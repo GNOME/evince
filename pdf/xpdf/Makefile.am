@@ -5,7 +5,7 @@ INCLUDES =					\
 	$(EXTRA_GNOME_CFLAGS)
 
 if WITH_GNOME
-gui = xpdf gpdf
+gui = gpdf
 else
 gui = xpdf
 endif
@@ -14,29 +14,51 @@ bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-applic
 
 common_sources =		\
 	Array.cc 		\
+	Array.h			\
 	BaseFile.h		\
 	Catalog.cc 		\
+	Catalog.h		\
+	CompactFontInfo.h	\
 	Dict.cc 		\
+	Dict.h			\
 	Error.cc 		\
+	Error.h			\
 	FontEncoding.cc		\
 	FontEncoding.h		\
 	FontFile.cc		\
 	FontFile.h		\
 	FontInfo.h		\
 	Gfx.cc 			\
+	Gfx.h			\
 	GfxFont.cc 		\
+	GfxFont.h		\
 	GfxState.cc		\
+	GfxState.h		\
 	Lexer.cc 		\
+	Lexer.h			\
 	Link.cc 		\
+	Link.h			\
 	Object.cc 		\
+	Object.h		\
 	OutputDev.cc 		\
+	OutputDev.h		\
 	Page.cc 		\
+	Page.h			\
 	Params.cc 		\
+	Params.h		\
 	Parser.cc 		\
+	Parser.h		\
 	PDFDoc.cc 		\
+	PDFDoc.h		\
+	StdFontInfo.h		\
 	Stream.cc 		\
+	Stream.h		\
+	Stream-CCITT.h		\
+	TextOutputDev.h		\
+	TextOutputFontInfo.h	\
 	TextOutputDev.cc	\
-	XRef.cc
+	XRef.cc			\
+	XRef.h
 
 gpdf_CFLAGS = 			\
 	-DBONOBO_IO
@@ -57,7 +79,9 @@ bonobo_application_x_pdf_SOURCES =	\
 	BonoboStream.h			\
 	BonoboStream.cc			\
 	GOutputDev.cc			\
+	GOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
+	bonobo-application-x-pdf.h	\
 	gtkgesture.c			\
 	gtkgesture.h
 
@@ -75,6 +99,7 @@ xpdf_SOURCES =			\
 	XOutputDev.cc		\
 	LTKOutputDev.cc		\
 	PSOutputDev.cc		\
+	PSOutputDev.h		\
 	xpdf.cc
 
 xpdf_CFLAGS = $(X_CFLAGS)
@@ -83,6 +108,7 @@ xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS)
 pdfimages_SOURCES =		\
 	$(common_sources)	\
 	ImageOutputDev.cc	\
+	ImageOutputDev.h	\
 	pdfimages.cc
 
 pdfimages_LDADD = ../goo/libgoo.a
@@ -106,7 +132,10 @@ pdfinfo_LDADD = ../goo/libgoo.a
 pdftopbm_SOURCES =		\
 	$(common_sources)	\
 	PBMOutputDev.cc		\
+	PBMOutputDev.h		\
 	XOutputDev.cc		\
+	XOutputDev.h		\
+	XOutputFontInfo.h	\
 	pdftopbm.cc
 
 pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
@@ -136,4 +165,5 @@ ltk = 			\
 gnorbadir = $(sysconfdir)/CORBA/servers
 gnorba_DATA = application-x-pdf.gnorba
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(gnorba_DATA)
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(gnorba_DATA) config.h
+

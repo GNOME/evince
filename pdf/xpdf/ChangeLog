@@ -1,3 +1,11 @@
+2000-02-25  NotZed  <NotZed@HelixCode.com>
+
+	* Makefile.am: Fixed up lists of sources so that distcheck works.
+	Also, only build gpdf if with gnome (otherwise distcheck fails).
+
+	* gpdf.cc (container_about_cmd): Define i if we are going
+	to be using it.
+
 2000-02-09  Michael Meeks  <michael@helixcode.com>
 
 	* Clean unused & lack of casting all round the place.

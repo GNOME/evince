@@ -311,6 +311,8 @@ container_about_cmd (GtkWidget *widget, Container *container)
   };
   
 #ifdef ENABLE_NLS
+  int i;
+
   for (i = 0; authors[i] != NULL; i++)
     authors [i] = _(authors [i]);
 #endif
