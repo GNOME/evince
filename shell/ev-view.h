@@ -34,20 +34,19 @@ G_BEGIN_DECLS
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
-GType	   ev_view_get_type (void) G_GNUC_CONST;
-GtkWidget* ev_view_new      (void);
-
-void ev_view_set_document (EvView     *view,
-			   EvDocument *document);
-void ev_view_set_page     (EvView     *view,
-			   int         page);
-int  ev_view_get_page     (EvView     *view);
-
-void ev_view_zoom_in     (EvView *view);
-void ev_view_zoom_out    (EvView *view);
-void ev_view_normal_size (EvView *view);
-void ev_view_best_fit    (EvView *view);
-void ev_view_fit_width   (EvView *view);
+GType		ev_view_get_type	(void) G_GNUC_CONST;
+GtkWidget*	ev_view_new		(void);
+void		ev_view_copy		(EvView     *view);
+void		ev_view_set_document	(EvView     *view,
+			   		 EvDocument *document);
+void		ev_view_set_page	(EvView     *view,
+					 int         page);
+int		ev_view_get_page	(EvView     *view);
+void		ev_view_zoom_in		(EvView     *view);
+void		ev_view_zoom_out	(EvView     *view);
+void		ev_view_normal_size	(EvView     *view);
+void		ev_view_best_fit	(EvView     *view);
+void		ev_view_fit_width	(EvView     *view);
 
 char* ev_view_get_find_status_message (EvView *view);
 

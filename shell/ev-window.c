@@ -607,7 +607,7 @@ ev_window_cmd_edit_copy (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_copy (EV_VIEW (ev_window->priv->view));
 }
 
 static void

@@ -421,6 +421,19 @@ ev_view_expose_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+void
+ev_view_copy (EvView *ev_view)
+{
+	GtkClipboard *clipboard;
+	char *text;
+
+	text = ev_document_get_text (ev_view->document, &ev_view->selection);
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
+					      GDK_SELECTION_CLIPBOARD);
+	gtk_clipboard_set_text (clipboard, text, -1);
+	g_free (text);
+}
+
 static void
 ev_view_primary_get_cb (GtkClipboard     *clipboard,
 			GtkSelectionData *selection_data,
