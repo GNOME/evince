@@ -216,6 +216,15 @@ update_action_sensitivity (EvWindow *ev_window)
 }
 
 static void
+set_widget_visibility (GtkWidget *widget, gboolean visible)
+{
+	if (visible)
+		gtk_widget_show (widget);
+	else
+		gtk_widget_hide (widget);
+}
+
+static void
 update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
@@ -228,16 +237,16 @@ update_chrome_visibility (EvWindow *window)
 	statusbar = (priv->chrome & EV_CHROME_STATUSBAR) != 0 && !priv->fullscreen_mode;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 
-	g_object_set (priv->menubar, "visible", menubar, NULL);
-	g_object_set (priv->toolbar_dock, "visible", toolbar, NULL);
-	g_object_set (priv->sidebar, "visible", sidebar, NULL);
-	g_object_set (priv->find_bar, "visible", findbar, NULL);
-	g_object_set (priv->statusbar, "visible", statusbar, NULL);
-	g_object_set (priv->fullscreen_toolbar, "visible", fullscreen_toolbar, NULL);
+	set_widget_visibility (priv->menubar, menubar);
+	set_widget_visibility (priv->toolbar_dock, toolbar);
+	set_widget_visibility (priv->sidebar, sidebar);
+	set_widget_visibility (priv->find_bar, findbar);
+	set_widget_visibility (priv->statusbar, statusbar);
+	set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
 
-	if (priv->fullscreen_popup) {
-		g_object_set (priv->fullscreen_popup, "visible", priv->fullscreen_mode, NULL);
-	} 
+	if (priv->fullscreen_popup != NULL) {
+		set_widget_visibility (priv->fullscreen_popup, priv->fullscreen_mode);
+	}
 }
 
 static void
@@ -1621,6 +1630,33 @@ ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
+					 EvWindow   *ev_window)
+{
+	GtkAction *action;
+	gboolean visible;
+
+	visible = GTK_WIDGET_VISIBLE (ev_sidebar);
+
+	/* In fullscreen mode the sidebar is not visible,
+	 * but we don't want to update the chrome
+	 */
+	if (ev_window->priv->fullscreen_mode)
+		return;
+	
+	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
+	
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_view_sidebar_cb), ev_window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), visible);
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_view_sidebar_cb), ev_window);
+
+	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
+			    GCONF_CHROME_SIDEBAR, visible);
+}
+
+static void
 menu_item_select_cb (GtkMenuItem *proxy, EvWindow *ev_window)
 {
 	GtkAction *action;
@@ -2064,9 +2100,9 @@ set_chrome_actions (EvWindow *window)
 static EvChrome
 load_chrome (void)
 {
-	GConfClient *client;
-	GConfValue *value;	
 	EvChrome chrome = EV_CHROME_NORMAL;
+	GConfClient *client;
+	GConfValue *value;
 
 	client = gconf_client_get_default ();
 
@@ -2182,13 +2218,16 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();
-	gtk_widget_show (ev_window->priv->hpaned);
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), ev_window->priv->hpaned,
-			    TRUE, TRUE, 0);
-
+			    TRUE, TRUE, 0);	
 	ev_window->priv->sidebar = ev_sidebar_new ();
+	g_signal_connect (ev_window->priv->sidebar,
+			  "notify::visible",
+			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
+			  ev_window);
 	gtk_paned_add1 (GTK_PANED (ev_window->priv->hpaned),
 			ev_window->priv->sidebar);
+	gtk_widget_show (ev_window->priv->hpaned);
 
 	/* Stub sidebar, for now */
 	sidebar_widget = ev_sidebar_links_new ();
