@@ -1,4 +1,4 @@
-SUBDIRS = cut-n-paste data backend shell po pdf
+SUBDIRS = cut-n-paste data backend po pdf shell
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 
