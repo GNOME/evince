@@ -60,7 +60,7 @@ void		 ev_application_open			(EvApplication *application,
 							 GError        *err);
 EvWindow	*ev_application_new_window		(EvApplication *application);
 void		 ev_application_open_bookmark		(EvApplication *application,
-							 EvDocument    *document,
+							 EvWindow      *window,
 							 EvBookmark    *bookmark,
 							 GError        *err);
 

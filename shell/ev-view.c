@@ -28,6 +28,7 @@
 #include "ev-marshal.h"
 #include "ev-view.h"
 #include "ev-document-find.h"
+#include "ev-history.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -52,6 +53,7 @@ struct _EvView {
 	GtkWidget parent_instance;
 
 	EvDocument *document;
+	EvHistory  *history;
 	
 	GdkWindow *bin_window;
 	
@@ -91,7 +93,7 @@ static guint page_changed_signal = 0;
 static void ev_view_set_scroll_adjustments (EvView         *view,
 					    GtkAdjustment  *hadjustment,
 					    GtkAdjustment  *vadjustment);
-     
+    
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 
 /*** Helper functions ***/       
@@ -167,6 +169,9 @@ ev_view_finalize (GObject *object)
 
 	if (view->document)
 		g_object_unref (view->document);
+
+	if (view->history)
+		g_object_unref (view->history);
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
@@ -900,12 +905,16 @@ ev_view_set_document (EvView     *view,
 		
 		if (old_page != ev_view_get_page (view))
 			g_signal_emit (view, page_changed_signal, 0);
+
+		if (view->history) {
+			g_object_unref (view->history);
+		}
+		view->history = ev_history_new ();
 	}
 }
 
-void
-ev_view_set_page (EvView *view,
-		  int     page)
+static void
+set_document_page (EvView *view, int page)
 {
 	if (view->document) {
 		int old_page = ev_document_get_page (view->document);
@@ -918,6 +927,80 @@ ev_view_set_page (EvView *view,
 			update_find_results (view);	
 		}
 	}
+}
+
+static void
+go_to_bookmark (EvView *view, EvBookmark *bookmark)
+{
+	EvBookmarkType type;
+	int page;
+
+	type = ev_bookmark_get_bookmark_type (bookmark);
+
+	if (type == EV_BOOKMARK_TYPE_LINK) {
+		page = ev_bookmark_get_page (bookmark);
+		set_document_page (view, page);
+	}
+}
+
+void
+ev_view_go_to_bookmark (EvView *view, EvBookmark *bookmark)
+{
+	go_to_bookmark (view, bookmark);
+	ev_history_add_link (view->history, bookmark);
+}
+
+static void
+go_to_index (EvView *view, int index)
+{
+	EvBookmark *bookmark;
+	
+	bookmark = ev_history_get_link_nth (view->history, index);
+	g_return_if_fail (bookmark != NULL);
+
+	go_to_bookmark (view, bookmark);
+}
+
+void
+ev_view_go_back	(EvView	*view)
+{
+	int index;
+
+	g_return_if_fail (EV_IS_HISTORY (view->history));
+
+	index = ev_history_get_current_index (view->history);
+	index = MAX (0, index - 1);
+
+	ev_history_set_current_index (view->history, index);
+	go_to_index (view, index);
+}
+
+void
+ev_view_go_forward (EvView *view)
+{
+	int index, n;
+
+	g_return_if_fail (EV_IS_HISTORY (view->history));
+
+	index = ev_history_get_current_index (view->history);
+	n = ev_history_get_n_links (view->history);
+
+	index = MIN (n - 1, index + 1);
+
+	ev_history_set_current_index (view->history, index);
+	go_to_index (view, index);
+}
+
+
+void
+ev_view_set_page (EvView *view,
+		  int     page)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+	g_return_if_fail (EV_IS_HISTORY (view->history));
+
+	set_document_page (view, page);
+	ev_history_add_page (view->history, page);
 }
 
 int

@@ -171,13 +171,12 @@ ev_application_open (EvApplication *application, GError *err)
 
 void
 ev_application_open_bookmark (EvApplication *application,
-			      EvDocument    *document,
+			      EvWindow      *window,
 			      EvBookmark    *bookmark,
 			      GError        *error)
 {
 	EvBookmarkType type;
 	const char *uri;
-	int page;
 
 	type = ev_bookmark_get_bookmark_type (bookmark);
 	
@@ -185,8 +184,7 @@ ev_application_open_bookmark (EvApplication *application,
 		case EV_BOOKMARK_TYPE_TITLE:
 			break;
 		case EV_BOOKMARK_TYPE_LINK:
-			page = ev_bookmark_get_page (bookmark);
-			ev_document_set_page (document, page);
+			ev_window_open_bookmark (window, bookmark);
 			break;
 		case EV_BOOKMARK_TYPE_EXTERNAL_URI:
 			uri = ev_bookmark_get_uri (bookmark);

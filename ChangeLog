@@ -1,3 +1,28 @@
+2005-01-09  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* shell/Makefile.am:
+	* shell/ev-application.c: (ev_application_open_bookmark):
+	* shell/ev-application.h:
+	* shell/ev-history.c: (ev_history_init), (free_links_list),
+	(ev_history_finalize), (ev_history_class_init),
+	(ev_history_add_link), (ev_history_add_page),
+	(ev_history_get_link_nth), (ev_history_get_n_links),
+	(ev_history_get_current_index), (ev_history_set_current_index),
+	(ev_history_new):
+	* shell/ev-history.h:
+	* shell/ev-sidebar-bookmarks.c: (selection_changed_cb):
+	* shell/ev-view.c: (ev_view_finalize), (ev_view_set_document),
+	(set_document_page), (go_to_bookmark), (ev_view_go_to_bookmark),
+	(go_to_index), (ev_view_go_back), (ev_view_go_forward),
+	(ev_view_set_page):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_open_bookmark),
+	(ev_window_cmd_go_back), (ev_window_cmd_go_forward),
+	(goto_page_cb), (register_custom_actions):
+	* shell/ev-window.h:
+
+	Initial history implementation. Needs work.
+
 2005-01-09  Martin Kretzschmar  <martink@gnome.org>
 
 	* pdf/xpdf/GDKSplashOutputDev.cc (redraw): fix pixbuf data offset.

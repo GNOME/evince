@@ -26,6 +26,8 @@
 #include <glib-object.h>
 #include <gtk/gtkwindow.h>
 
+#include "ev-bookmark.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvWindow EvWindow;
@@ -54,6 +56,8 @@ struct _EvWindowClass {
 
 GType		ev_window_get_type		(void);
 void		ev_window_open			(EvWindow *ev_window, const char *uri);
+void		ev_window_open_bookmark		(EvWindow   *ev_window,
+						 EvBookmark *bookmark);
 gboolean	ev_window_is_empty		(const EvWindow *ev_window);
 
 G_END_DECLS

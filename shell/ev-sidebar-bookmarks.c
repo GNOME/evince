@@ -106,6 +106,7 @@ selection_changed_cb (GtkTreeSelection   *selection,
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		EvBookmark *bookmark;
 		EvApplication *app;
+		GtkWidget *window;
 		GValue value = {0, };
 
 		gtk_tree_model_get_value (model, &iter,
@@ -114,8 +115,13 @@ selection_changed_cb (GtkTreeSelection   *selection,
 		bookmark = EV_BOOKMARK (g_value_get_object (&value));
 		g_return_if_fail (bookmark != NULL);
 
-		app = ev_application_get_instance ();
-		ev_application_open_bookmark (app, document, bookmark, NULL);
+		window = gtk_widget_get_ancestor (GTK_WIDGET (ev_sidebar_bookmarks),
+						  EV_TYPE_WINDOW);
+		if (window) {
+			app = ev_application_get_instance ();
+			ev_application_open_bookmark (app, EV_WINDOW (window),
+						      bookmark, NULL);
+		}
 	}
 }
 

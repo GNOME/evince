@@ -190,6 +190,12 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
 }
 
+void
+ev_window_open_bookmark	(EvWindow *ev_window, EvBookmark *bookmark)
+{
+	ev_view_go_to_bookmark (EV_VIEW (ev_window->priv->view), bookmark);
+}
+
 gboolean
 ev_window_is_empty (const EvWindow *ev_window)
 {
@@ -866,7 +872,7 @@ ev_window_cmd_go_back (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_go_back (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -874,7 +880,7 @@ ev_window_cmd_go_forward (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_go_forward (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -1323,8 +1329,11 @@ static GtkToggleActionEntry toggle_entries[] = {
 static void
 goto_page_cb (GtkAction *action, int page_number, EvWindow *ev_window)
 {
+	EvView *view = EV_VIEW (ev_window->priv->view);
 
-	ev_view_set_page (EV_VIEW (ev_window->priv->view), page_number);
+	if (ev_view_get_page (view) != page_number) {
+		ev_view_set_page (view, page_number);
+	}
 }
 
 static void
@@ -1341,6 +1350,8 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "direction", EV_NAVIGATION_DIRECTION_BACK,
 			       "is_important", TRUE,
 			       NULL);
+	g_signal_connect (action, "activate",
+			  G_CALLBACK (ev_window_cmd_go_back), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 
@@ -1352,6 +1363,8 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "arrow-tooltip", _("Forward history"),
 			       "direction", EV_NAVIGATION_DIRECTION_FORWARD,
 			       NULL);
+	g_signal_connect (action, "activate",
+			  G_CALLBACK (ev_window_cmd_go_back), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 
