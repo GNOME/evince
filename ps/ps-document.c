@@ -1734,7 +1734,7 @@ static void
 ps_document_set_page (EvDocument  *document,
 		       int          page)
 {
-	ps_document_goto_page (PS_DOCUMENT (document), page);
+	ps_document_goto_page (PS_DOCUMENT (document), page - 1);
 }
 
 static int
@@ -1744,7 +1744,7 @@ ps_document_get_page (EvDocument  *document)
 
 	g_return_val_if_fail (ps != NULL, -1);
 
-	return ps->current_page;
+	return ps->current_page + 1;
 }
 
 static gboolean

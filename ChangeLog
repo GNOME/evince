@@ -1,5 +1,11 @@
 2005-02-21  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* ps/ps-document.c: (ps_document_set_page), (ps_document_get_page):
+
+	ps pages are 0 based, convert 
+
+2005-02-21  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/ps-document.c: (ps_document_class_init), (ps_document_load):
 
 	Initialize correct parent class. Set GError on document load
