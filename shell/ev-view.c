@@ -517,12 +517,6 @@ expose_bin_window (GtkWidget      *widget,
 	ev_document_misc_paint_one_page (view->bin_window, widget, &area, &border);
 
 	/* Render the document itself */
-#if 0
-	ev_document_set_page_offset (view->document,
-				     x_offset + border.left,
-				     y_offset + border.top);
-#endif
-
 	LOG ("Render area %d %d %d %d - Offset %d %d",
 	     event->area.x, event->area.y,
              event->area.width, event->area.height,
@@ -1146,22 +1140,27 @@ set_document_page (EvView *view, int new_page)
 
 		if (old_page != page) {
 			if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
-				ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
+				//ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
 			}
-			ev_document_set_page (view->document, page);
 			view->current_page = page;
+			ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+							view->current_page,
+							view->current_page,
+							view->scale);
 		}
 
-		if (old_page != ev_document_get_page (view->document)) {
-			int width, height;
+		if (old_page != view->current_page) {
+//			int width, height;
 			
 			g_signal_emit (view, page_changed_signal, 0);
 
 			view->has_selection = FALSE;
+#if 0
 			ev_document_get_page_size (view->document,
 						   page, 
 						   &width, &height);
 			if (width != old_width || height != old_height)
+#endif
 				gtk_widget_queue_resize (GTK_WIDGET (view));
 
 			gtk_adjustment_set_value (view->vadjustment,

@@ -1,3 +1,18 @@
+Tue Mar 15 12:46:47 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document.c: (ev_document_set_page): update the page
+	cache.  Need to clean this up.
+	
+	* backend/ev-jobs.c: (ev_job_render_run): Set the page before
+	rendering.
+
+	* shell/ev-pixbuf-cache.c: (dispose_cache_job_info),
+	(move_one_job), (ev_pixbuf_cache_update_range),
+	(ev_pixbuf_cache_set_page_range), (ev_pixbuf_cache_get_pixbuf):
+	Clean up the cache.
+
+	* shell/ev-view.c: (expose_bin_window), (set_document_page):
+
 Mon Mar 14 02:23:16 2005  Jonathan Blandford  <jrb@redhat.com>
 	
 	* shell/ev-page-cache.[ch]: move to the backend.

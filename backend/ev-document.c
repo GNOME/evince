@@ -186,9 +186,7 @@ ev_document_set_page (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
 	LOG ("ev_document_set_page");
-	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_page (document, page);
-	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 int

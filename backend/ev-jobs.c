@@ -123,6 +123,7 @@ ev_job_render_run (EvJobRender *job)
 	g_return_if_fail (EV_IS_JOB_RENDER (job));
 	
 	ev_document_set_scale (job->document, job->scale);
+	ev_document_set_page (job->document, job->page);
 	job->pixbuf = ev_document_render_pixbuf (job->document);
 	job->pixbuf_done = TRUE;
 }
