@@ -36,7 +36,7 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-#define LOG(x) (g_print ("\t%s\n", x))
+#define LOG(x) 
 GType
 ev_document_get_type (void)
 {
