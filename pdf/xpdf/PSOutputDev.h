@@ -16,7 +16,7 @@
 #endif
 
 #include <stddef.h>
-#include "config.h"
+#include "xpdfconfig.h"
 #include "Object.h"
 #include "GlobalParams.h"
 #include "OutputDev.h"

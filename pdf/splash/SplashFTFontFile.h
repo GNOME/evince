@@ -15,7 +15,8 @@
 #pragma interface
 #endif
 
-#include <freetype/freetype.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "SplashFontFile.h"
 
 class SplashFontFileID;

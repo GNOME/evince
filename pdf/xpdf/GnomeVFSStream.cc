@@ -12,7 +12,7 @@
 #endif
 
 #include <aconf.h>
-#include "config.h"
+#include "xpdfconfig.h"
 
 #include "GnomeVFSStream.h"
 #include "gpdf-g-switch.h"

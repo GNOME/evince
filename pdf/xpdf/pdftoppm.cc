@@ -17,7 +17,7 @@
 #include "SplashBitmap.h"
 #include "Splash.h"
 #include "SplashOutputDev.h"
-#include "config.h"
+#include "xpdfconfig.h"
 
 static int firstPage = 1;
 static int lastPage = 0;

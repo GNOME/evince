@@ -27,7 +27,7 @@
 #include "CharTypes.h"
 #include "UnicodeMap.h"
 #include "Error.h"
-#include "config.h"
+#include "xpdfconfig.h"
 
 static void printInfoString(FILE *f, Dict *infoDict, char *key,
 			    char *text1, char *text2, UnicodeMap *uMap);

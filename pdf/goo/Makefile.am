@@ -1,5 +1,6 @@
-INCLUDES =		\
-	-I$(top_srcdir)
+INCLUDES =			\
+	-I$(top_srcdir) 	\
+	-I$(top_srcdir)/pdf
 
 noinst_LIBRARIES = libGoo.a
 

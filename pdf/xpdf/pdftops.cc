@@ -25,7 +25,7 @@
 #include "PDFDoc.h"
 #include "PSOutputDev.h"
 #include "Error.h"
-#include "config.h"
+#include "xpdfconfig.h"
 
 static int firstPage = 1;
 static int lastPage = 0;

@@ -15,7 +15,7 @@
 #include "GlobalParams.h"
 #include "Object.h"
 #include "XPDFApp.h"
-#include "config.h"
+#include "xpdfconfig.h"
 
 //------------------------------------------------------------------------
 // command line options

@@ -1,26 +1,15 @@
-SUBDIRS = . tests
-
 INCLUDES =							\
 	-I$(top_srcdir)						\
-	-I$(top_srcdir)/goo					\
-	-I$(top_srcdir)/lib/ggv-sidebar				\
-	-I$(top_srcdir)/fofi					\
-	-I$(top_srcdir)/splash					\
-	-DDATADIR=\""$(datadir)"\"            			\
-        -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
-	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
-	$(EXTRA_GNOME_CFLAGS)					\
-	$(GNOME_PRINT_PRIVATE_CFLAGS)				\
-	$(GPDF_DEPRECATED_CFLAGS)				\
-	$(libpaper_CFLAGS)
+	-I$(top_srcdir)/pdf					\
+	-I$(top_srcdir)/pdf/goo					\
+	-I$(top_srcdir)/pdf/fofi				\
+	-I$(top_srcdir)/pdf/splash				\
+	$(GTK_CFLAGS)						\
+	-DDATADIR=\""$(datadir)"\"
 
-marshal_sources =			\
-	gpdf-marshal.c			\
-	gpdf-marshal.h	
+noinst_PROGRAMS = test-gdk-output-dev
 
-libexec_PROGRAMS = gnome-pdf-viewer
-
-noinst_LIBRARIES = libxpdf.a libgpdf.a
+noinst_LIBRARIES = libxpdf.a
 
 libxpdf_a_SOURCES =		\
 	Annot.cc		\
@@ -104,191 +93,19 @@ common_sources =		\
 	TextOutputDev.h		\
 	UTF8.h
 
-ANNOTS_VIEW_SRCS =
+test_gdk_output_dev_SOURCES =          \
+       GDKSplashOutputDev.cc           \
+       GDKSplashOutputDev.h            \
+       SplashOutputDev.cc              \
+       SplashOutputDev.h               \
+       $(common_sources)               \
+       test-gdk-output-dev.cc
 
-if USE_ANNOTS_VIEW
-  ANNOTS_VIEW_SRCS += 			\
-	gpdf-annots-view.cc		\
-	gpdf-annots-view.h
-endif
+test_gdk_output_dev_LDADD = 					\
+        libxpdf.a                                               \
+        $(top_builddir)/pdf/goo/libGoo.a                        \
+        $(top_builddir)/pdf/fofi/libfofi.a                      \
+	$(top_builddir)/pdf/splash/libsplash.a			\
+	$(GTK_LIBS)
 
-libgpdf_a_SOURCES =			\
-	BonoboStream.cc			\
-	BonoboStream.h			\
-	GnomeVFSStream.cc		\
-	GnomeVFSStream.h		\
-	GPOutputDev.cc			\
-	GPOutputDev.h			\
-	PSOutputDev.cc			\
-	PSOutputDev.h			\
-	Thumb.cc			\
-	Thumb.h				\
-	gpdf-control.cc			\
-	gpdf-control.h			\
-	gpdf-control-private.h		\
-	gpdf-g-switch.h			\
-	gpdf-link-canvas-item.cc	\
-	gpdf-link-canvas-item.h		\
-	gpdf-links-canvas-layer.cc	\
-	gpdf-links-canvas-layer.h	\
-	gpdf-persist-file.cc		\
-	gpdf-persist-file.h		\
-	gpdf-persist-stream.cc		\
-	gpdf-persist-stream.h		\
-	gpdf-stock-icons.c		\
-	gpdf-stock-icons.h		\
-	gpdf-util.h			\
-	gpdf-view.cc			\
-	gpdf-view.h			\
-	gpdf-bookmarks-view.cc		\
-	gpdf-bookmarks-view.h		\
-	gpdf-thumbnails-view.cc		\
-	gpdf-thumbnails-view.h		\
-	$(ANNOTS_VIEW_SRCS)		\
-	eel-gconf-extensions.c		\
-	eel-gconf-extensions.h		\
-	prefs-strings.h			\
-	gpdf-sidebar.c			\
-	gpdf-sidebar.h			\
-	gtkgesture.c			\
-	gtkgesture.h			\
-	page-control.c			\
-	page-control.h			\
-	pdf-info-dict-util.cc		\
-	pdf-info-dict-util.h		\
-	pdf-properties-display.c	\
-	pdf-properties-display.h	\
-	gpdf-font-face.c		\
-	gpdf-font-face.h		\
-	$(marshal_sources)
-
-gnome_pdf_viewer_SOURCES =		\
-	$(common_sources)		\
-	bonobo-application-x-pdf.cc	\
-	nautilus-pdf-property-page.cc	\
-	nautilus-pdf-property-page.h
-
-# Old files
-#	GOutputDev.cc			\
-#	GOutputDev.h			\
-#	pdf-view.cc			\
-#	pdf-view.h			\
-# 	gpdf-embeddable.cc		\
-# 	gpdf-embeddable.h		\
-# 	gpdf-embeddable-view.cc		\
-# 	gpdf-embeddable-view.h
-
-gnome_pdf_viewer_LDADD =					\
-	libxpdf.a						\
-	libgpdf.a						\
-	$(top_builddir)/goo/libGoo.a				\
-	$(top_builddir)/fofi/libfofi.a				\
-	$(top_builddir)/lib/ggv-sidebar/libggv-sidebar.a	\
-	$(EXTRA_GNOME_LIBS)					\
-	$(libpaper_LIBS)
-
-gpdf-marshal.h: gpdf-marshal.list $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=gpdf_marshal > $@
-
-gpdf-marshal.c: gpdf-marshal.list $(GLIB_GENMARSHAL)
-	echo "#include \"gpdf-marshal.h\"" > $@ && \
-	$(GLIB_GENMARSHAL) $< --body --prefix=gpdf_marshal >> $@
-
-BUILT_SOURCES = $(marshal_sources)
-DONT_DIST_SOURCE = $(marshal_sources)
-
-dist-hook:
-	for file in $(DONT_DIST_SOURCE) ; do \
-	    rm -f $(distdir)/$$file ; \
-	done
-
-STOCK_ANNOTS_ICONS = 
-
-if USE_ANNOTS_VIEW
-  STOCK_ANNOTS_ICONS += 			\
-	stock-annot-circle.png		\
-	stock-annot-fileattachment.png	\
-	stock-annot-freetext.png	\
-	stock-annot-highlight.png	\
-	stock-annot-ink.png		\
-	stock-annot-line.png		\
-	stock-annot-link.png		\
-	stock-annot-movie.png		\
-	stock-annot-popup.png		\
-	stock-annot-sound.png		\
-	stock-annot-square.png		\
-	stock-annot-stamp.png		\
-	stock-annot-strikeout.png	\
-	stock-annot-text.png		\
-	stock-annot-trapnet.png		\
-	stock-annot-underline.png	\
-	stock-annot-widget.png		\
-	stock-annot-unknown.png
-endif
-
-stockdir = $(datadir)/pixmaps/gpdf
-stock_DATA = 				\
-	fitwidth.png			\
-	stock_book-closed-mark.png	\
-	stock_book-closed.png		\
-	stock_book-opened-mark.png	\
-	stock_book-opened.png		\
-	stock_bookmarks.png		\
-	$(STOCK_ANNOTS_ICONS)
-
-gladedir = $(datadir)/gpdf/glade
-glade_DATA =					\
-	gpdf-print-progress-dialog.glade	\
-	gpdf-properties-dialog.glade
-
-server_in_files = GNOME_PDF.server.in.in
-serverdir = $(libdir)/bonobo/servers
-server_DATA = $(server_in_files:%.server.in.in=%.server)
-
-$(server_in_files:%.server.in.in=%.server.in): $(server_in_files)
-	sed -e "s|\@LIBEXECDIR\@|$(libexecdir)|" $< > $@
-
-@INTLTOOL_SERVER_RULE@
-
-uidir = $(datadir)/gnome-2.0/ui
-ui_DATA =				\
-	gpdf-control-ui.xml
-
-CLEANFILES =				\
-	$(server_DATA)			\
-	$(server_in_files:.server.in.in=.server.in) \
-	$(marshal_sources)
-
-if USE_ANNOTS_VIEW
-  EXTRA_DIST = $(stock_DATA)		\
-	gpdf-marshal.list		\
-	$(server_in_files) 		\
-	config.h 			\
-	$(ui_DATA)			\
-	$(glade_DATA)
-else
-  EXTRA_DIST = $(stock_DATA)		\
-	gpdf-marshal.list		\
-	$(server_in_files) 		\
-	config.h 			\
-	$(ui_DATA)			\
-	$(glade_DATA)			\
-	stock-annot-circle.png		\
-	stock-annot-fileattachment.png	\
-	stock-annot-freetext.png	\
-	stock-annot-highlight.png	\
-	stock-annot-ink.png		\
-	stock-annot-line.png		\
-	stock-annot-link.png		\
-	stock-annot-movie.png		\
-	stock-annot-popup.png		\
-	stock-annot-sound.png		\
-	stock-annot-square.png		\
-	stock-annot-stamp.png		\
-	stock-annot-strikeout.png	\
-	stock-annot-text.png		\
-	stock-annot-trapnet.png		\
-	stock-annot-underline.png	\
-	stock-annot-widget.png		\
-	stock-annot-unknown.png
-endif
+EXTRA_DIST = config.h

@@ -1,7 +1,9 @@
-INCLUDES =			\
-	-I$(top_srcdir)		\
-	-I$(top_srcdir)/goo	\
-	-I$(top_srcdir)/fofi
+INCLUDES =				\
+	-I$(top_srcdir)			\
+	-I$(top_srcdir)/pdf		\
+	-I$(top_srcdir)/pdf/goo		\
+	-I$(top_srcdir)/pdf/fofi	\
+	$(FREETYPE_CFLAGS)
 
 noinst_LIBRARIES = libsplash.a
 

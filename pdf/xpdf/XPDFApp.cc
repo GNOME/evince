@@ -17,7 +17,7 @@
 #include "Error.h"
 #include "XPDFViewer.h"
 #include "XPDFApp.h"
-#include "config.h"
+#include "xpdfconfig.h"
 
 // these macro defns conflict with xpdf's Object class
 #ifdef LESSTIF_VERSION

@@ -19,7 +19,7 @@
 #include <math.h>
 #include "GString.h"
 #include "GList.h"
-#include "config.h"
+#include "xpdfconfig.h"
 #include "GlobalParams.h"
 #include "Object.h"
 #include "Error.h"

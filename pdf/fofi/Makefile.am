@@ -1,6 +1,7 @@
 INCLUDES =			\
 	-I$(top_srcdir)		\
-	-I$(top_srcdir)/goo
+	-I$(top_srcdir)/pdf	\
+	-I$(top_srcdir)/pdf/goo
 
 noinst_LIBRARIES = libfofi.a
 

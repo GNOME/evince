@@ -22,7 +22,7 @@
 #include "GfxFont.h"
 #include "Annot.h"
 #include "PDFDoc.h"
-#include "config.h"
+#include "xpdfconfig.h"
 
 static char *fontTypeNames[] = {
   "unknown",

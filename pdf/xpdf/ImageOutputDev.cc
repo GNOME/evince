@@ -17,7 +17,7 @@
 #include <stddef.h>
 #include <ctype.h>
 #include "gmem.h"
-#include "config.h"
+#include "xpdfconfig.h"
 #include "Error.h"
 #include "GfxState.h"
 #include "Object.h"

@@ -17,7 +17,7 @@
 
 #include "gtypes.h"
 #include "SplashTypes.h"
-#include "config.h"
+#include "xpdfconfig.h"
 #include "OutputDev.h"
 
 class GfxState;
@@ -30,6 +30,7 @@ class SplashPattern;
 class SplashFontEngine;
 class SplashFont;
 class T3FontCache;
+class XRef;
 struct T3FontCacheTag;
 struct T3GlyphStack;
 struct GfxRGB;

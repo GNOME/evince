@@ -12,8 +12,6 @@
 #pragma implementation
 #endif
 
-#include "freetype/ftoutln.h"
-#include "freetype/internal/ftobjs.h" // needed for FT_New_Size decl
 #include "gmem.h"
 #include "SplashMath.h"
 #include "SplashGlyphBitmap.h"
@@ -21,6 +19,9 @@
 #include "SplashFTFontEngine.h"
 #include "SplashFTFontFile.h"
 #include "SplashFTFont.h"
+
+#include FT_OUTLINE_H
+#include FT_INTERNAL_OBJECTS_H // needed for FT_New_Size decl
 
 //------------------------------------------------------------------------
 

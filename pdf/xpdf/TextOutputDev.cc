@@ -24,7 +24,7 @@
 #include "gmem.h"
 #include "GString.h"
 #include "GList.h"
-#include "config.h"
+#include "xpdfconfig.h"
 #include "Error.h"
 #include "GlobalParams.h"
 #include "UnicodeMap.h"

@@ -32,6 +32,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 PKG_CHECK_MODULES(LIBEVPRIVATE, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0 libbonobo-2.0)
 PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= 2.5.0 libgnomeui-2.0 gnome-vfs-2.0 libbonoboui-2.0 libgnomeprint-2.2 libgnomeprintui-2.2 libglade-2.0)
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
 
 dnl Compile with disable-deprecated switches
 
@@ -44,7 +45,7 @@ if test -f $srcdir/autogen.sh; then
 	set_enable_deprecated=no
 else
 	set_enable_deprecated=yes
-fi
+	fi
 ])
 AC_MSG_CHECKING([whether to disable deprecated glib/gtk+/etc. features])
 if test "$set_enable_deprecated" != "yes"; then
@@ -55,6 +56,218 @@ else
 	EVINCE_DISABLE_DEPRECATED=""
 fi
 AC_SUBST(EVINCE_DISABLE_DEPRECATED)
+
+dnl ================== Xpdf aconf.h.in checks ==================================
+
+AH_TEMPLATE([HAVE_LIBSM], [Define to 1 if you have session management.])
+AH_TEMPLATE([ENABLE_NLS], [Use Native Language Support.])
+AH_TEMPLATE([HAVE_CATGETS], [Use catgets functions.])
+AH_TEMPLATE([HAVE_GETTEXT], [Use gettext functions.])
+
+dnl Optional features.
+AH_TEMPLATE([A4_PAPER],
+            [Use A4 paper size instead of Letter for PostScript output.])
+AC_ARG_ENABLE(a4-paper,
+              AC_HELP_STRING([--enable-a4-paper],
+                             [use A4 paper size instead of Letter for 
+                              PostScript output]),
+              AC_DEFINE(A4_PAPER))
+
+dnl never define NO_TEXT_SELECT, just remember this Xpdf setting.
+AH_TEMPLATE([NO_TEXT_SELECT], [Do not allow text selection.])
+
+AH_TEMPLATE([OPI_SUPPORT],
+            [Include support for OPI comments.])
+AC_ARG_ENABLE(opi,
+              AC_HELP_STRING([--enable-opi],
+                             [include support for OPI comments]),
+              AC_DEFINE(OPI_SUPPORT))
+
+dnl enable these unconditionally.
+AC_DEFINE([MULTITHREADED], [1], [Enable multithreading support.])
+AC_DEFINE([TEXTOUT_WORD_LIST], [1], [Enable word list support.])
+	      
+AH_TEMPLATE([APPDEFDIR],
+            [Directory with the Xpdf app-defaults file.])
+AC_ARG_WITH(appdef-dir,
+            AC_HELP_STRING([--with-appdef-dir],
+                           [set app-defaults directory]),
+            AC_DEFINE_UNQUOTED(APPDEFDIR, "$with_appdef_dir"))
+
+dnl Path to xpdfrc.
+dnl This ugly kludge to get the sysconfdir path is needed because
+dnl autoconf doesn't actually set the prefix variable until later.
+if test "$sysconfdir" = '${prefix}/etc'; then
+  if test "x$prefix" = xNONE; then
+    system_xpdfrc="$ac_default_prefix/etc/xpdfrc"
+  else
+    system_xpdfrc="$prefix/etc/xpdfrc"
+  fi
+else
+  system_xpdfrc="$sysconfdir/xpdfrc"
+fi
+AC_DEFINE_UNQUOTED(SYSTEM_XPDFRC, "$system_xpdfrc",
+                   [Full path for the system-wide xpdfrc file.])
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+
+dnl Switch over to C++.  This will make the checks below a little
+dnl bit stricter (requiring function prototypes in include files).
+dnl (99% of xpdf is written in C++.)
+AC_LANG_CPLUSPLUS
+
+dnl Look for header that defines select() and fd_set.
+AC_MSG_CHECKING([select() and fd_set in sys/select.h and sys/bsdtypes.h])
+AC_TRY_COMPILE([#include <stdlib.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <sys/types.h>],
+  [fd_set fds;
+select(0, NULL, NULL, NULL, NULL);], xpdf_ok=yes, xpdf_ok=no)
+if test $xpdf_ok = yes; then
+  AC_MSG_RESULT([not needed])
+else
+  AC_TRY_COMPILE([#include <stdlib.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/select.h>],
+    [fd_set fds;
+select(0, NULL, NULL, NULL, NULL);], xpdf_ok=yes, xpdf_ok=no)
+  if test $xpdf_ok = yes; then
+    AC_DEFINE(HAVE_SYS_SELECT_H, 1, [Have sys/select.h.])
+    AC_MSG_RESULT([need sys/select.h])
+  else
+    AC_TRY_COMPILE([#include <stdlib.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/bsdtypes.h>],
+      [fd_set fds;
+select(0, NULL, NULL, NULL, NULL);], xpdf_ok=yes, xpdf_ok=no)
+    if test $xpdf_ok = yes; then
+      AC_DEFINE(HAVE_SYS_BSDTYPES_H, 1, [Have sys/bsdtypes.h.])
+      AC_MSG_RESULT([need sys/bsdtypes.h])
+    else
+      AC_MSG_RESULT([problem])
+    fi
+  fi
+fi
+
+dnl Look for header that defines FD_ZERO.
+AC_MSG_CHECKING([FD_ZERO and strings.h or bstring.h])
+AC_TRY_COMPILE([#include <stdlib.h>
+#include <sys/types.h>
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif],
+[fd_set fds; FD_ZERO(&fds);], xpdf_ok=yes, xpdf_ok=no)
+if test $xpdf_ok = yes; then
+  AC_MSG_RESULT([not needed])
+else
+  AC_TRY_COMPILE([#include <stdlib.h>
+#include <sys/types.h>
+#include <strings.h>
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif],
+    [fd_set fds; FD_ZERO(&fds);], xpdf_ok=yes, xpdf_ok=no)
+  if test $xpdf_ok = yes; then
+    AC_DEFINE(HAVE_STRINGS_H, 1, [Have strings.h.])
+    AC_MSG_RESULT([need strings.h])
+  else
+    AC_TRY_COMPILE([#include <stdlib.h>
+#include <sys/types.h>
+#include <bstring.h>
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif],
+      [fd_set fds; FD_ZERO(&fds);], xpdf_ok=yes, xpdf_ok=no)
+    if test $xpdf_ok = yes; then
+      AC_DEFINE(HAVE_BSTRING_H, 1, [Have bstring.h.])
+      AC_MSG_RESULT([need bstring.h])
+    else
+      AC_MSG_RESULT([problem])
+    fi
+  fi
+fi
+
+dnl Look for rewinddir.
+AC_CHECK_FUNCS(rewinddir)
+if test $ac_cv_func_rewinddir = no; then
+  AC_CHECK_LIB(cposix, rewinddir)
+fi
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(popen)
+dnl # This should use 'AC_CHECK_FUNCS(mkstemp)' but that fails if
+dnl # the mkstemp exists in the library but isn't declared in the
+dnl # include file (e.g., in cygwin 1.1.2).
+AC_CACHE_CHECK([for mkstemp],
+xpdf_cv_func_mkstemp,
+[AC_TRY_LINK([#include <stdlib.h>
+#include <unistd.h>],
+[mkstemp("foo");],
+xpdf_cv_func_mkstemp=yes, xpdf_cv_func_mkstemp=no)])
+if test "$xpdf_cv_func_mkstemp" = yes; then
+  AC_DEFINE(HAVE_MKSTEMP, 1, [Have mkstemp().])
+fi
+dnl Check for mkstemps, just like mkstemp.
+AC_CACHE_CHECK([for mkstemps],
+xpdf_cv_func_mkstemps,
+[AC_TRY_LINK([#include <stdlib.h>
+#include <unistd.h>],
+[mkstemps("foo", 0);],
+xpdf_cv_func_mkstemps=yes, xpdf_cv_func_mkstemps=no)])
+if test "$xpdf_cv_func_mkstemps" = yes; then
+  AC_DEFINE(HAVE_MKSTEMPS, 1, [Have mkstemps().])
+fi
+
+dnl Check select argument type: on HP-UX before version 10, select
+dnl takes (int *) instead of (fd_set *).
+AC_CACHE_CHECK([whether select takes fd_set arguments],
+xpdf_cv_func_select_arg,
+[AC_TRY_COMPILE([#include <sys/types.h>
+#include <sys/time.h>
+#include <unistd.h>
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif],
+[fd_set fds;
+select(1, &fds, &fds, &fds, 0);],
+xpdf_cv_func_select_arg=yes, xpdf_cv_func_select_arg=no)])
+if test "$xpdf_cv_func_select_arg" != yes; then
+  AC_DEFINE(SELECT_TAKES_INT, 1, [select() takes int, not fd_set arguments.])
+fi
+
+dnl Back to C for the library tests.
+AC_LANG_C
+
+dnl Check for fseeko/ftello or fseek64/ftell64
+dnl The LARGEFILE and FSEEKO macros have to be called in C, not C++, mode.
+AC_SYS_LARGEFILE
+AC_FUNC_FSEEKO
+AC_CHECK_FUNCS(fseek64, xpdf_cv_func_fseek64=yes, xpdf_cv_func_fseek64=no)
+AC_CHECK_FUNCS(ftell64, xpdf_cv_func_ftell64=yes, xpdf_cv_func_ftell64=no)
+if test "$xpdf_cv_func_fseek64" = yes -a "$xpdf_cv_func_ftell64" = yes; then
+  AC_DEFINE(HAVE_FSEEK64, 1, [Have fseek64().])
+fi
+
+dnl Check for freetype headers
+FREETYPE_LIBS=
+FREETYPE_CFLAGS=
+AC_PATH_PROG(FREETYPE_CONFIG, freetype-config, no)
+if test "x$FREETYPE_CONFIG" != "xno" ; then
+  FREETYPE_CFLAGS=`$FREETYPE_CONFIG --cflags`
+  FREETYPE_LIBS=`$FREETYPE_CONFIG --libs`
+  AC_DEFINE(HAVE_FREETYPE_H, 1, [Have FreeType2 include files])
+fi
+
+AC_SUBST(FREETYPE_CFLAGS)
+AC_SUBST(FREETYPE_LIBS)
+
+dnl ================== End of xpdf checks ===========================================
 
 dnl Turn on the additional warnings last, so -Werror doesn't affect other tests.
 dnl stolen from nautilus and gnome-common
@@ -115,6 +328,11 @@ Makefile
 cut-n-paste/Makefile
 cut-n-paste/recent-files/Makefile
 data/Makefile
+pdf/Makefile
+pdf/goo/Makefile
+pdf/fofi/Makefile
+pdf/splash/Makefile
+pdf/xpdf/Makefile
 po/Makefile.in
 shell/Makefile
 viewer/Makefile

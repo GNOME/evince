@@ -1,3 +1,20 @@
+Tue Dec 21 16:30:58 2004  Owen Taylor  <otaylor@redhat.com>
+
+	* pdf/**: Import of xpdf code from gpdf. 
+
+	* pdf/xpdf/xpdfconfig.h: Move the non-config.h config.h to xpdfconfig.h
+
+	* pdf/splash/SplashFTFont.{cc,h} pdf/splash/SplashFTFont.h
+	pdf/splash/SplashFTFontEngine.h pdf/splash/SplashFTFontFile.h: 
+	Fix FreeType includes.
+
+	* pdf/xpdf/{Error.h GnomeVFSStream.cc ImageOutputDev.cc PDFDoc.cc\
+	pdffonts.cc pdfimages.cc pdfinfo.cc pdftoppm.cc pdftops.cc
+	pdftotext.cc PSOutputDev.cc PSOutputDev.h SplashOutputDev.h
+	Stream.cc TextOutputDev.cc XPDFApp.cc xpdf.cc XPDFViewer.cc
+	pdf/xpdf/Error.h PSOutputDev.h SplashOutputDev.h}:
+	Include xpdfconfig.h
+	
 Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-window.c (ev_window_dispose): dispose can be called
