@@ -400,43 +400,99 @@ setup_pixmap (PSDocument *gs, int page, double scale)
 	}
 }
 
+#define DEFAULT_PAGE_SIZE 1
+
 static void
 get_page_box (PSDocument *gs, int page, int *urx, int *ury, int *llx, int *lly)
 {
-	GtkGSPaperSize *paper_sizes = gtk_gs_defaults_get_paper_sizes ();
+  gint new_llx = 0;
+  gint new_lly = 0;
+  gint new_urx = 0;
+  gint new_ury = 0;
+  GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes();
+  int new_pagesize = -1;
 
-	g_return_if_fail (PS_IS_DOCUMENT (gs));
-	g_return_if_fail (gs->doc != NULL);
-	g_return_if_fail (page >= 0);
+  g_return_if_fail(PS_IS_DOCUMENT(gs));
 
-	if (gs->doc->pages && gs->doc->pages[page].size) {
-		int page_size;
+  if(new_pagesize == -1) {
+    new_pagesize = DEFAULT_PAGE_SIZE;
+    if(gs->doc) {
+      /* If we have a document:
+         We use -- the page size (if specified)
+         or the doc. size (if specified)
+         or the page bbox (if specified)
+         or the bounding box
+       */
+      if((page >= 0) && (gs->doc->numpages > page) &&
+         (gs->doc->pages) && (gs->doc->pages[page].size)) {
+        new_pagesize = gs->doc->pages[page].size - gs->doc->size;
+      }
+      else if(gs->doc->default_page_size != NULL) {
+        new_pagesize = gs->doc->default_page_size - gs->doc->size;
+      }
+      else if((page >= 0) &&
+              (gs->doc->numpages > page) &&
+              (gs->doc->pages) &&
+              (gs->doc->pages[page].boundingbox[URX] >
+               gs->doc->pages[page].boundingbox[LLX]) &&
+              (gs->doc->pages[page].boundingbox[URY] >
+               gs->doc->pages[page].boundingbox[LLY])) {
+        new_pagesize = -1;
+      }
+      else if((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
+              (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
+        new_pagesize = -1;
+      }
+    }
+  }
 
-		page_size = gs->doc->pages[page].size - gs->doc->size;
-		*llx = *lly = 0;
-		*urx = gs->doc->size[page_size].width;
-		*ury = gs->doc->size[page_size].height;
-	} else if (gs->doc->pages &&
-                   (gs->doc->pages[page].boundingbox[URX] >
-                    gs->doc->pages[page].boundingbox[LLX]) &&
-                   (gs->doc->pages[page].boundingbox[URY] >
-                    gs->doc->pages[page].boundingbox[LLY])) {
-		*llx = gs->doc->pages[page].boundingbox[LLX];
-		*lly = gs->doc->pages[page].boundingbox[LLY];
-		*urx = gs->doc->pages[page].boundingbox[URX];
-		*ury = gs->doc->pages[page].boundingbox[URY];
-	} else if ((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
-                   (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
-		*llx = gs->doc->boundingbox[LLX];
-		*lly = gs->doc->boundingbox[LLY];
-		*urx = gs->doc->boundingbox[URX];
-		*ury = gs->doc->boundingbox[URY];
-	} else {
-		/* Fallback to A4 */
-		*llx = *lly = 0;
-		*urx = paper_sizes[12].width;
-    		*ury = paper_sizes[12].height;
-	}
+  /* Compute bounding box */
+  if(gs->doc && (gs->doc->epsf || new_pagesize == -1)) {    /* epsf or bbox */
+    if((page >= 0) &&
+       (gs->doc->pages) &&
+       (gs->doc->pages[page].boundingbox[URX] >
+        gs->doc->pages[page].boundingbox[LLX])
+       && (gs->doc->pages[page].boundingbox[URY] >
+           gs->doc->pages[page].boundingbox[LLY])) {
+      /* use page bbox */
+      new_llx = gs->doc->pages[page].boundingbox[LLX];
+      new_lly = gs->doc->pages[page].boundingbox[LLY];
+      new_urx = gs->doc->pages[page].boundingbox[URX];
+      new_ury = gs->doc->pages[page].boundingbox[URY];
+    }
+    else if((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
+            (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
+      /* use doc bbox */
+      new_llx = gs->doc->boundingbox[LLX];
+      new_lly = gs->doc->boundingbox[LLY];
+      new_urx = gs->doc->boundingbox[URX];
+      new_ury = gs->doc->boundingbox[URY];
+    }
+  }
+  else {
+    if(new_pagesize < 0)
+      new_pagesize = DEFAULT_PAGE_SIZE;
+    new_llx = new_lly = 0;
+    if(gs->doc && gs->doc->size &&
+       (new_pagesize < gs->doc->numsizes)) {
+      new_urx = gs->doc->size[new_pagesize].width;
+      new_ury = gs->doc->size[new_pagesize].height;
+    }
+    else {
+      new_urx = papersizes[new_pagesize].width;
+      new_ury = papersizes[new_pagesize].height;
+    }
+  }
+
+  if(new_urx <= new_llx)
+    new_urx = papersizes[12].width;
+  if(new_ury <= new_lly)
+    new_ury = papersizes[12].height;
+
+  *urx = new_urx;
+  *ury = new_ury;
+  *llx = new_llx;
+  *lly = new_lly;
 }
 
 static int
