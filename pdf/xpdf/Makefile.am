@@ -110,8 +110,6 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-control.cc			\
 	gpdf-control.h			\
 	gpdf-g-switch.h			\
-	gpdf-gnome-font.c		\
-	gpdf-gnome-font.h		\
 	gpdf-persist-stream.cc		\
 	gpdf-persist-stream.h		\
 	gpdf-util.h			\
@@ -119,6 +117,12 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-view.h			\
 	gtkgesture.c			\
 	gtkgesture.h			
+
+# Font embedding hack for Gnome Print < 2.1.?2?
+#	gpdf-gnome-font.c		\
+#	gpdf-gnome-font.h		\
+
+# Old files
 #	GOutputDev.cc			\
 #	GOutputDev.h			\
 #	pdf-view.cc			\
