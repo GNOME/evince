@@ -37,8 +37,6 @@
 #include "Error.h"
 #include "config.h"
 
-#define GPDF_GLADE_DIR "/opt/gnome/src/xpdf/xpdf"
-
 GBool printCommands = gFalse;
 gint  gpdf_debug=1;
 poptContext ctx;

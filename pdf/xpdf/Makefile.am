@@ -1,0 +1,107 @@
+
+INCLUDES =	\
+	-I$(top_srcdir)/goo	\
+	-I$(top_srcdir)/ltk	\
+	-DGPDF_GLADE_DIR=\""$(gladedir)"\"	\
+	$(EXTRA_GNOME_CFLAGS)
+	
+if WITH_GNOME
+gui = gpdf
+else
+gui = xpdf
+endif
+	
+bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui)
+
+common_sources =			\
+	Array.cc 		\
+	Catalog.cc 		\
+	Dict.cc 		\
+	Error.cc 		\
+	Gfx.cc 			\
+	GfxFont.cc 		\
+	GfxState.cc		\
+	Lexer.cc 		\
+	Link.cc 		\
+	Object.cc 		\
+	OutputDev.cc 		\
+	Page.cc 		\
+	Params.cc 		\
+	Parser.cc 		\
+	PDFDoc.cc 		\
+	Stream.cc 		\
+	XRef.cc
+
+gpdf_CFLAGS = 
+
+gpdf_SOURCES = 			\
+	$(common_sources)	\
+	TextOutputDev.cc	\
+	GOutputDev.cc		\
+	gpdf.cc
+
+gpdf_LDADD =			\
+	$(EXTRA_GNOME_LIBS)	\
+	../goo/libgoo.a
+
+xpdf_SOURCES =			\
+	$(common_sources)	\
+	XOutputDev.cc
+	xpdf.cc
+
+xpdf_CFLAGS = $(X_CFLAGS)
+xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a $(X_EXTRA_LIBS)
+
+pdfimages_SOURCES =		\
+	$(common_sources)	\
+	ImageOutputDev.cc	\
+	pdfimages.cc
+
+pdftops_SOURCES =		\
+	$(common_sources)	\
+	PSOutputDev.cc		\
+	pdftops.cc
+
+pdftotext_SOURCES =		\
+	$(common_sources)	\
+	TextOutputDev.cc	\
+	pdftotext.cc
+
+pdfinfo_SOURCES =		\
+	$(common_sources)	\
+	pdfinfo.cc
+
+pdftopbm_SOURCES =		\
+	$(common_sources)	\
+	XOutputDev.cc		\
+	pdftopbm.cc
+
+xpdf-ltk.h: xpdf.ltk
+	rm -f $@
+	$(LTKLIBDIR)/ltkbuild <xpdf.ltk >$@.new
+	mv $@.new $@
+
+bitmaps =			\
+	about.xbm		\
+	dblLeftArrow.xbm	\
+	dblRightArrow.xbm	\
+	find.xbm		\
+	leftArrow.xbm		\
+	postscript.xbm		\
+	rightArrow.xbm		\
+	xpdfIcon.xpm		\
+	zoomIn.xbm		\
+	zoomOut.xbm		
+
+ltk = 			\
+	xpdf-flip.ltk	\
+	xpdf-top.ltk	\
+	xpdf.ltk
+
+gladedir   = $(datadir)/xpdf/glade
+
+glade_DATA = 		\
+	about.glade	\
+	gpdf.glade
+
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(glade_DATA)
