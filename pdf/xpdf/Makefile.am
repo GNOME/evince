@@ -30,13 +30,13 @@ common_sources =			\
 	Parser.cc 		\
 	PDFDoc.cc 		\
 	Stream.cc 		\
+	TextOutputDev.cc	\
 	XRef.cc
 
 gpdf_CFLAGS = 
 
 gpdf_SOURCES = 			\
 	$(common_sources)	\
-	TextOutputDev.cc	\
 	GOutputDev.cc		\
 	gpdf.cc
 
@@ -67,7 +67,6 @@ pdftops_LDADD = ../goo/libgoo.a
 
 pdftotext_SOURCES =		\
 	$(common_sources)	\
-	TextOutputDev.cc	\
 	pdftotext.cc
 pdftotext_LDADD = ../goo/libgoo.a
 
@@ -78,9 +77,11 @@ pdfinfo_LDADD = ../goo/libgoo.a
 
 pdftopbm_SOURCES =		\
 	$(common_sources)	\
+	PBMOutputDev.cc		\
 	XOutputDev.cc		\
 	pdftopbm.cc
-pdftopbm_LDADD = ../goo/libgoo.a
+
+pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
 
 xpdf-ltk.h: xpdf.ltk
 	rm -f $@

@@ -110,12 +110,12 @@ INCLUDES =  	-I$(top_srcdir)/goo		-I$(top_srcdir)/ltk		-DGPDF_GLADE_DIR=\""$(gla
 
 bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui)
 
-common_sources =  	Array.cc 			Catalog.cc 			Dict.cc 			Error.cc 			Gfx.cc 				GfxFont.cc 			GfxState.cc			Lexer.cc 			Link.cc 			Object.cc 			OutputDev.cc 			Page.cc 			Params.cc 			Parser.cc 			PDFDoc.cc 			Stream.cc 			XRef.cc
+common_sources =  	Array.cc 			Catalog.cc 			Dict.cc 			Error.cc 			Gfx.cc 				GfxFont.cc 			GfxState.cc			Lexer.cc 			Link.cc 			Object.cc 			OutputDev.cc 			Page.cc 			Params.cc 			Parser.cc 			PDFDoc.cc 			Stream.cc 			TextOutputDev.cc		XRef.cc
 
 
 gpdf_CFLAGS = 
 
-gpdf_SOURCES =  	$(common_sources)		TextOutputDev.cc		GOutputDev.cc			gpdf.cc
+gpdf_SOURCES =  	$(common_sources)		GOutputDev.cc			gpdf.cc
 
 
 gpdf_LDADD =  	$(EXTRA_GNOME_LIBS)		../goo/libgoo.a
@@ -136,7 +136,7 @@ pdftops_SOURCES =  	$(common_sources)		PSOutputDev.cc			pdftops.cc
 
 pdftops_LDADD = ../goo/libgoo.a
 
-pdftotext_SOURCES =  	$(common_sources)		TextOutputDev.cc		pdftotext.cc
+pdftotext_SOURCES =  	$(common_sources)		pdftotext.cc
 
 pdftotext_LDADD = ../goo/libgoo.a
 
@@ -144,9 +144,10 @@ pdfinfo_SOURCES =  	$(common_sources)		pdfinfo.cc
 
 pdfinfo_LDADD = ../goo/libgoo.a
 
-pdftopbm_SOURCES =  	$(common_sources)		XOutputDev.cc			pdftopbm.cc
+pdftopbm_SOURCES =  	$(common_sources)		PBMOutputDev.cc			XOutputDev.cc			pdftopbm.cc
 
-pdftopbm_LDADD = ../goo/libgoo.a
+
+pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
 
 bitmaps =  	about.xbm			dblLeftArrow.xbm		dblRightArrow.xbm		find.xbm			leftArrow.xbm			postscript.xbm			rightArrow.xbm			xpdfIcon.xpm			zoomIn.xbm			zoomOut.xbm		
 
@@ -175,37 +176,38 @@ X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_PRE_LIBS = @X_PRE_LIBS@
 pdftops_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o PSOutputDev.o pdftops.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o PSOutputDev.o pdftops.o
 pdftops_DEPENDENCIES =  ../goo/libgoo.a
 pdftops_LDFLAGS = 
 pdftotext_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o TextOutputDev.o pdftotext.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o pdftotext.o
 pdftotext_DEPENDENCIES =  ../goo/libgoo.a
 pdftotext_LDFLAGS = 
 pdfinfo_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o pdfinfo.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o pdfinfo.o
 pdfinfo_DEPENDENCIES =  ../goo/libgoo.a
 pdfinfo_LDFLAGS = 
 pdftopbm_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o XOutputDev.o pdftopbm.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o PBMOutputDev.o XOutputDev.o \
+pdftopbm.o
 pdftopbm_DEPENDENCIES =  ../goo/libgoo.a
 pdftopbm_LDFLAGS = 
 pdfimages_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o ImageOutputDev.o pdfimages.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o ImageOutputDev.o pdfimages.o
 pdfimages_DEPENDENCIES =  ../goo/libgoo.a
 pdfimages_LDFLAGS = 
 gpdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o TextOutputDev.o GOutputDev.o gpdf.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o GOutputDev.o gpdf.o
 gpdf_DEPENDENCIES =  ../goo/libgoo.a
 gpdf_LDFLAGS = 
 xpdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o XRef.o XOutputDev.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o XOutputDev.o
 xpdf_DEPENDENCIES =  ../goo/libgoo.a ../ltk/libltk.a
 xpdf_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
@@ -225,10 +227,11 @@ GZIP_ENV = --best
 DEP_FILES =  .deps/Array.P .deps/Catalog.P .deps/Dict.P .deps/Error.P \
 .deps/GOutputDev.P .deps/Gfx.P .deps/GfxFont.P .deps/GfxState.P \
 .deps/ImageOutputDev.P .deps/Lexer.P .deps/Link.P .deps/Object.P \
-.deps/OutputDev.P .deps/PDFDoc.P .deps/PSOutputDev.P .deps/Page.P \
-.deps/Params.P .deps/Parser.P .deps/Stream.P .deps/TextOutputDev.P \
-.deps/XOutputDev.P .deps/XRef.P .deps/gpdf.P .deps/pdfimages.P \
-.deps/pdfinfo.P .deps/pdftopbm.P .deps/pdftops.P .deps/pdftotext.P
+.deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
+.deps/PSOutputDev.P .deps/Page.P .deps/Params.P .deps/Parser.P \
+.deps/Stream.P .deps/TextOutputDev.P .deps/XOutputDev.P .deps/XRef.P \
+.deps/gpdf.P .deps/pdfimages.P .deps/pdfinfo.P .deps/pdftopbm.P \
+.deps/pdftops.P .deps/pdftotext.P
 SOURCES = $(pdftops_SOURCES) $(pdftotext_SOURCES) $(pdfinfo_SOURCES) $(pdftopbm_SOURCES) $(pdfimages_SOURCES) $(gpdf_SOURCES) $(xpdf_SOURCES)
 OBJECTS = $(pdftops_OBJECTS) $(pdftotext_OBJECTS) $(pdfinfo_OBJECTS) $(pdftopbm_OBJECTS) $(pdfimages_OBJECTS) $(gpdf_OBJECTS) $(xpdf_OBJECTS)
 
