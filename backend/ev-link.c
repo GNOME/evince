@@ -32,6 +32,16 @@ enum {
 	PROP_URI
 };
 
+
+struct _EvLink {
+	GObject base_instance;
+	EvLinkPrivate *priv;
+};
+
+struct _EvLinkClass {
+	GObjectClass base_class;
+};
+
 struct _EvLinkPrivate {
 	char *title;
 	char *uri;

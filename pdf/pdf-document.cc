@@ -845,7 +845,6 @@ build_tree (PdfDocument  *pdf_document,
 
 		gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
 				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title,
-				    EV_DOCUMENT_LINKS_COLUMN_PAGE_VALID, TRUE,
 				    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
 				    -1);
 
@@ -876,7 +875,6 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	if (items != NULL) {
 		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 							     G_TYPE_STRING,
-							     G_TYPE_BOOLEAN,
 							     G_TYPE_POINTER);
 		build_tree (pdf_document, model, NULL, items);
 	}

@@ -46,15 +46,6 @@ typedef enum
 	 * links */
 } EvLinkType;
 
-struct _EvLink {
-	GObject base_instance;
-	EvLinkPrivate *priv;
-};
-
-struct _EvLinkClass {
-	GObjectClass base_class;
-};
-
 GType           ev_link_type_get_type	(void);
 GType		ev_link_get_type	(void);
 

@@ -1,3 +1,11 @@
+Sat Mar 19 01:33:27 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-page-cache.[ch]: add set_link
+	* backend/ev-link.[ch]: Move struct to be fully opaque to confirm
+	we don't use it.
+
+	* shell/ev-sidebar-links.c (selection_changed_cb): hook up index.
+
 2005-03-17  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* ps/ps-document.c: (ps_document_widget_event),

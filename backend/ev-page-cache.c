@@ -178,6 +178,15 @@ ev_page_cache_set_current_page (EvPageCache *page_cache,
 	g_signal_emit (page_cache, signals[PAGE_CHANGED], 0, page);
 }
 
+void
+ev_page_cache_set_link (EvPageCache *page_cache,
+			EvLink      *link)
+{
+	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
+	g_return_if_fail (EV_IS_LINK (link));
+
+	ev_page_cache_set_current_page (page_cache, ev_link_get_page (link));
+}
 
 char *
 ev_page_cache_get_title (EvPageCache *page_cache)

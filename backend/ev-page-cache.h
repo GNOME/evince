@@ -44,6 +44,8 @@ void           ev_page_cache_get_size         (EvPageCache *page_cache,
 gint           ev_page_cache_get_current_page (EvPageCache *page_cache);
 void           ev_page_cache_set_current_page (EvPageCache *page_cache,
 					       int          page);
+void           ev_page_cache_set_link         (EvPageCache *page_cache,
+					       EvLink      *link);
 gboolean       ev_page_cache_next_page        (EvPageCache *page_cache);         
 gboolean       ev_page_cache_prev_page        (EvPageCache *page_cache);         
 
