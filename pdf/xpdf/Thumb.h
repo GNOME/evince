@@ -27,51 +27,6 @@
 
 class XRef;
 class GfxColorSpace;
-class GfxRGB;
-class GfxCMYK;
-class GfxColor;
-
-/*
- * ThumbColorMap
- */
-class ThumbColorMap {
-
-      public:
-        ThumbColorMap(int bitsA, Object *obj, GfxColorSpace *csA);
-        ~ThumbColorMap();
-        
-        GBool isOk() {return ok; };
-        
-        GfxColorSpace *getColorSpace() { return cs; }; 
-        
-        int getNumPixelComps() { return nComps; }; 
-        int getBits() { return bits; }; 
-        
-        void getGray(Guchar *x, double *gray);
-        void getRGB(Guchar *x, GfxRGB *rgb);
-        void getCMYK(Guchar *x, GfxCMYK *cmyk);
-        //void getColor(Guchar *x, GfxColor *color);
-
-	static ThumbColorMap *lookupColorMap(XRef *xref, int bitsA, Object *obj, GfxColorSpace *csA); 
-
-      private:
-        GBool ok; 
-        int bits;
-        Stream *str;
-        GfxColorSpace *cs;
-        int nComps;
-        int length;
-        union {
-                double *gray;
-                GfxRGB *rgb;
-                GfxCMYK *cmyk;
-                GfxColor *colors; 
-        };
-};
-
-/*
- * ThumbColorMaps
- */
 
 /* FIXME: Should have a class to avoid reading same colormap for every thumb */
 
