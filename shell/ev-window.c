@@ -38,6 +38,8 @@
 #include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-print-job.h"
+#include "ev-document-thumbnails.h"
+#include "ev-document-links.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
 #include "eggfindbar.h"
@@ -132,6 +134,8 @@ static GtkTargetEntry ev_drop_types[] = {
 #define GCONF_CHROME_STATUSBAR	"/apps/evince/show_statusbar"
 
 static void     ev_window_update_fullscreen_popup (EvWindow         *window);
+static void     ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
+							 EvWindow   *ev_window);
 static void     ev_window_set_page_mode           (EvWindow         *window,
 						   EvWindowPageMode  page_mode);
 static gboolean start_loading_document            (EvWindow         *ev_window,
@@ -479,6 +483,27 @@ update_total_pages (EvWindow *ev_window)
 
 /* This function assumes that ev_window just had ev_window->document set.
  */
+static gboolean
+document_supports_sidebar (EvDocument *document)
+{
+	return (EV_IS_DOCUMENT_THUMBNAILS (document) && EV_IS_DOCUMENT_LINKS (document));
+}
+
+static void
+hide_sidebar_and_actions (EvWindow *ev_window)
+{
+	GtkAction *action;
+	/* Alsthough we update the hiddenness of the sidebar, we don't want to
+	 * store the value */
+	g_signal_handlers_disconnect_by_func (ev_window->priv->sidebar,
+					      ev_window_sidebar_visibility_changed_cb,
+					      ev_window);
+	gtk_widget_hide (ev_window->priv->sidebar);
+	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
+	gtk_action_set_sensitive (action, FALSE);
+
+}
+
 static void
 ev_window_setup_document (EvWindow *ev_window)
 {
@@ -495,7 +520,10 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
 
-	ev_sidebar_set_document (sidebar, document);
+	if (document_supports_sidebar (document)) 
+		ev_sidebar_set_document (sidebar, document);
+	else
+		hide_sidebar_and_actions (ev_window);
 	ev_view_set_document (view, document);
 
 	update_window_title (document, NULL, ev_window);
