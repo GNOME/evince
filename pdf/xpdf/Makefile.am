@@ -125,6 +125,8 @@ libgpdf_a_SOURCES =			\
 	GnomeVFSStream.h		\
 	GPOutputDev.cc			\
 	GPOutputDev.h			\
+	PSOutputDev.cc			\
+	PSOutputDev.h			\
 	eog-hig-dialog.c		\
 	eog-hig-dialog.h		\
 	gpdf-control.cc			\
@@ -272,7 +274,8 @@ stockdir = $(datadir)/pixmaps/gpdf
 stock_DATA = fitwidth.png
 
 gladedir = $(datadir)/gpdf/glade
-glade_DATA = 				\
+glade_DATA =					\
+	gpdf-print-progress-dialog.glade	\
 	gpdf-properties-dialog.glade
 
 server_in_files = GNOME_PDF.server.in.in
