@@ -21,6 +21,7 @@
 #include <aconf.h>
 #include "gtypes.h"
 #include "gfile.h" // for time_t
+#include "SplashTypes.h"
 
 class GString;
 class GList;
@@ -28,7 +29,7 @@ class BaseStream;
 class PDFDoc;
 class LinkAction;
 class LinkDest;
-class XPixmapOutputDev;
+class XSplashOutputDev;
 
 //------------------------------------------------------------------------
 // zoom factor
@@ -56,8 +57,8 @@ struct XPDFHistory {
 struct XPDFRegion {
   int page;
   double xMin, yMin, xMax, yMax;
-  Gulong color;
-  Gulong selectColor;
+  SplashRGB8 color;
+  SplashRGB8 selectColor;
   GBool selectable;
 };
 
@@ -86,8 +87,8 @@ public:
 
   // Create viewer core inside <parentWidgetA>.
   XPDFCore(Widget shellA, Widget parentWidgetA,
-	   Gulong paperColorA, GBool fullScreenA, GBool reverseVideo,
-	   GBool installCmap, int rgbCubeSize);
+	   SplashRGB8 paperColorA, GBool fullScreenA,
+	   GBool reverseVideo, GBool installCmap, int rgbCubeSize);
 
   ~XPDFCore();
 
@@ -162,7 +163,7 @@ public:
   Widget getWidget() { return scrolledWin; }
   Widget getDrawAreaWidget() { return drawArea; }
   PDFDoc *getDoc() { return doc; }
-  XPixmapOutputDev *getOutputDev() { return out; }
+  XSplashOutputDev *getOutputDev() { return out; }
   int getPageNum() { return page; }
   double getZoom() { return zoom; }
   double getZoomDPI() { return dpi; }
@@ -228,7 +229,7 @@ private:
   static void dialogCancelCbk(Widget widget, XtPointer ptr,
 			      XtPointer callData);
 
-  Gulong paperColor;
+  SplashRGB8 paperColor;
   GBool fullScreen;
 
   Display *display;
@@ -245,8 +246,6 @@ private:
   Cursor busyCursor, linkCursor, selectCursor;
   Cursor currentCursor;
   GC drawAreaGC;		// GC for blitting into drawArea
-  GC selectGC;
-  GC highlightGC;
 
   int drawAreaWidth, drawAreaHeight;
   int scrollX, scrollY;		// current upper-left corner
@@ -296,7 +295,7 @@ private:
   GBool hyperlinksEnabled;
   GBool selectEnabled;
 
-  XPixmapOutputDev *out;
+  XSplashOutputDev *out;
 
   int dialogDone;
 };

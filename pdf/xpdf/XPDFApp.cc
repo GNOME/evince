@@ -163,12 +163,20 @@ void XPDFApp::getResources() {
   installCmap = (GBool)resources.installCmap;
   rgbCubeSize = resources.rgbCubeSize;
   reverseVideo = (GBool)resources.reverseVideo;
-  paperColor = reverseVideo ? BlackPixel(display, screenNum) :
-                              WhitePixel(display, screenNum);
+  if (reverseVideo) {
+    paperRGB = splashMakeRGB8(0x00, 0x00, 0x00);
+    paperColor = BlackPixel(display, screenNum);
+  } else {
+    paperRGB = splashMakeRGB8(0xff, 0xff, 0xff);
+    paperColor = WhitePixel(display, screenNum);
+  }
   if (resources.paperColor) {
     XtVaGetValues(appShell, XmNcolormap, &colormap, NULL);
     if (XAllocNamedColor(display, colormap, resources.paperColor,
 			 &xcol, &xcol2)) {
+      paperRGB = splashMakeRGB8(xcol.red >> 8,
+				xcol.green >> 8,
+				xcol.blue >> 8);
       paperColor = xcol.pixel;
     } else {
       error(-1, "Couldn't allocate color '%s'", resources.paperColor);

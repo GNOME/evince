@@ -41,7 +41,6 @@
 #endif
 #include "XPDFApp.h"
 #include "XPDFViewer.h"
-#include "XPixmapOutputDev.h"
 #include "PSOutputDev.h"
 #include "config.h"
 
@@ -796,7 +795,7 @@ void XPDFViewer::initWindow() {
   n = 0;
   XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); ++n;
   XtSetArg(args[n], XmNleftWidget, lastBtn); ++n;
-  XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNrightAttachment, XmATTACH_WIDGET); ++n;
   XtSetArg(args[n], XmNrightWidget, quitBtn); ++n;
   XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
   XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
@@ -813,7 +812,7 @@ void XPDFViewer::initWindow() {
 #endif
 
     // core
-    core = new XPDFCore(win, form, app->getPaperColor(),
+    core = new XPDFCore(win, form, app->getPaperRGB(),
 			app->getFullScreen(), app->getReverseVideo(),
 			app->getInstallCmap(), app->getRGBCubeSize());
     core->setUpdateCbk(&updateCbk, this);
@@ -871,7 +870,7 @@ void XPDFViewer::initWindow() {
 		  (XtPointer)this);
 
     // core
-    core = new XPDFCore(win, panedWin, app->getPaperColor(),
+    core = new XPDFCore(win, panedWin, app->getPaperRGB(),
 			app->getFullScreen(), app->getReverseVideo(),
 			app->getInstallCmap(), app->getRGBCubeSize());
     core->setUpdateCbk(&updateCbk, this);
@@ -1879,7 +1878,7 @@ void XPDFViewer::openOkCbk(Widget widget, XtPointer ptr,
 //------------------------------------------------------------------------
 
 void XPDFViewer::initFindDialog() {
-  Widget row1, label, okBtn, closeBtn;
+  Widget form1, label, okBtn, closeBtn;
   Arg args[20];
   int n;
   XmString s;
@@ -1893,31 +1892,8 @@ void XPDFViewer::initFindDialog() {
   findDialog = XmCreateFormDialog(win, "findDialog", args, n);
   XmStringFree(s);
 
-  //----- top row: search string entry
-  n = 0;
-  XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
-  XtSetArg(args[n], XmNtopOffset, 4); ++n;
-  XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); ++n;
-  XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
-  XtSetArg(args[n], XmNorientation, XmHORIZONTAL); ++n;
-  XtSetArg(args[n], XmNpacking, XmPACK_TIGHT); ++n;
-  row1 = XmCreateRowColumn(findDialog, "row1", args, n);
-  XtManageChild(row1);
-  n = 0;
-  s = XmStringCreateLocalized("Find text: ");
-  XtSetArg(args[n], XmNlabelString, s); ++n;
-  label = XmCreateLabel(row1, "label", args, n);
-  XmStringFree(s);
-  XtManageChild(label);
-  n = 0;
-  XtSetArg(args[n], XmNnavigationType, XmEXCLUSIVE_TAB_GROUP); ++n;
-  findText = XmCreateTextField(row1, "text", args, n);
-  XtManageChild(findText);
-
   //----- "find" and "close" buttons
   n = 0;
-  XtSetArg(args[n], XmNtopAttachment, XmATTACH_WIDGET); ++n;
-  XtSetArg(args[n], XmNtopWidget, row1); ++n;
   XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); ++n;
   XtSetArg(args[n], XmNleftOffset, 4); ++n;
   XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
@@ -1928,8 +1904,6 @@ void XPDFViewer::initFindDialog() {
   XtAddCallback(okBtn, XmNactivateCallback,
 		&findFindCbk, (XtPointer)this);
   n = 0;
-  XtSetArg(args[n], XmNtopAttachment, XmATTACH_WIDGET); ++n;
-  XtSetArg(args[n], XmNtopWidget, row1); ++n;
   XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
   XtSetArg(args[n], XmNrightOffset, 4); ++n;
   XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
@@ -1939,6 +1913,42 @@ void XPDFViewer::initFindDialog() {
   XtManageChild(closeBtn);
   XtAddCallback(closeBtn, XmNactivateCallback,
 		&findCloseCbk, (XtPointer)this);
+
+  //----- search string entry
+  n = 0;
+  XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNtopOffset, 4); ++n;
+  XtSetArg(args[n], XmNbottomAttachment, XmATTACH_WIDGET); ++n;
+  XtSetArg(args[n], XmNbottomWidget, okBtn); ++n;
+  XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNleftOffset, 2); ++n;
+  XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNrightOffset, 2); ++n;
+  form1 = XmCreateForm(findDialog, "form", args, n);
+  XtManageChild(form1);
+  n = 0;
+  XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); ++n;
+  s = XmStringCreateLocalized("Find text: ");
+  XtSetArg(args[n], XmNlabelString, s); ++n;
+  label = XmCreateLabel(form1, "label", args, n);
+  XmStringFree(s);
+  XtManageChild(label);
+  n = 0;
+  XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); ++n;
+  XtSetArg(args[n], XmNleftWidget, label); ++n;
+  XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
+  findText = XmCreateTextField(form1, "text", args, n);
+  XtManageChild(findText);
+#ifdef LESSTIF_VERSION
+  XtAddCallback(findText, XmNactivateCallback,
+		&findFindCbk, (XtPointer)this);
+#endif
+
+  //----- dialog parameters
   n = 0;
   XtSetArg(args[n], XmNdefaultButton, okBtn); ++n;
   XtSetArg(args[n], XmNcancelButton, closeBtn); ++n;
@@ -2307,7 +2317,8 @@ void XPDFViewer::printPrintCbk(Widget widget, XtPointer ptr,
 			  doc->getCatalog(), firstPage, lastPage,
 			  psModePS);
   if (psOut->isOk()) {
-    doc->displayPages(psOut, firstPage, lastPage, 72, 72, 0, gFalse);
+    doc->displayPages(psOut, firstPage, lastPage, 72, 72,
+		      0, globalParams->getPSCrop(), gFalse);
   }
   delete psOut;
   delete psFileName;

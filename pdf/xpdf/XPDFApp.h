@@ -19,6 +19,7 @@
 #include <Xm/XmAll.h>
 #undef Object
 #include "gtypes.h"
+#include "SplashTypes.h"
 
 class GString;
 class GList;
@@ -64,6 +65,7 @@ public:
   GBool getInstallCmap() { return installCmap; }
   int getRGBCubeSize() { return rgbCubeSize; }
   GBool getReverseVideo() { return reverseVideo; }
+  SplashRGB8 getPaperRGB() { return paperRGB; }
   Gulong getPaperColor() { return paperColor; }
   GString *getInitialZoom() { return initialZoom; }
   GBool getViKeys() { return viKeys; }
@@ -96,6 +98,7 @@ private:
   GBool installCmap;
   int rgbCubeSize;
   GBool reverseVideo;
+  SplashRGB8 paperRGB;
   Gulong paperColor;
   GString *initialZoom;
   GBool viKeys;

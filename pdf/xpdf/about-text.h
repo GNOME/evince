@@ -16,7 +16,7 @@ static char *aboutWinText[] = {
   "Supports PDF version " supportedPDFVersionStr ".",
   " ",
   "The PDF data structures, operators, and specification",
-  "are copyright 1985-2001 Adobe Systems Inc.",
+  "are copyright 1985-2003 Adobe Systems Inc.",
   " ",
   "Mouse bindings:",
   "  button 1: select text / follow link",

@@ -25,7 +25,8 @@
 #include "GfxState.h"
 #include "PSOutputDev.h"
 #include "TextOutputDev.h"
-#include "XPixmapOutputDev.h"
+#include "SplashPattern.h"
+#include "XSplashOutputDev.h"
 #include "XPDFCore.h"
 
 // these macro defns conflict with xpdf's Object class
@@ -101,9 +102,10 @@ Atom XPDFCore::targetsAtom;
 //------------------------------------------------------------------------
 
 XPDFCore::XPDFCore(Widget shellA, Widget parentWidgetA,
-		   Gulong paperColorA, GBool fullScreenA, GBool reverseVideo,
-		   GBool installCmap, int rgbCubeSize) {
+		   SplashRGB8 paperColorA, GBool fullScreenA,
+		   GBool reverseVideo, GBool installCmap, int rgbCubeSize) {
   GString *initialZoom;
+  SplashColor paperColor2;
   int i;
 
   shell = shellA;
@@ -177,8 +179,9 @@ XPDFCore::XPDFCore(Widget shellA, Widget parentWidgetA,
   initWindow();
 
   // create the OutputDev
-  out = new XPixmapOutputDev(display, screenNum, visual, colormap,
-			     reverseVideo, paperColor,
+  paperColor2.rgb8 = paperColor;
+  out = new XSplashOutputDev(display, screenNum, visual, colormap,
+			     reverseVideo, paperColor2,
 			     installCmap, rgbCubeSize, gTrue,
 			     &outputDevRedrawCbk, this);
   out->startDoc(NULL);
@@ -202,10 +205,6 @@ XPDFCore::~XPDFCore() {
     if (history[i].fileName) {
       delete history[i].fileName;
     }
-  }
-  if (selectGC) {
-    XFreeGC(display, selectGC);
-    XFreeGC(display, highlightGC);
   }
   if (drawAreaGC) {
     XFreeGC(display, drawAreaGC);
@@ -438,7 +437,6 @@ void XPDFCore::displayPage(int pageA, double zoomA, int rotateA,
   int rot;
   XPDFHistory *h;
   GBool newZoom;
-  XGCValues gcValues;
   time_t newModTime;
   int oldScrollX, oldScrollY;
 
@@ -465,12 +463,6 @@ void XPDFCore::displayPage(int pageA, double zoomA, int rotateA,
       }
     }
     modTime = newModTime;
-  }
-
-  // free the old GCs
-  if (selectGC) {
-    XFreeGC(display, selectGC);
-    XFreeGC(display, highlightGC);
   }
 
   // new page number
@@ -518,23 +510,13 @@ void XPDFCore::displayPage(int pageA, double zoomA, int rotateA,
   } else {
     dpi = 0.01 * zoom * 72;
   }
-  out->setWindow(XtWindow(drawArea));
-  doc->displayPage(out, page, dpi, dpi, rotate, gTrue);
+  doc->displayPage(out, page, dpi, dpi, rotate, gTrue, gTrue);
   oldScrollX = scrollX;
   oldScrollY = scrollY;
   updateScrollBars();
   if (scrollX != oldScrollX || scrollY != oldScrollY) {
     redrawRectangle(scrollX, scrollY, drawAreaWidth, drawAreaHeight);
   }
-
-  // allocate new GCs
-  gcValues.foreground = BlackPixel(display, screenNum) ^
-                        WhitePixel(display, screenNum);
-  gcValues.function = GXxor;
-  selectGC = XCreateGC(display, out->getPixmap(),
-		       GCForeground | GCFunction, &gcValues);
-  highlightGC = XCreateGC(display, out->getPixmap(),
-		       GCForeground | GCFunction, &gcValues);
 
 
   // add to history
@@ -651,7 +633,7 @@ void XPDFCore::gotoPrevPage(int dec, GBool top, GBool bottom) {
   }
   if (page > 1) {
     if (!fullScreen && bottom) {
-      scrollY = out->getPixmapHeight() - drawAreaHeight;
+      scrollY = out->getBitmapHeight() - drawAreaHeight;
       if (scrollY < 0) {
 	scrollY = 0;
       }
@@ -729,7 +711,7 @@ void XPDFCore::scrollPageUp() {
 }
 
 void XPDFCore::scrollPageDown() {
-  if (scrollY >= out->getPixmapHeight() - drawAreaHeight) {
+  if (scrollY >= out->getBitmapHeight() - drawAreaHeight) {
     gotoNextPage(1, gTrue);
   } else {
     scrollTo(scrollX, scrollY + drawAreaHeight);
@@ -742,7 +724,7 @@ void XPDFCore::scrollTo(int x, int y) {
 
   needRedraw = gFalse;
 
-  maxPos = out ? out->getPixmapWidth() : 1;
+  maxPos = out ? out->getBitmapWidth() : 1;
   if (maxPos < drawAreaWidth) {
     maxPos = drawAreaWidth;
   }
@@ -760,7 +742,7 @@ void XPDFCore::scrollTo(int x, int y) {
     needRedraw = gTrue;
   }
 
-  maxPos = out ? out->getPixmapHeight() : 1;
+  maxPos = out ? out->getBitmapHeight() : 1;
   if (maxPos < drawAreaHeight) {
     maxPos = drawAreaHeight;
   }
@@ -789,28 +771,26 @@ void XPDFCore::scrollTo(int x, int y) {
 
 void XPDFCore::setSelection(int newXMin, int newYMin,
 			    int newXMax, int newYMax) {
-  Pixmap pixmap;
   int x, y;
   GBool needRedraw, needScroll;
   GBool moveLeft, moveRight, moveTop, moveBottom;
-
-  pixmap = out->getPixmap();
+  SplashColor xorColor;
 
 
   // erase old selection on off-screen bitmap
   needRedraw = gFalse;
   if (selectXMin < selectXMax && selectYMin < selectYMax) {
-    XFillRectangle(display, pixmap,
-		   selectGC, selectXMin, selectYMin,
-		   selectXMax - selectXMin, selectYMax - selectYMin);
+    xorColor.rgb8 = splashMakeRGB8(0xff, 0xff, 0xff);
+    out->xorRectangle(selectXMin, selectYMin, selectXMax, selectYMax,
+		      new SplashSolidColor(xorColor));
     needRedraw = gTrue;
   }
 
   // draw new selection on off-screen bitmap
   if (newXMin < newXMax && newYMin < newYMax) {
-    XFillRectangle(display, pixmap,
-		   selectGC, newXMin, newYMin,
-		   newXMax - newXMin, newYMax - newYMin);
+    xorColor.rgb8 = splashMakeRGB8(0xff, 0xff, 0xff);
+    out->xorRectangle(newXMin, newYMin, newXMax, newYMax,
+		      new SplashSolidColor(xorColor));
     needRedraw = gTrue;
   }
 
@@ -898,13 +878,13 @@ void XPDFCore::moveSelection(int mx, int my) {
   // clip mouse coords
   if (mx < 0) {
     mx = 0;
-  } else if (mx >= out->getPixmapWidth()) {
-    mx = out->getPixmapWidth() - 1;
+  } else if (mx >= out->getBitmapWidth()) {
+    mx = out->getBitmapWidth() - 1;
   }
   if (my < 0) {
     my = 0;
-  } else if (my >= out->getPixmapHeight()) {
-    my = out->getPixmapHeight() - 1;
+  } else if (my >= out->getBitmapHeight()) {
+    my = out->getBitmapHeight() - 1;
   }
 
   // move appropriate edges of selection
@@ -1036,7 +1016,7 @@ GString *XPDFCore::extractText(int pageNum,
     delete textOut;
     return NULL;
   }
-  doc->displayPage(textOut, pageNum, dpi, dpi, rotate, gFalse);
+  doc->displayPage(textOut, pageNum, dpi, dpi, rotate, gTrue, gFalse);
   s = textOut->getText(xMin, yMin, xMax, yMax);
   delete textOut;
   return s;
@@ -1358,7 +1338,7 @@ void XPDFCore::find(char *s, GBool next) {
     goto done;
   }
   for (pg = page+1; pg <= doc->getNumPages(); ++pg) {
-    doc->displayPage(textOut, pg, 72, 72, 0, gFalse);
+    doc->displayPage(textOut, pg, 72, 72, 0, gTrue, gFalse);
     if (textOut->findText(u, len, gTrue, gTrue, gFalse, gFalse,
 			  &xMin1, &yMin1, &xMax1, &yMax1)) {
       goto foundPage;
@@ -1367,7 +1347,7 @@ void XPDFCore::find(char *s, GBool next) {
 
   // search previous pages
   for (pg = 1; pg < page; ++pg) {
-    doc->displayPage(textOut, pg, 72, 72, 0, gFalse);
+    doc->displayPage(textOut, pg, 72, 72, 0, gTrue, gFalse);
     if (textOut->findText(u, len, gTrue, gTrue, gFalse, gFalse,
 			  &xMin1, &yMin1, &xMax1, &yMax1)) {
       goto foundPage;
@@ -1491,7 +1471,6 @@ void XPDFCore::initWindow() {
   XtManageChild(drawAreaFrame);
   n = 0;
   XtSetArg(args[n], XmNresizePolicy, XmRESIZE_ANY); ++n;
-  XtSetArg(args[n], XmNbackground, paperColor); ++n;
   XtSetArg(args[n], XmNwidth, 700); ++n;
   XtSetArg(args[n], XmNheight, 500); ++n;
   drawArea = XmCreateDrawingArea(drawAreaFrame, "drawArea", args, n);
@@ -1510,8 +1489,6 @@ void XPDFCore::initWindow() {
 
   // can't create a GC until the window gets mapped
   drawAreaGC = NULL;
-  selectGC = NULL;
-  highlightGC = NULL;
 }
 
 void XPDFCore::hScrollChangeCbk(Widget widget, XtPointer ptr,
@@ -1641,18 +1618,18 @@ void XPDFCore::inputCbk(Widget widget, XtPointer ptr, XtPointer callData) {
     } else if (data->event->xbutton.button == 5) { // mouse wheel down
       if (core->fullScreen ||
 	  core->scrollY >=
-	    core->out->getPixmapHeight() - core->drawAreaHeight) {
+	    core->out->getBitmapHeight() - core->drawAreaHeight) {
 	core->gotoNextPage(1, gTrue);
       } else {
 	core->scrollDown(1);
       }
-    } else if (data->event->xbutton.button == 6) { // second mouse wheel right
-      if (!core->fullScreen) {
-	core->scrollRight(1);
-      }
-    } else if (data->event->xbutton.button == 7) { // second mouse wheel left
+    } else if (data->event->xbutton.button == 6) { // second mouse wheel left
       if (!core->fullScreen) {
 	core->scrollLeft(1);
+      }
+    } else if (data->event->xbutton.button == 7) { // second mouse wheel right
+      if (!core->fullScreen) {
+	core->scrollRight(1);
       }
     } else {
       if (*core->mouseCbk) {
@@ -1776,8 +1753,8 @@ void XPDFCore::keyPress(char *s, KeySym key, Guint modifiers) {
     if (modifiers & ControlMask) {
       displayPage(doc->getNumPages(), zoom, rotate, gTrue, gTrue);
     } else if (!fullScreen) {
-      scrollTo(out->getPixmapWidth() - drawAreaWidth,
-	       out->getPixmapHeight() - drawAreaHeight);
+      scrollTo(out->getBitmapWidth() - drawAreaWidth,
+	       out->getBitmapHeight() - drawAreaHeight);
     }
     return;
   case XK_Page_Up:
@@ -1855,23 +1832,22 @@ void XPDFCore::redrawRectangle(int x, int y, int w, int h) {
   }
 
   // draw white background past the edges of the document
-  if (x + w > out->getPixmapWidth()) {
+  if (x + w > out->getBitmapWidth()) {
     XFillRectangle(display, drawAreaWin, drawAreaGC,
-		   out->getPixmapWidth() - scrollX, y - scrollY,
-		   x + w - out->getPixmapWidth(), h);
-    w = out->getPixmapWidth() - x;
+		   out->getBitmapWidth() - scrollX, y - scrollY,
+		   x + w - out->getBitmapWidth(), h);
+    w = out->getBitmapWidth() - x;
   }
-  if (y + h > out->getPixmapHeight()) {
+  if (y + h > out->getBitmapHeight()) {
     XFillRectangle(display, drawAreaWin, drawAreaGC,
-		   x - scrollX, out->getPixmapHeight() - scrollY,
-		   w, y + h - out->getPixmapHeight());
-    h = out->getPixmapHeight() - y;
+		   x - scrollX, out->getBitmapHeight() - scrollY,
+		   w, y + h - out->getBitmapHeight());
+    h = out->getBitmapHeight() - y;
   }
 
-  // redraw (checking to see if pixmap has been allocated yet)
-  if (out->getPixmapWidth() > 0) {
-    XCopyArea(display, out->getPixmap(), drawAreaWin, drawAreaGC,
-	      x, y, w, h, x - scrollX, y - scrollY);
+  // redraw
+  if (w >= 0 && h >= 0) {
+    out->redraw(x, y, drawAreaWin, drawAreaGC, x - scrollX, y - scrollY, w, h);
   }
 }
 
@@ -1880,7 +1856,7 @@ void XPDFCore::updateScrollBars() {
   int n;
   int maxPos;
 
-  maxPos = out ? out->getPixmapWidth() : 1;
+  maxPos = out ? out->getBitmapWidth() : 1;
   if (maxPos < drawAreaWidth) {
     maxPos = drawAreaWidth;
   }
@@ -1895,7 +1871,7 @@ void XPDFCore::updateScrollBars() {
   XtSetArg(args[n], XmNpageIncrement, drawAreaWidth); ++n;
   XtSetValues(hScrollBar, args, n);
 
-  maxPos = out ? out->getPixmapHeight() : 1;
+  maxPos = out ? out->getBitmapHeight() : 1;
   if (maxPos < drawAreaHeight) {
     maxPos = drawAreaHeight;
   }
