@@ -24,6 +24,8 @@
 #ifndef __GSTYPES_H__
 #define __GSTYPES_H__
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 typedef struct _GtkGSPaperSize GtkGSPaperSize;
