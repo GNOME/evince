@@ -484,7 +484,10 @@ ev_window_dispose (GObject *object)
 
 	priv = EV_WINDOW (object)->priv;
 
-	g_object_unref (priv->ui_manager);
+	if (priv->ui_manager) {
+		g_object_unref (priv->ui_manager);
+		priv->ui_manager = NULL;
+	}
 
 	G_OBJECT_CLASS (parent_class)->dispose (object);
 }
