@@ -424,7 +424,7 @@ container_set_view (Container *container, Component *component)
 	/*
 	 * Create the remote view and the local ViewFrame.
 	 */
-	view_frame = gnome_client_site_embeddable_new_view (component->client_site);
+	view_frame = gnome_client_site_new_view (component->client_site);
 	component->view_frame = view_frame;
 
 	/*
@@ -690,6 +690,7 @@ main (int argc, char **argv)
 
   if (bonobo_init (orb, NULL, NULL) == FALSE)
     g_error (_("Could not initialize Bonobo!\n"));
+  bonobo_activate ();
 
   view_files = poptGetArgs (ctx);
 
@@ -704,8 +705,8 @@ main (int argc, char **argv)
   
   poptFreeContext (ctx);
 
-  bonobo_activate ();  
   gtk_main ();
 	
   return 0;
 }
+

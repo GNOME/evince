@@ -456,6 +456,18 @@ view_create_menus (view_data_t *view_data)
 				     N_("First"), N_("View the first page"), -1,
 				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
 				     0, (GdkModifierType)0, page_first_cb, (gpointer)view_data);
+  gnome_ui_handler_toolbar_new_item (uih, "/Prev", GNOME_UI_HANDLER_MENU_ITEM,
+				     N_("Previous"), N_("View the previous page"), -1,
+				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
+				     0, (GdkModifierType)0, page_prev_cb, (gpointer)view_data);
+  gnome_ui_handler_toolbar_new_item (uih, "/Next", GNOME_UI_HANDLER_MENU_ITEM,
+				     N_("Next"), N_("View the next page"), -1,
+				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
+				     0, (GdkModifierType)0, page_next_cb, (gpointer)view_data);
+  gnome_ui_handler_toolbar_new_item (uih, "/Last", GNOME_UI_HANDLER_MENU_ITEM,
+				     N_("Last"), N_("View the last page"), -1,
+				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
+				     0, (GdkModifierType)0, page_last_cb, (gpointer)view_data);
 #endif
 				 
 }
@@ -770,8 +782,8 @@ main (int argc, char *argv [])
   
   gtk_widget_set_default_colormap (gdk_rgb_get_cmap ());
   gtk_widget_set_default_visual (gdk_rgb_get_visual ());
-  bonobo_activate ();
-  gtk_main ();
+
+  bonobo_main ();
   
   CORBA_exception_free (&ev);
   
