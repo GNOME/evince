@@ -1,6 +1,8 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /* this file is part of evince, a gnome document viewer
  *
  *  Copyright (C) 2004 Martin Kretzschmar
+ *  Copyright (C) 2004 Red Hat, Inc.
  *
  *  Author:
  *    Martin Kretzschmar <martink@gnome.org>
@@ -203,11 +205,138 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+        /* FIXME */
+}
+
+static void
 ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 {
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	gtk_widget_destroy (GTK_WIDGET (ev_window));
+}
+
+static void
+ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_edit_copy (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_go_back (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_go_forward (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
+}
+
+static void
+ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+        /* FIXME */
 }
 
 static void
@@ -289,6 +418,12 @@ ev_window_view_statusbar_cb (GtkAction *action, EvWindow *ev_window)
 		"visible",
 		gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)),
 		NULL);
+}
+
+static void
+ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
+{
+        /* FIXME */
 }
 
 static void
@@ -402,19 +537,77 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 /* Normal items */
 static GtkActionEntry entries[] = {
 	{ "File", NULL, N_("_File") },
+        { "Edit", NULL, N_("_Edit") },
 	{ "View", NULL, N_("_View") },
+        { "Go", NULL, N_("_Go") },
 	{ "Help", NULL, N_("_Help") },
 
 	/* File menu */
 	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open"), "<control>O",
 	  N_("Open a file"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
+        { "FilePrint", GTK_STOCK_PRINT, N_("_Print"), "<control>P",
+	  N_("Print this document"),
+	  G_CALLBACK (ev_window_cmd_file_print) },
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, N_("_Close"), "<control>W",
 	  N_("Close this window"),
 	  G_CALLBACK (ev_window_cmd_file_close_window) },
 
+        /* Edit menu */
+        { "EditCopy", GTK_STOCK_COPY, N_("_Copy"), "<control>C",
+          N_("Copy text from the document"),
+          G_CALLBACK (ev_window_cmd_edit_copy) },
+        
+        { "EditFind", GTK_STOCK_FIND, N_("_Find"), "<control>F",
+          N_("Find a word or phrase in the document"),
+          G_CALLBACK (ev_window_cmd_edit_find) },
+
+        /* View menu */
+        { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
+          N_("Expand the window to fill the screen"),
+          G_CALLBACK (ev_window_cmd_view_fullscreen) },
+        { "ViewZoomIn", GTK_STOCK_ZOOM_IN, N_("Zoom _In"), "<control>plus",
+          N_("Enlarge the document"),
+          G_CALLBACK (ev_window_cmd_view_zoom_in) },
+        { "ViewZoomOut", GTK_STOCK_ZOOM_OUT, N_("Zoom _Out"), "<control>minus",
+          N_("Shrink the document"),
+          G_CALLBACK (ev_window_cmd_view_zoom_out) },
+        { "ViewNormalSize", GTK_STOCK_ZOOM_100, N_("_Normal Size"), "<control>0",
+          N_("Zoom to the normal size"),
+          G_CALLBACK (ev_window_cmd_view_normal_size) },
+        { "ViewBestFit", GTK_STOCK_ZOOM_FIT, N_("_Best Fit"), NULL,
+          N_("Zoom to fit the document to the current window"),
+          G_CALLBACK (ev_window_cmd_view_best_fit) },
+        { "ViewPageWidth", NULL, N_("Fit Page _Width"), NULL,
+          N_("Zoom to fit the width of the current window "),
+          G_CALLBACK (ev_window_cmd_view_page_width) },
+
+        /* Go menu */
+        { "GoBack", GTK_STOCK_GO_BACK, N_("_Back"), "<mod1>Left",
+          N_("Go to the page viewed before this one"),
+          G_CALLBACK (ev_window_cmd_go_back) },
+        { "GoForward", GTK_STOCK_GO_FORWARD, N_("Fo_rward"), "<mod1>Right",
+          N_("Go to the page viewed before this one"),
+          G_CALLBACK (ev_window_cmd_go_forward) },
+        { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "<control>Page_Up",
+          N_("Go to the previous page"),
+          G_CALLBACK (ev_window_cmd_go_previous_page) },
+        { "GoNextPage", GTK_STOCK_GO_FORWARD, N_("_Next Page"), "<control>Page_Down",
+          N_("Go to the next page"),
+          G_CALLBACK (ev_window_cmd_go_next_page) },
+        { "GoFirstPage", GTK_STOCK_GOTO_FIRST, N_("_First Page"), "<control>Home",
+          N_("Go to the first page"),
+          G_CALLBACK (ev_window_cmd_go_first_page) },        
+        { "GoLastPage", GTK_STOCK_GOTO_LAST, N_("_Last Page"), "<control>End",
+          N_("Go to the last page"),
+          G_CALLBACK (ev_window_cmd_go_last_page) },
+        
 	/* Help menu */
-	{ "HelpAbout", NULL, N_("_About"), NULL,
+	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), NULL,
+	  N_("Display help for the viewer application"),
+	  G_CALLBACK (ev_window_cmd_help_contents) },
+        
+	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL,
 	  N_("Display credits for the document viewer creators"),
 	  G_CALLBACK (ev_window_cmd_help_about) },
 };
@@ -428,6 +621,9 @@ static GtkToggleActionEntry toggle_entries[] = {
 	{ "ViewStatusbar", NULL, N_("_Statusbar"), NULL,
 	  N_("Show or hide statusbar"),
 	  G_CALLBACK (ev_window_view_statusbar_cb), TRUE },
+        { "ViewSidebar", NULL, N_("Side_bar"), "F9",
+	  N_("Show or hide sidebar"),
+	  G_CALLBACK (ev_window_view_sidebar_cb), FALSE },
 };
 
 static void
@@ -441,7 +637,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
-	gtk_window_set_title (GTK_WINDOW (ev_window), _("Evince"));
+	gtk_window_set_title (GTK_WINDOW (ev_window), _("Document Viewer"));
 
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);

@@ -3,15 +3,43 @@
     <menu name="FileMenu" action="File">
       <menuitem name="FileOpenMenu" action="FileOpen"/>
       <separator name="FileSep1"/>
+      <menuitem name="FilePrintMenu" action="FilePrint"/>
+      <separator name="FileSep2"/>
       <menuitem name="FileCloseWindowMenu" action="FileCloseWindow"/>
+    </menu>
+
+    <menu name="EditMenu" action="Edit">
+      <menuitem name="EditCopyMenu" action="EditCopy"/>
+      <menuitem name="EditFindMenu" action="EditFind"/>
     </menu>
 
     <menu name="ViewMenu" action="View">
       <menuitem name="ViewToolbarMenu" action="ViewToolbar"/>
       <menuitem name="ViewStatusbarMenu" action="ViewStatusbar"/>
+      <menuitem name="ViewSidebarMenu" action="ViewSidebar"/>
+      <separator name="ViewSep1"/>
+      <menuitem name="ViewFullscreenMenu" action="ViewFullscreen"/>
+      <separator name="ViewSep2"/>
+      <menuitem name="ViewZoomInMenu" action="ViewZoomIn"/>
+      <menuitem name="ViewZoomOutMenu" action="ViewZoomOut"/>
+      <menuitem name="ViewNormalSizeMenu" action="ViewNormalSize"/>
+      <menuitem name="ViewBestFitMenu" action="ViewBestFit"/>
+      <menuitem name="ViewPageWidthMenu" action="ViewPageWidth"/>
+    </menu>
+
+    <menu name="GoMenu" action="Go">
+      <menuitem name="GoBackMenu" action="GoBack"/>
+      <menuitem name="GoForwardMenu" action="GoForward"/>
+      <separator name="GoSep1"/>
+      <menuitem name="GoPreviousPageMenu" action="GoPreviousPage"/>
+      <menuitem name="GoNextPageMenu" action="GoNextPage"/>
+      <separator name="GoSep2"/>
+      <menuitem name="GoFirstPageMenu" action="GoFirstPage"/>
+      <menuitem name="GoLastPageMenu" action="GoLastPage"/>
     </menu>
 
     <menu name="HelpMenu" action="Help">
+      <menuitem name="HelpContentsMenu" action="HelpContents"/>
       <menuitem name="HelpAboutMenu" action="HelpAbout"/>
     </menu>
   </menubar>
