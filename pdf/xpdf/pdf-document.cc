@@ -484,8 +484,8 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                                          &xMin, &yMin, &xMax, &yMax)) {
                 result.page_num = pdf_document->page;
 
-                result.highlight_area.x = xMin;
-                result.highlight_area.y = yMin;
+                result.highlight_area.x = xMin + pdf_document->page_x_offset;
+                result.highlight_area.y = yMin + pdf_document->page_y_offset;
                 result.highlight_area.width = xMax - xMin;
                 result.highlight_area.height = yMax - yMin;
 
@@ -499,8 +499,8 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
 
                         result.page_num = pdf_document->page;
 
-                        result.highlight_area.x = xMin;
-                        result.highlight_area.y = yMin;
+                        result.highlight_area.x = xMin + pdf_document->page_x_offset;
+                        result.highlight_area.y = yMin + pdf_document->page_y_offset;
                         result.highlight_area.width = xMax - xMin;
                         result.highlight_area.height = yMax - yMin;
 
@@ -1023,10 +1023,10 @@ pdf_document_get_text (EvDocument *document, GdkRectangle *rect)
 	const char *text;
 	int x1, y1, x2, y2;
 
-	x1 = rect->x;
-	y1 = rect->y;
-	x2 = x1 + rect->width;
-	y2 = y1 + rect->height;
+	x1 = rect->x + pdf_document->page_x_offset;
+	y1 = rect->y + pdf_document->page_y_offset;
+	x2 = x1 + rect->width + pdf_document->page_x_offset;
+	y2 = y1 + rect->height + pdf_document->page_y_offset;
 
 	sel_text = pdf_document->out->getText (x1, y1, x2, y2);
 	text = sel_text->getCString ();
@@ -1039,11 +1039,20 @@ pdf_document_get_link (EvDocument *document, int x, int y)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	LinkAction *action;
+	double link_x, link_y;
 
-	y = pdf_document->out->getBitmapHeight() - y;
+	/* Zoom */
+	link_x = x / pdf_document->scale;
+	link_y = y / pdf_document->scale;
 
-	action = pdf_document->links->find ((double)x / pdf_document->scale,
-					    (double)y / pdf_document->scale);
+	/* Offset */
+	link_x -= pdf_document->page_x_offset;
+	link_y -= pdf_document->page_y_offset;
+
+	/* Inverse y */
+	link_y = pdf_document->out->getBitmapHeight() - link_y;
+
+	action = pdf_document->links->find (link_x, link_y);
 	
 	if (action) {
 		return build_link_from_action (pdf_document, action, "");
