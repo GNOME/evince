@@ -784,6 +784,12 @@ start_interpreter(PSDocument * gs)
     return -1;
   }
 
+  gv_env = g_strdup_printf("GHOSTVIEW=%ld %ld",
+                           gdk_x11_drawable_get_xid(gs->pstarget),
+			   gdk_x11_drawable_get_xid(gs->bpixmap));
+
+  LOG ("Launching ghostview with env %s", gv_env)
+
   gs->busy = TRUE;
   gs->interpreter_pid = fork();
   switch (gs->interpreter_pid) {
@@ -819,12 +825,7 @@ start_interpreter(PSDocument * gs)
       }
     }
 
-    gv_env = g_strdup_printf("GHOSTVIEW=%ld %ld",
-                             gdk_x11_drawable_get_xid(gs->pstarget),
-			     gdk_x11_drawable_get_xid(gs->bpixmap));
     putenv(gv_env);
-
-    LOG ("Launching ghostview with env %s", gv_env)
 
     /* change to directory where the input file is. This helps
      * with postscript-files which include other files using
