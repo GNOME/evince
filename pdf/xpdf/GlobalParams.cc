@@ -18,6 +18,7 @@
 #if HAVE_PAPER_H
 #include <paper.h>
 #endif
+#include <fontconfig/fontconfig.h>
 #include "gmem.h"
 #include "GString.h"
 #include "GList.h"
@@ -85,6 +86,30 @@ static char *displayFontDirs[] = {
   "/usr/local/share/ghostscript/fonts",
   "/usr/share/fonts/default/Type1",
   NULL
+};
+
+/* patterns originally from mupdf; added agfa fonts*/ 
+static struct {
+  const char *name;
+  const char *pattern;
+} displayFontTabFc[] = {
+  {"Courier",               "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Regular,Roman"},
+  {"Courier-Bold",          "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Bold"},
+  {"Courier-BoldOblique",   "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Oblique,Italic"},
+  {"Courier-Oblique",       "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=BoldOblique,BoldItalic"},
+  {"Helvetica",             "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Regular,Roman"},
+  {"Helvetica-Bold",        "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Bold"},
+  {"Helvetica-BoldOblique", "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Oblique,Italic"},
+  {"Helvetica-Oblique",     "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=BoldOblique,BoldItalic"},
+  /* FIXME Symbol should be first,
+     but that matches windows ttf which gets wrong encoding */
+  {"Symbol",                "Standard Symbols L,Symbol"},
+  {"Times-Bold",            "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Bold,Medium"},
+  {"Times-BoldItalic",      "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=BoldItalic,Medium Italic"},
+  {"Times-Italic",          "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Italic,Regular Italic"},
+  {"Times-Roman",           "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Regular,Roman"},
+  {"ZapfDingbats",          "Zapf Dingbats,Dingbats"},
+  {NULL}
 };
 
 //------------------------------------------------------------------------
@@ -932,6 +957,83 @@ void GlobalParams::setupBaseFonts(char *dir) {
     }
     dfp = new DisplayFontParam(fontName, displayFontT1);
     dfp->t1.fileName = fileName;
+    globalParams->addDisplayFont(dfp);
+  }
+}
+
+//------------------------------------------------------------------------
+
+void GlobalParams::setupBaseFontsFc(FcConfig *fcConfig) {
+  GString *fontName;
+  GString *fileName;
+  DisplayFontParam *dfp;
+  FcPattern *namePat, *matchPat;
+  FcResult result;
+  FcChar8 *fcFileName;
+  int i;
+  DisplayFontParamKind kind;
+
+  for (i = 0; displayFontTabFc[i].name; ++i) {
+    fontName = new GString(displayFontTabFc[i].name);
+    if (getDisplayFont(fontName)) {
+      delete fontName;
+      continue;
+    }
+    fileName = NULL;
+    result = FcResultMatch;
+    namePat = FcNameParse((const FcChar8 *)displayFontTabFc[i].pattern);
+    FcConfigSubstitute(fcConfig, namePat, FcMatchPattern);
+    FcDefaultSubstitute(namePat);
+    matchPat = FcFontMatch(fcConfig, namePat, &result);
+
+    if (result == FcResultMatch) {
+      result = FcPatternGetString(matchPat, "file", 0, &fcFileName);
+      if (result == FcResultMatch)
+	fileName = new GString((const char *)fcFileName);
+    }
+
+    FcPatternDestroy(matchPat);
+    FcPatternDestroy(namePat);
+
+    if (fileName) {
+      char *ext;
+
+      /* FIXME */
+      ext = strrchr(fileName->getCString(), '.');
+      if (ext) {
+	if (strcasecmp (ext, ".pfb") == 0)
+	  kind = displayFontT1;
+	else if (strcasecmp (ext, ".pfa") == 0)
+	  kind = displayFontT1;
+	else if (strcasecmp (ext, ".ttf") == 0)
+	  kind = displayFontTT;
+	else if (strcasecmp (ext, ".ttc") == 0)
+	  kind = displayFontTT;
+	else {
+	  delete fileName;
+	  fileName = NULL;
+	}
+      } else {
+	delete fileName;
+	fileName = NULL;
+      }
+    }
+
+    if (!fileName) {
+      error(-1, "No display font for '%s'", displayFontTabFc[i].name);
+      delete fontName;
+      continue;
+    }
+
+    dfp = new DisplayFontParam(fontName, kind);
+    switch (kind) {
+    case displayFontT1:
+      dfp->t1.fileName = fileName;
+      break;
+    case displayFontTT:
+      dfp->tt.fileName = fileName;
+    }
+      
     globalParams->addDisplayFont(dfp);
   }
 }

@@ -84,7 +84,7 @@ pdf_document_load (EvDocument  *document,
 	
 	if (!globalParams) {
 		globalParams = new GlobalParams("/etc/xpdfrc");
-		globalParams->setupBaseFonts(NULL);
+		globalParams->setupBaseFontsFc(NULL);
 	}
 
 	filename = g_filename_from_uri (uri, NULL, error);

@@ -1,3 +1,14 @@
+2004-12-22  Martin Kretzschmar  <martink@gnome.org>
+
+	* pdf/xpdf/GlobalParams.h (setupBaseFontsFc): add prototype.
+
+	* pdf/xpdf/GlobalParams.cc (displayFontTabFc): maps base font
+	names to fontconfig patterns.
+	(setupBaseFontsFc): setupBaseFonts reimplemented using fontconfig.
+
+	* pdf/xpdf/pdf-document.cc (pdf_document_load): use
+	setupBaseFontsFc.
+
 2004-12-22  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* Makefile.am:

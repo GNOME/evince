@@ -16,6 +16,7 @@
 #endif
 
 #include <stdio.h>
+#include <fontconfig/fontconfig.h>
 #include "gtypes.h"
 #include "CharTypes.h"
 
@@ -116,6 +117,7 @@ public:
   ~GlobalParams();
 
   void setupBaseFonts(char *dir);
+  void setupBaseFontsFc(FcConfig *fcConfig);
 
   //----- accessors
 
