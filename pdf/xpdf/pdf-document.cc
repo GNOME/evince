@@ -745,18 +745,12 @@ pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmark
 				     EvDocumentBookmarksIter  *bookmarks_iter)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
-	EvBookmark *bookmark;
+	EvBookmark *bookmark = NULL;
 	BookmarksIter *iter = (BookmarksIter *)bookmarks_iter;
 	OutlineItem *anItem;
 	LinkAction *link_action;
-	LinkDest *link_dest = NULL;
-	LinkURI *link_uri = NULL;
-	LinkGoTo *link_goto = NULL;
-	GString *named_dest;
 	Unicode *link_title;
-	Ref page_ref;
-	gint page_num = 0;
-	char *title;
+	const char *title;
 
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
 	g_return_val_if_fail (iter != NULL, FALSE);
@@ -764,54 +758,50 @@ pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmark
 	anItem = (OutlineItem *)iter->items->get(iter->index);
 	link_action = anItem->getAction ();
 	link_title = anItem->getTitle ();
+	title = unicode_to_char (anItem, pdf_document->umap);
 
-	if (link_action) {
-		switch (link_action->getKind ()) {
+	if (link_action == NULL) {
+		bookmark = ev_bookmark_new_title (title);
+	} else if (link_action->getKind () == actionGoTo) {
+		LinkDest *link_dest;
+		LinkGoTo *link_goto;
+		Ref page_ref;
+		gint page_num = 0;
+		GString *named_dest;
 
-		case actionGoTo:
-			link_goto = dynamic_cast <LinkGoTo *> (link_action);
-			link_dest = link_goto->getDest ();
-			named_dest = link_goto->getNamedDest ();
+		link_goto = dynamic_cast <LinkGoTo *> (link_action);
+		link_dest = link_goto->getDest ();
+		named_dest = link_goto->getNamedDest ();
 
-			/* Wow!  This seems excessively slow on large
-			 * documents. I need to investigate more... -jrb */
-			if (link_dest != NULL) {
-				link_dest = link_dest->copy ();
-			} else if (named_dest != NULL) {
-				named_dest = named_dest->copy ();
-				link_dest = pdf_document->doc->findDest (named_dest);
-				delete named_dest;
+		/* Wow!  This seems excessively slow on large
+		 * documents. I need to investigate more... -jrb */
+		if (link_dest != NULL) {
+			link_dest = link_dest->copy ();
+		} else if (named_dest != NULL) {
+			named_dest = named_dest->copy ();
+			link_dest = pdf_document->doc->findDest (named_dest);
+			delete named_dest;
+		}
+		if (link_dest != NULL) {
+			if (link_dest->isPageRef ()) {
+				page_ref = link_dest->getPageRef ();
+				page_num = pdf_document->doc->findPage (page_ref.num, page_ref.gen);
+			} else {
+				page_num = link_dest->getPageNum ();
 			}
-			if (link_dest != NULL) {
-				if (link_dest->isPageRef ()) {
-					page_ref = link_dest->getPageRef ();
-					page_num = pdf_document->doc->findPage (page_ref.num, page_ref.gen);
-				} else {
-					page_num = link_dest->getPageNum ();
-				}
-
-				delete link_dest;
-			}
-
-			break;
-		case actionURI:
-			link_uri = dynamic_cast <LinkURI *> (link_action);
-			break;
-
-		case actionNamed:
-			/*Skip, for now */
-		default:
-			g_warning ("Unknown link action type: %d", link_action->getKind ());
+			delete link_dest;
 		}
 
-		title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
-	} else if (link_title) {
-		title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
+		bookmark = ev_bookmark_new_link (title, page_num);
+	} else if (link_action->getKind () == actionURI) {
+		LinkURI *link_uri;
+
+		link_uri = dynamic_cast <LinkURI *> (link_action);
+		bookmark = ev_bookmark_new_external
+			(title, link_uri->getURI()->getCString());
+	} else if (link_action->getKind () == actionNamed) {
+			/*Skip, for now */
 	}
-
-	bookmark = ev_bookmark_new (title, EV_BOOKMARK_TYPE_LINK, page_num);
-
-	g_free (title);
 
 	return bookmark;
 }

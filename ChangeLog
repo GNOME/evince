@@ -1,5 +1,27 @@
 2005-01-07  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-application.c: (ev_application_open),
+	(ev_application_open_bookmark):
+	* shell/ev-application.h:
+	
+	Add a way to open bookmarks
+
+	* backend/ev-bookmark.c: (ev_bookmark_get_uri),
+	(ev_bookmark_set_uri), (ev_bookmark_get_property),
+	(ev_bookmark_set_property), (ev_bookmark_class_init),
+	(ev_bookmark_new_title), (ev_bookmark_new_link),
+	(ev_bookmark_new_external):
+
+	Support for external uris, better constructors.
+
+	* backend/ev-bookmark.h:
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-sidebar-bookmarks.c: (selection_changed_cb):
+
+	Handle external uris
+
+2005-01-07  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-sidebar-bookmarks.c: (selection_changed_cb),
 	(ev_sidebar_bookmarks_construct), (do_one_iteration):
 

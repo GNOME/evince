@@ -29,6 +29,7 @@
 
 #include "ev-sidebar-bookmarks.h"
 #include "ev-document-bookmarks.h"
+#include "ev-application.h"
 
 /* Amount of time we devote to each iteration of the idle, in microseconds */
 #define IDLE_WORK_LENGTH 5000
@@ -104,8 +105,8 @@ selection_changed_cb (GtkTreeSelection   *selection,
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		EvBookmark *bookmark;
+		EvApplication *app;
 		GValue value = {0, };
-		int page;
 
 		gtk_tree_model_get_value (model, &iter,
 					  BOOKMARKS_COLUMN_BOOKMARK, &value);
@@ -113,8 +114,8 @@ selection_changed_cb (GtkTreeSelection   *selection,
 		bookmark = EV_BOOKMARK (g_value_get_object (&value));
 		g_return_if_fail (bookmark != NULL);
 
-		page = ev_bookmark_get_page (bookmark);
-		ev_document_set_page (document, page);
+		app = ev_application_get_instance ();
+		ev_application_open_bookmark (app, document, bookmark, NULL);
 	}
 }
 

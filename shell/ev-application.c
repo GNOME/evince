@@ -29,8 +29,9 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkmain.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 
-#include <ev-window.h>
+#include "ev-window.h"
 
 struct _EvApplicationPrivate {
 	GList *windows;
@@ -166,6 +167,32 @@ ev_application_open (EvApplication *application, GError *err)
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (chooser));
+}
+
+void
+ev_application_open_bookmark (EvApplication *application,
+			      EvDocument    *document,
+			      EvBookmark    *bookmark,
+			      GError        *error)
+{
+	EvBookmarkType type;
+	const char *uri;
+	int page;
+
+	type = ev_bookmark_get_bookmark_type (bookmark);
+	
+	switch (type) {
+		case EV_BOOKMARK_TYPE_TITLE:
+			break;
+		case EV_BOOKMARK_TYPE_LINK:
+			page = ev_bookmark_get_page (bookmark);
+			ev_document_set_page (document, page);
+			break;
+		case EV_BOOKMARK_TYPE_EXTERNAL_URI:
+			uri = ev_bookmark_get_uri (bookmark);
+			gnome_vfs_url_show (uri);
+			break;
+	}
 }
 
 static void

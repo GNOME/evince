@@ -56,12 +56,17 @@ struct _EvBookmarkClass {
 GType           ev_bookmark_type_get_type       (void);
 GType		ev_bookmark_get_type		(void);
 
-EvBookmark     *ev_bookmark_new			(const char     *title,
-						 EvBookmarkType  type,
+EvBookmark     *ev_bookmark_new_title		(const char     *title);
+EvBookmark     *ev_bookmark_new_link		(const char     *title,
 						 int             page);
+EvBookmark     *ev_bookmark_new_external	(const char     *title,
+						 const char     *uri);
 const char     *ev_bookmark_get_title		(EvBookmark     *bookmark);
 void		ev_bookmark_set_title		(EvBookmark     *bookmark,
 					 	 const char     *title);
+const char     *ev_bookmark_get_uri		(EvBookmark     *bookmark);
+void		ev_bookmark_set_uri		(EvBookmark     *bookmark,
+					 	 const char     *uri);
 EvBookmarkType  ev_bookmark_get_bookmark_type	(EvBookmark     *bookmark);
 void		ev_bookmark_set_bookmark_type	(EvBookmark     *bookmark,
 						 EvBookmarkType  type);

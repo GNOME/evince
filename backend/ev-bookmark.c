@@ -28,11 +28,13 @@ enum {
 	PROP_0,
 	PROP_TITLE,
 	PROP_TYPE,
-	PROP_PAGE
+	PROP_PAGE,
+	PROP_URI
 };
 
 struct _EvBookmarkPrivate {
 	char *title;
+	char *uri;
 	EvBookmarkType type;
 	int page;
 };
@@ -86,6 +88,29 @@ ev_bookmark_set_title (EvBookmark* self, const char *title)
 	g_object_notify (G_OBJECT (self), "title");
 }
 
+const char *
+ev_bookmark_get_uri (EvBookmark *self)
+{
+	g_return_val_if_fail (EV_IS_BOOKMARK (self), NULL);
+	
+	return self->priv->uri;
+}
+
+void
+ev_bookmark_set_uri (EvBookmark* self, const char *uri)
+{
+	g_assert (EV_IS_BOOKMARK (self));
+	g_assert (uri != NULL);
+
+	if (self->priv->uri != NULL) {
+		g_free (self->priv->uri);
+	}
+
+	self->priv->uri = g_strdup (uri);
+
+	g_object_notify (G_OBJECT (self), "uri");
+}
+
 EvBookmarkType
 ev_bookmark_get_bookmark_type (EvBookmark *self)
 {
@@ -134,6 +159,9 @@ ev_bookmark_get_property (GObject *object, guint prop_id, GValue *value,
 	case PROP_TITLE:
 		g_value_set_string (value, self->priv->title);
 		break;
+	case PROP_URI:
+		g_value_set_string (value, self->priv->uri);
+		break;
 	case PROP_TYPE:
 		g_value_set_enum (value, self->priv->type);
 		break;
@@ -159,6 +187,9 @@ ev_bookmark_set_property (GObject *object, guint prop_id, const GValue *value,
 	switch (prop_id) {
 	case PROP_TITLE:
 		ev_bookmark_set_title (self, g_value_get_string (value));
+		break;
+	case PROP_URI:
+		ev_bookmark_set_uri (self, g_value_get_string (value));
 		break;
 	case PROP_TYPE:
 		ev_bookmark_set_bookmark_type (self, g_value_get_enum (value));
@@ -222,6 +253,14 @@ ev_bookmark_class_init (EvBookmarkClass *ev_window_class)
 				     			      G_PARAM_READWRITE));
 
 	g_object_class_install_property (g_object_class,
+					 PROP_URI,
+					 g_param_spec_string ("uri",
+				     	 		      "Bookmark URI",
+				     			      "The bookmark URI",
+							      NULL,
+				     			      G_PARAM_READWRITE));
+
+	g_object_class_install_property (g_object_class,
 					 PROP_TYPE,
 			 		 g_param_spec_enum  ("type",
                               				     "Bookmark Type",
@@ -242,13 +281,30 @@ ev_bookmark_class_init (EvBookmarkClass *ev_window_class)
 }
 
 EvBookmark *
-ev_bookmark_new	(const char     *title,
-		 EvBookmarkType  type,
-		 int             page)
+ev_bookmark_new_title (const char *title)
+{
+	return EV_BOOKMARK (g_object_new (EV_TYPE_BOOKMARK,
+					  "title", title,
+					  "type", EV_BOOKMARK_TYPE_TITLE,
+					  NULL));
+}
+
+EvBookmark *
+ev_bookmark_new_link (const char *title, int page)
 {
 	return EV_BOOKMARK (g_object_new (EV_TYPE_BOOKMARK,
 					  "title", title,
 					  "page", page,
-					  "type", type,
+					  "type", EV_BOOKMARK_TYPE_LINK,
+					  NULL));
+}
+
+EvBookmark *
+ev_bookmark_new_external (const char *title, const char *uri)
+{
+	return EV_BOOKMARK (g_object_new (EV_TYPE_BOOKMARK,
+					  "title", title,
+					  "uri", uri,
+					  "type", EV_BOOKMARK_TYPE_EXTERNAL_URI,
 					  NULL));
 }
