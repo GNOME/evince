@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 0.1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-18 23:22+0100\n"
-"PO-Revision-Date: 2005-03-18 23:35+0100\n"
+"POT-Creation-Date: 2005-03-27 04:45+0200\n"
+"PO-Revision-Date: 2005-03-27 04:46+0200\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <gnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "_Contrasenya:"
 msgid "Document Viewer"
 msgstr "Visualitzador de documents"
 
-#: ../data/evince.desktop.in.h:2 ../shell/main.c:85
+#: ../data/evince.desktop.in.h:2 ../shell/main.c:87
 msgid "Evince Document Viewer"
 msgstr "Visualitzador de documents Evince"
 
@@ -144,47 +144,43 @@ msgstr "En quart"
 msgid "10x14"
 msgstr "10x14"
 
-#: ../ps/ps-document.c:287
+#: ../ps/ps-document.c:144
 msgid "No document loaded."
 msgstr "No hi ha cap document carregat."
 
-#: ../ps/ps-document.c:746
+#: ../ps/ps-document.c:540
 msgid "Broken pipe."
 msgstr "Conducte trencat."
 
-#: ../ps/ps-document.c:942
+#: ../ps/ps-document.c:724
 msgid "Interpreter failed."
 msgstr "L'intèrpret ha fallat."
 
 #. report error
-#: ../ps/ps-document.c:1064
+#: ../ps/ps-document.c:846
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "S'ha produït un error en descomprimir el fitxer %s:\n"
 
-#: ../ps/ps-document.c:1242
-msgid "File is not a valid PostScript document."
-msgstr "El fitxer no és un document PostScript vàlid."
-
-#: ../ps/ps-document.c:1293
+#: ../ps/ps-document.c:1039
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "No es pot obrir el fitxer %s.\n"
 
-#: ../ps/ps-document.c:1295
+#: ../ps/ps-document.c:1041
 msgid "File is not readable."
 msgstr "El fitxer no és llegible."
 
-#: ../ps/ps-document.c:1314
+#: ../ps/ps-document.c:1061
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "S'ha produït un error en analitzar el fitxer %s\n"
 
-#: ../ps/ps-document.c:1317
+#: ../ps/ps-document.c:1064
 msgid "The file is not a PostScript document."
 msgstr "El fitxer no és un document PostScript."
 
-#: ../ps/ps-document.c:1333
+#: ../ps/ps-document.c:1077
 msgid "Document loaded."
 msgstr "S'ha carregat el document."
 
@@ -248,7 +244,7 @@ msgstr "Documents PostScript i PDF"
 msgid "PostScript Documents"
 msgstr "Documents PostScript"
 
-#: ../shell/ev-application.c:145 ../shell/ev-window.c:869
+#: ../shell/ev-application.c:145 ../shell/ev-window.c:890
 msgid "PDF Documents"
 msgstr "Documents PDF"
 
@@ -256,7 +252,7 @@ msgstr "Documents PDF"
 msgid "Images"
 msgstr "Imatges"
 
-#: ../shell/ev-application.c:155 ../shell/ev-window.c:874
+#: ../shell/ev-application.c:155 ../shell/ev-window.c:895
 msgid "All Files"
 msgstr "Tots els fitxers"
 
@@ -307,31 +303,36 @@ msgstr ""
 msgid "Incorrect password"
 msgstr "Contrasenya errònia"
 
-#: ../shell/ev-view.c:661
+#: ../shell/ev-sidebar-links.c:133
+msgid "Loading..."
+msgstr "S'està carregant..."
+
+#: ../shell/ev-view.c:718
 #, c-format
 msgid "Go to page %d"
 msgstr "Vés a la pàgina %d"
 
+#. g_mutex_unlock (EV_DOC_MUTEX);
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:1055
+#: ../shell/ev-view.c:1113
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "Se n'ha trobat %d en aquesta pàgina"
 msgstr[1] "Se n'han trobat %d en aquesta pàgina"
 
-#: ../shell/ev-view.c:1066
+#: ../shell/ev-view.c:1125
 msgid "Not found"
-msgstr "No trobat"
+msgstr "No s'ha trobat"
 
-#: ../shell/ev-view.c:1068
+#: ../shell/ev-view.c:1127
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "Falta el %3d%% per cercar"
 
-#: ../shell/ev-window.c:377
+#: ../shell/ev-window.c:378
 msgid "Unable to open document"
 msgstr "No es pot obrir el document"
 
@@ -344,29 +345,29 @@ msgstr "Visualitzador de documents - Es necessita contrasenya"
 msgid "%s - Password Required"
 msgstr "%s - Necessita contrasenya"
 
-#: ../shell/ev-window.c:737
+#: ../shell/ev-window.c:757
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "El tipus MIME no es gestiona: \"%s\""
 
-#: ../shell/ev-window.c:841
+#: ../shell/ev-window.c:861
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "El fitxer no es pot desar com a \"%s\"."
 
-#: ../shell/ev-window.c:861
+#: ../shell/ev-window.c:882
 msgid "Save a Copy"
 msgstr "Desa una còpia"
 
-#: ../shell/ev-window.c:939
+#: ../shell/ev-window.c:964
 msgid "Print"
 msgstr "Imprimeix"
 
-#: ../shell/ev-window.c:962
+#: ../shell/ev-window.c:987
 msgid "Printing is not supported on this printer."
 msgstr "No es pot imprimir en aquesta impressora."
 
-#: ../shell/ev-window.c:965
+#: ../shell/ev-window.c:990
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -375,28 +376,28 @@ msgstr ""
 "Esteu intentant imprimir a una impressora amb el controlador \"%s\". Aquest "
 "programa requereix un controlador d'impressió PostScript."
 
-#: ../shell/ev-window.c:1017
+#: ../shell/ev-window.c:1042
 msgid "The \"Find\" feature will not work with this document"
 msgstr "La característica de \"Cerca\" no funcionarà en aquest document"
 
-#: ../shell/ev-window.c:1019
+#: ../shell/ev-window.c:1044
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Només es pot cercar text en els documents PDF."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1235 ../shell/ev-window.c:2029
+#: ../shell/ev-window.c:1260 ../shell/ev-window.c:2039
 msgid "Leave Fullscreen"
 msgstr "Surt de pantalla completa"
 
-#: ../shell/ev-window.c:1614
+#: ../shell/ev-window.c:1645
 msgid "Many..."
 msgstr "Molts..."
 
-#: ../shell/ev-window.c:1619
+#: ../shell/ev-window.c:1650
 msgid "Not so many..."
 msgstr "No tants..."
 
-#: ../shell/ev-window.c:1624
+#: ../shell/ev-window.c:1655
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -408,7 +409,7 @@ msgstr ""
 "publicada per la Free Software Foundation; ja sigui la versió 2 de la\n"
 "Llicència o bé (si ho preferiu) qualsevol altra versió posterior.\n"
 
-#: ../shell/ev-window.c:1628
+#: ../shell/ev-window.c:1659
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -420,7 +421,7 @@ msgstr ""
 "COMERCIABILITAT o ADEQUACIÓ PER UN PROPÒSIT PARTICULAR. Vegeu la\n"
 "Llicència Pública General GNU per obtenir-ne més detalls.\n"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1663
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -430,252 +431,255 @@ msgstr ""
 "juntament amb l'Evince; en cas contrari, escriviu a la Free Software\n"
 "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA\n"
 
-#: ../shell/ev-window.c:1654 ../shell/main.c:81
+#: ../shell/ev-window.c:1685 ../shell/main.c:82
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:1657
+#: ../shell/ev-window.c:1688
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 Els autors de l'Evince"
 
-#: ../shell/ev-window.c:1660
+#: ../shell/ev-window.c:1691
 msgid "PostScript and PDF File Viewer."
 msgstr "Visualitzador de fitxers PostScript i PDF"
 
-#: ../shell/ev-window.c:1663
+#: ../shell/ev-window.c:1694
 msgid "translator-credits"
 msgstr "Gil Forcada <gilforcada@guifi.net>"
 
-#: ../shell/ev-window.c:1960
+#: ../shell/ev-window.c:1970
 msgid "_File"
 msgstr "_Fitxer"
 
-#: ../shell/ev-window.c:1961
+#: ../shell/ev-window.c:1971
 msgid "_Edit"
 msgstr "_Edita"
 
-#: ../shell/ev-window.c:1962
+#: ../shell/ev-window.c:1972
 msgid "_View"
 msgstr "_Visualitza"
 
-#: ../shell/ev-window.c:1963
+#: ../shell/ev-window.c:1973
 msgid "_Go"
 msgstr "Vé_s"
 
-#: ../shell/ev-window.c:1964
+#: ../shell/ev-window.c:1974
 msgid "_Help"
 msgstr "A_juda"
 
-#: ../shell/ev-window.c:1968
+#: ../shell/ev-window.c:1978
 msgid "Open an existing document"
 msgstr "Obre un document existent"
 
-#: ../shell/ev-window.c:1970
+#: ../shell/ev-window.c:1980
 msgid "_Save a Copy..."
 msgstr "_Desa una còpia..."
 
-#: ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:1981
 msgid "Save the current document with a new filename"
 msgstr "Desa el document actual amb un nom nou"
 
-#: ../shell/ev-window.c:1973
+#: ../shell/ev-window.c:1983
 msgid "Print..."
 msgstr "Imprimeix..."
 
-#: ../shell/ev-window.c:1974
+#: ../shell/ev-window.c:1984
 msgid "Print this document"
 msgstr "Imprimeix el document"
 
-#: ../shell/ev-window.c:1977
+#: ../shell/ev-window.c:1987
 msgid "Close this window"
 msgstr "Tanca aquesta finestra"
 
-#: ../shell/ev-window.c:1982
+#: ../shell/ev-window.c:1992
 msgid "Copy text from the document"
 msgstr "Copia el text del document"
 
-#: ../shell/ev-window.c:1984
+#: ../shell/ev-window.c:1994
 msgid "Select _All"
 msgstr "Selecciona-ho _tot"
 
-#: ../shell/ev-window.c:1985
+#: ../shell/ev-window.c:1995
 msgid "Select the entire page"
 msgstr "Selecciona la pàgina sencera"
 
-#: ../shell/ev-window.c:1988
+#: ../shell/ev-window.c:1998
 msgid "Find a word or phrase in the document"
 msgstr "Cerca una paraula o frase al document"
 
-#: ../shell/ev-window.c:1993
+#: ../shell/ev-window.c:2003
 msgid "Enlarge the document"
 msgstr "Amplia el document"
 
-#: ../shell/ev-window.c:1996
+#: ../shell/ev-window.c:2006
 msgid "Shrink the document"
 msgstr "Encongeix el document"
 
-#: ../shell/ev-window.c:1999
+#: ../shell/ev-window.c:2009
 msgid "Reset the zoom level to the default value"
 msgstr "Reinicia el zoom al valor per defecte"
 
-#: ../shell/ev-window.c:2001
+#: ../shell/ev-window.c:2011
 msgid "_Reload"
 msgstr "A_ctualitza"
 
-#: ../shell/ev-window.c:2002
+#: ../shell/ev-window.c:2012
 msgid "Reload the document"
 msgstr "Actualitza el document"
 
 #. Go menu
-#: ../shell/ev-window.c:2006
+#: ../shell/ev-window.c:2016
 msgid "_Previous Page"
 msgstr "_Pàgina anterior"
 
-#: ../shell/ev-window.c:2007
+#: ../shell/ev-window.c:2017
 msgid "Go to the previous page"
 msgstr "Vés a la pàgina anterior"
 
-#: ../shell/ev-window.c:2009
+#: ../shell/ev-window.c:2019
 msgid "_Next Page"
 msgstr "Pàgi_na següent"
 
-#: ../shell/ev-window.c:2010
+#: ../shell/ev-window.c:2020
 msgid "Go to the next page"
 msgstr "Vés a la pàgina següent"
 
-#: ../shell/ev-window.c:2012
+#: ../shell/ev-window.c:2022
 msgid "_First Page"
 msgstr "_Primera pàgina"
 
-#: ../shell/ev-window.c:2013
+#: ../shell/ev-window.c:2023
 msgid "Go to the first page"
 msgstr "Vés a l'última pàgina"
 
-#: ../shell/ev-window.c:2015
+#: ../shell/ev-window.c:2025
 msgid "_Last Page"
 msgstr "_Última pàgina"
 
-#: ../shell/ev-window.c:2016
+#: ../shell/ev-window.c:2026
 msgid "Go to the last page"
 msgstr "Vés a l'última pàgina"
 
 # 
 #. Help menu
-#: ../shell/ev-window.c:2020
+#: ../shell/ev-window.c:2030
 msgid "_Contents"
 msgstr "_Continguts"
 
-#: ../shell/ev-window.c:2021
+#: ../shell/ev-window.c:2031
 msgid "Display help for the viewer application"
 msgstr "Mostra l'ajuda del visualitzador"
 
-#: ../shell/ev-window.c:2024
+#: ../shell/ev-window.c:2034
 msgid "_About"
 msgstr "_Quant a"
 
-#: ../shell/ev-window.c:2025
+#: ../shell/ev-window.c:2035
 msgid "Display credits for the document viewer creators"
 msgstr "Mostra els crèdits dels creadors del visualitzador de documents"
 
-#: ../shell/ev-window.c:2030
+#: ../shell/ev-window.c:2040
 msgid "Leave fullscreen mode"
 msgstr "Surt de pantalla completa"
 
 # 
 #. View Menu
-#: ../shell/ev-window.c:2037
+#: ../shell/ev-window.c:2047
 msgid "_Toolbar"
 msgstr "_Barra d'eines"
 
-#: ../shell/ev-window.c:2038
+#: ../shell/ev-window.c:2048
 msgid "Show or hide the toolbar"
 msgstr "Mostra o amaga la barra d'eines"
 
-#: ../shell/ev-window.c:2040
+#: ../shell/ev-window.c:2050
 msgid "_Statusbar"
 msgstr "Barra d'e_stat"
 
-#: ../shell/ev-window.c:2041
+#: ../shell/ev-window.c:2051
 msgid "Show or hide the statusbar"
 msgstr "Mostra o amaga la barra d'estat"
 
-#: ../shell/ev-window.c:2043
+#: ../shell/ev-window.c:2053
 msgid "Side _pane"
 msgstr "Barra _lateral"
 
-#: ../shell/ev-window.c:2044
+#: ../shell/ev-window.c:2054
 msgid "Show or hide the side pane"
 msgstr "Mostra o amaga la barra lateral"
 
-#: ../shell/ev-window.c:2046
+#: ../shell/ev-window.c:2056
 msgid "_Fullscreen"
 msgstr "_Pantalla completa"
 
-#: ../shell/ev-window.c:2047
+#: ../shell/ev-window.c:2057
 msgid "Expand the window to fill the screen"
 msgstr "Expandeix la finestra per omplir la pantalla"
 
-#: ../shell/ev-window.c:2049
+#: ../shell/ev-window.c:2059
 msgid "_Best Fit"
 msgstr "_Millor ajust"
 
-#: ../shell/ev-window.c:2050
+#: ../shell/ev-window.c:2060
 msgid "Make the current document fill the window"
 msgstr "Fes que el document actual ompli la finestra"
 
-#: ../shell/ev-window.c:2052
+#: ../shell/ev-window.c:2062
 msgid "Fit Page _Width"
 msgstr "_Ajusta a l'amplada de la pàgina"
 
-#: ../shell/ev-window.c:2053
+#: ../shell/ev-window.c:2063
 msgid "Make the current document fill the window width"
 msgstr "Fes que el document actual encaixi amb l'amplada de la finestra"
 
-#: ../shell/ev-window.c:2058
+#: ../shell/ev-window.c:2068
 msgid "Single"
 msgstr "Una a una"
 
-#: ../shell/ev-window.c:2059
+#: ../shell/ev-window.c:2069
 msgid "Show the document one page at a time"
 msgstr "Mostra el document pàgina a pàgina"
 
-#: ../shell/ev-window.c:2061
+#: ../shell/ev-window.c:2071
 msgid "Multi"
 msgstr "Totes"
 
-#: ../shell/ev-window.c:2062
+#: ../shell/ev-window.c:2072
 msgid "Show the full document at once"
 msgstr "Mostra tot el document alhora"
 
-#: ../shell/ev-window.c:2101
+#: ../shell/ev-window.c:2108
 msgid "Page"
 msgstr "Pàgina"
 
-#: ../shell/ev-window.c:2102
+#: ../shell/ev-window.c:2109
 msgid "Select Page"
 msgstr "Selecciona la pàgina"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2117
+#: ../shell/ev-window.c:2124
 msgid "Previous"
 msgstr "Anterior"
 
-#: ../shell/ev-window.c:2122
+#: ../shell/ev-window.c:2129
 msgid "Next"
 msgstr "Següent"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2125
+#: ../shell/ev-window.c:2132
 msgid "Fit Width"
-msgstr "Encaixa l'amplada"
+msgstr "Encaixa a l'amplada"
 
-#: ../shell/ev-window.c:2318
+#: ../shell/ev-window.c:2325
 msgid "Index"
 msgstr "Índex"
 
-#: ../shell/ev-window.c:2325
+#: ../shell/ev-window.c:2332
 msgid "Thumbnails"
 msgstr "Miniatures"
+
+#~ msgid "File is not a valid PostScript document."
+#~ msgstr "El fitxer no és un document PostScript vàlid."
 
 #~ msgid "Error while converting pdf file %s:\n"
 #~ msgstr "S'ha produït un error en convertir el pdf %s:\n"
