@@ -257,7 +257,9 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 
 	mime_type = gnome_vfs_get_mime_type (uri);
 
-	if (!strcmp (mime_type, "application/pdf"))
+	if (mime_type == NULL)
+		document = NULL;
+	else if (!strcmp (mime_type, "application/pdf"))
 		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
 	else if (!strcmp (mime_type, "application/postscript"))
 		document = g_object_new (GTK_GS_TYPE, NULL);
@@ -289,7 +291,7 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		char *error_message;
 
 		error_message = g_strdup_printf (_("Unhandled MIME type: '%s'"),
-						 mime_type);
+						 mime_type?mime_type:"<Unknown MIME Type>");
 		unable_to_load (ev_window, error_message);
 		g_free (error_message);
 	}

@@ -110,6 +110,7 @@ test_gdk_output_dev_LDADD =                                   	\
 	$(top_builddir)/pdf/goo/libGoo.la                       \
 	$(top_builddir)/pdf/fofi/libfofi.la                     \
 	$(top_builddir)/pdf/splash/libsplash.la                 \
+	$(top_builddir)/backend/libevbackend.la			\
 	$(GTK_LIBS)
 
 libpdfdocument_la_SOURCES =	\

@@ -50,10 +50,11 @@ struct _EvSidebarBookmarksClass {
 	GtkVBoxClass base_class;
 };
 
-GType      ev_sidebar_bookmarks_get_type (void);
-GtkWidget *ev_sidebar_bookmarks_new      (void);
-void       ev_sidebar_bookmarks_set_document (EvSidebarBookmarks *ev_sidebar_bookmarks,
-					      EvDocument         *document);
+GType      ev_sidebar_bookmarks_get_type       (void);
+GtkWidget *ev_sidebar_bookmarks_new            (void);
+void       ev_sidebar_bookmarks_set_document   (EvSidebarBookmarks *ev_sidebar_bookmarks,
+						EvDocument         *document);
+void       ev_sidebar_bookmarks_clear_document (EvSidebarBookmarks *sidebar_bookmarks);
 
 G_END_DECLS
 

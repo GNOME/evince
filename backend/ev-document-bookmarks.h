@@ -67,7 +67,7 @@ struct _EvDocumentBookmarksIface
 							     gchar                   **title,
 							     EvDocumentBookmarksType  *type,
 							     gint                     *page);
-	EvDocumentBookmarksIter *(* has_child)              (EvDocumentBookmarks      *document_bookmarks,
+	EvDocumentBookmarksIter *(* get_child)              (EvDocumentBookmarks      *document_bookmarks,
 							     EvDocumentBookmarksIter  *iter);
 	gboolean                 (* next)                   (EvDocumentBookmarks      *document_bookmarks,
 							     EvDocumentBookmarksIter  *iter);
@@ -83,7 +83,7 @@ gboolean                 ev_document_bookmarks_get_values             (EvDocumen
 								       char                    **title,
 								       EvDocumentBookmarksType  *type,
 								       gint                     *page);
-EvDocumentBookmarksIter *ev_document_bookmarks_has_child              (EvDocumentBookmarks      *document_bookmarks,
+EvDocumentBookmarksIter *ev_document_bookmarks_get_child              (EvDocumentBookmarks      *document_bookmarks,
 								       EvDocumentBookmarksIter  *iter);
 gboolean                 ev_document_bookmarks_next                   (EvDocumentBookmarks      *document_bookmarks,
 								       EvDocumentBookmarksIter  *iter);

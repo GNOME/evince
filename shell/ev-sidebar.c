@@ -29,6 +29,7 @@
 
 #include "ev-sidebar.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-bookmarks.h"
 #include "ev-sidebar-bookmarks.h"
 #include "ev-sidebar-thumbnails.h"
 
@@ -178,7 +179,7 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 
 	/* Set the first item added as active */
 	if (gtk_combo_box_get_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu)))
-		gtk_combo_box_set_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu), 0);
+		gtk_combo_box_set_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu), 1);
 }
 
 void
@@ -206,9 +207,9 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 				    PAGE_COLUMN_MAIN_WIDGET, &widget,
 				    -1);
 
-		if (EV_IS_SIDEBAR_BOOKMARKS (widget))
-			/* && EV_IS_BOOKMARKS (document)
-			   && ev_bookmarks_has_bookmarks (document)... */
+		if (EV_IS_SIDEBAR_BOOKMARKS (widget)
+		    && EV_IS_DOCUMENT_BOOKMARKS (document)
+		    && ev_document_bookmarks_has_document_bookmarks (EV_DOCUMENT_BOOKMARKS (document)))
 			ev_sidebar_bookmarks_set_document (EV_SIDEBAR_BOOKMARKS (widget),
 							   document);
 		else if (EV_IS_SIDEBAR_THUMBNAILS (widget) &&

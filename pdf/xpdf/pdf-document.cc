@@ -26,6 +26,10 @@
 #include "GlobalParams.h"
 #include "GDKSplashOutputDev.h"
 #include "PDFDoc.h"
+#include "Outline.h"
+#include "UnicodeMap.h"
+#include "GlobalParams.h"
+#include "goo/GList.h"
 #include "PSOutputDev.h"
 
 typedef struct
@@ -67,13 +71,15 @@ struct _PdfDocument
 	GDKSplashOutputDev *out;
 	PSOutputDev *ps_out;
 	PDFDoc *doc;
+	UnicodeMap *umap;
 
 	gboolean page_valid;
 
 	PdfDocumentSearch *search;
 };
 
-static void pdf_document_document_iface_init    (EvDocumentIface     *iface);
+static void pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface);
+static void pdf_document_document_iface_init           (EvDocumentIface          *iface);
 static void pdf_document_ps_exporter_iface_init (EvPSExporterIface   *iface);
 static void pdf_document_find_iface_init        (EvDocumentFindIface *iface);
 static void pdf_document_search_free            (PdfDocumentSearch   *search);
@@ -83,6 +89,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
 							pdf_document_document_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_BOOKMARKS,
+							pdf_document_document_bookmarks_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
 							pdf_document_ps_exporter_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
@@ -97,7 +105,7 @@ document_validate_page (PdfDocument *pdf_document)
 						72 * pdf_document->scale,
 						72 * pdf_document->scale,
 						0, gTrue, gTrue);
-		
+
 		pdf_document->page_valid = TRUE;
 
                 /* Update the search results available to the app since
@@ -106,6 +114,8 @@ document_validate_page (PdfDocument *pdf_document)
                 if (pdf_document->search)
                         pdf_document_search_page_changed (pdf_document->search);
 	}
+	
+	return pdf_document->page_valid;
 }
 
 static gboolean
@@ -118,10 +128,18 @@ pdf_document_load (EvDocument  *document,
 	int err;
 	char *filename;
 	GString *filename_g;
-	
+	GString *enc; 
+
 	if (!globalParams) {
 		globalParams = new GlobalParams("/etc/xpdfrc");
 		globalParams->setupBaseFontsFc(NULL);
+	}
+
+	if (! pdf_document->umap) {
+		enc = new GString("UTF-8");
+		pdf_document->umap = globalParams->getUnicodeMap(enc);
+		pdf_document->umap->incRefCnt (); 
+		delete enc;
 	}
 
 	filename = g_filename_from_uri (uri, NULL, error);
@@ -144,7 +162,7 @@ pdf_document_load (EvDocument  *document,
 			     "Failed to load document (error %d) '%s'\n",
 			     err,
 			     uri);
-		
+
 		return FALSE;
 	}
 
@@ -158,7 +176,7 @@ pdf_document_load (EvDocument  *document,
 		pdf_document->out->startDoc(pdf_document->doc->getXRef());
 
 	pdf_document->page_valid = FALSE;
-	
+
 	return TRUE;
 }
 
@@ -207,11 +225,11 @@ pdf_document_set_target (EvDocument  *document,
 			 GdkDrawable *target)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	
+
 	if (pdf_document->target != target) {
 		if (pdf_document->target)
 			g_object_unref (pdf_document->target);
-		
+
 		pdf_document->target = target;
 
 		if (pdf_document->target)
@@ -240,7 +258,7 @@ pdf_document_set_scale (EvDocument  *document,
 			double       scale)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	
+
 	if (pdf_document->scale != scale) {
 		pdf_document->scale = scale;
 		pdf_document->page_valid = FALSE;
@@ -253,7 +271,7 @@ pdf_document_set_page_offset (EvDocument  *document,
 			      int          y)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	
+
 	pdf_document->page_x_offset = x;
 	pdf_document->page_y_offset = y;
 }
@@ -291,7 +309,7 @@ pdf_document_render (EvDocument  *document,
 
 	if (!document_validate_page (pdf_document) || !pdf_document->target)
 		return;
-	
+
 	page.x = pdf_document->page_x_offset;
 	page.y = pdf_document->page_y_offset;
 	page.width = pdf_document->out->getBitmapWidth();
@@ -301,7 +319,7 @@ pdf_document_render (EvDocument  *document,
 	draw.y = clip_y;
 	draw.width = clip_width;
 	draw.height = clip_height;
-	
+
 	if (gdk_rectangle_intersect (&page, &draw, &draw))
 		pdf_document->out->redraw (draw.x - page.x, draw.y - page.y,
 					   pdf_document->target,
@@ -400,16 +418,15 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                 result.highlight_area.height = yMax - yMin;
 
                 g_array_append_val (search->current_page_results, result);
-        
                 /* Now find further results */
 
                 while (pdf_document->out->findText (search->ucs4, search->ucs4_len,
                                                     gFalse, gTrue,
                                                     gTrue, gFalse,
                                                     &xMin, &yMin, &xMax, &yMax)) {
-                        
+
                         result.page_num = pdf_document->page;
-                        
+
                         result.highlight_area.x = xMin;
                         result.highlight_area.y = yMin;
                         result.highlight_area.width = xMax - xMin;
@@ -435,7 +452,6 @@ pdf_document_search_idle_callback (void *data)
         PdfDocument *pdf_document = search->document;
         int n_pages;
         double xMin, yMin, xMax, yMax;
-        gboolean found;
 
         /* Note that PDF page count is 1 through n_pages INCLUSIVE
          * like a real book. We are looking to add one result for each
@@ -620,10 +636,210 @@ pdf_document_ps_export_end (EvPSExporter *exporter)
 	document->ps_out = NULL;
 }
 
+
+/* EvDocumentBookmarks Implementation */
+typedef struct
+{
+	/* goo GList, not glib */
+	GList *items;
+	int index;
+	int level;
+} BookmarksIter;
+
+static gchar *
+unicode_to_char (OutlineItem *outline_item, 
+		 UnicodeMap *uMap)
+{
+	GString gstr;
+	gchar buf[8]; /* 8 is enough for mapping an unicode char to a string */
+	int i, n;
+	
+	for (i = 0; i < outline_item->getTitleLength(); ++i) {
+		n = uMap->mapUnicode(outline_item->getTitle()[i], buf, sizeof(buf));
+		gstr.append(buf, n);
+	}
+
+	return g_strdup (gstr.getCString ());
+}
+
+
+static gboolean
+pdf_document_bookmarks_has_document_bookmarks (EvDocumentBookmarks *document_bookmarks)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
+	Outline *outline;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+
+	outline = pdf_document->doc->getOutline();
+	if (outline->getItems() != NULL &&
+	    outline->getItems()->getLength() > 0)
+		return TRUE;
+
+	return FALSE;
+}
+
+static EvDocumentBookmarksIter *
+pdf_document_bookmarks_begin_read (EvDocumentBookmarks *document_bookmarks)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
+	Outline *outline;
+	BookmarksIter *iter;
+	GList *items;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), NULL);
+
+	outline = pdf_document->doc->getOutline();
+	items = outline->getItems();
+	if (! items)
+		return NULL;
+
+	iter = g_new0 (BookmarksIter, 1);
+	iter->items = items;
+	iter->index = 0;
+	iter->level = 0;
+
+	return (EvDocumentBookmarksIter *) iter;
+}
+
+static gboolean
+pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
+				   EvDocumentBookmarksIter  *bookmarks_iter,
+				   char                    **title,
+				   EvDocumentBookmarksType  *type,
+				   gint                     *page)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
+	BookmarksIter *iter = (BookmarksIter *)bookmarks_iter;
+	OutlineItem *anItem;
+	LinkAction *link_action;
+	LinkDest *link_dest = NULL;
+	LinkURI *link_uri = NULL;
+	LinkGoTo *link_goto = NULL;
+	GString *named_dest; 
+	Unicode *link_title;
+	Ref page_ref;
+	gint page_num = -1;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+	g_return_val_if_fail (iter != NULL, FALSE);
+	g_return_val_if_fail (title != NULL, FALSE);
+	g_return_val_if_fail (type != NULL, FALSE);
+	g_return_val_if_fail (page != NULL, FALSE);
+
+	anItem = (OutlineItem *)iter->items->get(iter->index);
+	link_action = anItem->getAction ();
+	link_title = anItem->getTitle (); 
+
+	if (link_action) {
+		switch (link_action->getKind ()) {
+
+		case actionGoTo:
+			link_goto = dynamic_cast <LinkGoTo *> (link_action);
+			link_dest = link_goto->getDest ();
+			named_dest = link_goto->getNamedDest ();
+
+			/* Wow!  This seems excessively slow on large
+			 * documents. I need to investigate more... -jrb */
+			if (link_dest != NULL) {
+				link_dest = link_dest->copy ();
+			} else if (named_dest != NULL) {
+				named_dest = named_dest->copy ();
+				link_dest = pdf_document->doc->findDest (named_dest);
+				delete named_dest;
+			}
+			if (link_dest != NULL) {
+				if (link_dest->isPageRef ()) {
+					page_ref = link_dest->getPageRef ();
+					page_num = pdf_document->doc->findPage (page_ref.num, page_ref.gen);
+				} else {
+					page_num = link_dest->getPageNum ();
+				}
+				
+				delete link_dest;
+			}
+				
+			break;
+		case actionURI:
+			link_uri = dynamic_cast <LinkURI *> (link_action);
+			break;
+			
+		case actionNamed:
+			/*Skip, for now */
+		default:
+			g_warning ("Unknown link action type: %d", link_action->getKind ());
+		}
+
+		*title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
+	} else if (link_title) {
+		*title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
+	}
+
+	*type = EV_DOCUMENT_BOOKMARKS_TYPE_LINK;
+	*page = page_num;
+
+	return TRUE;
+}
+
+static EvDocumentBookmarksIter *
+pdf_document_bookmarks_get_child (EvDocumentBookmarks     *document_bookmarks,
+				  EvDocumentBookmarksIter *bookmarks_iter)
+{
+	BookmarksIter *iter = (BookmarksIter *)bookmarks_iter;
+	BookmarksIter *child_iter;
+	OutlineItem *anItem;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+
+	anItem = (OutlineItem *)iter->items->get(iter->index);
+	anItem->open ();
+	if (! (anItem->hasKids() && anItem->getKids()) )
+		return NULL;
+
+	child_iter = g_new0 (BookmarksIter, 1);
+	child_iter->index = 0;
+	child_iter->level = iter->level + 1;
+	child_iter->items = anItem->getKids ();
+	g_assert (child_iter->items);
+
+	return (EvDocumentBookmarksIter *) child_iter;
+}
+
+static gboolean
+pdf_document_bookmarks_next (EvDocumentBookmarks     *document_bookmarks,
+			     EvDocumentBookmarksIter *bookmarks_iter)
+{
+	BookmarksIter *iter = (BookmarksIter *) bookmarks_iter;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+
+	iter->index++;
+	if (iter->index >= iter->items->getLength())
+		return FALSE;
+
+	return TRUE;
+}
+
+static void
+pdf_document_bookmarks_free_iter (EvDocumentBookmarks     *document_bookmarks,
+				  EvDocumentBookmarksIter *iter)
+{
+	g_return_if_fail (PDF_IS_DOCUMENT (document_bookmarks));
+	g_return_if_fail (iter != NULL);
+
+	/* FIXME: Should I close all the nodes?? Free them? */
+	g_free (iter);
+}
+
 static void
 pdf_document_finalize (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (object);
+
+	if (pdf_document->umap) {
+		pdf_document->umap->decRefCnt ();
+		pdf_document->umap = NULL;
+	}
 
 	if (pdf_document->search)
 		pdf_document_search_free (pdf_document->search);
@@ -644,7 +860,7 @@ static void
 pdf_document_class_init (PdfDocumentClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-  
+
 	gobject_class->finalize = pdf_document_finalize;
 }
 
@@ -679,13 +895,25 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 }
 
 static void
+pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface)
+{
+	iface->has_document_bookmarks = pdf_document_bookmarks_has_document_bookmarks;
+	iface->begin_read = pdf_document_bookmarks_begin_read;
+	iface->get_values = pdf_document_bookmarks_get_values;
+	iface->get_child = pdf_document_bookmarks_get_child;
+	iface->next = pdf_document_bookmarks_next;
+	iface->free_iter = pdf_document_bookmarks_free_iter;
+}
+
+
+static void
 pdf_document_init (PdfDocument *pdf_document)
 {
 	pdf_document->page = 1;
 	pdf_document->page_x_offset = 0;
 	pdf_document->page_y_offset = 0;
 	pdf_document->scale = 1.;
-	
+
 	pdf_document->page_valid = FALSE;
 }
 

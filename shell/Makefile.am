@@ -44,10 +44,10 @@ evince_SOURCES=				\
 
 evince_LDADD=						\
 	$(SHELL_LIBS)					\
-	$(top_builddir)/backend/libevbackend.la		\
 	$(top_builddir)/pdf/xpdf/libpdfdocument.la 	\
 	$(top_builddir)/pixbuf/libpixbufdocument.la	\
 	$(top_builddir)/ps/libgtkgs.la			\
+	$(top_builddir)/backend/libevbackend.la		\
 	$(NULL)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c

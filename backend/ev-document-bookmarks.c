@@ -62,6 +62,10 @@ ev_document_bookmarks_begin_read (EvDocumentBookmarks *document_bookmarks)
 	return iface->begin_read (document_bookmarks);
 }
 
+ /*
+  * This function gets the values at a node.  You need to g_free the title.
+  * Additionally, if page is -1, the link doesn't go anywhere.
+  */
 gboolean 
 ev_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 				  EvDocumentBookmarksIter  *iter,
@@ -75,12 +79,12 @@ ev_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 }
 
 EvDocumentBookmarksIter *
-ev_document_bookmarks_has_child (EvDocumentBookmarks     *document_bookmarks,
+ev_document_bookmarks_get_child (EvDocumentBookmarks     *document_bookmarks,
 				 EvDocumentBookmarksIter *iter)
 {
 	EvDocumentBookmarksIface *iface = EV_DOCUMENT_BOOKMARKS_GET_IFACE (document_bookmarks);
 
-	return iface->has_child (document_bookmarks, iter);
+	return iface->get_child (document_bookmarks, iter);
 }
 
 

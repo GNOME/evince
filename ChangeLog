@@ -1,3 +1,22 @@
+Fri Dec 24 00:48:44 2004  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document-bookmarks.c:
+	(ev_document_bookmarks_get_child): *
+	backend/ev-document-bookmarks.h: * pdf/xpdf/Makefile.am: *
+	pdf/xpdf/pdf-document.cc: * pdf/xpdf/pdf-document.h: *
+	shell/Makefile.am: * shell/ev-sidebar-bookmarks.c:
+	(ev_sidebar_bookmarks_destroy),
+	(ev_sidebar_bookmarks_class_init),
+	(ev_sidebar_bookmarks_construct), (stack_data_free),
+	(do_one_iteration), (populate_bookmarks_idle),
+	(ev_sidebar_bookmarks_clear_document),
+	(ev_sidebar_bookmarks_set_document): *
+	shell/ev-sidebar-bookmarks.h: * shell/ev-sidebar.c:
+	(ev_sidebar_add_page),
+	(ev_sidebar_set_document): * shell/ev-window.c: (ev_window_open):
+	Initial stab at a bookmarks sidebar.  It doesn't navigate yet, but
+	it displays both the topics and the page numbers.
+
 2004-12-23  Kristian Høgsberg  <krh@redhat.com>
 
 	* shell/ev-window.c (ev_window_view_sidebar_cb): Hook up sidebar
