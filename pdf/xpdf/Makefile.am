@@ -1,7 +1,6 @@
 INCLUDES =					\
 	-I$(top_srcdir)/goo			\
 	-I$(top_srcdir)/ltk			\
-	-DGPDF_GLADE_DIR=\""$(gladedir)"\"	\
 	$(EXTRA_GLIB_CFLAGS)			\
 	$(EXTRA_GNOME_CFLAGS)
 
@@ -11,7 +10,7 @@ else
 gui = xpdf
 endif
 
-bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
+bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-application-x-pdf
 
 common_sources =		\
 	Array.cc 		\
@@ -53,20 +52,20 @@ gpdf_LDADD =			\
 	$(EXTRA_GNOME_LIBS)	\
 	$(INTLLIBS)
 
-bonobo_image_x_pdf_SOURCES =	\
-	$(common_sources)	\
-	BonoboStream.h		\
-	BonoboStream.cc		\
-	GOutputDev.cc		\
-	bonobo-image-x-pdf.cc
+bonobo_application_x_pdf_SOURCES =	\
+	$(common_sources)		\
+	BonoboStream.h			\
+	BonoboStream.cc			\
+	GOutputDev.cc			\
+	bonobo-application-x-pdf.cc
 
-bonobo_image_x_pdf_LDADD =	\
-	../goo/libgoo.a		\
-	$(GTK_LIBS)		\
-	$(GNOME_LIBDIR)		\
-	-lbonobo		\
-	$(GNOMEGNORBA_LIBS)	\
-	$(EXTRA_GLIB_LIBS)	\
+bonobo_application_x_pdf_LDADD =	\
+	../goo/libgoo.a			\
+	$(GTK_LIBS)			\
+	$(GNOME_LIBDIR)			\
+	-lbonobo			\
+	$(GNOMEGNORBA_LIBS)		\
+	$(EXTRA_GLIB_LIBS)		\
 	$(INTLLIBS)
 
 xpdf_SOURCES =			\
@@ -132,13 +131,7 @@ ltk = 			\
 	xpdf-top.ltk	\
 	xpdf.ltk
 
-gladedir   = $(datadir)/xpdf/glade
-
-glade_DATA = 		\
-	about.glade	\
-	gpdf.glade
-
 gnorbadir = $(sysconfdir)/CORBA/servers
-gnorba_DATA = image-x-pdf.gnorba
+gnorba_DATA = application-x-pdf.gnorba
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(glade_DATA) $(gnorba_DATA)
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(gnorba_DATA)

@@ -85,6 +85,7 @@ extern "C" {
   static void       container_open_cmd  (GtkWidget *widget, Container *container);
   static void       container_close_cmd (GtkWidget *widget, Container *container);
   static void       container_exit_cmd  (void);
+  static void       container_about_cmd (GtkWidget *widget, Container *container);
   static Component *container_activate_component (Container *container, char *component_goad_id);
   static void       zoom_in_cmd         (GtkWidget *widget, Container *container);
   static void       zoom_out_cmd        (GtkWidget *widget, Container *container);
@@ -113,9 +114,15 @@ static GnomeUIInfo container_menu_zoom [] = {
 	GNOMEUIINFO_END
 };
 
+static GnomeUIInfo container_help_menu [] = {
+        GNOMEUIINFO_MENU_ABOUT_ITEM(container_about_cmd, NULL),
+	GNOMEUIINFO_END
+};
+
 static GnomeUIInfo container_main_menu [] = {
 	GNOMEUIINFO_MENU_FILE_TREE (container_file_menu),
 	{ GNOME_APP_UI_SUBTREE, N_("_Zoom"), NULL, container_menu_zoom },
+	GNOMEUIINFO_MENU_HELP_TREE (container_help_menu),
 	GNOMEUIINFO_END
 };
 
@@ -141,7 +148,7 @@ extern "C" {
     g_return_val_if_fail (container != NULL, FALSE);
     g_return_val_if_fail (container->view_widget == NULL, FALSE);
 
-    comp = container_activate_component (container, "bonobo-object:image-x-pdf");
+    comp = container_activate_component (container, "bonobo-object:application-x-pdf");
     if (!comp || !(object = comp->server)) {
       gnome_error_dialog (_("Could not launch bonobo object."));
       return FALSE;
@@ -229,8 +236,10 @@ extern "C" {
 	char *fname = g_strdup (name);
 	if (container->view_widget) /* any sort of MDI sucks :-] */
 	  container = container_new (fname);
-	else
-	  open_pdf (container, fname);
+	else {
+	  if (!open_pdf (container, fname))
+	    container_destroy (container);
+	}
 	g_free (fname);
       } else {
 	GtkWidget *dialog;
@@ -250,7 +259,11 @@ extern "C" {
   container_destroy (Container *cont)
   {
     containers = g_list_remove (containers, cont);
-    gtk_widget_destroy (cont->app);
+    if (cont->app)
+      gtk_widget_destroy (cont->app);
+    cont->app = NULL;
+    /* FIXME: Some serious resource freeing needs to be here */
+    
     g_free (cont);
     if (!containers)
       gtk_main_quit ();
@@ -268,6 +281,34 @@ extern "C" {
     while (containers)
       container_destroy ((Container *)containers->data);
   }
+
+
+static void
+container_about_cmd (GtkWidget *widget, Container *container)
+{
+  GtkWidget *about;
+  int i;
+
+  const gchar *authors[] = {
+    N_("Michael Meeks, GNOME port maintainer."),
+    N_("Miguel de Icaza."),
+    N_("Nat Friedman."),
+    NULL
+  };
+  
+#ifdef ENABLE_NLS
+  for (i = 0; authors[i] != NULL; i++)
+    authors [i] = _(authors [i]);
+#endif
+  
+  about = gnome_about_new (_("GPDF"), VERSION,
+			   _("(C) 1996-1999 Derek B. Noonburg."),
+			   authors, NULL, NULL);
+  
+  gnome_dialog_set_parent (GNOME_DIALOG (about), GTK_WINDOW (container->app));
+  gnome_dialog_set_close (GNOME_DIALOG (about), TRUE);
+  gtk_widget_show (about);
+}
 
   /*
    * Enforces the containers zoom factor.
@@ -574,9 +615,10 @@ int
 main (int argc, char **argv)
 {
   CORBA_Environment ev;
-  CORBA_ORB orb;
-  char **view_files = NULL;
-  int    i;
+  CORBA_ORB         orb;
+  char            **view_files = NULL;
+  gboolean          loaded;
+  int               i;
   
   CORBA_exception_init (&ev);
   
@@ -597,11 +639,13 @@ main (int argc, char **argv)
 
   /* Load files */
   i = 0;
+  loaded = FALSE;
   if (view_files) {
     for (i = 0; view_files[i]; i++)
-      container_new (view_files[i]);
+      if (container_new (view_files[i]))
+	loaded = TRUE;
   }
-  if (i == 0)
+  if ((i == 0) || !loaded)
     container_new (NULL);
   
   poptFreeContext (ctx);

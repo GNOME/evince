@@ -1,5 +1,15 @@
 1999-08-24  Michael Meeks  <michael@imaginator.com>
 
+	* application-x-pdf.gnorba: Update to new mime type.
+
+	* Makefile.am (gnorba_DATA): Rename mime type.
+	Remove glade.
+
+	* gpdf.cc (main): File up a container if we fail to load
+	any of the command line files.
+
+1999-08-24  Michael Meeks  <michael@imaginator.com>
+
 	* Makefile.am: Cleaned + added thread bits.
 
 	* bonobo-image-x-pdf.cc: Add locking round 'xref' global.
