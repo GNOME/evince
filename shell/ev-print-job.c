@@ -224,7 +224,7 @@ ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialo
 	gnome_print_config_get_page_size (print_config,
 					  &job->width, &job->height);
 	gnome_print_config_get_boolean (print_config,
-					GNOME_PRINT_KEY_DUPLEX, &job->duplex);
+					(guchar *)GNOME_PRINT_KEY_DUPLEX, &job->duplex);
 	gnome_print_config_unref (print_config);
 }
 

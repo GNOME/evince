@@ -961,7 +961,7 @@ ev_window_print (EvWindow *ev_window)
 	config = gnome_print_config_default ();
 	job = gnome_print_job_new (config);
 
-	print_dialog = gnome_print_dialog_new (job, _("Print"),
+	print_dialog = gnome_print_dialog_new (job, (guchar *) _("Print"),
 					       (GNOME_PRINT_DIALOG_RANGE |
 						GNOME_PRINT_DIALOG_COPIES));
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (print_dialog),
@@ -989,7 +989,7 @@ ev_window_print (EvWindow *ev_window)
 				GTK_MESSAGE_DIALOG (dialog),
 				_("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
 				gnome_print_config_get (
-					config, "Settings.Engine.Backend.Driver"));
+					config, (guchar *)"Settings.Engine.Backend.Driver"));
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
 

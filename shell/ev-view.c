@@ -754,7 +754,7 @@ ev_view_create_invisible_cursor(void)
 {
        GdkBitmap *empty;
        GdkColor black = { 0, 0, 0, 0 };
-       static unsigned char bits[] = { 0x00 };
+       static char bits[] = { 0x00 };
 
        empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
 

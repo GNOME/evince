@@ -411,7 +411,7 @@ setup_page (PSDocument *gs)
 	setlocale(LC_NUMERIC, savelocale);
 #endif
 	gdk_property_change (gs->pstarget, gs_class->gs_atom, gs_class->string_atom,
-			     8, GDK_PROP_MODE_REPLACE, buf, strlen(buf));
+			     8, GDK_PROP_MODE_REPLACE, (guchar *)buf, strlen(buf));
 	gdk_flush ();
 }
 
