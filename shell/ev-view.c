@@ -1327,7 +1327,7 @@ ev_view_best_fit (EvView *view, int allocation_width, int allocation_height)
 	int width, height;
 	GtkBorder border;
 
-	if (view->document == NULL)
+	if (!GTK_WIDGET_REALIZED (view) || view->document == NULL)
 		return;
 
 	width = height = 0;
