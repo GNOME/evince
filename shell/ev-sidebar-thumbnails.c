@@ -228,6 +228,7 @@ do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 		gtk_list_store_set (priv->list_store,
 				    &(priv->current_page_iter),
 				    COLUMN_PIXBUF, pixbuf,
+				    COLUMN_THUMBNAIL_SET, TRUE,
 				    -1);
 
 		g_object_unref (pixbuf);

@@ -1,3 +1,9 @@
+2005-02-14  Crispin Flowerday  <gnome@flowerday.cx>
+
+	* shell/ev-sidebar-thumbnails.c: Ensure that after we have
+	created a thumbnail, the list store is updated to know
+	that the thumbnail is set. Fixes bug #166792
+
 2005-02-11  Bryan Clark  <clarkbw@cvs.gnome.org>
 
 	* shell/ev-window.c: fixed typo, closes bug 166897
