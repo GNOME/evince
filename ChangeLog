@@ -1,5 +1,14 @@
 2005-01-01  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* ps/gtkgs.c: (gtk_gs_class_init), (gtk_gs_get_orientation),
+	(output), (stop_interpreter), (gtk_gs_emit_error_msg),
+	(gtk_gs_zoom_to_fit), (gtk_gs_set_zoom):
+	* ps/gtkgs.h:
+
+	Remove unused code and make a lot of stuff private
+
+2005-01-01  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/gsdefaults.c: (gtk_gs_defaults_gconf_client),
 	(gtk_gs_defaults_changed):
 	* ps/gsdefaults.h:

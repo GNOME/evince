@@ -131,72 +131,7 @@ struct _GtkGSClass {
   void (*interpreter_error) (GtkGS *, gint, gpointer);
 };
 
-
-/* structure to describe section of file to send to ghostscript */
-struct record_list {
-  FILE *fp;
-  long begin;
-  guint len;
-  gboolean seek_needed;
-  gboolean close;
-  struct record_list *next;
-};
-
 GType gtk_gs_get_type(void);
-
-GObject *gtk_gs_new_from_file(GtkAdjustment * hadj, GtkAdjustment * vadj,
-                                gchar * fname);
-GObject *gtk_gs_new(GtkAdjustment * hadj, GtkAdjustment * vadj);
-gboolean gtk_gs_load(GtkGS * gs, const gchar * fname);
-void gtk_gs_reload(GtkGS * gs);
-
-/* control functions */
-gboolean gtk_gs_next_page(GtkGS * gs);
-gboolean gtk_gs_prev_page(GtkGS * gs);
-gboolean gtk_gs_goto_page(GtkGS * gs, gint);
-gint gtk_gs_enable_interpreter(GtkGS * gs);
-void gtk_gs_disable_interpreter(GtkGS * gs);
-
-gint gtk_gs_get_current_page(GtkGS * gs);
-gint gtk_gs_get_page_count(GtkGS * gs);
-gboolean gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid);
-gboolean gtk_gs_set_default_orientation(GtkGS * gs, gint orientation);
-gint gtk_gs_get_default_orientation(GtkGS * gs);
-void gtk_gs_set_default_size(GtkGS * gs, gint size);
-gint gtk_gs_get_default_size(GtkGS * gs);
-void gtk_gs_set_zoom(GtkGS * gs, gfloat zoom);
-gfloat gtk_gs_get_zoom(GtkGS * gs);
-gfloat gtk_gs_zoom_to_fit(GtkGS * gs, gboolean fit_width);
-void gtk_gs_set_center(GtkGS * gs, gfloat hval, gfloat vval);
-gint gtk_gs_get_orientation(GtkGS * gs);
-void gtk_gs_set_override_orientation(GtkGS * gs, gboolean f);
-gboolean gtk_gs_get_override_orientation(GtkGS * gs);
-void gtk_gs_set_respect_eof(GtkGS * gs, gboolean f);
-gboolean gtk_gs_get_respect_eof(GtkGS * gs);
-void gtk_gs_set_antialiasing(GtkGS * gs, gboolean f);
-gboolean gtk_gs_get_antialiasing(GtkGS * gs);
-void gtk_gs_set_override_size(GtkGS * gs, gboolean f);
-gboolean gtk_gs_get_override_size(GtkGS * gs);
-const gchar *gtk_gs_get_document_title(GtkGS * widget);
-guint gtk_gs_get_document_numpages(GtkGS * widget);
-const gchar *gtk_gs_get_document_page_label(GtkGS * widget, int page);
-
-void gtk_gs_set_zoom_mode(GtkGS * gs, GtkGSZoomMode zoom_mode);
-GtkGSZoomMode gtk_gs_get_zoom_mode(GtkGS * gs);
-
-void gtk_gs_set_available_size(GtkGS * gs, guint avail_w, guint avail_h);
-
-/* utility functions */
-gint gtk_gs_get_size_index(const gchar * string, GtkGSPaperSize * size);
-
-gchar *gtk_gs_get_postscript(GtkGS * gs, gint * pages);
-
-#define GTK_GS_IS_COMPRESSED(gs)       (GTK_GS(gs)->gs_filename_unc != NULL)
-#define GTK_GS_GET_PS_FILE(gs)         (GTK_GS_IS_COMPRESSED(gs) ? \
-                                        GTK_GS(gs)->gs_filename_unc : \
-                                        GTK_GS(gs)->gs_filename)
-#define GTK_GS_IS_PDF(gs)              (GTK_GS(gs)->gs_filename_dsc != NULL)
-#define GTK_GS_IS_STRUCTURED_DOC(gs)   (GTK_GS(gs)->structured_doc)
 
 G_END_DECLS
 
