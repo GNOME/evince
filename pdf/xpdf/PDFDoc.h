@@ -20,6 +20,7 @@
 #include "Link.h"
 #include "Catalog.h"
 #include "Page.h"
+#include "Annot.h"
 
 class GString;
 class BaseStream;
@@ -82,20 +83,26 @@ public:
   void displayPage(OutputDev *out, int page, double zoom,
 		   int rotate, GBool doLinks,
 		   GBool (*abortCheckCbk)(void *data) = NULL,
-		   void *abortCheckCbkData = NULL);
+		   void *abortCheckCbkData = NULL,
+                   GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data) = NULL,
+                   void *annotDisplayDecideCbkData = NULL);
 
   // Display a range of pages.
   void displayPages(OutputDev *out, int firstPage, int lastPage,
 		    int zoom, int rotate, GBool doLinks,
 		    GBool (*abortCheckCbk)(void *data) = NULL,
-		    void *abortCheckCbkData = NULL);
+		    void *abortCheckCbkData = NULL,
+                    GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data) = NULL,
+                    void *annotDisplayDecideCbkData = NULL);
 
   // Display part of a page.
   void displayPageSlice(OutputDev *out, int page, double zoom,
 			int rotate, int sliceX, int sliceY,
 			int sliceW, int sliceH,
 			GBool (*abortCheckCbk)(void *data) = NULL,
-			void *abortCheckCbkData = NULL);
+			void *abortCheckCbkData = NULL,
+                        GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data) = NULL,
+                        void *annotDisplayDecideCbkData = NULL);
 
   // Find a page, given its object ID.  Returns page number, or 0 if
   // not found.
@@ -144,7 +151,6 @@ public:
   // Save this file with another name.
   GBool saveAs(GString *name);
 
-
 private:
 
   GBool setup(GString *ownerPassword, GString *userPassword);
@@ -161,7 +167,6 @@ private:
 #ifndef DISABLE_OUTLINE
   Outline *outline;
 #endif
-
 
   GBool ok;
   int errCode;

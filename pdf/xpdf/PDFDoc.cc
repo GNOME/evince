@@ -206,7 +206,9 @@ void PDFDoc::checkHeader() {
 void PDFDoc::displayPage(OutputDev *out, int page, double zoom,
 			 int rotate, GBool doLinks,
 			 GBool (*abortCheckCbk)(void *data),
-			 void *abortCheckCbkData) {
+			 void *abortCheckCbkData,
+                         GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data),
+                         void *annotDisplayDecideCbkData) {
   Page *p;
 
   if (globalParams->getPrintCommands()) {
@@ -220,22 +222,27 @@ void PDFDoc::displayPage(OutputDev *out, int page, double zoom,
     }
     getLinks(p);
     p->display(out, zoom, rotate, links, catalog,
-	       abortCheckCbk, abortCheckCbkData);
+	       abortCheckCbk, abortCheckCbkData,
+               annotDisplayDecideCbk, annotDisplayDecideCbkData);
   } else {
     p->display(out, zoom, rotate, NULL, catalog,
-	       abortCheckCbk, abortCheckCbkData);
+	       abortCheckCbk, abortCheckCbkData,
+               annotDisplayDecideCbk, annotDisplayDecideCbkData);
   }
 }
 
 void PDFDoc::displayPages(OutputDev *out, int firstPage, int lastPage,
 			  int zoom, int rotate, GBool doLinks,
 			  GBool (*abortCheckCbk)(void *data),
-			  void *abortCheckCbkData) {
+			  void *abortCheckCbkData,
+                          GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data),
+                          void *annotDisplayDecideCbkData) {
   int page;
 
   for (page = firstPage; page <= lastPage; ++page) {
     displayPage(out, page, zoom, rotate, doLinks,
-		abortCheckCbk, abortCheckCbkData);
+		abortCheckCbk, abortCheckCbkData,
+                annotDisplayDecideCbk, annotDisplayDecideCbkData);
   }
 }
 
@@ -243,12 +250,16 @@ void PDFDoc::displayPageSlice(OutputDev *out, int page, double zoom,
 			      int rotate, int sliceX, int sliceY,
 			      int sliceW, int sliceH,
 			      GBool (*abortCheckCbk)(void *data),
-			      void *abortCheckCbkData) {
+			      void *abortCheckCbkData,
+                              GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data),
+                              void *annotDisplayDecideCbkData) {
   Page *p;
 
   p = catalog->getPage(page);
   p->displaySlice(out, zoom, rotate, sliceX, sliceY, sliceW, sliceH,
-		  NULL, catalog, abortCheckCbk, abortCheckCbkData);
+		  NULL, catalog,
+                  abortCheckCbk, abortCheckCbkData,
+                  annotDisplayDecideCbk, annotDisplayDecideCbkData);
 }
 
 GBool PDFDoc::isLinearized() {
