@@ -6,6 +6,7 @@ typedef struct _CacheJobInfo
 {
 	EvJob *job;
 	GdkPixbuf *pixbuf;
+	GList *link_mapping;
 } CacheJobInfo;
 
 struct _EvPixbufCache
@@ -50,14 +51,16 @@ static void          job_finished_cb            (EvJob              *job,
 						 EvPixbufCache      *pixbuf_cache);
 static CacheJobInfo *find_job_cache             (EvPixbufCache      *pixbuf_cache,
 						 int                 page);
-
+static void          copy_job_to_job_info       (EvJobRender        *job_render,
+						 CacheJobInfo       *job_info,
+						 EvPixbufCache      *pixbuf_cache);
 
 
 /* These are used for iterating through the prev and next arrays */
 #define FIRST_VISABLE_PREV(pixbuf_cache) \
 	(MAX (0, pixbuf_cache->preload_cache_size + 1 - pixbuf_cache->start_page))
 #define VISIBLE_NEXT_LEN(pixbuf_cache, page_cache) \
-	(MIN(pixbuf_cache->preload_cache_size, ev_page_cache_get_n_pages (page_cache) - pixbuf_cache->end_page))
+	(MIN(pixbuf_cache->preload_cache_size, ev_page_cache_get_n_pages (page_cache) - (1 + pixbuf_cache->end_page)))
 #define PAGE_CACHE_LEN(pixbuf_cache) \
 	((pixbuf_cache->end_page - pixbuf_cache->start_page) + 1)
 
@@ -66,8 +69,8 @@ G_DEFINE_TYPE (EvPixbufCache, ev_pixbuf_cache, G_TYPE_OBJECT)
 static void
 ev_pixbuf_cache_init (EvPixbufCache *pixbuf_cache)
 {
-	pixbuf_cache->start_page = 1;
-	pixbuf_cache->end_page = 1;
+	pixbuf_cache->start_page = 0;
+	pixbuf_cache->end_page = 0;
 	pixbuf_cache->job_list = g_new0 (CacheJobInfo, PAGE_CACHE_LEN (pixbuf_cache));
 
 	pixbuf_cache->preload_cache_size = 1;
@@ -123,6 +126,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		g_object_unref (G_OBJECT (job_info->pixbuf));
 		job_info->pixbuf = NULL;
 	}
+	if (job_info->link_mapping) {
+		ev_link_mapping_free (job_info->link_mapping);
+		job_info->link_mapping = NULL;
+	}
 }
 
 static void
@@ -177,6 +184,12 @@ job_finished_cb (EvJob         *job,
 		g_object_unref (job_info->pixbuf);
 	job_info->pixbuf = pixbuf;
 
+	if (job_render->link_mapping) {
+		if (job_info->link_mapping)
+			ev_link_mapping_free (job_info->link_mapping);
+		job_info->link_mapping = job_render->link_mapping;
+	}
+	
 	if (job_info->job == job)
 		job_info->job = NULL;
 	g_object_unref (job);
@@ -268,6 +281,7 @@ move_one_job (CacheJobInfo  *job_info,
 	*target_page = *job_info;
 	job_info->job = NULL;
 	job_info->pixbuf = NULL;
+	job_info->link_mapping = NULL;
 
 	if (new_priority != priority && target_page->job) {
 		g_print ("FIXME: update priority \n");
@@ -303,7 +317,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	/* Start with the prev cache. */
 	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		if (page < 1) {
+		if (page < 0) {
 			dispose_cache_job_info (pixbuf_cache->prev_job + i, pixbuf_cache);
 		} else {
 			move_one_job (pixbuf_cache->prev_job + i,
@@ -324,7 +338,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		if (page > ev_page_cache_get_n_pages (page_cache)) {
+		if (page >= ev_page_cache_get_n_pages (page_cache)) {
 			dispose_cache_job_info (pixbuf_cache->next_job + i, pixbuf_cache);
 		} else {
 			move_one_job (pixbuf_cache->next_job + i,
@@ -345,6 +359,22 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 
 	pixbuf_cache->start_page = start_page;
 	pixbuf_cache->end_page = end_page;
+}
+
+static void
+copy_job_to_job_info (EvJobRender   *job_render,
+		      CacheJobInfo  *job_info,
+		      EvPixbufCache *pixbuf_cache)
+{
+	GdkPixbuf *pixbuf;
+
+	pixbuf = g_object_ref (job_render->pixbuf);
+
+	dispose_cache_job_info (job_info, pixbuf_cache);
+
+	job_info->pixbuf = pixbuf;
+	if (job_render->link_mapping)
+		job_info->link_mapping = job_render->link_mapping;
 }
 
 static CacheJobInfo *
@@ -426,7 +456,8 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	/* make a new job now */
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   page, scale,
-					   width, height);
+					   width, height,
+					   (job_info->link_mapping == NULL)?TRUE:FALSE);
 	ev_job_queue_add_job (job_info->job, priority);
 	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
 }
@@ -484,8 +515,8 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
 
 	page_cache = ev_document_get_page_cache (pixbuf_cache->document);
 
-	g_return_if_fail (start_page > 0 && start_page <= ev_page_cache_get_n_pages (page_cache));
-	g_return_if_fail (end_page > 0 && end_page <= ev_page_cache_get_n_pages (page_cache));
+	g_return_if_fail (start_page >= 0 && start_page < ev_page_cache_get_n_pages (page_cache));
+	g_return_if_fail (end_page >= 0 && end_page < ev_page_cache_get_n_pages (page_cache));
 	g_return_if_fail (end_page >= start_page);
 
 	/* First, resize the page_range as needed.  We cull old pages
@@ -514,12 +545,27 @@ ev_pixbuf_cache_get_pixbuf (EvPixbufCache *pixbuf_cache,
 	/* We don't need to wait for the idle to handle the callback */
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
-		GdkPixbuf *pixbuf;
-
-		pixbuf = g_object_ref (EV_JOB_RENDER (job_info->job)->pixbuf);
-		dispose_cache_job_info (job_info, pixbuf_cache);
-		job_info->pixbuf = pixbuf;
+		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
 	}
 
 	return job_info->pixbuf;
+}
+
+GList *
+ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
+				  gint           page)
+{
+	CacheJobInfo *job_info;
+
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* We don't need to wait for the idle to handle the callback */
+	if (job_info->job &&
+	    EV_JOB (job_info->job)->finished) {
+		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+	}
+	
+	return job_info->link_mapping;
 }

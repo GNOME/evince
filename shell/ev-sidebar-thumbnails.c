@@ -118,7 +118,7 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 
 	path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->list_store),
 					&iter);
-	page = gtk_tree_path_get_indices (path)[0] + 1;
+	page = gtk_tree_path_get_indices (path)[0];
 	gtk_tree_path_free (path);
 
 	page_cache = ev_document_get_page_cache (priv->document);
@@ -189,7 +189,7 @@ page_changed_cb (EvPageCache         *page_cache,
 	GtkTreePath *path;
 	GtkTreeSelection *selection;
 
-	path = gtk_tree_path_new_from_indices (page - 1, -1);
+	path = gtk_tree_path_new_from_indices (page, -1);
 	selection = gtk_tree_view_get_selection
 			(GTK_TREE_VIEW (sidebar->priv->tree_view));
 
@@ -247,12 +247,12 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
 
 	gtk_list_store_clear (priv->list_store);
-	for (i = 1; i <= n_pages; i++) {
+	for (i = 0; i < n_pages; i++) {
 		EvJob *job;
 
 		/* FIXME: Bah.  This is still -1 for some reason.  Need to track it down.. */
-		job = ev_job_thumbnail_new (priv->document, i - 1, THUMBNAIL_WIDTH);
-		page = g_strdup_printf ("<i>%d</i>", i);
+		job = ev_job_thumbnail_new (priv->document, i, THUMBNAIL_WIDTH);
+		page = g_strdup_printf ("<i>%d</i>", i + 1); /* FIXME: replace with string. */
 		gtk_list_store_append (priv->list_store, &iter);
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_PAGE_STRING, page,

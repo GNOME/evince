@@ -97,6 +97,8 @@ struct _EvJobRender
 	gint target_width;
 	gint target_height;
 	GdkPixbuf *pixbuf;
+	GList *link_mapping;
+	gboolean include_links;
 };
 
 struct _EvJobRenderClass
@@ -134,7 +136,8 @@ EvJob          *ev_job_render_new         (EvDocument     *document,
 					   gint            page,
 					   double          scale,
 					   gint            width,
-					   gint            height);
+					   gint            height,
+					   gboolean        include_links);
 void            ev_job_render_run         (EvJobRender    *thumbnail);
 
 /* EvJobThumbnail */

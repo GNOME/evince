@@ -704,14 +704,15 @@ static char *
 status_message_from_link (EvLink *link)
 {
 	EvLinkType type;
-	char *msg;
+	char *msg = NULL;
 	int page;
 
 	type = ev_link_get_link_type (link);
 	
 	switch (type) {
 		case EV_LINK_TYPE_TITLE:
-			msg = g_strdup (ev_link_get_title (link));
+			if (ev_link_get_title (link))
+				msg = g_strdup (ev_link_get_title (link));
 			break;
 		case EV_LINK_TYPE_PAGE:
 			page = ev_link_get_page (link);
@@ -721,7 +722,7 @@ status_message_from_link (EvLink *link)
 			msg = g_strdup (ev_link_get_uri (link));
 			break;
 		default:
-			msg = NULL;
+			break;
 	}
 
 	return msg;
@@ -799,6 +800,56 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 	}
 }
 
+
+static void
+find_page_at_location (EvView  *view,
+		       gdouble  x,
+		       gdouble  y,
+		       gint    *page,
+		       gint    *x_offset,
+		       gint    *y_offset)
+{
+	GtkBorder border;
+	gint width, height;
+
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				view->scale,
+				&width, &height);
+	ev_document_misc_get_page_border_size (width, height, &border);
+
+	x -= (border.left + view->spacing);
+	y -= (border.top + view->spacing);
+
+	if ((x < 0) || (y < 0) ||
+	    (x >= width) || (y >= height)) {
+		*page = -1;
+		return;
+	}
+	*page = view->current_page;
+	*x_offset = (gint) x;
+	*y_offset = (gint) y;
+}
+
+static EvLink *
+get_link_at_location (EvView  *view,
+		      gdouble  x,
+		      gdouble  y)
+{
+	gint page;
+	gint x_offset, y_offset;
+	GList *link_mapping;
+
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+	if (page == -1)
+		return NULL;
+
+	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
+
+	return ev_link_mapping_find (link_mapping, x_offset /view->scale, y_offset /view->scale);
+}
+
+
 static gboolean
 ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
@@ -816,13 +867,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		view_rect_to_doc_rect (view, &selection, &view->selection);
 
 		gtk_widget_queue_draw (widget);
-	} else if (FALSE && view->document) {
+	} else if (view->document) {
 		EvLink *link;
 
-		g_mutex_lock (EV_DOC_MUTEX);
-		link = ev_document_get_link (view->document, event->x, event->y);
-		g_mutex_unlock (EV_DOC_MUTEX);
-
+		link = get_link_at_location (view, event->x, event->y);
                 if (link) {
 			char *msg;
 
@@ -830,8 +878,6 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			ev_view_set_status (view, msg);
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 			g_free (msg);
-
-                        g_object_unref (link);
 		} else {
 			ev_view_set_status (view, NULL);
 			if (view->cursor == EV_VIEW_CURSOR_LINK) {
@@ -856,14 +902,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 	} else if (view->document) {
 		EvLink *link;
 
-		g_mutex_lock (EV_DOC_MUTEX);
-		link = ev_document_get_link (view->document,
-					     event->x,
-					     event->y);
-		g_mutex_unlock (EV_DOC_MUTEX);
+		link = get_link_at_location (view, event->x, event->y);
 		if (link) {
 			ev_view_go_to_link (view, link);
-			g_object_unref (link);
 		}
 	}
 
@@ -1089,7 +1130,7 @@ ev_view_init (EvView *view)
 
 	view->spacing = 10;
 	view->scale = 1.0;
-	view->current_page = 1;
+	view->current_page = 0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 }

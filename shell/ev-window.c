@@ -202,10 +202,10 @@ update_action_sensitivity (EvWindow *ev_window)
 		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
 
-		set_action_sensitive (ev_window, "GoPreviousPage", page > 1);
-		set_action_sensitive (ev_window, "GoNextPage", page < n_pages);
-		set_action_sensitive (ev_window, "GoFirstPage", page > 1);
-		set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
+		set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
+		set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
+		set_action_sensitive (ev_window, "GoFirstPage", page > 0);
+		set_action_sensitive (ev_window, "GoLastPage", page < n_pages - 1);
 	} else {
   		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
 		set_action_sensitive (ev_window, "GoPreviousPage", FALSE);
@@ -495,7 +495,8 @@ update_total_pages (EvWindow *ev_window)
 static gboolean
 document_supports_sidebar (EvDocument *document)
 {
-	return (EV_IS_DOCUMENT_THUMBNAILS (document) && EV_IS_DOCUMENT_LINKS (document));
+        /* FIXME: Remove the (TRUE ||) after links are fixed in poppler-glib */
+	return (EV_IS_DOCUMENT_THUMBNAILS (document) && (EV_IS_DOCUMENT_LINKS (document)));
 }
 
 static void

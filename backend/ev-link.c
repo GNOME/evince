@@ -85,13 +85,14 @@ void
 ev_link_set_title (EvLink* self, const char *title)
 {
 	g_assert (EV_IS_LINK (self));
-	g_assert (title != NULL);
 
 	if (self->priv->title != NULL) {
 		g_free (self->priv->title);
 	}
-
-	self->priv->title = g_strdup (title);
+	if (title)
+		self->priv->title = g_strdup (title);
+	else
+		self->priv->title = NULL;
 
 	g_object_notify (G_OBJECT (self), "title");
 }
@@ -314,3 +315,50 @@ ev_link_new_external (const char *title, const char *uri)
 				      "type", EV_LINK_TYPE_EXTERNAL_URI,
 				      NULL));
 }
+
+
+
+static void
+ev_link_mapping_free_foreach (EvLinkMapping *mapping)
+{
+	g_object_unref (G_OBJECT (mapping->link));
+	g_free (mapping);
+}
+
+void
+ev_link_mapping_free (GList *link_mapping)
+{
+	if (link_mapping == NULL)
+		return;
+
+	g_list_foreach (link_mapping, (GFunc) (ev_link_mapping_free_foreach), NULL);
+	g_list_free (link_mapping);
+}
+
+
+EvLink *
+ev_link_mapping_find (GList   *link_mapping,
+		      gdouble  x,
+		      gdouble  y)
+{
+	GList *list;
+	EvLink *link = NULL;
+	int i;
+	
+	i = 0;
+	for (list = link_mapping; list; list = list->next) {
+		EvLinkMapping *mapping = list->data;
+
+		i++;
+		if ((x >= mapping->x1) &&
+		    (y >= mapping->y1) &&
+		    (x <= mapping->x2) &&
+		    (y <= mapping->y2)) {
+			link = mapping->link;
+			break;
+		}
+	}
+
+	return link;
+}
+

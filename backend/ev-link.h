@@ -37,6 +37,8 @@ typedef struct _EvLinkPrivate EvLinkPrivate;
 
 #define EV_TYPE_LINK_TYPE	  (ev_link_type_get_type ())
 
+
+
 typedef enum
 {
 	EV_LINK_TYPE_TITLE,
@@ -67,6 +69,22 @@ int		ev_link_get_page	(EvLink     *link);
 void		ev_link_set_page	(EvLink     *link,
 					 int             page);
 
+/* Link Mapping stuff */
+
+typedef struct _EvLinkMapping	  EvLinkMapping;
+struct _EvLinkMapping
+{
+	EvLink *link;
+	gdouble x1;
+	gdouble y1;
+	gdouble x2;
+	gdouble y2;
+};
+
+void    ev_link_mapping_free (GList   *link_mapping);
+EvLink *ev_link_mapping_find (GList   *link_mapping,
+			      gdouble  x,
+			      gdouble  y);
 G_END_DECLS
 
 #endif /* !EV_LINK_H */

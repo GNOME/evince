@@ -1,3 +1,58 @@
+Thu Mar 31 01:21:58 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* Makefile.am: Remove pixbuf backend for now
+
+	* configure.ac: Require poppler-glib instead of just poppler.
+
+	* backend/ev-document-thumbnails.h: Add a comment
+
+	* backend/ev-document.h:
+	* backend/ev-document.c: (ev_document_class_init),
+	(ev_document_load), (ev_document_get_link),
+	(ev_document_get_links): Remove 3 methods and add get_links.
+	Also, made 0 based.
+
+	* backend/ev-jobs.c: (ev_job_render_new), (ev_job_render_run):
+	* backend/ev-jobs.h: now EvJobRender can grab the links for a document.
+
+	* backend/ev-link.c: (ev_link_set_title),
+	(ev_link_mapping_free_foreach), (ev_link_mapping_free),
+	(ev_link_mapping_find):
+	* backend/ev-link.h: Allow NULL titles.  Also, introduce a mapping link.
+	
+	* backend/ev-page-cache.c: (ev_page_cache_init),
+	(_ev_page_cache_new), (ev_page_cache_set_current_page),
+	(ev_page_cache_get_size), (ev_page_cache_next_page),
+	(ev_page_cache_prev_page): Fix to be 0 based.
+
+	* pdf/Makefile.am: 
+	* pdf/ev-poppler.h:
+	* pdf/ev-poppler.cc: New backend.
+	
+	* ps/ps-document.c: (ps_document_init), (ps_document_set_page),
+	(ps_document_get_page), (ps_document_document_iface_init):
+
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_init),
+	(dispose_cache_job_info), (job_finished_cb), (move_one_job),
+	(ev_pixbuf_cache_update_range), (copy_job_to_job_info),
+	(add_job_if_needed), (ev_pixbuf_cache_set_page_range),
+	(ev_pixbuf_cache_get_pixbuf), (ev_pixbuf_cache_get_link_mapping):
+	Fix up code to grab a page cache per each doc.  Also, fix to be 0
+	based.
+	
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_tree_selection_changed), (page_changed_cb),
+	(ev_sidebar_thumbnails_set_document): Fix to be 0 based.
+
+	* shell/ev-view.c: (status_message_from_link),
+	(find_page_at_location), (get_link_at_location),
+	(ev_view_motion_notify_event), (ev_view_button_release_event),
+	(ev_view_init): Use the new link code.  Fix to be 0 based.
+
+	* shell/ev-window.c: (update_action_sensitivity),
+	(document_supports_sidebar): 0 based.
+
 Fri Mar 25 16:55:58 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* pdf/pdf-document.cc: Patch from Fernando Herrera

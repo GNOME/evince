@@ -52,6 +52,12 @@ struct _EvDocumentThumbnailsIface
 };
 
 GType      ev_document_thumbnails_get_type       (void);
+
+/* FIXME: This is a little bit busted.  We call get_thumbnail w/ a suggested
+ * width, but we should call it with a scale so that different sized pages get
+ * sized proportionally.
+ */
+
 GdkPixbuf *ev_document_thumbnails_get_thumbnail  (EvDocumentThumbnails *document,
                                                   gint                  page,
                                                   gint                  size,

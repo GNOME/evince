@@ -137,8 +137,6 @@ ps_document_init (PSDocument *gs)
 	gs->bytes_left = 0;
 	gs->buffer_bytes_left = 0;
 
-	gs->page_x_offset = 0;
-	gs->page_y_offset = 0;
 	gs->zoom_factor = 1.0;
 
 	gs->gs_status = _("No document loaded.");
@@ -1208,7 +1206,7 @@ ps_document_set_page (EvDocument  *document,
 
 	LOG ("Set document page %d\n", page);
 
-	gs->current_page = page - 1;
+	gs->current_page = page;
 	compute_dimensions (gs, page);
 }
 
@@ -1219,7 +1217,7 @@ ps_document_get_page (EvDocument  *document)
 
 	g_return_val_if_fail (ps != NULL, -1);
 
-	return ps->current_page + 1;
+	return ps->current_page;
 }
 
 static void
@@ -1230,17 +1228,6 @@ ps_document_set_scale (EvDocument  *document,
 
 	gs->zoom_factor = scale;
 	compute_dimensions (gs, gs->current_page);
-}
-
-static void
-ps_document_set_page_offset (EvDocument  *document,
-			      int          x,
-			      int          y)
-{
-	PSDocument *gs = PS_DOCUMENT (document);
-
-	gs->page_x_offset = x;
-	gs->page_y_offset = y;
 }
 
 static void
@@ -1338,7 +1325,6 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page = ps_document_set_page;
 	iface->get_page = ps_document_get_page;
 	iface->set_scale = ps_document_set_scale;
-	iface->set_page_offset = ps_document_set_page_offset;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->render_pixbuf = ps_document_render_pixbuf;
 }

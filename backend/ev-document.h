@@ -73,13 +73,8 @@ struct _EvDocumentIface
 	void	    (* set_page)	(EvDocument   *document,
 					 int           page);
 	int	    (* get_page)	(EvDocument   *document);
-	void	    (* set_target)      (EvDocument   *document,
-					 GdkDrawable  *target);
 	void	    (* set_scale)       (EvDocument   *document,
 					 double        scale);
-	void	    (* set_page_offset) (EvDocument   *document,
-					 int           x,
-					 int           y);
 	void	    (* get_page_size)   (EvDocument   *document,
 					 int           page,
 					 int          *width,
@@ -89,15 +84,8 @@ struct _EvDocumentIface
 	EvLink    * (* get_link)	(EvDocument   *document,
 					 int           x,
 					 int	       y);
-	void	    (* render)          (EvDocument   *document,
-					 int           clip_x,
-					 int           clip_y,
-					 int           clip_width,
-					 int           clip_height);
-	GdkPixbuf *(* render_pixbuf)    (EvDocument   *document);
-
-
-
+	GList     * (* get_links)	(EvDocument   *document);
+	GdkPixbuf * (* render_pixbuf)   (EvDocument   *document);
 };
 
 GType        ev_document_get_type       (void);
@@ -106,42 +94,31 @@ EvPageCache *ev_document_get_page_cache (EvDocument *document);
 GMutex      *ev_document_get_doc_mutex  (void);
 
 
-gboolean ev_document_load            (EvDocument   *document,
-				      const char   *uri,
-				      GError      **error);
-gboolean ev_document_save            (EvDocument   *document,
-				      const char   *uri,
-				      GError      **error);
-char    *ev_document_get_title       (EvDocument   *document);
-int      ev_document_get_n_pages     (EvDocument   *document);
-void     ev_document_set_page        (EvDocument   *document,
-				      int           page);
-int      ev_document_get_page        (EvDocument   *document);
-void     ev_document_set_target      (EvDocument   *document,
-				      GdkDrawable  *target);
-void     ev_document_set_scale       (EvDocument   *document,
-				      double        scale);
-void     ev_document_set_page_offset (EvDocument   *document,
-				      int           x,
-				      int           y);
-void     ev_document_get_page_size   (EvDocument   *document,
-				      int           page,
-				      int          *width,
-				      int          *height);
-char    *ev_document_get_text	     (EvDocument   *document,
-				      GdkRectangle *rect);
-EvLink  *ev_document_get_link	     (EvDocument   *document,
-				      int           x,
-				      int	    y);
-void     ev_document_render          (EvDocument   *document,
-				      int           clip_x,
-				      int           clip_y,
-				      int           clip_width,
-				      int           clip_height);
-/* Quick hack to test threaded rendering */
-GdkPixbuf *ev_document_render_pixbuf   (EvDocument   *document);
-void	 ev_document_page_changed    (EvDocument *document);
-void	 ev_document_scale_changed   (EvDocument *document);
+gboolean   ev_document_load          (EvDocument    *document,
+				      const char    *uri,
+				      GError       **error);
+gboolean   ev_document_save          (EvDocument    *document,
+				      const char    *uri,
+				      GError       **error);
+char      *ev_document_get_title     (EvDocument    *document);
+int        ev_document_get_n_pages   (EvDocument    *document);
+void       ev_document_set_page      (EvDocument    *document,
+				      int            page);
+int        ev_document_get_page      (EvDocument    *document);
+void       ev_document_set_scale     (EvDocument    *document,
+				      double         scale);
+void       ev_document_get_page_size (EvDocument    *document,
+				      int            page,
+				      int           *width,
+				      int           *height);
+char      *ev_document_get_text      (EvDocument    *document,
+				      GdkRectangle  *rect);
+EvLink    *ev_document_get_link      (EvDocument    *document,
+				      int            x,
+				      int            y);
+GList     *ev_document_get_links     (EvDocument    *document);
+GdkPixbuf *ev_document_render_pixbuf (EvDocument    *document);
+
 
 G_END_DECLS
 

@@ -27,16 +27,8 @@
 
 static void ev_document_class_init (gpointer g_class);
 
-enum
-{
-	PAGE_CHANGED,
-	SCALE_CHANGED,
-	LAST_SIGNAL
-};
 
-static guint signals[LAST_SIGNAL] = { 0 };
 GMutex *ev_doc_mutex = NULL;
-
 
 #define LOG(x) 
 GType
@@ -75,26 +67,6 @@ ev_document_error_quark (void)
 static void
 ev_document_class_init (gpointer g_class)
 {
-	signals[PAGE_CHANGED] =
-		g_signal_new ("page_changed",
-			      EV_TYPE_DOCUMENT,
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvDocumentIface, page_changed),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE,
-			      0);
-
-	signals[SCALE_CHANGED] =
-		g_signal_new ("scale_changed",
-			      EV_TYPE_DOCUMENT,
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvDocumentIface, scale_changed),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE,
-			      0);
-
 	g_object_interface_install_property (g_class,
 				g_param_spec_string ("title",
 						     "Document Title",
@@ -140,8 +112,11 @@ ev_document_load (EvDocument  *document,
 	gboolean retval;
 	LOG ("ev_document_load");
 	retval = iface->load (document, uri, error);
+
 	/* Call this to make the initial cached copy */
-	ev_document_get_page_cache (document);
+	if (retval)
+		ev_document_get_page_cache (document);
+
 	return retval;
 }
 
@@ -205,16 +180,6 @@ ev_document_get_page (EvDocument *document)
 }
 
 void
-ev_document_set_target (EvDocument  *document,
-			GdkDrawable *target)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	LOG ("ev_document_set_target");
-	iface->set_target (document, target);
-}
-
-void
 ev_document_set_scale (EvDocument   *document,
 		       double        scale)
 {
@@ -222,17 +187,6 @@ ev_document_set_scale (EvDocument   *document,
 
 	LOG ("ev_document_set_scale");
 	iface->set_scale (document, scale);
-}
-
-void
-ev_document_set_page_offset (EvDocument  *document,
-			     int          x,
-			     int          y)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	LOG ("ev_document_set_page_offset");
-	iface->set_page_offset (document, x, y);
 }
 
 void
@@ -269,23 +223,27 @@ ev_document_get_link (EvDocument   *document,
 	EvLink *retval;
 
 	LOG ("ev_document_get_link");
+	if (iface->get_link == NULL)
+		return NULL;
 	retval = iface->get_link (document, x, y);
 
 	return retval;
 }
 
-void
-ev_document_render (EvDocument  *document,
-		    int          clip_x,
-		    int          clip_y,
-		    int          clip_width,
-		    int          clip_height)
+GList *
+ev_document_get_links (EvDocument *document)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	GList *retval;
 
-	LOG ("ev_document_render");
-	iface->render (document, clip_x, clip_y, clip_width, clip_height);
+	LOG ("ev_document_get_link");
+	if (iface->get_links == NULL)
+		return NULL;
+	retval = iface->get_links (document);
+
+	return retval;
 }
+
 
 
 GdkPixbuf *
@@ -302,15 +260,3 @@ ev_document_render_pixbuf (EvDocument *document)
 	return retval;
 }
 
-
-void
-ev_document_page_changed (EvDocument *document)
-{
-	g_signal_emit (G_OBJECT (document), signals[PAGE_CHANGED], 0);
-}
-
-void
-ev_document_scale_changed (EvDocument *document)
-{
-	g_signal_emit (G_OBJECT (document), signals[SCALE_CHANGED], 0);
-}

@@ -37,14 +37,17 @@ G_BEGIN_DECLS
 typedef struct _EvPixbufCache       EvPixbufCache;
 typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
-GType          ev_pixbuf_cache_get_type       (void) G_GNUC_CONST;
-EvPixbufCache *ev_pixbuf_cache_new            (EvDocument    *document);
-void           ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
-					       gint           start_page,
-					       gint           end_page,
-					       gfloat         scale);
-GdkPixbuf     *ev_pixbuf_cache_get_pixbuf     (EvPixbufCache *pixbuf_cache,
-					       gint           page);
+GType          ev_pixbuf_cache_get_type         (void) G_GNUC_CONST;
+EvPixbufCache *ev_pixbuf_cache_new              (EvDocument    *document);
+void           ev_pixbuf_cache_set_page_range   (EvPixbufCache *pixbuf_cache,
+						 gint           start_page,
+						 gint           end_page,
+						 gfloat         scale);
+GdkPixbuf     *ev_pixbuf_cache_get_pixbuf       (EvPixbufCache *pixbuf_cache,
+						 gint           page);
+GList         *ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
+						 gint           page);
+
 
 G_END_DECLS
 

@@ -182,7 +182,8 @@ ev_job_render_new (EvDocument *document,
 		   gint        page,
 		   double      scale,
 		   gint        width,
-		   gint        height)
+		   gint        height,
+		   gboolean    include_links)
 {
 	EvJobRender *job;
 
@@ -193,6 +194,7 @@ ev_job_render_new (EvDocument *document,
 	job->scale = scale;
 	job->target_width = width;
 	job->target_height = height;
+	job->include_links = include_links;
 
 	return EV_JOB (job);
 }
@@ -204,9 +206,11 @@ ev_job_render_run (EvJobRender *job)
 
 	g_mutex_lock (EV_DOC_MUTEX);
 
-	ev_document_set_scale (EV_JOB (job)->document, job->scale);
 	ev_document_set_page (EV_JOB (job)->document, job->page);
+	ev_document_set_scale (EV_JOB (job)->document, job->scale);
 	job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document);
+	if (job->include_links)
+		job->link_mapping = ev_document_get_links (EV_JOB (job)->document);
 	EV_JOB (job)->finished = TRUE;
 
 	g_mutex_unlock (EV_DOC_MUTEX);

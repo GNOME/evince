@@ -48,7 +48,7 @@ G_DEFINE_TYPE (EvPageCache, ev_page_cache, G_TYPE_OBJECT)
 static void
 ev_page_cache_init (EvPageCache *page_cache)
 {
-	page_cache->current_page = 1;
+	page_cache->current_page = 0;
 }
 
 static void
@@ -102,13 +102,13 @@ _ev_page_cache_new (EvDocument *document)
 	page_cache->title = ev_document_get_title (document);
 
 	ev_document_set_scale (document, 1.0);
-	for (i = 1; i <= page_cache->n_pages; i++) {
+	for (i = 0; i < page_cache->n_pages; i++) {
 		gint page_width = 0;
 		gint page_height = 0;
 
 		ev_document_get_page_size (document, i, &page_width, &page_height);
 
-		if (i == 1) {
+		if (i == 0) {
 			page_cache->uniform_width = page_width;
 			page_cache->uniform_height = page_height;
 		} else if (page_cache->uniform &&
@@ -169,7 +169,7 @@ ev_page_cache_set_current_page (EvPageCache *page_cache,
 				int          page)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-	g_return_if_fail (page > 0 || page <= page_cache->n_pages);
+	g_return_if_fail (page >= 0 || page < page_cache->n_pages);
 
 	if (page == page_cache->current_page)
 		return;
@@ -204,7 +204,7 @@ ev_page_cache_get_size (EvPageCache *page_cache,
 			gint        *height)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-	g_return_if_fail (page > 0 && page <= page_cache->n_pages);
+	g_return_if_fail (page >= 0 && page < page_cache->n_pages);
 
 	if (page_cache->uniform) {
 		if (width)
@@ -214,7 +214,7 @@ ev_page_cache_get_size (EvPageCache *page_cache,
 	} else {
 		EvPageCacheInfo *info;
 
-		info = &(page_cache->size_cache [page - 1]);
+		info = &(page_cache->size_cache [page]);
 		
 		if (width)
 			*width = info->width;
@@ -234,7 +234,7 @@ ev_page_cache_next_page (EvPageCache *page_cache)
 {
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
 
-	if (page_cache->current_page >= page_cache->n_pages)
+	if (page_cache->current_page > page_cache->n_pages)
 		return FALSE;
 
 	ev_page_cache_set_current_page (page_cache, page_cache->current_page + 1);
@@ -247,7 +247,7 @@ ev_page_cache_prev_page (EvPageCache *page_cache)
 {
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
 
-	if (page_cache->current_page <= 1)
+	if (page_cache->current_page <= 0)
 		return FALSE;
 
 	ev_page_cache_set_current_page (page_cache, page_cache->current_page - 1);
