@@ -41,6 +41,7 @@ GBool printCommands = gFalse;
 gint  gpdf_debug=1;
 poptContext ctx;
 
+#define DOC_KEY "xpdf_doc_key"
 #define DOC_ROOT_MAGIC 0xad3f556d
 struct DOC_ROOT {
   guint32        magic;
@@ -54,8 +55,6 @@ struct DOC_ROOT {
   OutputDev      *out;
   GdkColor        paper;
 };
-
-DOC_ROOT *hack_global = NULL;
 
 static void
 crummy_cmd (GtkWidget *widget, DOC_ROOT *tmp)
@@ -89,8 +88,10 @@ static GnomeUIInfo main_menu [] = {
 static gint
 doc_config_event (GtkWidget *widget, void *ugly)
 {
-  DOC_ROOT *doc = hack_global;
+  DOC_ROOT *doc;
 
+  doc = (DOC_ROOT *)gtk_object_get_data (GTK_OBJECT (widget), DOC_KEY);
+  
   g_return_val_if_fail (doc, FALSE);
   g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
@@ -130,31 +131,27 @@ doc_config_event (GtkWidget *widget, void *ugly)
   return TRUE;
 }
 
-GdkFont *magic_font;
 GdkGC   *magic_black;
 
 static gint
 doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
 {
-  DOC_ROOT *doc = hack_global;
+  DOC_ROOT *doc;
+ 
+  g_return_val_if_fail (widget != NULL, FALSE);
 
-  g_return_val_if_fail (doc, FALSE);
+  doc = (DOC_ROOT *)gtk_object_get_data (GTK_OBJECT (widget), DOC_KEY);
+
+  g_return_val_if_fail (doc != NULL, FALSE);
   g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
   if (doc->out && doc->pdf) {
     GtkStyle *style = gtk_widget_get_default_style();
     printf ("There are %d pages\n", doc->pdf->getNumPages());
 
-    magic_font  = widget->style->font;
     magic_black = widget->style->black_gc;
-    gdk_draw_line (doc->pixmap,
-		   widget->style->black_gc,
-		   event->area.x, event->area.y,
-		   event->area.width, event->area.height);
-    doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue); /* 86 zoom */
-    printf ("Draw pixmap %p\n", doc->pixmap);
-    gdk_draw_string (doc->pixmap, magic_font, magic_black,
-		     300, 300, "Hello");
+
+    doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue);
     gdk_draw_pixmap(widget->window,
 		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
 		    doc->pixmap,
@@ -173,8 +170,6 @@ loadFile(GString *fileName)
   DOC_ROOT *doc = new DOC_ROOT();
   char s[20];
   char *p;
-
-  hack_global = doc;
 
   doc->magic = DOC_ROOT_MAGIC;
   // open PDF file
@@ -201,10 +196,11 @@ loadFile(GString *fileName)
 
   doc->pixmap = NULL;
   doc->area   = GTK_DRAWING_AREA (gtk_drawing_area_new ());
-  gtk_signal_connect (GTK_OBJECT(doc->area),"configure_event",
-		      (GtkSignalFunc) doc_config_event, doc);
-  gtk_signal_connect (GTK_OBJECT (doc->area), "expose_event",
-		      (GtkSignalFunc) doc_redraw_event, doc);
+  gtk_object_set_data (GTK_OBJECT (doc->area), DOC_KEY, doc);
+  gtk_signal_connect  (GTK_OBJECT (doc->area),"configure_event",
+		       (GtkSignalFunc) doc_config_event, doc);
+  gtk_signal_connect  (GTK_OBJECT (doc->area), "expose_event",
+		       (GtkSignalFunc) doc_redraw_event, doc);
 
   gtk_table_attach (GTK_TABLE (doc->table), GTK_WIDGET (doc->area),
 		    0, 1, 1, 2,
