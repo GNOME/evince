@@ -150,7 +150,7 @@ extern "C" {
     
     Bonobo_PersistStream_load (persist,
 			      (Bonobo_Stream) bonobo_object_corba_objref (BONOBO_OBJECT (stream)),
-			       "",
+			       "application/pdf",
 			       &ev);
 
     Bonobo_Unknown_unref (persist, &ev);
