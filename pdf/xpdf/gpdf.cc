@@ -1,21 +1,30 @@
-//========================================================================
-//
-// gpdf.cc
-//
-// Copyright 1996 Derek B. Noonburg
-// Copyright 1999 Michael Meeks.
-// Copyright 1999 Miguel de Icaza
-//
-//========================================================================
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+/*
+ * test-container.c
+ *
+ * A simple program to act as a test container for embeddable
+ * components.
+ *
+ * Authors:
+ *    Nat Friedman (nat@gnome-support.com)
+ *    Miguel de Icaza (miguel@gnu.org)
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+extern "C" {
 #define GString G_String
 #include <gnome.h>
-#include <glade/glade.h>
+#include <libgnorba/gnorba.h>
+#include <gdk/gdkprivate.h>
+#include <gdk/gdkx.h>
+#include <bonobo/gnome-bonobo.h>
 #undef  GString 
+}
+#include <sys/stat.h>
+#include <unistd.h>
 #include "gtypes.h"
 #include "GString.h"
 #include "parseargs.h"
@@ -37,31 +46,10 @@
 #include "Error.h"
 #include "config.h"
 
-GBool printCommands = gFalse;
-gint  gpdf_debug=1;
+CORBA_Environment ev;
+CORBA_ORB orb;
 poptContext ctx;
-
-#define DEV_DEBUG 0
-
-#define DOC_ROOT_TAG "xpdf_doc_root"
-struct DOC_ROOT {
-  GString        *title;
-  PDFDoc         *pdf;
-  Catalog        *cat;
-  GtkDrawingArea *area;
-  GtkPixmap      *pixmap;
-  OutputDev      *out;
-  GdkColor        paper;
-  GtkScrolledWindow *scroll;
-  GtkWidget      *mainframe;
-  GladeXML       *gui;
-  guint           w, h;
-
-  double          zoom;
-  gint            page;
-};
-
-GList *documents = NULL;
+gint  gpdf_debug=1;
 
 const struct poptOption gpdf_popt_options [] = {
   { "debug", '\0', POPT_ARG_INT, &gpdf_debug, 0,
@@ -69,324 +57,449 @@ const struct poptOption gpdf_popt_options [] = {
   { NULL, '\0', 0, NULL, 0 }
 };
 
-extern "C" {
-  static void connect_signals (DOC_ROOT *doc);
-}
+/*
+ * A handle to some Embeddables and their ClientSites so we can add
+ * views to existing components.
+ */
+GnomeObjectClient *text_obj;
+GnomeClientSite *text_client_site;
 
-//------------------------------------------------------------------------
-// loadFile / displayPage
-//------------------------------------------------------------------------
+GnomeObjectClient *image_png_obj;
+GnomeClientSite   *image_client_site;
 
-static GtkPixmap *
-setup_pixmap (DOC_ROOT *doc, DOC_ROOT *view, GdkWindow *window)
+/*
+ * The currently active view.  We keep track of this
+ * so we can deactivate it when a new view is activated.
+ */
+GnomeViewFrame *active_view_frame;
+
+char *server_goadid = "gnome_xpdf_viewer";
+
+typedef struct {
+	GtkWidget *app;
+	GnomeContainer *container;
+	GtkWidget *box;
+	GnomeUIHandler *uih;
+	gboolean contains_pdf;
+} Application;
+
+/* List of applications */
+GList *apps = NULL;
+
+static Application * application_new (void);
+
+static void
+application_destroy (Application *app)
 {
-  GdkGCValues  gcValues;
-  GdkGC       *strokeGC;
-  PDFDoc      *pdf = doc->pdf;
-  int          w, h;
-  GdkPixmap   *pixmap = NULL;
-
-  w = view->w = (int)((pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
-  h = view->h = (int)((pdf->getPageHeight (view->page) * view->zoom) / 72.0);
-
-  pixmap = gdk_pixmap_new (window, w, h, -1);
-
-  gdk_color_white (gtk_widget_get_default_colormap(), &view->paper);
-  view->out    = new GOutputDev (pixmap, view->paper, window);
-
-  gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
-  gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
-  gcValues.line_width = 1;
-  gcValues.line_style = GDK_LINE_SOLID;
-  strokeGC = gdk_gc_new_with_values (
-    pixmap, &gcValues, 
-    (enum GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_LINE_WIDTH | GDK_GC_LINE_STYLE));
-  
-  gdk_draw_rectangle (pixmap, strokeGC,
-		      TRUE, 0, 0,
-		      w, h);
-
-  return GTK_PIXMAP (gtk_pixmap_new (pixmap, NULL));
+	apps = g_list_remove (apps, app);
+	gtk_widget_destroy (app->app);
+	g_free (app);
+	if (!apps)
+		gtk_main_quit ();
 }
 
 static void
-render_page (DOC_ROOT *doc, DOC_ROOT *view)
+applications_destroy ()
 {
-  doc->pdf->displayPage(doc->out, view->page, view->zoom, 0, gTrue);
+	while (apps)
+		application_destroy ((Application *)apps->data);
 }
 
-/*static void displayPage(int page1, int zoom1, int rotate1) {
-  char s[20];
-
-  // check for document
-  if (!doc)
-    return;
-
-  // busy cursor
-  if (win)
-    win->setBusyCursor(gTrue);
-
-  // new page/zoom/rotate values
-  page = page1;
-  zoom = zoom1;
-  rotate = rotate1;
-
-  // initialize mouse-related stuff
-  linkAction = NULL;
-  win->setDefaultCursor();
-  linkLabel->setText(NULL);
-  selectXMin = selectXMax = 0;
-  selectYMin = selectYMax = 0;
-  lastDragLeft = lastDragTop = gTrue;
-
-  // draw the page
-  doc->displayPage(out, page, zoomDPI[zoom - minZoom], rotate, gTrue);
-  layoutCbk(win);
-
-  // update page number display
-  sprintf(s, "%d", page);
-  pageNumText->setText(s);
-
-  // back to regular cursor
-  win->setBusyCursor(gFalse);
-  }*/
-
-static PDFDoc *
-getPDF (GString *fname)
+static GnomeObjectClient *
+launch_server (GnomeClientSite *client_site, GnomeContainer *container, char *goadid)
 {
-  PDFDoc *pdf;
-  BaseFile *file;
+	GnomeObjectClient *object_server;
+	
+	gnome_container_add (container, GNOME_OBJECT (client_site));
 
-  pdf = new PDFDoc(bxpdfopen(fname), fname);
-  if (!pdf->isOk()) {
-    delete pdf;
-    return NULL;
-  }
-  g_return_val_if_fail (pdf->getCatalog(), NULL);
-  return pdf;
+	printf ("Launching...\n");
+	object_server = gnome_object_activate_with_goad_id (NULL, goadid, GOAD_ACTIVATE_SHLIB, NULL);
+	printf ("Return: %p\n", object_server);
+	if (!object_server){
+		g_warning (_("Can not activate object_server\n"));
+		return NULL;
+	}
+
+	if (!gnome_client_site_bind_embeddable (client_site, object_server)){
+		g_warning (_("Can not bind object server to client_site\n"));
+		return NULL;
+	}
+
+	return object_server;
 }
 
-static DOC_ROOT *
-doc_root_new (GString *fileName)
+static GnomeObjectClient *
+launch_server_moniker (GnomeClientSite *client_site, GnomeContainer *container, char *moniker)
 {
-  DOC_ROOT *doc = new DOC_ROOT();
-  GtkVBox  *pane;
+	GnomeObjectClient *object_server;
+	
+	gnome_container_add (container, GNOME_OBJECT (client_site));
 
-  // open PDF file
-  doc->pdf = getPDF (fileName);
-  if (!doc->pdf) {
-    delete doc;
-    return NULL;
-  }
+	printf ("Launching moniker %s...\n", moniker);
+	object_server = gnome_object_activate (moniker, GOAD_ACTIVATE_SHLIB);
+	printf ("Return: %p\n", object_server);
+	if (!object_server){
+		g_warning (_("Can not activate object_server\n"));
+		return NULL;
+	}
 
-  doc->gui = glade_xml_new (GPDF_GLADE_DIR "/gpdf.glade", NULL);
-  if (!doc->gui ||
-      !(doc->mainframe = glade_xml_get_widget (doc->gui, "gpdf")) ||
-      !(pane = GTK_VBOX (glade_xml_get_widget (doc->gui, "pane")))) {
-    printf ("Couldn't find " GPDF_GLADE_DIR "/gpdf.glade\n");
-    delete doc->pdf;
-    delete doc;
-    return NULL;
-  }
+	if (!gnome_client_site_bind_embeddable (client_site, object_server)){
+		g_warning (_("Can not bind object server to client_site\n"));
+		return NULL;
+	}
 
-  doc->zoom = 86.0;
-  doc->page = 1;
+	return object_server;
+}
 
-  connect_signals (doc);
+/*
+ * This function is called when the user double clicks on a View in
+ * order to activate it.
+ */
+static gint
+user_activation_request_cb (GnomeViewFrame *view_frame)
+{
+	/*
+	 * If there is already an active View, deactivate it.
+	 */
+        if (active_view_frame != NULL) {
+		/*
+		 * This just sends a notice to the embedded View that
+		 * it is being deactivated.  We will also forcibly
+		 * cover it so that it does not receive any Gtk
+		 * events.
+		 */
+                gnome_view_frame_view_deactivate (active_view_frame);
 
-  gtk_object_set_data (GTK_OBJECT (doc->mainframe), DOC_ROOT_TAG, doc);
+		/*
+		 * Here we manually cover it if it hasn't acquiesced.
+		 * If it has consented to be deactivated, then it will
+		 * already have notified us that it is inactive, and
+		 * we will have covered it and set active_view_frame
+		 * to NULL.  Which is why this check is here.
+		 */
+		if (active_view_frame != NULL)
+			gnome_view_frame_set_covered (active_view_frame, TRUE);
+									     
+		active_view_frame = NULL;
+	}
 
-  doc->pixmap = setup_pixmap (doc, doc, gtk_widget_get_parent_window (GTK_WIDGET (pane)));
-  
-  doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
-  gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,
-				  GTK_POLICY_AUTOMATIC);
-  render_page (doc, doc);
-  gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->pixmap));
-  gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
+        /*
+	 * Activate the View which the user clicked on.  This just
+	 * sends a request to the embedded View to activate itself.
+	 * When it agrees to be activated, it will notify its
+	 * ViewFrame, and our view_activated_cb callback will be
+	 * called.
+	 *
+	 * We do not uncover the View here, because it may not wish to
+	 * be activated, and so we wait until it notifies us that it
+	 * has been activated to uncover it.
+	 */
+        gnome_view_frame_view_activate (view_frame);
 
-  gtk_widget_show_all (doc->mainframe);
+        return FALSE;
+}                                                                               
 
-  documents = g_list_append (documents, doc);
+/*
+ * Gets called when the View notifies the ViewFrame that it would like
+ * to be activated or deactivated.
+ */
+static gint
+view_activated_cb (GnomeViewFrame *view_frame, gboolean activated)
+{
 
-  return doc;
+        if (activated) {
+		/*
+		 * If the View is requesting to be activated, then we
+		 * check whether or not there is already an active
+		 * View.
+		 */
+		if (active_view_frame != NULL) {
+			g_warning ("View requested to be activated but there is already "
+				   "an active View!\n");
+			return FALSE;
+		}
+
+		/*
+		 * Otherwise, uncover it so that it can receive
+		 * events, and set it as the active View.
+		 */
+		gnome_view_frame_set_covered (view_frame, FALSE);
+                active_view_frame = view_frame;
+        } else {
+		/*
+		 * If the View is asking to be deactivated, always
+		 * oblige.  We may have already deactivated it (see
+		 * user_activation_request_cb), but there's no harm in
+		 * doing it again.  There is always the possibility
+		 * that a View will ask to be deactivated when we have
+		 * not told it to deactivate itself, and that is
+		 * why we cover the view here.
+		 */
+		gnome_view_frame_set_covered (view_frame, TRUE);
+
+		if (view_frame == active_view_frame)
+			active_view_frame = NULL;
+        }                                                                       
+
+        return FALSE;
+}                                                                               
+
+static GnomeViewFrame *
+add_view (Application *app,
+	  GnomeClientSite *client_site, GnomeObjectClient *server) 
+{
+	GnomeViewFrame *view_frame;
+	GtkWidget *view_widget;
+	
+	view_frame = gnome_client_site_embeddable_new_view (client_site);
+
+	gtk_signal_connect (GTK_OBJECT (view_frame), "user_activate",
+			    GTK_SIGNAL_FUNC (user_activation_request_cb), NULL);
+	gtk_signal_connect (GTK_OBJECT (view_frame), "view_activated",
+			    GTK_SIGNAL_FUNC (view_activated_cb), NULL);
+
+	gnome_view_frame_set_ui_handler (view_frame, app->uih);
+
+	view_widget = gnome_view_frame_get_wrapper (view_frame);
+
+	gtk_box_pack_start (GTK_BOX (app->box), view_widget, TRUE, TRUE, 0);
+	gtk_widget_show_all (app->box);
+
+	return view_frame;
+} /* add_view */
+
+static GnomeObjectClient *
+add_cmd (Application *app, char *server_goadid,
+	 GnomeClientSite **client_site)
+{
+	GnomeObjectClient *server;
+	
+	*client_site = gnome_client_site_new (app->container);
+
+	server = launch_server (*client_site, app->container, server_goadid);
+	if (server == NULL)
+		return NULL;
+
+	add_view (app, *client_site, server);
+	return server;
 }
 
 static void
-doc_root_destroy (DOC_ROOT *doc)
+open_pdf (Application *app, const char *name)
 {
-    gtk_widget_destroy (doc->mainframe);
-    gtk_object_destroy (GTK_OBJECT (doc->gui));
-    
-    documents = g_list_remove (documents, doc);
-    if (g_list_length (documents) == 0)
-      gtk_main_quit ();
-    delete (doc);
+	GnomeObjectClient *object;
+	GnomeStream *stream;
+	GNOME_PersistStream persist;
+
+	object = add_cmd (app, "bonobo-object:image-x-pdf", &image_client_site);
+	if (object == NULL) {
+		gnome_error_dialog (_("Could not launch bonobo object."));
+		return;
+	}
+
+	image_png_obj = object;
+
+	persist = GNOME_Unknown_query_interface (
+		gnome_object_corba_objref (GNOME_OBJECT (object)),
+		"IDL:GNOME/PersistStream:1.0", &ev);
+
+        if (ev._major != CORBA_NO_EXCEPTION ||
+	    persist == CORBA_OBJECT_NIL) {
+		gnome_error_dialog ("Panic: component is well broken.");
+                return;
+	}
+	
+	stream = gnome_stream_fs_open (name, GNOME_Storage_READ);
+
+	if (stream == NULL) {
+		char *err = g_strconcat (_("Could not open "), name, NULL);
+		gnome_error_dialog_parented (err, GTK_WINDOW(app->app));
+		g_free (err);
+		return;
+	}
+	
+	GNOME_PersistStream_load (persist,
+	     (GNOME_Stream) gnome_object_corba_objref (GNOME_OBJECT (stream)), &ev);
+
+	GNOME_Unknown_unref (persist, &ev);
+	CORBA_Object_release (persist, &ev);
+	app->contains_pdf = TRUE;
 }
 
-//------------------------------------------------------------------------
-//                          Signal handlers
-//------------------------------------------------------------------------
+static void
+set_ok (GtkWidget *widget, gboolean *dialog_result)
+{
+	*dialog_result = TRUE;
+	gtk_main_quit ();
+}
 
-extern "C" {
-  void
-  do_close (GtkWidget *menuitem, DOC_ROOT *doc)
-  {
-    doc_root_destroy (doc);
-  }
+static guint
+file_dialog_delete_event (GtkWidget *widget, GdkEventAny *event)
+{
+	gtk_main_quit ();
+	return TRUE;
+}
 
-  void
-  do_exit (GtkWidget *menuitem, DOC_ROOT *doc)
-  {
-    GList *l;
-    while ((l=documents))
-      doc_root_destroy ((DOC_ROOT *)l->data);
-  }
+static void
+file_open_cmd (GtkWidget *widget, Application *app)
+{
+	GtkFileSelection *fsel;
+	gboolean accepted = FALSE;
 
-  static void
-  do_about_box (GtkWidget *w, DOC_ROOT *doc)
-  {
-    GladeXML *gui = glade_xml_new (GPDF_GLADE_DIR "/about.glade", NULL);
-    g_return_if_fail (gui);
-    GtkWidget *wi = glade_xml_get_widget (gui, "about_box");
-    g_return_if_fail (wi);
-    gtk_widget_show  (wi);
-    gtk_object_destroy (GTK_OBJECT (gui));
-  }
+	fsel = GTK_FILE_SELECTION (gtk_file_selection_new (_("Load file")));
+	gtk_window_set_modal (GTK_WINDOW (fsel), TRUE);
 
-  static void
-  do_forward_button (GtkWidget *w, DOC_ROOT *doc)
-  {
-    if (doc->page < doc->pdf->getNumPages()) {
-      doc->page++;
-      render_page (doc, doc);
-      gtk_widget_queue_draw (GTK_WIDGET (doc->scroll));
-    }
-  }
+	gtk_window_set_transient_for (GTK_WINDOW (fsel),
+				      GTK_WINDOW (app->app));
 
-  static void
-  do_back_button (GtkWidget *w, DOC_ROOT *doc)
-  {
-    if (doc->page > 1) {
-      doc->page--;
-      render_page (doc, doc);
-      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
-    }
-  }
+	/* Connect the signals for Ok and Cancel */
+	gtk_signal_connect (GTK_OBJECT (fsel->ok_button), "clicked",
+			    GTK_SIGNAL_FUNC (set_ok), &accepted);
+	gtk_signal_connect (GTK_OBJECT (fsel->cancel_button), "clicked",
+			    GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+	gtk_window_set_position (GTK_WINDOW (fsel), GTK_WIN_POS_MOUSE);
 
-  static void
-  do_first_button (GtkWidget *w, DOC_ROOT *doc)
-  {
-    if (doc->page != 1) {
-      doc->page = 1;
-      render_page (doc, doc);
-      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
-    }
-  }
+	/*
+	 * Make sure that we quit the main loop if the window is destroyed 
+	 */
+	gtk_signal_connect (GTK_OBJECT (fsel), "delete_event",
+			    GTK_SIGNAL_FUNC (file_dialog_delete_event), NULL);
 
-  static void
-  do_last_button (GtkWidget *w, DOC_ROOT *doc)
-  {
-    if (doc->page != doc->pdf->getNumPages()) {
-      doc->page = doc->pdf->getNumPages();
-      render_page (doc, doc);
-      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
-    }
-  }
+	/* Run the dialog */
+	gtk_widget_show (GTK_WIDGET (fsel));
+	gtk_grab_add (GTK_WIDGET (fsel));
+	gtk_main ();
 
-  static void
-  do_larger_button (GtkWidget *w, DOC_ROOT *doc)
-  {
-    if (doc->zoom < 200) {
-      doc->zoom *= 1.2;
-      render_page (doc, doc);
-      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
-    }
-  }
+	if (accepted) {
+		char *name = gtk_file_selection_get_filename (fsel);
 
-  static void
-  do_smaller_button (GtkWidget *w, DOC_ROOT *doc)
-  {
-    if (doc->zoom < 200) {
-      doc->zoom /= 1.2;
-      render_page (doc, doc);
-      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
-    }
-  }
-  
-  static void
-  simple_menu_connect (DOC_ROOT *doc, const char *name, GtkSignalFunc func)
-  {
-    GtkWidget *w;
-    w = glade_xml_get_widget (doc->gui, name);
-    g_return_if_fail (w);
-    gtk_signal_connect (GTK_OBJECT (w), "activate", func, doc);
-  }
-  
-  static void
-  simple_button_connect (DOC_ROOT *doc, const char *name, GtkSignalFunc func)
-  {
-    GtkWidget *w;
-    w = glade_xml_get_widget (doc->gui, name);
-    g_return_if_fail (w);
-    gtk_signal_connect (GTK_OBJECT (w), "clicked", func, doc);
-  }
+		if (name [strlen (name)-1] != '/') {
+			if (app->contains_pdf)
+				app = application_new ();
+			char *fname = g_strdup (name);
+			open_pdf (app, fname);
+			g_free (fname);
+		} else {
+			GtkWidget *dialog;
+			dialog = gnome_message_box_new ("Can't open a directory",
+							GNOME_MESSAGE_BOX_ERROR,
+							GNOME_STOCK_BUTTON_OK, NULL);
+			gnome_dialog_set_parent (GNOME_DIALOG (dialog),
+						 GTK_WINDOW (app->app));
+			gnome_dialog_run (GNOME_DIALOG (dialog));
+		}
+	}
 
-  static void
-  connect_signals (DOC_ROOT *doc)
-  {
-    GtkWidget *w;
+	gtk_widget_destroy (GTK_WIDGET (fsel));
+}
 
-    simple_menu_connect (doc, "about_menu", GTK_SIGNAL_FUNC (do_about_box)); 
-    simple_menu_connect (doc, "close_menu", GTK_SIGNAL_FUNC (do_close));
-    simple_menu_connect (doc, "exit_menu",  GTK_SIGNAL_FUNC (do_exit));
+static void
+close_cmd (GtkWidget *widget, Application *app)
+{
+	application_destroy (app);
+}
 
-    simple_button_connect (doc, "forward", GTK_SIGNAL_FUNC (do_forward_button));
-    simple_button_connect (doc, "back",    GTK_SIGNAL_FUNC (do_back_button));
-    simple_button_connect (doc, "first",   GTK_SIGNAL_FUNC (do_first_button));
-    simple_button_connect (doc, "last",    GTK_SIGNAL_FUNC (do_last_button));
-/*    simple_button_connect (doc, "larger",  GTK_SIGNAL_FUNC (do_larger_button)); need to resize the gtkpixmap...
-      simple_button_connect (doc, "smaller", GTK_SIGNAL_FUNC (do_smaller_button)); but bed first. */
+static void
+exit_cmd (void)
+{
+	applications_destroy ();
+}
 
-    gtk_signal_connect (GTK_OBJECT (doc->mainframe), "destroy",
-			GTK_SIGNAL_FUNC (do_close), doc);
- }
+static GnomeUIInfo container_file_menu [] = {
+	GNOMEUIINFO_MENU_OPEN_ITEM (file_open_cmd, NULL),
+	GNOMEUIINFO_SEPARATOR,
+	GNOMEUIINFO_MENU_CLOSE_ITEM(close_cmd, NULL),
+	GNOMEUIINFO_SEPARATOR,
+	GNOMEUIINFO_MENU_EXIT_ITEM (exit_cmd, NULL),
+	GNOMEUIINFO_END
+};
+
+static GnomeUIInfo container_main_menu [] = {
+	GNOMEUIINFO_MENU_FILE_TREE (container_file_menu),
+	GNOMEUIINFO_END
+};
+
+static Application *
+application_new (void)
+{
+	Application *app;
+	GnomeUIHandlerMenuItem *menu_list;
+
+	app = g_new0 (Application, 1);
+	app->app = gnome_app_new ("gpdf",
+				  "GNOME PDF viewer");
+	app->container = GNOME_CONTAINER (gnome_container_new ());
+	app->contains_pdf = FALSE;
+
+	app->box = gtk_vbox_new (FALSE, 0);
+	gtk_widget_show (app->box);
+	gnome_app_set_contents (GNOME_APP (app->app), app->box);
+
+	/*
+	 * Create the menus.
+	 */
+	app->uih = gnome_ui_handler_new ();
+
+	gnome_ui_handler_set_app (app->uih, GNOME_APP (app->app));
+	gnome_ui_handler_create_menubar (app->uih);
+
+	menu_list = gnome_ui_handler_menu_parse_uiinfo_list_with_data (container_main_menu, app);
+	gnome_ui_handler_menu_add_list (app->uih, "/", menu_list);
+	gnome_ui_handler_menu_free_list (menu_list);
+
+/*	gnome_ui_handler_create_toolbar (app->uih, "Common");
+	gnome_ui_handler_toolbar_new_item (app->uih,
+					   "/Common/item 1",
+					   "Container-added Item 1", "I am the container.  Hear me roar.",
+					   0, GNOME_UI_HANDLER_PIXMAP_NONE, NULL, 0, 0,
+					   NULL, NULL);*/
+
+	gtk_widget_show (app->app);
+
+	apps = g_list_append (apps, app);
+	return app;
 }
 
 int
 main (int argc, char *argv [])
 {
-  char **view_files = NULL;
-  int    i;
-  
-  gnome_init_with_popt_table (
-    "gpdf", "0.1", argc, argv,
-    gpdf_popt_options, 0, &ctx);
+	Application *app;
+	char **view_files = NULL;
 
-  errorInit();
-  
-  initParams (xpdfConfigFile); /* Init font path */
+	if (argc != 1){
+		server_goadid = argv [1];
+	}
+	
+	CORBA_exception_init (&ev);
+	
+	gnome_CORBA_init_with_popt_table ("PDFViewer", "0.0.1",
+					  &argc, argv,
+					  gpdf_popt_options, 0, &ctx,
+					  GNORBA_INIT_SERVER_FUNC, &ev);
+	orb = gnome_CORBA_ORB ();
+	
+	if (bonobo_init (orb, NULL, NULL) == FALSE)
+		g_error (_("Can not bonobo_init\n"));
 
-  glade_gnome_init ();
+	app = application_new ();
 
-  view_files = poptGetArgs (ctx);
-  /* Load files */
-  if (view_files) {
-    for (i = 0; view_files[i]; i++) {
-      GString *name = new GString (view_files[i]);
-      if (!name || !doc_root_new (name))
-	printf ("Error loading '%s'\n", view_files[i]);
-    }
-  } else {
-    printf ("Need filenames...\n");
-    exit (0);
-  }
+	view_files = poptGetArgs (ctx);
 
-  poptFreeContext (ctx);
+	/* Load files */
+	if (view_files) {
+		int i;
+		for (i = 0; view_files[i]; i++) {
+			if (app->contains_pdf)
+				app = application_new ();
+			open_pdf (app, view_files[i]);
+		}
+	}
 
-  gtk_main ();
+	poptFreeContext (ctx);
 
-  freeParams();
+	gtk_main ();
 
-  /* Destroy files */
+	CORBA_exception_free (&ev);
+	
+	return 0;
 }

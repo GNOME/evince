@@ -12,7 +12,7 @@ gui = xpdf
 endif
 
 #bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
-bin_PROGRAMS = bonobo-image-x-pdf
+bin_PROGRAMS = bonobo-image-x-pdf gpdf
 
 common_sources =		\
 	Array.cc 		\
@@ -40,16 +40,20 @@ common_sources =		\
 	TextOutputDev.cc	\
 	XRef.cc
 
-gpdf_CFLAGS = 
+gpdf_CFLAGS = 			\
+	-DBONOBO_IO
 
 gpdf_SOURCES = 			\
-	$(common_sources)	\
-	GOutputDev.cc		\
 	gpdf.cc
 
 gpdf_LDADD =			\
+	$(GTK_LIBS)		\
+	$(GNOME_LIBDIR)		\
+	-lbonobo		\
+	$(GNOMEGNORBA_LIBS)	\
 	$(EXTRA_GNOME_LIBS)	\
-	../goo/libgoo.a
+	$(INTLLIBS)
+
 
 bonobo_image_x_pdf_SOURCES =	\
 	$(common_sources)	\
