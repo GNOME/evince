@@ -10,7 +10,7 @@ Interface improvements
 
 	* Rename Bookmarks sidebar to Index
 	* Use filename as title if the file doesn't have a title (Jeff
-          Muizelaar)
+          Muizelaar) or if the title is empty
 	* Make navigation with thumbnails possible (Anders Carlsson)
 	* (De)Sensitize actions as necessary (Dave Malcolm)
 	* Show a wait cursor while the page is rendering
@@ -28,8 +28,9 @@ Code changes
 Bug fixes
 
 	* PostScript backend fixes
-	* Pixbuf backend fixes (Jeff Muizelaar, Martin)
+	* Pixbuf backend fixes (Jeff Muizelaar)
 	* Set page spin button limits correctly (Anders Carlsson)
+	* Fix problem when base fonts are installed as pcf files. 
 
 Translation updates
 
