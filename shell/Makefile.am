@@ -11,6 +11,8 @@ INCLUDES=					\
 bin_PROGRAMS=evince
 
 evince_SOURCES=				\
+	eggfindbar.c			\
+	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
 	ev-window.c			\

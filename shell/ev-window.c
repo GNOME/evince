@@ -28,6 +28,7 @@
 
 #include "ev-window.h"
 #include "ev-sidebar.h"
+#include "eggfindbar.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -51,6 +52,7 @@ struct _EvWindowPrivate {
 	GtkWidget *main_box;
 	GtkWidget *hpaned;
 	GtkWidget *sidebar;
+	GtkWidget *find_bar;
 	GtkWidget *bonobo_widget;
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
@@ -216,7 +218,8 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	gtk_widget_show (ev_window->priv->find_bar);
+	egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
 }
 
 static void
@@ -468,6 +471,55 @@ disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
 }
 
 static void
+find_bar_previous_cb (EggFindBar *find_bar,
+		      EvWindow   *ev_window)
+{
+	/* FIXME - highlight previous result */
+	g_printerr ("Find Previous\n");
+
+}
+
+static void
+find_bar_next_cb (EggFindBar *find_bar,
+		  EvWindow   *ev_window)
+{
+	/* FIXME - highlight next result */
+	g_printerr ("Find Next\n");
+}
+
+static void
+find_bar_close_cb (EggFindBar *find_bar,
+		   EvWindow   *ev_window)
+{
+	gtk_widget_hide (ev_window->priv->find_bar);
+}
+
+static void
+find_bar_search_changed_cb (EggFindBar *find_bar,
+			    GParamSpec *param,
+			    EvWindow   *ev_window)
+{
+	gboolean case_sensitive;
+	gboolean visible;
+	const char *search_string;
+
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+	
+	/* Either the string or case sensitivity could have changed,
+	 * we connect this callback to both. We also connect it
+	 * to ::visible so when the find bar is hidden, we should
+	 * pretend the search string is NULL/""
+	 */
+
+	case_sensitive = egg_find_bar_get_case_sensitive (find_bar);
+	visible = GTK_WIDGET_VISIBLE (find_bar);
+	search_string = egg_find_bar_get_search_string (find_bar);
+	
+	/* FIXME */
+	g_printerr ("search for '%s'\n", search_string ? search_string : "(nil)");
+}
+
+static void
 ev_window_dispose (GObject *object)
 {
 	EvWindowPrivate *priv;
@@ -694,7 +746,6 @@ ev_window_init (EvWindow *ev_window)
 	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
 			darea);
 
-
 	ev_window->priv->statusbar = gtk_statusbar_new ();
 	gtk_widget_show (ev_window->priv->statusbar);
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
@@ -703,4 +754,34 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->help_message_cid = gtk_statusbar_get_context_id
 		(GTK_STATUSBAR (ev_window->priv->statusbar), "help_message");
 
+	ev_window->priv->find_bar = egg_find_bar_new ();
+	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
+			  ev_window->priv->find_bar,
+			  FALSE, TRUE, 0);
+	
+	/* Connect to find bar signals */
+	g_signal_connect (ev_window->priv->find_bar,
+			  "previous",
+			  G_CALLBACK (find_bar_previous_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "next",
+			  G_CALLBACK (find_bar_next_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "close",
+			  G_CALLBACK (find_bar_close_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "notify::search-string",
+			  G_CALLBACK (find_bar_search_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "notify::case-sensitive",
+			  G_CALLBACK (find_bar_search_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "notify::visible",
+			  G_CALLBACK (find_bar_search_changed_cb),
+			  ev_window);
 }
