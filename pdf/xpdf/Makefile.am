@@ -120,8 +120,9 @@ common_sources =		\
 	UTF8.h
 
 ANNOTS_VIEW_SRCS =
+
 if USE_ANNOTS_VIEW
-  ANNOTS_VIEW_SRCS = 			\
+  ANNOTS_VIEW_SRCS += 			\
 	gpdf-annots-view.cc		\
 	gpdf-annots-view.h
 endif
@@ -292,8 +293,9 @@ dist-hook:
 	done
 
 STOCK_ANNOTS_ICONS = 
+
 if USE_ANNOTS_VIEW
-  STOCK_ANNOTS_ICONS = 			\
+  STOCK_ANNOTS_ICONS += 			\
 	stock-annot-circle.png		\
 	stock-annot-fileattachment.png	\
 	stock-annot-freetext.png	\
