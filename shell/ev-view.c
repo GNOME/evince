@@ -983,7 +983,10 @@ set_document_page (EvView *view, int new_page)
 
 		view->find_page = page;
 		view->find_result = 0;
-		update_find_status_message (view);
+
+		if (EV_IS_DOCUMENT_FIND (view->document)) {
+			update_find_status_message (view);
+		}
 	}
 }
 
