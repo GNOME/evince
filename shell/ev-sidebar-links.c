@@ -348,11 +348,6 @@ ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
 	g_return_if_fail (EV_IS_SIDEBAR_LINKS (sidebar_links));
 
 	priv = sidebar_links->priv;
-	if (priv->current_document) {
-		g_object_unref (priv->current_document);
-		priv->current_document = NULL;
-	}
-	gtk_tree_store_clear (GTK_TREE_STORE (priv->model));
 
 	/* Clear the idle */
 	if (priv->idle_id != 0) {
@@ -363,6 +358,11 @@ ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
 	g_list_free (priv->idle_stack);
 	priv->idle_stack = NULL;
 
+	if (priv->current_document) {
+		g_object_unref (priv->current_document);
+		priv->current_document = NULL;
+	}
+	gtk_tree_store_clear (GTK_TREE_STORE (priv->model));
 }
 
 void
