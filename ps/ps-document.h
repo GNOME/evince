@@ -84,7 +84,6 @@ struct _PSDocument {
 
   FILE *gs_psfile;              /* the currently loaded FILE */
   gchar *gs_filename;           /* the currently loaded filename */
-  gchar *gs_filename_dsc;       /* Used to browse PDF to PS */
   gchar *gs_filename_unc;       /* Uncompressed file */
   gchar *input_buffer;
   gint gs_scanstyle;

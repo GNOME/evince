@@ -22,108 +22,6 @@
  * Boston, MA 02111-1307, USA.
  */
  
-/*
-Ghostview interface to ghostscript
-
-When the GHOSTVIEW environment variable is set, ghostscript draws on
-an existing drawable rather than creating its own window.  Ghostscript
-can be directed to draw on either a window or a pixmap.
-
-Drawing on a Window
-
-The GHOSTVIEW environment variable contains the window id of the target
-window.  The window id is an integer.  Ghostscript will use the attributes
-of the window to obtain the width, height, colormap, screen, and visual of
-the window. The remainder of the information is gotten from the GHOSTVIEW
-property on that window.
-
-
-Drawing on a Pixmap
-
-The GHOSTVIEW environment variable contains a window id and a pixmap id.
-They are integers separated by white space.  Ghostscript will use the
-attributes of the window to obtain the colormap, screen, and visual to use.
-The width and height will be obtained from the pixmap. The remainder of the
-information, is gotten from the GHOSTVIEW property on the window.  In this
-case, the property is deleted when read.
-
-The GHOSTVIEW environment variable
-
-parameters:	window-id [pixmap-id]
-
-scanf format:	"%d %d"
-
-explanation of parameters:
-
-	window-id: tells ghostscript where to
-		    - read the GHOSTVIEW property
-		    - send events
-		    If pixmap-id is not present,
-		    ghostscript will draw on this window.
-
-	pixmap-id: If present, tells ghostscript that a pixmap will be used
-		    as the final destination for drawing.  The window will
-		    not be touched for drawing purposes.
-
-The GHOSTVIEW property
-
-type:	STRING
-
-parameters:
-
-    bpixmap orient llx lly urx ury xdpi ydpi [left bottom top right]
-
-scanf format: "%d %d %d %d %d %d %f %f %d %d %d %d"
-
-explanation of parameters:
-
-	bpixmap: pixmap id of the backing pixmap for the window.  If no
-		pixmap is to be used, this parameter should be zero.  This
-		parameter must be zero when drawing on a pixmap.
-
-	orient:	orientation of the page.  The number represents clockwise
-		rotation of the paper in degrees.  Permitted values are
-		0, 90, 180, 270.
-
-	llx, lly, urx, ury: Bounding box of the drawable.  The bounding box
-		is specified in PostScript points in default user coordinates.
-
-	xdpi, ydpi: Resolution of window.  (This can be derived from the
-		other parameters, but not without roundoff error.  These
-		values are included to avoid this error.)
-
-	left, bottom, top, right: (optional)
-		Margins around the window.  The margins extend the imageable
-		area beyond the boundaries of the window.  This is primarily
-		used for popup zoom windows.  I have encountered several
-		instances of PostScript programs that position themselves
-		with respect to the imageable area.  The margins are specified
-		in PostScript points.  If omitted, the margins are assumed to
-		be 0.
-
-Events from ghostscript
-
-If the final destination is a pixmap, the client will get a property notify
-event when ghostscript reads the GHOSTVIEW property causing it to be deleted.
-
-Ghostscript sends events to the window where it read the GHOSTVIEW property.
-These events are of type ClientMessage.  The message_type is set to
-either PAGE or DONE.  The first long data value gives the window to be used
-to send replies to ghostscript.  The second long data value gives the primary
-drawable.  If rendering to a pixmap, it is the primary drawable.  If rendering
-to a window, the backing pixmap is the primary drawable.  If no backing pixmap
-is employed, then the window is the primary drawable.  This field is necessary
-to distinguish multiple ghostscripts rendering to separate pixmaps where the
-GHOSTVIEW property was placed on the same window.
-
-The PAGE message indicates that a "page" has completed.  Ghostscript will
-wait until it receives a ClientMessage whose message_type is NEXT before
-continuing.
-
-The DONE message indicates that ghostscript has finished processing.
-
-*/
-
 #include "config.h"
 #include <string.h>
 #include <stdlib.h>
@@ -162,9 +60,6 @@ The DONE message indicates that ghostscript has finished processing.
 #   define O_NONBLOCK O_NDELAY
 #endif
 
-#define PS_DOCUMENT_WATCH_INTERVAL 1000
-#define PS_DOCUMENT_WATCH_TIMEOUT  2
-
 #define MAX_BUFSIZE 1024
 
 #define PS_DOCUMENT_IS_COMPRESSED(gs)       (PS_DOCUMENT(gs)->gs_filename_unc != NULL)
@@ -175,8 +70,6 @@ The DONE message indicates that ghostscript has finished processing.
 GCond* pixbuf_cond = NULL;
 GMutex* pixbuf_mutex = NULL;
 GdkPixbuf *current_pixbuf = NULL;
-
-enum { INTERPRETER_MESSAGE, INTERPRETER_ERROR, LAST_SIGNAL };
 
 enum {
 	PROP_0,
@@ -194,12 +87,6 @@ struct record_list {
 };
 
 static gboolean broken_pipe = FALSE;
-
-static void
-catchPipe(int i)
-{
-  broken_pipe = True;
-}
 
 /* Forward declarations */
 static void ps_document_init(PSDocument * gs);
@@ -242,7 +129,6 @@ ps_document_init (PSDocument *gs)
 	gs->changed = FALSE;
 	gs->gs_scanstyle = 0;
 	gs->gs_filename = 0;
-	gs->gs_filename_dsc = 0;
 	gs->gs_filename_unc = 0;
 
 	broken_pipe = FALSE;
@@ -333,62 +219,59 @@ ps_document_get_property (GObject *object,
 static void
 ps_document_class_init(PSDocumentClass *klass)
 {
-  GObjectClass *object_class;
+	GObjectClass *object_class;
 
-  object_class = (GObjectClass *) klass;
-  parent_class = g_type_class_peek_parent (klass);
-  gs_class = klass;
+	object_class = (GObjectClass *) klass;
+	parent_class = g_type_class_peek_parent (klass);
+	gs_class = klass;
 
-  object_class->finalize = ps_document_finalize;
-  object_class->get_property = ps_document_get_property;
-  object_class->set_property = ps_document_set_property;
+	object_class->finalize = ps_document_finalize;
+	object_class->get_property = ps_document_get_property;
+	object_class->set_property = ps_document_set_property;
 
-  /* Create atoms */
-  klass->gs_atom = gdk_atom_intern("GHOSTVIEW", FALSE);
-  klass->next_atom = gdk_atom_intern("NEXT", FALSE);
-  klass->page_atom = gdk_atom_intern("PAGE", FALSE);
-  klass->string_atom = gdk_atom_intern("STRING", FALSE);
+	klass->gs_atom = gdk_atom_intern ("GHOSTVIEW", FALSE);
+	klass->next_atom = gdk_atom_intern ("NEXT", FALSE);
+	klass->page_atom = gdk_atom_intern ("PAGE", FALSE);
+	klass->string_atom = gdk_atom_intern ("STRING", FALSE);
 
-  g_object_class_override_property (object_class, PROP_TITLE, "title");
+	g_object_class_override_property (object_class, PROP_TITLE, "title");
 }
 
-/* Clean all memory and temporal files */
 static void
-ps_document_cleanup(PSDocument * gs)
+ps_document_cleanup (PSDocument * gs)
 {
-  g_return_if_fail(gs != NULL);
-  g_return_if_fail(GTK_IS_GS(gs));
+	g_return_if_fail (gs != NULL);
+	g_return_if_fail (GTK_IS_GS (gs));
 
-  stop_interpreter(gs);
+	stop_interpreter (gs);
 
-  if(gs->gs_psfile) {
-    fclose(gs->gs_psfile);
-    gs->gs_psfile = NULL;
-  }
-  if(gs->gs_filename) {
-    g_free(gs->gs_filename);
-    gs->gs_filename = NULL;
-  }
-  if(gs->doc) {
-    psfree(gs->doc);
-    gs->doc = NULL;
-  }
-  if(gs->gs_filename_dsc) {
-    unlink(gs->gs_filename_dsc);
-    g_free(gs->gs_filename_dsc);
-    gs->gs_filename_dsc = NULL;
-  }
-  if(gs->gs_filename_unc) {
-    unlink(gs->gs_filename_unc);
-    g_free(gs->gs_filename_unc);
-    gs->gs_filename_unc = NULL;
-  }
-  gs->current_page = 0;
-  gs->loaded = FALSE;
-  gs->llx = 0;
-  gs->lly = 0;
-  gs->urx = 0;
-  gs->ury = 0;
+	if (gs->gs_psfile) {
+		fclose (gs->gs_psfile);
+		gs->gs_psfile = NULL;
+	}
+
+	if (gs->gs_filename) {
+		g_free (gs->gs_filename);
+		gs->gs_filename = NULL;
+	}
+
+	if (gs->doc) {
+		psfree (gs->doc);
+		gs->doc = NULL;
+	}
+
+	if (gs->gs_filename_unc) {
+		unlink(gs->gs_filename_unc);
+		g_free(gs->gs_filename_unc);
+		gs->gs_filename_unc = NULL;
+	}
+
+	gs->current_page = 0;
+	gs->loaded = FALSE;
+	gs->llx = 0;
+	gs->lly = 0;
+	gs->urx = 0;
+	gs->ury = 0;
 }
 
 static gboolean
@@ -442,7 +325,7 @@ ps_document_finalize (GObject * object)
 		gs->input_buffer = NULL;
 	}
 
-	(*G_OBJECT_CLASS(parent_class)->finalize) (object);
+	(*G_OBJECT_CLASS (parent_class)->finalize) (object);
 }
 
 static void
@@ -669,6 +552,12 @@ output(gpointer data, gint source, GdkInputCondition condition)
     msg = g_strdup(buf);
     ps_document_emit_error_msg (gs, msg);   
   }
+}
+
+static void
+catchPipe(int i)
+{
+  broken_pipe = True;
 }
 
 static void
@@ -1240,8 +1129,6 @@ document_load(PSDocument * gs, const gchar * fname)
   }
 
   /* prepare this document */
-
-  /* default values: no dsc information available  */
   gs->structured_doc = FALSE;
   gs->send_filename_to_gs = TRUE;
   gs->current_page = 0;
