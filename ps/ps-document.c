@@ -372,8 +372,6 @@ setup_pixmap (PSDocument *gs, int page, double scale)
 	pixmap_width = floor (width * scale);
 	pixmap_height = floor (height * scale);
 
-	g_print ("%f %f %f %d %d\n", width, height, scale, pixmap_width, pixmap_height);
-
 	if(gs->bpixmap) {
 		int w, h;
 
