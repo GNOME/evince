@@ -1,5 +1,16 @@
 2002-09-13  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
+	* bonobo-application-x-pdf.cc (embeddable_factory): don't
+	initialize embeddable (where did that come from?)
+
+	* gpdf-embeddable-view.cc (gpdf_embeddable_view_construct): don't
+	handle "activate" by connecting...
+	(class_init): ...install a default signal handler...
+	(gev_activate): cleaned up "activate" handler, renamed from 
+	(view_activate)
+
+2002-09-13  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
 	* Makefile.am: add pdf-view.cc, pdf-view.h
 
 	* gpdf-embeddable-view.cc (view_is_good, first_page, last_page)
