@@ -1,5 +1,12 @@
 2005-02-25  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-window.c: (update_window_title),
+	(ev_window_popup_password_dialog):
+
+	Unescape filename for display
+
+2005-02-25  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* pdf/xpdf/pdf-document.cc:
 
 	In get_page_size deal with rotation. Also

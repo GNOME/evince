@@ -53,6 +53,7 @@
 
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
 
 #include <gconf/gconf-client.h>
@@ -452,7 +453,11 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	}
 
 	if (doc_title == NULL && ev_window->priv->uri) {
-		doc_title = g_path_get_basename (ev_window->priv->uri);
+		char *basename;
+
+		basename = g_path_get_basename (ev_window->priv->uri);
+		doc_title = gnome_vfs_unescape_string_for_display (basename);
+		g_free (basename);
 	}
 
 	if (password_needed) {
@@ -588,9 +593,10 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 
 	update_window_title (ev_window->priv->password_document, NULL, ev_window);
 	if (ev_window->priv->password_dialog == NULL) {
-		gchar *file_name;
+		gchar *basename, *file_name;
 
-		file_name = g_path_get_basename (ev_window->priv->password_uri);
+		basename = g_path_get_basename (ev_window->priv->password_uri);
+		file_name = gnome_vfs_unescape_string_for_display (basename);
 		ev_window->priv->password_dialog =
 			ev_password_dialog_new (GTK_WIDGET (ev_window), file_name);
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
@@ -599,6 +605,7 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 				  "response",
 				  G_CALLBACK (password_dialog_response),
 				  ev_window);
+		g_free (basename);
 		g_free (file_name);
 		gtk_widget_show (ev_window->priv->password_dialog);
 	} else {
