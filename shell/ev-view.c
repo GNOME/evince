@@ -1111,6 +1111,7 @@ set_document_page (EvView *view, int page)
 		if (old_page != ev_document_get_page (view->document)) {
 			g_signal_emit (view, page_changed_signal, 0);
 
+			view->has_selection = FALSE;
 			view->find_percent_complete = 0.0;
 			update_find_results (view);	
 		}
