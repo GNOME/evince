@@ -1197,17 +1197,49 @@ ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
+	EvWindowPrivate *priv = ev_window->priv;
+	int width, height;
+
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_best_fit (EV_VIEW (ev_window->priv->view));
+	width = priv->scrolled_window->allocation.width;
+	height = priv->scrolled_window->allocation.height;
+
+	/* the scrolled window has a GTK_SHADOW_IN */
+	width -= 2 * priv->view->style->xthickness;
+	height -= 2 * priv->view->style->ythickness;
+
+	ev_view_best_fit (EV_VIEW (priv->view),
+			  MAX (1, width), MAX (1, height));
 }
 
 static void
 ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 {
+	EvWindowPrivate *priv = ev_window->priv;
+	int width, height;
+	GtkRequisition vsb_requisition;
+	int scrollbar_spacing;
+
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_fit_width (EV_VIEW (ev_window->priv->view));
+	width = priv->scrolled_window->allocation.width;
+	height = priv->scrolled_window->allocation.height;
+
+	/* the scrolled window has a GTK_SHADOW_IN */
+	width -= 2 * priv->view->style->xthickness;
+	height -= 2 * priv->view->style->ythickness;
+
+	gtk_widget_size_request (
+		GTK_SCROLLED_WINDOW (priv->scrolled_window)->vscrollbar,
+		&vsb_requisition);
+	gtk_widget_style_get (priv->scrolled_window,
+			      "scrollbar_spacing", &scrollbar_spacing,
+			      NULL);
+
+	ev_view_fit_width (EV_VIEW (ev_window->priv->view),
+			   width, height,
+			   vsb_requisition.width + scrollbar_spacing);
 }
 
 static void

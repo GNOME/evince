@@ -1233,21 +1233,34 @@ ev_view_normal_size (EvView *view)
 	ev_view_zoom (view, 1.0, FALSE);
 }
 
+/* Unfortunately this is not idempotent (!) (numerical stability
+ * issues because width and height are rounded)
+ *
+ * One more reason to make this a toggle and not a command */
 void
-ev_view_best_fit (EvView *view)
+ev_view_best_fit (EvView *view, int allocation_width, int allocation_height)
 {
 	double scale;
+	int available_width, available_height;
 	int width, height;
 
 	width = height = 0;
+	/* This is the bad part. You could make it stable by doing
+	 * ev_document_set_scale 1.0. But at least with pdf this means
+	 * redrawing the whole page */
 	ev_document_get_page_size (view->document, -1, &width, &height);
+
+	LOG ("Best fit %d %d", allocation_width, allocation_height);
 
 	scale = 1.0;
 	if (width != 0 && height != 0) {
 		double scale_w, scale_h;
 
-		scale_w = (double)GTK_WIDGET (view)->allocation.width * view->scale / width;
-		scale_h = (double)GTK_WIDGET (view)->allocation.height * view->scale / height;
+		available_width = MAX (1, allocation_width - 2); /* 1 px border left and right */
+		available_height = MAX (1, allocation_height - 2); /* 1 px border above and below */
+
+		scale_w = (double)available_width * view->scale / (width + 0.5);
+		scale_h = (double)available_height * view->scale / (height + 0.5);
 
 		scale = (scale_w < scale_h) ? scale_w : scale_h;
 	}
@@ -1256,17 +1269,27 @@ ev_view_best_fit (EvView *view)
 }
 
 void
-ev_view_fit_width (EvView *view)
+ev_view_fit_width (EvView *view, int allocation_width, int allocation_height,
+		   int vsb_width)
 {
+	int available_width, available_height;
+	int width, height;
 	double scale = 1.0;
-	int width;
 
-	width = 0;
-	ev_document_get_page_size (view->document, -1, &width, NULL);
+	width = height = 0;
+	ev_document_get_page_size (view->document, -1, &width, &height);
 
 	scale = 1.0;
-	if (width != 0)
-		scale = (double)GTK_WIDGET (view)->allocation.width * view->scale / width;
+	if (width != 0) {
+		available_width = MAX (1, allocation_width - 2); /* 1px border */
+		available_height = MAX (1, allocation_height - 2); /* 1px border */
+
+		scale = (double)available_width * view->scale / (width + 0.5);
+
+		if ((height + 0.5) * scale / view->scale > available_height)
+			scale = ((double)(available_width - vsb_width) * view->scale /
+				 (width + 0.5));
+	}
 
 	ev_view_zoom (view, scale, FALSE);
 }
