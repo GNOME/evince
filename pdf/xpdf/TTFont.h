@@ -11,9 +11,11 @@
 #ifndef TTFONT_H
 #define TTFONT_H
 
+#include <aconf.h>
+
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 
-#ifdef __GNUC__
+#ifdef USE_GCC_PRAGMAS
 #pragma interface
 #endif
 

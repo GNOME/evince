@@ -11,9 +11,11 @@
 #ifndef T1FONT_H
 #define T1FONT_H
 
+#include <aconf.h>
+
 #if HAVE_T1LIB_H
 
-#ifdef __GNUC__
+#ifdef USE_GCC_PRAGMAS
 #pragma interface
 #endif
 
@@ -38,6 +40,8 @@ private:
   GBool aa;			// use anti-aliasing?
   GBool aaHigh;			// use high-res anti-aliasing?
   GBool ok;
+
+  static int t1libInitCount;
 
   friend class T1FontFile;
   friend class T1Font;

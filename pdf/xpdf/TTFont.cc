@@ -6,13 +6,13 @@
 //
 //========================================================================
 
-#ifdef __GNUC__
-#pragma implementation
-#endif
-
 #include <aconf.h>
 
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+
+#ifdef USE_GCC_PRAGMAS
+#pragma implementation
+#endif
 
 #include <string.h>
 #include "gmem.h"

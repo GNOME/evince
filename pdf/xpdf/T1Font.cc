@@ -6,13 +6,13 @@
 //
 //========================================================================
 
-#ifdef __GNUC__
-#pragma implementation
-#endif
-
 #include <aconf.h>
 
 #if HAVE_T1LIB_H
+
+#ifdef USE_GCC_PRAGMAS
+#pragma implementation
+#endif
 
 #include <math.h>
 #include <string.h>
@@ -20,6 +20,10 @@
 #include "gmem.h"
 #include "GfxState.h"
 #include "T1Font.h"
+
+//------------------------------------------------------------------------
+
+int T1FontEngine::t1libInitCount = 0;
 
 //------------------------------------------------------------------------
 
@@ -32,30 +36,37 @@ T1FontEngine::T1FontEngine(Display *displayA, Visual *visualA, int depthA,
   };
 
   ok = gFalse;
-  T1_SetBitmapPad(8);
-  if (!T1_InitLib(NO_LOGFILE | IGNORE_CONFIGFILE | IGNORE_FONTDATABASE |
-		  T1_NO_AFM)) {
-    return;
-  }
   aa = aaA;
   aaHigh = aaHighA;
-  if (aa) {
-    T1_AASetBitsPerPixel(8);
-    if (aaHigh) {
-      T1_AASetLevel(T1_AA_HIGH);
-      T1_AAHSetGrayValues(grayVals);
-    } else {
-      T1_AASetLevel(T1_AA_LOW);
-      T1_AASetGrayValues(0, 1, 2, 3, 4);
+  //~ for multithreading: need a mutex here
+  if (t1libInitCount == 0) {
+    T1_SetBitmapPad(8);
+    if (!T1_InitLib(NO_LOGFILE | IGNORE_CONFIGFILE | IGNORE_FONTDATABASE |
+		    T1_NO_AFM)) {
+      return;
     }
-  } else {
-    T1_AANSetGrayValues(0, 1);
+    if (aa) {
+      T1_AASetBitsPerPixel(8);
+      if (aaHigh) {
+	T1_AASetLevel(T1_AA_HIGH);
+	T1_AAHSetGrayValues(grayVals);
+      } else {
+	T1_AASetLevel(T1_AA_LOW);
+	T1_AASetGrayValues(0, 1, 2, 3, 4);
+      }
+    } else {
+      T1_AANSetGrayValues(0, 1);
+    }
   }
+  ++t1libInitCount;
   ok = gTrue;
 }
 
 T1FontEngine::~T1FontEngine() {
-  T1_CloseLib();
+  //~ for multithreading: need a mutex here
+  if (--t1libInitCount == 0) {
+    T1_CloseLib();
+  }
 }
 
 //------------------------------------------------------------------------

@@ -6,11 +6,12 @@
 //
 //========================================================================
 
-#ifdef __GNUC__
+#include <aconf.h>
+
+#ifdef USE_GCC_PRAGMAS
 #pragma implementation
 #endif
 
-#include <aconf.h>
 #include <string.h>
 #include <ctype.h>
 #if HAVE_PAPER_H
@@ -144,11 +145,18 @@ GlobalParams::GlobalParams(char *cfgFileName) {
   displayCIDFonts = new GHash();
   displayNamedCIDFonts = new GHash();
 #if HAVE_PAPER_H
+  char *paperName;
   const struct paper *paperType;
   paperinit();
-  paperType = paperinfo(systempapername());
-  psPaperWidth = (int)paperpswidth(paperType);
-  psPaperHeight = (int)paperpsheight(paperType);
+  if ((paperName = systempapername())) {
+    paperType = paperinfo(paperName);
+    psPaperWidth = (int)paperpswidth(paperType);
+    psPaperHeight = (int)paperpsheight(paperType);
+  } else {
+    error(-1, "No paper information available - using defaults");
+    psPaperWidth = defPaperWidth;
+    psPaperHeight = defPaperHeight;
+  }
   paperdone();
 #else
   psPaperWidth = defPaperWidth;
@@ -174,12 +182,15 @@ GlobalParams::GlobalParams(char *cfgFileName) {
 #else
   textEOL = eolUnix;
 #endif
+  textKeepTinyChars = gFalse;
   fontDirs = new GList();
   initialZoom = new GString("1");
   t1libControl = fontRastAALow;
   freetypeControl = fontRastAALow;
   urlCommand = NULL;
+  movieCommand = NULL;
   mapNumericCharNames = gTrue;
+  printCommands = gFalse;
   errQuiet = gFalse;
 
   cidToUnicodeCache = new CIDToUnicodeCache();
@@ -192,18 +203,21 @@ GlobalParams::GlobalParams(char *cfgFileName) {
   }
 
   // set up the residentUnicodeMaps table
-  map = new UnicodeMap("Latin1", latin1UnicodeMapRanges, latin1UnicodeMapLen);
+  map = new UnicodeMap("Latin1", gFalse,
+		       latin1UnicodeMapRanges, latin1UnicodeMapLen);
   residentUnicodeMaps->add(map->getEncodingName(), map);
-  map = new UnicodeMap("ASCII7", ascii7UnicodeMapRanges, ascii7UnicodeMapLen);
+  map = new UnicodeMap("ASCII7", gFalse,
+		       ascii7UnicodeMapRanges, ascii7UnicodeMapLen);
   residentUnicodeMaps->add(map->getEncodingName(), map);
-  map = new UnicodeMap("Symbol", symbolUnicodeMapRanges, symbolUnicodeMapLen);
+  map = new UnicodeMap("Symbol", gFalse,
+		       symbolUnicodeMapRanges, symbolUnicodeMapLen);
   residentUnicodeMaps->add(map->getEncodingName(), map);
-  map = new UnicodeMap("ZapfDingbats", zapfDingbatsUnicodeMapRanges,
+  map = new UnicodeMap("ZapfDingbats", gFalse, zapfDingbatsUnicodeMapRanges,
 		       zapfDingbatsUnicodeMapLen);
   residentUnicodeMaps->add(map->getEncodingName(), map);
-  map = new UnicodeMap("UTF-8", &mapUTF8);
+  map = new UnicodeMap("UTF-8", gTrue, &mapUTF8);
   residentUnicodeMaps->add(map->getEncodingName(), map);
-  map = new UnicodeMap("UCS-2", &mapUCS2);
+  map = new UnicodeMap("UCS-2", gTrue, &mapUCS2);
   residentUnicodeMaps->add(map->getEncodingName(), map);
 
   // default displayFonts table
@@ -235,7 +249,7 @@ GlobalParams::GlobalParams(char *cfgFileName) {
     i = GetModuleFileName(NULL, buf, sizeof(buf));
     if (i <= 0 || i >= sizeof(buf)) {
       // error or path too long for buffer - just use the current dir
-      buf[i] = '\0';
+      buf[0] = '\0';
     }
     fileName = grabPath(buf);
     appendToPath(fileName, xpdfSysConfigFile);
@@ -249,6 +263,7 @@ GlobalParams::GlobalParams(char *cfgFileName) {
   if (f) {
     parseFile(fileName, f);
     delete fileName;
+    fclose(f);
   }
 }
 
@@ -354,6 +369,9 @@ void GlobalParams::parseFile(GString *fileName, FILE *f) {
 	parseTextEncoding(tokens, fileName, line);
       } else if (!cmd->cmp("textEOL")) {
 	parseTextEOL(tokens, fileName, line);
+      } else if (!cmd->cmp("textKeepTinyChars")) {
+	parseYesNo("textKeepTinyChars", &textKeepTinyChars,
+		   tokens, fileName, line);
       } else if (!cmd->cmp("fontDir")) {
 	parseFontDir(tokens, fileName, line);
       } else if (!cmd->cmp("initialZoom")) {
@@ -365,10 +383,14 @@ void GlobalParams::parseFile(GString *fileName, FILE *f) {
 	parseFontRastControl("freetypeControl", &freetypeControl,
 			     tokens, fileName, line);
       } else if (!cmd->cmp("urlCommand")) {
-	parseURLCommand(tokens, fileName, line);
+	parseCommand("urlCommand", &urlCommand, tokens, fileName, line);
+      } else if (!cmd->cmp("movieCommand")) {
+	parseCommand("movieCommand", &movieCommand, tokens, fileName, line);
       } else if (!cmd->cmp("mapNumericCharNames")) {
 	parseYesNo("mapNumericCharNames", &mapNumericCharNames,
 		   tokens, fileName, line);
+      } else if (!cmd->cmp("printCommands")) {
+	parseYesNo("printCommands", &printCommands, tokens, fileName, line);
       } else if (!cmd->cmp("errQuiet")) {
 	parseYesNo("errQuiet", &errQuiet, tokens, fileName, line);
       } else if (!cmd->cmp("fontpath") || !cmd->cmp("fontmap")) {
@@ -697,17 +719,17 @@ void GlobalParams::parseFontRastControl(char *cmdName, FontRastControl *val,
   }
 }
 
-void GlobalParams::parseURLCommand(GList *tokens, GString *fileName,
-				   int line) {
+void GlobalParams::parseCommand(char *cmdName, GString **val,
+				GList *tokens, GString *fileName, int line) {
   if (tokens->getLength() != 2) {
-    error(-1, "Bad 'urlCommand' config file command (%s:%d)",
-	  fileName->getCString(), line);
+    error(-1, "Bad '%s' config file command (%s:%d)",
+	  cmdName, fileName->getCString(), line);
     return;
   }
-  if (urlCommand) {
-    delete urlCommand;
+  if (*val) {
+    delete *val;
   }
-  urlCommand = ((GString *)tokens->get(1))->copy();
+  *val = ((GString *)tokens->get(1))->copy();
 }
 
 void GlobalParams::parseYesNo(char *cmdName, GBool *flag,
@@ -758,6 +780,9 @@ GlobalParams::~GlobalParams() {
   delete initialZoom;
   if (urlCommand) {
     delete urlCommand;
+  }
+  if (movieCommand) {
+    delete movieCommand;
   }
 
   cMapDirs->startIter(&iter);
@@ -948,6 +973,15 @@ UnicodeMap *GlobalParams::getTextEncoding() {
 // functions to set parameters
 //------------------------------------------------------------------------
 
+void GlobalParams::addDisplayFont(DisplayFontParam *param) {
+  DisplayFontParam *old;
+
+  if ((old = (DisplayFontParam *)displayFonts->remove(param->name))) {
+    delete old;
+  }
+  displayFonts->add(param->name, param);
+}
+
 void GlobalParams::setPSFile(char *file) {
   if (psFile) {
     delete psFile;
@@ -1032,6 +1066,10 @@ GBool GlobalParams::setTextEOL(char *s) {
   return gTrue;
 }
 
+void GlobalParams::setTextKeepTinyChars(GBool keep) {
+  textKeepTinyChars = keep;
+}
+
 void GlobalParams::setInitialZoom(char *s) {
   delete initialZoom;
   initialZoom = new GString(s);
@@ -1058,6 +1096,14 @@ GBool GlobalParams::setFontRastControl(FontRastControl *val, char *s) {
     return gFalse;
   }
   return gTrue;
+}
+
+void GlobalParams::setMapNumericCharNames(GBool map) {
+  mapNumericCharNames = map;
+}
+
+void GlobalParams::setPrintCommands(GBool printCommandsA) {
+  printCommands = printCommandsA;
 }
 
 void GlobalParams::setErrQuiet(GBool errQuietA) {
