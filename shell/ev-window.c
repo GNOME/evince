@@ -30,6 +30,8 @@
 #include "ev-sidebar.h"
 #include "eggfindbar.h"
 
+#include "pdf-document.h"
+
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
@@ -57,6 +59,8 @@ struct _EvWindowPrivate {
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
 	guint help_message_cid;
+	
+	EvDocument *document;
 };
 
 #if 0
@@ -147,6 +151,31 @@ ev_window_is_empty (const EvWindow *ev_window)
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
+	EvDocument *document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
+	GError *error = NULL;
+
+	if (ev_document_load (document, uri, &error)) {
+		if (ev_window->priv->document)
+			g_object_unref (ev_window->priv->document);
+		ev_window->priv->document = document;
+		
+	} else {
+		GtkWidget *dialog;
+
+		g_object_unref (document);
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("Unable to open document"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+							  "%s", error->message);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+
+		g_error_free (error);
+	}
+	
 #if 0
 	char *mime_type;
 	BonoboObject *bonobo_control;

@@ -3,9 +3,9 @@ INCLUDES =			\
 	-I$(top_srcdir)/pdf	\
 	-I$(top_srcdir)/pdf/goo
 
-noinst_LIBRARIES = libfofi.a
+noinst_LTLIBRARIES = libfofi.la
 
-libfofi_a_SOURCES =		\
+libfofi_la_SOURCES =		\
 	FoFiBase.cc		\
 	FoFiBase.h		\
 	FoFiEncodings.cc	\

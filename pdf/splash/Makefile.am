@@ -5,9 +5,9 @@ INCLUDES =				\
 	-I$(top_srcdir)/pdf/fofi	\
 	$(FREETYPE_CFLAGS)
 
-noinst_LIBRARIES = libsplash.a
+noinst_LTLIBRARIES = libsplash.la
 
-libsplash_a_SOURCES = \
+libsplash_la_SOURCES = \
 	Splash.cc \
 	Splash.h \
 	SplashBitmap.cc \

@@ -42,9 +42,9 @@ struct _EvDocumentIface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	void	    (* load)	        (EvDocument *document,
+	gboolean    (* load)	        (EvDocument *document,
 					 const char *uri,
-					 GError     *error);
+					 GError    **error);
 	int         (* get_n_pages)     (EvDocument *document);
 	void	    (* set_page)	(EvDocument  *document,
 					 int          page);
@@ -64,24 +64,24 @@ struct _EvDocumentIface
 
 GType ev_document_get_type (void);
 
-void ev_document_load          (EvDocument  *document,
-				const char  *uri,
-				GError      *error);
-int  ev_document_get_n_pages   (EvDocument  *document);
-void ev_document_set_page      (EvDocument  *document,
-				int          page);
-void ev_document_set_target    (EvDocument  *document,
-				GdkDrawable *target);
-void ev_document_set_page_rect (EvDocument  *document,
-				int          x,
-				int          y,
-				int          width,
-				int          height);
-void ev_document_render        (EvDocument  *document,
-				int          clip_x,
-				int          clip_y,
-				int          clip_width,
-				int          clip_height);
+gboolean ev_document_load          (EvDocument  *document,
+				    const char  *uri,
+				    GError     **error);
+int      ev_document_get_n_pages   (EvDocument  *document);
+void     ev_document_set_page      (EvDocument  *document,
+				    int          page);
+void     ev_document_set_target    (EvDocument  *document,
+				    GdkDrawable *target);
+void     ev_document_set_page_rect (EvDocument  *document,
+				    int          x,
+				    int          y,
+				    int          width,
+				    int          height);
+void     ev_document_render        (EvDocument  *document,
+				    int          clip_x,
+				    int          clip_y,
+				    int          clip_width,
+				    int          clip_height);
 
 G_END_DECLS
 

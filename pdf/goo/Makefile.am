@@ -2,9 +2,9 @@ INCLUDES =			\
 	-I$(top_srcdir) 	\
 	-I$(top_srcdir)/pdf
 
-noinst_LIBRARIES = libGoo.a
+noinst_LTLIBRARIES = libGoo.la
 
-libGoo_a_SOURCES = 	\
+libGoo_la_SOURCES = 	\
 	GHash.cc	\
 	GHash.h		\
 	GList.cc	\

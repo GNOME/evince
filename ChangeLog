@@ -1,3 +1,17 @@
+Tue Dec 21 19:28:55 2004  Owen Taylor  <otaylor@redhat.com>
+
+	* pdf/{goo,fofi,splash,xpdf}/Makefile.am: Switch from
+	.a to libtool convenience libraries.
+
+	* shell/ev-window.c (ev_window_open): Hard code loading
+	a PDF document.
+	
+	* backend/ev-document.h: Add a boolean return to load(),
+	fix GError * to GError **.
+
+	* pdf/xpdf/pdf-document.[ch] Makefile.am: Add a stub
+	object for a PDF backend EvDocument.
+
 Tue Dec 21 18:55:06 2004  Søren Sandmann  <sandmann@redhat.com>
 
 	* dvi/*: New directory with the beginning of a .dvi backend.

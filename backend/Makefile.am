@@ -7,9 +7,9 @@ INCLUDES=					\
 	$(EVINCE_DISABLE_DEPRECATED)		\
 	$(NULL)
 
-noinst_LTLIBRARIES = liblibevbackend.la
+noinst_LTLIBRARIES = libevbackend.la
 
-liblibevbackend_la_SOURCES=			\
+libevbackend_la_SOURCES=			\
 	ev-document.c				\
 	ev-document.h				\
 	$(NULL)

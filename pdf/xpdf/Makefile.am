@@ -1,5 +1,6 @@
 INCLUDES =							\
 	-I$(top_srcdir)						\
+	-I$(top_srcdir)/backend					\
 	-I$(top_srcdir)/pdf					\
 	-I$(top_srcdir)/pdf/goo					\
 	-I$(top_srcdir)/pdf/fofi				\
@@ -9,9 +10,9 @@ INCLUDES =							\
 
 noinst_PROGRAMS = test-gdk-output-dev
 
-noinst_LIBRARIES = libxpdf.a
+noinst_LTLIBRARIES = libxpdf.la libpdfdocument.la
 
-libxpdf_a_SOURCES =		\
+libxpdf_la_SOURCES =		\
 	Annot.cc		\
 	Annot.h			\
 	Array.cc 		\
@@ -73,6 +74,8 @@ libxpdf_a_SOURCES =		\
 	PDFDocEncoding.h	\
 	PSTokenizer.cc		\
 	PSTokenizer.h		\
+	SplashOutputDev.cc      \
+	SplashOutputDev.h       \
 	Stream-CCITT.h		\
 	Stream.cc 		\
 	Stream.h		\
@@ -82,30 +85,39 @@ libxpdf_a_SOURCES =		\
 	UnicodeTypeTable.cc	\
 	UnicodeTypeTable.h	\
 	XRef.cc			\
-	XRef.h
-
-common_sources =		\
+	XRef.h			\
+				\
 	CharTypes.h		\
 	CompactFontTables.h	\
 	ErrorCodes.h		\
 	NameToUnicodeTable.h	\
+	GDKSplashOutputDev.cc   \
+	GDKSplashOutputDev.h    \
 	TextOutputDev.cc	\
 	TextOutputDev.h		\
 	UTF8.h
 
+# The sources at the end are put in libxpdf.a for convenience here, but are 
+# conceptually part of the apps not part of the libs.
+
 test_gdk_output_dev_SOURCES =          \
-       GDKSplashOutputDev.cc           \
-       GDKSplashOutputDev.h            \
-       SplashOutputDev.cc              \
-       SplashOutputDev.h               \
-       $(common_sources)               \
        test-gdk-output-dev.cc
 
-test_gdk_output_dev_LDADD = 					\
-        libxpdf.a                                               \
-        $(top_builddir)/pdf/goo/libGoo.a                        \
-        $(top_builddir)/pdf/fofi/libfofi.a                      \
-	$(top_builddir)/pdf/splash/libsplash.a			\
+test_gdk_output_dev_LDADD =                                   	\
+	libxpdf.la                                              \
+	$(top_builddir)/pdf/goo/libGoo.la                       \
+	$(top_builddir)/pdf/fofi/libfofi.la                     \
+	$(top_builddir)/pdf/splash/libsplash.la                 \
 	$(GTK_LIBS)
+
+libpdfdocument_la_SOURCES =	\
+	pdf-document.c		\
+	pdf-document.h
+
+libpdfdocument_la_LIBADD =                                    	\
+	libxpdf.la                                             	\
+	$(top_builddir)/pdf/goo/libGoo.la                       \
+	$(top_builddir)/pdf/fofi/libfofi.la                     \
+	$(top_builddir)/pdf/splash/libsplash.la
 
 EXTRA_DIST = config.h

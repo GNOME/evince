@@ -50,13 +50,13 @@ ev_document_base_init (gpointer g_class)
 {
 }
 
-void
+gboolean
 ev_document_load (EvDocument  *document,
 		  const char  *uri,
-		  GError      *error)
+		  GError     **error)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	iface->load (document, uri, error);
+	return iface->load (document, uri, error);
 }
 
 int
