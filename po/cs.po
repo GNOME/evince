@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-26 10:53+0100\n"
-"PO-Revision-Date: 2005-02-26 14:47+0100\n"
+"POT-Creation-Date: 2005-03-03 10:54+0100\n"
+"PO-Revision-Date: 2005-03-03 16:25+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,35 +43,35 @@ msgid "View multipage documents"
 msgstr "Zobrazovat dokumenty s více stránkami"
 
 #: data/evince.schemas.in.h:1
+msgid "Default sidebar size"
+msgstr "Implicitní velikost bočního panelu"
+
+#: data/evince.schemas.in.h:2
 msgid "Show sidebar by default"
 msgstr "Implicitně zobrazovat boční panel"
 
-#: data/evince.schemas.in.h:2
+#: data/evince.schemas.in.h:3
 msgid "Show sidebar by default."
 msgstr "Implicitně zobrazovat boční panel."
 
-#: data/evince.schemas.in.h:3
+#: data/evince.schemas.in.h:4
 msgid "Show statusbar by default"
 msgstr "Implicitně zobrazovat stavovou lištu"
 
-#: data/evince.schemas.in.h:4
+#: data/evince.schemas.in.h:5
 msgid "Show statusbar by default."
 msgstr "Implicitně zobrazovat stavovou lištu."
 
-#: data/evince.schemas.in.h:5
+#: data/evince.schemas.in.h:6
 msgid "Show toolbar by default"
 msgstr "Implicitně zobrazovat lištu nástrojů"
 
-#: data/evince.schemas.in.h:6
+#: data/evince.schemas.in.h:7
 msgid "Show toolbar by default."
 msgstr "Implicitně zobrazovat lištu nástrojů."
 
-#: data/evince.schemas.in.h:7
-msgid "Sidebar size by default"
-msgstr "Implicitní velikost bočního panelu"
-
 #: data/evince.schemas.in.h:8
-msgid "Sidebar size by default."
+msgid "The default sidebar size."
 msgstr "Implicitní velikost bočního panelu."
 
 #: ps/gsdefaults.c:68
@@ -146,52 +146,52 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10×14"
 
-#: ps/ps-document.c:289
+#: ps/ps-document.c:290
 msgid "No document loaded."
 msgstr "Nebyl načten žádný dokument."
 
-#: ps/ps-document.c:689
+#: ps/ps-document.c:752
 msgid "Broken pipe."
 msgstr "Přerušená roura."
 
-#: ps/ps-document.c:885
+#: ps/ps-document.c:948
 msgid "Interpreter failed."
 msgstr "Interpret selhal."
 
 #. report error
-#: ps/ps-document.c:1007
+#: ps/ps-document.c:1070
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Chyba při dekomprimaci souboru %s:\n"
 
-#: ps/ps-document.c:1113
+#: ps/ps-document.c:1176
 #, c-format
 msgid "Error while converting pdf file %s:\n"
 msgstr "Chyba při převodu souboru pdf %s:\n"
 
-#: ps/ps-document.c:1292
+#: ps/ps-document.c:1355
 msgid "File is not a valid PostScript document."
 msgstr "Soubor není platný dokument v PostScriptu."
 
-#: ps/ps-document.c:1343
+#: ps/ps-document.c:1406
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Nemohu otevřít soubor %s.\n"
 
-#: ps/ps-document.c:1345
+#: ps/ps-document.c:1408
 msgid "File is not readable."
 msgstr "Soubor nelze číst."
 
-#: ps/ps-document.c:1366
+#: ps/ps-document.c:1429
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Chyba při procházení souboru %s\n"
 
-#: ps/ps-document.c:1369
+#: ps/ps-document.c:1432
 msgid "The file is not a PostScript document."
 msgstr "Soubor není dokument v PostScriptu."
 
-#: ps/ps-document.c:1400
+#: ps/ps-document.c:1463
 msgid "Document loaded."
 msgstr "Dokument načten."
 
@@ -267,7 +267,7 @@ msgstr "Obrázky"
 msgid "All Files"
 msgstr "Všechny soubory"
 
-#: shell/ev-page-action.c:70
+#: shell/ev-page-action.c:71
 #, c-format
 msgid "of %d"
 msgstr "z %d"
