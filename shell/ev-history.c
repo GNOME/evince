@@ -30,6 +30,11 @@ struct _EvHistoryPrivate
 	int current_index;
 };
 
+enum {
+	PROP_0,
+	PROP_INDEX
+};
+
 static void ev_history_init       (EvHistory *history);
 static void ev_history_class_init (EvHistoryClass *class);
 
@@ -66,13 +71,65 @@ ev_history_finalize (GObject *object)
 }
 
 static void
+ev_history_get_property (GObject *object, guint prop_id, GValue *value,
+		         GParamSpec *param_spec)
+{
+	EvHistory *self;
+
+	self = EV_HISTORY (object);
+
+	switch (prop_id) {
+	case PROP_INDEX:
+		g_value_set_int (value, self->priv->current_index);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
+						   prop_id,
+						   param_spec);
+		break;
+	}
+}
+
+static void
+ev_history_set_property (GObject *object, guint prop_id, const GValue *value,
+		         GParamSpec *param_spec)
+{
+	EvHistory *self;
+	
+	self = EV_HISTORY (object);
+	
+	switch (prop_id) {
+	case PROP_INDEX:
+		ev_history_set_current_index (self, g_value_get_int (value));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
+						   prop_id,
+						   param_spec);
+		break;
+	}
+}
+
+static void
 ev_history_class_init (EvHistoryClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
 	object_class->finalize = ev_history_finalize;
+	object_class->set_property = ev_history_set_property;
+	object_class->get_property = ev_history_get_property;
 
 	parent_class = g_type_class_peek_parent (class);
+
+	g_object_class_install_property (object_class,
+					 PROP_INDEX,
+					 g_param_spec_int ("index",
+							   "Current Index",
+							   "The current index",
+							    -1,
+							    G_MAXINT,
+							    0,
+							    G_PARAM_READWRITE));
 
 	g_type_class_add_private (object_class, sizeof (EvHistoryPrivate));
 }
@@ -115,7 +172,7 @@ ev_history_add_page (EvHistory *history, int page)
 
 	g_return_if_fail (EV_IS_HISTORY (history));
 
-	title = g_strdup_printf (_("Page %d\n"), page);
+	title = g_strdup_printf (_("Page %d"), page);
 	link = ev_link_new_page (title, page);
 	g_free (title);
 
@@ -156,6 +213,8 @@ ev_history_set_current_index (EvHistory *history, int index)
 	g_return_if_fail (EV_IS_HISTORY (history));
 
 	history->priv->current_index = index;
+
+	g_object_notify (G_OBJECT (history), "index");
 }
 
 EvHistory *

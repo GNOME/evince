@@ -75,12 +75,15 @@ struct _EvWindowPrivate {
 	guint help_message_cid;
 	GtkWidget *exit_fullscreen_popup;
 	char *uri;
-	GtkAction *page_action;
 
 	EvDocument *document;
 
 	gboolean fullscreen_mode;
 };
+
+#define NAVIGATION_BACK_ACTION "NavigationBack"
+#define NAVIGATION_FORWARD_ACTION "NavigationForward"
+#define PAGE_SELECTOR_ACTION "PageSelector"
 
 #if 0
 /* enable these to add support for signals */
@@ -282,12 +285,13 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 static void
 update_total_pages (EvWindow *ev_window)
 {
-	EvPageAction *page_action;
+	GtkAction *action;
 	int pages;
 
 	pages = ev_document_get_n_pages (ev_window->priv->document);
-	page_action = EV_PAGE_ACTION (ev_window->priv->page_action);
-	ev_page_action_set_total_pages (page_action, pages);
+	action = gtk_action_group_get_action
+		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
+	ev_page_action_set_total_pages (EV_PAGE_ACTION (action), pages);
 }
 
 void
@@ -319,14 +323,31 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 					 ev_window, 0);
 
 		if (ev_document_load (document, uri, &error)) {
+			EvHistory *history;
+			EvView *view = EV_VIEW (ev_window->priv->view);
+			EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
+			GtkAction *action;
+
 			if (ev_window->priv->document)
 				g_object_unref (ev_window->priv->document);
 			ev_window->priv->document = document;
 
-			ev_view_set_document (EV_VIEW (ev_window->priv->view),
-					      document);
-			ev_sidebar_set_document (EV_SIDEBAR (ev_window->priv->sidebar),
-						 document);
+			ev_view_set_document (view, document);
+			ev_sidebar_set_document (sidebar, document);
+
+			history = ev_history_new ();
+			ev_view_set_history (view, history);
+			g_object_unref (history);
+
+			action = gtk_action_group_get_action
+				(ev_window->priv->action_group, NAVIGATION_BACK_ACTION);
+			ev_navigation_action_set_history
+				(EV_NAVIGATION_ACTION (action), history);
+
+			action = gtk_action_group_get_action
+				(ev_window->priv->action_group, NAVIGATION_FORWARD_ACTION);
+			ev_navigation_action_set_history
+				(EV_NAVIGATION_ACTION (action), history);
 
 			update_total_pages (ev_window);
 			update_action_sensitivity (ev_window);
@@ -1068,12 +1089,14 @@ disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
 static void
 update_current_page (EvWindow *ev_window)
 {
-	EvPageAction *page_action;
 	int page;
+	GtkAction *action;
+
+	action = gtk_action_group_get_action
+		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 
 	page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
-	page_action = EV_PAGE_ACTION (ev_window->priv->page_action);
-	ev_page_action_set_current_page (page_action, page);
+	ev_page_action_set_current_page (EV_PAGE_ACTION (action), page);
 }
 
 static void
@@ -1342,7 +1365,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 	GtkAction *action;
 
 	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
-			       "name", "NavigationBack",
+			       "name", NAVIGATION_BACK_ACTION,
 			       "label", _("Back"),
 			       "stock_id", GTK_STOCK_GO_BACK,
 			       "tooltip", _("Go back"),
@@ -1356,7 +1379,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 	g_object_unref (action);
 
 	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
-			       "name", "NavigationForward",
+			       "name", NAVIGATION_FORWARD_ACTION,
 			       "label", _("Forward"),
 			       "stock_id", GTK_STOCK_GO_FORWARD,
 			       "tooltip", _("Go forward"),
@@ -1369,13 +1392,12 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 	g_object_unref (action);
 
 	action = g_object_new (EV_TYPE_PAGE_ACTION,
-			       "name", "PageSelector",
+			       "name", PAGE_SELECTOR_ACTION,
 			       "label", _("Page"),
 			       "tooltip", _("Select Page"),
 			       NULL);
 	g_signal_connect (action, "goto_page",
 			  G_CALLBACK (goto_page_cb), window);
-	window->priv->page_action = action;
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }

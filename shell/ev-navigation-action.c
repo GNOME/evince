@@ -37,6 +37,7 @@ struct _EvNavigationActionPrivate
 	EvWindow *window;
 	EvNavigationDirection direction;
 	char *arrow_tooltip;
+	EvHistory *history;
 };
 
 enum
@@ -53,14 +54,86 @@ static GObjectClass *parent_class = NULL;
 
 G_DEFINE_TYPE (EvNavigationAction, ev_navigation_action, GTK_TYPE_ACTION)
 
+#define MAX_LABEL_LENGTH 48
+
 #define EV_NAVIGATION_ACTION_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_NAVIGATION_ACTION, EvNavigationActionPrivate))
+
+void
+ev_navigation_action_set_history (EvNavigationAction *action,
+				  EvHistory	     *history)
+{
+	action->priv->history = history;
+
+	g_object_add_weak_pointer (G_OBJECT (action->priv->history),
+				   (gpointer *) &action->priv->history);
+}
+
+static void
+activate_menu_item_cb (GtkWidget *widget, EvNavigationAction *action)
+{
+	int index;
+
+	g_return_if_fail (EV_IS_HISTORY (action->priv->history));
+
+	index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (widget), "index"));
+	ev_history_set_current_index (action->priv->history, index);
+}
+
+static GtkWidget *
+new_history_menu_item (EvNavigationAction *action,
+		       EvLink             *link,
+		       int                 index)
+{
+	GtkLabel *label;
+	GtkWidget *item;
+	const char *title;
+
+	title = ev_link_get_title (link);
+	item = gtk_image_menu_item_new_with_label (title);
+	g_object_set_data (G_OBJECT (item), "index",
+			   GINT_TO_POINTER (index));
+
+	label = GTK_LABEL (GTK_BIN (item)->child);
+	gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
+	gtk_label_set_max_width_chars (label, MAX_LABEL_LENGTH);
+
+	g_signal_connect (item, "activate",
+			  G_CALLBACK (activate_menu_item_cb),
+			  action);
+
+	gtk_widget_show (item);
+
+	return item;
+}
 
 static GtkWidget *
 build_menu (EvNavigationAction *action)
 {
 	GtkMenuShell *menu;
+	EvHistory *history = action->priv->history;
+	int start, end, i;
 
 	menu = GTK_MENU_SHELL (gtk_menu_new ());
+
+	if (history == NULL) {
+		return GTK_WIDGET (menu);
+	}
+
+	if (action->priv->direction == EV_NAVIGATION_DIRECTION_BACK) {
+		start = 0;
+		end = ev_history_get_current_index (history);
+	} else {
+		start = ev_history_get_current_index (history) + 1;
+		end = ev_history_get_n_links (history);
+	}
+
+	for (i = start; i < end; i++) {
+		EvLink *link = ev_history_get_link_nth (history, i);
+		GtkWidget *item;
+
+		item = new_history_menu_item (action, link, i);
+		gtk_menu_shell_append (menu, item);
+	}
 
 	return GTK_WIDGET (menu);
 }
@@ -121,6 +194,11 @@ static void
 ev_navigation_action_finalize (GObject *object)
 {
 	EvNavigationAction *action = EV_NAVIGATION_ACTION (object);
+
+	if (action->priv->history) {
+		g_object_add_weak_pointer (G_OBJECT (action->priv->history),
+					   (gpointer *) &action->priv->history);
+	}
 
 	g_free (action->priv->arrow_tooltip);
 

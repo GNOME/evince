@@ -28,7 +28,6 @@
 #include "ev-marshal.h"
 #include "ev-view.h"
 #include "ev-document-find.h"
-#include "ev-history.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -905,12 +904,6 @@ ev_view_set_document (EvView     *view,
 		
 		if (old_page != ev_view_get_page (view))
 			g_signal_emit (view, page_changed_signal, 0);
-
-		if (view->history) {
-			g_object_unref (view->history);
-		}
-		view->history = ev_history_new ();
-		ev_history_add_page (view->history, ev_view_get_page (view));
 	}
 }
 
@@ -975,7 +968,6 @@ ev_view_go_back	(EvView	*view)
 	if (n > 0) {
 		index = MAX (0, index - 1);
 		ev_history_set_current_index (view->history, index);
-		go_to_index (view, index);
 	}
 }
 
@@ -992,7 +984,6 @@ ev_view_go_forward (EvView *view)
 	if (n > 0) {
 		index = MIN (n - 1, index + 1);
 		ev_history_set_current_index (view->history, index);
-		go_to_index (view, index);
 	}
 }
 
@@ -1116,4 +1107,31 @@ ev_view_get_find_status_message (EvView *view)
 		return g_strdup_printf (_("%d found on this page"),
 					view->results_on_this_page);
 	}
+}
+
+static void
+history_index_changed_cb (EvHistory  *history,
+			  GParamSpec *pspec,
+			  EvView     *view)
+{
+	int index;
+
+	index = ev_history_get_current_index (history);
+	go_to_index (view, index);
+}
+
+void
+ev_view_set_history (EvView     *view,
+		     EvHistory  *history)
+{
+	if (view->history) {
+		g_object_unref (view->history);
+	}
+
+	view->history = g_object_ref (history);
+	ev_history_add_page (view->history, ev_view_get_page (view));
+
+	g_signal_connect (view->history, "notify::index",
+			  G_CALLBACK (history_index_changed_cb),
+			  view);
 }

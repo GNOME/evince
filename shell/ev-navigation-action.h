@@ -24,6 +24,8 @@
 
 #include <gtk/gtkaction.h>
 
+#include "ev-history.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_NAVIGATION_ACTION            (ev_navigation_action_get_type ())
@@ -56,7 +58,9 @@ struct _EvNavigationActionClass
 	GtkActionClass parent_class;
 };
 
-GType ev_navigation_action_get_type (void);
+GType	ev_navigation_action_get_type		(void);
+void	ev_navigation_action_set_history	(EvNavigationAction *action,
+						 EvHistory	    *history);
 
 G_END_DECLS
 

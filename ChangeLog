@@ -1,5 +1,23 @@
 2005-01-11  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-history.c: (ev_history_get_property),
+	(ev_history_set_property), (ev_history_class_init),
+	(ev_history_add_page), (ev_history_set_current_index):
+	* shell/ev-navigation-action.c: (ev_navigation_action_set_history),
+	(activate_menu_item_cb), (new_history_menu_item), (build_menu),
+	(ev_navigation_action_finalize):
+	* shell/ev-navigation-action.h:
+	* shell/ev-view.c: (ev_view_set_document), (ev_view_go_back),
+	(ev_view_go_forward), (ev_view_get_find_status_message),
+	(history_index_changed_cb), (ev_view_set_history):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_total_pages), (ev_window_open),
+	(update_current_page), (register_custom_actions):
+
+	Implement history dropdowns
+
+2005-01-11  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-history.c: (ev_history_init), (ev_history_add_link):
 	* shell/ev-view.c: (ev_view_set_document), (ev_view_go_back),
 	(ev_view_go_forward):
