@@ -106,7 +106,7 @@ extern "C" {
     }
     
     CORBA_exception_init (&ev);
-    persist = Bonobo_Unknown_query_interface (
+    persist = Bonobo_Unknown_queryInterface (
       bonobo_object_corba_objref (BONOBO_OBJECT (object)),
       "IDL:Bonobo/PersistStream:1.0", &ev);
     
@@ -290,7 +290,7 @@ extern "C" {
 static void
 container_dump_cmd (GtkWidget *widget, Container *container)
 {
-	bonobo_win_dump (BONOBO_WIN (container->app), "on demand");
+	bonobo_window_dump (BONOBO_WINDOW(container->app), "on demand");
 }
 
 static void
@@ -481,7 +481,7 @@ container_new (const char *fname)
 	
 	container = g_new0 (Container, 1);
 
-	container->app = bonobo_win_new ("pdf-viewer",
+	container->app = bonobo_window_new ("pdf-viewer",
 					 "GNOME PDF viewer");
 
 	gtk_drag_dest_set (container->app,
@@ -502,7 +502,7 @@ container_new (const char *fname)
 	container->slot = gtk_event_box_new ();
 	gtk_widget_show (container->slot);
 
-	bonobo_win_set_contents (BONOBO_WIN (container->app),
+	bonobo_window_set_contents (BONOBO_WINDOW(container->app),
 				 GTK_WIDGET (container->slot));
 	gtk_widget_show_all (container->slot);
 
@@ -511,7 +511,7 @@ container_new (const char *fname)
 			     GTK_SIGNAL_FUNC (container_destroy_cb), container);
 
 	ui_container = bonobo_ui_container_new ();
-	bonobo_ui_container_set_win (ui_container, BONOBO_WIN (container->app));
+	bonobo_ui_container_set_win (ui_container, BONOBO_WINDOW(container->app));
 
 	container->ui_component = bonobo_ui_component_new ("gpdf");
 	bonobo_ui_component_set_container (
