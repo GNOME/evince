@@ -268,7 +268,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	ev_sidebar->priv->label = gtk_label_new ("");
 	gtk_box_pack_start (GTK_BOX (select_hbox),
 			    ev_sidebar->priv->label,
-			    TRUE, FALSE, 0);
+			    FALSE, FALSE, 0);
 	gtk_widget_show (ev_sidebar->priv->label);
 
 	arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
@@ -278,7 +278,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	gtk_container_add (GTK_CONTAINER (select_button), select_hbox);
 	gtk_widget_show (select_hbox);
 
-	gtk_box_pack_start (GTK_BOX (hbox), select_button, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), select_button, TRUE, TRUE, 0);
 	gtk_widget_show (select_button);
 
 	close_button = gtk_button_new ();
