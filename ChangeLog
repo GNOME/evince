@@ -1,3 +1,31 @@
+2005-03-09  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* NEWS:
+	* backend/ev-document-thumbnails.c:
+	(ev_document_thumbnails_get_thumbnail):
+	* backend/ev-document-thumbnails.h:
+	* backend/ev-jobs.c: (ev_job_thumbnail_run):
+	* configure.ac:
+	* pdf/pdf-document.cc:
+	* pixbuf/pixbuf-document.c:
+	(pixbuf_document_thumbnails_get_thumbnail):
+	* ps/Makefile.am:
+	* ps/gsdefaults.c: (gtk_gs_defaults_get_interpreter_cmd),
+	(gtk_gs_defaults_get_alpha_parameters),
+	(gtk_gs_defaults_get_ungzip_cmd),
+	(gtk_gs_defaults_get_unbzip2_cmd):
+	* ps/gsdefaults.h:
+	* ps/ps-document.c: (ps_document_init), (ps_document_class_init),
+	(ps_document_get_orientation), (document_load),
+	(ps_document_goto_page), (ps_document_set_page_size):
+	* ps/ps-document.h:
+	* shell/ev-sidebar-thumbnails.c: (do_one_iteration):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get),
+	(main):
+	* thumbnailer/evince-thumbnailer.schemas:
+
+	Merge changes from head and resolve conflicts
+
 Wed Mar  9 13:20:58 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-view.c (ev_view_set_document): No longer connect a

@@ -36,7 +36,8 @@
 #include "ev-window.h"
 #include "ev-utils.h"
 
-#define THUMBNAIL_WIDTH 75
+#define THUMBNAIL_WIDTH 100
+
 /* Amount of time we devote to each iteration of the idle, in microseconds */
 #define IDLE_WORK_LENGTH 5000
 
@@ -226,8 +227,9 @@ do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 			    COLUMN_THUMBNAIL_SET, &thumbnail_set,
 			    -1);
 	if (!thumbnail_set) {
-		pixbuf = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
-							       priv->current_page, THUMBNAIL_WIDTH);
+		pixbuf = ev_document_thumbnails_get_thumbnail
+				(EV_DOCUMENT_THUMBNAILS (priv->document),
+				 priv->current_page, THUMBNAIL_WIDTH, TRUE);
 
 		gtk_list_store_set (priv->list_store,
 				    &(priv->current_page_iter),

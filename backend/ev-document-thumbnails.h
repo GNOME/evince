@@ -42,7 +42,8 @@ struct _EvDocumentThumbnailsIface
         /* Methods  */
         GdkPixbuf *  (* get_thumbnail)  (EvDocumentThumbnails *document,
                                          gint                  page,
-                                         gint                  width);
+                                         gint                  size,
+					 gboolean              border);
         void         (* get_dimensions) (EvDocumentThumbnails *document,
 					 gint                  page,
 					 gint                  suggested_width,
@@ -53,10 +54,11 @@ struct _EvDocumentThumbnailsIface
 GType      ev_document_thumbnails_get_type       (void);
 GdkPixbuf *ev_document_thumbnails_get_thumbnail  (EvDocumentThumbnails *document,
                                                   gint                  page,
-                                                  gint                  suggested_width);
+                                                  gint                  size,
+                                                  gboolean              border);
 void       ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
                                                   gint                  page,
-                                                  gint                  suggested_width,
+                                                  gint                  size,
                                                   gint                 *width,
                                                   gint                 *height);
 

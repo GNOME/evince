@@ -10,10 +10,10 @@ noinst_LTLIBRARIES = libgtkgs.la
 libgtkgs_la_SOURCES = 	\
 	gsio.c		\
 	gsio.h		\
-	gsdefaults.c	\
-	gsdefaults.h	\
 	gstypes.h	\
 	ps.c		\
 	ps.h		\
 	ps-document.c	\
-	ps-document.h
+	ps-document.h	\
+	gsdefaults.c	\
+	gsdefaults.h

@@ -157,7 +157,8 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 
 	job->thumbnail = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (job->document),
 							       job->page,
-							       job->requested_width);
+							       job->requested_width,
+							       TRUE);
 }
 
 void

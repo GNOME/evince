@@ -267,19 +267,20 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 
 static GdkPixbuf *
 pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-					  gint 			 page,
-					  gint			 width)
+					  gint 			  page,
+					  gint			  size,
+					  gboolean                border)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 	GdkPixbuf *pixbuf;
 	gdouble scale_factor;
 	gint height;
 	
-	scale_factor = (gdouble)width / gdk_pixbuf_get_width (pixbuf_document->pixbuf);
+	scale_factor = (gdouble)size / gdk_pixbuf_get_width (pixbuf_document->pixbuf);
 
 	height = gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale_factor;
 	
-	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf, width, height,
+	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf, size, height,
 					  GDK_INTERP_BILINEAR);
 	
 	return pixbuf;

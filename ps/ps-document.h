@@ -47,8 +47,6 @@ struct _PSDocument {
                                  */
   GdkGC *psgc;
 
-  GtkGSZoomMode zoom_mode;
-
   GdkPixmap *bpixmap;           /* Backing pixmap */
 
   long message_window;          /* Used by ghostview to receive messages from app */
@@ -98,9 +96,7 @@ struct _PSDocument {
   gboolean antialiased;         /* Using antialiased display */
   gboolean respect_eof;         /* respect EOF comments? */
   gint default_size;
-  gboolean override_size;
   gfloat xdpi, ydpi;
-  gboolean override_orientation;
   gint fallback_orientation;    /* Orientation to use if override */
   gint real_orientation;        /* Real orientation from the document */
 
