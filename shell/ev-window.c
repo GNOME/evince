@@ -313,7 +313,8 @@ update_sizing_buttons (EvWindow *window)
 		best_fit = FALSE;
 		page_width = TRUE;
 		break;
-	case EV_SIZING_FREE:
+
+	default:
 		best_fit = page_width = FALSE;
 		break;
 	}
@@ -1454,33 +1455,39 @@ ev_window_cmd_leave_fullscreen (GtkAction *action, EvWindow *window)
 }
 
 static void
-size_allocate_cb (GtkWidget     *scrolled_window,
-		  GtkAllocation *allocation,
-		  EvWindow      *ev_window)
+update_view_size (EvWindow *window)
 {
 	int width, height;
 	GtkRequisition vsb_requisition;
 	int scrollbar_spacing;
 
-	width = ev_window->priv->scrolled_window->allocation.width;
-	height = ev_window->priv->scrolled_window->allocation.height;
+	width = window->priv->scrolled_window->allocation.width;
+	height = window->priv->scrolled_window->allocation.height;
 
 	/* the scrolled window has a GTK_SHADOW_IN */
-	width -= 2 * ev_window->priv->view->style->xthickness;
-	height -= 2 * ev_window->priv->view->style->ythickness;
+	width -= 2 * window->priv->view->style->xthickness;
+	height -= 2 * window->priv->view->style->ythickness;
 
-	if (ev_window->priv->sizing_mode == EV_SIZING_BEST_FIT) {
-		ev_view_set_size (EV_VIEW (ev_window->priv->view),
+	if (window->priv->sizing_mode == EV_SIZING_BEST_FIT) {
+		ev_view_set_size (EV_VIEW (window->priv->view),
 				  MAX (1, width), MAX (1, height));
-	} else if (ev_window->priv->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		gtk_widget_size_request (GTK_SCROLLED_WINDOW (ev_window->priv->scrolled_window)->vscrollbar,
+	} else if (window->priv->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->vscrollbar,
 					 &vsb_requisition);
-		gtk_widget_style_get (ev_window->priv->scrolled_window,
+		gtk_widget_style_get (window->priv->scrolled_window,
 				      "scrollbar_spacing", &scrollbar_spacing,
 				      NULL);
-		ev_view_set_size (EV_VIEW (ev_window->priv->view),
+		ev_view_set_size (EV_VIEW (window->priv->view),
 				  width - vsb_requisition.width - scrollbar_spacing, -1);
 	}
+}
+
+static void
+size_allocate_cb (GtkWidget     *scrolled_window,
+		  GtkAllocation *allocation,
+		  EvWindow      *window)
+{
+	update_view_size (window);
 }
 
 static void
@@ -1496,6 +1503,8 @@ ev_window_set_sizing_mode (EvWindow     *ev_window,
 	ev_window->priv->sizing_mode = sizing_mode;
 
 	g_signal_handlers_disconnect_by_func (scrolled_window, size_allocate_cb, ev_window);
+
+	update_view_size (ev_window);
 
 	switch (sizing_mode) {
 	case EV_SIZING_BEST_FIT:
