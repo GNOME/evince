@@ -42,8 +42,9 @@ LinkAction *LinkAction::parseAction(Object *obj, GString *baseURI) {
   Object obj2, obj3, obj4;
 
   if (!obj->isDict()) {
-    error(-1, "Bad annotation action");
-    return NULL;
+      error(-1, "parseAction: Bad annotation action for URI '%s'",
+            baseURI ? baseURI->getCString() : "NULL");
+      return NULL;
   }
 
   obj->dictLookup("S", &obj2);
@@ -92,7 +93,8 @@ LinkAction *LinkAction::parseAction(Object *obj, GString *baseURI) {
 
   // action is missing or wrong type
   } else {
-    error(-1, "Bad annotation action");
+    error(-1, "parseAction: Unknown annotation action object: URI = '%s'",
+          baseURI ? baseURI->getCString() : "NULL");
     action = NULL;
   }
 
