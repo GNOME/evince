@@ -27,4 +27,8 @@ EXTRA_DIST =				\
 	$(stock_DATA)			\
 	$(glade_DATA)			\
 	$(ui_DATA)			\
+	$(DESKTOP_IN_FILES)		\
 	$(NULL)
+
+DISTCLEANFILES = \
+	$(DESKTOP_FILES)
