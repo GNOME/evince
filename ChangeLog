@@ -1,5 +1,18 @@
 2004-12-22  Mark McLoughlin  <mark@skynet.ie>
 
+	* data/ev-stock-zoom-fit-width.png: fit-width
+	stock icon from gpdf.
+	
+	* shell/ev-stock-icons.[ch]: copied from gpdf.
+	
+	* shell/main.c: (main): init stock icons.
+	
+	* shell/ev-window.c: use the fit-width icon.
+	
+	* data/evince-ui.xml: add zooming toolbar items.
+
+2004-12-22  Mark McLoughlin  <mark@skynet.ie>
+
 	* shell/ev-view.c: 
 	(ev_view_best_fit), (ev_view_fit_width): because
 	get_page_size() returns the scaled page size, we

@@ -42,6 +42,7 @@
 #include <string.h>
 
 #include "ev-application.h"
+#include "ev-stock-icons.h"
 
 enum {
 	PROP_0,
@@ -697,7 +698,7 @@ static GtkActionEntry entries[] = {
         { "ViewBestFit", GTK_STOCK_ZOOM_FIT, N_("_Best Fit"), NULL,
           N_("Zoom to fit the document to the current window"),
           G_CALLBACK (ev_window_cmd_view_best_fit) },
-        { "ViewPageWidth", NULL, N_("Fit Page _Width"), NULL,
+        { "ViewPageWidth", EV_STOCK_ZOOM_FIT_WIDTH, N_("Fit Page _Width"), NULL,
           N_("Zoom to fit the width of the current window "),
           G_CALLBACK (ev_window_cmd_view_page_width) },
 

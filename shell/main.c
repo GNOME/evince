@@ -28,6 +28,8 @@
 #include <libgnomeui/gnome-ui-init.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
+#include "ev-stock-icons.h"
+
 static struct poptOption popt_options[] =
 {
 	{ NULL, 0, 0, NULL, 0, NULL, NULL }
@@ -86,6 +88,8 @@ main (int argc, char *argv[])
                                       NULL);
 
 	g_set_application_name (_("Evince Document Viewer"));
+
+	ev_stock_icons_init ();
 
 	g_object_get_property (G_OBJECT (program),
                                GNOME_PARAM_POPT_CONTEXT,

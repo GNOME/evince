@@ -6,6 +6,7 @@ INCLUDES=					\
 	-I$(top_srcdir)/backend			\
 	-I$(top_srcdir)/pdf/xpdf		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(SHELL_CFLAGS)				\
 	$(EVINCE_DISABLE_DEPRECATED)		\
 	$(NULL)
@@ -30,6 +31,8 @@ evince_SOURCES=				\
 	ev-sidebar-bookmarks.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
+	ev-stock-icons.c		\
+	ev-stock-icons.h		\
 	main.c				\
 	$(NULL)
 
