@@ -20,6 +20,8 @@
 
 #include <gtk/gtkalignment.h>
 #include <glib/gi18n.h>
+#include <gtk/gtkbindings.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "ev-marshal.h"
 #include "ev-view.h"
@@ -56,6 +58,9 @@ struct _EvViewClass {
 	void	(*set_scroll_adjustments) (EvView         *view,
 					   GtkAdjustment  *hadjustment,
 					   GtkAdjustment  *vadjustment);
+	void    (*scroll_view)		  (EvView         *view,
+					   GtkScrollType   scroll,
+					   gboolean        horizontal);
 	
 	/* Should this be notify::page? */
 	void	(*page_changed)           (EvView         *view);
@@ -240,7 +245,9 @@ ev_view_realize (GtkWidget *widget)
 	attributes.y = 0;
 	attributes.width = MAX (widget->allocation.width, widget->requisition.width);
 	attributes.height = MAX (widget->allocation.height, widget->requisition.height);
-	attributes.event_mask = GDK_EXPOSURE_MASK | GDK_SCROLL_MASK;
+	attributes.event_mask = GDK_EXPOSURE_MASK |
+				GDK_SCROLL_MASK |
+				GDK_KEY_PRESS_MASK;
   
 	view->bin_window = gdk_window_new (widget->window,
 					   &attributes,
@@ -424,11 +431,68 @@ ev_view_set_scroll_adjustments (EvView *view,
 }
 
 static void
+add_scroll_binding (GtkBindingSet  *binding_set,
+		    guint           keyval,
+		    GtkScrollType   scroll,
+		    gboolean        horizontal)
+{
+  guint keypad_keyval = keyval - GDK_Left + GDK_KP_Left;
+  
+  gtk_binding_entry_add_signal (binding_set, keyval, 0,
+                                "scroll_view", 2,
+                                GTK_TYPE_SCROLL_TYPE, scroll,
+				G_TYPE_BOOLEAN, horizontal);
+  gtk_binding_entry_add_signal (binding_set, keypad_keyval, 0,
+                                "scroll_view", 2,
+                                GTK_TYPE_SCROLL_TYPE, scroll,
+				G_TYPE_BOOLEAN, horizontal);
+}
+
+static void
+ev_view_scroll_view (EvView *view,
+		      GtkScrollType scroll,
+		      gboolean horizontal)
+{
+	GtkAdjustment *adjustment;
+	double value;
+
+	if (horizontal) {
+		adjustment = view->hadjustment;	
+	} else {
+		adjustment = view->vadjustment;
+	}
+
+	value = adjustment->value;
+
+	switch (scroll) {
+		case GTK_SCROLL_STEP_BACKWARD:	
+			value -= adjustment->step_increment; 
+			break;
+		case GTK_SCROLL_STEP_FORWARD:
+			value += adjustment->step_increment; 
+			break;
+		case GTK_SCROLL_PAGE_BACKWARD:	
+			value -= adjustment->page_increment; 
+			break;
+		case GTK_SCROLL_PAGE_FORWARD:
+			value += adjustment->page_increment; 
+			break;
+		default:
+			break;
+	}
+
+	value = CLAMP (value, adjustment->lower, adjustment->upper - adjustment->page_size);
+
+	gtk_adjustment_set_value (adjustment, value);
+}
+
+static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkObjectClass *gtk_object_class = GTK_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+	GtkBindingSet *binding_set;
 
 	object_class->finalize = ev_view_finalize;
 
@@ -443,8 +507,9 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->style_set = ev_view_style_set;
 	widget_class->state_changed = ev_view_state_changed;
 	gtk_object_class->destroy = ev_view_destroy;
-  
+
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
+	class->scroll_view = ev_view_scroll_view;
 
 	widget_class->set_scroll_adjustments_signal =  g_signal_new ("set-scroll-adjustments",
 								     G_OBJECT_CLASS_TYPE (object_class),
@@ -470,12 +535,34 @@ ev_view_class_init (EvViewClass *class)
 		      NULL, NULL,
 		      ev_marshal_VOID__NONE,
 		      G_TYPE_NONE, 0);
+
+	g_signal_new ("scroll_view",
+		      G_TYPE_FROM_CLASS (object_class),
+		      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		      G_STRUCT_OFFSET (EvViewClass, scroll_view),
+		      NULL, NULL,
+		      ev_marshal_VOID__ENUM_BOOLEAN,
+		      G_TYPE_NONE, 2,
+		      GTK_TYPE_SCROLL_TYPE,
+		      G_TYPE_BOOLEAN);
+
+	binding_set = gtk_binding_set_by_class (class);
+
+	add_scroll_binding (binding_set, GDK_Left,  GTK_SCROLL_STEP_BACKWARD, TRUE);
+	add_scroll_binding (binding_set, GDK_Right, GTK_SCROLL_STEP_FORWARD,  TRUE);
+	add_scroll_binding (binding_set, GDK_Up,    GTK_SCROLL_STEP_BACKWARD, FALSE);
+	add_scroll_binding (binding_set, GDK_Down,  GTK_SCROLL_STEP_FORWARD,  FALSE);
+
+	add_scroll_binding (binding_set, GDK_Page_Up,   GTK_SCROLL_PAGE_BACKWARD, FALSE);
+	add_scroll_binding (binding_set, GDK_Page_Down, GTK_SCROLL_PAGE_FORWARD,  FALSE);
 }
 
 static void
 ev_view_init (EvView *view)
 {
 	static const GdkColor white = { 0, 0xffff, 0xffff, 0xffff };
+
+	GTK_WIDGET_SET_FLAGS (view, GTK_CAN_FOCUS);
 
 	view->scale = 1.0;
 	
