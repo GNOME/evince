@@ -34,6 +34,7 @@ libxpdf_a_SOURCES =		\
 	Annot.h			\
 	Array.cc 		\
 	Array.h			\
+	BaseFile.h		\
 	BuiltinFont.cc		\
 	BuiltinFont.h		\
 	BuiltinFontTables.cc	\
@@ -76,6 +77,8 @@ libxpdf_a_SOURCES =		\
 	Object.h		\
 	Outline.cc		\
 	Outline.h		\
+	OutputDev.cc 		\
+	OutputDev.h		\
 	Page.cc 		\
 	Page.h			\
 	Parser.cc 		\
@@ -96,7 +99,6 @@ libxpdf_a_SOURCES =		\
 	XRef.h
 
 common_sources =		\
-	BaseFile.h		\
 	CharTypes.h		\
 	CompactFontTables.h	\
 	DisplayFontTable.h	\
@@ -104,8 +106,6 @@ common_sources =		\
 	FTFont.cc		\
 	FTFont.h		\
 	NameToUnicodeTable.h	\
-	OutputDev.cc 		\
-	OutputDev.h		\
 	SFont.cc		\
 	SFont.h			\
 	T1Font.cc		\
@@ -121,6 +121,11 @@ libgpdf_a_SOURCES =			\
 	BonoboStream.h			\
 	GnomeVFSStream.cc		\
 	GnomeVFSStream.h		\
+	GPOutputDev.cc			\
+	GPOutputDev.h			\
+	gpdf-control.cc			\
+	gpdf-control.h			\
+	gpdf-g-switch.h			\
 	gpdf-link-canvas-item.cc	\
 	gpdf-link-canvas-item.h		\
 	gpdf-links-canvas-layer.cc	\
@@ -128,16 +133,7 @@ libgpdf_a_SOURCES =			\
 	gpdf-persist-file.cc		\
 	gpdf-persist-file.h		\
 	gpdf-persist-stream.cc		\
-	gpdf-persist-stream.h
-
-gnome_pdf_viewer_SOURCES =		\
-	$(common_sources)		\
-	GPOutputDev.cc			\
-	GPOutputDev.h			\
-	bonobo-application-x-pdf.cc	\
-	gpdf-control.cc			\
-	gpdf-control.h			\
-	gpdf-g-switch.h			\
+	gpdf-persist-stream.h		\
 	gpdf-stock-icons.c		\
 	gpdf-stock-icons.h		\
 	gpdf-util.h			\
@@ -145,8 +141,6 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-view.h			\
 	gtkgesture.c			\
 	gtkgesture.h			\
-	nautilus-pdf-property-page.cc	\
-	nautilus-pdf-property-page.h	\
 	page-control.c			\
 	page-control.h			\
 	pdf-info-dict-util.cc		\
@@ -154,6 +148,12 @@ gnome_pdf_viewer_SOURCES =		\
 	pdf-properties-display.c	\
 	pdf-properties-display.h	\
 	$(marshal_sources)
+
+gnome_pdf_viewer_SOURCES =		\
+	$(common_sources)		\
+	bonobo-application-x-pdf.cc	\
+	nautilus-pdf-property-page.cc	\
+	nautilus-pdf-property-page.h
 
 
 # Old files
