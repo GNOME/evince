@@ -34,7 +34,6 @@
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
-#include "ev-page-view.h"
 #include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-print-job.h"
