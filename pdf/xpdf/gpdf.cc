@@ -130,6 +130,9 @@ doc_config_event (GtkWidget *widget, void *ugly)
   return TRUE;
 }
 
+GdkFont *magic_font;
+GdkGC   *magic_black;
+
 static gint
 doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
 {
@@ -139,16 +142,19 @@ doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
   g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
   if (doc->out && doc->pdf) {
+    GtkStyle *style = gtk_widget_get_default_style();
     printf ("There are %d pages\n", doc->pdf->getNumPages());
 
+    magic_font  = widget->style->font;
+    magic_black = widget->style->black_gc;
     gdk_draw_line (doc->pixmap,
 		   widget->style->black_gc,
 		   event->area.x, event->area.y,
 		   event->area.width, event->area.height);
-    doc->pdf->displayPage(doc->out, 1, 1, 0, gTrue); /* 86 zoom */
+    doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue); /* 86 zoom */
     printf ("Draw pixmap %p\n", doc->pixmap);
-    gdk_draw_string (doc->pixmap, widget->style->font, widget->style->black_gc,
-		     10, 10, "Hello");
+    gdk_draw_string (doc->pixmap, magic_font, magic_black,
+		     300, 300, "Hello");
     gdk_draw_pixmap(widget->window,
 		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
 		    doc->pixmap,
