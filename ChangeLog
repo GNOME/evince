@@ -1,3 +1,11 @@
+Tue Dec 21 22:17:04 2004  Owen Taylor  <otaylor@redhat.com>
+
+	* pdf/xpdf/pdf-document.cc (pdf_document_load): PDFDoc
+	constructor assumes ownership of the string passed in.
+	
+	* shell/ev-window.c (ev_window_open): Destroy the error
+	dialog once we've displayed it.
+
 Tue Dec 21 21:58:56 2004  Owen Taylor  <otaylor@redhat.com>
 
 	* pdf/xpdf/pdf-document.cc shell/ev-view.c: Hook things up 

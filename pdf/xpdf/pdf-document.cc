@@ -78,11 +78,9 @@ pdf_document_load (EvDocument  *document,
 	filename_g = new GString (filename);
 	g_free (filename);
 
-	// open the PDF file
+	// open the PDF file, assumes ownership of filename_g
 	newDoc = new PDFDoc(filename_g, 0, 0);
 
-	delete filename_g;
-  
 	if (!newDoc->isOk()) {
 		err = newDoc->getErrorCode();
 		delete newDoc;
