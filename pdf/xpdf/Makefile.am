@@ -129,7 +129,7 @@ bonobo_application_x_pdf_LDADD =	\
 	$(EXTRA_GNOME_LIBS)		\
 	$(EXTRA_GLIB_LIBS)		\
 	$(INTLLIBS)			\
-	$(libpaper_CFLAGS)
+	$(libpaper_LIBS)
 
 xpdf_SOURCES =			\
 	$(common_sources)	\
