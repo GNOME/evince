@@ -216,7 +216,7 @@ static gint start_interpreter(PSDocument * gs);
 gboolean computeSize(void);
 static gboolean ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid);
 static void ps_document_document_iface_init (EvDocumentIface *iface);
-static gboolean ps_document_goto_page(PSDocument * gs, gint page);
+static gboolean ps_document_goto_page(PSDocument * gs);
 static gboolean ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data);
 
 static GObjectClass *parent_class = NULL;
@@ -408,13 +408,6 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	if (event->client.message_type == gs_class->page_atom) {
 		LOG ("GS rendered the document");
 		gs->busy = FALSE;
-
-		if (gs->scaling) {
-			ev_document_scale_changed (EV_DOCUMENT (gs));
-			gs->scaling = FALSE;
-		} else {
-			ev_document_page_changed (EV_DOCUMENT (gs));
-		}
 	}
 
 	return TRUE;
@@ -1348,8 +1341,10 @@ ps_document_next_page(PSDocument * gs)
 }
 
 static gboolean
-ps_document_goto_page(PSDocument * gs, gint page)
+ps_document_goto_page(PSDocument * gs)
 {
+  int page = gs->current_page;
+
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
@@ -1551,8 +1546,6 @@ ps_document_set_zoom (PSDocument * gs, gfloat zoom)
 	if (gs->pstarget != NULL) {
 		set_up_page(gs);
 		gs->changed = TRUE;
-		gs->scaling = TRUE;
-		ps_document_goto_page (gs, gs->current_page);
 	}
 }
 
@@ -1610,7 +1603,7 @@ ps_document_set_page (EvDocument  *document,
 {
 	LOG ("Set document page %d\n", page);
 
-	ps_document_goto_page (PS_DOCUMENT (document), page - 1);
+	PS_DOCUMENT (document)->current_page = page - 1;
 }
 
 static int
@@ -1722,6 +1715,8 @@ ps_document_render_pixbuf (EvDocument *document)
 {
 	PSDocument *gs = PS_DOCUMENT (document);
 	GdkColormap *cmap;
+
+	ps_document_goto_page (PS_DOCUMENT (document));
 
 	cmap = gdk_window_get_colormap (gs->pstarget);
 	

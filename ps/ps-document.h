@@ -106,8 +106,6 @@ struct _PSDocument {
 
   int page_x_offset;
   int page_y_offset;
-
-  gboolean scaling;
 };
 
 struct _PSDocumentClass {
