@@ -118,7 +118,7 @@ extern "C" {
     g_return_val_if_fail (container->view_widget == NULL, FALSE);
 
 #if USING_OAF
-    comp = container_activate_component (container, "OAFIID:gpdf_componet:892f2727-e2ec-423c-91ad-6f7b75fec6c8");
+    comp = container_activate_component (container, "OAFIID:gpdf_component:892f2727-e2ec-423c-91ad-6f7b75fec6c8");
 
 #else
     comp = container_activate_component (container, "bonobo-object:application-x-pdf");
