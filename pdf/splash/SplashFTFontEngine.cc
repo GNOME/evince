@@ -81,6 +81,7 @@ SplashFontFile *SplashFTFontEngine::loadCIDFont(SplashFontFileID *idA,
   SplashFontFile *ret;
 
   // check for a CFF font
+#if HAVE_FREETYPE_217_OR_OLDER
   if ((ff = FoFiType1C::load(fileName))) {
     cidToGIDMap = ff->getCIDToGIDMap(&nCIDs);
     delete ff;
@@ -88,6 +89,12 @@ SplashFontFile *SplashFTFontEngine::loadCIDFont(SplashFontFileID *idA,
     cidToGIDMap = NULL;
     nCIDs = 0;
   }
+#else
+  // No need to check for CFF Font, freetype treats all CID fonts the same way
+  cidToGIDMap = NULL;
+  nCIDs = 0;
+#endif
+
   ret = SplashFTFontFile::loadCIDFont(this, idA, fileName, deleteFile,
 				      cidToGIDMap, nCIDs);
   if (!ret) {

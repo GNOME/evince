@@ -267,6 +267,14 @@ if test "x$FREETYPE_CONFIG" != "xno" ; then
   FREETYPE_CFLAGS=`$FREETYPE_CONFIG --cflags`
   FREETYPE_LIBS=`$FREETYPE_CONFIG --libs`
   AC_DEFINE(HAVE_FREETYPE_H, 1, [Have FreeType2 include files])
+
+  vers=`$FREETYPE_CONFIG --version 2>/dev/null | sed -e 's/libfreetype //' | awk 'BEGIN { FS = "."; } { printf "%d", ($1 * 1000 + $2) * 1000 + $3;}'`
+  if test -n "$vers" && test "$vers" -le 9005003; then
+    AC_DEFINE_UNQUOTED(HAVE_FREETYPE_217_OR_OLDER, 1, [Defines if your system has the freetype library 2.1.7 or older])
+  else
+    AC_DEFINE_UNQUOTED(HAVE_FREETYPE_217_OR_OLDER, 0, [Defines if your system has the freetype library 2.1.7 or older])
+  fi
+
 fi
 
 AC_SUBST(FREETYPE_CFLAGS)
