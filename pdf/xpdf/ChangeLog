@@ -1,5 +1,14 @@
 2002-09-14  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
+	* gpdf-embeddable-view.h (GPdfEmbeddableView): kill bed member
+
+	* gpdf-embeddable-view.cc: removed newlines from g_message calls
+	(class_init): use checked casts, we now have destroy, no need to
+	keep a ref to our embeddable here
+	(gev_destroy): new destructor
+
+2002-09-14  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
 	* gpdf-embeddable-view.cc (gpdf_embeddable_view_new):
 	s/printf/g_message/
 	(view_create_menus, view_remove_menus): rename to
