@@ -41,6 +41,8 @@ extern "C" {
 #include "Error.h"
 #include "config.h"
 
+#define UNTESTED 0
+
 poptContext ctx;
 gint  gpdf_debug=0;
 
@@ -50,25 +52,29 @@ const struct poptOption gpdf_popt_options [] = {
   { NULL, '\0', 0, NULL, 0 }
 };
 
+typedef struct _Component Component;
+typedef struct _Container Container;
 /* NB. there is a 1 to 1 Container -> Component mapping, this
    is due to how much MDI sucks; unutterably */
-typedef struct {
-	GnomeContainer  *container;
-	GnomeUIHandler  *uih;
+struct _Container {
+  GnomeContainer  *container;
+  GnomeUIHandler  *uih;
+  
+  GnomeViewFrame  *active_view_frame;
+  
+  GtkWidget	*app;
+  GtkWidget	*view_widget;
+  Component     *component;
+  gdouble zoom;
+};
 
-	GnomeViewFrame  *active_view_frame;
-
-	GtkWidget	*app;
-	GtkWidget	*view_widget;
-} Container;
-
-typedef struct {
+struct  _Component {
 	Container	  *container;
 
 	GnomeClientSite   *client_site;
 	GnomeViewFrame	  *view_frame;
 	GnomeObjectClient *server;
-} Component;
+};
 
 GList *containers = NULL;
 /*
@@ -81,6 +87,9 @@ extern "C" {
   static void       container_close_cmd (GtkWidget *widget, Container *container);
   static void       container_exit_cmd  (void);
   static Component *container_activate_component (Container *container, char *component_goad_id);
+  static void       zoom_in_cmd         (GtkWidget *widget, Container *container);
+  static void       zoom_out_cmd        (GtkWidget *widget, Container *container);
+  static void       zoom_set            (Container *container);
 }
 
 /*
@@ -95,8 +104,28 @@ static GnomeUIInfo container_file_menu [] = {
 	GNOMEUIINFO_END
 };
 
+static GnomeUIInfo container_menu_zoom [] = {
+	{ GNOME_APP_UI_ITEM, N_("_Zoom in"),
+	  N_("Increase the size of objects in the PDF"),
+	  NULL, zoom_in_cmd },
+	{ GNOME_APP_UI_ITEM, N_("_Zoom out"),
+	  N_("Decrease the size of objects in the PDF"),
+	  zoom_out_cmd },
+	GNOMEUIINFO_END
+};
+
 static GnomeUIInfo container_main_menu [] = {
 	GNOMEUIINFO_MENU_FILE_TREE (container_file_menu),
+	{ GNOME_APP_UI_SUBTREE, N_("_Zoom"), NULL, container_menu_zoom },
+	GNOMEUIINFO_END
+};
+
+static GnomeUIInfo container_toolbar [] = {
+	GNOMEUIINFO_ITEM_STOCK (
+		N_("Open"), N_("Opens an existing workbook"),
+		container_open_cmd, GNOME_STOCK_PIXMAP_OPEN),
+
+	GNOMEUIINFO_SEPARATOR,
 	GNOMEUIINFO_END
 };
 
@@ -141,6 +170,8 @@ extern "C" {
     
     GNOME_PersistStream_load (persist,
 			      (GNOME_Stream) gnome_object_corba_objref (GNOME_OBJECT (stream)), &ev);
+
+    
     
     GNOME_Unknown_unref (persist, &ev);
     CORBA_Object_release (persist, &ev);
@@ -237,6 +268,35 @@ extern "C" {
   {
     while (containers)
       container_destroy ((Container *)containers->data);
+  }
+
+  /*
+   * Enforces the containers zoom factor.
+   */
+  static void
+  zoom_set (Container *container)
+  {
+    g_return_if_fail (container != NULL);
+    g_return_if_fail (container->component != NULL);
+
+    gnome_view_frame_set_zoom_factor (container->component->view_frame,
+				      container->zoom);
+  }
+
+  static void
+  zoom_in_cmd (GtkWidget *widget, Container *container)
+  {
+    g_return_if_fail (container != NULL);
+    container->zoom *= 1.4;
+    zoom_set (container);
+  }
+
+  static void
+  zoom_out_cmd (GtkWidget *widget, Container *container)
+  {
+    g_return_if_fail (container != NULL);
+    container->zoom /= 1.4;
+    zoom_set (container);
   }
 
   static void
@@ -380,6 +440,7 @@ container_set_view (Container *container, Component *component)
 	 */
 	view_widget = gnome_view_frame_get_wrapper (view_frame);
 	container->view_widget = view_widget;
+	container->component   = component;
 /*	gtk_box_pack_start (GTK_BOX (container->app), view_widget,
 	FALSE, FALSE, 5);*/
 	gnome_app_set_contents (GNOME_APP (container->app), view_widget);
@@ -547,6 +608,23 @@ container_create_menus (Container *container)
 	gnome_ui_handler_menu_free_list (menu_list);
 }
 
+static void
+container_create_toolbar (Container *container)
+{
+	GnomeUIHandlerMenuItem *toolbar;
+
+#if UNTESTED > 0
+	gnome_ui_handler_create_menubar (container->uih);
+
+	/*
+	 * Create the basic menus out of UIInfo structures.
+	 */
+	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
+	gnome_ui_handler_toolbar_add_list (container->uih, "/", menu_list);
+	gnome_ui_handler_toolbar_free_list (menu_list);
+#endif
+}
+
 static Container *
 container_new (const char *fname)
 {
@@ -554,8 +632,9 @@ container_new (const char *fname)
 
 	container = g_new0 (Container, 1);
 
-	container->app = gnome_app_new ("pdf-viewer",
-					"GNOME PDF viewer");
+	container->app  = gnome_app_new ("pdf-viewer",
+					 "GNOME PDF viewer");
+	container->zoom = 43.0;
 
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 400, 400);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
@@ -572,10 +651,8 @@ container_new (const char *fname)
 	container->uih = gnome_ui_handler_new ();
 	gnome_ui_handler_set_app (container->uih, GNOME_APP (container->app));
 
-	/*
-	 * Create the menus.
-	 */
-	container_create_menus (container);
+	container_create_menus   (container);
+	container_create_toolbar (container);
 
 	gtk_widget_show_all (container->app);
 
