@@ -80,6 +80,8 @@ struct _EvWindowPrivate {
 static guint ev_window_signals [N_SIGNALS] = { 0 };
 #endif
 
+static void update_fullscreen_popup (EvWindow *window);
+
 static GObjectClass *parent_class = NULL;
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
@@ -317,6 +319,10 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	gtk_widget_show (ev_window->priv->find_bar);
+
+	if (ev_window->priv->exit_fullscreen_popup) 
+		update_fullscreen_popup (ev_window);
+	
 	egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
 }
 
@@ -337,6 +343,9 @@ update_fullscreen_popup (EvWindow *window)
 
 	g_return_if_fail (popup != NULL);
 
+	if (!popup)
+		return;
+	
 	popup_width = popup->requisition.width;
 	popup_height = popup->requisition.height;
 
@@ -347,6 +356,14 @@ update_fullscreen_popup (EvWindow *window)
                          GTK_WIDGET (window)->window),
                          &screen_rect);
 
+	if (GTK_WIDGET_VISIBLE (window->priv->find_bar)) {
+		GtkRequisition req;
+
+		gtk_widget_size_request (window->priv->find_bar, &req);
+		
+		screen_rect.height -= req.height;
+	}
+	
 	if (gtk_widget_get_direction (popup) == GTK_TEXT_DIR_RTL)
 	{
 		gtk_window_move (GTK_WINDOW (popup),
@@ -402,7 +419,7 @@ fullscreen_popup_size_request_cb (GtkWidget *popup, GtkRequisition *req, EvWindo
 static void
 ev_window_fullscreen (EvWindow *window)
 {
-	GtkWidget *popup, *button, *icon, *label, *hbox;
+	GtkWidget *popup, *button, *icon, *label, *hbox, *main_menu;
 
 	window->priv->fullscreen_mode = TRUE;
 
@@ -436,6 +453,10 @@ ev_window_fullscreen (EvWindow *window)
 	g_signal_connect (popup, "size_request",
 			  G_CALLBACK (fullscreen_popup_size_request_cb), window);
 
+	main_menu = gtk_ui_manager_get_widget (window->priv->ui_manager, "/MainMenu");
+	gtk_widget_hide (main_menu);
+	gtk_widget_hide (window->priv->statusbar);
+	
 	update_fullscreen_popup (window);
 
 	gtk_widget_show (popup);
@@ -444,8 +465,14 @@ ev_window_fullscreen (EvWindow *window)
 static void
 ev_window_unfullscreen (EvWindow *window)
 {
+	GtkWidget *main_menu;
+	
 	window->priv->fullscreen_mode = FALSE;
 
+	main_menu = gtk_ui_manager_get_widget (window->priv->ui_manager, "/MainMenu");
+	gtk_widget_show (main_menu);
+	gtk_widget_show (window->priv->statusbar);
+	
 	destroy_exit_fullscreen_popup (window);
 }
  
@@ -472,7 +499,6 @@ ev_window_state_event_cb (GtkWidget *widget, GdkEventWindowState *event, EvWindo
 	{
 		GtkActionGroup *action_group;
 		GtkAction *action;
-		GtkWidget *main_menu;
 		gboolean fullscreen;
 
 		fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
@@ -495,12 +521,19 @@ ev_window_state_event_cb (GtkWidget *widget, GdkEventWindowState *event, EvWindo
 		g_signal_handlers_unblock_by_func
 			(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
 
-		main_menu = gtk_ui_manager_get_widget (window->priv->ui_manager, "/MainMenu");
-		g_object_set (main_menu, "visible", !fullscreen, NULL);
 	}
 
 	return FALSE;
 }
+
+static gboolean
+ev_window_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *ev_window)
+{
+	gtk_window_unfullscreen (GTK_WINDOW (ev_window));
+	
+	return FALSE;
+}
+
 
 static void
 ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
@@ -765,6 +798,9 @@ find_bar_close_cb (EggFindBar *find_bar,
 		   EvWindow   *ev_window)
 {
 	gtk_widget_hide (ev_window->priv->find_bar);
+
+	if (ev_window->priv->exit_fullscreen_popup)
+		update_fullscreen_popup (ev_window);
 }
 
 static void
@@ -1103,6 +1139,9 @@ ev_window_init (EvWindow *ev_window)
 
 	g_signal_connect (ev_window, "window-state-event",
 			  G_CALLBACK (ev_window_state_event_cb),
+			  ev_window);
+	g_signal_connect (ev_window, "focus_out_event",
+			  G_CALLBACK (ev_window_focus_out_cb),
 			  ev_window);
 	
 	/* Give focus to the scrolled window */
