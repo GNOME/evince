@@ -596,6 +596,13 @@ ev_view_new (void)
 	return g_object_new (EV_TYPE_VIEW, NULL);
 }
 
+static void
+document_changed_callback (EvDocument *document,
+			   EvView     *view)
+{
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
 void
 ev_view_set_document (EvView     *view,
 		      EvDocument *document)
@@ -624,6 +631,10 @@ ev_view_set_document (EvView     *view,
                                           "found",
                                           G_CALLBACK (found_results_callback),
                                           view);
+			g_signal_connect (view->document,
+					  "changed",
+					  G_CALLBACK (document_changed_callback),
+					  view);
                 }
 
 		if (GTK_WIDGET_REALIZED (view))
@@ -648,9 +659,7 @@ ev_view_set_page (EvView *view,
 			g_signal_emit (view, page_changed_signal, 0);
 
 			view->find_percent_complete = 0.0;
-			update_find_results (view);
-			
-			gtk_widget_queue_draw (GTK_WIDGET (view));
+			update_find_results (view);	
 		}
 	}
 }

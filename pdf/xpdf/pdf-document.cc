@@ -204,6 +204,7 @@ pdf_document_set_page (EvDocument  *document,
 		pdf_document->page_valid = FALSE;
 	}
 
+	ev_document_changed (document);
 }
 
 static int

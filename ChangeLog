@@ -1,3 +1,28 @@
+2004-12-31  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document.c: (ev_document_base_init),
+	(ev_document_changed):
+	* backend/ev-document.h:
+
+	Add a changed event that is emitted when the page content
+	changes. This is necessary to deal with the fact that
+	in ps backend rendering happen asycrounously.
+	This makes the ps backend mostly work.
+
+	* pdf/xpdf/pdf-document.cc:
+
+	Emit changed event
+
+	* ps/gtkgs.c: (set_up_page), (gtk_gs_widget_event),
+	(ps_document_set_target):
+
+	Emit changed event
+
+	* shell/ev-view.c: (document_changed_callback),
+	(ev_view_set_document), (ev_view_set_page):
+
+	Redraw on the changed signal
+
 2004-12-25  Raphael Higino  <raphaelh@cvs.gnome.org>
 
 	* configure.ac: Added pt_BR to ALL_LINGUAS.

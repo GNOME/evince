@@ -25,6 +25,14 @@
 
 static void ev_document_base_init (gpointer g_class);
 
+enum
+{
+	CHANGED,
+	LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL] = { 0 };
+
 GType
 ev_document_get_type (void)
 {
@@ -50,7 +58,22 @@ ev_document_get_type (void)
 static void
 ev_document_base_init (gpointer g_class)
 {
+	static gboolean initialized = FALSE;
 
+	if (!initialized)
+	{
+		signals[CHANGED] =
+			g_signal_new ("changed",
+				      EV_TYPE_DOCUMENT,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (EvDocumentIface, changed),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE,
+				      0);
+
+		initialized = TRUE;
+	}
 }
 
 gboolean
@@ -128,4 +151,9 @@ ev_document_render (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	iface->render (document, clip_x, clip_y, clip_width, clip_height);
 }
-				    
+
+void
+ev_document_changed (EvDocument *document)
+{
+	g_signal_emit (G_OBJECT (document), signals[CHANGED], 0);
+}			    

@@ -42,6 +42,9 @@ struct _EvDocumentIface
 {
 	GTypeInterface base_iface;
 
+	/* Signals */
+	void	    (* changed)		(EvDocument *document);
+
 	/* Methods  */
 	gboolean    (* load)	        (EvDocument *document,
 					 const char *uri,
@@ -91,6 +94,7 @@ void     ev_document_render          (EvDocument   *document,
 				      int           clip_y,
 				      int           clip_width,
 				      int           clip_height);
+void	 ev_document_changed         (EvDocument *document);
 
 G_END_DECLS
 

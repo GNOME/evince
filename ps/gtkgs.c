@@ -498,6 +498,7 @@ set_up_page(GtkGS * gs)
   //GdkColormap *colormap;
   GdkGC *fill;
   GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
+  GdkColormap *colormap;
 
 #ifdef HAVE_LOCALE_H
   char *savelocale;
@@ -518,6 +519,8 @@ set_up_page(GtkGS * gs)
     /* clear new pixmap (set to white) */
     fill = gdk_gc_new(gs->pstarget);
     if(fill) {
+      colormap = gdk_drawable_get_colormap(gs->pstarget);
+      gdk_color_alloc (colormap, &white);
       gdk_gc_set_foreground(fill, &white);
 
       if(gs->width > 0 && gs->height > 0) {
@@ -2089,13 +2092,42 @@ ps_document_get_page (EvDocument  *document)
 	return gtk_gs_get_current_page (GTK_GS (document));
 }
 
+static gboolean
+gtk_gs_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	GtkGS *gs = (GtkGS *) data;
+
+	if(event->type != GDK_CLIENT_EVENT)
+		return FALSE;
+
+	if (event->client.message_type == gs_class->page_atom) {
+		gs->busy = FALSE;
+		ev_document_changed (EV_DOCUMENT (gs));
+	}
+
+	return TRUE;
+}
+
 static void
 ps_document_set_target (EvDocument  *document,
-			 GdkDrawable *target)
+			GdkDrawable *target)
 {
 	GtkGS *gs = GTK_GS (document);
+	GtkWidget *widget;
+	gpointer data;
 
 	gs->pstarget = target;
+
+	if (gs->pstarget) {
+		gdk_window_get_user_data (gs->pstarget, &data);
+		g_return_if_fail (GTK_IS_WIDGET (data));
+
+		widget = GTK_WIDGET (data);
+		g_signal_connect (widget, "event",
+				  G_CALLBACK (gtk_gs_widget_event),
+				  document);
+	}
+
 	gtk_gs_goto_page (gs, gs->current_page);
 }
 
