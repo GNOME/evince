@@ -73,7 +73,8 @@ ev_document_class_init (gpointer g_class)
 				g_param_spec_string ("title",
 						     "Document Title",
 						     "The title of the document",
-						     NULL, 0));
+						     NULL,
+						     G_PARAM_READABLE));
 }
 
 gboolean

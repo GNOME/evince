@@ -72,6 +72,7 @@ struct _EvWindowPrivate {
 	GtkWidget *statusbar;
 	guint help_message_cid;
 	GtkWidget *exit_fullscreen_popup;
+	char *uri;
 
 	EvDocument *document;
 
@@ -254,12 +255,14 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 {
 	char *title = NULL;
 
-	if (document) {
-		title = ev_document_get_title (document);
-	}
-
-	if (title == NULL) {
+	if (document == NULL) {
 		title = g_strdup (_("Document Viewer"));
+	} else {
+		title = ev_document_get_title (document);
+
+		if (title == NULL) {
+			title = g_path_get_basename (ev_window->priv->uri);
+		}
 	}
 
 	gtk_window_set_title (GTK_WINDOW (ev_window), title);
@@ -272,6 +275,9 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 {
 	EvDocument *document = NULL;
 	char *mime_type;
+	
+	g_free (ev_window->priv->uri);
+	ev_window->priv->uri = g_strdup (uri);
 
 	mime_type = gnome_vfs_get_mime_type (uri);
 
@@ -287,6 +293,11 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 	if (document) {
 		GError *error = NULL;
 
+		g_signal_connect_object (G_OBJECT (document),
+					 "notify::title",
+					 G_CALLBACK (update_window_title),
+					 ev_window, 0);
+
 		if (ev_document_load (document, uri, &error)) {
 			if (ev_window->priv->document)
 				g_object_unref (ev_window->priv->document);
@@ -296,11 +307,6 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 					      document);
 			ev_sidebar_set_document (EV_SIDEBAR (ev_window->priv->sidebar),
 						 document);
-
-			g_signal_connect_object (G_OBJECT (document),
-						 "notify::title",
-						 G_CALLBACK (update_window_title),
-						 ev_window, 0);
 
 			update_action_sensitivity (ev_window);
 		

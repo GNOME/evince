@@ -1,5 +1,14 @@
 2005-01-03  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* backend/ev-document.c: (ev_document_class_init):
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-window.c: (ev_window_open):
+
+	Fix document title bugs and fallback to
+	filename when not available.
+
+2005-01-03  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* backend/ev-document.c: (ev_document_get_type),
 	(ev_document_class_init), (ev_document_load),
 	(ev_document_get_title):

@@ -928,6 +928,8 @@ pdf_document_get_title (PdfDocument *pdf_document)
 	if (info.isDict ()) {
 		title = pdf_info_dict_get_string (info.getDict(), "Title");
 	}
+
+	return title;
 }
 
 static void
@@ -942,7 +944,7 @@ pdf_document_get_property (GObject *object,
 	switch (prop_id)
 	{
 		case PROP_TITLE:
-			title = pdf_document_get_title (pdf_document);	
+			title = pdf_document_get_title (pdf_document);
 			g_value_set_string (value, title);
 			g_free (title);
 			break;
