@@ -1,3 +1,14 @@
+2005-01-18  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-view.c: (status_message_from_link),
+	(ev_view_set_status), (ev_view_set_cursor),
+	(ev_view_motion_notify_event), (ev_view_init):
+	* shell/ev-window.c: (view_status_changed_cb), (ev_window_init):
+
+	Fix bugs in the links implementation and change cursor
+	when hovering a link.
+
 2005-01-17  Bryan Clark  <clarkbw@cvs.gnome.org>
 
 	* viewer/.cvsignore: added cvsignore file for viewer directory

@@ -1005,7 +1005,11 @@ pdf_document_get_link (EvDocument *document, int x, int y)
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	LinkAction *action;
 
-	action = pdf_document->links->find (x, y);
+	y = pdf_document->out->getBitmapHeight() - y;
+
+	action = pdf_document->links->find ((double)x / pdf_document->scale,
+					    (double)y / pdf_document->scale);
+	
 	if (action) {
 		return build_link_from_action (pdf_document, action, "");
 	} else {

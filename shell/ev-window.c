@@ -73,6 +73,7 @@ struct _EvWindowPrivate {
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
 	guint help_message_cid;
+	guint view_message_cid;
 	GtkWidget *exit_fullscreen_popup;
 	char *uri;
 
@@ -1166,9 +1167,14 @@ view_status_changed_cb (EvView     *view,
 {
 	const char *message;
 
+	gtk_statusbar_pop (GTK_STATUSBAR (ev_window->priv->statusbar),
+			   ev_window->priv->view_message_cid);
+
 	message = ev_view_get_status (view);
-	gtk_statusbar_push (GTK_STATUSBAR (ev_window->priv->statusbar),
-			    ev_window->priv->help_message_cid, message);
+	if (message) {
+		gtk_statusbar_push (GTK_STATUSBAR (ev_window->priv->statusbar),
+				    ev_window->priv->view_message_cid, message);
+	}
 }
 
 static void
@@ -1582,6 +1588,8 @@ ev_window_init (EvWindow *ev_window)
 			  FALSE, TRUE, 0);
 	ev_window->priv->help_message_cid = gtk_statusbar_get_context_id
 		(GTK_STATUSBAR (ev_window->priv->statusbar), "help_message");
+	ev_window->priv->view_message_cid = gtk_statusbar_get_context_id
+		(GTK_STATUSBAR (ev_window->priv->statusbar), "view_message");
 
 	ev_window->priv->find_bar = egg_find_bar_new ();
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),

@@ -55,6 +55,11 @@ static const GtkTargetEntry targets[] = {
 	{ "UTF8_STRING", 0, TARGET_UTF8_STRING },
 };
 
+typedef enum {
+	EV_VIEW_CURSOR_NORMAL,
+	EV_VIEW_CURSOR_HAND
+} EvViewCursor;
+
 struct _EvView {
 	GtkWidget parent_instance;
 
@@ -72,6 +77,7 @@ struct _EvView {
 	gboolean pressed_button;
 	gboolean has_selection;
 	GdkRectangle selection;
+	EvViewCursor cursor;
 
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
@@ -552,7 +558,7 @@ status_message_from_link (EvLink *link)
 			break;
 		case EV_LINK_TYPE_PAGE:
 			page = ev_link_get_page (link);
-			msg = g_strdup_printf (_("Page %d"), page);
+			msg = g_strdup_printf (_("Go to page %d"), page);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
 			msg = g_strdup (ev_link_get_uri (link));
@@ -569,9 +575,11 @@ ev_view_set_status (EvView *view, const char *message)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
-	g_free (view->status);
-	view->status = g_strdup (message);
-	g_object_notify (G_OBJECT (view), "status");
+	if (message != view->status) {
+		g_free (view->status);
+		view->status = g_strdup (message);
+		g_object_notify (G_OBJECT (view), "status");
+	}
 }
 
 static void
@@ -582,6 +590,31 @@ ev_view_set_find_status (EvView *view, const char *message)
 	g_free (view->find_status);
 	view->find_status = g_strdup (message);
 	g_object_notify (G_OBJECT (view), "find-status");
+}
+
+static void
+ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
+{
+	GdkCursor *cursor;
+	GtkWidget *widget = GTK_WIDGET (view);
+
+	if (view->cursor == new_cursor) {
+		return;
+	}
+
+	switch (new_cursor) {
+		case EV_VIEW_CURSOR_NORMAL:
+			gdk_window_set_cursor (widget->window, NULL);
+			break;
+		case EV_VIEW_CURSOR_HAND:
+			cursor = gdk_cursor_new_for_display
+				(gdk_display_get_default(), GDK_HAND2);
+			gdk_window_set_cursor (widget->window, cursor);
+			gdk_cursor_unref (cursor);
+			break;
+	}
+
+	view->cursor = new_cursor;
 }
 
 static gboolean
@@ -605,10 +638,14 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			msg = status_message_from_link (link);
 			ev_view_set_status (view, msg);
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_HAND);
 			g_free (msg);
 
                         g_object_unref (link);
-                }
+		} else {
+			ev_view_set_status (view, NULL);
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+		}
 	}
 
 	gtk_widget_queue_draw (widget);
@@ -871,6 +908,7 @@ ev_view_init (EvView *view)
 
 	view->scale = 1.0;
 	view->pressed_button = -1;
+	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	
 	gtk_widget_modify_bg (GTK_WIDGET (view), GTK_STATE_NORMAL, &white);
 
