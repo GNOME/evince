@@ -1,3 +1,11 @@
+1999-12-17  Michael Meeks  <mmeeks@gnu.org>
+
+	* gpdf.cc (container_set_view): make wrapper invisible.
+
+	* bonobo-application-x-pdf.cc (embeddable_factory): kill
+	diff id string. + constify lots of paths.
+	(view_factory): kill size query. (view_size_query): kill.
+
 1999-11-06  Michael Meeks  <mmeeks@gnu.org>
 
 	* gtkgesture.c (gesture_data_append_point): fix leak.

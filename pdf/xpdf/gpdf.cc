@@ -350,6 +350,7 @@ container_set_view (Container *container, Component *component)
 	 * Embed the view frame into the application.
 	 */
 	view_widget = gnome_view_frame_get_wrapper (view_frame);
+	gnome_wrapper_set_visibility (GNOME_WRAPPER (view_widget), FALSE);
 	container->view_widget = view_widget;
 	container->component   = component;
 
