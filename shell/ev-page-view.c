@@ -98,6 +98,19 @@ ev_page_view_init (EvPageView *page_view)
 }
 
 static void
+ev_page_view_dispose (GObject *object)
+{
+	EvPageView *view = EV_PAGE_VIEW (object);
+
+	if (view->priv->document) {
+		g_object_unref (view->priv->document);
+		view->priv->document = NULL;
+	}
+
+	G_OBJECT_CLASS (ev_page_view_parent_class)->dispose (object);
+}
+
+static void
 ev_page_view_class_init (EvPageViewClass *klass)
 {
 	GObjectClass *o_class;
@@ -114,6 +127,8 @@ ev_page_view_class_init (EvPageViewClass *klass)
 	widget_class->realize = ev_page_view_realize;
 	widget_class->unrealize = ev_page_view_unrealize;
 	widget_class->map = ev_page_view_map;
+
+	o_class->dispose = ev_page_view_dispose;
 
 	widget_class->set_scroll_adjustments_signal =
 		g_signal_new ("set_scroll_adjustments",

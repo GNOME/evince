@@ -1,5 +1,17 @@
 2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* ps/ps-document.c: (ps_document_finalize),
+	(ps_document_get_n_pages), (ps_document_get_page):
+
+	Some cleanups, stop the interpreter on finalize
+
+	* shell/ev-page-view.c: (ev_page_view_dispose),
+	(ev_page_view_class_init):
+
+	Release our reference on the document
+
+2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* Makefile.am:
 	* configure.ac:
 	* doc/debugging.txt:

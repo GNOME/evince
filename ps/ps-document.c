@@ -389,23 +389,26 @@ ps_document_cleanup(PSDocument * gs)
 }
 
 static void
-ps_document_finalize(GObject * object)
+ps_document_finalize (GObject * object)
 {
-  PSDocument *gs;
+	PSDocument *gs;
 
-  g_return_if_fail(object != NULL);
-  g_return_if_fail(GTK_IS_GS(object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GTK_IS_GS (object));
 
-  gs = PS_DOCUMENT(object);
+	LOG ("Finalize")
 
-  ps_document_cleanup(gs);
+	gs = PS_DOCUMENT (object);
 
-  if(gs->input_buffer) {
-    g_free(gs->input_buffer);
-    gs->input_buffer = NULL;
-  }
+	ps_document_cleanup (gs);
+	stop_interpreter (gs);
 
-  (*G_OBJECT_CLASS(parent_class)->finalize) (object);
+	if(gs->input_buffer) {
+		g_free(gs->input_buffer);
+		gs->input_buffer = NULL;
+	}
+
+	(*G_OBJECT_CLASS(parent_class)->finalize) (object);
 }
 
 static void
@@ -1431,31 +1434,6 @@ ps_document_next_page(PSDocument * gs)
   return TRUE;
 }
 
-static gint
-ps_document_get_current_page(PSDocument * gs)
-{
-  g_return_val_if_fail(gs != NULL, -1);
-  g_return_val_if_fail(GTK_IS_GS(gs), -1);
-
-  return gs->current_page;
-}
-
-static gint
-ps_document_get_page_count(PSDocument * gs)
-{
-  if(!gs->gs_filename)
-    return 0;
-
-  if(gs->doc) {
-    if(gs->structured_doc)
-      return gs->doc->numpages;
-    else
-      return G_MAXINT;
-  }
-  else
-    return 0;
-}
-
 static gboolean
 ps_document_goto_page(PSDocument * gs, gint page)
 {
@@ -1732,7 +1710,15 @@ ps_document_save (EvDocument  *document,
 static int
 ps_document_get_n_pages (EvDocument  *document)
 {
-	return ps_document_get_page_count (PS_DOCUMENT (document));
+	PSDocument *ps = PS_DOCUMENT (document);
+
+	g_return_val_if_fail (ps != NULL, -1);
+
+	if (!ps->gs_filename || !ps->doc) {
+		return -1;
+	}
+
+	return ps->structured_doc ? ps->doc->numpages : 1;
 }
 
 static void
@@ -1745,7 +1731,11 @@ ps_document_set_page (EvDocument  *document,
 static int
 ps_document_get_page (EvDocument  *document)
 {
-	return ps_document_get_current_page (PS_DOCUMENT (document));
+	PSDocument *ps = PS_DOCUMENT (document);
+
+	g_return_val_if_fail (ps != NULL, -1);
+
+	return ps->current_page;
 }
 
 static gboolean
