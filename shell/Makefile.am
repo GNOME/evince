@@ -15,6 +15,8 @@ evince_SOURCES=				\
 	ev-application.h		\
 	ev-window.c			\
 	ev-window.h			\
+	ev-sidebar.c			\
+	ev-sidebar.h			\
 	main.c				\
 	$(NULL)
 

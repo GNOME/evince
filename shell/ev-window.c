@@ -27,20 +27,10 @@
 #endif
 
 #include "ev-window.h"
+#include "ev-sidebar.h"
 
-#include <glib.h>
-#include <glib-object.h>
 #include <glib/gi18n.h>
-#include <gtk/gtkaboutdialog.h>
-#include <gtk/gtkaccelgroup.h>
-#include <gtk/gtkactiongroup.h>
-#include <gtk/gtkmain.h>
-#include <gtk/gtkmenuitem.h>
-#include <gtk/gtkstatusbar.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktoggleaction.h>
-#include <gtk/gtkuimanager.h>
-#include <gtk/gtkvbox.h>
+#include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 
 #include <string.h>
@@ -59,6 +49,8 @@ enum {
 
 struct _EvWindowPrivate {
 	GtkWidget *main_box;
+	GtkWidget *hpaned;
+	GtkWidget *sidebar;
 	GtkWidget *bonobo_widget;
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
@@ -637,6 +629,7 @@ ev_window_init (EvWindow *ev_window)
 	GError *error = NULL;
 	GtkWidget *menubar;
 	GtkWidget *toolbar;
+	GtkWidget *darea;
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
@@ -683,6 +676,24 @@ ev_window_init (EvWindow *ev_window)
 					     "/ToolBar");
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), toolbar,
 			    FALSE, FALSE, 0);
+
+	/* Add the main area */
+	ev_window->priv->hpaned = gtk_hpaned_new ();
+	gtk_widget_show (ev_window->priv->hpaned);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), ev_window->priv->hpaned,
+			    TRUE, TRUE, 0);
+
+	ev_window->priv->sidebar = ev_sidebar_new ();
+	gtk_widget_show (ev_window->priv->sidebar);
+	gtk_paned_add1 (GTK_PANED (ev_window->priv->hpaned),
+			ev_window->priv->sidebar);
+
+	/* Stub widget, for now */
+	darea = gtk_drawing_area_new ();
+	gtk_widget_show (darea);
+	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
+			darea);
+
 
 	ev_window->priv->statusbar = gtk_statusbar_new ();
 	gtk_widget_show (ev_window->priv->statusbar);
