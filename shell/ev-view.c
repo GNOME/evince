@@ -613,8 +613,8 @@ ev_view_best_fit (EvView *view)
 	if (width != 0 && height != 0) {
 		double scale_w, scale_h;
 
-		scale_w = (double)GTK_WIDGET (view)->allocation.width / width;
-		scale_h = (double)GTK_WIDGET (view)->allocation.height / height;
+		scale_w = (double)GTK_WIDGET (view)->allocation.width * view->scale / width;
+		scale_h = (double)GTK_WIDGET (view)->allocation.height * view->scale / height;
 
 		scale = (scale_w < scale_h) ? scale_w : scale_h;
 	}
@@ -633,7 +633,7 @@ ev_view_fit_width (EvView *view)
 
 	scale = 1.0;
 	if (width != 0)
-		scale = (double)GTK_WIDGET (view)->allocation.width / width;
+		scale = (double)GTK_WIDGET (view)->allocation.width * view->scale / width;
 
 	ev_view_zoom (view, scale, FALSE);
 }
