@@ -23,14 +23,11 @@
 #ifndef __GS_IO_H__
 #define __GS_IO_H__
 
-#include <gtkgs.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
 typedef struct _GtkGSDocSink GtkGSDocSink;
-
-gchar *gtk_gs_get_pages(GtkGS * gs, gint * pages);
-gchar *gtk_gs_get_document(GtkGS * gs);
 
 GtkGSDocSink *gtk_gs_doc_sink_new(void);
 void gtk_gs_doc_sink_free(GtkGSDocSink * sink);

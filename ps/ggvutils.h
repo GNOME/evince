@@ -26,9 +26,6 @@
 #include "gtkgs.h"
 
 extern GtkGSPaperSize ggv_paper_sizes[];
-extern gfloat ggv_zoom_levels[];
-extern const gchar *ggv_zoom_level_names[];
-extern const gint ggv_max_zoom_levels;
 
 /* If file exists and is a regular file then return its length, else -1 */
 gint ggv_file_length(const gchar * filename);

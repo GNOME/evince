@@ -1736,10 +1736,7 @@ gtk_gs_set_zoom(GtkGS * gs, gfloat zoom)
   default:
     break;
   }
-  if(zoom < ggv_zoom_levels[0])
-    zoom = ggv_zoom_levels[0];
-  else if(zoom > ggv_zoom_levels[ggv_max_zoom_levels])
-    zoom = ggv_zoom_levels[ggv_max_zoom_levels];
+
   if(fabs(gs->zoom_factor - zoom) > 0.001) {
     gs->zoom_factor = zoom;
     set_up_page(gs);

@@ -57,20 +57,6 @@ const gchar *ggv_orientation_labels[] = {
   NULL,
 };
 
-gfloat ggv_zoom_levels[] = {
-  1.0 / 6.0, 1.0 / 5.0, 1.0 / 4.0, 1.0 / 3.0, 1.0 / 2.0, 3.0 / 4.0, 1.0,
-  3.0 / 2.0, 2.0, 3.0, 4.0, 5.0, 6.0
-};
-
-const gchar *ggv_zoom_level_names[] = {
-  "1:6", "1:5", "1:4", "1:3",
-  "1:2", "3:4", "1:1", "3:2",
-  "2:1", "3:1", "4:1", "5:1",
-  "6:1",
-};
-
-const gint ggv_max_zoom_levels = (sizeof(ggv_zoom_levels) / sizeof(gfloat)) - 1;
-
 /* If file exists and is a regular file then return its length, else -1 */
 gint
 ggv_file_length(const gchar * filename)
