@@ -27,6 +27,8 @@ struct _EggRecentItem {
 	GList *groups;
 	
 	int refcount;
+
+	guint mime_type_is_explicit : 1;
 };
 
 GType		egg_recent_item_get_type (void) G_GNUC_CONST;

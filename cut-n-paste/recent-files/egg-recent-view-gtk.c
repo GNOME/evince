@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-/**
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -190,7 +190,7 @@ egg_recent_view_gtk_new_separator (EggRecentViewGtk *view)
 	
 	retval = gtk_separator_menu_item_new ();
 
-	/**
+	/*
 	 * this is a tag so we can distinguish our menu items
 	 * from others that may be in the menu.
 	 */
@@ -285,7 +285,7 @@ egg_recent_view_gtk_new_menu_item (EggRecentViewGtk *view,
 	g_free (mime_type);
 	g_free (text);
 
-	/**
+	/*
 	 * this is a tag so we can distinguish our menu items
 	 * from others that may be in the menu.
 	 */
@@ -773,7 +773,6 @@ egg_recent_view_gtk_new (GtkWidget *menu, GtkWidget *start_menu_item)
 
 /**
  * egg_recent_view_gtk_get_type:
- * @:
  *
  * This returns a GType representing a EggRecentViewGtk object.
  *

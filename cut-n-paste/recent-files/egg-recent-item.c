@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-/**
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -39,6 +39,7 @@ egg_recent_item_new (void)
 	item->private_data = FALSE;
 	item->uri = NULL;
 	item->mime_type = NULL;
+	item->mime_type_is_explicit = FALSE;
 
 	item->refcount = 1;
 
@@ -97,11 +98,6 @@ egg_recent_item_new_from_uri (const gchar *uri)
 		return NULL;
 	}
 	
-	item->mime_type = gnome_vfs_get_mime_type (item->uri);
-
-	if (!item->mime_type)
-		item->mime_type = g_strdup (GNOME_VFS_MIME_TYPE_UNKNOWN);
-
 	return item;
 }
 
@@ -182,6 +178,21 @@ egg_recent_item_new_valist (const gchar *uri, va_list args)
 }
 */
 
+static void
+egg_recent_item_update_mime_type (EggRecentItem *item)
+{
+	if (!item->mime_type_is_explicit) {
+		g_free (item->mime_type);
+		item->mime_type = NULL;
+
+		if (item->uri)
+			item->mime_type = gnome_vfs_get_mime_type (item->uri);
+
+		if (!item->mime_type)
+			item->mime_type = g_strdup (GNOME_VFS_MIME_TYPE_UNKNOWN);
+	}
+}
+
 gboolean
 egg_recent_item_set_uri (EggRecentItem *item, const gchar *uri)
 {
@@ -207,6 +218,8 @@ egg_recent_item_set_uri (EggRecentItem *item, const gchar *uri)
 
 		g_free (utf8_uri);
 	}
+
+	egg_recent_item_update_mime_type (item);
 
 	return TRUE;
 }
@@ -334,7 +347,16 @@ egg_recent_item_get_short_name (const EggRecentItem *item)
 void 
 egg_recent_item_set_mime_type (EggRecentItem *item, const gchar *mime)
 {
-	item->mime_type = g_strdup (mime);
+	g_free (item->mime_type);
+	item->mime_type = NULL;
+
+	if (mime && mime[0]) {
+		item->mime_type_is_explicit = TRUE;
+		item->mime_type             = g_strdup (mime);
+	} else {
+		item->mime_type_is_explicit = FALSE;
+		egg_recent_item_update_mime_type (item);
+	}
 }
 
 gchar * 
