@@ -2,7 +2,7 @@
 //
 // XPDFViewer.h
 //
-// Copyright 2002 Glyph & Cog, LLC
+// Copyright 2002-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -21,7 +21,7 @@
 #include "gtypes.h"
 #include "XPDFCore.h"
 
-#if XmVERSION <= 1
+#if (XmVERSION <= 1) && !defined(__sgi)
 #define DISABLE_OUTLINE
 #endif
 
@@ -172,6 +172,9 @@ private:
   static void passwordCancelCbk(Widget widget, XtPointer ptr,
 				XtPointer callData);
   void getPassword(GBool again);
+
+  //----- Motif support
+  XmFontList createFontList(char *xlfd);
 
   XPDFApp *app;
   GBool ok;

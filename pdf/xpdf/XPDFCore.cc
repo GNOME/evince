@@ -2,7 +2,7 @@
 //
 // XPDFCore.cc
 //
-// Copyright 2002 Glyph & Cog, LLC
+// Copyright 2002-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -101,6 +101,7 @@ static int zoomDPI[maxZoom - minZoom + 1] = {
 
 GString *XPDFCore::currentSelection = NULL;
 XPDFCore *XPDFCore::currentSelectionOwner = NULL;
+Atom XPDFCore::targetsAtom;
 
 //------------------------------------------------------------------------
 // XPDFCore
@@ -116,6 +117,7 @@ XPDFCore::XPDFCore(Widget shellA, Widget parentWidgetA,
   parentWidget = parentWidgetA;
   display = XtDisplay(parentWidget);
   screenNum = XScreenNumberOfScreen(XtScreen(parentWidget));
+  targetsAtom = XInternAtom(display, "TARGETS", False);
 
   paperColor = paperColorA;
   fullScreen = fullScreenA;
@@ -217,18 +219,6 @@ XPDFCore::~XPDFCore() {
   if (drawAreaGC) {
     XFreeGC(display, drawAreaGC);
   }
-  if (drawArea) {
-    XtDestroyWidget(drawArea);
-  }
-  if (drawAreaFrame) {
-    XtDestroyWidget(drawAreaFrame);
-  }
-  if (vScrollBar) {
-    XtDestroyWidget(vScrollBar);
-  }
-  if (hScrollBar) {
-    XtDestroyWidget(hScrollBar);
-  }
   if (scrolledWin) {
     XtDestroyWidget(scrolledWin);
   }
@@ -275,6 +265,74 @@ int XPDFCore::loadFile(GString *fileName, GString *ownerPassword,
 	return errEncrypted;
       }
       newDoc = new PDFDoc(fileName->copy(), password, password);
+      if (newDoc->isOk()) {
+	break;
+      }
+      err = newDoc->getErrorCode();
+      delete newDoc;
+      if (err != errEncrypted) {
+	setCursor(None);
+	return err;
+      }
+      again = gTrue;
+    }
+  }
+
+  // replace old document
+  if (doc) {
+    delete doc;
+  }
+  doc = newDoc;
+  if (out) {
+    out->startDoc(doc->getXRef());
+  }
+
+  // nothing displayed yet
+  page = -99;
+
+  // save the modification time
+  modTime = getModTime(doc->getFileName()->getCString());
+
+  // update the parent window
+  if (updateCbk) {
+    (*updateCbk)(updateCbkData, doc->getFileName(), -1,
+		 doc->getNumPages(), NULL);
+  }
+
+  // back to regular cursor
+  setCursor(None);
+
+  return errNone;
+}
+
+int XPDFCore::loadFile(BaseStream *stream, GString *ownerPassword,
+		       GString *userPassword) {
+  PDFDoc *newDoc;
+  GString *password;
+  GBool again;
+  int err;
+
+  // busy cursor
+  setCursor(busyCursor);
+
+  // open the PDF file
+  newDoc = new PDFDoc(stream, ownerPassword, userPassword);
+  if (!newDoc->isOk()) {
+    err = newDoc->getErrorCode();
+    delete newDoc;
+    if (err != errEncrypted || !reqPasswordCbk) {
+      setCursor(None);
+      return err;
+    }
+
+    // try requesting a password
+    again = ownerPassword != NULL || userPassword != NULL;
+    while (1) {
+      if (!(password = (*reqPasswordCbk)(reqPasswordCbkData, again))) {
+	setCursor(None);
+	return errEncrypted;
+      }
+      newDoc = new PDFDoc(stream, password, password);
       if (newDoc->isOk()) {
 	break;
       }
@@ -478,6 +536,15 @@ void XPDFCore::displayPage(int pageA, int zoomA, int rotateA,
     redrawRectangle(scrollX, scrollY, drawAreaWidth, drawAreaHeight);
   }
 
+  // allocate new GCs
+  gcValues.foreground = BlackPixel(display, screenNum) ^
+                        WhitePixel(display, screenNum);
+  gcValues.function = GXxor;
+  selectGC = XCreateGC(display, out->getPixmap(),
+		       GCForeground | GCFunction, &gcValues);
+  highlightGC = XCreateGC(display, out->getPixmap(),
+		       GCForeground | GCFunction, &gcValues);
+
 
   // add to history
   if (addToHist) {
@@ -488,7 +555,11 @@ void XPDFCore::displayPage(int pageA, int zoomA, int rotateA,
     if (h->fileName) {
       delete h->fileName;
     }
-    h->fileName = doc->getFileName()->copy();
+    if (doc->getFileName()) {
+      h->fileName = doc->getFileName()->copy();
+    } else {
+      h->fileName = NULL;
+    }
     h->page = page;
     if (historyBLen < xpdfHistorySize) {
       ++historyBLen;
@@ -500,15 +571,6 @@ void XPDFCore::displayPage(int pageA, int zoomA, int rotateA,
   if (updateCbk) {
     (*updateCbk)(updateCbkData, NULL, page, -1, "");
   }
-
-  // allocate new GCs
-  gcValues.foreground = BlackPixel(display, screenNum) ^
-                        WhitePixel(display, screenNum);
-  gcValues.function = GXxor;
-  selectGC = XCreateGC(display, out->getPixmap(),
-		       GCForeground | GCFunction, &gcValues);
-  highlightGC = XCreateGC(display, out->getPixmap(),
-		       GCForeground | GCFunction, &gcValues);
 
   // back to regular cursor
   setCursor(None);
@@ -925,15 +987,31 @@ Boolean XPDFCore::convertSelectionCbk(Widget widget, Atom *selection,
 				      Atom *target, Atom *type,
 				      XtPointer *value, unsigned long *length,
 				      int *format) {
-  if (*target != XA_STRING) {
-    return False;
+  Atom *array;
+
+  // send back a list of supported conversion targets
+  if (*target == targetsAtom) {
+    if (!(array = (Atom *)XtMalloc(sizeof(Atom)))) {
+      return False;
+    }
+    array[0] = XA_STRING;
+    *value = (XtPointer)array;
+    *type = XA_ATOM;
+    *format = 32;
+    *length = 1;
+    return True;
+
+  // send the selected text
+  } else if (*target == XA_STRING) {
+    //~ for multithreading: need a mutex here
+    *value = XtNewString(currentSelection->getCString());
+    *length = currentSelection->getLength();
+    *type = XA_STRING;
+    *format = 8; // 8-bit elements
+    return True;
   }
-  //~ for multithreading: need a mutex here
-  *value = XtNewString(currentSelection->getCString());
-  *length = currentSelection->getLength();
-  *type = XA_STRING;
-  *format = 8; // 8-bit elements
-  return True;
+
+  return False;
 }
 
 GBool XPDFCore::getSelection(int *xMin, int *yMin, int *xMax, int *yMax) {
@@ -962,7 +1040,7 @@ GString *XPDFCore::extractText(int pageNum,
   if (!doc->okToCopy()) {
     return NULL;
   }
-  textOut = new TextOutputDev(NULL, gFalse, gFalse, gFalse);
+  textOut = new TextOutputDev(NULL, gTrue, gFalse, gFalse);
   if (!textOut->isOk()) {
     delete textOut;
     return NULL;
@@ -1276,7 +1354,7 @@ void XPDFCore::find(char *s) {
   }
 
   // search following pages
-  textOut = new TextOutputDev(NULL, gFalse, gFalse, gFalse);
+  textOut = new TextOutputDev(NULL, gTrue, gFalse, gFalse);
   if (!textOut->isOk()) {
     delete textOut;
     goto done;
@@ -1472,6 +1550,7 @@ void XPDFCore::resizeCbk(Widget widget, XtPointer ptr, XtPointer callData) {
   Arg args[2];
   int n;
   Dimension w, h;
+  int oldScrollX, oldScrollY;
 
   n = 0;
   XtSetArg(args[n], XmNwidth, &w); ++n;
@@ -1484,7 +1563,13 @@ void XPDFCore::resizeCbk(Widget widget, XtPointer ptr, XtPointer callData) {
     core->displayPage(core->page, core->zoom, core->rotate,
 		      gFalse, gFalse);
   } else {
+    oldScrollX = core->scrollX;
+    oldScrollY = core->scrollY;
     core->updateScrollBars();
+    if (core->scrollX != oldScrollX || core->scrollY != oldScrollY) {
+      core->redrawRectangle(core->scrollX, core->scrollY,
+			    core->drawAreaWidth, core->drawAreaHeight);
+    }
   }
 }
 

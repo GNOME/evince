@@ -2,7 +2,7 @@
 //
 // XPDFApp.cc
 //
-// Copyright 2002 Glyph & Cog, LLC
+// Copyright 2002-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -270,7 +270,11 @@ void XPDFApp::quit() {
   while (viewers->getLength() > 0) {
     delete (XPDFViewer *)viewers->del(0);
   }
+#if HAVE_XTAPPSETEXITFLAG
+  exit(0);
+#else
   XtAppSetExitFlag(appContext);
+#endif
 }
 
 void XPDFApp::run() {

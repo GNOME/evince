@@ -2,7 +2,7 @@
 //
 // XPDFCore.h
 //
-// Copyright 2002 Glyph & Cog, LLC
+// Copyright 2002-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -24,6 +24,7 @@
 
 class GString;
 class GList;
+class BaseStream;
 class PDFDoc;
 class LinkAction;
 class LinkDest;
@@ -59,6 +60,7 @@ struct XPDFRegion {
   double xMin, yMin, xMax, yMax;
   Gulong color;
   Gulong selectColor;
+  GBool selectable;
 };
 
 //------------------------------------------------------------------------
@@ -95,6 +97,11 @@ public:
 
   // Load a new file.  Returns pdfOk or error code.
   int loadFile(GString *fileName, GString *ownerPassword = NULL,
+	       GString *userPassword = NULL);
+
+  // Load a new file, via a Stream instead of a file name.  Returns
+  // pdfOk or error code.
+  int loadFile(BaseStream *stream, GString *ownerPassword = NULL,
 	       GString *userPassword = NULL);
 
   // Resize the window to fit page <pg> of the current document.
@@ -253,6 +260,7 @@ private:
   GBool lastDragTop;		// last dragged selection edge was top/bottom
   static GString *currentSelection;  // selected text
   static XPDFCore *currentSelectionOwner;
+  static Atom targetsAtom;
 
   GBool panning;
   int panMX, panMY;

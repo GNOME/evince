@@ -2,7 +2,7 @@
 //
 // XPDFViewer.cc
 //
-// Copyright 2002 Glyph & Cog, LLC
+// Copyright 2002-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -18,6 +18,11 @@
 #include <X11/cursorfont.h>
 #ifdef HAVE_X11_XPM_H
 #include <X11/xpm.h>
+#endif
+#if defined(__sgi) && (XmVERSION <= 1)
+#define Object XtObject
+#include <Sgm/HPanedW.h>
+#undef Object
 #endif
 #include "gmem.h"
 #include "gfile.h"
@@ -198,6 +203,11 @@ void XPDFViewer::clear() {
   XtVaSetValues(prevPageBtn, XmNsensitive, False, NULL);
   XtVaSetValues(nextTenPageBtn, XmNsensitive, False, NULL);
   XtVaSetValues(nextPageBtn, XmNsensitive, False, NULL);
+
+  // remove the old outline
+#ifndef DISABLE_OUTLINE
+  setupOutline();
+#endif
 }
 
 //------------------------------------------------------------------------
@@ -452,6 +462,11 @@ void XPDFViewer::mouseCbk(void *data, XEvent *event) {
   if (event->type == ButtonPress && event->xbutton.button == 3) {
     XmMenuPosition(viewer->popupMenu, &event->xbutton);
     XtManageChild(viewer->popupMenu);
+
+    // this is magic (taken from DDD) - weird things happen if this
+    // call isn't made (this is done in two different places, in hopes
+    // of squashing this stupid bug)
+    XtUngrabButton(viewer->core->getDrawAreaWidget(), AnyButton, AnyModifier);
   }
 }
 
@@ -788,7 +803,11 @@ void XPDFViewer::initWindow() {
     XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); ++n;
     XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
     XtSetArg(args[n], XmNorientation, XmHORIZONTAL); ++n;
+#if defined(__sgi) && (XmVERSION <= 1)
+    panedWin = SgCreateHorzPanedWindow(form, "panedWin", args, n);
+#else
     panedWin = XmCreatePanedWindow(form, "panedWin", args, n);
+#endif
     XtManageChild(panedWin);
 
     // scrolled window for outline container
@@ -797,7 +816,9 @@ void XPDFViewer::initWindow() {
     XtSetArg(args[n], XmNallowResize, True); ++n;
     XtSetArg(args[n], XmNpaneMinimum, 1); ++n;
     XtSetArg(args[n], XmNpaneMaximum, 10000); ++n;
+#if !(defined(__sgi) && (XmVERSION <= 1))
     XtSetArg(args[n], XmNwidth, 1); ++n;
+#endif
     XtSetArg(args[n], XmNscrollingPolicy, XmAUTOMATIC); ++n;
     outlineScroll = XmCreateScrolledWindow(panedWin, "outlineScroll", args, n);
     XtManageChild(outlineScroll);
@@ -950,6 +971,10 @@ void XPDFViewer::initWindow() {
   XtAddCallback(btn, XmNactivateCallback,
 		&quitCbk, (XtPointer)this);
 
+  // this is magic (taken from DDD) - weird things happen if this
+  // call isn't made
+  XtUngrabButton(core->getDrawAreaWidget(), AnyButton, AnyModifier);
+
   XmStringFree(emptyString);
 }
 
@@ -958,7 +983,7 @@ void XPDFViewer::mapWindow() {
   Pixmap iconPixmap;
 #endif
   int depth;
-  Pixel bg, arm;
+  Pixel fg, bg, arm;
 
   // show the window
   XtPopup(win, XtGrabNone);
@@ -974,29 +999,27 @@ void XPDFViewer::mapWindow() {
 
   // set button bitmaps (must be done after the window is mapped)
   XtVaGetValues(backBtn, XmNdepth, &depth,
-		XmNbackground, &bg, XmNarmColor, &arm, NULL);
+		XmNforeground, &fg, XmNbackground, &bg,
+		XmNarmColor, &arm, NULL);
   XtVaSetValues(backBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)backArrow_bits,
 					    backArrow_width,
 					    backArrow_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)backArrow_bits,
 					    backArrow_width,
 					    backArrow_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)backArrowDis_bits,
 					    backArrowDis_width,
 					    backArrowDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(prevTenPageBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1004,22 +1027,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)dblLeftArrow_bits,
 					    dblLeftArrow_width,
 					    dblLeftArrow_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)dblLeftArrow_bits,
 					    dblLeftArrow_width,
 					    dblLeftArrow_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)dblLeftArrowDis_bits,
 					    dblLeftArrowDis_width,
 					    dblLeftArrowDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(prevPageBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1027,22 +1047,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)leftArrow_bits,
 					    leftArrow_width,
 					    leftArrow_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)leftArrow_bits,
 					    leftArrow_width,
 					    leftArrow_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)leftArrowDis_bits,
 					    leftArrowDis_width,
 					    leftArrowDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(nextPageBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1050,22 +1067,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)rightArrow_bits,
 					    rightArrow_width,
 					    rightArrow_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)rightArrow_bits,
 					    rightArrow_width,
 					    rightArrow_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)rightArrowDis_bits,
 					    rightArrowDis_width,
 					    rightArrowDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(nextTenPageBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1073,22 +1087,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)dblRightArrow_bits,
 					    dblRightArrow_width,
 					    dblRightArrow_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)dblRightArrow_bits,
 					    dblRightArrow_width,
 					    dblRightArrow_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)dblRightArrowDis_bits,
 					    dblRightArrowDis_width,
 					    dblRightArrowDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(forwardBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1096,22 +1107,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)forwardArrow_bits,
 					    forwardArrow_width,
 					    forwardArrow_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)forwardArrow_bits,
 					    forwardArrow_width,
 					    forwardArrow_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)forwardArrowDis_bits,
 					    forwardArrowDis_width,
 					    forwardArrowDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(findBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1119,22 +1127,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)find_bits,
 					    find_width,
 					    find_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)find_bits,
 					    find_width,
 					    find_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)findDis_bits,
 					    findDis_width,
 					    findDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(printBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1142,22 +1147,19 @@ void XPDFViewer::mapWindow() {
 					    (char *)print_bits,
 					    print_width,
 					    print_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)print_bits,
 					    print_width,
 					    print_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		XmNlabelInsensitivePixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)printDis_bits,
 					    printDis_width,
 					    printDis_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		NULL);
   XtVaSetValues(aboutBtn, XmNlabelType, XmPIXMAP,
 		XmNlabelPixmap,
@@ -1165,15 +1167,13 @@ void XPDFViewer::mapWindow() {
 					    (char *)about_bits,
 					    about_width,
 					    about_height,
-					    BlackPixel(display, screenNum),
-					    bg, depth),
+					    fg, bg, depth),
 		XmNarmPixmap,
 		XCreatePixmapFromBitmapData(display, XtWindow(toolBar),
 					    (char *)about_bits,
 					    about_width,
 					    about_height,
-					    BlackPixel(display, screenNum),
-					    arm, depth),
+					    fg, arm, depth),
 		NULL);
 }
 
@@ -1470,18 +1470,21 @@ void XPDFViewer::setupOutline() {
     outlineLabelsLength = outlineLabelsSize = 0;
   }
 
-  // create the new labels
-  items = core->getDoc()->getOutline()->getItems();
-  if (items && items->getLength() > 0) {
-    enc = new GString("Latin1");
-    uMap = globalParams->getUnicodeMap(enc);
-    delete enc;
-    setupOutlineItems(items, NULL, uMap);
-    uMap->decRefCnt();
-  }
+  if (core->getDoc()) {
 
-  // manage the new labels
-  XtManageChildren(outlineLabels, outlineLabelsLength);
+    // create the new labels
+    items = core->getDoc()->getOutline()->getItems();
+    if (items && items->getLength() > 0) {
+      enc = new GString("Latin1");
+      uMap = globalParams->getUnicodeMap(enc);
+      delete enc;
+      setupOutlineItems(items, NULL, uMap);
+      uMap->decRefCnt();
+    }
+
+    // manage the new labels
+    XtManageChildren(outlineLabels, outlineLabelsLength);
+  }
 }
 
 void XPDFViewer::setupOutlineItems(GList *items, Widget parent,
@@ -1560,7 +1563,6 @@ void XPDFViewer::initAboutDialog() {
   int n, i;
   XmString s;
   char buf[20];
-  XmFontListEntry entry;
 
   //----- dialog
   n = 0;
@@ -1601,24 +1603,12 @@ void XPDFViewer::initAboutDialog() {
   XtManageChild(col);
 
   //----- fonts
-  entry = XmFontListEntryLoad(
-		display,
-		"-*-times-bold-i-normal--20-*-*-*-*-*-iso8859-1",
-		XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
-  aboutBigFont = XmFontListAppendEntry(NULL, entry);
-  XmFontListEntryFree(&entry);
-  entry = XmFontListEntryLoad(
-		display,
-		"-*-times-medium-r-normal--16-*-*-*-*-*-iso8859-1",
-		XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
-  aboutVersionFont = XmFontListAppendEntry(NULL, entry);
-  XmFontListEntryFree(&entry);
-  entry = XmFontListEntryLoad(
-		display,
-		"-*-courier-medium-r-normal--12-*-*-*-*-*-iso8859-1",
-		XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
-  aboutFixedFont = XmFontListAppendEntry(NULL, entry);
-  XmFontListEntryFree(&entry);
+  aboutBigFont =
+    createFontList("-*-times-bold-i-normal--20-*-*-*-*-*-iso8859-1");
+  aboutVersionFont =
+    createFontList("-*-times-medium-r-normal--16-*-*-*-*-*-iso8859-1");
+  aboutFixedFont =
+    createFontList("-*-courier-medium-r-normal--12-*-*-*-*-*-iso8859-1");
 
   //----- heading
   n = 0;
@@ -1815,7 +1805,9 @@ void XPDFViewer::initFindDialog() {
   n = 0;
   XtSetArg(args[n], XmNdefaultButton, okBtn); ++n;
   XtSetArg(args[n], XmNcancelButton, closeBtn); ++n;
+#if XmVersion > 1001
   XtSetArg(args[n], XmNinitialFocus, findText); ++n;
+#endif
   XtSetValues(findDialog, args, n);
 }
 
@@ -1823,10 +1815,14 @@ void XPDFViewer::findFindCbk(Widget widget, XtPointer ptr,
 			     XtPointer callData) {
   XPDFViewer *viewer = (XPDFViewer *)ptr;
 
-  XDefineCursor(viewer->display, XtWindow(viewer->findDialog),
-		viewer->core->getBusyCursor());
+  if (XtWindow(viewer->findDialog)) {
+    XDefineCursor(viewer->display, XtWindow(viewer->findDialog),
+		  viewer->core->getBusyCursor());
+  }
   viewer->core->find(XmTextFieldGetString(viewer->findText));
-  XUndefineCursor(viewer->display, XtWindow(viewer->findDialog));
+  if (XtWindow(viewer->findDialog)) {
+    XUndefineCursor(viewer->display, XtWindow(viewer->findDialog));
+  }
 }
 
 void XPDFViewer::findCloseCbk(Widget widget, XtPointer ptr,
@@ -2260,7 +2256,9 @@ void XPDFViewer::initPasswordDialog() {
   n = 0;
   XtSetArg(args[n], XmNdefaultButton, okBtn); ++n;
   XtSetArg(args[n], XmNcancelButton, cancelBtn); ++n;
+#if XmVersion > 1001
   XtSetArg(args[n], XmNinitialFocus, passwordText); ++n;
+#endif
   XtSetValues(passwordDialog, args, n);
 }
 
@@ -2328,4 +2326,44 @@ void XPDFViewer::getPassword(GBool again) {
     delete password;
     password = NULL;
   }
+}
+
+//------------------------------------------------------------------------
+// Motif support
+//------------------------------------------------------------------------
+
+XmFontList XPDFViewer::createFontList(char *xlfd) {
+  XmFontList fontList;
+
+#if XmVersion <= 1001
+
+  XFontStruct *font;
+  String params;
+  Cardinal nParams;
+
+  font = XLoadQueryFont(display, xlfd);
+  if (font) {
+    fontList = XmFontListCreate(font, XmSTRING_DEFAULT_CHARSET);
+  } else {
+    params = (String)xlfd;
+    nParams = 1;
+    XtAppWarningMsg(app->getAppContext(),
+		    "noSuchFont", "CvtStringToXmFontList",
+		    "XtToolkitError", "No such font: %s",
+		    &params, &nParams);
+    fontList = NULL;
+  }
+
+#else
+
+  XmFontListEntry entry;
+
+  entry = XmFontListEntryLoad(display, xlfd,
+			      XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
+  fontList = XmFontListAppendEntry(NULL, entry);
+  XmFontListEntryFree(&entry);
+
+#endif
+
+  return fontList;
 }
