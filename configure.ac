@@ -334,6 +334,6 @@ pdf/fofi/Makefile
 pdf/splash/Makefile
 pdf/xpdf/Makefile
 po/Makefile.in
+backend/Makefile
 shell/Makefile
-viewer/Makefile
 ])
