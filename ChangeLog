@@ -1,5 +1,12 @@
 2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-view.c: (ev_view_size_allocate):
+
+	Calculate offsets before calling the parent
+	class (which does a redraw)
+
+2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* pdf/xpdf/pdf-document.cc:
 
 	Fix a crasher on exit. Unused code, put a TODO

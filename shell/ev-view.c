@@ -280,11 +280,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 	GtkBorder border;
 	gint width, height;
 
-	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
-
-	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
-	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
-
 	if (view->document) {
 		ev_document_get_page_size (view->document, -1,
 					   &width, &height);
@@ -296,6 +291,11 @@ ev_view_size_allocate (GtkWidget      *widget,
 		view->x_offset += MAX (0, (widget->allocation.width - target_width) / 2);
 		view->y_offset += MAX (0, (widget->allocation.height - target_height) / 2);
 	}
+
+	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
+
+	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
+	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
 
 	if (GTK_WIDGET_REALIZED (widget)) {
 		gdk_window_resize (view->bin_window,
