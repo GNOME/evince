@@ -38,7 +38,7 @@
 #include "config.h"
 
 GBool printCommands = gFalse;
-gint  gpdf_debug;
+gint  gpdf_debug=1;
 poptContext ctx;
 
 #define DOC_ROOT_MAGIC 0xad3f556d
@@ -107,11 +107,31 @@ doc_config_event (GtkWidget *widget, void *ugly)
   gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
   doc->out    = new GOutputDev (doc->pixmap, doc->paper);
 
+
+  {
+    GdkGCValues gcValues;
+    GdkGC *strokeGC;
+    
+    gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
+    gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
+    gcValues.line_width = 1;
+    gcValues.line_style = GDK_LINE_SOLID;
+    strokeGC = gdk_gc_new_with_values (
+      doc->pixmap, &gcValues, 
+      (enum GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_LINE_WIDTH | GDK_GC_LINE_STYLE));
+
+    gdk_draw_rectangle (doc->pixmap,
+			strokeGC,
+			TRUE,
+			0, 0,
+			widget->allocation.width,
+			widget->allocation.height);
+  }
   return TRUE;
 }
 
 static gint
-doc_redraw_event (GtkWidget *widget, void *ugly)
+doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
 {
   DOC_ROOT *doc = hack_global;
 
@@ -121,15 +141,17 @@ doc_redraw_event (GtkWidget *widget, void *ugly)
   if (doc->out && doc->pdf) {
     printf ("There are %d pages\n", doc->pdf->getNumPages());
 
-    doc->pdf->displayPage(doc->out, 1, 72, 0, gTrue);
-    gdk_draw_pixmap (widget->window,
-		     widget->style->white_gc,
-		     doc->pixmap,
-		     0, 0,
-		     0, 0,
-		     widget->allocation.width,
-		     widget->allocation.height);
-    
+//    doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue);
+    gdk_draw_line (doc->pixmap,
+		   widget->style->black_gc,
+		   event->area.x, event->area.y,
+		   event->area.width, event->area.height);
+    gdk_draw_pixmap(widget->window,
+		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+		    doc->pixmap,
+		    event->area.x, event->area.y,
+		    event->area.x, event->area.y,
+		    event->area.width, event->area.height);
   } else
     printf ("Null pointer error %p %p\n", doc->out, doc->pdf);
   
@@ -230,6 +252,8 @@ main (int argc, char *argv [])
   gnome_init_with_popt_table (
     "gpdf", "0.1", argc, argv,
     gpdf_popt_options, 0, &ctx);
+
+  errorInit();
   
   initParams (xpdfConfigFile); /* Init font path */
 
