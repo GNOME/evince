@@ -208,11 +208,11 @@ oafdir = $(datadir)/oaf
 oaf_DATA = GNOME_PDF.oafinfo
 
 XML_FILES =				\
-	gpdf-ui.xml			\
-	bonobo-application-x-pdf-ui.xml
+	bonobo-application-x-pdf-ui.xml \
+	gpdf-control-ui.xml
 
 uidir = $(datadir)/gnome/ui
 ui_DATA = $(XML_FILES)
 
-EXTRA_DIST = $(stock_DATA) ChangeLog $(ltk)	\
+EXTRA_DIST = $(stock_DATA) $(ltk)	\
              $(oaf_DATA) config.h $(XML_FILES)
