@@ -360,6 +360,8 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 					       1, THUMBNAIL_WIDTH, &width, &height);
 	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
 
+	gtk_list_store_clear (priv->list_store);
+
 	for (i = 1; i <= n_pages; i++) {
 		page = g_strdup_printf ("<i>%d</i>", i);
 		gtk_list_store_append (priv->list_store, &iter);
