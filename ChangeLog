@@ -1,3 +1,24 @@
+2004-12-22  Anders Carlsson  <andersca@gnome.org>
+
+	* Makefile.am:
+	* configure.ac:
+	* pixbuf/Makefile.am:
+	* pixbuf/pixbuf-document.c: (G_DEFINE_TYPE_WITH_CODE),
+	(pixbuf_document_load), (pixbuf_document_get_n_pages),
+	(pixbuf_document_set_page), (pixbuf_document_get_page),
+	(pixbuf_document_set_target), (pixbuf_document_set_scale),
+	(pixbuf_document_set_page_offset), (pixbuf_document_get_page_size),
+	(pixbuf_document_render), (pixbuf_document_begin_find),
+	(pixbuf_document_end_find), (pixbuf_document_finalize),
+	(pixbuf_document_class_init),
+	(pixbuf_document_document_iface_init), (pixbuf_document_init):
+	* pixbuf/pixbuf-document.h:
+	* shell/Makefile.am:
+	* shell/ev-application.c: (ev_application_open):
+	* shell/ev-window.c: (mime_type_supported_by_gdk_pixbuf),
+	(ev_window_open):
+	Add pixbuf backend.
+	
 Tue Dec 21 21:45:43 2004  Soeren Sandmann  <sandmann@redhat.com>
 
 	* Makefile.am: 
