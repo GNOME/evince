@@ -83,7 +83,7 @@ eog_hig_dialog_new (const char *stock_id, const char *header, const char *body, 
 	gtk_widget_show_all (hbox);
 
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dlg)->vbox), hbox);
-	g_object_set (G_OBJECT (GTK_DIALOG (dlg)->vbox), "spacing", 12);
+	g_object_set (G_OBJECT (GTK_DIALOG (dlg)->vbox), "spacing", 12, NULL);
 
 	return dlg;
 }
