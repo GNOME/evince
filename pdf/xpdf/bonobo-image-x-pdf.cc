@@ -726,14 +726,19 @@ embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 	return (GnomeObject *) embeddable;
 }
 
-static void
-init_bonobo_image_x_png_factory (void)
+static gboolean
+init_bonobo_image_x_pdf_factory (void)
 {
 	GnomeEmbeddableFactory *factory;
 	
 	factory = gnome_embeddable_factory_new (
 		"bonobo-object-factory:image-x-pdf",
 		embeddable_factory, NULL);
+
+	if (factory == NULL)
+		return FALSE;
+	else
+		return TRUE;
 }
 
 static void
@@ -753,7 +758,11 @@ main (int argc, char *argv [])
   CORBA_exception_init (&ev);
   
   init_server_factory (argc, argv);
-  init_bonobo_image_x_png_factory ();
+  if (!init_bonobo_image_x_pdf_factory ()){
+    fprintf (stderr, "Could not initialize the Bonobo PDF factory\n"
+	             "probably a server is already running?");
+    exit (1);
+  }
   
   errorInit();
   
@@ -761,6 +770,7 @@ main (int argc, char *argv [])
   
   gtk_widget_set_default_colormap (gdk_rgb_get_cmap ());
   gtk_widget_set_default_visual (gdk_rgb_get_visual ());
+  bonobo_activate ();
   gtk_main ();
   
   CORBA_exception_free (&ev);

@@ -703,7 +703,8 @@ main (int argc, char **argv)
     container_new (NULL);
   
   poptFreeContext (ctx);
-  
+
+  bonobo_activate ();  
   gtk_main ();
 	
   return 0;
