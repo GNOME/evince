@@ -395,13 +395,19 @@ expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
 	EvView *view = EV_VIEW (widget);
-        int i;
-	int current_page;
+        int i, current_page;
+	int x_offset, y_offset;
         const EvFindResult *results;
 
 	if (view->document == NULL)
 		return;
-	
+
+	x_offset = MAX (0, (widget->allocation.width -
+			    widget->requisition.width) / 2);
+	y_offset = MAX (0, (widget->allocation.height -
+			    widget->requisition.height) / 2);
+	ev_document_set_page_offset (view->document, x_offset, y_offset);
+
 	ev_document_render (view->document,
 			    event->area.x, event->area.y,
 			    event->area.width, event->area.height);
