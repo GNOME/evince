@@ -124,7 +124,7 @@ extern "C" {
     
     if (ev._major != CORBA_NO_EXCEPTION ||
 	persist == CORBA_OBJECT_NIL) {
-      gnome_error_dialog ("Panic: component is well broken.");
+      gnome_error_dialog ("Panic: component doesn't implement PersistStream.");
       return FALSE;
     }
     
@@ -336,16 +336,10 @@ container_set_view (Container *container, Component *component)
 	/*
 	 * Create the remote view and the local ViewFrame.
 	 */
-	view_frame = bonobo_client_site_new_view (component->client_site);
+	view_frame = bonobo_client_site_new_view (component->client_site,
+						  bonobo_object_corba_objref (BONOBO_OBJECT (
+							  container->uih)));
 	component->view_frame = view_frame;
-
-	/*
-	 * Set the BonoboUIHandler for this ViewFrame.  That way, the
-	 * embedded component can get access to our UIHandler server
-	 * so that it can merge menu and toolbar items when it gets
-	 * activated.
-	 */
-	bonobo_view_frame_set_ui_handler (view_frame, container->uih);
 
 	/*
 	 * Embed the view frame into the application.
@@ -621,7 +615,7 @@ container_new (const char *fname)
 	container = g_new0 (Container, 1);
 
 	container->app = gnome_app_new ("pdf-viewer",
-					 "GNOME PDF viewer");
+					"GNOME PDF viewer");
 
 	gtk_drag_dest_set (container->app,
 			   GTK_DEST_DEFAULT_ALL,
