@@ -316,7 +316,7 @@ container_about_cmd (GtkWidget *widget, Container *container)
     authors [i] = _(authors [i]);
 #endif
   
-  about = gnome_about_new (_("GPDF"), VERSION,
+  about = gnome_about_new (_("GPDF"), xpdfVersion,
 			   _("(C) 1996-1999 Derek B. Noonburg."),
 			   authors, NULL, NULL);
   
