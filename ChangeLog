@@ -1,5 +1,13 @@
 2005-02-04  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* TODO:
+	* shell/ev-view.c: (set_document_page):
+
+	Clamp page number, dont try to move to
+	not existant pages.
+
+2005-02-04  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* backend/ev-document-find.c: (ev_document_find_changed):
 	* backend/ev-document-find.h:
 	* pdf/xpdf/pdf-document.cc:

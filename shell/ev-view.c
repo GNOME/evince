@@ -944,8 +944,14 @@ update_find_status_message (EvView *view)
 }
 
 static void
-set_document_page (EvView *view, int page)
+set_document_page (EvView *view, int new_page)
 {
+	int page;
+	int pages;
+
+	pages = ev_document_get_n_pages (view->document);
+	page = CLAMP (new_page, 1, pages);
+
 	if (view->document) {
 		int old_page = ev_document_get_page (view->document);
 		int old_width, old_height;
