@@ -1,5 +1,5 @@
-
 INCLUDES =							\
+	-I$(top_srcdir)						\
 	-I$(top_srcdir)/goo					\
 	-DDATADIR=\""$(datadir)"\"            			\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
@@ -151,7 +151,7 @@ gnome_pdf_viewer_SOURCES =		\
 # 	gpdf-embeddable-view.h
 
 gnome_pdf_viewer_LDADD =		\
-	$(top_builddir)/goo/libgoo.a	\
+	$(top_builddir)/goo/libGoo.a	\
 	$(EXTRA_GNOME_LIBS)		\
 	$(libpaper_LIBS)
 
@@ -175,7 +175,7 @@ xpdf_SOURCES =			\
 
 xpdf_CFLAGS = $(X_CFLAGS)
 xpdf_LDADD = 				\
-	$(top_builddir)/goo/libgoo.a 	\
+	$(top_builddir)/goo/libGoo.a 	\
 	-lXpm                           \
 	$(EXTRA_GNOME_LIBS) 		\
 	$(libpaper_LIBS)
@@ -186,23 +186,23 @@ xpdf_LDADD = 				\
 #	ImageOutputDev.h	
 #	pdfimages.cc
 
-#pdfimages_LDADD = ../goo/libgoo.a
+#pdfimages_LDADD = ../goo/libGoo.a
 #
 #pdftops_SOURCES =		
 #	$(common_sources)	
 #	PSOutputDev.cc		
 #       pdftops.cc
-#pdftops_LDADD = ../goo/libgoo.a
+#pdftops_LDADD = ../goo/libGoo.a
 
 #pdftotext_SOURCES =		
 #	$(common_sources)	
 #	pdftotext.cc
-#pdftotext_LDADD = ../goo/libgoo.a
+#pdftotext_LDADD = ../goo/libGoo.a
 
 #pdfinfo_SOURCES =		
 #	$(common_sources)	
 #	pdfinfo.cc
-#pdfinfo_LDADD = ../goo/libgoo.a
+#pdfinfo_LDADD = ../goo/libGoo.a
 
 #pdftopbm_SOURCES =		
 #	$(common_sources)	
@@ -213,7 +213,7 @@ xpdf_LDADD = 				\
 #	XOutputFontInfo.h	
 #	pdftopbm.cc
 
-#pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
+#pdftopbm_LDADD = ../goo/libGoo.a $(EXTRA_GNOME_LIBS)
 
 #bitmaps =		
 #	about.xbm		

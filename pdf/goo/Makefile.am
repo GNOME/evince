@@ -1,6 +1,9 @@
-lib_LIBRARIES = libgoo.a
+INCLUDES =		\
+	-I$(top_srcdir)
 
-libgoo_a_SOURCES = 	\
+noinst_LIBRARIES = libGoo.a
+
+libGoo_a_SOURCES = 	\
 	GHash.cc	\
 	GHash.h		\
 	GList.cc	\
@@ -27,5 +30,4 @@ EXTRA_DIST = 		\
 	vms_unix_time.h	\
 	vms_unix_times.c\
 	vms_unlink.c	\
-	makefile.w32	\
 	vms_make.com
