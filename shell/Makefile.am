@@ -4,7 +4,7 @@ INCLUDES=					\
 	-DDATADIR=\"$(pkgdatadir)\"		\
 	-I$(top_srcdir)/lib			\
 	-I$(top_srcdir)/backend			\
-	-I$(top_srcdir)/pdf/xpdf		\
+	-I$(top_srcdir)/pdf			\
 	-I$(top_srcdir)/pixbuf			\
 	-I$(top_srcdir)/ps	                \
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
@@ -51,7 +51,7 @@ evince_SOURCES=				\
 evince_LDADD=						\
 	$(SHELL_LIBS)					\
 	$(top_builddir)/lib/libev.la			\
-	$(top_builddir)/pdf/xpdf/libpdfdocument.la 	\
+	$(top_builddir)/pdf/libpdfdocument.la	 	\
 	$(top_builddir)/pixbuf/libpixbufdocument.la	\
 	$(top_builddir)/ps/libgtkgs.la			\
 	$(top_builddir)/backend/libevbackend.la		\

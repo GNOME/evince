@@ -1,3 +1,25 @@
+2005-03-01  Kristian Høgsberg  <krh@redhat.com>
+
+	Use poppler instead of including xpdf source code.  Poppler is a
+	fork of xpdf to build it as a shared library. See
+	http://freedesktop.org/wiki/Software/poppler.
+
+	* pdf/xpdf/*, pdf/goo/*, pdf/splash/*, pdf/fofi/*: Remove included
+	xpdf fork.
+	
+	* pdf/Makefile.am: Build libpdfdocument.a here.
+	
+	* pdf/GDKSplashOutputDev.cc:
+	* pdf/GDKSplashOutputDev.h:
+	* pdf/GnomeVFSStream.cc:
+	* pdf/GnomeVFSStream.h:
+	* pdf-document.cc:
+	* pdf-document.h:
+	* test-gdk-output-dev.cc
+	* Thumb.cc:
+	* Thumb.h: Pull these files out of pdf/xpdf and adjust to compile
+	against poppler.
+
 2005-02-28  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* shell/ev-sidebar-links.c: (ev_sidebar_links_clear_document):
