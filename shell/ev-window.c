@@ -28,6 +28,7 @@
 
 #include "ev-window.h"
 #include "ev-sidebar.h"
+#include "ev-view.h"
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
@@ -56,6 +57,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar;
 	GtkWidget *find_bar;
 	GtkWidget *bonobo_widget;
+	GtkWidget *view;
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
 	guint help_message_cid;
@@ -158,6 +160,9 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = document;
+
+		ev_view_set_document (EV_VIEW (ev_window->priv->view),
+				      document);
 		
 	} else {
 		GtkWidget *dialog;
@@ -708,9 +713,9 @@ ev_window_init (EvWindow *ev_window)
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
+	GtkWidget *scrolled_window;
 	GtkWidget *menubar;
 	GtkWidget *toolbar;
-	GtkWidget *darea;
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
@@ -769,11 +774,17 @@ ev_window_init (EvWindow *ev_window)
 	gtk_paned_add1 (GTK_PANED (ev_window->priv->hpaned),
 			ev_window->priv->sidebar);
 
-	/* Stub widget, for now */
-	darea = gtk_drawing_area_new ();
-	gtk_widget_show (darea);
+	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_widget_show (scrolled_window);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
-			darea);
+			scrolled_window);
+
+	ev_window->priv->view = ev_view_new ();
+	gtk_widget_show (ev_window->priv->view);
+	gtk_container_add (GTK_CONTAINER (scrolled_window),
+			   ev_window->priv->view);
 
 	ev_window->priv->statusbar = gtk_statusbar_new ();
 	gtk_widget_show (ev_window->priv->statusbar);

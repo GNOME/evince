@@ -17,6 +17,10 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
+	ev-marshal.c			\
+	ev-marshal.h			\
+	ev-view.c			\
+	ev-view.h			\
 	ev-window.c			\
 	ev-window.h			\
 	ev-sidebar.c			\
@@ -29,3 +33,14 @@ evince_LDADD=						\
 	$(top_builddir)/backend/libevbackend.la		\
 	$(top_builddir)/pdf/xpdf/libpdfdocument.la 	\
 	$(NULL)
+
+BUILT_SOURCES = ev-marshal.h ev-marshal.c
+
+EXTRA_DIST = ev-marshal.list
+
+ev-marshal.h: ev-marshal.list
+	glib-genmarshal --prefix=ev_marshal ev-marshal.list --header > ev-marshal.h
+
+ev-marshal.c: ev-marshal.list
+	echo '#include "ev-marshal.h"' > ev-marshal.c
+	glib-genmarshal --prefix=ev_marshal ev-marshal.list --body >> ev-marshal.c
