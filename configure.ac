@@ -393,6 +393,4 @@ ps/Makefile
 po/Makefile.in
 backend/Makefile
 shell/Makefile
-dvi/Makefile
-dvi/dvilib/Makefile
 ])
