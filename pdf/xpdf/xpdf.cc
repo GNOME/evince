@@ -679,7 +679,7 @@ static GBool loadFile(GString *fileName) {
     win->setBusyCursor(gTrue);
 
   // open PDF file
-  newDoc = new PDFDoc(bxpdfopen(fileName), fileName);
+  newDoc = new PDFDoc(fileName);
   if (!newDoc->isOk()) {
     delete newDoc;
     if (win)

@@ -5,7 +5,7 @@ INCLUDES =					\
 	$(EXTRA_GNOME_CFLAGS)
 
 if WITH_GNOME
-gui = gpdf
+gui = xpdf gpdf
 else
 gui = xpdf
 endif
@@ -57,7 +57,9 @@ bonobo_application_x_pdf_SOURCES =	\
 	BonoboStream.h			\
 	BonoboStream.cc			\
 	GOutputDev.cc			\
-	bonobo-application-x-pdf.cc
+	bonobo-application-x-pdf.cc	\
+	gtkgesture.c			\
+	gtkgesture.h
 
 bonobo_application_x_pdf_LDADD =	\
 	../goo/libgoo.a			\

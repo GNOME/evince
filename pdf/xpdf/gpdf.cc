@@ -18,27 +18,6 @@ extern "C" {
 #include <bonobo/gnome-bonobo.h>
 #undef  GString 
 }
-#include <sys/stat.h>
-#include <unistd.h>
-#include "gtypes.h"
-#include "GString.h"
-#include "parseargs.h"
-#include "gfile.h"
-#include "gmem.h"
-#include "Object.h"
-#include "Stream.h"
-#include "Array.h"
-#include "Dict.h"
-#include "XRef.h"
-#include "Catalog.h"
-#include "Page.h"
-#include "Link.h"
-#include "PDFDoc.h"
-#include "GOutputDev.h"
-#include "PSOutputDev.h"
-#include "TextOutputDev.h"
-#include "Params.h"
-#include "Error.h"
 #include "config.h"
 #include "bonobo-application-x-pdf.h"
 
@@ -58,8 +37,6 @@ typedef struct _Container Container;
 struct _Container {
   GnomeContainer    *container;
   GnomeUIHandler    *uih;
-  
-  GnomeViewFrame    *active_view_frame;
   
   GtkWidget	    *app;
   GtkScrolledWindow *scroll;
@@ -245,16 +222,26 @@ extern "C" {
   component_destroy (Component *component)
   {
     CORBA_Environment ev;
+    Container *container;
     g_return_if_fail (component != NULL);
 
     CORBA_exception_init (&ev);
-    
+
+    /* Kill merged menus et al. */
+    gnome_view_frame_view_deactivate (component->view_frame);
+
+    container = component->container;
+    gtk_widget_destroy (container->view_widget);
+    container->view_widget = NULL;
+
     if (component->server)
       GNOME_Unknown_unref (
 	gnome_object_corba_objref (GNOME_OBJECT (component->server)), &ev);
     component->server = NULL;
 
     CORBA_exception_free (&ev);
+
+    g_free (component);
   }
 
   static void
@@ -276,11 +263,24 @@ extern "C" {
     if (!containers)
       gtk_main_quit ();
   }
+
+  static void
+  container_close (Container *cont)
+  {
+    g_return_if_fail (g_list_find (containers, cont) != NULL);
+    
+    if (cont->component) {
+      component_destroy (cont->component);
+      cont->component = NULL;
+    } else
+      container_destroy (cont);
+  }
+
   
   static void
   container_close_cmd (GtkWidget *widget, Container *cont)
   {
-    container_destroy (cont);
+    container_close (cont);
   }
   
   static int
@@ -296,7 +296,6 @@ extern "C" {
     while (containers)
       container_destroy ((Container *)containers->data);
   }
-
 
 static void
 container_about_cmd (GtkWidget *widget, Container *container)
@@ -363,6 +362,7 @@ container_set_view (Container *container, Component *component)
 	 * Activate it ( get it to merge menus etc. )
 	 */
 	gnome_view_frame_view_activate (view_frame);
+	gnome_view_frame_set_covered   (view_frame, FALSE);
 
 	gtk_widget_show_all (GTK_WIDGET (container->scroll));
 }
@@ -618,7 +618,7 @@ container_new (const char *fname)
 	
 	container = g_new0 (Container, 1);
 
-	container->app  = gnome_app_new ("pdf-viewer",
+	container->app = gnome_app_new ("pdf-viewer",
 					 "GNOME PDF viewer");
 
 	gtk_drag_dest_set (container->app,
@@ -628,7 +628,8 @@ container_new (const char *fname)
 
 	gtk_signal_connect (GTK_OBJECT(container->app),
 			    "drag_data_received",
-			    GTK_SIGNAL_FUNC(filenames_dropped), (gpointer)container);
+			    GTK_SIGNAL_FUNC(filenames_dropped),
+			    (gpointer)container);
 
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 600, 600);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
@@ -678,7 +679,7 @@ main (int argc, char **argv)
 {
   CORBA_Environment ev;
   CORBA_ORB         orb;
-  char            **view_files = NULL;
+  const char      **view_files = NULL;
   gboolean          loaded;
   int               i;
   

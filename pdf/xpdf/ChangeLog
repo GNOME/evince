@@ -1,3 +1,21 @@
+1999-10-06  Michael Meeks  <mmeeks@gnu.org>
+
+	* BonoboStream.cc (bfseek): Add debug case.
+	(bfread): nail immense leak.
+
+	* gpdf.cc (container_set_view): Activate the component to
+	allow gestures to work.
+
+1999-10-05  Michael Meeks  <mmeeks@gnu.org>
+
+	* bonobo-application-x-pdf.cc (setup_pixmap): Connect gestures + add
+	event mask.
+
+	* gpdf.cc (container_close): Created. (container_close_cmd): Use it.
+	Huge header clean.
+
+	* gtkgesture.[ch]: Create.
+
 1999-09-11  Michael Meeks  <michael@nuclecu.unam.mx>
 
 	* bonobo-application-x-pdf.cc (destroy_view): destroy don't unref,
