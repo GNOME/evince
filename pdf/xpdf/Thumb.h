@@ -50,12 +50,15 @@ class Thumb {
 
 	unsigned char *getPixbufData();
 
+	char ok() {return ok_flag != 0; }; 
+
       private:
         XRef *xref;
 	Stream *str;
 	GfxImageColorMap *colorMap;
         int width, height, bits;
 	int length;
+	char ok_flag; 
 };
 
 #endif
