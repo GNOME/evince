@@ -45,6 +45,7 @@ ev_history_init (EvHistory *history)
 	history->priv = EV_HISTORY_GET_PRIVATE (history);
 
 	history->priv->links = NULL;
+	history->priv->current_index = -1;
 }
 
 static void
@@ -84,14 +85,26 @@ ev_history_add_link (EvHistory *history, EvLink *link)
 	g_return_if_fail (EV_IS_HISTORY (history));
 	g_return_if_fail (EV_IS_LINK (link));
 
+	length = g_list_length (history->priv->links);
+	if (history->priv->current_index < length - 1) {
+		GList *l = g_list_nth (history->priv->links,
+				       history->priv->current_index + 1);
+		
+		if (l->prev) {
+			l->prev->next = NULL;
+			free_links_list (l);
+		} else {
+			free_links_list (history->priv->links);
+			history->priv->links = NULL;
+		}
+	}
+
 	g_object_ref (link);
 	history->priv->links = g_list_append (history->priv->links,
 					      link);
 
 	length = g_list_length (history->priv->links);
 	history->priv->current_index = length - 1;
-
-	g_print ("Set current\n");
 }
 
 void

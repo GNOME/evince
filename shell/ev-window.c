@@ -1364,7 +1364,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "direction", EV_NAVIGATION_DIRECTION_FORWARD,
 			       NULL);
 	g_signal_connect (action, "activate",
-			  G_CALLBACK (ev_window_cmd_go_back), window);
+			  G_CALLBACK (ev_window_cmd_go_forward), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 

@@ -910,6 +910,7 @@ ev_view_set_document (EvView     *view,
 			g_object_unref (view->history);
 		}
 		view->history = ev_history_new ();
+		ev_history_add_page (view->history, ev_view_get_page (view));
 	}
 }
 
@@ -964,15 +965,18 @@ go_to_index (EvView *view, int index)
 void
 ev_view_go_back	(EvView	*view)
 {
-	int index;
+	int index, n;
 
 	g_return_if_fail (EV_IS_HISTORY (view->history));
 
 	index = ev_history_get_current_index (view->history);
-	index = MAX (0, index - 1);
+	n = ev_history_get_n_links (view->history);
 
-	ev_history_set_current_index (view->history, index);
-	go_to_index (view, index);
+	if (n > 0) {
+		index = MAX (0, index - 1);
+		ev_history_set_current_index (view->history, index);
+		go_to_index (view, index);
+	}
 }
 
 void
@@ -985,10 +989,11 @@ ev_view_go_forward (EvView *view)
 	index = ev_history_get_current_index (view->history);
 	n = ev_history_get_n_links (view->history);
 
-	index = MIN (n - 1, index + 1);
-
-	ev_history_set_current_index (view->history, index);
-	go_to_index (view, index);
+	if (n > 0) {
+		index = MIN (n - 1, index + 1);
+		ev_history_set_current_index (view->history, index);
+		go_to_index (view, index);
+	}
 }
 
 
