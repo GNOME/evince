@@ -21,7 +21,7 @@ AC_STDC_HEADERS
 AC_PROG_RANLIB
 AC_PROG_INTLTOOL
 
-ALL_LINGUAS="cs da de en_CA ja no nb nl pt_BR sv zh_CN"
+ALL_LINGUAS="ca cs da de en_CA ja no nb nl pt_BR sv zh_CN"
 
 AM_GLIB_GNU_GETTEXT
 
