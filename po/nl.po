@@ -1,1908 +1,1729 @@
 # gpdf Dutch Translation.
 # Copyright (C) 2000 Free Software Foundation, Inc.
-# Almer S. Tigelaar <almer1@dds.nl>, 2000.
 # Tino Meinen <a.t.meinen@chello.nl>, 2003, 2004
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpdf cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-28 12:38+0100\n"
-"PO-Revision-Date: 2004-12-25 13:44+0100\n"
+"POT-Creation-Date: 2005-01-20 18:44+0100\n"
+"PO-Revision-Date: 2005-01-21 01:15+0100\n"
 "Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpdf.desktop.in.h:1 shell/gpdf.c:948 xpdf/GNOME_PDF.server.in.in.h:5
-msgid "PDF Viewer"
-msgstr "PDF-weergave"
-
-#: gpdf.desktop.in.h:2
-msgid "View PDF files"
-msgstr "PDF-bestanden weergeven"
-
-#: gpdf.schemas.in.h:1
-msgid "Default sidebar page"
-msgstr "Standaard zijbalkpagina"
-
-#: gpdf.schemas.in.h:2
-msgid "Default sidebar size"
-msgstr "Standaard zijbalkafmeting"
-
-#: gpdf.schemas.in.h:3
-msgid "Show sidebar by default"
-msgstr "Standaard de zijbalk tonen"
-
-#: shell/eel-vfs-extensions.c:691
-msgid " (invalid Unicode)"
-msgstr " (ongeldige Unicode)"
-
-#: shell/gpdf-recent-view-toolitem.c:124 shell/gpdf-window-ui.xml.h:4
-msgid "Open a file"
-msgstr "Bestand openen"
-
-#: shell/gpdf-recent-view-toolitem.c:127
-msgid "Open a recently used file"
-msgstr "Een recentelijk geopend document heropenen"
-
-# Recentelijk?
-#: shell/gpdf-recent-view-toolitem.c:130
-msgid "Recent"
-msgstr "Recent"
-
-#: shell/gpdf-window-ui.xml.h:1
-msgid "About this application"
-msgstr "Info over deze toepassing"
-
-#: shell/gpdf-window-ui.xml.h:2
-msgid "Close window"
-msgstr "Venster sluiten"
-
-#: shell/gpdf-window-ui.xml.h:3
-msgid "Online manual for this application"
-msgstr "Online handleiding voor deze toepassing"
-
-#: shell/gpdf-window-ui.xml.h:5
-msgid "Toggle fullscreen mode"
-msgstr "Volledig scherm schakelen"
-
-#: shell/gpdf-window-ui.xml.h:6
-msgid "_About"
-msgstr "In_fo"
-
-#: shell/gpdf-window-ui.xml.h:7
-msgid "_Close"
-msgstr "Sl_uiten"
-
-#: shell/gpdf-window-ui.xml.h:8
-msgid "_Contents"
-msgstr "_Inhoud"
-
-#: shell/gpdf-window-ui.xml.h:9 xpdf/gpdf-control-ui.xml.h:34
-msgid "_File"
-msgstr "_Bestand"
-
-#: shell/gpdf-window-ui.xml.h:10
-msgid "_Full Screen"
-msgstr "_Volledig scherm"
-
-#: shell/gpdf-window-ui.xml.h:11
-msgid "_Help"
-msgstr "_Hulp"
-
-#: shell/gpdf-window-ui.xml.h:12
-msgid "_Open..."
-msgstr "_Openen..."
-
-#: shell/gpdf-window-ui.xml.h:13 xpdf/gpdf-control-ui.xml.h:43
-msgid "_View"
-msgstr "Beel_d"
-
-#: shell/gpdf.c:142
-msgid "Could not initialize Bonobo!\n"
-msgstr "Kon Bonobo niet initializeren!\n"
-
-#: shell/gpdf.c:263 shell/gpdf.c:266 xpdf/GNOME_PDF.server.in.in.h:4
-#: xpdf/gpdf-control.cc:1973 xpdf/gpdf-control.cc:2005
-#: xpdf/gpdf-control.cc:2024 xpdf/gpdf-control.cc:2520
-msgid "PDF Document"
-msgstr "PDF-document"
-
-# uitzetten?
-#: shell/gpdf.c:462
-msgid "Exit Full Screen"
-msgstr "Volledig scherm verlaten"
-
-#: shell/gpdf.c:559
-msgid "Load file"
-msgstr "Bestand laden"
-
-#: shell/gpdf.c:568 xpdf/gpdf-control.cc:1120
-msgid "PDF Documents"
-msgstr "PDF-documenten"
-
-#: shell/gpdf.c:572 xpdf/gpdf-control.cc:1126
-msgid "All Files"
-msgstr "Alle bestanden"
-
-#: shell/gpdf.c:694
-msgid "Derek B. Noonburg, Xpdf author."
-msgstr "Derek B. Noonburg, Xpdf-auteur."
-
-#: shell/gpdf.c:695
-msgid "Martin Kretzschmar, GNOME port maintainer."
-msgstr "Martin Kretzschmar, beheerder Gnome versie."
-
-#: shell/gpdf.c:696
-msgid "Michael Meeks, GNOME port creator."
-msgstr "Micheal Meeks, initiële Gnome versie."
-
-#. please localize as R&eacute;mi (R\303\251mi)
-#: shell/gpdf.c:698
-msgid "Remi Cohen-Scali."
-msgstr "Rémi Cohen-Scali."
-
-#: shell/gpdf.c:699
-msgid "Miguel de Icaza."
-msgstr "Miguel de Icaza."
-
-#: shell/gpdf.c:700
-msgid "Nat Friedman."
-msgstr "Nat Friedman."
-
-#: shell/gpdf.c:701
-msgid "Ravi Pratap."
-msgstr "Ravi Pratap."
-
-#: shell/gpdf.c:706
-msgid "Chee Bin HOH <cbhoh@mimos.my>"
-msgstr "Chee Bin HOH <cbhoh@mimos.my>"
-
-#: shell/gpdf.c:707
-msgid "Breda McColgan <BredaMcColgan@sun.com>"
-msgstr "Breda McColgan <BredaMcColgan@sun.com>"
-
-#: shell/gpdf.c:723 shell/gpdf.c:738
-msgid "translator-credits"
-msgstr ""
-"Almer S. Tigelaar <almer1@dds.nl>\n"
-"Tino Meinen <a.t.meinen@chello.nl>\n"
-"\n"
-"Kijk voor meer info op http://nl.gnome.org/"
-
-#: shell/gpdf.c:726
-msgid "Glyph & Cog, LLC and authors"
-msgstr "Glyph & Cog, LLC en auteurs"
-
-#: shell/gpdf.c:731 xpdf/GNOME_PDF.server.in.in.h:1
-msgid "GNOME PDF Viewer"
-msgstr "GNOME PDF-weergave"
-
-#: shell/gpdf.c:734
-msgid "A PDF viewer based on Xpdf"
-msgstr "Een weergever voor PDF gebaseerd op Xpdf"
-
-#: xpdf/GNOME_PDF.server.in.in.h:2
-msgid "GNOME PDF viewer factory"
-msgstr "GNOME PDF-weergavefabriek"
-
-#: xpdf/GNOME_PDF.server.in.in.h:3
-msgid "Nautilus PDF Property Page"
-msgstr "Nautilus PDF eigenschappen-pagina"
-
-#: xpdf/GNOME_PDF.server.in.in.h:6
-msgid "PDF document viewer factory"
-msgstr "PDF document-weergavefabriek"
-
-#: xpdf/GNOME_PDF.server.in.in.h:7
-msgid "View as PDF Document"
-msgstr "Weergeven als PDF-document"
-
-#: xpdf/eel-gconf-extensions.c:74
-msgid ""
-"Cannot find a schema for gpdf preferences. \n"
-"Check your gconf setup, look at gpdf FAQ for \n"
-"more info"
-msgstr ""
-"Kon geen schema voor gpdf voorkeuren vinden. \n"
-"Controleer uw gconf instellingen. Zie de gpdf FAQ\n"
-"voor meer informatie"
-
-#: xpdf/eel-gconf-extensions.c:101
-#, c-format
-msgid ""
-"GConf error:\n"
-"  %s"
-msgstr ""
-"GConf fout:\n"
-"  %s"
-
-#: xpdf/gpdf-annots-view.cc:288 xpdf/gpdf-annots-view.cc:289
-msgid "Parent control"
-msgstr "Bovenliggende controle"
-
-#: xpdf/gpdf-annots-view.cc:916
-msgid "Owner/Title"
-msgstr "Eigenaar/Titel"
-
-#: xpdf/gpdf-annots-view.cc:925
-msgid "Opened"
-msgstr "Geopend"
-
-#: xpdf/gpdf-annots-view.cc:1070 xpdf/gpdf-annots-view.cc:1086
-#: xpdf/gpdf-thumbnails-view.cc:1466 xpdf/gpdf-thumbnails-view.cc:1482
-msgid "Not yet implemented!"
-msgstr "Nog niet geïmplementeerd"
-
-#: xpdf/gpdf-annots-view.cc:1071
-msgid "Annotations Filter feature not yet implemented... Sorry."
-msgstr "Annotatiefilter nog niet geïmplementeerd... sorry."
-
-#: xpdf/gpdf-annots-view.cc:1087
-msgid "Annotations Plug-ins management feature not yet implemented... Sorry."
-msgstr "Annotatie plugin-beheer nog niet geïmplementeerd...sorry."
-
-#: xpdf/gpdf-bookmarks-view.cc:128
-msgid "Expand"
-msgstr "Uitvouwen"
-
-#: xpdf/gpdf-bookmarks-view.cc:129
-msgid "Expand all bookmarks under this one"
-msgstr "Alle favorieten hieronder uitvouwen"
-
-#: xpdf/gpdf-bookmarks-view.cc:130
-msgid "Collapse"
-msgstr "Inklappen"
-
-#: xpdf/gpdf-bookmarks-view.cc:131
-msgid "Collapse all bookmarks under this one"
-msgstr "Alle favorieten hieronder inklappen"
-
-#: xpdf/gpdf-bookmarks-view.cc:132
-msgid "Expand All"
-msgstr "Alles uitvouwen"
-
-#: xpdf/gpdf-bookmarks-view.cc:133
-msgid "Expand All bookmarks in bookmarks tree"
-msgstr "Alle favorieten in de boom uitvouwen"
-
-#: xpdf/gpdf-bookmarks-view.cc:134
-msgid "Collapse All"
-msgstr "Alles inklappen"
-
-#: xpdf/gpdf-bookmarks-view.cc:135
-msgid "Collapse All bookmarks in bookmarks tree"
-msgstr "ALle favorieten in de boom inklappen"
-
-#: xpdf/gpdf-control-ui.xml.h:1
-msgid "Back"
-msgstr "Terug"
-
-#: xpdf/gpdf-control-ui.xml.h:2
-msgid "Best Fit"
-msgstr "Best passend"
-
-#: xpdf/gpdf-control-ui.xml.h:3
-msgid "Best _Fit"
-msgstr "Best _passend"
-
-# zijvenster?
-# Meestal wordt er over de 'side bar' gesproken
-#: xpdf/gpdf-control-ui.xml.h:4
-msgid "Change the visibility of the sidebar"
-msgstr "Zichtbaarheid van de zijbalk aanpassen"
-
-#: xpdf/gpdf-control-ui.xml.h:5
-msgid "Expand to a larger size"
-msgstr "Vergroten"
-
-#: xpdf/gpdf-control-ui.xml.h:6
-msgid "First"
-msgstr "Eerste"
-
-# knoptekst?
-#: xpdf/gpdf-control-ui.xml.h:7
-msgid "Fit Width"
-msgstr "Breedte"
-
-# uitleg
-#: xpdf/gpdf-control-ui.xml.h:8
-msgid "Fit page _width"
-msgstr "_Paginabreedte laten passen"
-
-#: xpdf/gpdf-control-ui.xml.h:9
-msgid "Fo_rward"
-msgstr "_Vooruit"
-
-#: xpdf/gpdf-control-ui.xml.h:10
-msgid "Forward"
-msgstr "Vooruit"
-
-#: xpdf/gpdf-control-ui.xml.h:11
-msgid "Go backward in history"
-msgstr "Teruggaan in de geschiedenis"
-
-#: xpdf/gpdf-control-ui.xml.h:12
-msgid "Go forward in history"
-msgstr "Vooruit gaan in de geschiedenis"
-
-#: xpdf/gpdf-control-ui.xml.h:13
-msgid "In"
-msgstr "In"
-
-#: xpdf/gpdf-control-ui.xml.h:14
-msgid "Last"
-msgstr "Laatste"
-
-#: xpdf/gpdf-control-ui.xml.h:15
-msgid "Next"
-msgstr "Volgende"
-
-#: xpdf/gpdf-control-ui.xml.h:16
-msgid "Out"
-msgstr "Uit"
-
-#: xpdf/gpdf-control-ui.xml.h:17
-msgid "Previous"
-msgstr "Vorige"
-
-#: xpdf/gpdf-control-ui.xml.h:18 xpdf/gpdf-control.cc:940
-msgid "Print"
-msgstr "Afdrukken"
-
-#: xpdf/gpdf-control-ui.xml.h:19
-msgid "Print the current file"
-msgstr "Het huidige bestand afdrukken"
-
-#: xpdf/gpdf-control-ui.xml.h:20
-msgid "Proper_ties"
-msgstr "_Eigenschappen"
-
-#: xpdf/gpdf-control-ui.xml.h:21 xpdf/gpdf-control.cc:1112
-msgid "Save a Copy"
-msgstr "Een kopie opslaan"
-
-#: xpdf/gpdf-control-ui.xml.h:22
-msgid "Save the current PDF document with a new filename"
-msgstr "Het huidige PDF-document opslaan onder een nieuwe naam"
-
-#: xpdf/gpdf-control-ui.xml.h:23
-msgid "Shrink to a smaller size"
-msgstr "Verkleinen"
-
-#: xpdf/gpdf-control-ui.xml.h:24
-msgid "Size to fit the page"
-msgstr "Inzoomen om op pagina te laten passend"
-
-#: xpdf/gpdf-control-ui.xml.h:25
-msgid "Size to fit the page width"
-msgstr "Inzoomen om paginabreedte te laten passen"
-
-#: xpdf/gpdf-control-ui.xml.h:26
-msgid "View properties of the displayed document"
-msgstr "Eigenschappen van het document weergeven"
-
-#: xpdf/gpdf-control-ui.xml.h:27
-msgid "View the first page"
-msgstr "Bekijk de eerste pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:28
-msgid "View the last page"
-msgstr "Bekijk de laatste pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:29
-msgid "View the next page"
-msgstr "Bekijk de volgende pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:30
-msgid "View the previous page"
-msgstr "Bekijk de vorige pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:31
-msgid "Zoom _In"
-msgstr "_Inzoomen"
-
-#: xpdf/gpdf-control-ui.xml.h:32
-msgid "Zoom _Out"
-msgstr "_Uitzoomen"
-
-#: xpdf/gpdf-control-ui.xml.h:33
-msgid "_Back"
-msgstr "_Terug"
-
-#: xpdf/gpdf-control-ui.xml.h:35
-msgid "_First Page"
-msgstr "_Eerste pagina"
-
-# in overeenstemming met Nautilus: Ga naar
-#: xpdf/gpdf-control-ui.xml.h:36
-msgid "_Go"
-msgstr "_Ga naar"
-
-#: xpdf/gpdf-control-ui.xml.h:37
-msgid "_Last Page"
-msgstr "_Laatste pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:38
-msgid "_Next Page"
-msgstr "V_olgende pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:39
-msgid "_Previous Page"
-msgstr "_Vorige pagina"
-
-#: xpdf/gpdf-control-ui.xml.h:40
-msgid "_Print..."
-msgstr "Af_drukken..."
-
-#: xpdf/gpdf-control-ui.xml.h:41
-msgid "_Save a Copy..."
-msgstr "Een kopie op_slaan..."
-
-#: xpdf/gpdf-control-ui.xml.h:42
-msgid "_Sidebar"
-msgstr "_Zijbalk"
-
-#: xpdf/gpdf-control.cc:565
-msgid "Documentation Error"
-msgstr "Documentatiefout"
-
-#: xpdf/gpdf-control.cc:769
-#, c-format
-msgid "Printing: Page %d."
-msgstr "Afdrukken: pagina %d."
-
-#: xpdf/gpdf-control.cc:897
-#, c-format
-msgid ""
-"You were trying to print to a printer using the \"%s\" driver. This program "
-"requires a PostScript printer driver."
-msgstr ""
-"U probeerde af te drukken naar een printer via het \"%s\" stuurprogramma. "
-"Dit programma heeft een PostScript printer-stuurprogramma nodig."
-
-#: xpdf/gpdf-control.cc:900
-msgid ""
-"You were trying to print to a printer that does not use PostScript. This "
-"program requires a PostScript printer driver."
-msgstr ""
-"U probeerde af te drukken naar een printer die geen ondersteuning biedt voor "
-"PostScript. Dit programma heeft een PostScript printer-stuurprogramma nodig."
-
-#: xpdf/gpdf-control.cc:904
-msgid "Printing is not supported on this printer."
-msgstr "Afdrukken is niet ondersteund met deze printer."
-
-#: xpdf/gpdf-control.cc:943
-msgid "_Pages"
-msgstr "_Paginas"
-
-#: xpdf/gpdf-control.cc:1053
-#, c-format
-msgid "A file named \"%s\" already exists."
-msgstr "Een bestand genaamd \"%s\" bestaad al."
-
-#: xpdf/gpdf-control.cc:1059
-msgid "Do you want to replace it with the one you are saving?"
-msgstr "Wilt u het vervangen door het exemplaar wat u aan het opslaan bent?"
-
-#: xpdf/gpdf-control.cc:1065
-msgid "_Replace"
-msgstr "_Vervangen"
-
-#: xpdf/gpdf-control.cc:1073
-msgid "Question"
-msgstr "Vraag"
-
-#: xpdf/gpdf-control.cc:1091
-#, c-format
-msgid "The file could not be saved as \"%s\"."
-msgstr "Het bestand kon niet worden opgeslagen als \"%s\"."
-
-#: xpdf/gpdf-control.cc:1198
-msgid "PDF Properties"
-msgstr "PDF eigenschappen"
-
-#: xpdf/gpdf-control.cc:2028
-#, c-format
-msgid "Loading of %s failed."
-msgstr "Laden van %s mislukt."
-
-#: xpdf/gpdf-control.cc:2369
-msgid "Bookmarks"
-msgstr "Favorieten"
-
-#: xpdf/gpdf-control.cc:2373
-msgid "Pages"
-msgstr "Pagina's"
-
-#: xpdf/gpdf-control.cc:2378
-msgid "Annotations"
-msgstr "Annotaties"
-
-#: xpdf/gpdf-link-canvas-item.cc:258 xpdf/gpdf-link-canvas-item.cc:259
-msgid "Link"
-msgstr "Link"
-
-#: xpdf/gpdf-link-canvas-item.cc:265 xpdf/gpdf-link-canvas-item.cc:266
-msgid "UsingHandCursor"
-msgstr "UsingHandCursor"
-
-# dubbelzinnig in het Nederlands maar het is niet anders.
-#: xpdf/gpdf-links-canvas-layer.cc:219 xpdf/gpdf-links-canvas-layer.cc:220
-msgid "Links"
-msgstr "Links"
-
-#: xpdf/gpdf-persist-file.cc:224 xpdf/gpdf-persist-stream.cc:213
-msgid "_Open Document"
-msgstr "Document _openen"
-
-# invoeren hier met opzet weggelaten
-#: xpdf/gpdf-persist-file.cc:251 xpdf/gpdf-persist-stream.cc:240
-msgid "Enter document password:"
-msgstr "Documentwachtwoord invoeren:"
-
-#: xpdf/gpdf-persist-file.cc:252 xpdf/gpdf-persist-stream.cc:241
-msgid ""
-"This document is encrypted and this operation requires the document's "
-"password"
-msgstr ""
-"Dit document is versleuteld en deze bewerking vereist het wachtwoord van het "
-"document"
-
-#. translators: page catalog is a part of the PDF file
-#. The last period (.) is missing on purpose
-#: xpdf/gpdf-persist-file.cc:337
-msgid "The PDF file is damaged. Its page catalog could not be read"
-msgstr "Het PDF-bestand is beschadigd. De page-catalog kon niet worden gelezen"
-
-#: xpdf/gpdf-persist-file.cc:341
-msgid ""
-"The PDF file is damaged or it is not a PDF file. It could not be repaired"
-msgstr ""
-"Het PDF-bestand is beschadigd of het is geen PDF-bestand. Het kon niet "
-"worden gerepareerd"
-
-#: xpdf/gpdf-persist-file.cc:345
-msgid "The PDF document is encrypted and you didn't enter the correct password"
-msgstr "Het PDF-document is versleuteld en u gaf niet het juiste wachtwoord"
-
-# bezig met...
-#: xpdf/gpdf-print-progress-dialog.glade.h:1
-msgid "Printing"
-msgstr "Afdrukken"
-
-#: xpdf/gpdf-print-progress-dialog.glade.h:2
-msgid "Printing: Preparing."
-msgstr "Afdrukken: voorbereiding."
-
-#: xpdf/gpdf-properties-dialog.glade.h:1
-msgid "Author:"
-msgstr "Auteur:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:2
-msgid "Created:"
-msgstr "Aangemaakt:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:3
-msgid "Creator:"
-msgstr "Maker:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:4
-msgid "Keywords:"
-msgstr "Sleutelwoorden:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:5
-msgid "Modified:"
-msgstr "Aangepast:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:6
-msgid "Number of Pages:"
-msgstr "Aantal pagina's:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:7
-msgid "Optimized:"
-msgstr "Geoptimaliseerd:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:8
-msgid "PDF Version:"
-msgstr "PDF-versie:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:9
-msgid "Producer:"
-msgstr "Producent:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:10
-msgid "Security:"
-msgstr "Beveiliging:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:11
-msgid "Subject:"
-msgstr "Onderwerp:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:12
-msgid "Title:"
-msgstr "Titel:"
-
-#: xpdf/gpdf-properties-dialog.glade.h:13 xpdf/pdf-info-dict-util.cc:49
-#: xpdf/pdf-properties-display.c:225 xpdf/pdf-properties-display.c:233
-#: xpdf/pdf-properties-display.c:241 xpdf/pdf-properties-display.c:249
-#: xpdf/pdf-properties-display.c:258 xpdf/pdf-properties-display.c:267
-#: xpdf/pdf-properties-display.c:275 xpdf/pdf-properties-display.c:284
-#: xpdf/pdf-properties-display.c:292 xpdf/pdf-properties-display.c:301
-#: xpdf/pdf-properties-display.c:309 xpdf/pdf-properties-display.c:317
-msgid "Unknown"
-msgstr "Onbekend"
-
-#: xpdf/gpdf-sidebar.c:350 xpdf/gpdf-sidebar.c:373
-msgid "Select sidebar page by title for displaying it"
-msgstr "Zijbalkpagina per titel selecteren voor weergave"
-
-# tools menu: werkmenu?
-#: xpdf/gpdf-sidebar.c:405 xpdf/gpdf-sidebar.c:422
-msgid "Click to open page tools menu"
-msgstr "Klikken om pagina-menu te openen"
-
-#: xpdf/gpdf-sidebar.c:441
-msgid "Remove page if it is removeable"
-msgstr "Pagina vewijderen indien verwijderbaar"
-
-#: xpdf/gpdf-sidebar.c:468
-msgid "Close sidebar"
-msgstr "Zijbalk sluiten"
-
-#: xpdf/gpdf-thumbnails-view.cc:1467
-msgid "Thumbnail Generation feature not yet implemented... Sorry."
-msgstr "Miniatuur-aanmaak nog niet geïmplementeerd...sorry."
-
-#: xpdf/gpdf-thumbnails-view.cc:1483
-msgid "All Thumbnails Generation feature not yet implemented... Sorry."
-msgstr "Alle miniatuur-aanmaak nog niet geïmplementeerd...sorry."
-
-#: xpdf/gpdf-view.cc:366
-#, c-format
-msgid "No application was found to open the URI: %s"
-msgstr "Er is geen toepassing gevonden voor het openen van de URI: %s"
-
-#: xpdf/gpdf-view.cc:369
-msgid "Application Launch Failure!"
-msgstr "Opstarten van toepassing mislukt!"
-
-# hekje hier weggelaten, omdat wij dat eigenlijk niet gebruiken
-#: xpdf/gpdf-view.cc:479
-#, c-format
-msgid "Go to page #%d"
-msgstr "Ga naar pagina %d"
-
-#: xpdf/gpdf-view.cc:513
-#, c-format
-msgid "Go to file %s:#%d"
-msgstr "Ga naar bestand %s:#%d"
-
-# link niet bereikbaar?
-#: xpdf/gpdf-view.cc:515
-msgid "Broken link"
-msgstr "Gebroken link"
-
-#: xpdf/gpdf-view.cc:535
-#, c-format
-msgid "Launch: %s %s"
-msgstr "Opstarten: %s %s"
-
-# bladeren
-# doorzoeken
-#: xpdf/gpdf-view.cc:543
-#, c-format
-msgid "Browse %s"
-msgstr "%s doorbladeren"
-
-#: xpdf/gpdf-view.cc:551
-#, c-format
-msgid "Action: %s"
-msgstr "Actie: %s"
-
-#: xpdf/gpdf-view.cc:559
-#, c-format
-msgid "Movie: %s"
-msgstr "Film: %s"
-
-#: xpdf/gpdf-view.cc:570
-#, c-format
-msgid "Unknown action: %s !"
-msgstr "Onbekende actie: %s !"
-
-# beeld?
-#: xpdf/gpdf-view.cc:1601
-msgid "Document View"
-msgstr "Documentweergave"
-
-#: xpdf/nautilus-pdf-property-page.cc:146
-msgid "URI currently displayed"
-msgstr "Huidig weergegeven URI"
-
-# misschien beter: uit (ipv van): pagina 1 uit 5
-#: xpdf/page-control.c:101
-#, c-format
-msgid " of %d"
-msgstr " van %d"
-
-#: xpdf/page-control.c:219 xpdf/page-control.c:233
-msgid "Current page"
-msgstr "Huidige pagina"
-
-#: xpdf/page-control.c:220
-msgid ""
-"This shows the current page number. To jump to another page, enter its "
-"number."
-msgstr ""
-"Dit toont het huidige paginanummer. Om naar een andere pagina te gaan voert "
-"u het paginanummer in."
-
-#: xpdf/page-control.c:230
-msgid "Page"
-msgstr "Pagina"
-
-#: xpdf/pdf-info-dict-util.cc:203
-msgid "Encrypted"
-msgstr "Versleuteld"
-
-#: xpdf/pdf-info-dict-util.cc:203
-msgid "None"
-msgstr "Geen"
-
-#. Yes/No will be displayed in the pdf properties dialog
-#. in a table as "Optimized: No"
-#: xpdf/pdf-info-dict-util.cc:219
-msgid "Yes"
-msgstr "Ja"
-
-#: xpdf/pdf-info-dict-util.cc:219
-msgid "No"
-msgstr "Nee"
-
-#: bonobo/GNOME_GGV.server.in.in.h:1
-msgid "GGV PostScript Document Control"
-msgstr "GGV PostScript-document Control"
-
-#: bonobo/GNOME_GGV.server.in.in.h:2
-msgid "GGV PostScript View"
-msgstr "GGV postscriptweergave"
-
-#: bonobo/GNOME_GGV.server.in.in.h:3
-msgid "GGV PostScript viewer factory"
-msgstr "GGV postscriptweergavefabriek"
-
-#: bonobo/ggv-control-ui.xml.h:2
-#, no-c-format
-msgid "15_0%"
-msgstr "15_0%"
-
-#: bonobo/ggv-control-ui.xml.h:3
-msgid "1:1"
-msgstr "1:1"
-
-#: bonobo/ggv-control-ui.xml.h:5
-#, no-c-format
-msgid "25%"
-msgstr "25%"
-
-#: bonobo/ggv-control-ui.xml.h:6
-msgid "Change zoom factor to default"
-msgstr "Zoomfactor instellen op standaardwaarde"
-
-#: bonobo/ggv-control-ui.xml.h:7
-msgid "Decrease zoom factor"
-msgstr "Zoomfactor verkleinen"
-
-# passen is nog korter
-#: bonobo/ggv-control-ui.xml.h:8
-msgid "Fit"
-msgstr "Inpassen"
-
-#: bonobo/ggv-control-ui.xml.h:10
-msgid "Fit _Width"
-msgstr "Schalen naar _breedte"
-
-#: bonobo/ggv-control-ui.xml.h:11
-msgid "Fit to Page _Size"
-msgstr "Schalen naar pagina_grootte"
-
-#: bonobo/ggv-control-ui.xml.h:12
-msgid "Fit to Page _Width"
-msgstr "Schalen naar paginab_reedte"
-
-#: bonobo/ggv-control-ui.xml.h:14
-msgid "Increase zoom factor"
-msgstr "Zoomfactor vergroten"
-
-#: bonobo/ggv-control-ui.xml.h:15
-msgid "Other"
-msgstr "Ander type"
-
-#: bonobo/ggv-control-ui.xml.h:19
-msgid "Zoom the page to be as wide as the window"
-msgstr "Pagina-zoomfactor instellen op vensterbreedte"
-
-#: bonobo/ggv-control-ui.xml.h:20
-msgid "Zoom the page to fit in the window"
-msgstr "Pagina-zoomfactor instellen op passend in venster"
-
-#: bonobo/ggv-control-ui.xml.h:22
-#, no-c-format
-msgid "_100%"
-msgstr "_100%"
-
-#: bonobo/ggv-control-ui.xml.h:24
-#, no-c-format
-msgid "_200%"
-msgstr "_200%"
-
-#: bonobo/ggv-control-ui.xml.h:26
-#, no-c-format
-msgid "_400%"
-msgstr "_400%"
-
-#: bonobo/ggv-control-ui.xml.h:28
-#, no-c-format
-msgid "_50%"
-msgstr "_50%"
-
-#: bonobo/ggv-control-ui.xml.h:30
-#, no-c-format
-msgid "_75%"
-msgstr "_75%"
-
-#: bonobo/ggv-control-ui.xml.h:31
-msgid "_Auto-fit"
-msgstr "_Auto-inpassen"
-
-#: bonobo/ggv-control-ui.xml.h:32
-msgid "_Default Zoom"
-msgstr "_Standaard zoomfactor"
-
-#: bonobo/ggv-control-ui.xml.h:33
-msgid "_Fit Window"
-msgstr "_Schalen naar venstergrootte"
-
-#: bonobo/ggv-control-ui.xml.h:34
-msgid "_No Auto-fit"
-msgstr "_Niet auto-inpassen"
-
-#: bonobo/ggv-control-ui.xml.h:35
-msgid "_Zoom"
-msgstr "_Zoomen"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:1 src/ggvutils.c:59
-msgid "10x14"
-msgstr "10x14"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:2 src/ggvutils.c:49
-msgid "A0"
-msgstr "A0"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:3 src/ggvutils.c:50
-msgid "A1"
-msgstr "A1"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:4 src/ggvutils.c:51
-msgid "A2"
-msgstr "A2"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:5 src/ggvutils.c:52
-msgid "A3"
-msgstr "A3"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:6 src/ggvutils.c:53
-msgid "A4"
-msgstr "A4"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:7 src/ggvutils.c:54
-msgid "A5"
-msgstr "A5"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:8 src/ggvutils.c:55
-msgid "B4"
-msgstr "B4"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:9 src/ggvutils.c:56
-msgid "B5"
-msgstr "B5"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:10 src/ggvutils.c:42
+#: ps/gsdefaults.c:68
 msgid "BBox"
 msgstr "BBox"
 
-#: bonobo/ggv-postscript-view-ui.xml.h:11 src/ggvutils.c:48
-msgid "Executive"
-msgstr "Executive"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:13 src/ggvutils.c:57
-msgid "Folio"
-msgstr "Folio"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:14
-msgid "Go to first page"
-msgstr "Ga naar eerste pagina"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:15
-msgid "Go to last page"
-msgstr "Ga naar laatste pagina"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:16
-msgid "Go to next page"
-msgstr "Naar volgende pagina gaan"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:17
-msgid "Go to previous page"
-msgstr "Naar vorige pagina gaan"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:19 src/ggvutils.c:45
-msgid "Ledger"
-msgstr "Ledger"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:20 src/ggvutils.c:46
-msgid "Legal"
-msgstr "Legal"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:21 src/ggvutils.c:43
+# papierformaat heet ook letter
+#: ps/gsdefaults.c:69
 msgid "Letter"
 msgstr "Letter"
 
-#: bonobo/ggv-postscript-view-ui.xml.h:23
-msgid "Open the preferences dialog"
-msgstr "Voorkeuren-venster openen"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:24
-msgid "Post_Script Viewer Preferences"
-msgstr "Post_Scriptweergave voorkeuren"
-
-# prev en next zijn alletwee 4 letters. misschien moeten we het vertalen met Volg en Vorg
-#: bonobo/ggv-postscript-view-ui.xml.h:25
-msgid "Prev"
-msgstr "Vorige"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:27
-msgid "Print marked pages"
-msgstr "Gemarkeerde pagina's afdrukken"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:28
-msgid "Print the whole document"
-msgstr "Gehele document afdrukken"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:29 src/ggvutils.c:58
-msgid "Quarto"
-msgstr "Quarto"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:30
-msgid "Save marked pages to a file"
-msgstr "Gemarkeerde pagina's als een bestand opslaan"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:31 src/ggvutils.c:47
-msgid "Statement"
-msgstr "Statement"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:32 src/ggvutils.c:44
+#: ps/gsdefaults.c:70
 msgid "Tabloid"
 msgstr "Tabloid"
 
-#: bonobo/ggv-postscript-view-ui.xml.h:33
-msgid "_Document Orientation"
-msgstr "_Documentoriëntatie"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:34
-msgid "_Document Size"
-msgstr "Document_formaat"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:35 src/ggv-ui.xml.h:23
-msgid "_Edit"
-msgstr "Be_werken"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:37
-msgid "_First page"
-msgstr "_Eerste pagina"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:39
-msgid "_Landscape"
-msgstr "_Liggend"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:40
-msgid "_Last page"
-msgstr "_Laatste pagina"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:41
-msgid "_Next page"
-msgstr "_Volgende pagina"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:42
-msgid "_Orientation"
-msgstr "_Oriëntatie"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:43
-msgid "_Portrait"
-msgstr "_Staand"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:44
-msgid "_Previous page"
-msgstr "Vo_rige pagina"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:45
-msgid "_Print document"
-msgstr "Document _afdrukken"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:46
-msgid "_Print marked pages"
-msgstr "Gemarkeerde pagina's _afdrukken"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:47
-msgid "_Save marked pages"
-msgstr "Gemarkeerde pagina's _opslaan"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:48
-msgid "_Seascape"
-msgstr "_Zee-oriëntatie"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:49
-msgid "_Size"
-msgstr "_Formaat"
-
-#: bonobo/ggv-postscript-view-ui.xml.h:50
-msgid "_Upside down"
-msgstr "_Ondersteboven"
-
-#: bonobo/ggv-postscript-view.c:875
-#, c-format
-msgid ""
-"Unable to execute print command:\n"
-"%s"
-msgstr ""
-"Kan afdrukopdracht niet uitvoeren:\n"
-"%s"
-
-#: bonobo/ggv-postscript-view.c:932
-msgid ""
-"No pages have been marked.\n"
-"Do you want to save the whole document?"
-msgstr ""
-"U heeft geen pagina's gemarkeerd.\n"
-"Wilt u het gehele document opslaan?"
-
-#: bonobo/ggv-postscript-view.c:957
-msgid "Select a file to save pages as"
-msgstr "Selecteer een bestand om pagina's naar weg te schrijven"
-
-#: bonobo/ggv-postscript-view.c:965 src/ggv-window.c:334
-msgid "PostScript Documents"
-msgstr "PostScript documenten"
-
-#: bonobo/ggv-postscript-view.c:1010
-msgid ""
-"A file with this name already exists.\n"
-"Do you want to overwrite it?"
-msgstr ""
-"Er bestaat reeds een bestand met deze naam.\n"
-"Wilt u het overschrijven?"
-
-#: bonobo/ggv-postscript-view.c:1051
-msgid ""
-"No pages have been marked.\n"
-"Do you want to print the whole document?"
-msgstr ""
-"U heeft geen pagina's gemarkeerd.\n"
-"Wilt u het gehele document afdrukken?"
-
-#: bonobo/ggv-postscript-view.c:2118
-msgid "GhostScript output"
-msgstr "GhostScript-uitvoer"
-
-#: bonobo/ggv-postscript-view.c:2150
-msgid "Document title"
-msgstr "Documenttitel"
-
-#: bonobo/ggv-postscript-view.c:2153
-msgid "GGV control status"
-msgstr "GGV controlestatus"
-
-#: bonobo/ggv-postscript-view.c:2156
-msgid "Number of pages"
-msgstr "Aantal pagina's"
-
-#: bonobo/ggv-postscript-view.c:2159
-msgid "Page names"
-msgstr "Paginanamen"
-
-#: bonobo/ggv-postscript-view.c:2162
-msgid "Current page number"
-msgstr "Huidig paginanummer"
-
-#: bonobo/ggv-postscript-view.c:2165
-msgid "Document width"
-msgstr "Documentbreedte"
-
-#: bonobo/ggv-postscript-view.c:2168
-msgid "Document height"
-msgstr "Documenthoogte"
-
-#: bonobo/ggv-postscript-view.c:2172
-msgid "Document orientation"
-msgstr "Documentoriëntatie"
-
-#: bonobo/ggv-postscript-view.c:2175
-msgid "Default orientation"
-msgstr "Standaardoriëntatie"
-
-#: bonobo/ggv-postscript-view.c:2179
-msgid "Default size"
-msgstr "Standaardformaat"
-
-#: bonobo/ggv-postscript-view.c:2184
-msgid "Override document orientation"
-msgstr "Forceer documentoriëntatie"
-
-#: bonobo/ggv-postscript-view.c:2188
-msgid "Override document size"
-msgstr "Forceer documentformaat"
-
-#: bonobo/ggv-postscript-view.c:2192 ggv.schemas.in.h:21
-msgid "Respect EOF comment"
-msgstr "Respecteer EOF-commentaar"
-
-#: bonobo/ggv-postscript-view.c:2196
-msgid "Antialiasing"
-msgstr "Anti-aliasing"
-
-#: bonobo/ggv-sidebar.c:352
-msgid "Toggle marked state of all pages"
-msgstr "Gemarkeerd-staat van alle pagina's aan/uitzetten"
-
-#: bonobo/ggv-sidebar.c:353
-msgid ""
-"Toggle marked state of all pages: previously marked pages will be unmarked "
-"and unmarked ones will become marked."
-msgstr ""
-"Gemarkeerd-staat van alle pagina's aan-/uitzetten: van eerder gemarkeerde "
-"pagina's zal de markering worden verwijderd en ongemarkeerden zullen worden "
-"gemarkeerd."
-
-#: bonobo/ggv-sidebar.c:365
-msgid "Toggle marked state of odd pages"
-msgstr "Gemarkeerd-staat van oneven pagina's aan/uitzetten"
-
-#: bonobo/ggv-sidebar.c:366
-msgid ""
-"Toggle marked state of odd pages: previously marked odd pages will be "
-"unmarked and unmarked ones will become marked."
-msgstr ""
-"Gemarkeerd-staat van oneven pagina's aan-/uitzetten: van eerder gemarkeerde "
-"oneven pagina's zal de markering worden verwijderd en ongemarkeerden zullen "
-"worden gemarkeerd."
-
-#: bonobo/ggv-sidebar.c:380
-msgid "Toggle marked state of even pages"
-msgstr "Gemarkeerd-staat van even pagina's aan/uitzetten"
-
-#: bonobo/ggv-sidebar.c:381
-msgid ""
-"Toggle marked state of even pages: previously marked even pages will be "
-"unmarked and unmarked ones will become marked."
-msgstr ""
-"Gemarkeerd-staat van even pagina's aan-/uitzetten: van eerder gemarkeerde "
-"even pagina's zal de markering worden verwijderd en ongemarkeerden zullen "
-"worden gemarkeerd."
-
-#: bonobo/ggv-sidebar.c:395
-msgid "Clear marked state of all pages"
-msgstr "Gemarkeerd-staat van alle pagina's verwijderen"
-
-#: bonobo/ggv-sidebar.c:396
-msgid "Clear marked state of all pages: all pages will be unmarked."
-msgstr ""
-"Markering van alle pagina's verwijderen: de markering zal van alle pagina's "
-"verwijderd worden."
-
-#: ggv.desktop.in.h:1
-msgid "A Ghostscript frontend to visualize PostScript files"
-msgstr "Een ghostscript-schil om postscript-bestanden te visualiseren"
-
-#: ggv.desktop.in.h:2
-msgid "GGV PostScript Viewer"
-msgstr "GGV postscriptweergave"
-
-#: ggv.schemas.in.h:1
-msgid "Antialiased rendering"
-msgstr "Anti-aliased renderen"
-
-#: ggv.schemas.in.h:2
-msgid "Antialiasing arguments"
-msgstr "Anti-alias argumenten"
-
-# Betere vertaling?
-#: ggv.schemas.in.h:3
-msgid "Autojump"
-msgstr "Autospringen"
-
-#: ggv.schemas.in.h:4
-msgid "Command line arguments for antialiasing."
-msgstr "Opdrachtregel-opties voor antialiasing"
-
-#: ggv.schemas.in.h:5
-msgid "Command line used to execute the PostScript interpreter."
-msgstr "Opdracht waarmee de PostScript interpreter wordt opgestart."
-
-#: ggv.schemas.in.h:6
-msgid "Coordinate units"
-msgstr "Coördinaat-eenheden"
-
-#: ggv.schemas.in.h:7
-msgid "Default document orientation"
-msgstr "Standaard documentoriëntatie"
-
-#: ggv.schemas.in.h:8
-msgid "Default page size"
-msgstr "Standaard papierformaat"
-
-#: ggv.schemas.in.h:9
-msgid "Default zoom factor"
-msgstr "Standaard zoomfactor"
-
-#: ggv.schemas.in.h:10
-msgid ""
-"If true, the orientation specified by the document will be overriden with "
-"the default orientation."
-msgstr ""
-"Indien waar, heeft de standaard orientatie voorrang boven de orientatie die "
-"door het document wordt aangegeven."
-
-# orientatie gegeven door document negeren
-# door document gegeven orientatie verwerpen/negeren
-#: ggv.schemas.in.h:11
-msgid "Override document specified orientation"
-msgstr "Door document opgegeven oriëntatie negeren"
-
-#: ggv.schemas.in.h:12
-msgid "Override document specified page size"
-msgstr "Door document opgegeven papierformaat negeren"
-
-#: ggv.schemas.in.h:13
-msgid "PDF to DSC conversion command"
-msgstr "Opdracht waarmee PDF naar DSC wordt omgezet"
-
-#: ggv.schemas.in.h:14
-msgid "PDF to PS conversion command"
-msgstr "Opdracht waarmee PDF naar PS wordt omgezet"
-
-# betere vertaling?
-#: ggv.schemas.in.h:15
-msgid "Page flip"
-msgstr "Pagina omslaan"
-
-#: ggv.schemas.in.h:16
-msgid "Panel on right-hand side"
-msgstr "Zijpaneel aan rechterkant plaatsen"
-
-#: ggv.schemas.in.h:17
-msgid "Percentage of the viewable area to move when scrolling."
-msgstr ""
-"Bij schuiven, het percentage van het zichtbare gedeelte dat bewogen wordt."
-
-# percentage ipv grootte?
-#: ggv.schemas.in.h:18
-msgid "Percentage of the viewable area to scroll"
-msgstr "Grootte van het te verschuiven zichtbare gedeelte"
-
-#: ggv.schemas.in.h:19
-msgid "PostScript interpreter command"
-msgstr "PostScript-interpreter opdracht"
-
-#: ggv.schemas.in.h:20
-msgid "Printing command"
-msgstr "Printopdracht"
-
-#: ggv.schemas.in.h:22
-msgid "Save window geometry"
-msgstr "Afmetingen opslaan"
-
-#: ggv.schemas.in.h:23
-msgid "Show menubar"
-msgstr "Menubalk tonen"
-
-#: ggv.schemas.in.h:24
-msgid "Show previous visible area when scrolling"
-msgstr "Bij schuiven laatst zichtbare gedeelte tonen"
-
-#: ggv.schemas.in.h:25
-msgid "Show side panel"
-msgstr "Zijpaneel tonen"
-
-#: ggv.schemas.in.h:26
-msgid "Show statusbar"
-msgstr "Statusbalk tonen"
-
-#: ggv.schemas.in.h:27
-msgid "Show toolbar"
-msgstr "Werkbalk tonen"
-
-#: ggv.schemas.in.h:28
-msgid "The command line used to convert PDF files to PostScript."
-msgstr "De opdrachtregel waarmee PDF-bestanden worden omgezet naar PostScript."
-
-#: ggv.schemas.in.h:29
-msgid "The command line used to create PostScript DSC files from PDF files."
-msgstr ""
-"De opdrachtregel waarmee PostScript DSC-bestanden worden omgezet naar PDF-"
-"bestanden."
-
-#: ggv.schemas.in.h:30
-msgid "The command used to unpack files compressed with bzip2."
-msgstr ""
-"De opdracht waarmee bestanden die gecomprimeerd zijn met bzip2 worden "
-"uitgepakt."
-
-#: ggv.schemas.in.h:31
-msgid "The command used to unpack files compressed with gzip."
-msgstr ""
-"De opdracht waarmee bestanden die gecomprimeerd zijn met gzip worden "
-"uitgepakt."
-
-#: ggv.schemas.in.h:32
-msgid ""
-"The default page size to use when no page size is specified by the document "
-"or when the user wishes to override the size specified in the document."
-msgstr " moet worden getoond."
-
-#: ggv.schemas.in.h:33
-msgid ""
-"The default zoom factor for the document. The value should belong to the "
-"interval [0.05, 30.0]."
-msgstr ""
-"De standaard zoomfactor voor het document. De waarde moet liggen binnen het "
-"interval [0,05; 30,0]."
-
-#: ggv.schemas.in.h:34
-msgid "The height of the viewer's window."
-msgstr "De hoogte van het venster."
-
-# trema's
-#: ggv.schemas.in.h:35
-msgid ""
-"The orientation to use when the document defines no orientation or when the "
-"user wishes to override the document specified orientation."
-msgstr ""
-"De orientatie wanneer deze niet door het document wordt gegeven of wanneer "
-"de gebruiker de gegeven orientatie wil forceren."
-
-#: ggv.schemas.in.h:36
-msgid "The shell command used to print files."
-msgstr "De opdrachtregel waarmee bestanden worden afgedrukt."
-
-#: ggv.schemas.in.h:37
-msgid "The width of the viewer's window."
-msgstr "De breedte van het venster."
-
-#: ggv.schemas.in.h:38
-msgid "Toolbar style"
-msgstr "Werkbalk-stijl"
-
-#: ggv.schemas.in.h:39
-msgid "Unbzip2 command"
-msgstr "Unbizp2 opdracht"
-
-#: ggv.schemas.in.h:40
-msgid "Ungzip command"
-msgstr "Ungzip opdracht"
-
-# trema
-#: ggv.schemas.in.h:41
-msgid "Units for the coordinate display."
-msgstr "De getoonde coordinaat-eenheden."
-
-#: ggv.schemas.in.h:42
-msgid "Viewer window height"
-msgstr "Hoogte weergavevenster"
-
-#: ggv.schemas.in.h:43
-msgid "Viewer window width"
-msgstr "Breedte weergavevenster"
-
-#: ggv.schemas.in.h:44
-msgid "Watch document for changes"
-msgstr "Beeld verversen als bestand verandert"
-
-# hoewel het beide kanten op werkt is het idee duidelijk zo
-#: ggv.schemas.in.h:45
-msgid ""
-"Whether GGV should automatically flip pages when you scroll to the edge."
-msgstr ""
-"Of GGV automatisch de volgende pagina moet tonen als bij het schuiven de "
-"onderkant wordt bereikt."
-
-#: ggv.schemas.in.h:46
-msgid ""
-"Whether the PostScript display widget should poll the viewed file for "
-"changes and reload it if it changes."
-msgstr ""
-"Of het PostScript weergave-widget regelmatig moet controleren of het bestand "
-"veranderd is, en het indien nodig herlaadt."
-
-#: ggv.schemas.in.h:47
-msgid ""
-"Whether the PostScript display widget should use its default page size "
-"instead of the one specified in the document."
-msgstr ""
-"Of het PostScript weergave-widget het standaard papierformaat moet gebruiken "
-"of het formaat zoals aangegeven in het document zelf."
-
-#: ggv.schemas.in.h:48
-msgid ""
-"Whether the PostScript display widget will respect the End Of File comment. "
-"If true, the widget will only parse the document until EOF comment."
-msgstr ""
-"Of het PostScript weergave-widget rekening houdt met een End Of FIle.  "
-"Indien waar, zal het widget het document verwerken totdat het het EOF "
-"tegenkomt."
-
-#: ggv.schemas.in.h:49
-msgid ""
-"Whether the control should jump to next page when using keyboard to scroll."
-msgstr ""
-"Of bij het schuiven via het toetsenbord vanzelf naar de volgende pagina "
-"wordt gesprongen."
-
-#: ggv.schemas.in.h:50
-msgid "Whether the document should be rendered in an antialiased mode."
-msgstr "Of anti-alias moet worden gebruikt bij het weergeven van het document."
-
-#: ggv.schemas.in.h:51
-msgid "Whether the menubar should be visible by default."
-msgstr "Of de menubalk standaard zichtbaar moet zijn."
-
-# Of het zijpaneel moet worden getoond, rechts van het weergavegebied.
-#: ggv.schemas.in.h:52
-msgid "Whether the side panel should appear on the right of the display area."
-msgstr "Of het zijpaneel getoond moet worden aan de rechterzijde."
-
-#: ggv.schemas.in.h:53
-msgid "Whether the side panel should be visible by default."
-msgstr "Of het zijpaneel standaard zichtbaar moet zijn."
-
-#: ggv.schemas.in.h:54
-msgid "Whether the statusbar should be visible by default."
-msgstr "Of de statusbalk standaard zichtbaar moet zijn."
-
-#: ggv.schemas.in.h:55
-msgid ""
-"Whether the toolbar buttons show icons, text, both or use the GNOME-wide "
-"default."
-msgstr ""
-"Of de werkbalkknoppen pictogrammen, tekst, of beide tonen, of hiervoor de "
-"GNOME-standaard volgen."
-
-#: ggv.schemas.in.h:56
-msgid "Whether the toolbar should be visible by default."
-msgstr "Of de werkbalk standaard zichtbaar moet zijn."
-
-# rand ipv rechthoek?
-#: ggv.schemas.in.h:57
-msgid ""
-"Whether the user wants to see a rectangle outlining the previously visible "
-"area when scrolling."
-msgstr ""
-"Of de gebruiker bij het schuiven een rechthoek te zien krijgt die het oude "
-"zichtbare gedeelte aangeeft."
-
-# onthouden ipv opslaan en herstellen?
-#: ggv.schemas.in.h:58
-msgid "Whether the viewer should save and restore the window geometry."
-msgstr "Of de viewer de vensterafmetingen moet opslaan en herstellen."
-
-#: src/ggv-prefs-ui.c:523
-msgid "_Use GNOME defaults"
-msgstr "GNOME-standaardinstellingen gebr_uiken"
-
-#: src/ggv-prefs-ui.c:524
-msgid "Show _both icons and text"
-msgstr "_Zowel pictogrammen als tekst tonen"
-
-#: src/ggv-prefs-ui.c:525
-msgid "Show only _icons"
-msgstr "Alleen p_ictogrammen tonen"
-
-#: src/ggv-prefs-ui.c:526
-msgid "Show only t_ext"
-msgstr "Alleen t_ekst tonen"
-
-#: src/ggv-prefs-ui.c:559
-msgid "GGV Preferences"
-msgstr "GGV-voorkeuren"
-
-#. zoom choice menu
-#: src/ggv-prefs-ui.c:565
-msgid "Default _Zoom:"
-msgstr "Stan_daard zoomfactor:"
-
-#. auto-fit choice menu
-#: src/ggv-prefs-ui.c:593
-msgid "A_uto-fit mode:"
-msgstr "A_uto-inpasmodus:"
-
-#. units choice menu
-#: src/ggv-prefs-ui.c:618
-msgid "Coordinate _units:"
-msgstr "_Coördinaat-eenheden:"
-
-#. size choice menu
-#: src/ggv-prefs-ui.c:642
-msgid "_Fallback page size:"
-msgstr "Terugval-papier_formaat:"
-
-#: src/ggv-prefs-ui.c:665
-msgid "Override _document size"
-msgstr "_Documentformaat forceren"
-
-#. orientation choice menu
-#: src/ggv-prefs-ui.c:674
-msgid "Fallback _media orientation:"
-msgstr "Terugval-_mediaoriëntatie:"
-
-#: src/ggv-prefs-ui.c:698
-msgid "O_verride document orientation"
-msgstr "D_ocumentoriëntatie forceren"
-
-#. antialiasing
-#: src/ggv-prefs-ui.c:707
-msgid "A_ntialiasing"
-msgstr "A_nti-aliasing"
-
-#: src/ggv-prefs-ui.c:718
-msgid "_Respect EOF comments"
-msgstr "EOF-commentaar _respecteren"
-
-#. watch file
-#: src/ggv-prefs-ui.c:727
-msgid "_Watch file"
-msgstr "Bestand blij_ven volgen"
-
-#: src/ggv-prefs-ui.c:736
-msgid "Document"
-msgstr "Document"
-
-#. show side panel
-#: src/ggv-prefs-ui.c:745
-msgid "_Show side panel"
-msgstr "_Zijpaneel tonen"
-
-#: src/ggv-prefs-ui.c:756
-msgid "_Put side panel on the right-hand side"
-msgstr "Zij_paneel aan rechterkant plaatsen"
-
-#. show menubar
-#: src/ggv-prefs-ui.c:765
-msgid "Show _menubar"
-msgstr "_Menubalk tonen"
-
-#. show toolbar
-#: src/ggv-prefs-ui.c:774
-msgid "Show _toolbar"
-msgstr "Werkbalk _tonen"
-
-#. show statusbar
-#: src/ggv-prefs-ui.c:784
-msgid "Show statusba_r"
-msgstr "Status_balk tonen"
-
-#. save geometry
-#: src/ggv-prefs-ui.c:794
-msgid "Save _geometry"
-msgstr "Afmetin_gen opslaan"
-
-#: src/ggv-prefs-ui.c:803
-msgid "Layout"
-msgstr "Lay-out"
-
-#: src/ggv-prefs-ui.c:814
-msgid "_Jump to beginning of page"
-msgstr "Naar _begin van pagina springen"
-
-#: src/ggv-prefs-ui.c:823
-msgid "Automatically _flip pages"
-msgstr "Pagina's automatisch _omslaan"
-
-#: src/ggv-prefs-ui.c:834
-msgid "Outline _last visible part when scrolling"
-msgstr "Bij schuiven _laatst zichtbare gedeelte omranden"
-
-#: src/ggv-prefs-ui.c:845
-msgid "Amount of _visible area to scroll"
-msgstr "Grootte van te _verschuiven zichtbaar gedeelte"
-
-#: src/ggv-prefs-ui.c:858
-msgid "Navigation"
-msgstr "Navigatie"
-
-#. interpreter
-#: src/ggv-prefs-ui.c:867
-msgid "_Interpreter:"
-msgstr "_Interpreter:"
-
-#. antialiasing
-#: src/ggv-prefs-ui.c:887
-msgid "A_ntialiasing:"
-msgstr "A_nti-aliasing:"
-
-# In overeenstemming met de andere berichten
-#. PDF->DSC command
-#: src/ggv-prefs-ui.c:907
-msgid "Convert _PDF to DSC file:"
-msgstr "Opdracht waarmee _PDF wordt omgezet naar DSC:"
-
-#. scan PDF command
-#: src/ggv-prefs-ui.c:931
-msgid "Convert _PDF to PS:"
-msgstr "_PDF converteren naar PS:"
-
-#. unzip command: gzip
-#: src/ggv-prefs-ui.c:955
-msgid "_Gzip:"
-msgstr "_Gzip:"
-
-#. unzip command: bzip2
-#: src/ggv-prefs-ui.c:975
-msgid "_Bzip2:"
-msgstr "_Bzip2:"
-
-#: src/ggv-prefs-ui.c:994
-msgid "Ghostscript"
-msgstr "Ghostscript"
-
-#. print command
-#: src/ggv-prefs-ui.c:1003
-msgid "_Print command:"
-msgstr "_Printopdracht:"
-
-#: src/ggv-ui.xml.h:2
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: src/ggv-ui.xml.h:3
-msgid "Close this window"
-msgstr "Dit venster sluiten"
-
-#: src/ggv-ui.xml.h:4
-msgid "Help for this application"
-msgstr "Hulp bij deze toepassing"
-
-#: src/ggv-ui.xml.h:6
-msgid "Open a new PostScript document"
-msgstr "Een nieuw PostScript-document openen"
-
-#: src/ggv-ui.xml.h:7
-msgid "Open in new window"
-msgstr "In nieuw venster openen"
-
-#: src/ggv-ui.xml.h:8
-msgid "Open in this window"
-msgstr "In dit venster openen"
-
-#: src/ggv-ui.xml.h:9
-msgid "Reload"
-msgstr "Herladen"
-
-#: src/ggv-ui.xml.h:10
-msgid "Reload current document"
-msgstr "Huidig document verversen"
-
-#: src/ggv-ui.xml.h:11
-msgid "Show Side_bar"
-msgstr "_Zijbalk tonen"
-
-#: src/ggv-ui.xml.h:12
-msgid "Show _Menus"
-msgstr "_Menu's tonen"
-
-#: src/ggv-ui.xml.h:13
-msgid "Show _Statusbar"
-msgstr "_Statusbalk tonen"
-
-#: src/ggv-ui.xml.h:14
-msgid "Show _Toolbar"
-msgstr "_Werkbalk tonen"
-
-#: src/ggv-ui.xml.h:15
-msgid "Show/hide the menus"
-msgstr "Menu's tonen/verbergen"
-
-#: src/ggv-ui.xml.h:16
-msgid "Show/hide the sidebar"
-msgstr "Zijbalk tonen/verbergen"
-
-#: src/ggv-ui.xml.h:17
-msgid "Show/hide the statusbar"
-msgstr "Statusbalk tonen/verbergen"
-
-#: src/ggv-ui.xml.h:18
-msgid "Show/hide the toolbar"
-msgstr "Werkbalk tonen/verbergen"
-
-#: src/ggv-ui.xml.h:27
-msgid "_Layout"
-msgstr "_Lay-out"
-
-#: src/ggv-ui.xml.h:28
-msgid "_Open"
-msgstr "_Openen"
-
-#: src/ggv-ui.xml.h:29
-msgid "_Reload"
-msgstr "He_rladen"
-
-#: src/ggv-window.c:271 src/ggv-window.c:380 src/ggv-window.c:601
-#: src/ggv-window.c:641 src/ggv-window.c:950 src/ggv-window.c:1289
-#, c-format
-msgid ""
-"Unable to load file:\n"
-"%s"
-msgstr ""
-"Kan bestand niet laden:\n"
-"%s"
-
-#: src/ggv-window.c:307 src/ggv-window.c:1032
-msgid "GGV: no document loaded"
-msgstr "GGV: geen document geladen"
-
-#: src/ggv-window.c:323
-msgid "Select a PostScript document"
-msgstr "Selecteer een PostScript document"
-
-#: src/ggv-window.c:516
-msgid "Jaka Mocnik (current maintainer)"
-msgstr "Jaka Mocnik (huidige beheerder)"
-
-#: src/ggv-window.c:526
-msgid "And many more..."
-msgstr "En vele anderen..."
-
-#: src/ggv-window.c:533
-msgid "translator_credits"
-msgstr ""
-"Dennis Smit <synap@area101.penguin.nl>\n"
-"Reinout van Schouwen <reinout@cs.vu.nl><\n"
-"Tino Meinen <a.t.meinen@chello.nl>"
-
-#: src/ggv-window.c:547
-msgid "Gnome Ghostview"
-msgstr "Gnome Ghostview"
-
-#: src/ggv-window.c:550
-msgid "The GNOME PostScript document previewer"
-msgstr "De GNOME-viewer voor PostScript-documenten"
-
-#: src/ggv-window.c:975
-msgid "Open recent files"
-msgstr "Een recent bestand openen"
-
-#: src/ggv-window.c:1075
-msgid "Open a file."
-msgstr "Een bestand openen."
-
-#: src/ggv-window.c:1249
-msgid " - GGV"
-msgstr " - GGV"
-
-#: src/ggvutils.c:71
-msgid "Portrait"
-msgstr "Staand"
-
-#: src/ggvutils.c:72
-msgid "Landscape"
-msgstr "Liggend"
-
-#: src/ggvutils.c:73
-msgid "Upside Down"
-msgstr "Ondersteboven"
-
-#: src/ggvutils.c:74
-msgid "Seascape"
-msgstr "Zee-oriëntatie"
-
-#: src/ggvutils.c:82
-msgid "inch"
-msgstr "inch"
-
-#: src/ggvutils.c:83
-msgid "mm"
-msgstr "mm"
-
-#: src/ggvutils.c:84
-msgid "cm"
-msgstr "cm"
-
-#: src/ggvutils.c:85
-msgid "point"
-msgstr "punt"
-
-#: src/ggvutils.c:107
-msgid "Fit to page width"
-msgstr "Schalen naar paginabreedte"
-
-#: src/ggvutils.c:107
-msgid "Fit to page size"
-msgstr "Schalen naar paginagrootte"
-
-#: src/ggvutils.c:317
-#, c-format
-msgid "Unable to load ggv stock icon '%s'\n"
-msgstr "Kan het standaard pictogram voor ggv '%s' niet laden\n"
-
-#: src/gtkgs.c:379
+#: ps/gsdefaults.c:71
+msgid "Ledger"
+msgstr "Ledger"
+
+#: ps/gsdefaults.c:72
+msgid "Legal"
+msgstr "Legal"
+
+#: ps/gsdefaults.c:73
+msgid "Statement"
+msgstr "Statement"
+
+#: ps/gsdefaults.c:74
+msgid "Executive"
+msgstr "Executive"
+
+#: ps/gsdefaults.c:75
+msgid "A0"
+msgstr "A0"
+
+#: ps/gsdefaults.c:76
+msgid "A1"
+msgstr "A1"
+
+#: ps/gsdefaults.c:77
+msgid "A2"
+msgstr "A2"
+
+#: ps/gsdefaults.c:78
+msgid "A3"
+msgstr "A3"
+
+#: ps/gsdefaults.c:79
+msgid "A4"
+msgstr "A4"
+
+#: ps/gsdefaults.c:80
+msgid "A5"
+msgstr "A5"
+
+#: ps/gsdefaults.c:81
+msgid "B4"
+msgstr "B4"
+
+#: ps/gsdefaults.c:82
+msgid "B5"
+msgstr "B5"
+
+#: ps/gsdefaults.c:83
+msgid "Folio"
+msgstr "Folio"
+
+#: ps/gsdefaults.c:84
+msgid "Quarto"
+msgstr "Quarto"
+
+#: ps/gsdefaults.c:85
+msgid "10x14"
+msgstr "10x14"
+
+#: ps/ps-document.c:285
 msgid "No document loaded."
 msgstr "Geen document geladen"
 
-#: src/gtkgs.c:492
-msgid "File is not a valid PostScript document."
-msgstr "Bestand is geen geldig PostScript-document"
-
-#: src/gtkgs.c:1019
+#: ps/ps-document.c:677
 msgid "Broken pipe."
 msgstr "Gebroken pijp."
 
-#: src/gtkgs.c:1208
+#: ps/ps-document.c:867
 msgid "Interpreter failed."
 msgstr "Analyse is mislukt."
 
 #. report error
-#: src/gtkgs.c:1312
+#: ps/ps-document.c:989
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Fout bij het decomprimeren van %s:\n"
 
-#: src/gtkgs.c:1418
+#: ps/ps-document.c:1095
 #, c-format
 msgid "Error while converting pdf file %s:\n"
 msgstr "Fout bij het converteren van pdf-bestand %s:\n"
 
-#: src/gtkgs.c:1744
+#: ps/ps-document.c:1274
+msgid "File is not a valid PostScript document."
+msgstr "Bestand is geen geldig PostScript-document"
+
+#: ps/ps-document.c:1323
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Kan bestand %s niet openen.\n"
 
-#: src/gtkgs.c:1746
+#: ps/ps-document.c:1325
 msgid "File is not readable."
 msgstr "Bestand is onleesbaar"
 
-#: src/gtkgs.c:1765
+#: ps/ps-document.c:1346
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Fout bij het analyseren van bestand %s\n"
 
-#: src/gtkgs.c:1768
+#: ps/ps-document.c:1349
 msgid "The file is not a PostScript document."
 msgstr "Het bestand is geen PostScript-document"
 
-#: src/gtkgs.c:1800
+#: ps/ps-document.c:1380
 msgid "Document loaded."
 msgstr "Document geladen."
 
-#: src/main.c:75
+#: shell/eggfindbar.c:141
+msgid "Search string"
+msgstr "Zoektekst"
+
+#: shell/eggfindbar.c:142
+msgid "The name of the string to be found"
+msgstr "De naam van een te zoeken tekenreeks "
+
+#: shell/eggfindbar.c:155
+msgid "Case sensitive"
+msgstr "Hoofdlettergevoelig"
+
+#: shell/eggfindbar.c:156
+msgid "TRUE for a case sensitive search"
+msgstr "WAAR voor een hoofdlettergevoelige zoekopdracht"
+
+#: shell/eggfindbar.c:163
+msgid "Highlight color"
+msgstr "Oplichtkleur"
+
+#: shell/eggfindbar.c:164
+msgid "Color of highlight for all matches"
+msgstr "Kleur waarmee de overeenkomst belicht wordt"
+
+#: shell/eggfindbar.c:170
+msgid "Current color"
+msgstr "Huidige kleur"
+
+#: shell/eggfindbar.c:171
+msgid "Color of highlight for the current match"
+msgstr "De oplichtkleur van het huidige zoekresultaat"
+
+#: shell/eggfindbar.c:288
+msgid "F_ind:"
+msgstr "_Zoeken:"
+
+#: shell/eggfindbar.c:301
+msgid "_Previous"
+msgstr "V_orige"
+
+#: shell/eggfindbar.c:302
+msgid "_Next"
+msgstr "_Volgende"
+
+#: shell/eggfindbar.c:314
+msgid "C_ase Sensitive"
+msgstr "_Hoofdlettergevoelig"
+
+#: shell/ev-application.c:120
+msgid "Open document"
+msgstr "Document openen"
+
+#: shell/ev-application.c:130
+msgid "PostScript and PDF Documents"
+msgstr "PostScript en PDF documenten"
+
+#: shell/ev-application.c:136
+msgid "PostScript Documents"
+msgstr "PostScript documenten"
+
+#: shell/ev-application.c:141 shell/ev-window.c:582
+msgid "PDF Documents"
+msgstr "PDF-documenten"
+
+#: shell/ev-application.c:146
+msgid "Images"
+msgstr "Afbeeldingen"
+
+#: shell/ev-application.c:151 shell/ev-window.c:587
+msgid "All Files"
+msgstr "Alle bestanden"
+
+# misschien beter: uit (ipv van): pagina 1 uit 5
+#: shell/ev-page-action.c:72
 #, c-format
-msgid "Invalid geometry string \"%s\"\n"
-msgstr "Ongeldige afmetingen-string \"%s\"\n"
+msgid "of %d"
+msgstr "uit %d"
 
-#: src/main.c:190
-msgid "Specify the number of empty windows to open."
-msgstr "Geef het aantal te openen lege vensters."
+#: shell/ev-view.c:562
+#, c-format
+msgid "Go to page %d"
+msgstr "Ga naar pagina %d"
 
-#: src/main.c:191
-msgid "Number of empty windows"
-msgstr "Aantal lege vensters"
+#: shell/ev-view.c:939
+msgid "Not found"
+msgstr "Niet gevonden"
 
-#: src/main.c:193
-msgid "X geometry specification (see \"X\" man page)."
-msgstr "X afmetingen-specificatie (zie de \"X\" man-pagina)."
+#: shell/ev-view.c:941
+#, c-format
+msgid "%3d%% remaining to search"
+msgstr "Nog %3d%% te doorzoeken"
 
-#: src/main.c:194
-msgid "GEOMETRY"
-msgstr "GEOMETRIE"
+# hekje hier weggelaten, omdat wij dat eigenlijk niet gebruiken
+#: shell/ev-view.c:946
+#, c-format
+msgid "Found on page %d"
+msgstr "Gevonden op pagina %d"
+
+# overeenkomsten/gevonden/maal gevonden
+#: shell/ev-view.c:949
+#, c-format
+msgid "%d found on this page"
+msgstr "%d maal gevonden op deze pagina"
+
+# niet in staat/kon
+#: shell/ev-window.c:283
+msgid "Unable to open document"
+msgstr "Kon het document niet openen"
+
+# viewer is ook nederlands
+#: shell/ev-window.c:334
+msgid "Document Viewer"
+msgstr "Document-viewer"
+
+# vrij vertaald
+#: shell/ev-window.c:485
+#, c-format
+msgid "Unhandled MIME type: '%s'"
+msgstr "MIME-type '%s' niet bekend"
+
+#: shell/ev-window.c:554
+#, c-format
+msgid "The file could not be saved as \"%s\"."
+msgstr "Het bestand kon niet worden opgeslagen als \"%s\"."
+
+#: shell/ev-window.c:574
+msgid "Save a Copy"
+msgstr "Een kopie opslaan"
+
+#: shell/ev-window.c:652
+msgid "Print"
+msgstr "Afdrukken"
+
+#: shell/ev-window.c:675
+msgid "Printing is not supported on this printer."
+msgstr "Afdrukken is niet ondersteund met deze printer."
+
+#: shell/ev-window.c:678
+#, c-format
+msgid ""
+"You were trying to print to a printer using the \"%s\" driver. This program "
+"requires a PostScript printer driver."
+msgstr "U probeerde af te drukken naar een printer met het stuurprogramma \"%s\". Dit programma heeft een stuurprogramma voor een PostScript-printer nodig."
+
+# beschikbaar zijn/werken
+#: shell/ev-window.c:730
+msgid "The \"Find\" feature will not work with this document"
+msgstr "De zoekmogelijkheid zal niet in dit document werken"
+
+# vrij vertaald
+#: shell/ev-window.c:732
+msgid "Searching for text is only supported for PDF documents."
+msgstr "Zoeken naar tekst is alleen mogelijk in PDF documenten."
+
+# uitzetten?
+#: shell/ev-window.c:879
+msgid "Exit Fullscreen"
+msgstr "Volledig scherm verlaten"
+
+#: shell/ev-window.c:1075
+msgid "Many..."
+msgstr "Veel..."
+
+#: shell/ev-window.c:1080
+msgid "Not so many..."
+msgstr "Niet zo veel..."
+
+#: shell/ev-window.c:1085
+msgid ""
+"Evince is free software; you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation; either version 2 of the License, or\n"
+"(at your option) any later version.\n"
+msgstr ""
+
+#: shell/ev-window.c:1089
+msgid ""
+"Evince is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+msgstr ""
+
+#: shell/ev-window.c:1093
+msgid ""
+"You should have received a copy of the GNU General Public License\n"
+"along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
+"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr ""
+
+#: shell/ev-window.c:1115 shell/main.c:80
+msgid "Evince"
+msgstr "Evince"
+
+#: shell/ev-window.c:1118
+msgid "© 1996-2004 The Evince authors"
+msgstr "© 1996-2004 De Evince auteurs"
+
+#: shell/ev-window.c:1121
+msgid "PostScript and PDF File Viewer."
+msgstr "PostScript en PDF bestands-viewer."
+
+#: shell/ev-window.c:1124
+msgid "translator-credits"
+msgstr ""
+"Tino Meinen\n"
+"Kijk voor meer info op http://nl.gnome.org/"
+
+#: shell/ev-window.c:1399
+msgid "_File"
+msgstr "_Bestand"
+
+#: shell/ev-window.c:1400
+msgid "_Edit"
+msgstr "Be_werken"
+
+#: shell/ev-window.c:1401
+msgid "_View"
+msgstr "Beel_d"
+
+# in overeenstemming met Nautilus: Ga naar
+#: shell/ev-window.c:1402
+msgid "_Go"
+msgstr "_Ga naar"
+
+#: shell/ev-window.c:1403
+msgid "_Help"
+msgstr "_Hulp"
+
+#. File menu
+#: shell/ev-window.c:1406
+msgid "_Open"
+msgstr "_Openen"
+
+#: shell/ev-window.c:1407
+msgid "Open a file"
+msgstr "Bestand openen"
+
+#: shell/ev-window.c:1409
+msgid "_Save a Copy..."
+msgstr "Een kopie op_slaan..."
+
+#: shell/ev-window.c:1410
+msgid "Save the current document with a new filename"
+msgstr "Het huidige document onder een nieuwe naam opslaan"
+
+#: shell/ev-window.c:1412
+msgid "_Print"
+msgstr "Af_drukken"
+
+#: shell/ev-window.c:1413
+msgid "Print this document"
+msgstr "Dit document afdrukken"
+
+#: shell/ev-window.c:1415
+msgid "_Close"
+msgstr "Sl_uiten"
+
+#: shell/ev-window.c:1416
+msgid "Close this window"
+msgstr "Dit venster sluiten"
+
+#. Edit menu
+#: shell/ev-window.c:1420
+msgid "_Copy"
+msgstr "_Kopiëren"
+
+#: shell/ev-window.c:1421
+msgid "Copy text from the document"
+msgstr "Tekst uit het document kopiëren"
+
+#: shell/ev-window.c:1423
+msgid "Select _All"
+msgstr "_Alles selecteren"
+
+#: shell/ev-window.c:1424
+msgid "Select the entire page"
+msgstr "De gehele pagina bekijken"
+
+#: shell/ev-window.c:1426
+msgid "_Find"
+msgstr "_Zoeken"
+
+#: shell/ev-window.c:1427
+msgid "Find a word or phrase in the document"
+msgstr "Een woord of frase in het document zoeken"
+
+#. View menu
+#: shell/ev-window.c:1431
+msgid "Zoom _In"
+msgstr "_Inzoomen"
+
+#: shell/ev-window.c:1432
+msgid "Enlarge the document"
+msgstr "Het document vergroten"
+
+#: shell/ev-window.c:1434
+msgid "Zoom _Out"
+msgstr "_Uitzoomen"
+
+#: shell/ev-window.c:1435
+msgid "Shrink the document"
+msgstr "Het document verkleinen"
+
+# afmetingen/grootte
+#: shell/ev-window.c:1437
+msgid "_Normal Size"
+msgstr "_Normale grootte"
+
+#: shell/ev-window.c:1438
+msgid "Zoom to the normal size"
+msgstr "Inzoomen op normale grootte"
+
+#: shell/ev-window.c:1440
+msgid "_Best Fit"
+msgstr "_Best passend"
+
+#: shell/ev-window.c:1441
+msgid "Zoom to fit the document to the current window"
+msgstr "Zoomen zodat de pagina in het huidige venster past"
+
+#: shell/ev-window.c:1443
+msgid "Fit Page _Width"
+msgstr "Pagina_breed passend"
+
+#: shell/ev-window.c:1444
+msgid "Zoom to fit the width of the current window "
+msgstr "Zoomen zodat de breedte van het venster volledig benut wordt"
+
+#. Go menu
+#: shell/ev-window.c:1448
+msgid "_Back"
+msgstr "_Terug"
+
+#: shell/ev-window.c:1449 shell/ev-window.c:1452
+msgid "Go to the page viewed before this one"
+msgstr "Ga naar de pagina die u hiervoor heeft bekeken"
+
+#: shell/ev-window.c:1451
+msgid "Fo_rward"
+msgstr "_Vooruit"
+
+#: shell/ev-window.c:1454
+msgid "_Page Up"
+msgstr "_Pagina terug"
+
+#: shell/ev-window.c:1455
+msgid "Go to the previous page"
+msgstr "Ga naar de vorige pagina"
+
+#: shell/ev-window.c:1457
+msgid "_Page Down"
+msgstr "_Pagina heen"
+
+#: shell/ev-window.c:1458
+msgid "Go to the next page"
+msgstr "Ga naar de volgende pagina"
+
+#: shell/ev-window.c:1460
+msgid "_First Page"
+msgstr "_Eerste pagina"
+
+#: shell/ev-window.c:1461
+msgid "Go to the first page"
+msgstr "Ga naar de eerste pagina"
+
+#: shell/ev-window.c:1463
+msgid "_Last Page"
+msgstr "_Laatste pagina"
+
+#: shell/ev-window.c:1464
+msgid "Go to the last page"
+msgstr "Ga naar de laatste pagina"
+
+#. Help menu
+#: shell/ev-window.c:1468
+msgid "_Contents"
+msgstr "_Inhoud"
+
+# vrij vertaald
+#: shell/ev-window.c:1469
+msgid "Display help for the viewer application"
+msgstr "De hulp bij deze viewer weergeven"
+
+#: shell/ev-window.c:1472
+msgid "_About"
+msgstr "In_fo"
+
+# weergeven/tonen/voorstellen
+#: shell/ev-window.c:1473
+msgid "Display credits for the document viewer creators"
+msgstr "De makers van de documentviewer tonen"
+
+#. View Menu
+#: shell/ev-window.c:1480
+msgid "_Toolbar"
+msgstr "_Werkbalk"
+
+#: shell/ev-window.c:1481
+msgid "Show or hide toolbar"
+msgstr "Werkbalk tonen/verbergen"
+
+#: shell/ev-window.c:1483
+msgid "_Statusbar"
+msgstr "_Statusbalk"
+
+#: shell/ev-window.c:1484
+msgid "Show or hide statusbar"
+msgstr "Statusbalk tonen/verbergen"
+
+#: shell/ev-window.c:1486
+msgid "Side_bar"
+msgstr "_Zijbalk"
+
+#: shell/ev-window.c:1487
+msgid "Show or hide sidebar"
+msgstr "Zijbalk tonen/verbergen"
+
+# schermvullend
+#: shell/ev-window.c:1489
+msgid "_Fullscreen"
+msgstr "_Volledig scherm"
+
+#: shell/ev-window.c:1490
+msgid "Expand the window to fill the screen"
+msgstr "Het venster schermvullend maken"
+
+#: shell/ev-window.c:1511
+msgid "Back"
+msgstr "Terug"
+
+#: shell/ev-window.c:1513
+msgid "Go back"
+msgstr "Ga terug"
+
+#: shell/ev-window.c:1514
+msgid "Back history"
+msgstr "Teruggaan overzicht"
+
+#: shell/ev-window.c:1525
+msgid "Forward"
+msgstr "Vooruit"
+
+#: shell/ev-window.c:1527
+msgid "Go forward"
+msgstr "Ga vooruit"
+
+#: shell/ev-window.c:1528
+msgid "Forward history"
+msgstr "Vooruitgaan overzicht"
+
+#: shell/ev-window.c:1538
+msgid "Page"
+msgstr "Pagina"
+
+#: shell/ev-window.c:1539
+msgid "Select Page"
+msgstr "Pagina selecteren"
+
+#: shell/ev-window.c:1623
+msgid "Index"
+msgstr "Index"
+
+#: shell/ev-window.c:1630
+msgid "Thumbnails"
+msgstr "Miniaturen"
+
+# beeld?
+#: shell/main.c:84
+msgid "Evince Document Viewer"
+msgstr "Evince documentviewer"
+
+#: shell/ev-history.c:175
+#, c-format
+msgid "Page %d"
+msgstr "Pagina %d"
+
+#~ msgid "PDF Viewer"
+#~ msgstr "PDF-weergave"
+
+#~ msgid "View PDF files"
+#~ msgstr "PDF-bestanden weergeven"
+
+#~ msgid "Default sidebar page"
+#~ msgstr "Standaard zijbalkpagina"
+
+#~ msgid "Default sidebar size"
+#~ msgstr "Standaard zijbalkafmeting"
+
+#~ msgid "Show sidebar by default"
+#~ msgstr "Standaard de zijbalk tonen"
+
+#~ msgid " (invalid Unicode)"
+#~ msgstr " (ongeldige Unicode)"
+
+#~ msgid "Open a recently used file"
+#~ msgstr "Een recentelijk geopend document heropenen"
+
+# Recentelijk?
+#~ msgid "Recent"
+#~ msgstr "Recent"
+
+#~ msgid "About this application"
+#~ msgstr "Info over deze toepassing"
+
+#~ msgid "Close window"
+#~ msgstr "Venster sluiten"
+
+#~ msgid "Online manual for this application"
+#~ msgstr "Online handleiding voor deze toepassing"
+
+#~ msgid "Toggle fullscreen mode"
+#~ msgstr "Volledig scherm schakelen"
+
+#~ msgid "_Open..."
+#~ msgstr "_Openen..."
+
+#~ msgid "Could not initialize Bonobo!\n"
+#~ msgstr "Kon Bonobo niet initializeren!\n"
+
+#~ msgid "PDF Document"
+#~ msgstr "PDF-document"
+
+#~ msgid "Load file"
+#~ msgstr "Bestand laden"
+
+#~ msgid "Derek B. Noonburg, Xpdf author."
+#~ msgstr "Derek B. Noonburg, Xpdf-auteur."
+
+#~ msgid "Martin Kretzschmar, GNOME port maintainer."
+#~ msgstr "Martin Kretzschmar, beheerder Gnome versie."
+
+#~ msgid "Michael Meeks, GNOME port creator."
+#~ msgstr "Micheal Meeks, initiële Gnome versie."
+
+#~ msgid "Remi Cohen-Scali."
+#~ msgstr "Rémi Cohen-Scali."
+
+#~ msgid "Miguel de Icaza."
+#~ msgstr "Miguel de Icaza."
+
+#~ msgid "Nat Friedman."
+#~ msgstr "Nat Friedman."
+
+#~ msgid "Ravi Pratap."
+#~ msgstr "Ravi Pratap."
+
+#~ msgid "Chee Bin HOH <cbhoh@mimos.my>"
+#~ msgstr "Chee Bin HOH <cbhoh@mimos.my>"
+
+#~ msgid "Breda McColgan <BredaMcColgan@sun.com>"
+#~ msgstr "Breda McColgan <BredaMcColgan@sun.com>"
+
+#~ msgid "Glyph & Cog, LLC and authors"
+#~ msgstr "Glyph & Cog, LLC en auteurs"
+
+#~ msgid "GNOME PDF Viewer"
+#~ msgstr "GNOME PDF-weergave"
+
+#~ msgid "A PDF viewer based on Xpdf"
+#~ msgstr "Een weergever voor PDF gebaseerd op Xpdf"
+
+#~ msgid "GNOME PDF viewer factory"
+#~ msgstr "GNOME PDF-weergavefabriek"
+
+#~ msgid "Nautilus PDF Property Page"
+#~ msgstr "Nautilus PDF eigenschappen-pagina"
+
+#~ msgid "PDF document viewer factory"
+#~ msgstr "PDF document-weergavefabriek"
+
+#~ msgid "View as PDF Document"
+#~ msgstr "Weergeven als PDF-document"
+
+#~ msgid ""
+#~ "Cannot find a schema for gpdf preferences. \n"
+#~ "Check your gconf setup, look at gpdf FAQ for \n"
+#~ "more info"
+#~ msgstr ""
+#~ "Kon geen schema voor gpdf voorkeuren vinden. \n"
+#~ "Controleer uw gconf instellingen. Zie de gpdf FAQ\n"
+#~ "voor meer informatie"
+
+#~ msgid ""
+#~ "GConf error:\n"
+#~ "  %s"
+#~ msgstr ""
+#~ "GConf fout:\n"
+#~ "  %s"
+
+#~ msgid "Parent control"
+#~ msgstr "Bovenliggende controle"
+
+#~ msgid "Owner/Title"
+#~ msgstr "Eigenaar/Titel"
+
+#~ msgid "Opened"
+#~ msgstr "Geopend"
+
+#~ msgid "Not yet implemented!"
+#~ msgstr "Nog niet geïmplementeerd"
+
+#~ msgid "Annotations Filter feature not yet implemented... Sorry."
+#~ msgstr "Annotatiefilter nog niet geïmplementeerd... sorry."
+
+#~ msgid ""
+#~ "Annotations Plug-ins management feature not yet implemented... Sorry."
+#~ msgstr "Annotatie plugin-beheer nog niet geïmplementeerd...sorry."
+
+#~ msgid "Expand"
+#~ msgstr "Uitvouwen"
+
+#~ msgid "Expand all bookmarks under this one"
+#~ msgstr "Alle favorieten hieronder uitvouwen"
+
+#~ msgid "Collapse"
+#~ msgstr "Inklappen"
+
+#~ msgid "Collapse all bookmarks under this one"
+#~ msgstr "Alle favorieten hieronder inklappen"
+
+#~ msgid "Expand All"
+#~ msgstr "Alles uitvouwen"
+
+#~ msgid "Expand All bookmarks in bookmarks tree"
+#~ msgstr "Alle favorieten in de boom uitvouwen"
+
+#~ msgid "Collapse All"
+#~ msgstr "Alles inklappen"
+
+#~ msgid "Collapse All bookmarks in bookmarks tree"
+#~ msgstr "ALle favorieten in de boom inklappen"
+
+#~ msgid "Best _Fit"
+#~ msgstr "Best _passend"
+
+# zijvenster?
+# Meestal wordt er over de 'side bar' gesproken
+#~ msgid "Change the visibility of the sidebar"
+#~ msgstr "Zichtbaarheid van de zijbalk aanpassen"
+
+#~ msgid "Expand to a larger size"
+#~ msgstr "Vergroten"
+
+#~ msgid "First"
+#~ msgstr "Eerste"
+
+# knoptekst?
+#~ msgid "Fit Width"
+#~ msgstr "Breedte"
+
+# uitleg
+#~ msgid "Fit page _width"
+#~ msgstr "_Paginabreedte laten passen"
+
+#~ msgid "In"
+#~ msgstr "In"
+
+#~ msgid "Last"
+#~ msgstr "Laatste"
+
+#~ msgid "Out"
+#~ msgstr "Uit"
+
+#~ msgid "Print the current file"
+#~ msgstr "Het huidige bestand afdrukken"
+
+#~ msgid "Proper_ties"
+#~ msgstr "_Eigenschappen"
+
+#~ msgid "Shrink to a smaller size"
+#~ msgstr "Verkleinen"
+
+#~ msgid "Size to fit the page"
+#~ msgstr "Inzoomen om op pagina te laten passend"
+
+#~ msgid "Size to fit the page width"
+#~ msgstr "Inzoomen om paginabreedte te laten passen"
+
+#~ msgid "View properties of the displayed document"
+#~ msgstr "Eigenschappen van het document weergeven"
+
+#~ msgid "View the first page"
+#~ msgstr "Bekijk de eerste pagina"
+
+#~ msgid "View the last page"
+#~ msgstr "Bekijk de laatste pagina"
+
+#~ msgid "View the previous page"
+#~ msgstr "Bekijk de vorige pagina"
+
+#~ msgid "_Previous Page"
+#~ msgstr "_Vorige pagina"
+
+#~ msgid "_Print..."
+#~ msgstr "Af_drukken..."
+
+#~ msgid "Documentation Error"
+#~ msgstr "Documentatiefout"
+
+#~ msgid "Printing: Page %d."
+#~ msgstr "Afdrukken: pagina %d."
+
+#~ msgid ""
+#~ "You were trying to print to a printer that does not use PostScript. This "
+#~ "program requires a PostScript printer driver."
+#~ msgstr ""
+#~ "U probeerde af te drukken naar een printer die geen ondersteuning biedt "
+#~ "voor PostScript. Dit programma heeft een PostScript printer-"
+#~ "stuurprogramma nodig."
+
+#~ msgid "A file named \"%s\" already exists."
+#~ msgstr "Een bestand genaamd \"%s\" bestaad al."
+
+#~ msgid "Do you want to replace it with the one you are saving?"
+#~ msgstr "Wilt u het vervangen door het exemplaar wat u aan het opslaan bent?"
+
+#~ msgid "_Replace"
+#~ msgstr "_Vervangen"
+
+#~ msgid "Question"
+#~ msgstr "Vraag"
+
+#~ msgid "PDF Properties"
+#~ msgstr "PDF eigenschappen"
+
+#~ msgid "Loading of %s failed."
+#~ msgstr "Laden van %s mislukt."
+
+#~ msgid "Bookmarks"
+#~ msgstr "Favorieten"
+
+#~ msgid "Annotations"
+#~ msgstr "Annotaties"
+
+#~ msgid "Link"
+#~ msgstr "Link"
+
+#~ msgid "UsingHandCursor"
+#~ msgstr "UsingHandCursor"
+
+# dubbelzinnig in het Nederlands maar het is niet anders.
+#~ msgid "Links"
+#~ msgstr "Links"
+
+# invoeren hier met opzet weggelaten
+#~ msgid "Enter document password:"
+#~ msgstr "Documentwachtwoord invoeren:"
+
+#~ msgid ""
+#~ "This document is encrypted and this operation requires the document's "
+#~ "password"
+#~ msgstr ""
+#~ "Dit document is versleuteld en deze bewerking vereist het wachtwoord van "
+#~ "het document"
+
+#~ msgid "The PDF file is damaged. Its page catalog could not be read"
+#~ msgstr ""
+#~ "Het PDF-bestand is beschadigd. De page-catalog kon niet worden gelezen"
+
+#~ msgid ""
+#~ "The PDF file is damaged or it is not a PDF file. It could not be repaired"
+#~ msgstr ""
+#~ "Het PDF-bestand is beschadigd of het is geen PDF-bestand. Het kon niet "
+#~ "worden gerepareerd"
+
+#~ msgid ""
+#~ "The PDF document is encrypted and you didn't enter the correct password"
+#~ msgstr "Het PDF-document is versleuteld en u gaf niet het juiste wachtwoord"
+
+# bezig met...
+#~ msgid "Printing"
+#~ msgstr "Afdrukken"
+
+#~ msgid "Printing: Preparing."
+#~ msgstr "Afdrukken: voorbereiding."
+
+#~ msgid "Author:"
+#~ msgstr "Auteur:"
+
+#~ msgid "Created:"
+#~ msgstr "Aangemaakt:"
+
+#~ msgid "Creator:"
+#~ msgstr "Maker:"
+
+#~ msgid "Keywords:"
+#~ msgstr "Sleutelwoorden:"
+
+#~ msgid "Modified:"
+#~ msgstr "Aangepast:"
+
+#~ msgid "Number of Pages:"
+#~ msgstr "Aantal pagina's:"
+
+#~ msgid "Optimized:"
+#~ msgstr "Geoptimaliseerd:"
+
+#~ msgid "PDF Version:"
+#~ msgstr "PDF-versie:"
+
+#~ msgid "Producer:"
+#~ msgstr "Producent:"
+
+#~ msgid "Security:"
+#~ msgstr "Beveiliging:"
+
+#~ msgid "Subject:"
+#~ msgstr "Onderwerp:"
+
+#~ msgid "Title:"
+#~ msgstr "Titel:"
+
+#~ msgid "Unknown"
+#~ msgstr "Onbekend"
+
+#~ msgid "Select sidebar page by title for displaying it"
+#~ msgstr "Zijbalkpagina per titel selecteren voor weergave"
+
+# tools menu: werkmenu?
+#~ msgid "Click to open page tools menu"
+#~ msgstr "Klikken om pagina-menu te openen"
+
+#~ msgid "Remove page if it is removeable"
+#~ msgstr "Pagina vewijderen indien verwijderbaar"
+
+#~ msgid "Close sidebar"
+#~ msgstr "Zijbalk sluiten"
+
+#~ msgid "Thumbnail Generation feature not yet implemented... Sorry."
+#~ msgstr "Miniatuur-aanmaak nog niet geïmplementeerd...sorry."
+
+#~ msgid "All Thumbnails Generation feature not yet implemented... Sorry."
+#~ msgstr "Alle miniatuur-aanmaak nog niet geïmplementeerd...sorry."
+
+#~ msgid "No application was found to open the URI: %s"
+#~ msgstr "Er is geen toepassing gevonden voor het openen van de URI: %s"
+
+#~ msgid "Application Launch Failure!"
+#~ msgstr "Opstarten van toepassing mislukt!"
+
+#~ msgid "Go to file %s:#%d"
+#~ msgstr "Ga naar bestand %s:#%d"
+
+# link niet bereikbaar?
+#~ msgid "Broken link"
+#~ msgstr "Gebroken link"
+
+#~ msgid "Launch: %s %s"
+#~ msgstr "Opstarten: %s %s"
+
+# bladeren
+# doorzoeken
+#~ msgid "Browse %s"
+#~ msgstr "%s doorbladeren"
+
+#~ msgid "Action: %s"
+#~ msgstr "Actie: %s"
+
+#~ msgid "Movie: %s"
+#~ msgstr "Film: %s"
+
+#~ msgid "Unknown action: %s !"
+#~ msgstr "Onbekende actie: %s !"
+
+#~ msgid "URI currently displayed"
+#~ msgstr "Huidig weergegeven URI"
+
+#~ msgid ""
+#~ "This shows the current page number. To jump to another page, enter its "
+#~ "number."
+#~ msgstr ""
+#~ "Dit toont het huidige paginanummer. Om naar een andere pagina te gaan "
+#~ "voert u het paginanummer in."
+
+#~ msgid "Encrypted"
+#~ msgstr "Versleuteld"
+
+#~ msgid "None"
+#~ msgstr "Geen"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nee"
+
+#~ msgid "GGV PostScript Document Control"
+#~ msgstr "GGV PostScript-document Control"
+
+#~ msgid "GGV PostScript View"
+#~ msgstr "GGV postscriptweergave"
+
+#~ msgid "GGV PostScript viewer factory"
+#~ msgstr "GGV postscriptweergavefabriek"
+
+#~ msgid "15_0%"
+#~ msgstr "15_0%"
+
+#~ msgid "1:1"
+#~ msgstr "1:1"
+
+#~ msgid "25%"
+#~ msgstr "25%"
+
+#~ msgid "Change zoom factor to default"
+#~ msgstr "Zoomfactor instellen op standaardwaarde"
+
+#~ msgid "Decrease zoom factor"
+#~ msgstr "Zoomfactor verkleinen"
+
+# passen is nog korter
+#~ msgid "Fit"
+#~ msgstr "Inpassen"
+
+#~ msgid "Fit _Width"
+#~ msgstr "Schalen naar _breedte"
+
+#~ msgid "Fit to Page _Size"
+#~ msgstr "Schalen naar pagina_grootte"
+
+#~ msgid "Increase zoom factor"
+#~ msgstr "Zoomfactor vergroten"
+
+#~ msgid "Other"
+#~ msgstr "Ander type"
+
+#~ msgid "Zoom the page to be as wide as the window"
+#~ msgstr "Pagina-zoomfactor instellen op vensterbreedte"
+
+#~ msgid "_100%"
+#~ msgstr "_100%"
+
+#~ msgid "_200%"
+#~ msgstr "_200%"
+
+#~ msgid "_400%"
+#~ msgstr "_400%"
+
+#~ msgid "_50%"
+#~ msgstr "_50%"
+
+#~ msgid "_75%"
+#~ msgstr "_75%"
+
+#~ msgid "_Auto-fit"
+#~ msgstr "_Auto-inpassen"
+
+#~ msgid "_Default Zoom"
+#~ msgstr "_Standaard zoomfactor"
+
+#~ msgid "_No Auto-fit"
+#~ msgstr "_Niet auto-inpassen"
+
+#~ msgid "_Zoom"
+#~ msgstr "_Zoomen"
+
+#~ msgid "Open the preferences dialog"
+#~ msgstr "Voorkeuren-venster openen"
+
+#~ msgid "Post_Script Viewer Preferences"
+#~ msgstr "Post_Scriptweergave voorkeuren"
+
+# prev en next zijn alletwee 4 letters. misschien moeten we het vertalen met Volg en Vorg
+#~ msgid "Prev"
+#~ msgstr "Vorige"
+
+#~ msgid "Print marked pages"
+#~ msgstr "Gemarkeerde pagina's afdrukken"
+
+#~ msgid "Save marked pages to a file"
+#~ msgstr "Gemarkeerde pagina's als een bestand opslaan"
+
+#~ msgid "_Document Orientation"
+#~ msgstr "_Documentoriëntatie"
+
+#~ msgid "_First page"
+#~ msgstr "_Eerste pagina"
+
+#~ msgid "_Landscape"
+#~ msgstr "_Liggend"
+
+#~ msgid "_Last page"
+#~ msgstr "_Laatste pagina"
+
+#~ msgid "_Next page"
+#~ msgstr "_Volgende pagina"
+
+#~ msgid "_Orientation"
+#~ msgstr "_Oriëntatie"
+
+#~ msgid "_Portrait"
+#~ msgstr "_Staand"
+
+#~ msgid "_Previous page"
+#~ msgstr "Vo_rige pagina"
+
+#~ msgid "_Print marked pages"
+#~ msgstr "Gemarkeerde pagina's _afdrukken"
+
+#~ msgid "_Save marked pages"
+#~ msgstr "Gemarkeerde pagina's _opslaan"
+
+#~ msgid "_Seascape"
+#~ msgstr "_Zee-oriëntatie"
+
+#~ msgid "_Size"
+#~ msgstr "_Formaat"
+
+#~ msgid "_Upside down"
+#~ msgstr "_Ondersteboven"
+
+#~ msgid ""
+#~ "Unable to execute print command:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Kan afdrukopdracht niet uitvoeren:\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "No pages have been marked.\n"
+#~ "Do you want to save the whole document?"
+#~ msgstr ""
+#~ "U heeft geen pagina's gemarkeerd.\n"
+#~ "Wilt u het gehele document opslaan?"
+
+#~ msgid "Select a file to save pages as"
+#~ msgstr "Selecteer een bestand om pagina's naar weg te schrijven"
+
+#~ msgid ""
+#~ "A file with this name already exists.\n"
+#~ "Do you want to overwrite it?"
+#~ msgstr ""
+#~ "Er bestaat reeds een bestand met deze naam.\n"
+#~ "Wilt u het overschrijven?"
+
+#~ msgid ""
+#~ "No pages have been marked.\n"
+#~ "Do you want to print the whole document?"
+#~ msgstr ""
+#~ "U heeft geen pagina's gemarkeerd.\n"
+#~ "Wilt u het gehele document afdrukken?"
+
+#~ msgid "GhostScript output"
+#~ msgstr "GhostScript-uitvoer"
+
+#~ msgid "Document title"
+#~ msgstr "Documenttitel"
+
+#~ msgid "GGV control status"
+#~ msgstr "GGV controlestatus"
+
+#~ msgid "Number of pages"
+#~ msgstr "Aantal pagina's"
+
+#~ msgid "Page names"
+#~ msgstr "Paginanamen"
+
+#~ msgid "Current page number"
+#~ msgstr "Huidig paginanummer"
+
+#~ msgid "Document width"
+#~ msgstr "Documentbreedte"
+
+#~ msgid "Document height"
+#~ msgstr "Documenthoogte"
+
+#~ msgid "Document orientation"
+#~ msgstr "Documentoriëntatie"
+
+#~ msgid "Default orientation"
+#~ msgstr "Standaardoriëntatie"
+
+#~ msgid "Default size"
+#~ msgstr "Standaardformaat"
+
+#~ msgid "Override document orientation"
+#~ msgstr "Forceer documentoriëntatie"
+
+#~ msgid "Override document size"
+#~ msgstr "Forceer documentformaat"
+
+#~ msgid "Respect EOF comment"
+#~ msgstr "Respecteer EOF-commentaar"
+
+#~ msgid "Antialiasing"
+#~ msgstr "Anti-aliasing"
+
+#~ msgid "Toggle marked state of all pages"
+#~ msgstr "Gemarkeerd-staat van alle pagina's aan/uitzetten"
+
+#~ msgid ""
+#~ "Toggle marked state of all pages: previously marked pages will be "
+#~ "unmarked and unmarked ones will become marked."
+#~ msgstr ""
+#~ "Gemarkeerd-staat van alle pagina's aan-/uitzetten: van eerder gemarkeerde "
+#~ "pagina's zal de markering worden verwijderd en ongemarkeerden zullen "
+#~ "worden gemarkeerd."
+
+#~ msgid "Toggle marked state of odd pages"
+#~ msgstr "Gemarkeerd-staat van oneven pagina's aan/uitzetten"
+
+#~ msgid ""
+#~ "Toggle marked state of odd pages: previously marked odd pages will be "
+#~ "unmarked and unmarked ones will become marked."
+#~ msgstr ""
+#~ "Gemarkeerd-staat van oneven pagina's aan-/uitzetten: van eerder "
+#~ "gemarkeerde oneven pagina's zal de markering worden verwijderd en "
+#~ "ongemarkeerden zullen worden gemarkeerd."
+
+#~ msgid "Toggle marked state of even pages"
+#~ msgstr "Gemarkeerd-staat van even pagina's aan/uitzetten"
+
+#~ msgid ""
+#~ "Toggle marked state of even pages: previously marked even pages will be "
+#~ "unmarked and unmarked ones will become marked."
+#~ msgstr ""
+#~ "Gemarkeerd-staat van even pagina's aan-/uitzetten: van eerder gemarkeerde "
+#~ "even pagina's zal de markering worden verwijderd en ongemarkeerden zullen "
+#~ "worden gemarkeerd."
+
+#~ msgid "Clear marked state of all pages"
+#~ msgstr "Gemarkeerd-staat van alle pagina's verwijderen"
+
+#~ msgid "Clear marked state of all pages: all pages will be unmarked."
+#~ msgstr ""
+#~ "Markering van alle pagina's verwijderen: de markering zal van alle "
+#~ "pagina's verwijderd worden."
+
+#~ msgid "A Ghostscript frontend to visualize PostScript files"
+#~ msgstr "Een ghostscript-schil om postscript-bestanden te visualiseren"
+
+#~ msgid "Antialiased rendering"
+#~ msgstr "Anti-aliased renderen"
+
+#~ msgid "Antialiasing arguments"
+#~ msgstr "Anti-alias argumenten"
+
+# Betere vertaling?
+#~ msgid "Autojump"
+#~ msgstr "Autospringen"
+
+#~ msgid "Command line arguments for antialiasing."
+#~ msgstr "Opdrachtregel-opties voor antialiasing"
+
+#~ msgid "Command line used to execute the PostScript interpreter."
+#~ msgstr "Opdracht waarmee de PostScript interpreter wordt opgestart."
+
+#~ msgid "Coordinate units"
+#~ msgstr "Coördinaat-eenheden"
+
+#~ msgid "Default document orientation"
+#~ msgstr "Standaard documentoriëntatie"
+
+#~ msgid "Default page size"
+#~ msgstr "Standaard papierformaat"
+
+#~ msgid "Default zoom factor"
+#~ msgstr "Standaard zoomfactor"
+
+#~ msgid ""
+#~ "If true, the orientation specified by the document will be overriden with "
+#~ "the default orientation."
+#~ msgstr ""
+#~ "Indien waar, heeft de standaard orientatie voorrang boven de orientatie "
+#~ "die door het document wordt aangegeven."
+
+# orientatie gegeven door document negeren
+# door document gegeven orientatie verwerpen/negeren
+#~ msgid "Override document specified orientation"
+#~ msgstr "Door document opgegeven oriëntatie negeren"
+
+#~ msgid "Override document specified page size"
+#~ msgstr "Door document opgegeven papierformaat negeren"
+
+#~ msgid "PDF to DSC conversion command"
+#~ msgstr "Opdracht waarmee PDF naar DSC wordt omgezet"
+
+#~ msgid "PDF to PS conversion command"
+#~ msgstr "Opdracht waarmee PDF naar PS wordt omgezet"
+
+# betere vertaling?
+#~ msgid "Page flip"
+#~ msgstr "Pagina omslaan"
+
+#~ msgid "Panel on right-hand side"
+#~ msgstr "Zijpaneel aan rechterkant plaatsen"
+
+#~ msgid "Percentage of the viewable area to move when scrolling."
+#~ msgstr ""
+#~ "Bij schuiven, het percentage van het zichtbare gedeelte dat bewogen wordt."
+
+# percentage ipv grootte?
+#~ msgid "Percentage of the viewable area to scroll"
+#~ msgstr "Grootte van het te verschuiven zichtbare gedeelte"
+
+#~ msgid "PostScript interpreter command"
+#~ msgstr "PostScript-interpreter opdracht"
+
+#~ msgid "Printing command"
+#~ msgstr "Printopdracht"
+
+#~ msgid "Save window geometry"
+#~ msgstr "Afmetingen opslaan"
+
+#~ msgid "Show menubar"
+#~ msgstr "Menubalk tonen"
+
+#~ msgid "Show previous visible area when scrolling"
+#~ msgstr "Bij schuiven laatst zichtbare gedeelte tonen"
+
+#~ msgid "Show side panel"
+#~ msgstr "Zijpaneel tonen"
+
+#~ msgid "Show statusbar"
+#~ msgstr "Statusbalk tonen"
+
+#~ msgid "Show toolbar"
+#~ msgstr "Werkbalk tonen"
+
+#~ msgid "The command line used to convert PDF files to PostScript."
+#~ msgstr ""
+#~ "De opdrachtregel waarmee PDF-bestanden worden omgezet naar PostScript."
+
+#~ msgid "The command line used to create PostScript DSC files from PDF files."
+#~ msgstr ""
+#~ "De opdrachtregel waarmee PostScript DSC-bestanden worden omgezet naar PDF-"
+#~ "bestanden."
+
+#~ msgid "The command used to unpack files compressed with bzip2."
+#~ msgstr ""
+#~ "De opdracht waarmee bestanden die gecomprimeerd zijn met bzip2 worden "
+#~ "uitgepakt."
+
+#~ msgid "The command used to unpack files compressed with gzip."
+#~ msgstr ""
+#~ "De opdracht waarmee bestanden die gecomprimeerd zijn met gzip worden "
+#~ "uitgepakt."
+
+#~ msgid ""
+#~ "The default page size to use when no page size is specified by the "
+#~ "document or when the user wishes to override the size specified in the "
+#~ "document."
+#~ msgstr " moet worden getoond."
+
+#~ msgid ""
+#~ "The default zoom factor for the document. The value should belong to the "
+#~ "interval [0.05, 30.0]."
+#~ msgstr ""
+#~ "De standaard zoomfactor voor het document. De waarde moet liggen binnen "
+#~ "het interval [0,05; 30,0]."
+
+#~ msgid "The height of the viewer's window."
+#~ msgstr "De hoogte van het venster."
+
+# trema's
+#~ msgid ""
+#~ "The orientation to use when the document defines no orientation or when "
+#~ "the user wishes to override the document specified orientation."
+#~ msgstr ""
+#~ "De orientatie wanneer deze niet door het document wordt gegeven of "
+#~ "wanneer de gebruiker de gegeven orientatie wil forceren."
+
+#~ msgid "The shell command used to print files."
+#~ msgstr "De opdrachtregel waarmee bestanden worden afgedrukt."
+
+#~ msgid "Toolbar style"
+#~ msgstr "Werkbalk-stijl"
+
+#~ msgid "Unbzip2 command"
+#~ msgstr "Unbizp2 opdracht"
+
+#~ msgid "Ungzip command"
+#~ msgstr "Ungzip opdracht"
+
+# trema
+#~ msgid "Units for the coordinate display."
+#~ msgstr "De getoonde coordinaat-eenheden."
+
+#~ msgid "Viewer window height"
+#~ msgstr "Hoogte weergavevenster"
+
+#~ msgid "Viewer window width"
+#~ msgstr "Breedte weergavevenster"
+
+#~ msgid "Watch document for changes"
+#~ msgstr "Beeld verversen als bestand verandert"
+
+# hoewel het beide kanten op werkt is het idee duidelijk zo
+#~ msgid ""
+#~ "Whether GGV should automatically flip pages when you scroll to the edge."
+#~ msgstr ""
+#~ "Of GGV automatisch de volgende pagina moet tonen als bij het schuiven de "
+#~ "onderkant wordt bereikt."
+
+#~ msgid ""
+#~ "Whether the PostScript display widget should poll the viewed file for "
+#~ "changes and reload it if it changes."
+#~ msgstr ""
+#~ "Of het PostScript weergave-widget regelmatig moet controleren of het "
+#~ "bestand veranderd is, en het indien nodig herlaadt."
+
+#~ msgid ""
+#~ "Whether the PostScript display widget should use its default page size "
+#~ "instead of the one specified in the document."
+#~ msgstr ""
+#~ "Of het PostScript weergave-widget het standaard papierformaat moet "
+#~ "gebruiken of het formaat zoals aangegeven in het document zelf."
+
+#~ msgid ""
+#~ "Whether the PostScript display widget will respect the End Of File "
+#~ "comment. If true, the widget will only parse the document until EOF "
+#~ "comment."
+#~ msgstr ""
+#~ "Of het PostScript weergave-widget rekening houdt met een End Of FIle.  "
+#~ "Indien waar, zal het widget het document verwerken totdat het het EOF "
+#~ "tegenkomt."
+
+#~ msgid ""
+#~ "Whether the control should jump to next page when using keyboard to "
+#~ "scroll."
+#~ msgstr ""
+#~ "Of bij het schuiven via het toetsenbord vanzelf naar de volgende pagina "
+#~ "wordt gesprongen."
+
+#~ msgid "Whether the document should be rendered in an antialiased mode."
+#~ msgstr ""
+#~ "Of anti-alias moet worden gebruikt bij het weergeven van het document."
+
+#~ msgid "Whether the menubar should be visible by default."
+#~ msgstr "Of de menubalk standaard zichtbaar moet zijn."
+
+# Of het zijpaneel moet worden getoond, rechts van het weergavegebied.
+#~ msgid ""
+#~ "Whether the side panel should appear on the right of the display area."
+#~ msgstr "Of het zijpaneel getoond moet worden aan de rechterzijde."
+
+#~ msgid "Whether the side panel should be visible by default."
+#~ msgstr "Of het zijpaneel standaard zichtbaar moet zijn."
+
+#~ msgid "Whether the statusbar should be visible by default."
+#~ msgstr "Of de statusbalk standaard zichtbaar moet zijn."
+
+#~ msgid ""
+#~ "Whether the toolbar buttons show icons, text, both or use the GNOME-wide "
+#~ "default."
+#~ msgstr ""
+#~ "Of de werkbalkknoppen pictogrammen, tekst, of beide tonen, of hiervoor de "
+#~ "GNOME-standaard volgen."
+
+#~ msgid "Whether the toolbar should be visible by default."
+#~ msgstr "Of de werkbalk standaard zichtbaar moet zijn."
+
+# rand ipv rechthoek?
+#~ msgid ""
+#~ "Whether the user wants to see a rectangle outlining the previously "
+#~ "visible area when scrolling."
+#~ msgstr ""
+#~ "Of de gebruiker bij het schuiven een rechthoek te zien krijgt die het "
+#~ "oude zichtbare gedeelte aangeeft."
+
+# onthouden ipv opslaan en herstellen?
+#~ msgid "Whether the viewer should save and restore the window geometry."
+#~ msgstr "Of de viewer de vensterafmetingen moet opslaan en herstellen."
+
+#~ msgid "_Use GNOME defaults"
+#~ msgstr "GNOME-standaardinstellingen gebr_uiken"
+
+#~ msgid "Show _both icons and text"
+#~ msgstr "_Zowel pictogrammen als tekst tonen"
+
+#~ msgid "Show only _icons"
+#~ msgstr "Alleen p_ictogrammen tonen"
+
+#~ msgid "Show only t_ext"
+#~ msgstr "Alleen t_ekst tonen"
+
+#~ msgid "GGV Preferences"
+#~ msgstr "GGV-voorkeuren"
+
+#~ msgid "Default _Zoom:"
+#~ msgstr "Stan_daard zoomfactor:"
+
+#~ msgid "A_uto-fit mode:"
+#~ msgstr "A_uto-inpasmodus:"
+
+#~ msgid "Coordinate _units:"
+#~ msgstr "_Coördinaat-eenheden:"
+
+#~ msgid "_Fallback page size:"
+#~ msgstr "Terugval-papier_formaat:"
+
+#~ msgid "Override _document size"
+#~ msgstr "_Documentformaat forceren"
+
+#~ msgid "Fallback _media orientation:"
+#~ msgstr "Terugval-_mediaoriëntatie:"
+
+#~ msgid "O_verride document orientation"
+#~ msgstr "D_ocumentoriëntatie forceren"
+
+#~ msgid "A_ntialiasing"
+#~ msgstr "A_nti-aliasing"
+
+#~ msgid "_Respect EOF comments"
+#~ msgstr "EOF-commentaar _respecteren"
+
+#~ msgid "_Watch file"
+#~ msgstr "Bestand blij_ven volgen"
+
+#~ msgid "Document"
+#~ msgstr "Document"
+
+#~ msgid "_Show side panel"
+#~ msgstr "_Zijpaneel tonen"
+
+#~ msgid "_Put side panel on the right-hand side"
+#~ msgstr "Zij_paneel aan rechterkant plaatsen"
+
+#~ msgid "Show _menubar"
+#~ msgstr "_Menubalk tonen"
+
+#~ msgid "Show _toolbar"
+#~ msgstr "Werkbalk _tonen"
+
+#~ msgid "Show statusba_r"
+#~ msgstr "Status_balk tonen"
+
+#~ msgid "Save _geometry"
+#~ msgstr "Afmetin_gen opslaan"
+
+#~ msgid "Layout"
+#~ msgstr "Lay-out"
+
+#~ msgid "_Jump to beginning of page"
+#~ msgstr "Naar _begin van pagina springen"
+
+#~ msgid "Automatically _flip pages"
+#~ msgstr "Pagina's automatisch _omslaan"
+
+#~ msgid "Outline _last visible part when scrolling"
+#~ msgstr "Bij schuiven _laatst zichtbare gedeelte omranden"
+
+#~ msgid "Amount of _visible area to scroll"
+#~ msgstr "Grootte van te _verschuiven zichtbaar gedeelte"
+
+#~ msgid "Navigation"
+#~ msgstr "Navigatie"
+
+#~ msgid "_Interpreter:"
+#~ msgstr "_Interpreter:"
+
+#~ msgid "A_ntialiasing:"
+#~ msgstr "A_nti-aliasing:"
+
+# In overeenstemming met de andere berichten
+#~ msgid "Convert _PDF to DSC file:"
+#~ msgstr "Opdracht waarmee _PDF wordt omgezet naar DSC:"
+
+#~ msgid "Convert _PDF to PS:"
+#~ msgstr "_PDF converteren naar PS:"
+
+#~ msgid "_Gzip:"
+#~ msgstr "_Gzip:"
+
+#~ msgid "_Bzip2:"
+#~ msgstr "_Bzip2:"
+
+#~ msgid "Ghostscript"
+#~ msgstr "Ghostscript"
+
+#~ msgid "_Print command:"
+#~ msgstr "_Printopdracht:"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
+
+#~ msgid "Open a new PostScript document"
+#~ msgstr "Een nieuw PostScript-document openen"
+
+#~ msgid "Open in new window"
+#~ msgstr "In nieuw venster openen"
+
+#~ msgid "Open in this window"
+#~ msgstr "In dit venster openen"
+
+#~ msgid "Reload"
+#~ msgstr "Herladen"
+
+#~ msgid "Show Side_bar"
+#~ msgstr "_Zijbalk tonen"
+
+#~ msgid "Show _Menus"
+#~ msgstr "_Menu's tonen"
+
+#~ msgid "Show/hide the menus"
+#~ msgstr "Menu's tonen/verbergen"
+
+#~ msgid "_Layout"
+#~ msgstr "_Lay-out"
+
+#~ msgid "_Reload"
+#~ msgstr "He_rladen"
+
+#~ msgid ""
+#~ "Unable to load file:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Kan bestand niet laden:\n"
+#~ "%s"
+
+#~ msgid "GGV: no document loaded"
+#~ msgstr "GGV: geen document geladen"
+
+#~ msgid "Select a PostScript document"
+#~ msgstr "Selecteer een PostScript document"
+
+#~ msgid "Jaka Mocnik (current maintainer)"
+#~ msgstr "Jaka Mocnik (huidige beheerder)"
+
+#~ msgid "And many more..."
+#~ msgstr "En vele anderen..."
+
+#~ msgid "translator_credits"
+#~ msgstr ""
+#~ "Dennis Smit <synap@area101.penguin.nl>\n"
+#~ "Reinout van Schouwen <reinout@cs.vu.nl><\n"
+#~ "Tino Meinen <a.t.meinen@chello.nl>"
+
+#~ msgid "Gnome Ghostview"
+#~ msgstr "Gnome Ghostview"
+
+#~ msgid "The GNOME PostScript document previewer"
+#~ msgstr "De GNOME-viewer voor PostScript-documenten"
+
+#~ msgid "Open recent files"
+#~ msgstr "Een recent bestand openen"
+
+#~ msgid "Open a file."
+#~ msgstr "Een bestand openen."
+
+#~ msgid " - GGV"
+#~ msgstr " - GGV"
+
+#~ msgid "Portrait"
+#~ msgstr "Staand"
+
+#~ msgid "Landscape"
+#~ msgstr "Liggend"
+
+#~ msgid "Upside Down"
+#~ msgstr "Ondersteboven"
+
+#~ msgid "Seascape"
+#~ msgstr "Zee-oriëntatie"
+
+#~ msgid "mm"
+#~ msgstr "mm"
+
+#~ msgid "cm"
+#~ msgstr "cm"
+
+#~ msgid "point"
+#~ msgstr "punt"
+
+#~ msgid "Fit to page width"
+#~ msgstr "Schalen naar paginabreedte"
+
+#~ msgid "Fit to page size"
+#~ msgstr "Schalen naar paginagrootte"
+
+#~ msgid "Unable to load ggv stock icon '%s'\n"
+#~ msgstr "Kan het standaard pictogram voor ggv '%s' niet laden\n"
+
+#~ msgid "Invalid geometry string \"%s\"\n"
+#~ msgstr "Ongeldige afmetingen-string \"%s\"\n"
+
+#~ msgid "Specify the number of empty windows to open."
+#~ msgstr "Geef het aantal te openen lege vensters."
+
+#~ msgid "Number of empty windows"
+#~ msgstr "Aantal lege vensters"
+
+#~ msgid "X geometry specification (see \"X\" man page)."
+#~ msgstr "X afmetingen-specificatie (zie de \"X\" man-pagina)."
+
+#~ msgid "GEOMETRY"
+#~ msgstr "GEOMETRIE"
 
 #~ msgid "Open"
 #~ msgstr "Openen"
@@ -1931,9 +1752,6 @@ msgstr "GEOMETRIE"
 
 #~ msgid "Print preview is not available in this program."
 #~ msgstr "Afdrukvoorbeeld is niet beschikbaar in dit programma."
-
-#~ msgid "Thumbnails"
-#~ msgstr "Miniaturen"
 
 #~ msgid "PDF file viewer"
 #~ msgstr "PDF-bestanden weergeven"
