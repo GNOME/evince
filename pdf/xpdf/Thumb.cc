@@ -42,7 +42,8 @@
 
 Thumb::Thumb(XRef *xrefA, Object *obj) :
   xref(xrefA),
-  str(NULL)
+  str(NULL),
+  ok_flag(0)
 {
 	Object obj1, obj2;
 	Dict *dict;
@@ -139,6 +140,8 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 		obj1.free ();
 
 		str->addFilters(obj);
+
+		ok_flag = 1; 
 	}
 	while (0);	
 }
