@@ -303,11 +303,11 @@ pdf_document_get_links (EvDocument *document)
 		link_mapping = (PopplerLinkMapping *)list->data;
 		ev_link_mapping = g_new (EvLinkMapping, 1);
 		ev_link_mapping->link = ev_link_from_action (link_mapping->action);
-		ev_link_mapping->x1 = link_mapping->x1;
-		ev_link_mapping->x2 = link_mapping->x2;
+		ev_link_mapping->x1 = link_mapping->area.x1;
+		ev_link_mapping->x2 = link_mapping->area.x2;
 		/* Invert this for X-style coordinates */
-		ev_link_mapping->y1 = height - link_mapping->y2;
-		ev_link_mapping->y2 = height - link_mapping->y1;
+		ev_link_mapping->y1 = height - link_mapping->area.y2;
+		ev_link_mapping->y2 = height - link_mapping->area.y1;
 
 		retval = g_list_prepend (retval, ev_link_mapping);
 	}
