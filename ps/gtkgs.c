@@ -150,7 +150,6 @@ The DONE message indicates that ghostscript has finished processing.
 
 #include "ev-document.h"
 #include "gtkgs.h"
-#include "ggvutils.h"
 #include "ps.h"
 #include "gsdefaults.h"
 
@@ -926,6 +925,25 @@ stop_interpreter(GtkGS * gs)
   gs->busy = FALSE;
 }
 
+/* If file exists and is a regular file then return its length, else -1 */
+static gint
+file_length(const gchar * filename)
+{
+  struct stat stat_rec;
+
+  if(filename && (stat(filename, &stat_rec) == 0)
+     && S_ISREG(stat_rec.st_mode))
+    return stat_rec.st_size;
+  else
+    return -1;
+}
+
+/* Test if file exists, is a regular file and its length is > 0 */
+static gboolean
+file_readable(const char *filename)
+{
+  return (file_length(filename) > 0);
+}
 
 /*
  * Decompress gs->gs_filename if necessary
@@ -981,8 +999,8 @@ check_filecompressed(GtkGS * gs)
   cmdline = g_strdup_printf("%s %s >%s 2>%s", cmd,
                             filename, filename_unc, filename_err);
   if((system(cmdline) == 0)
-     && ggv_file_readable(filename_unc)
-     && (ggv_file_length(filename_err) == 0)) {
+     && file_readable(filename_unc)
+     && (file_length(filename_err) == 0)) {
     /* sucessfully uncompressed file */
     gs->gs_filename_unc = filename_unc;
   }
@@ -991,7 +1009,7 @@ check_filecompressed(GtkGS * gs)
     g_snprintf(buf, 1024, _("Error while decompressing file %s:\n"),
                gs->gs_filename);
     gtk_gs_emit_error_msg(gs, buf);
-    if(ggv_file_length(filename_err) > 0) {
+    if(file_length(filename_err) > 0) {
       FILE *err;
       if((err = fopen(filename_err, "r"))) {
         /* print file to message window */
@@ -1050,12 +1068,12 @@ check_pdf(GtkGS * gs)
     cmdline = g_strdup_printf("%s >%s 2>&1", cmd, filename_err);
     g_free(cmd);
 
-    if((system(cmdline) == 0) && ggv_file_readable(filename_dsc)) {
+    if((system(cmdline) == 0) && file_readable(filename_dsc)) {
 
       /* success */
       filename = gs->gs_filename_dsc = filename_dsc;
 
-      if(ggv_file_length(filename_err) > 0) {
+      if(file_length(filename_err) > 0) {
         gchar *err_msg = " ";
         GtkWidget *dialog;
         FILE *err;
@@ -1097,7 +1115,7 @@ check_pdf(GtkGS * gs)
                  _("Error while converting pdf file %s:\n"), filename);
       gtk_gs_emit_error_msg(gs, buf);
 
-      if(ggv_file_length(filename_err) > 0) {
+      if(file_length(filename_err) > 0) {
         FILE *err;
         if((err = fopen(filename_err, "r"))) {
           /* print file to message window */
@@ -1364,7 +1382,7 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
      */
     gchar *filename = NULL;
 
-    if(!ggv_file_readable(fname)) {
+    if(!file_readable(fname)) {
       gchar buf[1024];
       g_snprintf(buf, 1024, _("Cannot open file %s.\n"), fname);
       gtk_gs_emit_error_msg(gs, buf);
@@ -2005,7 +2023,7 @@ gtk_gs_get_postscript(GtkGS * gs, gint * pages)
                            gs->gs_filename_unc : gs->gs_filename);
     cmd = g_strdup_printf(gtk_gs_defaults_get_convert_pdf_cmd(), tmpn, fname);
     g_free(fname);
-    if((system(cmd) == 0) && ggv_file_readable(tmpn)) {
+    if((system(cmd) == 0) && file_readable(tmpn)) {
       GObject *tmp_gs;
       tmp_gs = gtk_gs_new_from_file(NULL, NULL, tmpn);
       if(NULL != tmp_gs) {

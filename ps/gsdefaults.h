@@ -43,7 +43,6 @@ gint gtk_gs_defaults_get_orientation(void);
 gboolean gtk_gs_defaults_get_override_orientation(void);
 gfloat gtk_gs_defaults_get_zoom_factor(void);
 gboolean gtk_gs_defaults_get_respect_eof(void);
-gint gtk_gs_defaults_get_paper_count(void);
 gfloat gtk_gs_defaults_get_scroll_step(void);
 gboolean gtk_gs_defaults_get_show_scroll_rect(void);
 GtkGSPaperSize *gtk_gs_defaults_get_paper_sizes(void);

@@ -27,7 +27,6 @@
 
 #include "gtkgs.h"
 #include "gsdefaults.h"
-#include "ggvutils.h"
 
 #include <gconf/gconf-client.h>
 
@@ -61,6 +60,28 @@ static GtkGSDefaults gtk_gs_defaults = {
   TRUE, FALSE, 8, FALSE, TRUE, TRUE,
   0, 1.0, 0.25, NULL, NULL, NULL, NULL, NULL, NULL,
   GTK_GS_ZOOM_ABSOLUTE
+};
+
+GtkGSPaperSize gtk_gs_paper_sizes[] = {
+  {N_("BBox"), 0, 0},
+  {N_("Letter"), 612, 792,},
+  {N_("Tabloid"), 792, 1224,},
+  {N_("Ledger"), 1224, 792,},
+  {N_("Legal"), 612, 1008,},
+  {N_("Statement"), 396, 612,},
+  {N_("Executive"), 540, 720,},
+  {N_("A0"), 2380, 3368,},
+  {N_("A1"), 1684, 2380,},
+  {N_("A2"), 1190, 1684,},
+  {N_("A3"), 842, 1190,},
+  {N_("A4"), 595, 842,},
+  {N_("A5"), 420, 595,},
+  {N_("B4"), 729, 1032,},
+  {N_("B5"), 516, 729,},
+  {N_("Folio"), 612, 936,},
+  {N_("Quarto"), 610, 780,},
+  {N_("10x14"), 720, 1008,},
+  {NULL, 0, 0}
 };
 
 void
@@ -206,18 +227,7 @@ gtk_gs_defaults_get_respect_eof()
 GtkGSPaperSize *
 gtk_gs_defaults_get_paper_sizes()
 {
-  return ggv_paper_sizes;
-}
-
-gint
-gtk_gs_defaults_get_paper_count()
-{
-  gint n = 0;
-
-  while(ggv_paper_sizes[n].name != NULL)
-    n++;
-
-  return n;
+  return gtk_gs_paper_sizes;
 }
 
 gboolean

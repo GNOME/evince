@@ -13,7 +13,5 @@ libgtkgs_la_SOURCES = 	\
 	gsdefaults.h	\
 	ps.c		\
 	ps.h		\
-	ggvutils.c	\
-	ggvutils.h	\
 	gtkgs.c		\
 	gtkgs.h
