@@ -1,4 +1,4 @@
-SUBDIRS = lib cut-n-paste data backend po pdf ps shell thumbnailer
+SUBDIRS = lib cut-n-paste data backend po pdf ps pixbuf shell thumbnailer
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 

@@ -107,32 +107,12 @@ pixbuf_document_get_page (EvDocument  *document)
 }
 
 static void
-pixbuf_document_set_target (EvDocument  *document,
-			    GdkDrawable *target)
-{
-	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-
-	pixbuf_document->target = target;
-}
-
-static void
 pixbuf_document_set_scale (EvDocument  *document,
 			   double       scale)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 
 	pixbuf_document->scale = scale;
-}
-
-static void
-pixbuf_document_set_page_offset (EvDocument  *document,
-			      int          x,
-			      int          y)
-{
-	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-
-	pixbuf_document->x_offset = x;
-	pixbuf_document->y_offset = y;
 }
 
 static void
@@ -149,36 +129,14 @@ pixbuf_document_get_page_size (EvDocument   *document,
 		*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf) * pixbuf_document->scale;
 }
 
-static void
-pixbuf_document_render (EvDocument  *document,
-			int          clip_x,
-			int          clip_y,
-			int          clip_width,
-			int          clip_height)
+static GdkPixbuf*
+pixbuf_document_render_pixbuf (EvDocument  *document)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-	GdkPixbuf *tmp_pixbuf;
-	
-	tmp_pixbuf = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (pixbuf_document->pixbuf),
-				     gdk_pixbuf_get_has_alpha (pixbuf_document->pixbuf),
-				     gdk_pixbuf_get_bits_per_sample (pixbuf_document->pixbuf),
-				     clip_width, clip_height);
-	
-	gdk_pixbuf_fill (tmp_pixbuf, 0xffffffff);
-	gdk_pixbuf_scale (pixbuf_document->pixbuf, tmp_pixbuf, 0, 0,
-			  MIN(gdk_pixbuf_get_width(pixbuf_document->pixbuf)* pixbuf_document->scale-clip_x, clip_width),
-			  MIN(gdk_pixbuf_get_height(pixbuf_document->pixbuf)* pixbuf_document->scale-clip_y, clip_height),
-			  -clip_x, -clip_y,
-			  pixbuf_document->scale, pixbuf_document->scale,
-			  GDK_INTERP_BILINEAR);
-	
-	gdk_draw_pixbuf (pixbuf_document->target, NULL, tmp_pixbuf,
-			 0, 0,
-			 clip_x, clip_y,
-			 clip_width, clip_height, GDK_RGB_DITHER_NORMAL,
-			 0, 0);
-
-	g_object_unref (tmp_pixbuf);
+	return gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
+					gdk_pixbuf_get_width (pixbuf_document->pixbuf) * pixbuf_document->scale,
+					gdk_pixbuf_get_height (pixbuf_document->pixbuf) * pixbuf_document->scale,
+					GDK_INTERP_BILINEAR);
 }
 
 static void
@@ -259,10 +217,8 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page = pixbuf_document_set_page;
 	iface->get_page = pixbuf_document_get_page;
 	iface->set_scale = pixbuf_document_set_scale;
-	iface->set_target = pixbuf_document_set_target;
-	iface->set_page_offset = pixbuf_document_set_page_offset;
 	iface->get_page_size = pixbuf_document_get_page_size;
-	iface->render = pixbuf_document_render;
+	iface->render_pixbuf = pixbuf_document_render_pixbuf;
 }
 
 static GdkPixbuf *
