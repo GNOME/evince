@@ -1,3 +1,5 @@
+# SUBDIRS = . tests
+
 INCLUDES =							\
 	-I$(top_srcdir)						\
 	-I$(top_srcdir)/goo					\
@@ -25,34 +27,29 @@ bin_PROGRAMS = 	$(gui)
 
 libexec_PROGRAMS = gnome-pdf-viewer
 
-common_sources =		\
+noinst_LIBRARIES = libxpdf.a libgpdf.a
+
+libxpdf_a_SOURCES =		\
 	Annot.cc		\
 	Annot.h			\
 	Array.cc 		\
 	Array.h			\
-	BaseFile.h		\
 	BuiltinFont.cc		\
 	BuiltinFont.h		\
 	BuiltinFontTables.cc	\
 	BuiltinFontTables.h	\
-	CMap.cc			\
-	CMap.h			\
 	Catalog.cc 		\
 	Catalog.h		\
 	CharCodeToUnicode.cc	\
 	CharCodeToUnicode.h	\
-	CharTypes.h		\
-	CompactFontTables.h	\
+	CMap.cc			\
+	CMap.h			\
 	Decrypt.cc		\
 	Decrypt.h		\
 	Dict.cc 		\
 	Dict.h			\
-	DisplayFontTable.h	\
 	Error.cc 		\
 	Error.h			\
-	ErrorCodes.h		\
-	FTFont.cc		\
-	FTFont.h		\
 	FontEncodingTables.cc	\
 	FontEncodingTables.h	\
 	FontFile.cc		\
@@ -75,40 +72,55 @@ common_sources =		\
 	Link.h			\
 	NameToCharCode.cc	\
 	NameToCharCode.h	\
-	NameToUnicodeTable.h	\
 	Object.cc 		\
 	Object.h		\
 	Outline.cc		\
 	Outline.h		\
-	OutputDev.cc 		\
-	OutputDev.h		\
+	Page.cc 		\
+	Page.h			\
+	Parser.cc 		\
+	Parser.h		\
 	PDFDoc.cc 		\
 	PDFDoc.h		\
 	PDFDocEncoding.cc	\
 	PDFDocEncoding.h	\
 	PSTokenizer.cc		\
 	PSTokenizer.h		\
-	Page.cc 		\
-	Page.h			\
-	Parser.cc 		\
-	Parser.h		\
-	SFont.cc		\
-	SFont.h			\
 	Stream-CCITT.h		\
 	Stream.cc 		\
 	Stream.h		\
+	UnicodeMap.cc		\
+	UnicodeMap.h		\
+	UnicodeMapTables.h	\
+	XRef.cc			\
+	XRef.h
+
+common_sources =		\
+	BaseFile.h		\
+	CharTypes.h		\
+	CompactFontTables.h	\
+	DisplayFontTable.h	\
+	ErrorCodes.h		\
+	FTFont.cc		\
+	FTFont.h		\
+	NameToUnicodeTable.h	\
+	OutputDev.cc 		\
+	OutputDev.h		\
+	SFont.cc		\
+	SFont.h			\
 	T1Font.cc		\
 	T1Font.h		\
 	TTFont.cc		\
 	TTFont.h		\
 	TextOutputDev.cc	\
 	TextOutputDev.h		\
-	UTF8.h			\
-	UnicodeMap.cc		\
-	UnicodeMap.h		\
-	UnicodeMapTables.h	\
-	XRef.cc			\
-	XRef.h
+	UTF8.h
+
+libgpdf_a_SOURCES =			\
+	gpdf-link-canvas-item.cc	\
+	gpdf-link-canvas-item.h		\
+	gpdf-links-canvas-layer.cc	\
+	gpdf-links-canvas-layer.h
 
 gnome_pdf_viewer_SOURCES =		\
 	$(common_sources)		\
@@ -141,6 +153,7 @@ gnome_pdf_viewer_SOURCES =		\
 	pdf-properties-display.h	\
 	$(BUILT_SOURCES)
 
+
 # Old files
 #	GOutputDev.cc			\
 #	GOutputDev.h			\
@@ -152,6 +165,8 @@ gnome_pdf_viewer_SOURCES =		\
 # 	gpdf-embeddable-view.h
 
 gnome_pdf_viewer_LDADD =		\
+	libxpdf.a			\
+	libgpdf.a			\
 	$(top_builddir)/goo/libGoo.a	\
 	$(EXTRA_GNOME_LIBS)		\
 	$(libpaper_LIBS)
@@ -176,6 +191,7 @@ xpdf_SOURCES =			\
 
 xpdf_CFLAGS = $(X_CFLAGS)
 xpdf_LDADD = 				\
+	libxpdf.a			\
 	$(top_builddir)/goo/libGoo.a 	\
 	-lXpm                           \
 	$(EXTRA_GNOME_LIBS) 		\
