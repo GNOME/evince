@@ -1275,7 +1275,7 @@ ev_window_focus_in_event (GtkWidget *widget, GdkEventFocus *event)
 	EvWindow *window = EV_WINDOW (widget);
 	EvWindowPrivate *priv = window->priv;
 
-	if (priv->fullscreen_popup != NULL)
+	if (priv->fullscreen_mode)
 	{
 		gtk_widget_show (priv->fullscreen_popup);
 	}
@@ -1289,7 +1289,7 @@ ev_window_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 	EvWindow *window = EV_WINDOW (widget);
 	EvWindowPrivate *priv = window->priv;
 
-	if (priv->fullscreen_popup != NULL)
+	if (priv->fullscreen_mode)
 	{
 		gtk_widget_hide (priv->fullscreen_popup);
 	}
