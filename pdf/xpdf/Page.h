@@ -22,6 +22,8 @@ class XRef;
 class OutputDev;
 class Links;
 class Catalog;
+class Annots;
+class Annot;
 
 //------------------------------------------------------------------------
 
@@ -140,18 +142,25 @@ public:
   // Get contents.
   Object *getContents(Object *obj) { return contents.fetch(xref, obj); }
 
+  // Get thumb.
+  Object *getThumb(Object *obj) { return thumb.fetch(xref, obj); }
+
   // Display a page.
   void display(OutputDev *out, double dpi, int rotate,
 	       Links *links, Catalog *catalog,
 	       GBool (*abortCheckCbk)(void *data) = NULL,
-	       void *abortCheckCbkData = NULL);
+	       void *abortCheckCbkData = NULL,
+               GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data) = NULL,
+               void *annotDisplayDecideCbkData = NULL);
 
   // Display part of a page.
   void displaySlice(OutputDev *out, double dpi, int rotate,
 		    int sliceX, int sliceY, int sliceW, int sliceH,
 		    Links *links, Catalog *catalog,
 		    GBool (*abortCheckCbk)(void *data) = NULL,
-		    void *abortCheckCbkData = NULL);
+		    void *abortCheckCbkData = NULL,
+                    GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data) = NULL,
+                    void *annotDisplayDecideCbkData = NULL);
 
 private:
 
@@ -160,6 +169,7 @@ private:
   PageAttrs *attrs;		// page attributes
   Object annots;		// annotations array
   Object contents;		// page contents
+  Object thumb;			// page thumbnail
   GBool ok;			// true if page is valid
 };
 
