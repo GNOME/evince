@@ -70,8 +70,8 @@ CXX_SRC = \
 
 all: gpdf
 
-all: xpdf$(EXE) pdftops$(EXE) pdftotext$(EXE) pdfinfo$(EXE) \
-	pdftopbm$(EXE) pdfimages$(EXE)
+#all: xpdf$(EXE) pdftops$(EXE) pdftotext$(EXE) pdfinfo$(EXE) \
+#	pdftopbm$(EXE) pdfimages$(EXE)
 
 #------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ XPDF_OBJS = Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GPDF_OBJS = Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 	GfxState.o Lexer.o Link.o GOutputDev.o Object.o OutputDev.o \
 	Page.o Params.o Parser.o PDFDoc.o PSOutputDev.o Stream.o \
-	TextOutputDev.o XOutputDev.o XRef.o gpdf.o
+	TextOutputDev.o XRef.o gpdf.o
 
 XPDF_LIBS = -L$(LTKLIBDIR) -lLTK -L$(GOOLIBDIR) -lGoo $(XLIBS) $(OTHERLIBS) -lm
 
