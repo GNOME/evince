@@ -554,6 +554,8 @@ set_up_page(PSDocument * gs)
              gs->left_margin,
              gs->bottom_margin, gs->right_margin, gs->top_margin);
 
+  LOG ("GS property %s", buf)
+
 #ifdef HAVE_LOCALE_H
   setlocale(LC_NUMERIC, savelocale);
 #endif
