@@ -8,13 +8,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-23 10:52+0100\n"
-"PO-Revision-Date: 2005-01-23 15:11+0100\n"
+"POT-Creation-Date: 2005-01-28 10:52+0100\n"
+"PO-Revision-Date: 2005-01-28 13:42+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: data/evince-password.glade.h:1
+msgid "*"
+msgstr "*"
+
+#: data/evince-password.glade.h:2
+msgid "<span size=\"smaller\"> </span>"
+msgstr "<span size=\"smaller\"> </span>"
+
+#: data/evince-password.glade.h:3
+msgid "_Password:"
+msgstr "_Heslo:"
+
+#: data/evince.desktop.in.h:1 shell/ev-window.c:285
+msgid "Document Viewer"
+msgstr "Prohlížeč dokumentů"
+
+#: data/evince.desktop.in.h:2 shell/main.c:84
+msgid "Evince Document Viewer"
+msgstr "Prohlížeč dokumentů Evince"
+
+#: data/evince.desktop.in.h:3
+msgid "View multipage documents"
+msgstr "Zobrazovat dokumenty s více stránkami"
 
 #: ps/gsdefaults.c:68
 msgid "BBox"
@@ -197,7 +221,7 @@ msgstr "Dokumenty v PostScriptu a PDF"
 msgid "PostScript Documents"
 msgstr "Dokumenty v PostScriptu"
 
-#: shell/ev-application.c:141 shell/ev-window.c:582
+#: shell/ev-application.c:141 shell/ev-window.c:596
 msgid "PDF Documents"
 msgstr "Dokumenty PDF"
 
@@ -205,7 +229,7 @@ msgstr "Dokumenty PDF"
 msgid "Images"
 msgstr "Obrázky"
 
-#: shell/ev-application.c:151 shell/ev-window.c:587
+#: shell/ev-application.c:151 shell/ev-window.c:601
 msgid "All Files"
 msgstr "Všechny soubory"
 
@@ -214,61 +238,102 @@ msgstr "Všechny soubory"
 msgid "of %d"
 msgstr "z %d"
 
-#: shell/ev-view.c:556
+#: shell/ev-password-view.c:111
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
+msgstr "Tento dokument je uzamčen a lze jej číst jen po zadání správného hesla."
+
+#: shell/ev-password-view.c:120
+msgid "_Unlock Document"
+msgstr "_Odemknout dokument"
+
+#: shell/ev-password.c:88
+msgid "Unable to find glade file"
+msgstr "Nemohu najít soubor glade"
+
+#: shell/ev-password.c:90
+#, c-format
+msgid ""
+"The glade file, %s, cannot be found.  Please check that your installation is "
+"complete."
+msgstr "Soubor glade %s nelze najít. Zkontrolujte prosím, že vaše instalace je úplná."
+
+#: shell/ev-password.c:104
+msgid "Password required"
+msgstr "Vyžadováno heslo"
+
+#: shell/ev-password.c:105
+#, c-format
+msgid ""
+"The document <i>%s</i> is locked and requires a password before it can be "
+"opened."
+msgstr "Dokument <i>%s</i> je uzamčen a pro otevření vyžaduje heslo."
+
+#: shell/ev-password.c:142
+msgid "Incorrect password"
+msgstr "Nesprávné heslo"
+
+#: shell/ev-view.c:559
 #, c-format
 msgid "Go to page %d"
 msgstr "Jít na stranu %d"
 
-#: shell/ev-view.c:927
+#: shell/ev-view.c:930
 msgid "Not found"
 msgstr "Nenalezeno"
 
-#: shell/ev-view.c:929
+#: shell/ev-view.c:932
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "Zbývá prohledat %3d%%"
 
-#: shell/ev-view.c:934
+#: shell/ev-view.c:937
 #, c-format
 msgid "Found on page %d"
 msgstr "Nalezeno na straně %d"
 
-#: shell/ev-view.c:937
+#: shell/ev-view.c:940
 #, c-format
 msgid "%d found on this page"
 msgstr "Na této straně nalezeno %d"
 
-#: shell/ev-window.c:283
+#: shell/ev-window.c:207
 msgid "Unable to open document"
 msgstr "Nemohu otevřít dokument"
 
-#: shell/ev-window.c:334
-msgid "Document Viewer"
-msgstr "Prohlížeč dokumentů"
+#: shell/ev-window.c:279
+msgid "Document Viewer - Password Required"
+msgstr "Prohlížeč dokumentů - Vyžadováno heslo"
 
-#: shell/ev-window.c:485
+#: shell/ev-window.c:281
+#, c-format
+msgid "%s - Password Required"
+msgstr "%s - Vyžadováno heslo"
+
+#: shell/ev-window.c:499
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Neobsloužený typ MIME: '%s'"
 
-#: shell/ev-window.c:554
+#: shell/ev-window.c:568
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Soubor nelze uložit jako \"%s\"."
 
-#: shell/ev-window.c:574
+#: shell/ev-window.c:588
 msgid "Save a Copy"
 msgstr "Uložit kopii"
 
-#: shell/ev-window.c:652
+#: shell/ev-window.c:666
 msgid "Print"
 msgstr "Vytisknout"
 
-#: shell/ev-window.c:675
+#: shell/ev-window.c:689
 msgid "Printing is not supported on this printer."
 msgstr "Tisk na této tiskárně není podporován."
 
-#: shell/ev-window.c:678
+#: shell/ev-window.c:692
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -277,27 +342,27 @@ msgstr ""
 "Pokusili jste se tisknout na tiskárnu pomocí ovladače \"%s\". Tento program "
 "vyžaduje ovladač tiskárny PostScript."
 
-#: shell/ev-window.c:730
+#: shell/ev-window.c:744
 msgid "The \"Find\" feature will not work with this document"
 msgstr "Funkce \"Hledat\" nebude s tímto dokumentem fungovat"
 
-#: shell/ev-window.c:732
+#: shell/ev-window.c:746
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Hledání textu je podporováno jen pro dokumenty PDF"
 
-#: shell/ev-window.c:879
+#: shell/ev-window.c:893
 msgid "Exit Fullscreen"
 msgstr "Ukončit celou obrazovku"
 
-#: shell/ev-window.c:1075
+#: shell/ev-window.c:1099
 msgid "Many..."
 msgstr "Mnoho..."
 
-#: shell/ev-window.c:1080
+#: shell/ev-window.c:1104
 msgid "Not so many..."
 msgstr "Ne tak moc..."
 
-#: shell/ev-window.c:1085
+#: shell/ev-window.c:1109
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -309,7 +374,7 @@ msgstr ""
 "Foundation; a to buď verze 2 licence, nebo (podle vašeho uvážení)\n"
 "libovolné pozdější verze.\n"
 
-#: shell/ev-window.c:1089
+#: shell/ev-window.c:1113
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -321,7 +386,7 @@ msgstr ""
 "VHODNOSTI PRO KONKRÉTNÍ ÚČEL. Pro další podrobnosti viz\n"
 "GNU General Public License.\n"
 
-#: shell/ev-window.c:1093
+#: shell/ev-window.c:1117
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -331,155 +396,143 @@ msgstr ""
 "pokud se tak nestalo, napište Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: shell/ev-window.c:1115 shell/main.c:80
+#: shell/ev-window.c:1139 shell/main.c:80
 msgid "Evince"
 msgstr "Evince"
 
-#: shell/ev-window.c:1118
+#: shell/ev-window.c:1142
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 Autoři Evince"
 
-#: shell/ev-window.c:1121
+#: shell/ev-window.c:1145
 msgid "PostScript and PDF File Viewer."
 msgstr "Prohlížeč souborů v PostScriptu a PDF."
 
-#: shell/ev-window.c:1124
+#: shell/ev-window.c:1148
 msgid "translator-credits"
 msgstr "Miloslav Trmač <mitr@volny.cz>"
 
-#: shell/ev-window.c:1399
+#: shell/ev-window.c:1405
 msgid "_File"
 msgstr "_Soubor"
 
-#: shell/ev-window.c:1400
+#: shell/ev-window.c:1406
 msgid "_Edit"
 msgstr "_Upravit"
 
-#: shell/ev-window.c:1401
+#: shell/ev-window.c:1407
 msgid "_View"
 msgstr "_Zobrazit"
 
-#: shell/ev-window.c:1402
+#: shell/ev-window.c:1408
 msgid "_Go"
 msgstr "_Jít"
 
-#: shell/ev-window.c:1403
+#: shell/ev-window.c:1409
 msgid "_Help"
 msgstr "_Nápověda"
 
 #. File menu
-#: shell/ev-window.c:1406
+#: shell/ev-window.c:1412
 msgid "_Open"
 msgstr "_Otevřít"
 
-#: shell/ev-window.c:1407
+#: shell/ev-window.c:1413
 msgid "Open a file"
 msgstr "Otevřít soubor"
 
-#: shell/ev-window.c:1409
+#: shell/ev-window.c:1415
 msgid "_Save a Copy..."
 msgstr "_Uložit kopii..."
 
-#: shell/ev-window.c:1410
+#: shell/ev-window.c:1416
 msgid "Save the current document with a new filename"
 msgstr "Uložit aktuální dokument pod novým názvem"
 
-#: shell/ev-window.c:1412
+#: shell/ev-window.c:1418
 msgid "_Print"
 msgstr "Vy_tisknout"
 
-#: shell/ev-window.c:1413
+#: shell/ev-window.c:1419
 msgid "Print this document"
 msgstr "Vytisknout tento dokument"
 
-#: shell/ev-window.c:1415
+#: shell/ev-window.c:1421
 msgid "_Close"
 msgstr "_Zavřít"
 
-#: shell/ev-window.c:1416
+#: shell/ev-window.c:1422
 msgid "Close this window"
 msgstr "Zavřít toto okno"
 
 #. Edit menu
-#: shell/ev-window.c:1420
+#: shell/ev-window.c:1426
 msgid "_Copy"
 msgstr "_Kopírovat"
 
-#: shell/ev-window.c:1421
+#: shell/ev-window.c:1427
 msgid "Copy text from the document"
 msgstr "Kopírovat text z dokumentu"
 
-#: shell/ev-window.c:1423
+#: shell/ev-window.c:1429
 msgid "Select _All"
 msgstr "Vybrat vš_e"
 
-#: shell/ev-window.c:1424
+#: shell/ev-window.c:1430
 msgid "Select the entire page"
 msgstr "Vybrat celou stranu"
 
-#: shell/ev-window.c:1426
+#: shell/ev-window.c:1432
 msgid "_Find"
 msgstr "_Hledat"
 
-#: shell/ev-window.c:1427
+#: shell/ev-window.c:1433
 msgid "Find a word or phrase in the document"
 msgstr "Hledat slovo nebo frázi v dokumentu"
 
 #. View menu
-#: shell/ev-window.c:1431
+#: shell/ev-window.c:1437
 msgid "Zoom _In"
 msgstr "Z_většit"
 
-#: shell/ev-window.c:1432
+#: shell/ev-window.c:1438
 msgid "Enlarge the document"
 msgstr "Zvětšit dokument"
 
-#: shell/ev-window.c:1434
+#: shell/ev-window.c:1440
 msgid "Zoom _Out"
 msgstr "Z_menšit"
 
-#: shell/ev-window.c:1435
+#: shell/ev-window.c:1441
 msgid "Shrink the document"
 msgstr "Zmenšit dokument"
 
-#: shell/ev-window.c:1437
+#: shell/ev-window.c:1443
 msgid "_Normal Size"
 msgstr "_Normální velikost"
 
-#: shell/ev-window.c:1438
+#: shell/ev-window.c:1444
 msgid "Zoom to the normal size"
 msgstr "Normální zvětšení"
 
-#: shell/ev-window.c:1440
+#: shell/ev-window.c:1446
 msgid "_Best Fit"
 msgstr "_Přizpůsobit"
 
-#: shell/ev-window.c:1441
+#: shell/ev-window.c:1447
 msgid "Zoom to fit the document to the current window"
 msgstr "Zvětšení, aby se dokument vešel do aktuálního okna"
 
-#: shell/ev-window.c:1443
+#: shell/ev-window.c:1449
 msgid "Fit Page _Width"
 msgstr "Přizpůsobit _šířku strany"
 
-#: shell/ev-window.c:1444
+#: shell/ev-window.c:1450
 msgid "Zoom to fit the width of the current window "
 msgstr "Zvětšení, aby se dokument vešel do šířky aktuálního okna"
 
-#. Go menu
-#: shell/ev-window.c:1448
-msgid "_Back"
-msgstr "_Zpět"
-
-#: shell/ev-window.c:1449 shell/ev-window.c:1452
-msgid "Go to the page viewed before this one"
-msgstr "Jít na stranu zobrazenou před touto"
-
-#: shell/ev-window.c:1451
-msgid "Fo_rward"
-msgstr "_Vpřed"
-
 # FIXME?
+#. Go menu
 #: shell/ev-window.c:1454
 msgid "_Page Up"
 msgstr "Předchozí _strana"
@@ -564,65 +617,62 @@ msgid "Expand the window to fill the screen"
 msgstr "Zvětšit okno, aby vyplnilo obrazovku"
 
 #: shell/ev-window.c:1511
-msgid "Back"
-msgstr "Zpět"
-
-#: shell/ev-window.c:1513
-msgid "Go back"
-msgstr "Jít zpět"
-
-#: shell/ev-window.c:1514
-msgid "Back history"
-msgstr "Zpět v historii"
-
-#: shell/ev-window.c:1525
-msgid "Forward"
-msgstr "Vpřed"
-
-#: shell/ev-window.c:1527
-msgid "Go forward"
-msgstr "Jít vpřed"
-
-#: shell/ev-window.c:1528
-msgid "Forward history"
-msgstr "Vpřed v historii"
-
-#: shell/ev-window.c:1538
 msgid "Page"
 msgstr "Strana"
 
-#: shell/ev-window.c:1539
+#: shell/ev-window.c:1512
 msgid "Select Page"
 msgstr "Zvolit stranu"
 
-#: shell/ev-window.c:1553
+#: shell/ev-window.c:1526
 msgid "Up"
 msgstr "Nahoru"
 
-#: shell/ev-window.c:1555
+#: shell/ev-window.c:1528
 msgid "Down"
 msgstr "Dolů"
 
-#: shell/ev-window.c:1557
+#: shell/ev-window.c:1530
 msgid "Fit Width"
 msgstr "Přizpůsobit šířku"
 
-#: shell/ev-window.c:1636
+#: shell/ev-window.c:1608
 msgid "Index"
 msgstr "Rejstřík"
 
-#: shell/ev-window.c:1643
+#: shell/ev-window.c:1615
 msgid "Thumbnails"
 msgstr "Miniatury"
 
-#: shell/main.c:84
-msgid "Evince Document Viewer"
-msgstr "Prohlížeč dokumentů Evince"
+#~ msgid "_Back"
+#~ msgstr "_Zpět"
 
-#: shell/ev-history.c:175
-#, c-format
-msgid "Page %d"
-msgstr "Strana %d"
+#~ msgid "Go to the page viewed before this one"
+#~ msgstr "Jít na stranu zobrazenou před touto"
+
+#~ msgid "Fo_rward"
+#~ msgstr "_Vpřed"
+
+#~ msgid "Back"
+#~ msgstr "Zpět"
+
+#~ msgid "Go back"
+#~ msgstr "Jít zpět"
+
+#~ msgid "Back history"
+#~ msgstr "Zpět v historii"
+
+#~ msgid "Forward"
+#~ msgstr "Vpřed"
+
+#~ msgid "Go forward"
+#~ msgstr "Jít vpřed"
+
+#~ msgid "Forward history"
+#~ msgstr "Vpřed v historii"
+
+#~ msgid "Page %d"
+#~ msgstr "Strana %d"
 
 #~ msgid "Unknown"
 #~ msgstr "Neznámé"
