@@ -17,6 +17,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include "config.h"
+#include "Object.h"
 #include "CharTypes.h"
 #include "GlobalParams.h"
 #include "OutputDev.h"

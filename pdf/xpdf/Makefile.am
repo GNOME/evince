@@ -119,8 +119,10 @@ bonobo_application_x_pdf_SOURCES =	\
 	GOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
 	bonobo-application-x-pdf.h	\
-	gpdf-embeddable.h		\
 	gpdf-embeddable.cc		\
+	gpdf-embeddable.h		\
+	gpdf-embeddable-view.cc		\
+	gpdf-embeddable-view.h		\
 	gpdf-util.h			\
 	gtkgesture.c			\
 	gtkgesture.h
