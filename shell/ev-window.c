@@ -1651,8 +1651,10 @@ set_action_properties (GtkActionGroup *action_group)
 	action = gtk_action_group_get_action (action_group, "GoPreviousPage");
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Previous"), NULL);
+	g_object_set (action, "is-important", TRUE, NULL);
 	action = gtk_action_group_get_action (action_group, "GoNextPage");
 	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "is-important", TRUE, NULL);
 	g_object_set (action, "short_label", _("Next"), NULL);
 	action = gtk_action_group_get_action (action_group, "ViewPageWidth");
 	/*translators: this is the label for toolbar button*/
