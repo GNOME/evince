@@ -161,6 +161,14 @@ ev_document_get_page_size   (EvDocument   *document,
 	iface->get_page_size (document, width, height);
 }
 
+char *
+ev_document_get_text (EvDocument   *document,
+		      GdkRectangle *rect)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	return iface->get_text (document, rect);
+}
+
 void
 ev_document_render (EvDocument  *document,
 		    int          clip_x,

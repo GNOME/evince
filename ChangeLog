@@ -1,5 +1,18 @@
 2005-01-05  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* backend/ev-document.c: (ev_document_get_text):
+	* backend/ev-document.h:
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-view.c: (ev_view_realize), (expose_bin_window),
+	(ev_view_primary_get_cb), (ev_view_primary_clear_cb),
+	(ev_view_update_primary_selection), (ev_view_button_press_event),
+	(ev_view_motion_notify_event), (ev_view_button_release_event):
+
+	Beginnings of clipboard support. Incomplete but primary sort
+	of work.
+
+2005-01-05  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-view.c: (ev_gdk_color_to_rgb), (draw_rubberband),
 	(expose_bin_window):
 

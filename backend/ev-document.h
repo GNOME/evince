@@ -46,31 +46,33 @@ struct _EvDocumentIface
 	void	    (* changed)		(EvDocument *document);
 
 	/* Methods  */
-	gboolean    (* load)	        (EvDocument *document,
-					 const char *uri,
-					 GError    **error);
-	gboolean    (* save)	        (EvDocument *document,
-					 const char *uri,
-					 GError    **error);
-	int         (* get_n_pages)     (EvDocument *document);
-	void	    (* set_page)	(EvDocument  *document,
-					 int          page);
-	int	    (* get_page)	(EvDocument  *document);
-	void	    (* set_target)      (EvDocument  *document,
-					 GdkDrawable *target);
-	void	    (* set_scale)       (EvDocument  *document,
-					 double       scale);
-	void	    (* set_page_offset) (EvDocument  *document,
-					 int          x,
-					 int          y);
-	void	    (* get_page_size)   (EvDocument  *document,
-					 int         *width,
-					 int         *height);
-	void	    (* render)          (EvDocument  *document,
-					 int          clip_x,
-					 int          clip_y,
-					 int          clip_width,
-					 int          clip_height);
+	gboolean    (* load)	        (EvDocument   *document,
+					 const char   *uri,
+					 GError      **error);
+	gboolean    (* save)	        (EvDocument   *document,
+					 const char   *uri,
+					 GError      **error);
+	int         (* get_n_pages)     (EvDocument   *document);
+	void	    (* set_page)	(EvDocument   *document,
+					 int           page);
+	int	    (* get_page)	(EvDocument   *document);
+	void	    (* set_target)      (EvDocument   *document,
+					 GdkDrawable  *target);
+	void	    (* set_scale)       (EvDocument   *document,
+					 double        scale);
+	void	    (* set_page_offset) (EvDocument   *document,
+					 int           x,
+					 int           y);
+	void	    (* get_page_size)   (EvDocument   *document,
+					 int          *width,
+					 int          *height);
+	char	  * (* get_text)	(EvDocument   *document,
+					 GdkRectangle *rect);
+	void	    (* render)          (EvDocument   *document,
+					 int           clip_x,
+					 int           clip_y,
+					 int           clip_width,
+					 int           clip_height);
 };
 
 GType ev_document_get_type (void);
@@ -96,6 +98,8 @@ void     ev_document_set_page_offset (EvDocument   *document,
 void     ev_document_get_page_size   (EvDocument   *document,
 				      int          *width,
 				      int          *height);
+char    *ev_document_get_text	     (EvDocument   *document,
+				      GdkRectangle *rect);
 void     ev_document_render          (EvDocument   *document,
 				      int           clip_x,
 				      int           clip_y,

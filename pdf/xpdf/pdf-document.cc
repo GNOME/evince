@@ -959,6 +959,25 @@ pdf_document_get_title (PdfDocument *pdf_document)
 	return title;
 }
 
+static char *
+pdf_document_get_text (EvDocument *document, GdkRectangle *rect)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	GString *sel_text = new GString;
+	const char *text;
+	int x1, y1, x2, y2;
+
+	x1 = rect->x;
+	y1 = rect->y;
+	x2 = x1 + rect->width;
+	y2 = y1 + rect->height;
+
+	sel_text = pdf_document->out->getText (x1, y1, x2, y2);
+	text = sel_text->getCString ();
+
+	return text ? g_strdup (text) : NULL;
+}
+
 static void
 pdf_document_get_property (GObject *object,
 		           guint prop_id,
@@ -995,6 +1014,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = pdf_document_load;
 	iface->save = pdf_document_save;
+	iface->get_text = pdf_document_get_text;
 	iface->get_n_pages = pdf_document_get_n_pages;
 	iface->set_page = pdf_document_set_page;
 	iface->get_page = pdf_document_get_page;

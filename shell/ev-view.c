@@ -21,6 +21,8 @@
 #include <gtk/gtkalignment.h>
 #include <glib/gi18n.h>
 #include <gtk/gtkbindings.h>
+#include <gtk/gtkselection.h>
+#include <gtk/gtkclipboard.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "ev-marshal.h"
@@ -31,6 +33,21 @@
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
 #define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
 
+enum {
+  TARGET_STRING,
+  TARGET_TEXT,
+  TARGET_COMPOUND_TEXT,
+  TARGET_UTF8_STRING,
+  TARGET_TEXT_BUFFER_CONTENTS
+};
+
+static const GtkTargetEntry targets[] = {
+	{ "STRING", 0, TARGET_STRING },
+	{ "TEXT",   0, TARGET_TEXT },
+	{ "COMPOUND_TEXT", 0, TARGET_COMPOUND_TEXT },
+	{ "UTF8_STRING", 0, TARGET_UTF8_STRING },
+};
+
 struct _EvView {
 	GtkWidget parent_instance;
 
@@ -40,6 +57,9 @@ struct _EvView {
 	
 	int scroll_x;
 	int scroll_y;
+
+	gboolean has_selection;
+	GdkRectangle selection;
 
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
@@ -247,8 +267,10 @@ ev_view_realize (GtkWidget *widget)
 	attributes.height = MAX (widget->allocation.height, widget->requisition.height);
 	attributes.event_mask = GDK_EXPOSURE_MASK |
 				GDK_BUTTON_PRESS_MASK |
+				GDK_BUTTON_RELEASE_MASK |
 				GDK_SCROLL_MASK |
-				GDK_KEY_PRESS_MASK;
+				GDK_KEY_PRESS_MASK |
+				GDK_BUTTON1_MOTION_MASK;
   
 	view->bin_window = gdk_window_new (widget->window,
 					   &attributes,
@@ -379,6 +401,10 @@ expose_bin_window (GtkWidget      *widget,
 					 &results[i].highlight_area);
                 ++i;
         }
+
+	if (view->has_selection) {
+		draw_rubberband (widget, view->bin_window, &view->selection);
+	}
 }
 
 static gboolean
@@ -395,14 +421,67 @@ ev_view_expose_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+static void
+ev_view_primary_get_cb (GtkClipboard     *clipboard,
+			GtkSelectionData *selection_data,
+			guint             info,
+			gpointer          data)
+{
+	EvView *ev_view = EV_VIEW (data);
+	char *text;
+
+	text = ev_document_get_text (ev_view->document, &ev_view->selection);
+	gtk_selection_data_set_text (selection_data, text, -1);
+}
+
+static void
+ev_view_primary_clear_cb (GtkClipboard *clipboard,
+			  gpointer      data)
+{
+	EvView *ev_view = EV_VIEW (data);
+
+	ev_view->has_selection = FALSE;
+}
+
+static void
+ev_view_update_primary_selection (EvView *ev_view)
+{
+	GtkClipboard *clipboard;
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
+                                              GDK_SELECTION_PRIMARY);
+
+	if (ev_view->has_selection) {
+		if (!gtk_clipboard_set_with_owner (clipboard,
+						   targets,
+						   G_N_ELEMENTS (targets),
+						   ev_view_primary_get_cb,
+						   ev_view_primary_clear_cb,
+						   G_OBJECT (ev_view)))
+			ev_view_primary_clear_cb (clipboard, ev_view);
+	} else {
+		if (gtk_clipboard_get_owner (clipboard) == G_OBJECT (ev_view))
+			gtk_clipboard_clear (clipboard);
+	}
+}
+
 static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
-	if (event->type == GDK_BUTTON_PRESS) {
-		if (!GTK_WIDGET_HAS_FOCUS (widget)) {
-			gtk_widget_grab_focus (widget);
-		}
+	EvView *view = EV_VIEW (widget);
+
+	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
+		gtk_widget_grab_focus (widget);
+	}
+
+	switch (event->button) {
+		case 1:
+			view->selection.x = event->x;
+			view->selection.y = event->y;
+			view->selection.width = 0;
+			view->selection.height = 0;
+			break;
 	}
 
 	return TRUE;
@@ -412,16 +491,26 @@ static gboolean
 ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
 {
-	/* EvView *view = EV_VIEW (widget); */
-  
-	return FALSE;
+	EvView *view = EV_VIEW (widget);
+
+	view->has_selection = TRUE;
+	view->selection.x = MIN (view->selection.x, event->x);
+	view->selection.y = MIN (view->selection.y, event->y);
+	view->selection.width = ABS (view->selection.x - event->x) + 1;
+	view->selection.height = ABS (view->selection.y - event->y) + 1;
+
+	gtk_widget_queue_draw (widget);
+
+	return TRUE;
 }
 
 static gboolean
 ev_view_button_release_event (GtkWidget      *widget,
 			      GdkEventButton *event)
 {
-	/* EvView *view = EV_VIEW (widget); */
+	EvView *view = EV_VIEW (widget);
+
+	ev_view_update_primary_selection (view);
 
 	return FALSE;
 }
