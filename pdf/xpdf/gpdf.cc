@@ -394,33 +394,6 @@ container_launch_component (GnomeClientSite *client_site,
 	return object_server;
 }
 
-/*
- * Use query_interface to see if `obj' has `interface'.
- */
-static gboolean
-gnome_object_has_interface (GnomeObject *obj, char *interface)
-{
-	CORBA_Environment ev;
-	CORBA_Object requested_interface;
-
-	CORBA_exception_init (&ev);
-
-	requested_interface = GNOME_Unknown_query_interface (
-		gnome_object_corba_objref (obj), interface, &ev);
-
-	CORBA_exception_free (&ev);
-
-	if (!CORBA_Object_is_nil(requested_interface, &ev) &&
-	    ev._major == CORBA_NO_EXCEPTION)
-	{
-		/* Get rid of the interface we've been passed */
-		CORBA_Object_release (requested_interface, &ev);
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 extern "C" {
   static Component *
   container_activate_component (Container *container, char *component_goad_id)
