@@ -64,7 +64,6 @@ struct _Container {
   GtkScrolledWindow *scroll;
   GtkWidget	    *view_widget;
   Component         *component;
-  gdouble zoom;
 };
 
 struct  _Component {
@@ -87,9 +86,6 @@ extern "C" {
   static void       container_exit_cmd  (void);
   static void       container_about_cmd (GtkWidget *widget, Container *container);
   static Component *container_activate_component (Container *container, char *component_goad_id);
-  static void       zoom_in_cmd         (GtkWidget *widget, Container *container);
-  static void       zoom_out_cmd        (GtkWidget *widget, Container *container);
-  static void       zoom_set            (Container *container);
 }
 
 /*
@@ -104,16 +100,6 @@ static GnomeUIInfo container_file_menu [] = {
 	GNOMEUIINFO_END
 };
 
-static GnomeUIInfo container_menu_zoom [] = {
-	{ GNOME_APP_UI_ITEM, N_("_Zoom in"),
-	  N_("Increase the size of objects in the PDF"),
-	  zoom_in_cmd },
-	{ GNOME_APP_UI_ITEM, N_("_Zoom out"),
-	  N_("Decrease the size of objects in the PDF"),
-	  zoom_out_cmd },
-	GNOMEUIINFO_END
-};
-
 static GnomeUIInfo container_help_menu [] = {
         GNOMEUIINFO_MENU_ABOUT_ITEM(container_about_cmd, NULL),
 	GNOMEUIINFO_END
@@ -121,7 +107,6 @@ static GnomeUIInfo container_help_menu [] = {
 
 static GnomeUIInfo container_main_menu [] = {
 	GNOMEUIINFO_MENU_FILE_TREE (container_file_menu),
-	{ GNOME_APP_UI_SUBTREE, N_("_Zoom"), NULL, container_menu_zoom },
 	GNOMEUIINFO_MENU_HELP_TREE (container_help_menu),
 	GNOMEUIINFO_END
 };
@@ -177,11 +162,11 @@ extern "C" {
     GNOME_PersistStream_load (persist,
 			      (GNOME_Stream) gnome_object_corba_objref (GNOME_OBJECT (stream)), &ev);
 
-    zoom_set (container);
-        
     GNOME_Unknown_unref (persist, &ev);
     CORBA_Object_release (persist, &ev);
     CORBA_exception_free (&ev);
+
+/*    gnome_view_frame_view_do_verb (comp->view_frame, "ZoomFit"); */
     return TRUE;
   }
   
@@ -310,6 +295,7 @@ container_about_cmd (GtkWidget *widget, Container *container)
   int i;
 
   const gchar *authors[] = {
+    N_("Derek B. Noonburg, main author"),
     N_("Michael Meeks, GNOME port maintainer."),
     N_("Miguel de Icaza."),
     N_("Nat Friedman."),
@@ -329,39 +315,6 @@ container_about_cmd (GtkWidget *widget, Container *container)
   gnome_dialog_set_close (GNOME_DIALOG (about), TRUE);
   gtk_widget_show (about);
 }
-
-  /*
-   * Enforces the containers zoom factor.
-   */
-  static void
-  zoom_set (Container *container)
-  {
-    g_return_if_fail (container != NULL);
-    g_return_if_fail (container->component != NULL);
-
-    gnome_view_frame_set_zoom_factor (container->component->view_frame,
-				      container->zoom);
-  }
-
-  static void
-  zoom_in_cmd (GtkWidget *widget, Container *container)
-  {
-    g_return_if_fail (container != NULL);
-    if (container->zoom < 180.0) {
-      container->zoom *= 1.4;
-      zoom_set (container);
-    }
-  }
-
-  static void
-  zoom_out_cmd (GtkWidget *widget, Container *container)
-  {
-    g_return_if_fail (container != NULL);
-    if (container->zoom > 10.0) {
-      container->zoom /= 1.4;
-      zoom_set (container);
-    }
-  }
 }
 
 static void
@@ -583,7 +536,6 @@ container_new (const char *fname)
 
 	container->app  = gnome_app_new ("pdf-viewer",
 					 "GNOME PDF viewer");
-	container->zoom = 86.0;
 
 	gtk_drag_dest_set (container->app,
 			   GTK_DEST_DEFAULT_ALL,
