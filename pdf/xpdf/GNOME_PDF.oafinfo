@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gpdf_component_factory:5d6d2e89-b73a-4898-b24a-79b896926f12"
+<oaf_server iid="OAFIID:GNOME_XPDF_ComponentFactory"
             type="exe"
             location="bonobo-application-x-pdf">
 
@@ -15,9 +15,9 @@
 
 </oaf_server>
 
-<oaf_server iid="OAFIID:gpdf_component:892f2727-e2ec-423c-91ad-6f7b75fec6c8"
+<oaf_server iid="OAFIID:GNOME_XPDF_Embeddable"
             type="factory"
-            location="OAFIID:gpdf_component_factory:5d6d2e89-b73a-4898-b24a-79b896926f12">
+            location="OAFIID:GNOME_XPDF_ComponentFactory">
 
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:Bonobo/Embeddable:1.0"/>

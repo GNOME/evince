@@ -1,3 +1,15 @@
+2000-12-21  Michael Meeks  <michael@helixcode.com>
+
+	* bonobo-application-x-pdf.cc: Kill mutex / thread init code,
+	it screws gtk.
+
+	* gpdf.cc: update the IID naming scheme.
+
+	* bonobo-application-x-pdf.cc (init_bonobo_application_x_pdf_factory):
+	ditto. (init_server_factory): setup ORB properly.
+
+	* Makefile.am: De-goadize; update oafinfo fnames.
+
 2000-11-16  Ramiro Estrugo  <ramiro@eazel.com>
 
 	* bonobo-application-x-pdf.cc:

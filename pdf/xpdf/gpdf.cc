@@ -98,7 +98,7 @@ extern "C" {
     g_return_val_if_fail (container->view_widget == NULL, FALSE);
 
     comp = container_activate_component (
-	    container, "OAFIID:gpdf_component:892f2727-e2ec-423c-91ad-6f7b75fec6c8");
+	    container, "OAFIID:GNOME_XPDF_Embeddable");
 
     if (!comp || !(object = comp->server)) {
       gnome_error_dialog (_("Could not launch bonobo object."));

@@ -1,10 +1,4 @@
 
-if USING_OAF
-OBJECT_DIRECTORY_LIBS=$(OAF_LIBS) $(GNOMEUI_LIBS)
-else
-OBJECT_DIRECTORY_LIBS=$(GNOMEGNORBA_LIBS)
-endif
-
 INCLUDES =					\
 	-I$(top_srcdir)/goo			\
 	-I$(top_srcdir)/ltk			\
@@ -18,7 +12,11 @@ else
 gui = xpdf
 endif
 
-bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-application-x-pdf
+bin_PROGRAMS =			\
+	pdftops pdftotext	\
+	pdfinfo	pdftopbm	\
+	pdfimages $(gui)	\
+	bonobo-application-x-pdf
 
 common_sources =		\
 	Array.cc 		\
@@ -77,7 +75,6 @@ gpdf_SOURCES = 			\
 gpdf_LDADD =			\
 	$(GTK_LIBS)		\
 	$(GNOME_LIBDIR)		\
-	$(OBJECT_DIRECTORY_LIBS) \
 	$(EXTRA_GNOME_LIBS)	\
 	$(INTLLIBS)
 
@@ -96,7 +93,6 @@ bonobo_application_x_pdf_LDADD =	\
 	../goo/libgoo.a			\
 	$(GTK_LIBS)			\
 	$(GNOME_LIBDIR)			\
-	$(OBJECT_DIRECTORY_LIBS)	\
 	$(EXTRA_GNOME_LIBS)		\
 	$(EXTRA_GLIB_LIBS)		\
 	$(INTLLIBS)
@@ -169,17 +165,8 @@ ltk = 			\
 	xpdf-top.ltk	\
 	xpdf.ltk
 
-goaddir = $(sysconfdir)/CORBA/servers
 oafdir = $(datadir)/oaf
-
-if USING_OAF
-oaf_DATA = $(OAF_FILES)
-else
-goad_DATA = $(GOAD_FILES)
-endif
-
-GOAD_FILES = application-x-pdf.gnorba
-OAF_FILES = application-x-pdf.oafinfo
+oaf_DATA = GNOME_XPDF.oafinfo
 
 XML_FILES =				\
 	gpdf-ui.xml			\
@@ -188,7 +175,7 @@ XML_FILES =				\
 uidir = $(datadir)/gnome/ui
 ui_DATA = $(XML_FILES)
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(GOAD_FILES)	\
-             $(OAF_FILES) config.h $(XML_FILES)
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk)	\
+             $(oaf_DATA) config.h $(XML_FILES)
 
 
