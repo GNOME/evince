@@ -1,0 +1,30 @@
+<gconfschemafile>
+    <schemalist>
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@pdf/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@pdf/enable</applyto>
+            <owner>evince</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@pdf/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@pdf/command</applyto>
+            <owner>evince</owner>
+            <type>string</type>
+            <default>evince-thumbnailer %u %o</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+    </schemalist>
+</gconfschemafile>

@@ -140,7 +140,7 @@ document_display_page (PdfDocument *pdf_document)
 		pdf_document->doc->displayPage (pdf_document->out, pdf_document->page,
 						72 * pdf_document->scale,
 						72 * pdf_document->scale,
-						0, gTrue, gTrue);
+						90, gTrue, gTrue);
 
 		document_init_links (pdf_document);
 
