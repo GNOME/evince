@@ -188,11 +188,6 @@ XML_FILES =				\
 uidir = $(datadir)/gnome/ui
 ui_DATA = $(XML_FILES)
 
-BUILT_SOURCES=$(XML_FILES:.xml=.h)
-
-%.h : %.xml
-	bonobo-ui-extract $^ > $@
-
 EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(GOAD_FILES)	\
              $(OAF_FILES) config.h $(XML_FILES)
 
