@@ -40,12 +40,15 @@ struct _PdfDocument
 	GObject parent_instance;
 
 	int page;
-	GdkRectangle page_rect;
+	int page_x_offset;
+	int page_y_offset;
+	double scale;
 	GdkDrawable *target;
 
 	GDKSplashOutputDev *out;
 	PDFDoc *doc;
-	
+
+	gboolean page_valid;
 };
 
 static void pdf_document_document_iface_init (EvDocumentIface *iface);
@@ -54,6 +57,18 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
 						  pdf_document_document_iface_init) });
 
+static gboolean
+document_validate_page (PdfDocument *pdf_document)
+{
+	if (!pdf_document->page_valid) {
+		pdf_document->doc->displayPage (pdf_document->out, pdf_document->page,
+						72 * pdf_document->scale,
+						72 * pdf_document->scale,
+						0, gTrue, gTrue);
+		
+		pdf_document->page_valid = TRUE;
+	}
+}
 
 static gboolean
 pdf_document_load (EvDocument  *document,
@@ -99,10 +114,12 @@ pdf_document_load (EvDocument  *document,
 		delete pdf_document->doc;
 	pdf_document->doc = newDoc;
 
-	if (pdf_document->out) {
+	pdf_document->page = 1;
+
+	if (pdf_document->out)
 		pdf_document->out->startDoc(pdf_document->doc->getXRef());
-		pdf_document->doc->displayPage (pdf_document->out, 1, 72, 72, 0, gTrue, gTrue);
-	}
+
+	pdf_document->page_valid = FALSE;
 	
 	return TRUE;
 }
@@ -124,7 +141,11 @@ pdf_document_set_page (EvDocument  *document,
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 
-	pdf_document->page = page;
+	if (page != pdf_document->page) {
+		pdf_document->page = page;
+		pdf_document->page_valid = FALSE;
+	}
+
 }
 
 static void
@@ -148,34 +169,65 @@ pdf_document_set_target (EvDocument  *document,
 		if (pdf_document->target)
 			g_object_ref (pdf_document->target);
 
-		if (pdf_document->out)
+		if (pdf_document->out) {
 			delete pdf_document->out;
+			pdf_document->out = NULL;
+		}
 
 		if (pdf_document->target) {
 			pdf_document->out = new GDKSplashOutputDev (gdk_drawable_get_screen (pdf_document->target),
 							 redraw_callback, (void*) document);
 
-			if (pdf_document->doc) {
+			if (pdf_document->doc)
 				pdf_document->out->startDoc(pdf_document->doc->getXRef());
-				pdf_document->doc->displayPage (pdf_document->out, 1, 72, 72, 0, gTrue, gTrue);
-			}
+
 		}
+
+		pdf_document->page_valid = FALSE;
 	}
 }
 
 static void
-pdf_document_set_page_rect (EvDocument  *document,
-			    int          x,
-			    int          y,
-			    int          width,
-			    int          height)
+pdf_document_set_scale (EvDocument  *document,
+			double       scale)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	
-	pdf_document->page_rect.x = x;
-	pdf_document->page_rect.y = y;
-	pdf_document->page_rect.width = width;
-	pdf_document->page_rect.height = height;
+	if (pdf_document->scale != scale) {
+		pdf_document->scale = scale;
+		pdf_document->page_valid = FALSE;
+	}
+}
+
+static void
+pdf_document_set_page_offset (EvDocument  *document,
+			      int          x,
+			      int          y)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	
+	pdf_document->page_x_offset = x;
+	pdf_document->page_y_offset = y;
+}
+
+static void
+pdf_document_get_page_size (EvDocument   *document,
+			    int          *width,
+			    int          *height)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	if (document_validate_page (pdf_document)) {
+		if (width)
+			*width = pdf_document->out->getBitmapWidth();
+		if (height)
+			*height = pdf_document->out->getBitmapHeight();
+	} else {
+		if (width)
+			*width = 1;
+		if (height)
+			*height = 1;
+	}
 }
 
 static void
@@ -189,11 +241,11 @@ pdf_document_render (EvDocument  *document,
 	GdkRectangle page;
 	GdkRectangle draw;
 
-	if (!pdf_document->target)
+	if (!document_validate_page (pdf_document) || !pdf_document->target)
 		return;
 	
-	page.x = 0;
-	page.y = 0;
+	page.x = pdf_document->page_x_offset;
+	page.y = pdf_document->page_y_offset;
 	page.width = pdf_document->out->getBitmapWidth();
 	page.height = pdf_document->out->getBitmapHeight();
 
@@ -203,7 +255,7 @@ pdf_document_render (EvDocument  *document,
 	draw.height = clip_height;
 	
 	if (gdk_rectangle_intersect (&page, &draw, &draw))
-		pdf_document->out->redraw (draw.x, draw.y,
+		pdf_document->out->redraw (draw.x - page.x, draw.y - page.y,
 					   pdf_document->target,
 					   draw.x, draw.y,
 					   draw.width, draw.height);
@@ -238,13 +290,21 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->load = pdf_document_load;
 	iface->get_n_pages = pdf_document_get_n_pages;
 	iface->set_page = pdf_document_set_page;
+	iface->set_scale = pdf_document_set_scale;
 	iface->set_target = pdf_document_set_target;
-	iface->set_page_rect = pdf_document_set_page_rect;
+	iface->set_page_offset = pdf_document_set_page_offset;
+	iface->get_page_size = pdf_document_get_page_size;
 	iface->render = pdf_document_render;
 }
 
 static void
-pdf_document_init (PdfDocument *document)
+pdf_document_init (PdfDocument *pdf_document)
 {
+	pdf_document->page = 1;
+	pdf_document->page_x_offset = 0;
+	pdf_document->page_y_offset = 0;
+	pdf_document->scale = 1.;
+	
+	pdf_document->page_valid = FALSE;
 }
 

@@ -147,10 +147,19 @@ static void
 ev_view_size_request (GtkWidget      *widget,
 		      GtkRequisition *requisition)
 {
-	/* EvView *view = EV_VIEW (widget); */
+	EvView *view = EV_VIEW (widget);
+
+	if (GTK_WIDGET_REALIZED (widget)) {
+		if (view->document) {
+			ev_document_get_page_size (view->document,
+						   &requisition->width,
+						   &requisition->height);
+		} else {
+			requisition->width = 10;
+			requisition->height = 10;
+		}
+	}
   
-	requisition->width = 500;
-	requisition->height = 500;
 }
 
 static void
@@ -223,8 +232,16 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_set_user_data (view->bin_window, widget);
 	gdk_window_show (view->bin_window);
 
-	if (view->document)
+	if (view->document) {
 		ev_document_set_target (view->document, view->bin_window);
+
+		/* We can't get page size without a target, so we have to
+		 * queue a size request at realization. Could be fixed
+		 * with EvDocument changes to allow setting a GdkScreen
+		 * without setting a target.
+		 */
+		gtk_widget_queue_resize (widget);
+	}
 
 	update_window_backgrounds (view);
 }

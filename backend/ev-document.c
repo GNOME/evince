@@ -83,14 +83,29 @@ ev_document_set_target (EvDocument  *document,
 }
 
 void
-ev_document_set_page_rect (EvDocument  *document,
-			   int          x,
-			   int          y,
-			   int          width,
-			   int          height)
+ev_document_set_scale (EvDocument   *document,
+		       double        scale)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	iface->set_page_rect (document, x, y, width, height);
+	iface->set_scale (document, scale);
+}
+
+void
+ev_document_set_page_offset (EvDocument  *document,
+			     int          x,
+			     int          y)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	iface->set_page_offset (document, x, y);
+}
+
+void
+ev_document_get_page_size   (EvDocument   *document,
+			     int          *width,
+			     int          *height)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	iface->get_page_size (document, width, height);
 }
 
 void
