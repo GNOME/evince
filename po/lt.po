@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-16 14:06+0200\n"
-"PO-Revision-Date: 2005-03-16 15:04+0200\n"
+"POT-Creation-Date: 2005-03-30 19:46+0300\n"
+"PO-Revision-Date: 2005-03-30 19:47+0300\n"
 "Last-Translator: Žygimantas Beručka <uid0@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "_Slaptažodis:"
 msgid "Document Viewer"
 msgstr "Dokumentų peržiūros programa"
 
-#: ../data/evince.desktop.in.h:2 ../shell/main.c:85
+#: ../data/evince.desktop.in.h:2 ../shell/main.c:87
 msgid "Evince Document Viewer"
 msgstr "Dokumentų žiūryklė Evince"
 
@@ -145,47 +145,43 @@ msgstr "Ketvirtis lapo"
 msgid "10x14"
 msgstr "10x14"
 
-#: ../ps/ps-document.c:287
+#: ../ps/ps-document.c:144
 msgid "No document loaded."
 msgstr "Nėra įkeltų dokumentų."
 
-#: ../ps/ps-document.c:746
+#: ../ps/ps-document.c:540
 msgid "Broken pipe."
 msgstr "Sugadintas konvejeris."
 
-#: ../ps/ps-document.c:942
+#: ../ps/ps-document.c:724
 msgid "Interpreter failed."
 msgstr "Interpretatoriaus klaida."
 
 #. report error
-#: ../ps/ps-document.c:1064
+#: ../ps/ps-document.c:846
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Išskleidžiant bylą %s įvyko klaida:\n"
 
-#: ../ps/ps-document.c:1242
-msgid "File is not a valid PostScript document."
-msgstr "Byla nėra geras PostScript dokumentas."
-
-#: ../ps/ps-document.c:1293
+#: ../ps/ps-document.c:1039
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Nepavyko atverti bylos %s.\n"
 
-#: ../ps/ps-document.c:1295
+#: ../ps/ps-document.c:1041
 msgid "File is not readable."
 msgstr "Byla neperskaitoma."
 
-#: ../ps/ps-document.c:1314
+#: ../ps/ps-document.c:1061
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Skanuojant bylą %s įvyko klaida\n"
 
-#: ../ps/ps-document.c:1317
+#: ../ps/ps-document.c:1064
 msgid "The file is not a PostScript document."
 msgstr "Byla nėra PostScrip dokumentas."
 
-#: ../ps/ps-document.c:1333
+#: ../ps/ps-document.c:1077
 msgid "Document loaded."
 msgstr "Dokumentas įkeltas."
 
@@ -249,7 +245,7 @@ msgstr "PostScript ir PDF dokumentai"
 msgid "PostScript Documents"
 msgstr "PostScript dokumentai"
 
-#: ../shell/ev-application.c:145 ../shell/ev-window.c:869
+#: ../shell/ev-application.c:145 ../shell/ev-window.c:890
 msgid "PDF Documents"
 msgstr "PDF dokumentai"
 
@@ -257,7 +253,7 @@ msgstr "PDF dokumentai"
 msgid "Images"
 msgstr "Paveikslėliai"
 
-#: ../shell/ev-application.c:155 ../shell/ev-window.c:874
+#: ../shell/ev-application.c:155 ../shell/ev-window.c:895
 msgid "All Files"
 msgstr "Visos bylos"
 
@@ -305,15 +301,20 @@ msgstr ""
 msgid "Incorrect password"
 msgstr "Slaptažodis neteisingas"
 
-#: ../shell/ev-view.c:661
+#: ../shell/ev-sidebar-links.c:133
+msgid "Loading..."
+msgstr "Įkeliama..."
+
+#: ../shell/ev-view.c:718
 #, c-format
 msgid "Go to page %d"
 msgstr "Eiti į %d puslapį"
 
+#. g_mutex_unlock (EV_DOC_MUTEX);
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:1055
+#: ../shell/ev-view.c:1113
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -321,16 +322,16 @@ msgstr[0] "šiame puslapyje rastas %d"
 msgstr[1] "šiame puslapyje rasti %d"
 msgstr[2] "šiame puslapyje rasta %d"
 
-#: ../shell/ev-view.c:1066
+#: ../shell/ev-view.c:1125
 msgid "Not found"
 msgstr "Nerasta"
 
-#: ../shell/ev-view.c:1068
+#: ../shell/ev-view.c:1127
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "liko ieškoti %3d%%"
 
-#: ../shell/ev-window.c:377
+#: ../shell/ev-window.c:378
 msgid "Unable to open document"
 msgstr "Nepavyko atverti dokumento"
 
@@ -343,29 +344,29 @@ msgstr "Dokumentų peržiūros programa - Reikalingas slaptažodis"
 msgid "%s - Password Required"
 msgstr "%s - Reikalingas slaptažodis"
 
-#: ../shell/ev-window.c:737
+#: ../shell/ev-window.c:757
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Neapdorojamas MIME tipas: „%s“"
 
-#: ../shell/ev-window.c:841
+#: ../shell/ev-window.c:861
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Bylos išsaugoti kaip „%s“ nepavyko."
 
-#: ../shell/ev-window.c:861
+#: ../shell/ev-window.c:882
 msgid "Save a Copy"
 msgstr "Išsaugoti kopiją"
 
-#: ../shell/ev-window.c:939
+#: ../shell/ev-window.c:964
 msgid "Print"
 msgstr "Spausdinti"
 
-#: ../shell/ev-window.c:962
+#: ../shell/ev-window.c:987
 msgid "Printing is not supported on this printer."
 msgstr "Spaudinimas šiuo spausdintuvu nepalaikomas."
 
-#: ../shell/ev-window.c:965
+#: ../shell/ev-window.c:990
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -374,28 +375,28 @@ msgstr ""
 "Jūs bandėte spausdinti spausdintuvu naudojančiu „%s“ tvarkyklę. Šiai "
 "programai reikalinga PostScript spausdintuvo tvarkyklė."
 
-#: ../shell/ev-window.c:1017
+#: ../shell/ev-window.c:1042
 msgid "The \"Find\" feature will not work with this document"
 msgstr "Šiame dokumente funkcija „Rasti“ neveiks"
 
-#: ../shell/ev-window.c:1019
+#: ../shell/ev-window.c:1044
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Teksto paieška galima tik PDF dokumentuose."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1235 ../shell/ev-window.c:2029
+#: ../shell/ev-window.c:1260 ../shell/ev-window.c:2039
 msgid "Leave Fullscreen"
 msgstr "Palikti viso ekrano režimą"
 
-#: ../shell/ev-window.c:1614
+#: ../shell/ev-window.c:1645
 msgid "Many..."
 msgstr "Daugelis..."
 
-#: ../shell/ev-window.c:1619
+#: ../shell/ev-window.c:1650
 msgid "Not so many..."
 msgstr "Ne tiek daug..."
 
-#: ../shell/ev-window.c:1624
+#: ../shell/ev-window.c:1655
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -407,7 +408,7 @@ msgstr ""
 "paskelbtos Laisvosios programinės įrangos fondo; 2-osios arba\n"
 "(Jūsų pasirinkimu) bet kurios vėlesnės licencijos versijos sąlygomis.\n"
 
-#: ../shell/ev-window.c:1628
+#: ../shell/ev-window.c:1659
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -419,7 +420,7 @@ msgstr ""
 "TINKAMUMO TAM TIKRAM TIKSLUI garantijų. Dėl išsamesnės informacijos\n"
 "žiūrėkite GNU bendrąją viešąją licenciją.\n"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1663
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -429,247 +430,250 @@ msgstr ""
 "Evince; jeigu negavote, rašykite Laisvosios programinės įrangos\n"
 "fondui, 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:1654 ../shell/main.c:81
+#: ../shell/ev-window.c:1685 ../shell/main.c:82
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:1657
+#: ../shell/ev-window.c:1688
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 Evince autoriai"
 
-#: ../shell/ev-window.c:1660
+#: ../shell/ev-window.c:1691
 msgid "PostScript and PDF File Viewer."
 msgstr "PostScript ir PDF bylų peržiūros programa."
 
-#: ../shell/ev-window.c:1663
+#: ../shell/ev-window.c:1694
 msgid "translator-credits"
 msgstr "Žygimantas Beručka <uid0@akl.lt>"
 
-#: ../shell/ev-window.c:1960
+#: ../shell/ev-window.c:1970
 msgid "_File"
 msgstr "_Byla"
 
-#: ../shell/ev-window.c:1961
+#: ../shell/ev-window.c:1971
 msgid "_Edit"
 msgstr "_Keisti"
 
-#: ../shell/ev-window.c:1962
+#: ../shell/ev-window.c:1972
 msgid "_View"
 msgstr "_Rodyti"
 
-#: ../shell/ev-window.c:1963
+#: ../shell/ev-window.c:1973
 msgid "_Go"
 msgstr "_Eiti"
 
-#: ../shell/ev-window.c:1964
+#: ../shell/ev-window.c:1974
 msgid "_Help"
 msgstr "_Pagalba"
 
-#: ../shell/ev-window.c:1968
+#: ../shell/ev-window.c:1978
 msgid "Open an existing document"
 msgstr "Atverti egzistuojantį dokumentą"
 
-#: ../shell/ev-window.c:1970
+#: ../shell/ev-window.c:1980
 msgid "_Save a Copy..."
 msgstr "_Išsaugoti kopiją..."
 
-#: ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:1981
 msgid "Save the current document with a new filename"
 msgstr "Išsaugoti esamą dokumentą nauju pavadinimu"
 
-#: ../shell/ev-window.c:1973
+#: ../shell/ev-window.c:1983
 msgid "Print..."
 msgstr "Spausdinti..."
 
-#: ../shell/ev-window.c:1974
+#: ../shell/ev-window.c:1984
 msgid "Print this document"
 msgstr "Atspaudinti šį dokumentą"
 
-#: ../shell/ev-window.c:1977
+#: ../shell/ev-window.c:1987
 msgid "Close this window"
 msgstr "Uždaryti šį langą"
 
-#: ../shell/ev-window.c:1982
+#: ../shell/ev-window.c:1992
 msgid "Copy text from the document"
 msgstr "Kopijuoti tekstą iš dokumento"
 
-#: ../shell/ev-window.c:1984
+#: ../shell/ev-window.c:1994
 msgid "Select _All"
 msgstr "Pasirinkti _viską"
 
-#: ../shell/ev-window.c:1985
+#: ../shell/ev-window.c:1995
 msgid "Select the entire page"
 msgstr "Pasirinkti visą puslapį"
 
-#: ../shell/ev-window.c:1988
+#: ../shell/ev-window.c:1998
 msgid "Find a word or phrase in the document"
 msgstr "Rasti dokumente žodį ar frazę"
 
-#: ../shell/ev-window.c:1993
+#: ../shell/ev-window.c:2003
 msgid "Enlarge the document"
 msgstr "Išdidinti dokumentą"
 
-#: ../shell/ev-window.c:1996
+#: ../shell/ev-window.c:2006
 msgid "Shrink the document"
 msgstr "Sutraukti dokumentą"
 
-#: ../shell/ev-window.c:1999
+#: ../shell/ev-window.c:2009
 msgid "Reset the zoom level to the default value"
 msgstr "Atstatyti mastelį į įprastinę reikšmę"
 
-#: ../shell/ev-window.c:2001
+#: ../shell/ev-window.c:2011
 msgid "_Reload"
 msgstr "_Perkrauti"
 
-#: ../shell/ev-window.c:2002
+#: ../shell/ev-window.c:2012
 msgid "Reload the document"
 msgstr "Perkrauti dokumentą"
 
 #. Go menu
-#: ../shell/ev-window.c:2006
+#: ../shell/ev-window.c:2016
 msgid "_Previous Page"
 msgstr "_Ankstesnis puslapis"
 
-#: ../shell/ev-window.c:2007
+#: ../shell/ev-window.c:2017
 msgid "Go to the previous page"
 msgstr "Eiti į ankstesnįjį puslapį"
 
-#: ../shell/ev-window.c:2009
+#: ../shell/ev-window.c:2019
 msgid "_Next Page"
 msgstr "_Sekantis puslapis"
 
-#: ../shell/ev-window.c:2010
+#: ../shell/ev-window.c:2020
 msgid "Go to the next page"
 msgstr "Eiti į sekantį puslapį"
 
-#: ../shell/ev-window.c:2012
+#: ../shell/ev-window.c:2022
 msgid "_First Page"
 msgstr "_Pirmas puslapis"
 
-#: ../shell/ev-window.c:2013
+#: ../shell/ev-window.c:2023
 msgid "Go to the first page"
 msgstr "Eiti į pirmą puslapį"
 
-#: ../shell/ev-window.c:2015
+#: ../shell/ev-window.c:2025
 msgid "_Last Page"
 msgstr "_Paskutinis puslapis"
 
-#: ../shell/ev-window.c:2016
+#: ../shell/ev-window.c:2026
 msgid "Go to the last page"
 msgstr "Eiti į paskutinį puslapį"
 
 #. Help menu
-#: ../shell/ev-window.c:2020
+#: ../shell/ev-window.c:2030
 msgid "_Contents"
 msgstr "_Turinys"
 
-#: ../shell/ev-window.c:2021
+#: ../shell/ev-window.c:2031
 msgid "Display help for the viewer application"
 msgstr "Rodyti žiūryklės pagalbą"
 
-#: ../shell/ev-window.c:2024
+#: ../shell/ev-window.c:2034
 msgid "_About"
 msgstr "_Apie"
 
-#: ../shell/ev-window.c:2025
+#: ../shell/ev-window.c:2035
 msgid "Display credits for the document viewer creators"
 msgstr "Parodyti padėkas žiūryklės kūrėjams"
 
-#: ../shell/ev-window.c:2030
+#: ../shell/ev-window.c:2040
 msgid "Leave fullscreen mode"
 msgstr "Palikti viso ekrano režimą"
 
 #. View Menu
-#: ../shell/ev-window.c:2037
+#: ../shell/ev-window.c:2047
 msgid "_Toolbar"
 msgstr "Į_rankinė"
 
-#: ../shell/ev-window.c:2038
+#: ../shell/ev-window.c:2048
 msgid "Show or hide the toolbar"
 msgstr "Rodyti arba slėpti įrankinę"
 
-#: ../shell/ev-window.c:2040
+#: ../shell/ev-window.c:2050
 msgid "_Statusbar"
 msgstr "_Būsenos juosta"
 
-#: ../shell/ev-window.c:2041
+#: ../shell/ev-window.c:2051
 msgid "Show or hide the statusbar"
 msgstr "Rodyti arba slėpti būsenos juostą"
 
-#: ../shell/ev-window.c:2043
+#: ../shell/ev-window.c:2053
 msgid "Side _pane"
 msgstr "Šoninis _skydelis"
 
-#: ../shell/ev-window.c:2044
+#: ../shell/ev-window.c:2054
 msgid "Show or hide the side pane"
 msgstr "Rodyti arba slėpti šoninį skydelį"
 
-#: ../shell/ev-window.c:2046
+#: ../shell/ev-window.c:2056
 msgid "_Fullscreen"
 msgstr "_Visame ekrane"
 
-#: ../shell/ev-window.c:2047
+#: ../shell/ev-window.c:2057
 msgid "Expand the window to fill the screen"
 msgstr "Išplėsti langą per visą ekraną"
 
-#: ../shell/ev-window.c:2049
+#: ../shell/ev-window.c:2059
 msgid "_Best Fit"
 msgstr "_Geriausiai tinkantis"
 
-#: ../shell/ev-window.c:2050
+#: ../shell/ev-window.c:2060
 msgid "Make the current document fill the window"
 msgstr "Dokumentas užpildo visą langą"
 
-#: ../shell/ev-window.c:2052
+#: ../shell/ev-window.c:2062
 msgid "Fit Page _Width"
 msgstr "Tinkantis prie puslapio pl_očio"
 
-#: ../shell/ev-window.c:2053
+#: ../shell/ev-window.c:2063
 msgid "Make the current document fill the window width"
 msgstr "Dokumentas užpildo lango plotį"
 
-#: ../shell/ev-window.c:2058
+#: ../shell/ev-window.c:2068
 msgid "Single"
 msgstr "Vienas"
 
-#: ../shell/ev-window.c:2059
+#: ../shell/ev-window.c:2069
 msgid "Show the document one page at a time"
 msgstr "Rodyti dokumentą po vieną puslapį"
 
-#: ../shell/ev-window.c:2061
+#: ../shell/ev-window.c:2071
 msgid "Multi"
 msgstr "Daug"
 
-#: ../shell/ev-window.c:2062
+#: ../shell/ev-window.c:2072
 msgid "Show the full document at once"
 msgstr "Rodyti iš karto visą dokumentą"
 
-#: ../shell/ev-window.c:2101
+#: ../shell/ev-window.c:2108
 msgid "Page"
 msgstr "Puslapis"
 
-#: ../shell/ev-window.c:2102
+#: ../shell/ev-window.c:2109
 msgid "Select Page"
 msgstr "Pasirinkite puslapį"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2117
+#: ../shell/ev-window.c:2124
 msgid "Previous"
 msgstr "Ankstesnis"
 
-#: ../shell/ev-window.c:2122
+#: ../shell/ev-window.c:2129
 msgid "Next"
 msgstr "Sekantis"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2125
+#: ../shell/ev-window.c:2132
 msgid "Fit Width"
 msgstr "Tinka plotis"
 
-#: ../shell/ev-window.c:2318
+#: ../shell/ev-window.c:2325
 msgid "Index"
 msgstr "Rodyklė"
 
-#: ../shell/ev-window.c:2325
+#: ../shell/ev-window.c:2332
 msgid "Thumbnails"
 msgstr "Mini vaizdai"
+
+#~ msgid "File is not a valid PostScript document."
+#~ msgstr "Byla nėra geras PostScript dokumentas."
