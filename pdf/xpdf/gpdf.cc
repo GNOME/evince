@@ -15,6 +15,7 @@
 #include <string.h>
 #define GString G_String
 #include <gnome.h>
+#include <glade/glade.h>
 #undef  GString 
 #include "gtypes.h"
 #include "GString.h"
@@ -37,49 +38,29 @@
 #include "Error.h"
 #include "config.h"
 
+#define GPDF_GLADE_DIR "/opt/gnome/src/xpdf/xpdf"
+
 GBool printCommands = gFalse;
 gint  gpdf_debug=1;
 poptContext ctx;
 
 #define DOC_KEY "xpdf_doc_key"
-#define DOC_ROOT_MAGIC 0xad3f556d
 struct DOC_ROOT {
-  guint32        magic;
   GString        *title;
   PDFDoc         *pdf;
-  GtkWidget      *toplevel;
-  GtkWidget      *table;
-  GnomeAppBar    *appbar;
   GtkDrawingArea *area;
   GdkPixmap      *pixmap;
   OutputDev      *out;
   GdkColor        paper;
   GtkScrolledWindow *scroll;
+  GtkWidget      *mainframe;
+  GladeXML       *gui;
 };
-
-static void
-crummy_cmd (GtkWidget *widget, DOC_ROOT *tmp)
-{
-  printf ("Crummy\n");
-}
-
 
 const struct poptOption gpdf_popt_options [] = {
   { "debug", '\0', POPT_ARG_INT, &gpdf_debug, 0,
     N_("Enables some debugging functions"), N_("LEVEL") },
   { NULL, '\0', 0, NULL, 0 }
-};
-
-
-static GnomeUIInfo dummy_menu [] = {
-	{ GNOME_APP_UI_ITEM, N_("_dummy"),
-	  N_("What a dummy!"), crummy_cmd },
-	GNOMEUIINFO_END
-};
-
-static GnomeUIInfo main_menu [] = {
-	{ GNOME_APP_UI_SUBTREE, N_("_Dummy"), NULL, dummy_menu },
-	GNOMEUIINFO_END
 };
 
 //------------------------------------------------------------------------
@@ -94,7 +75,6 @@ doc_config_event (GtkWidget *widget, void *ugly)
   doc = (DOC_ROOT *)gtk_object_get_data (GTK_OBJECT (widget), DOC_KEY);
   
   g_return_val_if_fail (doc, FALSE);
-  g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
   if (doc->pixmap)
     gdk_pixmap_unref(doc->pixmap);
@@ -133,8 +113,6 @@ doc_config_event (GtkWidget *widget, void *ugly)
   return TRUE;
 }
 
-GdkGC   *magic_black;
-
 static gint
 doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
 {
@@ -145,13 +123,9 @@ doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
   doc = (DOC_ROOT *)gtk_object_get_data (GTK_OBJECT (widget), DOC_KEY);
 
   g_return_val_if_fail (doc != NULL, FALSE);
-  g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
   if (doc->out && doc->pdf) {
-    GtkStyle *style = gtk_widget_get_default_style();
     printf ("There are %d pages\n", doc->pdf->getNumPages());
-
-    magic_black = widget->style->black_gc;
 
     doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue);
     gdk_draw_pixmap(widget->window,
@@ -166,51 +140,60 @@ doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
   return FALSE;
 }
 
+static PDFDoc *
+getPDF (GString *fname)
+{
+  PDFDoc *pdf;
+  pdf = new PDFDoc(fname);
+  if (!pdf->isOk()) {
+    delete pdf;
+    return NULL;
+  }
+  g_return_val_if_fail (pdf->getCatalog(), NULL);
+  return pdf;
+}
+
+
 static GBool
-loadFile(GString *fileName)
+loadPDF(GString *fileName)
 {
   DOC_ROOT *doc = new DOC_ROOT();
-  char s[20];
-  char *p;
+  GtkVBox  *pane;
+  GtkAdjustment *hadj, *vadj;
 
-  doc->magic = DOC_ROOT_MAGIC;
   // open PDF file
-  doc->pdf = new PDFDoc(fileName);
-  if (!doc->pdf->isOk()) {
-    delete doc->pdf;
+  doc->pdf = getPDF (fileName);
+  if (!doc->pdf) {
     delete doc;
     return gFalse;
   }
 
-  g_assert (doc->pdf->getCatalog());
-
-  doc->toplevel = gnome_app_new ("gpdf", "gpdf");
-  gtk_window_set_policy(GTK_WINDOW(doc->toplevel), 1, 1, 0);
-  gtk_window_set_default_size (GTK_WINDOW(doc->toplevel), 600, 400);
-  doc->table  = GTK_WIDGET (gtk_table_new (0, 0, 0));
-  doc->appbar = GNOME_APPBAR (gnome_appbar_new (FALSE, TRUE,
-						GNOME_PREFERENCES_USER));
-  gnome_app_set_statusbar (GNOME_APP (doc->toplevel),
-			   GTK_WIDGET (doc->appbar));
-  gnome_app_set_contents (GNOME_APP (doc->toplevel), doc->table);
-  gnome_app_create_menus_with_data (GNOME_APP (doc->toplevel), main_menu, doc);
-  gnome_app_install_menu_hints(GNOME_APP (doc->toplevel), main_menu);
-
+  doc->gui = glade_xml_new (GPDF_GLADE_DIR "/gpdf.glade", NULL);
+  if (!doc->gui ||
+      !(doc->mainframe = glade_xml_get_widget (doc->gui, "gpdf")) ||
+      !(pane = GTK_VBOX (glade_xml_get_widget (doc->gui, "pane")))) {
+    printf ("Couldn't find " GPDF_GLADE_DIR "/gpdf.glade\n");
+    delete doc->pdf;
+    delete doc;
+    return gFalse;
+  }
+    
   doc->pixmap = NULL;
   doc->area   = GTK_DRAWING_AREA (gtk_drawing_area_new ());
+
   gtk_object_set_data (GTK_OBJECT (doc->area), DOC_KEY, doc);
   gtk_signal_connect  (GTK_OBJECT (doc->area),"configure_event",
 		       (GtkSignalFunc) doc_config_event, doc);
   gtk_signal_connect  (GTK_OBJECT (doc->area), "expose_event",
 		       (GtkSignalFunc) doc_redraw_event, doc);
 
-  gtk_table_attach (GTK_TABLE (doc->table), GTK_WIDGET (doc->area),
-		    0, 1, 1, 2,
-		    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND,
-		    0, 0);
+  hadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 1, 0.01, 0.1, 2));
+  vadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 1, 0.01, 0.1, 2));
+  doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (hadj, vadj));
+  gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->area));
+  gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
 
-  gtk_widget_show_all (doc->toplevel);
-
+  gtk_widget_show_all (doc->mainframe);
   return gTrue;
 }
 
@@ -250,12 +233,13 @@ loadFile(GString *fileName)
   win->setBusyCursor(gFalse);
   }*/
 
+
 int
 main (int argc, char *argv [])
 {
   char **view_files = NULL;
-  int lp;
-
+  int    i;
+  
   gnome_init_with_popt_table (
     "gpdf", "0.1", argc, argv,
     gpdf_popt_options, 0, &ctx);
@@ -264,13 +248,15 @@ main (int argc, char *argv [])
   
   initParams (xpdfConfigFile); /* Init font path */
 
+  glade_gnome_init ();
+
   view_files = poptGetArgs (ctx);
   /* Load files */
   if (view_files) {
-    for (lp=0;view_files[lp];lp++) {
-      GString *name = new GString (view_files[lp]);
-      if (!name || !loadFile(name))
-	printf ("Error loading '%s'\n", view_files[lp]);
+    for (i = 0; view_files[i]; i++) {
+      GString *name = new GString (view_files[i]);
+      if (!name || !loadPDF (name))
+	printf ("Error loading '%s'\n", view_files[i]);
     }
   } else {
     printf ("Need filenames...\n");

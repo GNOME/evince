@@ -1,3 +1,14 @@
+1999-08-01  Michael Meeks  <michael@edenproject.org>
+
+	* Makefile.in: Added -lglade, -lglade-gnome & Added -Wall
+	
+	* gpdf.glade: Added.
+	
+	* gpdf.cc (loadFile): Add typecast.
+	Remove all DOC_ROOT's magic numbers.
+	Add glade GUI,
+	Lots of other bits ...
+	
 1999-07-29  Michael Meeks  <michael@edenproject.org>
 
 	* GOutputDev.cc: Hahaaa... the bug ! :-)

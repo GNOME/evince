@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<GTK-Interface>
+
+<project>
+  <name>gpdf</name>
+  <program_name>gpdf</program_name>
+  <directory></directory>
+  <source_directory>src</source_directory>
+  <pixmaps_directory>pixmaps</pixmaps_directory>
+  <language>C</language>
+  <gnome_support>True</gnome_support>
+  <gettext_support>True</gettext_support>
+  <use_widget_names>False</use_widget_names>
+  <output_main_file>True</output_main_file>
+  <output_support_files>True</output_support_files>
+  <output_build_files>True</output_build_files>
+  <backup_source_files>True</backup_source_files>
+  <main_source_file>interface.c</main_source_file>
+  <main_header_file>interface.h</main_header_file>
+  <handler_source_file>callbacks.c</handler_source_file>
+  <handler_header_file>callbacks.h</handler_header_file>
+  <support_source_file>support.c</support_source_file>
+  <support_header_file>support.h</support_header_file>
+  <translatable_strings_file></translatable_strings_file>
+</project>
+
+<widget>
+  <class>GnomeApp</class>
+  <name>gpdf</name>
+  <width>600</width>
+  <height>400</height>
+  <title>GNOME PDF viewer</title>
+  <enable_layout_config>True</enable_layout_config>
+  <allow_shrink>False</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>False</auto_shrink>
+
+  <widget>
+    <class>GnomeDock</class>
+    <child_name>GnomeApp:dock</child_name>
+    <name>dock1</name>
+    <child>
+      <padding>0</padding>
+      <expand>True</expand>
+      <fill>True</fill>
+    </child>
+    <allow_floating>True</allow_floating>
+
+    <widget>
+      <class>GnomeDockItem</class>
+      <name>dockitem1</name>
+      <border_width>2</border_width>
+      <placement>GNOME_DOCK_TOP</placement>
+      <band>0</band>
+      <position>0</position>
+      <offset>0</offset>
+      <locked>False</locked>
+      <exclusive>True</exclusive>
+      <never_floating>False</never_floating>
+      <never_vertical>True</never_vertical>
+      <never_horizontal>False</never_horizontal>
+      <shadow_type>GTK_SHADOW_OUT</shadow_type>
+
+      <widget>
+	<class>GtkMenuBar</class>
+	<name>menubar1</name>
+
+	<widget>
+	  <class>GtkMenuItem</class>
+	  <name>file1</name>
+	  <stock_item>GNOMEUIINFO_MENU_FILE_TREE</stock_item>
+
+	  <widget>
+	    <class>GtkMenu</class>
+	    <name>file1_menu</name>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>open1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_open1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_OPEN_ITEM</stock_item>
+	    </widget>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>close1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_close1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_CLOSE_ITEM</stock_item>
+	    </widget>
+
+	    <widget>
+	      <class>GtkMenuItem</class>
+	      <name>separator1</name>
+	      <right_justify>False</right_justify>
+	    </widget>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>print1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_print1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_PRINT_ITEM</stock_item>
+	    </widget>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>print_setup1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_print_setup1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_PRINT_SETUP_ITEM</stock_item>
+	    </widget>
+
+	    <widget>
+	      <class>GtkMenuItem</class>
+	      <name>separator2</name>
+	      <right_justify>False</right_justify>
+	    </widget>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>exit1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_exit1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_EXIT_ITEM</stock_item>
+	    </widget>
+	  </widget>
+	</widget>
+
+	<widget>
+	  <class>GtkMenuItem</class>
+	  <name>edit1</name>
+	  <stock_item>GNOMEUIINFO_MENU_EDIT_TREE</stock_item>
+
+	  <widget>
+	    <class>GtkMenu</class>
+	    <name>edit1_menu</name>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>replace1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_replace1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_FIND_ITEM</stock_item>
+	    </widget>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>find_again1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_find_again1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_FIND_AGAIN_ITEM</stock_item>
+	    </widget>
+
+	    <widget>
+	      <class>GtkMenuItem</class>
+	      <name>separator5</name>
+	      <right_justify>False</right_justify>
+	    </widget>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>properties1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_properties1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_PROPERTIES_ITEM</stock_item>
+	    </widget>
+	  </widget>
+	</widget>
+
+	<widget>
+	  <class>GtkMenuItem</class>
+	  <name>view1</name>
+	  <stock_item>GNOMEUIINFO_MENU_VIEW_TREE</stock_item>
+
+	  <widget>
+	    <class>GtkMenu</class>
+	    <name>view1_menu</name>
+
+	    <widget>
+	      <class>GtkMenuItem</class>
+	      <name>larger1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_larger1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:20:39 GMT</last_modification_time>
+	      </signal>
+	      <label>Larger</label>
+	      <right_justify>False</right_justify>
+	    </widget>
+
+	    <widget>
+	      <class>GtkMenuItem</class>
+	      <name>smaller1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_smaller1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:21:07 GMT</last_modification_time>
+	      </signal>
+	      <label>smaller</label>
+	      <right_justify>False</right_justify>
+	    </widget>
+	  </widget>
+	</widget>
+
+	<widget>
+	  <class>GtkMenuItem</class>
+	  <name>settings1</name>
+	  <stock_item>GNOMEUIINFO_MENU_SETTINGS_TREE</stock_item>
+
+	  <widget>
+	    <class>GtkMenu</class>
+	    <name>settings1_menu</name>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>preferences1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_preferences1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_PREFERENCES_ITEM</stock_item>
+	    </widget>
+	  </widget>
+	</widget>
+
+	<widget>
+	  <class>GtkMenuItem</class>
+	  <name>help1</name>
+	  <stock_item>GNOMEUIINFO_MENU_HELP_TREE</stock_item>
+
+	  <widget>
+	    <class>GtkMenu</class>
+	    <name>help1_menu</name>
+
+	    <widget>
+	      <class>GtkPixmapMenuItem</class>
+	      <name>about1</name>
+	      <signal>
+		<name>activate</name>
+		<handler>on_about1_activate</handler>
+		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
+	      </signal>
+	      <stock_item>GNOMEUIINFO_MENU_ABOUT_ITEM</stock_item>
+	    </widget>
+	  </widget>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GnomeDockItem</class>
+      <name>dockitem2</name>
+      <border_width>1</border_width>
+      <placement>GNOME_DOCK_TOP</placement>
+      <band>1</band>
+      <position>0</position>
+      <offset>0</offset>
+      <locked>False</locked>
+      <exclusive>True</exclusive>
+      <never_floating>False</never_floating>
+      <never_vertical>False</never_vertical>
+      <never_horizontal>False</never_horizontal>
+      <shadow_type>GTK_SHADOW_OUT</shadow_type>
+
+      <widget>
+	<class>GtkToolbar</class>
+	<name>toolbar1</name>
+	<border_width>1</border_width>
+	<orientation>GTK_ORIENTATION_HORIZONTAL</orientation>
+	<type>GTK_TOOLBAR_BOTH</type>
+	<space_size>16</space_size>
+	<space_style>GTK_TOOLBAR_SPACE_LINE</space_style>
+	<relief>GTK_RELIEF_NONE</relief>
+	<tooltips>True</tooltips>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>button2</name>
+	  <tooltip>Open File</tooltip>
+	  <label>Open</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_OPEN</stock_pixmap>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>first</name>
+	  <label>First</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_FIRST</stock_pixmap>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>back</name>
+	  <label>back</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_BACK</stock_pixmap>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>forward</name>
+	  <label>forward</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_FORWARD</stock_pixmap>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>last</name>
+	  <label>Last</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_LAST</stock_pixmap>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>larger</name>
+	  <label>larger</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_UP</stock_pixmap>
+	</widget>
+
+	<widget>
+	  <class>GtkButton</class>
+	  <child_name>Toolbar:button</child_name>
+	  <name>smaller</name>
+	  <label>smaller</label>
+	  <stock_pixmap>GNOME_STOCK_PIXMAP_DOWN</stock_pixmap>
+	</widget>
+      </widget>
+    </widget>
+
+    <widget>
+      <class>GtkVBox</class>
+      <child_name>GnomeDock:contents</child_name>
+      <name>pane</name>
+      <homogeneous>False</homogeneous>
+      <spacing>0</spacing>
+    </widget>
+  </widget>
+
+  <widget>
+    <class>GnomeAppBar</class>
+    <child_name>GnomeApp:appbar</child_name>
+    <name>appbar1</name>
+    <child>
+      <padding>0</padding>
+      <expand>True</expand>
+      <fill>True</fill>
+    </child>
+    <has_progress>True</has_progress>
+    <has_status>True</has_status>
+  </widget>
+</widget>
+
+</GTK-Interface>
