@@ -1,3 +1,20 @@
+2004-12-22  Mark McLoughlin  <mark@skynet.ie>
+
+	* shell/main.c: (load_files), (main): load files
+	from the command line.
+
+2004-12-22  Mark McLoughlin  <mark@skynet.ie>
+
+	* configure.ac: don't require bonobo.
+	
+	* cut-n-paste/recent-files/*: kill bonobo recent
+	view.
+
+	* shell/ev-window.c:
+	(ev_window_is_empty): upd.
+	(unable_to_load), (ev_window_open): load backend
+	based on the mime type.
+
 2004-12-22  Martin Kretzschmar  <martink@gnome.org>
 
 	* backend/.cvsignore: ignore generated marshalers source.

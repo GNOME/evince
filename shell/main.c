@@ -26,11 +26,43 @@
 #include <gtk/gtkmain.h>
 #include <libgnome/gnome-program.h>
 #include <libgnomeui/gnome-ui-init.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 
 static struct poptOption popt_options[] =
 {
 	{ NULL, 0, 0, NULL, 0, NULL, NULL }
 };
+
+static void
+load_files (const char **files)
+{
+	GtkWidget *window;
+	int i;
+
+	if (!files) {
+		window = GTK_WIDGET (ev_application_new_window (EV_APP));
+		gtk_widget_show (window);
+		return;
+	}
+
+	for (i = 0; files[i]; i++) {
+		const char *uri;
+		char *freeme = NULL;
+		char *scheme;
+
+		if ((scheme = gnome_vfs_get_uri_scheme (files[i])))
+			uri = files[i];
+		else
+			uri = freeme = gnome_vfs_get_uri_from_local_path (files[i]);
+			
+		window = GTK_WIDGET (ev_application_new_window (EV_APP));
+		gtk_widget_show (window);
+		ev_window_open (EV_WINDOW (window), uri);
+
+		g_free (scheme);
+		g_free (freeme);
+        }
+}
 
 int
 main (int argc, char *argv[])
@@ -38,7 +70,6 @@ main (int argc, char *argv[])
 	poptContext context;
         GValue context_as_value = { 0 };
 	GnomeProgram *program;
-	GtkWidget *window;
 
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
@@ -61,8 +92,7 @@ main (int argc, char *argv[])
                                g_value_init (&context_as_value, G_TYPE_POINTER));
         context = g_value_get_pointer (&context_as_value);
 
-	window = GTK_WIDGET (ev_application_new_window (EV_APP));
-	gtk_widget_show (window);
+	load_files (poptGetArgs (context));
 
 	gtk_main ();
 

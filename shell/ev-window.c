@@ -58,7 +58,6 @@ struct _EvWindowPrivate {
 	GtkWidget *hpaned;
 	GtkWidget *sidebar;
 	GtkWidget *find_bar;
-	GtkWidget *bonobo_widget;
 	GtkWidget *view;
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
@@ -179,86 +178,66 @@ ev_window_is_empty (const EvWindow *ev_window)
 {
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
 	
-	return ev_window->priv->bonobo_widget == NULL;
+	return ev_window->priv->document == NULL;
+}
+
+static void
+unable_to_load (EvWindow   *ev_window,
+		const char *error_message)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_ERROR,
+					 GTK_BUTTONS_CLOSE,
+					 _("Unable to open document"));
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+						  "%s", error_message);
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
 }
 
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
-	EvDocument *document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
-	GError *error = NULL;
-
-	if (ev_document_load (document, uri, &error)) {
-		if (ev_window->priv->document)
-			g_object_unref (ev_window->priv->document);
-		ev_window->priv->document = document;
-
-		ev_view_set_document (EV_VIEW (ev_window->priv->view),
-				      document);
-
-		update_action_sensitivity (ev_window);
-		
-	} else {
-		GtkWidget *dialog;
-
-		g_object_unref (document);
-
-		dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("Unable to open document"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  "%s", error->message);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
-
-		g_error_free (error);
-	}
-	
-#if 0
+	EvDocument *document = NULL;
 	char *mime_type;
-	BonoboObject *bonobo_control;
-	CORBA_Environment ev;
-	Bonobo_PersistFile pf;
 
 	mime_type = gnome_vfs_get_mime_type (uri);
 
-	g_return_if_fail (mime_type != NULL); /* FIXME set error */
+	if (!strcmp (mime_type, "application/pdf"))
+		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
 
-	if (!strcmp (mime_type, "application/pdf")) {
-		bonobo_control = create_gpdf_control ();
-	} else if (!strcmp (mime_type, "application/postscript")) {
-		bonobo_control = create_ggv_control ();
-	} else if (!strcmp (mime_type, "application/x-gzip")) {
-		g_message ("Cannot open gzip-compressed file %s.", uri);
-		goto finally;
-	} else if (!strcmp (mime_type, "application/x-bzip")) {
-		g_message ("Cannot open bzip2-compressed file %s.", uri);
-		goto finally;
+	if (document) {
+		GError *error = NULL;
+
+		if (ev_document_load (document, uri, &error)) {
+			if (ev_window->priv->document)
+				g_object_unref (ev_window->priv->document);
+			ev_window->priv->document = document;
+
+			ev_view_set_document (EV_VIEW (ev_window->priv->view),
+					      document);
+
+			update_action_sensitivity (ev_window);
+		
+		} else {
+			g_assert (error != NULL);
+			g_object_unref (document);
+			unable_to_load (ev_window, error->message);
+			g_error_free (error);
+		}
 	} else {
-		g_warning ("Don't know how to open %s file %s.",
-			   mime_type, uri); /* FIXME set error */
-		goto finally;
+		char *error_message;
+
+		error_message = g_strdup_printf (_("Unhandled MIME type: '%s'"),
+						 mime_type);
+		unable_to_load (ev_window, error_message);
+		g_free (error_message);
 	}
 
-	ev_window->priv->bonobo_widget = bonobo_widget_new_control_from_objref (
-		bonobo_object_corba_objref (bonobo_control), CORBA_OBJECT_NIL);
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
-			    ev_window->priv->bonobo_widget,
-			    TRUE, TRUE, 0);
-	CORBA_exception_init (&ev);
-	pf = bonobo_object_query_interface (
-		bonobo_control, "IDL:Bonobo/PersistFile:1.0", &ev);
-	Bonobo_PersistFile_load (pf, uri, &ev);
-	gtk_widget_show (ev_window->priv->bonobo_widget);
-	bonobo_object_release_unref (pf, &ev);
-	bonobo_object_unref (bonobo_control);
-	CORBA_exception_free (&ev);
-
-finally:
 	g_free (mime_type);
-#endif
 }
 
 static void
