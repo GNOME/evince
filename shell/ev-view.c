@@ -24,6 +24,7 @@
 #include <gtk/gtkselection.h>
 #include <gtk/gtkclipboard.h>
 #include <gdk/gdkkeysyms.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 
 #include "ev-marshal.h"
 #include "ev-view.h"
@@ -547,7 +548,19 @@ ev_view_button_release_event (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
-	ev_view_update_primary_selection (view);
+	if (view->has_selection) {
+		ev_view_update_primary_selection (view);
+	} else {
+		EvLink *link;
+
+		link = ev_document_get_link (view->document,
+					     event->x,
+					     event->y);
+		if (link) {
+			ev_view_go_to_link (view, link);
+			g_object_unref (link);
+		}
+	}
 
 	return FALSE;
 }
@@ -927,21 +940,36 @@ static void
 go_to_link (EvView *view, EvLink *link)
 {
 	EvLinkType type;
+	const char *uri;
 	int page;
 
 	type = ev_link_get_link_type (link);
-
-	if (type == EV_LINK_TYPE_PAGE) {
-		page = ev_link_get_page (link);
-		set_document_page (view, page);
+	
+	switch (type) {
+		case EV_LINK_TYPE_TITLE:
+			break;
+		case EV_LINK_TYPE_PAGE:
+			page = ev_link_get_page (link);
+			set_document_page (view, page);
+			break;
+		case EV_LINK_TYPE_EXTERNAL_URI:
+			uri = ev_link_get_uri (link);
+			gnome_vfs_url_show (uri);
+			break;
 	}
 }
 
 void
 ev_view_go_to_link (EvView *view, EvLink *link)
 {
+	EvLinkType type;
+
 	go_to_link (view, link);
-	ev_history_add_link (view->history, link);
+
+	type = ev_link_get_link_type (link);
+	if (type == EV_LINK_TYPE_PAGE) {
+		ev_history_add_link (view->history, link);
+	}
 }
 
 static void

@@ -29,9 +29,6 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkmain.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-
-#include "ev-window.h"
 
 struct _EvApplicationPrivate {
 	GList *windows;
@@ -167,30 +164,6 @@ ev_application_open (EvApplication *application, GError *err)
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (chooser));
-}
-
-void
-ev_application_open_link (EvApplication *application,
-			  EvWindow      *window,
-			  EvLink        *link,
-			  GError        *error)
-{
-	EvLinkType type;
-	const char *uri;
-
-	type = ev_link_get_link_type (link);
-	
-	switch (type) {
-		case EV_LINK_TYPE_TITLE:
-			break;
-		case EV_LINK_TYPE_PAGE:
-			ev_window_open_link (window, link);
-			break;
-		case EV_LINK_TYPE_EXTERNAL_URI:
-			uri = ev_link_get_uri (link);
-			gnome_vfs_url_show (uri);
-			break;
-	}
 }
 
 static void

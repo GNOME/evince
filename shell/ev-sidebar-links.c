@@ -29,7 +29,7 @@
 
 #include "ev-sidebar-links.h"
 #include "ev-document-links.h"
-#include "ev-application.h"
+#include "ev-window.h"
 
 /* Amount of time we devote to each iteration of the idle, in microseconds */
 #define IDLE_WORK_LENGTH 5000
@@ -105,7 +105,6 @@ selection_changed_cb (GtkTreeSelection   *selection,
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		EvLink *link;
-		EvApplication *app;
 		GtkWidget *window;
 		GValue value = {0, };
 
@@ -118,9 +117,7 @@ selection_changed_cb (GtkTreeSelection   *selection,
 		window = gtk_widget_get_ancestor (GTK_WIDGET (ev_sidebar_links),
 						  EV_TYPE_WINDOW);
 		if (window) {
-			app = ev_application_get_instance ();
-			ev_application_open_link (app, EV_WINDOW (window),
-						  link, NULL);
+			ev_window_open_link (EV_WINDOW (window), link);
 		}
 	}
 }

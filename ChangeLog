@@ -1,3 +1,16 @@
+2005-01-13  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document.c: (ev_document_get_link):
+	* backend/ev-document.h:
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-application.c: (ev_application_open):
+	* shell/ev-application.h:
+	* shell/ev-sidebar-links.c: (selection_changed_cb):
+	* shell/ev-view.c: (ev_view_button_release_event), (go_to_link),
+	(ev_view_go_to_link):
+
+	Add support for document links
+
 2005-01-13  Anders Carlsson  <andersca@gnome.org>
 
 	* shell/ev-page-action.c: (update_spin), (total_pages_changed_cb),

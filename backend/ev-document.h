@@ -26,6 +26,8 @@
 #include <glib.h>
 #include <gdk/gdk.h>
 
+#include "ev-link.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT	    (ev_document_get_type ())
@@ -68,6 +70,9 @@ struct _EvDocumentIface
 					 int          *height);
 	char	  * (* get_text)	(EvDocument   *document,
 					 GdkRectangle *rect);
+	EvLink    * (* get_link)	(EvDocument   *document,
+					 int           x,
+					 int	       y);
 	void	    (* render)          (EvDocument   *document,
 					 int           clip_x,
 					 int           clip_y,
@@ -100,6 +105,9 @@ void     ev_document_get_page_size   (EvDocument   *document,
 				      int          *height);
 char    *ev_document_get_text	     (EvDocument   *document,
 				      GdkRectangle *rect);
+EvLink  *ev_document_get_link	     (EvDocument   *document,
+				      int           x,
+				      int	    y);
 void     ev_document_render          (EvDocument   *document,
 				      int           clip_x,
 				      int           clip_y,

@@ -84,6 +84,7 @@ struct _PdfDocument
 	GDKSplashOutputDev *out;
 	PSOutputDev *ps_out;
 	PDFDoc *doc;
+	Links *links;
 	UnicodeMap *umap;
 
 	gboolean page_valid;
@@ -113,6 +114,21 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_find_iface_init);
 			 });
 
+static void
+document_init_links (PdfDocument *pdf_document)
+{
+	Page *page;
+	Object obj;
+
+	if (pdf_document->links) {
+		delete pdf_document->links;
+	}
+	page = pdf_document->doc->getCatalog ()->getPage (pdf_document->page);
+	pdf_document->links = new Links (page->getAnnots (&obj),
+				         pdf_document->doc->getCatalog ()->getBaseURI ());
+	obj.free ();
+}
+
 static gboolean
 document_validate_page (PdfDocument *pdf_document)
 {
@@ -121,6 +137,8 @@ document_validate_page (PdfDocument *pdf_document)
 						72 * pdf_document->scale,
 						72 * pdf_document->scale,
 						0, gTrue, gTrue);
+
+		document_init_links (pdf_document);
 
 		pdf_document->page_valid = TRUE;
 
@@ -740,27 +758,12 @@ pdf_document_links_begin_read (EvDocumentLinks *document_links)
 	return (EvDocumentLinksIter *) iter;
 }
 
-/* FIXME This returns a new object every time, probably we should cache it
-   in the iter */
 static EvLink *
-pdf_document_links_get_link (EvDocumentLinks      *document_links,
-				 EvDocumentLinksIter  *links_iter)
+build_link_from_action (PdfDocument *pdf_document,
+			LinkAction  *link_action,
+			const char  *title)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
 	EvLink *link = NULL;
-	LinksIter *iter = (LinksIter *)links_iter;
-	OutlineItem *anItem;
-	LinkAction *link_action;
-	Unicode *link_title;
-	const char *title;
-
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), FALSE);
-	g_return_val_if_fail (iter != NULL, FALSE);
-
-	anItem = (OutlineItem *)iter->items->get(iter->index);
-	link_action = anItem->getAction ();
-	link_title = anItem->getTitle ();
-	title = unicode_to_char (anItem, pdf_document->umap);
 
 	if (link_action == NULL) {
 		link = ev_link_new_title (title);
@@ -808,9 +811,33 @@ pdf_document_links_get_link (EvDocumentLinks      *document_links,
 	return link;
 }
 
+/* FIXME This returns a new object every time, probably we should cache it
+   in the iter */
+static EvLink *
+pdf_document_links_get_link (EvDocumentLinks      *document_links,
+			     EvDocumentLinksIter  *links_iter)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
+	LinksIter *iter = (LinksIter *)links_iter;
+	OutlineItem *anItem;
+	LinkAction *link_action;
+	Unicode *link_title;
+	const char *title;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), FALSE);
+	g_return_val_if_fail (iter != NULL, FALSE);
+
+	anItem = (OutlineItem *)iter->items->get(iter->index);
+	link_action = anItem->getAction ();
+	link_title = anItem->getTitle ();
+	title = unicode_to_char (anItem, pdf_document->umap);
+
+	return build_link_from_action (pdf_document, link_action, title);
+}
+
 static EvDocumentLinksIter *
 pdf_document_links_get_child (EvDocumentLinks     *document_links,
-				  EvDocumentLinksIter *links_iter)
+			      EvDocumentLinksIter *links_iter)
 {
 	LinksIter *iter = (LinksIter *)links_iter;
 	LinksIter *child_iter;
@@ -834,7 +861,7 @@ pdf_document_links_get_child (EvDocumentLinks     *document_links,
 
 static gboolean
 pdf_document_links_next (EvDocumentLinks     *document_links,
-			     EvDocumentLinksIter *links_iter)
+			 EvDocumentLinksIter *links_iter)
 {
 	LinksIter *iter = (LinksIter *) links_iter;
 
@@ -849,7 +876,7 @@ pdf_document_links_next (EvDocumentLinks     *document_links,
 
 static void
 pdf_document_links_free_iter (EvDocumentLinks     *document_links,
-				  EvDocumentLinksIter *iter)
+			      EvDocumentLinksIter *iter)
 {
 	g_return_if_fail (PDF_IS_DOCUMENT (document_links));
 	g_return_if_fail (iter != NULL);
@@ -862,6 +889,10 @@ static void
 pdf_document_finalize (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (object);
+
+	if (pdf_document->links) {
+		delete pdf_document->links;
+	}
 
 	if (pdf_document->umap) {
 		pdf_document->umap->decRefCnt ();
@@ -968,6 +999,20 @@ pdf_document_get_text (EvDocument *document, GdkRectangle *rect)
 	return text ? g_strdup (text) : NULL;
 }
 
+static EvLink *
+pdf_document_get_link (EvDocument *document, int x, int y)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	LinkAction *action;
+
+	action = pdf_document->links->find (x, y);
+	if (action) {
+		return build_link_from_action (pdf_document, action, "");
+	} else {
+		return NULL;
+	}
+}
+
 static void
 pdf_document_get_property (GObject *object,
 		           guint prop_id,
@@ -1005,6 +1050,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->load = pdf_document_load;
 	iface->save = pdf_document_save;
 	iface->get_text = pdf_document_get_text;
+	iface->get_link = pdf_document_get_link;
 	iface->get_n_pages = pdf_document_get_n_pages;
 	iface->set_page = pdf_document_set_page;
 	iface->get_page = pdf_document_get_page;
@@ -1143,8 +1189,6 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	/* getPage seems to want page + 1 for some reason; */
 	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
 	the_page->getThumb (&the_thumb);
-
-
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {
 		/* Build the thumbnail object */

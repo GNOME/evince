@@ -169,6 +169,15 @@ ev_document_get_text (EvDocument   *document,
 	return iface->get_text (document, rect);
 }
 
+EvLink *
+ev_document_get_link (EvDocument   *document,
+		      int           x,
+		      int	    y)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	return iface->get_link (document, x, y);
+}
+
 void
 ev_document_render (EvDocument  *document,
 		    int          clip_x,
