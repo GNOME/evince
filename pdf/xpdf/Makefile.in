@@ -14,8 +14,8 @@ GOOLIBDIR = ../goo
 LTKSRCDIR = $(srcdir)/../ltk
 LTKLIBDIR = ../ltk
 
-CXXFLAGS = @CXXFLAGS@ @DEFS@ @OPTIONS@ -I$(GOOSRCDIR) -I$(LTKSRCDIR) -I$(srcdir) @X_CFLAGS@ @Xpm_CFLAGS@
-
+#CXXFLAGS = @CXXFLAGS@ @DEFS@ @OPTIONS@ -I$(GOOSRCDIR) -I$(LTKSRCDIR) -I$(srcdir) @X_CFLAGS@ @Xpm_CFLAGS@
+CXXFLAGS = @CXXFLAGS@ @DEFS@ @OPTIONS@ `gnome-config --cflags gnomeui` -I$(srcdir) @X_CFLAGS@
 XLIBS = @Xpm_LIBS@ @X_PRE_LIBS@ @X_LIBS@ -lX11 @X_EXTRA_LIBS@
 
 OTHERLIBS = @LIBS@
@@ -68,6 +68,8 @@ CXX_SRC = \
 
 #------------------------------------------------------------------------
 
+all: gpdf
+
 all: xpdf$(EXE) pdftops$(EXE) pdftotext$(EXE) pdfinfo$(EXE) \
 	pdftopbm$(EXE) pdfimages$(EXE)
 
@@ -77,7 +79,18 @@ XPDF_OBJS = Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 	GfxState.o Lexer.o Link.o LTKOutputDev.o Object.o OutputDev.o \
 	Page.o Params.o Parser.o PDFDoc.o PSOutputDev.o Stream.o \
 	TextOutputDev.o XOutputDev.o XRef.o xpdf.o
+
+GPDF_OBJS = Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
+	GfxState.o Lexer.o Link.o GOutputDev.o Object.o OutputDev.o \
+	Page.o Params.o Parser.o PDFDoc.o PSOutputDev.o Stream.o \
+	TextOutputDev.o XOutputDev.o XRef.o gpdf.o
+
 XPDF_LIBS = -L$(LTKLIBDIR) -lLTK -L$(GOOLIBDIR) -lGoo $(XLIBS) $(OTHERLIBS) -lm
+
+GPDF_LIBS = `gnome-config --libs gnomeui`
+
+gpdf: $(GPDF_OBJS)
+	$(CXX) $(CXXFLAGS) -o gpdf $(GPDF_OBJS) $(GPDF_LIBS)
 
 xpdf$(EXE): $(XPDF_OBJS)
 	$(CXX) $(CXXFLAGS) -o xpdf$(EXE) $(XPDF_OBJS) $(XPDF_LIBS)
