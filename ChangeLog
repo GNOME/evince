@@ -1,3 +1,37 @@
+2005-01-04  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* data/evince-ui.xml:
+
+	Change the layout to match clarkbw design.
+
+	* shell/Makefile.am:
+	* shell/ev-navigation-action.c: (build_menu), (menu_activated_cb),
+	(set_tooltip_cb), (connect_proxy), (ev_navigation_action_init),
+	(ev_navigation_action_finalize),
+	(ev_navigation_action_set_property),
+	(ev_navigation_action_get_property),
+	(ev_navigation_action_class_init):
+	* shell/ev-navigation-action.h:
+
+	Implement clarkbw toolbar navigation controls (incomplete)
+
+	* shell/ev-page-action.c: (update_label), (update_spin),
+	(value_changed_cb), (create_tool_item), (connect_proxy),
+	(ev_page_action_init), (ev_page_action_finalize),
+	(ev_page_action_set_property), (ev_page_action_get_property),
+	(ev_page_action_set_current_page),
+	(ev_page_action_set_total_pages), (ev_page_action_class_init):
+	* shell/ev-page-action.h:
+
+	Implement a page switcher in the toolbar
+
+	* shell/ev-view.c: (ev_view_scroll_view):
+	* shell/ev-window.c: (update_total_pages), (ev_window_open),
+	(update_current_page), (view_page_changed_cb), (goto_page_cb),
+	(register_custom_actions), (ev_window_init):
+
+	Change page on PageUp/Down.
+
 Tue Jan  4 03:22:56 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* pdf/xpdf/pdf-document.cc

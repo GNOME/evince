@@ -23,6 +23,10 @@ evince_SOURCES=				\
 	ev-application.h		\
 	ev-marshal.c			\
 	ev-marshal.h			\
+	ev-navigation-action.c		\
+	ev-navigation-action.h		\
+	ev-page-action.c		\
+	ev-page-action.h		\
 	ev-print-job.c			\
 	ev-print-job.h			\
 	ev-view.c			\

@@ -455,40 +455,41 @@ add_scroll_binding (GtkBindingSet  *binding_set,
 
 static void
 ev_view_scroll_view (EvView *view,
-		      GtkScrollType scroll,
-		      gboolean horizontal)
+		     GtkScrollType scroll,
+		     gboolean horizontal)
 {
-	GtkAdjustment *adjustment;
-	double value;
-
-	if (horizontal) {
-		adjustment = view->hadjustment;	
+	if (scroll == GTK_SCROLL_PAGE_BACKWARD) {
+		ev_view_set_page (view, ev_view_get_page (view) - 1);
+	} else if (scroll == GTK_SCROLL_PAGE_FORWARD) {
+		ev_view_set_page (view, ev_view_get_page (view) + 1);
 	} else {
-		adjustment = view->vadjustment;
+		GtkAdjustment *adjustment;
+		double value;
+
+		if (horizontal) {
+			adjustment = view->hadjustment;	
+		} else {
+			adjustment = view->vadjustment;
+		}
+
+		value = adjustment->value;
+
+		switch (scroll) {
+			case GTK_SCROLL_STEP_BACKWARD:	
+				value -= adjustment->step_increment; 
+				break;
+			case GTK_SCROLL_STEP_FORWARD:
+				value += adjustment->step_increment; 
+				break;
+			default:
+				break;
+		}
+
+		value = CLAMP (value, adjustment->lower,
+			       adjustment->upper - adjustment->page_size);
+
+		gtk_adjustment_set_value (adjustment, value);
 	}
-
-	value = adjustment->value;
-
-	switch (scroll) {
-		case GTK_SCROLL_STEP_BACKWARD:	
-			value -= adjustment->step_increment; 
-			break;
-		case GTK_SCROLL_STEP_FORWARD:
-			value += adjustment->step_increment; 
-			break;
-		case GTK_SCROLL_PAGE_BACKWARD:	
-			value -= adjustment->page_increment; 
-			break;
-		case GTK_SCROLL_PAGE_FORWARD:
-			value += adjustment->page_increment; 
-			break;
-		default:
-			break;
-	}
-
-	value = CLAMP (value, adjustment->lower, adjustment->upper - adjustment->page_size);
-
-	gtk_adjustment_set_value (adjustment, value);
 }
 
 static void

@@ -29,6 +29,8 @@
 #endif
 
 #include "ev-window.h"
+#include "ev-navigation-action.h"
+#include "ev-page-action.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-bookmarks.h"
 #include "ev-sidebar-thumbnails.h"
@@ -73,6 +75,7 @@ struct _EvWindowPrivate {
 	guint help_message_cid;
 	GtkWidget *exit_fullscreen_popup;
 	char *uri;
+	GtkAction *page_action;
 
 	EvDocument *document;
 
@@ -270,6 +273,17 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	g_free (title);
 }
 
+static void
+update_total_pages (EvWindow *ev_window)
+{
+	EvPageAction *page_action;
+	int pages;
+
+	pages = ev_document_get_n_pages (ev_window->priv->document);
+	page_action = EV_PAGE_ACTION (ev_window->priv->page_action);
+	ev_page_action_set_total_pages (page_action, pages);
+}
+
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
@@ -308,8 +322,8 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 			ev_sidebar_set_document (EV_SIDEBAR (ev_window->priv->sidebar),
 						 document);
 
+			update_total_pages (ev_window);
 			update_action_sensitivity (ev_window);
-		
 		} else {
 			g_assert (error != NULL);
 			g_object_unref (document);
@@ -923,9 +937,21 @@ disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
 }
 
 static void
+update_current_page (EvWindow *ev_window)
+{
+	EvPageAction *page_action;
+	int page;
+
+	page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
+	page_action = EV_PAGE_ACTION (ev_window->priv->page_action);
+	ev_page_action_set_current_page (page_action, page);
+}
+
+static void
 view_page_changed_cb (EvView   *view,
 		      EvWindow *ev_window)
 {
+	update_current_page (ev_window);
 	update_action_sensitivity (ev_window);
 }
 
@@ -1167,6 +1193,53 @@ static GtkToggleActionEntry toggle_entries[] = {
 };
 
 static void
+goto_page_cb (GtkAction *action, int page_number, EvWindow *ev_window)
+{
+
+	ev_view_set_page (EV_VIEW (ev_window->priv->view), page_number);
+}
+
+static void
+register_custom_actions (EvWindow *window, GtkActionGroup *group)
+{
+	GtkAction *action;
+
+	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
+			       "name", "NavigationBack",
+			       "label", _("Back"),
+			       "stock_id", GTK_STOCK_GO_BACK,
+			       "tooltip", _("Go back"),
+			       "arrow-tooltip", _("Back history"),
+			       "direction", EV_NAVIGATION_DIRECTION_BACK,
+			       "is_important", TRUE,
+			       NULL);
+	gtk_action_group_add_action (group, action);
+	g_object_unref (action);
+
+	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
+			       "name", "NavigationForward",
+			       "label", _("Forward"),
+			       "stock_id", GTK_STOCK_GO_FORWARD,
+			       "tooltip", _("Go forward"),
+			       "arrow-tooltip", _("Forward history"),
+			       "direction", EV_NAVIGATION_DIRECTION_FORWARD,
+			       NULL);
+	gtk_action_group_add_action (group, action);
+	g_object_unref (action);
+
+	action = g_object_new (EV_TYPE_PAGE_ACTION,
+			       "name", "PageSelector",
+			       "label", _("Page"),
+			       "tooltip", _("Select Page"),
+			       NULL);
+	g_signal_connect (action, "goto_page",
+			  G_CALLBACK (goto_page_cb), window);
+	window->priv->page_action = action;
+	gtk_action_group_add_action (group, action);
+	g_object_unref (action);
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -1193,6 +1266,8 @@ ev_window_init (EvWindow *ev_window)
 	gtk_action_group_add_toggle_actions (action_group, toggle_entries,
 					     G_N_ELEMENTS (toggle_entries),
 					     ev_window);
+
+	register_custom_actions (ev_window, action_group);
 
 	ev_window->priv->ui_manager = gtk_ui_manager_new ();
 	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
