@@ -66,7 +66,8 @@ typedef struct {
   GnomeEmbeddable *embeddable;
 
   PDFDoc       *pdf;
-  GNOME_Stream  stream; /* To free it later */
+  BonoboStream *pdf_stream;
+  GNOME_Stream  bonobo_stream;
 
   GList *views;
 } bed_t;
@@ -146,6 +147,7 @@ render_page (view_data_t *view_data)
 {
   setup_pixmap (view_data->bed, view_data,
 		view_data->win);
+  view_data->out->startDoc();
   view_data->bed->pdf->displayPage(view_data->out,
 				   view_data->page, view_data->zoom,
 				   0, gTrue);
@@ -214,6 +216,27 @@ setup_size (bed_t *doc, view_data_t *view)
   return same;
 }
 
+static void
+bed_free_data (bed_t *bed)
+{
+  g_return_if_fail (bed != NULL);
+
+  if (bed->pdf)
+    delete bed->pdf;
+  bed->pdf = NULL;
+  if (bed->pdf_stream)
+    delete (bed->pdf_stream);
+  bed->pdf_stream = NULL;
+  
+  if (bed->bonobo_stream) {
+    CORBA_exception_init (&ev);
+    CORBA_Object_release (bed->bonobo_stream, &ev);
+    bed->bonobo_stream = NULL;
+    CORBA_exception_free (&ev);
+  }
+}
+
+
 /*
  * Loads a PDF from a GNOME_Stream
  */
@@ -229,36 +252,34 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	char *name;
 	Object obj;
 
-	if (bed->pdf ||
-	    bed->stream) {
+	if (bed->pdf || bed->pdf_stream ||
+	    bed->bonobo_stream) {
 	  g_warning ("Won't overwrite pre-existing stream: you wierdo");
 	  return 0;
 	}
 
 	/* We need this for later */
 	CORBA_Object_duplicate (stream, &ev);
+	bed->bonobo_stream = stream;
 	g_return_val_if_fail (ev._major == CORBA_NO_EXCEPTION, 0);
 
 #if PDF_DEBUG > 0
 	printf ("Loading PDF from persiststream\n");
 #endif
-	bed->stream = stream;
 	obj.initNull();
-	BonoboStream *bs = new BonoboStream (stream, 0, -1, &obj);
-	bed->pdf = new PDFDoc (bs);
+	bed->pdf_stream = new BonoboStream (stream, 0, -1, &obj);
+	bed->pdf = new PDFDoc (bed->pdf_stream);
 					      
 #if PDF_DEBUG > 0
 	printf ("Done load\n");
 #endif
 	if (!(bed->pdf->isOk())) {
 	  g_warning ("Duff pdf data\n");
-	  delete bed->pdf;
-	  bed->pdf = NULL;
+	  bed_free_data (bed);
 	}
 	if (!bed->pdf->getCatalog()) {
 	  g_warning ("Duff pdf catalog\n");
-	  delete bed->pdf;
-	  bed->pdf = NULL;
+	  bed_free_data (bed);
 	}
 
 	realize_drawing_areas (bed);
@@ -280,13 +301,12 @@ extern "C" {
   static void
   destroy_embed (GnomeView *view, bed_t *bed)
   {
+    CORBA_Environment ev;
+
     while (bed->views)
       destroy_view (NULL, (view_data_t *)bed->views->data);
 
-    delete bed->pdf;
-    bed->pdf = NULL;
-    gtk_object_unref (GTK_OBJECT (bed->stream));
-    bed->stream = NULL;
+    bed_free_data (bed);
     g_free (bed);
 
     embeddable_servers--;
@@ -792,13 +812,13 @@ main (int argc, char *argv [])
   CORBA_exception_init (&ev);
   
   init_server_factory (argc, argv);
-  if (!init_bonobo_image_x_pdf_factory ()){
+  if (!init_bonobo_image_x_pdf_factory ()) {
     fprintf (stderr, "Could not initialize the Bonobo PDF factory\n"
 	             "probably a server is already running?");
     exit (1);
   }
   
-  errorInit();
+  errorInit ();
   
   initParams (xpdfConfigFile); /* Init font path */
   
@@ -806,7 +826,8 @@ main (int argc, char *argv [])
   gtk_widget_set_default_visual (gdk_rgb_get_visual ());
 
   bonobo_main ();
-  
+
+  freeParams ();
   CORBA_exception_free (&ev);
   
   return 0;

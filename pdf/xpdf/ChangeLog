@@ -1,3 +1,14 @@
+1999-08-24  Michael Meeks  <michael@imaginator.com>
+
+	* bonobo-image-x-pdf.cc (bed_free_data): Rationalised Stream
+	duplicate / release, and scoped BonoboFile correctly.
+
+	* BonoboStream.cc (bfseek): Add init / free to all corba
+	exceptions, ( stupidly lost this code somehow ).
+
+	* bonobo-image-x-pdf.cc (render_page): Add startDoc.
+	(main): Add freeParams.
+
 1999-08-23  Michael Meeks  <michael@imaginator.com>
 
 	* gpdf.cc (container_launch_component): Fix flags.
