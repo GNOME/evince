@@ -25,6 +25,8 @@ evince_SOURCES=				\
 	ev-marshal.h			\
 	ev-page-action.c		\
 	ev-page-action.h		\
+	ev-page-cache.c			\
+	ev-page-cache.h			\
 	ev-password.h			\
 	ev-password.c			\
 	ev-password-view.h		\

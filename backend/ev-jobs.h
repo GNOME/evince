@@ -50,6 +50,7 @@ struct _EvJobRender
 	GObject parent;
 	EvDocument *document;
 	gint page;
+	double scale;
 	gint target_width;
 	gint target_height;
 	GdkPixbuf *pixbuf;
@@ -83,6 +84,7 @@ struct _EvJobThumbnailClass
 GType           ev_job_render_get_type    (void);
 EvJobRender    *ev_job_render_new         (EvDocument     *document,
 					   gint            page,
+					   double          scale,
 					   gint            width,
 					   gint            height);
 void            ev_job_render_run         (EvJobRender    *thumbnail);

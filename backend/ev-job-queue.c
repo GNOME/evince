@@ -6,6 +6,7 @@
  */
 GCond *render_cond = NULL;
 GMutex *ev_doc_mutex = NULL;
+GMutex *ev_queue_mutex = NULL;
 
 static GQueue *render_queue_high = NULL;
 static GQueue *render_queue_low = NULL;
@@ -15,10 +16,12 @@ static GQueue *thumbnail_queue_low = NULL;
 static gboolean
 notify_finished (gpointer job)
 {
+	GDK_THREADS_ENTER();
 	if (EV_IS_JOB_THUMBNAIL (job))
 		ev_job_thumbnail_finished (EV_JOB_THUMBNAIL (job));
 	else if (EV_IS_JOB_RENDER (job))
 		ev_job_render_finished (EV_JOB_RENDER (job));
+	GDK_THREADS_LEAVE();
 	return FALSE;
 }
 
@@ -34,35 +37,28 @@ handle_job_unlocked (gpointer job)
 	g_idle_add (notify_finished, job);
 }
 
-static void
+static GObject *
 search_for_jobs_unlocked (void)
 {
-	EvJobRender *render_job;
-	EvJobThumbnail *thumbnail_job;
+	GObject *job;
 
-	render_job = (EvJobRender *) g_queue_pop_head (render_queue_high);
-	if (render_job) {
-		handle_job_unlocked (render_job);
-		return;
-	}
+	job = (GObject *) g_queue_pop_head (render_queue_high);
+	if (job)
+		return job;
 
-	thumbnail_job = (EvJobThumbnail *) g_queue_pop_head (thumbnail_queue_high);
-	if (thumbnail_job) {
-		handle_job_unlocked (thumbnail_job);
-		return;
-	}
+	job = (GObject *) g_queue_pop_head (thumbnail_queue_high);
+	if (job)
+		return job;
 
-	render_job = (EvJobRender *) g_queue_pop_head (render_queue_high);
-	if (render_job) {
-		handle_job_unlocked (render_job);
-		return;
-	}
+	job = (GObject *) g_queue_pop_head (render_queue_high);
+	if (job)
+		return job;
 
-	thumbnail_job = (EvJobThumbnail *) g_queue_pop_head (thumbnail_queue_low);
-	if (thumbnail_job) {
-		handle_job_unlocked (thumbnail_job);
-		return;
-	}
+	job = (GObject *) g_queue_pop_head (thumbnail_queue_low);
+	if (job)
+		return job;
+
+	return NULL;
 }
 
 static gboolean
@@ -79,14 +75,23 @@ static gpointer
 ev_render_thread (gpointer data)
 {
 	while (TRUE) {
-		g_mutex_lock (EV_DOC_MUTEX);
+		GObject *job;
 
-		if (no_jobs_available_unlocked ())
-			g_cond_wait (render_cond, ev_doc_mutex);
+		g_mutex_lock (ev_queue_mutex);
+		if (no_jobs_available_unlocked ()) {
+			g_cond_wait (render_cond, ev_queue_mutex);
+		}
 
-		search_for_jobs_unlocked ();
-		
-		g_mutex_unlock (EV_DOC_MUTEX);
+		job = search_for_jobs_unlocked ();
+		g_mutex_unlock (ev_queue_mutex);
+
+		/* Now that we have our job, we handle it */
+		if (job) {
+			g_mutex_lock (EV_DOC_MUTEX);
+			handle_job_unlocked (job);
+			g_object_unref (job);
+			g_mutex_unlock (EV_DOC_MUTEX);
+		}
 	}
 	return NULL;
 
@@ -100,6 +105,7 @@ ev_job_queue_init (void)
 
 	render_cond = g_cond_new ();
 	ev_doc_mutex = g_mutex_new ();
+	ev_queue_mutex = g_mutex_new ();
 
 	render_queue_high = g_queue_new ();
 	render_queue_low = g_queue_new ();
@@ -123,8 +129,7 @@ ev_job_queue_add_render_job (EvJobRender   *job,
 {
 	g_return_if_fail (job != NULL);
 
-	g_mutex_lock (EV_DOC_MUTEX);
-
+	g_mutex_lock (ev_queue_mutex);
 	g_object_ref (job);
 	if (priority == EV_JOB_PRIORITY_LOW)
 		g_queue_push_tail (render_queue_low, job);
@@ -133,7 +138,7 @@ ev_job_queue_add_render_job (EvJobRender   *job,
 	else g_assert_not_reached ();
 	
 	g_cond_broadcast (render_cond);
-	g_mutex_unlock (EV_DOC_MUTEX);
+	g_mutex_unlock (ev_queue_mutex);
 }
 
 static gboolean
@@ -155,12 +160,12 @@ ev_job_queue_remove_render_job (EvJobRender *job)
 {
 	gboolean retval = FALSE;
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	g_mutex_lock (ev_queue_mutex);
 
 	retval = remove_object_from_queue (render_queue_high, G_OBJECT (job));
 	retval = retval || remove_object_from_queue (render_queue_low, G_OBJECT (job));
 
-	g_mutex_unlock (EV_DOC_MUTEX);
+	g_mutex_unlock (ev_queue_mutex);
 
 	return retval;
 }
@@ -171,7 +176,7 @@ ev_job_queue_add_thumbnail_job    (EvJobThumbnail *job,
 {
 	g_return_if_fail (job != NULL);
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	g_mutex_lock (ev_queue_mutex);
 
 	g_object_ref (job);
 	if (priority == EV_JOB_PRIORITY_LOW)
@@ -181,7 +186,7 @@ ev_job_queue_add_thumbnail_job    (EvJobThumbnail *job,
 	else g_assert_not_reached ();
 	
 	g_cond_broadcast (render_cond);
-	g_mutex_unlock (EV_DOC_MUTEX);
+	g_mutex_unlock (ev_queue_mutex);
 }
 
 gboolean
@@ -189,12 +194,12 @@ ev_job_queue_remove_thumbnail_job (EvJobThumbnail *thumbnail)
 {
 	gboolean retval = FALSE;
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	g_mutex_lock (ev_queue_mutex);
 
 	retval = remove_object_from_queue (thumbnail_queue_high, G_OBJECT (thumbnail));
 	retval = retval || remove_object_from_queue (thumbnail_queue_low, G_OBJECT (thumbnail));
 
-	g_mutex_unlock (EV_DOC_MUTEX);
+	g_mutex_unlock (ev_queue_mutex);
 
 	return retval;
 }

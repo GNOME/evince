@@ -32,6 +32,7 @@
 #include "ev-document-misc.h"
 #include "ev-debug.h"
 #include "ev-job-queue.h"
+#include "ev-page-cache.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -93,6 +94,8 @@ struct _EvView {
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
 
+	EvPageCache *page_cache;
+	gint current_page;
 	EvJobRender *current_job;
 	GdkPixbuf *current_pixbuf;
 
@@ -228,7 +231,12 @@ ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
 
 	g_return_if_fail (EV_IS_DOCUMENT (document));
 
-	ev_document_get_page_size (document, -1, &width, &height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				&width, &height);
+	width *= view->scale;
+	height *= view->scale;
+
 	ev_document_misc_get_page_border_size (width, height, &border);
 	
 	*x_offset = view->spacing;
@@ -269,10 +277,15 @@ job_finished_cb (EvJobRender *job,
 {
 	if (view->current_pixbuf)
 		g_object_unref (view->current_pixbuf);
+
 	view->current_pixbuf = g_object_ref (job->pixbuf);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
+	if (view->current_job == job)
+		view->current_job = NULL;
+
 	g_object_unref (job);
 }
+
 static void
 ev_view_size_request (GtkWidget      *widget,
 		      GtkRequisition *requisition)
@@ -290,20 +303,31 @@ ev_view_size_request (GtkWidget      *widget,
 		return;
 	}
 
-	ev_document_get_page_size (view->document, -1,
-				   &width, &height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				&width, &height);
+	width *= view->scale;
+	height *= view->scale;
 
-	if (view->current_job) {
-		/* Try to remove the currrent job, and unref it if we can. */
+	/* queue a new job if we need to be */
+	if (view->current_job &&
+	    view->current_job->target_width != width &&
+	    view->current_job->target_height != height) {
+		/* Try to remove the current job, and unref it if we can. */
 		if (ev_job_queue_remove_render_job (view->current_job)) 
 			g_object_unref (view->current_job);
 	}
-	view->current_job = ev_job_render_new (view->document,
-					       -1,
-					       width,
-					       height);
-	ev_job_queue_add_render_job (view->current_job, EV_JOB_PRIORITY_HIGH);
-	g_signal_connect (view->current_job, "finished", G_CALLBACK (job_finished_cb), view);
+	if ((view->current_pixbuf == NULL) ||
+	    (width != gdk_pixbuf_get_width (view->current_pixbuf) &&
+	     height != gdk_pixbuf_get_height (view->current_pixbuf))) {
+		view->current_job = ev_job_render_new (view->document,
+						       view->current_page,
+						       view->scale,
+						       width,
+						       height);
+		ev_job_queue_add_render_job (view->current_job, EV_JOB_PRIORITY_HIGH);
+		g_signal_connect (view->current_job, "finished", G_CALLBACK (job_finished_cb), view);
+	}
 				 
 	ev_document_misc_get_page_border_size (width, height, &border);
 
@@ -393,7 +417,7 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_set_background (view->bin_window, &widget->style->mid[widget->state]);
 
 	if (view->document) {
-		ev_document_set_target (view->document, view->bin_window);
+//		ev_document_set_target (view->document, view->bin_window);
 
 		/* We can't get page size without a target, so we have to
 		 * queue a size request at realization. Could be fixed
@@ -507,8 +531,12 @@ expose_bin_window (GtkWidget      *widget,
 		return;
 
 	ev_view_get_offsets (view, &x_offset, &y_offset); 
-	ev_document_get_page_size (view->document, -1,
-				   &width, &height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				&width, &height);
+	width *= view->scale;
+	height *= view->scale;
+
 	ev_document_misc_get_page_border_size (width, height, &border);
 	
 	/* Paint the frame */
@@ -519,9 +547,11 @@ expose_bin_window (GtkWidget      *widget,
 	ev_document_misc_paint_one_page (view->bin_window, widget, &area, &border);
 
 	/* Render the document itself */
+#if 0
 	ev_document_set_page_offset (view->document,
 				     x_offset + border.left,
 				     y_offset + border.top);
+#endif
 
 	LOG ("Render area %d %d %d %d - Offset %d %d",
 	     event->area.x, event->area.y,
@@ -810,7 +840,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		view_rect_to_doc_rect (view, &selection, &view->selection);
 
 		gtk_widget_queue_draw (widget);
-	} else if (view->document) {
+	} else if (FALSE && view->document) {
 		EvLink *link;
 
 		link = ev_document_get_link (view->document, event->x, event->y);
@@ -1085,6 +1115,7 @@ ev_view_init (EvView *view)
 
 	view->spacing = 10;
 	view->scale = 1.0;
+	view->current_page = 1;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 }
@@ -1130,13 +1161,13 @@ static void
 set_document_page (EvView *view, int new_page)
 {
 	int page;
-	int pages;
+	int n_pages;
 
-	pages = ev_document_get_n_pages (view->document);
-	page = CLAMP (new_page, 1, pages);
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	page = CLAMP (new_page, 1, n_pages);
 
 	if (view->document) {
-		int old_page = ev_document_get_page (view->document);
+		int old_page = view->current_page;
 		int old_width, old_height;
 
 		ev_document_get_page_size (view->document,
@@ -1148,6 +1179,7 @@ set_document_page (EvView *view, int new_page)
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
 			}
 			ev_document_set_page (view->document, page);
+			view->current_page = page;
 		}
 
 		if (old_page != ev_document_get_page (view->document)) {
@@ -1157,7 +1189,7 @@ set_document_page (EvView *view, int new_page)
 
 			view->has_selection = FALSE;
 			ev_document_get_page_size (view->document,
-						   -1, 
+						   page, 
 						   &width, &height);
 			if (width != old_width || height != old_height)
 				gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1307,6 +1339,7 @@ ev_view_set_document (EvView     *view,
                                                               find_changed_cb,
                                                               view);
 			g_object_unref (view->document);
+			g_object_unref (view->page_cache);
                 }
 
 		view->document = document;
@@ -1329,10 +1362,12 @@ ev_view_set_document (EvView     *view,
 					  "scale_changed",
 					  G_CALLBACK (scale_changed_callback),
 					  view);
+			view->page_cache = ev_page_cache_new ();
+			ev_page_cache_set_document (view->page_cache, view->document);
                 }
 
-		if (GTK_WIDGET_REALIZED (view))
-			ev_document_set_target (view->document, view->bin_window);
+//		if (GTK_WIDGET_REALIZED (view))
+//			ev_document_set_target (view->document, view->bin_window);
 		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 		
@@ -1402,8 +1437,10 @@ ev_view_zoom (EvView   *view,
 	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
 
 	view->scale = scale;
-
+#if 0
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 	ev_document_set_scale (view->document, view->scale);
+#endif
 }
 
 void
@@ -1429,7 +1466,13 @@ size_to_zoom_factor (EvView *view, int width, int height)
 
 	doc_width = doc_height = 0;
 	scale = scale_w = scale_h = 1.0;
-	ev_document_get_page_size (view->document, -1, &doc_width, &doc_height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				&doc_width,
+				&doc_height);
+	doc_width *= view->scale;
+	doc_height *= view->scale;
+
 	/* FIXME: The border size isn't constant.  Ugh.  Still, if we have extra
 	 * space, we just cut it from the border */
 	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
@@ -1466,16 +1509,16 @@ ev_view_set_size (EvView     *view,
 {
 	double factor;
 
-	if (!view->document) {
+	if (!view->document)
 		return;
-	}
 
 	if (view->width != width ||
 	    view->height != height) {
 		view->width = width;
 		view->height = height;
 		factor = size_to_zoom_factor (view, width, height);
-		ev_view_zoom (view, factor, FALSE); 
+		ev_view_zoom (view, factor, FALSE);
+		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 }
 

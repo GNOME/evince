@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "ev-document.h"
+
 #include "ev-backend-marshalers.h"
 #include "ev-job-queue.h"
 
@@ -35,6 +36,7 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
+#define LOG(x) (g_print ("\t%s\n", x))
 GType
 ev_document_get_type (void)
 {
@@ -106,7 +108,7 @@ ev_document_load (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gboolean retval;
-
+	LOG ("ev_document_load");
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->load (document, uri, error);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -122,6 +124,7 @@ ev_document_save (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gboolean retval;
 
+	LOG ("ev_document_save");
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->save (document, uri, error);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -134,6 +137,7 @@ ev_document_get_title (EvDocument  *document)
 {
 	char *title;
 
+	LOG ("ev_document_get_title");
 	g_mutex_lock (EV_DOC_MUTEX);
 	g_object_get (document, "title", &title, NULL);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -147,6 +151,7 @@ ev_document_get_n_pages (EvDocument  *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gint retval;
 
+	LOG ("ev_document_get_n_pages");
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_n_pages (document);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -160,6 +165,7 @@ ev_document_set_page (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
+	LOG ("ev_document_set_page");
 	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_page (document, page);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -171,6 +177,7 @@ ev_document_get_page (EvDocument *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	int retval;
 
+	LOG ("ev_document_get_page");
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_page (document);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -184,6 +191,7 @@ ev_document_set_target (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
+	LOG ("ev_document_set_target");
 	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_target (document, target);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -195,9 +203,8 @@ ev_document_set_scale (EvDocument   *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	LOG ("ev_document_set_scale");
 	iface->set_scale (document, scale);
-	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void
@@ -207,6 +214,7 @@ ev_document_set_page_offset (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
+	LOG ("ev_document_set_page_offset");
 	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_page_offset (document, x, y);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -220,11 +228,8 @@ ev_document_get_page_size   (EvDocument   *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
-	/* FIXME: This is clearly unsafe.  But we can prolly get away with it in
-	 * the short term to test. */
-//	g_mutex_lock (EV_DOC_MUTEX);
+	LOG ("ev_document_get_page_size");
 	iface->get_page_size (document, page, width, height);
-//	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 char *
@@ -234,6 +239,7 @@ ev_document_get_text (EvDocument   *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	char *retval;
 
+	LOG ("ev_document_get_text");
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_text (document, rect);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -249,6 +255,7 @@ ev_document_get_link (EvDocument   *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	EvLink *retval;
 
+	LOG ("ev_document_get_link");
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_link (document, x, y);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -265,6 +272,7 @@ ev_document_render (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
+	LOG ("ev_document_render");
 	g_mutex_lock (EV_DOC_MUTEX);
 	iface->render (document, clip_x, clip_y, clip_width, clip_height);
 	g_mutex_unlock (EV_DOC_MUTEX);
@@ -277,6 +285,7 @@ ev_document_render_pixbuf (EvDocument *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	GdkPixbuf *retval;
 
+	LOG ("ev_document_render_pixbuf");
 	g_assert (iface->render_pixbuf);
 
 	retval = iface->render_pixbuf (document);

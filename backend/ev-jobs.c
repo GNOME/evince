@@ -100,6 +100,7 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 EvJobRender *
 ev_job_render_new (EvDocument *document,
 		   gint        page,
+		   double      scale,
 		   gint        width,
 		   gint        height)
 {
@@ -109,6 +110,7 @@ ev_job_render_new (EvDocument *document,
 
 	job->document = document;
 	job->page = page;
+	job->scale = scale;
 	job->target_width = width;
 	job->target_height = height;
 
@@ -119,7 +121,8 @@ void
 ev_job_render_run (EvJobRender *job)
 {
 	g_return_if_fail (EV_IS_JOB_RENDER (job));
-
+	
+	ev_document_set_scale (job->document, job->scale);
 	job->pixbuf = ev_document_render_pixbuf (job->document);
 }
 
