@@ -14,10 +14,10 @@
 //------------------------------------------------------------------------
 
 // xpdf version
-#define xpdfVersion         "2.00"
-#define xpdfVersionNum      2.00
+#define xpdfVersion         "2.01"
+#define xpdfVersionNum      2.01
 #define xpdfMajorVersion    2
-#define xpdfMinorVersion    0
+#define xpdfMinorVersion    1
 #define xpdfMajorVersionStr "2"
 
 // supported PDF version
@@ -28,7 +28,7 @@
 #define xpdfCopyright "Copyright 1996-2002 Glyph & Cog, LLC"
 
 // Windows resource file stuff
-#define winxpdfVersion "WinXpdf 2.00"
+#define winxpdfVersion "WinXpdf 2.01"
 #define xpdfCopyrightAmp "Copyright 1996-2002 Glyph && Cog, LLC"
 
 //------------------------------------------------------------------------

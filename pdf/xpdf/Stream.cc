@@ -467,7 +467,7 @@ GBool StreamPredictor::getNextLine() {
     upLeftBuf[1] = upLeftBuf[0];
     upLeftBuf[0] = predLine[i];
     if ((c = str->getRawChar()) == EOF) {
-      break;
+      return gFalse;
     }
     switch (curPred) {
     case 11:			// PNG sub
@@ -506,7 +506,6 @@ GBool StreamPredictor::getNextLine() {
   }
 
   // apply TIFF (component) predictor
-  //~ this is completely untested
   if (predictor == 2) {
     if (nBits == 1) {
       inBuf = predLine[pixBytes - 1];

@@ -170,44 +170,52 @@ LinkDest::LinkDest(Array *a) {
 
   // XYZ link
   if (obj1.isName("XYZ")) {
-    if (a->getLength() != 5) {
-      error(-1, "Annotation destination array has wrong length");
-      goto err2;
-    }
     kind = destXYZ;
-    a->get(2, &obj2);
-    if (obj2.isNull()) {
+    if (a->getLength() < 3) {
       changeLeft = gFalse;
-    } else if (obj2.isNum()) {
-      changeLeft = gTrue;
-      left = obj2.getNum();
     } else {
-      error(-1, "Bad annotation destination position");
-      goto err1;
+      a->get(2, &obj2);
+      if (obj2.isNull()) {
+	changeLeft = gFalse;
+      } else if (obj2.isNum()) {
+	changeLeft = gTrue;
+	left = obj2.getNum();
+      } else {
+	error(-1, "Bad annotation destination position");
+	goto err1;
+      }
+      obj2.free();
     }
-    obj2.free();
-    a->get(3, &obj2);
-    if (obj2.isNull()) {
+    if (a->getLength() < 4) {
       changeTop = gFalse;
-    } else if (obj2.isNum()) {
-      changeTop = gTrue;
-      top = obj2.getNum();
     } else {
-      error(-1, "Bad annotation destination position");
-      goto err1;
+      a->get(3, &obj2);
+      if (obj2.isNull()) {
+	changeTop = gFalse;
+      } else if (obj2.isNum()) {
+	changeTop = gTrue;
+	top = obj2.getNum();
+      } else {
+	error(-1, "Bad annotation destination position");
+	goto err1;
+      }
+      obj2.free();
     }
-    obj2.free();
-    a->get(4, &obj2);
-    if (obj2.isNull()) {
+    if (a->getLength() < 5) {
       changeZoom = gFalse;
-    } else if (obj2.isNum()) {
-      changeZoom = gTrue;
-      zoom = obj2.getNum();
     } else {
-      error(-1, "Bad annotation destination position");
-      goto err1;
+      a->get(4, &obj2);
+      if (obj2.isNull()) {
+	changeZoom = gFalse;
+      } else if (obj2.isNum()) {
+	changeZoom = gTrue;
+	zoom = obj2.getNum();
+      } else {
+	error(-1, "Bad annotation destination position");
+	goto err1;
+      }
+      obj2.free();
     }
-    obj2.free();
 
   // Fit link
   } else if (obj1.isName("Fit")) {

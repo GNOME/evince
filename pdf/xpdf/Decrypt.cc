@@ -382,20 +382,20 @@ static void md5(Guchar *msg, int msgLen, Guchar *digest) {
   }
 
   // break digest into bytes
-  digest[0] = a & 0xff;
-  digest[1] = (a >>= 8) & 0xff;
-  digest[2] = (a >>= 8) & 0xff;
-  digest[3] = (a >>= 8) & 0xff;
-  digest[4] = b & 0xff;
-  digest[5] = (b >>= 8) & 0xff;
-  digest[6] = (b >>= 8) & 0xff;
-  digest[7] = (b >>= 8) & 0xff;
-  digest[8] = c & 0xff;
-  digest[9] = (c >>= 8) & 0xff;
-  digest[10] = (c >>= 8) & 0xff;
-  digest[11] = (c >>= 8) & 0xff;
-  digest[12] = d & 0xff;
-  digest[13] = (d >>= 8) & 0xff;
-  digest[14] = (d >>= 8) & 0xff;
-  digest[15] = (d >>= 8) & 0xff;
+  digest[0] = (Guchar)(a & 0xff);
+  digest[1] = (Guchar)((a >>= 8) & 0xff);
+  digest[2] = (Guchar)((a >>= 8) & 0xff);
+  digest[3] = (Guchar)((a >>= 8) & 0xff);
+  digest[4] = (Guchar)(b & 0xff);
+  digest[5] = (Guchar)((b >>= 8) & 0xff);
+  digest[6] = (Guchar)((b >>= 8) & 0xff);
+  digest[7] = (Guchar)((b >>= 8) & 0xff);
+  digest[8] = (Guchar)(c & 0xff);
+  digest[9] = (Guchar)((c >>= 8) & 0xff);
+  digest[10] = (Guchar)((c >>= 8) & 0xff);
+  digest[11] = (Guchar)((c >>= 8) & 0xff);
+  digest[12] = (Guchar)(d & 0xff);
+  digest[13] = (Guchar)((d >>= 8) & 0xff);
+  digest[14] = (Guchar)((d >>= 8) & 0xff);
+  digest[15] = (Guchar)((d >>= 8) & 0xff);
 }

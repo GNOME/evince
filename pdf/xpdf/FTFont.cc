@@ -56,6 +56,9 @@ FTFontFile::FTFontFile(FTFontEngine *engineA, char *fontFileName,
   ok = gFalse;
   engine = engineA;
   codeMap = NULL;
+  cidToGID = NULL;
+  cidToGIDLen = 0;
+
   if (FT_New_Face(engine->lib, fontFileName, 0, &face)) {
     return;
   }
@@ -144,11 +147,15 @@ FTFontFile::FTFontFile(FTFontEngine *engineA, char *fontFileName,
   ok = gFalse;
   engine = engineA;
   codeMap = NULL;
+  cidToGID = NULL;
+  cidToGIDLen = 0;
+
   if (FT_New_Face(engine->lib, fontFileName, 0, &face)) {
     return;
   }
-  cidToGID = cidToGIDA;
   cidToGIDLen = cidToGIDLenA;
+  cidToGID = (Gushort *)gmalloc(cidToGIDLen * sizeof(Gushort));
+  memcpy(cidToGID, cidToGIDA, cidToGIDLen * sizeof(Gushort));
   mode = ftFontModeCIDToGIDMap;
   ok = gTrue;
 }
@@ -157,12 +164,17 @@ FTFontFile::FTFontFile(FTFontEngine *engineA, char *fontFileName) {
   ok = gFalse;
   engine = engineA;
   codeMap = NULL;
+  cidToGID = NULL;
+  cidToGIDLen = 0;
+
   if (FT_New_Face(engine->lib, fontFileName, 0, &face)) {
     return;
   }
-  cidToGID = NULL;
-  cidToGIDLen = 0;
-  mode = ftFontModeCFFCharset;
+  if (!strcmp(face->driver->root.clazz->module_name, "t1cid")) {
+    mode = ftFontModeCID;
+  } else {
+    mode = ftFontModeCFFCharset;
+  }
   ok = gTrue;
 }
 
@@ -172,6 +184,9 @@ FTFontFile::~FTFontFile() {
   }
   if (codeMap) {
     gfree(codeMap);
+  }
+  if (cidToGID) {
+    gfree(cidToGID);
   }
 }
 
@@ -664,19 +679,24 @@ FT_UInt FTFont::getGlyphIndex(CharCode c, Unicode u) {
     break;
   case ftFontModeCFFCharset:
 #if 1 //~ cff cid->gid map
+    {
 #if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
-    CFF_Font *cff = (CFF_Font *)((TT_Face)fontFile->face)->extra.data;
+      CFF_Font *cff = (CFF_Font *)((TT_Face)fontFile->face)->extra.data;
 #else
-    CFF_Font cff = (CFF_Font)((TT_Face)fontFile->face)->extra.data;
+      CFF_Font cff = (CFF_Font)((TT_Face)fontFile->face)->extra.data;
 #endif
-    idx = 0;
-    for (j = 0; j < (int)cff->num_glyphs; ++j) {
-      if (cff->charset.sids[j] == c) {
-	idx = j;
-	break;
+      idx = 0;
+      for (j = 0; j < (int)cff->num_glyphs; ++j) {
+	if (cff->charset.sids[j] == c) {
+	  idx = j;
+	  break;
+	}
       }
     }
 #endif
+    break;
+  case ftFontModeCID:
+    idx = c;
     break;
   }
   return idx;

@@ -828,6 +828,7 @@ XOutputFont *XOutputFontCache::getFont(XRef *xref, GfxFont *gfxFont,
     }
 #endif
     break;
+  case fontCIDType0:
   case fontCIDType0C:
 #if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
     if (freetypeControl != fontRastNone) {
@@ -993,7 +994,7 @@ XOutputFont *XOutputFontCache::tryGetFont(XRef *xref, DisplayFontParam *dfp,
 
   case displayFontT1:
 #if HAVE_T1LIB_H
-    if (t1libControl != fontRastNone) {
+    if (t1libControl != fontRastNone && !gfxFont->isCIDFont()) {
       font = tryGetT1FontFromFile(xref, dfp->t1.fileName, gFalse, gfxFont,
 				  m11Orig, m12Orig, m21Orig, m22Orig,
 				  m11, m12, m21, m22, subst);
@@ -1304,7 +1305,7 @@ XOutputFont *XOutputFontCache::tryGetFTFontFromFile(XRef *xref,
       fontFile = new FTFontFile(ftEngine, fileName->getCString(),
 				((GfxCIDFont *)gfxFont)->getCIDToGID(),
 				((GfxCIDFont *)gfxFont)->getCIDToGIDLen());
-    } else { // fontCIDType0C
+    } else { // fontCIDType0, fontCIDType0C
       fontFile = new FTFontFile(ftEngine, fileName->getCString());
     }
   } else {
@@ -1843,7 +1844,7 @@ void XOutputDev::startPage(int pageNum, GfxState *state) {
   XFillRectangle(display, pixmap, paperGC, 0, 0, pixmapW, pixmapH);
 
   // clear text object
-  text->clear();
+  text->startPage(state);
 }
 
 void XOutputDev::endPage() {
@@ -1942,6 +1943,9 @@ void XOutputDev::restoreState(GfxState *state) {
     s = save;
     save = save->next;
     delete s;
+
+    // restore the font
+    updateFont(state);
   }
 }
 
@@ -2483,11 +2487,11 @@ void XOutputDev::addPoint(XPoint **points, int *size, int *k, int x, int y) {
 }
 
 void XOutputDev::beginString(GfxState *state, GString *s) {
-  text->beginString(state, state->getCurX(), state->getCurY());
+  text->beginWord(state, state->getCurX(), state->getCurY());
 }
 
 void XOutputDev::endString(GfxState *state) {
-  text->endString();
+  text->endWord();
 }
 
 void XOutputDev::drawChar(GfxState *state, double x, double y,
@@ -2501,7 +2505,7 @@ void XOutputDev::drawChar(GfxState *state, double x, double y,
   double *ctm;
   double saveCTM[6];
 
-  text->addChar(state, x, y, dx, dy, u, uLen);
+  text->addChar(state, x, y, dx, dy, code, u, uLen);
 
   if (!font) {
     return;
@@ -2676,7 +2680,7 @@ GBool XOutputDev::beginType3Char(GfxState *state,
       }
       text->addChar(state, 0, 0,
 		    t3Font->cacheTags[i+j].wx, t3Font->cacheTags[i+j].wy,
-		    u, uLen);
+		    code, u, uLen);
       drawType3Glyph(t3Font, &t3Font->cacheTags[i+j],
 		     t3Font->cacheData + (i+j) * t3Font->glyphSize,
 		     xt, yt, &color);
@@ -2755,7 +2759,7 @@ void XOutputDev::endType3Char(GfxState *state) {
 		  t3GlyphStack->origCTM4, t3GlyphStack->origCTM5);
   }
   text->addChar(state, 0, 0, t3GlyphStack->wx, t3GlyphStack->wy,
-		t3GlyphStack->u, t3GlyphStack->uLen);
+		t3GlyphStack->code, t3GlyphStack->u, t3GlyphStack->uLen);
   t3gs = t3GlyphStack;
   t3GlyphStack = t3gs->next;
   delete t3gs;
@@ -2850,11 +2854,61 @@ void XOutputDev::type3D1(GfxState *state, double wx, double wy,
   XRectangle rect;
   double *ctm;
   T3FontCache *t3Font;
+  double xt, yt, xMin, xMax, yMin, yMax, x1, y1;
   int i, j;
+
+  t3Font = t3GlyphStack->cache;
+  t3GlyphStack->wx = wx;
+  t3GlyphStack->wy = wy;
+
+  // check for a valid bbox
+  state->transform(0, 0, &xt, &yt);
+  state->transform(llx, lly, &x1, &y1);
+  xMin = xMax = x1;
+  yMin = yMax = y1;
+  state->transform(llx, ury, &x1, &y1);
+  if (x1 < xMin) {
+    xMin = x1;
+  } else if (x1 > xMax) {
+    xMax = x1;
+  }
+  if (y1 < yMin) {
+    yMin = y1;
+  } else if (y1 > yMax) {
+    yMax = y1;
+  }
+  state->transform(urx, lly, &x1, &y1);
+  if (x1 < xMin) {
+    xMin = x1;
+  } else if (x1 > xMax) {
+    xMax = x1;
+  }
+  if (y1 < yMin) {
+    yMin = y1;
+  } else if (y1 > yMax) {
+    yMax = y1;
+  }
+  state->transform(urx, ury, &x1, &y1);
+  if (x1 < xMin) {
+    xMin = x1;
+  } else if (x1 > xMax) {
+    xMax = x1;
+  }
+  if (y1 < yMin) {
+    yMin = y1;
+  } else if (y1 > yMax) {
+    yMax = y1;
+  }
+  if (xMin - xt < t3Font->glyphX ||
+      yMin - yt < t3Font->glyphY ||
+      xMax - xt > t3Font->glyphX + t3Font->glyphW ||
+      yMax - yt > t3Font->glyphY + t3Font->glyphH) {
+    error(-1, "Bad bounding box in Type 3 glyph");
+    return;
+  }
 
   // allocate a cache entry
   t3GlyphStack->cacheable = gTrue;
-  t3Font = t3GlyphStack->cache;
   i = t3GlyphStack->cacheIdx;
   for (j = 0; j < t3Font->cacheAssoc; ++j) {
     if ((t3Font->cacheTags[i+j].mru & 0x7fff) == t3Font->cacheAssoc - 1) {
@@ -2866,8 +2920,6 @@ void XOutputDev::type3D1(GfxState *state, double wx, double wy,
       ++t3Font->cacheTags[i+j].mru;
     }
   }
-  t3GlyphStack->wx = wx;
-  t3GlyphStack->wy = wy;
   t3GlyphStack->cacheTag->wx = wx;
   t3GlyphStack->cacheTag->wy = wy;
 

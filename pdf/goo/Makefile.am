@@ -5,6 +5,7 @@ libgoo_a_SOURCES = 	\
 	GHash.h		\
 	GList.cc	\
 	GList.h		\
+	GMutex.h	\
 	GString.cc 	\
 	GString.h	\
 	gmempp.cc 	\

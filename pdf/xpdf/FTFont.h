@@ -53,7 +53,8 @@ enum FTFontIndexMode {
   ftFontModeCodeMap,
   ftFontModeCodeMapDirect,
   ftFontModeCIDToGIDMap,
-  ftFontModeCFFCharset
+  ftFontModeCFFCharset,
+  ftFontModeCID
 };
 
 class FTFontFile: public SFontFile {

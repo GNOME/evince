@@ -447,8 +447,6 @@ GBool openTempFile(GString **name, FILE **f, char *mode, char *ext) {
 #if defined(WIN32)
   //---------- Win32 ----------
   char *s;
-  char buf[_MAX_PATH];
-  char *fp;
 
   if (!(s = _tempnam(getenv("TEMP"), NULL))) {
     return gFalse;
@@ -646,10 +644,8 @@ GDir::~GDir() {
 }
 
 GDirEntry *GDir::getNextEntry() {
-  struct dirent *ent;
   GDirEntry *e;
 
-  e = NULL;
 #if defined(WIN32)
   e = new GDirEntry(path->getCString(), ffd.cFileName, doStat);
   if (hnd  && !FindNextFile(hnd, &ffd)) {
@@ -658,24 +654,34 @@ GDirEntry *GDir::getNextEntry() {
   }
 #elif defined(ACORN)
 #elif defined(MACOS)
-#else
+#elif defined(VMS)
+  struct dirent *ent;
+  e = NULL;
   if (dir) {
-#ifdef VMS
     if (needParent) {
       e = new GDirEntry(path->getCString(), "-", doStat);
       needParent = gFalse;
       return e;
     }
-#endif
     ent = readdir(dir);
-#ifndef VMS
-    if (ent && !strcmp(ent->d_name, "."))
-      ent = readdir(dir);
-#endif
-    if (ent)
+    if (ent) {
       e = new GDirEntry(path->getCString(), ent->d_name, doStat);
+    }
+  }
+#else
+  struct dirent *ent;
+  e = NULL;
+  if (dir) {
+    ent = readdir(dir);
+    if (ent && !strcmp(ent->d_name, ".")) {
+      ent = readdir(dir);
+    }
+    if (ent) {
+      e = new GDirEntry(path->getCString(), ent->d_name, doStat);
+    }
   }
 #endif
+
   return e;
 }
 

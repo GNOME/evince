@@ -19,6 +19,10 @@
 #include "gtypes.h"
 #include "CharTypes.h"
 
+#if MULTITHREADED
+#include "GMutex.h"
+#endif
+
 class GString;
 class GList;
 class GHash;
@@ -137,31 +141,30 @@ public:
   FILE *findToUnicodeFile(GString *name);
   DisplayFontParam *getDisplayFont(GString *fontName);
   DisplayFontParam *getDisplayCIDFont(GString *fontName, GString *collection);
-  GString *getPSFile() { return psFile; }
-  int getPSPaperWidth() { return psPaperWidth; }
-  int getPSPaperHeight() { return psPaperHeight; }
-  GBool getPSDuplex() { return psDuplex; }
-  PSLevel getPSLevel() { return psLevel; }
+  GString *getPSFile();
+  int getPSPaperWidth();
+  int getPSPaperHeight();
+  GBool getPSDuplex();
+  PSLevel getPSLevel();
   PSFontParam *getPSFont(GString *fontName);
   PSFontParam *getPSFont16(GString *fontName, GString *collection, int wMode);
-  GBool getPSEmbedType1() { return psEmbedType1; }
-  GBool getPSEmbedTrueType() { return psEmbedTrueType; }
-  GBool getPSEmbedCIDPostScript() { return psEmbedCIDPostScript; }
-  GBool getPSEmbedCIDTrueType() { return psEmbedCIDTrueType; }
-  GBool getPSOPI() { return psOPI; }
-  GBool getPSASCIIHex() { return psASCIIHex; }
-  GString *getTextEncodingName() { return textEncoding; }
-  EndOfLineKind getTextEOL() { return textEOL; }
-  GBool getTextKeepTinyChars() { return textKeepTinyChars; }
+  GBool getPSEmbedType1();
+  GBool getPSEmbedTrueType();
+  GBool getPSEmbedCIDPostScript();
+  GBool getPSEmbedCIDTrueType();
+  GBool getPSOPI();
+  GBool getPSASCIIHex();
+  EndOfLineKind getTextEOL();
+  GBool getTextKeepTinyChars();
   GString *findFontFile(GString *fontName, char *ext1, char *ext2);
-  GString *getInitialZoom() { return initialZoom; }
-  FontRastControl getT1libControl() { return t1libControl; }
-  FontRastControl getFreeTypeControl() { return freetypeControl; }
+  GString *getInitialZoom();
+  FontRastControl getT1libControl();
+  FontRastControl getFreeTypeControl();
   GString *getURLCommand() { return urlCommand; }
   GString *getMovieCommand() { return movieCommand; }
-  GBool getMapNumericCharNames() { return mapNumericCharNames; }
-  GBool getPrintCommands() { return printCommands; }
-  GBool getErrQuiet() { return errQuiet; }
+  GBool getMapNumericCharNames();
+  GBool getPrintCommands();
+  GBool getErrQuiet();
 
   CharCodeToUnicode *getCIDToUnicode(GString *collection);
   UnicodeMap *getUnicodeMap(GString *encodingName);
@@ -220,6 +223,7 @@ private:
 		    GList *tokens, GString *fileName, int line);
   void parseYesNo(char *cmdName, GBool *flag,
 		  GList *tokens, GString *fileName, int line);
+  UnicodeMap *getUnicodeMap2(GString *encodingName);
   GBool setFontRastControl(FontRastControl *val, char *s);
 
   //----- static tables
@@ -281,6 +285,10 @@ private:
   CIDToUnicodeCache *cidToUnicodeCache;
   UnicodeMapCache *unicodeMapCache;
   CMapCache *cMapCache;
+
+#ifdef MULTITHREADED
+  GMutex mutex;
+#endif
 };
 
 #endif

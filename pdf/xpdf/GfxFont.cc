@@ -66,6 +66,9 @@ static StdFontMapEntry stdFontMap[] = {
   { "Helvetica,Italic",             "Helvetica-Oblique" },
   { "Helvetica-BoldItalic",         "Helvetica-BoldOblique" },
   { "Helvetica-Italic",             "Helvetica-Oblique" },
+  { "Symbol,Bold",                  "Symbol" },
+  { "Symbol,BoldItalic",            "Symbol" },
+  { "Symbol,Italic",                "Symbol" },
   { "TimesNewRoman",                "Times-Roman" },
   { "TimesNewRoman,Bold",           "Times-Bold" },
   { "TimesNewRoman,BoldItalic",     "Times-BoldItalic" },
@@ -255,6 +258,10 @@ void GfxFont::readFontDescriptor(XRef *xref, Dict *fontDict) {
       // some broken font descriptors set ascent and descent to 0
       if (t != 0) {
 	descent = t;
+      }
+      // some broken font descriptors specify a positive descent
+      if (descent > 0) {
+	descent = -descent;
       }
     }
     obj2.free();
@@ -949,7 +956,7 @@ GfxCIDFont::GfxCIDFont(XRef *xref, char *tagA, Ref idA, GString *nameA,
 
   // CIDToGIDMap (for embedded TrueType fonts)
   if (type == fontCIDType2) {
-    fontDict->lookup("CIDToGIDMap", &obj1);
+    desFontDict->lookup("CIDToGIDMap", &obj1);
     if (obj1.isStream()) {
       cidToGIDLen = 0;
       i = 64;

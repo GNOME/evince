@@ -29,6 +29,24 @@ static inline double clip01(double x) {
 }
 
 //------------------------------------------------------------------------
+
+static char *gfxColorSpaceModeNames[] = {
+  "DeviceGray",
+  "CalGray",
+  "DeviceRGB",
+  "CalRGB",
+  "DeviceCMYK",
+  "Lab",
+  "ICCBased",
+  "Indexed",
+  "Separation",
+  "DeviceN",
+  "Pattern"
+};
+
+#define nGfxColorSpaceModes ((sizeof(gfxColorSpaceModeNames) / sizeof(char *)))
+
+//------------------------------------------------------------------------
 // GfxColorSpace
 //------------------------------------------------------------------------
 
@@ -97,6 +115,14 @@ void GfxColorSpace::getDefaultRanges(double *decodeLow, double *decodeRange,
     decodeLow[i] = 0;
     decodeRange[i] = 1;
   }
+}
+
+int GfxColorSpace::getNumColorSpaceModes() {
+  return nGfxColorSpaceModes;
+}
+
+char *GfxColorSpace::getColorSpaceModeName(int idx) {
+  return gfxColorSpaceModeNames[idx];
 }
 
 //------------------------------------------------------------------------
@@ -850,9 +876,9 @@ GfxColorSpace *GfxIndexedColorSpace::parse(Array *arr) {
   return NULL;
 }
 
-void GfxIndexedColorSpace::getGray(GfxColor *color, double *gray) {
+GfxColor *GfxIndexedColorSpace::mapColorToBase(GfxColor *color,
+					       GfxColor *baseColor) {
   Guchar *p;
-  GfxColor color2;
   double low[gfxColorMaxComps], range[gfxColorMaxComps];
   int n, i;
 
@@ -860,39 +886,27 @@ void GfxIndexedColorSpace::getGray(GfxColor *color, double *gray) {
   base->getDefaultRanges(low, range, indexHigh);
   p = &lookup[(int)(color->c[0] + 0.5) * n];
   for (i = 0; i < n; ++i) {
-    color2.c[i] = low[i] + (p[i] / 255.0) * range[i];
+    baseColor->c[i] = low[i] + (p[i] / 255.0) * range[i];
   }
-  base->getGray(&color2, gray);
+  return baseColor;
+}
+
+void GfxIndexedColorSpace::getGray(GfxColor *color, double *gray) {
+  GfxColor color2;
+
+  base->getGray(mapColorToBase(color, &color2), gray);
 }
 
 void GfxIndexedColorSpace::getRGB(GfxColor *color, GfxRGB *rgb) {
-  Guchar *p;
   GfxColor color2;
-  double low[gfxColorMaxComps], range[gfxColorMaxComps];
-  int n, i;
 
-  n = base->getNComps();
-  base->getDefaultRanges(low, range, indexHigh);
-  p = &lookup[(int)(color->c[0] + 0.5) * n];
-  for (i = 0; i < n; ++i) {
-    color2.c[i] = low[i] + (p[i] / 255.0) * range[i];
-  }
-  base->getRGB(&color2, rgb);
+  base->getRGB(mapColorToBase(color, &color2), rgb);
 }
 
 void GfxIndexedColorSpace::getCMYK(GfxColor *color, GfxCMYK *cmyk) {
-  Guchar *p;
   GfxColor color2;
-  double low[gfxColorMaxComps], range[gfxColorMaxComps];
-  int n, i;
 
-  n = base->getNComps();
-  base->getDefaultRanges(low, range, indexHigh);
-  p = &lookup[(int)(color->c[0] + 0.5) * n];
-  for (i = 0; i < n; ++i) {
-    color2.c[i] = low[i] + (p[i] / 255.0) * range[i];
-  }
-  base->getCMYK(&color2, cmyk);
+  base->getCMYK(mapColorToBase(color, &color2), cmyk);
 }
 
 void GfxIndexedColorSpace::getDefaultRanges(double *decodeLow,
@@ -1786,6 +1800,15 @@ void GfxImageColorMap::getCMYK(Guchar *x, GfxCMYK *cmyk) {
       color.c[i] = lookup[x[i] * nComps + i];
     }
     colorSpace->getCMYK(&color, cmyk);
+  }
+}
+
+void GfxImageColorMap::getColor(Guchar *x, GfxColor *color) {
+  int maxPixel, i;
+
+  maxPixel = (1 << bits) - 1;
+  for (i = 0; i < nComps; ++i) {
+    color->c[i] = decodeLow[i] + (x[i] * decodeRange[i]) / maxPixel;
   }
 }
 

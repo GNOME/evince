@@ -35,6 +35,7 @@ static void printInfoDate(FILE *f, Dict *infoDict, char *key, char *fmt);
 
 static int firstPage = 1;
 static int lastPage = 0;
+static GBool physLayout = gFalse;
 static GBool rawOrder = gFalse;
 static GBool htmlMeta = gFalse;
 static char textEncName[128] = "";
@@ -51,6 +52,8 @@ static ArgDesc argDesc[] = {
    "first page to convert"},
   {"-l",      argInt,      &lastPage,      0,
    "last page to convert"},
+  {"-layout", argFlag,     &physLayout,    0,
+   "maintain original physical layout"},
   {"-raw",    argFlag,     &rawOrder,      0,
    "keep strings in content stream order"},
   {"-htmlmeta", argFlag,   &htmlMeta,      0,
@@ -222,7 +225,8 @@ int main(int argc, char *argv[]) {
   }
 
   // write text file
-  textOut = new TextOutputDev(textFileName->getCString(), rawOrder, htmlMeta);
+  textOut = new TextOutputDev(textFileName->getCString(),
+			      physLayout, rawOrder, htmlMeta);
   if (textOut->isOk()) {
     doc->displayPages(textOut, firstPage, lastPage, 72, 0, gFalse);
   } else {
