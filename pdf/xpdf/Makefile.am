@@ -4,7 +4,8 @@ INCLUDES =							\
 	-I$(top_srcdir)/ltk					\
 	-DDATADIR=\""$(datadir)"\"            			\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
-	$(EXTRA_GNOME_CFLAGS)			\
+	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
+	$(EXTRA_GNOME_CFLAGS)					\
 	$(libpaper_CFLAGS)
 
 if WITH_GNOME
@@ -202,7 +203,7 @@ xpdf-ltk.h: xpdf.ltk
 
 
 stockdir = $(datadir)/pixmaps/gpdf
-stock_DATA = stock-zoom-fit-wide.xpm
+stock_DATA = fitwidth.png
 
 ltk = 			\
 	xpdf-flip.ltk	\
@@ -222,7 +223,6 @@ uidir = $(datadir)/gnome-2.0/ui
 ui_DATA =				\
 	bonobo-application-x-pdf-ui.xml \
 	gpdf-control-ui.xml
-
 
 EXTRA_DIST = $(stock_DATA) $(ltk)	\
              $(server_in_files) config.h $(ui_DATA)
