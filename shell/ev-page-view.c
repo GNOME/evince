@@ -103,7 +103,7 @@ ev_page_view_dispose (GObject *object)
 {
 	EvPageView *view = EV_PAGE_VIEW (object);
 
-	LOG ("dispose")
+	LOG ("dispose");
 
 	if (view->priv->document) {
 		g_object_unref (view->priv->document);

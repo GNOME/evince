@@ -396,7 +396,7 @@ ps_document_finalize (GObject * object)
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GTK_IS_GS (object));
 
-	LOG ("Finalize")
+	LOG ("Finalize");
 
 	gs = PS_DOCUMENT (object);
 
@@ -487,7 +487,7 @@ set_up_page(PSDocument * gs)
   GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
   GdkColormap *colormap;
 
-  LOG ("Setup the page")
+  LOG ("Setup the page");
 
 #ifdef HAVE_LOCALE_H
   char *savelocale;
@@ -518,7 +518,7 @@ set_up_page(PSDocument * gs)
           gs->bpixmap = NULL;
         }
 
-        LOG ("Create our internal pixmap")
+        LOG ("Create our internal pixmap");
         gs->bpixmap = gdk_pixmap_new(gs->pstarget, gs->width, gs->height, -1);
 
         gdk_draw_rectangle(gs->bpixmap, fill, TRUE,
@@ -554,7 +554,7 @@ set_up_page(PSDocument * gs)
              gs->left_margin,
              gs->bottom_margin, gs->right_margin, gs->top_margin);
 
-  LOG ("GS property %s", buf)
+  LOG ("GS property %s", buf);
 
 #ifdef HAVE_LOCALE_H
   setlocale(LC_NUMERIC, savelocale);
@@ -720,7 +720,7 @@ start_interpreter(PSDocument * gs)
   int std_out[2];               /* pipe from interp stdout */
   int std_err[2];               /* pipe from interp stderr */
 
-  LOG ("Start the interpreter")
+  LOG ("Start the interpreter");
 
 #define NUM_ARGS    100
 #define NUM_GS_ARGS (NUM_ARGS - 20)
@@ -790,7 +790,7 @@ start_interpreter(PSDocument * gs)
                            gdk_x11_drawable_get_xid(gs->pstarget),
 			   gdk_x11_drawable_get_xid(gs->bpixmap));
 
-  LOG ("Launching ghostview with env %s", gv_env)
+  LOG ("Launching ghostview with env %s", gv_env);
 
   gs->busy = TRUE;
   gs->interpreter_pid = fork();
@@ -876,7 +876,7 @@ stop_interpreter(PSDocument * gs)
 {
   if(gs->interpreter_pid > 0) {
     int status = 0;
-    LOG ("Stop the interpreter")
+    LOG ("Stop the interpreter");
     kill(gs->interpreter_pid, SIGTERM);
     while((wait(&status) == -1) && (errno == EINTR)) ;
     gs->interpreter_pid = -1;
@@ -1300,7 +1300,7 @@ document_load(PSDocument * gs, const gchar * fname)
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
-  LOG ("Load the document")
+  LOG ("Load the document");
 
   /* clean up previous document */
   ps_document_cleanup(gs);
@@ -1408,7 +1408,7 @@ ps_document_next_page(PSDocument * gs)
 {
   XEvent event;
 
-  LOG ("Make ghostscript render next page")
+  LOG ("Make ghostscript render next page");
 
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
@@ -1443,7 +1443,7 @@ ps_document_goto_page(PSDocument * gs, gint page)
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
-  LOG ("Go to page %d", page)
+  LOG ("Go to page %d", page);
 
   if(!gs->gs_filename) {
     return FALSE;
@@ -1455,7 +1455,7 @@ ps_document_goto_page(PSDocument * gs, gint page)
 
   if(gs->structured_doc && gs->doc) {
 
-    LOG ("It's a structured document, let's send one page to gs")
+    LOG ("It's a structured document, let's send one page to gs");
 
     if(page >= gs->doc->numpages)
       page = gs->doc->numpages - 1;
@@ -1498,7 +1498,7 @@ ps_document_goto_page(PSDocument * gs, gint page)
        case, ggv restarts GS again and the first page is displayed.
      */
 
-    LOG ("It's an unstructured document, gs will just read the file")
+    LOG ("It's an unstructured document, gs will just read the file");
 
     if(page == gs->current_page && !gs->changed)
       return TRUE;
@@ -1532,7 +1532,7 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
   gint new_ury = 0;
   GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes();
 
-  LOG ("Set the page size")
+  LOG ("Set the page size");
 
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
@@ -1752,7 +1752,7 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	gs->message_window = event->client.data.l[0];
 
 	if (event->client.message_type == gs_class->page_atom) {
-		LOG ("GS rendered the document")
+		LOG ("GS rendered the document");
 		gs->busy = FALSE;
 		ev_document_changed (EV_DOCUMENT (gs));
 	}
@@ -1857,7 +1857,7 @@ ps_document_render (EvDocument  *document,
 
 	LOG ("Copy the internal pixmap: %d %d %d %d %d %d",
              draw.x - page.x, draw.y - page.y,
-             draw.x, draw.y, draw.width, draw.height)
+             draw.x, draw.y, draw.width, draw.height);
 
 	g_object_unref (gc);
 }

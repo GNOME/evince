@@ -183,7 +183,7 @@ ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
-	LOG ("Finalize")
+	LOG ("Finalize");
 
 	if (view->document)
 		g_object_unref (view->document);
@@ -412,7 +412,7 @@ expose_bin_window (GtkWidget      *widget,
 				     y_offset + 1);
 
 	LOG ("Render area %d %d %d %d", event->area.x, event->area.y,
-             event->area.width, event->area.height)
+             event->area.width, event->area.height);
 
 	ev_document_render (view->document,
 			    event->area.x, event->area.y,
