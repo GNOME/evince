@@ -129,6 +129,8 @@ gnome_pdf_viewer_SOURCES =		\
 	nautilus-pdf-property-page.h	\
 	page-control.c			\
 	page-control.h			\
+	pdf-info-dict-util.cc		\
+	pdf-info-dict-util.h		\
 	pdf-properties-display.c	\
 	pdf-properties-display.h	\
 	$(BUILT_SOURCES)
