@@ -251,6 +251,7 @@ do_one_iteration (EvSidebarLinks *ev_sidebar_links)
 	IdleStackData *stack_data;
 	GtkTreeIter tree_iter;
 	EvDocumentLinksIter *child_iter;
+	EvLinkType link_type;
 	gint page;
 
 	g_assert (priv->idle_stack);
@@ -266,12 +267,12 @@ do_one_iteration (EvSidebarLinks *ev_sidebar_links)
 	}
 
 	page = ev_link_get_page (link);
+	link_type = ev_link_get_link_type (link);
 	gtk_tree_store_append (GTK_TREE_STORE (priv->model), &tree_iter, stack_data->tree_iter);
 	gtk_tree_store_set (GTK_TREE_STORE (priv->model), &tree_iter,
 			    LINKS_COLUMN_MARKUP, ev_link_get_title (link),
 			    LINKS_COLUMN_PAGE_NUM, page,
-			    /* FIXME: Handle links for real. */
-			    LINKS_COLUMN_PAGE_VALID, (page >= 0),
+			    LINKS_COLUMN_PAGE_VALID, (link_type == EV_LINK_TYPE_PAGE),
 			    LINKS_COLUMN_LINK, link,
 			    -1);
 	g_object_unref (link);

@@ -1,3 +1,11 @@
+Sun Feb 27 23:00:31 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-sidebar-links.c (do_one_iteration): Handle title links
+	for real.  Gosh, how long has this been broken.
+
+	* pdf/xpdf/pdf-document.cc (build_link_from_action): add back the
+	check for a NULL link.  We crash otherwise.
+
 2005-02-27  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* NEWS:

@@ -813,7 +813,9 @@ build_link_from_action (PdfDocument *pdf_document,
 {
 	EvLink *link = NULL;
 
-	if (link_action->getKind () == actionGoToR) {
+        if (link_action == NULL) {
+		link = ev_link_new_title (title);
+	} else if (link_action->getKind () == actionGoToR) {
 		g_warning ("actionGoToR links not implemented");
 	} else if (link_action->getKind () == actionLaunch) {
 		g_warning ("actionLaunch links not implemented");
