@@ -1,0 +1,16 @@
+1999-05-27  Michael Meeks  <michael@imaginator.com>
+
+	* GOutputDev.cc (GOutputFont): Hacks.
+	(GOutputFont): Renamed.
+	(getFont): killed redundant 'display'
+	getGdkFont not getXFont.
+	(GOutputDev): NB. colormap -> gtk_widget_get_default_colormap ()
+	which returns GdkColormap *, killed colormap & depth1 in prototype.
+	Removed redundant assigns.
+	NB. Miguel says 'miguel> michael: a GdkPixmap is a GdkWindow'
+	
+	* GOutputDev.h: Comments 'G'd and GOutputDev updated.
+	XPoint -> GdkPoint
+
+	* Makefile.in (CXXFLAGS): Add GOOSRCDIR.
+
