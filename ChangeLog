@@ -1,3 +1,8 @@
+Wed Mar  9 13:20:58 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c (ev_view_set_document): No longer connect a
+	resize to the idle.  This makes the resizing code work now!
+
 Wed Mar  9 00:40:39 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* backend/ev-document.c (LOG): remove fake logging.

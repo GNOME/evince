@@ -1296,29 +1296,6 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
-
-static void
-page_changed_callback (EvDocument *document,
-			   EvView     *view)
-{
-	LOG ("Page changed callback");
-
-	gtk_widget_queue_draw (GTK_WIDGET (view));
-
-	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
-		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
-	}
-}
-
-static void
-scale_changed_callback (EvDocument *document,
-			EvView     *view)
-{
-	LOG ("Scale changed callback");
-
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-}
-
 /*** Public API ***/       
      
 GtkWidget*
@@ -1354,14 +1331,6 @@ ev_view_set_document (EvView     *view,
 						  G_CALLBACK (find_changed_cb),
 						  view);
 			}
-			g_signal_connect (view->document,
-					  "page_changed",
-					  G_CALLBACK (page_changed_callback),
-					  view);
-			g_signal_connect (view->document,
-					  "scale_changed",
-					  G_CALLBACK (scale_changed_callback),
-					  view);
 			view->page_cache = ev_page_cache_new ();
 			ev_page_cache_set_document (view->page_cache, view->document);
                 }
