@@ -1,3 +1,35 @@
+2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document.c: (ev_document_class_init),
+	(ev_document_page_changed), (ev_document_scale_changed):
+	* backend/ev-document.h:
+
+	Separate page/scale notifications
+
+	* pdf/xpdf/pdf-document.cc:
+
+	Emit the new signals.
+	Do not display the pdf page in _render, do it
+	when scale/page are requested.
+
+	* ps/ps-document.c: (ps_document_set_zoom),
+	(ps_document_widget_event):
+	* ps/ps-document.h:
+
+	Emit the new signals.
+
+	* shell/ev-view.c: (ev_view_size_request), (expose_bin_window),
+	(ev_view_init), (page_changed_callback), (scale_changed_callback),
+	(ev_view_set_document), (ev_view_zoom), (ev_view_zoom_in),
+	(ev_view_zoom_out), (size_to_zoom_factor), (ev_view_set_size):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_cmd_view_normal_size),
+	(ev_window_cmd_view_page_width), (size_allocate_cb),
+	(ev_window_set_sizing_mode):
+
+	Rework sizing to be pixel based.
+	There are bugs but should be already way better.
+
 2005-02-23  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* shell/ev-window.c: (ev_window_init):

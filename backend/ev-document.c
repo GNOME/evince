@@ -27,7 +27,8 @@ static void ev_document_class_init (gpointer g_class);
 
 enum
 {
-	CHANGED,
+	PAGE_CHANGED,
+	SCALE_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -69,11 +70,21 @@ ev_document_error_quark (void)
 static void
 ev_document_class_init (gpointer g_class)
 {
-	signals[CHANGED] =
-		g_signal_new ("changed",
+	signals[PAGE_CHANGED] =
+		g_signal_new ("page_changed",
 			      EV_TYPE_DOCUMENT,
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvDocumentIface, changed),
+			      G_STRUCT_OFFSET (EvDocumentIface, page_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE,
+			      0);
+
+	signals[SCALE_CHANGED] =
+		g_signal_new ("scale_changed",
+			      EV_TYPE_DOCUMENT,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvDocumentIface, scale_changed),
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE,
@@ -201,7 +212,13 @@ ev_document_render (EvDocument  *document,
 }
 
 void
-ev_document_changed (EvDocument *document)
+ev_document_page_changed (EvDocument *document)
 {
-	g_signal_emit (G_OBJECT (document), signals[CHANGED], 0);
-}			    
+	g_signal_emit (G_OBJECT (document), signals[PAGE_CHANGED], 0);
+}
+
+void
+ev_document_scale_changed (EvDocument *document)
+{
+	g_signal_emit (G_OBJECT (document), signals[SCALE_CHANGED], 0);
+}		    

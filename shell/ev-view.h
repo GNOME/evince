@@ -31,13 +31,6 @@ G_BEGIN_DECLS
 #define EV_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW, EvView))
 #define EV_IS_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW))
 
-
-typedef enum {
-	EV_SIZING_BEST_FIT,
-	EV_SIZING_FIT_WIDTH,
-	EV_SIZING_FREE,
-} EvSizingMode;
-
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
@@ -45,8 +38,6 @@ GType		ev_view_get_type	(void) G_GNUC_CONST;
 GtkWidget*	ev_view_new		(void);
 void		ev_view_set_document	(EvView     *view,
 			   		 EvDocument *document);
-void            ev_view_set_mode        (EvView       *view,
-					 EvSizingMode  mode);
 
 /* Clipboard */
 void		ev_view_copy		(EvView     *view);
@@ -66,9 +57,9 @@ int		ev_view_get_page	(EvView     *view);
 /* Page size */
 void		ev_view_zoom_in		(EvView     *view);
 void		ev_view_zoom_out	(EvView     *view);
-void		ev_view_normal_size	(EvView     *view);
-void		ev_view_best_fit	(EvView     *view, int width, int height);
-void		ev_view_fit_width	(EvView     *view, int width, int height, int vsb_width);
+void		ev_view_set_size        (EvView     *view,
+					 int         width,
+					 int         height);
 
 /* Find */
 void            ev_view_find_next       (EvView     *view);

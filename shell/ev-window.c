@@ -61,6 +61,12 @@
 #include "ev-stock-icons.h"
 
 typedef enum {
+	EV_SIZING_BEST_FIT,
+	EV_SIZING_FIT_WIDTH,
+	EV_SIZING_FREE,
+} EvSizingMode;
+
+typedef enum {
 	PAGE_MODE_SINGLE_PAGE,
 	PAGE_MODE_CONTINUOUS_PAGE,
 	PAGE_MODE_PASSWORD,
@@ -1367,7 +1373,7 @@ ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_normal_size (EV_VIEW (ev_window->priv->view));
+	ev_view_set_size (EV_VIEW (ev_window->priv->view), -1, -1);
 }
 
 static void
@@ -1417,9 +1423,7 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 
 	ev_window_set_sizing_mode (ev_window, EV_SIZING_FIT_WIDTH);
 
-	ev_view_fit_width (EV_VIEW (ev_window->priv->view),
-			   width, height,
-			   vsb_requisition.width + scrollbar_spacing);
+	ev_view_set_size (EV_VIEW (ev_window->priv->view), width, height);
 }
 
 static void
@@ -1487,7 +1491,7 @@ size_allocate_cb (GtkWidget     *scrolled_window,
 	height -= 2 * ev_window->priv->view->style->ythickness;
 
 	if (ev_window->priv->sizing_mode == EV_SIZING_BEST_FIT) {
-		ev_view_best_fit (EV_VIEW (ev_window->priv->view),
+		ev_view_set_size (EV_VIEW (ev_window->priv->view),
 				  MAX (1, width), MAX (1, height));
 	} else if (ev_window->priv->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		gtk_widget_size_request (GTK_SCROLLED_WINDOW (ev_window->priv->scrolled_window)->vscrollbar,
@@ -1495,9 +1499,8 @@ size_allocate_cb (GtkWidget     *scrolled_window,
 		gtk_widget_style_get (ev_window->priv->scrolled_window,
 				      "scrollbar_spacing", &scrollbar_spacing,
 				      NULL);
-		ev_view_fit_width (EV_VIEW (ev_window->priv->view),
-				   width, height,
-				   vsb_requisition.width + scrollbar_spacing);
+		ev_view_set_size (EV_VIEW (ev_window->priv->view),
+				  width - vsb_requisition.width - scrollbar_spacing, -1);
 	}
 }
 
@@ -1542,7 +1545,6 @@ ev_window_set_sizing_mode (EvWindow     *ev_window,
 		break;
 	}
 
-	ev_view_set_mode (EV_VIEW (ev_window->priv->view), sizing_mode);
 	update_sizing_buttons (ev_window);
 }
 

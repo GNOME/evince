@@ -1678,7 +1678,8 @@ ps_document_set_zoom(PSDocument * gs, gfloat zoom)
     set_up_page(gs);
     gs->changed = TRUE;
   }
-
+  
+  gs->scaling = TRUE;
   ps_document_goto_page(gs, gs->current_page);
 }
 
@@ -1760,7 +1761,13 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	if (event->client.message_type == gs_class->page_atom) {
 		LOG ("GS rendered the document");
 		gs->busy = FALSE;
-		ev_document_changed (EV_DOCUMENT (gs));
+
+		if (gs->scaling) {
+			ev_document_scale_changed (EV_DOCUMENT (gs));
+			gs->scaling = FALSE;
+		} else {
+			ev_document_page_changed (EV_DOCUMENT (gs));
+		}
 	}
 
 	return TRUE;

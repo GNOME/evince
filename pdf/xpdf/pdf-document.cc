@@ -90,7 +90,6 @@ struct _PdfDocument
 	UnicodeMap *umap;
 
 	gchar *password;
-	gboolean page_valid;
 
 	PdfDocumentSearch *search;
 };
@@ -136,29 +135,21 @@ document_init_links (PdfDocument *pdf_document)
 	obj.free ();
 }
 
-static gboolean
-document_validate_page (PdfDocument *pdf_document)
+static void
+document_display_page (PdfDocument *pdf_document)
 {
-	if (!pdf_document->page_valid) {
-		pdf_document->doc->displayPage (pdf_document->out, pdf_document->page,
-						72 * pdf_document->scale,
-						72 * pdf_document->scale,
-						0, gTrue, gTrue);
+	pdf_document->doc->displayPage (pdf_document->out, pdf_document->page,
+					72 * pdf_document->scale,
+					72 * pdf_document->scale,
+					0, gTrue, gTrue);
 
-		document_init_links (pdf_document);
+	document_init_links (pdf_document);
 
-		pdf_document->page_valid = TRUE;
-
-		ev_document_changed (EV_DOCUMENT (pdf_document));
-
-                /* Update the search results available to the app since
-                 * we only provide full results on the current page
-                 */
-                if (pdf_document->search)
-                        pdf_document_search_page_changed (pdf_document->search);
-	}
-
-	return pdf_document->page_valid;
+	/* Update the search results available to the app since
+	 * we only provide full results on the current page
+         */
+	if (pdf_document->search)
+		pdf_document_search_page_changed (pdf_document->search);
 }
 
 static gboolean
@@ -227,8 +218,6 @@ pdf_document_load (EvDocument  *document,
 	if (pdf_document->out)
 		pdf_document->out->startDoc(pdf_document->doc->getXRef());
 
-	pdf_document->page_valid = FALSE;
-
 	g_object_notify (G_OBJECT (pdf_document), "title");
 
 	return TRUE;
@@ -274,7 +263,8 @@ pdf_document_set_page (EvDocument  *document,
 
 	if (page != pdf_document->page) {
 		pdf_document->page = page;
-		pdf_document->page_valid = FALSE;
+		document_display_page (pdf_document);
+		ev_document_page_changed (EV_DOCUMENT (pdf_document));
 	}
 }
 
@@ -321,7 +311,7 @@ pdf_document_set_target (EvDocument  *document,
 
 		}
 
-		pdf_document->page_valid = FALSE;
+		document_display_page (pdf_document);
 	}
 }
 
@@ -333,7 +323,8 @@ pdf_document_set_scale (EvDocument  *document,
 
 	if (pdf_document->scale != scale) {
 		pdf_document->scale = scale;
-		pdf_document->page_valid = FALSE;
+		document_display_page (pdf_document);
+		ev_document_scale_changed (EV_DOCUMENT (pdf_document));
 	}
 }
 
@@ -384,7 +375,7 @@ pdf_document_render (EvDocument  *document,
 	GdkRectangle page;
 	GdkRectangle draw;
 
-	if (!document_validate_page (pdf_document) || !pdf_document->target)
+	if (!pdf_document->target)
 		return;
 
 	page.x = pdf_document->page_x_offset;
@@ -485,12 +476,6 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
         int xMin, yMin, xMax, yMax;
 
         current_page = pdf_document->page;
-
-        if (!pdf_document->page_valid) {
-                /* we can't do anything until displayPage() */
-                search->current_page = -1;
-                return;
-        }
 
         if (search->current_page == current_page)
                 return;
@@ -1363,7 +1348,6 @@ pdf_document_init (PdfDocument *pdf_document)
 	pdf_document->page_y_offset = 0;
 	pdf_document->scale = 1.;
 
-	pdf_document->page_valid = FALSE;
 	pdf_document->password = NULL;
 }
 

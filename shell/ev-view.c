@@ -70,12 +70,6 @@ typedef enum {
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 18.4884
 
-/* FIXME: temporarily setting the epsilon very high until we figure out how to
- * constrain the size of the window to a pixel width, instead of to the zoom
- * level */
-#define ZOOM_EPSILON 1e-2
-
-
 struct _EvView {
 	GtkWidget parent_instance;
 
@@ -106,7 +100,8 @@ struct _EvView {
 	int spacing;
 
 	double scale;
-	EvSizingMode sizing_mode;
+	int width;
+	int height;
 };
 
 struct _EvViewClass {
@@ -248,10 +243,10 @@ ev_view_size_request (GtkWidget      *widget,
 	GtkBorder border;
 	gint width, height;
 
-	if (! GTK_WIDGET_REALIZED (widget))
+	if (!GTK_WIDGET_REALIZED (widget))
 		return;
 
-	if (! view->document) {
+	if (!view->document) {
 		requisition->width = 1;
 		requisition->height = 1;
 		return;
@@ -261,22 +256,18 @@ ev_view_size_request (GtkWidget      *widget,
 				   &width, &height);
 	ev_document_misc_get_page_border_size (width, height, &border);
 
-	switch (view->sizing_mode) {
-	case EV_SIZING_BEST_FIT:
-		requisition->width = MIN_SCALE * ((float) width) / view->scale;
-		requisition->height = MIN_SCALE * ((float) height) / view->scale;
-		break;
-	case EV_SIZING_FIT_WIDTH:
-		requisition->width = MIN_SCALE * ((float) width) / view->scale;
-		requisition->height = height + border.top + border.bottom;
-		requisition->height += view->spacing * 2;
-		break;
-	case EV_SIZING_FREE:
-		requisition->width = width + border.left + border.right;
-		requisition->height = height + border.top + border.bottom;
-		requisition->width += view->spacing * 2;
-		requisition->height += view->spacing * 2;
-		break;
+	if (view->width >= 0) {
+		requisition->width = 0;
+	} else {
+		requisition->width = width + border.left + border.right +
+				     view->spacing * 2;
+	}
+	
+	if (view->height >= 0) {
+		requisition->height = 0;
+	} else {
+		requisition->height = height + border.top + border.bottom +
+				      view->spacing * 2;
 	}
 }
 
@@ -490,8 +481,10 @@ expose_bin_window (GtkWidget      *widget,
 				     view->x_offset + border.left,
 				     view->y_offset + border.top);
 
-	LOG ("Render area %d %d %d %d", event->area.x, event->area.y,
-             event->area.width, event->area.height);
+	LOG ("Render area %d %d %d %d - Offset %d %d",
+	     event->area.x, event->area.y,
+             event->area.width, event->area.height,
+	     view->x_offset, view->y_offset);
 
 	ev_document_render (view->document,
 			    event->area.x, event->area.y,
@@ -1030,7 +1023,6 @@ ev_view_init (EvView *view)
 	view->scale = 1.0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
-	view->sizing_mode = EV_SIZING_BEST_FIT;
 }
 
 static void
@@ -1210,7 +1202,7 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 }
 
 static void
-document_changed_callback (EvDocument *document,
+page_changed_callback (EvDocument *document,
 			   EvView     *view)
 {
 	gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -1218,6 +1210,13 @@ document_changed_callback (EvDocument *document,
 	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
+}
+
+static void
+scale_changed_callback (EvDocument *document,
+			EvView     *view)
+{
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 /*** Public API ***/       
@@ -1255,8 +1254,12 @@ ev_view_set_document (EvView     *view,
 						  view);
 			}
 			g_signal_connect (view->document,
-					  "changed",
-					  G_CALLBACK (document_changed_callback),
+					  "page_changed",
+					  G_CALLBACK (page_changed_callback),
+					  view);
+			g_signal_connect (view->document,
+					  "scale_changed",
+					  G_CALLBACK (scale_changed_callback),
 					  view);
                 }
 
@@ -1267,17 +1270,6 @@ ev_view_set_document (EvView     *view,
 		
 		g_signal_emit (view, page_changed_signal, 0);
 	}
-}
-
-void
-ev_view_set_mode (EvView       *view,
-		  EvSizingMode  sizing_mode)
-{
-	if (view->sizing_mode == sizing_mode)
-		return;
-
-	view->sizing_mode = sizing_mode;
-	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
@@ -1341,100 +1333,81 @@ ev_view_zoom (EvView   *view,
 
 	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
 
-	if (ABS (scale - view->scale) < ZOOM_EPSILON)
-		return;
-
 	view->scale = scale;
 
 	ev_document_set_scale (view->document, view->scale);
-
-	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 void
 ev_view_zoom_in (EvView *view)
 {
+	view->width = view->height = -1;
 	ev_view_zoom (view, ZOOM_IN_FACTOR, TRUE);
 }
 
 void
 ev_view_zoom_out (EvView *view)
 {
+	view->width = view->height = -1;
 	ev_view_zoom (view, ZOOM_OUT_FACTOR, TRUE);
 }
 
-void
-ev_view_normal_size (EvView *view)
+static double
+size_to_zoom_factor (EvView *view, int width, int height)
 {
-	ev_view_zoom (view, 1.0, FALSE);
-}
-
-/* Unfortunately this is not idempotent (!) (numerical stability
- * issues because width and height are rounded) */
-void
-ev_view_best_fit (EvView *view, int allocation_width, int allocation_height)
-{
-	int target_width, target_height;
-	int width, height;
+	int doc_width, doc_height;
+	double scale, scale_w, scale_h;
 	GtkBorder border;
 
-	if (!GTK_WIDGET_REALIZED (view) || view->document == NULL)
-		return;
-
-	width = height = 0;
-	/* This is the bad part. You could make it stable by doing
-	 * ev_document_set_scale 1.0. But at least with pdf this means
-	 * redrawing the whole page */
-	ev_document_get_page_size (view->document, -1, &width, &height);
+	doc_width = doc_height = 0;
+	scale = scale_w = scale_h = 1.0;
+	ev_document_get_page_size (view->document, -1, &doc_width, &doc_height);
 	/* FIXME: The border size isn't constant.  Ugh.  Still, if we have extra
 	 * space, we just cut it from the border */
-	ev_document_misc_get_page_border_size (width, height, &border);
+	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
 
-	target_width = allocation_width - (view->spacing * 2 + border.left + border.right);
-	target_height = allocation_height - (view->spacing * 2 + border.top + border.bottom);
-
-	LOG ("Best fit %d %d", allocation_width, allocation_height);
-
-	if (width != 0 && height != 0) {
-		double scale;
-		double scale_w, scale_h;
-
-		scale_w = (double)target_width * view->scale / width;
-		scale_h = (double)target_height * view->scale / height;
-
-		scale = (scale_w < scale_h) ? scale_w : scale_h;
-
-		ev_view_zoom (view, scale, FALSE);
+	if (doc_width == 0 && doc_height == 0) {
+		return 0;
 	}
 
+	if (width >= 0) {
+		int target_width;
+
+		target_width = width - (view->spacing * 2 + border.left + border.right);
+		scale = scale_w = (double)target_width * view->scale / doc_width;
+	}
+
+	if (height >= 0) {
+		int target_height;
+
+		target_height = height - (view->spacing * 2 + border.top + border.bottom);
+		scale = scale_h = (double)target_height * view->scale / doc_height;
+	}
+
+	if (width >= 0 && height >= 0) {
+		scale = (scale_w < scale_h) ? scale_w : scale_h;
+	}
+
+	return scale;
 }
 
 void
-ev_view_fit_width (EvView *view, int allocation_width, int allocation_height,
-		   int vsb_width)
+ev_view_set_size (EvView     *view,
+		  int         width,
+		  int         height)
 {
-	int target_width, target_height;
-	int width, height;
-	GtkBorder border;
+	double factor;
 
-	if (view->document == NULL)
+	if (!view->document) {
 		return;
+	}
 
-	width = height = 0;
-	ev_document_get_page_size (view->document, -1, &width, &height);
-	ev_document_misc_get_page_border_size (width, height, &border);
-
-	target_width = allocation_width - (view->spacing * 2 + border.left + border.right);
-	target_height = allocation_height - (view->spacing * 2 + border.top + border.bottom);
-
-	if (width) {
-		double scale;
-		scale = (double)target_width * view->scale / width;
-
-		if (height * scale / view->scale > target_height)
-			scale = ((double)(target_width - vsb_width) * view->scale / width);
-
-		ev_view_zoom (view, scale, FALSE);
+	if (view->width != width ||
+	    view->height != height) {
+		view->width = width;
+		view->height = height;
+		factor = size_to_zoom_factor (view, width, height);
+		ev_view_zoom (view, factor, FALSE); 
 	}
 }
 
