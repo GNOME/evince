@@ -2426,6 +2426,6 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Set it to something random to force a change */
 	ev_window->priv->sizing_mode = EV_SIZING_FREE;
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_BEST_FIT);
+	ev_window_set_sizing_mode (ev_window,  EV_SIZING_FIT_WIDTH);
 	update_action_sensitivity (ev_window);
 }
