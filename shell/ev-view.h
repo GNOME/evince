@@ -43,6 +43,12 @@ void ev_view_set_page     (EvView     *view,
 			   int         page);
 int  ev_view_get_page     (EvView     *view);
 
+void ev_view_zoom_in     (EvView *view);
+void ev_view_zoom_out    (EvView *view);
+void ev_view_normal_size (EvView *view);
+void ev_view_best_fit    (EvView *view);
+void ev_view_fit_width   (EvView *view);
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */

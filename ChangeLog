@@ -1,3 +1,19 @@
+2004-12-22  Mark McLoughlin  <mark@skynet.ie>
+
+	* shell/ev-view.[ch]:
+	(ev_view_zoom), (ev_view_zoom_in), (ev_view_zoom_out),
+	(ev_view_normal_size), (ev_view_best_fit), (ev_view_fit_width):
+	add zooming.
+	
+	* shell/ev-window.c: (ev_window_cmd_view_zoom_in),
+	(ev_window_cmd_view_zoom_out), (ev_window_cmd_view_normal_size),
+	(ev_window_cmd_view_best_fit), (ev_window_cmd_view_page_width):
+	hook it up.
+	
+	* pdf/xpdf/pdf-document.cc:
+	(pdf_document_begin_find),
+	(pdf_document_end_find): make static.
+
 2004-12-22  Martin Kretzschmar  <martink@gnome.org>
 
 	* pdf/xpdf/GlobalParams.h (setupBaseFontsFc): add prototype.

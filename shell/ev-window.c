@@ -291,7 +291,7 @@ ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_zoom_in (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -299,7 +299,7 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_zoom_out (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -307,7 +307,7 @@ ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_normal_size (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -315,7 +315,7 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_best_fit (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -323,7 +323,7 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_fit_width (EV_VIEW (ev_window->priv->view));
 }
 
 static void

@@ -41,6 +41,8 @@ struct _EvView {
 	GtkAdjustment *vadjustment;
 
         GArray *find_results;
+
+	double scale;
 };
 
 struct _EvViewClass {
@@ -457,6 +459,8 @@ static void
 ev_view_init (EvView *view)
 {
 	static const GdkColor white = { 0, 0xffff, 0xffff, 0xffff };
+
+	view->scale = 1.0;
 	
 	gtk_widget_modify_bg (GTK_WIDGET (view), GTK_STATE_NORMAL, &white);
 
@@ -551,4 +555,85 @@ ev_view_get_page (EvView *view)
 		return ev_document_get_page (view->document);
 	else
 		return 1;
+}
+
+#define ZOOM_IN_FACTOR  1.2
+#define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
+
+#define MIN_SCALE 0.05409
+#define MAX_SCALE 18.4884
+
+static void
+ev_view_zoom (EvView   *view,
+	      double    factor,
+	      gboolean  relative)
+{
+	double scale;
+
+	if (relative)
+		scale = view->scale * factor;
+	else
+		scale = factor;
+
+	view->scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
+
+	ev_document_set_scale (view->document, view->scale);
+
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+void
+ev_view_zoom_in (EvView *view)
+{
+	ev_view_zoom (view, ZOOM_IN_FACTOR, TRUE);
+}
+
+void
+ev_view_zoom_out (EvView *view)
+{
+	ev_view_zoom (view, ZOOM_OUT_FACTOR, TRUE);
+}
+
+void
+ev_view_normal_size (EvView *view)
+{
+	ev_view_zoom (view, 1.0, FALSE);
+}
+
+void
+ev_view_best_fit (EvView *view)
+{
+	double scale;
+	int width, height;
+
+	width = height = 0;
+	ev_document_get_page_size (view->document, &width, &height);
+
+	scale = 1.0;
+	if (width != 0 && height != 0) {
+		double scale_w, scale_h;
+
+		scale_w = (double)GTK_WIDGET (view)->allocation.width / width;
+		scale_h = (double)GTK_WIDGET (view)->allocation.height / height;
+
+		scale = (scale_w < scale_h) ? scale_w : scale_h;
+	}
+
+	ev_view_zoom (view, scale, FALSE);
+}
+
+void
+ev_view_fit_width (EvView *view)
+{
+	double scale = 1.0;
+	int width;
+
+	width = 0;
+	ev_document_get_page_size (view->document, &width, NULL);
+
+	scale = 1.0;
+	if (width != 0)
+		scale = (double)GTK_WIDGET (view)->allocation.width / width;
+
+	ev_view_zoom (view, scale, FALSE);
 }

@@ -272,7 +272,7 @@ pdf_document_render (EvDocument  *document,
 					   draw.width, draw.height);
 }
 
-void
+static void
 pdf_document_begin_find (EvDocument   *document,
                          const char   *search_string,
                          gboolean      case_sensitive)
@@ -340,7 +340,7 @@ pdf_document_begin_find (EvDocument   *document,
         g_array_free (results, TRUE);
 }
 
-void
+static void
 pdf_document_end_find (EvDocument   *document)
 {
         PdfDocument *pdf_document = PDF_DOCUMENT (document);
