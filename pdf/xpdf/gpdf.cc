@@ -102,16 +102,11 @@ doc_config_event (GtkWidget *widget, void *ugly)
                                widget->allocation.height,
                                -1);
 
+  printf ("Creating pixmap of size %d %d\n",
+	  widget->allocation.width, widget->allocation.height);
   gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
   doc->out    = new GOutputDev (doc->pixmap, doc->paper);
 
-/*  gdk_draw_rectangle (doc->pixmap,
-		      widget->style->white_gc,
-		      TRUE,
-		      0, 0,
-		      widget->allocation.width,
-		      widget->allocation.height);*/
-  printf ("Configured...\n");
   return TRUE;
 }
 
