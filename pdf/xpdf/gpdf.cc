@@ -170,8 +170,8 @@ extern "C" {
     GNOME_PersistStream_load (persist,
 			      (GNOME_Stream) gnome_object_corba_objref (GNOME_OBJECT (stream)), &ev);
 
-    
-    
+    zoom_set (container);
+        
     GNOME_Unknown_unref (persist, &ev);
     CORBA_Object_release (persist, &ev);
     CORBA_exception_free (&ev);
@@ -301,75 +301,6 @@ extern "C" {
       zoom_set (container);
     }
   }
-  
-  static void
-  component_view_activated_cb (GnomeViewFrame *view_frame, gboolean activated, gpointer data)
-  {
-    Component *component = (Component *) data;
-    Container *container = component->container;
-    
-    if (activated) {
-      /*
-       * If the View is requesting to be activated, then we
-       * check whether or not there is already an active
-       * View.
-       */
-      if (container->active_view_frame != NULL) {
-	g_warning ("View requested to be activated but there is already "
-		   "an active View!\n");
-	return;
-      }
-      
-      /*
-       * Otherwise, uncover it so that it can receive
-       * events, and set it as the active View.
-       */
-      gnome_view_frame_set_covered (view_frame, FALSE);
-      container->active_view_frame = view_frame;
-    } else {
-      /*
-       * If the View is asking to be deactivated, always
-       * oblige.  We may have already deactivated it (see
-       * user_activation_request_cb), but there's no harm in
-       * doing it again.  There is always the possibility
-       * that a View will ask to be deactivated when we have
-       * not told it to deactivate itself, and that is
-       * why we cover the view here.
-       */
-      gnome_view_frame_set_covered (view_frame, TRUE);
-      
-      if (view_frame == container->active_view_frame)
-	container->active_view_frame = NULL;
-    }                                                                       
-  }
-  
-  static void
-  component_user_context_cb (GnomeViewFrame *view_frame, gpointer data)
-  {
-    Component *component = (Component *) data;
-    char *executed_verb;
-    GList *l;
-    
-    /*
-     * See if the remote GnomeEmbeddable supports any verbs at
-     * all.
-     */
-    l = gnome_client_site_get_verbs (component->client_site);
-    if (l == NULL)
-      return;
-    gnome_client_site_free_verbs (l);
-    
-    /*
-     * Popup the verb popup and execute the chosen verb.  This
-     * function saves us the work of creating the menu, connecting
-     * the callback, and executing the verb on the remove
-     * GnomeView.  We could implement all this functionality
-     * ourselves if we wanted.
-     */
-    executed_verb = gnome_view_frame_popup_verbs (view_frame);
-    
-    g_free (executed_verb);
-  }
 }
 
 static void
@@ -400,34 +331,12 @@ container_set_view (Container *container, Component *component)
 	container->component   = component;
 
 	/*
-	 * In-place activation of a component is a two-step process.
-	 * After the user double clicks on the component, our signal
-	 * callback (compoennt_user_activate_request_cb()) asks the
-	 * component to activate itself (see
-	 * gnome_view_frame_view_activate()).  The component can then
-	 * choose to either accept or refuse activation.  When an
-	 * embedded component notifies us of its decision to change
-	 * its activation state, the "view_activated" signal is
-	 * emitted from the view frame.  It is at that point that we
-	 * actually remove the cover so that events can get through.
-	 */
-	gtk_signal_connect (GTK_OBJECT (view_frame), "view_activated",
-			    GTK_SIGNAL_FUNC (component_view_activated_cb), component);
-
-	/*
-	 * The "user_context" signal is emitted when the user right
-	 * clicks on the wrapper.  We use it to pop up a verb menu.
-	 */
-	gtk_signal_connect (GTK_OBJECT (view_frame), "user_context",
-			    GTK_SIGNAL_FUNC (component_user_context_cb), component);
-
-	/*
 	 * Show the component.
 	 */
 	gtk_scrolled_window_add_with_viewport (container->scroll, view_widget);
 
 	/*
-	 * Activate it ( get it to merge menus etc.
+	 * Activate it ( get it to merge menus etc. )
 	 */
 	gnome_view_frame_view_activate (view_frame);
 
@@ -542,6 +451,35 @@ extern "C" {
 
     return component;
   }
+  
+  static void
+  filenames_dropped (GtkWidget * widget,
+		     GdkDragContext   *context,
+		     gint              x,
+		     gint              y,
+		     GtkSelectionData *selection_data,
+		     guint             info,
+		     guint             time,
+		     Container        *container)
+  {
+    GList *names, *tmp_list;
+    
+    names = gnome_uri_list_extract_filenames ((char *)selection_data->data);
+    tmp_list = names;
+    
+    while (tmp_list) {
+      const char *fname = (const char *)tmp_list->data;
+
+      if (fname) {
+	if (container->view_widget)
+	  container = container_new (fname);
+	else
+	  open_pdf (container, fname);
+      }
+
+      tmp_list = g_list_next (tmp_list);
+    }
+  }
 }
 
 static void
@@ -574,14 +512,28 @@ static Container *
 container_new (const char *fname)
 {
 	Container *container;
-
+	static GtkTargetEntry drag_types[] =
+	{
+	  { "text/uri-list", 0, 0 },
+	};
+	static gint n_drag_types = sizeof (drag_types) / sizeof (drag_types [0]);
+	
 	container = g_new0 (Container, 1);
 
 	container->app  = gnome_app_new ("pdf-viewer",
 					 "GNOME PDF viewer");
 	container->zoom = 86.0;
 
-	gtk_window_set_default_size (GTK_WINDOW (container->app), 400, 400);
+	gtk_drag_dest_set (container->app,
+			   GTK_DEST_DEFAULT_ALL,
+			   drag_types, n_drag_types,
+			   GDK_ACTION_COPY);
+
+	gtk_signal_connect (GTK_OBJECT(container->app),
+			    "drag_data_received",
+			    GTK_SIGNAL_FUNC(filenames_dropped), (gpointer)container);
+
+	gtk_window_set_default_size (GTK_WINDOW (container->app), 600, 600);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
 
 	container->container   = gnome_container_new ();
@@ -612,7 +564,6 @@ container_new (const char *fname)
 	  }
 
 	containers = g_list_append (containers, container);
-	zoom_set (container);
 
 	gtk_widget_show_all (container->app);
 
