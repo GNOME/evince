@@ -33,9 +33,6 @@
     </menu>
 
     <menu name="GoMenu" action="Go">
-      <menuitem name="GoBackMenu" action="GoBack"/>
-      <menuitem name="GoForwardMenu" action="GoForward"/>
-      <separator/>
       <menuitem name="GoPageUpMenu" action="GoPageUp"/>
       <menuitem name="GoPageDownMenu" action="GoPageDown"/>
       <separator/>
@@ -50,12 +47,10 @@
   </menubar>
 
   <toolbar name="ToolBar">
-    <toolitem action="NavigationBack"/>
-    <toolitem action="NavigationForward"/>
+    <toolitem action="GoPageDown"/>
+    <toolitem action="GoPageUp"/>
     <separator/>
     <toolitem action="PageSelector"/>
-    <toolitem action="GoPageUp"/>
-    <toolitem action="GoPageDown"/>
     <separator/>
     <toolitem action="ViewZoomIn"/>
     <toolitem action="ViewZoomOut"/>

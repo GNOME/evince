@@ -24,7 +24,6 @@
 
 #include "ev-document.h"
 #include "ev-link.h"
-#include "ev-history.h"
 
 G_BEGIN_DECLS
 
@@ -39,8 +38,6 @@ GType		ev_view_get_type	(void) G_GNUC_CONST;
 GtkWidget*	ev_view_new		(void);
 void		ev_view_set_document	(EvView     *view,
 			   		 EvDocument *document);
-void		ev_view_set_history	(EvView	    *view,
-					 EvHistory  *history);
 
 /* Clipboard */
 void		ev_view_copy		(EvView     *view);

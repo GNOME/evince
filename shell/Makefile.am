@@ -21,12 +21,8 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
-	ev-history.c			\
-	ev-history.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
-	ev-navigation-action.c		\
-	ev-navigation-action.h		\
 	ev-page-action.c		\
 	ev-page-action.h		\
 	ev-password.h			\

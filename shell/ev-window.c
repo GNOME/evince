@@ -29,7 +29,6 @@
 #endif
 
 #include "ev-window.h"
-#include "ev-navigation-action.h"
 #include "ev-page-action.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
@@ -93,8 +92,6 @@ struct _EvWindowPrivate {
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_WINDOW, EvWindowPrivate))
 
 
-#define NAVIGATION_BACK_ACTION "NavigationBack"
-#define NAVIGATION_FORWARD_ACTION "NavigationForward"
 #define PAGE_SELECTOR_ACTION "PageSelector"
 
 
@@ -124,17 +121,9 @@ update_action_sensitivity (EvWindow *ev_window)
 	EvDocument *document;
 	EvView *view;
 
-	gboolean can_go_back = FALSE;
-	gboolean can_go_forward = FALSE;
-
 	document = ev_window->priv->document;
 
 	view = EV_VIEW (ev_window->priv->view);
-
-	if (document) {
-		can_go_back = ev_view_can_go_back (view);
-		can_go_forward = ev_view_can_go_forward (view);
-	}
 
 	/* File menu */
 	/* "FileOpen": always sensitive */
@@ -159,8 +148,6 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, "ViewPageWidth", document!=NULL);
 
         /* Go menu */
-	set_action_sensitive (ev_window, "GoBack", can_go_back);
-	set_action_sensitive (ev_window, "GoForward", can_go_forward);
 	if (document) {
 		int n_pages;
 		int page;
@@ -184,8 +171,6 @@ update_action_sensitivity (EvWindow *ev_window)
 	/* "HelpAbout": always sensitive */
 
 	/* Toolbar-specific actions: */
-	set_action_sensitive (ev_window, NAVIGATION_BACK_ACTION, can_go_back);
-	set_action_sensitive (ev_window, NAVIGATION_FORWARD_ACTION, can_go_forward);
 	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, document!=NULL);
 }
 
@@ -327,10 +312,8 @@ static void
 ev_window_setup_document (EvWindow *ev_window)
 {
 	EvDocument *document;
-	EvHistory *history;
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
-	GtkAction *action;
 
 	document = ev_window->priv->document;
 
@@ -343,20 +326,6 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_sidebar_set_document (sidebar, document);
 	ev_view_set_document (view, document);
-
-	history = ev_history_new ();
-	ev_view_set_history (view, history);
-	g_object_unref (history);
-
-	action = gtk_action_group_get_action
-		(ev_window->priv->action_group, NAVIGATION_BACK_ACTION);
-	ev_navigation_action_set_history
-		(EV_NAVIGATION_ACTION (action), history);
-
-	action = gtk_action_group_get_action
-		(ev_window->priv->action_group, NAVIGATION_FORWARD_ACTION);
-	ev_navigation_action_set_history
-		(EV_NAVIGATION_ACTION (action), history);
 
 	update_window_title (ev_window->priv->document, NULL, ev_window);
 	update_total_pages (ev_window);
@@ -1082,22 +1051,6 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_go_back (GtkAction *action, EvWindow *ev_window)
-{
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
-
-	ev_view_go_back (EV_VIEW (ev_window->priv->view));
-}
-
-static void
-ev_window_cmd_go_forward (GtkAction *action, EvWindow *ev_window)
-{
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
-
-	ev_view_go_forward (EV_VIEW (ev_window->priv->view));
-}
-
-static void
 ev_window_cmd_go_page_up (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -1498,12 +1451,6 @@ static GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_page_width) },
 
         /* Go menu */
-        { "GoBack", GTK_STOCK_GO_BACK, N_("_Back"), "<mod1>Left",
-          N_("Go to the page viewed before this one"),
-          G_CALLBACK (ev_window_cmd_go_back) },
-        { "GoForward", GTK_STOCK_GO_FORWARD, N_("Fo_rward"), "<mod1>Right",
-          N_("Go to the page viewed before this one"),
-          G_CALLBACK (ev_window_cmd_go_forward) },
         { "GoPageUp", GTK_STOCK_GO_UP, N_("_Page Up"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_window_cmd_go_page_up) },
@@ -1558,33 +1505,6 @@ static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
-
-	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
-			       "name", NAVIGATION_BACK_ACTION,
-			       "label", _("Back"),
-			       "stock_id", GTK_STOCK_GO_BACK,
-			       "tooltip", _("Go back"),
-			       "arrow-tooltip", _("Back history"),
-			       "direction", EV_NAVIGATION_DIRECTION_BACK,
-			       "is_important", TRUE,
-			       NULL);
-	g_signal_connect (action, "activate",
-			  G_CALLBACK (ev_window_cmd_go_back), window);
-	gtk_action_group_add_action (group, action);
-	g_object_unref (action);
-
-	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
-			       "name", NAVIGATION_FORWARD_ACTION,
-			       "label", _("Forward"),
-			       "stock_id", GTK_STOCK_GO_FORWARD,
-			       "tooltip", _("Go forward"),
-			       "arrow-tooltip", _("Forward history"),
-			       "direction", EV_NAVIGATION_DIRECTION_FORWARD,
-			       NULL);
-	g_signal_connect (action, "activate",
-			  G_CALLBACK (ev_window_cmd_go_forward), window);
-	gtk_action_group_add_action (group, action);
-	g_object_unref (action);
 
 	action = g_object_new (EV_TYPE_PAGE_ACTION,
 			       "name", PAGE_SELECTOR_ACTION,

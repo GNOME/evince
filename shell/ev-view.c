@@ -65,7 +65,6 @@ struct _EvView {
 	GtkWidget parent_instance;
 
 	EvDocument *document;
-	EvHistory  *history;
 	
 	GdkWindow *bin_window;
 
@@ -187,9 +186,6 @@ ev_view_finalize (GObject *object)
 
 	if (view->document)
 		g_object_unref (view->document);
-
-	if (view->history)
-		g_object_unref (view->history);
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
@@ -1161,107 +1157,16 @@ go_to_link (EvView *view, EvLink *link)
 void
 ev_view_go_to_link (EvView *view, EvLink *link)
 {
-	EvLinkType type;
-
-	go_to_link (view, link);
-
-	type = ev_link_get_link_type (link);
-	if (type == EV_LINK_TYPE_PAGE) {
-		ev_history_add_link (view->history, link);
-	}
-}
-
-static void
-go_to_index (EvView *view, int index)
-{
-	EvLink *link;
-	
-	link = ev_history_get_link_nth (view->history, index);
-	g_return_if_fail (link != NULL);
-
 	go_to_link (view, link);
 }
-
-gboolean
-ev_view_can_go_back (EvView *view)
-{
-	int index, n;
-
-	if (view->history == NULL) {
-		return FALSE;
-	}
-
-	index = ev_history_get_current_index (view->history);
-	n = ev_history_get_n_links (view->history);
-
-	if (n > 0) {
-		return index != MAX (0, index - 1);
-	} else {
-		return FALSE;
-	}
-}
-
-void
-ev_view_go_back	(EvView	*view)
-{
-	int index, n;
-
-	g_return_if_fail (EV_IS_HISTORY (view->history));
-
-	index = ev_history_get_current_index (view->history);
-	n = ev_history_get_n_links (view->history);
-
-	if (n > 0) {
-		index = MAX (0, index - 1);
-		ev_history_set_current_index (view->history, index);
-	}
-}
-
-gboolean
-ev_view_can_go_forward (EvView *view)
-{
-	int index, n;
-
-	if (view->history == NULL) {
-		return FALSE;
-	}
-
-	index = ev_history_get_current_index (view->history);
-	n = ev_history_get_n_links (view->history);
-
-	if (n > 0) {
-		return 	index != MIN (n - 1, index + 1);
-	} else {
-		return FALSE;
-	}
-}
-
-void
-ev_view_go_forward (EvView *view)
-{
-	int index, n;
-
-	g_return_if_fail (EV_IS_HISTORY (view->history));
-
-	index = ev_history_get_current_index (view->history);
-	n = ev_history_get_n_links (view->history);
-
-	if (n > 0) {
-		index = MIN (n - 1, index + 1);
-		ev_history_set_current_index (view->history, index);
-	}
-}
-
 
 void
 ev_view_set_page (EvView *view,
 		  int     page)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
-	g_return_if_fail (EV_IS_HISTORY (view->history));
 
 	set_document_page (view, page);
-	ev_history_add_page (view->history, page);
 }
 
 int
@@ -1352,33 +1257,6 @@ ev_view_fit_width (EvView *view)
 		scale = (double)GTK_WIDGET (view)->allocation.width * view->scale / width;
 
 	ev_view_zoom (view, scale, FALSE);
-}
-
-static void
-history_index_changed_cb (EvHistory  *history,
-			  GParamSpec *pspec,
-			  EvView     *view)
-{
-	int index;
-
-	index = ev_history_get_current_index (history);
-	go_to_index (view, index);
-}
-
-void
-ev_view_set_history (EvView     *view,
-		     EvHistory  *history)
-{
-	if (view->history) {
-		g_object_unref (view->history);
-	}
-
-	view->history = g_object_ref (history);
-	ev_history_add_page (view->history, ev_view_get_page (view));
-
-	g_signal_connect (view->history, "notify::index",
-			  G_CALLBACK (history_index_changed_cb),
-			  view);
 }
 
 const char *

@@ -1,5 +1,21 @@
 2005-01-27  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* data/evince-ui.xml:
+	* shell/Makefile.am:
+	* shell/ev-history.c:
+	* shell/ev-history.h:
+	* shell/ev-navigation-action.c:
+	* shell/ev-navigation-action.h:
+	* shell/ev-view.c: (ev_view_finalize), (ev_view_go_to_link),
+	(ev_view_set_page), (ev_view_fit_width):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_setup_document), (register_custom_actions):
+
+	Kill session history
+
+2005-01-27  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-window.c: (update_action_sensitivity):
 
 	Fix inverted up/down buttons
