@@ -1,3 +1,13 @@
+1999-11-06  Michael Meeks  <mmeeks@gnu.org>
+
+	* gtkgesture.c (gesture_data_append_point): fix leak.
+
+	* bonobo-application-x-pdf.c (setup_pixmap): Fix leak + flicker.
+
+	* GOutputDev.cc (~GOutputDev): Add clear of state stack + clear
+	text page + delete font. (startPage): fic gdkGC leaks.
+	(findColor): clean.
+
 1999-10-11  Michael Meeks  <mmeeks@gnu.org>
 
 	* GOutputDev.cc: Re-enable stroke color setting.
