@@ -280,6 +280,7 @@ ev_view_realize (GtkWidget *widget)
 
 	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
   
+
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
@@ -298,6 +299,7 @@ ev_view_realize (GtkWidget *widget)
 					 GDK_WA_VISUAL);
 	gdk_window_set_user_data (widget->window, widget);
 	widget->style = gtk_style_attach (widget->style, widget->window);
+	gdk_window_set_background (widget->window, &widget->style->mid[widget->state]);
   
 	attributes.x = 0;
 	attributes.y = 0;
