@@ -168,14 +168,14 @@ update_action_sensitivity (EvWindow *ev_window)
 		page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
 		n_pages = ev_document_get_n_pages (document);
 
-		set_action_sensitive (ev_window, "GoPageDown", page > 1);
-		set_action_sensitive (ev_window, "GoPageUp", page < n_pages);
+		set_action_sensitive (ev_window, "GoPageUp", page > 1);
+		set_action_sensitive (ev_window, "GoPageDown", page < n_pages);
 		set_action_sensitive (ev_window, "GoFirstPage", page > 1);
 		set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
 	} else {
 		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
-		set_action_sensitive (ev_window, "GoPageDown", FALSE);
 		set_action_sensitive (ev_window, "GoPageUp", FALSE);
+		set_action_sensitive (ev_window, "GoPageDown", FALSE);
 		set_action_sensitive (ev_window, "GoLastPage", FALSE);
 	}
 
@@ -1504,10 +1504,10 @@ static GtkActionEntry entries[] = {
         { "GoForward", GTK_STOCK_GO_FORWARD, N_("Fo_rward"), "<mod1>Right",
           N_("Go to the page viewed before this one"),
           G_CALLBACK (ev_window_cmd_go_forward) },
-        { "GoPageDown", GTK_STOCK_GO_UP, N_("_Page Up"), "<control>Page_Up",
+        { "GoPageUp", GTK_STOCK_GO_UP, N_("_Page Up"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_window_cmd_go_page_up) },
-        { "GoPageUp", GTK_STOCK_GO_DOWN, N_("_Page Down"), "<control>Page_Down",
+        { "GoPageDown", GTK_STOCK_GO_DOWN, N_("_Page Down"), "<control>Page_Down",
           N_("Go to the next page"),
           G_CALLBACK (ev_window_cmd_go_page_down) },
         { "GoFirstPage", GTK_STOCK_GOTO_FIRST, N_("_First Page"), "<control>Home",
