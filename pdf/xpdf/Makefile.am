@@ -3,6 +3,7 @@ SUBDIRS = . tests
 INCLUDES =							\
 	-I$(top_srcdir)						\
 	-I$(top_srcdir)/goo					\
+	-I$(top_srcdir)/lib/ggv-sidebar				\
 	-DDATADIR=\""$(datadir)"\"            			\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
@@ -166,11 +167,12 @@ gnome_pdf_viewer_SOURCES =		\
 # 	gpdf-embeddable-view.cc		\
 # 	gpdf-embeddable-view.h
 
-gnome_pdf_viewer_LDADD =		\
-	libxpdf.a			\
-	libgpdf.a			\
-	$(top_builddir)/goo/libGoo.a	\
-	$(EXTRA_GNOME_LIBS)		\
+gnome_pdf_viewer_LDADD =					\
+	libxpdf.a						\
+	libgpdf.a						\
+	$(top_builddir)/goo/libGoo.a				\
+	$(top_builddir)/lib/ggv-sidebar/libggv-sidebar.a	\
+	$(EXTRA_GNOME_LIBS)					\
 	$(libpaper_LIBS)
 
 xpdf_SOURCES =			\
