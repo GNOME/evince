@@ -1718,6 +1718,11 @@ ps_document_render_pixbuf (EvDocument *document)
 
 	ps_document_goto_page (PS_DOCUMENT (document));
 
+	/* FIXME We need to block until rendering finished */
+	while (gs->busy) {
+		sleep (1);
+	}
+
 	cmap = gdk_window_get_colormap (gs->pstarget);
 	
 	return gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
