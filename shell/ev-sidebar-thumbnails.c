@@ -352,11 +352,11 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	/* We get the dimensions of the first doc so that we can make a blank
 	 * icon.  */
 	ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (priv->document),
-					       0, THUMBNAIL_WIDTH, &width, &height);
+					       1, THUMBNAIL_WIDTH, &width, &height);
 	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
 
-	for (i = 0; i < n_pages; i++) {
-		page = g_strdup_printf ("<i>%d</i>", i + 1);
+	for (i = 1; i <= n_pages; i++) {
+		page = g_strdup_printf ("<i>%d</i>", i);
 		gtk_list_store_append (priv->list_store, &iter);
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_PAGE_STRING, page,

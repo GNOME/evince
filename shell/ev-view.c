@@ -209,6 +209,7 @@ ev_view_size_request (GtkWidget      *widget,
 	if (GTK_WIDGET_REALIZED (widget)) {
 		if (view->document) {
 			ev_document_get_page_size (view->document,
+						   -1,
 						   &requisition->width,
 						   &requisition->height);
 		} else {
@@ -950,6 +951,7 @@ set_document_page (EvView *view, int page)
 		int old_width, old_height;
 
 		ev_document_get_page_size (view->document,
+					   -1, 
 					   &old_width, &old_height);
 
 		if (old_page != page) {
@@ -964,6 +966,7 @@ set_document_page (EvView *view, int page)
 
 			view->has_selection = FALSE;
 			ev_document_get_page_size (view->document,
+						   -1, 
 						   &width, &height);
 			if (width != old_width || height != old_height)
 				gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1216,7 +1219,7 @@ ev_view_best_fit (EvView *view)
 	int width, height;
 
 	width = height = 0;
-	ev_document_get_page_size (view->document, &width, &height);
+	ev_document_get_page_size (view->document, -1, &width, &height);
 
 	scale = 1.0;
 	if (width != 0 && height != 0) {
@@ -1238,7 +1241,7 @@ ev_view_fit_width (EvView *view)
 	int width;
 
 	width = 0;
-	ev_document_get_page_size (view->document, &width, NULL);
+	ev_document_get_page_size (view->document, -1, &width, NULL);
 
 	scale = 1.0;
 	if (width != 0)

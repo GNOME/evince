@@ -1784,9 +1784,12 @@ ps_document_set_page_offset (EvDocument  *document,
 
 static void
 ps_document_get_page_size (EvDocument   *document,
-			    int          *width,
-			    int          *height)
+			   int           page,
+			   int          *width,
+			   int          *height)
 {
+	/* Post script documents never vary in size */
+
 	PSDocument *gs = PS_DOCUMENT (document);
 
 	if (width) {

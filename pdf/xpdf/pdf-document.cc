@@ -350,21 +350,32 @@ pdf_document_set_page_offset (EvDocument  *document,
 
 static void
 pdf_document_get_page_size (EvDocument   *document,
+			    int           page,
 			    int          *width,
 			    int          *height)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	Page *the_page;
 
-	if (document_validate_page (pdf_document)) {
+	/* set some default values */
+	if (width)
+		*width = 1;
+	if (height)
+		*height = 1;
+
+		
+	if (page == -1 && document_validate_page (pdf_document)) {
 		if (width)
 			*width = pdf_document->out->getBitmapWidth();
 		if (height)
 			*height = pdf_document->out->getBitmapHeight();
-	} else {
-		if (width)
-			*width = 1;
-		if (height)
-			*height = 1;
+		return;
+	}
+
+	the_page = pdf_document->doc->getCatalog ()->getPage (page);
+	if (the_page) {
+		*width = (int) the_page->getWidth ();
+		*height = (int) the_page->getHeight ();
 	}
 }
 
@@ -1244,8 +1255,7 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	Thumb *thumb = NULL;
 	gdouble page_ratio;
 
-	/* getPage seems to want page + 1 for some reason; */
-	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
+	the_page = pdf_document->doc->getCatalog ()->getPage (page);
 	the_page->getThumb (&the_thumb);
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {

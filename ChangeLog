@@ -1,3 +1,41 @@
+Wed Feb  2 21:13:11 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* NOTES: New file with some random thoughts.
+
+	* TODO: Update.
+
+	* backend/ev-document-misc.c:
+	(ev_document_misc_get_page_border_size): New function to
+	canonicalize shadow drawing sizes.  Possibly goofy.
+
+	* shell/ev-view.c: (ev_view_size_request), (set_document_page),
+	(ev_view_best_fit), (ev_view_fit_width):
+	* pdf/xpdf/pdf-document.cc:
+	* pixbuf/pixbuf-document.c: (pixbuf_document_get_page_size):
+	* ps/ps-document.c: (ps_document_get_page_size):
+	* backend/ev-document-misc.h:
+	* backend/ev-document.c: (ev_document_get_page_size):
+	* backend/ev-document.h: get_page_size now takes a page number
+	parameter.  Made all the backends/frontends honor it.
+
+	* data/evince-ui.xml: Added a multiple-page mode.  Uncomment to
+	see.  Doesn't work yet.
+
+	* shell/Makefile.am:
+	* shell/ev-page-view.[ch]: New multi-page view.  Really rough.
+	Doesn't do anything yet.
+
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_set_document): [1..n_pages] instead of
+	[0..n_pages-1]
+
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_setup_document), (ev_window_set_page_mode),
+	(ev_window_page_mode_cb), (ev_window_init): Clean up the
+	view-swapping code a bit so we can have multiple views on a
+	document.  Add the multi-page view, though it can't be turned on
+	yet.
+
 2005-02-01  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* shell/ev-application.c: (ev_application_open):

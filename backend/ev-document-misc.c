@@ -1,6 +1,7 @@
 
 #include "ev-document-misc.h"
 #include <string.h>
+#include <gtk/gtk.h>
 
 /* Returns a new GdkPixbuf that is suitable for placing in the thumbnail view.
  * It is four pixels wider and taller than the source.  If source_pixbuf is not
@@ -62,3 +63,31 @@ ev_document_misc_get_thumbnail_frame (int        width,
 
 	return retval;
 }
+
+void
+ev_document_misc_get_page_border_size (gint  page_width,
+				       gint  page_height,
+				       gint *left_border,
+				       gint *right_border,
+				       gint *top_border,
+				       gint *bottom_border)
+{
+	g_assert (left_border);
+	g_assert (right_border);
+	g_assert (top_border);
+	g_assert (bottom_border);
+
+	*left_border = 1;
+	*top_border = 1;
+	if (page_width < 100) {
+		*right_border = 2;
+		*bottom_border = 2;
+	} else if (page_width < 500) {
+		*right_border = 3;
+		*left_border = 3;
+	} else {
+		*right_border = 4;
+		*bottom_border = 4;
+	}
+}
+

@@ -164,11 +164,12 @@ ev_document_set_page_offset (EvDocument  *document,
 
 void
 ev_document_get_page_size   (EvDocument   *document,
+			     int           page,
 			     int          *width,
 			     int          *height)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	iface->get_page_size (document, width, height);
+	iface->get_page_size (document, page, width, height);
 }
 
 char *

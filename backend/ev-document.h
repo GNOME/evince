@@ -74,6 +74,7 @@ struct _EvDocumentIface
 					 int           x,
 					 int           y);
 	void	    (* get_page_size)   (EvDocument   *document,
+					 int           page,
 					 int          *width,
 					 int          *height);
 	char	  * (* get_text)	(EvDocument   *document,
@@ -112,6 +113,7 @@ void     ev_document_set_page_offset (EvDocument   *document,
 				      int           x,
 				      int           y);
 void     ev_document_get_page_size   (EvDocument   *document,
+				      int           page,
 				      int          *width,
 				      int          *height);
 char    *ev_document_get_text	     (EvDocument   *document,

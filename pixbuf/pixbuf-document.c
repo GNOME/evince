@@ -137,6 +137,7 @@ pixbuf_document_set_page_offset (EvDocument  *document,
 
 static void
 pixbuf_document_get_page_size (EvDocument   *document,
+			       int           page,
 			       int          *width,
 			       int          *height)
 {

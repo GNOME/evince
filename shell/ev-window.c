@@ -34,6 +34,7 @@
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
+#include "ev-page-view.h"
 #include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-print-job.h"
@@ -70,6 +71,7 @@ struct _EvWindowPrivate {
 	GtkWidget *find_bar;
 	GtkWidget *scrolled_window;
 	GtkWidget *view;
+	GtkWidget *page_view;
 	GtkWidget *password_view;
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
@@ -81,6 +83,7 @@ struct _EvWindowPrivate {
 
 	EvDocument *document;
 
+	EvWindowPageMode page_mode;
 	/* These members are used temporarily when in PAGE_MODE_PASSWORD */
 	EvDocument *password_document;
 	GtkWidget *password_dialog;
@@ -119,9 +122,11 @@ static void
 update_action_sensitivity (EvWindow *ev_window)
 {
 	EvDocument *document;
+	EvWindowPageMode page_mode;
 	EvView *view;
 
 	document = ev_window->priv->document;
+	page_mode = ev_window->priv->page_mode;
 
 	view = EV_VIEW (ev_window->priv->view);
 
@@ -160,12 +165,20 @@ update_action_sensitivity (EvWindow *ev_window)
 		set_action_sensitive (ev_window, "GoFirstPage", page > 1);
 		set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
 	} else {
-		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
+  		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
 		set_action_sensitive (ev_window, "GoPageUp", FALSE);
 		set_action_sensitive (ev_window, "GoPageDown", FALSE);
 		set_action_sensitive (ev_window, "GoLastPage", FALSE);
 	}
 
+	/* Page View radio group */
+	if (document) {
+		set_action_sensitive (ev_window, "SinglePage", page_mode != PAGE_MODE_PASSWORD);
+		set_action_sensitive (ev_window, "ContinuousPage", page_mode != PAGE_MODE_PASSWORD);
+	} else {
+		set_action_sensitive (ev_window, "SinglePage", FALSE);
+		set_action_sensitive (ev_window, "ContinuousPage", FALSE);
+	}
 	/* Help menu */
 	/* "HelpContents": always sensitive */
 	/* "HelpAbout": always sensitive */
@@ -313,6 +326,7 @@ ev_window_setup_document (EvWindow *ev_window)
 {
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
+	EvPageView *page_view = EV_PAGE_VIEW (ev_window->priv->page_view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
 
 	document = ev_window->priv->document;
@@ -326,8 +340,9 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_sidebar_set_document (sidebar, document);
 	ev_view_set_document (view, document);
+	ev_page_view_set_document (page_view, document);
 
-	update_window_title (ev_window->priv->document, NULL, ev_window);
+	update_window_title (document, NULL, ev_window);
 	update_total_pages (ev_window);
 	update_action_sensitivity (ev_window);
 }
@@ -991,6 +1006,11 @@ ev_window_set_page_mode (EvWindow         *window,
 	GtkWidget *child = NULL;
 	GtkWidget *real_child;
 
+	if (window->priv->page_mode == page_mode)
+		return;
+
+	window->priv->page_mode = page_mode;
+
 	switch (page_mode) {
 	case PAGE_MODE_SINGLE_PAGE:
 		child = window->priv->view;
@@ -998,10 +1018,13 @@ ev_window_set_page_mode (EvWindow         *window,
 	case PAGE_MODE_PASSWORD:
 		child = window->priv->password_view;
 		break;
+	case PAGE_MODE_CONTINUOUS_PAGE:
+		child = window->priv->page_view;
+		break;
 	default:
-		g_warning ("page_mode not implemented yet\n");
 		g_assert_not_reached ();
 	}
+
 	real_child = gtk_bin_get_child (GTK_BIN (window->priv->scrolled_window));
 	if (child != real_child) {
 		gtk_container_remove (GTK_CONTAINER (window->priv->scrolled_window),
@@ -1009,6 +1032,7 @@ ev_window_set_page_mode (EvWindow         *window,
 		gtk_container_add (GTK_CONTAINER (window->priv->scrolled_window),
 				   child);
 	}
+	update_action_sensitivity (window);
 }
 
 static void
@@ -1313,6 +1337,21 @@ find_bar_close_cb (EggFindBar *find_bar,
 }
 
 static void
+ev_window_page_mode_cb (GtkRadioAction *action,
+			GtkRadioAction *activated_action,
+			EvWindow       *window)
+{
+	int mode;
+
+	mode = gtk_radio_action_get_current_value (action);
+
+	g_assert (mode == PAGE_MODE_CONTINUOUS_PAGE ||
+		  mode == PAGE_MODE_SINGLE_PAGE);
+
+	ev_window_set_page_mode (window, (EvWindowPageMode) mode);
+}
+
+static void
 find_bar_search_changed_cb (EggFindBar *find_bar,
 			    GParamSpec *param,
 			    EvWindow   *ev_window)
@@ -1489,6 +1528,15 @@ static GtkToggleActionEntry toggle_entries[] = {
           G_CALLBACK (ev_window_cmd_view_fullscreen) },
 };
 
+static GtkRadioActionEntry page_view_entries[] = {
+	{ "SinglePage", GTK_STOCK_DND, N_("Single"), NULL,
+	  N_("Show the document one page at a time"),
+	  PAGE_MODE_SINGLE_PAGE },
+	{ "ContinuousPage", GTK_STOCK_DND_MULTIPLE, N_("Multi"), NULL,
+	  N_("Show the full document at once"),
+	  PAGE_MODE_CONTINUOUS_PAGE }
+};
+
 static void
 goto_page_cb (GtkAction *action, int page_number, EvWindow *ev_window)
 {
@@ -1540,6 +1588,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
+	ev_window->priv->page_mode = PAGE_MODE_SINGLE_PAGE;
 	update_window_title (NULL, NULL, ev_window);
 
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
@@ -1554,6 +1603,11 @@ ev_window_init (EvWindow *ev_window)
 	gtk_action_group_add_toggle_actions (action_group, toggle_entries,
 					     G_N_ELEMENTS (toggle_entries),
 					     ev_window);
+	gtk_action_group_add_radio_actions (action_group, page_view_entries,
+					    G_N_ELEMENTS (page_view_entries),
+					    ev_window->priv->page_mode,
+					    G_CALLBACK (ev_window_page_mode_cb),
+					    ev_window);
 	set_short_labels (action_group);
 	register_custom_actions (ev_window, action_group);
 
@@ -1625,15 +1679,19 @@ ev_window_init (EvWindow *ev_window)
 			ev_window->priv->scrolled_window);
 
 	ev_window->priv->view = ev_view_new ();
+	ev_window->priv->page_view = ev_page_view_new ();
 	ev_window->priv->password_view = ev_password_view_new ();
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",
 				  G_CALLBACK (ev_window_popup_password_dialog),
 				  ev_window);
 	gtk_widget_show (ev_window->priv->view);
+	gtk_widget_show (ev_window->priv->page_view);
 	gtk_widget_show (ev_window->priv->password_view);
+
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);
+	g_object_ref (ev_window->priv->page_view);
 	g_object_ref (ev_window->priv->password_view);
 
 	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),

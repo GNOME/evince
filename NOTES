@@ -1,0 +1,30 @@
+
+SOME RANDOM COMMENTS:
+=====================
+
+ * We assume that all documents can be broken down into a linear
+   collection of pages.
+
+ * If a document type doesn't break down in such a way (like web pages)
+   then it's probably not a good fit for this application.
+
+ * Each page has a natural page size in pixels.  This is generally
+   ignored in favor of a scale-to-fit mode, but is occasionally
+   important for backends like the image backend.
+
+ * Each page is not necessarily the same size.
+
+ * We refer to pages by page number.  This number ranges from 1 to
+   document->n_pages.  A page index of -1 means the current set page,
+   and a page index of 0 is not used.
+
+
+--
+
+Thoughts on threading:
+
+ * The primary thing we are trying to do is minimize switching pages, as
+   doing so is slow for backends.  Additionally, some operations on the
+   backend are slow, leaving poor interactivity.  This
+
+--
