@@ -9,7 +9,7 @@ INCLUDES =					\
 	$(libpaper_CFLAGS)
 
 if WITH_GNOME
-gui = gpdf
+gui = ""
 else
 gui = xpdf
 endif
@@ -98,18 +98,6 @@ common_sources =		\
 	UnicodeMapTables.h	\
 	XRef.cc			\
 	XRef.h
-
-gpdf_CFLAGS = 			\
-	-DBONOBO_IO
-
-gpdf_SOURCES = 			\
-	gpdf.cc
-
-gpdf_LDADD =			\
-	$(GTK_LIBS)		\
-	$(GNOME_LIBDIR)		\
-	$(EXTRA_GNOME_LIBS)	\
-	$(INTLLIBS)
 
 bonobo_application_x_pdf_SOURCES =	\
 	$(common_sources)		\
