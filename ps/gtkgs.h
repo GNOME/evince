@@ -35,6 +35,8 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+#include "gstypes.h"
+
 G_BEGIN_DECLS
 
 #define GTK_GS_TYPE         (gtk_gs_get_type())
@@ -44,21 +46,6 @@ G_BEGIN_DECLS
 
 typedef struct _GtkGS GtkGS;
 typedef struct _GtkGSClass GtkGSClass;
-typedef struct _GtkGSPaperSize GtkGSPaperSize;
-
-typedef enum {
-  GTK_GS_ORIENTATION_NONE = -1,
-  GTK_GS_ORIENTATION_PORTRAIT = 0,
-  GTK_GS_ORIENTATION_SEASCAPE = 3,
-  GTK_GS_ORIENTATION_UPSIDEDOWN = 2,
-  GTK_GS_ORIENTATION_LANDSCAPE = 1
-} GtkGSOrientation;
-
-typedef enum {
-  GTK_GS_ZOOM_ABSOLUTE = 0,
-  GTK_GS_ZOOM_FIT_WIDTH = 1,
-  GTK_GS_ZOOM_FIT_PAGE = 2
-} GtkGSZoomMode;
 
 struct _GtkGS {
   GObject object;
@@ -153,11 +140,6 @@ struct record_list {
   gboolean seek_needed;
   gboolean close;
   struct record_list *next;
-};
-
-struct _GtkGSPaperSize {
-  gchar *name;
-  gint width, height;
 };
 
 GType gtk_gs_get_type(void);

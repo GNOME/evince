@@ -25,10 +25,12 @@
 #include <gnome.h>
 #include <math.h>
 
-#include "gtkgs.h"
 #include "gsdefaults.h"
 
 #include <gconf/gconf-client.h>
+
+static void gtk_gs_defaults_changed (GConfClient * client, guint cnxn_id,
+                        	     GConfEntry * entry, gpointer user_data);
 
 /**
  * defaults for GtkGS widgets
@@ -398,6 +400,23 @@ gtk_gs_defaults_set_zoom_mode(GtkGSZoomMode zoom_mode)
   }
 }
 
+static GConfClient *
+gtk_gs_defaults_gconf_client()
+{
+  if(!gconf_client) {
+    g_assert(gconf_is_initialized());
+    gconf_client = gconf_client_get_default();
+    g_assert(gconf_client != NULL);
+    gconf_client_add_dir(gconf_client, "/apps/ggv/gtkgs",
+                         GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
+    gconf_client_notify_add(gconf_client,
+                            "/apps/ggv/gtkgs", (GConfClientNotifyFunc)
+                            gtk_gs_defaults_changed, NULL, NULL, NULL);
+  }
+
+  return gconf_client;
+}
+
 void
 gtk_gs_defaults_load()
 {
@@ -495,21 +514,4 @@ gtk_gs_defaults_changed(GConfClient * client, guint cnxn_id,
   else if(!strcmp(entry->key, "/apps/ggv/gtkgs/scrollstep"))
     gtk_gs_defaults_set_scroll_step
       (gconf_client_get_float(client, "/apps/ggv/gtkgs/scrollstep", NULL));
-}
-
-GConfClient *
-gtk_gs_defaults_gconf_client()
-{
-  if(!gconf_client) {
-    g_assert(gconf_is_initialized());
-    gconf_client = gconf_client_get_default();
-    g_assert(gconf_client != NULL);
-    gconf_client_add_dir(gconf_client, "/apps/ggv/gtkgs",
-                         GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);
-    gconf_client_notify_add(gconf_client,
-                            "/apps/ggv/gtkgs", (GConfClientNotifyFunc)
-                            gtk_gs_defaults_changed, NULL, NULL, NULL);
-  }
-
-  return gconf_client;
 }

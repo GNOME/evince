@@ -133,6 +133,7 @@ The DONE message indicates that ghostscript has finished processing.
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdk.h>
+#include <glib/gi18n.h>
 #ifdef  HAVE_XINERAMA
 #   include <gdk/gdkx.h>
 #   include <X11/extensions/Xinerama.h>

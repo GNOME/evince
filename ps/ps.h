@@ -27,7 +27,6 @@
 
 #include <stdio.h>
 
-#include <gtkgs.h>
 #include <gsio.h>
 
 G_BEGIN_DECLS

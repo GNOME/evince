@@ -22,7 +22,9 @@
 #ifndef __GS_DEFAULTS_H__
 #define __GS_DEFAULTS_H__
 
-#include <gnome.h>
+#include <glib.h>
+
+#include "gstypes.h"
 
 G_BEGIN_DECLS
 
@@ -63,8 +65,6 @@ void gtk_gs_defaults_set_zoom_mode(GtkGSZoomMode zoom_mode);
 
 /* prefs IO */
 void gtk_gs_defaults_load(void);
-
-GConfClient *gtk_gs_defaults_gconf_client(void);
 
 G_END_DECLS
 
