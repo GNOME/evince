@@ -1545,6 +1545,19 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 }
 
 static void
+set_short_labels (GtkActionGroup *action_group)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (action_group, "GoPageUp");
+	g_object_set (action, "short_label", _("Up"), NULL);
+	action = gtk_action_group_get_action (action_group, "GoPageDown");
+	g_object_set (action, "short_label", _("Down"), NULL);
+	action = gtk_action_group_get_action (action_group, "ViewPageWidth");
+	g_object_set (action, "short_label", _("Fit Width"), NULL);
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -1571,7 +1584,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_action_group_add_toggle_actions (action_group, toggle_entries,
 					     G_N_ELEMENTS (toggle_entries),
 					     ev_window);
-
+	set_short_labels (action_group);
 	register_custom_actions (ev_window, action_group);
 
 	ev_window->priv->ui_manager = gtk_ui_manager_new ();
