@@ -1,3 +1,9 @@
+2005-02-04  Martin Kretzschmar  <martink@gnome.org>
+
+	* shell/ev-sidebar-thumbnails.c
+	(ev_sidebar_thumbnails_select_page): do nothing unless we have a
+	document. Prevents warning from scroll_to_cell.
+
 2005-02-02  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.ac: Add «nb» to ALL_LINGUAS too.

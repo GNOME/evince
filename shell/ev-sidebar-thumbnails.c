@@ -312,6 +312,10 @@ ev_sidebar_thumbnails_select_page (EvSidebarThumbnails *sidebar,
 	GtkTreePath *path;
 	GtkTreeSelection *selection;
 
+	/* if the EvSidebar's document can't provide thumbnails */
+	if (sidebar->priv->document == NULL) 
+		return;
+
 	path = gtk_tree_path_new_from_indices (page - 1, -1);
 	selection = gtk_tree_view_get_selection
 			(GTK_TREE_VIEW (sidebar->priv->tree_view));
