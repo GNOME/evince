@@ -240,7 +240,7 @@ ev_view_realize (GtkWidget *widget)
 	attributes.y = 0;
 	attributes.width = MAX (widget->allocation.width, widget->requisition.width);
 	attributes.height = MAX (widget->allocation.height, widget->requisition.height);
-	attributes.event_mask = GDK_EXPOSURE_MASK;
+	attributes.event_mask = GDK_EXPOSURE_MASK | GDK_SCROLL_MASK;
   
 	view->bin_window = gdk_window_new (widget->window,
 					   &attributes,
