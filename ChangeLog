@@ -1,3 +1,11 @@
+2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* ps/ps-document.c: (ps_document_widget_event):
+
+	Initialize message_window, this should make ps
+	rendering really work! (Never noticed because I was
+	testing with a ps that is causing gs to exit every time!)
+
 2005-02-07  Bryan Clark  <clarkbw@cvs.gnome.org>
 
 	* data/evince.schemas.in: updated simple error in applyto closing tag

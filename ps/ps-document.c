@@ -1733,6 +1733,8 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	if(event->type != GDK_CLIENT_EVENT)
 		return FALSE;
 
+	gs->message_window = event->client.data.l[0];
+
 	if (event->client.message_type == gs_class->page_atom) {
 		gs->busy = FALSE;
 		ev_document_changed (EV_DOCUMENT (gs));
