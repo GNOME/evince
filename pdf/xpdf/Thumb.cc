@@ -46,23 +46,16 @@ ThumbColorMap::ThumbColorMap(int bitsA,
                              GfxColorSpace *csA) :
   bits(bitsA),
   str(NULL),
-  length(0), 
-  cs(csA)
+  cs(csA), 
+  length(0)
 {
         Object obj1, obj2; 
         GfxIndexedColorSpace *iCS;
         GfxSeparationColorSpace *sepCS;
-        int maxPixel, indexHigh;
+        int maxPixel;
         Dict *streamDict;
         int n;
         int baseNComps; 
-        /* LZW params */
-        int colors = 0, early = 0;
-        /* CCITTFax params */
-        int encoding = 0, rows = 0;
-        GBool eol = gFalse, byteAlign = gFalse, eob = gFalse, black = gFalse;
-        /* Common params */
-        int pred = 0, cols = 0; 
 
         ok = gFalse;
         maxPixel = (1 << bits) - 1;
@@ -216,8 +209,6 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 {
 	Object obj1, obj2;
 	Dict *dict;
-	unsigned int dsize;
-	int row, col, comp;
 
 	do {
 		/* Get stream dict */
@@ -312,7 +303,7 @@ Thumb::getPixbufData()
 	ImageStream *imgstr;
 	unsigned char *pixbufdata;
 	unsigned int pixbufdatasize;
-	int row, col, i;
+	int row, col;
 	unsigned char *p;
 
 	/* RGB Pixbuf data */
