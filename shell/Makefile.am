@@ -26,6 +26,10 @@ evince_SOURCES=				\
 	ev-window.h			\
 	ev-sidebar.c			\
 	ev-sidebar.h			\
+	ev-sidebar-bookmarks.c		\
+	ev-sidebar-bookmarks.h		\
+	ev-sidebar-thumbnails.c		\
+	ev-sidebar-thumbnails.h		\
 	main.c				\
 	$(NULL)
 

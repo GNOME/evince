@@ -28,6 +28,8 @@
 
 #include "ev-window.h"
 #include "ev-sidebar.h"
+#include "ev-sidebar-bookmarks.h"
+#include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
 #include "eggfindbar.h"
 
@@ -717,6 +719,7 @@ ev_window_init (EvWindow *ev_window)
 	GtkWidget *scrolled_window;
 	GtkWidget *menubar;
 	GtkWidget *toolbar;
+	GtkWidget *sidebar_widget;
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
@@ -775,10 +778,26 @@ ev_window_init (EvWindow *ev_window)
 	gtk_paned_add1 (GTK_PANED (ev_window->priv->hpaned),
 			ev_window->priv->sidebar);
 
+	/* Stub sidebar, for now */
+	sidebar_widget = ev_sidebar_bookmarks_new ();
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     "bookmarks",
+			     _("Bookmarks"),
+			     sidebar_widget);
+
+	sidebar_widget = ev_sidebar_thumbnails_new ();
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     "thumbnails",
+			     _("Thumbnails"),
+			     sidebar_widget);
+	
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_show (scrolled_window);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
 	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
 			scrolled_window);
 

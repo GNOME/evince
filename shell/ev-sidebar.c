@@ -29,10 +29,31 @@
 
 #include "ev-sidebar.h"
 
+typedef struct
+{
+	char *id;
+	char *title;
+	GtkWidget *main_widget;
+} EvSidebarPage;
+
+enum
+{
+	PAGE_COLUMN_ID,
+	PAGE_COLUMN_TITLE,
+	PAGE_COLUMN_MAIN_WIDGET,
+	PAGE_COLUMN_NOTEBOOK_INDEX,
+	PAGE_COLUMN_NUM_COLS
+};
+
 struct _EvSidebarPrivate {
 	GtkWidget *option_menu;
 	GtkWidget *notebook;
+
+	GtkTreeModel *page_model;
 };
+
+static void ev_sidebar_omenu_changed_cb (GtkComboBox *combo_box,
+					 gpointer     user_data);
 
 G_DEFINE_TYPE (EvSidebar, ev_sidebar, GTK_TYPE_VBOX)
 
@@ -53,17 +74,67 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 static void
 ev_sidebar_init (EvSidebar *ev_sidebar)
 {
+	GtkWidget *hbox;
+	GtkCellRenderer *renderer;
+
 	ev_sidebar->priv = EV_SIDEBAR_GET_PRIVATE (ev_sidebar);
 
-	ev_sidebar->priv->notebook = gtk_notebook_new ();
+	gtk_box_set_spacing (GTK_BOX (ev_sidebar), 6);
+	/* data model */
+	ev_sidebar->priv->page_model = (GtkTreeModel *)
+		gtk_list_store_new (PAGE_COLUMN_NUM_COLS,
+				    G_TYPE_STRING,
+				    G_TYPE_STRING,
+				    GTK_TYPE_WIDGET,
+				    G_TYPE_INT);
+	/* top option menu */
+	hbox = gtk_hbox_new (FALSE, 6);
+	gtk_box_pack_start (GTK_BOX (ev_sidebar), hbox,
+			    FALSE, FALSE, 0);
+	ev_sidebar->priv->option_menu =
+		gtk_combo_box_new_with_model (ev_sidebar->priv->page_model);
+	g_signal_connect (ev_sidebar->priv->option_menu, "changed",
+			  G_CALLBACK (ev_sidebar_omenu_changed_cb), ev_sidebar);
+	gtk_box_pack_start (GTK_BOX (hbox),
+			    ev_sidebar->priv->option_menu,
+			    FALSE, FALSE, 0);
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (ev_sidebar->priv->option_menu),
+				    renderer, TRUE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (ev_sidebar->priv->option_menu),
+					renderer,
+					"text", PAGE_COLUMN_TITLE,
+					NULL);
 
+	ev_sidebar->priv->notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (ev_sidebar->priv->notebook), FALSE);
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (ev_sidebar->priv->notebook), FALSE);
 	gtk_box_pack_start (GTK_BOX (ev_sidebar), ev_sidebar->priv->notebook,
 			    TRUE, TRUE, 0);
-	gtk_widget_show_all (ev_sidebar->priv->notebook);
+	gtk_widget_show_all (GTK_WIDGET (ev_sidebar));
 }
 
+static void
+ev_sidebar_omenu_changed_cb (GtkComboBox *combo_box,
+			     gpointer     user_data)
+{
+	GtkTreeIter iter;
+	EvSidebar *ev_sidebar = EV_SIDEBAR (user_data);
+
+	if (gtk_combo_box_get_active_iter (combo_box, &iter)) {
+		gint index;
+
+		gtk_tree_model_get (ev_sidebar->priv->page_model,
+				    &iter,
+				    PAGE_COLUMN_NOTEBOOK_INDEX, &index,
+				    -1);
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (ev_sidebar->priv->notebook),
+					       index);
+					       
+	}
+}
+
+/* Public functions */
 
 GtkWidget *
 ev_sidebar_new (void)
@@ -73,4 +144,38 @@ ev_sidebar_new (void)
 	ev_sidebar = g_object_new (EV_TYPE_SIDEBAR, NULL);
 
 	return ev_sidebar;
+}
+
+void
+ev_sidebar_add_page (EvSidebar   *ev_sidebar,
+		     const gchar *page_id,
+		     const gchar *title,
+		     GtkWidget   *main_widget)
+{
+	GtkTreeIter iter;
+	int index;
+
+	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
+	g_return_if_fail (page_id != NULL);
+	g_return_if_fail (title != NULL);
+	g_return_if_fail (GTK_IS_WIDGET (main_widget));
+
+	index = gtk_notebook_append_page (GTK_NOTEBOOK (ev_sidebar->priv->notebook),
+					  main_widget, NULL);
+					  
+	gtk_list_store_insert_with_values (GTK_LIST_STORE (ev_sidebar->priv->page_model),
+					   &iter, 0,
+					   PAGE_COLUMN_ID, page_id,
+					   PAGE_COLUMN_TITLE, title,
+					   PAGE_COLUMN_MAIN_WIDGET, main_widget,
+					   PAGE_COLUMN_NOTEBOOK_INDEX, index,
+					   -1);
+}
+
+void
+ev_sidebar_clear (EvSidebar *ev_sidebar)
+{
+	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
+
+	gtk_list_store_clear (GTK_LIST_STORE (ev_sidebar->priv->page_model));
 }
