@@ -1,3 +1,16 @@
+1999-09-11  Michael Meeks  <michael@nuclecu.unam.mx>
+
+	* bonobo-application-x-pdf.cc (destroy_view): destroy don't unref,
+	make more paranoid add debug. (destroy_embed): Clean. 
+
+	* gpdf.cc (key_press_event_cb): Added all manner of shortcuts.
+	(container_new): Add key stuff (container_destroy_cb): Implement.
+	(container_destroy): Add paranoid check.
+
+1999-09-07  Michael Meeks  <michael@imaginator.com>
+
+	* gpdf.cc (container_new): Fiddled with scrollpane
+
 1999-09-01  Michael Meeks  <michael@imaginator.com>
 
 	* bonobo-application-x-pdf.cc: Fix a massive leak :-).

@@ -40,6 +40,7 @@ extern "C" {
 #include "Params.h"
 #include "Error.h"
 #include "config.h"
+#include "bonobo-application-x-pdf.h"
 
 poptContext ctx;
 gint  gpdf_debug=0;
@@ -259,17 +260,19 @@ extern "C" {
   static void
   container_destroy (Container *cont)
   {
+    g_return_if_fail (g_list_find (containers, cont) != NULL);
+
     containers = g_list_remove (containers, cont);
     if (cont->app)
       gtk_widget_destroy (cont->app);
+    cont->app = NULL;
     
     if (cont->component)
       component_destroy (cont->component);
     cont->component = NULL;
     
-    cont->app = NULL;
-    
     g_free (cont);
+
     if (!containers)
       gtk_main_quit ();
   }
@@ -278,6 +281,13 @@ extern "C" {
   container_close_cmd (GtkWidget *widget, Container *cont)
   {
     container_destroy (cont);
+  }
+  
+  static int
+  container_destroy_cb (GtkWidget *widget, GdkEvent *event, Container *cont)
+  {
+    container_destroy (cont);
+    return 1;
   }
   
   static void
@@ -467,6 +477,107 @@ extern "C" {
       tmp_list = g_list_next (tmp_list);
     }
   }
+  
+  /*
+   * GtkWidget key_press method override
+   *
+   * Scrolls the window on keypress
+   */
+  static gint
+  key_press_event_cb (GtkWidget *widget, GdkEventKey *event)
+  {
+    Container *container = (Container *) gtk_object_get_data (GTK_OBJECT (widget), "container_data");
+    Component *component;
+    GtkScrolledWindow *win;
+    float              delta;
+
+    g_return_val_if_fail (container != NULL, FALSE);
+
+    win       = container->scroll;
+    component = container->component;
+    if (component == NULL || win == NULL)
+      return FALSE;
+
+    /*
+     * Scrolling the view.
+     */
+    if (event->keyval == GDK_Up) {
+      GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment (win);
+
+      if (event->state & GDK_CONTROL_MASK)
+	delta = adj->step_increment * 3;
+      else
+	delta = adj->step_increment;
+
+      adj->value = CLAMP (adj->value - delta,
+			  adj->lower, adj->upper - adj->page_size);
+
+      gtk_adjustment_value_changed (adj);
+      return TRUE;
+    } else if (event->keyval == GDK_Down) {
+      GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment (win);
+
+      if (event->state & GDK_CONTROL_MASK)
+	delta = adj->step_increment * 3;
+      else
+	delta = adj->step_increment;
+
+      adj->value = CLAMP (adj->value + delta,
+			  adj->lower, adj->upper - adj->page_size);
+      gtk_adjustment_value_changed (adj);
+      return TRUE;
+    } else if (event->keyval == GDK_Left) {
+      GtkAdjustment *adj = gtk_scrolled_window_get_hadjustment (win);
+
+      if (event->state & GDK_CONTROL_MASK)
+	delta = adj->step_increment * 3;
+      else
+	delta = adj->step_increment;
+
+      adj->value = CLAMP (adj->value - delta,
+			  adj->lower, adj->upper - adj->page_size);
+      gtk_adjustment_value_changed (adj);
+      return TRUE;
+    } else if (event->keyval == GDK_Right) {
+      GtkAdjustment *adj = gtk_scrolled_window_get_hadjustment (win);
+
+      if (event->state & GDK_CONTROL_MASK)
+	delta = adj->step_increment * 3;
+      else
+	delta = adj->step_increment;
+
+      adj->value = CLAMP (adj->value + delta,
+			  adj->lower, adj->upper - adj->page_size);
+      gtk_adjustment_value_changed (adj);
+      return TRUE;
+
+      /*
+       * Various shortcuts mapped to verbs.
+       */
+
+    } else if (event->keyval == GDK_Home) {
+      gnome_view_frame_view_do_verb (component->view_frame, VERB_FIRST);
+      return TRUE;
+    } else if (event->keyval == GDK_End) {
+      gnome_view_frame_view_do_verb (component->view_frame, VERB_LAST);
+      return TRUE;
+    } else if (event->keyval == GDK_Page_Down ||
+	       event->keyval == GDK_Next) {
+      gnome_view_frame_view_do_verb (component->view_frame, VERB_NEXT);
+      return TRUE;
+    } else if (event->keyval == GDK_Page_Up ||
+	       event->keyval == GDK_Prior) {
+      gnome_view_frame_view_do_verb (component->view_frame, VERB_PREV);
+      return TRUE;
+    } else if (event->keyval == GDK_plus ||
+	       event->keyval == GDK_equal) {
+      gnome_view_frame_view_do_verb (component->view_frame, VERB_Z_IN);
+    } else if (event->keyval == GDK_underscore ||
+	       event->keyval == GDK_minus) {
+      gnome_view_frame_view_do_verb (component->view_frame, VERB_Z_OUT);
+    }    
+    return FALSE;
+  }
 }
 
 static void
@@ -525,9 +636,15 @@ container_new (const char *fname)
 	container->container   = gnome_container_new ();
 	container->view_widget = NULL;
 	container->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
-	gtk_scrolled_window_set_policy (container->scroll, GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_policy (container->scroll, GTK_POLICY_ALWAYS,
+					GTK_POLICY_ALWAYS);
 	gnome_app_set_contents (GNOME_APP (container->app), GTK_WIDGET (container->scroll));
+
+	gtk_object_set_data (GTK_OBJECT (container->app), "container_data", container);
+	gtk_signal_connect  (GTK_OBJECT (container->app), "key_press_event",
+			     GTK_SIGNAL_FUNC (key_press_event_cb), NULL);
+	gtk_signal_connect  (GTK_OBJECT (container->app), "delete_event",
+			     GTK_SIGNAL_FUNC (container_destroy_cb), container);
 
 	/*
 	 * Create the GnomeUIHandler object which will be used to
@@ -587,8 +704,11 @@ main (int argc, char **argv)
   loaded = FALSE;
   if (view_files) {
     for (i = 0; view_files[i]; i++)
-      if (container_new (view_files[i]))
+      if (container_new (view_files[i])) {
 	loaded = TRUE;
+	while (gtk_events_pending ())
+	  gtk_main_iteration ();
+      }
   }
   if ((i == 0) || !loaded)
     container_new (NULL);
