@@ -1,0 +1,81 @@
+<Root>
+
+<commands>
+        <cmd name="FileOpen" _label="Open" _tip="Open a file"
+	pixtype="stock" pixname="Open" accel="F3"/>
+	
+        <cmd name="FileClose" _label="Close"
+	_tip="Close the current file" pixtype="stock" pixname="Close"
+	accel="*Control*w"/>
+	
+        <cmd name="FileExit" _label="Exit" _tip="Exit the program"
+           pixtype="stock" pixname="Exit" accel="*Control*q"/>
+
+        <cmd name="FilePrint" _label="Print"
+	_tip="Print the current file" pixtype="stock" pixname="Print" hidden="1"/>
+	
+        <cmd name="FilePrintSetup" _label="Print Setup"
+          _tip="Setup the page settings for your current printer"
+	  pixtype="stock" pixname="Print" hidden="1"/>
+
+        <cmd name="HelpAbout" _label="About..." _tip="About this application"
+	 pixtype="stock" pixname="About"/>
+
+	<cmd name="DebugDumpXml" _label="Dump XML" _tip="Dump the UI Xml description"/>
+
+</commands>
+
+<menu>
+
+	<submenu name="File" _label="_File">
+        
+	        <menuitem name="FileOpen" verb="" _label="_Open..."/>
+	
+		<placeholder name="FileOps"/>
+
+		<placeholder name="Print" delimit="top">
+
+		        <menuitem name="FilePrint" verb="" _label="_Print"/>
+	
+		        <menuitem name="FilePrintSetup" verb="" _label="Print S_etup..."/>
+
+		</placeholder>
+	
+	        <menuitem name="FileClose" verb="" _label="_Close"/>
+	
+		<separator/>
+
+	        <menuitem name="FileExit" verb="" _label="E_xit"/>
+
+	</submenu>
+
+	<placeholder name="Component"/>
+
+	<submenu name="Help" _label="_Help">
+	
+		<placeholder name="BuiltMenuItems"/>
+
+	        <menuitem name="HelpAbout" verb="" _label="_About..."/>
+
+	</submenu>
+
+	<submenu name="Debug" _label="_Debug" hidden="1">
+
+		<menuitem name="DebugDumpXml" verb=""/>
+
+	</submenu>
+</menu>
+
+<dockitem name="Toolbar" behavior="exclusive">
+
+	<toolitem name="open" verb="FileOpen"/>
+
+	<separator/>
+
+</dockitem>
+
+<status>
+	<item name="main"/>
+</status>
+
+</Root>
