@@ -96,7 +96,7 @@ OutlineItem::OutlineItem(Dict *dict, XRef *xrefA) {
 OutlineItem::~OutlineItem() {
   close();
   if (title) {
-    delete title;
+    gfree(title);
   }
   if (action) {
     delete action;

@@ -54,6 +54,7 @@ public:
   GBool remoteServerRunning();
   void remoteOpen(GString *fileName, int page, GBool raise);
   void remoteOpenAtDest(GString *fileName, GString *dest, GBool raise);
+  void remoteReload(GBool raise);
   void remoteRaise();
   void remoteQuit();
 

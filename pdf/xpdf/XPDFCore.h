@@ -169,6 +169,7 @@ public:
   int getDrawAreaWidth() { return drawAreaWidth; }
   int getDrawAreaHeight() { return drawAreaHeight; }
   void setBusyCursor(GBool busy);
+  Cursor getBusyCursor() { return busyCursor; }
   void takeFocus();
   void enableHyperlinks(GBool on) { hyperlinksEnabled = on; }
   void enableSelect(GBool on) { selectEnabled = on; }

@@ -1560,6 +1560,7 @@ void XPDFViewer::initAboutDialog() {
   int n, i;
   XmString s;
   char buf[20];
+  XmFontListEntry entry;
 
   //----- dialog
   n = 0;
@@ -1600,18 +1601,24 @@ void XPDFViewer::initAboutDialog() {
   XtManageChild(col);
 
   //----- fonts
-  aboutBigFont = XmFontListAppendEntry(NULL,
-      XmFontListEntryCreate(XmFONTLIST_DEFAULT_TAG, XmFONT_IS_FONT,
-	  XLoadQueryFont(display,
-	      "-*-times-bold-i-normal--20-*-*-*-*-*-iso8859-1")));
-  aboutVersionFont = XmFontListAppendEntry(NULL,
-      XmFontListEntryCreate(XmFONTLIST_DEFAULT_TAG, XmFONT_IS_FONT,
-	  XLoadQueryFont(display,
-	      "-*-times-medium-r-normal--16-*-*-*-*-*-iso8859-1")));
-  aboutFixedFont = XmFontListAppendEntry(NULL,
-      XmFontListEntryCreate(XmFONTLIST_DEFAULT_TAG, XmFONT_IS_FONT,
-	  XLoadQueryFont(display,
-	      "-*-courier-medium-r-normal--12-*-*-*-*-*-iso8859-1")));
+  entry = XmFontListEntryLoad(
+		display,
+		"-*-times-bold-i-normal--20-*-*-*-*-*-iso8859-1",
+		XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
+  aboutBigFont = XmFontListAppendEntry(NULL, entry);
+  XmFontListEntryFree(&entry);
+  entry = XmFontListEntryLoad(
+		display,
+		"-*-times-medium-r-normal--16-*-*-*-*-*-iso8859-1",
+		XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
+  aboutVersionFont = XmFontListAppendEntry(NULL, entry);
+  XmFontListEntryFree(&entry);
+  entry = XmFontListEntryLoad(
+		display,
+		"-*-courier-medium-r-normal--12-*-*-*-*-*-iso8859-1",
+		XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG);
+  aboutFixedFont = XmFontListAppendEntry(NULL, entry);
+  XmFontListEntryFree(&entry);
 
   //----- heading
   n = 0;
@@ -1816,7 +1823,10 @@ void XPDFViewer::findFindCbk(Widget widget, XtPointer ptr,
 			     XtPointer callData) {
   XPDFViewer *viewer = (XPDFViewer *)ptr;
 
+  XDefineCursor(viewer->display, XtWindow(viewer->findDialog),
+		viewer->core->getBusyCursor());
   viewer->core->find(XmTextFieldGetString(viewer->findText));
+  XUndefineCursor(viewer->display, XtWindow(viewer->findDialog));
 }
 
 void XPDFViewer::findCloseCbk(Widget widget, XtPointer ptr,
@@ -2052,32 +2062,35 @@ void XPDFViewer::initPrintDialog() {
 void XPDFViewer::setupPrintDialog() {
   PDFDoc *doc;
   char buf[20];
-  GString *pdfFileName, *psFileName;
+  GString *pdfFileName, *psFileName, *psFileName2;
   char *p;
 
   doc = core->getDoc();
-
   psFileName = globalParams->getPSFile();
+
   if (psFileName && psFileName->getChar(0) != '|') {
     XmTextFieldSetString(printFileText, psFileName->getCString());
   } else {
     pdfFileName = doc->getFileName();
     p = pdfFileName->getCString() + pdfFileName->getLength() - 4;
     if (!strcmp(p, ".pdf") || !strcmp(p, ".PDF")) {
-      psFileName = new GString(pdfFileName->getCString(),
-			       pdfFileName->getLength() - 4);
+      psFileName2 = new GString(pdfFileName->getCString(),
+				pdfFileName->getLength() - 4);
     } else {
-      psFileName = pdfFileName->copy();
+      psFileName2 = pdfFileName->copy();
     }
-    psFileName->append(".ps");
-    XmTextFieldSetString(printFileText, psFileName->getCString());
-    delete psFileName;
+    psFileName2->append(".ps");
+    XmTextFieldSetString(printFileText, psFileName2->getCString());
+    delete psFileName2;
   }
 
-  psFileName = globalParams->getPSFile();
   if (psFileName && psFileName->getChar(0) == '|') {
     XmTextFieldSetString(printCmdText,
 			 psFileName->getCString() + 1);
+  }
+
+  if (psFileName) {
+    delete psFileName;
   }
 
   sprintf(buf, "%d", doc->getNumPages());

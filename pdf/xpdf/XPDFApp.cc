@@ -306,6 +306,12 @@ void XPDFApp::remoteOpenAtDest(GString *fileName, GString *dest, GBool raise) {
   XFlush(display);
 }
 
+void XPDFApp::remoteReload(GBool raise) {
+  XChangeProperty(display, remoteXWin, remoteAtom, remoteAtom, 8,
+		  PropModeReplace, raise ? (Guchar *)"L" : (Guchar *)"l", 2);
+  XFlush(display);
+}
+
 void XPDFApp::remoteRaise() {
   XChangeProperty(display, remoteXWin, remoteAtom, remoteAtom, 8,
 		  PropModeReplace, (Guchar *)"r", 2);
@@ -348,12 +354,6 @@ void XPDFApp::remoteMsgCbk(Widget widget, XtPointer ptr,
     return;
   }
 
-  // raise window
-  if (cmd[0] == 'D' || cmd[0] == 'r'){
-    XMapRaised(app->display, XtWindow(app->remoteWin));
-    XFlush(app->display);
-  }
-
   // display file / page
   if (cmd[0] == 'd' || cmd[0] == 'D') {
     p = cmd + 2;
@@ -379,8 +379,18 @@ void XPDFApp::remoteMsgCbk(Widget widget, XtPointer ptr,
       delete destName;
     }
 
+  // reload
+  } else if (cmd[0] == 'l' || cmd[0] == 'L') {
+    app->remoteViewer->reloadFile();
+
   // quit
   } else if (cmd[0] == 'q') {
     app->quit();
+  }
+
+  // raise window
+  if (cmd[0] == 'D' || cmd[0] == 'L' || cmd[0] == 'r'){
+    XMapRaised(app->display, XtWindow(app->remoteWin));
+    XFlush(app->display);
   }
 }

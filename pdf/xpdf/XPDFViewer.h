@@ -46,6 +46,7 @@ public:
 
   void open(GString *fileName, int pageA, GString *destName);
   void clear();
+  void reloadFile();
 
   Widget getWindow() { return win; }
 
@@ -54,7 +55,6 @@ private:
   //----- load / display
   GBool loadFile(GString *fileName, GString *ownerPassword = NULL,
 		 GString *userPassword = NULL);
-  void reloadFile();
   void displayPage(int pageA, int zoomA, int rotateA,
                    GBool scrollToTop, GBool addToHist);
   void displayDest(LinkDest *dest, int zoomA, int rotateA,

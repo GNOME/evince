@@ -150,6 +150,7 @@ XPDFCore::XPDFCore(Widget shellA, Widget parentWidgetA,
       zoom = maxZoom;
     }
   }
+  delete initialZoom;
 
   scrollX = 0;
   scrollY = 0;
@@ -961,7 +962,7 @@ GString *XPDFCore::extractText(int pageNum,
   if (!doc->okToCopy()) {
     return NULL;
   }
-  textOut = new TextOutputDev(NULL, gFalse, gFalse);
+  textOut = new TextOutputDev(NULL, gFalse, gFalse, gFalse);
   if (!textOut->isOk()) {
     delete textOut;
     return NULL;
@@ -1275,7 +1276,7 @@ void XPDFCore::find(char *s) {
   }
 
   // search following pages
-  textOut = new TextOutputDev(NULL, gFalse, gFalse);
+  textOut = new TextOutputDev(NULL, gFalse, gFalse, gFalse);
   if (!textOut->isOk()) {
     delete textOut;
     goto done;
