@@ -217,74 +217,85 @@ gboolean computeSize(void);
 static gboolean ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid);
 static void ps_document_document_iface_init (EvDocumentIface *iface);
 static gboolean ps_document_goto_page(PSDocument * gs, gint page);
+static gboolean ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data);
 
 static GObjectClass *parent_class = NULL;
 
 static PSDocumentClass *gs_class = NULL;
 
 static void
-ps_document_init(PSDocument * gs)
+ps_document_init (PSDocument *gs)
 {
-  gs->bpixmap = NULL;
+	GtkWidget *widget;	
 
-  gs->current_page = 0;
-  gs->disable_start = FALSE;
-  gs->interpreter_pid = -1;
+	gs->bpixmap = NULL;
 
-  gs->width = -1;
-  gs->height = -1;
-  gs->busy = FALSE;
-  gs->changed = FALSE;
-  gs->gs_scanstyle = 0;
-  gs->gs_filename = 0;
-  gs->gs_filename_dsc = 0;
-  gs->gs_filename_unc = 0;
+	gs->current_page = 0;
+	gs->disable_start = FALSE;
+	gs->interpreter_pid = -1;
 
-  broken_pipe = FALSE;
+	gs->width = -1;
+	gs->height = -1;
+	gs->busy = FALSE;
+	gs->changed = FALSE;
+	gs->gs_scanstyle = 0;
+	gs->gs_filename = 0;
+	gs->gs_filename_dsc = 0;
+	gs->gs_filename_unc = 0;
 
-  gs->structured_doc = FALSE;
-  gs->reading_from_pipe = FALSE;
-  gs->send_filename_to_gs = FALSE;
+	broken_pipe = FALSE;
 
-  gs->doc = NULL;
-  gs->loaded = FALSE;
+	gs->structured_doc = FALSE;
+	gs->reading_from_pipe = FALSE;
+	gs->send_filename_to_gs = FALSE;
 
-  gs->interpreter_input = -1;
-  gs->interpreter_output = -1;
-  gs->interpreter_err = -1;
-  gs->interpreter_input_id = 0;
-  gs->interpreter_output_id = 0;
-  gs->interpreter_error_id = 0;
+	gs->doc = NULL;
+	gs->loaded = FALSE;
 
-  gs->ps_input = NULL;
-  gs->input_buffer = NULL;
-  gs->input_buffer_ptr = NULL;
-  gs->bytes_left = 0;
-  gs->buffer_bytes_left = 0;
+	gs->interpreter_input = -1;
+	gs->interpreter_output = -1;
+	gs->interpreter_err = -1;
+	gs->interpreter_input_id = 0;
+	gs->interpreter_output_id = 0;
+	gs->interpreter_error_id = 0;
 
-  gs->llx = 0;
-  gs->lly = 0;
-  gs->urx = 0;
-  gs->ury = 0;
-  gs->xdpi = compute_xdpi();
-  gs->ydpi = compute_ydpi();
+	gs->ps_input = NULL;
+	gs->input_buffer = NULL;
+	gs->input_buffer_ptr = NULL;
+	gs->bytes_left = 0;
+	gs->buffer_bytes_left = 0;
 
-  gs->left_margin = 0;
-  gs->top_margin = 0;
-  gs->right_margin = 0;
-  gs->bottom_margin = 0;
+	gs->llx = 0;
+	gs->lly = 0;
+	gs->urx = 0;
+	gs->ury = 0;
+	gs->xdpi = compute_xdpi();
+	gs->ydpi = compute_ydpi();
 
-  gs->page_x_offset = 0;
-  gs->page_y_offset = 0;
+	gs->left_margin = 0;
+	gs->top_margin = 0;
+	gs->right_margin = 0;
+	gs->bottom_margin = 0;
 
-  /* Set user defined defaults */
-  gs->fallback_orientation = GTK_GS_ORIENTATION_PORTRAIT;
-  gs->zoom_factor = 1.0;
-  gs->default_size = 1;
-  gs->antialiased = TRUE;
-  gs->respect_eof = TRUE;
+	gs->page_x_offset = 0;
+	gs->page_y_offset = 0;
 
-  gs->gs_status = _("No document loaded.");
+	/* Set user defined defaults */
+	gs->fallback_orientation = GTK_GS_ORIENTATION_PORTRAIT;
+	gs->zoom_factor = 1.0;
+	gs->default_size = 1;
+	gs->antialiased = TRUE;
+	gs->respect_eof = TRUE;
+
+	gs->gs_status = _("No document loaded.");
+
+	widget = gtk_window_new (GTK_WINDOW_POPUP);
+        gtk_widget_realize (widget);
+	gs->pstarget = widget->window;
+        g_assert (gs->pstarget != NULL);
+	g_signal_connect (widget, "event",
+		    	  G_CALLBACK (ps_document_widget_event),
+		          gs);
 }
 
 static void
@@ -410,38 +421,6 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 }
 
 static void
-ps_document_set_target (EvDocument  *document,
-			GdkDrawable *target)
-{
-	PSDocument *gs = PS_DOCUMENT (document);
-	GtkWidget *widget;
-	gpointer data;
-
-	if (gs->pstarget) {
-		gdk_window_get_user_data (gs->pstarget, &data);
-		g_return_if_fail (GTK_IS_WIDGET (data));
-
-		widget = GTK_WIDGET (data);
-		g_signal_handlers_disconnect_by_func
-			(widget, ps_document_widget_event, document);
-	}
-
-	gs->pstarget = target;
-
-	if (gs->pstarget) {
-		gdk_window_get_user_data (gs->pstarget, &data);
-		g_return_if_fail (GTK_IS_WIDGET (data));
-
-		widget = GTK_WIDGET (data);
-		g_signal_connect (widget, "event",
-				  G_CALLBACK (ps_document_widget_event),
-				  document);
-	}
-
-	ps_document_goto_page (gs, gs->current_page);
-}
-
-static void
 ps_document_finalize (GObject * object)
 {
 	PSDocument *gs;
@@ -455,8 +434,6 @@ ps_document_finalize (GObject * object)
 
 	ps_document_cleanup (gs);
 	stop_interpreter (gs);
-
-	ps_document_set_target (EV_DOCUMENT (object), NULL);
 
 	if(gs->input_buffer) {
 		g_free(gs->input_buffer);
@@ -561,7 +538,7 @@ set_up_page(PSDocument * gs)
 
   if (size_changed || gs->bpixmap == NULL) {
     gdk_flush();
-
+    g_print ("1");
     /* clear new pixmap (set to white) */
     fill = gdk_gc_new(gs->pstarget);
     if(fill) {
@@ -1631,6 +1608,8 @@ static void
 ps_document_set_page (EvDocument  *document,
 		       int          page)
 {
+	LOG ("Set document page %d\n", page);
+
 	ps_document_goto_page (PS_DOCUMENT (document), page - 1);
 }
 
@@ -1738,6 +1717,19 @@ ps_document_get_link (EvDocument *document,
 	return NULL;
 }
 
+static GdkPixbuf *
+ps_document_render_pixbuf (EvDocument *document)
+{
+	PSDocument *gs = PS_DOCUMENT (document);
+	GdkColormap *cmap;
+
+	cmap = gdk_window_get_colormap (gs->pstarget);
+	
+	return gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
+				      	     0, 0, 0, 0,
+					     gs->width, gs->height);
+}
+
 static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
@@ -1749,8 +1741,8 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page = ps_document_set_page;
 	iface->get_page = ps_document_get_page;
 	iface->set_scale = ps_document_set_scale;
-	iface->set_target = ps_document_set_target;
 	iface->set_page_offset = ps_document_set_page_offset;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->render = ps_document_render;
+	iface->render_pixbuf = ps_document_render_pixbuf;
 }
