@@ -89,6 +89,9 @@ struct _EvView {
 	int scroll_x;
 	int scroll_y;
 
+	int x_offset;
+	int y_offset;
+
 	gboolean pressed_button;
 	gboolean has_selection;
 	GdkPoint selection_start;
@@ -220,6 +223,24 @@ ev_view_destroy (GtkObject *object)
 }
 
 static void
+view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, GdkRectangle *doc_rect)
+{
+	doc_rect->x = (view_rect->x - view->x_offset) / view->scale;
+	doc_rect->y = (view_rect->y - view->y_offset) / view->scale;
+	doc_rect->width = view_rect->width / view->scale;
+	doc_rect->height = view_rect->height / view->scale;
+}
+
+static void
+doc_rect_to_view_rect (EvView *view, GdkRectangle *doc_rect, GdkRectangle *view_rect)
+{
+	view_rect->x = doc_rect->x * view->scale + view->x_offset;
+	view_rect->y = doc_rect->y * view->scale + view->y_offset;
+	view_rect->width = doc_rect->width * view->scale;
+	view_rect->height = doc_rect->height * view->scale;
+}
+
+static void
 ev_view_size_request (GtkWidget      *widget,
 		      GtkRequisition *requisition)
 {
@@ -264,11 +285,26 @@ ev_view_size_allocate (GtkWidget      *widget,
 		       GtkAllocation  *allocation)
 {
 	EvView *view = EV_VIEW (widget);
+	gint target_width, target_height;	
+	GtkBorder border;
+	gint width, height;
 
 	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
 
 	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
 	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
+
+	if (view->document) {
+		ev_document_get_page_size (view->document, -1,
+					   &width, &height);
+		ev_document_misc_get_page_border_size (width, height, &border);
+		view->x_offset = view->spacing;
+		view->y_offset = view->spacing;
+		target_width = width + border.left + border.right + view->spacing * 2;
+		target_height = height + border.top + border.bottom + view->spacing * 2;
+		view->x_offset += MAX (0, (widget->allocation.width - target_width) / 2);
+		view->y_offset += MAX (0, (widget->allocation.height - target_height) / 2);
+	}
 
 	if (GTK_WIDGET_REALIZED (widget)) {
 		gdk_window_resize (view->bin_window,
@@ -431,12 +467,10 @@ expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
 	EvView *view = EV_VIEW (widget);
-	int x_offset, y_offset;
 	GtkBorder border;
 	gint width, height;
 	GdkRectangle area;
-	int target_width, target_height;
-			
+
 	if (view->document == NULL)
 		return;
 
@@ -444,25 +478,17 @@ expose_bin_window (GtkWidget      *widget,
 				   &width, &height);
 	ev_document_misc_get_page_border_size (width, height, &border);
 	
-	x_offset = view->spacing;
-	y_offset = view->spacing;
-	target_width = width + border.left + border.right + view->spacing * 2;
-	target_height = height + border.top + border.bottom + view->spacing * 2;
-
-	x_offset += MAX (0, (widget->allocation.width - target_width) / 2);
-	y_offset += MAX (0, (widget->allocation.height - target_height) / 2);
-
 	/* Paint the frame */
-	area.x = x_offset;
-	area.y = y_offset;
+	area.x = view->x_offset;
+	area.y = view->y_offset;
 	area.width = width + border.left + border.right;
 	area.height = height + border.top + border.bottom;
 	ev_document_misc_paint_one_page (view->bin_window, widget, &area, &border);
 
 	/* Render the document itself */
 	ev_document_set_page_offset (view->document,
-				     x_offset + border.left,
-				     y_offset + border.top);
+				     view->x_offset + border.left,
+				     view->y_offset + border.top);
 
 	LOG ("Render area %d %d %d %d", event->area.x, event->area.y,
              event->area.width, event->area.height);
@@ -476,8 +502,13 @@ expose_bin_window (GtkWidget      *widget,
 	}
 
 	if (view->has_selection) {
-		draw_rubberband (widget, view->bin_window,
-				 &view->selection, 0x40);
+		GdkRectangle rubberband;
+
+		doc_rect_to_view_rect (view, &view->selection, &rubberband);
+		if (rubberband.width > 0 && rubberband.height > 0) {
+			draw_rubberband (widget, view->bin_window,
+					 &rubberband, 0x40);
+		}
 	}
 }
 
@@ -499,13 +530,21 @@ void
 ev_view_select_all (EvView *ev_view)
 {
 	GtkWidget *widget = GTK_WIDGET (ev_view);
+	GdkRectangle selection;
+	int width, height;
+	GtkBorder border;
 
 	g_return_if_fail (EV_IS_VIEW (ev_view));
 
+	ev_document_get_page_size (ev_view->document, -1, &width, &height);
+	ev_document_misc_get_page_border_size (width, height, &border);
+
 	ev_view->has_selection = TRUE;
-	ev_view->selection.x = ev_view->selection.y = 0;
-	ev_view->selection.width = widget->requisition.width;
-	ev_view->selection.height = widget->requisition.height;
+	selection.x = ev_view->x_offset + border.left;
+        selection.y = ev_view->y_offset + border.top;
+	selection.width = width;
+	selection.height = height;
+	view_rect_to_doc_rect (ev_view, &selection, &ev_view->selection);
 
 	gtk_widget_queue_draw (widget);
 }
@@ -514,9 +553,11 @@ void
 ev_view_copy (EvView *ev_view)
 {
 	GtkClipboard *clipboard;
+	GdkRectangle selection;
 	char *text;
 
-	text = ev_document_get_text (ev_view->document, &ev_view->selection);
+	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
+	text = ev_document_get_text (ev_view->document, &selection);
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
 					      GDK_SELECTION_CLIPBOARD);
 	gtk_clipboard_set_text (clipboard, text, -1);
@@ -530,9 +571,11 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 			gpointer          data)
 {
 	EvView *ev_view = EV_VIEW (data);
+	GdkRectangle selection;
 	char *text;
 
-	text = ev_document_get_text (ev_view->document, &ev_view->selection);
+	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
+	text = ev_document_get_text (ev_view->document, &selection);
 	gtk_selection_data_set_text (selection_data, text, -1);
 }
 
@@ -700,11 +743,14 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 
 	if (view->pressed_button > 0) {
+		GdkRectangle selection;
+
 		view->has_selection = TRUE;
-		view->selection.x = MIN (view->selection_start.x, event->x);
-		view->selection.y = MIN (view->selection_start.y, event->y);
-		view->selection.width = ABS (view->selection_start.x - event->x) + 1;
-		view->selection.height = ABS (view->selection_start.y - event->y) + 1;
+		selection.x = MIN (view->selection_start.x, event->x);
+		selection.y = MIN (view->selection_start.y, event->y);
+		selection.width = ABS (view->selection_start.x - event->x) + 1;
+		selection.height = ABS (view->selection_start.y - event->y) + 1;
+		view_rect_to_doc_rect (view, &selection, &view->selection);
 
 		gtk_widget_queue_draw (widget);
 	} else if (view->document) {

@@ -1050,10 +1050,10 @@ pdf_document_get_text (EvDocument *document, GdkRectangle *rect)
 	const char *text;
 	int x1, y1, x2, y2;
 
-	x1 = rect->x + pdf_document->page_x_offset;
-	y1 = rect->y + pdf_document->page_y_offset;
-	x2 = x1 + rect->width + pdf_document->page_x_offset;
-	y2 = y1 + rect->height + pdf_document->page_y_offset;
+	x1 = rect->x - pdf_document->page_x_offset;
+	y1 = rect->y - pdf_document->page_y_offset;
+	x2 = x1 + rect->width;
+	y2 = y1 + rect->height;
 
 	sel_text = pdf_document->out->getText (x1, y1, x2, y2);
 	text = sel_text->getCString ();

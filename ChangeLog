@@ -1,5 +1,19 @@
 2005-02-21  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* pdf/xpdf/pdf-document.cc:
+
+	Fixup selection offset calculation
+
+	* shell/ev-view.c: (view_rect_to_doc_rect),
+	(doc_rect_to_view_rect), (ev_view_size_allocate),
+	(expose_bin_window), (ev_view_select_all), (ev_view_copy),
+	(ev_view_primary_get_cb), (ev_view_motion_notify_event):
+
+	Store selection as document relative, so that zooming
+	and offset changing doesnt break it.
+
+2005-02-21  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-view.c: (ev_view_best_fit):
 
 	Do not try to best fit if the view is not realized
