@@ -133,6 +133,15 @@ redraw_view (view_data_t *view_data, GdkRectangle *rect)
 }
 
 static void
+configure_size (view_data_t *view_data)
+{
+  gtk_widget_set_usize (
+    view_data->drawing_area,
+    view_data->w,
+    view_data->h);
+}
+
+static void
 render_page (view_data_t *view_data)
 {
   setup_pixmap (view_data->bed, view_data,
@@ -161,15 +170,6 @@ redraw_view_all (view_data_t *view_data)
 }
 
 static void
-configure_size (view_data_t *view_data)
-{
-  gtk_widget_set_usize (
-    view_data->drawing_area,
-    view_data->w,
-    view_data->h);
-}
-
-static void
 redraw_all (bed_t *bed)
 {
 	GList *l;
@@ -177,7 +177,6 @@ redraw_all (bed_t *bed)
 	for (l = bed->views; l; l = l->next) {
 	  GdkRectangle rect;
 	  view_data_t *view_data = (view_data_t *)l->data;
-	  configure_size (view_data);
 	  redraw_view_all (view_data);
 	}
 }
@@ -342,6 +341,7 @@ extern "C" {
 			w, h);
     
     view_data->pixmap = pixmap;
+    configure_size (view_data);
   }
 
   static gboolean
@@ -568,8 +568,12 @@ extern "C" {
 
     g_return_if_fail (view_data != NULL);
 
-    view_data->zoom = new_zoom;
+    /* The rational behind this is that the _entire_ page is allocated
+       regardless of viewport size, so you _really_ don't want it too big ! */
+    g_return_if_fail (new_zoom > 10.0);
+    g_return_if_fail (new_zoom < 180.0);
 
+    view_data->zoom = new_zoom;
     redraw_view_all (view_data);
   }
 

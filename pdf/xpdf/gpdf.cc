@@ -55,14 +55,15 @@ typedef struct _Container Container;
 /* NB. there is a 1 to 1 Container -> Component mapping, this
    is due to how much MDI sucks; unutterably */
 struct _Container {
-  GnomeContainer  *container;
-  GnomeUIHandler  *uih;
+  GnomeContainer    *container;
+  GnomeUIHandler    *uih;
   
-  GnomeViewFrame  *active_view_frame;
+  GnomeViewFrame    *active_view_frame;
   
-  GtkWidget	*app;
-  GtkWidget	*view_widget;
-  Component     *component;
+  GtkWidget	    *app;
+  GtkScrolledWindow *scroll;
+  GtkWidget	    *view_widget;
+  Component         *component;
   gdouble zoom;
 };
 
@@ -285,62 +286,20 @@ extern "C" {
   zoom_in_cmd (GtkWidget *widget, Container *container)
   {
     g_return_if_fail (container != NULL);
-    container->zoom *= 1.4;
-    zoom_set (container);
+    if (container->zoom < 180.0) {
+      container->zoom *= 1.4;
+      zoom_set (container);
+    }
   }
 
   static void
   zoom_out_cmd (GtkWidget *widget, Container *container)
   {
     g_return_if_fail (container != NULL);
-    container->zoom /= 1.4;
-    zoom_set (container);
-  }
-
-  static void
-  component_user_activate_request_cb (GnomeViewFrame *view_frame, gpointer data)
-  {
-    Component *component = (Component *) data;
-    Container *container = component->container;
-    
-    /*
-     * If there is a
-     * If there is already an active View, deactivate it.
-     */
-    if (container->active_view_frame != NULL) {
-      /*
-       * This just sends a notice to the embedded View that
-       * it is being deactivated.  We will also forcibly
-       * cover it so that it does not receive any Gtk
-       * events.
-       */
-      gnome_view_frame_view_deactivate (container->active_view_frame);
-      
-      /*
-       * Here we manually cover it if it hasn't acquiesced.
-       * If it has consented to be deactivated, then it will
-       * already have notified us that it is inactive, and
-       * we will have covered it and set active_view_frame
-       * to NULL.  Which is why this check is here.
-       */
-      if (container->active_view_frame != NULL)
-	gnome_view_frame_set_covered (container->active_view_frame, TRUE);
-      
-      container->active_view_frame = NULL;
+    if (container->zoom > 10.0) {
+      container->zoom /= 1.4;
+      zoom_set (container);
     }
-    
-    /*
-     * Activate the View which the user clicked on.  This just
-     * sends a request to the embedded View to activate itself.
-     * When it agrees to be activated, it will notify its
-     * ViewFrame, and our view_activated_cb callback will be
-     * called.
-     *
-     * We do not uncover the View here, because it may not wish to
-     * be activated, and so we wait until it notifies us that it
-     * has been activated to uncover it.
-     */
-    gnome_view_frame_view_activate (view_frame);
   }
   
   static void
@@ -439,19 +398,6 @@ container_set_view (Container *container, Component *component)
 	view_widget = gnome_view_frame_get_wrapper (view_frame);
 	container->view_widget = view_widget;
 	container->component   = component;
-/*	gtk_box_pack_start (GTK_BOX (container->app), view_widget,
-	FALSE, FALSE, 5);*/
-	gnome_app_set_contents (GNOME_APP (container->app), view_widget);
-	/*
-	 * The "user_activate" signal will be emitted when the user
-	 * double clicks on the "cover".  The cover is a transparent
-	 * window which sits on top of the component and keeps any
-	 * events (mouse, keyboard) from reaching it.  When the user
-	 * double clicks on the cover, the container (that's us)
-	 * can choose to activate the component.
-	 */
-	gtk_signal_connect (GTK_OBJECT (view_frame), "user_activate",
-			    GTK_SIGNAL_FUNC (component_user_activate_request_cb), component);
 
 	/*
 	 * In-place activation of a component is a two-step process.
@@ -478,7 +424,14 @@ container_set_view (Container *container, Component *component)
 	/*
 	 * Show the component.
 	 */
-	gtk_widget_show_all (view_widget);
+	gtk_scrolled_window_add_with_viewport (container->scroll, view_widget);
+
+	/*
+	 * Activate it ( get it to merge menus etc.
+	 */
+	gnome_view_frame_view_activate (view_frame);
+
+	gtk_widget_show_all (GTK_WIDGET (container->scroll));
 }
 
 static GnomeObjectClient *
@@ -626,13 +579,17 @@ container_new (const char *fname)
 
 	container->app  = gnome_app_new ("pdf-viewer",
 					 "GNOME PDF viewer");
-	container->zoom = 43.0;
+	container->zoom = 86.0;
 
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 400, 400);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
 
 	container->container   = gnome_container_new ();
 	container->view_widget = NULL;
+	container->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
+	gtk_scrolled_window_set_policy (container->scroll, GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
+	gnome_app_set_contents (GNOME_APP (container->app), GTK_WIDGET (container->scroll));
 
 	/*
 	 * Create the GnomeUIHandler object which will be used to
@@ -655,6 +612,7 @@ container_new (const char *fname)
 	  }
 
 	containers = g_list_append (containers, container);
+	zoom_set (container);
 
 	gtk_widget_show_all (container->app);
 
@@ -701,4 +659,3 @@ main (int argc, char **argv)
 	
   return 0;
 }
-
