@@ -116,6 +116,8 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-g-switch.h			\
 	gpdf-persist-stream.cc		\
 	gpdf-persist-stream.h		\
+	gpdf-stock-icons.c		\
+	gpdf-stock-icons.h		\
 	gpdf-util.h			\
 	gpdf-view.cc			\
 	gpdf-view.h			\
