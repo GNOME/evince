@@ -106,8 +106,10 @@ common_sources =		\
 
 gnome_pdf_viewer_SOURCES =		\
 	$(common_sources)		\
-	BonoboStream.h			\
 	BonoboStream.cc			\
+	BonoboStream.h			\
+	GnomeVFSStream.cc		\
+	GnomeVFSStream.h		\
 	GPOutputDev.cc			\
 	GPOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
@@ -123,15 +125,13 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-view.h			\
 	gtkgesture.c			\
 	gtkgesture.h			\
+	nautilus-pdf-property-page.cc	\
+	nautilus-pdf-property-page.h	\
 	page-control.c			\
 	page-control.h			\
 	pdf-properties-display.c	\
 	pdf-properties-display.h	\
 	$(BUILT_SOURCES)
-
-# Font embedding hack for Gnome Print < 2.1.?2?
-#	gpdf-gnome-font.c		\
-#	gpdf-gnome-font.h		\
 
 # Old files
 #	GOutputDev.cc			\
