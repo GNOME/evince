@@ -138,18 +138,20 @@ document_init_links (PdfDocument *pdf_document)
 static void
 document_display_page (PdfDocument *pdf_document)
 {
-	pdf_document->doc->displayPage (pdf_document->out, pdf_document->page,
-					72 * pdf_document->scale,
-					72 * pdf_document->scale,
-					0, gTrue, gTrue);
+	if (pdf_document->out != NULL) {
+		pdf_document->doc->displayPage (pdf_document->out, pdf_document->page,
+						72 * pdf_document->scale,
+						72 * pdf_document->scale,
+						0, gTrue, gTrue);
 
-	document_init_links (pdf_document);
+		document_init_links (pdf_document);
 
-	/* Update the search results available to the app since
-	 * we only provide full results on the current page
-         */
-	if (pdf_document->search)
-		pdf_document_search_page_changed (pdf_document->search);
+		/* Update the search results available to the app since
+		 * we only provide full results on the current page
+	         */
+		if (pdf_document->search)
+			pdf_document_search_page_changed (pdf_document->search);
+	}
 }
 
 static gboolean
@@ -309,9 +311,8 @@ pdf_document_set_target (EvDocument  *document,
 			if (pdf_document->doc)
 				pdf_document->out->startDoc(pdf_document->doc->getXRef());
 
+			document_display_page (pdf_document);
 		}
-
-		/* FIXME we need to regenerate pages */
 	}
 }
 
