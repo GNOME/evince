@@ -37,6 +37,7 @@
 
 G_BEGIN_DECLS
 
+#define GTK_GS_TYPE         (gtk_gs_get_type())
 #define GTK_GS(obj)         GTK_CHECK_CAST (obj, gtk_gs_get_type (), GtkGS)
 #define GTK_GS_CLASS(klass) GTK_CHECK_CLASS_CAST (klass, gtk_gs_get_type (), GtkGSClass)
 #define GTK_IS_GS(obj)      GTK_CHECK_TYPE (obj, gtk_gs_get_type())
@@ -60,7 +61,7 @@ typedef enum {
 } GtkGSZoomMode;
 
 struct _GtkGS {
-  GtkWidget widget;             /* the main widget */
+  GtkObject object;             /* the main widget */
   GdkWindow *pstarget;          /* the window passed to gv
                                  * it is a child of widget...
                                  */
@@ -136,7 +137,7 @@ struct _GtkGS {
 };
 
 struct _GtkGSClass {
-  GtkWidgetClass parent_class;
+  GObjectClass parent_class;
   GdkAtom gs_atom;
   GdkAtom gs_colors_atom;
   GdkAtom next_atom;
@@ -169,9 +170,9 @@ struct _GtkGSPaperSize {
 
 GType gtk_gs_get_type(void);
 
-GtkWidget *gtk_gs_new_from_file(GtkAdjustment * hadj, GtkAdjustment * vadj,
+GObject *gtk_gs_new_from_file(GtkAdjustment * hadj, GtkAdjustment * vadj,
                                 gchar * fname);
-GtkWidget *gtk_gs_new(GtkAdjustment * hadj, GtkAdjustment * vadj);
+GObject *gtk_gs_new(GtkAdjustment * hadj, GtkAdjustment * vadj);
 gboolean gtk_gs_load(GtkGS * gs, const gchar * fname);
 void gtk_gs_reload(GtkGS * gs);
 

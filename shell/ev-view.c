@@ -295,7 +295,7 @@ expose_bin_window (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
         int i;
         const EvFindResult *results;
-	
+
 	if (view->document)
 		ev_document_render (view->document,
 				    event->area.x, event->area.y,

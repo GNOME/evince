@@ -1,6 +1,7 @@
-INCLUDES =			\
-	-I$(top_srcdir)		\
-	-DGNOMEICONDIR=\""${prefix}/${DATADIRNAME}/pixmaps"\" \
+INCLUDES = \
+	-I$(top_srcdir)						\
+	-I$(top_srcdir)/backend					\
+	-DGNOMEICONDIR=\""${prefix}/${DATADIRNAME}/pixmaps"\" 	\
 	$(PS_CFLAGS)
 
 noinst_LTLIBRARIES = libgtkgs.la

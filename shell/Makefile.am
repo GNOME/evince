@@ -5,6 +5,7 @@ INCLUDES=					\
 	-I$(top_srcdir)/lib			\
 	-I$(top_srcdir)/backend			\
 	-I$(top_srcdir)/pdf/xpdf		\
+	-I$(top_srcdir)/ps	                \
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(SHELL_CFLAGS)				\
@@ -40,6 +41,7 @@ evince_LDADD=						\
 	$(SHELL_LIBS)					\
 	$(top_builddir)/backend/libevbackend.la		\
 	$(top_builddir)/pdf/xpdf/libpdfdocument.la 	\
+	$(top_builddir)/ps/libgtkgs.la			\
 	$(NULL)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c

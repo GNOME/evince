@@ -148,6 +148,7 @@ The DONE message indicates that ghostscript has finished processing.
 #include <stdio.h>
 #include <math.h>
 
+#include "ev-document.h"
 #include "gtkgs.h"
 #include "ggvutils.h"
 #include "ps.h"
@@ -180,14 +181,6 @@ catchPipe(int i)
 /* Forward declarations */
 static void gtk_gs_init(GtkGS * gs);
 static void gtk_gs_class_init(GtkGSClass * klass);
-static void gtk_gs_destroy(GtkObject * object);
-static void gtk_gs_realize(GtkWidget * widget);
-static void gtk_gs_size_request(GtkWidget * widget,
-                                GtkRequisition * requisition);
-static void gtk_gs_size_allocate(GtkWidget * widget,
-                                 GtkAllocation * allocation);
-static gint gtk_gs_widget_event(GtkWidget * widget, GdkEvent * event,
-                                gpointer data);
 static void gtk_gs_value_adjustment_changed(GtkAdjustment * adjustment,
                                             gpointer data);
 static void gtk_gs_interpreter_message(GtkGS * gs, gchar * msg,
@@ -195,6 +188,7 @@ static void gtk_gs_interpreter_message(GtkGS * gs, gchar * msg,
 static void gtk_gs_emit_error_msg(GtkGS * gs, const gchar * msg);
 static void gtk_gs_set_adjustments(GtkGS * gs, GtkAdjustment * hadj,
                                    GtkAdjustment * vadj);
+static void gtk_gs_finalize(GObject * object);
 static void send_ps(GtkGS * gs, long begin, unsigned int len, gboolean close);
 static void set_up_page(GtkGS * gs);
 static void close_pipe(int p[2]);
@@ -207,8 +201,9 @@ static void input(gpointer data, gint source, GdkInputCondition condition);
 static void stop_interpreter(GtkGS * gs);
 static gint start_interpreter(GtkGS * gs);
 gboolean computeSize(void);
+static void ps_document_document_iface_init (EvDocumentIface *iface);
 
-static GtkWidgetClass *parent_class = NULL;
+static GObjectClass *parent_class = NULL;
 
 static GtkGSClass *gs_class = NULL;
 
@@ -272,41 +267,6 @@ ggv_marshaller_VOID__INT(GClosure * closure,
     (GMarshalFunc_VOID__INT) (marshal_data ? marshal_data : cc->callback);
 
   callback(data1, g_value_get_int(param_values + 1), data2);
-}
-
-static void
-ggv_marshaller_VOID__POINTER_POINTER(GClosure * closure,
-                                     GValue * return_value,
-                                     guint n_param_values,
-                                     const GValue * param_values,
-                                     gpointer invocation_hint,
-                                     gpointer marshal_data)
-{
-  typedef void (*GMarshalFunc_VOID__POINTER_POINTER) (gpointer data1,
-                                                      gpointer arg_1,
-                                                      gpointer arg_2,
-                                                      gpointer data2);
-  register GMarshalFunc_VOID__POINTER_POINTER callback;
-  register GCClosure *cc = (GCClosure *) closure;
-  register gpointer data1, data2;
-
-  g_return_if_fail(n_param_values == 3);
-
-  if(G_CCLOSURE_SWAP_DATA(closure)) {
-    data1 = closure->data;
-    data2 = g_value_peek_pointer(param_values + 0);
-  }
-  else {
-    data1 = g_value_peek_pointer(param_values + 0);
-    data2 = closure->data;
-  }
-  callback =
-    (GMarshalFunc_VOID__POINTER_POINTER) (marshal_data ? marshal_data : cc->
-                                          callback);
-
-  callback(data1,
-           g_value_get_pointer(param_values + 1),
-           g_value_get_pointer(param_values + 2), data2);
 }
 
 static void
@@ -382,13 +342,9 @@ gtk_gs_init(GtkGS * gs)
 static void
 gtk_gs_class_init(GtkGSClass * klass)
 {
-  GtkObjectClass *object_class;
-  GObjectClass *gobject_class;
-  GtkWidgetClass *widget_class;
+  GObjectClass *object_class;
 
-  object_class = (GtkObjectClass *) klass;
-  gobject_class = (GObjectClass *) klass;
-  widget_class = (GtkWidgetClass *) klass;
+  object_class = (GObjectClass *) klass;
   parent_class = gtk_type_class(gtk_widget_get_type());
   gs_class = klass;
 
@@ -410,20 +366,7 @@ gtk_gs_class_init(GtkGSClass * klass)
                  NULL, NULL, ggv_marshaller_VOID__INT, G_TYPE_NONE, 1,
                  G_TYPE_INT);
 
-  object_class->destroy = gtk_gs_destroy;
-
-  widget_class->realize = gtk_gs_realize;
-  widget_class->size_request = gtk_gs_size_request;
-  widget_class->size_allocate = gtk_gs_size_allocate;
-  widget_class->set_scroll_adjustments_signal =
-    g_signal_new("set_scroll_adjustments",
-                 G_TYPE_FROM_CLASS(object_class),
-                 G_SIGNAL_RUN_LAST,
-                 G_STRUCT_OFFSET(GtkGSClass, set_scroll_adjustments),
-                 NULL,
-                 NULL,
-                 ggv_marshaller_VOID__POINTER_POINTER,
-                 G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+  object_class->finalize = gtk_gs_finalize;
 
   /* Create atoms */
   klass->gs_atom = gdk_atom_intern("GHOSTVIEW", FALSE);
@@ -497,7 +440,7 @@ gtk_gs_interpreter_message(GtkGS * gs, gchar * msg, gpointer user_data)
 }
 
 static void
-gtk_gs_destroy(GtkObject * object)
+gtk_gs_finalize(GObject * object)
 {
   GtkGS *gs;
 
@@ -527,195 +470,13 @@ gtk_gs_destroy(GtkObject * object)
     gs->vadj = NULL;
   }
 
-  if(GTK_OBJECT_CLASS(parent_class)->destroy)
-    (*GTK_OBJECT_CLASS(parent_class)->destroy) (object);
+  (*G_OBJECT_CLASS(parent_class)->finalize) (object);
 }
-
-/* FIXME: I'm not sure if all this is supposed to be here 
- * this is just a quick hack so that this can be called whenever
- * something changes.
- */
-static void
-gtk_gs_munge_adjustments(GtkGS * gs)
-{
-  gint x, y;
-
-  gdk_window_get_position(gs->pstarget, &x, &y);
-
-  /* 
-   * This is a bit messy:
-   * we want to make sure that we do the right thing if dragged.
-   */
-  if(gs->widget.allocation.width >= gs->width ||
-     gs->zoom_mode != GTK_GS_ZOOM_ABSOLUTE) {
-    x = (gs->widget.allocation.width - gs->width) / 2;
-    gs->hadj->value = 0.0;
-    gs->hadj->page_size = 1.0;
-    gs->hadj->step_increment = 1.0;
-  }
-  else {
-    if(x > 0)
-      x = 0;
-    else if(gs->widget.allocation.width > x + gs->width)
-      x = gs->widget.allocation.width - gs->width;
-    gs->hadj->page_size = ((gfloat) gs->widget.allocation.width) / gs->width;
-    gs->hadj->page_increment = gs->hadj->page_size * 0.9;
-    gs->hadj->step_increment = gs->scroll_step * gs->hadj->page_size;
-    gs->hadj->value = -((gfloat) x) / gs->width;
-  }
-  if(gs->widget.allocation.height >= gs->height ||
-     gs->zoom_mode == GTK_GS_ZOOM_FIT_PAGE) {
-    y = (gs->widget.allocation.height - gs->height) / 2;
-    gs->vadj->value = 0.0;
-    gs->vadj->page_size = 1.0;
-    gs->vadj->step_increment = 1.0;
-  }
-  else {
-    if(y > 0)
-      y = 0;
-    else if(gs->widget.allocation.height > y + gs->height)
-      y = gs->widget.allocation.height - gs->height;
-    gs->vadj->page_size = ((gfloat) gs->widget.allocation.height) / gs->height;
-    gs->vadj->page_increment = gs->vadj->page_size * 0.9;
-    gs->vadj->step_increment = gs->scroll_step * gs->vadj->page_size;
-    gs->vadj->value = -((gfloat) y) / gs->height;
-  }
-
-  gdk_window_move(gs->pstarget, x, y);
-
-  gtk_adjustment_changed(gs->hadj);
-  gtk_adjustment_changed(gs->vadj);
-}
-
-static void
-gtk_gs_realize(GtkWidget * widget)
-{
-  GtkGS *gs;
-  GdkWindowAttr attributes;
-  gint attributes_mask;
-
-  g_return_if_fail(widget != NULL);
-  g_return_if_fail(GTK_IS_GS(widget));
-
-  gs = GTK_GS(widget);
-
-  /* we set up the main widget! */
-  GTK_WIDGET_SET_FLAGS(widget, GTK_REALIZED);
-  attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.x = widget->allocation.x;
-  attributes.y = widget->allocation.y;
-  attributes.width = widget->allocation.width;
-  attributes.height = widget->allocation.height;
-  attributes.wclass = GDK_INPUT_OUTPUT;
-  attributes.visual = gtk_widget_get_visual(widget);
-  attributes.colormap = gtk_widget_get_colormap(widget);
-  attributes.event_mask = gtk_widget_get_events(widget) | GDK_EXPOSURE_MASK;
-  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
-
-  widget->window =
-    gdk_window_new(widget->parent->window, &attributes, attributes_mask);
-  gdk_window_set_user_data(widget->window, gs);
-  widget->style = gtk_style_attach(widget->style, widget->window);
-  gtk_style_set_background(widget->style, widget->window, GTK_STATE_NORMAL);
-
-  /* now we set up the child window.  This is the one that ps actually draws too. */
-  attributes.x = 0;
-  attributes.y = 0;
-
-  gs->pstarget = gdk_window_new(widget->window, &attributes, attributes_mask);
-  gdk_window_set_user_data(gs->pstarget, widget);
-  gdk_window_clear(gs->pstarget);
-  gtk_style_set_background(widget->style, gs->pstarget, GTK_STATE_ACTIVE);
-  gs->psgc = gdk_gc_new(gs->pstarget);
-  gdk_gc_set_function(gs->psgc, GDK_INVERT);
-
-  gs->width = 0;
-  gs->height = 0;
-
-  gtk_gs_set_page_size(gs, -1, 0);
-
-  if((gs->width > 0) && (gs->height > 0) && GTK_WIDGET_REALIZED(gs)) {
-    gtk_gs_munge_adjustments(gs);
-  }
-
-  g_signal_connect(G_OBJECT(widget), "event",
-                   G_CALLBACK(gtk_gs_widget_event), gs);
-
-  gtk_gs_goto_page(gs, gs->current_page);
-}
-
-static void
-gtk_gs_size_request(GtkWidget * widget, GtkRequisition * requisition)
-{
-  GtkGS *gs = GTK_GS(widget);
-
-  compute_size(gs);
-  requisition->width = gs->width;
-  requisition->height = gs->height;
-}
-
-static void
-gtk_gs_size_allocate(GtkWidget * widget, GtkAllocation * allocation)
-{
-  GtkGS *gs = GTK_GS(widget);
-  GdkEventConfigure event;
-
-  g_return_if_fail(widget != NULL);
-  g_return_if_fail(GTK_IS_GS(widget));
-  g_return_if_fail(allocation != NULL);
-
-  widget->allocation = *allocation;
-  if(GTK_WIDGET_REALIZED(widget)) {
-    gdk_window_move_resize(widget->window,
-                           allocation->x, allocation->y,
-                           allocation->width, allocation->height);
-
-    event.type = GDK_CONFIGURE;
-    event.window = widget->window;
-    event.x = allocation->x;
-    event.y = allocation->y;
-    event.width = allocation->width;
-    event.height = allocation->height;
-    gtk_widget_event(widget, (GdkEvent *) & event);
-  }
-
-  /* 
-   * update the adjustment if necessary (ie. a resize);
-   */
-#if 0
-  if(gs->zoom_mode != GTK_GS_ZOOM_ABSOLUTE) {
-    gtk_gs_set_zoom(gs, 0.0);
-  }
-#endif
-
-  if(GTK_WIDGET_REALIZED(gs)) {
-    gtk_gs_munge_adjustments(gs);
-  }
-
-  gtk_gs_goto_page(gs, gs->current_page);
-}
-
-static gboolean
-gtk_gs_widget_event(GtkWidget * widget, GdkEvent * event, gpointer data)
-{
-  GtkGS *gs = (GtkGS *) data;
-  if(event->type != GDK_CLIENT_EVENT)
-    return FALSE;
-
-  /* the first long is the window to communicate with gs,
-     only if event if client_event */
-  gs->message_window = event->client.data.l[0];
-
-  if(event->client.message_type == gs_class->page_atom) {
-    gs->busy = FALSE;
-  }
-  return TRUE;
-}
-
 
 static void
 gtk_gs_value_adjustment_changed(GtkAdjustment * adjustment, gpointer data)
 {
+#if 0
   GtkGS *gs;
   gint x, y, width, height, depth;
   gint newx, newy;
@@ -744,6 +505,7 @@ gtk_gs_value_adjustment_changed(GtkAdjustment * adjustment, gpointer data)
     newy = -gs->vadj->value * gs->height;
 
   gdk_window_move(gs->pstarget, newx, newy);
+#endif
 }
 
 void
@@ -1540,7 +1302,7 @@ compute_size(GtkGS * gs)
          && gs->height > 0)
         gdk_window_show(gs->pstarget);
     }
-    gtk_gs_munge_adjustments(gs);
+    //gtk_gs_munge_adjustments(gs);
   }
 
   return (change);
@@ -1583,36 +1345,47 @@ gtk_gs_get_type(void)
       (GInstanceInitFunc) gtk_gs_init
     };
 
+    static const GInterfaceInfo document_info =
+    {
+        (GInterfaceInitFunc) ps_document_document_iface_init,
+        NULL,
+        NULL
+    };
+
     gs_type = g_type_register_static(gtk_widget_get_type(),
                                      "GtkGS", &gs_info, 0);
+
+    g_type_add_interface_static (gs_type,
+                                 EV_TYPE_DOCUMENT,
+                                 &document_info);
   }
   return gs_type;
 
 
 }
 
-GtkWidget *
+GObject *
 gtk_gs_new(GtkAdjustment * hadj, GtkAdjustment * vadj)
 {
-  GtkGS *gs;
+  GObject *gs;
 
   if(NULL == hadj)
     hadj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 1.0, 0.01, 0.1, 0.09));
   if(NULL == vadj)
     vadj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 1.0, 0.01, 0.1, 0.09));
 
-  gs = (GtkGS *) gtk_type_new(gtk_gs_get_type());
+  gs = g_object_new(GTK_GS_TYPE, NULL);
 
-  gtk_gs_set_adjustments(gs, hadj, vadj);
+  //gtk_gs_set_adjustments(gs, hadj, vadj);
 
-  return GTK_WIDGET(gs);
+  return gs;
 }
 
 
-GtkWidget *
+GObject *
 gtk_gs_new_from_file(GtkAdjustment * hadj, GtkAdjustment * vadj, char *fname)
 {
-  GtkWidget *gs = gtk_gs_new(hadj, vadj);
+  GObject *gs = gtk_gs_new(hadj, vadj);
   gtk_gs_load(GTK_GS(gs), fname);
   return gs;
 }
@@ -1652,6 +1425,7 @@ gtk_gs_emit_error_msg(GtkGS * gs, const gchar * msg)
 void
 gtk_gs_center_page(GtkGS * gs)
 {
+#if 0
   g_return_if_fail(gs != NULL);
   g_return_if_fail(GTK_IS_GS(gs));
 
@@ -1666,6 +1440,7 @@ gtk_gs_center_page(GtkGS * gs)
   gs->vadj->value = 0.5 - gs->vadj->page_size / 2;
   gtk_adjustment_changed(gs->hadj);
   gtk_adjustment_changed(gs->vadj);
+#endif
 }
 
 void
@@ -1794,7 +1569,6 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
     }
   }
   gtk_gs_set_page_size(gs, -1, gs->current_page);
-  gtk_widget_queue_resize(&(gs->widget));
   gs->loaded = TRUE;
 
   gs->gs_status = _("Document loaded.");
@@ -2044,7 +1818,7 @@ gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid)
   if(gs->changed) {
     if(GTK_WIDGET_REALIZED(gs)) {
       set_up_page(gs);
-      gtk_widget_queue_resize(&(gs->widget));
+      //gtk_widget_queue_resize(&(gs->widget));
     }
     return TRUE;
   }
@@ -2071,7 +1845,7 @@ gtk_gs_set_override_orientation(GtkGS * gs, gboolean bNewOverride)
     if(GTK_WIDGET_REALIZED(gs))
       set_up_page(gs);
   }
-  gtk_widget_queue_resize(&(gs->widget));
+  //gtk_widget_queue_resize(&(gs->widget));
 }
 
 gboolean
@@ -2096,7 +1870,7 @@ gtk_gs_set_override_size(GtkGS * gs, gboolean f)
     if(GTK_WIDGET_REALIZED(gs))
       set_up_page(gs);
   }
-  gtk_widget_queue_resize(&(gs->widget));
+  //gtk_widget_queue_resize(&(gs->widget));
 }
 
 gboolean
@@ -2134,7 +1908,7 @@ gtk_gs_set_zoom(GtkGS * gs, gfloat zoom)
     if(GTK_WIDGET_REALIZED(gs))
       set_up_page(gs);
     gs->changed = TRUE;
-    gtk_widget_queue_resize(&(gs->widget));
+    //gtk_widget_queue_resize(&(gs->widget));
   }
 }
 
@@ -2190,7 +1964,7 @@ gtk_gs_set_default_orientation(GtkGS * gs, gint orientation)
     gs->changed = TRUE;
     if(GTK_WIDGET_REALIZED(gs))
       set_up_page(gs);
-    gtk_widget_queue_resize(&(gs->widget));
+    //gtk_widget_queue_resize(&(gs->widget));
     return TRUE;
   }
 
@@ -2360,8 +2134,8 @@ gtk_gs_start_scroll(GtkGS * gs)
   gdk_window_get_geometry(gs->pstarget, &x, &y, &w, &h, NULL);
   gs->scroll_start_x = MAX(-x, 0);
   gs->scroll_start_y = MAX(-y, 0);
-  gs->scroll_width = MIN(gs->widget.allocation.width - 1, w - 1);
-  gs->scroll_height = MIN(gs->widget.allocation.height - 1, h - 1);
+  //gs->scroll_width = MIN(gs->widget.allocation.width - 1, w - 1);
+  //gs->scroll_height = MIN(gs->widget.allocation.height - 1, h - 1);
 
   if(gs->bpixmap) {
     GdkRectangle rect;
@@ -2621,12 +2395,12 @@ gtk_gs_get_postscript(GtkGS * gs, gint * pages)
     cmd = g_strdup_printf(gtk_gs_defaults_get_convert_pdf_cmd(), tmpn, fname);
     g_free(fname);
     if((system(cmd) == 0) && ggv_file_readable(tmpn)) {
-      GtkWidget *tmp_gs;
+      GObject *tmp_gs;
       tmp_gs = gtk_gs_new_from_file(NULL, NULL, tmpn);
       if(NULL != tmp_gs) {
         if(GTK_GS(tmp_gs)->loaded)
           pscopydoc(sink, tmpn, GTK_GS(tmp_gs)->doc, pages);
-        gtk_widget_destroy(tmp_gs);
+        g_object_unref(tmp_gs);
       }
     }
     g_free(cmd);
@@ -2697,8 +2471,8 @@ gtk_gs_set_adjustments(GtkGS * gs, GtkAdjustment * hadj, GtkAdjustment * vadj)
                      G_CALLBACK(gtk_gs_value_adjustment_changed),
                      (gpointer) gs);
   }
-  if(GTK_WIDGET_REALIZED(gs))
-    gtk_gs_munge_adjustments(gs);
+  //if(GTK_WIDGET_REALIZED(gs))
+    //gtk_gs_munge_adjustments(gs);
 }
 
 
@@ -2737,4 +2511,100 @@ gtk_gs_set_available_size(GtkGS * gs, guint avail_w, guint avail_h)
   if(gs->zoom_mode != GTK_GS_ZOOM_ABSOLUTE) {
     gtk_gs_set_zoom(gs, 0.0);
   }
+}
+
+static gboolean
+ps_document_load (EvDocument  *document,
+		   const char  *uri,
+		   GError     **error)
+{
+	return gtk_gs_load (GTK_GS (document), uri);
+}
+
+static int
+ps_document_get_n_pages (EvDocument  *document)
+{
+	return gtk_gs_get_page_count (GTK_GS (document));
+}
+
+static void
+ps_document_set_page (EvDocument  *document,
+		       int          page)
+{
+	gtk_gs_goto_page (GTK_GS (document), page);
+}
+
+static int
+ps_document_get_page (EvDocument  *document)
+{
+	return gtk_gs_get_current_page (GTK_GS (document));
+}
+
+static void
+ps_document_set_target (EvDocument  *document,
+			 GdkDrawable *target)
+{
+	GTK_GS (document)->pstarget = target;
+}
+
+static void
+ps_document_set_scale (EvDocument  *document,
+			double       scale)
+{
+	gtk_gs_set_zoom (GTK_GS (document), scale);
+}
+
+static void
+ps_document_set_page_offset (EvDocument  *document,
+			      int          x,
+			      int          y)
+{
+}
+
+static void
+ps_document_get_page_size (EvDocument   *document,
+			    int          *width,
+			    int          *height)
+{
+}
+
+static void
+ps_document_render (EvDocument  *document,
+		     int          clip_x,
+		     int          clip_y,
+		     int          clip_width,
+		     int          clip_height)
+{
+	GtkGS *gs = GTK_GS (document);
+
+	start_interpreter(gs);
+	gtk_gs_goto_page(gs, gs->current_page);
+}
+
+static void
+ps_document_begin_find (EvDocument   *document,
+                         const char   *search_string,
+                         gboolean      case_sensitive)
+{
+}
+
+static void
+ps_document_end_find (EvDocument   *document)
+{
+}
+
+static void
+ps_document_document_iface_init (EvDocumentIface *iface)
+{
+	iface->load = ps_document_load;
+	iface->get_n_pages = ps_document_get_n_pages;
+	iface->set_page = ps_document_set_page;
+	iface->get_page = ps_document_get_page;
+	iface->set_scale = ps_document_set_scale;
+	iface->set_target = ps_document_set_target;
+	iface->set_page_offset = ps_document_set_page_offset;
+	iface->get_page_size = ps_document_get_page_size;
+	iface->render = ps_document_render;
+        iface->begin_find = ps_document_begin_find;
+        iface->end_find = ps_document_end_find;
 }

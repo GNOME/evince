@@ -36,6 +36,7 @@
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
+#include "gtkgs.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -214,6 +215,8 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 
 	if (!strcmp (mime_type, "application/pdf"))
 		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
+	else if (!strcmp (mime_type, "application/postscript"))
+		document = g_object_new (GTK_GS_TYPE, NULL);
 
 	if (document) {
 		GError *error = NULL;
