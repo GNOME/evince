@@ -54,7 +54,7 @@ main (int argc, char *argv[])
 				      GNOME_PARAM_APP_DATADIR, DATADIR,
                                       NULL);
 
-	g_set_application_name (_("Epiphany Web Browser"));
+	g_set_application_name (_("Evince Document Viewer"));
 
 	g_object_get_property (G_OBJECT (program),
                                GNOME_PARAM_POPT_CONTEXT,
