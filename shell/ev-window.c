@@ -44,9 +44,6 @@
 
 #include <string.h>
 
-#include <ev-macros.h>
-#include <ev-stock-icons.h>
-
 #include "ev-application.h"
 
 enum {
@@ -71,6 +68,8 @@ struct _EvWindowPrivate {
 /* enable these to add support for signals */
 static guint ev_window_signals [N_SIGNALS] = { 0 };
 #endif
+
+static GObjectClass *parent_class = NULL;
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -351,21 +350,9 @@ ev_window_dispose (GObject *object)
 
 	priv = EV_WINDOW (object)->priv;
 
-	EV_UNREF (priv->ui_manager);
+	g_object_unref (priv->ui_manager);
 
-	EV_CALL_VIRTUAL (
-		G_OBJECT_CLASS (ev_window_parent_class), dispose, (object));
-}
-
-static void
-ev_window_finalize (GObject *object)
-{
-	g_return_if_fail (object != NULL && EV_IS_WINDOW (object));
-
-	EV_WINDOW (object)->priv = NULL;
-
-	EV_CALL_VIRTUAL (
-		G_OBJECT_CLASS (ev_window_parent_class), finalize, (object));
+	G_OBJECT_CLASS (parent_class)->dispose (object);
 }
 
 static void
@@ -373,9 +360,10 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 {
 	GObjectClass *g_object_class;
 
+	parent_class = g_type_class_peek_parent (ev_window_class);
+
 	g_object_class = G_OBJECT_CLASS (ev_window_class);
 	g_object_class->dispose = ev_window_dispose;
-	g_object_class->finalize = ev_window_finalize;
 
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
 
@@ -427,7 +415,7 @@ static GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_file_close_window) },
 
 	/* Help menu */
-	{ "HelpAbout", STOCK_ABOUT, N_("_About"), NULL,
+	{ "HelpAbout", NULL, N_("_About"), NULL,
 	  N_("Display credits for the document viewer creators"),
 	  G_CALLBACK (ev_window_cmd_help_about) },
 };

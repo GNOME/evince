@@ -30,7 +30,6 @@
 #include <gtk/gtkwidget.h>
 #include <bonobo/bonobo-main.h>
 
-#include <ev-macros.h>
 #include <ev-window.h>
 
 struct _EvApplicationPrivate {
@@ -166,23 +165,11 @@ ev_application_open (EvApplication *application, GError *err)
 }
 
 static void
-ev_application_finalize (GObject *object)
-{
-	g_return_if_fail (object != NULL && EV_IS_APPLICATION (object));
-
-	EV_APPLICATION (object)->priv = NULL;
-
-	EV_CALL_VIRTUAL (
-		G_OBJECT_CLASS (ev_application_parent_class), finalize, (object));
-}
-
-static void
 ev_application_class_init (EvApplicationClass *ev_application_class)
 {
 	GObjectClass *g_object_class;
 
 	g_object_class = G_OBJECT_CLASS (ev_application_class);
-	g_object_class->finalize = ev_application_finalize;
 
 	g_type_class_add_private (g_object_class,
 				  sizeof (EvApplicationPrivate));

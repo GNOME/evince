@@ -20,5 +20,4 @@ evince_SOURCES=				\
 
 evince_LDADD=					\
 	$(SHELL_LIBS)				\
-	$(top_builddir)/lib/libevprivate.a	\
 	$(NULL)
