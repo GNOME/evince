@@ -90,7 +90,7 @@ void GDKSplashOutputDev::endPage() {
 }
 
 void GDKSplashOutputDev::dump() {
-  if (incrementalUpdate) {
+  if (incrementalUpdate && redrawCbk) {
     (*redrawCbk)(redrawCbkData);
   }
 }
@@ -153,6 +153,10 @@ void GDKSplashOutputDev::redraw(int srcX, int srcY,
   g_object_unref (gc);
 
   g_free (gdk_buf);
+}
+
+void GDKSplashOutputDev::drawToPixbuf(GdkPixbuf *pixbuf, int pageNum) {
+	
 }
 
 GBool GDKSplashOutputDev::findText(Unicode *s, int len,

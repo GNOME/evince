@@ -143,9 +143,9 @@ do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	GtkTreeIter iter;
 
 	tmp = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
-						       priv->current_page, THUMBNAIL_WIDTH);
+						    priv->current_page, THUMBNAIL_WIDTH);
 
-#if 1
+#if 0
 	/* Don't add the shadow for now, as it's really slow */
 	pixbuf = g_object_ref (tmp);
 #else

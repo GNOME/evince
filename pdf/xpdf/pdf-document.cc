@@ -1013,6 +1013,43 @@ pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface)
 
 /* Thumbnails */
 static GdkPixbuf *
+pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
+					 gdouble      scale_factor,
+					 gint         page_num,
+					 gint         width,
+					 gint         height)
+{
+	GdkPixmap *pixmap;
+	GDKSplashOutputDev *output;
+	GdkPixbuf *pixbuf;
+
+	pixmap = gdk_pixmap_new (pdf_document->target,
+				 width, height, -1);
+
+	output = new GDKSplashOutputDev (gdk_drawable_get_screen (pdf_document->target),
+					 NULL, NULL);
+	output->startDoc (pdf_document->doc->getXRef());
+	pdf_document->doc->displayPage (output,
+					page_num + 1,
+					72*scale_factor,
+					72*scale_factor,
+					0, gTrue, gFalse);
+	output->redraw (0, 0,
+			pixmap,
+			0, 0,
+			width, height);
+	pixbuf = gdk_pixbuf_get_from_drawable (NULL,
+					       pixmap,
+					       NULL,
+					       0, 0,
+					       0, 0,
+					       width, height);
+	gdk_drawable_unref (pixmap);
+	delete output;
+	return pixbuf;
+}
+
+static GdkPixbuf *
 pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 				       gint 		     page,
 				       gint                  width)
@@ -1054,13 +1091,19 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		thumbnail = tmp_pixbuf;
 	} else {
 		gdouble page_ratio;
+		gdouble scale_factor;
 		gint dest_height;
 
 		page_ratio = the_page->getHeight () / the_page->getWidth ();
+		scale_factor = (gdouble)width / the_page->getWidth ();
 		dest_height = (gint) (width * page_ratio);
-		
-		thumbnail = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, dest_height);
-		gdk_pixbuf_fill (thumbnail, 0xffffffff);
+
+		thumbnail = pdf_document_thumbnails_get_page_pixbuf (pdf_document,
+								     scale_factor,
+								     page,
+								     width,
+								     dest_height);
+
 		/* FIXME: Actually get the image... */
 	}
 

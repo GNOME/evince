@@ -73,6 +73,8 @@ public:
 	      int destX, int destY,
 	      int width, int height);
 
+  void drawToPixbuf(GdkPixbuf *pixbuf, int pageNum);
+
   // Find a string.  If <startAtTop> is true, starts looking at the
   // top of the page; else if <startAtLast> is true, starts looking
   // immediately after the last find result; else starts looking at
