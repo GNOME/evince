@@ -55,6 +55,7 @@ struct DOC_ROOT {
   GtkScrolledWindow *scroll;
   GtkWidget      *mainframe;
   GladeXML       *gui;
+  guint           w, h;
 
   double          zoom;
   gint            page;
@@ -77,7 +78,7 @@ extern "C" {
 //------------------------------------------------------------------------
 
 static GtkPixmap *
-setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
+setup_pixmap (DOC_ROOT *doc, DOC_ROOT *view, GdkWindow *window)
 {
   GdkGCValues  gcValues;
   GdkGC       *strokeGC;
@@ -85,13 +86,13 @@ setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
   int          w, h;
   GdkPixmap   *pixmap = NULL;
 
-  w = (int)((pdf->getPageWidth  (doc->page) * doc->zoom) / 72.0);
-  h = (int)((pdf->getPageHeight (doc->page) * doc->zoom) / 72.0);
+  w = view->w = (int)((pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
+  h = view->h = (int)((pdf->getPageHeight (view->page) * view->zoom) / 72.0);
 
   pixmap = gdk_pixmap_new (window, w, h, -1);
 
-  gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
-  doc->out    = new GOutputDev (pixmap, doc->paper, window);
+  gdk_color_white (gtk_widget_get_default_colormap(), &view->paper);
+  view->out    = new GOutputDev (pixmap, view->paper, window);
 
   gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
   gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
@@ -193,7 +194,7 @@ doc_root_new (GString *fileName)
 
   gtk_object_set_data (GTK_OBJECT (doc->mainframe), DOC_ROOT_TAG, doc);
 
-  doc->pixmap = setup_pixmap (doc, gtk_widget_get_parent_window (GTK_WIDGET (pane)));
+  doc->pixmap = setup_pixmap (doc, doc, gtk_widget_get_parent_window (GTK_WIDGET (pane)));
   
   doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
   gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,

@@ -4,14 +4,14 @@ INCLUDES =	\
 	-I$(top_srcdir)/ltk	\
 	-DGPDF_GLADE_DIR=\""$(gladedir)"\"	\
 	$(EXTRA_GNOME_CFLAGS)
-	
+
 if WITH_GNOME
 gui = gpdf
 else
 gui = xpdf
 endif
-	
-bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui)
+
+bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
 
 common_sources =			\
 	Array.cc 		\
@@ -48,6 +48,19 @@ gpdf_SOURCES = 			\
 gpdf_LDADD =			\
 	$(EXTRA_GNOME_LIBS)	\
 	../goo/libgoo.a
+
+bonobo_image_x_pdf_SOURCES =	\
+	$(common_sources)	\
+	GOutputDev.cc		\
+	bonobo-image-x-pdf.cc
+
+bonobo_image_x_pdf_LDADD =	\
+	../goo/libgoo.a		\
+	$(GTK_LIBS)		\
+	$(GNOME_LIBDIR)		\
+	-lbonobo		\
+	$(GNOMEGNORBA_LIBS)	\
+	$(INTLLIBS)
 
 xpdf_SOURCES =			\
 	$(common_sources)	\

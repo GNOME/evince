@@ -104,17 +104,13 @@ YACC = @YACC@
 ZVT_LIBS = @ZVT_LIBS@
 cflags_set = @cflags_set@
 cxxflags_set = @cxxflags_set@
-t1_CFLAGS = @t1_CFLAGS@
-t1_LIBS = @t1_LIBS@
-t1x_CFLAGS = @t1x_CFLAGS@
-t1x_LIBS = @t1x_LIBS@
 
 INCLUDES =  	-I$(top_srcdir)/goo		-I$(top_srcdir)/ltk		-DGPDF_GLADE_DIR=\""$(gladedir)"\"		$(EXTRA_GNOME_CFLAGS)
 
 @WITH_GNOME_TRUE@gui = gpdf
 @WITH_GNOME_FALSE@gui = xpdf
 
-bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui)
+bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
 
 common_sources =  	Array.cc 			Catalog.cc 			Dict.cc 			Error.cc 			FontEncoding.cc			FontEncoding.h			FontFile.cc			FontFile.h			FontInfo.h			Gfx.cc 				GfxFont.cc 			GfxState.cc			Lexer.cc 			Link.cc 			Object.cc 			OutputDev.cc 			Page.cc 			Params.cc 			Parser.cc 			PDFDoc.cc 			Stream.cc 			TextOutputDev.cc		XRef.cc
 
@@ -125,6 +121,12 @@ gpdf_SOURCES =  	$(common_sources)		GOutputDev.cc			gpdf.cc
 
 
 gpdf_LDADD =  	$(EXTRA_GNOME_LIBS)		../goo/libgoo.a
+
+
+bonobo_image_x_pdf_SOURCES =  	$(common_sources)		GOutputDev.cc			bonobo-image-x-pdf.cc
+
+
+bonobo_image_x_pdf_LDADD =  	../goo/libgoo.a			$(GTK_LIBS)			$(GNOME_LIBDIR)			-lbonobo			$(GNOMEGNORBA_LIBS)		$(INTLLIBS)
 
 
 xpdf_SOURCES =  	$(common_sources)		XOutputDev.cc			LTKOutputDev.cc			PSOutputDev.cc			xpdf.cc
@@ -222,6 +224,12 @@ OutputDev.o Page.o Params.o Parser.o PDFDoc.o Stream.o TextOutputDev.o \
 XRef.o XOutputDev.o LTKOutputDev.o PSOutputDev.o xpdf.o
 xpdf_DEPENDENCIES =  ../goo/libgoo.a ../ltk/libltk.a
 xpdf_LDFLAGS = 
+bonobo_image_x_pdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o \
+FontEncoding.o FontFile.o Gfx.o GfxFont.o GfxState.o Lexer.o Link.o \
+Object.o OutputDev.o Page.o Params.o Parser.o PDFDoc.o Stream.o \
+TextOutputDev.o XRef.o GOutputDev.o bonobo-image-x-pdf.o
+bonobo_image_x_pdf_DEPENDENCIES =  ../goo/libgoo.a
+bonobo_image_x_pdf_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -248,10 +256,11 @@ DEP_FILES =  .deps/Array.P .deps/Catalog.P .deps/Dict.P .deps/Error.P \
 .deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
 .deps/PSOutputDev.P .deps/Page.P .deps/Params.P .deps/Parser.P \
 .deps/Stream.P .deps/TextOutputDev.P .deps/XOutputDev.P .deps/XRef.P \
-.deps/gpdf.P .deps/pdfimages.P .deps/pdfinfo.P .deps/pdftopbm.P \
-.deps/pdftops.P .deps/pdftotext.P .deps/xpdf.P
-SOURCES = $(pdftops_SOURCES) $(pdftotext_SOURCES) $(pdfinfo_SOURCES) $(pdftopbm_SOURCES) $(pdfimages_SOURCES) $(gpdf_SOURCES) $(xpdf_SOURCES)
-OBJECTS = $(pdftops_OBJECTS) $(pdftotext_OBJECTS) $(pdfinfo_OBJECTS) $(pdftopbm_OBJECTS) $(pdfimages_OBJECTS) $(gpdf_OBJECTS) $(xpdf_OBJECTS)
+.deps/bonobo-image-x-pdf.P .deps/gpdf.P .deps/pdfimages.P \
+.deps/pdfinfo.P .deps/pdftopbm.P .deps/pdftops.P .deps/pdftotext.P \
+.deps/xpdf.P
+SOURCES = $(pdftops_SOURCES) $(pdftotext_SOURCES) $(pdfinfo_SOURCES) $(pdftopbm_SOURCES) $(pdfimages_SOURCES) $(gpdf_SOURCES) $(xpdf_SOURCES) $(bonobo_image_x_pdf_SOURCES)
+OBJECTS = $(pdftops_OBJECTS) $(pdftotext_OBJECTS) $(pdfinfo_OBJECTS) $(pdftopbm_OBJECTS) $(pdfimages_OBJECTS) $(gpdf_OBJECTS) $(xpdf_OBJECTS) $(bonobo_image_x_pdf_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -348,6 +357,10 @@ gpdf: $(gpdf_OBJECTS) $(gpdf_DEPENDENCIES)
 xpdf: $(xpdf_OBJECTS) $(xpdf_DEPENDENCIES)
 	@rm -f xpdf
 	$(CXXLINK) $(xpdf_LDFLAGS) $(xpdf_OBJECTS) $(xpdf_LDADD) $(LIBS)
+
+bonobo-image-x-pdf: $(bonobo_image_x_pdf_OBJECTS) $(bonobo_image_x_pdf_DEPENDENCIES)
+	@rm -f bonobo-image-x-pdf
+	$(CXXLINK) $(bonobo_image_x_pdf_LDFLAGS) $(bonobo_image_x_pdf_OBJECTS) $(bonobo_image_x_pdf_LDADD) $(LIBS)
 .cc.o:
 	$(CXXCOMPILE) -c $<
 .cc.lo:
