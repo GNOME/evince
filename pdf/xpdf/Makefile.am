@@ -130,7 +130,7 @@ gnome_pdf_viewer_SOURCES =		\
 # 	gpdf-embeddable.cc		\
 # 	gpdf-embeddable.h		\
 # 	gpdf-embeddable-view.cc		\
-# 	gpdf-embeddable-view.h		\
+# 	gpdf-embeddable-view.h
 
 gnome_pdf_viewer_LDADD =		\
 	$(top_builddir)/goo/libgoo.a	\
