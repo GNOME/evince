@@ -1,4 +1,47 @@
 ==============
+Evince   0.1.5
+==============
+
+New features
+
+	* Reload menu (Kai Willadsen)
+
+Interface improvements
+	
+	* Support for DnD of files (Carlos Garcia Campos)
+	* Set the "Previous" and "Next" toolbar
+	  buttons as important (Vincent Noel)
+	* Make the "best fit" and "fit width"
+	  values act as toggle buttons (Jonathan)
+	* Autohide the fullscreen button (Kristian Høgsberg)
+	* Added ellipsis to Print item (Bryan)
+	* Change the fullscreen toolbar to always be in
+          the popup window (Jonathan)
+	* Improved sidebar widget (Carlos Garcia Campos)
+	* Minimal size for the sidebar (Marco)
+	* Hide the sidebar if the type doesn't
+	  support thumbnailing and indexing (Jonathan)
+	* Remember the sidebar size (Carlos Garcia Campos)
+
+Bug fixes
+
+	* Fix compilation on non-gcc platforms (Marco)
+	* Fix thumbnails generation (Crispin Flowerday)
+	* Fix best fit size allocation (Martin)
+	* Replace newlines in the title by spaces (Martin)
+	* Get rid of the black flash when resizing the window (Jonathan)
+	* Sync selection with zoom levels (Marco)
+	* Fix clipboard operations (Marco)
+	* Fix a crash when the ps document cannot be opened (Marco)
+	* Fix postcript page selection (Marco)
+	* Fix page sizing to be idempotent (Marco)
+	* Fix page sizing toggle buttons (Marco)
+	* Fix freezing on document with unrecognized links (Marco)
+	* Check ghostscript minimal version (Marco)
+	* Fix rendering of landscape documents (Marco)
+	* Unescape filenames for display (Marco)
+
+==============
 Evince   0.1.4
 ==============
 
