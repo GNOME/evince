@@ -35,6 +35,8 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
+	ev-utils.c			\
+	ev-utils.h			\
 	main.c				\
 	$(NULL)
 

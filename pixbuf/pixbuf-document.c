@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
-/* pixbuf-document.h: Implementation of EvDocument for PIXBUF
+/*
  * Copyright (C) 2004, Anders Carlsson <andersca@gnome.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  */
 
 #include "pixbuf-document.h"
+#include "ev-document-thumbnails.h"
 
 struct _PixbufDocumentClass
 {
@@ -38,10 +39,14 @@ struct _PixbufDocument
 typedef struct _PixbufDocumentClass PixbufDocumentClass;
 
 static void pixbuf_document_document_iface_init (EvDocumentIface *iface);
+static void pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PixbufDocument, pixbuf_document, G_TYPE_OBJECT,
                          { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-						  pixbuf_document_document_iface_init) });
+						  pixbuf_document_document_iface_init);
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+						pixbuf_document_document_thumbnails_iface_init)				   
+				   });
 
 static GObjectClass *parent_class;
 
@@ -218,6 +223,34 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
         iface->begin_find = pixbuf_document_begin_find;
         iface->end_find = pixbuf_document_end_find;
 }
+
+static GdkPixbuf *
+pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
+					  gint 			 page,
+					  gint			 width)
+{
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+	GdkPixbuf *pixbuf;
+	gdouble scale_factor;
+	gint height;
+	
+	scale_factor = (gdouble)width / gdk_pixbuf_get_width (pixbuf_document->pixbuf);
+
+	height = gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale_factor;
+	
+	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf, width, height,
+					  GDK_INTERP_BILINEAR);
+	
+	return pixbuf;
+}
+
+
+static void
+pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+{
+	iface->get_thumbnail = pixbuf_document_thumbnails_get_thumbnail;
+}
+
 
 static void
 pixbuf_document_init (PixbufDocument *pixbuf_document)

@@ -26,6 +26,8 @@
 
 #include <gtk/gtkvbox.h>
 
+#include "ev-document.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvSidebarThumbnails EvSidebarThumbnails;
@@ -51,6 +53,9 @@ struct _EvSidebarThumbnailsClass {
 
 GType      ev_sidebar_thumbnails_get_type (void);
 GtkWidget *ev_sidebar_thumbnails_new      (void);
+
+void ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
+					 EvDocument          *document);
 
 G_END_DECLS
 

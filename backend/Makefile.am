@@ -13,6 +13,8 @@ libevbackend_la_SOURCES=			\
 	ev-backend-marshal.c			\
 	ev-document.c				\
 	ev-document.h				\
+	ev-document-thumbnails.c		\
+	ev-document-thumbnails.h		\
 	ev-document-bookmarks.c			\
 	ev-document-bookmarks.h			\
 	$(NULL)

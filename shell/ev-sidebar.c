@@ -28,7 +28,9 @@
 #include <gtk/gtk.h>
 
 #include "ev-sidebar.h"
+#include "ev-document-thumbnails.h"
 #include "ev-sidebar-bookmarks.h"
+#include "ev-sidebar-thumbnails.h"
 
 typedef struct
 {
@@ -77,7 +79,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 {
 	GtkWidget *hbox;
 	GtkCellRenderer *renderer;
-
+	
 	ev_sidebar->priv = EV_SIDEBAR_GET_PRIVATE (ev_sidebar);
 	gtk_box_set_spacing (GTK_BOX (ev_sidebar), 6);
 
@@ -100,6 +102,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	gtk_box_pack_start (GTK_BOX (hbox),
 			    ev_sidebar->priv->option_menu,
 			    FALSE, FALSE, 0);
+	
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (ev_sidebar->priv->option_menu),
 				    renderer, TRUE);
@@ -172,6 +175,10 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 					   PAGE_COLUMN_MAIN_WIDGET, main_widget,
 					   PAGE_COLUMN_NOTEBOOK_INDEX, index,
 					   -1);
+
+	/* Set the first item added as active */
+	if (gtk_combo_box_get_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu)))
+		gtk_combo_box_set_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu), 0);
 }
 
 void
@@ -204,7 +211,13 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 			   && ev_bookmarks_has_bookmarks (document)... */
 			ev_sidebar_bookmarks_set_document (EV_SIDEBAR_BOOKMARKS (widget),
 							   document);
-		/* else if EV_IS_SIDEBAR_THUMBNAILS... */
+		else if (EV_IS_SIDEBAR_THUMBNAILS (widget) &&
+			 EV_IS_DOCUMENT_THUMBNAILS (document))
+			ev_sidebar_thumbnails_set_document (EV_SIDEBAR_THUMBNAILS (widget),
+							    document);
+				
+
+		  
 	}
 	
 
