@@ -1,3 +1,11 @@
+2005-02-28  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* ps/ps-document.c: (ps_document_init), (ps_document_cleanup),
+	(set_up_page), (document_load), (ps_document_set_zoom):
+
+	Default page is 0. Calculate size even when we have no
+	target yet.
+
 2005-02-28  Carlos Garcia Campos <carlosgc@gnome.org>
 
 	* shell/ev-sidebar.c: expand the selection widget to be always as

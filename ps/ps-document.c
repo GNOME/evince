@@ -226,7 +226,7 @@ ps_document_init(PSDocument * gs)
 {
   gs->bpixmap = NULL;
 
-  gs->current_page = -2;
+  gs->current_page = 0;
   gs->disable_start = FALSE;
   gs->interpreter_pid = -1;
 
@@ -379,7 +379,7 @@ ps_document_cleanup(PSDocument * gs)
     g_free(gs->gs_filename_unc);
     gs->gs_filename_unc = NULL;
   }
-  gs->current_page = -1;
+  gs->current_page = 0;
   gs->loaded = FALSE;
   gs->llx = 0;
   gs->lly = 0;
@@ -486,12 +486,15 @@ set_up_page(PSDocument * gs)
   GdkGC *fill;
   GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
   GdkColormap *colormap;
+  gboolean size_changed;
 
   LOG ("Setup the page");
 
 #ifdef HAVE_LOCALE_H
   char *savelocale;
 #endif
+
+  size_changed = compute_size (gs);
 
   if (gs->pstarget == NULL)
     return;
@@ -502,7 +505,7 @@ set_up_page(PSDocument * gs)
 
   orientation = ps_document_get_orientation(gs);
 
-  if(compute_size(gs)) {
+  if(size_changed) {
     gdk_flush();
 
     /* clear new pixmap (set to white) */
@@ -1315,7 +1318,7 @@ document_load(PSDocument * gs, const gchar * fname)
   /* default values: no dsc information available  */
   gs->structured_doc = FALSE;
   gs->send_filename_to_gs = TRUE;
-  gs->current_page = -2;
+  gs->current_page = 0;
   gs->loaded = FALSE;
   if(*fname == '/') {
     /* an absolute path */
@@ -1632,55 +1635,19 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
   return FALSE;
 }
 
-static gfloat
-ps_document_zoom_to_fit(PSDocument * gs, gboolean fit_width)
-{
-  gint new_y;
-  gfloat new_zoom;
-  guint avail_w, avail_h;
-
-  g_return_val_if_fail(gs != NULL, 0.0);
-  g_return_val_if_fail(GTK_IS_GS(gs), 0.0);
-
-  avail_w = (gs->avail_w > 0) ? gs->avail_w : gs->width;
-  avail_h = (gs->avail_h > 0) ? gs->avail_h : gs->height;
-
-  new_zoom = ((gfloat) avail_w) / ((gfloat) gs->width) * gs->zoom_factor;
-  if(!fit_width) {
-    new_y = new_zoom * ((gfloat) gs->height) / gs->zoom_factor;
-    if(new_y > avail_h)
-      new_zoom = ((gfloat) avail_h) / ((gfloat) gs->height) * gs->zoom_factor;
-  }
-
-  return new_zoom;
-}
-
 static void
-ps_document_set_zoom(PSDocument * gs, gfloat zoom)
+ps_document_set_zoom (PSDocument * gs, gfloat zoom)
 {
-  g_return_if_fail(gs != NULL);
-  g_return_if_fail(GTK_IS_GS(gs));
+	g_return_if_fail (gs != NULL);
 
-  switch (gs->zoom_mode) {
-  case GTK_GS_ZOOM_FIT_WIDTH:
-    zoom = ps_document_zoom_to_fit(gs, TRUE);
-    break;
-  case GTK_GS_ZOOM_FIT_PAGE:
-    zoom = ps_document_zoom_to_fit(gs, FALSE);
-    break;
-  case GTK_GS_ZOOM_ABSOLUTE:
-  default:
-    break;
-  }
+	gs->zoom_factor = zoom;
 
-  if(fabs(gs->zoom_factor - zoom) > 0.001) {
-    gs->zoom_factor = zoom;
-    set_up_page(gs);
-    gs->changed = TRUE;
-  }
-  
-  gs->scaling = TRUE;
-  ps_document_goto_page(gs, gs->current_page);
+	if (gs->pstarget != NULL) {
+		set_up_page(gs);
+		gs->changed = TRUE;
+		gs->scaling = TRUE;
+		ps_document_goto_page (gs, gs->current_page);
+	}
 }
 
 static gboolean
