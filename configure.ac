@@ -298,7 +298,7 @@ AC_ARG_WITH(gs-pkg,
 if test "x$with_gs" = "x"; then
         AC_PATH_PROG(GS_PROG, gs)
         if test -z "$GS_PROG"; then
-                AC_MSG_ERROR(Unable to find GhostScript in the PATH. Provide the full path for GhostScript(--with-gs=PATH). You need to have Ghostscript installed in order to run GGV)
+                AC_MSG_ERROR(Unable to find GhostScript in the PATH. Provide the full path for GhostScript(--with-gs=PATH). You need to have Ghostscript installed in order to run evince)
         fi
 else
         GS_PROG=$with_gs
@@ -307,17 +307,13 @@ fi
 AC_DEFINE_UNQUOTED(GS_PATH, "$GS_PROG", [Path to the 'gs' executable.])
 
 
-dnl check for GS version and define appropriate alpha parameters
+dnl check for GS version
 AC_MSG_CHECKING(for Ghostscript version...)
-GS_VERSION=`$GS_PROG --version | head -n 1`
+GS_VERSION=`gs --version | head -n 1 | sed 's/\([[0-9]]*\)\.\([[0-9]]*\).*/\1/'`
 AC_MSG_RESULT(found $GS_VERSION)
-dnl GS tends to get a lot of BadMatch errors with the *AlphaBits parameters
-dnl so I've commented their use out
-dnl if test "$GS_VERSION" -gt "5"; then
-dnl     AA_PARMS="-sDEVICE=x11 -dTextAlphaBits=4 -dGraphicsAlphaBits=4"
-dnl else
-dnl     AA_PARMS="-sDEVICE=x11alpha"
-dnl fi
+if test "$GS_VERSION" -lt "7"; then
+	AC_MSG_ERROR([You need Ghostscript version >= 7 in order to run evince])
+fi
 AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS"
 AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghostscript.])
 AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
