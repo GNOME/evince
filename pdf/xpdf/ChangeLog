@@ -1,3 +1,22 @@
+2002-08-31  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* gpdf-embeddable.cc: 
+
+	* gpdf-embeddable.h: bed_t: Replace Data Value with Object
+	[Fowler] i.e.  turn it into the GPdf::Embeddable class.
+
+	* bonobo-application-x-pdf.cc: temporarily make some functions
+	non-static
+	(view_is_good): move up in file, use it in more places.
+	(setup_pixmap): remove window parameter, get it from view_data
+	(destroy_embed): move to GPdfEmbeddable::destroy
+	(embeddable_factory): drastically simplify, work is done in
+	GPdfEmbeddable::new and friends
+	remove count of running_objects.
+	
+	* gpdf-util.h: new file
+	(E_MAKE_TYPE): copied from gal
+
 2002-08-29  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
 	* bonobo-application-x-pdf.cc: move struct bed_t to
