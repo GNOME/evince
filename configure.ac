@@ -34,6 +34,9 @@ PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0 libbon
 PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= 2.5.0 libgnomeui-2.0 gnome-vfs-2.0 libbonoboui-2.0 libgnomeprint-2.2 libgnomeprintui-2.2 libglade-2.0)
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
 
+GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
+AC_SUBST(GLIB_GENMARSHAL)
+
 dnl Compile with disable-deprecated switches
 
 AC_ARG_ENABLE(deprecated,

@@ -1,3 +1,4 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  *  Copyright (C) 2004 Marco Pesenti Gritti
  *
@@ -20,6 +21,7 @@
 #include "config.h"
 
 #include "ev-document.h"
+#include "ev-backend-marshal.c"
 
 static void ev_document_base_init (gpointer g_class);
 
@@ -48,6 +50,22 @@ ev_document_get_type (void)
 static void
 ev_document_base_init (gpointer g_class)
 {
+	static gboolean initialized = FALSE;
+
+	if (!initialized) {
+		g_signal_new ("found",
+			      EV_TYPE_DOCUMENT,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvDocumentIface, found),
+			      NULL, NULL,
+			      _ev_backend_marshal_VOID__POINTER_INT_DOUBLE,
+			      G_TYPE_NONE, 3,
+			      G_TYPE_POINTER,
+			      G_TYPE_INT,
+			      G_TYPE_DOUBLE);
+
+		initialized = TRUE;
+	}
 }
 
 gboolean
@@ -117,4 +135,20 @@ ev_document_render (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	iface->render (document, clip_x, clip_y, clip_width, clip_height);
+}
+
+void
+ev_document_begin_find (EvDocument   *document,
+			const char   *search_string,
+			gboolean      case_sensitive)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	iface->begin_find (document, search_string, case_sensitive);
+}
+
+void
+ev_document_end_find (EvDocument   *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	iface->end_find (document);
 }

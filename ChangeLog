@@ -1,3 +1,15 @@
+2004-12-21  Havoc Pennington  <hp@redhat.com>
+
+	* backend/ev-backend-marshal.c,
+	backend/ev-backend-marshalers.list, backend/Makefile.am: add
+	marshaler-generator thingy. I'm sure there's a better way to do
+	this in the modern world.
+
+	* backend/ev-document.h (struct _EvDocumentIface): add begin_find,
+	end_find methods and "found" signal.
+
+	* configure.ac: find glib-genmarshal
+
 Tue Dec 21 23:20:35 2004  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar.c: Construct an actual sidebar.
