@@ -1491,7 +1491,7 @@ ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_page_cache_set_current_page (ev_window->priv->page_cache, 1);
+	ev_page_cache_set_current_page (ev_window->priv->page_cache, 0);
 }
 
 static void
@@ -1502,7 +1502,7 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
-	ev_page_cache_set_current_page (ev_window->priv->page_cache, n_pages);
+	ev_page_cache_set_current_page (ev_window->priv->page_cache, n_pages - 1);
 }
 
 static void
