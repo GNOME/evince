@@ -246,6 +246,7 @@ ev_view_realize (GtkWidget *widget)
 	attributes.width = MAX (widget->allocation.width, widget->requisition.width);
 	attributes.height = MAX (widget->allocation.height, widget->requisition.height);
 	attributes.event_mask = GDK_EXPOSURE_MASK |
+				GDK_BUTTON_PRESS_MASK |
 				GDK_SCROLL_MASK |
 				GDK_KEY_PRESS_MASK;
   
@@ -358,9 +359,13 @@ static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
-	/* EvView *view = EV_VIEW (widget); */
+	if (event->type == GDK_BUTTON_PRESS) {
+		if (!GTK_WIDGET_HAS_FOCUS (widget)) {
+			gtk_widget_grab_focus (widget);
+		}
+	}
 
-	return FALSE;
+	return TRUE;
 }
 
 static gboolean
