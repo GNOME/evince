@@ -663,7 +663,7 @@ void TextPage::coalesce(GBool physLayout) {
   TextBlock *yxBlocks, *blocks, *blkStack;
   TextFlow *flow0, *flow1;
   double sz, xLimit, yLimit;
-  double fit1, fit2, sp1, sp2;
+  double fit1, fit2, sp1, sp2 = 0.0e+0;
   GBool found;
   UnicodeMap *uMap;
   GBool isUnicode;
