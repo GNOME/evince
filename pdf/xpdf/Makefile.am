@@ -5,7 +5,8 @@ INCLUDES =					\
 	-DDATADIR=\""$(datadir)"\"            	\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	$(EXTRA_GLIB_CFLAGS)			\
-	$(EXTRA_GNOME_CFLAGS)
+	$(EXTRA_GNOME_CFLAGS)			\
+	$(libpaper_CFLAGS)
 
 if WITH_GNOME
 gui = gpdf
@@ -20,54 +21,81 @@ bin_PROGRAMS = 	$(gui)	bonobo-application-x-pdf
 
 
 common_sources =		\
+	Annot.cc		\
+	Annot.h			\
 	Array.cc 		\
 	Array.h			\
 	BaseFile.h		\
+	BuiltinFont.cc		\
+	BuiltinFont.h		\
+	BuiltinFontTables.cc	\
+	BuiltinFontTables.h	\
+	CMap.cc			\
+	CMap.h			\
 	Catalog.cc 		\
 	Catalog.h		\
-	CompactFontInfo.h	\
+	CharCodeToUnicode.cc	\
+	CharCodeToUnicode.h	\
+	CharTypes.h		\
+	CompactFontTables.h	\
 	Decrypt.cc		\
 	Decrypt.h		\
 	Dict.cc 		\
 	Dict.h			\
+	DisplayFontTable.h	\
 	Error.cc 		\
 	Error.h			\
-	FontEncoding.cc		\
-	FontEncoding.h		\
+	ErrorCodes.h		\
+	FTFont.cc		\
+	FTFont.h		\
+	FontEncodingTables.cc	\
+	FontEncodingTables.h	\
 	FontFile.cc		\
 	FontFile.h		\
-	FontInfo.h		\
-	FormWidget.cc		\
-	FormWidget.h		\
+	Function.cc		\
+	Function.h		\
 	Gfx.cc 			\
 	Gfx.h			\
 	GfxFont.cc 		\
 	GfxFont.h		\
 	GfxState.cc		\
 	GfxState.h		\
+	GlobalParams.cc		\
+	GlobalParams.h		\
 	Lexer.cc 		\
 	Lexer.h			\
 	Link.cc 		\
 	Link.h			\
+	NameToCharCode.cc	\
+	NameToCharCode.h	\
+	NameToUnicodeTable.h	\
 	Object.cc 		\
 	Object.h		\
 	OutputDev.cc 		\
 	OutputDev.h		\
-	Page.cc 		\
-	Page.h			\
-	Params.cc 		\
-	Params.h		\
-	Parser.cc 		\
-	Parser.h		\
 	PDFDoc.cc 		\
 	PDFDoc.h		\
-	StdFontInfo.h		\
+	PSTokenizer.cc		\
+	PSTokenizer.h		\
+	Page.cc 		\
+	Page.h			\
+	Parser.cc 		\
+	Parser.h		\
+	SFont.cc		\
+	SFont.h			\
+	Stream-CCITT.h		\
 	Stream.cc 		\
 	Stream.h		\
-	Stream-CCITT.h		\
-	TextOutputDev.h		\
-	TextOutputFontInfo.h	\
+	T1Font.cc		\
+	T1Font.h		\
+	TTFont.cc		\
+	TTFont.h		\
 	TextOutputDev.cc	\
+	TextOutputDev.h		\
+	UTF8.h			\
+	UnicodeMap.cc		\
+	UnicodeMap.h		\
+	UnicodeMapTables.h	\
 	XRef.cc			\
 	XRef.h
 
@@ -100,24 +128,19 @@ bonobo_application_x_pdf_LDADD =	\
 	$(GNOME_LIBDIR)			\
 	$(EXTRA_GNOME_LIBS)		\
 	$(EXTRA_GLIB_LIBS)		\
-	$(INTLLIBS)
+	$(INTLLIBS)			\
+	$(libpaper_CFLAGS)
 
 xpdf_SOURCES =			\
 	$(common_sources)	\
 	XOutputDev.cc		\
-	SFont.cc		\
-	SFont.h			\
-	T1Font.cc		\
-	T1Font.h		\
-	TTFont.cc		\
-	TTFont.h		\
 	LTKOutputDev.cc		\
 	PSOutputDev.cc		\
 	PSOutputDev.h		\
 	xpdf.cc
 
 xpdf_CFLAGS = $(X_CFLAGS)
-xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS) 
+xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS) $(libpaper_CFLAGS)
 
 #pdfimages_SOURCES =		
 #	$(common_sources)	

@@ -2,7 +2,7 @@
 //
 // ImageOutputDev.cc
 //
-// Copyright 1998 Derek B. Noonburg
+// Copyright 1998-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -22,10 +23,10 @@
 #include "Stream.h"
 #include "ImageOutputDev.h"
 
-ImageOutputDev::ImageOutputDev(char *fileRoot1, GBool dumpJPEG1) {
-  fileRoot = copyString(fileRoot1);
+ImageOutputDev::ImageOutputDev(char *fileRootA, GBool dumpJPEGA) {
+  fileRoot = copyString(fileRootA);
   fileName = (char *)gmalloc(strlen(fileRoot) + 20);
-  dumpJPEG = dumpJPEG1;
+  dumpJPEG = dumpJPEGA;
   imgNum = 0;
   ok = gTrue;
 }
@@ -40,9 +41,10 @@ void ImageOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 				   GBool inlineImg) {
   FILE *f;
   int c;
+  int size, i;
 
   // dump JPEG file
-  if (dumpJPEG && str->getKind() == strDCT) {
+  if (dumpJPEG && str->getKind() == strDCT && !inlineImg) {
 
     // open the image file
     sprintf(fileName, "%s-%03d.jpg", fileRoot, imgNum);
@@ -60,6 +62,7 @@ void ImageOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
     while ((c = str->getChar()) != EOF)
       fputc(c, f);
 
+    str->close();
     fclose(f);
 
   // dump PBM file
@@ -79,26 +82,32 @@ void ImageOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
     str->reset();
 
     // copy the stream
-    while ((c = str->getChar()) != EOF)
-      fputc(c, f);
+    size = height * ((width + 7) / 8);
+    for (i = 0; i < size; ++i) {
+      fputc(str->getChar(), f);
+    }
 
+    str->close();
     fclose(f);
   }
 }
 
 void ImageOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 			       int width, int height,
-			       GfxImageColorMap *colorMap, GBool inlineImg) {
+			       GfxImageColorMap *colorMap,
+			       int *maskColors, GBool inlineImg) {
   FILE *f;
   ImageStream *imgStr;
   Guchar pixBuf[4];
   GfxRGB rgb;
   int x, y;
   int c;
+  int size, i;
 
   // dump JPEG file
   if (dumpJPEG && str->getKind() == strDCT &&
-      colorMap->getNumPixelComps() == 3) {
+      colorMap->getNumPixelComps() == 3 &&
+      !inlineImg) {
 
     // open the image file
     sprintf(fileName, "%s-%03d.jpg", fileRoot, imgNum);
@@ -116,6 +125,33 @@ void ImageOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
     while ((c = str->getChar()) != EOF)
       fputc(c, f);
 
+    str->close();
+    fclose(f);
+
+  // dump PBM file
+  } else if (colorMap->getNumPixelComps() == 1 &&
+	     colorMap->getBits() == 1) {
+
+    // open the image file and write the PBM header
+    sprintf(fileName, "%s-%03d.pbm", fileRoot, imgNum);
+    ++imgNum;
+    if (!(f = fopen(fileName, "wb"))) {
+      error(-1, "Couldn't open image file '%s'", fileName);
+      return;
+    }
+    fprintf(f, "P4\n");
+    fprintf(f, "%d %d\n", width, height);
+
+    // initialize stream
+    str->reset();
+
+    // copy the stream
+    size = height * ((width + 7) / 8);
+    for (i = 0; i < size; ++i) {
+      fputc(str->getChar(), f);
+    }
+
+    str->close();
     fclose(f);
 
   // dump PPM file

@@ -2,7 +2,7 @@
 //
 // Array.h
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -15,6 +15,8 @@
 
 #include "Object.h"
 
+class XRef;
+
 //------------------------------------------------------------------------
 // Array
 //------------------------------------------------------------------------
@@ -23,7 +25,7 @@ class Array {
 public:
 
   // Constructor.
-  Array();
+  Array(XRef *xrefA);
 
   // Destructor.
   ~Array();
@@ -44,6 +46,7 @@ public:
 
 private:
 
+  XRef *xref;			// the xref table for this PDF file
   Object *elems;		// array of elements
   int size;			// size of <elems> array
   int length;			// number of elements in array

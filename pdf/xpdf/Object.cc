@@ -2,7 +2,7 @@
 //
 // Object.cc
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stddef.h>
 #include "Object.h"
 #include "Array.h"
@@ -44,21 +45,21 @@ int Object::numAlloc[numObjTypes] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #endif
 
-Object *Object::initArray() {
+Object *Object::initArray(XRef *xref) {
   initObj(objArray);
-  array = new Array();
+  array = new Array(xref);
   return this;
 }
 
-Object *Object::initDict() {
+Object *Object::initDict(XRef *xref) {
   initObj(objDict);
-  dict = new Dict();
+  dict = new Dict(xref);
   return this;
 }
 
-Object *Object::initStream(Stream *stream1) {
+Object *Object::initStream(Stream *streamA) {
   initObj(objStream);
-  stream = stream1;
+  stream = streamA;
   return this;
 }
 
@@ -92,7 +93,7 @@ Object *Object::copy(Object *obj) {
   return obj;
 }
 
-Object *Object::fetch(Object *obj) {
+Object *Object::fetch(XRef *xref, Object *obj) {
   return (type == objRef && xref) ?
          xref->fetch(ref.num, ref.gen, obj) : copy(obj);
 }
@@ -151,7 +152,9 @@ void Object::print(FILE *f) {
     fprintf(f, "%g", real);
     break;
   case objString:
-    fprintf(f, "(%s)", string->getCString());
+    fprintf(f, "(");
+    fwrite(string->getCString(), 1, string->getLength(), stdout);
+    fprintf(f, ")");
     break;
   case objName:
     fprintf(f, "/%s", name);

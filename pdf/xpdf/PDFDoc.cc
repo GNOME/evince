@@ -2,7 +2,7 @@
 //
 // PDFDoc.cc
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -22,8 +23,8 @@
 #include "XRef.h"
 #include "Link.h"
 #include "OutputDev.h"
-#include "Params.h"
 #include "Error.h"
+#include "ErrorCodes.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include "PDFDoc.h"
@@ -37,24 +38,28 @@
 // PDFDoc
 //------------------------------------------------------------------------
 
-PDFDoc::PDFDoc(GString *fileName1, GString *userPassword) {
+PDFDoc::PDFDoc(GString *fileNameA, GString *ownerPassword,
+	       GString *userPassword, GBool printCommandsA) {
   Object obj;
   GString *fileName2;
 
   ok = gFalse;
+  errCode = errNone;
 
   file = NULL;
   str = NULL;
   xref = NULL;
   catalog = NULL;
   links = NULL;
+  printCommands = printCommandsA;
 
   // try to open file
-  fileName = fileName1;
+  fileName = fileNameA;
   fileName2 = NULL;
 #ifdef VMS
   if (!(file = fopen(fileName->getCString(), "rb", "ctx=stm"))) {
     error(-1, "Couldn't open file '%s'", fileName->getCString());
+    errCode = errOpenFile;
     return;
   }
 #else
@@ -66,6 +71,7 @@ PDFDoc::PDFDoc(GString *fileName1, GString *userPassword) {
       if (!(file = fopen(fileName2->getCString(), "rb"))) {
 	error(-1, "Couldn't open file '%s'", fileName->getCString());
 	delete fileName2;
+	errCode = errOpenFile;
 	return;
       }
     }
@@ -75,40 +81,42 @@ PDFDoc::PDFDoc(GString *fileName1, GString *userPassword) {
 
   // create stream
   obj.initNull();
-  str = new FileStream(file, 0, -1, &obj);
+  str = new FileStream(file, 0, gFalse, 0, &obj);
 
-  ok = setup(userPassword);
+  ok = setup(ownerPassword, userPassword);
 }
 
-PDFDoc::PDFDoc(BaseStream *str, GString *userPassword) {
+PDFDoc::PDFDoc(BaseStream *strA, GString *ownerPassword,
+	       GString *userPassword, GBool printCommandsA) {
   ok = gFalse;
+  errCode = errNone;
   fileName = NULL;
   file = NULL;
-  this->str = str;
+  str = strA;
   xref = NULL;
   catalog = NULL;
   links = NULL;
-  ok = setup(userPassword);
+  printCommands = printCommandsA;
+  ok = setup(ownerPassword, userPassword);
 }
 
-GBool PDFDoc::setup(GString *userPassword) {
-  Object catObj;
-
+GBool PDFDoc::setup(GString *ownerPassword, GString *userPassword) {
   // check header
   checkHeader();
 
   // read xref table
-  xref = new XRef(str, userPassword);
+  xref = new XRef(str, ownerPassword, userPassword);
   if (!xref->isOk()) {
     error(-1, "Couldn't read xref table");
+    errCode = xref->getErrorCode();
     return gFalse;
   }
 
   // read catalog
-  catalog = new Catalog(xref->getCatalog(&catObj));
-  catObj.free();
+  catalog = new Catalog(xref, printCommands);
   if (!catalog->isOk()) {
     error(-1, "Couldn't read page catalog");
+    errCode = errBadCatalog;
     return gFalse;
   }
 
@@ -203,8 +211,9 @@ GBool PDFDoc::isLinearized() {
 
   lin = gFalse;
   obj1.initNull();
-  parser = new Parser(new Lexer(str->makeSubStream(str->getStart(),
-						   -1, &obj1)));
+  parser = new Parser(xref,
+	     new Lexer(xref,
+	       str->makeSubStream(str->getStart(), gFalse, 0, &obj1)));
   parser->getObj(&obj1);
   parser->getObj(&obj2);
   parser->getObj(&obj3);
@@ -248,4 +257,3 @@ void PDFDoc::getLinks(Page *page) {
   links = new Links(page->getAnnots(&obj), catalog->getBaseURI());
   obj.free();
 }
-

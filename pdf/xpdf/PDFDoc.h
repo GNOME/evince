@@ -2,7 +2,7 @@
 //
 // PDFDoc.h
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -14,13 +14,13 @@
 #endif
 
 #include <stdio.h>
+#include "XRef.h"
 #include "Link.h"
 #include "Catalog.h"
 #include "Page.h"
 
 class GString;
 class BaseStream;
-class XRef;
 class OutputDev;
 class Links;
 class LinkAction;
@@ -33,15 +33,23 @@ class LinkDest;
 class PDFDoc {
 public:
 
-  PDFDoc(GString *fileName1, GString *userPassword = NULL);
-  PDFDoc(BaseStream *str, GString *userPassword = NULL);
+  PDFDoc(GString *fileNameA, GString *ownerPassword = NULL,
+	 GString *userPassword = NULL, GBool printCommandsA = gFalse);
+  PDFDoc(BaseStream *strA, GString *ownerPassword = NULL,
+	 GString *userPassword = NULL, GBool printCommandsA = gFalse);
   ~PDFDoc();
 
   // Was PDF document successfully opened?
   GBool isOk() { return ok; }
 
+  // Get the error code (if isOk() returns false).
+  int getErrorCode() { return errCode; }
+
   // Get file name.
   GString *getFileName() { return fileName; }
+
+  // Get the xref table.
+  XRef *getXRef() { return xref; }
 
   // Get catalog.
   Catalog *getCatalog() { return catalog; }
@@ -59,6 +67,13 @@ public:
 
   // Get number of pages.
   int getNumPages() { return catalog->getNumPages(); }
+
+  // Return the contents of the metadata stream, or NULL if there is
+  // no metadata.
+  GString *readMetadata() { return catalog->readMetadata(); }
+
+  // Return the structure tree root object.
+  Object *getStructTreeRoot() { return catalog->getStructTreeRoot(); }
 
   // Display a page.
   void displayPage(OutputDev *out, int page, double zoom,
@@ -88,10 +103,14 @@ public:
   GBool isEncrypted() { return xref->isEncrypted(); }
 
   // Check various permissions.
-  GBool okToPrint() { return xref->okToPrint(); }
-  GBool okToChange() { return xref->okToChange(); }
-  GBool okToCopy() { return xref->okToCopy(); }
-  GBool okToAddNotes() { return xref->okToAddNotes(); }
+  GBool okToPrint(GBool ignoreOwnerPW = gFalse)
+    { return xref->okToPrint(ignoreOwnerPW); }
+  GBool okToChange(GBool ignoreOwnerPW = gFalse)
+    { return xref->okToChange(ignoreOwnerPW); }
+  GBool okToCopy(GBool ignoreOwnerPW = gFalse)
+    { return xref->okToCopy(ignoreOwnerPW); }
+  GBool okToAddNotes(GBool ignoreOwnerPW = gFalse)
+    { return xref->okToAddNotes(ignoreOwnerPW); }
 
   // Is this document linearized?
   GBool isLinearized();
@@ -107,7 +126,7 @@ public:
 
 private:
 
-  GBool setup(GString *userPassword);
+  GBool setup(GString *ownerPassword, GString *userPassword);
   void checkHeader();
   void getLinks(Page *page);
 
@@ -118,8 +137,10 @@ private:
   XRef *xref;
   Catalog *catalog;
   Links *links;
+  GBool printCommands;
 
   GBool ok;
+  int errCode;
 };
 
 #endif

@@ -1,6 +1,8 @@
 lib_LIBRARIES = libgoo.a
 
 libgoo_a_SOURCES = 	\
+	GHash.cc	\
+	GList.cc	\
 	GString.cc 	\
 	gmempp.cc 	\
 	gfile.cc	\
@@ -11,7 +13,7 @@ libgoo_a_SOURCES = 	\
 	gmem.h		\
 	gtypes.h	\
 	parseargs.h
-	
+
 EXTRA_DIST = 		\
 	vms_dirent.h	\
 	vms_sys_dirent.h\

@@ -2,7 +2,7 @@
 //
 // Parser.cc
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stddef.h>
 #include "Object.h"
 #include "Array.h"
@@ -21,8 +22,9 @@
 #include "Decrypt.h"
 #endif
 
-Parser::Parser(Lexer *lexer1) {
-  lexer = lexer1;
+Parser::Parser(XRef *xrefA, Lexer *lexerA) {
+  xref = xrefA;
+  lexer = lexerA;
   inlineImg = 0;
   lexer->getObj(&buf1);
   lexer->getObj(&buf2);
@@ -36,7 +38,8 @@ Parser::~Parser() {
 
 #ifndef NO_DECRYPTION
 Object *Parser::getObj(Object *obj,
-		       Guchar *fileKey, int objNum, int objGen) {
+		       Guchar *fileKey, int keyLength,
+		       int objNum, int objGen) {
 #else
 Object *Parser::getObj(Object *obj) {
 #endif
@@ -63,10 +66,10 @@ Object *Parser::getObj(Object *obj) {
   // array
   if (buf1.isCmd("[")) {
     shift();
-    obj->initArray();
+    obj->initArray(xref);
     while (!buf1.isCmd("]") && !buf1.isEOF())
 #ifndef NO_DECRYPTION
-      obj->arrayAdd(getObj(&obj2, fileKey, objNum, objGen));
+      obj->arrayAdd(getObj(&obj2, fileKey, keyLength, objNum, objGen));
 #else
       obj->arrayAdd(getObj(&obj2));
 #endif
@@ -77,7 +80,7 @@ Object *Parser::getObj(Object *obj) {
   // dictionary or stream
   } else if (buf1.isCmd("<<")) {
     shift();
-    obj->initDict();
+    obj->initDict(xref);
     while (!buf1.isCmd(">>") && !buf1.isEOF()) {
       if (!buf1.isName()) {
 	error(getPos(), "Dictionary key must be a name object");
@@ -88,7 +91,7 @@ Object *Parser::getObj(Object *obj) {
 	if (buf1.isEOF() || buf1.isError())
 	  break;
 #ifndef NO_DECRYPTION
-	obj->dictAdd(key, getObj(&obj2, fileKey, objNum, objGen));
+	obj->dictAdd(key, getObj(&obj2, fileKey, keyLength, objNum, objGen));
 #else
 	obj->dictAdd(key, getObj(&obj2));
 #endif
@@ -101,7 +104,8 @@ Object *Parser::getObj(Object *obj) {
 	obj->initStream(str);
 #ifndef NO_DECRYPTION
 	if (fileKey) {
-	  str->getBaseStream()->doDecryption(fileKey, objNum, objGen);
+	  str->getBaseStream()->doDecryption(fileKey, keyLength,
+					     objNum, objGen);
 	}
 #endif
       } else {
@@ -129,7 +133,7 @@ Object *Parser::getObj(Object *obj) {
   } else if (buf1.isString() && fileKey) {
     buf1.copy(obj);
     s = obj->getString();
-    decrypt = new Decrypt(fileKey, objNum, objGen);
+    decrypt = new Decrypt(fileKey, keyLength, objNum, objGen);
     for (i = 0, p = obj->getString()->getCString();
 	 i < s->getLength();
 	 ++i, ++p) {
@@ -151,7 +155,7 @@ Object *Parser::getObj(Object *obj) {
 Stream *Parser::makeStream(Object *dict) {
   Object obj;
   Stream *str;
-  int pos, endPos, length;
+  Guint pos, endPos, length;
 
   // get stream start position
   lexer->skipToNextLine();
@@ -160,7 +164,7 @@ Stream *Parser::makeStream(Object *dict) {
   // get length
   dict->dictLookup("Length", &obj);
   if (obj.isInt()) {
-    length = obj.getInt();
+    length = (Guint)obj.getInt();
     obj.free();
   } else {
     error(getPos(), "Bad 'Length' attribute in stream");
@@ -169,12 +173,13 @@ Stream *Parser::makeStream(Object *dict) {
   }
 
   // check for length in damaged file
-  if ((endPos = xref->getStreamEnd(pos)) >= 0) {
+  if (xref->getStreamEnd(pos, &endPos)) {
     length = endPos - pos;
   }
 
   // make base stream
-  str = lexer->getStream()->getBaseStream()->makeSubStream(pos, length, dict);
+  str = lexer->getStream()->getBaseStream()->makeSubStream(pos, gTrue,
+							   length, dict);
 
   // get filters
   str = str->addFilters(dict);

@@ -4,6 +4,8 @@
 //
 // Base class for font rasterizers.
 //
+// Copyright 2001-2002 Glyph & Cog, LLC
+//
 //========================================================================
 
 #ifndef SFONT_H
@@ -16,14 +18,17 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include "gtypes.h"
+#include "CharTypes.h"
+
+class GfxState;
 
 //------------------------------------------------------------------------
 
 class SFontEngine {
 public:
 
-  SFontEngine(Display *display, Visual *visual, int depth,
-	      Colormap colormap);
+  SFontEngine(Display *displayA, Visual *visualA, int depthA,
+	      Colormap colormapA);
   virtual ~SFontEngine();
 
   // Use a TrueColor visual.  Pixel values are computed as:
@@ -32,8 +37,8 @@ public:
   //
   // where r, g, and b are scaled to the ranges [0,rMax], [0,gMax],
   // and [0,bMax], respectively.
-  virtual void useTrueColor(int rMax, int rShift, int gMax, int gShift,
-			    int bMax, int bShift);
+  virtual void useTrueColor(int rMaxA, int rShiftA, int gMaxA, int gShiftA,
+			    int bMaxA, int bShiftA);
 
   // Use an RGB color cube.  <colors> is an array containing
   // <nRGB>*<nRGB>*<nRGB> pixel values in red,green,blue order, e.g.,
@@ -53,7 +58,7 @@ public:
   //
   // The <colors> array is not copied and must remain valid for the
   // lifetime of this SFont object.
-  virtual void useColorCube(Gulong *colors, int nRGB);
+  virtual void useColorCube(Gulong *colorsA, int nRGBA);
 
 protected:
 
@@ -114,12 +119,20 @@ public:
 
   virtual ~SFont();
 
-  // Draw a character <c> at <x>,<y> in color (<r>,<g>,<b>).  The RGB
-  // values should each be in the range [0,65535].  Draws into <d>,
-  // clipped to the rectangle (0,0)-(<w>-1,<h>-1).  Returns true if
-  // the character was drawn successfully.
+  // Draw a character <c>/<u> at <x>,<y> in color (<r>,<g>,<b>).  The
+  // RGB values should each be in the range [0,65535].  Draws into
+  // <d>, clipped to the rectangle (0,0)-(<w>-1,<h>-1).  Returns true
+  // if the character was drawn successfully.
   virtual GBool drawChar(Drawable d, int w, int h, GC gc,
-			 int x, int y, int r, int g, int b, Gushort c) = 0;
+			 int x, int y, int r, int g, int b,
+			 CharCode c, Unicode u) = 0;
+
+  // Add the outline of the specified character to the current path by
+  // calling state->moveTo, lineTo, and curveTo.  Returns true if
+  // successful.  If this SFont subclass doesn't implement character
+  // paths, returns false immediately without modifying the current
+  // path.
+  virtual GBool getCharPath(CharCode c, Unicode u, GfxState *state);
 
 protected:
 };

@@ -2,7 +2,7 @@
 //
 // LTKOutputDev.cc
 //
-// Copyright 1998 Derek B. Noonburg
+// Copyright 1998-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -23,20 +24,23 @@
 #include "GfxState.h"
 #include "GfxFont.h"
 #include "Error.h"
-#include "Params.h"
 #include "LTKOutputDev.h"
 
 //------------------------------------------------------------------------
 
-LTKOutputDev::LTKOutputDev(LTKWindow *win1, unsigned long paperColor):
-  XOutputDev(win1->getDisplay(),
-	     ((LTKScrollingCanvas *)win1->findWidget("canvas"))->getPixmap(),
-	     0, win1->getColormap(), paperColor)
+LTKOutputDev::LTKOutputDev(LTKWindow *winA, GBool reverseVideoA,
+			   unsigned long paperColor, GBool installCmap,
+			   GBool rgbCubeSize, GBool incrementalUpdateA):
+  XOutputDev(winA->getDisplay(),
+	     ((LTKScrollingCanvas *)winA->findWidget("canvas"))->getPixmap(),
+	     0, winA->getColormap(), reverseVideoA, paperColor,
+	     installCmap, rgbCubeSize)
 {
-  win = win1;
+  win = winA;
   canvas = (LTKScrollingCanvas *)win->findWidget("canvas");
   setPixmap(canvas->getPixmap(),
 	    canvas->getRealWidth(), canvas->getRealHeight());
+  incrementalUpdate = incrementalUpdateA;
 }
 
 LTKOutputDev::~LTKOutputDev() {
@@ -48,10 +52,21 @@ void LTKOutputDev::startPage(int pageNum, GfxState *state) {
   setPixmap(canvas->getPixmap(),
 	    canvas->getRealWidth(), canvas->getRealHeight());
   XOutputDev::startPage(pageNum, state);
-  canvas->redraw();
+  if (incrementalUpdate) {
+    canvas->redraw();
+  }
+}
+
+void LTKOutputDev::endPage() {
+  if (!incrementalUpdate) {
+    canvas->redraw();
+  }
+  XOutputDev::endPage();
 }
 
 void LTKOutputDev::dump() {
-  canvas->redraw();
+  if (incrementalUpdate) {
+    canvas->redraw();
+  }
   XOutputDev::dump();
 }

@@ -2,7 +2,7 @@
 //
 // LTKOutputDev.h
 //
-// Copyright 1998 Derek B. Noonburg
+// Copyright 1998-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -25,7 +25,9 @@ class LTKWindow;
 class LTKOutputDev: public XOutputDev {
 public:
 
-  LTKOutputDev(LTKWindow *win1, unsigned long paperColor);
+  LTKOutputDev(LTKWindow *winA, GBool reverseVideoA,
+	       unsigned long paperColor, GBool installCmap,
+	       GBool rgbCubeSize, GBool incrementalUpdateA);
 
   ~LTKOutputDev();
 
@@ -34,6 +36,9 @@ public:
   // Start a page.
   virtual void startPage(int pageNum, GfxState *state);
 
+  // End a page.
+  virtual void endPage();
+
   // Dump page contents to display.
   virtual void dump();
 
@@ -41,6 +46,7 @@ private:
 
   LTKWindow *win;		// window
   LTKScrollingCanvas *canvas;	// drawing canvas
+  GBool incrementalUpdate;	// incrementally update the display?
 };
 
 #endif

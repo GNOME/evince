@@ -4,11 +4,11 @@ $! Goo library compile script for VMS.
 $!
 $! Written by Patrick Moreau, Martin P.J. Zinser.
 $!
-$! Copyright 1996 Derek B. Noonburg
+$! Copyright 1996-2002 Glyph & Cog, LLC
 $!
 $!========================================================================
 $!
-$ GOO_CXXOBJS = "GString.obj,gmempp.obj,gfile.obj"
+$ GOO_CXXOBJS = "GString.obj,gmempp.obj,gfile.obj,ghash.obj,glist.obj"
 $ GOO_CCOBJS  = "gmem.obj,parseargs.obj,vms_directory.obj,vms_unix_times.obj"
 $!
 $ if f$extract(1,3,f$getsyi("Version")) .lts. "7.0"

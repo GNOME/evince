@@ -2,7 +2,7 @@
 //
 // Stream.cc
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -265,8 +266,8 @@ Stream *Stream::makeFilter(char *name, Stream *str, Object *params) {
 // BaseStream
 //------------------------------------------------------------------------
 
-BaseStream::BaseStream(Object *dict) {
-  this->dict = *dict;
+BaseStream::BaseStream(Object *dictA) {
+  dict = *dictA;
 #ifndef NO_DECRYPTION
   decrypt = NULL;
 #endif
@@ -281,8 +282,9 @@ BaseStream::~BaseStream() {
 }
 
 #ifndef NO_DECRYPTION
-void BaseStream::doDecryption(Guchar *fileKey, int objNum, int objGen) {
-  decrypt = new Decrypt(fileKey, objNum, objGen);
+void BaseStream::doDecryption(Guchar *fileKey, int keyLength,
+			      int objNum, int objGen) {
+  decrypt = new Decrypt(fileKey, keyLength, objNum, objGen);
 }
 #endif
 
@@ -290,8 +292,8 @@ void BaseStream::doDecryption(Guchar *fileKey, int objNum, int objGen) {
 // FilterStream
 //------------------------------------------------------------------------
 
-FilterStream::FilterStream(Stream *str) {
-  this->str = str;
+FilterStream::FilterStream(Stream *strA) {
+  str = strA;
 }
 
 FilterStream::~FilterStream() {
@@ -301,7 +303,7 @@ void FilterStream::close() {
   str->close();
 }
 
-void FilterStream::setPos(int pos) {
+void FilterStream::setPos(Guint pos, int dir) {
   error(-1, "Internal: called setPos() on FilterStream");
 }
 
@@ -309,13 +311,13 @@ void FilterStream::setPos(int pos) {
 // ImageStream
 //------------------------------------------------------------------------
 
-ImageStream::ImageStream(Stream *str, int width, int nComps, int nBits) {
+ImageStream::ImageStream(Stream *strA, int widthA, int nCompsA, int nBitsA) {
   int imgLineSize;
 
-  this->str = str;
-  this->width = width;
-  this->nComps = nComps;
-  this->nBits = nBits;
+  str = strA;
+  width = widthA;
+  nComps = nCompsA;
+  nBits = nBitsA;
 
   nVals = width * nComps;
   if (nBits == 1) {
@@ -396,13 +398,13 @@ void ImageStream::skipLine() {
 // StreamPredictor
 //------------------------------------------------------------------------
 
-StreamPredictor::StreamPredictor(Stream *str, int predictor,
-				 int width, int nComps, int nBits) {
-  this->str = str;
-  this->predictor = predictor;
-  this->width = width;
-  this->nComps = nComps;
-  this->nBits = nBits;
+StreamPredictor::StreamPredictor(Stream *strA, int predictorA,
+				 int widthA, int nCompsA, int nBitsA) {
+  str = strA;
+  predictor = predictorA;
+  width = widthA;
+  nComps = nCompsA;
+  nBits = nBitsA;
 
   nVals = width * nComps;
   pixBytes = (nComps * nBits + 7) >> 3;
@@ -486,11 +488,11 @@ GBool StreamPredictor::getNextLine() {
       if ((pc = p - upLeft) < 0)
 	pc = -pc;
       if (pa <= pb && pa <= pc)
-	predLine[i] = pa + (Guchar)c;
+	predLine[i] = left + (Guchar)c;
       else if (pb <= pc)
-	predLine[i] = pb + (Guchar)c;
+	predLine[i] = up + (Guchar)c;
       else
-	predLine[i] = pc + (Guchar)c;
+	predLine[i] = upLeft + (Guchar)c;
       break;
     case 10:			// PNG none
     default:			// no predictor or TIFF predictor
@@ -552,27 +554,37 @@ GBool StreamPredictor::getNextLine() {
 // FileStream
 //------------------------------------------------------------------------
 
-FileStream::FileStream(FILE *f, int start, int length, Object *dict):
-    BaseStream(dict) {
-  this->f = f;
-  this->start = start;
-  this->length = length;
+FileStream::FileStream(FILE *fA, Guint startA, GBool limitedA,
+		       Guint lengthA, Object *dictA):
+    BaseStream(dictA) {
+  f = fA;
+  start = startA;
+  limited = limitedA;
+  length = lengthA;
   bufPtr = bufEnd = buf;
   bufPos = start;
-  savePos = -1;
+  savePos = 0;
+  saved = gFalse;
 }
 
 FileStream::~FileStream() {
   close();
 }
 
-Stream *FileStream::makeSubStream(int start, int length, Object *dict) {
-  return new FileStream(f, start, length, dict);
+Stream *FileStream::makeSubStream(Guint startA, GBool limitedA,
+				  Guint lengthA, Object *dictA) {
+  return new FileStream(f, startA, limitedA, lengthA, dictA);
 }
 
 void FileStream::reset() {
-  savePos = (int)ftell(f);
+#if HAVE_FSEEK64
+  savePos = (Guint)ftell64(f);
+  fseek64(f, start, SEEK_SET);
+#else
+  savePos = (Guint)ftell(f);
   fseek(f, start, SEEK_SET);
+#endif
+  saved = gTrue;
   bufPtr = bufEnd = buf;
   bufPos = start;
 #ifndef NO_DECRYPTION
@@ -582,9 +594,13 @@ void FileStream::reset() {
 }
 
 void FileStream::close() {
-  if (savePos >= 0) {
+  if (saved) {
+#if HAVE_FSEEK64
+    fseek64(f, savePos, SEEK_SET);
+#else
     fseek(f, savePos, SEEK_SET);
-    savePos = -1;
+#endif
+    saved = gFalse;
   }
 }
 
@@ -596,10 +612,10 @@ GBool FileStream::fillBuf() {
 
   bufPos += bufEnd - buf;
   bufPtr = bufEnd = buf;
-  if (length >= 0 && bufPos >= start + length) {
+  if (limited && bufPos >= start + length) {
     return gFalse;
   }
-  if (length >= 0 && bufPos + fileStreamBufSize > start + length) {
+  if (limited && bufPos + fileStreamBufSize > start + length) {
     n = start + length - bufPos;
   } else {
     n = fileStreamBufSize;
@@ -619,56 +635,159 @@ GBool FileStream::fillBuf() {
   return gTrue;
 }
 
-void FileStream::setPos(int pos1) {
-  long size;
+void FileStream::setPos(Guint pos, int dir) {
+  Guint size;
 
-  if (pos1 >= 0) {
-    fseek(f, pos1, SEEK_SET);
-    bufPos = pos1;
+  if (dir >= 0) {
+#if HAVE_FSEEK64
+    fseek64(f, pos, SEEK_SET);
+#else
+    fseek(f, pos, SEEK_SET);
+#endif
+    bufPos = pos;
   } else {
+#if HAVE_FSEEK64
+    fseek64(f, 0, SEEK_END);
+    size = (Guint)ftell64(f);
+#else
     fseek(f, 0, SEEK_END);
-    size = ftell(f);
-    if (pos1 < -size)
-      pos1 = (int)(-size);
-    fseek(f, pos1, SEEK_END);
-    bufPos = (int)ftell(f);
+    size = (Guint)ftell(f);
+#endif
+    if (pos > size)
+      pos = (Guint)size;
+#ifdef __CYGWIN32__
+    //~ work around a bug in cygwin's implementation of fseek
+    rewind(f);
+#endif
+#if HAVE_FSEEK64
+    fseek64(f, -(int)pos, SEEK_END);
+    bufPos = (Guint)ftell64(f);
+#else
+    fseek(f, -(int)pos, SEEK_END);
+    bufPos = (Guint)ftell(f);
+#endif
   }
   bufPtr = bufEnd = buf;
 }
 
 void FileStream::moveStart(int delta) {
-  this->start += delta;
+  start += delta;
   bufPtr = bufEnd = buf;
   bufPos = start;
 }
 
 //------------------------------------------------------------------------
+// MemStream
+//------------------------------------------------------------------------
+
+MemStream::MemStream(char *bufA, Guint lengthA, Object *dictA):
+    BaseStream(dictA) {
+  buf = bufA;
+  needFree = gFalse;
+  length = lengthA;
+  bufEnd = buf + length;
+  bufPtr = buf;
+}
+
+MemStream::~MemStream() {
+  if (needFree) {
+    gfree(buf);
+  }
+}
+
+Stream *MemStream::makeSubStream(Guint start, GBool limited,
+				 Guint lengthA, Object *dictA) {
+  Guint newLength;
+
+  if (!limited || start + lengthA > length) {
+    newLength = length - start;
+  } else {
+    newLength = lengthA;
+  }
+  return new MemStream(buf + start, newLength, dictA);
+}
+
+void MemStream::reset() {
+  bufPtr = buf;
+#ifndef NO_DECRYPTION
+  if (decrypt) {
+    decrypt->reset();
+  }
+#endif
+}
+
+void MemStream::close() {
+}
+
+void MemStream::setPos(Guint pos, int dir) {
+  if (dir >= 0) {
+    if (pos > length) {
+      bufPtr = bufEnd;
+    } else {
+      bufPtr = buf + pos;
+    }
+  } else {
+    if (pos > length) {
+      bufPtr = buf;
+    } else {
+      bufPtr = bufEnd - pos;
+    }
+  }
+}
+
+void MemStream::moveStart(int delta) {
+  buf += delta;
+  bufPtr = buf;
+}
+
+#ifndef NO_DECRYPTION
+void MemStream::doDecryption(Guchar *fileKey, int keyLength,
+			     int objNum, int objGen) {
+  char *newBuf;
+  char *p, *q;
+
+  this->BaseStream::doDecryption(fileKey, keyLength, objNum, objGen);
+  if (decrypt) {
+    newBuf = (char *)gmalloc(bufEnd - buf);
+    for (p = buf, q = newBuf; p < bufEnd; ++p, ++q) {
+      *q = (char)decrypt->decryptByte((Guchar)*p);
+    }
+    bufEnd = newBuf + (bufEnd - buf);
+    bufPtr = newBuf + (bufPtr - buf);
+    buf = newBuf;
+    needFree = gTrue;
+  }
+}
+#endif
+
+//------------------------------------------------------------------------
 // EmbedStream
 //------------------------------------------------------------------------
 
-EmbedStream::EmbedStream(Stream *str, Object *dict):
-    BaseStream(dict) {
-  this->str = str;
+EmbedStream::EmbedStream(Stream *strA, Object *dictA):
+    BaseStream(dictA) {
+  str = strA;
 }
 
 EmbedStream::~EmbedStream() {
 }
 
-Stream *EmbedStream::makeSubStream(int start, int length, Object *dict) {
+Stream *EmbedStream::makeSubStream(Guint start, GBool limited,
+				   Guint length, Object *dictA) {
   error(-1, "Internal: called makeSubStream() on EmbedStream");
   return NULL;
 }
 
-void EmbedStream::setPos(int pos) {
+void EmbedStream::setPos(Guint pos, int dir) {
   error(-1, "Internal: called setPos() on EmbedStream");
 }
 
-int EmbedStream::getStart() {
+Guint EmbedStream::getStart() {
   error(-1, "Internal: called getStart() on EmbedStream");
   return 0;
 }
 
-void EmbedStream::moveStart(int start) {
+void EmbedStream::moveStart(int delta) {
   error(-1, "Internal: called moveStart() on EmbedStream");
 }
 
@@ -676,8 +795,8 @@ void EmbedStream::moveStart(int start) {
 // ASCIIHexStream
 //------------------------------------------------------------------------
 
-ASCIIHexStream::ASCIIHexStream(Stream *str):
-    FilterStream(str) {
+ASCIIHexStream::ASCIIHexStream(Stream *strA):
+    FilterStream(strA) {
   buf = EOF;
   eof = gFalse;
 }
@@ -748,7 +867,9 @@ int ASCIIHexStream::lookChar() {
 GString *ASCIIHexStream::getPSFilter(char *indent) {
   GString *s;
 
-  s = str->getPSFilter(indent);
+  if (!(s = str->getPSFilter(indent))) {
+    return NULL;
+  }
   s->append(indent)->append("/ASCIIHexDecode filter\n");
   return s;
 }
@@ -761,8 +882,8 @@ GBool ASCIIHexStream::isBinary(GBool last) {
 // ASCII85Stream
 //------------------------------------------------------------------------
 
-ASCII85Stream::ASCII85Stream(Stream *str):
-    FilterStream(str) {
+ASCII85Stream::ASCII85Stream(Stream *strA):
+    FilterStream(strA) {
   index = n = 0;
   eof = gFalse;
 }
@@ -824,7 +945,9 @@ int ASCII85Stream::lookChar() {
 GString *ASCII85Stream::getPSFilter(char *indent) {
   GString *s;
 
-  s = str->getPSFilter(indent);
+  if (!(s = str->getPSFilter(indent))) {
+    return NULL;
+  }
   s->append(indent)->append("/ASCII85Decode filter\n");
   return s;
 }
@@ -837,15 +960,15 @@ GBool ASCII85Stream::isBinary(GBool last) {
 // LZWStream
 //------------------------------------------------------------------------
 
-LZWStream::LZWStream(Stream *str, int predictor1, int columns1, int colors1,
-		     int bits1, int early1):
-    FilterStream(str) {
-  if (predictor1 != 1) {
-    pred = new StreamPredictor(this, predictor1, columns1, colors1, bits1);
+LZWStream::LZWStream(Stream *strA, int predictor, int columns, int colors,
+		     int bits, int earlyA):
+    FilterStream(strA) {
+  if (predictor != 1) {
+    pred = new StreamPredictor(this, predictor, columns, colors, bits);
   } else {
     pred = NULL;
   }
-  early = early1;
+  early = earlyA;
   zPipe = NULL;
   bufPtr = bufEnd = buf;
 }
@@ -949,11 +1072,7 @@ void LZWStream::reset() {
     return;
   }
 #else // HAVE_POPEN
-#ifdef VMS
-  if (!system(zCmd->getCString())) {
-#else
-  if (system(zCmd->getCString())) {
-#endif
+  if (!executeCommand(zCmd->getCString())) {
     error(getPos(), "Couldn't execute '%s'", zCmd->getCString());
     unlink(zName->getCString());
     delete zName;
@@ -1139,7 +1258,9 @@ GString *LZWStream::getPSFilter(char *indent) {
   if (pred) {
     return NULL;
   }
-  s = str->getPSFilter(indent);
+  if (!(s = str->getPSFilter(indent))) {
+    return NULL;
+  }
   s->append(indent)->append("/LZWDecode filter\n");
   return s;
 }
@@ -1152,8 +1273,8 @@ GBool LZWStream::isBinary(GBool last) {
 // RunLengthStream
 //------------------------------------------------------------------------
 
-RunLengthStream::RunLengthStream(Stream *str):
-    FilterStream(str) {
+RunLengthStream::RunLengthStream(Stream *strA):
+    FilterStream(strA) {
   bufPtr = bufEnd = buf;
   eof = gFalse;
 }
@@ -1171,7 +1292,9 @@ void RunLengthStream::reset() {
 GString *RunLengthStream::getPSFilter(char *indent) {
   GString *s;
 
-  s = str->getPSFilter(indent);
+  if (!(s = str->getPSFilter(indent))) {
+    return NULL;
+  }
   s->append(indent)->append("/RunLengthDecode filter\n");
   return s;
 }
@@ -1210,17 +1333,17 @@ GBool RunLengthStream::fillBuf() {
 // CCITTFaxStream
 //------------------------------------------------------------------------
 
-CCITTFaxStream::CCITTFaxStream(Stream *str, int encoding, GBool endOfLine,
-			       GBool byteAlign, int columns, int rows,
-			       GBool endOfBlock, GBool black):
-    FilterStream(str) {
-  this->encoding = encoding;
-  this->endOfLine = endOfLine;
-  this->byteAlign = byteAlign;
-  this->columns = columns;
-  this->rows = rows;
-  this->endOfBlock = endOfBlock;
-  this->black = black;
+CCITTFaxStream::CCITTFaxStream(Stream *strA, int encodingA, GBool endOfLineA,
+			       GBool byteAlignA, int columnsA, int rowsA,
+			       GBool endOfBlockA, GBool blackA):
+    FilterStream(strA) {
+  encoding = encodingA;
+  endOfLine = endOfLineA;
+  byteAlign = byteAlignA;
+  columns = columnsA;
+  rows = rowsA;
+  endOfBlock = endOfBlockA;
+  black = blackA;
   refLine = (short *)gmalloc((columns + 3) * sizeof(short));
   codingLine = (short *)gmalloc((columns + 2) * sizeof(short));
 
@@ -1274,7 +1397,7 @@ void CCITTFaxStream::reset() {
 int CCITTFaxStream::lookChar() {
   short code1, code2, code3;
   int a0New;
-#if 0 //~
+#if 0
   GBool err;
 #endif
   GBool gotEOL;
@@ -1287,7 +1410,7 @@ int CCITTFaxStream::lookChar() {
   }
 
   // read the next row
-#if 0 //~
+#if 0
   err = gFalse;
 #endif
   if (codingLine[a0] >= columns) {
@@ -1389,7 +1512,7 @@ int CCITTFaxStream::lookChar() {
 	  return EOF;
 	default:
 	  error(getPos(), "Bad 2D code %04x in CCITTFax stream", code1);
-#if 0 //~
+#if 0
 	  err = gTrue;
 	  break;
 #else
@@ -1424,7 +1547,7 @@ int CCITTFaxStream::lookChar() {
 
     if (codingLine[a0] != columns) {
       error(getPos(), "CCITTFax row is wrong length (%d)", codingLine[a0]);
-#if 0 //~
+#if 0
       err = gTrue;
 #endif
     }
@@ -1484,7 +1607,7 @@ int CCITTFaxStream::lookChar() {
       }
     }
 
-#if 0 //~
+#if 0
     // This looks for an end-of-line marker after an error, however
     // some (most?) CCITT streams in PDF files don't use end-of-line
     // markers, and the just-plow-on technique works better in those
@@ -1720,7 +1843,9 @@ GString *CCITTFaxStream::getPSFilter(char *indent) {
   GString *s;
   char s1[50];
 
-  s = str->getPSFilter(indent);
+  if (!(s = str->getPSFilter(indent))) {
+    return NULL;
+  }
   s->append(indent)->append("<< ");
   if (encoding != 0) {
     sprintf(s1, "/K %d ", encoding);
@@ -1810,8 +1935,8 @@ static int dctZigZag[64] = {
   63
 };
 
-DCTStream::DCTStream(Stream *str):
-    FilterStream(str) {
+DCTStream::DCTStream(Stream *strA):
+    FilterStream(strA) {
   int i, j;
 
   width = height = 0;
@@ -2001,7 +2126,7 @@ GBool DCTStream::readMCURow() {
 	    pCr = rowBuf[2][y2][x1+x2] - 128;
 	    pR = ((pY << 16) + dctCrToR * pCr + 32768) >> 16;
 	    rowBuf[0][y2][x1+x2] = 255 - dctClip[dctClipOffset + pR];
-	    pG = ((pY << 16) + dctCbToG * pCb + dctCrToG * pCr + 32678) >> 16;
+	    pG = ((pY << 16) + dctCbToG * pCb + dctCrToG * pCr + 32768) >> 16;
 	    rowBuf[1][y2][x1+x2] = 255 - dctClip[dctClipOffset + pG];
 	    pB = ((pY << 16) + dctCbToB * pCb + 32768) >> 16;
 	    rowBuf[2][y2][x1+x2] = 255 - dctClip[dctClipOffset + pB];
@@ -2710,7 +2835,9 @@ int DCTStream::read16() {
 GString *DCTStream::getPSFilter(char *indent) {
   GString *s;
 
-  s = str->getPSFilter(indent);
+  if (!(s = str->getPSFilter(indent))) {
+    return NULL;
+  }
   s->append(indent)->append("<< >> /DCTDecode filter\n");
   return s;
 }
@@ -2792,11 +2919,11 @@ FlateDecode FlateStream::distDecode[flateMaxDistCodes] = {
   {13, 24577}
 };
 
-FlateStream::FlateStream(Stream *str, int predictor1, int columns1,
-			 int colors1, int bits1):
-    FilterStream(str) {
-  if (predictor1 != 1) {
-    pred = new StreamPredictor(this, predictor1, columns1, colors1, bits1);
+FlateStream::FlateStream(Stream *strA, int predictor, int columns,
+			 int colors, int bits):
+    FilterStream(strA) {
+  if (predictor != 1) {
+    pred = new StreamPredictor(this, predictor, columns, colors, bits);
   } else {
     pred = NULL;
   }
@@ -3224,8 +3351,8 @@ int FlateStream::getCodeWord(int bits) {
 // EOFStream
 //------------------------------------------------------------------------
 
-EOFStream::EOFStream(Stream *str):
-    FilterStream(str) {
+EOFStream::EOFStream(Stream *strA):
+    FilterStream(strA) {
 }
 
 EOFStream::~EOFStream() {
@@ -3236,9 +3363,9 @@ EOFStream::~EOFStream() {
 // FixedLengthEncoder
 //------------------------------------------------------------------------
 
-FixedLengthEncoder::FixedLengthEncoder(Stream *str, int length1):
-    FilterStream(str) {
-  length = length1;
+FixedLengthEncoder::FixedLengthEncoder(Stream *strA, int lengthA):
+    FilterStream(strA) {
+  length = lengthA;
   count = 0;
 }
 
@@ -3269,11 +3396,61 @@ int FixedLengthEncoder::lookChar() {
 }
 
 //------------------------------------------------------------------------
+// ASCIIHexEncoder
+//------------------------------------------------------------------------
+
+ASCIIHexEncoder::ASCIIHexEncoder(Stream *strA):
+    FilterStream(strA) {
+  bufPtr = bufEnd = buf;
+  lineLen = 0;
+  eof = gFalse;
+}
+
+ASCIIHexEncoder::~ASCIIHexEncoder() {
+  if (str->isEncoder()) {
+    delete str;
+  }
+}
+
+void ASCIIHexEncoder::reset() {
+  str->reset();
+  bufPtr = bufEnd = buf;
+  lineLen = 0;
+  eof = gFalse;
+}
+
+void ASCIIHexEncoder::close() {
+}
+
+GBool ASCIIHexEncoder::fillBuf() {
+  static char *hex = "0123456789abcdef";
+  int c;
+
+  if (eof) {
+    return gFalse;
+  }
+  bufPtr = bufEnd = buf;
+  if ((c = str->getChar()) == EOF) {
+    *bufEnd++ = '>';
+    eof = gTrue;
+  } else {
+    if (lineLen >= 64) {
+      *bufEnd++ = '\n';
+      lineLen = 0;
+    }
+    *bufEnd++ = hex[(c >> 4) & 0x0f];
+    *bufEnd++ = hex[c & 0x0f];
+    lineLen += 2;
+  }
+  return gTrue;
+}
+
+//------------------------------------------------------------------------
 // ASCII85Encoder
 //------------------------------------------------------------------------
 
-ASCII85Encoder::ASCII85Encoder(Stream *str):
-    FilterStream(str) {
+ASCII85Encoder::ASCII85Encoder(Stream *strA):
+    FilterStream(strA) {
   bufPtr = bufEnd = buf;
   lineLen = 0;
   eof = gFalse;
@@ -3344,8 +3521,8 @@ GBool ASCII85Encoder::fillBuf() {
 // RunLengthEncoder
 //------------------------------------------------------------------------
 
-RunLengthEncoder::RunLengthEncoder(Stream *str):
-    FilterStream(str) {
+RunLengthEncoder::RunLengthEncoder(Stream *strA):
+    FilterStream(strA) {
   bufPtr = bufEnd = nextEnd = buf;
   eof = gFalse;
 }

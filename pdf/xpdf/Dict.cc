@@ -2,7 +2,7 @@
 //
 // Dict.cc
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stddef.h>
 #include <string.h>
 #include "gmem.h"
@@ -21,7 +22,8 @@
 // Dict
 //------------------------------------------------------------------------
 
-Dict::Dict() {
+Dict::Dict(XRef *xrefA) {
+  xref = xrefA;
   entries = NULL;
   size = length = 0;
   ref = 1;
@@ -66,7 +68,7 @@ GBool Dict::is(char *type) {
 Object *Dict::lookup(char *key, Object *obj) {
   DictEntry *e;
 
-  return (e = find(key)) ? e->val.fetch(obj) : obj->initNull();
+  return (e = find(key)) ? e->val.fetch(xref, obj) : obj->initNull();
 }
 
 Object *Dict::lookupNF(char *key, Object *obj) {
@@ -80,7 +82,7 @@ char *Dict::getKey(int i) {
 }
 
 Object *Dict::getVal(int i, Object *obj) {
-  return entries[i].val.fetch(obj);
+  return entries[i].val.fetch(xref, obj);
 }
 
 Object *Dict::getValNF(int i, Object *obj) {

@@ -2,10 +2,11 @@
 //
 // pdftotext.cc
 //
-// Copyright 1997 Derek B. Noonburg
+// Copyright 1997-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -13,6 +14,7 @@
 #include "parseargs.h"
 #include "GString.h"
 #include "gmem.h"
+#include "GlobalParams.h"
 #include "Object.h"
 #include "Stream.h"
 #include "Array.h"
@@ -22,20 +24,25 @@
 #include "Page.h"
 #include "PDFDoc.h"
 #include "TextOutputDev.h"
-#include "Params.h"
+#include "CharTypes.h"
+#include "UnicodeMap.h"
 #include "Error.h"
 #include "config.h"
 
+static void printInfoString(FILE *f, Dict *infoDict, char *key,
+			    char *text1, char *text2, UnicodeMap *uMap);
+static void printInfoDate(FILE *f, Dict *infoDict, char *key, char *fmt);
+
 static int firstPage = 1;
 static int lastPage = 0;
-static GBool useASCII7 = gFalse;
-static GBool useLatin2 = gFalse;
-static GBool useLatin5 = gFalse;
-#if JAPANESE_SUPPORT
-static GBool useEUCJP = gFalse;
-#endif
 static GBool rawOrder = gFalse;
+static GBool htmlMeta = gFalse;
+static char textEncName[128] = "";
+static char textEOL[16] = "";
+static char ownerPassword[33] = "";
 static char userPassword[33] = "";
+static GBool quiet = gFalse;
+static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
@@ -44,27 +51,31 @@ static ArgDesc argDesc[] = {
    "first page to convert"},
   {"-l",      argInt,      &lastPage,      0,
    "last page to convert"},
-  {"-ascii7", argFlag,     &useASCII7,     0,
-   "convert to 7-bit ASCII (default is 8-bit ISO Latin-1)"},
-  {"-latin2", argFlag,     &useLatin2,     0,
-   "convert to ISO Latin-2 character set"},
-  {"-latin5", argFlag,     &useLatin5,     0,
-   "convert to ISO Latin-5 character set"},
-#if JAPANESE_SUPPORT
-  {"-eucjp",  argFlag,     &useEUCJP,      0,
-   "convert Japanese text to EUC-JP"},
-#endif
   {"-raw",    argFlag,     &rawOrder,      0,
    "keep strings in content stream order"},
+  {"-htmlmeta", argFlag,   &htmlMeta,      0,
+   "generate a simple HTML file, including the meta information"},
+  {"-enc",    argString,   textEncName,    sizeof(textEncName),
+   "output text encoding name"},
+  {"-eol",    argString,   textEOL,        sizeof(textEOL),
+   "output end-of-line convention (unix, dos, or mac)"},
+  {"-opw",    argString,   ownerPassword,  sizeof(ownerPassword),
+   "owner password (for encrypted files)"},
   {"-upw",    argString,   userPassword,   sizeof(userPassword),
    "user password (for encrypted files)"},
-  {"-q",      argFlag,     &errQuiet,      0,
+  {"-q",      argFlag,     &quiet,         0,
    "don't print any messages or errors"},
+  {"-cfg",        argString,      cfgFileName,    sizeof(cfgFileName),
+   "configuration file to use in place of .xpdfrc"},
   {"-v",      argFlag,     &printVersion,  0,
    "print copyright and version info"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
+   "print usage information"},
+  {"--help",  argFlag,     &printHelp,     0,
+   "print usage information"},
+  {"-?",      argFlag,     &printHelp,     0,
    "print usage information"},
   {NULL}
 };
@@ -73,9 +84,11 @@ int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
   GString *textFileName;
-  GString *userPW;
+  GString *ownerPW, *userPW;
   TextOutputDev *textOut;
-  TextOutputCharSet charSet;
+  FILE *f;
+  UnicodeMap *uMap;
+  Object info;
   GBool ok;
   char *p;
 
@@ -91,31 +104,53 @@ int main(int argc, char *argv[]) {
   }
   fileName = new GString(argv[1]);
 
-  // init error file
-  errorInit();
-
   // read config file
-  initParams(xpdfConfigFile);
+  globalParams = new GlobalParams(cfgFileName);
+  if (textEncName[0]) {
+    globalParams->setTextEncoding(textEncName);
+  }
+  if (textEOL[0]) {
+    if (!globalParams->setTextEOL(textEOL)) {
+      fprintf(stderr, "Bad '-eol' value on command line\n");
+    }
+  }
+  if (quiet) {
+    globalParams->setErrQuiet(quiet);
+  }
+
+  // get mapping to output encoding
+  if (!(uMap = globalParams->getTextEncoding())) {
+    error(-1, "Couldn't get text encoding");
+    delete fileName;
+    goto err1;
+  }
 
   // open PDF file
-  xref = NULL;
+  if (ownerPassword[0]) {
+    ownerPW = new GString(ownerPassword);
+  } else {
+    ownerPW = NULL;
+  }
   if (userPassword[0]) {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
   }
-  doc = new PDFDoc(fileName, userPW);
+  doc = new PDFDoc(fileName, ownerPW, userPW);
   if (userPW) {
     delete userPW;
   }
+  if (ownerPW) {
+    delete ownerPW;
+  }
   if (!doc->isOk()) {
-    goto err;
+    goto err2;
   }
 
   // check for copy permission
   if (!doc->okToCopy()) {
     error(-1, "Copying of text from this document is not allowed.");
-    goto err;
+    goto err2;
   }
 
   // construct text file name
@@ -129,7 +164,7 @@ int main(int argc, char *argv[]) {
     } else {
       textFileName = fileName->copy();
     }
-    textFileName->append(".txt");
+    textFileName->append(htmlMeta ? ".html" : ".txt");
   }
 
   // get page range
@@ -140,33 +175,134 @@ int main(int argc, char *argv[]) {
     lastPage = doc->getNumPages();
   }
 
-  // write text file
-#if JAPANESE_SUPPORT
-  useASCII7 |= useEUCJP;
-#endif
-  charSet = textOutLatin1;
-  if (useASCII7) {
-    charSet = textOutASCII7;
-  } else if (useLatin2) {
-    charSet = textOutLatin2;
-  } else if (useLatin5) {
-    charSet = textOutLatin5;
+  // write HTML header
+  if (htmlMeta) {
+    if (!textFileName->cmp("-")) {
+      f = stdout;
+    } else {
+      if (!(f = fopen(textFileName->getCString(), "wb"))) {
+	error(-1, "Couldn't open text file '%s'", textFileName->getCString());
+	goto err3;
+      }
+    }
+    fputs("<html>\n", f);
+    fputs("<head>\n", f);
+    doc->getDocInfo(&info);
+    if (info.isDict()) {
+      printInfoString(f, info.getDict(), "Title", "<title>", "</title>\n",
+		      uMap);
+      printInfoString(f, info.getDict(), "Subject",
+		      "<meta name=\"Subject\" content=\"", "\">\n", uMap);
+      printInfoString(f, info.getDict(), "Keywords",
+		      "<meta name=\"Keywords\" content=\"", "\">\n", uMap);
+      printInfoString(f, info.getDict(), "Author",
+		      "<meta name=\"Author\" content=\"", "\">\n", uMap);
+      printInfoString(f, info.getDict(), "Creator",
+		      "<meta name=\"Creator\" content=\"", "\">\n", uMap);
+      printInfoString(f, info.getDict(), "Producer",
+		      "<meta name=\"Producer\" content=\"", "\">\n", uMap);
+      printInfoDate(f, info.getDict(), "CreationDate",
+		    "<meta name=\"CreationDate\" content=\"\">\n");
+      printInfoDate(f, info.getDict(), "LastModifiedDate",
+		    "<meta name=\"ModDate\" content=\"\">\n");
+    }
+    info.free();
+    fputs("</head>\n", f);
+    fputs("<body>\n", f);
+    fputs("<pre>\n", f);
+    if (f != stdout) {
+      fclose(f);
+    }
   }
-  textOut = new TextOutputDev(textFileName->getCString(), charSet, rawOrder);
+
+  // write text file
+  textOut = new TextOutputDev(textFileName->getCString(), rawOrder, htmlMeta);
   if (textOut->isOk()) {
     doc->displayPages(textOut, firstPage, lastPage, 72, 0, gFalse);
   }
   delete textOut;
 
+  // write end of HTML file
+  if (htmlMeta) {
+    if (!textFileName->cmp("-")) {
+      f = stdout;
+    } else {
+      if (!(f = fopen(textFileName->getCString(), "ab"))) {
+	error(-1, "Couldn't open text file '%s'", textFileName->getCString());
+	goto err3;
+      }
+    }
+    fputs("</pre>\n", f);
+    fputs("</body>\n", f);
+    fputs("</html>\n", f);
+    if (f != stdout) {
+      fclose(f);
+    }
+  }
+
   // clean up
+ err3:
   delete textFileName;
- err:
+ err2:
   delete doc;
-  freeParams();
+  uMap->decRefCnt();
+ err1:
+  delete globalParams;
 
   // check for memory leaks
   Object::memCheck(stderr);
   gMemReport(stderr);
 
   return 0;
+}
+
+static void printInfoString(FILE *f, Dict *infoDict, char *key,
+			    char *text1, char *text2, UnicodeMap *uMap) {
+  Object obj;
+  GString *s1;
+  GBool isUnicode;
+  Unicode u;
+  char buf[8];
+  int i, n;
+
+  if (infoDict->lookup(key, &obj)->isString()) {
+    fputs(text1, f);
+    s1 = obj.getString();
+    if ((s1->getChar(0) & 0xff) == 0xfe &&
+	(s1->getChar(1) & 0xff) == 0xff) {
+      isUnicode = gTrue;
+      i = 2;
+    } else {
+      isUnicode = gFalse;
+      i = 0;
+    }
+    while (i < obj.getString()->getLength()) {
+      if (isUnicode) {
+	u = ((s1->getChar(i) & 0xff) << 8) |
+	    (s1->getChar(i+1) & 0xff);
+	i += 2;
+      } else {
+	u = s1->getChar(i) & 0xff;
+	++i;
+      }
+      n = uMap->mapUnicode(u, buf, sizeof(buf));
+      fwrite(buf, 1, n, f);
+    }
+    fputs(text2, f);
+  }
+  obj.free();
+}
+
+static void printInfoDate(FILE *f, Dict *infoDict, char *key, char *fmt) {
+  Object obj;
+  char *s;
+
+  if (infoDict->lookup(key, &obj)->isString()) {
+    s = obj.getString()->getCString();
+    if (s[0] == 'D' && s[1] == ':') {
+      s += 2;
+    }
+    fprintf(f, fmt, s);
+  }
+  obj.free();
 }

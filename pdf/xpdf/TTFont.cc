@@ -2,30 +2,35 @@
 //
 // TTFont.cc
 //
+// Copyright 2001-2002 Glyph & Cog, LLC
+//
 //========================================================================
 
 #ifdef __GNUC__
 #pragma implementation
 #endif
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#include <aconf.h>
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 
 #include <string.h>
 #include "gmem.h"
+#include "GlobalParams.h"
 #include "TTFont.h"
 
 //------------------------------------------------------------------------
 
-TTFontEngine::TTFontEngine(Display *display, Visual *visual, int depth,
-			   Colormap colormap, GBool aa):
-  SFontEngine(display, visual, depth, colormap) {
+TTFontEngine::TTFontEngine(Display *displayA, Visual *visualA, int depthA,
+			   Colormap colormapA, GBool aaA):
+  SFontEngine(displayA, visualA, depthA, colormapA) {
   static TT_Byte ttPalette[5] = {0, 1, 2, 3, 4};
 
   ok = gFalse;
   if (TT_Init_FreeType(&engine)) {
     return;
   }
-  this->aa = aa;
+  aa = aaA;
   if (aa) {
     if (TT_Set_Raster_Gray_Palette(engine, ttPalette)) {
       return;
@@ -40,12 +45,16 @@ TTFontEngine::~TTFontEngine() {
 
 //------------------------------------------------------------------------
 
-TTFontFile::TTFontFile(TTFontEngine *engine, char *fontFileName) {
+TTFontFile::TTFontFile(TTFontEngine *engineA, char *fontFileName,
+		       char **fontEnc, GBool pdfFontHasEncoding) {
   TT_Face_Properties props;
+  TT_UShort unicodeCmap, macRomanCmap, msSymbolCmap;
   TT_UShort platform, encoding, i;
+  int j;
 
   ok = gFalse;
-  this->engine = engine;
+  engine = engineA;
+  codeMap = NULL;
   if (TT_Open_Face(engine->engine, fontFileName, &face)) {
     return;
   }
@@ -53,41 +62,91 @@ TTFontFile::TTFontFile(TTFontEngine *engine, char *fontFileName) {
     return;
   }
 
-  // Choose a cmap:
-  // 1. If the font contains a Windows-symbol cmap, use it.
-  // 2. Otherwise, use the first cmap in the TTF file.
-  // 3. If the Windows-Symbol cmap is used (from either step 1 or step
-  //    2), offset all character indexes by 0xf000.
-  // This seems to match what acroread does, but may need further
-  // tweaking.
+  // To match up with the Adobe-defined behaviour, we choose a cmap
+  // like this:
+  // 1. If the PDF font has an encoding:
+  //    1a. If the TrueType font has a Microsoft Unicode cmap, use it,
+  //        and use the Unicode indexes, not the char codes.
+  //    1b. If the TrueType font has a Macintosh Roman cmap, use it,
+  //        and reverse map the char names through MacRomanEncoding to
+  //        get char codes.
+  // 2. If the PDF font does not have an encoding:
+  //    2a. If the TrueType font has a Macintosh Roman cmap, use it,
+  //        and use char codes directly.
+  //    2b. If the TrueType font has a Microsoft Symbol cmap, use it,
+  //        and use (0xf000 + char code).
+  // 3. If none of these rules apply, use the first cmap and hope for
+  //    the best (this shouldn't happen).
+  unicodeCmap = macRomanCmap = msSymbolCmap = 0xffff;
   for (i = 0; i < props.num_CharMaps; ++i) {
     if (!TT_Get_CharMap_ID(face, i, &platform, &encoding)) {
-      if (platform == 3 && encoding == 0) {
-	break;
+      if (platform == 3 && encoding == 1) {
+	unicodeCmap = i;
+      } else if (platform == 1 && encoding == 0) {
+	macRomanCmap = i;
+      } else if (platform == 3 && encoding == 0) {
+	msSymbolCmap = i;
       }
     }
   }
-  if (i >= props.num_CharMaps) {
-    i = 0;
-    TT_Get_CharMap_ID(face, i, &platform, &encoding);
-  }
-  if (platform == 3 && encoding == 0) {
-    charMapOffset = 0xf000;
+  i = 0;
+  mode = ttFontModeCharCode;
+  charMapOffset = 0;
+  if (pdfFontHasEncoding) {
+    if (unicodeCmap != 0xffff) {
+      i = unicodeCmap;
+      mode = ttFontModeUnicode;
+    } else if (macRomanCmap != 0xffff) {
+      i = macRomanCmap;
+      mode = ttFontModeCodeMap;
+      codeMap = (Guchar *)gmalloc(256 * sizeof(Guchar));
+      for (j = 0; j < 256; ++j) {
+	if (fontEnc[j]) {
+	  codeMap[j] = (Guchar)globalParams->getMacRomanCharCode(fontEnc[j]);
+	} else {
+	  codeMap[j] = 0;
+	}
+      }
+    }
   } else {
-    charMapOffset = 0;
+    if (macRomanCmap != 0xffff) {
+      i = macRomanCmap;
+      mode = ttFontModeCharCode;
+    } else if (msSymbolCmap != 0xffff) {
+      i = msSymbolCmap;
+      mode = ttFontModeCharCodeOffset;
+      charMapOffset = 0xf000;
+    }
   }
   TT_Get_CharMap(face, i, &charMap);
 
   ok = gTrue;
 }
 
+TTFontFile::TTFontFile(TTFontEngine *engineA, char *fontFileName,
+		       Gushort *cidToGIDA, int cidToGIDLenA) {
+  ok = gFalse;
+  engine = engineA;
+  codeMap = NULL;
+  cidToGID = cidToGIDA;
+  cidToGIDLen = cidToGIDLenA;
+  if (TT_Open_Face(engine->engine, fontFileName, &face)) {
+    return;
+  }
+  mode = ttFontModeCIDToGIDMap;
+  ok = gTrue;
+}
+
 TTFontFile::~TTFontFile() {
   TT_Close_Face(face);
+  if (codeMap) {
+    gfree(codeMap);
+  }
 }
 
 //------------------------------------------------------------------------
 
-TTFont::TTFont(TTFontFile *fontFile, double *m) {
+TTFont::TTFont(TTFontFile *fontFileA, double *m) {
   TTFontEngine *engine;
   TT_Face_Properties props;
   TT_Instance_Metrics metrics;
@@ -96,7 +155,7 @@ TTFont::TTFont(TTFontFile *fontFile, double *m) {
   int i;
 
   ok = gFalse;
-  this->fontFile = fontFile;
+  fontFile = fontFileA;
   engine = fontFile->engine;
   if (TT_New_Instance(fontFile->face, &instance) ||
       TT_Set_Instance_Resolutions(instance, 72, 72) ||
@@ -220,7 +279,8 @@ TTFont::~TTFont() {
 }
 
 GBool TTFont::drawChar(Drawable d, int w, int h, GC gc,
-		       int x, int y, int r, int g, int b, Gushort c) {
+		       int x, int y, int r, int g, int b,
+		       CharCode c, Unicode u) {
   TTFontEngine *engine;
   XColor xcolor;
   int bgR, bgG, bgB;
@@ -269,14 +329,14 @@ GBool TTFont::drawChar(Drawable d, int w, int h, GC gc,
 	       ZPixmap, image, x1, y1);
 
   // generate the glyph pixmap
-  if (!getGlyphPixmap(c)) {
+  if (!getGlyphPixmap(c, u)) {
     return gFalse;
   }
 
   if (engine->aa) {
 
     // compute the colors
-    xcolor.pixel = XGetPixel(image, x1, y1);
+    xcolor.pixel = XGetPixel(image, x1 + w0/2, y1 + h0/2);
     XQueryColor(engine->display, engine->colormap, &xcolor);
     bgR = xcolor.red;
     bgG = xcolor.green;
@@ -333,7 +393,7 @@ GBool TTFont::drawChar(Drawable d, int w, int h, GC gc,
   return gTrue;
 }
 
-GBool TTFont::getGlyphPixmap(Gushort c) {
+GBool TTFont::getGlyphPixmap(CharCode c, Unicode u) {
   TT_UShort idx;
   TT_Outline outline;
   int i, j, k;
@@ -355,7 +415,38 @@ GBool TTFont::getGlyphPixmap(Gushort c) {
   }
 
   // generate the glyph pixmap or bitmap
-  idx = TT_Char_Index(fontFile->charMap, fontFile->charMapOffset + c);
+  idx = 0; // make gcc happy
+  switch (fontFile->mode) {
+  case ttFontModeUnicode:
+    idx = TT_Char_Index(fontFile->charMap, (TT_UShort)u);
+    break;
+  case ttFontModeCharCode:
+    idx = TT_Char_Index(fontFile->charMap, (TT_UShort)c);
+    break;
+  case ttFontModeCharCodeOffset:
+    idx = TT_Char_Index(fontFile->charMap,
+			(TT_UShort)(c + fontFile->charMapOffset));
+    break;
+  case ttFontModeCodeMap:
+    if (c <= 0xff) {
+      idx = TT_Char_Index(fontFile->charMap,
+			  (TT_UShort)(fontFile->codeMap[c] & 0xff));
+    } else {
+      idx = 0;
+    }
+    break;
+  case ttFontModeCIDToGIDMap:
+    if (fontFile->cidToGIDLen) {
+      if ((int)c < fontFile->cidToGIDLen) {
+	idx = (TT_UShort)fontFile->cidToGID[c];
+      } else {
+	idx = (TT_UShort)0;
+      }
+    } else {
+      idx = (TT_UShort)c;
+    }
+    break;
+  }
   if (TT_Load_Glyph(instance, glyph, idx, TTLOAD_DEFAULT) ||
       TT_Get_Glyph_Outline(glyph, &outline)) {
     return gFalse;
@@ -386,4 +477,4 @@ GBool TTFont::getGlyphPixmap(Gushort c) {
   return gTrue;
 }
 
-#endif // HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#endif // !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)

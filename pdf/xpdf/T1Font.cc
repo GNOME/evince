@@ -2,11 +2,15 @@
 //
 // T1Font.cc
 //
+// Copyright 2001-2002 Glyph & Cog, LLC
+//
 //========================================================================
 
 #ifdef __GNUC__
 #pragma implementation
 #endif
+
+#include <aconf.h>
 
 #if HAVE_T1LIB_H
 
@@ -14,14 +18,14 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include "gmem.h"
-#include "FontEncoding.h"
+#include "GfxState.h"
 #include "T1Font.h"
 
 //------------------------------------------------------------------------
 
-T1FontEngine::T1FontEngine(Display *display, Visual *visual, int depth,
-			   Colormap colormap, GBool aa, GBool aaHigh):
-  SFontEngine(display, visual, depth, colormap)
+T1FontEngine::T1FontEngine(Display *displayA, Visual *visualA, int depthA,
+			   Colormap colormapA, GBool aaA, GBool aaHighA):
+  SFontEngine(displayA, visualA, depthA, colormapA)
 {
   static unsigned long grayVals[17] = {
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
@@ -33,8 +37,8 @@ T1FontEngine::T1FontEngine(Display *display, Visual *visual, int depth,
 		  T1_NO_AFM)) {
     return;
   }
-  this->aa = aa;
-  this->aaHigh = aaHigh;
+  aa = aaA;
+  aaHigh = aaHighA;
   if (aa) {
     T1_AASetBitsPerPixel(8);
     if (aaHigh) {
@@ -56,14 +60,19 @@ T1FontEngine::~T1FontEngine() {
 
 //------------------------------------------------------------------------
 
-T1FontFile::T1FontFile(T1FontEngine *engine, char *fontFileName,
-		       FontEncoding *fontEnc) {
+T1FontFile::T1FontFile(T1FontEngine *engineA, char *fontFileName,
+		       char **fontEnc, double *bboxA) {
   int encStrSize;
   char *encPtr;
   int i;
 
   ok = gFalse;
-  this->engine = engine;
+  engine = engineA;
+  enc = NULL;
+  encStr = NULL;
+  for (i = 0; i < 4; ++i) {
+    bbox[i] = bboxA[i];
+  }
 
   // load the font file
   if ((id = T1_AddFont(fontFileName)) < 0) {
@@ -73,25 +82,22 @@ T1FontFile::T1FontFile(T1FontEngine *engine, char *fontFileName,
 
   // reencode it
   encStrSize = 0;
-  for (i = 0; i < 256 && i < fontEnc->getSize(); ++i) {
-    if (fontEnc->getCharName(i)) {
-      encStrSize += strlen(fontEnc->getCharName(i)) + 1;
+  for (i = 0; i < 256; ++i) {
+    if (fontEnc[i]) {
+      encStrSize += strlen(fontEnc[i]) + 1;
     }
   }
   enc = (char **)gmalloc(257 * sizeof(char *));
   encStr = (char *)gmalloc(encStrSize * sizeof(char));
   encPtr = encStr;
-  for (i = 0; i < 256 && i < fontEnc->getSize(); ++i) {
-    if (fontEnc->getCharName(i)) {
-      strcpy(encPtr, fontEnc->getCharName(i));
+  for (i = 0; i < 256; ++i) {
+    if (fontEnc[i]) {
+      strcpy(encPtr, fontEnc[i]);
       enc[i] = encPtr;
       encPtr += strlen(encPtr) + 1;
     } else {
       enc[i] = ".notdef";
     }
-  }
-  for (; i < 256; ++i) {
-    enc[i] = ".notdef";
   }
   enc[256] = "custom";
   T1_ReencodeFont(id, enc);
@@ -102,21 +108,24 @@ T1FontFile::T1FontFile(T1FontEngine *engine, char *fontFileName,
 T1FontFile::~T1FontFile() {
   gfree(enc);
   gfree(encStr);
-  T1_DeleteFont(id);
+  if (id >= 0) {
+    T1_DeleteFont(id);
+  }
 }
 
 //------------------------------------------------------------------------
 
-T1Font::T1Font(T1FontFile *fontFile, double *m) {
+T1Font::T1Font(T1FontFile *fontFileA, double *m) {
   T1FontEngine *engine;
   T1_TMATRIX matrix;
   BBox bbox;
+  double bbx0, bby0, bbx1, bby1;
   int x, y, xMin, xMax, yMin, yMax;
   int i;
 
   ok = gFalse;
+  fontFile = fontFileA;
   engine = fontFile->engine;
-  this->fontFile = fontFile;
 
   id = T1_CopyFont(fontFile->id);
 
@@ -125,50 +134,73 @@ T1Font::T1Font(T1FontFile *fontFile, double *m) {
 
   // transform the four corners of the font bounding box -- the min
   // and max values form the bounding box of the transformed font
+  bbx0 = fontFile->bbox[0];
+  bby0 = fontFile->bbox[1];
+  bbx1 = fontFile->bbox[2];
+  bby1 = fontFile->bbox[3];
+  // some fonts in PDF files have bboxes which are just plain wrong,
+  // so we check the font file's bbox too
   bbox = T1_GetFontBBox(id);
-  x = (int)((m[0] * bbox.llx + m[2] * bbox.lly) * 0.001);
+  if (0.001 * bbox.llx < bbx0) {
+    bbx0 = 0.001 * bbox.llx;
+  }
+  if (0.001 * bbox.lly < bby0) {
+    bby0 = 0.001 * bbox.lly;
+  }
+  if (0.001 * bbox.urx > bbx1) {
+    bbx1 = 0.001 * bbox.urx;
+  }
+  if (0.001 * bbox.ury > bby1) {
+    bby1 = 0.001 * bbox.ury;
+  }
+  // some fonts are completely broken, so we fake it (with values
+  // large enough that most glyphs should fit)
+  if (bbx0 == 0 && bby0 == 0 && bbx1 == 0 && bby1 == 0) {
+    bbx0 = bby0 = -0.5;
+    bbx1 = bby1 = 1.5;
+  }
+  x = (int)(m[0] * bbx0 + m[2] * bby0);
   xMin = xMax = x;
-  y = (int)((m[1] * bbox.llx + m[3] * bbox.lly) * 0.001);
+  y = (int)(m[1] * bbx0 + m[3] * bby0);
   yMin = yMax = y;
-  x = (int)((m[0] * bbox.llx + m[2] * bbox.ury) * 0.001);
+  x = (int)(m[0] * bbx0 + m[2] * bby1);
   if (x < xMin) {
     xMin = x;
   } else if (x > xMax) {
     xMax = x;
   }
-  y = (int)((m[1] * bbox.llx + m[3] * bbox.ury) * 0.001);
+  y = (int)(m[1] * bbx0 + m[3] * bby1);
   if (y < yMin) {
     yMin = y;
   } else if (y > yMax) {
     yMax = y;
   }
-  x = (int)((m[0] * bbox.urx + m[2] * bbox.lly) * 0.001);
+  x = (int)(m[0] * bbx1 + m[2] * bby0);
   if (x < xMin) {
     xMin = x;
   } else if (x > xMax) {
     xMax = x;
   }
-  y = (int)((m[1] * bbox.urx + m[3] * bbox.lly) * 0.001);
+  y = (int)(m[1] * bbx1 + m[3] * bby0);
   if (y < yMin) {
     yMin = y;
   } else if (y > yMax) {
     yMax = y;
   }
-  x = (int)((m[0] * bbox.urx + m[2] * bbox.ury) * 0.001);
+  x = (int)(m[0] * bbx1 + m[2] * bby1);
   if (x < xMin) {
     xMin = x;
   } else if (x > xMax) {
     xMax = x;
   }
-  y = (int)((m[1] * bbox.urx + m[3] * bbox.ury) * 0.001);
+  y = (int)(m[1] * bbx1 + m[3] * bby1);
   if (y < yMin) {
     yMin = y;
   } else if (y > yMax) {
     yMax = y;
   }
-#if 1 //~
-  //~ This is a kludge: some buggy PDF generators embed fonts with
-  //~ zero bounding boxes.
+  // This is a kludge: some buggy PDF generators embed fonts with
+  // zero bounding boxes.
   if (xMax == xMin) {
     xMin = 0;
     xMax = (int)size;
@@ -177,7 +209,24 @@ T1Font::T1Font(T1FontFile *fontFile, double *m) {
     yMin = 0;
     yMax = (int)(1.2 * size);
   }
-#endif
+  // Another kludge: an unusually large xMin or yMin coordinate is
+  // probably wrong.
+  if (xMin > 0) {
+    xMin = 0;
+  }
+  if (yMin > 0) {
+    yMin = 0;
+  }
+  // Another kludge: t1lib doesn't correctly handle fonts with
+  // real (non-integer) bounding box coordinates.
+  if (xMax - xMin > 5000) {
+    xMin = 0;
+    xMax = (int)size;
+  }
+  if (yMax - yMin > 5000) {
+    yMin = 0;
+    yMax = (int)(1.2 * size);
+  }
   // this should be (max - min + 1), but we add some padding to
   // deal with rounding errors
   glyphW = xMax - xMin + 3;
@@ -235,7 +284,8 @@ T1Font::~T1Font() {
 }
 
 GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
-		       int x, int y, int r, int g, int b, Gushort c) {
+		       int x, int y, int r, int g, int b,
+		       CharCode c, Unicode u) {
   T1FontEngine *engine;
   XColor xcolor;
   int bgR, bgG, bgB;
@@ -292,7 +342,7 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
   if (engine->aa) {
 
     // compute the colors
-    xcolor.pixel = XGetPixel(image, x1, y1);
+    xcolor.pixel = XGetPixel(image, x1 + w0/2, y1 + h0/2);
     XQueryColor(engine->display, engine->colormap, &xcolor);
     bgR = xcolor.red;
     bgG = xcolor.green;
@@ -357,7 +407,7 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
   return gTrue;
 }
 
-Guchar *T1Font::getGlyphPixmap(Gushort c, int *x, int *y, int *w, int *h) {
+Guchar *T1Font::getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h) {
   T1FontEngine *engine;
   GLYPH *glyph;
   int gSize;
@@ -399,7 +449,7 @@ Guchar *T1Font::getGlyphPixmap(Gushort c, int *x, int *y, int *w, int *h) {
   *w = glyph->metrics.rightSideBearing - glyph->metrics.leftSideBearing;
   *h = glyph->metrics.ascent - glyph->metrics.descent;
   if (*w > glyphW || *h > glyphH) {
-#if 1 //~
+#if 1 //~ debug
     fprintf(stderr, "Weird t1lib glyph size: %d > %d or %d > %d\n",
 	    *w, glyphW, *h, glyphH);
 #endif
@@ -432,6 +482,43 @@ Guchar *T1Font::getGlyphPixmap(Gushort c, int *x, int *y, int *w, int *h) {
     }
   }
   return ret;
+}
+
+GBool T1Font::getCharPath(CharCode c, Unicode u, GfxState *state) {
+  T1_OUTLINE *outline;
+  T1_PATHSEGMENT *seg;
+  T1_BEZIERSEGMENT *bez;
+  double x, y, x1, y1;
+
+  outline = T1_GetCharOutline(id, c, size, NULL);
+  x = 0;
+  y = 0;
+  for (seg = outline; seg; seg = seg->link) {
+    switch (seg->type) {
+    case T1_PATHTYPE_MOVE:
+      x += seg->dest.x / 65536.0;
+      y += seg->dest.y / 65536.0;
+      state->moveTo(x, y);
+      break;
+    case T1_PATHTYPE_LINE:
+      x += seg->dest.x / 65536.0;
+      y += seg->dest.y / 65536.0;
+      state->lineTo(x, y);
+      break;
+    case T1_PATHTYPE_BEZIER:
+      bez = (T1_BEZIERSEGMENT *)seg;
+      x1 = x + bez->dest.x / 65536.0;
+      y1 = y + bez->dest.y / 65536.0;
+      state->curveTo(x + bez->B.x / 65536.0, y + bez->B.y / 65536.0,
+		     x + bez->C.x / 65536.0, y + bez->C.y / 65536.0,
+		     x1, y1);
+      x = x1;
+      y = y1;
+      break;
+    }
+  }
+  T1_FreeOutline(outline);
+  return gTrue;
 }
 
 #endif // HAVE_T1LIB_H

@@ -2,7 +2,7 @@
 //
 // Lexer.h
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -16,6 +16,8 @@
 #include "Object.h"
 #include "Stream.h"
 
+class XRef;
+
 #define tokBufSize 128		// size of token buffer
 
 //------------------------------------------------------------------------
@@ -27,11 +29,11 @@ public:
 
   // Construct a lexer for a single stream.  Deletes the stream when
   // lexer is deleted.
-  Lexer(Stream *str);
+  Lexer(XRef *xref, Stream *str);
 
   // Construct a lexer for a stream or array of streams (assumes obj
   // is either a stream or array of streams).
-  Lexer(Object *obj);
+  Lexer(XRef *xref, Object *obj);
 
   // Destructor.
   ~Lexer();
@@ -49,13 +51,14 @@ public:
   Stream *getStream()
     { return curStr.isNone() ? (Stream *)NULL : curStr.getStream(); }
 
-  // Get current position in file.
+  // Get current position in file.  This is only used for error
+  // messages, so it returns an int instead of a Guint.
   int getPos()
-    { return curStr.isNone() ? -1 : curStr.streamGetPos(); }
+    { return curStr.isNone() ? -1 : (int)curStr.streamGetPos(); }
 
   // Set position in file.
-  void setPos(int pos)
-    { if (!curStr.isNone()) curStr.streamSetPos(pos); }
+  void setPos(Guint pos, int dir = 0)
+    { if (!curStr.isNone()) curStr.streamSetPos(pos, dir); }
 
 private:
 

@@ -2,7 +2,7 @@
 //
 // Catalog.h
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -13,6 +13,7 @@
 #pragma interface
 #endif
 
+class XRef;
 class Object;
 class Page;
 class PageAttrs;
@@ -27,7 +28,7 @@ class Catalog {
 public:
 
   // Constructor.
-  Catalog(Object *catDict);
+  Catalog(XRef *xrefA, GBool printCommands = gFalse);
 
   // Destructor.
   ~Catalog();
@@ -47,6 +48,13 @@ public:
   // Return base URI, or NULL if none.
   GString *getBaseURI() { return baseURI; }
 
+  // Return the contents of the metadata stream, or NULL if there is
+  // no metadata.
+  GString *readMetadata();
+
+  // Return the structure tree root object.
+  Object *getStructTreeRoot() { return &structTreeRoot; }
+
   // Find a page, given its object ID.  Returns page number, or 0 if
   // not found.
   int findPage(int num, int gen);
@@ -57,6 +65,7 @@ public:
 
 private:
 
+  XRef *xref;			// the xref table for this PDF file
   Page **pages;			// array of pages
   Ref *pageRefs;		// object ID for each page
   int numPages;			// number of pages
@@ -64,9 +73,12 @@ private:
   Object dests;			// named destination dictionary
   Object nameTree;		// name tree
   GString *baseURI;		// base URI for URI-type links
+  Object metadata;		// metadata stream
+  Object structTreeRoot;	// structure tree root dictionary
   GBool ok;			// true if catalog is valid
 
-  int readPageTree(Dict *pages, PageAttrs *attrs, int start);
+  int readPageTree(Dict *pages, PageAttrs *attrs, int start,
+		   GBool printCommands);
   Object *findDestInTree(Object *tree, GString *name, Object *obj);
 };
 

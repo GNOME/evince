@@ -2,7 +2,7 @@
 //
 // Dict.h
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -28,7 +28,7 @@ class Dict {
 public:
 
   // Constructor.
-  Dict();
+  Dict(XRef *xrefA);
 
   // Destructor.
   ~Dict();
@@ -56,8 +56,14 @@ public:
   Object *getVal(int i, Object *obj);
   Object *getValNF(int i, Object *obj);
 
+  // Set the xref pointer.  This is only used in one special case: the
+  // trailer dictionary, which is read before the xref table is
+  // parsed.
+  void setXRef(XRef *xrefA) { xref = xrefA; }
+
 private:
 
+  XRef *xref;			// the xref table for this PDF file
   DictEntry *entries;		// array of entries
   int size;			// size of <entries> array
   int length;			// number of entries in dictionary

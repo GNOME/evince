@@ -2,10 +2,11 @@
 //
 // pdftopbm.cc
 //
-// Copyright 1998 Derek B. Noonburg
+// Copyright 1998-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -13,6 +14,7 @@
 #include "parseargs.h"
 #include "GString.h"
 #include "gmem.h"
+#include "GlobalParams.h"
 #include "Object.h"
 #include "Stream.h"
 #include "Array.h"
@@ -22,14 +24,16 @@
 #include "Page.h"
 #include "PDFDoc.h"
 #include "PBMOutputDev.h"
-#include "Params.h"
 #include "Error.h"
 #include "config.h"
 
 static int firstPage = 1;
 static int lastPage = 0;
 static int resolution = 150;
+static char ownerPassword[33] = "";
 static char userPassword[33] = "";
+static GBool quiet = gFalse;
+static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
@@ -40,15 +44,23 @@ static ArgDesc argDesc[] = {
    "last page to print"},
   {"-r",      argInt,      &resolution,    0,
    "resolution, in DPI (default is 150)"},
+  {"-opw",    argString,   ownerPassword,  sizeof(ownerPassword),
+   "owner password (for encrypted files)"},
   {"-upw",    argString,   userPassword,   sizeof(userPassword),
    "user password (for encrypted files)"},
-  {"-q",      argFlag,     &errQuiet,      0,
+  {"-q",      argFlag,     &quiet,         0,
    "don't print any messages or errors"},
+  {"-cfg",        argString,      cfgFileName,    sizeof(cfgFileName),
+   "configuration file to use in place of .xpdfrc"},
   {"-v",      argFlag,     &printVersion,  0,
    "print copyright and version info"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
+   "print usage information"},
+  {"--help",  argFlag,     &printHelp,     0,
+   "print usage information"},
+  {"-?",      argFlag,     &printHelp,     0,
    "print usage information"},
   {NULL}
 };
@@ -57,7 +69,7 @@ int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
   char *pbmRoot;
-  GString *userPW;
+  GString *ownerPW, *userPW;
   PBMOutputDev *pbmOut;
   GBool ok;
 
@@ -74,22 +86,29 @@ int main(int argc, char *argv[]) {
   fileName = new GString(argv[1]);
   pbmRoot = argv[2];
 
-  // init error file
-  errorInit();
-
   // read config file
-  initParams(xpdfConfigFile);
+  globalParams = new GlobalParams(cfgFileName);
+  if (quiet) {
+    globalParams->setErrQuiet(quiet);
+  }
 
   // open PDF file
-  xref = NULL;
+  if (ownerPassword[0]) {
+    ownerPW = new GString(ownerPassword);
+  } else {
+    ownerPW = NULL;
+  }
   if (userPassword[0]) {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
   }
-  doc = new PDFDoc(fileName, userPW);
+  doc = new PDFDoc(fileName, ownerPW, userPW);
   if (userPW) {
     delete userPW;
+  }
+  if (ownerPW) {
+    delete ownerPW;
   }
   if (!doc->isOk()) {
     goto err;
@@ -102,15 +121,15 @@ int main(int argc, char *argv[]) {
     lastPage = doc->getNumPages();
 
   // write PBM files
-  rgbCubeSize = 1;
   pbmOut = PBMOutputDev::makePBMOutputDev(NULL, pbmRoot);
+  pbmOut->startDoc(doc->getXRef());
   doc->displayPages(pbmOut, firstPage, lastPage, resolution, 0, gFalse);
   PBMOutputDev::killPBMOutputDev(pbmOut);
 
   // clean up
  err:
   delete doc;
-  freeParams();
+  delete globalParams;
 
   // check for memory leaks
   Object::memCheck(stderr);

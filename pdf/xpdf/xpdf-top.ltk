@@ -1,8 +1,8 @@
 #========================================================================
 #
-# xpdf.ltk
+# xpdf-top.ltk
 #
-# Copyright 1996 Derek B. Noonburg
+# Copyright 1996-2002 Glyph & Cog, LLC
 #
 #========================================================================
 
@@ -96,9 +96,9 @@ Menu(func:makeMenu title:"xpdf" n:7) {
   MenuItem(text:"Save as..."                    num:menuSavePDF
            select:&menuCbk)
   MenuItem(text:NULL)
-  MenuItem(text:"Rotate left"                   num:menuRotateLeft
+  MenuItem(text:"Rotate counterclockwise"       num:menuRotateCCW
            select:&menuCbk)
-  MenuItem(text:"Rotate right"                  num:menuRotateRight
+  MenuItem(text:"Rotate clockwise"              num:menuRotateCW
            select:&menuCbk)
   MenuItem(text:NULL)
   MenuItem(text:"Quit"         shortcut:"Q"     num:menuQuit

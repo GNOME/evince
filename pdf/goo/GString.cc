@@ -4,7 +4,7 @@
 //
 // Simple variable-length string type.
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -12,6 +12,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -45,18 +46,25 @@ GString::GString() {
   s[0] = '\0';
 }
 
-GString::GString(const char *s1) {
-  int n = strlen(s1);
+GString::GString(const char *sA) {
+  int n = strlen(sA);
 
   s = NULL;
   resize(length = n);
-  memcpy(s, s1, n + 1);
+  memcpy(s, sA, n + 1);
 }
 
-GString::GString(const char *s1, int length1) {
+GString::GString(const char *sA, int lengthA) {
   s = NULL;
-  resize(length = length1);
-  memcpy(s, s1, length * sizeof(char));
+  resize(length = lengthA);
+  memcpy(s, sA, length * sizeof(char));
+  s[length] = '\0';
+}
+
+GString::GString(GString *str, int idx, int lengthA) {
+  s = NULL;
+  resize(length = lengthA);
+  memcpy(s, str->getCString() + idx, length);
   s[length] = '\0';
 }
 
@@ -137,10 +145,10 @@ GString *GString::append(const char *str) {
   return this;
 }
 
-GString *GString::append(const char *str, int length1) {
-  resize(length + length1);
-  memcpy(s + length, str, length1);
-  length += length1;
+GString *GString::append(const char *str, int lengthA) {
+  resize(length + lengthA);
+  memcpy(s + length, str, lengthA);
+  length += lengthA;
   s[length] = '\0';
   return this;
 }
@@ -180,14 +188,14 @@ GString *GString::insert(int i, const char *str) {
   return this;
 }
 
-GString *GString::insert(int i, const char *str, int length1) {
+GString *GString::insert(int i, const char *str, int lengthA) {
   int j;
 
-  resize(length + length1);
+  resize(length + lengthA);
   for (j = length; j >= i; --j)
-    s[j+length1] = s[j];
-  memcpy(s+i, str, length1);
-  length += length1;
+    s[j+lengthA] = s[j];
+  memcpy(s+i, str, lengthA);
+  length += lengthA;
   return this;
 }
 

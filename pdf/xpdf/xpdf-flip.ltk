@@ -2,7 +2,7 @@
 #
 # xpdf-flip.ltk
 #
-# Copyright 1997 Derek B. Noonburg
+# Copyright 1997-2002 Glyph & Cog, LLC
 #
 #========================================================================
 
@@ -100,9 +100,9 @@ Menu(func:makeMenu title:"xpdf" n:9) {
   MenuItem(text:"Find"         shortcut:"F"     num:menuFind
            select:&menuCbk)
   MenuItem(text:NULL)
-  MenuItem(text:"Rotate left"                   num:menuRotateLeft
+  MenuItem(text:"Rotate counterclockwise"       num:menuRotateCCW
            select:&menuCbk)
-  MenuItem(text:"Rotate right"                  num:menuRotateRight
+  MenuItem(text:"Rotate clockwise"              num:menuRotateCW
            select:&menuCbk)
   MenuItem(text:NULL)
   MenuItem(text:"Quit"         shortcut:"Q"     num:menuQuit

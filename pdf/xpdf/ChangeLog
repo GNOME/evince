@@ -1,3 +1,21 @@
+2002-08-12  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* GOutputDev.cc: make it compile (without Type 3 support for now)
+
+	* bonobo-application-x-pdf.cc: Derek has removed the global xref
+	variable. Remove the ``Ugly global xref fix''
+
+2002-08-09  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* BonoboStream.h: ditto.
+
+	* BonoboStream.cc: sync with FileStream.
+
+	Merge in Xpdf 1.01 files
+
+	* GOutputDev.cc (drawImage), (drawImageMask): use gdk_image_get
+	as XGetSubImage 
+
 2002-08-05  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
 	* GOutputDev.h: ditto. 

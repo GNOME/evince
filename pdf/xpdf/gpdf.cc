@@ -4,6 +4,7 @@
  * Author:
  *   Michael Meeks <michael@imaginator.com>
  */
+#include <aconf.h>
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>

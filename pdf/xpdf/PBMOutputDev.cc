@@ -2,7 +2,7 @@
 //
 // PBMOutputDev.cc
 //
-// Copyright 1998 Derek B. Noonburg
+// Copyright 1998-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -21,78 +22,77 @@
 #include "GfxState.h"
 #include "GfxFont.h"
 #include "Error.h"
-#include "Params.h"
 #include "PBMOutputDev.h"
 
 //------------------------------------------------------------------------
 
 PBMOutputDev *PBMOutputDev::makePBMOutputDev(char *displayName,
-					     char *fileRoot1) {
-  Display *display;
-  Pixmap pixmap;
-  Window dummyWin;
-  int screen;
-  int invert;
+					     char *fileRootA) {
+  Display *displayA;
+  Pixmap pixmapA;
+  Window dummyWinA;
+  int screenA;
+  int invertA;
   unsigned long black, white;
   PBMOutputDev *out;
 
-  if (!(display = XOpenDisplay(displayName))) {
+  if (!(displayA = XOpenDisplay(displayName))) {
     fprintf(stderr, "Couldn't open display '%s'\n", displayName);
     exit(1);
   }
-  screen = DefaultScreen(display);
+  screenA = DefaultScreen(displayA);
 
-  black = BlackPixel(display, screen);
-  white = WhitePixel(display, screen);
+  black = BlackPixel(displayA, screenA);
+  white = WhitePixel(displayA, screenA);
   if ((black & 1) == (white & 1)) {
     fprintf(stderr, "Weird black/white pixel colors\n");
-    XCloseDisplay(display);
+    XCloseDisplay(displayA);
     return NULL;
   } 
-  invert = (white & 1) == 1 ? 0xff : 0x00;
+  invertA = (white & 1) == 1 ? 0xff : 0x00;
 
-  dummyWin = XCreateSimpleWindow(display, RootWindow(display, screen),
-				 0, 0, 1, 1, 0,
-				 black, white);
-  pixmap = XCreatePixmap(display, dummyWin, 1, 1, 1);
-  out = new PBMOutputDev(display, screen, pixmap, dummyWin,
-			 invert, fileRoot1);
-  out->startDoc();
+  dummyWinA = XCreateSimpleWindow(displayA, RootWindow(displayA, screenA),
+				  0, 0, 1, 1, 0,
+				  black, white);
+  pixmapA = XCreatePixmap(displayA, dummyWinA, 1, 1, 1);
+  out = new PBMOutputDev(displayA, screenA, pixmapA, dummyWinA,
+			 invertA, fileRootA);
   return out;
 }
 
 void PBMOutputDev::killPBMOutputDev(PBMOutputDev *out) {
-  Display *display;
-  Pixmap pixmap;
-  Window dummyWin;
+  Display *displayA;
+  Pixmap pixmapA;
+  Window dummyWinA;
 
-  display = out->display;
-  pixmap = out->pixmap;
-  dummyWin = out->dummyWin;
+  displayA = out->display;
+  pixmapA = out->pixmap;
+  dummyWinA = out->dummyWin;
 
   delete out;
 
   // these have to be done *after* the XOutputDev (parent of the
   // PBMOutputDev) is deleted, since XOutputDev::~XOutputDev() needs
   // them
-  XFreePixmap(display, pixmap);
-  XDestroyWindow(display, dummyWin);
-  XCloseDisplay(display);
+  XFreePixmap(displayA, pixmapA);
+  XDestroyWindow(displayA, dummyWinA);
+  XCloseDisplay(displayA);
 }
 
-PBMOutputDev::PBMOutputDev(Display *display1, int screen1,
-			   Pixmap pixmap1, Window dummyWin1,
-			   int invert1, char *fileRoot1):
-  XOutputDev(display1, pixmap1, 1,
-	     DefaultColormap(display1, screen1),
-	     WhitePixel(display1, DefaultScreen(display1)))
+PBMOutputDev::PBMOutputDev(Display *displayA, int screenA,
+			   Pixmap pixmapA, Window dummyWinA,
+			   int invertA, char *fileRootA):
+  XOutputDev(displayA, pixmapA, 1,
+	     DefaultColormap(displayA, screenA), gFalse,
+	     WhitePixel(displayA, DefaultScreen(displayA)),
+	     gFalse, 1)
 {
-  display = display1;
-  screen = screen1;
-  pixmap = pixmap1;
-  dummyWin = dummyWin1;
-  invert = invert1;
-  fileRoot = fileRoot1;
+  display = displayA;
+  screen = screenA;
+  pixmap = pixmapA;
+  dummyWin = dummyWinA;
+  invert = invertA;
+  fileRoot = fileRootA;
   fileName = (char *)gmalloc(strlen(fileRoot) + 20);
 }
 
@@ -101,7 +101,6 @@ PBMOutputDev::~PBMOutputDev() {
 }
 
 void PBMOutputDev::startPage(int pageNum, GfxState *state) {
-
   curPage = pageNum;
   width = (int)(state->getPageWidth() + 0.5);
   height = (int)(state->getPageHeight() + 0.5);

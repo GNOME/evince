@@ -2,42 +2,45 @@
 //
 // SFont.cc
 //
+// Copyright 2001-2002 Glyph & Cog, LLC
+//
 //========================================================================
 
 #ifdef __GNUC__
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include "SFont.h"
 
 //------------------------------------------------------------------------
 
-SFontEngine::SFontEngine(Display *display, Visual *visual, int depth,
-			 Colormap colormap) {
-  this->display = display;
-  this->visual = visual;
-  this->depth = depth;
-  this->colormap = colormap;
-};
+SFontEngine::SFontEngine(Display *displayA, Visual *visualA, int depthA,
+			 Colormap colormapA) {
+  display = displayA;
+  visual = visualA;
+  depth = depthA;
+  colormap = colormapA;
+}
 
 SFontEngine::~SFontEngine() {
 }
 
-void SFontEngine::useTrueColor(int rMax, int rShift, int gMax, int gShift,
-			       int bMax, int bShift) {
+void SFontEngine::useTrueColor(int rMaxA, int rShiftA, int gMaxA, int gShiftA,
+			       int bMaxA, int bShiftA) {
   trueColor = gTrue;
-  this->rMax = rMax;
-  this->rShift = rShift;
-  this->gMax = gMax;
-  this->gShift = gShift;
-  this->bMax = bMax;
-  this->bShift = bShift;
+  rMax = rMaxA;
+  rShift = rShiftA;
+  gMax = gMaxA;
+  gShift = gShiftA;
+  bMax = bMaxA;
+  bShift = bShiftA;
 }
 
-void SFontEngine::useColorCube(Gulong *colors, int nRGB) {
+void SFontEngine::useColorCube(Gulong *colorsA, int nRGBA) {
   trueColor = gFalse;
-  this->colors = colors;
-  this->nRGB = nRGB;
+  colors = colorsA;
+  nRGB = nRGBA;
   rMax = gMax = bMax = nRGB - 1;
 }
 
@@ -70,4 +73,8 @@ SFont::SFont() {
 }
 
 SFont::~SFont() {
+}
+
+GBool SFont::getCharPath(CharCode c, Unicode u, GfxState *state) {
+  return gFalse;
 }

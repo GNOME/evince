@@ -2,7 +2,7 @@
 //
 // XOutputDev.cc
 //
-// Copyright 1996 Derek B. Noonburg
+// Copyright 1996-2002 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -10,6 +10,7 @@
 #pragma implementation
 #endif
 
+#include <aconf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -20,25 +21,27 @@
 #include "gmem.h"
 #include "gfile.h"
 #include "GString.h"
+#include "GList.h"
 #include "Object.h"
 #include "Stream.h"
 #include "Link.h"
 #include "GfxState.h"
 #include "GfxFont.h"
+#include "UnicodeMap.h"
+#include "CharCodeToUnicode.h"
 #include "FontFile.h"
-#include "FontEncoding.h"
 #include "Error.h"
-#include "Params.h"
 #include "TextOutputDev.h"
 #include "XOutputDev.h"
 #if HAVE_T1LIB_H
 #include "T1Font.h"
 #endif
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+#include "FTFont.h"
+#endif
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 #include "TTFont.h"
 #endif
-
-#include "XOutputFontInfo.h"
 
 #ifdef VMS
 #if (__VMS_VER < 70000000)
@@ -64,484 +67,60 @@ typedef char *XPointer;
 				//   drawing Bezier curves
 
 //------------------------------------------------------------------------
-// Parameters
-//------------------------------------------------------------------------
-
-GBool installCmap = gFalse;
-
-int rgbCubeSize = defaultRGBCube;
-
-#if HAVE_T1LIB_H
-GString *t1libControl = NULL;
-#endif
-
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-GString *freeTypeControl = NULL;
-#endif
-
-GString *t1Courier = NULL;
-GString *t1CourierBold = NULL;
-GString *t1CourierBoldOblique = NULL;
-GString *t1CourierOblique = NULL;
-GString *t1Helvetica = NULL;
-GString *t1HelveticaBold = NULL;
-GString *t1HelveticaBoldOblique = NULL;
-GString *t1HelveticaOblique = NULL;
-GString *t1Symbol = NULL;
-GString *t1TimesBold = NULL;
-GString *t1TimesBoldItalic = NULL;
-GString *t1TimesItalic = NULL;
-GString *t1TimesRoman = NULL;
-GString *t1ZapfDingbats = NULL;
-
-GBool useEUCJP = gFalse;
-#if JAPANESE_SUPPORT
-GString *japan12Font = NULL;
-#endif
-#if CHINESE_GB_SUPPORT
-GString *gb12Font = NULL;
-#endif
-#if CHINESE_CNS_SUPPORT
-GString *cns13Font = NULL;
-#endif
-
-//------------------------------------------------------------------------
-// Font map
-//------------------------------------------------------------------------
-
-struct FontMapEntry {
-  char *pdfFont;
-  char *xFont;
-  GString **t1Font;
-  FontEncoding *encoding;
-};
-
-static FontMapEntry fontMap[] = {
-  {"Courier",               "-*-courier-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1Courier,              &isoLatin1Encoding},
-  {"Courier-Bold",          "-*-courier-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1CourierBold,          &isoLatin1Encoding},
-  {"Courier-BoldOblique",   "-*-courier-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1CourierBoldOblique,   &isoLatin1Encoding},
-  {"Courier-Oblique",       "-*-courier-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1CourierOblique,       &isoLatin1Encoding},
-  {"Helvetica",             "-*-helvetica-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",        &t1Helvetica,            &isoLatin1Encoding},
-  {"Helvetica-Bold",        "-*-helvetica-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1HelveticaBold,        &isoLatin1Encoding},
-  {"Helvetica-BoldOblique", "-*-helvetica-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1HelveticaBoldOblique, &isoLatin1Encoding},
-  {"Helvetica-Oblique",     "-*-helvetica-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",        &t1HelveticaOblique,     &isoLatin1Encoding},
-  {"Symbol",                "-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific",  &t1Symbol,               &symbolEncoding},
-  {"Times-Bold",            "-*-times-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",              &t1TimesBold,            &isoLatin1Encoding},
-  {"Times-BoldItalic",      "-*-times-bold-i-normal-*-%s-*-*-*-*-*-iso8859-1",              &t1TimesBoldItalic,      &isoLatin1Encoding},
-  {"Times-Italic",          "-*-times-medium-i-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1TimesItalic,          &isoLatin1Encoding},
-  {"Times-Roman",           "-*-times-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1TimesRoman,           &isoLatin1Encoding},
-  {"ZapfDingbats",          "-*-zapfdingbats-medium-r-normal-*-%s-*-*-*-*-*-*-*",           &t1ZapfDingbats,         &zapfDingbatsEncoding},
-  {NULL}
-};
-
-static FontMapEntry *userFontMap;
-
-//------------------------------------------------------------------------
 // Font substitutions
 //------------------------------------------------------------------------
 
-struct FontSubst {
-  char *xFont;
-  GString **t1Font;
+struct XOutFontSubst {
+  char *name;
   double mWidth;
 };
 
 // index: {symbolic:12, fixed:8, serif:4, sans-serif:0} + bold*2 + italic
-static FontSubst fontSubst[16] = {
-  {"-*-helvetica-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",       &t1Helvetica,            0.833},
-  {"-*-helvetica-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",       &t1HelveticaOblique,     0.833},
-  {"-*-helvetica-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1HelveticaBold,        0.889},
-  {"-*-helvetica-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1HelveticaBoldOblique, 0.889},
-  {"-*-times-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1TimesRoman,           0.788},
-  {"-*-times-medium-i-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1TimesItalic,          0.722},
-  {"-*-times-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",             &t1TimesBold,            0.833},
-  {"-*-times-bold-i-normal-*-%s-*-*-*-*-*-iso8859-1",             &t1TimesBoldItalic,      0.778},
-  {"-*-courier-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1Courier,              0.600},
-  {"-*-courier-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1CourierOblique,       0.600},
-  {"-*-courier-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1CourierBold,          0.600},
-  {"-*-courier-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1CourierBoldOblique,   0.600},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576}
+static XOutFontSubst xOutSubstFonts[16] = {
+  {"Helvetica",             0.833},
+  {"Helvetica-Oblique",     0.833},
+  {"Helvetica-Bold",        0.889},
+  {"Helvetica-BoldOblique", 0.889},
+  {"Times-Roman",           0.788},
+  {"Times-Italic",          0.722},
+  {"Times-Bold",            0.833},
+  {"Times-BoldItalic",      0.778},
+  {"Courier",               0.600},
+  {"Courier-Oblique",       0.600},
+  {"Courier-Bold",          0.600},
+  {"Courier-BoldOblique",   0.600},
+  {"Symbol",                0.576},
+  {"Symbol",                0.576},
+  {"Symbol",                0.576},
+  {"Symbol",                0.576}
 };
-
-//------------------------------------------------------------------------
-// 16-bit fonts
-//------------------------------------------------------------------------
-
-#if JAPANESE_SUPPORT
-
-static char *japan12DefFont =
-    "-*-fixed-medium-r-normal-*-%s-*-*-*-*-*-jisx0208.1983-0";
-
-// CID 0 .. 96
-static Gushort japan12Map[96] = {
-  0x2121, 0x2121, 0x212a, 0x2149, 0x2174, 0x2170, 0x2173, 0x2175, // 00 .. 07
-  0x2147, 0x214a, 0x214b, 0x2176, 0x215c, 0x2124, 0x213e, 0x2123, // 08 .. 0f
-  0x213f, 0x2330, 0x2331, 0x2332, 0x2333, 0x2334, 0x2335, 0x2336, // 10 .. 17
-  0x2337, 0x2338, 0x2339, 0x2127, 0x2128, 0x2163, 0x2161, 0x2164, // 18 .. 1f
-  0x2129, 0x2177, 0x2341, 0x2342, 0x2343, 0x2344, 0x2345, 0x2346, // 20 .. 27
-  0x2347, 0x2348, 0x2349, 0x234a, 0x234b, 0x234c, 0x234d, 0x234e, // 28 .. 2f
-  0x234f, 0x2350, 0x2351, 0x2352, 0x2353, 0x2354, 0x2355, 0x2356, // 30 .. 37
-  0x2357, 0x2358, 0x2359, 0x235a, 0x214e, 0x216f, 0x214f, 0x2130, // 38 .. 3f
-  0x2132, 0x2146, 0x2361, 0x2362, 0x2363, 0x2364, 0x2365, 0x2366, // 40 .. 47
-  0x2367, 0x2368, 0x2369, 0x236a, 0x236b, 0x236c, 0x236d, 0x236e, // 48 .. 4f
-  0x236f, 0x2370, 0x2371, 0x2372, 0x2373, 0x2374, 0x2375, 0x2376, // 50 .. 57
-  0x2377, 0x2378, 0x2379, 0x237a, 0x2150, 0x2143, 0x2151, 0x2141  // 58 .. 5f
-};
-
-// CID 325 .. 421
-static Gushort japan12KanaMap1[97] = {
-  0x2131, 0x2121, 0x2123, 0x2156, 0x2157, 0x2122, 0x2126, 0x2572,
-  0x2521, 0x2523, 0x2525, 0x2527, 0x2529, 0x2563, 0x2565, 0x2567,
-  0x2543, 0x213c, 0x2522, 0x2524, 0x2526, 0x2528, 0x252a, 0x252b,
-  0x252d, 0x252f, 0x2531, 0x2533, 0x2535, 0x2537, 0x2539, 0x253b,
-  0x253d, 0x253f, 0x2541, 0x2544, 0x2546, 0x2548, 0x254a, 0x254b,
-  0x254c, 0x254d, 0x254e, 0x254f, 0x2552, 0x2555, 0x2558, 0x255b,
-  0x255e, 0x255f, 0x2560, 0x2561, 0x2562, 0x2564, 0x2566, 0x2568,
-  0x2569, 0x256a, 0x256b, 0x256c, 0x256d, 0x256f, 0x2573, 0x212b,
-  0x212c, 0x212e, 0x2570, 0x2571, 0x256e, 0x2575, 0x2576, 0x2574,
-  0x252c, 0x252e, 0x2530, 0x2532, 0x2534, 0x2536, 0x2538, 0x253a,
-  0x253c, 0x253e, 0x2540, 0x2542, 0x2545, 0x2547, 0x2549, 0x2550,
-  0x2551, 0x2553, 0x2554, 0x2556, 0x2557, 0x2559, 0x255a, 0x255c,
-  0x255d
-};
-
-// CID 501 .. 598
-static Gushort japan12KanaMap2[98] = {
-  0x212d, 0x212f, 0x216d, 0x214c, 0x214d, 0x2152, 0x2153, 0x2154,
-  0x2155, 0x2158, 0x2159, 0x215a, 0x215b, 0x213d, 0x2121, 0x2472,
-  0x2421, 0x2423, 0x2425, 0x2427, 0x2429, 0x2463, 0x2465, 0x2467,
-  0x2443, 0x2422, 0x2424, 0x2426, 0x2428, 0x242a, 0x242b, 0x242d,
-  0x242f, 0x2431, 0x2433, 0x2435, 0x2437, 0x2439, 0x243b, 0x243d,
-  0x243f, 0x2441, 0x2444, 0x2446, 0x2448, 0x244a, 0x244b, 0x244c,
-  0x244d, 0x244e, 0x244f, 0x2452, 0x2455, 0x2458, 0x245b, 0x245e,
-  0x245f, 0x2460, 0x2461, 0x2462, 0x2464, 0x2466, 0x2468, 0x2469,
-  0x246a, 0x246b, 0x246c, 0x246d, 0x246f, 0x2473, 0x2470, 0x2471,
-  0x246e, 0x242c, 0x242e, 0x2430, 0x2432, 0x2434, 0x2436, 0x2438,
-  0x243a, 0x243c, 0x243e, 0x2440, 0x2442, 0x2445, 0x2447, 0x2449,
-  0x2450, 0x2451, 0x2453, 0x2454, 0x2456, 0x2457, 0x2459, 0x245a,
-  0x245c, 0x245d
-};
-
-static char *japan12Roman[10] = {
-  "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
-};
-
-static char *japan12Abbrev1[6] = {
-  "mm", "cm", "km", "mg", "kg", "cc"
-};
-
-#endif // JAPANESE_SUPPORT
-
-#if CHINESE_GB_SUPPORT
-
-static char *gb12DefFont =
-    "-*-fangsong ti-medium-r-normal-*-%s-*-*-*-*-*-gb2312.1980-0";
-
-static Gushort gb12Map[940] = {
-  // 0 - 95
-  0x0000, 0x2121, 0x2321, 0x2322, 0x2323, 0x2167, 0x2325, 0x2326,
-  0x2327, 0x2328, 0x2329, 0x232a, 0x232b, 0x232c, 0x232d, 0x232e,
-  0x232f, 0x2330, 0x2331, 0x2332, 0x2333, 0x2334, 0x2335, 0x2336,
-  0x2337, 0x2338, 0x2339, 0x233a, 0x233b, 0x233c, 0x233d, 0x233e,
-  0x233f, 0x2340, 0x2341, 0x2342, 0x2343, 0x2344, 0x2345, 0x2346,
-  0x2347, 0x2348, 0x2349, 0x234a, 0x234b, 0x234c, 0x234d, 0x234e,
-  0x234f, 0x2350, 0x2351, 0x2352, 0x2353, 0x2354, 0x2355, 0x2356,
-  0x2357, 0x2358, 0x2359, 0x235a, 0x235b, 0x235c, 0x235d, 0x235e,
-  0x235f, 0x2360, 0x2361, 0x2362, 0x2363, 0x2364, 0x2365, 0x2366,
-  0x2367, 0x2368, 0x2369, 0x236a, 0x236b, 0x236c, 0x236d, 0x236e,
-  0x236f, 0x2370, 0x2371, 0x2372, 0x2373, 0x2374, 0x2375, 0x2376,
-  0x2377, 0x2378, 0x2379, 0x237a, 0x237b, 0x237c, 0x237d, 0x212b,
-
-  // 96-355
-  0x2121, 0x2122, 0x2123, 0x2124, 0x2125, 0x2126, 0x2127, 0x2128,
-  0x2129, 0x212a, 0x212b, 0x212c, 0x212d, 0x212e, 0x212f, 0x2130,
-  0x2131, 0x2132, 0x2133, 0x2134, 0x2135, 0x2136, 0x2137, 0x2138,
-  0x2139, 0x213a, 0x213b, 0x213c, 0x213d, 0x213e, 0x213f, 0x2140,
-  0x2141, 0x2142, 0x2143, 0x2144, 0x2145, 0x2146, 0x2147, 0x2148,
-  0x2149, 0x214a, 0x214b, 0x214c, 0x214d, 0x214e, 0x214f, 0x2150,
-  0x2151, 0x2152, 0x2153, 0x2154, 0x2155, 0x2156, 0x2157, 0x2158,
-  0x2159, 0x215a, 0x215b, 0x215c, 0x215d, 0x215e, 0x215f, 0x2160,
-  0x2161, 0x2162, 0x2163, 0x2164, 0x2165, 0x2166, 0x2167, 0x2168,
-  0x2169, 0x216a, 0x216b, 0x216c, 0x216d, 0x216e, 0x216f, 0x2170,
-  0x2171, 0x2172, 0x2173, 0x2174, 0x2175, 0x2176, 0x2177, 0x2178,
-  0x2179, 0x217a, 0x217b, 0x217c, 0x217d, 0x217e, 0x2231, 0x2232,
-  0x2233, 0x2234, 0x2235, 0x2236, 0x2237, 0x2238, 0x2239, 0x223a,
-  0x223b, 0x223c, 0x223d, 0x223e, 0x223f, 0x2240, 0x2241, 0x2242,
-  0x2243, 0x2244, 0x2245, 0x2246, 0x2247, 0x2248, 0x2249, 0x224a,
-  0x224b, 0x224c, 0x224d, 0x224e, 0x224f, 0x2250, 0x2251, 0x2252,
-  0x2253, 0x2254, 0x2255, 0x2256, 0x2257, 0x2258, 0x2259, 0x225a,
-  0x225b, 0x225c, 0x225d, 0x225e, 0x225f, 0x2260, 0x2261, 0x2262,
-  0x2265, 0x2266, 0x2267, 0x2268, 0x2269, 0x226a, 0x226b, 0x226c,
-  0x226d, 0x226e, 0x2271, 0x2272, 0x2273, 0x2274, 0x2275, 0x2276,
-  0x2277, 0x2278, 0x2279, 0x227a, 0x227b, 0x227c, 0x2321, 0x2322,
-  0x2323, 0x2324, 0x2325, 0x2326, 0x2327, 0x2328, 0x2329, 0x232a,
-  0x232b, 0x232c, 0x232d, 0x232e, 0x232f, 0x2330, 0x2331, 0x2332,
-  0x2333, 0x2334, 0x2335, 0x2336, 0x2337, 0x2338, 0x2339, 0x233a,
-  0x233b, 0x233c, 0x233d, 0x233e, 0x233f, 0x2340, 0x2341, 0x2342,
-  0x2343, 0x2344, 0x2345, 0x2346, 0x2347, 0x2348, 0x2349, 0x234a,
-  0x234b, 0x234c, 0x234d, 0x234e, 0x234f, 0x2350, 0x2351, 0x2352,
-  0x2353, 0x2354, 0x2355, 0x2356, 0x2357, 0x2358, 0x2359, 0x235a,
-  0x235b, 0x235c, 0x235d, 0x235e, 0x235f, 0x2360, 0x2361, 0x2362,
-  0x2363, 0x2364, 0x2365, 0x2366, 0x2367, 0x2368, 0x2369, 0x236a,
-  0x236b, 0x236c, 0x236d, 0x236e, 0x236f, 0x2370, 0x2371, 0x2372,
-  0x2373, 0x2374, 0x2375, 0x2376, 0x2377, 0x2378, 0x2379, 0x237a,
-  0x237b, 0x237c, 0x237d, 0x237e,
-
-  // 356-524
-                                  0x2421, 0x2422, 0x2423, 0x2424,
-  0x2425, 0x2426, 0x2427, 0x2428, 0x2429, 0x242a, 0x242b, 0x242c,
-  0x242d, 0x242e, 0x242f, 0x2430, 0x2431, 0x2432, 0x2433, 0x2434,
-  0x2435, 0x2436, 0x2437, 0x2438, 0x2439, 0x243a, 0x243b, 0x243c,
-  0x243d, 0x243e, 0x243f, 0x2440, 0x2441, 0x2442, 0x2443, 0x2444,
-  0x2445, 0x2446, 0x2447, 0x2448, 0x2449, 0x244a, 0x244b, 0x244c,
-  0x244d, 0x244e, 0x244f, 0x2450, 0x2451, 0x2452, 0x2453, 0x2454,
-  0x2455, 0x2456, 0x2457, 0x2458, 0x2459, 0x245a, 0x245b, 0x245c,
-  0x245d, 0x245e, 0x245f, 0x2460, 0x2461, 0x2462, 0x2463, 0x2464,
-  0x2465, 0x2466, 0x2467, 0x2468, 0x2469, 0x246a, 0x246b, 0x246c,
-  0x246d, 0x246e, 0x246f, 0x2470, 0x2471, 0x2472, 0x2473, 0x2521,
-  0x2522, 0x2523, 0x2524, 0x2525, 0x2526, 0x2527, 0x2528, 0x2529,
-  0x252a, 0x252b, 0x252c, 0x252d, 0x252e, 0x252f, 0x2530, 0x2531,
-  0x2532, 0x2533, 0x2534, 0x2535, 0x2536, 0x2537, 0x2538, 0x2539,
-  0x253a, 0x253b, 0x253c, 0x253d, 0x253e, 0x253f, 0x2540, 0x2541,
-  0x2542, 0x2543, 0x2544, 0x2545, 0x2546, 0x2547, 0x2548, 0x2549,
-  0x254a, 0x254b, 0x254c, 0x254d, 0x254e, 0x254f, 0x2550, 0x2551,
-  0x2552, 0x2553, 0x2554, 0x2555, 0x2556, 0x2557, 0x2558, 0x2559,
-  0x255a, 0x255b, 0x255c, 0x255d, 0x255e, 0x255f, 0x2560, 0x2561,
-  0x2562, 0x2563, 0x2564, 0x2565, 0x2566, 0x2567, 0x2568, 0x2569,
-  0x256a, 0x256b, 0x256c, 0x256d, 0x256e, 0x256f, 0x2570, 0x2571,
-  0x2572, 0x2573, 0x2574, 0x2575, 0x2576,
-
-  // 525-572
-                                          0x2621, 0x2622, 0x2623,
-  0x2624, 0x2625, 0x2626, 0x2627, 0x2628, 0x2629, 0x262a, 0x262b,
-  0x262c, 0x262d, 0x262e, 0x262f, 0x2630, 0x2631, 0x2632, 0x2633,
-  0x2634, 0x2635, 0x2636, 0x2637, 0x2638, 0x2641, 0x2642, 0x2643,
-  0x2644, 0x2645, 0x2646, 0x2647, 0x2648, 0x2649, 0x264a, 0x264b,
-  0x264c, 0x264d, 0x264e, 0x264f, 0x2650, 0x2651, 0x2652, 0x2653,
-  0x2654, 0x2655, 0x2656, 0x2657, 0x2658,
-
-  // 573-601
-                                          0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,
-
-  // 602-667
-                  0x2721, 0x2722, 0x2723, 0x2724, 0x2725, 0x2726,
-  0x2727, 0x2728, 0x2729, 0x272a, 0x272b, 0x272c, 0x272d, 0x272e,
-  0x272f, 0x2730, 0x2731, 0x2732, 0x2733, 0x2734, 0x2735, 0x2736,
-  0x2737, 0x2738, 0x2739, 0x273a, 0x273b, 0x273c, 0x273d, 0x273e,
-  0x273f, 0x2740, 0x2741, 0x2751, 0x2752, 0x2753, 0x2754, 0x2755,
-  0x2756, 0x2757, 0x2758, 0x2759, 0x275a, 0x275b, 0x275c, 0x275d,
-  0x275e, 0x275f, 0x2760, 0x2761, 0x2762, 0x2763, 0x2764, 0x2765,
-  0x2766, 0x2767, 0x2768, 0x2769, 0x276a, 0x276b, 0x276c, 0x276d,
-  0x276e, 0x276f, 0x2770, 0x2771,
-
-  // 668-699
-                                  0x2821, 0x2822, 0x2823, 0x2824,
-  0x2825, 0x2826, 0x2827, 0x2828, 0x2829, 0x282a, 0x282b, 0x282c,
-  0x282d, 0x282e, 0x282f, 0x2830, 0x2831, 0x2832, 0x2833, 0x2834,
-  0x2835, 0x2836, 0x2837, 0x2838, 0x2839, 0x283a, 0,      0,
-  0,      0,      0,      0,
-
-  // 700-737
-                                  0x2845, 0x2846, 0x2847, 0x2848,
-  0x2849, 0x284a, 0x284b, 0x284c, 0x284d, 0x284e, 0x284f, 0x2850,
-  0x2851, 0x2852, 0x2853, 0x2854, 0x2855, 0x2856, 0x2857, 0x2858,
-  0x2859, 0x285a, 0x285b, 0x285c, 0x285d, 0x285e, 0x285f, 0x2860,
-  0x2861, 0x2862, 0x2863, 0x2864, 0x2865, 0x2866, 0x2867, 0x2868,
-  0x2869, 0,
-
-  // 738-813
-                  0x2924, 0x2925, 0x2926, 0x2927, 0x2928, 0x2929,
-  0x292a, 0x292b, 0x292c, 0x292d, 0x292e, 0x292f, 0x2930, 0x2931,
-  0x2932, 0x2933, 0x2934, 0x2935, 0x2936, 0x2937, 0x2938, 0x2939,
-  0x293a, 0x293b, 0x293c, 0x293d, 0x293e, 0x293f, 0x2940, 0x2941,
-  0x2942, 0x2943, 0x2944, 0x2945, 0x2946, 0x2947, 0x2948, 0x2949,
-  0x294a, 0x294b, 0x294c, 0x294d, 0x294e, 0x294f, 0x2950, 0x2951,
-  0x2952, 0x2953, 0x2954, 0x2955, 0x2956, 0x2957, 0x2958, 0x2959,
-  0x295a, 0x295b, 0x295c, 0x295d, 0x295e, 0x295f, 0x2960, 0x2961,
-  0x2962, 0x2963, 0x2964, 0x2965, 0x2966, 0x2967, 0x2968, 0x2969,
-  0x296a, 0x296b, 0x296c, 0x296d, 0x296e, 0x296f,
-
-  // 814-939
-                                                  0x2321, 0x2322,
-  0x2323, 0x2324, 0x2325, 0x2326, 0x2327, 0x2328, 0x2329, 0x232a,
-  0x232b, 0x232c, 0x232d, 0x232e, 0x232f, 0x2330, 0x2331, 0x2332,
-  0x2333, 0x2334, 0x2335, 0x2336, 0x2337, 0x2338, 0x2339, 0x233a,
-  0x233b, 0x233c, 0x233d, 0x233e, 0x233f, 0x2340, 0x2341, 0x2342,
-  0x2343, 0x2344, 0x2345, 0x2346, 0x2347, 0x2348, 0x2349, 0x234a,
-  0x234b, 0x234c, 0x234d, 0x234e, 0x234f, 0x2350, 0x2351, 0x2352,
-  0x2353, 0x2354, 0x2355, 0x2356, 0x2357, 0x2358, 0x2359, 0x235a,
-  0x235b, 0x235c, 0x235d, 0x235e, 0x235f, 0x2360, 0x2361, 0x2362,
-  0x2363, 0x2364, 0x2365, 0x2366, 0x2367, 0x2368, 0x2369, 0x236a,
-  0x236b, 0x236c, 0x236d, 0x236e, 0x236f, 0x2370, 0x2371, 0x2372,
-  0x2373, 0x2374, 0x2375, 0x2376, 0x2377, 0x2378, 0x2379, 0x237a,
-  0x237b, 0x237c, 0x237d, 0x237e, 0x2821, 0x2822, 0x2823, 0x2824,
-  0x2825, 0x2826, 0x2827, 0x2828, 0x2829, 0x282a, 0x282b, 0x282c,
-  0x282d, 0x282e, 0x282f, 0x2830, 0x2831, 0x2832, 0x2833, 0x2834,
-  0x2835, 0x2836, 0x2837, 0x2838, 0x2839, 0x283a, 0,      0,
-  0,      0,      0,      0
-};
-
-#endif // CHINESE_GB_SUPPORT
-
-#if CHINESE_CNS_SUPPORT
-
-static char *cns13DefFont =
-    "-*-fixed-medium-r-normal-*-%s-*-*-*-*-*-big5-0";
-
-static Gushort cns13Map1[99] = {
-  // 0-98
-  0,      0xa140, 0xa149, 0xa1a8, 0xa1ad, 0xa243, 0xa248, 0xa1ae,
-  0xa1a6, 0xa15d, 0xa15e, 0xa1af, 0xa1cf, 0xa141, 0xa1df, 0xa144,
-  0xa241, 0xa2af, 0xa2b0, 0xa2b1, 0xa2b2, 0xa2b3, 0xa2b4, 0xa2b5,
-  0xa2b6, 0xa2b7, 0xa2b8, 0xa147, 0xa146, 0xa1d5, 0xa1d7, 0xa1d6,
-  0xa148, 0xa249, 0xa2cf, 0xa2d0, 0xa2d1, 0xa2d2, 0xa2d3, 0xa2d4,
-  0xa2d5, 0xa2d6, 0xa2d7, 0xa2d8, 0xa2d9, 0xa2da, 0xa2db, 0xa2dc,
-  0xa2dd, 0xa2de, 0xa2df, 0xa2e0, 0xa2e1, 0xa2e2, 0xa2e3, 0xa2e4,
-  0xa2e5, 0xa2e6, 0xa2e7, 0xa2e8, 0xa165, 0xa242, 0xa166, 0xa173,
-  0xa15a, 0xa1a5, 0xa2e9, 0xa2ea, 0xa2eb, 0xa2ec, 0xa2ed, 0xa2ee,
-  0xa2ef, 0xa2f0, 0xa2f1, 0xa2f2, 0xa2f3, 0xa2f4, 0xa2f5, 0xa2f6,
-  0xa2f7, 0xa2f8, 0xa2f9, 0xa2fa, 0xa2fb, 0xa2fc, 0xa2fd, 0xa2fe,
-  0xa340, 0xa341, 0xa342, 0xa343, 0xa161, 0xa159, 0xa162, 0xa1e3,
-  0,      0,      0xa14b
-};
-
-static Gushort cns13Map2[95] = {
-  // 13648-13742
-          0xa140, 0xa149, 0xa1a8, 0xa1ad, 0xa244, 0xa248, 0xa1ae,
-  0xa1a6, 0xa15d, 0xa15e, 0xa1af, 0xa1cf, 0xa141, 0xa1df, 0xa144,
-  0xa241, 0xa2af, 0xa2b0, 0xa2b1, 0xa2b2, 0xa2b3, 0xa2b4, 0xa2b5,
-  0xa2b6, 0xa2b7, 0xa2b8, 0xa147, 0xa146, 0xa1d5, 0xa1d7, 0xa1d6,
-  0xa148, 0xa249, 0xa2cf, 0xa2d0, 0xa2d1, 0xa2d2, 0xa2d3, 0xa2d4,
-  0xa2d5, 0xa2d6, 0xa2d7, 0xa2d8, 0xa2d9, 0xa2da, 0xa2db, 0xa2dc,
-  0xa2dd, 0xa2de, 0xa2df, 0xa2e0, 0xa2e1, 0xa2e2, 0xa2e3, 0xa2e4,
-  0xa2e5, 0xa2e6, 0xa2e7, 0xa2e8, 0xa165, 0xa242, 0xa166, 0xa173,
-  0xa15a, 0xa1a5, 0xa2e9, 0xa2ea, 0xa2eb, 0xa2ec, 0xa2ed, 0xa2ee,
-  0xa2ef, 0xa2f0, 0xa2f1, 0xa2f2, 0xa2f3, 0xa2f4, 0xa2f5, 0xa2f6,
-  0xa2f7, 0xa2f8, 0xa2f9, 0xa2fa, 0xa2fb, 0xa2fc, 0xa2fd, 0xa2fe,
-  0xa340, 0xa341, 0xa342, 0xa343, 0xa161, 0xa159, 0xa162, 0xa1c3
-};
-
-#endif
-
-//------------------------------------------------------------------------
-// Constructed characters
-//------------------------------------------------------------------------
-
-#define lastRegularChar 0x0ff
-#define firstSubstChar  0x100
-#define lastSubstChar   0x104
-#define firstConstrChar 0x105
-#define lastConstrChar  0x106
-#define firstMultiChar  0x107
-#define lastMultiChar   0x110
-
-// substituted chars
-static Guchar substChars[] = {
-  0x27,				// 100: quotesingle --> quoteright
-  0x2d,				// 101: emdash --> hyphen
-  0xad,				// 102: hyphen --> endash
-  0x2f,				// 103: fraction --> slash
-  0xb0,				// 104: ring --> degree
-};
-
-// constructed chars
-// 105: bullet
-// 106: trademark
-
-// built-up chars
-static char *multiChars[] = {
-  "fi",				// 107: fi
-  "fl",				// 108: fl
-  "ff",				// 109: ff
-  "ffi",			// 10a: ffi
-  "ffl",			// 10b: ffl
-  "OE",				// 10c: OE
-  "oe",				// 10d: oe
-  "...",			// 10e: ellipsis
-  "``",				// 10f: quotedblleft
-  "''"				// 110: quotedblright
-};
-
-// ignored chars
-// 111: Lslash
-//    : Scaron
-//    : Zcaron
-//    : Ydieresis
-//    : breve
-//    : caron
-//    : circumflex
-//    : dagger
-//    : daggerdbl
-//    : dotaccent
-//    : dotlessi
-//    : florin
-//    : grave
-//    : guilsinglleft
-//    : guilsinglright
-//    : hungarumlaut
-//    : lslash
-//    : ogonek
-//    : perthousand
-//    : quotedblbase
-//    : quotesinglbase
-//    : scaron
-//    : tilde
-//    : zcaron
 
 //------------------------------------------------------------------------
 // XOutputFont
 //------------------------------------------------------------------------
 
-XOutputFont::XOutputFont(GfxFont *gfxFont, double m11, double m12,
-			 double m21, double m22, Display *display,
-			 XOutputFontCache *cache) {
-  int code;
-  char *charName;
-
-  id = gfxFont->getID();
-  this->display = display;
-  tm11 = m11;
-  tm12 = m12;
-  tm21 = m21;
-  tm22 = m22;
-
-  // check for hex char names
-  hex = gFalse;
-  if (!gfxFont->is16Bit()) {
-    for (code = 0; code < 256; ++code) {
-      if ((charName = gfxFont->getCharName(code))) {
-	if ((charName[0] == 'B' || charName[0] == 'C' ||
-	     charName[0] == 'G') &&
-	    strlen(charName) == 3 &&
-	    isxdigit(charName[1]) && isxdigit(charName[2]) &&
-	    ((charName[1] >= 'a' && charName[1] <= 'f') ||
-	     (charName[1] >= 'A' && charName[1] <= 'F') ||
-	     (charName[2] >= 'a' && charName[2] <= 'f') ||
-	     (charName[2] >= 'A' && charName[2] <= 'F'))) {
-	  hex = gTrue;
-	  break;
-	} else if ((strlen(charName) == 2) &&
-		   isxdigit(charName[0]) && isxdigit(charName[1]) &&
-		   ((charName[0] >= 'a' && charName[0] <= 'f') ||
-		    (charName[0] >= 'A' && charName[0] <= 'F') ||
-		    (charName[1] >= 'a' && charName[1] <= 'f') ||
-		    (charName[1] >= 'A' && charName[1] <= 'F'))) {
-	  hex = gTrue;
-	  break;
-	}
-      }
-    }
-  }
+XOutputFont::XOutputFont(Ref *idA, double m11OrigA, double m12OrigA,
+			 double m21OrigA, double m22OrigA,
+			 double m11A, double m12A, double m21A, double m22A,
+			 Display *displayA, XOutputDev *xOutA) {
+  id = *idA;
+  display = displayA;
+  xOut = xOutA;
+  m11Orig = m11OrigA;
+  m12Orig = m12OrigA;
+  m21Orig = m21OrigA;
+  m22Orig = m22OrigA;
+  m11 = m11A;
+  m12 = m12A;
+  m21 = m21A;
+  m22 = m22A;
 }
 
 XOutputFont::~XOutputFont() {
+}
+
+void XOutputFont::getCharPath(GfxState *state,
+			      CharCode c, Unicode *u, int ulen) {
 }
 
 #if HAVE_T1LIB_H
@@ -549,32 +128,18 @@ XOutputFont::~XOutputFont() {
 // XOutputT1Font
 //------------------------------------------------------------------------
 
-XOutputT1Font::XOutputT1Font(GfxFont *gfxFont, GString *pdfBaseFont,
-			     double m11, double m12, double m21, double m22,
-			     Display *display, XOutputFontCache *cache):
-  XOutputFont(gfxFont, m11, m12, m21, m22, display, cache)
+XOutputT1Font::XOutputT1Font(Ref *idA, T1FontFile *fontFileA,
+			     double m11OrigA, double m12OrigA,
+			     double m21OrigA, double m22OrigA,
+			     double m11A, double m12A,
+			     double m21A, double m22A,
+			     Display *displayA, XOutputDev *xOutA):
+  XOutputFont(idA, m11OrigA, m12OrigA, m21OrigA, m22OrigA,
+	      m11A, m12A, m21A, m22A, displayA, xOutA)
 {
-  Ref embRef;
   double matrix[4];
 
-  fontFile = NULL;
-  font = NULL;
-
-  // we can only handle 8-bit, Type 1/1C, with embedded font file
-  // or user-specified base fonts
-  //~ also look for external font files
-  if (!(pdfBaseFont ||
-	(!gfxFont->is16Bit() &&
-	 (gfxFont->getType() == fontType1 ||
-	  gfxFont->getType() == fontType1C) &&
-	 gfxFont->getEmbeddedFontID(&embRef)))) {
-    return;
-  }
-
-  // load the font
-  if (!(fontFile = cache->getT1Font(gfxFont, pdfBaseFont))) {
-    return;
-  }
+  fontFile = fontFileA;
 
   // create the transformed instance
   matrix[0] = m11;
@@ -598,47 +163,91 @@ void XOutputT1Font::updateGC(GC gc) {
 }
 
 void XOutputT1Font::drawChar(GfxState *state, Pixmap pixmap, int w, int h,
-			     GC gc, double x, double y, int c) {
-  GfxRGB rgb;
-
-  if (state->getRender() & 1) {
-    state->getStrokeRGB(&rgb);
-  } else {
-    state->getFillRGB(&rgb);
-  }
+			     GC gc, GfxRGB *rgb,
+			     double x, double y, double dx, double dy,
+			     CharCode c, Unicode *u, int uLen) {
   font->drawChar(pixmap, w, h, gc, xoutRound(x), xoutRound(y),
-		 (int)(rgb.r * 65535), (int)(rgb.g * 65535),
-		 (int)(rgb.b * 65535), c);
+		 (int)(rgb->r * 65535), (int)(rgb->g * 65535),
+		 (int)(rgb->b * 65535), c, u[0]);
+}
+
+void XOutputT1Font::getCharPath(GfxState *state,
+				CharCode c, Unicode *u, int uLen) {
+  font->getCharPath(c, u[0], state);
 }
 #endif // HAVE_T1LIB_H
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+//------------------------------------------------------------------------
+// XOutputFTFont
+//------------------------------------------------------------------------
+
+XOutputFTFont::XOutputFTFont(Ref *idA, FTFontFile *fontFileA,
+			     double m11OrigA, double m12OrigA,
+			     double m21OrigA, double m22OrigA,
+			     double m11A, double m12A,
+			     double m21A, double m22A,
+			     Display *displayA, XOutputDev *xOutA):
+  XOutputFont(idA, m11OrigA, m12OrigA, m21OrigA, m22OrigA,
+	      m11A, m12A, m21A, m22A, displayA, xOutA)
+{
+  double matrix[4];
+
+  fontFile = fontFileA;
+
+  // create the transformed instance
+  matrix[0] = m11;
+  matrix[1] = -m12;
+  matrix[2] = m21;
+  matrix[3] = -m22;
+  font = new FTFont(fontFile, matrix);
+}
+
+XOutputFTFont::~XOutputFTFont() {
+  if (font) {
+    delete font;
+  }
+}
+
+GBool XOutputFTFont::isOk() {
+  return font != NULL;
+}
+
+void XOutputFTFont::updateGC(GC gc) {
+}
+
+void XOutputFTFont::drawChar(GfxState *state, Pixmap pixmap, int w, int h,
+			     GC gc, GfxRGB *rgb,
+			     double x, double y, double dx, double dy,
+			     CharCode c, Unicode *u, int uLen) {
+  font->drawChar(pixmap, w, h, gc, xoutRound(x), xoutRound(y),
+		 (int)(rgb->r * 65535), (int)(rgb->g * 65535),
+		 (int)(rgb->b * 65535), c, uLen > 0 ? u[0] : 0);
+}
+
+void XOutputFTFont::getCharPath(GfxState *state,
+				CharCode c, Unicode *u, int uLen) {
+  font->getCharPath(c, u[0], state);
+}
+#endif // FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 //------------------------------------------------------------------------
 // XOutputTTFont
 //------------------------------------------------------------------------
 
-XOutputTTFont::XOutputTTFont(GfxFont *gfxFont, double m11, double m12,
-			     double m21, double m22, Display *display,
-			     XOutputFontCache *cache):
-  XOutputFont(gfxFont, m11, m12, m21, m22, display, cache)
+XOutputTTFont::XOutputTTFont(Ref *idA, TTFontFile *fontFileA,
+			     double m11OrigA, double m12OrigA,
+			     double m21OrigA, double m22OrigA,
+			     double m11A, double m12A,
+			     double m21A, double m22A,
+			     Display *displayA, XOutputDev *xOutA):
+  XOutputFont(idA, m11OrigA, m12OrigA, m21OrigA, m22OrigA,
+	      m11A, m12A, m21A, m22A, displayA, xOutA)
 {
-  Ref embRef;
   double matrix[4];
 
-  fontFile = NULL;
-  font = NULL;
-
-  // we can only handle 8-bit, TrueType, with embedded font file
-  if (!(!gfxFont->is16Bit() &&
-	gfxFont->getType() == fontTrueType &&
-	gfxFont->getEmbeddedFontID(&embRef))) {
-    return;
-  }
-
-  // load the font
-  if (!(fontFile = cache->getTTFont(gfxFont))) {
-    return;
-  }
+  fontFile = fontFileA;
 
   // create the transformed instance
   matrix[0] = m11;
@@ -662,114 +271,70 @@ void XOutputTTFont::updateGC(GC gc) {
 }
 
 void XOutputTTFont::drawChar(GfxState *state, Pixmap pixmap, int w, int h,
-			     GC gc, double x, double y, int c) {
-  GfxRGB rgb;
-
-  if (state->getRender() & 1) {
-    state->getStrokeRGB(&rgb);
-  } else {
-    state->getFillRGB(&rgb);
-  }
+			     GC gc, GfxRGB *rgb,
+			     double x, double y, double dx, double dy,
+			     CharCode c, Unicode *u, int uLen) {
   font->drawChar(pixmap, w, h, gc, xoutRound(x), xoutRound(y),
-		 (int)(rgb.r * 65535), (int)(rgb.g * 65535),
-		 (int)(rgb.b * 65535), c);
+		 (int)(rgb->r * 65535), (int)(rgb->g * 65535),
+		 (int)(rgb->b * 65535), c, u[0]);
 }
-#endif // HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#endif // !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 
 //------------------------------------------------------------------------
-// XOutputServerFont
+// XOutputServer8BitFont
 //------------------------------------------------------------------------
 
-XOutputServerFont::XOutputServerFont(GfxFont *gfxFont, char *fontNameFmt,
-				     FontEncoding *encoding,
-				     double m11, double m12,
-				     double m21, double m22,
-				     double size,
-				     double ntm11, double ntm12,
-				     double ntm21, double ntm22,
-				     Display *display,
-				     XOutputFontCache *cache):
-  XOutputFont(gfxFont, m11, m12, m21, m22, display, cache)
-{
-  char fontName[200], fontSize[100];
-  GBool rotated;
-  int startSize, sz;
-  int code, code2;
-  char *charName;
-  int n;
+// Copy <fmt>, substituting <val> for one occurrence of "%s", into
+// <buf>.
+static void stringSubst(char *buf, int bufSize, char *fmt, char *val) {
+  char *p, *q;
+  int i;
 
-  xFont = NULL;
-
-  // Construct forward and reverse map.
-  // This tries to deal with font subset character names of the form
-  // 'Bxx', 'Cxx', 'Gxx', or 'xx' with decimal or hex numbering.
-  if (!gfxFont->is16Bit()) {
-    for (code = 0; code < 256; ++code)
-      revMap[code] = 0;
-    if (encoding) {
-      for (code = 0; code < 256; ++code) {
-	if ((charName = gfxFont->getCharName(code))) {
-	  if ((code2 = encoding->getCharCode(charName)) < 0) {
-	    n = strlen(charName);
-	    if (hex && n == 3 &&
-		(charName[0] == 'B' || charName[0] == 'C' ||
-		 charName[0] == 'G') &&
-		isxdigit(charName[1]) && isxdigit(charName[2])) {
-	      sscanf(charName+1, "%x", &code2);
-	    } else if (hex && n == 2 &&
-		       isxdigit(charName[0]) && isxdigit(charName[1])) {
-	      sscanf(charName, "%x", &code2);
-	    } else if (!hex && n >= 2 && n <= 3 &&
-		       isdigit(charName[0]) && isdigit(charName[1])) {
-	      code2 = atoi(charName);
-	      if (code2 >= 256)
-		code2 = -1;
-	    } else if (n >= 3 && n <= 5 && isdigit(charName[1])) {
-	      code2 = atoi(charName+1);
-	      if (code2 >= 256)
-		code2 = -1;
-	    }
-	    //~ this is a kludge -- is there a standard internal encoding
-	    //~ used by all/most Type 1 fonts?
-	    if (code2 == 262)		// hyphen
-	      code2 = 45;
-	    else if (code2 == 266)	// emdash
-	      code2 = 208;
-	  }
-	  if (code2 >= 0) {
-	    map[code] = (Gushort)code2;
-	    if (code2 < 256)
-	      revMap[code2] = (Guchar)code;
-	  } else {
-	    map[code] = 0;
-	  }
-	} else {
-	  map[code] = 0;
-	}
+  i = 0;
+  p = fmt;
+  while (*p) {
+    if (p[0] == '%' && p[1] == 's') {
+      q = val;
+      while (*q && i < bufSize - 1) {
+	buf[i++] = *q++;
       }
+      p += 2;
     } else {
-      code2 = 0; // to make gcc happy
-      //~ this is a hack to get around the fact that X won't draw
-      //~ chars 0..31; this works when the fonts have duplicate encodings
-      //~ for those chars
-      for (code = 0; code < 32; ++code) {
-	if ((charName = gfxFont->getCharName(code)) &&
-	    (code2 = gfxFont->getCharCode(charName)) >= 0) {
-	  map[code] = (Gushort)code2;
-	  if (code2 < 256)
-	    revMap[code2] = (Guchar)code;
-	}
+      if (i < bufSize - 1) {
+	buf[i++] = *p;
       }
-      for (code = 32; code < 256; ++code) {
-	map[code] = (Gushort)code;
-	revMap[code] = (Guchar)code;
-      }
+      ++p;
     }
   }
+  buf[i] = '\0';
+}
 
-  // adjust transform for the X transform convention
-  ntm12 = -ntm12;
-  ntm22 = -ntm22;
+XOutputServer8BitFont::XOutputServer8BitFont(Ref *idA, GString *xlfdFmt, 
+					     UnicodeMap *xUMapA,
+					     CharCodeToUnicode *fontUMap,
+					     double m11OrigA, double m12OrigA,
+					     double m21OrigA, double m22OrigA,
+					     double m11A, double m12A,
+					     double m21A, double m22A,
+					     Display *displayA,
+					     XOutputDev *xOutA):
+  XOutputFont(idA, m11OrigA, m12OrigA, m21OrigA, m22OrigA,
+	      m11A, m12A, m21A, m22A, displayA, xOutA)
+{
+  double size, ntm11, ntm12, ntm21, ntm22;
+  GBool rotated;
+  int startSize, sz;
+  char fontName[500], fontSize[100];
+  Unicode u;
+  char buf;
+  int i;
+
+  // compute size and normalized transform matrix
+  size = sqrt(m21*m21 + m22*m22);
+  ntm11 = m11 / size;
+  ntm12 = -m12 / size;
+  ntm21 = m21 / size;
+  ntm22 = -m22 / size;
 
   // try to get a rotated font?
   rotated = !(ntm11 > 0 && ntm22 > 0 &&
@@ -779,36 +344,179 @@ XOutputServerFont::XOutputServerFont(GfxFont *gfxFont, char *fontNameFmt,
 
   // open X font -- if font is not found (which means the server can't
   // scale fonts), try progressively smaller and then larger sizes
-  //~ This does a linear search -- it should get a list of fonts from
-  //~ the server and pick the closest.
   startSize = (int)size;
-  if (rotated)
+  if (rotated) {
     sprintf(fontSize, "[%s%0.2f %s%0.2f %s%0.2f %s%0.2f]",
 	    ntm11<0 ? "~" : "", fabs(ntm11 * size),
 	    ntm12<0 ? "~" : "", fabs(ntm12 * size),
 	    ntm21<0 ? "~" : "", fabs(ntm21 * size),
 	    ntm22<0 ? "~" : "", fabs(ntm22 * size));
-  else
+  } else {
     sprintf(fontSize, "%d", startSize);
-  sprintf(fontName, fontNameFmt, fontSize);
+  }
+  stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(), fontSize);
   xFont = XLoadQueryFont(display, fontName);
   if (!xFont) {
     for (sz = startSize; sz >= startSize/2 && sz >= 1; --sz) {
       sprintf(fontSize, "%d", sz);
-      sprintf(fontName, fontNameFmt, fontSize);
+      stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(), fontSize);
       if ((xFont = XLoadQueryFont(display, fontName)))
 	break;
     }
     if (!xFont) {
       for (sz = startSize + 1; sz < startSize + 10; ++sz) {
 	sprintf(fontSize, "%d", sz);
-	sprintf(fontName, fontNameFmt, fontSize);
-	if ((xFont = XLoadQueryFont(display, fontName)))
+	stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(),
+		    fontSize);
+	if ((xFont = XLoadQueryFont(display, fontName))) {
 	  break;
+	}
       }
       if (!xFont) {
 	sprintf(fontSize, "%d", startSize);
-	sprintf(fontName, fontNameFmt, fontSize);
+	stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(),
+		    fontSize);
+	error(-1, "Failed to open font: '%s'", fontName);
+	return;
+      }
+    }
+  }
+
+  // Construct char code map.
+  xUMap = xUMapA;
+  for (i = 0; i < 256; ++i) {
+    if (fontUMap->mapToUnicode((CID)i, &u, 1) == 1 &&
+	xUMap->mapUnicode(u, &buf, 1) == 1) {
+      map[i] = buf & 0xff;
+    } else {
+      map[i] = 0;
+    }
+  }
+}
+
+XOutputServer8BitFont::~XOutputServer8BitFont() {
+  if (xFont) {
+    XFreeFont(display, xFont);
+  }
+}
+
+GBool XOutputServer8BitFont::isOk() {
+  return xFont != NULL;
+}
+
+void XOutputServer8BitFont::updateGC(GC gc) {
+  XSetFont(display, gc, xFont->fid);
+}
+
+void XOutputServer8BitFont::drawChar(GfxState *state, Pixmap pixmap,
+				     int w, int h, GC gc, GfxRGB *rgb,
+				     double x, double y, double dx, double dy,
+				     CharCode c, Unicode *u, int uLen) {
+  Gushort c1;
+  char buf[8];
+  double dx1, dy1;
+  int m, n, i, j, k;
+
+  c1 = map[c];
+  if (c1 > 0) {
+    buf[0] = (char)c1;
+    XDrawString(display, pixmap, gc, xoutRound(x), xoutRound(y), buf, 1);
+  } else {
+    // substituted character, using more than one character
+    n = 0;
+    for (i = 0; i < uLen; ++i) {
+      n += xUMap->mapUnicode(u[i], buf, sizeof(buf));
+    }
+    if (n > 0) {
+      dx1 = dx / n;
+      dy1 = dy / n;
+      k = 0;
+      for (i = 0; i < uLen; ++i) {
+	m = xUMap->mapUnicode(u[i], buf, sizeof(buf));
+	for (j = 0; j < m; ++j) {
+	  XDrawString(display, pixmap, gc,
+		      xoutRound(x + k*dx1), xoutRound(y + k*dy1),
+		      buf + j, 1);
+	  ++k;
+	}
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------------
+// XOutputServer16BitFont
+//------------------------------------------------------------------------
+
+XOutputServer16BitFont::XOutputServer16BitFont(Ref *idA, GString *xlfdFmt, 
+					       UnicodeMap *xUMapA,
+					       CharCodeToUnicode *fontUMap,
+					       double m11OrigA,
+					       double m12OrigA,
+					       double m21OrigA,
+					       double m22OrigA,
+					       double m11A, double m12A,
+					       double m21A, double m22A,
+					       Display *displayA,
+					       XOutputDev *xOutA):
+  XOutputFont(idA, m11OrigA, m12OrigA, m21OrigA, m22OrigA,
+	      m11A, m12A, m21A, m22A, displayA, xOutA)
+{
+  double size, ntm11, ntm12, ntm21, ntm22;
+  GBool rotated;
+  int startSize, sz;
+  char fontName[500], fontSize[100];
+
+  xUMap = xUMapA;
+  xUMap->incRefCnt();
+
+  // compute size and normalized transform matrix
+  size = sqrt(m21*m21 + m22*m22);
+  ntm11 = m11 / size;
+  ntm12 = -m12 / size;
+  ntm21 = m21 / size;
+  ntm22 = -m22 / size;
+
+  // try to get a rotated font?
+  rotated = !(ntm11 > 0 && ntm22 > 0 &&
+	      fabs(ntm11 / ntm22 - 1) < 0.2 &&
+	      fabs(ntm12) < 0.01 &&
+	      fabs(ntm21) < 0.01);
+
+  // open X font -- if font is not found (which means the server can't
+  // scale fonts), try progressively smaller and then larger sizes
+  startSize = (int)size;
+  if (rotated) {
+    sprintf(fontSize, "[%s%0.2f %s%0.2f %s%0.2f %s%0.2f]",
+	    ntm11<0 ? "~" : "", fabs(ntm11 * size),
+	    ntm12<0 ? "~" : "", fabs(ntm12 * size),
+	    ntm21<0 ? "~" : "", fabs(ntm21 * size),
+	    ntm22<0 ? "~" : "", fabs(ntm22 * size));
+  } else {
+    sprintf(fontSize, "%d", startSize);
+  }
+  stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(), fontSize);
+  xFont = XLoadQueryFont(display, fontName);
+  if (!xFont) {
+    for (sz = startSize; sz >= startSize/2 && sz >= 1; --sz) {
+      sprintf(fontSize, "%d", sz);
+      stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(), fontSize);
+      if ((xFont = XLoadQueryFont(display, fontName)))
+	break;
+    }
+    if (!xFont) {
+      for (sz = startSize + 1; sz < startSize + 10; ++sz) {
+	sprintf(fontSize, "%d", sz);
+	stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(),
+		    fontSize);
+	if ((xFont = XLoadQueryFont(display, fontName))) {
+	  break;
+	}
+      }
+      if (!xFont) {
+	sprintf(fontSize, "%d", startSize);
+	stringSubst(fontName, sizeof(fontName), xlfdFmt->getCString(),
+		    fontSize);
 	error(-1, "Failed to open font: '%s'", fontName);
 	return;
       }
@@ -816,75 +524,53 @@ XOutputServerFont::XOutputServerFont(GfxFont *gfxFont, char *fontNameFmt,
   }
 }
 
-XOutputServerFont::~XOutputServerFont() {
-  if (xFont)
+XOutputServer16BitFont::~XOutputServer16BitFont() {
+  xUMap->decRefCnt();
+  if (xFont) {
     XFreeFont(display, xFont);
+  }
 }
 
-GBool XOutputServerFont::isOk() {
+GBool XOutputServer16BitFont::isOk() {
   return xFont != NULL;
 }
 
-void XOutputServerFont::updateGC(GC gc) {
+void XOutputServer16BitFont::updateGC(GC gc) {
   XSetFont(display, gc, xFont->fid);
 }
 
-void XOutputServerFont::drawChar(GfxState *state, Pixmap pixmap, int w, int h,
-				 GC gc, double x, double y, int c) {
-  GfxFont *gfxFont;
-  Gushort c1;
-  char buf;
-  char *p;
-  int n, i;
-  double tx;
+void XOutputServer16BitFont::drawChar(GfxState *state, Pixmap pixmap,
+				      int w, int h, GC gc, GfxRGB *rgb,
+				      double x, double y, double dx, double dy,
+				      CharCode c, Unicode *u, int uLen) {
+  char buf[16];
+  XChar2b c1;
+  double dx1, dy1;
+  int m, n, i, j, k;
 
-  c1 = map[c];
-  if (c1 <= lastRegularChar) {
-    buf = (char)c1;
-    XDrawString(display, pixmap, gc, xoutRound(x), xoutRound(y), &buf, 1);
-  } else if (c1 <= lastSubstChar) {
-    buf = (char)substChars[c1 - firstSubstChar];
-    XDrawString(display, pixmap, gc, xoutRound(x), xoutRound(y), &buf, 1);
-  } else if (c1 <= lastConstrChar) {
-    gfxFont = state->getFont();
-    //~ need to deal with rotated text here
-    switch (c1 - firstConstrChar) {
-    case 0: // bullet
-      tx = 0.25 * state->getTransformedFontSize() * gfxFont->getWidth(c);
-      XFillRectangle(display, pixmap, gc,
-		     xoutRound(x + tx),
-		     xoutRound(y - 0.4 * xFont->ascent - tx),
-		     xoutRound(2 * tx), xoutRound(2 * tx));
-      break;
-    case 1: // trademark
-//~ this should use a smaller font
-//      tx = state->getTransformedFontSize() *
-//           (gfxFont->getWidth(c) -
-//            gfxFont->getWidth(font->revMap['M']));
-      tx = 0.9 * state->getTransformedFontSize() *
-           gfxFont->getWidth(revMap['T']);
-      y -= 0.33 * (double)xFont->ascent;
-      buf = 'T';
-      XDrawString(display, pixmap, gc,
-		  xoutRound(x), xoutRound(y), &buf, 1);
-      x += tx;
-      buf = 'M';
-      XDrawString(display, pixmap, gc,
-		  xoutRound(x), xoutRound(y), &buf, 1);
-      break;
+  n = 0;
+  for (i = 0; i < uLen; ++i) {
+    n += xUMap->mapUnicode(u[i], buf, sizeof(buf));
+  }
+  if (n > 0) {
+    dx1 = dx / n;
+    dy1 = dy / n;
+    k = 0;
+    for (i = 0; i < uLen; ++i) {
+      m = xUMap->mapUnicode(u[i], buf, sizeof(buf));
+      for (j = 0; j+1 < m; j += 2) {
+	c1.byte1 = buf[j];
+	c1.byte2 = buf[j+1];
+	XDrawString16(display, pixmap, gc,
+		      xoutRound(x + k*dx1), xoutRound(y + k*dy1),
+		      &c1, 1);
+	++k;
+      }
     }
-  } else if (c1 <= lastMultiChar) {
-    gfxFont = state->getFont();
-    p = multiChars[c1 - firstMultiChar];
-    n = strlen(p);
-    tx = gfxFont->getWidth(c);
-    tx -= gfxFont->getWidth(revMap[p[n-1]]);
-    tx = tx * state->getTransformedFontSize() / (double)(n - 1);
-    for (i = 0; i < n; ++i) {
-      XDrawString(display, pixmap, gc,
-		  xoutRound(x), xoutRound(y), p + i, 1);
-      x += tx;
-    }
+  } else if (c != 0) {
+    // some PDF files use CID 0, which is .notdef, so just ignore it
+    error(-1, "Unknown character (CID=%d Unicode=%04x)",
+	  c, uLen > 0 ? u[0] : (Unicode)0);
   }
 }
 
@@ -892,32 +578,45 @@ void XOutputServerFont::drawChar(GfxState *state, Pixmap pixmap, int w, int h,
 // XOutputFontCache
 //------------------------------------------------------------------------
 
-XOutputFontCache::XOutputFontCache(Display *display, Guint depth) {
-  this->display = display;
-  this->depth = depth;
+#if HAVE_T1LIB_H
+XOutputT1FontFile::~XOutputT1FontFile() {
+  delete fontFile;
+}
+#endif
+
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+XOutputFTFontFile::~XOutputFTFontFile() {
+  delete fontFile;
+}
+#endif
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+XOutputTTFontFile::~XOutputTTFontFile() {
+  delete fontFile;
+}
+#endif
+
+XOutputFontCache::XOutputFontCache(Display *displayA, Guint depthA,
+				   XOutputDev *xOutA,
+				   FontRastControl t1libControlA,
+				   FontRastControl freetypeControlA) {
+  display = displayA;
+  depth = depthA;
+  xOut = xOutA;
 
 #if HAVE_T1LIB_H
   t1Engine = NULL;
-  if (t1libControl) {
-    useT1lib = t1libControl->cmp("none") != 0;
-    t1libAA = t1libControl->cmp("plain") != 0;
-    t1libAAHigh = t1libControl->cmp("high") == 0;
-  } else {
-    useT1lib = gFalse;
-    t1libAA = gFalse;
-    t1libAAHigh = gFalse;
-  }
+  t1libControl = t1libControlA;
 #endif
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+  ftEngine = NULL;
+#endif
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
   ttEngine = NULL;
-  if (freeTypeControl) {
-    useFreeType = freeTypeControl->cmp("none") != 0;
-    freeTypeAA = freeTypeControl->cmp("plain") != 0;
-  } else {
-    useFreeType = gFalse;
-    freeTypeAA = gFalse;
-  }
+#endif
+#if HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H
+  freetypeControl = freetypeControlA;
 #endif
 
   clear();
@@ -936,9 +635,12 @@ void XOutputFontCache::startDoc(int screenNum, Colormap colormap,
   clear();
 
 #if HAVE_T1LIB_H
-  if (useT1lib) {
+  if (t1libControl != fontRastNone) {
     t1Engine = new T1FontEngine(display, DefaultVisual(display, screenNum),
-				depth, colormap, t1libAA, t1libAAHigh);
+				depth, colormap,
+				t1libControl == fontRastAALow ||
+				  t1libControl == fontRastAAHigh,
+				t1libControl == fontRastAAHigh);
     if (t1Engine->isOk()) {
       if (trueColor) {
 	t1Engine->useTrueColor(rMul, rShift, gMul, gShift, bMul, bShift);
@@ -952,10 +654,31 @@ void XOutputFontCache::startDoc(int screenNum, Colormap colormap,
   }
 #endif // HAVE_T1LIB_H
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-  if (useFreeType) {
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+  if (freetypeControl != fontRastNone) {
+    ftEngine = new FTFontEngine(display, DefaultVisual(display, screenNum),
+				depth, colormap,
+				freetypeControl == fontRastAALow ||
+				  freetypeControl == fontRastAAHigh);
+    if (ftEngine->isOk()) {
+      if (trueColor) {
+	ftEngine->useTrueColor(rMul, rShift, gMul, gShift, bMul, bShift);
+      } else {
+	ftEngine->useColorCube(colors, numColors);
+      }
+    } else {
+      delete ftEngine;
+      ftEngine = NULL;
+    }
+  }
+#endif // FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+  if (freetypeControl != fontRastNone) {
     ttEngine = new TTFontEngine(display, DefaultVisual(display, screenNum),
-				depth, colormap, freeTypeAA);
+				depth, colormap,
+				freetypeControl == fontRastAALow ||
+				  freetypeControl == fontRastAAHigh);
     if (ttEngine->isOk()) {
       if (trueColor) {
 	ttEngine->useTrueColor(rMul, rShift, gMul, gShift, bMul, bShift);
@@ -967,208 +690,166 @@ void XOutputFontCache::startDoc(int screenNum, Colormap colormap,
       ttEngine = NULL;
     }
   }
-#endif
+#endif // !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 }
 
 void XOutputFontCache::delFonts() {
   int i;
 
+  for (i = 0; i < nFonts; ++i) {
+    delete fonts[i];
+  }
+
 #if HAVE_T1LIB_H
-  // delete Type 1 fonts
-  for (i = 0; i < nT1Fonts; ++i) {
-    delete t1Fonts[i];
-  }
-  for (i = 0; i < t1FontFilesSize && t1FontFiles[i].num >= 0; ++i) {
-    delete t1FontFiles[i].fontFile;
-  }
-  gfree(t1FontFiles);
+  // delete Type 1 font files
+  deleteGList(t1FontFiles, XOutputT1FontFile);
   if (t1Engine) {
     delete t1Engine;
   }
 #endif
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+  // delete FreeType font files
+  deleteGList(ftFontFiles, XOutputFTFontFile);
+  if (ftEngine) {
+    delete ftEngine;
+  }
+#endif
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
   // delete TrueType fonts
-  for (i = 0; i < nTTFonts; ++i) {
-    delete ttFonts[i];
-  }
-  for (i = 0; i < ttFontFilesSize && ttFontFiles[i].num >= 0; ++i) {
-    delete ttFontFiles[i].fontFile;
-  }
-  gfree(ttFontFiles);
+  deleteGList(ttFontFiles, XOutputTTFontFile);
   if (ttEngine) {
     delete ttEngine;
   }
 #endif
-
-  // delete server fonts
-  for (i = 0; i < nServerFonts; ++i) {
-    delete serverFonts[i];
-  }
 }
 
 void XOutputFontCache::clear() {
   int i;
 
+  for (i = 0; i < xOutFontCacheSize; ++i) {
+    fonts[i] = NULL;
+  }
+  nFonts = 0;
+
 #if HAVE_T1LIB_H
-  // clear Type 1 font cache
-  for (i = 0; i < t1FontCacheSize; ++i) {
-    t1Fonts[i] = NULL;
-  }
-  nT1Fonts = 0;
-  t1FontFiles = NULL;
-  t1FontFilesSize = 0;
+  // clear Type 1 font files
+  t1FontFiles = new GList();
 #endif
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+  // clear FreeType font cache
+  ftFontFiles = new GList();
+#endif
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
   // clear TrueType font cache
-  for (i = 0; i < ttFontCacheSize; ++i) {
-    ttFonts[i] = NULL;
-  }
-  nTTFonts = 0;
-  ttFontFiles = NULL;
-  ttFontFilesSize = 0;
+  ttFontFiles = new GList();
 #endif
-
-  // clear server font cache
-  for (i = 0; i < serverFontCacheSize; ++i) {
-    serverFonts[i] = NULL;
-  }
-  nServerFonts = 0;
 }
 
-XOutputFont *XOutputFontCache::getFont(GfxFont *gfxFont,
+XOutputFont *XOutputFontCache::getFont(XRef *xref, GfxFont *gfxFont,
 				       double m11, double m12,
 				       double m21, double m22) {
-#if HAVE_T1LIB_H
-  XOutputT1Font *t1Font;
-#endif
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-  XOutputTTFont *ttFont;
-#endif
-  XOutputServerFont *serverFont;
-  FontMapEntry *fme;
-  GString *t1FontName;
-  char *xFontName;
-  FontEncoding *xEncoding;
-  double size;
-  double ntm11, ntm12, ntm21, ntm22;
+  XOutputFont *font;
+  DisplayFontParam *dfp;
+  GString *substName;
+  double m11New, m12New, m21New, m22New;
   double w1, w2, v;
   double *fm;
+  char *name;
   int index;
   int code;
   int i, j;
 
-  // is it the most recently used Type 1, TrueType, or server font?
+  // is it the most recently used font?
+  if (nFonts > 0 && fonts[0]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
+    return fonts[0];
+  }
+
+  // is it in the cache?
+  for (i = 1; i < nFonts; ++i) {
+    if (fonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
+      font = fonts[i];
+      for (j = i; j > 0; --j) {
+	fonts[j] = fonts[j-1];
+      }
+      fonts[0] = font;
+      return font;
+    }
+  }
+
+  // try for a cached FontFile, an embedded font, or an external font
+  // file
+  font = NULL;
+  switch (gfxFont->getType()) {
+  case fontType1:
+  case fontType1C:
 #if HAVE_T1LIB_H
-  if (useT1lib && nT1Fonts > 0 &&
-      t1Fonts[0]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
-    return t1Fonts[0];
-  }
+    if (t1libControl != fontRastNone) {
+      font = tryGetT1Font(xref, gfxFont, m11, m12, m21, m22);
+    }
 #endif
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-  if (useFreeType && nTTFonts > 0 &&
-      ttFonts[0]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
-    return ttFonts[0];
-  }
-#endif
-  if (nServerFonts > 0 && serverFonts[0]->matches(gfxFont->getID(),
-						  m11, m12, m21, m22)) {
-    return serverFonts[0];
-  }
-
-#if HAVE_T1LIB_H
-  // is it in the Type 1 cache?
-  if (useT1lib) {
-    for (i = 1; i < nT1Fonts; ++i) {
-      if (t1Fonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
-	t1Font = t1Fonts[i];
-	for (j = i; j > 0; --j) {
-	  t1Fonts[j] = t1Fonts[j-1];
-	}
-	t1Fonts[0] = t1Font;
-	return t1Font;
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (!font) {
+      if (freetypeControl != fontRastNone) {
+	font = tryGetFTFont(xref, gfxFont, m11, m12, m21, m22);
       }
     }
-  }
 #endif
-
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-  // is it in the TrueType cache?
-  if (useFreeType) {
-    for (i = 1; i < nTTFonts; ++i) {
-      if (ttFonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
-	ttFont = ttFonts[i];
-	for (j = i; j > 0; --j) {
-	  ttFonts[j] = ttFonts[j-1];
-	}
-	ttFonts[0] = ttFont;
-	return ttFont;
-      }
+    break;
+  case fontTrueType:
+  case fontCIDType2:
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (freetypeControl != fontRastNone) {
+      font = tryGetFTFont(xref, gfxFont, m11, m12, m21, m22);
     }
-  }
 #endif
-
-  // is it in the server cache?
-  for (i = 1; i < nServerFonts; ++i) {
-    if (serverFonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
-      serverFont = serverFonts[i];
-      for (j = i; j > 0; --j)
-	serverFonts[j] = serverFonts[j-1];
-      serverFonts[0] = serverFont;
-      return serverFont;
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (freetypeControl != fontRastNone) {
+      font = tryGetTTFont(xref, gfxFont, m11, m12, m21, m22);
     }
+#endif
+    break;
+  case fontCIDType0C:
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (freetypeControl != fontRastNone) {
+      font = tryGetFTFont(xref, gfxFont, m11, m12, m21, m22);
+    }
+#endif
+    break;
+  default:
+    break;
   }
 
-  // search for a font map entry
-  t1FontName = NULL;
-  xFontName = NULL;
-  xEncoding = NULL;
-  if (!gfxFont->is16Bit() && gfxFont->getName()) {
-    for (fme = userFontMap; fme->pdfFont; ++fme) {
-      if (!gfxFont->getName()->cmp(fme->pdfFont)) {
-	break;
-      }
-    }
-    if (!fme->pdfFont) {
-      for (fme = fontMap; fme->pdfFont; ++fme) {
-	if (!gfxFont->getName()->cmp(fme->pdfFont)) {
-	  break;
-	}
-      }
-    }
-    if (fme && fme->t1Font) {
-      t1FontName = *fme->t1Font;
-    }
-    if (fme && fme->xFont && fme->encoding) {
-      xFontName = fme->xFont;
-      xEncoding = fme->encoding;
-    }
-  }
+  if (!font) {
 
-  // no font map entry found, so substitute a font
-  if (!t1FontName && !xFontName) {
-    if (gfxFont->is16Bit()) {
-      xFontName = fontSubst[0].xFont;
-      t1FontName = NULL;
-      switch (gfxFont->getCharSet16()) {
-      case font16AdobeJapan12:
-#if JAPANESE_SUPPORT
-	xFontName = japan12Font ? japan12Font->getCString() : japan12DefFont;
-#endif
-	break;
-      case font16AdobeGB12:
-#if CHINESE_GB_SUPPORT
-	xFontName = gb12Font ? gb12Font->getCString() : gb12DefFont;
-#endif
-	break;
-      case font16AdobeCNS13:
-#if CHINESE_CNS_SUPPORT
-	xFontName = cns13Font ? cns13Font->getCString() : cns13DefFont;
-#endif
-	break;
+    // search for a display font mapping
+    dfp = NULL;
+    if (gfxFont->isCIDFont()) {
+      if (((GfxCIDFont *)gfxFont)->getCollection()) {
+	dfp = globalParams->
+	        getDisplayCIDFont(gfxFont->getName(),
+				  ((GfxCIDFont *)gfxFont)->getCollection());
+      } else {
+	// this error (no CMap file) was already reported by GfxFont
+	return NULL;
       }
     } else {
+      if (gfxFont->getName()) {
+	dfp = globalParams->getDisplayFont(gfxFont->getName());
+      }
+    }
+    if (dfp) {
+      font = tryGetFont(xref, dfp, gfxFont, m11, m12, m21, m22,
+			m11, m12, m21, m22, gFalse);
+    }
+
+    // substitute a font (8-bit fonts only)
+    if (!font && !gfxFont->isCIDFont()) {
+
+      // choose a substitute font
       if (gfxFont->isFixedWidth()) {
 	index = 8;
       } else if (gfxFont->isSerif()) {
@@ -1176,280 +857,502 @@ XOutputFont *XOutputFontCache::getFont(GfxFont *gfxFont,
       } else {
 	index = 0;
       }
-      if (gfxFont->isBold())
+      if (gfxFont->isBold()) {
 	index += 2;
-      if (gfxFont->isItalic())
+      }
+      if (gfxFont->isItalic()) {
 	index += 1;
-      xFontName = fontSubst[index].xFont;
-      t1FontName = *fontSubst[index].t1Font;
-      xEncoding = &isoLatin1Encoding;
-      // get width of 'm' in real font and substituted font
-      if ((code = gfxFont->getCharCode("m")) >= 0)
-	w1 = gfxFont->getWidth(code);
-      else
-	w1 = 0;
-      w2 = fontSubst[index].mWidth;
-      if (gfxFont->getType() == fontType3) {
-	// This is a hack which makes it possible to substitute for some
-	// Type 3 fonts.  The problem is that it's impossible to know what
-	// the base coordinate system used in the font is without actually
-	// rendering the font.  This code tries to guess by looking at the
-	// width of the character 'm' (which breaks if the font is a
-	// subset that doesn't contain 'm').
-	if (w1 > 0 && (w1 > 1.1 * w2 || w1 < 0.9 * w2)) {
-	  w1 /= w2;
-	  m11 *= w1;
-	  m12 *= w1;
-	  m21 *= w1;
-	  m22 *= w1;
+      }
+      substName = new GString(xOutSubstFonts[index].name);
+
+      // adjust the font matrix -- compare the width of 'm' in the
+      // original font and the substituted font
+      m11New = m11;
+      m12New = m12;
+      m21New = m21;
+      m22New = m22;
+      for (code = 0; code < 256; ++code) {
+	if ((name = ((Gfx8BitFont *)gfxFont)->getCharName(code)) &&
+	    name[0] == 'm' && name[1] == '\0') {
+	  break;
 	}
-	fm = gfxFont->getFontMatrix();
-	v = (fm[0] == 0) ? 1 : (fm[3] / fm[0]);
-	m21 *= v;
-	m22 *= v;
-      } else if (!gfxFont->isSymbolic()) {
-	// if real font is substantially narrower than substituted
-	// font, reduce the font size accordingly
-	if (w1 > 0.01 && w1 < 0.9 * w2) {
-	  w1 /= w2;
-	  if (w1 < 0.8) {
-	    w1 = 0.8;
+      }
+      if (code < 256) {
+	w1 = ((Gfx8BitFont *)gfxFont)->getWidth(code);
+	w2 = xOutSubstFonts[index].mWidth;
+	if (gfxFont->getType() == fontType3) {
+	  // This is a hack which makes it possible to substitute for some
+	  // Type 3 fonts.  The problem is that it's impossible to know what
+	  // the base coordinate system used in the font is without actually
+	  // rendering the font.  This code tries to guess by looking at the
+	  // width of the character 'm' (which breaks if the font is a
+	  // subset that doesn't contain 'm').
+	  if (w1 > 0 && (w1 > 1.1 * w2 || w1 < 0.9 * w2)) {
+	    w1 /= w2;
+	    m11New *= w1;
+	    m12New *= w1;
+	    m21New *= w1;
+	    m22New *= w1;
 	  }
-	  m11 *= w1;
-	  m12 *= w1;
-	  m21 *= w1;
-	  m22 *= w1;
+	  fm = gfxFont->getFontMatrix();
+	  v = (fm[0] == 0) ? 1 : (fm[3] / fm[0]);
+	  m21New *= v;
+	  m22New *= v;
+	} else if (!gfxFont->isSymbolic()) {
+	  // if real font is substantially narrower than substituted
+	  // font, reduce the font size accordingly
+	  if (w1 > 0.01 && w1 < 0.9 * w2) {
+	    w1 /= w2;
+	    m11New *= w1;
+	    m21New *= w1;
+	  }
 	}
       }
+
+      // get the font
+      dfp = globalParams->getDisplayFont(substName);
+      delete substName;
+      if (!dfp) {
+	// this should never happen since GlobalParams sets up default
+	// mappings for the Base-14 fonts
+	error(-1, "Couldn't find a font for '%s'",
+	      gfxFont->getName()->getCString());
+	return NULL;
+      }
+      font = tryGetFont(xref, dfp, gfxFont, m11, m12, m21, m22,
+			m11New, m12New, m21New, m22New, gTrue);
     }
   }
 
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-  // try to create a new TrueType font
-  if (useFreeType) {
-    ttFont = new XOutputTTFont(gfxFont, m11, m12, m21, m22, display, this);
-    if (ttFont->isOk()) {
-
-      // insert in cache
-      if (nTTFonts == ttFontCacheSize) {
-	--nTTFonts;
-	delete ttFonts[nTTFonts];
-      }
-      for (j = nTTFonts; j > 0; --j) {
-	ttFonts[j] = ttFonts[j-1];
-      }
-      ttFonts[0] = ttFont;
-      ++nTTFonts;
-
-      return ttFont;
+  // check for error
+  if (!font) {
+    // This will happen if the user specifies a bogus font in the
+    // config file (a non-existent font file or a font that requires a
+    // rasterizer that is disabled or wasn't built in), or if a CID
+    // font has no associated font in the config file.
+    if (gfxFont->isCIDFont()) {
+      error(-1, "Couldn't find a font for the '%s' character collection",
+	    ((GfxCIDFont *)gfxFont)->getCollection()->getCString());
+    } else {
+      error(-1, "Couldn't find a font for '%s'",
+	    gfxFont->getName() ?
+	        gfxFont->getName()->getCString() : "[unnamed]");
     }
-    delete ttFont;
+    return NULL;
   }
-#endif
 
+  // insert font in cache
+  if (nFonts == xOutFontCacheSize) {
+    --nFonts;
+    delete fonts[nFonts];
+  }
+  for (j = nFonts; j > 0; --j) {
+    fonts[j] = fonts[j-1];
+  }
+  fonts[0] = font;
+  ++nFonts;
+
+  return font;
+}
+
+XOutputFont *XOutputFontCache::tryGetFont(XRef *xref, DisplayFontParam *dfp,
+					  GfxFont *gfxFont,
+					  double m11Orig, double m12Orig,
+					  double m21Orig, double m22Orig,
+					  double m11, double m12,
+					  double m21, double m22,
+					  GBool subst) {
+  XOutputFont *font;
+
+  font = NULL;
+
+  // create the new font
+  switch (dfp->kind) {
+
+  case displayFontX:
+    font = tryGetServerFont(dfp->x.xlfd, dfp->x.encoding, gfxFont,
+			    m11Orig, m12Orig, m21Orig, m22Orig,
+			    m11, m12, m21, m22);
+    break;
+
+  case displayFontT1:
 #if HAVE_T1LIB_H
-  // try to create a new Type 1 font
-  if (useT1lib) {
-    t1Font = new XOutputT1Font(gfxFont, t1FontName, m11, m12, m21, m22,
-			       display, this);
-    if (t1Font->isOk()) {
-
-      // insert in cache
-      if (nT1Fonts == t1FontCacheSize) {
-	--nT1Fonts;
-	delete t1Fonts[nT1Fonts];
-      }
-      for (j = nT1Fonts; j > 0; --j) {
-	t1Fonts[j] = t1Fonts[j-1];
-      }
-      t1Fonts[0] = t1Font;
-      ++nT1Fonts;
-
-      return t1Font;
+    if (t1libControl != fontRastNone) {
+      font = tryGetT1FontFromFile(xref, dfp->t1.fileName, gfxFont,
+				  m11Orig, m12Orig, m21Orig, m22Orig,
+				  m11, m12, m21, m22, subst);
     }
-    delete t1Font;
-  }
 #endif
-
-  // compute size and normalized transform matrix
-  size = sqrt(m21*m21 + m22*m22);
-  ntm11 = m11 / size;
-  ntm12 = m12 / size;
-  ntm21 = m21 / size;
-  ntm22 = m22 / size;
-
-  // create a new server font
-  serverFont = new XOutputServerFont(gfxFont, xFontName, xEncoding,
-				     m11, m12, m21, m22,
-				     size, ntm11, ntm12, ntm21, ntm22,
-				     display, this);
-  if (serverFont->isOk()) {
-
-    // insert in cache
-    if (nServerFonts == serverFontCacheSize) {
-      --nServerFonts;
-      delete serverFonts[nServerFonts];
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (!font) {
+      if (freetypeControl != fontRastNone) {
+	font = tryGetFTFontFromFile(xref, dfp->t1.fileName, gfxFont,
+				    m11Orig, m12Orig, m21Orig, m22Orig,
+				    m11, m12, m21, m22, subst);
+      }
     }
-    for (j = nServerFonts; j > 0; --j)
-      serverFonts[j] = serverFonts[j-1];
-    serverFonts[0] = serverFont;
-    ++nServerFonts;
+#endif
+#if !((FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)) || defined(HAVE_T1LIB_H))
+    error(-1, "Config file specifies a Type 1 font,");
+    error(-1, "but xpdf was not built with t1lib or FreeType2 support");
+#endif
+    break;
 
-    return serverFont;
+  case displayFontTT:
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (freetypeControl != fontRastNone) {
+      font = tryGetFTFontFromFile(xref, dfp->tt.fileName, gfxFont,
+				  m11Orig, m12Orig, m21Orig, m22Orig,
+				  m11, m12, m21, m22, subst);
+    }
+#endif
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    if (freetypeControl != fontRastNone) {
+      font = tryGetTTFontFromFile(xref, dfp->tt.fileName, gfxFont,
+				  m11Orig, m12Orig, m21Orig, m22Orig,
+				  m11, m12, m21, m22, subst);
+    }
+#endif
+#if !(HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+    error(-1, "Config file specifies a TrueType font,");
+    error(-1, "but xpdf was not built with FreeType support");
+    dfp = NULL;
+#endif
+    break;
   }
-  delete serverFont;
 
-  return NULL;
+  return font;
 }
 
 #if HAVE_T1LIB_H
-T1FontFile *XOutputFontCache::getT1Font(GfxFont *gfxFont,
-					GString *pdfBaseFont) {
-  Ref id;
-  T1FontFile *fontFile;
+XOutputFont *XOutputFontCache::tryGetT1Font(XRef *xref,
+					    GfxFont *gfxFont,
+					    double m11, double m12,
+					    double m21, double m22) {
+  Ref *id;
+  XOutputT1FontFile *xFontFile;
+  XOutputFont *font;
+  Ref embRef;
   GString *fileName;
-  GString *tmpFileName;
   FILE *f;
   char *fontBuf;
   int fontLen;
-  Type1CFontConverter *cvt;
-  Ref embRef;
+  Type1CFontFile *ff;
   Object refObj, strObj;
   int c;
-  int i, j;
+  int i;
 
+  // check the already available font files
   id = gfxFont->getID();
-
-  // check available fonts
-  fontFile = NULL;
-  for (i = 0; i < t1FontFilesSize && t1FontFiles[i].num >= 0; ++i) {
-    if (t1FontFiles[i].num == id.num && t1FontFiles[i].gen == id.gen) {
-      fontFile = t1FontFiles[i].fontFile;
-    }
-  }
-
-  // create a new font file
-  if (!fontFile) {
-
-    // resize t1FontFiles if necessary
-    if (i == t1FontFilesSize) {
-      t1FontFiles = (XOutputT1FontFile *)
-	grealloc(t1FontFiles,
-		 (t1FontFilesSize + 16) * sizeof(XOutputT1FontFile));
-      for (j = 0; j < 16; ++j) {
-	t1FontFiles[t1FontFilesSize + j].num = -1;
-      }
-      t1FontFilesSize += 16;
-    }
-
-    // create the font file
-    tmpFileName = NULL;
-    if (!gfxFont->is16Bit() &&
-	(gfxFont->getType() == fontType1 ||
-	 gfxFont->getType() == fontType1C) &&
-	gfxFont->getEmbeddedFontID(&embRef)) {
-      if (!openTempFile(&tmpFileName, &f, "wb", NULL)) {
-	error(-1, "Couldn't create temporary Type 1 font file");
+  for (i = 0; i < t1FontFiles->getLength(); ++i) {
+    xFontFile = (XOutputT1FontFile *)t1FontFiles->get(i);
+    if (xFontFile->num == id->num && xFontFile->gen == id->gen &&
+	!xFontFile->subst) {
+      font = new XOutputT1Font(id, xFontFile->fontFile,
+			       m11, m12, m21, m22,
+			       m11, m12, m21, m22, display, xOut);
+      if (!font->isOk()) {
+	delete font;
 	return NULL;
       }
-      if (gfxFont->getType() == fontType1C) {
-	if (!(fontBuf = gfxFont->readEmbFontFile(&fontLen))) {
-	  fclose(f);
-	  return NULL;
-	}
-	cvt = new Type1CFontConverter(fontBuf, fontLen, f);
-	cvt->convert();
-	delete cvt;
-	gfree(fontBuf);
-      } else {
-	gfxFont->getEmbeddedFontID(&embRef);
-	refObj.initRef(embRef.num, embRef.gen);
-	refObj.fetch(&strObj);
-	refObj.free();
-	strObj.streamReset();
-	while ((c = strObj.streamGetChar()) != EOF) {
-	  fputc(c, f);
-	}
-	strObj.streamClose();
-	strObj.free();
-      }
-      fclose(f);
-      fileName = tmpFileName;
-    } else if (!gfxFont->is16Bit() &&
-	       gfxFont->getType() == fontType1 &&
-	       gfxFont->getExtFontFile()) {
-      fileName = gfxFont->getExtFontFile();
-    } else {
-      fileName = pdfBaseFont;
-    }
-
-    // create the t1lib font
-    fontFile = new T1FontFile(t1Engine, fileName->getCString(),
-			      gfxFont->getEncoding());
-    if (!fontFile->isOk()) {
-      error(-1, "Couldn't create t1lib font from '%s'",
-	    fileName->getCString());
-      delete fontFile;
-      return NULL;
-    }
-    t1FontFiles[i].num = id.num;
-    t1FontFiles[i].gen = id.gen;
-    t1FontFiles[i].fontFile = fontFile;
-
-    // remove the font file
-    if (tmpFileName) {
-      unlink(tmpFileName->getCString());
-      delete tmpFileName;
+      return font;
     }
   }
 
-  return fontFile;
-}
-#endif
-
-#if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-TTFontFile *XOutputFontCache::getTTFont(GfxFont *gfxFont) {
-  Ref id;
-  TTFontFile *fontFile;
-  GString *fileName;
-  FILE *f;
-  Ref embRef;
-  Object refObj, strObj;
-  int c;
-  int i, j;
-
-  id = gfxFont->getID();
-
-  // check available fonts
-  fontFile = NULL;
-  for (i = 0; i < ttFontFilesSize && ttFontFiles[i].num >= 0; ++i) {
-    if (ttFontFiles[i].num == id.num && ttFontFiles[i].gen == id.gen) {
-      fontFile = ttFontFiles[i].fontFile;
-    }
-  }
-
-  // create a new font file
-  if (!fontFile) {
-
-    // resize ttFontFiles if necessary
-    if (i == ttFontFilesSize) {
-      ttFontFiles = (XOutputTTFontFile *)
-	grealloc(ttFontFiles,
-		 (ttFontFilesSize + 16) * sizeof(XOutputTTFontFile));
-      for (j = 0; j < 16; ++j) {
-	ttFontFiles[ttFontFilesSize + j].num = -1;
-      }
-      ttFontFilesSize += 16;
-    }
+  // check for an embedded font
+  if (gfxFont->getEmbeddedFontID(&embRef)) {
 
     // create the font file
+    fileName = NULL;
+    if (!openTempFile(&fileName, &f, "wb", NULL)) {
+      error(-1, "Couldn't create temporary Type 1 font file");
+      return NULL;
+    }
+    if (gfxFont->getType() == fontType1C) {
+      if (!(fontBuf = gfxFont->readEmbFontFile(xref, &fontLen))) {
+	fclose(f);
+	return NULL;
+      }
+      ff = new Type1CFontFile(fontBuf, fontLen);
+      ff->convertToType1(f);
+      delete ff;
+      gfree(fontBuf);
+    } else { // fontType1
+      refObj.initRef(embRef.num, embRef.gen);
+      refObj.fetch(xref, &strObj);
+      refObj.free();
+      strObj.streamReset();
+      while ((c = strObj.streamGetChar()) != EOF) {
+	fputc(c, f);
+      }
+      strObj.streamClose();
+      strObj.free();
+    }
+    fclose(f);
+
+    // create the Font
+    font = tryGetT1FontFromFile(xref, fileName, gfxFont,
+				m11, m12, m21, m22,
+				m11, m12, m21, m22, gFalse);
+
+    // remove the temporary file
+    unlink(fileName->getCString());
+    delete fileName;
+
+  // check for an external font file
+  } else if ((fileName = gfxFont->getExtFontFile())) {
+    font = tryGetT1FontFromFile(xref, fileName, gfxFont,
+				m11, m12, m21, m22,
+				m11, m12, m21, m22, gFalse);
+
+  } else {
+    font = NULL;
+  }
+
+  return font;
+}
+
+XOutputFont *XOutputFontCache::tryGetT1FontFromFile(XRef *xref,
+						    GString *fileName,
+						    GfxFont *gfxFont,
+						    double m11Orig,
+						    double m12Orig,
+						    double m21Orig,
+						    double m22Orig,
+						    double m11, double m12,
+						    double m21, double m22,
+						    GBool subst) {
+  Ref *id;
+  T1FontFile *fontFile;
+  XOutputFont *font;
+
+  // create the t1lib font file
+  fontFile = new T1FontFile(t1Engine, fileName->getCString(),
+			    ((Gfx8BitFont *)gfxFont)->getEncoding(),
+			    gfxFont->getFontBBox());
+  if (!fontFile->isOk()) {
+    error(-1, "Couldn't create t1lib font from '%s'",
+	  fileName->getCString());
+    delete fontFile;
+    return NULL;
+  }
+
+  // add to list
+  id = gfxFont->getID();
+  t1FontFiles->append(new XOutputT1FontFile(id->num, id->gen,
+					    subst, fontFile));
+
+  // create the Font
+  font = new XOutputT1Font(gfxFont->getID(), fontFile,
+			   m11Orig, m12Orig, m21Orig, m22Orig,
+			   m11, m12, m21, m22, display, xOut);
+  if (!font->isOk()) {
+    delete font;
+    return NULL;
+  }
+  return font;
+}
+#endif // HAVE_T1LIB_H
+
+#if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+XOutputFont *XOutputFontCache::tryGetFTFont(XRef *xref,
+					    GfxFont *gfxFont,
+					    double m11, double m12,
+					    double m21, double m22) {
+  Ref *id;
+  XOutputFTFontFile *xFontFile;
+  XOutputFont *font;
+  Ref embRef;
+  GString *fileName;
+  FILE *f;
+#if 1 //~ need this until FT can handle fonts with missing tables
+  char *fontBuf;
+  int fontLen;
+  TrueTypeFontFile *ff;
+#endif
+  Object refObj, strObj;
+  int c;
+  int i;
+
+  // check the already available font files
+  id = gfxFont->getID();
+  for (i = 0; i < ftFontFiles->getLength(); ++i) {
+    xFontFile = (XOutputFTFontFile *)ftFontFiles->get(i);
+    if (xFontFile->num == id->num && xFontFile->gen == id->gen &&
+	!xFontFile->subst) {
+      font = new XOutputFTFont(id, xFontFile->fontFile,
+			       m11, m12, m21, m22,
+			       m11, m12, m21, m22, display, xOut);
+      if (!font->isOk()) {
+	delete font;
+	return NULL;
+      }
+      return font;
+    }
+  }
+
+  // check for an embedded font
+  if (gfxFont->getEmbeddedFontID(&embRef)) {
+
+    // create the font file
+    fileName = NULL;
     if (!openTempFile(&fileName, &f, "wb", NULL)) {
       error(-1, "Couldn't create temporary TrueType font file");
       return NULL;
     }
-    gfxFont->getEmbeddedFontID(&embRef);
+#if 1 //~ need this until FT can handle fonts with missing tables
+    if (gfxFont->getType() == fontTrueType ||
+	gfxFont->getType() == fontCIDType2) {
+      if (!(fontBuf = gfxFont->readEmbFontFile(xref, &fontLen))) {
+	fclose(f);
+	return NULL;
+      }
+      ff = new TrueTypeFontFile(fontBuf, fontLen);
+      ff->writeTTF(f);
+      delete ff;
+      gfree(fontBuf);
+    } else {
+      refObj.initRef(embRef.num, embRef.gen);
+      refObj.fetch(xref, &strObj);
+      refObj.free();
+      strObj.streamReset();
+      while ((c = strObj.streamGetChar()) != EOF) {
+	fputc(c, f);
+      }
+      strObj.streamClose();
+      strObj.free();
+    }
+#else
     refObj.initRef(embRef.num, embRef.gen);
-    refObj.fetch(&strObj);
+    refObj.fetch(xref, &strObj);
+    refObj.free();
+    strObj.streamReset();
+    while ((c = strObj.streamGetChar()) != EOF) {
+      fputc(c, f);
+    }
+    strObj.streamClose();
+    strObj.free();
+#endif
+    fclose(f);
+
+    // create the Font
+    font = tryGetFTFontFromFile(xref, fileName, gfxFont,
+				m11, m12, m21, m22,
+				m11, m12, m21, m22, gFalse);
+
+    // remove the temporary file
+    unlink(fileName->getCString());
+    delete fileName;
+
+  // check for an external font file
+  } else if ((fileName = gfxFont->getExtFontFile())) {
+    font = tryGetFTFontFromFile(xref, fileName, gfxFont,
+				m11, m12, m21, m22,
+				m11, m12, m21, m22, gFalse);
+
+  } else {
+    font = NULL;
+  }
+
+  return font;
+}
+
+XOutputFont *XOutputFontCache::tryGetFTFontFromFile(XRef *xref,
+						    GString *fileName,
+						    GfxFont *gfxFont,
+						    double m11Orig,
+						    double m12Orig,
+						    double m21Orig,
+						    double m22Orig,
+						    double m11, double m12,
+						    double m21, double m22,
+						    GBool subst) {
+  Ref *id;
+  FTFontFile *fontFile;
+  XOutputFont *font;
+
+  // create the FreeType font file
+  if (gfxFont->isCIDFont()) {
+    if (gfxFont->getType() == fontCIDType2) {
+      fontFile = new FTFontFile(ftEngine, fileName->getCString(),
+				((GfxCIDFont *)gfxFont)->getCIDToGID(),
+				((GfxCIDFont *)gfxFont)->getCIDToGIDLen());
+    } else { // fontCIDType0C
+      fontFile = new FTFontFile(ftEngine, fileName->getCString());
+    }
+  } else {
+    fontFile = new FTFontFile(ftEngine, fileName->getCString(),
+			      ((Gfx8BitFont *)gfxFont)->getEncoding(),
+			      ((Gfx8BitFont *)gfxFont)->getHasEncoding());
+  }
+  if (!fontFile->isOk()) {
+    error(-1, "Couldn't create FreeType font from '%s'",
+	  fileName->getCString());
+    delete fontFile;
+    return NULL;
+  }
+
+  // add to list
+  id = gfxFont->getID();
+  ftFontFiles->append(new XOutputFTFontFile(id->num, id->gen,
+					    subst, fontFile));
+
+  // create the Font
+  font = new XOutputFTFont(gfxFont->getID(), fontFile,
+			   m11Orig, m12Orig, m21Orig, m22Orig,
+			   m11, m12, m21, m22, display, xOut);
+  if (!font->isOk()) {
+    delete font;
+    return NULL;
+  }
+  return font;
+}
+#endif // FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+
+#if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+XOutputFont *XOutputFontCache::tryGetTTFont(XRef *xref,
+					    GfxFont *gfxFont,
+					    double m11, double m12,
+					    double m21, double m22) {
+  Ref *id;
+  XOutputTTFontFile *xFontFile;
+  XOutputFont *font;
+  Ref embRef;
+  GString *fileName;
+  FILE *f;
+  Object refObj, strObj;
+  int c;
+  int i;
+
+  // check the already available font files
+  id = gfxFont->getID();
+  xFontFile = NULL;
+  for (i = 0; i < ttFontFiles->getLength(); ++i) {
+    xFontFile = (XOutputTTFontFile *)ttFontFiles->get(i);
+    if (xFontFile->num == id->num && xFontFile->gen == id->gen &&
+	!xFontFile->subst) {
+      font = new XOutputTTFont(id, xFontFile->fontFile,
+			       m11, m12, m21, m22,
+			       m11, m12, m21, m22, display, xOut);
+      if (!font->isOk()) {
+	delete font;
+	return NULL;
+      }
+      return font;
+    }
+  }
+
+  // check for an embedded font
+  if (gfxFont->getEmbeddedFontID(&embRef)) {
+
+    // create the font file
+    fileName = NULL;
+    if (!openTempFile(&fileName, &f, "wb", NULL)) {
+      error(-1, "Couldn't create temporary TrueType font file");
+      return NULL;
+    }
+    refObj.initRef(embRef.num, embRef.gen);
+    refObj.fetch(xref, &strObj);
     refObj.free();
     strObj.streamReset();
     while ((c = strObj.streamGetChar()) != EOF) {
@@ -1459,33 +1362,226 @@ TTFontFile *XOutputFontCache::getTTFont(GfxFont *gfxFont) {
     strObj.free();
     fclose(f);
 
-    // create the FreeType font file
-    fontFile = new TTFontFile(ttEngine, fileName->getCString());
-    if (!fontFile->isOk()) {
-      error(-1, "Couldn't create FreeType font from '%s'",
-	    fileName->getCString());
-      delete fontFile;
-      return NULL;
-    }
-    ttFontFiles[i].num = id.num;
-    ttFontFiles[i].gen = id.gen;
-    ttFontFiles[i].fontFile = fontFile;
+    // create the Font
+    font = tryGetTTFontFromFile(xref, fileName, gfxFont,
+				m11, m12, m21, m22,
+				m11, m12, m21, m22, gFalse);
 
-    // remove the font file
+    // remove the temporary file
     unlink(fileName->getCString());
     delete fileName;
+
+  } else if ((fileName = gfxFont->getExtFontFile())) {
+    font = tryGetTTFontFromFile(xref, fileName, gfxFont,
+				m11, m12, m21, m22,
+				m11, m12, m21, m22, gFalse);
+
+  } else {
+    font = NULL;
   }
 
-  return fontFile;
+  return font;
 }
-#endif
+
+XOutputFont *XOutputFontCache::tryGetTTFontFromFile(XRef *xref,
+						    GString *fileName,
+						    GfxFont *gfxFont,
+						    double m11Orig,
+						    double m12Orig,
+						    double m21Orig,
+						    double m22Orig,
+						    double m11, double m12,
+						    double m21, double m22,
+						    GBool subst) {
+  Ref *id;
+  TTFontFile *fontFile;
+  XOutputFont *font;
+
+  // create the FreeType font file
+  if (gfxFont->isCIDFont()) {
+    // fontCIDType2
+    fontFile = new TTFontFile(ttEngine, fileName->getCString(),
+			      ((GfxCIDFont *)gfxFont)->getCIDToGID(),
+			      ((GfxCIDFont *)gfxFont)->getCIDToGIDLen());
+  } else {
+    fontFile = new TTFontFile(ttEngine, fileName->getCString(),
+			      ((Gfx8BitFont *)gfxFont)->getEncoding(),
+			      ((Gfx8BitFont *)gfxFont)->getHasEncoding());
+  }
+  if (!fontFile->isOk()) {
+    error(-1, "Couldn't create FreeType font from '%s'",
+	  fileName->getCString());
+    delete fontFile;
+    return NULL;
+  }
+
+  // add to list
+  id = gfxFont->getID();
+  ttFontFiles->append(new XOutputTTFontFile(id->num, id->gen,
+					    subst, fontFile));
+
+  // create the Font
+  font = new XOutputTTFont(gfxFont->getID(), fontFile,
+			   m11Orig, m12Orig, m21Orig, m22Orig,
+			   m11, m12, m21, m22, display, xOut);
+  if (!font->isOk()) {
+    delete font;
+    return NULL;
+  }
+  return font;
+}
+#endif // !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+
+XOutputFont *XOutputFontCache::tryGetServerFont(GString *xlfd,
+						GString *encodingName,
+						GfxFont *gfxFont,
+						double m11Orig, double m12Orig,
+						double m21Orig, double m22Orig,
+						double m11, double m12,
+						double m21, double m22) {
+  XOutputFont *font;
+  UnicodeMap *uMap;
+  CharCodeToUnicode *ctu;
+
+  uMap = globalParams->getUnicodeMap(encodingName);
+  if (gfxFont->isCIDFont()) {
+    ctu = ((GfxCIDFont *)gfxFont)->getToUnicode();
+    font = new XOutputServer16BitFont(gfxFont->getID(), xlfd, uMap, ctu,
+				      m11Orig, m12Orig, m21Orig, m22Orig,
+				      m11, m12, m21, m22,
+				      display, xOut);
+    ctu->decRefCnt();
+  } else {
+    ctu = ((Gfx8BitFont *)gfxFont)->getToUnicode();
+    font = new XOutputServer8BitFont(gfxFont->getID(), xlfd, uMap, ctu,
+				     m11Orig, m12Orig, m21Orig, m22Orig,
+				     m11, m12, m21, m22,
+				     display, xOut);
+    ctu->decRefCnt();
+  }
+  uMap->decRefCnt();
+  if (!font->isOk()) {
+    delete font;
+    return NULL;
+  }
+  return font;
+}
+
+//------------------------------------------------------------------------
+// T3FontCache
+//------------------------------------------------------------------------
+
+struct T3FontCacheTag {
+  Gushort code;
+  Gushort mru;			// valid bit (0x8000) and MRU index
+  double wx, wy;		// untransformed glyph metrics
+};
+
+class T3FontCache {
+public:
+
+  T3FontCache(Ref *fontID, double m11A, double m12A,
+	      double m21A, double m22A,
+	      int glyphXA, int glyphYA, int glyphWA, int glyphHA,
+	      Display *displayA, Visual *visual, Guint depth,
+	      Pixmap origPixmap);
+  ~T3FontCache();
+  GBool matches(Ref *idA, double m11A, double m12A,
+		double m21A, double m22A)
+    { return fontID.num == idA->num && fontID.gen == idA->gen &&
+	     m11 == m11A && m12 == m12A && m21 == m21A && m22 == m22A; }
+
+  Ref fontID;			// PDF font ID
+  double m11, m12, m21, m22;	// transform matrix
+  int glyphX, glyphY;		// pixel offset of glyph pixmaps
+  int glyphW, glyphH;		// size of glyph pixmaps, in pixels
+  int glyphSize;		// size of glyph pixmaps, in bytes
+  int cacheSets;		// number of sets in cache
+  int cacheAssoc;		// cache associativity (glyphs per set)
+  Guchar *cacheData;		// glyph pixmap cache
+  T3FontCacheTag *cacheTags;	// cache tags, i.e., char codes
+  Display *display;
+  Pixmap pixmap;
+  XImage *image;
+};
+
+T3FontCache::T3FontCache(Ref *fontIDA, double m11A, double m12A,
+			 double m21A, double m22A,
+			 int glyphXA, int glyphYA, int glyphWA, int glyphHA,
+			 Display *displayA, Visual *visual, Guint depth,
+			 Pixmap origPixmap) {
+  int i;
+
+  fontID = *fontIDA;
+  m11 = m11A;
+  m12 = m12A;
+  m21 = m21A;
+  m22 = m22A;
+  glyphX = glyphXA;
+  glyphY = glyphYA;
+  glyphW = glyphWA;
+  glyphH = glyphHA;
+  glyphSize = glyphW * glyphH;
+  cacheAssoc = 8;
+  if (glyphSize <= 256) {
+    cacheSets = 8;
+  } else if (glyphSize <= 512) {
+    cacheSets = 4;
+  } else if (glyphSize <= 1024) {
+    cacheSets = 2;
+  } else {
+    cacheSets = 1;
+  }
+  cacheData = (Guchar *)gmalloc(cacheSets * cacheAssoc * glyphSize);
+  cacheTags = (T3FontCacheTag *)gmalloc(cacheSets * cacheAssoc *
+					sizeof(T3FontCacheTag));
+  for (i = 0; i < cacheSets * cacheAssoc; ++i) {
+    cacheTags[i].mru = i & (cacheAssoc - 1);
+  }
+  display = displayA;
+  pixmap = XCreatePixmap(display, origPixmap, glyphW, glyphH, depth);
+  image = XCreateImage(display, visual, depth, ZPixmap, 0, NULL,
+		       glyphW, glyphH, 8, 0);
+  image->data = (char *)gmalloc(glyphH * image->bytes_per_line);
+}
+
+T3FontCache::~T3FontCache() {
+  gfree(cacheData);
+  gfree(cacheTags);
+  XFreePixmap(display, pixmap);
+  gfree(image->data);
+  image->data = NULL;
+  XDestroyImage(image);
+}
+
+struct T3GlyphStack {
+  GBool cacheable;
+  Gushort code;
+  T3FontCache *cache;
+  int cacheIdx;
+  T3FontCacheTag *cacheTag;
+  Guchar *cacheData;
+  double x, y;
+  Unicode *u;
+  int uLen;
+  GfxRGB color;
+  int origPixmapW, origPixmapH;
+  Pixmap origPixmap;
+  GC origStrokeGC;
+  GC origFillGC;
+  Region origClipRegion;
+  double wx, wy;		// untransformed glyph metrics
+  T3GlyphStack *next;
+};
 
 //------------------------------------------------------------------------
 // XOutputDev
 //------------------------------------------------------------------------
 
-XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
-		       Colormap colormap, unsigned long paperColor) {
+XOutputDev::XOutputDev(Display *displayA, Pixmap pixmapA, Guint depthA,
+		       Colormap colormapA, GBool reverseVideoA,
+		       unsigned long paperColor, GBool installCmap,
+		       int rgbCubeSize) {
   XVisualInfo visualTempl;
   XVisualInfo *visualList;
   int nVisuals;
@@ -1496,17 +1592,19 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
   int r, g, b, n, m, i;
   GBool ok;
 
+  xref = NULL;
+
   // get display/pixmap info
-  this->display = display;
+  display = displayA;
   screenNum = DefaultScreen(display);
-  this->pixmap = pixmap;
-  this->depth = depth;
-  this->colormap = colormap;
+  pixmap = pixmapA;
+  depth = depthA;
+  colormap = colormapA;
 
   // check for TrueColor visual
   trueColor = gFalse;
   if (depth == 0) {
-    this->depth = DefaultDepth(display, screenNum);
+    depth = DefaultDepth(display, screenNum);
     visualList = XGetVisualInfo(display, 0, &visualTempl, &nVisuals);
     for (i = 0; i < nVisuals; ++i) {
       if (visualList[i].visual == DefaultVisual(display, screenNum)) {
@@ -1533,13 +1631,16 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
 
   // allocate a color cube
   if (!trueColor) {
+    redMap[BlackPixel(display, screenNum) & 0xff] = 0;
+    redMap[WhitePixel(display, screenNum) & 0xff] = 1;
 
     // set colors in private colormap
     if (installCmap) {
       for (numColors = 6; numColors >= 2; --numColors) {
 	m = numColors * numColors * numColors;
-	if (XAllocColorCells(display, colormap, False, NULL, 0, colors, m))
+	if (XAllocColorCells(display, colormap, False, NULL, 0, colors, m)) {
 	  break;
+	}
       }
       if (numColors >= 2) {
 	m = numColors * numColors * numColors;
@@ -1553,6 +1654,7 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
 	      xcolors[n].green = (g * 65535) / (numColors - 1);
 	      xcolors[n].blue = (b * 65535) / (numColors - 1);
 	      xcolors[n].flags = DoRed | DoGreen | DoBlue;
+	      redMap[xcolors[n].pixel & 0xff] = xcolors[n].red / 65535.0;
 	      ++n;
 	    }
 	  }
@@ -1567,8 +1669,9 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
 
     // allocate colors in shared colormap
     } else {
-      if (rgbCubeSize > maxRGBCube)
+      if (rgbCubeSize > maxRGBCube) {
 	rgbCubeSize = maxRGBCube;
+      }
       ok = gFalse;
       for (numColors = rgbCubeSize; numColors >= 2; --numColors) {
 	ok = gTrue;
@@ -1577,21 +1680,26 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
 	  for (g = 0; g < numColors && ok; ++g) {
 	    for (b = 0; b < numColors && ok; ++b) {
 	      if (n == 0) {
-		colors[n++] = BlackPixel(display, screenNum);
+		colors[n] = BlackPixel(display, screenNum);
+		redMap[colors[n] & 0xff] = 0;
+		++n;
 	      } else {
 		xcolor.red = (r * 65535) / (numColors - 1);
 		xcolor.green = (g * 65535) / (numColors - 1);
 		xcolor.blue = (b * 65535) / (numColors - 1);
-		if (XAllocColor(display, colormap, &xcolor))
+		if (XAllocColor(display, colormap, &xcolor)) {
 		  colors[n++] = xcolor.pixel;
-		else
+		  redMap[xcolor.pixel & 0xff] = xcolor.red / 65535.0;
+		} else {
 		  ok = gFalse;
+		}
 	      }
 	    }
 	  }
 	}
-	if (ok)
+	if (ok) {
 	  break;
+	}
 	XFreeColors(display, colormap, &colors[1], n-1, 0);
       }
       if (!ok) {
@@ -1601,6 +1709,9 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
       }
     }
   }
+
+  // reverse video mode
+  reverseVideo = reverseVideoA;
 
   // allocate GCs
   gcValues.foreground = BlackPixel(display, screenNum);
@@ -1621,52 +1732,48 @@ XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
   // no clip region yet
   clipRegion = NULL;
 
-  // get user font map
-  for (n = 0; devFontMap[n].pdfFont; ++n) ;
-  userFontMap = (FontMapEntry *)gmalloc((n+1) * sizeof(FontMapEntry));
-  for (i = 0; i < n; ++i) {
-    userFontMap[i].pdfFont = devFontMap[i].pdfFont;
-    userFontMap[i].xFont = devFontMap[i].devFont;
-    m = strlen(userFontMap[i].xFont);
-    if (m >= 10 && !strcmp(userFontMap[i].xFont + m - 10, "-iso8859-2"))
-      userFontMap[i].encoding = &isoLatin2Encoding;
-    else if (m >= 13 && !strcmp(userFontMap[i].xFont + m - 13,
-				"-fontspecific"))
-      userFontMap[i].encoding = NULL;
-    else
-      userFontMap[i].encoding = &isoLatin1Encoding;
-    userFontMap[i].t1Font = NULL;
-  }
-  userFontMap[n].pdfFont = NULL;
-
   // set up the font cache and fonts
   gfxFont = NULL;
   font = NULL;
-  fontCache = new XOutputFontCache(display, this->depth);
+  fontCache = new XOutputFontCache(display, depth, this,
+				   globalParams->getT1libControl(),
+				   globalParams->getFreeTypeControl());
+  nT3Fonts = 0;
+  t3GlyphStack = NULL;
 
   // empty state stack
   save = NULL;
 
   // create text object
-  text = new TextPage(useEUCJP ? textOutASCII7 : textOutLatin1, gFalse);
-
-  type3Warning = gFalse;
+  text = new TextPage(gFalse);
 }
 
 XOutputDev::~XOutputDev() {
-  gfree(userFontMap);
+  int i;
+
   delete fontCache;
+  for (i = 0; i < nT3Fonts; ++i) {
+    delete t3FontCache[i];
+  }
   XFreeGC(display, strokeGC);
   XFreeGC(display, fillGC);
   XFreeGC(display, paperGC);
-  if (clipRegion)
+  if (clipRegion) {
     XDestroyRegion(clipRegion);
+  }
   delete text;
 }
 
-void XOutputDev::startDoc() {
+void XOutputDev::startDoc(XRef *xrefA) {
+  int i;
+
+  xref = xrefA;
   fontCache->startDoc(screenNum, colormap, trueColor, rMul, gMul, bMul,
 		      rShift, gShift, bShift, colors, numColors);
+  for (i = 0; i < nT3Fonts; ++i) {
+    delete t3FontCache[i];
+  }
+  nT3Fonts = 0;
 }
 
 void XOutputDev::startPage(int pageNum, GfxState *state) {
@@ -1896,6 +2003,11 @@ void XOutputDev::updateFillColor(GfxState *state) {
   GfxRGB rgb;
 
   state->getFillRGB(&rgb);
+  if (reverseVideo) {
+    rgb.r = 1 - rgb.r;
+    rgb.g = 1 - rgb.g;
+    rgb.b = 1 - rgb.b;
+  }
   XSetForeground(display, fillGC, findColor(&rgb));
 }
 
@@ -1903,6 +2015,11 @@ void XOutputDev::updateStrokeColor(GfxState *state) {
   GfxRGB rgb;
 
   state->getStrokeRGB(&rgb);
+  if (reverseVideo) {
+    rgb.r = 1 - rgb.r;
+    rgb.g = 1 - rgb.g;
+    rgb.b = 1 - rgb.b;
+  }
   XSetForeground(display, strokeGC, findColor(&rgb));
 }
 
@@ -1913,20 +2030,20 @@ void XOutputDev::updateFont(GfxState *state) {
     font = NULL;
     return;
   }
+  if (gfxFont->getType() == fontType3) {
+    font = NULL;
+    return;
+  }
   state->getFontTransMat(&m11, &m12, &m21, &m22);
   m11 *= state->getHorizScaling();
-  m21 *= state->getHorizScaling();
-  font = fontCache->getFont(gfxFont, m11, m12, m21, m22);
+  m12 *= state->getHorizScaling();
+  font = fontCache->getFont(xref, gfxFont, m11, m12, m21, m22);
   if (font) {
     font->updateGC(fillGC);
     font->updateGC(strokeGC);
   }
 
-  // look for Type 3 font
-  if (!type3Warning && gfxFont->getType() == fontType3) {
-    error(-1, "This document uses Type 3 fonts - some text may not be correctly displayed");
-    type3Warning = gTrue;
-  }
+  text->updateFont(state);
 }
 
 void XOutputDev::stroke(GfxState *state) {
@@ -2017,10 +2134,21 @@ void XOutputDev::doClip(GfxState *state, int rule) {
   n = convertPath(state, &points, &size, &numPoints, &lengths, gTrue);
 
   // construct union of subpath regions
-  region = XPolygonRegion(points, lengths[0], rule);
+  // (XPolygonRegion chokes if there aren't at least three points --
+  // this happens if the PDF file does moveto/closepath/clip, which
+  // sets an empty clipping region)
+  if (lengths[0] > 2) {
+    region = XPolygonRegion(points, lengths[0], rule);
+  } else {
+    region = XCreateRegion();
+  }
   j = lengths[0] + 1;
   for (i = 1; i < n; ++i) {
-    region2 = XPolygonRegion(points + j, lengths[i], rule);
+    if (lengths[i] > 2) {
+      region2 = XPolygonRegion(points + j, lengths[i], rule);
+    } else {
+      region2 = XCreateRegion();
+    }
     XUnionRegion(region2, region, region);
     XDestroyRegion(region2);
     j += lengths[i] + 1;
@@ -2103,7 +2231,7 @@ int XOutputDev::convertPath(GfxState *state, XPoint **points, int *size,
 
     // close subpath if necessary
     if (fillHack && ((*points)[*numPoints-1].x != (*points)[j].x ||
-		   (*points)[*numPoints-1].y != (*points)[j].y)) {
+		     (*points)[*numPoints-1].y != (*points)[j].y)) {
       addPoint(points, size, numPoints, (*points)[j].x, (*points)[j].y);
     }
 
@@ -2113,6 +2241,21 @@ int XOutputDev::convertPath(GfxState *state, XPoint **points, int *size,
     // leave an extra point for compound fill hack
     if (fillHack)
       addPoint(points, size, numPoints, 0, 0);
+  }
+
+  // kludge: munge any points that are *way* out of bounds - these can
+  // crash certain (buggy) X servers
+  for (i = 0; i < *numPoints; ++i) {
+    if ((*points)[i].x < -pixmapW) {
+      (*points)[i].x = -pixmapW;
+    } else if ((*points)[i].x > 2 * pixmapW) {
+      (*points)[i].x = 2 * pixmapW;
+    }
+    if ((*points)[i].y < -pixmapH) {
+      (*points)[i].y = -pixmapH;
+    } else if ((*points)[i].y > 2 * pixmapH) {
+      (*points)[i].y = 2 * pixmapH;
+    }
   }
 
   // combine compound polygons
@@ -2133,13 +2276,12 @@ int XOutputDev::convertPath(GfxState *state, XPoint **points, int *size,
 
 	// look for the first subsequent subpath, if any, which overlaps
 	for (ii = i; ii < n; ++ii) {
-	  if (((rects[ii].xMin > rect.xMin && rects[ii].xMin < rect.xMax) ||
-	       (rects[ii].xMax > rect.xMin && rects[ii].xMax < rect.xMax) ||
-	       (rects[ii].xMin < rect.xMin && rects[ii].xMax > rect.xMax)) &&
-	      ((rects[ii].yMin > rect.yMin && rects[ii].yMin < rect.yMax) ||
-	       (rects[ii].yMax > rect.yMin && rects[ii].yMax < rect.yMax) ||
-	       (rects[ii].yMin < rect.yMin && rects[ii].yMax > rect.yMax)))
+	  if (rects[ii].xMax > rects[i].xMin &&
+	      rects[ii].xMin < rects[i].xMax &&
+	      rects[ii].yMax > rects[i].yMin &&
+	      rects[ii].yMin < rects[i].yMax) {
 	    break;
+	  }
 	}
 
 	// if there is an overlap, combine the polygons
@@ -2308,7 +2450,7 @@ void XOutputDev::addPoint(XPoint **points, int *size, int *k, int x, int y) {
 }
 
 void XOutputDev::beginString(GfxState *state, GString *s) {
-  text->beginString(state, s, font ? font->isHex() : gFalse);
+  text->beginString(state);
 }
 
 void XOutputDev::endString(GfxState *state) {
@@ -2316,418 +2458,428 @@ void XOutputDev::endString(GfxState *state) {
 }
 
 void XOutputDev::drawChar(GfxState *state, double x, double y,
-			  double dx, double dy, Guchar c) {
-  double x1, y1;
+			  double dx, double dy,
+			  double originX, double originY,
+			  CharCode code, Unicode *u, int uLen) {
+  int render;
+  double x1, y1, dx1, dy1;
+  GfxRGB rgb;
+  double saveCurX, saveCurY;
+  double *ctm;
+  double saveCTM[6];
 
-  text->addChar(state, x, y, dx, dy, c);
+  text->addChar(state, x, y, dx, dy, u, uLen);
 
-  if (!font)
+  if (!font) {
     return;
+  }
 
   // check for invisible text -- this is used by Acrobat Capture
-  if ((state->getRender() & 3) == 3)
+  render = state->getRender();
+  if ((render & 3) == 3) {
     return;
+  }
 
+  x -= originX;
+  y -= originY;
   state->transform(x, y, &x1, &y1);
+  state->transformDelta(dx, dy, &dx1, &dy1);
 
-  font->drawChar(state, pixmap, pixmapW, pixmapH,
-		 (state->getRender() & 1) ? strokeGC : fillGC,
-		 xoutRound(x1), xoutRound(y1), c);
+  // fill
+  if (!(render & 1)) {
+    state->getFillRGB(&rgb);
+    if (reverseVideo) {
+      rgb.r = 1 - rgb.r;
+      rgb.g = 1 - rgb.g;
+      rgb.b = 1 - rgb.b;
+    }
+    font->drawChar(state, pixmap, pixmapW, pixmapH, fillGC, &rgb,
+		   x1, y1, dx1, dy1, code, u, uLen);
+  }
+
+  // stroke
+  if ((render & 3) == 1 || (render & 3) == 2) {
+    if (font->hasGetCharPath()) {
+      saveCurX = state->getCurX();
+      saveCurY = state->getCurY();
+      ctm = state->getCTM();
+      memcpy(saveCTM, ctm, 6 * sizeof(double));
+      state->setCTM(1, 0, 0, 1, x1, y1);
+      font->getCharPath(state, code, u, uLen);
+      stroke(state);
+      state->clearPath();
+      state->setCTM(saveCTM[0], saveCTM[1], saveCTM[2], saveCTM[3],
+		    saveCTM[4], saveCTM[5]);
+      state->moveTo(saveCurX, saveCurY);
+    } else {
+      // can't stroke the outline, so just fill it using the stroke
+      // color
+      state->getStrokeRGB(&rgb);
+      if (reverseVideo) {
+	rgb.r = 1 - rgb.r;
+	rgb.g = 1 - rgb.g;
+	rgb.b = 1 - rgb.b;
+      }
+      font->drawChar(state, pixmap, pixmapW, pixmapH, strokeGC, &rgb,
+		     x1, y1, dx1, dy1, code, u, uLen);
+    }
+  }
+
+#if 0 //~ unimplemented: clipping to char path
+  // clip
+  if (render & 4) {
+  }
+#endif
 }
 
-void XOutputDev::drawChar16(GfxState *state, double x, double y,
-			    double dx, double dy, int c) {
-  int c1;
-  XChar2b c2[4];
-  double x1, y1;
-#if JAPANESE_SUPPORT | CHINESE_GB_SUPPORT | CHINESE_CNS_SUPPORT
-  int t1, t2;
-#endif
-#if JAPANESE_SUPPORT
-  double x2;
-  char *p;
-  int n, i;
-#endif
+GBool XOutputDev::beginType3Char(GfxState *state,
+				 CharCode code, Unicode *u, int uLen) {
+  Ref *fontID;
+  double *ctm, *bbox;
+  GfxRGB color;
+  T3FontCache *t3Font;
+  T3GlyphStack *t3gs;
+  double x1, y1, xMin, yMin, xMax, yMax, xt, yt;
+  int i, j;
 
-  if (gfxFont) {
-    text->addChar16(state, x, y, dx, dy, c, gfxFont->getCharSet16());
+  if (!gfxFont) {
+    return gFalse;
   }
+  fontID = gfxFont->getID();
+  ctm = state->getCTM();
+  state->transform(0, 0, &xt, &yt);
 
-  //~ assumes font is an XOutputServerFont
+  // is it the first (MRU) font in the cache?
+  if (!(nT3Fonts > 0 &&
+	t3FontCache[0]->matches(fontID, ctm[0], ctm[1], ctm[2], ctm[3]))) {
 
-  if (!font)
-    return;
-
-  // check for invisible text -- this is used by Acrobat Capture
-  if ((state->getRender() & 3) == 3)
-    return;
-
-  // handle origin offset for vertical fonts
-  if (gfxFont->getWMode16() == 1) {
-    x -= gfxFont->getOriginX16(c) * state->getFontSize();
-    y -= gfxFont->getOriginY16(c) * state->getFontSize();
-  }
-
-  state->transform(x, y, &x1, &y1);
-
-  c1 = 0;
-  switch (gfxFont->getCharSet16()) {
-
-  // convert Adobe-Japan1-2 to JIS X 0208-1983
-  case font16AdobeJapan12:
-#if JAPANESE_SUPPORT
-    if (c <= 96) {
-      c1 = japan12Map[c];
-    } else if (c <= 632) {
-      if (c <= 230)
-	c1 = 0;
-      else if (c <= 324)
-	c1 = japan12Map[c - 230];
-      else if (c <= 421)
-	c1 = japan12KanaMap1[c - 325];
-      else if (c <= 500)
-	c1 = 0;
-      else if (c <= 598)
-	c1 = japan12KanaMap2[c - 501];
-      else
-	c1 = 0;
-    } else if (c <= 1124) {
-      if (c <= 779) {
-	if (c <= 726)
-	  c1 = 0x2121 + (c - 633);
-	else if (c <= 740)
-	  c1 = 0x2221 + (c - 727);
-	else if (c <= 748)
-	  c1 = 0x223a + (c - 741);
-	else if (c <= 755)
-	  c1 = 0x224a + (c - 749);
-	else if (c <= 770)
-	  c1 = 0x225c + (c - 756);
-	else if (c <= 778)
-	  c1 = 0x2272 + (c - 771);
-	else
-	  c1 = 0x227e;
-      } else if (c <= 841) {
-	if (c <= 789)
-	  c1 = 0x2330 + (c - 780);
-	else if (c <= 815)
-	  c1 = 0x2341 + (c - 790);
-	else
-	  c1 = 0x2361 + (c - 816);
-      } else if (c <= 1010) {
-	if (c <= 924)
-	  c1 = 0x2421 + (c - 842);
-	else
-	  c1 = 0x2521 + (c - 925);
-      } else {
-	if (c <= 1034)
-	  c1 = 0x2621 + (c - 1011);
-	else if (c <= 1058)
-	  c1 = 0x2641 + (c - 1035);
-	else if (c <= 1091)
-	  c1 = 0x2721 + (c - 1059);
-	else
-	  c1 = 0x2751 + (c - 1092);
-      }
-    } else if (c <= 4089) {
-      t1 = (c - 1125) / 94;
-      t2 = (c - 1125) % 94;
-      c1 = 0x3021 + (t1 << 8) + t2;
-    } else if (c <= 7477) {
-      t1 = (c - 4090) / 94;
-      t2 = (c - 4090) % 94;
-      c1 = 0x5021 + (t1 << 8) + t2;
-    } else if (c <= 7554) {
-      c1 = 0;
-    } else if (c <= 7563) {	// circled Arabic numbers 1..9
-      c1 = 0x2331 + (c - 7555);
-      c2[0].byte1 = c1 >> 8;
-      c2[0].byte2 = c1 & 0xff;
-      XDrawString16(display, pixmap,
-		    (state->getRender() & 1) ? strokeGC : fillGC,
-		    xoutRound(x1), xoutRound(y1), c2, 1);
-      c1 = 0x227e;
-      c2[0].byte1 = c1 >> 8;
-      c2[0].byte2 = c1 & 0xff;
-      XDrawString16(display, pixmap,
-		    (state->getRender() & 1) ? strokeGC : fillGC,
-		    xoutRound(x1), xoutRound(y1), c2, 1);
-      c1 = -1;
-    } else if (c <= 7574) {	// circled Arabic numbers 10..20
-      n = c - 7564 + 10;
-      x2 = x1;
-      for (i = 0; i < 2; ++i) {
-	c1 = 0x2330 + (i == 0 ? (n / 10) : (n % 10));
-	c2[0].byte1 = c1 >> 8;
-	c2[0].byte2 = c1 & 0xff;
-	XDrawString16(display, pixmap,
-		      (state->getRender() & 1) ? strokeGC : fillGC,
-		      xoutRound(x2), xoutRound(y1), c2, 1);
-	x2 += 0.5 * state->getTransformedFontSize();
-      }
-      c1 = 0x227e;
-      c2[0].byte1 = c1 >> 8;
-      c2[0].byte2 = c1 & 0xff;
-      XDrawString16(display, pixmap,
-		    (state->getRender() & 1) ? strokeGC : fillGC,
-		    xoutRound(x1), xoutRound(y1), c2, 1);
-      c1 = -1;
-    } else if (c <= 7584) {	// Roman numbers I..X
-      p = japan12Roman[c - 7575];
-      n = strlen(p);
-      for (; *p; ++p) {
-	if (*p == 'I')
-	  c1 = 0x2349;
-	else if (*p == 'V')
-	  c1 = 0x2356;
-	else // 'X'
-	  c1 = 0x2358;
-	c2[0].byte1 = c1 >> 8;
-	c2[0].byte2 = c1 & 0xff;
-	XDrawString16(display, pixmap,
-		      (state->getRender() & 1) ? strokeGC : fillGC,
-		      xoutRound(x1), xoutRound(y1), c2, 1);
-	if (*p == 'I')
-	  x1 += 0.2 * state->getTransformedFontSize();
-	else
-	  x1 += 0.5 * state->getTransformedFontSize();
-      }
-      c1 = -1;
-    } else if (c <= 7632) {
-      if (c <= 7600) {
-	c1 = 0;
-      } else if (c <= 7606) {
-	p = japan12Abbrev1[c - 7601];
-	n = strlen(p);
-	for (; *p; ++p) {
-	  c1 = 0x2300 + *p;
-	  c2[0].byte1 = c1 >> 8;
-	  c2[0].byte2 = c1 & 0xff;
-	  XDrawString16(display, pixmap,
-			(state->getRender() & 1) ? strokeGC : fillGC,
-			xoutRound(x1), xoutRound(y1), c2, 1);
-	  x1 += 0.5 * state->getTransformedFontSize();
+    // is the font elsewhere in the cache?
+    for (i = 1; i < nT3Fonts; ++i) {
+      if (t3FontCache[i]->matches(fontID, ctm[0], ctm[1], ctm[2], ctm[3])) {
+	t3Font = t3FontCache[i];
+	for (j = i; j > 0; --j) {
+	  t3FontCache[j] = t3FontCache[j - 1];
 	}
-	c1 = -1;
-      } else {
-	c1 = 0;
+	t3FontCache[0] = t3Font;
+	break;
       }
+    }
+    if (i >= nT3Fonts) {
+
+      // create new entry in the font cache
+      if (nT3Fonts == xOutT3FontCacheSize) {
+	delete t3FontCache[nT3Fonts - 1];
+	--nT3Fonts;
+      }
+      for (j = nT3Fonts; j > 0; --j) {
+	t3FontCache[j] = t3FontCache[j - 1];
+      }
+      ++nT3Fonts;
+      bbox = gfxFont->getFontBBox();
+      if (bbox[0] == 0 && bbox[1] == 0 && bbox[2] == 0 && bbox[3] == 0) {
+	// broken bounding box -- just take a guess
+	xMin = xt - 5;
+	xMax = xMin + 30;
+	yMax = yt + 15;
+	yMin = yMax - 45;
+      } else {
+	state->transform(bbox[0], bbox[1], &x1, &y1);
+	xMin = xMax = x1;
+	yMin = yMax = y1;
+	state->transform(bbox[0], bbox[3], &x1, &y1);
+	if (x1 < xMin) {
+	  xMin = x1;
+	} else if (x1 > xMax) {
+	  xMax = x1;
+	}
+	if (y1 < yMin) {
+	  yMin = y1;
+	} else if (y1 > yMax) {
+	  yMax = y1;
+	}
+	state->transform(bbox[2], bbox[1], &x1, &y1);
+	if (x1 < xMin) {
+	  xMin = x1;
+	} else if (x1 > xMax) {
+	  xMax = x1;
+	}
+	if (y1 < yMin) {
+	  yMin = y1;
+	} else if (y1 > yMax) {
+	  yMax = y1;
+	}
+	state->transform(bbox[2], bbox[3], &x1, &y1);
+	if (x1 < xMin) {
+	  xMin = x1;
+	} else if (x1 > xMax) {
+	  xMax = x1;
+	}
+	if (y1 < yMin) {
+	  yMin = y1;
+	} else if (y1 > yMax) {
+	  yMax = y1;
+	}
+      }
+      t3FontCache[0] = new T3FontCache(fontID, ctm[0], ctm[1], ctm[2], ctm[3],
+	                               (int)floor(xMin - xt),
+				       (int)floor(yMin - yt),
+				       (int)ceil(xMax) - (int)floor(xMin) + 3,
+				       (int)ceil(yMax) - (int)floor(yMin) + 3,
+				       display,
+				       DefaultVisual(display, screenNum),
+				       depth, pixmap);
+    }
+  }
+  t3Font = t3FontCache[0];
+
+  // is the glyph in the cache?
+  i = (code & (t3Font->cacheSets - 1)) * t3Font->cacheAssoc;
+  for (j = 0; j < t3Font->cacheAssoc; ++j) {
+    if ((t3Font->cacheTags[i+j].mru & 0x8000) &&
+	t3Font->cacheTags[i+j].code == code) {
+      state->getFillRGB(&color);
+      if (reverseVideo) {
+	color.r = 1 - color.r;
+	color.g = 1 - color.g;
+	color.b = 1 - color.b;
+      }
+      text->addChar(state, 0, 0,
+		    t3Font->cacheTags[i+j].wx, t3Font->cacheTags[i+j].wy,
+		    u, uLen);
+      drawType3Glyph(t3Font, &t3Font->cacheTags[i+j],
+		     t3Font->cacheData + (i+j) * t3Font->glyphSize,
+		     xt, yt, &color);
+      return gTrue;
+    }
+  }
+
+  // push a new Type 3 glyph record
+  t3gs = new T3GlyphStack();
+  t3gs->next = t3GlyphStack;
+  t3GlyphStack = t3gs;
+  t3GlyphStack->cacheable = gFalse;
+  t3GlyphStack->code = code;
+  t3GlyphStack->cache = t3Font;
+  t3GlyphStack->cacheIdx = i;
+  t3GlyphStack->x = xt;
+  t3GlyphStack->y = yt;
+  t3GlyphStack->u = u;
+  t3GlyphStack->uLen = uLen;
+
+  return gFalse;
+}
+
+void XOutputDev::endType3Char(GfxState *state) {
+  XImage *image;
+  Guchar *p;
+  int x, y;
+  Gulong pixel;
+  double alpha;
+  T3GlyphStack *t3gs;
+
+  if (t3GlyphStack->cacheable) {
+    image = t3GlyphStack->cache->image;
+    XGetSubImage(display, pixmap, 0, 0,
+		 t3GlyphStack->cache->glyphW, t3GlyphStack->cache->glyphH,
+		 (1 << depth) - 1, ZPixmap, image, 0, 0);
+    p = t3GlyphStack->cacheData;
+    for (y = 0; y < t3GlyphStack->cache->glyphH; ++y) {
+      for (x = 0; x < t3GlyphStack->cache->glyphW; ++x) {
+	pixel = XGetPixel(image, x, y);
+	if (trueColor) {
+	  alpha = (double)((pixel >> rShift) & rMul) / (double)rMul;
+	} else {
+	  alpha = redMap[pixel & 0xff];
+	}
+	if (alpha <= 0.2) {
+	  *p++ = 4;
+	} else if (alpha <= 0.4) {
+	  *p++ = 3;
+	} else if (alpha <= 0.6) {
+	  *p++ = 2;
+	} else if (alpha <= 0.8) {
+	  *p++ = 1;
+	} else {
+	  *p++ = 0;
+	}
+      }
+    }
+    XDestroyRegion(clipRegion);
+    XFreeGC(display, strokeGC);
+    XFreeGC(display, fillGC);
+    pixmapW = t3GlyphStack->origPixmapW;
+    pixmapH = t3GlyphStack->origPixmapH;
+    pixmap = t3GlyphStack->origPixmap;
+    strokeGC = t3GlyphStack->origStrokeGC;
+    fillGC = t3GlyphStack->origFillGC;
+    clipRegion = t3GlyphStack->origClipRegion;
+    drawType3Glyph(t3GlyphStack->cache,
+		   t3GlyphStack->cacheTag, t3GlyphStack->cacheData,
+		   t3GlyphStack->x, t3GlyphStack->y, &t3GlyphStack->color);
+  }
+  text->addChar(state, 0, 0, t3GlyphStack->wx, t3GlyphStack->wy,
+		t3GlyphStack->u, t3GlyphStack->uLen);
+  t3gs = t3GlyphStack;
+  t3GlyphStack = t3gs->next;
+  delete t3gs;
+}
+
+void XOutputDev::drawType3Glyph(T3FontCache *t3Font,
+				T3FontCacheTag *tag, Guchar *data,
+				double x, double y, GfxRGB *color) {
+  XImage *image;
+  XColor xcolor;
+  GfxRGB bg, rgb;
+  Gulong map[5];
+  Gulong pixel;
+  Guchar *p;
+  int x0, y0, w0, h0, x1, y1;
+  int ix, iy;
+
+  // compute: (x0,y0) = position in destination pixmap
+  //          (x1,y1) = position in the XImage
+  //          (w0,h0) = size of XImage transfer
+  x0 = xoutRound(x + t3Font->glyphX);
+  y0 = xoutRound(y + t3Font->glyphY);
+  x1 = 0;
+  y1 = 0;
+  w0 = t3Font->glyphW;
+  h0 = t3Font->glyphH;
+  if (x0 < 0) {
+    x1 = -x0;
+    w0 += x0;
+    x0 = 0;
+  }
+  if (x0 + w0 > pixmapW) {
+    w0 = pixmapW - x0;
+  }
+  if (w0 <= 0) {
+    return;
+  }
+  if (y0 < 0) {
+    y1 = -y0;
+    h0 += y0;
+    y0 = 0;
+  }
+  if (y0 + h0 > pixmapH) {
+    h0 = pixmapH - y0;
+  }
+  if (h0 <= 0) {
+    return;
+  }
+
+  image = t3Font->image;
+  XGetSubImage(display, pixmap, x0, y0, w0, h0,
+	       (1 << depth) - 1, ZPixmap, image, x1, y1);
+  xcolor.pixel = XGetPixel(image, t3Font->glyphW / 2, t3Font->glyphH / 2);
+  XQueryColor(display, colormap, &xcolor);
+  bg.r = xcolor.red / 65535.0;
+  bg.g = xcolor.green / 65535.0;
+  bg.b = xcolor.blue / 65535.0;
+  rgb.r = 0.25 * (color->r + 3 * bg.r);
+  rgb.g = 0.25 * (color->g + 3 * bg.g);
+  rgb.b = 0.25 * (color->b + 3 * bg.b);
+  map[1] = findColor(&rgb);
+  rgb.r = 0.5 * (color->r + bg.r);
+  rgb.g = 0.5 * (color->g + bg.g);
+  rgb.b = 0.5 * (color->b + bg.b);
+  map[2] = findColor(&rgb);
+  rgb.r = 0.25 * (3 * color->r + bg.r);
+  rgb.g = 0.25 * (3 * color->g + bg.g);
+  rgb.b = 0.25 * (3 * color->b + bg.b);
+  map[3] = findColor(&rgb);
+  map[4] = findColor(color);
+  p = data;
+  for (iy = 0; iy < t3Font->glyphH; ++iy) {
+    for (ix = 0; ix < t3Font->glyphW; ++ix) {
+      pixel = *p++;
+      if (pixel > 0) {
+	XPutPixel(image, ix, iy, map[pixel]);
+      }
+    }
+  }
+  XPutImage(display, pixmap, fillGC, image, x1, y1, x0, y0, w0, h0);
+}
+
+void XOutputDev::type3D0(GfxState *state, double wx, double wy) {
+  t3GlyphStack->wx = wx;
+  t3GlyphStack->wy = wy;
+}
+
+void XOutputDev::type3D1(GfxState *state, double wx, double wy,
+			 double llx, double lly, double urx, double ury) {
+  GfxColor fgColor;
+  XGCValues gcValues;
+  XRectangle rect;
+  double *ctm;
+  T3FontCache *t3Font;
+  int i, j;
+
+  // allocate a cache entry
+  t3GlyphStack->cacheable = gTrue;
+  t3Font = t3GlyphStack->cache;
+  i = t3GlyphStack->cacheIdx;
+  for (j = 0; j < t3Font->cacheAssoc; ++j) {
+    if ((t3Font->cacheTags[i+j].mru & 0x7fff) == t3Font->cacheAssoc - 1) {
+      t3Font->cacheTags[i+j].mru = 0x8000;
+      t3Font->cacheTags[i+j].code = t3GlyphStack->code;
+      t3GlyphStack->cacheTag = &t3Font->cacheTags[i+j];
+      t3GlyphStack->cacheData = t3Font->cacheData + (i+j) * t3Font->glyphSize;
     } else {
-      c1 = 0;
+      ++t3Font->cacheTags[i+j].mru;
     }
-#if 0 //~
-    if (c1 == 0)
-      error(-1, "Unsupported Adobe-Japan1-2 character: %d", c);
-#endif
-#endif // JAPANESE_SUPPORT
-    break;
-
-  // convert Adobe-GB1-2 to GB 2312-80
-  case font16AdobeGB12:
-#if CHINESE_GB_SUPPORT
-    if (c <= 939) {
-      c1 = gb12Map[c];
-    } else if (c <= 4605) {
-      t1 = (c - 940) / 94;
-      t2 = (c - 940) % 94;
-      c1 = 0x3021 + (t1 << 8) + t2;
-    } else if (c <= 4694) {
-      c1 = c - 4606 + 0x5721;
-    } else if (c <= 7702) {
-      t1 = (c - 4695) / 94;
-      t2 = (c - 4695) % 94;
-      c1 = 0x5821 + (t1 << 8) + t2;
-    } else if (c == 7716) {
-      c1 = 0x2121;
-    }
-#if 1 //~
-    if (c1 == 0) {
-      error(-1, "Unsupported Adobe-GB1-2 character: %d", c);
-    }
-#endif
-#endif // CHINESE_GB_SUPPORT
-    break;
-
-  // convert Adobe-CNS1-3 to Big5
-  case font16AdobeCNS13:
-#if CHINESE_CNS_SUPPORT
-    if (c <= 98) {
-      c1 = cns13Map1[c];
-    } else if (c <= 502) {
-      if (c == 247) {
-	c1 = 0xa1f7;
-      } else if (c == 248) {
-	c1 = 0xa1f6;
-      } else {
-	t1 = (c - 99) / 157;
-	t2 = (c - 99) % 157;
-	if (t2 <= 62) {
-	  c1 = 0xa140 + (t1 << 8) + t2;
-	} else {
-	  c1 = 0xa162 + (t1 << 8) + t2;
-	}
-      }
-    } else if (c <= 505) {
-      c1 = 0xa3bd + (c - 503);
-    } else if (c <= 594) {
-      c1 = 0;
-    } else if (c <= 5995) {
-      if (c == 2431) {
-	c1 = 0xacfe;
-      } else if (c == 4308) {
-	c1 = 0xbe52;
-      } else if (c == 5221) {
-	c1 = 0xc2cb;
-      } else if (c == 5495) {
-	c1 = 0xc456;
-      } else if (c == 5550) {
-	c1 = 0xc3ba;
-      } else if (c == 5551) {
-	c1 = 0xc3b9;
-      } else {
-	if (c >= 2007 && c <= 2430) {
-	  t1 = c - 594;
-	} else if (c >= 4309 && c <= 4695) {
-	  t1 = c - 596;
-	} else if (c >= 5222 && c <= 5410) {
-	  t1 = c - 596;
-	} else if (c >= 5496 && c <= 5641) {
-	  t1 = c - 596;
-	} else {
-	  t1 = c - 595;
-	}
-	t2 = t1 % 157;
-	t1 /= 157;
-	if (t2 <= 62) {
-	  c1 = 0xa440 + (t1 << 8) + t2;
-	} else {
-	  c1 = 0xa462 + (t1 << 8) + t2;
-	}
-      }
-    } else if (c <= 13645) {
-      if (c == 6039) {
-	c1 = 0xc9be;
-      } else if (c == 6134) {
-	c1 = 0xcaf7;
-      } else if (c == 8142) {
-	c1 = 0xdadf;
-      } else if (c == 8788) {
-	c1 = 0xd6cc;
-      } else if (c == 8889) {
-	c1 = 0xd77a;
-      } else if (c == 10926) {
-	c1 = 0xebf1;
-      } else if (c == 11073) {
-	c1 = 0xecde;
-      } else if (c == 11361) {
-	c1 = 0xf0cb;
-      } else if (c == 11719) {
-	c1 = 0xf056;
-      } else if (c == 12308) {
-	c1 = 0xeeeb;
-      } else if (c == 12526) {
-	c1 = 0xf4b5;
-      } else if (c == 12640) {
-	c1 = 0xf16b;
-      } else if (c == 12783) {
-	c1 = 0xf268;
-      } else if (c == 12900) {
-	c1 = 0xf663;
-      } else if (c == 13585) {
-	c1 = 0xf9c4;
-      } else if (c == 13641) {
-	c1 = 0xf9c6;
-      } else {
-	if (c >= 6006 && c <= 6038) {
-	  t1 = c - 5995;
-	} else if (c >= 6088 && c <= 6133) {
-	  t1 = c - 5995;
-	} else if (c >= 6302 && c <= 8250) {
-	  t1 = c - 5995;
-	} else if (c >= 8251 && c <= 8888) {
-	  t1 = c - 5994;
-	} else if (c >= 8890 && c <= 9288) {
-	  t1 = c - 5995;
-	} else if (c >= 9289 && c <= 10925) {
-	  t1 = c - 5994;
-	} else if (c >= 10927 && c <= 11072) {
-	  t1 = c - 5995;
-	} else if (c >= 11362 && c <= 11477) {
-	  t1 = c - 5997;
-	} else if (c >= 11615 && c <= 11718) {
-	  t1 = c - 5995;
-	} else if (c >= 11942 && c <= 12139) {
-	  t1 = c - 5995;
-	} else if (c >= 12140 && c <= 12221) {
-	  t1 = c - 5994;
-	} else if (c >= 12222 && c <= 12307) {
-	  t1 = c - 5993;
-	} else if (c >= 12309 && c <= 12316) {
-	  t1 = c - 5994;
-	} else if (c >= 12317 && c <= 12469) {
-	  t1 = c - 5993;
-	} else if (c >= 12470 && c <= 12525) {
-	  t1 = c - 5992;
-	} else if (c >= 12527 && c <= 12639) {
-	  t1 = c - 5993;
-	} else if (c >= 12641 && c <= 12782) {
-	  t1 = c - 5994;
-	} else if (c >= 12784 && c <= 12828) {
-	  t1 = c - 5995;
-	} else if (c >= 12829 && c <= 12899) {
-	  t1 = c - 5994;
-	} else if (c >= 12901 && c <= 13094) {
-	  t1 = c - 5995;
-	} else if (c >= 13095 && c <= 13584) {
-	  t1 = c - 5994;
-	} else if (c >= 13586 && c <= 13628) {
-	  t1 = c - 5995;
-	} else if (c == 13629) {
-	  t1 = c - 5994;
-	} else if (c >= 13630 && c <= 13640) {
-	  t1 = c - 5993;
-	} else if (c >= 13642 && c <= 13645) {
-	  t1 = c - 5994;
-	} else {
-	  t1 = c - 5996;
-	}
-	t2 = t1 % 157;
-	t1 /= 157;
-	if (t2 <= 62) {
-	  c1 = 0xc940 + (t1 << 8) + t2;
-	} else {
-	  c1 = 0xc962 + (t1 << 8) + t2;
-	}
-      }
-    } else if (c == 13646) {
-      c1 = 0xa14b;
-    } else if (c == 13647) {
-      c1 = 0xa1e3;
-    } else if (c <= 13742) {
-      c1 = cns13Map2[c - 13648];
-    } else if (c <= 13746) {
-      c1 = 0xa159 + (c - 13743);
-    } else if (c <= 14055) {
-      c1 = 0;
-    } else if (c <= 14062) {
-      c1 = 0xf9d6 + (c - 14056);
-    }
-#if 1 //~
-    if (c1 == 0) {
-      error(-1, "Unsupported Adobe-CNS1-3 character: %d", c);
-    }
-#endif
-#endif
-    break;
   }
+  t3GlyphStack->wx = wx;
+  t3GlyphStack->wy = wy;
+  t3GlyphStack->cacheTag->wx = wx;
+  t3GlyphStack->cacheTag->wy = wy;
 
-  if (c1 > 0) {
-    c2[0].byte1 = c1 >> 8;
-    c2[0].byte2 = c1 & 0xff;
-    XDrawString16(display, pixmap,
-		  (state->getRender() & 1) ? strokeGC : fillGC,
-		  xoutRound(x1), xoutRound(y1), c2, 1);
+  // prepare to rasterize the glyph
+  //~ do we need to handle both fill and stroke color?
+  state->getFillRGB(&t3GlyphStack->color);
+  if (reverseVideo) {
+    t3GlyphStack->color.r = 1 - t3GlyphStack->color.r;
+    t3GlyphStack->color.g = 1 - t3GlyphStack->color.g;
+    t3GlyphStack->color.b = 1 - t3GlyphStack->color.b;
   }
+  fgColor.c[0] = reverseVideo ? 1 : 0;
+  state->setFillColorSpace(new GfxDeviceGrayColorSpace());
+  state->setFillColor(&fgColor);
+  state->setStrokeColorSpace(new GfxDeviceGrayColorSpace());
+  state->setStrokeColor(&fgColor);
+  t3GlyphStack->origPixmapW = pixmapW;
+  t3GlyphStack->origPixmapH = pixmapH;
+  t3GlyphStack->origPixmap = pixmap;
+  t3GlyphStack->origStrokeGC = strokeGC;
+  t3GlyphStack->origFillGC = fillGC;
+  t3GlyphStack->origClipRegion = clipRegion;
+  pixmapW = t3GlyphStack->cache->glyphW;
+  pixmapH = t3GlyphStack->cache->glyphH;
+  pixmap = t3GlyphStack->cache->pixmap;
+  gcValues.foreground = BlackPixel(display, screenNum);
+  gcValues.background = WhitePixel(display, screenNum);
+  gcValues.line_width = 0;
+  gcValues.line_style = LineSolid;
+  strokeGC = XCreateGC(display, pixmap,
+		       GCForeground | GCBackground | GCLineWidth | GCLineStyle,
+		       &gcValues);
+  updateLineAttrs(state, gTrue);
+  gcValues.foreground = WhitePixel(display, screenNum);
+  fillGC = XCreateGC(display, pixmap,
+		     GCForeground | GCBackground | GCLineWidth | GCLineStyle,
+		     &gcValues);
+  XFillRectangle(display, pixmap, fillGC, 0, 0, pixmapW, pixmapH);
+  XSetForeground(display, fillGC, BlackPixel(display, screenNum));
+  clipRegion = XCreateRegion();
+  rect.x = rect.y = 0;
+  rect.width = pixmapW;
+  rect.height = pixmapH;
+  XUnionRectWithRegion(&rect, clipRegion, clipRegion);
+  XSetRegion(display, strokeGC, clipRegion);
+  XSetRegion(display, fillGC, clipRegion);
+  ctm = state->getCTM();
+  state->setCTM(ctm[0], ctm[1], ctm[2], ctm[3], 
+		-t3GlyphStack->cache->glyphX, -t3GlyphStack->cache->glyphY);
 }
 
 inline Gulong XOutputDev::findColor(GfxRGB *x, GfxRGB *err) {
@@ -2792,7 +2944,7 @@ Gulong XOutputDev::findColor(GfxRGB *rgb) {
     r = xoutRound(rgb->r * (numColors - 1));
     g = xoutRound(rgb->g * (numColors - 1));
     b = xoutRound(rgb->b * (numColors - 1));
-#if 0 //~ this makes things worse as often as better
+#if 0 // this makes things worse as often as better
     // even a very light color shouldn't map to white
     if (r == numColors - 1 && g == numColors - 1 && b == numColors - 1) {
       if (color->getR() < 0.95)
@@ -2813,20 +2965,16 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 			       GBool inlineImg) {
   ImageStream *imgStr;
   XImage *image;
-  double xt, yt;
+  double *ctm;
+  GBool rot;
+  double xScale, yScale, xShear, yShear;
+  int tx, ty, scaledWidth, scaledHeight, xSign, ySign;
   int ulx, uly, llx, lly, urx, ury, lrx, lry;
-  int hx, hy;
+  int ulx1, uly1, llx1, lly1, urx1, ury1, lrx1, lry1;
   int bx0, by0, bx1, by1, bw, bh;
   int cx0, cy0, cx1, cy1, cw, ch;
-  int dx, dy;
-  int dvx, dvdx, dvpx, dvqx, dvdx2, dvtx;
-  int dvy, dvdy, dvpy, dvqy, dvdy2, dvty;
-  int dhx, dhdx, dhpx, dhqx, dhdx2, dhtx, dhtx0;
-  int dhy, dhdy, dhpy, dhqy, dhdy2, dhty, dhty0;
-  int ivy, ivdy, ivpy, ivqy, ivty;
-  int ihx, ihdx, ihpx, ihqx, ihtx;
-  int vn, vi, hn, hi;
-  int bufy;
+  int yp, yq, yt, yStep, lastYStep;
+  int xp, xq, xt, xStep, xSrc;
   GfxRGB rgb;
   Guchar *pixBuf;
   int imgPix;
@@ -2837,80 +2985,97 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
   double r0, g0, b0, r1, g1, b1;
   Gulong pix;
   Guchar *p;
+  int x, y, x1, y1, x2, y2;
   int n, m, i, j;
 
-  // corners in device space
-  state->transform(0, 0, &xt, &yt);
-  llx = xoutRound(xt);
-  lly = xoutRound(yt);
-  state->transform(0, 1, &xt, &yt);
-  ulx = xoutRound(xt);
-  uly = xoutRound(yt);
-  state->transform(1, 0, &xt, &yt);
-  lrx = xoutRound(xt);
-  lry = xoutRound(yt);
-  state->transform(1, 1, &xt, &yt);
-  urx = xoutRound(xt);
-  ury = xoutRound(yt);
-
-  // horizontal traversal
-  hx = urx - ulx;
-  if (abs(lrx - llx) < abs(hx)) {
-    hx = lrx - llx;
+  // get CTM, check for singular matrix
+  ctm = state->getCTM();
+  if (fabs(ctm[0] * ctm[3] - ctm[1] * ctm[2]) < 0.000001) {
+    error(-1, "Singular CTM in drawImage");
+    if (inlineImg) {
+      j = height * ((width + 7) / 8);
+      str->reset();
+      for (i = 0; i < j; ++i) {
+	str->getChar();
+      }
+      str->close();
+    }
+    return;
   }
-  hy = ury - uly;
-  if (abs(lry - lly) < abs(hy)) {
-    hy = lry - lly;
+
+  // compute scale, shear, rotation, translation parameters
+  rot = fabs(ctm[1]) > fabs(ctm[0]);
+  if (rot) {
+    xScale = -ctm[1];
+    yScale = -ctm[2] + (ctm[0] * ctm[3]) / ctm[1];
+    xShear = ctm[3] / yScale;
+    yShear = -ctm[0] / ctm[1];
+  } else {
+    xScale = ctm[0];
+    yScale = -ctm[3] + (ctm[1] * ctm[2]) / ctm[0];
+    xShear = -ctm[2] / yScale;
+    yShear = ctm[1] / ctm[0];
+  }
+  tx = xoutRound(ctm[2] + ctm[4]);
+  ty = xoutRound(ctm[3] + ctm[5]);
+  // use ceil() to avoid gaps between "striped" images
+  scaledWidth = (int)ceil(fabs(xScale));
+  xSign = (xScale < 0) ? -1 : 1;
+  scaledHeight = (int)ceil(fabs(yScale));
+  ySign = (yScale < 0) ? -1 : 1;
+
+  // compute corners in device space
+  ulx1 = 0;
+  uly1 = 0;
+  urx1 = xSign * (scaledWidth - 1);
+  ury1 = xoutRound(yShear * urx1);
+  llx1 = xoutRound(xShear * ySign * (scaledHeight - 1));
+  lly1 = ySign * (scaledHeight - 1) + xoutRound(yShear * llx1);
+  lrx1 = xSign * (scaledWidth - 1) +
+           xoutRound(xShear * ySign * (scaledHeight - 1));
+  lry1 = ySign * (scaledHeight - 1) + xoutRound(yShear * lrx1);
+  if (rot) {
+    ulx = tx + uly1;    uly = ty - ulx1;
+    urx = tx + ury1;    ury = ty - urx1;
+    llx = tx + lly1;    lly = ty - llx1;
+    lrx = tx + lry1;    lry = ty - lrx1;
+  } else {
+    ulx = tx + ulx1;    uly = ty + uly1;
+    urx = tx + urx1;    ury = ty + ury1;
+    llx = tx + llx1;    lly = ty + lly1;
+    lrx = tx + lrx1;    lry = ty + lry1;
   }
 
   // bounding box:
   //   (bx0, by0) = upper-left corner
   //   (bx1, by1) = lower-right corner
   //   (bw, bh) = size
-  bx0 = bx1 = ulx;
-  if (llx < bx0) {
-    bx0 = llx;
-  } else if (llx > bx1) {
-    bx1 = llx;
-  }
-  if (urx < bx0) {
-    bx0 = urx;
-  } else if (urx > bx1) {
-    bx1 = urx;
-  }
-  if (lrx < bx0) {
-    bx0 = lrx;
-  } else if (lrx > bx1) {
-    bx1 = lrx;
-  }
-  by0 = by1 = uly;
-  if (lly < by0) {
-    by0 = lly;
-  } else if (lly > by1) {
-    by1 = lly;
-  }
-  if (ury < by0) {
-    by0 = ury;
-  } else if (ury > by1) {
-    by1 = ury;
-  }
-  if (lry < by0) {
-    by0 = lry;
-  } else if (lry > by1) {
-    by1 = lry;
-  }
+  bx0 = (ulx < urx) ? (ulx < llx) ? (ulx < lrx) ? ulx : lrx
+                                  : (llx < lrx) ? llx : lrx
+		    : (urx < llx) ? (urx < lrx) ? urx : lrx
+                                  : (llx < lrx) ? llx : lrx;
+  bx1 = (ulx > urx) ? (ulx > llx) ? (ulx > lrx) ? ulx : lrx
+                                  : (llx > lrx) ? llx : lrx
+		    : (urx > llx) ? (urx > lrx) ? urx : lrx
+                                  : (llx > lrx) ? llx : lrx;
+  by0 = (uly < ury) ? (uly < lly) ? (uly < lry) ? uly : lry
+                                  : (lly < lry) ? lly : lry
+		    : (ury < lly) ? (ury < lry) ? ury : lry
+                                  : (lly < lry) ? lly : lry;
+  by1 = (uly > ury) ? (uly > lly) ? (uly > lry) ? uly : lry
+                                  : (lly > lry) ? lly : lry
+		    : (ury > lly) ? (ury > lry) ? ury : lry
+                                  : (lly > lry) ? lly : lry;
   bw = bx1 - bx0 + 1;
   bh = by1 - by0 + 1;
 
-  // bounding box clipped to pixmap, i.e., "valid" rectangle:
-  //   (cx0, cy0) = upper-left corner of valid rectangle in page pixmap
-  //   (cx1, cy1) = upper-left corner of valid rectangle in image pixmap
+  // Bounding box clipped to pixmap, i.e., "valid" rectangle:
+  //   (cx0, cy0) = upper-left corner of valid rectangle in Pixmap
+  //   (cx1, cy1) = upper-left corner of valid rectangle in XImage
   //   (cw, ch) = size of valid rectangle
-  if (bx1 >= pixmapW) {
-    cw = pixmapW - bx0;
-  } else {
-    cw = bw;
-  }
+  // These values will be used to transfer the XImage from/to the
+  // Pixmap.
+  cw = (bx1 >= pixmapW) ? pixmapW - bx0 : bw;
   if (bx0 < 0) {
     cx0 = 0;
     cx1 = -bx0;
@@ -2919,11 +3084,7 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
     cx0 = bx0;
     cx1 = 0;
   }
-  if (by1 >= pixmapH) {
-    ch = pixmapH - by0;
-  } else {
-    ch = bh;
-  }
+  ch = (by1 >= pixmapH) ? pixmapH - by0 : bh;
   if (by0 < 0) {
     cy0 = 0;
     cy1 = -by0;
@@ -2935,70 +3096,26 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 
   // check for tiny (zero width or height) images
   // and off-page images
-  if (cw <= 0 || ch <= 0) {
+  if (scaledWidth <= 0 || scaledHeight <= 0 || cw <= 0 || ch <= 0) {
     if (inlineImg) {
       j = height * ((width + 7) / 8);
       str->reset();
       for (i = 0; i < j; ++i) {
 	str->getChar();
       }
+      str->close();
     }
     return;
   }
 
-  // Bresenham parameters for vertical traversal
-  // (device coordinates and image coordinates)
-  dx = llx - ulx;
-  dy = lly - uly;
-  if (abs(dx) > abs(dy)) {
-    vn = abs(dx);
-    dvdx = dx > 0 ? 1 : -1;
-    dvpx = 0;
-    dvdx2 = 0;
-    dvdy = 0;
-    dvpy = abs(dy);
-    dvdy2 = dy > 0 ? 1 : -1;
-  } else {
-    vn = abs(dy);
-    dvdx = 0;
-    dvpx = abs(dx);
-    dvdx2 = dx > 0 ? 1 : -1;
-    dvdy = dy > 0 ? 1 : -1;
-    dvpy = 0;
-    dvdy2 = 0;
-  }
-  dvqx = dvqy = vn;
-  ivqy = vn + 1;
-  ivdy = height / ivqy;
-  ivpy = height % ivqy;
-
-  // Bresenham parameters for horizontal traversal
-  // (device coordinates and image coordinates)
-  if (abs(hx) > abs(hy)) {
-    hn = abs(hx);
-    dhdx = hx > 0 ? 1 : -1;
-    dhpx = 0;
-    dhdx2 = 0;
-    dhdy = 0;
-    dhpy = abs(hy);
-    dhdy2 = hy > 0 ? 1 : -1;
-  } else {
-    hn = abs(hy);
-    dhdx = 0;
-    dhpx = abs(hx);
-    dhdx2 = hx > 0 ? 1 : -1;
-    dhdy = hy > 0 ? 1 : -1;
-    dhpy = 0;
-    dhdy2 = 0;
-  }
-  dhqx = dhqy = hn;
-  ihqx = hn + 1;
-  ihdx = width / ihqx;
-  ihpx = width % ihqx;
+  // compute Bresenham parameters for x and y scaling
+  yp = height / scaledHeight;
+  yq = height % scaledHeight;
+  xp = width / scaledWidth;
+  xq = width % scaledWidth;
 
   // allocate pixel buffer
-  n = ivdy + (ivpy > 0 ? 1 : 0);
-  pixBuf = (Guchar *)gmalloc(n * width * sizeof(Guchar));
+  pixBuf = (Guchar *)gmalloc((yp + 1) * width * sizeof(Guchar));
 
   // allocate XImage and read from page pixmap
   image = XCreateImage(display, DefaultVisual(display, screenNum),
@@ -3009,6 +3126,11 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 
   // get mask color
   state->getFillRGB(&rgb);
+  if (reverseVideo) {
+    rgb.r = 1 - rgb.r;
+    rgb.g = 1 - rgb.g;
+    rgb.b = 1 - rgb.b;
+  }
   r0 = rgb.r;
   g0 = rgb.g;
   b0 = rgb.b;
@@ -3026,26 +3148,23 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
   imgStr = new ImageStream(str, width, 1, 1);
   imgStr->reset();
 
-  // traverse left edge of image
-  dvx = ulx;
-  dvtx = 0;
-  dvy = uly;
-  dvty = 0;
-  ivy = 0;
-  ivty = 0;
-  dhtx0 = 0;
-  dhty0 = 0;
-  n = 0;
-  bufy = -1;
-  for (vi = 0; vi <= vn; ++vi) {
+  // init y scale Bresenham
+  yt = 0;
+  lastYStep = 1;
+
+  for (y = 0; y < scaledHeight; ++y) {
+
+    // y scale Bresenham
+    yStep = yp;
+    yt += yq;
+    if (yt >= scaledHeight) {
+      yt -= scaledHeight;
+      ++yStep;
+    }
 
     // read row(s) from image
-    if (ivy > bufy) {
-      if (ivdy == 0) {
-	n = 1;
-      } else {
-	n = ivdy + (ivty + ivpy >= ivqy ? 1 : 0);
-      }
+    n = (yp > 0) ? yStep : lastYStep;
+    if (n > 0) {
       p = pixBuf;
       for (i = 0; i < n; ++i) {
 	for (j = 0; j < width; ++j) {
@@ -3056,26 +3175,44 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 	  ++p;
 	}
       }
-      bufy = ivy;
     }
+    lastYStep = yStep;
 
-    // traverse a horizontal stripe
-    dhx = 0;
-    dhy = 0;
-    dhtx = dhtx0;
-    dhty = dhty0;
-    ihx = 0;
-    ihtx = 0;
-    for (hi = 0; hi <= hn; ++hi) {
+    // init x scale Bresenham
+    xt = 0;
+    xSrc = 0;
 
-      // compute filtered pixel value
-      imgPix = 0;
-      if (ihdx == 0) {
-	m = 1;
-      } else {
-	m = ihdx + (ihtx + ihpx >= ihqx ? 1 : 0);
+    for (x = 0; x < scaledWidth; ++x) {
+
+      // x scale Bresenham
+      xStep = xp;
+      xt += xq;
+      if (xt >= scaledWidth) {
+	xt -= scaledWidth;
+	++xStep;
       }
-      p = pixBuf + ihx * sizeof(Guchar);
+
+      // x shear
+      x1 = xSign * x + xoutRound(xShear * ySign * y);
+
+      // y shear
+      y1 = ySign * y + xoutRound(yShear * x1);
+
+      // rotation
+      if (rot) {
+	x2 = y1;
+	y2 = -x1;
+      } else {
+	x2 = x1;
+	y2 = y1;
+      }
+
+      // compute the filtered pixel at (x,y) after the
+      // x and y scaling operations
+      n = yStep > 0 ? yStep : 1;
+      m = xStep > 0 ? xStep : 1;
+      p = pixBuf + xSrc;
+      imgPix = 0;
       for (i = 0; i < n; ++i) {
 	for (j = 0; j < m; ++j) {
 	  imgPix += *p++;
@@ -3083,9 +3220,12 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 	p += width - m;
       }
 
+      // x scale Bresenham
+      xSrc += xStep;
+
       // blend image pixel with background
       alpha = (double)imgPix / (double)(n * m);
-      xcolor.pixel = XGetPixel(image, dvx + dhx - bx0, dvy + dhy - by0);
+      xcolor.pixel = XGetPixel(image, tx + x2 - bx0, ty + y2 - by0);
       if (xcolor.pixel != lastPixel) {
 	XQueryColor(display, colormap, &xcolor);
 	r1 = (double)xcolor.red / 65535.0;
@@ -3099,64 +3239,10 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
       pix = findColor(&rgb2);
 
       // set pixel
-      XPutPixel(image, dvx + dhx - bx0, dvy + dhy - by0, pix);
-
-      // Bresenham increment (horizontal stripe)
-      dhx += dhdx;
-      dhtx += dhpx;
-      if (dhtx >= dhqx) {
-	dhx += dhdx2;
-	dhtx -= dhqx;
-      }
-      dhy += dhdy;
-      dhty += dhpy;
-      if (dhty >= dhqy) {
-	dhy += dhdy2;
-	dhty -= dhqy;
-      }
-      ihx += ihdx;
-      ihtx += ihpx;
-      if (ihtx >= ihqx) {
-	++ihx;
-	ihtx -= ihqx;
-      }
-    }
-
-    // Bresenham increment (left edge)
-    dvx += dvdx;
-    dvtx += dvpx;
-    dhty0 += dvdx * dhdx * dhpy;
-    if (dvtx >= dvqx) {
-      dvx += dvdx2;
-      dvtx -= dvqx;
-      dhty0 += dvdx2 * dhdx * dhpy;
-    }
-    dvy += dvdy;
-    dvty += dvpy;
-    dhtx0 += dvdy * dhdy * dhpx;
-    if (dvty >= dvqy) {
-      dvy += dvdy2;
-      dvty -= dvqy;
-      dhtx0 += dvdy2 * dhdy * dhpx;
-    }
-    ivy += ivdy;
-    ivty += ivpy;
-    if (ivty >= ivqy) {
-      ++ivy;
-      ivty -= ivqy;
-    }
-    if (dhtx0 >= dhqy) {
-      dhtx0 -= dhqx;
-    } else if (dhtx0 < 0) {
-      dhtx0 += dhqx;
-    }
-    if (dhty0 >= dhqx) {
-      dhty0 -= dhqy;
-    } else if (dhty0 < 0) {
-      dhty0 += dhqy;
+      XPutPixel(image, tx + x2 - bx0, ty + y2 - by0, pix);
     }
   }
-  
+
   // blit the image into the pixmap
   XPutImage(display, pixmap, fillGC, image, cx1, cy1, cx0, cy0, cw, ch);
 
@@ -3170,33 +3256,34 @@ void XOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 
 void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 			   int width, int height, GfxImageColorMap *colorMap,
-			   GBool inlineImg) {
+			   int *maskColors, GBool inlineImg) {
   ImageStream *imgStr;
   XImage *image;
   int nComps, nVals, nBits;
   GBool dither;
-  double xt, yt;
+  double *ctm;
+  GBool rot;
+  double xScale, yScale, xShear, yShear;
+  int tx, ty, scaledWidth, scaledHeight, xSign, ySign;
   int ulx, uly, llx, lly, urx, ury, lrx, lry;
-  int hx, hy;
+  int ulx1, uly1, llx1, lly1, urx1, ury1, lrx1, lry1;
   int bx0, by0, bx1, by1, bw, bh;
   int cx0, cy0, cx1, cy1, cw, ch;
-  int dx, dy;
-  int dvx, dvdx, dvpx, dvqx, dvdx2, dvtx;
-  int dvy, dvdy, dvpy, dvqy, dvdy2, dvty;
-  int dhx, dhdx, dhpx, dhqx, dhdx2, dhtx, dhtx0;
-  int dhy, dhdy, dhpy, dhqy, dhdy2, dhty, dhty0;
-  int ivy, ivdy, ivpy, ivqy, ivty;
-  int ihx, ihdx, ihpx, ihqx, ihtx;
-  int vn, vi, hn, hi;
-  int bufy;
+  int yp, yq, yt, yStep, lastYStep;
+  int xp, xq, xt, xStep, xSrc;
   GfxRGB *pixBuf;
+  Guchar *alphaBuf;
   Guchar pixBuf2[gfxColorMaxComps];
   GfxRGB color2, err, errRight;
   GfxRGB *errDown;
-  double r0, g0, b0;
+  double r0, g0, b0, alpha, mul;
   Gulong pix;
   GfxRGB *p;
-  int n, m, i, j;
+  Guchar *q;
+  GBool oneBitMode;
+  GfxRGB oneBitRGB[2];
+  int x, y, x1, y1, x2, y2;
+  int n, m, i, j, k;
 
   // image parameters
   nComps = colorMap->getNumPixelComps();
@@ -3204,66 +3291,84 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   nBits = colorMap->getBits();
   dither = nComps > 1 || nBits > 1;
 
-  // corners in device space
-  state->transform(0, 0, &xt, &yt);
-  llx = xoutRound(xt);
-  lly = xoutRound(yt);
-  state->transform(0, 1, &xt, &yt);
-  ulx = xoutRound(xt);
-  uly = xoutRound(yt);
-  state->transform(1, 0, &xt, &yt);
-  lrx = xoutRound(xt);
-  lry = xoutRound(yt);
-  state->transform(1, 1, &xt, &yt);
-  urx = xoutRound(xt);
-  ury = xoutRound(yt);
-
-  // horizontal traversal
-  hx = urx - ulx;
-  if (abs(lrx - llx) < abs(hx)) {
-    hx = lrx - llx;
+  // get CTM, check for singular matrix
+  ctm = state->getCTM();
+  if (fabs(ctm[0] * ctm[3] - ctm[1] * ctm[2]) < 0.000001) {
+    error(-1, "Singular CTM in drawImage");
+    if (inlineImg) {
+      str->reset();
+      j = height * ((nVals * nBits + 7) / 8);
+      for (i = 0; i < j; ++i) {
+	str->getChar();
+      }
+      str->close();
+    }
+    return;
   }
-  hy = ury - uly;
-  if (abs(lry - lly) < abs(hy)) {
-    hy = lry - lly;
+
+  // compute scale, shear, rotation, translation parameters
+  rot = fabs(ctm[1]) > fabs(ctm[0]);
+  if (rot) {
+    xScale = -ctm[1];
+    yScale = -ctm[2] + (ctm[0] * ctm[3]) / ctm[1];
+    xShear = ctm[3] / yScale;
+    yShear = -ctm[0] / ctm[1];
+  } else {
+    xScale = ctm[0];
+    yScale = -ctm[3] + (ctm[1] * ctm[2]) / ctm[0];
+    xShear = -ctm[2] / yScale;
+    yShear = ctm[1] / ctm[0];
+  }
+  tx = xoutRound(ctm[2] + ctm[4]);
+  ty = xoutRound(ctm[3] + ctm[5]);
+  // use ceil() to avoid gaps between "striped" images
+  scaledWidth = (int)ceil(fabs(xScale));
+  xSign = (xScale < 0) ? -1 : 1;
+  scaledHeight = (int)ceil(fabs(yScale));
+  ySign = (yScale < 0) ? -1 : 1;
+
+  // compute corners in device space
+  ulx1 = 0;
+  uly1 = 0;
+  urx1 = xSign * (scaledWidth - 1);
+  ury1 = xoutRound(yShear * urx1);
+  llx1 = xoutRound(xShear * ySign * (scaledHeight - 1));
+  lly1 = ySign * (scaledHeight - 1) + xoutRound(yShear * llx1);
+  lrx1 = xSign * (scaledWidth - 1) +
+           xoutRound(xShear * ySign * (scaledHeight - 1));
+  lry1 = ySign * (scaledHeight - 1) + xoutRound(yShear * lrx1);
+  if (rot) {
+    ulx = tx + uly1;    uly = ty - ulx1;
+    urx = tx + ury1;    ury = ty - urx1;
+    llx = tx + lly1;    lly = ty - llx1;
+    lrx = tx + lry1;    lry = ty - lrx1;
+  } else {
+    ulx = tx + ulx1;    uly = ty + uly1;
+    urx = tx + urx1;    ury = ty + ury1;
+    llx = tx + llx1;    lly = ty + lly1;
+    lrx = tx + lrx1;    lry = ty + lry1;
   }
 
   // bounding box:
   //   (bx0, by0) = upper-left corner
   //   (bx1, by1) = lower-right corner
   //   (bw, bh) = size
-  bx0 = bx1 = ulx;
-  if (llx < bx0) {
-    bx0 = llx;
-  } else if (llx > bx1) {
-    bx1 = llx;
-  }
-  if (urx < bx0) {
-    bx0 = urx;
-  } else if (urx > bx1) {
-    bx1 = urx;
-  }
-  if (lrx < bx0) {
-    bx0 = lrx;
-  } else if (lrx > bx1) {
-    bx1 = lrx;
-  }
-  by0 = by1 = uly;
-  if (lly < by0) {
-    by0 = lly;
-  } else if (lly > by1) {
-    by1 = lly;
-  }
-  if (ury < by0) {
-    by0 = ury;
-  } else if (ury > by1) {
-    by1 = ury;
-  }
-  if (lry < by0) {
-    by0 = lry;
-  } else if (lry > by1) {
-    by1 = lry;
-  }
+  bx0 = (ulx < urx) ? (ulx < llx) ? (ulx < lrx) ? ulx : lrx
+                                  : (llx < lrx) ? llx : lrx
+		    : (urx < llx) ? (urx < lrx) ? urx : lrx
+                                  : (llx < lrx) ? llx : lrx;
+  bx1 = (ulx > urx) ? (ulx > llx) ? (ulx > lrx) ? ulx : lrx
+                                  : (llx > lrx) ? llx : lrx
+		    : (urx > llx) ? (urx > lrx) ? urx : lrx
+                                  : (llx > lrx) ? llx : lrx;
+  by0 = (uly < ury) ? (uly < lly) ? (uly < lry) ? uly : lry
+                                  : (lly < lry) ? lly : lry
+		    : (ury < lly) ? (ury < lry) ? ury : lry
+                                  : (lly < lry) ? lly : lry;
+  by1 = (uly > ury) ? (uly > lly) ? (uly > lry) ? uly : lry
+                                  : (lly > lry) ? lly : lry
+		    : (ury > lly) ? (ury > lry) ? ury : lry
+                                  : (lly > lry) ? lly : lry;
   bw = bx1 - bx0 + 1;
   bh = by1 - by0 + 1;
 
@@ -3273,11 +3378,7 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   //   (cw, ch) = size of valid rectangle
   // These values will be used to transfer the XImage from/to the
   // Pixmap.
-  if (bx1 >= pixmapW) {
-    cw = pixmapW - bx0;
-  } else {
-    cw = bw;
-  }
+  cw = (bx1 >= pixmapW) ? pixmapW - bx0 : bw;
   if (bx0 < 0) {
     cx0 = 0;
     cx1 = -bx0;
@@ -3286,11 +3387,7 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
     cx0 = bx0;
     cx1 = 0;
   }
-  if (by1 >= pixmapH) {
-    ch = pixmapH - by0;
-  } else {
-    ch = bh;
-  }
+  ch = (by1 >= pixmapH) ? pixmapH - by0 : bh;
   if (by0 < 0) {
     cy0 = 0;
     cy1 = -by0;
@@ -3302,69 +3399,30 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 
   // check for tiny (zero width or height) images
   // and off-page images
-  if (cw <= 0 || ch <= 0) {
+  if (scaledWidth <= 0 || scaledHeight <= 0 || cw <= 0 || ch <= 0) {
     if (inlineImg) {
       str->reset();
       j = height * ((nVals * nBits + 7) / 8);
       for (i = 0; i < j; ++i)
 	str->getChar();
+      str->close();
     }
     return;
   }
 
-  // Bresenham parameters for vertical traversal
-  // (device coordinates and image coordinates)
-  dx = llx - ulx;
-  dy = lly - uly;
-  if (abs(dx) > abs(dy)) {
-    vn = abs(dx);
-    dvdx = dx > 0 ? 1 : -1;
-    dvpx = 0;
-    dvdx2 = 0;
-    dvdy = 0;
-    dvpy = abs(dy);
-    dvdy2 = dy > 0 ? 1 : -1;
-  } else {
-    vn = abs(dy);
-    dvdx = 0;
-    dvpx = abs(dx);
-    dvdx2 = dx > 0 ? 1 : -1;
-    dvdy = dy > 0 ? 1 : -1;
-    dvpy = 0;
-    dvdy2 = 0;
-  }
-  dvqx = dvqy = vn;
-  ivqy = vn + 1;
-  ivdy = height / ivqy;
-  ivpy = height % ivqy;
-
-  // Bresenham parameters for horizontal traversal
-  // (device coordinates and image coordinates)
-  if (abs(hx) > abs(hy)) {
-    hn = abs(hx);
-    dhdx = hx > 0 ? 1 : -1;
-    dhpx = 0;
-    dhdx2 = 0;
-    dhdy = 0;
-    dhpy = abs(hy);
-    dhdy2 = hy > 0 ? 1 : -1;
-  } else {
-    hn = abs(hy);
-    dhdx = 0;
-    dhpx = abs(hx);
-    dhdx2 = hx > 0 ? 1 : -1;
-    dhdy = hy > 0 ? 1 : -1;
-    dhpy = 0;
-    dhdy2 = 0;
-  }
-  dhqx = dhqy = hn;
-  ihqx = hn + 1;
-  ihdx = width / ihqx;
-  ihpx = width % ihqx;
+  // compute Bresenham parameters for x and y scaling
+  yp = height / scaledHeight;
+  yq = height % scaledHeight;
+  xp = width / scaledWidth;
+  xq = width % scaledWidth;
 
   // allocate pixel buffer
-  n = ivdy + (ivpy > 0 ? 1 : 0);
-  pixBuf = (GfxRGB *)gmalloc(n * width * sizeof(GfxRGB));
+  pixBuf = (GfxRGB *)gmalloc((yp + 1) * width * sizeof(GfxRGB));
+  if (maskColors) {
+    alphaBuf = (Guchar *)gmalloc((yp + 1) * width * sizeof(Guchar));
+  } else {
+    alphaBuf = NULL;
+  }
 
   // allocate XImage
   image = XCreateImage(display, DefaultVisual(display, screenNum),
@@ -3372,9 +3430,11 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   image->data = (char *)gmalloc(bh * image->bytes_per_line);
 
   // if the transform is anything other than a 0/90/180/270 degree
-  // rotation/flip, read the backgound pixmap to fill in the corners
+  // rotation/flip, or if there is color key masking, read the
+  // backgound pixmap to fill in the corners
   if (!((ulx == llx && uly == ury) ||
-	(uly == lly && ulx == urx))) {
+	(uly == lly && ulx == urx)) ||
+      maskColors) {
     XGetSubImage(display, pixmap, cx0, cy0, cw, ch, (1 << depth) - 1, ZPixmap,
 		 image, cx1, cy1);
   }
@@ -3389,98 +3449,147 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
     errDown = NULL;
   }
 
+  // optimize the one-bit-deep image case
+  if ((oneBitMode = nComps == 1 && nBits == 1)) {
+    pixBuf2[0] = 0;
+    colorMap->getRGB(pixBuf2, &oneBitRGB[0]);
+    pixBuf2[0] = 1;
+    colorMap->getRGB(pixBuf2, &oneBitRGB[1]);
+  }
+
   // initialize the image stream
   imgStr = new ImageStream(str, width, nComps, nBits);
   imgStr->reset();
 
-  // traverse left edge of image
-  dvx = ulx;
-  dvtx = 0;
-  dvy = uly;
-  dvty = 0;
-  ivy = 0;
-  ivty = 0;
-  dhtx0 = 0;
-  dhty0 = 0;
-  n = 0;
-  bufy = -1;
-  for (vi = 0; vi <= vn; ++vi) {
+  // init y scale Bresenham
+  yt = 0;
+  lastYStep = 1;
+
+  for (y = 0; y < scaledHeight; ++y) {
+
+    // initialize error diffusion accumulator
+    errRight.r = errRight.g = errRight.b = 0;
+
+    // y scale Bresenham
+    yStep = yp;
+    yt += yq;
+    if (yt >= scaledHeight) {
+      yt -= scaledHeight;
+      ++yStep;
+    }
 
     // read row(s) from image
-    if (ivy > bufy) {
-      if (ivdy == 0) {
-	n = 1;
-      } else {
-	n = ivdy + (ivty + ivpy >= ivqy ? 1 : 0);
-      }
+    n = (yp > 0) ? yStep : lastYStep;
+    if (n > 0) {
       p = pixBuf;
+      q = alphaBuf;
       for (i = 0; i < n; ++i) {
 	for (j = 0; j < width; ++j) {
 	  imgStr->getPixel(pixBuf2);
-	  colorMap->getRGB(pixBuf2, p);
-	  ++p;
+	  if (oneBitMode) {
+	    *p++ = oneBitRGB[pixBuf2[0]];
+	  } else {
+	    colorMap->getRGB(pixBuf2, p);
+	    ++p;
+	  }
+	  if (q) {
+	    *q = 1;
+	    for (k = 0; k < nComps; ++k) {
+	      if (pixBuf2[k] < maskColors[2*k] ||
+		  pixBuf2[k] > maskColors[2*k]) {
+		*q = 0;
+		break;
+	      }
+	    }
+	    ++q;
+	  }
 	}
       }
-      bufy = ivy;
     }
+    lastYStep = yStep;
 
-    // clear error accumulator
-    errRight.r = errRight.g = errRight.b = 0;
+    // init x scale Bresenham
+    xt = 0;
+    xSrc = 0;
 
-    // traverse a horizontal stripe
-    dhx = 0;
-    dhy = 0;
-    dhtx = dhtx0;
-    dhty = dhty0;
-    ihx = 0;
-    ihtx = 0;
-    for (hi = 0; hi <= hn; ++hi) {
+    for (x = 0; x < scaledWidth; ++x) {
 
-      // compute filtered pixel value
-      if (ihdx == 0) {
-	m = 1;
-      } else {
-	m = ihdx + (ihtx + ihpx >= ihqx ? 1 : 0);
+      // x scale Bresenham
+      xStep = xp;
+      xt += xq;
+      if (xt >= scaledWidth) {
+	xt -= scaledWidth;
+	++xStep;
       }
-      p = pixBuf + ihx * sizeof(Guchar);
+
+      // x shear
+      x1 = xSign * x + xoutRound(xShear * ySign * y);
+
+      // y shear
+      y1 = ySign * y + xoutRound(yShear * x1);
+
+      // rotation
+      if (rot) {
+	x2 = y1;
+	y2 = -x1;
+      } else {
+	x2 = x1;
+	y2 = y1;
+      }
+
+      // compute the filtered pixel at (x,y) after the
+      // x and y scaling operations
+      n = yStep > 0 ? yStep : 1;
+      m = xStep > 0 ? xStep : 1;
+      p = pixBuf + xSrc;
       r0 = g0 = b0 = 0;
+      q = alphaBuf ? alphaBuf + xSrc : (Guchar *)NULL;
+      alpha = 0;
       for (i = 0; i < n; ++i) {
 	for (j = 0; j < m; ++j) {
 	  r0 += p->r;
 	  g0 += p->g;
 	  b0 += p->b;
 	  ++p;
+	  if (q) {
+	    alpha += *q++;
+	  }
 	}
 	p += width - m;
       }
-      r0 /= n * m;
-      g0 /= n * m;
-      b0 /= n * m;
+      mul = 1 / (double)(n * m);
+      r0 *= mul;
+      g0 *= mul;
+      b0 *= mul;
+      alpha *= mul;
+
+      // x scale Bresenham
+      xSrc += xStep;
 
       // compute pixel
       if (dither) {
-	color2.r = r0 + errRight.r + errDown[dvx + dhx - bx0].r;
+	color2.r = r0 + errRight.r + errDown[tx + x2 - bx0].r;
 	if (color2.r > 1) {
 	  color2.r = 1;
 	} else if (color2.r < 0) {
 	  color2.r = 0;
 	}
-	color2.g = g0 + errRight.g + errDown[dvx + dhx - bx0].g;
+	color2.g = g0 + errRight.g + errDown[tx + x2 - bx0].g;
 	if (color2.g > 1) {
 	  color2.g = 1;
 	} else if (color2.g < 0) {
 	  color2.g = 0;
 	}
-	color2.b = b0 + errRight.b + errDown[dvx + dhx - bx0].b;
+	color2.b = b0 + errRight.b + errDown[tx + x2 - bx0].b;
 	if (color2.b > 1) {
 	  color2.b = 1;
 	} else if (color2.b < 0) {
 	  color2.b = 0;
 	}
 	pix = findColor(&color2, &err);
-	errRight.r = errDown[dvx + dhx - bx0].r = err.r / 2;
-	errRight.g = errDown[dvx + dhx - bx0].g = err.g / 2;
-	errRight.b = errDown[dvx + dhx - bx0].b = err.b / 2;
+	errRight.r = errDown[tx + x2 - bx0].r = err.r / 2;
+	errRight.g = errDown[tx + x2 - bx0].g = err.g / 2;
+	errRight.b = errDown[tx + x2 - bx0].b = err.b / 2;
       } else {
 	color2.r = r0;
 	color2.g = g0;
@@ -3489,77 +3598,29 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
       }
 
       // set pixel
-      XPutPixel(image, dvx + dhx - bx0, dvy + dhy - by0, pix);
-
-      // Bresenham increment (horizontal stripe)
-      dhx += dhdx;
-      dhtx += dhpx;
-      if (dhtx >= dhqx) {
-	dhx += dhdx2;
-	dhtx -= dhqx;
+      //~ this should do a blend when 0 < alpha < 1
+      if (alpha < 0.75) {
+	XPutPixel(image, tx + x2 - bx0, ty + y2 - by0, pix);
       }
-      dhy += dhdy;
-      dhty += dhpy;
-      if (dhty >= dhqy) {
-	dhy += dhdy2;
-	dhty -= dhqy;
-      }
-      ihx += ihdx;
-      ihtx += ihpx;
-      if (ihtx >= ihqx) {
-	++ihx;
-	ihtx -= ihqx;
-      }
-    }
-
-    // Bresenham increment (left edge)
-    dvx += dvdx;
-    dvtx += dvpx;
-    dhty0 += dvdx * dhdx * dhpy;
-    if (dvtx >= dvqx) {
-      dvx += dvdx2;
-      dvtx -= dvqx;
-      dhty0 += dvdx2 * dhdx * dhpy;
-    }
-    dvy += dvdy;
-    dvty += dvpy;
-    dhtx0 += dvdy * dhdy * dhpx;
-    if (dvty >= dvqy) {
-      dvy += dvdy2;
-      dvty -= dvqy;
-      dhtx0 += dvdy2 * dhdy * dhpx;
-    }
-    ivy += ivdy;
-    ivty += ivpy;
-    if (ivty >= ivqy) {
-      ++ivy;
-      ivty -= ivqy;
-    }
-    if (dhtx0 >= dhqy) {
-      dhtx0 -= dhqx;
-    } else if (dhtx0 < 0) {
-      dhtx0 += dhqx;
-    }
-    if (dhty0 >= dhqx) {
-      dhty0 -= dhqy;
-    } else if (dhty0 < 0) {
-      dhty0 += dhqy;
     }
   }
-  
+
   // blit the image into the pixmap
   XPutImage(display, pixmap, fillGC, image, cx1, cy1, cx0, cy0, cw, ch);
 
   // free memory
   delete imgStr;
   gfree(pixBuf);
+  if (maskColors) {
+    gfree(alphaBuf);
+  }
   gfree(image->data);
   image->data = NULL;
   XDestroyImage(image);
   gfree(errDown);
 }
 
-GBool XOutputDev::findText(char *s, GBool top, GBool bottom,
+GBool XOutputDev::findText(Unicode *s, int len, GBool top, GBool bottom,
 			   int *xMin, int *yMin, int *xMax, int *yMax) {
   double xMin1, yMin1, xMax1, yMax1;
   
@@ -3567,7 +3628,7 @@ GBool XOutputDev::findText(char *s, GBool top, GBool bottom,
   yMin1 = (double)*yMin;
   xMax1 = (double)*xMax;
   yMax1 = (double)*yMax;
-  if (text->findText(s, top, bottom, &xMin1, &yMin1, &xMax1, &yMax1)) {
+  if (text->findText(s, len, top, bottom, &xMin1, &yMin1, &xMax1, &yMax1)) {
     *xMin = xoutRound(xMin1);
     *xMax = xoutRound(xMax1);
     *yMin = xoutRound(yMin1);

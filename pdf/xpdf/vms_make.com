@@ -4,45 +4,53 @@ $! Xpdf compile script for VMS.
 $!
 $! Written by Patrick Moreau, Martin P.J. Zinser.
 $!
-$! Copyright 1996 Derek B. Noonburg
+$! Copyright 1996-2002 Glyph & Cog, LLC
 $!
 $!========================================================================
 $!
 $ i = 0
 $ j = 0
-$ APPS = "XPDF,PDFTOPS,PDFTOTEXT,PDFINFO,PDFTOPBM,PDFIMAGES"
+$ APPS = "XPDF,PDFTOPS,PDFTOTEXT,PDFINFO,PDFTOPBM,PDFIMAGES,PDFFONTS"
 $ if f$search("COMMON.OLB").eqs."" then lib/create common.olb
 $!
-$ COMMON_OBJS = "Array.obj,Catalog.obj,Decrypt.obj,Dict.obj,Error.obj," + -
-                "FontEncoding.obj,FontFile.obj,FormWidget.obj,Gfx.obj," + -
-                "GfxFont.obj,GfxState.obj,Lexer.obj,Link.obj,Object.obj," + -
-                "OutputDev.obj,Page.obj,Params.obj,Parser.obj,PDFdoc.obj," + -
-		"Stream.obj,XRef.obj"
+$ COMMON_OBJS = "Annot.obj,Array.obj,BuiltinFont.obj," + - 
+                "BuiltinFontTables.obj,Catalog.obj,CharCodeToUnicode.obj," + - 
+		"CMap.obj,Decrypt.obj,Dict.obj,Error.obj," + -
+                "FontEncodingTables.obj,FontFile.obj," + -
+                "Function.obj,Gfx.obj,GfxFont.obj,GfxState.obj,"+ - 
+		"GlobalParams.obj,Lexer.obj," + -
+                "Link.obj,NameToCharCode.obj,Object.obj,OutputDev.obj," + -
+		"Page.obj,Parser.obj,PDFdoc.obj,PSTokenizer.obj," + -
+                "Stream.obj,UnicodeMap.obj,XRef.obj"
 $ COMMON_LIBS = "[]common.olb/lib,[-.goo]libgoo.olb/lib"
 $!
-$ XPDF_OBJS = "xpdf.obj,LTKOutputDev.obj,PSOutputDev.obj,SFont.obj," + - 
-              "T1Font.obj,TextOutputDev.obj,TTFont.obj,XOutputDev.obj"
+$ XPDF_OBJS = "xpdf.obj,FTFont.obj,LTKOutputDev.obj,PSOutputDev.obj," + -
+              "SFont.obj,T1Font.obj,TextOutputDev.obj,TTFont.obj," + -
+              "XOutputDev.obj"
 $ XPDF_LIBS = "[-.ltk]libltk.olb/lib"
 $!
-$ PDFTOPS_OBJS = "pdftops.obj,PSOutputDev.obj" 
-$ PDFTOPS_LIBS = ""
+$ PDFTOPS_OBJS   = "pdftops.obj,PSOutputDev.obj" 
+$ PDFTOPS_LIBS   = ""
 $!
 $ PDFTOTEXT_OBJS = "pdftotext.obj,TextOutputDev.obj"
 $ PDFTOTEXT_LIBS = ""
 $!
-$ PDFINFO_OBJS =  "pdfinfo.obj"
-$ PDFINFO_LIBS = ""
+$ PDFINFO_OBJS   =  "pdfinfo.obj"
+$ PDFINFO_LIBS   = ""
 $!
-$ PDFTOPBM_OBJS = "pdftopbm.obj,PBMOutputDev.obj,SFont.obj,T1Font.obj," + -
-                  "TextOutputDev.obj,TTFont.obj,XOutputDev.obj"
-$ PDFTOPBM_LIBS = ""
+$ PDFTOPBM_OBJS  = "pdftopbm.obj,FTFont.obj,PBMOutputDev.obj,SFont.obj," + -
+                   "T1Font.obj,TextOutputDev.obj,TTFont.obj,XOutputDev.obj"
+$ PDFTOPBM_LIBS  = ""
 $!
 $ PDFIMAGES_OBJS = "pdfimages.obj,ImageOutputDev.obj"
 $ PDFIMAGES_LIBS = ""
 $!
+$ PDFFONTS_OBJS  = "pdffonts.obj"
+$ PDFFONTS_LIBS  = ""
 $! Build xpdf-ltk.h
-$ def/user sys$input xpdf.ltk
-$ def/user sys$output xpdf-ltk.h
+$ close sys$input 
+$ define/user sys$input xpdf.ltk
+$ define/user sys$output xpdf-ltk.h
 $ run [-.ltk]ltkbuild
 $!
 $COMPILE_CXX_LOOP:
@@ -77,6 +85,7 @@ $ else
 $   LIBS = COMMON_LIBS 
 $ endif
 $ OBJS = 'curr_app'_OBJS
+$ write sys$output "Linking ''curr_app'..."
 $ xpdf_link/exe='curr_app'.exe 'OBJS','libs',[-]xpdf.opt/opt
 $!  
 $ goto BUILD_APPS
