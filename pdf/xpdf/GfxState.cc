@@ -410,6 +410,12 @@ void GfxDeviceCMYKColorSpace::getGray(GfxColor *color, double *gray) {
 void GfxDeviceCMYKColorSpace::getRGB(GfxColor *color, GfxRGB *rgb) {
   double c, m, y, aw, ac, am, ay, ar, ag, ab;
 
+  /* FIXME ask Derek */
+  if (color->c[0] == 0.0 && color->c[1] == 0 && color->c[2] == 0) {
+    rgb->r = rgb->g = rgb->b = 1 - color->c[3];
+    return;
+  }
+    
   c = clip01(color->c[0] + color->c[3]);
   m = clip01(color->c[1] + color->c[3]);
   y = clip01(color->c[2] + color->c[3]);
