@@ -661,13 +661,13 @@ container_new (const char *fname)
 
 	gtk_widget_show_all (container->app);
 
+	containers = g_list_append (containers, container);
+
 	if (fname)
 	  if (!open_pdf (container, fname)) {
 	    container_destroy (container);
 	    return NULL;
 	  }
-
-	containers = g_list_append (containers, container);
 
 	gtk_widget_show_all (container->app);
 

@@ -1,3 +1,13 @@
+1999-10-08  Michael Meeks  <mmeeks@gnu.org>
+
+	* gpdf.cc (container_new): add to list before possibly removing.
+
+	* bonobo-application-x-pdf.cc (destroy_embed): Quit on last component
+	close. (load_pdf_from_stream): inline redraw-all with new API.
+	(redraw_view): implement (redraw_all): remove. (realize_mainbox): remould.
+	(destroy_view): Fix serious memory corruption freeing pixmap twice.
+	(view_activate): kill debug.
+
 1999-10-06  Peter Teichman  <pat4@acpub.duke.edu>
 
 	* GOutputDev.cc: add return type for GOutputServerFont::isOk()
