@@ -1262,13 +1262,14 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 
 	if (border) {
 		pixbuf = ev_document_misc_get_thumbnail_frame (width, height, NULL);
+		bitmap_to_pixbuf (output->getBitmap(), pixbuf, 1, 1);
 	} else {
 		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
-					 width + 4, height + 4);
+					 width, height);
 		gdk_pixbuf_fill (pixbuf, 0xffffffff);
+		bitmap_to_pixbuf (output->getBitmap(), pixbuf, 0, 0);
 	}
 
-	bitmap_to_pixbuf (output->getBitmap(), pixbuf, 1, 1);
 	delete output;
 
 	return pixbuf;
