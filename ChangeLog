@@ -1,3 +1,9 @@
+Mon Jan  3 17:22:25 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-sidebar-thumbnails.c (do_one_iteration): move the
+	thumbnail code into a time-based idle as well.  Also, turn off the
+	shadow temporarily as it's really slow.
+
 2005-01-03  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* backend/ev-document.c: (ev_document_class_init):

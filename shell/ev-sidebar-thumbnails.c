@@ -34,6 +34,8 @@
 #include "ev-utils.h"
 
 #define THUMBNAIL_WIDTH 96
+/* Amount of time we devote to each iteration of the idle, in microseconds */
+#define IDLE_WORK_LENGTH 5000
 
 struct _EvSidebarThumbnailsPrivate {
 	GtkWidget *tree_view;
@@ -133,21 +135,23 @@ ev_sidebar_thumbnails_new (void)
 }
 
 static gboolean
-populate_thumbnails (gpointer data)
+do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
-	EvSidebarThumbnails *ev_sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (data);
 	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
 	GdkPixbuf *tmp, *pixbuf;
 	GtkTreePath *path;
 	GtkTreeIter iter;
-	
+
 	tmp = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
 						       priv->current_page, THUMBNAIL_WIDTH);
 
-
+#if 1
+	/* Don't add the shadow for now, as it's really slow */
+	pixbuf = g_object_ref (tmp);
+#else
 	/* Add shadow */
 	pixbuf = ev_pixbuf_add_shadow (tmp, 5, 0, 0, 0.5);
-	
+#endif
 	path = gtk_tree_path_new_from_indices (priv->current_page, -1);
 	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
 	gtk_tree_path_free (path);
@@ -165,6 +169,38 @@ populate_thumbnails (gpointer data)
 		return FALSE;
 	else
 		return TRUE;
+}
+
+static gboolean
+populate_thumbnails_idle (gpointer data)
+{
+	GTimer *timer;
+	gint i;
+	gulong microseconds = 0;
+
+	EvSidebarThumbnails *ev_sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (data);
+	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
+
+	if (priv->current_page == priv->n_pages) {
+		priv->idle_id = 0;
+		return FALSE;
+	}
+
+	timer = g_timer_new ();
+	i = 0;
+	g_timer_start (timer);
+	while (do_one_iteration (ev_sidebar_thumbnails)) {
+		i++;
+		g_timer_elapsed (timer, &microseconds);
+		if (microseconds > IDLE_WORK_LENGTH)
+			break;
+	}
+	g_timer_destroy (timer);
+#if 1
+	g_print ("%d rows done this idle in %d\n", i, (int)microseconds);
+#endif
+
+	return TRUE;
 }
 
 void
@@ -205,7 +241,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	}
 
 	priv->document = document;
-	priv->idle_id = g_idle_add (populate_thumbnails, sidebar_thumbnails);
+	priv->idle_id = g_idle_add (populate_thumbnails_idle, sidebar_thumbnails);
 	priv->n_pages = n_pages;
 	priv->current_page = 0;
 }
