@@ -882,10 +882,11 @@ ev_view_set_document (EvView     *view,
 
 		if (view->document) {
 			g_object_ref (view->document);
-                        g_signal_connect (view->document,
-                                          "found",
-                                          G_CALLBACK (found_results_callback),
-                                          view);
+			if (EV_IS_DOCUMENT_FIND (view->document))
+				g_signal_connect (view->document,
+						  "found",
+						  G_CALLBACK (found_results_callback),
+						  view);
 			g_signal_connect (view->document,
 					  "changed",
 					  G_CALLBACK (document_changed_callback),
