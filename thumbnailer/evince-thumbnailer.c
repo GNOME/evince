@@ -31,7 +31,7 @@
 #define THUMBNAIL_SIZE 128
 
 static gboolean
-evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail)
+evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 {
 	EvDocument *document = NULL;
 	char *mime_type;
@@ -57,7 +57,7 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail)
 	}
 
 	pixbuf = ev_document_thumbnails_get_thumbnail
-			(EV_DOCUMENT_THUMBNAILS (document), 0, THUMBNAIL_SIZE, FALSE);
+			(EV_DOCUMENT_THUMBNAILS (document), 0, size, FALSE);
 	
 	if (pixbuf != NULL) {
 		GdkPixbuf *pdflogo;
@@ -97,19 +97,36 @@ int
 main (int argc, char *argv[])
 {
 	int res;
+	char *input, *output;
+	int size;
 	char *uri;
 
-	if (argc != 3) {
-		g_print ("%s: thumbnailer for Nautilus\n", argv[0]);
-		g_print ("usage: %s <input-filename> <output-filename>\n", argv[0]);
+	if (argc <= 2 || argc > 5 || strcmp (argv[1], "-h") == 0 ||
+	    strcmp (argv[1], "--help") == 0) {
+		g_print ("Usage: %s [-s <size>] <input> <output>\n", argv[0]);
 		return -1;
 	}
 
 	res = gnome_vfs_init ();
 
-	uri = gnome_vfs_make_uri_from_shell_arg (argv[1]);
+	if (!strcmp (argv[1], "-s")) {
+		input = argv[3];
+		output = argv[4];
+		size = g_strtod (argv[2], NULL);
+	} else {
+		input = argv[1];
+		output = argv[2];
+		size = THUMBNAIL_SIZE;
+	}
 
-	if (evince_thumbnail_pngenc_get (uri, argv[2])) {
+	if (size < 40) {
+		g_print ("Size cannot be smaller than 40 pixels\n");
+		return -1;
+	}
+
+	uri = gnome_vfs_make_uri_from_shell_arg (input);
+
+	if (evince_thumbnail_pngenc_get (uri, output, size)) {
 		g_free (uri);
 		return 0;
 	} else {
