@@ -14,6 +14,10 @@ else
 gui = xpdf
 endif
 
+BUILT_SOURCES = 			\
+	gpdf-marshal.c			\
+	gpdf-marshal.h	
+
 bin_PROGRAMS = 	$(gui)
 #	pdftops pdftotext	
 #	pdfinfo	pdftopbm	
@@ -118,7 +122,8 @@ gnome_pdf_viewer_SOURCES =		\
 	gtkgesture.c			\
 	gtkgesture.h			\
 	page-control.c			\
-	page-control.h
+	page-control.h			\
+	$(BUILT_SOURCES)
 
 # Font embedding hack for Gnome Print < 2.1.?2?
 #	gpdf-gnome-font.c		\
@@ -207,6 +212,12 @@ xpdf-ltk.h: xpdf.ltk
 #	zoomIn.xbm		
 #	zoomOut.xbm		
 
+gpdf-marshal.h: gpdf-marshal.list $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --header --prefix=gpdf_marshal > $@
+
+gpdf-marshal.c: gpdf-marshal.list $(GLIB_GENMARSHAL)
+	echo "#include \"gpdf-marshal.h\"" > $@ && \
+	$(GLIB_GENMARSHAL) $< --body --prefix=gpdf_marshal >> $@
 
 stockdir = $(datadir)/pixmaps/gpdf
 stock_DATA = fitwidth.png
@@ -215,7 +226,6 @@ ltk = 			\
 	xpdf-flip.ltk	\
 	xpdf-top.ltk	\
 	xpdf.ltk
-
 
 server_in_files = GNOME_PDF.server.in.in
 
@@ -230,5 +240,9 @@ ui_DATA =				\
 	bonobo-application-x-pdf-ui.xml \
 	gpdf-control-ui.xml
 
-EXTRA_DIST = $(stock_DATA) $(ltk)	\
+CLEANFILES = $(server_DATA) $(BUILT_SOURCES)
+DISTCLEANFILES = $(server_in_files:.server.in.in=.server.in)
+
+EXTRA_DIST = $(stock_DATA)		\
+             gpdf-marshal.list		\
              $(server_in_files) config.h $(ui_DATA)
