@@ -20,6 +20,11 @@
 #include "pixbuf-document.h"
 #include "ev-document-thumbnails.h"
 
+enum {
+	PROP_0,
+	PROP_TITLE
+};
+
 struct _PixbufDocumentClass
 {
 	GObjectClass parent_class;
@@ -186,6 +191,34 @@ pixbuf_document_finalize (GObject *object)
 }
 
 static void
+pixbuf_document_set_property (GObject *object,
+		              guint prop_id,
+			      const GValue *value,
+			      GParamSpec *pspec)
+{
+	switch (prop_id)
+	{
+		case PROP_TITLE:
+			/* read only */
+			break;
+	}
+}
+
+static void
+pixbuf_document_get_property (GObject *object,
+		              guint prop_id,
+		              GValue *value,
+		              GParamSpec *pspec)
+{
+	switch (prop_id)
+	{
+		case PROP_TITLE:
+			g_value_set_string (value, NULL);
+			break;
+	}
+}
+
+static void
 pixbuf_document_class_init (PixbufDocumentClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
@@ -193,6 +226,10 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 	
 	gobject_class->finalize = pixbuf_document_finalize;
+	gobject_class->get_property = pixbuf_document_get_property;
+	gobject_class->set_property = pixbuf_document_set_property;
+
+	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
 static void
