@@ -11,8 +11,7 @@ else
 gui = xpdf
 endif
 
-#bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
-bin_PROGRAMS = bonobo-image-x-pdf gpdf
+bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
 
 common_sources =		\
 	Array.cc 		\
@@ -57,8 +56,8 @@ gpdf_LDADD =			\
 
 bonobo_image_x_pdf_SOURCES =	\
 	$(common_sources)	\
-	BonoboFile.h		\
-	BonoboFile.cc		\
+	BonoboStream.h		\
+	BonoboStream.cc		\
 	GOutputDev.cc		\
 	bonobo-image-x-pdf.cc
 

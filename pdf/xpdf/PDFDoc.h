@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 #include "Link.h"
-#include "BaseFile.h"
 
 class GString;
 class XRef;
@@ -32,7 +31,7 @@ class LinkDest;
 class PDFDoc {
 public:
 
-  PDFDoc(BaseFile file, GString *fileName1);
+  PDFDoc(Stream *str1, GString *fileName1);
   ~PDFDoc();
 
   // Was PDF document successfully opened?
@@ -97,7 +96,7 @@ private:
   void getLinks(int page);
 
   GString *fileName;
-  BaseFile file;
+  Stream  *str;
   XRef *xref;
   Catalog *catalog;
   Links *links;

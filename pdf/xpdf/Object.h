@@ -18,7 +18,6 @@
 #include "gtypes.h"
 #include "gmem.h"
 #include "GString.h"
-#include "BaseFile.h"
 
 class Array;
 class Dict;
@@ -178,7 +177,7 @@ public:
   char *streamGetLine(char *buf, int size);
   int streamGetPos();
   void streamSetPos(int pos);
-  BaseFile streamGetFile();
+/*  BaseFile streamGetFile();*/
   Dict *streamGetDict();
 
   // Output.
@@ -291,8 +290,8 @@ inline int Object::streamGetPos()
 inline void Object::streamSetPos(int pos)
   { stream->setPos(pos); }
 
-inline BaseFile Object::streamGetFile()
-  { return stream->getFile(); }
+/*inline BaseFile Object::streamGetFile()
+  { return stream->getFile(); }*/
 
 inline Dict *Object::streamGetDict()
   { return stream->getDict(); }

@@ -511,64 +511,6 @@ GBool StreamPredictor::getNextLine() {
 // FileStream
 //------------------------------------------------------------------------
 
-FileStream::FileStream(BaseFile f1, int start1, int length1, Object *dict1) {
-  f = f1;
-  start = start1;
-  length = length1;
-  bufPtr = bufEnd = buf;
-  bufPos = start;
-  savePos = -1;
-  dict = *dict1;
-}
-
-FileStream::~FileStream() {
-  if (savePos >= 0)
-    bfseek(f, savePos, SEEK_SET);
-  dict.free();
-}
-
-void FileStream::reset() {
-  savePos = (int)bftell(f);
-  bfseek(f, start, SEEK_SET);
-  bufPtr = bufEnd = buf;
-  bufPos = start;
-}
-
-GBool FileStream::fillBuf() {
-  int n;
-
-  bufPos += bufEnd - buf;
-  bufPtr = bufEnd = buf;
-  if (length >= 0 && bufPos >= start + length)
-    return gFalse;
-  if (length >= 0 && bufPos + 256 > start + length)
-    n = start + length - bufPos;
-  else
-    n = 256;
-  n = bfread(buf, 1, n, f);
-  bufEnd = buf + n;
-  if (bufPtr >= bufEnd)
-    return gFalse;
-  return gTrue;
-}
-
-void FileStream::setPos(int pos1) {
-  long size;
-
-  if (pos1 >= 0) {
-    bfseek(f, pos1, SEEK_SET);
-    bufPos = pos1;
-  } else {
-    bfseek(f, 0, SEEK_END);
-    size = bftell(f);
-    if (pos1 < -size)
-      pos1 = (int)(-size);
-    bfseek(f, pos1, SEEK_END);
-    bufPos = (int)bftell(f);
-  }
-  bufPtr = bufEnd = buf;
-}
-
 GBool FileStream::checkHeader() {
   char hdrBuf[headerSearchSize+1];
   char *p;
@@ -596,6 +538,103 @@ GBool FileStream::checkHeader() {
     return gFalse;
   }
   return gTrue;
+}
+
+FILE *fileOpen (GString *fileName1) {
+  GString *fileName2;
+  // try to open file
+  fileName2 = NULL;
+  FILE *file;
+
+#ifdef VMS
+  if (!(file = fopen(fileName->getCString(), "rb", "ctx=stm"))) {
+    error(-1, "Couldn't open file '%s'", fileName->getCString());
+    return NULL;
+  }
+#else
+  if (!(file = fopen(fileName1->getCString(), "rb"))) {
+    fileName2 = fileName1->copy();
+    fileName2->lowerCase();
+    if (!(file = fopen(fileName2->getCString(), "rb"))) {
+      fileName2->upperCase();
+      if (!(file = fopen(fileName2->getCString(), "rb"))) {
+	error(-1, "Couldn't open file '%s'", fileName1->getCString());
+	delete fileName2;
+	return NULL;
+      }
+    }
+    delete fileName2;
+  }
+#endif
+  return file;
+}
+
+FileStream::FileStream(FILE *f1) {
+  f = f1;
+  start = 0;
+  length = -1;
+  bufPtr = bufEnd = buf;
+  bufPos = start;
+  savePos = -1;
+  dict.initNull();
+  checkHeader();
+}
+
+Stream *FileStream::subStream (int start1, int length1, Object *dict1) {
+  start = start1;
+  length = length1;
+  bufPtr = bufEnd = buf;
+  bufPos = start;
+  savePos = -1;
+  dict = *dict1;
+}
+
+FileStream::~FileStream() {
+  if (savePos >= 0)
+    fseek(f, savePos, SEEK_SET);
+  dict.free();
+}
+
+void FileStream::reset() {
+  savePos = (int)ftell(f);
+  fseek(f, start, SEEK_SET);
+  bufPtr = bufEnd = buf;
+  bufPos = start;
+}
+
+GBool FileStream::fillBuf() {
+  int n;
+
+  bufPos += bufEnd - buf;
+  bufPtr = bufEnd = buf;
+  if (length >= 0 && bufPos >= start + length)
+    return gFalse;
+  if (length >= 0 && bufPos + 256 > start + length)
+    n = start + length - bufPos;
+  else
+    n = 256;
+  n = fread(buf, 1, n, f);
+  bufEnd = buf + n;
+  if (bufPtr >= bufEnd)
+    return gFalse;
+  return gTrue;
+}
+
+void FileStream::setPos(int pos1) {
+  long size;
+
+  if (pos1 >= 0) {
+    fseek(f, pos1, SEEK_SET);
+    bufPos = pos1;
+  } else {
+    fseek(f, 0, SEEK_END);
+    size = ftell(f);
+    if (pos1 < -size)
+      pos1 = (int)(-size);
+    fseek(f, pos1, SEEK_END);
+    bufPos = (int)ftell(f);
+  }
+  bufPtr = bufEnd = buf;
 }
 
 //------------------------------------------------------------------------

@@ -37,6 +37,7 @@ extern "C" {
 #include "Params.h"
 #include "Error.h"
 #include "config.h"
+#include "BonoboStream.h"
 
 GBool printCommands = gFalse;
 
@@ -214,7 +215,8 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 
 	printf ("Loading PDF from persiststream\n");
 	bonobo_object_data->stream = stream;
-	bonobo_object_data->pdf = new PDFDoc (stream, new GString ("Bonobo.pdf"));
+	bonobo_object_data->pdf = new PDFDoc (new BonoboStream (stream),
+					      new GString ("Bonobo.pdf"));
 	printf ("Done load\n");
 	if (!(bonobo_object_data->pdf->isOk())) {
 	  g_warning ("Duff pdf data\n");

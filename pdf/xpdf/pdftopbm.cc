@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(bxpdfopen(fileName), fileName);
+  doc = new PDFDoc(new FileStream (fileOpen (fileName)), fileName);
   if (!doc->isOk())
     exit(1);
 

@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include "gtypes.h"
 #include "Object.h"
-#include "BaseFile.h"
 
 //------------------------------------------------------------------------
 
@@ -83,8 +82,11 @@ public:
   // Get the base FileStream or SubStream of this stream.
   virtual Stream *getBaseStream() = 0;
 
-  // Get the base file of this stream.
-  virtual BaseFile getFile() = 0;
+  // Get a substream of this stream.
+  virtual Stream *subStream (int start1, int length1, Object *dict1) = 0;
+
+  // Get start offset of a stream's data.
+  virtual int     getStart  () = 0;
 
   // Get the dictionary associated with this stream.
   virtual Dict *getDict() = 0;
@@ -175,10 +177,12 @@ private:
 // FileStream
 //------------------------------------------------------------------------
 
+// Portable pdf open helper function.
+extern FILE *fileOpen (GString *fileName1);
+
 class FileStream: public Stream {
 public:
-
-  FileStream(BaseFile f1, int start1, int length1, Object *dict1);
+  FileStream(FILE *f1);
   virtual ~FileStream();
   virtual StreamKind getKind() { return strFile; }
   virtual void reset();
@@ -190,21 +194,16 @@ public:
   virtual void setPos(int pos1);
   virtual GBool isBinary(GBool last = gTrue) { return last; }
   virtual Stream *getBaseStream() { return this; }
-  virtual BaseFile getFile() { return f; }
+  virtual Stream *subStream (int start1, int length1, Object *dict1);
+  virtual int     getStart  () { return start; }
   virtual Dict *getDict() { return dict.getDict(); }
-
-  // Check for a PDF header on this stream.  Skip past some garbage
-  // if necessary.
-  GBool checkHeader();
-
-  // Get position of first byte of stream within the file.
-  int getStart() { return start; }
 
 private:
 
   GBool fillBuf();
+  GBool checkHeader();
 
-  BaseFile f;
+  FILE *f;
   int start;
   int length;
   char buf[256];
@@ -231,7 +230,9 @@ public:
   virtual int getPos() { return str->getPos(); }
   virtual GBool isBinary(GBool last = gTrue) { return last; }
   virtual Stream *getBaseStream() { return this; }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return dict.getDict(); }
 
 private:
@@ -258,7 +259,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -286,7 +289,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -317,7 +322,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -359,7 +366,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -395,7 +404,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -462,7 +473,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
   Stream *getRawStream() { return str; }
 
@@ -553,7 +566,9 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -607,7 +622,9 @@ public:
   virtual GString *getPSFilter(char *indent)  { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -632,7 +649,9 @@ public:
   virtual GString *getPSFilter(char *indent) { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
   virtual GBool isEncoder() { return gTrue; }
 
@@ -662,7 +681,9 @@ public:
   virtual GString *getPSFilter(char *indent) { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
   virtual GBool isEncoder() { return gTrue; }
 
@@ -697,7 +718,9 @@ public:
   virtual GString *getPSFilter(char *indent) { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual BaseFile getFile() { return str->getFile(); }
+  virtual Stream *subStream (int start1, int length1, Object *dict1)
+    { return str->subStream (start1, length1, dict1); }
+  virtual int     getStart  () { return str->getStart (); }
   virtual Dict *getDict() { return str->getDict(); }
   virtual GBool isEncoder() { return gTrue; }
 

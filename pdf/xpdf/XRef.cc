@@ -38,7 +38,7 @@ XRef *xref = NULL;
 // XRef
 //------------------------------------------------------------------------
 
-XRef::XRef(FileStream *str) {
+XRef::XRef(Stream *str1) {
   XRef *oldXref;
   int pos;
   int i;
@@ -53,7 +53,7 @@ XRef::XRef(FileStream *str) {
   xref = NULL;
 
   // read the trailer
-  file = str->getFile();
+  str = str1;
   start = str->getStart();
   pos = readTrailer(str);
 
@@ -105,7 +105,7 @@ XRef::~XRef() {
 
 // Read startxref position, xref table size, and root.  Returns
 // first xref position.
-int XRef::readTrailer(FileStream *str) {
+int XRef::readTrailer(Stream *str) {
   Parser *parser;
   Object obj;
   char buf[xrefSearchSize+1];
@@ -166,7 +166,7 @@ int XRef::readTrailer(FileStream *str) {
 
   // read trailer dict
   obj.initNull();
-  parser = new Parser(new Lexer(new FileStream(file, start + pos1, -1, &obj)));
+  parser = new Parser(new Lexer(str->subStream (start + pos1, -1, &obj)));
   parser->getObj(&trailerDict);
   if (trailerDict.isDict()) {
     trailerDict.dictLookupNF("Size", &obj);
@@ -193,7 +193,7 @@ int XRef::readTrailer(FileStream *str) {
 }
 
 // Read an xref table and the prev pointer from the trailer.
-GBool XRef::readXRef(FileStream *str, int *pos) {
+GBool XRef::readXRef(Stream *str, int *pos) {
   Parser *parser;
   Object obj, obj2;
   char s[20];
@@ -258,8 +258,7 @@ GBool XRef::readXRef(FileStream *str, int *pos) {
 
   // read prev pointer from trailer dictionary
   obj.initNull();
-  parser = new Parser(new Lexer(
-    new FileStream(file, str->getPos(), -1, &obj)));
+  parser = new Parser(new Lexer(str->subStream (str->getPos(), -1, &obj)));
   parser->getObj(&obj);
   if (!obj.isCmd("trailer"))
     goto err1;
@@ -288,7 +287,7 @@ GBool XRef::readXRef(FileStream *str, int *pos) {
 }
 
 // Attempt to construct an xref table for a damaged file.
-GBool XRef::constructXRef(FileStream *str) {
+GBool XRef::constructXRef(Stream *str) {
   Parser *parser;
   Object obj;
   char buf[256];
@@ -312,8 +311,7 @@ GBool XRef::constructXRef(FileStream *str) {
     // got trailer dictionary
     if (!strncmp(p, "trailer", 7)) {
       obj.initNull();
-      parser = new Parser(new Lexer(
-		 new FileStream(file, start + pos + 8, -1, &obj)));
+      parser = new Parser(new Lexer(str->subStream(start + pos + 8, -1, &obj)));
       if (!trailerDict.isNone())
 	trailerDict.free();
       parser->getObj(&trailerDict);
@@ -416,8 +414,7 @@ Object *XRef::fetch(int num, int gen, Object *obj) {
   e = &entries[num];
   if (e->gen == gen && e->offset >= 0) {
     obj1.initNull();
-    parser = new Parser(new Lexer(
-      new FileStream(file, start + e->offset, -1, &obj1)));
+    parser = new Parser(new Lexer(str->subStream(start + e->offset, -1, &obj1)));
     parser->getObj(&obj1);
     parser->getObj(&obj2);
     parser->getObj(&obj3);

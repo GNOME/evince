@@ -29,33 +29,30 @@
 // PDFDoc
 //------------------------------------------------------------------------
 
-PDFDoc::PDFDoc(BaseFile file1, GString *fileName1) {
-  FileStream *str;
+PDFDoc::PDFDoc(Stream *str1, GString *fileName1) {
   Object catObj;
-  Object obj;
 
   // setup
   ok = gFalse;
   catalog = NULL;
   xref = NULL;
-  file = NULL;
   links = NULL;
 
   fileName = fileName1;
-  file = file1;
-  if (!file)
+  if (!str1)
     return;
 
   // create stream
-  obj.initNull();
-  str  = new FileStream(file, 0, -1, &obj);
+/*  obj.initNull(); */
+/*  str  = new FileStream(file, 0, -1, &obj); */
+  str = str1;
 
   // check header
-  str->checkHeader();
+/*  str->checkHeader(); FIXME */
 
   // read xref table
   xref = new XRef(str);
-  delete str;
+/*  delete str; */
   if (!xref->isOk()) {
     error(-1, "Couldn't read xref table");
     return;
@@ -79,8 +76,10 @@ PDFDoc::~PDFDoc() {
     delete catalog;
   if (xref)
     delete xref;
-  if (file)
-    bfclose(file);
+  if (str) {
+    delete (str);
+    str = NULL;
+  }
   if (fileName)
     delete fileName;
   if (links)
@@ -133,9 +132,9 @@ GBool PDFDoc::saveAs(GString *name) {
     error(-1, "Couldn't open file '%s'", name->getCString());
     return gFalse;
   }
-  brewind(file);
-  while ((n = bfread(buf, 1, sizeof(buf), file)) > 0)
-    fwrite(buf, 1, n, f);
+  str->reset();
+  while (str->getLine (buf, 4096))
+    fputs (buf, f);
   fclose(f);
   return gTrue;
 }
