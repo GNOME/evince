@@ -17,6 +17,7 @@
 #include "CharTypes.h"
 
 class GString;
+class Object;
 class GfxState;
 class GfxColorSpace;
 class GfxImageColorMap;

@@ -14,6 +14,7 @@
 #endif
 
 #include "gtypes.h"
+#include "Object.h"
 
 class GString;
 class XRef;

@@ -105,12 +105,16 @@ gnome_pdf_viewer_SOURCES =		\
 	BonoboStream.cc			\
 	GOutputDev.cc			\
 	GOutputDev.h			\
+	GPOutputDev.cc			\
+	GPOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
 	gpdf-control.cc			\
 	gpdf-control.h			\
 	gpdf-persist-stream.cc		\
 	gpdf-persist-stream.h		\
 	gpdf-util.h			\
+	gpdf-view.cc			\
+	gpdf-view.h			\
 	gtkgesture.c			\
 	gtkgesture.h			\
 	pdf-view.cc			\
