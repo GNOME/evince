@@ -1,3 +1,21 @@
+2005-03-21  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* ps/gsdefaults.c:
+	* ps/gsdefaults.h:
+	* ps/ps-document.c: (ps_document_init), (push_pixbuf),
+	(interpreter_failed), (ps_document_cleanup),
+	(ps_document_widget_event), (ps_document_finalize), (get_xdpi),
+	(get_ydpi), (setup_pixmap), (setup_page), (close_pipe),
+	(is_interpreter_ready), (output), (input), (start_interpreter),
+	(check_filecompressed), (compute_dimensions),
+	(ps_document_enable_interpreter), (document_load),
+	(ps_document_next_page), (render_page), (ps_document_set_page),
+	(ps_document_set_scale), (render_pixbuf_idle),
+	(ps_document_document_iface_init):
+	* ps/ps-document.h:
+
+	Lots of cleanups and rewrite size computation.
+
 2005-03-20  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* ps/ps-document.c: (ps_document_init), (ps_document_class_init),

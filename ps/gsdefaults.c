@@ -61,12 +61,6 @@ gtk_gs_defaults_get_interpreter_cmd()
 }
 
 const gchar *
-gtk_gs_defaults_get_alpha_parameters (void)
-{
-	return ALPHA_PARAMS;
-}
-
-const gchar *
 gtk_gs_defaults_get_ungzip_cmd (void)
 {
 	return "gzip -cd";
