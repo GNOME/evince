@@ -57,10 +57,18 @@ int
 bfseek (BaseFile file, long offset, int whence)
 {
   CORBA_Environment ev;
+  GNOME_Stream_SeekType t;
 #ifdef HARD_DEBUG
   printf ("Seek %p %d %d\n", file, offset, whence);
 #endif
-  return GNOME_Stream_seek (file, offset, whence, &ev);
+  if (whence == SEEK_SET)
+    t = GNOME_Stream_SEEK_SET;
+  else if (whence == SEEK_CUR)
+    t = GNOME_Stream_SEEK_CUR;
+  else
+    t = GNOME_Stream_SEEK_END;
+  
+  return GNOME_Stream_seek (file, offset, t, &ev);
 }
 
 void
@@ -70,7 +78,7 @@ brewind (BaseFile file)
 #ifdef HARD_DEBUG
   printf ("rewind %p\n", file);
 #endif
-  GNOME_Stream_seek (file, 0, SEEK_SET, &ev);
+  GNOME_Stream_seek (file, 0, GNOME_Stream_SEEK_SET, &ev);
 }
 
 long
@@ -81,7 +89,7 @@ bftell (BaseFile file)
 #ifdef HARD_DEBUG
   printf ("tell %p\n", file);
 #endif
-  pos = GNOME_Stream_seek (file, 0, SEEK_CUR, &ev);
+  pos = GNOME_Stream_seek (file, 0, GNOME_Stream_SEEK_CUR, &ev);
 #ifdef HARD_DEBUG
   printf ("tell returns %d\n", pos);
 #endif
