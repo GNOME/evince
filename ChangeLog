@@ -1,3 +1,10 @@
+2005-01-05  Martin Kretzschmar  <martink@gnome.org>
+
+	* pdf/xpdf/GlobalParams.cc (displayFontTabFc): match only outline
+	fonts. Should fix font problems on systems that have the base
+	fonts in bitmap format. Reported by James Henstridge
+	<james@jamesh.id.au>.
+
 2005-01-05  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* pdf/xpdf/Gfx.cc:

@@ -93,22 +93,22 @@ static struct {
   const char *name;
   const char *pattern;
 } displayFontTabFc[] = {
-  {"Courier",               "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Regular,Roman"},
-  {"Courier-Bold",          "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Bold"},
-  {"Courier-BoldOblique",   "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Oblique,Italic"},
-  {"Courier-Oblique",       "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=BoldOblique,BoldItalic"},
-  {"Helvetica",             "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Regular,Roman"},
-  {"Helvetica-Bold",        "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Bold"},
-  {"Helvetica-BoldOblique", "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Oblique,Italic"},
-  {"Helvetica-Oblique",     "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=BoldOblique,BoldItalic"},
+  {"Courier",               "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Regular,Roman:outline=true"},
+  {"Courier-Bold",          "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Bold:outline=true"},
+  {"Courier-BoldOblique",   "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=Oblique,Italic:outline=true"},
+  {"Courier-Oblique",       "Courier,Nimbus Mono L,Courier New,Cumberland AMT,Cumberland:style=BoldOblique,BoldItalic:outline=true"},
+  {"Helvetica",             "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Regular,Roman:outline=true"},
+  {"Helvetica-Bold",        "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Bold:outline=true"},
+  {"Helvetica-BoldOblique", "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=Oblique,Italic:outline=true"},
+  {"Helvetica-Oblique",     "Helvetica,Nimbus Sans L,Arial,Albany AMT,Albany:style=BoldOblique,BoldItalic:outline=true"},
   /* FIXME Symbol should be first,
      but that matches windows ttf which gets wrong encoding */
-  {"Symbol",                "Standard Symbols L,Symbol"},
-  {"Times-Bold",            "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Bold,Medium"},
-  {"Times-BoldItalic",      "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=BoldItalic,Medium Italic"},
-  {"Times-Italic",          "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Italic,Regular Italic"},
-  {"Times-Roman",           "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Regular,Roman"},
-  {"ZapfDingbats",          "Zapf Dingbats,Dingbats"},
+  {"Symbol",                "Standard Symbols L,Symbol:outline=true"},
+  {"Times-Bold",            "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Bold,Medium:outline=true"},
+  {"Times-BoldItalic",      "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=BoldItalic,Medium Italic:outline=true"},
+  {"Times-Italic",          "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Italic,Regular Italic:outline=true"},
+  {"Times-Roman",           "Times,Nimbus Roman No9 L,Times New Roman,Thorndale AMT,Thorndale:style=Regular,Roman:outline=true"},
+  {"ZapfDingbats",          "Zapf Dingbats,Dingbats:outline=true"},
   {NULL}
 };
 
