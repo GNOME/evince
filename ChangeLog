@@ -1,5 +1,15 @@
 2005-04-05  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* ps/ps-document.c: (ps_document_init), (push_pixbuf),
+	(ps_document_cleanup), (setup_pixmap), (get_page_box),
+	(get_page_orientation), (setup_page), (document_load),
+	(ps_document_get_page_size), (render_pixbuf_idle):
+	* ps/ps-document.h:
+
+	More refactoring to adapt to EvDocument changes
+
+2005-04-05  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* ps/ps-document.c: (start_interpreter):
 
 	Actually add alpha args

@@ -55,19 +55,9 @@ struct _PSDocument {
   guint interpreter_output_id;
   guint interpreter_error_id;
 
-  gint width;                   /* Size of window at last setup()  */
-  gint llx;
-  gint lly;
-  gint urx;
-  gint ury;
-  gint height;
-  gint orientation;
   gboolean busy;                /* Is gs busy drawing? */
-  gfloat zoom_factor;
-  gint current_page;
   gboolean structured_doc;
   gboolean loaded;
-  gboolean changed;
 
   struct record_list *ps_input;
   gchar *input_buffer_ptr;
@@ -83,9 +73,6 @@ struct _PSDocument {
   struct document *doc;
 
   const gchar *gs_status;       /* PSDocument status */
-
-  int page_x_offset;
-  int page_y_offset;
 };
 
 struct _PSDocumentClass {

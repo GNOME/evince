@@ -112,11 +112,8 @@ ps_document_init (PSDocument *gs)
 {
 	gs->bpixmap = NULL;
 
-	gs->current_page = 0;
 	gs->interpreter_pid = -1;
 
-	gs->width = -1;
-	gs->height = -1;
 	gs->busy = FALSE;
 	gs->gs_filename = 0;
 	gs->gs_filename_unc = 0;
@@ -142,8 +139,6 @@ ps_document_init (PSDocument *gs)
 	gs->input_buffer_ptr = NULL;
 	gs->bytes_left = 0;
 	gs->buffer_bytes_left = 0;
-
-	gs->zoom_factor = 1.0;
 
 	gs->gs_status = _("No document loaded.");
 
@@ -212,12 +207,13 @@ push_pixbuf (PSDocument *gs)
 {
 	GdkColormap *cmap;
 	GdkPixbuf *pixbuf;
+	int width, height;
 
 	cmap = gdk_window_get_colormap (gs->pstarget);
-	
+	gdk_drawable_get_size (gs->bpixmap, &width, &height);
 	pixbuf =  gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
 				      	        0, 0, 0, 0,
-					        gs->width, gs->height);
+					        width, height);
 	g_mutex_lock (pixbuf_mutex);
 	current_pixbuf = pixbuf;
 	g_cond_signal (pixbuf_cond);
@@ -266,7 +262,6 @@ ps_document_cleanup (PSDocument *gs)
 		gs->gs_filename_unc = NULL;
 	}
 
-	gs->current_page = 0;
 	gs->loaded = FALSE;
 }
 
@@ -365,31 +360,107 @@ get_ydpi (PSDocument *gs)
 }
 
 static void
-setup_pixmap (PSDocument *gs)
+setup_pixmap (PSDocument *gs, int page, double scale)
 {
 	GdkGC *fill;
 	GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
 	GdkColormap *colormap;
+	double width, height;
+	int pixmap_width, pixmap_height;
 
-        LOG ("Create our internal pixmap");
+	ev_document_get_page_size (EV_DOCUMENT (gs), page, &width, &height);
+	pixmap_width = floor (width * scale);
+	pixmap_height = floor (height * scale);
+
+	g_print ("%f %f %f %d %d\n", width, height, scale, pixmap_width, pixmap_height);
 
 	if(gs->bpixmap) {
-		gdk_drawable_unref(gs->bpixmap);
+		int w, h;
+
+		gdk_drawable_get_size (gs->bpixmap, &w, &h);
+
+		if (pixmap_width != w || h != pixmap_height) {
+			gdk_drawable_unref (gs->bpixmap);
+			gs->bpixmap = NULL;
+			stop_interpreter (gs);
+		}
 	}
 
-	fill = gdk_gc_new (gs->pstarget);
-	colormap = gdk_drawable_get_colormap (gs->pstarget);
-	gdk_color_alloc (colormap, &white);
-	gdk_gc_set_foreground (fill, &white);
-	gs->bpixmap = gdk_pixmap_new (gs->pstarget, gs->width, gs->height, -1);
-	gdk_draw_rectangle (gs->bpixmap, fill, TRUE,
-                            0, 0, gs->width, gs->height);
+	if (!gs->bpixmap) {
+		LOG ("Create pixmap");
+
+		fill = gdk_gc_new (gs->pstarget);
+		colormap = gdk_drawable_get_colormap (gs->pstarget);
+		gdk_color_alloc (colormap, &white);
+		gdk_gc_set_foreground (fill, &white);
+		gs->bpixmap = gdk_pixmap_new (gs->pstarget, pixmap_width,
+					      pixmap_height, -1);
+		gdk_draw_rectangle (gs->bpixmap, fill, TRUE,
+	                            0, 0, pixmap_width, pixmap_height);
+	}
 }
 
 static void
-setup_page (PSDocument *gs, double scale)
+get_page_box (PSDocument *gs, int page, int *urx, int *ury, int *llx, int *lly)
+{
+	GtkGSPaperSize *paper_sizes = gtk_gs_defaults_get_paper_sizes ();
+
+	g_return_if_fail (PS_IS_DOCUMENT (gs));
+	g_return_if_fail (gs->doc != NULL);
+	g_return_if_fail (page >= 0);
+
+	if (gs->doc->pages && gs->doc->pages[page].size) {
+		int page_size;
+
+		page_size = gs->doc->pages[page].size - gs->doc->size;
+		*llx = *lly = 0;
+		*urx = gs->doc->size[page_size].width;
+		*ury = gs->doc->size[page_size].height;
+	} else if (gs->doc->pages &&
+                   (gs->doc->pages[page].boundingbox[URX] >
+                    gs->doc->pages[page].boundingbox[LLX]) &&
+                   (gs->doc->pages[page].boundingbox[URY] >
+                    gs->doc->pages[page].boundingbox[LLY])) {
+		*llx = gs->doc->pages[page].boundingbox[LLX];
+		*lly = gs->doc->pages[page].boundingbox[LLY];
+		*urx = gs->doc->pages[page].boundingbox[URX];
+		*ury = gs->doc->pages[page].boundingbox[URY];
+	} else if ((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
+                   (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
+		*llx = gs->doc->boundingbox[LLX];
+		*lly = gs->doc->boundingbox[LLY];
+		*urx = gs->doc->boundingbox[URX];
+		*ury = gs->doc->boundingbox[URY];
+	} else {
+		/* Fallback to A4 */
+		*llx = *lly = 0;
+		*urx = paper_sizes[12].width;
+    		*ury = paper_sizes[12].height;
+	}
+}
+
+static int
+get_page_orientation (PSDocument *gs, int page)
+{
+	int orientation;
+
+	orientation = GTK_GS_ORIENTATION_NONE;
+
+	if (gs->structured_doc) {
+		orientation = gs->doc->pages[page].orientation;
+	}
+	if (orientation == GTK_GS_ORIENTATION_NONE) {
+		orientation = GTK_GS_ORIENTATION_PORTRAIT;
+	}
+
+	return orientation;
+}
+
+static void
+setup_page (PSDocument *gs, int page, double scale)
 {
 	char buf[1024];
+	int urx, ury, llx, lly, orientation;
 #ifdef HAVE_LOCALE_H
 	char *savelocale;
 #endif
@@ -403,9 +474,11 @@ setup_page (PSDocument *gs, double scale)
 	 */
 	savelocale = setlocale (LC_NUMERIC, "C");
 #endif
+	get_page_box (gs, page, &urx, &ury, &llx, &lly);
+	orientation = get_page_orientation (gs, page);
 
 	g_snprintf (buf, 1024, "%ld %d %d %d %d %d %f %f %d %d %d %d",
-		    0L, gs->orientation * 90, gs->llx, gs->lly, gs->urx, gs->ury,
+		    0L, orientation * 90, llx, lly, urx, ury,
 		    get_xdpi (gs) * scale,
 		    get_ydpi (gs) * scale,
 		    0, 0, 0, 0);
@@ -864,91 +937,6 @@ check_filecompressed(PSDocument * gs)
   return filename_unc;
 }
 
-static void
-compute_dimensions (PSDocument *gs, int page)
-{
-	GtkGSPaperSize *paper_sizes = gtk_gs_defaults_get_paper_sizes ();
-	int urx, ury, llx, lly;
-	int width, height;
-	int orientation;
-
-	g_return_if_fail (PS_IS_DOCUMENT (gs));
-	g_return_if_fail (gs->doc != NULL);
-	g_return_if_fail (page >= 0);
-	g_return_if_fail (gs->doc->numpages > page);
-
-	orientation = GTK_GS_ORIENTATION_NONE;
-	if (gs->structured_doc) {
-		orientation = gs->doc->pages[gs->current_page].orientation;
-	}
-	if (orientation == GTK_GS_ORIENTATION_NONE) {
-		orientation = GTK_GS_ORIENTATION_PORTRAIT;
-	}
-
-	if (gs->doc->pages && gs->doc->pages[page].size) {
-		int page_size;
-
-		page_size = gs->doc->pages[page].size - gs->doc->size;
-		llx = lly = 0;
-		urx = gs->doc->size[page_size].width;
-		ury = gs->doc->size[page_size].height;
-	} else if (gs->doc->pages &&
-                   (gs->doc->pages[page].boundingbox[URX] >
-                    gs->doc->pages[page].boundingbox[LLX]) &&
-                   (gs->doc->pages[page].boundingbox[URY] >
-                    gs->doc->pages[page].boundingbox[LLY])) {
-		llx = gs->doc->pages[page].boundingbox[LLX];
-		lly = gs->doc->pages[page].boundingbox[LLY];
-		urx = gs->doc->pages[page].boundingbox[URX];
-		ury = gs->doc->pages[page].boundingbox[URY];
-	} else if ((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
-                   (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
-		llx = gs->doc->boundingbox[LLX];
-		lly = gs->doc->boundingbox[LLY];
-		urx = gs->doc->boundingbox[URX];
-		ury = gs->doc->boundingbox[URY];
-	} else {
-		/* Fallback to A4 */
-		llx = lly = 0;
-		urx = paper_sizes[12].width;
-    		ury = paper_sizes[12].height;
-	}
-
-	switch (orientation) {
-		case GTK_GS_ORIENTATION_PORTRAIT:
-		case GTK_GS_ORIENTATION_UPSIDEDOWN:
-			width = (urx - llx) / 72.0 * get_xdpi (gs) + 0.5;
-			height = (ury - lly) / 72.0 * get_ydpi (gs) + 0.5;
-			break;
-		case GTK_GS_ORIENTATION_LANDSCAPE:
-		case GTK_GS_ORIENTATION_SEASCAPE:
-			width = (ury - lly) / 72.0 * get_xdpi (gs) + 0.5;
-			height = (urx - llx) / 72.0 * get_ydpi (gs) + 0.5;
-			break;
-		default:
-			width = height = 0;
-			g_assert_not_reached ();
-			break;
-	}
-
-	width = width * gs->zoom_factor;
-	height = height * gs->zoom_factor;
-
-	if (llx != gs->llx || lly != gs->lly ||
-	    urx != gs->urx || ury != gs->ury ||
-	    gs->width != width || gs->height != height ||
-	    orientation != gs->orientation) {
-		gs->llx = llx;
-		gs->lly = lly;
-		gs->urx = urx;
-		gs->ury = ury;
-		gs->width = width;
-		gs->height = height;
-		gs->orientation = orientation;
-		gs->changed = TRUE;
-	}
-}
-
 static gint
 ps_document_enable_interpreter(PSDocument * gs)
 {
@@ -1018,7 +1006,6 @@ document_load(PSDocument * gs, const gchar * fname)
   /* prepare this document */
   gs->structured_doc = FALSE;
   gs->send_filename_to_gs = TRUE;
-  gs->current_page = 0;
   gs->loaded = FALSE;
   if(*fname == '/') {
     /* an absolute path */
@@ -1079,7 +1066,6 @@ document_load(PSDocument * gs, const gchar * fname)
     }
   }
   gs->loaded = TRUE;
-  compute_dimensions (gs, gs->current_page);
 
   gs->gs_status = _("Document loaded.");
 
@@ -1213,18 +1199,36 @@ ps_document_get_page_size (EvDocument   *document,
 			   double       *width,
 			   double       *height)
 {
-	/* Post script documents never vary in size */
-
 	PSDocument *gs = PS_DOCUMENT (document);
+	int w, h;
+	int urx, ury, llx, lly, orientation;
 
-	compute_dimensions (gs, page);
+	get_page_box (PS_DOCUMENT (document), page, &urx, &ury, &llx, &lly);
+	orientation = get_page_orientation (PS_DOCUMENT (document), page);
+
+	switch (orientation) {
+		case GTK_GS_ORIENTATION_PORTRAIT:
+		case GTK_GS_ORIENTATION_UPSIDEDOWN:
+			w = (urx - llx) / 72.0 * get_xdpi (gs) + 0.5;
+			h = (ury - lly) / 72.0 * get_ydpi (gs) + 0.5;
+			break;
+		case GTK_GS_ORIENTATION_LANDSCAPE:
+		case GTK_GS_ORIENTATION_SEASCAPE:
+			w = (ury - lly) / 72.0 * get_xdpi (gs) + 0.5;
+			h = (urx - llx) / 72.0 * get_ydpi (gs) + 0.5;
+			break;
+		default:
+			w = h = 0;
+			g_assert_not_reached ();
+			break;
+	}
 
 	if (width) {
-		*width = gs->width;
+		*width = w;
 	}
 
 	if (height) {
-		*height = gs->height;
+		*height = h;
 	}
 }
 
@@ -1254,12 +1258,8 @@ render_pixbuf_idle (PSRenderJob *job)
 			          gs);
 	}
 
-	if (gs->changed) {
-		stop_interpreter (gs);
-		setup_pixmap (gs);
-		setup_page (gs, job->scale);
-		gs->changed = FALSE;
-	}
+	setup_pixmap (gs, job->page, job->scale);
+	setup_page (gs, job->page, job->scale);
 
 	render_page (gs, job->page);
 
