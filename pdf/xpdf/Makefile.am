@@ -79,6 +79,8 @@ libxpdf_la_SOURCES =		\
 	Stream-CCITT.h		\
 	Stream.cc 		\
 	Stream.h		\
+	Thumb.cc		\
+	Thumb.h			\
 	UnicodeMap.cc		\
 	UnicodeMap.h		\
 	UnicodeMapTables.h	\

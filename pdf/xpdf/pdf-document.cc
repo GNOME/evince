@@ -24,6 +24,8 @@
 #include "ev-ps-exporter.h"
 #include "ev-document-find.h"
 #include "gpdf-g-switch.h"
+#include "ev-document-bookmarks.h"
+#include "ev-document-thumbnails.h"
 
 #include "GlobalParams.h"
 #include "GDKSplashOutputDev.h"
@@ -31,6 +33,8 @@
 #include "Outline.h"
 #include "UnicodeMap.h"
 #include "GlobalParams.h"
+#include "GfxState.h"
+#include "Thumb.h"
 #include "goo/GList.h"
 #include "PSOutputDev.h"
 
@@ -85,8 +89,9 @@ struct _PdfDocument
 	PdfDocumentSearch *search;
 };
 
-static void pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface);
-static void pdf_document_document_iface_init           (EvDocumentIface          *iface);
+static void pdf_document_document_bookmarks_iface_init  (EvDocumentBookmarksIface  *iface);
+static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
 static void pdf_document_ps_exporter_iface_init (EvPSExporterIface   *iface);
 static void pdf_document_find_iface_init        (EvDocumentFindIface *iface);
 static void pdf_document_search_free            (PdfDocumentSearch   *search);
@@ -98,6 +103,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_BOOKMARKS,
 							pdf_document_document_bookmarks_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+							pdf_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
 							pdf_document_ps_exporter_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
@@ -121,7 +128,7 @@ document_validate_page (PdfDocument *pdf_document)
                 if (pdf_document->search)
                         pdf_document_search_page_changed (pdf_document->search);
 	}
-	
+
 	return pdf_document->page_valid;
 }
 
@@ -135,7 +142,7 @@ pdf_document_load (EvDocument  *document,
 	int err;
 	char *filename;
 	GString *filename_g;
-	GString *enc; 
+	GString *enc;
 
 	if (!globalParams) {
 		globalParams = new GlobalParams("/etc/xpdfrc");
@@ -145,7 +152,7 @@ pdf_document_load (EvDocument  *document,
 	if (! pdf_document->umap) {
 		enc = new GString("UTF-8");
 		pdf_document->umap = globalParams->getUnicodeMap(enc);
-		pdf_document->umap->incRefCnt (); 
+		pdf_document->umap->incRefCnt ();
 		delete enc;
 	}
 
@@ -368,9 +375,9 @@ pdf_document_search_emit_found (PdfDocumentSearch *search)
                 if (i != pdf_document->page &&
                     search->other_page_flags[i]) {
                         EvFindResult result;
-                        
+
                         result.page_num = i;
-                        
+
                         /* Use bogus coordinates, again we can't get coordinates
                          * until this is the current page because TextOutputDev
                          * isn't good enough
@@ -379,18 +386,18 @@ pdf_document_search_emit_found (PdfDocumentSearch *search)
                         result.highlight_area.y = -1;
                         result.highlight_area.width = 1;
                         result.highlight_area.height = 1;
-                        
+
                         g_array_append_val (tmp_results, result);
                 }
 
                 ++i;
         }
-        
+
         ev_document_find_found (EV_DOCUMENT_FIND (pdf_document),
                                 (EvFindResult*) tmp_results->data,
                                 tmp_results->len,
                                 pages_done / (double) n_pages);
-        
+
         g_array_free (tmp_results, TRUE);
 }
 
@@ -409,13 +416,13 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                 search->current_page = -1;
                 return;
         }
-        
+
         if (search->current_page == current_page)
                 return;
-        
+
         /* We need to create current_page_results for the new current page */
         g_array_set_size (search->current_page_results, 0);
-        
+
         if (pdf_document->out->findText (search->ucs4, search->ucs4_len,
                                          gTrue, gTrue, // startAtTop, stopAtBottom
                                          gFalse, gFalse, // startAtLast, stopAtLast
@@ -441,7 +448,7 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                         result.highlight_area.y = yMin;
                         result.highlight_area.width = xMax - xMin;
                         result.highlight_area.height = yMax - yMin;
-                        
+
                         g_array_append_val (search->current_page_results, result);
                 }
         }
@@ -451,7 +458,7 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
          */
         search->other_page_flags[current_page] =
                 search->current_page_results->len > 0;
-        
+
         pdf_document_search_emit_found (search);
 }
 
@@ -483,7 +490,7 @@ pdf_document_search_idle_callback (void *data)
                         goto end_search;
                 }
         }
-                                                  
+
         pdf_document->doc->displayPage (search->output_dev,
                                         search->search_page,
                                         72, 72, 0, gTrue, gFalse);
@@ -496,7 +503,7 @@ pdf_document_search_idle_callback (void *data)
                 /* This page has results */
                 search->other_page_flags[search->search_page] = TRUE;
         }
-        
+
         search->search_page += 1;
         if (search->search_page > n_pages) {
                 /* wrap around */
@@ -505,7 +512,7 @@ pdf_document_search_idle_callback (void *data)
 
         /* We do this even if nothing was found, to update the percent complete */
         pdf_document_search_emit_found (search);
-        
+
         return TRUE;
 
  end_search:
@@ -529,7 +536,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
          * code is always case insensitive for ASCII
          * and case sensitive for all other languaages)
          */
-        
+
         g_assert (sizeof (gunichar) == sizeof (Unicode));
         ucs4 = g_utf8_to_ucs4_fast (search_string, -1,
                                     &ucs4_len);
@@ -548,22 +555,22 @@ pdf_document_find_begin (EvDocumentFind   *document,
                 pdf_document_search_free (pdf_document->search);
                 pdf_document->search = NULL;
         }
-        
+
         search = g_new0 (PdfDocumentSearch, 1);
 
         search->ucs4 = ucs4;
         search->ucs4_len = ucs4_len;
-        
+
         search->current_page_results = g_array_new (FALSE,
                                                     FALSE,
                                                     sizeof (EvFindResult));
-        n_pages = ev_document_get_n_pages (EV_DOCUMENT (document)); 
+        n_pages = ev_document_get_n_pages (EV_DOCUMENT (document));
 
         /* This is an array of bool; with the first value ignored
          * so we can index by the based-at-1 page numbers
          */
         search->other_page_flags = g_new0 (guchar, n_pages + 1);
-        
+
         search->document = pdf_document;
 
         /* We add at low priority so the progress bar repaints */
@@ -582,7 +589,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
         search->current_page = -1;
 
         pdf_document->search = search;
-        
+
         /* Update for the current page right away */
         pdf_document_search_page_changed (search);
 }
@@ -606,10 +613,10 @@ pdf_document_search_free (PdfDocumentSearch   *search)
 
 	if (search->output_dev)
 		delete search->output_dev;
-	
+
         g_array_free (search->current_page_results, TRUE);
         g_free (search->other_page_flags);
-        
+
         g_free (search->ucs4);
 	g_free (search);
 }
@@ -625,7 +632,7 @@ pdf_document_ps_export_begin (EvPSExporter *exporter, const char *filename)
 	document->ps_out = new PSOutputDev ((char *)filename, document->doc->getXRef(),
 					    document->doc->getCatalog(), 1,
 					    ev_document_get_n_pages (EV_DOCUMENT (document)),
-					    psModePS);	
+					    psModePS);
 }
 
 static void
@@ -657,13 +664,13 @@ typedef struct
 } BookmarksIter;
 
 static gchar *
-unicode_to_char (OutlineItem *outline_item, 
+unicode_to_char (OutlineItem *outline_item,
 		 UnicodeMap *uMap)
 {
 	GString gstr;
 	gchar buf[8]; /* 8 is enough for mapping an unicode char to a string */
 	int i, n;
-	
+
 	for (i = 0; i < outline_item->getTitleLength(); ++i) {
 		n = uMap->mapUnicode(outline_item->getTitle()[i], buf, sizeof(buf));
 		gstr.append(buf, n);
@@ -726,7 +733,7 @@ pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 	LinkDest *link_dest = NULL;
 	LinkURI *link_uri = NULL;
 	LinkGoTo *link_goto = NULL;
-	GString *named_dest; 
+	GString *named_dest;
 	Unicode *link_title;
 	Ref page_ref;
 	gint page_num = -1;
@@ -739,7 +746,7 @@ pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 
 	anItem = (OutlineItem *)iter->items->get(iter->index);
 	link_action = anItem->getAction ();
-	link_title = anItem->getTitle (); 
+	link_title = anItem->getTitle ();
 
 	if (link_action) {
 		switch (link_action->getKind ()) {
@@ -765,15 +772,15 @@ pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 				} else {
 					page_num = link_dest->getPageNum ();
 				}
-				
+
 				delete link_dest;
 			}
-				
+
 			break;
 		case actionURI:
 			link_uri = dynamic_cast <LinkURI *> (link_action);
 			break;
-			
+
 		case actionNamed:
 			/*Skip, for now */
 		default:
@@ -853,7 +860,7 @@ pdf_document_finalize (GObject *object)
 
 	if (pdf_document->search)
 		pdf_document_search_free (pdf_document->search);
-	
+
 	if (pdf_document->target)
 		g_object_unref (pdf_document->target);
 
@@ -920,7 +927,7 @@ pdf_info_dict_get_string (Dict *info_dict, const gchar *key) {
 static char *
 pdf_document_get_title (PdfDocument *pdf_document)
 {
-	char *title;
+	char *title = NULL;
 	Object info;
 
 	pdf_document->doc->getDocInfo (&info);
@@ -1002,6 +1009,67 @@ pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface)
 	iface->get_child = pdf_document_bookmarks_get_child;
 	iface->next = pdf_document_bookmarks_next;
 	iface->free_iter = pdf_document_bookmarks_free_iter;
+}
+
+/* Thumbnails */
+static GdkPixbuf *
+pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
+				       gint 		     page,
+				       gint                  width)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_thumbnails);
+	GdkPixbuf *thumbnail;
+	Page *the_page;
+	Object the_thumb;
+	Thumb *thumb = NULL;
+	gboolean have_ethumbs = FALSE;
+
+	/* getPage seems to want page + 1 for some reason; */
+	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
+	the_page->getThumb(&the_thumb);
+
+	if (!(the_thumb.isNull () || the_thumb.isNone())) {
+		/* Build the thumbnail object */
+		thumb = new Thumb(pdf_document->doc->getXRef (),
+				  &the_thumb);
+
+		have_ethumbs = thumb->ok();
+	}
+
+	if (have_ethumbs) {
+		guchar *data;
+		GdkPixbuf *tmp_pixbuf;
+
+		data = thumb->getPixbufData();
+		/* FISME: scale the image if it's not an appropriate size */
+		tmp_pixbuf = gdk_pixbuf_new_from_data (data,
+						       GDK_COLORSPACE_RGB,
+						       FALSE,
+						       8,
+						       thumb->getWidth (),
+						       thumb->getHeight (),
+						       thumb->getWidth () * 3,
+						       NULL, NULL);
+
+		thumbnail = tmp_pixbuf;
+	} else {
+		gdouble page_ratio;
+		gint dest_height;
+
+		page_ratio = the_page->getHeight () / the_page->getWidth ();
+		dest_height = (gint) (width * page_ratio);
+		
+		thumbnail = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, width, dest_height);
+		gdk_pixbuf_fill (thumbnail, 0xffffffff);
+		/* FIXME: Actually get the image... */
+	}
+
+	return thumbnail;
+}
+static void
+pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+{
+	iface->get_thumbnail = pdf_document_thumbnails_get_thumbnail;
 }
 
 

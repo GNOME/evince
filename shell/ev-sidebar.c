@@ -179,7 +179,7 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 
 	/* Set the first item added as active */
 	if (gtk_combo_box_get_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu)))
-		gtk_combo_box_set_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu), 1);
+		gtk_combo_box_set_active (GTK_COMBO_BOX (ev_sidebar->priv->option_menu), 0);
 }
 
 void

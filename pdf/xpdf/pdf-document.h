@@ -20,7 +20,6 @@
 #define __PDF_DOCUMENT_H__
 
 #include "ev-document.h"
-#include "ev-document-bookmarks.h"
 
 G_BEGIN_DECLS
 

@@ -196,7 +196,7 @@ populate_thumbnails_idle (gpointer data)
 			break;
 	}
 	g_timer_destroy (timer);
-#if 1
+#if 0
 	g_print ("%d rows done this idle in %d\n", i, (int)microseconds);
 #endif
 

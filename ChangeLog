@@ -1,3 +1,10 @@
+Tue Jan  4 03:22:56 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* pdf/xpdf/pdf-document.cc
+	(pdf_document_thumbnails_get_thumbnail): initial stab at
+	implementing thumbnail support for pdfs.  It only does documents
+	with precached pdfs now.
+
 Mon Jan  3 17:22:25 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar-thumbnails.c (do_one_iteration): move the
