@@ -14,20 +14,9 @@ INCLUDES =							\
 	$(GPDF_DEPRECATED_CFLAGS)				\
 	$(libpaper_CFLAGS)
 
-if WITH_GNOME
-gui =
-else
-gui = xpdf
-endif
-
 marshal_sources =			\
 	gpdf-marshal.c			\
 	gpdf-marshal.h	
-
-bin_PROGRAMS = 	$(gui)
-#	pdftops pdftotext	
-#	pdfinfo	pdftopbm	
-#	pdfimages  		
 
 libexec_PROGRAMS = gnome-pdf-viewer
 
@@ -181,7 +170,6 @@ gnome_pdf_viewer_SOURCES =		\
 	nautilus-pdf-property-page.cc	\
 	nautilus-pdf-property-page.h
 
-
 # Old files
 #	GOutputDev.cc			\
 #	GOutputDev.h			\
@@ -200,77 +188,6 @@ gnome_pdf_viewer_LDADD =					\
 	$(top_builddir)/lib/ggv-sidebar/libggv-sidebar.a	\
 	$(EXTRA_GNOME_LIBS)					\
 	$(libpaper_LIBS)
-
-xpdf_SOURCES =			\
-	$(common_sources)	\
-	SplashOutputDev.cc	\
-	SplashOutputDev.h	\
-	XPDFApp.cc		\
-	XPDFApp.h		\
-	XPDFCore.cc		\
-	XPDFCore.h		\
-	XPDFTree.cc		\
-	XPDFTree.h		\
-	XPDFViewer.cc		\
-	XPDFViewer.h		\
-	XSplashOutputDev.cc	\
-	XSplashOutputDev.h	\
-	PSOutputDev.cc		\
-	PSOutputDev.h		\
-	xpdf.cc
-
-xpdf_CFLAGS = $(X_CFLAGS)
-xpdf_LDADD = 				\
-	libxpdf.a			\
-	$(top_builddir)/goo/libGoo.a 	\
-	-lXpm                           \
-	$(EXTRA_GNOME_LIBS) 		\
-	$(libpaper_LIBS)
-
-#pdfimages_SOURCES =		
-#	$(common_sources)	
-#	ImageOutputDev.cc	
-#	ImageOutputDev.h	
-#	pdfimages.cc
-
-#pdfimages_LDADD = ../goo/libGoo.a
-#
-#pdftops_SOURCES =		
-#	$(common_sources)	
-#	PSOutputDev.cc		
-#       pdftops.cc
-#pdftops_LDADD = ../goo/libGoo.a
-
-#pdftotext_SOURCES =		
-#	$(common_sources)	
-#	pdftotext.cc
-#pdftotext_LDADD = ../goo/libGoo.a
-
-#pdfinfo_SOURCES =		
-#	$(common_sources)	
-#	pdfinfo.cc
-#pdfinfo_LDADD = ../goo/libGoo.a
-
-#pdftopüm_SOURCES =		
-#	$(common_sources)	
-#	XOutputDev.cc		
-#	XOutputDev.h		
-#	XOutputFontInfo.h	
-#	pdftopbm.cc
-
-#pdftoppm_LDADD = ../goo/libGoo.a $(EXTRA_GNOME_LIBS)
-
-#bitmaps =		
-#	about.xbm		
-#	dblLeftArrow.xbm	
-#	dblRightArrow.xbm	
-#	find.xbm		
-#	leftArrow.xbm		
-#	postscript.xbm		
-#	rightArrow.xbm		
-#	xpdfIcon.xpm		
-#	zoomIn.xbm		
-#	zoomOut.xbm		
 
 gpdf-marshal.h: gpdf-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=gpdf_marshal > $@
