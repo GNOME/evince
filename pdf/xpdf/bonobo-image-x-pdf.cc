@@ -318,11 +318,17 @@ view_factory (GnomeEmbeddable *bonobo_object,
 	bonobo_object_data_t *bonobo_object_data = (bonobo_object_data_t *)data;
 	view_data_t *view_data = g_new (view_data_t, 1);
 
-	view_data->scale = 1.0;
+	printf ("Created new bonobo object view %p\n", view_data);
+	
+	view_data->scale  = 1.0;
 	view_data->bonobo_object_data = bonobo_object_data;
 	view_data->drawing_area = gtk_drawing_area_new ();
-	view_data->page = 1;
-	view_data->zoom = 24.0; /* 86.0; Must be small for demos :-) */
+	view_data->pixmap = NULL;
+	view_data->out    = NULL;
+	view_data->w      = 320;
+	view_data->h      = 320;
+	view_data->zoom   = 24.0; /* 86.0; Must be small for demos :-) */
+	view_data->page   = 1;
 
 	gtk_signal_connect (
 		GTK_OBJECT (view_data->drawing_area),
@@ -356,6 +362,7 @@ bonobo_object_factory (GnomeEmbeddableFactory *This, void *data)
 	if (!bonobo_object_data)
 		return NULL;
 
+	printf ("Created new bonobo object %p\n", bonobo_object_data);
 	/*
 	 * Creates the BonoboObject server
 	 */

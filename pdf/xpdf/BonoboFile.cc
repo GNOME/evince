@@ -21,7 +21,7 @@
 
 #include "BaseFile.h"
 
-//#define HARD_DEBUG
+//define HARD_DEBUG
 
 /* The open/close is done for you by the Bonobo server */
 
