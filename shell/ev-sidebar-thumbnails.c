@@ -322,6 +322,8 @@ ev_sidebar_thumbnails_select_page (EvSidebarThumbnails *sidebar,
 
 	if (path) {
 		gtk_tree_selection_select_path (selection, path);
+		gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (sidebar->priv->tree_view),
+					      path, NULL, FALSE, 0.0, 0.0);
 		gtk_tree_path_free (path);	
 	}
 }
