@@ -544,7 +544,7 @@ FILE *fileOpen (GString *fileName1) {
   GString *fileName2;
   // try to open file
   fileName2 = NULL;
-  FILE *file;
+  FILE *file = NULL;
 
 #ifdef VMS
   if (!(file = fopen(fileName->getCString(), "rb", "ctx=stm"))) {
@@ -569,6 +569,9 @@ FILE *fileOpen (GString *fileName1) {
   return file;
 }
 
+FileStream::FileStream() {
+}
+
 FileStream::FileStream(FILE *f1) {
   f = f1;
   start = 0;
@@ -577,16 +580,20 @@ FileStream::FileStream(FILE *f1) {
   bufPos = start;
   savePos = -1;
   dict.initNull();
-  checkHeader();
+  if (f)
+    checkHeader();
 }
 
 Stream *FileStream::subStream (int start1, int length1, Object *dict1) {
-  start = start1;
-  length = length1;
-  bufPtr = bufEnd = buf;
-  bufPos = start;
-  savePos = -1;
-  dict = *dict1;
+  FileStream *scp = new FileStream ();
+  scp->f = f;
+  scp->start = start1;
+  scp->length = length1;
+  scp->bufPtr = bufEnd = buf;
+  scp->bufPos = start;
+  scp->savePos = -1;
+  scp->dict = *dict1;
+  return scp;
 }
 
 FileStream::~FileStream() {

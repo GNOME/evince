@@ -48,20 +48,22 @@ CORBA_ORB orb;
  * BonoboObject data
  */
 typedef struct {
-  GnomeEmbeddable *bonobo_object;
+  GnomeEmbeddable *embed_obj;
 
   PDFDoc       *pdf;
   GNOME_Stream  stream; /* To free it later */
 
   GList *views;
-} bonobo_object_data_t;
+} bed_t;
 
 /*
  * View data
  */
 typedef struct {
+  GnomeView            *view;
+  bed_t *bed;
+
   double                scale;
-  bonobo_object_data_t *bonobo_object_data;
   GtkWidget            *drawing_area;
   GdkPixmap            *pixmap;
   GOutputDev           *out;
@@ -71,11 +73,13 @@ typedef struct {
   gint                  page;
 } view_data_t;
 
+static void realize_drawing_areas (bed_t *bed);
+
 static void
 redraw_view (view_data_t *view_data, GdkRectangle *rect)
 {
   gint width, height;
-  bonobo_object_data_t *bonobo_object_data = view_data->bonobo_object_data;
+  bed_t *bed = view_data->bed;
 
   g_return_if_fail (view_data->pixmap != NULL);
 
@@ -117,7 +121,7 @@ configure_size (view_data_t *view_data, GdkRectangle *rect)
 	if (view_data->scaled)
 		pixbuf = view_data->scaled;
 	else
-		pixbuf = view_data->bonobo_object_data->image;
+		pixbuf = view_data->bed->image;
 */
   gtk_widget_set_usize (
     view_data->drawing_area,
@@ -131,11 +135,11 @@ configure_size (view_data_t *view_data, GdkRectangle *rect)
 }
 
 static void
-redraw_all (bonobo_object_data_t *bonobo_object_data)
+redraw_all (bed_t *bed)
 {
 	GList *l;
 	
-	for (l = bonobo_object_data->views; l; l = l->next){
+	for (l = bed->views; l; l = l->next){
 		GdkRectangle rect;
 		view_data_t *view_data = (view_data_t *)l->data;
 
@@ -153,7 +157,7 @@ save_image (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 }
 
 static void
-setup_size (bonobo_object_data_t *doc, view_data_t *view)
+setup_size (bed_t *doc, view_data_t *view)
 {
   if (!doc || !view || !doc->pdf) {
     view->w = 320;
@@ -170,7 +174,7 @@ setup_size (bonobo_object_data_t *doc, view_data_t *view)
 static int
 load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 {
-	bonobo_object_data_t *bonobo_object_data = (bonobo_object_data_t *)data;
+	bed_t *bed = (bed_t *)data;
 	CORBA_long length;
 	GNOME_Stream_iobuf *buffer;
 	guint lp;
@@ -178,8 +182,8 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	FILE *hack;
 	char *name;
 
-	if (bonobo_object_data->pdf ||
-	    bonobo_object_data->stream) {
+	if (bed->pdf ||
+	    bed->stream) {
 	  g_warning ("Won't overwrite pre-existing stream: you wierdo");
 	  return 0;
 	}
@@ -214,38 +218,56 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	CORBA_free (buffer);*/
 
 	printf ("Loading PDF from persiststream\n");
-	bonobo_object_data->stream = stream;
-	bonobo_object_data->pdf = new PDFDoc (new BonoboStream (stream),
-					      new GString ("Bonobo.pdf"));
+	bed->stream = stream;
+	BonoboStream *bs = new BonoboStream (stream);
+	GString *st = new GString ("Bonobo.pdf");
+	bed->pdf = new PDFDoc (bs, st);
+					      
 	printf ("Done load\n");
-	if (!(bonobo_object_data->pdf->isOk())) {
+	if (!(bed->pdf->isOk())) {
 	  g_warning ("Duff pdf data\n");
-	  delete bonobo_object_data->pdf;
-	  bonobo_object_data->pdf = NULL;
+	  delete bed->pdf;
+	  bed->pdf = NULL;
 	}
-	if (!bonobo_object_data->pdf->getCatalog()) {
+	if (!bed->pdf->getCatalog()) {
 	  g_warning ("Duff pdf catalog\n");
-	  delete bonobo_object_data->pdf;
-	  bonobo_object_data->pdf = NULL;
+	  delete bed->pdf;
+	  bed->pdf = NULL;
 	}
 
-	redraw_all (bonobo_object_data);
+	realize_drawing_areas (bed);
+	redraw_all (bed);
 	return 0;
 }
 
 extern "C" {
+
   static void
   destroy_view (GnomeView *view, view_data_t *view_data)
   {
-    view_data->bonobo_object_data->views = g_list_remove (view_data->bonobo_object_data->views, view_data);
+    view_data->bed->views = g_list_remove (view_data->bed->views, view_data);
     gtk_object_unref (GTK_OBJECT (view_data->drawing_area));
     
     g_free (view_data);
   }
+
+  static void
+  destroy_embed (GnomeView *view, bed_t *bed)
+  {
+    while (bed->views)
+      destroy_view (NULL, (view_data_t *)bed->views->data);
+
+    delete bed->pdf;
+    bed->pdf = NULL;
+    gtk_object_unref (GTK_OBJECT (bed->stream));
+    bed->stream = NULL;
+    g_free (bed);
+  }
+
 }
 
 static GdkPixmap *
-setup_pixmap (bonobo_object_data_t *doc, view_data_t *view, GdkWindow *window)
+setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window)
 {
     GdkGCValues  gcValues;
     GdkGC       *strokeGC;
@@ -285,45 +307,67 @@ setup_pixmap (bonobo_object_data_t *doc, view_data_t *view, GdkWindow *window)
 }
 
 extern "C" {
+
+  static void
+  drawing_area_realize (GtkWidget *drawing_area, view_data_t *view_data)
+  {
+    g_return_if_fail (view_data != NULL);
+    g_return_if_fail (view_data->bed != NULL);
+    g_return_if_fail (view_data->bed->pdf != NULL);
+
+    if (!view_data->pixmap) {
+      GdkWindow *win = gtk_widget_get_parent_window (drawing_area);
+      GdkRectangle tmp;
+      
+      g_return_if_fail (win);
+      
+      view_data->pixmap = setup_pixmap (view_data->bed, view_data, win);
+      view_data->bed->pdf->displayPage(view_data->out, view_data->page, view_data->zoom, 0, gTrue);
+
+      configure_size (view_data, &tmp);
+    }
+  }
+
   static int
   drawing_area_exposed (GtkWidget *widget, GdkEventExpose *event, view_data_t *view_data)
   {
     if (!view_data ||
-	!view_data->bonobo_object_data->pdf)
+	!view_data->bed->pdf)
       return TRUE;
     
 /* Hoisted from view_factory: ugly */
-    if (!view_data->pixmap) {
-      GdkWindow *win = gtk_widget_get_parent_window (widget);
-      GdkRectangle tmp;
-      
-      g_return_val_if_fail (win, TRUE);
-      
-      view_data->pixmap = setup_pixmap (view_data->bonobo_object_data, view_data, win);
-      view_data->bonobo_object_data->pdf->displayPage(view_data->out, view_data->page, view_data->zoom, 0, gTrue);
-
-      configure_size (view_data, &tmp);
-    }
-    
     redraw_view (view_data, &event->area);
     
     return TRUE;
   }
 }
 
+static void
+realize_drawing_areas (bed_t *bed)
+{
+  GList *l;
+  
+  for (l = bed->views; l; l = l->next){
+    GdkRectangle rect;
+    view_data_t *view_data = (view_data_t *)l->data;
+
+    drawing_area_realize (view_data->drawing_area, view_data);
+  }  
+}
+
 static GnomeView *
-view_factory (GnomeEmbeddable *bonobo_object,
+view_factory (GnomeEmbeddable *embed_obj,
 	      const GNOME_ViewFrame view_frame,
 	      void *data)
 {
         GnomeView *view;
-	bonobo_object_data_t *bonobo_object_data = (bonobo_object_data_t *)data;
+	bed_t *bed = (bed_t *)data;
 	view_data_t *view_data = g_new (view_data_t, 1);
 
 	printf ("Created new bonobo object view %p\n", view_data);
 	
 	view_data->scale  = 1.0;
-	view_data->bonobo_object_data = bonobo_object_data;
+	view_data->bed    = bed;
 	view_data->drawing_area = gtk_drawing_area_new ();
 	view_data->pixmap = NULL;
 	view_data->out    = NULL;
@@ -334,12 +378,17 @@ view_factory (GnomeEmbeddable *bonobo_object,
 
 	gtk_signal_connect (
 		GTK_OBJECT (view_data->drawing_area),
+		"realize",
+		GTK_SIGNAL_FUNC (drawing_area_realize), view_data);
+
+	gtk_signal_connect (
+		GTK_OBJECT (view_data->drawing_area),
 		"expose_event",
 		GTK_SIGNAL_FUNC (drawing_area_exposed), view_data);
 
         gtk_widget_show (view_data->drawing_area);
 
-	setup_size (bonobo_object_data, view_data);
+	setup_size (bed, view_data);
 
         view = gnome_view_new (view_data->drawing_area);
 
@@ -347,34 +396,33 @@ view_factory (GnomeEmbeddable *bonobo_object,
 		GTK_OBJECT (view), "destroy",
 		GTK_SIGNAL_FUNC (destroy_view), view_data);
 
-	bonobo_object_data->views = g_list_prepend (bonobo_object_data->views,
-						view_data);
+	bed->views = g_list_prepend (bed->views, view_data);
 
         return view;
 }
 
 static GnomeObject *
-bonobo_object_factory (GnomeEmbeddableFactory *This, void *data)
+embed_obj_factory (GnomeEmbeddableFactory *This, void *data)
 {
-	GnomeEmbeddable *bonobo_object;
+	GnomeEmbeddable *embed_obj;
 	GnomePersistStream *stream;
-	bonobo_object_data_t *bonobo_object_data = (bonobo_object_data_t *)data;
+	bed_t *bed = (bed_t *)data;
 
-	bonobo_object_data = g_new0 (bonobo_object_data_t, 1);
-	if (!bonobo_object_data)
+	bed = g_new0 (bed_t, 1);
+	if (!bed)
 		return NULL;
 
-	printf ("Created new bonobo object %p\n", bonobo_object_data);
+	printf ("Created new bonobo object %p\n", bed);
 	/*
 	 * Creates the BonoboObject server
 	 */
-	bonobo_object = gnome_embeddable_new (view_factory, bonobo_object_data);
-	if (bonobo_object == NULL){
-		g_free (bonobo_object_data);
+	embed_obj = gnome_embeddable_new (view_factory, bed);
+	if (embed_obj == NULL){
+		g_free (bed);
 		return NULL;
 	}
 
-	bonobo_object_data->pdf = NULL;
+	bed->pdf = NULL;
 
 	/*
 	 * Interface GNOME::PersistStream 
@@ -382,21 +430,24 @@ bonobo_object_factory (GnomeEmbeddableFactory *This, void *data)
 	stream = gnome_persist_stream_new ("bonobo-object:image-x-pdf",
 					   load_image_from_stream,
 					   save_image,
-					   bonobo_object_data);
+					   bed);
 	if (stream == NULL){
-		gtk_object_unref (GTK_OBJECT (bonobo_object));
-		g_free (bonobo_object_data);
+		gtk_object_unref (GTK_OBJECT (embed_obj));
+		g_free (bed);
 		return NULL;
 	}
 
-	bonobo_object_data->bonobo_object = bonobo_object;
+	bed->embed_obj = embed_obj;
 
 	/*
 	 * Bind the interfaces
 	 */
-	gnome_object_add_interface (GNOME_OBJECT (bonobo_object),
+	gnome_object_add_interface (GNOME_OBJECT (embed_obj),
 				    GNOME_OBJECT (stream));
-	return (GnomeObject *) bonobo_object;
+	gtk_signal_connect (
+	  GTK_OBJECT (embed_obj), "destroy",
+	  GTK_SIGNAL_FUNC (destroy_embed), bed);
+	return (GnomeObject *) embed_obj;
 }
 
 static void
@@ -406,7 +457,7 @@ init_bonobo_image_x_png_factory (void)
 	
 	factory = gnome_embeddable_factory_new (
 		"bonobo-object-factory:image-x-pdf",
-		bonobo_object_factory, NULL);
+		embed_obj_factory, NULL);
 }
 
 static void

@@ -38,14 +38,14 @@ PDFDoc::PDFDoc(Stream *str1, GString *fileName1) {
   xref = NULL;
   links = NULL;
 
+  str = str1;
   fileName = fileName1;
-  if (!str1)
+  if (!(str && str->isOk()))
     return;
 
   // create stream
 /*  obj.initNull(); */
 /*  str  = new FileStream(file, 0, -1, &obj); */
-  str = str1;
 
   // check header
 /*  str->checkHeader(); FIXME */
