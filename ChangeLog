@@ -1,3 +1,20 @@
+2005-03-08  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* ps/Makefile.am:
+	* ps/gsdefaults.c: (gtk_gs_defaults_get_interpreter_cmd),
+	(gtk_gs_defaults_get_alpha_parameters),
+	(gtk_gs_defaults_get_ungzip_cmd),
+	(gtk_gs_defaults_get_unbzip2_cmd):
+	* ps/gsdefaults.h:
+	* ps/ps-document.c: (ps_document_init), (ps_document_class_init),
+	(ps_document_get_orientation), (document_load),
+	(ps_document_goto_page), (ps_document_set_page_size):
+	* ps/ps-document.h:
+
+	Some more sanitization of the ps backend. Remove a lot
+	of unused code and do not base our defaults on ggv
+	preferences (ugh!)
+
 2005-03-08  Fernando Herrera  <fherrera@onirica.com>
 
 	* thumbnailer/evince-thumbnailer.schemas:

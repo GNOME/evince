@@ -278,14 +278,11 @@ ps_document_init(PSDocument * gs)
   gs->page_y_offset = 0;
 
   /* Set user defined defaults */
-  gs->override_orientation = gtk_gs_defaults_get_override_orientation();
-  gs->fallback_orientation = gtk_gs_defaults_get_orientation();
-  gs->zoom_factor = gtk_gs_defaults_get_zoom_factor();
-  gs->default_size = gtk_gs_defaults_get_size();
-  gs->antialiased = gtk_gs_defaults_get_antialiased();
-  gs->override_size = gtk_gs_defaults_get_override_size();
-  gs->respect_eof = gtk_gs_defaults_get_respect_eof();
-  gs->zoom_mode = gtk_gs_defaults_get_zoom_mode();
+  gs->fallback_orientation = GTK_GS_ORIENTATION_PORTRAIT;
+  gs->zoom_factor = 1.0;
+  gs->default_size = 1;
+  gs->antialiased = TRUE;
+  gs->respect_eof = TRUE;
 
   gs->gs_status = _("No document loaded.");
 }
@@ -343,8 +340,6 @@ ps_document_class_init(PSDocumentClass *klass)
   klass->next_atom = gdk_atom_intern("NEXT", FALSE);
   klass->page_atom = gdk_atom_intern("PAGE", FALSE);
   klass->string_atom = gdk_atom_intern("STRING", FALSE);
-
-  gtk_gs_defaults_load();
 
   g_object_class_override_property (object_class, PROP_TITLE, "title");
 }
@@ -530,8 +525,7 @@ ps_document_get_orientation(PSDocument * gs)
       gs->real_orientation = gs->doc->orientation;
   }
 
-  if(gs->override_orientation ||
-     gs->real_orientation == GTK_GS_ORIENTATION_NONE)
+  if(gs->real_orientation == GTK_GS_ORIENTATION_NONE)
     return gs->fallback_orientation;
   else
     return gs->real_orientation;
@@ -1090,113 +1084,6 @@ check_filecompressed(PSDocument * gs)
   return filename_unc;
 }
 
-/*
- * Check if gs->gs_filename or gs->gs_filename_unc is a pdf file and scan
- * pdf file if necessary.
- * Set gs->filename_dsc to the name of the dsc file or NULL.
- * Error reporting via signal 'interpreter_message'.
- */
-static gchar *
-check_pdf(PSDocument * gs)
-{
-  FILE *file;
-  gchar buf[1024], *filename;
-  int fd;
-
-  /* use uncompressed file as input if necessary */
-  filename = (gs->gs_filename_unc ? gs->gs_filename_unc : gs->gs_filename);
-
-  if((file = fopen(filename, "r"))
-     && (fread(buf, sizeof(char), 5, file) == 5)
-     && (strncmp(buf, "%PDF-", 5) == 0)) {
-    /* we found a PDF file */
-    gchar *fname, *filename_dsc, *filename_err, *cmd, *cmdline;
-    filename_dsc = g_strconcat(g_get_tmp_dir(), "/ggvXXXXXX", NULL);
-    if((fd = mkstemp(filename_dsc)) < 0) {
-      return NULL;
-    }
-    close(fd);
-    filename_err = g_strconcat(g_get_tmp_dir(), "/ggvXXXXXX", NULL);
-    if((fd = mkstemp(filename_err)) < 0) {
-      g_free(filename_dsc);
-      return NULL;
-    }
-    close(fd);
-    fname = g_shell_quote(filename);
-    cmd = g_strdup_printf(gtk_gs_defaults_get_dsc_cmd(), filename_dsc, fname);
-    g_free(fname);
-    /* this command (sometimes?) prints error messages to stdout! */
-    cmdline = g_strdup_printf("%s >%s 2>&1", cmd, filename_err);
-    g_free(cmd);
-
-    if((system(cmdline) == 0) && file_readable(filename_dsc)) {
-
-      /* success */
-      filename = gs->gs_filename_dsc = filename_dsc;
-
-      if(file_length(filename_err) > 0) {
-        gchar *err_msg = " ";
-        GtkWidget *dialog;
-        FILE *err;
-        GdkColor color;
-
-        if((err = fopen(filename_err, "r"))) {
-
-          /* print the content of the file to a message box */
-          while(fgets(buf, 1024, err))
-            err_msg = g_strconcat(err_msg, buf, NULL);
-
-          /* FIXME The dialog is not yet set to modal, difficult to 
-           * get the parent of the dialog box here 
-           */
-
-          dialog = gtk_message_dialog_new(NULL,
-                                          GTK_DIALOG_MODAL,
-                                          GTK_MESSAGE_WARNING,
-                                          GTK_BUTTONS_OK,
-                                          ("There was an error while scaning the file: %s \n%s"),
-                                          gs->gs_filename, err_msg);
-
-          gdk_color_parse("white", &color);
-          gtk_widget_modify_bg(GTK_WIDGET(dialog), GTK_STATE_NORMAL, &color);
-
-          g_signal_connect(G_OBJECT(dialog), "response",
-                           G_CALLBACK(gtk_widget_destroy), NULL);
-
-          gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
-          gtk_widget_show(dialog);
-          g_free(err_msg);
-        }
-      }
-
-    }
-    else {
-      /* report error */
-      g_snprintf(buf, 1024,
-                 _("Error while converting pdf file %s:\n"), filename);
-      ps_document_emit_error_msg(gs, buf);
-
-      if(file_length(filename_err) > 0) {
-        FILE *err;
-        if((err = fopen(filename_err, "r"))) {
-          /* print file to message window */
-          while(fgets(buf, 1024, err))
-            ps_document_emit_error_msg(gs, buf);
-        }
-      }
-      unlink(filename_dsc);
-      g_free(filename_dsc);
-      filename = NULL;
-    }
-    unlink(filename_err);
-    g_free(filename_err);
-    g_free(cmdline);
-  }
-  if(NULL != file)
-    fclose(file);
-  return filename;
-}
-
 #ifdef BROKEN_XINERAMA_PATCH_THAT_SHOULD_NOT_BE_USED
 /* never mind this patch: a properly working X server should take care of
    calculating the proper values. */
@@ -1409,8 +1296,6 @@ document_load(PSDocument * gs, const gchar * fname)
     }
     else {
       filename = check_filecompressed(gs);
-      if(filename)
-        filename = check_pdf(gs);
     }
 
     if(!filename || (gs->gs_psfile = fopen(filename, "r")) == NULL) {
@@ -1440,22 +1325,7 @@ document_load(PSDocument * gs, const gchar * fname)
     }
 
     /* We have to set up the orientation of the document */
-
-
-    /* orientation can only be portrait, and landscape or none.
-       This is the document default. A document can have
-       pages in landscape and some in portrait */
-    if(gs->override_orientation) {
-      /* If the orientation should be override... 
-         then gs->orientation has already the correct
-         value (it was set when the widget was created */
-      /* So do nothing */
-
-    }
-    else {
-      /* Otherwise, set the proper orientation for the doc */
-      gs->real_orientation = gs->doc->orientation;
-    }
+    gs->real_orientation = gs->doc->orientation;
   }
   ps_document_set_page_size(gs, -1, gs->current_page);
   gs->loaded = TRUE;
@@ -1529,7 +1399,6 @@ ps_document_goto_page(PSDocument * gs, gint page)
     gs->current_page = page;
 
     if(gs->doc->pages[page].orientation != NONE &&
-       !gs->override_orientation &&
        gs->doc->pages[page].orientation != gs->real_orientation) {
       gs->real_orientation = gs->doc->pages[page].orientation;
       gs->changed = TRUE;
@@ -1603,7 +1472,7 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
   if(new_pagesize == -1) {
     if(gs->default_size > 0)
       new_pagesize = gs->default_size;
-    if(!gs->override_size && gs->doc) {
+    if(gs->doc) {
       /* If we have a document:
          We use -- the page size (if specified)
          or the doc. size (if specified)
@@ -1634,7 +1503,7 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
   }
 
   /* Compute bounding box */
-  if(gs->doc && ((gs->doc->epsf && !gs->override_size) || new_pagesize == -1)) {    /* epsf or bbox */
+  if(gs->doc && (gs->doc->epsf || new_pagesize == -1)) {    /* epsf or bbox */
     if((pageid >= 0) &&
        (gs->doc->pages) &&
        (gs->doc->pages[pageid].boundingbox[URX] >
@@ -1660,7 +1529,7 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
     if(new_pagesize < 0)
       new_pagesize = gs->default_size;
     new_llx = new_lly = 0;
-    if(gs->doc && !gs->override_size && gs->doc->size &&
+    if(gs->doc && gs->doc->size &&
        (new_pagesize < gs->doc->numsizes)) {
       new_urx = gs->doc->size[new_pagesize].width;
       new_ury = gs->doc->size[new_pagesize].height;
