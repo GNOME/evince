@@ -422,6 +422,21 @@ ev_view_expose_event (GtkWidget      *widget,
 }
 
 void
+ev_view_select_all (EvView *ev_view)
+{
+	GtkWidget *widget = GTK_WIDGET (ev_view);
+
+	g_return_if_fail (EV_IS_VIEW (ev_view));
+
+	ev_view->has_selection = TRUE;
+	ev_view->selection.x = ev_view->selection.y = 0;
+	ev_view->selection.width = widget->requisition.width;
+	ev_view->selection.height = widget->requisition.height;
+
+	gtk_widget_queue_draw (widget);
+}
+
+void
 ev_view_copy (EvView *ev_view)
 {
 	GtkClipboard *clipboard;
@@ -490,6 +505,11 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 	switch (event->button) {
 		case 1:
+			if (view->has_selection) {
+				view->has_selection = FALSE;
+				gtk_widget_queue_draw (widget);
+			}
+
 			view->selection.x = event->x;
 			view->selection.y = event->y;
 			view->selection.width = 0;

@@ -12,6 +12,9 @@
 
     <menu name="EditMenu" action="Edit">
       <menuitem name="EditCopyMenu" action="EditCopy"/>
+      <separator/>
+      <menuitem name="EditSelectAllMenu" action="EditSelectAll"/>
+      <separator/>
       <menuitem name="EditFindMenu" action="EditFind"/>
     </menu>
 
@@ -19,9 +22,9 @@
       <menuitem name="ViewToolbarMenu" action="ViewToolbar"/>
       <menuitem name="ViewStatusbarMenu" action="ViewStatusbar"/>
       <menuitem name="ViewSidebarMenu" action="ViewSidebar"/>
-      <separator name="ViewSep1"/>
+      <separator/>
       <menuitem name="ViewFullscreenMenu" action="ViewFullscreen"/>
-      <separator name="ViewSep2"/>
+      <separator/>
       <menuitem name="ViewZoomInMenu" action="ViewZoomIn"/>
       <menuitem name="ViewZoomOutMenu" action="ViewZoomOut"/>
       <menuitem name="ViewNormalSizeMenu" action="ViewNormalSize"/>
@@ -32,10 +35,10 @@
     <menu name="GoMenu" action="Go">
       <menuitem name="GoBackMenu" action="GoBack"/>
       <menuitem name="GoForwardMenu" action="GoForward"/>
-      <separator name="GoSep1"/>
+      <separator/>
       <menuitem name="GoPageUpMenu" action="GoPageUp"/>
       <menuitem name="GoPageDownMenu" action="GoPageDown"/>
-      <separator name="GoSep2"/>
+      <separator/>
       <menuitem name="GoFirstPageMenu" action="GoFirstPage"/>
       <menuitem name="GoLastPageMenu" action="GoLastPage"/>
     </menu>

@@ -584,6 +584,14 @@ find_not_supported_dialog (EvWindow   *ev_window)
 }
 
 static void
+ev_window_cmd_edit_select_all (GtkAction *action, EvWindow *ev_window)
+{
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	ev_view_select_all (EV_VIEW (ev_window->priv->view));
+}
+
+static void
 ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -1239,7 +1247,9 @@ static GtkActionEntry entries[] = {
         { "EditCopy", GTK_STOCK_COPY, N_("_Copy"), "<control>C",
           N_("Copy text from the document"),
           G_CALLBACK (ev_window_cmd_edit_copy) },
-        
+ 	{ "EditSelectAll", NULL, N_("Select _All"), "<control>A",
+	  N_("Select the entire page"),
+	  G_CALLBACK (ev_window_cmd_edit_select_all) }, 
         { "EditFind", GTK_STOCK_FIND, N_("_Find"), "<control>F",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },

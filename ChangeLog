@@ -1,3 +1,17 @@
+2005-01-07  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* data/evince-ui.xml:
+
+	Cleanup and add select all.
+
+	* shell/ev-view.c: (ev_view_select_all),
+	(ev_view_button_press_event):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_cmd_edit_select_all):
+
+	Add select all.
+	Clear selection on click.
+
 Fri Jan  7 01:28:58 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar-thumbnails.c
