@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-15 22:07+0100\n"
-"PO-Revision-Date: 2005-01-15 22:10+0100\n"
+"POT-Creation-Date: 2005-01-19 12:26+0100\n"
+"PO-Revision-Date: 2005-01-19 12:30+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -197,7 +197,7 @@ msgstr "PostScript og PDF-dokumenter"
 msgid "PostScript Documents"
 msgstr "PostScript-dokumenter"
 
-#: shell/ev-application.c:141 shell/ev-window.c:512
+#: shell/ev-application.c:141 shell/ev-window.c:575
 msgid "PDF Documents"
 msgstr "PDF-dokumenter"
 
@@ -205,7 +205,7 @@ msgstr "PDF-dokumenter"
 msgid "Images"
 msgstr "Bilder"
 
-#: shell/ev-application.c:151 shell/ev-window.c:517
+#: shell/ev-application.c:151 shell/ev-window.c:580
 msgid "All Files"
 msgstr "Alle filer"
 
@@ -214,61 +214,61 @@ msgstr "Alle filer"
 msgid "of %d"
 msgstr "av %d"
 
-#: shell/ev-view.c:555 shell/ev-history.c:175
+#: shell/ev-view.c:561
 #, c-format
-msgid "Page %d"
-msgstr "Side %d"
+msgid "Go to page %d"
+msgstr "Gå til side %d"
 
-#: shell/ev-view.c:889
+#: shell/ev-view.c:927
 msgid "Not found"
 msgstr "Ikke funnet"
 
-#: shell/ev-view.c:891
+#: shell/ev-view.c:929
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% igjen å søke i"
 
-#: shell/ev-view.c:896
+#: shell/ev-view.c:934
 #, c-format
 msgid "Found on page %d"
 msgstr "Funnet på side %d"
 
-#: shell/ev-view.c:899
+#: shell/ev-view.c:937
 #, c-format
 msgid "%d found on this page"
 msgstr "%d funnet på denne siden"
 
-#: shell/ev-window.c:272
+#: shell/ev-window.c:276
 msgid "Unable to open document"
 msgstr "Kan ikke åpne dokument"
 
-#: shell/ev-window.c:323
+#: shell/ev-window.c:327
 msgid "Document Viewer"
 msgstr "Dokumentvisning"
 
-#: shell/ev-window.c:415
+#: shell/ev-window.c:478
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Uhåndtert MIME-type: «%s»"
 
-#: shell/ev-window.c:484
+#: shell/ev-window.c:547
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Filen kunne ikke lagres som «%s»."
 
-#: shell/ev-window.c:504
+#: shell/ev-window.c:567
 msgid "Save a Copy"
 msgstr "Lagre en kopi"
 
-#: shell/ev-window.c:582
+#: shell/ev-window.c:645
 msgid "Print"
 msgstr "Skriv ut"
 
-#: shell/ev-window.c:605
+#: shell/ev-window.c:668
 msgid "Printing is not supported on this printer."
 msgstr "Utskrift støttes ikke på denne skriveren."
 
-#: shell/ev-window.c:608
+#: shell/ev-window.c:671
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -277,316 +277,327 @@ msgstr ""
 "Du prøvde å skrive ut til en skriver ved bruk av driveren «%s». Dette "
 "programmet krever en PostScript skriverdriver."
 
-#: shell/ev-window.c:660
+#: shell/ev-window.c:723
 msgid "The \"Find\" feature will not work with this document"
 msgstr "Funksjonen «Finn» vil ikke fungere med dette dokumentet"
 
-#: shell/ev-window.c:662
+#: shell/ev-window.c:725
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Søk etter tekst er kun støttet for PDF-dokumenter."
 
-#: shell/ev-window.c:809
+#: shell/ev-window.c:872
 msgid "Exit Fullscreen"
 msgstr "Avslutt fullskjerm"
 
-#: shell/ev-window.c:1005
+#: shell/ev-window.c:1068
 msgid "Many..."
 msgstr "Mange..."
 
-#: shell/ev-window.c:1010
+#: shell/ev-window.c:1073
 msgid "Not so many..."
 msgstr "Ikke så mange..."
 
-#: shell/ev-window.c:1015
+#: shell/ev-window.c:1078
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
 "the Free Software Foundation; either version 2 of the License, or\n"
 "(at your option) any later version.\n"
 msgstr ""
+"Evince er fri programvare. Du kan redistribuere programmet og eller\n"
+"endre det i henhold til betingelsene gitt i GNU General Public License\n"
+"som publisert av Free Software Foundation; enten versjon 2 av lisensen,\n"
+"eller (hvis du ønsker) enhver senere versjon.\n"
 
-#: shell/ev-window.c:1019
+#: shell/ev-window.c:1082
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details.\n"
 msgstr ""
+"Evince distribueres i håp om at programmet vil være nyttig,\n"
+"men UTEN NOEN GARANTI; selv ikke en implisitt garanti for at\n"
+"det er SALGBART eller PASSER ET SPESIELT FORMÅL. Se Gnu\n"
+"General Public License for flere detaljer.\n"
 
-#: shell/ev-window.c:1023
+#: shell/ev-window.c:1086
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
+"Du skal ha mottatt en kopi av GNU General Public License\n"
+"sammen med Evince; hvis ikke kan du skrive til Free Software Foundation, Inc.,\n"
+"59 Temple Place, Suite 330, Boston, MA 02111-1307 USA\n"
 
-#: shell/ev-window.c:1045 shell/main.c:80
+#: shell/ev-window.c:1108 shell/main.c:80
 msgid "Evince"
 msgstr "Evince"
 
-#: shell/ev-window.c:1048
+#: shell/ev-window.c:1111
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 Evince-utviklerene"
 
-#: shell/ev-window.c:1051
+#: shell/ev-window.c:1114
 msgid "PostScript and PDF File Viewer."
 msgstr "PostScript og PDF-filvisning."
 
-#: shell/ev-window.c:1054
+#: shell/ev-window.c:1117
 msgid "translator-credits"
 msgstr "Kjartan Maraas <kmaraas@gnome.org>"
 
-#: shell/ev-window.c:1319
+#: shell/ev-window.c:1387
 msgid "_File"
 msgstr "_Fil"
 
-#: shell/ev-window.c:1320
+#: shell/ev-window.c:1388
 msgid "_Edit"
 msgstr "R_ediger"
 
-#: shell/ev-window.c:1321
+#: shell/ev-window.c:1389
 msgid "_View"
 msgstr "_Vis"
 
-#: shell/ev-window.c:1322
+#: shell/ev-window.c:1390
 msgid "_Go"
 msgstr "_Gå til"
 
-#: shell/ev-window.c:1323
+#: shell/ev-window.c:1391
 msgid "_Help"
 msgstr "_Hjelp"
 
 #. File menu
-#: shell/ev-window.c:1326
+#: shell/ev-window.c:1394
 msgid "_Open"
 msgstr "_Åpne"
 
-#: shell/ev-window.c:1327
+#: shell/ev-window.c:1395
 msgid "Open a file"
 msgstr "Åpne en fil"
 
-#: shell/ev-window.c:1329
+#: shell/ev-window.c:1397
 msgid "_Save a Copy..."
 msgstr "_Lagre en kopi..."
 
-#: shell/ev-window.c:1330
+#: shell/ev-window.c:1398
 msgid "Save the current document with a new filename"
 msgstr "Lagre dette dokumentet med et nytt filnavn"
 
-#: shell/ev-window.c:1332
+#: shell/ev-window.c:1400
 msgid "_Print"
 msgstr "S_kriv ut"
 
-#: shell/ev-window.c:1333
+#: shell/ev-window.c:1401
 msgid "Print this document"
 msgstr "Skriv ut dette dokumentet"
 
-#: shell/ev-window.c:1335
+#: shell/ev-window.c:1403
 msgid "_Close"
 msgstr "_Lukk"
 
-#: shell/ev-window.c:1336
+#: shell/ev-window.c:1404
 msgid "Close this window"
 msgstr "Lukk dette vinduet"
 
 #. Edit menu
-#: shell/ev-window.c:1340
+#: shell/ev-window.c:1408
 msgid "_Copy"
 msgstr "_Kopier"
 
-#: shell/ev-window.c:1341
+#: shell/ev-window.c:1409
 msgid "Copy text from the document"
 msgstr "Kopier tekst fra dokumentet"
 
-#: shell/ev-window.c:1343
+#: shell/ev-window.c:1411
 msgid "Select _All"
 msgstr "Velg _alt"
 
-#: shell/ev-window.c:1344
+#: shell/ev-window.c:1412
 msgid "Select the entire page"
 msgstr "Merk hele siden"
 
-#: shell/ev-window.c:1346
+#: shell/ev-window.c:1414
 msgid "_Find"
 msgstr "S_øk"
 
-#: shell/ev-window.c:1347
+#: shell/ev-window.c:1415
 msgid "Find a word or phrase in the document"
 msgstr "Finn et ord eller en frase i dokumentet"
 
 #. View menu
-#: shell/ev-window.c:1351
+#: shell/ev-window.c:1419
 msgid "Zoom _In"
 msgstr "Zoom _inn"
 
-#: shell/ev-window.c:1352
+#: shell/ev-window.c:1420
 msgid "Enlarge the document"
 msgstr "Forstørr dokumentet"
 
-#: shell/ev-window.c:1354
+#: shell/ev-window.c:1422
 msgid "Zoom _Out"
 msgstr "Zoom _ut"
 
-#: shell/ev-window.c:1355
+#: shell/ev-window.c:1423
 msgid "Shrink the document"
 msgstr "Komprimer dokumentet"
 
-#: shell/ev-window.c:1357
+#: shell/ev-window.c:1425
 msgid "_Normal Size"
 msgstr "_Normal størrelse"
 
-#: shell/ev-window.c:1358
+#: shell/ev-window.c:1426
 msgid "Zoom to the normal size"
 msgstr "Zoom til normal størrelse"
 
-#: shell/ev-window.c:1360
+#: shell/ev-window.c:1428
 msgid "_Best Fit"
 msgstr "_Beste tilpasning"
 
-#: shell/ev-window.c:1361
+#: shell/ev-window.c:1429
 msgid "Zoom to fit the document to the current window"
 msgstr "Zoom for å tilpasse dokumentet til aktivt vindu"
 
-#: shell/ev-window.c:1363
+#: shell/ev-window.c:1431
 msgid "Fit Page _Width"
 msgstr "Tilpass til side_bredde"
 
-#: shell/ev-window.c:1364
+#: shell/ev-window.c:1432
 msgid "Zoom to fit the width of the current window "
 msgstr "Zoom tilpasset bredden av aktivt vindu"
 
 #. Go menu
-#: shell/ev-window.c:1368
+#: shell/ev-window.c:1436
 msgid "_Back"
 msgstr "Til_bake"
 
-#: shell/ev-window.c:1369 shell/ev-window.c:1372
+#: shell/ev-window.c:1437 shell/ev-window.c:1440
 msgid "Go to the page viewed before this one"
 msgstr "Gå til siden som ble vist før denne"
 
-#: shell/ev-window.c:1371
+#: shell/ev-window.c:1439
 msgid "Fo_rward"
 msgstr "F_remover"
 
-#: shell/ev-window.c:1374
+#: shell/ev-window.c:1442
 msgid "_Page Up"
 msgstr "Gå o_pp en side"
 
-#: shell/ev-window.c:1375
+#: shell/ev-window.c:1443
 msgid "Go to the previous page"
 msgstr "Gå til forrige side"
 
-#: shell/ev-window.c:1377
+#: shell/ev-window.c:1445
 msgid "_Page Down"
 msgstr "Gå _ned en side"
 
-#: shell/ev-window.c:1378
+#: shell/ev-window.c:1446
 msgid "Go to the next page"
 msgstr "Gå til neste side"
 
-#: shell/ev-window.c:1380
+#: shell/ev-window.c:1448
 msgid "_First Page"
 msgstr "_Første side"
 
-#: shell/ev-window.c:1381
+#: shell/ev-window.c:1449
 msgid "Go to the first page"
 msgstr "Gå til den første siden"
 
-#: shell/ev-window.c:1383
+#: shell/ev-window.c:1451
 msgid "_Last Page"
 msgstr "S_iste side"
 
-#: shell/ev-window.c:1384
+#: shell/ev-window.c:1452
 msgid "Go to the last page"
 msgstr "Gå til den siste siden"
 
 #. Help menu
-#: shell/ev-window.c:1388
+#: shell/ev-window.c:1456
 msgid "_Contents"
 msgstr "_Innhold"
 
-#: shell/ev-window.c:1389
+#: shell/ev-window.c:1457
 msgid "Display help for the viewer application"
 msgstr "Vis hjelp for dokumentvisning"
 
-#: shell/ev-window.c:1392
+#: shell/ev-window.c:1460
 msgid "_About"
 msgstr "_Om"
 
-#: shell/ev-window.c:1393
+#: shell/ev-window.c:1461
 msgid "Display credits for the document viewer creators"
 msgstr "Vis kreditering for skaperene av dokumentvisning"
 
 #. View Menu
-#: shell/ev-window.c:1400
+#: shell/ev-window.c:1468
 msgid "_Toolbar"
 msgstr "Verk_tøylinje"
 
-#: shell/ev-window.c:1401
+#: shell/ev-window.c:1469
 msgid "Show or hide toolbar"
 msgstr "Vis/skjul verktøylinje"
 
-#: shell/ev-window.c:1403
+#: shell/ev-window.c:1471
 msgid "_Statusbar"
 msgstr "_Statuslinje"
 
-#: shell/ev-window.c:1404
+#: shell/ev-window.c:1472
 msgid "Show or hide statusbar"
 msgstr "Vis/skjul statuslinje"
 
-#: shell/ev-window.c:1406
+#: shell/ev-window.c:1474
 msgid "Side_bar"
 msgstr "Si_delinje"
 
-#: shell/ev-window.c:1407
+#: shell/ev-window.c:1475
 msgid "Show or hide sidebar"
 msgstr "Vis eller skjul statuslinje"
 
-#: shell/ev-window.c:1409
+#: shell/ev-window.c:1477
 msgid "_Fullscreen"
 msgstr "_Fullskjerm"
 
-#: shell/ev-window.c:1410
+#: shell/ev-window.c:1478
 msgid "Expand the window to fill the screen"
 msgstr "Utvid vinduet så det fyller skjermen"
 
-#: shell/ev-window.c:1431
+#: shell/ev-window.c:1499
 msgid "Back"
 msgstr "Tilbake"
 
-#: shell/ev-window.c:1433
+#: shell/ev-window.c:1501
 msgid "Go back"
 msgstr "Gå tilbake"
 
-#: shell/ev-window.c:1434
+#: shell/ev-window.c:1502
 msgid "Back history"
 msgstr "Historikk bakover"
 
-#: shell/ev-window.c:1445
+#: shell/ev-window.c:1513
 msgid "Forward"
 msgstr "Fremover"
 
-#: shell/ev-window.c:1447
+#: shell/ev-window.c:1515
 msgid "Go forward"
 msgstr "Gå fremover"
 
-#: shell/ev-window.c:1448
+#: shell/ev-window.c:1516
 msgid "Forward history"
 msgstr "Historikk fremover"
 
-#: shell/ev-window.c:1458
+#: shell/ev-window.c:1526
 msgid "Page"
 msgstr "Side"
 
-#: shell/ev-window.c:1459
+#: shell/ev-window.c:1527
 msgid "Select Page"
 msgstr "Velg side"
 
-#: shell/ev-window.c:1543
+#: shell/ev-window.c:1611
 msgid "Index"
 msgstr "Indeks"
 
-#: shell/ev-window.c:1550
+#: shell/ev-window.c:1618
 msgid "Thumbnails"
 msgstr "Miniatyrer"
 
@@ -594,3 +605,7 @@ msgstr "Miniatyrer"
 msgid "Evince Document Viewer"
 msgstr "Evince dokumentvisning"
 
+#: shell/ev-history.c:175
+#, c-format
+msgid "Page %d"
+msgstr "Side %d"
