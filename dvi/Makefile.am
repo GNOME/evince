@@ -1,7 +1,7 @@
 SUBDIRS = dvilib
 
 INCLUDES =					\
-	-Idvilib				\
+	-I$(srcdir)/dvilib			\
 	$(DVI_CFLAGS)				\
 	-I$(top_srcdir)
 
@@ -20,7 +20,9 @@ dviviewer_SOURCES =				\
 	view.cc					\
 						\
 	model.hh				\
-	model.cc
+	model.cc				\
+						\
+	observer.hh
 
 dviviewer_LDADD = 				\
         $(top_builddir)/dvi/dvilib/libdvilib.a	\

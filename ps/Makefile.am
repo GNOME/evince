@@ -11,6 +11,7 @@ libgtkgs_la_SOURCES = 	\
 	gsio.h		\
 	gsdefaults.c	\
 	gsdefaults.h	\
+	gstypes.h	\
 	ps.c		\
 	ps.h		\
 	ps-document.c	\

@@ -97,7 +97,9 @@ libxpdf_la_SOURCES =		\
 	PSOutputDev.h		\
 	TextOutputDev.cc	\
 	TextOutputDev.h		\
-	UTF8.h
+	UTF8.h			\
+				\
+	gpdf-g-switch.h
 
 # The sources at the end are put in libxpdf.a for convenience here, but are 
 # conceptually part of the apps not part of the libs.
@@ -124,4 +126,4 @@ libpdfdocument_la_LIBADD =                                    	\
 	$(top_builddir)/pdf/fofi/libfofi.la                     \
 	$(top_builddir)/pdf/splash/libsplash.la
 
-EXTRA_DIST = config.h
+EXTRA_DIST = xpdfconfig.h

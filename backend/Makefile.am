@@ -23,17 +23,17 @@ libevbackend_la_SOURCES=			\
 	ev-ps-exporter.h			\
 	$(NULL)
 
+BUILT_SOURCES=				\
+	ev-backend-marshalers.h		\
+	ev-backend-marshalers.c
+
+CLEANFILES = $(BUILT_SOURCES)
+
 ev-backend-marshalers.h: ev-backend-marshalers.list
-	cd $(srcdir) \
-	&& $(GLIB_GENMARSHAL) --prefix=_ev_backend_marshal ev-backend-marshalers.list --header > xgen-emh \
-	&& cp xgen-emh ev-backend-marshalers.h \
-	&& rm -f xgen-emh xgen-emh~
+	$(GLIB_GENMARSHAL) --prefix=_ev_backend_marshal $(srcdir)/ev-backend-marshalers.list --header > $@
 
 ev-backend-marshalers.c: ev-backend-marshalers.list
-	cd $(srcdir) \
-	&& $(GLIB_GENMARSHAL) --prefix=_ev_backend_marshal ev-backend-marshalers.list --body > xgen-emc \
-	&& cp xgen-emc ev-backend-marshalers.c \
-	&& rm -f xgen-emc xgen-emc~
+	$(GLIB_GENMARSHAL) --prefix=_ev_backend_marshal $(srcdir)/ev-backend-marshalers.list --body > $@
 
 ev-backend-marshal.c: ev-backend-marshalers.h ev-backend-marshalers.c
 
