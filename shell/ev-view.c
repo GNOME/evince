@@ -77,6 +77,7 @@ struct _EvView {
 
 	gboolean pressed_button;
 	gboolean has_selection;
+	GdkPoint selection_start;
 	GdkRectangle selection;
 	EvViewCursor cursor;
 
@@ -529,10 +530,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 				gtk_widget_queue_draw (widget);
 			}
 
-			view->selection.x = event->x;
-			view->selection.y = event->y;
-			view->selection.width = 0;
-			view->selection.height = 0;
+			view->selection_start.x = event->x;
+			view->selection_start.y = event->y;
 			break;
 	}
 
@@ -630,10 +629,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 	if (view->pressed_button > 0) {
 		view->has_selection = TRUE;
-		view->selection.x = MIN (view->selection.x, event->x);
-		view->selection.y = MIN (view->selection.y, event->y);
-		view->selection.width = ABS (view->selection.x - event->x) + 1;
-		view->selection.height = ABS (view->selection.y - event->y) + 1;
+		view->selection.x = MIN (view->selection_start.x, event->x);
+		view->selection.y = MIN (view->selection_start.y, event->y);
+		view->selection.width = ABS (view->selection_start.x - event->x) + 1;
+		view->selection.height = ABS (view->selection_start.y - event->y) + 1;
 	} else if (view->document) {
 		EvLink *link;
 
