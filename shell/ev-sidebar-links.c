@@ -126,13 +126,13 @@ create_loading_model (void)
 	/* Creates a fake model to indicate that we're loading */
 	retval = (GtkTreeModel *)gtk_list_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 						     G_TYPE_STRING,
-						     G_TYPE_BOOLEAN,
 						     G_TYPE_OBJECT);
 
 	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
 	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>", _("Loading..."));
 	gtk_list_store_set (GTK_LIST_STORE (retval), &iter,
 			    EV_DOCUMENT_LINKS_COLUMN_MARKUP, markup,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, NULL,
 			    -1);
 	g_free (markup);
 
@@ -224,7 +224,7 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
 
 		g_object_set (cell,
-			      "markup", page_string,
+ 			      "markup", page_string,
 			      "visible", TRUE,
 			      NULL);
 
