@@ -1694,6 +1694,15 @@ ps_document_load (EvDocument  *document,
 	return result;
 }
 
+static gboolean
+ps_document_save (EvDocument  *document,
+		  const char  *uri,
+		  GError     **error)
+{
+	g_warning ("ps_document_save not implemented"); /* FIXME */
+	return TRUE;
+}
+
 static int
 ps_document_get_n_pages (EvDocument  *document)
 {
@@ -1808,6 +1817,13 @@ ps_document_render (EvDocument  *document,
 	g_object_unref (gc);
 }
 
+static char *
+ps_document_get_text (EvDocument *document, GdkRectangle *rect)
+{
+	g_warning ("ps_document_get_text not implemented"); /* FIXME ? */
+	return NULL;
+}
+
 static EvLink *
 ps_document_get_link (EvDocument *document,
 		      int         x,
@@ -1820,6 +1836,8 @@ static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = ps_document_load;
+	iface->save = ps_document_save;
+	iface->get_text = ps_document_get_text;
 	iface->get_link = ps_document_get_link;
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->set_page = ps_document_set_page;

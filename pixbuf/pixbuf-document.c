@@ -80,6 +80,15 @@ pixbuf_document_load (EvDocument  *document,
 	return TRUE;
 }
 
+static gboolean
+pixbuf_document_save (EvDocument  *document,
+		      const char  *uri,
+		      GError     **error)
+{
+	g_warning ("pixbuf_document_save not implemented"); /* FIXME */
+	return TRUE;
+}
+
 static int
 pixbuf_document_get_n_pages (EvDocument  *document)
 {
@@ -234,6 +243,15 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
+static char *
+pixbuf_document_get_text (EvDocument *document, GdkRectangle *rect)
+{
+	/* FIXME this method should not be in EvDocument */
+	g_warning ("pixbuf_document_get_text not implemented");
+	return NULL;
+}
+
+
 static EvLink *
 pixbuf_document_get_link (EvDocument *document,
 		          int         x,
@@ -246,6 +264,8 @@ static void
 pixbuf_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = pixbuf_document_load;
+	iface->save = pixbuf_document_save;
+	iface->get_text = pixbuf_document_get_text;
 	iface->get_link = pixbuf_document_get_link;
 	iface->get_n_pages = pixbuf_document_get_n_pages;
 	iface->set_page = pixbuf_document_set_page;
