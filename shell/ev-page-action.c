@@ -29,124 +29,73 @@
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkhbox.h>
-#include <stdlib.h>
 
 struct _EvPageActionPrivate
 {
-	int current_page;
-	int total_pages;
+	EvPageCache *page_cache;
 };
 
-enum
-{
-	PROP_0,
-	PROP_CURRENT_PAGE,
-	PROP_TOTAL_PAGES
-};
 
 static void ev_page_action_init       (EvPageAction *action);
 static void ev_page_action_class_init (EvPageActionClass *class);
-
-enum
-{
-	GOTO_PAGE_SIGNAL,
-	LAST_SIGNAL
-};
-
-static guint signals[LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (EvPageAction, ev_page_action, GTK_TYPE_ACTION)
 
 #define EV_PAGE_ACTION_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_PAGE_ACTION, EvPageActionPrivate))
 
-static void
-update_label (GtkAction *action, gpointer dummy, GtkWidget *proxy)
-{
-	EvPageAction *page = EV_PAGE_ACTION (action);
-	char *text;
-	GtkWidget *label;
+enum {
+	PROP_0,
+	PROP_PAGE_CACHE,
+};
 
-	label = GTK_WIDGET (g_object_get_data (G_OBJECT (proxy), "label"));
-
-	text = g_strdup_printf (_("of %d"), page->priv->total_pages);
-	gtk_label_set_text (GTK_LABEL (label), text);
-}
+#define ENTRY_DATA      "epa-entry"
+#define PAGE_CACHE_DATA "epa-page-cache"
+#define SIGNAL_ID_DATA  "epa-signal-id"
 
 static void
-update_entry (EvPageAction *page_action, GtkWidget *entry)
+page_changed_cb (EvPageCache *page_cache,
+		 gint         page,
+		 GtkWidget   *proxy)
 {
-	char *text;
-
-	text = g_strdup_printf ("%d", page_action->priv->current_page);
-	gtk_entry_set_text (GTK_ENTRY (entry), text);
-	g_free (text);
-}
-
-static void
-sync_entry (GtkAction *action, gpointer dummy, GtkWidget *proxy)
-{
-	EvPageAction *page_action = EV_PAGE_ACTION (action);
 	GtkWidget *entry;
 
-	entry = GTK_WIDGET (g_object_get_data (G_OBJECT (proxy), "entry"));
-	update_entry (page_action, entry);
+	entry = GTK_WIDGET (g_object_get_data (G_OBJECT (proxy), ENTRY_DATA));
+	if (page_cache != NULL) {
+		gchar *page_label = ev_page_cache_get_page_label (page_cache, page);
+		gtk_entry_set_text (GTK_ENTRY (entry), page_label);
+		gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+		g_free (page_label);
+	} else {
+		gtk_entry_set_text (GTK_ENTRY (entry), "");
+	}
 }
 
 static void
 activate_cb (GtkWidget *entry, GtkAction *action)
 {
-	EvPageAction *page_action = EV_PAGE_ACTION (action);
+	EvPageAction *page = EV_PAGE_ACTION (action);
+	EvPageCache *page_cache;
 	const char *text;
-	char *endptr;
-	int page = -1;
 
 	text = gtk_entry_get_text (GTK_ENTRY (entry));
-	if (text) {
-		long value;
+	page_cache = page->priv->page_cache;
 
-		value = strtol (text, &endptr, 10);
-		if (endptr[0] == '\0') {
-			/* Page number is an integer */
-			page = MIN (G_MAXINT, value);
-		}
+	if (! ev_page_cache_set_page_label (page_cache, text)) {
+		/* rest the entry to the current page if we were unable to
+		 * change it */
+		gchar *page_label =
+			ev_page_cache_get_page_label (page_cache,
+						      ev_page_cache_get_current_page (page_cache));
+		gtk_entry_set_text (GTK_ENTRY (entry), page_label);
+		gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+		g_free (page_label);
 	}
-
-	if (page > 0 && page <= page_action->priv->total_pages) {
-		g_signal_emit (action, signals[GOTO_PAGE_SIGNAL], 0, page);
-	} else {
-		update_entry (page_action, entry);
-	}
-}
-
-static void
-entry_size_request_cb (GtkWidget      *entry,
-		       GtkRequisition *requisition,
-		       GtkAction      *action)
-{
-	PangoContext *context;
-	PangoFontMetrics *metrics;
-	int digit_width;
-
-	context = gtk_widget_get_pango_context (entry);
-	metrics = pango_context_get_metrics
-			(context, entry->style->font_desc,
-			 pango_context_get_language (context));
-
-	digit_width = pango_font_metrics_get_approximate_digit_width (metrics);
-	digit_width = PANGO_SCALE * ((digit_width + PANGO_SCALE - 1) / PANGO_SCALE);
-
-	pango_font_metrics_unref (metrics);
-
-	/* Space for 4 digits. Probably 3 would be enough but it doesnt
-	   seem to possible to calculate entry borders without using
-	   gtk private info */
-	requisition->width = PANGO_PIXELS (digit_width * 4);
 }
 
 static GtkWidget *
 create_tool_item (GtkAction *action)
 {
-	GtkWidget *hbox, *entry, *item, *label;
+	GtkWidget *hbox, *entry, *item;
 
 	hbox = gtk_hbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6); 
@@ -156,38 +105,59 @@ create_tool_item (GtkAction *action)
 	gtk_widget_show (item);
 
 	entry = gtk_entry_new ();
-	g_signal_connect (entry, "size_request",
-			  G_CALLBACK (entry_size_request_cb),
-			  action);
-	g_object_set_data (G_OBJECT (item), "entry", entry);
+	gtk_entry_set_width_chars (GTK_ENTRY (entry), 5);
+	g_object_set_data (G_OBJECT (item), ENTRY_DATA, entry);
 	gtk_widget_show (entry);
 
 	g_signal_connect (entry, "activate",
 			  G_CALLBACK (activate_cb),
 			  action);
 
-	label = gtk_label_new ("");
-	g_object_set_data (G_OBJECT (item), "label", label);
-	update_label (action, NULL, item);
-	gtk_widget_show (label);
-
 	gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (item), hbox);
 
 	return item;
 }
 
 static void
+update_page_cache (EvPageAction *page, gpointer dummy, GtkWidget *proxy)
+{
+	EvPageCache *page_cache;
+	EvPageCache *old_page_cache;
+	guint signal_id;
+
+	page_cache = page->priv->page_cache;
+	old_page_cache = (EvPageCache *) g_object_get_data (G_OBJECT (proxy), PAGE_CACHE_DATA);
+	signal_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (proxy), SIGNAL_ID_DATA));
+
+	/* clear the old signal */
+	if (signal_id > 0 && old_page_cache)
+		g_signal_handler_disconnect (old_page_cache, signal_id);
+	
+	if (page_cache != NULL) {
+		signal_id = g_signal_connect (page_cache,
+					      "page-changed",
+					      G_CALLBACK (page_changed_cb),
+					      proxy);
+		/* Set the initial value */
+		page_changed_cb (page_cache,
+				 ev_page_cache_get_current_page (page_cache),
+				 proxy);
+	} else {
+		/* Or clear the entry */
+		signal_id = 0;
+		page_changed_cb (NULL, 0, proxy);
+	}
+	g_object_set_data (G_OBJECT (proxy), PAGE_CACHE_DATA, page_cache);
+	g_object_set_data (G_OBJECT (proxy), SIGNAL_ID_DATA, GINT_TO_POINTER (signal_id));
+}
+
+static void
 connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
-	if (GTK_IS_TOOL_ITEM (proxy))
-	{
-		g_signal_connect_object (action, "notify::total-pages",
-					 G_CALLBACK (update_label),
-					 proxy, 0);
-		g_signal_connect_object (action, "notify::current-page",
-					 G_CALLBACK (sync_entry),
+	if (GTK_IS_TOOL_ITEM (proxy)) {
+		g_signal_connect_object (action, "notify::page-cache",
+					 G_CALLBACK (update_page_cache),
 					 proxy, 0);
 	}
 
@@ -195,65 +165,79 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 }
 
 static void
-ev_page_action_init (EvPageAction *action)
+ev_page_action_dispose (GObject *object)
 {
-	action->priv = EV_PAGE_ACTION_GET_PRIVATE (action);
+	EvPageAction *page = EV_PAGE_ACTION (object);
+
+	if (page->priv->page_cache) {
+		g_object_unref (page->priv->page_cache);
+		page->priv->page_cache = NULL;
+	}
+
+	G_OBJECT_CLASS (ev_page_action_parent_class)->dispose (object);
 }
 
 static void
-ev_page_action_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (ev_page_action_parent_class)->finalize (object);
-}
-
-static void
-ev_page_action_set_property (GObject *object,
-			     guint prop_id,
+ev_page_action_set_property (GObject      *object,
+			     guint         prop_id,
 			     const GValue *value,
-			     GParamSpec *pspec)
+			     GParamSpec   *pspec)
 {
-	EvPageAction *page = EV_PAGE_ACTION (object);
+	EvPageAction *page;
+	EvPageCache *page_cache;
+  
+	page = EV_PAGE_ACTION (object);
 
 	switch (prop_id)
 	{
-		case PROP_CURRENT_PAGE:
-			page->priv->current_page = g_value_get_int (value);
-			break;
-		case PROP_TOTAL_PAGES:
-			page->priv->total_pages = g_value_get_int (value);
-			break;
+	case PROP_PAGE_CACHE:
+		page_cache = page->priv->page_cache;
+		page->priv->page_cache = EV_PAGE_CACHE (g_value_dup_object (value));
+		if (page_cache)
+			g_object_unref (page_cache);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
 	}
 }
 
 static void
-ev_page_action_get_property (GObject *object,
-			     guint prop_id,
-			     GValue *value,
+ev_page_action_get_property (GObject    *object,
+			     guint       prop_id,
+			     GValue     *value,
 			     GParamSpec *pspec)
 {
-	EvPageAction *page = EV_PAGE_ACTION (object);
+	EvPageAction *page;
+  
+	page = EV_PAGE_ACTION (object);
 
 	switch (prop_id)
 	{
-		case PROP_CURRENT_PAGE:
-			g_value_set_int (value, page->priv->current_page);
-			break;
-		case PROP_TOTAL_PAGES:
-			g_value_set_int (value, page->priv->total_pages);
-			break;
+	case PROP_PAGE_CACHE:
+		g_value_set_object (value, page->priv->page_cache);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
 	}
 }
 
 void
-ev_page_action_set_current_page (EvPageAction *page, int current_page)
+ev_page_action_set_document (EvPageAction *page, EvDocument *document)
 {
-	g_object_set (page, "current-page", current_page, NULL);
+	EvPageCache *page_cache = NULL;
+
+	if (document)
+		page_cache = ev_document_get_page_cache (document);
+	
+	g_object_set (page, "page-cache", page_cache, NULL);
 }
 
-void
-ev_page_action_set_total_pages (EvPageAction *page, int total_pages)
+static void
+ev_page_action_init (EvPageAction *page)
 {
-	g_object_set (page, "total-pages", total_pages, NULL);
+	page->priv = EV_PAGE_ACTION_GET_PRIVATE (page);
 }
 
 static void
@@ -262,7 +246,7 @@ ev_page_action_class_init (EvPageActionClass *class)
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkActionClass *action_class = GTK_ACTION_CLASS (class);
 
-	object_class->finalize = ev_page_action_finalize;
+	object_class->dispose = ev_page_action_dispose;
 	object_class->set_property = ev_page_action_set_property;
 	object_class->get_property = ev_page_action_get_property;
 
@@ -270,36 +254,13 @@ ev_page_action_class_init (EvPageActionClass *class)
 	action_class->create_tool_item = create_tool_item;
 	action_class->connect_proxy = connect_proxy;
 
-	signals[GOTO_PAGE_SIGNAL] =
-		g_signal_new ("goto_page",
-			      G_OBJECT_CLASS_TYPE (object_class),
-			      G_SIGNAL_RUN_FIRST,
-			      G_STRUCT_OFFSET (EvPageActionClass, goto_page),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__INT,
-			      G_TYPE_NONE,
-			      1,
-			      G_TYPE_INT);
-
 	g_object_class_install_property (object_class,
-					 PROP_CURRENT_PAGE,
-					 g_param_spec_int ("current-page",
-							   "Current Page",
-							   "The number of current page",
-							   0,
-							   G_MAXINT,
-							   0,
-							   G_PARAM_READWRITE));
-
-	g_object_class_install_property (object_class,
-					 PROP_TOTAL_PAGES,
-					 g_param_spec_int ("total-pages",
-							   "Total Pages",
-							   "The total number of pages",
-							   0,
-							   G_MAXINT,
-							   0,
-							   G_PARAM_READWRITE));
+					 PROP_PAGE_CACHE,
+					 g_param_spec_object ("page-cache",
+							      "Page Cache",
+							      "Current page cache",
+							      EV_TYPE_PAGE_CACHE,
+							      G_PARAM_READWRITE));
 
 	g_type_class_add_private (object_class, sizeof (EvPageActionPrivate));
 }

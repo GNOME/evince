@@ -23,6 +23,7 @@
 #define EV_PAGE_ACTION_H
 
 #include <gtk/gtkaction.h>
+#include <ev-document.h>
 
 G_BEGIN_DECLS
 
@@ -54,10 +55,9 @@ struct _EvPageActionClass
 };
 
 GType ev_page_action_get_type         (void);
-void  ev_page_action_set_total_pages  (EvPageAction *page_action,
-				       int           total_pages);
-void  ev_page_action_set_current_page (EvPageAction *page_action,
-				       int           current_page);
+void  ev_page_action_set_document     (EvPageAction *page_action,
+				       EvDocument   *document);
+
 
 G_END_DECLS
 

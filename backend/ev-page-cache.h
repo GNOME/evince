@@ -45,6 +45,8 @@ char          *ev_page_cache_get_page_label  (EvPageCache  *page_cache,
 gint           ev_page_cache_get_current_page (EvPageCache *page_cache);
 void           ev_page_cache_set_current_page (EvPageCache *page_cache,
 					       int          page);
+gboolean       ev_page_cache_set_page_label   (EvPageCache *page_cache,
+					       const char  *page_label);
 void           ev_page_cache_set_link         (EvPageCache *page_cache,
 					       EvLink      *link);
 gboolean       ev_page_cache_next_page        (EvPageCache *page_cache);         

@@ -1,3 +1,12 @@
+Fri Apr  1 01:59:39 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-page-action.c: Changed to use page labels now.  Rewrote
+	completely because I didn't understand GtkActions.  I should
+	read Marco's code more carefully in the future.
+
+	* backend/ev-page-cache.h (ev_page_cache_set_page_label): New
+	function
+
 2005-03-31  Kristian Høgsberg  <krh@redhat.com>
 
 	* pdf/ev-poppler.cc (pdf_document_get_links): Update to work with

@@ -1106,7 +1106,7 @@ ev_view_class_init (EvViewClass *class)
 							      G_PARAM_READABLE));
 
 	g_object_class_install_property (object_class,
-					 PROP_STATUS,
+					 PROP_FIND_STATUS,
 					 g_param_spec_string ("find-status",
 							      "Find Status Message",
 							      "The find status message",

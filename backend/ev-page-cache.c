@@ -1,5 +1,7 @@
 #include "ev-page-cache.h"
 #include "ev-job-queue.h"
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct _EvPageCacheInfo
 {
@@ -179,6 +181,45 @@ ev_page_cache_set_current_page (EvPageCache *page_cache,
 
 	page_cache->current_page = page;
 	g_signal_emit (page_cache, signals[PAGE_CHANGED], 0, page);
+}
+
+gboolean
+ev_page_cache_set_page_label (EvPageCache *page_cache,
+			      const char  *page_label)
+{
+	gint i, page;
+	long value;
+	char *endptr = NULL;
+	
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
+	g_return_val_if_fail (page_label != NULL, FALSE);
+
+	/* First, look for a literal label match */
+	for (i = 0; i < page_cache->n_pages; i ++) {
+		if (page_cache->page_labels[i] != NULL &&
+		    ! strcmp (page_label, page_cache->page_labels[i])) {
+			ev_page_cache_set_current_page (page_cache, i);
+			return TRUE;
+		}
+	}
+
+	/* Next, parse the label, and see if the number fits */
+	value = strtol (page_label, &endptr, 10);
+	if (endptr[0] == '\0') {
+		/* Page number is an integer */
+		page = MIN (G_MAXINT, value);
+
+		/* convert from a page label to a page offset */
+		page --;
+		if (page >= 0 &&
+		    page < page_cache->n_pages &&
+		    page_cache->page_labels[page] == NULL) {
+			ev_page_cache_set_current_page (page_cache, page);
+			return TRUE;
+		}
+	}
+
+	return FALSE;
 }
 
 void

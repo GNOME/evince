@@ -479,17 +479,6 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	g_free (title);
 }
 
-static void
-update_total_pages (EvWindow *ev_window)
-{
-	GtkAction *action;
-	int pages;
-
-	pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
-	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
-	ev_page_action_set_total_pages (EV_PAGE_ACTION (action), pages);
-}
-
 /* This function assumes that ev_window just had ev_window->document set.
  */
 static gboolean
@@ -518,12 +507,6 @@ page_changed_cb (EvPageCache *page_cache,
 		 gint         page,
 		 EvWindow    *ev_window)
 {
-	GtkAction *action;
-
-	action = gtk_action_group_get_action
-		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
-
-	ev_page_action_set_current_page (EV_PAGE_ACTION (action), page);
 	update_action_sensitivity (ev_window);
 }
 
@@ -534,6 +517,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
+	GtkAction *action;
 
 	document = ev_window->priv->document;
 	ev_window->priv->page_cache = ev_document_get_page_cache (ev_window->priv->document);
@@ -554,7 +538,8 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_view_set_document (view, document);
 
 	update_window_title (document, NULL, ev_window);
-	update_total_pages (ev_window);
+	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
+	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	update_action_sensitivity (ev_window);
 }
 
@@ -2074,13 +2059,6 @@ static GtkRadioActionEntry page_view_entries[] = {
 };
 
 static void
-goto_page_cb (GtkAction *action, int page_number, EvWindow *ev_window)
-{
-	ev_page_cache_set_current_page (ev_window->priv->page_cache,
-					page_number);
-}
-
-static void
 drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 		       gint x, gint y, GtkSelectionData *selection_data,
 		       guint info, guint time, gpointer gdata)
@@ -2108,8 +2086,6 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "label", _("Page"),
 			       "tooltip", _("Select Page"),
 			       NULL);
-	g_signal_connect (action, "goto_page",
-			  G_CALLBACK (goto_page_cb), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }
