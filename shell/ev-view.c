@@ -19,6 +19,7 @@
  */
 
 #include <gtk/gtkalignment.h>
+#include <glib/gi18n.h>
 
 #include "ev-marshal.h"
 #include "ev-view.h"
@@ -42,6 +43,9 @@ struct _EvView {
 	GtkAdjustment *vadjustment;
 
         GArray *find_results;
+	int results_on_this_page;
+	int next_page_with_result;
+	double find_percent_complete;
 
 	double scale;
 };
@@ -458,6 +462,14 @@ ev_view_class_init (EvViewClass *class)
 					    NULL, NULL,
 					    ev_marshal_VOID__NONE,
 					    G_TYPE_NONE, 0);
+
+	g_signal_new ("find-status-changed",
+		      G_OBJECT_CLASS_TYPE (object_class),
+		      G_SIGNAL_RUN_LAST,
+		      0,
+		      NULL, NULL,
+		      ev_marshal_VOID__NONE,
+		      G_TYPE_NONE, 0);
 }
 
 static void
@@ -472,8 +484,73 @@ ev_view_init (EvView *view)
         view->find_results = g_array_new (FALSE,
                                           FALSE,
                                           sizeof (EvFindResult));
+	view->results_on_this_page = 0;
+	view->next_page_with_result = 0;
 }
 
+static void
+update_find_results (EvView *view)
+{
+	const EvFindResult *results;
+	int i;
+	int on_this_page;
+	int next_page_with_result;
+	int earliest_page_with_result;
+	int current_page;
+	gboolean counts_changed;
+	
+	results = (EvFindResult*) view->find_results->data;
+	current_page = ev_document_get_page (view->document);
+	next_page_with_result = 0;
+	on_this_page = 0;
+	earliest_page_with_result = 0;
+	
+	i = 0;
+	while (i < view->find_results->len) {
+		if (results[i].page_num == current_page) {
+			++on_this_page;
+		} else {
+			int delta = results[i].page_num - current_page;
+			
+			if (delta > 0 && /* result on later page */
+			    (next_page_with_result == 0 ||
+			     results[i].page_num < next_page_with_result))
+				next_page_with_result = results[i].page_num;
+
+			if (delta < 0 && /* result on a previous page */
+			    (earliest_page_with_result == 0 ||
+			     results[i].page_num < earliest_page_with_result))
+				earliest_page_with_result = results[i].page_num;
+		}
+		++i;
+	}
+
+	/* If earliest page is just the current page, there is no earliest page */
+	if (earliest_page_with_result == current_page)
+		earliest_page_with_result = 0;
+	
+	/* If no next page, then wrap and the wrapped page is the next page */
+	if (next_page_with_result == 0)
+		next_page_with_result = earliest_page_with_result;
+
+	counts_changed = FALSE;
+	if (on_this_page != view->results_on_this_page ||
+	    next_page_with_result != view->next_page_with_result) {
+		view->results_on_this_page = on_this_page;
+		view->next_page_with_result = next_page_with_result;
+		counts_changed = TRUE;
+	}
+
+	/* If there are no results at all, then the
+	 * results of ev_view_get_find_status_message() will change
+	 * to reflect the percent_complete so we have to emit the signal
+	 */
+	if (counts_changed ||
+	    view->find_results->len == 0) {
+		g_signal_emit_by_name (view,
+				       "find-status-changed");
+	}
+}
 
 static void
 found_results_callback (EvDocument         *document,
@@ -494,7 +571,8 @@ found_results_callback (EvDocument         *document,
   {
 	  int i;
 
-	  g_printerr ("%d results: ", n_results);
+	  g_printerr ("%d results %d%%: ", n_results,
+		      (int) (percent_complete * 100));
 	  i = 0;
 	  while (i < n_results) {
 		  g_printerr ("%d ", results[i].page_num);
@@ -503,6 +581,9 @@ found_results_callback (EvDocument         *document,
 	  g_printerr ("\n");
   }
 #endif
+
+  view->find_percent_complete = percent_complete;
+  update_find_results (view);
   
   gtk_widget_queue_draw (GTK_WIDGET (view));
 }
@@ -525,11 +606,14 @@ ev_view_set_document (EvView     *view,
 		int old_page = ev_view_get_page (view);
 		
 		if (view->document) {
-			g_object_unref (view->document);
                         g_signal_handlers_disconnect_by_func (view->document,
                                                               found_results_callback,
                                                               view);
                         g_array_set_size (view->find_results, 0);
+			view->results_on_this_page = 0;
+			view->next_page_with_result = 0;
+
+			g_object_unref (view->document);
                 }
 
 		view->document = document;
@@ -562,6 +646,10 @@ ev_view_set_page (EvView *view,
 			ev_document_set_page (view->document, page);
 		if (old_page != ev_document_get_page (view->document)) {
 			g_signal_emit (view, page_changed_signal, 0);
+
+			view->find_percent_complete = 0.0;
+			update_find_results (view);
+			
 			gtk_widget_queue_draw (GTK_WIDGET (view));
 		}
 	}
@@ -655,4 +743,24 @@ ev_view_fit_width (EvView *view)
 		scale = (double)GTK_WIDGET (view)->allocation.width * view->scale / width;
 
 	ev_view_zoom (view, scale, FALSE);
+}
+
+char*
+ev_view_get_find_status_message (EvView *view)
+{
+	if (view->find_results->len == 0) {
+		if (view->find_percent_complete >= (1.0 - 1e-10)) {
+			return g_strdup (_("Not found"));
+		} else {
+			return g_strdup_printf (_("%3d%% remaining to search"),
+						(int) ((1.0 - view->find_percent_complete) * 100));
+		}
+	} else if (view->results_on_this_page == 0) {
+		g_assert (view->next_page_with_result != 0);
+		return g_strdup_printf (_("Found on page %d"),
+					view->next_page_with_result);
+	} else {
+		return g_strdup_printf (_("%d found on this page"),
+					view->results_on_this_page);
+	}
 }

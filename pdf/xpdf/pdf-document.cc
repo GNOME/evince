@@ -314,13 +314,15 @@ pdf_document_search_emit_found (PdfDocumentSearch *search)
 {
         PdfDocument *pdf_document = search->document;
         int n_pages;
-        double pages_done;
+        int pages_done;
         GArray *tmp_results;
         int i;
 
         n_pages = ev_document_get_n_pages (EV_DOCUMENT (search->document));
         if (search->search_page > search->start_page) {
                 pages_done = search->search_page - search->start_page;
+        } else if (search->search_page == search->start_page) {
+                pages_done = n_pages;
         } else {
                 pages_done = n_pages - search->start_page + search->search_page;
         }
@@ -467,15 +469,16 @@ pdf_document_search_idle_callback (void *data)
                                           &xMin, &yMin, &xMax, &yMax)) {
                 /* This page has results */
                 search->other_page_flags[search->search_page] = TRUE;
-                
-                pdf_document_search_emit_found (search);
         }
-
+        
         search->search_page += 1;
         if (search->search_page > n_pages) {
                 /* wrap around */
                 search->search_page = 1;
         }
+
+        /* We do this even if nothing was found, to update the percent complete */
+        pdf_document_search_emit_found (search);
         
         return TRUE;
 
@@ -537,8 +540,11 @@ pdf_document_find_begin (EvDocumentFind   *document,
         
         search->document = pdf_document;
 
-        search->idle = g_idle_add (pdf_document_search_idle_callback,
-                                   search);
+        /* We add at low priority so the progress bar repaints */
+        search->idle = g_idle_add_full (G_PRIORITY_LOW,
+                                        pdf_document_search_idle_callback,
+                                        search,
+                                        NULL);
 
         search->output_dev = 0;
 

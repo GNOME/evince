@@ -49,6 +49,8 @@ void ev_view_normal_size (EvView *view);
 void ev_view_best_fit    (EvView *view);
 void ev_view_fit_width   (EvView *view);
 
+char* ev_view_get_find_status_message (EvView *view);
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */

@@ -1,3 +1,15 @@
+2004-12-23  Havoc Pennington  <hp@redhat.com>
+
+	* shell/ev-window.c: hook up potentially-questionable "find
+	results status text" feature - something involving the sidebar or
+	scrollbar or a continuous all-pages-on-giant-roll-of-paper-view
+	might be better in the end.
+
+	* shell/ev-view.c (ev_view_get_find_status_message): new function, 
+	with corresponding signal when it should be updated
+
+	* shell/eggfindbar.c (egg_find_bar_set_status_text): new function
+
 2004-12-22  Havoc Pennington  <hp@redhat.com>
 
 	* pdf/xpdf/pdf-document.cc (pdf_document_find_begin): make search

@@ -42,6 +42,8 @@ struct _EggFindBarPrivate
   GtkWidget *next_button;
   GtkWidget *previous_button;
   GtkWidget *case_button;
+  GtkWidget *status_separator;
+  GtkWidget *status_label;
   guint case_sensitive : 1;
 };
 
@@ -311,6 +313,13 @@ egg_find_bar_init (EggFindBar *find_bar)
   
   priv->case_button = gtk_check_button_new_with_mnemonic (_("C_ase Sensitive"));
 
+  priv->status_separator = gtk_vseparator_new ();
+  
+  priv->status_label = gtk_label_new (NULL);
+  gtk_label_set_ellipsize (GTK_LABEL (priv->status_label),
+                           PANGO_ELLIPSIZE_END);
+  gtk_misc_set_alignment (GTK_MISC (priv->status_label), 0.0, 0.5);
+  
 #if 0
  {
    GtkWidget *button_label;
@@ -339,7 +348,11 @@ egg_find_bar_init (EggFindBar *find_bar)
                       separator, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (priv->hbox),
                       priv->case_button, FALSE, FALSE, 0);
-
+  gtk_box_pack_start (GTK_BOX (priv->hbox),
+                      priv->status_separator, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (priv->hbox),
+                      priv->status_label, TRUE, TRUE, 0);
+  
   gtk_container_add (GTK_CONTAINER (find_bar), priv->hbox);
 
   gtk_widget_show (priv->hbox);
@@ -352,6 +365,7 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_widget_show (image);
   gtk_widget_show (image_back);
   gtk_widget_show (image_forward);
+  /* don't show status separator/label until they are set */
 
   gtk_widget_pop_composite_child ();
 
@@ -689,4 +703,38 @@ egg_find_bar_grab_focus (EggFindBar *find_bar)
   priv = (EggFindBarPrivate *)find_bar->private_data;
  
   gtk_widget_grab_focus (priv->find_entry);
+}
+
+/**
+ * egg_find_bar_set_status_text:
+ *
+ * Sets some text to display if there's space; typical text would
+ * be something like "5 results on this page" or "No results"
+ *
+ * @text: the text to display
+ *
+ * Since: 2.6
+ */
+void
+egg_find_bar_set_status_text (EggFindBar *find_bar,
+                              const char *text)
+{
+  EggFindBarPrivate *priv;
+
+  g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
+
+  priv = (EggFindBarPrivate *)find_bar->private_data;
+  
+  if (text == NULL || *text == '\0')
+    {
+      gtk_widget_hide (priv->status_label);
+      gtk_widget_hide (priv->status_separator);
+      gtk_label_set_text (GTK_LABEL (priv->status_label), NULL);
+    }
+  else
+    {
+      gtk_label_set_text (GTK_LABEL (priv->status_label), text);
+      gtk_widget_show (priv->status_label);
+      gtk_widget_show (priv->status_separator);
+    }
 }

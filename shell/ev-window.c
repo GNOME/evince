@@ -895,6 +895,20 @@ view_page_changed_cb (EvView   *view,
 }
 
 static void
+view_find_status_changed_cb (EvView   *view,
+			     EvWindow *ev_window)
+{
+	char *text;
+
+	text = ev_view_get_find_status_message (view);
+
+	egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
+				      text);
+
+	g_free (text);
+}
+
+static void
 find_bar_previous_cb (EggFindBar *find_bar,
 		      EvWindow   *ev_window)
 {
@@ -946,15 +960,14 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	g_printerr ("search for '%s'\n", search_string ? search_string : "(nil)");
 #endif
 
-	/* We don't require begin/end find calls to be matched up, it's really
-	 * start_find and cancel_any_find_that_may_not_be_finished
-	 */
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		if (visible && search_string) {
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), search_string, case_sensitive);
 		} else {
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
+			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
+						      NULL);
 		}
 	}
 }
@@ -1218,7 +1231,11 @@ ev_window_init (EvWindow *ev_window)
 			  "page-changed",
 			  G_CALLBACK (view_page_changed_cb),
 			  ev_window);
-
+	g_signal_connect (ev_window->priv->view,
+			  "find-status-changed",
+			  G_CALLBACK (view_find_status_changed_cb),
+			  ev_window);
+	
 	ev_window->priv->statusbar = gtk_statusbar_new ();
 	gtk_widget_show (ev_window->priv->statusbar);
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
