@@ -222,7 +222,6 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	GdkPixbuf *loading_icon;
 	gint i, n_pages;
 	GtkTreeIter iter;
-	gchar *page;
 	gint width = THUMBNAIL_WIDTH;
 	gint height = THUMBNAIL_WIDTH;
 	EvPageCache *page_cache;
@@ -249,18 +248,22 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	gtk_list_store_clear (priv->list_store);
 	for (i = 0; i < n_pages; i++) {
 		EvJob *job;
+		gchar *page_label;
+		gchar *page_string;
 
-		/* FIXME: Bah.  This is still -1 for some reason.  Need to track it down.. */
 		job = ev_job_thumbnail_new (priv->document, i, THUMBNAIL_WIDTH);
-		page = g_strdup_printf ("<i>%d</i>", i + 1); /* FIXME: replace with string. */
+		page_label = ev_page_cache_get_page_label (page_cache, i);
+		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
+
 		gtk_list_store_append (priv->list_store, &iter);
 		gtk_list_store_set (priv->list_store, &iter,
-				    COLUMN_PAGE_STRING, page,
+				    COLUMN_PAGE_STRING, page_string,
 				    COLUMN_PIXBUF, loading_icon,
 				    COLUMN_THUMBNAIL_SET, FALSE,
 				    COLUMN_JOB, job,
 				    -1);
-		g_free (page);
+		g_free (page_label);
+		g_free (page_string);
 		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
 		g_object_set_data_full (G_OBJECT (job), "tree_iter",
 					gtk_tree_iter_copy (&iter),

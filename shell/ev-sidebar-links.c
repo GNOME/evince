@@ -51,7 +51,7 @@ static void links_page_num_func  (GtkTreeViewColumn *tree_column,
 				  GtkCellRenderer   *cell,
 				  GtkTreeModel      *tree_model,
 				  GtkTreeIter       *iter,
-				  gpointer           data);
+				  EvSidebarLinks    *sidebar_links);
 static void update_page_callback (EvPageCache       *page_cache,
 				  gint               current_page,
 				  EvSidebarLinks    *sidebar_links);
@@ -189,7 +189,7 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
 	gtk_tree_view_column_set_cell_data_func (GTK_TREE_VIEW_COLUMN (column), renderer,
 						 (GtkTreeCellDataFunc) links_page_num_func,
-						 NULL, NULL);
+						 ev_sidebar_links, NULL);
 
 	
 }
@@ -207,7 +207,7 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 		     GtkCellRenderer   *cell,
 		     GtkTreeModel      *tree_model,
 		     GtkTreeIter       *iter,
-		     gpointer           data)
+		     EvSidebarLinks    *sidebar_links)
 {
 	EvLink *link;
 
@@ -217,12 +217,19 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 	
 	if (link != NULL &&
 	    ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
-		gchar *markup = g_strdup_printf ("<i>%d</i>", ev_link_get_page (link));
+		gchar *page_label;
+		gchar *page_string;
+
+		page_label = ev_page_cache_get_page_label (sidebar_links->priv->page_cache, ev_link_get_page (link));
+		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
+
 		g_object_set (cell,
-			      "markup", markup,
+			      "markup", page_string,
 			      "visible", TRUE,
 			      NULL);
-		g_free (markup);
+
+		g_free (page_label);
+		g_free (page_string);
 	} else {
 		g_object_set (cell,
 			      "visible", FALSE,

@@ -261,6 +261,26 @@ pdf_document_get_page_size (EvDocument   *document,
 			    width, height);
 }
 
+static char *
+pdf_document_get_page_label (EvDocument *document,
+			     int         page)
+{
+	PopplerPage *poppler_page = NULL;
+	char *label = NULL;
+
+	if (page == -1)
+		poppler_page = PDF_DOCUMENT (document)->page;
+	else
+		poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
+							  page);
+
+	g_object_get (poppler_page,
+		      "label", &label,
+		      NULL);
+
+	return label;
+}
+
 static GList *
 pdf_document_get_links (EvDocument *document)
 {
@@ -359,6 +379,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page = pdf_document_get_page;
 	iface->set_scale = pdf_document_set_scale;
 	iface->get_page_size = pdf_document_get_page_size;
+	iface->get_page_label = pdf_document_get_page_label;
 	iface->get_links = pdf_document_get_links;
 	iface->render_pixbuf = pdf_document_render_pixbuf;
 };

@@ -39,7 +39,8 @@ void           ev_page_cache_get_size         (EvPageCache *page_cache,
 					       gfloat       scale,
 					       gint        *width,
 					       gint        *height);
-
+char          *ev_page_cache_get_page_label  (EvPageCache  *page_cache,
+					      gint          page);
 /* Navigation */
 gint           ev_page_cache_get_current_page (EvPageCache *page_cache);
 void           ev_page_cache_set_current_page (EvPageCache *page_cache,

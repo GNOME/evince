@@ -701,11 +701,11 @@ ev_view_button_press_event (GtkWidget      *widget,
 }
 
 static char *
-status_message_from_link (EvLink *link)
+status_message_from_link (EvView *view, EvLink *link)
 {
 	EvLinkType type;
 	char *msg = NULL;
-	int page;
+	char *page_label;
 
 	type = ev_link_get_link_type (link);
 	
@@ -715,8 +715,9 @@ status_message_from_link (EvLink *link)
 				msg = g_strdup (ev_link_get_title (link));
 			break;
 		case EV_LINK_TYPE_PAGE:
-			page = ev_link_get_page (link);
-			msg = g_strdup_printf (_("Go to page %d"), page);
+			page_label = ev_page_cache_get_page_label (view->page_cache, ev_link_get_page (link));
+			msg = g_strdup_printf (_("Go to page %s"), page_label);
+			g_free (page_label);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
 			msg = g_strdup (ev_link_get_uri (link));
@@ -874,7 +875,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
                 if (link) {
 			char *msg;
 
-			msg = status_message_from_link (link);
+			msg = status_message_from_link (view, link);
 			ev_view_set_status (view, msg);
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 			g_free (msg);

@@ -79,6 +79,8 @@ struct _EvDocumentIface
 					 int           page,
 					 int          *width,
 					 int          *height);
+	char	  * (* get_page_label)  (EvDocument   *document,
+					 int           page);
 	char	  * (* get_text)	(EvDocument   *document,
 					 GdkRectangle *rect);
 	EvLink    * (* get_link)	(EvDocument   *document,
@@ -111,6 +113,8 @@ void       ev_document_get_page_size (EvDocument    *document,
 				      int            page,
 				      int           *width,
 				      int           *height);
+char      *ev_document_get_page_label(EvDocument    *document,
+				     int             page);
 char      *ev_document_get_text      (EvDocument    *document,
 				      GdkRectangle  *rect);
 EvLink    *ev_document_get_link      (EvDocument    *document,

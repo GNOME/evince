@@ -1,3 +1,22 @@
+Thu Mar 31 13:27:50 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document.c: (ev_document_get_page_label):
+	* backend/ev-document.h:
+	* backend/ev-page-cache.c: (_ev_page_cache_new),
+	(ev_page_cache_get_page_label):
+	* backend/ev-page-cache.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_construct),
+	(links_page_num_func):
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-view.c: (status_message_from_link),
+	(ev_view_motion_notify_event):
+	* shell/ev-window.c: (document_supports_sidebar): Add in page
+	label support.  It's not perfect yet, but it's the first 'feature'
+	in a while.
+        Also, fix a bogus comment noticed by crispin. 
+
 Thu Mar 31 01:21:58 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* Makefile.am: Remove pixbuf backend for now

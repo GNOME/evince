@@ -16,6 +16,7 @@ struct _EvPageCache
 	gint current_page;
 	int n_pages;
 	char *title;
+	char **page_labels;
 
 	gboolean uniform;
 	gint uniform_width;
@@ -100,6 +101,7 @@ _ev_page_cache_new (EvDocument *document)
 	page_cache->uniform = TRUE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
 	page_cache->title = ev_document_get_title (document);
+	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 
 	ev_document_set_scale (document, 1.0);
 	for (i = 0; i < page_cache->n_pages; i++) {
@@ -107,6 +109,7 @@ _ev_page_cache_new (EvDocument *document)
 		gint page_height = 0;
 
 		ev_document_get_page_size (document, i, &page_width, &page_height);
+		page_cache->page_labels[i] = ev_document_get_page_label (document, i);
 
 		if (i == 0) {
 			page_cache->uniform_width = page_width;
@@ -228,6 +231,19 @@ ev_page_cache_get_size (EvPageCache *page_cache,
 		*height = (*height) * scale;
 
 }
+gchar *
+ev_page_cache_get_page_label (EvPageCache *page_cache,
+			      gint         page)
+{
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), NULL);
+	g_return_val_if_fail (page >= 0 && page < page_cache->n_pages, NULL);
+
+	if (page_cache->page_labels[page] == NULL)
+		return g_strdup_printf ("%d", page + 1);
+
+	return g_strdup (page_cache->page_labels[page]);
+}
+
 
 gboolean
 ev_page_cache_next_page (EvPageCache *page_cache)

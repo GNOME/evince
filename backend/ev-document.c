@@ -202,6 +202,19 @@ ev_document_get_page_size   (EvDocument   *document,
 }
 
 char *
+ev_document_get_page_label(EvDocument    *document,
+			   int             page)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	LOG ("ev_document_get_page_label");
+	if (iface->get_page_label == NULL)
+		return NULL;
+
+	return iface->get_page_label (document, page);
+}
+
+char *
 ev_document_get_text (EvDocument   *document,
 		      GdkRectangle *rect)
 {

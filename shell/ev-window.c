@@ -495,7 +495,6 @@ update_total_pages (EvWindow *ev_window)
 static gboolean
 document_supports_sidebar (EvDocument *document)
 {
-        /* FIXME: Remove the (TRUE ||) after links are fixed in poppler-glib */
 	return (EV_IS_DOCUMENT_THUMBNAILS (document) && (EV_IS_DOCUMENT_LINKS (document)));
 }
 
