@@ -1,5 +1,14 @@
 2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-view.c: (ev_view_get_offsets), (view_rect_to_doc_rect),
+	(doc_rect_to_view_rect), (ev_view_size_allocate),
+	(expose_bin_window), (ev_view_select_all), (page_changed_callback),
+	(scale_changed_callback):
+
+	Do not cache offsets in size_allocate.
+
+2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-view.c: (ev_view_size_allocate):
 
 	Calculate offsets before calling the parent
