@@ -189,6 +189,7 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, "ViewNormalSize", document!=NULL);
 	set_action_sensitive (ev_window, "ViewBestFit", document!=NULL);
 	set_action_sensitive (ev_window, "ViewPageWidth", document!=NULL);
+	set_action_sensitive (ev_window, "ViewReload", document!=NULL);
 
         /* Go menu */
 	if (document) {
@@ -1469,6 +1470,23 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
+{
+	char *uri;
+	int page;
+
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	page = ev_document_get_page (ev_window->priv->document);
+	uri = g_strdup (ev_window->priv->uri);
+
+	ev_window_open (ev_window, uri);
+	ev_window_open_page (ev_window, page);
+
+	g_free (uri);
+}
+
+static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -1955,6 +1973,9 @@ static GtkActionEntry entries[] = {
         { "ViewNormalSize", GTK_STOCK_ZOOM_100, NULL, "<control>0",
           N_("Reset the zoom level to the default value"),
           G_CALLBACK (ev_window_cmd_view_normal_size) },
+        { "ViewReload", GTK_STOCK_REFRESH, N_("_Reload"), "<control>R",
+          N_("Reload the document"),
+          G_CALLBACK (ev_window_cmd_view_reload) },
 
         /* Go menu */
         { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "Page_Up",
