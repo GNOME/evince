@@ -12,7 +12,13 @@
 extern "C" {
 #define GString G_String
 #include <gnome.h>
+
+#if USING_OAF
+#include <liboaf/liboaf.h>
+#else
 #include <libgnorba/gnorba.h>
+#endif
+
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
 #include <bonobo.h>
@@ -39,7 +45,7 @@ struct _Container {
   BonoboUIHandler    *uih;
   
   GtkWidget	    *app;
-  GtkScrolledWindow *scroll;
+  GtkWidget	    *slot;
   GtkWidget	    *view_widget;
   Component         *component;
 };
@@ -111,7 +117,12 @@ extern "C" {
     g_return_val_if_fail (container != NULL, FALSE);
     g_return_val_if_fail (container->view_widget == NULL, FALSE);
 
+#if USING_OAF
+    comp = container_activate_component (container, "OAFIID:gpdf_componet:892f2727-e2ec-423c-91ad-6f7b75fec6c8");
+
+#else
     comp = container_activate_component (container, "bonobo-object:application-x-pdf");
+#endif
     if (!comp || !(object = comp->server)) {
       gnome_error_dialog (_("Could not launch bonobo object."));
       return FALSE;
@@ -349,10 +360,7 @@ container_set_view (Container *container, Component *component)
 	container->view_widget = view_widget;
 	container->component   = component;
 
-	/*
-	 * Show the component.
-	 */
-	gtk_scrolled_window_add_with_viewport (container->scroll, view_widget);
+	gtk_container_add (GTK_CONTAINER (container->slot), view_widget);
 
 	/*
 	 * Activate it ( get it to merge menus etc. )
@@ -360,7 +368,7 @@ container_set_view (Container *container, Component *component)
 	bonobo_view_frame_view_activate (view_frame);
 	bonobo_view_frame_set_covered   (view_frame, FALSE);
 
-	gtk_widget_show_all (GTK_WIDGET (container->scroll));
+	gtk_widget_show_all (GTK_WIDGET (container->slot));
 }
 
 static BonoboObjectClient *
@@ -373,8 +381,7 @@ container_launch_component (BonoboClientSite *client_site,
 	/*
 	 * Launch the component.
 	 */
-	object_server = bonobo_object_activate_with_goad_id (
-		NULL, component_goad_id, GOAD_ACTIVATE_SHLIB, NULL);
+	object_server = bonobo_object_activate (component_goad_id, 0);
 
 	if (object_server == NULL)
 		return NULL;
@@ -473,108 +480,8 @@ extern "C" {
       tmp_list = g_list_next (tmp_list);
     }
   }
-  
-  /*
-   * GtkWidget key_press method override
-   *
-   * Scrolls the window on keypress
-   */
-  static gint
-  key_press_event_cb (GtkWidget *widget, GdkEventKey *event)
-  {
-    Container *container = (Container *) gtk_object_get_data (GTK_OBJECT (widget), "container_data");
-    Component *component;
-    GtkScrolledWindow *win;
-    float              delta;
 
-    g_return_val_if_fail (container != NULL, FALSE);
-
-    win       = container->scroll;
-    component = container->component;
-    if (component == NULL || win == NULL)
-      return FALSE;
-
-    /*
-     * Scrolling the view.
-     */
-    if (event->keyval == GDK_Up) {
-      GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment (win);
-
-      if (event->state & GDK_CONTROL_MASK)
-	delta = adj->step_increment * 3;
-      else
-	delta = adj->step_increment;
-
-      adj->value = CLAMP (adj->value - delta,
-			  adj->lower, adj->upper - adj->page_size);
-
-      gtk_adjustment_value_changed (adj);
-      return TRUE;
-    } else if (event->keyval == GDK_Down) {
-      GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment (win);
-
-      if (event->state & GDK_CONTROL_MASK)
-	delta = adj->step_increment * 3;
-      else
-	delta = adj->step_increment;
-
-      adj->value = CLAMP (adj->value + delta,
-			  adj->lower, adj->upper - adj->page_size);
-      gtk_adjustment_value_changed (adj);
-      return TRUE;
-    } else if (event->keyval == GDK_Left) {
-      GtkAdjustment *adj = gtk_scrolled_window_get_hadjustment (win);
-
-      if (event->state & GDK_CONTROL_MASK)
-	delta = adj->step_increment * 3;
-      else
-	delta = adj->step_increment;
-
-      adj->value = CLAMP (adj->value - delta,
-			  adj->lower, adj->upper - adj->page_size);
-      gtk_adjustment_value_changed (adj);
-      return TRUE;
-    } else if (event->keyval == GDK_Right) {
-      GtkAdjustment *adj = gtk_scrolled_window_get_hadjustment (win);
-
-      if (event->state & GDK_CONTROL_MASK)
-	delta = adj->step_increment * 3;
-      else
-	delta = adj->step_increment;
-
-      adj->value = CLAMP (adj->value + delta,
-			  adj->lower, adj->upper - adj->page_size);
-      gtk_adjustment_value_changed (adj);
-      return TRUE;
-
-      /*
-       * Various shortcuts mapped to verbs.
-       */
-
-    } else if (event->keyval == GDK_Home) {
-      bonobo_view_frame_view_do_verb (component->view_frame, VERB_FIRST);
-      return TRUE;
-    } else if (event->keyval == GDK_End) {
-      bonobo_view_frame_view_do_verb (component->view_frame, VERB_LAST);
-      return TRUE;
-    } else if (event->keyval == GDK_Page_Down ||
-	       event->keyval == GDK_Next) {
-      bonobo_view_frame_view_do_verb (component->view_frame, VERB_NEXT);
-      return TRUE;
-    } else if (event->keyval == GDK_Page_Up ||
-	       event->keyval == GDK_Prior) {
-      bonobo_view_frame_view_do_verb (component->view_frame, VERB_PREV);
-      return TRUE;
-    } else if (event->keyval == GDK_plus ||
-	       event->keyval == GDK_equal) {
-      bonobo_view_frame_view_do_verb (component->view_frame, VERB_Z_IN);
-    } else if (event->keyval == GDK_underscore ||
-	       event->keyval == GDK_minus) {
-      bonobo_view_frame_view_do_verb (component->view_frame, VERB_Z_OUT);
-    }    
-    return FALSE;
-  }
-}
+}  
 
 static void
 container_create_menus (Container *container)
@@ -632,14 +539,12 @@ container_new (const char *fname)
 
 	container->container   = bonobo_container_new ();
 	container->view_widget = NULL;
-	container->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
-	gtk_scrolled_window_set_policy (container->scroll, GTK_POLICY_ALWAYS,
-					GTK_POLICY_ALWAYS);
-	gnome_app_set_contents (GNOME_APP (container->app), GTK_WIDGET (container->scroll));
+	container->slot = gtk_event_box_new ();
+	gtk_widget_show (container->slot);
+
+	gnome_app_set_contents (GNOME_APP (container->app), GTK_WIDGET (container->slot));
 
 	gtk_object_set_data (GTK_OBJECT (container->app), "container_data", container);
-	gtk_signal_connect  (GTK_OBJECT (container->app), "key_press_event",
-			     GTK_SIGNAL_FUNC (key_press_event_cb), NULL);
 	gtk_signal_connect  (GTK_OBJECT (container->app), "delete_event",
 			     GTK_SIGNAL_FUNC (container_destroy_cb), container);
 
@@ -681,14 +586,23 @@ main (int argc, char **argv)
   
   CORBA_exception_init (&ev);
   
+
+#if USING_OAF
+  gnomelib_register_popt_table (oaf_popt_options, "OAF");
+  gnome_init_with_popt_table("PDFViewer", "0.0.1",
+			     argc, argv,
+			     gpdf_popt_options, 0, &ctx); 
+  orb = oaf_init (argc, argv);
+#else
   gnome_CORBA_init_with_popt_table ("PDFViewer", "0.0.1",
 				    &argc, argv,
 				    gpdf_popt_options, 0, &ctx,
 				    GNORBA_INIT_SERVER_FUNC, &ev);
 
-  CORBA_exception_free (&ev);
-
   orb = gnome_CORBA_ORB ();
+#endif
+
+  CORBA_exception_free (&ev);
 
   if (bonobo_init (orb, NULL, NULL) == FALSE)
     g_error (_("Could not initialize Bonobo!\n"));

@@ -1,3 +1,10 @@
+
+if USING_OAF
+OBJECT_DIRECTORY_LIBS=$(OAF_LIBS) $(GNOMEUI_LIBS)
+else
+OBJECT_DIRECTORY_LIBS=$(GNOMEGNORBA_LIBS)
+endif
+
 INCLUDES =					\
 	-I$(top_srcdir)/goo			\
 	-I$(top_srcdir)/ltk			\
@@ -70,7 +77,7 @@ gpdf_LDADD =			\
 	$(GTK_LIBS)		\
 	$(GNOME_LIBDIR)		\
 	-lbonobo		\
-	$(GNOMEGNORBA_LIBS)	\
+	$(OBJECT_DIRECTORY_LIBS) \
 	$(EXTRA_GNOME_LIBS)	\
 	$(INTLLIBS)
 
@@ -90,7 +97,7 @@ bonobo_application_x_pdf_LDADD =	\
 	$(GTK_LIBS)			\
 	$(GNOME_LIBDIR)			\
 	-lbonobo			\
-	$(GNOMEGNORBA_LIBS)		\
+	$(OBJECT_DIRECTORY_LIBS)	\
 	$(EXTRA_GLIB_LIBS)		\
 	$(INTLLIBS)
 
@@ -162,8 +169,16 @@ ltk = 			\
 	xpdf-top.ltk	\
 	xpdf.ltk
 
-gnorbadir = $(sysconfdir)/CORBA/servers
-gnorba_DATA = application-x-pdf.gnorba
+goaddir = $(sysconfdir)/CORBA/servers
+oafdir = $(datadir)/oaf
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(gnorba_DATA) config.h
+if USING_OAF
+oaf_DATA = $(OAF_FILES)
+else
+goad_DATA = $(GOAD_FILES)
+endif
 
+GOAD_FILES = application-x-pdf.gnorba
+OAF_FILES = application-x-pdf.oafinfo
+
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(GOAD_FILES) $(OAF_FILES) config.h
