@@ -206,11 +206,11 @@ ev_job_render_run (EvJobRender *job)
 
 	g_mutex_lock (EV_DOC_MUTEX);
 
-	ev_document_set_page (EV_JOB (job)->document, job->page);
-	ev_document_set_scale (EV_JOB (job)->document, job->scale);
-	job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document);
+	job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document,
+						 job->page,
+						 job->scale);
 	if (job->include_links)
-		job->link_mapping = ev_document_get_links (EV_JOB (job)->document);
+		job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->page);
 	EV_JOB (job)->finished = TRUE;
 
 	g_mutex_unlock (EV_DOC_MUTEX);

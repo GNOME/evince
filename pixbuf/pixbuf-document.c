@@ -36,7 +36,6 @@ struct _PixbufDocument
 
 	GdkPixbuf *pixbuf;
 	GdkDrawable *target;
-	gdouble scale;
 
 	gint x_offset, y_offset;
 };
@@ -94,48 +93,29 @@ pixbuf_document_get_n_pages (EvDocument  *document)
 }
 
 static void
-pixbuf_document_set_page (EvDocument  *document,
-			  int          page)
-{
-	/* Do nothing */
-}
-
-static int
-pixbuf_document_get_page (EvDocument  *document)
-{
-	return 1;
-}
-
-static void
-pixbuf_document_set_scale (EvDocument  *document,
-			   double       scale)
-{
-	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-
-	pixbuf_document->scale = scale;
-}
-
-static void
 pixbuf_document_get_page_size (EvDocument   *document,
 			       int           page,
-			       int          *width,
-			       int          *height)
+			       double       *width,
+			       double       *height)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 
 	if (width)
-		*width = gdk_pixbuf_get_width (pixbuf_document->pixbuf) * pixbuf_document->scale;
+		*width = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
 	if (height)
-		*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf) * pixbuf_document->scale;
+		*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
+
+	printf ("get_page_size, page=%d, *width=%f, *height=%f\n",
+		page, *width, *height);
 }
 
 static GdkPixbuf*
-pixbuf_document_render_pixbuf (EvDocument  *document)
+pixbuf_document_render_pixbuf (EvDocument  *document, int page, double scale)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 	return gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
-					gdk_pixbuf_get_width (pixbuf_document->pixbuf) * pixbuf_document->scale,
-					gdk_pixbuf_get_height (pixbuf_document->pixbuf) * pixbuf_document->scale,
+					gdk_pixbuf_get_width (pixbuf_document->pixbuf) * scale,
+					gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale,
 					GDK_INTERP_BILINEAR);
 }
 
@@ -190,19 +170,10 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 }
 
 static char *
-pixbuf_document_get_text (EvDocument *document, GdkRectangle *rect)
+pixbuf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 {
 	/* FIXME this method should not be in EvDocument */
 	g_warning ("pixbuf_document_get_text not implemented");
-	return NULL;
-}
-
-
-static EvLink *
-pixbuf_document_get_link (EvDocument *document,
-		          int         x,
-		          int	      y)
-{
 	return NULL;
 }
 
@@ -212,11 +183,7 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->load = pixbuf_document_load;
 	iface->save = pixbuf_document_save;
 	iface->get_text = pixbuf_document_get_text;
-	iface->get_link = pixbuf_document_get_link;
 	iface->get_n_pages = pixbuf_document_get_n_pages;
-	iface->set_page = pixbuf_document_set_page;
-	iface->get_page = pixbuf_document_get_page;
-	iface->set_scale = pixbuf_document_set_scale;
 	iface->get_page_size = pixbuf_document_get_page_size;
 	iface->render_pixbuf = pixbuf_document_render_pixbuf;
 }
@@ -269,8 +236,6 @@ pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface
 static void
 pixbuf_document_init (PixbufDocument *pixbuf_document)
 {
-	pixbuf_document->scale = 1.0;
-
 	pixbuf_document->x_offset = 0;
 	pixbuf_document->y_offset = 0;
 }

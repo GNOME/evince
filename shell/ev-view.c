@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
 #include <gtk/gtkalignment.h>
 #include <glib/gi18n.h>
 #include <gtk/gtkbindings.h>
@@ -94,7 +95,7 @@ struct _EvView {
 	gboolean pressed_button;
 	gboolean has_selection;
 	GdkPoint selection_start;
-	GdkRectangle selection;
+	EvRectangle selection;
 	EvViewCursor cursor;
 
 	GtkAdjustment *hadjustment;
@@ -257,27 +258,27 @@ ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
 }
 
 static void
-view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, GdkRectangle *doc_rect)
+view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, EvRectangle *doc_rect)
 {
 	int x_offset, y_offset;
 
 	ev_view_get_offsets (view, &x_offset, &y_offset);
-	doc_rect->x = (view_rect->x - x_offset) / view->scale;
-	doc_rect->y = (view_rect->y - y_offset) / view->scale;
-	doc_rect->width = view_rect->width / view->scale;
-	doc_rect->height = view_rect->height / view->scale;
+	doc_rect->x1 = (double) (view_rect->x - x_offset) / view->scale;
+	doc_rect->y1 = (double) (view_rect->y - y_offset) / view->scale;
+	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
+	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
 
 static void
-doc_rect_to_view_rect (EvView *view, GdkRectangle *doc_rect, GdkRectangle *view_rect)
+doc_rect_to_view_rect (EvView *view, EvRectangle *doc_rect, GdkRectangle *view_rect)
 {
 	int x_offset, y_offset;
 
 	ev_view_get_offsets (view, &x_offset, &y_offset);
-	view_rect->x = doc_rect->x * view->scale + x_offset;
-	view_rect->y = doc_rect->y * view->scale + y_offset;
-	view_rect->width = doc_rect->width * view->scale;
-	view_rect->height = doc_rect->height * view->scale;
+	view_rect->x = floor (doc_rect->x1 * view->scale) + x_offset;
+	view_rect->y = floor (doc_rect->y1 * view->scale) + y_offset;
+	view_rect->width = ceil (doc_rect->x2 * view->scale) + x_offset - view_rect->x;
+	view_rect->height = ceil (doc_rect->y2 * view->scale) + y_offset - view_rect->y;
 }
 
 
@@ -436,9 +437,6 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	GdkPixbuf *pixbuf;
 	GdkColor *fill_color_gdk;
 	guint fill_color;
-	int x_offset, y_offset;
-
-	ev_view_get_offsets (EV_VIEW (widget), &x_offset, &y_offset);
 
 	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
 	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | alpha;
@@ -449,7 +447,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 
 	gdk_draw_pixbuf (window, NULL, pixbuf,
 			 0, 0,
-			 rect->x + x_offset, rect->y + y_offset,
+			 rect->x, rect->y,
 			 rect->width, rect->height,
 			 GDK_RGB_DITHER_NONE,
 			 0, 0);
@@ -459,7 +457,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	gc = gdk_gc_new (window);
 	gdk_gc_set_rgb_fg_color (gc, fill_color_gdk);
 	gdk_draw_rectangle (window, gc, FALSE,
-			    rect->x + x_offset, rect->y + y_offset,
+			    rect->x, rect->y,
 			    rect->width - 1,
 			    rect->height - 1);
 	g_object_unref (gc);
@@ -478,19 +476,22 @@ highlight_find_results (EvView *view)
 	find = EV_DOCUMENT_FIND (view->document);
 
 	g_mutex_lock (EV_DOC_MUTEX);
-	results = ev_document_find_get_n_results (find);
+	results = ev_document_find_get_n_results (find, view->current_page);
 	g_mutex_unlock (EV_DOC_MUTEX);
 
 	for (i = 0; i < results; i++) {
-		GdkRectangle rectangle;
+		EvRectangle rectangle;
+		GdkRectangle view_rectangle;
 		guchar alpha;
 
 		alpha = (i == view->find_result) ? 0x90 : 0x20;
 		g_mutex_lock (EV_DOC_MUTEX);
-		ev_document_find_get_result (find, i, &rectangle);
+		ev_document_find_get_result (find, view->current_page,
+					     i, &rectangle);
 		g_mutex_unlock (EV_DOC_MUTEX);
+		doc_rect_to_view_rect (view, &rectangle, &view_rectangle);
 		draw_rubberband (GTK_WIDGET (view), view->bin_window,
-				 &rectangle, alpha);
+				 &view_rectangle, alpha);
         }
 }
 
@@ -617,12 +618,12 @@ void
 ev_view_copy (EvView *ev_view)
 {
 	GtkClipboard *clipboard;
-	GdkRectangle selection;
 	char *text;
 
-	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
 	g_mutex_lock (EV_DOC_MUTEX);
-	text = ev_document_get_text (ev_view->document, &selection);
+	text = ev_document_get_text (ev_view->document,
+				     ev_view->current_page,
+				     &ev_view->selection);
 	g_mutex_unlock (EV_DOC_MUTEX);
 
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
@@ -638,12 +639,12 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 			gpointer          data)
 {
 	EvView *ev_view = EV_VIEW (data);
-	GdkRectangle selection;
 	char *text;
 
-	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
 	g_mutex_lock (EV_DOC_MUTEX);
-	text = ev_document_get_text (ev_view->document, &selection);
+	text = ev_document_get_text (ev_view->document,
+				     ev_view->current_page,
+				     &ev_view->selection);
 	g_mutex_unlock (EV_DOC_MUTEX);
 	gtk_selection_data_set_text (selection_data, text, -1);
 }
@@ -1207,12 +1208,13 @@ update_find_status_message (EvView *view)
 	char *message;
 
 //	g_mutex_lock (EV_DOC_MUTEX);
-	if (ev_document_get_page (view->document) == view->find_page) {
+	if (view->current_page == view->find_page) {
 		int results;
 
 //		g_mutex_lock (EV_DOC_MUTEX);
 		results = ev_document_find_get_n_results
-				(EV_DOCUMENT_FIND (view->document));
+				(EV_DOCUMENT_FIND (view->document),
+				 view->current_page);
 //		g_mutex_unlock (EV_DOC_MUTEX);
 		/* TRANS: Sometimes this could be better translated as
 		   "%d hit(s) on this page".  Therefore this string
@@ -1280,20 +1282,22 @@ static void
 jump_to_find_result (EvView *view)
 {
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
-	GdkRectangle rect;
+	EvRectangle rect;
+	GdkRectangle view_rect;
 	int n_results;
 
 	g_mutex_lock (EV_DOC_MUTEX);
-	n_results = ev_document_find_get_n_results (find);
+	n_results = ev_document_find_get_n_results (find, view->current_page);
 	g_mutex_unlock (EV_DOC_MUTEX);
 
 	if (n_results > view->find_result) {
 		g_mutex_lock (EV_DOC_MUTEX);
 		ev_document_find_get_result
-			(find, view->find_result, &rect);
+			(find, view->current_page, view->find_result, &rect);
 		g_mutex_unlock (EV_DOC_MUTEX);
 
-		ensure_rectangle_is_visible (view, &rect);
+		doc_rect_to_view_rect (view, &rect, &view_rect);
+		ensure_rectangle_is_visible (view, &view_rect);
 	}
 }
 
@@ -1334,12 +1338,8 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 	jump_to_find_result (view);
 	update_find_status_message (view);
 
-#if 0
-	/* FIXME: */
-	if (ev_document_get_page (document) == page) {
+	if (view->current_page == page)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
-	}
-#endif
 }
 /*** Public API ***/
 
@@ -1441,6 +1441,12 @@ ev_view_set_document (EvView     *view,
 
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
+}
+
+int
+ev_view_get_page        (EvView     *view)
+{
+	return view->current_page;
 }
 
 static void
@@ -1593,7 +1599,7 @@ ev_view_find_next (EvView *view)
 
 	page_cache = ev_document_get_page_cache (view->document);
 	g_mutex_lock (EV_DOC_MUTEX);
-	n_results = ev_document_find_get_n_results (find);
+	n_results = ev_document_find_get_n_results (find, view->current_page);
 	g_mutex_unlock (EV_DOC_MUTEX);
 
 	n_pages = ev_page_cache_get_n_pages (page_cache);
@@ -1625,7 +1631,7 @@ ev_view_find_previous (EvView *view)
 	page_cache = ev_document_get_page_cache (view->document);
 
 	g_mutex_lock (EV_DOC_MUTEX);
-	n_results = ev_document_find_get_n_results (find);
+	n_results = ev_document_find_get_n_results (find, view->current_page);
 	g_mutex_unlock (EV_DOC_MUTEX);
 
 	n_pages = ev_page_cache_get_n_pages (page_cache);

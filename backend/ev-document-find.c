@@ -68,6 +68,7 @@ ev_document_find_base_init (gpointer g_class)
 
 void
 ev_document_find_begin (EvDocumentFind   *document_find,
+			int               page,
                         const char       *search_string,
                         gboolean          case_sensitive)
 {
@@ -75,7 +76,7 @@ ev_document_find_begin (EvDocumentFind   *document_find,
 
         g_return_if_fail (search_string != NULL);
         
-	iface->begin (document_find, search_string, case_sensitive);
+	iface->begin (document_find, page, search_string, case_sensitive);
 }
 
 void
@@ -94,19 +95,21 @@ ev_document_find_page_has_results (EvDocumentFind *document_find,
 }
 
 int
-ev_document_find_get_n_results (EvDocumentFind *document_find)
+ev_document_find_get_n_results (EvDocumentFind *document_find,
+				int             page)
 {
 	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	return iface->get_n_results (document_find);
+	return iface->get_n_results (document_find, page);
 }
 
 gboolean
 ev_document_find_get_result (EvDocumentFind *document_find,
+			     int             page,
 			     int             n_result,
-			     GdkRectangle   *rectangle)
+			     EvRectangle    *rectangle)
 {
 	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	return iface->get_result (document_find, n_result, rectangle);
+	return iface->get_result (document_find, page, n_result, rectangle);
 }
 
 double

@@ -54,13 +54,16 @@ typedef enum
 	EV_DOCUMENT_ERROR_ENCRYPTED
 } EvDocumentError;
 
+typedef struct {
+	double x1;
+	double y1;
+	double x2;
+	double y2;
+} EvRectangle;
+
 struct _EvDocumentIface
 {
 	GTypeInterface base_iface;
-
-	/* Signals */
-	void	    (* page_changed)	(EvDocument *document);
-	void        (* scale_changed)    (EvDocument *document);
 
 	/* Methods  */
 	gboolean    (* load)	        (EvDocument   *document,
@@ -70,24 +73,20 @@ struct _EvDocumentIface
 					 const char   *uri,
 					 GError      **error);
 	int         (* get_n_pages)     (EvDocument   *document);
-	void	    (* set_page)	(EvDocument   *document,
-					 int           page);
-	int	    (* get_page)	(EvDocument   *document);
-	void	    (* set_scale)       (EvDocument   *document,
-					 double        scale);
 	void	    (* get_page_size)   (EvDocument   *document,
 					 int           page,
-					 int          *width,
-					 int          *height);
+					 double       *width,
+					 double       *height);
 	char	  * (* get_page_label)  (EvDocument   *document,
 					 int           page);
 	char	  * (* get_text)	(EvDocument   *document,
-					 GdkRectangle *rect);
-	EvLink    * (* get_link)	(EvDocument   *document,
-					 int           x,
-					 int	       y);
-	GList     * (* get_links)	(EvDocument   *document);
-	GdkPixbuf * (* render_pixbuf)   (EvDocument   *document);
+					 int           page,
+					 EvRectangle  *rect);
+	GList     * (* get_links)	(EvDocument   *document,
+					 int           page);
+	GdkPixbuf * (* render_pixbuf)   (EvDocument   *document,
+					 int           page,
+					 double        scale);
 };
 
 GType        ev_document_get_type       (void);
@@ -104,24 +103,20 @@ gboolean   ev_document_save          (EvDocument    *document,
 				      GError       **error);
 char      *ev_document_get_title     (EvDocument    *document);
 int        ev_document_get_n_pages   (EvDocument    *document);
-void       ev_document_set_page      (EvDocument    *document,
-				      int            page);
-int        ev_document_get_page      (EvDocument    *document);
-void       ev_document_set_scale     (EvDocument    *document,
-				      double         scale);
 void       ev_document_get_page_size (EvDocument    *document,
 				      int            page,
-				      int           *width,
-				      int           *height);
+				      double        *width,
+				      double        *height);
 char      *ev_document_get_page_label(EvDocument    *document,
-				     int             page);
+				      int            page);
 char      *ev_document_get_text      (EvDocument    *document,
-				      GdkRectangle  *rect);
-EvLink    *ev_document_get_link      (EvDocument    *document,
-				      int            x,
-				      int            y);
-GList     *ev_document_get_links     (EvDocument    *document);
-GdkPixbuf *ev_document_render_pixbuf (EvDocument    *document);
+				      int            page,
+				      EvRectangle   *rect);
+GList     *ev_document_get_links     (EvDocument    *document,
+				      int            page);
+GdkPixbuf *ev_document_render_pixbuf (EvDocument    *document,
+				      int            page,
+				      double         scale);
 
 
 G_END_DECLS

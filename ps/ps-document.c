@@ -82,6 +82,12 @@ struct record_list {
   struct record_list *next;
 };
 
+typedef struct {
+	int page;
+	double scale;
+	PSDocument *document;
+} PSRenderJob;
+
 static gboolean broken_pipe = FALSE;
 
 /* Forward declarations */
@@ -381,7 +387,7 @@ setup_pixmap (PSDocument *gs)
 }
 
 static void
-setup_page (PSDocument *gs)
+setup_page (PSDocument *gs, double scale)
 {
 	char buf[1024];
 #ifdef HAVE_LOCALE_H
@@ -400,8 +406,8 @@ setup_page (PSDocument *gs)
 
 	g_snprintf (buf, 1024, "%ld %d %d %d %d %d %f %f %d %d %d %d",
 		    0L, gs->orientation * 90, gs->llx, gs->lly, gs->urx, gs->ury,
-		    get_xdpi (gs) * gs->zoom_factor,
-		    get_ydpi (gs) * gs->zoom_factor,
+		    get_xdpi (gs) * scale,
+		    get_ydpi (gs) * scale,
 		    0, 0, 0, 0);
 	LOG ("GS property %s", buf);
 
@@ -1106,7 +1112,7 @@ ps_document_next_page (PSDocument *gs)
 }
 
 static gboolean
-render_page (PSDocument *gs)
+render_page (PSDocument *gs, int page)
 {
 	g_return_val_if_fail(gs != NULL, FALSE);
 	g_return_val_if_fail(PS_IS_DOCUMENT(gs), FALSE);
@@ -1126,8 +1132,8 @@ render_page (PSDocument *gs)
 			send_ps (gs, gs->doc->beginsetup, gs->doc->lensetup, FALSE);
 		}
 
-		send_ps (gs, gs->doc->pages[gs->current_page].begin,
-			 gs->doc->pages[gs->current_page].len, FALSE);
+		send_ps (gs, gs->doc->pages[page].begin,
+			 gs->doc->pages[page].len, FALSE);
 	} else {
 		/* Unstructured document
 		 *
@@ -1199,46 +1205,16 @@ ps_document_get_n_pages (EvDocument  *document)
 }
 
 static void
-ps_document_set_page (EvDocument  *document,
-		       int          page)
-{
-	PSDocument *gs = PS_DOCUMENT (document);
-
-	LOG ("Set document page %d\n", page);
-
-	gs->current_page = page;
-	compute_dimensions (gs, page);
-}
-
-static int
-ps_document_get_page (EvDocument  *document)
-{
-	PSDocument *ps = PS_DOCUMENT (document);
-
-	g_return_val_if_fail (ps != NULL, -1);
-
-	return ps->current_page;
-}
-
-static void
-ps_document_set_scale (EvDocument  *document,
-			double       scale)
-{
-	PSDocument *gs = PS_DOCUMENT (document);
-
-	gs->zoom_factor = scale;
-	compute_dimensions (gs, gs->current_page);
-}
-
-static void
 ps_document_get_page_size (EvDocument   *document,
 			   int           page,
-			   int          *width,
-			   int          *height)
+			   double       *width,
+			   double       *height)
 {
 	/* Post script documents never vary in size */
 
 	PSDocument *gs = PS_DOCUMENT (document);
+
+	compute_dimensions (gs, page);
 
 	if (width) {
 		*width = gs->width;
@@ -1250,24 +1226,16 @@ ps_document_get_page_size (EvDocument   *document,
 }
 
 static char *
-ps_document_get_text (EvDocument *document, GdkRectangle *rect)
+ps_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 {
 	g_warning ("ps_document_get_text not implemented"); /* FIXME ? */
 	return NULL;
 }
 
-static EvLink *
-ps_document_get_link (EvDocument *document,
-		      int         x,
-		      int	  y)
-{
-	return NULL;
-}
-
 static gboolean
-render_pixbuf_idle (EvDocument *document)
+render_pixbuf_idle (PSRenderJob *job)
 {
-	PSDocument *gs = PS_DOCUMENT (document);
+	PSDocument *gs = job->document;
 
 	if (gs->pstarget == NULL) {
 		GtkWidget *widget;
@@ -1286,21 +1254,25 @@ render_pixbuf_idle (EvDocument *document)
 	if (gs->changed) {
 		stop_interpreter (gs);
 		setup_pixmap (gs);
-		setup_page (gs);
+		setup_page (gs, job->scale);
 		gs->changed = FALSE;
 	}
 
-	render_page (PS_DOCUMENT (document));
+	render_page (gs, job->page);
 
 	return FALSE;
 }
 
 static GdkPixbuf *
-ps_document_render_pixbuf (EvDocument *document)
+ps_document_render_pixbuf (EvDocument *document, int page, double scale)
 {
 	GdkPixbuf *pixbuf;
+	PSRenderJob job;
 
-	g_idle_add ((GSourceFunc)render_pixbuf_idle, document);
+	job.page = page;
+	job.scale = scale;
+	job.document = PS_DOCUMENT (document);
+	g_idle_add ((GSourceFunc)render_pixbuf_idle, &job);
 
 	g_mutex_lock (pixbuf_mutex);
 	while (!current_pixbuf)
@@ -1320,11 +1292,7 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->load = ps_document_load;
 	iface->save = ps_document_save;
 	iface->get_text = ps_document_get_text;
-	iface->get_link = ps_document_get_link;
 	iface->get_n_pages = ps_document_get_n_pages;
-	iface->set_page = ps_document_set_page;
-	iface->get_page = ps_document_get_page;
-	iface->set_scale = ps_document_set_scale;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->render_pixbuf = ps_document_render_pixbuf;
 }

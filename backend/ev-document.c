@@ -158,42 +158,10 @@ ev_document_get_n_pages (EvDocument  *document)
 }
 
 void
-ev_document_set_page (EvDocument  *document,
-		      int          page)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	LOG ("ev_document_set_page");
-	iface->set_page (document, page);
-}
-
-int
-ev_document_get_page (EvDocument *document)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	int retval;
-
-	LOG ("ev_document_get_page");
-	retval = iface->get_page (document);
-
-	return retval;
-}
-
-void
-ev_document_set_scale (EvDocument   *document,
-		       double        scale)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	LOG ("ev_document_set_scale");
-	iface->set_scale (document, scale);
-}
-
-void
 ev_document_get_page_size   (EvDocument   *document,
 			     int           page,
-			     int          *width,
-			     int          *height)
+			     double       *width,
+			     double       *height)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
@@ -215,36 +183,22 @@ ev_document_get_page_label(EvDocument    *document,
 }
 
 char *
-ev_document_get_text (EvDocument   *document,
-		      GdkRectangle *rect)
+ev_document_get_text (EvDocument  *document,
+		      int          page,
+		      EvRectangle *rect)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	char *retval;
 
 	LOG ("ev_document_get_text");
-	retval = iface->get_text (document, rect);
-
-	return retval;
-}
-
-EvLink *
-ev_document_get_link (EvDocument   *document,
-		      int           x,
-		      int	    y)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	EvLink *retval;
-
-	LOG ("ev_document_get_link");
-	if (iface->get_link == NULL)
-		return NULL;
-	retval = iface->get_link (document, x, y);
+	retval = iface->get_text (document, page, rect);
 
 	return retval;
 }
 
 GList *
-ev_document_get_links (EvDocument *document)
+ev_document_get_links (EvDocument *document,
+		       int         page)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	GList *retval;
@@ -252,7 +206,7 @@ ev_document_get_links (EvDocument *document)
 	LOG ("ev_document_get_link");
 	if (iface->get_links == NULL)
 		return NULL;
-	retval = iface->get_links (document);
+	retval = iface->get_links (document, page);
 
 	return retval;
 }
@@ -260,7 +214,9 @@ ev_document_get_links (EvDocument *document)
 
 
 GdkPixbuf *
-ev_document_render_pixbuf (EvDocument *document)
+ev_document_render_pixbuf (EvDocument *document,
+			   int         page,
+			   double      scale)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	GdkPixbuf *retval;
@@ -268,7 +224,7 @@ ev_document_render_pixbuf (EvDocument *document)
 	LOG ("ev_document_render_pixbuf");
 	g_assert (iface->render_pixbuf);
 
-	retval = iface->render_pixbuf (document);
+	retval = iface->render_pixbuf (document, page, scale);
 
 	return retval;
 }

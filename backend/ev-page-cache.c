@@ -5,8 +5,8 @@
 
 typedef struct _EvPageCacheInfo
 {
-	gint width;
-	gint height;
+	double width;
+	double height;
 }
 EvPageCacheInfo;
 
@@ -21,8 +21,8 @@ struct _EvPageCache
 	char **page_labels;
 
 	gboolean uniform;
-	gint uniform_width;
-	gint uniform_height;
+	double uniform_width;
+	double uniform_height;
 
 	EvPageCacheInfo *size_cache;
 };
@@ -105,10 +105,9 @@ _ev_page_cache_new (EvDocument *document)
 	page_cache->title = ev_document_get_title (document);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 
-	ev_document_set_scale (document, 1.0);
 	for (i = 0; i < page_cache->n_pages; i++) {
-		gint page_width = 0;
-		gint page_height = 0;
+		double page_width = 0;
+		double page_height = 0;
 
 		ev_document_get_page_size (document, i, &page_width, &page_height);
 		page_cache->page_labels[i] = ev_document_get_page_label (document, i);

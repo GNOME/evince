@@ -58,8 +58,6 @@ struct _PdfDocument
 	GObject parent_instance;
 
 	PopplerDocument *document;
-	PopplerPage *page;
-	double scale;
 	gchar *password;
 
 	PdfDocumentSearch *search;
@@ -133,8 +131,6 @@ pdf_document_class_init (PdfDocumentClass *klass)
 static void
 pdf_document_init (PdfDocument *pdf_document)
 {
-	pdf_document->page = NULL;
-	pdf_document->scale = 1.0;
 	pdf_document->password = NULL;
 }
 
@@ -209,84 +205,28 @@ pdf_document_get_n_pages (EvDocument *document)
 }
 
 static void
-pdf_document_set_page (EvDocument   *document,
-		       int           page)
-{
-	page = CLAMP (page, 0, poppler_document_get_n_pages (PDF_DOCUMENT (document)->document) - 1);
-
-	PDF_DOCUMENT (document)->page = poppler_document_get_page (PDF_DOCUMENT (document)->document, page);
-}
-
-static int
-pdf_document_get_page (EvDocument   *document)
-{
-	PdfDocument *pdf_document;
-
-	pdf_document = PDF_DOCUMENT (document);
-
-	if (pdf_document->page)
-		return poppler_page_get_index (pdf_document->page);
-
-	return 1;
-}
-
-static void 
-pdf_document_set_scale (EvDocument   *document,
-			double        scale)
-{
-	PDF_DOCUMENT (document)->scale = scale;
-}
-
-
-static void
-get_size_from_page (PopplerPage *poppler_page,
-		    double       scale,
-		    int         *width,
-		    int         *height)
-{
-	gdouble width_d, height_d;
-	poppler_page_get_size (poppler_page, &width_d, &height_d);
-	if (width)
-		*width = (int) (width_d * scale);
-	if (height)
-		*height = (int) (height_d * scale);
-
-}
-
-static void
 pdf_document_get_page_size (EvDocument   *document,
 			    int           page,
-			    int          *width,
-			    int          *height)
+			    double       *width,
+			    double       *height)
 {
-	PopplerPage *poppler_page = NULL;
+	PopplerPage *poppler_page;
 
-	if (page == -1)
-		poppler_page = PDF_DOCUMENT (document)->page;
-	else
-		poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
-							  page);
+	poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
+						  page);
 
-	if (poppler_page == NULL)
-		poppler_document_get_page (PDF_DOCUMENT (document)->document, 0);
-
-	get_size_from_page (poppler_page,
-			    PDF_DOCUMENT (document)->scale,
-			    width, height);
+	poppler_page_get_size (poppler_page, width, height);
 }
 
 static char *
 pdf_document_get_page_label (EvDocument *document,
 			     int         page)
 {
-	PopplerPage *poppler_page = NULL;
+	PopplerPage *poppler_page;
 	char *label = NULL;
 
-	if (page == -1)
-		poppler_page = PDF_DOCUMENT (document)->page;
-	else
-		poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
-							  page);
+	poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
+						  page);
 
 	g_object_get (poppler_page,
 		      "label", &label,
@@ -296,19 +236,21 @@ pdf_document_get_page_label (EvDocument *document,
 }
 
 static GList *
-pdf_document_get_links (EvDocument *document)
+pdf_document_get_links (EvDocument *document,
+			int         page)
 {
 	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
 	GList *retval = NULL;
 	GList *mapping_list;
 	GList *list;
-	gint height;
+	double height;
 
 	pdf_document = PDF_DOCUMENT (document);
-	g_return_val_if_fail (pdf_document->page != NULL, NULL);
-
-	mapping_list = poppler_page_get_link_mapping (pdf_document->page);
-	get_size_from_page (pdf_document->page, 1.0, NULL, &height);
+	poppler_page = poppler_document_get_page (pdf_document->document,
+						  page);
+	mapping_list = poppler_page_get_link_mapping (poppler_page);
+	poppler_page_get_size (poppler_page, NULL, &height);
 
 	for (list = mapping_list; list; list = list->next) {
 		PopplerLinkMapping *link_mapping;
@@ -333,27 +275,32 @@ pdf_document_get_links (EvDocument *document)
 			
 
 static GdkPixbuf *
-pdf_document_render_pixbuf (EvDocument   *document)
+pdf_document_render_pixbuf (EvDocument   *document,
+			    int           page,
+			    double        scale)
 {
 	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf;
+	double width_points, height_points;
 	gint width, height;
 
 	pdf_document = PDF_DOCUMENT (document);
-	g_return_val_if_fail (pdf_document->page != NULL, NULL);
+	poppler_page = poppler_document_get_page (pdf_document->document,
+						  page);
 
-	get_size_from_page (pdf_document->page,
-			    pdf_document->scale,
-			    &width, &height);
+	poppler_page_get_size (poppler_page, &width_points, &height_points);
+	width = (int) ceil (width_points * scale);
+	height = (int) ceil (height_points * scale);
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
 				 FALSE, 8,
 				 width, height);
 
-	poppler_page_render_to_pixbuf (pdf_document->page,
+	poppler_page_render_to_pixbuf (poppler_page,
 				       0, 0,
 				       width, height,
-				       pdf_document->scale,
+				       scale,
 				       pixbuf,
 				       0, 0);
 
@@ -389,9 +336,6 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->save = pdf_document_save;
 	iface->load = pdf_document_load;
 	iface->get_n_pages = pdf_document_get_n_pages;
-	iface->set_page = pdf_document_set_page;
-	iface->get_page = pdf_document_get_page;
-	iface->set_scale = pdf_document_set_scale;
 	iface->get_page_size = pdf_document_get_page_size;
 	iface->get_page_label = pdf_document_get_page_label;
 	iface->get_links = pdf_document_get_links;
@@ -599,10 +543,9 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	has_thumb = poppler_page_get_thumbnail_size (poppler_page, width, height);
 
 	if (!has_thumb) {
-		int page_width, page_height;
+		double page_width, page_height;
 
-		get_size_from_page (poppler_page, 1.0, &page_width, &page_height);
-
+		poppler_page_get_size (poppler_page, &page_width, &page_height);
 		if (page_width > page_height) {
 			*width = size;
 			*height = (int) (size * page_height / page_width);
@@ -640,8 +583,7 @@ pdf_document_search_idle_callback (void *data)
 	search->pages[search->search_page] = matches;
         n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
 
-	changed_page = search->start_page;
-
+	changed_page = search->search_page;
         search->search_page += 1;
         if (search->search_page == n_pages) {
                 /* wrap around */
@@ -661,7 +603,9 @@ pdf_document_search_idle_callback (void *data)
 
 
 static PdfDocumentSearch *
-pdf_document_search_new (PdfDocument *pdf_document, const char *text)
+pdf_document_search_new (PdfDocument *pdf_document,
+			 int          start_page,
+			 const char  *text)
 {
 	PdfDocumentSearch *search;
 	int n_pages;
@@ -685,8 +629,8 @@ pdf_document_search_new (PdfDocument *pdf_document, const char *text)
                                         search,
                                         NULL);
 
-        search->start_page = pdf_document_get_page (EV_DOCUMENT (pdf_document));
-        search->search_page = search->start_page;
+        search->start_page = start_page;
+        search->search_page = start_page;
 
 	return search;
 }
@@ -712,6 +656,7 @@ pdf_document_search_free (PdfDocumentSearch   *search)
 
 static void
 pdf_document_find_begin (EvDocumentFind   *document,
+			 int               page,
                          const char       *search_string,
                          gboolean          case_sensitive)
 {
@@ -730,19 +675,18 @@ pdf_document_find_begin (EvDocumentFind   *document,
                 pdf_document_search_free (pdf_document->search);
 
         pdf_document->search = pdf_document_search_new (pdf_document,
+							page,
 							search_string);
 }
 
 int
-pdf_document_find_get_n_results (EvDocumentFind *document_find)
+pdf_document_find_get_n_results (EvDocumentFind *document_find, int page)
 {
 	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
 	int current_page;
 
-	current_page = pdf_document_get_page (EV_DOCUMENT (document_find));
-
 	if (search) {
-		return g_list_length (search->pages[current_page]);
+		return g_list_length (search->pages[page]);
 	} else {
 		return 0;
 	}
@@ -750,29 +694,31 @@ pdf_document_find_get_n_results (EvDocumentFind *document_find)
 
 gboolean
 pdf_document_find_get_result (EvDocumentFind *document_find,
+			      int             page,
 			      int             n_result,
-			      GdkRectangle   *rectangle)
+			      EvRectangle    *rectangle)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_find);
 	PdfDocumentSearch *search = pdf_document->search;
+	PopplerPage *poppler_page;
 	PopplerRectangle *r;
 	int current_page;
-	double scale;
+	double scale, height;
 
 	if (search == NULL)
 		return FALSE;
 
-	current_page = pdf_document_get_page (EV_DOCUMENT (pdf_document));
-	r = (PopplerRectangle *) g_list_nth_data (search->pages[current_page],
+	r = (PopplerRectangle *) g_list_nth_data (search->pages[page],
 						  n_result);
 	if (r == NULL)
 		return FALSE;
 
-	scale = pdf_document->scale;
-	rectangle->x = (gint) floor (r->x1 * scale);
-	rectangle->y = (gint) floor (r->y1 * scale);
-	rectangle->width = (gint) ceil (r->x2 * scale) - rectangle->x;
-	rectangle->height = (gint) ceil (r->y2 * scale) - rectangle->y;
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page_get_size (poppler_page, NULL, &height);
+	rectangle->x1 = r->x1;
+	rectangle->y1 = height - r->y2;
+	rectangle->x2 = r->x2;
+	rectangle->y2 = height - r->y1;
 	
 	return TRUE;
 }

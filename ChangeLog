@@ -1,3 +1,20 @@
+2005-04-04  Kristian Høgsberg  <krh@redhat.com>
+
+	Make searching work again.
+	
+	* backend/ev-document.c:
+	* backend/ev-document.h:
+	* backend/ev-document-find.c:
+	* backend/ev-document-find.h: Change EvDocumentIface so we no
+	longer store the current page or zoom level in the document.  The
+	consequence is that all calls that operate on the current page now
+	instead take the page number as an extra argument, and all
+	coordinates are now doubles in document coordinate system.
+
+	* pdf/ev-poppler.cc:
+	* pixbuf/pixbuf-document.c:
+	* ps/ps-document.c: Update backends accordingly.
+
 2005-04-04  Marco Pesenti Gritti <marco@gnome.org>
 
 	* autogen.sh:

@@ -26,6 +26,8 @@
 #include <glib.h>
 #include <gdk/gdk.h>
 
+#include "ev-document.h"	/* For EvRectangle */
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_FIND	    (ev_document_find_get_type ())
@@ -45,15 +47,18 @@ struct _EvDocumentFindIface
         /* Methods */
         
         void     (* begin)	      (EvDocumentFind *document_find,
+				       int             page,
                                        const char     *search_string,
                                        gboolean        case_sensitive);
         void     (* cancel)	      (EvDocumentFind *document_find);
 	int      (* page_has_results) (EvDocumentFind *document_find,
 				       int             page);
-	int      (* get_n_results)    (EvDocumentFind *document_find);
+	int      (* get_n_results)    (EvDocumentFind *document_find,
+				       int             page);
 	gboolean (* get_result)	      (EvDocumentFind *document_find,
+				       int             page,
 				       int             n_result,
-				       GdkRectangle   *rectangle); 
+				       EvRectangle    *rectangle); 
 	double	 (* get_progress)     (EvDocumentFind *document_find);
 
         /* Signals */
@@ -64,15 +69,18 @@ struct _EvDocumentFindIface
 
 GType     ev_document_find_get_type         (void);
 void      ev_document_find_begin	    (EvDocumentFind *document_find,
+					     int             page,
 					     const char     *search_string,
 					     gboolean        case_sensitive);
 void      ev_document_find_cancel	    (EvDocumentFind *document_find);
 int       ev_document_find_page_has_results (EvDocumentFind *document_find,
 					     int             page);
-int       ev_document_find_get_n_results    (EvDocumentFind *document_find);
+int       ev_document_find_get_n_results    (EvDocumentFind *document_find,
+					     int             page);
 gboolean  ev_document_find_get_result	    (EvDocumentFind *document_find,
+					     int             page,
 					     int             n_result,
-					     GdkRectangle   *rectangle); 
+					     EvRectangle    *rectangle); 
 double	  ev_document_find_get_progress     (EvDocumentFind *document_find);
 void      ev_document_find_changed          (EvDocumentFind *document_find,
 					     int             page);

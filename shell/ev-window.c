@@ -1876,7 +1876,10 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		if (visible && search_string && search_string[0]) {
 			g_mutex_lock (EV_DOC_MUTEX);
-			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), search_string, case_sensitive);
+			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), 
+						ev_view_get_page (EV_VIEW (ev_window->priv->view)),
+						search_string,
+						case_sensitive);
 			g_mutex_unlock (EV_DOC_MUTEX);
 		} else {
 			g_mutex_lock (EV_DOC_MUTEX);
