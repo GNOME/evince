@@ -35,6 +35,8 @@ enum
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
+GMutex *ev_doc_mutex = NULL;
+
 
 #define LOG(x) 
 GType
@@ -120,6 +122,16 @@ ev_document_get_page_cache (EvDocument *document)
 	return page_cache;
 }
 
+GMutex *
+ev_document_get_doc_mutex (void)
+{
+	if (ev_doc_mutex == NULL) {
+		ev_doc_mutex = g_mutex_new ();
+	}
+	return ev_doc_mutex;
+}
+
+
 gboolean
 ev_document_load (EvDocument  *document,
 		  const char  *uri,
@@ -128,9 +140,7 @@ ev_document_load (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gboolean retval;
 	LOG ("ev_document_load");
-	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->load (document, uri, error);
-	g_mutex_unlock (EV_DOC_MUTEX);
 	/* Call this to make the initial cached copy */
 	ev_document_get_page_cache (document);
 	return retval;
@@ -145,9 +155,7 @@ ev_document_save (EvDocument  *document,
 	gboolean retval;
 
 	LOG ("ev_document_save");
-	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->save (document, uri, error);
-	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return retval;
 }
@@ -158,9 +166,7 @@ ev_document_get_title (EvDocument  *document)
 	char *title;
 
 	LOG ("ev_document_get_title");
-	g_mutex_lock (EV_DOC_MUTEX);
 	g_object_get (document, "title", &title, NULL);
-	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return title;
 }
@@ -172,9 +178,7 @@ ev_document_get_n_pages (EvDocument  *document)
 	gint retval;
 
 	LOG ("ev_document_get_n_pages");
-	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_n_pages (document);
-	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return retval;
 }
@@ -196,9 +200,7 @@ ev_document_get_page (EvDocument *document)
 	int retval;
 
 	LOG ("ev_document_get_page");
-	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_page (document);
-	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return retval;
 }
@@ -210,9 +212,7 @@ ev_document_set_target (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
 	LOG ("ev_document_set_target");
-	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_target (document, target);
-	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void
@@ -233,9 +233,7 @@ ev_document_set_page_offset (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
 	LOG ("ev_document_set_page_offset");
-	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_page_offset (document, x, y);
-	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void
@@ -258,9 +256,7 @@ ev_document_get_text (EvDocument   *document,
 	char *retval;
 
 	LOG ("ev_document_get_text");
-	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_text (document, rect);
-	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return retval;
 }
@@ -274,9 +270,7 @@ ev_document_get_link (EvDocument   *document,
 	EvLink *retval;
 
 	LOG ("ev_document_get_link");
-	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->get_link (document, x, y);
-	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return retval;
 }
@@ -291,9 +285,7 @@ ev_document_render (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
 	LOG ("ev_document_render");
-	g_mutex_lock (EV_DOC_MUTEX);
 	iface->render (document, clip_x, clip_y, clip_width, clip_height);
-	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 

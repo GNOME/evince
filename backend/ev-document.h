@@ -46,6 +46,7 @@ typedef struct _EvPageCacheClass  EvPageCacheClass;
 
 
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
+#define EV_DOC_MUTEX (ev_document_get_doc_mutex ())
 
 typedef enum
 {
@@ -102,6 +103,7 @@ struct _EvDocumentIface
 GType        ev_document_get_type       (void);
 GQuark       ev_document_error_quark    (void);
 EvPageCache *ev_document_get_page_cache (EvDocument *document);
+GMutex      *ev_document_get_doc_mutex  (void);
 
 
 gboolean ev_document_load            (EvDocument   *document,

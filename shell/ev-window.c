@@ -41,6 +41,7 @@
 #include "ev-document-links.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
+#include "ev-job-queue.h"
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
@@ -559,9 +560,12 @@ password_dialog_response (GtkWidget *password_dialog,
 		gchar *uri;
 
 		password = ev_password_dialog_get_password (password_dialog);
-		if (password)
+		if (password) {
+			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->password_document),
 							   password);
+			g_mutex_unlock (EV_DOC_MUTEX);
+		}
 		g_free (password);
 
 		document = ev_window->priv->password_document;
@@ -862,6 +866,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 	GtkFileFilter *pdf_filter, *all_filter;
 	gchar *uri = NULL;
+	gboolean success;
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -894,8 +899,12 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		    !overwrite_existing_file (GTK_WINDOW (fc), uri))
 				continue;
 */
+		
+		g_mutex_lock (EV_DOC_MUTEX);
+		success = ev_document_save (ev_window->priv->document, uri, NULL);
+		g_mutex_unlock (EV_DOC_MUTEX);
 
-		if (ev_document_save (ev_window->priv->document, uri, NULL))
+		if (success)
 			break;
 		else
 			save_error_dialog (GTK_WINDOW (fc), uri);
@@ -1505,10 +1514,17 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
 	char *uri;
 	int page;
+	EvPageCache *page_cache;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	page = ev_document_get_page (ev_window->priv->document);
+	page_cache = ev_document_get_page_cache (ev_window->priv->document);
+#if 0
+	/* FIXME: uncomment when this is written.*/
+	page = ev_page_cache_get_page (page_cache);
+#else
+	page = 1;
+#endif
 	uri = g_strdup (ev_window->priv->uri);
 
 	ev_window_open (ev_window, uri);
@@ -1891,9 +1907,14 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		if (visible && search_string) {
+			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), search_string, case_sensitive);
+			g_mutex_unlock (EV_DOC_MUTEX);
 		} else {
+			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
+			g_mutex_unlock (EV_DOC_MUTEX);
+
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 						      NULL);
 			gtk_widget_queue_draw (GTK_WIDGET (ev_window->priv->view));

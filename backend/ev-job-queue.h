@@ -25,10 +25,8 @@
 
 G_BEGIN_DECLS
 
-#define EV_DOC_MUTEX (ev_job_queue_get_doc_mutex ())
 
 void     ev_job_queue_init                 (void);
-GMutex  *ev_job_queue_get_doc_mutex        (void);
 
 void     ev_job_queue_add_render_job       (EvJobRender    *job,
 					    EvJobPriority   priority);

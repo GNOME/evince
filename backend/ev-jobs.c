@@ -1,4 +1,5 @@
 #include "ev-jobs.h"
+#include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
 
 static void ev_job_render_init          (EvJobRender         *job);
@@ -121,10 +122,13 @@ void
 ev_job_render_run (EvJobRender *job)
 {
 	g_return_if_fail (EV_IS_JOB_RENDER (job));
-	
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	ev_document_set_scale (job->document, job->scale);
 	ev_document_set_page (job->document, job->page);
 	job->pixbuf = ev_document_render_pixbuf (job->document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
 	job->pixbuf_done = TRUE;
 }
 
@@ -157,10 +161,14 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 {
 	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
 
-	job->thumbnail = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (job->document),
-							       job->page,
-							       job->requested_width,
-							       TRUE);
+	g_mutex_lock (EV_DOC_MUTEX);
+	job->thumbnail =
+		ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (job->document),
+						      job->page,
+						      job->requested_width,
+						      TRUE);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
 	job->thumbnail_done = TRUE;
 }
 

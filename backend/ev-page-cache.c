@@ -73,12 +73,13 @@ _ev_page_cache_set_document (EvPageCache *page_cache,
 	EvPageCacheInfo *info;
 	gint i;
 
+	g_mutex_lock (EV_DOC_MUTEX);
+
 	/* Assume uniform is TRUE until proven otherwise */
 	page_cache->uniform = TRUE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
 	page_cache->title = ev_document_get_title (document);
 
-	g_mutex_lock (EV_DOC_MUTEX);
 	ev_document_set_scale (document, 1.0);
 	for (i = 1; i <= page_cache->n_pages; i++) {
 		gint page_width = 0;

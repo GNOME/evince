@@ -5,7 +5,6 @@
  * data.
  */
 GCond *render_cond = NULL;
-GMutex *ev_doc_mutex = NULL;
 GMutex *ev_queue_mutex = NULL;
 
 static GQueue *render_queue_high = NULL;
@@ -16,25 +15,30 @@ static GQueue *thumbnail_queue_low = NULL;
 static gboolean
 notify_finished (gpointer job)
 {
-	GDK_THREADS_ENTER();
 	if (EV_IS_JOB_THUMBNAIL (job))
 		ev_job_thumbnail_finished (EV_JOB_THUMBNAIL (job));
 	else if (EV_IS_JOB_RENDER (job))
 		ev_job_render_finished (EV_JOB_RENDER (job));
-	GDK_THREADS_LEAVE();
+
 	return FALSE;
 }
 
 
 static void
-handle_job_unlocked (gpointer job)
+handle_job (gpointer job)
 {
+	g_object_ref (job);
+
 	if (EV_IS_JOB_THUMBNAIL (job))
 		ev_job_thumbnail_run (EV_JOB_THUMBNAIL (job));
 	else if (EV_IS_JOB_RENDER (job))
 		ev_job_render_run (EV_JOB_RENDER (job));
 
-	g_idle_add (notify_finished, job);
+	/* We let the idle own a ref, as we (the queue) are done with the job. */
+	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
+			 notify_finished,
+			 job,
+			 g_object_unref);
 }
 
 static GObject *
@@ -87,10 +91,8 @@ ev_render_thread (gpointer data)
 
 		/* Now that we have our job, we handle it */
 		if (job) {
-			g_mutex_lock (EV_DOC_MUTEX);
-			handle_job_unlocked (job);
+			handle_job (job);
 			g_object_unref (job);
-			g_mutex_unlock (EV_DOC_MUTEX);
 		}
 	}
 	return NULL;
@@ -104,7 +106,6 @@ ev_job_queue_init (void)
 	if (!g_thread_supported ()) g_thread_init (NULL);
 
 	render_cond = g_cond_new ();
-	ev_doc_mutex = g_mutex_new ();
 	ev_queue_mutex = g_mutex_new ();
 
 	render_queue_high = g_queue_new ();
@@ -114,13 +115,6 @@ ev_job_queue_init (void)
 
 	g_thread_create (ev_render_thread, NULL, FALSE, NULL);
 
-}
-
-GMutex *
-ev_job_queue_get_doc_mutex (void)
-{
-	g_assert (ev_doc_mutex);
-	return ev_doc_mutex;
 }
 
 void

@@ -1,3 +1,36 @@
+Tue Mar 15 23:42:39 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document-links.c:
+	(ev_document_links_has_document_links),
+	(ev_document_links_begin_read), (ev_document_links_get_link),
+	(ev_document_links_get_child), (ev_document_links_next),
+	(ev_document_links_free_iter):
+	* backend/ev-document.c: (ev_document_get_doc_mutex),
+	(ev_document_load), (ev_document_save), (ev_document_get_title),
+	(ev_document_get_n_pages), (ev_document_get_page),
+	(ev_document_set_target), (ev_document_set_page_offset),
+	(ev_document_get_text), (ev_document_get_link),
+	(ev_document_render):
+	* backend/ev-document.h:
+	* backend/ev-job-queue.c: (notify_finished), (handle_job),
+	(ev_render_thread), (ev_job_queue_init):
+	* backend/ev-job-queue.h:
+	* backend/ev-jobs.c: (ev_job_render_run), (ev_job_thumbnail_run):
+	* backend/ev-page-cache.c: (_ev_page_cache_set_document):
+	* shell/ev-print-job.c: (idle_print_handler):
+	* shell/ev-view.c: (highlight_find_results), (ev_view_select_all),
+	(ev_view_copy), (ev_view_primary_get_cb),
+	(ev_view_motion_notify_event), (ev_view_button_release_event),
+	(update_find_status_message), (set_document_page),
+	(jump_to_find_result), (jump_to_find_page), (find_changed_cb),
+	(ev_view_zoom), (ev_view_find_next), (ev_view_find_previous):
+	* shell/ev-window.c: (password_dialog_response),
+	(ev_window_cmd_save_as), (ev_window_cmd_view_reload),
+	(find_bar_search_changed_cb):
+
+	Big mutex clean up.  It's not perfect, and find is still broken.
+	But it will do for now.  On to re-enabling the other features.
+	
 Tue Mar 15 12:46:47 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* backend/ev-document.c: (ev_document_set_page): update the page

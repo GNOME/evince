@@ -472,14 +472,18 @@ highlight_find_results (EvView *view)
 
 	find = EV_DOCUMENT_FIND (view->document);
 
+	g_mutex_lock (EV_DOC_MUTEX);
 	results = ev_document_find_get_n_results (find);
+	g_mutex_unlock (EV_DOC_MUTEX);
 
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
 		guchar alpha;
 
 		alpha = (i == view->find_result) ? 0x90 : 0x20;
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_document_find_get_result (find, i, &rectangle);
+		g_mutex_unlock (EV_DOC_MUTEX);
 		draw_rubberband (GTK_WIDGET (view), view->bin_window,
 				 &rectangle, alpha);
         }
@@ -579,6 +583,7 @@ void
 ev_view_select_all (EvView *ev_view)
 {
 	GtkWidget *widget = GTK_WIDGET (ev_view);
+	EvPageCache *page_cache;
 	GdkRectangle selection;
 	int width, height;
 	int x_offset, y_offset;
@@ -586,8 +591,13 @@ ev_view_select_all (EvView *ev_view)
 
 	g_return_if_fail (EV_IS_VIEW (ev_view));
 
+	page_cache = ev_document_get_page_cache (ev_view->document);
+
 	ev_view_get_offsets (ev_view, &x_offset, &y_offset);
-	ev_document_get_page_size (ev_view->document, -1, &width, &height);
+	ev_page_cache_get_size (page_cache,
+				ev_view->current_page,
+				ev_view->scale,
+				&width, &height);
 	ev_document_misc_get_page_border_size (width, height, &border);
 
 	ev_view->has_selection = TRUE;
@@ -608,7 +618,10 @@ ev_view_copy (EvView *ev_view)
 	char *text;
 
 	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
+	g_mutex_lock (EV_DOC_MUTEX);
 	text = ev_document_get_text (ev_view->document, &selection);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
 					      GDK_SELECTION_CLIPBOARD);
 	gtk_clipboard_set_text (clipboard, text, -1);
@@ -626,7 +639,9 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 	char *text;
 
 	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
+	g_mutex_lock (EV_DOC_MUTEX);
 	text = ev_document_get_text (ev_view->document, &selection);
+	g_mutex_unlock (EV_DOC_MUTEX);
 	gtk_selection_data_set_text (selection_data, text, -1);
 }
 
@@ -807,7 +822,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	} else if (FALSE && view->document) {
 		EvLink *link;
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		link = ev_document_get_link (view->document, event->x, event->y);
+		g_mutex_unlock (EV_DOC_MUTEX);
+
                 if (link) {
 			char *msg;
 
@@ -841,9 +859,11 @@ ev_view_button_release_event (GtkWidget      *widget,
 	} else if (view->document) {
 		EvLink *link;
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		link = ev_document_get_link (view->document,
 					     event->x,
 					     event->y);
+		g_mutex_unlock (EV_DOC_MUTEX);
 		if (link) {
 			ev_view_go_to_link (view, link);
 			g_object_unref (link);
@@ -1089,12 +1109,14 @@ update_find_status_message (EvView *view)
 {
 	char *message;
 
+	g_mutex_lock (EV_DOC_MUTEX);
 	if (ev_document_get_page (view->document) == view->find_page) {
 		int results;
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		results = ev_document_find_get_n_results
 				(EV_DOCUMENT_FIND (view->document));
-
+		g_mutex_unlock (EV_DOC_MUTEX);
 		/* TRANS: Sometimes this could be better translated as
 		   "%d hit(s) on this page".  Therefore this string
 		   contains plural cases. */
@@ -1104,10 +1126,11 @@ update_find_status_message (EvView *view)
 					   results);
 	} else {
 		double percent;
-		
+
+		g_mutex_lock (EV_DOC_MUTEX);
 		percent = ev_document_find_get_progress
 				(EV_DOCUMENT_FIND (view->document));
-
+		g_mutex_unlock (EV_DOC_MUTEX);
 		if (percent >= (1.0 - 1e-10)) {
 			message = g_strdup (_("Not found"));
 		} else {
@@ -1116,6 +1139,7 @@ update_find_status_message (EvView *view)
 		}
 		
 	}
+	g_mutex_unlock (EV_DOC_MUTEX);
 
 	ev_view_set_find_status (view, message);
 	g_free (message);
@@ -1150,8 +1174,6 @@ set_document_page (EvView *view, int new_page)
 		}
 
 		if (old_page != view->current_page) {
-//			int width, height;
-			
 			g_signal_emit (view, page_changed_signal, 0);
 
 			view->has_selection = FALSE;
@@ -1216,11 +1238,16 @@ jump_to_find_result (EvView *view)
 	GdkRectangle rect;
 	int n_results;
 
+	g_mutex_lock (EV_DOC_MUTEX);
 	n_results = ev_document_find_get_n_results (find);
+	g_mutex_unlock (EV_DOC_MUTEX);
 
 	if (n_results > view->find_result) {
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_document_find_get_result
 			(find, view->find_result, &rect);
+		g_mutex_unlock (EV_DOC_MUTEX);
+
 		ensure_rectangle_is_visible (view, &rect);
 	}
 }
@@ -1229,8 +1256,12 @@ static void
 jump_to_find_page (EvView *view)
 {
 	int n_pages, i;
+	EvPageCache *page_cache;
 
-	n_pages = ev_document_get_n_pages (view->document);
+
+	page_cache = ev_document_get_page_cache (view->document);
+
+	n_pages = ev_page_cache_get_n_pages (page_cache);
 
 	for (i = 0; i <= n_pages; i++) {
 		int has_results;
@@ -1241,6 +1272,7 @@ jump_to_find_page (EvView *view)
 			page = page - n_pages;
 		}
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		has_results = ev_document_find_page_has_results
 				(EV_DOCUMENT_FIND (view->document), page);
 		if (has_results == -1) {
@@ -1261,9 +1293,12 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 	jump_to_find_result (view);
 	update_find_status_message (view);
 
+#if 0
+	/* FIXME: */
 	if (ev_document_get_page (document) == page) {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
+#endif
 }
 /*** Public API ***/       
      
@@ -1380,10 +1415,7 @@ ev_view_zoom (EvView   *view,
 	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
 
 	view->scale = scale;
-#if 0
 	gtk_widget_queue_resize (GTK_WIDGET (view));
-	ev_document_set_scale (view->document, view->scale);
-#endif
 }
 
 void
@@ -1483,11 +1515,16 @@ ev_view_get_find_status (EvView *view)
 void
 ev_view_find_next (EvView *view)
 {
+	EvPageCache *page_cache;
 	int n_results, n_pages;
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
+	page_cache = ev_document_get_page_cache (view->document);
+	g_mutex_lock (EV_DOC_MUTEX);
 	n_results = ev_document_find_get_n_results (find);
-	n_pages = ev_document_get_n_pages (view->document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	n_pages = ev_page_cache_get_n_pages (page_cache);
 
 	view->find_result++;
 
@@ -1511,9 +1548,15 @@ ev_view_find_previous (EvView *view)
 {
 	int n_results, n_pages;
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+	EvPageCache *page_cache;
 
+	page_cache = ev_document_get_page_cache (view->document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	n_results = ev_document_find_get_n_results (find);
-	n_pages = ev_document_get_n_pages (view->document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	n_pages = ev_page_cache_get_n_pages (page_cache);
 
 	view->find_result--;
 
