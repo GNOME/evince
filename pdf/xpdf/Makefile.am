@@ -119,12 +119,11 @@ common_sources =		\
 	TextOutputDev.h		\
 	UTF8.h
 
+ANNOTS_VIEW_SRCS =
 if USE_ANNOTS_VIEW
   ANNOTS_VIEW_SRCS = 			\
 	gpdf-annots-view.cc		\
 	gpdf-annots-view.h
-else
-  ANNOTS_VIEW_SRCS =
 endif
 
 libgpdf_a_SOURCES =			\
@@ -292,6 +291,7 @@ dist-hook:
 	    rm -f $(distdir)/$$file ; \
 	done
 
+STOCK_ANNOTS_ICONS = 
 if USE_ANNOTS_VIEW
   STOCK_ANNOTS_ICONS = 			\
 	stock-annot-circle.png		\
@@ -312,8 +312,6 @@ if USE_ANNOTS_VIEW
 	stock-annot-underline.png	\
 	stock-annot-widget.png		\
 	stock-annot-unknown.png
-else
-  STOCK_ANNOTS_ICONS =
 endif
 
 stockdir = $(datadir)/pixmaps/gpdf
