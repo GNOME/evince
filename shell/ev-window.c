@@ -1695,10 +1695,13 @@ ev_window_init (EvWindow *ev_window)
 			     _("Thumbnails"),
 			     ev_window->priv->thumbs_sidebar);
 
-	ev_window->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	ev_window->priv->scrolled_window =
+		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
+					  "hscrollbar-policy", GTK_POLICY_AUTOMATIC,
+					  "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+					  "shadow-type", GTK_SHADOW_IN,
+					  NULL));
 	gtk_widget_show (ev_window->priv->scrolled_window);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (ev_window->priv->scrolled_window),
-					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
 			ev_window->priv->scrolled_window);
