@@ -1022,6 +1022,9 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 	GdkPixmap *pixmap;
 	GDKSplashOutputDev *output;
 	GdkPixbuf *pixbuf;
+	GdkPixbuf *shadow;
+	gint rowstride;
+	guchar *data;
 
 	pixmap = gdk_pixmap_new (pdf_document->target,
 				 width, height, -1);
@@ -1046,7 +1049,33 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 					       width, height);
 	gdk_drawable_unref (pixmap);
 	delete output;
-	return pixbuf;
+
+	shadow = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
+				 TRUE, 8,
+				 width + 4,
+				 height + 4);
+	gdk_pixbuf_fill (shadow, 0x000000ff);
+	gdk_pixbuf_copy_area (pixbuf, 0, 0,
+			      width,
+			      height,
+			      shadow,
+			      1, 1);
+	g_object_unref (pixbuf);
+
+	/* Add the corner */
+	data = gdk_pixbuf_get_pixels (shadow);
+	rowstride = gdk_pixbuf_get_rowstride (shadow);
+	data [(width + 2) * 4 + 3] = 0;
+	data [(width + 3) * 4 + 3] = 0;
+	data [(width + 2) * 4 + (rowstride * 1) + 3] = 0;
+	data [(width + 3) * 4 + (rowstride * 1) + 3] = 0;
+
+	data [(height + 2) * rowstride + 3] = 0;
+	data [(height + 3) * rowstride + 3] = 0;
+	data [(height + 2) * rowstride + 4 + 3] = 0;
+	data [(height + 3) * rowstride + 4 + 3] = 0;
+	
+	return shadow;
 }
 
 static GdkPixbuf *
