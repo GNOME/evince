@@ -187,6 +187,7 @@ void PDFDoc::displayPage(OutputDev *out, int page, double zoom,
   if (doLinks) {
     if (links) {
       delete links;
+      links = NULL;
     }
     getLinks(p);
     p->display(out, zoom, rotate, links, catalog);
