@@ -1,3 +1,4 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /* pdfdocument.h: Implementation of EvDocument for PDF
  * Copyright (C) 2004, Red Hat, Inc.
  *
@@ -271,6 +272,88 @@ pdf_document_render (EvDocument  *document,
 					   draw.width, draw.height);
 }
 
+void
+pdf_document_begin_find (EvDocument   *document,
+                         const char   *search_string,
+                         gboolean      case_sensitive)
+{
+        /* FIXME make this incremental (idle handler) and multi-page */
+        /* Right now it's fully synchronous plus only does the current page */
+        
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+        gunichar *ucs4;
+        glong ucs4_len;
+        int xMin, yMin, xMax, yMax;
+        GArray *results;
+        EvFindResult result;
+
+        /* FIXME case_sensitive (right now XPDF
+         * code is always case insensitive for ASCII
+         * and case sensitive for all other languaages)
+         */
+        
+        g_assert (sizeof (gunichar) == sizeof (Unicode));
+        ucs4 = g_utf8_to_ucs4_fast (search_string, -1,
+                                    &ucs4_len);
+
+        results = g_array_new (FALSE,
+                               FALSE,
+                               sizeof (EvFindResult));
+
+        if (pdf_document->out->findText (ucs4, ucs4_len,
+                                         gTrue, gTrue, // startAtTop, stopAtBottom
+                                         gFalse, gFalse, // startAtLast, stopAtLast
+                                         &xMin, &yMin, &xMax, &yMax)) {
+
+                result.page_num = pdf_document->page;
+
+                result.highlight_area.x = xMin;
+                result.highlight_area.y = yMin;
+                result.highlight_area.width = xMax - xMin;
+                result.highlight_area.height = yMax - yMin;
+
+                g_array_append_val (results, result);
+        
+                /* Now find further results */
+
+                while (pdf_document->out->findText (ucs4, ucs4_len,
+                                                    gFalse, gTrue,
+                                                    gTrue, gFalse,
+                                                    &xMin, &yMin, &xMax, &yMax)) {
+                        
+                        result.page_num = pdf_document->page;
+                        
+                        result.highlight_area.x = xMin;
+                        result.highlight_area.y = yMin;
+                        result.highlight_area.width = xMax - xMin;
+                        result.highlight_area.height = yMax - yMin;
+                        
+                        g_array_append_val (results, result);
+                }
+        }
+
+        ev_document_found (document,
+                           (EvFindResult*) results->data,
+                           results->len,
+                           1.0);
+
+        g_array_free (results, TRUE);
+}
+
+void
+pdf_document_end_find (EvDocument   *document)
+{
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+        /* FIXME this will do something once begin_find queues
+         * an incremental find
+         */
+
+        // this should probably be shared among EvDocument
+        // implementations somehow?
+        ev_document_found (document, NULL, 0, 1.0);
+}
+
 static void
 pdf_document_finalize (GObject *object)
 {
@@ -306,6 +389,8 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page_offset = pdf_document_set_page_offset;
 	iface->get_page_size = pdf_document_get_page_size;
 	iface->render = pdf_document_render;
+        iface->begin_find = pdf_document_begin_find;
+        iface->end_find = pdf_document_end_find;
 }
 
 static void

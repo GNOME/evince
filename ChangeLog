@@ -1,3 +1,16 @@
+2004-12-22  Havoc Pennington  <hp@redhat.com>
+
+	* shell/ev-view.c (ev_view_set_document): connect to "found" signal
+	(expose_bin_window): draw find highlights
+
+	* shell/ev-window.c (find_bar_search_changed_cb): implement 
+	
+	* pdf/xpdf/pdf-document.cc (pdf_document_begin_find) 
+	(pdf_document_end_find): implement this interface
+
+	* backend/ev-document.c (ev_document_found): add this to emit
+	signal
+
 Tue Dec 21 23:57:37 2004  Owen Taylor  <otaylor@redhat.com>
 
 	* data/evince-ui.xml: Add a few more toolbar items.

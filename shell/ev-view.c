@@ -1,3 +1,4 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /* this file is part of evince, a gnome document viewer
  *
  *  Copyright (C) 2004 Red Hat, Inc
@@ -38,6 +39,8 @@ struct _EvView {
 
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
+
+        GArray *find_results;
 };
 
 struct _EvViewClass {
@@ -135,6 +138,9 @@ ev_view_finalize (GObject *object)
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
+        g_array_free (view->find_results, TRUE);
+        view->find_results = NULL;
+        
 	G_OBJECT_CLASS (ev_view_parent_class)->finalize (object);
 }
 
@@ -285,11 +291,35 @@ expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
 	EvView *view = EV_VIEW (widget);
+        int i;
+        const EvFindResult *results;
 	
 	if (view->document)
 		ev_document_render (view->document,
 				    event->area.x, event->area.y,
 				    event->area.width, event->area.height);
+
+        results = (EvFindResult*) view->find_results->data;
+        i = 0;
+        while (i < view->find_results->len) {
+#if 0
+                g_printerr ("highlighting result %d at %d,%d %dx%d\n",
+                            i,
+                            results[i].highlight_area.x,
+                            results[i].highlight_area.y,
+                            results[i].highlight_area.width,
+                            results[i].highlight_area.height);
+#endif                       
+                // if (results[i].page_num == current_page) FIXME
+                gdk_draw_rectangle (view->bin_window,
+                                    widget->style->base_gc[GTK_STATE_SELECTED],
+                                    FALSE,
+                                    results[i].highlight_area.x,
+                                    results[i].highlight_area.y,
+                                    results[i].highlight_area.width,
+                                    results[i].highlight_area.height);
+                ++i;
+        }
 }
 
 static gboolean
@@ -304,7 +334,6 @@ ev_view_expose_event (GtkWidget      *widget,
 		return GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event (widget, event);
 
 	return FALSE;
-  
 }
 
 static gboolean
@@ -430,6 +459,29 @@ ev_view_init (EvView *view)
 	static const GdkColor white = { 0, 0xffff, 0xffff, 0xffff };
 	
 	gtk_widget_modify_bg (GTK_WIDGET (view), GTK_STATE_NORMAL, &white);
+
+        view->find_results = g_array_new (FALSE,
+                                          FALSE,
+                                          sizeof (EvFindResult));
+}
+
+
+static void
+found_results_callback (EvDocument         *document,
+                        const EvFindResult *results,
+                        int                 n_results,
+                        double              percent_complete,
+                        void               *data)
+{
+  EvView *view = EV_VIEW (data);
+  
+  g_array_set_size (view->find_results, 0);
+
+  if (n_results > 0)
+          g_array_append_vals (view->find_results,
+                               results, n_results);
+  
+  gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /*** Public API ***/       
@@ -449,13 +501,23 @@ ev_view_set_document (EvView     *view,
 	if (document != view->document) {
 		int old_page = ev_view_get_page (view);
 		
-		if (view->document)
+		if (view->document) {
 			g_object_unref (view->document);
+                        g_signal_handlers_disconnect_by_func (view->document,
+                                                              found_results_callback,
+                                                              view);
+                        g_array_set_size (view->find_results, 0);
+                }
 
 		view->document = document;
 
-		if (view->document)
+		if (view->document) {
 			g_object_ref (view->document);
+                        g_signal_connect (view->document,
+                                          "found",
+                                          G_CALLBACK (found_results_callback),
+                                          view);
+                }
 
 		if (GTK_WIDGET_REALIZED (view))
 			ev_document_set_target (view->document, view->bin_window);

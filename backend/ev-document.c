@@ -159,3 +159,15 @@ ev_document_end_find (EvDocument   *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	iface->end_find (document);
 }
+
+void
+ev_document_found (EvDocument         *document,
+		   const EvFindResult *results,
+		   int                 n_results,
+		   double              percent_complete)
+{
+	g_signal_emit_by_name (document,
+			       "found",
+			       results, n_results, percent_complete);
+}
+				    

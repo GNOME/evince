@@ -593,8 +593,18 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	visible = GTK_WIDGET_VISIBLE (find_bar);
 	search_string = egg_find_bar_get_search_string (find_bar);
 	
-	/* FIXME */
+#if 0
 	g_printerr ("search for '%s'\n", search_string ? search_string : "(nil)");
+#endif
+
+	/* We don't require begin/end find calls to be matched up, it's really
+	 * start_find and cancel_any_find_that_may_not_be_finished
+	 */
+	if (visible && search_string) {
+		ev_document_begin_find (ev_window->priv->document, search_string, case_sensitive);
+	} else {
+		ev_document_end_find (ev_window->priv->document);
+	}
 }
 
 static void

@@ -80,7 +80,9 @@ struct _EvDocumentIface
         /* Signals */
 
         /* "found" emitted at least 1 time (possibly with n_results == 0)
-         * for any call to begin_find.
+         * for any call to begin_find; also emitted with NULL,0 when
+	 * you end_find. Calling begin_find twice without calling end_find
+	 * is considered OK.
          */
         void         (* found)          (EvDocument         *document,
                                          const EvFindResult *results,
@@ -116,6 +118,12 @@ void     ev_document_begin_find    (EvDocument   *document,
                                     const char   *search_string,
                                     gboolean      case_sensitive);
 void     ev_document_end_find      (EvDocument   *document);
+
+void     ev_document_found         (EvDocument         *document,
+				    const EvFindResult *results,
+				    int                 n_results,
+				    double              percent_complete);
+				    
 
 G_END_DECLS
 
