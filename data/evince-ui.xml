@@ -1,0 +1,22 @@
+<ui>
+  <menubar name="MainMenu">
+    <menu name="FileMenu" action="File">
+      <menuitem name="FileOpenMenu" action="FileOpen"/>
+      <separator name="FileSep1"/>
+      <menuitem name="FileCloseWindowMenu" action="FileCloseWindow"/>
+    </menu>
+
+    <menu name="ViewMenu" action="View">
+      <menuitem name="ViewToolbarMenu" action="ViewToolbar"/>
+      <menuitem name="ViewStatusbarMenu" action="ViewStatusbar"/>
+    </menu>
+
+    <menu name="HelpMenu" action="Help">
+      <menuitem name="HelpAboutMenu" action="HelpAbout"/>
+    </menu>
+  </menubar>
+
+  <toolbar name="ToolBar">
+    <toolitem action="FileOpen"/>
+  </toolbar>
+</ui>
