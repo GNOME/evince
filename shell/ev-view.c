@@ -301,6 +301,51 @@ ev_view_state_changed (GtkWidget    *widget,
 	update_window_backgrounds (EV_VIEW (widget));
 }
 
+static guint32
+ev_gdk_color_to_rgb (const GdkColor *color)
+{
+  guint32 result;
+  result = (0xff0000 | (color->red & 0xff00));
+  result <<= 8;
+  result |= ((color->green & 0xff00) | (color->blue >> 8));
+  return result;
+}
+
+static void
+draw_rubberband (GtkWidget *widget, GdkWindow *window, const GdkRectangle *rect)
+{
+	GdkGC *gc;
+	GdkPixbuf *pixbuf;
+	GdkColor *fill_color_gdk;
+	guint fill_color;
+
+	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
+	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | 0x40;
+
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+				 rect->width, rect->height);
+	gdk_pixbuf_fill (pixbuf, fill_color);
+
+	gdk_draw_pixbuf (window, NULL, pixbuf,
+			 0, 0,
+			 rect->x,rect->y,
+			 rect->width, rect->height,
+			 GDK_RGB_DITHER_NONE,
+			 0, 0);
+
+	g_object_unref (pixbuf);
+
+	gc = gdk_gc_new (window);
+	gdk_gc_set_rgb_fg_color (gc, fill_color_gdk);
+	gdk_draw_rectangle (window, gc, FALSE,
+			    rect->x, rect->y,
+			    rect->width - 1,
+			    rect->height - 1);
+	g_object_unref (gc);
+
+	gdk_color_free (fill_color_gdk);
+}
+
 static void
 expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
@@ -330,13 +375,8 @@ expose_bin_window (GtkWidget      *widget,
                             results[i].highlight_area.height);
 #endif
 		if (results[i].page_num == current_page)
-			gdk_draw_rectangle (view->bin_window,
-					    widget->style->base_gc[GTK_STATE_SELECTED],
-					    FALSE,
-					    results[i].highlight_area.x,
-					    results[i].highlight_area.y,
-					    results[i].highlight_area.width,
-					    results[i].highlight_area.height);
+			draw_rubberband (widget, view->bin_window,
+					 &results[i].highlight_area);
                 ++i;
         }
 }
