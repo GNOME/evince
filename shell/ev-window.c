@@ -482,7 +482,8 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		document = NULL;
 	else if (!strcmp (mime_type, "application/pdf"))
 		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
-	else if (!strcmp (mime_type, "application/postscript"))
+	else if (!strcmp (mime_type, "application/postscript") ||
+		 !strcmp (mime_type, "image/x-eps"))
 		document = g_object_new (PS_TYPE_DOCUMENT, NULL);
 	else if (mime_type_supported_by_gdk_pixbuf (mime_type))
 		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);

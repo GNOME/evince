@@ -411,7 +411,9 @@ expose_bin_window (GtkWidget      *widget,
 			    event->area.x, event->area.y,
 			    event->area.width, event->area.height);
 
-	highlight_find_results (view);
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
+		highlight_find_results (view);
+	}
 
 	if (view->has_selection) {
 		draw_rubberband (widget, view->bin_window,

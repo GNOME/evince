@@ -129,12 +129,14 @@ ev_application_open (EvApplication *application, GError *err)
 	gtk_file_filter_set_name (both_filter,
 				  _("PostScript and PDF Documents"));
 	gtk_file_filter_add_mime_type (both_filter, "application/postscript");
+	gtk_file_filter_add_mime_type (both_filter, "image/x-eps");
 	gtk_file_filter_add_mime_type (both_filter, "application/pdf");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), both_filter);
 
 	ps_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (ps_filter, _("PostScript Documents"));
 	gtk_file_filter_add_mime_type (ps_filter, "application/postscript");
+	gtk_file_filter_add_mime_type (ps_filter, "image/x-eps");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), ps_filter);
 
 	pdf_filter = gtk_file_filter_new ();
