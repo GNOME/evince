@@ -32,6 +32,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 PKG_CHECK_MODULES(LIBEVPRIVATE, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= 2.5.0 libgnomeui-2.0 gnome-vfs-2.0 libgnomeprint-2.2 libgnomeprintui-2.2 libglade-2.0)
+PKG_CHECK_MODULES(DVI, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(PS, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 libgnomeui-2.0)
 
@@ -373,4 +374,6 @@ ps/Makefile
 po/Makefile.in
 backend/Makefile
 shell/Makefile
+dvi/Makefile
+dvi/dvilib/Makefile
 ])

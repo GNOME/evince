@@ -28,7 +28,7 @@ namespace DviLib {
 	virtual void y_rep () = 0;			// move down y
 	virtual void z (int len) = 0;			// move down len, set z = len
 	virtual void z_rep () = 0;			// move down z	
-	virtual void push_fontmap (std::map<int, DviFontdefinition *> fontmap) = 0;
+	virtual void fontmap (DviFontMap *fontmap) = 0;	// set fontmap
 	virtual void font_num (int num) = 0;		// f = num
 	virtual void special (std::string spc) = 0;	// do something special
 	

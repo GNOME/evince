@@ -2,12 +2,14 @@
 #define DL_FONT_DEFINITION_HH__
 
 #include <string>
+#include <map>
 
 #include "dl-refcounted.hh"
 
 namespace DviLib {
-    
-    class DviFontdefinition : public RefCounted {
+
+    class DviFontdefinition : public RefCounted
+    {
     public:
 	uint fontnum;
 	uint checksum;
@@ -18,5 +20,13 @@ namespace DviLib {
 	string name;
     };
 
+    class DviFontMap : public RefCounted
+    {
+    public:
+	std::map <int, DviFontdefinition *> fontmap;
+	DviFontdefinition *get_fontdefinition (int fontnum);
+	void set_fontdefinition (int fontnum, DviFontdefinition *fd);
+	DviFontMap::~DviFontMap ();
+    };
 }    
 #endif // DL_FONT_DEFINITION_HH__

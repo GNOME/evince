@@ -120,6 +120,8 @@ run_mktexpk (int dpi, string name)
     char *namestr = g_strdup (name.c_str());
     char *result;
 
+    cout << "mktexpk " << bdpistr << " " << dpistr << " " << " " << namestr << " " << endl;
+    
     result = run_program ("mktexpk", NULL, bdpistr, dpistr, namestr, NULL);
     if (result)
 	g_free (result);
@@ -136,6 +138,8 @@ FontFactory::create_font (std::string name,
 {
     char *filename;
 
+    cout << "at size: " << at_size << endl;
+    
     /* Find VF */
     filename = run_kpsewhich (dpi, "vf", name);
 

@@ -17,7 +17,8 @@ namespace DviLib {
 	REPEAT_COUNT
     };
     
-    class PkChar : public AbstractCharacter {
+    class PkChar : public AbstractCharacter
+    {
 	uint dyn_f;
 	bool first_is_black;	// if first run count is black or white
 	int character_code;
@@ -39,6 +40,7 @@ namespace DviLib {
 	void unpack_rle (RleContext& nr);
 	void unpack_bitmap (void);
 	void unpack (void);
+
     public:
 	PkChar (AbstractLoader &l);
 	virtual void paint (DviRuntime &runtime);

@@ -77,7 +77,9 @@ namespace DviLib
     public:
 	DviRuleCommand (int h_arg, int w_arg) : h(h_arg), w(w_arg) 
 	{
+#if 0
 	    std::cout << "rule cmd " << h << " " << w << std::endl;
+#endif
 	}
 	int get_h (void) const { return h; }
 	int get_w (void) const { return w; }

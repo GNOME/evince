@@ -2,6 +2,7 @@
 #include "dl-dvi-fontdefinition.hh"
 
 using DviLib::DviFontdefinition;
+using DviLib::DviFontMap;
 using DviLib::AbstractCharacter;
 
 // paint a bitmap
@@ -41,13 +42,11 @@ DviPainter::paint_bitmap (const unsigned char *data,
 void 
 DviPainter::set_char (int ch)
 {
-    g_assert (current_font);
-    
-    AbstractCharacter *character = current_font->get_char (ch);
+    AbstractCharacter *character = current_frame->font->get_char (ch);
     character->paint (* this);
     
     int tfm_width = character->get_tfm_width ();
-    int at_size = current_font->get_at_size ();
+    int at_size = current_frame->font->get_at_size ();
     int dvi_width = tfm_to_dvi (tfm_width, at_size);
     
     current_frame->h += dvi_width;
@@ -57,7 +56,7 @@ DviPainter::set_char (int ch)
 void 
 DviPainter::put_char (int ch)
 {
-    AbstractCharacter *character = current_font->get_char (ch);
+    AbstractCharacter *character = current_frame->font->get_char (ch);
     character->paint (* this);
 }
 
@@ -71,7 +70,9 @@ DviPainter::set_rule (int height,
     int x = dvi_to_pixels (current_frame->h);
     int y = dvi_to_pixels (current_frame->v);
     
+#if 0
     cout << "BIRNAN\n" << endl;
+#endif
     
     gdk_draw_rectangle (pixmap,	gc, TRUE, 
 			x, y, 
@@ -108,14 +109,28 @@ DviFrame::copy (void)
 {
     DviFrame *frame = new DviFrame ();
 
+    frame->fontmap = this->fontmap;
+    if (frame->fontmap)
+	frame->fontmap->ref();
     frame->h = this->h;
     frame->v = this->v;
     frame->w = this->w;
     frame->x = this->x;
     frame->y = this->y;
     frame->z = this->z;
-
+    frame->font = this->font;
+    if (frame->font)
+	frame->font->ref();
+    
     return frame;
+}
+
+DviFrame::~DviFrame()
+{
+    if (this->fontmap)
+	this->fontmap->unref();
+    if (this->font)
+	this->font->unref();
 }
 
 void 
@@ -124,6 +139,10 @@ DviPainter::push (void)
     DviFrame *new_frame = current_frame->copy();
     new_frame->next = current_frame;
     current_frame = new_frame;
+    if (current_frame->font)
+	cout << "push: there is a font" << endl;
+    else
+	cout << "push: there is not a font" << endl;
 }
 
 // pop ccontext
@@ -132,8 +151,18 @@ DviPainter::pop (void)
 {
     DviFrame *old_frame = current_frame;
 
+    // FIXME: dvi assumes that fonts survive pops
+    // FIXME: however, do they also survive the final pop of a vfchar?
+    
     current_frame = current_frame->next;
 
+    if (current_frame && current_frame->font)
+	cout << "pop: there is a font" << endl;
+    else if (current_frame)
+	cout << "pop: there is not font" << endl;
+    else
+	cout << "no current" << endl;
+    
     old_frame->unref();
 }
 
@@ -215,9 +244,8 @@ DviPainter::z_rep ()
 void 
 DviPainter::font_num (int font_num)
 {
-    cout << "get fno " << font_num << endl;
-    DviFontdefinition *fd = dvi_file->get_fontdefinition (font_num);
-    
+    DviFontdefinition *fd = current_frame->fontmap->get_fontdefinition (font_num);
+
     g_assert (fd);
     if (fd)
     {
@@ -225,10 +253,18 @@ DviPainter::font_num (int font_num)
 	int dpi = (int)floor( 0.5 + 1.0 * base_dpi * 
 			      dvi_file->get_magnification() * fd->at_size /
 			      ( 1000.0 * fd->design_size));
-	cout << "fno: " << fd->fontnum << endl;
-	cout << fd->name << endl;
-	current_font = 
+
+	cout << fd->name << " design size: " << fd->design_size << " at size " << fd->at_size << endl;
+	
+	if (current_frame->font)
+	    current_frame->font->unref();
+	
+	current_frame->font = 
 	    font_factory->create_font (fd->name, dpi, fd->at_size);
+
+	g_assert (current_frame->font);
+	cout << "there is now a font"<< endl;
+    
     }
 }
 
@@ -302,8 +338,6 @@ DviPainter::DviPainter (GdkPixmap              *pixmap_arg,
     dvi_file->ref();
     font_factory->ref();
     
-    current_font = 0;
-    
     current_frame = new DviFrame;
     current_frame->h = 0;
     current_frame->v = 0;
@@ -311,6 +345,8 @@ DviPainter::DviPainter (GdkPixmap              *pixmap_arg,
     current_frame->x = 0;
     current_frame->y = 0;
     current_frame->z = 0;
+    current_frame->fontmap = NULL;
+    current_frame->font = NULL;
     
     // from gtkdvi:
     scale =  dvi_file->get_numerator() / 254000.0;
@@ -329,6 +365,12 @@ DviPainter::~DviPainter ()
 }
 
 void
-DviPainter::push_fontmap (std::map<int, DviFontdefinition *> fontmap)
+DviPainter::fontmap (DviFontMap *fontmap)
 {
+    fontmap->ref();
+
+    if (current_frame->fontmap)
+	current_frame->fontmap->unref();
+
+    current_frame->fontmap = fontmap;
 }

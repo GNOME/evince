@@ -43,7 +43,7 @@ DviFile::get_page (uint n)
 	loader.goto_from_start (header->address + 45);
 	program = parser.parse_program ();
 	
-	page = new DviPage (*header, *program);
+	page = new DviPage (*program, header->count, postamble->fontmap);
     }
     
     return page;

@@ -23,9 +23,12 @@ public:
 class DviFrame : public DviLib::RefCounted
 {
 public:
+    DviLib::DviFontMap *fontmap;
     int h, v, w, x, y, z;		// in dvi units
     DviFrame *next;
     DviFrame *copy ();
+    DviLib::AbstractFont *font;
+    ~DviFrame();
 };
 
 class DviPainter : public AbstractDviPainter
@@ -49,7 +52,7 @@ public:
     virtual void y_rep ();			// move down y
     virtual void z (int len);			// move down len, set z = len
     virtual void z_rep ();			// move down z
-    virtual void push_fontmap (std::map<int, DviLib::DviFontdefinition *> fontmap);
+    virtual void fontmap (DviLib::DviFontMap *fontmap); // set fontmap
     virtual void font_num (int font_num);	// current_font = fd
     virtual void special (string spc);		// do something special
     virtual void paint_bitmap (const unsigned char *data, 
@@ -65,7 +68,6 @@ private:
     AbstractFontFactory *font_factory;
 
     // runtime
-    DviLib::AbstractFont *current_font;
     DviFrame *current_frame;		// stack of DVI frames
 
     double scale;		// convert dvi units to pixels

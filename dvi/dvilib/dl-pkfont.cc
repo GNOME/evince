@@ -189,21 +189,31 @@ PkChar::unpack_bitmap (void)
 {
     uint i, weight;
     
-    uchar *bitmap 
-	= new uchar [4 * width * height];
-    fill (bitmap, bitmap + 4 * width * height, 0xFF);
+    uint *bitmap 
+	= new uint [width * height];
+    fill (bitmap, bitmap + width * height, 0x00000000);
     
     weight = 128;
     
-    for (i=0; i < height * width; i+=4)
+    for (i=0; i < height * width; i++)
     {
 	if ((*data.packed & weight) != 0)
-	    bitmap[i] = bitmap[i+1] = 
-		bitmap[i+2] = bitmap[i+3] = 0x00;
-	weight = (weight == 1)?
-	    (data.packed++, 128) : weight >> 1;
+	{
+	    bitmap[i] = 0xff000000;
+	}
+
+	if (weight == 1)
+	{
+	    weight = 128;
+	    data.packed++;
+	}
+	else
+	{
+	    weight >>= 1;
+	}
     }
-    data.bitmap = bitmap;
+    
+    data.bitmap = (uchar *)bitmap;
 }
 
 void
@@ -213,7 +223,9 @@ PkChar::unpack (void)
 	return;
     
     if (dyn_f == 14)
+    {
 	unpack_bitmap();
+    }
     else
     {
 	Bitmap bitmap (width, height);
@@ -222,9 +234,17 @@ PkChar::unpack (void)
 		       first_is_black? BLACK : WHITE,
 		       bitmap);
 	unpack_rle (nr);
-	unpacked = true;
 	data.bitmap = bitmap.steal_pixels ();
+
+#if 0
+	if (character_code == '6')
+	    cout << "HERER" << endl;
+	else
+	    cout << '[' << character_code << " not " << (int)'6' << ']' << endl;
+#endif
     }
+    
+    unpacked = true;
 }
 
 PkChar::PkChar (AbstractLoader &loader)
@@ -257,9 +277,13 @@ PkChar::PkChar (AbstractLoader &loader)
     case 4: case 5: case 6:
 	/* extended short preamble */
 	length = loader.get_uint16 () + ((flag_byte & 3) << 16) - 13;
+#if 0
 	cout << length;
+#endif
 	character_code = loader.get_uint8 ();
+#if 0
 	cout << ',' << character_code;
+#endif
 	tfm_width = loader.get_uint24 ();
 	dx = loader.get_uint16 () << 16;
 	dy = 0;

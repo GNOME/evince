@@ -1,3 +1,19 @@
+Tue Dec 21 21:45:43 2004  Soeren Sandmann  <sandmann@redhat.com>
+
+	* Makefile.am: 
+	* dvi/dvilib/Makefile.am:
+	* dvi/Makefile.am:
+	* configure.ac: Auto*ify dvi and dvi/dvilib
+
+	* dvi/Makefile: Remove from CVS
+	
+	* dvi/dvilib/dl-pkfont.cc (unpack_bitmap): Fix uchar/uint
+	confusion.
+
+	* dvi/dvilib/dl-fontdefinition.{cc,hh}: New DviFontMap class
+	
+	* dvi/dvilib/dl-vffont.{cc,hh}: Many bugfixes to VF code.
+	
 2004-12-22  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* ps/Makefile.am:

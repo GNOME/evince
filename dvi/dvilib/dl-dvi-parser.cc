@@ -358,7 +358,9 @@ DviParser::parse_program (uint n_bytes)
 	cmd = parse_command (loader, &count, &opcode);
 	if (cmd)
 	{
+#if 0
 	    cout << opcode << endl;
+#endif
 	    program->add_command (cmd);
 	    cmd->unref();
 	}
@@ -420,12 +422,14 @@ DviParser::parse_fontdefinition (void)
     fontdef->directory = "";
     fontdef->name = "";
     
-    for (uint i=0; i<dirlength; ++i)
+    for (uint i=0; i < dirlength; ++i)
 	fontdef->directory += loader.get_uint8();
-    for (uint i=0; i<namelength; ++i)
+    for (uint i=0; i < namelength; ++i)
 	fontdef->name += loader.get_uint8();
     
+#if 0
     cout << "parsed fd: " << fontdef->name << " " << fontdef->fontnum << endl;
+#endif
     
     return fontdef;
 }
@@ -462,6 +466,8 @@ DviFilePostamble *
 DviParser::parse_postamble (void)
 {
     DviFilePostamble *postamble = new DviFilePostamble;
+
+    postamble->fontmap = new DviFontMap;
     
     loader.goto_from_end (-5);
     
@@ -497,9 +503,9 @@ DviParser::parse_postamble (void)
 	    loader.goto_from_current (-1);
 	    DviFontdefinition *fd = parse_fontdefinition ();
 	    
-	    postamble->fontdefinitions[fd->fontnum] = fd;
+	    postamble->fontmap->set_fontdefinition (fd->fontnum, fd);
 	    cout << fd->name << endl;
-	    cout << postamble->fontdefinitions[fd->fontnum]->name;
+	    cout << postamble->fontmap->get_fontdefinition(fd->fontnum)->name;
 	}
 	else
 	{
@@ -515,6 +521,8 @@ DviParser::parse_vf_font_preamble (void)
 {
     DviOpcode c;
     VfFontPreamble *preamble = new VfFontPreamble;
+
+    preamble->fontmap = new DviFontMap;
     
     c = (DviOpcode)loader.get_uint8 ();
     if (c != DVI_PRE)
@@ -527,6 +535,7 @@ DviParser::parse_vf_font_preamble (void)
     preamble->checksum = loader.get_uint32 ();
     preamble->design_size = loader.get_uint32 ();
     
+    int i = 0;
     while (true)
     {
 	DviOpcode c = (DviOpcode)loader.get_uint8 ();
@@ -536,7 +545,7 @@ DviParser::parse_vf_font_preamble (void)
 	    loader.goto_from_current (-1);
 	    DviFontdefinition *fd = parse_fontdefinition ();
 	    
-	    preamble->fontdefinitions.push_back (fd);
+	    preamble->fontmap->set_fontdefinition (i++, fd);
 	}
 	else
 	{

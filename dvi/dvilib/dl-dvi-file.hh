@@ -8,44 +8,50 @@
 #include "dl-dvi-fontdefinition.hh"
 #include "dl-loader.hh"
 
-namespace DviLib {
+namespace DviLib
+{
     const uint N_PAGE_COUNTERS = 10;          // \count0 ... \count9
     
-    class DviPageHeader : public RefCounted {
+    class DviPageHeader : public RefCounted
+    {
     public:
 	int count[N_PAGE_COUNTERS];
 	uint address;          // address of this page, not the preceding
     };
     
-    class DviPage : public AbstractDviProgram { 
+    class DviPage : public AbstractDviProgram
+    { 
 	DviProgram& program;
+	DviFontMap *fontmap;
 	int count[N_PAGE_COUNTERS];	   // \count0 ... \count9
     public:
-	DviPage (DviProgram& p, int c[N_PAGE_COUNTERS]) :
+	DviPage (DviProgram& p, int c[N_PAGE_COUNTERS], DviFontMap *fontmap) :
 	    program (p)
 	{
-	    for (uint i=0; i<N_PAGE_COUNTERS; ++i)
+	    this->fontmap = fontmap;
+	    this->fontmap->ref();
+	    for (uint i = 0; i < N_PAGE_COUNTERS; ++i)
 		count[i] = c[i];
-	}
-	DviPage (DviPageHeader& h, DviProgram& p) :
-	    program (p)
-	{
-	    for (uint i=0; i<N_PAGE_COUNTERS; ++i)
-		count[i] = h.count[i];
 	}
 	virtual void execute (DviRuntime& runtime)
 	{
+	    runtime.push();
+	    runtime.fontmap (fontmap);
+	    cout << "page " << (int)fontmap << endl;
 	    program.execute (runtime);
+	    runtime.pop();
 	}
 	int get_page_count (int i) { return count[i]; }
     };
     
-    enum DviType {
+    enum DviType
+    {
 	NORMAL_DVI  = 2, // FIXME: this should be 2
 	TEX_XET_DVI = 2  // FIXME: is this correct?
     };
     
-    class DviFilePreamble : public RefCounted {
+    class DviFilePreamble : public RefCounted
+    {
     public:
 	// preamble
 	DviType type;
@@ -55,7 +61,8 @@ namespace DviLib {
 	string comment;
     };
     
-    class DviFilePostamble : public RefCounted {
+    class DviFilePostamble : public RefCounted
+    {
     public:
 	// postamble
 	DviType type;
@@ -67,10 +74,12 @@ namespace DviLib {
 	uint max_height;
 	uint max_width;
 	uint stack_height;
-	map <uint, DviFontdefinition *> fontdefinitions;
+
+	DviFontMap *fontmap;
     };
     
-    class DviFile : public RefCounted {
+    class DviFile : public RefCounted
+    {
 	AbstractLoader &loader;
 	
 	DviFilePreamble *preamble;
@@ -87,7 +96,7 @@ namespace DviLib {
 	uint get_n_pages () { return n_pages; }
 	DviFontdefinition *get_fontdefinition (uint n) 
 	{
-	    return postamble->fontdefinitions[n];
+	    return postamble->fontmap->get_fontdefinition (n);
 	}
 	uint get_numerator () { return postamble->numerator; }
 	uint get_denominator () { return postamble->denominator; }
