@@ -66,6 +66,7 @@ typedef struct {
   GnomeEmbeddable *embeddable;
 
   PDFDoc       *pdf;
+  XRef         *xref; /* Ugly global XRef hack fix */
   BonoboStream *pdf_stream;
   GNOME_Stream  bonobo_stream;
 
@@ -147,10 +148,13 @@ render_page (view_data_t *view_data)
 {
   setup_pixmap (view_data->bed, view_data,
 		view_data->win);
+  xref = view_data->bed->xref; /* Ugly global XRef hack fix */
   view_data->out->startDoc();
   view_data->bed->pdf->displayPage(view_data->out,
 				   view_data->page, view_data->zoom,
 				   0, gTrue);
+  view_data->bed->xref = xref;
+  xref = NULL;
 }
 
 static void
@@ -236,7 +240,6 @@ bed_free_data (bed_t *bed)
   }
 }
 
-
 /*
  * Loads a PDF from a GNOME_Stream
  */
@@ -269,6 +272,8 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	obj.initNull();
 	bed->pdf_stream = new BonoboStream (stream, 0, -1, &obj);
 	bed->pdf = new PDFDoc (bed->pdf_stream);
+	bed->xref = xref; /* Ugly global XRef hack fix */
+	xref = NULL;
 					      
 #if PDF_DEBUG > 0
 	printf ("Done load\n");
@@ -302,6 +307,8 @@ extern "C" {
   destroy_embed (GnomeView *view, bed_t *bed)
   {
     CORBA_Environment ev;
+
+    printf ("Destroying embedded component\n");
 
     while (bed->views)
       destroy_view (NULL, (view_data_t *)bed->views->data);

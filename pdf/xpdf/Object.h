@@ -22,6 +22,7 @@
 class Array;
 class Dict;
 class Stream;
+class XRef;
 
 //------------------------------------------------------------------------
 // Ref
@@ -291,5 +292,7 @@ inline void Object::streamSetPos(int pos)
 
 inline Dict *Object::streamGetDict()
   { return stream->getDict(); }
+
+#include "XRef.h"
 
 #endif
