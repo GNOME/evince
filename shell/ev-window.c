@@ -1129,7 +1129,7 @@ static GtkToggleActionEntry toggle_entries[] = {
 	  G_CALLBACK (ev_window_view_statusbar_cb), TRUE },
         { "ViewSidebar", NULL, N_("Side_bar"), "F9",
 	  N_("Show or hide sidebar"),
-	  G_CALLBACK (ev_window_view_sidebar_cb), FALSE },
+	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
         { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
           G_CALLBACK (ev_window_cmd_view_fullscreen) },
