@@ -1,3 +1,10 @@
+2005-01-21  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* pdf/xpdf/pdf-document.cc:
+
+	Check the links info is initialized before
+	using it. Should fix a crash on startup.
+
 2005-01-21  Martin Kretzschmar  <martink@gnome.org>
 
 	* pixbuf/pixbuf-document.c

@@ -1041,6 +1041,10 @@ pdf_document_get_link (EvDocument *document, int x, int y)
 	LinkAction *action;
 	double link_x, link_y;
 
+	if (pdf_document->links == NULL) {
+		return NULL;
+	}
+
 	/* Zoom */
 	link_x = x / pdf_document->scale;
 	link_y = y / pdf_document->scale;
