@@ -492,7 +492,7 @@ container_launch_component (GnomeClientSite *client_site,
 	 * Launch the component.
 	 */
 	object_server = gnome_object_activate_with_goad_id (
-		NULL, component_goad_id, 0, NULL);
+		NULL, component_goad_id, GOAD_ACTIVATE_SHLIB, NULL);
 
 	if (object_server == NULL)
 		return NULL;
@@ -612,7 +612,7 @@ container_create_toolbar (Container *container)
 	GnomeUIHandlerToolbarItem *toolbar;
 
 	gnome_ui_handler_create_toolbar (container->uih, "pdf");
-	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list (container->uih, container_toolbar);
+	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
 	gnome_ui_handler_toolbar_add_list (container->uih, "/", toolbar);
 	gnome_ui_handler_toolbar_free_list (toolbar);
 }
