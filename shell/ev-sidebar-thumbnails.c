@@ -111,7 +111,7 @@ adjustment_changed_cb (GtkAdjustment       *adjustment,
 	if (!path)
 		return;
 
-	page = gtk_tree_path_get_indices (path)[0];
+	page = gtk_tree_path_get_indices (path)[0] + 1;
 	if (page == priv->current_page)
 		return;
 	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store),
@@ -119,7 +119,7 @@ adjustment_changed_cb (GtkAdjustment       *adjustment,
 	gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store), &iter,
 			    COLUMN_THUMBNAIL_SET, &thumbnail_set,
 			    -1);
-	if (! thumbnail_set) {
+	if (!thumbnail_set) {
 		priv->current_page = page;
 		priv->current_page_iter = iter;
 		
@@ -239,8 +239,8 @@ do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 
 	priv->current_page++;
 
-	if (priv->current_page == priv->n_pages) {
-		priv->current_page = 0;
+	if (priv->current_page > priv->n_pages) {
+		priv->current_page = 1;
 		gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->list_store),
 					       &(priv->current_page_iter));
 	} else {
@@ -378,7 +378,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	g_object_unref (loading_icon);
 	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->list_store),
 				       &(priv->current_page_iter));
-	priv->current_page = 0;
+	priv->current_page = 1;
 	priv->pages_done = 0;
 }
 

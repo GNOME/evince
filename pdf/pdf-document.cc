@@ -1252,7 +1252,7 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 	output = new SplashOutputDev (splashModeRGB8, gFalse, color);
 	output->startDoc (pdf_document->doc->getXRef());
 	pdf_document->doc->displayPage (output,
-					page_num + 1,
+					page_num,
 					72*scale_factor,
 					72*scale_factor,
 					0, gTrue, gFalse);
@@ -1287,7 +1287,7 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	Object the_thumb;
 	Thumb *thumb = NULL;
 
-	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
+	the_page = pdf_document->doc->getCatalog ()->getPage (page);
 	the_page->getThumb (&the_thumb);
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {
@@ -1326,8 +1326,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	Thumb *thumb = NULL;
 	gboolean have_ethumbs = FALSE;
 
-	/* getPage seems to want page + 1 for some reason; */
-	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
+	the_page = pdf_document->doc->getCatalog ()->getPage (page);
 	the_page->getThumb(&the_thumb);
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {
