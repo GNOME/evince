@@ -328,7 +328,27 @@ pdf_document_set_password (EvDocumentSecurity *document_security,
 	document->password = g_strdup (password);
 }
 
+static char *
+pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerPage *poppler_page;
+	PopplerRectangle r;
+	double height;
+	
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	g_return_val_if_fail (poppler_page != NULL, NULL);
 
+	poppler_page_get_size (poppler_page, NULL, &height);
+	r.x1 = rect->x1;
+	r.y1 = height - rect->y2;
+	r.x2 = rect->x2;
+	r.y2 = height - rect->y1;
+
+	g_print ("%f %f %f %f\n", r.x1, r.y1, r.x2, r.y2);
+
+	return poppler_page_get_text (poppler_page, &r);
+}
 
 static void
 pdf_document_document_iface_init (EvDocumentIface *iface)
@@ -340,6 +360,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_label = pdf_document_get_page_label;
 	iface->get_links = pdf_document_get_links;
 	iface->render_pixbuf = pdf_document_render_pixbuf;
+	iface->get_text = pdf_document_get_text;
 };
 
 static void
@@ -703,7 +724,7 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 	PopplerPage *poppler_page;
 	PopplerRectangle *r;
 	int current_page;
-	double scale, height;
+	double height;
 
 	if (search == NULL)
 		return FALSE;
