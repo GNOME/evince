@@ -223,6 +223,9 @@ ev_view_size_request (GtkWidget      *widget,
 			requisition->width = 10;
 			requisition->height = 10;
 		}
+
+		requisition->width += 2;
+		requisition->height += 2;
 	}
   
 }
@@ -242,17 +245,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 		gdk_window_resize (view->bin_window,
 				   MAX (widget->allocation.width, widget->requisition.width),
 				   MAX (widget->allocation.height, widget->requisition.height));
-	}
-}
-
-static void
-update_window_backgrounds (EvView *view)
-{
-	GtkWidget *widget = GTK_WIDGET (view);
-  
-	if (GTK_WIDGET_REALIZED (view)) {
-		gdk_window_set_background (view->bin_window,
-					   &widget->style->base[GTK_WIDGET_STATE (widget)]);
 	}
 }
 
@@ -302,6 +294,9 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_set_user_data (view->bin_window, widget);
 	gdk_window_show (view->bin_window);
 
+	widget->style = gtk_style_attach (widget->style, view->bin_window);
+	gtk_style_set_background (widget->style, view->bin_window, GTK_STATE_NORMAL);
+
 	if (view->document) {
 		ev_document_set_target (view->document, view->bin_window);
 
@@ -312,8 +307,6 @@ ev_view_realize (GtkWidget *widget)
 		 */
 		gtk_widget_queue_resize (widget);
 	}
-
-	update_window_backgrounds (view);
 }
 
 static void
@@ -329,20 +322,6 @@ ev_view_unrealize (GtkWidget *widget)
 	view->bin_window = NULL;
 
 	GTK_WIDGET_CLASS (ev_view_parent_class)->unrealize (widget);
-}
-
-static void
-ev_view_style_set (GtkWidget      *widget,
-		   GtkStyle       *previous_style)
-{
-	update_window_backgrounds (EV_VIEW (widget));
-}
-
-static void
-ev_view_state_changed (GtkWidget    *widget,
-		       GtkStateType  previous_state)
-{
-	update_window_backgrounds (EV_VIEW (widget));
 }
 
 static guint32
@@ -406,7 +385,17 @@ expose_bin_window (GtkWidget      *widget,
 			    widget->requisition.width) / 2);
 	y_offset = MAX (0, (widget->allocation.height -
 			    widget->requisition.height) / 2);
-	ev_document_set_page_offset (view->document, x_offset, y_offset);
+	gdk_draw_rectangle (view->bin_window,
+                            widget->style->black_gc,
+                            FALSE,
+                            x_offset,
+			    y_offset,
+                            widget->requisition.width - 1,
+			    widget->requisition.height - 1);
+
+	ev_document_set_page_offset (view->document,
+				     x_offset + 1,
+				     y_offset + 1);
 
 	ev_document_render (view->document,
 			    event->area.x, event->area.y,
@@ -856,8 +845,6 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->size_allocate = ev_view_size_allocate;
 	widget_class->realize = ev_view_realize;
 	widget_class->unrealize = ev_view_unrealize;
-	widget_class->style_set = ev_view_style_set;
-	widget_class->state_changed = ev_view_state_changed;
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
@@ -920,16 +907,12 @@ ev_view_class_init (EvViewClass *class)
 static void
 ev_view_init (EvView *view)
 {
-	static const GdkColor white = { 0, 0xffff, 0xffff, 0xffff };
-
 	GTK_WIDGET_SET_FLAGS (view, GTK_CAN_FOCUS);
 
 	view->scale = 1.0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	
-	gtk_widget_modify_bg (GTK_WIDGET (view), GTK_STATE_NORMAL, &white);
-
         view->find_results = g_array_new (FALSE,
                                           FALSE,
                                           sizeof (EvFindResult));

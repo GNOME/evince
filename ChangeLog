@@ -1,5 +1,13 @@
 2005-01-20  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-view.c: (ev_view_size_request), (ev_view_realize),
+	(expose_bin_window), (ev_view_class_init), (ev_view_init):
+
+	Use normal style color for the widget background and
+	draw a black box around the page.
+
+2005-01-20  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* pdf/xpdf/pdf-document.cc:
 
 	Keep offset in consideration in a few places
