@@ -17,6 +17,8 @@ libevbackend_la_SOURCES=			\
 	ev-document-thumbnails.h		\
 	ev-document-bookmarks.c			\
 	ev-document-bookmarks.h			\
+	ev-document-find.c			\
+	ev-document-find.h			\
 	ev-ps-exporter.c			\
 	ev-ps-exporter.h			\
 	$(NULL)

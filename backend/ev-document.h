@@ -28,12 +28,6 @@
 
 G_BEGIN_DECLS
 
-typedef struct
-{
-  int page_num;
-  GdkRectangle highlight_area;
-} EvFindResult;
-
 #define EV_TYPE_DOCUMENT	    (ev_document_get_type ())
 #define EV_DOCUMENT(o)		    (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT, EvDocument))
 #define EV_DOCUMENT_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentIface))
@@ -71,23 +65,6 @@ struct _EvDocumentIface
 					 int          clip_y,
 					 int          clip_width,
 					 int          clip_height);
-        
-        void         (* begin_find)     (EvDocument    *document,
-                                         const char    *search_string,
-                                         gboolean       case_sensitive);
-        void         (* end_find)       (EvDocument    *document);
-
-        /* Signals */
-
-        /* "found" emitted at least 1 time (possibly with n_results == 0)
-         * for any call to begin_find; also emitted with NULL,0 when
-	 * you end_find. Calling begin_find twice without calling end_find
-	 * is considered OK.
-         */
-        void         (* found)          (EvDocument         *document,
-                                         const EvFindResult *results,
-                                         int                 n_results,
-                                         double              percent_complete);
 };
 
 GType ev_document_get_type (void);
@@ -114,16 +91,6 @@ void     ev_document_render          (EvDocument   *document,
 				      int           clip_y,
 				      int           clip_width,
 				      int           clip_height);
-void     ev_document_begin_find    (EvDocument   *document,
-                                    const char   *search_string,
-                                    gboolean      case_sensitive);
-void     ev_document_end_find      (EvDocument   *document);
-
-void     ev_document_found         (EvDocument         *document,
-				    const EvFindResult *results,
-				    int                 n_results,
-				    double              percent_complete);
-				    
 
 G_END_DECLS
 

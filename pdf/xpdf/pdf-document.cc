@@ -20,6 +20,7 @@
 #include "gpdf-g-switch.h"
 #include "pdf-document.h"
 #include "ev-ps-exporter.h"
+#include "ev-document-find.h"
 #include "gpdf-g-switch.h"
 
 #include "GlobalParams.h"
@@ -55,8 +56,9 @@ struct _PdfDocument
 	gboolean page_valid;
 };
 
-static void pdf_document_document_iface_init (EvDocumentIface *iface);
-static void pdf_document_ps_exporter_iface_init (EvPSExporterIface *iface);
+static void pdf_document_document_iface_init    (EvDocumentIface     *iface);
+static void pdf_document_ps_exporter_iface_init (EvPSExporterIface   *iface);
+static void pdf_document_find_iface_init        (EvDocumentFindIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
@@ -64,6 +66,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
 							pdf_document_ps_exporter_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
+							pdf_document_find_iface_init);
 			 });
 
 static gboolean
@@ -281,9 +285,9 @@ pdf_document_render (EvDocument  *document,
 }
 
 static void
-pdf_document_begin_find (EvDocument   *document,
-                         const char   *search_string,
-                         gboolean      case_sensitive)
+pdf_document_find_begin (EvDocumentFind   *document,
+                         const char       *search_string,
+                         gboolean          case_sensitive)
 {
         /* FIXME make this incremental (idle handler) and multi-page */
         /* Right now it's fully synchronous plus only does the current page */
@@ -340,26 +344,22 @@ pdf_document_begin_find (EvDocument   *document,
                 }
         }
 
-        ev_document_found (document,
-                           (EvFindResult*) results->data,
-                           results->len,
-                           1.0);
+        ev_document_find_found (document,
+				(EvFindResult*) results->data,
+				results->len,
+				1.0);
 
         g_array_free (results, TRUE);
 }
 
 static void
-pdf_document_end_find (EvDocument   *document)
+pdf_document_find_cancel (EvDocumentFind   *document)
 {
         PdfDocument *pdf_document = PDF_DOCUMENT (document);
 
         /* FIXME this will do something once begin_find queues
          * an incremental find
          */
-
-        // this should probably be shared among EvDocument
-        // implementations somehow?
-        ev_document_found (document, NULL, 0, 1.0);
 }
 
 static void
@@ -431,8 +431,6 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page_offset = pdf_document_set_page_offset;
 	iface->get_page_size = pdf_document_get_page_size;
 	iface->render = pdf_document_render;
-        iface->begin_find = pdf_document_begin_find;
-        iface->end_find = pdf_document_end_find;
 }
 
 static void
@@ -441,6 +439,14 @@ pdf_document_ps_exporter_iface_init (EvPSExporterIface *iface)
 	iface->begin = pdf_document_ps_export_begin;
 	iface->do_page = pdf_document_ps_export_do_page;
 	iface->end = pdf_document_ps_export_end;
+}
+
+
+static void
+pdf_document_find_iface_init (EvDocumentFindIface *iface)
+{
+        iface->begin = pdf_document_find_begin;
+        iface->cancel = pdf_document_find_cancel;
 }
 
 static void

@@ -34,6 +34,7 @@
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
 #include "ev-print-job.h"
+#include "ev-document-find.h"
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
@@ -405,16 +406,42 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+find_not_supported_dialog (EvWindow   *ev_window)
+{
+	GtkWidget *dialog;
+
+	/* If you change this so it isn't modal, be sure you don't
+	 * allow multiple copies of the dialog...
+	 */
+	
+ 	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_ERROR,
+					 GTK_BUTTONS_CLOSE,
+					 _("The \"Find\" feature will not work with this document"));
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+ 						  _("Searching for text is only supported for PDF documents."));
+	gtk_dialog_run (GTK_DIALOG (dialog));
+ 	gtk_widget_destroy (dialog);
+}
+
+static void
 ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	gtk_widget_show (ev_window->priv->find_bar);
+	if (ev_window->priv->document == NULL) {
+		g_printerr ("We should have set the Find menu item insensitive since there's no document\n");
+	} else if (!EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
+		find_not_supported_dialog (ev_window);
+	} else {
+		gtk_widget_show (ev_window->priv->find_bar);
 
-	if (ev_window->priv->exit_fullscreen_popup) 
-		update_fullscreen_popup (ev_window);
+		if (ev_window->priv->exit_fullscreen_popup) 
+			update_fullscreen_popup (ev_window);
 	
-	egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
+		egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
+	}
 }
 
 static void
@@ -442,7 +469,7 @@ update_fullscreen_popup (EvWindow *window)
 
 	/* FIXME multihead */
 	gdk_screen_get_monitor_geometry (gdk_screen_get_default (),
-                        gdk_screen_get_monitor_at_window
+			gdk_screen_get_monitor_at_window
                         (gdk_screen_get_default (),
                          GTK_WIDGET (window)->window),
                          &screen_rect);
@@ -922,10 +949,13 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	/* We don't require begin/end find calls to be matched up, it's really
 	 * start_find and cancel_any_find_that_may_not_be_finished
 	 */
-	if (visible && search_string) {
-		ev_document_begin_find (ev_window->priv->document, search_string, case_sensitive);
-	} else {
-		ev_document_end_find (ev_window->priv->document);
+	if (ev_window->priv->document &&
+	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
+		if (visible && search_string) {
+			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), search_string, case_sensitive);
+		} else {
+			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
+		}
 	}
 }
 

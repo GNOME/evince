@@ -1,3 +1,17 @@
+2004-12-22  Havoc Pennington  <hp@redhat.com>
+
+	* shell/ev-window.c (ev_window_cmd_edit_find): display an error if
+	the document doesn't support find (better ideas?)
+	(find_bar_search_changed_cb): handle missing document or document
+	that doesn't support find
+
+	* pdf/xpdf/pdf-document.cc: port to implement the new
+	EvDocumentFindIface
+
+	* backend/ev-document-find.c: create a new interface for searching
+
+	* backend/ev-document.h, backend/ev-document.c: delete the find stuff
+
 2004-12-23  Martin Kretzschmar  <martink@gnome.org>
 
 	* pdf/xpdf/Makefile.am (libpdfdocument_la_LIBADD): add

@@ -176,19 +176,6 @@ pixbuf_document_render (EvDocument  *document,
 }
 
 static void
-pixbuf_document_begin_find (EvDocument   *document,
-			    const char   *search_string,
-			    gboolean      case_sensitive)
-{
-	
-}
-
-static void
-pixbuf_document_end_find (EvDocument   *document)
-{
-}
-
-static void
 pixbuf_document_finalize (GObject *object)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (object);
@@ -220,8 +207,6 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page_offset = pixbuf_document_set_page_offset;
 	iface->get_page_size = pixbuf_document_get_page_size;
 	iface->render = pixbuf_document_render;
-        iface->begin_find = pixbuf_document_begin_find;
-        iface->end_find = pixbuf_document_end_find;
 }
 
 static GdkPixbuf *
