@@ -238,8 +238,11 @@ entry_activate_callback (GtkEntry *entry,
                           void     *data)
 {
   EggFindBar *find_bar = EGG_FIND_BAR (data);
+  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->private_data;
 
-  egg_find_bar_emit_next (find_bar);
+  /* We activate the "next" button here so we'll get a nice
+     animation */
+  gtk_widget_activate (priv->next_button);
 }
 
 static void
