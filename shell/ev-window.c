@@ -36,6 +36,7 @@
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
 #include "ev-password.h"
+#include "ev-password-view.h"
 #include "ev-print-job.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
@@ -56,15 +57,11 @@
 #include "ev-application.h"
 #include "ev-stock-icons.h"
 
-enum {
-	PROP_0,
-	PROP_ATTRIBUTE
-};
-
-enum {
-	SIGNAL,
-	N_SIGNALS
-};
+typedef enum {
+	PAGE_MODE_SINGLE_PAGE,
+	PAGE_MODE_CONTINUOUS_PAGE,
+	PAGE_MODE_PASSWORD,
+} EvWindowPageMode;
 
 struct _EvWindowPrivate {
 	GtkWidget *main_box;
@@ -72,7 +69,9 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar;
 	GtkWidget *thumbs_sidebar;
 	GtkWidget *find_bar;
+	GtkWidget *scrolled_window;
 	GtkWidget *view;
+	GtkWidget *password_view;
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
@@ -83,91 +82,31 @@ struct _EvWindowPrivate {
 
 	EvDocument *document;
 
+	/* These members are used temporarily when in PAGE_MODE_PASSWORD */
+	EvDocument *password_document;
+	GtkWidget *password_dialog;
+	char *password_uri;
+
 	gboolean fullscreen_mode;
 };
+#define EV_WINDOW_GET_PRIVATE(object) \
+	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_WINDOW, EvWindowPrivate))
+
 
 #define NAVIGATION_BACK_ACTION "NavigationBack"
 #define NAVIGATION_FORWARD_ACTION "NavigationForward"
 #define PAGE_SELECTOR_ACTION "PageSelector"
 
-#if 0
-/* enable these to add support for signals */
-static guint ev_window_signals [N_SIGNALS] = { 0 };
-#endif
 
-static void update_fullscreen_popup (EvWindow *window);
+static void     ev_window_update_fullscreen_popup (EvWindow         *window);
+static void     ev_window_set_page_mode           (EvWindow         *window,
+						   EvWindowPageMode  page_mode);
+static gboolean start_loading_document            (EvWindow         *ev_window,
+						   EvDocument       *document,
+						   const char       *uri);
 
-static GObjectClass *parent_class = NULL;
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
-
-#define EV_WINDOW_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_WINDOW, EvWindowPrivate))
-
-#if 0
-const char *
-ev_window_get_attribute (EvWindow *self)
-{
-	g_return_val_if_fail (self != NULL && EV_IS_WINDOW (self), NULL);
-
-	return self->priv->attribute;
-}
-
-void
-ev_window_set_attribute (EvWindow* self, const char *attribute)
-{
-	g_assert (self != NULL && EV_IS_WINDOW (self));
-	g_assert (attribute != NULL);
-
-	if (self->priv->attribute != NULL) {
-		g_free (self->priv->attribute);
-	}
-
-	self->priv->attribute = g_strdup (attribute);
-
-	g_object_notify (G_OBJECT (self), "attribute");
-}
-
-static void
-ev_window_get_property (GObject *object, guint prop_id, GValue *value,
-			GParamSpec *param_spec)
-{
-	EvWindow *self;
-
-	self = EV_WINDOW (object);
-
-	switch (prop_id) {
-	case PROP_ATTRIBUTE:
-		g_value_set_string (value, self->priv->attribute);
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
-						   prop_id,
-						   param_spec);
-		break;
-	}
-}
-
-static void
-ev_window_set_property (GObject *object, guint prop_id, const GValue *value,
-			GParamSpec *param_spec)
-{
-	EvWindow *self;
-
-	self = EV_WINDOW (object);
-
-	switch (prop_id) {
-	case PROP_ATTRIBUTE:
-		ev_window_set_attribute (self, g_value_get_string (value));
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
-						   prop_id,
-						   param_spec);
-		break;
-	}
-}
-#endif
 
 static void
 set_action_sensitive (EvWindow   *ev_window,
@@ -329,19 +268,44 @@ static void
 update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_window)
 {
 	char *title = NULL;
+	char *doc_title = NULL;
+	gboolean password_needed;
 
-	if (document == NULL) {
-		title = g_strdup (_("Document Viewer"));
+	password_needed = (ev_window->priv->password_document != NULL);
+
+	if (document) {
+		doc_title = ev_document_get_title (document);
+
+		/* Make sure we get a valid title back */
+		if (doc_title) {
+			if (doc_title[0] == '\000' ||
+			    !g_utf8_validate (doc_title, -1, NULL)) {
+				g_free (doc_title);
+				doc_title = NULL;
+			}
+		}
+	}
+	if (doc_title == NULL && ev_window->priv->uri) {
+		doc_title = g_path_get_basename (ev_window->priv->uri);
+	}
+
+	if (password_needed) {
+		if (doc_title == NULL) {
+			title = g_strdup (_("Document Viewer - Password Required"));
+		} else {
+			title = g_strdup_printf (_("%s - Password Required"), doc_title);
+		}
 	} else {
-		title = ev_document_get_title (document);
-
-		if (title == NULL || (title && strlen (title) == 0)) {
-			title = g_path_get_basename (ev_window->priv->uri);
+		if (doc_title == NULL) {
+			title = g_strdup (_("Document Viewer"));
+		} else {
+			title = g_strdup (doc_title);
 		}
 	}
 
 	gtk_window_set_title (GTK_WINDOW (ev_window), title);
 
+	g_free (doc_title);
 	g_free (title);
 }
 
@@ -370,6 +334,13 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	document = ev_window->priv->document;
 
+	g_signal_connect_object (G_OBJECT (document),
+				 "notify::title",
+				 G_CALLBACK (update_window_title),
+				 ev_window, 0);
+
+	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
+
 	ev_sidebar_set_document (sidebar, document);
 	ev_view_set_document (view, document);
 
@@ -387,20 +358,144 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_navigation_action_set_history
 		(EV_NAVIGATION_ACTION (action), history);
 
+	update_window_title (ev_window->priv->document, NULL, ev_window);
 	update_total_pages (ev_window);
 	update_action_sensitivity (ev_window);
 }
 
-
-static gchar *
-ev_window_get_password (GtkWidget *password_dialog)
+static void
+password_dialog_response (GtkWidget *password_dialog,
+			  gint       response_id,
+			  EvWindow  *ev_window)
 {
-	gchar *password = NULL;
+	char *password;
+	
+	if (response_id == GTK_RESPONSE_OK) {
+		EvDocument *document;
+		gchar *uri;
 
-	if (gtk_dialog_run (GTK_DIALOG (password_dialog)) == GTK_RESPONSE_OK)
 		password = ev_password_dialog_get_password (password_dialog);
+		if (password)
+			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->password_document),
+							   password);
+		g_free (password);
 
-	return password;
+		document = ev_window->priv->password_document;
+		uri = ev_window->priv->password_uri;
+
+		ev_window->priv->password_document = NULL;
+		ev_window->priv->password_uri = NULL;
+
+		if (start_loading_document (ev_window, document, uri)) {
+			gtk_widget_destroy (password_dialog);
+		}
+
+		g_object_unref (document);
+		g_free (uri);
+
+		return;
+	}
+
+	gtk_widget_set_sensitive (ev_window->priv->password_view, TRUE);
+	gtk_widget_destroy (password_dialog);
+}
+
+/* Called either by start_loading_document or by the "unlock" callback on the
+ * password_view page.  It assumes that ev_window->priv->password_* has been set
+ * correctly.  These are cleared by password_dialog_response() */
+
+static void
+ev_window_popup_password_dialog (EvWindow *ev_window)
+{
+	g_assert (ev_window->priv->password_document);
+	g_assert (ev_window->priv->password_uri);
+
+	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
+
+	update_window_title (ev_window->priv->password_document, NULL, ev_window);
+	if (ev_window->priv->password_dialog == NULL) {
+		gchar *file_name;
+
+		file_name = g_path_get_basename (ev_window->priv->password_uri);
+		ev_window->priv->password_dialog =
+			ev_password_dialog_new (GTK_WIDGET (ev_window), file_name);
+		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
+					   (gpointer *) &(ev_window->priv->password_dialog));
+		g_signal_connect (ev_window->priv->password_dialog,
+				  "response",
+				  G_CALLBACK (password_dialog_response),
+				  ev_window);
+		g_free (file_name);
+		gtk_widget_show (ev_window->priv->password_dialog);
+	} else {
+		ev_password_dialog_set_bad_pass (ev_window->priv->password_dialog);
+	}
+}
+
+/* This wil try to load the document.  It might be called multiple times on the
+ * same document by the password dialog.
+ *
+ * Since the flow of the error dialog is very confusing, we assume that both
+ * document and uri will go away after this function is called, and thus we need
+ * to ref/dup them.  Additionally, it needs to clear
+ * ev_window->priv->password_{uri,document}, and thus people who call this
+ * function should _not_ necessarily expect those to exist after being
+ * called. */
+static gboolean
+start_loading_document (EvWindow   *ev_window,
+			EvDocument *document,
+			const char *uri)
+{
+	gboolean result;
+	GError *error = NULL;
+
+	g_assert (document);
+	g_assert (document != ev_window->priv->document);
+	g_assert (uri);
+	if (ev_window->priv->password_document) {
+		g_object_unref (ev_window->priv->password_document);
+		ev_window->priv->password_document = NULL;
+	}
+	if (ev_window->priv->password_uri) {
+		g_free (ev_window->priv->password_uri);
+		ev_window->priv->password_uri = NULL;
+	}
+
+	result = ev_document_load (document, uri, &error);
+
+	/* Success! */
+	if (result) {
+		if (ev_window->priv->document)
+			g_object_unref (ev_window->priv->document);
+		ev_window->priv->document = g_object_ref (document);
+		ev_window_setup_document (ev_window);
+
+		return TRUE;
+	}
+
+	/* unable to load the document */
+	g_assert (error != NULL);
+
+	if (error->domain == EV_DOCUMENT_ERROR &&
+	    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+		char *file_name;
+
+		ev_window->priv->password_document = g_object_ref (document);
+		ev_window->priv->password_uri = g_strdup (uri);
+
+		file_name = g_path_get_basename (uri);
+		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
+						file_name);
+		g_free (file_name);
+		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
+
+		ev_window_popup_password_dialog (ev_window);
+	} else {
+		unable_to_load (ev_window, error->message);
+	}
+	g_error_free (error);
+
+	return FALSE;
 }
 
 void
@@ -424,61 +519,11 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);
 
 	if (document) {
-		GError *error = NULL;
-		GtkWidget *password_dialog = NULL;
-
-		g_signal_connect_object (G_OBJECT (document),
-					 "notify::title",
-					 G_CALLBACK (update_window_title),
-					 ev_window, 0);
-
-		/* If we get an error while loading the document, we try to fix
-		 * it and try again. This is an ugly loop that could do with
-		 * some refactoring.*/
-		while (TRUE) {
-			gboolean result;
-
-			result = ev_document_load (document, uri, &error);
-
-			if (result) {
-				if (ev_window->priv->document)
-					g_object_unref (ev_window->priv->document);
-				ev_window->priv->document = document;
-				ev_window_setup_document (ev_window);
-
-				if (password_dialog)
-					gtk_widget_destroy (password_dialog);
-				break;
-			}
-
-			g_assert (error != NULL);
-
-			if (error->domain == EV_DOCUMENT_ERROR &&
-			    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
-				char *password;
-
-				if (password_dialog == NULL)
-					password_dialog = ev_password_dialog_new (GTK_WIDGET (ev_window), uri);
-				else
-					ev_password_dialog_set_bad_pass (password_dialog);
-				password = ev_window_get_password (password_dialog);
-				if (password) {
-					ev_document_security_set_password (EV_DOCUMENT_SECURITY (document),
-									   password);
-					g_free (password);
-					g_error_free (error);
-					error = NULL;
-					continue;
-				} else {
-					gtk_widget_destroy (password_dialog);
-				}
-			} else {
-				unable_to_load (ev_window, error->message);
-			}
-			g_object_unref (document);
-			g_error_free (error);
-			break;
-		}
+		start_loading_document (ev_window, document, uri);
+		/* See the comment on start_loading_document on ref counting.
+		 * As the password dialog flow is confusing, we're very explicit
+		 * on ref counting. */
+		g_object_unref (document);
 	} else {
 		char *error_message;
 
@@ -755,7 +800,7 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 		gtk_widget_show (ev_window->priv->find_bar);
 
 		if (ev_window->priv->exit_fullscreen_popup)
-			update_fullscreen_popup (ev_window);
+			ev_window_update_fullscreen_popup (ev_window);
 
 		egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
 	}
@@ -770,7 +815,7 @@ ev_window_cmd_edit_copy (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-update_fullscreen_popup (EvWindow *window)
+ev_window_update_fullscreen_popup (EvWindow *window)
 {
 	GtkWidget *popup = window->priv->exit_fullscreen_popup;
 	int popup_width, popup_height;
@@ -816,7 +861,7 @@ static void
 screen_size_changed_cb (GdkScreen *screen,
 			EvWindow *window)
 {
-	update_fullscreen_popup (window);
+	ev_window_update_fullscreen_popup (window);
 }
 
 static void
@@ -848,7 +893,7 @@ exit_fullscreen_button_clicked_cb (GtkWidget *button, EvWindow *window)
 static void
 fullscreen_popup_size_request_cb (GtkWidget *popup, GtkRequisition *req, EvWindow *window)
 {
-	update_fullscreen_popup (window);
+	ev_window_update_fullscreen_popup (window);
 }
 
 static void
@@ -892,7 +937,7 @@ ev_window_fullscreen (EvWindow *window)
 	gtk_widget_hide (main_menu);
 	gtk_widget_hide (window->priv->statusbar);
 
-	update_fullscreen_popup (window);
+	ev_window_update_fullscreen_popup (window);
 
 	gtk_widget_show (popup);
 }
@@ -969,6 +1014,32 @@ ev_window_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *ev_wi
 	return FALSE;
 }
 
+static void
+ev_window_set_page_mode (EvWindow         *window,
+			 EvWindowPageMode  page_mode)
+{
+	GtkWidget *child = NULL;
+	GtkWidget *real_child;
+
+	switch (page_mode) {
+	case PAGE_MODE_SINGLE_PAGE:
+		child = window->priv->view;
+		break;
+	case PAGE_MODE_PASSWORD:
+		child = window->priv->password_view;
+		break;
+	default:
+		g_warning ("page_mode not implemented yet\n");
+		g_assert_not_reached ();
+	}
+	real_child = gtk_bin_get_child (GTK_BIN (window->priv->scrolled_window));
+	if (child != real_child) {
+		gtk_container_remove (GTK_CONTAINER (window->priv->scrolled_window),
+				      real_child);
+		gtk_container_add (GTK_CONTAINER (window->priv->scrolled_window),
+				   child);
+	}
+}
 
 static void
 ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
@@ -1287,7 +1358,7 @@ find_bar_close_cb (EggFindBar *find_bar,
 	gtk_widget_hide (ev_window->priv->find_bar);
 
 	if (ev_window->priv->exit_fullscreen_popup)
-		update_fullscreen_popup (ev_window);
+		ev_window_update_fullscreen_popup (ev_window);
 }
 
 static void
@@ -1346,7 +1417,22 @@ ev_window_dispose (GObject *object)
 		priv->action_group = NULL;
 	}
 
-	G_OBJECT_CLASS (parent_class)->dispose (object);
+	if (priv->document) {
+		g_object_unref (priv->document);
+		priv->document = NULL;
+	}
+	
+	if (priv->password_document) {
+		g_object_unref (priv->password_document);
+		priv->password_document = NULL;
+	}
+	
+	if (priv->password_uri) {
+		g_free (priv->password_uri);
+		priv->password_uri = NULL;
+	}
+	
+	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
 
 static void
@@ -1354,44 +1440,11 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 {
 	GObjectClass *g_object_class;
 
-	parent_class = g_type_class_peek_parent (ev_window_class);
-
 	g_object_class = G_OBJECT_CLASS (ev_window_class);
 	g_object_class->dispose = ev_window_dispose;
 
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
 
-#if 0
-	/* setting up signal system */
-	ev_window_class->signal = ev_window_signal;
-
-	ev_window_signals [SIGNAL] = g_signal_new (
-		"signal",
-		EV_TYPE_WINDOW,
-		G_SIGNAL_RUN_LAST,
-		G_STRUCT_OFFSET (EvWindowClass,
-				 signal),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__STRING,
-		G_TYPE_NONE,
-		0);
-	/* setting up property system */
-	g_object_class->set_property = ev_window_set_property;
-	g_object_class->get_property = ev_window_get_property;
-
-	g_object_class_install_property (
-		g_object_class,
-		PROP_ATTRIBUTE,
-		g_param_spec_string ("attribute",
-				     "Attribute",
-				     "A simple unneccessary attribute that "
-				     "does nothing special except being a "
-				     "demonstration for the correct implem"
-				     "entation of a GObject property",
-				     "default_value",
-				     G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-#endif
 }
 
 /* Normal items */
@@ -1563,7 +1616,6 @@ ev_window_init (EvWindow *ev_window)
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
-	GtkWidget *scrolled_window;
 	GtkWidget *menubar;
 	GtkWidget *toolbar;
 	GtkWidget *sidebar_widget;
@@ -1643,17 +1695,27 @@ ev_window_init (EvWindow *ev_window)
 			     _("Thumbnails"),
 			     ev_window->priv->thumbs_sidebar);
 
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_widget_show (scrolled_window);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+	ev_window->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_widget_show (ev_window->priv->scrolled_window);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (ev_window->priv->scrolled_window),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
-			scrolled_window);
+			ev_window->priv->scrolled_window);
 
 	ev_window->priv->view = ev_view_new ();
+	ev_window->priv->password_view = ev_password_view_new ();
+	g_signal_connect_swapped (ev_window->priv->password_view,
+				  "unlock",
+				  G_CALLBACK (ev_window_popup_password_dialog),
+				  ev_window);
 	gtk_widget_show (ev_window->priv->view);
-	gtk_container_add (GTK_CONTAINER (scrolled_window),
+	gtk_widget_show (ev_window->priv->password_view);
+	/* We own a ref on these widgets, as we can swap them in and out */
+	g_object_ref (ev_window->priv->view);
+	g_object_ref (ev_window->priv->password_view);
+
+	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),
 			   ev_window->priv->view);
 	g_signal_connect (ev_window->priv->view,
 			  "page-changed",
@@ -1717,7 +1779,7 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 
 	/* Give focus to the scrolled window */
-	gtk_widget_grab_focus (scrolled_window);
+	gtk_widget_grab_focus (ev_window->priv->scrolled_window);
 
 	update_action_sensitivity (ev_window);
 }

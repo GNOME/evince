@@ -102,7 +102,7 @@ ev_password_dialog_new (GtkWidget  *toplevel,
 	g_signal_connect (entry, "changed", G_CALLBACK (ev_window_password_entry_changed_cb), dialog);
 	format = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
 				  _("Password required"),
-				  _("The document '%s' requires a password before it can be opened."));
+				  _("The document <i>%s</i> is locked and requires a password before it can be opened."));
 	markup = g_markup_printf_escaped (format, uri);
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (format);

@@ -1006,6 +1006,8 @@ pdf_document_get_title (PdfDocument *pdf_document)
 	char *title = NULL;
 	Object info;
 
+	if (pdf_document->doc == NULL)
+		return NULL;
 	pdf_document->doc->getDocInfo (&info);
 
 	if (info.isDict ()) {

@@ -48,10 +48,6 @@ struct _EvWindow {
 
 struct _EvWindowClass {
 	GtkWindowClass		base_class;
-
-	/* signals */
-	void (*signal)		(EvWindow	*self,
-				 const char	*string);
 };
 
 GType		ev_window_get_type	(void);

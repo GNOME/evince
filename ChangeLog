@@ -1,3 +1,14 @@
+Tue Jan 25 00:59:34 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* pdf/xpdf/pdf-document.cc (pdf_document_get_title): guard against
+	unloaded docs when the title is accessed.
+
+	* shell/ev-password-view.[hc]: New widget for displaying password
+	state.
+
+	* shell/ev-window.[ch]: Refactor password handling code to handle
+	the new view.
+
 2005-01-24  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* NEWS:
