@@ -111,7 +111,7 @@ test_gdk_output_dev_LDADD =                                   	\
 	$(GTK_LIBS)
 
 libpdfdocument_la_SOURCES =	\
-	pdf-document.c		\
+	pdf-document.cc		\
 	pdf-document.h
 
 libpdfdocument_la_LIBADD =                                    	\

@@ -16,7 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "gpdf-g-switch.h"
 #include "pdf-document.h"
+#include "gpdf-g-switch.h"
+
+#include "GlobalParams.h"
+#include "GDKSplashOutputDev.h"
+#include "PDFDoc.h"
 
 typedef struct _PdfDocumentClass PdfDocumentClass;
 
@@ -33,8 +39,12 @@ struct _PdfDocument
 {
 	GObject parent_instance;
 
+	int page;
 	GdkRectangle page_rect;
 	GdkDrawable *target;
+
+	GDKSplashOutputDev *out;
+	PDFDoc *doc;
 	
 };
 
@@ -50,19 +60,79 @@ pdf_document_load (EvDocument  *document,
 		   const char  *uri,
 		   GError     **error)
 {
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PDFDoc *newDoc;
+	int err;
+	char *filename;
+	GString *filename_g;
+	
+	if (!globalParams) {
+		globalParams = new GlobalParams("/etc/xpdfrc");
+		globalParams->setupBaseFonts(NULL);
+	}
+
+	filename = g_filename_from_uri (uri, NULL, error);
+	if (!filename)
+		return FALSE;
+
+	filename_g = new GString (filename);
+	g_free (filename);
+
+	// open the PDF file
+	newDoc = new PDFDoc(filename_g, 0, 0);
+
+	delete filename_g;
+  
+	if (!newDoc->isOk()) {
+		err = newDoc->getErrorCode();
+		delete newDoc;
+
+		/* FIXME: Add a real error enum to EvDocument */
+		g_set_error (error, G_FILE_ERROR,
+			     G_FILE_ERROR_FAILED,
+			     "Failed to load document (error %d) '%s'\n",
+			     err,
+			     uri);
+		
+		return FALSE;
+	}
+
+	if (pdf_document->doc)
+		delete pdf_document->doc;
+	pdf_document->doc = newDoc;
+
+	if (pdf_document->out) {
+		pdf_document->out->startDoc(pdf_document->doc->getXRef());
+		pdf_document->doc->displayPage (pdf_document->out, 1, 72, 72, 0, gTrue, gTrue);
+	}
+	
 	return TRUE;
 }
 
 static int
 pdf_document_get_n_pages (EvDocument  *document)
 {
-	return 1;
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	if (pdf_document->doc)
+		return pdf_document->doc->getNumPages();
+	else
+		return 1;
 }
 
 static void
 pdf_document_set_page (EvDocument  *document,
 		       int          page)
 {
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	pdf_document->page = page;
+}
+
+static void
+redraw_callback (void *data)
+{
+	/* Need to hook up through a EvDocument callback? */
 }
 
 static void
@@ -79,6 +149,19 @@ pdf_document_set_target (EvDocument  *document,
 
 		if (pdf_document->target)
 			g_object_ref (pdf_document->target);
+
+		if (pdf_document->out)
+			delete pdf_document->out;
+
+		if (pdf_document->target) {
+			pdf_document->out = new GDKSplashOutputDev (gdk_drawable_get_screen (pdf_document->target),
+							 redraw_callback, (void*) document);
+
+			if (pdf_document->doc) {
+				pdf_document->out->startDoc(pdf_document->doc->getXRef());
+				pdf_document->doc->displayPage (pdf_document->out, 1, 72, 72, 0, gTrue, gTrue);
+			}
+		}
 	}
 }
 
@@ -104,6 +187,28 @@ pdf_document_render (EvDocument  *document,
 		     int          clip_width,
 		     int          clip_height)
 {
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	GdkRectangle page;
+	GdkRectangle draw;
+
+	if (!pdf_document->target)
+		return;
+	
+	page.x = 0;
+	page.y = 0;
+	page.width = pdf_document->out->getBitmapWidth();
+	page.height = pdf_document->out->getBitmapHeight();
+
+	draw.x = clip_x;
+	draw.y = clip_y;
+	draw.width = clip_width;
+	draw.height = clip_height;
+	
+	if (gdk_rectangle_intersect (&page, &draw, &draw))
+		pdf_document->out->redraw (draw.x, draw.y,
+					   pdf_document->target,
+					   draw.x, draw.y,
+					   draw.width, draw.height);
 }
 
 static void
@@ -114,12 +219,17 @@ pdf_document_finalize (GObject *object)
 	if (pdf_document->target)
 		g_object_unref (pdf_document->target);
 
+	if (pdf_document->out)
+		delete pdf_document->out;
+	if (pdf_document->doc)
+		delete pdf_document->doc;
+
 }
 
 static void
-pdf_document_class_init (PdfDocumentClass *class)
+pdf_document_class_init (PdfDocumentClass *klass)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
   
 	gobject_class->finalize = pdf_document_finalize;
 }

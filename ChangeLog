@@ -1,3 +1,14 @@
+Tue Dec 21 21:58:56 2004  Owen Taylor  <otaylor@redhat.com>
+
+	* pdf/xpdf/pdf-document.cc shell/ev-view.c: Hook things up 
+	a bit, it works! (sort of)
+
+	* pdf/xpdf/Makefile.am pdf/xpdf/pdf-document.cc:
+	Move to .cc since we need to use C++ in the implementation.
+
+	* shell/dummy.cc: Add a CC file to force evince
+	to be linked as a C++ program.
+
 Tue Dec 21 21:07:55 2004  Owen Taylor  <otaylor@redhat.com>
 
 	* shell/ev-view.[ch]: Start of content-area widget.

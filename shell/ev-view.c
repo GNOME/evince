@@ -223,8 +223,9 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_set_user_data (view->bin_window, widget);
 	gdk_window_show (view->bin_window);
 
-	attributes.event_mask = GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK | GDK_EXPOSURE_MASK;
-  
+	if (view->document)
+		ev_document_set_target (view->document, view->bin_window);
+
 	update_window_backgrounds (view);
 }
 
@@ -233,10 +234,13 @@ ev_view_unrealize (GtkWidget *widget)
 {
 	EvView *view = EV_VIEW (widget);
 
+	if (view->document)
+		ev_document_set_target (view->document, NULL);
+
 	gdk_window_set_user_data (view->bin_window, NULL);
 	gdk_window_destroy (view->bin_window);
 	view->bin_window = NULL;
-  
+
 	GTK_WIDGET_CLASS (ev_view_parent_class)->unrealize (widget);
 }
 
@@ -258,7 +262,12 @@ static void
 expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
-	/* EvView *view = EV_VIEW (widget); */
+	EvView *view = EV_VIEW (widget);
+	
+	if (view->document)
+		ev_document_render (view->document,
+				    event->area.x, event->area.y,
+				    event->area.width, event->area.height);
 }
 
 static gboolean
@@ -417,6 +426,9 @@ ev_view_set_document (EvView     *view,
 		if (view->document)
 			g_object_ref (view->document);
 
+		if (GTK_WIDGET_REALIZED (view))
+			ev_document_set_target (view->document, view->bin_window);
+		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 }

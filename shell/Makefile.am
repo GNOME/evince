@@ -13,6 +13,7 @@ INCLUDES=					\
 bin_PROGRAMS=evince
 
 evince_SOURCES=				\
+	dummy.cc			\
 	eggfindbar.c			\
 	eggfindbar.h			\
 	ev-application.c		\
