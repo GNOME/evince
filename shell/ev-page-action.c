@@ -25,10 +25,11 @@
 #include "ev-window.h"
 
 #include <glib/gi18n.h>
-#include <gtk/gtkspinbutton.h>
+#include <gtk/gtkentry.h>
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkhbox.h>
+#include <stdlib.h>
 
 struct _EvPageActionPrivate
 {
@@ -72,45 +73,80 @@ update_label (GtkAction *action, gpointer dummy, GtkWidget *proxy)
 }
 
 static void
-update_spin (GtkAction *action, gpointer dummy, GtkWidget *proxy)
+update_entry (EvPageAction *page_action, GtkWidget *entry)
 {
-	EvPageAction *page = EV_PAGE_ACTION (action);
-	GtkWidget *spin;
-	int value;
+	char *text;
 
-	spin = GTK_WIDGET (g_object_get_data (G_OBJECT (proxy), "spin"));
+	text = g_strdup_printf ("%d", page_action->priv->current_page);
+	gtk_entry_set_text (GTK_ENTRY (entry), text);
+	g_free (text);
+}
 
-	value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin));
+static void
+sync_entry (GtkAction *action, gpointer dummy, GtkWidget *proxy)
+{
+	EvPageAction *page_action = EV_PAGE_ACTION (action);
+	GtkWidget *entry;
 
-	if (value != page->priv->current_page )
-	{
-		gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin),
-					   page->priv->current_page);
+	entry = GTK_WIDGET (g_object_get_data (G_OBJECT (proxy), "entry"));
+	update_entry (page_action, entry);
+}
+
+static void
+activate_cb (GtkWidget *entry, GtkAction *action)
+{
+	EvPageAction *page_action = EV_PAGE_ACTION (action);
+	const char *text;
+	char *endptr;
+	int page = -1;
+
+	text = gtk_entry_get_text (GTK_ENTRY (entry));
+	if (text) {
+		long value;
+
+		value = strtol (text, &endptr, 10);
+		if (endptr[0] == '\0') {
+			/* Page number is an integer */
+			page = MIN (G_MAXINT, value);
+		}
+	}
+
+	if (page > 0 && page <= page_action->priv->total_pages) {
+		g_signal_emit (action, signals[GOTO_PAGE_SIGNAL], 0, page);
+	} else {
+		update_entry (page_action, entry);
 	}
 }
 
 static void
-value_changed_cb (GtkWidget *spin, GtkAction *action)
+entry_size_request_cb (GtkWidget      *entry,
+		       GtkRequisition *requisition,
+		       GtkAction      *action)
 {
-	int value;
+	PangoContext *context;
+	PangoFontMetrics *metrics;
+	int digit_width;
 
-	value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin));
+	context = gtk_widget_get_pango_context (entry);
+	metrics = pango_context_get_metrics
+			(context, entry->style->font_desc,
+			 pango_context_get_language (context));
 
-	g_signal_emit (action, signals[GOTO_PAGE_SIGNAL], 0, value);
-}
+	digit_width = pango_font_metrics_get_approximate_digit_width (metrics);
+	digit_width = PANGO_SCALE * ((digit_width + PANGO_SCALE - 1) / PANGO_SCALE);
 
-static void
-total_pages_changed_cb (EvPageAction *action, GParamSpec *pspec,
-			GtkSpinButton *spin)
-{
-	gtk_spin_button_set_range (GTK_SPIN_BUTTON (spin), 1, 
-				   action->priv->total_pages);
+	pango_font_metrics_unref (metrics);
+
+	/* Space for 4 digits. Probably 3 would be enough but it doesnt
+	   seem to possible to calculate entry borders without using
+	   gtk private info */
+	requisition->width = PANGO_PIXELS (digit_width * 4);
 }
 
 static GtkWidget *
 create_tool_item (GtkAction *action)
 {
-	GtkWidget *hbox, *spin, *item, *label;
+	GtkWidget *hbox, *entry, *item, *label;
 
 	hbox = gtk_hbox_new (FALSE, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6); 
@@ -119,16 +155,15 @@ create_tool_item (GtkAction *action)
 	item = GTK_WIDGET (gtk_tool_item_new ());
 	gtk_widget_show (item);
 
-	spin = gtk_spin_button_new_with_range (1, 9999, 1);
-	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (spin), 0);
-	g_object_set_data (G_OBJECT (item), "spin", spin);
-	gtk_widget_show (spin);
+	entry = gtk_entry_new ();
+	g_signal_connect (entry, "size_request",
+			  G_CALLBACK (entry_size_request_cb),
+			  action);
+	g_object_set_data (G_OBJECT (item), "entry", entry);
+	gtk_widget_show (entry);
 
-	g_signal_connect (action, "notify::total-pages",
-			  G_CALLBACK (total_pages_changed_cb),
-			  spin);
-	g_signal_connect (spin, "value_changed",
-			  G_CALLBACK (value_changed_cb),
+	g_signal_connect (entry, "activate",
+			  G_CALLBACK (activate_cb),
 			  action);
 
 	label = gtk_label_new ("");
@@ -136,7 +171,7 @@ create_tool_item (GtkAction *action)
 	update_label (action, NULL, item);
 	gtk_widget_show (label);
 
-	gtk_box_pack_start (GTK_BOX (hbox), spin, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (item), hbox);
 
@@ -152,7 +187,7 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 					 G_CALLBACK (update_label),
 					 proxy, 0);
 		g_signal_connect_object (action, "notify::current-page",
-					 G_CALLBACK (update_spin),
+					 G_CALLBACK (sync_entry),
 					 proxy, 0);
 	}
 
