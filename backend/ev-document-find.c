@@ -109,12 +109,11 @@ ev_document_find_get_result (EvDocumentFind *document_find,
 	return iface->get_result (document_find, n_result, rectangle);
 }
 
-void
-ev_document_find_get_progress (EvDocumentFind *document_find,
-			       double          percent_complete)
+double
+ev_document_find_get_progress (EvDocumentFind *document_find)
 {
 	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	iface->get_progress (document_find, percent_complete);
+	return iface->get_progress (document_find);
 }
 
 void

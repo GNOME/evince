@@ -54,8 +54,7 @@ struct _EvDocumentFindIface
 	gboolean (* get_result)	      (EvDocumentFind *document_find,
 				       int             n_result,
 				       GdkRectangle   *rectangle); 
-	void	 (* get_progress)     (EvDocumentFind *document_find,
-				       double          percent_complete);
+	double	 (* get_progress)     (EvDocumentFind *document_find);
 
         /* Signals */
 
@@ -74,8 +73,7 @@ int       ev_document_find_get_n_results    (EvDocumentFind *document_find);
 gboolean  ev_document_find_get_result	    (EvDocumentFind *document_find,
 					     int             n_result,
 					     GdkRectangle   *rectangle); 
-void	  ev_document_find_get_progress     (EvDocumentFind *document_find,
-					     double          percent_complete);
+double	  ev_document_find_get_progress     (EvDocumentFind *document_find);
 void      ev_document_find_changed          (EvDocumentFind *document_find,
 					     int             page);
 

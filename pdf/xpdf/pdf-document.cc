@@ -399,6 +399,24 @@ pdf_document_render (EvDocument  *document,
 					   draw.width, draw.height);
 }
 
+double
+pdf_document_find_get_progress (EvDocumentFind *document_find)
+{
+	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
+	int n_pages, pages_done;
+ 
+	n_pages = ev_document_get_n_pages (EV_DOCUMENT (document_find));
+	if (search->search_page > search->start_page) {
+		pages_done = search->search_page - search->start_page;
+	} else if (search->search_page == search->start_page) {
+		pages_done = n_pages;
+	} else {
+		pages_done = n_pages - search->start_page + search->search_page;
+	}
+
+	return pages_done / (double) n_pages;
+}
+
 int
 pdf_document_find_page_has_results (EvDocumentFind *document_find,
 				    int             page)
@@ -427,15 +445,16 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 			      int             n_result,
 			      GdkRectangle   *rectangle)
 {
-	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_find);
+	PdfDocumentSearch *search = pdf_document->search;
 	GdkRectangle r;
 
 	if (search != NULL) {
 		r = g_array_index (search->current_page_results,
 				   GdkRectangle, n_result);
 
-		rectangle->x = r.x;
-		rectangle->y = r.y;
+		rectangle->x = r.x + pdf_document->page_x_offset;
+		rectangle->y = r.y + pdf_document->page_y_offset;
 		rectangle->width = r.width;
 		rectangle->height = r.height;
 
@@ -498,7 +517,7 @@ pdf_document_search_idle_callback (void *data)
 {
         PdfDocumentSearch *search = (PdfDocumentSearch*) data;
         PdfDocument *pdf_document = search->document;
-        int n_pages;
+        int n_pages, changed_page;
         double xMin, yMin, xMax, yMax;
 
         /* Note that PDF page count is 1 through n_pages INCLUSIVE
@@ -533,17 +552,19 @@ pdf_document_search_idle_callback (void *data)
 		search->other_page_flags[search->search_page] = 0;
 	}
 
-        if (search->search_page != search->start_page) {
-	        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
-					  search->search_page);
-	        return TRUE;
-	}
+	changed_page = search->start_page;
 
         search->search_page += 1;
         if (search->search_page > n_pages) {
                 /* wrap around */
                 search->search_page = 1;
         }
+
+        if (search->search_page != search->start_page) {
+	        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
+					  changed_page);
+	        return TRUE;
+	}
 
 end_search:
         /* We're done. */

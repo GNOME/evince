@@ -328,7 +328,7 @@ ev_gdk_color_to_rgb (const GdkColor *color)
 
 static void
 draw_rubberband (GtkWidget *widget, GdkWindow *window,
-		 const GdkRectangle *rect, gboolean dark)
+		 const GdkRectangle *rect, guchar alpha)
 {
 	GdkGC *gc;
 	GdkPixbuf *pixbuf;
@@ -336,8 +336,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	guint fill_color;
 
 	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
-	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 |
-		     (dark ? 0x90 : 0x40);
+	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | alpha;
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
 				 rect->width, rect->height);
@@ -373,12 +372,12 @@ highlight_find_results (EvView *view)
 
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
-		gboolean current;
+		guchar alpha;
 
-		current = (i == view->find_result);
+		alpha = (i == view->find_result) ? 0x90 : 0x20;
 		ev_document_find_get_result (find, i, &rectangle);
 		draw_rubberband (GTK_WIDGET (view), view->bin_window,
-				 &rectangle, current);
+				 &rectangle, alpha);
         }
 }
 
@@ -416,7 +415,7 @@ expose_bin_window (GtkWidget      *widget,
 
 	if (view->has_selection) {
 		draw_rubberband (widget, view->bin_window,
-				 &view->selection, FALSE);
+				 &view->selection, 0x40);
 	}
 }
 
@@ -909,26 +908,36 @@ ev_view_init (EvView *view)
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 }
 
-static char *
-ev_view_get_find_status_message (EvView *view)
+static void
+update_find_status_message (EvView *view)
 {
-/*
-	if (view->find_results->len == 0) {
-		if (view->find_percent_complete >= (1.0 - 1e-10)) {
-			return g_strdup (_("Not found"));
-		} else {
-			return g_strdup_printf (_("%3d%% remaining to search"),
-						(int) ((1.0 - view->find_percent_complete) * 100));
-		}
-	} else if (view->results_on_this_page == 0) {
-		g_assert (view->next_page_with_result != 0);
-		return g_strdup_printf (_("Found on page %d"),
-					view->next_page_with_result);
+	char *message;
+
+	if (ev_document_get_page (view->document) == view->find_page) {
+		int results;
+
+		results = ev_document_find_get_n_results
+				(EV_DOCUMENT_FIND (view->document));
+
+		message = g_strdup_printf (_("%d found on this page"),
+					   results);
 	} else {
-		return g_strdup_printf (_("%d found on this page"),
-					view->results_on_this_page);
+		double percent;
+		
+		percent = ev_document_find_get_progress
+				(EV_DOCUMENT_FIND (view->document));
+
+		if (percent >= (1.0 - 1e-10)) {
+			message = g_strdup (_("Not found"));
+		} else {
+			message = g_strdup_printf (_("%3d%% remaining to search"),
+						   (int) ((1.0 - percent) * 100));
+		}
+		
 	}
-*/
+
+	ev_view_set_find_status (view, message);
+	g_free (message);
 }
 
 static void
@@ -960,6 +969,7 @@ set_document_page (EvView *view, int page)
 
 		view->find_page = page;
 		view->find_result = 0;
+		update_find_status_message (view);
 	}
 }
 
@@ -1041,8 +1051,7 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 {
 	jump_to_find_page (view);
 	jump_to_find_result (view);
-
-	g_print ("Update for page %d\n", page);
+	update_find_status_message (view);
 
 	if (ev_document_get_page (document) == page) {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
