@@ -1,6 +1,16 @@
+2005-01-14  Dave Malcolm  <dmalcolm@redhat.com>
+
+	* shell/ev-view.h:
+	* shell/ev-view.c (ev_view_can_go_back), (ev_view_can_go_forward):	
+	new functions to help with implementation of sensitivity code
+	* shell/ev-window.c (update_action_sensitivity): Fix sensitivity
+	of all actions that might require it.  Fixes a crash when you
+	click on the Zoom actions in a window lacking a document.
+
 2005-01-13  Dave Malcolm  <dmalcolm@redhat.com>
 
-	* shell/ev-window.c (Module): Fix sensitivity of the Find action
+	* shell/ev-window.c (update_action_sensitivity): Fix sensitivity
+	of the Find action
 
 2005-01-13  Marco Pesenti Gritti  <marco@gnome.org>
 

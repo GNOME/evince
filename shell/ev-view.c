@@ -1123,6 +1123,23 @@ go_to_index (EvView *view, int index)
 	go_to_link (view, link);
 }
 
+gboolean
+ev_view_can_go_back (EvView *view)
+{
+	int index, n;
+
+	g_return_val_if_fail (EV_IS_HISTORY (view->history), FALSE);
+
+	index = ev_history_get_current_index (view->history);
+	n = ev_history_get_n_links (view->history);
+
+	if (n > 0) {
+		return index != MAX (0, index - 1);
+	} else {
+		return FALSE;
+	}
+}
+
 void
 ev_view_go_back	(EvView	*view)
 {
@@ -1136,6 +1153,23 @@ ev_view_go_back	(EvView	*view)
 	if (n > 0) {
 		index = MAX (0, index - 1);
 		ev_history_set_current_index (view->history, index);
+	}
+}
+
+gboolean
+ev_view_can_go_forward (EvView *view)
+{
+	int index, n;
+
+	g_return_val_if_fail (EV_IS_HISTORY (view->history), FALSE);
+
+	index = ev_history_get_current_index (view->history);
+	n = ev_history_get_n_links (view->history);
+
+	if (n > 0) {
+		return 	index != MIN (n - 1, index + 1);
+	} else {
+		return FALSE;
 	}
 }
 

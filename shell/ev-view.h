@@ -47,7 +47,9 @@ void		ev_view_copy		(EvView     *view);
 void		ev_view_select_all	(EvView     *view);
 
 /* Navigation */
+gboolean	ev_view_can_go_back	(EvView	    *view);
 void		ev_view_go_back		(EvView	    *view);
+gboolean	ev_view_can_go_forward	(EvView     *view);
 void		ev_view_go_forward	(EvView     *view);
 void		ev_view_go_to_link	(EvView     *view,
 					 EvLink     *link);

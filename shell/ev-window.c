@@ -178,29 +178,71 @@ static void
 update_action_sensitivity (EvWindow *ev_window)
 {
 	EvDocument *document;
-	int n_pages;
-	int page;
+	EvView *view;
+
+	gboolean can_go_back = FALSE;
+	gboolean can_go_forward = FALSE;
 
 	document = ev_window->priv->document;
 
-	if (document)
-		n_pages = ev_document_get_n_pages (document);
-	else
-		n_pages = 1;
+	view = EV_VIEW (ev_window->priv->view);
 
-	page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
+	if (document) {
+		can_go_back = ev_view_can_go_back (view);
+		can_go_forward = ev_view_can_go_forward (view);
+	}
 
-	set_action_sensitive (ev_window, "GoFirstPage", page > 1);
-	set_action_sensitive (ev_window, "GoPageDown", page > 1);
-	set_action_sensitive (ev_window, "GoPageUp", page < n_pages);
-	set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
+	/* File menu */
+	/* "FileOpen": always sensitive */
+	set_action_sensitive (ev_window, "FileSaveAs", document!=NULL);
+	set_action_sensitive (ev_window, "FilePrint", document!=NULL);
+	/* "FileCloseWindow": always sensitive */
+
+        /* Edit menu */
+	set_action_sensitive (ev_window, "EditCopy", document!=NULL);
+	set_action_sensitive (ev_window, "EditSelectAll", document!=NULL);
 
 	if (document)
 		set_action_sensitive (ev_window, "EditFind", EV_IS_DOCUMENT_FIND (document));
 	else
 		set_action_sensitive (ev_window, "EditFind", FALSE);
 
-	
+        /* View menu */
+	set_action_sensitive (ev_window, "ViewZoomIn", document!=NULL);
+	set_action_sensitive (ev_window, "ViewZoomOut", document!=NULL);
+	set_action_sensitive (ev_window, "ViewNormalSize", document!=NULL);
+	set_action_sensitive (ev_window, "ViewBestFit", document!=NULL);
+	set_action_sensitive (ev_window, "ViewPageWidth", document!=NULL);
+
+        /* Go menu */
+	set_action_sensitive (ev_window, "GoBack", can_go_back);
+	set_action_sensitive (ev_window, "GoForward", can_go_forward);
+	if (document) {
+		int n_pages;
+		int page;
+
+		page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
+		n_pages = ev_document_get_n_pages (document);
+
+		set_action_sensitive (ev_window, "GoPageDown", page > 1);
+		set_action_sensitive (ev_window, "GoPageUp", page < n_pages);
+		set_action_sensitive (ev_window, "GoFirstPage", page > 1);
+		set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
+	} else {
+		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
+		set_action_sensitive (ev_window, "GoPageDown", FALSE);
+		set_action_sensitive (ev_window, "GoPageUp", FALSE);
+		set_action_sensitive (ev_window, "GoLastPage", FALSE);
+	}
+        
+	/* Help menu */
+	/* "HelpContents": always sensitive */
+	/* "HelpAbout": always sensitive */
+
+	/* Toolbar-specific actions: */
+	set_action_sensitive (ev_window, NAVIGATION_BACK_ACTION, can_go_back);
+	set_action_sensitive (ev_window, NAVIGATION_FORWARD_ACTION, can_go_forward);
+	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, document!=NULL);
 }
 
 void
