@@ -76,6 +76,7 @@ typedef struct {
 
 extern "C" {
   static void realize_drawing_areas (bed_t *bed);
+  static GdkPixmap *setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window);
 }
 
 static void
@@ -117,18 +118,38 @@ redraw_view (view_data_t *view_data, GdkRectangle *rect)
 }
 
 static void
-configure_size (view_data_t *view_data, GdkRectangle *rect)
+render_page (view_data_t *view_data)
+{
+  view_data->pixmap = setup_pixmap (view_data->bed, view_data,
+				    view_data->win);
+  view_data->bed->pdf->displayPage(view_data->out,
+				   view_data->page, view_data->zoom,
+				   0, gTrue);
+}
+
+static void
+redraw_view_all (view_data_t *view_data)
+{
+  GdkRectangle rect;
+  g_return_if_fail (view_data != NULL);
+
+  printf ("Redraw view of page %d\n", view_data->page);
+  render_page (view_data);
+  rect.x = 0;
+  rect.y = 0;
+  rect.width  = view_data->w;
+  rect.height = view_data->h;
+  redraw_view (view_data, &rect);
+  gtk_widget_queue_draw (GTK_WIDGET (view_data->drawing_area));
+}
+
+static void
+configure_size (view_data_t *view_data)
 {
   gtk_widget_set_usize (
     view_data->drawing_area,
     view_data->w,
     view_data->h);
-  
-  rect->x = 0;
-  rect->y = 0;
-  rect->width = view_data->w;
-  rect->height = view_data->h;
-  printf ("Set size to %d, %d\n", view_data->w, view_data->h);
 }
 
 static void
@@ -137,12 +158,10 @@ redraw_all (bed_t *bed)
 	GList *l;
 	
 	for (l = bed->views; l; l = l->next){
-		GdkRectangle rect;
-		view_data_t *view_data = (view_data_t *)l->data;
-
-		configure_size (view_data, &rect);
-		
-		redraw_view (view_data, &rect);
+	  GdkRectangle rect;
+	  view_data_t *view_data = (view_data_t *)l->data;
+	  configure_size (view_data);
+	  redraw_view_all (view_data);
 	}
 }
 
@@ -236,11 +255,9 @@ extern "C" {
     g_free (bed);
   }
 
-}
-
-static GdkPixmap *
-setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window)
-{
+  static GdkPixmap *
+  setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window)
+  {
     GdkGCValues  gcValues;
     GdkGC       *strokeGC;
     PDFDoc      *pdf;
@@ -276,15 +293,89 @@ setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window)
 			w, h);
     
     return pixmap;
-}
+  }
 
-extern "C" {
-  static void
-  view_color_select_cb (GnomeUIHandler *uih, void *data, char *path)
+  static gboolean
+  view_is_good (view_data_t *view_data)
   {
-    view_data_t *view_data = (view_data_t *) data;
+    if (!view_data ||
+	!view_data->bed ||
+	!view_data->bed->pdf)
+      return FALSE;
 
-    printf ("path '%s'\n", path);
+    return TRUE;
+  }
+
+  static gboolean
+  first_page (view_data_t *view_data)
+  {
+    g_return_val_if_fail (view_is_good (view_data), FALSE);
+    if (view_data->page != 1) {
+      view_data->page = 1;
+      return TRUE;
+    } else
+      return FALSE;
+  }
+
+  static gboolean
+  last_page (view_data_t *view_data)
+  {
+    g_return_val_if_fail (view_is_good (view_data), FALSE);
+    if (view_data->page < view_data->bed->pdf->getNumPages()) {
+      view_data->page = view_data->bed->pdf->getNumPages();
+      return TRUE;
+    } else
+      return FALSE;
+  }
+
+  static gboolean
+  next_page (view_data_t *view_data)
+  {
+    g_return_val_if_fail (view_is_good (view_data), FALSE);
+    if (view_data->page < view_data->bed->pdf->getNumPages()) {
+      view_data->page++;
+      return TRUE;
+    } else
+      return FALSE;
+  }
+
+  static gboolean
+  prev_page (view_data_t *view_data)
+  {
+    g_return_val_if_fail (view_is_good (view_data), FALSE);
+    if (view_data->page > 1) {
+      view_data->page--;
+      return TRUE;
+    } else
+      return FALSE;
+  }
+
+  static void
+  page_first_cb (GnomeUIHandler *uih, void *data, char *path)
+  {
+    first_page ((view_data_t *)data);
+    redraw_view_all ((view_data_t *)data);
+  }
+  
+  static void
+  page_next_cb  (GnomeUIHandler *uih, void *data, char *path)
+  {
+    next_page ((view_data_t *)data);
+    redraw_view_all ((view_data_t *)data);
+  }
+  
+  static void
+  page_prev_cb  (GnomeUIHandler *uih, void *data, char *path)
+  {
+    prev_page ((view_data_t *)data);
+    redraw_view_all ((view_data_t *)data);
+  }
+
+  static void
+  page_last_cb  (GnomeUIHandler *uih, void *data, char *path)
+  {
+    last_page ((view_data_t *)data);
+    redraw_view_all ((view_data_t *)data);
   }
 }
 
@@ -305,34 +396,34 @@ view_create_menus (view_data_t *view_data)
   
   gnome_ui_handler_set_container (uih, remote_uih);
 
-  gnome_ui_handler_menu_new_subtree (uih, "/Colors",
-				     N_("Select drawing color..."),
-				     N_("Set the current drawing color"),
+  gnome_ui_handler_menu_new_subtree (uih, "/Page",
+				     N_("Page..."),
+				     N_("Set the currently displayed page"),
 				     1,
 				     GNOME_UI_HANDLER_PIXMAP_NONE, NULL,
-				     0, 0);
-  gnome_ui_handler_menu_new_radiogroup (uih, "/Colors/color radiogroup");
+				     0, (GdkModifierType)0);
+
+  gnome_ui_handler_menu_new_item (uih, "/Page/First",
+				  N_("First"), N_("View the first page"), -1,
+				  GNOME_UI_HANDLER_PIXMAP_NONE, NULL, 0,
+				  (GdkModifierType)0, page_first_cb, (gpointer)view_data);
+				 
+  gnome_ui_handler_menu_new_item (uih, "/Page/Prev",
+				  N_("Previous"), N_("View the previous page"), -1,
+				  GNOME_UI_HANDLER_PIXMAP_NONE, NULL, 0,
+				  (GdkModifierType)0, page_prev_cb, (gpointer)view_data);
+				 
+  gnome_ui_handler_menu_new_item (uih, "/Page/Next",
+				  N_("Next"), N_("View the next page"), -1,
+				  GNOME_UI_HANDLER_PIXMAP_NONE, NULL, 0,
+				  (GdkModifierType)0, page_next_cb, (gpointer)view_data);
+				 
+  gnome_ui_handler_menu_new_item (uih, "/Page/Last",
+				  N_("Last"), N_("View the last page"), -1,
+				  GNOME_UI_HANDLER_PIXMAP_NONE, NULL, 0,
+				  (GdkModifierType)0, page_last_cb, (gpointer)view_data);
   
-  gnome_ui_handler_menu_new_radioitem (uih, "/Colors/color radiogroup/White",
-				       N_("White"),
-				       N_("Set the current drawing color to white"),
-				       -1,
-				       0, (GdkModifierType) 0,
-				       view_color_select_cb, (gpointer) view_data);
-  
-  gnome_ui_handler_menu_new_radioitem (uih, "/Colors/color radiogroup/Red",
-				       N_("Red"),
-				       N_("Set the current drawing color to red"),
-				       -1, 
-				       0, (GdkModifierType) 0,
-				       view_color_select_cb, (gpointer) view_data);
-  
-  gnome_ui_handler_menu_new_radioitem (uih, "/Colors/color radiogroup/Green",
-				       N_("Green"),
-				       N_("Set the current drawing color to green"),
-				       -1,
-				       0, (GdkModifierType) 0,
-				       view_color_select_cb, (gpointer) view_data);
+				 
 }
 
 /*
@@ -381,9 +472,12 @@ extern "C" {
   view_activate (GnomeView *view, gboolean activate, gpointer data)
   {
     view_data_t *view_data = (view_data_t *) data;
+    g_return_if_fail (view != NULL);
+    g_return_if_fail (view_data != NULL);
     
     gnome_view_activate_notify (view, activate);
     
+    printf ("View change activation to %d\n", activate);
     /*
      * If we were just activated, we merge in our menu entries.
      * If we were just deactivated, we remove them.
@@ -405,26 +499,15 @@ extern "C" {
   }
 
   static void
-  render_page (view_data_t *view_data)
-  {
-    view_data->pixmap = setup_pixmap (view_data->bed, view_data,
-				      view_data->win);
-    view_data->bed->pdf->displayPage(view_data->out,
-				     view_data->page, view_data->zoom,
-				     0, gTrue);
-  }
-
-  static void
   realize_drawing_areas (bed_t *bed)
   {
     GList *l;
     
     for (l = bed->views; l; l = l->next) {
-      GdkRectangle rect;
       view_data_t *view_data = (view_data_t *)l->data;
       g_return_if_fail (view_data->win);
       render_page (view_data);
-      configure_size (view_data, &rect);
+      configure_size (view_data);
     }  
   }
 
@@ -436,17 +519,9 @@ extern "C" {
     gboolean      changed = FALSE;
 
     if (!g_strcasecmp (verb_name, "nextpage")) {
-      printf ("next page\n");
-      if (view_data->page < view_data->bed->pdf->getNumPages()) {
-	view_data->page++;
-	changed = TRUE;
-      }
+      changed = next_page (view_data);
     } else if (!g_strcasecmp (verb_name, "prevpage")) {
-      printf ("previous page\n");
-      if (view_data->page > 1) {
-	view_data->page--;
-	changed = TRUE;
-      }
+      changed = prev_page (view_data);
     } else
       g_warning ("Unknown verb");
 
@@ -478,7 +553,7 @@ view_factory (GnomeEmbeddable *embeddable,
 	view_data->out    = NULL;
 	view_data->w      = 320;
 	view_data->h      = 320;
-	view_data->zoom   = 24.0; /* 86.0; Must be small for demos :-) */
+	view_data->zoom   = 43.0; /* 86.0; Must be small for demos :-) */
 	view_data->page   = 1;
 
 	gtk_signal_connect (
@@ -496,6 +571,7 @@ view_factory (GnomeEmbeddable *embeddable,
 	setup_size (bed, view_data);
 
         view = gnome_view_new (view_data->drawing_area);
+	view_data->view = view;
 
 	gtk_signal_connect (
 		GTK_OBJECT (view), "destroy",
@@ -568,7 +644,6 @@ embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 	gtk_signal_connect (
 	  GTK_OBJECT (embeddable), "destroy",
 	  GTK_SIGNAL_FUNC (destroy_embed), bed);
-
 
 	/* Setup some verbs */
 	gnome_embeddable_add_verb (embeddable,

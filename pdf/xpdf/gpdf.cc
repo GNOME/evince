@@ -425,21 +425,6 @@ component_new_view_cb (GtkWidget *button, gpointer data)
 	component_add_view (component);
 }
 
-static void
-component_load_pf_cb (GtkWidget *button, gpointer data)
-{
-}
-
-static void
-component_load_ps_cb (GtkWidget *button, gpointer data)
-{
-}
-
-static void
-component_destroy_cb (GtkWidget *button, gpointer data)
-{
-}
-
 static GnomeObjectClient *
 container_launch_component (GnomeClientSite *client_site,
 			    GnomeContainer *container,
@@ -592,8 +577,8 @@ container_create (void)
 
 	container = g_new0 (Container, 1);
 
-	container->app = gnome_app_new ("sample-container",
-					"Sample Bonobo Container");
+	container->app = gnome_app_new ("pdf-viewer",
+					"GNOME PDF viewer");
 
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 400, 400);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
