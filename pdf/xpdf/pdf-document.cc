@@ -311,7 +311,7 @@ pdf_document_set_target (EvDocument  *document,
 
 		}
 
-		document_display_page (pdf_document);
+		/* FIXME we need to regenerate pages */
 	}
 }
 
