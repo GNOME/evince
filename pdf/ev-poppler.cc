@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include <poppler.h>
 #include <poppler-document.h>
@@ -37,6 +39,15 @@ enum {
 };
 
 
+typedef struct {
+	PdfDocument *document;
+	char *text;
+	GList **pages;
+	guint idle;
+	int start_page;
+	int search_page;
+} PdfDocumentSearch;
+
 struct _PdfDocumentClass
 {
 	GObjectClass parent_class;
@@ -50,12 +61,15 @@ struct _PdfDocument
 	PopplerPage *page;
 	double scale;
 	gchar *password;
+
+	PdfDocumentSearch *search;
 };
 
 static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
 static void pdf_document_security_iface_init            (EvDocumentSecurityIface   *iface);
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
+static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
 static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
 							 gint                       page,
 							 gint                       size,
@@ -74,11 +88,11 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
 							pdf_document_document_links_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
+							pdf_document_find_iface_init);
 #if 0
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
 							pdf_document_ps_exporter_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
-							pdf_document_find_iface_init);
 #endif
 			 });
 
@@ -605,6 +619,221 @@ pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 	iface->get_thumbnail = pdf_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = pdf_document_thumbnails_get_dimensions;
 }
+
+
+static gboolean
+pdf_document_search_idle_callback (void *data)
+{
+        PdfDocumentSearch *search = (PdfDocumentSearch*) data;
+        PdfDocument *pdf_document = search->document;
+        int n_pages, changed_page;
+	GList *matches;
+	PopplerPage *page;
+
+	page = poppler_document_get_page (search->document->document,
+					  search->search_page);
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	matches = poppler_page_find_text (page, search->text);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	search->pages[search->search_page] = matches;
+        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
+
+	changed_page = search->start_page;
+
+        search->search_page += 1;
+        if (search->search_page == n_pages) {
+                /* wrap around */
+                search->search_page = 0;
+        }
+
+        if (search->search_page != search->start_page) {
+	        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
+					  changed_page);
+	        return TRUE;
+	}
+
+        /* We're done. */
+        search->idle = 0; /* will return FALSE to remove */
+        return FALSE;
+}
+
+
+static PdfDocumentSearch *
+pdf_document_search_new (PdfDocument *pdf_document, const char *text)
+{
+	PdfDocumentSearch *search;
+	int n_pages;
+	int i;
+
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
+
+        search = g_new0 (PdfDocumentSearch, 1);
+
+	search->text = g_strdup (text);
+        search->pages = g_new0 (GList *, n_pages);
+	for (i = 0; i < n_pages; i++) {
+		search->pages[i] = NULL;
+	}
+
+        search->document = pdf_document;
+
+        /* We add at low priority so the progress bar repaints */
+        search->idle = g_idle_add_full (G_PRIORITY_LOW,
+                                        pdf_document_search_idle_callback,
+                                        search,
+                                        NULL);
+
+        search->start_page = pdf_document_get_page (EV_DOCUMENT (pdf_document));
+        search->search_page = search->start_page;
+
+	return search;
+}
+
+static void
+pdf_document_search_free (PdfDocumentSearch   *search)
+{
+        PdfDocument *pdf_document = search->document;
+	int n_pages;
+	int i;
+
+        if (search->idle != 0)
+                g_source_remove (search->idle);
+
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
+	for (i = 0; i < n_pages; i++) {
+		g_list_foreach (search->pages[i], (GFunc) g_free, NULL);
+		g_list_free (search->pages[i]);
+	}
+	
+        g_free (search->text);
+}
+
+static void
+pdf_document_find_begin (EvDocumentFind   *document,
+                         const char       *search_string,
+                         gboolean          case_sensitive)
+{
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+        /* FIXME handle case_sensitive (right now XPDF
+         * code is always case insensitive for ASCII
+         * and case sensitive for all other languaages)
+         */
+
+	if (pdf_document->search &&
+	    strcmp (search_string, pdf_document->search->text) == 0)
+                return;
+
+        if (pdf_document->search)
+                pdf_document_search_free (pdf_document->search);
+
+        pdf_document->search = pdf_document_search_new (pdf_document,
+							search_string);
+}
+
+int
+pdf_document_find_get_n_results (EvDocumentFind *document_find)
+{
+	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
+	int current_page;
+
+	current_page = pdf_document_get_page (EV_DOCUMENT (document_find));
+
+	if (search) {
+		return g_list_length (search->pages[current_page]);
+	} else {
+		return 0;
+	}
+}
+
+gboolean
+pdf_document_find_get_result (EvDocumentFind *document_find,
+			      int             n_result,
+			      GdkRectangle   *rectangle)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_find);
+	PdfDocumentSearch *search = pdf_document->search;
+	PopplerRectangle *r;
+	int current_page;
+	double scale;
+
+	if (search == NULL)
+		return FALSE;
+
+	current_page = pdf_document_get_page (EV_DOCUMENT (pdf_document));
+	r = (PopplerRectangle *) g_list_nth_data (search->pages[current_page],
+						  n_result);
+	if (r == NULL)
+		return FALSE;
+
+	scale = pdf_document->scale;
+	rectangle->x = (gint) floor (r->x1 * scale);
+	rectangle->y = (gint) floor (r->y1 * scale);
+	rectangle->width = (gint) ceil (r->x2 * scale) - rectangle->x;
+	rectangle->height = (gint) ceil (r->y2 * scale) - rectangle->y;
+	
+	return TRUE;
+}
+
+int
+pdf_document_find_page_has_results (EvDocumentFind *document_find,
+				    int             page)
+{
+	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
+
+	g_return_val_if_fail (search != NULL, FALSE);
+
+	return search->pages[page] != NULL;
+}
+
+double
+pdf_document_find_get_progress (EvDocumentFind *document_find)
+{
+	PdfDocumentSearch *search;
+	int n_pages, pages_done;
+
+	search = PDF_DOCUMENT (document_find)->search;
+
+	if (search == NULL) {
+		return 0;
+	}
+
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (document_find));
+	if (search->search_page > search->start_page) {
+		pages_done = search->search_page - search->start_page + 1;
+	} else if (search->search_page == search->start_page) {
+		pages_done = n_pages;
+	} else {
+		pages_done = n_pages - search->start_page + search->search_page;
+	}
+
+	return pages_done / (double) n_pages;
+}
+
+static void
+pdf_document_find_cancel (EvDocumentFind *document)
+{
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	if (pdf_document->search) {
+		pdf_document_search_free (pdf_document->search);
+		pdf_document->search = NULL;
+	}
+}
+
+static void
+pdf_document_find_iface_init (EvDocumentFindIface *iface)
+{
+        iface->begin = pdf_document_find_begin;
+	iface->get_n_results = pdf_document_find_get_n_results;
+	iface->get_result = pdf_document_find_get_result;
+	iface->page_has_results = pdf_document_find_page_has_results;
+	iface->get_progress = pdf_document_find_get_progress;
+        iface->cancel = pdf_document_find_cancel;
+}
+
 
 PdfDocument *
 pdf_document_new (void)

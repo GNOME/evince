@@ -1,3 +1,16 @@
+2005-04-01  Kristian Høgsberg  <krh@redhat.com>
+
+	* pdf/ev-poppler.cc: Implement search based on
+	poppler_page_find_text().  Currently a bit crude since we remember
+	all matches from all pages.  Also, we grab the big document lock
+	when we search since searching changes the underlying stream and
+	thus conflicts with the rendering thread.
+	
+	* shell/ev-view.c: (draw_rubberband), (highlight_find_results),
+	(jump_to_find_page), (ev_view_set_document), (ev_view_find_next),
+	(ev_view_find_previous): Fix some page indexes to be 0 based,
+	offset rubber band by view offset,
+
 Fri Apr 01 09:21:12 2005  Pablo Saratxaga  <pablo@mandrakesoft.com>
 
 	* configure.ac: Added Walloon (wa) to ALL_LINGUAS.

@@ -431,6 +431,9 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	GdkPixbuf *pixbuf;
 	GdkColor *fill_color_gdk;
 	guint fill_color;
+	int x_offset, y_offset;
+
+	ev_view_get_offsets (EV_VIEW (widget), &x_offset, &y_offset); 
 
 	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
 	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | alpha;
@@ -441,7 +444,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 
 	gdk_draw_pixbuf (window, NULL, pixbuf,
 			 0, 0,
-			 rect->x,rect->y,
+			 rect->x + x_offset, rect->y + y_offset,
 			 rect->width, rect->height,
 			 GDK_RGB_DITHER_NONE,
 			 0, 0);
@@ -451,7 +454,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	gc = gdk_gc_new (window);
 	gdk_gc_set_rgb_fg_color (gc, fill_color_gdk);
 	gdk_draw_rectangle (window, gc, FALSE,
-			    rect->x, rect->y,
+			    rect->x + x_offset, rect->y + y_offset,
 			    rect->width - 1,
 			    rect->height - 1);
 	g_object_unref (gc);
@@ -469,11 +472,9 @@ highlight_find_results (EvView *view)
 
 	find = EV_DOCUMENT_FIND (view->document);
 
-#if 0
 	g_mutex_lock (EV_DOC_MUTEX);
 	results = ev_document_find_get_n_results (find);
 	g_mutex_unlock (EV_DOC_MUTEX);
-#endif
 	
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
@@ -1239,16 +1240,16 @@ jump_to_find_page (EvView *view)
 
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
-	for (i = 0; i <= n_pages; i++) {
+	for (i = 0; i < n_pages; i++) {
 		int has_results;
 		int page;
 
 		page = i + view->find_page;
-		if (page > n_pages) {
+		if (page >= n_pages) {
 			page = page - n_pages;
 		}
 
-		g_mutex_lock (EV_DOC_MUTEX);
+		//		g_mutex_lock (EV_DOC_MUTEX);
 		has_results = ev_document_find_page_has_results
 				(EV_DOCUMENT_FIND (view->document), page);
 		if (has_results == -1) {
@@ -1357,7 +1358,7 @@ ev_view_set_document (EvView     *view,
                 }
 
 		view->document = document;
-		view->find_page = 1;
+		view->find_page = 0;
 		view->find_result = 0;
 
 		if (view->document) {
@@ -1539,8 +1540,8 @@ ev_view_find_next (EvView *view)
 		view->find_result = 0;
 		view->find_page++;
 
-		if (view->find_page > n_pages) {
-			view->find_page = 1;
+		if (view->find_page >= n_pages) {
+			view->find_page = 0;
 		}
 
 		jump_to_find_page (view);
@@ -1571,8 +1572,8 @@ ev_view_find_previous (EvView *view)
 		view->find_result = 0;
 		view->find_page--;
 
-		if (view->find_page < 1) {
-			view->find_page = n_pages;
+		if (view->find_page < 0) {
+			view->find_page = n_pages - 1;
 		}
 
 		jump_to_find_page (view);
