@@ -1,3 +1,30 @@
+2002-09-08  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* GOutputDev.h: add missing gdk include
+
+	* GOutputDev.cc (GOutputDev::drawLink): don't #if 0, just don't
+	use it
+	(GOutputDev::drawImage, GOutputDev::drawImageMask): use Michael's
+	broken image handling code from gpdf 0.90.1 instead of my even
+	more broken code
+
+	* gpdf-embeddable-view.cc (render_page): disable links here.
+	(realize_mainbox): view == view_data now. Don't have to
+	gtk_object_get_data anymore
+	(real_redraw_view): ditto
+	(redraw_view): ditto, make it static again
+	(gpdf_embeddable_view_construct): connect redraw_view to
+	pdf_changed signal, don't gtk_object_set_data "view_data"
+	(view_switch_page, view_zoom_verb, view_activate)
+	(button_press_event_cb, gesture_page_event_cb)
+	(gesture_zoom_event_cb, key_press_event_cb, mainbox_realize): make
+	them static again
+
+	* gpdf-embeddable.cc (class_init): add "pdf_changed" signal
+	(load_pdf_from_stream): emit it, don't redraw_view explicitly
+
+	* gpdf-embeddable.h: add signal to class struct
+
 2002-09-01  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
 	* gpdf-embeddable.cc (gpdf_embeddable_view_factory): move here
