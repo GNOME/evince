@@ -40,13 +40,13 @@ typedef struct _Container Container;
 /* NB. there is a 1 to 1 Container -> Component mapping, this
    is due to how much MDI sucks; unutterably */
 struct _Container {
-  BonoboContainer    *container;
-  BonoboUIHandler    *uih;
+	BonoboItemContainer *container;
+	BonoboUIHandler     *uih;
   
-  GtkWidget	    *app;
-  GtkWidget	    *slot;
-  GtkWidget	    *view_widget;
-  Component         *component;
+	GtkWidget           *app;
+	GtkWidget           *slot;
+	GtkWidget           *view_widget;
+	Component           *component;
 };
 
 struct  _Component {
@@ -348,9 +348,10 @@ container_set_view (Container *container, Component *component)
 	/*
 	 * Create the remote view and the local ViewFrame.
 	 */
-	view_frame = bonobo_client_site_new_view (component->client_site,
-						  bonobo_object_corba_objref (BONOBO_OBJECT (
-							  container->uih)));
+	view_frame = bonobo_client_site_new_view (
+		component->client_site,
+		bonobo_ui_compat_get_container (container->uih));
+
 	component->view_frame = view_frame;
 
 	/*
@@ -373,9 +374,9 @@ container_set_view (Container *container, Component *component)
 }
 
 static BonoboObjectClient *
-container_launch_component (BonoboClientSite *client_site,
-			    BonoboContainer *container,
-			    char *component_goad_id)
+container_launch_component (BonoboClientSite    *client_site,
+			    BonoboItemContainer *container,
+			    char                *component_goad_id)
 {
 	BonoboObjectClient *object_server;
 
@@ -403,7 +404,7 @@ container_launch_component (BonoboClientSite *client_site,
 	 * ClientSites which it manages.  Here we add the new
 	 * ClientSite to that list.
 	 */
-	bonobo_container_add (container, BONOBO_OBJECT (client_site));
+	bonobo_item_container_add (container, BONOBO_OBJECT (client_site));
 
 	return object_server;
 }
@@ -522,8 +523,8 @@ container_new (const char *fname)
 	
 	container = g_new0 (Container, 1);
 
-	container->app = gnome_app_new ("pdf-viewer",
-					"GNOME PDF viewer");
+	container->app = bonobo_win_new ("pdf-viewer",
+					 "GNOME PDF viewer");
 
 	gtk_drag_dest_set (container->app,
 			   GTK_DEST_DEFAULT_ALL,
@@ -538,12 +539,13 @@ container_new (const char *fname)
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 600, 600);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
 
-	container->container   = bonobo_container_new ();
+	container->container   = bonobo_item_container_new ();
 	container->view_widget = NULL;
 	container->slot = gtk_event_box_new ();
 	gtk_widget_show (container->slot);
 
-	gnome_app_set_contents (GNOME_APP (container->app), GTK_WIDGET (container->slot));
+	bonobo_win_set_contents (BONOBO_WIN (container->app),
+				 GTK_WIDGET (container->slot));
 
 	gtk_object_set_data (GTK_OBJECT (container->app), "container_data", container);
 	gtk_signal_connect  (GTK_OBJECT (container->app), "delete_event",
@@ -556,7 +558,7 @@ container_new (const char *fname)
 	 * to do menu/toolbar merging.
 	 */
 	container->uih = bonobo_ui_handler_new ();
-	bonobo_ui_handler_set_app (container->uih, GNOME_APP (container->app));
+	bonobo_ui_handler_set_app (container->uih, BONOBO_WIN (container->app));
 
 	container_create_menus   (container);
 	container_create_toolbar (container);
