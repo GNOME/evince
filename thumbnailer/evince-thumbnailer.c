@@ -28,7 +28,7 @@
 
 #include <string.h>
 
-#define THUMBNAIL_SIZE 100
+#define THUMBNAIL_SIZE 128
 
 static gboolean
 evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail)
@@ -57,7 +57,7 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail)
 	}
 
 	pixbuf = ev_document_thumbnails_get_thumbnail
-			(EV_DOCUMENT_THUMBNAILS (document), 0, THUMBNAIL_SIZE);
+			(EV_DOCUMENT_THUMBNAILS (document), 0, THUMBNAIL_SIZE, FALSE);
 	
 	if (pixbuf != NULL) {
 		GdkPixbuf *pdflogo;

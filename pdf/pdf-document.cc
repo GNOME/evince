@@ -1240,7 +1240,8 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 					 gdouble      scale_factor,
 					 gint         page_num,
 					 gint         width,
-					 gint         height)
+					 gint         height,
+					 gboolean     border)
 {
 	SplashOutputDev *output;
 	GdkPixbuf *pixbuf;
@@ -1256,9 +1257,17 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 					72*scale_factor,
 					0, gTrue, gFalse);
 
-	pixbuf = ev_document_misc_get_thumbnail_frame (output->getBitmap()->getWidth(),
-						       output->getBitmap()->getHeight(),
-						       NULL);
+	width = output->getBitmap()->getWidth();
+	height = output->getBitmap()->getHeight();
+
+	if (border) {
+		pixbuf = ev_document_misc_get_thumbnail_frame (width, height, NULL);
+	} else {
+		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+					 width + 4, height + 4);
+		gdk_pixbuf_fill (pixbuf, 0xffffffff);
+	}
+
 	bitmap_to_pixbuf (output->getBitmap(), pixbuf, 1, 1);
 	delete output;
 
@@ -1268,7 +1277,7 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 static void
 pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails,
 					gint                  page,
-					gint                  suggested_width,
+					gint                  size,
 					gint                 *width,
 					gint                 *height)
 {
@@ -1276,9 +1285,8 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	Page *the_page;
 	Object the_thumb;
 	Thumb *thumb = NULL;
-	gdouble page_ratio;
 
-	the_page = pdf_document->doc->getCatalog ()->getPage (page);
+	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
 	the_page->getThumb (&the_thumb);
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {
@@ -1289,16 +1297,26 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 		*width = thumb->getWidth ();
 		*height = thumb->getHeight ();
 	} else {
-		page_ratio = the_page->getHeight () / the_page->getWidth ();
-		*width = suggested_width;
-		*height = (gint) (suggested_width * page_ratio);
+		double page_width, page_height;
+
+		page_width = the_page->getWidth ();
+		page_height = the_page->getHeight ();
+
+		if (page_width > page_height) {
+			*width = size;
+			*height = (int) (size * page_height / page_width);
+		} else {
+			*width = (int) (size * page_width / page_height);
+			*height = size;
+		}
 	}
 }
 
 static GdkPixbuf *
 pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 				       gint 		     page,
-				       gint                  width)
+				       gint                  size,
+				       gboolean              border)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_thumbnails);
 	GdkPixbuf *thumbnail;
@@ -1306,16 +1324,10 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	Object the_thumb;
 	Thumb *thumb = NULL;
 	gboolean have_ethumbs = FALSE;
-	gdouble page_ratio;
-	gint dest_height;
 
 	/* getPage seems to want page + 1 for some reason; */
 	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
 	the_page->getThumb(&the_thumb);
-
-	page_ratio = the_page->getHeight () / the_page->getWidth ();
-	dest_height = (gint) (width * page_ratio);
-
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {
 		/* Build the thumbnail object */
@@ -1342,15 +1354,18 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
 		g_object_unref (tmp_pixbuf);
 	} else {
-		gdouble scale_factor;
-
-		scale_factor = (gdouble)width / the_page->getWidth ();
-
+		int width, height;
+		double scale_factor;
+	
+		pdf_document_thumbnails_get_dimensions (document_thumbnails, page, size,
+							&width, &height);
+		scale_factor = width / the_page->getWidth ();
 		thumbnail = pdf_document_thumbnails_get_page_pixbuf (pdf_document,
 								     scale_factor,
 								     page,
 								     width,
-								     dest_height);
+								     height,
+								     border);
 	}
 
 	return thumbnail;

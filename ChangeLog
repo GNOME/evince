@@ -1,3 +1,22 @@
+2005-03-07  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document-thumbnails.c:
+	(ev_document_thumbnails_get_thumbnail):
+	* backend/ev-document-thumbnails.h:
+
+	Rework API a bit. Add a border flag and
+	change sizing logic (now the size we specify
+	applies to the bigger dimension).
+
+	* pdf/pdf-document.cc:
+	* pixbuf/pixbuf-document.c:
+	(pixbuf_document_thumbnails_get_thumbnail):
+	* shell/ev-sidebar-thumbnails.c: (do_one_iteration):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+
+	Adapt to the new API and do not draw a border for nautilus
+	thumbnailer.
+
 2005-03-03  Fernando Herrera  <fherrera@onirica.com>
 
 	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
