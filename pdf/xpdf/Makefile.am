@@ -110,6 +110,7 @@ gnome_pdf_viewer_SOURCES =		\
 	bonobo-application-x-pdf.cc	\
 	gpdf-control.cc			\
 	gpdf-control.h			\
+	gpdf-g-switch.h			\
 	gpdf-persist-stream.cc		\
 	gpdf-persist-stream.h		\
 	gpdf-util.h			\
