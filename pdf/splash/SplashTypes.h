@@ -24,6 +24,7 @@ enum SplashColorMode {
   splashModeMono1,
   splashModeMono8,
   splashModeRGB8,
+  splashModeRGB8Packed,
   splashModeBGR8Packed
 };
 
@@ -45,6 +46,8 @@ typedef Guint SplashRGB8;
 #define splashMakeRGB8(r, g, b) \
   ((((r) & 0xff) << 16) | (((g) & 0xff) << 8) | ((b) & 0xff))
 
+typedef Guchar SplashRGB8P; // packed
+
 // 3x8-bit RGB: (MSB) 00BBGGRR (LSB)
 typedef Guint SplashBGR8;
 typedef Guchar SplashBGR8P; // packed
@@ -65,6 +68,7 @@ union SplashColorPtr {
   SplashMono1P *mono1;
   SplashMono8 *mono8;
   SplashRGB8 *rgb8;
+  SplashRGB8P *rgb8p;
   SplashBGR8P *bgr8;
 };
 

@@ -188,6 +188,7 @@ void Splash::clear(SplashColor color) {
   SplashMono1P *mono1;
   SplashMono8 *mono8;
   SplashRGB8 *rgb8;
+  SplashRGB8P *rgb8pline, *rgb8p;
   SplashBGR8P *bgr8line, *bgr8;
   SplashMono1 data;
   int n, i, x, y;
@@ -210,6 +211,19 @@ void Splash::clear(SplashColor color) {
     n = bitmap->width * bitmap->height;
     for (i = 0, rgb8 = bitmap->data.rgb8; i < n; ++i, ++rgb8) {
       *rgb8 = color.rgb8;
+    }
+    break;
+  case splashModeRGB8Packed:
+    rgb8pline = bitmap->data.rgb8p;
+    for (y = 0; y < bitmap->height; ++y) {
+      rgb8p = rgb8pline;
+      for (x = 0; x < bitmap->width; ++x) {
+	rgb8p[0] = splashRGB8R(color.rgb8);
+	rgb8p[1] = splashRGB8G(color.rgb8);
+	rgb8p[2] = splashRGB8B(color.rgb8);
+	rgb8p += 3;
+      }
+      rgb8pline += bitmap->rowSize;
     }
     break;
   case splashModeBGR8Packed:
@@ -701,6 +715,7 @@ SplashError Splash::xorFill(SplashPath *path, GBool eo) {
 
 void Splash::drawPixel(int x, int y, SplashColor *color, GBool noClip) {
   SplashMono1P *mono1;
+  SplashRGB8P *rgb8p;
   SplashBGR8P *bgr8;
 
   if (noClip || state->clip->test(x, y)) {
@@ -719,6 +734,12 @@ void Splash::drawPixel(int x, int y, SplashColor *color, GBool noClip) {
     case splashModeRGB8:
       bitmap->data.rgb8[y * bitmap->width + x] = color->rgb8;
       break;
+    case splashModeRGB8Packed:
+      rgb8p = &bitmap->data.rgb8p[y * bitmap->rowSize + 3 * x];
+      rgb8p[0] = splashRGB8R(color->rgb8);
+      rgb8p[1] = splashRGB8G(color->rgb8);
+      rgb8p[2] = splashRGB8B(color->rgb8);
+      break;
     case splashModeBGR8Packed:
       bgr8 = &bitmap->data.bgr8[y * bitmap->rowSize + 3 * x];
       bgr8[2] = splashBGR8R(color->bgr8);
@@ -732,6 +753,7 @@ void Splash::drawPixel(int x, int y, SplashColor *color, GBool noClip) {
 void Splash::drawPixel(int x, int y, SplashPattern *pattern, GBool noClip) {
   SplashColor color;
   SplashMono1P *mono1;
+  SplashRGB8P *rgb8p;
   SplashBGR8P *bgr8;
 
   if (noClip || state->clip->test(x, y)) {
@@ -751,6 +773,12 @@ void Splash::drawPixel(int x, int y, SplashPattern *pattern, GBool noClip) {
     case splashModeRGB8:
       bitmap->data.rgb8[y * bitmap->width + x] = color.rgb8;
       break;
+    case splashModeRGB8Packed:
+      rgb8p = &bitmap->data.rgb8p[y * bitmap->rowSize + 3 * x];
+      rgb8p[0] = splashRGB8R(color.rgb8);
+      rgb8p[1] = splashRGB8G(color.rgb8);
+      rgb8p[2] = splashRGB8B(color.rgb8);
+      break;
     case splashModeBGR8Packed:
       bgr8 = &bitmap->data.bgr8[y * bitmap->rowSize + 3 * x];
       bgr8[2] = splashBGR8R(color.bgr8);
@@ -767,6 +795,7 @@ void Splash::drawSpan(int x0, int x1, int y, SplashPattern *pattern,
   SplashMono1P *mono1;
   SplashMono8 *mono8;
   SplashRGB8 *rgb8;
+  SplashRGB8P *rgb8p;
   SplashBGR8P *bgr8;
   SplashMono1 mask1;
   int i, j, n;
@@ -831,6 +860,19 @@ void Splash::drawSpan(int x0, int x1, int y, SplashPattern *pattern,
     }
     break;
 
+  case splashModeRGB8Packed:
+    rgb8p = &bitmap->data.rgb8p[y * bitmap->rowSize + 3 * x0];
+    for (i = 0; i < n; ++i) {
+      if (noClip || state->clip->test(x0 + i, y)) {
+	color = pattern->getColor(x0 + i, y);
+	rgb8p[0] = splashRGB8R(color.rgb8);
+	rgb8p[1] = splashRGB8G(color.rgb8);
+	rgb8p[2] = splashRGB8B(color.rgb8);
+      }
+      rgb8p += 3;
+    }
+    break;
+
   case splashModeBGR8Packed:
     bgr8 = &bitmap->data.bgr8[y * bitmap->rowSize + 3 * x0];
     for (i = 0; i < n; ++i) {
@@ -852,6 +894,7 @@ void Splash::xorSpan(int x0, int x1, int y, SplashPattern *pattern,
   SplashMono1P *mono1;
   SplashMono8 *mono8;
   SplashRGB8 *rgb8;
+  SplashRGB8P *rgb8p;
   SplashBGR8P *bgr8;
   SplashMono1 mask1;
   int i, j, n;
@@ -912,6 +955,19 @@ void Splash::xorSpan(int x0, int x1, int y, SplashPattern *pattern,
     }
     break;
 
+  case splashModeRGB8Packed:
+    rgb8p = &bitmap->data.rgb8p[y * bitmap->rowSize + 3 * x0];
+    for (i = 0; i < n; ++i) {
+      if (noClip || state->clip->test(x0 + i, y)) {
+	color = pattern->getColor(x0 + i, y);
+	rgb8p[0] ^= splashRGB8R(color.rgb8);
+	rgb8p[1] ^= splashRGB8G(color.rgb8);
+	rgb8p[2] ^= splashRGB8B(color.rgb8);
+      }
+      rgb8p += 3;
+    }
+    break;
+
   case splashModeBGR8Packed:
     bgr8 = &bitmap->data.bgr8[y * bitmap->rowSize + 3 * x0];
     for (i = 0; i < n; ++i) {
@@ -928,6 +984,7 @@ void Splash::xorSpan(int x0, int x1, int y, SplashPattern *pattern,
 }
 
 void Splash::getPixel(int x, int y, SplashColor *pixel) {
+  SplashRGB8P *rgb8p;
   SplashBGR8P *bgr8;
 
   if (y < 0 || y >= bitmap->height || x < 0 || x >= bitmap->width) {
@@ -943,6 +1000,10 @@ void Splash::getPixel(int x, int y, SplashColor *pixel) {
     break;
   case splashModeRGB8:
     pixel->rgb8 = bitmap->data.rgb8[y * bitmap->width + x];
+    break;
+  case splashModeRGB8Packed:
+    rgb8p = &bitmap->data.rgb8p[y * bitmap->rowSize + 3 * x];
+    pixel->rgb8 = splashMakeRGB8(rgb8p[0], rgb8p[1], rgb8p[2]);
     break;
   case splashModeBGR8Packed:
     bgr8 = &bitmap->data.bgr8[y * bitmap->rowSize + 3 * x];
@@ -983,6 +1044,7 @@ SplashError Splash::fillGlyph(SplashCoord x, SplashCoord y,
   SplashMono1P *mono1Ptr;
   SplashMono8 *mono8Ptr;
   SplashRGB8 *rgb8Ptr;
+  SplashRGB8P *rgb8pPtr;
   SplashBGR8P *bgr8Ptr;
   SplashMono8 bgMono8;
   int bgR, bgG, bgB;
@@ -1040,6 +1102,15 @@ SplashError Splash::fillGlyph(SplashCoord x, SplashCoord y,
 					  (alpha * splashRGB8B(fg.rgb8) +
 					   ialpha * bgB) >> 8);
 		break;
+	      case splashModeRGB8Packed:
+		rgb8pPtr = &bitmap->data.rgb8p[y1 * bitmap->rowSize + 3 * x1];
+		rgb8pPtr[0] =
+		    (alpha * splashRGB8R(fg.rgb8) + ialpha * rgb8pPtr[0]) >> 8;
+		rgb8pPtr[1] =
+		    (alpha * splashRGB8G(fg.rgb8) + ialpha * rgb8pPtr[1]) >> 8;
+		rgb8pPtr[2] =
+		    (alpha * splashRGB8B(fg.rgb8) + ialpha * rgb8pPtr[2]) >> 8;
+		break;
 	      case splashModeBGR8Packed:
 		bgr8Ptr = &bitmap->data.bgr8[y1 * bitmap->rowSize + 3 * x1];
 		bgr8Ptr[2] =
@@ -1079,6 +1150,12 @@ SplashError Splash::fillGlyph(SplashCoord x, SplashCoord y,
 		  break;
 		case splashModeRGB8:
 		  bitmap->data.rgb8[y1 * bitmap->width + x1] = fg.rgb8;
+		  break;
+		case splashModeRGB8Packed:
+		  rgb8pPtr = &bitmap->data.rgb8p[y1 * bitmap->rowSize + 3 * x1];
+		  rgb8pPtr[0] = splashRGB8R(fg.rgb8);
+		  rgb8pPtr[1] = splashRGB8G(fg.rgb8);
+		  rgb8pPtr[2] = splashRGB8B(fg.rgb8);
 		  break;
 		case splashModeBGR8Packed:
 		  bgr8Ptr = &bitmap->data.bgr8[y1 * bitmap->rowSize + 3 * x1];
@@ -1307,6 +1384,7 @@ SplashError Splash::fillImageMask(SplashImageMaskSource src, void *srcData,
 				    (1 - alpha) * bg.mono8);
 	    break;
 	  case splashModeRGB8:
+	  case splashModeRGB8Packed:
 	    pix.rgb8 = splashMakeRGB8(
 			   splashRound(alpha * splashRGB8R(fg.rgb8) +
 				       (1 - alpha) * splashRGB8R(bg.rgb8)),
@@ -1314,6 +1392,7 @@ SplashError Splash::fillImageMask(SplashImageMaskSource src, void *srcData,
 				       (1 - alpha) * splashRGB8G(bg.rgb8)),
 			   splashRound(alpha * splashRGB8B(fg.rgb8) +
 				       (1 - alpha) * splashRGB8B(bg.rgb8)));
+	    break;
 	  case splashModeBGR8Packed:
 	    pix.bgr8 = splashMakeBGR8(
 			   splashRound(alpha * splashBGR8R(fg.bgr8) +
@@ -1377,6 +1456,9 @@ SplashError Splash::drawImage(SplashImageSource src, void *srcData,
     break;
   case splashModeRGB8:
     ok = srcMode == splashModeRGB8;
+    break;
+  case splashModeRGB8Packed:
+    ok = srcMode == splashModeRGB8Packed;
     break;
   case splashModeBGR8Packed:
     ok = srcMode == splashModeBGR8Packed;
@@ -1564,6 +1646,7 @@ SplashError Splash::drawImage(SplashImageSource src, void *srcData,
 	    pixAcc[0] += p->mono8;
 	    break;
 	  case splashModeRGB8:
+	  case splashModeRGB8Packed:
 	    pixAcc[0] += splashRGB8R(p->rgb8);
 	    pixAcc[1] += splashRGB8G(p->rgb8);
 	    pixAcc[2] += splashRGB8B(p->rgb8);
@@ -1606,6 +1689,7 @@ SplashError Splash::drawImage(SplashImageSource src, void *srcData,
 	    pix.mono8 = splashRound(pixAcc[0] * pixMul);
 	    break;
 	  case splashModeRGB8:
+	  case splashModeRGB8Packed:
 	    pix.rgb8 = splashMakeRGB8(splashRound(pixAcc[0] * pixMul),
 				      splashRound(pixAcc[1] * pixMul),
 				      splashRound(pixAcc[2] * pixMul));

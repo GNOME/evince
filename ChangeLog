@@ -1,5 +1,15 @@
 2005-01-08  Martin Kretzschmar  <martink@gnome.org>
 
+	* pdf/splash/Splash.cc (clear, drawPixel, drawSpan, xorSpan, getPixel)
+	(fillGlyph, fillImageMask, drawImage):
+	pdf/splash/SplashBitmap.cc (SplashBitmap, ~SplashBitmap, writePNMFile):
+	pdf/splash/SplashTypes.h:
+	pdf/xpdf/SplashOutputDev (startPage, getColor, imageSrc): implement RGB8
+	packed mode for Splash.
+
+	* pdf/xpdf/GDKSplashOutputDev.cc (GDKSplashOutputDev, redraw): use
+	RGB8 packed mode, eliminates the pixbuf data creation loop.
+
 	* shell/ev-print-job.c (ev_print_job_finalize)
 	(ev_print_job_set_property, ev_print_job_get_property)
 	(ev_print_job_set_gnome_print_job, ev_print_job_set_document)

@@ -276,7 +276,8 @@ void SplashOutputDev::startPage(int pageNum, GfxState *state) {
   switch (colorMode) {
   case splashModeMono1: color.mono1 = 0; break;
   case splashModeMono8: color.mono8 = 0; break;
-  case splashModeRGB8: color.rgb8 = splashMakeRGB8(0, 0, 0); break;
+  case splashModeRGB8:
+  case splashModeRGB8Packed: color.rgb8 = splashMakeRGB8(0, 0, 0); break;
   case splashModeBGR8Packed: color.bgr8 = splashMakeBGR8(0, 0, 0); break;
   }
   splash->setStrokePattern(new SplashSolidColor(color));
@@ -469,6 +470,7 @@ SplashPattern *SplashOutputDev::getColor(double gray, GfxRGB *rgb) {
     pattern = new SplashSolidColor(color1);
     break;
   case splashModeRGB8:
+  case splashModeRGB8Packed:
     color1.rgb8 = splashMakeRGB8(soutRound(255 * r),
 				 soutRound(255 * g),
 				 soutRound(255 * b));
@@ -1201,6 +1203,7 @@ GBool SplashOutputDev::imageSrc(void *data, SplashColor *pixel,
     pixel->mono8 = soutRound(255 * gray);
     break;
   case splashModeRGB8:
+  case splashModeRGB8Packed:
     imgData->colorMap->getRGB(pix, &rgb);
     pixel->rgb8 = splashMakeRGB8(soutRound(255 * rgb.r),
 				 soutRound(255 * rgb.g),

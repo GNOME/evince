@@ -39,6 +39,11 @@ SplashBitmap::SplashBitmap(int widthA, int heightA, SplashColorMode modeA) {
     data.rgb8 = (SplashRGB8 *)
                   gmalloc(width * height * sizeof(SplashRGB8));
     break;
+  case splashModeRGB8Packed:
+    rowSize = (width * 3 + 3) & ~3;
+    data.rgb8p = (SplashRGB8P *)
+                  gmalloc(rowSize * height * sizeof(SplashRGB8P));
+    break;
   case splashModeBGR8Packed:
     rowSize = (width * 3 + 3) & ~3;
     data.bgr8 = (SplashBGR8P *)
@@ -58,9 +63,11 @@ SplashBitmap::~SplashBitmap() {
   case splashModeRGB8:
     gfree(data.rgb8);
     break;
+  case splashModeRGB8Packed:
+    gfree(data.rgb8p);
+    break;
   case splashModeBGR8Packed:
     gfree(data.bgr8);
-    break;
   }
 }
 
@@ -69,6 +76,7 @@ SplashError SplashBitmap::writePNMFile(char *fileName) {
   SplashMono1P *mono1;
   SplashMono8 *mono8;
   SplashRGB8 *rgb8;
+  SplashRGB8P *rgb8pline, *rgb8p;
   SplashBGR8P *bgr8line, *bgr8;
   int x, y;
 
@@ -110,6 +118,21 @@ SplashError SplashBitmap::writePNMFile(char *fileName) {
 	fputc(splashRGB8B(*rgb8), f);
 	++rgb8;
       }
+    }
+    break;
+
+  case splashModeRGB8Packed:
+    fprintf(f, "P6\n%d %d\n255\n", width, height);
+    rgb8pline = data.rgb8p;
+    for (y = 0; y < height; ++y) {
+      rgb8p = rgb8pline;
+      for (x = 0; x < width; ++x) {
+	fputc(rgb8p[0], f);
+	fputc(rgb8p[1], f);
+	fputc(rgb8p[2], f);
+	rgb8p += 3;
+      }
+      rgb8pline += rowSize;
     }
     break;
 
