@@ -97,22 +97,19 @@ PageAttrs::PageAttrs(PageAttrs *attrs, Dict *dict) {
     if (obj2.isNum())
       cropY2 = obj2.getNum();
     obj2.free();
-
-    // if the MediaBox is excessively larger than the CropBox,
-    // just use the CropBox
-    w = 0.25 * (cropX2 - cropX1);
-    h = 0.25 * (cropY2 - cropY1);
-    if (cropX1 - x1 > w || x2 - cropX2 > w ||
-	cropY1 - y1 > h || y2 - cropY2 > h) {
-      x1 = cropX1;
-      x2 = cropX2;
-      y1 = cropY1;
-      y2 = cropY2;
-    }
-  } else {
-    cropX1 = cropX2 = cropY1 = cropY2 = 0;
   }
   obj1.free();
+
+  // if the MediaBox is excessively larger than the CropBox,
+  // just use the CropBox
+  limitToCropBox = gFalse;
+  w = 0.25 * (cropX2 - cropX1);
+  h = 0.25 * (cropY2 - cropY1);
+  if (cropX2 > cropX1 &&
+      (cropX1 - x1 > w || x2 - cropX2 > w ||
+       cropY1 - y1 > h || y2 - cropY2 > h)) {
+    limitToCropBox = gTrue;
+  }
 
   // rotate
   dict->lookup("Rotate", &obj1);

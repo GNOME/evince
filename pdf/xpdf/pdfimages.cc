@@ -39,6 +39,8 @@ static ArgDesc argDesc[] = {
    "last page to convert"},
   {"-j",      argFlag,     &dumpJPEG,      0,
    "write JPEG images as JPEG files"},
+  {"-q",      argFlag,     &errQuiet,      0,
+   "don't print any messages or errors"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -70,11 +72,18 @@ int main(int argc, char *argv[]) {
   // read config file
   initParams(xpdfConfigFile);
 
-  // open PDF file
+  // open PDF fihe
   xref = NULL;
   doc = new PDFDoc(fileName);
-  if (!doc->isOk())
-    exit(1);
+  if (!doc->isOk()) {
+    goto err1;
+  }
+
+  // check for copy permission
+  if (!doc->okToCopy()) {
+    error(-1, "Copying of images from this document is not allowed.");
+    goto err2;
+  }
 
   // get page range
   if (firstPage < 1)
@@ -89,12 +98,14 @@ int main(int argc, char *argv[]) {
   delete imgOut;
 
   // clean up
+ err2:
   delete doc;
+ err1:
   freeParams();
 
   // check for memory leaks
-  Object::memCheck(errFile);
-  gMemReport(errFile);
+  Object::memCheck(stderr);
+  gMemReport(stderr);
 
   return 0;
 }

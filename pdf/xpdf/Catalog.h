@@ -41,6 +41,9 @@ public:
   // Get a page.
   Page *getPage(int i) { return pages[i-1]; }
 
+  // Return base URI, or NULL if none.
+  GString *getBaseURI() { return baseURI; }
+
   // Find a page, given its object ID.  Returns page number, or 0 if
   // not found.
   int findPage(int num, int gen);
@@ -56,6 +59,7 @@ private:
   int numPages;			// number of pages
   Object dests;			// named destination dictionary
   Object nameTree;		// name tree
+  GString *baseURI;		// base URI for URI-type links
   GBool ok;			// true if catalog is valid
 
   int readPageTree(Dict *pages, PageAttrs *attrs, int start);

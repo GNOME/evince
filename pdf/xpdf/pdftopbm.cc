@@ -39,6 +39,8 @@ static ArgDesc argDesc[] = {
    "last page to print"},
   {"-r",      argInt,      &resolution,    0,
    "resolution, in DPI (default is 150)"},
+  {"-q",      argFlag,     &errQuiet,      0,
+   "don't print any messages or errors"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -93,8 +95,8 @@ int main(int argc, char *argv[]) {
   freeParams();
 
   // check for memory leaks
-  Object::memCheck(errFile);
-  gMemReport(errFile);
+  Object::memCheck(stderr);
+  gMemReport(stderr);
 
   return 0;
 }

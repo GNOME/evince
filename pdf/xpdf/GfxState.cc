@@ -45,12 +45,12 @@ GfxColorSpace::GfxColorSpace(Object *colorSpace) {
   ok = gTrue;
   lookup = NULL;
 
-  // check for Separation colorspace
+  // check for Separation, DeviceN, and Pattern colorspaces
   colorSpace->copy(&csObj);
   sepFunc = NULL;
   if (colorSpace->isArray()) {
     colorSpace->arrayGet(0, &obj);
-    if (obj.isName("Separation")) {
+    if (obj.isName("Separation") || obj.isName("DeviceN")) {
       csObj.free();
       colorSpace->arrayGet(2, &csObj);
       sepFunc = new Function(colorSpace->arrayGet(3, &obj2));
@@ -59,6 +59,9 @@ GfxColorSpace::GfxColorSpace(Object *colorSpace) {
 	delete sepFunc;
 	sepFunc = NULL;
       }
+    } else if (obj.isName("Pattern")) {
+      csObj.free();
+      colorSpace->arrayGet(1, &csObj);
     }
     obj.free();
   }
@@ -80,8 +83,9 @@ GfxColorSpace::GfxColorSpace(Object *colorSpace) {
   } else {
     goto err1;
   }
-  if (!ok)
-    return;
+  if (!ok) {
+    goto err1;
+  }
 
   // get lookup table for indexed colorspace
   if (indexed) {
@@ -528,6 +532,11 @@ GfxImageColorMap::GfxImageColorMap(int bits1, Object *decode,
   colorSpace = colorSpace1;
   mode = colorSpace->getMode();
 
+  // work around a bug in Distiller (?)
+  if (colorSpace->isIndexed() && maxPixel > colorSpace->getIndexHigh()) {
+    maxPixel = colorSpace->getIndexHigh();
+  }
+
   // get decode map
   if (decode->isNull()) {
     if (colorSpace->isIndexed()) {
@@ -926,6 +935,14 @@ void GfxState::textShift(double tx) {
   double dx, dy;
 
   textTransformDelta(tx, 0, &dx, &dy);
+  curX += dx;
+  curY += dy;
+}
+
+void GfxState::textShift(double tx, double ty) {
+  double dx, dy;
+
+  textTransformDelta(tx, ty, &dx, &dy);
   curX += dx;
   curY += dy;
 }

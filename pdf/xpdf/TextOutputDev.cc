@@ -19,7 +19,7 @@
 #include "config.h"
 #include "Error.h"
 #include "GfxState.h"
-#include "GfxFont.h"
+#include "FontEncoding.h"
 #include "TextOutputDev.h"
 
 #include "TextOutputFontInfo.h"
@@ -34,8 +34,8 @@ static char *isoLatin1Subst[] = {
   "S",				// Scaron
   "Y",				// Ydieresis
   "Z",				// Zcaron
-  "fi",				// fi
-  "fl",				// fl
+  "fi", "fl",			// ligatures
+  "ff", "ffi", "ffl",		// ligatures
   "i",				// dotlessi
   "l",				// lslash
   "oe",				// oe
@@ -70,8 +70,8 @@ static char *ascii7Subst[] = {
   "ae",				// ae
   "c",				// ccedilla
   "e", "e", "e", "e",		// e{acute,circumflex,dieresis,grave}
-  "fi",				// fi
-  "fl",				// fl
+  "fi", "fl",			// ligatures
+  "ff", "ffi", "ffl",		// ligatures
   "i",				// dotlessi
   "i", "i", "i", "i",		// i{acute,circumflex,dieresis,grave}
   "l",				// lslash
@@ -92,6 +92,72 @@ static char *ascii7Subst[] = {
   "(R)",			// registered
   "TM"				// trademark
 };
+
+//------------------------------------------------------------------------
+// 16-bit fonts
+//------------------------------------------------------------------------
+
+#if JAPANESE_SUPPORT
+
+// CID 0 .. 96
+static Gushort japan12Map[96] = {
+  0x2120, 0x2120, 0x212a, 0x2149, 0x2174, 0x2170, 0x2173, 0x2175, // 00 .. 07
+  0x2147, 0x214a, 0x214b, 0x2176, 0x215c, 0x2124, 0x213e, 0x2123, // 08 .. 0f
+  0x213f, 0x2330, 0x2331, 0x2332, 0x2333, 0x2334, 0x2335, 0x2336, // 10 .. 17
+  0x2337, 0x2338, 0x2339, 0x2127, 0x2128, 0x2163, 0x2161, 0x2164, // 18 .. 1f
+  0x2129, 0x2177, 0x2341, 0x2342, 0x2343, 0x2344, 0x2345, 0x2346, // 20 .. 27
+  0x2347, 0x2348, 0x2349, 0x234a, 0x234b, 0x234c, 0x234d, 0x234e, // 28 .. 2f
+  0x234f, 0x2350, 0x2351, 0x2352, 0x2353, 0x2354, 0x2355, 0x2356, // 30 .. 37
+  0x2357, 0x2358, 0x2359, 0x235a, 0x214e, 0x216f, 0x214f, 0x2130, // 38 .. 3f
+  0x2132, 0x2146, 0x2361, 0x2362, 0x2363, 0x2364, 0x2365, 0x2366, // 40 .. 47
+  0x2367, 0x2368, 0x2369, 0x236a, 0x236b, 0x236c, 0x236d, 0x236e, // 48 .. 4f
+  0x236f, 0x2370, 0x2371, 0x2372, 0x2373, 0x2374, 0x2375, 0x2376, // 50 .. 57
+  0x2377, 0x2378, 0x2379, 0x237a, 0x2150, 0x2143, 0x2151, 0x2141  // 58 .. 5f
+};
+
+// CID 325 .. 421
+static Gushort japan12KanaMap1[97] = {
+  0x2131, 0x2121, 0x2123, 0x2156, 0x2157, 0x2122, 0x2126, 0x2572,
+  0x2521, 0x2523, 0x2525, 0x2527, 0x2529, 0x2563, 0x2565, 0x2567,
+  0x2543, 0x213c, 0x2522, 0x2524, 0x2526, 0x2528, 0x252a, 0x252b,
+  0x252d, 0x252f, 0x2531, 0x2533, 0x2535, 0x2537, 0x2539, 0x253b,
+  0x253d, 0x253f, 0x2541, 0x2544, 0x2546, 0x2548, 0x254a, 0x254b,
+  0x254c, 0x254d, 0x254e, 0x254f, 0x2552, 0x2555, 0x2558, 0x255b,
+  0x255e, 0x255f, 0x2560, 0x2561, 0x2562, 0x2564, 0x2566, 0x2568,
+  0x2569, 0x256a, 0x256b, 0x256c, 0x256d, 0x256f, 0x2573, 0x212b,
+  0x212c, 0x212e, 0x2570, 0x2571, 0x256e, 0x2575, 0x2576, 0x2574,
+  0x252c, 0x252e, 0x2530, 0x2532, 0x2534, 0x2536, 0x2538, 0x253a,
+  0x253c, 0x253e, 0x2540, 0x2542, 0x2545, 0x2547, 0x2549, 0x2550,
+  0x2551, 0x2553, 0x2554, 0x2556, 0x2557, 0x2559, 0x255a, 0x255c,
+  0x255d
+};
+
+// CID 501 .. 598
+static Gushort japan12KanaMap2[98] = {
+  0x212d, 0x212f, 0x216d, 0x214c, 0x214d, 0x2152, 0x2153, 0x2154,
+  0x2155, 0x2158, 0x2159, 0x215a, 0x215b, 0x213d, 0x2121, 0x2472,
+  0x2421, 0x2423, 0x2425, 0x2427, 0x2429, 0x2463, 0x2465, 0x2467,
+  0x2443, 0x2422, 0x2424, 0x2426, 0x2428, 0x242a, 0x242b, 0x242d,
+  0x242f, 0x2431, 0x2433, 0x2435, 0x2437, 0x2439, 0x243b, 0x243d,
+  0x243f, 0x2441, 0x2444, 0x2446, 0x2448, 0x244a, 0x244b, 0x244c,
+  0x244d, 0x244e, 0x244f, 0x2452, 0x2455, 0x2458, 0x245b, 0x245e,
+  0x245f, 0x2460, 0x2461, 0x2462, 0x2464, 0x2466, 0x2468, 0x2469,
+  0x246a, 0x246b, 0x246c, 0x246d, 0x246f, 0x2473, 0x2470, 0x2471,
+  0x246e, 0x242c, 0x242e, 0x2430, 0x2432, 0x2434, 0x2436, 0x2438,
+  0x243a, 0x243c, 0x243e, 0x2440, 0x2442, 0x2445, 0x2447, 0x2449,
+  0x2450, 0x2451, 0x2453, 0x2454, 0x2456, 0x2457, 0x2459, 0x245a,
+  0x245c, 0x245d
+};
+
+static char *japan12Roman[10] = {
+  "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
+};
+
+static char *japan12Abbrev1[6] = {
+  "mm", "cm", "km", "mg", "kg", "cc"
+};
+
+#endif
 
 //------------------------------------------------------------------------
 // TextString
@@ -193,15 +259,166 @@ void TextString::addChar(GfxState *state, double x, double y,
   xMax = x + dx;
 }
 
+void TextString::addChar16(GfxState *state, double x, double y,
+			   double dx, double dy,
+			   int c, GfxFontCharSet16 charSet) {
+  int c1, t1, t2;
+  int sub[8];
+  char *p;
+  int *q;
+  int i, j, n;
+
+  // get current index
+  i = text->getLength();
+
+  // convert the 16-bit character
+  c1 = 0;
+  sub[0] = 0;
+  switch (charSet) {
+
+  // convert Adobe-Japan1-2 to JIS X 0208-1983
+  case font16AdobeJapan12:
+#if JAPANESE_SUPPORT
+    if (c <= 96) {
+      c1 = 0x8080 + japan12Map[c];
+    } else if (c <= 632) {
+      if (c <= 230)
+	c1 = 0;
+      else if (c <= 324)
+	c1 = 0x8080 + japan12Map[c - 230];
+      else if (c <= 421)
+	c1 = 0x8080 + japan12KanaMap1[c - 325];
+      else if (c <= 500)
+	c1 = 0;
+      else if (c <= 598)
+	c1 = 0x8080 + japan12KanaMap2[c - 501];
+      else
+	c1 = 0;
+    } else if (c <= 1124) {
+      if (c <= 779) {
+	if (c <= 726)
+	  c1 = 0xa1a1 + (c - 633);
+	else if (c <= 740)
+	  c1 = 0xa2a1 + (c - 727);
+	else if (c <= 748)
+	  c1 = 0xa2ba + (c - 741);
+	else if (c <= 755)
+	  c1 = 0xa2ca + (c - 749);
+	else if (c <= 770)
+	  c1 = 0xa2dc + (c - 756);
+	else if (c <= 778)
+	  c1 = 0xa2f2 + (c - 771);
+	else
+	  c1 = 0xa2fe;
+      } else if (c <= 841) {
+	if (c <= 789)
+	  c1 = 0xa3b0 + (c - 780);
+	else if (c <= 815)
+	  c1 = 0xa3c1 + (c - 790);
+	else
+	  c1 = 0xa3e1 + (c - 816);
+      } else if (c <= 1010) {
+	if (c <= 924)
+	  c1 = 0xa4a1 + (c - 842);
+	else
+	  c1 = 0xa5a1 + (c - 925);
+      } else {
+	if (c <= 1034)
+	  c1 = 0xa6a1 + (c - 1011);
+	else if (c <= 1058)
+	  c1 = 0xa6c1 + (c - 1035);
+	else if (c <= 1091)
+	  c1 = 0xa7a1 + (c - 1059);
+	else
+	  c1 = 0xa7d1 + (c - 1092);
+      }
+    } else if (c <= 4089) {
+      t1 = (c - 1125) / 94;
+      t2 = (c - 1125) % 94;
+      c1 = 0xb0a1 + (t1 << 8) + t2;
+    } else if (c <= 7477) {
+      t1 = (c - 4090) / 94;
+      t2 = (c - 4090) % 94;
+      c1 = 0xd0a1 + (t1 << 8) + t2;
+    } else if (c <= 7554) {
+      c1 = 0;
+    } else if (c <= 7563) {	// circled Arabic numbers 1..9
+      c1 = 0xa3b1 + (c - 7555);
+    } else if (c <= 7574) {	// circled Arabic numbers 10..20
+      t1 = c - 7564 + 10;
+      sub[0] = 0xa3b0 + (t1 / 10);
+      sub[1] = 0xa3b0 + (t1 % 10);
+      sub[2] = 0;
+      c1 = -1;
+    } else if (c <= 7584) {	// Roman numbers I..X
+      for (p = japan12Roman[c - 7575], q = sub; *p; ++p, ++q) {
+	*q = 0xa380 + *p;
+      }
+      *q = 0;
+      c1 = -1;
+    } else if (c <= 7632) {
+      if (c <= 7600) {
+	c1 = 0;
+      } else if (c <= 7606) {
+	for (p = japan12Abbrev1[c - 7601], q = sub; *p; ++p, ++q) {
+	  *q = 0xa380 + *p;
+	}
+	*q = 0;
+	c1 = -1;
+      } else {
+	c1 = 0;
+      }
+    } else {
+      c1 = 0;
+    }
+#endif // JAPANESE_SUPPORT
+    break;
+  }
+
+  // append converted character to string
+  if (c1 == 0) {
+#if 0 //~
+    error(-1, "Unsupported Adobe-Japan1-2 character: %d", c);
+#endif
+    text->append(' ');
+    n = 1;
+  } else if (c1 > 0) {
+    text->append(c1 >> 8);
+    text->append(c1 & 0xff);
+    n = 2;
+  } else {
+    n = 0;
+    for (q = sub; *q; ++q) {
+      text->append(*q >> 8);
+      text->append(*q & 0xff);
+      n += 2;
+    }
+  }
+
+  // update position information
+  if (i+n > ((i+15) & ~15)) {
+    xRight = (double *)grealloc(xRight, ((i+n+15) & ~15) * sizeof(double));
+  }
+  if (i == 0) {
+    xMin = x;
+  }
+  for (j = 0; j < n; ++j) {
+    xRight[i+j] = x + dx;
+  }
+  xMax = x + dx;
+}
+
 //------------------------------------------------------------------------
 // TextPage
 //------------------------------------------------------------------------
 
-TextPage::TextPage(GBool useASCII71) {
-  useASCII7 = useASCII71;
+TextPage::TextPage(GBool useASCII7, GBool rawOrder) {
+  this->useASCII7 = useASCII7;
+  this->rawOrder = rawOrder;
   curStr = NULL;
   yxStrings = NULL;
   xyStrings = NULL;
+  yxCur1 = yxCur2 = NULL;
 }
 
 TextPage::~TextPage() {
@@ -214,11 +431,45 @@ void TextPage::beginString(GfxState *state, GString *s, GBool hexCodes) {
 
 void TextPage::addChar(GfxState *state, double x, double y,
 		       double dx, double dy, Guchar c) {
-  double x1, y1, w1, h1;
+  double x1, y1, w1, h1, dx2, dy2;
+  int n;
+  GBool hexCodes;
 
   state->transform(x, y, &x1, &y1);
+  state->textTransformDelta(state->getCharSpace(), 0, &dx2, &dy2);
+  dx -= dx2;
+  dy -= dy2;
   state->transformDelta(dx, dy, &w1, &h1);
+  n = curStr->text->getLength();
+  if (n > 0 &&
+      x1 - curStr->xRight[n-1] > 0.1 * (curStr->yMax - curStr->yMin)) {
+    hexCodes = curStr->hexCodes;
+    endString();
+    beginString(state, NULL, hexCodes);
+  }
   curStr->addChar(state, x1, y1, w1, h1, c, useASCII7);
+}
+
+void TextPage::addChar16(GfxState *state, double x, double y,
+			 double dx, double dy, int c,
+			 GfxFontCharSet16 charSet) {
+  double x1, y1, w1, h1, dx2, dy2;
+  int n;
+  GBool hexCodes;
+
+  state->transform(x, y, &x1, &y1);
+  state->textTransformDelta(state->getCharSpace(), 0, &dx2, &dy2);
+  dx -= dx2;
+  dy -= dy2;
+  state->transformDelta(dx, dy, &w1, &h1);
+  n = curStr->text->getLength();
+  if (n > 0 &&
+      x1 - curStr->xRight[n-1] > 0.1 * (curStr->yMax - curStr->yMin)) {
+    hexCodes = curStr->hexCodes;
+    endString();
+    beginString(state, NULL, hexCodes);
+  }
+  curStr->addChar16(state, x1, y1, w1, h1, c, charSet);
 }
 
 void TextPage::endString() {
@@ -245,10 +496,25 @@ void TextPage::endString() {
   h = curStr->yMax - curStr->yMin;
   y1 = curStr->yMin + 0.5 * h;
   y2 = curStr->yMin + 0.8 * h;
-  for (p1 = NULL, p2 = yxStrings; p2; p1 = p2, p2 = p2->yxNext) {
-    if (y1 < p2->yMin || (y2 < p2->yMax && curStr->xMax < p2->xMin))
-      break;
+  if (rawOrder) {
+    p1 = yxCur1;
+    p2 = NULL;
+  } else if ((!yxCur1 ||
+	      (y1 >= yxCur1->yMin &&
+	       (y2 >= yxCur1->yMax || curStr->xMax >= yxCur1->xMin))) &&
+	     (!yxCur2 ||
+	      (y1 < yxCur2->yMin ||
+	       (y2 < yxCur2->yMax && curStr->xMax < yxCur2->xMin)))) {
+    p1 = yxCur1;
+    p2 = yxCur2;
+  } else {
+    for (p1 = NULL, p2 = yxStrings; p2; p1 = p2, p2 = p2->yxNext) {
+      if (y1 < p2->yMin || (y2 < p2->yMax && curStr->xMax < p2->xMin))
+	break;
+    }
+    yxCur2 = p2;
   }
+  yxCur1 = curStr;
   if (p1)
     p1->yxNext = curStr;
   else
@@ -275,9 +541,17 @@ void TextPage::coalesce() {
     space = str1->yMax - str1->yMin;
     d = str2->xMin - str1->xMax;
 #if 0 //~tmp
-    if (str2->yMin < str1->yMax && d > -0.1 * space && d < 0.2 * space) {
+    if (((rawOrder &&
+	  ((str2->yMin >= str1->yMin && str2->yMin <= str1->yMax) ||
+	   (str2->yMax >= str1->yMin && str2->yMax <= str1->yMax))) ||
+	 (!rawOrder && str2->yMin < str1->yMax)) &&
+	d > -0.1 * space && d < 0.2 * space) {
 #else
-    if (str2->yMin < str1->yMax && d > -0.5 * space && d < space) {
+    if (((rawOrder &&
+	  ((str2->yMin >= str1->yMin && str2->yMin <= str1->yMax) ||
+	   (str2->yMax >= str1->yMin && str2->yMax <= str1->yMax))) ||
+	 (!rawOrder && str2->yMin < str1->yMax)) &&
+	d > -0.5 * space && d < space) {
 #endif
       n = str1->text->getLength();
       if (d > 0.1 * space)
@@ -467,8 +741,13 @@ void TextPage::dump(FILE *f) {
   for (str1 = yxStrings; str1; str1 = str1->yxNext) {
 
     // line this string up with the correct column
-    for (; col1 < str1->col; ++col1)
-      fputc(' ', f);
+    if (rawOrder && col1 == 0) {
+      col1 = str1->col;
+    } else {
+      for (; col1 < str1->col; ++col1) {
+	fputc(' ', f);
+      }
+    }
 
     // print the string
     fputs(str1->text->getCString(), f);
@@ -482,10 +761,13 @@ void TextPage::dump(FILE *f) {
 
     // if we've hit the end of the line...
 #if 0 //~
-    if (!(str1->yxNext && str1->yxNext->yMin < str1->yMax &&
+    if (!(str1->yxNext &&
+	  !(rawOrder && str1->yxNext->yMax < str1->yMin) &&
+	  str1->yxNext->yMin < str1->yMax &&
 	  str1->yxNext->xMin >= str1->xMax)) {
 #else
     if (!(str1->yxNext &&
+	  !(rawOrder && str1->yxNext->yMax < str1->yMin) &&
 	  str1->yxNext->yMin < 0.2*str1->yMin + 0.8*str1->yMax &&
 	  str1->yxNext->xMin >= str1->xMax)) {
 #endif
@@ -508,8 +790,12 @@ void TextPage::dump(FILE *f) {
 	  
 	// print the space
 	d = (int)((yMin - yMax) / (str1->yMax - str1->yMin) + 0.5);
-	for (; d > 0; --d)
+	if (rawOrder && d > 2) {
+	  d = 2;
+	}
+	for (; d > 0; --d) {
 	  fputc('\n', f);
+	}
       }
 
       // set up for next line
@@ -532,14 +818,16 @@ void TextPage::clear() {
   }
   yxStrings = NULL;
   xyStrings = NULL;
+  yxCur1 = yxCur2 = NULL;
 }
 
 //------------------------------------------------------------------------
 // TextOutputDev
 //------------------------------------------------------------------------
 
-TextOutputDev::TextOutputDev(char *fileName, GBool useASCII7) {
+TextOutputDev::TextOutputDev(char *fileName, GBool useASCII7, GBool rawOrder) {
   text = NULL;
+  this->rawOrder = rawOrder;
   ok = gTrue;
 
   // open file
@@ -559,7 +847,7 @@ TextOutputDev::TextOutputDev(char *fileName, GBool useASCII7) {
   }
 
   // set up text object
-  text = new TextPage(useASCII7);
+  text = new TextPage(useASCII7, rawOrder);
 }
 
 TextOutputDev::~TextOutputDev() {
@@ -590,7 +878,7 @@ void TextOutputDev::updateFont(GfxState *state) {
 
   // look for hex char codes in subsetted font
   hexCodes = gFalse;
-  if ((font = state->getFont())) {
+  if ((font = state->getFont()) && !font->is16Bit()) {
     for (c = 0; c < 256; ++c) {
       if ((charName = font->getCharName(c))) {
 	if ((charName[0] == 'B' || charName[0] == 'C' ||
@@ -619,6 +907,11 @@ void TextOutputDev::endString(GfxState *state) {
 void TextOutputDev::drawChar(GfxState *state, double x, double y,
 			     double dx, double dy, Guchar c) {
   text->addChar(state, x, y, dx, dy, c);
+}
+
+void TextOutputDev::drawChar16(GfxState *state, double x, double y,
+			       double dx, double dy, int c) {
+  text->addChar16(state, x, y, dx, dy, c, state->getFont()->getCharSet16());
 }
 
 GBool TextOutputDev::findText(char *s, GBool top, GBool bottom,

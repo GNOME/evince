@@ -106,16 +106,19 @@ void Object::free() {
     gfree(name);
     break;
   case objArray:
-    if (!array->decRef())
+    if (!array->decRef()) {
       delete array;
+    }
     break;
   case objDict:
-    if (!dict->decRef())
+    if (!dict->decRef()) {
       delete dict;
+    }
     break;
   case objStream:
-    if (!stream->decRef())
+    if (!stream->decRef()) {
       delete stream;
+    }
     break;
   case objCmd:
     gfree(cmd);

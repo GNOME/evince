@@ -16,6 +16,10 @@
 #include <stddef.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#if HAVE_T1LIB_H
+#include <t1lib.h>
+#include <t1libx.h>
+#endif
 #include "config.h"
 #include "OutputDev.h"
 
@@ -25,6 +29,8 @@ class GfxFont;
 class GfxSubpath;
 class TextPage;
 struct RGBColor;
+class FontEncoding;
+class XOutputFontCache;
 
 //------------------------------------------------------------------------
 // Constants
@@ -59,6 +65,40 @@ extern GBool installCmap;
 // Size of RGB color cube.
 extern int rgbCubeSize;
 
+#if HAVE_T1LIB_H
+// Type of t1lib font rendering to use:
+//     "none"   -- don't use t1lib
+//     "plain"  -- t1lib, without anti-aliasing
+//     "low"    -- t1lib, with low-level anti-aliasing
+//     "high"   -- t1lib, with high-level anti-aliasing
+extern GString *t1libControl;
+#endif
+
+// If any of these are set, xpdf will use t1lib to render those font(s)
+// instead of using the X server font(s).
+extern GString *t1Courier;
+extern GString *t1CourierBold;
+extern GString *t1CourierBoldOblique;
+extern GString *t1CourierOblique;
+extern GString *t1Helvetica;
+extern GString *t1HelveticaBold;
+extern GString *t1HelveticaBoldOblique;
+extern GString *t1HelveticaOblique;
+extern GString *t1Symbol;
+extern GString *t1TimesBold;
+extern GString *t1TimesBoldItalic;
+extern GString *t1TimesItalic;
+extern GString *t1TimesRoman;
+extern GString *t1ZapfDingbats;
+
+// Use the EUC-JP encoding.
+extern GBool useEUCJP;
+
+#if JAPANESE_SUPPORT
+// X font name pattern to use for Japanese text.
+extern GString *japan12Font;
+#endif
+
 //------------------------------------------------------------------------
 // XOutputFont
 //------------------------------------------------------------------------
@@ -66,64 +106,168 @@ extern int rgbCubeSize;
 class XOutputFont {
 public:
 
-  // Constructor.
   XOutputFont(GfxFont *gfxFont, double m11, double m12,
-	      double m21, double m22, Display *display1);
+	      double m21, double m22, Display *display,
+	      XOutputFontCache *cache);
 
-  // Destructor.
-  ~XOutputFont();
+  virtual ~XOutputFont();
 
-  // Does this font match the ID, size, and angle?
+  // Does this font match the ID and transform?
   GBool matches(Ref id1, double m11, double m12, double m21, double m22)
     { return id.num == id1.num && id.gen == id1.gen &&
-	     mat11 == m11 && mat12 == m12 && mat21 == m21 && mat22 == m22; }
+	     m11 == tm11 && m12 == tm12 && m21 == tm21 && m22 == tm22; }
 
-  // Get X font.
-  XFontStruct *getXFont() { return xFont; }
+  // Was font created successfully?
+  virtual GBool isOk() = 0;
 
-  // Get character mapping.
-  Gushort mapChar(Guchar c) { return map[c]; }
+  // Update <gc> with this font.
+  virtual void updateGC(GC gc) = 0;
 
-  // Reverse map a character.
-  Guchar revMapChar(Gushort c) { return revMap[c]; }
+  // Draw character <c> at <x>,<y>.
+  virtual void drawChar(GfxState *state, Pixmap pixmap, GC gc,
+			double x, double y, int c) = 0;
 
   // Does this font use hex char codes?
   GBool isHex() { return hex; }
 
+protected:
+
+  Ref id;			// font ID
+  double tm11, tm12,		// original transform matrix
+         tm21, tm22;
+  Display *display;		// X display
+  GBool hex;			// subsetted font with hex char codes
+				//   (this flag is used for text output)
+};
+
+#if HAVE_T1LIB_H
+//------------------------------------------------------------------------
+// XOutputT1Font
+//------------------------------------------------------------------------
+
+class XOutputT1Font: public XOutputFont {
+public:
+
+  XOutputT1Font(GfxFont *gfxFont, GString *pdfBaseFont,
+		double m11, double m12, double m21, double m22,
+		double size, double ntm11, double ntm12,
+		double ntm21, double ntm22,
+		Display *display, XOutputFontCache *cache);
+
+  virtual ~XOutputT1Font();
+
+  // Was font created successfully?
+  virtual GBool isOk();
+
+  // Update <gc> with this font.
+  virtual void updateGC(GC gc);
+
+  // Draw character <c> at <x>,<y>.
+  virtual void drawChar(GfxState *state, Pixmap pixmap, GC gc,
+			double x, double y, int c);
+
 private:
 
-  Ref id;
-  double mat11, mat12, mat21, mat22;
-  Display *display;
-  XFontStruct *xFont;
-  GBool hex;			// subsetted font with hex char codes
-  Gushort map[256];
-  Guchar revMap[256];
+  float size;			// font size
+  int t1ID;			// t1lib font ID
+  GBool t1libAA;		// true for anti-aliased fonts
+};
+#endif
+
+//------------------------------------------------------------------------
+// XOutputServerFont
+//------------------------------------------------------------------------
+
+class XOutputServerFont: public XOutputFont {
+public:
+
+  XOutputServerFont(GfxFont *gfxFont, char *fontNameFmt,
+		    FontEncoding *encoding,
+		    double m11, double m12, double m21, double m22,
+		    double size, double ntm11, double ntm12,
+		    double ntm21, double ntm22,
+		    Display *display, XOutputFontCache *cache);
+
+  virtual ~XOutputServerFont();
+
+  // Was font created successfully?
+  virtual GBool isOk();
+
+  // Update <gc> with this font.
+  virtual void updateGC(GC gc);
+
+  // Draw character <c> at <x>,<y>.
+  virtual void drawChar(GfxState *state, Pixmap pixmap, GC gc,
+			double x, double y, int c);
+
+private:
+
+  XFontStruct *xFont;		// the X font
+  Gushort map[256];		// forward map (PDF code -> font code)
+  Guchar revMap[256];		// reverese map (font code -> PDF code)
 };
 
 //------------------------------------------------------------------------
 // XOutputFontCache
 //------------------------------------------------------------------------
 
+#if HAVE_T1LIB_H
+struct XOutputT1BaseFont {
+  int num, gen;
+  int t1ID;
+  char **enc;
+  char *encStr;
+};
+#endif
+
 class XOutputFontCache {
 public:
 
   // Constructor.
-  XOutputFontCache(Display *display1);
+  XOutputFontCache(Display *display);
 
   // Destructor.
   ~XOutputFontCache();
+
+  // Initialize (or re-initialize) the font cache for a new document.
+  void startDoc(int screenNum, Guint depth,
+		Colormap colormap);
 
   // Get a font.  This creates a new font if necessary.
   XOutputFont *getFont(GfxFont *gfxFont, double m11, double m12,
 		       double m21, double m22);
 
+#if HAVE_T1LIB_H
+  // Get a t1lib font.
+  int getT1Font(GfxFont *gfxFont, GString *pdfBaseFont);
+
+  // Use anti-aliased Type 1 fonts?
+  GBool getT1libAA() { return t1libAA; }
+#endif
+
 private:
 
+  void delFonts();
+  void clear();
+
   Display *display;		// X display pointer
-  XOutputFont *			// fonts in reverse-LRU order
-    fonts[fontCacheSize];
-  int numFonts;			// number of valid entries
+
+#if HAVE_T1LIB_H
+  GBool useT1lib;		// if false, t1lib is not used at all
+  GBool t1libAA;		// true for anti-aliased fonts
+  GBool t1libAAHigh;		// low or high-level anti-aliasing
+  GBool t1Init;			// set when t1lib has been initialized
+  XOutputT1Font *		// Type 1 fonts in reverse-LRU order
+    t1Fonts[t1FontCacheSize];
+  int nT1Fonts;			// number of valid entries in t1Fonts[]
+  XOutputT1BaseFont *		// list of t1lib base fonts
+    t1BaseFonts;
+  int t1BaseFontsSize;		// size of t1BaseFonts array
+#endif
+
+  XOutputServerFont *		// X server fonts in reverse-LRU order
+    serverFonts[serverFontCacheSize];
+  int nServerFonts;		// number of valid entries in serverFonts[]
 };
 
 //------------------------------------------------------------------------
@@ -219,6 +363,9 @@ public:
 
   //----- special access
 
+  // Called to indicate that a new PDF document has been loaded.
+  void startDoc();
+
   // Find a string.  If <top> is true, starts looking at <xMin>,<yMin>;
   // otherwise starts looking at top of page.  If <bottom> is true,
   // stops looking at <xMax>,<yMax>; otherwise stops looking at bottom
@@ -243,6 +390,7 @@ private:
   Pixmap pixmap;		// pixmap to draw into
   int pixmapW, pixmapH;		// size of pixmap
   Guint depth;			// pixmap depth
+  Colormap colormap;		// X colormap
   int flatness;			// line flatness
   GC paperGC;			// GC for background
   GC strokeGC;			// GC with stroke color

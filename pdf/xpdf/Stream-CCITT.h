@@ -29,14 +29,70 @@ struct CCITTCode {
 #define twoDimVertR3 7
 #define twoDimVertL3 8
 
-// 1-4 bit codes
-static CCITTCode twoDimTab1[16] = {
-  {-1, -1},				// 0000
-  {4, twoDimPass},			// 0001
-  {3, twoDimHoriz}, {3, twoDimHoriz},	// 001x
-  {3, twoDimVertL1}, {3, twoDimVertL1},	// 010x
-  {3, twoDimVertR1}, {3, twoDimVertR1},	// 011x
-  {1, twoDimVert0}, {1, twoDimVert0},	// 1xxx
+// 1-7 bit codes
+static CCITTCode twoDimTab1[128] = {
+  {-1, -1}, {-1, -1},		        // 000000x
+  {7, twoDimVertL3},		        // 0000010
+  {7, twoDimVertR3},		        // 0000011
+  {6, twoDimVertL2}, {6, twoDimVertL2},	// 000010x
+  {6, twoDimVertR2}, {6, twoDimVertR2},	// 000011x
+  {4, twoDimPass}, {4, twoDimPass},     // 0001xxx
+    {4, twoDimPass}, {4, twoDimPass},
+    {4, twoDimPass}, {4, twoDimPass},
+    {4, twoDimPass}, {4, twoDimPass},
+  {3, twoDimHoriz}, {3, twoDimHoriz},	// 001xxxx
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+    {3, twoDimHoriz}, {3, twoDimHoriz},
+  {3, twoDimVertL1}, {3, twoDimVertL1},	// 010xxxx
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+    {3, twoDimVertL1}, {3, twoDimVertL1},
+  {3, twoDimVertR1}, {3, twoDimVertR1},	// 011xxxx
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+    {3, twoDimVertR1}, {3, twoDimVertR1},
+  {1, twoDimVert0}, {1, twoDimVert0},	// 1xxxxxx
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
+    {1, twoDimVert0}, {1, twoDimVert0},
     {1, twoDimVert0}, {1, twoDimVert0},
     {1, twoDimVert0}, {1, twoDimVert0},
     {1, twoDimVert0}, {1, twoDimVert0}

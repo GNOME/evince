@@ -16,46 +16,10 @@
 #include "gtypes.h"
 #include "GString.h"
 #include "Object.h"
+#include "FontEncoding.h"
 
 class Dict;
-
-//------------------------------------------------------------------------
-// GfxFontEncoding
-//------------------------------------------------------------------------
-
-#define gfxFontEncHashSize 419
-
-class GfxFontEncoding {
-public:
-
-  // Construct an empty encoding.
-  GfxFontEncoding();
-
-  // Construct an encoding from an array of char names.
-  GfxFontEncoding(char **encoding1, int encSize);
-
-  // Destructor.
-  ~GfxFontEncoding();
-
-  // Add a char to the encoding.
-  void addChar(int code, char *name);
-
-  // Return the character name associated with <code>.
-  char *getCharName(int code) { return encoding[code]; }
-
-  // Return the code associated with <name>.
-  int getCharCode(char *name);
-
-private:
-
-  int hash(char *name);
-  void addChar1(int code, char *name);
-
-  char **encoding;		// code --> name mapping
-  GBool freeEnc;		// should we free the encoding array?
-  short				// name --> code hash table
-    hashTab[gfxFontEncHashSize];
-};
+struct BuiltinFont;
 
 //------------------------------------------------------------------------
 // GfxFontCharSet16
@@ -70,6 +34,7 @@ enum GfxFontCharSet16 {
 //------------------------------------------------------------------------
 
 struct GfxFontEncoding16 {
+  int wMode;			// writing mode (0=horizontal, 1=vertical)
   Guchar codeLen[256];		// length of codes, in bytes, indexed by
 				//   first byte of code
   Gushort map1[256];		// one-byte code mapping:
@@ -86,15 +51,26 @@ struct GfxFontEncoding16 {
 //------------------------------------------------------------------------
 
 struct GfxFontWidthExcep {
-  int first;			// chars <first>..<last> have
-  int last;			//   width <width>
-  double width;
+  int first;			// this record applies to
+  int last;			//   chars <first>..<last>
+  double width;			// char width
+};
+
+struct GfxFontWidthExcepV {
+  int first;			// this record applies to
+  int last;			//   chars <first>..<last>
+  double height;		// char height
+  double vx, vy;		// origin position
 };
 
 struct GfxFontWidths16 {
   double defWidth;		// default char width
+  double defHeight;		// default char height
+  double defVY;			// default origin position
   GfxFontWidthExcep *exceps;	// exceptions
   int numExceps;		// number of valid entries in exceps
+  GfxFontWidthExcepV *excepsV;	// exceptions for vertical font
+  int numExcepsV;		// number of valid entries in excepsV
 };
 
 //------------------------------------------------------------------------
@@ -110,6 +86,7 @@ struct GfxFontWidths16 {
 enum GfxFontType {
   fontUnknownType,
   fontType1,
+  fontType1C,
   fontType3,
   fontTrueType,
   fontType0
@@ -167,8 +144,15 @@ public:
   // Get width of a character or string.
   double getWidth(Guchar c) { return widths[c]; }
   double getWidth(GString *s);
+
+  // Get character metrics for 16-bit font.
   double getWidth16(int c);
-  double getWidth16(GString *s);
+  double getHeight16(int c);
+  double getOriginX16(int c);
+  double getOriginY16(int c);
+
+  // Return the encoding.
+  FontEncoding *getEncoding() { return encoding; }
 
   // Return the character name associated with <code>.
   char *getCharName(int code) { return encoding->getCharName(code); }
@@ -180,16 +164,21 @@ public:
   GfxFontCharSet16 getCharSet16() { return enc16.charSet; }
   GfxFontEncoding16 *getEncoding16() { return enc16.enc; }
 
+  // Get the writing mode (0=horizontal, 1=vertical).
+  int getWMode16() { return enc16.enc->wMode; }
+
   // Return the font matrix.
   double *getFontMatrix() { return fontMat; }
 
+  // Read an external or embedded font file into a buffer.
+  char *readExtFontFile(int *len);
+  char *readEmbFontFile(int *len);
+
 private:
 
-  void makeEncoding(Dict *fontDict, GfxFontEncoding *builtinEncoding);
-  GfxFontEncoding *makeEncoding1(Object obj, Dict *fontDesc,
-				 GfxFontEncoding *builtinEncoding);
-  void getType1Encoding(Stream *str);
-  void makeWidths(Dict *fontDict, GfxFontEncoding *builtinEncoding,
+  void getEncAndWidths(Dict *fontDict, BuiltinFont *builtinFont);
+  void findExtFontFile();
+  void makeWidths(Dict *fontDict, FontEncoding *builtinEncoding,
 		  Gushort *builtinWidths);
   void getType0EncAndWidths(Dict *fontDict);
 
@@ -204,7 +193,7 @@ private:
   GString *extFontFile;		// external font file name
   double fontMat[6];		// font matrix
   union {
-    GfxFontEncoding *encoding;	// 8-bit font encoding
+    FontEncoding *encoding;	// 8-bit font encoding
     struct {
       GfxFontCharSet16 charSet;	// 16-bit character set
       GfxFontEncoding16 *enc;	// 16-bit encoding (CMap)

@@ -6,41 +6,47 @@ $! Copyright 1996 Derek B. Noonburg
 $!
 $!========================================================================
 $!
-$ XPDF_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj,Gfx.obj," + -
+$ XPDF_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj," + -
+              "FontEncoding.obj,FontFile.obj,Gfx.obj," + -
               "GfxFont.obj,GfxState.obj,Lexer.obj,Link.obj," + -
               "LTKOutputDev.obj,Object.obj,OutputDev.obj,Page.obj," + -
               "Params.obj,Parser.obj,PDFDoc.obj,PSOutputDev.obj," + -
               "Stream.obj,TextOutputDev.obj,XOutputDev.obj,XRef.obj"
-$ XPDF_LIBS = "[-.goo]libgoo.olb/lib,[-.ltk]libltk.olb/lib"
+$ XPDF_LIBS = "[-.ltk]libltk.olb/lib,[-.goo]libgoo.olb/lib"
 $!
-$ PDFTOPS_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj,Gfx.obj," + -
+$ PDFTOPS_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj," + -
+                 "FontEncoding.obj,FontFile.obj,Gfx.obj," + -
                  "GfxFont.obj,GfxState.obj,Lexer.obj,Link.obj," + -
                  "Object.obj,OutputDev.obj,Page.obj,Params.obj," + -
                  "Parser.obj,PDFdoc.obj,PSOutputDev.obj,Stream.obj," + -
                  "XRef.obj"
 $ PDFTOPS_LIBS = "[-.goo]libgoo.olb/lib"
 $!
-$ PDFTOTEXT_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj,Gfx.obj," + -
+$ PDFTOTEXT_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj," + -
+                   "FontEncoding.obj,FontFile.obj,Gfx.obj," + -
                    "GfxFont.obj,GfxState.obj,Lexer.obj,Link.obj," + -
                    "Object.obj,OutputDev.obj,Page.obj,Params.obj," + -
                    "Parser.obj,PDFdoc.obj,TextOutputDev.obj,Stream.obj," + -
                    "XRef.obj"
 $ PDFTOTEXT_LIBS = "[-.goo]libgoo.olb/lib"
 $!
-$ PDFINFO_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj,Gfx.obj," + -
+$ PDFINFO_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj," + -
+                 "FontEncoding.obj,FontFile.obj,Gfx.obj," + -
                  "GfxFont.obj,GfxState.obj,Lexer.obj,Link.obj," + -
                  "Object.obj,OutputDev.obj,Page.obj,Params.obj," + -
                  "Parser.obj,PDFdoc.obj,Stream.obj,XRef.obj"
 $ PDFINFO_LIBS = "[-.goo]libgoo.olb/lib"
 $!
-$ PDFTOPBM_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj,Gfx.obj," + -
+$ PDFTOPBM_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj," + -
+                  "FontEncoding.obj,FontFile.obj,Gfx.obj," + -
                   "GfxFont.obj,GfxState.obj,Lexer.obj,Link.obj," + -
                   "Object.obj,OutputDev.obj,PBMOutputDev.obj,Page.obj," + -
                   "Params.obj,Parser.obj,PDFdoc.obj,Stream.obj," + -
                   "TextOutputDev.obj,XOutputDev.obj,XRef.obj"
 $ PDFTOPBM_LIBS = "[-.goo]libgoo.olb/lib"
 $!
-$ PDFIMAGES_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj,Gfx.obj," + -
+$ PDFIMAGES_OBJS = "Array.obj,Catalog.obj,Dict.obj,Error.obj," + -
+                   "FontEncoding.obj,FontFile.obj,Gfx.obj," + -
                    "GfxFont.obj,GfxState.obj,ImageOutputDev.obj," + -
                    "Lexer.obj,Link.obj,Object.obj,OutputDev.obj,Page.obj," + -
                    "Params.obj,Parser.obj,PDFdoc.obj,Stream.obj,XRef.obj"
@@ -54,6 +60,8 @@ $ CXXCOMP Array.cc
 $ CXXCOMP Catalog.cc
 $ CXXCOMP Dict.cc
 $ CXXCOMP Error.cc
+$ CXXCOMP FontEncoding.cc
+$ CXXCOMP FontFile.cc
 $ CXXCOMP Gfx.cc
 $ CXXCOMP GfxFont.cc
 $ CXXCOMP GfxState.cc

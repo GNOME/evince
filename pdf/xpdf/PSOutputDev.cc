@@ -21,6 +21,7 @@
 #include "Error.h"
 #include "GfxState.h"
 #include "GfxFont.h"
+#include "FontFile.h"
 #include "Catalog.h"
 #include "Page.h"
 #include "Stream.h"
@@ -45,6 +46,18 @@ static char *prolog[] = {
   "% PDF special state",
   "/pdfDictSize 14 def",
   "/pdfSetup {",
+  "  2 array astore",
+  "  /setpagedevice where {",
+  "    pop 3 dict dup begin",
+  "      exch /PageSize exch def",
+  "      /ImagingBBox null def",
+  "      /Policies 1 dict dup begin /PageSize 3 def end def",
+  "    end setpagedevice",
+  "  } {",
+  "    pop",
+  "  } ifelse",
+  "} def",
+  "/pdfStartPage {",
   "  pdfDictSize dict begin",
   "  /pdfFill [0] def",
   "  /pdfStroke [0] def",
@@ -57,18 +70,6 @@ static char *prolog[] = {
   "  /pdfTextRise 0 def",
   "  /pdfWordSpacing 0 def",
   "  /pdfHorizScaling 1 def",
-  "} def",
-  "/pdfStartPage {",
-  "  2 array astore",
-  "  pdfSetup",
-  "  /setpagedevice where {",
-  "    pop 2 dict dup begin",
-  "      exch /PageSize exch def",
-  "      /ImagingBBox null def",
-  "    end setpagedevice",
-  "  } {",
-  "    pop",
-  "  } ifelse",
   "} def",
   "/pdfEndPage { end } def",
   "/sCol { pdfLastStroke not {",
@@ -116,7 +117,7 @@ static char *prolog[] = {
   "/l { lineto } def",
   "/c { curveto } def",
   "/re { 4 2 roll moveto 1 index 0 rlineto 0 exch rlineto",
-  "      neg 0 rlineto closepath } def"
+  "      neg 0 rlineto closepath } def",
   "% path painting operators",
   "/S { sCol stroke } def",
   "/f { fCol fill } def",
@@ -316,10 +317,12 @@ PSOutputDev::PSOutputDev(char *fileName, Catalog *catalog,
     if ((resDict = catalog->getPage(pg)->getResourceDict()))
       setupFonts(resDict);
   }
-  if (doForm)
+  if (doForm) {
     writePS("end\n");
-  else
+  } else {
+    writePS("%d %d pdfSetup\n", paperWidth, paperHeight);
     writePS("%%%%EndSetup\n");
+  }
 
   // write form header
   if (doForm) {
@@ -421,19 +424,26 @@ void PSOutputDev::setupFont(GfxFont *font) {
   }
   fontIDs[fontIDLen++] = font->getID();
 
-  // check for embedded font
+  // check for embedded Type 1 font
   if (embedType1 && font->getType() == fontType1 &&
       font->getEmbeddedFontID(&fontFileID)) {
-    setupEmbeddedFont(&fontFileID);
+    setupEmbeddedType1Font(&fontFileID);
     psName = font->getEmbeddedFontName();
     scale = 1;
 
-  // check for external font file
+  // check for external Type 1 font file
   } else if (embedType1 && font->getType() == fontType1 &&
 	     font->getExtFontFile()) {
-    setupEmbeddedFont(font->getExtFontFile());
+    setupEmbeddedType1Font(font->getExtFontFile());
     // this assumes that the PS font name matches the PDF font name
     psName = font->getName()->getCString();
+    scale = 1;
+
+  // check for embedded Type 1C font
+  } else if (embedType1 && font->getType() == fontType1C &&
+	     font->getEmbeddedFontID(&fontFileID)) {
+    setupEmbeddedType1CFont(font, &fontFileID);
+    psName = font->getEmbeddedFontName();
     scale = 1;
 
   // do font substitution
@@ -481,7 +491,7 @@ void PSOutputDev::setupFont(GfxFont *font) {
   writePS("pdfMakeFont\n");
 }
 
-void PSOutputDev::setupEmbeddedFont(Ref *id) {
+void PSOutputDev::setupEmbeddedType1Font(Ref *id) {
   static char hexChar[17] = "0123456789abcdef";
   Object refObj, strObj, obj1, obj2;
   Dict *dict;
@@ -589,7 +599,7 @@ void PSOutputDev::setupEmbeddedFont(Ref *id) {
 
 //~ This doesn't handle .pfb files or binary eexec data (which only
 //~ happens in pfb files?).
-void PSOutputDev::setupEmbeddedFont(char *fileName) {
+void PSOutputDev::setupEmbeddedType1Font(char *fileName) {
   FILE *fontFile;
   int c;
   int i;
@@ -618,6 +628,34 @@ void PSOutputDev::setupEmbeddedFont(char *fileName) {
   fclose(fontFile);
 }
 
+void PSOutputDev::setupEmbeddedType1CFont(GfxFont *font, Ref *id) {
+  char *fontBuf;
+  int fontLen;
+  Type1CFontConverter *cvt;
+  int i;
+
+  // check if font is already embedded
+  for (i = 0; i < fontFileIDLen; ++i) {
+    if (fontFileIDs[i].num == id->num &&
+	fontFileIDs[i].gen == id->gen)
+      return;
+  }
+
+  // add entry to fontFileIDs list
+  if (fontFileIDLen >= fontFileIDSize) {
+    fontFileIDSize += 64;
+    fontFileIDs = (Ref *)grealloc(fontFileIDs, fontFileIDSize * sizeof(Ref));
+  }
+  fontFileIDs[fontFileIDLen++] = *id;
+
+  // convert it to a Type 1 font
+  fontBuf = font->readEmbFontFile(&fontLen);
+  cvt = new Type1CFontConverter(fontBuf, fontLen, f);
+  cvt->convert();
+  delete cvt;
+  gfree(fontBuf);
+}
+
 void PSOutputDev::startPage(int pageNum, GfxState *state) {
   int x1, y1, x2, y2, width, height, t;
   double xScale, yScale;
@@ -642,7 +680,7 @@ void PSOutputDev::startPage(int pageNum, GfxState *state) {
     height = y2 - y1;
     if (width > height) {
       writePS("%%%%PageOrientation: Landscape\n");
-      writePS("%d %d pdfStartPage\n", paperWidth, paperHeight);
+      writePS("pdfStartPage\n");
       writePS("90 rotate\n");
       writePS("%d %d translate\n", -x1, -(y1 + paperWidth));
       t = width;
@@ -650,7 +688,7 @@ void PSOutputDev::startPage(int pageNum, GfxState *state) {
       height = t;
     } else {
       writePS("%%%%PageOrientation: Portrait\n");
-      writePS("%d %d pdfStartPage\n", paperWidth, paperHeight);
+      writePS("pdfStartPage\n");
       if (x1 != 0 || y1 != 0)
 	writePS("%d %d translate\n", -x1, -y1);
     }
@@ -911,6 +949,7 @@ void PSOutputDev::drawImage(GfxState *state, Stream *str, int width,
 void PSOutputDev::doImageL1(GfxImageColorMap *colorMap,
 			    GBool invert, GBool inlineImg,
 			    Stream *str, int width, int height, int len) {
+  ImageStream *imgStr;
   Guchar pixBuf[4];
   GfxColor color;
   int x, y, i;
@@ -930,7 +969,9 @@ void PSOutputDev::doImageL1(GfxImageColorMap *colorMap,
   if (colorMap) {
 
     // set up to process the data stream
-    str->resetImage(width, colorMap->getNumPixelComps(), colorMap->getBits());
+    imgStr = new ImageStream(str, width, colorMap->getNumPixelComps(),
+			     colorMap->getBits());
+    imgStr->reset();
 
     // process the data stream
     i = 0;
@@ -938,7 +979,7 @@ void PSOutputDev::doImageL1(GfxImageColorMap *colorMap,
 
       // write the line
       for (x = 0; x < width; ++x) {
-	str->getImagePixel(pixBuf);
+	imgStr->getPixel(pixBuf);
 	colorMap->getColor(pixBuf, &color);
 	fprintf(f, "%02x", (int)(color.getGray() * 255 + 0.5));
 	if (++i == 32) {
@@ -949,6 +990,7 @@ void PSOutputDev::doImageL1(GfxImageColorMap *colorMap,
     }
     if (i != 0)
       fputc('\n', f);
+    delete imgStr;
 
   // imagemask
   } else {

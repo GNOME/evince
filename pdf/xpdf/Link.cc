@@ -323,12 +323,39 @@ LinkLaunch::~LinkLaunch() {
 // LinkURI
 //------------------------------------------------------------------------
 
-LinkURI::LinkURI(Object *uriObj) {
+LinkURI::LinkURI(Object *uriObj, GString *baseURI) {
+  GString *uri2;
+  int n;
+  char c;
+
   uri = NULL;
-  if (uriObj->isString())
-    uri = uriObj->getString()->copy();
-  else
+  if (uriObj->isString()) {
+    uri2 = uriObj->getString()->copy();
+    if (baseURI) {
+      n = strcspn(uri2->getCString(), "/:");
+      if (n == uri2->getLength() || uri2->getChar(n) == '/') {
+	uri = baseURI->copy();
+	c = uri->getChar(uri->getLength() - 1);
+	if (c == '/' || c == '?') {
+	  if (uri2->getChar(0) == '/') {
+	    uri2->del(0);
+	  }
+	} else {
+	  if (uri2->getChar(0) != '/') {
+	    uri->append('/');
+	  }
+	}
+	uri->append(uri2);
+	delete uri2;
+      } else {
+	uri = uri2;
+      }
+    } else {
+      uri = uri2;
+    }
+  } else {
     error(-1, "Illegal URI-type link");
+  }
 }
 
 LinkURI::~LinkURI() {
@@ -352,7 +379,7 @@ LinkUnknown::~LinkUnknown() {
 // Link
 //------------------------------------------------------------------------
 
-Link::Link(Dict *dict) {
+Link::Link(Dict *dict, GString *baseURI) {
   Object obj1, obj2, obj3, obj4;
   double t;
 
@@ -442,7 +469,7 @@ Link::Link(Dict *dict) {
       // URI action
       } else if (obj2.isName("URI")) {
 	obj1.dictLookup("URI", &obj3);
-	action = new LinkURI(&obj3);
+	action = new LinkURI(&obj3, baseURI);
 	obj3.free();
 
       // unknown action
@@ -485,7 +512,7 @@ Link::~Link() {
 // Links
 //------------------------------------------------------------------------
 
-Links::Links(Object *annots) {
+Links::Links(Object *annots, GString *baseURI) {
   Link *link;
   Object obj1, obj2;
   int size;
@@ -499,7 +526,7 @@ Links::Links(Object *annots) {
     for (i = 0; i < annots->arrayGetLength(); ++i) {
       if (annots->arrayGet(i, &obj1)->isDict()) {
 	if (obj1.dictLookup("Subtype", &obj2)->isName("Link")) {
-	  link = new Link(obj1.getDict());
+	  link = new Link(obj1.getDict(), baseURI);
 	  if (link->isOk()) {
 	    if (numLinks >= size) {
 	      size += 16;
@@ -571,6 +598,7 @@ static GString *getFileSpecName(Object *fileSpecObj) {
       name = obj1.getString()->copy();
     else
       error(-1, "Illegal file spec in link");
+    obj1.free();
 
   // error
   } else {

@@ -18,6 +18,11 @@ common_sources =			\
 	Catalog.cc 		\
 	Dict.cc 		\
 	Error.cc 		\
+	FontEncoding.cc		\
+	FontEncoding.h		\
+	FontFile.cc		\
+	FontFile.h		\
+	FontInfo.h		\
 	Gfx.cc 			\
 	GfxFont.cc 		\
 	GfxState.cc		\

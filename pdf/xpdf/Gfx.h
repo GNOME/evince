@@ -61,7 +61,7 @@ struct Operator {
 class GfxResources {
 public:
 
-  GfxResources(GfxResources *next1) { next = next1; }
+  GfxResources(GfxResources *next1) { fonts = NULL; next = next1; }
   ~GfxResources();
 
   GfxFontDict *fonts;
@@ -119,6 +119,7 @@ private:
   void opSetMiterLimit(Object args[], int numArgs);
   void opSetLineWidth(Object args[], int numArgs);
   void opSetExtGState(Object args[], int numArgs);
+  void opSetRenderingIntent(Object args[], int numArgs);
 
   // color operators
   void opSetFillGray(Object args[], int numArgs);
@@ -153,6 +154,7 @@ private:
   void opCloseFillStroke(Object args[], int numArgs);
   void opEOFillStroke(Object args[], int numArgs);
   void opCloseEOFillStroke(Object args[], int numArgs);
+  void opShFill(Object args[], int numArgs);
   void doEndPath();
 
   // path clipping operators

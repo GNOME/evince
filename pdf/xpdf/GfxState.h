@@ -424,6 +424,7 @@ public:
   void textMoveTo(double tx, double ty)
     { lineX = tx; lineY = ty; textTransform(tx, ty, &curX, &curY); }
   void textShift(double tx);
+  void textShift(double tx, double ty);
 
   // Push/pop GfxState on/off stack.
   GfxState *save();

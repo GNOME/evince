@@ -106,16 +106,23 @@ int main(int argc, char *argv[]) {
   // print page count
   printf("Pages:        %d\n", doc->getNumPages());
 
-  // print encrypted flag
-  printf("Encrypted:    %s\n", doc->isEncrypted() ? "yes" : "no");
+  // print encryption info
+  printf("Encrypted:    ");
+  if (doc->isEncrypted()) {
+    printf("yes (print:%s copy:%s)\n",
+	   doc->okToPrint() ? "yes" : "no",
+	   doc->okToCopy() ? "yes" : "no");
+  } else {
+    printf("no\n");
+  }
 
   // clean up
   delete doc;
   freeParams();
 
   // check for memory leaks
-  Object::memCheck(errFile);
-  gMemReport(errFile);
+  Object::memCheck(stderr);
+  gMemReport(stderr);
 
   return 0;
 }

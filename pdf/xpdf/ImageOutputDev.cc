@@ -90,6 +90,7 @@ void ImageOutputDev::drawImage(GfxState *state, Stream *str, int width,
 			       int height, GfxImageColorMap *colorMap,
 			       GBool inlineImg) {
   FILE *f;
+  ImageStream *imgStr;
   Guchar pixBuf[4];
   GfxColor color;
   int x, y;
@@ -131,20 +132,23 @@ void ImageOutputDev::drawImage(GfxState *state, Stream *str, int width,
     fprintf(f, "255\n");
 
     // initialize stream
-    str->resetImage(width, colorMap->getNumPixelComps(), colorMap->getBits());
+    imgStr = new ImageStream(str, width, colorMap->getNumPixelComps(),
+			     colorMap->getBits());
+    imgStr->reset();
 
     // for each line...
     for (y = 0; y < height; ++y) {
 
       // write the line
       for (x = 0; x < width; ++x) {
-	str->getImagePixel(pixBuf);
+	imgStr->getPixel(pixBuf);
 	colorMap->getColor(pixBuf, &color);
 	fputc((int)(color.getR() * 255 + 0.5), f);
 	fputc((int)(color.getG() * 255 + 0.5), f);
 	fputc((int)(color.getB() * 255 + 0.5), f);
       }
     }
+    delete imgStr;
 
     fclose(f);
   }

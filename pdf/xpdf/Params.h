@@ -15,6 +15,9 @@ extern GBool printCommands;
 // Send error messages to /dev/tty instead of stderr.
 extern GBool errorsToTTY;
 
+// If this is set, error messages will be silently discarded.
+extern GBool errQuiet;
+
 // Font search path.
 extern char **fontPath;
 

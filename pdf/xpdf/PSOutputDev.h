@@ -124,8 +124,9 @@ private:
 
   void setupFonts(Dict *resDict);
   void setupFont(GfxFont *font);
-  void setupEmbeddedFont(Ref *id);
-  void setupEmbeddedFont(char *fileName);
+  void setupEmbeddedType1Font(Ref *id);
+  void setupEmbeddedType1Font(char *fileName);
+  void setupEmbeddedType1CFont(GfxFont *font, Ref *id);
   void doPath(GfxPath *path);
   void doImageL1(GfxImageColorMap *colorMap,
 		 GBool invert, GBool inlineImg,

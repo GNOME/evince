@@ -29,6 +29,10 @@
 static int firstPage = 1;
 static int lastPage = 0;
 static GBool useASCII7 = gFalse;
+#if JAPANESE_SUPPORT
+static GBool useEUCJP = gFalse;
+#endif
+static GBool rawOrder = gFalse;
 GBool printCommands = gFalse;
 static GBool printHelp = gFalse;
 
@@ -39,6 +43,14 @@ static ArgDesc argDesc[] = {
    "last page to convert"},
   {"-ascii7", argFlag,     &useASCII7,     0,
    "convert to 7-bit ASCII (default is 8-bit ISO Latin-1)"},
+#if JAPANESE_SUPPORT
+  {"-eucjp",  argFlag,     &useEUCJP,      0,
+   "convert Japanese text to EUC-JP"},
+#endif
+  {"-raw",    argFlag,     &rawOrder,      0,
+   "keep strings in content stream order"},
+  {"-q",      argFlag,     &errQuiet,      0,
+   "don't print any messages or errors"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -73,8 +85,15 @@ int main(int argc, char *argv[]) {
   // open PDF file
   xref = NULL;
   doc = new PDFDoc(fileName);
-  if (!doc->isOk())
-    exit(1);
+  if (!doc->isOk()) {
+    goto err1;
+  }
+
+  // check for copy permission
+  if (!doc->okToCopy()) {
+    error(-1, "Copying of text from this document is not allowed.");
+    goto err2;
+  }
 
   // construct text file name
   if (argc == 3) {
@@ -96,19 +115,24 @@ int main(int argc, char *argv[]) {
     lastPage = doc->getNumPages();
 
   // write text file
-  textOut = new TextOutputDev(textFileName->getCString(), useASCII7);
+#if JAPANESE_SUPPORT
+  useASCII7 |= useEUCJP;
+#endif
+  textOut = new TextOutputDev(textFileName->getCString(), useASCII7, rawOrder);
   if (textOut->isOk())
     doc->displayPages(textOut, firstPage, lastPage, 72, 0);
   delete textOut;
 
   // clean up
   delete textFileName;
+ err2:
   delete doc;
+ err1:
   freeParams();
 
   // check for memory leaks
-  Object::memCheck(errFile);
-  gMemReport(errFile);
+  Object::memCheck(stderr);
+  gMemReport(stderr);
 
   return 0;
 }

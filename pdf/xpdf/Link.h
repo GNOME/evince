@@ -200,8 +200,8 @@ private:
 class LinkURI: public LinkAction {
 public:
 
-  // Build a LinkURI given the URI (string).
-  LinkURI(Object *uriObj);
+  // Build a LinkURI given the URI (string) and base URI.
+  LinkURI(Object *uriObj, GString *baseURI);
 
   // Destructor.
   virtual ~LinkURI();
@@ -251,7 +251,7 @@ class Link {
 public:
 
   // Construct a link, given its dictionary.
-  Link(Dict *dict);
+  Link(Dict *dict, GString *baseURI);
 
   // Destructor.
   ~Link();
@@ -288,7 +288,7 @@ class Links {
 public:
 
   // Extract links from array of annotations.
-  Links(Object *annots);
+  Links(Object *annots, GString *baseURI);
 
   // Destructor.
   ~Links();

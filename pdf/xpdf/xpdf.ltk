@@ -28,7 +28,11 @@ Window(func:makeWindow title:"xpdf" icon:xpdfIcon) {
     }
 
     # buttons, page number, etc.
-    Box(x:14 y:1 xfill:1) {
+    Box(x:15 y:1 xfill:1) {
+      Box1() {
+        IconButton(bitmap:backArrow_bits w:backArrow_width
+                   h:backArrow_height press:&backCbk)
+      }
       Box1() {
         IconButton(bitmap:dblLeftArrow_bits w:dblLeftArrow_width
                    h:dblLeftArrow_height press:&prevTenPageCbk)
@@ -46,6 +50,10 @@ Window(func:makeWindow title:"xpdf" icon:xpdfIcon) {
                    h:dblRightArrow_height press:&nextTenPageCbk)
       }
       Box1() {
+        IconButton(bitmap:forwardArrow_bits w:forwardArrow_width
+                   h:forwardArrow_height press:&forwardCbk)
+      }
+      Box1() {
         Label(text:"Page"
               font:"-*-courier-medium-r-normal-*-14-*-*-*-*-*-*-*")
       }
@@ -58,12 +66,7 @@ Window(func:makeWindow title:"xpdf" icon:xpdfIcon) {
               font:"-*-courier-medium-r-normal-*-14-*-*-*-*-*-*-*")
       }
       Box1() {
-        IconButton(bitmap:zoomIn_bits w:zoomIn_width
-                   h:zoomIn_height press:&zoomInCbk)
-      }
-      Box1() {
-        IconButton(bitmap:zoomOut_bits w:zoomOut_width
-                   h:zoomOut_height press:&zoomOutCbk)
+        MenuButton(name:"zoom" menu:zoomMenu)
       }
       Box1() {
         IconButton(bitmap:find_bits w:find_width
@@ -103,6 +106,27 @@ Menu(func:makeMenu title:"xpdf" n:7) {
   MenuItem(text:NULL)
   MenuItem(text:"Quit"         shortcut:"Q"     num:menuQuit
            select:&menuCbk)
+}
+
+#------------------------------------------------------------------------
+# popup zoom menu
+#------------------------------------------------------------------------
+
+Menu(func:makeZoomMenu title:"zoom" n:14) {
+  MenuItem(text:"-5" num:-5 select:&zoomMenuCbk)
+  MenuItem(text:"-4" num:-4 select:&zoomMenuCbk)
+  MenuItem(text:"-3" num:-3 select:&zoomMenuCbk)
+  MenuItem(text:"-2" num:-2 select:&zoomMenuCbk)
+  MenuItem(text:"-1" num:-1 select:&zoomMenuCbk)
+  MenuItem(text:"0"  num: 0 select:&zoomMenuCbk)
+  MenuItem(text:"+1" num: 1 select:&zoomMenuCbk)
+  MenuItem(text:"+2" num: 2 select:&zoomMenuCbk)
+  MenuItem(text:"+3" num: 3 select:&zoomMenuCbk)
+  MenuItem(text:"+4" num: 4 select:&zoomMenuCbk)
+  MenuItem(text:"+5" num: 5 select:&zoomMenuCbk)
+  MenuItem(text:NULL)
+  MenuItem(text:"fit page"  num:100 select:&zoomMenuCbk)
+  MenuItem(text:"fit width" num:101 select:&zoomMenuCbk)
 }
 
 #------------------------------------------------------------------------

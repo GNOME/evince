@@ -163,6 +163,7 @@ GBool PDFDoc::saveAs(GString *name) {
 void PDFDoc::getLinks(int page) {
   Object obj;
 
-  links = new Links(catalog->getPage(page)->getAnnots(&obj));
+  links = new Links(catalog->getPage(page)->getAnnots(&obj),
+		    catalog->getBaseURI());
   obj.free();
 }

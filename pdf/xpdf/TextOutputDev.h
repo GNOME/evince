@@ -15,10 +15,10 @@
 
 #include <stdio.h>
 #include "gtypes.h"
+#include "GfxFont.h"
 #include "OutputDev.h"
 
 class GfxState;
-class GfxFont;
 class GString;
 
 //------------------------------------------------------------------------
@@ -38,6 +38,11 @@ public:
   void addChar(GfxState *state, double x, double y,
 	       double dx, double dy,
 	       Guchar c, GBool useASCII7);
+
+  // Add a 16-bit character to the string.
+  void addChar16(GfxState *state, double x, double y,
+		 double dx, double dy,
+		 int c, GfxFontCharSet16 charSet);
 
 private:
 
@@ -61,7 +66,7 @@ class TextPage {
 public:
 
   // Constructor.
-  TextPage(GBool useASCII71);
+  TextPage(GBool useASCII7, GBool rawOrder);
 
   // Destructor.
   ~TextPage();
@@ -72,6 +77,11 @@ public:
   // Add a character to the current string.
   void addChar(GfxState *state, double x, double y,
 	       double dx, double dy, Guchar c);
+
+  // Add a 16-bit character to the current string.
+  void addChar16(GfxState *state, double x, double y,
+		 double dx, double dy, int c,
+		 GfxFontCharSet16 charSet);
 
   // End the current string, sorting it into the list of strings.
   void endString();
@@ -101,11 +111,13 @@ public:
 private:
 
   GBool useASCII7;		// use 7-bit ASCII?
+  GBool rawOrder;		// keep strings in content stream order
 
   TextString *curStr;		// currently active string
 
   TextString *yxStrings;	// strings in y-major order
   TextString *xyStrings;	// strings in x-major order
+  TextString *yxCur1, *yxCur2;	// cursors for yxStrings list
 };
 
 //------------------------------------------------------------------------
@@ -118,8 +130,10 @@ public:
   // Open a text output file.  If <fileName> is NULL, no file is written
   // (this is useful, e.g., for searching text).  If <useASCII7> is true,
   // text is converted to 7-bit ASCII; otherwise, text is converted to
-  // 8-bit ISO Latin-1.
-  TextOutputDev(char *fileName, GBool useASCII7);
+  // 8-bit ISO Latin-1.  <useASCII7> should also be set for Japanese
+  // (EUC-JP) text.  If <rawOrder> is true, the text is kept in content
+  // stream order.
+  TextOutputDev(char *fileName, GBool useASCII7, GBool rawOrder);
 
   // Destructor.
   virtual ~TextOutputDev();
@@ -152,6 +166,8 @@ public:
   virtual void endString(GfxState *state);
   virtual void drawChar(GfxState *state, double x, double y,
 			double dx, double dy, Guchar c);
+  virtual void drawChar16(GfxState *state, double x, double y,
+			  double dx, double dy, int c);
 
   //----- special access
 
@@ -169,6 +185,7 @@ private:
   FILE *f;			// text file
   GBool needClose;		// need to close the file?
   TextPage *text;		// text for the current page
+  GBool rawOrder;		// keep text in content stream order
   GBool hexCodes;		// subsetted font with hex char codes
   GBool ok;			// set up ok?
 };

@@ -15,7 +15,7 @@
 // Character encodings.
 //------------------------------------------------------------------------
 
-#define ascii7EncodingSize 208
+#define ascii7EncodingSize 211
 static char *ascii7EncodingNames[ascii7EncodingSize] = {
   NULL,
   NULL,
@@ -192,6 +192,9 @@ static char *ascii7EncodingNames[ascii7EncodingSize] = {
   "egrave",
   "fi",
   "fl",
+  "ff",
+  "ffi",
+  "ffl",
   "dotlessi",
   "iacute",
   "icircumflex",
@@ -226,10 +229,10 @@ static char *ascii7EncodingNames[ascii7EncodingSize] = {
   "registered",
   "trademark"
 };
-static GfxFontEncoding ascii7Encoding(ascii7EncodingNames,
-                                      ascii7EncodingSize);
+static FontEncoding ascii7Encoding(ascii7EncodingNames,
+                                   ascii7EncodingSize);
 
-#define isoLatin1EncodingSize 276
+#define isoLatin1EncodingSize 279
 static char *isoLatin1EncodingNames[isoLatin1EncodingSize] = {
   NULL,
   NULL,
@@ -494,6 +497,9 @@ static char *isoLatin1EncodingNames[isoLatin1EncodingSize] = {
   "Zcaron",
   "fi",
   "fl",
+  "ff",
+  "ffi",
+  "ffl",
   "dotlessi",
   "lslash",
   "oe",
@@ -508,7 +514,7 @@ static char *isoLatin1EncodingNames[isoLatin1EncodingSize] = {
   "quotesingle",
   "trademark"
 };
-static GfxFontEncoding isoLatin1Encoding(isoLatin1EncodingNames,
-                                         isoLatin1EncodingSize);
+static FontEncoding isoLatin1Encoding(isoLatin1EncodingNames,
+                                      isoLatin1EncodingSize);
 
 #endif

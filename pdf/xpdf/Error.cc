@@ -20,23 +20,32 @@
 // Send error messages to /dev/tty instead of stderr.
 GBool errorsToTTY = gFalse;
 
-// File to send error (and other) messages to.
 FILE *errFile;
+GBool errQuiet;
 
 void errorInit() {
-  if (!errorsToTTY || !(errFile = fopen("/dev/tty", "w")))
-    errFile = stderr;
+  if (errQuiet) {
+    errFile = NULL;
+  } else {
+    if (!errorsToTTY || !(errFile = fopen("/dev/tty", "w")))
+      errFile = stderr;
+  }
 }
 
 void CDECL error(int pos, char *msg, ...) {
   va_list args;
 
-  if (printCommands)
+  if (errQuiet) {
+    return;
+  }
+  if (printCommands) {
     fflush(stdout);
-  if (pos >= 0)
+  }
+  if (pos >= 0) {
     fprintf(errFile, "Error (%d): ", pos);
-  else
+  } else {
     fprintf(errFile, "Error: ");
+  }
   va_start(args, msg);
   vfprintf(errFile, msg, args);
   va_end(args);

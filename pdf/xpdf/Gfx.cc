@@ -167,6 +167,8 @@ Operator Gfx::opTab[] = {
           &Gfx::opRectangle},
   {"rg",  3, {tchkNum,    tchkNum,    tchkNum},
           &Gfx::opSetFillRGBColor},
+  {"ri",  1, {tchkName},
+          &Gfx::opSetRenderingIntent},
   {"s",   0, {tchkNone},
           &Gfx::opCloseStroke},
   {"sc",  -4, {tchkNum,   tchkNum,    tchkNum,    tchkNum},
@@ -174,6 +176,8 @@ Operator Gfx::opTab[] = {
   {"scn", -5, {tchkSCN,   tchkSCN,    tchkSCN,    tchkSCN,
 	       tchkSCN},
           &Gfx::opSetFillColorN},
+  {"sh",  1, {tchkName},
+          &Gfx::opShFill},
   {"v",   4, {tchkNum,    tchkNum,    tchkNum,    tchkNum},
           &Gfx::opCurveTo1},
   {"w",   1, {tchkNum},
@@ -560,6 +564,9 @@ void Gfx::opSetLineWidth(Object args[], int numArgs) {
 void Gfx::opSetExtGState(Object args[], int numArgs) {
 }
 
+void Gfx::opSetRenderingIntent(Object args[], int numArgs) {
+}
+
 //------------------------------------------------------------------------
 // color operators
 //------------------------------------------------------------------------
@@ -884,6 +891,9 @@ void Gfx::opCloseEOFillStroke(Object args[], int numArgs) {
   doEndPath();
 }
 
+void Gfx::opShFill(Object args[], int numArgs) {
+}
+
 void Gfx::doEndPath() {
   if (state->isPath()) {
     if (clip == clipNormal)
@@ -1088,7 +1098,7 @@ void Gfx::doShowText(GString *s) {
   int c16;
   GString *s16;
   int m, n;
-  double dx, dy, width, w, h;
+  double dx, dy, width, height, w, h;
 
   if (fontChanged) {
     out->updateFont(state);
@@ -1110,12 +1120,19 @@ void Gfx::doShowText(GString *s) {
     n = s->getLength();
     while (n > 0) {
       m = getNextChar16(enc, p, &c16);
-      width = state->getFontSize() * state->getHorizScaling() *
-	      font->getWidth16(c16) +
-	      state->getCharSpace();
-      if (c16 == ' ')
-	width += state->getWordSpace();
-      state->textTransformDelta(width, 0, &w, &h);
+      if (enc->wMode == 0) {
+	width = state->getFontSize() * state->getHorizScaling() *
+	        font->getWidth16(c16) +
+	        state->getCharSpace();
+	if (c16 == ' ') {
+	  width += state->getWordSpace();
+	}
+	height = 0;
+      } else {
+	width = 0;
+	height = state->getFontSize() * font->getHeight16(c16);
+      }
+      state->textTransformDelta(width, height, &w, &h);
       if (out->useDrawChar()) {
 	out->drawChar16(state, state->getCurX() + dx, state->getCurY() + dy,
 			w, h, c16);
@@ -1124,7 +1141,7 @@ void Gfx::doShowText(GString *s) {
 	s16->setChar(1, (char)c16);
 	out->drawString16(state, s16);
       }
-      state->textShift(width);
+      state->textShift(width, height);
       n -= m;
       p += m;
     }
@@ -1365,9 +1382,7 @@ void Gfx::doForm(Object *str) {
   // check form type
   dict->lookup("FormType", &obj1);
   if (!(obj1.isInt() && obj1.getInt() == 1)) {
-    obj1.free();
     error(getPos(), "Unknown form type");
-    return;
   }
   obj1.free();
 
@@ -1387,10 +1402,10 @@ void Gfx::doForm(Object *str) {
   }
 
   // push new resources on stack
+  res = new GfxResources(res);
   dict->lookup("Resources", &obj1);
   if (obj1.isDict()) {
     resDict = obj1.getDict();
-    res = new GfxResources(res);
     res->fonts = NULL;
     resDict->lookup("Font", &obj2);
     if (obj2.isDict())

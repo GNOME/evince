@@ -14,14 +14,14 @@
 //------------------------------------------------------------------------
 
 // xpdf version
-#define xpdfVersion "0.80"
+#define xpdfVersion "0.90"
 
 // supported PDF version
-#define pdfVersion "1.2"
-#define pdfVersionNum 1.2
+#define pdfVersion "1.3"
+#define pdfVersionNum 1.3
 
 // copyright notice
-#define xpdfCopyright "Copyright \251 1996-1998 Derek B. Noonburg"
+#define xpdfCopyright "Copyright \251 1996-1999 Derek B. Noonburg"
 
 // default paper size (in points) for PostScript output
 #ifdef A4_PAPER
@@ -33,7 +33,7 @@
 #endif
 
 // config file name
-#if defined(VMS) || defined(__EMX__)
+#if defined(VMS)
 #define xpdfConfigFile "xpdfrc"
 #else
 #define xpdfConfigFile ".xpdfrc"
@@ -46,8 +46,11 @@
 // default maximum size of color cube to allocate
 #define defaultRGBCube 5
 
-// number of fonts to cache
-#define fontCacheSize 16
+// number of X server fonts to cache
+#define serverFontCacheSize 16
+
+// number of Type 1 (t1lib) fonts to cache
+#define t1FontCacheSize 32
 
 //------------------------------------------------------------------------
 // uncompress program

@@ -26,7 +26,7 @@
 
 Catalog::Catalog(Object *catDict) {
   Object pagesDict;
-  Object obj;
+  Object obj, obj2;
   int i;
 
   ok = gTrue;
@@ -74,6 +74,16 @@ Catalog::Catalog(Object *catDict) {
     nameTree.initNull();
   obj.free();
 
+  // read base URI
+  baseURI = NULL;
+  if (catDict->dictLookup("URI", &obj)->isDict()) {
+    if (obj.dictLookup("Base", &obj2)->isString()) {
+      baseURI = obj2.getString()->copy();
+    }
+    obj2.free();
+  }
+  obj.free();
+
   return;
 
  err3:
@@ -99,6 +109,9 @@ Catalog::~Catalog() {
   }
   dests.free();
   nameTree.free();
+  if (baseURI) {
+    delete baseURI;
+  }
 }
 
 int Catalog::readPageTree(Dict *pagesDict, PageAttrs *attrs, int start) {

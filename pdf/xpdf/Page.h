@@ -35,10 +35,10 @@ public:
   ~PageAttrs();
 
   // Accessors.
-  double getX1() { return x1; }
-  double getY1() { return y1; }
-  double getX2() { return x2; }
-  double getY2() { return y2; }
+  double getX1() { return limitToCropBox ? cropX1 : x1; }
+  double getY1() { return limitToCropBox ? cropY1 : y1; }
+  double getX2() { return limitToCropBox ? cropX2 : x2; }
+  double getY2() { return limitToCropBox ? cropY2 : y2; }
   GBool isCropped() { return cropX2 > cropX1; }
   double getCropX1() { return cropX1; }
   double getCropY1() { return cropY1; }
@@ -52,6 +52,7 @@ private:
 
   double x1, y1, x2, y2;
   double cropX1, cropY1, cropX2, cropY2;
+  GBool limitToCropBox;
   int rotate;
   Object resources;
 };

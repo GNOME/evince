@@ -48,6 +48,8 @@ static ArgDesc argDesc[] = {
    "don't embed Type 1 fonts"},
   {"-form",   argFlag,     &doForm,        0,
    "generate a PostScript form"},
+  {"-q",      argFlag,     &errQuiet,      0,
+   "don't print any messages or errors"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -86,8 +88,15 @@ int main(int argc, char *argv[]) {
   // open PDF file
   xref = NULL;
   doc = new PDFDoc(fileName);
-  if (!doc->isOk())
-    exit(1);
+  if (!doc->isOk()) {
+    goto err1;
+  }
+
+  // check for print permission
+  if (!doc->okToPrint()) {
+    error(-1, "Printing this document is not allowed.");
+    goto err2;
+  }
 
   // construct PostScript file name
   if (argc == 3) {
@@ -111,22 +120,22 @@ int main(int argc, char *argv[]) {
     lastPage = firstPage;
 
   // write PostScript file
-  if (doc->okToPrint()) {
-    psOut = new PSOutputDev(psFileName->getCString(), doc->getCatalog(),
-			    firstPage, lastPage, !noEmbedFonts, doForm);
-    if (psOut->isOk())
-      doc->displayPages(psOut, firstPage, lastPage, 72, 0);
-    delete psOut;
-  }
+  psOut = new PSOutputDev(psFileName->getCString(), doc->getCatalog(),
+			  firstPage, lastPage, !noEmbedFonts, doForm);
+  if (psOut->isOk())
+    doc->displayPages(psOut, firstPage, lastPage, 72, 0);
+  delete psOut;
 
   // clean up
   delete psFileName;
+ err2:
   delete doc;
+ err1:
   freeParams();
 
   // check for memory leaks
-  Object::memCheck(errFile);
-  gMemReport(errFile);
+  Object::memCheck(stderr);
+  gMemReport(stderr);
 
   return 0;
 }

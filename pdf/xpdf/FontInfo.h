@@ -353,8 +353,8 @@ static char *standardEncodingNames[standardEncodingSize] = {
   "ydieresis",
   "zcaron"
 };
-static GfxFontEncoding standardEncoding(standardEncodingNames,
-                                        standardEncodingSize);
+static FontEncoding standardEncoding(standardEncodingNames,
+                                     standardEncodingSize);
 
 #define symbolEncodingSize 257
 static char *symbolEncodingNames[symbolEncodingSize] = {
@@ -616,8 +616,8 @@ static char *symbolEncodingNames[symbolEncodingSize] = {
   NULL,
   "apple"
 };
-static GfxFontEncoding symbolEncoding(symbolEncodingNames,
-                                      symbolEncodingSize);
+static FontEncoding symbolEncoding(symbolEncodingNames,
+                                   symbolEncodingSize);
 
 #define zapfDingbatsEncodingSize 270
 static char *zapfDingbatsEncodingNames[zapfDingbatsEncodingSize] = {
@@ -892,8 +892,8 @@ static char *zapfDingbatsEncodingNames[zapfDingbatsEncodingSize] = {
   "a95",
   "a96"
 };
-static GfxFontEncoding zapfDingbatsEncoding(zapfDingbatsEncodingNames,
-                                            zapfDingbatsEncodingSize);
+static FontEncoding zapfDingbatsEncoding(zapfDingbatsEncodingNames,
+                                         zapfDingbatsEncodingSize);
 
 #define macRomanEncodingSize 256
 static char *macRomanEncodingNames[macRomanEncodingSize] = {
@@ -1154,8 +1154,8 @@ static char *macRomanEncodingNames[macRomanEncodingSize] = {
   "ogonek",
   "caron"
 };
-static GfxFontEncoding macRomanEncoding(macRomanEncodingNames,
-                                        macRomanEncodingSize);
+static FontEncoding macRomanEncoding(macRomanEncodingNames,
+                                     macRomanEncodingSize);
 
 #define winAnsiEncodingSize 256
 static char *winAnsiEncodingNames[winAnsiEncodingSize] = {
@@ -1416,8 +1416,8 @@ static char *winAnsiEncodingNames[winAnsiEncodingSize] = {
   "thorn",
   "ydieresis"
 };
-static GfxFontEncoding winAnsiEncoding(winAnsiEncodingNames,
-                                       winAnsiEncodingSize);
+static FontEncoding winAnsiEncoding(winAnsiEncodingNames,
+                                    winAnsiEncodingSize);
 
 //------------------------------------------------------------------------
 // Character widths for built-in fonts.
@@ -2043,7 +2043,7 @@ static Gushort zapfDingbatsWidths[270] = {
 struct BuiltinFont {
   char *name;
   Gushort *widths;
-  GfxFontEncoding *encoding;
+  FontEncoding *encoding;
 };
 
 #define numBuiltinFonts ((int)(sizeof(builtinFonts)/sizeof(BuiltinFont)))

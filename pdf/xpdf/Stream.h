@@ -54,27 +54,18 @@ public:
   // Reset stream to beginning.
   virtual void reset() = 0;
 
-  // Reset stream and allocate buffers for use by getPixel().
-  // The image has <width1> pixels per line, <nComps1> components per
-  // pixel, and <nBits1> bits per component.
-  virtual void resetImage(int width1, int nComps1, int nBits1);
-
   // Get next char from stream.
   virtual int getChar() = 0;
 
   // Peek at next char in stream.
   virtual int lookChar() = 0;
 
+  // Get next char from stream without using the predictor.
+  // This is only used by StreamPredictor.
+  virtual int getRawChar();
+
   // Get next line from stream.
   virtual char *getLine(char *buf, int size);
-
-  // Gets the next pixel from the stream.  (resetImage() must be called
-  // first.)  <pix> should be able to hold at least nComps elements.
-  // Returns false at end of file.
-  virtual GBool getImagePixel(Guchar *pix);
-
-  // Skip an entire line from the image.
-  virtual void skipImageLine();
 
   // Get current position in file.
   virtual int getPos() = 0;
@@ -109,10 +100,65 @@ private:
   Stream *makeFilter(char *name, Stream *str, Object *params);
 
   int ref;			// reference count
+};
 
-protected:
+//------------------------------------------------------------------------
+// ImageStream
+//------------------------------------------------------------------------
 
-  //----- image stuff
+class ImageStream {
+public:
+
+  // Create an image stream object for an image with the specified
+  // parameters.  Note that these are the actual image parameters,
+  // which may be different from the predictor parameters.
+  ImageStream(Stream *str, int width, int nComps, int nBits);
+
+  ~ImageStream();
+
+  // Reset the stream.
+  void reset();
+
+  // Gets the next pixel from the stream.  <pix> should be able to hold
+  // at least nComps elements.  Returns false at end of file.
+  GBool getPixel(Guchar *pix);
+
+  // Skip an entire line from the image.
+  void skipLine();
+
+private:
+
+  Stream *str;			// base stream
+  int width;			// pixels per line
+  int nComps;			// components per pixel
+  int nBits;			// bits per component
+  int nVals;			// components per line
+  Guchar *imgLine;		// line buffer
+  int imgIdx;			// current index in imgLine
+};
+
+//------------------------------------------------------------------------
+// StreamPredictor
+//------------------------------------------------------------------------
+
+class StreamPredictor {
+public:
+
+  // Create a predictor object.  Note that the parameters are for the
+  // predictor, and may not match the actual image parameters.
+  StreamPredictor(Stream *str, int predictor,
+		  int width, int nComps, int nBits);
+
+  ~StreamPredictor();
+
+  int lookChar();
+  int getChar();
+
+private:
+
+  GBool getNextLine();
+
+  Stream *str;			// base stream
   int predictor;		// predictor
   int width;			// pixels per line
   int nComps;			// components per pixel
@@ -120,9 +166,8 @@ protected:
   int nVals;			// components per line
   int pixBytes;			// bytes per pixel
   int rowBytes;			// bytes per line
-  Guchar *rawLine;		// raw line buffer
-  Guchar *pixLine;		// pixel line buffer
-  int pixIdx;			// current index in line buffer
+  Guchar *predLine;		// line buffer
+  int predIdx;			// current index in predLine
 };
 
 //------------------------------------------------------------------------
@@ -266,6 +311,7 @@ public:
   virtual void reset();
   virtual int getChar();
   virtual int lookChar();
+  virtual int getRawChar();
   virtual int getPos() { return str->getPos(); }
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
@@ -276,6 +322,7 @@ public:
 private:
 
   Stream *str;			// stream
+  StreamPredictor *pred;	// predictor
   int early;			// early parameter
   char zCmd[256];		// uncompress command
   FILE *zPipe;			// uncompress pipe
@@ -334,8 +381,9 @@ struct CCITTCodeTable;
 class CCITTFaxStream: public Stream {
 public:
 
-  CCITTFaxStream(Stream *str1, int encoding1, GBool byteAlign1,
-		 int columns1, int rows1, GBool black1);
+  CCITTFaxStream(Stream *str, int encoding, GBool endOfLine,
+		 GBool byteAlign, int columns, int rows,
+		 GBool endOfBlock, GBool black);
   virtual ~CCITTFaxStream();
   virtual StreamKind getKind() { return strCCITTFax; }
   virtual void reset();
@@ -353,12 +401,15 @@ private:
 
   Stream *str;			// stream
   int encoding;			// 'K' parameter
+  GBool endOfLine;		// 'EndOfLine' parameter
   GBool byteAlign;		// 'EncodedByteAlign' parameter
   int columns;			// 'Columns' parameter
   int rows;			// 'Rows' parameter
+  GBool endOfBlock;		// 'EndOfBlock' parameter
   GBool black;			// 'BlackIs1' parameter
   GBool eof;			// true if at eof
   GBool nextLine2D;		// true if next line uses 2D encoding
+  int row;			// current row
   int inputBuf;			// input buffer
   int inputBits;		// number of bits in input buffer
   short *refLine;		// reference line changing elements
@@ -371,8 +422,8 @@ private:
   short getTwoDimCode();
   short getWhiteCode();
   short getBlackCode();
-  short look13Bits();
-  void eatBits(int bits) { inputBits -= bits; }
+  short lookBits(int n);
+  void eatBits(int n) { inputBits -= n; }
 };
 
 //------------------------------------------------------------------------
@@ -422,6 +473,7 @@ private:
   DCTCompInfo compInfo[4];	// info for each component
   int numComps;			// number of components in image
   int colorXform;		// need YCbCr-to-RGB transform?
+  GBool gotAdobeMarker;		// set if APP14 Adobe marker was present
   int restartInterval;		// restart interval, in MCUs
   Guchar quantTables[4][64];	// quantization tables
   int numQuantTables;		// number of quantization tables
@@ -495,6 +547,7 @@ public:
   virtual void reset();
   virtual int getChar();
   virtual int lookChar();
+  virtual int getRawChar();
   virtual int getPos() { return str->getPos(); }
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
@@ -505,6 +558,7 @@ public:
 private:
 
   Stream *str;			// stream
+  StreamPredictor *pred;	// predictor
   Guchar buf[flateWindow];	// output data buffer
   int index;			// current index into output buffer
   int remain;			// number valid bytes in output buffer

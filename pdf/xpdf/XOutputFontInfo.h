@@ -15,7 +15,7 @@
 // Character encodings.
 //------------------------------------------------------------------------
 
-#define isoLatin1EncodingSize 294
+#define isoLatin1EncodingSize 297
 static char *isoLatin1EncodingNames[isoLatin1EncodingSize] = {
   NULL,
   NULL,
@@ -282,6 +282,9 @@ static char *isoLatin1EncodingNames[isoLatin1EncodingSize] = {
   "trademark",
   "fi",
   "fl",
+  "ff",
+  "ffi",
+  "ffl",
   "OE",
   "oe",
   "ellipsis",
@@ -312,10 +315,10 @@ static char *isoLatin1EncodingNames[isoLatin1EncodingSize] = {
   "tilde",
   "zcaron"
 };
-static GfxFontEncoding isoLatin1Encoding(isoLatin1EncodingNames,
-                                         isoLatin1EncodingSize);
+static FontEncoding isoLatin1Encoding(isoLatin1EncodingNames,
+                                      isoLatin1EncodingSize);
 
-#define isoLatin2EncodingSize 294
+#define isoLatin2EncodingSize 297
 static char *isoLatin2EncodingNames[isoLatin2EncodingSize] = {
   NULL,
   NULL,
@@ -508,7 +511,7 @@ static char *isoLatin2EncodingNames[isoLatin2EncodingSize] = {
   "zacute",
   "hungarumlaut",
   "zcaron",
-  "zdotaccent",
+  "zdotaccenp",
   "Racute",
   "Aacute",
   "Acircumflex",
@@ -582,6 +585,9 @@ static char *isoLatin2EncodingNames[isoLatin2EncodingSize] = {
   "trademark",
   "fi",
   "fl",
+  "ff",
+  "ffi",
+  "ffl",
   "OE",
   "oe",
   "ellipsis",
@@ -612,8 +618,8 @@ static char *isoLatin2EncodingNames[isoLatin2EncodingSize] = {
   "tilde",
   NULL
 };
-static GfxFontEncoding isoLatin2Encoding(isoLatin2EncodingNames,
-                                         isoLatin2EncodingSize);
+static FontEncoding isoLatin2Encoding(isoLatin2EncodingNames,
+                                      isoLatin2EncodingSize);
 
 #define symbolEncodingSize 256
 static char *symbolEncodingNames[symbolEncodingSize] = {
@@ -874,8 +880,8 @@ static char *symbolEncodingNames[symbolEncodingSize] = {
   "bracerightbt",
   NULL
 };
-static GfxFontEncoding symbolEncoding(symbolEncodingNames,
-                                      symbolEncodingSize);
+static FontEncoding symbolEncoding(symbolEncodingNames,
+                                   symbolEncodingSize);
 
 #define zapfDingbatsEncodingSize 256
 static char *zapfDingbatsEncodingNames[zapfDingbatsEncodingSize] = {
@@ -1136,7 +1142,7 @@ static char *zapfDingbatsEncodingNames[zapfDingbatsEncodingSize] = {
   "a191",
   NULL
 };
-static GfxFontEncoding zapfDingbatsEncoding(zapfDingbatsEncodingNames,
-                                            zapfDingbatsEncodingSize);
+static FontEncoding zapfDingbatsEncoding(zapfDingbatsEncodingNames,
+                                         zapfDingbatsEncodingSize);
 
 #endif

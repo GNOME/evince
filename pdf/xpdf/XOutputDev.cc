@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <unistd.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
@@ -22,6 +23,8 @@
 #include "Stream.h"
 #include "GfxState.h"
 #include "GfxFont.h"
+#include "FontFile.h"
+#include "FontEncoding.h"
 #include "Error.h"
 #include "Params.h"
 #include "TextOutputDev.h"
@@ -50,9 +53,33 @@ typedef char *XPointer;
 // Parameters
 //------------------------------------------------------------------------
 
-GBool installCmap;
+GBool installCmap = gFalse;
 
-int rgbCubeSize;
+int rgbCubeSize = defaultRGBCube;
+
+#if HAVE_T1LIB_H
+GString *t1libControl = NULL;
+#endif
+
+GString *t1Courier = NULL;
+GString *t1CourierBold = NULL;
+GString *t1CourierBoldOblique = NULL;
+GString *t1CourierOblique = NULL;
+GString *t1Helvetica = NULL;
+GString *t1HelveticaBold = NULL;
+GString *t1HelveticaBoldOblique = NULL;
+GString *t1HelveticaOblique = NULL;
+GString *t1Symbol = NULL;
+GString *t1TimesBold = NULL;
+GString *t1TimesBoldItalic = NULL;
+GString *t1TimesItalic = NULL;
+GString *t1TimesRoman = NULL;
+GString *t1ZapfDingbats = NULL;
+
+GBool useEUCJP = gFalse;
+#if JAPANESE_SUPPORT
+GString *japan12Font = NULL;
+#endif
 
 //------------------------------------------------------------------------
 // Font map
@@ -61,52 +88,25 @@ int rgbCubeSize;
 struct FontMapEntry {
   char *pdfFont;
   char *xFont;
-  GfxFontEncoding *encoding;
+  GString **t1Font;
+  FontEncoding *encoding;
 };
 
 static FontMapEntry fontMap[] = {
-  {"Courier",
-   "-*-courier-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Courier-Bold",
-   "-*-courier-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Courier-BoldOblique",
-   "-*-courier-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Courier-Oblique",
-   "-*-courier-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Helvetica",
-   "-*-helvetica-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Helvetica-Bold",
-   "-*-helvetica-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Helvetica-BoldOblique",
-   "-*-helvetica-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Helvetica-Oblique",
-   "-*-helvetica-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Symbol",
-   "-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific",
-   &symbolEncoding},
-  {"Times-Bold",
-   "-*-times-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Times-BoldItalic",
-   "-*-times-bold-i-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Times-Italic",
-   "-*-times-medium-i-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"Times-Roman",
-   "-*-times-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",
-   &isoLatin1Encoding},
-  {"ZapfDingbats",
-   "-*-zapfdingbats-medium-r-normal-*-%s-*-*-*-*-*-*-*",
-   &zapfDingbatsEncoding},
+  {"Courier",               "-*-courier-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1Courier,              &isoLatin1Encoding},
+  {"Courier-Bold",          "-*-courier-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1CourierBold,          &isoLatin1Encoding},
+  {"Courier-BoldOblique",   "-*-courier-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1CourierBoldOblique,   &isoLatin1Encoding},
+  {"Courier-Oblique",       "-*-courier-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1CourierOblique,       &isoLatin1Encoding},
+  {"Helvetica",             "-*-helvetica-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",        &t1Helvetica,            &isoLatin1Encoding},
+  {"Helvetica-Bold",        "-*-helvetica-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1HelveticaBold,        &isoLatin1Encoding},
+  {"Helvetica-BoldOblique", "-*-helvetica-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",          &t1HelveticaBoldOblique, &isoLatin1Encoding},
+  {"Helvetica-Oblique",     "-*-helvetica-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",        &t1HelveticaOblique,     &isoLatin1Encoding},
+  {"Symbol",                "-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific",  &t1Symbol,               &symbolEncoding},
+  {"Times-Bold",            "-*-times-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",              &t1TimesBold,            &isoLatin1Encoding},
+  {"Times-BoldItalic",      "-*-times-bold-i-normal-*-%s-*-*-*-*-*-iso8859-1",              &t1TimesBoldItalic,      &isoLatin1Encoding},
+  {"Times-Italic",          "-*-times-medium-i-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1TimesItalic,          &isoLatin1Encoding},
+  {"Times-Roman",           "-*-times-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",            &t1TimesRoman,           &isoLatin1Encoding},
+  {"ZapfDingbats",          "-*-zapfdingbats-medium-r-normal-*-%s-*-*-*-*-*-*-*",           &t1ZapfDingbats,         &zapfDingbatsEncoding},
   {NULL}
 };
 
@@ -118,27 +118,28 @@ static FontMapEntry *userFontMap;
 
 struct FontSubst {
   char *xFont;
+  GString **t1Font;
   double mWidth;
 };
 
 // index: {symbolic:12, fixed:8, serif:4, sans-serif:0} + bold*2 + italic
 static FontSubst fontSubst[16] = {
-  {"-*-helvetica-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",       0.833},
-  {"-*-helvetica-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",       0.833},
-  {"-*-helvetica-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",         0.889},
-  {"-*-helvetica-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",         0.889},
-  {"-*-times-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",           0.788},
-  {"-*-times-medium-i-normal-*-%s-*-*-*-*-*-iso8859-1",           0.722},
-  {"-*-times-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",             0.833},
-  {"-*-times-bold-i-normal-*-%s-*-*-*-*-*-iso8859-1",             0.778},
-  {"-*-courier-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",         0.600},
-  {"-*-courier-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",         0.600},
-  {"-*-courier-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",           0.600},
-  {"-*-courier-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",           0.600},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", 0.576},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", 0.576},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", 0.576},
-  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", 0.576}
+  {"-*-helvetica-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",       &t1Helvetica,            0.833},
+  {"-*-helvetica-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",       &t1HelveticaOblique,     0.833},
+  {"-*-helvetica-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1HelveticaBold,        0.889},
+  {"-*-helvetica-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1HelveticaBoldOblique, 0.889},
+  {"-*-times-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1TimesRoman,           0.788},
+  {"-*-times-medium-i-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1TimesItalic,          0.722},
+  {"-*-times-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",             &t1TimesBold,            0.833},
+  {"-*-times-bold-i-normal-*-%s-*-*-*-*-*-iso8859-1",             &t1TimesBoldItalic,      0.778},
+  {"-*-courier-medium-r-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1Courier,              0.600},
+  {"-*-courier-medium-o-normal-*-%s-*-*-*-*-*-iso8859-1",         &t1CourierOblique,       0.600},
+  {"-*-courier-bold-r-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1CourierBold,          0.600},
+  {"-*-courier-bold-o-normal-*-%s-*-*-*-*-*-iso8859-1",           &t1CourierBoldOblique,   0.600},
+  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576},
+  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576},
+  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576},
+  {"-*-symbol-medium-r-normal-*-%s-*-*-*-*-*-adobe-fontspecific", &t1Symbol,               0.576}
 };
 
 //------------------------------------------------------------------------
@@ -147,7 +148,8 @@ static FontSubst fontSubst[16] = {
 
 #if JAPANESE_SUPPORT
 
-static char *japan12Font = "-*-fixed-medium-r-normal-*-%s-*-*-*-*-*-jisx0208.1983-0";
+static char *japan12DefFont =
+    "-*-fixed-medium-r-normal-*-%s-*-*-*-*-*-jisx0208.1983-0";
 
 // CID 0 .. 96
 static Gushort japan12Map[96] = {
@@ -219,7 +221,7 @@ static char *japan12Abbrev1[6] = {
 #define firstConstrChar 0x105
 #define lastConstrChar  0x106
 #define firstMultiChar  0x107
-#define lastMultiChar   0x10d
+#define lastMultiChar   0x110
 
 // substituted chars
 static Guchar substChars[] = {
@@ -238,176 +240,182 @@ static Guchar substChars[] = {
 static char *multiChars[] = {
   "fi",				// 107: fi
   "fl",				// 108: fl
-  "OE",				// 109: OE
-  "oe",				// 10a: oe
-  "...",			// 10b: ellipsis
-  "``",				// 10c: quotedblleft
-  "''"				// 10d: quotedblright
+  "ff",				// 109: ff
+  "ffi",			// 10a: ffi
+  "ffl",			// 10b: ffl
+  "OE",				// 10c: OE
+  "oe",				// 10d: oe
+  "...",			// 10e: ellipsis
+  "``",				// 10f: quotedblleft
+  "''"				// 110: quotedblright
 };
 
 // ignored chars
-// 10c: Lslash
-// 10d: Scaron
-// 10e: Zcaron
-// 10f: Ydieresis
-// 110: breve
-// 111: caron
-// 112: circumflex
-// 113: dagger
-// 114: daggerdbl
-// 115: dotaccent
-// 116: dotlessi
-// 117: florin
-// 118: grave
-// 119: guilsinglleft
-// 11a: guilsinglright
-// 11b: hungarumlaut
-// 11c: lslash
-// 11d: ogonek
-// 11e: perthousand
-// 11f: quotedblbase
-// 120: quotesinglbase
-// 121: scaron
-// 122: tilde
-// 123: zcaron
+// 111: Lslash
+//    : Scaron
+//    : Zcaron
+//    : Ydieresis
+//    : breve
+//    : caron
+//    : circumflex
+//    : dagger
+//    : daggerdbl
+//    : dotaccent
+//    : dotlessi
+//    : florin
+//    : grave
+//    : guilsinglleft
+//    : guilsinglright
+//    : hungarumlaut
+//    : lslash
+//    : ogonek
+//    : perthousand
+//    : quotedblbase
+//    : quotesinglbase
+//    : scaron
+//    : tilde
+//    : zcaron
 
 //------------------------------------------------------------------------
 // XOutputFont
 //------------------------------------------------------------------------
 
-// Note: if real font is substantially narrower than substituted
-// font, the size is reduced accordingly.
 XOutputFont::XOutputFont(GfxFont *gfxFont, double m11, double m12,
-			 double m21, double m22, Display *display1) {
-  GString *pdfFont;
-  FontMapEntry *p;
-  GfxFontEncoding *encoding;
-  char *fontNameFmt;
+			 double m21, double m22, Display *display,
+			 XOutputFontCache *cache) {
+  int code;
+  char *charName;
+
+  id = gfxFont->getID();
+  this->display = display;
+  tm11 = m11;
+  tm12 = m12;
+  tm21 = m21;
+  tm22 = m22;
+
+  // check for hex char names
+  hex = gFalse;
+  if (!gfxFont->is16Bit()) {
+    for (code = 0; code < 256; ++code) {
+      if ((charName = gfxFont->getCharName(code))) {
+	if ((charName[0] == 'B' || charName[0] == 'C' ||
+	     charName[0] == 'G') &&
+	    strlen(charName) == 3 &&
+	    ((charName[1] >= 'a' && charName[1] <= 'f') ||
+	     (charName[1] >= 'A' && charName[1] <= 'F') ||
+	     (charName[2] >= 'a' && charName[2] <= 'f') ||
+	     (charName[2] >= 'A' && charName[2] <= 'F'))) {
+	  hex = gTrue;
+	  break;
+	}
+      }
+    }
+  }
+}
+
+XOutputFont::~XOutputFont() {
+}
+
+#if HAVE_T1LIB_H
+//------------------------------------------------------------------------
+// XOutputT1Font
+//------------------------------------------------------------------------
+
+XOutputT1Font::XOutputT1Font(GfxFont *gfxFont, GString *pdfBaseFont,
+			     double m11, double m12, double m21, double m22,
+			     double size, double ntm11, double ntm12,
+			     double ntm21, double ntm22,
+			     Display *display, XOutputFontCache *cache):
+  XOutputFont(gfxFont, m11, m12, m21, m22, display, cache)
+{
+  Ref embRef;
+  T1_TMATRIX xform;
+
+  t1ID = -1;
+  t1libAA = cache->getT1libAA();
+
+  // keep size info (for drawChar())
+  this->size = (float)size;
+
+  // we can only handle 8-bit, Type 1/1C, with embedded font file
+  // or user-specified base fonts
+  //~ also look for external font files
+  if (!(pdfBaseFont ||
+	(!gfxFont->is16Bit() &&
+	 (gfxFont->getType() == fontType1 ||
+	  gfxFont->getType() == fontType1C) &&
+	 gfxFont->getEmbeddedFontID(&embRef)))) {
+    return;
+  }
+
+  // load the font
+  if ((t1ID = cache->getT1Font(gfxFont, pdfBaseFont)) < 0)
+    return;
+
+  // transform the font
+  xform.cxx = ntm11;
+  xform.cxy = -ntm12;
+  xform.cyx = ntm21;
+  xform.cyy = -ntm22;
+  T1_TransformFont(t1ID, &xform);
+}
+
+XOutputT1Font::~XOutputT1Font() {
+  if (t1ID >= 0) {
+    T1_DeleteFont(t1ID);
+  }
+}
+
+GBool XOutputT1Font::isOk() {
+  return t1ID >= 0;
+}
+
+void XOutputT1Font::updateGC(GC gc) {
+}
+
+void XOutputT1Font::drawChar(GfxState *state, Pixmap pixmap, GC gc,
+			     double x, double y, int c) {
+  if (t1libAA) {
+    T1_AASetCharX(pixmap, gc, 0, xoutRound(x), xoutRound(y),
+		  t1ID, c, size, NULL);
+  } else {
+    T1_SetCharX(pixmap, gc, 0, xoutRound(x), xoutRound(y),
+		t1ID, c, size, NULL);
+  }
+}
+#endif // HAVE_T1LIB_H
+
+//------------------------------------------------------------------------
+// XOutputServerFont
+//------------------------------------------------------------------------
+
+XOutputServerFont::XOutputServerFont(GfxFont *gfxFont, char *fontNameFmt,
+				     FontEncoding *encoding,
+				     double m11, double m12,
+				     double m21, double m22,
+				     double size,
+				     double ntm11, double ntm12,
+				     double ntm21, double ntm22,
+				     Display *display,
+				     XOutputFontCache *cache):
+  XOutputFont(gfxFont, m11, m12, m21, m22, display, cache)
+{
   char fontName[200], fontSize[100];
   GBool rotated;
-  double size;
   int startSize, sz;
-  int index;
   int code, code2;
-  double w1, w2, v;
-  double *fm;
   char *charName;
   int n;
 
-  // init
-  id = gfxFont->getID();
-  mat11 = m11;
-  mat12 = m12;
-  mat21 = m21;
-  mat22 = m22;
-  display = display1;
   xFont = NULL;
-  hex = gFalse;
 
-  // construct X font name
-  if (gfxFont->is16Bit()) {
-    fontNameFmt = fontSubst[0].xFont;
-    switch (gfxFont->getCharSet16()) {
-    case font16AdobeJapan12:
-#if JAPANESE_SUPPORT
-      fontNameFmt = japan12Font;
-#endif
-      break;
-    }
-  } else {
-    pdfFont = gfxFont->getName();
-    if (pdfFont) {
-      for (p = userFontMap; p->pdfFont; ++p) {
-	if (!pdfFont->cmp(p->pdfFont))
-	  break;
-      }
-      if (!p->pdfFont) {
-	for (p = fontMap; p->pdfFont; ++p) {
-	  if (!pdfFont->cmp(p->pdfFont))
-	    break;
-	}
-      }
-    } else {
-      p = NULL;
-    }
-    if (p && p->pdfFont) {
-      fontNameFmt = p->xFont;
-      encoding = p->encoding;
-    } else {
-      encoding = &isoLatin1Encoding;
-//~ Some non-symbolic fonts are tagged as symbolic.
-//      if (gfxFont->isSymbolic()) {
-//        index = 12;
-//        encoding = symbolEncoding;
-//      } else
-      if (gfxFont->isFixedWidth()) {
-	index = 8;
-      } else if (gfxFont->isSerif()) {
-	index = 4;
-      } else {
-	index = 0;
-      }
-      if (gfxFont->isBold())
-	index += 2;
-      if (gfxFont->isItalic())
-	index += 1;
-      if ((code = gfxFont->getCharCode("m")) >= 0)
-	w1 = gfxFont->getWidth(code);
-      else
-	w1 = 0;
-      w2 = fontSubst[index].mWidth;
-      if (gfxFont->getType() == fontType3) {
-	// This is a hack which makes it possible to substitute for some
-	// Type 3 fonts.  The problem is that it's impossible to know what
-	// the base coordinate system used in the font is without actually
-	// rendering the font.  This code tries to guess by looking at the
-	// width of the character 'm' (which breaks if the font is a
-	// subset that doesn't contain 'm').
-	if (w1 > 0 && (w1 > 1.1 * w2 || w1 < 0.9 * w2)) {
-	  w1 /= w2;
-	  mat11 *= w1;
-	  mat12 *= w1;
-	  mat21 *= w1;
-	  mat22 *= w1;
-	}
-	fm = gfxFont->getFontMatrix();
-	v = (fm[0] == 0) ? 1 : (fm[3] / fm[0]);
-	mat12 *= v;
-	mat22 *= v;
-      } else if (!gfxFont->isSymbolic()) {
-	if (w1 > 0.01 && w1 < 0.9 * w2) {
-	  w1 /= w2;
-	  if (w1 < 0.8)
-	    w1 = 0.8;
-	  mat11 *= w1;
-	  mat12 *= w1;
-	  mat21 *= w1;
-	  mat22 *= w1;
-	}
-      }
-      fontNameFmt = fontSubst[index].xFont;
-    }
-
-    // Construct forward and reverse map.
-    // This tries to deal with font subset character names of the
-    // form 'Bxx', 'Cxx', 'Gxx', with decimal or hex numbering.
+  // Construct forward and reverse map.
+  // This tries to deal with font subset character names of the
+  // form 'Bxx', 'Cxx', 'Gxx', with decimal or hex numbering.
+  if (!gfxFont->is16Bit()) {
     for (code = 0; code < 256; ++code)
       revMap[code] = 0;
     if (encoding) {
-      for (code = 0; code < 256; ++code) {
-	if ((charName = gfxFont->getCharName(code))) {
-	  if ((charName[0] == 'B' || charName[0] == 'C' ||
-	       charName[0] == 'G') &&
-	      strlen(charName) == 3 &&
-	      ((charName[1] >= 'a' && charName[1] <= 'f') ||
-	       (charName[1] >= 'A' && charName[1] <= 'F') ||
-	       (charName[2] >= 'a' && charName[2] <= 'f') ||
-	       (charName[2] >= 'A' && charName[2] <= 'F'))) {
-	    hex = gTrue;
-	    break;
-	  }
-	}
-      }
       for (code = 0; code < 256; ++code) {
 	if ((charName = gfxFont->getCharName(code))) {
 	  if ((code2 = encoding->getCharCode(charName)) < 0) {
@@ -465,28 +473,27 @@ XOutputFont::XOutputFont(GfxFont *gfxFont, double m11, double m12,
     }
   }
 
-  // compute size, normalize matrix
-  size = sqrt(mat21*mat21 + mat22*mat22);
-  mat11 = mat11 / size;
-  mat12 = -mat12 / size;
-  mat21 = mat21 / size;
-  mat22 = -mat22 / size;
-  startSize = (int)size;
+  // adjust transform for the X transform convention
+  ntm12 = -ntm12;
+  ntm22 = -ntm22;
 
   // try to get a rotated font?
-  rotated = !(mat11 > 0 && mat22 > 0 && fabs(mat11/mat22 - 1) < 0.2 &&
-	      fabs(mat12) < 0.01 && fabs(mat21) < 0.01);
+  rotated = !(ntm11 > 0 && ntm22 > 0 &&
+	      fabs(ntm11 / ntm22 - 1) < 0.2 &&
+	      fabs(ntm12) < 0.01 &&
+	      fabs(ntm21) < 0.01);
 
   // open X font -- if font is not found (which means the server can't
   // scale fonts), try progressively smaller and then larger sizes
   //~ This does a linear search -- it should get a list of fonts from
   //~ the server and pick the closest.
+  startSize = (int)size;
   if (rotated)
     sprintf(fontSize, "[%s%0.2f %s%0.2f %s%0.2f %s%0.2f]",
-	    mat11<0 ? "~" : "", fabs(mat11 * startSize),
-	    mat12<0 ? "~" : "", fabs(mat12 * startSize),
-	    mat21<0 ? "~" : "", fabs(mat21 * startSize),
-	    mat22<0 ? "~" : "", fabs(mat22 * startSize));
+	    ntm11<0 ? "~" : "", fabs(ntm11 * size),
+	    ntm12<0 ? "~" : "", fabs(ntm12 * size),
+	    ntm21<0 ? "~" : "", fabs(ntm21 * size),
+	    ntm22<0 ? "~" : "", fabs(ntm22 * size));
   else
     sprintf(fontSize, "%d", startSize);
   sprintf(fontName, fontNameFmt, fontSize);
@@ -515,79 +522,518 @@ XOutputFont::XOutputFont(GfxFont *gfxFont, double m11, double m12,
   }
 }
 
-XOutputFont::~XOutputFont() {
+XOutputServerFont::~XOutputServerFont() {
   if (xFont)
     XFreeFont(display, xFont);
+}
+
+GBool XOutputServerFont::isOk() {
+  return xFont != NULL;
+}
+
+void XOutputServerFont::updateGC(GC gc) {
+  XSetFont(display, gc, xFont->fid);
+}
+
+void XOutputServerFont::drawChar(GfxState *state, Pixmap pixmap, GC gc,
+				 double x, double y, int c) {
+  GfxFont *gfxFont;
+  Gushort c1;
+  char buf;
+  char *p;
+  int n, i;
+  double tx;
+
+  c1 = map[c];
+  if (c1 <= lastRegularChar) {
+    buf = (char)c1;
+    XDrawString(display, pixmap, gc, xoutRound(x), xoutRound(y), &buf, 1);
+  } else if (c1 <= lastSubstChar) {
+    buf = (char)substChars[c1 - firstSubstChar];
+    XDrawString(display, pixmap, gc, xoutRound(x), xoutRound(y), &buf, 1);
+  } else if (c1 <= lastConstrChar) {
+    gfxFont = state->getFont();
+    //~ need to deal with rotated text here
+    switch (c1 - firstConstrChar) {
+    case 0: // bullet
+      tx = 0.25 * state->getTransformedFontSize() * gfxFont->getWidth(c);
+      XFillRectangle(display, pixmap, gc,
+		     xoutRound(x + tx),
+		     xoutRound(y - 0.4 * xFont->ascent - tx),
+		     xoutRound(2 * tx), xoutRound(2 * tx));
+      break;
+    case 1: // trademark
+//~ this should use a smaller font
+//      tx = state->getTransformedFontSize() *
+//           (gfxFont->getWidth(c) -
+//            gfxFont->getWidth(font->revMap['M']));
+      tx = 0.9 * state->getTransformedFontSize() *
+           gfxFont->getWidth(revMap['T']);
+      y -= 0.33 * (double)xFont->ascent;
+      buf = 'T';
+      XDrawString(display, pixmap, gc,
+		  xoutRound(x), xoutRound(y), &buf, 1);
+      x += tx;
+      buf = 'M';
+      XDrawString(display, pixmap, gc,
+		  xoutRound(x), xoutRound(y), &buf, 1);
+      break;
+    }
+  } else if (c1 <= lastMultiChar) {
+    gfxFont = state->getFont();
+    p = multiChars[c1 - firstMultiChar];
+    n = strlen(p);
+    tx = gfxFont->getWidth(c);
+    tx -= gfxFont->getWidth(revMap[p[n-1]]);
+    tx = tx * state->getTransformedFontSize() / (double)(n - 1);
+    for (i = 0; i < n; ++i) {
+      XDrawString(display, pixmap, gc,
+		  xoutRound(x), xoutRound(y), p + i, 1);
+      x += tx;
+    }
+  }
 }
 
 //------------------------------------------------------------------------
 // XOutputFontCache
 //------------------------------------------------------------------------
 
-XOutputFontCache::XOutputFontCache(Display *display1) {
-  int i;
-
-  display = display1;
-  for (i = 0; i < fontCacheSize; ++i)
-    fonts[i] = NULL;
-  numFonts = 0;
+XOutputFontCache::XOutputFontCache(Display *display) {
+  this->display = display;
+#if HAVE_T1LIB_H
+  t1Init = gFalse;
+  if (t1libControl) {
+    useT1lib = t1libControl->cmp("none") != 0;
+    t1libAA = t1libControl->cmp("plain") != 0;
+    t1libAAHigh = t1libControl->cmp("high") == 0;
+  } else {
+    useT1lib = gFalse;
+    t1libAA = gFalse;
+    t1libAAHigh = gFalse;
+  }
+#endif
+  clear();
 }
 
 XOutputFontCache::~XOutputFontCache() {
+  delFonts();
+}
+
+void XOutputFontCache::startDoc(int screenNum, Guint depth,
+				Colormap colormap) {
+  delFonts();
+  clear();
+
+#if HAVE_T1LIB_H
+  if (useT1lib) {
+    if (T1_InitLib(NO_LOGFILE | IGNORE_CONFIGFILE | IGNORE_FONTDATABASE |
+		   T1_NO_AFM)) {
+      if (t1libAA) {
+	T1_AASetLevel(t1libAAHigh ? T1_AA_HIGH : T1_AA_LOW);
+	if (depth <= 8)
+	  T1_AASetBitsPerPixel(8);
+	else if (depth <= 16)
+	  T1_AASetBitsPerPixel(16);
+	else
+	  T1_AASetBitsPerPixel(32);
+      }
+      T1_SetX11Params(display, DefaultVisual(display, screenNum),
+		      depth, colormap);
+      t1Init = gTrue;
+    } else {
+      useT1lib = gFalse;
+    }
+  }
+#endif // HAVE_T1LIB_H
+}
+
+void XOutputFontCache::delFonts() {
   int i;
 
-  for (i = 0; i < numFonts; ++i)
-    delete fonts[i];
+#if HAVE_T1LIB_H
+  // delete Type 1 fonts
+  for (i = 0; i < nT1Fonts; ++i)
+    delete t1Fonts[i];
+  for (i = 0; i < t1BaseFontsSize && t1BaseFonts[i].num >= 0; ++i) {
+    T1_DeleteFont(t1BaseFonts[i].t1ID);
+    gfree(t1BaseFonts[i].encStr);
+    gfree(t1BaseFonts[i].enc);
+  }
+  gfree(t1BaseFonts);
+  if (t1Init) {
+    T1_CloseLib();
+  }
+#endif
+
+  // delete server fonts
+  for (i = 0; i < nServerFonts; ++i)
+    delete serverFonts[i];
+}
+
+void XOutputFontCache::clear() {
+  int i;
+
+#if HAVE_T1LIB_H
+  // clear Type 1 font cache
+  for (i = 0; i < t1FontCacheSize; ++i)
+    t1Fonts[i] = NULL;
+  nT1Fonts = 0;
+  t1BaseFonts = NULL;
+  t1BaseFontsSize = 0;
+#endif
+
+  // clear server font cache
+  for (i = 0; i < serverFontCacheSize; ++i)
+    serverFonts[i] = NULL;
+  nServerFonts = 0;
 }
 
 XOutputFont *XOutputFontCache::getFont(GfxFont *gfxFont,
 				       double m11, double m12,
 				       double m21, double m22) {
-  XOutputFont *font;
+#if HAVE_T1LIB_H
+  XOutputT1Font *t1Font;
+#endif
+  XOutputServerFont *serverFont;
+  FontMapEntry *fme;
+  GString *t1FontName;
+  char *xFontName;
+  FontEncoding *xEncoding;
+  double size;
+  double ntm11, ntm12, ntm21, ntm22;
+  double w1, w2, v;
+  double *fm;
+  int index;
+  int code;
   int i, j;
 
-  // is it the most recently used font?
-  if (numFonts > 0 && fonts[0]->matches(gfxFont->getID(),
-					m11, m12, m21, m22))
-    return fonts[0];
+  // is it the most recently used Type 1 or server font?
+#if HAVE_T1LIB_H
+  if (useT1lib && nT1Fonts > 0 &&
+      t1Fonts[0]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
+    return t1Fonts[0];
+  }
+#endif
+  if (nServerFonts > 0 && serverFonts[0]->matches(gfxFont->getID(),
+						  m11, m12, m21, m22))
+    return serverFonts[0];
 
-  // is it in the cache?
-  for (i = 1; i < numFonts; ++i) {
-    if (fonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
-      font = fonts[i];
+#if HAVE_T1LIB_H
+  // is it in the Type 1 cache?
+  if (useT1lib) {
+    for (i = 1; i < nT1Fonts; ++i) {
+      if (t1Fonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
+	t1Font = t1Fonts[i];
+	for (j = i; j > 0; --j)
+	  t1Fonts[j] = t1Fonts[j-1];
+	t1Fonts[0] = t1Font;
+	return t1Font;
+      }
+    }
+  }
+#endif
+
+  // is it in the server cache?
+  for (i = 1; i < nServerFonts; ++i) {
+    if (serverFonts[i]->matches(gfxFont->getID(), m11, m12, m21, m22)) {
+      serverFont = serverFonts[i];
       for (j = i; j > 0; --j)
-	fonts[j] = fonts[j-1];
-      fonts[0] = font;
-      return font;
+	serverFonts[j] = serverFonts[j-1];
+      serverFonts[0] = serverFont;
+      return serverFont;
     }
   }
 
-  // make a new font
-  font = new XOutputFont(gfxFont, m11, m12, m21, m22, display);
-  if (!font->getXFont()) {
-    delete font;
-    return NULL;
+  // compute size and normalized transform matrix
+  size = sqrt(m21*m21 + m22*m22);
+  ntm11 = m11 / size;
+  ntm12 = m12 / size;
+  ntm21 = m21 / size;
+  ntm22 = m22 / size;
+
+  // search for a font map entry
+  t1FontName = NULL;
+  xFontName = NULL;
+  xEncoding = NULL;
+  if (!gfxFont->is16Bit() && gfxFont->getName()) {
+    for (fme = userFontMap; fme->pdfFont; ++fme) {
+      if (!gfxFont->getName()->cmp(fme->pdfFont)) {
+	break;
+      }
+    }
+    if (!fme->pdfFont) {
+      for (fme = fontMap; fme->pdfFont; ++fme) {
+	if (!gfxFont->getName()->cmp(fme->pdfFont)) {
+	  break;
+	}
+      }
+    }
+    if (fme && fme->t1Font) {
+      t1FontName = *fme->t1Font;
+    }
+    if (fme && fme->xFont && fme->encoding) {
+      xFontName = fme->xFont;
+      xEncoding = fme->encoding;
+    }
   }
 
-  // insert font in cache
-  if (numFonts == fontCacheSize) {
-    --numFonts;
-    delete fonts[numFonts];
+  // no font map entry found, so substitute a font
+  if (!t1FontName && !xFontName) {
+    if (gfxFont->is16Bit()) {
+      xFontName = fontSubst[0].xFont;
+      t1FontName = NULL;
+      switch (gfxFont->getCharSet16()) {
+      case font16AdobeJapan12:
+#if JAPANESE_SUPPORT
+	xFontName = japan12Font ? japan12Font->getCString() : japan12DefFont;
+#endif
+	break;
+      }
+    } else {
+      if (gfxFont->isFixedWidth()) {
+	index = 8;
+      } else if (gfxFont->isSerif()) {
+	index = 4;
+      } else {
+	index = 0;
+      }
+      if (gfxFont->isBold())
+	index += 2;
+      if (gfxFont->isItalic())
+	index += 1;
+      xFontName = fontSubst[index].xFont;
+      t1FontName = *fontSubst[index].t1Font;
+      xEncoding = &isoLatin1Encoding;
+      // un-normalize
+      ntm11 = m11;
+      ntm12 = m12;
+      ntm21 = m21;
+      ntm22 = m22;
+      // get width of 'm' in real font and substituted font
+      if ((code = gfxFont->getCharCode("m")) >= 0)
+	w1 = gfxFont->getWidth(code);
+      else
+	w1 = 0;
+      w2 = fontSubst[index].mWidth;
+      if (gfxFont->getType() == fontType3) {
+	// This is a hack which makes it possible to substitute for some
+	// Type 3 fonts.  The problem is that it's impossible to know what
+	// the base coordinate system used in the font is without actually
+	// rendering the font.  This code tries to guess by looking at the
+	// width of the character 'm' (which breaks if the font is a
+	// subset that doesn't contain 'm').
+	if (w1 > 0 && (w1 > 1.1 * w2 || w1 < 0.9 * w2)) {
+	  w1 /= w2;
+	  ntm11 = m11 * w1;
+	  ntm12 = m12 * w1;
+	  ntm21 = m21 * w1;
+	  ntm22 = m22 * w1;
+	}
+	fm = gfxFont->getFontMatrix();
+	v = (fm[0] == 0) ? 1 : (fm[3] / fm[0]);
+	ntm12 *= v;
+	ntm22 *= v;
+      } else if (!gfxFont->isSymbolic()) {
+	// if real font is substantially narrower than substituted
+	// font, reduce the font size accordingly
+	if (w1 > 0.01 && w1 < 0.9 * w2) {
+	  w1 /= w2;
+	  if (w1 < 0.8)
+	    w1 = 0.8;
+	  ntm11 = m11 * w1;
+	  ntm12 = m12 * w1;
+	  ntm21 = m21 * w1;
+	  ntm22 = m22 * w1;
+	}
+      }
+      // renormalize
+      size = sqrt(ntm21*ntm21 + ntm22*ntm22);
+      ntm11 /= size;
+      ntm12 /= size;
+      ntm21 /= size;
+      ntm22 /= size;
+    }
   }
-  for (j = numFonts; j > 0; --j)
-    fonts[j] = fonts[j-1];
-  fonts[0] = font;
-  ++numFonts;
 
-  // return it
-  return font;
+#if HAVE_T1LIB_H
+  // try to create a new Type 1 font
+  if (useT1lib) {
+    t1Font = new XOutputT1Font(gfxFont, t1FontName,
+			       m11, m12, m21, m22,
+			       size, ntm11, ntm12, ntm21, ntm22,
+			       display, this);
+    if (t1Font->isOk()) {
+
+      // insert in cache
+      if (nT1Fonts == t1FontCacheSize) {
+	--nT1Fonts;
+	delete t1Fonts[nT1Fonts];
+      }
+      for (j = nT1Fonts; j > 0; --j)
+	t1Fonts[j] = t1Fonts[j-1];
+      t1Fonts[0] = t1Font;
+      ++nT1Fonts;
+
+      return t1Font;
+    }
+    delete t1Font;
+  }
+#endif
+
+  // create a new server font
+  serverFont = new XOutputServerFont(gfxFont, xFontName, xEncoding,
+				     m11, m12, m21, m22,
+				     size, ntm11, ntm12, ntm21, ntm22,
+				     display, this);
+  if (serverFont->isOk()) {
+
+    // insert in cache
+    if (nServerFonts == serverFontCacheSize) {
+      --nServerFonts;
+      delete serverFonts[nServerFonts];
+    }
+    for (j = nServerFonts; j > 0; --j)
+      serverFonts[j] = serverFonts[j-1];
+    serverFonts[0] = serverFont;
+    ++nServerFonts;
+
+    return serverFont;
+  }
+  delete serverFont;
+
+  return NULL;
 }
+
+#if HAVE_T1LIB_H
+int XOutputFontCache::getT1Font(GfxFont *gfxFont, GString *pdfBaseFont) {
+  Ref id;
+  char *fileName;
+  char tmpFileName[60];
+  FILE *f;
+  char *fontBuf;
+  int fontLen;
+  Type1CFontConverter *cvt;
+  Ref embRef;
+  Object refObj, strObj;
+  FontEncoding *enc;
+  int encStrSize;
+  char *encPtr;
+  int t1ID;
+  int c;
+  int i, j;
+
+  id = gfxFont->getID();
+
+  // check available fonts
+  t1ID = -1;
+  for (i = 0; i < t1BaseFontsSize && t1BaseFonts[i].num >= 0; ++i) {
+    if (t1BaseFonts[i].num == id.num && t1BaseFonts[i].gen == id.gen) {
+      t1ID = t1BaseFonts[i].t1ID;
+    }
+  }
+
+  // create a new base font
+  if (t1ID < 0) {
+
+    // resize t1BaseFonts if necessary
+    if (i == t1BaseFontsSize) {
+      t1BaseFonts = (XOutputT1BaseFont *)
+	grealloc(t1BaseFonts,
+		 (t1BaseFontsSize + 16) * sizeof(XOutputT1BaseFont));
+      for (j = 0; j < 16; ++j) {
+	t1BaseFonts[t1BaseFontsSize + j].num = -1;
+      }
+      t1BaseFontsSize += 16;
+    }
+
+    // create the font file
+    tmpFileName[0] = '\0';
+    if (!gfxFont->is16Bit() &&
+	(gfxFont->getType() == fontType1 ||
+	 gfxFont->getType() == fontType1C) &&
+	gfxFont->getEmbeddedFontID(&embRef)) {
+      tmpnam(tmpFileName);
+      if (!(f = fopen(tmpFileName, "wb"))) {
+	error(-1, "Couldn't open temporary Type 1 font file '%s'",
+	      tmpFileName);
+	return -1;
+      }
+      if (gfxFont->getType() == fontType1C) {
+	fontBuf = gfxFont->readEmbFontFile(&fontLen);
+	cvt = new Type1CFontConverter(fontBuf, fontLen, f);
+	cvt->convert();
+	delete cvt;
+	gfree(fontBuf);
+      } else {
+	gfxFont->getEmbeddedFontID(&embRef);
+	refObj.initRef(embRef.num, embRef.gen);
+	refObj.fetch(&strObj);
+	refObj.free();
+	strObj.streamReset();
+	while ((c = strObj.streamGetChar()) != EOF)
+	  fputc(c, f);
+      }
+      fclose(f);
+      strObj.free();
+      fileName = tmpFileName;
+    } else {
+      fileName = pdfBaseFont->getCString();
+    }
+
+    // create the t1lib font
+    if ((t1ID = T1_AddFont(fileName)) < 0) {
+      error(-1, "Couldn't create t1lib font from '%s'", fileName);
+      return -1;
+    }
+    T1_LoadFont(t1ID);
+    t1BaseFonts[i].num = id.num;
+    t1BaseFonts[i].gen = id.gen;
+    t1BaseFonts[i].t1ID = t1ID;
+
+    // remove the font file
+    if (tmpFileName[0]) {
+      unlink(tmpFileName);
+    }
+
+    // reencode it
+    enc = gfxFont->getEncoding();
+    encStrSize = 0;
+    for (j = 0; j < 256 && j < enc->getSize(); ++j) {
+      if (enc->getCharName(j)) {
+	encStrSize += strlen(enc->getCharName(j)) + 1;
+      }
+    }
+    t1BaseFonts[i].enc = (char **)gmalloc(257 * sizeof(char *));
+    encPtr = (char *)gmalloc(encStrSize * sizeof(char));
+    t1BaseFonts[i].encStr = encPtr;
+    for (j = 0; j < 256 && j < enc->getSize(); ++j) {
+      if (enc->getCharName(j)) {
+	strcpy(encPtr, enc->getCharName(j));
+	t1BaseFonts[i].enc[j] = encPtr;
+	encPtr += strlen(encPtr) + 1;
+      } else {
+	t1BaseFonts[i].enc[j] = ".notdef";
+      }
+    }
+    for (; j < 256; ++j) {
+      t1BaseFonts[i].enc[j] = ".notdef";
+    }
+    t1BaseFonts[i].enc[256] = "custom";
+    T1_ReencodeFont(t1BaseFonts[i].t1ID, t1BaseFonts[i].enc);
+  }
+
+  // copy it
+  t1ID = T1_CopyFont(t1ID);
+
+  return t1ID;
+}
+#endif
 
 //------------------------------------------------------------------------
 // XOutputDev
 //------------------------------------------------------------------------
 
-XOutputDev::XOutputDev(Display *display1, Pixmap pixmap1, Guint depth1,
+XOutputDev::XOutputDev(Display *display, Pixmap pixmap, Guint depth,
 		       Colormap colormap, unsigned long paperColor) {
   XVisualInfo visualTempl;
   XVisualInfo *visualList;
@@ -600,15 +1046,16 @@ XOutputDev::XOutputDev(Display *display1, Pixmap pixmap1, Guint depth1,
   GBool ok;
 
   // get display/pixmap info
-  display = display1;
+  this->display = display;
   screenNum = DefaultScreen(display);
-  pixmap = pixmap1;
-  depth = depth1;
+  this->pixmap = pixmap;
+  this->depth = depth;
+  this->colormap = colormap;
 
   // check for TrueColor visual
   trueColor = gFalse;
   if (depth == 0) {
-    depth = DefaultDepth(display, screenNum);
+    this->depth = DefaultDepth(display, screenNum);
     visualList = XGetVisualInfo(display, 0, &visualTempl, &nVisuals);
     for (i = 0; i < nVisuals; ++i) {
       if (visualList[i].visual == DefaultVisual(display, screenNum)) {
@@ -746,6 +1193,7 @@ XOutputDev::XOutputDev(Display *display1, Pixmap pixmap1, Guint depth1,
       userFontMap[i].encoding = NULL;
     else
       userFontMap[i].encoding = &isoLatin1Encoding;
+    userFontMap[i].t1Font = NULL;
   }
   userFontMap[n].pdfFont = NULL;
 
@@ -758,7 +1206,7 @@ XOutputDev::XOutputDev(Display *display1, Pixmap pixmap1, Guint depth1,
   save = NULL;
 
   // create text object
-  text = new TextPage(gFalse);
+  text = new TextPage(useEUCJP, gFalse);
 }
 
 XOutputDev::~XOutputDev() {
@@ -770,6 +1218,10 @@ XOutputDev::~XOutputDev() {
   if (clipRegion)
     XDestroyRegion(clipRegion);
   delete text;
+}
+
+void XOutputDev::startDoc() {
+  fontCache->startDoc(screenNum, depth, colormap);
 }
 
 void XOutputDev::startPage(int pageNum, GfxState *state) {
@@ -960,6 +1412,11 @@ void XOutputDev::updateLineAttrs(GfxState *state, GBool updateDash) {
     cap = CapButt;
     break;
   }
+#if 1 //~ work around a bug in XFree86 (???)
+  if (dashLength > 0 && cap == CapProjecting) {
+    cap = CapButt;
+  }
+#endif
   switch (state->getLineJoin()) {
   case 0: join = JoinMiter; break;
   case 1: join = JoinRound; break;
@@ -1005,8 +1462,8 @@ void XOutputDev::updateFont(GfxState *state) {
   m21 *= state->getHorizScaling();
   font = fontCache->getFont(gfxFont, m11, m12, m21, m22);
   if (font) {
-    XSetFont(display, fillGC, font->getXFont()->fid);
-    XSetFont(display, strokeGC, font->getXFont()->fid);
+    font->updateGC(fillGC);
+    font->updateGC(strokeGC);
   }
 }
 
@@ -1398,12 +1855,7 @@ void XOutputDev::endString(GfxState *state) {
 
 void XOutputDev::drawChar(GfxState *state, double x, double y,
 			  double dx, double dy, Guchar c) {
-  Gushort c1;
-  char buf;
-  char *p;
-  int n, i;
   double x1, y1;
-  double tx;
 
   text->addChar(state, x, y, dx, dy, c);
 
@@ -1415,61 +1867,9 @@ void XOutputDev::drawChar(GfxState *state, double x, double y,
     return;
 
   state->transform(x, y, &x1, &y1);
-  c1 = font->mapChar(c);
-  if (c1 <= lastRegularChar) {
-    buf = (char)c1;
-    XDrawString(display, pixmap,
-		(state->getRender() & 1) ? strokeGC : fillGC,
-		xoutRound(x1), xoutRound(y1), &buf, 1);
-  } else if (c1 <= lastSubstChar) {
-    buf = (char)substChars[c1 - firstSubstChar];
-    XDrawString(display, pixmap,
-		(state->getRender() & 1) ? strokeGC : fillGC,
-		xoutRound(x1), xoutRound(y1), &buf, 1);
-  } else if (c1 <= lastConstrChar) {
-    //~ need to deal with rotated text here
-    switch (c1 - firstConstrChar) {
-    case 0: // bullet
-      tx = 0.25 * state->getTransformedFontSize() * 
-           gfxFont->getWidth(c);
-      XFillRectangle(display, pixmap,
-		     (state->getRender() & 1) ? strokeGC : fillGC,
-		     xoutRound(x1 + tx),
-		     xoutRound(y1 - 0.4 * font->getXFont()->ascent - tx),
-		     xoutRound(2 * tx), xoutRound(2 * tx));
-      break;
-    case 1: // trademark
-//~ this should use a smaller font
-//      tx = state->getTransformedFontSize() *
-//           (gfxFont->getWidth(c) -
-//            gfxFont->getWidth(font->revCharMap('M')));
-      tx = 0.9 * state->getTransformedFontSize() *
-           gfxFont->getWidth(font->revMapChar('T'));
-      y1 -= 0.33 * (double)font->getXFont()->ascent;
-      buf = 'T';
-      XDrawString(display, pixmap,
-		  (state->getRender() & 1) ? strokeGC : fillGC,
-		  xoutRound(x1), xoutRound(y1), &buf, 1);
-      x1 += tx;
-      buf = 'M';
-      XDrawString(display, pixmap,
-		  (state->getRender() & 1) ? strokeGC : fillGC,
-		  xoutRound(x1), xoutRound(y1), &buf, 1);
-      break;
-    }
-  } else if (c1 <= lastMultiChar) {
-    p = multiChars[c1 - firstMultiChar];
-    n = strlen(p);
-    tx = gfxFont->getWidth(c);
-    tx -= gfxFont->getWidth(font->revMapChar(p[n-1]));
-    tx = tx * state->getTransformedFontSize() / (double)(n - 1);
-    for (i = 0; i < n; ++i) {
-      XDrawString(display, pixmap,
-		  (state->getRender() & 1) ? strokeGC : fillGC,
-		  xoutRound(x1), xoutRound(y1), p + i, 1);
-      x1 += tx;
-    }
-  }
+
+  font->drawChar(state, pixmap, (state->getRender() & 1) ? strokeGC : fillGC,
+		 xoutRound(x1), xoutRound(y1), c);
 }
 
 void XOutputDev::drawChar16(GfxState *state, double x, double y,
@@ -1484,12 +1884,24 @@ void XOutputDev::drawChar16(GfxState *state, double x, double y,
   int n, i;
 #endif
 
+  if (gfxFont) {
+    text->addChar16(state, x, y, dx, dy, c, gfxFont->getCharSet16());
+  }
+
+  //~ assumes font is an XOutputServerFont
+
   if (!font)
     return;
 
   // check for invisible text -- this is used by Acrobat Capture
   if ((state->getRender() & 3) == 3)
     return;
+
+  // handle origin offset for vertical fonts
+  if (gfxFont->getWMode16() == 1) {
+    x -= gfxFont->getOriginX16(c) * state->getFontSize();
+    y -= gfxFont->getOriginY16(c) * state->getFontSize();
+  }
 
   state->transform(x, y, &x1, &y1);
 
@@ -1658,6 +2070,7 @@ void XOutputDev::drawChar16(GfxState *state, double x, double y,
 void XOutputDev::drawImageMask(GfxState *state, Stream *str,
 			       int width, int height, GBool invert,
 			       GBool inlineImg) {
+  ImageStream *imgStr;
   XImage *image;
   int x0, y0;			// top left corner of image
   int w0, h0, w1, h1;		// size of image
@@ -1752,7 +2165,8 @@ void XOutputDev::drawImageMask(GfxState *state, Stream *str,
 	       image, x2, y2);
 
   // initialize the image stream
-  str->resetImage(width, 1, 1);
+  imgStr = new ImageStream(str, width, 1, 1);
+  imgStr->reset();
 
   // first line (column)
   y = yFlip ? h1 - 1 : 0;
@@ -1770,7 +2184,7 @@ void XOutputDev::drawImageMask(GfxState *state, Stream *str,
 
     // drop a line (column)
     if (dy == 0) {
-      str->skipImageLine();
+      imgStr->skipLine();
 
     } else {
 
@@ -1789,7 +2203,7 @@ void XOutputDev::drawImageMask(GfxState *state, Stream *str,
 	}
 
 	// get image pixel
-	str->getImagePixel(&pixBuf);
+	imgStr->getPixel(&pixBuf);
 	if (invert)
 	  pixBuf ^= 1;
 
@@ -1833,6 +2247,7 @@ void XOutputDev::drawImageMask(GfxState *state, Stream *str,
   XPutImage(display, pixmap, fillGC, image, x2, y2, x0, y0, w2, h2);
 
   // free memory
+  delete imgStr;
   gfree(image->data);
   image->data = NULL;
   XDestroyImage(image);
@@ -1881,6 +2296,7 @@ inline Gulong XOutputDev::findColor(RGBColor *x, RGBColor *err) {
 void XOutputDev::drawImage(GfxState *state, Stream *str, int width,
 			   int height, GfxImageColorMap *colorMap,
 			   GBool inlineImg) {
+  ImageStream *imgStr;
   XImage *image;
   int x0, y0;			// top left corner of image
   int w0, h0, w1, h1;		// size of image
@@ -1969,7 +2385,8 @@ void XOutputDev::drawImage(GfxState *state, Stream *str, int width,
   }
 
   // initialize the image stream
-  str->resetImage(width, nComps, nBits);
+  imgStr = new ImageStream(str, width, nComps, nBits);
+  imgStr->reset();
 
   // first line (column)
   y = yFlip ? h1 - 1 : 0;
@@ -1987,7 +2404,7 @@ void XOutputDev::drawImage(GfxState *state, Stream *str, int width,
 
     // drop a line (column)
     if (dy == 0) {
-      str->skipImageLine();
+      imgStr->skipLine();
 
     } else {
 
@@ -2012,7 +2429,7 @@ void XOutputDev::drawImage(GfxState *state, Stream *str, int width,
 	}
 
 	// get image pixel
-	str->getImagePixel(pixBuf);
+	imgStr->getPixel(pixBuf);
 
 	// draw image pixel
 	if (dx > 0) {
@@ -2114,6 +2531,7 @@ void XOutputDev::drawImage(GfxState *state, Stream *str, int width,
   XPutImage(display, pixmap, fillGC, image, 0, 0, x0, y0, w0, h0);
 
   // free memory
+  delete imgStr;
   gfree(image->data);
   image->data = NULL;
   XDestroyImage(image);
