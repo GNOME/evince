@@ -47,9 +47,10 @@ Stream *GnomeVFSStream::makeSubStream(Guint startA, GBool limitedA,
 
 void GnomeVFSStream::reset() {
   GnomeVFSFileSize offsetReturn;
-  gnome_vfs_tell(handle, &offsetReturn);
-  savePos = (Guint)offsetReturn;
-  saved = gTrue;
+  if (gnome_vfs_tell(handle, &offsetReturn) == GNOME_VFS_OK) {
+    savePos = (Guint)offsetReturn;
+    saved = gTrue;
+  }
   gnome_vfs_seek(handle, GNOME_VFS_SEEK_START, start);
   bufPtr = bufEnd = buf;
   bufPos = start;
@@ -83,7 +84,9 @@ GBool GnomeVFSStream::fillBuf() {
   } else {
     n = gnomeVFSStreamBufSize;
   }
-  gnome_vfs_read(handle, buf, n, &bytesRead);
+  if (gnome_vfs_read(handle, buf, n, &bytesRead) != GNOME_VFS_OK) {
+    return gFalse;
+  }
   bufEnd = buf + bytesRead;
   if (bufPtr >= bufEnd) {
     return gFalse;
@@ -99,21 +102,22 @@ GBool GnomeVFSStream::fillBuf() {
 }
 
 void GnomeVFSStream::setPos(Guint pos, int dir) {
-  Guint size;
-
   if (dir >= 0) {
-    gnome_vfs_seek(handle, GNOME_VFS_SEEK_START, pos);
-    bufPos = pos;
+    if (gnome_vfs_seek(handle, GNOME_VFS_SEEK_START, pos) == GNOME_VFS_OK) {
+      bufPos = pos;
+    }
   } else {
     GnomeVFSFileSize offsetReturn;
-    gnome_vfs_seek(handle, GNOME_VFS_SEEK_END, 0);
-    gnome_vfs_tell(handle, &offsetReturn);
-    size = (Guint)offsetReturn;
-    if (pos > size)
-      pos = (Guint)size;
-    gnome_vfs_seek(handle, GNOME_VFS_SEEK_END, -(int)pos);
-    gnome_vfs_tell(handle, &offsetReturn);
-    bufPos = (Guint)offsetReturn;
+    if (gnome_vfs_seek(handle, GNOME_VFS_SEEK_END, 0) == GNOME_VFS_OK &&
+	gnome_vfs_tell(handle, &offsetReturn) == GNOME_VFS_OK) {
+      bufPos = (Guint)offsetReturn;
+      if (pos > bufPos)
+	pos = (Guint)bufPos;
+      if (gnome_vfs_seek(handle, GNOME_VFS_SEEK_END, -(int)pos) == GNOME_VFS_OK &&
+	  gnome_vfs_tell(handle, &offsetReturn) == GNOME_VFS_OK) {
+	bufPos = (Guint)offsetReturn;
+      }
+    }
   }
   bufPtr = bufEnd = buf;
 }
