@@ -8,6 +8,7 @@ INCLUDES =							\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
 	$(EXTRA_GNOME_CFLAGS)					\
+	$(GNOME_PRINT_PRIVATE_CFLAGS)				\
 	$(WARN_CFLAGS)						\
 	$(libpaper_CFLAGS)
 
@@ -148,6 +149,8 @@ libgpdf_a_SOURCES =			\
 	pdf-info-dict-util.h		\
 	pdf-properties-display.c	\
 	pdf-properties-display.h	\
+	gpdf-font-face.c		\
+	gpdf-font-face.h		\
 	$(marshal_sources)
 
 gnome_pdf_viewer_SOURCES =		\
