@@ -2225,8 +2225,8 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::visible",
 			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
 			  ev_window);
-	gtk_paned_add1 (GTK_PANED (ev_window->priv->hpaned),
-			ev_window->priv->sidebar);
+	gtk_paned_pack1 (GTK_PANED (ev_window->priv->hpaned),
+			 ev_window->priv->sidebar, FALSE, FALSE);
 	gtk_widget_show (ev_window->priv->hpaned);
 
 	/* Stub sidebar, for now */
