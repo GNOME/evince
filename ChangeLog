@@ -1,3 +1,25 @@
+2004-12-22  Anders Carlsson  <andersca@gnome.org>
+
+	* backend/Makefile.am:
+	* backend/ev-document-thumbnails.c:
+	(ev_document_thumbnails_get_type),
+	(ev_document_thumbnails_get_thumbnail):
+	* backend/ev-document-thumbnails.h:
+	* pixbuf/pixbuf-document.c: (G_DEFINE_TYPE_WITH_CODE),
+	(pixbuf_document_thumbnails_get_thumbnail),
+	(pixbuf_document_document_thumbnails_iface_init):
+	* shell/Makefile.am:
+	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_destroy),
+	(ev_sidebar_thumbnails_class_init), (ev_sidebar_thumbnails_init),
+	(populate_thumbnails), (ev_sidebar_thumbnails_set_document):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-sidebar.c: (ev_sidebar_init), (ev_sidebar_add_page),
+	(ev_sidebar_set_document):
+	* shell/ev-utils.c: (gaussian), (create_blur_filter),
+	(create_shadow), (ev_pixbuf_add_shadow):
+	* shell/ev-utils.h:
+	Add thumbnail support.
+	
 2004-12-22  Martin Kretzschmar  <martink@gnome.org>
 
 	* shell/ev-window.c (ev_window_cmd_file_print, ev_window_print)
