@@ -301,7 +301,6 @@ static void
 container_about_cmd (GtkWidget *widget, Container *container)
 {
   GtkWidget *about;
-  int i;
 
   const gchar *authors[] = {
     N_("Derek B. Noonburg, main author"),

@@ -779,7 +779,7 @@ static void displayPage(int page1, int zoom1, int rotate1, GBool addToHist) {
   } else {
     dpi = zoomDPI[zoom - minZoom];
   }
-  doc->displayPage(out, page, dpi, rotate, gTrue);
+  doc->displayPage(out, page, (double)dpi, rotate, gTrue);
   updateScrollbars();
 
   // update page number display
