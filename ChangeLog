@@ -1,3 +1,19 @@
+2005-01-20  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_tree_selection_changed),
+	(ev_sidebar_thumbnails_select_page):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-view.c: (ev_view_set_document), (ev_view_can_go_back),
+	(ev_view_can_go_forward):
+	* shell/ev-window.c: (ev_window_open_page),
+	(ev_window_setup_document), (update_current_page),
+	(view_page_changed_cb), (ev_window_init):
+	* shell/ev-window.h:
+
+	Ensure thumbnails selection, toolbar page control and
+	current page are in sync.
+
 2005-01-19  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* pdf/xpdf/XRef.cc:

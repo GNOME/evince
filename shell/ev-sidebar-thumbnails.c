@@ -32,6 +32,7 @@
 #include "ev-sidebar-thumbnails.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
+#include "ev-window.h"
 #include "ev-utils.h"
 
 #define THUMBNAIL_WIDTH 75
@@ -133,6 +134,7 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 				   EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv;
+	GtkWidget *window;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	int page;
@@ -149,7 +151,11 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 
 	gtk_tree_path_free (path);
 
-	ev_document_set_page (priv->document, page);
+	window = gtk_widget_get_ancestor (GTK_WIDGET (ev_sidebar_thumbnails),
+					  EV_TYPE_WINDOW);
+	if (window && ev_document_get_page (priv->document) != page) {
+		ev_window_open_page (EV_WINDOW (window), page);
+	}
 }
 
 static void
@@ -302,6 +308,24 @@ populate_thumbnails_idle (gpointer data)
 
 	return TRUE;
 }
+
+void
+ev_sidebar_thumbnails_select_page (EvSidebarThumbnails *sidebar,
+				   int                  page)
+{
+	GtkTreePath *path;
+	GtkTreeSelection *selection;
+
+	path = gtk_tree_path_new_from_indices (page - 1, -1);
+	selection = gtk_tree_view_get_selection
+			(GTK_TREE_VIEW (sidebar->priv->tree_view));
+
+	if (path) {
+		gtk_tree_selection_select_path (selection, path);
+		gtk_tree_path_free (path);	
+	}
+}
+
 
 void
 ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,

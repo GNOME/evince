@@ -56,6 +56,8 @@ GtkWidget *ev_sidebar_thumbnails_new      (void);
 
 void ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 					 EvDocument          *document);
+void ev_sidebar_thumbnails_select_page  (EvSidebarThumbnails *sidebar_thumbnails,
+					 int                  page);
 
 G_END_DECLS
 

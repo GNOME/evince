@@ -70,6 +70,7 @@ struct _EvWindowPrivate {
 	GtkWidget *main_box;
 	GtkWidget *hpaned;
 	GtkWidget *sidebar;
+	GtkWidget *thumbs_sidebar;
 	GtkWidget *find_bar;
 	GtkWidget *view;
 	GtkActionGroup *action_group;
@@ -250,6 +251,12 @@ update_action_sensitivity (EvWindow *ev_window)
 }
 
 void
+ev_window_open_page (EvWindow *ev_window, int page)
+{
+	ev_view_set_page (EV_VIEW (ev_window->priv->view), page);
+}
+
+void
 ev_window_open_link (EvWindow *ev_window, EvLink *link)
 {
 	ev_view_go_to_link (EV_VIEW (ev_window->priv->view), link);
@@ -363,8 +370,8 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	document = ev_window->priv->document;
 
-	ev_view_set_document (view, document);
 	ev_sidebar_set_document (sidebar, document);
+	ev_view_set_document (view, document);
 
 	history = ev_history_new ();
 	ev_view_set_history (view, history);
@@ -1202,10 +1209,15 @@ disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
 }
 
 static void
-update_current_page (EvWindow *ev_window)
+update_current_page (EvWindow *ev_window,
+		     EvView   *view)
 {
 	int page;
 	GtkAction *action;
+	EvSidebarThumbnails *thumbs;
+
+	thumbs = EV_SIDEBAR_THUMBNAILS (ev_window->priv->thumbs_sidebar);
+	ev_sidebar_thumbnails_select_page (thumbs, ev_view_get_page (view));
 
 	action = gtk_action_group_get_action
 		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
@@ -1218,7 +1230,7 @@ static void
 view_page_changed_cb (EvView   *view,
 		      EvWindow *ev_window)
 {
-	update_current_page (ev_window);
+	update_current_page (ev_window, view);
 	update_action_sensitivity (ev_window);
 }
 
@@ -1611,12 +1623,12 @@ ev_window_init (EvWindow *ev_window)
 			     _("Index"),
 			     sidebar_widget);
 
-	sidebar_widget = ev_sidebar_thumbnails_new ();
-	gtk_widget_show (sidebar_widget);
+	ev_window->priv->thumbs_sidebar = ev_sidebar_thumbnails_new ();
+	gtk_widget_show (ev_window->priv->thumbs_sidebar);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     "thumbnails",
 			     _("Thumbnails"),
-			     sidebar_widget);
+			     ev_window->priv->thumbs_sidebar);
 
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_show (scrolled_window);

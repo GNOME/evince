@@ -1060,8 +1060,6 @@ ev_view_set_document (EvView     *view,
 	g_return_if_fail (EV_IS_VIEW (view));
 
 	if (document != view->document) {
-		int old_page = ev_view_get_page (view);
-		
 		if (view->document) {
                         g_signal_handlers_disconnect_by_func (view->document,
                                                               found_results_callback,
@@ -1093,8 +1091,7 @@ ev_view_set_document (EvView     *view,
 		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 		
-		if (old_page != ev_view_get_page (view))
-			g_signal_emit (view, page_changed_signal, 0);
+		g_signal_emit (view, page_changed_signal, 0);
 	}
 }
 
@@ -1166,7 +1163,9 @@ ev_view_can_go_back (EvView *view)
 {
 	int index, n;
 
-	g_return_val_if_fail (EV_IS_HISTORY (view->history), FALSE);
+	if (view->history == NULL) {
+		return FALSE;
+	}
 
 	index = ev_history_get_current_index (view->history);
 	n = ev_history_get_n_links (view->history);
@@ -1199,7 +1198,9 @@ ev_view_can_go_forward (EvView *view)
 {
 	int index, n;
 
-	g_return_val_if_fail (EV_IS_HISTORY (view->history), FALSE);
+	if (view->history == NULL) {
+		return FALSE;
+	}
 
 	index = ev_history_get_current_index (view->history);
 	n = ev_history_get_n_links (view->history);

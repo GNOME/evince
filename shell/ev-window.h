@@ -59,6 +59,8 @@ void		ev_window_open		(EvWindow       *ev_window,
 					 const char     *uri);
 void		ev_window_open_link	(EvWindow       *ev_window,
 					 EvLink         *link);
+void		ev_window_open_page	(EvWindow       *ev_window,
+					 int             page);
 gboolean	ev_window_is_empty	(const EvWindow *ev_window);
 
 G_END_DECLS
