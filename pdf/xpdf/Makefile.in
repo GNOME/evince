@@ -87,7 +87,7 @@ GPDF_OBJS = Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 
 XPDF_LIBS = -L$(LTKLIBDIR) -lLTK -L$(GOOLIBDIR) -lGoo $(XLIBS) $(OTHERLIBS) -lm
 
-GPDF_LIBS = `gnome-config --libs gnomeui`
+GPDF_LIBS = -L$(GOOLIBDIR) $(OTHERLIBS) -lGoo `gnome-config --libs gnomeui` -lm
 
 gpdf: $(GPDF_OBJS)
 	$(CXX) $(CXXFLAGS) -o gpdf $(GPDF_OBJS) $(GPDF_LIBS)
