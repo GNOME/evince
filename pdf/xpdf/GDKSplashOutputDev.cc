@@ -114,7 +114,7 @@ void GDKSplashOutputDev::redraw(int srcX, int srcY,
                       destX, destY,
                       width, height,
                       GDK_RGB_DITHER_NORMAL,
-                      getBitmap()->getDataPtr().rgb8p + srcY * gdk_rowstride + srcX,
+                      getBitmap()->getDataPtr().rgb8p + srcY * gdk_rowstride + srcX * 3,
                       gdk_rowstride);
 
   g_object_unref (gc);
