@@ -597,6 +597,9 @@ start_interpreter (PSDocument *gs)
 	}
 
 	alpha_args = g_strsplit (ALPHA_PARAMS, " ", NUM_ALPHA_ARGS);
+	for(i = 0; i < NUM_ALPHA_ARGS && alpha_args[i]; i++, argc++) {
+		argv[argc] = alpha_args[i];
+	}
 
 	argv[argc++] = "-dNOPAUSE";
 	argv[argc++] = "-dQUIET";
