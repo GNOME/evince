@@ -13,5 +13,5 @@ libgtkgs_la_SOURCES = 	\
 	gsdefaults.h	\
 	ps.c		\
 	ps.h		\
-	gtkgs.c		\
-	gtkgs.h
+	ps-document.c	\
+	ps-document.h

@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GTK_GS_H__
-#define __GTK_GS_H__
+#ifndef __PS_DOCUMENT_H__
+#define __PS_DOCUMENT_H__
 
 #include <gdk/gdk.h>
 #include <gtk/gtkwidget.h>
@@ -39,15 +39,15 @@
 
 G_BEGIN_DECLS
 
-#define GTK_GS_TYPE         (gtk_gs_get_type())
-#define GTK_GS(obj)         GTK_CHECK_CAST (obj, gtk_gs_get_type (), GtkGS)
-#define GTK_GS_CLASS(klass) GTK_CHECK_CLASS_CAST (klass, gtk_gs_get_type (), GtkGSClass)
-#define GTK_IS_GS(obj)      GTK_CHECK_TYPE (obj, gtk_gs_get_type())
+#define PS_TYPE_DOCUMENT         (ps_document_get_type())
+#define PS_DOCUMENT(obj)         GTK_CHECK_CAST (obj, ps_document_get_type (), PSDocument)
+#define PS_DOCUMENT_CLASS(klass) GTK_CHECK_CLASS_CAST (klass, ps_document_get_type (), PSDocumentClass)
+#define GTK_IS_GS(obj)           GTK_CHECK_TYPE (obj, ps_document_get_type())
 
-typedef struct _GtkGS GtkGS;
-typedef struct _GtkGSClass GtkGSClass;
+typedef struct _PSDocument PSDocument;
+typedef struct _PSDocumentClass PSDocumentClass;
 
-struct _GtkGS {
+struct _PSDocument {
   GObject object;
   GdkWindow *pstarget;          /* the window passed to gv
                                  * it is a child of widget...
@@ -111,12 +111,12 @@ struct _GtkGS {
   gint fallback_orientation;    /* Orientation to use if override */
   gint real_orientation;        /* Real orientation from the document */
 
-  const gchar *gs_status;       /* GtkGS status */
+  const gchar *gs_status;       /* PSDocument status */
 
   guint avail_w, avail_h;
 };
 
-struct _GtkGSClass {
+struct _PSDocumentClass {
   GObjectClass parent_class;
 
   GdkAtom gs_atom;
@@ -125,8 +125,8 @@ struct _GtkGSClass {
   GdkAtom string_atom;
 };
 
-GType gtk_gs_get_type(void);
+GType ps_document_get_type(void);
 
 G_END_DECLS
 
-#endif /* __GTK_GS_H__ */
+#endif /* __PS_DOCUMENT_H__ */

@@ -39,7 +39,7 @@
 
 #include "pdf-document.h"
 #include "pixbuf-document.h"
-#include "gtkgs.h"
+#include "ps-document.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -262,7 +262,7 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 	else if (!strcmp (mime_type, "application/pdf"))
 		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
 	else if (!strcmp (mime_type, "application/postscript"))
-		document = g_object_new (GTK_GS_TYPE, NULL);
+		document = g_object_new (PS_TYPE_DOCUMENT, NULL);
 	else if (mime_type_supported_by_gdk_pixbuf (mime_type))
 		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);
 	

@@ -150,7 +150,7 @@ The DONE message indicates that ghostscript has finished processing.
 #include <math.h>
 
 #include "ev-document.h"
-#include "gtkgs.h"
+#include "ps-document.h"
 #include "ps.h"
 #include "gsdefaults.h"
 
@@ -163,15 +163,15 @@ The DONE message indicates that ghostscript has finished processing.
 #   define O_NONBLOCK O_NDELAY
 #endif
 
-#define GTK_GS_WATCH_INTERVAL 1000
-#define GTK_GS_WATCH_TIMEOUT  2
+#define PS_DOCUMENT_WATCH_INTERVAL 1000
+#define PS_DOCUMENT_WATCH_TIMEOUT  2
 
 #define MAX_BUFSIZE 1024
 
-#define GTK_GS_IS_COMPRESSED(gs)       (GTK_GS(gs)->gs_filename_unc != NULL)
-#define GTK_GS_GET_PS_FILE(gs)         (GTK_GS_IS_COMPRESSED(gs) ? \
-                                        GTK_GS(gs)->gs_filename_unc : \
-                                        GTK_GS(gs)->gs_filename)
+#define PS_DOCUMENT_IS_COMPRESSED(gs)       (PS_DOCUMENT(gs)->gs_filename_unc != NULL)
+#define PS_DOCUMENT_GET_PS_FILE(gs)         (PS_DOCUMENT_IS_COMPRESSED(gs) ? \
+                                        PS_DOCUMENT(gs)->gs_filename_unc : \
+                                        PS_DOCUMENT(gs)->gs_filename)
 
 enum { INTERPRETER_MESSAGE, INTERPRETER_ERROR, LAST_SIGNAL };
 
@@ -194,31 +194,31 @@ catchPipe(int i)
 }
 
 /* Forward declarations */
-static void gtk_gs_init(GtkGS * gs);
-static void gtk_gs_class_init(GtkGSClass * klass);
-static void gtk_gs_emit_error_msg(GtkGS * gs, const gchar * msg);
-static void gtk_gs_finalize(GObject * object);
-static void send_ps(GtkGS * gs, long begin, unsigned int len, gboolean close);
-static void set_up_page(GtkGS * gs);
+static void ps_document_init(PSDocument * gs);
+static void ps_document_class_init(PSDocumentClass * klass);
+static void ps_document_emit_error_msg(PSDocument * gs, const gchar * msg);
+static void ps_document_finalize(GObject * object);
+static void send_ps(PSDocument * gs, long begin, unsigned int len, gboolean close);
+static void set_up_page(PSDocument * gs);
 static void close_pipe(int p[2]);
-static void interpreter_failed(GtkGS * gs);
+static void interpreter_failed(PSDocument * gs);
 static float compute_xdpi(void);
 static float compute_ydpi(void);
-static gboolean compute_size(GtkGS * gs);
+static gboolean compute_size(PSDocument * gs);
 static void output(gpointer data, gint source, GdkInputCondition condition);
 static void input(gpointer data, gint source, GdkInputCondition condition);
-static void stop_interpreter(GtkGS * gs);
-static gint start_interpreter(GtkGS * gs);
+static void stop_interpreter(PSDocument * gs);
+static gint start_interpreter(PSDocument * gs);
 gboolean computeSize(void);
-static gboolean gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid);
+static gboolean ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid);
 static void ps_document_document_iface_init (EvDocumentIface *iface);
 
 static GObjectClass *parent_class = NULL;
 
-static GtkGSClass *gs_class = NULL;
+static PSDocumentClass *gs_class = NULL;
 
 static void
-gtk_gs_init(GtkGS * gs)
+ps_document_init(PSDocument * gs)
 {
   gs->bpixmap = NULL;
 
@@ -283,7 +283,7 @@ gtk_gs_init(GtkGS * gs)
 }
 
 static void
-gtk_gs_class_init(GtkGSClass * klass)
+ps_document_class_init(PSDocumentClass * klass)
 {
   GObjectClass *object_class;
 
@@ -291,7 +291,7 @@ gtk_gs_class_init(GtkGSClass * klass)
   parent_class = gtk_type_class(gtk_widget_get_type());
   gs_class = klass;
 
-  object_class->finalize = gtk_gs_finalize;
+  object_class->finalize = ps_document_finalize;
 
   /* Create atoms */
   klass->gs_atom = gdk_atom_intern("GHOSTVIEW", FALSE);
@@ -304,7 +304,7 @@ gtk_gs_class_init(GtkGSClass * klass)
 
 /* Clean all memory and temporal files */
 static void
-gtk_gs_cleanup(GtkGS * gs)
+ps_document_cleanup(PSDocument * gs)
 {
   g_return_if_fail(gs != NULL);
   g_return_if_fail(GTK_IS_GS(gs));
@@ -343,16 +343,16 @@ gtk_gs_cleanup(GtkGS * gs)
 }
 
 static void
-gtk_gs_finalize(GObject * object)
+ps_document_finalize(GObject * object)
 {
-  GtkGS *gs;
+  PSDocument *gs;
 
   g_return_if_fail(object != NULL);
   g_return_if_fail(GTK_IS_GS(object));
 
-  gs = GTK_GS(object);
+  gs = PS_DOCUMENT(object);
 
-  gtk_gs_cleanup(gs);
+  ps_document_cleanup(gs);
 
   if(gs->input_buffer) {
     g_free(gs->input_buffer);
@@ -363,7 +363,7 @@ gtk_gs_finalize(GObject * object)
 }
 
 static void
-send_ps(GtkGS * gs, long begin, unsigned int len, gboolean close)
+send_ps(PSDocument * gs, long begin, unsigned int len, gboolean close)
 {
   struct record_list *ps_new;
 
@@ -402,7 +402,7 @@ send_ps(GtkGS * gs, long begin, unsigned int len, gboolean close)
 }
 
 static gint
-gtk_gs_get_orientation(GtkGS * gs)
+ps_document_get_orientation(PSDocument * gs)
 {
   g_return_val_if_fail(gs != NULL, -1);
   g_return_val_if_fail(GTK_IS_GS(gs), -1);
@@ -429,7 +429,7 @@ gtk_gs_get_orientation(GtkGS * gs)
 }
 
 static void
-set_up_page(GtkGS * gs)
+set_up_page(PSDocument * gs)
 {
   guint orientation;
   char buf[1024];
@@ -449,7 +449,7 @@ set_up_page(GtkGS * gs)
 
   stop_interpreter(gs);
 
-  orientation = gtk_gs_get_orientation(gs);
+  orientation = ps_document_get_orientation(gs);
 
   if(compute_size(gs)) {
     gdk_flush();
@@ -522,13 +522,13 @@ close_pipe(int p[2])
 }
 
 static gboolean
-is_interpreter_ready(GtkGS * gs)
+is_interpreter_ready(PSDocument * gs)
 {
   return (gs->interpreter_pid != -1 && !gs->busy && gs->ps_input == NULL);
 }
 
 static void
-interpreter_failed(GtkGS * gs)
+interpreter_failed(PSDocument * gs)
 {
   stop_interpreter(gs);
 }
@@ -538,7 +538,7 @@ output(gpointer data, gint source, GdkInputCondition condition)
 {
   char buf[MAX_BUFSIZE + 1], *msg;
   guint bytes = 0;
-  GtkGS *gs = GTK_GS(data);
+  PSDocument *gs = PS_DOCUMENT(data);
 
   if(source == gs->interpreter_output) {
     bytes = read(gs->interpreter_output, buf, MAX_BUFSIZE);
@@ -577,14 +577,14 @@ output(gpointer data, gint source, GdkInputCondition condition)
   if(bytes > 0) {
     buf[bytes] = '\0';
     msg = g_strdup(buf);
-    gtk_gs_emit_error_msg (gs, msg);   
+    ps_document_emit_error_msg (gs, msg);   
   }
 }
 
 static void
 input(gpointer data, gint source, GdkInputCondition condition)
 {
-  GtkGS *gs = GTK_GS(data);
+  PSDocument *gs = PS_DOCUMENT(data);
   int bytes_written;
   void (*oldsig) (int);
   oldsig = signal(SIGPIPE, catchPipe);
@@ -632,7 +632,7 @@ input(gpointer data, gint source, GdkInputCondition condition)
                             gs->input_buffer_ptr, gs->buffer_bytes_left);
 
       if(broken_pipe) {
-        gtk_gs_emit_error_msg(gs, g_strdup(_("Broken pipe.")));
+        ps_document_emit_error_msg(gs, g_strdup(_("Broken pipe.")));
         broken_pipe = FALSE;
         interpreter_failed(gs);
       }
@@ -660,7 +660,7 @@ input(gpointer data, gint source, GdkInputCondition condition)
 }
 
 static int
-start_interpreter(GtkGS * gs)
+start_interpreter(PSDocument * gs)
 {
   int std_in[2] = { -1, -1 };   /* pipe to interp stdin */
   int std_out[2];               /* pipe from interp stdout */
@@ -705,7 +705,7 @@ start_interpreter(GtkGS * gs)
 
   /* set up the pipes */
   if(gs->send_filename_to_gs) {
-    argv[argc++] = GTK_GS_GET_PS_FILE(gs);
+    argv[argc++] = PS_DOCUMENT_GET_PS_FILE(gs);
     argv[argc++] = "-c";
     argv[argc++] = "quit";
   }
@@ -813,7 +813,7 @@ start_interpreter(GtkGS * gs)
 }
 
 static void
-stop_interpreter(GtkGS * gs)
+stop_interpreter(PSDocument * gs)
 {
   if(gs->interpreter_pid > 0) {
     int status = 0;
@@ -821,7 +821,7 @@ stop_interpreter(GtkGS * gs)
     while((wait(&status) == -1) && (errno == EINTR)) ;
     gs->interpreter_pid = -1;
     if(status == 1) {
-      gtk_gs_cleanup(gs);
+      ps_document_cleanup(gs);
       gs->gs_status = _("Interpreter failed.");
     }
   }
@@ -890,7 +890,7 @@ file_readable(const char *filename)
  * Return name of input file to use or NULL on error..
  */
 static gchar *
-check_filecompressed(GtkGS * gs)
+check_filecompressed(PSDocument * gs)
 {
   FILE *file;
   gchar buf[1024];
@@ -946,13 +946,13 @@ check_filecompressed(GtkGS * gs)
     /* report error */
     g_snprintf(buf, 1024, _("Error while decompressing file %s:\n"),
                gs->gs_filename);
-    gtk_gs_emit_error_msg(gs, buf);
+    ps_document_emit_error_msg(gs, buf);
     if(file_length(filename_err) > 0) {
       FILE *err;
       if((err = fopen(filename_err, "r"))) {
         /* print file to message window */
         while(fgets(buf, 1024, err))
-          gtk_gs_emit_error_msg(gs, buf);
+          ps_document_emit_error_msg(gs, buf);
         fclose(err);
       }
     }
@@ -974,7 +974,7 @@ check_filecompressed(GtkGS * gs)
  * Error reporting via signal 'interpreter_message'.
  */
 static gchar *
-check_pdf(GtkGS * gs)
+check_pdf(PSDocument * gs)
 {
   FILE *file;
   gchar buf[1024], *filename;
@@ -1051,14 +1051,14 @@ check_pdf(GtkGS * gs)
       /* report error */
       g_snprintf(buf, 1024,
                  _("Error while converting pdf file %s:\n"), filename);
-      gtk_gs_emit_error_msg(gs, buf);
+      ps_document_emit_error_msg(gs, buf);
 
       if(file_length(filename_err) > 0) {
         FILE *err;
         if((err = fopen(filename_err, "r"))) {
           /* print file to message window */
           while(fgets(buf, 1024, err))
-            gtk_gs_emit_error_msg(gs, buf);
+            ps_document_emit_error_msg(gs, buf);
         }
       }
       unlink(filename_dsc);
@@ -1137,7 +1137,7 @@ compute_ydpi(void)
 /* Compute new size of window, sets xdpi and ydpi if necessary.
  * returns True if new window size is different */
 static gboolean
-compute_size(GtkGS * gs)
+compute_size(PSDocument * gs)
 {
   guint new_width = 1;
   guint new_height = 1;
@@ -1146,7 +1146,7 @@ compute_size(GtkGS * gs)
 
   /* width and height can be changed, calculate window size according */
   /* to xpdi and ydpi */
-  orientation = gtk_gs_get_orientation(gs);
+  orientation = ps_document_get_orientation(gs);
 
   switch (orientation) {
   case GTK_GS_ORIENTATION_PORTRAIT:
@@ -1170,7 +1170,7 @@ compute_size(GtkGS * gs)
 }
 
 static gint
-gtk_gs_enable_interpreter(GtkGS * gs)
+ps_document_enable_interpreter(PSDocument * gs)
 {
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
@@ -1186,20 +1186,20 @@ gtk_gs_enable_interpreter(GtkGS * gs)
 /* publicly accessible functions */
 
 GType
-gtk_gs_get_type(void)
+ps_document_get_type(void)
 {
   static GType gs_type = 0;
   if(!gs_type) {
     GTypeInfo gs_info = {
-      sizeof(GtkGSClass),
+      sizeof(PSDocumentClass),
       (GBaseInitFunc) NULL,
       (GBaseFinalizeFunc) NULL,
-      (GClassInitFunc) gtk_gs_class_init,
+      (GClassInitFunc) ps_document_class_init,
       (GClassFinalizeFunc) NULL,
       NULL,                     /* class_data */
-      sizeof(GtkGS),
+      sizeof(PSDocument),
       0,                        /* n_preallocs */
-      (GInstanceInitFunc) gtk_gs_init
+      (GInstanceInitFunc) ps_document_init
     };
 
     static const GInterfaceInfo document_info =
@@ -1210,7 +1210,7 @@ gtk_gs_get_type(void)
     };
 
     gs_type = g_type_register_static(G_TYPE_OBJECT,
-                                     "GtkGS", &gs_info, 0);
+                                     "PSDocument", &gs_info, 0);
 
     g_type_add_interface_static (gs_type,
                                  EV_TYPE_DOCUMENT,
@@ -1225,23 +1225,23 @@ gtk_gs_get_type(void)
  * Show error message -> send signal "interpreter_message"
  */
 static void
-gtk_gs_emit_error_msg(GtkGS * gs, const gchar * msg)
+ps_document_emit_error_msg(PSDocument * gs, const gchar * msg)
 {
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
   if(strstr(msg, "Error:")) {
     gs->gs_status = _("File is not a valid PostScript document.");
-    gtk_gs_cleanup(gs);
+    ps_document_cleanup(gs);
   }
 }
 
 static gboolean
-gtk_gs_load(GtkGS * gs, const gchar * fname)
+document_load(PSDocument * gs, const gchar * fname)
 {
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
   /* clean up previous document */
-  gtk_gs_cleanup(gs);
+  ps_document_cleanup(gs);
 
   if(fname == NULL) {
     gs->gs_status = "";
@@ -1279,7 +1279,7 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
     if(!file_readable(fname)) {
       gchar buf[1024];
       g_snprintf(buf, 1024, _("Cannot open file %s.\n"), fname);
-      gtk_gs_emit_error_msg(gs, buf);
+      ps_document_emit_error_msg(gs, buf);
       gs->gs_status = _("File is not readable.");
     }
     else {
@@ -1289,7 +1289,7 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
     }
 
     if(!filename || (gs->gs_psfile = fopen(filename, "r")) == NULL) {
-      gtk_gs_cleanup(gs);
+      ps_document_cleanup(gs);
       return FALSE;
     }
 
@@ -1300,8 +1300,8 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
       /* File does not seem to be a Postscript one */
       gchar buf[1024];
       g_snprintf(buf, 1024, _("Error while scanning file %s\n"), fname);
-      gtk_gs_emit_error_msg(gs, buf);
-      gtk_gs_cleanup(gs);
+      ps_document_emit_error_msg(gs, buf);
+      ps_document_cleanup(gs);
       gs->gs_status = _("The file is not a PostScript document.");
       return FALSE;
     }
@@ -1330,7 +1330,7 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
       gs->real_orientation = gs->doc->orientation;
     }
   }
-  gtk_gs_set_page_size(gs, -1, gs->current_page);
+  ps_document_set_page_size(gs, -1, gs->current_page);
   gs->loaded = TRUE;
 
   gs->gs_status = _("Document loaded.");
@@ -1340,7 +1340,7 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
 
 
 static gboolean
-gtk_gs_next_page(GtkGS * gs)
+ps_document_next_page(PSDocument * gs)
 {
   XEvent event;
 
@@ -1372,7 +1372,7 @@ gtk_gs_next_page(GtkGS * gs)
 }
 
 static gint
-gtk_gs_get_current_page(GtkGS * gs)
+ps_document_get_current_page(PSDocument * gs)
 {
   g_return_val_if_fail(gs != NULL, -1);
   g_return_val_if_fail(GTK_IS_GS(gs), -1);
@@ -1381,7 +1381,7 @@ gtk_gs_get_current_page(GtkGS * gs)
 }
 
 static gint
-gtk_gs_get_page_count(GtkGS * gs)
+ps_document_get_page_count(PSDocument * gs)
 {
   if(!gs->gs_filename)
     return 0;
@@ -1397,7 +1397,7 @@ gtk_gs_get_page_count(GtkGS * gs)
 }
 
 static gboolean
-gtk_gs_goto_page(GtkGS * gs, gint page)
+ps_document_goto_page(PSDocument * gs, gint page)
 {
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
@@ -1426,15 +1426,15 @@ gtk_gs_goto_page(GtkGS * gs, gint page)
       gs->changed = TRUE;
     }
 
-    gtk_gs_set_page_size(gs, -1, page);
+    ps_document_set_page_size(gs, -1, page);
 
     gs->changed = FALSE;
 
     if(is_interpreter_ready(gs)) {
-      gtk_gs_next_page(gs);
+      ps_document_next_page(gs);
     }
     else {
-      gtk_gs_enable_interpreter(gs);
+      ps_document_enable_interpreter(gs);
       send_ps(gs, gs->doc->beginprolog, gs->doc->lenprolog, FALSE);
       send_ps(gs, gs->doc->beginsetup, gs->doc->lensetup, FALSE);
     }
@@ -1455,11 +1455,11 @@ gtk_gs_goto_page(GtkGS * gs, gint page)
       return TRUE;
 
     if(!is_interpreter_ready(gs))
-      gtk_gs_enable_interpreter(gs);
+      ps_document_enable_interpreter(gs);
 
     gs->current_page = page;
 
-    gtk_gs_next_page(gs);
+    ps_document_next_page(gs);
   }
   return TRUE;
 }
@@ -1473,7 +1473,7 @@ gtk_gs_goto_page(GtkGS * gs, gint page)
  * otherwise, the new_pagesize is used as the pagesize
  */
 static gboolean
-gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid)
+ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
 {
   gint new_llx = 0;
   gint new_lly = 0;
@@ -1561,7 +1561,7 @@ gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid)
     new_ury = papersizes[12].height;
 
   /* If bounding box changed, setup for new size. */
-  /* gtk_gs_disable_interpreter (gs); */
+  /* ps_document_disable_interpreter (gs); */
   if((new_llx != gs->llx) || (new_lly != gs->lly) ||
      (new_urx != gs->urx) || (new_ury != gs->ury)) {
     gs->llx = new_llx;
@@ -1580,7 +1580,7 @@ gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid)
 }
 
 static gfloat
-gtk_gs_zoom_to_fit(GtkGS * gs, gboolean fit_width)
+ps_document_zoom_to_fit(PSDocument * gs, gboolean fit_width)
 {
   gint new_y;
   gfloat new_zoom;
@@ -1603,17 +1603,17 @@ gtk_gs_zoom_to_fit(GtkGS * gs, gboolean fit_width)
 }
 
 static void
-gtk_gs_set_zoom(GtkGS * gs, gfloat zoom)
+ps_document_set_zoom(PSDocument * gs, gfloat zoom)
 {
   g_return_if_fail(gs != NULL);
   g_return_if_fail(GTK_IS_GS(gs));
 
   switch (gs->zoom_mode) {
   case GTK_GS_ZOOM_FIT_WIDTH:
-    zoom = gtk_gs_zoom_to_fit(gs, TRUE);
+    zoom = ps_document_zoom_to_fit(gs, TRUE);
     break;
   case GTK_GS_ZOOM_FIT_PAGE:
-    zoom = gtk_gs_zoom_to_fit(gs, FALSE);
+    zoom = ps_document_zoom_to_fit(gs, FALSE);
     break;
   case GTK_GS_ZOOM_ABSOLUTE:
   default:
@@ -1626,13 +1626,13 @@ gtk_gs_set_zoom(GtkGS * gs, gfloat zoom)
     gs->changed = TRUE;
   }
 
-  gtk_gs_goto_page(gs, gs->current_page);
+  ps_document_goto_page(gs, gs->current_page);
 }
 
 static gboolean
 ps_document_load (EvDocument  *document,
-		   const char  *uri,
-		   GError     **error)
+		  const char  *uri,
+		  GError     **error)
 {
 	gboolean result;
 	char *filename;
@@ -1641,7 +1641,7 @@ ps_document_load (EvDocument  *document,
 	if (!filename)
 		return FALSE;
 
-	result = gtk_gs_load (GTK_GS (document), filename);
+	result = document_load (PS_DOCUMENT (document), filename);
 
 	g_free (filename);
 
@@ -1651,26 +1651,26 @@ ps_document_load (EvDocument  *document,
 static int
 ps_document_get_n_pages (EvDocument  *document)
 {
-	return gtk_gs_get_page_count (GTK_GS (document));
+	return ps_document_get_page_count (PS_DOCUMENT (document));
 }
 
 static void
 ps_document_set_page (EvDocument  *document,
 		       int          page)
 {
-	gtk_gs_goto_page (GTK_GS (document), page);
+	ps_document_goto_page (PS_DOCUMENT (document), page);
 }
 
 static int
 ps_document_get_page (EvDocument  *document)
 {
-	return gtk_gs_get_current_page (GTK_GS (document));
+	return ps_document_get_current_page (PS_DOCUMENT (document));
 }
 
 static gboolean
-gtk_gs_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
+ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-	GtkGS *gs = (GtkGS *) data;
+	PSDocument *gs = (PSDocument *) data;
 
 	if(event->type != GDK_CLIENT_EVENT)
 		return FALSE;
@@ -1687,7 +1687,7 @@ static void
 ps_document_set_target (EvDocument  *document,
 			GdkDrawable *target)
 {
-	GtkGS *gs = GTK_GS (document);
+	PSDocument *gs = PS_DOCUMENT (document);
 	GtkWidget *widget;
 	gpointer data;
 
@@ -1699,18 +1699,18 @@ ps_document_set_target (EvDocument  *document,
 
 		widget = GTK_WIDGET (data);
 		g_signal_connect (widget, "event",
-				  G_CALLBACK (gtk_gs_widget_event),
+				  G_CALLBACK (ps_document_widget_event),
 				  document);
 	}
 
-	gtk_gs_goto_page (gs, gs->current_page);
+	ps_document_goto_page (gs, gs->current_page);
 }
 
 static void
 ps_document_set_scale (EvDocument  *document,
 			double       scale)
 {
-	gtk_gs_set_zoom (GTK_GS (document), scale);
+	ps_document_set_zoom (PS_DOCUMENT (document), scale);
 }
 
 static void
@@ -1725,7 +1725,7 @@ ps_document_get_page_size (EvDocument   *document,
 			    int          *width,
 			    int          *height)
 {
-	GtkGS *gs = GTK_GS (document);
+	PSDocument *gs = PS_DOCUMENT (document);
 
 	if (width) {
 		*width = gs->width;
@@ -1743,7 +1743,7 @@ ps_document_render (EvDocument  *document,
 		    int          clip_width,
 		    int          clip_height)
 {
-	GtkGS *gs = GTK_GS (document);
+	PSDocument *gs = PS_DOCUMENT (document);
 	GdkGC *gc;
 
 	if (gs->pstarget == NULL ||

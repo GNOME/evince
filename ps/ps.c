@@ -54,7 +54,7 @@
 #endif
 #include <ctype.h>
 #include <X11/Xos.h>            /* #includes the appropriate <string.h> */
-#include "gtkgs.h"
+#include "gstypes.h"
 #include "gsdefaults.h"
 #include "ps.h"
 #include "gsio.h"
@@ -211,8 +211,6 @@ pages_new(struct page *pages, int current, int maxpages)
  */
 
 #include <glib.h>
-
-#include <gtkgs.h>
 
 struct document *
 psscan(FILE * file, int respect_eof, const gchar * fname)
