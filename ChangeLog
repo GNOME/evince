@@ -1,5 +1,12 @@
 2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* pdf/xpdf/pdf-document.cc:
+
+	Return a link even if it's of an unrecognized
+	type. Otherwise we go in an infinte cycle.
+
+2005-02-24  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-window.c: (update_sizing_buttons), (update_view_size),
 	(size_allocate_cb), (ev_window_set_sizing_mode):
 
