@@ -2,652 +2,686 @@
 # Copyright (C) 2004-2005 Free Software Foundation, Inc.
 # This file is distributed under the same license as the evince package.
 # Funda Wang <fundawang@linux.net.cn>, 2004
+# Abel Cheung <maddog@linuxhall.org>, 2005
 # Wei-Lun Chao <chaoweilun@pcmail.com.tw>, 2005
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince 0.1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-09 14:13+0100\n"
-"PO-Revision-Date: 2005-02-16 10:59+0800\n"
+"POT-Creation-Date: 2005-03-30 13:39+0800\n"
+"PO-Revision-Date: 2005-03-30 14:14+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
-"Language-Team: zh_TW <zh-l10n@linux.org.tw>\n"
+"Language-Team: Chinese/Traditional <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: data/evince-password.glade.h:1
+#: ../data/evince-password.glade.h:1
 msgid "*"
 msgstr "*"
 
-#: data/evince-password.glade.h:2
+#: ../data/evince-password.glade.h:2
 msgid "<span size=\"smaller\"> </span>"
 msgstr "<span size=\"smaller\"> </span>"
 
-#: data/evince-password.glade.h:3
+#: ../data/evince-password.glade.h:3
 msgid "_Password:"
-msgstr "密碼(_P)"
+msgstr "密碼(_P):"
 
-#: data/evince.desktop.in.h:1 shell/ev-window.c:362
+#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:470
 msgid "Document Viewer"
-msgstr "文件觀看器"
+msgstr "文件檢視器"
 
-#: data/evince.desktop.in.h:2 shell/main.c:85
+#: ../data/evince.desktop.in.h:2 ../shell/main.c:87
 msgid "Evince Document Viewer"
-msgstr "Evince 文件觀看器"
+msgstr "Evince 文件檢視器"
 
-#: data/evince.desktop.in.h:3
+#: ../data/evince.desktop.in.h:3
 msgid "View multipage documents"
-msgstr "觀看多頁文件"
+msgstr "閱讀文件"
 
-#: data/evince.schemas.in.h:1
+#: ../data/evince.schemas.in.h:1
+msgid "Default sidebar size"
+msgstr "預設側面窗格尺寸"
+
+#: ../data/evince.schemas.in.h:2
 msgid "Show sidebar by default"
-msgstr "預設顯示側邊軸"
+msgstr "預設顯示側面窗格"
 
-#: data/evince.schemas.in.h:2
+#: ../data/evince.schemas.in.h:3
 msgid "Show sidebar by default."
-msgstr "預設顯示側邊軸。"
+msgstr "預設顯示側面窗格。"
 
-#: data/evince.schemas.in.h:3
+#: ../data/evince.schemas.in.h:4
 msgid "Show statusbar by default"
 msgstr "預設顯示狀態列"
 
-#: data/evince.schemas.in.h:4
+#: ../data/evince.schemas.in.h:5
 msgid "Show statusbar by default."
 msgstr "預設顯示狀態列。"
 
-#: data/evince.schemas.in.h:5
+#: ../data/evince.schemas.in.h:6
 msgid "Show toolbar by default"
 msgstr "預設顯示工具列"
 
-#: data/evince.schemas.in.h:6
+#: ../data/evince.schemas.in.h:7
 msgid "Show toolbar by default."
 msgstr "預設顯示工具列。"
 
-#: ps/gsdefaults.c:68
+#: ../data/evince.schemas.in.h:8
+msgid "The default sidebar size."
+msgstr "預設的側面窗格尺寸。"
+
+#: ../ps/gsdefaults.c:30
 msgid "BBox"
 msgstr "BBox"
 
-#: ps/gsdefaults.c:69
+#: ../ps/gsdefaults.c:31
 msgid "Letter"
 msgstr "Letter"
 
-#: ps/gsdefaults.c:70
+#: ../ps/gsdefaults.c:32
 msgid "Tabloid"
 msgstr "Tabloid"
 
-#: ps/gsdefaults.c:71
+#: ../ps/gsdefaults.c:33
 msgid "Ledger"
 msgstr "Ledger"
 
-#: ps/gsdefaults.c:72
+#: ../ps/gsdefaults.c:34
 msgid "Legal"
 msgstr "Legal"
 
-#: ps/gsdefaults.c:73
+#: ../ps/gsdefaults.c:35
 msgid "Statement"
 msgstr "Statement"
 
-#: ps/gsdefaults.c:74
+#: ../ps/gsdefaults.c:36
 msgid "Executive"
 msgstr "Executive"
 
-#: ps/gsdefaults.c:75
+#: ../ps/gsdefaults.c:37
 msgid "A0"
 msgstr "A0"
 
-#: ps/gsdefaults.c:76
+#: ../ps/gsdefaults.c:38
 msgid "A1"
 msgstr "A1"
 
-#: ps/gsdefaults.c:77
+#: ../ps/gsdefaults.c:39
 msgid "A2"
 msgstr "A2"
 
-#: ps/gsdefaults.c:78
+#: ../ps/gsdefaults.c:40
 msgid "A3"
 msgstr "A3"
 
-#: ps/gsdefaults.c:79
+#: ../ps/gsdefaults.c:41
 msgid "A4"
 msgstr "A4"
 
-#: ps/gsdefaults.c:80
+#: ../ps/gsdefaults.c:42
 msgid "A5"
 msgstr "A5"
 
-#: ps/gsdefaults.c:81
+#: ../ps/gsdefaults.c:43
 msgid "B4"
 msgstr "B4"
 
-#: ps/gsdefaults.c:82
+#: ../ps/gsdefaults.c:44
 msgid "B5"
 msgstr "B5"
 
-#: ps/gsdefaults.c:83
+#: ../ps/gsdefaults.c:45
 msgid "Folio"
 msgstr "Folio"
 
-#: ps/gsdefaults.c:84
+#: ../ps/gsdefaults.c:46
 msgid "Quarto"
 msgstr "Quarto"
 
-#: ps/gsdefaults.c:85
+#: ../ps/gsdefaults.c:47
 msgid "10x14"
 msgstr "10x14"
 
-#: ps/ps-document.c:289
+#: ../ps/ps-document.c:144
 msgid "No document loaded."
-msgstr "沒有文件被載入。"
+msgstr "沒有載入任何文件。"
 
-#: ps/ps-document.c:689
+#: ../ps/ps-document.c:540
 msgid "Broken pipe."
 msgstr "管線作業中斷"
 
-#: ps/ps-document.c:885
+#: ../ps/ps-document.c:724
 msgid "Interpreter failed."
 msgstr "解譯程式失誤。"
 
 #. report error
-#: ps/ps-document.c:1007
+#: ../ps/ps-document.c:846
 #, c-format
 msgid "Error while decompressing file %s:\n"
-msgstr "解壓縮檔案 %s 時產生錯誤:\n"
+msgstr "將檔案 %s 解壓縮時產生錯誤:\n"
 
-#: ps/ps-document.c:1113
-#, c-format
-msgid "Error while converting pdf file %s:\n"
-msgstr "轉換 pdf 檔案 %s 時產生錯誤:\n"
-
-#: ps/ps-document.c:1292
-msgid "File is not a valid PostScript document."
-msgstr "檔案不是一個合法的 PostScript 文件。"
-
-#: ps/ps-document.c:1343
+#: ../ps/ps-document.c:1039
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "無法開啟檔案 %s。\n"
 
-#: ps/ps-document.c:1345
+#: ../ps/ps-document.c:1041
 msgid "File is not readable."
 msgstr "檔案為不可讀。"
 
-#: ps/ps-document.c:1366
+#: ../ps/ps-document.c:1061
 #, c-format
 msgid "Error while scanning file %s\n"
-msgstr "掃描檔案 %s 時產生錯誤:\n"
+msgstr "掃描檔案 %s 時產生錯誤\n"
 
-#: ps/ps-document.c:1369
+#: ../ps/ps-document.c:1064
 msgid "The file is not a PostScript document."
-msgstr "檔案不是一個 PostScript 文件。"
+msgstr "檔案不是 PostScript 文件。"
 
-#: ps/ps-document.c:1400
+#: ../ps/ps-document.c:1077
 msgid "Document loaded."
 msgstr "文件已載入。"
 
-#: shell/eggfindbar.c:141
+#: ../shell/eggfindbar.c:141
 msgid "Search string"
 msgstr "搜尋字串"
 
-#: shell/eggfindbar.c:142
+#: ../shell/eggfindbar.c:142
 msgid "The name of the string to be found"
-msgstr "欲搜尋字串的名稱"
+msgstr "欲搜尋的字串名稱"
 
-#: shell/eggfindbar.c:155
+#: ../shell/eggfindbar.c:155
 msgid "Case sensitive"
 msgstr "區分大小寫"
 
-#: shell/eggfindbar.c:156
+#: ../shell/eggfindbar.c:156
 msgid "TRUE for a case sensitive search"
 msgstr "TRUE 代表區分大小寫的搜尋"
 
-#: shell/eggfindbar.c:163
+#: ../shell/eggfindbar.c:163
 msgid "Highlight color"
 msgstr "高亮度顏色"
 
-#: shell/eggfindbar.c:164
+#: ../shell/eggfindbar.c:164
 msgid "Color of highlight for all matches"
-msgstr "用於所有符合者的高亮度顏色"
+msgstr "加強顯示所有符合的字串時的顏色"
 
-#: shell/eggfindbar.c:170
+#: ../shell/eggfindbar.c:170
 msgid "Current color"
 msgstr "目前的顏色"
 
-#: shell/eggfindbar.c:171
+#: ../shell/eggfindbar.c:171
 msgid "Color of highlight for the current match"
-msgstr "用於目前符合者的高亮度顏色"
+msgstr "加強顯示目前符合的字串時的顏色"
 
-#: shell/eggfindbar.c:288
+#: ../shell/eggfindbar.c:288
 msgid "F_ind:"
-msgstr "尋找(_I)："
+msgstr "尋找(_I):"
 
-#: shell/eggfindbar.c:301
+#: ../shell/eggfindbar.c:301
 msgid "_Previous"
 msgstr "上一個(_P)"
 
-#: shell/eggfindbar.c:302
+#: ../shell/eggfindbar.c:302
 msgid "_Next"
 msgstr "下一個(_N)"
 
-#: shell/eggfindbar.c:314
+#: ../shell/eggfindbar.c:314
 msgid "C_ase Sensitive"
 msgstr "區分大小寫(_A)"
 
-#: shell/ev-application.c:120
+#: ../shell/ev-application.c:120
 msgid "Open document"
 msgstr "開啟文件"
 
-#: shell/ev-application.c:130
+#: ../shell/ev-application.c:130
 msgid "PostScript and PDF Documents"
 msgstr "PostScript 和 PDF 文件"
 
-#: shell/ev-application.c:138
+#: ../shell/ev-application.c:138
 msgid "PostScript Documents"
 msgstr "PostScript 文件"
 
-#: shell/ev-application.c:145 shell/ev-window.c:677
+#: ../shell/ev-application.c:145 ../shell/ev-window.c:890
 msgid "PDF Documents"
 msgstr "PDF 文件"
 
-#: shell/ev-application.c:150
+#: ../shell/ev-application.c:150
 msgid "Images"
-msgstr "圖像"
+msgstr "圖片"
 
-#: shell/ev-application.c:155 shell/ev-window.c:682
+#: ../shell/ev-application.c:155 ../shell/ev-window.c:895
 msgid "All Files"
-msgstr "全部文件"
+msgstr "所有文件"
 
-#: shell/ev-page-action.c:70
+# (Abel) 這裡是頁數 (%d of %d)
+#: ../shell/ev-page-action.c:71
 #, c-format
 msgid "of %d"
-msgstr "於 %d"
+msgstr "/ %d"
 
-#: shell/ev-password-view.c:111
+#: ../shell/ev-password-view.c:111
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
-msgstr "這份文件已被鎖住，只有在輸入正確密碼之後才能讀取。"
+msgstr "這份文件已被鎖上，只有在輸入正確密碼之後才能讀取。"
 
-#: shell/ev-password-view.c:120
+#: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
 msgstr "文件解鎖(_U)"
 
-#: shell/ev-password.c:88
+#: ../shell/ev-password.c:88
 msgid "Unable to find glade file"
 msgstr "無法找到 glade 檔案"
 
-#: shell/ev-password.c:90
+#: ../shell/ev-password.c:90
 #, c-format
 msgid ""
 "The glade file, %s, cannot be found.  Please check that your installation is "
 "complete."
-msgstr "無法找到 glade 檔案 %s 。請確認你已安成安裝。"
+msgstr "無法找到 glade 檔案 %s。請檢查程式是否已正確安裝。"
 
-#: shell/ev-password.c:104
+#: ../shell/ev-password.c:104
 msgid "Password required"
 msgstr "需要密碼"
 
-#: shell/ev-password.c:105
+#: ../shell/ev-password.c:105
 #, c-format
 msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
 "opened."
-msgstr "文件 <i>%s</i> 已被鎖住，在它能被開啟前需要密碼。"
+msgstr "文件 <i>%s</i> 已被鎖上，需要密碼才能開啟。"
 
-#: shell/ev-password.c:142
+#: ../shell/ev-password.c:142
 msgid "Incorrect password"
 msgstr "密碼不正確"
 
-#: shell/ev-view.c:559
+#: ../shell/ev-sidebar-links.c:133
+msgid "Loading..."
+msgstr "載入中..."
+
+#: ../shell/ev-view.c:718
 #, c-format
 msgid "Go to page %d"
-msgstr "跳至第 %d 頁"
+msgstr "前往第 %d 頁"
 
-#: shell/ev-view.c:931
+#. g_mutex_unlock (EV_DOC_MUTEX);
+#. TRANS: Sometimes this could be better translated as
+#. "%d hit(s) on this page".  Therefore this string
+#. contains plural cases.
+#: ../shell/ev-view.c:1113
 #, c-format
 msgid "%d found on this page"
-msgstr "本頁找到 %d 處"
+msgid_plural "%d found on this page"
+msgstr[0] "本頁找到 %d 處"
 
-#: shell/ev-view.c:940
+#: ../shell/ev-view.c:1125
 msgid "Not found"
 msgstr "沒有找到"
 
-#: shell/ev-view.c:942
+#: ../shell/ev-view.c:1127
 #, c-format
 msgid "%3d%% remaining to search"
-msgstr "%3d%% 尚待搜尋"
+msgstr "還有 %3d%% 尚待搜尋"
 
-#: shell/ev-window.c:284
+#: ../shell/ev-window.c:378
 msgid "Unable to open document"
 msgstr "無法開啟文件"
 
-#: shell/ev-window.c:356
+#: ../shell/ev-window.c:464
 msgid "Document Viewer - Password Required"
-msgstr "文件觀看器 - 需要密碼"
+msgstr "文件檢視器 - 需要密碼"
 
-#: shell/ev-window.c:358
+#: ../shell/ev-window.c:466
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - 需要密碼"
 
-#: shell/ev-window.c:580
+#: ../shell/ev-window.c:757
 #, c-format
 msgid "Unhandled MIME type: '%s'"
-msgstr "無法掌握的 MIME 型態: '%s'"
+msgstr "無法處理的 MIME 型態: '%s'"
 
-#: shell/ev-window.c:649
+#: ../shell/ev-window.c:861
 #, c-format
 msgid "The file could not be saved as \"%s\"."
-msgstr "檔案無法儲存為 \"%s\"。"
+msgstr "檔案無法儲存為 “%s”。"
 
-#: shell/ev-window.c:669
+#: ../shell/ev-window.c:882
 msgid "Save a Copy"
 msgstr "儲存副本"
 
-#: shell/ev-window.c:747
+#: ../shell/ev-window.c:964
 msgid "Print"
 msgstr "列印"
 
-#: shell/ev-window.c:770
+#: ../shell/ev-window.c:987
 msgid "Printing is not supported on this printer."
 msgstr "這台印表機不支援列印。"
 
-#: shell/ev-window.c:773
+#: ../shell/ev-window.c:990
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
 "requires a PostScript printer driver."
 msgstr ""
-"你剛剛試著利用 \"%s\" 驅動器來讓印表機列印。本程式需要一個 PostScript 的印表"
-"機驅動器。"
+"您剛剛試著利用 “%s” 驅動程式來讓印表機列印，可是本程式需要 PostScript 印表機"
+"驅動程式。"
 
-#: shell/ev-window.c:825
+#: ../shell/ev-window.c:1042
 msgid "The \"Find\" feature will not work with this document"
-msgstr "\"尋找\" 功能無法在本文件中作用"
+msgstr "本文件無法使用「尋找」功能"
 
-#: shell/ev-window.c:827
+#: ../shell/ev-window.c:1044
 msgid "Searching for text is only supported for PDF documents."
-msgstr "搜尋文字的功能只支援 PDF 文件。"
+msgstr "只有 PDF 文件支援搜尋文字的功能。"
 
 #. Toolbar-only
-#: shell/ev-window.c:963 shell/ev-window.c:1589
+#: ../shell/ev-window.c:1260 ../shell/ev-window.c:2039
 msgid "Leave Fullscreen"
-msgstr "離開全螢幕"
+msgstr "離開全螢幕模式"
 
-#: shell/ev-window.c:1198
+#: ../shell/ev-window.c:1645
 msgid "Many..."
-msgstr "許多..."
+msgstr "許多人..."
 
-#: shell/ev-window.c:1203
+#: ../shell/ev-window.c:1650
 msgid "Not so many..."
-msgstr "不那麼多..."
+msgstr "不那麼多人..."
 
-#: shell/ev-window.c:1208
+# (Abel) 大致上參考台灣 LUG 的建議
+#: ../shell/ev-window.c:1655
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
 "the Free Software Foundation; either version 2 of the License, or\n"
 "(at your option) any later version.\n"
 msgstr ""
-"Evince 是自由軟體; 你可以依據由「自由軟體基金會」所出版的\n"
-"「GNU 一般公共授權」(不論是該授權的第二版或是任何其它依你\n"
-"所願的後續版本) 來重新散佈或修改它。\n"
+"Evince 是自由軟體，您可以遵照自由軟體基金會 (Free Software Foundation)\n"
+"出版的 GNU 通用公共許可證條款 (GNU General Public License)\n"
+"第二版來修改和重新發佈這一程式，或者自由選擇使用任何更新的版本。\n"
 
-#: shell/ev-window.c:1212
+#: ../shell/ev-window.c:1659
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details.\n"
 msgstr ""
-"Evince 的散佈原因是希望它能夠有所幫助，但是「不提供任何保證」; \n"
+"發佈 Evince 的目的是希望它有用，但不提供任何保證，\n"
 "甚至不暗示任何對於某種特定目的之商業性及適用性。\n"
-"請參閱「GNU 一般公共授權」以獲得更多的細節。\n"
+"更詳細的情況請參閱 GNU 通用公共許可證。\n"
 
-#: shell/ev-window.c:1216
+#: ../shell/ev-window.c:1663
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
-"你應該已經和 Evince 同時收到了一份「GNU 一般公共授權」的副本;\n"
-"如果沒有，請寄信至 Free Software Foundation, Inc.,\n"
-"59 Temple Place, Suite 330, Boston, MA 02111-1307, USA\n"
+"您應該已經和 Evince 一起收到一份 GNU 通用公共許可證的副本。\n"
+"如果還沒有，寫信給：\n"
+"Free Software Foundation, Inc., 59 Temple Place, Suite 330,\n"
+"Boston, MA 02111-1307 USA\n"
 
-#: shell/ev-window.c:1238 shell/main.c:81
+#: ../shell/ev-window.c:1685 ../shell/main.c:82
 msgid "Evince"
 msgstr "Evince"
 
-#: shell/ev-window.c:1241
+#: ../shell/ev-window.c:1688
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 Evince 作者"
 
-#: shell/ev-window.c:1244
+#: ../shell/ev-window.c:1691
 msgid "PostScript and PDF File Viewer."
-msgstr "PostScript 和 PDF 文件觀看器。"
+msgstr "PostScript 和 PDF 文件檢視器。"
 
-#: shell/ev-window.c:1247
+#: ../shell/ev-window.c:1694
 msgid "translator-credits"
-msgstr "翻譯者-榮譽"
+msgstr ""
+"i18n 程式中文化計劃\n"
+"http://i18n.linux.org.tw/\n"
+"\n"
+"Wei-Lun Chao <chaoweilun@pcmail.com.tw>, 2005\n"
+"Abel Cheung <maddog@linuxhall.org>, 2005"
 
-#: shell/ev-window.c:1517
+#: ../shell/ev-window.c:1970
 msgid "_File"
 msgstr "檔案(_F)"
 
-#: shell/ev-window.c:1518
+#: ../shell/ev-window.c:1971
 msgid "_Edit"
 msgstr "編輯(_E)"
 
-#: shell/ev-window.c:1519
+#: ../shell/ev-window.c:1972
 msgid "_View"
-msgstr "查看(_V)"
+msgstr "顯示(_V)"
 
-#: shell/ev-window.c:1520
+#: ../shell/ev-window.c:1973
 msgid "_Go"
-msgstr "跳至(_G)"
+msgstr "前往(_G)"
 
-#: shell/ev-window.c:1521
+#: ../shell/ev-window.c:1974
 msgid "_Help"
-msgstr "輔助(_H)"
+msgstr "求助(_H)"
 
-#: shell/ev-window.c:1525
-#, fuzzy
+#: ../shell/ev-window.c:1978
 msgid "Open an existing document"
 msgstr "開啟現存文件"
 
-#: shell/ev-window.c:1527
+#: ../shell/ev-window.c:1980
 msgid "_Save a Copy..."
-msgstr "儲存副本(_S)"
+msgstr "儲存副本(_S)..."
 
-#: shell/ev-window.c:1528
+#: ../shell/ev-window.c:1981
 msgid "Save the current document with a new filename"
-msgstr "以新檔名儲存目前文件"
+msgstr "以新檔名儲存目前的文件"
 
-#: shell/ev-window.c:1531
+#: ../shell/ev-window.c:1983
+msgid "Print..."
+msgstr "列印..."
+
+#: ../shell/ev-window.c:1984
 msgid "Print this document"
-msgstr "列印目前文件"
+msgstr "列印目前的文件"
 
-#: shell/ev-window.c:1534
+#: ../shell/ev-window.c:1987
 msgid "Close this window"
-msgstr "關閉目前視窗"
+msgstr "關閉目前的視窗"
 
-#: shell/ev-window.c:1539
+#: ../shell/ev-window.c:1992
 msgid "Copy text from the document"
 msgstr "從文件中複製文字"
 
-#: shell/ev-window.c:1541
+#: ../shell/ev-window.c:1994
 msgid "Select _All"
 msgstr "全部選取(_A)"
 
-#: shell/ev-window.c:1542
+#: ../shell/ev-window.c:1995
 msgid "Select the entire page"
 msgstr "選取整頁"
 
-#: shell/ev-window.c:1545
+#: ../shell/ev-window.c:1998
 msgid "Find a word or phrase in the document"
 msgstr "在文件中尋找字詞"
 
-#: shell/ev-window.c:1550
+#: ../shell/ev-window.c:2003
 msgid "Enlarge the document"
 msgstr "放大文件"
 
-#: shell/ev-window.c:1553
+#: ../shell/ev-window.c:2006
 msgid "Shrink the document"
 msgstr "縮小文件"
 
-#: shell/ev-window.c:1556
-msgid "Reset the zoom level to the defaul value"
-msgstr "重置縮放等級至預設值"
+#: ../shell/ev-window.c:2009
+msgid "Reset the zoom level to the default value"
+msgstr "將文件頁面還原至原來尺寸"
 
-#: shell/ev-window.c:1558
-msgid "_Best Fit"
-msgstr "最適大小(_B)"
+#: ../shell/ev-window.c:2011
+msgid "_Reload"
+msgstr "重新載入(_R)"
 
-#: shell/ev-window.c:1559
-msgid "Make the current document fill the window"
-msgstr "使目前文件填滿視窗"
-
-#: shell/ev-window.c:1561
-msgid "Fit Page _Width"
-msgstr "適合頁寬(_W)"
-
-#: shell/ev-window.c:1562
-msgid "Make the current document fill the window width"
-msgstr "使目前文件符合視窗寬度"
+#: ../shell/ev-window.c:2012
+msgid "Reload the document"
+msgstr "重新載入文件"
 
 #. Go menu
-#: shell/ev-window.c:1566
+#: ../shell/ev-window.c:2016
 msgid "_Previous Page"
 msgstr "上一頁(_P)"
 
-#: shell/ev-window.c:1567
+#: ../shell/ev-window.c:2017
 msgid "Go to the previous page"
-msgstr "跳至上一頁"
+msgstr "回到上一頁"
 
-#: shell/ev-window.c:1569
+#: ../shell/ev-window.c:2019
 msgid "_Next Page"
 msgstr "下一頁(_N)"
 
-#: shell/ev-window.c:1570
+#: ../shell/ev-window.c:2020
 msgid "Go to the next page"
-msgstr "跳至下一頁"
+msgstr "前往下一頁"
 
-#: shell/ev-window.c:1572
+#: ../shell/ev-window.c:2022
 msgid "_First Page"
 msgstr "第一頁(_F)"
 
-#: shell/ev-window.c:1573
+#: ../shell/ev-window.c:2023
 msgid "Go to the first page"
-msgstr "跳至第一頁"
+msgstr "回到第一頁"
 
-#: shell/ev-window.c:1575
+#: ../shell/ev-window.c:2025
 msgid "_Last Page"
 msgstr "最後一頁(_L)"
 
-#: shell/ev-window.c:1576
+#: ../shell/ev-window.c:2026
 msgid "Go to the last page"
-msgstr "跳至最後一頁"
+msgstr "前往最後一頁"
 
 #. Help menu
-#: shell/ev-window.c:1580
+#: ../shell/ev-window.c:2030
 msgid "_Contents"
 msgstr "內容(_C)"
 
-#: shell/ev-window.c:1581
+#: ../shell/ev-window.c:2031
 msgid "Display help for the viewer application"
-msgstr "顯示觀看器應用程式的輔助說明"
+msgstr "顯示檢視器的說明文件"
 
-#: shell/ev-window.c:1584
+#: ../shell/ev-window.c:2034
 msgid "_About"
 msgstr "關於(_A)"
 
-#: shell/ev-window.c:1585
+#: ../shell/ev-window.c:2035
 msgid "Display credits for the document viewer creators"
-msgstr "顯示文件觀看器創作者的榮譽"
+msgstr "顯示和文件檢視器有關的開發人員"
 
-#: shell/ev-window.c:1590
+#: ../shell/ev-window.c:2040
 msgid "Leave fullscreen mode"
 msgstr "離開全螢幕模式"
 
 #. View Menu
-#: shell/ev-window.c:1597
+#: ../shell/ev-window.c:2047
 msgid "_Toolbar"
 msgstr "工具列(_T)"
 
-#: shell/ev-window.c:1598
+#: ../shell/ev-window.c:2048
 msgid "Show or hide the toolbar"
 msgstr "顯示或隱藏工具列"
 
-#: shell/ev-window.c:1600
+#: ../shell/ev-window.c:2050
 msgid "_Statusbar"
 msgstr "狀態列(_S)"
 
-#: shell/ev-window.c:1601
+#: ../shell/ev-window.c:2051
 msgid "Show or hide the statusbar"
 msgstr "顯示或隱藏狀態列"
 
-#: shell/ev-window.c:1603
+#: ../shell/ev-window.c:2053
 msgid "Side _pane"
-msgstr "側邊窗格(_P)"
+msgstr "側面窗格(_P)"
 
-#: shell/ev-window.c:1604
+#: ../shell/ev-window.c:2054
 msgid "Show or hide the side pane"
-msgstr "顯示或隱藏側邊窗格"
+msgstr "顯示或隱藏側面窗格"
 
-#: shell/ev-window.c:1606
+#: ../shell/ev-window.c:2056
 msgid "_Fullscreen"
 msgstr "全螢幕(_F)"
 
-#: shell/ev-window.c:1607
+#: ../shell/ev-window.c:2057
 msgid "Expand the window to fill the screen"
 msgstr "將視窗展開為全螢幕"
 
-#: shell/ev-window.c:1612
-msgid "Single"
-msgstr "單一"
+#: ../shell/ev-window.c:2059
+msgid "_Best Fit"
+msgstr "最適大小(_B)"
 
-#: shell/ev-window.c:1613
+#: ../shell/ev-window.c:2060
+msgid "Make the current document fill the window"
+msgstr "令視窗可以顯示整頁頁面"
+
+#: ../shell/ev-window.c:2062
+msgid "Fit Page _Width"
+msgstr "符合頁寬(_W)"
+
+#: ../shell/ev-window.c:2063
+msgid "Make the current document fill the window width"
+msgstr "使目前文件符合視窗寬度"
+
+#: ../shell/ev-window.c:2068
+msgid "Single"
+msgstr "單頁"
+
+#: ../shell/ev-window.c:2069
 msgid "Show the document one page at a time"
 msgstr "一次顯示一頁文件"
 
-#: shell/ev-window.c:1615
+#: ../shell/ev-window.c:2071
 msgid "Multi"
-msgstr "多重"
+msgstr "多頁"
 
-#: shell/ev-window.c:1616
+#: ../shell/ev-window.c:2072
 msgid "Show the full document at once"
 msgstr "一次顯示整份文件"
 
-#: shell/ev-window.c:1637
+#: ../shell/ev-window.c:2108
 msgid "Page"
-msgstr "頁次"
+msgstr "頁數"
 
-#: shell/ev-window.c:1638
+#: ../shell/ev-window.c:2109
 msgid "Select Page"
-msgstr "選取頁次"
+msgstr "選擇頁數"
 
 #. translators: this is the label for toolbar button
-#: shell/ev-window.c:1653
+#: ../shell/ev-window.c:2124
 msgid "Previous"
-msgstr "上一頁"
+msgstr "上頁"
 
-#. translators: this is the label for toolbar button
-#: shell/ev-window.c:1656
+#: ../shell/ev-window.c:2129
 msgid "Next"
-msgstr "下一頁"
+msgstr "下頁"
 
 #. translators: this is the label for toolbar button
-#: shell/ev-window.c:1659
+#: ../shell/ev-window.c:2132
 msgid "Fit Width"
-msgstr "適合頁寬"
+msgstr "符合頁寬"
 
-#: shell/ev-window.c:1838
+#: ../shell/ev-window.c:2325
 msgid "Index"
 msgstr "索引"
 
-#: shell/ev-window.c:1845
+#: ../shell/ev-window.c:2332
 msgid "Thumbnails"
 msgstr "縮圖"
+
+#~ msgid "Error while converting pdf file %s:\n"
+#~ msgstr "轉換 pdf 檔案 %s 時產生錯誤:\n"
+
+#~ msgid "File is not a valid PostScript document."
+#~ msgstr "檔案不是一個合法的 PostScript 文件。"
 
 #~ msgid "Exit Fullscreen"
 #~ msgstr "離開全螢幕"
