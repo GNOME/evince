@@ -23,7 +23,7 @@ AC_PROG_INTLTOOL
 
 GNOME_DEBUG_CHECK
 
-ALL_LINGUAS="ca cs da de en_CA en_GB ja no nb nl pt_BR sv zh_CN"
+ALL_LINGUAS="bg ca cs da de en_CA en_GB ja no nb nl pt_BR sv zh_CN"
 
 AM_GLIB_GNU_GETTEXT
 
