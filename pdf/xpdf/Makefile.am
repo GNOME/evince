@@ -8,6 +8,7 @@ endif
 INCLUDES =					\
 	-I$(top_srcdir)/goo			\
 	-I$(top_srcdir)/ltk			\
+	-DDATADIR=\""$(datadir)"\"            	\
 	$(EXTRA_GLIB_CFLAGS)			\
 	$(EXTRA_GNOME_CFLAGS)
 
@@ -180,4 +181,19 @@ endif
 GOAD_FILES = application-x-pdf.gnorba
 OAF_FILES = application-x-pdf.oafinfo
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(GOAD_FILES) $(OAF_FILES) config.h
+XML_FILES =				\
+	gpdf-ui.xml			\
+	bonobo-application-x-pdf-ui.xml
+
+uidir = $(datadir)/gnome/ui
+ui_DATA = $(XML_FILES)
+
+BUILT_SOURCES=$(XML_FILES:.xml=.h)
+
+%.h : %.xml
+	bonobo-ui-extract $^ > $@
+
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(GOAD_FILES)	\
+             $(OAF_FILES) config.h $(XML_FILES)
+
+

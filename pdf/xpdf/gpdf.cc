@@ -37,7 +37,7 @@ typedef struct _Container Container;
    is due to how much MDI sucks; unutterably */
 struct _Container {
 	BonoboItemContainer *container;
-	BonoboUIHandler     *uih;
+	BonoboUIComponent   *ui_component;
   
 	GtkWidget           *app;
 	GtkWidget           *slot;
@@ -64,40 +64,25 @@ extern "C" {
   static void       container_close_cmd (GtkWidget *widget, Container *container);
   static void       container_exit_cmd  (void);
   static void       container_about_cmd (GtkWidget *widget, Container *container);
+  static void       container_dump_cmd  (GtkWidget *widget, Container *container);
   static Component *container_activate_component (Container *container, char *component_goad_id);
 }
 
 /*
  * The menus.
  */
-static GnomeUIInfo container_file_menu [] = {
-	GNOMEUIINFO_MENU_OPEN_ITEM (container_open_cmd, NULL),
-	GNOMEUIINFO_SEPARATOR,
-	GNOMEUIINFO_MENU_CLOSE_ITEM(container_close_cmd, NULL),
-	GNOMEUIINFO_SEPARATOR,
-	GNOMEUIINFO_MENU_EXIT_ITEM (container_exit_cmd, NULL),
-	GNOMEUIINFO_END
+BonoboUIVerb verbs [] = {
+	BONOBO_UI_UNSAFE_VERB ("FileOpen",  container_open_cmd),
+	BONOBO_UI_UNSAFE_VERB ("FileClose", container_close_cmd),
+	BONOBO_UI_UNSAFE_VERB ("FileExit",  container_exit_cmd),
+
+	BONOBO_UI_UNSAFE_VERB ("HelpAbout", container_about_cmd),
+
+	BONOBO_UI_UNSAFE_VERB ("DebugDumpXml", container_dump_cmd),
+
+	BONOBO_UI_VERB_END
 };
 
-static GnomeUIInfo container_help_menu [] = {
-        GNOMEUIINFO_MENU_ABOUT_ITEM(container_about_cmd, NULL),
-	GNOMEUIINFO_END
-};
-
-static GnomeUIInfo container_main_menu [] = {
-	GNOMEUIINFO_MENU_FILE_TREE (container_file_menu),
-	GNOMEUIINFO_MENU_HELP_TREE (container_help_menu),
-	GNOMEUIINFO_END
-};
-
-static GnomeUIInfo container_toolbar [] = {
-	GNOMEUIINFO_ITEM_STOCK (
-		N_("Open"), N_("Opens an existing workbook"),
-		container_open_cmd, GNOME_STOCK_PIXMAP_OPEN),
-
-	GNOMEUIINFO_SEPARATOR,
-	GNOMEUIINFO_END
-};
 
 extern "C" {
   static gboolean
@@ -303,6 +288,12 @@ extern "C" {
   }
 
 static void
+container_dump_cmd (GtkWidget *widget, Container *container)
+{
+	bonobo_win_dump (BONOBO_WIN (container->app), "on demand");
+}
+
+static void
 container_about_cmd (GtkWidget *widget, Container *container)
 {
   GtkWidget *about;
@@ -343,7 +334,7 @@ container_set_view (Container *container, Component *component)
 	 */
 	view_frame = bonobo_client_site_new_view (
 		component->client_site,
-		bonobo_ui_compat_get_container (container->uih));
+		bonobo_ui_component_get_container (container->ui_component));
 
 	component->view_frame = view_frame;
 
@@ -475,33 +466,6 @@ extern "C" {
       tmp_list = g_list_next (tmp_list);
     }
   }
-
-}  
-
-static void
-container_create_menus (Container *container)
-{
-	BonoboUIHandlerMenuItem *menu_list;
-
-	bonobo_ui_handler_create_menubar (container->uih);
-
-	/*
-	 * Create the basic menus out of UIInfo structures.
-	 */
-	menu_list = bonobo_ui_handler_menu_parse_uiinfo_list_with_data (container_main_menu, container);
-	bonobo_ui_handler_menu_add_list (container->uih, "/", menu_list);
-	bonobo_ui_handler_menu_free_list (menu_list);
-}
-
-static void
-container_create_toolbar (Container *container)
-{
-	BonoboUIHandlerToolbarItem *toolbar;
-
-	bonobo_ui_handler_create_toolbar (container->uih, "pdf");
-	toolbar = bonobo_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
-	bonobo_ui_handler_toolbar_add_list (container->uih, "/pdf/", toolbar);
-	bonobo_ui_handler_toolbar_free_list (toolbar);
 }
 
 static Container *
@@ -513,6 +477,7 @@ container_new (const char *fname)
 	  { "text/uri-list", 0, 0 },
 	};
 	static gint n_drag_types = sizeof (drag_types) / sizeof (drag_types [0]);
+	BonoboUIContainer *ui_container;
 	
 	container = g_new0 (Container, 1);
 
@@ -539,24 +504,26 @@ container_new (const char *fname)
 
 	bonobo_win_set_contents (BONOBO_WIN (container->app),
 				 GTK_WIDGET (container->slot));
+	gtk_widget_show_all (container->slot);
 
 	gtk_object_set_data (GTK_OBJECT (container->app), "container_data", container);
 	gtk_signal_connect  (GTK_OBJECT (container->app), "delete_event",
 			     GTK_SIGNAL_FUNC (container_destroy_cb), container);
 
-	/*
-	 * Create the BonoboUIHandler object which will be used to
-	 * create the container's menus and toolbars.  The UIHandler
-	 * also creates a CORBA server which embedded components use
-	 * to do menu/toolbar merging.
-	 */
-	container->uih = bonobo_ui_handler_new ();
-	bonobo_ui_handler_set_app (container->uih, BONOBO_WIN (container->app));
+	ui_container = bonobo_ui_container_new ();
+	bonobo_ui_container_set_win (ui_container, BONOBO_WIN (container->app));
 
-	container_create_menus   (container);
-	container_create_toolbar (container);
+	container->ui_component = bonobo_ui_component_new ("gpdf");
+	bonobo_ui_component_set_container (
+		container->ui_component,
+		bonobo_object_corba_objref (BONOBO_OBJECT (ui_container)));
 
-	gtk_widget_show_all (container->app);
+	bonobo_ui_component_add_verb_list_with_data (
+		container->ui_component, verbs, container);
+
+	bonobo_ui_util_set_ui (container->ui_component, DATADIR, "gpdf-ui.xml", "gpdf");
+
+	gtk_widget_show (container->app);
 
 	containers = g_list_append (containers, container);
 
@@ -566,7 +533,7 @@ container_new (const char *fname)
 	    return NULL;
 	  }
 
-	gtk_widget_show_all (container->app);
+	gtk_widget_show (container->app);
 
 	return container;
 }
