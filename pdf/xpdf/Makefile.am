@@ -5,6 +5,7 @@ INCLUDES =							\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
 	$(EXTRA_GNOME_CFLAGS)					\
+	$(WARN_CFLAGS)						\
 	$(libpaper_CFLAGS)
 
 if WITH_GNOME
