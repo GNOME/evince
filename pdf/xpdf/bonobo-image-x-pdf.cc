@@ -48,7 +48,7 @@ CORBA_ORB orb;
  * BonoboObject data
  */
 typedef struct {
-  GnomeEmbeddable *embed_obj;
+  GnomeEmbeddable *embeddable;
 
   PDFDoc       *pdf;
   GNOME_Stream  stream; /* To free it later */
@@ -66,6 +66,7 @@ typedef struct {
   double                scale;
   GtkWidget            *drawing_area;
   GdkPixmap            *pixmap;
+  GdkWindow            *win;
   GOutputDev           *out;
   GdkColor              paper;
   gint                  w, h;
@@ -73,7 +74,9 @@ typedef struct {
   gint                  page;
 } view_data_t;
 
-static void realize_drawing_areas (bed_t *bed);
+extern "C" {
+  static void realize_drawing_areas (bed_t *bed);
+}
 
 static void
 redraw_view (view_data_t *view_data, GdkRectangle *rect)
@@ -116,13 +119,6 @@ redraw_view (view_data_t *view_data, GdkRectangle *rect)
 static void
 configure_size (view_data_t *view_data, GdkRectangle *rect)
 {
-/*	ArtPixBuf *pixbuf;
-	
-	if (view_data->scaled)
-		pixbuf = view_data->scaled;
-	else
-		pixbuf = view_data->bed->image;
-*/
   gtk_widget_set_usize (
     view_data->drawing_area,
     view_data->w,
@@ -132,6 +128,7 @@ configure_size (view_data_t *view_data, GdkRectangle *rect)
   rect->y = 0;
   rect->width = view_data->w;
   rect->height = view_data->h;
+  printf ("Set size to %d, %d\n", view_data->w, view_data->h);
 }
 
 static void
@@ -191,31 +188,6 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	/* We need this for later */
 	CORBA_Object_duplicate (stream, &ev);
 	g_return_val_if_fail (ev._major == CORBA_NO_EXCEPTION, 0);
-
-/*	buffer = GNOME_Stream_iobuf__alloc ();
-	length = GNOME_Stream_length (stream, &ev);
-
-	name = tempnam (NULL, "xpdf-hack");
-	if (!name)
-	  return -1;
-	hack = fopen (name, "wb+");
-	if (!hack)
-	  return -1;
-
-	while (length > 0) {
-	  guint getlen;
-	  if (length > 128)
-	    getlen = 128;
-	  else
-	    getlen = length;
-	  GNOME_Stream_read (stream, getlen, &buffer, &ev);
-	  fwrite (buffer->_buffer, 1, buffer->_length, hack);
-	  length -= buffer->_length;
-	}
-
-	fclose (hack);
-
-	CORBA_free (buffer);*/
 
 	printf ("Loading PDF from persiststream\n");
 	bed->stream = stream;
@@ -307,24 +279,89 @@ setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window)
 }
 
 extern "C" {
+  static void
+  view_color_select_cb (GnomeUIHandler *uih, void *data, char *path)
+  {
+    view_data_t *view_data = (view_data_t *) data;
+
+    printf ("path '%s'\n", path);
+  }
+}
+
+static void
+view_create_menus (view_data_t *view_data)
+{
+  GNOME_UIHandler remote_uih;
+  GnomeView *view = view_data->view;
+  GnomeUIHandler *uih;
+  
+  uih = gnome_view_get_ui_handler (view);
+  remote_uih = gnome_view_get_remote_ui_handler (view);
+  
+  if (remote_uih == CORBA_OBJECT_NIL) {
+    g_warning ("server has no UI hander");
+    return;
+  }
+  
+  gnome_ui_handler_set_container (uih, remote_uih);
+
+  gnome_ui_handler_menu_new_subtree (uih, "/Colors",
+				     N_("Select drawing color..."),
+				     N_("Set the current drawing color"),
+				     1,
+				     GNOME_UI_HANDLER_PIXMAP_NONE, NULL,
+				     0, 0);
+  gnome_ui_handler_menu_new_radiogroup (uih, "/Colors/color radiogroup");
+  
+  gnome_ui_handler_menu_new_radioitem (uih, "/Colors/color radiogroup/White",
+				       N_("White"),
+				       N_("Set the current drawing color to white"),
+				       -1,
+				       0, (GdkModifierType) 0,
+				       view_color_select_cb, (gpointer) view_data);
+  
+  gnome_ui_handler_menu_new_radioitem (uih, "/Colors/color radiogroup/Red",
+				       N_("Red"),
+				       N_("Set the current drawing color to red"),
+				       -1, 
+				       0, (GdkModifierType) 0,
+				       view_color_select_cb, (gpointer) view_data);
+  
+  gnome_ui_handler_menu_new_radioitem (uih, "/Colors/color radiogroup/Green",
+				       N_("Green"),
+				       N_("Set the current drawing color to green"),
+				       -1,
+				       0, (GdkModifierType) 0,
+				       view_color_select_cb, (gpointer) view_data);
+}
+
+/*
+ * When this view is deactivated, we must remove our menu items.
+ */
+static void
+view_remove_menus (view_data_t *view_data)
+{
+	GnomeView *view = view_data->view;
+	GnomeUIHandler *uih;
+
+	uih = gnome_view_get_ui_handler (view);
+
+	gnome_ui_handler_unset_container (uih);
+}
+
+extern "C" {
 
   static void
   drawing_area_realize (GtkWidget *drawing_area, view_data_t *view_data)
   {
     g_return_if_fail (view_data != NULL);
     g_return_if_fail (view_data->bed != NULL);
-    g_return_if_fail (view_data->bed->pdf != NULL);
 
-    if (!view_data->pixmap) {
-      GdkWindow *win = gtk_widget_get_parent_window (drawing_area);
-      GdkRectangle tmp;
-      
-      g_return_if_fail (win);
-      
-      view_data->pixmap = setup_pixmap (view_data->bed, view_data, win);
-      view_data->bed->pdf->displayPage(view_data->out, view_data->page, view_data->zoom, 0, gTrue);
-
-      configure_size (view_data, &tmp);
+    view_data->win = gtk_widget_get_parent_window (drawing_area);
+    if (!view_data->bed->pdf ||
+	!view_data->pixmap) {
+      g_warning ("Failed to setup pixmap");
+      return;
     }
   }
 
@@ -335,32 +372,99 @@ extern "C" {
 	!view_data->bed->pdf)
       return TRUE;
     
-/* Hoisted from view_factory: ugly */
     redraw_view (view_data, &event->area);
     
     return TRUE;
   }
-}
 
-static void
-realize_drawing_areas (bed_t *bed)
-{
-  GList *l;
-  
-  for (l = bed->views; l; l = l->next){
-    GdkRectangle rect;
-    view_data_t *view_data = (view_data_t *)l->data;
+  static void
+  view_activate (GnomeView *view, gboolean activate, gpointer data)
+  {
+    view_data_t *view_data = (view_data_t *) data;
+    
+    gnome_view_activate_notify (view, activate);
+    
+    /*
+     * If we were just activated, we merge in our menu entries.
+     * If we were just deactivated, we remove them.
+     */
+    if (activate)
+      view_create_menus (view_data);
+    else
+      view_remove_menus (view_data);
+  }
 
-    drawing_area_realize (view_data->drawing_area, view_data);
-  }  
+  static void
+  view_size_query (GnomeView *view, int *desired_width, int *desired_height,
+		   gpointer data)
+  {
+    view_data_t *view_data = (view_data_t *) data;
+    
+    *desired_width  = view_data->w;
+    *desired_height = view_data->h;
+  }
+
+  static void
+  render_page (view_data_t *view_data)
+  {
+    view_data->pixmap = setup_pixmap (view_data->bed, view_data,
+				      view_data->win);
+    view_data->bed->pdf->displayPage(view_data->out,
+				     view_data->page, view_data->zoom,
+				     0, gTrue);
+  }
+
+  static void
+  realize_drawing_areas (bed_t *bed)
+  {
+    GList *l;
+    
+    for (l = bed->views; l; l = l->next) {
+      GdkRectangle rect;
+      view_data_t *view_data = (view_data_t *)l->data;
+      g_return_if_fail (view_data->win);
+      render_page (view_data);
+      configure_size (view_data, &rect);
+    }  
+  }
+
+  static void
+  view_switch_page (GnomeView *view, const char *verb_name, void *user_data)
+  {
+    view_data_t  *view_data = (view_data_t *) user_data;
+    GdkRectangle  rect;
+    gboolean      changed = FALSE;
+
+    if (!g_strcasecmp (verb_name, "nextpage")) {
+      printf ("next page\n");
+      if (view_data->page < view_data->bed->pdf->getNumPages()) {
+	view_data->page++;
+	changed = TRUE;
+      }
+    } else if (!g_strcasecmp (verb_name, "prevpage")) {
+      printf ("previous page\n");
+      if (view_data->page > 1) {
+	view_data->page--;
+	changed = TRUE;
+      }
+    } else
+      g_warning ("Unknown verb");
+
+    if (changed) {
+      render_page (view_data);
+      redraw_view (view_data, &rect);
+      gtk_widget_queue_draw (GTK_WIDGET (view_data->drawing_area));
+    }
+  }
 }
 
 static GnomeView *
-view_factory (GnomeEmbeddable *embed_obj,
+view_factory (GnomeEmbeddable *embeddable,
 	      const GNOME_ViewFrame view_frame,
 	      void *data)
 {
         GnomeView *view;
+	GnomeUIHandler *uih;
 	bed_t *bed = (bed_t *)data;
 	view_data_t *view_data = g_new (view_data_t, 1);
 
@@ -370,6 +474,7 @@ view_factory (GnomeEmbeddable *embed_obj,
 	view_data->bed    = bed;
 	view_data->drawing_area = gtk_drawing_area_new ();
 	view_data->pixmap = NULL;
+	view_data->win    = NULL;
 	view_data->out    = NULL;
 	view_data->w      = 320;
 	view_data->h      = 320;
@@ -396,15 +501,31 @@ view_factory (GnomeEmbeddable *embed_obj,
 		GTK_OBJECT (view), "destroy",
 		GTK_SIGNAL_FUNC (destroy_view), view_data);
 
+	/* UI handling */
+	uih = gnome_ui_handler_new ();
+	gnome_view_set_ui_handler (view, uih);
+
+	gtk_signal_connect (GTK_OBJECT (view), "view_activate",
+			    GTK_SIGNAL_FUNC (view_activate), view_data);
+
+	gtk_signal_connect (GTK_OBJECT (view), "size_query",
+			    GTK_SIGNAL_FUNC (view_size_query), view_data);
+
 	bed->views = g_list_prepend (bed->views, view_data);
+
+	/* Verb handling */
+	gnome_view_register_verb (view, "NextPage",
+				  view_switch_page, view_data);
+	gnome_view_register_verb (view, "PrevPage",
+				  view_switch_page, view_data);
 
         return view;
 }
 
 static GnomeObject *
-embed_obj_factory (GnomeEmbeddableFactory *This, void *data)
+embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 {
-	GnomeEmbeddable *embed_obj;
+	GnomeEmbeddable *embeddable;
 	GnomePersistStream *stream;
 	bed_t *bed = (bed_t *)data;
 
@@ -416,8 +537,8 @@ embed_obj_factory (GnomeEmbeddableFactory *This, void *data)
 	/*
 	 * Creates the BonoboObject server
 	 */
-	embed_obj = gnome_embeddable_new (view_factory, bed);
-	if (embed_obj == NULL){
+	embeddable = gnome_embeddable_new (view_factory, bed);
+	if (embeddable == NULL){
 		g_free (bed);
 		return NULL;
 	}
@@ -431,23 +552,35 @@ embed_obj_factory (GnomeEmbeddableFactory *This, void *data)
 					   load_image_from_stream,
 					   save_image,
 					   bed);
-	if (stream == NULL){
-		gtk_object_unref (GTK_OBJECT (embed_obj));
+	if (stream == NULL) {
+		gtk_object_unref (GTK_OBJECT (embeddable));
 		g_free (bed);
 		return NULL;
 	}
 
-	bed->embed_obj = embed_obj;
+	bed->embeddable = embeddable;
 
 	/*
 	 * Bind the interfaces
 	 */
-	gnome_object_add_interface (GNOME_OBJECT (embed_obj),
+	gnome_object_add_interface (GNOME_OBJECT (embeddable),
 				    GNOME_OBJECT (stream));
 	gtk_signal_connect (
-	  GTK_OBJECT (embed_obj), "destroy",
+	  GTK_OBJECT (embeddable), "destroy",
 	  GTK_SIGNAL_FUNC (destroy_embed), bed);
-	return (GnomeObject *) embed_obj;
+
+
+	/* Setup some verbs */
+	gnome_embeddable_add_verb (embeddable,
+				   "NextPage",
+				   _("_Next page"),
+				   _("goto the next page"));
+	gnome_embeddable_add_verb (embeddable,
+				   "PrevPage",
+				   _("_Previous page"),
+				   _("goto the previous page"));
+	
+	return (GnomeObject *) embeddable;
 }
 
 static void
@@ -457,7 +590,7 @@ init_bonobo_image_x_png_factory (void)
 	
 	factory = gnome_embeddable_factory_new (
 		"bonobo-object-factory:image-x-pdf",
-		embed_obj_factory, NULL);
+		embeddable_factory, NULL);
 }
 
 static void
@@ -474,21 +607,20 @@ init_server_factory (int argc, char **argv)
 int
 main (int argc, char *argv [])
 {
-	CORBA_exception_init (&ev);
-
-	init_server_factory (argc, argv);
-	init_bonobo_image_x_png_factory ();
-
-	errorInit();
-
-	initParams (xpdfConfigFile); /* Init font path */
-
-	gtk_widget_set_default_colormap (gdk_rgb_get_cmap ());
-	gtk_widget_set_default_visual (gdk_rgb_get_visual ());
-	gtk_main ();
-	
-	CORBA_exception_free (&ev);
-
-	return 0;
+  CORBA_exception_init (&ev);
+  
+  init_server_factory (argc, argv);
+  init_bonobo_image_x_png_factory ();
+  
+  errorInit();
+  
+  initParams (xpdfConfigFile); /* Init font path */
+  
+  gtk_widget_set_default_colormap (gdk_rgb_get_cmap ());
+  gtk_widget_set_default_visual (gdk_rgb_get_visual ());
+  gtk_main ();
+  
+  CORBA_exception_free (&ev);
+  
+  return 0;
 }
-      
