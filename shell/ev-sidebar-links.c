@@ -36,17 +36,26 @@
 struct _EvSidebarLinksPrivate {
 	GtkWidget *tree_view;
 
+	/* Keep these ids around for blocking */
+	guint selection_id;
+	guint page_changed_id;
+
 	EvJobLinks *job;
 	GtkTreeModel *model;
 	EvDocument *document;
+	EvPageCache *page_cache;
 };
 
 
-static void links_page_num_func (GtkTreeViewColumn *tree_column,
-				 GtkCellRenderer   *cell,
-				 GtkTreeModel      *tree_model,
-				 GtkTreeIter       *iter,
-				 gpointer           data);
+static void links_page_num_func  (GtkTreeViewColumn *tree_column,
+				  GtkCellRenderer   *cell,
+				  GtkTreeModel      *tree_model,
+				  GtkTreeIter       *iter,
+				  gpointer           data);
+static void update_page_callback (EvPageCache       *page_cache,
+				  gint               current_page,
+				  EvSidebarLinks    *sidebar_links);
+
 
 G_DEFINE_TYPE (EvSidebarLinks, ev_sidebar_links, GTK_TYPE_VBOX)
 
@@ -91,7 +100,6 @@ selection_changed_cb (GtkTreeSelection   *selection,
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		EvLink *link;
-		EvPageCache *page_cache;
 
 		gtk_tree_model_get (model, &iter,
 				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
@@ -100,8 +108,11 @@ selection_changed_cb (GtkTreeSelection   *selection,
 		if (link == NULL)
 			return;
 
-		page_cache = ev_document_get_page_cache (document);
-		ev_page_cache_set_link (page_cache, link);
+		g_signal_handler_block (ev_sidebar_links->priv->page_cache,
+					ev_sidebar_links->priv->page_changed_id);
+		ev_page_cache_set_link (ev_sidebar_links->priv->page_cache, link);
+		g_signal_handler_unblock (ev_sidebar_links->priv->page_cache,
+					  ev_sidebar_links->priv->page_changed_id);
 	}
 }
 
@@ -243,9 +254,65 @@ ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
 	if (priv->document) {
 		g_object_unref (priv->document);
 		priv->document = NULL;
+		priv->page_cache = NULL;
 	}
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), NULL);
+}
+
+static gboolean
+update_page_callback_foreach (GtkTreeModel *model,
+			      GtkTreePath  *path,
+			      GtkTreeIter  *iter,
+			      gpointer      data)
+{
+	EvSidebarLinks *sidebar_links = (data);
+	EvLink *link;
+
+	gtk_tree_model_get (model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+	if (link && ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+		int current_page;
+
+		current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
+		if (ev_link_get_page (link) == current_page) {
+			GtkTreeSelection *selection;
+
+			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+
+			gtk_tree_selection_select_path (selection, path);
+
+			return TRUE;
+		}
+	}
+	
+	return FALSE;
+}
+
+static void
+update_page_callback (EvPageCache    *page_cache,
+		      gint            current_page,
+		      EvSidebarLinks *sidebar_links)
+{
+	GtkTreeSelection *selection;
+	/* We go through the tree linearly looking for the first page that
+	 * matches.  This is pretty inefficient.  We can do something neat with
+	 * a GtkTreeModelSort here to make it faster, if it turns out to be
+	 * slow.
+	 */
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+
+	g_signal_handler_block (selection, sidebar_links->priv->selection_id);
+
+	gtk_tree_selection_unselect_all (selection);
+	gtk_tree_model_foreach (sidebar_links->priv->model,
+				update_page_callback_foreach,
+				sidebar_links);
+
+	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
 }
 
 static void
@@ -276,9 +343,16 @@ job_finished_cb (EvJobLinks     *job,
 	
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-	g_signal_connect (selection, "changed",
-			  G_CALLBACK (selection_changed_cb),
-			  sidebar_links);
+	priv->selection_id = g_signal_connect (selection, "changed",
+					       G_CALLBACK (selection_changed_cb),
+					       sidebar_links);
+	priv->page_changed_id = g_signal_connect (priv->page_cache, "page-changed",
+						  G_CALLBACK (update_page_callback),
+						  sidebar_links);
+	update_page_callback (priv->page_cache,
+			      ev_page_cache_get_current_page (priv->page_cache),
+			      sidebar_links);
+
 }
 
 void
@@ -295,6 +369,7 @@ ev_sidebar_links_set_document (EvSidebarLinks *sidebar_links,
 	g_object_ref (document);
 
 	priv->document = document;
+	priv->page_cache = ev_document_get_page_cache (document);
 
 	priv->job = ev_job_links_new (document);
 	g_signal_connect (priv->job,
