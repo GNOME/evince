@@ -788,7 +788,7 @@ ev_view_zoom (EvView   *view,
 
 	ev_document_set_scale (view->document, view->scale);
 
-	gtk_widget_queue_draw (GTK_WIDGET (view));
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 void
