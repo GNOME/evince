@@ -25,6 +25,7 @@
 #include "ev-document-find.h"
 #include "gpdf-g-switch.h"
 #include "ev-document-bookmarks.h"
+#include "ev-document-misc.h"
 #include "ev-document-thumbnails.h"
 
 #include "GlobalParams.h"
@@ -1023,8 +1024,6 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 	GDKSplashOutputDev *output;
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *shadow;
-	gint rowstride;
-	guchar *data;
 
 	pixmap = gdk_pixmap_new (pdf_document->target,
 				 width, height, -1);
@@ -1050,31 +1049,9 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 	gdk_drawable_unref (pixmap);
 	delete output;
 
-	shadow = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
-				 TRUE, 8,
-				 width + 4,
-				 height + 4);
-	gdk_pixbuf_fill (shadow, 0x000000ff);
-	gdk_pixbuf_copy_area (pixbuf, 0, 0,
-			      width,
-			      height,
-			      shadow,
-			      1, 1);
+	shadow = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
 	g_object_unref (pixbuf);
 
-	/* Add the corner */
-	data = gdk_pixbuf_get_pixels (shadow);
-	rowstride = gdk_pixbuf_get_rowstride (shadow);
-	data [(width + 2) * 4 + 3] = 0;
-	data [(width + 3) * 4 + 3] = 0;
-	data [(width + 2) * 4 + (rowstride * 1) + 3] = 0;
-	data [(width + 3) * 4 + (rowstride * 1) + 3] = 0;
-
-	data [(height + 2) * rowstride + 3] = 0;
-	data [(height + 3) * rowstride + 3] = 0;
-	data [(height + 2) * rowstride + 4 + 3] = 0;
-	data [(height + 3) * rowstride + 4 + 3] = 0;
-	
 	return shadow;
 }
 
@@ -1089,10 +1066,16 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	Object the_thumb;
 	Thumb *thumb = NULL;
 	gboolean have_ethumbs = FALSE;
+	gdouble page_ratio;
+	gint dest_height;
 
 	/* getPage seems to want page + 1 for some reason; */
 	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
 	the_page->getThumb(&the_thumb);
+
+	page_ratio = the_page->getHeight () / the_page->getWidth ();
+	dest_height = (gint) (width * page_ratio);
+
 
 	if (!(the_thumb.isNull () || the_thumb.isNone())) {
 		/* Build the thumbnail object */
@@ -1107,7 +1090,6 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		GdkPixbuf *tmp_pixbuf;
 
 		data = thumb->getPixbufData();
-		/* FISME: scale the image if it's not an appropriate size */
 		tmp_pixbuf = gdk_pixbuf_new_from_data (data,
 						       GDK_COLORSPACE_RGB,
 						       FALSE,
@@ -1116,24 +1098,19 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 						       thumb->getHeight (),
 						       thumb->getWidth () * 3,
 						       NULL, NULL);
-
-		thumbnail = tmp_pixbuf;
+		/* FIXME: do we want to check that the thumb's size isn't ridiculous?? */
+		thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
+		g_object_unref (tmp_pixbuf);
 	} else {
-		gdouble page_ratio;
 		gdouble scale_factor;
-		gint dest_height;
 
-		page_ratio = the_page->getHeight () / the_page->getWidth ();
 		scale_factor = (gdouble)width / the_page->getWidth ();
-		dest_height = (gint) (width * page_ratio);
 
 		thumbnail = pdf_document_thumbnails_get_page_pixbuf (pdf_document,
 								     scale_factor,
 								     page,
 								     width,
 								     dest_height);
-
-		/* FIXME: Actually get the image... */
 	}
 
 	return thumbnail;

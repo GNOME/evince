@@ -33,7 +33,7 @@
 #include "ev-document-thumbnails.h"
 #include "ev-utils.h"
 
-#define THUMBNAIL_WIDTH 96
+#define THUMBNAIL_WIDTH 75
 /* Amount of time we devote to each iteration of the idle, in microseconds */
 #define IDLE_WORK_LENGTH 5000
 
@@ -96,6 +96,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	GtkWidget *swindow;
 	EvSidebarThumbnailsPrivate *priv;
+	GtkCellRenderer *renderer;
 
 	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
 
@@ -103,12 +104,17 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->list_store));
 
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
+	renderer = g_object_new (GTK_TYPE_CELL_RENDERER_PIXBUF,
+				 "xpad", 2,
+				 "ypad", 2,
+				 NULL);
 	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
-						     NULL, gtk_cell_renderer_pixbuf_new (),
-						     "pixbuf", 1, NULL);
+						     NULL, renderer,
+						     "pixbuf", 1,
+						     NULL);
 	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
 						     NULL, gtk_cell_renderer_text_new (),
-						     "text", 0, NULL);
+						     "markup", 0, NULL);
 	
 	g_object_unref (priv->list_store);
 
@@ -138,20 +144,13 @@ static gboolean
 do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
-	GdkPixbuf *tmp, *pixbuf;
+	GdkPixbuf *pixbuf;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 
-	tmp = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
-						    priv->current_page, THUMBNAIL_WIDTH);
+	pixbuf = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
+						       priv->current_page, THUMBNAIL_WIDTH);
 
-#if 0
-	/* Don't add the shadow for now, as it's really slow */
-	pixbuf = g_object_ref (tmp);
-#else
-	/* Add shadow */
-	pixbuf = ev_pixbuf_add_shadow (tmp, 5, 0, 0, 0.5);
-#endif
 	path = gtk_tree_path_new_from_indices (priv->current_page, -1);
 	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
 	gtk_tree_path_free (path);
@@ -160,7 +159,6 @@ do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 			    COLUMN_PIXBUF, pixbuf,
 			    -1);
 
-	g_object_unref (tmp);
 	g_object_unref (pixbuf);
 	
 	priv->current_page++;
@@ -229,7 +227,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 		GtkTreeIter iter;
 		gchar *page;
 
-		page = g_strdup_printf ("Page %d", i + 1);
+		page = g_strdup_printf ("<i>%d</i>", i + 1);
 		gtk_list_store_append (sidebar_thumbnails->priv->list_store,
 				       &iter);
 		gtk_list_store_set (sidebar_thumbnails->priv->list_store,

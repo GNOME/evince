@@ -21,6 +21,8 @@ libevbackend_la_SOURCES=			\
 	ev-document-find.h			\
 	ev-ps-exporter.c			\
 	ev-ps-exporter.h			\
+	ev-document-misc.h			\
+	ev-document-misc.c			\
 	$(NULL)
 
 BUILT_SOURCES=				\
