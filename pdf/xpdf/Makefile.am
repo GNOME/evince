@@ -93,6 +93,8 @@ libxpdf_la_SOURCES =		\
 	NameToUnicodeTable.h	\
 	GDKSplashOutputDev.cc   \
 	GDKSplashOutputDev.h    \
+	PSOutputDev.cc		\
+	PSOutputDev.h		\
 	TextOutputDev.cc	\
 	TextOutputDev.h		\
 	UTF8.h

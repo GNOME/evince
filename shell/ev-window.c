@@ -377,8 +377,9 @@ ev_window_print (EvWindow *ev_window)
 		}
 
 		print_job = g_object_new (EV_TYPE_PRINT_JOB,
+					  "gnome_print_job", job,
 					  "document", ev_window->priv->document,
-					  "print-dialog", print_dialog,
+					  "print_dialog", print_dialog,
 					  NULL);
 		break;
 	}

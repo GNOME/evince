@@ -19,11 +19,13 @@
 
 #include "gpdf-g-switch.h"
 #include "pdf-document.h"
+#include "ev-ps-exporter.h"
 #include "gpdf-g-switch.h"
 
 #include "GlobalParams.h"
 #include "GDKSplashOutputDev.h"
 #include "PDFDoc.h"
+#include "PSOutputDev.h"
 
 typedef struct _PdfDocumentClass PdfDocumentClass;
 
@@ -47,16 +49,22 @@ struct _PdfDocument
 	GdkDrawable *target;
 
 	GDKSplashOutputDev *out;
+	PSOutputDev *ps_out;
 	PDFDoc *doc;
 
 	gboolean page_valid;
 };
 
 static void pdf_document_document_iface_init (EvDocumentIface *iface);
+static void pdf_document_ps_exporter_iface_init (EvPSExporterIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
-                         { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-						  pdf_document_document_iface_init) });
+                         {
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
+							pdf_document_document_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
+							pdf_document_ps_exporter_iface_init);
+			 });
 
 static gboolean
 document_validate_page (PdfDocument *pdf_document)
@@ -355,6 +363,38 @@ pdf_document_end_find (EvDocument   *document)
 }
 
 static void
+pdf_document_ps_export_begin (EvPSExporter *exporter, const char *filename)
+{
+	PdfDocument *document = PDF_DOCUMENT (exporter);
+
+	if (document->ps_out)
+		delete document->ps_out;
+
+	document->ps_out = new PSOutputDev ((char *)filename, document->doc->getXRef(),
+					    document->doc->getCatalog(), 1,
+					    ev_document_get_n_pages (EV_DOCUMENT (document)),
+					    psModePS);	
+}
+
+static void
+pdf_document_ps_export_do_page (EvPSExporter *exporter, int page)
+{
+	PdfDocument *document = PDF_DOCUMENT (exporter);
+
+	document->doc->displayPage (document->ps_out, page,
+				    72.0, 72.0, 0, gTrue, gFalse);
+}
+
+static void
+pdf_document_ps_export_end (EvPSExporter *exporter)
+{
+	PdfDocument *document = PDF_DOCUMENT (exporter);
+
+	delete document->ps_out;
+	document->ps_out = NULL;
+}
+
+static void
 pdf_document_finalize (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (object);
@@ -364,6 +404,8 @@ pdf_document_finalize (GObject *object)
 
 	if (pdf_document->out)
 		delete pdf_document->out;
+	if (pdf_document->ps_out)
+		delete pdf_document->ps_out;
 	if (pdf_document->doc)
 		delete pdf_document->doc;
 
@@ -391,6 +433,14 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->render = pdf_document_render;
         iface->begin_find = pdf_document_begin_find;
         iface->end_find = pdf_document_end_find;
+}
+
+static void
+pdf_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+{
+	iface->begin = pdf_document_ps_export_begin;
+	iface->do_page = pdf_document_ps_export_do_page;
+	iface->end = pdf_document_ps_export_end;
 }
 
 static void

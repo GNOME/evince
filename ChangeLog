@@ -1,3 +1,20 @@
+2004-12-23  Martin Kretzschmar  <martink@gnome.org>
+
+	* shell/ev-window.c (ev_window_print): add GnomePrintJob to
+	EvPrintJob constructor arguments.
+
+	* backend/ev-ps-exporter.c, backend/ev-ps-exporter.h: interface
+	for documents that can export PostScript (page by page).
+
+	* backend/Makefile.am (libevbackend_la_SOURCES): add them.
+	
+	* pdf/xpdf/pdf-document.cc (pdf_document_ps_export_begin)
+	(pdf_document_ps_export_do_page, pdf_document_ps_export_end)
+	(pdf_document_ps_exporter_iface_init:
+	Implement EvPSExporter.
+
+	* pdf/xpdf/Makefile.am (libxpdf_la_SOURCES): build PSOutputDev.
+
 2004-12-22  Anders Carlsson  <andersca@gnome.org>
 
 	* backend/Makefile.am:
