@@ -1045,16 +1045,16 @@ pdf_document_get_link (EvDocument *document, int x, int y)
 		return NULL;
 	}
 
-	/* Zoom */
-	link_x = x / pdf_document->scale;
-	link_y = y / pdf_document->scale;
-
 	/* Offset */
-	link_x -= pdf_document->page_x_offset;
-	link_y -= pdf_document->page_y_offset;
+	link_x = x - pdf_document->page_x_offset;
+	link_y = y - pdf_document->page_y_offset;
 
 	/* Inverse y */
 	link_y = pdf_document->out->getBitmapHeight() - link_y;
+
+	/* Zoom */
+	link_x = link_x / pdf_document->scale;
+	link_y = link_y / pdf_document->scale;
 
 	action = pdf_document->links->find (link_x, link_y);
 	
