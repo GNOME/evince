@@ -1,5 +1,15 @@
 2002-09-14  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
+	* gpdf-embeddable-view.cc (destroy_view): kill already commented
+	out, previously unused destructor
+	(gev_destroy): set mainbox member = NULL
+
+	* pdf-view.cc (pv_destroy): new destructor
+	(class_init): use it, init parent_class
+	(pdf_view_construct): reindent
+
+2002-09-14  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
 	* gpdf-embeddable-view.h (GPdfEmbeddableView): kill bed member
 
 	* gpdf-embeddable-view.cc: removed newlines from g_message calls
