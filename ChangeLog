@@ -1,5 +1,8 @@
 2005-01-22  Martin Kretzschmar  <martink@gnome.org>
 
+	* shell/ev-window.c (update_window_title): empty titles are
+	useless, use filename in that case too.
+
 	* NEWS: Add some content.
 
 2005-01-21  Bryan Clark  <clarkbw@cvs.gnome.org>

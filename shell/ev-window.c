@@ -335,7 +335,7 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	} else {
 		title = ev_document_get_title (document);
 
-		if (title == NULL) {
+		if (title == NULL || (title && strlen (title) == 0)) {
 			title = g_path_get_basename (ev_window->priv->uri);
 		}
 	}
