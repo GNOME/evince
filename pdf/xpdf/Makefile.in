@@ -112,7 +112,7 @@ INCLUDES =  	-I$(top_srcdir)/goo		-I$(top_srcdir)/ltk		-DGPDF_GLADE_DIR=\""$(gla
 
 bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
 
-common_sources =  	Array.cc 			Catalog.cc 			Dict.cc 			Error.cc 			FontEncoding.cc			FontEncoding.h			FontFile.cc			FontFile.h			FontInfo.h			Gfx.cc 				GfxFont.cc 			GfxState.cc			Lexer.cc 			Link.cc 			Object.cc 			OutputDev.cc 			Page.cc 			Params.cc 			Parser.cc 			PDFDoc.cc 			Stream.cc 			TextOutputDev.cc		XRef.cc
+common_sources =  	Array.cc 			BaseFile.h			Catalog.cc 			Dict.cc 			Error.cc 			FontEncoding.cc			FontEncoding.h			FontFile.cc			FontFile.h			FontInfo.h			Gfx.cc 				GfxFont.cc 			GfxState.cc			Lexer.cc 			Link.cc 			Object.cc 			OutputDev.cc 			Page.cc 			Params.cc 			Parser.cc 			PDFDoc.cc 			Stream.cc 			TextOutputDev.cc		XRef.cc
 
 
 gpdf_CFLAGS = 
@@ -123,7 +123,10 @@ gpdf_SOURCES =  	$(common_sources)		GOutputDev.cc			gpdf.cc
 gpdf_LDADD =  	$(EXTRA_GNOME_LIBS)		../goo/libgoo.a
 
 
-bonobo_image_x_pdf_SOURCES =  	$(common_sources)		GOutputDev.cc			bonobo-image-x-pdf.cc
+bonobo_image_x_pdf_SOURCES =  	$(common_sources)		BonoboFile.h			BonoboFile.cc			GOutputDev.cc			bonobo-image-x-pdf.cc
+
+
+bonobo_image_x_pdf_CFLAGS =  	-DBONOBO_IO
 
 
 bonobo_image_x_pdf_LDADD =  	../goo/libgoo.a			$(GTK_LIBS)			$(GNOME_LIBDIR)			-lbonobo			$(GNOMEGNORBA_LIBS)		$(INTLLIBS)
@@ -227,7 +230,7 @@ xpdf_LDFLAGS =
 bonobo_image_x_pdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o \
 FontEncoding.o FontFile.o Gfx.o GfxFont.o GfxState.o Lexer.o Link.o \
 Object.o OutputDev.o Page.o Params.o Parser.o PDFDoc.o Stream.o \
-TextOutputDev.o XRef.o GOutputDev.o bonobo-image-x-pdf.o
+TextOutputDev.o XRef.o BonoboFile.o GOutputDev.o bonobo-image-x-pdf.o
 bonobo_image_x_pdf_DEPENDENCIES =  ../goo/libgoo.a
 bonobo_image_x_pdf_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
@@ -249,11 +252,11 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = gtar
 GZIP_ENV = --best
-DEP_FILES =  .deps/Array.P .deps/Catalog.P .deps/Dict.P .deps/Error.P \
-.deps/FontEncoding.P .deps/FontFile.P .deps/GOutputDev.P .deps/Gfx.P \
-.deps/GfxFont.P .deps/GfxState.P .deps/ImageOutputDev.P \
-.deps/LTKOutputDev.P .deps/Lexer.P .deps/Link.P .deps/Object.P \
-.deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
+DEP_FILES =  .deps/Array.P .deps/BonoboFile.P .deps/Catalog.P \
+.deps/Dict.P .deps/Error.P .deps/FontEncoding.P .deps/FontFile.P \
+.deps/GOutputDev.P .deps/Gfx.P .deps/GfxFont.P .deps/GfxState.P \
+.deps/ImageOutputDev.P .deps/LTKOutputDev.P .deps/Lexer.P .deps/Link.P \
+.deps/Object.P .deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
 .deps/PSOutputDev.P .deps/Page.P .deps/Params.P .deps/Parser.P \
 .deps/Stream.P .deps/TextOutputDev.P .deps/XOutputDev.P .deps/XRef.P \
 .deps/bonobo-image-x-pdf.P .deps/gpdf.P .deps/pdfimages.P \

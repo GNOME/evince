@@ -13,8 +13,9 @@ endif
 
 bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
 
-common_sources =			\
+common_sources =		\
 	Array.cc 		\
+	BaseFile.h		\
 	Catalog.cc 		\
 	Dict.cc 		\
 	Error.cc 		\
@@ -51,8 +52,13 @@ gpdf_LDADD =			\
 
 bonobo_image_x_pdf_SOURCES =	\
 	$(common_sources)	\
+	BonoboFile.h		\
+	BonoboFile.cc		\
 	GOutputDev.cc		\
 	bonobo-image-x-pdf.cc
+
+bonobo_image_x_pdf_CFLAGS  =	\
+	-DBONOBO_IO
 
 bonobo_image_x_pdf_LDADD =	\
 	../goo/libgoo.a		\

@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "gtypes.h"
 #include "Object.h"
+#include "BaseFile.h"
 
 class Dict;
 class FileStream;
@@ -60,7 +61,7 @@ public:
 
 private:
 
-  FILE *file;			// input file
+  BaseFile file;		// input file
   int start;			// offset in file (to allow for garbage
 				//   at beginning of file)
   XRefEntry *entries;		// xref entries

@@ -511,7 +511,7 @@ GBool StreamPredictor::getNextLine() {
 // FileStream
 //------------------------------------------------------------------------
 
-FileStream::FileStream(FILE *f1, int start1, int length1, Object *dict1) {
+FileStream::FileStream(BaseFile f1, int start1, int length1, Object *dict1) {
   f = f1;
   start = start1;
   length = length1;
@@ -523,13 +523,13 @@ FileStream::FileStream(FILE *f1, int start1, int length1, Object *dict1) {
 
 FileStream::~FileStream() {
   if (savePos >= 0)
-    fseek(f, savePos, SEEK_SET);
+    bfseek(f, savePos, SEEK_SET);
   dict.free();
 }
 
 void FileStream::reset() {
-  savePos = (int)ftell(f);
-  fseek(f, start, SEEK_SET);
+  savePos = (int)bftell(f);
+  bfseek(f, start, SEEK_SET);
   bufPtr = bufEnd = buf;
   bufPos = start;
 }
@@ -545,7 +545,7 @@ GBool FileStream::fillBuf() {
     n = start + length - bufPos;
   else
     n = 256;
-  n = fread(buf, 1, n, f);
+  n = bfread(buf, 1, n, f);
   bufEnd = buf + n;
   if (bufPtr >= bufEnd)
     return gFalse;
@@ -556,15 +556,15 @@ void FileStream::setPos(int pos1) {
   long size;
 
   if (pos1 >= 0) {
-    fseek(f, pos1, SEEK_SET);
+    bfseek(f, pos1, SEEK_SET);
     bufPos = pos1;
   } else {
-    fseek(f, 0, SEEK_END);
-    size = ftell(f);
+    bfseek(f, 0, SEEK_END);
+    size = bftell(f);
     if (pos1 < -size)
       pos1 = (int)(-size);
-    fseek(f, pos1, SEEK_END);
-    bufPos = (int)ftell(f);
+    bfseek(f, pos1, SEEK_END);
+    bufPos = (int)bftell(f);
   }
   bufPtr = bufEnd = buf;
 }

@@ -29,11 +29,10 @@
 // PDFDoc
 //------------------------------------------------------------------------
 
-PDFDoc::PDFDoc(GString *fileName1) {
+PDFDoc::PDFDoc(BaseFile file1, GString *fileName1) {
   FileStream *str;
   Object catObj;
   Object obj;
-  GString *fileName2;
 
   // setup
   ok = gFalse;
@@ -42,33 +41,14 @@ PDFDoc::PDFDoc(GString *fileName1) {
   file = NULL;
   links = NULL;
 
-  // try to open file
   fileName = fileName1;
-  fileName2 = NULL;
-#ifdef VMS
-  if (!(file = fopen(fileName->getCString(), "rb", "ctx=stm"))) {
-    error(-1, "Couldn't open file '%s'", fileName->getCString());
+  file = file1;
+  if (!file)
     return;
-  }
-#else
-  if (!(file = fopen(fileName->getCString(), "rb"))) {
-    fileName2 = fileName->copy();
-    fileName2->lowerCase();
-    if (!(file = fopen(fileName2->getCString(), "rb"))) {
-      fileName2->upperCase();
-      if (!(file = fopen(fileName2->getCString(), "rb"))) {
-	error(-1, "Couldn't open file '%s'", fileName->getCString());
-	delete fileName2;
-	return;
-      }
-    }
-    delete fileName2;
-  }
-#endif
 
   // create stream
   obj.initNull();
-  str = new FileStream(file, 0, -1, &obj);
+  str  = new FileStream(file, 0, -1, &obj);
 
   // check header
   str->checkHeader();
@@ -100,7 +80,7 @@ PDFDoc::~PDFDoc() {
   if (xref)
     delete xref;
   if (file)
-    fclose(file);
+    bfclose(file);
   if (fileName)
     delete fileName;
   if (links)
@@ -153,8 +133,8 @@ GBool PDFDoc::saveAs(GString *name) {
     error(-1, "Couldn't open file '%s'", name->getCString());
     return gFalse;
   }
-  rewind(file);
-  while ((n = fread(buf, 1, sizeof(buf), file)) > 0)
+  brewind(file);
+  while ((n = bfread(buf, 1, sizeof(buf), file)) > 0)
     fwrite(buf, 1, n, f);
   fclose(f);
   return gTrue;

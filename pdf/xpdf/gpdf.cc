@@ -155,7 +155,9 @@ static PDFDoc *
 getPDF (GString *fname)
 {
   PDFDoc *pdf;
-  pdf = new PDFDoc(fname);
+  BaseFile *file;
+
+  pdf = new PDFDoc(bxpdfopen(fname), fname);
   if (!pdf->isOk()) {
     delete pdf;
     return NULL;

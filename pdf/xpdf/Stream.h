@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "gtypes.h"
 #include "Object.h"
+#include "BaseFile.h"
 
 //------------------------------------------------------------------------
 
@@ -83,7 +84,7 @@ public:
   virtual Stream *getBaseStream() = 0;
 
   // Get the base file of this stream.
-  virtual FILE *getFile() = 0;
+  virtual BaseFile getFile() = 0;
 
   // Get the dictionary associated with this stream.
   virtual Dict *getDict() = 0;
@@ -177,7 +178,7 @@ private:
 class FileStream: public Stream {
 public:
 
-  FileStream(FILE *f1, int start1, int length1, Object *dict1);
+  FileStream(BaseFile f1, int start1, int length1, Object *dict1);
   virtual ~FileStream();
   virtual StreamKind getKind() { return strFile; }
   virtual void reset();
@@ -189,7 +190,7 @@ public:
   virtual void setPos(int pos1);
   virtual GBool isBinary(GBool last = gTrue) { return last; }
   virtual Stream *getBaseStream() { return this; }
-  virtual FILE *getFile() { return f; }
+  virtual BaseFile getFile() { return f; }
   virtual Dict *getDict() { return dict.getDict(); }
 
   // Check for a PDF header on this stream.  Skip past some garbage
@@ -203,7 +204,7 @@ private:
 
   GBool fillBuf();
 
-  FILE *f;
+  BaseFile f;
   int start;
   int length;
   char buf[256];
@@ -230,7 +231,7 @@ public:
   virtual int getPos() { return str->getPos(); }
   virtual GBool isBinary(GBool last = gTrue) { return last; }
   virtual Stream *getBaseStream() { return this; }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return dict.getDict(); }
 
 private:
@@ -257,7 +258,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -285,7 +286,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -316,7 +317,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -358,7 +359,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -394,7 +395,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -461,7 +462,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
   Stream *getRawStream() { return str; }
 
@@ -552,7 +553,7 @@ public:
   virtual GString *getPSFilter(char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -606,7 +607,7 @@ public:
   virtual GString *getPSFilter(char *indent)  { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
 
 private:
@@ -631,7 +632,7 @@ public:
   virtual GString *getPSFilter(char *indent) { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
   virtual GBool isEncoder() { return gTrue; }
 
@@ -661,7 +662,7 @@ public:
   virtual GString *getPSFilter(char *indent) { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
   virtual GBool isEncoder() { return gTrue; }
 
@@ -696,7 +697,7 @@ public:
   virtual GString *getPSFilter(char *indent) { return NULL; }
   virtual GBool isBinary(GBool last = gTrue) { return gFalse; }
   virtual Stream *getBaseStream() { return str->getBaseStream(); }
-  virtual FILE *getFile() { return str->getFile(); }
+  virtual BaseFile getFile() { return str->getFile(); }
   virtual Dict *getDict() { return str->getDict(); }
   virtual GBool isEncoder() { return gTrue; }
 

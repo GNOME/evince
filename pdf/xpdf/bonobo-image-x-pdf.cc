@@ -49,7 +49,8 @@ CORBA_ORB orb;
 typedef struct {
   GnomeEmbeddable *bonobo_object;
 
-  PDFDoc *pdf;
+  PDFDoc       *pdf;
+  GNOME_Stream  stream; /* To free it later */
 
   GList *views;
 } bonobo_object_data_t;
@@ -169,7 +170,6 @@ static int
 load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 {
 	bonobo_object_data_t *bonobo_object_data = (bonobo_object_data_t *)data;
-	CORBA_Environment ev;
 	CORBA_long length;
 	GNOME_Stream_iobuf *buffer;
 	guint lp;
@@ -177,7 +177,17 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	FILE *hack;
 	char *name;
 
-	buffer = GNOME_Stream_iobuf__alloc ();
+	if (bonobo_object_data->pdf ||
+	    bonobo_object_data->stream) {
+	  g_warning ("Won't overwrite pre-existing stream: you wierdo");
+	  return 0;
+	}
+
+	/* We need this for later */
+	CORBA_Object_duplicate (stream, &ev);
+	g_return_val_if_fail (ev._major == CORBA_NO_EXCEPTION, 0);
+
+/*	buffer = GNOME_Stream_iobuf__alloc ();
 	length = GNOME_Stream_length (stream, &ev);
 
 	name = tempnam (NULL, "xpdf-hack");
@@ -200,9 +210,12 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 
 	fclose (hack);
 
-	CORBA_free (buffer);
+	CORBA_free (buffer);*/
 
-	bonobo_object_data->pdf = new PDFDoc (new GString (name));
+	printf ("Loading PDF from persiststream\n");
+	bonobo_object_data->stream = stream;
+	bonobo_object_data->pdf = new PDFDoc (stream, new GString ("Bonobo.pdf"));
+	printf ("Done load\n");
 	if (!(bonobo_object_data->pdf->isOk())) {
 	  g_warning ("Duff pdf data\n");
 	  delete bonobo_object_data->pdf;

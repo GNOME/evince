@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 
   // open PDF fihe
   xref = NULL;
-  doc = new PDFDoc(fileName);
+  doc = new PDFDoc(bxpdfopen(fileName), fileName);
   if (!doc->isOk()) {
     goto err1;
   }
