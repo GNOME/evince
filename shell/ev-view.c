@@ -628,6 +628,8 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		view->selection.y = MIN (view->selection_start.y, event->y);
 		view->selection.width = ABS (view->selection_start.x - event->x) + 1;
 		view->selection.height = ABS (view->selection_start.y - event->y) + 1;
+
+		gtk_widget_queue_draw (widget);
 	} else if (view->document) {
 		EvLink *link;
 
@@ -648,8 +650,6 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			}
 		}
 	}
-
-	gtk_widget_queue_draw (widget);
 
 	return TRUE;
 }
