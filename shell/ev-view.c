@@ -965,6 +965,9 @@ set_document_page (EvView *view, int page)
 						   &width, &height);
 			if (width != old_width || height != old_height)
 				gtk_widget_queue_resize (GTK_WIDGET (view));
+
+			gtk_adjustment_set_value (view->vadjustment,
+						  view->vadjustment->lower);
 		}
 
 		view->find_page = page;
