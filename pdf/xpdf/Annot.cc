@@ -100,7 +100,7 @@ void Annot::draw(Gfx *gfx) {
 
 Annots::Annots(XRef *xref, Object *annotsObj) {
   Annot *annot;
-  Object obj1, obj2;
+  Object obj1;
   int size;
   int i;
 
@@ -111,18 +111,16 @@ Annots::Annots(XRef *xref, Object *annotsObj) {
   if (annotsObj->isArray()) {
     for (i = 0; i < annotsObj->arrayGetLength(); ++i) {
       if (annotsObj->arrayGet(i, &obj1)->isDict()) {
-	obj1.dictLookup("Subtype", &obj2);
-        annot = new Annot(xref, obj1.getDict());
-        if (annot->isOk()) {
-                if (nAnnots >= size) {
-                        size += 16;
-                        annots = (Annot **)grealloc(annots, size * sizeof(Annot *));
-                }
-                annots[nAnnots++] = annot;
-        } else {
-                delete annot;
+	annot = new Annot(xref, obj1.getDict());
+	if (annot->isOk()) {
+	  if (nAnnots >= size) {
+	    size += 16;
+	    annots = (Annot **)grealloc(annots, size * sizeof(Annot *));
+	  }
+	  annots[nAnnots++] = annot;
+	} else {
+	  delete annot;
 	}
-	obj2.free();
       }
       obj1.free();
     }

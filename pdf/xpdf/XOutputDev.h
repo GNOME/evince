@@ -28,6 +28,7 @@ class GString;
 class GList;
 struct GfxRGB;
 class GfxFont;
+class GfxPath;
 class GfxSubpath;
 class TextPage;
 class XOutputFontCache;
@@ -564,6 +565,7 @@ public:
   virtual GBool beginType3Char(GfxState *state,
 			       CharCode code, Unicode *u, int uLen);
   virtual void endType3Char(GfxState *state);
+  virtual void endTextObject(GfxState *state);
 
   //----- image drawing
   virtual void drawImageMask(GfxState *state, Object *ref, Stream *str,
@@ -582,14 +584,19 @@ public:
 
   // Called to indicate that a new PDF document has been loaded.
   void startDoc(XRef *xrefA);
-
-  // Find a string.  If <top> is true, starts looking at <xMin>,<yMin>;
-  // otherwise starts looking at top of page.  If <bottom> is true,
-  // stops looking at <xMax>,<yMax>; otherwise stops looking at bottom
-  // of page.  If found, sets the text bounding rectange and returns
-  // true; otherwise returns false.
-  GBool findText(Unicode *s, int len, GBool top, GBool bottom,
-		 int *xMin, int *yMin, int *xMax, int *yMax);
+ 
+  // Find a string.  If <startAtTop> is true, starts looking at the
+  // top of the page; else if <startAtLast> is true, starts looking
+  // immediately after the last find result; else starts looking at
+  // <xMin>,<yMin>.  If <stopAtBottom> is true, stops looking at the
+  // bottom of the page; else if <stopAtLast> is true, stops looking
+  // just before the last find result; else stops looking at
+  // <xMax>,<yMax>.
+  GBool findText(Unicode *s, int len,
+		 GBool startAtTop, GBool stopAtBottom,
+		 GBool startAtLast, GBool stopAtLast,
+		 int *xMin, int *yMin,
+		 int *xMax, int *yMax);
 
   // Get the text which is inside the specified rectangle.
   GString *getText(int xMin, int yMin, int xMax, int yMax);
@@ -647,14 +654,16 @@ private:
     t3FontCache[xOutT3FontCacheSize];
   int nT3Fonts;			// number of valid entries in t3FontCache
   T3GlyphStack *t3GlyphStack;	// Type 3 glyph context stack
+  GfxPath *textClipPath;	// text outline clipping path
   XOutputState *save;		// stack of saved states
 
   TextPage *text;		// text from the current page
 
   void updateLineAttrs(GfxState *state, GBool updateDash);
   void doFill(GfxState *state, int rule);
-  void doClip(GfxState *state, int rule);
-  int convertPath(GfxState *state, XPoint **points, int *size,
+  void doClip(GfxState *state, GfxPath *path, int rule);
+  int convertPath(GfxState *state, GfxPath *path,
+		  XPoint **points, int *size,
 		  int *numPoints, int **lengths, GBool fillHack);
   void convertSubpath(GfxState *state, GfxSubpath *subpath,
 		      XPoint **points, int *size, int *n);
@@ -665,7 +674,7 @@ private:
   void drawType3Glyph(T3FontCache *t3Font,
 		      T3FontCacheTag *tag, Guchar *data,
 		      double x, double y, GfxRGB *color);
-  Gulong findColor(GfxRGB *x, GfxRGB *err);
+  Gulong findColor(GfxRGB *x, GfxRGB *actual);
 };
 
 #endif

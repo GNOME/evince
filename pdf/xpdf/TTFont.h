@@ -55,7 +55,6 @@ private:
 enum TTFontIndexMode {
   ttFontModeUnicode,
   ttFontModeCharCode,
-  ttFontModeCharCodeOffset,
   ttFontModeCodeMap,
   ttFontModeCIDToGIDMap
 };
@@ -80,7 +79,6 @@ private:
   TT_Face face;
   TT_CharMap charMap;
   TTFontIndexMode mode;
-  int charMapOffset;
   Guchar *codeMap;
   Gushort *cidToGID;
   int cidToGIDLen;

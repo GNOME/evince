@@ -22,7 +22,7 @@ $ COMMON_OBJS = "Annot.obj,Array.obj,BuiltinFont.obj," + -
                 "Link.obj,NameToCharCode.obj,Object.obj,Outline.obj,"+ -
                 "OutputDev.obj,Page.obj,Parser.obj,PDFdoc.obj," + -
                 "PDFDocEncoding.obj,PSTokenizer.obj,Stream.obj," + -
-                "UnicodeMap.obj,XRef.obj"
+                "UnicodeMap.obj,UnicodeTypeTable.obj,XRef.obj"
 $ COMMON_LIBS = "[]common.olb/lib,[-.goo]libgoo.olb/lib"
 $!
 $ XPDF_OBJS = "xpdf.obj,FTFont.obj,PSOutputDev.obj," + -

@@ -624,18 +624,20 @@ XOutputFontCache::XOutputFontCache(Display *displayA, Guint depthA,
   xOut = xOutA;
 
 #if HAVE_T1LIB_H
-  t1Engine = NULL;
   t1libControl = t1libControlA;
+  t1Engine = NULL;
+  t1FontFiles = NULL;
 #endif
 
 #if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
+  freetypeControl = freetypeControlA;
   ftEngine = NULL;
+  ftFontFiles = NULL;
 #endif
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
-  ttEngine = NULL;
-#endif
-#if HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H
   freetypeControl = freetypeControlA;
+  ttEngine = NULL;
+  ttFontFiles = NULL;
 #endif
 
   clear();
@@ -718,25 +720,37 @@ void XOutputFontCache::delFonts() {
 
 #if HAVE_T1LIB_H
   // delete Type 1 font files
-  deleteGList(t1FontFiles, XOutputT1FontFile);
+  if (t1FontFiles) {
+    deleteGList(t1FontFiles, XOutputT1FontFile);
+    t1FontFiles = NULL;
+  }
   if (t1Engine) {
     delete t1Engine;
+    t1Engine = NULL;
   }
 #endif
 
 #if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
   // delete FreeType font files
-  deleteGList(ftFontFiles, XOutputFTFontFile);
+  if (ftFontFiles) {
+    deleteGList(ftFontFiles, XOutputFTFontFile);
+    ftFontFiles = NULL;
+  }
   if (ftEngine) {
     delete ftEngine;
+    ftEngine = NULL;
   }
 #endif
 
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
   // delete TrueType fonts
-  deleteGList(ttFontFiles, XOutputTTFontFile);
+  if (ttFontFiles) {
+    deleteGList(ttFontFiles, XOutputTTFontFile);
+    ttFontFiles = NULL;
+  }
   if (ttEngine) {
     delete ttEngine;
+    ttEngine = NULL;
   }
 #endif
 }
@@ -1088,12 +1102,16 @@ XOutputFont *XOutputFontCache::tryGetT1Font(XRef *xref,
     if (gfxFont->getType() == fontType1C) {
       if (!(fontBuf = gfxFont->readEmbFontFile(xref, &fontLen))) {
 	fclose(f);
+	unlink(fileName->getCString());
+	delete fileName;
 	return NULL;
       }
       ff = new Type1CFontFile(fontBuf, fontLen);
       if (!ff->isOk()) {
 	delete ff;
 	gfree(fontBuf);
+	unlink(fileName->getCString());
+	delete fileName;
 	return NULL;
       }
       ff->convertToType1(outputToFile, f);
@@ -1235,6 +1253,8 @@ XOutputFont *XOutputFontCache::tryGetFTFont(XRef *xref,
 	gfxFont->getType() == fontCIDType2) {
       if (!(fontBuf = gfxFont->readEmbFontFile(xref, &fontLen))) {
 	fclose(f);
+	unlink(fileName->getCString());
+	delete fileName;
 	return NULL;
       }
       ff = new TrueTypeFontFile(fontBuf, fontLen);
@@ -1304,6 +1324,11 @@ XOutputFont *XOutputFontCache::tryGetFTFontFromFile(XRef *xref,
   Ref *id;
   FTFontFile *fontFile;
   XOutputFont *font;
+  char *buf;
+  int len;
+  FILE *f;
+  TrueTypeFontFile *ff;
+  Gushort *codeToGID;
 
   // create the FreeType font file
   if (gfxFont->isCIDFont()) {
@@ -1316,10 +1341,27 @@ XOutputFont *XOutputFontCache::tryGetFTFontFromFile(XRef *xref,
       fontFile = new FTFontFile(ftEngine, fileName->getCString(), embedded);
     }
   } else {
+    if (!(f = fopen(fileName->getCString(), "rb"))) {
+      return NULL;
+    }
+    fseek(f, 0, SEEK_END);
+    len = (int)ftell(f);
+    fseek(f, 0, SEEK_SET);
+    buf = (char *)gmalloc(len);
+    if ((int)fread(buf, 1, len, f) != len) {
+      gfree(buf);
+      fclose(f);
+      return NULL;
+    }
+    fclose(f);
+    ff = new TrueTypeFontFile(buf, len);
+    codeToGID = ((Gfx8BitFont *)gfxFont)->getCodeToGIDMap(ff);
     fontFile = new FTFontFile(ftEngine, fileName->getCString(),
 			      ((Gfx8BitFont *)gfxFont)->getEncoding(),
-			      ((Gfx8BitFont *)gfxFont)->getHasEncoding(),
-			      ((Gfx8BitFont *)gfxFont)->isSymbolic());
+			      codeToGID);
+    gfree(codeToGID);
+    delete ff;
+    gfree(buf);
   }
   if (!fontFile->isOk()) {
     error(-1, "Couldn't create FreeType font from '%s'",
@@ -1784,6 +1826,9 @@ XOutputDev::XOutputDev(Display *displayA, int screenNumA,
   nT3Fonts = 0;
   t3GlyphStack = NULL;
 
+  // no text outline clipping path
+  textClipPath = NULL;
+
   // empty state stack
   save = NULL;
 
@@ -1877,32 +1922,61 @@ void XOutputDev::endPage() {
 }
 
 void XOutputDev::drawLink(Link *link, Catalog *catalog) {
-  double x1, y1, x2, y2, w;
+  double x1, y1, x2, y2;
+  LinkBorderStyle *borderStyle;
   GfxRGB rgb;
+  double *dash;
+  char dashList[20];
+  int dashLength;
   XPoint points[5];
-  int x, y;
+  int x, y, i;
 
-  link->getBorder(&x1, &y1, &x2, &y2, &w);
-  if (w > 0) {
-    rgb.r = 0;
-    rgb.g = 0;
-    rgb.b = 1;
+  link->getRect(&x1, &y1, &x2, &y2);
+  borderStyle = link->getBorderStyle();
+  if (borderStyle->getWidth() > 0) {
+    borderStyle->getColor(&rgb.r, &rgb.g, &rgb.b);
     XSetForeground(display, strokeGC, findColor(&rgb));
-    XSetLineAttributes(display, strokeGC, xoutRound(w),
-		       LineSolid, CapRound, JoinRound);
-    cvtUserToDev(x1, y1, &x, &y);
-    points[0].x = points[4].x = x;
-    points[0].y = points[4].y = y;
-    cvtUserToDev(x2, y1, &x, &y);
-    points[1].x = x;
-    points[1].y = y;
-    cvtUserToDev(x2, y2, &x, &y);
-    points[2].x = x;
-    points[2].y = y;
-    cvtUserToDev(x1, y2, &x, &y);
-    points[3].x = x;
-    points[3].y = y;
-    XDrawLines(display, pixmap, strokeGC, points, 5, CoordModeOrigin);
+    borderStyle->getDash(&dash, &dashLength);
+    if (borderStyle->getType() == linkBorderDashed && dashLength > 0) {
+      if (dashLength > 20) {
+	dashLength = 20;
+      }
+      for (i = 0; i < dashLength; ++i) {
+	if ((dashList[i] = xoutRound(dash[i])) == 0) {
+	  dashList[i] = 1;
+	}
+      }
+      XSetLineAttributes(display, strokeGC, xoutRound(borderStyle->getWidth()),
+			 LineOnOffDash, CapButt, JoinMiter);
+      XSetDashes(display, strokeGC, 0, dashList, dashLength);
+    } else {
+      XSetLineAttributes(display, strokeGC, xoutRound(borderStyle->getWidth()),
+			 LineSolid, CapButt, JoinMiter);
+    }
+    if (borderStyle->getType() == linkBorderUnderlined) {
+      cvtUserToDev(x1, y1, &x, &y);
+      points[0].x = x;
+      points[0].y = y;
+      cvtUserToDev(x2, y1, &x, &y);
+      points[1].x = x;
+      points[1].y = y;
+      XDrawLine(display, pixmap, strokeGC, points[0].x, points[0].y,
+		points[1].x, points[1].y);
+    } else {
+      cvtUserToDev(x1, y1, &x, &y);
+      points[0].x = points[4].x = x;
+      points[0].y = points[4].y = y;
+      cvtUserToDev(x2, y1, &x, &y);
+      points[1].x = x;
+      points[1].y = y;
+      cvtUserToDev(x2, y2, &x, &y);
+      points[2].x = x;
+      points[2].y = y;
+      cvtUserToDev(x1, y2, &x, &y);
+      points[3].x = x;
+      points[3].y = y;
+      XDrawLines(display, pixmap, strokeGC, points, 5, CoordModeOrigin);
+    }
   }
 }
 
@@ -2100,7 +2174,8 @@ void XOutputDev::stroke(GfxState *state) {
   int n, size, numPoints, i, j;
 
   // transform points
-  n = convertPath(state, &points, &size, &numPoints, &lengths, gFalse);
+  n = convertPath(state, state->getPath(),
+		  &points, &size, &numPoints, &lengths, gFalse);
 
   // draw each subpath
   j = 0;
@@ -2143,7 +2218,8 @@ void XOutputDev::doFill(GfxState *state, int rule) {
   XSetFillRule(display, fillGC, rule);
 
   // transform points, build separate polygons
-  n = convertPath(state, &points, &size, &numPoints, &lengths, gTrue);
+  n = convertPath(state, state->getPath(),
+		  &points, &size, &numPoints, &lengths, gTrue);
 
   // fill them
   j = 0;
@@ -2165,41 +2241,109 @@ void XOutputDev::doFill(GfxState *state, int rule) {
 }
 
 void XOutputDev::clip(GfxState *state) {
-  doClip(state, WindingRule);
+  doClip(state, state->getPath(), WindingRule);
 }
 
 void XOutputDev::eoClip(GfxState *state) {
-  doClip(state, EvenOddRule);
+  doClip(state, state->getPath(), EvenOddRule);
 }
 
-void XOutputDev::doClip(GfxState *state, int rule) {
+void XOutputDev::doClip(GfxState *state, GfxPath *path, int rule) {
+  GfxSubpath *subpath;
   Region region, region2;
+  XPoint rect[5];
   XPoint *points;
   int *lengths;
+  double x0, y0, x1, y1, x2, y2, x3, y3;
+  GBool gotRect;
   int n, size, numPoints, i, j;
 
-  // transform points, build separate polygons
-  n = convertPath(state, &points, &size, &numPoints, &lengths, gTrue);
-
-  // construct union of subpath regions
-  // (XPolygonRegion chokes if there aren't at least three points --
-  // this happens if the PDF file does moveto/closepath/clip, which
-  // sets an empty clipping region)
-  if (lengths[0] > 2) {
-    region = XPolygonRegion(points, lengths[0], rule);
-  } else {
-    region = XCreateRegion();
-  }
-  j = lengths[0] + 1;
-  for (i = 1; i < n; ++i) {
-    if (lengths[i] > 2) {
-      region2 = XPolygonRegion(points + j, lengths[i], rule);
-    } else {
-      region2 = XCreateRegion();
+  // special case for rectangular clipping paths -- this is a common
+  // case, and we want to make sure not to clip an extra pixel on the
+  // right and bottom edges due to the difference between the PDF and
+  // X rendering models
+  gotRect = gFalse;
+  if (path->getNumSubpaths() == 1) {
+    subpath = path->getSubpath(0);
+    if ((subpath->isClosed() && subpath->getNumPoints() == 5) ||
+	(!subpath->isClosed() && subpath->getNumPoints() == 4)) {
+      state->transform(subpath->getX(0), subpath->getY(0), &x0, &y0);
+      state->transform(subpath->getX(1), subpath->getY(1), &x1, &y1);
+      state->transform(subpath->getX(2), subpath->getY(2), &x2, &y2);
+      state->transform(subpath->getX(3), subpath->getY(3), &x3, &y3);
+      if (fabs(x0-x1) < 1 && fabs(x2-x3) < 1 &&
+	  fabs(y0-y3) < 1 && fabs(y1-y2) < 1) {
+	if (x0 < x2) {
+	  rect[0].x = rect[1].x = rect[4].x = (int)floor(x0);
+	  rect[2].x = rect[3].x = (int)floor(x2) + 1;
+	} else {
+	  rect[0].x = rect[1].x = rect[4].x = (int)floor(x0) + 1;
+	  rect[2].x = rect[3].x = (int)floor(x2);
+	}
+	if (y0 < y1) {
+	  rect[0].y = rect[3].y = rect[4].y = (int)floor(y0);
+	  rect[1].y = rect[2].y = (int)floor(y1) + 1;
+	} else {
+	  rect[0].y = rect[3].y = rect[4].y = (int)floor(y0) + 1;
+	  rect[1].y = rect[2].y = (int)floor(y1);
+	}
+	gotRect = gTrue;
+      } else if (fabs(x0-x3) < 1 && fabs(x1-x2) < 1 &&
+		 fabs(y0-y1) < 1 && fabs(y2-y3) < 1) {
+	if (x0 < x1) {
+	  rect[0].x = rect[3].x = rect[4].x = (int)floor(x0);
+	  rect[1].x = rect[2].x = (int)floor(x1) + 1;
+	} else {
+	  rect[0].x = rect[3].x = rect[4].x = (int)floor(x0) + 1;
+	  rect[1].x = rect[2].x = (int)floor(x1);
+	}
+	if (y0 < y2) {
+	  rect[0].y = rect[1].y = rect[4].y = (int)floor(y0);
+	  rect[2].y = rect[3].y = (int)floor(y2) + 1;
+	} else {
+	  rect[0].y = rect[1].y = rect[4].y = (int)floor(y0) + 1;
+	  rect[2].y = rect[3].y = (int)floor(y2);
+	}
+	gotRect = gTrue;
+      }
     }
-    XUnionRegion(region2, region, region);
-    XDestroyRegion(region2);
-    j += lengths[i] + 1;
+  }
+
+  if (gotRect) {
+    region = XPolygonRegion(rect, 5, EvenOddRule);
+
+  } else {
+    // transform points, build separate polygons
+    n = convertPath(state, path, &points, &size, &numPoints, &lengths, gTrue);
+
+    // construct union of subpath regions
+    // (XPolygonRegion chokes if there aren't at least three points --
+    // this happens if the PDF file does moveto/closepath/clip, which
+    // sets an empty clipping region)
+    if (lengths[0] > 2) {
+      region = XPolygonRegion(points, lengths[0], rule);
+    } else {
+      region = XCreateRegion();
+    }
+    j = lengths[0] + 1;
+    for (i = 1; i < n; ++i) {
+      if (lengths[i] > 2) {
+	region2 = XPolygonRegion(points + j, lengths[i], rule);
+      } else {
+	region2 = XCreateRegion();
+      }
+      XUnionRegion(region2, region, region);
+      XDestroyRegion(region2);
+      j += lengths[i] + 1;
+    }
+
+    // free points and lengths arrays
+    if (points != tmpPoints) {
+      gfree(points);
+    }
+    if (lengths != tmpLengths) {
+      gfree(lengths);
+    }
   }
 
   // intersect region with clipping region
@@ -2207,12 +2351,6 @@ void XOutputDev::doClip(GfxState *state, int rule) {
   XDestroyRegion(region);
   XSetRegion(display, strokeGC, clipRegion);
   XSetRegion(display, fillGC, clipRegion);
-
-  // free points and lengths arrays
-  if (points != tmpPoints)
-    gfree(points);
-  if (lengths != tmpLengths)
-    gfree(lengths);
 }
 
 //
@@ -2224,15 +2362,14 @@ void XOutputDev::doClip(GfxState *state, int rule) {
 // Then it connects subaths within a single compound polygon to a single
 // point so that X can fill the polygon (sort of).
 //
-int XOutputDev::convertPath(GfxState *state, XPoint **points, int *size,
+int XOutputDev::convertPath(GfxState *state, GfxPath *path,
+			    XPoint **points, int *size,
 			    int *numPoints, int **lengths, GBool fillHack) {
-  GfxPath *path;
   BoundingRect *rects;
   BoundingRect rect;
   int n, i, ii, j, k, k0;
 
   // get path and number of subpaths
-  path = state->getPath();
   n = path->getNumSubpaths();
 
   // allocate lengths array
@@ -2294,15 +2431,15 @@ int XOutputDev::convertPath(GfxState *state, XPoint **points, int *size,
   // kludge: munge any points that are *way* out of bounds - these can
   // crash certain (buggy) X servers
   for (i = 0; i < *numPoints; ++i) {
-    if ((*points)[i].x < -pixmapW) {
-      (*points)[i].x = -pixmapW;
-    } else if ((*points)[i].x > 2 * pixmapW) {
-      (*points)[i].x = 2 * pixmapW;
+    if ((*points)[i].x < -4 * pixmapW) {
+      (*points)[i].x = -4 * pixmapW;
+    } else if ((*points)[i].x > 4 * pixmapW) {
+      (*points)[i].x = 4 * pixmapW;
     }
     if ((*points)[i].y < -pixmapH) {
-      (*points)[i].y = -pixmapH;
-    } else if ((*points)[i].y > 2 * pixmapH) {
-      (*points)[i].y = 2 * pixmapH;
+      (*points)[i].y = -4 * pixmapH;
+    } else if ((*points)[i].y > 4 * pixmapH) {
+      (*points)[i].y = 4 * pixmapH;
     }
   }
 
@@ -2528,7 +2665,7 @@ void XOutputDev::drawChar(GfxState *state, double x, double y,
 
   // check for invisible text -- this is used by Acrobat Capture
   render = state->getRender();
-  if ((render & 3) == 3) {
+  if (render == 3) {
     return;
   }
 
@@ -2577,11 +2714,22 @@ void XOutputDev::drawChar(GfxState *state, double x, double y,
     }
   }
 
-#if 0 //~ unimplemented: clipping to char path
   // clip
   if (render & 4) {
+    if (font->hasGetCharPath()) {
+      saveCurX = state->getCurX();
+      saveCurY = state->getCurY();
+      font->getCharPath(state, code, u, uLen);
+      state->getPath()->offset(x1, y1);
+      if (textClipPath) {
+	textClipPath->append(state->getPath());
+      } else {
+	textClipPath = state->getPath()->copy();
+      }
+      state->clearPath();
+      state->moveTo(saveCurX, saveCurY);
+    }
   }
-#endif
 }
 
 GBool XOutputDev::beginType3Char(GfxState *state,
@@ -2991,7 +3139,23 @@ void XOutputDev::type3D1(GfxState *state, double wx, double wy,
 		-t3GlyphStack->cache->glyphX, -t3GlyphStack->cache->glyphY);
 }
 
-inline Gulong XOutputDev::findColor(GfxRGB *x, GfxRGB *err) {
+void XOutputDev::endTextObject(GfxState *state) {
+  double *ctm;
+  double saveCTM[6];
+
+  if (textClipPath) {
+    ctm = state->getCTM();
+    memcpy(saveCTM, ctm, 6 * sizeof(double));
+    state->setCTM(1, 0, 0, 1, 0, 0);
+    doClip(state, textClipPath, WindingRule);
+    state->setCTM(saveCTM[0], saveCTM[1], saveCTM[2], saveCTM[3],
+		  saveCTM[4], saveCTM[5]);
+    delete textClipPath;
+    textClipPath = NULL;
+  }
+}
+
+inline Gulong XOutputDev::findColor(GfxRGB *x, GfxRGB *actual) {
   double gray;
   int r, g, b;
   Gulong pixel;
@@ -3003,30 +3167,26 @@ inline Gulong XOutputDev::findColor(GfxRGB *x, GfxRGB *err) {
     pixel = ((Gulong)r << rShift) +
             ((Gulong)g << gShift) +
             ((Gulong)b << bShift);
-    err->r = x->r - (double)r / rMul;
-    err->g = x->g - (double)g / gMul;
-    err->b = x->b - (double)b / bMul;
+    actual->r = (double)r / rMul;
+    actual->g = (double)g / gMul;
+    actual->b = (double)b / bMul;
   } else if (numColors == 1) {
     gray = 0.299 * x->r + 0.587 * x->g + 0.114 * x->b;
     if (gray < 0.5) {
       pixel = colors[0];
-      err->r = x->r;
-      err->g = x->g;
-      err->b = x->b;
+      actual->r = actual->g = actual->b = 0;
     } else {
       pixel = colors[1];
-      err->r = x->r - 1;
-      err->g = x->g - 1;
-      err->b = x->b - 1;
+      actual->r = actual->g = actual->b = 1;
     }
   } else {
     r = xoutRound(x->r * (numColors - 1));
     g = xoutRound(x->g * (numColors - 1));
     b = xoutRound(x->b * (numColors - 1));
     pixel = colors[(r * numColors + g) * numColors + b];
-    err->r = x->r - (double)r / (numColors - 1);
-    err->g = x->g - (double)g / (numColors - 1); 
-    err->b = x->b - (double)b / (numColors - 1);
+    actual->r = (double)r / (numColors - 1);
+    actual->g = (double)g / (numColors - 1); 
+    actual->b = (double)b / (numColors - 1);
   }
   return pixel;
 }
@@ -3380,14 +3540,14 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   int yp, yq, yt, yStep, lastYStep;
   int xp, xq, xt, xStep, xSrc;
   GfxRGB *pixBuf;
-  Guchar *alphaBuf;
+  Guchar *pixBuf1, *alphaBuf;
   Guchar pixBuf2[gfxColorMaxComps];
-  GfxRGB color2, err, errRight;
-  GfxRGB *errDown;
+  GfxRGB color2, color3, actual, err, errRight;
+  GfxRGB *errDown0, *errDown1, *errDownTmp;
   double r0, g0, b0, alpha, mul;
   Gulong pix;
   GfxRGB *p;
-  Guchar *q, *p2;
+  Guchar *q, *p1, *p2;
   GBool oneBitMode;
   GfxRGB oneBitRGB[2];
   int x, y, x1, y1, x2, y2;
@@ -3397,6 +3557,7 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   nComps = colorMap->getNumPixelComps();
   nVals = width * nComps;
   nBits = colorMap->getBits();
+  oneBitMode = nComps == 1 && nBits == 1 && !maskColors;
   dither = nComps > 1 || nBits > 1;
 
   // get CTM, check for singular matrix
@@ -3533,7 +3694,13 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   xq = width % scaledWidth;
 
   // allocate pixel buffer
-  pixBuf = (GfxRGB *)gmalloc((yp + 1) * width * sizeof(GfxRGB));
+  if (oneBitMode) {
+    pixBuf1 = (Guchar *)gmalloc((yp + 1) * width * sizeof(Guchar));
+    pixBuf = NULL;
+  } else {
+    pixBuf = (GfxRGB *)gmalloc((yp + 1) * width * sizeof(GfxRGB));
+    pixBuf1 = NULL;
+  }
   if (maskColors) {
     alphaBuf = (Guchar *)gmalloc((yp + 1) * width * sizeof(Guchar));
   } else {
@@ -3556,16 +3723,18 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 
   // allocate error diffusion accumulators
   if (dither) {
-    errDown = (GfxRGB *)gmalloc(bw * sizeof(GfxRGB));
-    for (j = 0; j < bw; ++j) {
-      errDown[j].r = errDown[j].g = errDown[j].b = 0;
+    errDown0 = (GfxRGB *)gmalloc((scaledWidth + 2) * sizeof(GfxRGB));
+    errDown1 = (GfxRGB *)gmalloc((scaledWidth + 2) * sizeof(GfxRGB));
+    for (j = 0; j < scaledWidth + 2; ++j) {
+      errDown0[j].r = errDown0[j].g = errDown0[j].b = 0;
+      errDown1[j].r = errDown1[j].g = errDown1[j].b = 0;
     }
   } else {
-    errDown = NULL;
+    errDown0 = errDown1 = NULL;
   }
 
   // optimize the one-bit-deep image case
-  if ((oneBitMode = nComps == 1 && nBits == 1)) {
+  if (oneBitMode) {
     pixBuf2[0] = 0;
     colorMap->getRGB(pixBuf2, &oneBitRGB[0]);
     pixBuf2[0] = 1;
@@ -3582,8 +3751,16 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 
   for (y = 0; y < scaledHeight; ++y) {
 
-    // initialize error diffusion accumulator
-    errRight.r = errRight.g = errRight.b = 0;
+    // initialize error diffusion accumulators
+    if (dither) {
+      errDownTmp = errDown0;
+      errDown0 = errDown1;
+      errDown1 = errDownTmp;
+      for (j = 0; j < scaledWidth + 2; ++j) {
+	errDown1[j].r = errDown1[j].g = errDown1[j].b = 0;
+      }
+      errRight.r = errRight.g = errRight.b = 0;
+    }
 
     // y scale Bresenham
     yStep = yp;
@@ -3596,30 +3773,35 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
     // read row(s) from image
     n = (yp > 0) ? yStep : lastYStep;
     if (n > 0) {
-      p = pixBuf;
-      q = alphaBuf;
-      for (i = 0; i < n; ++i) {
-        p2 = imgStr->getLine();
-        for (j = 0; j < width; ++j) {
-          if (oneBitMode) {
-            *p = oneBitRGB[*p2];
-          } else {
+      if (oneBitMode) {
+	p1 = pixBuf1;
+	for (i = 0; i < n; ++i) {
+	  p2 = imgStr->getLine();
+	  memcpy(p1, p2, width);
+	  p1 += width;
+	}
+      } else {
+	p = pixBuf;
+	q = alphaBuf;
+	for (i = 0; i < n; ++i) {
+	  p2 = imgStr->getLine();
+	  for (j = 0; j < width; ++j) {
             colorMap->getRGB(p2, p);
-          }
-          ++p;
-          if (q) {
-            *q = 1;
-            for (k = 0; k < nComps; ++k) {
-              if (p2[k] < maskColors[2*k] ||
-                  p2[k] > maskColors[2*k]) {
-                *q = 0;
-                break;
-              }
-            }
-            ++q;
-          }
-          p2 += nComps;
-        }
+	    ++p;
+	    if (q) {
+	      *q = 1;
+	      for (k = 0; k < nComps; ++k) {
+		if (p2[k] < maskColors[2*k] ||
+		    p2[k] > maskColors[2*k+1]) {
+		  *q = 0;
+		  break;
+		}
+	      }
+	      ++q;
+	    }
+	    p2 += nComps;
+	  }
+	}
       }
     }
     lastYStep = yStep;
@@ -3657,60 +3839,94 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
       // x and y scaling operations
       n = yStep > 0 ? yStep : 1;
       m = xStep > 0 ? xStep : 1;
-      p = pixBuf + xSrc;
-      r0 = g0 = b0 = 0;
-      q = alphaBuf ? alphaBuf + xSrc : (Guchar *)NULL;
-      alpha = 0;
-      for (i = 0; i < n; ++i) {
-	for (j = 0; j < m; ++j) {
-	  r0 += p->r;
-	  g0 += p->g;
-	  b0 += p->b;
-	  ++p;
-	  if (q) {
-	    alpha += *q++;
+      if (oneBitMode) {
+	p1 = pixBuf1 + xSrc;
+	k = 0;
+	for (i = 0; i < n; ++i) {
+	  for (j = 0; j < m; ++j) {
+	    k += *p1++;
 	  }
+	  p1 += width - m;
 	}
-	p += width - m;
+	mul = (double)k / (double)(n * m);
+	r0 = mul * oneBitRGB[1].r + (1 - mul) * oneBitRGB[0].r;
+	g0 = mul * oneBitRGB[1].g + (1 - mul) * oneBitRGB[0].g;
+	b0 = mul * oneBitRGB[1].b + (1 - mul) * oneBitRGB[0].b;
+	alpha = 0;
+      } else {
+	p = pixBuf + xSrc;
+	q = alphaBuf ? alphaBuf + xSrc : (Guchar *)NULL;
+	alpha = 0;
+	r0 = g0 = b0 = 0;
+	for (i = 0; i < n; ++i) {
+	  for (j = 0; j < m; ++j) {
+	    r0 += p->r;
+	    g0 += p->g;
+	    b0 += p->b;
+	    ++p;
+	    if (q) {
+	      alpha += *q++;
+	    }
+	  }
+	  p += width - m;
+	}
+	mul = 1 / (double)(n * m);
+	r0 *= mul;
+	g0 *= mul;
+	b0 *= mul;
+	alpha *= mul;
       }
-      mul = 1 / (double)(n * m);
-      r0 *= mul;
-      g0 *= mul;
-      b0 *= mul;
-      alpha *= mul;
 
       // x scale Bresenham
       xSrc += xStep;
 
       // compute pixel
       if (dither) {
-	color2.r = r0 + errRight.r + errDown[tx + x2 - bx0].r;
+	color2.r = r0 + errRight.r + errDown0[x + 1].r;
 	if (color2.r > 1) {
-	  color2.r = 1;
+	  color3.r = 1;
 	} else if (color2.r < 0) {
-	  color2.r = 0;
+	  color3.r = 0;
+	} else {
+	  color3.r = color2.r;
 	}
-	color2.g = g0 + errRight.g + errDown[tx + x2 - bx0].g;
+	color2.g = g0 + errRight.g + errDown0[x + 1].g;
 	if (color2.g > 1) {
-	  color2.g = 1;
+	  color3.g = 1;
 	} else if (color2.g < 0) {
-	  color2.g = 0;
+	  color3.g = 0;
+	} else {
+	  color3.g = color2.g;
 	}
-	color2.b = b0 + errRight.b + errDown[tx + x2 - bx0].b;
+	color2.b = b0 + errRight.b + errDown0[x + 1].b;
 	if (color2.b > 1) {
-	  color2.b = 1;
+	  color3.b = 1;
 	} else if (color2.b < 0) {
-	  color2.b = 0;
+	  color3.b = 0;
+	} else {
+	  color3.b = color2.b;
 	}
-	pix = findColor(&color2, &err);
-	errRight.r = errDown[tx + x2 - bx0].r = err.r / 2;
-	errRight.g = errDown[tx + x2 - bx0].g = err.g / 2;
-	errRight.b = errDown[tx + x2 - bx0].b = err.b / 2;
+	pix = findColor(&color3, &actual);
+	err.r = (color2.r - actual.r) / 16;
+	err.g = (color2.g - actual.g) / 16;
+	err.b = (color2.b - actual.b) / 16;
+	errRight.r = 7 * err.r;
+	errRight.g = 7 * err.g;
+	errRight.b = 7 * err.b;
+	errDown1[x].r += 3 * err.r;
+	errDown1[x].g += 3 * err.g;
+	errDown1[x].b += 3 * err.b;
+	errDown1[x + 1].r += 5 * err.r;
+	errDown1[x + 1].g += 5 * err.g;
+	errDown1[x + 1].b += 5 * err.b;
+	errDown1[x + 2].r = err.r;
+	errDown1[x + 2].g = err.g;
+	errDown1[x + 2].b = err.b;
       } else {
 	color2.r = r0;
 	color2.g = g0;
 	color2.b = b0;
-	pix = findColor(&color2, &err);
+	pix = findColor(&color2, &actual);
       }
 
       // set pixel
@@ -3726,25 +3942,35 @@ void XOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 
   // free memory
   delete imgStr;
-  gfree(pixBuf);
+  if (oneBitMode) {
+    gfree(pixBuf1);
+  } else {
+    gfree(pixBuf);
+  }
   if (maskColors) {
     gfree(alphaBuf);
   }
   gfree(image->data);
   image->data = NULL;
   XDestroyImage(image);
-  gfree(errDown);
+  gfree(errDown0);
+  gfree(errDown1);
 }
 
-GBool XOutputDev::findText(Unicode *s, int len, GBool top, GBool bottom,
-			   int *xMin, int *yMin, int *xMax, int *yMax) {
+GBool XOutputDev::findText(Unicode *s, int len,
+			   GBool startAtTop, GBool stopAtBottom,
+			   GBool startAtLast, GBool stopAtLast,
+			   int *xMin, int *yMin,
+			   int *xMax, int *yMax) {
   double xMin1, yMin1, xMax1, yMax1;
   
   xMin1 = (double)*xMin;
   yMin1 = (double)*yMin;
   xMax1 = (double)*xMax;
   yMax1 = (double)*yMax;
-  if (text->findText(s, len, top, bottom, &xMin1, &yMin1, &xMax1, &yMax1)) {
+  if (text->findText(s, len, startAtTop, stopAtBottom,
+		     startAtLast, stopAtLast,
+		     &xMin1, &yMin1, &xMax1, &yMax1)) {
     *xMin = xoutRound(xMin1);
     *xMax = xoutRound(xMax1);
     *yMin = xoutRound(yMin1);

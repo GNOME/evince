@@ -40,8 +40,8 @@ static void scanFont(GfxFont *font, PDFDoc *doc);
 
 static int firstPage = 1;
 static int lastPage = 0;
-static char ownerPassword[33] = "";
-static char userPassword[33] = "";
+static char ownerPassword[33] = "\001";
+static char userPassword[33] = "\001";
 static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
@@ -91,10 +91,10 @@ int main(int argc, char *argv[]) {
   // parse args
   ok = parseArgs(argDesc, &argc, argv);
   if (!ok || argc != 2 || printVersion || printHelp) {
-    fprintf(stderr, "pdfinfo version %s\n", xpdfVersion);
+    fprintf(stderr, "pdffonts version %s\n", xpdfVersion);
     fprintf(stderr, "%s\n", xpdfCopyright);
     if (!printVersion) {
-      printUsage("pdfinfo", "<PDF-file>", argDesc);
+      printUsage("pdffonts", "<PDF-file>", argDesc);
     }
     goto err0;
   }
@@ -104,12 +104,12 @@ int main(int argc, char *argv[]) {
   globalParams = new GlobalParams(cfgFileName);
 
   // open PDF file
-  if (ownerPassword[0]) {
+  if (ownerPassword[0] != '\001') {
     ownerPW = new GString(ownerPassword);
   } else {
     ownerPW = NULL;
   }
-  if (userPassword[0]) {
+  if (userPassword[0] != '\001') {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
@@ -176,22 +176,33 @@ int main(int argc, char *argv[]) {
 }
 
 static void scanFonts(Dict *resDict, PDFDoc *doc) {
+  Object obj1, obj2, xObjDict, xObj, resObj;
+  Ref r;
   GfxFontDict *gfxFontDict;
   GfxFont *font;
-  Object fontDict, xObjDict, xObj, resObj;
   int i;
 
   // scan the fonts in this resource dictionary
-  resDict->lookup("Font", &fontDict);
-  if (fontDict.isDict()) {
-    gfxFontDict = new GfxFontDict(doc->getXRef(), fontDict.getDict());
+  gfxFontDict = NULL;
+  resDict->lookupNF("Font", &obj1);
+  if (obj1.isRef()) {
+    obj1.fetch(doc->getXRef(), &obj2);
+    if (obj2.isDict()) {
+      r = obj1.getRef();
+      gfxFontDict = new GfxFontDict(doc->getXRef(), &r, obj2.getDict());
+    }
+    obj2.free();
+  } else if (obj1.isDict()) {
+    gfxFontDict = new GfxFontDict(doc->getXRef(), NULL, obj1.getDict());
+  }
+  if (gfxFontDict) {
     for (i = 0; i < gfxFontDict->getNumFonts(); ++i) {
       font = gfxFontDict->getFont(i);
       scanFont(font, doc);
     }
     delete gfxFontDict;
   }
-  fontDict.free();
+  obj1.free();
 
   // recursively scan any resource dictionaries in objects in this
   // resource dictionary
@@ -228,17 +239,12 @@ static void scanFont(GfxFont *font, PDFDoc *doc) {
     }
   }
 
-  // get the original font name -- the GfxFont class munges substitute
-  // Base-14 font names into proper form, so this code grabs the
-  // original name from the font dictionary; also look for a ToUnicode
-  // map
-  name = NULL;
+  // font name
+  name = font->getOrigName();
+
+  // look for a ToUnicode map
   hasToUnicode = gFalse;
   if (doc->getXRef()->fetch(fontRef.num, fontRef.gen, &fontObj)->isDict()) {
-    if (fontObj.dictLookup("BaseFont", &nameObj)->isName()) {
-      name = new GString(nameObj.getName());
-    }
-    nameObj.free();
     hasToUnicode = fontObj.dictLookup("ToUnicode", &toUnicodeObj)->isStream();
     toUnicodeObj.free();
   }
@@ -263,13 +269,10 @@ static void scanFont(GfxFont *font, PDFDoc *doc) {
 	 font->getEmbeddedFontID(&embRef) ? "yes" : "no",
 	 subset ? "yes" : "no",
 	 hasToUnicode ? "yes" : "no");
-  if (fontRef.gen == 999999) {
+  if (fontRef.gen >= 100000) {
     printf(" [none]\n");
   } else {
     printf(" %6d %2d\n", fontRef.num, fontRef.gen);
-  }
-  if (name) {
-    delete name;
   }
 
   // add this font to the list

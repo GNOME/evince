@@ -40,45 +40,48 @@ static GBool rawOrder = gFalse;
 static GBool htmlMeta = gFalse;
 static char textEncName[128] = "";
 static char textEOL[16] = "";
-static char ownerPassword[33] = "";
-static char userPassword[33] = "";
+static GBool noPageBreaks = gFalse;
+static char ownerPassword[33] = "\001";
+static char userPassword[33] = "\001";
 static GBool quiet = gFalse;
 static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
-  {"-f",      argInt,      &firstPage,     0,
+  {"-f",       argInt,      &firstPage,     0,
    "first page to convert"},
-  {"-l",      argInt,      &lastPage,      0,
+  {"-l",       argInt,      &lastPage,      0,
    "last page to convert"},
-  {"-layout", argFlag,     &physLayout,    0,
+  {"-layout",  argFlag,     &physLayout,    0,
    "maintain original physical layout"},
-  {"-raw",    argFlag,     &rawOrder,      0,
+  {"-raw",     argFlag,     &rawOrder,      0,
    "keep strings in content stream order"},
-  {"-htmlmeta", argFlag,   &htmlMeta,      0,
+  {"-htmlmeta", argFlag,   &htmlMeta,       0,
    "generate a simple HTML file, including the meta information"},
-  {"-enc",    argString,   textEncName,    sizeof(textEncName),
+  {"-enc",     argString,   textEncName,    sizeof(textEncName),
    "output text encoding name"},
-  {"-eol",    argString,   textEOL,        sizeof(textEOL),
+  {"-eol",     argString,   textEOL,        sizeof(textEOL),
    "output end-of-line convention (unix, dos, or mac)"},
-  {"-opw",    argString,   ownerPassword,  sizeof(ownerPassword),
+  {"-nopgbrk", argFlag,     &noPageBreaks,  0,
+   "don't insert page breaks between pages"},
+  {"-opw",     argString,   ownerPassword,  sizeof(ownerPassword),
    "owner password (for encrypted files)"},
-  {"-upw",    argString,   userPassword,   sizeof(userPassword),
+  {"-upw",     argString,   userPassword,   sizeof(userPassword),
    "user password (for encrypted files)"},
-  {"-q",      argFlag,     &quiet,         0,
+  {"-q",       argFlag,     &quiet,         0,
    "don't print any messages or errors"},
-  {"-cfg",        argString,      cfgFileName,    sizeof(cfgFileName),
+  {"-cfg",     argString,   cfgFileName,    sizeof(cfgFileName),
    "configuration file to use in place of .xpdfrc"},
-  {"-v",      argFlag,     &printVersion,  0,
+  {"-v",       argFlag,     &printVersion,  0,
    "print copyright and version info"},
-  {"-h",      argFlag,     &printHelp,     0,
+  {"-h",       argFlag,     &printHelp,     0,
    "print usage information"},
-  {"-help",   argFlag,     &printHelp,     0,
+  {"-help",    argFlag,     &printHelp,     0,
    "print usage information"},
-  {"--help",  argFlag,     &printHelp,     0,
+  {"--help",   argFlag,     &printHelp,     0,
    "print usage information"},
-  {"-?",      argFlag,     &printHelp,     0,
+  {"-?",       argFlag,     &printHelp,     0,
    "print usage information"},
   {NULL}
 };
@@ -120,6 +123,9 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "Bad '-eol' value on command line\n");
     }
   }
+  if (noPageBreaks) {
+    globalParams->setTextPageBreaks(gFalse);
+  }
   if (quiet) {
     globalParams->setErrQuiet(quiet);
   }
@@ -132,12 +138,12 @@ int main(int argc, char *argv[]) {
   }
 
   // open PDF file
-  if (ownerPassword[0]) {
+  if (ownerPassword[0] != '\001') {
     ownerPW = new GString(ownerPassword);
   } else {
     ownerPW = NULL;
   }
-  if (userPassword[0]) {
+  if (userPassword[0] != '\001') {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
@@ -228,7 +234,7 @@ int main(int argc, char *argv[]) {
   textOut = new TextOutputDev(textFileName->getCString(),
 			      physLayout, rawOrder, htmlMeta);
   if (textOut->isOk()) {
-    doc->displayPages(textOut, firstPage, lastPage, 72, 0, gFalse);
+    doc->displayPages(textOut, firstPage, lastPage, 72, 72, 0, gFalse);
   } else {
     delete textOut;
     exitCode = 2;

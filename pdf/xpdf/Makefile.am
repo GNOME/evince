@@ -97,6 +97,7 @@ libxpdf_a_SOURCES =		\
 	UnicodeMap.cc		\
 	UnicodeMap.h		\
 	UnicodeMapTables.h	\
+	UnicodeTypeTable.cc	\
 	XRef.cc			\
 	XRef.h
 

@@ -30,8 +30,8 @@
 static int firstPage = 1;
 static int lastPage = 0;
 static GBool dumpJPEG = gFalse;
-static char ownerPassword[33] = "";
-static char userPassword[33] = "";
+static char ownerPassword[33] = "\001";
+static char userPassword[33] = "\001";
 static GBool quiet = gFalse;
 static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
@@ -96,12 +96,12 @@ int main(int argc, char *argv[]) {
   }
 
   // open PDF file
-  if (ownerPassword[0]) {
+  if (ownerPassword[0] != '\001') {
     ownerPW = new GString(ownerPassword);
   } else {
     ownerPW = NULL;
   }
-  if (userPassword[0]) {
+  if (userPassword[0] != '\001') {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
   // write image files
   imgOut = new ImageOutputDev(imgRoot, dumpJPEG);
   if (imgOut->isOk()) {
-    doc->displayPages(imgOut, firstPage, lastPage, 72, 0, gFalse);
+    doc->displayPages(imgOut, firstPage, lastPage, 72, 72, 0, gFalse);
   }
   delete imgOut;
 

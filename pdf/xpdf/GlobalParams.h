@@ -28,7 +28,7 @@ class GList;
 class GHash;
 class NameToCharCode;
 class CharCodeToUnicode;
-class CIDToUnicodeCache;
+class CharCodeToUnicodeCache;
 class UnicodeMap;
 class UnicodeMapCache;
 class CMap;
@@ -134,7 +134,6 @@ public:
   CharCode getMacRomanCharCode(char *charName);
 
   Unicode mapNameToUnicode(char *charName);
-  FILE *getCIDToUnicodeFile(GString *collection);
   UnicodeMap *getResidentUnicodeMap(GString *encodingName);
   FILE *getUnicodeMapFile(GString *encodingName);
   FILE *findCMapFile(GString *collection, GString *cMapName);
@@ -154,7 +153,9 @@ public:
   GBool getPSEmbedCIDTrueType();
   GBool getPSOPI();
   GBool getPSASCIIHex();
+  GString *getTextEncodingName();
   EndOfLineKind getTextEOL();
+  GBool getTextPageBreaks();
   GBool getTextKeepTinyChars();
   GString *findFontFile(GString *fontName, char **exts);
   GString *getInitialZoom();
@@ -167,6 +168,7 @@ public:
   GBool getErrQuiet();
 
   CharCodeToUnicode *getCIDToUnicode(GString *collection);
+  CharCodeToUnicode *getUnicodeToUnicode(GString *fontName);
   UnicodeMap *getUnicodeMap(GString *encodingName);
   CMap *getCMap(GString *collection, GString *cMapName);
   UnicodeMap *getTextEncoding();
@@ -188,6 +190,7 @@ public:
   void setPSASCIIHex(GBool hex);
   void setTextEncoding(char *encodingName);
   GBool setTextEOL(char *s);
+  void setTextPageBreaks(GBool pageBreaks);
   void setTextKeepTinyChars(GBool keep);
   void setInitialZoom(char *s);
   GBool setT1libControl(char *s);
@@ -201,6 +204,7 @@ private:
   void parseFile(GString *fileName, FILE *f);
   void parseNameToUnicode(GList *tokens, GString *fileName, int line);
   void parseCIDToUnicode(GList *tokens, GString *fileName, int line);
+  void parseUnicodeToUnicode(GList *tokens, GString *fileName, int line);
   void parseUnicodeMap(GList *tokens, GString *fileName, int line);
   void parseCMapDir(GList *tokens, GString *fileName, int line);
   void parseToUnicodeDir(GList *tokens, GString *fileName, int line);
@@ -238,6 +242,8 @@ private:
   GHash *cidToUnicodes;		// files for mappings from char collections
 				//   to Unicode, indexed by collection name
 				//   [GString]
+  GHash *unicodeToUnicodes;	// files for Unicode-to-Unicode mappings,
+				//   indexed by font name pattern [GString]
   GHash *residentUnicodeMaps;	// mappings from Unicode to char codes,
 				//   indexed by encoding name [UnicodeMap]
   GHash *unicodeMaps;		// files for mappings from Unicode to char
@@ -270,6 +276,7 @@ private:
 				//   output
   EndOfLineKind textEOL;	// type of EOL marker to use for text
 				//   output
+  GBool textPageBreaks;		// insert end-of-page markers?
   GBool textKeepTinyChars;	// keep all characters in text output
   GList *fontDirs;		// list of font dirs [GString]
   GString *initialZoom;		// initial zoom level
@@ -282,12 +289,15 @@ private:
   GBool printCommands;		// print the drawing commands
   GBool errQuiet;		// suppress error messages?
 
-  CIDToUnicodeCache *cidToUnicodeCache;
+  CharCodeToUnicodeCache *cidToUnicodeCache;
+  CharCodeToUnicodeCache *unicodeToUnicodeCache;
   UnicodeMapCache *unicodeMapCache;
   CMapCache *cMapCache;
 
-#ifdef MULTITHREADED
+#if MULTITHREADED
   GMutex mutex;
+  GMutex unicodeMapCacheMutex;
+  GMutex cMapCacheMutex;
 #endif
 };
 

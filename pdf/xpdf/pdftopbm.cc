@@ -30,8 +30,8 @@
 static int firstPage = 1;
 static int lastPage = 0;
 static int resolution = 150;
-static char ownerPassword[33] = "";
-static char userPassword[33] = "";
+static char ownerPassword[33] = "\001";
+static char userPassword[33] = "\001";
 static GBool quiet = gFalse;
 static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
@@ -96,12 +96,12 @@ int main(int argc, char *argv[]) {
   }
 
   // open PDF file
-  if (ownerPassword[0]) {
+  if (ownerPassword[0] != '\001') {
     ownerPW = new GString(ownerPassword);
   } else {
     ownerPW = NULL;
   }
-  if (userPassword[0]) {
+  if (userPassword[0] != '\001') {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
@@ -127,7 +127,8 @@ int main(int argc, char *argv[]) {
   // write PBM files
   pbmOut = PBMOutputDev::makePBMOutputDev(NULL, pbmRoot);
   pbmOut->startDoc(doc->getXRef());
-  doc->displayPages(pbmOut, firstPage, lastPage, resolution, 0, gFalse);
+  doc->displayPages(pbmOut, firstPage, lastPage,
+		    resolution, resolution, 0, gFalse);
   PBMOutputDev::killPBMOutputDev(pbmOut);
 
   exitCode = 0;

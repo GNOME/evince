@@ -30,8 +30,8 @@ static int paperHeight = 0;
 static GBool level1 = gFalse;
 static char textEncName[128] = "";
 static char textEOL[16] = "";
-static char ownerPassword[33] = "";
-static char userPassword[33] = "";
+static char ownerPassword[33] = "\001";
+static char userPassword[33] = "\001";
 static GBool fullScreen = gFalse;
 static char remoteName[100] = "xpdf_";
 static GBool doRemoteReload = gFalse;
@@ -59,7 +59,7 @@ static ArgDesc argDesc[] = {
   {"-papercolor", argStringDummy, NULL,           0,
    "color of paper background"},
   {"-z",          argStringDummy, NULL,           0,
-   "initial zoom level (-5..5, page, width)"},
+   "initial zoom level (percent, 'page', 'width')"},
 #if HAVE_T1LIB_H
   {"-t1lib",      argString,      t1libControlStr, sizeof(t1libControlStr),
    "t1lib font rasterizer control: none, plain, low, high"},
@@ -249,10 +249,10 @@ int main(int argc, char *argv[]) {
   app->setFullScreen(fullScreen);
 
   // check for password string(s)
-  ownerPasswordStr = ownerPassword[0] ? new GString(ownerPassword)
-                                      : (GString *)NULL;
-  userPasswordStr = userPassword[0] ? new GString(userPassword)
-                                    : (GString *)NULL;
+  ownerPasswordStr = ownerPassword[0] != '\001' ? new GString(ownerPassword)
+                                                : (GString *)NULL;
+  userPasswordStr = userPassword[0] != '\001' ? new GString(userPassword)
+                                              : (GString *)NULL;
 
   // open the file and run the main loop
   if (destName) {

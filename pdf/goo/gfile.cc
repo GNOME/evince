@@ -10,13 +10,7 @@
 
 #include <aconf.h>
 
-#ifdef WIN32
-   extern "C" {
-#  ifndef _MSC_VER
-#    include <kpathsea/win32lib.h>
-#  endif
-   }
-#else // !WIN32
+#ifndef WIN32
 #  if defined(MACOS)
 #    include <sys/stat.h>
 #  elif !defined(ACORN)
@@ -647,10 +641,14 @@ GDirEntry *GDir::getNextEntry() {
   GDirEntry *e;
 
 #if defined(WIN32)
-  e = new GDirEntry(path->getCString(), ffd.cFileName, doStat);
-  if (hnd  && !FindNextFile(hnd, &ffd)) {
-    FindClose(hnd);
-    hnd = NULL;
+  if (hnd) {
+    e = new GDirEntry(path->getCString(), ffd.cFileName, doStat);
+    if (hnd  && !FindNextFile(hnd, &ffd)) {
+      FindClose(hnd);
+      hnd = NULL;
+    }
+  } else {
+    e = NULL;
   }
 #elif defined(ACORN)
 #elif defined(MACOS)
@@ -694,6 +692,7 @@ void GDir::rewind() {
   tmp = path->copy();
   tmp->append("/*.*");
   hnd = FindFirstFile(tmp->getCString(), &ffd);
+  delete tmp;
 #elif defined(ACORN)
 #elif defined(MACOS)
 #else

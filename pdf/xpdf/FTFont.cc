@@ -48,11 +48,9 @@ FTFontEngine::~FTFontEngine() {
 //------------------------------------------------------------------------
 
 FTFontFile::FTFontFile(FTFontEngine *engineA, char *fontFileName,
-		       char **fontEnc, GBool pdfFontHasEncoding,
-		       GBool pdfFontIsSymbolic) {
+		       char **fontEnc, Gushort *codeToGID) {
   char *name;
-  int unicodeCmap, macRomanCmap, msSymbolCmap;
-  int i, j;
+  int i;
 
   ok = gFalse;
   engine = engineA;
@@ -66,7 +64,6 @@ FTFontFile::FTFontFile(FTFontEngine *engineA, char *fontFileName,
 
   if (!strcmp(face->driver->root.clazz->module_name, "type1") ||
       !strcmp(face->driver->root.clazz->module_name, "cff")) {
-
     mode = ftFontModeCodeMapDirect;
     codeMap = (Guint *)gmalloc(256 * sizeof(Guint));
     for (i = 0; i < 256; ++i) {
@@ -77,73 +74,10 @@ FTFontFile::FTFontFile(FTFontEngine *engineA, char *fontFileName,
     }
 
   } else {
-
-    // To match up with the Adobe-defined behaviour, we choose a cmap
-    // like this:
-    // 1. If the PDF font has an encoding:
-    //    1a. If the TrueType font has a Microsoft Unicode cmap, use it,
-    //        and use the Unicode indexes, not the char codes.
-    //    1b. If the PDF font is symbolic and the TrueType font has a
-    //        Microsoft Symbol cmap, use it, and use (0xf000 + char code).
-    //    1c. If the TrueType font has a Macintosh Roman cmap, use it,
-    //        and reverse map the char names through MacRomanEncoding to
-    //        get char codes.
-    // 2. If the PDF font does not have an encoding:
-    //    2a. If the TrueType font has a Macintosh Roman cmap, use it,
-    //        and use char codes directly.
-    //    2b. If the TrueType font has a Microsoft Symbol cmap, use it,
-    //        and use (0xf000 + char code).
-    // 3. If none of these rules apply, use the first cmap and hope for
-    //    the best (this shouldn't happen).
-    unicodeCmap = macRomanCmap = msSymbolCmap = 0xffff;
-    for (i = 0; i < face->num_charmaps; ++i) {
-      if ((face->charmaps[i]->platform_id == 3 &&
-	   face->charmaps[i]->encoding_id == 1) ||
-	  face->charmaps[i]->platform_id == 0) {
-	unicodeCmap = i;
-      } else if (face->charmaps[i]->platform_id == 1 &&
-		 face->charmaps[i]->encoding_id == 0) {
-	macRomanCmap = i;
-      } else if (face->charmaps[i]->platform_id == 3 &&
-		 face->charmaps[i]->encoding_id == 0) {
-	msSymbolCmap = i;
-      }
-    }
-    i = 0;
-    mode = ftFontModeCharCode;
-    charMapOffset = 0;
-    if (pdfFontHasEncoding) {
-      if (unicodeCmap != 0xffff) {
-	i = unicodeCmap;
-	mode = ftFontModeUnicode;
-      } else if (pdfFontIsSymbolic && msSymbolCmap != 0xffff) {
-	i = msSymbolCmap;
-	mode = ftFontModeCharCodeOffset;
-	charMapOffset = 0xf000;
-      } else if (macRomanCmap != 0xffff) {
-	i = macRomanCmap;
-	mode = ftFontModeCodeMap;
-	codeMap = (Guint *)gmalloc(256 * sizeof(Guint));
-	for (j = 0; j < 256; ++j) {
-	  if (fontEnc[j]) {
-	    codeMap[j] = globalParams->getMacRomanCharCode(fontEnc[j]);
-	  } else {
-	    codeMap[j] = 0;
-	  }
-	}
-      }
-    } else {
-      if (macRomanCmap != 0xffff) {
-	i = macRomanCmap;
-	mode = ftFontModeCharCode;
-      } else if (msSymbolCmap != 0xffff) {
-	i = msSymbolCmap;
-	mode = ftFontModeCharCodeOffset;
-	charMapOffset = 0xf000;
-      }
-    }
-    if (FT_Set_Charmap(face, face->charmaps[i])) {
-      return;
+    mode = ftFontModeCodeMapDirect;
+    codeMap = (Guint *)gmalloc(256 * sizeof(Guint));
+    for (i = 0; i < 256; ++i) {
+      codeMap[i] = (int)codeToGID[i];
     }
   }
 
@@ -558,7 +492,9 @@ Guchar *FTFont::getGlyphPixmap(CharCode c, Unicode u,
   idx = getGlyphIndex(c, u);
   // if we have the FT2 bytecode interpreter, autohinting won't be used
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-  if (FT_Load_Glyph(fontFile->face, idx, FT_LOAD_DEFAULT)) {
+  if (FT_Load_Glyph(fontFile->face, idx,
+		    fontFile->engine->aa ? FT_LOAD_NO_BITMAP
+		                         : FT_LOAD_DEFAULT)) {
     return gFalse;
   }
 #else
@@ -567,8 +503,8 @@ Guchar *FTFont::getGlyphPixmap(CharCode c, Unicode u,
   // anti-aliasing is disabled, this seems to be a tossup - some fonts
   // look better with hinting, some without, so leave hinting on
   if (FT_Load_Glyph(fontFile->face, idx,
-		    fontFile->engine->aa ? FT_LOAD_NO_HINTING
-		                         : FT_LOAD_DEFAULT)) {
+		fontFile->engine->aa ? FT_LOAD_NO_HINTING | FT_LOAD_NO_BITMAP
+		                     : FT_LOAD_DEFAULT)) {
     return gFalse;
   }
 #endif
@@ -720,22 +656,6 @@ FT_UInt FTFont::getGlyphIndex(CharCode c, Unicode u) {
   switch (fontFile->mode) {
   case ftFontModeUnicode:
     idx = FT_Get_Char_Index(fontFile->face, (FT_ULong)u);
-    break;
-  case ftFontModeCharCode:
-    idx = FT_Get_Char_Index(fontFile->face, (FT_ULong)c);
-    break;
-  case ftFontModeCharCodeOffset:
-    if ((idx = FT_Get_Char_Index(fontFile->face, (FT_ULong)c)) == 0) {
-      idx = FT_Get_Char_Index(fontFile->face,
-			      (FT_ULong)(c + fontFile->charMapOffset));
-    }
-    break;
-  case ftFontModeCodeMap:
-    if (c <= 0xff) {
-      idx = FT_Get_Char_Index(fontFile->face, (FT_ULong)fontFile->codeMap[c]);
-    } else {
-      idx = 0;
-    }
     break;
   case ftFontModeCodeMapDirect:
     if (c <= 0xff) {

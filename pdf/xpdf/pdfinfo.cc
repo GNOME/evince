@@ -34,15 +34,21 @@ static void printInfoString(Dict *infoDict, char *key, char *text,
 			    UnicodeMap *uMap);
 static void printInfoDate(Dict *infoDict, char *key, char *text);
 
+static int firstPage = 1;
+static int lastPage = 0;
 static GBool printMetadata = gFalse;
 static char textEncName[128] = "";
-static char ownerPassword[33] = "";
-static char userPassword[33] = "";
+static char ownerPassword[33] = "\001";
+static char userPassword[33] = "\001";
 static char cfgFileName[256] = "";
 static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
+  {"-f",      argInt,      &firstPage,        0,
+   "first page to convert"},
+  {"-l",      argInt,      &lastPage,         0,
+   "last page to convert"},
   {"-meta",   argFlag,     &printMetadata,    0,
    "print the document metadata (XML)"},
   {"-enc",    argString,   textEncName,    sizeof(textEncName),
@@ -77,7 +83,8 @@ int main(int argc, char *argv[]) {
   GString *metadata;
   GBool ok;
   int exitCode;
-  int i;
+  int pg, i;
+  GBool multiPage;
 
   exitCode = 99;
 
@@ -107,12 +114,12 @@ int main(int argc, char *argv[]) {
   }
 
   // open PDF file
-  if (ownerPassword[0]) {
+  if (ownerPassword[0] != '\001') {
     ownerPW = new GString(ownerPassword);
   } else {
     ownerPW = NULL;
   }
-  if (userPassword[0]) {
+  if (userPassword[0] != '\001') {
     userPW = new GString(userPassword);
   } else {
     userPW = NULL;
@@ -129,29 +136,43 @@ int main(int argc, char *argv[]) {
     goto err2;
   }
 
+  // get page range
+  if (firstPage < 1) {
+    firstPage = 1;
+  }
+  if (lastPage == 0) {
+    multiPage = gFalse;
+    lastPage = 1;
+  } else {
+    multiPage = gTrue;
+  }
+  if (lastPage < 1 || lastPage > doc->getNumPages()) {
+    lastPage = doc->getNumPages();
+  }
+
   // print doc info
   doc->getDocInfo(&info);
   if (info.isDict()) {
-    printInfoString(info.getDict(), "Title",        "Title:        ", uMap);
-    printInfoString(info.getDict(), "Subject",      "Subject:      ", uMap);
-    printInfoString(info.getDict(), "Keywords",     "Keywords:     ", uMap);
-    printInfoString(info.getDict(), "Author",       "Author:       ", uMap);
-    printInfoString(info.getDict(), "Creator",      "Creator:      ", uMap);
-    printInfoString(info.getDict(), "Producer",     "Producer:     ", uMap);
-    printInfoDate(info.getDict(),   "CreationDate", "CreationDate: ");
-    printInfoDate(info.getDict(),   "ModDate",      "ModDate:      ");
+    printInfoString(info.getDict(), "Title",        "Title:          ", uMap);
+    printInfoString(info.getDict(), "Subject",      "Subject:        ", uMap);
+    printInfoString(info.getDict(), "Keywords",     "Keywords:       ", uMap);
+    printInfoString(info.getDict(), "Author",       "Author:         ", uMap);
+    printInfoString(info.getDict(), "Creator",      "Creator:        ", uMap);
+    printInfoString(info.getDict(), "Producer",     "Producer:       ", uMap);
+    printInfoDate(info.getDict(),   "CreationDate", "CreationDate:   ");
+    printInfoDate(info.getDict(),   "ModDate",      "ModDate:        ");
   }
   info.free();
 
   // print tagging info
-  printf("Tagged:       %s\n",
+  printf("Tagged:         %s\n",
 	 doc->getStructTreeRoot()->isDict() ? "yes" : "no");
 
   // print page count
-  printf("Pages:        %d\n", doc->getNumPages());
+  printf("Pages:          %d\n", doc->getNumPages());
 
   // print encryption info
-  printf("Encrypted:    ");
+  printf("Encrypted:      ");
   if (doc->isEncrypted()) {
     printf("yes (print:%s copy:%s change:%s addNotes:%s)\n",
 	   doc->okToPrint(gTrue) ? "yes" : "no",
@@ -163,16 +184,20 @@ int main(int argc, char *argv[]) {
   }
 
   // print page size
-  if (doc->getNumPages() >= 1) {
-    w = doc->getPageWidth(1);
-    h = doc->getPageHeight(1);
-    printf("Page size:    %g x %g pts", w, h);
+  for (pg = firstPage; pg <= lastPage; ++pg) {
+    w = doc->getPageWidth(pg);
+    h = doc->getPageHeight(pg);
+    if (multiPage) {
+      printf("Page %4d size: %g x %g pts", pg, w, h);
+    } else {
+      printf("Page size:      %g x %g pts", w, h);
+    }
     if ((fabs(w - 612) < 0.1 && fabs(h - 792) < 0.1) ||
 	(fabs(w - 792) < 0.1 && fabs(h - 612) < 0.1)) {
       printf(" (letter)");
     } else {
-      hISO = sqrt(sqrt(2)) * 7200 / 2.54;
-      wISO = hISO / sqrt(2);
+      hISO = sqrt(sqrt(2.0)) * 7200 / 2.54;
+      wISO = hISO / sqrt(2.0);
       for (i = 0; i <= 6; ++i) {
 	if ((fabs(w - wISO) < 1 && fabs(h - hISO) < 1) ||
 	    (fabs(w - hISO) < 1 && fabs(h - wISO) < 1)) {
@@ -180,7 +205,7 @@ int main(int argc, char *argv[]) {
 	  break;
 	}
 	hISO = wISO;
-	wISO /= sqrt(2);
+	wISO /= sqrt(2.0);
       }
     }
     printf("\n");
@@ -195,22 +220,22 @@ int main(int argc, char *argv[]) {
   if (f) {
 #if HAVE_FSEEKO
     fseeko(f, 0, SEEK_END);
-    printf("File size:    %u bytes\n", (Guint)ftello(f));
+    printf("File size:      %u bytes\n", (Guint)ftello(f));
 #elif HAVE_FSEEK64
     fseek64(f, 0, SEEK_END);
-    printf("File size:    %u bytes\n", (Guint)ftell64(f));
+    printf("File size:      %u bytes\n", (Guint)ftell64(f));
 #else
     fseek(f, 0, SEEK_END);
-    printf("File size:    %d bytes\n", (int)ftell(f));
+    printf("File size:      %d bytes\n", (int)ftell(f));
 #endif
     fclose(f);
   }
 
   // print linearization info
-  printf("Optimized:    %s\n", doc->isLinearized() ? "yes" : "no");
+  printf("Optimized:      %s\n", doc->isLinearized() ? "yes" : "no");
 
   // print PDF version
-  printf("PDF version:  %.1f\n", doc->getPDFVersion());
+  printf("PDF version:    %.1f\n", doc->getPDFVersion());
 
   // print the metadata
   if (printMetadata && (metadata = doc->readMetadata())) {

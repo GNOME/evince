@@ -48,9 +48,6 @@ private:
 
 enum FTFontIndexMode {
   ftFontModeUnicode,
-  ftFontModeCharCode,
-  ftFontModeCharCodeOffset,
-  ftFontModeCodeMap,
   ftFontModeCodeMapDirect,
   ftFontModeCIDToGIDMap,
   ftFontModeCFFCharset,
@@ -62,8 +59,7 @@ public:
 
   // 8-bit font, TrueType or Type 1/1C
   FTFontFile(FTFontEngine *engineA, char *fontFileName,
-	     char **fontEnc, GBool pdfFontHasEncoding,
-	     GBool pdfFontIsSymbolic);
+	     char **fontEnc, Gushort *codeToGID);
 
   // CID font, TrueType
   FTFontFile(FTFontEngine *engineA, char *fontFileName,
@@ -81,7 +77,6 @@ private:
   FTFontEngine *engine;
   FT_Face face;
   FTFontIndexMode mode;
-  int charMapOffset;
   Guint *codeMap;
   Gushort *cidToGID;
   int cidToGIDLen;

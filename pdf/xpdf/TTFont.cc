@@ -65,16 +65,25 @@ TTFontFile::TTFontFile(TTFontEngine *engineA, char *fontFileName,
   // To match up with the Adobe-defined behaviour, we choose a cmap
   // like this:
   // 1. If the PDF font has an encoding:
-  //    1a. If the TrueType font has a Microsoft Unicode cmap, use it,
-  //        and use the Unicode indexes, not the char codes.
-  //    1b. If the TrueType font has a Macintosh Roman cmap, use it,
-  //        and reverse map the char names through MacRomanEncoding to
+  //    1a. If the PDF font specified MacRomanEncoding and the
+  //        TrueType font has a Macintosh Roman cmap, use it, and
+  //        reverse map the char names through MacRomanEncoding to
   //        get char codes.
+  //    1b. If the TrueType font has a Microsoft Unicode cmap or a
+  //        non-Microsoft Unicode cmap, use it, and use the Unicode
+  //        indexes, not the char codes.
+  //    1c. If the PDF font is symbolic and the TrueType font has a
+  //        Microsoft Symbol cmap, use it, and use char codes
+  //        directly (possibly with an offset of 0xf000).
+  //    1d. If the TrueType font has a Macintosh Roman cmap, use it,
+  //        as in case 1a.
   // 2. If the PDF font does not have an encoding:
   //    2a. If the TrueType font has a Macintosh Roman cmap, use it,
-  //        and use char codes directly.
+  //        and use char codes directly (possibly with an offset of
+  //        0xf000).
   //    2b. If the TrueType font has a Microsoft Symbol cmap, use it,
-  //        and use (0xf000 + char code).
+  //        and use char codes directly (possible with an offset of
+  //        0xf000).
   // 3. If none of these rules apply, use the first cmap and hope for
   //    the best (this shouldn't happen).
   unicodeCmap = macRomanCmap = msSymbolCmap = 0xffff;
@@ -91,7 +100,6 @@ TTFontFile::TTFontFile(TTFontEngine *engineA, char *fontFileName,
   }
   i = 0;
   mode = ttFontModeCharCode;
-  charMapOffset = 0;
   if (pdfFontHasEncoding) {
     if (unicodeCmap != 0xffff) {
       i = unicodeCmap;
@@ -114,8 +122,7 @@ TTFontFile::TTFontFile(TTFontEngine *engineA, char *fontFileName,
       mode = ttFontModeCharCode;
     } else if (msSymbolCmap != 0xffff) {
       i = msSymbolCmap;
-      mode = ttFontModeCharCodeOffset;
-      charMapOffset = 0xf000;
+      mode = ttFontModeCharCode;
     }
   }
   TT_Get_CharMap(face, i, &charMap);
@@ -421,11 +428,9 @@ GBool TTFont::getGlyphPixmap(CharCode c, Unicode u) {
     idx = TT_Char_Index(fontFile->charMap, (TT_UShort)u);
     break;
   case ttFontModeCharCode:
-    idx = TT_Char_Index(fontFile->charMap, (TT_UShort)c);
-    break;
-  case ttFontModeCharCodeOffset:
-    idx = TT_Char_Index(fontFile->charMap,
-			(TT_UShort)(c + fontFile->charMapOffset));
+    if ((idx = TT_Char_Index(fontFile->charMap, (TT_UShort)c)) == 0) {
+      idx = TT_Char_Index(fontFile->charMap, (TT_UShort)(0xf000 + c));
+    }
     break;
   case ttFontModeCodeMap:
     if (c <= 0xff) {
