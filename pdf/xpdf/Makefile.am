@@ -271,8 +271,9 @@ ui_DATA =				\
 
 CLEANFILES =				\
 	$(server_DATA)			\
-	$(server_in_files:.server.in.in=.server.in) \
-	$(BUILT_SOURCES)
+	$(server_in_files:.server.in.in=.server.in)
+
+#	$(marshal_sources)
 
 EXTRA_DIST = $(stock_DATA)		\
 	gpdf-marshal.list		\
@@ -283,8 +284,8 @@ EXTRA_DIST = $(stock_DATA)		\
 
 DONT_DIST_SOURCE = $(marshal_sources)
 
-dist-hook:
-	for file in $(DONT_DIST_SOURCE) ; do \
-	    rm -f $(distdir)/$$file ; \
-	done
+# dist-hook:
+# 	for file in $(DONT_DIST_SOURCE) ; do \
+# 	    rm -f $(distdir)/$$file ; \
+# 	done
 
