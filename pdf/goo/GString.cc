@@ -44,7 +44,7 @@ GString::GString() {
   s[0] = '\0';
 }
 
-GString::GString(char *s1) {
+GString::GString(const char *s1) {
   int n = strlen(s1);
 
   s = NULL;
@@ -52,7 +52,7 @@ GString::GString(char *s1) {
   memcpy(s, s1, n + 1);
 }
 
-GString::GString(char *s1, int length1) {
+GString::GString(const char *s1, int length1) {
   s = NULL;
   resize(length = length1);
   memcpy(s, s1, length * sizeof(char));

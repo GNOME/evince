@@ -24,11 +24,11 @@ public:
   GString();
 
   // Create a string from a C string.
-  GString(char *s1);
+  GString(const char *s1);
 
   // Create a string from <length1> chars at <s1>.  This string
   // can contain null characters.
-  GString (char *s1, int length1);
+  GString (const char *s1, int length1);
 
   // Copy a string.
   GString(GString *str);

@@ -511,7 +511,7 @@ static char *isoLatin2EncodingNames[isoLatin2EncodingSize] = {
   "zacute",
   "hungarumlaut",
   "zcaron",
-  "zdotaccenp",
+  "zdotaccent",
   "Racute",
   "Aacute",
   "Acircumflex",

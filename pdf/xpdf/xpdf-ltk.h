@@ -17,7 +17,10 @@ LTKWindow *makeWindow(LTKApp *a) {
           new LTKEmpty()
         )
       ),
-      new LTKBox(NULL, 14, 1, 0, 0, 0, 0, ltkBorderNone, 1, 0,
+      new LTKBox(NULL, 15, 1, 0, 0, 0, 0, ltkBorderNone, 1, 0,
+        new LTKBox(NULL, 1, 1, 2, 2, 2, 2, ltkBorderNone, 0, 0,
+          new LTKButton(NULL, 0, backArrow_bits, backArrow_width, backArrow_height, ltkButtonClick, &backCbk)
+        ),
         new LTKBox(NULL, 1, 1, 2, 2, 2, 2, ltkBorderNone, 0, 0,
           new LTKButton(NULL, 0, dblLeftArrow_bits, dblLeftArrow_width, dblLeftArrow_height, ltkButtonClick, &prevTenPageCbk)
         ),
