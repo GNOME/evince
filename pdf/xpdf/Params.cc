@@ -73,9 +73,12 @@ void freeParams() {
   int i;
 
   if (fontPath) {
-    for (i = 0; i < fontPathLen; ++i)
+    for (i = 0; i < fontPathLen; ++i) {
       gfree(fontPath[i]);
+      fontPath[i] = NULL;
+    }
     gfree(fontPath);
+    fontPath = NULL;
   }
   if (devFontMap) {
     for (i = 0; i < devFontMapLen; ++i) {

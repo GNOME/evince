@@ -41,19 +41,21 @@ GBool printCommands = gFalse;
 gint  gpdf_debug;
 poptContext ctx;
 
+#define DOC_ROOT_MAGIC 0xad3f556d
 struct DOC_ROOT {
+  guint32        magic;
   GString        *title;
   PDFDoc         *pdf;
   GtkWidget      *toplevel;
   GtkWidget      *table;
   GnomeAppBar    *appbar;
   GtkDrawingArea *area;
-  GdkVisual      *visual;
   GdkPixmap      *pixmap;
   OutputDev      *out;
   GdkColor        paper;
 };
 
+DOC_ROOT *hack_global = NULL;
 
 static void
 crummy_cmd (GtkWidget *widget, DOC_ROOT *tmp)
@@ -85,10 +87,12 @@ static GnomeUIInfo main_menu [] = {
 //------------------------------------------------------------------------
 
 static gint
-doc_config_event (GtkWidget *widget, DOC_ROOT *doc)
+doc_config_event (GtkWidget *widget, void *ugly)
 {
-  if (!doc)
-    return TRUE;
+  DOC_ROOT *doc = hack_global;
+
+  g_return_val_if_fail (doc, FALSE);
+  g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
   if (doc->pixmap)
     gdk_pixmap_unref(doc->pixmap);
@@ -97,32 +101,43 @@ doc_config_event (GtkWidget *widget, DOC_ROOT *doc)
                                widget->allocation.width,
                                widget->allocation.height,
                                -1);
-  gdk_draw_rectangle (doc->pixmap,
+
+  gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
+  doc->out    = new GOutputDev (doc->pixmap, doc->paper);
+
+/*  gdk_draw_rectangle (doc->pixmap,
 		      widget->style->white_gc,
 		      TRUE,
 		      0, 0,
 		      widget->allocation.width,
-		      widget->allocation.height);
+		      widget->allocation.height);*/
+  printf ("Configured...\n");
   return TRUE;
 }
 
 static gint
-doc_redraw_event (GtkWidget *widget, DOC_ROOT *doc)
+doc_redraw_event (GtkWidget *widget, void *ugly)
 {
-/* Redraw the screen from the backing pixmap */
+  DOC_ROOT *doc = hack_global;
 
-  gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
-  doc->out    = new GOutputDev (doc->pixmap, doc->paper);
-  
-  doc->pdf->displayPage(doc->out, 1, 1, 0, gTrue);
-  
-/*  gdk_draw_pixmap(widget->window,
-		  widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-		  doc->pixmap,
-		  event->area.x, event->area.y,
-		  event->area.x, event->area.y,
-		  event->area.width, event->area.height);*/
+  g_return_val_if_fail (doc, FALSE);
+  g_return_val_if_fail (doc->magic == DOC_ROOT_MAGIC, FALSE);
 
+  if (doc->out && doc->pdf) {
+    printf ("There are %d pages\n", doc->pdf->getNumPages());
+
+    doc->pdf->displayPage(doc->out, 1, 72, 0, gTrue);
+    gdk_draw_pixmap (widget->window,
+		     widget->style->white_gc,
+		     doc->pixmap,
+		     0, 0,
+		     0, 0,
+		     widget->allocation.width,
+		     widget->allocation.height);
+    
+  } else
+    printf ("Null pointer error %p %p\n", doc->out, doc->pdf);
+  
   return FALSE;
 }
 
@@ -133,6 +148,9 @@ loadFile(GString *fileName)
   char s[20];
   char *p;
 
+  hack_global = doc;
+
+  doc->magic = DOC_ROOT_MAGIC;
   // open PDF file
   doc->pdf = new PDFDoc(fileName);
   if (!doc->pdf->isOk()) {
@@ -140,6 +158,8 @@ loadFile(GString *fileName)
     delete doc;
     return gFalse;
   }
+
+  g_assert (doc->pdf->getCatalog());
 
   doc->toplevel = gnome_app_new ("gpdf", "gpdf");
   gtk_window_set_policy(GTK_WINDOW(doc->toplevel), 1, 1, 0);
@@ -155,10 +175,10 @@ loadFile(GString *fileName)
 
   doc->pixmap = NULL;
   doc->area   = GTK_DRAWING_AREA (gtk_drawing_area_new ());
-  gtk_signal_connect (GTK_OBJECT (doc->area), "expose_event",
-		      (GtkSignalFunc) doc_redraw_event, NULL);
   gtk_signal_connect (GTK_OBJECT(doc->area),"configure_event",
-		      (GtkSignalFunc) doc_config_event, NULL);
+		      (GtkSignalFunc) doc_config_event, doc);
+  gtk_signal_connect (GTK_OBJECT (doc->area), "expose_event",
+		      (GtkSignalFunc) doc_redraw_event, doc);
 
   gtk_table_attach (GTK_TABLE (doc->table), GTK_WIDGET (doc->area),
 		    0, 1, 1, 2,
@@ -233,9 +253,9 @@ main (int argc, char *argv [])
 
   poptFreeContext (ctx);
 
-  freeParams();
-
   gtk_main ();
+
+  freeParams();
 
   /* Destroy files */
 }

@@ -1,3 +1,14 @@
+1999-06-03  Michael Meeks  <michael@edenproject.org>
+
+	* gpdf.cc (main): Moved freeParams() to after the main
+	loop !
+
+	* Params.cc (initParams): Added assert on fontPathLen.
+	(freeParams): Clean global pointers on free.
+
+	* Makefile.in (CXXFLAGS): Added LTKSRCDIR and
+	Xpm_CFLAGS to CXXFLAGS.
+
 1999-05-29  Michael Meeks  <michael@edenproject.org>
 
 	* Makefile.in (GPDF_OBJS): Remove XOutputDev

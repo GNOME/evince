@@ -15,7 +15,7 @@ LTKSRCDIR = $(srcdir)/../ltk
 LTKLIBDIR = ../ltk
 
 #CXXFLAGS = @CXXFLAGS@ @DEFS@ @OPTIONS@ -I$(GOOSRCDIR) -I$(LTKSRCDIR) -I$(srcdir) @X_CFLAGS@ @Xpm_CFLAGS@
-CXXFLAGS = @CXXFLAGS@ @DEFS@ @OPTIONS@ -I$(GOOSRCDIR) `gnome-config --cflags gnomeui` -I$(srcdir) @X_CFLAGS@
+CXXFLAGS = @CXXFLAGS@ @DEFS@ @OPTIONS@ -I$(GOOSRCDIR) -I$(LTKSRCDIR) `gnome-config --cflags gnomeui` -I$(srcdir) @Xpm_CFLAGS@ @X_CFLAGS@
 XLIBS = @Xpm_LIBS@ @X_PRE_LIBS@ @X_LIBS@ -lX11 @X_EXTRA_LIBS@
 
 OTHERLIBS = @LIBS@
@@ -68,7 +68,7 @@ CXX_SRC = \
 
 #------------------------------------------------------------------------
 
-all: gpdf
+all: gpdf xpdf
 
 #all: xpdf$(EXE) pdftops$(EXE) pdftotext$(EXE) pdfinfo$(EXE) \
 #	pdftopbm$(EXE) pdfimages$(EXE)
