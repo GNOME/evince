@@ -149,7 +149,9 @@ extern "C" {
     }
     
     Bonobo_PersistStream_load (persist,
-			      (Bonobo_Stream) bonobo_object_corba_objref (BONOBO_OBJECT (stream)), &ev);
+			      (Bonobo_Stream) bonobo_object_corba_objref (BONOBO_OBJECT (stream)),
+			       "",
+			       &ev);
 
     Bonobo_Unknown_unref (persist, &ev);
     CORBA_Object_release (persist, &ev);
