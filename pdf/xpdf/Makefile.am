@@ -125,6 +125,8 @@ libgpdf_a_SOURCES =			\
 	gpdf-link-canvas-item.h		\
 	gpdf-links-canvas-layer.cc	\
 	gpdf-links-canvas-layer.h	\
+	gpdf-persist-file.cc		\
+	gpdf-persist-file.h		\
 	gpdf-persist-stream.cc		\
 	gpdf-persist-stream.h
 
