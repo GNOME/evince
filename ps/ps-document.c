@@ -325,12 +325,12 @@ ps_document_get_property (GObject *object,
 }
 
 static void
-ps_document_class_init(PSDocumentClass * klass)
+ps_document_class_init(PSDocumentClass *klass)
 {
   GObjectClass *object_class;
 
   object_class = (GObjectClass *) klass;
-  parent_class = gtk_type_class(gtk_widget_get_type());
+  parent_class = g_type_class_peek_parent (klass);
   gs_class = klass;
 
   object_class->finalize = ps_document_finalize;
@@ -1695,6 +1695,12 @@ ps_document_load (EvDocument  *document,
 		return FALSE;
 
 	result = document_load (PS_DOCUMENT (document), filename);
+	if (!result) {
+		g_set_error (error, G_FILE_ERROR,
+			     G_FILE_ERROR_FAILED,
+			     "Failed to load document '%s'\n",
+			     uri);
+	}
 
 	g_free (filename);
 
