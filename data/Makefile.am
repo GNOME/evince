@@ -11,5 +11,6 @@ stock_DATA =				\
 	$(NULL)
 
 EXTRA_DIST =				\
+	$(stock_DATA)			\
 	$(ui_DATA)			\
 	$(NULL)
