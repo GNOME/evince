@@ -1,5 +1,21 @@
 2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* shell/ev-page-view.c: (ev_page_view_dispose):
+	* shell/ev-view.c: (ev_view_finalize):
+	* shell/ev-window.c: (ev_window_setup_document),
+	(ev_window_dispose), (ev_window_init):
+
+	Solve more refs issues.
+
+	I commented out the page_view initialization for now:
+	it was never destroyed (because it's never added
+	to a container). Because of that we was leaking
+	gs processes. Couldnt think to a clean fix.
+	We need to figure this out, password view has the
+	same issue probably.
+
+2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/ps-document.c: (ps_document_finalize),
 	(ps_document_get_n_pages), (ps_document_get_page):
 

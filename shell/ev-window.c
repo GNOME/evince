@@ -390,7 +390,7 @@ ev_window_setup_document (EvWindow *ev_window)
 {
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
-	EvPageView *page_view = EV_PAGE_VIEW (ev_window->priv->page_view);
+	//EvPageView *page_view = EV_PAGE_VIEW (ev_window->priv->page_view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
 
 	document = ev_window->priv->document;
@@ -404,7 +404,7 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_sidebar_set_document (sidebar, document);
 	ev_view_set_document (view, document);
-	ev_page_view_set_document (page_view, document);
+	//ev_page_view_set_document (page_view, document);
 
 	update_window_title (document, NULL, ev_window);
 	update_total_pages (ev_window);
@@ -1472,7 +1472,17 @@ ev_window_dispose (GObject *object)
 		g_object_unref (priv->document);
 		priv->document = NULL;
 	}
-	
+
+	if (priv->view) {
+		g_object_unref (priv->view);
+		priv->view = NULL;
+	}
+
+	if (priv->page_view) {
+		g_object_unref (priv->page_view);
+		priv->page_view = NULL;
+	}
+
 	if (priv->password_document) {
 		g_object_unref (priv->password_document);
 		priv->password_document = NULL;
@@ -1843,19 +1853,19 @@ ev_window_init (EvWindow *ev_window)
 			ev_window->priv->scrolled_window);
 
 	ev_window->priv->view = ev_view_new ();
-	ev_window->priv->page_view = ev_page_view_new ();
+	//ev_window->priv->page_view = ev_page_view_new ();
 	ev_window->priv->password_view = ev_password_view_new ();
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",
 				  G_CALLBACK (ev_window_popup_password_dialog),
 				  ev_window);
 	gtk_widget_show (ev_window->priv->view);
-	gtk_widget_show (ev_window->priv->page_view);
+	//gtk_widget_show (ev_window->priv->page_view);
 	gtk_widget_show (ev_window->priv->password_view);
 
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);
-	g_object_ref (ev_window->priv->page_view);
+	//g_object_ref (ev_window->priv->page_view);
 	g_object_ref (ev_window->priv->password_view);
 
 	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),

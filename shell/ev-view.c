@@ -183,6 +183,8 @@ ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
+	LOG ("Finalize")
+
 	if (view->document)
 		g_object_unref (view->document);
 

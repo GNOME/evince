@@ -21,6 +21,7 @@
 #include "ev-page-view.h"
 #include "ev-marshal.h"
 #include "ev-document-misc.h"
+#include "ev-debug.h"
 #include <gtk/gtk.h>
 
 /* We keep a cached array of all the page sizes.  The info is accessed via
@@ -101,6 +102,8 @@ static void
 ev_page_view_dispose (GObject *object)
 {
 	EvPageView *view = EV_PAGE_VIEW (object);
+
+	LOG ("dispose")
 
 	if (view->priv->document) {
 		g_object_unref (view->priv->document);
