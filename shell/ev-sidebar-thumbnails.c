@@ -173,14 +173,33 @@ static gboolean
 populate_thumbnails_idle (gpointer data)
 {
 	GTimer *timer;
-	gint i;
-	gulong microseconds = 0;
+	int i;
+	gdouble time_elapsed = 0;
 
 	EvSidebarThumbnails *ev_sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (data);
 	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
 
+
+#if PROFILE_THUMB == 1
+	static GTimer *total_timer;
+	static gboolean first_time = TRUE;
+
+	if (first_time) {
+		total_timer = g_timer_new ();
+		first_time = FALSE;
+		g_timer_start (total_timer);
+	}
+#endif
+
 	if (priv->current_page == priv->n_pages) {
 		priv->idle_id = 0;
+#if PROFILE_THUMB == 1
+		time_elapsed = g_timer_elapsed (total_timer, NULL);
+		g_timer_destroy (total_timer);
+		g_print ("%d rows done in %f seconds\n",
+			 gtk_tree_model_iter_n_children (GTK_TREE_MODEL (priv->list_store), NULL),
+			 time_elapsed);
+#endif
 		return FALSE;
 	}
 
@@ -189,13 +208,13 @@ populate_thumbnails_idle (gpointer data)
 	g_timer_start (timer);
 	while (do_one_iteration (ev_sidebar_thumbnails)) {
 		i++;
-		g_timer_elapsed (timer, &microseconds);
-		if (microseconds > IDLE_WORK_LENGTH)
+		time_elapsed = g_timer_elapsed (timer, NULL);
+		if (time_elapsed > IDLE_WORK_LENGTH/1000000)
 			break;
 	}
 	g_timer_destroy (timer);
-#if 0
-	g_print ("%d rows done this idle in %d\n", i, (int)microseconds);
+#if PROFILE_THUMB == 2
+	g_print ("%d rows done this idle in %f seconds\n", i, time_elapsed);
 #endif
 
 	return TRUE;

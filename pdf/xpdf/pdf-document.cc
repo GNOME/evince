@@ -30,6 +30,7 @@
 
 #include "GlobalParams.h"
 #include "GDKSplashOutputDev.h"
+#include "SplashBitmap.h"
 #include "PDFDoc.h"
 #include "Outline.h"
 #include "UnicodeMap.h"
@@ -1053,6 +1054,60 @@ pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface)
 }
 
 /* Thumbnails */
+
+static GdkPixbuf *
+bitmap_to_pixbuf (SplashBitmap *bitmap,
+		  GdkPixbuf    *target,
+		  gint          x_offset,
+		  gint          y_offset)
+{
+	gint width;
+	gint height;
+	SplashColorPtr dataPtr;
+	int x, y;
+
+	gboolean target_has_alpha;
+	gint target_rowstride;
+	guchar *target_data;
+
+	width = bitmap->getWidth ();
+	height = bitmap->getHeight ();
+
+	if (width + x_offset > gdk_pixbuf_get_width (target))
+		width = gdk_pixbuf_get_width (target) - x_offset;
+	if (height + y_offset > gdk_pixbuf_get_height (target))
+		height = gdk_pixbuf_get_height (target) - x_offset;
+
+	target_has_alpha = gdk_pixbuf_get_has_alpha (target);
+	target_rowstride = gdk_pixbuf_get_rowstride (target);
+	target_data = gdk_pixbuf_get_pixels (target);
+
+	dataPtr = bitmap->getDataPtr ();
+
+	for (y = 0; y < height; y++) {
+		SplashRGB8 *p;
+		SplashRGB8 rgb;
+		guchar *q;
+
+		p = dataPtr.rgb8 + y * width;
+		q = target_data + ((y + y_offset) * target_rowstride + 
+				   x_offset * (target_has_alpha?4:3));
+		for (x = 0; x < width; x++) {
+			rgb = *p++;
+
+			*q++ = splashRGB8R (rgb);
+			*q++ = splashRGB8G (rgb);
+			*q++ = splashRGB8B (rgb);
+
+			if (target_has_alpha)
+				q++;
+		}
+	}
+
+	return target;
+}
+
+
 static GdkPixbuf *
 pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 					 gdouble      scale_factor,
@@ -1060,39 +1115,27 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 					 gint         width,
 					 gint         height)
 {
-	GdkPixmap *pixmap;
-	GDKSplashOutputDev *output;
+	SplashOutputDev *output;
 	GdkPixbuf *pixbuf;
-	GdkPixbuf *shadow;
+	SplashColor color;
 
-	pixmap = gdk_pixmap_new (pdf_document->target,
-				 width, height, -1);
+	color.rgb8 = splashMakeRGB8 (255, 255, 255);
 
-	output = new GDKSplashOutputDev (gdk_drawable_get_screen (pdf_document->target),
-					 NULL, NULL);
+	output = new SplashOutputDev (splashModeRGB8, gFalse, color);
 	output->startDoc (pdf_document->doc->getXRef());
 	pdf_document->doc->displayPage (output,
 					page_num + 1,
 					72*scale_factor,
 					72*scale_factor,
 					0, gTrue, gFalse);
-	output->redraw (0, 0,
-			pixmap,
-			0, 0,
-			width, height);
-	pixbuf = gdk_pixbuf_get_from_drawable (NULL,
-					       pixmap,
-					       NULL,
-					       0, 0,
-					       0, 0,
-					       width, height);
-	gdk_drawable_unref (pixmap);
+
+	pixbuf = ev_document_misc_get_thumbnail_frame (output->getBitmap()->getWidth(),
+						       output->getBitmap()->getHeight(),
+						       NULL);
+	bitmap_to_pixbuf (output->getBitmap(), pixbuf, 1, 1);
 	delete output;
 
-	shadow = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
-	g_object_unref (pixbuf);
-
-	return shadow;
+	return pixbuf;
 }
 
 static GdkPixbuf *

@@ -1,3 +1,11 @@
+Wed Jan  5 15:38:28 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* pdf/xpdf/pdf-document.cc (bitmap_to_pixbuf): bypass
+	GDKSplashOutputDev and just use a normal SplashOutputDev.  Speeds
+	things up a bit.
+
+	* shell/ev-sidebar-thumbnail.c: start of some profiling code.
+
 2005-01-05  Martin Kretzschmar  <martink@gnome.org>
 
 	* pdf/xpdf/GlobalParams.cc (displayFontTabFc): match only outline
