@@ -125,7 +125,9 @@ bonobo_application_x_pdf_SOURCES =	\
 	gpdf-embeddable-view.h		\
 	gpdf-util.h			\
 	gtkgesture.c			\
-	gtkgesture.h
+	gtkgesture.h			\
+	pdf-view.cc			\
+	pdf-view.h
 
 bonobo_application_x_pdf_LDADD =	\
 	../goo/libgoo.a			\

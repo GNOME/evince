@@ -1,3 +1,67 @@
+2002-09-13  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* Makefile.am: add pdf-view.cc, pdf-view.h
+
+	* gpdf-embeddable-view.cc (view_is_good, first_page, last_page)
+	(next_page, prev_page, configure_size, setup_size, setup_pixmap)
+	(render_page, realize_mainbox, redraw_view_all, real_redraw_view)
+	(redraw_view): kill
+	(first_page, last_page, next_page, prev_page, redraw_view_all):
+	only declare here, use definitions from pdf-view.cc
+	(page_first_cb, page_next_cb, page_prev_cb, page_last_cb):
+	s/view_data_t/PdfView/ etc.
+	(view_switch_page): kill
+	(zoom_to_fit): leave only declaration
+	(view_zoom_verb, page_zoom_fit_width_cb, page_zoom_fit_height_cb) 
+	(page_enlarge_cb, page_shrink_cb, view_zoom_query): s///
+	(verbs[]): make static
+	(view_create_menus, view_remove_menus, view_activate): s///
+	(button_press_event_cb, gesture_page_event_cb) 
+	(gesture_zoom_event_cb): kill
+	(key_press_event_cb): s///, only handle scrolling here
+	(mainbox_realize): kill
+	(destroy_view): comment out for now
+	(init): empty
+	(gpdf_embeddable_view_construct): mainbox = pdf_view_new,
+	remove mainbox construction code
+
+	* pdf-view.cc (view_is_good): s/view_data_t/PdfView/
+	(first_page, last_page, next_page, prev_page): non-static
+	(setup_pixmap): view_data is our mainbox now
+	(render_page): s/view_data_t/PdfView/ s/view_data/view/
+	(redraw_view_all): ditto
+	(realize_mainbox): /GPdfEmbeddableView/PdfView/ etc.
+	(real_redraw_view): ditto
+	(redraw_view): ditto, view is our mainbox now
+	(page_first_cb, page_next_cb, page_prev_cb, page_last_cb): kill
+	here (verb implementations)
+	(view_switch_page): s/// as above
+	(zoom_to_fit): non-static, commented out for now
+	(view_zoom_verb, view_zoom_query): s/// as above
+	(page_zoom_fit_width_cb, page_zoom_fit_height_cb)
+	(page_enlarge_cb, page_shrink_cb): kill here (verb impl)
+	(verbs[], view_create_menus, view_remove_menus, view_activate):
+	kill here (bonobo stuff)
+	(gesture_page_event_cb, gesture_zoom_event_cb): s///
+	(key_press_event_cb): don't handle scrolling here, s///
+	(destroy_view): kill here
+	(pdf_view_construct): kill everything except mainbox construction
+	
+
+	* gpdf-embeddable-view.h: view_data_t is no longer a typedef'd
+	GPdfEmbeddableView. Remove PdfView related members from
+	GPdfEmbeddableView
+
+	* pdf-view.h: s/GPdfEmbeddableView/PdfView/ with some AI ;)
+	GPdfEmbeddableView still typedef'd view_data_t. Super class
+	is GtkEventBox
+
+	Split bonobo / non-bonobo parts of GPdfEmbeddableView:
+	
+	* pdf-view.h: new file (cvs copy of gpdf-embeddable.h)
+
+	* pdf-view.c: ditto. These will contain non-bonobo parts
+
 2002-09-08  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
 	* GOutputDev.h: add missing gdk include
