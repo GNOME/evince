@@ -172,6 +172,10 @@ The DONE message indicates that ghostscript has finished processing.
                                         PS_DOCUMENT(gs)->gs_filename_unc : \
                                         PS_DOCUMENT(gs)->gs_filename)
 
+GCond* pixbuf_cond = NULL;
+GMutex* pixbuf_mutex = NULL;
+GdkPixbuf *current_pixbuf = NULL;
+
 enum { INTERPRETER_MESSAGE, INTERPRETER_ERROR, LAST_SIGNAL };
 
 enum {
@@ -226,8 +230,6 @@ static PSDocumentClass *gs_class = NULL;
 static void
 ps_document_init (PSDocument *gs)
 {
-	GtkWidget *widget;	
-
 	gs->bpixmap = NULL;
 
 	gs->current_page = 0;
@@ -289,13 +291,8 @@ ps_document_init (PSDocument *gs)
 
 	gs->gs_status = _("No document loaded.");
 
-	widget = gtk_window_new (GTK_WINDOW_POPUP);
-        gtk_widget_realize (widget);
-	gs->pstarget = widget->window;
-        g_assert (gs->pstarget != NULL);
-	g_signal_connect (widget, "event",
-		    	  G_CALLBACK (ps_document_widget_event),
-		          gs);
+	pixbuf_cond = g_cond_new ();
+	pixbuf_mutex = g_mutex_new ();
 }
 
 static void
@@ -392,7 +389,6 @@ ps_document_cleanup(PSDocument * gs)
   gs->lly = 0;
   gs->urx = 0;
   gs->ury = 0;
-  set_up_page(gs);
 }
 
 static gboolean
@@ -406,8 +402,21 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	gs->message_window = event->client.data.l[0];
 
 	if (event->client.message_type == gs_class->page_atom) {
+		GdkColormap *cmap;
+		GdkPixbuf *pixbuf;
+
 		LOG ("GS rendered the document");
 		gs->busy = FALSE;
+
+		cmap = gdk_window_get_colormap (gs->pstarget);
+	
+		pixbuf =  gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
+					      	        0, 0, 0, 0,
+						        gs->width, gs->height);
+		g_mutex_lock (pixbuf_mutex);
+		current_pixbuf = pixbuf;
+		g_cond_signal (pixbuf_cond);
+		g_mutex_unlock (pixbuf_mutex);
 	}
 
 	return TRUE;
@@ -1365,9 +1374,6 @@ ps_document_goto_page(PSDocument * gs)
     if(page >= gs->doc->numpages)
       page = gs->doc->numpages - 1;
 
-    if(page == gs->current_page && !gs->changed)
-      return TRUE;
-
     gs->current_page = page;
 
     if(gs->doc->pages[page].orientation != NONE &&
@@ -1528,11 +1534,6 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
     gs->changed = TRUE;
   }
 
-  if(gs->changed) {
-    set_up_page(gs);
-    return TRUE;
-  }
-
   return FALSE;
 }
 
@@ -1542,11 +1543,7 @@ ps_document_set_zoom (PSDocument * gs, gfloat zoom)
 	g_return_if_fail (gs != NULL);
 
 	gs->zoom_factor = zoom;
-
-	if (gs->pstarget != NULL) {
-		set_up_page(gs);
-		gs->changed = TRUE;
-	}
+	compute_size (gs);
 }
 
 static gboolean
@@ -1710,24 +1707,49 @@ ps_document_get_link (EvDocument *document,
 	return NULL;
 }
 
-static GdkPixbuf *
-ps_document_render_pixbuf (EvDocument *document)
+static gboolean
+render_pixbuf_idle (EvDocument *document)
 {
 	PSDocument *gs = PS_DOCUMENT (document);
-	GdkColormap *cmap;
+
+	if (gs->pstarget == NULL) {
+		GtkWidget *widget;
+
+		widget = gtk_window_new (GTK_WINDOW_POPUP);
+	        gtk_widget_realize (widget);
+		gs->pstarget = widget->window;
+
+	        g_assert (gs->pstarget != NULL);
+
+		g_signal_connect (widget, "event",
+			    	  G_CALLBACK (ps_document_widget_event),
+			          gs);
+	}
+
+	set_up_page (gs);
 
 	ps_document_goto_page (PS_DOCUMENT (document));
 
-	/* FIXME We need to block until rendering finished */
-	while (gs->busy) {
-		sleep (1);
-	}
+	return FALSE;
+}
 
-	cmap = gdk_window_get_colormap (gs->pstarget);
-	
-	return gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
-				      	     0, 0, 0, 0,
-					     gs->width, gs->height);
+static GdkPixbuf *
+ps_document_render_pixbuf (EvDocument *document)
+{
+	GdkPixbuf *pixbuf;
+
+	g_idle_add ((GSourceFunc)render_pixbuf_idle, document);
+
+	g_mutex_lock (pixbuf_mutex);
+	while (!current_pixbuf)
+		g_cond_wait (pixbuf_cond, pixbuf_mutex);
+	pixbuf = current_pixbuf;
+	current_pixbuf = NULL;
+	g_mutex_unlock (pixbuf_mutex);
+
+	LOG ("Pixbuf rendered %p\n", pixbuf);
+
+	return pixbuf;
 }
 
 static void
