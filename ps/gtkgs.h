@@ -61,16 +61,11 @@ typedef enum {
 } GtkGSZoomMode;
 
 struct _GtkGS {
-  GtkObject object;             /* the main widget */
+  GObject object;
   GdkWindow *pstarget;          /* the window passed to gv
                                  * it is a child of widget...
                                  */
-  GtkAdjustment *hadj, *vadj;
-
   GdkGC *psgc;
-  gint scroll_start_x, scroll_start_y;
-  gint scroll_width, scroll_height;
-  gboolean show_scroll_rect;
 
   GtkGSZoomMode zoom_mode;
 
@@ -101,7 +96,6 @@ struct _GtkGS {
   gboolean busy;                /* Is gs busy drawing? */
   gboolean changed;             /* Anything changed since setup */
   gfloat zoom_factor;
-  gfloat scroll_step;
   gint current_page;
   gboolean structured_doc;
   gboolean loaded;
@@ -149,7 +143,6 @@ struct _GtkGSClass {
 
   void (*interpreter_message) (GtkGS *, gchar *, gpointer);
   void (*interpreter_error) (GtkGS *, gint, gpointer);
-  void (*set_scroll_adjustments) (GtkGS *, GtkAdjustment *, GtkAdjustment *);
 };
 
 
@@ -178,11 +171,6 @@ void gtk_gs_reload(GtkGS * gs);
 
 /* control functions */
 void gtk_gs_center_page(GtkGS * gs);
-void gtk_gs_scroll(GtkGS * gs, gint, gint);
-gboolean gtk_gs_scroll_step(GtkGS * gs, GtkScrollType direction,
-                            gboolean dowrap);
-gboolean gtk_gs_scroll_to_edge(GtkGS * gs, GtkPositionType vertical,
-                               GtkPositionType horizontal);
 gboolean gtk_gs_next_page(GtkGS * gs);
 gboolean gtk_gs_prev_page(GtkGS * gs);
 gboolean gtk_gs_goto_page(GtkGS * gs, gint);
@@ -198,8 +186,6 @@ void gtk_gs_set_default_size(GtkGS * gs, gint size);
 gint gtk_gs_get_default_size(GtkGS * gs);
 void gtk_gs_set_zoom(GtkGS * gs, gfloat zoom);
 gfloat gtk_gs_get_zoom(GtkGS * gs);
-void gtk_gs_set_scroll_step(GtkGS * gs, gfloat scroll_step);
-gfloat gtk_gs_get_scroll_step(GtkGS * gs);
 gfloat gtk_gs_zoom_to_fit(GtkGS * gs, gboolean fit_width);
 void gtk_gs_set_center(GtkGS * gs, gfloat hval, gfloat vval);
 gint gtk_gs_get_orientation(GtkGS * gs);
@@ -214,11 +200,6 @@ gboolean gtk_gs_get_override_size(GtkGS * gs);
 const gchar *gtk_gs_get_document_title(GtkGS * widget);
 guint gtk_gs_get_document_numpages(GtkGS * widget);
 const gchar *gtk_gs_get_document_page_label(GtkGS * widget, int page);
-void gtk_gs_set_show_scroll_rect(GtkGS * gs, gboolean f);
-gboolean gtk_gs_get_show_scroll_rect(GtkGS * gs);
-
-void gtk_gs_start_scroll(GtkGS * gs);
-void gtk_gs_end_scroll(GtkGS * gs);
 
 void gtk_gs_set_zoom_mode(GtkGS * gs, GtkGSZoomMode zoom_mode);
 GtkGSZoomMode gtk_gs_get_zoom_mode(GtkGS * gs);

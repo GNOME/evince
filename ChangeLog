@@ -1,3 +1,20 @@
+2004-12-22  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* ps/gtkgs.c: (gtk_gs_init), (gtk_gs_class_init), (gtk_gs_cleanup),
+	(gtk_gs_finalize), (gtk_gs_set_center), (set_up_page), (output),
+	(start_interpreter), (compute_size), (gtk_gs_enable_interpreter),
+	(gtk_gs_get_type), (gtk_gs_new), (gtk_gs_reload),
+	(gtk_gs_emit_error_msg), (gtk_gs_disable_interpreter),
+	(gtk_gs_load), (gtk_gs_goto_page), (gtk_gs_set_page_size),
+	(gtk_gs_set_override_orientation), (gtk_gs_set_override_size),
+	(gtk_gs_set_zoom), (gtk_gs_set_default_orientation),
+	(gtk_gs_set_antialiasing), (ps_document_load),
+	(ps_document_render):
+	* ps/gtkgs.h:
+
+	Another check point for the ps backend. Now I can get it to show
+	pages!
+
 Wed Dec 22 13:41:01 2004  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar.c (ev_sidebar_set_document): initial sidebar

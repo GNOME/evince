@@ -181,13 +181,9 @@ catchPipe(int i)
 /* Forward declarations */
 static void gtk_gs_init(GtkGS * gs);
 static void gtk_gs_class_init(GtkGSClass * klass);
-static void gtk_gs_value_adjustment_changed(GtkAdjustment * adjustment,
-                                            gpointer data);
 static void gtk_gs_interpreter_message(GtkGS * gs, gchar * msg,
                                        gpointer user_data);
 static void gtk_gs_emit_error_msg(GtkGS * gs, const gchar * msg);
-static void gtk_gs_set_adjustments(GtkGS * gs, GtkAdjustment * hadj,
-                                   GtkAdjustment * vadj);
 static void gtk_gs_finalize(GObject * object);
 static void send_ps(GtkGS * gs, long begin, unsigned int len, gboolean close);
 static void set_up_page(GtkGS * gs);
@@ -330,11 +326,7 @@ gtk_gs_init(GtkGS * gs)
   gs->antialiased = gtk_gs_defaults_get_antialiased();
   gs->override_size = gtk_gs_defaults_get_override_size();
   gs->respect_eof = gtk_gs_defaults_get_respect_eof();
-  gs->show_scroll_rect = gtk_gs_defaults_get_show_scroll_rect();
-  gs->scroll_step = gtk_gs_defaults_get_scroll_step();
   gs->zoom_mode = gtk_gs_defaults_get_zoom_mode();
-
-  gs->scroll_start_x = gs->scroll_start_y = -1;
 
   gs->gs_status = _("No document loaded.");
 }
@@ -378,8 +370,6 @@ gtk_gs_class_init(GtkGSClass * klass)
 
   /* a default handler for "interpreter_message" signal */
   klass->interpreter_message = gtk_gs_interpreter_message;
-  /* supply a scrollable interface */
-  klass->set_scroll_adjustments = gtk_gs_set_adjustments;
 
   gtk_gs_defaults_load();
 }
@@ -415,8 +405,6 @@ gtk_gs_cleanup(GtkGS * gs)
     g_free(gs->gs_filename_unc);
     gs->gs_filename_unc = NULL;
   }
-  if(gs->pstarget && gdk_window_is_visible(gs->pstarget))
-    gdk_window_hide(gs->pstarget);
   gs->current_page = -1;
   gs->loaded = FALSE;
   gs->llx = 0;
@@ -455,68 +443,13 @@ gtk_gs_finalize(GObject * object)
     g_free(gs->input_buffer);
     gs->input_buffer = NULL;
   }
-  if(gs->hadj) {
-    g_signal_handlers_disconnect_matched(G_OBJECT(gs->hadj),
-                                         G_SIGNAL_MATCH_DATA,
-                                         0, 0, NULL, NULL, gs);
-    gtk_object_unref(GTK_OBJECT(gs->hadj));
-    gs->hadj = NULL;
-  }
-  if(gs->vadj) {
-    g_signal_handlers_disconnect_matched(G_OBJECT(gs->vadj),
-                                         G_SIGNAL_MATCH_DATA,
-                                         0, 0, NULL, NULL, gs);
-    gtk_object_unref(GTK_OBJECT(gs->vadj));
-    gs->vadj = NULL;
-  }
 
   (*G_OBJECT_CLASS(parent_class)->finalize) (object);
-}
-
-static void
-gtk_gs_value_adjustment_changed(GtkAdjustment * adjustment, gpointer data)
-{
-#if 0
-  GtkGS *gs;
-  gint x, y, width, height, depth;
-  gint newx, newy;
-
-  g_return_if_fail(adjustment != NULL);
-  g_return_if_fail(data != NULL);
-  gs = GTK_GS(data);
-  if(gs->bpixmap == NULL)
-    return;
-
-#if 0
-  g_print("Adjustment %c: val = %f, page = %f, upper = %f, lower = %f\n",
-          (adjustment == gs->hadj) ? 'H' : 'V',
-          adjustment->value, adjustment->page_size,
-          adjustment->upper, adjustment->lower);
-#endif
-
-  gdk_window_get_geometry(gs->pstarget, &x, &y, &width, &height, &depth);
-  if(gs->width <= gs->widget.allocation.width)
-    newx = (gs->widget.allocation.width - gs->width) / 2;
-  else
-    newx = -gs->hadj->value * gs->width;
-  if(gs->height <= gs->widget.allocation.height)
-    newy = (gs->widget.allocation.height - gs->height) / 2;
-  else
-    newy = -gs->vadj->value * gs->height;
-
-  gdk_window_move(gs->pstarget, newx, newy);
-#endif
 }
 
 void
 gtk_gs_set_center(GtkGS * gs, gfloat hval, gfloat vval)
 {
-  if(hval <= gs->hadj->upper - gs->hadj->page_size / 2 &&
-     hval >= gs->hadj->lower + gs->hadj->page_size / 2)
-    gtk_adjustment_set_value(gs->hadj, hval);
-  if(vval <= gs->vadj->upper - gs->vadj->page_size / 2 &&
-     vval >= gs->vadj->lower + gs->vadj->page_size / 2)
-    gtk_adjustment_set_value(gs->vadj, vval);
 }
 
 static void
@@ -560,31 +493,16 @@ send_ps(GtkGS * gs, long begin, unsigned int len, gboolean close)
 
 static void
 set_up_page(GtkGS * gs)
-     /* 
-      * This is used to prepare the widget internally for
-      * a new document. It sets gs->pstarget to the
-      * correct size and position, and updates the 
-      * adjustments appropriately.
-      *
-      * It is not meant to be used every time a specific page
-      * is selected.
-      *
-      * NOTE: It expects the widget is realized.
-      */
 {
   guint orientation;
   char buf[1024];
-  GdkPixmap *pprivate;
-  GdkColormap *colormap;
+  //GdkColormap *colormap;
   GdkGC *fill;
   GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
 
 #ifdef HAVE_LOCALE_H
   char *savelocale;
 #endif
-
-  if(!GTK_WIDGET_REALIZED(gs))
-    return;
 
   /* Do we have to check if the actual geometry changed? */
 
@@ -598,8 +516,8 @@ set_up_page(GtkGS * gs)
     /* clear new pixmap (set to white) */
     fill = gdk_gc_new(gs->pstarget);
     if(fill) {
-      colormap = gtk_widget_get_colormap(GTK_WIDGET(gs));
-      gdk_color_alloc(colormap, &white);
+      //colormap = gtk_widget_get_colormap(GTK_WIDGET(gs));
+      //gdk_color_alloc(colormap, &white);
       gdk_gc_set_foreground(fill, &white);
 
       if(gs->use_bpixmap && gs->width > 0 && gs->height > 0) {
@@ -612,16 +530,12 @@ set_up_page(GtkGS * gs)
 
         gdk_draw_rectangle(gs->bpixmap, fill, TRUE,
                            0, 0, gs->width, gs->height);
-
-        gdk_window_set_back_pixmap(gs->pstarget, gs->bpixmap, FALSE);
       }
       else {
         gdk_draw_rectangle(gs->pstarget, fill, TRUE,
                            0, 0, gs->width, gs->height);
       }
       gdk_gc_unref(fill);
-
-      gdk_window_resize(gs->pstarget, gs->width, gs->height);
 
       gdk_flush();
     }
@@ -634,10 +548,9 @@ set_up_page(GtkGS * gs)
    */
   savelocale = setlocale(LC_NUMERIC, "C");
 #endif
-  pprivate = (GdkPixmap *) gs->bpixmap;
 
   g_snprintf(buf, 1024, "%ld %d %d %d %d %d %f %f %d %d %d %d",
-             pprivate ? gdk_x11_drawable_get_xid(pprivate) : 0L,
+             0L,
              orientation * 90,
              gs->llx,
              gs->lly,
@@ -723,7 +636,7 @@ output(gpointer data, gint source, GdkInputCondition condition)
   if(bytes > 0) {
     buf[bytes] = '\0';
     msg = g_strdup(buf);
-    gtk_signal_emit(GTK_OBJECT(gs), gtk_gs_signals[INTERPRETER_MESSAGE], msg);
+    g_signal_emit (G_OBJECT(gs), gtk_gs_signals[INTERPRETER_MESSAGE], 0, msg);
   }
 }
 
@@ -911,8 +824,9 @@ start_interpreter(GtkGS * gs)
       }
     }
 
-    gv_env = g_strdup_printf("GHOSTVIEW=%ld",
-                             gdk_x11_drawable_get_xid(gs->pstarget));
+    gv_env = g_strdup_printf("GHOSTVIEW=%ld %ld",
+                             gdk_x11_drawable_get_xid(gs->pstarget),
+			     gdk_x11_drawable_get_xid(gs->bpixmap));
     putenv(gv_env);
 
     /* change to directory where the input file is. This helps
@@ -1292,18 +1206,6 @@ compute_size(GtkGS * gs)
     || (new_height != gs->height * gs->zoom_factor);
   gs->width = (gint) (new_width * gs->zoom_factor);
   gs->height = (gint) (new_height * gs->zoom_factor);
-  if(GTK_WIDGET_REALIZED(gs)) {
-    if(!gs->loaded) {
-      if(gdk_window_is_visible(gs->pstarget))
-        gdk_window_hide(gs->pstarget);
-    }
-    else {
-      if(!gdk_window_is_visible(gs->pstarget) && gs->width > 0
-         && gs->height > 0)
-        gdk_window_show(gs->pstarget);
-    }
-    //gtk_gs_munge_adjustments(gs);
-  }
 
   return (change);
 }
@@ -1318,12 +1220,8 @@ gtk_gs_enable_interpreter(GtkGS * gs)
     return 0;
 
   gs->disable_start = FALSE;
-  if(GTK_WIDGET_REALIZED(gs)) {
-    return start_interpreter(gs);
-  }
-  else {
-    return 0;
-  }
+  
+  return start_interpreter(gs);
 }
 
 /* publicly accessible functions */
@@ -1352,7 +1250,7 @@ gtk_gs_get_type(void)
         NULL
     };
 
-    gs_type = g_type_register_static(gtk_widget_get_type(),
+    gs_type = g_type_register_static(G_TYPE_OBJECT,
                                      "GtkGS", &gs_info, 0);
 
     g_type_add_interface_static (gs_type,
@@ -1369,14 +1267,7 @@ gtk_gs_new(GtkAdjustment * hadj, GtkAdjustment * vadj)
 {
   GObject *gs;
 
-  if(NULL == hadj)
-    hadj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 1.0, 0.01, 0.1, 0.09));
-  if(NULL == vadj)
-    vadj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 1.0, 0.01, 0.1, 0.09));
-
   gs = g_object_new(GTK_GS_TYPE, NULL);
-
-  //gtk_gs_set_adjustments(gs, hadj, vadj);
 
   return gs;
 }
@@ -1394,8 +1285,6 @@ void
 gtk_gs_reload(GtkGS * gs)
 {
   gchar *fname;
-  gfloat hval = gs->hadj->value;
-  gfloat vval = gs->vadj->value;
   gint page;
 
   if(!gs->gs_filename)
@@ -1405,8 +1294,6 @@ gtk_gs_reload(GtkGS * gs)
   fname = g_strdup(gs->gs_filename);
   gtk_gs_load(gs, fname);
   gtk_gs_goto_page(gs, page);
-  gtk_adjustment_set_value(gs->hadj, hval);
-  gtk_adjustment_set_value(gs->vadj, vval);
   g_free(fname);
 }
 
@@ -1417,46 +1304,8 @@ gtk_gs_reload(GtkGS * gs)
 static void
 gtk_gs_emit_error_msg(GtkGS * gs, const gchar * msg)
 {
-  gtk_signal_emit(GTK_OBJECT(gs),
-                  gtk_gs_signals[INTERPRETER_MESSAGE], g_strdup(msg));
-}
-
-
-void
-gtk_gs_center_page(GtkGS * gs)
-{
-#if 0
-  g_return_if_fail(gs != NULL);
-  g_return_if_fail(GTK_IS_GS(gs));
-
-  gdk_window_move(gs->pstarget,
-                  (gs->widget.allocation.width - gs->width) / 2,
-                  (gs->widget.allocation.height - gs->height) / 2);
-  gs->hadj->page_size = ((gfloat) gs->widget.allocation.width) / gs->width;
-  gs->hadj->page_size = MIN(gs->hadj->page_size, 1.0);
-  gs->vadj->page_size = ((gfloat) gs->widget.allocation.height) / gs->height;
-  gs->vadj->page_size = MIN(gs->vadj->page_size, 1.0);
-  gs->hadj->value = 0.5 - gs->hadj->page_size / 2;
-  gs->vadj->value = 0.5 - gs->vadj->page_size / 2;
-  gtk_adjustment_changed(gs->hadj);
-  gtk_adjustment_changed(gs->vadj);
-#endif
-}
-
-void
-gtk_gs_scroll(GtkGS * gs, gint x_delta, gint y_delta)
-{
-  gfloat hval, vval;
-
-  g_return_if_fail(gs != NULL);
-  g_return_if_fail(GTK_IS_GS(gs));
-
-  hval = gs->hadj->value + ((gfloat) x_delta) / gs->width;
-  vval = gs->vadj->value + ((gfloat) y_delta) / gs->height;
-  if(hval <= gs->hadj->upper - gs->hadj->page_size && hval >= gs->hadj->lower)
-    gtk_adjustment_set_value(gs->hadj, hval);
-  if(vval <= gs->vadj->upper - gs->vadj->page_size && vval >= gs->vadj->lower)
-    gtk_adjustment_set_value(gs->vadj, vval);
+  g_signal_emit (G_OBJECT(gs),
+                 gtk_gs_signals[INTERPRETER_MESSAGE], 0, g_strdup(msg));
 }
 
 void
@@ -1466,8 +1315,8 @@ gtk_gs_disable_interpreter(GtkGS * gs)
   g_return_if_fail(GTK_IS_GS(gs));
 
   gs->disable_start = TRUE;
-  if(GTK_WIDGET_REALIZED(GTK_WIDGET(gs)))
-    stop_interpreter(gs);
+
+  stop_interpreter(gs);
 }
 
 gboolean
@@ -1480,8 +1329,6 @@ gtk_gs_load(GtkGS * gs, const gchar * fname)
   gtk_gs_cleanup(gs);
 
   if(fname == NULL) {
-    if(gs->pstarget != NULL && gdk_window_is_visible(gs->pstarget))
-      gdk_window_hide(gs->pstarget);
     gs->gs_status = "";
     return FALSE;
   }
@@ -1657,9 +1504,6 @@ gtk_gs_goto_page(GtkGS * gs, gint page)
 
     gs->current_page = page;
 
-    if(!GTK_WIDGET_REALIZED(gs))
-      return FALSE;
-
     if(gs->doc->pages[page].orientation != NONE &&
        !gs->override_orientation &&
        gs->doc->pages[page].orientation != gs->real_orientation) {
@@ -1694,9 +1538,6 @@ gtk_gs_goto_page(GtkGS * gs, gint page)
      */
     if(page == gs->current_page && !gs->changed)
       return TRUE;
-
-    if(!GTK_WIDGET_REALIZED(gs))
-      return FALSE;
 
     if(!is_interpreter_ready(gs))
       gtk_gs_enable_interpreter(gs);
@@ -1816,10 +1657,7 @@ gtk_gs_set_page_size(GtkGS * gs, gint new_pagesize, gint pageid)
   }
 
   if(gs->changed) {
-    if(GTK_WIDGET_REALIZED(gs)) {
-      set_up_page(gs);
-      //gtk_widget_queue_resize(&(gs->widget));
-    }
+    set_up_page(gs);
     return TRUE;
   }
 
@@ -1842,10 +1680,8 @@ gtk_gs_set_override_orientation(GtkGS * gs, gboolean bNewOverride)
      new orientation  then redisplay */
   if(iOldOrientation != gtk_gs_get_orientation(gs)) {
     gs->changed = TRUE;
-    if(GTK_WIDGET_REALIZED(gs))
-      set_up_page(gs);
+    set_up_page(gs);
   }
-  //gtk_widget_queue_resize(&(gs->widget));
 }
 
 gboolean
@@ -1867,10 +1703,8 @@ gtk_gs_set_override_size(GtkGS * gs, gboolean f)
     gs->override_size = f;
     gs->changed = TRUE;
     gtk_gs_set_page_size(gs, -1, gs->current_page);
-    if(GTK_WIDGET_REALIZED(gs))
-      set_up_page(gs);
+    set_up_page(gs);
   }
-  //gtk_widget_queue_resize(&(gs->widget));
 }
 
 gboolean
@@ -1905,10 +1739,8 @@ gtk_gs_set_zoom(GtkGS * gs, gfloat zoom)
     zoom = ggv_zoom_levels[ggv_max_zoom_levels];
   if(fabs(gs->zoom_factor - zoom) > 0.001) {
     gs->zoom_factor = zoom;
-    if(GTK_WIDGET_REALIZED(gs))
-      set_up_page(gs);
+    set_up_page(gs);
     gs->changed = TRUE;
-    //gtk_widget_queue_resize(&(gs->widget));
   }
 }
 
@@ -1962,9 +1794,7 @@ gtk_gs_set_default_orientation(GtkGS * gs, gint orientation)
   /* We are setting the fallback orientation */
   if(iOldOrientation != gtk_gs_get_orientation(gs)) {
     gs->changed = TRUE;
-    if(GTK_WIDGET_REALIZED(gs))
-      set_up_page(gs);
-    //gtk_widget_queue_resize(&(gs->widget));
+    set_up_page(gs);
     return TRUE;
   }
 
@@ -2059,8 +1889,7 @@ gtk_gs_set_antialiasing(GtkGS * gs, gboolean f)
 
   gs->antialiased = f;
   gs->changed = TRUE;
-  if(GTK_WIDGET_REALIZED(gs))
-    start_interpreter(gs);
+  start_interpreter(gs);
   gtk_gs_goto_page(gs, gs->current_page);
 }
 
@@ -2121,226 +1950,6 @@ gtk_gs_get_size_index(const gchar * string, GtkGSPaperSize * size)
   }
 
   return -1;
-}
-
-void
-gtk_gs_start_scroll(GtkGS * gs)
-{
-  gint x, y, w, h;
-
-  if(!GTK_WIDGET_REALIZED(gs) || !gs->show_scroll_rect)
-    return;
-
-  gdk_window_get_geometry(gs->pstarget, &x, &y, &w, &h, NULL);
-  gs->scroll_start_x = MAX(-x, 0);
-  gs->scroll_start_y = MAX(-y, 0);
-  //gs->scroll_width = MIN(gs->widget.allocation.width - 1, w - 1);
-  //gs->scroll_height = MIN(gs->widget.allocation.height - 1, h - 1);
-
-  if(gs->bpixmap) {
-    GdkRectangle rect;
-    rect.x = gs->scroll_start_x;
-    rect.y = gs->scroll_start_y;
-    rect.width = gs->scroll_width + 1;
-    rect.height = gs->scroll_height + 1;
-    gdk_draw_rectangle(gs->bpixmap, gs->psgc, FALSE,
-                       gs->scroll_start_x, gs->scroll_start_y,
-                       gs->scroll_width, gs->scroll_height);
-    rect.width = 1;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-    rect.x = gs->scroll_start_x + gs->scroll_width;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-    rect.x = gs->scroll_start_x + 1;
-    rect.width = gs->scroll_start_x + gs->scroll_width - 1;
-    rect.height = 1;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-    rect.y = gs->scroll_start_y + gs->scroll_height;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-  }
-}
-
-void
-gtk_gs_end_scroll(GtkGS * gs)
-{
-  if(!GTK_WIDGET_REALIZED(gs) || !gs->show_scroll_rect)
-    return;
-
-  if(gs->scroll_start_x == -1 || gs->scroll_start_y == -1)
-    return;
-
-  if(gs->bpixmap) {
-    GdkRectangle rect;
-    rect.x = gs->scroll_start_x;
-    rect.y = gs->scroll_start_y;
-    rect.width = gs->scroll_width + 1;
-    rect.height = gs->scroll_height + 1;
-    gdk_draw_rectangle(gs->bpixmap, gs->psgc, FALSE,
-                       gs->scroll_start_x, gs->scroll_start_y,
-                       gs->scroll_width, gs->scroll_height);
-    rect.width = 1;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-    rect.x = gs->scroll_start_x + gs->scroll_width;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-    rect.x = gs->scroll_start_x + 1;
-    rect.width = gs->scroll_start_x + gs->scroll_width - 1;
-    rect.height = 1;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-    rect.y = gs->scroll_start_y + gs->scroll_height;
-    gdk_window_invalidate_rect(gs->pstarget, &rect, TRUE);
-  }
-  gs->scroll_start_x = -1;
-  gs->scroll_start_y = -1;
-}
-
-void
-gtk_gs_set_show_scroll_rect(GtkGS * gs, gboolean f)
-{
-  gs->show_scroll_rect = f;
-}
-
-gboolean
-gtk_gs_get_show_scroll_rect(GtkGS * gs)
-{
-  return gs->show_scroll_rect;
-}
-
-gboolean
-gtk_gs_scroll_to_edge(GtkGS * gs, GtkPositionType vertical,
-                      GtkPositionType horizontal)
-{
-  g_return_val_if_fail(gs != NULL, FALSE);
-  g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
-
-  switch (vertical) {
-  case GTK_POS_TOP:
-    gs->vadj->value = gs->vadj->lower;
-    gtk_adjustment_value_changed(gs->vadj);
-    break;
-  case GTK_POS_BOTTOM:
-    gs->vadj->value = gs->vadj->upper - gs->vadj->page_size;
-    gtk_adjustment_value_changed(gs->vadj);
-    break;
-  default:
-    g_assert(0);                /* Illegal parameter error */
-  }
-
-
-  switch (horizontal) {
-  case GTK_POS_TOP:
-    gs->hadj->value = gs->hadj->lower;
-    gtk_adjustment_value_changed(gs->hadj);
-    break;
-  case GTK_POS_BOTTOM:
-    gs->hadj->value = gs->hadj->upper - gs->hadj->page_size;
-    gtk_adjustment_value_changed(gs->hadj);
-    break;
-  default:
-    g_assert(0);                /* Illegal parameter error */
-  }
-
-  return TRUE;
-}
-
-gboolean
-gtk_gs_scroll_step(GtkGS * gs, GtkScrollType direction, gboolean dowrap)
-{
-  GtkAdjustment *MainAdj;       /* We will move this adjustment */
-  GtkAdjustment *SecoAdj;       /* And this _only_ if we can't move MainAdj (ie. we're edge)
-                                   and there is wrapping */
-
-  gboolean MoveHorizontal = TRUE;   /* Positive if we move horizontal */
-  gboolean DirectionFlag = TRUE;    /* Positive if we move towards upper */
-  g_return_val_if_fail(gs != NULL, FALSE);
-  g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
-
-#define EPSILON 0.00005
-
-#define CHECK_THERE_IS_NO_LOWER_SPACE(adj) \
-        ((adj)->value - (EPSILON) <= (adj)->lower)
-#define CHECK_THERE_IS_NO_UPPER_SPACE(adj) \
-        ((adj)->value + (EPSILON) >= (adj)->upper - (adj)->page_size)
-
-#define CHECK_THERE_IS_NO_SPACE_FOR_STEP(adj,dir) \
-        (dir?CHECK_THERE_IS_NO_UPPER_SPACE(adj):CHECK_THERE_IS_NO_LOWER_SPACE(adj))
-
-  /* To make code more readable, we make a macro */
-#define ADVANCE_TOWARDS_LOWER(adj) \
-        (adj->value -= gs->scroll_step * (adj->page_size))
-#define ADVANCE_TOWARDS_UPPER(adj) \
-        (adj->value += gs->scroll_step * (adj->page_size))
-
-#define ADVANCE_STEP(adj,dir) \
-        (dir?ADVANCE_TOWARDS_UPPER(adj):ADVANCE_TOWARDS_LOWER(adj))
-
-#define MOVE_TO_LOWER_EDGE(adj) \
-        (adj->value = adj->lower)
-#define MOVE_TO_UPPER_EDGE(adj) \
-        (adj->value = adj->upper - adj->page_size)
-
-  /* if upper is 1 goto upper, otherwise to lower */
-#define MOVE_TO_EDGE(adj,upper) (upper?MOVE_TO_UPPER_EDGE(adj):MOVE_TO_LOWER_EDGE(adj))
-
-  /* These variables make our life easier */
-  switch (direction) {
-  case GTK_SCROLL_STEP_RIGHT:
-    MoveHorizontal = TRUE;
-    DirectionFlag = TRUE;
-    break;
-  case GTK_SCROLL_STEP_LEFT:
-    MoveHorizontal = TRUE;
-    DirectionFlag = FALSE;
-    break;
-  case GTK_SCROLL_STEP_DOWN:
-    MoveHorizontal = FALSE;
-    DirectionFlag = TRUE;
-    break;
-  case GTK_SCROLL_STEP_UP:
-    MoveHorizontal = FALSE;
-    DirectionFlag = FALSE;
-    break;
-  default:
-    g_warning("Illegal scroll step direction.");
-  }
-
-  if(MoveHorizontal) {
-    MainAdj = gs->hadj;
-    SecoAdj = gs->vadj;
-  }
-  else {
-    MainAdj = gs->vadj;
-    SecoAdj = gs->hadj;
-  }
-
-  if(CHECK_THERE_IS_NO_SPACE_FOR_STEP(MainAdj, DirectionFlag)) {
-    if(!dowrap)
-      return FALSE;
-    /* Move in the oposite axis */
-    if(CHECK_THERE_IS_NO_SPACE_FOR_STEP(SecoAdj, DirectionFlag)) {
-      /* there is no place to move, we need a new page */
-      return FALSE;
-    }
-    ADVANCE_STEP(SecoAdj, DirectionFlag);
-
-    if(CHECK_THERE_IS_NO_SPACE_FOR_STEP(SecoAdj, DirectionFlag)) {
-      /* We move it too far, lets move it to the edge */
-      MOVE_TO_EDGE(SecoAdj, DirectionFlag);
-    }
-    /* now move to edge (other axis) in oposite direction */
-    MOVE_TO_EDGE(MainAdj, !DirectionFlag);
-    gtk_adjustment_value_changed(SecoAdj);
-    return TRUE;
-  }
-
-  /* Now we know we can move in the direction sought */
-  ADVANCE_STEP(MainAdj, DirectionFlag);
-
-  if(CHECK_THERE_IS_NO_SPACE_FOR_STEP(MainAdj, DirectionFlag)) {
-    /* We move it too far, lets move it to the edge */
-    MOVE_TO_EDGE(MainAdj, DirectionFlag);
-  }
-  gtk_adjustment_value_changed(MainAdj);
-
-  return TRUE;
 }
 
 gchar *
@@ -2418,77 +2027,6 @@ gtk_gs_get_postscript(GtkGS * gs, gint * pages)
 }
 
 void
-gtk_gs_set_adjustments(GtkGS * gs, GtkAdjustment * hadj, GtkAdjustment * vadj)
-{
-  g_return_if_fail(gs != NULL);
-  g_return_if_fail(GTK_IS_GS(gs));
-  if(hadj)
-    g_return_if_fail(GTK_IS_ADJUSTMENT(hadj));
-  else
-    hadj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 1.0, 0.0, 0.0, 1.0));
-  if(vadj)
-    g_return_if_fail(GTK_IS_ADJUSTMENT(vadj));
-  else
-    vadj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 1.0, 0.0, 0.0, 1.0));
-
-  if(gs->hadj && (gs->hadj != hadj)) {
-    g_signal_handlers_disconnect_matched(G_OBJECT(gs->hadj),
-                                         G_SIGNAL_MATCH_DATA,
-                                         0, 0, NULL, NULL, gs);
-    gtk_object_unref(GTK_OBJECT(gs->hadj));
-  }
-  if(gs->vadj && (gs->vadj != vadj)) {
-    g_signal_handlers_disconnect_matched(G_OBJECT(gs->vadj),
-                                         G_SIGNAL_MATCH_DATA,
-                                         0, 0, NULL, NULL, gs);
-    gtk_object_unref(GTK_OBJECT(gs->vadj));
-  }
-  if(gs->hadj != hadj) {
-    hadj->lower = 0.0;
-    hadj->upper = 1.0;
-    hadj->value = 0.0;
-    hadj->page_size = 1.0;
-    hadj->page_increment = 1.0;
-    gs->hadj = hadj;
-    gtk_object_ref(GTK_OBJECT(gs->hadj));
-    gtk_object_sink(GTK_OBJECT(gs->hadj));
-
-    g_signal_connect(G_OBJECT(hadj), "value_changed",
-                     G_CALLBACK(gtk_gs_value_adjustment_changed),
-                     (gpointer) gs);
-  }
-  if(gs->vadj != vadj) {
-    vadj->lower = 0.0;
-    vadj->upper = 1.0;
-    vadj->value = 0.0;
-    vadj->page_size = 1.0;
-    vadj->page_increment = 1.0;
-    gs->vadj = vadj;
-    gtk_object_ref(GTK_OBJECT(gs->vadj));
-    gtk_object_sink(GTK_OBJECT(gs->vadj));
-
-    g_signal_connect(G_OBJECT(vadj), "value_changed",
-                     G_CALLBACK(gtk_gs_value_adjustment_changed),
-                     (gpointer) gs);
-  }
-  //if(GTK_WIDGET_REALIZED(gs))
-    //gtk_gs_munge_adjustments(gs);
-}
-
-
-void
-gtk_gs_set_scroll_step(GtkGS * gs, gfloat scroll_step)
-{
-  gs->scroll_step = scroll_step;
-}
-
-gfloat
-gtk_gs_get_scroll_step(GtkGS * gs)
-{
-  return gs->scroll_step;
-}
-
-void
 gtk_gs_set_zoom_mode(GtkGS * gs, GtkGSZoomMode zoom_mode)
 {
   if(zoom_mode != gs->zoom_mode) {
@@ -2518,7 +2056,18 @@ ps_document_load (EvDocument  *document,
 		   const char  *uri,
 		   GError     **error)
 {
-	return gtk_gs_load (GTK_GS (document), uri);
+	gboolean result;
+	char *filename;
+
+	filename = g_filename_from_uri (uri, NULL, error);
+	if (!filename)
+		return FALSE;
+
+	result = gtk_gs_load (GTK_GS (document), filename);
+
+	g_free (filename);
+
+	return result;
 }
 
 static int
@@ -2570,15 +2119,23 @@ ps_document_get_page_size (EvDocument   *document,
 
 static void
 ps_document_render (EvDocument  *document,
-		     int          clip_x,
-		     int          clip_y,
-		     int          clip_width,
-		     int          clip_height)
+		    int          clip_x,
+		    int          clip_y,
+		    int          clip_width,
+		    int          clip_height)
 {
 	GtkGS *gs = GTK_GS (document);
+	GdkGC *gc;
 
-	start_interpreter(gs);
-	gtk_gs_goto_page(gs, gs->current_page);
+	gc = gdk_gc_new (gs->pstarget);
+
+	gdk_draw_drawable (gs->pstarget, gc,
+			   gs->bpixmap,
+			   clip_x, clip_y,
+			   clip_x, clip_y,
+			   clip_width, clip_height);
+
+	g_object_unref (gc);
 }
 
 static void
