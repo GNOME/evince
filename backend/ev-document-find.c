@@ -53,16 +53,13 @@ ev_document_find_base_init (gpointer g_class)
 	static gboolean initialized = FALSE;
 
 	if (!initialized) {
-		g_signal_new ("found",
+		g_signal_new ("find_changed",
 			      EV_TYPE_DOCUMENT_FIND,
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvDocumentFindIface, found),
+			      G_STRUCT_OFFSET (EvDocumentFindIface, find_changed),
 			      NULL, NULL,
-			      _ev_backend_marshal_VOID__POINTER_INT_DOUBLE,
-			      G_TYPE_NONE, 3,
-			      G_TYPE_POINTER,
-			      G_TYPE_INT,
-			      G_TYPE_DOUBLE);
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 
 		initialized = TRUE;
 	}
@@ -85,18 +82,43 @@ ev_document_find_cancel (EvDocumentFind   *document_find)
 {
 	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
 	iface->cancel (document_find);
+}
 
-        ev_document_find_found (document_find, NULL, 0, 1.0);
+int
+ev_document_find_page_has_results (EvDocumentFind *document_find,
+				   int             page)
+{
+	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+	return iface->page_has_results (document_find, page);
+}
+
+int
+ev_document_find_get_n_results (EvDocumentFind *document_find)
+{
+	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+	return iface->get_n_results (document_find);
+}
+
+gboolean
+ev_document_find_get_result (EvDocumentFind *document_find,
+			     int             n_result,
+			     GdkRectangle   *rectangle)
+{
+	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+	return iface->get_result (document_find, n_result, rectangle);
 }
 
 void
-ev_document_find_found (EvDocumentFind         *document_find,
-                        const EvFindResult *results,
-                        int                 n_results,
-                        double              percent_complete)
+ev_document_find_get_progress (EvDocumentFind *document_find,
+			       double          percent_complete)
 {
-	g_signal_emit_by_name (document_find,
-			       "found",
-			       results, n_results, percent_complete);
+	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+	iface->get_progress (document_find, percent_complete);
+}
+
+void
+ev_document_find_changed (EvDocumentFind  *document_find)
+{
+	g_signal_emit_by_name (document_find, "find_changed");
 }
 				    

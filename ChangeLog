@@ -1,3 +1,27 @@
+2005-01-29  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-backend-marshalers.list:
+	* backend/ev-document-find.c: (ev_document_find_base_init),
+	(ev_document_find_cancel), (ev_document_find_page_has_results),
+	(ev_document_find_get_n_results), (ev_document_find_get_result),
+	(ev_document_find_get_progress), (ev_document_find_changed):
+	* backend/ev-document-find.h:
+
+	Enanche the find interface to be really able to do
+	multi page find.
+
+	* pdf/xpdf/pdf-document.cc:
+
+	Implement
+
+	* shell/ev-view.c: (ev_view_finalize), (highlight_find_results),
+	(expose_bin_window), (ev_view_init),
+	(ev_view_get_find_status_message), (find_changed_cb),
+	(ev_view_set_document), (set_document_page):
+
+	Adapt to the new interface. A few things are regressed sorry,
+	I will finish it soon.
+
 2005-01-28  Martin Kretzschmar  <martink@gnome.org>
 
 	* shell/ev-sidebar-thumbnails.c (ev_sidebar_thumbnails_destroy)

@@ -83,7 +83,6 @@ struct _EvView {
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
 
-        GArray *find_results;
 	int results_on_this_page;
 	int next_page_with_result;
 	double find_percent_complete;
@@ -189,9 +188,6 @@ ev_view_finalize (GObject *object)
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
-        g_array_free (view->find_results, TRUE);
-        view->find_results = NULL;
-        
 	G_OBJECT_CLASS (ev_view_parent_class)->finalize (object);
 }
 
@@ -367,13 +363,28 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window, const GdkRectangle *rect)
 }
 
 static void
+highlight_find_results (EvView *view)
+{
+	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+	int i, results;
+
+	results = ev_document_find_get_n_results (find);
+
+	for (i = 0; i < results; i++) {
+		GdkRectangle rectangle;
+
+		ev_document_find_get_result (find, i, &rectangle);
+		draw_rubberband (GTK_WIDGET (view),
+				 view->bin_window, &rectangle);
+        }
+}
+
+static void
 expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
 	EvView *view = EV_VIEW (widget);
-        int i, current_page;
 	int x_offset, y_offset;
-        const EvFindResult *results;
 
 	if (view->document == NULL)
 		return;
@@ -398,30 +409,7 @@ expose_bin_window (GtkWidget      *widget,
 			    event->area.x, event->area.y,
 			    event->area.width, event->area.height);
 
-        results = (EvFindResult*) view->find_results->data;
-	current_page = ev_document_get_page (view->document);
-        i = 0;
-        while (i < view->find_results->len) {
-#if 0
-                g_printerr ("highlighting result %d page %d at %d,%d %dx%d\n",
-                            i, results[i].page_num,
-                            results[i].highlight_area.x,
-                            results[i].highlight_area.y,
-                            results[i].highlight_area.width,
-                            results[i].highlight_area.height);
-#endif
-		if (results[i].page_num == current_page) {
-			GdkRectangle highlight_area_fixed;
-			highlight_area_fixed.x = results[i].highlight_area.x + x_offset + 1;
-			highlight_area_fixed.y = results[i].highlight_area.y + y_offset + 1;
-			highlight_area_fixed.width = results[i].highlight_area.width;
-			highlight_area_fixed.height = results[i].highlight_area.height;
-
-			draw_rubberband (widget, view->bin_window,
-					 &highlight_area_fixed);
-		}
-                ++i;
-        }
+	highlight_find_results (view);
 
 	if (view->has_selection) {
 		draw_rubberband (widget, view->bin_window, &view->selection);
@@ -589,6 +577,7 @@ ev_view_set_find_status (EvView *view, const char *message)
 	view->find_status = g_strdup (message);
 	g_object_notify (G_OBJECT (view), "find-status");
 }
+
 
 static void
 ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
@@ -914,10 +903,6 @@ ev_view_init (EvView *view)
 	view->scale = 1.0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
-	
-        view->find_results = g_array_new (FALSE,
-                                          FALSE,
-                                          sizeof (EvFindResult));
 	view->results_on_this_page = 0;
 	view->next_page_with_result = 0;
 }
@@ -925,6 +910,7 @@ ev_view_init (EvView *view)
 static char *
 ev_view_get_find_status_message (EvView *view)
 {
+/*
 	if (view->find_results->len == 0) {
 		if (view->find_percent_complete >= (1.0 - 1e-10)) {
 			return g_strdup (_("Not found"));
@@ -940,105 +926,13 @@ ev_view_get_find_status_message (EvView *view)
 		return g_strdup_printf (_("%d found on this page"),
 					view->results_on_this_page);
 	}
+*/
 }
 
 static void
-update_find_results (EvView *view)
+find_changed_cb (EvDocument *document, EvView *view)
 {
-	const EvFindResult *results;
-	int i;
-	int on_this_page;
-	int next_page_with_result;
-	int earliest_page_with_result;
-	int current_page;
-	gboolean counts_changed;
-	
-	results = (EvFindResult*) view->find_results->data;
-	current_page = ev_document_get_page (view->document);
-	next_page_with_result = 0;
-	on_this_page = 0;
-	earliest_page_with_result = 0;
-	
-	i = 0;
-	while (i < view->find_results->len) {
-		if (results[i].page_num == current_page) {
-			++on_this_page;
-		} else {
-			int delta = results[i].page_num - current_page;
-			
-			if (delta > 0 && /* result on later page */
-			    (next_page_with_result == 0 ||
-			     results[i].page_num < next_page_with_result))
-				next_page_with_result = results[i].page_num;
-
-			if (delta < 0 && /* result on a previous page */
-			    (earliest_page_with_result == 0 ||
-			     results[i].page_num < earliest_page_with_result))
-				earliest_page_with_result = results[i].page_num;
-		}
-		++i;
-	}
-
-	/* If earliest page is just the current page, there is no earliest page */
-	if (earliest_page_with_result == current_page)
-		earliest_page_with_result = 0;
-	
-	/* If no next page, then wrap and the wrapped page is the next page */
-	if (next_page_with_result == 0)
-		next_page_with_result = earliest_page_with_result;
-
-	counts_changed = FALSE;
-	if (on_this_page != view->results_on_this_page ||
-	    next_page_with_result != view->next_page_with_result) {
-		view->results_on_this_page = on_this_page;
-		view->next_page_with_result = next_page_with_result;
-		counts_changed = TRUE;
-	}
-
-	if (counts_changed ||
-	    view->find_results->len == 0) {
-		char *message;
-
-		message = ev_view_get_find_status_message (view);
-		ev_view_set_find_status (view, message);
-		g_free (message);
-	}
-}
-
-static void
-found_results_callback (EvDocument         *document,
-                        const EvFindResult *results,
-                        int                 n_results,
-                        double              percent_complete,
-                        void               *data)
-{
-  EvView *view = EV_VIEW (data);
-  
-  g_array_set_size (view->find_results, 0);
-
-  if (n_results > 0)
-          g_array_append_vals (view->find_results,
-                               results, n_results);
-
-#if 0
-  {
-	  int i;
-
-	  g_printerr ("%d results %d%%: ", n_results,
-		      (int) (percent_complete * 100));
-	  i = 0;
-	  while (i < n_results) {
-		  g_printerr ("%d ", results[i].page_num);
-		  ++i;
-	  }
-	  g_printerr ("\n");
-  }
-#endif
-
-  view->find_percent_complete = percent_complete;
-  update_find_results (view);
-  
-  gtk_widget_queue_draw (GTK_WIDGET (view));
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 static void
@@ -1066,12 +960,8 @@ ev_view_set_document (EvView     *view,
 	if (document != view->document) {
 		if (view->document) {
                         g_signal_handlers_disconnect_by_func (view->document,
-                                                              found_results_callback,
+                                                              find_changed_cb,
                                                               view);
-                        g_array_set_size (view->find_results, 0);
-			view->results_on_this_page = 0;
-			view->next_page_with_result = 0;
-
 			g_object_unref (view->document);
                 }
 
@@ -1081,8 +971,8 @@ ev_view_set_document (EvView     *view,
 			g_object_ref (view->document);
 			if (EV_IS_DOCUMENT_FIND (view->document))
 				g_signal_connect (view->document,
-						  "found",
-						  G_CALLBACK (found_results_callback),
+						  "find_changed",
+						  G_CALLBACK (find_changed_cb),
 						  view);
 			g_signal_connect (view->document,
 					  "changed",
@@ -1124,9 +1014,6 @@ set_document_page (EvView *view, int page)
 						   &width, &height);
 			if (width != old_width || height != old_height)
 				gtk_widget_queue_resize (GTK_WIDGET (view));
-
-			view->find_percent_complete = 0.0;
-			update_find_results (view);	
 		}
 	}
 }

@@ -28,12 +28,6 @@
 
 G_BEGIN_DECLS
 
-typedef struct
-{
-  int page_num;
-  GdkRectangle highlight_area;
-} EvFindResult;
-
 #define EV_TYPE_DOCUMENT_FIND	    (ev_document_find_get_type ())
 #define EV_DOCUMENT_FIND(o)		    (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_FIND, EvDocumentFind))
 #define EV_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FIND, EvDocumentFindIface))
@@ -50,29 +44,38 @@ struct _EvDocumentFindIface
 
         /* Methods */
         
-        void         (* begin)     (EvDocumentFind    *document_find,
-                                    const char        *search_string,
-                                    gboolean           case_sensitive);
-        void         (* cancel)    (EvDocumentFind    *document_find);
+        void     (* begin)	      (EvDocumentFind *document_find,
+                                       const char     *search_string,
+                                       gboolean        case_sensitive);
+        void     (* cancel)	      (EvDocumentFind *document_find);
+	int      (* page_has_results) (EvDocumentFind *document_find,
+				       int             page);
+	int      (* get_n_results)    (EvDocumentFind *document_find);
+	gboolean (* get_result)	      (EvDocumentFind *document_find,
+				       int             n_result,
+				       GdkRectangle   *rectangle); 
+	void	 (* get_progress)     (EvDocumentFind *document_find,
+				       double          percent_complete);
 
         /* Signals */
 
-        void         (* found)      (EvDocumentFind     *document_find,
-                                     const EvFindResult *results,
-                                     int                 n_results,
-                                     double              percent_complete);
+        void (* find_changed) (EvDocumentFind *document_find);
 };
 
-GType ev_document_find_get_type (void);
-
-void ev_document_find_begin  (EvDocumentFind     *document_find,
-                              const char         *search_string,
-                              gboolean            case_sensitive);
-void ev_document_find_cancel (EvDocumentFind     *document_find);
-void ev_document_find_found  (EvDocumentFind     *document_find,
-                              const EvFindResult *results,
-                              int                 n_results,
-                              double              percent_complete);
+GType     ev_document_find_get_type         (void);
+void      ev_document_find_begin	    (EvDocumentFind *document_find,
+					     const char     *search_string,
+					     gboolean        case_sensitive);
+void      ev_document_find_cancel	    (EvDocumentFind *document_find);
+int       ev_document_find_page_has_results (EvDocumentFind *document_find,
+					     int             page);
+int       ev_document_find_get_n_results    (EvDocumentFind *document_find);
+gboolean  ev_document_find_get_result	    (EvDocumentFind *document_find,
+					     int             n_result,
+					     GdkRectangle   *rectangle); 
+void	  ev_document_find_get_progress     (EvDocumentFind *document_find,
+					     double          percent_complete);
+void      ev_document_find_changed          (EvDocumentFind *document_find);
 
 
 /* How this interface works:
@@ -81,14 +84,6 @@ void ev_document_find_found  (EvDocumentFind     *document_find,
  * 
  * cancel() cancels a search if any, otherwise does nothing.
  * 
- * If begin() has been called and cancel() has not, then the
- * "found" signal can be emitted at any time.
- * The results given in the "found" signal are always all-inclusive,
- * that is, the array will contain all results found so far.
- * There are no guarantees about the ordering of the array,
- * or consistency of ordering between "found" signal emissions.
- *
- * When cancel() is called, "found" will always be emitted with NULL,0
  */
 
 G_END_DECLS

@@ -399,61 +399,50 @@ pdf_document_render (EvDocument  *document,
 					   draw.width, draw.height);
 }
 
-static void
-pdf_document_search_emit_found (PdfDocumentSearch *search)
+int
+pdf_document_find_page_has_results (EvDocumentFind *document_find,
+				    int             page)
 {
-        PdfDocument *pdf_document = search->document;
-        int n_pages;
-        int pages_done;
-        GArray *tmp_results;
-        int i;
+	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
 
-        n_pages = ev_document_get_n_pages (EV_DOCUMENT (search->document));
-        if (search->search_page > search->start_page) {
-                pages_done = search->search_page - search->start_page;
-        } else if (search->search_page == search->start_page) {
-                pages_done = n_pages;
-        } else {
-                pages_done = n_pages - search->start_page + search->search_page;
-        }
+	g_return_val_if_fail (search != NULL, FALSE);
 
-        tmp_results = g_array_new (FALSE, FALSE, sizeof (EvFindResult));
-        g_array_append_vals (tmp_results,
-                             search->current_page_results->data,
-                             search->current_page_results->len);
+	return search->other_page_flags[page];
+}
 
-        /* Now append a bogus element for each page that has a result in it,
-         * that is not the current page
-         */
-        i = 1;
-        while (i <= n_pages) {
-                if (i != pdf_document->page &&
-                    search->other_page_flags[i]) {
-                        EvFindResult result;
+int
+pdf_document_find_get_n_results (EvDocumentFind *document_find)
+{
+	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
 
-                        result.page_num = i;
+	if (search) {
+		return search->current_page_results->len;
+	} else {
+		return 0;
+	}
+}
 
-                        /* Use bogus coordinates, again we can't get coordinates
-                         * until this is the current page because TextOutputDev
-                         * isn't good enough
-                         */
-                        result.highlight_area.x = -1;
-                        result.highlight_area.y = -1;
-                        result.highlight_area.width = 1;
-                        result.highlight_area.height = 1;
+gboolean
+pdf_document_find_get_result (EvDocumentFind *document_find,
+			      int             n_result,
+			      GdkRectangle   *rectangle)
+{
+	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
+	GdkRectangle r;
 
-                        g_array_append_val (tmp_results, result);
-                }
+	if (search != NULL) {
+		r = g_array_index (search->current_page_results,
+				   GdkRectangle, n_result);
 
-                ++i;
-        }
+		rectangle->x = r.x;
+		rectangle->y = r.y;
+		rectangle->width = r.width;
+		rectangle->height = r.height;
 
-        ev_document_find_found (EV_DOCUMENT_FIND (pdf_document),
-                                (EvFindResult*) tmp_results->data,
-                                tmp_results->len,
-                                pages_done / (double) n_pages);
-
-        g_array_free (tmp_results, TRUE);
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 static void
@@ -461,7 +450,7 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
 {
         PdfDocument *pdf_document = search->document;
         int current_page;
-        EvFindResult result;
+        GdkRectangle result;
         int xMin, yMin, xMax, yMax;
 
         current_page = pdf_document->page;
@@ -482,12 +471,10 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                                          gTrue, gTrue, // startAtTop, stopAtBottom
                                          gFalse, gFalse, // startAtLast, stopAtLast
                                          &xMin, &yMin, &xMax, &yMax)) {
-                result.page_num = pdf_document->page;
-
-                result.highlight_area.x = xMin;
-                result.highlight_area.y = yMin;
-                result.highlight_area.width = xMax - xMin;
-                result.highlight_area.height = yMax - yMin;
+                result.x = xMin;
+                result.y = yMin;
+                result.width = xMax - xMin;
+                result.height = yMax - yMin;
 
                 g_array_append_val (search->current_page_results, result);
                 /* Now find further results */
@@ -496,25 +483,14 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                                                     gFalse, gTrue,
                                                     gTrue, gFalse,
                                                     &xMin, &yMin, &xMax, &yMax)) {
-
-                        result.page_num = pdf_document->page;
-
-                        result.highlight_area.x = xMin;
-                        result.highlight_area.y = yMin;
-                        result.highlight_area.width = xMax - xMin;
-                        result.highlight_area.height = yMax - yMin;
+                        result.x = xMin;
+                        result.y = yMin;
+                        result.width = xMax - xMin;
+                        result.height = yMax - yMin;
 
                         g_array_append_val (search->current_page_results, result);
                 }
         }
-
-        /* needed for the initial current page since we don't search
-         * it in the idle
-         */
-        search->other_page_flags[current_page] =
-                search->current_page_results->len > 0;
-
-        pdf_document_search_emit_found (search);
 }
 
 static gboolean
@@ -566,7 +542,7 @@ pdf_document_search_idle_callback (void *data)
         }
 
         /* We do this even if nothing was found, to update the percent complete */
-        pdf_document_search_emit_found (search);
+        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document));
 
         return TRUE;
 
@@ -618,7 +594,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
 
         search->current_page_results = g_array_new (FALSE,
                                                     FALSE,
-                                                    sizeof (EvFindResult));
+                                                    sizeof (GdkRectangle));
         n_pages = ev_document_get_n_pages (EV_DOCUMENT (document));
 
         /* This is an array of bool; with the first value ignored
@@ -1128,6 +1104,9 @@ static void
 pdf_document_find_iface_init (EvDocumentFindIface *iface)
 {
         iface->begin = pdf_document_find_begin;
+	iface->get_n_results = pdf_document_find_get_n_results;
+	iface->get_result = pdf_document_find_get_result;
+	iface->page_has_results = pdf_document_find_page_has_results;
         iface->cancel = pdf_document_find_cancel;
 }
 
