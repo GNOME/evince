@@ -50,6 +50,7 @@
 #include <gtk/gtk.h>
 
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
 
 #include <gconf/gconf-client.h>
@@ -107,6 +108,12 @@ struct _EvWindowPrivate {
 	EvChrome chrome;
 	gboolean fullscreen_mode;
 };
+
+static GtkTargetEntry ev_drop_types[] = {
+	{ "text/uri-list", 0, 0 }
+};
+
+
 #define EV_WINDOW_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_WINDOW, EvWindowPrivate))
 
@@ -546,6 +553,31 @@ start_loading_document (EvWindow   *ev_window,
 	return FALSE;
 }
 
+static gboolean
+is_file_supported (const gchar *mime_type)
+{
+	static char *supported_types [] = {
+		"application/pdf",
+		"application/postscript",
+		"application/x-gzpostscript",
+		"image/x-eps",
+		NULL
+	};
+	gint   i;
+	
+	g_return_val_if_fail (mime_type != NULL, FALSE);
+
+	if (mime_type_supported_by_gdk_pixbuf (mime_type))
+		return TRUE;
+	
+	for (i = 0; supported_types[i] != NULL; i++) {
+		if (g_ascii_strcasecmp (mime_type, supported_types[i]) == 0)
+			return TRUE;
+	}
+	
+	return FALSE;
+}
+
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
@@ -584,6 +616,41 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 	}
 
 	g_free (mime_type);
+}
+
+static void
+ev_window_open_uri_list (EvWindow *ev_window, GList *uri_list)
+{
+	GList *list;
+	gchar *uri, *mime_type;
+	
+	g_return_if_fail (uri_list != NULL);
+	
+	list = uri_list;
+	while (list) {
+		uri = gnome_vfs_uri_to_string (list->data, GNOME_VFS_URI_HIDE_NONE);
+		mime_type = gnome_vfs_get_mime_type (uri);
+		
+		if (is_file_supported (mime_type)) {
+			if (ev_window_is_empty (EV_WINDOW (ev_window))) {
+				ev_window_open (ev_window, uri);
+				
+				gtk_widget_show (GTK_WIDGET (ev_window));
+			} else {
+				EvWindow *new_window;
+				
+				new_window = ev_application_new_window (EV_APP);
+				ev_window_open (new_window, uri);
+				
+				gtk_widget_show (GTK_WIDGET (new_window));
+			}
+		}
+
+		g_free (mime_type);
+		g_free (uri);
+
+		list = g_list_next (list);
+	}
 }
 
 static void
@@ -1628,6 +1695,24 @@ goto_page_cb (GtkAction *action, int page_number, EvWindow *ev_window)
 }
 
 static void
+drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
+		       gint x, gint y, GtkSelectionData *selection_data,
+		       guint info, guint time, gpointer gdata)
+{
+	GList    *uri_list = NULL;
+
+	uri_list = gnome_vfs_uri_list_parse ((gchar *) selection_data->data);
+
+	if (uri_list) {
+		ev_window_open_uri_list (EV_WINDOW (widget), uri_list);
+		
+		gnome_vfs_uri_list_free (uri_list);
+
+		gtk_drag_finish (context, TRUE, FALSE, time);
+	}
+}
+
+static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
@@ -1939,6 +2024,14 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Give focus to the scrolled window */
 	gtk_widget_grab_focus (ev_window->priv->scrolled_window);
+
+	/* Drag and Drop */
+	gtk_drag_dest_unset (GTK_WIDGET (ev_window));
+	gtk_drag_dest_set (GTK_WIDGET (ev_window), GTK_DEST_DEFAULT_ALL, ev_drop_types,
+			   sizeof (ev_drop_types) / sizeof (ev_drop_types[0]),
+			   GDK_ACTION_COPY);
+	g_signal_connect (G_OBJECT (ev_window), "drag_data_received",
+			  G_CALLBACK (drag_data_received_cb), NULL);
 
 	update_action_sensitivity (ev_window);
 }
