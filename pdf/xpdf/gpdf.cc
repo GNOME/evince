@@ -116,7 +116,7 @@ extern "C" {
       return FALSE;
     }
     
-    stream = bonobo_stream_fs_open (name, Bonobo_Storage_READ);
+    stream = bonobo_stream_open (BONOBO_IO_DRIVER_FS, name, Bonobo_Storage_READ, 0);
     
     if (stream == NULL) {
       char *err = g_strconcat (_("Could not open "), name, NULL);
