@@ -1,3 +1,28 @@
+Tue Feb 15 22:27:13 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document-misc.h:
+	* backend/ev-document-misc.c:
+	(ev_document_misc_get_page_border_size),
+	(ev_document_misc_paint_one_page): New function to canonicalize
+	sizing/painting a border.
+
+	* shell/Makefile.am: Remove ev-page-view.c entirely as it's not
+	used.
+
+	* pdf/xpdf/pdf-document.cc: use new function
+
+	* shell/ev-view.c: (ev_view_size_request), (expose_bin_window),
+	(ev_view_init), (ev_view_set_mode), (ev_view_zoom),
+	(ev_view_best_fit), (ev_view_fit_width): * shell/ev-view.h: *
+	shell/ev-window.c: (update_sizing_buttons),
+	(ev_window_setup_document), (ev_window_cmd_view_zoom_in),
+	(ev_window_cmd_view_zoom_out), (ev_window_cmd_view_best_fit),
+	(ev_window_cmd_view_page_width), (size_allocate_cb),
+	(ev_window_set_sizing_mode), (ev_window_init): make the "best fit"
+	and "fit width" values act as toggle buttons so they stay
+	toggled.  It's not 100% perfect, and it's a little slow, but it's
+	good enough to commit I think.
+
 2005-02-15  David Lodge  <dave@cirt.net>
 
 	* configure.ac (ALL_LINGUAS): Added "en_GB" (English (British)).

@@ -23,9 +23,9 @@
 #include "pdf-document.h"
 #include "ev-ps-exporter.h"
 #include "ev-document-find.h"
+#include "ev-document-misc.h"
 #include "gpdf-g-switch.h"
 #include "ev-document-links.h"
-#include "ev-document-misc.h"
 #include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 

@@ -65,29 +65,60 @@ ev_document_misc_get_thumbnail_frame (int        width,
 }
 
 void
-ev_document_misc_get_page_border_size (gint  page_width,
-				       gint  page_height,
-				       gint *left_border,
-				       gint *right_border,
-				       gint *top_border,
-				       gint *bottom_border)
+ev_document_misc_get_page_border_size (gint       page_width,
+				       gint       page_height,
+				       GtkBorder *border)
 {
-	g_assert (left_border);
-	g_assert (right_border);
-	g_assert (top_border);
-	g_assert (bottom_border);
+	g_assert (border);
 
-	*left_border = 1;
-	*top_border = 1;
+	border->left = 1;
+	border->top = 1;
 	if (page_width < 100) {
-		*right_border = 2;
-		*bottom_border = 2;
+		border->right = 2;
+		border->bottom = 2;
 	} else if (page_width < 500) {
-		*right_border = 3;
-		*left_border = 3;
+		border->right = 3;
+		border->bottom = 3;
 	} else {
-		*right_border = 4;
-		*bottom_border = 4;
+		border->right = 4;
+		border->bottom = 4;
 	}
 }
 
+
+void
+ev_document_misc_paint_one_page (GdkDrawable  *drawable,
+				 GtkWidget    *widget,
+				 GdkRectangle *area,
+				 GtkBorder    *border)
+{
+	gdk_draw_rectangle (drawable,
+			    widget->style->black_gc,
+			    TRUE,
+			    area->x,
+			    area->y,
+			    area->width,
+			    area->height);
+	gdk_draw_rectangle (drawable,
+			    widget->style->white_gc,
+			    TRUE,
+			    area->x + border->left,
+			    area->y + border->top,
+			    area->width - (border->left + border->right),
+			    area->height - (border->top + border->bottom));
+	gdk_draw_rectangle (drawable,
+			    widget->style->mid_gc[widget->state],
+			    TRUE,
+			    area->x,
+			    area->y + area->height - (border->bottom - border->top),
+			    border->bottom - border->top,
+			    border->bottom - border->top);
+	gdk_draw_rectangle (drawable,
+			    widget->style->mid_gc[widget->state],
+			    TRUE,
+			    area->x + area->width - (border->right - border->left),
+			    area->y,
+			    border->right - border->left,
+			    border->right - border->left);
+
+}
