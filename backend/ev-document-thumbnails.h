@@ -25,31 +25,40 @@
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_DOCUMENT_THUMBNAILS	    (ev_document_thumbnails_get_type ())
-#define EV_DOCUMENT_THUMBNAILS(o)		    (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_THUMBNAILS, EvDocumentThumbnails))
-#define EV_DOCUMENT_THUMBNAILS_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_THUMBNAILS, EvDocumentThumbnailsIface))
-#define EV_IS_DOCUMENT_THUMBNAILS(o)	    (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_THUMBNAILS))
-#define EV_IS_DOCUMENT_THUMBNAILS_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_THUMBNAILS))
+#define EV_TYPE_DOCUMENT_THUMBNAILS         (ev_document_thumbnails_get_type ())
+#define EV_DOCUMENT_THUMBNAILS(o)                   (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_THUMBNAILS, EvDocumentThumbnails))
+#define EV_DOCUMENT_THUMBNAILS_IFACE(k)     (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_THUMBNAILS, EvDocumentThumbnailsIface))
+#define EV_IS_DOCUMENT_THUMBNAILS(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_THUMBNAILS))
+#define EV_IS_DOCUMENT_THUMBNAILS_IFACE(k)          (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_THUMBNAILS))
 #define EV_DOCUMENT_THUMBNAILS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_THUMBNAILS, EvDocumentThumbnailsIface))
 
-typedef struct _EvDocumentThumbnails	EvDocumentThumbnails;
-typedef struct _EvDocumentThumbnailsIface	EvDocumentThumbnailsIface;
+typedef struct _EvDocumentThumbnails    EvDocumentThumbnails;
+typedef struct _EvDocumentThumbnailsIface       EvDocumentThumbnailsIface;
 
 struct _EvDocumentThumbnailsIface
 {
-	GTypeInterface base_iface;
+        GTypeInterface base_iface;
 
-	/* Methods  */
-	GdkPixbuf *  (* get_thumbnail) (EvDocumentThumbnails   *document,
-					gint 		        page,
-					gint                    width);
+        /* Methods  */
+        GdkPixbuf *  (* get_thumbnail)  (EvDocumentThumbnails *document,
+                                         gint                  page,
+                                         gint                  width);
+        void         (* get_dimensions) (EvDocumentThumbnails *document,
+					 gint                  page,
+					 gint                  suggested_width,
+					 gint                 *width,
+					 gint                 *height);
 };
 
-GType ev_document_thumbnails_get_type (void);
-
-GdkPixbuf *ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-						 gint 			 page,
-						 gint			 width);
+GType      ev_document_thumbnails_get_type       (void);
+GdkPixbuf *ev_document_thumbnails_get_thumbnail  (EvDocumentThumbnails *document,
+                                                  gint                  page,
+                                                  gint                  suggested_width);
+void       ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
+                                                  gint                  page,
+                                                  gint                  suggested_width,
+                                                  gint                 *width,
+                                                  gint                 *height);
 
 G_END_DECLS
 

@@ -1138,6 +1138,39 @@ pdf_document_thumbnails_get_page_pixbuf (PdfDocument *pdf_document,
 	return pixbuf;
 }
 
+static void
+pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails,
+					gint                  page,
+					gint                  suggested_width,
+					gint                 *width,
+					gint                 *height)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_thumbnails);
+	Page *the_page;
+	Object the_thumb;
+	Thumb *thumb = NULL;
+	gdouble page_ratio;
+
+	/* getPage seems to want page + 1 for some reason; */
+	the_page = pdf_document->doc->getCatalog ()->getPage (page + 1);
+	the_page->getThumb (&the_thumb);
+
+
+
+	if (!(the_thumb.isNull () || the_thumb.isNone())) {
+		/* Build the thumbnail object */
+		thumb = new Thumb(pdf_document->doc->getXRef (),
+				  &the_thumb);
+
+		*width = thumb->getWidth ();
+		*height = thumb->getHeight ();
+	} else {
+		page_ratio = the_page->getHeight () / the_page->getWidth ();
+		*width = suggested_width;
+		*height = (gint) (suggested_width * page_ratio);
+	}
+}
+
 static GdkPixbuf *
 pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 				       gint 		     page,
@@ -1202,6 +1235,7 @@ static void
 pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 {
 	iface->get_thumbnail = pdf_document_thumbnails_get_thumbnail;
+	iface->get_dimensions = pdf_document_thumbnails_get_dimensions;
 }
 
 

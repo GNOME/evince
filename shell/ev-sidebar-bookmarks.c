@@ -203,7 +203,6 @@ stack_data_free (IdleStackData       *stack_data,
 	g_free (stack_data);
 }
 
-#if 0
 static gboolean
 do_one_iteration (EvSidebarBookmarks *ev_sidebar_bookmarks)
 {
@@ -299,7 +298,7 @@ populate_bookmarks_idle (gpointer data)
 #endif
 	return TRUE;
 }
-#endif
+
 void
 ev_sidebar_bookmarks_clear_document (EvSidebarBookmarks *sidebar_bookmarks)
 {
@@ -350,7 +349,7 @@ ev_sidebar_bookmarks_set_document (EvSidebarBookmarks *sidebar_bookmarks,
 		stack_data->tree_iter = NULL;
 
 		priv->idle_stack = g_list_prepend (priv->idle_stack, stack_data);
-		//priv->idle_id = g_idle_add (populate_bookmarks_idle, sidebar_bookmarks);
+		priv->idle_id = g_idle_add (populate_bookmarks_idle, sidebar_bookmarks);
 	}
 }
 

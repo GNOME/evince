@@ -47,9 +47,30 @@ ev_document_thumbnails_get_type (void)
 GdkPixbuf *
 ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 				      gint 		      page,
-				      gint		      width)
+				      gint		      suggested_width)
 {
-	EvDocumentThumbnailsIface *iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
-	
-	return iface->get_thumbnail (document, page, width);
+	EvDocumentThumbnailsIface *iface;
+
+	g_return_val_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document), NULL);
+
+	iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
+	return iface->get_thumbnail (document, page, suggested_width);
 }
+
+void
+ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
+				       gint                  page,
+				       gint                  suggested_width,
+				       gint                 *width,
+				       gint                 *height)
+{
+	EvDocumentThumbnailsIface *iface;
+
+	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
+	g_return_if_fail (width != NULL);
+	g_return_if_fail (height != NULL);
+
+	iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
+	iface->get_dimensions (document, page, suggested_width, width, height);
+}
+

@@ -31,6 +31,7 @@
 
 #include "ev-sidebar-thumbnails.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-misc.h"
 #include "ev-utils.h"
 
 #define THUMBNAIL_WIDTH 75
@@ -224,9 +225,13 @@ void
 ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 				    EvDocument          *document)
 {
-	GtkIconTheme *theme;
 	GdkPixbuf *loading_icon;
 	gint i, n_pages;
+	GtkTreeIter iter;
+	gchar *page;
+	gint width = THUMBNAIL_WIDTH;
+	gint height = THUMBNAIL_WIDTH;
+
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	
 	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
@@ -234,32 +239,27 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	if (priv->idle_id != 0) {
 		g_source_remove (priv->idle_id);
 	}
-	
-	theme = gtk_icon_theme_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (sidebar_thumbnails)));
-
-	loading_icon = gtk_icon_theme_load_icon (theme, "gnome-fs-loading-icon",
-						 THUMBNAIL_WIDTH, 0, NULL);
-
 	n_pages = ev_document_get_n_pages (document);
-	
-	for (i = 0; i < n_pages; i++) {
-		GtkTreeIter iter;
-		gchar *page;
 
+	priv->document = document;
+	priv->idle_id = g_idle_add (populate_thumbnails_idle, sidebar_thumbnails);
+	priv->n_pages = n_pages;
+	priv->current_page = 0;
+
+	/* We get the dimensions of the first doc so that   */
+	ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (priv->document),
+					       0, THUMBNAIL_WIDTH, &width, &height);
+	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
+
+	for (i = 0; i < n_pages; i++) {
 		page = g_strdup_printf ("<i>%d</i>", i + 1);
-		gtk_list_store_append (sidebar_thumbnails->priv->list_store,
-				       &iter);
-		gtk_list_store_set (sidebar_thumbnails->priv->list_store,
-				    &iter,
+		gtk_list_store_append (priv->list_store, &iter);
+		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_PAGE_STRING, page,
 				    COLUMN_PIXBUF, loading_icon,
 				    -1);
 		g_free (page);
 	}
 
-	priv->document = document;
-	priv->idle_id = g_idle_add (populate_thumbnails_idle, sidebar_thumbnails);
-	priv->n_pages = n_pages;
-	priv->current_page = 0;
 }
 

@@ -1,10 +1,13 @@
 
 #include "ev-document-misc.h"
+#include <string.h>
 
 /* Returns a new GdkPixbuf that is suitable for placing in the thumbnail view.
  * It is four pixels wider and taller than the source.  If source_pixbuf is not
  * NULL, then it will fill the return pixbuf with the contents of
- * source_pixbuf. */
+ * source_pixbuf.
+ */
+
 GdkPixbuf *
 ev_document_misc_get_thumbnail_frame (int        width,
 				      int        height,
@@ -13,6 +16,7 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	GdkPixbuf *retval;
 	guchar *data;
 	gint rowstride;
+	int i;
 
 	if (source_pixbuf)
 		g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
@@ -29,7 +33,16 @@ ev_document_misc_get_thumbnail_frame (int        width,
 				 TRUE, 8,
 				 width + 4,
 				 height + 4);
+
+	/* make it black and fill in the middle */
+	data = gdk_pixbuf_get_pixels (retval);
+	rowstride = gdk_pixbuf_get_rowstride (retval);
+
 	gdk_pixbuf_fill (retval, 0x000000ff);
+	for (i = 1; i < height + 1; i++)
+		memset (data + (rowstride * i) + 4, 0xffffffff, width * 4);
+
+	/* copy the source pixbuf */
 	if (source_pixbuf)
 		gdk_pixbuf_copy_area (source_pixbuf, 0, 0,
 				      width,
@@ -37,8 +50,6 @@ ev_document_misc_get_thumbnail_frame (int        width,
 				      retval,
 				      1, 1);
 	/* Add the corner */
-	data = gdk_pixbuf_get_pixels (retval);
-	rowstride = gdk_pixbuf_get_rowstride (retval);
 	data [(width + 2) * 4 + 3] = 0;
 	data [(width + 3) * 4 + 3] = 0;
 	data [(width + 2) * 4 + (rowstride * 1) + 3] = 0;
