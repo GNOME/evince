@@ -1,23 +1,47 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_XPDF_ComponentFactory"
+<oaf_server iid="OAFIID:GNOME_PDF_Factory"
             type="exe"
-            location="bonobo-application-x-pdf">
+            location="gnome-pdf-viewer">
 
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GNOME/GenericFactory:1.0"/>
 	</oaf_attribute>
 
 	<oaf_attribute name="description" type="string"
-	               value="application/x-pdf bonobo object factory"/>
+	               value="Gnome PDF viewer factory"/>
 	<oaf_attribute name="name" type="string"
 	               value="PDF document viewer factory"/>
 
 </oaf_server>
 
-<oaf_server iid="OAFIID:GNOME_XPDF_Embeddable"
+  <oaf_server iid="OAFIID:GNOME_PDF_Control"
+    type="factory"
+    location="OAFIID:GNOME_PDF_Factory">
+    
+    <oaf_attribute name="repo_ids" type="stringv">
+      <item value="IDL:Bonobo/Control:1.0"/>
+      <item value="IDL:Bonobo/PersistStream:1.0"/>
+      <item value="IDL:Bonobo/Persist:1.0"/>
+      <item value="IDL:Bonobo/Unknown:1.0"/>
+    </oaf_attribute>
+
+    <oaf_attribute name="description" type="string" value="Gnome PDF Viewer"/>
+    <oaf_attribute name="name" type="string" value="Gnome PDF Viewer"/>
+    <oaf_attribute name="bonobo:editable" type="boolean" value="false"/>
+    <oaf_attribute name="bonobo:supported_mime_types" type="stringv">
+      <item value="application/x-pdf"/>
+      <item value="application/pdf"/>
+    </oaf_attribute>
+    
+    <oaf_attribute name="nautilus:view_as_name" type="string"
+      value="PDF Document"/>
+
+  </oaf_server>
+
+<oaf_server iid="OAFIID:GNOME_PDF_Embeddable"
             type="factory"
-            location="OAFIID:GNOME_XPDF_ComponentFactory">
+            location="OAFIID:GNOME_PDF_Factory">
 
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:Bonobo/Embeddable:1.0"/>
@@ -27,18 +51,15 @@
 	</oaf_attribute>
 
 	<oaf_attribute name="description" type="string"
-	               value="application/x-pdf bonobo object"/>
+	               value="Embeddable Gnome PDF document"/>
 	<oaf_attribute name="name" type="string"
-	               value="PDF document viewer"/>
+	               value="Embeddable PDF document"/>
 
 	<oaf_attribute name="bonobo:editable" type="boolean" value="true"/>
 	<oaf_attribute name="bonobo:supported_mime_types" type="stringv">
 	<item value="application/x-pdf"/>
 	<item value="application/pdf"/>
 	</oaf_attribute>
-
-	<oaf_attribute name="nautilus:view_as_name" type="string"
-	               value="PDF Document"/>
 
 </oaf_server>
 

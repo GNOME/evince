@@ -14,7 +14,7 @@ else
 gui = xpdf
 endif
 
-bin_PROGRAMS = 	$(gui)	bonobo-application-x-pdf
+bin_PROGRAMS = 	$(gui)	gnome-pdf-viewer
 #	pdftops pdftotext	
 #	pdfinfo	pdftopbm	
 #	pdfimages  		
@@ -99,7 +99,7 @@ common_sources =		\
 	XRef.cc			\
 	XRef.h
 
-bonobo_application_x_pdf_SOURCES =	\
+gnome_pdf_viewer_SOURCES =		\
 	$(common_sources)		\
 	BonoboStream.h			\
 	BonoboStream.cc			\
@@ -107,6 +107,8 @@ bonobo_application_x_pdf_SOURCES =	\
 	GOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
 	bonobo-application-x-pdf.h	\
+	gpdf-control.cc			\
+	gpdf-control.h			\
 	gpdf-embeddable.cc		\
 	gpdf-embeddable.h		\
 	gpdf-embeddable-view.cc		\
@@ -119,7 +121,7 @@ bonobo_application_x_pdf_SOURCES =	\
 	pdf-view.cc			\
 	pdf-view.h
 
-bonobo_application_x_pdf_LDADD =	\
+gnome_pdf_viewer_LDADD =		\
 	../goo/libgoo.a			\
 	$(GTK_LIBS)			\
 	$(GNOME_LIBDIR)			\
@@ -203,7 +205,7 @@ ltk = 			\
 	xpdf.ltk
 
 oafdir = $(datadir)/oaf
-oaf_DATA = GNOME_XPDF.oafinfo
+oaf_DATA = GNOME_PDF.oafinfo
 
 XML_FILES =				\
 	gpdf-ui.xml			\
@@ -214,5 +216,3 @@ ui_DATA = $(XML_FILES)
 
 EXTRA_DIST = $(stock_DATA) ChangeLog $(ltk)	\
              $(oaf_DATA) config.h $(XML_FILES)
-
-
