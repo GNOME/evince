@@ -76,7 +76,6 @@ gpdf_SOURCES = 			\
 gpdf_LDADD =			\
 	$(GTK_LIBS)		\
 	$(GNOME_LIBDIR)		\
-	-lbonobo		\
 	$(OBJECT_DIRECTORY_LIBS) \
 	$(EXTRA_GNOME_LIBS)	\
 	$(INTLLIBS)
@@ -96,8 +95,8 @@ bonobo_application_x_pdf_LDADD =	\
 	../goo/libgoo.a			\
 	$(GTK_LIBS)			\
 	$(GNOME_LIBDIR)			\
-	-lbonobo			\
 	$(OBJECT_DIRECTORY_LIBS)	\
+	$(EXTRA_GNOME_LIBS)		\
 	$(EXTRA_GLIB_LIBS)		\
 	$(INTLLIBS)
 

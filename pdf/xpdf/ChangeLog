@@ -1,3 +1,15 @@
+2000-08-02  Michael Meeks  <michael@helixcode.com>
+
+	* Makefile.am (gpdf_LDADD): kill ghastly hack adding -lbonobo.
+	(bonobo_application_x_pdf_LDADD): add EXTRA_GNOME_LIBS
+
+2000-07-25  Michael Meeks  <michael@helixcode.com>
+
+	* bonobo-application-x-pdf.cc (embeddable_factory): s/gtk/bonobo/
+	on unref. Junk 2 stop tabs throught, Derek can have my kittens.
+	(view_create_menus): create the pdf toolbar before using it.
+	(button_press_event_cb): return a value.
+
 2000-07-04  Michael Meeks  <michael@helixcode.com>
 
 	* GOutputDev.cc (drawImage): kill double free.

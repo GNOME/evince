@@ -3,7 +3,6 @@
  *
  * Author:
  *   Michael Meeks <michael@imaginator.com>
- *
  */
 #include <stdio.h>
 #include <stdlib.h>
