@@ -287,7 +287,7 @@ pixbuf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 	gdouble page_ratio;
 
-	page_ratio = gdk_pixbuf_get_height (pixbuf_document->pixbuf) /
+	page_ratio = ((double)gdk_pixbuf_get_height (pixbuf_document->pixbuf)) /
 		     gdk_pixbuf_get_width (pixbuf_document->pixbuf);
 	*width = suggested_width;
 	*height = (gint) (suggested_width * page_ratio);
