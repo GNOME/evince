@@ -534,6 +534,7 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_sidebar_set_document (sidebar, document);
 	else
 		hide_sidebar_and_actions (ev_window);
+
 	ev_view_set_document (view, document);
 
 	update_window_title (document, NULL, ev_window);

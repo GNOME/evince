@@ -22,6 +22,7 @@
 
 #include "ev-document.h"
 #include "ev-backend-marshalers.h"
+#include "ev-job-queue.h"
 
 static void ev_document_class_init (gpointer g_class);
 
@@ -104,7 +105,13 @@ ev_document_load (EvDocument  *document,
 		  GError     **error)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	return iface->load (document, uri, error);
+	gboolean retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->load (document, uri, error);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 gboolean
@@ -113,7 +120,13 @@ ev_document_save (EvDocument  *document,
 		  GError     **error)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	return iface->save (document, uri, error);
+	gboolean retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->save (document, uri, error);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 char *
@@ -121,7 +134,9 @@ ev_document_get_title (EvDocument  *document)
 {
 	char *title;
 
+	g_mutex_lock (EV_DOC_MUTEX);
 	g_object_get (document, "title", &title, NULL);
+	g_mutex_unlock (EV_DOC_MUTEX);
 
 	return title;
 }
@@ -130,7 +145,13 @@ int
 ev_document_get_n_pages (EvDocument  *document)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	return iface->get_n_pages (document);
+	gint retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->get_n_pages (document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 void
@@ -138,14 +159,23 @@ ev_document_set_page (EvDocument  *document,
 		      int          page)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_page (document, page);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 int
 ev_document_get_page (EvDocument *document)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	return iface->get_page (document);
+	int retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->get_page (document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 void
@@ -153,7 +183,10 @@ ev_document_set_target (EvDocument  *document,
 			GdkDrawable *target)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_target (document, target);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void
@@ -161,7 +194,10 @@ ev_document_set_scale (EvDocument   *document,
 		       double        scale)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_scale (document, scale);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void
@@ -170,7 +206,10 @@ ev_document_set_page_offset (EvDocument  *document,
 			     int          y)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->set_page_offset (document, x, y);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void
@@ -180,7 +219,10 @@ ev_document_get_page_size   (EvDocument   *document,
 			     int          *height)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->get_page_size (document, page, width, height);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 char *
@@ -188,7 +230,13 @@ ev_document_get_text (EvDocument   *document,
 		      GdkRectangle *rect)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	return iface->get_text (document, rect);
+	char *retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->get_text (document, rect);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 EvLink *
@@ -197,7 +245,13 @@ ev_document_get_link (EvDocument   *document,
 		      int	    y)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	return iface->get_link (document, x, y);
+	EvLink *retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->get_link (document, x, y);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 void
@@ -208,7 +262,10 @@ ev_document_render (EvDocument  *document,
 		    int          clip_height)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->render (document, clip_x, clip_y, clip_width, clip_height);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 void

@@ -1,3 +1,17 @@
+Sat Mar  5 18:04:35 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-sidebar-thumbnails.c: Disable old idle-based
+	thumbnailing code in favor of threaded code.
+
+	* backend/ev-job-queue.[ch]: Initial implementation of the job
+	queue.
+
+	* backend/ev-jobs.[ch]: Job objects.  Pretty uninteresting right
+	now.
+
+	* backend/ev-document*: Add locks.  This is pretty wrong right
+	now, but we can get away with it.
+
 2005-03-03  Fernando Herrera  <fherrera@onirica.com>
 
 	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):

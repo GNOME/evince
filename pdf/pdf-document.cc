@@ -259,7 +259,7 @@ pdf_document_set_page (EvDocument  *document,
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 
-	page = CLAMP (page, 1, ev_document_get_n_pages (document));
+	page = CLAMP (page, 1, pdf_document_get_n_pages (document));
 
 	if (page != pdf_document->page) {
 		pdf_document->page = page;
@@ -427,7 +427,7 @@ pdf_document_find_get_progress (EvDocumentFind *document_find)
 		return 0;
 	}
 
-	n_pages = ev_document_get_n_pages (EV_DOCUMENT (document_find));
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (document_find));
 	if (search->search_page > search->start_page) {
 		pages_done = search->search_page - search->start_page + 1;
 	} else if (search->search_page == search->start_page) {
@@ -544,7 +544,7 @@ pdf_document_search_idle_callback (void *data)
          * and then when the user switches to the current page, we
          * will emit "found" again with the real results.
          */
-        n_pages = ev_document_get_n_pages (EV_DOCUMENT (search->document));
+        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
 
         if (search->output_dev == 0) {
                 /* First time through here... */
@@ -632,7 +632,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
         search->current_page_results = g_array_new (FALSE,
                                                     FALSE,
                                                     sizeof (GdkRectangle));
-        n_pages = ev_document_get_n_pages (EV_DOCUMENT (document));
+        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (document));
 
         search->other_page_flags = g_new0 (int, n_pages + 1);
 	for (i = 0; i <= n_pages; i++) {
@@ -716,7 +716,7 @@ pdf_document_ps_export_begin (EvPSExporter *exporter, const char *filename)
 
 	document->ps_out = new PSOutputDev ((char *)filename, document->doc->getXRef(),
 					    document->doc->getCatalog(), 1,
-					    ev_document_get_n_pages (EV_DOCUMENT (document)),
+					    pdf_document_get_n_pages (EV_DOCUMENT (document)),
 					    psModePS);
 }
 

@@ -402,8 +402,8 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 		if (EV_IS_SIDEBAR_LINKS (widget)
 		    && EV_IS_DOCUMENT_LINKS (document)
 		    && ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document))) {
-		       ev_sidebar_links_set_document
-				(EV_SIDEBAR_LINKS (widget), document);
+			// FIXME: Removed for threading change
+			//ev_sidebar_links_set_document (EV_SIDEBAR_LINKS (widget), document);
 		} else if (EV_IS_SIDEBAR_THUMBNAILS (widget) &&
 			   EV_IS_DOCUMENT_THUMBNAILS (document)) {
 			ev_sidebar_thumbnails_set_document

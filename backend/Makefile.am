@@ -23,6 +23,10 @@ libevbackend_la_SOURCES=			\
 	ev-document-security.h			\
 	ev-document-find.c			\
 	ev-document-find.h			\
+	ev-job-queue.h				\
+	ev-job-queue.c				\
+	ev-jobs.h				\
+	ev-jobs.c				\
 	ev-ps-exporter.c			\
 	ev-ps-exporter.h			\
 	ev-document-misc.h			\

@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include "ev-document-links.h"
+#include "ev-job-queue.h"
 
 GType
 ev_document_links_get_type (void)
@@ -51,15 +52,26 @@ gboolean
 ev_document_links_has_document_links (EvDocumentLinks *document_links)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	return iface->has_document_links (document_links);
+	gboolean retval;
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->has_document_links (document_links);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 EvDocumentLinksIter *
 ev_document_links_begin_read (EvDocumentLinks *document_links)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvDocumentLinksIter *retval;
 
-	return iface->begin_read (document_links);
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->begin_read (document_links);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 EvLink * 
@@ -67,8 +79,13 @@ ev_document_links_get_link (EvDocumentLinks      *document_links,
 			    EvDocumentLinksIter  *iter)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvLink *retval;
 
-	return iface->get_link (document_links, iter);
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->get_link (document_links, iter);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 EvDocumentLinksIter *
@@ -76,8 +93,13 @@ ev_document_links_get_child (EvDocumentLinks     *document_links,
 			     EvDocumentLinksIter *iter)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvDocumentLinksIter *retval;
 
-	return iface->get_child (document_links, iter);
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->get_child (document_links, iter);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 
@@ -86,8 +108,13 @@ ev_document_links_next (EvDocumentLinks     *document_links,
 			EvDocumentLinksIter *iter)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	gboolean retval;
 
-	return iface->next (document_links, iter);
+	g_mutex_lock (EV_DOC_MUTEX);
+	retval = iface->next (document_links, iter);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	return retval;
 }
 
 
@@ -97,5 +124,7 @@ ev_document_links_free_iter (EvDocumentLinks     *document_links,
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 
+	g_mutex_lock (EV_DOC_MUTEX);
 	iface->free_iter (document_links, iter);
+	g_mutex_unlock (EV_DOC_MUTEX);
 }
