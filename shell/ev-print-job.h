@@ -25,6 +25,9 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <libgnomeprintui/gnome-print-dialog.h>
+
+#include "ev-document.h"
 
 G_BEGIN_DECLS
 
@@ -35,8 +38,11 @@ typedef struct _EvPrintJobClass EvPrintJobClass;
 #define EV_PRINT_JOB(object)		(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PRINT_JOB, EvPrintJob))
 #define EV_IS_PRINT_JOB(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PRINT_JOB))
 
-GType		ev_print_job_get_type		(void);
-void		ev_print_job_print		(EvPrintJob *job, GtkWindow *parent);
+GType		ev_print_job_get_type			(void);
+void		ev_print_job_set_gnome_print_job	(EvPrintJob *job, GnomePrintJob *gpj);
+void		ev_print_job_set_document		(EvPrintJob *job, EvDocument *document);
+void		ev_print_job_use_print_dialog_settings	(EvPrintJob *job, GnomePrintDialog *dialog);
+void		ev_print_job_print			(EvPrintJob *job, GtkWindow *parent);
 
 G_END_DECLS
 

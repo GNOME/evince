@@ -545,8 +545,10 @@ ev_window_print (EvWindow *ev_window)
 				
 	gtk_widget_destroy (print_dialog);
 
-	if (print_job != NULL)
+	if (print_job != NULL) {
 		ev_print_job_print (print_job, GTK_WINDOW (ev_window));
+		g_object_unref (print_job);
+	}
 }
 
 static void

@@ -1,5 +1,17 @@
 2005-01-08  Martin Kretzschmar  <martink@gnome.org>
 
+	* shell/ev-print-job.c (ev_print_job_finalize)
+	(ev_print_job_set_property, ev_print_job_get_property)
+	(ev_print_job_set_gnome_print_job, ev_print_job_set_document)
+	(ev_print_job_use_print_dialog_settings, idle_print_handler)
+	(print_closure_finalize, ev_print_job_print): implement
+	printing (for backends with EvPsExporter)
+
+	* shell/ev_print_job.h: update prototypes.
+
+	* shell/ev-window.c (ev_window_print): unref print job after
+	printing.
+
 	* shell/ev-view.c (ev_view_set_document): don't connect to "found"
 	unless the document implements the EvDocumentFind interface.
 
