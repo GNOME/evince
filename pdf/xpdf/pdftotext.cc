@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(new FileStream (fileOpen(fileName)), fileName);
+  doc = new PDFDoc(fileName);
   if (!doc->isOk()) {
     goto err1;
   }

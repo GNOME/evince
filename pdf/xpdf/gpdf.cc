@@ -41,8 +41,6 @@ extern "C" {
 #include "Error.h"
 #include "config.h"
 
-#define UNTESTED 0
-
 poptContext ctx;
 gint  gpdf_debug=0;
 
@@ -611,18 +609,12 @@ container_create_menus (Container *container)
 static void
 container_create_toolbar (Container *container)
 {
-	GnomeUIHandlerMenuItem *toolbar;
+	GnomeUIHandlerToolbarItem *toolbar;
 
-#if UNTESTED > 0
-	gnome_ui_handler_create_menubar (container->uih);
-
-	/*
-	 * Create the basic menus out of UIInfo structures.
-	 */
-	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
-	gnome_ui_handler_toolbar_add_list (container->uih, "/", menu_list);
-	gnome_ui_handler_toolbar_free_list (menu_list);
-#endif
+	gnome_ui_handler_create_toolbar (container->uih, "pdf");
+	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list (container->uih, container_toolbar);
+	gnome_ui_handler_toolbar_add_list (container->uih, "/", toolbar);
+	gnome_ui_handler_toolbar_free_list (toolbar);
 }
 
 static Container *

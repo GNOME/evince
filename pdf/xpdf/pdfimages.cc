@@ -72,9 +72,9 @@ int main(int argc, char *argv[]) {
   // read config file
   initParams(xpdfConfigFile);
 
-  // open PDF fihe
+  // open PDF file
   xref = NULL;
-  doc = new PDFDoc(new FileStream(fileOpen(fileName)), fileName);
+  doc = new PDFDoc(fileName);
   if (!doc->isOk()) {
     goto err1;
   }

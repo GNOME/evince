@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
   GString *psFileName;
-  FILE *file;
   PSOutputDev *psOut;
   GBool ok;
   char *p;
@@ -88,7 +87,7 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(new FileStream (fileOpen (fileName)), fileName);
+  doc = new PDFDoc(fileName);
   if (!doc->isOk()) {
     goto err1;
   }

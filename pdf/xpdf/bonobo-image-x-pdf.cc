@@ -40,7 +40,6 @@ extern "C" {
 #include "BonoboStream.h"
 
 #define PDF_DEBUG 0
-#define UNTESTED 0
 
 GBool printCommands = gFalse;
 
@@ -472,25 +471,23 @@ view_create_menus (view_data_t *view_data)
 				  N_("Last"), N_("View the last page"), -1,
 				  GNOME_UI_HANDLER_PIXMAP_NONE, NULL, 0,
 				  (GdkModifierType)0, page_last_cb, (gpointer)view_data);
-#if UNTESTED > 0
-  gnome_ui_handler_toolbar_new_item (uih, "/First", GNOME_UI_HANDLER_MENU_ITEM,
+
+  gnome_ui_handler_toolbar_new_item (uih, "/First", 
 				     N_("First"), N_("View the first page"), -1,
 				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
 				     0, (GdkModifierType)0, page_first_cb, (gpointer)view_data);
-  gnome_ui_handler_toolbar_new_item (uih, "/Prev", GNOME_UI_HANDLER_MENU_ITEM,
+  gnome_ui_handler_toolbar_new_item (uih, "/Prev",
 				     N_("Previous"), N_("View the previous page"), -1,
 				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
 				     0, (GdkModifierType)0, page_prev_cb, (gpointer)view_data);
-  gnome_ui_handler_toolbar_new_item (uih, "/Next", GNOME_UI_HANDLER_MENU_ITEM,
+  gnome_ui_handler_toolbar_new_item (uih, "/Next",
 				     N_("Next"), N_("View the next page"), -1,
 				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
 				     0, (GdkModifierType)0, page_next_cb, (gpointer)view_data);
-  gnome_ui_handler_toolbar_new_item (uih, "/Last", GNOME_UI_HANDLER_MENU_ITEM,
+  gnome_ui_handler_toolbar_new_item (uih, "/Last",
 				     N_("Last"), N_("View the last page"), -1,
 				     GNOME_UI_HANDLER_PIXMAP_STOCK, GNOME_STOCK_PIXMAP_FIRST,
 				     0, (GdkModifierType)0, page_last_cb, (gpointer)view_data);
-#endif
-				 
 }
 
 /*
