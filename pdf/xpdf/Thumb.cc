@@ -36,169 +36,6 @@
 #include "GfxState.h"
 #include "Thumb.h"
 
-static GHashTable *cmhash = NULL;
-
-/*
- * ThumbColorMap
- */
-ThumbColorMap::ThumbColorMap(int bitsA,
-                             Object *obj,
-                             GfxColorSpace *csA) :
-  bits(bitsA),
-  str(NULL),
-  cs(csA), 
-  length(0)
-{
-        Object obj1, obj2; 
-        GfxIndexedColorSpace *iCS;
-        GfxSeparationColorSpace *sepCS;
-        int maxPixel;
-        Dict *streamDict;
-        int n;
-        int baseNComps; 
-
-        ok = gFalse;
-        maxPixel = (1 << bits) - 1;
-
-        do {
-                if (!obj->isStream ()) {
-                        printf ("Error: Invalid object of type %s\n",
-                                obj->getTypeName ()); 
-                        break; 
-                }
-                str = obj->getStream(); 
-
-                streamDict = obj->streamGetDict ();
-
-                streamDict->lookupNF ("Filter", &obj1);
-                if (!obj1.isArray ()) {
-                        printf ("Error: Invalid filter object of type %s\n",
-                                obj1.getTypeName ()); 
-                        break;                         
-                }
-
-                str = str->addFilters(obj);
-
-		streamDict->lookup ("Length", &obj1);
-		if (obj1.isNull ())
-		{
-			printf ("Error: No Length object\n"); 
-                        break; 
-		}
-		if (!obj1.isInt ()) {
-			printf ("Error: Invalid Width object %s\n",
-				obj1.getTypeName ());
-			obj1.free ();
-			break;
-		}
-		length = obj1.getInt ();
-		obj1.free ();
-
-                nComps = cs->getNComps();
-
-                if (cs->getMode () == csIndexed) {
-                        iCS = (GfxIndexedColorSpace *)cs;
-                        baseNComps = iCS->getBase ()->getNComps ();
-                        str->reset(); 
-                        if (iCS->getBase ()->getMode () == csDeviceGray) {
-                                gray = (double *)gmalloc(sizeof(double) * (iCS->getIndexHigh () + 1));
-                                for (n = 0; n <= iCS->getIndexHigh (); n++) {
-                                        double comp = (double)str->getChar(); 
-                                        //printf ("Gray pixel [%03d] = %02x\n", n, (int)comp); 
-                                        gray[n] = comp / (double)iCS->getIndexHigh (); 
-                                }
-                        }
-                        else if (iCS->getBase ()->getMode () == csDeviceRGB) {
-                                rgb = (GfxRGB *)gmalloc(sizeof(GfxRGB) * (iCS->getIndexHigh () + 1));
-                                for (n = 0; n <= iCS->getIndexHigh (); n++) {
-                                        double comp_r = (double)str->getChar(); 
-                                        double comp_g = (double)str->getChar(); 
-                                        double comp_b = (double)str->getChar(); 
-//                                        printf ("RGB pixel [0x%02x] = (%02x,%02x,%02x)\n",
-//                                                n, (int)comp_r, (int)comp_g, (int)comp_b); 
-                                        rgb[n].r = comp_r / (double)iCS->getIndexHigh (); 
-                                        rgb[n].g = comp_g / (double)iCS->getIndexHigh (); 
-                                        rgb[n].b = comp_b / (double)iCS->getIndexHigh (); 
-                                }
-                        }
-                        else if (iCS->getBase ()->getMode () == csDeviceCMYK) {
-                                cmyk = (GfxCMYK *)gmalloc(sizeof(GfxCMYK) * (iCS->getIndexHigh () + 1));
-                                for (n = 0; n <= iCS->getIndexHigh (); n++) {
-                                        double comp_c = (double)str->getChar(); 
-                                        double comp_m = (double)str->getChar(); 
-                                        double comp_y = (double)str->getChar(); 
-                                        double comp_k = (double)str->getChar(); 
-                                        //printf ("CMYK pixel [%03d] = (%02x,%02x,%02x,%02x)\n",
-                                        //        n, (int)comp_c, (int)comp_m, (int)comp_y, (int)comp_k); 
-                                        cmyk[n].c = comp_c / (double)iCS->getIndexHigh (); 
-                                        cmyk[n].m = comp_m / (double)iCS->getIndexHigh (); 
-                                        cmyk[n].y = comp_y / (double)iCS->getIndexHigh (); 
-                                        cmyk[n].k = comp_k / (double)iCS->getIndexHigh (); 
-                                }
-                        }
-                }
-                else if (cs->getMode () == csSeparation) {
-                        sepCS = (GfxSeparationColorSpace *)cs; 
-                        /* FIXME: still to do */
-                }
-
-                ok = gTrue;
-        }
-        while (0); 
-}
-
-ThumbColorMap *
-ThumbColorMap::lookupColorMap(XRef *xref, int bits, Object *obj, GfxColorSpace *cs)
-{
-	Object obj1; 
-	ThumbColorMap *cm; 
-	gchar *key;
-	
-	if (!cmhash)
-		cmhash = g_hash_table_new(NULL, g_int_equal); 
-
-	key = g_strdup_printf ("%d %d R", obj->getRefNum (), obj->getRefGen ());
-
-	if (!(cm = (ThumbColorMap *)g_hash_table_lookup (cmhash, &key))) {
-		cm = new ThumbColorMap(bits, obj->fetch(xref, &obj1), cs);
-		obj1.free(); 
-		g_hash_table_insert(cmhash, &key, cm); 
-	}
-
-	g_free (key); 
-
-	return cm; 
-}
-
-void
-ThumbColorMap::getGray(Guchar *x, double *outgray)
-{
-	*outgray = gray[*x];
-}
-
-void
-ThumbColorMap::getRGB(Guchar *x, GfxRGB *outrgb)
-{
-	outrgb->r = rgb[*x].r;
-	outrgb->g = rgb[*x].g;
-	outrgb->b = rgb[*x].b;
-}
-
-void
-ThumbColorMap::getCMYK(Guchar *x, GfxCMYK *outcmyk)
-{
-	outcmyk->c = cmyk[*x].c;
-	outcmyk->m = cmyk[*x].m;
-	outcmyk->y = cmyk[*x].y;
-	outcmyk->k = cmyk[*x].k;
-}
-
-ThumbColorMap::~ThumbColorMap()
-{
-        delete str;
-        gfree((void *)gray); 
-}
-
 /*
  * Thumb
  */
@@ -209,6 +46,7 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 {
 	Object obj1, obj2;
 	Dict *dict;
+	GfxColorSpace *colorSpace;
 
 	do {
 		/* Get stream dict */
@@ -270,18 +108,26 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 			obj1.free ();
 			dict->lookup ("CS", &obj1);
 		}
-		if (!(gfxCS = GfxColorSpace::parse (&obj1)))
-		{
+		colorSpace = GfxColorSpace::parse(&obj1);
+		obj1.free();
+		if (!colorSpace) {
 			fprintf (stderr, "Error: Cannot parse color space\n");
-			obj1.free ();
 			break;
 		}
-		if (gfxCS->getMode () == csIndexed)			
-			thumbCM = ThumbColorMap::lookupColorMap (xref, bits, obj1.arrayGetNF(3, &obj2), gfxCS);
-		else if (gfxCS->getMode () == csSeparation)
-			fprintf (stderr, "Not yet implemented\n");
-		  
-		
+
+		dict->lookup("Decode", &obj1);
+		if (obj1.isNull()) {
+			obj1.free();
+			dict->lookup("D", &obj1);
+		}
+		colorMap = new GfxImageColorMap(bits, &obj1, colorSpace);
+		obj1.free();
+		if (!colorMap->isOk()) {
+			fprintf (stderr, "Error: invalid colormap\n");
+			delete colorMap;
+			colorMap = NULL;
+		}
+
 		dict->lookup ("Length", &obj1);
 		if (!obj1.isInt ()) {
 			fprintf (stderr, "Error: Invalid Length Object %s\n",
@@ -308,10 +154,16 @@ Thumb::getPixbufData()
 
 	/* RGB Pixbuf data */
 	pixbufdatasize = width * height * 3;
-	pixbufdata =(unsigned char *)g_malloc(pixbufdatasize);
+	if (colorMap) {
+		pixbufdata =(unsigned char *)g_malloc(pixbufdatasize);
+	} else {
+		pixbufdata =(unsigned char *)g_malloc0(pixbufdatasize);
+		return pixbufdata;
+	}
+
 	p = pixbufdata;
 
-	imgstr = new ImageStream(str, width, thumbCM->getNumPixelComps(), thumbCM->getBits());
+	imgstr = new ImageStream(str, width, colorMap->getNumPixelComps(), colorMap->getBits());
 	imgstr->reset();
 	for (row = 0; row < height; ++row) {
 	    for (col = 0; col < width; ++col) {
@@ -319,7 +171,7 @@ Thumb::getPixbufData()
 		GfxRGB rgb;
 
 		imgstr->getPixel(pix);
-		thumbCM->getRGB(pix, &rgb);
+		colorMap->getRGB(pix, &rgb);
 
 		*p++ = (guchar)(rgb.r * 255.99999);
 		*p++ = (guchar)(rgb.g * 255.99999);
@@ -332,7 +184,7 @@ Thumb::getPixbufData()
 }
 
 Thumb::~Thumb() {
-        delete thumbCM;
+        delete colorMap;
         delete str;
 }
 
