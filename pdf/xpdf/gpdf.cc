@@ -107,7 +107,7 @@ static GnomeUIInfo container_file_menu [] = {
 static GnomeUIInfo container_menu_zoom [] = {
 	{ GNOME_APP_UI_ITEM, N_("_Zoom in"),
 	  N_("Increase the size of objects in the PDF"),
-	  NULL, zoom_in_cmd },
+	  zoom_in_cmd },
 	{ GNOME_APP_UI_ITEM, N_("_Zoom out"),
 	  N_("Decrease the size of objects in the PDF"),
 	  zoom_out_cmd },
