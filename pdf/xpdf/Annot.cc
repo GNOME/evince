@@ -21,15 +21,18 @@
 // Annot
 //------------------------------------------------------------------------
 
-Annot::Annot(XRef *xrefA, Dict *dict) {
+Annot::Annot(XRef *xrefA, Dict *dictA) {
   Object apObj, asObj, obj1, obj2;
   double t;
 
   ok = gFalse;
   xref = xrefA;
+  dict = dictA;
+  dict->incRef(); 
 
-  if (dict->lookup("AP", &apObj)->isDict()) {
-    if (dict->lookup("AS", &asObj)->isName()) {
+  dictA->lookup("Subtype", &subtype); 
+  if (dictA->lookup("AP", &apObj)->isDict()) {
+    if (dictA->lookup("AS", &asObj)->isName()) {
       if (apObj.dictLookup("N", &obj1)->isDict()) {
 	if (obj1.dictLookupNF(asObj.getName(), &obj2)->isRef()) {
 	  obj2.copy(&appearance);
@@ -49,7 +52,7 @@ Annot::Annot(XRef *xrefA, Dict *dict) {
   }
   apObj.free();
 
-  if (dict->lookup("Rect", &obj1)->isArray() &&
+  if (dictA->lookup("Rect", &obj1)->isArray() &&
       obj1.arrayGetLength() == 4) {
     //~ should check object types here
     obj1.arrayGet(0, &obj2);
@@ -109,18 +112,15 @@ Annots::Annots(XRef *xref, Object *annotsObj) {
     for (i = 0; i < annotsObj->arrayGetLength(); ++i) {
       if (annotsObj->arrayGet(i, &obj1)->isDict()) {
 	obj1.dictLookup("Subtype", &obj2);
-	if (obj2.isName("Widget") ||
-	    obj2.isName("Stamp")) {
-	  annot = new Annot(xref, obj1.getDict());
-	  if (annot->isOk()) {
-	    if (nAnnots >= size) {
-	      size += 16;
-	      annots = (Annot **)grealloc(annots, size * sizeof(Annot *));
-	    }
-	    annots[nAnnots++] = annot;
-	  } else {
-	    delete annot;
-	  }
+        annot = new Annot(xref, obj1.getDict());
+        if (annot->isOk()) {
+                if (nAnnots >= size) {
+                        size += 16;
+                        annots = (Annot **)grealloc(annots, size * sizeof(Annot *));
+                }
+                annots[nAnnots++] = annot;
+        } else {
+                delete annot;
 	}
 	obj2.free();
       }
