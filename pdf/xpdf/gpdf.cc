@@ -43,9 +43,6 @@ poptContext ctx;
 
 #define DEV_DEBUG 0
 
-double zoom = 86.0;
-gint page = 2;
-
 #define DOC_ROOT_TAG "xpdf_doc_root"
 struct DOC_ROOT {
   GString        *title;
@@ -58,6 +55,9 @@ struct DOC_ROOT {
   GtkScrolledWindow *scroll;
   GtkWidget      *mainframe;
   GladeXML       *gui;
+
+  double          zoom;
+  gint            page;
 };
 
 GList *documents = NULL;
@@ -85,8 +85,8 @@ setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
   int          w, h;
   GdkPixmap   *pixmap = NULL;
 
-  w = (int)((pdf->getPageWidth  (page) * zoom) / 72.0);
-  h = (int)((pdf->getPageHeight (page) * zoom) / 72.0);
+  w = (int)((pdf->getPageWidth  (doc->page) * doc->zoom) / 72.0);
+  h = (int)((pdf->getPageHeight (doc->page) * doc->zoom) / 72.0);
 
   pixmap = gdk_pixmap_new (window, w, h, -1);
 
@@ -109,9 +109,9 @@ setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
 }
 
 static void
-show_page (DOC_ROOT *doc, gint page)
+render_page (DOC_ROOT *doc)
 {
-  doc->pdf->displayPage(doc->out, page, zoom, 0, gTrue);
+  doc->pdf->displayPage(doc->out, doc->page, doc->zoom, 0, gTrue);
 }
 
 /*static void displayPage(int page1, int zoom1, int rotate1) {
@@ -186,6 +186,9 @@ doc_root_new (GString *fileName)
     return NULL;
   }
 
+  doc->zoom = 86.0;
+  doc->page = 1;
+
   connect_signals (doc);
 
   gtk_object_set_data (GTK_OBJECT (doc->mainframe), DOC_ROOT_TAG, doc);
@@ -195,7 +198,7 @@ doc_root_new (GString *fileName)
   doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
   gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
-  show_page (doc, page);
+  render_page (doc);
   gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->pixmap));
   gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
 
@@ -249,19 +252,101 @@ extern "C" {
   }
 
   static void
-  simple_connect (DOC_ROOT *doc, const char *name, GtkSignalFunc func)
+  do_forward_button (GtkWidget *w, DOC_ROOT *doc)
+  {
+    if (doc->page < doc->pdf->getNumPages()) {
+      doc->page++;
+      render_page (doc);
+      gtk_widget_queue_draw (GTK_WIDGET (doc->scroll));
+    }
+  }
+
+  static void
+  do_back_button (GtkWidget *w, DOC_ROOT *doc)
+  {
+    if (doc->page > 1) {
+      doc->page--;
+      render_page (doc);
+      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
+    }
+  }
+
+  static void
+  do_first_button (GtkWidget *w, DOC_ROOT *doc)
+  {
+    if (doc->page != 1) {
+      doc->page = 1;
+      render_page (doc);
+      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
+    }
+  }
+
+  static void
+  do_last_button (GtkWidget *w, DOC_ROOT *doc)
+  {
+    if (doc->page != doc->pdf->getNumPages()) {
+      doc->page = doc->pdf->getNumPages();
+      render_page (doc);
+      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
+    }
+  }
+
+  static void
+  do_larger_button (GtkWidget *w, DOC_ROOT *doc)
+  {
+    if (doc->zoom < 200) {
+      doc->zoom *= 1.2;
+      render_page (doc);
+      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
+    }
+  }
+
+  static void
+  do_smaller_button (GtkWidget *w, DOC_ROOT *doc)
+  {
+    if (doc->zoom < 200) {
+      doc->zoom /= 1.2;
+      render_page (doc);
+      gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
+    }
+  }
+  
+  static void
+  simple_menu_connect (DOC_ROOT *doc, const char *name, GtkSignalFunc func)
   {
     GtkWidget *w;
     w = glade_xml_get_widget (doc->gui, name);
+    g_return_if_fail (w);
     gtk_signal_connect (GTK_OBJECT (w), "activate", func, doc);
   }
   
   static void
+  simple_button_connect (DOC_ROOT *doc, const char *name, GtkSignalFunc func)
+  {
+    GtkWidget *w;
+    w = glade_xml_get_widget (doc->gui, name);
+    g_return_if_fail (w);
+    gtk_signal_connect (GTK_OBJECT (w), "clicked", func, doc);
+  }
+
+  static void
   connect_signals (DOC_ROOT *doc)
   {
-    simple_connect (doc, "about_menu", GTK_SIGNAL_FUNC (do_about_box)); 
-    simple_connect (doc, "close_menu", GTK_SIGNAL_FUNC (do_close));
-    simple_connect (doc, "exit_menu",  GTK_SIGNAL_FUNC (do_exit));
+    GtkWidget *w;
+
+    simple_menu_connect (doc, "about_menu", GTK_SIGNAL_FUNC (do_about_box)); 
+    simple_menu_connect (doc, "close_menu", GTK_SIGNAL_FUNC (do_close));
+    simple_menu_connect (doc, "exit_menu",  GTK_SIGNAL_FUNC (do_exit));
+
+    simple_button_connect (doc, "forward", GTK_SIGNAL_FUNC (do_forward_button));
+    simple_button_connect (doc, "back",    GTK_SIGNAL_FUNC (do_back_button));
+    simple_button_connect (doc, "first",   GTK_SIGNAL_FUNC (do_first_button));
+    simple_button_connect (doc, "last",    GTK_SIGNAL_FUNC (do_last_button));
+/*    simple_button_connect (doc, "larger",  GTK_SIGNAL_FUNC (do_larger_button)); need to resize the gtkpixmap...
+      simple_button_connect (doc, "smaller", GTK_SIGNAL_FUNC (do_smaller_button)); but bed first. */
+
+    gtk_signal_connect (GTK_OBJECT (doc->mainframe), "destroy",
+			GTK_SIGNAL_FUNC (do_close), doc);
  }
 }
 
