@@ -12,11 +12,7 @@ extern "C" {
 #define GString G_String
 #include <gnome.h>
 
-#if USING_OAF
 #include <liboaf/liboaf.h>
-#else
-#include <libgnorba/gnorba.h>
-#endif
 
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
@@ -116,12 +112,9 @@ extern "C" {
     g_return_val_if_fail (container != NULL, FALSE);
     g_return_val_if_fail (container->view_widget == NULL, FALSE);
 
-#if USING_OAF
-    comp = container_activate_component (container, "OAFIID:gpdf_component:892f2727-e2ec-423c-91ad-6f7b75fec6c8");
+    comp = container_activate_component (
+	    container, "OAFIID:gpdf_component:892f2727-e2ec-423c-91ad-6f7b75fec6c8");
 
-#else
-    comp = container_activate_component (container, "bonobo-object:application-x-pdf");
-#endif
     if (!comp || !(object = comp->server)) {
       gnome_error_dialog (_("Could not launch bonobo object."));
       return FALSE;
@@ -590,20 +583,11 @@ main (int argc, char **argv)
   CORBA_exception_init (&ev);
   
 
-#if USING_OAF
   gnomelib_register_popt_table (oaf_popt_options, "OAF");
   gnome_init_with_popt_table("PDFViewer", "0.0.1",
 			     argc, argv,
 			     gpdf_popt_options, 0, &ctx); 
   orb = oaf_init (argc, argv);
-#else
-  gnome_CORBA_init_with_popt_table ("PDFViewer", "0.0.1",
-				    &argc, argv,
-				    gpdf_popt_options, 0, &ctx,
-				    GNORBA_INIT_SERVER_FUNC, &ev);
-
-  orb = gnome_CORBA_ORB ();
-#endif
 
   CORBA_exception_free (&ev);
 
