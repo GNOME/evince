@@ -37,8 +37,13 @@ G_BEGIN_DECLS
 #define EV_IS_DOCUMENT_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
 #define EV_DOCUMENT_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT, EvDocumentIface))
 
-typedef struct _EvDocument	EvDocument;
-typedef struct _EvDocumentIface	EvDocumentIface;
+typedef struct _EvDocument	  EvDocument;
+typedef struct _EvDocumentIface   EvDocumentIface;
+typedef struct _EvPageCache       EvPageCache;
+typedef struct _EvPageCacheClass  EvPageCacheClass;
+
+#include "ev-page-cache.h"
+
 
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
 
@@ -94,8 +99,10 @@ struct _EvDocumentIface
 
 };
 
-GType    ev_document_get_type    (void);
-GQuark   ev_document_error_quark (void);
+GType        ev_document_get_type       (void);
+GQuark       ev_document_error_quark    (void);
+EvPageCache *ev_document_get_page_cache (EvDocument *document);
+
 
 gboolean ev_document_load            (EvDocument   *document,
 				      const char   *uri,

@@ -50,7 +50,7 @@ search_for_jobs_unlocked (void)
 	if (job)
 		return job;
 
-	job = (GObject *) g_queue_pop_head (render_queue_high);
+	job = (GObject *) g_queue_pop_head (render_queue_low);
 	if (job)
 		return job;
 

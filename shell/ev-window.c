@@ -168,7 +168,6 @@ update_action_sensitivity (EvWindow *ev_window)
 
 	document = ev_window->priv->document;
 	page_mode = ev_window->priv->page_mode;
-
 	view = EV_VIEW (ev_window->priv->view);
 
 	/* File menu */
@@ -198,9 +197,11 @@ update_action_sensitivity (EvWindow *ev_window)
 	if (document) {
 		int n_pages;
 		int page;
+		EvPageCache *page_cache;
 
+		page_cache = ev_document_get_page_cache (document);
 		page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
-		n_pages = ev_document_get_n_pages (document);
+		n_pages = ev_page_cache_get_n_pages (page_cache);
 
 		set_action_sensitive (ev_window, "GoPreviousPage", page > 1);
 		set_action_sensitive (ev_window, "GoNextPage", page < n_pages);
@@ -427,9 +428,11 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	gboolean password_needed;
 
 	password_needed = (ev_window->priv->password_document != NULL);
-
 	if (document) {
-		doc_title = ev_document_get_title (document);
+		EvPageCache *page_cache;
+
+		page_cache = ev_document_get_page_cache (document);
+		doc_title = ev_page_cache_get_title (page_cache);
 
 		/* Make sure we get a valid title back */
 		if (doc_title) {
@@ -484,10 +487,12 @@ update_total_pages (EvWindow *ev_window)
 {
 	GtkAction *action;
 	int pages;
+	EvPageCache *page_cache;
 
-	pages = ev_document_get_n_pages (ev_window->priv->document);
-	action = gtk_action_group_get_action
-		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
+	page_cache = ev_document_get_page_cache (ev_window->priv->document);
+
+	pages = ev_page_cache_get_n_pages (page_cache);
+	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_total_pages (EV_PAGE_ACTION (action), pages);
 }
 

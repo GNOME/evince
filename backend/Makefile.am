@@ -27,6 +27,8 @@ libevbackend_la_SOURCES=			\
 	ev-job-queue.c				\
 	ev-jobs.h				\
 	ev-jobs.c				\
+	ev-page-cache.h				\
+	ev-page-cache.c				\
 	ev-ps-exporter.c			\
 	ev-ps-exporter.h			\
 	ev-document-misc.h			\

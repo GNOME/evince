@@ -14,6 +14,7 @@ struct _EvPageCache
 	GObject parent;
 
 	int n_pages;
+	char *title;
 
 	gboolean uniform;
 	gint uniform_width;
@@ -29,6 +30,7 @@ struct _EvPageCacheClass
 
 static void ev_page_cache_init       (EvPageCache      *page_cache);
 static void ev_page_cache_class_init (EvPageCacheClass *page_cache);
+static void ev_page_cache_finalize   (GObject *object);
 
 G_DEFINE_TYPE (EvPageCache, ev_page_cache, G_TYPE_OBJECT)
 
@@ -40,6 +42,22 @@ ev_page_cache_init (EvPageCache *page_cache)
 static void
 ev_page_cache_class_init (EvPageCacheClass *class)
 {
+	GObjectClass *object_class;
+
+	object_class = G_OBJECT_CLASS (class);
+
+	object_class->finalize = ev_page_cache_finalize;
+}
+
+static void
+ev_page_cache_finalize (GObject *object)
+{
+	EvPageCache *page_cache;
+
+	page_cache = EV_PAGE_CACHE (object);
+
+	g_free (page_cache->title);
+	g_free (page_cache->size_cache);
 }
 
 EvPageCache *
@@ -49,8 +67,8 @@ ev_page_cache_new (void)
 }
 
 void
-ev_page_cache_set_document (EvPageCache *page_cache,
-			    EvDocument  *document)
+_ev_page_cache_set_document (EvPageCache *page_cache,
+			     EvDocument  *document)
 {
 	EvPageCacheInfo *info;
 	gint i;
@@ -58,6 +76,7 @@ ev_page_cache_set_document (EvPageCache *page_cache,
 	/* Assume uniform is TRUE until proven otherwise */
 	page_cache->uniform = TRUE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
+	page_cache->title = ev_document_get_title (document);
 
 	g_mutex_lock (EV_DOC_MUTEX);
 	ev_document_set_scale (document, 1.0);
@@ -113,9 +132,18 @@ ev_page_cache_get_n_pages (EvPageCache *page_cache)
 	return page_cache->n_pages;
 }
 
+char *
+ev_page_cache_get_title (EvPageCache *page_cache)
+{
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), NULL);
+
+	return page_cache->title;
+}
+
 void
 ev_page_cache_get_size (EvPageCache *page_cache,
 			gint         page,
+			gfloat       scale,
 			gint        *width,
 			gint        *height)
 {
@@ -137,4 +165,10 @@ ev_page_cache_get_size (EvPageCache *page_cache,
 		if (height)
 			*height = info->height;
 	}
+
+	if (width)
+		*width = (*width) * scale;
+	if (width)
+		*height = (*height) * scale;
+
 }

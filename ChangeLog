@@ -1,3 +1,21 @@
+Mon Mar 14 02:23:16 2005  Jonathan Blandford  <jrb@redhat.com>
+	
+	* shell/ev-page-cache.[ch]: move to the backend.
+
+	* backend/ev-jobs.[ch]: add a finished flag to let us short
+	circuit rendering.  It does not appear to be fully working yet.
+
+	* backend/ev-page-cache.h (get_size): Canonicalize the scaling
+	here.  Getting the size outside of the scale is meaningless,
+	anyway.
+
+	* shell/ev-pixbuf-cache.[hc]: New class to act as a pixbuf cache.
+	It keeps a bunch of messy code out of ev-view.c, but is
+	essentially just part of that code base.  It doesn't handle ranges
+	quite yet, but that's coming soon.  As soon as ranges are done, we
+	have all the pieces in place to do continuous scrolling and
+	side-by-side displays.
+
 2005-03-11  Bryan Clark  <clarkbw@cvs.gnome.org>
 
 	* TODO: Updated by moving two items to TODONE

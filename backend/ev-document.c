@@ -101,6 +101,25 @@ ev_document_class_init (gpointer g_class)
 						     G_PARAM_READABLE));
 }
 
+#define PAGE_CACHE_STRING "ev-page-cache"
+
+EvPageCache *
+ev_document_get_page_cache (EvDocument *document)
+{
+	EvPageCache *page_cache;
+
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
+	page_cache = g_object_get_data (G_OBJECT (document), PAGE_CACHE_STRING);
+	if (page_cache == NULL) {
+		page_cache = ev_page_cache_new ();
+		_ev_page_cache_set_document (page_cache, document);
+		g_object_set_data_full (G_OBJECT (document), PAGE_CACHE_STRING, page_cache, g_object_unref);
+	}
+
+	return page_cache;
+}
+
 gboolean
 ev_document_load (EvDocument  *document,
 		  const char  *uri,
@@ -112,7 +131,8 @@ ev_document_load (EvDocument  *document,
 	g_mutex_lock (EV_DOC_MUTEX);
 	retval = iface->load (document, uri, error);
 	g_mutex_unlock (EV_DOC_MUTEX);
-
+	/* Call this to make the initial cached copy */
+	ev_document_get_page_cache (document);
 	return retval;
 }
 
@@ -304,4 +324,4 @@ void
 ev_document_scale_changed (EvDocument *document)
 {
 	g_signal_emit (G_OBJECT (document), signals[SCALE_CHANGED], 0);
-}		    
+}

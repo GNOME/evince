@@ -231,6 +231,8 @@ ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialo
 static gboolean
 idle_print_handler (EvPrintJob *job)
 {
+	EvPageCache *page_cache;
+
 	if (!job->printing) {
 		ev_ps_exporter_begin (EV_PS_EXPORTER (job->document),
 				      job->temp_file);
@@ -239,7 +241,8 @@ idle_print_handler (EvPrintJob *job)
 		return TRUE;
 	}
 
-	if (job->next_page <= ev_document_get_n_pages (job->document)) {
+	page_cache = ev_document_get_page_cache (job->document);
+	if (job->next_page <= ev_page_cache_get_n_pages (page_cache)) {
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
 #endif

@@ -54,6 +54,7 @@ struct _EvJobRender
 	gint target_width;
 	gint target_height;
 	GdkPixbuf *pixbuf;
+	gboolean pixbuf_done;
 };
 
 struct _EvJobRenderClass
@@ -70,6 +71,7 @@ struct _EvJobThumbnail
 	gint page;
 	gint requested_width;
 	GdkPixbuf *thumbnail;
+	gboolean thumbnail_done;
 };
 
 struct _EvJobThumbnailClass

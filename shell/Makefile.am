@@ -25,12 +25,12 @@ evince_SOURCES=				\
 	ev-marshal.h			\
 	ev-page-action.c		\
 	ev-page-action.h		\
-	ev-page-cache.c			\
-	ev-page-cache.h			\
 	ev-password.h			\
 	ev-password.c			\
 	ev-password-view.h		\
 	ev-password-view.c		\
+	ev-pixbuf-cache.c		\
+	ev-pixbuf-cache.h		\
 	ev-print-job.c			\
 	ev-print-job.h			\
 	ev-utils.c			\

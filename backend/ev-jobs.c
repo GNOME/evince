@@ -124,6 +124,7 @@ ev_job_render_run (EvJobRender *job)
 	
 	ev_document_set_scale (job->document, job->scale);
 	job->pixbuf = ev_document_render_pixbuf (job->document);
+	job->pixbuf_done = TRUE;
 }
 
 void
@@ -159,6 +160,7 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 							       job->page,
 							       job->requested_width,
 							       TRUE);
+	job->thumbnail_done = TRUE;
 }
 
 void
