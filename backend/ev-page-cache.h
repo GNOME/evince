@@ -28,20 +28,24 @@ G_BEGIN_DECLS
 #define EV_PAGE_CACHE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_CACHE, EvPageCache))
 #define EV_IS_PAGE_CACHE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PAGE_CACHE))
 
-GType          ev_page_cache_get_type      (void) G_GNUC_CONST;
-void           _ev_page_cache_set_document (EvPageCache *page_cache,
-					    EvDocument  *document);
-EvPageCache   *ev_page_cache_new           (void);
-gint           ev_page_cache_get_n_pages   (EvPageCache *page_cache);
-char          *ev_page_cache_get_title     (EvPageCache *page_cache);
+GType          ev_page_cache_get_type         (void) G_GNUC_CONST;
+/* Used by ev-document.c only */
+EvPageCache   *_ev_page_cache_new             (EvDocument  *document);
 
-void           ev_page_cache_get_size      (EvPageCache *page_cache,
-					    gint         page,
-					    gfloat       scale,
-					    gint        *width,
-					    gint        *height);
+gint           ev_page_cache_get_n_pages      (EvPageCache *page_cache);
+char          *ev_page_cache_get_title        (EvPageCache *page_cache);
+void           ev_page_cache_get_size         (EvPageCache *page_cache,
+					       gint         page,
+					       gfloat       scale,
+					       gint        *width,
+					       gint        *height);
 
-
+/* Navigation */
+gint           ev_page_cache_get_current_page (EvPageCache *page_cache);
+void           ev_page_cache_set_current_page (EvPageCache *page_cache,
+					       int          page);
+gboolean       ev_page_cache_next_page        (EvPageCache *page_cache);         
+gboolean       ev_page_cache_prev_page        (EvPageCache *page_cache);         
 
 G_END_DECLS
 

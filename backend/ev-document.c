@@ -114,8 +114,7 @@ ev_document_get_page_cache (EvDocument *document)
 
 	page_cache = g_object_get_data (G_OBJECT (document), PAGE_CACHE_STRING);
 	if (page_cache == NULL) {
-		page_cache = ev_page_cache_new ();
-		_ev_page_cache_set_document (page_cache, document);
+		page_cache = _ev_page_cache_new (document);
 		g_object_set_data_full (G_OBJECT (document), PAGE_CACHE_STRING, page_cache, g_object_unref);
 	}
 

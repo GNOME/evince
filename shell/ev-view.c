@@ -120,11 +120,8 @@ struct _EvViewClass {
 					   GtkScrollType   scroll,
 					   gboolean        horizontal);
 	
-	/* Should this be notify::page? */
-	void	(*page_changed)           (EvView         *view);
 };
 
-static guint page_changed_signal = 0;
 
 static void ev_view_set_scroll_adjustments (EvView         *view,
 					    GtkAdjustment  *hadjustment,
@@ -583,7 +580,6 @@ void
 ev_view_select_all (EvView *ev_view)
 {
 	GtkWidget *widget = GTK_WIDGET (ev_view);
-	EvPageCache *page_cache;
 	GdkRectangle selection;
 	int width, height;
 	int x_offset, y_offset;
@@ -591,10 +587,9 @@ ev_view_select_all (EvView *ev_view)
 
 	g_return_if_fail (EV_IS_VIEW (ev_view));
 
-	page_cache = ev_document_get_page_cache (ev_view->document);
 
 	ev_view_get_offsets (ev_view, &x_offset, &y_offset);
-	ev_page_cache_get_size (page_cache,
+	ev_page_cache_get_size (ev_view->page_cache,
 				ev_view->current_page,
 				ev_view->scale,
 				&width, &height);
@@ -946,9 +941,9 @@ ev_view_scroll_view (EvView *view,
 		     gboolean horizontal)
 {
 	if (scroll == GTK_SCROLL_PAGE_BACKWARD) {
-		ev_view_set_page (view, ev_view_get_page (view) - 1);
+		ev_page_cache_prev_page (view->page_cache);
 	} else if (scroll == GTK_SCROLL_PAGE_FORWARD) {
-		ev_view_set_page (view, ev_view_get_page (view) + 1);
+		ev_page_cache_next_page (view->page_cache);
 	} else {
 		GtkAdjustment *adjustment;
 		double value;
@@ -1047,13 +1042,6 @@ ev_view_class_init (EvViewClass *class)
 								     G_TYPE_NONE, 2,
 								     GTK_TYPE_ADJUSTMENT,
 								     GTK_TYPE_ADJUSTMENT);
-	page_changed_signal = g_signal_new ("page-changed",
-					    G_OBJECT_CLASS_TYPE (object_class),
-					    G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-					    G_STRUCT_OFFSET (EvViewClass, page_changed),
-					    NULL, NULL,
-					    ev_marshal_VOID__NONE,
-					    G_TYPE_NONE, 0);
 
 	g_signal_new ("scroll_view",
 		      G_TYPE_FROM_CLASS (object_class),
@@ -1109,14 +1097,14 @@ update_find_status_message (EvView *view)
 {
 	char *message;
 
-	g_mutex_lock (EV_DOC_MUTEX);
+//	g_mutex_lock (EV_DOC_MUTEX);
 	if (ev_document_get_page (view->document) == view->find_page) {
 		int results;
 
-		g_mutex_lock (EV_DOC_MUTEX);
+//		g_mutex_lock (EV_DOC_MUTEX);
 		results = ev_document_find_get_n_results
 				(EV_DOCUMENT_FIND (view->document));
-		g_mutex_unlock (EV_DOC_MUTEX);
+//		g_mutex_unlock (EV_DOC_MUTEX);
 		/* TRANS: Sometimes this could be better translated as
 		   "%d hit(s) on this page".  Therefore this string
 		   contains plural cases. */
@@ -1139,62 +1127,10 @@ update_find_status_message (EvView *view)
 		}
 		
 	}
-	g_mutex_unlock (EV_DOC_MUTEX);
+//	g_mutex_unlock (EV_DOC_MUTEX);
 
 	ev_view_set_find_status (view, message);
-	g_free (message);
-}
-
-static void
-set_document_page (EvView *view, int new_page)
-{
-	int page;
-	int n_pages;
-
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
-	page = CLAMP (new_page, 1, n_pages);
-
-	if (view->document) {
-		int old_page = view->current_page;
-		int old_width, old_height;
-
-		ev_document_get_page_size (view->document,
-					   -1, 
-					   &old_width, &old_height);
-
-		if (old_page != page) {
-			if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
-				//ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
-			}
-			view->current_page = page;
-			ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
-							view->current_page,
-							view->current_page,
-							view->scale);
-		}
-
-		if (old_page != view->current_page) {
-			g_signal_emit (view, page_changed_signal, 0);
-
-			view->has_selection = FALSE;
-#if 0
-			ev_document_get_page_size (view->document,
-						   page, 
-						   &width, &height);
-			if (width != old_width || height != old_height)
-#endif
-				gtk_widget_queue_resize (GTK_WIDGET (view));
-
-			gtk_adjustment_set_value (view->vadjustment,
-						  view->vadjustment->lower);
-		}
-
-		if (EV_IS_DOCUMENT_FIND (view->document)) {
-			view->find_page = page;
-			view->find_result = 0;
-			update_find_status_message (view);
-		}
-	}
+//	g_free (message);
 }
 
 #define MARGIN 5
@@ -1256,12 +1192,8 @@ static void
 jump_to_find_page (EvView *view)
 {
 	int n_pages, i;
-	EvPageCache *page_cache;
 
-
-	page_cache = ev_document_get_page_cache (view->document);
-
-	n_pages = ev_page_cache_get_n_pages (page_cache);
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	for (i = 0; i <= n_pages; i++) {
 		int has_results;
@@ -1279,7 +1211,7 @@ jump_to_find_page (EvView *view)
 			view->find_page = page;
 			break;
 		} else if (has_results == 1) {
-			set_document_page (view, page);
+			ev_page_cache_set_current_page (view->page_cache, page);
 			jump_to_find_result (view);
 			break;
 		}
@@ -1315,6 +1247,55 @@ job_finished_cb (EvPixbufCache *pixbuf_cache,
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
+
+static void
+page_changed_cb (EvPageCache *page_cache,
+		 int          new_page,
+		 EvView      *view)
+{
+	int old_page = view->current_page;
+	int old_width, old_height;
+	int new_width, new_height;
+
+	if (old_page == new_page)
+		return;
+
+	ev_page_cache_get_size (page_cache,
+				old_page,
+				view->scale,
+				&old_width, &old_height);
+	ev_page_cache_get_size (page_cache,
+				new_page,
+				view->scale,
+				&new_width, &new_height);
+
+	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
+		//ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
+	}
+
+	view->current_page = new_page;
+	view->has_selection = FALSE;
+
+	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+					view->current_page,
+					view->current_page,
+					view->scale);
+
+	if (new_width != old_width || new_height != old_height)
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	else
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	
+	gtk_adjustment_set_value (view->vadjustment,
+				  view->vadjustment->lower);
+
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
+		view->find_page = new_page;
+		view->find_result = 0;
+		update_find_status_message (view);
+	}
+}
+
 void
 ev_view_set_document (EvView     *view,
 		      EvDocument *document)
@@ -1327,7 +1308,8 @@ ev_view_set_document (EvView     *view,
                                                               find_changed_cb,
                                                               view);
 			g_object_unref (view->document);
-			g_object_unref (view->page_cache);
+			view->page_cache = NULL;
+			
                 }
 
 		view->document = document;
@@ -1343,13 +1325,12 @@ ev_view_set_document (EvView     *view,
 						  view);
 			}
 			view->page_cache = ev_document_get_page_cache (view->document);
+			g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
 			view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
 			g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
                 }
 		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
-		
-		g_signal_emit (view, page_changed_signal, 0);
 	}
 }
 
@@ -1367,7 +1348,7 @@ go_to_link (EvView *view, EvLink *link)
 			break;
 		case EV_LINK_TYPE_PAGE:
 			page = ev_link_get_page (link);
-			set_document_page (view, page);
+			ev_page_cache_set_current_page (view->page_cache, page);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
 			uri = ev_link_get_uri (link);
@@ -1380,24 +1361,6 @@ void
 ev_view_go_to_link (EvView *view, EvLink *link)
 {
 	go_to_link (view, link);
-}
-
-void
-ev_view_set_page (EvView *view,
-		  int     page)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	set_document_page (view, page);
-}
-
-int
-ev_view_get_page (EvView *view)
-{
-	if (view->document)
-		return ev_document_get_page (view->document);
-	else
-		return 1;
 }
 
 static void

@@ -1,3 +1,32 @@
+Wed Mar 16 02:50:11 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document.c: (ev_document_get_page_cache):
+	* backend/ev-page-cache.c: (ev_page_cache_init),
+	(ev_page_cache_class_init), (_ev_page_cache_new),
+	(ev_page_cache_get_current_page), (ev_page_cache_set_current_page),
+	(ev_page_cache_next_page), (ev_page_cache_prev_page):
+	* backend/ev-page-cache.h:
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_class_init), (adjustment_changed_cb),
+	(ev_sidebar_tree_selection_changed), (page_changed_cb),
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-view.c: (ev_view_select_all), (ev_view_scroll_view),
+	(ev_view_class_init), (update_find_status_message),
+	(jump_to_find_page), (page_changed_cb), (ev_view_set_document),
+	(go_to_link), (ev_view_go_to_link):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_open_page), (update_window_title), (update_total_pages),
+	(page_changed_cb), (ev_window_setup_document),
+	(ev_window_cmd_go_previous_page), (ev_window_cmd_go_next_page),
+	(ev_window_cmd_go_first_page), (ev_window_cmd_go_last_page),
+	(ev_window_cmd_view_reload), (goto_page_cb), (ev_window_init):
+
+	Massive reworking of the code to handle current page better.  It's
+	now in EvPageCache instead of in EvView.  Also, jiggered the
+	locking a little bit.  It's not perfect yet.
+
 Tue Mar 15 23:42:39 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* backend/ev-document-links.c:
