@@ -252,8 +252,10 @@ uidir = $(datadir)/gnome-2.0/ui
 ui_DATA =				\
 	gpdf-control-ui.xml
 
-CLEANFILES = $(server_DATA) $(BUILT_SOURCES)
-DISTCLEANFILES = $(server_in_files:.server.in.in=.server.in)
+CLEANFILES =				\
+	$(server_DATA)			\
+	$(server_in_files:.server.in.in=.server.in) \
+	$(BUILT_SOURCES)
 
 EXTRA_DIST = $(stock_DATA)		\
 	gpdf-marshal.list		\
