@@ -56,7 +56,7 @@ typedef struct
         /* full results are only possible for the rendered current page */
         int current_page;
         GArray *current_page_results;
-        guchar *other_page_flags; /* length n_pages + 1, first element ignored */
+        int *other_page_flags; /* length n_pages + 1, first element ignored */
         int start_page;   /* skip this one as we iterate, since we did it first */
         int search_page;  /* the page we're searching now */
         TextOutputDev *output_dev;
@@ -510,10 +510,6 @@ pdf_document_search_idle_callback (void *data)
          */
         n_pages = ev_document_get_n_pages (EV_DOCUMENT (search->document));
 
-        if (search->search_page == search->start_page) {
-                goto end_search;
-        }
-
         if (search->output_dev == 0) {
                 /* First time through here... */
                 search->output_dev = new TextOutputDev (NULL, gTrue, gFalse, gFalse);
@@ -532,8 +528,16 @@ pdf_document_search_idle_callback (void *data)
                                           gFalse, gFalse, // startAtLast, stopAtLast
                                           &xMin, &yMin, &xMax, &yMax)) {
                 /* This page has results */
-                search->other_page_flags[search->search_page] = TRUE;
-        }
+                search->other_page_flags[search->search_page] = 1;
+        } else {
+		search->other_page_flags[search->search_page] = 0;
+	}
+
+        if (search->search_page != search->start_page) {
+	        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
+					  search->search_page);
+	        return TRUE;
+	}
 
         search->search_page += 1;
         if (search->search_page > n_pages) {
@@ -541,12 +545,7 @@ pdf_document_search_idle_callback (void *data)
                 search->search_page = 1;
         }
 
-        /* We do this even if nothing was found, to update the percent complete */
-        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document));
-
-        return TRUE;
-
- end_search:
+end_search:
         /* We're done. */
         search->idle = 0; /* will return FALSE to remove */
         return FALSE;
@@ -559,7 +558,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
 {
         PdfDocument *pdf_document = PDF_DOCUMENT (document);
         PdfDocumentSearch *search;
-        int n_pages;
+        int n_pages, i;
         gunichar *ucs4;
         glong ucs4_len;
 
@@ -597,10 +596,10 @@ pdf_document_find_begin (EvDocumentFind   *document,
                                                     sizeof (GdkRectangle));
         n_pages = ev_document_get_n_pages (EV_DOCUMENT (document));
 
-        /* This is an array of bool; with the first value ignored
-         * so we can index by the based-at-1 page numbers
-         */
-        search->other_page_flags = g_new0 (guchar, n_pages + 1);
+        search->other_page_flags = g_new0 (int, n_pages + 1);
+	for (i = 0; i <= n_pages; i++) {
+		search->other_page_flags[i] = -1;
+	}
 
         search->document = pdf_document;
 
@@ -613,9 +612,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
         search->output_dev = 0;
 
         search->start_page = pdf_document->page;
-        search->search_page = search->start_page + 1;
-        if (search->search_page > n_pages)
-                search->search_page = 1;
+        search->search_page = search->start_page;
 
         search->current_page = -1;
 

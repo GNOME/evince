@@ -1,3 +1,19 @@
+2005-01-30  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document-find.c: (ev_document_find_base_init),
+	(ev_document_find_changed):
+	* backend/ev-document-find.h:
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-view.c: (draw_rubberband), (highlight_find_results),
+	(expose_bin_window), (ev_view_init), (set_document_page),
+	(ensure_rectangle_is_visible), (jump_to_find_result),
+	(jump_to_find_page), (find_changed_cb), (ev_view_set_document),
+	(ev_view_find_next), (ev_view_find_previous):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (find_bar_previous_cb), (find_bar_next_cb):
+
+	More work on find implementation, mostly there now
+
 2005-01-29  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* backend/ev-backend-marshalers.list:

@@ -59,7 +59,8 @@ struct _EvDocumentFindIface
 
         /* Signals */
 
-        void (* find_changed) (EvDocumentFind *document_find);
+        void     (* find_changed)     (EvDocumentFind *document_find,
+				       int             page);
 };
 
 GType     ev_document_find_get_type         (void);
@@ -75,7 +76,8 @@ gboolean  ev_document_find_get_result	    (EvDocumentFind *document_find,
 					     GdkRectangle   *rectangle); 
 void	  ev_document_find_get_progress     (EvDocumentFind *document_find,
 					     double          percent_complete);
-void      ev_document_find_changed          (EvDocumentFind *document_find);
+void      ev_document_find_changed          (EvDocumentFind *document_find,
+					     int             page);
 
 
 /* How this interface works:

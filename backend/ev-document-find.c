@@ -58,8 +58,9 @@ ev_document_find_base_init (gpointer g_class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (EvDocumentFindIface, find_changed),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
+			      g_cclosure_marshal_VOID__INT,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_INT);
 
 		initialized = TRUE;
 	}
@@ -117,8 +118,8 @@ ev_document_find_get_progress (EvDocumentFind *document_find,
 }
 
 void
-ev_document_find_changed (EvDocumentFind  *document_find)
+ev_document_find_changed (EvDocumentFind  *document_find, int page)
 {
-	g_signal_emit_by_name (document_find, "find_changed");
+	g_signal_emit_by_name (document_find, "find_changed", page);
 }
 				    

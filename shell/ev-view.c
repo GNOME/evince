@@ -83,9 +83,8 @@ struct _EvView {
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
 
-	int results_on_this_page;
-	int next_page_with_result;
-	double find_percent_complete;
+	int find_page;
+	int find_result;
 
 	double scale;
 };
@@ -328,7 +327,8 @@ ev_gdk_color_to_rgb (const GdkColor *color)
 }
 
 static void
-draw_rubberband (GtkWidget *widget, GdkWindow *window, const GdkRectangle *rect)
+draw_rubberband (GtkWidget *widget, GdkWindow *window,
+		 const GdkRectangle *rect, gboolean dark)
 {
 	GdkGC *gc;
 	GdkPixbuf *pixbuf;
@@ -336,7 +336,8 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window, const GdkRectangle *rect)
 	guint fill_color;
 
 	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
-	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | 0x40;
+	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 |
+		     (dark ? 0x90 : 0x40);
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
 				 rect->width, rect->height);
@@ -372,10 +373,12 @@ highlight_find_results (EvView *view)
 
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
+		gboolean current;
 
+		current = (i == view->find_result);
 		ev_document_find_get_result (find, i, &rectangle);
-		draw_rubberband (GTK_WIDGET (view),
-				 view->bin_window, &rectangle);
+		draw_rubberband (GTK_WIDGET (view), view->bin_window,
+				 &rectangle, current);
         }
 }
 
@@ -412,7 +415,8 @@ expose_bin_window (GtkWidget      *widget,
 	highlight_find_results (view);
 
 	if (view->has_selection) {
-		draw_rubberband (widget, view->bin_window, &view->selection);
+		draw_rubberband (widget, view->bin_window,
+				 &view->selection, FALSE);
 	}
 }
 
@@ -903,8 +907,6 @@ ev_view_init (EvView *view)
 	view->scale = 1.0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
-	view->results_on_this_page = 0;
-	view->next_page_with_result = 0;
 }
 
 static char *
@@ -930,9 +932,121 @@ ev_view_get_find_status_message (EvView *view)
 }
 
 static void
-find_changed_cb (EvDocument *document, EvView *view)
+set_document_page (EvView *view, int page)
 {
-	gtk_widget_queue_draw (GTK_WIDGET (view));
+	if (view->document) {
+		int old_page = ev_document_get_page (view->document);
+		int old_width, old_height;
+
+		ev_document_get_page_size (view->document,
+					   &old_width, &old_height);
+
+		if (old_page != page) {
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
+			ev_document_set_page (view->document, page);
+		}
+
+		if (old_page != ev_document_get_page (view->document)) {
+			int width, height;
+			
+			g_signal_emit (view, page_changed_signal, 0);
+
+			view->has_selection = FALSE;
+			ev_document_get_page_size (view->document,
+						   &width, &height);
+			if (width != old_width || height != old_height)
+				gtk_widget_queue_resize (GTK_WIDGET (view));
+		}
+
+		view->find_page = page;
+		view->find_result = 0;
+	}
+}
+
+#define MARGIN 5
+
+static void
+ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
+{
+	GtkWidget *widget = GTK_WIDGET (view);
+	GtkAdjustment *adjustment;
+	int value;
+
+	adjustment = view->vadjustment;
+
+	if (rect->y < adjustment->value) {
+		value = MAX (adjustment->lower, rect->y - MARGIN);
+		gtk_adjustment_set_value (view->vadjustment, value);
+	} else if (rect->y + rect->height >
+		   adjustment->value + widget->allocation.height) {
+		value = MIN (adjustment->upper, rect->y + rect->height -
+			     widget->allocation.height + MARGIN);
+		gtk_adjustment_set_value (view->vadjustment, value);
+	}
+
+	adjustment = view->hadjustment;
+
+	if (rect->x < adjustment->value) {
+		value = MAX (adjustment->lower, rect->x - MARGIN);
+		gtk_adjustment_set_value (view->hadjustment, value);
+	} else if (rect->x + rect->height >
+		   adjustment->value + widget->allocation.width) {
+		value = MIN (adjustment->upper, rect->x + rect->width -
+			     widget->allocation.width + MARGIN);
+		gtk_adjustment_set_value (view->hadjustment, value);
+	}
+}
+
+static void
+jump_to_find_result (EvView *view)
+{
+	GdkRectangle rect;
+
+	ev_document_find_get_result (EV_DOCUMENT_FIND (view->document),
+				     view->find_result, &rect);
+	ensure_rectangle_is_visible (view, &rect);
+}
+
+static void
+jump_to_find_page (EvView *view)
+{
+	int n_pages, i;
+
+	n_pages = ev_document_get_n_pages (view->document);
+
+	for (i = 0; i <= n_pages; i++) {
+		int has_results;
+		int page;
+
+		page = i + view->find_page;
+		if (page > n_pages) {
+			page = page - n_pages;
+		}
+
+		has_results = ev_document_find_page_has_results
+				(EV_DOCUMENT_FIND (view->document), page);
+		if (has_results == -1) {
+			view->find_page = page;
+			break;
+		} else if (has_results == 1) {
+			set_document_page (view, page);
+			jump_to_find_result (view);
+			break;
+		}
+	}
+}
+
+static void
+find_changed_cb (EvDocument *document, int page, EvView *view)
+{
+	jump_to_find_page (view);
+	jump_to_find_result (view);
+
+	g_print ("Update for page %d\n", page);
+
+	if (ev_document_get_page (document) == page) {
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
 }
 
 static void
@@ -966,6 +1080,8 @@ ev_view_set_document (EvView     *view,
                 }
 
 		view->document = document;
+		view->find_page = 1;
+		view->find_result = 0;
 
 		if (view->document) {
 			g_object_ref (view->document);
@@ -986,35 +1102,6 @@ ev_view_set_document (EvView     *view,
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 		
 		g_signal_emit (view, page_changed_signal, 0);
-	}
-}
-
-static void
-set_document_page (EvView *view, int page)
-{
-	if (view->document) {
-		int old_page = ev_document_get_page (view->document);
-		int old_width, old_height;
-
-		ev_document_get_page_size (view->document,
-					   &old_width, &old_height);
-
-		if (old_page != page) {
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
-			ev_document_set_page (view->document, page);
-		}
-
-		if (old_page != ev_document_get_page (view->document)) {
-			int width, height;
-			
-			g_signal_emit (view, page_changed_signal, 0);
-
-			view->has_selection = FALSE;
-			ev_document_get_page_size (view->document,
-						   &width, &height);
-			if (width != old_width || height != old_height)
-				gtk_widget_queue_resize (GTK_WIDGET (view));
-		}
 	}
 }
 
@@ -1162,4 +1249,54 @@ ev_view_get_find_status (EvView *view)
 	return view->find_status;
 }
 
+void
+ev_view_find_next (EvView *view)
+{
+	int n_results, n_pages;
+	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
+	n_results = ev_document_find_get_n_results (find);
+	n_pages = ev_document_get_n_pages (view->document);
+
+	view->find_result++;
+
+	if (view->find_result >= n_results) {
+		view->find_result = 0;
+		view->find_page++;
+
+		if (view->find_page > n_pages) {
+			view->find_page = 1;
+		}
+
+		jump_to_find_page (view);
+	} else {
+		jump_to_find_result (view);
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
+}
+
+void
+ev_view_find_previous (EvView *view)
+{
+	int n_results, n_pages;
+	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+
+	n_results = ev_document_find_get_n_results (find);
+	n_pages = ev_document_get_n_pages (view->document);
+
+	view->find_result--;
+
+	if (view->find_result < 0) {
+		view->find_result = 0;
+		view->find_page--;
+
+		if (view->find_page < 1) {
+			view->find_page = n_pages;
+		}
+
+		jump_to_find_page (view);
+	} else {
+		jump_to_find_result (view);
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
+}

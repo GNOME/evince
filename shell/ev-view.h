@@ -61,6 +61,10 @@ void		ev_view_normal_size	(EvView     *view);
 void		ev_view_best_fit	(EvView     *view);
 void		ev_view_fit_width	(EvView     *view);
 
+/* Find */
+void            ev_view_find_next       (EvView     *view);
+void            ev_view_find_previous   (EvView     *view);
+
 /* Status */
 const char     *ev_view_get_status      (EvView     *view);
 const char     *ev_view_get_find_status (EvView     *view);

@@ -1291,17 +1291,14 @@ static void
 find_bar_previous_cb (EggFindBar *find_bar,
 		      EvWindow   *ev_window)
 {
-	/* FIXME - highlight previous result */
-	g_printerr ("Find Previous\n");
-
+	ev_view_find_previous (EV_VIEW (ev_window->priv->view));
 }
 
 static void
 find_bar_next_cb (EggFindBar *find_bar,
 		  EvWindow   *ev_window)
 {
-	/* FIXME - highlight next result */
-	g_printerr ("Find Next\n");
+	ev_view_find_next (EV_VIEW (ev_window->priv->view));
 }
 
 static void
