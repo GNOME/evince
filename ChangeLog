@@ -1,3 +1,10 @@
+2005-01-04  Jeff Muizelaar  <jrmuizel@nit.ca>
+
+	* shell/main.c (load_files):
+
+	use gnome_vfs_make_uri_from_shell_arg so that relative paths work
+	from the command line and because it seems more appropriate.
+
 2005-01-04  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* data/evince-ui.xml:

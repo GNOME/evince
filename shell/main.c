@@ -48,21 +48,15 @@ load_files (const char **files)
 	}
 
 	for (i = 0; files[i]; i++) {
-		const char *uri;
-		char *freeme = NULL;
-		char *scheme;
+		char *uri;
 
-		if ((scheme = gnome_vfs_get_uri_scheme (files[i])))
-			uri = files[i];
-		else
-			uri = freeme = gnome_vfs_get_uri_from_local_path (files[i]);
-			
+		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);		
+
 		window = GTK_WIDGET (ev_application_new_window (EV_APP));
 		gtk_widget_show (window);
 		ev_window_open (EV_WINDOW (window), uri);
 
-		g_free (scheme);
-		g_free (freeme);
+		g_free (uri);
         }
 }
 
