@@ -39,7 +39,6 @@
 #include <gtk/gtktoggleaction.h>
 #include <gtk/gtkuimanager.h>
 #include <gtk/gtkvbox.h>
-#include <libbonoboui.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 
 #include <string.h>

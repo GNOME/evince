@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include "ev-application.h"
+
 #include <glib/gi18n.h>
 #include <gtk/gtkmain.h>
 #include <libgnome/gnome-program.h>
@@ -36,6 +38,7 @@ main (int argc, char *argv[])
 	poptContext context;
         GValue context_as_value = { 0 };
 	GnomeProgram *program;
+	GtkWidget *window;
 
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
@@ -57,6 +60,9 @@ main (int argc, char *argv[])
                                GNOME_PARAM_POPT_CONTEXT,
                                g_value_init (&context_as_value, G_TYPE_POINTER));
         context = g_value_get_pointer (&context_as_value);
+
+	window = GTK_WIDGET (ev_application_new_window (EV_APP));
+	gtk_widget_show (window);
 
 	gtk_main ();
 

@@ -28,7 +28,7 @@
 #include <gtk/gtkfilechooserdialog.h>
 #include <gtk/gtkstock.h>
 #include <gtk/gtkwidget.h>
-#include <bonobo/bonobo-main.h>
+#include <gtk/gtkmain.h>
 
 #include <ev-window.h>
 
@@ -66,7 +66,7 @@ window_destroy_cb (GtkObject *object, gpointer user_data)
 		g_list_remove (application->priv->windows, object);
 
 	if (application->priv->windows == NULL)
-		bonobo_main_quit ();
+		gtk_main_quit ();
 }
 
 EvWindow *
