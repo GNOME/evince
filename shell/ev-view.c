@@ -1018,11 +1018,17 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 static void
 jump_to_find_result (EvView *view)
 {
+	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 	GdkRectangle rect;
+	int n_results;
 
-	ev_document_find_get_result (EV_DOCUMENT_FIND (view->document),
-				     view->find_result, &rect);
-	ensure_rectangle_is_visible (view, &rect);
+	n_results = ev_document_find_get_n_results (find);
+
+	if (n_results > view->find_result) {
+		ev_document_find_get_result
+			(find, view->find_result, &rect);
+		ensure_rectangle_is_visible (view, &rect);
+	}
 }
 
 static void
@@ -1090,9 +1096,8 @@ ev_view_set_document (EvView     *view,
 
 	if (document != view->document) {
 		if (view->document) {
-                        g_signal_handlers_disconnect_by_func (view->document,
-                                                              find_changed_cb,
-                                                              view);
+                        g_signal_handlers_disconnect_by_func
+				(view->document, find_changed_cb, view);
 			g_object_unref (view->document);
                 }
 
@@ -1102,11 +1107,12 @@ ev_view_set_document (EvView     *view,
 
 		if (view->document) {
 			g_object_ref (view->document);
-			if (EV_IS_DOCUMENT_FIND (view->document))
+			if (EV_IS_DOCUMENT_FIND (view->document)) {
 				g_signal_connect (view->document,
 						  "find_changed",
 						  G_CALLBACK (find_changed_cb),
 						  view);
+			}
 			g_signal_connect (view->document,
 					  "changed",
 					  G_CALLBACK (document_changed_callback),

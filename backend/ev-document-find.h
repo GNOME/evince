@@ -77,7 +77,6 @@ double	  ev_document_find_get_progress     (EvDocumentFind *document_find);
 void      ev_document_find_changed          (EvDocumentFind *document_find,
 					     int             page);
 
-
 /* How this interface works:
  *
  * begin() begins a new search, canceling any previous search.

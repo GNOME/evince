@@ -1384,6 +1384,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 						      NULL);
+			gtk_widget_queue_draw (GTK_WIDGET (ev_window->priv->view));
 		}
 	}
 }

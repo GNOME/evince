@@ -413,12 +413,18 @@ pdf_document_render (EvDocument  *document,
 double
 pdf_document_find_get_progress (EvDocumentFind *document_find)
 {
-	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
+	PdfDocumentSearch *search;
 	int n_pages, pages_done;
- 
+
+	search = PDF_DOCUMENT (document_find)->search;
+
+	if (search == NULL) {
+		return 0;
+	}
+
 	n_pages = ev_document_get_n_pages (EV_DOCUMENT (document_find));
 	if (search->search_page > search->start_page) {
-		pages_done = search->search_page - search->start_page;
+		pages_done = search->search_page - search->start_page + 1;
 	} else if (search->search_page == search->start_page) {
 		pages_done = n_pages;
 	} else {
@@ -460,7 +466,8 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 	PdfDocumentSearch *search = pdf_document->search;
 	GdkRectangle r;
 
-	if (search != NULL) {
+	if (search != NULL &&
+	    n_result < search->current_page_results->len) {
 		r = g_array_index (search->current_page_results,
 				   GdkRectangle, n_result);
 
@@ -655,7 +662,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
 }
 
 static void
-pdf_document_find_cancel (EvDocumentFind   *document)
+pdf_document_find_cancel (EvDocumentFind *document)
 {
         PdfDocument *pdf_document = PDF_DOCUMENT (document);
 
@@ -1136,6 +1143,7 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 	iface->get_n_results = pdf_document_find_get_n_results;
 	iface->get_result = pdf_document_find_get_result;
 	iface->page_has_results = pdf_document_find_page_has_results;
+	iface->get_progress = pdf_document_find_get_progress;
         iface->cancel = pdf_document_find_cancel;
 }
 

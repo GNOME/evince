@@ -121,4 +121,3 @@ ev_document_find_changed (EvDocumentFind  *document_find, int page)
 {
 	g_signal_emit_by_name (document_find, "find_changed", page);
 }
-				    
