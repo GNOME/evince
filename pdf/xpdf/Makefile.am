@@ -119,6 +119,14 @@ common_sources =		\
 	TextOutputDev.h		\
 	UTF8.h
 
+if USE_ANNOTS_VIEW
+  ANNOTS_VIEW_SRCS = 			\
+	gpdf-annots-view.cc		\
+	gpdf-annots-view.h
+else
+  ANNOTS_VIEW_SRCS =
+endif
+
 libgpdf_a_SOURCES =			\
 	BonoboStream.cc			\
 	BonoboStream.h			\
@@ -128,10 +136,13 @@ libgpdf_a_SOURCES =			\
 	GPOutputDev.h			\
 	PSOutputDev.cc			\
 	PSOutputDev.h			\
-	eog-hig-dialog.c		\
-	eog-hig-dialog.h		\
+	gpdf-hig-dialog.c		\
+	gpdf-hig-dialog.h		\
+	Thumb.cc			\
+	Thumb.h				\
 	gpdf-control.cc			\
 	gpdf-control.h			\
+	gpdf-control-private.h		\
 	gpdf-g-switch.h			\
 	gpdf-link-canvas-item.cc	\
 	gpdf-link-canvas-item.h		\
@@ -146,6 +157,16 @@ libgpdf_a_SOURCES =			\
 	gpdf-util.h			\
 	gpdf-view.cc			\
 	gpdf-view.h			\
+	gpdf-bookmarks-view.cc		\
+	gpdf-bookmarks-view.h		\
+	gpdf-thumbnails-view.cc		\
+	gpdf-thumbnails-view.h		\
+	$(ANNOTS_VIEW_SRCS)		\
+	eel-gconf-extensions.c		\
+	eel-gconf-extensions.h		\
+	prefs-strings.h			\
+	gpdf-sidebar.c			\
+	gpdf-sidebar.h			\
 	gtkgesture.c			\
 	gtkgesture.h			\
 	page-control.c			\
@@ -271,8 +292,39 @@ dist-hook:
 	    rm -f $(distdir)/$$file ; \
 	done
 
+if USE_ANNOTS_VIEW
+  STOCK_ANNOTS_ICONS = 			\
+	stock-annot-circle.png		\
+	stock-annot-fileattachment.png	\
+	stock-annot-freetext.png	\
+	stock-annot-highlight.png	\
+	stock-annot-ink.png		\
+	stock-annot-line.png		\
+	stock-annot-link.png		\
+	stock-annot-movie.png		\
+	stock-annot-popup.png		\
+	stock-annot-sound.png		\
+	stock-annot-square.png		\
+	stock-annot-stamp.png		\
+	stock-annot-strikeout.png	\
+	stock-annot-text.png		\
+	stock-annot-trapnet.png		\
+	stock-annot-underline.png	\
+	stock-annot-widget.png		\
+	stock-annot-unknown.png
+else
+  STOCK_ANNOTS_ICONS =
+endif
+
 stockdir = $(datadir)/pixmaps/gpdf
-stock_DATA = fitwidth.png
+stock_DATA = 				\
+	fitwidth.png			\
+	stock_book-closed-mark.png	\
+	stock_book-closed.png		\
+	stock_book-opened-mark.png	\
+	stock_book-opened.png		\
+	stock_bookmarks.png		\
+	$(STOCK_ANNOTS_ICONS)
 
 gladedir = $(datadir)/gpdf/glade
 glade_DATA =					\
@@ -281,9 +333,11 @@ glade_DATA =					\
 
 server_in_files = GNOME_PDF.server.in.in
 serverdir = $(libdir)/bonobo/servers
-server_DATA = $(server_in_files:.server.in.in=.server)
-$(server_in_files:.server.in.in=.server.in): $(server_in_files)
+server_DATA = $(server_in_files:%.server.in.in=%.server)
+
+$(server_in_files:%.server.in.in=%.server.in): $(server_in_files)
 	sed -e "s|\@LIBEXECDIR\@|$(libexecdir)|" $< > $@
+
 @INTLTOOL_SERVER_RULE@
 
 uidir = $(datadir)/gnome-2.0/ui
