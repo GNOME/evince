@@ -130,17 +130,23 @@ xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a $(X_EXTRA_LIBS)
 pdfimages_SOURCES =  	$(common_sources)		ImageOutputDev.cc		pdfimages.cc
 
 
+pdfimages_LDADD = ../goo/libgoo.a
+
 pdftops_SOURCES =  	$(common_sources)		PSOutputDev.cc			pdftops.cc
 
+pdftops_LDADD = ../goo/libgoo.a
 
 pdftotext_SOURCES =  	$(common_sources)		TextOutputDev.cc		pdftotext.cc
 
+pdftotext_LDADD = ../goo/libgoo.a
 
 pdfinfo_SOURCES =  	$(common_sources)		pdfinfo.cc
 
+pdfinfo_LDADD = ../goo/libgoo.a
 
 pdftopbm_SOURCES =  	$(common_sources)		XOutputDev.cc			pdftopbm.cc
 
+pdftopbm_LDADD = ../goo/libgoo.a
 
 bitmaps =  	about.xbm			dblLeftArrow.xbm		dblRightArrow.xbm		find.xbm			leftArrow.xbm			postscript.xbm			rightArrow.xbm			xpdfIcon.xpm			zoomIn.xbm			zoomOut.xbm		
 
@@ -170,32 +176,27 @@ X_PRE_LIBS = @X_PRE_LIBS@
 pdftops_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
 PDFDoc.o Stream.o XRef.o PSOutputDev.o pdftops.o
-pdftops_LDADD = $(LDADD)
-pdftops_DEPENDENCIES = 
+pdftops_DEPENDENCIES =  ../goo/libgoo.a
 pdftops_LDFLAGS = 
 pdftotext_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
 PDFDoc.o Stream.o XRef.o TextOutputDev.o pdftotext.o
-pdftotext_LDADD = $(LDADD)
-pdftotext_DEPENDENCIES = 
+pdftotext_DEPENDENCIES =  ../goo/libgoo.a
 pdftotext_LDFLAGS = 
 pdfinfo_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
 PDFDoc.o Stream.o XRef.o pdfinfo.o
-pdfinfo_LDADD = $(LDADD)
-pdfinfo_DEPENDENCIES = 
+pdfinfo_DEPENDENCIES =  ../goo/libgoo.a
 pdfinfo_LDFLAGS = 
 pdftopbm_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
 PDFDoc.o Stream.o XRef.o XOutputDev.o pdftopbm.o
-pdftopbm_LDADD = $(LDADD)
-pdftopbm_DEPENDENCIES = 
+pdftopbm_DEPENDENCIES =  ../goo/libgoo.a
 pdftopbm_LDFLAGS = 
 pdfimages_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
 PDFDoc.o Stream.o XRef.o ImageOutputDev.o pdfimages.o
-pdfimages_LDADD = $(LDADD)
-pdfimages_DEPENDENCIES = 
+pdfimages_DEPENDENCIES =  ../goo/libgoo.a
 pdfimages_LDFLAGS = 
 gpdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \

@@ -57,24 +57,30 @@ pdfimages_SOURCES =		\
 	ImageOutputDev.cc	\
 	pdfimages.cc
 
+pdfimages_LDADD = ../goo/libgoo.a
+
 pdftops_SOURCES =		\
 	$(common_sources)	\
 	PSOutputDev.cc		\
 	pdftops.cc
+pdftops_LDADD = ../goo/libgoo.a
 
 pdftotext_SOURCES =		\
 	$(common_sources)	\
 	TextOutputDev.cc	\
 	pdftotext.cc
+pdftotext_LDADD = ../goo/libgoo.a
 
 pdfinfo_SOURCES =		\
 	$(common_sources)	\
 	pdfinfo.cc
+pdfinfo_LDADD = ../goo/libgoo.a
 
 pdftopbm_SOURCES =		\
 	$(common_sources)	\
 	XOutputDev.cc		\
 	pdftopbm.cc
+pdftopbm_LDADD = ../goo/libgoo.a
 
 xpdf-ltk.h: xpdf.ltk
 	rm -f $@
