@@ -246,5 +246,8 @@ CLEANFILES = $(server_DATA) $(BUILT_SOURCES)
 DISTCLEANFILES = $(server_in_files:.server.in.in=.server.in)
 
 EXTRA_DIST = $(stock_DATA)		\
-             gpdf-marshal.list		\
-             $(server_in_files) config.h $(ui_DATA)
+	gpdf-marshal.list		\
+	$(server_in_files) 		\
+	config.h 			\
+	$(ui_DATA)			\
+	$(glade_DATA)
