@@ -120,7 +120,7 @@ extern "C" {
     CORBA_exception_init (&ev);
     persist = Bonobo_Unknown_query_interface (
       bonobo_object_corba_objref (BONOBO_OBJECT (object)),
-      "IDL:GNOME/PersistStream:1.0", &ev);
+      "IDL:Bonobo/PersistStream:1.0", &ev);
     
     if (ev._major != CORBA_NO_EXCEPTION ||
 	persist == CORBA_OBJECT_NIL) {
