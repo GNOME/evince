@@ -1428,6 +1428,9 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	Thumb *thumb = NULL;
 	gboolean have_ethumbs = FALSE;
 
+	/* Add 1 to page.  !@#!!~!#!@#! */
+	page ++;
+
 	the_page = pdf_document->doc->getCatalog ()->getPage (page);
 	the_page->getThumb(&the_thumb);
 
