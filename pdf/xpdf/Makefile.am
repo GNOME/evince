@@ -9,7 +9,7 @@ INCLUDES =					\
 	$(libpaper_CFLAGS)
 
 if WITH_GNOME
-gui = ""
+gui =
 else
 gui = xpdf
 endif
@@ -111,6 +111,8 @@ bonobo_application_x_pdf_SOURCES =	\
 	gpdf-embeddable.h		\
 	gpdf-embeddable-view.cc		\
 	gpdf-embeddable-view.h		\
+	gpdf-persist-stream.cc		\
+	gpdf-persist-stream.h		\
 	gpdf-util.h			\
 	gtkgesture.c			\
 	gtkgesture.h			\
