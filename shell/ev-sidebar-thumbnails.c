@@ -248,7 +248,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 
 	gtk_list_store_clear (priv->list_store);
 	for (i = 1; i <= n_pages; i++) {
-		EvJobThumbnail *job;
+		EvJob *job;
 
 		/* FIXME: Bah.  This is still -1 for some reason.  Need to track it down.. */
 		job = ev_job_thumbnail_new (priv->document, i - 1, THUMBNAIL_WIDTH);
@@ -261,7 +261,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 				    COLUMN_JOB, job,
 				    -1);
 		g_free (page);
-		ev_job_queue_add_thumbnail_job (job, EV_JOB_PRIORITY_LOW);
+		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
 		g_object_set_data_full (G_OBJECT (job), "tree_iter",
 					gtk_tree_iter_copy (&iter),
 					(GDestroyNotify) gtk_tree_iter_free);

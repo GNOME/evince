@@ -4,7 +4,7 @@
 
 typedef struct _CacheJobInfo
 {
-	EvJobRender *job;
+	EvJob *job;
 	GdkPixbuf *pixbuf;
 } CacheJobInfo;
 
@@ -46,7 +46,7 @@ static void          ev_pixbuf_cache_init       (EvPixbufCache      *pixbuf_cach
 static void          ev_pixbuf_cache_class_init (EvPixbufCacheClass *pixbuf_cache);
 static void          ev_pixbuf_cache_finalize   (GObject            *object);
 static void          ev_pixbuf_cache_dispose    (GObject            *object);
-static void          job_finished_cb            (EvJobRender        *job,
+static void          job_finished_cb            (EvJob              *job,
 						 EvPixbufCache      *pixbuf_cache);
 static CacheJobInfo *find_job_cache             (EvPixbufCache      *pixbuf_cache,
 						 int                 page);
@@ -156,24 +156,23 @@ ev_pixbuf_cache_new (EvDocument *document)
 }
 
 static void
-job_finished_cb (EvJobRender   *job,
+job_finished_cb (EvJob         *job,
 		 EvPixbufCache *pixbuf_cache)
 {
 	CacheJobInfo *job_info;
+	EvJobRender *job_render = EV_JOB_RENDER (job);
 	GdkPixbuf *pixbuf;
 
 	/* If the job is outside of our interest, we silently discard it */
-	if ((job->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
-	    (job->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
+	if ((job_render->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
+	    (job_render->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
 		g_object_unref (job);
 		return;
 	}
 	
-	job_info = find_job_cache (pixbuf_cache, job->page);
+	job_info = find_job_cache (pixbuf_cache, job_render->page);
 
-	/* Guard against reentrancy.  I don't think this can happen but
-	 * you can never be too safe */
-	pixbuf = g_object_ref (job->pixbuf);
+	pixbuf = g_object_ref (job_render->pixbuf);
 	if (job_info->pixbuf)
 		g_object_unref (job_info->pixbuf);
 	job_info->pixbuf = pixbuf;
@@ -202,18 +201,18 @@ check_job_size_and_unref (CacheJobInfo *job_info,
 		return;
 
 	ev_page_cache_get_size (page_cache,
-				job_info->job->page,
+				EV_JOB_RENDER (job_info->job)->page,
 				scale,
 				&width, &height);
 				
-	if (width == job_info->job->target_width &&
-	    height == job_info->job->target_height)
+	if (width == EV_JOB_RENDER (job_info->job)->target_width &&
+	    height == EV_JOB_RENDER (job_info->job)->target_height)
 		return;
 
 	/* Try to remove the job.  If we can't, then the thread has already
 	 * picked it up and we are going get a signal when it's done.  If we
 	 * can, then the job is fully dead and will never rnu.. */
-	if (ev_job_queue_remove_render_job (job_info->job))
+	if (ev_job_queue_remove_job (job_info->job))
 		g_object_unref (job_info->job);
 
 	job_info->job = NULL;
@@ -428,7 +427,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   page, scale,
 					   width, height);
-	ev_job_queue_add_render_job (job_info->job, priority);
+	ev_job_queue_add_job (job_info->job, priority);
 	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
 }
 
@@ -514,10 +513,10 @@ ev_pixbuf_cache_get_pixbuf (EvPixbufCache *pixbuf_cache,
 
 	/* We don't need to wait for the idle to handle the callback */
 	if (job_info->job &&
-	    job_info->job->pixbuf_done) {
+	    EV_JOB (job_info->job)->finished) {
 		GdkPixbuf *pixbuf;
 
-		pixbuf = g_object_ref (G_OBJECT (job_info->job->pixbuf));
+		pixbuf = g_object_ref (EV_JOB_RENDER (job_info->job)->pixbuf);
 		dispose_cache_job_info (job_info, pixbuf_cache);
 		job_info->pixbuf = pixbuf;
 	}

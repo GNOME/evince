@@ -40,7 +40,7 @@ struct _EvSidebarLinksPrivate {
 	guint selection_id;
 	guint page_changed_id;
 
-	EvJobLinks *job;
+	EvJob *job;
 	GtkTreeModel *model;
 	EvDocument *document;
 	EvPageCache *page_cache;
@@ -376,7 +376,8 @@ ev_sidebar_links_set_document (EvSidebarLinks *sidebar_links,
 			  "finished",
 			  G_CALLBACK (job_finished_cb),
 			  sidebar_links);
-	ev_job_queue_add_links_job (priv->job);
+	/* The priority doesn't matter for this job */
+	ev_job_queue_add_job (priv->job, EV_JOB_PRIORITY_LOW);
 
 }
 

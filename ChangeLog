@@ -1,3 +1,29 @@
+Sat Mar 19 18:43:11 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-job-queue.c: (remove_object_from_queue),
+	(notify_finished), (handle_job), (search_for_jobs_unlocked),
+	(no_jobs_available_unlocked), (ev_render_thread), (find_queue),
+	(ev_job_queue_add_job), (ev_job_queue_remove_job):
+	* backend/ev-job-queue.h:
+	* backend/ev-jobs.c: (ev_job_init), (ev_job_dispose),
+	(ev_job_class_init), (ev_job_links_init), (ev_job_links_dispose),
+	(ev_job_links_class_init), (ev_job_render_init),
+	(ev_job_render_dispose), (ev_job_render_class_init),
+	(ev_job_thumbnail_init), (ev_job_thumbnail_dispose),
+	(ev_job_thumbnail_class_init), (ev_job_finished),
+	(ev_job_links_new), (ev_job_links_run), (ev_job_render_new),
+	(ev_job_render_run), (ev_job_thumbnail_new),
+	(ev_job_thumbnail_run):
+	* backend/ev-jobs.h:
+	* shell/ev-pixbuf-cache.c: (job_finished_cb),
+	(check_job_size_and_unref), (add_job_if_needed),
+	(ev_pixbuf_cache_get_pixbuf):
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_set_document):
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_set_document): Big refactor of the job
+	code.  We now have an EvJob parent type that every other job
+	inherits from.
+
 Sat Mar 19 15:27:42 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar-links.c: Change listed page based upon the page

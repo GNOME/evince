@@ -26,20 +26,11 @@
 G_BEGIN_DECLS
 
 
-void     ev_job_queue_init                 (void);
+void     ev_job_queue_init       (void);
 
-void     ev_job_queue_add_links_job        (EvJobLinks     *job);
-gboolean ev_job_queue_remove_links_job     (EvJobRender    *job);
-
-void     ev_job_queue_add_render_job       (EvJobRender    *job,
-					    EvJobPriority   priority);
-gboolean ev_job_queue_remove_render_job    (EvJobRender    *job);
-
-
-void     ev_job_queue_add_thumbnail_job    (EvJobThumbnail *thumbnail,
-					    EvJobPriority   priority);
-gboolean ev_job_queue_remove_thumbnail_job (EvJobThumbnail *thumbnail);
-
+void     ev_job_queue_add_job    (EvJob         *job,
+				  EvJobPriority  priority);
+gboolean ev_job_queue_remove_job (EvJob         *job);
 
 G_END_DECLS
 

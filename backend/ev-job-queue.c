@@ -14,12 +14,13 @@ static GQueue *thumbnail_queue_high = NULL;
 static GQueue *thumbnail_queue_low = NULL;
 
 static gboolean
-remove_object_from_queue (GQueue *queue, GObject *object)
+remove_object_from_queue (GQueue *queue, EvJob *job)
 {
 	GList *list;
-	list = g_queue_find (queue, object);
+
+	list = g_queue_find (queue, job);
 	if (list) {
-		g_object_unref (object);
+		g_object_unref (G_OBJECT (job));
 		g_queue_delete_link (queue, list);
 
 		return TRUE;
@@ -31,21 +32,16 @@ remove_object_from_queue (GQueue *queue, GObject *object)
 static gboolean
 notify_finished (GObject *job)
 {
-	if (EV_IS_JOB_THUMBNAIL (job))
-		ev_job_thumbnail_finished (EV_JOB_THUMBNAIL (job));
-	else if (EV_IS_JOB_LINKS (job))
-		ev_job_links_finished (EV_JOB_LINKS (job));
-	else if (EV_IS_JOB_RENDER (job))
-		ev_job_render_finished (EV_JOB_RENDER (job));
+	ev_job_finished (EV_JOB (job));
 
 	return FALSE;
 }
 
 
 static void
-handle_job (gpointer job)
+handle_job (EvJob *job)
 {
-	g_object_ref (job);
+	g_object_ref (G_OBJECT (job));
 
 	if (EV_IS_JOB_THUMBNAIL (job))
 		ev_job_thumbnail_run (EV_JOB_THUMBNAIL (job));
@@ -61,28 +57,28 @@ handle_job (gpointer job)
 			 g_object_unref);
 }
 
-static GObject *
+static EvJob *
 search_for_jobs_unlocked (void)
 {
-	GObject *job;
+	EvJob *job;
 
-	job = (GObject *) g_queue_pop_head (render_queue_high);
+	job = (EvJob *) g_queue_pop_head (render_queue_high);
 	if (job)
 		return job;
 
-	job = (GObject *) g_queue_pop_head (thumbnail_queue_high);
+	job = (EvJob *) g_queue_pop_head (thumbnail_queue_high);
 	if (job)
 		return job;
 
-	job = (GObject *) g_queue_pop_head (render_queue_low);
+	job = (EvJob *) g_queue_pop_head (render_queue_low);
 	if (job)
 		return job;
 
-	job = (GObject *) g_queue_pop_head (links_queue);
+	job = (EvJob *) g_queue_pop_head (links_queue);
 	if (job)
 		return job;
 
-	job = (GObject *) g_queue_pop_head (thumbnail_queue_low);
+	job = (EvJob *) g_queue_pop_head (thumbnail_queue_low);
 	if (job)
 		return job;
 
@@ -94,6 +90,7 @@ no_jobs_available_unlocked (void)
 {
 	return g_queue_is_empty (render_queue_high)
 		&& g_queue_is_empty (render_queue_low)
+		&& g_queue_is_empty (links_queue)
 		&& g_queue_is_empty (thumbnail_queue_high)
 		&& g_queue_is_empty (thumbnail_queue_low);
 }
@@ -103,7 +100,7 @@ static gpointer
 ev_render_thread (gpointer data)
 {
 	while (TRUE) {
-		GObject *job;
+		EvJob *job;
 
 		g_mutex_lock (ev_queue_mutex);
 		if (no_jobs_available_unlocked ()) {
@@ -116,7 +113,7 @@ ev_render_thread (gpointer data)
 		/* Now that we have our job, we handle it */
 		if (job) {
 			handle_job (job);
-			g_object_unref (job);
+			g_object_unref (G_OBJECT (job));
 		}
 	}
 	return NULL;
@@ -142,98 +139,73 @@ ev_job_queue_init (void)
 
 }
 
-void
-ev_job_queue_add_links_job (EvJobLinks *job)
+static GQueue *
+find_queue (EvJob         *job,
+	    EvJobPriority  priority)
 {
-	g_return_if_fail (EV_IS_JOB_LINKS (job));
+	if (EV_IS_JOB_RENDER (job)) {
+		if (priority == EV_JOB_PRIORITY_HIGH)
+			return render_queue_high;
+		else
+			return render_queue_low;
+	} else if (EV_IS_JOB_THUMBNAIL (job)) {
+		if (priority == EV_JOB_PRIORITY_HIGH)
+			return thumbnail_queue_high;
+		else
+			return thumbnail_queue_low;
+	} else if (EV_IS_JOB_LINKS (job)) {
+		/* the priority doesn't effect links */
+		return links_queue;
+	}
 
-	g_mutex_lock (ev_queue_mutex);
-	g_object_ref (job);
-
-	g_queue_push_tail (links_queue, job);
-
-	g_cond_broadcast (render_cond);	
-	g_mutex_unlock (ev_queue_mutex);
+	g_assert_not_reached ();
+	return NULL;
 }
 
-gboolean
-ev_job_queue_remove_links_job     (EvJobRender *job)
-{
-	gboolean retval = FALSE;
-
-	g_mutex_lock (ev_queue_mutex);
-
-	retval = remove_object_from_queue (links_queue, G_OBJECT (job));
-
-	g_mutex_unlock (ev_queue_mutex);
-
-	return retval;
-}
-
-
 void
-ev_job_queue_add_render_job (EvJobRender   *job,
-			     EvJobPriority  priority)
+ev_job_queue_add_job (EvJob         *job,
+		      EvJobPriority  priority)
 {
-	g_return_if_fail (EV_IS_JOB_RENDER (job));
+	GQueue *queue;
+
+	g_return_if_fail (EV_IS_JOB (job));
+
+	queue = find_queue (job, priority);
 
 	g_mutex_lock (ev_queue_mutex);
+
 	g_object_ref (job);
-	if (priority == EV_JOB_PRIORITY_LOW)
-		g_queue_push_tail (render_queue_low, job);
-	else if (priority == EV_JOB_PRIORITY_HIGH)
-		g_queue_push_tail (render_queue_high, job);
-	else g_assert_not_reached ();
-	
+	g_queue_push_tail (queue, job);
 	g_cond_broadcast (render_cond);
-	g_mutex_unlock (ev_queue_mutex);
-}
-
-gboolean
-ev_job_queue_remove_render_job (EvJobRender *job)
-{
-	gboolean retval = FALSE;
-
-	g_mutex_lock (ev_queue_mutex);
-
-	retval = remove_object_from_queue (render_queue_high, G_OBJECT (job));
-	retval = retval || remove_object_from_queue (render_queue_low, G_OBJECT (job));
 
 	g_mutex_unlock (ev_queue_mutex);
-
-	return retval;
-}
-
-void
-ev_job_queue_add_thumbnail_job    (EvJobThumbnail *job,
-				   EvJobPriority   priority)
-{
-	g_return_if_fail (job != NULL);
-
-	g_mutex_lock (ev_queue_mutex);
-
-	g_object_ref (job);
-	if (priority == EV_JOB_PRIORITY_LOW)
-		g_queue_push_tail (thumbnail_queue_low, job);
-	else if (priority == EV_JOB_PRIORITY_HIGH)
-		g_queue_push_tail (thumbnail_queue_high, job);
-	else g_assert_not_reached ();
 	
-	g_cond_broadcast (render_cond);
-	g_mutex_unlock (ev_queue_mutex);
 }
 
 gboolean
-ev_job_queue_remove_thumbnail_job (EvJobThumbnail *thumbnail)
+ev_job_queue_remove_job (EvJob *job)
 {
 	gboolean retval = FALSE;
 
+	g_return_val_if_fail (EV_IS_JOB (job), FALSE);
+
 	g_mutex_lock (ev_queue_mutex);
 
-	retval = remove_object_from_queue (thumbnail_queue_high, G_OBJECT (thumbnail));
-	retval = retval || remove_object_from_queue (thumbnail_queue_low, G_OBJECT (thumbnail));
-
+	if (EV_IS_JOB_THUMBNAIL (job)) {
+		retval = remove_object_from_queue (thumbnail_queue_high, job);
+		retval = retval || remove_object_from_queue (thumbnail_queue_low, job);
+	} else if (EV_IS_JOB_RENDER (job)) {
+		retval = remove_object_from_queue (render_queue_high, job);
+		retval = retval || remove_object_from_queue (render_queue_low, job);
+	} else if (EV_IS_JOB_LINKS (job)) {
+		retval = remove_object_from_queue (links_queue, job);
+	} else {
+		g_assert_not_reached ();
+	}
+	
 	g_mutex_unlock (ev_queue_mutex);
 
 	return retval;
 }
+
+
