@@ -340,6 +340,19 @@ pdf_document_set_page_offset (EvDocument  *document,
 	pdf_document->page_y_offset = y;
 }
 
+static gint
+canonical_multiple_of_90 (gint n)
+{
+	while (n >= 360) {
+		n -= 360;
+	}
+	while (n < 0) {
+		n += 360;
+	}
+
+	return 90 * (gint)((n / 90.0) + .5);
+}
+
 static void
 pdf_document_get_page_size (EvDocument   *document,
 			    int           page,
@@ -347,22 +360,30 @@ pdf_document_get_page_size (EvDocument   *document,
 			    int          *height)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	Page *the_page;
-
-	/* set some default values */
-	if (width)
-		*width = 1;
-	if (height)
-		*height = 1;
+	Page *doc_page;
+	int page_width = 1, page_height = 1;
+	double scale = pdf_document->scale;
 
 	if (page == -1) 
 		page = pdf_document->page;
 
-	the_page = pdf_document->doc->getCatalog ()->getPage (page);
-	if (the_page) {
-		*width = (int) ((the_page->getWidth () * pdf_document->scale) + 0.5);
-		*height = (int) ((the_page->getHeight () * pdf_document->scale) + 0.5);
+	doc_page = pdf_document->doc->getCatalog ()->getPage (page);
+
+	if (page) {
+		int page_rotate;
+
+		page_rotate = canonical_multiple_of_90 (doc_page->getRotate ());
+		if (page_rotate == 90 || page_rotate == 270) {
+			page_width = (int) ((doc_page->getHeight () * scale) + 0.5);
+			page_height = (int) ((doc_page->getWidth () * scale) + 0.5);
+		} else /* if (page_rotate == 0 || page_rotate == 180) */ {
+			page_width = (int) ((doc_page->getWidth () * scale) + 0.5);
+			page_height = (int) ((doc_page->getHeight () * scale) + 0.5);
+		}
 	}
+
+	if (width) *width = page_width;
+	if (height) *height = page_height;
 }
 
 static void
