@@ -794,9 +794,19 @@ GfxColorSpace *GfxIndexedColorSpace::parse(Array *arr) {
   obj1.free();
   if (!arr->get(2, &obj1)->isInt()) {
     error(-1, "Bad Indexed color space (hival)");
+    delete baseA;
     goto err2;
   }
   indexHighA = obj1.getInt();
+  if (indexHighA < 0 || indexHighA > 255) {
+    // the PDF spec requires indexHigh to be in [0,255] -- allowing
+    // values larger than 255 creates a security hole: if nComps *
+    // indexHigh is greater than 2^31, the loop below may overwrite
+    // past the end of the array
+    error(-1, "Bad Indexed color space (invalid indexHigh value)");
+    delete baseA;
+    goto err2;
+  }
   obj1.free();
   cs = new GfxIndexedColorSpace(baseA, indexHighA);
   arr->get(3, &obj1);
