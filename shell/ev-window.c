@@ -835,7 +835,11 @@ ev_window_view_statusbar_cb (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 {
-        /* FIXME */
+	g_object_set (
+		ev_window->priv->sidebar,
+		"visible",
+		gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)),
+		NULL);
 }
 
 static void
