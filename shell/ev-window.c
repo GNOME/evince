@@ -33,6 +33,7 @@
 #include "ev-sidebar-bookmarks.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
+#include "ev-print-job.h"
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
@@ -42,6 +43,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <libgnomeprintui/gnome-print-dialog.h>
 
 #include <string.h>
 
@@ -300,11 +302,97 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *ev_window)
 	ev_application_open (EV_APP, NULL);
 }
 
+static gboolean
+using_postscript_printer (GnomePrintConfig *config)
+{
+	const guchar *driver;
+	const guchar *transport;
+
+	driver = gnome_print_config_get (
+		config, (const guchar *)"Settings.Engine.Backend.Driver");
+	
+	transport = gnome_print_config_get (
+		config, (const guchar *)"Settings.Transport.Backend");
+	
+	if (driver) {
+		if (!strcmp ((const gchar *)driver, "gnome-print-ps"))
+			return TRUE;
+		else 
+			return FALSE;
+	} else 	if (transport) {
+		if (!strcmp ((const gchar *)transport, "CUPS"))
+			return TRUE;
+	}
+	
+	return FALSE;
+}
+
+static void
+ev_window_print (EvWindow *ev_window)
+{
+	GnomePrintConfig *config;
+	GnomePrintJob *job;
+	GtkWidget *print_dialog;
+	EvPrintJob *print_job = NULL;
+
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+	g_return_if_fail (ev_window->priv->document != NULL);
+
+	config = gnome_print_config_default ();
+	job = gnome_print_job_new (config);
+
+	print_dialog = gnome_print_dialog_new (job, _("Print"),
+					       (GNOME_PRINT_DIALOG_RANGE |
+						GNOME_PRINT_DIALOG_COPIES));
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (print_dialog),
+					   GNOME_PRINT_DIALOG_RESPONSE_PREVIEW,
+					   FALSE);
+	
+	while (TRUE) {
+		int response;
+		response = gtk_dialog_run (GTK_DIALOG (print_dialog));
+		
+		if (response != GNOME_PRINT_DIALOG_RESPONSE_PRINT)
+			break;
+
+		/* FIXME: Change this when we have the first backend
+		 * that can print more than postscript
+		 */
+		if (!using_postscript_printer (config)) {
+			GtkWidget *dialog;
+			
+			dialog = gtk_message_dialog_new (
+				GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
+				GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+				_("Printing is not supported on this printer."));
+			gtk_message_dialog_format_secondary_text (
+				GTK_MESSAGE_DIALOG (dialog),
+				_("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
+				gnome_print_config_get (
+					config, "Settings.Engine.Backend.Driver"));
+			gtk_dialog_run (GTK_DIALOG (dialog));
+			gtk_widget_destroy (dialog);
+
+			continue;
+		}
+
+		print_job = g_object_new (EV_TYPE_PRINT_JOB,
+					  "document", ev_window->priv->document,
+					  "print-dialog", print_dialog,
+					  NULL);
+		break;
+	}
+				
+	gtk_widget_destroy (print_dialog);
+
+	if (print_job != NULL)
+		ev_print_job_print (print_job, GTK_WINDOW (ev_window));
+}
+
 static void
 ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
 {
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
-        /* FIXME */
+	ev_window_print (ev_window);
 }
 
 static void
