@@ -29,6 +29,7 @@
 #include "ev-marshal.h"
 #include "ev-view.h"
 #include "ev-document-find.h"
+#include "ev-debug.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -407,6 +408,9 @@ expose_bin_window (GtkWidget      *widget,
 	ev_document_set_page_offset (view->document,
 				     x_offset + 1,
 				     y_offset + 1);
+
+	LOG ("Render area %d %d %d %d", event->area.x, event->area.y,
+             event->area.width, event->area.height)
 
 	ev_document_render (view->document,
 			    event->area.x, event->area.y,

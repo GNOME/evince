@@ -1,5 +1,30 @@
 2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* Makefile.am:
+	* configure.ac:
+	* doc/debugging.txt:
+	* lib/.cvsignore:
+	* lib/Makefile.am:
+	* lib/ev-debug.c: (log_module), (trap_handler), (ev_debug_init),
+	(ev_profiler_new), (ev_should_profile), (ev_profiler_dump),
+	(ev_profiler_free), (ev_profiler_start), (ev_profiler_stop):
+	* lib/ev-debug.h:
+
+	Add debugging helpers
+
+	* ps/Makefile.am:
+	* ps/ps-document.c: (set_up_page), (start_interpreter),
+	(stop_interpreter), (document_load), (ps_document_next_page),
+	(ps_document_goto_page), (ps_document_set_page_size),
+	(ps_document_widget_event), (ps_document_render):
+	* shell/Makefile.am:
+	* shell/ev-view.c: (expose_bin_window):
+	* shell/main.c: (main):
+
+	Add some logs
+	
+2005-02-07  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/ps-document.c: (ps_document_widget_event):
 
 	Initialize message_window, this should make ps

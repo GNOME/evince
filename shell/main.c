@@ -29,6 +29,7 @@
 #include <libgnomevfs/gnome-vfs-utils.h>
 
 #include "ev-stock-icons.h"
+#include "ev-debug.h"
 
 static struct poptOption popt_options[] =
 {
@@ -83,6 +84,7 @@ main (int argc, char *argv[])
 
 	g_set_application_name (_("Evince Document Viewer"));
 
+	ev_debug_init ();
 	ev_stock_icons_init ();
 
 	g_object_get_property (G_OBJECT (program),

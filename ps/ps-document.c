@@ -150,6 +150,7 @@ The DONE message indicates that ghostscript has finished processing.
 #include <math.h>
 
 #include "ps-document.h"
+#include "ev-debug.h"
 #include "gsdefaults.h"
 
 #ifdef HAVE_LOCALE_H
@@ -483,6 +484,8 @@ set_up_page(PSDocument * gs)
   GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
   GdkColormap *colormap;
 
+  LOG ("Setup the page")
+
 #ifdef HAVE_LOCALE_H
   char *savelocale;
 #endif
@@ -512,6 +515,7 @@ set_up_page(PSDocument * gs)
           gs->bpixmap = NULL;
         }
 
+        LOG ("Create our internal pixmap")
         gs->bpixmap = gdk_pixmap_new(gs->pstarget, gs->width, gs->height, -1);
 
         gdk_draw_rectangle(gs->bpixmap, fill, TRUE,
@@ -711,6 +715,8 @@ start_interpreter(PSDocument * gs)
   int std_out[2];               /* pipe from interp stdout */
   int std_err[2];               /* pipe from interp stderr */
 
+  LOG ("Start the interpreter")
+
 #define NUM_ARGS    100
 #define NUM_GS_ARGS (NUM_ARGS - 20)
 #define NUM_ALPHA_ARGS 10
@@ -815,6 +821,8 @@ start_interpreter(PSDocument * gs)
 			     gdk_x11_drawable_get_xid(gs->bpixmap));
     putenv(gv_env);
 
+    LOG ("Launching ghostview with env %s", gv_env)
+
     /* change to directory where the input file is. This helps
      * with postscript-files which include other files using
      * a relative path */
@@ -862,6 +870,7 @@ stop_interpreter(PSDocument * gs)
 {
   if(gs->interpreter_pid > 0) {
     int status = 0;
+    LOG ("Stop the interpreter")
     kill(gs->interpreter_pid, SIGTERM);
     while((wait(&status) == -1) && (errno == EINTR)) ;
     gs->interpreter_pid = -1;
@@ -1285,6 +1294,8 @@ document_load(PSDocument * gs, const gchar * fname)
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
+  LOG ("Load the document")
+
   /* clean up previous document */
   ps_document_cleanup(gs);
 
@@ -1391,6 +1402,8 @@ ps_document_next_page(PSDocument * gs)
 {
   XEvent event;
 
+  LOG ("Make ghostscript render next page")
+
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
@@ -1449,6 +1462,8 @@ ps_document_goto_page(PSDocument * gs, gint page)
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
 
+  LOG ("Go to page %d", page)
+
   if(!gs->gs_filename) {
     return FALSE;
   }
@@ -1458,6 +1473,9 @@ ps_document_goto_page(PSDocument * gs, gint page)
     page = 0;
 
   if(gs->structured_doc && gs->doc) {
+
+    LOG ("It's a structured document, let's send one page to gs")
+
     if(page >= gs->doc->numpages)
       page = gs->doc->numpages - 1;
 
@@ -1498,6 +1516,9 @@ ps_document_goto_page(PSDocument * gs, gint page)
        the last page of the file was displayed. In that
        case, ggv restarts GS again and the first page is displayed.
      */
+
+    LOG ("It's an unstructured document, gs will just read the file")
+
     if(page == gs->current_page && !gs->changed)
       return TRUE;
 
@@ -1529,6 +1550,8 @@ ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid)
   gint new_urx = 0;
   gint new_ury = 0;
   GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes();
+
+  LOG ("Set the page size")
 
   g_return_val_if_fail(gs != NULL, FALSE);
   g_return_val_if_fail(GTK_IS_GS(gs), FALSE);
@@ -1736,6 +1759,7 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	gs->message_window = event->client.data.l[0];
 
 	if (event->client.message_type == gs_class->page_atom) {
+		LOG ("GS rendered the document")
 		gs->busy = FALSE;
 		ev_document_changed (EV_DOCUMENT (gs));
 	}
@@ -1837,6 +1861,10 @@ ps_document_render (EvDocument  *document,
 			   draw.x - page.x, draw.y - page.y,
 			   draw.x, draw.y,
 			   draw.width, draw.height);
+
+	LOG ("Copy the internal pixmap: %d %d %d %d %d %d",
+             draw.x - page.x, draw.y - page.y,
+             draw.x, draw.y, draw.width, draw.height)
 
 	g_object_unref (gc);
 }

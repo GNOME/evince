@@ -21,6 +21,8 @@ AC_STDC_HEADERS
 AC_PROG_RANLIB
 AC_PROG_INTLTOOL
 
+GNOME_DEBUG_CHECK
+
 ALL_LINGUAS="ca cs da de en_CA ja no nb nl pt_BR sv zh_CN"
 
 AM_GLIB_GNU_GETTEXT
@@ -380,6 +382,7 @@ Makefile
 cut-n-paste/Makefile
 cut-n-paste/recent-files/Makefile
 data/Makefile
+lib/Makefile
 pdf/Makefile
 pdf/goo/Makefile
 pdf/fofi/Makefile
