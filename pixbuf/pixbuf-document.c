@@ -234,10 +234,19 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
+static EvLink *
+pixbuf_document_get_link (EvDocument *document,
+		          int         x,
+		          int	      y)
+{
+	return NULL;
+}
+
 static void
 pixbuf_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = pixbuf_document_load;
+	iface->get_link = pixbuf_document_get_link;
 	iface->get_n_pages = pixbuf_document_get_n_pages;
 	iface->set_page = pixbuf_document_set_page;
 	iface->get_page = pixbuf_document_get_page;

@@ -1808,10 +1808,19 @@ ps_document_render (EvDocument  *document,
 	g_object_unref (gc);
 }
 
+static EvLink *
+ps_document_get_link (EvDocument *document,
+		      int         x,
+		      int	  y)
+{
+	return NULL;
+}
+
 static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = ps_document_load;
+	iface->get_link = ps_document_get_link;
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->set_page = ps_document_set_page;
 	iface->get_page = ps_document_get_page;

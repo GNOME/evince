@@ -35,6 +35,12 @@
 #define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
 
 enum {
+	PROP_0,
+	PROP_STATUS,
+	PROP_FIND_STATUS
+};
+
+enum {
   TARGET_STRING,
   TARGET_TEXT,
   TARGET_COMPOUND_TEXT,
@@ -56,10 +62,14 @@ struct _EvView {
 	EvHistory  *history;
 	
 	GdkWindow *bin_window;
+
+	char *status;
+	char *find_status;
 	
 	int scroll_x;
 	int scroll_y;
 
+	gboolean pressed_button;
 	gboolean has_selection;
 	GdkRectangle selection;
 
@@ -275,7 +285,7 @@ ev_view_realize (GtkWidget *widget)
 				GDK_BUTTON_RELEASE_MASK |
 				GDK_SCROLL_MASK |
 				GDK_KEY_PRESS_MASK |
-				GDK_BUTTON1_MOTION_MASK;
+				GDK_POINTER_MOTION_MASK;
   
 	view->bin_window = gdk_window_new (widget->window,
 					   &attributes,
@@ -508,6 +518,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 		gtk_widget_grab_focus (widget);
 	}
 
+	view->pressed_button = event->button;
+
 	switch (event->button) {
 		case 1:
 			if (view->has_selection) {
@@ -525,17 +537,79 @@ ev_view_button_press_event (GtkWidget      *widget,
 	return TRUE;
 }
 
+static char *
+status_message_from_link (EvLink *link)
+{
+	EvLinkType type;
+	char *msg;
+	int page;
+
+	type = ev_link_get_link_type (link);
+	
+	switch (type) {
+		case EV_LINK_TYPE_TITLE:
+			msg = g_strdup (ev_link_get_title (link));
+			break;
+		case EV_LINK_TYPE_PAGE:
+			page = ev_link_get_page (link);
+			msg = g_strdup_printf (_("Page %d"), page);
+			break;
+		case EV_LINK_TYPE_EXTERNAL_URI:
+			msg = g_strdup (ev_link_get_uri (link));
+			break;
+		default:
+			msg = NULL;
+	}
+
+	return msg;
+}
+
+static void
+ev_view_set_status (EvView *view, const char *message)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	g_free (view->status);
+	view->status = g_strdup (message);
+	g_object_notify (G_OBJECT (view), "status");
+}
+
+static void
+ev_view_set_find_status (EvView *view, const char *message)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+	
+	g_free (view->find_status);
+	view->find_status = g_strdup (message);
+	g_object_notify (G_OBJECT (view), "find-status");
+}
+
 static gboolean
 ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
 {
 	EvView *view = EV_VIEW (widget);
 
-	view->has_selection = TRUE;
-	view->selection.x = MIN (view->selection.x, event->x);
-	view->selection.y = MIN (view->selection.y, event->y);
-	view->selection.width = ABS (view->selection.x - event->x) + 1;
-	view->selection.height = ABS (view->selection.y - event->y) + 1;
+	if (view->pressed_button > 0) {
+		view->has_selection = TRUE;
+		view->selection.x = MIN (view->selection.x, event->x);
+		view->selection.y = MIN (view->selection.y, event->y);
+		view->selection.width = ABS (view->selection.x - event->x) + 1;
+		view->selection.height = ABS (view->selection.y - event->y) + 1;
+	} else if (view->document) {
+		EvLink *link;
+
+		link = ev_document_get_link (view->document, event->x, event->y);
+                if (link) {
+			char *msg;
+
+			msg = status_message_from_link (link);
+			ev_view_set_status (view, msg);
+			g_free (msg);
+
+                        g_object_unref (link);
+                }
+	}
 
 	gtk_widget_queue_draw (widget);
 
@@ -548,9 +622,11 @@ ev_view_button_release_event (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
+	view->pressed_button = -1;
+
 	if (view->has_selection) {
 		ev_view_update_primary_selection (view);
-	} else {
+	} else if (view->document) {
 		EvLink *link;
 
 		link = ev_document_get_link (view->document,
@@ -672,6 +748,40 @@ ev_view_scroll_view (EvView *view,
 }
 
 static void
+ev_view_set_property (GObject *object,
+		      guint prop_id,
+		      const GValue *value,
+		      GParamSpec *pspec)
+{
+	switch (prop_id)
+	{
+		/* Read only */
+		case PROP_STATUS:
+		case PROP_FIND_STATUS:
+			break;
+	}
+}
+
+static void
+ev_view_get_property (GObject *object,
+		      guint prop_id,
+		      GValue *value,
+		      GParamSpec *pspec)
+{
+	EvView *view = EV_VIEW (object);
+
+	switch (prop_id)
+	{
+		case PROP_STATUS:
+			g_value_set_string (value, view->status);
+			break;
+		case PROP_FIND_STATUS:
+			g_value_set_string (value, view->status);
+			break;
+	}
+}
+
+static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -680,6 +790,8 @@ ev_view_class_init (EvViewClass *class)
 	GtkBindingSet *binding_set;
 
 	object_class->finalize = ev_view_finalize;
+	object_class->set_property = ev_view_set_property;
+	object_class->get_property = ev_view_get_property;
 
 	widget_class->expose_event = ev_view_expose_event;
 	widget_class->button_press_event = ev_view_button_press_event;
@@ -713,14 +825,6 @@ ev_view_class_init (EvViewClass *class)
 					    ev_marshal_VOID__NONE,
 					    G_TYPE_NONE, 0);
 
-	g_signal_new ("find-status-changed",
-		      G_OBJECT_CLASS_TYPE (object_class),
-		      G_SIGNAL_RUN_LAST,
-		      0,
-		      NULL, NULL,
-		      ev_marshal_VOID__NONE,
-		      G_TYPE_NONE, 0);
-
 	g_signal_new ("scroll_view",
 		      G_TYPE_FROM_CLASS (object_class),
 		      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
@@ -730,6 +834,22 @@ ev_view_class_init (EvViewClass *class)
 		      G_TYPE_NONE, 2,
 		      GTK_TYPE_SCROLL_TYPE,
 		      G_TYPE_BOOLEAN);
+
+	g_object_class_install_property (object_class,
+					 PROP_STATUS,
+					 g_param_spec_string ("status",
+							      "Status Message",
+							      "The status message",
+							      NULL,
+							      G_PARAM_READABLE));
+
+	g_object_class_install_property (object_class,
+					 PROP_STATUS,
+					 g_param_spec_string ("find-status",
+							      "Find Status Message",
+							      "The find status message",
+							      NULL,
+							      G_PARAM_READABLE));
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -750,6 +870,7 @@ ev_view_init (EvView *view)
 	GTK_WIDGET_SET_FLAGS (view, GTK_CAN_FOCUS);
 
 	view->scale = 1.0;
+	view->pressed_button = -1;
 	
 	gtk_widget_modify_bg (GTK_WIDGET (view), GTK_STATE_NORMAL, &white);
 
@@ -758,6 +879,26 @@ ev_view_init (EvView *view)
                                           sizeof (EvFindResult));
 	view->results_on_this_page = 0;
 	view->next_page_with_result = 0;
+}
+
+static char *
+ev_view_get_find_status_message (EvView *view)
+{
+	if (view->find_results->len == 0) {
+		if (view->find_percent_complete >= (1.0 - 1e-10)) {
+			return g_strdup (_("Not found"));
+		} else {
+			return g_strdup_printf (_("%3d%% remaining to search"),
+						(int) ((1.0 - view->find_percent_complete) * 100));
+		}
+	} else if (view->results_on_this_page == 0) {
+		g_assert (view->next_page_with_result != 0);
+		return g_strdup_printf (_("Found on page %d"),
+					view->next_page_with_result);
+	} else {
+		return g_strdup_printf (_("%d found on this page"),
+					view->results_on_this_page);
+	}
 }
 
 static void
@@ -813,14 +954,13 @@ update_find_results (EvView *view)
 		counts_changed = TRUE;
 	}
 
-	/* If there are no results at all, then the
-	 * results of ev_view_get_find_status_message() will change
-	 * to reflect the percent_complete so we have to emit the signal
-	 */
 	if (counts_changed ||
 	    view->find_results->len == 0) {
-		g_signal_emit_by_name (view,
-				       "find-status-changed");
+		char *message;
+
+		message = ev_view_get_find_status_message (view);
+		ev_view_set_find_status (view, message);
+		g_free (message);
 	}
 }
 
@@ -1117,26 +1257,6 @@ ev_view_fit_width (EvView *view)
 	ev_view_zoom (view, scale, FALSE);
 }
 
-char*
-ev_view_get_find_status_message (EvView *view)
-{
-	if (view->find_results->len == 0) {
-		if (view->find_percent_complete >= (1.0 - 1e-10)) {
-			return g_strdup (_("Not found"));
-		} else {
-			return g_strdup_printf (_("%3d%% remaining to search"),
-						(int) ((1.0 - view->find_percent_complete) * 100));
-		}
-	} else if (view->results_on_this_page == 0) {
-		g_assert (view->next_page_with_result != 0);
-		return g_strdup_printf (_("Found on page %d"),
-					view->next_page_with_result);
-	} else {
-		return g_strdup_printf (_("%d found on this page"),
-					view->results_on_this_page);
-	}
-}
-
 static void
 history_index_changed_cb (EvHistory  *history,
 			  GParamSpec *pspec,
@@ -1163,3 +1283,21 @@ ev_view_set_history (EvView     *view,
 			  G_CALLBACK (history_index_changed_cb),
 			  view);
 }
+
+const char *
+ev_view_get_status (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), NULL);
+
+	return view->status;
+}
+
+const char *
+ev_view_get_find_status (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), NULL);
+
+	return view->find_status;
+}
+
+

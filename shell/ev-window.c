@@ -1108,17 +1108,27 @@ view_page_changed_cb (EvView   *view,
 }
 
 static void
-view_find_status_changed_cb (EvView   *view,
-			     EvWindow *ev_window)
+view_status_changed_cb (EvView     *view,
+			GParamSpec *pspec,
+			EvWindow   *ev_window)
 {
-	char *text;
+	const char *message;
 
-	text = ev_view_get_find_status_message (view);
+	message = ev_view_get_status (view);
+	gtk_statusbar_push (GTK_STATUSBAR (ev_window->priv->statusbar),
+			    ev_window->priv->help_message_cid, message);
+}
 
+static void
+view_find_status_changed_cb (EvView     *view,
+			     GParamSpec *pspec,
+			     EvWindow   *ev_window)
+{
+	const char *text;
+
+	text = ev_view_get_find_status (view);
 	egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 				      text);
-
-	g_free (text);
 }
 
 static void
@@ -1505,10 +1515,14 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (view_page_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->view,
-			  "find-status-changed",
+			  "notify::find-status",
 			  G_CALLBACK (view_find_status_changed_cb),
 			  ev_window);
-	
+	g_signal_connect (ev_window->priv->view,
+			  "notify::status",
+			  G_CALLBACK (view_status_changed_cb),
+			  ev_window);
+
 	ev_window->priv->statusbar = gtk_statusbar_new ();
 	gtk_widget_show (ev_window->priv->statusbar);
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),

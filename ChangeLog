@@ -1,5 +1,25 @@
 2005-01-13  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* pixbuf/pixbuf-document.c: (pixbuf_document_get_link),
+	(pixbuf_document_document_iface_init):
+	* ps/ps-document.c: (ps_document_get_link),
+	(ps_document_document_iface_init):
+	* shell/ev-view.c: (ev_view_realize), (ev_view_button_press_event),
+	(status_message_from_link), (ev_view_set_status),
+	(ev_view_set_find_status), (ev_view_motion_notify_event),
+	(ev_view_button_release_event), (ev_view_set_property),
+	(ev_view_get_property), (ev_view_class_init), (ev_view_init),
+	(ev_view_get_find_status_message), (update_find_results),
+	(ev_view_get_status), (ev_view_get_find_status):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (view_status_changed_cb),
+	(view_find_status_changed_cb), (ev_window_init):
+
+	View status message support, use it to show the links.
+	Needs work...
+
+2005-01-13  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* backend/ev-document.c: (ev_document_get_link):
 	* backend/ev-document.h:
 	* pdf/xpdf/pdf-document.cc:

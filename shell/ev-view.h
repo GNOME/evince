@@ -32,7 +32,6 @@ G_BEGIN_DECLS
 #define EV_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW, EvView))
 #define EV_IS_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW))
 
-
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
@@ -63,7 +62,9 @@ void		ev_view_normal_size	(EvView     *view);
 void		ev_view_best_fit	(EvView     *view);
 void		ev_view_fit_width	(EvView     *view);
 
-char* ev_view_get_find_status_message (EvView *view);
+/* Status */
+const char     *ev_view_get_status      (EvView     *view);
+const char     *ev_view_get_find_status (EvView     *view);
 
 G_END_DECLS
 
