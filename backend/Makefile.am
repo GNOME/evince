@@ -19,6 +19,8 @@ libevbackend_la_SOURCES=			\
 	ev-document-thumbnails.h		\
 	ev-document-links.c			\
 	ev-document-links.h			\
+	ev-document-security.c			\
+	ev-document-security.h			\
 	ev-document-find.c			\
 	ev-document-find.h			\
 	ev-ps-exporter.c			\

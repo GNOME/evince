@@ -26,6 +26,7 @@
 #include "gpdf-g-switch.h"
 #include "ev-document-links.h"
 #include "ev-document-misc.h"
+#include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 
 #include "GlobalParams.h"
@@ -33,6 +34,7 @@
 #include "SplashBitmap.h"
 #include "PDFDoc.h"
 #include "Outline.h"
+#include "ErrorCodes.h"
 #include "UnicodeMap.h"
 #include "GlobalParams.h"
 #include "GfxState.h"
@@ -87,18 +89,21 @@ struct _PdfDocument
 	Links *links;
 	UnicodeMap *umap;
 
+	gchar *password;
 	gboolean page_valid;
 
 	PdfDocumentSearch *search;
 };
 
-static void pdf_document_document_links_iface_init      (EvDocumentLinksIface  *iface);
+static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
-static void pdf_document_ps_exporter_iface_init (EvPSExporterIface   *iface);
-static void pdf_document_find_iface_init        (EvDocumentFindIface *iface);
-static void pdf_document_search_free            (PdfDocumentSearch   *search);
-static void pdf_document_search_page_changed    (PdfDocumentSearch   *search);
+static void pdf_document_ps_exporter_iface_init         (EvPSExporterIface         *iface);
+static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
+static void pdf_document_security_iface_init            (EvDocumentSecurityIface   *iface);
+static void pdf_document_search_free                    (PdfDocumentSearch         *search);
+static void pdf_document_search_page_changed            (PdfDocumentSearch         *search);
+
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
@@ -112,6 +117,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_ps_exporter_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 							pdf_document_find_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
+							pdf_document_security_iface_init);
 			 });
 
 static void
@@ -184,18 +191,27 @@ pdf_document_load (EvDocument  *document,
 	g_free (filename);
 
 	// open the PDF file, assumes ownership of filename_g
-	newDoc = new PDFDoc(filename_g, 0, 0);
+	GString *password = NULL;
+	if (pdf_document->password)
+		password = new GString (pdf_document->password);
+	newDoc = new PDFDoc(filename_g, password, password);
+	if (password)
+		delete password;
 
 	if (!newDoc->isOk()) {
 		err = newDoc->getErrorCode();
 		delete newDoc;
-
-		/* FIXME: Add a real error enum to EvDocument */
-		g_set_error (error, G_FILE_ERROR,
-			     G_FILE_ERROR_FAILED,
-			     "Failed to load document (error %d) '%s'\n",
-			     err,
-			     uri);
+		if (err == errEncrypted) {
+			g_set_error (error, EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_ENCRYPTED,
+				     "Document is encrypted.");
+		} else {
+			g_set_error (error, G_FILE_ERROR,
+				     G_FILE_ERROR_FAILED,
+				     "Failed to load document (error %d) '%s'\n",
+				     err,
+				     uri);
+		}
 
 		return FALSE;
 	}
@@ -660,6 +676,25 @@ pdf_document_search_free (PdfDocumentSearch   *search)
 	g_free (search);
 }
 
+static gboolean
+pdf_document_has_document_security (EvDocumentSecurity *document_security)
+{
+	/* FIXME: do we really need to have this? */
+	return FALSE;
+}
+
+static void
+pdf_document_set_password (EvDocumentSecurity *document_security,
+			   const char         *password)
+{
+	PdfDocument *document = PDF_DOCUMENT (document_security);
+
+	if (document->password)
+		g_free (document->password);
+
+	document->password = g_strdup (password);
+}
+
 static void
 pdf_document_ps_export_begin (EvPSExporter *exporter, const char *filename)
 {
@@ -1082,6 +1117,13 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 }
 
 static void
+pdf_document_security_iface_init (EvDocumentSecurityIface *iface)
+{
+	iface->has_document_security = pdf_document_has_document_security;
+	iface->set_password = pdf_document_set_password;
+}
+
+static void
 pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 {
 	iface->has_document_links = pdf_document_links_has_document_links;
@@ -1285,5 +1327,6 @@ pdf_document_init (PdfDocument *pdf_document)
 	pdf_document->scale = 1.;
 
 	pdf_document->page_valid = FALSE;
+	pdf_document->password = NULL;
 }
 

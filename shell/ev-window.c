@@ -35,8 +35,10 @@
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
+#include "ev-password.h"
 #include "ev-print-job.h"
 #include "ev-document-find.h"
+#include "ev-document-security.h"
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
@@ -45,6 +47,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
 
@@ -105,7 +108,7 @@ const char *
 ev_window_get_attribute (EvWindow *self)
 {
 	g_return_val_if_fail (self != NULL && EV_IS_WINDOW (self), NULL);
-	
+
 	return self->priv->attribute;
 }
 
@@ -149,9 +152,9 @@ ev_window_set_property (GObject *object, guint prop_id, const GValue *value,
 			GParamSpec *param_spec)
 {
 	EvWindow *self;
-	
+
 	self = EV_WINDOW (object);
-	
+
 	switch (prop_id) {
 	case PROP_ATTRIBUTE:
 		ev_window_set_attribute (self, g_value_get_string (value));
@@ -235,7 +238,7 @@ update_action_sensitivity (EvWindow *ev_window)
 		set_action_sensitive (ev_window, "GoPageUp", FALSE);
 		set_action_sensitive (ev_window, "GoLastPage", FALSE);
 	}
-        
+
 	/* Help menu */
 	/* "HelpContents": always sensitive */
 	/* "HelpAbout": always sensitive */
@@ -256,7 +259,7 @@ gboolean
 ev_window_is_empty (const EvWindow *ev_window)
 {
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
-	
+
 	return ev_window->priv->document == NULL;
 }
 
@@ -283,33 +286,33 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 {
 	GSList *formats, *list;
 	gboolean retval = FALSE;
-	
+
 	formats = gdk_pixbuf_get_formats ();
-	
+
 	list = formats;
 	while (list) {
 		GdkPixbufFormat *format = list->data;
 		int i;
 		gchar **mime_types;
-		
+
 		if (gdk_pixbuf_format_is_disabled (format))
 			continue;
 
 		mime_types = gdk_pixbuf_format_get_mime_types (format);
-		
+
 		for (i = 0; mime_types[i] != NULL; i++) {
 			if (strcmp (mime_types[i], mime_type) == 0) {
 				retval = TRUE;
 				break;
 			}
 		}
-		
+
 		if (retval)
 			break;
-		
+
 		list = list->next;
 	}
-	
+
 	g_slist_free (formats);
 
 	return retval;
@@ -347,12 +350,58 @@ update_total_pages (EvWindow *ev_window)
 	ev_page_action_set_total_pages (EV_PAGE_ACTION (action), pages);
 }
 
+/* This function assumes that ev_window just had ev_window->document set.
+ */
+static void
+ev_window_setup_document (EvWindow *ev_window)
+{
+	EvDocument *document;
+	EvHistory *history;
+	EvView *view = EV_VIEW (ev_window->priv->view);
+	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
+	GtkAction *action;
+
+	document = ev_window->priv->document;
+
+	ev_view_set_document (view, document);
+	ev_sidebar_set_document (sidebar, document);
+
+	history = ev_history_new ();
+	ev_view_set_history (view, history);
+	g_object_unref (history);
+
+	action = gtk_action_group_get_action
+		(ev_window->priv->action_group, NAVIGATION_BACK_ACTION);
+	ev_navigation_action_set_history
+		(EV_NAVIGATION_ACTION (action), history);
+
+	action = gtk_action_group_get_action
+		(ev_window->priv->action_group, NAVIGATION_FORWARD_ACTION);
+	ev_navigation_action_set_history
+		(EV_NAVIGATION_ACTION (action), history);
+
+	update_total_pages (ev_window);
+	update_action_sensitivity (ev_window);
+}
+
+
+static gchar *
+ev_window_get_password (GtkWidget *password_dialog)
+{
+	gchar *password = NULL;
+
+	if (gtk_dialog_run (GTK_DIALOG (password_dialog)) == GTK_RESPONSE_OK)
+		password = ev_password_dialog_get_password (password_dialog);
+
+	return password;
+}
+
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
 	EvDocument *document = NULL;
 	char *mime_type;
-	
+
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
 
@@ -366,49 +415,62 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		document = g_object_new (PS_TYPE_DOCUMENT, NULL);
 	else if (mime_type_supported_by_gdk_pixbuf (mime_type))
 		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);
-	
+
 	if (document) {
 		GError *error = NULL;
+		GtkWidget *password_dialog = NULL;
 
 		g_signal_connect_object (G_OBJECT (document),
 					 "notify::title",
 					 G_CALLBACK (update_window_title),
 					 ev_window, 0);
 
-		if (ev_document_load (document, uri, &error)) {
-			EvHistory *history;
-			EvView *view = EV_VIEW (ev_window->priv->view);
-			EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
-			GtkAction *action;
+		/* If we get an error while loading the document, we try to fix
+		 * it and try again. This is an ugly loop that could do with
+		 * some refactoring.*/
+		while (TRUE) {
+			gboolean result;
 
-			if (ev_window->priv->document)
-				g_object_unref (ev_window->priv->document);
-			ev_window->priv->document = document;
+			result = ev_document_load (document, uri, &error);
 
-			ev_view_set_document (view, document);
-			ev_sidebar_set_document (sidebar, document);
+			if (result) {
+				if (ev_window->priv->document)
+					g_object_unref (ev_window->priv->document);
+				ev_window->priv->document = document;
+				ev_window_setup_document (ev_window);
 
-			history = ev_history_new ();
-			ev_view_set_history (view, history);
-			g_object_unref (history);
+				if (password_dialog)
+					gtk_widget_destroy (password_dialog);
+				break;
+			}
 
-			action = gtk_action_group_get_action
-				(ev_window->priv->action_group, NAVIGATION_BACK_ACTION);
-			ev_navigation_action_set_history
-				(EV_NAVIGATION_ACTION (action), history);
-
-			action = gtk_action_group_get_action
-				(ev_window->priv->action_group, NAVIGATION_FORWARD_ACTION);
-			ev_navigation_action_set_history
-				(EV_NAVIGATION_ACTION (action), history);
-
-			update_total_pages (ev_window);
-			update_action_sensitivity (ev_window);
-		} else {
 			g_assert (error != NULL);
+
+			if (error->domain == EV_DOCUMENT_ERROR &&
+			    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+				char *password;
+
+				if (password_dialog == NULL)
+					password_dialog = ev_password_dialog_new (GTK_WIDGET (ev_window), uri);
+				else
+					ev_password_dialog_set_bad_pass (password_dialog);
+				password = ev_window_get_password (password_dialog);
+				if (password) {
+					ev_document_security_set_password (EV_DOCUMENT_SECURITY (document),
+									   password);
+					g_free (password);
+					g_error_free (error);
+					error = NULL;
+					continue;
+				} else {
+					gtk_widget_destroy (password_dialog);
+				}
+			} else {
+				unable_to_load (ev_window, error->message);
+			}
 			g_object_unref (document);
-			unable_to_load (ev_window, error->message);
 			g_error_free (error);
+			break;
 		}
 	} else {
 		char *error_message;
@@ -451,7 +513,7 @@ overwrite_existing_file (GtkWindow *window, const gchar *file_name)
 		GTK_MESSAGE_DIALOG (msgbox),
 		_("Do you want to replace it with the one you are saving?"));
 
-	gtk_dialog_add_button (GTK_DIALOG (msgbox), 
+	gtk_dialog_add_button (GTK_DIALOG (msgbox),
 			       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 
 	gtk_dialog_add_button (GTK_DIALOG (msgbox),
@@ -499,7 +561,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 {
 	GtkWidget *fc;
 	GtkFileFilter *pdf_filter, *all_filter;
-	gchar *uri = NULL; 
+	gchar *uri = NULL;
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -519,7 +581,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	gtk_file_filter_add_pattern (all_filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), all_filter);
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (fc), pdf_filter);
-	
+
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
 	gtk_widget_show (fc);
@@ -528,7 +590,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
 
 /* FIXME
-		if (g_file_test (uri, G_FILE_TEST_EXISTS) &&  
+		if (g_file_test (uri, G_FILE_TEST_EXISTS) &&
 		    !overwrite_existing_file (GTK_WINDOW (fc), uri))
 				continue;
 */
@@ -536,7 +598,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		if (ev_document_save (ev_window->priv->document, uri, NULL))
 			break;
 		else
-			save_error_dialog (GTK_WINDOW (fc), uri);    
+			save_error_dialog (GTK_WINDOW (fc), uri);
 	}
 	gtk_widget_destroy (fc);
 }
@@ -549,20 +611,20 @@ using_postscript_printer (GnomePrintConfig *config)
 
 	driver = gnome_print_config_get (
 		config, (const guchar *)"Settings.Engine.Backend.Driver");
-	
+
 	transport = gnome_print_config_get (
 		config, (const guchar *)"Settings.Transport.Backend");
-	
+
 	if (driver) {
 		if (!strcmp ((const gchar *)driver, "gnome-print-ps"))
 			return TRUE;
-		else 
+		else
 			return FALSE;
 	} else 	if (transport) {
 		if (!strcmp ((const gchar *)transport, "CUPS"))
 			return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
@@ -586,11 +648,11 @@ ev_window_print (EvWindow *ev_window)
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (print_dialog),
 					   GNOME_PRINT_DIALOG_RESPONSE_PREVIEW,
 					   FALSE);
-	
+
 	while (TRUE) {
 		int response;
 		response = gtk_dialog_run (GTK_DIALOG (print_dialog));
-		
+
 		if (response != GNOME_PRINT_DIALOG_RESPONSE_PRINT)
 			break;
 
@@ -599,7 +661,7 @@ ev_window_print (EvWindow *ev_window)
 		 */
 		if (!using_postscript_printer (config)) {
 			GtkWidget *dialog;
-			
+
 			dialog = gtk_message_dialog_new (
 				GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
 				GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
@@ -622,7 +684,7 @@ ev_window_print (EvWindow *ev_window)
 					  NULL);
 		break;
 	}
-				
+
 	gtk_widget_destroy (print_dialog);
 
 	if (print_job != NULL) {
@@ -653,7 +715,7 @@ find_not_supported_dialog (EvWindow   *ev_window)
 	/* If you change this so it isn't modal, be sure you don't
 	 * allow multiple copies of the dialog...
 	 */
-	
+
  	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_ERROR,
@@ -685,9 +747,9 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 	} else {
 		gtk_widget_show (ev_window->priv->find_bar);
 
-		if (ev_window->priv->exit_fullscreen_popup) 
+		if (ev_window->priv->exit_fullscreen_popup)
 			update_fullscreen_popup (ev_window);
-	
+
 		egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
 	}
 }
@@ -711,7 +773,7 @@ update_fullscreen_popup (EvWindow *window)
 
 	if (!popup)
 		return;
-	
+
 	popup_width = popup->requisition.width;
 	popup_height = popup->requisition.height;
 
@@ -726,10 +788,10 @@ update_fullscreen_popup (EvWindow *window)
 		GtkRequisition req;
 
 		gtk_widget_size_request (window->priv->find_bar, &req);
-		
+
 		screen_rect.height -= req.height;
 	}
-	
+
 	if (gtk_widget_get_direction (popup) == GTK_TEXT_DIR_RTL)
 	{
 		gtk_window_move (GTK_WINDOW (popup),
@@ -822,7 +884,7 @@ ev_window_fullscreen (EvWindow *window)
 	main_menu = gtk_ui_manager_get_widget (window->priv->ui_manager, "/MainMenu");
 	gtk_widget_hide (main_menu);
 	gtk_widget_hide (window->priv->statusbar);
-	
+
 	update_fullscreen_popup (window);
 
 	gtk_widget_show (popup);
@@ -832,21 +894,21 @@ static void
 ev_window_unfullscreen (EvWindow *window)
 {
 	GtkWidget *main_menu;
-	
+
 	window->priv->fullscreen_mode = FALSE;
 
 	main_menu = gtk_ui_manager_get_widget (window->priv->ui_manager, "/MainMenu");
 	gtk_widget_show (main_menu);
 	gtk_widget_show (window->priv->statusbar);
-	
+
 	destroy_exit_fullscreen_popup (window);
 }
- 
+
 static void
 ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *ev_window)
 {
 	gboolean fullscreen;
-	
+
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	fullscreen = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
@@ -896,7 +958,7 @@ static gboolean
 ev_window_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *ev_window)
 {
 	gtk_window_unfullscreen (GTK_WINDOW (ev_window));
-	
+
 	return FALSE;
 }
 
@@ -1016,7 +1078,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		N_("Evince is free software; you can redistribute it and/or modify\n"
 		   "it under the terms of the GNU General Public License as published by\n"
 		   "the Free Software Foundation; either version 2 of the License, or\n"
-		   "(at your option) any later version.\n"),		
+		   "(at your option) any later version.\n"),
 		N_("Evince is distributed in the hope that it will be useful,\n"
 		   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
@@ -1098,7 +1160,7 @@ menu_item_select_cb (GtkMenuItem *proxy, EvWindow *ev_window)
 
 	action = g_object_get_data (G_OBJECT (proxy), "gtk-action");
 	g_return_if_fail (action != NULL);
-	
+
 	g_object_get (G_OBJECT (action), "tooltip", &message, NULL);
 	if (message) {
 		gtk_statusbar_push (GTK_STATUSBAR (ev_window->priv->statusbar),
@@ -1226,7 +1288,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	const char *search_string;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
-	
+
 	/* Either the string or case sensitivity could have changed,
 	 * we connect this callback to both. We also connect it
 	 * to ::visible so when the find bar is hidden, we should
@@ -1236,7 +1298,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	case_sensitive = egg_find_bar_get_case_sensitive (find_bar);
 	visible = GTK_WIDGET_VISIBLE (find_bar);
 	search_string = egg_find_bar_get_search_string (find_bar);
-	
+
 #if 0
 	g_printerr ("search for '%s'\n", search_string ? search_string : "(nil)");
 #endif
@@ -1271,7 +1333,7 @@ ev_window_dispose (GObject *object)
 		g_object_unref (priv->action_group);
 		priv->action_group = NULL;
 	}
-	
+
 	G_OBJECT_CLASS (parent_class)->dispose (object);
 }
 
@@ -1348,7 +1410,7 @@ static GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_edit_copy) },
  	{ "EditSelectAll", NULL, N_("Select _All"), "<control>A",
 	  N_("Select the entire page"),
-	  G_CALLBACK (ev_window_cmd_edit_select_all) }, 
+	  G_CALLBACK (ev_window_cmd_edit_select_all) },
         { "EditFind", GTK_STOCK_FIND, N_("_Find"), "<control>F",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
@@ -1385,16 +1447,16 @@ static GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_go_page_down) },
         { "GoFirstPage", GTK_STOCK_GOTO_FIRST, N_("_First Page"), "<control>Home",
           N_("Go to the first page"),
-          G_CALLBACK (ev_window_cmd_go_first_page) },        
+          G_CALLBACK (ev_window_cmd_go_first_page) },
         { "GoLastPage", GTK_STOCK_GOTO_LAST, N_("_Last Page"), "<control>End",
           N_("Go to the last page"),
           G_CALLBACK (ev_window_cmd_go_last_page) },
-        
+
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), NULL,
 	  N_("Display help for the viewer application"),
 	  G_CALLBACK (ev_window_cmd_help_contents) },
-        
+
 	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL,
 	  N_("Display credits for the document viewer creators"),
 	  G_CALLBACK (ev_window_cmd_help_about) },
@@ -1488,7 +1550,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);
 	gtk_widget_show (ev_window->priv->main_box);
-	
+
 	action_group = gtk_action_group_new ("MenuActions");
 	ev_window->priv->action_group = action_group;
 	gtk_action_group_set_translation_domain (action_group, NULL);
@@ -1555,7 +1617,7 @@ ev_window_init (EvWindow *ev_window)
 			     "thumbnails",
 			     _("Thumbnails"),
 			     sidebar_widget);
-	
+
 	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_show (scrolled_window);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
@@ -1595,7 +1657,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
 			  ev_window->priv->find_bar,
 			  FALSE, TRUE, 0);
-	
+
 	/* Connect to find bar signals */
 	g_signal_connect (ev_window->priv->find_bar,
 			  "previous",
@@ -1628,9 +1690,9 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window, "focus_out_event",
 			  G_CALLBACK (ev_window_focus_out_cb),
 			  ev_window);
-	
+
 	/* Give focus to the scrolled window */
 	gtk_widget_grab_focus (scrolled_window);
-	
+
 	update_action_sensitivity (ev_window);
-} 
+}

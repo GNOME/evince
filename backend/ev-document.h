@@ -40,6 +40,14 @@ G_BEGIN_DECLS
 typedef struct _EvDocument	EvDocument;
 typedef struct _EvDocumentIface	EvDocumentIface;
 
+#define EV_DOCUMENT_ERROR ev_document_error_quark ()
+
+typedef enum
+{
+	EV_DOCUMENT_ERROR_INVALID,
+	EV_DOCUMENT_ERROR_ENCRYPTED
+} EvDocumentError;
+
 struct _EvDocumentIface
 {
 	GTypeInterface base_iface;
@@ -78,9 +86,12 @@ struct _EvDocumentIface
 					 int           clip_y,
 					 int           clip_width,
 					 int           clip_height);
+
+
 };
 
-GType ev_document_get_type (void);
+GType    ev_document_get_type    (void);
+GQuark   ev_document_error_quark (void);
 
 gboolean ev_document_load            (EvDocument   *document,
 				      const char   *uri,

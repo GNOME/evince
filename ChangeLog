@@ -1,3 +1,38 @@
+Wed Jan 19 01:10:57 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/Makefile.am:
+	* backend/ev-document-links.h:
+	* backend/ev-document-security.c: (ev_document_security_get_type),
+	(ev_document_security_has_document_security),
+	(ev_document_security_set_password):
+	* backend/ev-document-security.h:
+	* backend/ev-document.c: (ev_document_error_quark):
+	* backend/ev-document.h:
+	* data/Makefile.am:
+	* data/evince-password.glade:
+	* pdf/xpdf/pdf-document.cc:
+	* shell/Makefile.am:
+	* shell/ev-password.c: (ev_password_set_bad_password_label),
+	(ev_window_password_entry_changed_cb), (ev_password_dialog_new),
+	(ev_password_dialog_get_password),
+	(ev_password_dialog_set_bad_pass):
+	* shell/ev-password.h:
+	* shell/ev-window.c: (ev_window_get_attribute),
+	(ev_window_set_property), (update_action_sensitivity),
+	(ev_window_is_empty), (mime_type_supported_by_gdk_pixbuf),
+	(ev_window_setup_document), (ev_window_get_password),
+	(ev_window_open), (ev_window_cmd_save_as),
+	(using_postscript_printer), (ev_window_print),
+	(find_not_supported_dialog), (ev_window_cmd_edit_find),
+	(update_fullscreen_popup), (ev_window_fullscreen),
+	(ev_window_unfullscreen), (ev_window_cmd_view_fullscreen),
+	(ev_window_focus_out_cb), (ev_window_cmd_help_about),
+	(menu_item_select_cb), (find_bar_search_changed_cb),
+	(ev_window_dispose), (ev_window_init):
+
+	Add initial support for password-supported dialogs.  This could be
+	a lot cooler, but it'll do for now.
+
 2005-01-18  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* pdf/xpdf/pdf-document.cc:

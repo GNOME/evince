@@ -29,6 +29,8 @@ evince_SOURCES=				\
 	ev-navigation-action.h		\
 	ev-page-action.c		\
 	ev-page-action.h		\
+	ev-password.h			\
+	ev-password.c			\
 	ev-print-job.c			\
 	ev-print-job.h			\
 	ev-utils.c			\

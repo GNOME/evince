@@ -56,6 +56,16 @@ ev_document_get_type (void)
 	return type;
 }
 
+GQuark
+ev_document_error_quark (void)
+{
+  static GQuark q = 0;
+  if (q == 0)
+    q = g_quark_from_static_string ("ev-document-error-quark");
+
+  return q;
+}
+
 static void
 ev_document_class_init (gpointer g_class)
 {

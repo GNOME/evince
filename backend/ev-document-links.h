@@ -1,5 +1,5 @@
 /* ev-document-links.h
- *  this file is part of evince, a gnome document_links viewer
+ *  this file is part of evince, a gnome document viewer
  * 
  * Copyright (C) 2004 Red Hat, Inc.
  *
