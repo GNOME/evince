@@ -1,3 +1,22 @@
+2005-01-12  Jeff Muizelaar  <jeff@nit.ca>
+
+	* pixbuf/pixbuf-document.c: (pixbuf_document_class_init),
+	(pixbuf_document_set_property), (pixbuf_document_get_property):
+
+	implement get/set properties
+
+2005-01-12  Jeff Muizelaar  <jeff@nit.ca>
+
+	* pdf/xpdf/pdf-document.cc: (pdf_info_dict_get_string):
+	
+	return NULL instead of "Unknown", letting the title get set to
+	the filename when the pdf has no title.
+
+2005-01-11  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* ps/ps-document.c: (ps_document_get_page_count),
+	(ps_document_goto_page):
+
 2005-01-11  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* shell/ev-history.c: (ev_history_get_property),

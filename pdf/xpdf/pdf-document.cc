@@ -916,7 +916,7 @@ pdf_info_dict_get_string (Dict *info_dict, const gchar *key) {
 
 	if (!info_dict->lookup ((gchar *)key, &obj)->isString ()) {
 		obj.free ();
-		return g_strdup (_("Unknown"));
+		return NULL;
 	}
 
 	value = obj.getString ();

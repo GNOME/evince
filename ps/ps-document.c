@@ -1434,7 +1434,7 @@ ps_document_get_page_count(PSDocument * gs)
     if(gs->structured_doc)
       return gs->doc->numpages;
     else
-      return G_MAXINT;
+      return 1;
   }
   else
     return 0;
@@ -1454,6 +1454,8 @@ ps_document_goto_page(PSDocument * gs, gint page)
   if(page < 0)
     page = 0;
 
+  ps_document_set_page_size(gs, -1, page);
+
   if(gs->structured_doc && gs->doc) {
     if(page >= gs->doc->numpages)
       page = gs->doc->numpages - 1;
@@ -1469,8 +1471,6 @@ ps_document_goto_page(PSDocument * gs, gint page)
       gs->real_orientation = gs->doc->pages[page].orientation;
       gs->changed = TRUE;
     }
-
-    ps_document_set_page_size(gs, -1, page);
 
     gs->changed = FALSE;
 
