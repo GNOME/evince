@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(evince, 0.1.0)
+AC_INIT(evince, 0.1.1)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
