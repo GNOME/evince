@@ -17,6 +17,9 @@
 #include "gtypes.h"
 #include "Object.h"
 
+#ifndef NO_DECRYPTION
+class Decrypt;
+#endif
 class BaseStream;
 
 //------------------------------------------------------------------------
@@ -55,6 +58,9 @@ public:
 
   // Reset stream to beginning.
   virtual void reset() = 0;
+
+  // Close down the stream.
+  virtual void close();
 
   // Get next char from stream.
   virtual int getChar() = 0;
@@ -121,6 +127,17 @@ public:
   virtual int getStart() = 0;
   virtual void moveStart(int delta) = 0;
 
+#ifndef NO_DECRYPTION
+  // Set decryption for this stream.
+  void doDecryption(Guchar *fileKey, int objNum, int objGen);
+#endif
+
+#ifndef NO_DECRYPTION
+protected:
+
+  Decrypt *decrypt;
+#endif
+
 private:
 
   Object dict;
@@ -137,6 +154,7 @@ public:
 
   FilterStream(Stream *str);
   virtual ~FilterStream();
+  virtual void close();
   virtual int getPos() { return str->getPos(); }
   virtual void setPos(int pos);
   virtual BaseStream *getBaseStream() { return str->getBaseStream(); }
@@ -219,6 +237,8 @@ private:
 // FileStream
 //------------------------------------------------------------------------
 
+#define fileStreamBufSize 256
+
 class FileStream: public BaseStream {
 public:
 
@@ -227,6 +247,7 @@ public:
   virtual Stream *makeSubStream(int start, int length, Object *dict);
   virtual StreamKind getKind() { return strFile; }
   virtual void reset();
+  virtual void close();
   virtual int getChar()
     { return (bufPtr >= bufEnd && !fillBuf()) ? EOF : (*bufPtr++ & 0xff); }
   virtual int lookChar()
@@ -244,7 +265,7 @@ private:
   FILE *f;
   int start;
   int length;
-  char buf[256];
+  char buf[fileStreamBufSize];
   char *bufPtr;
   char *bufEnd;
   int bufPos;
@@ -352,9 +373,8 @@ private:
 
   StreamPredictor *pred;	// predictor
   int early;			// early parameter
-  char zCmd[256];		// uncompress command
   FILE *zPipe;			// uncompress pipe
-  char *zName;			// .Z file name (in zCmd)
+  GString *zName;		// .Z file name
   int inputBuf;			// input buffer
   int inputBits;		// number of bits in input buffer
   int inCodeBits;		// size of input code
@@ -625,6 +645,7 @@ public:
   ~FixedLengthEncoder();
   virtual StreamKind getKind() { return strWeird; }
   virtual void reset();
+  virtual void close();
   virtual int getChar();
   virtual int lookChar();
   virtual GString *getPSFilter(char *indent) { return NULL; }
@@ -648,6 +669,7 @@ public:
   virtual ~ASCII85Encoder();
   virtual StreamKind getKind() { return strWeird; }
   virtual void reset();
+  virtual void close();
   virtual int getChar()
     { return (bufPtr >= bufEnd && !fillBuf()) ? EOF : (*bufPtr++ & 0xff); }
   virtual int lookChar()
@@ -678,6 +700,7 @@ public:
   virtual ~RunLengthEncoder();
   virtual StreamKind getKind() { return strWeird; }
   virtual void reset();
+  virtual void close();
   virtual int getChar()
     { return (bufPtr >= bufEnd && !fillBuf()) ? EOF : (*bufPtr++ & 0xff); }
   virtual int lookChar()

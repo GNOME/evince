@@ -20,6 +20,8 @@ class GfxState;
 class GfxColorSpace;
 class GfxImageColorMap;
 class Stream;
+class Link;
+class Catalog;
 
 //------------------------------------------------------------------------
 // OutputDev
@@ -64,8 +66,7 @@ public:
   virtual void cvtUserToDev(double ux, double uy, int *dx, int *dy);
 
   //----- link borders
-  virtual void drawLinkBorder(double x1, double y1, double x2, double y2,
-			      double w) {}
+  virtual void drawLink(Link *link, Catalog *catalog) {}
 
   //----- save/restore graphics state
   virtual void saveState(GfxState *state) {}
@@ -83,6 +84,8 @@ public:
   virtual void updateLineWidth(GfxState *state) {}
   virtual void updateFillColor(GfxState *state) {}
   virtual void updateStrokeColor(GfxState *state) {}
+  virtual void updateFillOpacity(GfxState *state) {}
+  virtual void updateStrokeOpacity(GfxState *state) {}
 
   //----- update text state
   virtual void updateFont(GfxState *state) {}
@@ -115,12 +118,18 @@ public:
   virtual void drawString16(GfxState *state, GString *s) {}
 
   //----- image drawing
-  virtual void drawImageMask(GfxState *state, Stream *str,
+  virtual void drawImageMask(GfxState *state, Object *ref, Stream *str,
 			     int width, int height, GBool invert,
 			     GBool inlineImg);
-  virtual void drawImage(GfxState *state, Stream *str, int width,
-			 int height, GfxImageColorMap *colorMap,
+  virtual void drawImage(GfxState *state, Object *ref, Stream *str,
+			 int width, int height, GfxImageColorMap *colorMap,
 			 GBool inlineImg);
+
+#if OPI_SUPPORT
+  //----- OPI functions
+  virtual void opiBegin(GfxState *state, Dict *opiDict);
+  virtual void opiEnd(GfxState *state, Dict *opiDict);
+#endif
 
 private:
 

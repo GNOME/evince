@@ -57,7 +57,7 @@ void OutputDev::updateAll(GfxState *state) {
   updateFont(state);
 }
 
-void OutputDev::drawImageMask(GfxState *state, Stream *str,
+void OutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 			      int width, int height, GBool invert,
 			      GBool inlineImg) {
   int i, j;
@@ -70,8 +70,8 @@ void OutputDev::drawImageMask(GfxState *state, Stream *str,
   }
 }
 
-void OutputDev::drawImage(GfxState *state, Stream *str, int width,
-			  int height, GfxImageColorMap *colorMap,
+void OutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+			  int width, int height, GfxImageColorMap *colorMap,
 			  GBool inlineImg) {
   int i, j;
 
@@ -83,3 +83,11 @@ void OutputDev::drawImage(GfxState *state, Stream *str, int width,
       str->getChar();
   }
 }
+
+#if OPI_SUPPORT
+void OutputDev::opiBegin(GfxState *state, Dict *opiDict) {
+}
+
+void OutputDev::opiEnd(GfxState *state, Dict *opiDict) {
+}
+#endif

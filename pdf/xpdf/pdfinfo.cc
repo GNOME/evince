@@ -25,10 +25,18 @@
 #include "Error.h"
 #include "config.h"
 
-GBool printCommands = gFalse;
+static void printInfoString(Dict *infoDict, char *key, char *fmt);
+static void printInfoDate(Dict *infoDict, char *key, char *fmt);
+
+static char userPassword[33] = "";
+static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
+  {"-upw",    argString,   userPassword,   sizeof(userPassword),
+   "user password (for encrypted files)"},
+  {"-v",      argFlag,     &printVersion,  0,
+   "print copyright and version info"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -39,16 +47,18 @@ static ArgDesc argDesc[] = {
 int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
-  Object info, obj;
-  char *s;
+  GString *userPW;
+  Object info;
   GBool ok;
 
   // parse args
   ok = parseArgs(argDesc, &argc, argv);
-  if (!ok || argc != 2 || printHelp) {
+  if (!ok || argc != 2 || printVersion || printHelp) {
     fprintf(stderr, "pdfinfo version %s\n", xpdfVersion);
     fprintf(stderr, "%s\n", xpdfCopyright);
-    printUsage("pdfinfo", "<PDF-file>", argDesc);
+    if (!printVersion) {
+      printUsage("pdfinfo", "<PDF-file>", argDesc);
+    }
     exit(1);
   }
   fileName = new GString(argv[1]);
@@ -61,45 +71,30 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(fileName);
-  if (!doc->isOk())
+  if (userPassword[0]) {
+    userPW = new GString(userPassword);
+  } else {
+    userPW = NULL;
+  }
+  doc = new PDFDoc(fileName, userPW);
+  if (userPW) {
+    delete userPW;
+  }
+  if (!doc->isOk()) {
     exit(1);
+  }
 
   // print doc info
   doc->getDocInfo(&info);
   if (info.isDict()) {
-    if (info.dictLookup("Title", &obj)->isString())
-      printf("Title:        %s\n", obj.getString()->getCString());
-    obj.free();
-    if (info.dictLookup("Subject", &obj)->isString())
-      printf("Subject:      %s\n", obj.getString()->getCString());
-    obj.free();
-    if (info.dictLookup("Keywords", &obj)->isString())
-      printf("Keywords:     %s\n", obj.getString()->getCString());
-    obj.free();
-    if (info.dictLookup("Author", &obj)->isString())
-      printf("Author:       %s\n", obj.getString()->getCString());
-    obj.free();
-    if (info.dictLookup("Creator", &obj)->isString())
-      printf("Creator:      %s\n", obj.getString()->getCString());
-    obj.free();
-    if (info.dictLookup("Producer", &obj)->isString())
-      printf("Producer:     %s\n", obj.getString()->getCString());
-    obj.free();
-    if (info.dictLookup("CreationDate", &obj)->isString()) {
-      s = obj.getString()->getCString();
-      if (s[0] == 'D' && s[1] == ':')
-	s += 2;
-      printf("CreationDate: %s\n", s);
-    }
-    obj.free();
-    if (info.dictLookup("ModDate", &obj)->isString()) {
-      s = obj.getString()->getCString();
-      if (s[0] == 'D' && s[1] == ':')
-	s += 2;
-      printf("ModDate:      %s\n", s);
-    }
-    obj.free();
+    printInfoString(info.getDict(), "Title",        "Title:        %s\n");
+    printInfoString(info.getDict(), "Subject",      "Subject:      %s\n");
+    printInfoString(info.getDict(), "Keywords",     "Keywords:     %s\n");
+    printInfoString(info.getDict(), "Author",       "Author:       %s\n");
+    printInfoString(info.getDict(), "Creator",      "Creator:      %s\n");
+    printInfoString(info.getDict(), "Producer",     "Producer:     %s\n");
+    printInfoDate(info.getDict(),   "CreationDate", "CreationDate: %s\n");
+    printInfoDate(info.getDict(),   "ModDate",      "ModDate:      %s\n");
   }
   info.free();
 
@@ -109,12 +104,17 @@ int main(int argc, char *argv[]) {
   // print encryption info
   printf("Encrypted:    ");
   if (doc->isEncrypted()) {
-    printf("yes (print:%s copy:%s)\n",
+    printf("yes (print:%s copy:%s change:%s addNotes:%s)\n",
 	   doc->okToPrint() ? "yes" : "no",
-	   doc->okToCopy() ? "yes" : "no");
+	   doc->okToCopy() ? "yes" : "no",
+	   doc->okToChange() ? "yes" : "no",
+	   doc->okToAddNotes() ? "yes" : "no");
   } else {
     printf("no\n");
   }
+
+  // print linearization info
+  printf("Linearized:   %s\n", doc->isLinearized() ? "yes" : "no");
 
   // clean up
   delete doc;
@@ -125,4 +125,46 @@ int main(int argc, char *argv[]) {
   gMemReport(stderr);
 
   return 0;
+}
+
+static void printInfoString(Dict *infoDict, char *key, char *fmt) {
+  Object obj;
+  GString *s1, *s2;
+  int i;
+
+  if (infoDict->lookup(key, &obj)->isString()) {
+    s1 = obj.getString();
+    if ((s1->getChar(0) & 0xff) == 0xfe &&
+	(s1->getChar(1) & 0xff) == 0xff) {
+      s2 = new GString();
+      for (i = 2; i < obj.getString()->getLength(); i += 2) {
+	if (s1->getChar(i) == '\0') {
+	  s2->append(s1->getChar(i+1));
+	} else {
+	  delete s2;
+	  s2 = new GString("<unicode>");
+	  break;
+	}
+      }
+      printf(fmt, s2->getCString());
+      delete s2;
+    } else {
+      printf(fmt, s1->getCString());
+    }
+  }
+  obj.free();
+}
+
+static void printInfoDate(Dict *infoDict, char *key, char *fmt) {
+  Object obj;
+  char *s;
+
+  if (infoDict->lookup(key, &obj)->isString()) {
+    s = obj.getString()->getCString();
+    if (s[0] == 'D' && s[1] == ':') {
+      s += 2;
+    }
+    printf(fmt, s);
+  }
+  obj.free();
 }

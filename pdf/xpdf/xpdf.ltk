@@ -90,11 +90,23 @@ Window(func:makeWindow title:"xpdf" icon:xpdfIcon) {
 }
 
 #------------------------------------------------------------------------
+# full-screen main window
+#------------------------------------------------------------------------
+
+Window(func:makeFullScreenWindow title:"xpdf" icon:xpdfIcon) {
+  Box(x:1 y:1 xfill:1 yfill:1) {
+    ScrollingCanvas(name:"canvas" w:100 h:100)
+  }
+}
+
+#------------------------------------------------------------------------
 # menu for main window
 #------------------------------------------------------------------------
 
-Menu(func:makeMenu title:"xpdf" n:7) {
+Menu(func:makeMenu title:"xpdf" n:8) {
   MenuItem(text:"Open..."      shortcut:"O"     num:menuOpen
+           select:&menuCbk)
+  MenuItem(text:"Reload"       shortcut:"R"     num:menuReload
            select:&menuCbk)
   MenuItem(text:"Save as..."                    num:menuSavePDF
            select:&menuCbk)
@@ -247,7 +259,7 @@ Window(func:makeAboutWindow defWidget:"close" title:"About xpdf") {
         Label(text:"derekn@foolabs.com")
       }
       Box1(bottom:2) {
-        Label(text:["Supports PDF version " pdfVersion "."])
+        Label(text:["Supports PDF version " supportedPDFVersionStr "."])
       }
       Box1(bottom:0) {
         Label(text:"The PDF data structures, operators, and specification")

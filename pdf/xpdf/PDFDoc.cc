@@ -24,6 +24,8 @@
 #include "OutputDev.h"
 #include "Params.h"
 #include "Error.h"
+#include "Lexer.h"
+#include "Parser.h"
 #include "PDFDoc.h"
 
 //------------------------------------------------------------------------
@@ -35,7 +37,7 @@
 // PDFDoc
 //------------------------------------------------------------------------
 
-PDFDoc::PDFDoc(GString *fileName1) {
+PDFDoc::PDFDoc(GString *fileName1, GString *userPassword) {
   Object obj;
   GString *fileName2;
 
@@ -43,6 +45,9 @@ PDFDoc::PDFDoc(GString *fileName1) {
 
   file = NULL;
   str = NULL;
+  xref = NULL;
+  catalog = NULL;
+  links = NULL;
 
   // try to open file
   fileName = fileName1;
@@ -72,29 +77,28 @@ PDFDoc::PDFDoc(GString *fileName1) {
   obj.initNull();
   str = new FileStream(file, 0, -1, &obj);
 
-  ok = setup();
+  ok = setup(userPassword);
 }
 
-PDFDoc::PDFDoc(BaseStream *str) {
+PDFDoc::PDFDoc(BaseStream *str, GString *userPassword) {
   ok = gFalse;
   fileName = NULL;
   file = NULL;
   this->str = str;
-  ok = setup();
-}
-
-GBool PDFDoc::setup() {
-  Object catObj;
-
   xref = NULL;
   catalog = NULL;
   links = NULL;
+  ok = setup(userPassword);
+}
+
+GBool PDFDoc::setup(GString *userPassword) {
+  Object catObj;
 
   // check header
   checkHeader();
 
   // read xref table
-  xref = new XRef(str);
+  xref = new XRef(str, userPassword);
   if (!xref->isOk()) {
     error(-1, "Couldn't read xref table");
     return gFalse;
@@ -138,9 +142,9 @@ PDFDoc::~PDFDoc() {
 void PDFDoc::checkHeader() {
   char hdrBuf[headerSearchSize+1];
   char *p;
-  double version;
   int i;
 
+  pdfVersion = 0;
   for (i = 0; i < headerSearchSize; ++i) {
     hdrBuf[i] = str->getChar();
   }
@@ -156,49 +160,69 @@ void PDFDoc::checkHeader() {
   }
   str->moveStart(i);
   p = strtok(&hdrBuf[i+5], " \t\n\r");
-  version = atof(p);
+  pdfVersion = atof(p);
   if (!(hdrBuf[i+5] >= '0' && hdrBuf[i+5] <= '9') ||
-      version > pdfVersionNum + 0.0001) {
+      pdfVersion > supportedPDFVersionNum + 0.0001) {
     error(-1, "PDF version %s -- xpdf supports version %s"
-	  " (continuing anyway)", p, pdfVersion);
+	  " (continuing anyway)", p, supportedPDFVersionStr);
   }
 }
 
-void PDFDoc::displayPage(OutputDev *out, int page, int zoom, int rotate,
-			 GBool doLinks) {
-  Link *link;
-  double x1, y1, x2, y2;
-  double w;
-  int i;
+void PDFDoc::displayPage(OutputDev *out, int page, double zoom,
+			 int rotate, GBool doLinks) {
+  Page *p;
 
-  if (printCommands)
+  if (printCommands) {
     printf("***** page %d *****\n", page);
-  catalog->getPage(page)->display(out, zoom, rotate);
+  }
+  p = catalog->getPage(page);
   if (doLinks) {
-    if (links)
+    if (links) {
       delete links;
-    getLinks(page);
-    for (i = 0; i < links->getNumLinks(); ++i) {
-      link = links->getLink(i);
-      link->getBorder(&x1, &y1, &x2, &y2, &w);
-      if (w > 0)
-	out->drawLinkBorder(x1, y1, x2, y2, w);
     }
-    out->dump();
+    getLinks(p);
+    p->display(out, zoom, rotate, links, catalog);
+  } else {
+    p->display(out, zoom, rotate, NULL, catalog);
   }
 }
 
 void PDFDoc::displayPages(OutputDev *out, int firstPage, int lastPage,
-			  int zoom, int rotate) {
-  Page *p;
+			  int zoom, int rotate, GBool doLinks) {
   int page;
 
   for (page = firstPage; page <= lastPage; ++page) {
-    if (printCommands)
-      printf("***** page %d *****\n", page);
-    p = catalog->getPage(page);
-    p->display(out, zoom, rotate);
+    displayPage(out, page, zoom, rotate, doLinks);
   }
+}
+
+GBool PDFDoc::isLinearized() {
+  Parser *parser;
+  Object obj1, obj2, obj3, obj4, obj5;
+  GBool lin;
+
+  lin = gFalse;
+  obj1.initNull();
+  parser = new Parser(new Lexer(str->makeSubStream(str->getStart(),
+						   -1, &obj1)));
+  parser->getObj(&obj1);
+  parser->getObj(&obj2);
+  parser->getObj(&obj3);
+  parser->getObj(&obj4);
+  if (obj1.isInt() && obj2.isInt() && obj3.isCmd("obj") &&
+      obj4.isDict()) {
+    obj4.dictLookup("Linearized", &obj5);
+    if (obj5.isNum() && obj5.getNum() > 0) {
+      lin = gTrue;
+    }
+    obj5.free();
+  }
+  obj4.free();
+  obj3.free();
+  obj2.free();
+  obj1.free();
+  delete parser;
+  return lin;
 }
 
 GBool PDFDoc::saveAs(GString *name) {
@@ -213,14 +237,15 @@ GBool PDFDoc::saveAs(GString *name) {
   while ((c = str->getChar()) != EOF) {
     fputc(c, f);
   }
+  str->close();
   fclose(f);
   return gTrue;
 }
 
-void PDFDoc::getLinks(int page) {
+void PDFDoc::getLinks(Page *page) {
   Object obj;
 
-  links = new Links(catalog->getPage(page)->getAnnots(&obj),
-		    catalog->getBaseURI());
+  links = new Links(page->getAnnots(&obj), catalog->getBaseURI());
   obj.free();
 }
+

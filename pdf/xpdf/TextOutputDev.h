@@ -22,6 +22,15 @@ class GfxState;
 class GString;
 
 //------------------------------------------------------------------------
+
+enum TextOutputCharSet {
+  textOutASCII7,
+  textOutLatin1,
+  textOutLatin2,
+  textOutLatin5
+};
+
+//------------------------------------------------------------------------
 // TextString
 //------------------------------------------------------------------------
 
@@ -37,7 +46,7 @@ public:
   // Add a character to the string.
   void addChar(GfxState *state, double x, double y,
 	       double dx, double dy,
-	       Guchar c, GBool useASCII7);
+	       Guchar c, TextOutputCharSet charSet);
 
   // Add a 16-bit character to the string.
   void addChar16(GfxState *state, double x, double y,
@@ -66,7 +75,7 @@ class TextPage {
 public:
 
   // Constructor.
-  TextPage(GBool useASCII7, GBool rawOrder);
+  TextPage(TextOutputCharSet charSet, GBool rawOrder);
 
   // Destructor.
   ~TextPage();
@@ -110,7 +119,7 @@ public:
 
 private:
 
-  GBool useASCII7;		// use 7-bit ASCII?
+  TextOutputCharSet charSet;	// character set
   GBool rawOrder;		// keep strings in content stream order
 
   TextString *curStr;		// currently active string
@@ -118,6 +127,8 @@ private:
   TextString *yxStrings;	// strings in y-major order
   TextString *xyStrings;	// strings in x-major order
   TextString *yxCur1, *yxCur2;	// cursors for yxStrings list
+
+  int nest;			// current nesting level (for Type 3 fonts)
 };
 
 //------------------------------------------------------------------------
@@ -127,13 +138,13 @@ private:
 class TextOutputDev: public OutputDev {
 public:
 
-  // Open a text output file.  If <fileName> is NULL, no file is written
-  // (this is useful, e.g., for searching text).  If <useASCII7> is true,
-  // text is converted to 7-bit ASCII; otherwise, text is converted to
-  // 8-bit ISO Latin-1.  <useASCII7> should also be set for Japanese
-  // (EUC-JP) text.  If <rawOrder> is true, the text is kept in content
-  // stream order.
-  TextOutputDev(char *fileName, GBool useASCII7, GBool rawOrder);
+  // Open a text output file.  If <fileName> is NULL, no file is
+  // written (this is useful, e.g., for searching text).  Text is
+  // converted to the character set specified by <charSet>.  This
+  // should be set to textOutASCII7 for Japanese (EUC-JP) text.  If
+  // <rawOrder> is true, the text is kept in content stream order.
+  TextOutputDev(char *fileName, TextOutputCharSet charSet,
+		GBool rawOrder);
 
   // Destructor.
   virtual ~TextOutputDev();

@@ -20,6 +20,9 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Dict.h"
+#ifndef NO_DECRYPTION
+#include "Decrypt.h"
+#endif
 #include "Error.h"
 #include "XRef.h"
 
@@ -27,6 +30,18 @@
 
 #define xrefSearchSize 1024	// read this many bytes at end of file
 				//   to look for 'startxref'
+
+#ifndef NO_DECRYPTION
+//------------------------------------------------------------------------
+// Permission bits
+//------------------------------------------------------------------------
+
+#define permPrint    (1<<2)
+#define permChange   (1<<3)
+#define permCopy     (1<<4)
+#define permNotes    (1<<5)
+#define defPermFlags 0xfffc
+#endif
 
 //------------------------------------------------------------------------
 // The global xref table
@@ -38,7 +53,7 @@ XRef *xref = NULL;
 // XRef
 //------------------------------------------------------------------------
 
-XRef::XRef(BaseStream *str) {
+XRef::XRef(BaseStream *str, GString *userPassword) {
   XRef *oldXref;
   int pos;
   int i;
@@ -46,6 +61,8 @@ XRef::XRef(BaseStream *str) {
   ok = gTrue;
   size = 0;
   entries = NULL;
+  streamEnds = NULL;
+  streamEndsLen = 0;
 
   // get rid of old xref (otherwise it will try to fetch the Root object
   // in the new document, using the old xref)
@@ -91,7 +108,10 @@ XRef::XRef(BaseStream *str) {
   xref = this;
 
   // check for encryption
-  if (checkEncrypted()) {
+#ifndef NO_DECRYPTION
+  encrypted = gFalse;
+#endif
+  if (checkEncrypted(userPassword)) {
     ok = gFalse;
     xref = oldXref;
     return;
@@ -101,6 +121,9 @@ XRef::XRef(BaseStream *str) {
 XRef::~XRef() {
   gfree(entries);
   trailerDict.free();
+  if (streamEnds) {
+    gfree(streamEnds);
+  }
 }
 
 // Read startxref position, xref table size, and root.  Returns
@@ -131,7 +154,7 @@ int XRef::readTrailer() {
   if (i < 0)
     return 0;
   for (p = &buf[i+9]; isspace(*p); ++p) ;
-  pos = atoi(p);
+  pos = lastXRefPos = atoi(p);
 
   // find trailer dict by looking after first xref table
   // (NB: we can't just use the trailer dict at the end of the file --
@@ -252,6 +275,18 @@ GBool XRef::readXRef(int *pos) {
 	  entries[i].used = gFalse;
 	else
 	  goto err2;
+#if 1 //~
+	//~ PDF files of patents from the IBM Intellectual Property
+	//~ Network have a bug: the xref table claims to start at 1
+	//~ instead of 0.
+	if (i == 1 && first == 1 &&
+	    entries[1].offset == 0 && entries[1].gen == 65535 &&
+	    !entries[1].used) {
+	  i = first = 0;
+	  entries[0] = entries[1];
+	  entries[1].offset = -1;
+	}
+#endif
       }
     }
   }
@@ -294,25 +329,28 @@ GBool XRef::constructXRef() {
   int pos;
   int num, gen;
   int newSize;
+  int streamEndsSize;
   char *p;
   int i;
   GBool gotRoot;
 
   error(0, "PDF file is damaged - attempting to reconstruct xref table...");
   gotRoot = gFalse;
+  streamEndsLen = streamEndsSize = 0;
 
   str->reset();
   while (1) {
     pos = str->getPos();
-    if (!str->getLine(buf, 256))
+    if (!str->getLine(buf, 256)) {
       break;
+    }
     p = buf;
 
     // got trailer dictionary
     if (!strncmp(p, "trailer", 7)) {
       obj.initNull();
       parser = new Parser(new Lexer(
-		      str->makeSubStream(start + pos + 8, -1, &obj)));
+		      str->makeSubStream(start + pos + 7, -1, &obj)));
       if (!trailerDict.isNone())
 	trailerDict.free();
       parser->getObj(&trailerDict);
@@ -368,6 +406,13 @@ GBool XRef::constructXRef() {
 	  }
 	}
       }
+
+    } else if (!strncmp(p, "endstream", 9)) {
+      if (streamEndsLen == streamEndsSize) {
+	streamEndsSize += 64;
+	streamEnds = (int *)grealloc(streamEnds, streamEndsSize * sizeof(int));
+      }
+      streamEnds[streamEndsLen++] = pos;
     }
   }
 
@@ -378,7 +423,57 @@ GBool XRef::constructXRef() {
   return gFalse;
 }
 
-GBool XRef::checkEncrypted() {
+#ifndef NO_DECRYPTION
+GBool XRef::checkEncrypted(GString *userPassword) {
+  Object encrypt, ownerKey, userKey, permissions, fileID, fileID1;
+  GBool encrypted1;
+  GBool ret;
+
+  ret = gFalse;
+
+  permFlags = defPermFlags;
+  trailerDict.dictLookup("Encrypt", &encrypt);
+  if ((encrypted1 = encrypt.isDict())) {
+    ret = gTrue;
+    encrypt.dictLookup("O", &ownerKey);
+    encrypt.dictLookup("U", &userKey);
+    encrypt.dictLookup("P", &permissions);
+    trailerDict.dictLookup("ID", &fileID);
+    if (ownerKey.isString() && ownerKey.getString()->getLength() == 32 &&
+	userKey.isString() && userKey.getString()->getLength() == 32 &&
+	permissions.isInt() &&
+	fileID.isArray()) {
+      permFlags = permissions.getInt();
+      fileID.arrayGet(0, &fileID1);
+      if (fileID1.isString()) {
+	if (Decrypt::makeFileKey(ownerKey.getString(), userKey.getString(),
+				 permFlags, fileID1.getString(),
+				 userPassword, fileKey)) {
+	  ret = gFalse;
+	} else {
+	  error(-1, "Incorrect user password");
+	}
+      } else {
+	error(-1, "Weird encryption info");
+      }
+      fileID1.free();
+    } else {
+      error(-1, "Weird encryption info");
+    }
+    ownerKey.free();
+    userKey.free();
+    permissions.free();
+    fileID.free();
+  }
+  encrypt.free();
+
+  // this flag has to be set *after* we read the O/U/P strings
+  encrypted = encrypted1;
+
+  return ret;
+}
+#else
+GBool XRef::checkEncrypted(GString *userPassword) {
   Object obj;
   GBool encrypted;
 
@@ -392,12 +487,41 @@ GBool XRef::checkEncrypted() {
   obj.free();
   return encrypted;
 }
+#endif
 
 GBool XRef::okToPrint() {
+#ifndef NO_DECRYPTION
+  if (!(permFlags & permPrint)) {
+    return gFalse;
+  }
+#endif
+  return gTrue;
+}
+
+GBool XRef::okToChange() {
+#ifndef NO_DECRYPTION
+  if (!(permFlags & permChange)) {
+    return gFalse;
+  }
+#endif
   return gTrue;
 }
 
 GBool XRef::okToCopy() {
+#ifndef NO_DECRYPTION
+  if (!(permFlags & permCopy)) {
+    return gFalse;
+  }
+#endif
+  return gTrue;
+}
+
+GBool XRef::okToAddNotes() {
+#ifndef NO_DECRYPTION
+  if (!(permFlags & permNotes)) {
+    return gFalse;
+  }
+#endif
   return gTrue;
 }
 
@@ -423,7 +547,11 @@ Object *XRef::fetch(int num, int gen, Object *obj) {
     if (obj1.isInt() && obj1.getInt() == num &&
 	obj2.isInt() && obj2.getInt() == gen &&
 	obj3.isCmd("obj")) {
+#ifndef NO_DECRYPTION
+      parser->getObj(obj, encrypted ? fileKey : (Guchar *)NULL, num, gen);
+#else
       parser->getObj(obj);
+#endif
     } else {
       obj->initNull();
     }
@@ -439,4 +567,26 @@ Object *XRef::fetch(int num, int gen, Object *obj) {
 
 Object *XRef::getDocInfo(Object *obj) {
   return trailerDict.dictLookup("Info", obj);
+}
+
+int XRef::getStreamEnd(int start) {
+  int a, b, m;
+
+  if (streamEndsLen == 0 ||
+      start > streamEnds[streamEndsLen - 1]) {
+    return -1;
+  }
+
+  a = -1;
+  b = streamEndsLen - 1;
+  // invariant: streamEnds[a] < start <= streamEnds[b]
+  while (b - a > 1) {
+    m = (a + b) / 2;
+    if (start <= streamEnds[m]) {
+      b = m;
+    } else {
+      a = m;
+    }
+  }
+  return streamEnds[b];
 }

@@ -33,7 +33,7 @@ class XRef {
 public:
 
   // Constructor.  Read xref table from stream.
-  XRef(BaseStream *str);
+  XRef(BaseStream *str, GString *userPassword);
 
   // Destructor.
   ~XRef();
@@ -42,11 +42,17 @@ public:
   GBool isOk() { return ok; }
 
   // Is the file encrypted?
+#ifndef NO_DECRYPTION
+  GBool isEncrypted() { return encrypted; }
+#else
   GBool isEncrypted() { return gFalse; }
+#endif
 
-  // Are printing and copying allowed?  If not, print an error message.
+  // Check various permissions.
   GBool okToPrint();
+  GBool okToChange();
   GBool okToCopy();
+  GBool okToAddNotes();
 
   // Get catalog object.
   Object *getCatalog(Object *obj) { return fetch(rootNum, rootGen, obj); }
@@ -56,6 +62,20 @@ public:
 
   // Return the document's Info dictionary (if any).
   Object *getDocInfo(Object *obj);
+
+  // Return the number of objects in the xref table.
+  int getNumObjects() { return size; }
+
+  // Return the offset of the last xref table.
+  int getLastXRefPos() { return lastXRefPos; }
+
+  // Return the catalog object reference.
+  int getRootNum() { return rootNum; }
+  int getRootGen() { return rootGen; }
+
+  // Get end position for a stream in a damaged file.
+  // Returns -1 if unknown or file is not damaged.
+  int getStreamEnd(int start);
 
 private:
 
@@ -67,11 +87,20 @@ private:
   int rootNum, rootGen;		// catalog dict
   GBool ok;			// true if xref table is valid
   Object trailerDict;		// trailer dictionary
+  int lastXRefPos;		// offset of last xref table
+  int *streamEnds;		// 'endstream' positions - only used in
+				//   damaged files
+  int streamEndsLen;		// number of valid entries in streamEnds
+#ifndef NO_DECRYPTION
+  GBool encrypted;		// true if file is encrypted
+  int permFlags;		// permission bits
+  Guchar fileKey[16];		// file decryption key
+#endif
 
   int readTrailer();
   GBool readXRef(int *pos);
   GBool constructXRef();
-  GBool checkEncrypted();
+  GBool checkEncrypted(GString *userPassword);
 };
 
 //------------------------------------------------------------------------

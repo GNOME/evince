@@ -29,7 +29,8 @@
 static int firstPage = 1;
 static int lastPage = 0;
 static int resolution = 150;
-GBool printCommands = gFalse;
+static char userPassword[33] = "";
+static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
@@ -39,8 +40,12 @@ static ArgDesc argDesc[] = {
    "last page to print"},
   {"-r",      argInt,      &resolution,    0,
    "resolution, in DPI (default is 150)"},
+  {"-upw",    argString,   userPassword,   sizeof(userPassword),
+   "user password (for encrypted files)"},
   {"-q",      argFlag,     &errQuiet,      0,
    "don't print any messages or errors"},
+  {"-v",      argFlag,     &printVersion,  0,
+   "print copyright and version info"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -52,15 +57,18 @@ int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
   char *pbmRoot;
+  GString *userPW;
   PBMOutputDev *pbmOut;
   GBool ok;
 
   // parse args
   ok = parseArgs(argDesc, &argc, argv);
-  if (!ok || argc != 3 || printHelp) {
+  if (!ok || argc != 3 || printVersion || printHelp) {
     fprintf(stderr, "pdftopbm version %s\n", xpdfVersion);
     fprintf(stderr, "%s\n", xpdfCopyright);
-    printUsage("pdftopbm", "<PDF-file> <PBM-root>", argDesc);
+    if (!printVersion) {
+      printUsage("pdftopbm", "<PDF-file> <PBM-root>", argDesc);
+    }
     exit(1);
   }
   fileName = new GString(argv[1]);
@@ -74,9 +82,18 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(fileName);
-  if (!doc->isOk())
-    exit(1);
+  if (userPassword[0]) {
+    userPW = new GString(userPassword);
+  } else {
+    userPW = NULL;
+  }
+  doc = new PDFDoc(fileName, userPW);
+  if (userPW) {
+    delete userPW;
+  }
+  if (!doc->isOk()) {
+    goto err;
+  }
 
   // get page range
   if (firstPage < 1)
@@ -87,10 +104,11 @@ int main(int argc, char *argv[]) {
   // write PBM files
   rgbCubeSize = 1;
   pbmOut = PBMOutputDev::makePBMOutputDev(NULL, pbmRoot);
-  doc->displayPages(pbmOut, firstPage, lastPage, resolution, 0);
-  delete pbmOut;
+  doc->displayPages(pbmOut, firstPage, lastPage, resolution, 0, gFalse);
+  PBMOutputDev::killPBMOutputDev(pbmOut);
 
   // clean up
+ err:
   delete doc;
   freeParams();
 

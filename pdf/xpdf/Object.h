@@ -115,6 +115,7 @@ public:
   void free();
 
   // Type checking.
+  ObjType getType() { return type; }
   GBool isBool() { return type == objBool; }
   GBool isInt() { return type == objInt; }
   GBool isReal() { return type == objReal; }
@@ -172,6 +173,7 @@ public:
   // Stream accessors.
   GBool streamIs(char *dictType);
   void streamReset();
+  void streamClose();
   int streamGetChar();
   int streamLookChar();
   char *streamGetLine(char *buf, int size);
@@ -273,6 +275,9 @@ inline GBool Object::isStream(char *dictType)
 
 inline void Object::streamReset()
   { stream->reset(); }
+
+inline void Object::streamClose()
+  { stream->close(); }
 
 inline int Object::streamGetChar()
   { return stream->getChar(); }

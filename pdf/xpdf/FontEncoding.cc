@@ -22,12 +22,12 @@
 //------------------------------------------------------------------------
 
 inline int FontEncoding::hash(char *name) {
-  int h;
+  Guint h;
 
-  h = name[0];
-  if (name[1])
-    h = h * 61 + name[1];
-  return h % fontEncHashSize;
+  h = (Guint)name[0] & 0xff;
+  if (h && name[1])
+    h = h * 61 + ((Guint)name[1] & 0xff);
+  return (int)(h % (Guint)fontEncHashSize);
 }
 
 FontEncoding::FontEncoding() {
@@ -64,7 +64,7 @@ FontEncoding::FontEncoding(FontEncoding *fontEnc) {
   freeEnc = gTrue;
   for (i = 0; i < size; ++i) {
     encoding[i] =
-      fontEnc->encoding[i] ? copyString(fontEnc->encoding[i]) : NULL;
+      fontEnc->encoding[i] ? copyString(fontEnc->encoding[i]) : (char *)NULL;
   }
   memcpy(hashTab, fontEnc->hashTab, fontEncHashSize * sizeof(short));
 }

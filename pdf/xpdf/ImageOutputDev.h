@@ -48,11 +48,11 @@ public:
   virtual GBool useDrawChar() { return gFalse; }
 
   //----- image drawing
-  virtual void drawImageMask(GfxState *state, Stream *str,
+  virtual void drawImageMask(GfxState *state, Object *ref, Stream *str,
 			     int width, int height, GBool invert,
 			     GBool inlineImg);
-  virtual void drawImage(GfxState *state, Stream *str, int width,
-			 int height, GfxImageColorMap *colorMap,
+  virtual void drawImage(GfxState *state, Object *ref, Stream *str,
+			 int width, int height, GfxImageColorMap *colorMap,
 			 GBool inlineImg);
 
 private:

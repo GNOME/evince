@@ -29,11 +29,14 @@
 static int firstPage = 1;
 static int lastPage = 0;
 static GBool useASCII7 = gFalse;
+static GBool useLatin2 = gFalse;
+static GBool useLatin5 = gFalse;
 #if JAPANESE_SUPPORT
 static GBool useEUCJP = gFalse;
 #endif
 static GBool rawOrder = gFalse;
-GBool printCommands = gFalse;
+static char userPassword[33] = "";
+static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
@@ -43,14 +46,22 @@ static ArgDesc argDesc[] = {
    "last page to convert"},
   {"-ascii7", argFlag,     &useASCII7,     0,
    "convert to 7-bit ASCII (default is 8-bit ISO Latin-1)"},
+  {"-latin2", argFlag,     &useLatin2,     0,
+   "convert to ISO Latin-2 character set"},
+  {"-latin5", argFlag,     &useLatin5,     0,
+   "convert to ISO Latin-5 character set"},
 #if JAPANESE_SUPPORT
   {"-eucjp",  argFlag,     &useEUCJP,      0,
    "convert Japanese text to EUC-JP"},
 #endif
   {"-raw",    argFlag,     &rawOrder,      0,
    "keep strings in content stream order"},
+  {"-upw",    argString,   userPassword,   sizeof(userPassword),
+   "user password (for encrypted files)"},
   {"-q",      argFlag,     &errQuiet,      0,
    "don't print any messages or errors"},
+  {"-v",      argFlag,     &printVersion,  0,
+   "print copyright and version info"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -62,16 +73,20 @@ int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
   GString *textFileName;
+  GString *userPW;
   TextOutputDev *textOut;
+  TextOutputCharSet charSet;
   GBool ok;
   char *p;
 
   // parse args
   ok = parseArgs(argDesc, &argc, argv);
-  if (!ok || argc < 2 || argc > 3 || printHelp) {
+  if (!ok || argc < 2 || argc > 3 || printVersion || printHelp) {
     fprintf(stderr, "pdftotext version %s\n", xpdfVersion);
     fprintf(stderr, "%s\n", xpdfCopyright);
-    printUsage("pdftotext", "<PDF-file> [<text-file>]", argDesc);
+    if (!printVersion) {
+      printUsage("pdftotext", "<PDF-file> [<text-file>]", argDesc);
+    }
     exit(1);
   }
   fileName = new GString(argv[1]);
@@ -84,15 +99,23 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(fileName);
+  if (userPassword[0]) {
+    userPW = new GString(userPassword);
+  } else {
+    userPW = NULL;
+  }
+  doc = new PDFDoc(fileName, userPW);
+  if (userPW) {
+    delete userPW;
+  }
   if (!doc->isOk()) {
-    goto err1;
+    goto err;
   }
 
   // check for copy permission
   if (!doc->okToCopy()) {
     error(-1, "Copying of text from this document is not allowed.");
-    goto err2;
+    goto err;
   }
 
   // construct text file name
@@ -100,34 +123,45 @@ int main(int argc, char *argv[]) {
     textFileName = new GString(argv[2]);
   } else {
     p = fileName->getCString() + fileName->getLength() - 4;
-    if (!strcmp(p, ".pdf") || !strcmp(p, ".PDF"))
+    if (!strcmp(p, ".pdf") || !strcmp(p, ".PDF")) {
       textFileName = new GString(fileName->getCString(),
 				 fileName->getLength() - 4);
-    else
+    } else {
       textFileName = fileName->copy();
+    }
     textFileName->append(".txt");
   }
 
   // get page range
-  if (firstPage < 1)
+  if (firstPage < 1) {
     firstPage = 1;
-  if (lastPage < 1 || lastPage > doc->getNumPages())
+  }
+  if (lastPage < 1 || lastPage > doc->getNumPages()) {
     lastPage = doc->getNumPages();
+  }
 
   // write text file
 #if JAPANESE_SUPPORT
   useASCII7 |= useEUCJP;
 #endif
-  textOut = new TextOutputDev(textFileName->getCString(), useASCII7, rawOrder);
-  if (textOut->isOk())
-    doc->displayPages(textOut, firstPage, lastPage, 72, 0);
+  charSet = textOutLatin1;
+  if (useASCII7) {
+    charSet = textOutASCII7;
+  } else if (useLatin2) {
+    charSet = textOutLatin2;
+  } else if (useLatin5) {
+    charSet = textOutLatin5;
+  }
+  textOut = new TextOutputDev(textFileName->getCString(), charSet, rawOrder);
+  if (textOut->isOk()) {
+    doc->displayPages(textOut, firstPage, lastPage, 72, 0, gFalse);
+  }
   delete textOut;
 
   // clean up
   delete textFileName;
- err2:
+ err:
   delete doc;
- err1:
   freeParams();
 
   // check for memory leaks

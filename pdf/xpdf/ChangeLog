@@ -1,3 +1,21 @@
+2002-08-05  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* GOutputDev.h: ditto. 
+
+	* GOutputDev.cc: sync with XOutputDev.cc.
+
+	* bonobo-application-x-pdf.cc (printCommands): is in Gfx.cc now
+
+2002-08-04  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* BonoboStream.cc: merge in decryption code from FileStream 0.92
+	(close): new method, from FileStream,
+	(~bonoboStream): use close
+
+	* BonoboStream.h: #define bonoboStreamBufSize as in FileStream
+	0.92, 
+	(bonoboStream): use it.
+
 2001-01-11  Michael Meeks  <michael@helixcode.com>
 
 	* gpdf.cc (container_launch_component): don't add the client

@@ -22,10 +22,16 @@
 class PBMOutputDev: public XOutputDev {
 public:
 
+  // NB: Users must use makePBMOutputDev and killPBMOutputDev rather
+  // than the constructor and destructor.  (This is due to some
+  // constraints in the underlying XOutputDev object.)
+
   static PBMOutputDev *makePBMOutputDev(char *displayName,
 					char *fileRoot1);
 
-  ~PBMOutputDev();
+  static void killPBMOutputDev(PBMOutputDev *out);
+
+  virtual ~PBMOutputDev();
 
   //----- initialization and control
 

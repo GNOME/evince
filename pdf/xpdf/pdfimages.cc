@@ -29,7 +29,8 @@
 static int firstPage = 1;
 static int lastPage = 0;
 static GBool dumpJPEG = gFalse;
-GBool printCommands = gFalse;
+static char userPassword[33] = "";
+static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
@@ -39,8 +40,12 @@ static ArgDesc argDesc[] = {
    "last page to convert"},
   {"-j",      argFlag,     &dumpJPEG,      0,
    "write JPEG images as JPEG files"},
+  {"-upw",    argString,   userPassword,   sizeof(userPassword),
+   "user password (for encrypted files)"},
   {"-q",      argFlag,     &errQuiet,      0,
    "don't print any messages or errors"},
+  {"-v",      argFlag,     &printVersion,  0,
+   "print copyright and version info"},
   {"-h",      argFlag,     &printHelp,     0,
    "print usage information"},
   {"-help",   argFlag,     &printHelp,     0,
@@ -52,15 +57,18 @@ int main(int argc, char *argv[]) {
   PDFDoc *doc;
   GString *fileName;
   char *imgRoot;
+  GString *userPW;
   ImageOutputDev *imgOut;
   GBool ok;
 
   // parse args
   ok = parseArgs(argDesc, &argc, argv);
-  if (!ok || argc != 3 || printHelp) {
+  if (!ok || argc != 3 || printVersion || printHelp) {
     fprintf(stderr, "pdfimages version %s\n", xpdfVersion);
     fprintf(stderr, "%s\n", xpdfCopyright);
-    printUsage("pdfimages", "<PDF-file> <image-root>", argDesc);
+    if (!printVersion) {
+      printUsage("pdfimages", "<PDF-file> <image-root>", argDesc);
+    }
     exit(1);
   }
   fileName = new GString(argv[1]);
@@ -74,15 +82,23 @@ int main(int argc, char *argv[]) {
 
   // open PDF file
   xref = NULL;
-  doc = new PDFDoc(fileName);
+  if (userPassword[0]) {
+    userPW = new GString(userPassword);
+  } else {
+    userPW = NULL;
+  }
+  doc = new PDFDoc(fileName, userPW);
+  if (userPW) {
+    delete userPW;
+  }
   if (!doc->isOk()) {
-    goto err1;
+    goto err;
   }
 
   // check for copy permission
   if (!doc->okToCopy()) {
     error(-1, "Copying of images from this document is not allowed.");
-    goto err2;
+    goto err;
   }
 
   // get page range
@@ -94,13 +110,12 @@ int main(int argc, char *argv[]) {
   // write image files
   imgOut = new ImageOutputDev(imgRoot, dumpJPEG);
   if (imgOut->isOk())
-    doc->displayPages(imgOut, firstPage, lastPage, 72, 0);
+    doc->displayPages(imgOut, firstPage, lastPage, 72, 0, gFalse);
   delete imgOut;
 
   // clean up
- err2:
+ err:
   delete doc;
- err1:
   freeParams();
 
   // check for memory leaks

@@ -22,31 +22,65 @@
 #include "FontEncoding.h"
 #include "TextOutputDev.h"
 
+#ifdef MACOS
+// needed for setting type/creator of MacOS files
+#include "ICSupport.h"
+#endif
+
 #include "TextOutputFontInfo.h"
 
 //------------------------------------------------------------------------
 // Character substitutions
 //------------------------------------------------------------------------
 
-static char *isoLatin1Subst[] = {
-  "L",				// Lslash
-  "OE",				// OE
-  "S",				// Scaron
-  "Y",				// Ydieresis
-  "Z",				// Zcaron
-  "fi", "fl",			// ligatures
-  "ff", "ffi", "ffl",		// ligatures
-  "i",				// dotlessi
-  "l",				// lslash
-  "oe",				// oe
-  "s",				// scaron
-  "z",				// zcaron
-  "*",				// bullet
-  "...",			// ellipsis
-  "-", "-",			// emdash, hyphen
-  "\"", "\"",			// quotedblleft, quotedblright
-  "'",				// quotesingle
-  "TM"				// trademark
+static char *generalSubstNames[] = {
+  "zerooldstyle",
+  "oneoldstyle",
+  "twooldstyle",
+  "threeoldstyle",
+  "fouroldstyle",
+  "fiveoldstyle",
+  "sixoldstyle",
+  "sevenoldstyle",
+  "eightoldstyle",
+  "nineoldstyle",
+  "oldstylezero",
+  "oldstyleone",
+  "oldstyletwo",
+  "oldstylethree",
+  "oldstylefour",
+  "oldstylefive",
+  "oldstylesix",
+  "oldstyleseven",
+  "oldstyleeight",
+  "oldstylenine"
+};
+
+static FontEncoding generalSubstEncoding(generalSubstNames,
+					 sizeof(generalSubstNames) /
+					   sizeof(char *));
+
+static char *generalSubst[] = {
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine"
 };
 
 static char *ascii7Subst[] = {
@@ -93,6 +127,40 @@ static char *ascii7Subst[] = {
   "TM"				// trademark
 };
 
+static char *isoLatin1Subst[] = {
+  "L",				// Lslash
+  "OE",				// OE
+  "S",				// Scaron
+  "Y",				// Ydieresis
+  "Z",				// Zcaron
+  "fi", "fl",			// ligatures
+  "ff", "ffi", "ffl",		// ligatures
+  "i",				// dotlessi
+  "l",				// lslash
+  "oe",				// oe
+  "s",				// scaron
+  "z",				// zcaron
+  "*",				// bullet
+  "...",			// ellipsis
+  "-", "-",			// emdash, hyphen
+  "\"", "\"",			// quotedblleft, quotedblright
+  "'",				// quotesingle
+  "TM"				// trademark
+};
+
+static char *isoLatin2Subst[] = {
+  "fi", "fl",			// ligatures
+  "ff", "ffi", "ffl",		// ligatures
+  "*",				// bullet
+  "...",			// ellipsis
+  "-", "-",			// emdash, hyphen
+  "\"", "\"",			// quotedblleft, quotedblright
+  "'",				// quotesingle
+  "TM"				// trademark
+};
+
+static char **isoLatin5Subst = isoLatin1Subst;
+
 //------------------------------------------------------------------------
 // 16-bit fonts
 //------------------------------------------------------------------------
@@ -101,7 +169,7 @@ static char *ascii7Subst[] = {
 
 // CID 0 .. 96
 static Gushort japan12Map[96] = {
-  0x2120, 0x2120, 0x212a, 0x2149, 0x2174, 0x2170, 0x2173, 0x2175, // 00 .. 07
+  0x2121, 0x2121, 0x212a, 0x2149, 0x2174, 0x2170, 0x2173, 0x2175, // 00 .. 07
   0x2147, 0x214a, 0x214b, 0x2176, 0x215c, 0x2124, 0x213e, 0x2123, // 08 .. 0f
   0x213f, 0x2330, 0x2331, 0x2332, 0x2333, 0x2334, 0x2335, 0x2336, // 10 .. 17
   0x2337, 0x2338, 0x2339, 0x2127, 0x2128, 0x2163, 0x2161, 0x2164, // 18 .. 1f
@@ -159,6 +227,43 @@ static char *japan12Abbrev1[6] = {
 
 #endif
 
+#if CHINESE_CNS_SUPPORT
+
+static Gushort cns13Map1[99] = {
+  // 0-98
+  0,      0xa140, 0xa149, 0xa1a8, 0xa1ad, 0xa243, 0xa248, 0xa1ae,
+  0xa1a6, 0xa15d, 0xa15e, 0xa1af, 0xa1cf, 0xa141, 0xa1df, 0xa144,
+  0xa241, 0xa2af, 0xa2b0, 0xa2b1, 0xa2b2, 0xa2b3, 0xa2b4, 0xa2b5,
+  0xa2b6, 0xa2b7, 0xa2b8, 0xa147, 0xa146, 0xa1d5, 0xa1d7, 0xa1d6,
+  0xa148, 0xa249, 0xa2cf, 0xa2d0, 0xa2d1, 0xa2d2, 0xa2d3, 0xa2d4,
+  0xa2d5, 0xa2d6, 0xa2d7, 0xa2d8, 0xa2d9, 0xa2da, 0xa2db, 0xa2dc,
+  0xa2dd, 0xa2de, 0xa2df, 0xa2e0, 0xa2e1, 0xa2e2, 0xa2e3, 0xa2e4,
+  0xa2e5, 0xa2e6, 0xa2e7, 0xa2e8, 0xa165, 0xa242, 0xa166, 0xa173,
+  0xa15a, 0xa1a5, 0xa2e9, 0xa2ea, 0xa2eb, 0xa2ec, 0xa2ed, 0xa2ee,
+  0xa2ef, 0xa2f0, 0xa2f1, 0xa2f2, 0xa2f3, 0xa2f4, 0xa2f5, 0xa2f6,
+  0xa2f7, 0xa2f8, 0xa2f9, 0xa2fa, 0xa2fb, 0xa2fc, 0xa2fd, 0xa2fe,
+  0xa340, 0xa341, 0xa342, 0xa343, 0xa161, 0xa159, 0xa162, 0xa1e3,
+  0,      0,      0xa14b
+};
+
+static Gushort cns13Map2[95] = {
+  // 13648-13742
+          0xa140, 0xa149, 0xa1a8, 0xa1ad, 0xa244, 0xa248, 0xa1ae,
+  0xa1a6, 0xa15d, 0xa15e, 0xa1af, 0xa1cf, 0xa141, 0xa1df, 0xa144,
+  0xa241, 0xa2af, 0xa2b0, 0xa2b1, 0xa2b2, 0xa2b3, 0xa2b4, 0xa2b5,
+  0xa2b6, 0xa2b7, 0xa2b8, 0xa147, 0xa146, 0xa1d5, 0xa1d7, 0xa1d6,
+  0xa148, 0xa249, 0xa2cf, 0xa2d0, 0xa2d1, 0xa2d2, 0xa2d3, 0xa2d4,
+  0xa2d5, 0xa2d6, 0xa2d7, 0xa2d8, 0xa2d9, 0xa2da, 0xa2db, 0xa2dc,
+  0xa2dd, 0xa2de, 0xa2df, 0xa2e0, 0xa2e1, 0xa2e2, 0xa2e3, 0xa2e4,
+  0xa2e5, 0xa2e6, 0xa2e7, 0xa2e8, 0xa165, 0xa242, 0xa166, 0xa173,
+  0xa15a, 0xa1a5, 0xa2e9, 0xa2ea, 0xa2eb, 0xa2ec, 0xa2ed, 0xa2ee,
+  0xa2ef, 0xa2f0, 0xa2f1, 0xa2f2, 0xa2f3, 0xa2f4, 0xa2f5, 0xa2f6,
+  0xa2f7, 0xa2f8, 0xa2f9, 0xa2fa, 0xa2fb, 0xa2fc, 0xa2fd, 0xa2fe,
+  0xa340, 0xa341, 0xa342, 0xa343, 0xa161, 0xa159, 0xa162, 0xa1c3
+};
+
+#endif
+
 //------------------------------------------------------------------------
 // TextString
 //------------------------------------------------------------------------
@@ -186,7 +291,7 @@ TextString::~TextString() {
 
 void TextString::addChar(GfxState *state, double x, double y,
 			 double dx, double dy,
-			 Guchar c, GBool useASCII7) {
+			 Guchar c, TextOutputCharSet charSet) {
   char *charName, *sub;
   int c1;
   int i, j, n, m;
@@ -198,10 +303,23 @@ void TextString::addChar(GfxState *state, double x, double y,
   sub = NULL;
   n = 1;
   if ((charName = state->getFont()->getCharName(c))) {
-    if (useASCII7)
+    if ((c1 = generalSubstEncoding.getCharCode(charName)) >= 0) {
+      charName = generalSubst[c1];
+    }
+    switch (charSet) {
+    case textOutASCII7:
       c1 = ascii7Encoding.getCharCode(charName);
-    else
+      break;
+    case textOutLatin1:
       c1 = isoLatin1Encoding.getCharCode(charName);
+      break;
+    case textOutLatin2:
+      c1 = isoLatin2Encoding.getCharCode(charName);
+      break;
+    case textOutLatin5:
+      c1 = isoLatin5Encoding.getCharCode(charName);
+      break;
+    }
     if (c1 < 0) {
       m = strlen(charName);
       if (hexCodes && m == 3 &&
@@ -209,15 +327,20 @@ void TextString::addChar(GfxState *state, double x, double y,
 	   charName[0] == 'G') &&
 	  isxdigit(charName[1]) && isxdigit(charName[2])) {
 	sscanf(charName+1, "%x", &c1);
+      } else if (hexCodes && m == 2 &&
+		 isxdigit(charName[0]) && isxdigit(charName[1])) {
+	sscanf(charName, "%x", &c1);
       } else if (!hexCodes && m >= 2 && m <= 3 &&
 		 isdigit(charName[0]) && isdigit(charName[1])) {
 	c1 = atoi(charName);
-	if (c1 >= 256)
+	if (c1 >= 256) {
 	  c1 = -1;
-      } else if (!hexCodes && m >= 3 && m <= 5 && isdigit(charName[1])) {
+	}
+      } else if (m >= 3 && m <= 5 && isdigit(charName[1])) {
 	c1 = atoi(charName+1);
-	if (c1 >= 256)
+	if (c1 >= 256) {
 	  c1 = -1;
+	}
       }
       //~ this is a kludge -- is there a standard internal encoding
       //~ used by all/most Type 1 fonts?
@@ -225,26 +348,60 @@ void TextString::addChar(GfxState *state, double x, double y,
 	c1 = 45;
       else if (c1 == 266)	// emdash
 	c1 = 208;
-      if (useASCII7)
-	c1 = ascii7Encoding.getCharCode(isoLatin1Encoding.getCharName(c1));
+      if (c1 >= 0) {
+	charName = isoLatin1Encoding.getCharName(c1);
+	if (charName) {
+	  switch (charSet) {
+	  case textOutASCII7:
+	    c1 = ascii7Encoding.getCharCode(charName);
+	    break;
+	  case textOutLatin1:
+	    // no translation
+	    break;
+	  case textOutLatin2:
+	    c1 = isoLatin2Encoding.getCharCode(charName);
+	    break;
+	  case textOutLatin5:
+	    c1 = isoLatin5Encoding.getCharCode(charName);
+	    break;
+	  }
+	} else {
+	  c1 = -1;
+	}
+      }
     }
-    if (useASCII7) {
-      if (c1 >= 128) {
-	sub = ascii7Subst[c1 - 128];
-	n = strlen(sub);
-      }
-    } else {
-      if (c1 >= 256) {
-	sub = isoLatin1Subst[c1 - 256];
-	n = strlen(sub);
-      }
+    switch (charSet) {
+      case textOutASCII7:
+	if (c1 >= 128) {
+	  sub = ascii7Subst[c1 - 128];
+	  n = strlen(sub);
+	}
+	break;
+      case textOutLatin1:
+	if (c1 >= 256) {
+	  sub = isoLatin1Subst[c1 - 256];
+	  n = strlen(sub);
+	}
+	break;
+      case textOutLatin2:
+	if (c1 >= 256) {
+	  sub = isoLatin2Subst[c1 - 256];
+	  n = strlen(sub);
+	}
+	break;
+      case textOutLatin5:
+	if (c1 >= 256) {
+	  sub = isoLatin5Subst[c1 - 256];
+	  n = strlen(sub);
+	}
+	break;
     }
   } else {
     c1 = -1;
   }
   if (sub)
     text->append(sub);
-  else if (c1 >= 0)
+  else if (c1 >= ' ')
     text->append((char)c1);
   else
     text->append(' ');
@@ -371,15 +528,193 @@ void TextString::addChar16(GfxState *state, double x, double y,
     } else {
       c1 = 0;
     }
+#if 0 //~
+    if (c1 == 0) {
+      error(-1, "Unsupported Adobe-Japan1-2 character: %d", c);
+    }
+#endif
 #endif // JAPANESE_SUPPORT
+    break;
+
+  case font16AdobeGB12:
+#if CHINESE_GB_SUPPORT
+#endif
+    break;
+
+  case font16AdobeCNS13:
+#if CHINESE_CNS_SUPPORT
+    if (c <= 98) {
+      c1 = cns13Map1[c];
+    } else if (c <= 502) {
+      if (c == 247) {
+	c1 = 0xa1f7;
+      } else if (c == 248) {
+	c1 = 0xa1f6;
+      } else {
+	t1 = (c - 99) / 157;
+	t2 = (c - 99) % 157;
+	if (t2 <= 62) {
+	  c1 = 0xa140 + (t1 << 8) + t2;
+	} else {
+	  c1 = 0xa162 + (t1 << 8) + t2;
+	}
+      }
+    } else if (c <= 505) {
+      c1 = 0xa3bd + (c - 503);
+    } else if (c <= 594) {
+      c1 = 0;
+    } else if (c <= 5995) {
+      if (c == 2431) {
+	c1 = 0xacfe;
+      } else if (c == 4308) {
+	c1 = 0xbe52;
+      } else if (c == 5221) {
+	c1 = 0xc2cb;
+      } else if (c == 5495) {
+	c1 = 0xc456;
+      } else if (c == 5550) {
+	c1 = 0xc3ba;
+      } else if (c == 5551) {
+	c1 = 0xc3b9;
+      } else {
+	if (c >= 2007 && c <= 2430) {
+	  t1 = c - 594;
+	} else if (c >= 4309 && c <= 4695) {
+	  t1 = c - 596;
+	} else if (c >= 5222 && c <= 5410) {
+	  t1 = c - 596;
+	} else if (c >= 5496 && c <= 5641) {
+	  t1 = c - 596;
+	} else {
+	  t1 = c - 595;
+	}
+	t2 = t1 % 157;
+	t1 /= 157;
+	if (t2 <= 62) {
+	  c1 = 0xa440 + (t1 << 8) + t2;
+	} else {
+	  c1 = 0xa462 + (t1 << 8) + t2;
+	}
+      }
+    } else if (c <= 13645) {
+      if (c == 6039) {
+	c1 = 0xc9be;
+      } else if (c == 6134) {
+	c1 = 0xcaf7;
+      } else if (c == 8142) {
+	c1 = 0xdadf;
+      } else if (c == 8788) {
+	c1 = 0xd6cc;
+      } else if (c == 8889) {
+	c1 = 0xd77a;
+      } else if (c == 10926) {
+	c1 = 0xebf1;
+      } else if (c == 11073) {
+	c1 = 0xecde;
+      } else if (c == 11361) {
+	c1 = 0xf0cb;
+      } else if (c == 11719) {
+	c1 = 0xf056;
+      } else if (c == 12308) {
+	c1 = 0xeeeb;
+      } else if (c == 12526) {
+	c1 = 0xf4b5;
+      } else if (c == 12640) {
+	c1 = 0xf16b;
+      } else if (c == 12783) {
+	c1 = 0xf268;
+      } else if (c == 12900) {
+	c1 = 0xf663;
+      } else if (c == 13585) {
+	c1 = 0xf9c4;
+      } else if (c == 13641) {
+	c1 = 0xf9c6;
+      } else {
+	if (c >= 6006 && c <= 6038) {
+	  t1 = c - 5995;
+	} else if (c >= 6088 && c <= 6133) {
+	  t1 = c - 5995;
+	} else if (c >= 6302 && c <= 8250) {
+	  t1 = c - 5995;
+	} else if (c >= 8251 && c <= 8888) {
+	  t1 = c - 5994;
+	} else if (c >= 8890 && c <= 9288) {
+	  t1 = c - 5995;
+	} else if (c >= 9289 && c <= 10925) {
+	  t1 = c - 5994;
+	} else if (c >= 10927 && c <= 11072) {
+	  t1 = c - 5995;
+	} else if (c >= 11362 && c <= 11477) {
+	  t1 = c - 5997;
+	} else if (c >= 11615 && c <= 11718) {
+	  t1 = c - 5995;
+	} else if (c >= 11942 && c <= 12139) {
+	  t1 = c - 5995;
+	} else if (c >= 12140 && c <= 12221) {
+	  t1 = c - 5994;
+	} else if (c >= 12222 && c <= 12307) {
+	  t1 = c - 5993;
+	} else if (c >= 12309 && c <= 12316) {
+	  t1 = c - 5994;
+	} else if (c >= 12317 && c <= 12469) {
+	  t1 = c - 5993;
+	} else if (c >= 12470 && c <= 12525) {
+	  t1 = c - 5992;
+	} else if (c >= 12527 && c <= 12639) {
+	  t1 = c - 5993;
+	} else if (c >= 12641 && c <= 12782) {
+	  t1 = c - 5994;
+	} else if (c >= 12784 && c <= 12828) {
+	  t1 = c - 5995;
+	} else if (c >= 12829 && c <= 12899) {
+	  t1 = c - 5994;
+	} else if (c >= 12901 && c <= 13094) {
+	  t1 = c - 5995;
+	} else if (c >= 13095 && c <= 13584) {
+	  t1 = c - 5994;
+	} else if (c >= 13586 && c <= 13628) {
+	  t1 = c - 5995;
+	} else if (c == 13629) {
+	  t1 = c - 5994;
+	} else if (c >= 13630 && c <= 13640) {
+	  t1 = c - 5993;
+	} else if (c >= 13642 && c <= 13645) {
+	  t1 = c - 5994;
+	} else {
+	  t1 = c - 5996;
+	}
+	t2 = t1 % 157;
+	t1 /= 157;
+	if (t2 <= 62) {
+	  c1 = 0xc940 + (t1 << 8) + t2;
+	} else {
+	  c1 = 0xc962 + (t1 << 8) + t2;
+	}
+      }
+    } else if (c == 13646) {
+      c1 = 0xa14b;
+    } else if (c == 13647) {
+      c1 = 0xa1e3;
+    } else if (c <= 13742) {
+      c1 = cns13Map2[c - 13648];
+    } else if (c <= 13746) {
+      c1 = 0xa159 + (c - 13743);
+    } else if (c <= 14055) {
+      c1 = 0;
+    } else if (c <= 14062) {
+      c1 = 0xf9d6 + (c - 14056);
+    }
+#if 1 //~
+    if (c1 == 0) {
+      error(-1, "Unsupported Adobe-CNS1-3 character: %d", c);
+    }
+#endif
+#endif
     break;
   }
 
   // append converted character to string
   if (c1 == 0) {
-#if 0 //~
-    error(-1, "Unsupported Adobe-Japan1-2 character: %d", c);
-#endif
     text->append(' ');
     n = 1;
   } else if (c1 > 0) {
@@ -412,13 +747,14 @@ void TextString::addChar16(GfxState *state, double x, double y,
 // TextPage
 //------------------------------------------------------------------------
 
-TextPage::TextPage(GBool useASCII7, GBool rawOrder) {
-  this->useASCII7 = useASCII7;
+TextPage::TextPage(TextOutputCharSet charSet, GBool rawOrder) {
+  this->charSet = charSet;
   this->rawOrder = rawOrder;
   curStr = NULL;
   yxStrings = NULL;
   xyStrings = NULL;
   yxCur1 = yxCur2 = NULL;
+  nest = 0;
 }
 
 TextPage::~TextPage() {
@@ -426,6 +762,13 @@ TextPage::~TextPage() {
 }
 
 void TextPage::beginString(GfxState *state, GString *s, GBool hexCodes) {
+  // This check is needed because Type 3 characters can contain
+  // text-drawing operations.
+  if (curStr) {
+    ++nest;
+    return;
+  }
+
   curStr = new TextString(state, hexCodes);
 }
 
@@ -447,7 +790,7 @@ void TextPage::addChar(GfxState *state, double x, double y,
     endString();
     beginString(state, NULL, hexCodes);
   }
-  curStr->addChar(state, x1, y1, w1, h1, c, useASCII7);
+  curStr->addChar(state, x1, y1, w1, h1, c, charSet);
 }
 
 void TextPage::addChar16(GfxState *state, double x, double y,
@@ -476,6 +819,11 @@ void TextPage::endString() {
   TextString *p1, *p2;
   double h, y1, y2;
 
+  if (nest > 0) {
+    --nest;
+    return;
+  }
+
   // throw away zero-length strings -- they don't have valid xMin/xMax
   // values, and they're useless anyway
   if (curStr->text->getLength() == 0) {
@@ -483,14 +831,6 @@ void TextPage::endString() {
     curStr = NULL;
     return;
   }
-
-#if 0 //~tmp
-  if (curStr->yMax - curStr->yMin > 20) {
-    delete curStr;
-    curStr = NULL;
-    return;
-  }
-#endif
 
   // insert string in y-major list
   h = curStr->yMax - curStr->yMin;
@@ -540,25 +880,18 @@ void TextPage::coalesce() {
   while (str1 && (str2 = str1->yxNext)) {
     space = str1->yMax - str1->yMin;
     d = str2->xMin - str1->xMax;
-#if 0 //~tmp
-    if (((rawOrder &&
-	  ((str2->yMin >= str1->yMin && str2->yMin <= str1->yMax) ||
-	   (str2->yMax >= str1->yMin && str2->yMax <= str1->yMax))) ||
-	 (!rawOrder && str2->yMin < str1->yMax)) &&
-	d > -0.1 * space && d < 0.2 * space) {
-#else
     if (((rawOrder &&
 	  ((str2->yMin >= str1->yMin && str2->yMin <= str1->yMax) ||
 	   (str2->yMax >= str1->yMin && str2->yMax <= str1->yMax))) ||
 	 (!rawOrder && str2->yMin < str1->yMax)) &&
 	d > -0.5 * space && d < space) {
-#endif
       n = str1->text->getLength();
       if (d > 0.1 * space)
 	str1->text->append(' ');
       str1->text->append(str2->text);
       str1->xRight = (double *)
-	grealloc(str1->xRight, str1->text->getLength() * sizeof(double));
+	grealloc(str1->xRight,
+		 ((str1->text->getLength() + 15) & ~15) * sizeof(double));
       if (d > 0.1 * space)
 	str1->xRight[n++] = str2->xMin;
       for (i = 0; i < str2->text->getLength(); ++i)
@@ -666,7 +999,11 @@ GString *TextPage::getText(double xMin, double yMin,
       }
       if (s->getLength() > 0) {
 	if (x0 < xPrev || str1->yMin > yPrev) {
+#ifdef MACOS
+	  s->append('\r');
+#else
 	  s->append('\n');
+#endif
 	  multiLine = gTrue;
 	} else {
 	  s->append("    ");
@@ -677,8 +1014,13 @@ GString *TextPage::getText(double xMin, double yMin,
       yPrev = str1->yMax;
     }
   }
-  if (multiLine)
+  if (multiLine) {
+#ifdef MACOS
+    s->append('\r');
+#else
     s->append('\n');
+#endif
+  }
   return s;
 }
 
@@ -760,17 +1102,10 @@ void TextPage::dump(FILE *f) {
       yMax = str1->yMax;
 
     // if we've hit the end of the line...
-#if 0 //~
-    if (!(str1->yxNext &&
-	  !(rawOrder && str1->yxNext->yMax < str1->yMin) &&
-	  str1->yxNext->yMin < str1->yMax &&
-	  str1->yxNext->xMin >= str1->xMax)) {
-#else
     if (!(str1->yxNext &&
 	  !(rawOrder && str1->yxNext->yMax < str1->yMin) &&
 	  str1->yxNext->yMin < 0.2*str1->yMin + 0.8*str1->yMax &&
 	  str1->yxNext->xMin >= str1->xMax)) {
-#endif
 
       // print a return
       fputc('\n', f);
@@ -825,7 +1160,8 @@ void TextPage::clear() {
 // TextOutputDev
 //------------------------------------------------------------------------
 
-TextOutputDev::TextOutputDev(char *fileName, GBool useASCII7, GBool rawOrder) {
+TextOutputDev::TextOutputDev(char *fileName, TextOutputCharSet charSet,
+			     GBool rawOrder) {
   text = NULL;
   this->rawOrder = rawOrder;
   ok = gTrue;
@@ -847,14 +1183,19 @@ TextOutputDev::TextOutputDev(char *fileName, GBool useASCII7, GBool rawOrder) {
   }
 
   // set up text object
-  text = new TextPage(useASCII7, rawOrder);
+  text = new TextPage(charSet, rawOrder);
 }
 
 TextOutputDev::~TextOutputDev() {
-  if (needClose)
+  if (needClose) {
+#ifdef MACOS
+    ICS_MapRefNumAndAssign((short)f->handle);
+#endif
     fclose(f);
-  if (text)
+  }
+  if (text) {
     delete text;
+  }
 }
 
 void TextOutputDev::startPage(int pageNum, GfxState *state) {
@@ -884,10 +1225,19 @@ void TextOutputDev::updateFont(GfxState *state) {
 	if ((charName[0] == 'B' || charName[0] == 'C' ||
 	     charName[0] == 'G') &&
 	    strlen(charName) == 3 &&
+	    isxdigit(charName[1]) && isxdigit(charName[2]) &&
 	    ((charName[1] >= 'a' && charName[1] <= 'f') ||
 	     (charName[1] >= 'A' && charName[1] <= 'F') ||
 	     (charName[2] >= 'a' && charName[2] <= 'f') ||
 	     (charName[2] >= 'A' && charName[2] <= 'F'))) {
+	  hexCodes = gTrue;
+	  break;
+	} else if ((strlen(charName) == 2) &&
+		   isxdigit(charName[0]) && isxdigit(charName[1]) &&
+		   ((charName[0] >= 'a' && charName[0] <= 'f') ||
+		    (charName[0] >= 'A' && charName[0] <= 'F') ||
+		    (charName[1] >= 'a' && charName[1] <= 'f') ||
+		    (charName[1] >= 'A' && charName[1] <= 'F'))) {
 	  hexCodes = gTrue;
 	  break;
 	}

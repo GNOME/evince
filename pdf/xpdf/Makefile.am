@@ -26,6 +26,8 @@ common_sources =		\
 	Catalog.cc 		\
 	Catalog.h		\
 	CompactFontInfo.h	\
+	Decrypt.cc		\
+	Decrypt.h		\
 	Dict.cc 		\
 	Dict.h			\
 	Error.cc 		\
@@ -35,6 +37,8 @@ common_sources =		\
 	FontFile.cc		\
 	FontFile.h		\
 	FontInfo.h		\
+	FormWidget.cc		\
+	FormWidget.h		\
 	Gfx.cc 			\
 	Gfx.h			\
 	GfxFont.cc 		\
@@ -101,6 +105,12 @@ bonobo_application_x_pdf_LDADD =	\
 xpdf_SOURCES =			\
 	$(common_sources)	\
 	XOutputDev.cc		\
+	SFont.cc		\
+	SFont.h			\
+	T1Font.cc		\
+	T1Font.h		\
+	TTFont.cc		\
+	TTFont.h		\
 	LTKOutputDev.cc		\
 	PSOutputDev.cc		\
 	PSOutputDev.h		\

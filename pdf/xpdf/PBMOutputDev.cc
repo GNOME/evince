@@ -34,6 +34,7 @@ PBMOutputDev *PBMOutputDev::makePBMOutputDev(char *displayName,
   int screen;
   int invert;
   unsigned long black, white;
+  PBMOutputDev *out;
 
   if (!(display = XOpenDisplay(displayName))) {
     fprintf(stderr, "Couldn't open display '%s'\n", displayName);
@@ -54,8 +55,29 @@ PBMOutputDev *PBMOutputDev::makePBMOutputDev(char *displayName,
 				 0, 0, 1, 1, 0,
 				 black, white);
   pixmap = XCreatePixmap(display, dummyWin, 1, 1, 1);
-  return new PBMOutputDev(display, screen, pixmap, dummyWin,
-			  invert, fileRoot1);
+  out = new PBMOutputDev(display, screen, pixmap, dummyWin,
+			 invert, fileRoot1);
+  out->startDoc();
+  return out;
+}
+
+void PBMOutputDev::killPBMOutputDev(PBMOutputDev *out) {
+  Display *display;
+  Pixmap pixmap;
+  Window dummyWin;
+
+  display = out->display;
+  pixmap = out->pixmap;
+  dummyWin = out->dummyWin;
+
+  delete out;
+
+  // these have to be done *after* the XOutputDev (parent of the
+  // PBMOutputDev) is deleted, since XOutputDev::~XOutputDev() needs
+  // them
+  XFreePixmap(display, pixmap);
+  XDestroyWindow(display, dummyWin);
+  XCloseDisplay(display);
 }
 
 PBMOutputDev::PBMOutputDev(Display *display1, int screen1,
@@ -75,9 +97,6 @@ PBMOutputDev::PBMOutputDev(Display *display1, int screen1,
 }
 
 PBMOutputDev::~PBMOutputDev() {
-  XFreePixmap(display, pixmap);
-  XDestroyWindow(display, dummyWin);
-  XCloseDisplay(display);
   gfree(fileName);
 }
 

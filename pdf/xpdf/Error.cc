@@ -17,9 +17,6 @@
 #include "Params.h"
 #include "Error.h"
 
-// Send error messages to /dev/tty instead of stderr.
-GBool errorsToTTY = gFalse;
-
 FILE *errFile;
 GBool errQuiet;
 
@@ -27,8 +24,7 @@ void errorInit() {
   if (errQuiet) {
     errFile = NULL;
   } else {
-    if (!errorsToTTY || !(errFile = fopen("/dev/tty", "w")))
-      errFile = stderr;
+    errFile = stderr;
   }
 }
 
