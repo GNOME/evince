@@ -84,7 +84,7 @@ update_spin (GtkAction *action, gpointer dummy, GtkWidget *proxy)
 
 	value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin));
 
-	if (value != page->priv->current_page)
+	if (value != page->priv->current_page )
 	{
 		gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin),
 					   page->priv->current_page);
@@ -99,6 +99,14 @@ value_changed_cb (GtkWidget *spin, GtkAction *action)
 	value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin));
 
 	g_signal_emit (action, signals[GOTO_PAGE_SIGNAL], 0, value);
+}
+
+static void
+total_pages_changed_cb (EvPageAction *action, GParamSpec *pspec,
+			GtkSpinButton *spin)
+{
+	gtk_spin_button_set_range (GTK_SPIN_BUTTON (spin), 1, 
+				   action->priv->total_pages);
 }
 
 static GtkWidget *
@@ -118,6 +126,9 @@ create_tool_item (GtkAction *action)
 	g_object_set_data (G_OBJECT (item), "spin", spin);
 	gtk_widget_show (spin);
 
+	g_signal_connect (action, "notify::total-pages",
+			  G_CALLBACK (total_pages_changed_cb),
+			  spin);
 	g_signal_connect (spin, "value_changed",
 			  G_CALLBACK (value_changed_cb),
 			  action);

@@ -1,7 +1,7 @@
 /* this file is part of evince, a gnome document viewer
  *
  *  Copyright (C) 2004 Red Hat, Inc.
- *  Copyright (C) 2004 Anders Carlsson <andersca@gnome.org>
+ *  Copyright (C) 2004, 2005 Anders Carlsson <andersca@gnome.org>
  *
  *  Authors:
  *    Jonathan Blandford <jrb@alum.mit.edu>
@@ -129,17 +129,45 @@ adjustment_changed_cb (GtkAdjustment       *adjustment,
 }
 
 static void
+ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
+				   EvSidebarThumbnails *ev_sidebar_thumbnails)
+{
+	EvSidebarThumbnailsPrivate *priv;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	int page;
+
+	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
+  
+	if (!gtk_tree_selection_get_selected (selection, NULL, &iter))
+		return;
+	
+	path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->list_store),
+					&iter);
+
+	page = gtk_tree_path_get_indices (path)[0] + 1;
+
+	gtk_tree_path_free (path);
+
+	ev_document_set_page (priv->document, page);
+}
+
+static void
 ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	GtkWidget *swindow;
 	EvSidebarThumbnailsPrivate *priv;
 	GtkCellRenderer *renderer;
+	GtkTreeSelection *selection;
 
 	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
-
+	
 	priv->list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_BOOLEAN);
 	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->list_store));
-
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+	g_signal_connect (selection, "changed",
+			  G_CALLBACK (ev_sidebar_tree_selection_changed), ev_sidebar_thumbnails);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
 	renderer = g_object_new (GTK_TYPE_CELL_RENDERER_PIXBUF,
 				 "xpad", 2,
