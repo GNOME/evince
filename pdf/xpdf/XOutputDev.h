@@ -9,7 +9,9 @@
 #ifndef XOUTPUTDEV_H
 #define XOUTPUTDEV_H
 
-#ifdef __GNUC__
+#include <aconf.h>
+
+#ifdef USE_GCC_PRAGMAS
 #pragma interface
 #endif
 
@@ -328,36 +330,45 @@ private:
 #if HAVE_T1LIB_H
 class XOutputT1FontFile {
 public:
-  XOutputT1FontFile(int numA, int genA, GBool substA, T1FontFile *fontFileA)
-    { num = numA; gen = genA; subst = substA; fontFile = fontFileA; }
+  XOutputT1FontFile(int numA, int genA, GBool substA,
+		    T1FontFile *fontFileA, GString *tmpFileNameA)
+    { num = numA; gen = genA; subst = substA;
+      fontFile = fontFileA; tmpFileName = tmpFileNameA; }
   ~XOutputT1FontFile();
   int num, gen;
   GBool subst;
   T1FontFile *fontFile;
+  GString *tmpFileName;
 };
 #endif
 
 #if FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 class XOutputFTFontFile {
 public:
-  XOutputFTFontFile(int numA, int genA, GBool substA, FTFontFile *fontFileA)
-    { num = numA; gen = genA; subst = substA; fontFile = fontFileA; }
+  XOutputFTFontFile(int numA, int genA, GBool substA,
+		    FTFontFile *fontFileA, GString *tmpFileNameA)
+    { num = numA; gen = genA; subst = substA;
+      fontFile = fontFileA; tmpFileName = tmpFileNameA; }
   ~XOutputFTFontFile();
   int num, gen;
   GBool subst;
   FTFontFile *fontFile;
+  GString *tmpFileName;
 };
 #endif
 
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
 class XOutputTTFontFile {
 public:
-  XOutputTTFontFile(int numA, int genA, GBool substA, TTFontFile *fontFileA)
-    { num = numA; gen = genA; subst = substA; fontFile = fontFileA; }
+  XOutputTTFontFile(int numA, int genA, GBool substA,
+		    TTFontFile *fontFileA, GString *tmpFileNameA)
+    { num = numA; gen = genA; subst = substA;
+      fontFile = fontFileA; tmpFileName = tmpFileNameA; }
   ~XOutputTTFontFile();
   int num, gen;
   GBool subst;
   TTFontFile *fontFile;
+  GString *tmpFileName;
 };
 #endif
 
@@ -374,8 +385,8 @@ public:
   ~XOutputFontCache();
 
   // Initialize (or re-initialize) the font cache for a new document.
-  void startDoc(int screenNum, Colormap colormap,
-		GBool trueColor,
+  void startDoc(int screenNum, Visual *visual,
+		Colormap colormap, GBool trueColor,
 		int rMul, int gMul, int bMul,
 		int rShift, int gShift, int bShift,
 		Gulong *colors, int numColors);
@@ -397,7 +408,7 @@ private:
   XOutputFont *tryGetT1Font(XRef *xref, GfxFont *gfxFont,
 			    double m11, double m12, double m21, double m22);
   XOutputFont *tryGetT1FontFromFile(XRef *xref, GString *fileName,
-				    GfxFont *gfxFont,
+				    GBool deleteFile, GfxFont *gfxFont,
 				    double m11Orig, double m12Orig,
 				    double m21Orig, double m22Orig,
 				    double m11, double m12,
@@ -407,7 +418,7 @@ private:
   XOutputFont *tryGetFTFont(XRef *xref, GfxFont *gfxFont,
 			    double m11, double m12, double m21, double m22);
   XOutputFont *tryGetFTFontFromFile(XRef *xref, GString *fileName,
-				    GfxFont *gfxFont,
+				    GBool deleteFile, GfxFont *gfxFont,
 				    double m11Orig, double m12Orig,
 				    double m21Orig, double m22Orig,
 				    double m11, double m12,
@@ -417,7 +428,7 @@ private:
   XOutputFont *tryGetTTFont(XRef *xref, GfxFont *gfxFont,
 			    double m11, double m12, double m21, double m22);
   XOutputFont *tryGetTTFontFromFile(XRef *xref, GString *fileName,
-				    GfxFont *gfxFont,
+				    GBool deleteFile, GfxFont *gfxFont,
 				    double m11Orig, double m12Orig,
 				    double m21Orig, double m22Orig,
 				    double m11, double m12,
@@ -480,10 +491,11 @@ class XOutputDev: public OutputDev {
 public:
 
   // Constructor.
-  XOutputDev(Display *displayA, Pixmap pixmapA, Guint depthA,
-	     Colormap colormapA, GBool reverseVideoA,
-	     unsigned long paperColor, GBool installCmap,
-	     int rgbCubeSize);
+  XOutputDev(Display *displayA, int screenNumA,
+	     Visual *visualA, Colormap colormapA,
+	     GBool reverseVideoA, unsigned long paperColorA,
+	     GBool installCmap, int rgbCubeSize,
+	     int forceDepth = 0);
 
   // Destructor.
   virtual ~XOutputDev();
@@ -583,11 +595,18 @@ public:
 
   GBool isReverseVideo() { return reverseVideo; }
 
-protected:
-
   // Update pixmap ID after a page change.
-  void setPixmap(Pixmap pixmap1, int pixmapW1, int pixmapH1)
-    { pixmap = pixmap1; pixmapW = pixmapW1; pixmapH = pixmapH1; }
+  void setPixmap(Pixmap pixmapA, int pixmapWA, int pixmapHA)
+    { pixmap = pixmapA; pixmapW = pixmapWA; pixmapH = pixmapHA; }
+
+  // Get the off-screen pixmap, its size, various display info.
+  Pixmap getPixmap() { return pixmap; }
+  int getPixmapWidth() { return pixmapW; }
+  int getPixmapHeight() { return pixmapH; }
+  Display *getDisplay() { return display; }
+  Guint getDepth() { return depth; }
+
+  Gulong findColor(GfxRGB *rgb);
 
 private:
 
@@ -597,6 +616,7 @@ private:
   Pixmap pixmap;		// pixmap to draw into
   int pixmapW, pixmapH;		// size of pixmap
   Guint depth;			// pixmap depth
+  Visual *visual;		// X visual
   Colormap colormap;		// X colormap
   int flatness;			// line flatness
   GC paperGC;			// GC for background
@@ -608,6 +628,7 @@ private:
   int rShift, gShift, bShift;	// RGB shifts (for TrueColor)
   Gulong			// color cube
     colors[maxRGBCube * maxRGBCube * maxRGBCube];
+  unsigned long paperColor;	// paper color (pixel value)
   int numColors;		// size of color cube
   double redMap[256];		// map pixel (from color cube) to red value
   GBool reverseVideo;		// reverse video mode
@@ -642,7 +663,6 @@ private:
   void drawType3Glyph(T3FontCache *t3Font,
 		      T3FontCacheTag *tag, Guchar *data,
 		      double x, double y, GfxRGB *color);
-  Gulong findColor(GfxRGB *rgb);
   Gulong findColor(GfxRGB *x, GfxRGB *err);
 };
 

@@ -1,7 +1,6 @@
 
 INCLUDES =							\
 	-I$(top_srcdir)/goo					\
-	-I$(top_srcdir)/ltk					\
 	-DDATADIR=\""$(datadir)"\"            			\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
@@ -67,6 +66,8 @@ common_sources =		\
 	GfxState.h		\
 	GlobalParams.cc		\
 	GlobalParams.h		\
+	JBIG2Stream.cc		\
+	JBIG2Stream.h		\
 	Lexer.cc 		\
 	Lexer.h			\
 	Link.cc 		\
@@ -76,10 +77,14 @@ common_sources =		\
 	NameToUnicodeTable.h	\
 	Object.cc 		\
 	Object.h		\
+	Outline.cc		\
+	Outline.h		\
 	OutputDev.cc 		\
 	OutputDev.h		\
 	PDFDoc.cc 		\
 	PDFDoc.h		\
+	PDFDocEncoding.cc	\
+	PDFDocEncoding.h	\
 	PSTokenizer.cc		\
 	PSTokenizer.h		\
 	Page.cc 		\
@@ -152,8 +157,18 @@ gnome_pdf_viewer_LDADD =		\
 
 xpdf_SOURCES =			\
 	$(common_sources)	\
+	XPDFApp.cc		\
+	XPDFApp.h		\
+	XPDFCore.cc		\
+	XPDFCore.h		\
+	XPDFTree.cc		\
+	XPDFTree.h		\
+	XPDFViewer.cc		\
+	XPDFViewer.h		\
 	XOutputDev.cc		\
-	LTKOutputDev.cc		\
+	XOutputDev.h		\
+	XPixmapOutputDev.cc	\
+	XPixmapOutputDev.h	\
 	PSOutputDev.cc		\
 	PSOutputDev.h		\
 	xpdf.cc
@@ -161,7 +176,6 @@ xpdf_SOURCES =			\
 xpdf_CFLAGS = $(X_CFLAGS)
 xpdf_LDADD = 				\
 	$(top_builddir)/goo/libgoo.a 	\
-	$(top_builddir)/ltk/libltk.a    \
 	-lXpm                           \
 	$(EXTRA_GNOME_LIBS) 		\
 	$(libpaper_LIBS)
@@ -200,11 +214,6 @@ xpdf_LDADD = 				\
 #	pdftopbm.cc
 
 #pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
-
-xpdf-ltk.h: xpdf.ltk
-	rm -f $@
-	$(top_srcdir)/ltk/ltkbuild <xpdf.ltk >$@.new
-	mv $@.new $@
 
 #bitmaps =		
 #	about.xbm		

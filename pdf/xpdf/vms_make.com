@@ -15,19 +15,21 @@ $ if f$search("COMMON.OLB").eqs."" then lib/create common.olb
 $!
 $ COMMON_OBJS = "Annot.obj,Array.obj,BuiltinFont.obj," + - 
                 "BuiltinFontTables.obj,Catalog.obj,CharCodeToUnicode.obj," + - 
-		"CMap.obj,Decrypt.obj,Dict.obj,Error.obj," + -
+                "CMap.obj,Decrypt.obj,Dict.obj,Error.obj," + -
                 "FontEncodingTables.obj,FontFile.obj," + -
                 "Function.obj,Gfx.obj,GfxFont.obj,GfxState.obj,"+ - 
-		"GlobalParams.obj,Lexer.obj," + -
-                "Link.obj,NameToCharCode.obj,Object.obj,OutputDev.obj," + -
-		"Page.obj,Parser.obj,PDFdoc.obj,PSTokenizer.obj," + -
-                "Stream.obj,UnicodeMap.obj,XRef.obj"
+                "GlobalParams.obj,JBIG2Stream.obj,Lexer.obj," + -
+                "Link.obj,NameToCharCode.obj,Object.obj,Outline.obj,"+ -
+                "OutputDev.obj,Page.obj,Parser.obj,PDFdoc.obj," + -
+                "PDFDocEncoding.obj,PSTokenizer.obj,Stream.obj," + -
+                "UnicodeMap.obj,XRef.obj"
 $ COMMON_LIBS = "[]common.olb/lib,[-.goo]libgoo.olb/lib"
 $!
-$ XPDF_OBJS = "xpdf.obj,FTFont.obj,LTKOutputDev.obj,PSOutputDev.obj," + -
+$ XPDF_OBJS = "xpdf.obj,FTFont.obj,PSOutputDev.obj," + -
               "SFont.obj,T1Font.obj,TextOutputDev.obj,TTFont.obj," + -
-              "XOutputDev.obj"
-$ XPDF_LIBS = "[-.ltk]libltk.olb/lib"
+              "XOutputDev.obj,XPDFApp.o,XPDFCore.o,XPDFTree.o," + -
+              "XPDFViewer.o,XPixmapOutputDev.o"
+$ XPDF_LIBS = ""
 $!
 $ PDFTOPS_OBJS   = "pdftops.obj,PSOutputDev.obj" 
 $ PDFTOPS_LIBS   = ""
@@ -47,11 +49,6 @@ $ PDFIMAGES_LIBS = ""
 $!
 $ PDFFONTS_OBJS  = "pdffonts.obj"
 $ PDFFONTS_LIBS  = ""
-$! Build xpdf-ltk.h
-$ close sys$input 
-$ define/user sys$input xpdf.ltk
-$ define/user sys$output xpdf-ltk.h
-$ run [-.ltk]ltkbuild
 $!
 $COMPILE_CXX_LOOP:
 $ file = f$element(i, ",",COMMON_OBJS)

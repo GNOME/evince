@@ -12,6 +12,7 @@
 #pragma implementation
 #endif
 
+#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -1072,7 +1073,11 @@ GBool PostScriptFunction::parseCode(Stream *str, int *codePtr) {
       resizeCode(*codePtr);
       if (isReal) {
 	code[*codePtr].type = psReal;
-	code[*codePtr].real = atof(tok->getCString());
+        {
+          char *theLocale = setlocale(LC_NUMERIC, "C");
+          code[*codePtr].real = atof(tok->getCString());
+          setlocale(LC_NUMERIC, theLocale);
+        }
       } else {
 	code[*codePtr].type = psInt;
 	code[*codePtr].intg = atoi(tok->getCString());
