@@ -42,7 +42,7 @@ Outline::~Outline() {
 //------------------------------------------------------------------------
 
 OutlineItem::OutlineItem(Dict *dict, XRef *xrefA) {
-  Object obj1;
+  Object obj1, obj2;
   GString *s;
   int i;
 
@@ -74,10 +74,10 @@ OutlineItem::OutlineItem(Dict *dict, XRef *xrefA) {
   if (!dict->lookup("Dest", &obj1)->isNull()) {
     action = LinkAction::parseDest(&obj1);
   } else {
-    obj1.free();
-    if (dict->lookup("A", &obj1)) {
-      action = LinkAction::parseAction(&obj1);
-    }
+      obj1.free();
+      dict->lookup("A", &obj1);
+      if (!obj1.isNull())
+        action = LinkAction::parseAction(&obj1);
   }
   obj1.free();
 
