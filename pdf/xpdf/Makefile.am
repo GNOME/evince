@@ -118,6 +118,7 @@ libpdfdocument_la_SOURCES =	\
 
 libpdfdocument_la_LIBADD =                                    	\
 	libxpdf.la                                             	\
+	$(top_builddir)/backend/libevbackend.la			\
 	$(top_builddir)/pdf/goo/libGoo.la                       \
 	$(top_builddir)/pdf/fofi/libfofi.la                     \
 	$(top_builddir)/pdf/splash/libsplash.la
