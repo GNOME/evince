@@ -11,13 +11,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-26 08:50+0100\n"
-"PO-Revision-Date: 2005-01-22 12:19+0100\n"
+"POT-Creation-Date: 2005-01-27 09:08+0100\n"
+"PO-Revision-Date: 2005-01-27 09:08+0100\n"
 "Last-Translator: Frank Arnold <frank@scirocco-5v-turbo.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: data/evince-password.glade.h:1
+msgid "*"
+msgstr "*"
+
+#: data/evince-password.glade.h:2
+msgid "<span size=\"smaller\"> </span>"
+msgstr "<span size=\"smaller\"> </span>"
+
+#: data/evince-password.glade.h:3
+msgid "_Password:"
+msgstr "_Passwort:"
+
+#: data/evince.desktop.in.h:1 shell/ev-window.c:300
+msgid "Document Viewer"
+msgstr "Dokumentenbetrachter"
+
+#: data/evince.desktop.in.h:2 shell/main.c:84
+msgid "Evince Document Viewer"
+msgstr "Evince Dokumentenbetrachter"
+
+#: data/evince.desktop.in.h:3
+msgid "View multipage documents"
+msgstr "Mehrseitige Dokumente anzeigen"
 
 #: ps/gsdefaults.c:68
 msgid "BBox"
@@ -212,10 +236,57 @@ msgstr "Bilder"
 msgid "All Files"
 msgstr "Alle Dateien"
 
+#: shell/ev-history.c:175
+#, c-format
+msgid "Page %d"
+msgstr "Seite %d"
+
 #: shell/ev-page-action.c:72
 #, c-format
 msgid "of %d"
 msgstr "von %d"
+
+#: shell/ev-password-view.c:111
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
+msgstr ""
+"Dieses Dokument ist gesperrt und kann nur nach Eingabe des korrekten "
+"Passworts gelesen werden."
+
+#: shell/ev-password-view.c:120
+msgid "_Unlock Document"
+msgstr "Dokument _freigeben"
+
+#: shell/ev-password.c:88
+msgid "Unable to find glade file"
+msgstr "Glade-Datei wurde nicht gefunden"
+
+#: shell/ev-password.c:90
+#, c-format
+msgid ""
+"The glade file, %s, cannot be found.  Please check that your installation is "
+"complete."
+msgstr ""
+"Die Glade-Datei %s wurde nicht gefunden. Bitte stellen Sie sicher, dass Ihre "
+"Installation vollständig ist."
+
+#: shell/ev-password.c:104
+msgid "Password required"
+msgstr "Passwort erforderlich"
+
+#: shell/ev-password.c:105
+#, c-format
+msgid ""
+"The document <i>%s</i> is locked and requires a password before it can be "
+"opened."
+msgstr ""
+"Das Dokument <i>%s</i> ist gesperrt und benötigt ein Passwort, bevor es "
+"geöffnet werden kann."
+
+#: shell/ev-password.c:142
+msgid "Incorrect password"
+msgstr "Falsches Passwort"
 
 #: shell/ev-view.c:563
 #, c-format
@@ -253,10 +324,6 @@ msgstr "Dokumentenbetrachter - Passwort erforderlich"
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Passwort erforderlich"
-
-#: shell/ev-window.c:300
-msgid "Document Viewer"
-msgstr "Dokumentenbetrachter"
 
 #: shell/ev-window.c:530
 #, c-format
@@ -631,15 +698,6 @@ msgstr "Inhalt"
 #: shell/ev-window.c:1695
 msgid "Thumbnails"
 msgstr "Vorschaubilder"
-
-#: shell/main.c:84
-msgid "Evince Document Viewer"
-msgstr "Evince Dokumentenbetrachter"
-
-#: shell/ev-history.c:175
-#, c-format
-msgid "Page %d"
-msgstr "Seite %d"
 
 #~ msgid "Unknown"
 #~ msgstr "Unbekannt"
