@@ -8,13 +8,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-26 00:49-0500\n"
-"PO-Revision-Date: 2005-01-26 10:30-0400\n"
+"POT-Creation-Date: 2005-01-27 15:54-0500\n"
+"PO-Revision-Date: 2005-01-27 10:30-0400\n"
 "Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
 "Language-Team: Canadian English <adamw@FreeBSD.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: data/evince-password.glade.h:1
+msgid "*"
+msgstr "*"
+
+#: data/evince-password.glade.h:2
+msgid "<span size=\"smaller\"> </span>"
+msgstr "<span size=\"smaller\"> </span>"
+
+#: data/evince-password.glade.h:3
+msgid "_Password:"
+msgstr "_Password:"
+
+#: data/evince.desktop.in.h:1 shell/ev-window.c:285
+msgid "Document Viewer"
+msgstr "Document Viewer"
+
+#: data/evince.desktop.in.h:2 shell/main.c:84
+msgid "Evince Document Viewer"
+msgstr "Evince Document Viewer"
+
+#: data/evince.desktop.in.h:3
+msgid "View multipage documents"
+msgstr "View multipage documents"
 
 #: ps/gsdefaults.c:68
 msgid "BBox"
@@ -197,7 +221,7 @@ msgstr "PostScript and PDF Documents"
 msgid "PostScript Documents"
 msgstr "PostScript Documents"
 
-#: shell/ev-application.c:141 shell/ev-window.c:627
+#: shell/ev-application.c:141 shell/ev-window.c:596
 msgid "PDF Documents"
 msgstr "PDF Documents"
 
@@ -205,7 +229,7 @@ msgstr "PDF Documents"
 msgid "Images"
 msgstr "Images"
 
-#: shell/ev-application.c:151 shell/ev-window.c:632
+#: shell/ev-application.c:151 shell/ev-window.c:601
 msgid "All Files"
 msgstr "All Files"
 
@@ -214,70 +238,108 @@ msgstr "All Files"
 msgid "of %d"
 msgstr "of %d"
 
-#: shell/ev-view.c:563
+#: shell/ev-password-view.c:111
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
+msgstr ""
+"This document is locked and can only be read by entering the correct "
+"password."
+
+#: shell/ev-password-view.c:120
+msgid "_Unlock Document"
+msgstr "_Unlock Document"
+
+#: shell/ev-password.c:88
+msgid "Unable to find glade file"
+msgstr "Unable to find glade file"
+
+#: shell/ev-password.c:90
+#, c-format
+msgid ""
+"The glade file, %s, cannot be found.  Please check that your installation is "
+"complete."
+msgstr ""
+"The glade file, %s, cannot be found.  Please check that your installation is "
+"complete."
+
+#: shell/ev-password.c:104
+msgid "Password required"
+msgstr "Password required"
+
+#: shell/ev-password.c:105
+#, c-format
+msgid ""
+"The document <i>%s</i> is locked and requires a password before it can be "
+"opened."
+msgstr ""
+"The document <i>%s</i> is locked and requires a password before it can be "
+"opened."
+
+#: shell/ev-password.c:142
+msgid "Incorrect password"
+msgstr "Incorrect password"
+
+#: shell/ev-view.c:559
 #, c-format
 msgid "Go to page %d"
 msgstr "Go to page %d"
 
-#: shell/ev-view.c:934
+#: shell/ev-view.c:930
 msgid "Not found"
 msgstr "Not found"
 
-#: shell/ev-view.c:936
+#: shell/ev-view.c:932
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% remaining to search"
 
-#: shell/ev-view.c:941
+#: shell/ev-view.c:937
 #, c-format
 msgid "Found on page %d"
 msgstr "Found on page %d"
 
-#: shell/ev-view.c:944
+#: shell/ev-view.c:940
 #, c-format
 msgid "%d found on this page"
 msgstr "%d found on this page"
 
-#: shell/ev-window.c:222
+#: shell/ev-window.c:207
 msgid "Unable to open document"
 msgstr "Unable to open document"
 
-#: shell/ev-window.c:294
+#: shell/ev-window.c:279
 msgid "Document Viewer - Password Required"
 msgstr "Document Viewer - Password Required"
 
-#: shell/ev-window.c:296
+#: shell/ev-window.c:281
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Password Required"
 
-#: shell/ev-window.c:300
-msgid "Document Viewer"
-msgstr "Document Viewer"
-
-#: shell/ev-window.c:530
+#: shell/ev-window.c:499
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Unhandled MIME type: '%s'"
 
-#: shell/ev-window.c:599
+#: shell/ev-window.c:568
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "The file could not be saved as \"%s\"."
 
-#: shell/ev-window.c:619
+#: shell/ev-window.c:588
 msgid "Save a Copy"
 msgstr "Save a Copy"
 
-#: shell/ev-window.c:697
+#: shell/ev-window.c:666
 msgid "Print"
 msgstr "Print"
 
-#: shell/ev-window.c:720
+#: shell/ev-window.c:689
 msgid "Printing is not supported on this printer."
 msgstr "Printing is not supported on this printer."
 
-#: shell/ev-window.c:723
+#: shell/ev-window.c:692
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -286,27 +348,27 @@ msgstr ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
 "requires a PostScript printer driver."
 
-#: shell/ev-window.c:775
+#: shell/ev-window.c:744
 msgid "The \"Find\" feature will not work with this document"
 msgstr "The \"Find\" feature will not work with this document"
 
-#: shell/ev-window.c:777
+#: shell/ev-window.c:746
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Searching for text is only supported for PDF documents."
 
-#: shell/ev-window.c:924
+#: shell/ev-window.c:893
 msgid "Exit Fullscreen"
 msgstr "Exit Fullscreen"
 
-#: shell/ev-window.c:1146
+#: shell/ev-window.c:1099
 msgid "Many..."
 msgstr "Many..."
 
-#: shell/ev-window.c:1151
+#: shell/ev-window.c:1104
 msgid "Not so many..."
 msgstr "Not so many..."
 
-#: shell/ev-window.c:1156
+#: shell/ev-window.c:1109
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -318,7 +380,7 @@ msgstr ""
 "the Free Software Foundation; either version 2 of the Licence, or\n"
 "(at your option) any later version.\n"
 
-#: shell/ev-window.c:1160
+#: shell/ev-window.c:1113
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -330,7 +392,7 @@ msgstr ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public Licence for more details.\n"
 
-#: shell/ev-window.c:1164
+#: shell/ev-window.c:1117
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -340,293 +402,248 @@ msgstr ""
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: shell/ev-window.c:1186 shell/main.c:80
+#: shell/ev-window.c:1139 shell/main.c:80
 msgid "Evince"
 msgstr "Evince"
 
-#: shell/ev-window.c:1189
+#: shell/ev-window.c:1142
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 The Evince authors"
 
-#: shell/ev-window.c:1192
+#: shell/ev-window.c:1145
 msgid "PostScript and PDF File Viewer."
 msgstr "PostScript and PDF File Viewer."
 
-#: shell/ev-window.c:1195
+#: shell/ev-window.c:1148
 msgid "translator-credits"
 msgstr "Adam Weinberger <adamw@gnome.org>"
 
-#: shell/ev-window.c:1452
+#: shell/ev-window.c:1405
 msgid "_File"
 msgstr "_File"
 
-#: shell/ev-window.c:1453
+#: shell/ev-window.c:1406
 msgid "_Edit"
 msgstr "_Edit"
 
-#: shell/ev-window.c:1454
+#: shell/ev-window.c:1407
 msgid "_View"
 msgstr "_View"
 
-#: shell/ev-window.c:1455
+#: shell/ev-window.c:1408
 msgid "_Go"
 msgstr "_Go"
 
-#: shell/ev-window.c:1456
+#: shell/ev-window.c:1409
 msgid "_Help"
 msgstr "_Help"
 
 #. File menu
-#: shell/ev-window.c:1459
+#: shell/ev-window.c:1412
 msgid "_Open"
 msgstr "_Open"
 
-#: shell/ev-window.c:1460
+#: shell/ev-window.c:1413
 msgid "Open a file"
 msgstr "Open a file"
 
-#: shell/ev-window.c:1462
+#: shell/ev-window.c:1415
 msgid "_Save a Copy..."
 msgstr "_Save a Copy..."
 
-#: shell/ev-window.c:1463
+#: shell/ev-window.c:1416
 msgid "Save the current document with a new filename"
 msgstr "Save the current document with a new filename"
 
-#: shell/ev-window.c:1465
+#: shell/ev-window.c:1418
 msgid "_Print"
 msgstr "_Print"
 
-#: shell/ev-window.c:1466
+#: shell/ev-window.c:1419
 msgid "Print this document"
 msgstr "Print this document"
 
-#: shell/ev-window.c:1468
+#: shell/ev-window.c:1421
 msgid "_Close"
 msgstr "_Close"
 
-#: shell/ev-window.c:1469
+#: shell/ev-window.c:1422
 msgid "Close this window"
 msgstr "Close this window"
 
 #. Edit menu
-#: shell/ev-window.c:1473
+#: shell/ev-window.c:1426
 msgid "_Copy"
 msgstr "_Copy"
 
-#: shell/ev-window.c:1474
+#: shell/ev-window.c:1427
 msgid "Copy text from the document"
 msgstr "Copy text from the document"
 
-#: shell/ev-window.c:1476
+#: shell/ev-window.c:1429
 msgid "Select _All"
 msgstr "Select _All"
 
-#: shell/ev-window.c:1477
+#: shell/ev-window.c:1430
 msgid "Select the entire page"
 msgstr "Select the entire page"
 
-#: shell/ev-window.c:1479
+#: shell/ev-window.c:1432
 msgid "_Find"
 msgstr "_Find"
 
-#: shell/ev-window.c:1480
+#: shell/ev-window.c:1433
 msgid "Find a word or phrase in the document"
 msgstr "Find a word or phrase in the document"
 
 #. View menu
-#: shell/ev-window.c:1484
+#: shell/ev-window.c:1437
 msgid "Zoom _In"
 msgstr "Zoom _In"
 
-#: shell/ev-window.c:1485
+#: shell/ev-window.c:1438
 msgid "Enlarge the document"
 msgstr "Enlarge the document"
 
-#: shell/ev-window.c:1487
+#: shell/ev-window.c:1440
 msgid "Zoom _Out"
 msgstr "Zoom _Out"
 
-#: shell/ev-window.c:1488
+#: shell/ev-window.c:1441
 msgid "Shrink the document"
 msgstr "Shrink the document"
 
-#: shell/ev-window.c:1490
+#: shell/ev-window.c:1443
 msgid "_Normal Size"
 msgstr "_Normal Size"
 
-#: shell/ev-window.c:1491
+#: shell/ev-window.c:1444
 msgid "Zoom to the normal size"
 msgstr "Zoom to the normal size"
 
-#: shell/ev-window.c:1493
+#: shell/ev-window.c:1446
 msgid "_Best Fit"
 msgstr "_Best Fit"
 
-#: shell/ev-window.c:1494
+#: shell/ev-window.c:1447
 msgid "Zoom to fit the document to the current window"
 msgstr "Zoom to fit the document to the current window"
 
-#: shell/ev-window.c:1496
+#: shell/ev-window.c:1449
 msgid "Fit Page _Width"
 msgstr "Fit Page _Width"
 
-#: shell/ev-window.c:1497
+#: shell/ev-window.c:1450
 msgid "Zoom to fit the width of the current window "
 msgstr "Zoom to fit the width of the current window "
 
 #. Go menu
-#: shell/ev-window.c:1501
-msgid "_Back"
-msgstr "_Back"
-
-#: shell/ev-window.c:1502 shell/ev-window.c:1505
-msgid "Go to the page viewed before this one"
-msgstr "Go to the page viewed before this one"
-
-#: shell/ev-window.c:1504
-msgid "Fo_rward"
-msgstr "Fo_rward"
-
-#: shell/ev-window.c:1507
+#: shell/ev-window.c:1454
 msgid "_Page Up"
 msgstr "_Page Up"
 
-#: shell/ev-window.c:1508
+#: shell/ev-window.c:1455
 msgid "Go to the previous page"
 msgstr "Go to the previous page"
 
-#: shell/ev-window.c:1510
+#: shell/ev-window.c:1457
 msgid "_Page Down"
 msgstr "_Page Down"
 
-#: shell/ev-window.c:1511
+#: shell/ev-window.c:1458
 msgid "Go to the next page"
 msgstr "Go to the next page"
 
-#: shell/ev-window.c:1513
+#: shell/ev-window.c:1460
 msgid "_First Page"
 msgstr "_First Page"
 
-#: shell/ev-window.c:1514
+#: shell/ev-window.c:1461
 msgid "Go to the first page"
 msgstr "Go to the first page"
 
-#: shell/ev-window.c:1516
+#: shell/ev-window.c:1463
 msgid "_Last Page"
 msgstr "_Last Page"
 
-#: shell/ev-window.c:1517
+#: shell/ev-window.c:1464
 msgid "Go to the last page"
 msgstr "Go to the last page"
 
 #. Help menu
-#: shell/ev-window.c:1521
+#: shell/ev-window.c:1468
 msgid "_Contents"
 msgstr "_Contents"
 
-#: shell/ev-window.c:1522
+#: shell/ev-window.c:1469
 msgid "Display help for the viewer application"
 msgstr "Display help for the viewer application"
 
-#: shell/ev-window.c:1525
+#: shell/ev-window.c:1472
 msgid "_About"
 msgstr "_About"
 
-#: shell/ev-window.c:1526
+#: shell/ev-window.c:1473
 msgid "Display credits for the document viewer creators"
 msgstr "Display credits for the document viewer creators"
 
 #. View Menu
-#: shell/ev-window.c:1533
+#: shell/ev-window.c:1480
 msgid "_Toolbar"
 msgstr "_Toolbar"
 
-#: shell/ev-window.c:1534
+#: shell/ev-window.c:1481
 msgid "Show or hide toolbar"
 msgstr "Show or hide toolbar"
 
-#: shell/ev-window.c:1536
+#: shell/ev-window.c:1483
 msgid "_Statusbar"
 msgstr "_Statusbar"
 
-#: shell/ev-window.c:1537
+#: shell/ev-window.c:1484
 msgid "Show or hide statusbar"
 msgstr "Show or hide statusbar"
 
-#: shell/ev-window.c:1539
+#: shell/ev-window.c:1486
 msgid "Side_bar"
 msgstr "Side_bar"
 
-#: shell/ev-window.c:1540
+#: shell/ev-window.c:1487
 msgid "Show or hide sidebar"
 msgstr "Show or hide sidebar"
 
-#: shell/ev-window.c:1542
+#: shell/ev-window.c:1489
 msgid "_Fullscreen"
 msgstr "_Fullscreen"
 
-#: shell/ev-window.c:1543
+#: shell/ev-window.c:1490
 msgid "Expand the window to fill the screen"
 msgstr "Expand the window to fill the screen"
 
-#: shell/ev-window.c:1564
-msgid "Back"
-msgstr "Back"
-
-#: shell/ev-window.c:1566
-msgid "Go back"
-msgstr "Go back"
-
-#: shell/ev-window.c:1567
-msgid "Back history"
-msgstr "Back history"
-
-#: shell/ev-window.c:1578
-msgid "Forward"
-msgstr "Forward"
-
-#: shell/ev-window.c:1580
-msgid "Go forward"
-msgstr "Go forward"
-
-#: shell/ev-window.c:1581
-msgid "Forward history"
-msgstr "Forward history"
-
-#: shell/ev-window.c:1591
+#: shell/ev-window.c:1511
 msgid "Page"
 msgstr "Page"
 
-#: shell/ev-window.c:1592
+#: shell/ev-window.c:1512
 msgid "Select Page"
 msgstr "Select Page"
 
-#: shell/ev-window.c:1606
+#: shell/ev-window.c:1526
 msgid "Up"
 msgstr "Up"
 
-#: shell/ev-window.c:1608
+#: shell/ev-window.c:1528
 msgid "Down"
 msgstr "Down"
 
-#: shell/ev-window.c:1610
+#: shell/ev-window.c:1530
 msgid "Fit Width"
 msgstr "Fit Width"
 
-#: shell/ev-window.c:1688
+#: shell/ev-window.c:1608
 msgid "Index"
 msgstr "Index"
 
-#: shell/ev-window.c:1695
+#: shell/ev-window.c:1615
 msgid "Thumbnails"
 msgstr "Thumbnails"
-
-#: shell/main.c:84
-msgid "Evince Document Viewer"
-msgstr "Evince Document Viewer"
-
-#: shell/ev-history.c:175
-#, c-format
-msgid "Page %d"
-msgstr "Page %d"
