@@ -295,10 +295,8 @@ gtk_gs_class_init(GtkGSClass * klass)
 
   /* Create atoms */
   klass->gs_atom = gdk_atom_intern("GHOSTVIEW", FALSE);
-  klass->gs_colors_atom = gdk_atom_intern("GHOSTVIEW_COLORS", FALSE);
   klass->next_atom = gdk_atom_intern("NEXT", FALSE);
   klass->page_atom = gdk_atom_intern("PAGE", FALSE);
-  klass->done_atom = gdk_atom_intern("DONE", FALSE);
   klass->string_atom = gdk_atom_intern("STRING", FALSE);
 
   gtk_gs_defaults_load();

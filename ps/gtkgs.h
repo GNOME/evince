@@ -118,17 +118,11 @@ struct _GtkGS {
 
 struct _GtkGSClass {
   GObjectClass parent_class;
+
   GdkAtom gs_atom;
-  GdkAtom gs_colors_atom;
   GdkAtom next_atom;
   GdkAtom page_atom;
-  GdkAtom done_atom;
   GdkAtom string_atom;
-
-  GConfClient *gconf_client;
-
-  void (*interpreter_message) (GtkGS *, gchar *, gpointer);
-  void (*interpreter_error) (GtkGS *, gint, gpointer);
 };
 
 GType gtk_gs_get_type(void);
