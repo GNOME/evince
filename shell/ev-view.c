@@ -31,6 +31,9 @@
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-debug.h"
+#include "ev-job-queue.h"
+#include "ev-page-cache.h"
+#include "ev-pixbuf-cache.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -92,6 +95,12 @@ struct _EvView {
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
 
+	EvPageCache *page_cache;
+	EvPixbufCache *pixbuf_cache;
+
+	gint current_page;
+	EvJobRender *current_job;
+
 	int find_page;
 	int find_result;
 	int spacing;
@@ -111,11 +120,8 @@ struct _EvViewClass {
 					   GtkScrollType   scroll,
 					   gboolean        horizontal);
 	
-	/* Should this be notify::page? */
-	void	(*page_changed)           (EvView         *view);
 };
 
-static guint page_changed_signal = 0;
 
 static void ev_view_set_scroll_adjustments (EvView         *view,
 					    GtkAdjustment  *hadjustment,
@@ -196,8 +202,6 @@ ev_view_finalize (GObject *object)
 
 	LOG ("Finalize");
 
-	if (view->document)
-		g_object_unref (view->document);
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
@@ -209,6 +213,14 @@ ev_view_destroy (GtkObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
+	if (view->document) {
+		g_object_unref (view->document);
+		view->document = NULL;
+	}
+	if (view->pixbuf_cache) {
+		g_object_unref (view->pixbuf_cache);
+		view->pixbuf_cache = NULL;
+	}
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
   
 	GTK_OBJECT_CLASS (ev_view_parent_class)->destroy (object);
@@ -224,7 +236,11 @@ ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
 
 	g_return_if_fail (EV_IS_DOCUMENT (document));
 
-	ev_document_get_page_size (document, -1, &width, &height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				view->scale,
+				&width, &height);
+
 	ev_document_misc_get_page_border_size (width, height, &border);
 	
 	*x_offset = view->spacing;
@@ -259,6 +275,9 @@ doc_rect_to_view_rect (EvView *view, GdkRectangle *doc_rect, GdkRectangle *view_
 	view_rect->height = doc_rect->height * view->scale;
 }
 
+
+/* Called by size_request to make sure we have appropriate jobs running.
+ */
 static void
 ev_view_size_request (GtkWidget      *widget,
 		      GtkRequisition *requisition)
@@ -276,8 +295,15 @@ ev_view_size_request (GtkWidget      *widget,
 		return;
 	}
 
-	ev_document_get_page_size (view->document, -1,
-				   &width, &height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				view->scale,
+				&width, &height);
+
+	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+					view->current_page,
+					view->current_page,
+					view->scale);
 	ev_document_misc_get_page_border_size (width, height, &border);
 
 	if (view->width >= 0) {
@@ -366,8 +392,6 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_set_background (view->bin_window, &widget->style->mid[widget->state]);
 
 	if (view->document) {
-		ev_document_set_target (view->document, view->bin_window);
-
 		/* We can't get page size without a target, so we have to
 		 * queue a size request at realization. Could be fixed
 		 * with EvDocument changes to allow setting a GdkScreen
@@ -381,9 +405,6 @@ static void
 ev_view_unrealize (GtkWidget *widget)
 {
 	EvView *view = EV_VIEW (widget);
-
-	if (view->document)
-		ev_document_set_target (view->document, NULL);
 
 	gdk_window_set_user_data (view->bin_window, NULL);
 	gdk_window_destroy (view->bin_window);
@@ -442,20 +463,26 @@ static void
 highlight_find_results (EvView *view)
 {
 	EvDocumentFind *find;
-	int i, results;
+	int i, results = 0;
 
 	g_return_if_fail (EV_IS_DOCUMENT_FIND (view->document));
 
 	find = EV_DOCUMENT_FIND (view->document);
 
+#if 0
+	g_mutex_lock (EV_DOC_MUTEX);
 	results = ev_document_find_get_n_results (find);
-
+	g_mutex_unlock (EV_DOC_MUTEX);
+#endif
+	
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
 		guchar alpha;
 
 		alpha = (i == view->find_result) ? 0x90 : 0x20;
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_document_find_get_result (find, i, &rectangle);
+		g_mutex_unlock (EV_DOC_MUTEX);
 		draw_rubberband (GTK_WIDGET (view), view->bin_window,
 				 &rectangle, alpha);
         }
@@ -471,13 +498,18 @@ expose_bin_window (GtkWidget      *widget,
 	gint width, height;
 	GdkRectangle area;
 	int x_offset, y_offset;
+	GdkPixbuf *scaled_image;
+	GdkPixbuf *current_pixbuf;
 
 	if (view->document == NULL)
 		return;
 
 	ev_view_get_offsets (view, &x_offset, &y_offset); 
-	ev_document_get_page_size (view->document, -1,
-				   &width, &height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				view->scale,
+				&width, &height);
+
 	ev_document_misc_get_page_border_size (width, height, &border);
 	
 	/* Paint the frame */
@@ -488,18 +520,34 @@ expose_bin_window (GtkWidget      *widget,
 	ev_document_misc_paint_one_page (view->bin_window, widget, &area, &border);
 
 	/* Render the document itself */
-	ev_document_set_page_offset (view->document,
-				     x_offset + border.left,
-				     y_offset + border.top);
-
 	LOG ("Render area %d %d %d %d - Offset %d %d",
 	     event->area.x, event->area.y,
              event->area.width, event->area.height,
 	     x_offset, y_offset);
 
-	ev_document_render (view->document,
-			    event->area.x, event->area.y,
-			    event->area.width, event->area.height);
+	current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, view->current_page);
+
+	if (current_pixbuf == NULL)
+		scaled_image = NULL;
+	else if (width == gdk_pixbuf_get_width (current_pixbuf) &&
+		 height == gdk_pixbuf_get_height (current_pixbuf))
+		scaled_image = g_object_ref (current_pixbuf);
+	else
+		scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
+							width, height,
+							GDK_INTERP_NEAREST);
+	if (scaled_image) {
+		gdk_draw_pixbuf (view->bin_window,
+				 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
+				 scaled_image,
+				 0, 0,
+				 area.x + border.left,
+				 area.y + border.top,
+				 width, height,
+				 GDK_RGB_DITHER_NORMAL,
+				 0, 0);
+		g_object_unref (scaled_image);
+	}
 
 	if (EV_IS_DOCUMENT_FIND (view->document)) {
 		highlight_find_results (view);
@@ -541,8 +589,12 @@ ev_view_select_all (EvView *ev_view)
 
 	g_return_if_fail (EV_IS_VIEW (ev_view));
 
+
 	ev_view_get_offsets (ev_view, &x_offset, &y_offset);
-	ev_document_get_page_size (ev_view->document, -1, &width, &height);
+	ev_page_cache_get_size (ev_view->page_cache,
+				ev_view->current_page,
+				ev_view->scale,
+				&width, &height);
 	ev_document_misc_get_page_border_size (width, height, &border);
 
 	ev_view->has_selection = TRUE;
@@ -563,7 +615,10 @@ ev_view_copy (EvView *ev_view)
 	char *text;
 
 	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
+	g_mutex_lock (EV_DOC_MUTEX);
 	text = ev_document_get_text (ev_view->document, &selection);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
 					      GDK_SELECTION_CLIPBOARD);
 	gtk_clipboard_set_text (clipboard, text, -1);
@@ -581,7 +636,9 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 	char *text;
 
 	doc_rect_to_view_rect (ev_view, &ev_view->selection, &selection);
+	g_mutex_lock (EV_DOC_MUTEX);
 	text = ev_document_get_text (ev_view->document, &selection);
+	g_mutex_unlock (EV_DOC_MUTEX);
 	gtk_selection_data_set_text (selection_data, text, -1);
 }
 
@@ -697,7 +754,7 @@ ev_view_create_invisible_cursor(void)
 {
        GdkBitmap *empty;
        GdkColor black = { 0, 0, 0, 0 };
-       static unsigned char bits[] = { 0x00 };
+       static char bits[] = { 0x00 };
 
        empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
 
@@ -759,10 +816,13 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		view_rect_to_doc_rect (view, &selection, &view->selection);
 
 		gtk_widget_queue_draw (widget);
-	} else if (view->document) {
+	} else if (FALSE && view->document) {
 		EvLink *link;
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		link = ev_document_get_link (view->document, event->x, event->y);
+		g_mutex_unlock (EV_DOC_MUTEX);
+
                 if (link) {
 			char *msg;
 
@@ -796,9 +856,11 @@ ev_view_button_release_event (GtkWidget      *widget,
 	} else if (view->document) {
 		EvLink *link;
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		link = ev_document_get_link (view->document,
 					     event->x,
 					     event->y);
+		g_mutex_unlock (EV_DOC_MUTEX);
 		if (link) {
 			ev_view_go_to_link (view, link);
 			g_object_unref (link);
@@ -881,9 +943,9 @@ ev_view_scroll_view (EvView *view,
 		     gboolean horizontal)
 {
 	if (scroll == GTK_SCROLL_PAGE_BACKWARD) {
-		ev_view_set_page (view, ev_view_get_page (view) - 1);
+		ev_page_cache_prev_page (view->page_cache);
 	} else if (scroll == GTK_SCROLL_PAGE_FORWARD) {
-		ev_view_set_page (view, ev_view_get_page (view) + 1);
+		ev_page_cache_next_page (view->page_cache);
 	} else {
 		GtkAdjustment *adjustment;
 		double value;
@@ -982,13 +1044,6 @@ ev_view_class_init (EvViewClass *class)
 								     G_TYPE_NONE, 2,
 								     GTK_TYPE_ADJUSTMENT,
 								     GTK_TYPE_ADJUSTMENT);
-	page_changed_signal = g_signal_new ("page-changed",
-					    G_OBJECT_CLASS_TYPE (object_class),
-					    G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-					    G_STRUCT_OFFSET (EvViewClass, page_changed),
-					    NULL, NULL,
-					    ev_marshal_VOID__NONE,
-					    G_TYPE_NONE, 0);
 
 	g_signal_new ("scroll_view",
 		      G_TYPE_FROM_CLASS (object_class),
@@ -1034,6 +1089,7 @@ ev_view_init (EvView *view)
 
 	view->spacing = 10;
 	view->scale = 1.0;
+	view->current_page = 1;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 }
@@ -1043,12 +1099,14 @@ update_find_status_message (EvView *view)
 {
 	char *message;
 
+//	g_mutex_lock (EV_DOC_MUTEX);
 	if (ev_document_get_page (view->document) == view->find_page) {
 		int results;
 
+//		g_mutex_lock (EV_DOC_MUTEX);
 		results = ev_document_find_get_n_results
 				(EV_DOCUMENT_FIND (view->document));
-
+//		g_mutex_unlock (EV_DOC_MUTEX);
 		/* TRANS: Sometimes this could be better translated as
 		   "%d hit(s) on this page".  Therefore this string
 		   contains plural cases. */
@@ -1058,10 +1116,11 @@ update_find_status_message (EvView *view)
 					   results);
 	} else {
 		double percent;
-		
+
+		g_mutex_lock (EV_DOC_MUTEX);
 		percent = ev_document_find_get_progress
 				(EV_DOCUMENT_FIND (view->document));
-
+		g_mutex_unlock (EV_DOC_MUTEX);
 		if (percent >= (1.0 - 1e-10)) {
 			message = g_strdup (_("Not found"));
 		} else {
@@ -1070,57 +1129,10 @@ update_find_status_message (EvView *view)
 		}
 		
 	}
+//	g_mutex_unlock (EV_DOC_MUTEX);
 
 	ev_view_set_find_status (view, message);
-	g_free (message);
-}
-
-static void
-set_document_page (EvView *view, int new_page)
-{
-	int page;
-	int pages;
-
-	pages = ev_document_get_n_pages (view->document);
-	page = CLAMP (new_page, 1, pages);
-
-	if (view->document) {
-		int old_page = ev_document_get_page (view->document);
-		int old_width, old_height;
-
-		ev_document_get_page_size (view->document,
-					   -1, 
-					   &old_width, &old_height);
-
-		if (old_page != page) {
-			if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
-				ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
-			}
-			ev_document_set_page (view->document, page);
-		}
-
-		if (old_page != ev_document_get_page (view->document)) {
-			int width, height;
-			
-			g_signal_emit (view, page_changed_signal, 0);
-
-			view->has_selection = FALSE;
-			ev_document_get_page_size (view->document,
-						   -1, 
-						   &width, &height);
-			if (width != old_width || height != old_height)
-				gtk_widget_queue_resize (GTK_WIDGET (view));
-
-			gtk_adjustment_set_value (view->vadjustment,
-						  view->vadjustment->lower);
-		}
-
-		if (EV_IS_DOCUMENT_FIND (view->document)) {
-			view->find_page = page;
-			view->find_result = 0;
-			update_find_status_message (view);
-		}
-	}
+//	g_free (message);
 }
 
 #define MARGIN 5
@@ -1164,11 +1176,16 @@ jump_to_find_result (EvView *view)
 	GdkRectangle rect;
 	int n_results;
 
+	g_mutex_lock (EV_DOC_MUTEX);
 	n_results = ev_document_find_get_n_results (find);
+	g_mutex_unlock (EV_DOC_MUTEX);
 
 	if (n_results > view->find_result) {
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_document_find_get_result
 			(find, view->find_result, &rect);
+		g_mutex_unlock (EV_DOC_MUTEX);
+
 		ensure_rectangle_is_visible (view, &rect);
 	}
 }
@@ -1178,7 +1195,7 @@ jump_to_find_page (EvView *view)
 {
 	int n_pages, i;
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	for (i = 0; i <= n_pages; i++) {
 		int has_results;
@@ -1189,13 +1206,14 @@ jump_to_find_page (EvView *view)
 			page = page - n_pages;
 		}
 
+		g_mutex_lock (EV_DOC_MUTEX);
 		has_results = ev_document_find_page_has_results
 				(EV_DOCUMENT_FIND (view->document), page);
 		if (has_results == -1) {
 			view->find_page = page;
 			break;
 		} else if (has_results == 1) {
-			set_document_page (view, page);
+			ev_page_cache_set_current_page (view->page_cache, page);
 			jump_to_find_result (view);
 			break;
 		}
@@ -1209,39 +1227,75 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 	jump_to_find_result (view);
 	update_find_status_message (view);
 
+#if 0
+	/* FIXME: */
 	if (ev_document_get_page (document) == page) {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
+#endif
 }
-
-static void
-page_changed_callback (EvDocument *document,
-			   EvView     *view)
-{
-	LOG ("Page changed callback");
-
-	gtk_widget_queue_draw (GTK_WIDGET (view));
-
-	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
-		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
-	}
-}
-
-static void
-scale_changed_callback (EvDocument *document,
-			EvView     *view)
-{
-	LOG ("Scale changed callback");
-
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-}
-
 /*** Public API ***/       
      
 GtkWidget*
 ev_view_new (void)
 {
 	return g_object_new (EV_TYPE_VIEW, NULL);
+}
+
+static void
+job_finished_cb (EvPixbufCache *pixbuf_cache,
+		 EvView        *view)
+{
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+
+static void
+page_changed_cb (EvPageCache *page_cache,
+		 int          new_page,
+		 EvView      *view)
+{
+	int old_page = view->current_page;
+	int old_width, old_height;
+	int new_width, new_height;
+
+	if (old_page == new_page)
+		return;
+
+	ev_page_cache_get_size (page_cache,
+				old_page,
+				view->scale,
+				&old_width, &old_height);
+	ev_page_cache_get_size (page_cache,
+				new_page,
+				view->scale,
+				&new_width, &new_height);
+
+	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
+		//ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
+	}
+
+	view->current_page = new_page;
+	view->has_selection = FALSE;
+
+	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+					view->current_page,
+					view->current_page,
+					view->scale);
+
+	if (new_width != old_width || new_height != old_height)
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	else
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	
+	gtk_adjustment_set_value (view->vadjustment,
+				  view->vadjustment->lower);
+
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
+		view->find_page = new_page;
+		view->find_result = 0;
+		update_find_status_message (view);
+	}
 }
 
 void
@@ -1256,6 +1310,8 @@ ev_view_set_document (EvView     *view,
                                                               find_changed_cb,
                                                               view);
 			g_object_unref (view->document);
+			view->page_cache = NULL;
+			
                 }
 
 		view->document = document;
@@ -1270,22 +1326,13 @@ ev_view_set_document (EvView     *view,
 						  G_CALLBACK (find_changed_cb),
 						  view);
 			}
-			g_signal_connect (view->document,
-					  "page_changed",
-					  G_CALLBACK (page_changed_callback),
-					  view);
-			g_signal_connect (view->document,
-					  "scale_changed",
-					  G_CALLBACK (scale_changed_callback),
-					  view);
+			view->page_cache = ev_document_get_page_cache (view->document);
+			g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
+			view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
+			g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
                 }
-
-		if (GTK_WIDGET_REALIZED (view))
-			ev_document_set_target (view->document, view->bin_window);
 		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
-		
-		g_signal_emit (view, page_changed_signal, 0);
 	}
 }
 
@@ -1303,7 +1350,7 @@ go_to_link (EvView *view, EvLink *link)
 			break;
 		case EV_LINK_TYPE_PAGE:
 			page = ev_link_get_page (link);
-			set_document_page (view, page);
+			ev_page_cache_set_current_page (view->page_cache, page);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
 			uri = ev_link_get_uri (link);
@@ -1316,24 +1363,6 @@ void
 ev_view_go_to_link (EvView *view, EvLink *link)
 {
 	go_to_link (view, link);
-}
-
-void
-ev_view_set_page (EvView *view,
-		  int     page)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	set_document_page (view, page);
-}
-
-int
-ev_view_get_page (EvView *view)
-{
-	if (view->document)
-		return ev_document_get_page (view->document);
-	else
-		return 1;
 }
 
 static void
@@ -1351,8 +1380,7 @@ ev_view_zoom (EvView   *view,
 	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
 
 	view->scale = scale;
-
-	ev_document_set_scale (view->document, view->scale);
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 void
@@ -1378,7 +1406,12 @@ size_to_zoom_factor (EvView *view, int width, int height)
 
 	doc_width = doc_height = 0;
 	scale = scale_w = scale_h = 1.0;
-	ev_document_get_page_size (view->document, -1, &doc_width, &doc_height);
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				view->scale,
+				&doc_width,
+				&doc_height);
+
 	/* FIXME: The border size isn't constant.  Ugh.  Still, if we have extra
 	 * space, we just cut it from the border */
 	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
@@ -1415,16 +1448,16 @@ ev_view_set_size (EvView     *view,
 {
 	double factor;
 
-	if (!view->document) {
+	if (!view->document)
 		return;
-	}
 
 	if (view->width != width ||
 	    view->height != height) {
 		view->width = width;
 		view->height = height;
 		factor = size_to_zoom_factor (view, width, height);
-		ev_view_zoom (view, factor, FALSE); 
+		ev_view_zoom (view, factor, FALSE);
+		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 }
 
@@ -1447,11 +1480,16 @@ ev_view_get_find_status (EvView *view)
 void
 ev_view_find_next (EvView *view)
 {
+	EvPageCache *page_cache;
 	int n_results, n_pages;
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
+	page_cache = ev_document_get_page_cache (view->document);
+	g_mutex_lock (EV_DOC_MUTEX);
 	n_results = ev_document_find_get_n_results (find);
-	n_pages = ev_document_get_n_pages (view->document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	n_pages = ev_page_cache_get_n_pages (page_cache);
 
 	view->find_result++;
 
@@ -1475,9 +1513,15 @@ ev_view_find_previous (EvView *view)
 {
 	int n_results, n_pages;
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+	EvPageCache *page_cache;
 
+	page_cache = ev_document_get_page_cache (view->document);
+
+	g_mutex_lock (EV_DOC_MUTEX);
 	n_results = ev_document_find_get_n_results (find);
-	n_pages = ev_document_get_n_pages (view->document);
+	g_mutex_unlock (EV_DOC_MUTEX);
+
+	n_pages = ev_page_cache_get_n_pages (page_cache);
 
 	view->find_result--;
 

@@ -30,6 +30,7 @@
 
 #include "ev-stock-icons.h"
 #include "ev-debug.h"
+#include "ev-job-queue.h"
 
 static struct poptOption popt_options[] =
 {
@@ -82,6 +83,7 @@ main (int argc, char *argv[])
 				      GNOME_PARAM_APP_DATADIR, DATADIR,
                                       NULL);
 
+	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
 
 	ev_debug_init ();

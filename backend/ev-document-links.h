@@ -26,7 +26,7 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 #include "ev-document.h"
 #include "ev-link.h"
@@ -43,37 +43,25 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocumentLinks	     EvDocumentLinks;
 typedef struct _EvDocumentLinksIface EvDocumentLinksIface;
-typedef struct _EvDocumentLinksIter  EvDocumentLinksIter;
+
+enum {
+	EV_DOCUMENT_LINKS_COLUMN_MARKUP,
+	EV_DOCUMENT_LINKS_COLUMN_LINK,
+	EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS
+};
 
 struct _EvDocumentLinksIface
 {
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	gboolean             (* has_document_links) (EvDocumentLinks      *document_links);
-	EvDocumentLinksIter *(* begin_read)	    (EvDocumentLinks      *document_links);
-	EvLink              *(* get_link)           (EvDocumentLinks      *document_links,
-						     EvDocumentLinksIter  *iter);
-	EvDocumentLinksIter *(* get_child)          (EvDocumentLinks      *document_links,
-						     EvDocumentLinksIter  *iter);
-	gboolean             (* next)               (EvDocumentLinks      *document_links,
-						     EvDocumentLinksIter  *iter);
-	void                 (* free_iter)          (EvDocumentLinks      *document_links,
-						     EvDocumentLinksIter  *iter);
+	gboolean      (* has_document_links) (EvDocumentLinks      *document_links);
+	GtkTreeModel *(* get_links_model)    (EvDocumentLinks      *document_links);
 };
 
-GType                    ev_document_links_get_type           (void);
-gboolean                 ev_document_links_has_document_links (EvDocumentLinks      *document_links);
-EvDocumentLinksIter     *ev_document_links_begin_read         (EvDocumentLinks      *document_links);
-EvLink			*ev_document_links_get_link           (EvDocumentLinks      *document_links,
-							       EvDocumentLinksIter  *iter);
-EvDocumentLinksIter     *ev_document_links_get_child          (EvDocumentLinks      *document_links,
-							       EvDocumentLinksIter  *iter);
-gboolean                 ev_document_links_next               (EvDocumentLinks      *document_links,
-							       EvDocumentLinksIter  *iter);
-void                     ev_document_links_free_iter          (EvDocumentLinks      *document_links,
-							       EvDocumentLinksIter  *iter);
-
+GType         ev_document_links_get_type           (void);
+gboolean      ev_document_links_has_document_links (EvDocumentLinks *document_links);
+GtkTreeModel *ev_document_links_get_links_model    (EvDocumentLinks *document_links);
 
 G_END_DECLS
 

@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include "ev-document-links.h"
+#include "ev-job-queue.h"
 
 GType
 ev_document_links_get_type (void)
@@ -51,51 +52,20 @@ gboolean
 ev_document_links_has_document_links (EvDocumentLinks *document_links)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	return iface->has_document_links (document_links);
+	gboolean retval;
+
+	retval = iface->has_document_links (document_links);
+
+	return retval;
 }
 
-EvDocumentLinksIter *
-ev_document_links_begin_read (EvDocumentLinks *document_links)
+GtkTreeModel *
+ev_document_links_get_links_model (EvDocumentLinks *document_links)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	GtkTreeModel *retval;
 
-	return iface->begin_read (document_links);
-}
+	retval = iface->get_links_model (document_links);
 
-EvLink * 
-ev_document_links_get_link (EvDocumentLinks      *document_links,
-			    EvDocumentLinksIter  *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-
-	return iface->get_link (document_links, iter);
-}
-
-EvDocumentLinksIter *
-ev_document_links_get_child (EvDocumentLinks     *document_links,
-			     EvDocumentLinksIter *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-
-	return iface->get_child (document_links, iter);
-}
-
-
-gboolean 
-ev_document_links_next (EvDocumentLinks     *document_links,
-			EvDocumentLinksIter *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-
-	return iface->next (document_links, iter);
-}
-
-
-void
-ev_document_links_free_iter (EvDocumentLinks     *document_links,
-			     EvDocumentLinksIter *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-
-	iface->free_iter (document_links, iter);
+	return retval;
 }

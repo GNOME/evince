@@ -224,31 +224,40 @@ ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialo
 	gnome_print_config_get_page_size (print_config,
 					  &job->width, &job->height);
 	gnome_print_config_get_boolean (print_config,
-					GNOME_PRINT_KEY_DUPLEX, &job->duplex);
+					(guchar *)GNOME_PRINT_KEY_DUPLEX, &job->duplex);
 	gnome_print_config_unref (print_config);
 }
 
 static gboolean
 idle_print_handler (EvPrintJob *job)
 {
+	EvPageCache *page_cache;
+
 	if (!job->printing) {
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_ps_exporter_begin (EV_PS_EXPORTER (job->document),
 				      job->temp_file);
+		g_mutex_unlock (EV_DOC_MUTEX);
 		job->next_page = 1; /* FIXME use 0-based page numbering? */
 		job->printing = TRUE;
 		return TRUE;
 	}
 
-	if (job->next_page <= ev_document_get_n_pages (job->document)) {
+	page_cache = ev_document_get_page_cache (job->document);
+	if (job->next_page <= ev_page_cache_get_n_pages (page_cache)) {
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
 #endif
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_ps_exporter_do_page (EV_PS_EXPORTER (job->document),
 					job->next_page);
+		g_mutex_unlock (EV_DOC_MUTEX);
 		job->next_page++;
 		return TRUE;
 	} else { /* no more pages */
+		g_mutex_lock (EV_DOC_MUTEX);
 		ev_ps_exporter_end (EV_PS_EXPORTER (job->document));
+		g_mutex_unlock (EV_DOC_MUTEX);
 
 		close (job->fd);
 		job->fd = 0;

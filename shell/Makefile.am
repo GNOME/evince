@@ -29,6 +29,8 @@ evince_SOURCES=				\
 	ev-password.c			\
 	ev-password-view.h		\
 	ev-password-view.c		\
+	ev-pixbuf-cache.c		\
+	ev-pixbuf-cache.h		\
 	ev-print-job.c			\
 	ev-print-job.h			\
 	ev-utils.c			\

@@ -37,10 +37,16 @@ G_BEGIN_DECLS
 #define EV_IS_DOCUMENT_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
 #define EV_DOCUMENT_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT, EvDocumentIface))
 
-typedef struct _EvDocument	EvDocument;
-typedef struct _EvDocumentIface	EvDocumentIface;
+typedef struct _EvDocument	  EvDocument;
+typedef struct _EvDocumentIface   EvDocumentIface;
+typedef struct _EvPageCache       EvPageCache;
+typedef struct _EvPageCacheClass  EvPageCacheClass;
+
+#include "ev-page-cache.h"
+
 
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
+#define EV_DOC_MUTEX (ev_document_get_doc_mutex ())
 
 typedef enum
 {
@@ -88,12 +94,17 @@ struct _EvDocumentIface
 					 int           clip_y,
 					 int           clip_width,
 					 int           clip_height);
+	GdkPixbuf *(* render_pixbuf)    (EvDocument   *document);
+
 
 
 };
 
-GType    ev_document_get_type    (void);
-GQuark   ev_document_error_quark (void);
+GType        ev_document_get_type       (void);
+GQuark       ev_document_error_quark    (void);
+EvPageCache *ev_document_get_page_cache (EvDocument *document);
+GMutex      *ev_document_get_doc_mutex  (void);
+
 
 gboolean ev_document_load            (EvDocument   *document,
 				      const char   *uri,
@@ -127,6 +138,8 @@ void     ev_document_render          (EvDocument   *document,
 				      int           clip_y,
 				      int           clip_width,
 				      int           clip_height);
+/* Quick hack to test threaded rendering */
+GdkPixbuf *ev_document_render_pixbuf   (EvDocument   *document);
 void	 ev_document_page_changed    (EvDocument *document);
 void	 ev_document_scale_changed   (EvDocument *document);
 

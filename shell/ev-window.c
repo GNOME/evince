@@ -41,6 +41,7 @@
 #include "ev-document-links.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
+#include "ev-job-queue.h"
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
@@ -106,6 +107,7 @@ struct _EvWindowPrivate {
 	char *uri;
 
 	EvDocument *document;
+	EvPageCache *page_cache;
 
 	EvWindowPageMode page_mode;
 	/* These members are used temporarily when in PAGE_MODE_PASSWORD */
@@ -168,7 +170,6 @@ update_action_sensitivity (EvWindow *ev_window)
 
 	document = ev_window->priv->document;
 	page_mode = ev_window->priv->page_mode;
-
 	view = EV_VIEW (ev_window->priv->view);
 
 	/* File menu */
@@ -198,9 +199,8 @@ update_action_sensitivity (EvWindow *ev_window)
 	if (document) {
 		int n_pages;
 		int page;
-
-		page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
-		n_pages = ev_document_get_n_pages (document);
+		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
 
 		set_action_sensitive (ev_window, "GoPreviousPage", page > 1);
 		set_action_sensitive (ev_window, "GoNextPage", page < n_pages);
@@ -347,7 +347,8 @@ update_sizing_buttons (EvWindow *window)
 void
 ev_window_open_page (EvWindow *ev_window, int page)
 {
-	ev_view_set_page (EV_VIEW (ev_window->priv->view), page);
+	if (ev_window->priv->page_cache)
+		ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
 }
 
 void
@@ -427,9 +428,8 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	gboolean password_needed;
 
 	password_needed = (ev_window->priv->password_document != NULL);
-
 	if (document) {
-		doc_title = ev_document_get_title (document);
+		doc_title = ev_page_cache_get_title (ev_window->priv->page_cache);
 
 		/* Make sure we get a valid title back */
 		if (doc_title) {
@@ -485,9 +485,8 @@ update_total_pages (EvWindow *ev_window)
 	GtkAction *action;
 	int pages;
 
-	pages = ev_document_get_n_pages (ev_window->priv->document);
-	action = gtk_action_group_get_action
-		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
+	pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_total_pages (EV_PAGE_ACTION (action), pages);
 }
 
@@ -515,6 +514,21 @@ hide_sidebar_and_actions (EvWindow *ev_window)
 }
 
 static void
+page_changed_cb (EvPageCache *page_cache,
+		 gint         page,
+		 EvWindow    *ev_window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action
+		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
+
+	ev_page_action_set_current_page (EV_PAGE_ACTION (action), page);
+	update_action_sensitivity (ev_window);
+}
+
+
+static void
 ev_window_setup_document (EvWindow *ev_window)
 {
 	EvDocument *document;
@@ -522,6 +536,8 @@ ev_window_setup_document (EvWindow *ev_window)
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
 
 	document = ev_window->priv->document;
+	ev_window->priv->page_cache = ev_document_get_page_cache (ev_window->priv->document);
+	g_signal_connect (ev_window->priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), ev_window);
 
 	g_signal_connect_object (G_OBJECT (document),
 				 "notify::title",
@@ -534,6 +550,7 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_sidebar_set_document (sidebar, document);
 	else
 		hide_sidebar_and_actions (ev_window);
+
 	ev_view_set_document (view, document);
 
 	update_window_title (document, NULL, ev_window);
@@ -553,9 +570,12 @@ password_dialog_response (GtkWidget *password_dialog,
 		gchar *uri;
 
 		password = ev_password_dialog_get_password (password_dialog);
-		if (password)
+		if (password) {
+			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->password_document),
 							   password);
+			g_mutex_unlock (EV_DOC_MUTEX);
+		}
 		g_free (password);
 
 		document = ev_window->priv->password_document;
@@ -856,6 +876,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 	GtkFileFilter *pdf_filter, *all_filter;
 	gchar *uri = NULL;
+	gboolean success;
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -888,8 +909,12 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		    !overwrite_existing_file (GTK_WINDOW (fc), uri))
 				continue;
 */
+		
+		g_mutex_lock (EV_DOC_MUTEX);
+		success = ev_document_save (ev_window->priv->document, uri, NULL);
+		g_mutex_unlock (EV_DOC_MUTEX);
 
-		if (ev_document_save (ev_window->priv->document, uri, NULL))
+		if (success)
 			break;
 		else
 			save_error_dialog (GTK_WINDOW (fc), uri);
@@ -936,7 +961,7 @@ ev_window_print (EvWindow *ev_window)
 	config = gnome_print_config_default ();
 	job = gnome_print_job_new (config);
 
-	print_dialog = gnome_print_dialog_new (job, _("Print"),
+	print_dialog = gnome_print_dialog_new (job, (guchar *) _("Print"),
 					       (GNOME_PRINT_DIALOG_RANGE |
 						GNOME_PRINT_DIALOG_COPIES));
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (print_dialog),
@@ -964,7 +989,7 @@ ev_window_print (EvWindow *ev_window)
 				GTK_MESSAGE_DIALOG (dialog),
 				_("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
 				gnome_print_config_get (
-					config, "Settings.Engine.Backend.Driver"));
+					config, (guchar *)"Settings.Engine.Backend.Driver"));
 			gtk_dialog_run (GTK_DIALOG (dialog));
 			gtk_widget_destroy (dialog);
 
@@ -1465,8 +1490,7 @@ ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_page (EV_VIEW (ev_window->priv->view),
-			  ev_view_get_page (EV_VIEW (ev_window->priv->view)) - 1);
+	ev_page_cache_prev_page (ev_window->priv->page_cache);
 }
 
 static void
@@ -1474,8 +1498,7 @@ ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_page (EV_VIEW (ev_window->priv->view),
-			  ev_view_get_page (EV_VIEW (ev_window->priv->view)) + 1);
+	ev_page_cache_next_page (ev_window->priv->page_cache);
 }
 
 static void
@@ -1483,15 +1506,18 @@ ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_page (EV_VIEW (ev_window->priv->view), 1);
+	ev_page_cache_set_current_page (ev_window->priv->page_cache, 1);
 }
 
 static void
 ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 {
+	int n_pages;
+
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_page (EV_VIEW (ev_window->priv->view), G_MAXINT);
+	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+	ev_page_cache_set_current_page (ev_window->priv->page_cache, n_pages);
 }
 
 static void
@@ -1502,7 +1528,12 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	page = ev_document_get_page (ev_window->priv->document);
+#if 0
+	/* FIXME: uncomment when this is written.*/
+	page = ev_page_cache_get_page (ev_window->priv->page_cache);
+#else
+	page = 1;
+#endif
 	uri = g_strdup (ev_window->priv->uri);
 
 	ev_window_open (ev_window, uri);
@@ -1767,32 +1798,6 @@ disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
 }
 
 static void
-update_current_page (EvWindow *ev_window,
-		     EvView   *view)
-{
-	int page;
-	GtkAction *action;
-	EvSidebarThumbnails *thumbs;
-
-	thumbs = EV_SIDEBAR_THUMBNAILS (ev_window->priv->thumbs_sidebar);
-	ev_sidebar_thumbnails_select_page (thumbs, ev_view_get_page (view));
-
-	action = gtk_action_group_get_action
-		(ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
-
-	page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
-	ev_page_action_set_current_page (EV_PAGE_ACTION (action), page);
-}
-
-static void
-view_page_changed_cb (EvView   *view,
-		      EvWindow *ev_window)
-{
-	update_current_page (ev_window, view);
-	update_action_sensitivity (ev_window);
-}
-
-static void
 view_status_changed_cb (EvView     *view,
 			GParamSpec *pspec,
 			EvWindow   *ev_window)
@@ -1885,9 +1890,14 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		if (visible && search_string) {
+			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), search_string, case_sensitive);
+			g_mutex_unlock (EV_DOC_MUTEX);
 		} else {
+			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
+			g_mutex_unlock (EV_DOC_MUTEX);
+
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 						      NULL);
 			gtk_widget_queue_draw (GTK_WIDGET (ev_window->priv->view));
@@ -2066,11 +2076,8 @@ static GtkRadioActionEntry page_view_entries[] = {
 static void
 goto_page_cb (GtkAction *action, int page_number, EvWindow *ev_window)
 {
-	EvView *view = EV_VIEW (ev_window->priv->view);
-
-	if (ev_view_get_page (view) != page_number) {
-		ev_view_set_page (view, page_number);
-	}
+	ev_page_cache_set_current_page (ev_window->priv->page_cache,
+					page_number);
 }
 
 static void
@@ -2352,10 +2359,6 @@ ev_window_init (EvWindow *ev_window)
 
 	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),
 			   ev_window->priv->view);
-	g_signal_connect (ev_window->priv->view,
-			  "page-changed",
-			  G_CALLBACK (view_page_changed_cb),
-			  ev_window);
 	g_signal_connect (ev_window->priv->view,
 			  "notify::find-status",
 			  G_CALLBACK (view_find_status_changed_cb),

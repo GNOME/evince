@@ -25,41 +25,37 @@
 #endif
 
 #include <string.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "ev-sidebar-links.h"
+#include "ev-job-queue.h"
 #include "ev-document-links.h"
 #include "ev-window.h"
 
-/* Amount of time we devote to each iteration of the idle, in microseconds */
-#define IDLE_WORK_LENGTH 5000
-
-typedef struct {
-	EvDocumentLinksIter *links_iter;
-	GtkTreeIter *tree_iter;
-} IdleStackData;
-
 struct _EvSidebarLinksPrivate {
 	GtkWidget *tree_view;
+
+	/* Keep these ids around for blocking */
+	guint selection_id;
+	guint page_changed_id;
+
+	EvJob *job;
 	GtkTreeModel *model;
-	EvDocument *current_document;
-	GList *idle_stack;
-	guint idle_id;
+	EvDocument *document;
+	EvPageCache *page_cache;
 };
 
-enum {
-	LINKS_COLUMN_MARKUP,
-	LINKS_COLUMN_PAGE_NUM,
-	LINKS_COLUMN_PAGE_VALID,
-	LINKS_COLUMN_LINK,
-	LINKS_COLUMN_NUM_COLUMNS
-};
 
-static void links_page_num_func (GtkTreeViewColumn *tree_column,
-				 GtkCellRenderer   *cell,
-				 GtkTreeModel      *tree_model,
-				 GtkTreeIter       *iter,
-				 gpointer           data);
+static void links_page_num_func  (GtkTreeViewColumn *tree_column,
+				  GtkCellRenderer   *cell,
+				  GtkTreeModel      *tree_model,
+				  GtkTreeIter       *iter,
+				  gpointer           data);
+static void update_page_callback (EvPageCache       *page_cache,
+				  gint               current_page,
+				  EvSidebarLinks    *sidebar_links);
+
 
 G_DEFINE_TYPE (EvSidebarLinks, ev_sidebar_links, GTK_TYPE_VBOX)
 
@@ -72,7 +68,6 @@ ev_sidebar_links_destroy (GtkObject *object)
 {
 	EvSidebarLinks *ev_sidebar_links = (EvSidebarLinks *) object;
 
-	g_print ("ev_sidebar_links_destroy!\n");
 	ev_sidebar_links_clear_document (ev_sidebar_links);
 }
 
@@ -100,26 +95,48 @@ selection_changed_cb (GtkTreeSelection   *selection,
 
 	g_return_if_fail (EV_IS_SIDEBAR_LINKS (ev_sidebar_links));
 
-	document = EV_DOCUMENT (ev_sidebar_links->priv->current_document);
-	g_return_if_fail (ev_sidebar_links->priv->current_document != NULL);
+	document = EV_DOCUMENT (ev_sidebar_links->priv->document);
+	g_return_if_fail (ev_sidebar_links->priv->document != NULL);
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		EvLink *link;
-		GtkWidget *window;
-		GValue value = {0, };
 
-		gtk_tree_model_get_value (model, &iter,
-					  LINKS_COLUMN_LINK, &value);
+		gtk_tree_model_get (model, &iter,
+				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+				    -1);
+		
+		if (link == NULL)
+			return;
 
-		link = EV_LINK (g_value_get_object (&value));
-		g_return_if_fail (link != NULL);
-
-		window = gtk_widget_get_ancestor (GTK_WIDGET (ev_sidebar_links),
-						  EV_TYPE_WINDOW);
-		if (window) {
-			ev_window_open_link (EV_WINDOW (window), link);
-		}
+		g_signal_handler_block (ev_sidebar_links->priv->page_cache,
+					ev_sidebar_links->priv->page_changed_id);
+		ev_page_cache_set_link (ev_sidebar_links->priv->page_cache, link);
+		g_signal_handler_unblock (ev_sidebar_links->priv->page_cache,
+					  ev_sidebar_links->priv->page_changed_id);
 	}
+}
+
+static GtkTreeModel *
+create_loading_model (void)
+{
+	GtkTreeModel *retval;
+	GtkTreeIter iter;
+	gchar *markup;
+
+	/* Creates a fake model to indicate that we're loading */
+	retval = (GtkTreeModel *)gtk_list_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
+						     G_TYPE_STRING,
+						     G_TYPE_BOOLEAN,
+						     G_TYPE_OBJECT);
+
+	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
+	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>", _("Loading..."));
+	gtk_list_store_set (GTK_LIST_STORE (retval), &iter,
+			    EV_DOCUMENT_LINKS_COLUMN_MARKUP, markup,
+			    -1);
+	g_free (markup);
+
+	return retval;
 }
 
 static void
@@ -130,13 +147,9 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *selection;
+	GtkTreeModel *loading_model;
 
 	priv = ev_sidebar_links->priv;
-	priv->model = (GtkTreeModel *) gtk_tree_store_new (LINKS_COLUMN_NUM_COLUMNS,
-							   G_TYPE_STRING,
-							   G_TYPE_INT,
-							   G_TYPE_BOOLEAN,
-							   G_TYPE_OBJECT);
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 
@@ -146,11 +159,14 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 					     GTK_SHADOW_IN);
 
 	/* Create tree view */
-	priv->tree_view = gtk_tree_view_new_with_model (priv->model);
-	g_object_unref (priv->model);
+	loading_model = create_loading_model ();
+	priv->tree_view = gtk_tree_view_new_with_model (loading_model);
+	g_object_unref (loading_model);
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
 	gtk_container_add (GTK_CONTAINER (swindow), priv->tree_view);
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (priv->tree_view), TRUE);
 
 	gtk_box_pack_start (GTK_BOX (ev_sidebar_links), swindow, TRUE, TRUE, 0);
 	gtk_widget_show_all (GTK_WIDGET (ev_sidebar_links));
@@ -165,20 +181,17 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 			      NULL);
 	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, TRUE);
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
-					     "markup", LINKS_COLUMN_MARKUP,
+					     "markup", EV_DOCUMENT_LINKS_COLUMN_MARKUP,
 					     NULL);
 
+	
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
 	gtk_tree_view_column_set_cell_data_func (GTK_TREE_VIEW_COLUMN (column), renderer,
 						 (GtkTreeCellDataFunc) links_page_num_func,
 						 NULL, NULL);
 
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
-	g_signal_connect (selection, "changed",
-			  G_CALLBACK (selection_changed_cb),
-			  ev_sidebar_links);
+	
 }
 
 static void
@@ -196,16 +209,15 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 		     GtkTreeIter       *iter,
 		     gpointer           data)
 {
-	int page_num;
-	gboolean page_valid;
+	EvLink *link;
 
 	gtk_tree_model_get (tree_model, iter,
-			    LINKS_COLUMN_PAGE_NUM, &page_num,
-			    LINKS_COLUMN_PAGE_VALID, &page_valid,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
-
-	if (page_valid) {
-		gchar *markup = g_strdup_printf ("<i>%d</i>", page_num);
+	
+	if (link != NULL &&
+	    ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+		gchar *markup = g_strdup_printf ("<i>%d</i>", ev_link_get_page (link));
 		g_object_set (cell,
 			      "markup", markup,
 			      "visible", TRUE,
@@ -230,116 +242,6 @@ ev_sidebar_links_new (void)
 	return ev_sidebar_links;
 }
 
-static void
-stack_data_free (IdleStackData       *stack_data,
-		 EvDocumentLinks     *document_links)
-{
-	g_assert (stack_data);
-
-	if (stack_data->tree_iter)
-		gtk_tree_iter_free (stack_data->tree_iter);
-	if (stack_data->links_iter)
-		ev_document_links_free_iter (document_links, stack_data->links_iter);
-	g_free (stack_data);
-}
-
-static gboolean
-do_one_iteration (EvSidebarLinks *ev_sidebar_links)
-{
-	EvSidebarLinksPrivate *priv = ev_sidebar_links->priv;
-	EvLink *link;
-	IdleStackData *stack_data;
-	GtkTreeIter tree_iter;
-	EvDocumentLinksIter *child_iter;
-	EvLinkType link_type;
-	gint page;
-
-	g_assert (priv->idle_stack);
-
-	stack_data = (IdleStackData *) priv->idle_stack->data;
-
-	link = ev_document_links_get_link
-		(EV_DOCUMENT_LINKS (priv->current_document),
-		 stack_data->links_iter);
-	if (link == NULL) {
-		g_warning ("mismatch in model.  No values available at current level.\n");
-		return FALSE;
-	}
-
-	page = ev_link_get_page (link);
-	link_type = ev_link_get_link_type (link);
-	gtk_tree_store_append (GTK_TREE_STORE (priv->model), &tree_iter, stack_data->tree_iter);
-	gtk_tree_store_set (GTK_TREE_STORE (priv->model), &tree_iter,
-			    LINKS_COLUMN_MARKUP, ev_link_get_title (link),
-			    LINKS_COLUMN_PAGE_NUM, page,
-			    LINKS_COLUMN_PAGE_VALID, (link_type == EV_LINK_TYPE_PAGE),
-			    LINKS_COLUMN_LINK, link,
-			    -1);
-	g_object_unref (link);
-	
-	child_iter = ev_document_links_get_child (EV_DOCUMENT_LINKS (priv->current_document),
-						      stack_data->links_iter);
-	if (child_iter) {
-		IdleStackData *child_stack_data;
-
-		child_stack_data = g_new0 (IdleStackData, 1);
-		child_stack_data->tree_iter = gtk_tree_iter_copy (&tree_iter);
-		child_stack_data->links_iter = child_iter;
-		priv->idle_stack = g_list_prepend (priv->idle_stack, child_stack_data);
-
-		return TRUE;
-	}
-
-	/* We don't have children, so we need to walk to the next node */
-	while (TRUE) {
-		if (ev_document_links_next (EV_DOCUMENT_LINKS (priv->current_document),
-						stack_data->links_iter))
-			return TRUE;
-
-		/* We're done with this level.  Pop it off the idle stack and go
-		 * to the next level */
-		stack_data_free (stack_data, EV_DOCUMENT_LINKS (priv->current_document));
-		priv->idle_stack = g_list_delete_link (priv->idle_stack, priv->idle_stack);
-		if (priv->idle_stack == NULL)
-			return FALSE;
-		stack_data = priv->idle_stack->data;
-	}
-}
-
-static gboolean
-populate_links_idle (gpointer data)
-{
-	GTimer *timer;
-	gint i;
-	gulong microseconds = 0;
-
-	EvSidebarLinks *ev_sidebar_links = (EvSidebarLinks *)data;
-	EvSidebarLinksPrivate *priv = ev_sidebar_links->priv;
-
-	if (priv->idle_stack == NULL) {
-		priv->idle_id = 0;
-		return FALSE;
-	}
-
-	/* The amount of time that reading the next bookmark takes is wildly
-	 * inconsistent, so we constrain it to IDLE_WORK_LENGTH microseconds per
-	 * idle iteration. */
-	timer = g_timer_new ();
-	i = 0;
-	g_timer_start (timer);
-	while (do_one_iteration (ev_sidebar_links)) {
-		i++;
-		g_timer_elapsed (timer, &microseconds);
-		if (microseconds > IDLE_WORK_LENGTH)
-			break;
-	}
-	g_timer_destroy (timer);
-#if 0
-	g_print ("%d rows done this idle in %d\n", i, (int)microseconds);
-#endif
-	return TRUE;
-}
-
 void
 ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
 {
@@ -349,20 +251,108 @@ ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
 
 	priv = sidebar_links->priv;
 
-	/* Clear the idle */
-	if (priv->idle_id != 0) {
-		g_source_remove (priv->idle_id);
-		priv->idle_id = 0;
+	if (priv->document) {
+		g_object_unref (priv->document);
+		priv->document = NULL;
+		priv->page_cache = NULL;
 	}
-	g_list_foreach (priv->idle_stack, (GFunc) stack_data_free, priv->current_document);
-	g_list_free (priv->idle_stack);
-	priv->idle_stack = NULL;
 
-	if (priv->current_document) {
-		g_object_unref (priv->current_document);
-		priv->current_document = NULL;
+	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), NULL);
+}
+
+static gboolean
+update_page_callback_foreach (GtkTreeModel *model,
+			      GtkTreePath  *path,
+			      GtkTreeIter  *iter,
+			      gpointer      data)
+{
+	EvSidebarLinks *sidebar_links = (data);
+	EvLink *link;
+
+	gtk_tree_model_get (model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+	if (link && ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+		int current_page;
+
+		current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
+		if (ev_link_get_page (link) == current_page) {
+			GtkTreeSelection *selection;
+
+			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+
+			gtk_tree_selection_select_path (selection, path);
+
+			return TRUE;
+		}
 	}
-	gtk_tree_store_clear (GTK_TREE_STORE (priv->model));
+	
+	return FALSE;
+}
+
+static void
+update_page_callback (EvPageCache    *page_cache,
+		      gint            current_page,
+		      EvSidebarLinks *sidebar_links)
+{
+	GtkTreeSelection *selection;
+	/* We go through the tree linearly looking for the first page that
+	 * matches.  This is pretty inefficient.  We can do something neat with
+	 * a GtkTreeModelSort here to make it faster, if it turns out to be
+	 * slow.
+	 */
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+
+	g_signal_handler_block (selection, sidebar_links->priv->selection_id);
+
+	gtk_tree_selection_unselect_all (selection);
+	gtk_tree_model_foreach (sidebar_links->priv->model,
+				update_page_callback_foreach,
+				sidebar_links);
+
+	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
+}
+
+static void
+job_finished_cb (EvJobLinks     *job,
+		 EvSidebarLinks *sidebar_links)
+{
+	EvSidebarLinksPrivate *priv;
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	gboolean result;
+
+	priv = sidebar_links->priv;
+
+	priv->model = g_object_ref (job->model);
+	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
+	g_object_unref (job);
+
+	/* Expand one level of the tree */
+	path = gtk_tree_path_new_first ();
+	for (result = gtk_tree_model_get_iter_first (priv->model, &iter);
+	     result;
+	     result = gtk_tree_model_iter_next (priv->model, &iter)) {
+		gtk_tree_view_expand_row (GTK_TREE_VIEW (priv->tree_view), path, FALSE);
+		gtk_tree_path_next (path);
+	}
+	gtk_tree_path_free (path);
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+	priv->selection_id = g_signal_connect (selection, "changed",
+					       G_CALLBACK (selection_changed_cb),
+					       sidebar_links);
+	priv->page_changed_id = g_signal_connect (priv->page_cache, "page-changed",
+						  G_CALLBACK (update_page_callback),
+						  sidebar_links);
+	update_page_callback (priv->page_cache,
+			      ev_page_cache_get_current_page (priv->page_cache),
+			      sidebar_links);
+
 }
 
 void
@@ -370,7 +360,6 @@ ev_sidebar_links_set_document (EvSidebarLinks *sidebar_links,
 			       EvDocument     *document)
 {
 	EvSidebarLinksPrivate *priv;
-	EvDocumentLinksIter *links_iter;
 
 	g_return_if_fail (EV_IS_SIDEBAR_LINKS (sidebar_links));
 	g_return_if_fail (EV_IS_DOCUMENT (document));
@@ -378,19 +367,17 @@ ev_sidebar_links_set_document (EvSidebarLinks *sidebar_links,
 	priv = sidebar_links->priv;
 
 	g_object_ref (document);
-	ev_sidebar_links_clear_document (sidebar_links);
 
-	priv->current_document = document;
-	links_iter = ev_document_links_begin_read (EV_DOCUMENT_LINKS (document));
-	if (links_iter) {
-		IdleStackData *stack_data;
+	priv->document = document;
+	priv->page_cache = ev_document_get_page_cache (document);
 
-		stack_data = g_new0 (IdleStackData, 1);
-		stack_data->links_iter = links_iter;
-		stack_data->tree_iter = NULL;
+	priv->job = ev_job_links_new (document);
+	g_signal_connect (priv->job,
+			  "finished",
+			  G_CALLBACK (job_finished_cb),
+			  sidebar_links);
+	/* The priority doesn't matter for this job */
+	ev_job_queue_add_job (priv->job, EV_JOB_PRIORITY_LOW);
 
-		priv->idle_stack = g_list_prepend (priv->idle_stack, stack_data);
-		priv->idle_id = g_idle_add (populate_links_idle, sidebar_links);
-	}
 }
 
