@@ -125,6 +125,8 @@ gnome_pdf_viewer_SOURCES =		\
 	gtkgesture.h			\
 	page-control.c			\
 	page-control.h			\
+	pdf-properties-display.c	\
+	pdf-properties-display.h	\
 	$(BUILT_SOURCES)
 
 # Font embedding hack for Gnome Print < 2.1.?2?
@@ -224,13 +226,11 @@ gpdf-marshal.c: gpdf-marshal.list $(GLIB_GENMARSHAL)
 stockdir = $(datadir)/pixmaps/gpdf
 stock_DATA = fitwidth.png
 
-ltk = 			\
-	xpdf-flip.ltk	\
-	xpdf-top.ltk	\
-	xpdf.ltk
+gladedir = $(datadir)/gpdf/glade
+glade_DATA = 				\
+	gpdf-properties-dialog.glade
 
 server_in_files = GNOME_PDF.server.in.in
-
 serverdir = $(libdir)/bonobo/servers
 server_DATA = $(server_in_files:.server.in.in=.server)
 $(server_in_files:.server.in.in=.server.in): $(server_in_files)

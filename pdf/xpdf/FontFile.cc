@@ -11,6 +11,7 @@
 #endif
 
 #include <aconf.h>
+#include <locale.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -2130,7 +2131,11 @@ double Type1CFontFile::getNum(Guchar **ptr, GBool *isFP) {
       }
     } while (i < 64);
     buf[i] = '\0';
-    x = atof(buf);
+    {
+      char *theLocale = setlocale(LC_NUMERIC, "C");
+      x = atof(buf);
+      setlocale(LC_NUMERIC, theLocale);
+    }
     *isFP = gTrue;
   } else if (b0 == 31) {
     x = 0;

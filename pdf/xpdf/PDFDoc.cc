@@ -11,6 +11,7 @@
 #endif
 
 #include <aconf.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -168,7 +169,11 @@ void PDFDoc::checkHeader() {
   }
   str->moveStart(i);
   p = strtok(&hdrBuf[i+5], " \t\n\r");
-  pdfVersion = atof(p);
+  {
+    char *theLocale = setlocale(LC_NUMERIC, "C");
+    pdfVersion = atof(p);
+    setlocale(LC_NUMERIC, theLocale);
+  }
   if (!(hdrBuf[i+5] >= '0' && hdrBuf[i+5] <= '9') ||
       pdfVersion > supportedPDFVersionNum + 0.0001) {
     error(-1, "PDF version %s -- xpdf supports version %s"

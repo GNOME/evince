@@ -6,6 +6,7 @@
  * Copyright 1996-2002 Glyph & Cog, LLC
  */
 
+#include <locale.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <string.h>
@@ -117,7 +118,11 @@ static GBool grabArg(ArgDesc *arg, int i, int *argc, char *argv[]) {
     break;
   case argFP:
     if (i + 1 < *argc && isFP(argv[i+1])) {
-      *(double *)arg->val = atof(argv[i+1]);
+      {
+        char *theLocale = setlocale(LC_NUMERIC, "C");
+        *(double *)arg->val = atof(argv[i+1]);
+        setlocale(LC_NUMERIC, theLocale);
+      }
       n = 2;
     } else {
       ok = gFalse;
