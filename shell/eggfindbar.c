@@ -266,6 +266,8 @@ egg_find_bar_init (EggFindBar *find_bar)
   GtkWidget *label;
   GtkWidget *separator;
   GtkWidget *image;
+  GtkWidget *image_back;
+  GtkWidget *image_forward;
 
   /* Data */
   priv = EGG_FIND_BAR_GET_PRIVATE (find_bar);
@@ -291,11 +293,35 @@ egg_find_bar_init (EggFindBar *find_bar)
   priv->find_entry = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), priv->find_entry);
   
-  priv->previous_button = gtk_button_new_from_stock (GTK_STOCK_GO_BACK);
-  priv->next_button = gtk_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+  priv->previous_button = gtk_button_new_with_mnemonic (_("_Previous"));
+  priv->next_button = gtk_button_new_with_mnemonic (_("_Next"));
 
+  image_back = gtk_image_new_from_stock (GTK_STOCK_GO_BACK,
+                                         GTK_ICON_SIZE_BUTTON);
+  image_forward = gtk_image_new_from_stock (GTK_STOCK_GO_FORWARD,
+                                            GTK_ICON_SIZE_BUTTON);
+
+  gtk_button_set_image (GTK_BUTTON (priv->previous_button),
+                        image_back);
+  gtk_button_set_image (GTK_BUTTON (priv->next_button),
+                        image_forward);
+  
   priv->case_button = gtk_check_button_new_with_mnemonic (_("C_ase Sensitive"));
 
+#if 0
+ {
+   GtkWidget *button_label;
+   /* This hack doesn't work because GtkCheckButton doesn't pass the
+    * larger size allocation to the label, it always gives the label
+    * its exact request. If you un-ifdef this, set the box back
+    * on case_button to TRUE, TRUE below
+    */
+   button_label = gtk_bin_get_child (GTK_BIN (priv->case_button));
+   gtk_label_set_ellipsize (GTK_LABEL (button_label),
+                            PANGO_ELLIPSIZE_END);
+ }
+#endif
+  
   gtk_box_pack_start (GTK_BOX (priv->hbox),
                       priv->close_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (priv->hbox),
@@ -321,6 +347,8 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_widget_show (separator);
   gtk_widget_show (label);
   gtk_widget_show (image);
+  gtk_widget_show (image_back);
+  gtk_widget_show (image_forward);
 
   gtk_widget_pop_composite_child ();
 
