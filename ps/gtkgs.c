@@ -1745,6 +1745,8 @@ gtk_gs_set_zoom(GtkGS * gs, gfloat zoom)
     set_up_page(gs);
     gs->changed = TRUE;
   }
+
+  gtk_gs_goto_page(gs, gs->current_page);
 }
 
 gfloat
@@ -2036,6 +2038,7 @@ gtk_gs_set_zoom_mode(GtkGS * gs, GtkGSZoomMode zoom_mode)
     gs->zoom_mode = zoom_mode;
     gtk_gs_set_zoom(gs, 1.0);
   }
+  gtk_gs_goto_page(gs, gs->current_page);
 }
 
 GtkGSZoomMode
