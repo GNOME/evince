@@ -348,6 +348,119 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *ev_window)
 	ev_application_open (EV_APP, NULL);
 }
 
+/* FIXME
+static gboolean
+overwrite_existing_file (GtkWindow *window, const gchar *file_name)
+{
+	GtkWidget *msgbox;
+	gchar *utf8_file_name;
+	AtkObject *obj;
+	gint ret;
+
+	utf8_file_name = g_filename_to_utf8 (file_name, -1, NULL, NULL, NULL);
+	msgbox = gtk_message_dialog_new (
+		window,
+		(GtkDialogFlags)GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_QUESTION,
+		GTK_BUTTONS_NONE,
+		_("A file named \"%s\" already exists."),
+		utf8_file_name);
+	g_free (utf8_file_name);
+
+	gtk_message_dialog_format_secondary_text (
+		GTK_MESSAGE_DIALOG (msgbox),
+		_("Do you want to replace it with the one you are saving?"));
+
+	gtk_dialog_add_button (GTK_DIALOG (msgbox), 
+			       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+
+	gtk_dialog_add_button (GTK_DIALOG (msgbox),
+			       _("_Replace"), GTK_RESPONSE_YES);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (msgbox),
+					 GTK_RESPONSE_CANCEL);
+
+	obj = gtk_widget_get_accessible (msgbox);
+
+	if (GTK_IS_ACCESSIBLE (obj))
+		atk_object_set_name (obj, _("Question"));
+
+	ret = gtk_dialog_run (GTK_DIALOG (msgbox));
+	gtk_widget_destroy (msgbox);
+
+	return (ret == GTK_RESPONSE_YES);
+}
+*/
+
+static void
+save_error_dialog (GtkWindow *window, const gchar *file_name)
+{
+	GtkWidget *error_dialog;
+
+	error_dialog = gtk_message_dialog_new (
+		window,
+		(GtkDialogFlags)GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_ERROR,
+		GTK_BUTTONS_CLOSE,
+		_("The file could not be saved as \"%s\"."),
+		file_name);
+
+	/* Easy way to make the text bold while keeping the string
+	 * above free from pango markup (FIXME ?) */
+	gtk_message_dialog_format_secondary_text (
+		GTK_MESSAGE_DIALOG (error_dialog), " ");
+
+	gtk_dialog_run (GTK_DIALOG (error_dialog));
+	gtk_widget_destroy (error_dialog);
+}
+
+static void
+ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
+{
+	GtkWidget *fc;
+	GtkFileFilter *pdf_filter, *all_filter;
+	gchar *uri = NULL; 
+
+	fc = gtk_file_chooser_dialog_new (
+		_("Save a Copy"),
+		NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
+		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+		NULL);
+	gtk_window_set_modal (GTK_WINDOW (fc), TRUE);
+
+	pdf_filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (pdf_filter, _("PDF Documents"));
+	gtk_file_filter_add_mime_type (pdf_filter, "application/pdf");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), pdf_filter);
+
+	all_filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (all_filter, _("All Files"));
+	gtk_file_filter_add_pattern (all_filter, "*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), all_filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (fc), pdf_filter);
+	
+	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
+
+	gtk_widget_show (fc);
+
+	while (gtk_dialog_run (GTK_DIALOG (fc)) == GTK_RESPONSE_OK) {
+		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+
+/* FIXME
+		if (g_file_test (uri, G_FILE_TEST_EXISTS) &&  
+		    !overwrite_existing_file (GTK_WINDOW (fc), uri))
+				continue;
+*/
+
+		if (ev_document_save (ev_window->priv->document, uri, NULL))
+			break;
+		else
+			save_error_dialog (GTK_WINDOW (fc), uri);    
+	}
+	gtk_widget_destroy (fc);
+}
+
 static gboolean
 using_postscript_printer (GnomePrintConfig *config)
 {
@@ -1112,7 +1225,10 @@ static GtkActionEntry entries[] = {
 	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open"), "<control>O",
 	  N_("Open a file"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
-        { "FilePrint", GTK_STOCK_PRINT, N_("_Print"), "<control>P",
+       	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), NULL,
+	  N_("Save the current document with a new filename"),
+	  G_CALLBACK (ev_window_cmd_save_as) },
+	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print"), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, N_("_Close"), "<control>W",

@@ -197,6 +197,25 @@ pdf_document_load (EvDocument  *document,
 	return TRUE;
 }
 
+static gboolean
+pdf_document_save (EvDocument  *document,
+		   const char  *uri,
+		   GError     **error)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	char *filename;
+	gboolean retval = FALSE;
+
+	filename = g_filename_from_uri (uri, NULL, error);
+	if (filename != NULL) {
+		GString *fname = new GString (filename);
+
+		retval = pdf_document->doc->saveAs (fname);
+	}
+
+	return retval;
+}
+
 static int
 pdf_document_get_n_pages (EvDocument  *document)
 {
@@ -975,6 +994,7 @@ static void
 pdf_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = pdf_document_load;
+	iface->save = pdf_document_save;
 	iface->get_n_pages = pdf_document_get_n_pages;
 	iface->set_page = pdf_document_set_page;
 	iface->get_page = pdf_document_get_page;

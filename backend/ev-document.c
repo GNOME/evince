@@ -86,6 +86,15 @@ ev_document_load (EvDocument  *document,
 	return iface->load (document, uri, error);
 }
 
+gboolean
+ev_document_save (EvDocument  *document,
+		  const char  *uri,
+		  GError     **error)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	return iface->save (document, uri, error);
+}
+
 char *
 ev_document_get_title (EvDocument  *document)
 {

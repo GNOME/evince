@@ -2,9 +2,11 @@
   <menubar name="MainMenu">
     <menu name="FileMenu" action="File">
       <menuitem name="FileOpenMenu" action="FileOpen"/>
-      <separator name="FileSep1"/>
+      <separator/>
+      <menuitem name="FileSaveAsMenu" action="FileSaveAs"/>
+      <separator/>
       <menuitem name="FilePrintMenu" action="FilePrint"/>
-      <separator name="FileSep2"/>
+      <separator/>
       <menuitem name="FileCloseWindowMenu" action="FileCloseWindow"/>
     </menu>
 

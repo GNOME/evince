@@ -49,6 +49,9 @@ struct _EvDocumentIface
 	gboolean    (* load)	        (EvDocument *document,
 					 const char *uri,
 					 GError    **error);
+	gboolean    (* save)	        (EvDocument *document,
+					 const char *uri,
+					 GError    **error);
 	int         (* get_n_pages)     (EvDocument *document);
 	void	    (* set_page)	(EvDocument  *document,
 					 int          page);
@@ -73,6 +76,9 @@ struct _EvDocumentIface
 GType ev_document_get_type (void);
 
 gboolean ev_document_load            (EvDocument   *document,
+				      const char   *uri,
+				      GError      **error);
+gboolean ev_document_save            (EvDocument   *document,
 				      const char   *uri,
 				      GError      **error);
 char    *ev_document_get_title       (EvDocument   *document);
