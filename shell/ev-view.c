@@ -1044,7 +1044,12 @@ update_find_status_message (EvView *view)
 		results = ev_document_find_get_n_results
 				(EV_DOCUMENT_FIND (view->document));
 
-		message = g_strdup_printf (_("%d found on this page"),
+		/* TRANS: Sometimes this could be better translated as
+		   "%d hit(s) on this page".  Therefore this string
+		   contains plural cases. */
+		message = g_strdup_printf (ngettext ("%d found on this page",
+						     "%d found on this page",
+						     results),
 					   results);
 	} else {
 		double percent;
