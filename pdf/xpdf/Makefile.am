@@ -16,7 +16,7 @@ else
 gui = xpdf
 endif
 
-BUILT_SOURCES = 			\
+marshal_sources =			\
 	gpdf-marshal.c			\
 	gpdf-marshal.h	
 
@@ -151,7 +151,7 @@ gnome_pdf_viewer_SOURCES =		\
 	pdf-info-dict-util.h		\
 	pdf-properties-display.c	\
 	pdf-properties-display.h	\
-	$(BUILT_SOURCES)
+	$(marshal_sources)
 
 
 # Old files
@@ -280,3 +280,11 @@ EXTRA_DIST = $(stock_DATA)		\
 	config.h 			\
 	$(ui_DATA)			\
 	$(glade_DATA)
+
+DONT_DIST_SOURCE = $(marshal_sources)
+
+dist-hook:
+	for file in $(DONT_DIST_SOURCE) ; do \
+	    rm -f $(distdir)/$$file ; \
+	done
+
