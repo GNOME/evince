@@ -1840,7 +1840,7 @@ static GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), NULL,
 	  N_("Save the current document with a new filename"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePrint", GTK_STOCK_PRINT, NULL, "<control>P",
+	{ "FilePrint", GTK_STOCK_PRINT, N_("Print..."), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W",
