@@ -316,6 +316,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 		g_free (page);
 	}
 
+	g_object_unref (loading_icon);
 	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->list_store),
 				       &(priv->current_page_iter));
 	priv->current_page = 0;
