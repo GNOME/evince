@@ -87,8 +87,8 @@ class Thumb {
 
         int getWidth(void) {return width; };
         int getHeight(void) {return height; };
-        GfxColorSpace *getColorSpace(void) {return gfxCS; };
-        int getBitsPerComponent(void) {return bits; };
+        GfxColorSpace *getColorSpace(void) {return colorMap->getColorSpace(); };
+        int getBitsPerComponent(void) {return colorMap->getBits(); };
 	int getLength(void) {return length; };
 
 	Stream *getStream() {return str; };
@@ -98,8 +98,7 @@ class Thumb {
       private:
         XRef *xref;
 	Stream *str;
-	GfxColorSpace *gfxCS;
-        ThumbColorMap *thumbCM; 
+	GfxImageColorMap *colorMap;
         int width, height, bits;
 	int length;
 };

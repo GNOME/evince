@@ -209,6 +209,7 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 {
 	Object obj1, obj2;
 	Dict *dict;
+	GfxColorSpace *colorSpace;
 
 	do {
 		/* Get stream dict */
@@ -270,18 +271,26 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 			obj1.free ();
 			dict->lookup ("CS", &obj1);
 		}
-		if (!(gfxCS = GfxColorSpace::parse (&obj1)))
-		{
+		colorSpace = GfxColorSpace::parse(&obj1);
+		obj1.free();
+		if (!colorSpace) {
 			fprintf (stderr, "Error: Cannot parse color space\n");
-			obj1.free ();
 			break;
 		}
-		if (gfxCS->getMode () == csIndexed)			
-			thumbCM = ThumbColorMap::lookupColorMap (xref, bits, obj1.arrayGetNF(3, &obj2), gfxCS);
-		else if (gfxCS->getMode () == csSeparation)
-			fprintf (stderr, "Not yet implemented\n");
-		  
-		
+
+		dict->lookup("Decode", &obj1);
+		if (obj1.isNull()) {
+			obj1.free();
+			dict->lookup("D", &obj1);
+		}
+		colorMap = new GfxImageColorMap(bits, &obj1, colorSpace);
+		obj1.free();
+		if (!colorMap->isOk()) {
+			fprintf (stderr, "Error: invalid colormap\n");
+			delete colorMap;
+			colorMap = NULL;
+		}
+
 		dict->lookup ("Length", &obj1);
 		if (!obj1.isInt ()) {
 			fprintf (stderr, "Error: Invalid Length Object %s\n",
@@ -308,10 +317,16 @@ Thumb::getPixbufData()
 
 	/* RGB Pixbuf data */
 	pixbufdatasize = width * height * 3;
-	pixbufdata =(unsigned char *)g_malloc(pixbufdatasize);
+	if (colorMap) {
+		pixbufdata =(unsigned char *)g_malloc(pixbufdatasize);
+	} else {
+		pixbufdata =(unsigned char *)g_malloc0(pixbufdatasize);
+		return pixbufdata;
+	}
+
 	p = pixbufdata;
 
-	imgstr = new ImageStream(str, width, thumbCM->getNumPixelComps(), thumbCM->getBits());
+	imgstr = new ImageStream(str, width, colorMap->getNumPixelComps(), colorMap->getBits());
 	imgstr->reset();
 	for (row = 0; row < height; ++row) {
 	    for (col = 0; col < width; ++col) {
@@ -319,7 +334,7 @@ Thumb::getPixbufData()
 		GfxRGB rgb;
 
 		imgstr->getPixel(pix);
-		thumbCM->getRGB(pix, &rgb);
+		colorMap->getRGB(pix, &rgb);
 
 		*p++ = (guchar)(rgb.r * 255.99999);
 		*p++ = (guchar)(rgb.g * 255.99999);
@@ -332,7 +347,7 @@ Thumb::getPixbufData()
 }
 
 Thumb::~Thumb() {
-        delete thumbCM;
+        delete colorMap;
         delete str;
 }
 
