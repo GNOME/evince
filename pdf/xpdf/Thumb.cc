@@ -223,7 +223,7 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 			dict->lookup ("W", &obj1);
 		}
 		if (!obj1.isInt ()) {
-			printf ("Error: Invalid Width object %s\n",
+			fprintf (stderr, "Error: Invalid Width object %s\n",
 				obj1.getTypeName ());
 			obj1.free ();
 			break;
@@ -239,7 +239,7 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 			dict->lookup ("H", &obj1);
 		}
 		if (!obj1.isInt ()) {
-			printf ("Error: Invalid Height object %s\n",
+			fprintf (stderr, "Error: Invalid Height object %s\n",
 				obj1.getTypeName ());
 			obj1.free ();
 			break;
@@ -255,7 +255,7 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 			dict->lookup ("BPC", &obj1);
 		}
 		if (!obj1.isInt ()) {
-			printf ("Error: Invalid BitsPerComponent object %s\n",
+			fprintf (stderr, "Error: Invalid BitsPerComponent object %s\n",
 				obj1.getTypeName ());
 			obj1.free ();
 			break;
@@ -272,19 +272,19 @@ Thumb::Thumb(XRef *xrefA, Object *obj) :
 		}
 		if (!(gfxCS = GfxColorSpace::parse (&obj1)))
 		{
-			printf ("Error: Cannot parse color space\n");
+			fprintf (stderr, "Error: Cannot parse color space\n");
 			obj1.free ();
 			break;
 		}
 		if (gfxCS->getMode () == csIndexed)			
 			thumbCM = ThumbColorMap::lookupColorMap (xref, bits, obj1.arrayGetNF(3, &obj2), gfxCS);
 		else if (gfxCS->getMode () == csSeparation)
-			printf ("Not yet implemented\n");
+			fprintf (stderr, "Not yet implemented\n");
 		  
 		
 		dict->lookup ("Length", &obj1);
 		if (!obj1.isInt ()) {
-			printf ("Error: Invalid Length Object %s\n",
+			fprintf (stderr, "Error: Invalid Length Object %s\n",
 				obj1.getTypeName ());
 			obj1.free ();
 			break;
