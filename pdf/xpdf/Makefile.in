@@ -121,11 +121,11 @@ gpdf_SOURCES =  	$(common_sources)		GOutputDev.cc			gpdf.cc
 gpdf_LDADD =  	$(EXTRA_GNOME_LIBS)		../goo/libgoo.a
 
 
-xpdf_SOURCES =  	$(common_sources)		XOutputDev.cc
+xpdf_SOURCES =  	$(common_sources)		XOutputDev.cc			LTKOutputDev.cc			PSOutputDev.cc			xpdf.cc
 
 
 xpdf_CFLAGS = $(X_CFLAGS)
-xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a $(X_EXTRA_LIBS)
+xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS) 
 
 pdfimages_SOURCES =  	$(common_sources)		ImageOutputDev.cc		pdfimages.cc
 
@@ -207,7 +207,8 @@ gpdf_DEPENDENCIES =  ../goo/libgoo.a
 gpdf_LDFLAGS = 
 xpdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o Gfx.o GfxFont.o \
 GfxState.o Lexer.o Link.o Object.o OutputDev.o Page.o Params.o Parser.o \
-PDFDoc.o Stream.o TextOutputDev.o XRef.o XOutputDev.o
+PDFDoc.o Stream.o TextOutputDev.o XRef.o XOutputDev.o LTKOutputDev.o \
+PSOutputDev.o xpdf.o
 xpdf_DEPENDENCIES =  ../goo/libgoo.a ../ltk/libltk.a
 xpdf_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
@@ -226,12 +227,12 @@ TAR = tar
 GZIP_ENV = --best
 DEP_FILES =  .deps/Array.P .deps/Catalog.P .deps/Dict.P .deps/Error.P \
 .deps/GOutputDev.P .deps/Gfx.P .deps/GfxFont.P .deps/GfxState.P \
-.deps/ImageOutputDev.P .deps/Lexer.P .deps/Link.P .deps/Object.P \
-.deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
+.deps/ImageOutputDev.P .deps/LTKOutputDev.P .deps/Lexer.P .deps/Link.P \
+.deps/Object.P .deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
 .deps/PSOutputDev.P .deps/Page.P .deps/Params.P .deps/Parser.P \
 .deps/Stream.P .deps/TextOutputDev.P .deps/XOutputDev.P .deps/XRef.P \
 .deps/gpdf.P .deps/pdfimages.P .deps/pdfinfo.P .deps/pdftopbm.P \
-.deps/pdftops.P .deps/pdftotext.P
+.deps/pdftops.P .deps/pdftotext.P .deps/xpdf.P
 SOURCES = $(pdftops_SOURCES) $(pdftotext_SOURCES) $(pdfinfo_SOURCES) $(pdftopbm_SOURCES) $(pdfimages_SOURCES) $(gpdf_SOURCES) $(xpdf_SOURCES)
 OBJECTS = $(pdftops_OBJECTS) $(pdftotext_OBJECTS) $(pdfinfo_OBJECTS) $(pdftopbm_OBJECTS) $(pdfimages_OBJECTS) $(gpdf_OBJECTS) $(xpdf_OBJECTS)
 
@@ -531,11 +532,10 @@ all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
-	xpdf.cc
 
 xpdf-ltk.h: xpdf.ltk
 	rm -f $@
-	$(LTKLIBDIR)/ltkbuild <xpdf.ltk >$@.new
+	$(top_srcdir)/ltk/ltkbuild <xpdf.ltk >$@.new
 	mv $@.new $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -46,11 +46,13 @@ gpdf_LDADD =			\
 
 xpdf_SOURCES =			\
 	$(common_sources)	\
-	XOutputDev.cc
+	XOutputDev.cc		\
+	LTKOutputDev.cc		\
+	PSOutputDev.cc		\
 	xpdf.cc
 
 xpdf_CFLAGS = $(X_CFLAGS)
-xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a $(X_EXTRA_LIBS)
+xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS) 
 
 pdfimages_SOURCES =		\
 	$(common_sources)	\
@@ -85,7 +87,7 @@ pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
 
 xpdf-ltk.h: xpdf.ltk
 	rm -f $@
-	$(LTKLIBDIR)/ltkbuild <xpdf.ltk >$@.new
+	$(top_srcdir)/ltk/ltkbuild <xpdf.ltk >$@.new
 	mv $@.new $@
 
 bitmaps =			\
