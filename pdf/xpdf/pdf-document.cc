@@ -363,19 +363,13 @@ pdf_document_get_page_size (EvDocument   *document,
 	if (height)
 		*height = 1;
 
-		
-	if (page == -1 && document_validate_page (pdf_document)) {
-		if (width)
-			*width = pdf_document->out->getBitmapWidth();
-		if (height)
-			*height = pdf_document->out->getBitmapHeight();
-		return;
-	}
+	if (page == -1) 
+		page = pdf_document->page;
 
 	the_page = pdf_document->doc->getCatalog ()->getPage (page);
 	if (the_page) {
-		*width = (int) the_page->getWidth ();
-		*height = (int) the_page->getHeight ();
+		*width = (int) ((the_page->getWidth () * pdf_document->scale) + 0.5);
+		*height = (int) ((the_page->getHeight () * pdf_document->scale) + 0.5);
 	}
 }
 
