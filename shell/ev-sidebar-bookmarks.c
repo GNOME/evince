@@ -50,6 +50,7 @@ enum {
 	BOOKMARKS_COLUMN_MARKUP,
 	BOOKMARKS_COLUMN_PAGE_NUM,
 	BOOKMARKS_COLUMN_PAGE_VALID,
+	BOOKMARKS_COLUMN_BOOKMARK,
 	BOOKMARKS_COLUMN_NUM_COLUMNS
 };
 
@@ -88,6 +89,34 @@ ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *ev_sidebar_bookmarks_c
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarBookmarksPrivate));
 }
 
+static void
+selection_changed_cb (GtkTreeSelection   *selection,
+		      EvSidebarBookmarks *ev_sidebar_bookmarks)
+{
+	EvDocument *document;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+
+	g_return_if_fail (EV_IS_SIDEBAR_BOOKMARKS (ev_sidebar_bookmarks));
+
+	document = EV_DOCUMENT (ev_sidebar_bookmarks->priv->current_document);
+	g_return_if_fail (ev_sidebar_bookmarks->priv->current_document != NULL);
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		EvBookmark *bookmark;
+		GValue value = {0, };
+		int page;
+
+		gtk_tree_model_get_value (model, &iter,
+					  BOOKMARKS_COLUMN_BOOKMARK, &value);
+
+		bookmark = EV_BOOKMARK (g_value_get_object (&value));
+		g_return_if_fail (bookmark != NULL);
+
+		page = ev_bookmark_get_page (bookmark);
+		ev_document_set_page (document, page);
+	}
+}
 
 static void
 ev_sidebar_bookmarks_construct (EvSidebarBookmarks *ev_sidebar_bookmarks)
@@ -96,12 +125,14 @@ ev_sidebar_bookmarks_construct (EvSidebarBookmarks *ev_sidebar_bookmarks)
 	GtkWidget *swindow;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
+	GtkTreeSelection *selection;
 
 	priv = ev_sidebar_bookmarks->priv;
 	priv->model = (GtkTreeModel *) gtk_tree_store_new (BOOKMARKS_COLUMN_NUM_COLUMNS,
 							   G_TYPE_STRING,
 							   G_TYPE_INT,
-							   G_TYPE_BOOLEAN);
+							   G_TYPE_BOOLEAN,
+							   G_TYPE_OBJECT);
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 
@@ -139,6 +170,11 @@ ev_sidebar_bookmarks_construct (EvSidebarBookmarks *ev_sidebar_bookmarks)
 						 (GtkTreeCellDataFunc) bookmarks_page_num_func,
 						 NULL, NULL);
 
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+	g_signal_connect (selection, "changed",
+			  G_CALLBACK (selection_changed_cb),
+			  ev_sidebar_bookmarks);
 }
 
 static void
@@ -232,6 +268,7 @@ do_one_iteration (EvSidebarBookmarks *ev_sidebar_bookmarks)
 			    BOOKMARKS_COLUMN_PAGE_NUM, page,
 			    /* FIXME: Handle links for real. */
 			    BOOKMARKS_COLUMN_PAGE_VALID, (page >= 0),
+			    BOOKMARKS_COLUMN_BOOKMARK, bookmark,
 			    -1);
 	g_object_unref (bookmark);
 	
