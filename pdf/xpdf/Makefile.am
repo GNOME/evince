@@ -141,4 +141,7 @@ glade_DATA = 		\
 	about.glade	\
 	gpdf.glade
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(glade_DATA)
+gnorbadir = $(sysconfdir)/CORBA/servers
+gnorba_DATA = image-x-pdf.gnorba
+
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(glade_DATA) $(gnorba_DATA)
