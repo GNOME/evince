@@ -86,6 +86,7 @@ main (int argc, char *argv[])
 
 	ev_debug_init ();
 	ev_stock_icons_init ();
+	gtk_window_set_default_icon_name ("postscript-viewer");
 
 	g_object_get_property (G_OBJECT (program),
                                GNOME_PARAM_POPT_CONTEXT,
