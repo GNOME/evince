@@ -1,5 +1,9 @@
 2005-01-22  Martin Kretzschmar  <martink@gnome.org>
 
+	* pdf/xpdf/GlobalParams.cc: My 2005-01-05 change didn't actually
+	fix the problem. Now I just removed the Adobe font names and hope
+	that the URW fonts are always in outline format. Bug #164934
+
 	* shell/ev-window.c (update_window_title): empty titles are
 	useless, use filename in that case too.
 
