@@ -44,7 +44,7 @@
 #include "ev-job-queue.h"
 #include "eggfindbar.h"
 
-#include "pdf-document.h"
+#include "ev-poppler.h"
 #include "pixbuf-document.h"
 #include "ps-document.h"
 
