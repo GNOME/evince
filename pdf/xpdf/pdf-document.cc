@@ -740,14 +740,12 @@ pdf_document_bookmarks_begin_read (EvDocumentBookmarks *document_bookmarks)
 	return (EvDocumentBookmarksIter *) iter;
 }
 
-static gboolean
-pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
-				   EvDocumentBookmarksIter  *bookmarks_iter,
-				   char                    **title,
-				   EvDocumentBookmarksType  *type,
-				   gint                     *page)
+static EvBookmark *
+pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmarks,
+				     EvDocumentBookmarksIter  *bookmarks_iter)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
+	EvBookmark *bookmark;
 	BookmarksIter *iter = (BookmarksIter *)bookmarks_iter;
 	OutlineItem *anItem;
 	LinkAction *link_action;
@@ -757,13 +755,11 @@ pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 	GString *named_dest;
 	Unicode *link_title;
 	Ref page_ref;
-	gint page_num = -1;
+	gint page_num = 0;
+	char *title;
 
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
 	g_return_val_if_fail (iter != NULL, FALSE);
-	g_return_val_if_fail (title != NULL, FALSE);
-	g_return_val_if_fail (type != NULL, FALSE);
-	g_return_val_if_fail (page != NULL, FALSE);
 
 	anItem = (OutlineItem *)iter->items->get(iter->index);
 	link_action = anItem->getAction ();
@@ -808,15 +804,16 @@ pdf_document_bookmarks_get_values (EvDocumentBookmarks      *document_bookmarks,
 			g_warning ("Unknown link action type: %d", link_action->getKind ());
 		}
 
-		*title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
+		title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
 	} else if (link_title) {
-		*title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
+		title = g_strdup (unicode_to_char (anItem, pdf_document->umap));
 	}
 
-	*type = EV_DOCUMENT_BOOKMARKS_TYPE_LINK;
-	*page = page_num;
+	bookmark = ev_bookmark_new (title, EV_BOOKMARK_TYPE_LINK, page_num);
 
-	return TRUE;
+	g_free (title);
+
+	return bookmark;
 }
 
 static EvDocumentBookmarksIter *
@@ -1047,7 +1044,7 @@ pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface)
 {
 	iface->has_document_bookmarks = pdf_document_bookmarks_has_document_bookmarks;
 	iface->begin_read = pdf_document_bookmarks_begin_read;
-	iface->get_values = pdf_document_bookmarks_get_values;
+	iface->get_bookmark = pdf_document_bookmarks_get_bookmark;
 	iface->get_child = pdf_document_bookmarks_get_child;
 	iface->next = pdf_document_bookmarks_next;
 	iface->free_iter = pdf_document_bookmarks_free_iter;

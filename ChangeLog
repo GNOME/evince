@@ -1,5 +1,24 @@
 2005-01-07  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* backend/Makefile.am:
+	* backend/ev-bookmark.c: (ev_bookmark_type_get_type),
+	(ev_bookmark_get_title), (ev_bookmark_set_title),
+	(ev_bookmark_get_bookmark_type), (ev_bookmark_set_bookmark_type),
+	(ev_bookmark_get_page), (ev_bookmark_set_page),
+	(ev_bookmark_get_property), (ev_bookmark_set_property),
+	(ev_window_dispose), (ev_bookmark_init), (ev_bookmark_class_init),
+	(ev_bookmark_new):
+	* backend/ev-bookmark.h:
+	* backend/ev-document-bookmarks.c:
+	(ev_document_bookmarks_get_bookmark):
+	* backend/ev-document-bookmarks.h:
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-sidebar-bookmarks.c: (do_one_iteration):
+
+	Add a bookmark object to the backend and use it instead of get_values
+
+2005-01-07  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* data/evince-ui.xml:
 
 	Cleanup and add select all.

@@ -207,34 +207,33 @@ static gboolean
 do_one_iteration (EvSidebarBookmarks *ev_sidebar_bookmarks)
 {
 	EvSidebarBookmarksPrivate *priv = ev_sidebar_bookmarks->priv;
+	EvBookmark *bookmark;
 	IdleStackData *stack_data;
 	GtkTreeIter tree_iter;
-	gchar *title = NULL;
-	EvDocumentBookmarksType type;
 	EvDocumentBookmarksIter *child_iter;
-	gint page = -1;
+	gint page;
 
 	g_assert (priv->idle_stack);
 
 	stack_data = (IdleStackData *) priv->idle_stack->data;
 
-	if (! ev_document_bookmarks_get_values (EV_DOCUMENT_BOOKMARKS (priv->current_document),
-						stack_data->bookmarks_iter,
-						&title,
-						&type,
-						&page)) {
+	bookmark = ev_document_bookmarks_get_bookmark
+		(EV_DOCUMENT_BOOKMARKS (priv->current_document),
+		 stack_data->bookmarks_iter);
+	if (bookmark == NULL) {
 		g_warning ("mismatch in model.  No values available at current level.\n");
 		return FALSE;
 	}
 
+	page = ev_bookmark_get_page (bookmark);
 	gtk_tree_store_append (GTK_TREE_STORE (priv->model), &tree_iter, stack_data->tree_iter);
 	gtk_tree_store_set (GTK_TREE_STORE (priv->model), &tree_iter,
-			    BOOKMARKS_COLUMN_MARKUP, title,
+			    BOOKMARKS_COLUMN_MARKUP, ev_bookmark_get_title (bookmark),
 			    BOOKMARKS_COLUMN_PAGE_NUM, page,
 			    /* FIXME: Handle links for real. */
 			    BOOKMARKS_COLUMN_PAGE_VALID, (page >= 0),
 			    -1);
-	g_free (title);
+	g_object_unref (bookmark);
 	
 	child_iter = ev_document_bookmarks_get_child (EV_DOCUMENT_BOOKMARKS (priv->current_document),
 						      stack_data->bookmarks_iter);

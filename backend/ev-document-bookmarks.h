@@ -32,7 +32,9 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <gdk/gdk.h>
+
 #include "ev-document.h"
+#include "ev-bookmark.h"
 
 G_BEGIN_DECLS
 
@@ -48,13 +50,6 @@ typedef struct _EvDocumentBookmarks		EvDocumentBookmarks;
 typedef struct _EvDocumentBookmarksIface	EvDocumentBookmarksIface;
 typedef struct _EvDocumentBookmarksIter 	EvDocumentBookmarksIter;
 
-typedef enum
-{
-	EV_DOCUMENT_BOOKMARKS_TYPE_TITLE,
-	EV_DOCUMENT_BOOKMARKS_TYPE_LINK,
-	EV_DOCUMENT_BOOKMARKS_TYPE_EXTERNAL_URI,
-} EvDocumentBookmarksType;
-
 struct _EvDocumentBookmarksIface
 {
 	GTypeInterface base_iface;
@@ -62,11 +57,8 @@ struct _EvDocumentBookmarksIface
 	/* Methods  */
 	gboolean                 (* has_document_bookmarks) (EvDocumentBookmarks      *document_bookmarks);
 	EvDocumentBookmarksIter *(* begin_read)             (EvDocumentBookmarks      *document_bookmarks);
-	gboolean                 (* get_values)             (EvDocumentBookmarks      *document_bookmarks,
-							     EvDocumentBookmarksIter  *iter,
-							     gchar                   **title,
-							     EvDocumentBookmarksType  *type,
-							     gint                     *page);
+	EvBookmark              *(* get_bookmark)           (EvDocumentBookmarks      *document_bookmarks,
+							     EvDocumentBookmarksIter  *iter);
 	EvDocumentBookmarksIter *(* get_child)              (EvDocumentBookmarks      *document_bookmarks,
 							     EvDocumentBookmarksIter  *iter);
 	gboolean                 (* next)                   (EvDocumentBookmarks      *document_bookmarks,
@@ -78,11 +70,8 @@ struct _EvDocumentBookmarksIface
 GType                    ev_document_bookmarks_get_type               (void);
 gboolean                 ev_document_bookmarks_has_document_bookmarks (EvDocumentBookmarks      *document_bookmarks);
 EvDocumentBookmarksIter *ev_document_bookmarks_begin_read             (EvDocumentBookmarks      *document_bookmarks);
-gboolean                 ev_document_bookmarks_get_values             (EvDocumentBookmarks      *document_bookmarks,
-								       EvDocumentBookmarksIter  *iter,
-								       char                    **title,
-								       EvDocumentBookmarksType  *type,
-								       gint                     *page);
+EvBookmark		*ev_document_bookmarks_get_bookmark           (EvDocumentBookmarks      *document_bookmarks,
+								       EvDocumentBookmarksIter  *iter);
 EvDocumentBookmarksIter *ev_document_bookmarks_get_child              (EvDocumentBookmarks      *document_bookmarks,
 								       EvDocumentBookmarksIter  *iter);
 gboolean                 ev_document_bookmarks_next                   (EvDocumentBookmarks      *document_bookmarks,

@@ -11,6 +11,8 @@ noinst_LTLIBRARIES = libevbackend.la
 
 libevbackend_la_SOURCES=			\
 	ev-backend-marshal.c			\
+	ev-bookmark.c				\
+	ev-bookmark.h				\
 	ev-document.c				\
 	ev-document.h				\
 	ev-document-thumbnails.c		\
