@@ -177,11 +177,14 @@ set_action_sensitive (EvWindow   *ev_window,
 static void
 update_action_sensitivity (EvWindow *ev_window)
 {
+	EvDocument *document;
 	int n_pages;
 	int page;
 
-	if (ev_window->priv->document)
-		n_pages = ev_document_get_n_pages (ev_window->priv->document);
+	document = ev_window->priv->document;
+
+	if (document)
+		n_pages = ev_document_get_n_pages (document);
 	else
 		n_pages = 1;
 
@@ -191,6 +194,13 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, "GoPageDown", page > 1);
 	set_action_sensitive (ev_window, "GoPageUp", page < n_pages);
 	set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
+
+	if (document)
+		set_action_sensitive (ev_window, "EditFind", EV_IS_DOCUMENT_FIND (document));
+	else
+		set_action_sensitive (ev_window, "EditFind", FALSE);
+
+	
 }
 
 void
