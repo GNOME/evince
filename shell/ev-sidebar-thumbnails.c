@@ -57,8 +57,6 @@ enum {
 	NUM_COLUMNS
 };
 
-static GtkVBoxClass *parent_class;
-
 G_DEFINE_TYPE (EvSidebarThumbnails, ev_sidebar_thumbnails, GTK_TYPE_VBOX);
 
 #define EV_SIDEBAR_THUMBNAILS_GET_PRIVATE(object) \
@@ -76,7 +74,7 @@ ev_sidebar_thumbnails_destroy (GtkObject *object)
 		priv->idle_id = 0;
 	}
 
-	GTK_OBJECT_CLASS (parent_class)->destroy (object);
+	GTK_OBJECT_CLASS (ev_sidebar_thumbnails_parent_class)->destroy (object);
 }
 
 static void
@@ -87,8 +85,6 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_thumbnails_class);
 	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_thumbnails_class);
-
- 	parent_class = g_type_class_peek_parent (ev_sidebar_thumbnails_class);
 
 	gtk_object_class->destroy = ev_sidebar_thumbnails_destroy;
 

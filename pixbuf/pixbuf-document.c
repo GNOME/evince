@@ -53,8 +53,6 @@ G_DEFINE_TYPE_WITH_CODE (PixbufDocument, pixbuf_document, G_TYPE_OBJECT,
 						pixbuf_document_document_thumbnails_iface_init)				   
 				   });
 
-static GObjectClass *parent_class;
-
 static gboolean
 pixbuf_document_load (EvDocument  *document,
 		      const char  *uri,
@@ -198,7 +196,7 @@ pixbuf_document_finalize (GObject *object)
 
 	g_object_unref (pixbuf_document->pixbuf);
 	
-	G_OBJECT_CLASS (parent_class)->finalize (object);
+	G_OBJECT_CLASS (pixbuf_document_parent_class)->finalize (object);
 }
 
 static void
@@ -234,8 +232,6 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-	
 	gobject_class->finalize = pixbuf_document_finalize;
 	gobject_class->get_property = pixbuf_document_get_property;
 	gobject_class->set_property = pixbuf_document_set_property;

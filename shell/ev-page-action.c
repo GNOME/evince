@@ -54,8 +54,6 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-static GObjectClass *parent_class = NULL;
-
 G_DEFINE_TYPE (EvPageAction, ev_page_action, GTK_TYPE_ACTION)
 
 #define EV_PAGE_ACTION_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_PAGE_ACTION, EvPageActionPrivate))
@@ -158,7 +156,7 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 					 proxy, 0);
 	}
 
-	GTK_ACTION_CLASS (parent_class)->connect_proxy (action, proxy);
+	GTK_ACTION_CLASS (ev_page_action_parent_class)->connect_proxy (action, proxy);
 }
 
 static void
@@ -170,7 +168,7 @@ ev_page_action_init (EvPageAction *action)
 static void
 ev_page_action_finalize (GObject *object)
 {
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (ev_page_action_parent_class)->finalize (object);
 }
 
 static void
@@ -232,8 +230,6 @@ ev_page_action_class_init (EvPageActionClass *class)
 	object_class->finalize = ev_page_action_finalize;
 	object_class->set_property = ev_page_action_set_property;
 	object_class->get_property = ev_page_action_get_property;
-
-	parent_class = g_type_class_peek_parent (class);
 
 	action_class->toolbar_item_type = GTK_TYPE_TOOL_ITEM;
 	action_class->create_tool_item = create_tool_item;

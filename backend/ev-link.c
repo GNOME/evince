@@ -39,8 +39,6 @@ struct _EvLinkPrivate {
 	int page;
 };
 
-static GObjectClass *parent_class = NULL;
-
 G_DEFINE_TYPE (EvLink, ev_link, G_TYPE_OBJECT)
 
 #define EV_LINK_GET_PRIVATE(object) \
@@ -219,7 +217,7 @@ ev_window_dispose (GObject *object)
 		priv->title = NULL;
 	}
 
-	G_OBJECT_CLASS (parent_class)->dispose (object);
+	G_OBJECT_CLASS (ev_link_parent_class)->dispose (object);
 }
 
 static void
@@ -234,8 +232,6 @@ static void
 ev_link_class_init (EvLinkClass *ev_window_class)
 {
 	GObjectClass *g_object_class;
-
-	parent_class = g_type_class_peek_parent (ev_window_class);
 
 	g_object_class = G_OBJECT_CLASS (ev_window_class);
 	g_object_class->dispose = ev_window_dispose;

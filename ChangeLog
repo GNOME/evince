@@ -1,5 +1,19 @@
 2005-01-28  Martin Kretzschmar  <martink@gnome.org>
 
+	* shell/ev-sidebar-thumbnails.c (ev_sidebar_thumbnails_destroy)
+	(ev_sidebar_thumbnails_class_init): use G_DEFINE_TYPE-supplied
+	ev_sidebar_thumbnails_parent_class variable, don't define another
+	parent_class variable.
+
+	* shell/ev-page-action.c (connect_proxy, ev_page_action_finalize)
+	(ev_page_action_class_init): ditto.
+
+	* pixbuf/pixbuf-document.c (pixbuf_document_finalize)
+	(pixbuf_document_class_init): ditto.
+
+	* backend/ev-link.c (ev_window_dispose, ev_link_class_init):
+	ditto.
+
 	* .cvsignore: ignore various valgrind output files.
 
 2005-01-27  Marco Pesenti Gritti  <marco@gnome.org>
