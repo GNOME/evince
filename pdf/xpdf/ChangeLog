@@ -1,3 +1,10 @@
+2002-09-17  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* gpdf-embeddable.cc (load_pdf_from_stream): don't try to check
+	for catalog after having discovered that !pdf->isOk and having
+	already deleted it. I introduced my first goto to this code.
+	Edsger Dijkstra in memoriam
+
 2002-09-15  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
 	* Makefile.am: don't build gpdf here
