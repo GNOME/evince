@@ -40,16 +40,19 @@
 
 struct _EvSidebarThumbnailsPrivate {
 	GtkWidget *tree_view;
+	GtkAdjustment *vadjustment;
 	GtkListStore *list_store;
 	EvDocument *document;
-	
+
 	guint idle_id;
-	gint current_page, n_pages;
+	gint current_page, n_pages, pages_done;
+	GtkTreeIter current_page_iter;
 };
 
 enum {
 	COLUMN_PAGE_STRING,
 	COLUMN_PIXBUF,
+	COLUMN_THUMBNAIL_SET,
 	NUM_COLUMNS
 };
 
@@ -65,13 +68,13 @@ ev_sidebar_thumbnails_destroy (GtkObject *object)
 {
 	EvSidebarThumbnails *ev_sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (object);
 	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
-	
+
 	if (priv->idle_id != 0) {
 		g_source_remove (priv->idle_id);
 
 		priv->idle_id = 0;
 	}
-	
+
 	GTK_OBJECT_CLASS (parent_class)->destroy (object);
 }
 
@@ -80,16 +83,49 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 {
 	GObjectClass *g_object_class;
 	GtkObjectClass *gtk_object_class;
-	
+
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_thumbnails_class);
 	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_thumbnails_class);
 
  	parent_class = g_type_class_peek_parent (ev_sidebar_thumbnails_class);
-	
+
 	gtk_object_class->destroy = ev_sidebar_thumbnails_destroy;
-	
+
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarThumbnailsPrivate));
 
+}
+
+static void
+adjustment_changed_cb (GtkAdjustment       *adjustment,
+		       EvSidebarThumbnails *ev_sidebar_thumbnails)
+{
+	EvSidebarThumbnailsPrivate *priv;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	int page;
+	gboolean thumbnail_set;
+
+	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
+
+	gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (priv->tree_view),
+				       1, 1, &path,
+				       NULL, NULL, NULL);
+	if (!path)
+		return;
+
+	page = gtk_tree_path_get_indices (path)[0];
+	if (page == priv->current_page)
+		return;
+	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store),
+				 &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store), &iter,
+			    COLUMN_THUMBNAIL_SET, &thumbnail_set,
+			    -1);
+	if (! thumbnail_set) {
+		priv->current_page = page;
+		priv->current_page_iter = iter;
+		
+	}
 }
 
 static void
@@ -101,7 +137,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 
 	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
 
-	priv->list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, GDK_TYPE_PIXBUF);
+	priv->list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, GDK_TYPE_PIXBUF, G_TYPE_BOOLEAN);
 	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->list_store));
 
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
@@ -116,7 +152,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
 						     NULL, gtk_cell_renderer_text_new (),
 						     "markup", 0, NULL);
-	
+
 	g_object_unref (priv->list_store);
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
@@ -124,10 +160,13 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
 					     GTK_SHADOW_IN);
-
+	priv->vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (swindow));
+	g_signal_connect (G_OBJECT (priv->vadjustment), "value-changed",
+			  G_CALLBACK (adjustment_changed_cb),
+			  ev_sidebar_thumbnails);
 	gtk_container_add (GTK_CONTAINER (swindow), priv->tree_view);
 	gtk_box_pack_start (GTK_BOX (ev_sidebar_thumbnails), swindow, TRUE, TRUE, 0);
-	
+
 	gtk_widget_show_all (swindow);
 }
 
@@ -146,25 +185,37 @@ do_one_iteration (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
 	GdkPixbuf *pixbuf;
-	GtkTreePath *path;
-	GtkTreeIter iter;
+	gboolean thumbnail_set;
 
-	pixbuf = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
-						       priv->current_page, THUMBNAIL_WIDTH);
-
-	path = gtk_tree_path_new_from_indices (priv->current_page, -1);
-	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
-	gtk_tree_path_free (path);
-
-	gtk_list_store_set (priv->list_store, &iter,
-			    COLUMN_PIXBUF, pixbuf,
+	gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store),
+			    &(priv->current_page_iter),
+			    COLUMN_THUMBNAIL_SET, &thumbnail_set,
 			    -1);
+	if (!thumbnail_set) {
+		pixbuf = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (priv->document),
+							       priv->current_page, THUMBNAIL_WIDTH);
 
-	g_object_unref (pixbuf);
-	
+		gtk_list_store_set (priv->list_store,
+				    &(priv->current_page_iter),
+				    COLUMN_PIXBUF, pixbuf,
+				    -1);
+
+		g_object_unref (pixbuf);
+		priv->pages_done ++;
+	}
+
 	priv->current_page++;
-	
-	if (priv->current_page == priv->n_pages)
+
+	if (priv->current_page == priv->n_pages) {
+		priv->current_page = 0;
+		gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->list_store),
+					       &(priv->current_page_iter));
+	} else {
+		gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->list_store),
+					  &(priv->current_page_iter));
+	}
+
+	if (priv->pages_done == priv->n_pages)
 		return FALSE;
 	else
 		return TRUE;
@@ -180,7 +231,6 @@ populate_thumbnails_idle (gpointer data)
 	EvSidebarThumbnails *ev_sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (data);
 	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
 
-
 #if PROFILE_THUMB == 1
 	static GTimer *total_timer;
 	static gboolean first_time = TRUE;
@@ -192,8 +242,12 @@ populate_thumbnails_idle (gpointer data)
 	}
 #endif
 
-	if (priv->current_page == priv->n_pages) {
+	/* undo the thumbnailing idle and handler */
+	if (priv->pages_done == priv->n_pages) {
 		priv->idle_id = 0;
+		g_signal_handlers_disconnect_by_func (priv->vadjustment,
+						      adjustment_changed_cb,
+						      ev_sidebar_thumbnails);
 #if PROFILE_THUMB == 1
 		time_elapsed = g_timer_elapsed (total_timer, NULL);
 		g_timer_destroy (total_timer);
@@ -233,7 +287,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	gint height = THUMBNAIL_WIDTH;
 
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-	
+
 	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
 
 	if (priv->idle_id != 0) {
@@ -244,9 +298,9 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	priv->document = document;
 	priv->idle_id = g_idle_add (populate_thumbnails_idle, sidebar_thumbnails);
 	priv->n_pages = n_pages;
-	priv->current_page = 0;
 
-	/* We get the dimensions of the first doc so that   */
+	/* We get the dimensions of the first doc so that we can make a blank
+	 * icon.  */
 	ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (priv->document),
 					       0, THUMBNAIL_WIDTH, &width, &height);
 	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
@@ -257,9 +311,14 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_PAGE_STRING, page,
 				    COLUMN_PIXBUF, loading_icon,
+				    COLUMN_THUMBNAIL_SET, FALSE,
 				    -1);
 		g_free (page);
 	}
 
+	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->list_store),
+				       &(priv->current_page_iter));
+	priv->current_page = 0;
+	priv->pages_done = 0;
 }
 
