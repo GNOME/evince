@@ -1,5 +1,14 @@
 1999-08-11  Michael Meeks  <michael@imaginator.com>
 
+	* bonobo-image-x-pdf.cc: Fixed innumerable bugs,
+	some in bonobo :-)
+	(load_image_from_stream): Try closing the file to let its
+	contents hit disk before reading from it :-)
+	(configure_size): Don't get scared by configure_size.
+	(redraw_view): Get the parameters in some sort of order.
+
+1999-08-11  Michael Meeks  <michael@imaginator.com>
+
 	* bonobo-image-x-pdf.cc: Added.
 
 	* Makefile.am: added bonobo-image-x-pdf.c

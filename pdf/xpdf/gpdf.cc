@@ -110,9 +110,9 @@ setup_pixmap (DOC_ROOT *doc, DOC_ROOT *view, GdkWindow *window)
 }
 
 static void
-render_page (DOC_ROOT *doc)
+render_page (DOC_ROOT *doc, DOC_ROOT *view)
 {
-  doc->pdf->displayPage(doc->out, doc->page, doc->zoom, 0, gTrue);
+  doc->pdf->displayPage(doc->out, view->page, view->zoom, 0, gTrue);
 }
 
 /*static void displayPage(int page1, int zoom1, int rotate1) {
@@ -199,7 +199,7 @@ doc_root_new (GString *fileName)
   doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
   gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
-  render_page (doc);
+  render_page (doc, doc);
   gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->pixmap));
   gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
 
@@ -257,7 +257,7 @@ extern "C" {
   {
     if (doc->page < doc->pdf->getNumPages()) {
       doc->page++;
-      render_page (doc);
+      render_page (doc, doc);
       gtk_widget_queue_draw (GTK_WIDGET (doc->scroll));
     }
   }
@@ -267,7 +267,7 @@ extern "C" {
   {
     if (doc->page > 1) {
       doc->page--;
-      render_page (doc);
+      render_page (doc, doc);
       gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
     }
   }
@@ -277,7 +277,7 @@ extern "C" {
   {
     if (doc->page != 1) {
       doc->page = 1;
-      render_page (doc);
+      render_page (doc, doc);
       gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
     }
   }
@@ -287,7 +287,7 @@ extern "C" {
   {
     if (doc->page != doc->pdf->getNumPages()) {
       doc->page = doc->pdf->getNumPages();
-      render_page (doc);
+      render_page (doc, doc);
       gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
     }
   }
@@ -297,7 +297,7 @@ extern "C" {
   {
     if (doc->zoom < 200) {
       doc->zoom *= 1.2;
-      render_page (doc);
+      render_page (doc, doc);
       gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
     }
   }
@@ -307,7 +307,7 @@ extern "C" {
   {
     if (doc->zoom < 200) {
       doc->zoom /= 1.2;
-      render_page (doc);
+      render_page (doc, doc);
       gtk_widget_queue_draw (GTK_WIDGET (doc->pixmap));
     }
   }

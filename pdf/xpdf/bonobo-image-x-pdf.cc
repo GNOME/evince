@@ -61,7 +61,7 @@ typedef struct {
   double                scale;
   bonobo_object_data_t *bonobo_object_data;
   GtkWidget            *drawing_area;
-  GtkPixmap            *pixmap;
+  GdkPixmap            *pixmap;
   GOutputDev           *out;
   GdkColor              paper;
   gint                  w, h;
@@ -72,14 +72,10 @@ typedef struct {
 static void
 redraw_view (view_data_t *view_data, GdkRectangle *rect)
 {
-  GdkPixmap *pixmap;
-  GdkBitmap *dummy;
   gint width, height;
   bonobo_object_data_t *bonobo_object_data = view_data->bonobo_object_data;
 
-  gtk_pixmap_get (view_data->pixmap, &pixmap, &dummy);
-
-  g_return_if_fail (pixmap != NULL);
+  g_return_if_fail (view_data->pixmap != NULL);
 
   /*
    * Do not draw outside the region that we know how to display
@@ -104,11 +100,11 @@ redraw_view (view_data_t *view_data, GdkRectangle *rect)
    */
   gdk_draw_pixmap (view_data->drawing_area->window,
 		   view_data->drawing_area->style->white_gc,
-		   pixmap,
+		   view_data->pixmap,
+		   rect->x, rect->y,
 		   rect->x, rect->y,
 		   rect->width,
-		   rect->height,
-		   rect->x, rect->y);
+		   rect->height);
 }
 
 static void
@@ -120,17 +116,16 @@ configure_size (view_data_t *view_data, GdkRectangle *rect)
 		pixbuf = view_data->scaled;
 	else
 		pixbuf = view_data->bonobo_object_data->image;
-
-	gtk_widget_set_usize (
-		view_data->drawing_area,
-		pixbuf->width,
-		pixbuf->height);
-
-	rect->x = 0;
-	rect->y = 0;
-	rect->width = pixbuf->width;
-	rect->height = pixbuf->height;*/
-  g_warning ("Ahhh run away... scaling !");
+*/
+  gtk_widget_set_usize (
+    view_data->drawing_area,
+    view_data->w,
+    view_data->h);
+  
+  rect->x = 0;
+  rect->y = 0;
+  rect->width = view_data->w;
+  rect->height = view_data->h;
 }
 
 static void
@@ -155,6 +150,18 @@ save_image (GnomePersistStream *ps, GNOME_Stream stream, void *data)
   return -1;
 }
 
+static void
+setup_size (bonobo_object_data_t *doc, view_data_t *view)
+{
+  if (!doc || !view || !doc->pdf) {
+    view->w = 320;
+    view->h = 200;
+    return;
+  }
+  view->w = (int)((doc->pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
+  view->h = (int)((doc->pdf->getPageHeight (view->page) * view->zoom) / 72.0);
+}
+
 /*
  * Loads a PDF from a GNOME_Stream
  */
@@ -165,82 +172,128 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	CORBA_Environment ev;
 	CORBA_long length;
 	GNOME_Stream_iobuf *buffer;
+	guint lp;
+	#define CHUNK 512
 	FILE *hack;
 	char *name;
 
 	buffer = GNOME_Stream_iobuf__alloc ();
-
 	length = GNOME_Stream_length (stream, &ev);
-	GNOME_Stream_read (stream, length, &buffer, &ev);
 
 	name = tempnam (NULL, "xpdf-hack");
 	if (!name)
 	  return -1;
-	hack = fopen (name, "w+");
+	hack = fopen (name, "wb+");
 	if (!hack)
 	  return -1;
 
-	fwrite (buffer->_buffer, 1, buffer->_length, hack);
+	while (length > 0) {
+	  guint getlen;
+	  if (length > 128)
+	    getlen = 128;
+	  else
+	    getlen = length;
+	  GNOME_Stream_read (stream, getlen, &buffer, &ev);
+	  fwrite (buffer->_buffer, 1, buffer->_length, hack);
+	  length -= buffer->_length;
+	}
+
+	fclose (hack);
 
 	CORBA_free (buffer);
 
 	bonobo_object_data->pdf = new PDFDoc (new GString (name));
+	if (!(bonobo_object_data->pdf->isOk())) {
+	  g_warning ("Duff pdf data\n");
+	  delete bonobo_object_data->pdf;
+	  bonobo_object_data->pdf = NULL;
+	}
+	if (!bonobo_object_data->pdf->getCatalog()) {
+	  g_warning ("Duff pdf catalog\n");
+	  delete bonobo_object_data->pdf;
+	  bonobo_object_data->pdf = NULL;
+	}
 
 	redraw_all (bonobo_object_data);
 	return 0;
 }
 
-static void
-destroy_view (GnomeView *view, view_data_t *view_data)
-{
-	view_data->bonobo_object_data->views = g_list_remove (view_data->bonobo_object_data->views, view_data);
-	gtk_object_unref (GTK_OBJECT (view_data->drawing_area));
-
-	g_free (view_data);
+extern "C" {
+  static void
+  destroy_view (GnomeView *view, view_data_t *view_data)
+  {
+    view_data->bonobo_object_data->views = g_list_remove (view_data->bonobo_object_data->views, view_data);
+    gtk_object_unref (GTK_OBJECT (view_data->drawing_area));
+    
+    g_free (view_data);
+  }
 }
 
-static int
-drawing_area_exposed (GtkWidget *widget, GdkEventExpose *event, view_data_t *view_data)
-{
-/*	if (!view_data->bonobo_object_data->image)
-	return TRUE;*/
-	
-	redraw_view (view_data, &event->area);
-
-	return TRUE;
-}
-
-
-static GtkPixmap *
+static GdkPixmap *
 setup_pixmap (bonobo_object_data_t *doc, view_data_t *view, GdkWindow *window)
 {
-  GdkGCValues  gcValues;
-  GdkGC       *strokeGC;
-  PDFDoc      *pdf = doc->pdf;
-  int          w, h;
-  GdkPixmap   *pixmap = NULL;
+    GdkGCValues  gcValues;
+    GdkGC       *strokeGC;
+    PDFDoc      *pdf;
+    int          w, h;
+    GdkPixmap   *pixmap = NULL;
+    
+    g_return_val_if_fail (doc != NULL, NULL);
+    g_return_val_if_fail (view != NULL, NULL);
+    g_return_val_if_fail (doc->pdf != NULL, NULL);
+    
+    pdf = doc->pdf;
 
-  w = view->w = (int)((pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
-  h = view->h = (int)((pdf->getPageHeight (view->page) * view->zoom) / 72.0);
+    setup_size (doc, view);
 
-  pixmap = gdk_pixmap_new (window, w, h, -1);
+    w = view->w;
+    h = view->h;
+   
+    pixmap = gdk_pixmap_new (window, w, h, -1);
+    
+    gdk_color_white (gtk_widget_get_default_colormap(), &view->paper);
+    view->out    = new GOutputDev (pixmap, view->paper, window);
+    
+    gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
+    gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
+    gcValues.line_width = 1;
+    gcValues.line_style = GDK_LINE_SOLID;
+    strokeGC = gdk_gc_new_with_values (
+      pixmap, &gcValues, 
+      (enum GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_LINE_WIDTH | GDK_GC_LINE_STYLE));
+    
+    gdk_draw_rectangle (pixmap, strokeGC,
+			TRUE, 0, 0,
+			w, h);
+    
+    return pixmap;
+}
 
-  gdk_color_white (gtk_widget_get_default_colormap(), &view->paper);
-  view->out    = new GOutputDev (pixmap, view->paper, window);
+extern "C" {
+  static int
+  drawing_area_exposed (GtkWidget *widget, GdkEventExpose *event, view_data_t *view_data)
+  {
+    if (!view_data ||
+	!view_data->bonobo_object_data->pdf)
+      return TRUE;
+    
+/* Hoisted from view_factory: ugly */
+    if (!view_data->pixmap) {
+      GdkWindow *win = gtk_widget_get_parent_window (widget);
+      GdkRectangle tmp;
+      
+      g_return_val_if_fail (win, TRUE);
+      
+      view_data->pixmap = setup_pixmap (view_data->bonobo_object_data, view_data, win);
+      view_data->bonobo_object_data->pdf->displayPage(view_data->out, view_data->page, view_data->zoom, 0, gTrue);
 
-  gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
-  gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
-  gcValues.line_width = 1;
-  gcValues.line_style = GDK_LINE_SOLID;
-  strokeGC = gdk_gc_new_with_values (
-    pixmap, &gcValues, 
-    (enum GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_LINE_WIDTH | GDK_GC_LINE_STYLE));
-  
-  gdk_draw_rectangle (pixmap, strokeGC,
-		      TRUE, 0, 0,
-		      w, h);
-
-  return GTK_PIXMAP (gtk_pixmap_new (pixmap, NULL));
+      configure_size (view_data, &tmp);
+    }
+    
+    redraw_view (view_data, &event->area);
+    
+    return TRUE;
+  }
 }
 
 static GnomeView *
@@ -256,11 +309,7 @@ view_factory (GnomeEmbeddable *bonobo_object,
 	view_data->bonobo_object_data = bonobo_object_data;
 	view_data->drawing_area = gtk_drawing_area_new ();
 	view_data->page = 1;
-	view_data->zoom = 86.0;
-
-	GdkWindow *win = gtk_widget_get_parent_window (GTK_WIDGET (view_data->drawing_area));
-	view_data->pixmap = setup_pixmap (bonobo_object_data, view_data, win);
-					  
+	view_data->zoom = 24.0; /* 86.0; Must be small for demos :-) */
 
 	gtk_signal_connect (
 		GTK_OBJECT (view_data->drawing_area),
@@ -268,6 +317,9 @@ view_factory (GnomeEmbeddable *bonobo_object,
 		GTK_SIGNAL_FUNC (drawing_area_exposed), view_data);
 
         gtk_widget_show (view_data->drawing_area);
+
+	setup_size (bonobo_object_data, view_data);
+
         view = gnome_view_new (view_data->drawing_area);
 
 	gtk_signal_connect (
@@ -300,8 +352,6 @@ bonobo_object_factory (GnomeEmbeddableFactory *This, void *data)
 		return NULL;
 	}
 
-	/* Does the pdf init stuff */
-	initParams (xpdfConfigFile); /* Init font path */
 	bonobo_object_data->pdf = NULL;
 
 	/*
@@ -355,6 +405,10 @@ main (int argc, char *argv [])
 
 	init_server_factory (argc, argv);
 	init_bonobo_image_x_png_factory ();
+
+	errorInit();
+
+	initParams (xpdfConfigFile); /* Init font path */
 
 	gtk_widget_set_default_colormap (gdk_rgb_get_cmap ());
 	gtk_widget_set_default_visual (gdk_rgb_get_visual ());
