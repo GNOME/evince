@@ -11,7 +11,9 @@ else
 gui = xpdf
 endif
 
-bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
+#bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
+# Wait for Derek to send updated pdfto*
+bin_PROGRAMS = $(gui) bonobo-image-x-pdf
 
 common_sources =		\
 	Array.cc 		\

@@ -229,6 +229,7 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	#define CHUNK 512
 	FILE *hack;
 	char *name;
+	Object obj;
 
 	if (bed->pdf ||
 	    bed->stream) {
@@ -244,9 +245,9 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	printf ("Loading PDF from persiststream\n");
 #endif
 	bed->stream = stream;
-	BonoboStream *bs = new BonoboStream (stream);
-	GString *st = new GString ("Bonobo.pdf");
-	bed->pdf = new PDFDoc (bs, st);
+	obj.initNull();
+	BonoboStream *bs = new BonoboStream (stream, 0, -1, &obj);
+	bed->pdf = new PDFDoc (bs);
 					      
 #if PDF_DEBUG > 0
 	printf ("Done load\n");

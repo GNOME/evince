@@ -126,7 +126,7 @@ Stream *Parser::makeStream(Object *dict) {
   }
 
   // make base stream
-  str = lexer->getStream()->subStream (pos, length, dict);
+  str = lexer->getStream()->getBaseStream()->makeSubStream(pos, length, dict);
 
   // get filters
   str = str->addFilters(dict);

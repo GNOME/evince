@@ -13,12 +13,11 @@
 #pragma interface
 #endif
 
-#include <stdio.h>
 #include "gtypes.h"
 #include "Object.h"
 
 class Dict;
-class FileStream;
+class Stream;
 
 //------------------------------------------------------------------------
 // XRef
@@ -34,7 +33,7 @@ class XRef {
 public:
 
   // Constructor.  Read xref table from stream.
-  XRef(Stream *str);
+  XRef(BaseStream *str);
 
   // Destructor.
   ~XRef();
@@ -60,7 +59,7 @@ public:
 
 private:
 
-  Stream *str;			// input file
+  BaseStream *str;		// input stream
   int start;			// offset in file (to allow for garbage
 				//   at beginning of file)
   XRefEntry *entries;		// xref entries
@@ -69,9 +68,9 @@ private:
   GBool ok;			// true if xref table is valid
   Object trailerDict;		// trailer dictionary
 
-  int readTrailer(Stream *str);
-  GBool readXRef(Stream *str, int *pos);
-  GBool constructXRef(Stream *str);
+  int readTrailer();
+  GBool readXRef(int *pos);
+  GBool constructXRef();
   GBool checkEncrypted();
 };
 

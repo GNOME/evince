@@ -18,6 +18,7 @@
 #include "config.h"
 #include "Page.h"
 #include "Catalog.h"
+#include "Stream.h"
 #include "XRef.h"
 #include "Link.h"
 #include "OutputDev.h"
@@ -26,36 +27,77 @@
 #include "PDFDoc.h"
 
 //------------------------------------------------------------------------
+
+#define headerSearchSize 1024	// read this many bytes at beginning of
+				//   file to look for '%PDF'
+
+//------------------------------------------------------------------------
 // PDFDoc
 //------------------------------------------------------------------------
 
-PDFDoc::PDFDoc(Stream *str1, GString *fileName1) {
-  Object catObj;
+PDFDoc::PDFDoc(GString *fileName1) {
+  Object obj;
+  GString *fileName2;
 
-  // setup
   ok = gFalse;
-  catalog = NULL;
-  xref = NULL;
-  links = NULL;
 
-  str = str1;
+  file = NULL;
+  str = NULL;
+
+  // try to open file
   fileName = fileName1;
-  if (!(str && str->isOk()))
+  fileName2 = NULL;
+#ifdef VMS
+  if (!(file = fopen(fileName->getCString(), "rb", "ctx=stm"))) {
+    error(-1, "Couldn't open file '%s'", fileName->getCString());
     return;
+  }
+#else
+  if (!(file = fopen(fileName->getCString(), "rb"))) {
+    fileName2 = fileName->copy();
+    fileName2->lowerCase();
+    if (!(file = fopen(fileName2->getCString(), "rb"))) {
+      fileName2->upperCase();
+      if (!(file = fopen(fileName2->getCString(), "rb"))) {
+	error(-1, "Couldn't open file '%s'", fileName->getCString());
+	delete fileName2;
+	return;
+      }
+    }
+    delete fileName2;
+  }
+#endif
 
   // create stream
-/*  obj.initNull(); */
-/*  str  = new FileStream(file, 0, -1, &obj); */
+  obj.initNull();
+  str = new FileStream(file, 0, -1, &obj);
+
+  ok = setup();
+}
+
+PDFDoc::PDFDoc(BaseStream *str) {
+  ok = gFalse;
+  fileName = NULL;
+  file = NULL;
+  this->str = str;
+  ok = setup();
+}
+
+GBool PDFDoc::setup() {
+  Object catObj;
+
+  xref = NULL;
+  catalog = NULL;
+  links = NULL;
 
   // check header
-/*  str->checkHeader(); FIXME */
+  checkHeader();
 
   // read xref table
   xref = new XRef(str);
-/*  delete str; */
   if (!xref->isOk()) {
     error(-1, "Couldn't read xref table");
-    return;
+    return gFalse;
   }
 
   // read catalog
@@ -63,27 +105,63 @@ PDFDoc::PDFDoc(Stream *str1, GString *fileName1) {
   catObj.free();
   if (!catalog->isOk()) {
     error(-1, "Couldn't read page catalog");
-    return;
+    return gFalse;
   }
 
   // done
-  ok = gTrue;
-  return;
+  return gTrue;
 }
 
 PDFDoc::~PDFDoc() {
-  if (catalog)
+  if (catalog) {
     delete catalog;
-  if (xref)
-    delete xref;
-  if (str) {
-    delete (str);
-    str = NULL;
   }
-  if (fileName)
+  if (xref) {
+    delete xref;
+  }
+  if (str) {
+    delete str;
+  }
+  if (file) {
+    fclose(file);
+  }
+  if (fileName) {
     delete fileName;
-  if (links)
+  }
+  if (links) {
     delete links;
+  }
+}
+
+// Check for a PDF header on this stream.  Skip past some garbage
+// if necessary.
+void PDFDoc::checkHeader() {
+  char hdrBuf[headerSearchSize+1];
+  char *p;
+  double version;
+  int i;
+
+  for (i = 0; i < headerSearchSize; ++i) {
+    hdrBuf[i] = str->getChar();
+  }
+  hdrBuf[headerSearchSize] = '\0';
+  for (i = 0; i < headerSearchSize - 5; ++i) {
+    if (!strncmp(&hdrBuf[i], "%PDF-", 5)) {
+      break;
+    }
+  }
+  if (i >= headerSearchSize - 5) {
+    error(-1, "May not be a PDF file (continuing anyway)");
+    return;
+  }
+  str->moveStart(i);
+  p = strtok(&hdrBuf[i+5], " \t\n\r");
+  version = atof(p);
+  if (!(hdrBuf[i+5] >= '0' && hdrBuf[i+5] <= '9') ||
+      version > pdfVersionNum + 0.0001) {
+    error(-1, "PDF version %s -- xpdf supports version %s"
+	  " (continuing anyway)", p, pdfVersion);
+  }
 }
 
 void PDFDoc::displayPage(OutputDev *out, int page, int zoom, int rotate,
@@ -125,16 +203,16 @@ void PDFDoc::displayPages(OutputDev *out, int firstPage, int lastPage,
 
 GBool PDFDoc::saveAs(GString *name) {
   FILE *f;
-  char buf[4096];
-  int n;
+  int c;
 
   if (!(f = fopen(name->getCString(), "wb"))) {
     error(-1, "Couldn't open file '%s'", name->getCString());
     return gFalse;
   }
   str->reset();
-  while (str->getLine (buf, 4096))
-    fputs (buf, f);
+  while ((c = str->getChar()) != EOF) {
+    fputc(c, f);
+  }
   fclose(f);
   return gTrue;
 }

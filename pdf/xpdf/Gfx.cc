@@ -1523,7 +1523,7 @@ Stream *Gfx::buildImageStream() {
   obj.free();
 
   // make stream
-  str = new SubStream(parser->getStream(), &dict);
+  str = new EmbedStream(parser->getStream(), &dict);
   str = str->addFilters(&dict);
 
   return str;

@@ -46,11 +46,6 @@ extern "C" int unlink(char *filename);
 #endif
 
 //------------------------------------------------------------------------
-
-#define headerSearchSize 1024	// read this many bytes at beginning of
-				//   file to look for '%PDF'
-
-//------------------------------------------------------------------------
 // Stream (base class)
 //------------------------------------------------------------------------
 
@@ -85,10 +80,6 @@ char *Stream::getLine(char *buf, int size) {
   }
   buf[i] = '\0';
   return buf;
-}
-
-void Stream::setPos(int pos) {
-  error(-1, "Internal: called setPos() on non-FileStream");
 }
 
 GString *Stream::getPSFilter(char *indent) {
@@ -262,6 +253,33 @@ Stream *Stream::makeFilter(char *name, Stream *str, Object *params) {
     str = new EOFStream(str);
   }
   return str;
+}
+
+//------------------------------------------------------------------------
+// BaseStream
+//------------------------------------------------------------------------
+
+BaseStream::BaseStream(Object *dict) {
+  this->dict = *dict;
+}
+
+BaseStream::~BaseStream() {
+  dict.free();
+}
+
+//------------------------------------------------------------------------
+// FilterStream
+//------------------------------------------------------------------------
+
+FilterStream::FilterStream(Stream *str) {
+  this->str = str;
+}
+
+FilterStream::~FilterStream() {
+}
+
+void FilterStream::setPos(int pos) {
+  error(-1, "Internal: called setPos() on FilterStream");
 }
 
 //------------------------------------------------------------------------
@@ -511,95 +529,24 @@ GBool StreamPredictor::getNextLine() {
 // FileStream
 //------------------------------------------------------------------------
 
-GBool FileStream::checkHeader() {
-  char hdrBuf[headerSearchSize+1];
-  char *p;
-  double version;
-  int i;
-
-  for (i = 0; i < headerSearchSize; ++i)
-    hdrBuf[i] = getChar();
-  hdrBuf[headerSearchSize] = '\0';
-  for (i = 0; i < headerSearchSize - 5; ++i) {
-    if (!strncmp(&hdrBuf[i], "%PDF-", 5))
-      break;
-  }
-  if (i >= headerSearchSize - 5) {
-    error(-1, "May not be a PDF file (continuing anyway)");
-    return gFalse;
-  }
-  start += i;
-  p = strtok(&hdrBuf[i+5], " \t\n\r");
-  version = atof(p);
-  if (!(hdrBuf[i+5] >= '0' && hdrBuf[i+5] <= '9') ||
-      version > pdfVersionNum + 0.0001) {
-    error(getPos(), "PDF version %s -- xpdf supports version %s"
-	  " (continuing anyway)", p, pdfVersion);
-    return gFalse;
-  }
-  return gTrue;
-}
-
-FILE *fileOpen (GString *fileName1) {
-  GString *fileName2;
-  // try to open file
-  fileName2 = NULL;
-  FILE *file = NULL;
-
-#ifdef VMS
-  if (!(file = fopen(fileName->getCString(), "rb", "ctx=stm"))) {
-    error(-1, "Couldn't open file '%s'", fileName->getCString());
-    return NULL;
-  }
-#else
-  if (!(file = fopen(fileName1->getCString(), "rb"))) {
-    fileName2 = fileName1->copy();
-    fileName2->lowerCase();
-    if (!(file = fopen(fileName2->getCString(), "rb"))) {
-      fileName2->upperCase();
-      if (!(file = fopen(fileName2->getCString(), "rb"))) {
-	error(-1, "Couldn't open file '%s'", fileName1->getCString());
-	delete fileName2;
-	return NULL;
-      }
-    }
-    delete fileName2;
-  }
-#endif
-  return file;
-}
-
-FileStream::FileStream() {
-}
-
-FileStream::FileStream(FILE *f1) {
-  f = f1;
-  start = 0;
-  length = -1;
+FileStream::FileStream(FILE *f, int start, int length, Object *dict):
+    BaseStream(dict) {
+  this->f = f;
+  this->start = start;
+  this->length = length;
   bufPtr = bufEnd = buf;
   bufPos = start;
   savePos = -1;
-  dict.initNull();
-  if (f)
-    checkHeader();
-}
-
-Stream *FileStream::subStream (int start1, int length1, Object *dict1) {
-  FileStream *scp = new FileStream ();
-  scp->f = f;
-  scp->start = start1;
-  scp->length = length1;
-  scp->bufPtr = bufEnd = buf;
-  scp->bufPos = start;
-  scp->savePos = -1;
-  scp->dict = *dict1;
-  return scp;
 }
 
 FileStream::~FileStream() {
-  if (savePos >= 0)
+  if (savePos >= 0) {
     fseek(f, savePos, SEEK_SET);
-  dict.free();
+  }
+}
+
+Stream *FileStream::makeSubStream(int start, int length, Object *dict) {
+  return new FileStream(f, start, length, dict);
 }
 
 void FileStream::reset() {
@@ -644,25 +591,48 @@ void FileStream::setPos(int pos1) {
   bufPtr = bufEnd = buf;
 }
 
-//------------------------------------------------------------------------
-// SubStream
-//------------------------------------------------------------------------
-
-SubStream::SubStream(Stream *str1, Object *dict1) {
-  str = str1;
-  dict = *dict1;
+void FileStream::moveStart(int delta) {
+  this->start += delta;
+  bufPtr = bufEnd = buf;
+  bufPos = start;
 }
 
-SubStream::~SubStream() {
-  dict.free();
+//------------------------------------------------------------------------
+// EmbedStream
+//------------------------------------------------------------------------
+
+EmbedStream::EmbedStream(Stream *str, Object *dict):
+    BaseStream(dict) {
+  this->str = str;
+}
+
+EmbedStream::~EmbedStream() {
+}
+
+Stream *EmbedStream::makeSubStream(int start, int length, Object *dict) {
+  error(-1, "Internal: called makeSubStream() on EmbedStream");
+  return NULL;
+}
+
+void EmbedStream::setPos(int pos) {
+  error(-1, "Internal: called setPos() on EmbedStream");
+}
+
+int EmbedStream::getStart() {
+  error(-1, "Internal: called getStart() on EmbedStream");
+  return 0;
+}
+
+void EmbedStream::moveStart(int start) {
+  error(-1, "Internal: called moveStart() on EmbedStream");
 }
 
 //------------------------------------------------------------------------
 // ASCIIHexStream
 //------------------------------------------------------------------------
 
-ASCIIHexStream::ASCIIHexStream(Stream *str1) {
-  str = str1;
+ASCIIHexStream::ASCIIHexStream(Stream *str):
+    FilterStream(str) {
   buf = EOF;
   eof = gFalse;
 }
@@ -746,8 +716,8 @@ GBool ASCIIHexStream::isBinary(GBool last) {
 // ASCII85Stream
 //------------------------------------------------------------------------
 
-ASCII85Stream::ASCII85Stream(Stream *str1) {
-  str = str1;
+ASCII85Stream::ASCII85Stream(Stream *str):
+    FilterStream(str) {
   index = n = 0;
   eof = gFalse;
 }
@@ -822,9 +792,9 @@ GBool ASCII85Stream::isBinary(GBool last) {
 // LZWStream
 //------------------------------------------------------------------------
 
-LZWStream::LZWStream(Stream *str1, int predictor1, int columns1, int colors1,
-		     int bits1, int early1) {
-  str = str1;
+LZWStream::LZWStream(Stream *str, int predictor1, int columns1, int colors1,
+		     int bits1, int early1):
+    FilterStream(str) {
   if (predictor1 != 1) {
     pred = new StreamPredictor(this, predictor1, columns1, colors1, bits1);
   } else {
@@ -1102,8 +1072,8 @@ GBool LZWStream::isBinary(GBool last) {
 // RunLengthStream
 //------------------------------------------------------------------------
 
-RunLengthStream::RunLengthStream(Stream *str1) {
-  str = str1;
+RunLengthStream::RunLengthStream(Stream *str):
+    FilterStream(str) {
   bufPtr = bufEnd = buf;
   eof = gFalse;
 }
@@ -1162,8 +1132,8 @@ GBool RunLengthStream::fillBuf() {
 
 CCITTFaxStream::CCITTFaxStream(Stream *str, int encoding, GBool endOfLine,
 			       GBool byteAlign, int columns, int rows,
-			       GBool endOfBlock, GBool black) {
-  this->str = str;
+			       GBool endOfBlock, GBool black):
+    FilterStream(str) {
   this->encoding = encoding;
   this->endOfLine = endOfLine;
   this->byteAlign = byteAlign;
@@ -1751,10 +1721,10 @@ static int dctZigZag[64] = {
   63
 };
 
-DCTStream::DCTStream(Stream *str1) {
+DCTStream::DCTStream(Stream *str):
+    FilterStream(str) {
   int i, j;
 
-  str = str1;
   width = height = 0;
   mcuWidth = mcuHeight = 0;
   numComps = 0;
@@ -2733,9 +2703,9 @@ FlateDecode FlateStream::distDecode[flateMaxDistCodes] = {
   {13, 24577}
 };
 
-FlateStream::FlateStream(Stream *str1, int predictor1, int columns1,
-			 int colors1, int bits1) {
-  str = str1;
+FlateStream::FlateStream(Stream *str, int predictor1, int columns1,
+			 int colors1, int bits1):
+    FilterStream(str) {
   if (predictor1 != 1) {
     pred = new StreamPredictor(this, predictor1, columns1, colors1, bits1);
   } else {
@@ -3163,8 +3133,8 @@ int FlateStream::getCodeWord(int bits) {
 // EOFStream
 //------------------------------------------------------------------------
 
-EOFStream::EOFStream(Stream *str1) {
-  str = str1;
+EOFStream::EOFStream(Stream *str):
+    FilterStream(str) {
 }
 
 EOFStream::~EOFStream() {
@@ -3175,8 +3145,8 @@ EOFStream::~EOFStream() {
 // FixedLengthEncoder
 //------------------------------------------------------------------------
 
-FixedLengthEncoder::FixedLengthEncoder(Stream *str1, int length1) {
-  str = str1;
+FixedLengthEncoder::FixedLengthEncoder(Stream *str, int length1):
+    FilterStream(str) {
   length = length1;
   count = 0;
 }
@@ -3208,8 +3178,8 @@ int FixedLengthEncoder::lookChar() {
 // ASCII85Encoder
 //------------------------------------------------------------------------
 
-ASCII85Encoder::ASCII85Encoder(Stream *str1) {
-  str = str1;
+ASCII85Encoder::ASCII85Encoder(Stream *str):
+    FilterStream(str) {
   bufPtr = bufEnd = buf;
   lineLen = 0;
   eof = gFalse;
@@ -3277,8 +3247,8 @@ GBool ASCII85Encoder::fillBuf() {
 // RunLengthEncoder
 //------------------------------------------------------------------------
 
-RunLengthEncoder::RunLengthEncoder(Stream *str1) {
-  str = str1;
+RunLengthEncoder::RunLengthEncoder(Stream *str):
+    FilterStream(str) {
   bufPtr = bufEnd = nextEnd = buf;
   eof = gFalse;
 }
