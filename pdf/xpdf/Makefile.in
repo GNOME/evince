@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4a from Makefile.am
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -46,10 +46,9 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -61,12 +60,20 @@ POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
 AS = @AS@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CXX = @CXX@
+DATADIRNAME = @DATADIRNAME@
 DLLTOOL = @DLLTOOL@
 EXE = @EXE@
+EXTRA_GLIB_CFLAGS = @EXTRA_GLIB_CFLAGS@
+EXTRA_GLIB_LIBS = @EXTRA_GLIB_LIBS@
 EXTRA_GNOME_CFLAGS = @EXTRA_GNOME_CFLAGS@
 EXTRA_GNOME_LIBS = @EXTRA_GNOME_LIBS@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
 GNOMEGNORBA_LIBS = @GNOMEGNORBA_LIBS@
 GNOMEUI_LIBS = @GNOMEUI_LIBS@
 GNOME_APPLETS_LIBS = @GNOME_APPLETS_LIBS@
@@ -81,12 +88,20 @@ GTKXMHTML_LIBS = @GTKXMHTML_LIBS@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
 LD = @LD@
 LIBPREFIX = @LIBPREFIX@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
 NM = @NM@
 OPTIONS = @OPTIONS@
 ORBIT_CFLAGS = @ORBIT_CFLAGS@
@@ -94,9 +109,13 @@ ORBIT_CONFIG = @ORBIT_CONFIG@
 ORBIT_IDL = @ORBIT_IDL@
 ORBIT_LIBS = @ORBIT_LIBS@
 PACKAGE = @PACKAGE@
+POFILES = @POFILES@
+POSUB = @POSUB@
 PTHREAD_LIB = @PTHREAD_LIB@
 RANLIB = @RANLIB@
 STRIP = @STRIP@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 USE_SYMBOL_UNDERSCORE = @USE_SYMBOL_UNDERSCORE@
 VERSION = @VERSION@
 XPM_LIBS = @XPM_LIBS@
@@ -104,13 +123,14 @@ YACC = @YACC@
 ZVT_LIBS = @ZVT_LIBS@
 cflags_set = @cflags_set@
 cxxflags_set = @cxxflags_set@
+l = @l@
 
-INCLUDES =  	-I$(top_srcdir)/goo		-I$(top_srcdir)/ltk		-DGPDF_GLADE_DIR=\""$(gladedir)"\"		$(EXTRA_GNOME_CFLAGS)
+INCLUDES =  	-I$(top_srcdir)/goo				-I$(top_srcdir)/ltk				$(EXTRA_GLIB_CFLAGS)				$(EXTRA_GNOME_CFLAGS)
 
-@WITH_GNOME_TRUE@gui = gpdf
+@WITH_GNOME_TRUE@gui = xpdf gpdf
 @WITH_GNOME_FALSE@gui = xpdf
 
-bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-image-x-pdf
+bin_PROGRAMS = pdftops pdftotext pdfinfo pdftopbm pdfimages $(gui) bonobo-application-x-pdf
 
 common_sources =  	Array.cc 			BaseFile.h			Catalog.cc 			Dict.cc 			Error.cc 			FontEncoding.cc			FontEncoding.h			FontFile.cc			FontFile.h			FontInfo.h			Gfx.cc 				GfxFont.cc 			GfxState.cc			Lexer.cc 			Link.cc 			Object.cc 			OutputDev.cc 			Page.cc 			Params.cc 			Parser.cc 			PDFDoc.cc 			Stream.cc 			TextOutputDev.cc		XRef.cc
 
@@ -124,13 +144,10 @@ gpdf_SOURCES =  	gpdf.cc
 gpdf_LDADD =  	$(GTK_LIBS)			$(GNOME_LIBDIR)			-lbonobo			$(GNOMEGNORBA_LIBS)		$(EXTRA_GNOME_LIBS)		$(INTLLIBS)
 
 
-bonobo_image_x_pdf_SOURCES =  	$(common_sources)		BonoboStream.h			BonoboStream.cc			GOutputDev.cc			bonobo-image-x-pdf.cc
+bonobo_application_x_pdf_SOURCES =  	$(common_sources)			BonoboStream.h				BonoboStream.cc				GOutputDev.cc				bonobo-application-x-pdf.cc		gtkgesture.c				gtkgesture.h
 
 
-bonobo_image_x_pdf_CFLAGS =  	-DBONOBO_IO
-
-
-bonobo_image_x_pdf_LDADD =  	../goo/libgoo.a			$(GTK_LIBS)			$(GNOME_LIBDIR)			-lbonobo			$(GNOMEGNORBA_LIBS)		$(INTLLIBS)
+bonobo_application_x_pdf_LDADD =  	../goo/libgoo.a				$(GTK_LIBS)				$(GNOME_LIBDIR)				-lbonobo				$(GNOMEGNORBA_LIBS)			$(EXTRA_GLIB_LIBS)			$(INTLLIBS)
 
 
 xpdf_SOURCES =  	$(common_sources)		XOutputDev.cc			LTKOutputDev.cc			PSOutputDev.cc			xpdf.cc
@@ -167,15 +184,10 @@ bitmaps =  	about.xbm			dblLeftArrow.xbm		dblRightArrow.xbm		find.xbm			leftArro
 ltk =  	xpdf-flip.ltk		xpdf-top.ltk		xpdf.ltk
 
 
-gladedir = $(datadir)/xpdf/glade
-
-glade_DATA =  	about.glade		gpdf.glade
-
-
 gnorbadir = $(sysconfdir)/CORBA/servers
-gnorba_DATA = image-x-pdf.gnorba
+gnorba_DATA = application-x-pdf.gnorba
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(glade_DATA) $(gnorba_DATA)
+EXTRA_DIST = $(bitmaps) ChangeLog $(ltk) $(gnorba_DATA)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(bin_PROGRAMS)
@@ -219,21 +231,22 @@ OutputDev.o Page.o Params.o Parser.o PDFDoc.o Stream.o TextOutputDev.o \
 XRef.o ImageOutputDev.o pdfimages.o
 pdfimages_DEPENDENCIES =  ../goo/libgoo.a
 pdfimages_LDFLAGS = 
-gpdf_OBJECTS =  gpdf.o
-gpdf_DEPENDENCIES = 
-gpdf_LDFLAGS = 
 xpdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o FontEncoding.o \
 FontFile.o Gfx.o GfxFont.o GfxState.o Lexer.o Link.o Object.o \
 OutputDev.o Page.o Params.o Parser.o PDFDoc.o Stream.o TextOutputDev.o \
 XRef.o XOutputDev.o LTKOutputDev.o PSOutputDev.o xpdf.o
 xpdf_DEPENDENCIES =  ../goo/libgoo.a ../ltk/libltk.a
 xpdf_LDFLAGS = 
-bonobo_image_x_pdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o \
+gpdf_OBJECTS =  gpdf.o
+gpdf_DEPENDENCIES = 
+gpdf_LDFLAGS = 
+bonobo_application_x_pdf_OBJECTS =  Array.o Catalog.o Dict.o Error.o \
 FontEncoding.o FontFile.o Gfx.o GfxFont.o GfxState.o Lexer.o Link.o \
 Object.o OutputDev.o Page.o Params.o Parser.o PDFDoc.o Stream.o \
-TextOutputDev.o XRef.o BonoboStream.o GOutputDev.o bonobo-image-x-pdf.o
-bonobo_image_x_pdf_DEPENDENCIES =  ../goo/libgoo.a
-bonobo_image_x_pdf_LDFLAGS = 
+TextOutputDev.o XRef.o BonoboStream.o GOutputDev.o \
+bonobo-application-x-pdf.o gtkgesture.o
+bonobo_application_x_pdf_DEPENDENCIES =  ../goo/libgoo.a
+bonobo_application_x_pdf_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -244,7 +257,7 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CF
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
-DATA =  $(glade_DATA) $(gnorba_DATA)
+DATA =  $(gnorba_DATA)
 
 DIST_COMMON =  ChangeLog Makefile.am Makefile.in
 
@@ -260,11 +273,11 @@ DEP_FILES =  .deps/Array.P .deps/BonoboStream.P .deps/Catalog.P \
 .deps/Object.P .deps/OutputDev.P .deps/PBMOutputDev.P .deps/PDFDoc.P \
 .deps/PSOutputDev.P .deps/Page.P .deps/Params.P .deps/Parser.P \
 .deps/Stream.P .deps/TextOutputDev.P .deps/XOutputDev.P .deps/XRef.P \
-.deps/bonobo-image-x-pdf.P .deps/gpdf.P .deps/pdfimages.P \
-.deps/pdfinfo.P .deps/pdftopbm.P .deps/pdftops.P .deps/pdftotext.P \
-.deps/xpdf.P
-SOURCES = $(pdftops_SOURCES) $(pdftotext_SOURCES) $(pdfinfo_SOURCES) $(pdftopbm_SOURCES) $(pdfimages_SOURCES) $(gpdf_SOURCES) $(xpdf_SOURCES) $(bonobo_image_x_pdf_SOURCES)
-OBJECTS = $(pdftops_OBJECTS) $(pdftotext_OBJECTS) $(pdfinfo_OBJECTS) $(pdftopbm_OBJECTS) $(pdfimages_OBJECTS) $(gpdf_OBJECTS) $(xpdf_OBJECTS) $(bonobo_image_x_pdf_OBJECTS)
+.deps/bonobo-application-x-pdf.P .deps/gpdf.P .deps/gtkgesture.P \
+.deps/pdfimages.P .deps/pdfinfo.P .deps/pdftopbm.P .deps/pdftops.P \
+.deps/pdftotext.P .deps/xpdf.P
+SOURCES = $(pdftops_SOURCES) $(pdftotext_SOURCES) $(pdfinfo_SOURCES) $(pdftopbm_SOURCES) $(pdfimages_SOURCES) $(xpdf_SOURCES) $(gpdf_SOURCES) $(bonobo_application_x_pdf_SOURCES)
+OBJECTS = $(pdftops_OBJECTS) $(pdftotext_OBJECTS) $(pdfinfo_OBJECTS) $(pdftopbm_OBJECTS) $(pdfimages_OBJECTS) $(xpdf_OBJECTS) $(gpdf_OBJECTS) $(bonobo_application_x_pdf_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -291,8 +304,8 @@ install-binPROGRAMS: $(bin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
 	  else :; fi; \
 	done
 
@@ -354,40 +367,25 @@ pdfimages: $(pdfimages_OBJECTS) $(pdfimages_DEPENDENCIES)
 	@rm -f pdfimages
 	$(CXXLINK) $(pdfimages_LDFLAGS) $(pdfimages_OBJECTS) $(pdfimages_LDADD) $(LIBS)
 
+xpdf: $(xpdf_OBJECTS) $(xpdf_DEPENDENCIES)
+	@rm -f xpdf
+	$(CXXLINK) $(xpdf_LDFLAGS) $(xpdf_OBJECTS) $(xpdf_LDADD) $(LIBS)
+
 gpdf: $(gpdf_OBJECTS) $(gpdf_DEPENDENCIES)
 	@rm -f gpdf
 	$(CXXLINK) $(gpdf_LDFLAGS) $(gpdf_OBJECTS) $(gpdf_LDADD) $(LIBS)
 
 xpdf: $(xpdf_OBJECTS) $(xpdf_DEPENDENCIES)
 	@rm -f xpdf
-	$(CXXLINK) $(xpdf_LDFLAGS) $(xpdf_OBJECTS) $(xpdf_LDADD) $(LIBS)
+	$(LINK) $(xpdf_LDFLAGS) $(xpdf_OBJECTS) $(xpdf_LDADD) $(LIBS)
 
-bonobo-image-x-pdf: $(bonobo_image_x_pdf_OBJECTS) $(bonobo_image_x_pdf_DEPENDENCIES)
-	@rm -f bonobo-image-x-pdf
-	$(CXXLINK) $(bonobo_image_x_pdf_LDFLAGS) $(bonobo_image_x_pdf_OBJECTS) $(bonobo_image_x_pdf_LDADD) $(LIBS)
+bonobo-application-x-pdf: $(bonobo_application_x_pdf_OBJECTS) $(bonobo_application_x_pdf_DEPENDENCIES)
+	@rm -f bonobo-application-x-pdf
+	$(CXXLINK) $(bonobo_application_x_pdf_LDFLAGS) $(bonobo_application_x_pdf_OBJECTS) $(bonobo_application_x_pdf_LDADD) $(LIBS)
 .cc.o:
 	$(CXXCOMPILE) -c $<
 .cc.lo:
 	$(LTCXXCOMPILE) -c $<
-
-install-gladeDATA: $(glade_DATA)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(gladedir)
-	@list='$(glade_DATA)'; for p in $$list; do \
-	  if test -f $(srcdir)/$$p; then \
-	    echo " $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(gladedir)/$$p"; \
-	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(gladedir)/$$p; \
-	  else if test -f $$p; then \
-	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(gladedir)/$$p"; \
-	    $(INSTALL_DATA) $$p $(DESTDIR)$(gladedir)/$$p; \
-	  fi; fi; \
-	done
-
-uninstall-gladeDATA:
-	@$(NORMAL_UNINSTALL)
-	list='$(glade_DATA)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(gladedir)/$$p; \
-	done
 
 install-gnorbaDATA: $(gnorba_DATA)
 	@$(NORMAL_INSTALL)
@@ -450,7 +448,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pr $$/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -519,22 +517,20 @@ installcheck: installcheck-am
 install-exec-am: install-binPROGRAMS
 install-exec: install-exec-am
 
-install-data-am: install-gladeDATA install-gnorbaDATA
+install-data-am: install-gnorbaDATA
 install-data: install-data-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-am
-uninstall-am: uninstall-binPROGRAMS uninstall-gladeDATA \
-		uninstall-gnorbaDATA
+uninstall-am: uninstall-binPROGRAMS uninstall-gnorbaDATA
 uninstall: uninstall-am
 all-am: Makefile $(PROGRAMS) $(DATA)
 all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(bindir) $(DESTDIR)$(gladedir) \
-		$(DESTDIR)$(gnorbadir)
+	$(mkinstalldirs)  $(DESTDIR)$(bindir) $(DESTDIR)$(gnorbadir)
 
 
 mostlyclean-generic:
@@ -577,12 +573,11 @@ maintainer-clean: maintainer-clean-am
 maintainer-clean-binPROGRAMS uninstall-binPROGRAMS install-binPROGRAMS \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile mostlyclean-libtool distclean-libtool \
-clean-libtool maintainer-clean-libtool uninstall-gladeDATA \
-install-gladeDATA uninstall-gnorbaDATA install-gnorbaDATA tags \
-mostlyclean-tags distclean-tags clean-tags maintainer-clean-tags \
-distdir mostlyclean-depend distclean-depend clean-depend \
-maintainer-clean-depend info-am info dvi-am dvi check check-am \
-installcheck-am installcheck install-exec-am install-exec \
+clean-libtool maintainer-clean-libtool uninstall-gnorbaDATA \
+install-gnorbaDATA tags mostlyclean-tags distclean-tags clean-tags \
+maintainer-clean-tags distdir mostlyclean-depend distclean-depend \
+clean-depend maintainer-clean-depend info-am info dvi-am dvi check \
+check-am installcheck-am installcheck install-exec-am install-exec \
 install-data-am install-data install-am install uninstall-am uninstall \
 all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \

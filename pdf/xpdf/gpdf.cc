@@ -15,7 +15,7 @@ extern "C" {
 #include <libgnorba/gnorba.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
-#include <bonobo/gnome-bonobo.h>
+#include <bonobo.h>
 #undef  GString 
 }
 #include "config.h"
@@ -35,8 +35,8 @@ typedef struct _Container Container;
 /* NB. there is a 1 to 1 Container -> Component mapping, this
    is due to how much MDI sucks; unutterably */
 struct _Container {
-  GnomeContainer    *container;
-  GnomeUIHandler    *uih;
+  BonoboContainer    *container;
+  BonoboUIHandler    *uih;
   
   GtkWidget	    *app;
   GtkScrolledWindow *scroll;
@@ -47,9 +47,9 @@ struct _Container {
 struct  _Component {
 	Container	  *container;
 
-	GnomeClientSite   *client_site;
-	GnomeViewFrame	  *view_frame;
-	GnomeObjectClient *server;
+	BonoboClientSite   *client_site;
+	BonoboViewFrame	  *view_frame;
+	BonoboObjectClient *server;
 };
 
 GList *containers = NULL;
@@ -102,9 +102,9 @@ extern "C" {
   static gboolean
   open_pdf (Container *container, const char *name)
   {
-    GnomeObjectClient *object;
-    GnomeStream *stream;
-    GNOME_PersistStream persist;
+    BonoboObjectClient *object;
+    BonoboStream *stream;
+    Bonobo_PersistStream persist;
     Component *comp;
     CORBA_Environment ev;
 
@@ -118,8 +118,8 @@ extern "C" {
     }
     
     CORBA_exception_init (&ev);
-    persist = GNOME_Unknown_query_interface (
-      gnome_object_corba_objref (GNOME_OBJECT (object)),
+    persist = Bonobo_Unknown_query_interface (
+      bonobo_object_corba_objref (BONOBO_OBJECT (object)),
       "IDL:GNOME/PersistStream:1.0", &ev);
     
     if (ev._major != CORBA_NO_EXCEPTION ||
@@ -128,7 +128,7 @@ extern "C" {
       return FALSE;
     }
     
-    stream = gnome_stream_fs_open (name, GNOME_Storage_READ);
+    stream = bonobo_stream_fs_open (name, Bonobo_Storage_READ);
     
     if (stream == NULL) {
       char *err = g_strconcat (_("Could not open "), name, NULL);
@@ -137,14 +137,14 @@ extern "C" {
       return FALSE;
     }
     
-    GNOME_PersistStream_load (persist,
-			      (GNOME_Stream) gnome_object_corba_objref (GNOME_OBJECT (stream)), &ev);
+    Bonobo_PersistStream_load (persist,
+			      (Bonobo_Stream) bonobo_object_corba_objref (BONOBO_OBJECT (stream)), &ev);
 
-    GNOME_Unknown_unref (persist, &ev);
+    Bonobo_Unknown_unref (persist, &ev);
     CORBA_Object_release (persist, &ev);
     CORBA_exception_free (&ev);
 
-/*    gnome_view_frame_view_do_verb (comp->view_frame, "ZoomFit"); */
+/*    bonobo_view_frame_view_do_verb (comp->view_frame, "ZoomFit"); */
     return TRUE;
   }
   
@@ -228,15 +228,15 @@ extern "C" {
     CORBA_exception_init (&ev);
 
     /* Kill merged menus et al. */
-    gnome_view_frame_view_deactivate (component->view_frame);
+    bonobo_view_frame_view_deactivate (component->view_frame);
 
     container = component->container;
     gtk_widget_destroy (container->view_widget);
     container->view_widget = NULL;
 
     if (component->server)
-      GNOME_Unknown_unref (
-	gnome_object_corba_objref (GNOME_OBJECT (component->server)), &ev);
+      Bonobo_Unknown_unref (
+	bonobo_object_corba_objref (BONOBO_OBJECT (component->server)), &ev);
     component->server = NULL;
 
     CORBA_exception_free (&ev);
@@ -329,28 +329,28 @@ container_about_cmd (GtkWidget *widget, Container *container)
 static void
 container_set_view (Container *container, Component *component)
 {
-	GnomeViewFrame *view_frame;
+	BonoboViewFrame *view_frame;
 	GtkWidget *view_widget;
 
 	/*
 	 * Create the remote view and the local ViewFrame.
 	 */
-	view_frame = gnome_client_site_new_view (component->client_site);
+	view_frame = bonobo_client_site_new_view (component->client_site);
 	component->view_frame = view_frame;
 
 	/*
-	 * Set the GnomeUIHandler for this ViewFrame.  That way, the
+	 * Set the BonoboUIHandler for this ViewFrame.  That way, the
 	 * embedded component can get access to our UIHandler server
 	 * so that it can merge menu and toolbar items when it gets
 	 * activated.
 	 */
-	gnome_view_frame_set_ui_handler (view_frame, container->uih);
+	bonobo_view_frame_set_ui_handler (view_frame, container->uih);
 
 	/*
 	 * Embed the view frame into the application.
 	 */
-	view_widget = gnome_view_frame_get_wrapper (view_frame);
-	gnome_wrapper_set_visibility (GNOME_WRAPPER (view_widget), FALSE);
+	view_widget = bonobo_view_frame_get_wrapper (view_frame);
+	bonobo_wrapper_set_visibility (BONOBO_WRAPPER (view_widget), FALSE);
 	container->view_widget = view_widget;
 	container->component   = component;
 
@@ -362,23 +362,23 @@ container_set_view (Container *container, Component *component)
 	/*
 	 * Activate it ( get it to merge menus etc. )
 	 */
-	gnome_view_frame_view_activate (view_frame);
-	gnome_view_frame_set_covered   (view_frame, FALSE);
+	bonobo_view_frame_view_activate (view_frame);
+	bonobo_view_frame_set_covered   (view_frame, FALSE);
 
 	gtk_widget_show_all (GTK_WIDGET (container->scroll));
 }
 
-static GnomeObjectClient *
-container_launch_component (GnomeClientSite *client_site,
-			    GnomeContainer *container,
+static BonoboObjectClient *
+container_launch_component (BonoboClientSite *client_site,
+			    BonoboContainer *container,
 			    char *component_goad_id)
 {
-	GnomeObjectClient *object_server;
+	BonoboObjectClient *object_server;
 
 	/*
 	 * Launch the component.
 	 */
-	object_server = gnome_object_activate_with_goad_id (
+	object_server = bonobo_object_activate_with_goad_id (
 		NULL, component_goad_id, GOAD_ACTIVATE_SHLIB, NULL);
 
 	if (object_server == NULL)
@@ -386,21 +386,21 @@ container_launch_component (GnomeClientSite *client_site,
 
 	/*
 	 * Bind it to the local ClientSite.  Every embedded component
-	 * has a local GnomeClientSite object which serves as a
+	 * has a local BonoboClientSite object which serves as a
 	 * container-side point of contact for the embeddable.  The
 	 * container talks to the embeddable through its ClientSite
 	 */
-	if (!gnome_client_site_bind_embeddable (client_site, object_server)) {
-		gnome_object_unref (GNOME_OBJECT (object_server));
+	if (!bonobo_client_site_bind_embeddable (client_site, object_server)) {
+		bonobo_object_unref (BONOBO_OBJECT (object_server));
 		return NULL;
 	}
 
 	/*
-	 * The GnomeContainer object maintains a list of the
+	 * The BonoboContainer object maintains a list of the
 	 * ClientSites which it manages.  Here we add the new
 	 * ClientSite to that list.
 	 */
-	gnome_container_add (container, GNOME_OBJECT (client_site));
+	bonobo_container_add (container, BONOBO_OBJECT (client_site));
 
 	return object_server;
 }
@@ -410,18 +410,18 @@ extern "C" {
   container_activate_component (Container *container, char *component_goad_id)
   {
     Component *component;
-    GnomeClientSite *client_site;
-    GnomeObjectClient *server;
+    BonoboClientSite *client_site;
+    BonoboObjectClient *server;
     
     /*
      * The ClientSite is the container-side point of contact for
      * the Embeddable.  So there is a one-to-one correspondence
-     * between GnomeClientSites and GnomeEmbeddables.  */
-    client_site = gnome_client_site_new (container->container);
+     * between BonoboClientSites and BonoboEmbeddables.  */
+    client_site = bonobo_client_site_new (container->container);
     
     /*
-     * A GnomeObjectClient is a simple wrapper for a remote
-     * GnomeObject (a server supporting GNOME::Unknown).
+     * A BonoboObjectClient is a simple wrapper for a remote
+     * BonoboObject (a server supporting Bonobo::Unknown).
      */
     server = container_launch_component (client_site, container->container,
 					 component_goad_id);
@@ -557,25 +557,25 @@ extern "C" {
        */
 
     } else if (event->keyval == GDK_Home) {
-      gnome_view_frame_view_do_verb (component->view_frame, VERB_FIRST);
+      bonobo_view_frame_view_do_verb (component->view_frame, VERB_FIRST);
       return TRUE;
     } else if (event->keyval == GDK_End) {
-      gnome_view_frame_view_do_verb (component->view_frame, VERB_LAST);
+      bonobo_view_frame_view_do_verb (component->view_frame, VERB_LAST);
       return TRUE;
     } else if (event->keyval == GDK_Page_Down ||
 	       event->keyval == GDK_Next) {
-      gnome_view_frame_view_do_verb (component->view_frame, VERB_NEXT);
+      bonobo_view_frame_view_do_verb (component->view_frame, VERB_NEXT);
       return TRUE;
     } else if (event->keyval == GDK_Page_Up ||
 	       event->keyval == GDK_Prior) {
-      gnome_view_frame_view_do_verb (component->view_frame, VERB_PREV);
+      bonobo_view_frame_view_do_verb (component->view_frame, VERB_PREV);
       return TRUE;
     } else if (event->keyval == GDK_plus ||
 	       event->keyval == GDK_equal) {
-      gnome_view_frame_view_do_verb (component->view_frame, VERB_Z_IN);
+      bonobo_view_frame_view_do_verb (component->view_frame, VERB_Z_IN);
     } else if (event->keyval == GDK_underscore ||
 	       event->keyval == GDK_minus) {
-      gnome_view_frame_view_do_verb (component->view_frame, VERB_Z_OUT);
+      bonobo_view_frame_view_do_verb (component->view_frame, VERB_Z_OUT);
     }    
     return FALSE;
   }
@@ -584,27 +584,27 @@ extern "C" {
 static void
 container_create_menus (Container *container)
 {
-	GnomeUIHandlerMenuItem *menu_list;
+	BonoboUIHandlerMenuItem *menu_list;
 
-	gnome_ui_handler_create_menubar (container->uih);
+	bonobo_ui_handler_create_menubar (container->uih);
 
 	/*
 	 * Create the basic menus out of UIInfo structures.
 	 */
-	menu_list = gnome_ui_handler_menu_parse_uiinfo_list_with_data (container_main_menu, container);
-	gnome_ui_handler_menu_add_list (container->uih, "/", menu_list);
-	gnome_ui_handler_menu_free_list (menu_list);
+	menu_list = bonobo_ui_handler_menu_parse_uiinfo_list_with_data (container_main_menu, container);
+	bonobo_ui_handler_menu_add_list (container->uih, "/", menu_list);
+	bonobo_ui_handler_menu_free_list (menu_list);
 }
 
 static void
 container_create_toolbar (Container *container)
 {
-	GnomeUIHandlerToolbarItem *toolbar;
+	BonoboUIHandlerToolbarItem *toolbar;
 
-	gnome_ui_handler_create_toolbar (container->uih, "pdf");
-	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
-	gnome_ui_handler_toolbar_add_list (container->uih, "/pdf/", toolbar);
-	gnome_ui_handler_toolbar_free_list (toolbar);
+	bonobo_ui_handler_create_toolbar (container->uih, "pdf");
+	toolbar = bonobo_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
+	bonobo_ui_handler_toolbar_add_list (container->uih, "/pdf/", toolbar);
+	bonobo_ui_handler_toolbar_free_list (toolbar);
 }
 
 static Container *
@@ -635,7 +635,7 @@ container_new (const char *fname)
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 600, 600);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
 
-	container->container   = gnome_container_new ();
+	container->container   = bonobo_container_new ();
 	container->view_widget = NULL;
 	container->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
 	gtk_scrolled_window_set_policy (container->scroll, GTK_POLICY_ALWAYS,
@@ -649,13 +649,13 @@ container_new (const char *fname)
 			     GTK_SIGNAL_FUNC (container_destroy_cb), container);
 
 	/*
-	 * Create the GnomeUIHandler object which will be used to
+	 * Create the BonoboUIHandler object which will be used to
 	 * create the container's menus and toolbars.  The UIHandler
 	 * also creates a CORBA server which embedded components use
 	 * to do menu/toolbar merging.
 	 */
-	container->uih = gnome_ui_handler_new ();
-	gnome_ui_handler_set_app (container->uih, GNOME_APP (container->app));
+	container->uih = bonobo_ui_handler_new ();
+	bonobo_ui_handler_set_app (container->uih, GNOME_APP (container->app));
 
 	container_create_menus   (container);
 	container_create_toolbar (container);
