@@ -67,32 +67,22 @@
 
 	<widget>
 	  <class>GtkMenuItem</class>
-	  <name>file1</name>
+	  <name>file_menu</name>
 	  <stock_item>GNOMEUIINFO_MENU_FILE_TREE</stock_item>
 
 	  <widget>
 	    <class>GtkMenu</class>
-	    <name>file1_menu</name>
+	    <name>file_menu_menu</name>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>open1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_open1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>open_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_OPEN_ITEM</stock_item>
 	    </widget>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>close</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_close_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 23:33:35 GMT</last_modification_time>
-	      </signal>
+	      <name>close_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_CLOSE_ITEM</stock_item>
 	    </widget>
 
@@ -104,23 +94,13 @@
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>print1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_print1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>print_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_PRINT_ITEM</stock_item>
 	    </widget>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>print_setup1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_print_setup1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>print_setup_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_PRINT_SETUP_ITEM</stock_item>
 	    </widget>
 
@@ -132,12 +112,7 @@
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>exit1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_exit1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>exit_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_EXIT_ITEM</stock_item>
 	    </widget>
 	  </widget>
@@ -145,32 +120,22 @@
 
 	<widget>
 	  <class>GtkMenuItem</class>
-	  <name>edit1</name>
+	  <name>edit_menu</name>
 	  <stock_item>GNOMEUIINFO_MENU_EDIT_TREE</stock_item>
 
 	  <widget>
 	    <class>GtkMenu</class>
-	    <name>edit1_menu</name>
+	    <name>edit_menu_menu</name>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>replace1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_replace1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>replace_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_FIND_ITEM</stock_item>
 	    </widget>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>find_again1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_find_again1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>find_again_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_FIND_AGAIN_ITEM</stock_item>
 	    </widget>
 
@@ -182,12 +147,7 @@
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>properties1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_properties1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>properties_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_PROPERTIES_ITEM</stock_item>
 	    </widget>
 	  </widget>
@@ -195,33 +155,23 @@
 
 	<widget>
 	  <class>GtkMenuItem</class>
-	  <name>view1</name>
+	  <name>view_menu</name>
 	  <stock_item>GNOMEUIINFO_MENU_VIEW_TREE</stock_item>
 
 	  <widget>
 	    <class>GtkMenu</class>
-	    <name>view1_menu</name>
+	    <name>view_menu_menu</name>
 
 	    <widget>
 	      <class>GtkMenuItem</class>
-	      <name>larger1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_larger1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:20:39 GMT</last_modification_time>
-	      </signal>
+	      <name>larger_menu</name>
 	      <label>Larger</label>
 	      <right_justify>False</right_justify>
 	    </widget>
 
 	    <widget>
 	      <class>GtkMenuItem</class>
-	      <name>smaller1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_smaller1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:21:07 GMT</last_modification_time>
-	      </signal>
+	      <name>smaller_menu</name>
 	      <label>smaller</label>
 	      <right_justify>False</right_justify>
 	    </widget>
@@ -230,21 +180,16 @@
 
 	<widget>
 	  <class>GtkMenuItem</class>
-	  <name>settings1</name>
+	  <name>settings_menu</name>
 	  <stock_item>GNOMEUIINFO_MENU_SETTINGS_TREE</stock_item>
 
 	  <widget>
 	    <class>GtkMenu</class>
-	    <name>settings1_menu</name>
+	    <name>settings_menu_menu</name>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>preferences1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_preferences1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>preferences_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_PREFERENCES_ITEM</stock_item>
 	    </widget>
 	  </widget>
@@ -252,21 +197,16 @@
 
 	<widget>
 	  <class>GtkMenuItem</class>
-	  <name>help1</name>
+	  <name>help_menu</name>
 	  <stock_item>GNOMEUIINFO_MENU_HELP_TREE</stock_item>
 
 	  <widget>
 	    <class>GtkMenu</class>
-	    <name>help1_menu</name>
+	    <name>help_menu_menu</name>
 
 	    <widget>
 	      <class>GtkPixmapMenuItem</class>
-	      <name>about1</name>
-	      <signal>
-		<name>activate</name>
-		<handler>on_about1_activate</handler>
-		<last_modification_time>Sun, 01 Aug 1999 03:04:00 GMT</last_modification_time>
-	      </signal>
+	      <name>about_menu</name>
 	      <stock_item>GNOMEUIINFO_MENU_ABOUT_ITEM</stock_item>
 	    </widget>
 	  </widget>

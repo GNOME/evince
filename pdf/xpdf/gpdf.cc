@@ -8,7 +8,6 @@
 //
 //========================================================================
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -49,10 +48,11 @@ poptContext ctx;
 double zoom = 86.0;
 gint page = 2;
 
-#define DOC_KEY "xpdf_doc_key"
+#define DOC_ROOT_TAG "xpdf_doc_root"
 struct DOC_ROOT {
   GString        *title;
   PDFDoc         *pdf;
+  Catalog        *cat;
   GtkDrawingArea *area;
   GtkPixmap      *pixmap;
   OutputDev      *out;
@@ -62,33 +62,23 @@ struct DOC_ROOT {
   GladeXML       *gui;
 };
 
+GList *documents = NULL;
+
 const struct poptOption gpdf_popt_options [] = {
   { "debug", '\0', POPT_ARG_INT, &gpdf_debug, 0,
     N_("Enables some debugging functions"), N_("LEVEL") },
   { NULL, '\0', 0, NULL, 0 }
 };
 
+extern "C" {
+  static void connect_signals (DOC_ROOT *doc);
+}
+
 //------------------------------------------------------------------------
 // loadFile / displayPage
 //------------------------------------------------------------------------
 
-static void
-get_page_geom (int *w, int *h, Page *p)
-{
-  double pw = p->getWidth();
-  double ph = p->getHeight();
-
-  *w = 612;
-  *h = 792;
-
-  if (!p)
-    return;
-
-  *w = (int)((pw * zoom)/72.0 + 28.0);
-  *h = (int)((ph * zoom)/72.0 + 56.0);
-}
-
-static GdkPixmap *
+static GtkPixmap *
 setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
 {
   GdkGCValues  gcValues;
@@ -97,16 +87,11 @@ setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
   int          w, h;
   GdkPixmap   *pixmap = NULL;
 
-  if (pixmap)
-    gdk_pixmap_unref(pixmap);
-
-  Catalog *cat = pdf->getCatalog();
-  get_page_geom (&w, &h, cat->getPage (page));
+  w = (int)((pdf->getPageWidth  (page) * zoom) / 72.0);
+  h = (int)((pdf->getPageHeight (page) * zoom) / 72.0);
 
   pixmap = gdk_pixmap_new (window, w, h, -1);
-  gtk_widget_set_usize (GTK_WIDGET (doc->scroll), w, h);
 
-  printf ("Creating pixmap of size %d %d\n", w, h);
   gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
   doc->out    = new GOutputDev (pixmap, doc->paper, window);
 
@@ -121,102 +106,14 @@ setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
   gdk_draw_rectangle (pixmap, strokeGC,
 		      TRUE, 0, 0,
 		      w, h);
-  return pixmap;
+
+  return GTK_PIXMAP (gtk_pixmap_new (pixmap, NULL));
 }
 
-/*static gint
-doc_config_event (GtkWidget *widget, void *ugly)
+static void
+show_page (DOC_ROOT *doc, gint page)
 {
-  DOC_ROOT *doc;
-
-  doc = (DOC_ROOT *)gtk_object_get_data (GTK_OBJECT (widget), DOC_KEY);
-  
-  g_return_val_if_fail (doc, FALSE);
-
-  return TRUE;
-}
-
-static gint
-doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
-{
-  DOC_ROOT *doc;
- 
-  g_return_val_if_fail (widget != NULL, FALSE);
-
-  doc = (DOC_ROOT *)gtk_object_get_data (GTK_OBJECT (widget), DOC_KEY);
-
-  g_return_val_if_fail (doc != NULL, FALSE);
-
-  if (doc->out && doc->pdf) {
-#if DEV_DEBUG > 0
-    printf ("There are %d pages\n", doc->pdf->getNumPages());
-#endif
-
-    doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue);
-    gdk_draw_pixmap(widget->window,
-		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-		    doc->pixmap,
-		    0, 0,
-		    event->area.x, event->area.y,
-		    event->area.width, event->area.height);
-  } else
-    printf ("Null pointer error %p %p\n", doc->out, doc->pdf);
-  
-  return FALSE;
-}*/
-
-static PDFDoc *
-getPDF (GString *fname)
-{
-  PDFDoc *pdf;
-  pdf = new PDFDoc(fname);
-  if (!pdf->isOk()) {
-    delete pdf;
-    return NULL;
-  }
-  g_return_val_if_fail (pdf->getCatalog(), NULL);
-  return pdf;
-}
-
-
-static GBool
-loadPDF(GString *fileName)
-{
-  DOC_ROOT *doc = new DOC_ROOT();
-  GtkVBox  *pane;
-  GtkAdjustment *hadj, *vadj;
-  GdkPixmap *pix;
-
-  // open PDF file
-  doc->pdf = getPDF (fileName);
-  if (!doc->pdf) {
-    delete doc;
-    return gFalse;
-  }
-
-  doc->gui = glade_xml_new (GPDF_GLADE_DIR "/gpdf.glade", NULL);
-  if (!doc->gui ||
-      !(doc->mainframe = glade_xml_get_widget (doc->gui, "gpdf")) ||
-      !(pane = GTK_VBOX (glade_xml_get_widget (doc->gui, "pane")))) {
-    printf ("Couldn't find " GPDF_GLADE_DIR "/gpdf.glade\n");
-    delete doc->pdf;
-    delete doc;
-    return gFalse;
-  }
-/*  glade_xml_signal_autoconnect (doc->gui);*/
-    
-  pix = setup_pixmap (doc, gtk_widget_get_parent_window (GTK_WIDGET (pane)));
-  doc->pixmap = GTK_PIXMAP (gtk_pixmap_new (pix, NULL));
-  
-  doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
-  gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,
-				  GTK_POLICY_AUTOMATIC);
   doc->pdf->displayPage(doc->out, page, zoom, 0, gTrue);
-  gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->pixmap));
-  gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
-
-  gtk_widget_show_all (doc->mainframe);
-  return gTrue;
 }
 
 /*static void displayPage(int page1, int zoom1, int rotate1) {
@@ -255,13 +152,119 @@ loadPDF(GString *fileName)
   win->setBusyCursor(gFalse);
   }*/
 
+static PDFDoc *
+getPDF (GString *fname)
+{
+  PDFDoc *pdf;
+  pdf = new PDFDoc(fname);
+  if (!pdf->isOk()) {
+    delete pdf;
+    return NULL;
+  }
+  g_return_val_if_fail (pdf->getCatalog(), NULL);
+  return pdf;
+}
+
+static DOC_ROOT *
+doc_root_new (GString *fileName)
+{
+  DOC_ROOT *doc = new DOC_ROOT();
+  GtkVBox  *pane;
+
+  // open PDF file
+  doc->pdf = getPDF (fileName);
+  if (!doc->pdf) {
+    delete doc;
+    return NULL;
+  }
+
+  doc->gui = glade_xml_new (GPDF_GLADE_DIR "/gpdf.glade", NULL);
+  if (!doc->gui ||
+      !(doc->mainframe = glade_xml_get_widget (doc->gui, "gpdf")) ||
+      !(pane = GTK_VBOX (glade_xml_get_widget (doc->gui, "pane")))) {
+    printf ("Couldn't find " GPDF_GLADE_DIR "/gpdf.glade\n");
+    delete doc->pdf;
+    delete doc;
+    return NULL;
+  }
+
+  connect_signals (doc);
+
+  gtk_object_set_data (GTK_OBJECT (doc->mainframe), DOC_ROOT_TAG, doc);
+
+  doc->pixmap = setup_pixmap (doc, gtk_widget_get_parent_window (GTK_WIDGET (pane)));
+  
+  doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
+  gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,
+				  GTK_POLICY_AUTOMATIC);
+  show_page (doc, page);
+  gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->pixmap));
+  gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
+
+  gtk_widget_show_all (doc->mainframe);
+
+  documents = g_list_append (documents, doc);
+
+  return doc;
+}
+
+static void
+doc_root_destroy (DOC_ROOT *doc)
+{
+    gtk_widget_destroy (doc->mainframe);
+    gtk_object_destroy (GTK_OBJECT (doc->gui));
+    
+    documents = g_list_remove (documents, doc);
+    if (g_list_length (documents) == 0)
+      gtk_main_quit ();
+    delete (doc);
+}
+
+//------------------------------------------------------------------------
+//                          Signal handlers
+//------------------------------------------------------------------------
+
 extern "C" {
   void
-  on_close_activate (GtkWidget *window, void *data)
+  do_close (GtkWidget *menuitem, DOC_ROOT *doc)
   {
-    printf ("Bye...");
-    gtk_widget_destroy (window);
+    doc_root_destroy (doc);
   }
+
+  void
+  do_exit (GtkWidget *menuitem, DOC_ROOT *doc)
+  {
+    GList *l;
+    while ((l=documents))
+      doc_root_destroy ((DOC_ROOT *)l->data);
+  }
+
+  static void
+  do_about_box (GtkWidget *w, DOC_ROOT *doc)
+  {
+    GladeXML *gui = glade_xml_new (GPDF_GLADE_DIR "/about.glade", NULL);
+    g_return_if_fail (gui);
+    GtkWidget *wi = glade_xml_get_widget (gui, "about_box");
+    g_return_if_fail (wi);
+    gtk_widget_show  (wi);
+    gtk_object_destroy (GTK_OBJECT (gui));
+  }
+
+  static void
+  simple_connect (DOC_ROOT *doc, const char *name, GtkSignalFunc func)
+  {
+    GtkWidget *w;
+    w = glade_xml_get_widget (doc->gui, name);
+    gtk_signal_connect (GTK_OBJECT (w), "activate", func, doc);
+  }
+  
+  static void
+  connect_signals (DOC_ROOT *doc)
+  {
+    simple_connect (doc, "about_menu", GTK_SIGNAL_FUNC (do_about_box)); 
+    simple_connect (doc, "close_menu", GTK_SIGNAL_FUNC (do_close));
+    simple_connect (doc, "exit_menu",  GTK_SIGNAL_FUNC (do_exit));
+ }
 }
 
 int
@@ -285,7 +288,7 @@ main (int argc, char *argv [])
   if (view_files) {
     for (i = 0; view_files[i]; i++) {
       GString *name = new GString (view_files[i]);
-      if (!name || !loadPDF (name))
+      if (!name || !doc_root_new (name))
 	printf ("Error loading '%s'\n", view_files[i]);
     }
   } else {
