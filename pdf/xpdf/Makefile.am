@@ -251,6 +251,14 @@ gpdf-marshal.c: gpdf-marshal.list $(GLIB_GENMARSHAL)
 	echo "#include \"gpdf-marshal.h\"" > $@ && \
 	$(GLIB_GENMARSHAL) $< --body --prefix=gpdf_marshal >> $@
 
+BUILT_SOURCES = $(marshal_sources)
+DONT_DIST_SOURCE = $(marshal_sources)
+
+dist-hook:
+	for file in $(DONT_DIST_SOURCE) ; do \
+	    rm -f $(distdir)/$$file ; \
+	done
+
 stockdir = $(datadir)/pixmaps/gpdf
 stock_DATA = fitwidth.png
 
@@ -271,9 +279,8 @@ ui_DATA =				\
 
 CLEANFILES =				\
 	$(server_DATA)			\
-	$(server_in_files:.server.in.in=.server.in)
-
-#	$(marshal_sources)
+	$(server_in_files:.server.in.in=.server.in) \
+	$(marshal_sources)
 
 EXTRA_DIST = $(stock_DATA)		\
 	gpdf-marshal.list		\
@@ -281,11 +288,3 @@ EXTRA_DIST = $(stock_DATA)		\
 	config.h 			\
 	$(ui_DATA)			\
 	$(glade_DATA)
-
-DONT_DIST_SOURCE = $(marshal_sources)
-
-# dist-hook:
-# 	for file in $(DONT_DIST_SOURCE) ; do \
-# 	    rm -f $(distdir)/$$file ; \
-# 	done
-
