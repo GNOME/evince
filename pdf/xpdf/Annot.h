@@ -34,9 +34,21 @@ public:
   // Get appearance object.
   Object *getAppearance(Object *obj) { return appearance.fetch(xref, obj); }
 
+  // Get subtype object
+  Object *getSubtype(Object *obj) {return subtype.copy(obj); };
+
+  // Get dictionary
+  Dict *getDict() {return dict; };
+
+  // Get annot appearance ID
+  int getRefNum() {return appearance.getRefNum();};
+  int getRefGen() {return appearance.getRefGen();};
+  
 private:
 
   XRef *xref;			// the xref table for this PDF file
+  Dict *dict;
+  Object subtype;
   Object appearance;		// a reference to the Form XObject stream
 				//   for the normal appearance
   double xMin, yMin,		// annotation rectangle
