@@ -491,7 +491,7 @@ container_create_toolbar (Container *container)
 
 	gnome_ui_handler_create_toolbar (container->uih, "pdf");
 	toolbar = gnome_ui_handler_toolbar_parse_uiinfo_list_with_data (container_toolbar, container);
-	gnome_ui_handler_toolbar_add_list (container->uih, "/", toolbar);
+	gnome_ui_handler_toolbar_add_list (container->uih, "/pdf/", toolbar);
 	gnome_ui_handler_toolbar_free_list (toolbar);
 }
 
