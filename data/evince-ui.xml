@@ -33,8 +33,8 @@
     </menu>
 
     <menu name="GoMenu" action="Go">
-      <menuitem name="GoPageUpMenu" action="GoPageUp"/>
-      <menuitem name="GoPageDownMenu" action="GoPageDown"/>
+      <menuitem name="GoPreviousPageMenu" action="GoPreviousPage"/>
+      <menuitem name="GoNextPageMenu" action="GoNextPage"/>
       <separator/>
       <menuitem name="GoFirstPageMenu" action="GoFirstPage"/>
       <menuitem name="GoLastPageMenu" action="GoLastPage"/>
@@ -47,8 +47,8 @@
   </menubar>
 
   <toolbar name="ToolBar">
-    <toolitem action="GoPageDown"/>
-    <toolitem action="GoPageUp"/>
+    <toolitem action="GoPreviousPage"/>
+    <toolitem action="GoNextPage"/>
     <separator/>
     <toolitem action="PageSelector"/>
     <separator/>

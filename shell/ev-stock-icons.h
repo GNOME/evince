@@ -28,9 +28,10 @@
 
 G_BEGIN_DECLS
 
-/* Toolbar icons */
-#define EV_STOCK_ZOOM_FIT_WIDTH "ev-zoom-fit-width"
-#define EV_STOCK_LEAVE_FULLSCREEN "stock_leave-fullscreen"
+/* Evince stock icons */
+#define EV_STOCK_ZOOM_PAGE              "stock_zoom-page" 
+#define EV_STOCK_ZOOM_WIDTH             "stock_zoom-page-width" 
+#define EV_STOCK_LEAVE_FULLSCREEN       "stock_leave-fullscreen"
 
 void ev_stock_icons_init (void);
 

@@ -29,51 +29,44 @@
 #include <gtk/gtkstock.h>
 #include <gdk/gdkpixbuf.h>
 
-/* Toolbar icons files */
-#define STOCK_ZOOM_FIT_WIDTH_FILE "ev-stock-zoom-fit-width.png"
+typedef struct {
+	char *stock_id;
+	char *icon;
+} EvStockIcon;
 
-#define EV_ADD_STOCK_ICON(id, file, def_id)				        \
-{				  					        \
-	GdkPixbuf *pixbuf;						        \
-	GtkIconSet *icon_set = NULL;					        \
-        pixbuf = gdk_pixbuf_new_from_file (GNOMEICONDIR "/evince/" file, NULL); \
-        if (pixbuf) {							        \
-        	icon_set = gtk_icon_set_new_from_pixbuf (pixbuf);	        \
-	} else if (def_id) {						        \
-		icon_set = gtk_icon_factory_lookup_default (def_id);	        \
-		gtk_icon_set_ref (icon_set);				        \
-	}								        \
-        gtk_icon_factory_add (factory, id, icon_set);   		        \
-        gtk_icon_set_unref (icon_set);					        \
-}
+/* Evince stock icons from gnome-icon-theme */
+static EvStockIcon stock_icons [] = {
+	{ EV_STOCK_ZOOM_PAGE,        "stock_zoom-page" },
+	{ EV_STOCK_ZOOM_WIDTH,       "stock_zoom-page-width" },
+	{ EV_STOCK_LEAVE_FULLSCREEN, "stock_leave-fullscreen" }
+};
+
 
 void
 ev_stock_icons_init (void)
 {
-	static const char *icon_theme_items[] =	{
-		EV_STOCK_LEAVE_FULLSCREEN
-	};
-        GtkIconFactory *factory;
-	guint i;
+	GtkIconFactory *factory;
+	GtkIconSource *source;
+	gint i;
 
         factory = gtk_icon_factory_new ();
         gtk_icon_factory_add_default (factory);
 
-	/* fitwidth stock icon */
-	EV_ADD_STOCK_ICON (EV_STOCK_ZOOM_FIT_WIDTH, STOCK_ZOOM_FIT_WIDTH_FILE, GTK_STOCK_ZOOM_FIT);
+	source = gtk_icon_source_new ();
 
-	for (i = 0; i < G_N_ELEMENTS (icon_theme_items); i++) {
-		GtkIconSet *icon_set;
-		GtkIconSource *icon_source;
+	for (i = 0; i < G_N_ELEMENTS (stock_icons); i++) {
+		GtkIconSet *set;
 
-		icon_set = gtk_icon_set_new ();
-		icon_source = gtk_icon_source_new ();
-		gtk_icon_source_set_icon_name (icon_source, icon_theme_items[i]);
-		gtk_icon_set_add_source (icon_set, icon_source);
-		gtk_icon_factory_add (factory, icon_theme_items[i], icon_set);
-		gtk_icon_set_unref (icon_set);
-		gtk_icon_source_free (icon_source);
+		gtk_icon_source_set_icon_name (source, stock_icons [i].icon);
+
+		set = gtk_icon_set_new ();
+		gtk_icon_set_add_source (set, source);
+
+		gtk_icon_factory_add (factory, stock_icons [i].stock_id, set);
+		gtk_icon_set_unref (set);
 	}
+
+	gtk_icon_source_free (source);
 
 	g_object_unref (G_OBJECT (factory));
 }

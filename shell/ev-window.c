@@ -178,14 +178,14 @@ update_action_sensitivity (EvWindow *ev_window)
 		page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
 		n_pages = ev_document_get_n_pages (document);
 
-		set_action_sensitive (ev_window, "GoPageUp", page > 1);
-		set_action_sensitive (ev_window, "GoPageDown", page < n_pages);
+		set_action_sensitive (ev_window, "GoPreviousPage", page > 1);
+		set_action_sensitive (ev_window, "GoNextPage", page < n_pages);
 		set_action_sensitive (ev_window, "GoFirstPage", page > 1);
 		set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
 	} else {
   		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
-		set_action_sensitive (ev_window, "GoPageUp", FALSE);
-		set_action_sensitive (ev_window, "GoPageDown", FALSE);
+		set_action_sensitive (ev_window, "GoPreviousPage", FALSE);
+		set_action_sensitive (ev_window, "GoNextPage", FALSE);
 		set_action_sensitive (ev_window, "GoLastPage", FALSE);
 	}
 
@@ -1144,7 +1144,7 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_go_page_up (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
@@ -1153,7 +1153,7 @@ ev_window_cmd_go_page_up (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_go_page_down (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
@@ -1521,54 +1521,54 @@ static GtkActionEntry entries[] = {
 	{ "Help", NULL, N_("_Help") },
 
 	/* File menu */
-	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open"), "<control>O",
-	  N_("Open a file"),
+	{ "FileOpen", GTK_STOCK_OPEN, NULL, "<control>O",
+	  N_("Open an existing document"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), NULL,
 	  N_("Save the current document with a new filename"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print"), "<control>P",
+	{ "FilePrint", GTK_STOCK_PRINT, NULL, "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
-	{ "FileCloseWindow", GTK_STOCK_CLOSE, N_("_Close"), "<control>W",
+	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W",
 	  N_("Close this window"),
 	  G_CALLBACK (ev_window_cmd_file_close_window) },
 
         /* Edit menu */
-        { "EditCopy", GTK_STOCK_COPY, N_("_Copy"), "<control>C",
+        { "EditCopy", GTK_STOCK_COPY, NULL, "<control>C",
           N_("Copy text from the document"),
           G_CALLBACK (ev_window_cmd_edit_copy) },
  	{ "EditSelectAll", NULL, N_("Select _All"), "<control>A",
 	  N_("Select the entire page"),
 	  G_CALLBACK (ev_window_cmd_edit_select_all) },
-        { "EditFind", GTK_STOCK_FIND, N_("_Find"), "<control>F",
+        { "EditFind", GTK_STOCK_FIND, NULL, "<control>F",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
 
         /* View menu */
-        { "ViewZoomIn", GTK_STOCK_ZOOM_IN, N_("Zoom _In"), "<control>plus",
+        { "ViewZoomIn", GTK_STOCK_ZOOM_IN, NULL, "<control>plus",
           N_("Enlarge the document"),
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
-        { "ViewZoomOut", GTK_STOCK_ZOOM_OUT, N_("Zoom _Out"), "<control>minus",
+        { "ViewZoomOut", GTK_STOCK_ZOOM_OUT, NULL, "<control>minus",
           N_("Shrink the document"),
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
-        { "ViewNormalSize", GTK_STOCK_ZOOM_100, N_("_Normal Size"), "<control>0",
-          N_("Zoom to the normal size"),
+        { "ViewNormalSize", GTK_STOCK_ZOOM_100, NULL, "<control>0",
+          N_("Reset the zoom level to the defaul value"),
           G_CALLBACK (ev_window_cmd_view_normal_size) },
-        { "ViewBestFit", GTK_STOCK_ZOOM_FIT, N_("_Best Fit"), NULL,
-          N_("Zoom to fit the document to the current window"),
+        { "ViewBestFit", EV_STOCK_ZOOM_PAGE, N_("_Best Fit"), NULL,
+          N_("Make the current document fill the window"),
           G_CALLBACK (ev_window_cmd_view_best_fit) },
-        { "ViewPageWidth", EV_STOCK_ZOOM_FIT_WIDTH, N_("Fit Page _Width"), NULL,
-          N_("Zoom to fit the width of the current window "),
+        { "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
+          N_("Make the current document fill the window width"),
           G_CALLBACK (ev_window_cmd_view_page_width) },
 
         /* Go menu */
-        { "GoPageUp", GTK_STOCK_GO_UP, N_("_Page Up"), "<control>Page_Up",
+        { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "Page_Up",
           N_("Go to the previous page"),
-          G_CALLBACK (ev_window_cmd_go_page_up) },
-        { "GoPageDown", GTK_STOCK_GO_DOWN, N_("_Page Down"), "<control>Page_Down",
+          G_CALLBACK (ev_window_cmd_go_previous_page) },
+        { "GoNextPage", GTK_STOCK_GO_FORWARD, N_("_Next Page"), "Page_Down",
           N_("Go to the next page"),
-          G_CALLBACK (ev_window_cmd_go_page_down) },
+          G_CALLBACK (ev_window_cmd_go_next_page) },
         { "GoFirstPage", GTK_STOCK_GOTO_FIRST, N_("_First Page"), "<control>Home",
           N_("Go to the first page"),
           G_CALLBACK (ev_window_cmd_go_first_page) },
@@ -1595,13 +1595,13 @@ static GtkActionEntry entries[] = {
 static GtkToggleActionEntry toggle_entries[] = {
 	/* View Menu */
 	{ "ViewToolbar", NULL, N_("_Toolbar"), "<shift><control>T",
-	  N_("Show or hide toolbar"),
+	  N_("Show or hide the toolbar"),
 	  G_CALLBACK (ev_window_view_toolbar_cb), TRUE },
 	{ "ViewStatusbar", NULL, N_("_Statusbar"), NULL,
-	  N_("Show or hide statusbar"),
+	  N_("Show or hide the statusbar"),
 	  G_CALLBACK (ev_window_view_statusbar_cb), TRUE },
-        { "ViewSidebar", NULL, N_("Side_bar"), "F9",
-	  N_("Show or hide sidebar"),
+        { "ViewSidebar", NULL, N_("Side _pane"), "F9",
+	  N_("Show or hide the side pane"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
         { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
@@ -1648,12 +1648,16 @@ set_action_properties (GtkActionGroup *action_group)
 {
 	GtkAction *action;
 
-	action = gtk_action_group_get_action (action_group, "GoPageUp");
-	g_object_set (action, "short_label", _("Up"), NULL);
-	action = gtk_action_group_get_action (action_group, "GoPageDown");
-	g_object_set (action, "short_label", _("Down"), NULL);
+	action = gtk_action_group_get_action (action_group, "GoPreviousPage");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Previous"), NULL);
+	action = gtk_action_group_get_action (action_group, "GoNextPage");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Next"), NULL);
 	action = gtk_action_group_get_action (action_group, "ViewPageWidth");
+	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Fit Width"), NULL);
+	action = gtk_action_group_get_action (action_group, "ViewZoomIn");
 
 	action = gtk_action_group_get_action (action_group, "LeaveFullscreen");
 	g_object_set (action, "is-important", TRUE, NULL);
