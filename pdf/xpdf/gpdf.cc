@@ -44,12 +44,17 @@ GBool printCommands = gFalse;
 gint  gpdf_debug=1;
 poptContext ctx;
 
+#define DEV_DEBUG 0
+
+double zoom = 86.0;
+gint page = 2;
+
 #define DOC_KEY "xpdf_doc_key"
 struct DOC_ROOT {
   GString        *title;
   PDFDoc         *pdf;
   GtkDrawingArea *area;
-  GdkPixmap      *pixmap;
+  GtkPixmap      *pixmap;
   OutputDev      *out;
   GdkColor        paper;
   GtkScrolledWindow *scroll;
@@ -67,7 +72,59 @@ const struct poptOption gpdf_popt_options [] = {
 // loadFile / displayPage
 //------------------------------------------------------------------------
 
-static gint
+static void
+get_page_geom (int *w, int *h, Page *p)
+{
+  double pw = p->getWidth();
+  double ph = p->getHeight();
+
+  *w = 612;
+  *h = 792;
+
+  if (!p)
+    return;
+
+  *w = (int)((pw * zoom)/72.0 + 28.0);
+  *h = (int)((ph * zoom)/72.0 + 56.0);
+}
+
+static GdkPixmap *
+setup_pixmap (DOC_ROOT *doc, GdkWindow *window)
+{
+  GdkGCValues  gcValues;
+  GdkGC       *strokeGC;
+  PDFDoc      *pdf = doc->pdf;
+  int          w, h;
+  GdkPixmap   *pixmap = NULL;
+
+  if (pixmap)
+    gdk_pixmap_unref(pixmap);
+
+  Catalog *cat = pdf->getCatalog();
+  get_page_geom (&w, &h, cat->getPage (page));
+
+  pixmap = gdk_pixmap_new (window, w, h, -1);
+  gtk_widget_set_usize (GTK_WIDGET (doc->scroll), w, h);
+
+  printf ("Creating pixmap of size %d %d\n", w, h);
+  gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
+  doc->out    = new GOutputDev (pixmap, doc->paper, window);
+
+  gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
+  gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
+  gcValues.line_width = 1;
+  gcValues.line_style = GDK_LINE_SOLID;
+  strokeGC = gdk_gc_new_with_values (
+    pixmap, &gcValues, 
+    (enum GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_LINE_WIDTH | GDK_GC_LINE_STYLE));
+  
+  gdk_draw_rectangle (pixmap, strokeGC,
+		      TRUE, 0, 0,
+		      w, h);
+  return pixmap;
+}
+
+/*static gint
 doc_config_event (GtkWidget *widget, void *ugly)
 {
   DOC_ROOT *doc;
@@ -76,40 +133,6 @@ doc_config_event (GtkWidget *widget, void *ugly)
   
   g_return_val_if_fail (doc, FALSE);
 
-  if (doc->pixmap)
-    gdk_pixmap_unref(doc->pixmap);
-
-  doc->pixmap = gdk_pixmap_new(widget->window,
-                               widget->allocation.width,
-                               widget->allocation.height,
-                               -1);
-
-  printf ("Creating pixmap of size %d %d\n",
-	  widget->allocation.width, widget->allocation.height);
-  gdk_color_white (gtk_widget_get_default_colormap(), &doc->paper);
-  doc->out    = new GOutputDev (doc->pixmap, doc->paper,
-				gtk_widget_get_parent_window (widget));
-
-
-  {
-    GdkGCValues gcValues;
-    GdkGC *strokeGC;
-    
-    gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
-    gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
-    gcValues.line_width = 1;
-    gcValues.line_style = GDK_LINE_SOLID;
-    strokeGC = gdk_gc_new_with_values (
-      doc->pixmap, &gcValues, 
-      (enum GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_LINE_WIDTH | GDK_GC_LINE_STYLE));
-
-    gdk_draw_rectangle (doc->pixmap,
-			strokeGC,
-			TRUE,
-			0, 0,
-			widget->allocation.width,
-			widget->allocation.height);
-  }
   return TRUE;
 }
 
@@ -125,7 +148,9 @@ doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
   g_return_val_if_fail (doc != NULL, FALSE);
 
   if (doc->out && doc->pdf) {
+#if DEV_DEBUG > 0
     printf ("There are %d pages\n", doc->pdf->getNumPages());
+#endif
 
     doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue);
     gdk_draw_pixmap(widget->window,
@@ -138,7 +163,7 @@ doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
     printf ("Null pointer error %p %p\n", doc->out, doc->pdf);
   
   return FALSE;
-}
+}*/
 
 static PDFDoc *
 getPDF (GString *fname)
@@ -160,6 +185,7 @@ loadPDF(GString *fileName)
   DOC_ROOT *doc = new DOC_ROOT();
   GtkVBox  *pane;
   GtkAdjustment *hadj, *vadj;
+  GdkPixmap *pix;
 
   // open PDF file
   doc->pdf = getPDF (fileName);
@@ -177,20 +203,16 @@ loadPDF(GString *fileName)
     delete doc;
     return gFalse;
   }
+/*  glade_xml_signal_autoconnect (doc->gui);*/
     
-  doc->pixmap = NULL;
-  doc->area   = GTK_DRAWING_AREA (gtk_drawing_area_new ());
-
-  gtk_object_set_data (GTK_OBJECT (doc->area), DOC_KEY, doc);
-  gtk_signal_connect  (GTK_OBJECT (doc->area),"configure_event",
-		       (GtkSignalFunc) doc_config_event, doc);
-  gtk_signal_connect  (GTK_OBJECT (doc->area), "expose_event",
-		       (GtkSignalFunc) doc_redraw_event, doc);
-
-  hadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 1, 0.01, 0.1, 2));
-  vadj = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 1, 0.01, 0.1, 2));
-  doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (hadj, vadj));
-  gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->area));
+  pix = setup_pixmap (doc, gtk_widget_get_parent_window (GTK_WIDGET (pane)));
+  doc->pixmap = GTK_PIXMAP (gtk_pixmap_new (pix, NULL));
+  
+  doc->scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new (NULL, NULL));
+  gtk_scrolled_window_set_policy (doc->scroll, GTK_POLICY_AUTOMATIC,
+				  GTK_POLICY_AUTOMATIC);
+  doc->pdf->displayPage(doc->out, page, zoom, 0, gTrue);
+  gtk_scrolled_window_add_with_viewport (doc->scroll, GTK_WIDGET (doc->pixmap));
   gtk_box_pack_start (GTK_BOX (pane), GTK_WIDGET (doc->scroll), TRUE, TRUE, 0);
 
   gtk_widget_show_all (doc->mainframe);
@@ -233,6 +255,14 @@ loadPDF(GString *fileName)
   win->setBusyCursor(gFalse);
   }*/
 
+extern "C" {
+  void
+  on_close_activate (GtkWidget *window, void *data)
+  {
+    printf ("Bye...");
+    gtk_widget_destroy (window);
+  }
+}
 
 int
 main (int argc, char *argv [])
