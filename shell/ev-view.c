@@ -1102,6 +1102,10 @@ set_document_page (EvView *view, int page)
 {
 	if (view->document) {
 		int old_page = ev_document_get_page (view->document);
+		int old_width, old_height;
+
+		ev_document_get_page_size (view->document,
+					   &old_width, &old_height);
 
 		if (old_page != page) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
@@ -1109,9 +1113,16 @@ set_document_page (EvView *view, int page)
 		}
 
 		if (old_page != ev_document_get_page (view->document)) {
+			int width, height;
+			
 			g_signal_emit (view, page_changed_signal, 0);
 
 			view->has_selection = FALSE;
+			ev_document_get_page_size (view->document,
+						   &width, &height);
+			if (width != old_width || height != old_height)
+				gtk_widget_queue_resize (GTK_WIDGET (view));
+
 			view->find_percent_complete = 0.0;
 			update_find_results (view);	
 		}
