@@ -1,3 +1,28 @@
+2005-02-07  Christian Persch  <chpe@cvs.gnome.org>
+
+	* Makefile.am:
+	* configure.ac:
+	* data/.cvsignore:
+	* data/Makefile.am:
+	* data/evince-ui.xml:
+	A data/evince.schemas.in:
+	* po/POTFILES.in:
+	* shell/ev-stock-icons.c: (ev_stock_icons_init):
+	* shell/ev-stock-icons.h:
+	* shell/ev-window.c: (update_chrome_visibility),
+	(update_chrome_flag), (ev_window_cmd_edit_find),
+	(ev_window_update_fullscreen_popup), (ev_window_fullscreen),
+	(ev_window_unfullscreen), (ev_window_focus_in_event),
+	(ev_window_focus_out_event), (ev_window_cmd_leave_fullscreen),
+	(ev_window_view_toolbar_cb), (ev_window_view_statusbar_cb),
+	(ev_window_view_sidebar_cb), (find_bar_close_cb),
+	(ev_window_dispose), (ev_window_class_init),
+	(set_action_properties), (set_chrome_actions), (load_chrome),
+	(ev_window_init):
+
+	Implement fullscreen mode changes from bug #164776.
+	Also implement persistent chrome toggles.
+
 2005-02-07  Jordi Mallach  <jordi@sindominio.net>
 
 	* configure.ac (ALL_LINGUAS): Added "ca" (Catalan).

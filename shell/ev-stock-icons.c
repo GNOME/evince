@@ -50,13 +50,30 @@
 void
 ev_stock_icons_init (void)
 {
+	static const char *icon_theme_items[] =	{
+		EV_STOCK_LEAVE_FULLSCREEN
+	};
         GtkIconFactory *factory;
+	guint i;
 
         factory = gtk_icon_factory_new ();
         gtk_icon_factory_add_default (factory);
 
 	/* fitwidth stock icon */
 	EV_ADD_STOCK_ICON (EV_STOCK_ZOOM_FIT_WIDTH, STOCK_ZOOM_FIT_WIDTH_FILE, GTK_STOCK_ZOOM_FIT);
-	
+
+	for (i = 0; i < G_N_ELEMENTS (icon_theme_items); i++) {
+		GtkIconSet *icon_set;
+		GtkIconSource *icon_source;
+
+		icon_set = gtk_icon_set_new ();
+		icon_source = gtk_icon_source_new ();
+		gtk_icon_source_set_icon_name (icon_source, icon_theme_items[i]);
+		gtk_icon_set_add_source (icon_set, icon_source);
+		gtk_icon_factory_add (factory, icon_theme_items[i], icon_set);
+		gtk_icon_set_unref (icon_set);
+		gtk_icon_source_free (icon_source);
+	}
+
 	g_object_unref (G_OBJECT (factory));
 }
