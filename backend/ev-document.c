@@ -23,7 +23,7 @@
 #include "ev-document.h"
 #include "ev-backend-marshalers.h"
 
-static void ev_document_base_init (gpointer g_class);
+static void ev_document_class_init (gpointer g_class);
 
 enum
 {
@@ -43,8 +43,9 @@ ev_document_get_type (void)
 		static const GTypeInfo our_info =
 		{
 			sizeof (EvDocumentIface),
-			ev_document_base_init,
 			NULL,
+			NULL,
+			(GClassInitFunc)ev_document_class_init
 		};
 
 		type = g_type_register_static (G_TYPE_INTERFACE,
@@ -56,24 +57,23 @@ ev_document_get_type (void)
 }
 
 static void
-ev_document_base_init (gpointer g_class)
+ev_document_class_init (gpointer g_class)
 {
-	static gboolean initialized = FALSE;
+	signals[CHANGED] =
+		g_signal_new ("changed",
+			      EV_TYPE_DOCUMENT,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvDocumentIface, changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE,
+			      0);
 
-	if (!initialized)
-	{
-		signals[CHANGED] =
-			g_signal_new ("changed",
-				      EV_TYPE_DOCUMENT,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (EvDocumentIface, changed),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE,
-				      0);
-
-		initialized = TRUE;
-	}
+	g_object_interface_install_property (g_class,
+				g_param_spec_string ("title",
+						     "Document Title",
+						     "The title of the document",
+						     NULL, 0));
 }
 
 gboolean
@@ -83,6 +83,16 @@ ev_document_load (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	return iface->load (document, uri, error);
+}
+
+char *
+ev_document_get_title (EvDocument  *document)
+{
+	char *title;
+
+	g_object_get (document, "title", &title, NULL);
+
+	return title;
 }
 
 int

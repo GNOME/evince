@@ -28,6 +28,7 @@
 #include <stdio.h>
 
 #include <gsio.h>
+#include <gstypes.h>
 
 G_BEGIN_DECLS
 

@@ -24,17 +24,10 @@
 #ifndef __PS_DOCUMENT_H__
 #define __PS_DOCUMENT_H__
 
-#include <gdk/gdk.h>
-#include <gtk/gtkwidget.h>
-
-#include <gconf/gconf-client.h>
-
-#include <errno.h>
-#include <signal.h>
-#include <unistd.h>
 #include <sys/types.h>
-#include <stdio.h>
 
+#include "ev-document.h"
+#include "ps.h"
 #include "gstypes.h"
 
 G_BEGIN_DECLS

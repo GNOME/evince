@@ -149,9 +149,7 @@ The DONE message indicates that ghostscript has finished processing.
 #include <stdio.h>
 #include <math.h>
 
-#include "ev-document.h"
 #include "ps-document.h"
-#include "ps.h"
 #include "gsdefaults.h"
 
 #ifdef HAVE_LOCALE_H
@@ -174,6 +172,11 @@ The DONE message indicates that ghostscript has finished processing.
                                         PS_DOCUMENT(gs)->gs_filename)
 
 enum { INTERPRETER_MESSAGE, INTERPRETER_ERROR, LAST_SIGNAL };
+
+enum {
+	PROP_0,
+	PROP_TITLE
+};
 
 /* structure to describe section of file to send to ghostscript */
 struct record_list {
@@ -283,6 +286,41 @@ ps_document_init(PSDocument * gs)
 }
 
 static void
+ps_document_set_property (GObject *object,
+		          guint prop_id,
+		          const GValue *value,
+		          GParamSpec *pspec)
+{
+	switch (prop_id)
+
+	{
+		case PROP_TITLE:
+			/* read only */
+			break;
+	}
+}
+
+static void
+ps_document_get_property (GObject *object,
+		          guint prop_id,
+		          GValue *value,
+		          GParamSpec *pspec)
+{
+	PSDocument *ps = PS_DOCUMENT (object);
+
+	switch (prop_id)
+	{
+		case PROP_TITLE:
+			if (ps->doc) {
+				g_value_set_string (value, ps->doc->title);
+			} else {
+				g_value_set_string (value, NULL);
+			}
+			break;
+	}
+}
+
+static void
 ps_document_class_init(PSDocumentClass * klass)
 {
   GObjectClass *object_class;
@@ -292,6 +330,8 @@ ps_document_class_init(PSDocumentClass * klass)
   gs_class = klass;
 
   object_class->finalize = ps_document_finalize;
+  object_class->get_property = ps_document_get_property;
+  object_class->set_property = ps_document_set_property;
 
   /* Create atoms */
   klass->gs_atom = gdk_atom_intern("GHOSTVIEW", FALSE);
@@ -300,6 +340,8 @@ ps_document_class_init(PSDocumentClass * klass)
   klass->string_atom = gdk_atom_intern("STRING", FALSE);
 
   gtk_gs_defaults_load();
+
+  g_object_class_override_property (object_class, PROP_TITLE, "title");
 }
 
 /* Clean all memory and temporal files */
@@ -1295,6 +1337,8 @@ document_load(PSDocument * gs, const gchar * fname)
 
     /* we grab the vital statistics!!! */
     gs->doc = psscan(gs->gs_psfile, gs->respect_eof, filename);
+
+    g_object_notify (G_OBJECT (gs), "title");
 
     if(gs->doc == NULL) {
       /* File does not seem to be a Postscript one */

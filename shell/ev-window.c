@@ -249,6 +249,24 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 	return retval;
 }
 
+static void
+update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_window)
+{
+	char *title = NULL;
+
+	if (document) {
+		title = ev_document_get_title (document);
+	}
+
+	if (title == NULL) {
+		title = g_strdup (_("Document Viewer"));
+	}
+
+	gtk_window_set_title (GTK_WINDOW (ev_window), title);
+
+	g_free (title);
+}
+
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
@@ -278,6 +296,11 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 					      document);
 			ev_sidebar_set_document (EV_SIDEBAR (ev_window->priv->sidebar),
 						 document);
+
+			g_signal_connect_object (G_OBJECT (document),
+						 "notify::title",
+						 G_CALLBACK (update_window_title),
+						 ev_window, 0);
 
 			update_action_sensitivity (ev_window);
 		
@@ -1150,7 +1173,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
-	gtk_window_set_title (GTK_WINDOW (ev_window), _("Document Viewer"));
+	update_window_title (NULL, NULL, ev_window);
 
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);

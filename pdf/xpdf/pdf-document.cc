@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <glib/gi18n.h>
+
 #include "gpdf-g-switch.h"
 #include "pdf-document.h"
 #include "ev-ps-exporter.h"
@@ -31,6 +33,11 @@
 #include "GlobalParams.h"
 #include "goo/GList.h"
 #include "PSOutputDev.h"
+
+enum {
+	PROP_0,
+	PROP_TITLE
+};
 
 typedef struct
 {
@@ -176,6 +183,8 @@ pdf_document_load (EvDocument  *document,
 		pdf_document->out->startDoc(pdf_document->doc->getXRef());
 
 	pdf_document->page_valid = FALSE;
+
+	g_object_notify (G_OBJECT (pdf_document), "title");
 
 	return TRUE;
 }
@@ -858,11 +867,98 @@ pdf_document_finalize (GObject *object)
 }
 
 static void
+pdf_document_set_property (GObject *object,
+		           guint prop_id,
+		           const GValue *value,
+		           GParamSpec *pspec)
+{
+	switch (prop_id)
+
+	{
+		case PROP_TITLE:
+			/* read only */
+			break;
+	}
+}
+
+static gboolean
+has_unicode_marker (GString *string)
+{
+	return ((string->getChar (0) & 0xff) == 0xfe &&
+		(string->getChar (1) & 0xff) == 0xff);
+}
+
+static gchar *
+pdf_info_dict_get_string (Dict *info_dict, const gchar *key) {
+	Object obj;
+	GString *value;
+	gchar *result;
+
+	g_return_val_if_fail (info_dict != NULL, NULL);
+	g_return_val_if_fail (key != NULL, NULL);
+
+	if (!info_dict->lookup ((gchar *)key, &obj)->isString ()) {
+		obj.free ();
+		return g_strdup (_("Unknown"));
+	}
+
+	value = obj.getString ();
+
+	if (has_unicode_marker (value)) {
+		result = g_convert (value->getCString () + 2,
+				    value->getLength () - 2,
+				    "UTF-8", "UTF-16BE", NULL, NULL, NULL);
+	} else {
+		result = g_strndup (value->getCString (), value->getLength ());
+	}
+
+	obj.free ();
+
+	return result;
+}
+
+static char *
+pdf_document_get_title (PdfDocument *pdf_document)
+{
+	char *title;
+	Object info;
+
+	pdf_document->doc->getDocInfo (&info);
+
+	if (info.isDict ()) {
+		title = pdf_info_dict_get_string (info.getDict(), "Title");
+	}
+}
+
+static void
+pdf_document_get_property (GObject *object,
+		           guint prop_id,
+		           GValue *value,
+		           GParamSpec *pspec)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (object);
+	char *title;
+
+	switch (prop_id)
+	{
+		case PROP_TITLE:
+			title = pdf_document_get_title (pdf_document);	
+			g_value_set_string (value, title);
+			g_free (title);
+			break;
+	}
+}
+
+static void
 pdf_document_class_init (PdfDocumentClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->finalize = pdf_document_finalize;
+	gobject_class->get_property = pdf_document_get_property;
+	gobject_class->set_property = pdf_document_set_property;
+
+	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
 static void

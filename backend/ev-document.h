@@ -75,6 +75,7 @@ GType ev_document_get_type (void);
 gboolean ev_document_load            (EvDocument   *document,
 				      const char   *uri,
 				      GError      **error);
+char    *ev_document_get_title       (EvDocument   *document);
 int      ev_document_get_n_pages     (EvDocument   *document);
 void     ev_document_set_page        (EvDocument   *document,
 				      int           page);

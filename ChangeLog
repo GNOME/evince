@@ -1,3 +1,20 @@
+2005-01-03  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document.c: (ev_document_get_type),
+	(ev_document_class_init), (ev_document_load),
+	(ev_document_get_title):
+	* backend/ev-document.h:
+	* pdf/xpdf/pdf-document.cc:
+	* ps/ps-document.c: (ps_document_set_property),
+	(ps_document_get_property), (ps_document_class_init),
+	(document_load):
+	* ps/ps-document.h:
+	* ps/ps.h:
+	* shell/ev-window.c: (update_window_title), (ev_window_open),
+	(ev_window_init):
+
+	Initial support for document title. Not working yet.
+
 2005-01-02  Marco Pesenti Gritti  <marco@gnome.org>
 
 	* shell/ev-view.c: (ev_view_realize), (ev_view_button_press_event):
