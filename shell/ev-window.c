@@ -133,6 +133,9 @@ static GtkTargetEntry ev_drop_types[] = {
 #define GCONF_CHROME_SIDEBAR	"/apps/evince/show_sidebar"
 #define GCONF_CHROME_STATUSBAR	"/apps/evince/show_statusbar"
 
+#define GCONF_SIDEBAR_SIZE      "/apps/evince/sidebar_size"
+#define SIDEBAR_DEFAULT_SIZE    132
+
 static void     ev_window_update_fullscreen_popup (EvWindow         *window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
 							 EvWindow   *ev_window);
@@ -229,6 +232,8 @@ update_action_sensitivity (EvWindow *ev_window)
 static void
 set_widget_visibility (GtkWidget *widget, gboolean visible)
 {
+	g_return_if_fail (GTK_IS_WIDGET (widget));
+	
 	if (visible)
 		gtk_widget_show (widget);
 	else
@@ -1089,6 +1094,20 @@ screen_size_changed_cb (GdkScreen *screen,
 			EvWindow *window)
 {
 	ev_window_update_fullscreen_popup (window);
+}
+
+static void
+ev_window_sidebar_position_change_cb (GObject *object, GParamSpec *pspec,
+				      EvWindow *ev_window)
+{
+	GConfClient *client;
+	int sidebar_size;
+
+	sidebar_size = gtk_paned_get_position (GTK_PANED (object));
+
+	client = gconf_client_get_default ();
+	gconf_client_set_int (client, GCONF_SIDEBAR_SIZE, sidebar_size, NULL);
+	g_object_unref (client);
 }
 
 static void
@@ -2181,6 +2200,9 @@ ev_window_init (EvWindow *ev_window)
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget, *toolbar_dock;
+	GConfValue *value;
+	GConfClient *client;
+	int sidebar_size;
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
@@ -2257,16 +2279,30 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), ev_window->priv->hpaned,
-			    TRUE, TRUE, 0);	
-	ev_window->priv->sidebar = ev_sidebar_new ();
-	g_signal_connect (ev_window->priv->sidebar,
-			  "notify::visible",
-			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
+	g_signal_connect (ev_window->priv->hpaned,
+			  "notify::position",
+			  G_CALLBACK (ev_window_sidebar_position_change_cb),
 			  ev_window);
+	
+	sidebar_size = SIDEBAR_DEFAULT_SIZE;
+	client = gconf_client_get_default ();
+	value = gconf_client_get (client, GCONF_SIDEBAR_SIZE, NULL);
+	if (value != NULL) {
+		if (value->type == GCONF_VALUE_INT) {
+			sidebar_size = gconf_value_get_int (value);
+		}
+		gconf_value_free (value);
+	}
+	g_object_unref (client);
+	gtk_paned_set_position (GTK_PANED (ev_window->priv->hpaned), sidebar_size);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), ev_window->priv->hpaned,
+			    TRUE, TRUE, 0);
+	gtk_widget_show (ev_window->priv->hpaned);
+	
+	ev_window->priv->sidebar = ev_sidebar_new ();
 	gtk_paned_pack1 (GTK_PANED (ev_window->priv->hpaned),
 			 ev_window->priv->sidebar, FALSE, FALSE);
-	gtk_widget_show (ev_window->priv->hpaned);
+	gtk_widget_show (ev_window->priv->sidebar);
 
 	/* Stub sidebar, for now */
 	sidebar_widget = ev_sidebar_links_new ();
@@ -2341,6 +2377,12 @@ ev_window_init (EvWindow *ev_window)
 	set_chrome_actions (ev_window);
 	update_chrome_visibility (ev_window);
 
+	/* Connect sidebar signals */
+	g_signal_connect (ev_window->priv->sidebar,
+			  "notify::visible",
+			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
+			  ev_window);
+	
 	/* Connect to find bar signals */
 	g_signal_connect (ev_window->priv->find_bar,
 			  "previous",

@@ -233,7 +233,6 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	GtkWidget *image;
 
 	ev_sidebar->priv = EV_SIDEBAR_GET_PRIVATE (ev_sidebar);
-	gtk_box_set_spacing (GTK_BOX (ev_sidebar), 6);
 
 	/* data model */
 	ev_sidebar->priv->page_model = (GtkTreeModel *)
