@@ -4,6 +4,7 @@
  * Author:
  *   Michael Meeks <michael@imaginator.com>
  */
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -19,7 +20,6 @@ extern "C" {
 #include <bonobo.h>
 #undef  GString 
 }
-#include "config.h"
 #include "bonobo-application-x-pdf.h"
 
 poptContext ctx;
@@ -119,7 +119,7 @@ extern "C" {
     stream = bonobo_stream_open (BONOBO_IO_DRIVER_FS, name, Bonobo_Storage_READ, 0);
     
     if (stream == NULL) {
-      char *err = g_strconcat (_("Could not open "), name, NULL);
+      char *err = g_strdup_printf (_("Could not open %s"), name);
       gnome_error_dialog_parented (err, GTK_WINDOW(container->app));
       g_free (err);
       return FALSE;
@@ -196,7 +196,7 @@ extern "C" {
 	g_free (fname);
       } else {
 	GtkWidget *dialog;
-	dialog = gnome_message_box_new ("Can't open a directory",
+	dialog = gnome_message_box_new (_("Can't open a directory"),
 					GNOME_MESSAGE_BOX_ERROR,
 					GNOME_STOCK_BUTTON_OK, NULL);
 	gnome_dialog_set_parent (GNOME_DIALOG (dialog),
@@ -475,7 +475,7 @@ container_new (const char *fname)
 	container = g_new0 (Container, 1);
 
 	container->app = bonobo_window_new ("pdf-viewer",
-					 "GNOME PDF viewer");
+					 _("GNOME PDF viewer"));
 
 	gtk_drag_dest_set (container->app,
 			   GTK_DEST_DEFAULT_ALL,
@@ -539,9 +539,12 @@ main (int argc, char **argv)
 	const char      **view_files = NULL;
 	gboolean          loaded;
 	int               i;
-	
+
+	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
+	textdomain (PACKAGE);
+	setlocale (LC_ALL, "");
+ 	
 	CORBA_exception_init (&ev);
-	
 	
 	gnomelib_register_popt_table (oaf_popt_options, "OAF");
 	gnome_init_with_popt_table("PDFViewer", "0.0.1",

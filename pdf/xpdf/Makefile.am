@@ -3,6 +3,7 @@ INCLUDES =					\
 	-I$(top_srcdir)/goo			\
 	-I$(top_srcdir)/ltk			\
 	-DDATADIR=\""$(datadir)"\"            	\
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	$(EXTRA_GLIB_CFLAGS)			\
 	$(EXTRA_GNOME_CFLAGS)
 
