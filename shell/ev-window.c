@@ -1051,7 +1051,7 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 	} else {
 		update_chrome_flag (ev_window, EV_CHROME_FINDBAR, NULL, TRUE);
 
-		egg_find_bar_grab_focus (EGG_FIND_BAR (ev_window->priv->find_bar));
+		gtk_widget_grab_focus (ev_window->priv->find_bar);
 	}
 }
 
@@ -1874,7 +1874,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
-		if (visible && search_string) {
+		if (visible && search_string && search_string[0]) {
 			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), search_string, case_sensitive);
 			g_mutex_unlock (EV_DOC_MUTEX);
@@ -1929,6 +1929,14 @@ ev_window_dispose (GObject *object)
 	if (priv->password_uri) {
 		g_free (priv->password_uri);
 		priv->password_uri = NULL;
+	}
+
+	if (priv->find_bar) {
+		g_signal_handlers_disconnect_by_func
+			(window->priv->find_bar,
+			 G_CALLBACK (find_bar_close_cb),
+			 window);
+		priv->find_bar = NULL;
 	}
 
 	destroy_fullscreen_popup (window);
@@ -2012,7 +2020,7 @@ static GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_go_last_page) },
 
 	/* Help menu */
-	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), NULL,
+	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1",
 	  N_("Display help for the viewer application"),
 	  G_CALLBACK (ev_window_cmd_help_contents) },
 

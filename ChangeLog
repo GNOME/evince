@@ -1,3 +1,22 @@
+Sat Apr  2 18:57:00 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/evwindow.c: Patch from Alberto Mesas <amesas@gmail.com> to
+	make F1 bring up non-existent help.
+
+	* shell/eggfindbar.c: Patch from Christian Persch to sync to
+	epiphany's find bar, #167477
+
+	* shell/ev-view.c (ev_view_jump): Patch from Emil Soleyman-Zomalan
+	<emil@nishra.com> to add space-bar scrolling, 
+
+	* shell/ev-window.c (static GtkActionEntry entries): add default
+	keybinding for Help (F1)
+	Fixes #171068
+
+	* shell/ev-view.c (ev_view_show_cursor): Fix from Yuval Tanny
+	changing EV_VIEW_CURSOR_LINK to EV_VIEW_CURSOR_NORMAL resolves bug
+	170110
+
 2005-04-01  David Malcolm  <dmalcolm@redhat.com>
 
 	* Makefile.am: 

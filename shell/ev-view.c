@@ -53,6 +53,11 @@ enum {
   TARGET_TEXT_BUFFER_CONTENTS
 };
 
+enum {
+	EV_SCROLL_PAGE_FORWARD,
+	EV_SCROLL_PAGE_BACKWARD
+};
+
 static const GtkTargetEntry targets[] = {
 	{ "STRING", 0, TARGET_STRING },
 	{ "TEXT",   0, TARGET_TEXT },
@@ -77,12 +82,12 @@ struct _EvView {
 	GtkWidget parent_instance;
 
 	EvDocument *document;
-	
+
 	GdkWindow *bin_window;
 
 	char *status;
 	char *find_status;
-	
+
 	int scroll_x;
 	int scroll_y;
 
@@ -119,24 +124,24 @@ struct _EvViewClass {
 	void    (*scroll_view)		  (EvView         *view,
 					   GtkScrollType   scroll,
 					   gboolean        horizontal);
-	
+
 };
 
 
 static void ev_view_set_scroll_adjustments (EvView         *view,
 					    GtkAdjustment  *hadjustment,
 					    GtkAdjustment  *vadjustment);
-    
+
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 
-/*** Helper functions ***/       
-     
+/*** Helper functions ***/
+
 static void
 view_update_adjustments (EvView *view)
 {
 	int old_x = view->scroll_x;
 	int old_y = view->scroll_y;
-  
+
 	if (view->hadjustment)
 		view->scroll_x = view->hadjustment->value;
 	else
@@ -146,7 +151,7 @@ view_update_adjustments (EvView *view)
 		view->scroll_y = view->vadjustment->value;
 	else
 		view->scroll_y = 0;
-  
+
 	if (GTK_WIDGET_REALIZED (view) &&
 	    (view->scroll_x != old_x || view->scroll_y != old_y)) {
 		gdk_window_move (view->bin_window, - view->scroll_x, - view->scroll_y);
@@ -176,7 +181,7 @@ view_set_adjustment_values (EvView         *view,
 
 	if (!adjustment)
 		return;
-  
+
 	adjustment->page_size = allocation;
 	adjustment->step_increment = allocation * 0.1;
 	adjustment->page_increment = allocation * 0.9;
@@ -193,8 +198,8 @@ view_set_adjustment_values (EvView         *view,
 		gtk_adjustment_value_changed (adjustment);
 }
 
-/*** Virtual function implementations ***/       
-     
+/*** Virtual function implementations ***/
+
 static void
 ev_view_finalize (GObject *object)
 {
@@ -222,7 +227,7 @@ ev_view_destroy (GtkObject *object)
 		view->pixbuf_cache = NULL;
 	}
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
-  
+
 	GTK_OBJECT_CLASS (ev_view_parent_class)->destroy (object);
 }
 
@@ -242,7 +247,7 @@ ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
 				&width, &height);
 
 	ev_document_misc_get_page_border_size (width, height, &border);
-	
+
 	*x_offset = view->spacing;
 	*y_offset = view->spacing;
 	target_width = width + border.left + border.right + view->spacing * 2;
@@ -256,7 +261,7 @@ view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, GdkRectangle *doc_
 {
 	int x_offset, y_offset;
 
-	ev_view_get_offsets (view, &x_offset, &y_offset); 
+	ev_view_get_offsets (view, &x_offset, &y_offset);
 	doc_rect->x = (view_rect->x - x_offset) / view->scale;
 	doc_rect->y = (view_rect->y - y_offset) / view->scale;
 	doc_rect->width = view_rect->width / view->scale;
@@ -268,7 +273,7 @@ doc_rect_to_view_rect (EvView *view, GdkRectangle *doc_rect, GdkRectangle *view_
 {
 	int x_offset, y_offset;
 
-	ev_view_get_offsets (view, &x_offset, &y_offset); 
+	ev_view_get_offsets (view, &x_offset, &y_offset);
 	view_rect->x = doc_rect->x * view->scale + x_offset;
 	view_rect->y = doc_rect->y * view->scale + y_offset;
 	view_rect->width = doc_rect->width * view->scale;
@@ -312,7 +317,7 @@ ev_view_size_request (GtkWidget      *widget,
 		requisition->width = width + border.left + border.right +
 				     view->spacing * 2;
 	}
-	
+
 	if (view->height >= 0) {
 		requisition->height = 0;
 	} else {
@@ -346,19 +351,19 @@ ev_view_realize (GtkWidget *widget)
 	GdkWindowAttr attributes;
 
 	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
-  
+
 
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
 	attributes.colormap = gtk_widget_get_colormap (widget);
-  
+
 	attributes.x = widget->allocation.x;
 	attributes.y = widget->allocation.y;
 	attributes.width = widget->allocation.width;
 	attributes.height = widget->allocation.height;
 	attributes.event_mask = 0;
-  
+
 	widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
 					 &attributes,
 					 GDK_WA_X | GDK_WA_Y |
@@ -367,7 +372,7 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_set_user_data (widget->window, widget);
 	widget->style = gtk_style_attach (widget->style, widget->window);
 	gdk_window_set_background (widget->window, &widget->style->mid[widget->state]);
-  
+
 	attributes.x = 0;
 	attributes.y = 0;
 	attributes.width = MAX (widget->allocation.width, widget->requisition.width);
@@ -379,7 +384,7 @@ ev_view_realize (GtkWidget *widget)
 				GDK_KEY_PRESS_MASK |
 				GDK_POINTER_MOTION_MASK |
 		                GDK_LEAVE_NOTIFY_MASK;
-  
+
 	view->bin_window = gdk_window_new (widget->window,
 					   &attributes,
 					   GDK_WA_X | GDK_WA_Y |
@@ -433,7 +438,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	guint fill_color;
 	int x_offset, y_offset;
 
-	ev_view_get_offsets (EV_VIEW (widget), &x_offset, &y_offset); 
+	ev_view_get_offsets (EV_VIEW (widget), &x_offset, &y_offset);
 
 	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
 	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | alpha;
@@ -475,7 +480,7 @@ highlight_find_results (EvView *view)
 	g_mutex_lock (EV_DOC_MUTEX);
 	results = ev_document_find_get_n_results (find);
 	g_mutex_unlock (EV_DOC_MUTEX);
-	
+
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
 		guchar alpha;
@@ -505,14 +510,14 @@ expose_bin_window (GtkWidget      *widget,
 	if (view->document == NULL)
 		return;
 
-	ev_view_get_offsets (view, &x_offset, &y_offset); 
+	ev_view_get_offsets (view, &x_offset, &y_offset);
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
 				view->scale,
 				&width, &height);
 
 	ev_document_misc_get_page_border_size (width, height, &border);
-	
+
 	/* Paint the frame */
 	area.x = x_offset;
 	area.y = y_offset;
@@ -709,7 +714,7 @@ status_message_from_link (EvView *view, EvLink *link)
 	char *page_label;
 
 	type = ev_link_get_link_type (link);
-	
+
 	switch (type) {
 		case EV_LINK_TYPE_TITLE:
 			if (ev_link_get_title (link))
@@ -746,7 +751,7 @@ static void
 ev_view_set_find_status (EvView *view, const char *message)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
-	
+
 	g_free (view->find_status);
 	view->find_status = g_strdup (message);
 	g_object_notify (G_OBJECT (view), "find-status");
@@ -931,7 +936,7 @@ set_scroll_adjustment (EvView *view,
 		to_set = &view->hadjustment;
 	else
 		to_set = &view->vadjustment;
-  
+
 	if (*to_set != adjustment) {
 		if (*to_set) {
 			g_signal_handlers_disconnect_by_func (*to_set,
@@ -969,7 +974,7 @@ add_scroll_binding (GtkBindingSet  *binding_set,
 		    gboolean        horizontal)
 {
   guint keypad_keyval = keyval - GDK_Left + GDK_KP_Left;
-  
+
   gtk_binding_entry_add_signal (binding_set, keyval, 0,
                                 "scroll_view", 2,
                                 GTK_TYPE_SCROLL_TYPE, scroll,
@@ -981,6 +986,60 @@ add_scroll_binding (GtkBindingSet  *binding_set,
 }
 
 static void
+ev_view_jump (EvView        *view,
+	      GtkScrollType  scroll)
+{
+	GtkAdjustment *adjustment;
+	double value, increment;
+	gboolean first_page = FALSE;
+	gboolean last_page = FALSE;
+
+	/* Assign values for increment and vertical adjustment */
+	adjustment = view->vadjustment;
+	increment = adjustment->page_size * 0.75;
+	value = adjustment->value;
+
+	/* Assign boolean for first and last page */
+	if (view->current_page == 0)
+		first_page = TRUE;
+	if (view->current_page == ev_page_cache_get_n_pages (view->page_cache) - 1)
+		last_page = TRUE;
+
+	switch (scroll) {
+		case EV_SCROLL_PAGE_BACKWARD:
+			/* Do not jump backwards if at the first page */
+			if (value == (adjustment->lower) && first_page) {
+				/* Do nothing */
+				/* At the top of a page, assign the upper bound limit of previous page */
+			} else if (value == (adjustment->lower)) {
+				value = adjustment->upper - adjustment->page_size;
+				ev_page_cache_set_current_page (view->page_cache, view->current_page - 1);
+				/* Jump to the top */
+			} else {
+				value = MAX (value - increment, adjustment->lower);
+			}
+			break;
+		case EV_SCROLL_PAGE_FORWARD:
+			/* Do not jump forward if at the last page */
+			if (value == (adjustment->upper - adjustment->page_size) && last_page) {
+				/* Do nothing */
+			/* At the bottom of a page, assign the lower bound limit of next page */
+			} else if (value == (adjustment->upper - adjustment->page_size)) {
+				value = 0;
+				ev_page_cache_set_current_page (view->page_cache, view->current_page + 1);
+			/* Jump to the bottom */
+			} else {
+				value = MIN (value + increment, adjustment->upper - adjustment->page_size);
+			}
+			break;
+		default:
+			break;
+	}
+
+	gtk_adjustment_set_value (adjustment, value);
+}
+
+static void
 ev_view_scroll_view (EvView *view,
 		     GtkScrollType scroll,
 		     gboolean horizontal)
@@ -989,12 +1048,14 @@ ev_view_scroll_view (EvView *view,
 		ev_page_cache_prev_page (view->page_cache);
 	} else if (scroll == GTK_SCROLL_PAGE_FORWARD) {
 		ev_page_cache_next_page (view->page_cache);
+	} else if (scroll == EV_SCROLL_PAGE_BACKWARD || scroll == EV_SCROLL_PAGE_FORWARD) {
+ 		ev_view_jump (view, scroll);
 	} else {
 		GtkAdjustment *adjustment;
 		double value;
 
 		if (horizontal) {
-			adjustment = view->hadjustment;	
+			adjustment = view->hadjustment;
 		} else {
 			adjustment = view->vadjustment;
 		}
@@ -1002,11 +1063,11 @@ ev_view_scroll_view (EvView *view,
 		value = adjustment->value;
 
 		switch (scroll) {
-			case GTK_SCROLL_STEP_BACKWARD:	
-				value -= adjustment->step_increment; 
+			case GTK_SCROLL_STEP_BACKWARD:
+				value -= adjustment->step_increment;
 				break;
 			case GTK_SCROLL_STEP_FORWARD:
-				value += adjustment->step_increment; 
+				value += adjustment->step_increment;
 				break;
 			default:
 				break;
@@ -1123,6 +1184,9 @@ ev_view_class_init (EvViewClass *class)
 
 	add_scroll_binding (binding_set, GDK_Page_Up,   GTK_SCROLL_PAGE_BACKWARD, FALSE);
 	add_scroll_binding (binding_set, GDK_Page_Down, GTK_SCROLL_PAGE_FORWARD,  FALSE);
+
+	add_scroll_binding (binding_set, GDK_space, EV_SCROLL_PAGE_FORWARD, FALSE);
+	add_scroll_binding (binding_set, GDK_BackSpace, EV_SCROLL_PAGE_BACKWARD, FALSE);
 }
 
 static void
@@ -1170,7 +1234,7 @@ update_find_status_message (EvView *view)
 			message = g_strdup_printf (_("%3d%% remaining to search"),
 						   (int) ((1.0 - percent) * 100));
 		}
-		
+
 	}
 //	g_mutex_unlock (EV_DOC_MUTEX);
 
@@ -1277,8 +1341,8 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 	}
 #endif
 }
-/*** Public API ***/       
-     
+/*** Public API ***/
+
 GtkWidget*
 ev_view_new (void)
 {
@@ -1330,7 +1394,7 @@ page_changed_cb (EvPageCache *page_cache,
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	else
 		gtk_widget_queue_draw (GTK_WIDGET (view));
-	
+
 	gtk_adjustment_set_value (view->vadjustment,
 				  view->vadjustment->lower);
 
@@ -1354,7 +1418,7 @@ ev_view_set_document (EvView     *view,
                                                               view);
 			g_object_unref (view->document);
 			view->page_cache = NULL;
-			
+
                 }
 
 		view->document = document;
@@ -1374,7 +1438,7 @@ ev_view_set_document (EvView     *view,
 			view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
 			g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
                 }
-		
+
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 }
@@ -1387,7 +1451,7 @@ go_to_link (EvView *view, EvLink *link)
 	int page;
 
 	type = ev_link_get_link_type (link);
-	
+
 	switch (type) {
 		case EV_LINK_TYPE_TITLE:
 			break;
@@ -1591,5 +1655,5 @@ ev_view_hide_cursor (EvView *view)
 void
 ev_view_show_cursor (EvView *view)
 {
-       ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
+       ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }

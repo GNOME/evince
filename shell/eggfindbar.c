@@ -32,18 +32,17 @@ Boston, MA 02111-1307, USA.
 
 #include <string.h>
 
-typedef struct _EggFindBarPrivate EggFindBarPrivate;
 struct _EggFindBarPrivate
 {
   gchar *search_string;
   GtkWidget *hbox;
-  GtkWidget *close_button;
   GtkWidget *find_entry;
   GtkWidget *next_button;
   GtkWidget *previous_button;
   GtkWidget *case_button;
   GtkWidget *status_separator;
   GtkWidget *status_label;
+  gulong set_focus_handler;
   guint case_sensitive : 1;
 };
 
@@ -70,6 +69,9 @@ static void egg_find_bar_size_request  (GtkWidget      *widget,
                                         GtkRequisition *requisition);
 static void egg_find_bar_size_allocate (GtkWidget      *widget,
                                         GtkAllocation  *allocation);
+static void egg_find_bar_show          (GtkWidget *widget);
+static void egg_find_bar_hide          (GtkWidget *widget);
+static void egg_find_bar_grab_focus    (GtkWidget *widget);
 
 G_DEFINE_TYPE (EggFindBar, egg_find_bar, GTK_TYPE_BIN);
 
@@ -90,6 +92,8 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   GtkWidgetClass *widget_class;
   GtkBinClass *bin_class;
   GtkBindingSet *binding_set;
+        
+  egg_find_bar_parent_class = g_type_class_peek_parent (klass);
 
   object_class = (GObjectClass *)klass;
   widget_class = (GtkWidgetClass *)klass;
@@ -102,12 +106,15 @@ egg_find_bar_class_init (EggFindBarClass *klass)
 
   widget_class->size_request = egg_find_bar_size_request;
   widget_class->size_allocate = egg_find_bar_size_allocate;
+  widget_class->show = egg_find_bar_show;
+  widget_class->hide = egg_find_bar_hide;
+  widget_class->grab_focus = egg_find_bar_grab_focus;
 
   find_bar_signals[NEXT] =
     g_signal_new ("next",
 		  G_OBJECT_CLASS_TYPE (object_class),
 		  G_SIGNAL_RUN_FIRST,
-                  0,
+                  G_STRUCT_OFFSET (EggFindBarClass, next),
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
@@ -115,7 +122,7 @@ egg_find_bar_class_init (EggFindBarClass *klass)
     g_signal_new ("previous",
 		  G_OBJECT_CLASS_TYPE (object_class),
 		  G_SIGNAL_RUN_FIRST,
-                  0,
+                  G_STRUCT_OFFSET (EggFindBarClass, previous),
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
@@ -123,7 +130,7 @@ egg_find_bar_class_init (EggFindBarClass *klass)
     g_signal_new ("close",
 		  G_OBJECT_CLASS_TYPE (object_class),
 		  G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
-                  0,
+                  G_STRUCT_OFFSET (EggFindBarClass, close),
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
@@ -193,21 +200,6 @@ egg_find_bar_emit_previous (EggFindBar *find_bar)
 }
 
 static void
-egg_find_bar_emit_close (EggFindBar *find_bar)
-{
-  g_signal_emit (find_bar, find_bar_signals[CLOSE], 0);
-}
-
-static void
-close_clicked_callback (GtkButton *button,
-                        void      *data)
-{
-  EggFindBar *find_bar = EGG_FIND_BAR (data);
-
-  egg_find_bar_emit_close (find_bar);
-}
-
-static void
 next_clicked_callback (GtkButton *button,
                        void      *data)
 {
@@ -240,7 +232,7 @@ entry_activate_callback (GtkEntry *entry,
                           void     *data)
 {
   EggFindBar *find_bar = EGG_FIND_BAR (data);
-  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->private_data;
+  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->priv;
 
   /* We activate the "next" button here so we'll get a nice
      animation */
@@ -265,18 +257,38 @@ entry_changed_callback (GtkEntry *entry,
 }
 
 static void
+set_focus_cb (GtkWidget *window,
+	      GtkWidget *widget,
+	      EggFindBar *bar)
+{
+  GtkWidget *wbar = GTK_WIDGET (bar);
+
+  while (widget != NULL && widget != wbar)
+    {
+      widget = widget->parent;
+    }
+
+  /* if widget == bar, the new focus widget is in the bar, so we
+   * don't deactivate.
+   */
+  if (widget != wbar)
+    {
+      g_signal_emit (bar, find_bar_signals[CLOSE], 0);
+    }
+}
+
+static void
 egg_find_bar_init (EggFindBar *find_bar)
 {
   EggFindBarPrivate *priv;
   GtkWidget *label;
   GtkWidget *separator;
-  GtkWidget *image;
   GtkWidget *image_back;
   GtkWidget *image_forward;
 
   /* Data */
   priv = EGG_FIND_BAR_GET_PRIVATE (find_bar);
-  find_bar->private_data = priv;
+  find_bar->priv = priv;
 
   priv->search_string = NULL;
 
@@ -288,18 +300,13 @@ egg_find_bar_init (EggFindBar *find_bar)
   label = gtk_label_new_with_mnemonic (_("F_ind:"));
   separator = gtk_vseparator_new ();
 
-  priv->close_button = gtk_button_new ();
-  gtk_button_set_relief (GTK_BUTTON (priv->close_button),
-                         GTK_RELIEF_NONE);
-  image = gtk_image_new_from_stock (GTK_STOCK_CLOSE,
-                                    GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_container_add (GTK_CONTAINER (priv->close_button), image);
-
   priv->find_entry = gtk_entry_new ();
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), priv->find_entry);
-  
+
   priv->previous_button = gtk_button_new_with_mnemonic (_("_Previous"));
+  gtk_button_set_focus_on_click (GTK_BUTTON (priv->previous_button), FALSE);
   priv->next_button = gtk_button_new_with_mnemonic (_("_Next"));
+  gtk_button_set_focus_on_click (GTK_BUTTON (priv->next_button), FALSE);
 
   image_back = gtk_image_new_from_stock (GTK_STOCK_GO_BACK,
                                          GTK_ICON_SIZE_BUTTON);
@@ -314,7 +321,7 @@ egg_find_bar_init (EggFindBar *find_bar)
   priv->case_button = gtk_check_button_new_with_mnemonic (_("C_ase Sensitive"));
 
   priv->status_separator = gtk_vseparator_new ();
-  
+
   priv->status_label = gtk_label_new (NULL);
   gtk_label_set_ellipsize (GTK_LABEL (priv->status_label),
                            PANGO_ELLIPSIZE_END);
@@ -333,9 +340,7 @@ egg_find_bar_init (EggFindBar *find_bar)
                             PANGO_ELLIPSIZE_END);
  }
 #endif
-  
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->close_button, FALSE, FALSE, 0);
+
   gtk_box_pack_start (GTK_BOX (priv->hbox),
                       label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (priv->hbox),
@@ -356,24 +361,17 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_container_add (GTK_CONTAINER (find_bar), priv->hbox);
 
   gtk_widget_show (priv->hbox);
-  gtk_widget_show (priv->close_button);
   gtk_widget_show (priv->find_entry);
   gtk_widget_show (priv->previous_button);
   gtk_widget_show (priv->next_button);
   gtk_widget_show (separator);
   gtk_widget_show (label);
-  gtk_widget_show (image);
   gtk_widget_show (image_back);
   gtk_widget_show (image_forward);
   /* don't show status separator/label until they are set */
 
   gtk_widget_pop_composite_child ();
 
-  gtk_widget_show_all (priv->hbox);
-
-  g_signal_connect (priv->close_button, "clicked",
-                    G_CALLBACK (close_clicked_callback),
-                    find_bar);
   g_signal_connect (priv->find_entry, "changed",
                     G_CALLBACK (entry_changed_callback),
                     find_bar);
@@ -395,7 +393,7 @@ static void
 egg_find_bar_finalize (GObject *object)
 {
   EggFindBar *find_bar = EGG_FIND_BAR (object);
-  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->private_data;
+  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->priv;
 
   g_free (priv->search_string);
 
@@ -431,7 +429,7 @@ egg_find_bar_get_property (GObject    *object,
                            GParamSpec *pspec)
 {
   EggFindBar *find_bar = EGG_FIND_BAR (object);
-  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->private_data;
+  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->priv;
 
   switch (prop_id)
     {
@@ -478,6 +476,55 @@ egg_find_bar_size_allocate (GtkWidget     *widget,
     gtk_widget_size_allocate (bin->child, allocation);
 }
 
+static void
+egg_find_bar_show (GtkWidget *widget)
+{
+  EggFindBar *bar = EGG_FIND_BAR (widget);
+  EggFindBarPrivate *priv = bar->priv;
+
+  GTK_WIDGET_CLASS (egg_find_bar_parent_class)->show (widget);
+
+  if (priv->set_focus_handler == 0)
+    {
+      GtkWidget *toplevel;
+
+      toplevel = gtk_widget_get_toplevel (widget);
+
+      priv->set_focus_handler =
+	g_signal_connect (toplevel, "set-focus",
+			  G_CALLBACK (set_focus_cb), bar);
+    }
+}
+
+static void
+egg_find_bar_hide (GtkWidget *widget)
+{
+  EggFindBar *bar = EGG_FIND_BAR (widget);
+  EggFindBarPrivate *priv = bar->priv;
+
+  if (priv->set_focus_handler != 0)
+    {
+      GtkWidget *toplevel;
+
+      toplevel = gtk_widget_get_toplevel (widget);
+
+      g_signal_handlers_disconnect_by_func
+	(toplevel, (void (*)) G_CALLBACK (set_focus_cb), bar);
+      priv->set_focus_handler = 0;
+    }
+
+  GTK_WIDGET_CLASS (egg_find_bar_parent_class)->hide (widget);
+}
+
+static void
+egg_find_bar_grab_focus (GtkWidget *widget)
+{
+  EggFindBar *find_bar = EGG_FIND_BAR (widget);
+  EggFindBarPrivate *priv = find_bar->priv;
+
+  gtk_widget_grab_focus (priv->find_entry);
+}
+
 /**
  * egg_find_bar_new:
  *
@@ -513,7 +560,7 @@ egg_find_bar_set_search_string  (EggFindBar *find_bar,
 
   g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
 
-  priv = (EggFindBarPrivate *)find_bar->private_data;
+  priv = (EggFindBarPrivate *)find_bar->priv;
 
   g_object_freeze_notify (G_OBJECT (find_bar));
   
@@ -569,9 +616,9 @@ egg_find_bar_get_search_string  (EggFindBar *find_bar)
 
   g_return_val_if_fail (EGG_IS_FIND_BAR (find_bar), NULL);
 
-  priv = (EggFindBarPrivate *)find_bar->private_data;
+  priv = find_bar->priv;
 
-  return priv->search_string;
+  return priv->search_string ? priv->search_string : "";
 }
 
 /**
@@ -589,7 +636,7 @@ egg_find_bar_set_case_sensitive (EggFindBar *find_bar,
 
   g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
 
-  priv = (EggFindBarPrivate *)find_bar->private_data;
+  priv = (EggFindBarPrivate *)find_bar->priv;
 
   g_object_freeze_notify (G_OBJECT (find_bar));
 
@@ -625,7 +672,7 @@ egg_find_bar_get_case_sensitive (EggFindBar *find_bar)
 
   g_return_val_if_fail (EGG_IS_FIND_BAR (find_bar), FALSE);
 
-  priv = (EggFindBarPrivate *)find_bar->private_data;
+  priv = (EggFindBarPrivate *)find_bar->priv;
 
   return priv->case_sensitive;
 }
@@ -686,26 +733,6 @@ egg_find_bar_get_current_match_color (EggFindBar *find_bar,
 }
 
 /**
- * egg_find_bar_grab_focus:
- *
- * Focuses the text entry in the find bar; currently GTK+ doesn't have
- * a way to make this work on gtk_widget_grab_focus(find_bar).
- *
- * Since: 2.6
- */
-void
-egg_find_bar_grab_focus (EggFindBar *find_bar)
-{
-  EggFindBarPrivate *priv;
-
-  g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
-
-  priv = (EggFindBarPrivate *)find_bar->private_data;
- 
-  gtk_widget_grab_focus (priv->find_entry);
-}
-
-/**
  * egg_find_bar_set_status_text:
  *
  * Sets some text to display if there's space; typical text would
@@ -723,7 +750,7 @@ egg_find_bar_set_status_text (EggFindBar *find_bar,
 
   g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
 
-  priv = (EggFindBarPrivate *)find_bar->private_data;
+  priv = (EggFindBarPrivate *)find_bar->priv;
   
   if (text == NULL || *text == '\0')
     {

@@ -32,18 +32,23 @@ G_BEGIN_DECLS
 
 typedef struct _EggFindBar        EggFindBar;
 typedef struct _EggFindBarClass   EggFindBarClass;
+typedef struct _EggFindBarPrivate EggFindBarPrivate;
 
 struct _EggFindBar
 {
   GtkBin parent_instance;
 
   /*< private >*/
-  gpointer private_data;
+  EggFindBarPrivate *priv;
 };
 
 struct _EggFindBarClass
 {
   GtkBinClass parent_class;
+
+  void (* next)	    (EggFindBar *find_bar);
+  void (* previous) (EggFindBar *find_bar);
+  void (* close)    (EggFindBar *find_bar);
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
@@ -65,8 +70,6 @@ void        egg_find_bar_get_all_matches_color   (EggFindBar *find_bar,
                                                   GdkColor   *color);
 void        egg_find_bar_get_current_match_color (EggFindBar *find_bar,
                                                   GdkColor   *color);
-void        egg_find_bar_grab_focus              (EggFindBar *find_bar);
-
 void        egg_find_bar_set_status_text         (EggFindBar *find_bar,
                                                   const char *text);
 
