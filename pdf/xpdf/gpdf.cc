@@ -42,7 +42,7 @@ extern "C" {
 #include "config.h"
 
 poptContext ctx;
-gint  gpdf_debug=1;
+gint  gpdf_debug=0;
 
 const struct poptOption gpdf_popt_options [] = {
   { "debug", '\0', POPT_ARG_INT, &gpdf_debug, 0,
@@ -50,6 +50,8 @@ const struct poptOption gpdf_popt_options [] = {
   { NULL, '\0', 0, NULL, 0 }
 };
 
+/* NB. there is a 1 to 1 Container -> Component mapping, this
+   is due to how much MDI sucks; unutterably */
 typedef struct {
 	GnomeContainer  *container;
 	GnomeUIHandler  *uih;
@@ -57,7 +59,7 @@ typedef struct {
 	GnomeViewFrame  *active_view_frame;
 
 	GtkWidget	*app;
-	GtkWidget	*vbox;
+	GtkWidget	*view_widget;
 } Container;
 
 typedef struct {
@@ -66,8 +68,6 @@ typedef struct {
 	GnomeClientSite   *client_site;
 	GnomeViewFrame	  *view_frame;
 	GnomeObjectClient *server;
-
-	GtkWidget	  *views_hbox;
 } Component;
 
 GList *containers = NULL;
@@ -75,7 +75,7 @@ GList *containers = NULL;
  * Static prototypes.
  */
 extern "C" {
-  static Container *container_new       (void);
+  static Container *container_new       (const char *fname);
   static void       container_destroy   (Container *cont);
   static void       container_open_cmd  (GtkWidget *widget, Container *container);
   static void       container_close_cmd (GtkWidget *widget, Container *container);
@@ -101,7 +101,7 @@ static GnomeUIInfo container_main_menu [] = {
 };
 
 extern "C" {
-  static void
+  static gboolean
   open_pdf (Container *container, const char *name)
   {
     GnomeObjectClient *object;
@@ -110,10 +110,13 @@ extern "C" {
     Component *comp;
     CORBA_Environment ev;
 
+    g_return_val_if_fail (container != NULL, FALSE);
+    g_return_val_if_fail (container->view_widget == NULL, FALSE);
+
     comp = container_activate_component (container, "bonobo-object:image-x-pdf");
     if (!comp || !(object = comp->server)) {
       gnome_error_dialog (_("Could not launch bonobo object."));
-      return;
+      return FALSE;
     }
     
     CORBA_exception_init (&ev);
@@ -124,7 +127,7 @@ extern "C" {
     if (ev._major != CORBA_NO_EXCEPTION ||
 	persist == CORBA_OBJECT_NIL) {
       gnome_error_dialog ("Panic: component is well broken.");
-      return;
+      return FALSE;
     }
     
     stream = gnome_stream_fs_open (name, GNOME_Storage_READ);
@@ -133,7 +136,7 @@ extern "C" {
       char *err = g_strconcat (_("Could not open "), name, NULL);
       gnome_error_dialog_parented (err, GTK_WINDOW(container->app));
       g_free (err);
-      return;
+      return FALSE;
     }
     
     GNOME_PersistStream_load (persist,
@@ -142,7 +145,7 @@ extern "C" {
     GNOME_Unknown_unref (persist, &ev);
     CORBA_Object_release (persist, &ev);
     CORBA_exception_free (&ev);
-/*	app->contains_pdf = TRUE; */
+    return TRUE;
   }
   
   static void
@@ -160,7 +163,7 @@ extern "C" {
   }
   
   static void
-  container_open_cmd (GtkWidget *widget, Container *app)
+  container_open_cmd (GtkWidget *widget, Container *container)
   {
     GtkFileSelection *fsel;
     gboolean accepted = FALSE;
@@ -169,7 +172,7 @@ extern "C" {
     gtk_window_set_modal (GTK_WINDOW (fsel), TRUE);
     
     gtk_window_set_transient_for (GTK_WINDOW (fsel),
-				  GTK_WINDOW (app->app));
+				  GTK_WINDOW (container->app));
     
     /* Connect the signals for Ok and Cancel */
     gtk_signal_connect (GTK_OBJECT (fsel->ok_button), "clicked",
@@ -193,10 +196,11 @@ extern "C" {
       char *name = gtk_file_selection_get_filename (fsel);
       
       if (name [strlen (name)-1] != '/') {
-/*			if (app->contains_pdf)
-			app = application_new ();*/
 	char *fname = g_strdup (name);
-	open_pdf (app, fname);
+	if (container->view_widget) /* any sort of MDI sucks :-] */
+	  container = container_new (fname);
+	else
+	  open_pdf (container, fname);
 	g_free (fname);
       } else {
 	GtkWidget *dialog;
@@ -204,7 +208,7 @@ extern "C" {
 					GNOME_MESSAGE_BOX_ERROR,
 					GNOME_STOCK_BUTTON_OK, NULL);
 	gnome_dialog_set_parent (GNOME_DIALOG (dialog),
-				 GTK_WINDOW (app->app));
+				 GTK_WINDOW (container->app));
 	gnome_dialog_run (GNOME_DIALOG (dialog));
       }
     }
@@ -352,7 +356,7 @@ extern "C" {
 }
 
 static void
-component_add_view (Component *component)
+container_set_view (Container *container, Component *component)
 {
 	GnomeViewFrame *view_frame;
 	GtkWidget *view_widget;
@@ -369,15 +373,16 @@ component_add_view (Component *component)
 	 * so that it can merge menu and toolbar items when it gets
 	 * activated.
 	 */
-	gnome_view_frame_set_ui_handler (view_frame, component->container->uih);
+	gnome_view_frame_set_ui_handler (view_frame, container->uih);
 
 	/*
 	 * Embed the view frame into the application.
 	 */
 	view_widget = gnome_view_frame_get_wrapper (view_frame);
-	gtk_box_pack_start (GTK_BOX (component->views_hbox), view_widget,
-			    FALSE, FALSE, 5);
-
+	container->view_widget = view_widget;
+/*	gtk_box_pack_start (GTK_BOX (container->app), view_widget,
+	FALSE, FALSE, 5);*/
+	gnome_app_set_contents (GNOME_APP (container->app), view_widget);
 	/*
 	 * The "user_activate" signal will be emitted when the user
 	 * double clicks on the "cover".  The cover is a transparent
@@ -415,14 +420,6 @@ component_add_view (Component *component)
 	 * Show the component.
 	 */
 	gtk_widget_show_all (view_widget);
-}
-
-static void
-component_new_view_cb (GtkWidget *button, gpointer data)
-{
-	Component *component = (Component *) data;
-
-	component_add_view (component);
 }
 
 static GnomeObjectClient *
@@ -489,19 +486,6 @@ gnome_object_has_interface (GnomeObject *obj, char *interface)
 	return FALSE;
 }
 
-static void
-container_create_component_frame (Container *container, Component *component, char *name)
-{
-	/*
-	 * This hbox will store all the views of the component.
-	 */
-	component->views_hbox = gtk_hbox_new (FALSE, 2);
-
-	gtk_box_pack_start (GTK_BOX (container->vbox), component->views_hbox,
-			    TRUE, FALSE, 5);
-	gtk_widget_show_all (component->views_hbox);
-}
-
 extern "C" {
   static Component *
   container_activate_component (Container *container, char *component_goad_id)
@@ -542,14 +526,7 @@ extern "C" {
     component->client_site = client_site;
     component->server = server;
     
-    /*
-     * Now we have a GnomeEmbeddable bound to our local
-     * ClientSite.  Here we create a little on-screen box to store
-     * the embeddable in, when the user adds views for it.
-     */
-    container_create_component_frame (container, component, component_goad_id);
-    
-    component_add_view (component);
+    container_set_view (container, component);
 
     return component;
   }
@@ -570,8 +547,8 @@ container_create_menus (Container *container)
 	gnome_ui_handler_menu_free_list (menu_list);
 }
 
-static void
-container_create (void)
+static Container *
+container_new (const char *fname)
 {
 	Container *container;
 
@@ -583,13 +560,8 @@ container_create (void)
 	gtk_window_set_default_size (GTK_WINDOW (container->app), 400, 400);
 	gtk_window_set_policy (GTK_WINDOW (container->app), TRUE, TRUE, FALSE);
 
-	container->container = gnome_container_new ();
-
-	/*
-	 * This is the VBox we will stuff embedded components into.
-	 */
-	container->vbox = gtk_vbox_new (FALSE, 0);
-	gnome_app_set_contents (GNOME_APP (container->app), container->vbox);
+	container->container   = gnome_container_new ();
+	container->view_widget = NULL;
 
 	/*
 	 * Create the GnomeUIHandler object which will be used to
@@ -604,30 +576,58 @@ container_create (void)
 	 * Create the menus.
 	 */
 	container_create_menus (container);
-	
+
 	gtk_widget_show_all (container->app);
+
+	if (fname)
+	  if (!open_pdf (container, fname)) {
+	    container_destroy (container);
+	    return NULL;
+	  }
+
+	containers = g_list_append (containers, container);
+
+	gtk_widget_show_all (container->app);
+
+	return container;
 }
 
 int
 main (int argc, char **argv)
 {
-	CORBA_Environment ev;
-	CORBA_ORB orb;
+  CORBA_Environment ev;
+  CORBA_ORB orb;
+  char **view_files = NULL;
+  int    i;
+  
+  CORBA_exception_init (&ev);
+  
+  gnome_CORBA_init_with_popt_table ("PDFViewer", "0.0.1",
+				    &argc, argv,
+				    gpdf_popt_options, 0, &ctx,
+				    GNORBA_INIT_SERVER_FUNC, &ev);
 
-	CORBA_exception_init (&ev);
+  CORBA_exception_free (&ev);
 
-	gnome_CORBA_init ("gnome_xpdf_viewer", "0.1", &argc, argv, 0, &ev);
+  orb = gnome_CORBA_ORB ();
 
-	CORBA_exception_free (&ev);
+  if (bonobo_init (orb, NULL, NULL) == FALSE)
+    g_error (_("Could not initialize Bonobo!\n"));
 
-	orb = gnome_CORBA_ORB ();
+  view_files = poptGetArgs (ctx);
 
-	if (bonobo_init (orb, NULL, NULL) == FALSE)
-		g_error (_("Could not initialize Bonobo!\n"));
-
-	container_create ();
-
-	gtk_main ();
-
-	return 0;
+  /* Load files */
+  i = 0;
+  if (view_files) {
+    for (i = 0; view_files[i]; i++)
+      container_new (view_files[i]);
+  }
+  if (i == 0)
+    container_new (NULL);
+  
+  poptFreeContext (ctx);
+  
+  gtk_main ();
+	
+  return 0;
 }

@@ -39,6 +39,8 @@ extern "C" {
 #include "config.h"
 #include "BonoboStream.h"
 
+#define PDF_DEBUG 0
+
 GBool printCommands = gFalse;
 
 CORBA_Environment ev;
@@ -76,7 +78,7 @@ typedef struct {
 
 extern "C" {
   static void realize_drawing_areas (bed_t *bed);
-  static GdkPixmap *setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window);
+  static void setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window);
 }
 
 static void
@@ -120,8 +122,8 @@ redraw_view (view_data_t *view_data, GdkRectangle *rect)
 static void
 render_page (view_data_t *view_data)
 {
-  view_data->pixmap = setup_pixmap (view_data->bed, view_data,
-				    view_data->win);
+  setup_pixmap (view_data->bed, view_data,
+		view_data->win);
   view_data->bed->pdf->displayPage(view_data->out,
 				   view_data->page, view_data->zoom,
 				   0, gTrue);
@@ -133,7 +135,9 @@ redraw_view_all (view_data_t *view_data)
   GdkRectangle rect;
   g_return_if_fail (view_data != NULL);
 
+#if PDF_DEBUG > 0
   printf ("Redraw view of page %d\n", view_data->page);
+#endif
   render_page (view_data);
   rect.x = 0;
   rect.y = 0;
@@ -157,7 +161,7 @@ redraw_all (bed_t *bed)
 {
 	GList *l;
 	
-	for (l = bed->views; l; l = l->next){
+	for (l = bed->views; l; l = l->next) {
 	  GdkRectangle rect;
 	  view_data_t *view_data = (view_data_t *)l->data;
 	  configure_size (view_data);
@@ -172,16 +176,30 @@ save_image (GnomePersistStream *ps, GNOME_Stream stream, void *data)
   return -1;
 }
 
-static void
+/*
+ * different size ?
+ */
+static gboolean
 setup_size (bed_t *doc, view_data_t *view)
 {
+  int      w, h;
+  gboolean same;
+
   if (!doc || !view || !doc->pdf) {
     view->w = 320;
     view->h = 200;
-    return;
+    return FALSE;
   }
-  view->w = (int)((doc->pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
-  view->h = (int)((doc->pdf->getPageHeight (view->page) * view->zoom) / 72.0);
+  w = (int)((doc->pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
+  h = (int)((doc->pdf->getPageHeight (view->page) * view->zoom) / 72.0);
+  if (view->w == w && view->h == h)
+    same = TRUE;
+  else
+    same = FALSE;
+  view->w = w;
+  view->h = h;
+
+  return same;
 }
 
 /*
@@ -208,13 +226,17 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	CORBA_Object_duplicate (stream, &ev);
 	g_return_val_if_fail (ev._major == CORBA_NO_EXCEPTION, 0);
 
+#if PDF_DEBUG > 0
 	printf ("Loading PDF from persiststream\n");
+#endif
 	bed->stream = stream;
 	BonoboStream *bs = new BonoboStream (stream);
 	GString *st = new GString ("Bonobo.pdf");
 	bed->pdf = new PDFDoc (bs, st);
 					      
+#if PDF_DEBUG > 0
 	printf ("Done load\n");
+#endif
 	if (!(bed->pdf->isOk())) {
 	  g_warning ("Duff pdf data\n");
 	  delete bed->pdf;
@@ -255,8 +277,8 @@ extern "C" {
     g_free (bed);
   }
 
-  static GdkPixmap *
-  setup_pixmap (bed_t *doc, view_data_t *view, GdkWindow *window)
+  static void
+  setup_pixmap (bed_t *doc, view_data_t *view_data, GdkWindow *window)
   {
     GdkGCValues  gcValues;
     GdkGC       *strokeGC;
@@ -264,21 +286,27 @@ extern "C" {
     int          w, h;
     GdkPixmap   *pixmap = NULL;
     
-    g_return_val_if_fail (doc != NULL, NULL);
-    g_return_val_if_fail (view != NULL, NULL);
-    g_return_val_if_fail (doc->pdf != NULL, NULL);
+    g_return_if_fail (doc != NULL);
+    g_return_if_fail (doc->pdf != NULL);
+    g_return_if_fail (view_data != NULL);
     
     pdf = doc->pdf;
 
-    setup_size (doc, view);
+    if (setup_size (doc, view_data) &&
+	view_data->pixmap) {
+#if PDF_DEBUG > 0
+      printf ("No need to re-init output device\n");
+#endif
+      return;
+    }
 
-    w = view->w;
-    h = view->h;
-   
+    w = view_data->w;
+    h = view_data->h;
+
     pixmap = gdk_pixmap_new (window, w, h, -1);
     
-    gdk_color_white (gtk_widget_get_default_colormap(), &view->paper);
-    view->out    = new GOutputDev (pixmap, view->paper, window);
+    gdk_color_white (gtk_widget_get_default_colormap(), &view_data->paper);
+    view_data->out = new GOutputDev (pixmap, view_data->paper, window);
     
     gdk_color_white (gtk_widget_get_default_colormap (), &gcValues.foreground);
     gdk_color_black (gtk_widget_get_default_colormap (), &gcValues.background);
@@ -292,7 +320,7 @@ extern "C" {
 			TRUE, 0, 0,
 			w, h);
     
-    return pixmap;
+    view_data->pixmap = pixmap;
   }
 
   static gboolean
@@ -446,14 +474,9 @@ extern "C" {
   drawing_area_realize (GtkWidget *drawing_area, view_data_t *view_data)
   {
     g_return_if_fail (view_data != NULL);
-    g_return_if_fail (view_data->bed != NULL);
+    g_return_if_fail (drawing_area != NULL);
 
     view_data->win = gtk_widget_get_parent_window (drawing_area);
-    if (!view_data->bed->pdf ||
-	!view_data->pixmap) {
-      g_warning ("Failed to setup pixmap");
-      return;
-    }
   }
 
   static int
@@ -477,7 +500,9 @@ extern "C" {
     
     gnome_view_activate_notify (view, activate);
     
+#if PDF_DEBUG > 0
     printf ("View change activation to %d\n", activate);
+#endif
     /*
      * If we were just activated, we merge in our menu entries.
      * If we were just deactivated, we remove them.
@@ -518,10 +543,14 @@ extern "C" {
     GdkRectangle  rect;
     gboolean      changed = FALSE;
 
-    if (!g_strcasecmp (verb_name, "nextpage")) {
-      changed = next_page (view_data);
+    if (!g_strcasecmp (verb_name, "firstpage")) {
+      changed = first_page (view_data);
     } else if (!g_strcasecmp (verb_name, "prevpage")) {
       changed = prev_page (view_data);
+    } else if (!g_strcasecmp (verb_name, "nextpage")) {
+      changed = next_page (view_data);
+    } else if (!g_strcasecmp (verb_name, "lastpage")) {
+      changed = last_page (view_data);
     } else
       g_warning ("Unknown verb");
 
@@ -543,7 +572,9 @@ view_factory (GnomeEmbeddable *embeddable,
 	bed_t *bed = (bed_t *)data;
 	view_data_t *view_data = g_new (view_data_t, 1);
 
+#if PDF_DEBUG > 0
 	printf ("Created new bonobo object view %p\n", view_data);
+#endif
 	
 	view_data->scale  = 1.0;
 	view_data->bed    = bed;
@@ -590,9 +621,13 @@ view_factory (GnomeEmbeddable *embeddable,
 	bed->views = g_list_prepend (bed->views, view_data);
 
 	/* Verb handling */
-	gnome_view_register_verb (view, "NextPage",
+	gnome_view_register_verb (view, "FirstPage",
 				  view_switch_page, view_data);
 	gnome_view_register_verb (view, "PrevPage",
+				  view_switch_page, view_data);
+	gnome_view_register_verb (view, "NextPage",
+				  view_switch_page, view_data);
+	gnome_view_register_verb (view, "LastPage",
 				  view_switch_page, view_data);
 
         return view;
@@ -609,7 +644,9 @@ embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 	if (!bed)
 		return NULL;
 
+#if PDF_DEBUG > 0
 	printf ("Created new bonobo object %p\n", bed);
+#endif
 	/*
 	 * Creates the BonoboObject server
 	 */
@@ -647,13 +684,21 @@ embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 
 	/* Setup some verbs */
 	gnome_embeddable_add_verb (embeddable,
-				   "NextPage",
-				   _("_Next page"),
-				   _("goto the next page"));
+				   "FirstPage",
+				   _("_First page"),
+				   _("goto the first page"));
 	gnome_embeddable_add_verb (embeddable,
 				   "PrevPage",
 				   _("_Previous page"),
 				   _("goto the previous page"));
+	gnome_embeddable_add_verb (embeddable,
+				   "NextPage",
+				   _("_Next page"),
+				   _("goto the next page"));
+	gnome_embeddable_add_verb (embeddable,
+				   "LastPage",
+				   _("_Last page"),
+				   _("goto the last page"));
 	
 	return (GnomeObject *) embeddable;
 }
