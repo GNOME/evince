@@ -48,6 +48,19 @@ CORBA_Environment ev;
 CORBA_ORB orb;
 
 /*
+ * Number of servers running on the system
+ * when the count reaches zero, we unregister from the
+ * Name Server and we shut down.
+ */
+static int embeddable_servers = 0;
+
+/*
+ * Our embeddable factory
+ */
+static GnomeEmbeddableFactory *factory;
+	
+
+/*
  * BonoboObject data
  */
 typedef struct {
@@ -276,6 +289,13 @@ extern "C" {
     gtk_object_unref (GTK_OBJECT (bed->stream));
     bed->stream = NULL;
     g_free (bed);
+
+    embeddable_servers--;
+
+    if (embeddable_servers == 0){
+      gnome_object_unref (GNOME_OBJECT (factory));
+      gtk_main_quit ();
+    }
   }
 
   static void
@@ -717,6 +737,8 @@ embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 	  GTK_OBJECT (embeddable), "destroy",
 	  GTK_SIGNAL_FUNC (destroy_embed), bed);
 
+	embeddable_servers++;
+
 	/* Setup some verbs */
 	gnome_embeddable_add_verb (embeddable,
 				   "FirstPage",
@@ -741,8 +763,6 @@ embeddable_factory (GnomeEmbeddableFactory *This, void *data)
 static gboolean
 init_bonobo_image_x_pdf_factory (void)
 {
-	GnomeEmbeddableFactory *factory;
-	
 	factory = gnome_embeddable_factory_new (
 		"bonobo-object-factory:image-x-pdf",
 		embeddable_factory, NULL);
