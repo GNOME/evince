@@ -141,15 +141,18 @@ doc_redraw_event (GtkWidget *widget, GdkEventExpose *event)
   if (doc->out && doc->pdf) {
     printf ("There are %d pages\n", doc->pdf->getNumPages());
 
-//    doc->pdf->displayPage(doc->out, 1, 86, 0, gTrue);
     gdk_draw_line (doc->pixmap,
 		   widget->style->black_gc,
 		   event->area.x, event->area.y,
 		   event->area.width, event->area.height);
+    doc->pdf->displayPage(doc->out, 1, 1, 0, gTrue); /* 86 zoom */
+    printf ("Draw pixmap %p\n", doc->pixmap);
+    gdk_draw_string (doc->pixmap, widget->style->font, widget->style->black_gc,
+		     10, 10, "Hello");
     gdk_draw_pixmap(widget->window,
 		    widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
 		    doc->pixmap,
-		    event->area.x, event->area.y,
+		    0, 0,
 		    event->area.x, event->area.y,
 		    event->area.width, event->area.height);
   } else
