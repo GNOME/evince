@@ -170,24 +170,24 @@ ev_application_open (EvApplication *application, GError *err)
 }
 
 void
-ev_application_open_bookmark (EvApplication *application,
-			      EvWindow      *window,
-			      EvBookmark    *bookmark,
-			      GError        *error)
+ev_application_open_link (EvApplication *application,
+			  EvWindow      *window,
+			  EvLink        *link,
+			  GError        *error)
 {
-	EvBookmarkType type;
+	EvLinkType type;
 	const char *uri;
 
-	type = ev_bookmark_get_bookmark_type (bookmark);
+	type = ev_link_get_link_type (link);
 	
 	switch (type) {
-		case EV_BOOKMARK_TYPE_TITLE:
+		case EV_LINK_TYPE_TITLE:
 			break;
-		case EV_BOOKMARK_TYPE_LINK:
-			ev_window_open_bookmark (window, bookmark);
+		case EV_LINK_TYPE_PAGE:
+			ev_window_open_link (window, link);
 			break;
-		case EV_BOOKMARK_TYPE_EXTERNAL_URI:
-			uri = ev_bookmark_get_uri (bookmark);
+		case EV_LINK_TYPE_EXTERNAL_URI:
+			uri = ev_link_get_uri (link);
 			gnome_vfs_url_show (uri);
 			break;
 	}

@@ -24,7 +24,7 @@
 #include "ev-ps-exporter.h"
 #include "ev-document-find.h"
 #include "gpdf-g-switch.h"
-#include "ev-document-bookmarks.h"
+#include "ev-document-links.h"
 #include "ev-document-misc.h"
 #include "ev-document-thumbnails.h"
 
@@ -91,7 +91,7 @@ struct _PdfDocument
 	PdfDocumentSearch *search;
 };
 
-static void pdf_document_document_bookmarks_iface_init  (EvDocumentBookmarksIface  *iface);
+static void pdf_document_document_links_iface_init      (EvDocumentLinksIface  *iface);
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
 static void pdf_document_ps_exporter_iface_init (EvPSExporterIface   *iface);
@@ -103,8 +103,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
 							pdf_document_document_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_BOOKMARKS,
-							pdf_document_document_bookmarks_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
+							pdf_document_document_links_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 							pdf_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
@@ -675,14 +675,14 @@ pdf_document_ps_export_end (EvPSExporter *exporter)
 }
 
 
-/* EvDocumentBookmarks Implementation */
+/* EvDocumentLinks Implementation */
 typedef struct
 {
 	/* goo GList, not glib */
 	GList *items;
 	int index;
 	int level;
-} BookmarksIter;
+} LinksIter;
 
 static gchar *
 unicode_to_char (OutlineItem *outline_item,
@@ -702,12 +702,12 @@ unicode_to_char (OutlineItem *outline_item,
 
 
 static gboolean
-pdf_document_bookmarks_has_document_bookmarks (EvDocumentBookmarks *document_bookmarks)
+pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
 	Outline *outline;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), FALSE);
 
 	outline = pdf_document->doc->getOutline();
 	if (outline->getItems() != NULL &&
@@ -717,44 +717,44 @@ pdf_document_bookmarks_has_document_bookmarks (EvDocumentBookmarks *document_boo
 	return FALSE;
 }
 
-static EvDocumentBookmarksIter *
-pdf_document_bookmarks_begin_read (EvDocumentBookmarks *document_bookmarks)
+static EvDocumentLinksIter *
+pdf_document_links_begin_read (EvDocumentLinks *document_links)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
 	Outline *outline;
-	BookmarksIter *iter;
+	LinksIter *iter;
 	GList *items;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), NULL);
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), NULL);
 
 	outline = pdf_document->doc->getOutline();
 	items = outline->getItems();
 	if (! items)
 		return NULL;
 
-	iter = g_new0 (BookmarksIter, 1);
+	iter = g_new0 (LinksIter, 1);
 	iter->items = items;
 	iter->index = 0;
 	iter->level = 0;
 
-	return (EvDocumentBookmarksIter *) iter;
+	return (EvDocumentLinksIter *) iter;
 }
 
 /* FIXME This returns a new object every time, probably we should cache it
    in the iter */
-static EvBookmark *
-pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmarks,
-				     EvDocumentBookmarksIter  *bookmarks_iter)
+static EvLink *
+pdf_document_links_get_link (EvDocumentLinks      *document_links,
+				 EvDocumentLinksIter  *links_iter)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_bookmarks);
-	EvBookmark *bookmark = NULL;
-	BookmarksIter *iter = (BookmarksIter *)bookmarks_iter;
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
+	EvLink *link = NULL;
+	LinksIter *iter = (LinksIter *)links_iter;
 	OutlineItem *anItem;
 	LinkAction *link_action;
 	Unicode *link_title;
 	const char *title;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), FALSE);
 	g_return_val_if_fail (iter != NULL, FALSE);
 
 	anItem = (OutlineItem *)iter->items->get(iter->index);
@@ -763,7 +763,7 @@ pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmark
 	title = unicode_to_char (anItem, pdf_document->umap);
 
 	if (link_action == NULL) {
-		bookmark = ev_bookmark_new_title (title);
+		link = ev_link_new_title (title);
 	} else if (link_action->getKind () == actionGoTo) {
 		LinkDest *link_dest;
 		LinkGoTo *link_goto;
@@ -794,51 +794,51 @@ pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmark
 			delete link_dest;
 		}
 
-		bookmark = ev_bookmark_new_link (title, page_num);
+		link = ev_link_new_page (title, page_num);
 	} else if (link_action->getKind () == actionURI) {
 		LinkURI *link_uri;
 
 		link_uri = dynamic_cast <LinkURI *> (link_action);
-		bookmark = ev_bookmark_new_external
+		link = ev_link_new_external
 			(title, link_uri->getURI()->getCString());
 	} else if (link_action->getKind () == actionNamed) {
 			/*Skip, for now */
 	}
 
-	return bookmark;
+	return link;
 }
 
-static EvDocumentBookmarksIter *
-pdf_document_bookmarks_get_child (EvDocumentBookmarks     *document_bookmarks,
-				  EvDocumentBookmarksIter *bookmarks_iter)
+static EvDocumentLinksIter *
+pdf_document_links_get_child (EvDocumentLinks     *document_links,
+				  EvDocumentLinksIter *links_iter)
 {
-	BookmarksIter *iter = (BookmarksIter *)bookmarks_iter;
-	BookmarksIter *child_iter;
+	LinksIter *iter = (LinksIter *)links_iter;
+	LinksIter *child_iter;
 	OutlineItem *anItem;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), FALSE);
 
 	anItem = (OutlineItem *)iter->items->get(iter->index);
 	anItem->open ();
 	if (! (anItem->hasKids() && anItem->getKids()) )
 		return NULL;
 
-	child_iter = g_new0 (BookmarksIter, 1);
+	child_iter = g_new0 (LinksIter, 1);
 	child_iter->index = 0;
 	child_iter->level = iter->level + 1;
 	child_iter->items = anItem->getKids ();
 	g_assert (child_iter->items);
 
-	return (EvDocumentBookmarksIter *) child_iter;
+	return (EvDocumentLinksIter *) child_iter;
 }
 
 static gboolean
-pdf_document_bookmarks_next (EvDocumentBookmarks     *document_bookmarks,
-			     EvDocumentBookmarksIter *bookmarks_iter)
+pdf_document_links_next (EvDocumentLinks     *document_links,
+			     EvDocumentLinksIter *links_iter)
 {
-	BookmarksIter *iter = (BookmarksIter *) bookmarks_iter;
+	LinksIter *iter = (LinksIter *) links_iter;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_bookmarks), FALSE);
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), FALSE);
 
 	iter->index++;
 	if (iter->index >= iter->items->getLength())
@@ -848,10 +848,10 @@ pdf_document_bookmarks_next (EvDocumentBookmarks     *document_bookmarks,
 }
 
 static void
-pdf_document_bookmarks_free_iter (EvDocumentBookmarks     *document_bookmarks,
-				  EvDocumentBookmarksIter *iter)
+pdf_document_links_free_iter (EvDocumentLinks     *document_links,
+				  EvDocumentLinksIter *iter)
 {
-	g_return_if_fail (PDF_IS_DOCUMENT (document_bookmarks));
+	g_return_if_fail (PDF_IS_DOCUMENT (document_links));
 	g_return_if_fail (iter != NULL);
 
 	/* FIXME: Should I close all the nodes?? Free them? */
@@ -1032,14 +1032,14 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 }
 
 static void
-pdf_document_document_bookmarks_iface_init (EvDocumentBookmarksIface *iface)
+pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 {
-	iface->has_document_bookmarks = pdf_document_bookmarks_has_document_bookmarks;
-	iface->begin_read = pdf_document_bookmarks_begin_read;
-	iface->get_bookmark = pdf_document_bookmarks_get_bookmark;
-	iface->get_child = pdf_document_bookmarks_get_child;
-	iface->next = pdf_document_bookmarks_next;
-	iface->free_iter = pdf_document_bookmarks_free_iter;
+	iface->has_document_links = pdf_document_links_has_document_links;
+	iface->begin_read = pdf_document_links_begin_read;
+	iface->get_link = pdf_document_links_get_link;
+	iface->get_child = pdf_document_links_get_child;
+	iface->next = pdf_document_links_next;
+	iface->free_iter = pdf_document_links_free_iter;
 }
 
 /* Thumbnails */

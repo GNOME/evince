@@ -23,7 +23,7 @@
 
 #include <glib-object.h>
 
-#include "ev-bookmark.h"
+#include "ev-link.h"
 
 G_BEGIN_DECLS
 
@@ -54,10 +54,10 @@ struct _EvHistoryClass
 GType		ev_history_get_type		(void);
 EvHistory      *ev_history_new			(void);
 void		ev_history_add_link		(EvHistory  *history,
-						 EvBookmark *bookmark);
+						 EvLink     *linkk);
 void		ev_history_add_page		(EvHistory  *history,
 						 int         page);
-EvBookmark     *ev_history_get_link_nth		(EvHistory  *history,
+EvLink	       *ev_history_get_link_nth		(EvHistory  *history,
 					 	 int         index);
 int		ev_history_get_n_links		(EvHistory  *history);
 int		ev_history_get_current_index	(EvHistory  *history);

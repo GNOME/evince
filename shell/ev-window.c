@@ -32,7 +32,7 @@
 #include "ev-navigation-action.h"
 #include "ev-page-action.h"
 #include "ev-sidebar.h"
-#include "ev-sidebar-bookmarks.h"
+#include "ev-sidebar-links.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
 #include "ev-print-job.h"
@@ -191,9 +191,9 @@ update_action_sensitivity (EvWindow *ev_window)
 }
 
 void
-ev_window_open_bookmark	(EvWindow *ev_window, EvBookmark *bookmark)
+ev_window_open_link (EvWindow *ev_window, EvLink *link)
 {
-	ev_view_go_to_bookmark (EV_VIEW (ev_window->priv->view), bookmark);
+	ev_view_go_to_link (EV_VIEW (ev_window->priv->view), link);
 }
 
 gboolean
@@ -1452,11 +1452,11 @@ ev_window_init (EvWindow *ev_window)
 			ev_window->priv->sidebar);
 
 	/* Stub sidebar, for now */
-	sidebar_widget = ev_sidebar_bookmarks_new ();
+	sidebar_widget = ev_sidebar_links_new ();
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     "bookmarks",
-			     _("Bookmarks"),
+			     "index",
+			     _("Index"),
 			     sidebar_widget);
 
 	sidebar_widget = ev_sidebar_thumbnails_new ();

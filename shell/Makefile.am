@@ -39,8 +39,8 @@ evince_SOURCES=				\
 	ev-window.h			\
 	ev-sidebar.c			\
 	ev-sidebar.h			\
-	ev-sidebar-bookmarks.c		\
-	ev-sidebar-bookmarks.h		\
+	ev-sidebar-links.c		\
+	ev-sidebar-links.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
 	ev-stock-icons.c		\

@@ -77,16 +77,16 @@ ev_history_class_init (EvHistoryClass *class)
 }
 
 void
-ev_history_add_link (EvHistory *history, EvBookmark *bookmark)
+ev_history_add_link (EvHistory *history, EvLink *link)
 {
 	int length;
 
 	g_return_if_fail (EV_IS_HISTORY (history));
-	g_return_if_fail (EV_IS_BOOKMARK (bookmark));
+	g_return_if_fail (EV_IS_LINK (link));
 
-	g_object_ref (bookmark);
+	g_object_ref (link);
 	history->priv->links = g_list_append (history->priv->links,
-					      bookmark);
+					      link);
 
 	length = g_list_length (history->priv->links);
 	history->priv->current_index = length - 1;
@@ -97,19 +97,19 @@ ev_history_add_link (EvHistory *history, EvBookmark *bookmark)
 void
 ev_history_add_page (EvHistory *history, int page)
 {
-	EvBookmark *bookmark;
+	EvLink *link;
 	char *title;
 
 	g_return_if_fail (EV_IS_HISTORY (history));
 
 	title = g_strdup_printf (_("Page %d\n"), page);
-	bookmark = ev_bookmark_new_link (title, page);
+	link = ev_link_new_page (title, page);
 	g_free (title);
 
-	ev_history_add_link (history, bookmark);
+	ev_history_add_link (history, link);
 }
 
-EvBookmark *
+EvLink *
 ev_history_get_link_nth	(EvHistory *history, int index)
 {
 	GList *l;
@@ -118,7 +118,7 @@ ev_history_get_link_nth	(EvHistory *history, int index)
 
 	l = g_list_nth (history->priv->links, index);
 
-	return EV_BOOKMARK (l->data);
+	return EV_LINK (l->data);
 }
 
 int

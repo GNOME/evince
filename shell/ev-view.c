@@ -930,35 +930,35 @@ set_document_page (EvView *view, int page)
 }
 
 static void
-go_to_bookmark (EvView *view, EvBookmark *bookmark)
+go_to_link (EvView *view, EvLink *link)
 {
-	EvBookmarkType type;
+	EvLinkType type;
 	int page;
 
-	type = ev_bookmark_get_bookmark_type (bookmark);
+	type = ev_link_get_link_type (link);
 
-	if (type == EV_BOOKMARK_TYPE_LINK) {
-		page = ev_bookmark_get_page (bookmark);
+	if (type == EV_LINK_TYPE_PAGE) {
+		page = ev_link_get_page (link);
 		set_document_page (view, page);
 	}
 }
 
 void
-ev_view_go_to_bookmark (EvView *view, EvBookmark *bookmark)
+ev_view_go_to_link (EvView *view, EvLink *link)
 {
-	go_to_bookmark (view, bookmark);
-	ev_history_add_link (view->history, bookmark);
+	go_to_link (view, link);
+	ev_history_add_link (view->history, link);
 }
 
 static void
 go_to_index (EvView *view, int index)
 {
-	EvBookmark *bookmark;
+	EvLink *link;
 	
-	bookmark = ev_history_get_link_nth (view->history, index);
-	g_return_if_fail (bookmark != NULL);
+	link = ev_history_get_link_nth (view->history, index);
+	g_return_if_fail (link != NULL);
 
-	go_to_bookmark (view, bookmark);
+	go_to_link (view, link);
 }
 
 void

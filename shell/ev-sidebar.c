@@ -29,8 +29,8 @@
 
 #include "ev-sidebar.h"
 #include "ev-document-thumbnails.h"
-#include "ev-document-bookmarks.h"
-#include "ev-sidebar-bookmarks.h"
+#include "ev-document-links.h"
+#include "ev-sidebar-links.h"
 #include "ev-sidebar-thumbnails.h"
 
 typedef struct
@@ -207,18 +207,15 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 				    PAGE_COLUMN_MAIN_WIDGET, &widget,
 				    -1);
 
-		if (EV_IS_SIDEBAR_BOOKMARKS (widget)
-		    && EV_IS_DOCUMENT_BOOKMARKS (document)
-		    && ev_document_bookmarks_has_document_bookmarks (EV_DOCUMENT_BOOKMARKS (document)))
-			ev_sidebar_bookmarks_set_document (EV_SIDEBAR_BOOKMARKS (widget),
-							   document);
+		if (EV_IS_SIDEBAR_LINKS (widget)
+		    && EV_IS_DOCUMENT_LINKS (document)
+		    && ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document)))
+			ev_sidebar_links_set_document (EV_SIDEBAR_LINKS (widget),
+						       document);
 		else if (EV_IS_SIDEBAR_THUMBNAILS (widget) &&
 			 EV_IS_DOCUMENT_THUMBNAILS (document))
 			ev_sidebar_thumbnails_set_document (EV_SIDEBAR_THUMBNAILS (widget),
 							    document);
-				
-
-		  
 	}
 	
 

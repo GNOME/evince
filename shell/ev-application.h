@@ -28,7 +28,7 @@
 
 #include "ev-window.h"
 #include "ev-document.h"
-#include "ev-bookmark.h"
+#include "ev-link.h"
 
 G_BEGIN_DECLS
 
@@ -59,9 +59,9 @@ EvApplication	*ev_application_get_instance		(void);
 void		 ev_application_open			(EvApplication *application,
 							 GError        *err);
 EvWindow	*ev_application_new_window		(EvApplication *application);
-void		 ev_application_open_bookmark		(EvApplication *application,
+void		 ev_application_open_link		(EvApplication *application,
 							 EvWindow      *window,
-							 EvBookmark    *bookmark,
+							 EvLink        *link,
 							 GError        *err);
 
 G_END_DECLS

@@ -23,7 +23,7 @@
 #include <gtk/gtkwidget.h>
 
 #include "ev-document.h"
-#include "ev-bookmark.h"
+#include "ev-link.h"
 
 G_BEGIN_DECLS
 
@@ -47,8 +47,8 @@ void		ev_view_select_all	(EvView     *view);
 /* Navigation */
 void		ev_view_go_back		(EvView	    *view);
 void		ev_view_go_forward	(EvView     *view);
-void		ev_view_go_to_bookmark	(EvView     *view,
-					 EvBookmark *bookmark);
+void		ev_view_go_to_link	(EvView     *view,
+					 EvLink     *link);
 void		ev_view_set_page	(EvView     *view,
 					 int         page);
 int		ev_view_get_page	(EvView     *view);
