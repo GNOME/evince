@@ -349,9 +349,36 @@ CLEANFILES =				\
 	$(server_in_files:.server.in.in=.server.in) \
 	$(marshal_sources)
 
-EXTRA_DIST = $(stock_DATA)		\
+if USE_ANNOTS_VIEW
+  EXTRA_DIST = $(stock_DATA)		\
 	gpdf-marshal.list		\
 	$(server_in_files) 		\
 	config.h 			\
 	$(ui_DATA)			\
 	$(glade_DATA)
+else
+  EXTRA_DIST = $(stock_DATA)		\
+	gpdf-marshal.list		\
+	$(server_in_files) 		\
+	config.h 			\
+	$(ui_DATA)			\
+	$(glade_DATA)			\
+	stock-annot-circle.png		\
+	stock-annot-fileattachment.png	\
+	stock-annot-freetext.png	\
+	stock-annot-highlight.png	\
+	stock-annot-ink.png		\
+	stock-annot-line.png		\
+	stock-annot-link.png		\
+	stock-annot-movie.png		\
+	stock-annot-popup.png		\
+	stock-annot-sound.png		\
+	stock-annot-square.png		\
+	stock-annot-stamp.png		\
+	stock-annot-strikeout.png	\
+	stock-annot-text.png		\
+	stock-annot-trapnet.png		\
+	stock-annot-underline.png	\
+	stock-annot-widget.png		\
+	stock-annot-unknown.png
+endif
