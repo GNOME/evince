@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-20 18:44+0100\n"
-"PO-Revision-Date: 2005-01-20 19:32+0100\n"
+"POT-Creation-Date: 2005-01-23 10:52+0100\n"
+"PO-Revision-Date: 2005-01-23 15:11+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -88,52 +88,52 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10×14"
 
-#: ps/ps-document.c:285
+#: ps/ps-document.c:288
 msgid "No document loaded."
 msgstr "Nebyl načten žádný dokument."
 
-#: ps/ps-document.c:677
+#: ps/ps-document.c:680
 msgid "Broken pipe."
 msgstr "Přerušená roura."
 
-#: ps/ps-document.c:867
+#: ps/ps-document.c:870
 msgid "Interpreter failed."
 msgstr "Interpret selhal."
 
 #. report error
-#: ps/ps-document.c:989
+#: ps/ps-document.c:992
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Chyba při dekomprimaci souboru %s:\n"
 
-#: ps/ps-document.c:1095
+#: ps/ps-document.c:1098
 #, c-format
 msgid "Error while converting pdf file %s:\n"
 msgstr "Chyba při převodu souboru pdf %s:\n"
 
-#: ps/ps-document.c:1274
+#: ps/ps-document.c:1277
 msgid "File is not a valid PostScript document."
 msgstr "Soubor není platný dokument v PostScriptu."
 
-#: ps/ps-document.c:1323
+#: ps/ps-document.c:1326
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Nemohu otevřít soubor %s.\n"
 
-#: ps/ps-document.c:1325
+#: ps/ps-document.c:1328
 msgid "File is not readable."
 msgstr "Soubor nelze číst."
 
-#: ps/ps-document.c:1346
+#: ps/ps-document.c:1349
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Chyba při procházení souboru %s\n"
 
-#: ps/ps-document.c:1349
+#: ps/ps-document.c:1352
 msgid "The file is not a PostScript document."
 msgstr "Soubor není dokument v PostScriptu."
 
-#: ps/ps-document.c:1380
+#: ps/ps-document.c:1383
 msgid "Document loaded."
 msgstr "Dokument načten."
 
@@ -214,26 +214,26 @@ msgstr "Všechny soubory"
 msgid "of %d"
 msgstr "z %d"
 
-#: shell/ev-view.c:562
+#: shell/ev-view.c:556
 #, c-format
 msgid "Go to page %d"
 msgstr "Jít na stranu %d"
 
-#: shell/ev-view.c:939
+#: shell/ev-view.c:927
 msgid "Not found"
 msgstr "Nenalezeno"
 
-#: shell/ev-view.c:941
+#: shell/ev-view.c:929
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "Zbývá prohledat %3d%%"
 
-#: shell/ev-view.c:946
+#: shell/ev-view.c:934
 #, c-format
 msgid "Found on page %d"
 msgstr "Nalezeno na straně %d"
 
-#: shell/ev-view.c:949
+#: shell/ev-view.c:937
 #, c-format
 msgid "%d found on this page"
 msgstr "Na této straně nalezeno %d"
@@ -595,11 +595,23 @@ msgstr "Strana"
 msgid "Select Page"
 msgstr "Zvolit stranu"
 
-#: shell/ev-window.c:1623
+#: shell/ev-window.c:1553
+msgid "Up"
+msgstr "Nahoru"
+
+#: shell/ev-window.c:1555
+msgid "Down"
+msgstr "Dolů"
+
+#: shell/ev-window.c:1557
+msgid "Fit Width"
+msgstr "Přizpůsobit šířku"
+
+#: shell/ev-window.c:1636
 msgid "Index"
 msgstr "Rejstřík"
 
-#: shell/ev-window.c:1630
+#: shell/ev-window.c:1643
 msgid "Thumbnails"
 msgstr "Miniatury"
 
