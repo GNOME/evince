@@ -60,7 +60,8 @@ static const GtkTargetEntry targets[] = {
 typedef enum {
 	EV_VIEW_CURSOR_NORMAL,
 	EV_VIEW_CURSOR_LINK,
-	EV_VIEW_CURSOR_WAIT
+	EV_VIEW_CURSOR_WAIT,
+	EV_VIEW_CURSOR_HIDDEN
 } EvViewCursor;
 
 #define ZOOM_IN_FACTOR  1.2
@@ -310,7 +311,8 @@ ev_view_realize (GtkWidget *widget)
 				GDK_BUTTON_RELEASE_MASK |
 				GDK_SCROLL_MASK |
 				GDK_KEY_PRESS_MASK |
-				GDK_POINTER_MOTION_MASK;
+				GDK_POINTER_MOTION_MASK |
+		                GDK_LEAVE_NOTIFY_MASK;
   
 	view->bin_window = gdk_window_new (widget->window,
 					   &attributes,
@@ -399,8 +401,12 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 static void
 highlight_find_results (EvView *view)
 {
-	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+	EvDocumentFind *find;
 	int i, results;
+
+	g_return_if_fail (EV_IS_DOCUMENT_FIND (view->document));
+
+	find = EV_DOCUMENT_FIND (view->document);
 
 	results = ev_document_find_get_n_results (find);
 
@@ -633,6 +639,17 @@ ev_view_set_find_status (EvView *view, const char *message)
 	g_object_notify (G_OBJECT (view), "find-status");
 }
 
+static GdkCursor *
+ev_view_create_invisible_cursor(void)
+{
+       GdkBitmap *empty;
+       GdkColor black = { 0, 0, 0, 0 };
+       static unsigned char bits[] = { 0x00 };
+
+       empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
+
+       return gdk_cursor_new_from_pixmap (empty, empty, &black, &black, 0, 0);
+}
 
 static void
 ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
@@ -659,6 +676,10 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 		case EV_VIEW_CURSOR_WAIT:
 			cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
 			break;
+                case EV_VIEW_CURSOR_HIDDEN:
+                        cursor = ev_view_create_invisible_cursor ();
+                        break;
+
 	}
 
 	if (cursor) {
@@ -1012,7 +1033,9 @@ set_document_page (EvView *view, int new_page)
 					   &old_width, &old_height);
 
 		if (old_page != page) {
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
+			if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
+				ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
+			}
 			ev_document_set_page (view->document, page);
 		}
 
@@ -1032,10 +1055,9 @@ set_document_page (EvView *view, int new_page)
 						  view->vadjustment->lower);
 		}
 
-		view->find_page = page;
-		view->find_result = 0;
-
 		if (EV_IS_DOCUMENT_FIND (view->document)) {
+			view->find_page = page;
+			view->find_result = 0;
 			update_find_status_message (view);
 		}
 	}
@@ -1137,7 +1159,10 @@ document_changed_callback (EvDocument *document,
 			   EvView     *view)
 {
 	gtk_widget_queue_draw (GTK_WIDGET (view));
-	ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+
+	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+	}
 }
 
 /*** Public API ***/       
@@ -1156,8 +1181,9 @@ ev_view_set_document (EvView     *view,
 
 	if (document != view->document) {
 		if (view->document) {
-                        g_signal_handlers_disconnect_by_func
-				(view->document, find_changed_cb, view);
+                        g_signal_handlers_disconnect_by_func (view->document,
+                                                              find_changed_cb,
+                                                              view);
 			g_object_unref (view->document);
                 }
 
@@ -1423,4 +1449,15 @@ ev_view_find_previous (EvView *view)
 		jump_to_find_result (view);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
+}
+void
+ev_view_hide_cursor (EvView *view)
+{
+       ev_view_set_cursor (view, EV_VIEW_CURSOR_HIDDEN);
+}
+
+void
+ev_view_show_cursor (EvView *view)
+{
+       ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 }

@@ -78,6 +78,10 @@ void            ev_view_find_previous   (EvView     *view);
 const char     *ev_view_get_status      (EvView     *view);
 const char     *ev_view_get_find_status (EvView     *view);
 
+/* Cursor */
+void           ev_view_hide_cursor     (EvView     *view);
+void           ev_view_show_cursor     (EvView     *view);
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */

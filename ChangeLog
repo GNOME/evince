@@ -1,3 +1,21 @@
+2005-02-16  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* shell/ev-view.c: (ev_view_realize), (highlight_find_results),
+	(ev_view_create_invisible_cursor), (ev_view_set_cursor),
+	(set_document_page), (document_changed_callback),
+	(ev_view_set_document), (ev_view_find_previous),
+	(ev_view_hide_cursor), (ev_view_show_cursor):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_chrome_visibility),
+	(fullscreen_timeout_cb), (fullscreen_set_timeout),
+	(fullscreen_clear_timeout), (fullscreen_motion_notify_cb),
+	(fullscreen_leave_notify_cb), (ev_window_fullscreen),
+	(ev_window_unfullscreen):
+	* shell/main.c: (main):
+
+	Automatically hide the fullscreen button.
+	Patch by Kristian Høgsberg <krh@redhat.com>
+
 2005-02-16  Vincent Noel  <vnoel@cox.net>
 
 	* shell/main.c (main): Specify an icon for the window. Patch by
