@@ -29,6 +29,8 @@ evince_SOURCES=				\
 	ev-page-action.h		\
 	ev-print-job.c			\
 	ev-print-job.h			\
+	ev-utils.c			\
+	ev-utils.h			\
 	ev-view.c			\
 	ev-view.h			\
 	ev-window.c			\
