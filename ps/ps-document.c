@@ -505,7 +505,7 @@ set_up_page(PSDocument * gs)
 
   orientation = ps_document_get_orientation(gs);
 
-  if(size_changed) {
+  if (size_changed || gs->bpixmap == NULL) {
     gdk_flush();
 
     /* clear new pixmap (set to white) */

@@ -1,5 +1,12 @@
 2005-02-28  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* ps/ps-document.c: (set_up_page):
+
+	If there is no bpixmap create one, even if size
+	is not changed.
+
+2005-02-28  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/ps-document.c: (ps_document_init), (ps_document_cleanup),
 	(set_up_page), (document_load), (ps_document_set_zoom):
 
