@@ -117,25 +117,25 @@ common_sources =		\
 	UTF8.h
 
 libgpdf_a_SOURCES =			\
-	gpdf-link-canvas-item.cc	\
-	gpdf-link-canvas-item.h		\
-	gpdf-links-canvas-layer.cc	\
-	gpdf-links-canvas-layer.h
-
-gnome_pdf_viewer_SOURCES =		\
-	$(common_sources)		\
 	BonoboStream.cc			\
 	BonoboStream.h			\
 	GnomeVFSStream.cc		\
 	GnomeVFSStream.h		\
+	gpdf-link-canvas-item.cc	\
+	gpdf-link-canvas-item.h		\
+	gpdf-links-canvas-layer.cc	\
+	gpdf-links-canvas-layer.h	\
+	gpdf-persist-stream.cc		\
+	gpdf-persist-stream.h
+
+gnome_pdf_viewer_SOURCES =		\
+	$(common_sources)		\
 	GPOutputDev.cc			\
 	GPOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
 	gpdf-control.cc			\
 	gpdf-control.h			\
 	gpdf-g-switch.h			\
-	gpdf-persist-stream.cc		\
-	gpdf-persist-stream.h		\
 	gpdf-stock-icons.c		\
 	gpdf-stock-icons.h		\
 	gpdf-util.h			\
