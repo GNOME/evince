@@ -1620,7 +1620,7 @@ static GtkActionEntry entries[] = {
           N_("Shrink the document"),
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
         { "ViewNormalSize", GTK_STOCK_ZOOM_100, NULL, "<control>0",
-          N_("Reset the zoom level to the defaul value"),
+          N_("Reset the zoom level to the default value"),
           G_CALLBACK (ev_window_cmd_view_normal_size) },
         { "ViewBestFit", EV_STOCK_ZOOM_PAGE, N_("_Best Fit"), NULL,
           N_("Make the current document fill the window"),
