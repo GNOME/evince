@@ -56,7 +56,7 @@ ev_document_load (EvDocument  *document,
 		  GError      *error)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	iface->load (document, uri);
+	iface->load (document, uri, error);
 }
 
 int
