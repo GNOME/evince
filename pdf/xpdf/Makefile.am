@@ -121,8 +121,6 @@ libgpdf_a_SOURCES =			\
 	GPOutputDev.h			\
 	PSOutputDev.cc			\
 	PSOutputDev.h			\
-	gpdf-hig-dialog.c		\
-	gpdf-hig-dialog.h		\
 	Thumb.cc			\
 	Thumb.h				\
 	gpdf-control.cc			\
