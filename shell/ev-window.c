@@ -36,6 +36,7 @@
 #include "eggfindbar.h"
 
 #include "pdf-document.h"
+#include "pixbuf-document.h"
 #include "gtkgs.h"
 
 #include <glib/gi18n.h>
@@ -205,6 +206,44 @@ unable_to_load (EvWindow   *ev_window,
 	gtk_widget_destroy (dialog);
 }
 
+/* Would be nice to have this in gdk-pixbuf */
+static gboolean
+mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
+{
+	GSList *formats, *list;
+	gboolean retval = FALSE;
+	
+	formats = gdk_pixbuf_get_formats ();
+	
+	list = formats;
+	while (list) {
+		GdkPixbufFormat *format = list->data;
+		int i;
+		gchar **mime_types;
+		
+		if (gdk_pixbuf_format_is_disabled (format))
+			continue;
+
+		mime_types = gdk_pixbuf_format_get_mime_types (format);
+		
+		for (i = 0; mime_types[i] != NULL; i++) {
+			if (strcmp (mime_types[i], mime_type) == 0) {
+				retval = TRUE;
+				break;
+			}
+		}
+		
+		if (retval)
+			break;
+		
+		list = list->next;
+	}
+	
+	g_slist_free (formats);
+
+	return retval;
+}
+
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
@@ -217,7 +256,9 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
 	else if (!strcmp (mime_type, "application/postscript"))
 		document = g_object_new (GTK_GS_TYPE, NULL);
-
+	else if (mime_type_supported_by_gdk_pixbuf (mime_type))
+		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);
+	
 	if (document) {
 		GError *error = NULL;
 

@@ -115,8 +115,7 @@ ev_application_open (EvApplication *application, GError *err)
 {
 	EvWindow *ev_window;
 	GtkWidget *chooser;
-	GtkFileFilter *both_filter, *pdf_filter, *ps_filter, *all_filter;
-
+	GtkFileFilter *both_filter, *pdf_filter, *ps_filter, *pixbuf_filter, *all_filter;
 
 	ev_window = ev_application_get_empty_window (application);
 
@@ -145,11 +144,16 @@ ev_application_open (EvApplication *application, GError *err)
 	gtk_file_filter_add_mime_type (pdf_filter, "application/pdf");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), pdf_filter);
 
+	pixbuf_filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (pixbuf_filter, _("Images"));
+	gtk_file_filter_add_pixbuf_formats (pixbuf_filter);
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), pixbuf_filter);
+	
 	all_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (all_filter, _("All Files"));
 	gtk_file_filter_add_pattern (all_filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), all_filter);
-
+	
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), both_filter);
 
 	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {

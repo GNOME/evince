@@ -370,6 +370,7 @@ pdf/goo/Makefile
 pdf/fofi/Makefile
 pdf/splash/Makefile
 pdf/xpdf/Makefile
+pixbuf/Makefile
 ps/Makefile
 po/Makefile.in
 backend/Makefile
