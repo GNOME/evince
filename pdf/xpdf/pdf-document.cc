@@ -814,6 +814,14 @@ build_link_from_action (PdfDocument *pdf_document,
 
 	if (link_action == NULL) {
 		link = ev_link_new_title (title);
+	} else if (link_action->getKind () == actionGoToR) {
+		g_warning ("actionGoToR links not implemented");
+	} else if (link_action->getKind () == actionLaunch) {
+		g_warning ("actionLaunch links not implemented");
+	} else if (link_action->getKind () == actionNamed) {
+		g_warning ("actionNamed links not implemented");
+	} else if (link_action->getKind () == actionMovie) {
+		g_warning ("actionMovie links not implemented");
 	} else if (link_action->getKind () == actionGoTo) {
 		LinkDest *link_dest;
 		LinkGoTo *link_goto;
@@ -851,8 +859,13 @@ build_link_from_action (PdfDocument *pdf_document,
 		link_uri = dynamic_cast <LinkURI *> (link_action);
 		link = ev_link_new_external
 			(title, link_uri->getURI()->getCString());
-	} else if (link_action->getKind () == actionNamed) {
-			/*Skip, for now */
+	} else if (link_action->getKind () == actionUnknown) {
+		LinkUnknown *link_unknown;
+
+		link_unknown = dynamic_cast <LinkUnknown *> (link_action);
+
+		g_warning ("Unknown link type %s",
+			   link_unknown->getAction()->getCString());
 	}
 
 	return link;
