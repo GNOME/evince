@@ -1,10 +1,9 @@
 
-INCLUDES =					\
-	-I$(top_srcdir)/goo			\
-	-I$(top_srcdir)/ltk			\
-	-DDATADIR=\""$(datadir)"\"            	\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
-	$(EXTRA_GLIB_CFLAGS)			\
+INCLUDES =							\
+	-I$(top_srcdir)/goo					\
+	-I$(top_srcdir)/ltk					\
+	-DDATADIR=\""$(datadir)"\"            			\
+        -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	$(EXTRA_GNOME_CFLAGS)			\
 	$(libpaper_CFLAGS)
 
@@ -14,11 +13,12 @@ else
 gui = xpdf
 endif
 
-bin_PROGRAMS = 	$(gui)	gnome-pdf-viewer
+bin_PROGRAMS = 	$(gui)
 #	pdftops pdftotext	
 #	pdfinfo	pdftopbm	
 #	pdfimages  		
 
+libexec_PROGRAMS = gnome-pdf-viewer
 
 common_sources =		\
 	Annot.cc		\
@@ -106,13 +106,8 @@ gnome_pdf_viewer_SOURCES =		\
 	GOutputDev.cc			\
 	GOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
-	bonobo-application-x-pdf.h	\
 	gpdf-control.cc			\
 	gpdf-control.h			\
-	gpdf-embeddable.cc		\
-	gpdf-embeddable.h		\
-	gpdf-embeddable-view.cc		\
-	gpdf-embeddable-view.h		\
 	gpdf-persist-stream.cc		\
 	gpdf-persist-stream.h		\
 	gpdf-util.h			\
@@ -120,14 +115,14 @@ gnome_pdf_viewer_SOURCES =		\
 	gtkgesture.h			\
 	pdf-view.cc			\
 	pdf-view.h
+# 	gpdf-embeddable.cc		\
+# 	gpdf-embeddable.h		\
+# 	gpdf-embeddable-view.cc		\
+# 	gpdf-embeddable-view.h		\
 
 gnome_pdf_viewer_LDADD =		\
-	../goo/libgoo.a			\
-	$(GTK_LIBS)			\
-	$(GNOME_LIBDIR)			\
+	$(top_builddir)/goo/libgoo.a	\
 	$(EXTRA_GNOME_LIBS)		\
-	$(EXTRA_GLIB_LIBS)		\
-	$(INTLLIBS)			\
 	$(libpaper_LIBS)
 
 xpdf_SOURCES =			\
@@ -139,7 +134,12 @@ xpdf_SOURCES =			\
 	xpdf.cc
 
 xpdf_CFLAGS = $(X_CFLAGS)
-xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS) $(libpaper_CFLAGS)
+xpdf_LDADD = 				\
+	$(top_builddir)/goo/libgoo.a 	\
+	$(top_builddir)/ltk/libltk.a    \
+	-lXpm                           \
+	$(EXTRA_GNOME_LIBS) 		\
+	$(libpaper_LIBS)
 
 #pdfimages_SOURCES =		
 #	$(common_sources)	
@@ -195,24 +195,27 @@ xpdf-ltk.h: xpdf.ltk
 
 
 stockdir = $(datadir)/pixmaps/gpdf
-stock_DATA = stock-zoom-in.xpm	stock-zoom-out.xpm \
-	     stock-zoom-fit.xpm stock-zoom-fit-wide.xpm	\
-	     stock-zoom-fit-tall.xpm	
+stock_DATA = stock-zoom-fit-wide.xpm
 
 ltk = 			\
 	xpdf-flip.ltk	\
 	xpdf-top.ltk	\
 	xpdf.ltk
 
-oafdir = $(datadir)/oaf
-oaf_DATA = GNOME_PDF.oafinfo
 
-XML_FILES =				\
+server_in_files = GNOME_PDF.server.in.in
+
+serverdir = $(libdir)/bonobo/servers
+server_DATA = $(server_in_files:.server.in.in=.server)
+$(server_in_files:.server.in.in=.server.in): $(server_in_files)
+	sed -e "s|\@LIBEXECDIR\@|$(libexecdir)|" $< > $@
+@INTLTOOL_SERVER_RULE@
+
+uidir = $(datadir)/gnome-2.0/ui
+ui_DATA =				\
 	bonobo-application-x-pdf-ui.xml \
 	gpdf-control-ui.xml
 
-uidir = $(datadir)/gnome/ui
-ui_DATA = $(XML_FILES)
 
 EXTRA_DIST = $(stock_DATA) $(ltk)	\
-             $(oaf_DATA) config.h $(XML_FILES)
+             $(server_in_files) config.h $(ui_DATA)
