@@ -135,8 +135,10 @@ pixbuf_document_get_page_size (EvDocument   *document,
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 
-	*width = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
-	*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
+	if (width)
+		*width = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
+	if (height)
+		*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
 }
 
 static void
