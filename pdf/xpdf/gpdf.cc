@@ -383,13 +383,6 @@ container_launch_component (BonoboClientSite    *client_site,
 		return NULL;
 	}
 
-	/*
-	 * The BonoboContainer object maintains a list of the
-	 * ClientSites which it manages.  Here we add the new
-	 * ClientSite to that list.
-	 */
-	bonobo_item_container_add (container, BONOBO_OBJECT (client_site));
-
 	return object_server;
 }
 
