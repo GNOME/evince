@@ -59,60 +59,13 @@ ev_document_links_has_document_links (EvDocumentLinks *document_links)
 	return retval;
 }
 
-EvDocumentLinksIter *
-ev_document_links_begin_read (EvDocumentLinks *document_links)
+GtkTreeModel *
+ev_document_links_get_links_model (EvDocumentLinks *document_links)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	EvDocumentLinksIter *retval;
+	GtkTreeModel *retval;
 
-	retval = iface->begin_read (document_links);
+	retval = iface->get_links_model (document_links);
 
 	return retval;
-}
-
-EvLink * 
-ev_document_links_get_link (EvDocumentLinks      *document_links,
-			    EvDocumentLinksIter  *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	EvLink *retval;
-
-	retval = iface->get_link (document_links, iter);
-
-	return retval;
-}
-
-EvDocumentLinksIter *
-ev_document_links_get_child (EvDocumentLinks     *document_links,
-			     EvDocumentLinksIter *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	EvDocumentLinksIter *retval;
-
-	retval = iface->get_child (document_links, iter);
-
-	return retval;
-}
-
-
-gboolean 
-ev_document_links_next (EvDocumentLinks     *document_links,
-			EvDocumentLinksIter *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	gboolean retval;
-
-	retval = iface->next (document_links, iter);
-
-	return retval;
-}
-
-
-void
-ev_document_links_free_iter (EvDocumentLinks     *document_links,
-			     EvDocumentLinksIter *iter)
-{
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-
-	iface->free_iter (document_links, iter);
 }

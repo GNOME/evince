@@ -1,6 +1,7 @@
 #include "ev-jobs.h"
 #include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-links.h"
 
 static void ev_job_render_init          (EvJobRender         *job);
 static void ev_job_render_class_init    (EvJobRenderClass    *class);
@@ -13,12 +14,55 @@ enum
 	LAST_SIGNAL
 };
 
+static guint links_signals[LAST_SIGNAL] = { 0 };
 static guint render_signals[LAST_SIGNAL] = { 0 };
 static guint thumbnail_signals[LAST_SIGNAL] = { 0 };
 
 
+G_DEFINE_TYPE (EvJobLinks, ev_job_links, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobRender, ev_job_render, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, G_TYPE_OBJECT)
+
+
+
+static void
+ev_job_links_init (EvJobLinks *job)
+{
+	
+}
+
+static void
+ev_job_links_dispose (GObject *object)
+{
+	EvJobLinks *job;
+
+	job = EV_JOB_LINKS (object);
+
+	if (job->model) {
+		g_object_unref (job->model);
+		job->model = NULL;
+	}
+}
+
+static void
+ev_job_links_class_init (EvJobLinksClass *class)
+{
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_links_dispose;
+
+	links_signals [FINISHED] =
+		g_signal_new ("finished",
+			      EV_TYPE_JOB_LINKS,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvJobLinksClass, finished),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+}
+
 
 static void
 ev_job_render_init (EvJobRender *job)
@@ -97,6 +141,38 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 }
 
 /* Public functions */
+
+
+EvJobLinks *
+ev_job_links_new (EvDocument *document)
+{
+	EvJobLinks *job;
+
+	job = g_object_new (EV_TYPE_JOB_LINKS, NULL);
+	job->document = document;
+
+	return job;
+}
+
+void
+ev_job_links_run (EvJobLinks *job)
+{
+	g_return_if_fail (EV_IS_JOB_LINKS (job));
+
+	g_mutex_lock (EV_DOC_MUTEX);
+	job->model = ev_document_links_get_links_model (EV_DOCUMENT_LINKS (job->document));
+	g_mutex_unlock (EV_DOC_MUTEX);
+}
+
+void
+ev_job_links_finished (EvJobLinks *job)
+{
+	g_return_if_fail (EV_IS_JOB_LINKS (job));
+
+	g_signal_emit (job, links_signals[FINISHED], 0);
+
+}
+
 
 EvJobRender *
 ev_job_render_new (EvDocument *document,

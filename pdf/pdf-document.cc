@@ -92,6 +92,10 @@ struct _PdfDocument
 	PdfDocumentSearch *search;
 };
 
+static EvLink *build_link_from_action (PdfDocument *pdf_document,
+				       LinkAction  *link_action,
+				       const char  *title);
+
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
@@ -367,7 +371,7 @@ pdf_document_get_page_size (EvDocument   *document,
 	int page_width = 1, page_height = 1;
 	double scale = pdf_document->scale;
 
-	if (page == -1) 
+	if (page == -1)
 		page = pdf_document->page;
 
 	doc_page = pdf_document->doc->getCatalog ()->getPage (page);
@@ -817,27 +821,67 @@ pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 	return FALSE;
 }
 
-static EvDocumentLinksIter *
-pdf_document_links_begin_read (EvDocumentLinks *document_links)
+static void
+build_tree (PdfDocument  *pdf_document,
+	    GtkTreeModel *model,
+	    GtkTreeIter  *parent,
+	    GooList      *items)
+{
+	int i;
+
+	for (i = 0; i < items->getLength (); i++) {
+		OutlineItem *item;
+		GtkTreeIter iter;
+		LinkAction *link_action;
+		gchar *title;
+		EvLink *link;
+		
+		item = (OutlineItem *)items->get (i);
+		gtk_tree_store_append (GTK_TREE_STORE (model), &iter, parent);
+
+		link_action = item->getAction ();
+		title = unicode_to_char (item, pdf_document->umap);
+		link = build_link_from_action (pdf_document, link_action, title);
+
+		gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
+				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title,
+				    EV_DOCUMENT_LINKS_COLUMN_PAGE_VALID, TRUE,
+				    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
+				    -1);
+
+		item->open ();
+		if (item->hasKids () && item->getKids ()) {
+			build_tree (pdf_document,
+				    model,
+				    &iter,
+				    item->getKids ());
+		}
+	}
+}
+
+static GtkTreeModel *
+pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
+	GtkTreeModel *model = NULL;
 	Outline *outline;
-	LinksIter *iter;
 	GooList *items;
 
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), NULL);
 
 	outline = pdf_document->doc->getOutline();
 	items = outline->getItems();
-	if (! items)
-		return NULL;
 
-	iter = g_new0 (LinksIter, 1);
-	iter->items = items;
-	iter->index = 0;
-	iter->level = 0;
+	/* Create the model iff we have items*/
+	if (items != NULL) {
+		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
+							     G_TYPE_STRING,
+							     G_TYPE_BOOLEAN,
+							     G_TYPE_POINTER);
+		build_tree (pdf_document, model, NULL, items);
+	}
 
-	return (EvDocumentLinksIter *) iter;
+	return model;
 }
 
 static EvLink *
@@ -908,6 +952,31 @@ build_link_from_action (PdfDocument *pdf_document,
 	}
 
 	return link;
+}
+
+
+#if 0
+static EvDocumentLinksIter *
+pdf_document_links_begin_read (EvDocumentLinks *document_links)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
+	Outline *outline;
+	LinksIter *iter;
+	GooList *items;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), NULL);
+
+	outline = pdf_document->doc->getOutline();
+	items = outline->getItems();
+	if (! items)
+		return NULL;
+
+	iter = g_new0 (LinksIter, 1);
+	iter->items = items;
+	iter->index = 0;
+	iter->level = 0;
+
+	return (EvDocumentLinksIter *) iter;
 }
 
 /* FIXME This returns a new object every time, probably we should cache it
@@ -983,6 +1052,7 @@ pdf_document_links_free_iter (EvDocumentLinks     *document_links,
 	/* FIXME: Should I close all the nodes?? Free them? */
 	g_free (iter);
 }
+#endif
 
 static void
 pdf_document_finalize (GObject *object)
@@ -1123,7 +1193,7 @@ pdf_document_get_link (EvDocument *document, int x, int y)
 	link_y = link_y / pdf_document->scale;
 
 	action = pdf_document->links->find (link_x, link_y);
-	
+
 	if (action) {
 		return build_link_from_action (pdf_document, action, "");
 	} else {
@@ -1211,11 +1281,7 @@ static void
 pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 {
 	iface->has_document_links = pdf_document_links_has_document_links;
-	iface->begin_read = pdf_document_links_begin_read;
-	iface->get_link = pdf_document_links_get_link;
-	iface->get_child = pdf_document_links_get_child;
-	iface->next = pdf_document_links_next;
-	iface->free_iter = pdf_document_links_free_iter;
+	iface->get_links_model = pdf_document_links_get_links_model;
 }
 
 /* Thumbnails */
@@ -1255,7 +1321,7 @@ bitmap_to_pixbuf (SplashBitmap *bitmap,
 		guchar *q;
 
 		p = dataPtr.rgb8 + y * width;
-		q = target_data + ((y + y_offset) * target_rowstride + 
+		q = target_data + ((y + y_offset) * target_rowstride +
 				   x_offset * (target_has_alpha?4:3));
 		for (x = 0; x < width; x++) {
 			rgb = *p++;
@@ -1395,7 +1461,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	} else {
 		int width, height;
 		double scale_factor;
-	
+
 		pdf_document_thumbnails_get_dimensions (document_thumbnails, page, size,
 							&width, &height);
 		scale_factor = width / the_page->getWidth ();

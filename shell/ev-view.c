@@ -463,16 +463,18 @@ static void
 highlight_find_results (EvView *view)
 {
 	EvDocumentFind *find;
-	int i, results;
+	int i, results = 0;
 
 	g_return_if_fail (EV_IS_DOCUMENT_FIND (view->document));
 
 	find = EV_DOCUMENT_FIND (view->document);
 
+#if 0
 	g_mutex_lock (EV_DOC_MUTEX);
 	results = ev_document_find_get_n_results (find);
 	g_mutex_unlock (EV_DOC_MUTEX);
-
+#endif
+	
 	for (i = 0; i < results; i++) {
 		GdkRectangle rectangle;
 		guchar alpha;

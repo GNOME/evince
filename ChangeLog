@@ -1,3 +1,31 @@
+Thu Mar 17 01:48:20 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document-links.c: (ev_document_links_get_links_model):
+	* backend/ev-document-links.h:
+	* backend/ev-job-queue.c: (remove_object_from_queue),
+	(notify_finished), (handle_job), (search_for_jobs_unlocked),
+	(ev_job_queue_init), (ev_job_queue_add_links_job),
+	(ev_job_queue_remove_links_job), (ev_job_queue_add_render_job):
+	* backend/ev-job-queue.h:
+	* backend/ev-jobs.c: (ev_job_links_init), (ev_job_links_dispose),
+	(ev_job_links_class_init), (ev_job_links_new), (ev_job_links_run),
+	(ev_job_links_finished):
+	* backend/ev-jobs.h:
+	* backend/ev-link.h:
+	* pdf/pdf-document.cc:
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_destroy),
+	(selection_changed_cb), (create_loading_model),
+	(ev_sidebar_links_construct), (links_page_num_func),
+	(ev_sidebar_links_clear_document), (job_finished_cb),
+	(ev_sidebar_links_set_document):
+	* shell/ev-sidebar.c: (ev_sidebar_set_document):
+	* shell/ev-view.c: (highlight_find_results):
+
+	Initial cut at moving the indexing over to threads.  It's sloooow
+	still on big docs.  This needs profiling for real in poppler.
+	Also, we don't actually change pages yet.  Should be easy to do
+	that though.
+
 Wed Mar 16 02:50:11 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* backend/ev-document.c: (ev_document_get_page_cache):

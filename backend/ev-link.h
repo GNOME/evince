@@ -41,7 +41,9 @@ typedef enum
 {
 	EV_LINK_TYPE_TITLE,
 	EV_LINK_TYPE_PAGE,
-	EV_LINK_TYPE_EXTERNAL_URI
+	EV_LINK_TYPE_EXTERNAL_URI,
+	/* We'll probably fill this in more as we support the other types of
+	 * links */
 } EvLinkType;
 
 struct _EvLink {

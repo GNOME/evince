@@ -27,8 +27,17 @@ G_BEGIN_DECLS
 
 typedef struct _EvJobRender EvJobRender;
 typedef struct _EvJobRenderClass EvJobRenderClass;
+
 typedef struct _EvJobThumbnail EvJobThumbnail;
 typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
+
+typedef struct _EvJobLinks EvJobLinks;
+typedef struct _EvJobLinksClass EvJobLinksClass;
+
+#define EV_TYPE_JOB_LINKS		     (ev_job_links_get_type())
+#define EV_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LINKS, EvJobLinks))
+#define EV_JOB_LINKS_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_LINKS, EvJobLinksClass))
+#define EV_IS_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LINKS))
 
 #define EV_TYPE_JOB_RENDER		     (ev_job_render_get_type())
 #define EV_JOB_RENDER(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_RENDER, EvJobRender))
@@ -44,6 +53,20 @@ typedef enum {
 	EV_JOB_PRIORITY_LOW,
 	EV_JOB_PRIORITY_HIGH,
 } EvJobPriority;
+
+struct _EvJobLinks
+{
+	GObject parent;
+	EvDocument *document;
+	GtkTreeModel *model;
+};
+
+struct _EvJobLinksClass
+{
+	GObjectClass parent_class;
+
+	void    (* finished) (EvJobLinks *job);
+};
 
 struct _EvJobRender
 {
@@ -81,6 +104,12 @@ struct _EvJobThumbnailClass
 	void    (* finished) (EvJobThumbnail *job);
 };
 
+
+/* EvJobLinks */
+GType           ev_job_links_get_type     (void);
+EvJobLinks     *ev_job_links_new          (EvDocument     *document);
+void            ev_job_links_run          (EvJobLinks     *thumbnail);
+void            ev_job_links_finished     (EvJobLinks     *job);
 
 /* EvJobRender */
 GType           ev_job_render_get_type    (void);
