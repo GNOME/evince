@@ -85,11 +85,38 @@
 
 //------------------------------------------------------------------------
 
+struct ZoomMenuInfo {
+  char *label;
+  double zoom;
+};
+
+static ZoomMenuInfo zoomMenuInfo[nZoomMenuItems] = {
+  { "400%",      400 },
+  { "200%",      200 },
+  { "150%",      150 },
+  { "125%",      125 },
+  { "100%",      100 },
+  { "50%",        50 },
+  { "25%",        25 },
+  { "12.5%",      12.5 },
+  { "fit page",  zoomPage },
+  { "fit width", zoomWidth }
+};
+
+#define maxZoomIdx   0
+#define defZoomIdx   3
+#define minZoomIdx   7
+#define zoomPageIdx  8
+#define zoomWidthIdx 9
+
+//------------------------------------------------------------------------
+
 XPDFViewer::XPDFViewer(XPDFApp *appA, GString *fileName,
 		       int pageA, GString *destName,
 		       GString *ownerPassword, GString *userPassword) {
   LinkDest *dest;
-  int pg, z;
+  int pg;
+  double z;
   GString *dir;
 
   app = appA;
@@ -118,6 +145,13 @@ XPDFViewer::XPDFViewer(XPDFApp *appA, GString *fileName,
   if (fileName) {
     if (loadFile(fileName, ownerPassword, userPassword)) {
       getPageAndDest(pageA, destName, &pg, &dest);
+#ifndef DISABLE_OUTLINE
+      if (!app->getFullScreen() &&
+	  core->getDoc()->getOutline()->getItems() &&
+	  core->getDoc()->getOutline()->getItems()->getLength() > 0) {
+	XtVaSetValues(outlineScroll, XmNwidth, 175, NULL);
+      }
+#endif
       if (pg > 0) {
 	core->resizeToPage(pg);
       }
@@ -164,7 +198,8 @@ XPDFViewer::~XPDFViewer() {
 
 void XPDFViewer::open(GString *fileName, int pageA, GString *destName) {
   LinkDest *dest;
-  int pg, z;
+  int pg;
+  double z;
 
   if (!core->getDoc() || fileName->cmp(core->getDoc()->getFileName())) {
     if (!loadFile(fileName, NULL, NULL)) {
@@ -233,12 +268,12 @@ void XPDFViewer::reloadFile() {
   displayPage(pg, core->getZoom(), core->getRotate(), gFalse, gFalse);
 }
 
-void XPDFViewer::displayPage(int pageA, int zoomA, int rotateA,
+void XPDFViewer::displayPage(int pageA, double zoomA, int rotateA,
 			     GBool scrollToTop, GBool addToHist) {
   core->displayPage(pageA, zoomA, rotateA, scrollToTop, addToHist);
 }
 
-void XPDFViewer::displayDest(LinkDest *dest, int zoomA, int rotateA,
+void XPDFViewer::displayDest(LinkDest *dest, double zoomA, int rotateA,
 			     GBool addToHist) {
   core->displayDest(dest, zoomA, rotateA, addToHist);
 }
@@ -318,7 +353,7 @@ void XPDFViewer::keyPressCbk(void *data, char *s, KeySym key,
       break;
     case '\007':		// ctrl-G
       if (viewer->core->getDoc()) {
-	XPDFViewer::findFindCbk(None, viewer, NULL);
+	viewer->doFind(gTrue);
       }
       break;
     case '\020':		// ctrl-P
@@ -387,43 +422,39 @@ void XPDFViewer::keyPressCbk(void *data, char *s, KeySym key,
     case '0':
       if (!viewer->app->getFullScreen() &&
 	  viewer->core->getZoom() != defZoom) {
-	XtVaSetValues(viewer->zoomMenu,
-		      XmNmenuHistory, viewer->getZoomMenuBtn(defZoom),
-		      NULL);
+	viewer->setZoomIdx(defZoomIdx);
 	viewer->displayPage(viewer->core->getPageNum(), defZoom,
 			    viewer->core->getRotate(), gTrue, gFalse);
       }
       break;
     case '+':
-      if (!viewer->app->getFullScreen() &&
-	  viewer->core->getZoom() >= minZoom &&
-	  viewer->core->getZoom() < maxZoom) {
-	z = viewer->core->getZoom() + 1;
-	XtVaSetValues(viewer->zoomMenu,
-		      XmNmenuHistory, viewer->getZoomMenuBtn(z),
-		      NULL);
-	viewer->displayPage(viewer->core->getPageNum(), z,
-			    viewer->core->getRotate(), gTrue, gFalse);
+      if (!viewer->app->getFullScreen()) {
+	z = viewer->getZoomIdx();
+	if (z <= minZoomIdx && z > maxZoomIdx) {
+	  --z;
+	  viewer->setZoomIdx(z);
+	  viewer->displayPage(viewer->core->getPageNum(),
+			      zoomMenuInfo[z].zoom,
+			      viewer->core->getRotate(), gTrue, gFalse);
+	}
       }
       break;
     case '-':
-      if (!viewer->app->getFullScreen() &&
-	  viewer->core->getZoom() > minZoom &&
-	  viewer->core->getZoom() <= maxZoom) {
-	z = viewer->core->getZoom() - 1;
-	XtVaSetValues(viewer->zoomMenu,
-		      XmNmenuHistory, viewer->getZoomMenuBtn(z),
-		      NULL);
-	viewer->displayPage(viewer->core->getPageNum(), z,
-			    viewer->core->getRotate(), gTrue, gFalse);
+      if (!viewer->app->getFullScreen()) {
+	z = viewer->getZoomIdx();
+	if (z < minZoomIdx && z >= maxZoomIdx) {
+	  ++z;
+	  viewer->setZoomIdx(z);
+	  viewer->displayPage(viewer->core->getPageNum(),
+			      zoomMenuInfo[z].zoom,
+			      viewer->core->getRotate(), gTrue, gFalse);
+	}
       }
       break;
     case 'z':
       if (!viewer->app->getFullScreen() &&
 	  viewer->core->getZoom() != zoomPage) {
-	XtVaSetValues(viewer->zoomMenu,
-		      XmNmenuHistory, viewer->getZoomMenuBtn(zoomPage),
-		      NULL);
+	viewer->setZoomIdx(zoomPageIdx);
 	viewer->displayPage(viewer->core->getPageNum(), zoomPage,
 			    viewer->core->getRotate(), gTrue, gFalse);
       }
@@ -431,9 +462,7 @@ void XPDFViewer::keyPressCbk(void *data, char *s, KeySym key,
     case 'w':
       if (!viewer->app->getFullScreen() &&
 	  viewer->core->getZoom() != zoomWidth) {
-	XtVaSetValues(viewer->zoomMenu,
-		      XmNmenuHistory, viewer->getZoomMenuBtn(zoomWidth),
-		      NULL);
+	viewer->setZoomIdx(zoomWidthIdx);
 	viewer->displayPage(viewer->core->getPageNum(), zoomWidth,
 			    viewer->core->getRotate(), gTrue, gFalse);
       }
@@ -475,7 +504,7 @@ void XPDFViewer::mouseCbk(void *data, XEvent *event) {
 //------------------------------------------------------------------------
 
 void XPDFViewer::initWindow() {
-  Widget btn, label, menuPane, lastBtn;
+  Widget btn, label, lastBtn, zoomWidget;
 #ifndef DISABLE_OUTLINE
   Widget clipWin;
 #endif
@@ -485,7 +514,6 @@ void XPDFViewer::initWindow() {
   int n;
   char *title;
   XmString s, s2, emptyString;
-  char buf[16];
   int i;
 
   display = XtDisplay(app->getAppShell());
@@ -658,42 +686,49 @@ void XPDFViewer::initWindow() {
   XmStringFree(s);
 
   // zoom menu
+#if USE_COMBO_BOX
+  XmString st[nZoomMenuItems];
+  n = 0;
+  XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); ++n;
+  XtSetArg(args[n], XmNleftWidget, pageCountLabel); ++n;
+  XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
+  XtSetArg(args[n], XmNmarginWidth, 0); ++n;
+  XtSetArg(args[n], XmNmarginHeight, 0); ++n;
+  XtSetArg(args[n], XmNcomboBoxType, XmDROP_DOWN_COMBO_BOX); ++n;
+  XtSetArg(args[n], XmNpositionMode, XmONE_BASED); ++n;
+  XtSetArg(args[n], XmNcolumns, 7); ++n;
+  for (i = 0; i < nZoomMenuItems; ++i) {
+    st[i] = XmStringCreateLocalized(zoomMenuInfo[i].label);
+  }
+  XtSetArg(args[n], XmNitems, st); ++n;
+  XtSetArg(args[n], XmNitemCount, nZoomMenuItems); ++n;
+  zoomComboBox = XmCreateComboBox(toolBar, "zoomComboBox", args, n);
+  for (i = 0; i < nZoomMenuItems; ++i) {
+    XmStringFree(st[i]);
+  }
+  XtAddCallback(zoomComboBox, XmNselectionCallback,
+		&zoomComboBoxCbk, (XtPointer)this);
+  XtManageChild(zoomComboBox);
+  zoomWidget = zoomComboBox;
+#else
+  Widget menuPane;
+  char buf[16];
   n = 0;
   menuPane = XmCreatePulldownMenu(toolBar, "zoomMenuPane", args, n);
-  for (i = minZoom; i <= maxZoom; ++i) {
+  for (i = 0; i < nZoomMenuItems; ++i) {
     n = 0;
-    sprintf(buf, "%s%d", i > 0 ? "+" : "", i);
-    s = XmStringCreateLocalized(buf);
+    s = XmStringCreateLocalized(zoomMenuInfo[i].label);
     XtSetArg(args[n], XmNlabelString, s); ++n;
     XtSetArg(args[n], XmNuserData, (XtPointer)i); ++n;
-    sprintf(buf, "zoom%s%d", i < 0 ? "M" : "", i < 0 ? -i : i);
+    sprintf(buf, "zoom%d", i);
     btn = XmCreatePushButton(menuPane, buf, args, n);
     XmStringFree(s);
     XtManageChild(btn);
     XtAddCallback(btn, XmNactivateCallback,
 		  &zoomMenuCbk, (XtPointer)this);
-    zoomMenuBtns[i - minZoom] = btn;
+    zoomMenuBtns[i] = btn;
   }
-  n = 0;
-  s = XmStringCreateLocalized("fit page");
-  XtSetArg(args[n], XmNlabelString, s); ++n;
-  XtSetArg(args[n], XmNuserData, (XtPointer)zoomPage); ++n;
-  btn = XmCreatePushButton(menuPane, "zoomPage", args, n);
-  XmStringFree(s);
-  XtManageChild(btn);
-  XtAddCallback(btn, XmNactivateCallback,
-		&zoomMenuCbk, (XtPointer)this);
-  zoomMenuBtns[maxZoom - minZoom + 1] = btn;
-  n = 0;
-  s = XmStringCreateLocalized("fit width");
-  XtSetArg(args[n], XmNlabelString, s); ++n;
-  XtSetArg(args[n], XmNuserData, (XtPointer)zoomWidth); ++n;
-  btn = XmCreatePushButton(menuPane, "zoomWidth", args, n);
-  XmStringFree(s);
-  XtManageChild(btn);
-  XtAddCallback(btn, XmNactivateCallback,
-		&zoomMenuCbk, (XtPointer)this);
-  zoomMenuBtns[maxZoom - minZoom + 2] = btn;
   n = 0;
   XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); ++n;
   XtSetArg(args[n], XmNleftWidget, pageCountLabel); ++n;
@@ -704,11 +739,13 @@ void XPDFViewer::initWindow() {
   XtSetArg(args[n], XmNsubMenuId, menuPane); ++n;
   zoomMenu = XmCreateOptionMenu(toolBar, "zoomMenu", args, n);
   XtManageChild(zoomMenu);
+  zoomWidget = zoomMenu;
+#endif
 
   // find/print/about buttons
   n = 0;
   XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); ++n;
-  XtSetArg(args[n], XmNleftWidget, zoomMenu); ++n;
+  XtSetArg(args[n], XmNleftWidget, zoomWidget); ++n;
   XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
   XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
   XtSetArg(args[n], XmNmarginWidth, 6); ++n;
@@ -760,7 +797,7 @@ void XPDFViewer::initWindow() {
   XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); ++n;
   XtSetArg(args[n], XmNleftWidget, lastBtn); ++n;
   XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); ++n;
-  XtSetArg(args[n], XmNrightWidget, btn); ++n;
+  XtSetArg(args[n], XmNrightWidget, quitBtn); ++n;
   XtSetArg(args[n], XmNtopAttachment, XmATTACH_FORM); ++n;
   XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); ++n;
   s = XmStringCreateLocalized("");
@@ -852,8 +889,7 @@ void XPDFViewer::initWindow() {
 #endif
 
   // set the zoom menu to match the initial zoom setting
-  XtVaSetValues(zoomMenu, XmNmenuHistory,
-		getZoomMenuBtn(core->getZoom()), NULL);
+  setZoomVal(core->getZoom());
 
   // set traversal order
   XtVaSetValues(core->getDrawAreaWidget(),
@@ -872,7 +908,7 @@ void XPDFViewer::initWindow() {
 		NULL);
   XtVaSetValues(pageNumText, XmNnavigationType, XmEXCLUSIVE_TAB_GROUP,
 		NULL);
-  XtVaSetValues(zoomMenu, XmNnavigationType, XmEXCLUSIVE_TAB_GROUP,
+  XtVaSetValues(zoomWidget, XmNnavigationType, XmEXCLUSIVE_TAB_GROUP,
 		NULL);
   XtVaSetValues(findBtn, XmNnavigationType, XmEXCLUSIVE_TAB_GROUP,
 		NULL);
@@ -885,7 +921,12 @@ void XPDFViewer::initWindow() {
 
   // popup menu
   n = 0;
+#if XmVersion < 1002
+  // older versions of Motif need this, newer ones choke on it,
+  // sometimes not displaying the menu at all, maybe depending on the
+  // state of the NumLock key (taken from DDD)
   XtSetArg(args[n], XmNmenuPost, "<Btn3Down>"); ++n;
+#endif
   popupMenu = XmCreatePopupMenu(core->getDrawAreaWidget(), "popupMenu",
 				args, n);
   n = 0;
@@ -1182,17 +1223,67 @@ void XPDFViewer::closeWindow() {
   XtDestroyWidget(win);
 }
 
-Widget XPDFViewer::getZoomMenuBtn(int z) {
-  if (z >= minZoom && z <= maxZoom) {
-    return zoomMenuBtns[z - minZoom];
+int XPDFViewer::getZoomIdx() {
+#if USE_COMBO_BOX
+  int z;
+
+  XtVaGetValues(zoomComboBox, XmNselectedPosition, &z, NULL);
+  return z - 1;
+#else
+  Widget w;
+  int i;
+
+  XtVaGetValues(zoomMenu, XmNmenuHistory, &w, NULL);
+  for (i = 0; i < nZoomMenuItems; ++i) {
+    if (w == zoomMenuBtns[i]) {
+      return i;
+    }
   }
-  if (z == zoomPage) {
-    return zoomMenuBtns[maxZoom - minZoom + 1];
+  // this should never happen
+  return 0;
+#endif
+}
+
+void XPDFViewer::setZoomIdx(int idx) {
+#if USE_COMBO_BOX
+  XtVaSetValues(zoomComboBox, XmNselectedPosition, idx + 1, NULL);
+#else
+  XtVaSetValues(zoomMenu, XmNmenuHistory, zoomMenuBtns[idx], NULL);
+#endif
+}
+
+void XPDFViewer::setZoomVal(double z) {
+#if USE_COMBO_BOX
+  char buf[32];
+  XmString s;
+  int i;
+
+  for (i = 0; i < nZoomMenuItems; ++i) {
+    if (z == zoomMenuInfo[i].zoom) {
+      XtVaSetValues(zoomComboBox, XmNselectedPosition, i + 1, NULL);
+      return;
+    }
   }
-  if (z == zoomWidth) {
-    return zoomMenuBtns[maxZoom - minZoom + 2];
+  sprintf(buf, "%d", (int)z);
+  s = XmStringCreateLocalized(buf);
+  XtVaSetValues(zoomComboBox, XmNselectedItem, s, NULL);
+  XmStringFree(s);
+#else
+  int i;
+
+  for (i = 0; i < nZoomMenuItems; ++i) {
+    if (z == zoomMenuInfo[i].zoom) {
+      XtVaSetValues(zoomMenu, XmNmenuHistory, zoomMenuBtns[i], NULL);
+      return;
+    }
   }
-  return zoomMenuBtns[0];
+  for (i = maxZoomIdx; i < minZoomIdx; ++i) {
+    if (z > zoomMenuInfo[i].zoom) {
+      break;
+    }
+  }
+  XtVaSetValues(zoomMenu, XmNmenuHistory, zoomMenuBtns[i], NULL);
+#endif
 }
 
 void XPDFViewer::prevPageCbk(Widget widget, XtPointer ptr,
@@ -1243,18 +1334,64 @@ void XPDFViewer::forwardCbk(Widget widget, XtPointer ptr,
   viewer->core->takeFocus();
 }
 
-void XPDFViewer::zoomMenuCbk(Widget widget, XtPointer ptr,
-			     XtPointer callData) {
-  XPDFViewer *viewer = (XPDFViewer *)ptr;
-  XtPointer userData;
+#if USE_COMBO_BOX
 
-  XtVaGetValues(widget, XmNuserData, &userData, NULL);
-  if ((int)userData != viewer->core->getZoom()) {
-    viewer->displayPage(viewer->core->getPageNum(), (int)userData,
+void XPDFViewer::zoomComboBoxCbk(Widget widget, XtPointer ptr,
+				 XtPointer callData) {
+  XPDFViewer *viewer = (XPDFViewer *)ptr;
+  XmComboBoxCallbackStruct *data = (XmComboBoxCallbackStruct *)callData;
+  double z;
+  char *s;
+  XmStringContext context;
+  XmStringCharSet charSet;
+  XmStringDirection dir;
+  Boolean sep;
+
+  z = viewer->core->getZoom();
+  if (data->item_position == 0) {
+    XmStringInitContext(&context, data->item_or_text);
+    if (XmStringGetNextSegment(context, &s, &charSet, &dir, &sep)) {
+      z = atof(s);
+      if (z <= 1) {
+	z = defZoom;
+      }
+      XtFree(charSet);
+      XtFree(s);
+    }
+    XmStringFreeContext(context);
+  } else {
+    z = zoomMenuInfo[data->item_position - 1].zoom;
+  }
+  // only redraw if this was triggered by an event; otherwise
+  // the caller is responsible for doing the redraw
+  if (z != viewer->core->getZoom() && data->event) {
+    viewer->displayPage(viewer->core->getPageNum(), z,
 			viewer->core->getRotate(), gTrue, gFalse);
   }
   viewer->core->takeFocus();
 }
+
+#else // USE_COMBO_BOX
+
+void XPDFViewer::zoomMenuCbk(Widget widget, XtPointer ptr,
+			     XtPointer callData) {
+  XPDFViewer *viewer = (XPDFViewer *)ptr;
+  XmPushButtonCallbackStruct *data = (XmPushButtonCallbackStruct *)callData;
+  XtPointer userData;
+  double z;
+
+  XtVaGetValues(widget, XmNuserData, &userData, NULL);
+  z = zoomMenuInfo[(int)userData].zoom;
+  // only redraw if this was triggered by an event; otherwise
+  // the caller is responsible for doing the redraw
+  if (z != viewer->core->getZoom() && data->event) {
+    viewer->displayPage(viewer->core->getPageNum(), z,
+			viewer->core->getRotate(), gTrue, gFalse);
+  }
+  viewer->core->takeFocus();
+}
+
+#endif // USE_COMBO_BOX
 
 void XPDFViewer::findCbk(Widget widget, XtPointer ptr,
 			 XtPointer callData) {
@@ -1389,7 +1526,7 @@ void XPDFViewer::pageNumCbk(Widget widget, XtPointer ptr,
 }
 
 void XPDFViewer::updateCbk(void *data, GString *fileName,
-			   int pageNum, int numPages, char *linkLabel) {
+			   int pageNum, int numPages, char *linkString) {
   XPDFViewer *viewer = (XPDFViewer *)data;
   GString *title;
   char buf[20];
@@ -1439,8 +1576,8 @@ void XPDFViewer::updateCbk(void *data, GString *fileName,
     XmStringFree(s);
   }
 
-  if (linkLabel) {
-    s = XmStringCreateLocalized(linkLabel);
+  if (linkString) {
+    s = XmStringCreateLocalized(linkString);
     XtVaSetValues(viewer->linkLabel, XmNlabelString, s, NULL);
     XmStringFree(s);
   }
@@ -1815,13 +1952,16 @@ void XPDFViewer::findFindCbk(Widget widget, XtPointer ptr,
 			     XtPointer callData) {
   XPDFViewer *viewer = (XPDFViewer *)ptr;
 
-  if (XtWindow(viewer->findDialog)) {
-    XDefineCursor(viewer->display, XtWindow(viewer->findDialog),
-		  viewer->core->getBusyCursor());
+  viewer->doFind(gFalse);
+}
+
+void XPDFViewer::doFind(GBool next) {
+  if (XtWindow(findDialog)) {
+    XDefineCursor(display, XtWindow(findDialog), core->getBusyCursor());
   }
-  viewer->core->find(XmTextFieldGetString(viewer->findText));
-  if (XtWindow(viewer->findDialog)) {
-    XUndefineCursor(viewer->display, XtWindow(viewer->findDialog));
+  core->find(XmTextFieldGetString(findText), next);
+  if (XtWindow(findDialog)) {
+    XUndefineCursor(display, XtWindow(findDialog));
   }
 }
 
@@ -1905,6 +2045,7 @@ void XPDFViewer::initPrintDialog() {
   Arg args[20];
   int n;
   XmString s;
+  GString *psFileName;
 
   //----- dialog
   n = 0;
@@ -2053,6 +2194,17 @@ void XPDFViewer::initPrintDialog() {
   XtSetArg(args[n], XmNdefaultButton, okBtn); ++n;
   XtSetArg(args[n], XmNcancelButton, cancelBtn); ++n;
   XtSetValues(printDialog, args, n);
+
+  //----- initial values
+  if ((psFileName = globalParams->getPSFile())) {
+    if (psFileName->getChar(0) == '|') {
+      XmTextFieldSetString(printCmdText,
+			   psFileName->getCString() + 1);
+    } else {
+      XmTextFieldSetString(printFileText, psFileName->getCString());
+    }
+    delete psFileName;
+  }
 }
 
 void XPDFViewer::setupPrintDialog() {
@@ -2063,10 +2215,7 @@ void XPDFViewer::setupPrintDialog() {
 
   doc = core->getDoc();
   psFileName = globalParams->getPSFile();
-
-  if (psFileName && psFileName->getChar(0) != '|') {
-    XmTextFieldSetString(printFileText, psFileName->getCString());
-  } else {
+  if (!psFileName || psFileName->getChar(0) == '|') {
     pdfFileName = doc->getFileName();
     p = pdfFileName->getCString() + pdfFileName->getLength() - 4;
     if (!strcmp(p, ".pdf") || !strcmp(p, ".PDF")) {
@@ -2079,12 +2228,6 @@ void XPDFViewer::setupPrintDialog() {
     XmTextFieldSetString(printFileText, psFileName2->getCString());
     delete psFileName2;
   }
-
-  if (psFileName && psFileName->getChar(0) == '|') {
-    XmTextFieldSetString(printCmdText,
-			 psFileName->getCString() + 1);
-  }
-
   if (psFileName) {
     delete psFileName;
   }
@@ -2164,7 +2307,7 @@ void XPDFViewer::printPrintCbk(Widget widget, XtPointer ptr,
 			  doc->getCatalog(), firstPage, lastPage,
 			  psModePS);
   if (psOut->isOk()) {
-    doc->displayPages(psOut, firstPage, lastPage, 72, 0, gFalse);
+    doc->displayPages(psOut, firstPage, lastPage, 72, 72, 0, gFalse);
   }
   delete psOut;
   delete psFileName;

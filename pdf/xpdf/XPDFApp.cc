@@ -35,6 +35,7 @@
 //------------------------------------------------------------------------
 
 static String fallbackResources[] = {
+  "*.zoomComboBox*fontList: -*-helvetica-medium-r-normal--12-*-*-*-*-*-iso8859-1",
   "*XmTextField.fontList: -*-courier-medium-r-normal--12-*-*-*-*-*-iso8859-1",
   "*.fontList: -*-helvetica-medium-r-normal--12-*-*-*-*-*-iso8859-1",
   "*XmTextField.translations: #override\\n"
@@ -271,9 +272,9 @@ void XPDFApp::quit() {
     delete (XPDFViewer *)viewers->del(0);
   }
 #if HAVE_XTAPPSETEXITFLAG
-  exit(0);
-#else
   XtAppSetExitFlag(appContext);
+#else
+  exit(0);
 #endif
 }
 
@@ -378,7 +379,6 @@ void XPDFApp::remoteMsgCbk(Widget widget, XtPointer ptr,
       app->remoteViewer->open(fileName, page, destName);
       delete fileName;
     }
-    XFree((XPointer)cmd);
     if (destName) {
       delete destName;
     }
@@ -397,4 +397,6 @@ void XPDFApp::remoteMsgCbk(Widget widget, XtPointer ptr,
     XMapRaised(app->display, XtWindow(app->remoteWin));
     XFlush(app->display);
   }
+
+  XFree((XPointer)cmd);
 }

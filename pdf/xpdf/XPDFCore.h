@@ -34,11 +34,9 @@ class XPixmapOutputDev;
 // zoom factor
 //------------------------------------------------------------------------
 
-#define minZoom    -5
-#define maxZoom     5
-#define zoomPage  100
-#define zoomWidth 101
-#define defZoom     1
+#define zoomPage  -1
+#define zoomWidth -2
+#define defZoom   125
 
 //------------------------------------------------------------------------
 // XPDFHistory
@@ -114,11 +112,11 @@ public:
   // set, the window is vertically scrolled to the top; otherwise, no
   // scrolling is done.  If <addToHist> is set, this page change is
   // added to the history list.
-  void displayPage(int pageA, int zoomA, int rotateA,
+  void displayPage(int pageA, double zoomA, int rotateA,
 		   GBool scrollToTop, GBool addToHist);
 
   // Display a link destination.
-  void displayDest(LinkDest *dest, int zoomA, int rotateA,
+  void displayDest(LinkDest *dest, double zoomA, int rotateA,
 		   GBool addToHist);
 
   //----- page/position changes
@@ -151,7 +149,7 @@ public:
 
   //----- find
 
-  void find(char *s);
+  void find(char *s, GBool next = gFalse);
 
   //----- simple modal dialogs
 
@@ -166,7 +164,7 @@ public:
   PDFDoc *getDoc() { return doc; }
   XPixmapOutputDev *getOutputDev() { return out; }
   int getPageNum() { return page; }
-  int getZoom() { return zoom; }
+  double getZoom() { return zoom; }
   double getZoomDPI() { return dpi; }
   int getRotate() { return rotate; }
   GBool canGoBack() { return historyBLen > 1; }
@@ -194,8 +192,9 @@ public:
 private:
 
   //----- hyperlinks
-  void doLink(int mx, int my);
+  GBool doLink(int mx, int my);
   void runCommand(GString *cmdFmt, GString *arg);
+  GString *mungeURL(GString *url);
 
   //----- selection
   static Boolean convertSelectionCbk(Widget widget, Atom *selection,
@@ -275,7 +274,7 @@ private:
 
   PDFDoc *doc;			// current PDF file
   int page;			// current page number
-  int zoom;			// current zoom level
+  double zoom;			// current zoom level, in percent of 72 dpi
   double dpi;			// current zoom level, in DPI
   int rotate;			// current page rotation
   time_t modTime;		// last modification time of PDF file

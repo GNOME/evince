@@ -28,4 +28,11 @@
 #  endif
 #endif
 
+/*
+ * Make sure WIN32 is defined if appropriate.
+ */
+#if defined(_WIN32) && !defined(WIN32)
+#  define WIN32
+#endif
+
 #endif

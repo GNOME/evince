@@ -25,11 +25,22 @@
 #define DISABLE_OUTLINE
 #endif
 
+#if (XmVERSION >= 2 && !defined(LESSTIF_VERSION))
+#  define USE_COMBO_BOX 1
+#else
+#  undef USE_COMBO_BOX
+#endif
+
 class GString;
 class GList;
 class UnicodeMap;
 class LinkDest;
 class XPDFApp;
+
+//------------------------------------------------------------------------
+
+// NB: this must match the defn of zoomMenuBtnInfo in XPDFViewer.cc
+#define nZoomMenuItems 10
 
 //------------------------------------------------------------------------
 // XPDFViewer
@@ -55,9 +66,9 @@ private:
   //----- load / display
   GBool loadFile(GString *fileName, GString *ownerPassword = NULL,
 		 GString *userPassword = NULL);
-  void displayPage(int pageA, int zoomA, int rotateA,
+  void displayPage(int pageA, double zoomA, int rotateA,
                    GBool scrollToTop, GBool addToHist);
-  void displayDest(LinkDest *dest, int zoomA, int rotateA,
+  void displayDest(LinkDest *dest, double zoomA, int rotateA,
 		   GBool addToHist);
   void getPageAndDest(int pageA, GString *destName,
 		      int *pageOut, LinkDest **destOut);
@@ -77,7 +88,9 @@ private:
   void initWindow();
   void mapWindow();
   void closeWindow();
-  Widget getZoomMenuBtn(int z);
+  int getZoomIdx();
+  void setZoomIdx(int idx);
+  void setZoomVal(double z);
   static void prevPageCbk(Widget widget, XtPointer ptr,
 			  XtPointer callData);
   static void prevTenPageCbk(Widget widget, XtPointer ptr,
@@ -90,8 +103,13 @@ private:
 		      XtPointer callData);
   static void forwardCbk(Widget widget, XtPointer ptr,
 			 XtPointer callData);
+#if USE_COMBO_BOX
+  static void zoomComboBoxCbk(Widget widget, XtPointer ptr,
+			      XtPointer callData);
+#else
   static void zoomMenuCbk(Widget widget, XtPointer ptr,
 			  XtPointer callData);
+#endif
   static void findCbk(Widget widget, XtPointer ptr,
 		      XtPointer callData);
   static void printCbk(Widget widget, XtPointer ptr,
@@ -119,7 +137,7 @@ private:
   static void pageNumCbk(Widget widget, XtPointer ptr,
 			 XtPointer callData);
   static void updateCbk(void *data, GString *fileName,
-			int pageNum, int numPages, char *linkLabel);
+			int pageNum, int numPages, char *linkString);
 
   //----- GUI code: outline
 #ifndef DISABLE_OUTLINE
@@ -143,6 +161,7 @@ private:
   void initFindDialog();
   static void findFindCbk(Widget widget, XtPointer ptr,
 			  XtPointer callData);
+  void doFind(GBool next);
   static void findCloseCbk(Widget widget, XtPointer ptr,
 			   XtPointer callData);
 
@@ -201,8 +220,12 @@ private:
   Widget forwardBtn;
   Widget pageNumText;
   Widget pageCountLabel;
+#if USE_COMBO_BOX
+  Widget zoomComboBox;
+#else
   Widget zoomMenu;
-  Widget zoomMenuBtns[maxZoom - minZoom + 1 + 2];
+  Widget zoomMenuBtns[nZoomMenuItems];
+#endif
   Widget findBtn;
   Widget printBtn;
   Widget aboutBtn;
