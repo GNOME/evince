@@ -216,6 +216,7 @@ static gint start_interpreter(PSDocument * gs);
 gboolean computeSize(void);
 static gboolean ps_document_set_page_size(PSDocument * gs, gint new_pagesize, gint pageid);
 static void ps_document_document_iface_init (EvDocumentIface *iface);
+static gboolean ps_document_goto_page(PSDocument * gs, gint page);
 
 static GObjectClass *parent_class = NULL;
 
@@ -388,6 +389,63 @@ ps_document_cleanup(PSDocument * gs)
   set_up_page(gs);
 }
 
+static gboolean
+ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	PSDocument *gs = (PSDocument *) data;
+
+	if(event->type != GDK_CLIENT_EVENT)
+		return FALSE;
+
+	gs->message_window = event->client.data.l[0];
+
+	if (event->client.message_type == gs_class->page_atom) {
+		LOG ("GS rendered the document");
+		gs->busy = FALSE;
+
+		if (gs->scaling) {
+			ev_document_scale_changed (EV_DOCUMENT (gs));
+			gs->scaling = FALSE;
+		} else {
+			ev_document_page_changed (EV_DOCUMENT (gs));
+		}
+	}
+
+	return TRUE;
+}
+
+static void
+ps_document_set_target (EvDocument  *document,
+			GdkDrawable *target)
+{
+	PSDocument *gs = PS_DOCUMENT (document);
+	GtkWidget *widget;
+	gpointer data;
+
+	if (gs->pstarget) {
+		gdk_window_get_user_data (gs->pstarget, &data);
+		g_return_if_fail (GTK_IS_WIDGET (data));
+
+		widget = GTK_WIDGET (data);
+		g_signal_handlers_disconnect_by_func
+			(widget, ps_document_widget_event, document);
+	}
+
+	gs->pstarget = target;
+
+	if (gs->pstarget) {
+		gdk_window_get_user_data (gs->pstarget, &data);
+		g_return_if_fail (GTK_IS_WIDGET (data));
+
+		widget = GTK_WIDGET (data);
+		g_signal_connect (widget, "event",
+				  G_CALLBACK (ps_document_widget_event),
+				  document);
+	}
+
+	ps_document_goto_page (gs, gs->current_page);
+}
+
 static void
 ps_document_finalize (GObject * object)
 {
@@ -402,6 +460,8 @@ ps_document_finalize (GObject * object)
 
 	ps_document_cleanup (gs);
 	stop_interpreter (gs);
+
+	ps_document_set_target (EV_DOCUMENT (object), NULL);
 
 	if(gs->input_buffer) {
 		g_free(gs->input_buffer);
@@ -1713,54 +1773,6 @@ ps_document_get_page (EvDocument  *document)
 	g_return_val_if_fail (ps != NULL, -1);
 
 	return ps->current_page + 1;
-}
-
-static gboolean
-ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-	PSDocument *gs = (PSDocument *) data;
-
-	if(event->type != GDK_CLIENT_EVENT)
-		return FALSE;
-
-	gs->message_window = event->client.data.l[0];
-
-	if (event->client.message_type == gs_class->page_atom) {
-		LOG ("GS rendered the document");
-		gs->busy = FALSE;
-
-		if (gs->scaling) {
-			ev_document_scale_changed (EV_DOCUMENT (gs));
-			gs->scaling = FALSE;
-		} else {
-			ev_document_page_changed (EV_DOCUMENT (gs));
-		}
-	}
-
-	return TRUE;
-}
-
-static void
-ps_document_set_target (EvDocument  *document,
-			GdkDrawable *target)
-{
-	PSDocument *gs = PS_DOCUMENT (document);
-	GtkWidget *widget;
-	gpointer data;
-
-	gs->pstarget = target;
-
-	if (gs->pstarget) {
-		gdk_window_get_user_data (gs->pstarget, &data);
-		g_return_if_fail (GTK_IS_WIDGET (data));
-
-		widget = GTK_WIDGET (data);
-		g_signal_connect (widget, "event",
-				  G_CALLBACK (ps_document_widget_event),
-				  document);
-	}
-
-	ps_document_goto_page (gs, gs->current_page);
 }
 
 static void

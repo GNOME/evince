@@ -1,5 +1,14 @@
 2005-02-28  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* ps/ps-document.c: (ps_document_widget_event),
+	(ps_document_set_target), (ps_document_finalize),
+	(ps_document_get_page):
+
+	Disconnect the widget event signal on finalize.
+	Some code cleanups.
+
+2005-02-28  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/ps-document.c: (set_up_page):
 
 	If there is no bpixmap create one, even if size
