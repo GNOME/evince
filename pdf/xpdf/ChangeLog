@@ -1,3 +1,15 @@
+1999-08-27  Michael Meeks  <michael@imaginator.com>
+
+	* bonobo-application-x-pdf.cc: Remove count of embeddable
+	servers: seems to be handled inside Bonobo now.
+
+1999-08-26  Michael Meeks  <michael@imaginator.com>
+
+	* gpdf.cc (component_destroy): Improved clean up.
+
+	* bonobo-application-x-pdf.cc (bed_free_data): Expand, and
+	clean; remove redundant pdf_stream delete.
+
 1999-08-24  Michael Meeks  <michael@imaginator.com>
 
 	* application-x-pdf.gnorba: Update to new mime type.

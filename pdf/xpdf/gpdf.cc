@@ -255,14 +255,34 @@ extern "C" {
     gtk_widget_destroy (GTK_WIDGET (fsel));
   }
 
+  static void 
+  component_destroy (Component *component)
+  {
+    CORBA_Environment ev;
+    g_return_if_fail (component != NULL);
+
+    CORBA_exception_init (&ev);
+    
+    if (component->server)
+      GNOME_Unknown_unref (
+	gnome_object_corba_objref (GNOME_OBJECT (component->server)), &ev);
+    component->server = NULL;
+
+    CORBA_exception_free (&ev);
+  }
+
   static void
   container_destroy (Container *cont)
   {
     containers = g_list_remove (containers, cont);
     if (cont->app)
       gtk_widget_destroy (cont->app);
+    
+    if (cont->component)
+      component_destroy (cont->component);
+    cont->component = NULL;
+    
     cont->app = NULL;
-    /* FIXME: Some serious resource freeing needs to be here */
     
     g_free (cont);
     if (!containers)
