@@ -103,8 +103,6 @@ gnome_pdf_viewer_SOURCES =		\
 	$(common_sources)		\
 	BonoboStream.h			\
 	BonoboStream.cc			\
-	GOutputDev.cc			\
-	GOutputDev.h			\
 	GPOutputDev.cc			\
 	GPOutputDev.h			\
 	bonobo-application-x-pdf.cc	\
@@ -117,9 +115,11 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-view.cc			\
 	gpdf-view.h			\
 	gtkgesture.c			\
-	gtkgesture.h			\
-	pdf-view.cc			\
-	pdf-view.h
+	gtkgesture.h			
+#	GOutputDev.cc			\
+#	GOutputDev.h			\
+#	pdf-view.cc			\
+#	pdf-view.h			\
 # 	gpdf-embeddable.cc		\
 # 	gpdf-embeddable.h		\
 # 	gpdf-embeddable-view.cc		\
