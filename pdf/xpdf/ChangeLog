@@ -1,5 +1,12 @@
 1999-08-24  Michael Meeks  <michael@imaginator.com>
 
+	* Makefile.am: Cleaned + added thread bits.
+
+	* bonobo-image-x-pdf.cc: Add locking round 'xref' global.
+	Remove CORBA_Environment global.
+
+1999-08-24  Michael Meeks  <michael@imaginator.com>
+
 	* bonobo-image-x-pdf.cc (bed_free_data): Rationalised Stream
 	duplicate / release, and scoped BonoboFile correctly.
 

@@ -43,9 +43,6 @@ extern "C" {
 
 GBool printCommands = gFalse;
 
-CORBA_Environment ev;
-CORBA_ORB orb;
-
 /*
  * Number of servers running on the system
  * when the count reaches zero, we unregister from the
@@ -58,6 +55,8 @@ static int embeddable_servers = 0;
  */
 static GnomeEmbeddableFactory *factory;
 	
+/* This lock protects the global PDF 'xref' variable */
+GMutex       *xref_lock;
 
 /*
  * BonoboObject data
@@ -67,6 +66,7 @@ typedef struct {
 
   PDFDoc       *pdf;
   XRef         *xref; /* Ugly global XRef hack fix */
+
   BonoboStream *pdf_stream;
   GNOME_Stream  bonobo_stream;
 
@@ -90,6 +90,23 @@ typedef struct {
   gdouble               zoom;
   gint                  page;
 } view_data_t;
+
+static inline void
+xref_do_lock (bed_t *bed)
+{
+  g_return_if_fail (bed != NULL);
+
+  g_mutex_lock (xref_lock);
+  xref = bed->xref; /* Ugly global XRef hack fix */
+}
+
+static inline void
+xref_do_unlock (bed_t *bed)
+{
+  xref = NULL;
+  g_mutex_unlock (xref_lock);
+}
+
 
 extern "C" {
   static void realize_drawing_areas (bed_t *bed);
@@ -148,13 +165,13 @@ render_page (view_data_t *view_data)
 {
   setup_pixmap (view_data->bed, view_data,
 		view_data->win);
-  xref = view_data->bed->xref; /* Ugly global XRef hack fix */
+
+  xref_do_lock (view_data->bed);
   view_data->out->startDoc();
-  view_data->bed->pdf->displayPage(view_data->out,
-				   view_data->page, view_data->zoom,
-				   0, gTrue);
-  view_data->bed->xref = xref;
-  xref = NULL;
+  view_data->bed->pdf->displayPage (view_data->out,
+				    view_data->page, view_data->zoom,
+				    0, gTrue);
+  xref_do_unlock (view_data->bed);
 }
 
 static void
@@ -198,24 +215,29 @@ save_image (GnomePersistStream *ps, GNOME_Stream stream, void *data)
  * different size ?
  */
 static gboolean
-setup_size (bed_t *doc, view_data_t *view)
+setup_size (bed_t *doc, view_data_t *view_data)
 {
   int      w, h;
   gboolean same;
 
-  if (!doc || !view || !doc->pdf) {
-    view->w = 320;
-    view->h = 200;
+  if (!doc || !view_data || !doc->pdf) {
+    view_data->w = 320;
+    view_data->h = 200;
     return FALSE;
   }
-  w = (int)((doc->pdf->getPageWidth  (view->page) * view->zoom) / 72.0);
-  h = (int)((doc->pdf->getPageHeight (view->page) * view->zoom) / 72.0);
-  if (view->w == w && view->h == h)
+  xref_do_lock (view_data->bed);
+  w = (int)((doc->pdf->getPageWidth  (view_data->page)
+	     * view_data->zoom) / 72.0);
+  h = (int)((doc->pdf->getPageHeight (view_data->page)
+	     * view_data->zoom) / 72.0);
+  xref_do_unlock (view_data->bed);
+  
+  if (view_data->w == w && view_data->h == h)
     same = TRUE;
   else
     same = FALSE;
-  view->w = w;
-  view->h = h;
+  view_data->w = w;
+  view_data->h = h;
 
   return same;
 }
@@ -225,14 +247,18 @@ bed_free_data (bed_t *bed)
 {
   g_return_if_fail (bed != NULL);
 
+  xref_do_lock (bed);
   if (bed->pdf)
     delete bed->pdf;
   bed->pdf = NULL;
+  xref_do_unlock (bed);
+
   if (bed->pdf_stream)
     delete (bed->pdf_stream);
   bed->pdf_stream = NULL;
   
   if (bed->bonobo_stream) {
+    CORBA_Environment ev;
     CORBA_exception_init (&ev);
     CORBA_Object_release (bed->bonobo_stream, &ev);
     bed->bonobo_stream = NULL;
@@ -249,6 +275,7 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	bed_t *bed = (bed_t *)data;
 	CORBA_long length;
 	GNOME_Stream_iobuf *buffer;
+	CORBA_Environment ev;
 	guint lp;
 	#define CHUNK 512
 	FILE *hack;
@@ -260,6 +287,7 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	  g_warning ("Won't overwrite pre-existing stream: you wierdo");
 	  return 0;
 	}
+	CORBA_exception_init (&ev);
 
 	/* We need this for later */
 	CORBA_Object_duplicate (stream, &ev);
@@ -269,6 +297,7 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 #if PDF_DEBUG > 0
 	printf ("Loading PDF from persiststream\n");
 #endif
+	xref_do_lock (bed);
 	obj.initNull();
 	bed->pdf_stream = new BonoboStream (stream, 0, -1, &obj);
 	bed->pdf = new PDFDoc (bed->pdf_stream);
@@ -286,9 +315,12 @@ load_image_from_stream (GnomePersistStream *ps, GNOME_Stream stream, void *data)
 	  g_warning ("Duff pdf catalog\n");
 	  bed_free_data (bed);
 	}
+	xref_do_unlock (bed);
 
 	realize_drawing_areas (bed);
 	redraw_all (bed);
+
+	CORBA_exception_free (&ev);
 	return 0;
 }
 
@@ -805,18 +837,25 @@ init_bonobo_image_x_pdf_factory (void)
 static void
 init_server_factory (int argc, char **argv)
 {
-	gnome_CORBA_init_with_popt_table (
-		"bonobo-image-x-pdf", "1.0",
-		&argc, argv, NULL, 0, NULL, GNORBA_INIT_SERVER_FUNC, &ev);
+  CORBA_Environment ev;
 
-	if (bonobo_init (CORBA_OBJECT_NIL, CORBA_OBJECT_NIL, CORBA_OBJECT_NIL) == FALSE)
-		g_error (_("I could not initialize Bonobo"));
+  CORBA_exception_init (&ev);
+
+  gnome_CORBA_init_with_popt_table (
+    "bonobo-image-x-pdf", "1.0",
+    &argc, argv, NULL, 0, NULL, GNORBA_INIT_SERVER_FUNC, &ev);
+  
+  if (bonobo_init (CORBA_OBJECT_NIL, CORBA_OBJECT_NIL, CORBA_OBJECT_NIL) == FALSE)
+    g_error (_("I could not initialize Bonobo"));
+
+  CORBA_exception_free (&ev);
 }
 
 int
 main (int argc, char *argv [])
 {
-  CORBA_exception_init (&ev);
+  g_thread_init (NULL);
+  xref_lock = g_mutex_new ();
   
   init_server_factory (argc, argv);
   if (!init_bonobo_image_x_pdf_factory ()) {
@@ -835,7 +874,8 @@ main (int argc, char *argv [])
   bonobo_main ();
 
   freeParams ();
-  CORBA_exception_free (&ev);
+  g_mutex_free (xref_lock);
   
   return 0;
 }
+

@@ -1,8 +1,8 @@
-
-INCLUDES =	\
-	-I$(top_srcdir)/goo	\
-	-I$(top_srcdir)/ltk	\
+INCLUDES =					\
+	-I$(top_srcdir)/goo			\
+	-I$(top_srcdir)/ltk			\
 	-DGPDF_GLADE_DIR=\""$(gladedir)"\"	\
+	$(EXTRA_GLIB_CFLAGS)			\
 	$(EXTRA_GNOME_CFLAGS)
 
 if WITH_GNOME
@@ -53,7 +53,6 @@ gpdf_LDADD =			\
 	$(EXTRA_GNOME_LIBS)	\
 	$(INTLLIBS)
 
-
 bonobo_image_x_pdf_SOURCES =	\
 	$(common_sources)	\
 	BonoboStream.h		\
@@ -61,15 +60,13 @@ bonobo_image_x_pdf_SOURCES =	\
 	GOutputDev.cc		\
 	bonobo-image-x-pdf.cc
 
-bonobo_image_x_pdf_CFLAGS  =	\
-	-DBONOBO_IO
-
 bonobo_image_x_pdf_LDADD =	\
 	../goo/libgoo.a		\
 	$(GTK_LIBS)		\
 	$(GNOME_LIBDIR)		\
 	-lbonobo		\
 	$(GNOMEGNORBA_LIBS)	\
+	$(EXTRA_GLIB_LIBS)	\
 	$(INTLLIBS)
 
 xpdf_SOURCES =			\
