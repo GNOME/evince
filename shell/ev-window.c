@@ -278,30 +278,59 @@ update_chrome_flag (EvWindow *window, EvChrome flag, const char *pref, gboolean 
 }
 
 static void
-update_sizing_buttons (EvWindow *ev_window)
+ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
-	GtkWidget *best_fit;
-	GtkWidget *fit_width;
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_BEST_FIT);
+	} else {
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
+	}
+}
 
-	best_fit = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-					      "/ToolBar/ViewBestFit");
-	fit_width = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-					      "/ToolBar/ViewPageWidth");
+static void
+ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
+{
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_FIT_WIDTH);
+	} else {
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
+	}
+}
 
-	switch (ev_window->priv->sizing_mode) {
+static void
+update_sizing_buttons (EvWindow *window)
+{
+	GtkActionGroup *action_group = window->priv->action_group;
+	GtkAction *action;
+	gboolean best_fit, page_width;
+
+	switch (window->priv->sizing_mode) {
 	case EV_SIZING_BEST_FIT:
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (best_fit), TRUE);
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (fit_width), FALSE);
+		best_fit = TRUE;
+		page_width = FALSE;
 		break;
 	case EV_SIZING_FIT_WIDTH:
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (best_fit), FALSE);
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (fit_width), TRUE);
+		best_fit = FALSE;
+		page_width = TRUE;
 		break;
 	case EV_SIZING_FREE:
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (best_fit), FALSE);
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (fit_width), FALSE);
+		best_fit = page_width = FALSE;
 		break;
 	}
+
+	action = gtk_action_group_get_action (action_group, "ViewBestFit");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_best_fit), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), best_fit);
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_best_fit), window);
+
+	action = gtk_action_group_get_action (action_group, "ViewPageWidth");	
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_page_width), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), page_width);
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_page_width), window);
 }
 
 void
@@ -1374,56 +1403,6 @@ ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	ev_view_set_size (EV_VIEW (ev_window->priv->view), -1, -1);
-}
-
-static void
-ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
-{
-	EvWindowPrivate *priv = ev_window->priv;
-	GtkWidget *button;
-
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
-
-	button = gtk_ui_manager_get_widget (priv->ui_manager, "/ToolBar/ViewBestFit");
-	if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (button)))
-		return;
-
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_BEST_FIT);
-}
-
-static void
-ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
-{
-	EvWindowPrivate *priv = ev_window->priv;
-	GtkWidget *button;
-	int width, height;
-	GtkRequisition vsb_requisition;
-	int scrollbar_spacing;
-
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
-
-	button = gtk_ui_manager_get_widget (priv->ui_manager, "/ToolBar/ViewPageWidth");
-	if (! gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (button)))
-		return;
-
-
-	width = priv->scrolled_window->allocation.width;
-	height = priv->scrolled_window->allocation.height;
-
-	/* the scrolled window has a GTK_SHADOW_IN */
-	width -= 2 * priv->view->style->xthickness;
-	height -= 2 * priv->view->style->ythickness;
-
-	gtk_widget_size_request (
-		GTK_SCROLLED_WINDOW (priv->scrolled_window)->vscrollbar,
-		&vsb_requisition);
-	gtk_widget_style_get (priv->scrolled_window,
-			      "scrollbar_spacing", &scrollbar_spacing,
-			      NULL);
-
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_FIT_WIDTH);
-
-	ev_view_set_size (EV_VIEW (ev_window->priv->view), width, height);
 }
 
 static void
