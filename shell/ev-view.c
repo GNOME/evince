@@ -295,7 +295,7 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_show (view->bin_window);
 
 	widget->style = gtk_style_attach (widget->style, view->bin_window);
-	gtk_style_set_background (widget->style, view->bin_window, GTK_STATE_NORMAL);
+	gdk_window_set_background (view->bin_window, &widget->style->mid[widget->state]);
 
 	if (view->document) {
 		ev_document_set_target (view->document, view->bin_window);
