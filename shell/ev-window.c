@@ -354,6 +354,17 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 			}
 		}
 	}
+
+	if (doc_title) {
+		char *p;
+
+		for (p = doc_title; *p; ++p) {
+			/* an '\n' byte is always ASCII, no need for UTF-8 special casing */
+			if (*p == '\n')
+				*p = ' ';
+		}
+	}
+
 	if (doc_title == NULL && ev_window->priv->uri) {
 		doc_title = g_path_get_basename (ev_window->priv->uri);
 	}
