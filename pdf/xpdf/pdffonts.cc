@@ -197,8 +197,9 @@ static void scanFonts(Dict *resDict, PDFDoc *doc) {
   }
   if (gfxFontDict) {
     for (i = 0; i < gfxFontDict->getNumFonts(); ++i) {
-      font = gfxFontDict->getFont(i);
-      scanFont(font, doc);
+      if ((font = gfxFontDict->getFont(i))) {
+	scanFont(font, doc);
+      }
     }
     delete gfxFontDict;
   }
@@ -225,9 +226,9 @@ static void scanFonts(Dict *resDict, PDFDoc *doc) {
 
 static void scanFont(GfxFont *font, PDFDoc *doc) {
   Ref fontRef, embRef;
-  Object fontObj, nameObj, toUnicodeObj;
+  Object fontObj, toUnicodeObj;
   GString *name;
-  GBool subset, hasToUnicode;
+  GBool emb, subset, hasToUnicode;
   int i;
 
   fontRef = *font->getID();
@@ -241,6 +242,13 @@ static void scanFont(GfxFont *font, PDFDoc *doc) {
 
   // font name
   name = font->getOrigName();
+
+  // check for an embedded font
+  if (font->getType() == fontType3) {
+    emb = gTrue;
+  } else {
+    emb = font->getEmbeddedFontID(&embRef);
+  }
 
   // look for a ToUnicode map
   hasToUnicode = gFalse;
@@ -266,7 +274,7 @@ static void scanFont(GfxFont *font, PDFDoc *doc) {
   printf("%-36s %-12s %-3s %-3s %-3s",
 	 name ? name->getCString() : "[none]",
 	 fontTypeNames[font->getType()],
-	 font->getEmbeddedFontID(&embRef) ? "yes" : "no",
+	 emb ? "yes" : "no",
 	 subset ? "yes" : "no",
 	 hasToUnicode ? "yes" : "no");
   if (fontRef.gen >= 100000) {

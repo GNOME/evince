@@ -54,14 +54,16 @@ public:
   // Open a PostScript output file, and write the prolog.
   PSOutputDev(char *fileName, XRef *xrefA, Catalog *catalog,
 	      int firstPage, int lastPage, PSOutMode modeA,
-	      int paperWidthA = 0, int paperHeightA = 0,
+	      int imgLLXA = 0, int imgLLYA = 0,
+	      int imgURXA = 0, int imgURYA = 0,
 	      GBool manualCtrlA = gFalse);
 
   // Open a PSOutputDev that will write to a generic stream.
   PSOutputDev(PSOutputFunc outputFuncA, void *outputStreamA,
 	      XRef *xrefA, Catalog *catalog,
 	      int firstPage, int lastPage, PSOutMode modeA,
-	      int paperWidthA = 0, int paperHeightA = 0,
+	      int imgLLXA = 0, int imgLLYA = 0,
+	      int imgURXA = 0, int imgURYA = 0,
 	      GBool manualCtrlA = gFalse);
 
   // Destructor -- writes the trailer and closes the file.
@@ -86,7 +88,8 @@ public:
   //----- header/trailer (used only if manualCtrl is true)
 
   // Write the document-level header.
-  void writeHeader(int firstPage, int lastPage, PDFRectangle *box);
+  void writeHeader(int firstPage, int lastPage,
+		   PDFRectangle *mediaBox, PDFRectangle *cropBox);
 
   // Write the Xpdf procset.
   void writeXpdfProcset();
@@ -174,6 +177,14 @@ public:
   virtual void psXObject(Stream *psStream, Stream *level1Stream);
 
   //----- miscellaneous
+  void setOffset(double x, double y)
+    { tx0 = x; ty0 = y; }
+  void setScale(double x, double y)
+    { xScale0 = x; yScale0 = y; }
+  void setRotate(int rotateA)
+    { rotate0 = rotateA; }
+  void setClip(double llx, double lly, double urx, double ury)
+    { clipLLX0 = llx; clipLLY0 = lly; clipURX0 = urx; clipURY0 = ury; }
   void setUnderlayCbk(void (*cbk)(PSOutputDev *psOut, void *data),
 		      void *data)
     { underlayCbk = cbk; underlayCbkData = data; }
@@ -186,7 +197,7 @@ private:
   void init(PSOutputFunc outputFuncA, void *outputStreamA,
 	    PSFileType fileTypeA, XRef *xrefA, Catalog *catalog,
 	    int firstPage, int lastPage, PSOutMode modeA,
-	    int paperWidthA, int paperHeightA,
+	    int imgLLXA, int imgLLYA, int imgURXA, int imgURYA,
 	    GBool manualCtrlA);
   void setupResources(Dict *resDict);
   void setupFonts(Dict *resDict);
@@ -204,7 +215,7 @@ private:
   void addProcessColor(double c, double m, double y, double k);
   void addCustomColor(GfxSeparationColorSpace *sepCS);
   void doPath(GfxPath *path);
-  void doImageL1(GfxImageColorMap *colorMap,
+  void doImageL1(Object *ref, GfxImageColorMap *colorMap,
 		 GBool invert, GBool inlineImg,
 		 Stream *str, int width, int height, int len);
   void doImageL1Sep(GfxImageColorMap *colorMap,
@@ -232,6 +243,8 @@ private:
   PSOutMode mode;		// PostScript mode (PS, EPS, form)
   int paperWidth;		// width of paper, in pts
   int paperHeight;		// height of paper, in pts
+  int imgLLX, imgLLY,		// imageable area, in pts
+      imgURX, imgURY;
 
   PSOutputFunc outputFunc;
   void *outputStream;
@@ -263,9 +276,14 @@ private:
 				//   processed
   int numSaves;			// current number of gsaves
 
-  double tx, ty;		// global translation
-  double xScale, yScale;	// global scaling
-  GBool landscape;		// true for landscape, false for portrait
+  double tx0, ty0;		// global translation
+  double xScale0, yScale0;	// global scaling
+  int rotate0;			// rotation angle (0, 90, 180, 270)
+  double clipLLX0, clipLLY0,
+         clipURX0, clipURY0;
+  double tx, ty;		// global translation for current page
+  double xScale, yScale;	// global scaling for current page
+  int rotate;			// rotation angle for current page
 
   GString *embFontList;		// resource comments for embedded fonts
 

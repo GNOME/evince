@@ -206,7 +206,7 @@ void PDFDoc::checkHeader() {
 }
 
 void PDFDoc::displayPage(OutputDev *out, int page, double hDPI, double vDPI,
-			 int rotate, GBool doLinks,
+			 int rotate, GBool crop, GBool doLinks,
 			 GBool (*abortCheckCbk)(void *data),
 			 void *abortCheckCbkData,
                          GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data),
@@ -223,18 +223,19 @@ void PDFDoc::displayPage(OutputDev *out, int page, double hDPI, double vDPI,
       links = NULL;
     }
     getLinks(p);
-    p->display(out, hDPI, vDPI, rotate, links, catalog,
+    p->display(out, hDPI, vDPI, rotate, crop, links, catalog,
 	       abortCheckCbk, abortCheckCbkData,
                annotDisplayDecideCbk, annotDisplayDecideCbkData);
   } else {
-    p->display(out, hDPI, vDPI, rotate, NULL, catalog,
+    p->display(out, hDPI, vDPI, rotate, crop, NULL, catalog,
 	       abortCheckCbk, abortCheckCbkData,
                annotDisplayDecideCbk, annotDisplayDecideCbkData);
   }
 }
 
 void PDFDoc::displayPages(OutputDev *out, int firstPage, int lastPage,
-			  double hDPI, double vDPI, int rotate, GBool doLinks,
+			  double hDPI, double vDPI, int rotate,
+			  GBool crop, GBool doLinks,
 			  GBool (*abortCheckCbk)(void *data),
 			  void *abortCheckCbkData,
                           GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data),
@@ -242,7 +243,7 @@ void PDFDoc::displayPages(OutputDev *out, int firstPage, int lastPage,
   int page;
 
   for (page = firstPage; page <= lastPage; ++page) {
-    displayPage(out, page, hDPI, vDPI, rotate, doLinks,
+    displayPage(out, page, hDPI, vDPI, rotate, crop, doLinks,
 		abortCheckCbk, abortCheckCbkData,
                 annotDisplayDecideCbk, annotDisplayDecideCbkData);
   }
@@ -250,8 +251,8 @@ void PDFDoc::displayPages(OutputDev *out, int firstPage, int lastPage,
 
 void PDFDoc::displayPageSlice(OutputDev *out, int page,
 			      double hDPI, double vDPI,
-			      int rotate, int sliceX, int sliceY,
-			      int sliceW, int sliceH,
+			      int rotate, GBool crop,
+			      int sliceX, int sliceY, int sliceW, int sliceH,
 			      GBool (*abortCheckCbk)(void *data),
 			      void *abortCheckCbkData,
                               GBool (*annotDisplayDecideCbk)(Annot *annot, void *user_data),
@@ -259,7 +260,8 @@ void PDFDoc::displayPageSlice(OutputDev *out, int page,
   Page *p;
 
   p = catalog->getPage(page);
-  p->displaySlice(out, hDPI, vDPI, rotate, sliceX, sliceY, sliceW, sliceH,
+  p->displaySlice(out, hDPI, vDPI, rotate, crop,
+		  sliceX, sliceY, sliceW, sliceH,
 		  NULL, catalog,
                   abortCheckCbk, abortCheckCbkData,
                   annotDisplayDecideCbk, annotDisplayDecideCbkData);

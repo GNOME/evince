@@ -429,7 +429,6 @@ private:
     *names[gfxColorMaxComps];
   GfxColorSpace *alt;		// alternate color space
   Function *func;		// tint transform (into alternate color space)
-  
 };
 
 //------------------------------------------------------------------------
@@ -910,6 +909,7 @@ public:
   double getRise() { return rise; }
   int getRender() { return render; }
   GfxPath *getPath() { return path; }
+  void setPath(GfxPath *pathA);
   double getCurX() { return curX; }
   double getCurY() { return curY; }
   void getClipBBox(double *xMin, double *yMin, double *xMax, double *yMax)

@@ -18,9 +18,9 @@ $ COMMON_OBJS = "Annot.obj,Array.obj,BuiltinFont.obj," + -
                 "CMap.obj,Decrypt.obj,Dict.obj,Error.obj," + -
                 "FontEncodingTables.obj,FontFile.obj," + -
                 "Function.obj,Gfx.obj,GfxFont.obj,GfxState.obj,"+ - 
-                "GlobalParams.obj,JBIG2Stream.obj,Lexer.obj," + -
-                "Link.obj,NameToCharCode.obj,Object.obj,Outline.obj,"+ -
-                "OutputDev.obj,Page.obj,Parser.obj,PDFdoc.obj," + -
+                "GlobalParams.obj,JArithmeticDecoder.obj,JBIG2Stream.obj,"+ -
+                "Lexer.obj,Link.obj,NameToCharCode.obj,Object.obj,"+ -
+                "Outline.obj,OutputDev.obj,Page.obj,Parser.obj,PDFdoc.obj," + -
                 "PDFDocEncoding.obj,PSTokenizer.obj,Stream.obj," + -
                 "UnicodeMap.obj,UnicodeTypeTable.obj,XRef.obj"
 $ COMMON_LIBS = "[]common.olb/lib,[-.goo]libgoo.olb/lib"

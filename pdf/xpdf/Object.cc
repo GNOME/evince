@@ -58,6 +58,13 @@ Object *Object::initDict(XRef *xref) {
   return this;
 }
 
+Object *Object::initDict(Dict *dictA) {
+  initObj(objDict);
+  dict = dictA;
+  dict->incRef();
+  return this;
+}
+
 Object *Object::initStream(Stream *streamA) {
   initObj(objStream);
   stream = streamA;

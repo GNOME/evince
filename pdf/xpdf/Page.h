@@ -146,7 +146,8 @@ public:
   Object *getThumb(Object *obj) { return thumb.fetch(xref, obj); }
 
   // Display a page.
-  void display(OutputDev *out, double hDPI, double vDPI, int rotate,
+  void display(OutputDev *out, double hDPI, double vDPI,
+	       int rotate, GBool crop,
 	       Links *links, Catalog *catalog,
 	       GBool (*abortCheckCbk)(void *data) = NULL,
 	       void *abortCheckCbkData = NULL,
@@ -154,7 +155,8 @@ public:
                void *annotDisplayDecideCbkData = NULL);
 
   // Display part of a page.
-  void displaySlice(OutputDev *out, double hDPI, double vDPI, int rotate,
+  void displaySlice(OutputDev *out, double hDPI, double vDPI,
+		    int rotate, GBool crop,
 		    int sliceX, int sliceY, int sliceW, int sliceH,
 		    Links *links, Catalog *catalog,
 		    GBool (*abortCheckCbk)(void *data) = NULL,

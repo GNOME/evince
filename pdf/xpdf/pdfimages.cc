@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
   // write image files
   imgOut = new ImageOutputDev(imgRoot, dumpJPEG);
   if (imgOut->isOk()) {
-    doc->displayPages(imgOut, firstPage, lastPage, 72, 72, 0, gFalse);
+    doc->displayPages(imgOut, firstPage, lastPage, 72, 72, 0, gTrue, gFalse);
   }
   delete imgOut;
 

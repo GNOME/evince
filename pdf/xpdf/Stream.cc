@@ -30,6 +30,7 @@
 #endif
 #include "Stream.h"
 #include "JBIG2Stream.h"
+#include "JPXStream.h"
 #include "Stream-CCITT.h"
 
 #ifdef __DJGPP__
@@ -256,6 +257,8 @@ Stream *Stream::makeFilter(char *name, Stream *str, Object *params) {
     }
     str = new JBIG2Stream(str, &globals);
     globals.free();
+  } else if (!strcmp(name, "JPXDecode")) {
+    str = new JPXStream(str);
   } else {
     error(getPos(), "Unknown filter '%s'", name);
     str = new EOFStream(str);
@@ -450,7 +453,7 @@ GBool StreamPredictor::getNextLine() {
   int i, j, k;
 
   // get PNG optimum predictor number
-  if (predictor == 15) {
+  if (predictor >= 10) {
     if ((curPred = str->getRawChar()) == EOF) {
       return gFalse;
     }
@@ -784,18 +787,36 @@ void MemStream::doDecryption(Guchar *fileKey, int keyLength,
 // EmbedStream
 //------------------------------------------------------------------------
 
-EmbedStream::EmbedStream(Stream *strA, Object *dictA):
+EmbedStream::EmbedStream(Stream *strA, Object *dictA,
+			 GBool limitedA, Guint lengthA):
     BaseStream(dictA) {
   str = strA;
+  limited = limitedA;
+  length = lengthA;
 }
 
 EmbedStream::~EmbedStream() {
 }
 
-Stream *EmbedStream::makeSubStream(Guint start, GBool limited,
-				   Guint length, Object *dictA) {
+Stream *EmbedStream::makeSubStream(Guint start, GBool limitedA,
+				   Guint lengthA, Object *dictA) {
   error(-1, "Internal: called makeSubStream() on EmbedStream");
   return NULL;
+}
+
+int EmbedStream::getChar() {
+  if (limited && !length) {
+    return EOF;
+  }
+  --length;
+  return str->getChar();
+}
+
+int EmbedStream::lookChar() {
+  if (limited && !length) {
+    return EOF;
+  }
+  return str->lookChar();
 }
 
 void EmbedStream::setPos(Guint pos, int dir) {
@@ -1263,7 +1284,7 @@ CCITTFaxStream::~CCITTFaxStream() {
 }
 
 void CCITTFaxStream::reset() {
-  int n;
+  short code1;
 
   str->reset();
   eof = gFalse;
@@ -1275,16 +1296,13 @@ void CCITTFaxStream::reset() {
   a0 = 1;
   buf = EOF;
 
-  // get initial end-of-line marker and 2D encoding tag
-  if (endOfBlock) {
-    if (lookBits(12) == 0x001) {
-      eatBits(12);
-    }
-  } else {
-    for (n = 0; n < 11 && lookBits(n) == 0; ++n) ;
-    if (n == 11 && lookBits(12) == 0x001) {
-      eatBits(12);
-    }
+  // skip any initial zero bits and end-of-line marker, and get the 2D
+  // encoding tag
+  while ((code1 = lookBits(12)) == 0) {
+    eatBits(1);
+  }
+  if (code1 == 0x001) {
+    eatBits(12);
   }
   if (encoding > 0) {
     nextLine2D = !lookBits(1);
@@ -1295,10 +1313,7 @@ void CCITTFaxStream::reset() {
 int CCITTFaxStream::lookChar() {
   short code1, code2, code3;
   int a0New;
-#if 0
-  GBool err;
-#endif
-  GBool gotEOL;
+  GBool err, gotEOL;
   int ret;
   int bits, i;
 
@@ -1308,9 +1323,7 @@ int CCITTFaxStream::lookChar() {
   }
 
   // read the next row
-#if 0
   err = gFalse;
-#endif
   if (codingLine[a0] >= columns) {
 
     // 2-D encoding
@@ -1412,13 +1425,8 @@ int CCITTFaxStream::lookChar() {
 	  return EOF;
 	default:
 	  error(getPos(), "Bad 2D code %04x in CCITTFax stream", code1);
-#if 0
 	  err = gTrue;
 	  break;
-#else
-	  eof = gTrue;
-	  return EOF;
-#endif
 	}
       } while (codingLine[a0] < columns);
 
@@ -1447,9 +1455,12 @@ int CCITTFaxStream::lookChar() {
 
     if (codingLine[a0] != columns) {
       error(getPos(), "CCITTFax row is wrong length (%d)", codingLine[a0]);
-#if 0
+      // force the row to be the correct length
+      while (codingLine[a0] > columns) {
+	--a0;
+      }
+      codingLine[++a0] = columns;
       err = gTrue;
-#endif
     }
 
     // byte-align the row
@@ -1505,14 +1516,11 @@ int CCITTFaxStream::lookChar() {
 	}
 	eof = gTrue;
       }
-    }
 
-#if 0
-    // This looks for an end-of-line marker after an error, however
-    // some (most?) CCITT streams in PDF files don't use end-of-line
-    // markers, and the just-plow-on technique works better in those
-    // cases.
-    else if (err) {
+    // look for an end-of-line marker after an error -- we only do
+    // this if we know the stream contains end-of-line markers because
+    // the "just plow on" technique tends to work better otherwise
+    } else if (err && endOfLine) {
       do {
 	if (code1 == EOF) {
 	  eof = gTrue;
@@ -1522,13 +1530,11 @@ int CCITTFaxStream::lookChar() {
 	code1 = lookBits(13);
       } while ((code1 >> 1) != 0x001);
       eatBits(12); 
-      codingLine[++a0] = columns;
       if (encoding > 0) {
 	eatBits(1);
 	nextLine2D = !(code1 & 1);
       }
     }
-#endif
 
     a0 = 0;
     outputBits = codingLine[1] - codingLine[0];
@@ -3745,6 +3751,10 @@ int FixedLengthEncoder::lookChar() {
   if (length >= 0 && count >= length)
     return EOF;
   return str->getChar();
+}
+
+GBool FixedLengthEncoder::isBinary(GBool last) {
+  return str->isBinary(gTrue);
 }
 
 //------------------------------------------------------------------------

@@ -4,6 +4,8 @@ INCLUDES =							\
 	-I$(top_srcdir)						\
 	-I$(top_srcdir)/goo					\
 	-I$(top_srcdir)/lib/ggv-sidebar				\
+	-I$(top_srcdir)/fofi					\
+	-I$(top_srcdir)/splash					\
 	-DDATADIR=\""$(datadir)"\"            			\
         -DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\"			\
@@ -55,8 +57,6 @@ libxpdf_a_SOURCES =		\
 	Error.h			\
 	FontEncodingTables.cc	\
 	FontEncodingTables.h	\
-	FontFile.cc		\
-	FontFile.h		\
 	Function.cc		\
 	Function.h		\
 	Gfx.cc 			\
@@ -67,8 +67,12 @@ libxpdf_a_SOURCES =		\
 	GfxState.h		\
 	GlobalParams.cc		\
 	GlobalParams.h		\
+	JArithmeticDecoder.cc	\
+	JArithmeticDecoder.h	\
 	JBIG2Stream.cc		\
 	JBIG2Stream.h		\
+	JPXStream.cc		\
+	JPXStream.h		\
 	Lexer.cc 		\
 	Lexer.h			\
 	Link.cc 		\
@@ -98,23 +102,15 @@ libxpdf_a_SOURCES =		\
 	UnicodeMap.h		\
 	UnicodeMapTables.h	\
 	UnicodeTypeTable.cc	\
+	UnicodeTypeTable.h	\
 	XRef.cc			\
 	XRef.h
 
 common_sources =		\
 	CharTypes.h		\
 	CompactFontTables.h	\
-	DisplayFontTable.h	\
 	ErrorCodes.h		\
-	FTFont.cc		\
-	FTFont.h		\
 	NameToUnicodeTable.h	\
-	SFont.cc		\
-	SFont.h			\
-	T1Font.cc		\
-	T1Font.h		\
-	TTFont.cc		\
-	TTFont.h		\
 	TextOutputDev.cc	\
 	TextOutputDev.h		\
 	UTF8.h
@@ -200,12 +196,15 @@ gnome_pdf_viewer_LDADD =					\
 	libxpdf.a						\
 	libgpdf.a						\
 	$(top_builddir)/goo/libGoo.a				\
+	$(top_builddir)/fofi/libfofi.a				\
 	$(top_builddir)/lib/ggv-sidebar/libggv-sidebar.a	\
 	$(EXTRA_GNOME_LIBS)					\
 	$(libpaper_LIBS)
 
 xpdf_SOURCES =			\
 	$(common_sources)	\
+	SplashOutputDev.cc	\
+	SplashOutputDev.h	\
 	XPDFApp.cc		\
 	XPDFApp.h		\
 	XPDFCore.cc		\
@@ -214,10 +213,8 @@ xpdf_SOURCES =			\
 	XPDFTree.h		\
 	XPDFViewer.cc		\
 	XPDFViewer.h		\
-	XOutputDev.cc		\
-	XOutputDev.h		\
-	XPixmapOutputDev.cc	\
-	XPixmapOutputDev.h	\
+	XSplashOutputDev.cc	\
+	XSplashOutputDev.h	\
 	PSOutputDev.cc		\
 	PSOutputDev.h		\
 	xpdf.cc
@@ -254,16 +251,14 @@ xpdf_LDADD = 				\
 #	pdfinfo.cc
 #pdfinfo_LDADD = ../goo/libGoo.a
 
-#pdftopbm_SOURCES =		
+#pdftopüm_SOURCES =		
 #	$(common_sources)	
-#	PBMOutputDev.cc		
-#	PBMOutputDev.h		
 #	XOutputDev.cc		
 #	XOutputDev.h		
 #	XOutputFontInfo.h	
 #	pdftopbm.cc
 
-#pdftopbm_LDADD = ../goo/libGoo.a $(EXTRA_GNOME_LIBS)
+#pdftoppm_LDADD = ../goo/libGoo.a $(EXTRA_GNOME_LIBS)
 
 #bitmaps =		
 #	about.xbm		

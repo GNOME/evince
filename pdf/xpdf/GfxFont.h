@@ -23,7 +23,7 @@
 class Dict;
 class CMap;
 class CharCodeToUnicode;
-class TrueTypeFontFile;
+class FoFiTrueType;
 struct GfxFontCIDWidths;
 
 //------------------------------------------------------------------------
@@ -220,7 +220,7 @@ public:
 
   // Return a char code-to-GID mapping for the provided font file.
   // (This is only useful for TrueType fonts.)
-  Gushort *getCodeToGIDMap(TrueTypeFontFile *ff);
+  Gushort *getCodeToGIDMap(FoFiTrueType *ff);
 
   // Return the Type 3 CharProc dictionary, or NULL if none.
   Dict *getCharProcs();

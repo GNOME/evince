@@ -354,6 +354,9 @@ public:
   // Start a new page.
   void startPage(GfxState *state);
 
+  // End the current page.
+  void endPage();
+
   // Update the current font.
   void updateFont(GfxState *state);
 
@@ -426,6 +429,8 @@ private:
   double curFontSize;		// current font size
   int nest;			// current nesting level (for Type 3 fonts)
   int nTinyChars;		// number of "tiny" chars seen so far
+  GBool lastCharOverlap;	// set if the last added char overlapped the
+				//   previous char
 
   TextPool *pools[4];		// a "pool" of TextWords for each rotation
   TextFlow *flows;		// linked list of flows

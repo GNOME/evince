@@ -33,9 +33,11 @@
 static void printInfoString(Dict *infoDict, char *key, char *text,
 			    UnicodeMap *uMap);
 static void printInfoDate(Dict *infoDict, char *key, char *text);
+static void printBox(char *text, PDFRectangle *box);
 
 static int firstPage = 1;
 static int lastPage = 0;
+static GBool printBoxes = gFalse;
 static GBool printMetadata = gFalse;
 static char textEncName[128] = "";
 static char ownerPassword[33] = "\001";
@@ -49,6 +51,8 @@ static ArgDesc argDesc[] = {
    "first page to convert"},
   {"-l",      argInt,      &lastPage,         0,
    "last page to convert"},
+  {"-box",    argFlag,     &printBoxes,       0,
+   "print the page bounding boxes"},
   {"-meta",   argFlag,     &printMetadata,    0,
    "print the document metadata (XML)"},
   {"-enc",    argString,   textEncName,    sizeof(textEncName),
@@ -77,7 +81,9 @@ int main(int argc, char *argv[]) {
   GString *fileName;
   GString *ownerPW, *userPW;
   UnicodeMap *uMap;
+  Page *page;
   Object info;
+  char buf[256];
   double w, h, wISO, hISO;
   FILE *f;
   GString *metadata;
@@ -211,6 +217,32 @@ int main(int argc, char *argv[]) {
     printf("\n");
   } 
 
+  // print the boxes
+  if (printBoxes) {
+    if (multiPage) {
+      for (pg = firstPage; pg <= lastPage; ++pg) {
+	page = doc->getCatalog()->getPage(pg);
+	sprintf(buf, "Page %4d MediaBox: ", pg);
+	printBox(buf, page->getMediaBox());
+	sprintf(buf, "Page %4d CropBox:  ", pg);
+	printBox(buf, page->getCropBox());
+	sprintf(buf, "Page %4d BleedBox: ", pg);
+	printBox(buf, page->getBleedBox());
+	sprintf(buf, "Page %4d TrimBox:  ", pg);
+	printBox(buf, page->getTrimBox());
+	sprintf(buf, "Page %4d ArtBox:   ", pg);
+	printBox(buf, page->getArtBox());
+      }
+    } else {
+      page = doc->getCatalog()->getPage(firstPage);
+      printBox("MediaBox:       ", page->getMediaBox());
+      printBox("CropBox:        ", page->getCropBox());
+      printBox("BleedBox:       ", page->getBleedBox());
+      printBox("TrimBox:        ", page->getTrimBox());
+      printBox("ArtBox:         ", page->getArtBox());
+    }
+  }
+
   // print file size
 #ifdef VMS
   f = fopen(fileName->getCString(), "rb", "ctx=stm");
@@ -336,4 +368,9 @@ static void printInfoDate(Dict *infoDict, char *key, char *text) {
     fputc('\n', stdout);
   }
   obj.free();
+}
+
+static void printBox(char *text, PDFRectangle *box) {
+  printf("%s%8.2f %8.2f %8.2f %8.2f\n",
+	 text, box->x1, box->y1, box->x2, box->y2);
 }

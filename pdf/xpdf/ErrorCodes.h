@@ -31,4 +31,6 @@
 
 #define errBadPageNum       9	// invalid page number
 
+#define errFileIO          10   // file I/O error
+
 #endif

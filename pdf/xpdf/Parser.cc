@@ -176,7 +176,7 @@ Stream *Parser::makeStream(Object *dict) {
   }
 
   // check for length in damaged file
-  if (xref->getStreamEnd(pos, &endPos)) {
+  if (xref && xref->getStreamEnd(pos, &endPos)) {
     length = endPos - pos;
   }
 

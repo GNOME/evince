@@ -766,12 +766,18 @@ void GfxICCBasedColorSpace::getCMYK(GfxColor *color, GfxCMYK *cmyk) {
 void GfxICCBasedColorSpace::getDefaultRanges(double *decodeLow,
 					     double *decodeRange,
 					     int maxImgPixel) {
+  alt->getDefaultRanges(decodeLow, decodeRange, maxImgPixel);
+
+#if 0
+  // this is nominally correct, but some PDF files don't set the
+  // correct ranges in the ICCBased dict
   int i;
 
   for (i = 0; i < nComps; ++i) {
     decodeLow[i] = rangeMin[i];
     decodeRange[i] = rangeMax[i] - rangeMin[i];
   }
+#endif
 }
 
 //------------------------------------------------------------------------
@@ -1053,6 +1059,11 @@ GfxColorSpace *GfxDeviceNColorSpace::parse(Array *arr) {
     goto err2;
   }
   nCompsA = obj1.arrayGetLength();
+  if (nCompsA > gfxColorMaxComps) {
+    error(-1, "DeviceN color space with more than %d > %d components",
+	  nCompsA, gfxColorMaxComps);
+    nCompsA = gfxColorMaxComps;
+  }
   for (i = 0; i < nCompsA; ++i) {
     if (!obj1.arrayGet(i, &obj2)->isName()) {
       error(-1, "Bad DeviceN color space (names)");
@@ -2030,13 +2041,18 @@ GfxImageColorMap::GfxImageColorMap(int bitsA, Object *decode,
     colorSpace2 = indexedCS->getBase();
     indexHigh = indexedCS->getIndexHigh();
     nComps2 = colorSpace2->getNComps();
-    lookup = (double *)gmalloc((indexHigh + 1) * nComps2 * sizeof(double));
+    lookup = (double *)gmalloc((maxPixel + 1) * nComps2 * sizeof(double));
     lookup2 = indexedCS->getLookup();
     colorSpace2->getDefaultRanges(x, y, indexHigh);
-    for (i = 0; i <= indexHigh; ++i) {
+    for (i = 0; i <= maxPixel; ++i) {
       j = (int)(decodeLow[0] + (i * decodeRange[0]) / maxPixel + 0.5);
+      if (j < 0) {
+	j = 0;
+      } else if (j > indexHigh) {
+	j = indexHigh;
+      }
       for (k = 0; k < nComps2; ++k) {
-	lookup[j*nComps2 + k] = x[k] + (lookup2[i*nComps2 + k] / 255.0) * y[k];
+	lookup[i*nComps2 + k] = x[k] + (lookup2[j*nComps2 + k] / 255.0) * y[k];
       }
     }
   } else if (colorSpace->getMode() == csSeparation) {
@@ -2079,17 +2095,15 @@ GfxImageColorMap::GfxImageColorMap(GfxImageColorMap *colorMap) {
   nComps2 = colorMap->nComps2;
   colorSpace2 = NULL;
   lookup = NULL;
+  n = 1 << bits;
   if (colorSpace->getMode() == csIndexed) {
     colorSpace2 = ((GfxIndexedColorSpace *)colorSpace)->getBase();
-    n = ((GfxIndexedColorSpace *)colorSpace)->getIndexHigh();
-    n = (n + 1) * nComps2 * sizeof(double);
+    n = n * nComps2 * sizeof(double);
   } else if (colorSpace->getMode() == csSeparation) {
     colorSpace2 = ((GfxSeparationColorSpace *)colorSpace)->getAlt();
-    n = (1 << bits) - 1;
-    n = (n + 1) * nComps2 * sizeof(double);
+    n = n * nComps2 * sizeof(double);
   } else {
-    n = (1 << bits) - 1;
-    n = (n + 1) * nComps * sizeof(double);
+    n = n * nComps * sizeof(double);
   }
   lookup = (double *)gmalloc(n);
   memcpy(lookup, colorMap->lookup, n);
@@ -2495,6 +2509,11 @@ GfxState::GfxState(GfxState *state) {
     memcpy(lineDash, state->lineDash, lineDashLength * sizeof(double));
   }
   saved = NULL;
+}
+
+void GfxState::setPath(GfxPath *pathA) {
+  delete path;
+  path = pathA;
 }
 
 void GfxState::getUserClipBBox(double *xMin, double *yMin,

@@ -47,6 +47,10 @@ static GBool noEmbedCIDTTFonts = gFalse;
 static char paperSize[15] = "";
 static int paperWidth = 0;
 static int paperHeight = 0;
+static GBool noCrop = gFalse;
+static GBool expand = gFalse;
+static GBool noShrink = gFalse;
+static GBool noCenter = gFalse;
 static GBool duplex = gFalse;
 static char ownerPassword[33] = "\001";
 static char userPassword[33] = "\001";
@@ -56,63 +60,71 @@ static GBool printVersion = gFalse;
 static GBool printHelp = gFalse;
 
 static ArgDesc argDesc[] = {
-  {"-f",      argInt,      &firstPage,      0,
+  {"-f",          argInt,      &firstPage,      0,
    "first page to print"},
-  {"-l",      argInt,      &lastPage,       0,
+  {"-l",          argInt,      &lastPage,       0,
    "last page to print"},
-  {"-level1", argFlag,     &level1,         0,
+  {"-level1",     argFlag,     &level1,         0,
    "generate Level 1 PostScript"},
-  {"-level1sep", argFlag,  &level1Sep,      0,
+  {"-level1sep",  argFlag,     &level1Sep,      0,
    "generate Level 1 separable PostScript"},
-  {"-level2", argFlag,     &level2,         0,
+  {"-level2",     argFlag,     &level2,         0,
    "generate Level 2 PostScript"},
-  {"-level2sep", argFlag,  &level2Sep,      0,
+  {"-level2sep",  argFlag,     &level2Sep,      0,
    "generate Level 2 separable PostScript"},
-  {"-level3", argFlag,     &level3,         0,
+  {"-level3",     argFlag,     &level3,         0,
    "generate Level 3 PostScript"},
-  {"-level3sep", argFlag,  &level3Sep,      0,
+  {"-level3sep",  argFlag,     &level3Sep,      0,
    "generate Level 3 separable PostScript"},
-  {"-eps",    argFlag,     &doEPS,          0,
+  {"-eps",        argFlag,     &doEPS,          0,
    "generate Encapsulated PostScript (EPS)"},
-  {"-form",   argFlag,     &doForm,         0,
+  {"-form",       argFlag,     &doForm,         0,
    "generate a PostScript form"},
 #if OPI_SUPPORT
-  {"-opi",    argFlag,     &doOPI,          0,
+  {"-opi",        argFlag,     &doOPI,          0,
    "generate OPI comments"},
 #endif
-  {"-noembt1", argFlag,     &noEmbedT1Fonts, 0,
+  {"-noembt1",    argFlag,     &noEmbedT1Fonts, 0,
    "don't embed Type 1 fonts"},
-  {"-noembtt", argFlag,    &noEmbedTTFonts, 0,
+  {"-noembtt",    argFlag,     &noEmbedTTFonts, 0,
    "don't embed TrueType fonts"},
-  {"-noembcidps", argFlag, &noEmbedCIDPSFonts, 0,
+  {"-noembcidps", argFlag,     &noEmbedCIDPSFonts, 0,
    "don't embed CID PostScript fonts"},
-  {"-noembcidtt", argFlag, &noEmbedCIDTTFonts, 0,
+  {"-noembcidtt", argFlag, &noEmbedCIDTTFonts,  0,
    "don't embed CID TrueType fonts"},
-  {"-paper",  argString,   paperSize,       sizeof(paperSize),
+  {"-paper",      argString,   paperSize,       sizeof(paperSize),
    "paper size (letter, legal, A4, A3, match)"},
-  {"-paperw", argInt,      &paperWidth,     0,
+  {"-paperw",     argInt,      &paperWidth,     0,
    "paper width, in points"},
-  {"-paperh", argInt,      &paperHeight,    0,
+  {"-paperh",     argInt,      &paperHeight,    0,
    "paper height, in points"},
-  {"-duplex", argFlag,     &duplex,         0,
+  {"-nocrop",     argFlag,     &noCrop,         0,
+   "don't crop pages to CropBox"},
+  {"-expand",     argFlag,     &expand,         0,
+   "expand pages smaller than the paper size"},
+  {"-noshrink",   argFlag,     &noShrink,       0,
+   "don't shrink pages larger than the paper size"},
+  {"-nocenter",   argFlag,     &noCenter,       0,
+   "don't center pages smaller than the paper size"},
+  {"-duplex",     argFlag,     &duplex,         0,
    "enable duplex printing"},
-  {"-opw",    argString,   ownerPassword,   sizeof(ownerPassword),
+  {"-opw",        argString,   ownerPassword,   sizeof(ownerPassword),
    "owner password (for encrypted files)"},
-  {"-upw",    argString,   userPassword,    sizeof(userPassword),
+  {"-upw",        argString,   userPassword,    sizeof(userPassword),
    "user password (for encrypted files)"},
-  {"-q",      argFlag,     &quiet,          0,
+  {"-q",          argFlag,     &quiet,          0,
    "don't print any messages or errors"},
   {"-cfg",        argString,      cfgFileName,    sizeof(cfgFileName),
    "configuration file to use in place of .xpdfrc"},
-  {"-v",      argFlag,     &printVersion,   0,
+  {"-v",          argFlag,     &printVersion,   0,
    "print copyright and version info"},
-  {"-h",      argFlag,     &printHelp,      0,
+  {"-h",          argFlag,     &printHelp,      0,
    "print usage information"},
-  {"-help",   argFlag,     &printHelp,      0,
+  {"-help",       argFlag,     &printHelp,      0,
    "print usage information"},
-  {"--help",  argFlag,     &printHelp,      0,
+  {"--help",      argFlag,     &printHelp,      0,
    "print usage information"},
-  {"-?",      argFlag,     &printHelp,      0,
+  {"-?",          argFlag,     &printHelp,      0,
    "print usage information"},
   {NULL}
 };
@@ -191,6 +203,18 @@ int main(int argc, char *argv[]) {
     if (paperHeight) {
       globalParams->setPSPaperHeight(paperHeight);
     }
+  }
+  if (noCrop) {
+    globalParams->setPSCrop(gFalse);
+  }
+  if (expand) {
+    globalParams->setPSExpandSmaller(gTrue);
+  }
+  if (noShrink) {
+    globalParams->setPSShrinkLarger(gFalse);
+  }
+  if (noCenter) {
+    globalParams->setPSCenter(gFalse);
   }
   if (duplex) {
     globalParams->setPSDuplex(duplex);
@@ -281,7 +305,8 @@ int main(int argc, char *argv[]) {
   psOut = new PSOutputDev(psFileName->getCString(), doc->getXRef(),
 			  doc->getCatalog(), firstPage, lastPage, mode);
   if (psOut->isOk()) {
-    doc->displayPages(psOut, firstPage, lastPage, 72, 72, 0, gFalse);
+    doc->displayPages(psOut, firstPage, lastPage, 72, 72,
+		      0, globalParams->getPSCrop(), gFalse);
   } else {
     delete psOut;
     exitCode = 2;

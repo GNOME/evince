@@ -45,9 +45,13 @@
 // this many points.
 #define textPoolStep 4
 
-// Inter-character space width which will cause addChar to break up a
-// text string.
-#define defaultSpaceWidth 0.25
+// Inter-character space width which will cause addChar to start a new
+// word.
+#define minWordBreakSpace 0.1
+
+// Negative inter-character space width, i.e., overlap, which will
+// cause addChar to start a new word.
+#define minDupBreakOverlap 0.2
 
 // Max distance between baselines of two lines within a block, as a
 // fraction of the font size.
@@ -72,13 +76,17 @@
 
 // Minimum inter-word spacing, as a fraction of the font size.  (Only
 // used for raw ordering.)
-#define minWordSpacing 0.2
+#define minWordSpacing 0.15
 
 // Maximum inter-word spacing, as a fraction of the font size.
 #define maxWordSpacing 1.5
 
+// Maximum horizontal spacing which will allow a word to be pulled
+// into a block.
+#define minColSpacing1 0.3
+
 // Minimum spacing between columns, as a fraction of the font size.
-#define minColSpacing 1.0
+#define minColSpacing2 1.0
 
 // Maximum vertical spacing between blocks within a flow, as a
 // multiple of the font size.
@@ -1591,6 +1599,7 @@ TextPage::TextPage(GBool rawOrderA) {
   curFontSize = 0;
   nest = 0;
   nTinyChars = 0;
+  lastCharOverlap = gFalse;
   if (!rawOrder) {
     for (rot = 0; rot < 4; ++rot) {
       pools[rot] = new TextPool();
@@ -1624,6 +1633,12 @@ void TextPage::startPage(GfxState *state) {
     pageHeight = state->getPageHeight();
   } else {
     pageWidth = pageHeight = 0;
+  }
+}
+
+void TextPage::endPage() {
+  if (curWord) {
+    endWord();
   }
 }
 
@@ -1748,7 +1763,7 @@ void TextPage::beginWord(GfxState *state, double x0, double y0) {
 
   // This check is needed because Type 3 characters can contain
   // text-drawing operations (when TextPage is being used via
-  // XOutputDev rather than TextOutputDev).
+  // {X,Win}SplashOutputDev rather than TextOutputDev).
   if (curWord) {
     ++nest;
     return;
@@ -1784,8 +1799,8 @@ void TextPage::beginWord(GfxState *state, double x0, double y0) {
 void TextPage::addChar(GfxState *state, double x, double y,
 		       double dx, double dy,
 		       CharCode c, Unicode *u, int uLen) {
-  double x1, y1, w1, h1, dx2, dy2, sp;
-  int n, i;
+  double x1, y1, w1, h1, dx2, dy2, base, sp;
+  int i;
 
   // if the previous char was a space, addChar will have called
   // endWord, so we need to start a new word
@@ -1826,21 +1841,46 @@ void TextPage::addChar(GfxState *state, double x, double y,
     return;
   }
 
-  // large char spacing is sometimes used to move text around -- in
-  // this case, break text into individual chars and let the coalesce
-  // function deal with it later
-  n = curWord->len;
-  if (n > 0) {
+  // start a new word if:
+  // (1) this character's baseline doesn't match the current word's
+  //     baseline, or
+  // (2) there is space between the end of the current word and this
+  //     character, or
+  // (3) this character overlaps the previous one (duplicated text), or
+  // (4) the previous character was an overlap (we want each duplicated
+  //     characters to be in a word by itself)
+  base = sp = 0; // make gcc happy
+  if (curWord->len > 0) {
     switch (curWord->rot) {
-    case 0: sp = x1 - curWord->xMax; break;
-    case 1: sp = y1 - curWord->yMax; break;
-    case 2: sp = curWord->xMin - x1; break;
-    case 3: sp = curWord->yMin - y1; break;
+    case 0:
+      base = y1;
+      sp = x1 - curWord->xMax;
+      break;
+    case 1:
+      base = x1;
+      sp = y1 - curWord->yMax;
+      break;
+    case 2:
+      base = y1;
+      sp = curWord->xMin - x1;
+      break;
+    case 3:
+      base = x1;
+      sp = curWord->yMin - y1;
+      break;
     }
-    if (sp > defaultSpaceWidth * curWord->fontSize) {
+    if (fabs(base - curWord->base) > 0.5 ||
+	sp > minWordBreakSpace * curWord->fontSize ||
+	sp < -minDupBreakOverlap * curWord->fontSize ||
+	lastCharOverlap) {
+      lastCharOverlap = gTrue;
       endWord();
       beginWord(state, x, y);
+    } else {
+      lastCharOverlap = gFalse;
     }
+  } else {
+    lastCharOverlap = gFalse;
   }
 
   // page rotation and/or transform matrices can cause text to be
@@ -1873,7 +1913,7 @@ void TextPage::addChar(GfxState *state, double x, double y,
 void TextPage::endWord() {
   // This check is needed because Type 3 characters can contain
   // text-drawing operations (when TextPage is being used via
-  // XOutputDev rather than TextOutputDev).
+  // {X,Win}SplashOutputDev rather than TextOutputDev).
   if (nest > 0) {
     --nest;
     return;
@@ -1915,7 +1955,7 @@ void TextPage::coalesce(GBool physLayout) {
   TextFlow *flow, *lastFlow;
   int rot, poolMinBaseIdx, baseIdx, startBaseIdx;
   double minBase, maxBase, newMinBase, newMaxBase;
-  double fontSize, colSpace, lineSpace, intraLineSpace, blkSpace;
+  double fontSize, colSpace1, colSpace2, lineSpace, intraLineSpace, blkSpace;
   GBool found;
   int count[4];
   int lrCount;
@@ -2000,7 +2040,8 @@ void TextPage::coalesce(GBool physLayout) {
 
       fontSize = word0->fontSize;
       minBase = maxBase = word0->base;
-      colSpace = minColSpacing * fontSize;
+      colSpace1 = minColSpacing1 * fontSize;
+      colSpace2 = minColSpacing2 * fontSize;
       lineSpace = maxLineSpacingDelta * fontSize;
       intraLineSpace = maxIntraLineDelta * fontSize;
 
@@ -2089,8 +2130,10 @@ void TextPage::coalesce(GBool physLayout) {
 	    if (word1->base >= minBase - intraLineSpace &&
 		word1->base <= maxBase + intraLineSpace &&
 		((rot == 0 || rot == 2)
-		 ? (word1->xMin < blk->xMax && word1->xMax > blk->xMin)
-		 : (word1->yMin < blk->yMax && word1->yMax > blk->yMin)) &&
+		 ? (word1->xMin < blk->xMax + colSpace1 &&
+		    word1->xMax > blk->xMin - colSpace1)
+		 : (word1->yMin < blk->yMax + colSpace1 &&
+		    word1->yMax > blk->yMin - colSpace1)) &&
 		fabs(word1->fontSize - fontSize) <
 		  maxBlockFontSizeDelta2 * fontSize) {
 	      word2 = word1;
@@ -2129,9 +2172,9 @@ void TextPage::coalesce(GBool physLayout) {
 		word1->base <= maxBase + intraLineSpace &&
 		((rot == 0 || rot == 2)
 		 ? (word1->xMax <= blk->xMin &&
-		    word1->xMax > blk->xMin - colSpace)
+		    word1->xMax > blk->xMin - colSpace2)
 		 : (word1->yMax <= blk->yMin &&
-		    word1->yMax > blk->yMin - colSpace)) &&
+		    word1->yMax > blk->yMin - colSpace2)) &&
 		fabs(word1->fontSize - fontSize) <
 		  maxBlockFontSizeDelta3 * fontSize) {
 	      ++n;
@@ -2151,9 +2194,9 @@ void TextPage::coalesce(GBool physLayout) {
 		  word1->base <= maxBase + intraLineSpace &&
 		  ((rot == 0 || rot == 2)
 		   ? (word1->xMax <= blk->xMin &&
-		      word1->xMax > blk->xMin - colSpace)
+		      word1->xMax > blk->xMin - colSpace2)
 		   : (word1->yMax <= blk->yMin &&
-		      word1->yMax > blk->yMin - colSpace)) &&
+		      word1->yMax > blk->yMin - colSpace2)) &&
 		  fabs(word1->fontSize - fontSize) <
 		    maxBlockFontSizeDelta3 * fontSize) {
 		word2 = word1;
@@ -2193,9 +2236,9 @@ void TextPage::coalesce(GBool physLayout) {
 		word1->base <= maxBase + intraLineSpace &&
 		((rot == 0 || rot == 2)
 		 ? (word1->xMin >= blk->xMax &&
-		    word1->xMin < blk->xMax + colSpace)
+		    word1->xMin < blk->xMax + colSpace2)
 		 : (word1->yMin >= blk->yMax &&
-		    word1->yMin < blk->yMax + colSpace)) &&
+		    word1->yMin < blk->yMax + colSpace2)) &&
 		fabs(word1->fontSize - fontSize) <
 		  maxBlockFontSizeDelta3 * fontSize) {
 	      ++n;
@@ -2215,9 +2258,9 @@ void TextPage::coalesce(GBool physLayout) {
 		  word1->base <= maxBase + intraLineSpace &&
 		  ((rot == 0 || rot == 2)
 		   ? (word1->xMin >= blk->xMax &&
-		      word1->xMin < blk->xMax + colSpace)
+		      word1->xMin < blk->xMax + colSpace2)
 		   : (word1->yMin >= blk->yMax &&
-		      word1->yMin < blk->yMax + colSpace)) &&
+		      word1->yMin < blk->yMax + colSpace2)) &&
 		  fabs(word1->fontSize - fontSize) <
 		    maxBlockFontSizeDelta3 * fontSize) {
 		word2 = word1;
@@ -3435,6 +3478,7 @@ void TextOutputDev::startPage(int pageNum, GfxState *state) {
 }
 
 void TextOutputDev::endPage() {
+  text->endPage();
   text->coalesce(physLayout);
   if (outputStream) {
     text->dump(outputStream, outputFunc, physLayout);
@@ -3446,11 +3490,9 @@ void TextOutputDev::updateFont(GfxState *state) {
 }
 
 void TextOutputDev::beginString(GfxState *state, GString *s) {
-  text->beginWord(state, state->getCurX(), state->getCurY());
 }
 
 void TextOutputDev::endString(GfxState *state) {
-  text->endWord();
 }
 
 void TextOutputDev::drawChar(GfxState *state, double x, double y,

@@ -35,7 +35,7 @@ class GfxFunctionShading;
 class GfxAxialShading;
 class GfxRadialShading;
 class GfxState;
-class GfxColor;
+struct GfxColor;
 class Gfx;
 class PDFRectangle;
 

@@ -21,8 +21,9 @@
 // command line options
 //------------------------------------------------------------------------
 
-static char t1libControlStr[16] = "";
-static char freetypeControlStr[16] = "";
+static char enableT1libStr[16] = "";
+static char enableFreeTypeStr[16] = "";
+static char antialiasStr[16] = "";
 static char psFileArg[256];
 static char paperSize[15] = "";
 static int paperWidth = 0;
@@ -61,13 +62,15 @@ static ArgDesc argDesc[] = {
   {"-z",          argStringDummy, NULL,           0,
    "initial zoom level (percent, 'page', 'width')"},
 #if HAVE_T1LIB_H
-  {"-t1lib",      argString,      t1libControlStr, sizeof(t1libControlStr),
-   "t1lib font rasterizer control: none, plain, low, high"},
+  {"-t1lib",      argString,      enableT1libStr, sizeof(enableT1libStr),
+   "enable t1lib font rasterizer: yes, no"},
 #endif
 #if HAVE_FREETYPE_FREETYPE_H | HAVE_FREETYPE_H
-  {"-freetype",   argString,      freetypeControlStr, sizeof(freetypeControlStr),
-   "FreeType font rasterizer control: none, plain, low, high"},
+  {"-freetype",   argString,      enableFreeTypeStr, sizeof(enableFreeTypeStr),
+   "enable FreeType font rasterizer: yes, no"},
 #endif
+  {"-aa",         argString,      antialiasStr,   sizeof(antialiasStr),
+   "enable font anti-aliasing: yes, no"},
   {"-ps",         argString,      psFileArg,      sizeof(psFileArg),
    "default PostScript file name or command"},
   {"-paper",      argString,      paperSize,      sizeof(paperSize),
@@ -131,9 +134,19 @@ int main(int argc, char *argv[]) {
 
   // parse args
   ok = parseArgs(argDesc, &argc, argv);
+  if (!ok || printVersion || printHelp) {
+    fprintf(stderr, "xpdf version %s\n", xpdfVersion);
+    fprintf(stderr, "%s\n", xpdfCopyright);
+    if (!printVersion) {
+      printUsage("xpdf", "[<PDF-file> [<page> | +<dest>]]", argDesc);
+    }
+    exitCode = 99;
+    goto done0;
+  }
 
   // read config file
   globalParams = new GlobalParams(cfgFileName);
+  globalParams->setupBaseFonts(NULL);
   if (psFileArg[0]) {
     globalParams->setPSFile(psFileArg);
   }
@@ -160,14 +173,19 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "Bad '-eol' value on command line\n");
     }
   }
-  if (t1libControlStr[0]) {
-    if (!globalParams->setT1libControl(t1libControlStr)) {
+  if (enableT1libStr[0]) {
+    if (!globalParams->setEnableT1lib(enableT1libStr)) {
       fprintf(stderr, "Bad '-t1lib' value on command line\n");
     }
   }
-  if (freetypeControlStr[0]) {
-    if (!globalParams->setFreeTypeControl(freetypeControlStr)) {
+  if (enableFreeTypeStr[0]) {
+    if (!globalParams->setEnableFreeType(enableFreeTypeStr)) {
       fprintf(stderr, "Bad '-freetype' value on command line\n");
+    }
+  }
+  if (antialiasStr[0]) {
+    if (!globalParams->setAntialias(antialiasStr)) {
+      fprintf(stderr, "Bad '-aa' value on command line\n");
     }
   }
   if (printCommands) {
@@ -290,6 +308,7 @@ int main(int argc, char *argv[]) {
   delete globalParams;
 
   // check for memory leaks
+ done0:
   Object::memCheck(stderr);
   gMemReport(stderr);
 

@@ -234,7 +234,7 @@ int main(int argc, char *argv[]) {
   textOut = new TextOutputDev(textFileName->getCString(),
 			      physLayout, rawOrder, htmlMeta);
   if (textOut->isOk()) {
-    doc->displayPages(textOut, firstPage, lastPage, 72, 72, 0, gFalse);
+    doc->displayPages(textOut, firstPage, lastPage, 72, 72, 0, gTrue, gFalse);
   } else {
     delete textOut;
     exitCode = 2;

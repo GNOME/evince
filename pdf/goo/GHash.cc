@@ -20,7 +20,10 @@
 
 struct GHashBucket {
   GString *key;
-  void *val;
+  union {
+    void *p;
+    int i;
+  } val;
   GHashBucket *next;
 };
 
@@ -61,35 +64,37 @@ GHash::~GHash() {
 }
 
 void GHash::add(GString *key, void *val) {
-  GHashBucket **oldTab;
   GHashBucket *p;
-  int oldSize, i, h;
+  int h;
 
   // expand the table if necessary
   if (len >= size) {
-    oldSize = size;
-    oldTab = tab;
-    size = 2*size + 1;
-    tab = (GHashBucket **)gmalloc(size * sizeof(GHashBucket *));
-    for (h = 0; h < size; ++h) {
-      tab[h] = NULL;
-    }
-    for (i = 0; i < oldSize; ++i) {
-      while (oldTab[i]) {
-	p = oldTab[i];
-	oldTab[i] = oldTab[i]->next;
-	h = hash(p->key);
-	p->next = tab[h];
-	tab[h] = p;
-      }
-    }
-    gfree(oldTab);
+    expand();
   }
 
   // add the new symbol
   p = new GHashBucket;
   p->key = key;
-  p->val = val;
+  p->val.p = val;
+  h = hash(key);
+  p->next = tab[h];
+  tab[h] = p;
+  ++len;
+}
+
+void GHash::add(GString *key, int val) {
+  GHashBucket *p;
+  int h;
+
+  // expand the table if necessary
+  if (len >= size) {
+    expand();
+  }
+
+  // add the new symbol
+  p = new GHashBucket;
+  p->key = key;
+  p->val.i = val;
   h = hash(key);
   p->next = tab[h];
   tab[h] = p;
@@ -103,7 +108,17 @@ void *GHash::lookup(GString *key) {
   if (!(p = find(key, &h))) {
     return NULL;
   }
-  return p->val;
+  return p->val.p;
+}
+
+int GHash::lookupInt(GString *key) {
+  GHashBucket *p;
+  int h;
+
+  if (!(p = find(key, &h))) {
+    return 0;
+  }
+  return p->val.i;
 }
 
 void *GHash::lookup(char *key) {
@@ -113,7 +128,17 @@ void *GHash::lookup(char *key) {
   if (!(p = find(key, &h))) {
     return NULL;
   }
-  return p->val;
+  return p->val.p;
+}
+
+int GHash::lookupInt(char *key) {
+  GHashBucket *p;
+  int h;
+
+  if (!(p = find(key, &h))) {
+    return 0;
+  }
+  return p->val.i;
 }
 
 void *GHash::remove(GString *key) {
@@ -133,7 +158,30 @@ void *GHash::remove(GString *key) {
   if (deleteKeys) {
     delete p->key;
   }
-  val = p->val;
+  val = p->val.p;
+  delete p;
+  --len;
+  return val;
+}
+
+int GHash::removeInt(GString *key) {
+  GHashBucket *p;
+  GHashBucket **q;
+  int val;
+  int h;
+
+  if (!(p = find(key, &h))) {
+    return 0;
+  }
+  q = &tab[h];
+  while (*q != p) {
+    q = &((*q)->next);
+  }
+  *q = p->next;
+  if (deleteKeys) {
+    delete p->key;
+  }
+  val = p->val.i;
   delete p;
   --len;
   return val;
@@ -156,7 +204,30 @@ void *GHash::remove(char *key) {
   if (deleteKeys) {
     delete p->key;
   }
-  val = p->val;
+  val = p->val.p;
+  delete p;
+  --len;
+  return val;
+}
+
+int GHash::removeInt(char *key) {
+  GHashBucket *p;
+  GHashBucket **q;
+  int val;
+  int h;
+
+  if (!(p = find(key, &h))) {
+    return 0;
+  }
+  q = &tab[h];
+  while (*q != p) {
+    q = &((*q)->next);
+  }
+  *q = p->next;
+  if (deleteKeys) {
+    delete p->key;
+  }
+  val = p->val.i;
   delete p;
   --len;
   return val;
@@ -184,13 +255,57 @@ GBool GHash::getNext(GHashIter **iter, GString **key, void **val) {
     (*iter)->p = tab[(*iter)->h];
   }
   *key = (*iter)->p->key;
-  *val = (*iter)->p->val;
+  *val = (*iter)->p->val.p;
+  return gTrue;
+}
+
+GBool GHash::getNext(GHashIter **iter, GString **key, int *val) {
+  if (!*iter) {
+    return gFalse;
+  }
+  if ((*iter)->p) {
+    (*iter)->p = (*iter)->p->next;
+  }
+  while (!(*iter)->p) {
+    if (++(*iter)->h == size) {
+      delete *iter;
+      *iter = NULL;
+      return gFalse;
+    }
+    (*iter)->p = tab[(*iter)->h];
+  }
+  *key = (*iter)->p->key;
+  *val = (*iter)->p->val.i;
   return gTrue;
 }
 
 void GHash::killIter(GHashIter **iter) {
   delete *iter;
   *iter = NULL;
+}
+
+void GHash::expand() {
+  GHashBucket **oldTab;
+  GHashBucket *p;
+  int oldSize, h, i;
+
+  oldSize = size;
+  oldTab = tab;
+  size = 2*size + 1;
+  tab = (GHashBucket **)gmalloc(size * sizeof(GHashBucket *));
+  for (h = 0; h < size; ++h) {
+    tab[h] = NULL;
+  }
+  for (i = 0; i < oldSize; ++i) {
+    while (oldTab[i]) {
+      p = oldTab[i];
+      oldTab[i] = oldTab[i]->next;
+      h = hash(p->key);
+      p->next = tab[h];
+      tab[h] = p;
+    }
+  }
+  gfree(oldTab);
 }
 
 GHashBucket *GHash::find(GString *key, int *h) {

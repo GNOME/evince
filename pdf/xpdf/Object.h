@@ -95,6 +95,7 @@ public:
     { initObj(objNull); return this; }
   Object *initArray(XRef *xref);
   Object *initDict(XRef *xref);
+  Object *initDict(Dict *dictA);
   Object *initStream(Stream *streamA);
   Object *initRef(int numA, int genA)
     { initObj(objRef); ref.num = numA; ref.gen = genA; return this; }

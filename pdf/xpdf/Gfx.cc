@@ -1254,6 +1254,7 @@ void Gfx::doPatternFill(GBool eoFill) {
 void Gfx::doTilingPatternFill(GfxTilingPattern *tPat, GBool eoFill) {
   GfxPatternColorSpace *patCS;
   GfxColorSpace *cs;
+  GfxPath *savedPath;
   double xMin, yMin, xMax, yMax, x, y, x1, y1;
   double cxMin, cyMin, cxMax, cyMax;
   int xi0, yi0, xi1, yi1, xi, yi;
@@ -1303,6 +1304,7 @@ void Gfx::doTilingPatternFill(GfxTilingPattern *tPat, GBool eoFill) {
   imb[5] = (m1[1] * m1[4] - m1[0] * m1[5]) * det;
 
   // save current graphics state
+  savedPath = state->getPath()->copy();
   saveState();
 
   // set underlying color space (for uncolored tiling patterns); set
@@ -1378,17 +1380,17 @@ void Gfx::doTilingPatternFill(GfxTilingPattern *tPat, GBool eoFill) {
   //~ edge instead of left/bottom (?)
   xstep = fabs(tPat->getXStep());
   ystep = fabs(tPat->getYStep());
-  xi0 = (int)floor(xMin / xstep);
-  xi1 = (int)ceil(xMax / xstep);
-  yi0 = (int)floor(yMin / ystep);
-  yi1 = (int)ceil(yMax / ystep);
+  xi0 = (int)floor((xMin - tPat->getBBox()[0]) / xstep);
+  xi1 = (int)ceil((xMax - tPat->getBBox()[0]) / xstep);
+  yi0 = (int)floor((yMin - tPat->getBBox()[1]) / ystep);
+  yi1 = (int)ceil((yMax - tPat->getBBox()[1]) / ystep);
   for (i = 0; i < 4; ++i) {
     m1[i] = m[i];
   }
   for (yi = yi0; yi < yi1; ++yi) {
     for (xi = xi0; xi < xi1; ++xi) {
-      x = xi * xstep - tPat->getBBox()[0];
-      y = yi * ystep - tPat->getBBox()[1];
+      x = xi * xstep;
+      y = yi * ystep;
       m1[4] = x * m[0] + y * m[2] + m[4];
       m1[5] = x * m[1] + y * m[3] + m[5];
       doForm1(tPat->getContentStream(), tPat->getResDict(),
@@ -1398,10 +1400,12 @@ void Gfx::doTilingPatternFill(GfxTilingPattern *tPat, GBool eoFill) {
 
   // restore graphics state
   restoreState();
+  state->setPath(savedPath);
 }
 
 void Gfx::doShadingPatternFill(GfxShadingPattern *sPat, GBool eoFill) {
   GfxShading *shading;
+  GfxPath *savedPath;
   double *ctm, *btm, *ptm;
   double m[6], ictm[6], m1[6];
   double xMin, yMin, xMax, yMax;
@@ -1410,6 +1414,7 @@ void Gfx::doShadingPatternFill(GfxShadingPattern *sPat, GBool eoFill) {
   shading = sPat->getShading();
 
   // save current graphics state
+  savedPath = state->getPath()->copy();
   saveState();
 
   // clip to bbox
@@ -1483,10 +1488,12 @@ void Gfx::doShadingPatternFill(GfxShadingPattern *sPat, GBool eoFill) {
 
   // restore graphics state
   restoreState();
+  state->setPath(savedPath);
 }
 
 void Gfx::opShFill(Object args[], int numArgs) {
   GfxShading *shading;
+  GfxPath *savedPath;
   double xMin, yMin, xMax, yMax;
 
   if (!(shading = res->lookupShading(args[0].getName()))) {
@@ -1494,6 +1501,7 @@ void Gfx::opShFill(Object args[], int numArgs) {
   }
 
   // save current graphics state
+  savedPath = state->getPath()->copy();
   saveState();
 
   // clip to bbox
@@ -1527,6 +1535,7 @@ void Gfx::opShFill(Object args[], int numArgs) {
 
   // restore graphics state
   restoreState();
+  state->setPath(savedPath);
 
   delete shading;
 }
@@ -2335,6 +2344,8 @@ void Gfx::doShowText(GString *s) {
     newCTM[2] = mat[2] * newCTM[0] + mat[3] * newCTM[2];
     newCTM[3] = mat[2] * newCTM[1] + mat[3] * newCTM[3];
     newCTM[0] *= state->getFontSize();
+    newCTM[1] *= state->getFontSize();
+    newCTM[2] *= state->getFontSize();
     newCTM[3] *= state->getFontSize();
     newCTM[0] *= state->getHorizScaling();
     newCTM[2] *= state->getHorizScaling();
@@ -2361,7 +2372,8 @@ void Gfx::doShowText(GString *s) {
       saveState();
       state->setCTM(newCTM[0], newCTM[1], newCTM[2], newCTM[3], x, y);
       //~ out->updateCTM(???)
-      if (!out->beginType3Char(state, code, u, uLen)) {
+      if (!out->beginType3Char(state, curX + riseX, curY + riseY, tdx, tdy,
+			       code, u, uLen)) {
 	((Gfx8BitFont *)font)->getCharProc(code, &charProc);
 	if ((resDict = ((Gfx8BitFont *)font)->getResources())) {
 	  pushResources(resDict);
@@ -2970,7 +2982,7 @@ Stream *Gfx::buildImageStream() {
   obj.free();
 
   // make stream
-  str = new EmbedStream(parser->getStream(), &dict);
+  str = new EmbedStream(parser->getStream(), &dict, gFalse, 0);
   str = str->addFilters(&dict);
 
   return str;
