@@ -69,7 +69,11 @@ typedef enum {
 
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 18.4884
-#define ZOOM_EPSILON 1e-10
+
+/* FIXME: temporarily setting the epsilon very high until we figure out how to
+ * constrain the size of the window to a pixel width, instead of to the zoom
+ * level */
+#define ZOOM_EPSILON 1e-2
 
 
 struct _EvView {

@@ -1,3 +1,15 @@
+Fri Feb 18 15:32:57 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-window.c: Change the fullscreen toolbar to always be in
+	the popup window.  That prevents it resizing when in full screen
+	mode.
+
+	* shell/ev-view.c: Change Zoom epsilon as a bad hack to avoid
+	multiple rerenders.  This pretty much sucks.
+
+	* data/evince-ui.xml: Change the fullscreen toolbar to include the
+	rest of the toolbar.
+
 2005-02-18  Tommi Vainikainen  <thv@iki.fi>
 
 	* configure.ac (ALL_LINGUAS): Added "fi" (Finnish).

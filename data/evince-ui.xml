@@ -64,7 +64,15 @@
   </toolbar>
 
   <toolbar name="LeaveFullscreenToolbar">
-    <toolitem action="LeaveFullscreen"/>
+    <toolitem action="GoPreviousPage"/>
+    <toolitem action="GoNextPage"/>
+    <separator/>
+    <toolitem action="PageSelector"/>
+    <separator/>
+    <toolitem action="ViewZoomIn"/>
+    <toolitem action="ViewZoomOut"/>
+    <toolitem action="ViewBestFit"/>
+    <toolitem action="ViewPageWidth"/>
   </toolbar>
 
   <accelerator name="LeaveFullscreenAccel" action="LeaveFullscreen"/>
