@@ -268,11 +268,27 @@ pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	return pixbuf;
 }
 
+static void
+pixbuf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
+					   gint                  page,
+					   gint                  suggested_width,
+					   gint                  *width,
+					   gint                  *height)
+{
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+	gdouble page_ratio;
+
+	page_ratio = gdk_pixbuf_get_height (pixbuf_document->pixbuf) /
+		     gdk_pixbuf_get_width (pixbuf_document->pixbuf);
+	*width = suggested_width;
+	*height = (gint) (suggested_width * page_ratio);
+}
 
 static void
 pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 {
 	iface->get_thumbnail = pixbuf_document_thumbnails_get_thumbnail;
+	iface->get_dimensions = pixbuf_document_thumbnails_get_dimensions;
 }
 
 
