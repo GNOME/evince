@@ -295,32 +295,36 @@ expose_bin_window (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
         int i;
+	int current_page;
         const EvFindResult *results;
 
-	if (view->document)
-		ev_document_render (view->document,
-				    event->area.x, event->area.y,
-				    event->area.width, event->area.height);
+	if (view->document == NULL)
+		return;
+	
+	ev_document_render (view->document,
+			    event->area.x, event->area.y,
+			    event->area.width, event->area.height);
 
         results = (EvFindResult*) view->find_results->data;
+	current_page = ev_document_get_page (view->document);
         i = 0;
         while (i < view->find_results->len) {
 #if 0
-                g_printerr ("highlighting result %d at %d,%d %dx%d\n",
-                            i,
+                g_printerr ("highlighting result %d page %d at %d,%d %dx%d\n",
+                            i, results[i].page_num,
                             results[i].highlight_area.x,
                             results[i].highlight_area.y,
                             results[i].highlight_area.width,
                             results[i].highlight_area.height);
-#endif                       
-                // if (results[i].page_num == current_page) FIXME
-                gdk_draw_rectangle (view->bin_window,
-                                    widget->style->base_gc[GTK_STATE_SELECTED],
-                                    FALSE,
-                                    results[i].highlight_area.x,
-                                    results[i].highlight_area.y,
-                                    results[i].highlight_area.width,
-                                    results[i].highlight_area.height);
+#endif
+		if (results[i].page_num == current_page)
+			gdk_draw_rectangle (view->bin_window,
+					    widget->style->base_gc[GTK_STATE_SELECTED],
+					    FALSE,
+					    results[i].highlight_area.x,
+					    results[i].highlight_area.y,
+					    results[i].highlight_area.width,
+					    results[i].highlight_area.height);
                 ++i;
         }
 }
@@ -485,6 +489,20 @@ found_results_callback (EvDocument         *document,
   if (n_results > 0)
           g_array_append_vals (view->find_results,
                                results, n_results);
+
+#if 0
+  {
+	  int i;
+
+	  g_printerr ("%d results: ", n_results);
+	  i = 0;
+	  while (i < n_results) {
+		  g_printerr ("%d ", results[i].page_num);
+		  ++i;
+	  }
+	  g_printerr ("\n");
+  }
+#endif
   
   gtk_widget_queue_draw (GTK_WIDGET (view));
 }

@@ -1,5 +1,13 @@
 2004-12-22  Havoc Pennington  <hp@redhat.com>
 
+	* pdf/xpdf/pdf-document.cc (pdf_document_find_begin): make search
+	find stuff on other pages, sort of (only returns one result on
+	invisible pages, to show they have results; updates full results
+	for a page when you view it). Currently repaints the current page
+	every time a new result is found on any page, which isn't so nice.
+
+2004-12-22  Havoc Pennington  <hp@redhat.com>
+
 	* shell/ev-window.c (ev_window_cmd_edit_find): display an error if
 	the document doesn't support find (better ideas?)
 	(find_bar_search_changed_cb): handle missing document or document
