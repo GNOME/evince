@@ -250,7 +250,6 @@ $(server_in_files:.server.in.in=.server.in): $(server_in_files)
 
 uidir = $(datadir)/gnome-2.0/ui
 ui_DATA =				\
-	bonobo-application-x-pdf-ui.xml \
 	gpdf-control-ui.xml
 
 CLEANFILES = $(server_DATA) $(BUILT_SOURCES)
