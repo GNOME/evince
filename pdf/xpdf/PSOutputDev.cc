@@ -481,12 +481,12 @@ void PSOutputDev::setupFont(GfxFont *font) {
   writePS("/F%d_%d /%s %g\n",
 	  font->getID().num, font->getID().gen, psName, scale);
   for (i = 0; i < 256; i += 8) {
-    writePS((i == 0) ? "[ " : "  ");
+    writePS((i == 0) ? (char *)"[ " : (char *)"  ");
     for (j = 0; j < 8; ++j) {
       charName = font->getCharName(i+j);
-      writePS("/%s", charName ? charName : ".notdef");
+      writePS("/%s", charName ? charName : (char *)".notdef");
     }
-    writePS((i == 256-8) ? "]\n" : "\n");
+    writePS((i == 256-8) ? (char *)"]\n" : (char *)"\n");
   }
   writePS("pdfMakeFont\n");
 }
