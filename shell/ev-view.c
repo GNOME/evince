@@ -57,7 +57,8 @@ static const GtkTargetEntry targets[] = {
 
 typedef enum {
 	EV_VIEW_CURSOR_NORMAL,
-	EV_VIEW_CURSOR_HAND
+	EV_VIEW_CURSOR_LINK,
+	EV_VIEW_CURSOR_WAIT
 } EvViewCursor;
 
 struct _EvView {
@@ -595,26 +596,35 @@ ev_view_set_find_status (EvView *view, const char *message)
 static void
 ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 {
-	GdkCursor *cursor;
-	GtkWidget *widget = GTK_WIDGET (view);
+	GdkCursor *cursor = NULL;
+	GdkDisplay *display;
+	GtkWidget *widget;
 
 	if (view->cursor == new_cursor) {
 		return;
 	}
 
+	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	display = gtk_widget_get_display (widget);
+	view->cursor = new_cursor;
+
 	switch (new_cursor) {
 		case EV_VIEW_CURSOR_NORMAL:
 			gdk_window_set_cursor (widget->window, NULL);
 			break;
-		case EV_VIEW_CURSOR_HAND:
-			cursor = gdk_cursor_new_for_display
-				(gdk_display_get_default(), GDK_HAND2);
-			gdk_window_set_cursor (widget->window, cursor);
-			gdk_cursor_unref (cursor);
+		case EV_VIEW_CURSOR_LINK:
+			cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
+			break;
+		case EV_VIEW_CURSOR_WAIT:
+			cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
 			break;
 	}
 
-	view->cursor = new_cursor;
+	if (cursor) {
+		gdk_window_set_cursor (widget->window, cursor);
+		gdk_cursor_unref (cursor);
+		gdk_flush();
+	}
 }
 
 static gboolean
@@ -638,13 +648,15 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			msg = status_message_from_link (link);
 			ev_view_set_status (view, msg);
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_HAND);
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 			g_free (msg);
 
                         g_object_unref (link);
 		} else {
 			ev_view_set_status (view, NULL);
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+			if (view->cursor == EV_VIEW_CURSOR_LINK) {
+				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+			}
 		}
 	}
 
@@ -1038,19 +1050,20 @@ found_results_callback (EvDocument         *document,
   gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
+static void
+document_changed_callback (EvDocument *document,
+			   EvView     *view)
+{
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+	ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+}
+
 /*** Public API ***/       
      
 GtkWidget*
 ev_view_new (void)
 {
 	return g_object_new (EV_TYPE_VIEW, NULL);
-}
-
-static void
-document_changed_callback (EvDocument *document,
-			   EvView     *view)
-{
-	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void
@@ -1100,8 +1113,12 @@ set_document_page (EvView *view, int page)
 {
 	if (view->document) {
 		int old_page = ev_document_get_page (view->document);
-		if (old_page != page)
+
+		if (old_page != page) {
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
 			ev_document_set_page (view->document, page);
+		}
+
 		if (old_page != ev_document_get_page (view->document)) {
 			g_signal_emit (view, page_changed_signal, 0);
 

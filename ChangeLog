@@ -1,5 +1,14 @@
 2005-01-20  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* pdf/xpdf/pdf-document.cc:
+	* shell/ev-view.c: (ev_view_set_cursor),
+	(ev_view_motion_notify_event), (document_changed_callback),
+	(set_document_page):
+
+	Show a wait cursor while the page is rendering
+
+2005-01-20  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* shell/ev-sidebar-thumbnails.c:
 	(ev_sidebar_tree_selection_changed),
 	(ev_sidebar_thumbnails_select_page):

@@ -149,6 +149,8 @@ document_validate_page (PdfDocument *pdf_document)
 
 		pdf_document->page_valid = TRUE;
 
+		ev_document_changed (EV_DOCUMENT (pdf_document));
+
                 /* Update the search results available to the app since
                  * we only provide full results on the current page
                  */
@@ -274,8 +276,6 @@ pdf_document_set_page (EvDocument  *document,
 		pdf_document->page = page;
 		pdf_document->page_valid = FALSE;
 	}
-
-	ev_document_changed (document);
 }
 
 static int
