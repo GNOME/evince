@@ -1,3 +1,13 @@
+Sun Mar  6 23:09:57 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document.c (ev_document_render_pixbuf): New
+	implementation.  Really a proof of concept.  It does render much
+	faster, though.  It also g_assert()s on any non-pdf backend and is
+	a bit racy.
+
+	* shell/ev-view.c: Hack up a little to use new rendering
+	interface.  Racy and buggy.  But more responsive.
+
 Sat Mar  5 18:04:35 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar-thumbnails.c: Disable old idle-based

@@ -79,13 +79,24 @@ struct _EvJobThumbnailClass
 };
 
 
+/* EvJobRender */
 GType           ev_job_render_get_type    (void);
+EvJobRender    *ev_job_render_new         (EvDocument     *document,
+					   gint            page,
+					   gint            width,
+					   gint            height);
+void            ev_job_render_run         (EvJobRender    *thumbnail);
+void            ev_job_render_finished    (EvJobRender    *job);
+
+/* EvJobThumbnail */
 GType           ev_job_thumbnail_get_type (void);
-EvJobThumbnail *ev_job_thumbnail_new      (EvDocument *document,
-					   gint        page,
-					   gint        requested_width);
+EvJobThumbnail *ev_job_thumbnail_new      (EvDocument     *document,
+					   gint            page,
+					   gint            requested_width);
 void            ev_job_thumbnail_run      (EvJobThumbnail *thumbnail);
 void            ev_job_thumbnail_finished (EvJobThumbnail *job);
+
+
 G_END_DECLS
 
 #endif /* __EV_JOBS_H__ */

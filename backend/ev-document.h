@@ -88,6 +88,8 @@ struct _EvDocumentIface
 					 int           clip_y,
 					 int           clip_width,
 					 int           clip_height);
+	GdkPixbuf *(* render_pixbuf)    (EvDocument   *document);
+
 
 
 };
@@ -127,6 +129,8 @@ void     ev_document_render          (EvDocument   *document,
 				      int           clip_y,
 				      int           clip_width,
 				      int           clip_height);
+/* Quick hack to test threaded rendering */
+GdkPixbuf *ev_document_render_pixbuf   (EvDocument   *document);
 void	 ev_document_page_changed    (EvDocument *document);
 void	 ev_document_scale_changed   (EvDocument *document);
 

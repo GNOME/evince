@@ -101,6 +101,11 @@ static void pdf_document_security_iface_init            (EvDocumentSecurityIface
 static void pdf_document_search_free                    (PdfDocumentSearch         *search);
 static void pdf_document_search_page_changed            (PdfDocumentSearch         *search);
 
+static GdkPixbuf *bitmap_to_pixbuf (SplashBitmap *bitmap,
+				    GdkPixbuf    *target,
+				    gint          x_offset,
+				    gint          y_offset);
+
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
@@ -413,6 +418,38 @@ pdf_document_render (EvDocument  *document,
 					   pdf_document->target,
 					   draw.x, draw.y,
 					   draw.width, draw.height);
+}
+
+
+
+static GdkPixbuf *
+pdf_document_render_pixbuf (EvDocument *document)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	SplashOutputDev *output;
+	GdkPixbuf *pixbuf;
+	SplashColor color;
+
+	color.rgb8 = splashMakeRGB8 (255, 255, 255);
+
+	output = new SplashOutputDev (splashModeRGB8, gFalse, color);
+	output->startDoc (pdf_document->doc->getXRef());
+
+	pdf_document->doc->displayPage (output,
+					pdf_document->page,
+					72*pdf_document->scale,
+					72*pdf_document->scale,
+					0, gTrue, gFalse);
+
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
+				 FALSE, 8,
+				 output->getBitmap()->getWidth(),
+				 output->getBitmap()->getHeight());
+
+	bitmap_to_pixbuf (output->getBitmap(), pixbuf, 0, 0);
+	delete output;
+
+	return pixbuf;
 }
 
 double
@@ -1140,6 +1177,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_page_offset = pdf_document_set_page_offset;
 	iface->get_page_size = pdf_document_get_page_size;
 	iface->render = pdf_document_render;
+	iface->render_pixbuf = pdf_document_render_pixbuf;
 }
 
 static void

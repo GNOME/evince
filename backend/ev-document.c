@@ -220,9 +220,11 @@ ev_document_get_page_size   (EvDocument   *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	/* FIXME: This is clearly unsafe.  But we can prolly get away with it in
+	 * the short term to test. */
+//	g_mutex_lock (EV_DOC_MUTEX);
 	iface->get_page_size (document, page, width, height);
-	g_mutex_unlock (EV_DOC_MUTEX);
+//	g_mutex_unlock (EV_DOC_MUTEX);
 }
 
 char *
@@ -267,6 +269,21 @@ ev_document_render (EvDocument  *document,
 	iface->render (document, clip_x, clip_y, clip_width, clip_height);
 	g_mutex_unlock (EV_DOC_MUTEX);
 }
+
+
+GdkPixbuf *
+ev_document_render_pixbuf (EvDocument *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	GdkPixbuf *retval;
+
+	g_assert (iface->render_pixbuf);
+
+	retval = iface->render_pixbuf (document);
+
+	return retval;
+}
+
 
 void
 ev_document_page_changed (EvDocument *document)

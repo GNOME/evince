@@ -31,6 +31,7 @@
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-debug.h"
+#include "ev-job-queue.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -91,6 +92,9 @@ struct _EvView {
 
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
+
+	EvJobRender *current_job;
+	GdkPixbuf *current_pixbuf;
 
 	int find_page;
 	int find_result;
@@ -260,6 +264,16 @@ doc_rect_to_view_rect (EvView *view, GdkRectangle *doc_rect, GdkRectangle *view_
 }
 
 static void
+job_finished_cb (EvJobRender *job,
+		 EvView      *view)
+{
+	if (view->current_pixbuf)
+		g_object_unref (view->current_pixbuf);
+	view->current_pixbuf = g_object_ref (job->pixbuf);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+	g_object_unref (job);
+}
+static void
 ev_view_size_request (GtkWidget      *widget,
 		      GtkRequisition *requisition)
 {
@@ -278,6 +292,19 @@ ev_view_size_request (GtkWidget      *widget,
 
 	ev_document_get_page_size (view->document, -1,
 				   &width, &height);
+
+	if (view->current_job) {
+		/* Try to remove the currrent job, and unref it if we can. */
+		if (ev_job_queue_remove_render_job (view->current_job)) 
+			g_object_unref (view->current_job);
+	}
+	view->current_job = ev_job_render_new (view->document,
+					       -1,
+					       width,
+					       height);
+	ev_job_queue_add_render_job (view->current_job, EV_JOB_PRIORITY_HIGH);
+	g_signal_connect (view->current_job, "finished", G_CALLBACK (job_finished_cb), view);
+				 
 	ev_document_misc_get_page_border_size (width, height, &border);
 
 	if (view->width >= 0) {
@@ -471,8 +498,12 @@ expose_bin_window (GtkWidget      *widget,
 	gint width, height;
 	GdkRectangle area;
 	int x_offset, y_offset;
+	GdkPixbuf *scaled_image;
 
 	if (view->document == NULL)
+		return;
+
+	if (view->current_pixbuf == NULL)
 		return;
 
 	ev_view_get_offsets (view, &x_offset, &y_offset); 
@@ -497,10 +528,30 @@ expose_bin_window (GtkWidget      *widget,
              event->area.width, event->area.height,
 	     x_offset, y_offset);
 
+	if (width == gdk_pixbuf_get_width (view->current_pixbuf) &&
+	    height == gdk_pixbuf_get_height (view->current_pixbuf))
+		scaled_image = g_object_ref (view->current_pixbuf);
+	else
+		scaled_image = gdk_pixbuf_scale_simple (view->current_pixbuf,
+							width, height,
+							GDK_INTERP_NEAREST);
+	
+	gdk_draw_pixbuf (view->bin_window,
+			 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
+			 scaled_image,
+			 0, 0,
+			 area.x + border.left,
+			 area.y + border.top,
+			 width, height,
+			 GDK_RGB_DITHER_NORMAL,
+			 0, 0);
+	g_object_unref (scaled_image);
+#if 0
 	ev_document_render (view->document,
 			    event->area.x, event->area.y,
 			    event->area.width, event->area.height);
-
+#endif
+	
 	if (EV_IS_DOCUMENT_FIND (view->document)) {
 		highlight_find_results (view);
 	}

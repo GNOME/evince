@@ -12,24 +12,25 @@ static GQueue *render_queue_low = NULL;
 static GQueue *thumbnail_queue_high = NULL;
 static GQueue *thumbnail_queue_low = NULL;
 
-static void
-handle_render_job_unlocked (EvJobRender *job)
-{
-	//g_print ("handle_render_job\n");
-}
-
 static gboolean
-notify_finished (gpointer data)
+notify_finished (gpointer job)
 {
-	ev_job_thumbnail_finished (EV_JOB_THUMBNAIL (data));
+	if (EV_IS_JOB_THUMBNAIL (job))
+		ev_job_thumbnail_finished (EV_JOB_THUMBNAIL (job));
+	else if (EV_IS_JOB_RENDER (job))
+		ev_job_render_finished (EV_JOB_RENDER (job));
 	return FALSE;
 }
 
+
 static void
-handle_thumbnail_job_unlocked (EvJobThumbnail *job)
+handle_job_unlocked (gpointer job)
 {
-	/* Let the main loop know that we're done */
-	ev_job_thumbnail_run (job);
+	if (EV_IS_JOB_THUMBNAIL (job))
+		ev_job_thumbnail_run (EV_JOB_THUMBNAIL (job));
+	else if (EV_IS_JOB_RENDER (job))
+		ev_job_render_run (EV_JOB_RENDER (job));
+
 	g_idle_add (notify_finished, job);
 }
 
@@ -41,25 +42,25 @@ search_for_jobs_unlocked (void)
 
 	render_job = (EvJobRender *) g_queue_pop_head (render_queue_high);
 	if (render_job) {
-		handle_render_job_unlocked (render_job);
+		handle_job_unlocked (render_job);
 		return;
 	}
 
 	thumbnail_job = (EvJobThumbnail *) g_queue_pop_head (thumbnail_queue_high);
 	if (thumbnail_job) {
-		handle_thumbnail_job_unlocked (thumbnail_job);
+		handle_job_unlocked (thumbnail_job);
 		return;
 	}
 
 	render_job = (EvJobRender *) g_queue_pop_head (render_queue_high);
 	if (render_job) {
-		handle_render_job_unlocked (render_job);
+		handle_job_unlocked (render_job);
 		return;
 	}
 
 	thumbnail_job = (EvJobThumbnail *) g_queue_pop_head (thumbnail_queue_low);
 	if (thumbnail_job) {
-		handle_thumbnail_job_unlocked (thumbnail_job);
+		handle_job_unlocked (thumbnail_job);
 		return;
 	}
 }

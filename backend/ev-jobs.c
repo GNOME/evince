@@ -26,8 +26,27 @@ ev_job_render_init (EvJobRender *job)
 }
 
 static void
+ev_job_render_dispose (GObject *object)
+{
+	EvJobRender *job;
+
+	job = EV_JOB_RENDER (object);
+
+	if (job->pixbuf) {
+		g_object_unref (job->pixbuf);
+		job->pixbuf = NULL;
+	}
+}
+
+static void
 ev_job_render_class_init (EvJobRenderClass *class)
 {
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_render_dispose;
+
 	render_signals [FINISHED] =
 		g_signal_new ("finished",
 			      EV_TYPE_JOB_RENDER,
@@ -45,8 +64,27 @@ ev_job_thumbnail_init (EvJobThumbnail *job)
 }
 
 static void
+ev_job_thumbnail_dispose (GObject *object)
+{
+	EvJobThumbnail *job;
+
+	job = EV_JOB_THUMBNAIL (object);
+
+	if (job->thumbnail) {
+		g_object_unref (job->thumbnail);
+		job->thumbnail = NULL;
+	}
+}
+
+static void
 ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 {
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_thumbnail_dispose;
+
 	thumbnail_signals [FINISHED] =
 		g_signal_new ("finished",
 			      EV_TYPE_JOB_THUMBNAIL,
@@ -58,6 +96,40 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 }
 
 /* Public functions */
+
+EvJobRender *
+ev_job_render_new (EvDocument *document,
+		   gint        page,
+		   gint        width,
+		   gint        height)
+{
+	EvJobRender *job;
+
+	job = g_object_new (EV_TYPE_JOB_RENDER, NULL);
+
+	job->document = document;
+	job->page = page;
+	job->target_width = width;
+	job->target_height = height;
+
+	return job;
+}
+
+void
+ev_job_render_run (EvJobRender *job)
+{
+	g_return_if_fail (EV_IS_JOB_RENDER (job));
+
+	job->pixbuf = ev_document_render_pixbuf (job->document);
+}
+
+void
+ev_job_render_finished (EvJobRender *job)
+{
+	g_return_if_fail (EV_IS_JOB_RENDER (job));
+
+	g_signal_emit (job, render_signals[FINISHED], 0);
+}
 
 EvJobThumbnail *
 ev_job_thumbnail_new (EvDocument *document,
@@ -76,14 +148,6 @@ ev_job_thumbnail_new (EvDocument *document,
 }
 
 void
-ev_job_thumbnail_finished (EvJobThumbnail *job)
-{
-	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
-
-	g_signal_emit (job, thumbnail_signals[FINISHED], 0);
-}
-
-void
 ev_job_thumbnail_run (EvJobThumbnail *job)
 {
 	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
@@ -91,4 +155,12 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 	job->thumbnail = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (job->document),
 							       job->page,
 							       job->requested_width);
+}
+
+void
+ev_job_thumbnail_finished (EvJobThumbnail *job)
+{
+	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
+
+	g_signal_emit (job, thumbnail_signals[FINISHED], 0);
 }
