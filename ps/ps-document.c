@@ -272,6 +272,9 @@ ps_document_init(PSDocument * gs)
   gs->right_margin = 0;
   gs->bottom_margin = 0;
 
+  gs->page_x_offset = 0;
+  gs->page_y_offset = 0;
+
   /* Set user defined defaults */
   gs->override_orientation = gtk_gs_defaults_get_override_orientation();
   gs->fallback_orientation = gtk_gs_defaults_get_orientation();
