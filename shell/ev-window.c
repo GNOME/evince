@@ -60,6 +60,7 @@ struct _EvWindowPrivate {
 	GtkWidget *find_bar;
 	GtkWidget *bonobo_widget;
 	GtkWidget *view;
+	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
 	guint help_message_cid;
@@ -144,6 +145,35 @@ ev_window_set_property (GObject *object, guint prop_id, const GValue *value,
 }
 #endif
 
+static void
+set_action_sensitive (EvWindow   *ev_window,
+		      const char *name,
+		      gboolean    sensitive)
+{
+	GtkAction *action = gtk_action_group_get_action (ev_window->priv->action_group,
+							 name);
+	gtk_action_set_sensitive (action, sensitive);
+}
+
+static void
+update_action_sensitivity (EvWindow *ev_window)
+{
+	int n_pages;
+	int page;
+
+	if (ev_window->priv->document)
+		n_pages = ev_document_get_n_pages (ev_window->priv->document);
+	else
+		n_pages = 1;
+
+	page = ev_view_get_page (EV_VIEW (ev_window->priv->view));
+
+	set_action_sensitive (ev_window, "GoFirstPage", page > 1);
+	set_action_sensitive (ev_window, "GoPreviousPage", page > 1);
+	set_action_sensitive (ev_window, "GoNextPage", page < n_pages);
+	set_action_sensitive (ev_window, "GoLastPage", page < n_pages);
+}
+
 gboolean
 ev_window_is_empty (const EvWindow *ev_window)
 {
@@ -165,6 +195,8 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 
 		ev_view_set_document (EV_VIEW (ev_window->priv->view),
 				      document);
+
+		update_action_sensitivity (ev_window);
 		
 	} else {
 		GtkWidget *dialog;
@@ -336,7 +368,8 @@ ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_set_page (EV_VIEW (ev_window->priv->view),
+			  ev_view_get_page (EV_VIEW (ev_window->priv->view)) - 1);
 }
 
 static void
@@ -344,7 +377,8 @@ ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_set_page (EV_VIEW (ev_window->priv->view),
+			  ev_view_get_page (EV_VIEW (ev_window->priv->view)) + 1);
 }
 
 static void
@@ -352,7 +386,7 @@ ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_set_page (EV_VIEW (ev_window->priv->view), 1);
 }
 
 static void
@@ -360,7 +394,7 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	ev_view_set_page (EV_VIEW (ev_window->priv->view), G_MAXINT);
 }
 
 static void
@@ -508,6 +542,13 @@ disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
 }
 
 static void
+view_page_changed_cb (EvView   *view,
+		      EvWindow *ev_window)
+{
+	update_action_sensitivity (ev_window);
+}
+
+static void
 find_bar_previous_cb (EggFindBar *find_bar,
 		      EvWindow   *ev_window)
 {
@@ -570,6 +611,11 @@ ev_window_dispose (GObject *object)
 		priv->ui_manager = NULL;
 	}
 
+	if (priv->action_group) {
+		g_object_unref (priv->action_group);
+		priv->action_group = NULL;
+	}
+	
 	G_OBJECT_CLASS (parent_class)->dispose (object);
 }
 
@@ -728,8 +774,9 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);
 	gtk_widget_show (ev_window->priv->main_box);
-
+	
 	action_group = gtk_action_group_new ("MenuActions");
+	ev_window->priv->action_group = action_group;
 	gtk_action_group_set_translation_domain (action_group, NULL);
 	gtk_action_group_add_actions (action_group, entries,
 				      G_N_ELEMENTS (entries), ev_window);
@@ -805,6 +852,10 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view);
 	gtk_container_add (GTK_CONTAINER (scrolled_window),
 			   ev_window->priv->view);
+	g_signal_connect (ev_window->priv->view,
+			  "page-changed",
+			  G_CALLBACK (view_page_changed_cb),
+			  ev_window);
 
 	ev_window->priv->statusbar = gtk_statusbar_new ();
 	gtk_widget_show (ev_window->priv->statusbar);
@@ -844,4 +895,6 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::visible",
 			  G_CALLBACK (find_bar_search_changed_cb),
 			  ev_window);
+	
+	update_action_sensitivity (ev_window);
 }

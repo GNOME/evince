@@ -1,3 +1,19 @@
+Tue Dec 21 23:57:37 2004  Owen Taylor  <otaylor@redhat.com>
+
+	* data/evince-ui.xml: Add a few more toolbar items.
+
+	* shell/ev-window.c: Hook up page navigation toolbar 
+	items.
+
+	* shell/ev-view.[ch]: add ev_view_set/get_page and 
+	a page-changed signal.
+
+	* backend/ev-document.{h,cc} pdf/xpdf/pdf-document.cc::
+	Add ev_document_get_page().
+
+	* shell/ev-window.c: Sensitize/desensitize navigation
+	actions.
+
 2004-12-21  Havoc Pennington  <hp@redhat.com>
 
 	* backend/ev-backend-marshal.c,

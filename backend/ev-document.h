@@ -55,6 +55,7 @@ struct _EvDocumentIface
 	int         (* get_n_pages)     (EvDocument *document);
 	void	    (* set_page)	(EvDocument  *document,
 					 int          page);
+	int	    (* get_page)	(EvDocument  *document);
 	void	    (* set_target)      (EvDocument  *document,
 					 GdkDrawable *target);
 	void	    (* set_scale)       (EvDocument  *document,
@@ -95,6 +96,7 @@ gboolean ev_document_load            (EvDocument   *document,
 int      ev_document_get_n_pages     (EvDocument   *document);
 void     ev_document_set_page        (EvDocument   *document,
 				      int           page);
+int      ev_document_get_page        (EvDocument   *document);
 void     ev_document_set_target      (EvDocument   *document,
 				      GdkDrawable  *target);
 void     ev_document_set_scale       (EvDocument   *document,

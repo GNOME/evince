@@ -37,8 +37,11 @@ typedef struct _EvViewClass  EvViewClass;
 GType	   ev_view_get_type (void) G_GNUC_CONST;
 GtkWidget* ev_view_new      (void);
 
-void       ev_view_set_document (EvView     *view,
-				 EvDocument *document);
+void ev_view_set_document (EvView     *view,
+			   EvDocument *document);
+void ev_view_set_page     (EvView     *view,
+			   int         page);
+int  ev_view_get_page     (EvView     *view);
 
 G_END_DECLS
 

@@ -141,11 +141,21 @@ pdf_document_set_page (EvDocument  *document,
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 
+	page = CLAMP (page, 1, ev_document_get_n_pages (document));
+
 	if (page != pdf_document->page) {
 		pdf_document->page = page;
 		pdf_document->page_valid = FALSE;
 	}
 
+}
+
+static int
+pdf_document_get_page (EvDocument  *document)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	return pdf_document->page;
 }
 
 static void
@@ -290,6 +300,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->load = pdf_document_load;
 	iface->get_n_pages = pdf_document_get_n_pages;
 	iface->set_page = pdf_document_set_page;
+	iface->get_page = pdf_document_get_page;
 	iface->set_scale = pdf_document_set_scale;
 	iface->set_target = pdf_document_set_target;
 	iface->set_page_offset = pdf_document_set_page_offset;

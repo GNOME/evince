@@ -46,7 +46,12 @@ struct _EvViewClass {
 	void	(*set_scroll_adjustments) (EvView         *view,
 					   GtkAdjustment  *hadjustment,
 					   GtkAdjustment  *vadjustment);
+	
+	/* Should this be notify::page? */
+	void	(*page_changed)           (EvView         *view);
 };
+
+static guint page_changed_signal = 0;
 
 static void ev_view_set_scroll_adjustments (EvView         *view,
 					    GtkAdjustment  *hadjustment,
@@ -410,6 +415,13 @@ ev_view_class_init (EvViewClass *class)
 								     G_TYPE_NONE, 2,
 								     GTK_TYPE_ADJUSTMENT,
 								     GTK_TYPE_ADJUSTMENT);
+	page_changed_signal = g_signal_new ("page-changed",
+					    G_OBJECT_CLASS_TYPE (object_class),
+					    G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+					    G_STRUCT_OFFSET (EvViewClass, page_changed),
+					    NULL, NULL,
+					    ev_marshal_VOID__NONE,
+					    G_TYPE_NONE, 0);
 }
 
 static void
@@ -435,6 +447,8 @@ ev_view_set_document (EvView     *view,
 	g_return_if_fail (EV_IS_VIEW (view));
 
 	if (document != view->document) {
+		int old_page = ev_view_get_page (view);
+		
 		if (view->document)
 			g_object_unref (view->document);
 
@@ -447,5 +461,32 @@ ev_view_set_document (EvView     *view,
 			ev_document_set_target (view->document, view->bin_window);
 		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
+		
+		if (old_page != ev_view_get_page (view))
+			g_signal_emit (view, page_changed_signal, 0);
 	}
+}
+
+void
+ev_view_set_page (EvView *view,
+		  int     page)
+{
+	if (view->document) {
+		int old_page = ev_document_get_page (view->document);
+		if (old_page != page)
+			ev_document_set_page (view->document, page);
+		if (old_page != ev_document_get_page (view->document)) {
+			g_signal_emit (view, page_changed_signal, 0);
+			gtk_widget_queue_draw (GTK_WIDGET (view));
+		}
+	}
+}
+
+int
+ev_view_get_page (EvView *view)
+{
+	if (view->document)
+		return ev_document_get_page (view->document);
+	else
+		return 1;
 }

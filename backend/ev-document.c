@@ -92,6 +92,13 @@ ev_document_set_page (EvDocument  *document,
 	iface->set_page (document, page);
 }
 
+int
+ev_document_get_page (EvDocument *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	return iface->get_page (document);
+}
+
 void
 ev_document_set_target (EvDocument  *document,
 			GdkDrawable *target)
