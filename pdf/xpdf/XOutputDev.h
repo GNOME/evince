@@ -2,7 +2,7 @@
 //
 // XOutputDev.h
 //
-// Copyright 1996-2002 Glyph & Cog, LLC
+// Copyright 1996-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -422,7 +422,8 @@ private:
 				    double m11Orig, double m12Orig,
 				    double m21Orig, double m22Orig,
 				    double m11, double m12,
-				    double m21, double m22, GBool subst);
+				    double m21, double m22,
+				    GBool embedded, GBool subst);
 #endif
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
   XOutputFont *tryGetTTFont(XRef *xref, GfxFont *gfxFont,
@@ -640,6 +641,7 @@ private:
     tmpRects[numTmpSubpaths];
   GfxFont *gfxFont;		// current PDF font
   XOutputFont *font;		// current font
+  GBool needFontUpdate;		// set when the font needs to be updated
   XOutputFontCache *fontCache;	// font cache
   T3FontCache *			// Type 3 font cache
     t3FontCache[xOutT3FontCacheSize];

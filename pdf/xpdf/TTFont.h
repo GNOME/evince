@@ -4,7 +4,7 @@
 //
 // An X wrapper for the FreeType TrueType font rasterizer.
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 

@@ -4,7 +4,7 @@
 //
 // An X wrapper for the t1lib Type 1 font rasterizer.
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -90,7 +90,8 @@ public:
 
 private:
 
-  Guchar *getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h);
+  Guchar *getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h,
+			 GBool *tempBitmap);
 
   T1FontFile *fontFile;
   int id;

@@ -2,7 +2,7 @@
 //
 // XOutputDev.cc
 //
-// Copyright 1996-2002 Glyph & Cog, LLC
+// Copyright 1996-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -1005,7 +1005,7 @@ XOutputFont *XOutputFontCache::tryGetFont(XRef *xref, DisplayFontParam *dfp,
       if (freetypeControl != fontRastNone) {
 	font = tryGetFTFontFromFile(xref, dfp->t1.fileName, gFalse, gfxFont,
 				    m11Orig, m12Orig, m21Orig, m22Orig,
-				    m11, m12, m21, m22, subst);
+				    m11, m12, m21, m22, gFalse, subst);
       }
     }
 #endif
@@ -1020,7 +1020,7 @@ XOutputFont *XOutputFontCache::tryGetFont(XRef *xref, DisplayFontParam *dfp,
     if (freetypeControl != fontRastNone) {
       font = tryGetFTFontFromFile(xref, dfp->tt.fileName, gFalse, gfxFont,
 				  m11Orig, m12Orig, m21Orig, m22Orig,
-				  m11, m12, m21, m22, subst);
+				  m11, m12, m21, m22, gFalse, subst);
     }
 #endif
 #if !FREETYPE2 && (HAVE_FREETYPE_FREETYPE_H || HAVE_FREETYPE_H)
@@ -1091,6 +1091,11 @@ XOutputFont *XOutputFontCache::tryGetT1Font(XRef *xref,
 	return NULL;
       }
       ff = new Type1CFontFile(fontBuf, fontLen);
+      if (!ff->isOk()) {
+	delete ff;
+	gfree(fontBuf);
+	return NULL;
+      }
       ff->convertToType1(outputToFile, f);
       delete ff;
       gfree(fontBuf);
@@ -1263,7 +1268,7 @@ XOutputFont *XOutputFontCache::tryGetFTFont(XRef *xref,
     // create the Font
     font = tryGetFTFontFromFile(xref, fileName, gTrue, gfxFont,
 				m11, m12, m21, m22,
-				m11, m12, m21, m22, gFalse);
+				m11, m12, m21, m22, gTrue, gFalse);
 
     // on systems with Unix hard link semantics, this will remove the
     // last link to the temp file
@@ -1275,7 +1280,7 @@ XOutputFont *XOutputFontCache::tryGetFTFont(XRef *xref,
   } else if ((fileName = gfxFont->getExtFontFile())) {
     font = tryGetFTFontFromFile(xref, fileName, gFalse, gfxFont,
 				m11, m12, m21, m22,
-				m11, m12, m21, m22, gFalse);
+				m11, m12, m21, m22, gFalse, gFalse);
 
   } else {
     font = NULL;
@@ -1294,6 +1299,7 @@ XOutputFont *XOutputFontCache::tryGetFTFontFromFile(XRef *xref,
 						    double m22Orig,
 						    double m11, double m12,
 						    double m21, double m22,
+						    GBool embedded,
 						    GBool subst) {
   Ref *id;
   FTFontFile *fontFile;
@@ -1304,14 +1310,16 @@ XOutputFont *XOutputFontCache::tryGetFTFontFromFile(XRef *xref,
     if (gfxFont->getType() == fontCIDType2) {
       fontFile = new FTFontFile(ftEngine, fileName->getCString(),
 				((GfxCIDFont *)gfxFont)->getCIDToGID(),
-				((GfxCIDFont *)gfxFont)->getCIDToGIDLen());
+				((GfxCIDFont *)gfxFont)->getCIDToGIDLen(),
+				embedded);
     } else { // fontCIDType0, fontCIDType0C
-      fontFile = new FTFontFile(ftEngine, fileName->getCString());
+      fontFile = new FTFontFile(ftEngine, fileName->getCString(), embedded);
     }
   } else {
     fontFile = new FTFontFile(ftEngine, fileName->getCString(),
 			      ((Gfx8BitFont *)gfxFont)->getEncoding(),
-			      ((Gfx8BitFont *)gfxFont)->getHasEncoding());
+			      ((Gfx8BitFont *)gfxFont)->getHasEncoding(),
+			      ((Gfx8BitFont *)gfxFont)->isSymbolic());
   }
   if (!fontFile->isOk()) {
     error(-1, "Couldn't create FreeType font from '%s'",
@@ -1769,6 +1777,7 @@ XOutputDev::XOutputDev(Display *displayA, int screenNumA,
   // set up the font cache and fonts
   gfxFont = NULL;
   font = NULL;
+  needFontUpdate = gFalse;
   fontCache = new XOutputFontCache(display, depth, this,
 				   globalParams->getT1libControl(),
 				   globalParams->getFreeTypeControl());
@@ -1850,7 +1859,7 @@ void XOutputDev::startPage(int pageNum, GfxState *state) {
 void XOutputDev::endPage() {
   XOutputState *s;
 
-  text->coalesce();
+  text->coalesce(gTrue);
 
   // clear state stack, free all GCs, free the clip region
   while (save) {
@@ -1944,8 +1953,8 @@ void XOutputDev::restoreState(GfxState *state) {
     save = save->next;
     delete s;
 
-    // restore the font
-    updateFont(state);
+    // we'll need to restore the font
+    needFontUpdate = gTrue;
   }
 }
 
@@ -1955,7 +1964,7 @@ void XOutputDev::updateAll(GfxState *state) {
   updateMiterLimit(state);
   updateFillColor(state);
   updateStrokeColor(state);
-  updateFont(state);
+  needFontUpdate = gTrue;
 }
 
 void XOutputDev::updateCTM(GfxState *state, double m11, double m12,
@@ -2062,6 +2071,8 @@ void XOutputDev::updateStrokeColor(GfxState *state) {
 
 void XOutputDev::updateFont(GfxState *state) {
   double m11, m12, m21, m22;
+
+  needFontUpdate = gFalse;
 
   text->updateFont(state);
 
@@ -2505,6 +2516,10 @@ void XOutputDev::drawChar(GfxState *state, double x, double y,
   double *ctm;
   double saveCTM[6];
 
+  if (needFontUpdate) {
+    updateFont(state);
+  }
+
   text->addChar(state, x, y, dx, dy, code, u, uLen);
 
   if (!font) {
@@ -2579,6 +2594,9 @@ GBool XOutputDev::beginType3Char(GfxState *state,
   double x1, y1, xMin, yMin, xMax, yMax, xt, yt;
   int i, j;
 
+  if (needFontUpdate) {
+    updateFont(state);
+  }
   if (!gfxFont) {
     return gFalse;
   }

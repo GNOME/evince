@@ -4,7 +4,7 @@ $! Xpdf compile script for VMS.
 $!
 $! Written by Patrick Moreau, Martin P.J. Zinser.
 $!
-$! Copyright 1996-2002 Glyph & Cog, LLC
+$! Copyright 1996-2003 Glyph & Cog, LLC
 $!
 $!========================================================================
 $!
@@ -27,8 +27,8 @@ $ COMMON_LIBS = "[]common.olb/lib,[-.goo]libgoo.olb/lib"
 $!
 $ XPDF_OBJS = "xpdf.obj,FTFont.obj,PSOutputDev.obj," + -
               "SFont.obj,T1Font.obj,TextOutputDev.obj,TTFont.obj," + -
-              "XOutputDev.obj,XPDFApp.o,XPDFCore.o,XPDFTree.o," + -
-              "XPDFViewer.o,XPixmapOutputDev.o"
+              "XOutputDev.obj,XPDFApp.obj,XPDFCore.obj,XPDFTree.obj," + -
+              "XPDFViewer.obj,XPixmapOutputDev.obj"
 $ XPDF_LIBS = ""
 $!
 $ PDFTOPS_OBJS   = "pdftops.obj,PSOutputDev.obj" 

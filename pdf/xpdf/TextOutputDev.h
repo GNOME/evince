@@ -2,7 +2,7 @@
 //
 // TextOutputDev.h
 //
-// Copyright 1997-2002 Glyph & Cog, LLC
+// Copyright 1997-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -65,7 +65,7 @@ class TextWord {
 public:
 
   // Constructor.
-  TextWord(GfxState *state, double x0, double y0,
+  TextWord(GfxState *state, double x0, double y0, int charPosA,
 	   TextFontInfo *fontA, double fontSize);
 
 
@@ -89,6 +89,9 @@ private:
   double *xRight;		// right-hand x coord of each char
   int len;			// length of text and xRight
   int size;			// size of text and xRight arrays
+  int charPos;                  // character position (within content stream)
+  int charLen;                  // number of content stream characters in
+                                //   this word
   TextFontInfo *font;		// font information
   double fontSize;		// font size
   GBool spaceAfter;		// set if there is a space between this
@@ -123,6 +126,7 @@ private:
   TextFontInfo *font;		// primary font
   double fontSize;		// primary font size
   TextWord *words;		// words in this line
+  TextWord *lastWord;		// last word in this line
   Unicode *text;		// Unicode text of the line, including
 				//   spaces between words
   double *xRight;		// right-hand x coord of each Unicode char
@@ -222,12 +226,12 @@ public:
 
 
   // Coalesce strings that look like parts of the same line.
-  void coalesce();
+  void coalesce(GBool physLayout);
 
   // Find a string.  If <top> is true, starts looking at top of page;
   // otherwise starts looking at <xMin>,<yMin>.  If <bottom> is true,
   // stops looking at bottom of page; otherwise stops looking at
-  // <xMax>,<yMax>.  If found, sets the text bounding rectange and
+  // <xMax>,<yMax>.  If found, sets the text bounding rectangle and
   // returns true; otherwise returns false.
   GBool findText(Unicode *s, int len,
 		 GBool top, GBool bottom,
@@ -237,6 +241,13 @@ public:
   // Get the text which is inside the specified rectangle.
   GString *getText(double xMin, double yMin,
 		   double xMax, double yMax);
+
+  // Find a string by character position and length.  If found, sets
+  // the text bounding rectangle and returns true; otherwise returns
+  // false.
+  GBool findCharRange(int pos, int length,
+		      double *xMin, double *yMin,
+		      double *xMax, double *yMax);
 
   // Dump contents of page to a file.
   void dump(void *outputStream, TextOutputFunc outputFunc,
@@ -249,7 +260,7 @@ public:
 private:
 
   void clear();
-  double lineFit(TextLine *line, TextWord *lastWord, TextWord *word);
+  double lineFit(TextLine *line, TextWord *word, double *space);
   GBool lineFit2(TextLine *line0, TextLine *line1);
   GBool blockFit(TextBlock *blk, TextLine *line);
   GBool blockFit2(TextBlock *blk0, TextBlock *blk1);
@@ -259,6 +270,8 @@ private:
 
   double pageWidth, pageHeight;	// width and height of current page
   TextWord *curWord;		// currently active string
+  int charPos;			// next character position (within content
+				//   stream)
   TextFontInfo *font;		// current font
   double fontSize;		// current font size
   int nest;			// current nesting level (for Type 3 fonts)
@@ -347,7 +360,7 @@ public:
   // Find a string.  If <top> is true, starts looking at top of page;
   // otherwise starts looking at <xMin>,<yMin>.  If <bottom> is true,
   // stops looking at bottom of page; otherwise stops looking at
-  // <xMax>,<yMax>.  If found, sets the text bounding rectange and
+  // <xMax>,<yMax>.  If found, sets the text bounding rectangle and
   // returns true; otherwise returns false.
   GBool findText(Unicode *s, int len,
 		 GBool top, GBool bottom,
@@ -357,6 +370,13 @@ public:
   // Get the text which is inside the specified rectangle.
   GString *getText(double xMin, double yMin,
 		   double xMax, double yMax);
+
+  // Find a string by character position and length.  If found, sets
+  // the text bounding rectangle and returns true; otherwise returns
+  // false.
+  GBool findCharRange(int pos, int length,
+		      double *xMin, double *yMin,
+		      double *xMax, double *yMax);
 
 
 private:

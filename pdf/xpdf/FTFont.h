@@ -4,7 +4,7 @@
 //
 // An X wrapper for the FreeType font rasterizer.
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -62,14 +62,16 @@ public:
 
   // 8-bit font, TrueType or Type 1/1C
   FTFontFile(FTFontEngine *engineA, char *fontFileName,
-	     char **fontEnc, GBool pdfFontHasEncoding);
+	     char **fontEnc, GBool pdfFontHasEncoding,
+	     GBool pdfFontIsSymbolic);
 
   // CID font, TrueType
   FTFontFile(FTFontEngine *engineA, char *fontFileName,
-	     Gushort *cidToGIDA, int cidToGIDLenA);
+	     Gushort *cidToGIDA, int cidToGIDLenA, GBool embedded);
 
   // CID font, Type 0C (CFF)
-  FTFontFile(FTFontEngine *engineA, char *fontFileName);
+  FTFontFile(FTFontEngine *engineA, char *fontFileName,
+	     GBool embedded);
 
   GBool isOk() { return ok; }
   virtual ~FTFontFile();
@@ -110,7 +112,8 @@ public:
 private:
 
   Guchar *getGlyphPixmap(CharCode c, Unicode u,
-			 int *x, int *y, int *w, int *h);
+			 int *x, int *y, int *w, int *h,
+			 GBool *tempBitmap);
   static int charPathMoveTo(FT_Vector *pt, void *state);
   static int charPathLineTo(FT_Vector *pt, void *state);
   static int charPathConicTo(FT_Vector *ctrl, FT_Vector *pt, void *state);

@@ -2,7 +2,7 @@
 //
 // TextOutputDev.cc
 //
-// Copyright 1997-2002 Glyph & Cog, LLC
+// Copyright 1997-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -17,6 +17,10 @@
 #include <stddef.h>
 #include <math.h>
 #include <ctype.h>
+#ifdef WIN32
+#include <fcntl.h> // for O_BINARY
+#include <io.h>    // for setmode
+#endif
 #include "gmem.h"
 #include "GString.h"
 #include "GList.h"
@@ -49,7 +53,7 @@
 // Max difference in x,y coordinates (as a fraction of the font size)
 // allowed for duplicated text (fake boldface, drop shadows) which is
 // to be discarded.
-#define dupMaxDeltaX 0.2
+#define dupMaxDeltaX 0.1
 #define dupMaxDeltaY 0.2
 
 // Min overlap (as a fraction of the font size) required for two
@@ -124,14 +128,11 @@ TextFontInfo::TextFontInfo(GfxState *state) {
     horizScaling *= t1 / t2;
   }
 
-  if (!gfxFont) {
-    minSpaceWidth = horizScaling * wordDefMinSpaceWidth;
-    maxSpaceWidth = horizScaling * wordDefMaxSpaceWidth;
-  } else if (gfxFont->isCIDFont()) {
+  minSpaceWidth = horizScaling * wordDefMinSpaceWidth;
+  maxSpaceWidth = horizScaling * wordDefMaxSpaceWidth;
+  if (gfxFont && gfxFont->isCIDFont()) {
     //~ handle 16-bit fonts
-    minSpaceWidth = horizScaling * wordDefMinSpaceWidth;
-    maxSpaceWidth = horizScaling * wordDefMaxSpaceWidth;
-  } else {
+  } else if (gfxFont && gfxFont->getType() != fontType3) {
     avgWidth = 0;
     n = 0;
     for (i = 0; i < 256; ++i) {
@@ -141,9 +142,11 @@ TextFontInfo::TextFontInfo(GfxState *state) {
 	++n;
       }
     }
-    avgWidth /= n;
-    minSpaceWidth = horizScaling * wordMinSpaceWidth * avgWidth;
-    maxSpaceWidth = horizScaling * wordMaxSpaceWidth * avgWidth;
+    if (n > 0) {
+      avgWidth /= n;
+      minSpaceWidth = horizScaling * wordMinSpaceWidth * avgWidth;
+      maxSpaceWidth = horizScaling * wordMaxSpaceWidth * avgWidth;
+    }
   }
 
 }
@@ -169,11 +172,13 @@ GBool TextFontInfo::matches(GfxState *state) {
 // TextWord
 //------------------------------------------------------------------------
 
-TextWord::TextWord(GfxState *state, double x0, double y0,
+TextWord::TextWord(GfxState *state, double x0, double y0, int charPosA,
 		   TextFontInfo *fontA, double fontSizeA) {
   GfxFont *gfxFont;
   double x, y;
 
+  charPos = charPosA;
+  charLen = 0;
   font = fontA;
   fontSize = fontSizeA;
   state->transform(x0, y0, &x, &y);
@@ -249,6 +254,7 @@ void TextWord::merge(TextWord *word2) {
     xRight[len + i] = word2->xRight[i];
   }
   len += word2->len;
+  charLen += word2->charLen;
 }
 
 //------------------------------------------------------------------------
@@ -299,7 +305,6 @@ GBool TextLine::yxBefore(TextLine *line2) {
 
 // Merge another line's words onto the end of this line.
 void TextLine::merge(TextLine *line2) {
-  TextWord *word;
   int newLen, i;
 
   xMax = line2->xMax;
@@ -310,9 +315,9 @@ void TextLine::merge(TextLine *line2) {
     yMax = line2->yMax;
   }
   xSpaceR = line2->xSpaceR;
-  for (word = words; word->next; word = word->next) ;
-  word->spaceAfter = gTrue;
-  word->next = line2->words;
+  lastWord->spaceAfter = gTrue;
+  lastWord->next = line2->words;
+  lastWord = line2->lastWord;
   line2->words = NULL;
   newLen = len + 1 + line2->len;
   text = (Unicode *)grealloc(text, newLen * sizeof(Unicode));
@@ -424,6 +429,7 @@ TextFlow::~TextFlow() {
 TextPage::TextPage(GBool rawOrderA) {
   rawOrder = rawOrderA;
   curWord = NULL;
+  charPos = 0;
   font = NULL;
   fontSize = 0;
   nest = 0;
@@ -516,7 +522,7 @@ void TextPage::beginWord(GfxState *state, double x0, double y0) {
     return;
   }
 
-  curWord = new TextWord(state, x0, y0, font, fontSize);
+  curWord = new TextWord(state, x0, y0, charPos, font, fontSize);
 }
 
 void TextPage::addChar(GfxState *state, double x, double y,
@@ -558,6 +564,8 @@ void TextPage::addChar(GfxState *state, double x, double y,
 
   // break words at space character
   if (uLen == 1 && u[0] == (Unicode)0x20) {
+    ++curWord->charLen;
+    ++charPos;
     endWord();
     return;
   }
@@ -568,9 +576,20 @@ void TextPage::addChar(GfxState *state, double x, double y,
   n = curWord->len;
   if (n > 0 && x1 - curWord->xRight[n-1] >
                     curWord->font->minSpaceWidth * curWord->fontSize) {
-    // large char spacing is sometimes used to move text around
     endWord();
     beginWord(state, x, y);
+  }
+
+  // page rotation and/or transform matrices can cause text to be
+  // drawn in reverse order -- in this case, swap the begin/end
+  // coordinates and break text into individual chars
+  if (w1 < 0) {
+    endWord();
+    beginWord(state, x + dx, y + dy);
+    x1 += w1;
+    y1 += h1;
+    w1 = -w1;
+    h1 = -h1;
   }
 
   // add the characters to the current word
@@ -581,6 +600,8 @@ void TextPage::addChar(GfxState *state, double x, double y,
   for (i = 0; i < uLen; ++i) {
     curWord->addChar(state, x1 + i*w1, y1 + i*h1, w1, h1, u[i]);
   }
+  ++curWord->charLen;
+  ++charPos;
 }
 
 void TextPage::endWord() {
@@ -635,14 +656,14 @@ void TextPage::addWord(TextWord *word) {
   wordPtr = word;
 }
 
-void TextPage::coalesce() {
-  TextWord *word0, *word1, *word2, *word3, *word4;
+void TextPage::coalesce(GBool physLayout) {
+  TextWord *word0, *word1, *word2;
   TextLine *line0, *line1, *line2, *line3, *line4, *lineList;
   TextBlock *blk0, *blk1, *blk2, *blk3, *blk4, *blk5, *blk6;
   TextBlock *yxBlocks, *blocks, *blkStack;
   TextFlow *flow0, *flow1;
-  double sz, xLimit, minSpace, maxSpace, yLimit;
-  double fit1, fit2;
+  double sz, xLimit, yLimit;
+  double fit1, fit2, sp1, sp2;
   GBool found;
   UnicodeMap *uMap;
   GBool isUnicode;
@@ -720,7 +741,8 @@ void TextPage::coalesce() {
 	      word2->xMin < xLimit &&
 	      word2->font == word0->font &&
 	      fabs(word2->fontSize - sz) < 0.05 &&
-	      fabs(word2->yBase - word0->yBase) < 0.05;
+	      fabs(word2->yBase - word0->yBase) < 0.05 &&
+	      word2->charPos == word0->charPos + word0->charLen;
     } else {
       found = gFalse;
       for (word1 = word0, word2 = word0->next;
@@ -728,7 +750,8 @@ void TextPage::coalesce() {
 	   word1 = word2, word2 = word2->next) {
 	if (word2->font == word0->font &&
 	    fabs(word2->fontSize - sz) < 0.05 &&
-	    fabs(word2->yBase - word0->yBase) < 0.05) {
+	    fabs(word2->yBase - word0->yBase) < 0.05 &&
+	    word2->charPos == word0->charPos + word0->charLen) {
 	  found = gTrue;
 	  break;
 	}
@@ -760,84 +783,83 @@ void TextPage::coalesce() {
 
   //----- assemble words into lines
 
-  uMap = globalParams->getTextEncoding();
-  isUnicode = uMap ? uMap->isUnicode() : gFalse;
-
-  lineList = NULL;
-  line0 = NULL;
+  lineList = line0 = NULL;
   while (words) {
 
-    // build a new line object
+    // remove the first word from the word list
     word0 = words;
     words = words->next;
     word0->next = NULL;
-    line1 = new TextLine();
-    line1->words = word0;
-    line1->xMin = word0->xMin;
-    line1->xMax = word0->xMax;
-    line1->yMin = word0->yMin;
-    line1->yMax = word0->yMax;
-    line1->yBase = word0->yBase;
-    line1->font = word0->font;
-    line1->fontSize = word0->fontSize;
-    line1->len = word0->len;
-    minSpace = line1->fontSize * word0->font->minSpaceWidth;
-    maxSpace = line1->fontSize * word0->font->maxSpaceWidth;
 
-    // find subsequent words in the line
-    while (words) {
-      xLimit = line1->xMax + maxSpace;
-      fit1 = fit2 = 0;
-      word3 = word4 = NULL;
-      if (rawOrder) {
-	if (words &&
-	    words->xMin < xLimit &&
-	    ((fit1 = lineFit(line1, word0, words)) >= 0)) {
-	  word3 = NULL;
-	  word4 = words;
-	}
+    // find the best line (if any) for the word
+    if (rawOrder) {
+      if (line0 && lineFit(line0, word0, &sp2) >= 0) {
+	line1 = line0;
+	sp1 = sp2;
       } else {
-	for (word1 = NULL, word2 = words;
-	     word2 && word2->xMin < xLimit;
-	     word1 = word2, word2 = word2->next) {
-	  fit2 = lineFit(line1, word0, word2);
-	  if (fit2 >= 0 && (!word4 ||
-			    (word4 && fit2 < fit1))) {
-	    fit1 = fit2;
-	    word3 = word1;
-	    word4 = word2;
-	  }
-	}
+	line1 = NULL;
+	sp1 = 0;
       }
-      if (word4) {
-	if (word3) {
-	  word3->next = word4->next;
-	} else {
-	  words = word4->next;
+    } else {
+      line1 = NULL;
+      fit1 = 0;
+      sp1 = 0;
+      for (line2 = lineList; line2; line2 = line2->next) {
+	fit2 = lineFit(line2, word0, &sp2);
+	if (fit2 >= 0 && (!line1 || fit2 < fit1)) {
+	  line1 = line2;
+	  fit1 = fit2;
+	  sp1 = sp2;
 	}
-	word0->next = word4;
-	word4->next = NULL;
-	if (word4->xMax > line1->xMax) {
-	  line1->xMax = word4->xMax;
-	}
-	if (word4->yMin < line1->yMin) {
-	  line1->yMin = word4->yMin;
-	}
-	if (word4->yMax > line1->yMax) {
-	  line1->yMax = word4->yMax;
-	}
-	line1->len += word4->len;
-	if (fit1 > minSpace) {
-	  word0->spaceAfter = gTrue;
-	  ++line1->len;
-	}
-	word0 = word4;
-      } else {
-	break;
       }
     }
 
-    // build the line text
+    // found a line: append the word
+    if (line1) {
+      word1 = line1->lastWord;
+      word1->next = word0;
+      line1->lastWord = word0;
+      if (word0->xMax > line1->xMax) {
+	line1->xMax = word0->xMax;
+      }
+      if (word0->yMin < line1->yMin) {
+	line1->yMin = word0->yMin;
+      }
+      if (word0->yMax > line1->yMax) {
+	line1->yMax = word0->yMax;
+      }
+      line1->len += word0->len;
+      if (sp1 > line1->fontSize * line1->font->minSpaceWidth) {
+	word1->spaceAfter = gTrue;
+	++line1->len;
+      }
+
+    // didn't find a line: create a new line
+    } else {
+      line1 = new TextLine();
+      line1->words = line1->lastWord = word0;
+      line1->xMin = word0->xMin;
+      line1->xMax = word0->xMax;
+      line1->yMin = word0->yMin;
+      line1->yMax = word0->yMax;
+      line1->yBase = word0->yBase;
+      line1->font = word0->font;
+      line1->fontSize = word0->fontSize;
+      line1->len = word0->len;
+      if (line0) {
+	line0->next = line1;
+      } else {
+	lineList = line1;
+      }
+      line0 = line1;
+    }
+  }
+
+  // build the line text
+  uMap = globalParams->getTextEncoding();
+  isUnicode = uMap ? uMap->isUnicode() : gFalse;
+
+  for (line1 = lineList; line1; line1 = line1->next) {
     line1->text = (Unicode *)gmalloc(line1->len * sizeof(Unicode));
     line1->xRight = (double *)gmalloc(line1->len * sizeof(double));
     line1->col = (int *)gmalloc(line1->len * sizeof(int));
@@ -871,13 +893,6 @@ void TextPage::coalesce() {
       line1->hyphenated = gTrue;
     }
 
-    // insert line on list
-    if (line0) {
-      line0->next = line1;
-    } else {
-      lineList = line1;
-    }
-    line0 = line1;
   }
 
   if (uMap) {
@@ -931,6 +946,26 @@ void TextPage::coalesce() {
       line1->col[j] += col1;
     }
   }
+
+#if 0 // for debugging
+  printf("*** lines in xy order, after column assignment ***\n");
+  for (line0 = lineList; line0; line0 = line0->next) {
+    printf("[line: x=%.2f..%.2f y=%.2f..%.2f base=%.2f col=%d len=%d]\n",
+	   line0->xMin, line0->xMax, line0->yMin, line0->yMax,
+	   line0->yBase, line0->col[0], line0->len);
+    for (word0 = line0->words; word0; word0 = word0->next) {
+      printf("  word: x=%.2f..%.2f y=%.2f..%.2f base=%.2f fontSz=%.2f space=%d: '",
+	     word0->xMin, word0->xMax, word0->yMin, word0->yMax,
+	     word0->yBase, word0->fontSize, word0->spaceAfter);
+      for (i = 0; i < word0->len; ++i) {
+	fputc(word0->text[i] & 0xff, stdout);
+      }
+      printf("'\n");
+    }
+  }
+  printf("\n");
+  fflush(stdout);
+#endif
 
   //----- assemble lines into blocks
 
@@ -1181,6 +1216,7 @@ void TextPage::coalesce() {
       //   +------+ +------+                 +-----------+
       //   | blk4 | | blk6 | ...             | blk4+blk6 |
       //   +------+ +------+                 +-----------+
+      yLimit = 0; // make gcc happy
       if (blkStack) {
 	yLimit = blkStack->yMax + blkMaxSpacing * blkStack->lines->fontSize;
       }
@@ -1249,8 +1285,10 @@ void TextPage::coalesce() {
 	blk0 = blk4;
 
 	// push the block on the traversal stack
-	blk4->stackNext = blkStack;
-	blkStack = blk4;
+	if (!physLayout) {
+	  blk4->stackNext = blkStack;
+	  blkStack = blk4;
+	}
       }
     }
   } // (!rawOrder)
@@ -1456,18 +1494,21 @@ void TextPage::coalesce() {
 #endif
 }
 
-// Returns a non-negative number if <word> can be added to <line>
-// (whose last word is <lastWord>).  A smaller return value indicates
-// a better fit.  If <word> cannot be added to <line> at all, returns
-// a negative number.
-double TextPage::lineFit(TextLine *line, TextWord *lastWord, TextWord *word) {
+// If <word> can be added the end of <line>, return the absolute value
+// of the difference between <line>'s baseline and <word>'s baseline,
+// and set *<space> to the horizontal space between the current last
+// word in <line> and <word>.  A smaller return value indicates a
+// better fit.  Otherwise, return a negative number.
+double TextPage::lineFit(TextLine *line, TextWord *word, double *space) {
+  TextWord *lastWord;
   double fontSize0, fontSize1;
   double dx, dxLimit;
 
+  lastWord = line->lastWord;
   fontSize0 = line->fontSize;
   fontSize1 = word->fontSize;
   dx = word->xMin - lastWord->xMax;
-  dxLimit = fontSize0 * line->font->maxSpaceWidth;
+  dxLimit = fontSize0 * lastWord->font->maxSpaceWidth;
 
   // check inter-word spacing
   if (dx < fontSize0 * lineMinDeltaX ||
@@ -1475,36 +1516,30 @@ double TextPage::lineFit(TextLine *line, TextWord *lastWord, TextWord *word) {
     return -1;
   }
 
-  // ensure a non-negative return value
-  if (dx < 0) {
-    dx = 0;
-  }
+  if (
+      // look for adjacent words with close baselines and close font sizes
+      (fabs(line->yBase - word->yBase) < lineMaxBaselineDelta * fontSize0 &&
+       fontSize0 < lineMaxFontSizeRatio * fontSize1 &&
+       fontSize1 < lineMaxFontSizeRatio * fontSize0) ||
 
-  // look for adjacent words with close baselines and close font sizes
-  if (fabs(line->yBase - word->yBase) < lineMaxBaselineDelta * fontSize0 &&
-      fontSize0 < lineMaxFontSizeRatio * fontSize1 &&
-      fontSize1 < lineMaxFontSizeRatio * fontSize0) {
-    return dx;
-  }
+      // look for a superscript
+      (fontSize1 > lineMinSuperscriptFontSizeRatio * fontSize0 &&
+       fontSize1 < lineMaxSuperscriptFontSizeRatio * fontSize0 &&
+       (word->yMax < lastWord->yMax ||
+	word->yBase < lastWord->yBase) &&
+       word->yMax - lastWord->yMin > lineMinSuperscriptOverlap * fontSize0 &&
+       dx < fontSize0 * lineMaxSuperscriptDeltaX) ||
 
-  // look for a superscript
-  if (fontSize1 > lineMinSuperscriptFontSizeRatio * fontSize0 &&
-      fontSize1 < lineMaxSuperscriptFontSizeRatio * fontSize0 &&
-      (word->yMax < lastWord->yMax ||
-       word->yBase < lastWord->yBase) &&
-      word->yMax - lastWord->yMin > lineMinSuperscriptOverlap * fontSize0 &&
-      dx < fontSize0 * lineMaxSuperscriptDeltaX) {
-    return dx;
-  }
+      // look for a subscript
+      (fontSize1 > lineMinSubscriptFontSizeRatio * fontSize0 &&
+       fontSize1 < lineMaxSubscriptFontSizeRatio * fontSize0 &&
+       (word->yMin > lastWord->yMin ||
+	word->yBase > lastWord->yBase) &&
+       line->yMax - word->yMin > lineMinSubscriptOverlap * fontSize0 &&
+       dx < fontSize0 * lineMaxSubscriptDeltaX)) {
 
-  // look for a subscript
-  if (fontSize1 > lineMinSubscriptFontSizeRatio * fontSize0 &&
-      fontSize1 < lineMaxSubscriptFontSizeRatio * fontSize0 &&
-      (word->yMin > lastWord->yMin ||
-       word->yBase > lastWord->yBase) &&
-      line->yMax - word->yMin > lineMinSubscriptOverlap * fontSize0 &&
-      dx < fontSize0 * lineMaxSubscriptDeltaX) {
-    return dx;
+    *space = dx;
+    return fabs(word->yBase - line->yBase);
   }
 
   return -1;
@@ -1737,13 +1772,16 @@ GString *TextPage::getText(double xMin, double yMin,
     }
 
     i = 0;
-    while (1) {
+    while (i < line->len) {
       x0 = (i==0) ? line->xMin : line->xRight[i-1];
       x1 = line->xRight[i];
       if (0.5 * (x0 + x1) > xMin) {
 	break;
       }
       ++i;
+    }
+    if (i == line->len) {
+      continue;
     }
     col = line->col[i];
 
@@ -1755,9 +1793,8 @@ GString *TextPage::getText(double xMin, double yMin,
   // extract the text
   col = firstCol;
   multiLine = gFalse;
-  for (prevLine = NULL, line = lines;
-       line;
-       prevLine = line, line = line->pageNext) {
+  prevLine = NULL;
+  for (line = lines; line; line = line->pageNext) {
     if (line->yMin > yMax) {
       break;
     }
@@ -1773,7 +1810,7 @@ GString *TextPage::getText(double xMin, double yMin,
     }
 
     i = 0;
-    while (1) {
+    while (i < line->len) {
       x0 = (i==0) ? line->xMin : line->xRight[i-1];
       x1 = line->xRight[i];
       if (0.5 * (x0 + x1) > xMin) {
@@ -1781,9 +1818,12 @@ GString *TextPage::getText(double xMin, double yMin,
       }
       ++i;
     }
+    if (i == line->len) {
+      continue;
+    }
 
     // insert a return
-    if (col > line->col[i] ||
+    if (line->col[i] < col ||
 	(prevLine &&
 	 line->yMin >
 	   prevLine->yMax - lineOverlapSlack * prevLine->fontSize)) {
@@ -1791,6 +1831,7 @@ GString *TextPage::getText(double xMin, double yMin,
       col = firstCol;
       multiLine = gTrue;
     }
+    prevLine = line;
 
     // line this block up with the correct column
     for (; col < line->col[i]; ++col) {
@@ -1819,6 +1860,53 @@ GString *TextPage::getText(double xMin, double yMin,
   uMap->decRefCnt();
 
   return s;
+}
+
+GBool TextPage::findCharRange(int pos, int length,
+			      double *xMin, double *yMin,
+			      double *xMax, double *yMax) {
+  TextLine *line;
+  TextWord *word;
+  double x;
+  GBool first;
+  int i;
+
+  //~ this doesn't correctly handle:
+  //~ - ranges split across multiple lines (the highlighted region
+  //~   is the bounding box of all the parts of the range)
+  //~ - cases where characters don't convert one-to-one into Unicode
+  first = gTrue;
+  for (line = lines; line; line = line->pageNext) {
+    for (word = line->words; word; word = word->next) {
+      if (pos < word->charPos + word->charLen &&
+	  word->charPos < pos + length) {
+	i = pos - word->charPos;
+	if (i < 0) {
+	  i = 0;
+	}
+	x = (i == 0) ? word->xMin : word->xRight[i - 1];
+	if (first || x < *xMin) {
+	  *xMin = x;
+	}
+	i = pos + length - word->charPos;
+	if (i >= word->len) {
+	  i = word->len - 1;
+	}
+	x = word->xRight[i];
+	if (first || x > *xMax) {
+	  *xMax = x;
+	}
+	if (first || word->yMin < *yMin) {
+	  *yMin = word->yMin;
+	}
+	if (first || word->yMax > *yMax) {
+	  *yMax = word->yMax;
+	}
+	first = gFalse;
+      }
+    }
+  }
+  return !first;
 }
 
 void TextPage::dump(void *outputStream, TextOutputFunc outputFunc,
@@ -1870,7 +1958,8 @@ void TextPage::dump(void *outputStream, TextOutputFunc outputFunc,
       col += line->convertedLen;
 
       // print one or more returns if necessary
-      if (!line->pageNext ||
+      if (rawOrder ||
+	  !line->pageNext ||
 	  line->pageNext->col[0] < col ||
 	  line->pageNext->yMin >
 	    line->yMax - lineOverlapSlack * line->fontSize) {
@@ -1927,8 +2016,12 @@ void TextPage::dump(void *outputStream, TextOutputFunc outputFunc,
 
 void TextPage::startPage(GfxState *state) {
   clear();
-  pageWidth = state->getPageWidth();
-  pageHeight = state->getPageHeight();
+  if (state) {
+    pageWidth = state->getPageWidth();
+    pageHeight = state->getPageHeight();
+  } else {
+    pageWidth = pageHeight = 0;
+  }
 }
 
 void TextPage::clear() {
@@ -1953,6 +2046,7 @@ void TextPage::clear() {
   deleteGList(fonts, TextFontInfo);
 
   curWord = NULL;
+  charPos = 0;
   font = NULL;
   fontSize = 0;
   nest = 0;
@@ -1985,6 +2079,10 @@ TextOutputDev::TextOutputDev(char *fileName, GBool physLayoutA,
   if (fileName) {
     if (!strcmp(fileName, "-")) {
       outputStream = stdout;
+#ifdef WIN32
+      // keep DOS from munging the end-of-line characters
+      setmode(fileno(stdout), O_BINARY);
+#endif
     } else if ((outputStream = fopen(fileName, append ? "ab" : "wb"))) {
       needClose = gTrue;
     } else {
@@ -2029,7 +2127,7 @@ void TextOutputDev::startPage(int pageNum, GfxState *state) {
 }
 
 void TextOutputDev::endPage() {
-  text->coalesce();
+  text->coalesce(physLayout);
   if (outputStream) {
     text->dump(outputStream, outputFunc, physLayout);
   }
@@ -2066,5 +2164,10 @@ GString *TextOutputDev::getText(double xMin, double yMin,
   return text->getText(xMin, yMin, xMax, yMax);
 }
 
+GBool TextOutputDev::findCharRange(int pos, int length,
+				   double *xMin, double *yMin,
+				   double *xMax, double *yMax) {
+  return text->findCharRange(pos, length, xMin, yMin, xMax, yMax);
+}
 
 

@@ -2,7 +2,7 @@
 //
 // GlobalParams.h
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -156,7 +156,7 @@ public:
   GBool getPSASCIIHex();
   EndOfLineKind getTextEOL();
   GBool getTextKeepTinyChars();
-  GString *findFontFile(GString *fontName, char *ext1, char *ext2);
+  GString *findFontFile(GString *fontName, char **exts);
   GString *getInitialZoom();
   FontRastControl getT1libControl();
   FontRastControl getFreeTypeControl();

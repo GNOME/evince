@@ -2,7 +2,7 @@
 //
 // TTFont.cc
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -80,7 +80,7 @@ TTFontFile::TTFontFile(TTFontEngine *engineA, char *fontFileName,
   unicodeCmap = macRomanCmap = msSymbolCmap = 0xffff;
   for (i = 0; i < props.num_CharMaps; ++i) {
     if (!TT_Get_CharMap_ID(face, i, &platform, &encoding)) {
-      if (platform == 3 && encoding == 1) {
+      if ((platform == 3 && encoding == 1) || platform == 0) {
 	unicodeCmap = i;
       } else if (platform == 1 && encoding == 0) {
 	macRomanCmap = i;

@@ -2,7 +2,7 @@
 //
 // xpdf.cc
 //
-// Copyright 1996-2002 Glyph & Cog, LLC
+// Copyright 1996-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -71,7 +71,7 @@ static ArgDesc argDesc[] = {
   {"-ps",         argString,      psFileArg,      sizeof(psFileArg),
    "default PostScript file name or command"},
   {"-paper",      argString,      paperSize,      sizeof(paperSize),
-   "paper size (letter, legal, A4, A3)"},
+   "paper size (letter, legal, A4, A3, match)"},
   {"-paperw",     argInt,         &paperWidth,    0,
    "paper width, in points"},
   {"-paperh",     argInt,         &paperHeight,   0,

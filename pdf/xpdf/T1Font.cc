@@ -2,7 +2,7 @@
 //
 // T1Font.cc
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -301,7 +301,9 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
   XColor xcolor;
   int bgR, bgG, bgB;
   Gulong colors[17];
-  Guchar *p;
+  Guchar *bitmap, *p;
+  GBool tempBitmap;
+  XImage *img;
   int xOffset, yOffset, x0, y0, x1, y1, gw, gh, w0, h0;
   int xx, yy, xx1;
   Guchar pix, mPix;
@@ -310,7 +312,8 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
   engine = fontFile->engine;
 
   // generate the glyph pixmap
-  if (!(p = getGlyphPixmap(c, &xOffset, &yOffset, &gw, &gh))) {
+  if (!(bitmap = getGlyphPixmap(c, &xOffset, &yOffset, &gw, &gh,
+				&tempBitmap))) {
     return gFalse;
   }
 
@@ -332,7 +335,7 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
     w0 = w - x0;
   }
   if (w0 < 0) {
-    return gTrue;
+    goto done;
   }
   if (y0 < 0) {
     y1 = -y0;
@@ -343,17 +346,29 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
     h0 = h - y0;
   }
   if (h0 < 0) {
-    return gTrue;
+    goto done;
+  }
+
+  // getGlyphPixmap may have returned a larger-than-cache-entry
+  // bitmap, in which case we need to allocate a temporary XImage here
+  if (tempBitmap) {
+    if (!(img = XCreateImage(engine->display, engine->visual, engine->depth,
+			     ZPixmap, 0, NULL, gw, gh, 8, 0))) {
+      goto done;
+    }
+    img->data = (char *)gmalloc(gh * img->bytes_per_line);
+  } else {
+    img = image;
   }
 
   // read the X image
   XGetSubImage(engine->display, d, x0, y0, w0, h0, (1 << engine->depth) - 1,
-	       ZPixmap, image, x1, y1);
+	       ZPixmap, img, x1, y1);
 
   if (engine->aa) {
 
     // compute the colors
-    xcolor.pixel = XGetPixel(image, x1 + w0/2, y1 + h0/2);
+    xcolor.pixel = XGetPixel(img, x1 + w0/2, y1 + h0/2);
     XQueryColor(engine->display, engine->colormap, &xcolor);
     bgR = xcolor.red;
     bgG = xcolor.green;
@@ -380,6 +395,7 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
     }
 
     // stuff the glyph pixmap into the X image
+    p = bitmap;
     for (yy = 0; yy < gh; ++yy) {
       for (xx = 0; xx < gw; ++xx) {
 	pix = *p++;
@@ -387,7 +403,7 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
 	  if (pix > mPix) {
 	    pix = mPix;
 	  }
-	  XPutPixel(image, xx, yy, colors[pix]);
+	  XPutPixel(img, xx, yy, colors[pix]);
 	}
       }
     }
@@ -398,12 +414,13 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
     colors[1] = engine->findColor(r, g, b);
 
     // stuff the glyph bitmap into the X image
+    p = bitmap;
     for (yy = 0; yy < gh; ++yy) {
       for (xx = 0; xx < gw; xx += 8) {
 	pix = *p++;
 	for (xx1 = xx; xx1 < xx + 8 && xx1 < gw; ++xx1) {
 	  if (pix & 0x01) {
-	    XPutPixel(image, xx1, yy, colors[1]);
+	    XPutPixel(img, xx1, yy, colors[1]);
 	  }
 	  pix >>= 1;
 	}
@@ -413,12 +430,22 @@ GBool T1Font::drawChar(Drawable d, int w, int h, GC gc,
   }
 
   // draw the X image
-  XPutImage(engine->display, d, gc, image, x1, y1, x0, y0, w0, h0);
+  XPutImage(engine->display, d, gc, img, x1, y1, x0, y0, w0, h0);
 
+  if (tempBitmap) {
+    gfree(img->data);
+    img->data = NULL;
+    XDestroyImage(img);
+  }
+ done:
+  if (tempBitmap) {
+    gfree(bitmap);
+  }
   return gTrue;
 }
 
-Guchar *T1Font::getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h) {
+Guchar *T1Font::getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h,
+			       GBool *tempBitmap) {
   T1FontEngine *engine;
   GLYPH *glyph;
   int gSize;
@@ -442,6 +469,7 @@ Guchar *T1Font::getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h) {
 	}
       }
       cacheTags[i+j].mru = 0x8000;
+      *tempBitmap = gFalse;
       return cache + (i+j) * glyphSize;
     }
   }
@@ -455,42 +483,45 @@ Guchar *T1Font::getGlyphPixmap(CharCode c, int *x, int *y, int *w, int *h) {
   if (!glyph) {
     return NULL;
   }
+
+  // copy the glyph into the cache or a temporary bitmap
   *x = -glyph->metrics.leftSideBearing;
   *y = glyph->metrics.ascent;
   *w = glyph->metrics.rightSideBearing - glyph->metrics.leftSideBearing;
   *h = glyph->metrics.ascent - glyph->metrics.descent;
-  if (*w > glyphW || *h > glyphH) {
-#if 1 //~ debug
-    fprintf(stderr, "Weird t1lib glyph size: %d > %d or %d > %d\n",
-	    *w, glyphW, *h, glyphH);
-#endif
-    return NULL;
+  if (engine->aa) {
+    gSize = *w * *h;
+  } else {
+    gSize = ((*w + 7) >> 3) * *h;
   }
-
-  // store glyph pixmap in cache
-  ret = NULL;
-  for (j = 0; j < cacheAssoc; ++j) {
-    if ((cacheTags[i+j].mru & 0x7fff) == cacheAssoc - 1) {
-      cacheTags[i+j].mru = 0x8000;
-      cacheTags[i+j].code = c;
-      cacheTags[i+j].x = *x;
-      cacheTags[i+j].y = *y;
-      cacheTags[i+j].w = *w;
-      cacheTags[i+j].h = *h;
-      if (engine->aa) {
-	gSize = *w * *h;
+  if (*w > glyphW || *h > glyphH) {
+    // the glyph doesn't fit in the bounding box -- return a
+    // temporary, uncached bitmap (this shouldn't happen but some
+    // fonts have incorrect bboxes)
+    ret = (Guchar *)gmalloc(gSize);
+    *tempBitmap = gTrue;
+  } else {
+    // store glyph pixmap in cache
+    ret = NULL; // make gcc happy
+    for (j = 0; j < cacheAssoc; ++j) {
+      if ((cacheTags[i+j].mru & 0x7fff) == cacheAssoc - 1) {
+	cacheTags[i+j].mru = 0x8000;
+	cacheTags[i+j].code = c;
+	cacheTags[i+j].x = *x;
+	cacheTags[i+j].y = *y;
+	cacheTags[i+j].w = *w;
+	cacheTags[i+j].h = *h;
+	ret = cache + (i+j) * glyphSize;
       } else {
-	gSize = ((*w + 7) >> 3) * *h;
+	++cacheTags[i+j].mru;
       }
-      ret = cache + (i+j) * glyphSize;
-      if (glyph->bits) {
-	memcpy(ret, glyph->bits, gSize);
-      } else {
-	memset(ret, 0, gSize);
-      }
-    } else {
-      ++cacheTags[i+j].mru;
     }
+    *tempBitmap = gFalse;
+  }
+  if (glyph->bits) {
+    memcpy(ret, glyph->bits, gSize);
+  } else {
+    memset(ret, 0, gSize);
   }
   return ret;
 }

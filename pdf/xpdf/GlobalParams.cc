@@ -2,7 +2,7 @@
 //
 // GlobalParams.cc
 //
-// Copyright 2001-2002 Glyph & Cog, LLC
+// Copyright 2001-2003 Glyph & Cog, LLC
 //
 //========================================================================
 
@@ -353,6 +353,12 @@ void GlobalParams::parseFile(GString *fileName, FILE *f) {
       } else if (!cmd->cmp("displayCIDFontT1")) {
 	parseDisplayFont(tokens, displayCIDFonts,
 			 displayFontT1, fileName, line);
+      } else if (!cmd->cmp("displayNamedCIDFontTT")) {
+	parseDisplayFont(tokens, displayNamedCIDFonts,
+			 displayFontTT, fileName, line);
+      } else if (!cmd->cmp("displayCIDFontTT")) {
+	parseDisplayFont(tokens, displayCIDFonts,
+			 displayFontTT, fileName, line);
       } else if (!cmd->cmp("psFile")) {
 	parsePSFile(tokens, fileName, line);
       } else if (!cmd->cmp("psFont")) {
@@ -1061,26 +1067,17 @@ GBool GlobalParams::getTextKeepTinyChars() {
   return tiny;
 }
 
-GString *GlobalParams::findFontFile(GString *fontName,
-				    char *ext1, char *ext2) {
+GString *GlobalParams::findFontFile(GString *fontName, char **exts) {
   GString *dir, *fileName;
+  char **ext;
   FILE *f;
   int i;
 
   for (i = 0; i < fontDirs->getLength(); ++i) {
     dir = (GString *)fontDirs->get(i);
-    if (ext1) {
+    for (ext = exts; *ext; ++ext) {
       fileName = appendToPath(dir->copy(), fontName->getCString());
-      fileName->append(ext1);
-      if ((f = fopen(fileName->getCString(), "r"))) {
-	fclose(f);
-	return fileName;
-      }
-      delete fileName;
-    }
-    if (ext2) {
-      fileName = appendToPath(dir->copy(), fontName->getCString());
-      fileName->append(ext2);
+      fileName->append(*ext);
       if ((f = fopen(fileName->getCString(), "r"))) {
 	fclose(f);
 	return fileName;
@@ -1218,7 +1215,9 @@ void GlobalParams::setPSFile(char *file) {
 
 GBool GlobalParams::setPSPaperSize(char *size) {
   globalParamsLock;
-  if (!strcmp(size, "letter")) {
+  if (!strcmp(size, "match")) {
+    psPaperWidth = psPaperHeight = -1;
+  } else if (!strcmp(size, "letter")) {
     psPaperWidth = 612;
     psPaperHeight = 792;
   } else if (!strcmp(size, "legal")) {

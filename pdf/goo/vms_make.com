@@ -4,7 +4,7 @@ $! Goo library compile script for VMS.
 $!
 $! Written by Patrick Moreau, Martin P.J. Zinser.
 $!
-$! Copyright 1996-2002 Glyph & Cog, LLC
+$! Copyright 1996-2003 Glyph & Cog, LLC
 $!
 $!========================================================================
 $!
