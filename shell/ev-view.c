@@ -414,9 +414,16 @@ expose_bin_window (GtkWidget      *widget,
                             results[i].highlight_area.width,
                             results[i].highlight_area.height);
 #endif
-		if (results[i].page_num == current_page)
+		if (results[i].page_num == current_page) {
+			GdkRectangle highlight_area_fixed;
+			highlight_area_fixed.x = results[i].highlight_area.x + x_offset + 1;
+			highlight_area_fixed.y = results[i].highlight_area.y + y_offset + 1;
+			highlight_area_fixed.width = results[i].highlight_area.width;
+			highlight_area_fixed.height = results[i].highlight_area.height;
+
 			draw_rubberband (widget, view->bin_window,
-					 &results[i].highlight_area);
+					 &highlight_area_fixed);
+		}
                 ++i;
         }
 

@@ -484,8 +484,8 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
                                          &xMin, &yMin, &xMax, &yMax)) {
                 result.page_num = pdf_document->page;
 
-                result.highlight_area.x = xMin + pdf_document->page_x_offset;
-                result.highlight_area.y = yMin + pdf_document->page_y_offset;
+                result.highlight_area.x = xMin;
+                result.highlight_area.y = yMin;
                 result.highlight_area.width = xMax - xMin;
                 result.highlight_area.height = yMax - yMin;
 
@@ -499,8 +499,8 @@ pdf_document_search_page_changed (PdfDocumentSearch   *search)
 
                         result.page_num = pdf_document->page;
 
-                        result.highlight_area.x = xMin + pdf_document->page_x_offset;
-                        result.highlight_area.y = yMin + pdf_document->page_y_offset;
+                        result.highlight_area.x = xMin;
+                        result.highlight_area.y = yMin;
                         result.highlight_area.width = xMax - xMin;
                         result.highlight_area.height = yMax - yMin;
 

@@ -1,5 +1,11 @@
 2005-01-23  Stephane LOEUILLET  <stephane.loeuillet@tiscali.fr>
 
+	* pdf/xpdf/pdf-document.cc (pdf_document_search_page_changed):
+	ignore page offset here, to make search results independent of it,
+
+	* shell/ev-view.c (expose_bin_window): but take offsets into
+	account here. Bug #164932
+
 	* pdf/xpdf/pdf-document.cc (pdf_document_get_link): divide by
 	scale at the right time. Bug #164996
 
