@@ -575,7 +575,7 @@ Links::~Links() {
   gfree(links);
 }
 
-LinkAction *Links::find(double x, double y) {
+LinkAction *Links::find(double x, double y) const {
   int i;
 
   for (i = numLinks - 1; i >= 0; --i) {
@@ -586,7 +586,7 @@ LinkAction *Links::find(double x, double y) {
   return NULL;
 }
 
-GBool Links::onLink(double x, double y) {
+GBool Links::onLink(double x, double y) const {
   int i;
 
   for (i = 0; i < numLinks; ++i) {

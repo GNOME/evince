@@ -535,28 +535,25 @@ container_new (const char *fname)
 int
 main (int argc, char **argv)
 {
-	CORBA_Environment ev;
-	CORBA_ORB         orb;
 	const char      **view_files = NULL;
 	gboolean          loaded;
 	int               i;
 
 	bindtextdomain (PACKAGE, GNOMELOCALEDIR);
 	textdomain (PACKAGE);
-	setlocale (LC_ALL, "");
  	
-	CORBA_exception_init (&ev);
-	
 	gnomelib_register_popt_table (oaf_popt_options, "OAF");
-	gnome_init_with_popt_table("PDFViewer", "0.0.1",
+	gnome_init_with_popt_table("PDFViewer", "0." VERSION,
 				   argc, argv,
 				   gpdf_popt_options, 0, &ctx); 
-	orb = oaf_init (argc, argv);
 	
-	CORBA_exception_free (&ev);
+	oaf_init (argc, argv);
 	
-	if (bonobo_init (orb, NULL, NULL) == FALSE)
+	if (!bonobo_init (CORBA_OBJECT_NIL, 
+			  CORBA_OBJECT_NIL, 
+			  CORBA_OBJECT_NIL))
 		g_error (_("Could not initialize Bonobo!\n"));
+
 	bonobo_activate ();
 	
 	view_files = poptGetArgs (ctx);
@@ -577,6 +574,9 @@ main (int argc, char **argv)
 	
 	poptFreeContext (ctx);
 	
+	gtk_widget_push_visual (gdk_rgb_get_visual ());
+	gtk_widget_push_colormap (gdk_rgb_get_cmap ());
+
 	gtk_main ();
 	
 	return 0;

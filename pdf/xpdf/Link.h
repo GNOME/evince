@@ -278,18 +278,18 @@ public:
   ~Link();
 
   // Was the link created successfully?
-  GBool isOk() { return ok; }
+  GBool isOk() const { return ok; }
 
   // Check if point is inside the link rectangle.
-  GBool inRect(double x, double y)
+  GBool inRect(double x, double y) const
     { return x1 <= x && x <= x2 && y1 <= y && y <= y2; }
 
   // Get action.
-  LinkAction *getAction() { return action; }
+  LinkAction *getAction() const { return action; }
 
   // Get border corners and width.
   void getBorder(double *xa1, double *ya1, double *xa2, double *ya2,
-		 double *wa)
+		 double *wa) const
     { *xa1 = x1; *ya1 = y1; *xa2 = x2; *ya2 = y2; *wa = borderW; }
 
 private:
@@ -315,15 +315,15 @@ public:
   ~Links();
 
   // Iterate through list of links.
-  int getNumLinks() { return numLinks; }
-  Link *getLink(int i) { return links[i]; }
+  int getNumLinks() const { return numLinks; }
+  Link *getLink(int i) const { return links[i]; }
 
   // If point <x>,<y> is in a link, return the associated action;
   // else return NULL.
-  LinkAction *find(double x, double y);
+  LinkAction *find(double x, double y) const;
 
   // Return true if <x>,<y> is in a link.
-  GBool onLink(double x, double y);
+  GBool onLink(double x, double y) const;
 
 private:
 

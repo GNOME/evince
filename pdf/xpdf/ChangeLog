@@ -1,3 +1,20 @@
+2002-08-29  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
+
+	* bonobo-application-x-pdf.cc: move struct bed_t to
+	gpdf-embeddable.{cc,h}
+	(setup_pixmap) remove doc parameter. (Get it from view_data param)
+	
+	* gpdf-embeddable.cc: New files to contain the embeddable class
+
+	* gpdf-embeddable.h:  
+
+	* gpdf.cc (main): remove call to setlocale (done in
+	gnome_init...), ignore return value of oaf_init, let bonobo_init
+	figure out which orb to use.
+	
+	* Link.h: declare some methods as const.
+	* Link.cc:
+
 2002-08-12  Martin Kretzschmar  <Martin.Kretzschmar@inf.tu-dresden.de>
 
 	* GOutputDev.cc: make it compile (without Type 3 support for now)
