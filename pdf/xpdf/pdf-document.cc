@@ -740,6 +740,8 @@ pdf_document_bookmarks_begin_read (EvDocumentBookmarks *document_bookmarks)
 	return (EvDocumentBookmarksIter *) iter;
 }
 
+/* FIXME This returns a new object every time, probably we should cache it
+   in the iter */
 static EvBookmark *
 pdf_document_bookmarks_get_bookmark (EvDocumentBookmarks      *document_bookmarks,
 				     EvDocumentBookmarksIter  *bookmarks_iter)
