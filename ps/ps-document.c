@@ -1773,6 +1773,10 @@ ps_document_set_page_offset (EvDocument  *document,
 			      int          x,
 			      int          y)
 {
+	PSDocument *gs = PS_DOCUMENT (document);
+
+	gs->page_x_offset = x;
+	gs->page_y_offset = y;
 }
 
 static void
@@ -1799,6 +1803,8 @@ ps_document_render (EvDocument  *document,
 		    int          clip_height)
 {
 	PSDocument *gs = PS_DOCUMENT (document);
+	GdkRectangle page;
+	GdkRectangle draw;
 	GdkGC *gc;
 
 	if (gs->pstarget == NULL ||
@@ -1806,13 +1812,23 @@ ps_document_render (EvDocument  *document,
 		return;
 	}
 
+	page.x = gs->page_x_offset;
+	page.y = gs->page_y_offset;
+	page.width = gs->width;
+	page.height = gs->height;
+
+	draw.x = clip_x;
+	draw.y = clip_y;
+	draw.width = clip_width;
+	draw.height = clip_height;
+
 	gc = gdk_gc_new (gs->pstarget);
 
 	gdk_draw_drawable (gs->pstarget, gc,
 			   gs->bpixmap,
-			   clip_x, clip_y,
-			   clip_x, clip_y,
-			   clip_width, clip_height);
+			   draw.x - page.x, draw.y - page.y,
+			   draw.x, draw.y,
+			   draw.width, draw.height);
 
 	g_object_unref (gc);
 }

@@ -107,6 +107,9 @@ struct _PSDocument {
   const gchar *gs_status;       /* PSDocument status */
 
   guint avail_w, avail_h;
+
+  int page_x_offset;
+  int page_y_offset;
 };
 
 struct _PSDocumentClass {
