@@ -116,7 +116,9 @@ gnome_pdf_viewer_SOURCES =		\
 	gpdf-view.cc			\
 	gpdf-view.h			\
 	gtkgesture.c			\
-	gtkgesture.h			
+	gtkgesture.h			\
+	page-control.c			\
+	page-control.h
 
 # Font embedding hack for Gnome Print < 2.1.?2?
 #	gpdf-gnome-font.c		\
