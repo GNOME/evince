@@ -25,6 +25,7 @@
 #define __EV_SIDEBAR_H__
 
 #include <gtk/gtkvbox.h>
+#include "ev-document.h"
 
 G_BEGIN_DECLS
 
@@ -49,13 +50,15 @@ struct _EvSidebarClass {
 	GtkVBoxClass base_class;
 };
 
-GType      ev_sidebar_get_type (void);
-GtkWidget *ev_sidebar_new      (void);
-void       ev_sidebar_add_page (EvSidebar   *ev_sidebar,
-				const gchar *page_id,
-				const gchar *title,
-				GtkWidget   *main_widget);
-void       ev_sidebar_clear    (EvSidebar   *ev_sidebar);
+GType      ev_sidebar_get_type     (void);
+GtkWidget *ev_sidebar_new          (void);
+void       ev_sidebar_add_page     (EvSidebar   *ev_sidebar,
+				    const gchar *page_id,
+				    const gchar *title,
+				    GtkWidget   *main_widget);
+void       ev_sidebar_set_document (EvSidebar   *ev_sidebar,
+				    EvDocument  *document);
+void       ev_sidebar_clear        (EvSidebar   *ev_sidebar);
 
 G_END_DECLS
 

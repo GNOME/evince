@@ -25,6 +25,7 @@
 #define __EV_SIDEBAR_BOOKMARKS_H__
 
 #include <gtk/gtkvbox.h>
+#include "ev-document.h"
 
 G_BEGIN_DECLS
 
@@ -51,6 +52,8 @@ struct _EvSidebarBookmarksClass {
 
 GType      ev_sidebar_bookmarks_get_type (void);
 GtkWidget *ev_sidebar_bookmarks_new      (void);
+void       ev_sidebar_bookmarks_set_document (EvSidebarBookmarks *ev_sidebar_bookmarks,
+					      EvDocument         *document);
 
 G_END_DECLS
 

@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 
 #include "ev-sidebar.h"
+#include "ev-sidebar-bookmarks.h"
 
 typedef struct
 {
@@ -78,8 +79,8 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	GtkCellRenderer *renderer;
 
 	ev_sidebar->priv = EV_SIDEBAR_GET_PRIVATE (ev_sidebar);
-
 	gtk_box_set_spacing (GTK_BOX (ev_sidebar), 6);
+
 	/* data model */
 	ev_sidebar->priv->page_model = (GtkTreeModel *)
 		gtk_list_store_new (PAGE_COLUMN_NUM_COLS,
@@ -87,6 +88,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 				    G_TYPE_STRING,
 				    GTK_TYPE_WIDGET,
 				    G_TYPE_INT);
+
 	/* top option menu */
 	hbox = gtk_hbox_new (FALSE, 6);
 	gtk_box_pack_start (GTK_BOX (ev_sidebar), hbox,
@@ -170,6 +172,42 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 					   PAGE_COLUMN_MAIN_WIDGET, main_widget,
 					   PAGE_COLUMN_NOTEBOOK_INDEX, index,
 					   -1);
+}
+
+void
+ev_sidebar_set_document (EvSidebar   *sidebar,
+			 EvDocument  *document)
+{
+	EvSidebarPrivate *priv;
+	GtkTreeIter iter;
+	gboolean result;
+
+	g_return_if_fail (EV_IS_SIDEBAR (sidebar));
+	g_return_if_fail (EV_IS_DOCUMENT (document));
+
+	priv = sidebar->priv;
+	
+	/* FIXME: We should prolly make sidebars have an interface.  For now, we
+	 * do this bad hack (TM)
+	 */
+	for (result = gtk_tree_model_get_iter_first (priv->page_model, &iter);
+	     result;
+	     result = gtk_tree_model_iter_next (priv->page_model, &iter)) {
+		GtkWidget *widget;
+
+		gtk_tree_model_get (priv->page_model, &iter,
+				    PAGE_COLUMN_MAIN_WIDGET, &widget,
+				    -1);
+
+		if (EV_IS_SIDEBAR_BOOKMARKS (widget))
+			/* && EV_IS_BOOKMARKS (document)
+			   && ev_bookmarks_has_bookmarks (document)... */
+			ev_sidebar_bookmarks_set_document (EV_SIDEBAR_BOOKMARKS (widget),
+							   document);
+		/* else if EV_IS_SIDEBAR_THUMBNAILS... */
+	}
+	
+
 }
 
 void

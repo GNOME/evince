@@ -271,6 +271,8 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 
 			ev_view_set_document (EV_VIEW (ev_window->priv->view),
 					      document);
+			ev_sidebar_set_document (EV_SIDEBAR (ev_window->priv->sidebar),
+						 document);
 
 			update_action_sensitivity (ev_window);
 		
