@@ -12,11 +12,11 @@ else
 gui = xpdf
 endif
 
-bin_PROGRAMS =			\
-	pdftops pdftotext	\
-	pdfinfo	pdftopbm	\
-	pdfimages $(gui)	\
-	bonobo-application-x-pdf
+bin_PROGRAMS = 	$(gui)	bonobo-application-x-pdf
+#	pdftops pdftotext	
+#	pdfinfo	pdftopbm	
+#	pdfimages  		
+
 
 common_sources =		\
 	Array.cc 		\
@@ -108,57 +108,63 @@ xpdf_SOURCES =			\
 xpdf_CFLAGS = $(X_CFLAGS)
 xpdf_LDADD = ../goo/libgoo.a ../ltk/libltk.a -lXpm $(EXTRA_GNOME_LIBS) 
 
-pdfimages_SOURCES =		\
-	$(common_sources)	\
-	ImageOutputDev.cc	\
-	ImageOutputDev.h	\
-	pdfimages.cc
+#pdfimages_SOURCES =		
+#	$(common_sources)	
+#	ImageOutputDev.cc	
+#	ImageOutputDev.h	
+#	pdfimages.cc
 
-pdfimages_LDADD = ../goo/libgoo.a
+#pdfimages_LDADD = ../goo/libgoo.a
+#
+#pdftops_SOURCES =		
+#	$(common_sources)	
+#	PSOutputDev.cc		
+#       pdftops.cc
+#pdftops_LDADD = ../goo/libgoo.a
 
-pdftops_SOURCES =		\
-	$(common_sources)	\
-	PSOutputDev.cc		\
-	pdftops.cc
-pdftops_LDADD = ../goo/libgoo.a
+#pdftotext_SOURCES =		
+#	$(common_sources)	
+#	pdftotext.cc
+#pdftotext_LDADD = ../goo/libgoo.a
 
-pdftotext_SOURCES =		\
-	$(common_sources)	\
-	pdftotext.cc
-pdftotext_LDADD = ../goo/libgoo.a
+#pdfinfo_SOURCES =		
+#	$(common_sources)	
+#	pdfinfo.cc
+#pdfinfo_LDADD = ../goo/libgoo.a
 
-pdfinfo_SOURCES =		\
-	$(common_sources)	\
-	pdfinfo.cc
-pdfinfo_LDADD = ../goo/libgoo.a
+#pdftopbm_SOURCES =		
+#	$(common_sources)	
+#	PBMOutputDev.cc		
+#	PBMOutputDev.h		
+#	XOutputDev.cc		
+#	XOutputDev.h		
+#	XOutputFontInfo.h	
+#	pdftopbm.cc
 
-pdftopbm_SOURCES =		\
-	$(common_sources)	\
-	PBMOutputDev.cc		\
-	PBMOutputDev.h		\
-	XOutputDev.cc		\
-	XOutputDev.h		\
-	XOutputFontInfo.h	\
-	pdftopbm.cc
-
-pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
+#pdftopbm_LDADD = ../goo/libgoo.a $(EXTRA_GNOME_LIBS)
 
 xpdf-ltk.h: xpdf.ltk
 	rm -f $@
 	$(top_srcdir)/ltk/ltkbuild <xpdf.ltk >$@.new
 	mv $@.new $@
 
-bitmaps =			\
-	about.xbm		\
-	dblLeftArrow.xbm	\
-	dblRightArrow.xbm	\
-	find.xbm		\
-	leftArrow.xbm		\
-	postscript.xbm		\
-	rightArrow.xbm		\
-	xpdfIcon.xpm		\
-	zoomIn.xbm		\
-	zoomOut.xbm		
+#bitmaps =		
+#	about.xbm		
+#	dblLeftArrow.xbm	
+#	dblRightArrow.xbm	
+#	find.xbm		
+#	leftArrow.xbm		
+#	postscript.xbm		
+#	rightArrow.xbm		
+#	xpdfIcon.xpm		
+#	zoomIn.xbm		
+#	zoomOut.xbm		
+
+
+stockdir = $(datadir)/pixmaps/gpdf
+stock_DATA = stock-zoom-in.xpm	stock-zoom-out.xpm \
+	     stock-zoom-fit.xpm stock-zoom-fit-wide.xpm	\
+	     stock-zoom-fit-tall.xpm	
 
 ltk = 			\
 	xpdf-flip.ltk	\
@@ -175,7 +181,7 @@ XML_FILES =				\
 uidir = $(datadir)/gnome/ui
 ui_DATA = $(XML_FILES)
 
-EXTRA_DIST = $(bitmaps) ChangeLog $(ltk)	\
+EXTRA_DIST = $(stock_DATA) ChangeLog $(ltk)	\
              $(oaf_DATA) config.h $(XML_FILES)
 
 

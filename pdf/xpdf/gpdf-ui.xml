@@ -12,11 +12,11 @@
            pixtype="stock" pixname="Exit" accel="*Control*q"/>
 
         <cmd name="FilePrint" _label="Print"
-	_tip="Print the current file" pixtype="stock" pixname="Print" hidden="1"/>
+	_tip="Print the current file" pixtype="stock" pixname="Print" hidden="0"/>
 	
         <cmd name="FilePrintSetup" _label="Print Setup"
           _tip="Setup the page settings for your current printer"
-	  pixtype="stock" pixname="Print" hidden="1"/>
+	  pixtype="stock" pixname="Print" hidden="0"/>
 
         <cmd name="HelpAbout" _label="About..." _tip="About this application"
 	 pixtype="stock" pixname="About"/>
@@ -69,8 +69,8 @@
 <dockitem name="Toolbar" behavior="exclusive">
 
 	<toolitem name="open" verb="FileOpen"/>
-
-	<separator/>
+        <toolitem name="print" verb="FilePrint"/>
+        <separator/>
 
 </dockitem>
 

@@ -10,8 +10,10 @@
 #define VERB_PREV  "PrevPage"
 #define VERB_NEXT  "NextPage"
 #define VERB_LAST  "LastPage"
-#define VERB_Z_FIT "ZoomFit"
+
 #define VERB_Z_IN  "ZoomIn"
 #define VERB_Z_OUT "ZoomOut"
+#define VERB_Z_FIT_WIDTH  "ZoomFitWidth"
+#define VERB_Z_FIT_HEIGHT "ZoomFitHeight"
 
 #endif /* BONOBOAPPLICATIONXPDF_H */

@@ -49,7 +49,7 @@ struct  _Component {
 	Container	  *container;
 
 	BonoboClientSite   *client_site;
-	BonoboViewFrame	  *view_frame;
+	BonoboViewFrame	   *view_frame;
 	BonoboObjectClient *server;
 };
 
@@ -534,46 +534,46 @@ container_new (const char *fname)
 int
 main (int argc, char **argv)
 {
-  CORBA_Environment ev;
-  CORBA_ORB         orb;
-  const char      **view_files = NULL;
-  gboolean          loaded;
-  int               i;
-  
-  CORBA_exception_init (&ev);
-  
-
-  gnomelib_register_popt_table (oaf_popt_options, "OAF");
-  gnome_init_with_popt_table("PDFViewer", "0.0.1",
-			     argc, argv,
-			     gpdf_popt_options, 0, &ctx); 
-  orb = oaf_init (argc, argv);
-
-  CORBA_exception_free (&ev);
-
-  if (bonobo_init (orb, NULL, NULL) == FALSE)
-    g_error (_("Could not initialize Bonobo!\n"));
-  bonobo_activate ();
-
-  view_files = poptGetArgs (ctx);
-
-  /* Load files */
-  i = 0;
-  loaded = FALSE;
-  if (view_files) {
-    for (i = 0; view_files[i]; i++)
-      if (container_new (view_files[i])) {
-	loaded = TRUE;
-	while (gtk_events_pending ())
-	  gtk_main_iteration ();
-      }
-  }
-  if ((i == 0) || !loaded)
-    container_new (NULL);
-  
-  poptFreeContext (ctx);
-
-  gtk_main ();
+	CORBA_Environment ev;
+	CORBA_ORB         orb;
+	const char      **view_files = NULL;
+	gboolean          loaded;
+	int               i;
 	
-  return 0;
+	CORBA_exception_init (&ev);
+	
+	
+	gnomelib_register_popt_table (oaf_popt_options, "OAF");
+	gnome_init_with_popt_table("PDFViewer", "0.0.1",
+				   argc, argv,
+				   gpdf_popt_options, 0, &ctx); 
+	orb = oaf_init (argc, argv);
+	
+	CORBA_exception_free (&ev);
+	
+	if (bonobo_init (orb, NULL, NULL) == FALSE)
+		g_error (_("Could not initialize Bonobo!\n"));
+	bonobo_activate ();
+	
+	view_files = poptGetArgs (ctx);
+	
+	/* Load files */
+	i = 0;
+	loaded = FALSE;
+	if (view_files) {
+		for (i = 0; view_files[i]; i++)
+			if (container_new (view_files[i])) {
+				loaded = TRUE;
+				while (gtk_events_pending ())
+					gtk_main_iteration ();
+			}
+	}
+	if ((i == 0) || !loaded)
+		container_new (NULL);
+	
+	poptFreeContext (ctx);
+	
+	gtk_main ();
+	
+	return 0;
 }
