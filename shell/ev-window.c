@@ -3,6 +3,8 @@
  *
  *  Copyright (C) 2004 Martin Kretzschmar
  *  Copyright (C) 2004 Red Hat, Inc.
+ *  Copyright (C) 2000, 2001, 2002, 2003, 2004 Marco Pesenti Gritti
+ *  Copyright (C) 2003, 2004 Christian Persch
  *
  *  Author:
  *    Martin Kretzschmar <martink@gnome.org>
@@ -64,8 +66,11 @@ struct _EvWindowPrivate {
 	GtkUIManager *ui_manager;
 	GtkWidget *statusbar;
 	guint help_message_cid;
-	
+	GtkWidget *exit_fullscreen_popup;
+
 	EvDocument *document;
+
+	gboolean fullscreen_mode;
 };
 
 #if 0
@@ -280,11 +285,177 @@ ev_window_cmd_edit_copy (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+update_fullscreen_popup (EvWindow *window)
+{
+	GtkWidget *popup = window->priv->exit_fullscreen_popup;
+	int popup_width, popup_height;
+	GdkRectangle screen_rect;
+
+	g_return_if_fail (popup != NULL);
+
+	popup_width = popup->requisition.width;
+	popup_height = popup->requisition.height;
+
+	/* FIXME multihead */
+	gdk_screen_get_monitor_geometry (gdk_screen_get_default (),
+                        gdk_screen_get_monitor_at_window
+                        (gdk_screen_get_default (),
+                         GTK_WIDGET (window)->window),
+                         &screen_rect);
+
+	if (gtk_widget_get_direction (popup) == GTK_TEXT_DIR_RTL)
+	{
+		gtk_window_move (GTK_WINDOW (popup),
+				 screen_rect.x + screen_rect.width - popup_width,
+				 screen_rect.height - popup_height);
+	}
+	else
+	{
+		gtk_window_move (GTK_WINDOW (popup),
+                	        screen_rect.x, screen_rect.height - popup_height);
+	}
+}
+
+static void
+screen_size_changed_cb (GdkScreen *screen,
+			EvWindow *window)
+{
+	update_fullscreen_popup (window);
+}
+
+static void
+destroy_exit_fullscreen_popup (EvWindow *window)
+{
+	if (window->priv->exit_fullscreen_popup != NULL)
+	{
+		/* FIXME multihead */
+		g_signal_handlers_disconnect_by_func
+			(gdk_screen_get_default (),
+			 G_CALLBACK (screen_size_changed_cb), window);
+
+		gtk_widget_destroy (window->priv->exit_fullscreen_popup);
+		window->priv->exit_fullscreen_popup = NULL;
+	}
+}
+
+static void
+exit_fullscreen_button_clicked_cb (GtkWidget *button, EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewFullscreen");
+	g_return_if_fail (action != NULL);
+
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), FALSE);
+}
+
+static void
+fullscreen_popup_size_request_cb (GtkWidget *popup, GtkRequisition *req, EvWindow *window)
+{
+	update_fullscreen_popup (window);
+}
+
+static void
+ev_window_fullscreen (EvWindow *window)
+{
+	GtkWidget *popup, *button, *icon, *label, *hbox;
+
+	window->priv->fullscreen_mode = TRUE;
+
+	popup = gtk_window_new (GTK_WINDOW_POPUP);
+	window->priv->exit_fullscreen_popup = popup;
+
+	button = gtk_button_new ();
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (exit_fullscreen_button_clicked_cb),
+			  window);
+	gtk_widget_show (button);
+	gtk_container_add (GTK_CONTAINER (popup), button);
+
+	hbox = gtk_hbox_new (FALSE, 2);
+	gtk_widget_show (hbox);
+	gtk_container_add (GTK_CONTAINER (button), hbox);
+
+	icon = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_BUTTON);
+	gtk_widget_show (icon);
+	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
+
+	label = gtk_label_new (_("Exit Fullscreen"));
+	gtk_widget_show (label);
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+	gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
+
+	/* FIXME multihead */
+	g_signal_connect (gdk_screen_get_default (), "size-changed",
+			  G_CALLBACK (screen_size_changed_cb), window);
+	g_signal_connect (popup, "size_request",
+			  G_CALLBACK (fullscreen_popup_size_request_cb), window);
+
+	update_fullscreen_popup (window);
+
+	gtk_widget_show (popup);
+}
+
+static void
+ev_window_unfullscreen (EvWindow *window)
+{
+	window->priv->fullscreen_mode = FALSE;
+
+	destroy_exit_fullscreen_popup (window);
+}
+ 
+static void
 ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *ev_window)
 {
+	gboolean fullscreen;
+	
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	fullscreen = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+
+	if (fullscreen) {
+		gtk_window_fullscreen (GTK_WINDOW (ev_window));
+	} else {
+		gtk_window_unfullscreen (GTK_WINDOW (ev_window));
+	}
+}
+
+static gboolean
+ev_window_state_event_cb (GtkWidget *widget, GdkEventWindowState *event, EvWindow *window)
+{
+	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN)
+	{
+		GtkActionGroup *action_group;
+		GtkAction *action;
+		GtkWidget *main_menu;
+		gboolean fullscreen;
+
+		fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
+
+		if (fullscreen)
+		{
+			ev_window_fullscreen (window);
+		}
+		else
+		{
+			ev_window_unfullscreen (window);
+		}
+
+		action_group = window->priv->action_group;
+
+		action = gtk_action_group_get_action (action_group, "ViewFullscreen");
+		g_signal_handlers_block_by_func
+			(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fullscreen);
+		g_signal_handlers_unblock_by_func
+			(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
+
+		main_menu = gtk_ui_manager_get_widget (window->priv->ui_manager, "/MainMenu");
+		g_object_set (main_menu, "visible", !fullscreen, NULL);
+	}
+
+	return FALSE;
 }
 
 static void
@@ -683,9 +854,6 @@ static GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_edit_find) },
 
         /* View menu */
-        { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
-          N_("Expand the window to fill the screen"),
-          G_CALLBACK (ev_window_cmd_view_fullscreen) },
         { "ViewZoomIn", GTK_STOCK_ZOOM_IN, N_("Zoom _In"), "<control>plus",
           N_("Enlarge the document"),
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
@@ -744,6 +912,9 @@ static GtkToggleActionEntry toggle_entries[] = {
         { "ViewSidebar", NULL, N_("Side_bar"), "F9",
 	  N_("Show or hide sidebar"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), FALSE },
+        { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
+          N_("Expand the window to fill the screen"),
+          G_CALLBACK (ev_window_cmd_view_fullscreen) },
 };
 
 static void
@@ -885,6 +1056,13 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::visible",
 			  G_CALLBACK (find_bar_search_changed_cb),
 			  ev_window);
+
+	g_signal_connect (ev_window, "window-state-event",
+			  G_CALLBACK (ev_window_state_event_cb),
+			  ev_window);
+	
+	/* Give focus to the scrolled window */
+	gtk_widget_grab_focus (scrolled_window);
 	
 	update_action_sensitivity (ev_window);
-}
+} 
