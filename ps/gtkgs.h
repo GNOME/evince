@@ -70,7 +70,6 @@ struct _GtkGS {
   GtkGSZoomMode zoom_mode;
 
   GdkPixmap *bpixmap;           /* Backing pixmap */
-  int use_bpixmap;
 
   long message_window;          /* Used by ghostview to receive messages from app */
 
@@ -170,7 +169,6 @@ gboolean gtk_gs_load(GtkGS * gs, const gchar * fname);
 void gtk_gs_reload(GtkGS * gs);
 
 /* control functions */
-void gtk_gs_center_page(GtkGS * gs);
 gboolean gtk_gs_next_page(GtkGS * gs);
 gboolean gtk_gs_prev_page(GtkGS * gs);
 gboolean gtk_gs_goto_page(GtkGS * gs, gint);

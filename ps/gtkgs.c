@@ -269,7 +269,6 @@ static void
 gtk_gs_init(GtkGS * gs)
 {
   gs->bpixmap = NULL;
-  gs->use_bpixmap = TRUE;
 
   gs->current_page = -2;
   gs->disable_start = FALSE;
@@ -504,6 +503,9 @@ set_up_page(GtkGS * gs)
   char *savelocale;
 #endif
 
+  if (gs->pstarget == NULL)
+    return;
+
   /* Do we have to check if the actual geometry changed? */
 
   stop_interpreter(gs);
@@ -516,11 +518,9 @@ set_up_page(GtkGS * gs)
     /* clear new pixmap (set to white) */
     fill = gdk_gc_new(gs->pstarget);
     if(fill) {
-      //colormap = gtk_widget_get_colormap(GTK_WIDGET(gs));
-      //gdk_color_alloc(colormap, &white);
       gdk_gc_set_foreground(fill, &white);
 
-      if(gs->use_bpixmap && gs->width > 0 && gs->height > 0) {
+      if(gs->width > 0 && gs->height > 0) {
         if(gs->bpixmap) {
           gdk_drawable_unref(gs->bpixmap);
           gs->bpixmap = NULL;
@@ -2093,7 +2093,10 @@ static void
 ps_document_set_target (EvDocument  *document,
 			 GdkDrawable *target)
 {
-	GTK_GS (document)->pstarget = target;
+	GtkGS *gs = GTK_GS (document);
+
+	gs->pstarget = target;
+	gtk_gs_goto_page (gs, gs->current_page);
 }
 
 static void
@@ -2115,6 +2118,15 @@ ps_document_get_page_size (EvDocument   *document,
 			    int          *width,
 			    int          *height)
 {
+	GtkGS *gs = GTK_GS (document);
+
+	if (width) {
+		*width = gs->width;
+	}
+
+	if (height) {
+		*height = gs->height;
+	}
 }
 
 static void
@@ -2126,6 +2138,11 @@ ps_document_render (EvDocument  *document,
 {
 	GtkGS *gs = GTK_GS (document);
 	GdkGC *gc;
+
+	if (gs->pstarget == NULL ||
+	    gs->bpixmap == NULL) {
+		return;
+	}
 
 	gc = gdk_gc_new (gs->pstarget);
 
