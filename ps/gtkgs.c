@@ -959,7 +959,7 @@ check_filecompressed(GtkGS * gs)
     return gs->gs_filename;
 
   /* do the decompression */
-  filename = ggv_quote_filename(gs->gs_filename);
+  filename = g_shell_quote(gs->gs_filename);
   filename_unc = g_strconcat(g_get_tmp_dir(), "/ggvXXXXXX", NULL);
   if((fd = mkstemp(filename_unc)) < 0) {
     g_free(filename_unc);
@@ -1040,7 +1040,7 @@ check_pdf(GtkGS * gs)
       return NULL;
     }
     close(fd);
-    fname = ggv_quote_filename(filename);
+    fname = g_shell_quote(filename);
     cmd = g_strdup_printf(gtk_gs_defaults_get_dsc_cmd(), filename_dsc, fname);
     g_free(fname);
     /* this command (sometimes?) prints error messages to stdout! */
@@ -1999,8 +1999,8 @@ gtk_gs_get_postscript(GtkGS * gs, gint * pages)
       return NULL;
     }
     close(tmpfd);
-    fname = ggv_quote_filename(gs->gs_filename_unc ?
-                               gs->gs_filename_unc : gs->gs_filename);
+    fname = g_shell_quote (gs->gs_filename_unc ?
+                           gs->gs_filename_unc : gs->gs_filename);
     cmd = g_strdup_printf(gtk_gs_defaults_get_convert_pdf_cmd(), tmpn, fname);
     g_free(fname);
     if((system(cmd) == 0) && ggv_file_readable(tmpn)) {

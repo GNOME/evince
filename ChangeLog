@@ -1,5 +1,14 @@
 2004-12-22  Marco Pesenti Gritti  <marco@gnome.org>
 
+	* ps/ggvutils.c: (ggv_file_readable):
+	* ps/ggvutils.h:
+	* ps/gtkgs.c: (check_filecompressed), (check_pdf),
+	(gtk_gs_get_postscript):
+
+	Remove unused utils
+
+2004-12-22  Marco Pesenti Gritti  <marco@gnome.org>
+
 	* ps/gtkgs.c: (gtk_gs_init), (gtk_gs_class_init), (gtk_gs_cleanup),
 	(gtk_gs_finalize), (gtk_gs_set_center), (set_up_page), (output),
 	(start_interpreter), (compute_size), (gtk_gs_enable_interpreter),
