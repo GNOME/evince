@@ -338,22 +338,21 @@ void Page::displaySlice(OutputDev *out, double dpi, int rotate,
   //~ need to reset CTM ???
   annotList = new Annots(xref, annots.fetch(xref, &obj));
   obj.free();
+#ifdef USE_ANNOTS_VIEW
   if (annotList->getNumAnnots() > 0) {
     if (globalParams->getPrintCommands()) {
       printf("***** Annotations\n");
     }
     for (i = 0; i < annotList->getNumAnnots(); ++i) {
         Annot *annot = annotList->getAnnot(i);
-        if ((annotDisplayDecideCbk && (*annotDisplayDecideCbk)(annot, annotDisplayDecideCbkData)) 
-#ifdef USE_ANNOTS_VIEW
-            || !annotDisplayDecideCbk
-#endif
-            )
+        if ((annotDisplayDecideCbk &&
+             (*annotDisplayDecideCbk)(annot, annotDisplayDecideCbkData)) || 
+            !annotDisplayDecideCbk)
           annot->draw(gfx); 
-            
     }
     out->dump();
   }
+#endif
   delete annotList;
 
   delete gfx;
