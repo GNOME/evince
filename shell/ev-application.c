@@ -20,6 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "ev-application.h"
 
 #include <glib.h>
@@ -95,7 +99,7 @@ is_window_empty (const EvWindow *ev_window, gconstpointer dummy)
 		: -1;
 }
 
-static EvWindow *
+EvWindow *
 ev_application_get_empty_window (EvApplication *application)
 {
 	GList *node;
@@ -113,7 +117,17 @@ ev_application_open (EvApplication *application, GError *err)
 {
 	EvWindow *ev_window;
 	GtkWidget *chooser;
-	GtkFileFilter *both_filter, *pdf_filter, *ps_filter, *pixbuf_filter, *all_filter;
+	GtkFileFilter *documents_filter;
+	GtkFileFilter *pdf_filter;
+	GtkFileFilter *ps_filter;
+	GtkFileFilter *pixbuf_filter;
+	GtkFileFilter *all_filter;
+#ifdef ENABLE_DJVU
+	GtkFileFilter *djvu_filter;
+#endif
+#ifdef ENABLE_DVI
+	GtkFileFilter *dvi_filter;
+#endif
 
 	ev_window = ev_application_get_empty_window (application);
 
@@ -125,19 +139,26 @@ ev_application_open (EvApplication *application, GError *err)
 					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 					       NULL);
 
-	both_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (both_filter,
-				  _("PostScript and PDF Documents"));
-	gtk_file_filter_add_mime_type (both_filter, "application/postscript");
-	gtk_file_filter_add_mime_type (both_filter, "application/x-gzpostscript");
-	gtk_file_filter_add_mime_type (both_filter, "image/x-eps");
-	gtk_file_filter_add_mime_type (both_filter, "application/pdf");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), both_filter);
+	documents_filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (documents_filter,
+				  _("All Documents"));
+	gtk_file_filter_add_mime_type (documents_filter, "application/postscript");
+	gtk_file_filter_add_mime_type (documents_filter, "application/x-gzpostscript");
+	gtk_file_filter_add_mime_type (documents_filter, "image/x-eps");
+	gtk_file_filter_add_mime_type (documents_filter, "application/pdf");
+#ifdef ENABLE_DVI
+	gtk_file_filter_add_mime_type (documents_filter, "application/x-dvi");
+#endif
+	gtk_file_filter_add_pixbuf_formats (documents_filter);
+#ifdef ENABLE_DJVU
+	gtk_file_filter_add_mime_type (documents_filter, "image/vnd.djvu");
+#endif
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), documents_filter);
 
 	ps_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (ps_filter, _("PostScript Documents"));
 	gtk_file_filter_add_mime_type (ps_filter, "application/postscript");
-	gtk_file_filter_add_mime_type (both_filter, "application/x-gzpostscript");
+	gtk_file_filter_add_mime_type (ps_filter, "application/x-gzpostscript");
 	gtk_file_filter_add_mime_type (ps_filter, "image/x-eps");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), ps_filter);
 
@@ -146,17 +167,31 @@ ev_application_open (EvApplication *application, GError *err)
 	gtk_file_filter_add_mime_type (pdf_filter, "application/pdf");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), pdf_filter);
 
+#ifdef ENABLE_DVI
+	dvi_filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (dvi_filter, _("DVI Documents"));
+	gtk_file_filter_add_mime_type (dvi_filter, "application/x-dvi");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), dvi_filter);
+#endif
+
 	pixbuf_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (pixbuf_filter, _("Images"));
 	gtk_file_filter_add_pixbuf_formats (pixbuf_filter);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), pixbuf_filter);
+
+#ifdef ENABLE_DJVU
+	djvu_filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (djvu_filter, _("Djvu Documents"));
+	gtk_file_filter_add_mime_type (djvu_filter, "image/vnd.djvu");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), djvu_filter);
+#endif	
 	
 	all_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (all_filter, _("All Files"));
 	gtk_file_filter_add_pattern (all_filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), all_filter);
 	
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), both_filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), documents_filter);
 
 	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {
 		char *uri;

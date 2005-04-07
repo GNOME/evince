@@ -43,13 +43,23 @@
 #include "ev-document-security.h"
 #include "ev-job-queue.h"
 #include "eggfindbar.h"
+#include "egg-recent-view-gtk.h"
+#include "egg-recent-view.h"
+#include "egg-recent-model.h"
 
 #include "ev-poppler.h"
 #include "pixbuf-document.h"
 #include "ps-document.h"
+#ifdef ENABLE_DVI
+#include "dvi-document.h"
+#endif
+#ifdef ENABLE_DJVU
+#include "djvu-document.h"
+#endif
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <gnome.h>
 
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
@@ -119,6 +129,10 @@ struct _EvWindowPrivate {
 	gboolean fullscreen_mode;
 	EvSizingMode sizing_mode;
 	GSource *fullscreen_timeout_source;
+
+	/* recent file stuff */
+	EggRecentModel *recent_model;
+	EggRecentViewGtk *recent_view;
 };
 
 static GtkTargetEntry ev_drop_types[] = {
@@ -148,6 +162,8 @@ static gboolean start_loading_document            (EvWindow         *ev_window,
 						   const char       *uri);
 static void     ev_window_set_sizing_mode         (EvWindow         *ev_window,
 						   EvSizingMode      sizing_mode);
+
+static void 	ev_window_add_recent (EvWindow *window, const char *filename);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -484,7 +500,7 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 static gboolean
 document_supports_sidebar (EvDocument *document)
 {
-	return (EV_IS_DOCUMENT_THUMBNAILS (document) && (EV_IS_DOCUMENT_LINKS (document)));
+	return (EV_IS_DOCUMENT_THUMBNAILS (document) || (EV_IS_DOCUMENT_LINKS (document)));
 }
 
 static void
@@ -654,6 +670,8 @@ start_loading_document (EvWindow   *ev_window,
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
 		ev_window_setup_document (ev_window);
+		
+		ev_window_add_recent (ev_window, uri);
 
 		return TRUE;
 	}
@@ -689,6 +707,8 @@ is_file_supported (const gchar *mime_type)
 	static char *supported_types [] = {
 		"application/pdf",
 		"application/postscript",
+		"application/x-dvi",
+		"image/vnd.djvu",
 		"application/x-gzpostscript",
 		"image/x-eps",
 		NULL
@@ -727,8 +747,16 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 		 !strcmp (mime_type, "application/x-gzpostscript") ||
 		 !strcmp (mime_type, "image/x-eps"))
 		document = g_object_new (PS_TYPE_DOCUMENT, NULL);
+#ifdef ENABLE_DJVU
+	else if (!strcmp (mime_type, "image/vnd.djvu"))
+		document = g_object_new (DJVU_TYPE_DOCUMENT, NULL);
+#endif		
 	else if (mime_type_supported_by_gdk_pixbuf (mime_type))
 		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);
+#ifdef ENABLE_DVI
+	else if (!strcmp (mime_type, "application/x-dvi"))
+		document = g_object_new (DVI_TYPE_DOCUMENT, NULL);
+#endif
 
 	if (document) {
 		start_loading_document (ev_window, document, uri);
@@ -787,6 +815,69 @@ static void
 ev_window_cmd_file_open (GtkAction *action, EvWindow *ev_window)
 {
 	ev_application_open (EV_APP, NULL);
+}
+
+static void
+ev_window_cmd_recent_file_activate (EggRecentViewGtk *view, EggRecentItem *item,
+        	                    EvWindow *ev_window)
+{
+	char *uri;
+	GtkWidget *window;
+
+	uri = egg_recent_item_get_uri (item);
+
+	window = GTK_WIDGET (ev_application_get_empty_window (EV_APP));
+	gtk_widget_show (window);
+	ev_window_open (EV_WINDOW (window), uri);
+	
+	g_free (uri);
+}
+
+static void
+ev_window_add_recent (EvWindow *window, const char *filename)
+{
+	EggRecentItem *item;
+
+	if (strstr (filename, "file:///") == NULL)
+		return;
+
+	item = egg_recent_item_new_from_uri (filename);
+	egg_recent_item_add_group (item, "Evince");
+	egg_recent_model_add_full (window->priv->recent_model, item);
+}
+
+static void
+ev_window_setup_recent (EvWindow *ev_window)
+{
+	GtkWidget *menu_item;
+	GtkWidget *menu;
+
+	menu_item = gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/MainMenu/FileMenu");
+	menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item));
+	menu_item = gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/MainMenu/FileMenu/RecentFilesMenu");
+
+	g_return_if_fail (menu != NULL);
+	g_return_if_fail (menu_item != NULL);
+
+	/* it would be better if we just filtered by mime-type, but there
+	 * doesn't seem to be an easy way to figure out which mime-types we
+	 * can handle */
+	ev_window->priv->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
+
+	ev_window->priv->recent_view = egg_recent_view_gtk_new (menu, menu_item);
+	egg_recent_view_gtk_show_icons (EGG_RECENT_VIEW_GTK (ev_window->priv->recent_view), FALSE);
+	egg_recent_model_set_limit (ev_window->priv->recent_model, 5);
+
+	egg_recent_view_set_model (EGG_RECENT_VIEW (ev_window->priv->recent_view),
+				   ev_window->priv->recent_model);
+
+	egg_recent_model_set_filter_groups (ev_window->priv->recent_model,
+    	    	    			    "Evince", NULL);
+
+	egg_recent_view_gtk_set_trailing_sep (ev_window->priv->recent_view, TRUE);
+	
+	g_signal_connect (ev_window->priv->recent_view, "activate",
+			G_CALLBACK (ev_window_cmd_recent_file_activate), ev_window);
 }
 
 /* FIXME
@@ -1530,9 +1621,16 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
+	GError *error = NULL;
+
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-        /* FIXME */
+	gnome_help_display ("evince.xml", NULL, &error);
+
+	if(error != NULL) {
+		g_warning (error->message);
+		g_error_free (error);
+	}
 }
 
 static void
@@ -2369,6 +2467,7 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window->priv->find_bar,
 			  FALSE, TRUE, 0);
 
+	ev_window_setup_recent (ev_window);
 	ev_window->priv->chrome = load_chrome ();
 	set_chrome_actions (ev_window);
 	update_chrome_visibility (ev_window);

@@ -19,9 +19,9 @@ EGG_FILES =				\
         egg-recent-util.c		\
 	egg-recent-util.h
 
-noinst_LIBRARIES = librecent.a
+noinst_LTLIBRARIES = librecent.la
 
-librecent_a_SOURCES = $(EGG_FILES)
+librecent_la_SOURCES = $(EGG_FILES)
 
 EXTRA_DIST = update-from-egg.sh
 

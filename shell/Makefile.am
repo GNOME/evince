@@ -1,16 +1,20 @@
 NULL=
 
-INCLUDES=					\
-	-DDATADIR=\"$(pkgdatadir)\"		\
-	-I$(top_srcdir)/lib			\
-	-I$(top_srcdir)/backend			\
-	-I$(top_srcdir)/pdf			\
-	-I$(top_srcdir)/pixbuf			\
-	-I$(top_srcdir)/ps	                \
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
-	$(SHELL_CFLAGS)				\
-	$(EVINCE_DISABLE_DEPRECATED)		\
+INCLUDES=						\
+	-DDATADIR=\"$(pkgdatadir)\"			\
+	-DGNOMEDATADIR=\"$(datadir)\"			\
+	-I$(top_srcdir)/lib				\
+	-I$(top_srcdir)/cut-n-paste/recent-files/	\
+	-I$(top_srcdir)/backend				\
+	-I$(top_srcdir)/pdf				\
+	-I$(top_srcdir)/pixbuf				\
+	-I$(top_srcdir)/ps	                	\
+	-I$(top_srcdir)/djvu				\
+	-I$(top_srcdir)/dvi				\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
+	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
+	$(SHELL_CFLAGS)					\
+	$(EVINCE_DISABLE_DEPRECATED)			\
 	$(NULL)
 
 bin_PROGRAMS=evince
@@ -50,14 +54,33 @@ evince_SOURCES=				\
 	main.c				\
 	$(NULL)
 
-evince_LDADD=						\
-	$(SHELL_LIBS)					\
-	$(top_builddir)/lib/libev.la			\
-	$(top_builddir)/pdf/libpdfdocument.la	 	\
-	$(top_builddir)/pixbuf/libpixbufdocument.la	\
-	$(top_builddir)/ps/libgtkgs.la			\
-	$(top_builddir)/backend/libevbackend.la		\
+evince_LDADD=							\
+	$(SHELL_LIBS)						\
+	$(top_builddir)/cut-n-paste/recent-files/librecent.la	\
+	$(top_builddir)/lib/libev.la				\
+	$(top_builddir)/pdf/libpdfdocument.la	 		\
+	$(top_builddir)/pixbuf/libpixbufdocument.la		\
+	$(top_builddir)/ps/libgtkgs.la				\
+	$(top_builddir)/backend/libevbackend.la			\
 	$(NULL)
+
+if ENABLE_DJVU
+evince_LDADD += 				\
+	-ldjvulibre 				\
+	-lpthread   				\
+	$(top_builddir)/djvu/libgtkdjvu.la	\
+	$(NULL)
+endif
+
+if ENABLE_DVI
+evince_LDADD += 				\
+	$(top_builddir)/dvi/libgtkdvi.la	\
+	$(NULL)
+endif
+
+if WITH_TYPE1_FONTS
+evince_LDADD += -lt1lib
+endif
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 

@@ -1,0 +1,320 @@
+/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
+/*
+ * Copyright (C) 2005, Nickolay V. Shmyrev <nshmyrev@yandex.ru>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#include "djvu-document.h"
+#include "ev-document-thumbnails.h"
+#include "ev-document-misc.h"
+
+#include <libdjvu/ddjvuapi.h>
+#include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixbuf-core.h>
+
+#define SCALE_FACTOR 0.2
+
+enum {
+	PROP_0,
+	PROP_TITLE
+};
+
+struct _DjvuDocumentClass
+{
+	GObjectClass parent_class;
+};
+
+struct _DjvuDocument
+{
+	GObject parent_instance;
+
+	ddjvu_context_t  *d_context;
+	ddjvu_document_t *d_document;
+	ddjvu_format_t   *d_format;
+};
+
+typedef struct _DjvuDocumentClass DjvuDocumentClass;
+
+static void djvu_document_document_iface_init (EvDocumentIface *iface);
+static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE 
+    (DjvuDocument, djvu_document, G_TYPE_OBJECT, 
+    {
+      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT, djvu_document_document_iface_init);    
+      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init)
+     });
+
+static gboolean
+djvu_document_load (EvDocument  *document,
+		      const char  *uri,
+		      GError     **error)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	ddjvu_document_t *doc;
+	gchar *filename;
+
+	/* FIXME: We could actually load uris  */
+	filename = g_filename_from_uri (uri, NULL, error);
+	if (!filename)
+		return FALSE;
+	
+	doc = ddjvu_document_create_by_filename (djvu_document->d_context, filename, TRUE);
+
+	if (!doc) return FALSE;
+
+	if (djvu_document->d_document)
+	    ddjvu_document_release (djvu_document->d_document);
+
+	djvu_document->d_document = doc;
+
+	while (!ddjvu_document_decoding_done (djvu_document->d_document))
+		    ddjvu_message_wait (djvu_document->d_context);	
+		
+	return TRUE;
+}
+
+
+static gboolean
+djvu_document_save (EvDocument  *document,
+		      const char  *uri,
+		      GError     **error)
+{
+	g_warning ("djvu_document_save not implemented"); /* FIXME */
+	return TRUE;
+}
+
+static int
+djvu_document_get_n_pages (EvDocument  *document)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	
+	g_return_val_if_fail (djvu_document->d_document, 0);
+	
+	return ddjvu_document_get_pagenum (djvu_document->d_document);
+}
+
+static void
+djvu_document_get_page_size (EvDocument   *document,
+			       int           page,
+			       double       *width,
+			       double       *height)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+
+	ddjvu_page_t *d_page;
+	
+	g_return_if_fail (djvu_document->d_document);
+	
+	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, page);
+
+	while (!ddjvu_page_decoding_done (d_page))
+		    ddjvu_message_wait (djvu_document->d_context);	
+
+	if (width)
+		*width = ddjvu_page_get_width (d_page) * SCALE_FACTOR;
+	if (height)
+		*height = ddjvu_page_get_height (d_page) * SCALE_FACTOR;
+	
+	ddjvu_page_release (d_page);
+}
+
+static GdkPixbuf *
+djvu_document_render_pixbuf (EvDocument  *document, 
+			     int page, gdouble scale)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	GdkPixbuf *pixbuf;
+	
+    	ddjvu_rect_t rrect;
+	ddjvu_rect_t prect;
+	ddjvu_page_t *d_page;
+	
+	double page_width, page_height;
+
+	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, page);
+	
+	while (!ddjvu_page_decoding_done (d_page))
+		    ddjvu_message_wait (djvu_document->d_context);	
+	
+	page_width = ddjvu_page_get_width (d_page) * scale * SCALE_FACTOR;
+	page_height = ddjvu_page_get_height (d_page) * scale * SCALE_FACTOR;
+
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, page_width, page_height);
+
+	prect.x = 0; prect.y = 0;
+	prect.w = page_width; prect.h = page_height;
+	rrect = prect;
+
+	ddjvu_page_render(d_page, DDJVU_RENDER_COLOR,
+                          &prect,
+                          &rrect,
+                          djvu_document->d_format,
+                	  gdk_pixbuf_get_rowstride (pixbuf),
+                          gdk_pixbuf_get_pixels (pixbuf));
+	
+    
+	return pixbuf;
+}
+
+static void
+djvu_document_finalize (GObject *object)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (object);
+
+	if (djvu_document->d_document)
+	    ddjvu_document_release (djvu_document->d_document);
+
+	ddjvu_context_release (djvu_document->d_context);
+	ddjvu_format_release (djvu_document->d_format);
+	
+	G_OBJECT_CLASS (djvu_document_parent_class)->finalize (object);
+}
+
+static void
+djvu_document_set_property (GObject *object,
+		              guint prop_id,
+			      const GValue *value,
+			      GParamSpec *pspec)
+{
+	switch (prop_id)
+	{
+		case PROP_TITLE:
+			/* read only */
+			break;
+	}
+}
+
+static void
+djvu_document_get_property (GObject *object,
+		              guint prop_id,
+		              GValue *value,
+		              GParamSpec *pspec)
+{
+	switch (prop_id)
+	{
+		case PROP_TITLE:
+			g_value_set_string (value, NULL);
+			break;
+	}
+}
+
+static void
+djvu_document_class_init (DjvuDocumentClass *klass)
+{
+	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+
+	gobject_class->finalize = djvu_document_finalize;
+	gobject_class->get_property = djvu_document_get_property;
+	gobject_class->set_property = djvu_document_set_property;
+
+	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
+}
+
+static char *
+djvu_document_get_text (EvDocument *document, gint page, EvRectangle *rect)
+{
+	/* FIXME this method should not be in EvDocument */
+	g_warning ("djvu_document_get_text not implemented");
+	return NULL;
+}
+
+static void
+djvu_document_document_iface_init (EvDocumentIface *iface)
+{
+	iface->load = djvu_document_load;
+	iface->save = djvu_document_save;
+	iface->get_text = djvu_document_get_text;
+	iface->get_n_pages = djvu_document_get_n_pages;
+	iface->get_page_size = djvu_document_get_page_size;
+	iface->render_pixbuf = djvu_document_render_pixbuf;
+}
+
+static void
+djvu_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
+					   gint                  page,
+					   gint                  suggested_width,
+					   gint                  *width,
+					   gint                  *height)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document); 
+	gdouble p_width, p_height;
+	gdouble page_ratio;
+	
+	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), page, &p_width, &p_height);
+
+	page_ratio = p_height / p_width;
+	*width = suggested_width;
+	*height = (gint) (suggested_width * page_ratio);
+	
+	return;
+}
+
+static GdkPixbuf *
+djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
+					  gint 			 page,
+					  gint			 width,
+					  gboolean 		 border)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	GdkPixbuf *pixbuf;
+	gint thumb_width, thumb_height;
+
+	gchar *pixels;
+	
+	g_return_val_if_fail (djvu_document->d_document, NULL);
+	
+	djvu_document_thumbnails_get_dimensions (document, page, width, &thumb_width, &thumb_height);
+	
+	if (border) {
+		pixbuf = ev_document_misc_get_thumbnail_frame (thumb_width, thumb_height, NULL);
+		pixels = gdk_pixbuf_get_pixels (pixbuf) + gdk_pixbuf_get_rowstride (pixbuf) + 4;
+	} else {
+		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+					 thumb_width, thumb_height);
+		gdk_pixbuf_fill (pixbuf, 0xffffffff);
+		pixels = gdk_pixbuf_get_pixels (pixbuf);
+	}
+	
+	while (ddjvu_thumbnail_status (djvu_document->d_document, page, 1) < DDJVU_JOB_OK)
+		    ddjvu_message_wait (djvu_document->d_context);	
+		    
+	ddjvu_thumbnail_render (djvu_document->d_document, page, 
+				&thumb_width, &thumb_height,
+				djvu_document->d_format,
+				gdk_pixbuf_get_rowstride (pixbuf), 
+				pixels);
+	
+	return pixbuf;
+}
+
+static void
+djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+{
+	iface->get_thumbnail = djvu_document_thumbnails_get_thumbnail;
+	iface->get_dimensions = djvu_document_thumbnails_get_dimensions;
+}
+
+static void
+djvu_document_init (DjvuDocument *djvu_document)
+{
+	djvu_document->d_context = ddjvu_context_create ("Evince");
+	djvu_document->d_format = ddjvu_format_create (DDJVU_FORMAT_RGB24, 0, 0);
+	ddjvu_format_set_row_order (djvu_document->d_format,1);
+	
+	djvu_document->d_document = NULL;
+}
+

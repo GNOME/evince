@@ -12,8 +12,3 @@ libpdfdocument_la_SOURCES =			\
 	ev-poppler.h
 
 
-test_gdk_output_dev_LDADD =			\
-	libpdfdocument.la			\
-	$(top_builddir)/backend/libevbackend.la	\
-	$(POPPLER_LIBS)				\
-	$(GTK_LIBS)

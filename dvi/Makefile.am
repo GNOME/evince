@@ -1,29 +1,26 @@
-SUBDIRS = dvilib
+SUBDIRS = mdvi-lib
 
-INCLUDES =					\
-	-I$(srcdir)/dvilib			\
-	$(DVI_CFLAGS)				\
-	-I$(top_srcdir)
+INCLUDES = \
+	-I$(top_srcdir)						\
+	-I$(top_srcdir)/backend					\
+	-I$(top_srcdir)/lib					\
+	-I./mdvi-lib						\
+	$(DVI_CFLAGS)
 
-bin_PROGRAMS=dviviewer
+noinst_LTLIBRARIES = libgtkdvi.la
+    
+libgtkdvi_la_SOURCES = \
+	dvi-document.c	\
+	dvi-document.h  \
+	pixbuf-device.c \
+	pixbuf-device.h \
+	fonts.c		\
+	fonts.h
 
-dviviewer_SOURCES =				\
-	main.cc					\
-						\
-	painter.hh				\
-	painter.cc				\
-						\
-	font.hh					\
-	font.cc					\
-						\
-	view.hh					\
-	view.cc					\
-						\
-	model.hh				\
-	model.cc				\
-						\
-	observer.hh
+libgtkdvi_la_LIBADD = mdvi-lib/libmdvi.la	\
+	$(DVI_LIBS) -lkpathsea
 
-dviviewer_LDADD = 				\
-        $(top_builddir)/dvi/dvilib/libdvilib.a	\
-	$(GTK_LIBS)
+
+
+
+

@@ -22,7 +22,7 @@ AC_PROG_INTLTOOL
 
 GNOME_DEBUG_CHECK
 
-ALL_LINGUAS="bg ca cs da de el en_CA en_GB fi fr ja ko lt nb nl no pt_BR rw sv wa zh_CN zh_TW"
+ALL_LINGUAS="bg ca cs da de el en_CA en_GB fi fr ja ko lt nb nl no pt_BR ru rw sv wa zh_CN zh_TW"
 
 AM_GLIB_GNU_GETTEXT
 
@@ -98,7 +98,65 @@ fi
 AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS"
 AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghostscript.])
 AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
+dnl ======================== End of ggv checks =================================
 
+dnl ================== djvu checks ===================================================
+
+AC_ARG_ENABLE(djvu,
+            [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu=yes,enable_djvu=no)
+
+if test "x$enable_djvu" = "xyes"; then
+    AC_CHECK_HEADERS([libdjvu/ddjvuapi.h],enable_djvu=yes,enable_djvu=no,)
+fi
+
+if test "x$enable_djvu" = "xyes"; then
+    AC_CHECK_LIB([djvulibre],ddjvu_context_create,enable_djvu=yes,enable_djvu=no,"-lpthread")
+fi
+
+if test "x$enable_djvu" = "xyes"; then
+    AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
+fi
+AM_CONDITIONAL(ENABLE_DJVU, test x$enable_djvu = xyes)
+
+dnl ================== End of djvu checks ===================================================
+
+dnl ================== dvi checks ===================================================
+
+AC_ARG_ENABLE(dvi,
+            [AC_HELP_STRING([--enable-dvi], [Compile with support of dvi viewer])],enable_dvi=yes,enable_dvi=no)
+
+AC_ARG_ENABLE(t1lib,
+            [AC_HELP_STRING([--enable-t1lib], [Compile with support of t1lib for type1 fonts in dvi])],enable_type1_fonts=yes,enable_type1_fonts=no)
+
+if test "x$enable_dvi" = "xyes"; then
+    AC_C_CONST
+    AC_C_INLINE
+    AC_TYPE_SIZE_T
+    AC_CHECK_SIZEOF(long, 4)
+    AC_CHECK_SIZEOF(int, 4)
+    AC_CHECK_SIZEOF(short, 2)
+    AC_CHECK_SIZEOF(void *, 4)
+    AC_CHECK_LIB([kpathsea],[kpse_init_prog],[enable_dvi=yes],[enable_dvi=no])
+
+    if test "x$enable_dvi" = "xyes"; then
+	AC_DEFINE([ENABLE_DVI], [1], [Enable dvi viewer support.])
+    fi
+fi
+AM_CONDITIONAL(ENABLE_DVI, test x$enable_dvi = xyes)
+
+if test "x$enable_dvi" = "xyes"; then
+    if test "x$enable_type1_fonts" = "xyes"; then
+	AC_CHECK_LIB([t1lib],T1_InitLib,enable_type1_fonts=yes,enable_type1_fonts=no)
+    fi
+
+    if test "x$enable_type1_fonts" = xyes; then
+        AC_DEFINE([WITH_TYPE1_FONTS], [1], [Enable t1lib support in dvi.])
+    fi
+fi
+AM_CONDITIONAL(WITH_TYPE1_FONTS, test x$enable_type1_fonts = xyes)
+
+
+dnl ================== End of dvi checks ===================================================
 
 dnl Turn on the additional warnings last, so -Werror doesn't affect other tests.
 dnl stolen from nautilus and gnome-common
@@ -152,7 +210,6 @@ else
 	AC_MSG_RESULT(no)
 fi
 
-dnl ======================== End of ggv checks =================================
 
 AC_OUTPUT([
 Makefile
@@ -163,8 +220,13 @@ lib/Makefile
 pdf/Makefile
 pixbuf/Makefile
 ps/Makefile
+djvu/Makefile
+dvi/Makefile
+dvi/mdvi-lib/Makefile
 po/Makefile.in
 backend/Makefile
 shell/Makefile
 thumbnailer/Makefile
+help/Makefile
+help/C/Makefile
 ])

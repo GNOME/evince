@@ -57,6 +57,7 @@ EvApplication	*ev_application_get_instance		(void);
 void		 ev_application_open			(EvApplication *application,
 							 GError        *err);
 EvWindow	*ev_application_new_window		(EvApplication *application);
+EvWindow *	ev_application_get_empty_window 	(EvApplication *application);
 
 G_END_DECLS
 
