@@ -49,7 +49,7 @@ gchar * egg_recent_item_get_uri_for_display (const EggRecentItem *item);
 gchar * egg_recent_item_get_short_name (const EggRecentItem *item);
 
 void egg_recent_item_set_mime_type (EggRecentItem *item, const gchar *mime);
-gchar * egg_recent_item_get_mime_type (const EggRecentItem *item);
+gchar * egg_recent_item_get_mime_type (EggRecentItem *item);
 
 void egg_recent_item_set_timestamp (EggRecentItem *item, time_t timestamp);
 time_t egg_recent_item_get_timestamp (const EggRecentItem *item);

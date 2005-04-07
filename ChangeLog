@@ -1,3 +1,14 @@
+2005-04-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* cut-n-paste/recent-files/egg-recent-item.c:
+	(egg_recent_item_set_uri), (make_valid_utf8),
+	(egg_recent_item_set_mime_type), (egg_recent_item_get_mime_type):
+	* cut-n-paste/recent-files/egg-recent-item.h:
+	
+	Update egg-recent from libegg. This should fix long
+	startup problem. For details see
+	http://bugzilla.gnome.org/show_bug.cgi?id=160531
+
 2005-04-07  Nickolay V. Shmyrev <nshmyrev@yandex.ru>
 
 	* cut-n-paste/recent-files/Makefile.am:
