@@ -1,3 +1,24 @@
+Fri Apr  8 01:12:24 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-page-action.h:
+	* shell/ev-page-action.c: (ev_page_action_widget_init),
+	(ev_page_action_widget_class_init), (page_changed_cb),
+	(create_tool_item), (update_page_cache), (build_new_tree_cb),
+	(get_filter_model_from_model), (match_selected_cb),
+	(display_completion_text), (match_completion), (update_model),
+	(connect_proxy), (ev_page_action_set_property),
+	(ev_page_action_get_property), (ev_page_action_set_document),
+	(ev_page_action_set_model), (ev_page_action_class_init): Big
+	reworking to make completions work iff we have >= GTK-2.7.0
+		
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_set_property),
+	(ev_sidebar_links_get_property), (ev_sidebar_links_class_init),
+	(job_finished_cb): We now have a 'model' property that is set when
+	the links are loaded.  This can be caught with "notify::model"
+
+	* shell/ev-window.c: (sidebar_widget_model_set), (ev_window_init):
+	listen for the model to be set, and propagate it to the action.
+
 2005-04-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* cut-n-paste/recent-files/egg-recent-item.c:

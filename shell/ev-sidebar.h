@@ -58,6 +58,7 @@ void       ev_sidebar_add_page     (EvSidebar   *ev_sidebar,
 				    GtkWidget   *main_widget);
 void       ev_sidebar_set_document (EvSidebar   *ev_sidebar,
 				    EvDocument  *document);
+
 G_END_DECLS
 
 #endif /* __EV_SIDEBAR_H__ */

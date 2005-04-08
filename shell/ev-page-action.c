@@ -23,17 +23,58 @@
 
 #include "ev-page-action.h"
 #include "ev-window.h"
+#include "ev-document-links.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtkentry.h>
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkhbox.h>
+#include <string.h>
+
+typedef struct _EvPageActionWidget EvPageActionWidget;
+typedef struct _EvPageActionWidgetClass EvPageActionWidgetClass;
+struct _EvPageActionWidget
+{
+	GtkToolItem parent;
+
+	GtkWidget *entry;
+	EvPageCache *page_cache;
+	guint signal_id;
+	GtkTreeModel *filter_model;
+	GtkTreeModel *model;
+};
+
+struct _EvPageActionWidgetClass
+{
+	GtkToolItemClass parent_class;
+};
 
 struct _EvPageActionPrivate
 {
 	EvPageCache *page_cache;
+	GtkTreeModel *model;
 };
+
+
+/* Widget we pass back */
+static GType ev_page_action_widget_get_type   (void);
+static void  ev_page_action_widget_init       (EvPageActionWidget      *action_widget);
+static void  ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget);
+
+G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_TOOL_ITEM)
+
+static void
+ev_page_action_widget_init (EvPageActionWidget *action_widget)
+{
+
+}
+
+static void
+ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget)
+{
+}
+
 
 
 static void ev_page_action_init       (EvPageAction *action);
@@ -46,27 +87,26 @@ G_DEFINE_TYPE (EvPageAction, ev_page_action, GTK_TYPE_ACTION)
 enum {
 	PROP_0,
 	PROP_PAGE_CACHE,
+	PROP_MODEL,
 };
 
-#define ENTRY_DATA      "epa-entry"
-#define PAGE_CACHE_DATA "epa-page-cache"
-#define SIGNAL_ID_DATA  "epa-signal-id"
+/* user data to set on the widget. */
+#define EPA_FILTER_MODEL_DATA "epa-filter-model"
 
 static void
-page_changed_cb (EvPageCache *page_cache,
-		 gint         page,
-		 GtkWidget   *proxy)
+page_changed_cb (EvPageCache        *page_cache,
+		 gint                page,
+		 EvPageActionWidget *proxy)
 {
-	GtkWidget *entry;
-
-	entry = GTK_WIDGET (g_object_get_data (G_OBJECT (proxy), ENTRY_DATA));
+	g_assert (proxy);
+	
 	if (page_cache != NULL) {
 		gchar *page_label = ev_page_cache_get_page_label (page_cache, page);
-		gtk_entry_set_text (GTK_ENTRY (entry), page_label);
-		gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+		gtk_entry_set_text (GTK_ENTRY (proxy->entry), page_label);
+		gtk_editable_set_position (GTK_EDITABLE (proxy->entry), -1);
 		g_free (page_label);
 	} else {
-		gtk_entry_set_text (GTK_ENTRY (entry), "");
+		gtk_entry_set_text (GTK_ENTRY (proxy->entry), "");
 	}
 }
 
@@ -95,44 +135,36 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 static GtkWidget *
 create_tool_item (GtkAction *action)
 {
-	GtkWidget *hbox, *entry, *item;
+	EvPageActionWidget *proxy;
 
-	hbox = gtk_hbox_new (FALSE, 6);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6); 
-	gtk_widget_show (hbox);
+	proxy = g_object_new (ev_page_action_widget_get_type (), NULL);
+	gtk_container_set_border_width (GTK_CONTAINER (proxy), 6); 
+	gtk_widget_show (GTK_WIDGET (proxy));
 
-	item = GTK_WIDGET (gtk_tool_item_new ());
-	gtk_widget_show (item);
+	proxy->entry = gtk_entry_new ();
+	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 5);
+	gtk_widget_show (proxy->entry);
 
-	entry = gtk_entry_new ();
-	gtk_entry_set_width_chars (GTK_ENTRY (entry), 5);
-	g_object_set_data (G_OBJECT (item), ENTRY_DATA, entry);
-	gtk_widget_show (entry);
-
-	g_signal_connect (entry, "activate",
+	g_signal_connect (proxy->entry, "activate",
 			  G_CALLBACK (activate_cb),
 			  action);
 
-	gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
-	gtk_container_add (GTK_CONTAINER (item), hbox);
+	gtk_container_add (GTK_CONTAINER (proxy), proxy->entry);
 
-	return item;
+	return GTK_WIDGET (proxy);
 }
 
 static void
-update_page_cache (EvPageAction *page, gpointer dummy, GtkWidget *proxy)
+update_page_cache (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 {
 	EvPageCache *page_cache;
-	EvPageCache *old_page_cache;
 	guint signal_id;
 
 	page_cache = page->priv->page_cache;
-	old_page_cache = (EvPageCache *) g_object_get_data (G_OBJECT (proxy), PAGE_CACHE_DATA);
-	signal_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (proxy), SIGNAL_ID_DATA));
 
 	/* clear the old signal */
-	if (signal_id > 0 && old_page_cache)
-		g_signal_handler_disconnect (old_page_cache, signal_id);
+	if (proxy->signal_id > 0 && proxy->page_cache)
+		g_signal_handler_disconnect (proxy->page_cache, proxy->signal_id);
 	
 	if (page_cache != NULL) {
 		signal_id = g_signal_connect (page_cache,
@@ -148,8 +180,187 @@ update_page_cache (EvPageAction *page, gpointer dummy, GtkWidget *proxy)
 		signal_id = 0;
 		page_changed_cb (NULL, 0, proxy);
 	}
-	g_object_set_data (G_OBJECT (proxy), PAGE_CACHE_DATA, page_cache);
-	g_object_set_data (G_OBJECT (proxy), SIGNAL_ID_DATA, GINT_TO_POINTER (signal_id));
+	proxy->page_cache = page_cache;
+	proxy->signal_id = signal_id;
+}
+
+static gboolean
+build_new_tree_cb (GtkTreeModel *model,
+		   GtkTreePath  *path,
+		   GtkTreeIter  *iter,
+		   gpointer      data)
+{
+	GtkTreeModel *filter_model = GTK_TREE_MODEL (data);
+	EvLink *link;
+
+	gtk_tree_model_get (model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+	if (link && ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+		GtkTreeIter filter_iter;
+
+		gtk_list_store_append (GTK_LIST_STORE (filter_model), &filter_iter);
+		gtk_list_store_set (GTK_LIST_STORE (filter_model), &filter_iter,
+				    0, iter,
+				    -1);
+	}
+	
+	return FALSE;
+}
+
+static GtkTreeModel *
+get_filter_model_from_model (GtkTreeModel *model)
+{
+	GtkTreeModel *filter_model;
+
+	filter_model =
+		(GtkTreeModel *) g_object_get_data (G_OBJECT (model), EPA_FILTER_MODEL_DATA);
+	if (filter_model == NULL) {
+		filter_model = (GtkTreeModel *) gtk_list_store_new (1, GTK_TYPE_TREE_ITER);
+
+		gtk_tree_model_foreach (model,
+					build_new_tree_cb,
+					filter_model);
+		g_object_set_data_full (G_OBJECT (model), EPA_FILTER_MODEL_DATA, filter_model, g_object_unref);
+	}
+
+	return filter_model;
+}
+
+static gboolean
+match_selected_cb (GtkEntryCompletion *completion,
+		   GtkTreeModel       *filter_model,
+		   GtkTreeIter        *filter_iter,
+		   EvPageActionWidget *proxy)
+{
+	EvLink *link;
+	GtkTreeIter *iter;
+
+	gtk_tree_model_get (filter_model, filter_iter,
+			    0, &iter,
+			    -1);
+	gtk_tree_model_get (proxy->model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+	ev_page_cache_set_link (proxy->page_cache, link);
+	
+	return TRUE;
+}
+		   
+
+static void
+display_completion_text (GtkCellLayout      *cell_layout,
+			 GtkCellRenderer    *renderer,
+			 GtkTreeModel       *filter_model,
+			 GtkTreeIter        *filter_iter,
+			 EvPageActionWidget *proxy)
+{
+	EvLink *link;
+	GtkTreeIter *iter;
+
+	gtk_tree_model_get (filter_model, filter_iter,
+			    0, &iter,
+			    -1);
+	gtk_tree_model_get (proxy->model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+	g_object_set (renderer, "text", ev_link_get_title (link), NULL);
+}
+
+static gboolean
+match_completion (GtkEntryCompletion *completion,
+		  const gchar        *key,
+		  GtkTreeIter        *filter_iter,
+		  EvPageActionWidget *proxy)
+{
+	EvLink *link;
+	GtkTreeIter *iter;
+	const gchar *text = NULL;
+
+	gtk_tree_model_get (gtk_entry_completion_get_model (completion),
+			    filter_iter,
+			    0, &iter,
+			    -1);
+	gtk_tree_model_get (proxy->model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+
+	if (link)
+		text = ev_link_get_title (link);
+
+	if (text && key ) {
+		gchar *normalized_text;
+		gchar *normalized_key;
+		gchar *case_normalized_text;
+		gchar *case_normalized_key;
+		gboolean retval = FALSE;
+
+		normalized_text = g_utf8_normalize (text, -1, G_NORMALIZE_ALL);
+		normalized_key = g_utf8_normalize (key, -1, G_NORMALIZE_ALL);
+		case_normalized_text = g_utf8_casefold (normalized_text, -1);
+		case_normalized_key = g_utf8_casefold (normalized_key, -1);
+
+		if (strstr (case_normalized_text, case_normalized_key))
+			retval = TRUE;
+
+		g_free (normalized_text);
+		g_free (normalized_key);
+		g_free (case_normalized_text);
+		g_free (case_normalized_key);
+
+		return retval;
+	}
+
+	return FALSE;
+}
+
+
+static void
+update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
+{
+	GtkTreeModel *model;
+	GtkTreeModel *filter_model;
+
+	g_object_get (G_OBJECT (page),
+		      "model", &model,
+		      NULL);
+	if (model != NULL) {
+		/* Magik */
+		GtkEntryCompletion *completion;
+		GtkCellRenderer *renderer;
+
+		proxy->model = model;
+		filter_model = get_filter_model_from_model (model);
+
+		completion = gtk_entry_completion_new ();
+
+		/* popup-set-width is 2.7.0 only */
+		g_object_set (G_OBJECT (completion),
+			      "popup-set-width", FALSE,
+			      "model", filter_model,
+			      NULL);
+
+		g_signal_connect (completion, "match-selected", G_CALLBACK (match_selected_cb), proxy);
+		gtk_entry_completion_set_match_func (completion,
+						     (GtkEntryCompletionMatchFunc) match_completion,
+						     proxy, NULL);
+
+		/* Set up the layout */
+		renderer = (GtkCellRenderer *)
+			g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
+				      "ellipsize", PANGO_ELLIPSIZE_END,
+				      "width_chars", 30,
+				      NULL);
+		gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (completion), renderer, TRUE);
+		gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (completion),
+						    renderer,
+						    (GtkCellLayoutDataFunc) display_completion_text,
+						    proxy, NULL);
+		gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
+	}
 }
 
 static void
@@ -159,6 +370,13 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 		g_signal_connect_object (action, "notify::page-cache",
 					 G_CALLBACK (update_page_cache),
 					 proxy, 0);
+		/* We only go through this whole rigmarole if we can set
+		 * GtkEntryCompletion::popup-set-width  */
+		if (gtk_check_version (2, 7, 0) != NULL) {
+			g_signal_connect_object (action, "notify::model",
+						 G_CALLBACK (update_model),
+						 proxy, 0);
+		}
 	}
 
 	GTK_ACTION_CLASS (ev_page_action_parent_class)->connect_proxy (action, proxy);
@@ -185,6 +403,7 @@ ev_page_action_set_property (GObject      *object,
 {
 	EvPageAction *page;
 	EvPageCache *page_cache;
+	GtkTreeModel *model;
   
 	page = EV_PAGE_ACTION (object);
 
@@ -195,6 +414,12 @@ ev_page_action_set_property (GObject      *object,
 		page->priv->page_cache = EV_PAGE_CACHE (g_value_dup_object (value));
 		if (page_cache)
 			g_object_unref (page_cache);
+		break;
+	case PROP_MODEL:
+		model = page->priv->model;
+		page->priv->model = GTK_TREE_MODEL (g_value_dup_object (value));
+		if (model)
+			g_object_unref (model);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -217,6 +442,9 @@ ev_page_action_get_property (GObject    *object,
 	case PROP_PAGE_CACHE:
 		g_value_set_object (value, page->priv->page_cache);
 		break;
+	case PROP_MODEL:
+		g_value_set_object (value, page->priv->model);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -231,7 +459,19 @@ ev_page_action_set_document (EvPageAction *page, EvDocument *document)
 	if (document)
 		page_cache = ev_document_get_page_cache (document);
 	
-	g_object_set (page, "page-cache", page_cache, NULL);
+	g_object_set (page,
+		      "page-cache", page_cache,
+		      "model", NULL,
+		      NULL);
+}
+
+void
+ev_page_action_set_model (EvPageAction *page_action,
+			  GtkTreeModel *model)
+{
+	g_object_set (page_action,
+		      "model", model,
+		      NULL);
 }
 
 static void
@@ -260,6 +500,14 @@ ev_page_action_class_init (EvPageActionClass *class)
 							      "Page Cache",
 							      "Current page cache",
 							      EV_TYPE_PAGE_CACHE,
+							      G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class,
+					 PROP_MODEL,
+					 g_param_spec_object ("model",
+							      "Model",
+							      "Current Model",
+							      GTK_TYPE_TREE_MODEL,
 							      G_PARAM_READWRITE));
 
 	g_type_class_add_private (object_class, sizeof (EvPageActionPrivate));

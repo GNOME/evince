@@ -2292,6 +2292,22 @@ load_chrome (void)
 }
 
 static void
+sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
+			  GParamSpec     *pspec,
+			  EvWindow       *ev_window)
+{
+	GtkTreeModel *model;
+	GtkAction *action;
+
+	g_object_get (G_OBJECT (ev_sidebar_links),
+		      "model", &model,
+		      NULL);
+
+	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
+	ev_page_action_set_model (EV_PAGE_ACTION (action), model);
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -2404,6 +2420,10 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Stub sidebar, for now */
 	sidebar_widget = ev_sidebar_links_new ();
+	g_signal_connect (sidebar_widget,
+			  "notify::model",
+			  G_CALLBACK (sidebar_widget_model_set),
+			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     "index",

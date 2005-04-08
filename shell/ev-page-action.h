@@ -23,6 +23,7 @@
 #define EV_PAGE_ACTION_H
 
 #include <gtk/gtkaction.h>
+#include <gtk/gtktreemodel.h>
 #include <ev-document.h>
 
 G_BEGIN_DECLS
@@ -54,9 +55,11 @@ struct _EvPageActionClass
 			    int           page_number);
 };
 
-GType ev_page_action_get_type         (void);
-void  ev_page_action_set_document     (EvPageAction *page_action,
-				       EvDocument   *document);
+GType ev_page_action_get_type     (void);
+void  ev_page_action_set_document (EvPageAction *page_action,
+				   EvDocument   *document);
+void  ev_page_action_set_model    (EvPageAction *page_action,
+				   GtkTreeModel *model);
 
 
 G_END_DECLS

@@ -46,6 +46,11 @@ struct _EvSidebarLinksPrivate {
 	EvPageCache *page_cache;
 };
 
+enum {
+	PROP_0,
+	PROP_MODEL,
+};
+
 
 static void links_page_num_func  (GtkTreeViewColumn *tree_column,
 				  GtkCellRenderer   *cell,
@@ -72,6 +77,53 @@ ev_sidebar_links_destroy (GtkObject *object)
 }
 
 static void
+ev_sidebar_links_set_property (GObject      *object,
+			       guint         prop_id,
+			       const GValue *value,
+			       GParamSpec   *pspec)
+{
+	EvSidebarLinks *ev_sidebar_links;
+	GtkTreeModel *model;
+  
+	ev_sidebar_links = EV_SIDEBAR_LINKS (object);
+
+	switch (prop_id)
+	{
+	case PROP_MODEL:
+		model = ev_sidebar_links->priv->model;
+		ev_sidebar_links->priv->model = GTK_TREE_MODEL (g_value_dup_object (value));
+		if (model)
+			g_object_unref (model);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
+ev_sidebar_links_get_property (GObject    *object,
+			       guint       prop_id,
+			       GValue     *value,
+			       GParamSpec *pspec)
+{
+	EvSidebarLinks *ev_sidebar_links;
+  
+	ev_sidebar_links = EV_SIDEBAR_LINKS (object);
+
+	switch (prop_id)
+	{
+	case PROP_MODEL:
+		g_value_set_object (value, ev_sidebar_links->priv->model);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+
+static void
 ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 {
 	GObjectClass *g_object_class;
@@ -80,7 +132,18 @@ ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_links_class);
 	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_links_class);
 
+	g_object_class->set_property = ev_sidebar_links_set_property;
+	g_object_class->get_property = ev_sidebar_links_get_property;
+
 	gtk_object_class->destroy = ev_sidebar_links_destroy;
+
+	g_object_class_install_property (g_object_class,
+					 PROP_MODEL,
+					 g_param_spec_object ("model",
+							      "Model",
+							      "Current Model",
+							      GTK_TYPE_TREE_MODEL,
+							      G_PARAM_READWRITE));
 
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarLinksPrivate));
 }
@@ -335,6 +398,8 @@ job_finished_cb (EvJobLinks     *job,
 	priv = sidebar_links->priv;
 
 	priv->model = g_object_ref (job->model);
+	g_object_notify (G_OBJECT (sidebar_links), "model");
+
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
 	g_object_unref (job);
 
