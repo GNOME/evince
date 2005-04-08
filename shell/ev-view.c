@@ -1595,7 +1595,7 @@ ev_view_can_find_next (EvView *view)
 {
 	int n_results = 0;
 
-	if (view->document) {	
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
 		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
 		g_mutex_lock (EV_DOC_MUTEX);

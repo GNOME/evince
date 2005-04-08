@@ -551,10 +551,12 @@ ev_window_setup_document (EvWindow *ev_window)
 				 "notify::title",
 				 G_CALLBACK (update_window_title),
 				 ev_window, 0);
-	g_signal_connect_object (G_OBJECT (document),
-			         "find_changed",
-			         G_CALLBACK (find_changed_cb),	
-			         ev_window, 0);
+	if (EV_IS_DOCUMENT_FIND (document)) {
+		g_signal_connect_object (G_OBJECT (document),
+				         "find_changed",
+				         G_CALLBACK (find_changed_cb),	
+				         ev_window, 0);
+	}
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
 
