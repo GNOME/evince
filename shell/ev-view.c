@@ -1590,6 +1590,22 @@ ev_view_get_find_status (EvView *view)
 	return view->find_status;
 }
 
+gboolean
+ev_view_can_find_next (EvView *view)
+{
+	int n_results = 0;
+
+	if (view->document) {	
+		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+
+		g_mutex_lock (EV_DOC_MUTEX);
+		n_results = ev_document_find_get_n_results (find, view->current_page);
+		g_mutex_unlock (EV_DOC_MUTEX);
+	}
+
+	return n_results > 0;
+}
+
 void
 ev_view_find_next (EvView *view)
 {

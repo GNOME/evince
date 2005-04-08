@@ -56,6 +56,7 @@ void		ev_view_set_size        (EvView     *view,
 					 int         height);
 
 /* Find */
+gboolean	ev_view_can_find_next	(EvView     *view);
 void            ev_view_find_next       (EvView     *view);
 void            ev_view_find_previous   (EvView     *view);
 

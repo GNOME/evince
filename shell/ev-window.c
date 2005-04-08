@@ -203,6 +203,9 @@ update_action_sensitivity (EvWindow *ev_window)
 	else
 		set_action_sensitive (ev_window, "EditFind", FALSE);
 
+	set_action_sensitive (ev_window, "EditFindNext",
+			      ev_view_can_find_next (EV_VIEW (ev_window->priv->view)));
+
         /* View menu */
 	set_action_sensitive (ev_window, "ViewZoomIn", document!=NULL);
 	set_action_sensitive (ev_window, "ViewZoomOut", document!=NULL);
@@ -519,13 +522,18 @@ hide_sidebar_and_actions (EvWindow *ev_window)
 }
 
 static void
+find_changed_cb (EvDocument *document, int page, EvWindow *ev_window)
+{
+	update_action_sensitivity (ev_window);
+}
+
+static void
 page_changed_cb (EvPageCache *page_cache,
 		 gint         page,
 		 EvWindow    *ev_window)
 {
 	update_action_sensitivity (ev_window);
 }
-
 
 static void
 ev_window_setup_document (EvWindow *ev_window)
@@ -543,6 +551,10 @@ ev_window_setup_document (EvWindow *ev_window)
 				 "notify::title",
 				 G_CALLBACK (update_window_title),
 				 ev_window, 0);
+	g_signal_connect_object (G_OBJECT (document),
+			         "find_changed",
+			         G_CALLBACK (find_changed_cb),	
+			         ev_window, 0);
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
 
@@ -1144,6 +1156,14 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 
 		gtk_widget_grab_focus (ev_window->priv->find_bar);
 	}
+}
+
+static void
+ev_window_cmd_edit_find_next (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	ev_view_find_next (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -2091,6 +2111,9 @@ static GtkActionEntry entries[] = {
         { "EditFind", GTK_STOCK_FIND, NULL, "<control>F",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
+	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G",
+	  N_("Find next occurrence of the word or phrase"),
+	  G_CALLBACK (ev_window_cmd_edit_find_next) },
 
         /* View menu */
         { "ViewZoomIn", GTK_STOCK_ZOOM_IN, NULL, "<control>plus",
