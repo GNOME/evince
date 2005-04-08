@@ -58,6 +58,7 @@ struct _PdfDocument
 	GObject parent_instance;
 
 	PopplerDocument *document;
+	PopplerPSFile *ps_file;
 	gchar *password;
 
 	PdfDocumentSearch *search;
@@ -68,6 +69,7 @@ static void pdf_document_security_iface_init            (EvDocumentSecurityIface
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
+static void pdf_document_ps_exporter_iface_init         (EvPSExporterIface         *iface);
 static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
 							 gint                       page,
 							 gint                       size,
@@ -88,15 +90,9 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_links_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 							pdf_document_find_iface_init);
-#if 0
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
 							pdf_document_ps_exporter_iface_init);
-#endif
 			 });
-
-
-
-
 
 
 static void
@@ -801,6 +797,45 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
         iface->cancel = pdf_document_find_cancel;
 }
 
+static void
+pdf_document_ps_exporter_begin (EvPSExporter *exporter, const char *filename)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+	int n_pages;
+	
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (exporter));
+	pdf_document->ps_file = poppler_ps_file_new (pdf_document->document,
+						     filename, n_pages);
+}
+
+static void
+pdf_document_ps_exporter_do_page (EvPSExporter *exporter, int page)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+	PopplerPage *poppler_page;
+
+	g_return_if_fail (pdf_document->ps_file != NULL);
+
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page_render_to_ps (poppler_page, pdf_document->ps_file);
+}
+
+static void
+pdf_document_ps_exporter_end (EvPSExporter *exporter)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+
+	poppler_ps_file_free (pdf_document->ps_file);
+	pdf_document->ps_file = NULL;
+}
+
+static void
+pdf_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+{
+        iface->begin = pdf_document_ps_exporter_begin;
+        iface->do_page = pdf_document_ps_exporter_do_page;
+        iface->end = pdf_document_ps_exporter_end;
+}
 
 PdfDocument *
 pdf_document_new (void)

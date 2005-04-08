@@ -238,13 +238,13 @@ idle_print_handler (EvPrintJob *job)
 		ev_ps_exporter_begin (EV_PS_EXPORTER (job->document),
 				      job->temp_file);
 		g_mutex_unlock (EV_DOC_MUTEX);
-		job->next_page = 1; /* FIXME use 0-based page numbering? */
+		job->next_page = 0;
 		job->printing = TRUE;
 		return TRUE;
 	}
 
 	page_cache = ev_document_get_page_cache (job->document);
-	if (job->next_page <= ev_page_cache_get_n_pages (page_cache)) {
+	if (job->next_page < ev_page_cache_get_n_pages (page_cache)) {
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
 #endif
