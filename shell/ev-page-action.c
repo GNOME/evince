@@ -371,8 +371,9 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 					 G_CALLBACK (update_page_cache),
 					 proxy, 0);
 		/* We only go through this whole rigmarole if we can set
-		 * GtkEntryCompletion::popup-set-width  */
-		if (gtk_check_version (2, 7, 0) != NULL) {
+		 * GtkEntryCompletion::popup-set-width, which appeared in
+		 * GTK+-2.7.0 */
+		if (gtk_check_version (2, 7, 0) == NULL) {
 			g_signal_connect_object (action, "notify::model",
 						 G_CALLBACK (update_model),
 						 proxy, 0);
