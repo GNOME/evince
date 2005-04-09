@@ -30,6 +30,8 @@ void     ev_job_queue_init       (void);
 
 void     ev_job_queue_add_job    (EvJob         *job,
 				  EvJobPriority  priority);
+gboolean ev_job_queue_update_job (EvJob         *job,
+				  EvJobPriority  new_priority);
 gboolean ev_job_queue_remove_job (EvJob         *job);
 
 G_END_DECLS

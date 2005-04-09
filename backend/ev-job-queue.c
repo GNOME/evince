@@ -14,7 +14,7 @@ static GQueue *thumbnail_queue_high = NULL;
 static GQueue *thumbnail_queue_low = NULL;
 
 static gboolean
-remove_object_from_queue (GQueue *queue, EvJob *job)
+remove_job_from_queue_locked (GQueue *queue, EvJob *job)
 {
 	GList *list;
 
@@ -26,6 +26,15 @@ remove_object_from_queue (GQueue *queue, EvJob *job)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+static void
+add_job_to_queue_locked (GQueue *queue,
+			 EvJob  *job)
+{
+	g_object_ref (job);
+	g_queue_push_tail (queue, job);
+	g_cond_broadcast (render_cond);
 }
 
 
@@ -173,13 +182,52 @@ ev_job_queue_add_job (EvJob         *job,
 	queue = find_queue (job, priority);
 
 	g_mutex_lock (ev_queue_mutex);
-
-	g_object_ref (job);
-	g_queue_push_tail (queue, job);
-	g_cond_broadcast (render_cond);
-
+	add_job_to_queue_locked (queue, job);
 	g_mutex_unlock (ev_queue_mutex);
+}
+
+gboolean
+ev_job_queue_update_job (EvJob         *job,
+			 EvJobPriority  new_priority)
+{
+	gboolean retval = FALSE;
 	
+	g_return_val_if_fail (EV_IS_JOB (job), FALSE);
+
+	g_mutex_lock (ev_queue_mutex);
+	g_object_ref (job);
+	
+	if (EV_IS_JOB_THUMBNAIL (job)) {
+		if (new_priority == EV_JOB_PRIORITY_LOW) {
+			if (remove_job_from_queue_locked (thumbnail_queue_high, job)) {
+				add_job_to_queue_locked (thumbnail_queue_low, job);
+				retval = TRUE;
+			}
+		} else if (new_priority == EV_JOB_PRIORITY_HIGH) {
+			if (remove_job_from_queue_locked (thumbnail_queue_low, job)) {
+				add_job_to_queue_locked (thumbnail_queue_high, job);
+				retval = TRUE;
+			}
+		}
+	} else if (EV_IS_JOB_RENDER (job)) {
+		if (new_priority == EV_JOB_PRIORITY_LOW) {
+			if (remove_job_from_queue_locked (render_queue_high, job)) {
+				add_job_to_queue_locked (render_queue_low, job);
+				retval = TRUE;
+			}
+		} else if (new_priority == EV_JOB_PRIORITY_HIGH) {
+			if (remove_job_from_queue_locked (render_queue_low, job)) {
+				add_job_to_queue_locked (render_queue_high, job);
+				retval = TRUE;
+			}
+		}
+	} else {
+		/* We don't have a priority queue for any of the other jobs */
+	}
+	g_object_unref (job);
+	g_mutex_unlock (ev_queue_mutex);
+
+	return retval;
 }
 
 gboolean
@@ -192,13 +240,13 @@ ev_job_queue_remove_job (EvJob *job)
 	g_mutex_lock (ev_queue_mutex);
 
 	if (EV_IS_JOB_THUMBNAIL (job)) {
-		retval = remove_object_from_queue (thumbnail_queue_high, job);
-		retval = retval || remove_object_from_queue (thumbnail_queue_low, job);
+		retval = remove_job_from_queue_locked (thumbnail_queue_high, job);
+		retval = retval || remove_job_from_queue_locked (thumbnail_queue_low, job);
 	} else if (EV_IS_JOB_RENDER (job)) {
-		retval = remove_object_from_queue (render_queue_high, job);
-		retval = retval || remove_object_from_queue (render_queue_low, job);
+		retval = remove_job_from_queue_locked (render_queue_high, job);
+		retval = retval || remove_job_from_queue_locked (render_queue_low, job);
 	} else if (EV_IS_JOB_LINKS (job)) {
-		retval = remove_object_from_queue (links_queue, job);
+		retval = remove_job_from_queue_locked (links_queue, job);
 	} else {
 		g_assert_not_reached ();
 	}

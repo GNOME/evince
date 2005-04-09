@@ -284,7 +284,7 @@ move_one_job (CacheJobInfo  *job_info,
 	job_info->link_mapping = NULL;
 
 	if (new_priority != priority && target_page->job) {
-		g_print ("FIXME: update priority \n");
+		ev_job_queue_update_job (target_page->job, new_priority);
 	}
 }
 
