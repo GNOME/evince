@@ -514,7 +514,6 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		}
 		fread(info->coding, 39, 1, in);
 		info->coding[n] = 0;
-		ptr += i;
 	} else
 		strcpy(info->coding, "FontSpecific");
 	/* get the font family */

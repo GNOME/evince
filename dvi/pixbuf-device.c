@@ -9,6 +9,10 @@ typedef struct _DviPixbufDevice
     
     gint xmargin;
     gint ymargin;
+    
+    Ulong fg;
+    Ulong bg;
+    
 } DviPixbufDevice;
 
 static void dvi_pixbuf_draw_rule(DviContext *dvi, int x, int y, Uint w, Uint h, int fill);
@@ -52,6 +56,11 @@ static void dvi_pixbuf_draw_rule(DviContext *dvi, int x, int y, Uint w, Uint h, 
 	gint rowstride;
 	gchar *p;
 	gint i, j;    
+	gint red, green, blue;
+	
+	red = (c_device->fg >> 16) & 0xff;
+	green = (c_device->fg >> 8) & 0xff;
+	blue = c_device->fg & 0xff;
 	
 	x += c_device->xmargin; y += c_device->ymargin;
 	
@@ -66,19 +75,19 @@ static void dvi_pixbuf_draw_rule(DviContext *dvi, int x, int y, Uint w, Uint h, 
 	for (i = 0; i < h; i++) {
 	    if (i == 0 || i == h - 1 || fill) {
 		  for (j = 0; j < w; j++) {
-			p[j * 4] = 0x00;
-		        p[j * 4 + 1] = 0x00;
-			p[j * 4 + 2] = 0x00;
+			p[j * 4] = red;
+		        p[j * 4 + 1] = green;
+			p[j * 4 + 2] = blue;
 			p[j * 4 + 3] = 0xff;
 		  }
     	    } else {
-		p[0] = 0x00;
-		p[1] = 0x00;
-		p[2] = 0x00;
+		p[0] = red;
+		p[1] = green;
+		p[2] = blue;
 		p[3] = 0xff;
-		p[(w - 1) * 4] = 0x00;
-		p[(w - 1) * 4 + 1] = 0x00;
-		p[(w - 1) * 4 + 2] = 0x00;
+		p[(w - 1) * 4] = red;
+		p[(w - 1) * 4 + 1] = green;
+		p[(w - 1) * 4 + 2] = blue;
 		p[(w - 1) * 4 + 3] = 0xff;
     	    }
 	    p += rowstride;
@@ -143,7 +152,10 @@ static void dvi_pixbuf_put_pixel(void *image, int x, int y, Ulong color)
 
 static void dvi_pixbuf_set_color(void *device_data, Ulong fg, Ulong bg)
 {
+    DviPixbufDevice *c_device = (DviPixbufDevice *) device_data;
     
+    c_device->fg = fg;
+        
     return; 
 }
 
@@ -194,7 +206,7 @@ mdvi_pixbuf_device_render (DviContext * dvi)
     
   page_width = dvi->dvi_page_w * dvi->params.conv + 2 * c_device->xmargin;
   page_height = dvi->dvi_page_h * dvi->params.vconv + 2 * c_device->ymargin;
-     
+    
   c_device->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, page_width, page_height);
   gdk_pixbuf_fill (c_device->pixbuf, 0xffffffff);
 

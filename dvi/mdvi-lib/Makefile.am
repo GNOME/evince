@@ -3,14 +3,13 @@ noinst_LTLIBRARIES = libmdvi.la
 libmdvi_la_SOURCES = \
 	afmparse.c   \
 	afmparse.h   \
-	assoc.c	     \
-	assoc.h	     \
 	bitmap.c     \
 	bitmap.h     \
+	color.c	     \
+	color.h	     \
 	common.c     \
 	common.h     \
 	defaults.h   \
-	dvimisc.c    \
 	dviopcodes.h \
 	dviread.c    \
 	files.c	     \
@@ -38,3 +37,5 @@ libmdvi_la_SOURCES = \
 	tt.c	     \
 	util.c	     \
 	vf.c         
+
+

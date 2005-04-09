@@ -65,7 +65,6 @@ typedef enum {
 	TRUE	= 1	
 } DviBool;
 
-#include "assoc.h"
 #include "hash.h"
 #include "paper.h"
 
@@ -307,8 +306,6 @@ struct _DviParams {
 	DviOrientation	orientation;	/* page orientation */
 	int	base_x;
 	int	base_y;
-	Ulong	*pixels;	/* colors used for antialiasing */
-	int	npixels;	/* number of entries in `pixels' */
 };
 
 typedef enum {
@@ -387,10 +384,11 @@ struct _DviContext {
 	DviDevice device;	/* device-specific routines */
 	Ulong	curr_fg;	/* rendering color */
 	Ulong	curr_bg;
+
 	DviColorPair *color_stack;
-	DviHashTable assoc;
 	int	color_top;
 	int	color_size;
+
 	DviFontRef *(*findref) __PROTO((DviContext *, Int32));
 	void	*user_data;	/* client data attached to this context */
 };
@@ -522,12 +520,6 @@ extern void mdvi_free_page_spec __PROTO((DviPageSpec *));
 extern int mdvi_in_range __PROTO((DviRange *, int, int));
 extern int mdvi_range_length __PROTO((DviRange *, int));
 extern int mdvi_page_selected __PROTO((DviPageSpec *, PageNum, int));
-
-/* Color support */
-extern void mdvi_set_color __PROTO((DviContext *, Ulong, Ulong));
-extern void mdvi_push_color __PROTO((DviContext *, Ulong, Ulong));
-extern void mdvi_pop_color __PROTO((DviContext *));
-extern void mdvi_reset_color __PROTO((DviContext *));
 
 /* Specials */
 extern int mdvi_register_special __PROTO((

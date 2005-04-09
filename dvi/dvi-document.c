@@ -21,6 +21,7 @@
 
 #include "dvi-document.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-misc.h"
 
 #include "mdvi.h"
 #include "fonts.h"
@@ -57,9 +58,7 @@ struct _DviDocument
 typedef struct _DviDocumentClass DviDocumentClass;
 
 static void dvi_document_document_iface_init (EvDocumentIface *iface);
-#if 0
 static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-#endif
 static void dvi_document_get_page_size 			(EvDocument   *document,
 					    		 int       page,
 							 double    *width,
@@ -69,9 +68,7 @@ G_DEFINE_TYPE_WITH_CODE
     (DviDocument, dvi_document, G_TYPE_OBJECT, 
     {
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT, dvi_document_document_iface_init);    
-#if 0
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, dvi_document_document_thumbnails_iface_init)
-#endif      
      });
 
 static gboolean
@@ -101,6 +98,7 @@ dvi_document_load (EvDocument  *document,
 	        + 2 * unit2pix(dvi_document->params->dpi, MDVI_VMARGIN) / dvi_document->params->vshrink;
 
     dvi_context_mutex = g_mutex_new ();
+
 
     return TRUE;
 }
@@ -259,24 +257,75 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 	iface->render_pixbuf = dvi_document_render_pixbuf;
 }
 
-#if 0
 static void
 dvi_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 					   gint                  page,
 					   gint                  suggested_width,
 					   gint                  *width,
 					   gint                  *height)
-{
+{	
+	DviDocument *dvi_document = DVI_DOCUMENT (document); 
+	gdouble page_ratio;
+	
+	page_ratio = dvi_document->base_height / dvi_document->base_width;
+	*width = suggested_width;
+	*height = (gint) (suggested_width * page_ratio);
+
 	return;
 }
 
 static GdkPixbuf *
 dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-					  gint 			 page,
-					  gint			 width)
+				       gint 			 page,
+				       gint			 width,
+				       gboolean 		 border)
 {
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
+	GdkPixbuf *pixbuf;
+	GdkPixbuf *border_pixbuf;
+	gint thumb_width, thumb_height;
+	gint proposed_width, proposed_height;
+	
+	dvi_document_thumbnails_get_dimensions (document, page, width, &thumb_width, &thumb_height);
 
-	return NULL;
+	g_mutex_lock (dvi_context_mutex);
+
+	mdvi_setpage(dvi_document->context,  page);
+
+	mdvi_set_shrink (dvi_document->context, 
+			  (int)dvi_document->base_width * dvi_document->params->hshrink / thumb_width,
+			  (int)dvi_document->base_width * dvi_document->params->vshrink / thumb_height);
+
+	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
+	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
+			  
+	if (border) {
+	 	mdvi_pixbuf_device_set_margins	(&dvi_document->context->device, 
+						 MAX (thumb_width - proposed_width, 0) / 2,
+						 MAX (thumb_height - proposed_height, 0) / 2); 	
+	} else {
+	 	mdvi_pixbuf_device_set_margins	(&dvi_document->context->device, 
+						 MAX (thumb_width - proposed_width - 2, 0) / 2,
+						 MAX (thumb_height - proposed_height - 2, 0) / 2); 	
+	}
+	
+
+        mdvi_pixbuf_device_render (dvi_document->context);
+	pixbuf = mdvi_pixbuf_device_get_pixbuf (&dvi_document->context->device);
+
+	g_mutex_unlock (dvi_context_mutex);
+
+	if (border) {
+	        border_pixbuf = ev_document_misc_get_thumbnail_frame (thumb_width, thumb_height, NULL);
+		gdk_pixbuf_copy_area (pixbuf, 0, 0, 
+				      thumb_width - 2, thumb_height - 2,
+				      border_pixbuf, 2, 2);
+		g_object_unref (pixbuf);
+		pixbuf = border_pixbuf;
+	}
+	
+	
+	return pixbuf;
 }
 
 static void
@@ -285,7 +334,6 @@ dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 	iface->get_thumbnail = dvi_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = dvi_document_thumbnails_get_dimensions;
 }
-#endif
 
 
 static void

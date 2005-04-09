@@ -216,10 +216,6 @@ extern void *xmemdup __PROTO((const void *, size_t));
 #define xnalloc(t,n)	(t *)xcalloc((n), sizeof(t))
 #define xresize(p,t,n)	(t *)xrealloc((p), (n) * sizeof(t))
 
-extern int get_number __PROTO((const char *, long *));
-/* return paper dimensions (in cm) */
-extern int paper_dimensions __PROTO((const char *, double *, double *));
-
 extern char *xstradd __PROTO((char *, size_t *, size_t, const char *, size_t));
 
 extern Ulong get_mtime __PROTO((int));
@@ -255,10 +251,8 @@ extern void dstring_reset __PROTO((Dstring *));
 extern char *dgets __PROTO((Dstring *, FILE *));
 extern int  file_readable __PROTO((const char *));
 extern int  file_exists __PROTO((const char *));
-extern char *find_in_path __PROTO((const char *path, const char *file));
 extern const char *file_basename __PROTO((const char *));
 extern const char *file_extension __PROTO((const char *));
-extern char *read_into_core __PROTO((const char *, size_t *));
 
 /*
  * Miscellaneous macros

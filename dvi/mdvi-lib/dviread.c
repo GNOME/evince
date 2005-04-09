@@ -27,6 +27,7 @@
 
 #include "mdvi.h"
 #include "private.h"
+#include "color.h"
 
 typedef int (*DviCommand) __PROTO((DviContext *, int));
 
@@ -578,11 +579,6 @@ int mdvi_configure(DviContext *dvi, DviParamCode option, ...)
 			break;
 		case MDVI_SET_GAMMA:
 			np.gamma = va_arg(ap, double);
-			if(np.pixels) {
-				xfree(np.pixels);
-				np.pixels = 0;
-				np.npixels = 0;
-			}
 			reset_font = MDVI_FONTSEL_GREY;
 			break;
 		case MDVI_SET_DENSITY:
@@ -745,8 +741,6 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	dvi->params.orientation = par->orientation;
 	dvi->params.fg = par->fg;
 	dvi->params.bg = par->bg;
-	dvi->params.pixels = NULL;
-	dvi->params.npixels = 0;
 
 	/* initialize colors */
 	dvi->curr_fg = par->fg;
@@ -902,9 +896,6 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	dvi->device.set_color    = dummy_dev_set_color;
 	dvi->device.device_data  = NULL;
 
-	/* initialize associations */
-	mdvi_hash_init(&dvi->assoc);
-
 	DEBUG((DBG_DVI, "%s read successfully\n", filename));
 	return dvi;
 
@@ -942,7 +933,6 @@ void	mdvi_destroy_context(DviContext *dvi)
 		xfree(dvi->buffer.data);
 	if(dvi->color_stack)
 		xfree(dvi->color_stack);
-	mdvi_assoc_flush(dvi);
 	
 	xfree(dvi);
 }
@@ -1175,6 +1165,50 @@ static void inline fix_after_horizontal(DviContext *dvi)
 	(a), (b) > 0 ? '+' : '-', \
 	(b) > 0 ? (b) : -(b), (c)
 
+/*
+ * Draw rules with some sort of antialias support. Usefult for high-rate
+ * scale factors.
+ */ 
+
+static void draw_shrink_rule (DviContext *dvi, int x, int y, Uint w, Uint h, int f)
+{		
+	int hs, vs, npixels;
+	Ulong fg, bg;
+	Ulong *pixels;
+	
+	hs = dvi->params.hshrink;
+	vs = dvi->params.vshrink;
+	fg = dvi->params.fg;
+	bg = dvi->params.bg;
+
+	if (MDVI_ENABLED(dvi, MDVI_PARAM_ANTIALIASED)) {
+		npixels = vs * hs + 1;
+		pixels = get_color_table(&dvi->device, npixels, bg, fg,
+					 dvi->params.gamma, dvi->params.density);
+	
+		if (pixels) {
+		    int color;
+		    
+		    /*  Lines with width 1 should be perfectly visible
+		     *  in shrink about 15. That is the reason of constant
+		     */
+		     
+		    color = (pow (vs / h * hs, 2) + pow (hs / w * vs, 2)) / 225;
+		    if (color < npixels) {
+		        fg = pixels[color];
+    		    } else {	
+			fg = pixels[npixels - 1];
+		    }
+		}
+        }
+
+	mdvi_push_color (dvi, fg, bg);
+	dvi->device.draw_rule(dvi, x, y, w, h, f);
+	mdvi_pop_color (dvi);
+	
+	return;
+}
+
 /* 
  * The only commands that actually draw something are:
  *   set_char, set_rule
@@ -1233,8 +1267,7 @@ static void draw_box(DviContext *dvi, DviFontChar *ch)
 		break;
 	}
 		
-	dvi->device.draw_rule(dvi,
-		dvi->pos.hh - x, dvi->pos.vv - y, w, h, 1);
+	draw_shrink_rule(dvi, dvi->pos.hh - x, dvi->pos.vv - y, w, h, 1);
 }
 
 int	set_char(DviContext *dvi, int opcode)
@@ -1306,9 +1339,10 @@ int	set_rule(DviContext *dvi, int opcode)
 			b, a, w, h));
 		/* the `draw' functions expect the origin to be at the top left
 		 * corner of the rule, not the bottom left, as in DVI files */
-		if(dvi->curr_layer <= dvi->params.layer)
-			dvi->device.draw_rule(dvi,
-				dvi->pos.hh, dvi->pos.vv - h + 1, w, h, 1);
+		if(dvi->curr_layer <= dvi->params.layer) {
+			draw_shrink_rule(dvi,
+					 dvi->pos.hh, dvi->pos.vv - h + 1, w, h, 1);
+		}
 	} else { 
 		SHOWCMD((dvi, opcode == DVI_SET_RULE ? "setrule" : "putrule", -1,
 			"(moving left only, by %d)\n", b));

@@ -872,18 +872,19 @@ void	mdvi_flush_fontmaps(void)
 
 void	ps_init_default_paths(void)
 {
-	char	*kppath = mdvi_getenv("MDVI_PS_LIBPATH");
-	char	*kfpath = mdvi_getenv("MDVI_PS_FONTPATH");
+	char	*kppath;
+	char	*kfpath;
 
 	ASSERT(psinitialized == 0);
-	if(kppath == NULL)
-		kppath = getenv("GS_LIB");
-	if(kfpath == NULL)
-		kfpath = getenv("GS_FONTPATH");	
+
+	kppath = getenv("GS_LIB");
+	kfpath = getenv("GS_FONTPATH");	
+
 	if(kppath != NULL)
 		pslibdir = kpse_path_expand(kppath);
 	if(kfpath != NULL)
 		psfontdir = kpse_path_expand(kfpath);
+
 	listh_init(&psfonts);
 	mdvi_hash_create(&pstable, PSMAP_HASH_SIZE);
 	psinitialized = 1;

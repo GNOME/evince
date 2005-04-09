@@ -235,7 +235,7 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 {
 	char	*file;
 	char	*special;
-	EpsfBox	box;
+	EpsfBox	box = {0, 0, 0, 0};
 	int	x, y;
 	int	w, h;
 	double	xf, vf;

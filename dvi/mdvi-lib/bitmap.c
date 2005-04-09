@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "mdvi.h"
+#include "color.h"
 
 /* bit_masks[n] contains a BmUnit with `n' contiguous bits */
 
@@ -45,17 +46,6 @@ static BmUnit bit_masks[] = {
 #ifndef NODEBUG
 #define SHOW_OP_DATA	(DEBUGGING(BITMAP_OPS) && DEBUGGING(BITMAP_DATA))
 #endif
-
-/* cache for color tables, to avoid creating them for every glyph */
-typedef struct {
-	Ulong	fg;
-	Ulong	bg;
-	Uint	nlevels;
-	Ulong	*pixels;
-	int	density;
-	double	gamma;
-	Uint	hits;
-} ColorCache;
 
 /* 
  * Some useful macros to manipulate bitmap data
@@ -126,70 +116,6 @@ static Uchar bit_swap[] = {
 	0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
-#define CCSIZE		256
-static ColorCache	color_cache[CCSIZE];
-static int		cc_entries;
-
-#define GAMMA_DIFF	0.005
-
-static Ulong	*get_color_table(DviDevice *dev, 
-				int nlevels, Ulong fg, Ulong bg, double gamma, int density);
-
-
-/* create a color table */
-static Ulong	*get_color_table(DviDevice *dev, 
-				int nlevels, Ulong fg, Ulong bg, double gamma, int density)
-{
-	ColorCache	*cc, *tofree;
-	int		lohits;
-	Ulong		*pixels;
-	int		status;
-
-	lohits = color_cache[0].hits;
-	tofree = &color_cache[0];
-	/* look in the cache and see if we have one that matches this request */
-	for(cc = &color_cache[0]; cc < &color_cache[cc_entries]; cc++) {
-		if(cc->hits < lohits) {
-			lohits = cc->hits;
-			tofree = cc;
-		}
-		if(cc->fg == fg && cc->bg == bg && cc->density == density &&
-		   cc->nlevels == nlevels && fabs(cc->gamma - gamma) <= GAMMA_DIFF)
-		   	break;
-	}
-
-	if(cc < &color_cache[cc_entries]) {
-		cc->hits++;
-		return cc->pixels;
-	}
-
-	DEBUG((DBG_DEVICE, "Adding color table to cache (fg=%lu, bg=%lu, n=%d)\n",
-		fg, bg, nlevels));
-		
-	/* no entry was found in the cache, create a new one */
-	if(cc_entries < CCSIZE) {
-		cc = &color_cache[cc_entries++];
-		cc->pixels = NULL;
-	} else {
-		cc = tofree;
-		xfree(cc->pixels);
-	}
-	pixels = xnalloc(Ulong, nlevels);
-	status = dev->alloc_colors(dev->device_data, 
-		pixels, nlevels, fg, bg, gamma, density);
-	if(status < 0) {
-		xfree(pixels);
-		return NULL;
-	}
-	cc->fg = fg;
-	cc->bg = bg;
-	cc->gamma = gamma;
-	cc->density = density;
-	cc->nlevels = nlevels;
-	cc->pixels = pixels;
-	cc->hits = 1;
-	return pixels;	
-}
 
 /* 
  * next we have three bitmap functions to convert bitmaps in LSB bit order

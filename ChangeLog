@@ -1,3 +1,34 @@
+2005-04-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	
+	* dvi/mdvi-lib/assoc.c:
+	* dvi/mdvi-lib/assoc.h: Removed garbage files
+	
+	* dvi/mdvi-lib/bitmap.c:
+	* dvi/mdvi-lib/color.c: (mdvi_set_color), (mdvi_push_color),
+	(mdvi_pop_color), (mdvi_reset_color), (get_color_table):
+	* dvi/mdvi-lib/color.h: Antialias of rules
+	
+	* dvi/mdvi-lib/common.h:
+	* dvi/mdvi-lib/dviread.c: (mdvi_configure), (mdvi_init_context),
+	(mdvi_destroy_context), (draw_shrink_rule), (draw_box), (set_rule):
+	* dvi/mdvi-lib/files.c:
+	* dvi/mdvi-lib/fontmap.c: (ps_init_default_paths):
+	* dvi/mdvi-lib/mdvi.h:
+	* dvi/mdvi-lib/sp-epsf.c: (epsf_special):
+	* dvi/mdvi-lib/tfmfile.c: (ofm_load_file):
+	* dvi/mdvi-lib/util.c: Fix compile warnings
+	
+	* dvi/dvi-document.c:
+	(dvi_document_load), (dvi_document_thumbnails_get_dimensions),
+	(dvi_document_thumbnails_get_thumbnail),
+	(dvi_document_document_thumbnails_iface_init):
+	* dvi/mdvi-lib/Makefile.am:
+	* dvi/pixbuf-device.c: (dvi_pixbuf_draw_rule),
+	(dvi_pixbuf_set_color), (mdvi_pixbuf_device_render):
+	
+	Dvi backend now renders thumbnails
+
 2005-04-09  Christian Persch  <chpe@cvs.gnome.org>
 
 	* shell/main.c: (main):	

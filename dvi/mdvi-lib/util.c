@@ -360,19 +360,6 @@ char	*xstradd(char *dest, size_t *size, size_t n, const char *src, size_t m)
 	return dest;
 }
 
-int	get_number(const char *string, long *val)
-{
-	long	x;
-	char	*end;
-	
-	errno = 0;
-	x = strtol(string, &end, 10);
-	if(errno || *end)
-		return -1;
-	*val = x;
-	return 0;
-}
-
 char	*getword(char *string, const char *delim, char **end)
 {
 	char *ptr;
