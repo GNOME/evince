@@ -26,6 +26,7 @@
 #include <gtk/gtkmain.h>
 #include <libgnome/gnome-program.h>
 #include <libgnomeui/gnome-ui-init.h>
+#include <libgnomeui/gnome-app-helper.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
 #include "ev-stock-icons.h"
@@ -99,6 +100,7 @@ main (int argc, char *argv[])
 
 	gtk_main ();
 
+	gnome_accelerators_sync ();
 	poptFreeContext (context);
 
 	return 0;
