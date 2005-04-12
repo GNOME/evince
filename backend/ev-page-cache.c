@@ -290,7 +290,7 @@ ev_page_cache_next_page (EvPageCache *page_cache)
 {
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
 
-	if (page_cache->current_page >= page_cache->n_pages)
+	if (page_cache->current_page >= page_cache->n_pages - 1)
 		return FALSE;
 
 	ev_page_cache_set_current_page (page_cache, page_cache->current_page + 1);

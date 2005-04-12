@@ -1,3 +1,27 @@
+2005-04-12  Nikolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/ev-page-cache.c: (ev_page_cache_next_page):
+	
+	Fix for #300233. Next page correctly handles document end.
+	
+	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_dispose),
+	(ev_sidebar_thumbnails_class_init),
+	(ev_sidebar_thumbnails_set_document),
+	(ev_sidebar_thumbnails_clear_job),
+	(ev_sidebar_thumbnails_clear_model):
+	
+	Cleanup thumbnail jobs on document changes.
+	
+	* shell/ev-view.c: (add_scroll_binding_keypad),
+	(add_scroll_binding_shifted), (ev_view_class_init):
+	
+	Shift + Space scrolls up. Fix for #173184
+	
+	* shell/ev-window.c: (ev_window_open_page),
+	(ev_window_cmd_view_reload):
+	
+	Fix reload (Bug #300094)
+
 2005-04-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	

@@ -63,6 +63,19 @@ G_DEFINE_TYPE (EvSidebarThumbnails, ev_sidebar_thumbnails, GTK_TYPE_VBOX);
 #define EV_SIDEBAR_THUMBNAILS_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnailsPrivate));
 
+static void 
+ev_sidebar_thumbnails_clear_model (EvSidebarThumbnails *sidebar);
+
+static void
+ev_sidebar_thumbnails_dispose (GObject *object)
+{
+	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (object);
+	
+	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
+
+	G_OBJECT_CLASS (ev_sidebar_thumbnails_parent_class)->dispose (object);
+}
+
 static void
 ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnails_class)
 {
@@ -71,6 +84,8 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_thumbnails_class);
 	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_thumbnails_class);
+
+	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
 
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarThumbnailsPrivate));
 }
@@ -245,7 +260,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 
 	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
 
-	gtk_list_store_clear (priv->list_store);
+	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	for (i = 0; i < n_pages; i++) {
 		EvJob *job;
 		gchar *page_label;
@@ -280,4 +295,33 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	page_changed_cb (page_cache, ev_page_cache_get_current_page (page_cache), sidebar_thumbnails);
 
 }
+
+static gboolean
+ev_sidebar_thumbnails_clear_job (GtkTreeModel *model,                                             
+			         GtkTreePath *path, 					                                                 
+			         GtkTreeIter *iter, 											                                              
+				 gpointer data)
+{
+    EvJob *job;
+    
+    gtk_tree_model_get (model, iter, COLUMN_JOB, &job, -1);
+    
+    if (job != NULL) {
+        ev_job_queue_remove_job (job);
+	g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, data);
+    	g_object_unref (job);
+    }
+
+    return FALSE;    
+}
+
+static void 
+ev_sidebar_thumbnails_clear_model (EvSidebarThumbnails *sidebar_thumbnails)
+{
+    EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
+    
+    gtk_tree_model_foreach (GTK_TREE_MODEL (priv->list_store), ev_sidebar_thumbnails_clear_job, sidebar_thumbnails);
+    gtk_list_store_clear (priv->list_store);
+}
+
 

@@ -366,8 +366,10 @@ update_sizing_buttons (EvWindow *window)
 void
 ev_window_open_page (EvWindow *ev_window, int page)
 {
-	if (ev_window->priv->page_cache)
-		ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
+	if (ev_window->priv->page_cache) {
+	    page = CLAMP (page, 0, ev_page_cache_get_n_pages (ev_window->priv->page_cache));
+	    ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
+	}
 }
 
 void
@@ -1626,12 +1628,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-#if 0
-	/* FIXME: uncomment when this is written.*/
-	page = ev_page_cache_get_page (ev_window->priv->page_cache);
-#else
-	page = 1;
-#endif
+	page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 	uri = g_strdup (ev_window->priv->uri);
 
 	ev_window_open (ev_window, uri);
