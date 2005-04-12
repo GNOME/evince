@@ -1659,6 +1659,19 @@ ev_window_cmd_leave_fullscreen (GtkAction *action, EvWindow *window)
 }
 
 static void
+ev_window_cmd_escape (GtkAction *action, EvWindow *window)
+{
+	GtkWidget *widget;
+
+	widget = gtk_window_get_focus (GTK_WINDOW (window));
+	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
+		update_chrome_flag (window, EV_CHROME_FINDBAR, NULL, FALSE);
+	} else {
+		gtk_window_unfullscreen (GTK_WINDOW (window));
+	}
+}
+
+static void
 update_view_size (EvWindow *window)
 {
 	int width, height;
@@ -2152,9 +2165,12 @@ static GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_help_about) },
 
 	/* Toolbar-only */
-	{ "LeaveFullscreen", EV_STOCK_LEAVE_FULLSCREEN, N_("Leave Fullscreen"), "Escape",
+	{ "LeaveFullscreen", EV_STOCK_LEAVE_FULLSCREEN, N_("Leave Fullscreen"), NULL,
 	  N_("Leave fullscreen mode"),
-	  G_CALLBACK (ev_window_cmd_leave_fullscreen) }
+	  G_CALLBACK (ev_window_cmd_leave_fullscreen) },
+
+	{ "Escape", NULL, N_("Selection Caret"), "Escape", "",
+	  G_CALLBACK (ev_window_cmd_escape) }
 };
 
 /* Toggle items */
