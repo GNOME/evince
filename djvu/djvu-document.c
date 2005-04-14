@@ -224,12 +224,10 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
-static char *
-djvu_document_get_text (EvDocument *document, gint page, EvRectangle *rect)
+static gboolean
+djvu_document_can_get_text (EvDocument *document)
 {
-	/* FIXME this method should not be in EvDocument */
-	g_warning ("djvu_document_get_text not implemented");
-	return NULL;
+	return FALSE;
 }
 
 static void
@@ -237,7 +235,7 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = djvu_document_load;
 	iface->save = djvu_document_save;
-	iface->get_text = djvu_document_get_text;
+	iface->can_get_text = djvu_document_can_get_text;
 	iface->get_n_pages = djvu_document_get_n_pages;
 	iface->get_page_size = djvu_document_get_page_size;
 	iface->render_pixbuf = djvu_document_render_pixbuf;

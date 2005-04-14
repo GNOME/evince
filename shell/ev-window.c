@@ -183,6 +183,7 @@ update_action_sensitivity (EvWindow *ev_window)
 	EvDocument *document;
 	EvWindowPageMode page_mode;
 	EvView *view;
+	gboolean sensitive;
 
 	document = ev_window->priv->document;
 	page_mode = ev_window->priv->page_mode;
@@ -195,8 +196,10 @@ update_action_sensitivity (EvWindow *ev_window)
 	/* "FileCloseWindow": always sensitive */
 
         /* Edit menu */
-	set_action_sensitive (ev_window, "EditCopy", document!=NULL);
-	set_action_sensitive (ev_window, "EditSelectAll", document!=NULL);
+
+	sensitive = document && ev_document_can_get_text (document);
+	set_action_sensitive (ev_window, "EditCopy", sensitive);
+	set_action_sensitive (ev_window, "EditSelectAll", sensitive);
 
 	if (document)
 		set_action_sensitive (ev_window, "EditFind", EV_IS_DOCUMENT_FIND (document));

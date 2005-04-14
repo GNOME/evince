@@ -1286,11 +1286,10 @@ ps_document_get_page_size (EvDocument   *document,
 	}
 }
 
-static char *
-ps_document_get_text (EvDocument *document, int page, EvRectangle *rect)
+static gboolean
+ps_document_can_get_text (EvDocument *document)
 {
-	g_warning ("ps_document_get_text not implemented"); /* FIXME ? */
-	return NULL;
+	return FALSE;
 }
 
 static gboolean
@@ -1348,7 +1347,7 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = ps_document_load;
 	iface->save = ps_document_save;
-	iface->get_text = ps_document_get_text;
+	iface->can_get_text = ps_document_can_get_text;
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->render_pixbuf = ps_document_render_pixbuf;

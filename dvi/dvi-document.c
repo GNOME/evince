@@ -238,12 +238,10 @@ dvi_document_class_init (DviDocumentClass *klass)
 	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
-static char *
-dvi_document_get_text (EvDocument *document, gint page, EvRectangle *rect)
+static gboolean
+dvi_document_can_get_text (EvDocument *document)
 {
-	/* FIXME this method should not be in EvDocument */
-	g_warning ("dvi_document_get_text not implemented");
-	return NULL;
+	return FALSE;
 }
 
 static void
@@ -251,7 +249,7 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = dvi_document_load;
 	iface->save = dvi_document_save;
-	iface->get_text = dvi_document_get_text;
+	iface->can_get_text = dvi_document_can_get_text;
 	iface->get_n_pages = dvi_document_get_n_pages;
 	iface->get_page_size = dvi_document_get_page_size;
 	iface->render_pixbuf = dvi_document_render_pixbuf;

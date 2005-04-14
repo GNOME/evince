@@ -182,6 +182,14 @@ ev_document_get_page_label(EvDocument    *document,
 	return iface->get_page_label (document, page);
 }
 
+gboolean
+ev_document_can_get_text (EvDocument  *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	return iface->can_get_text (document);
+}
+
 char *
 ev_document_get_text (EvDocument  *document,
 		      int          page,

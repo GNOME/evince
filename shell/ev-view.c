@@ -620,6 +620,10 @@ ev_view_copy (EvView *ev_view)
 	GtkClipboard *clipboard;
 	char *text;
 
+	if (!ev_document_can_get_text (ev_view->document)) {
+		return;
+	}
+
 	g_mutex_lock (EV_DOC_MUTEX);
 	text = ev_document_get_text (ev_view->document,
 				     ev_view->current_page,
@@ -640,6 +644,10 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 {
 	EvView *ev_view = EV_VIEW (data);
 	char *text;
+
+	if (!ev_document_can_get_text (ev_view->document)) {
+		return;
+	}
 
 	g_mutex_lock (EV_DOC_MUTEX);
 	text = ev_document_get_text (ev_view->document,

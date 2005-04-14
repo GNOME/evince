@@ -169,12 +169,10 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
-static char *
-pixbuf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
+static gboolean
+pixbuf_document_can_get_text (EvDocument *document)
 {
-	/* FIXME this method should not be in EvDocument */
-	g_warning ("pixbuf_document_get_text not implemented");
-	return NULL;
+	return FALSE;
 }
 
 static void
@@ -182,7 +180,7 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = pixbuf_document_load;
 	iface->save = pixbuf_document_save;
-	iface->get_text = pixbuf_document_get_text;
+	iface->can_get_text = pixbuf_document_can_get_text;
 	iface->get_n_pages = pixbuf_document_get_n_pages;
 	iface->get_page_size = pixbuf_document_get_page_size;
 	iface->render_pixbuf = pixbuf_document_render_pixbuf;
