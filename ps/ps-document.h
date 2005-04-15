@@ -71,6 +71,9 @@ struct _PSDocument {
   gboolean send_filename_to_gs; /* True if gs should read from file directly */
   gboolean reading_from_pipe;   /* True if ggv is reading input from pipe */
   struct document *doc;
+  
+  int *ps_export_pagelist;
+  char *ps_export_filename;
 
   const gchar *gs_status;       /* PSDocument status */
 };

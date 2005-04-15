@@ -46,6 +46,7 @@
 #include "ps-document.h"
 #include "ev-debug.h"
 #include "gsdefaults.h"
+#include "ev-ps-exporter.h"
 
 #ifdef HAVE_LOCALE_H
 #   include <locale.h>
@@ -101,6 +102,7 @@ static void input(gpointer data, gint source, GdkInputCondition condition);
 static void stop_interpreter(PSDocument * gs);
 static gint start_interpreter(PSDocument * gs);
 static void ps_document_document_iface_init (EvDocumentIface *iface);
+static void ps_document_ps_exporter_iface_init (EvPSExporterIface *iface);
 static gboolean ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data);
 
 static GObjectClass *parent_class = NULL;
@@ -141,6 +143,9 @@ ps_document_init (PSDocument *gs)
 	gs->buffer_bytes_left = 0;
 
 	gs->gs_status = _("No document loaded.");
+
+	gs->ps_export_pagelist = NULL;
+	gs->ps_export_filename = NULL;
 
 	pixbuf_cond = g_cond_new ();
 	pixbuf_mutex = g_mutex_new ();
@@ -1029,12 +1034,22 @@ ps_document_get_type(void)
         NULL
     };
 
+    static const GInterfaceInfo ps_exporter_info =
+    {
+        (GInterfaceInitFunc) ps_document_ps_exporter_iface_init,
+        NULL,
+        NULL
+    };
+
     gs_type = g_type_register_static(G_TYPE_OBJECT,
                                      "PSDocument", &gs_info, 0);
 
     g_type_add_interface_static (gs_type,
                                  EV_TYPE_DOCUMENT,
                                  &document_info);
+    g_type_add_interface_static (gs_type,
+                                 EV_TYPE_PS_EXPORTER,
+                                 &ps_exporter_info);
   }
   return gs_type;
 
@@ -1225,12 +1240,58 @@ ps_document_load (EvDocument  *document,
 }
 
 static gboolean
+save_page_list (PSDocument *document, int *page_list, const char *filename)
+{
+	gboolean result = TRUE;
+	GtkGSDocSink *sink = gtk_gs_doc_sink_new ();
+	FILE *f;
+	gchar *buf;
+
+	pscopydoc (sink, document->gs_filename, document->doc, page_list);
+	
+	buf = gtk_gs_doc_sink_get_buffer (sink);
+	
+	f = fopen (filename, "w");
+	if (f) {
+		fputs (buf, f);
+		fclose (f);
+	} else {
+		result = FALSE;
+	}
+
+	g_free (buf);
+	gtk_gs_doc_sink_free (sink);
+	g_free (sink);
+
+	return result;
+}
+
+static gboolean
 ps_document_save (EvDocument  *document,
 		  const char  *uri,
 		  GError     **error)
 {
-	g_warning ("ps_document_save not implemented"); /* FIXME */
-	return TRUE;
+	PSDocument *ps = PS_DOCUMENT (document);
+	int *page_list;
+	gboolean result;
+	int i;
+	char *filename;
+
+	filename = g_filename_from_uri (uri, NULL, error);
+	if (!filename)
+		return FALSE;
+
+	page_list = g_new0 (int, ps->doc->numpages);
+	for (i = 0; i < ps->doc->numpages; i++) {
+		page_list[i] = 1;
+	}
+
+	result = save_page_list (ps, page_list, filename);
+
+	g_free (page_list);
+	g_free (filename);
+
+	return result;
 }
 
 static int
@@ -1351,4 +1412,45 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->render_pixbuf = ps_document_render_pixbuf;
+}
+
+static void
+ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename)
+{
+	PSDocument *document = PS_DOCUMENT (exporter);
+
+	g_free (document->ps_export_pagelist);
+	
+	document->ps_export_pagelist = g_new0 (int, document->doc->numpages);
+	document->ps_export_filename = g_strdup (filename);
+}
+
+static void
+ps_document_ps_export_do_page (EvPSExporter *exporter, int page)
+{
+	PSDocument *document = PS_DOCUMENT (exporter);
+	
+	document->ps_export_pagelist[page] = 1;
+}
+
+static void
+ps_document_ps_export_end (EvPSExporter *exporter)
+{
+	PSDocument *document = PS_DOCUMENT (exporter);
+
+	save_page_list (document, document->ps_export_pagelist,
+			document->ps_export_filename);
+
+	g_free (document->ps_export_pagelist);
+	g_free (document->ps_export_filename);	
+	document->ps_export_pagelist = NULL;
+	document->ps_export_filename = NULL;
+}
+
+static void
+ps_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+{
+	iface->begin = ps_document_ps_export_begin;
+	iface->do_page = ps_document_ps_export_do_page;
+	iface->end = ps_document_ps_export_end;
 }
