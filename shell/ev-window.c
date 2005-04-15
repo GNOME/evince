@@ -2249,10 +2249,27 @@ set_action_properties (GtkActionGroup *action_group)
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Previous"), NULL);
 	g_object_set (action, "is-important", TRUE, NULL);
+
 	action = gtk_action_group_get_action (action_group, "GoNextPage");
-	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "is-important", TRUE, NULL);
+	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Next"), NULL);
+
+	action = gtk_action_group_get_action (action_group, "ViewZoomIn");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Zoom In"), NULL);
+	action = gtk_action_group_get_action (action_group, "ViewZoomIn");
+
+	action = gtk_action_group_get_action (action_group, "ViewZoomOut");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Zoom Out"), NULL);
+	action = gtk_action_group_get_action (action_group, "ViewZoomIn");
+
+	action = gtk_action_group_get_action (action_group, "ViewBestFit");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Best Fit"), NULL);
+	action = gtk_action_group_get_action (action_group, "ViewZoomIn");
+
 	action = gtk_action_group_get_action (action_group, "ViewPageWidth");
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Fit Width"), NULL);
