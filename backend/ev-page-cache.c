@@ -123,17 +123,17 @@ _ev_page_cache_new (EvDocument *document)
 
 			page_cache->size_cache = g_new0 (EvPageCacheInfo, page_cache->n_pages);
 
-			for (j = 1; j < i; j++) {
-				info = &(page_cache->size_cache [j - 1]);
-				info->width = page_width;
-				info->height = page_height;
+			for (j = 0; j < i; j++) {
+				info = &(page_cache->size_cache [j]);
+				info->width = page_cache->uniform_width;
+				info->height = page_cache->uniform_height;
 			}
 			page_cache->uniform = FALSE;
 
 		}
 
 		if (! page_cache->uniform) {
-			info = &(page_cache->size_cache [i - 1]);
+			info = &(page_cache->size_cache [i]);
 
 			info->width = page_width;
 			info->height = page_height;
