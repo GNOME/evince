@@ -394,19 +394,48 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 	     result;
 	     result = gtk_tree_model_iter_next (priv->page_model, &iter)) {
 		GtkWidget *widget;
+		GtkWidget *menu_widget;
 
 		gtk_tree_model_get (priv->page_model, &iter,
 				    PAGE_COLUMN_MAIN_WIDGET, &widget,
+				    PAGE_COLUMN_MENU_ITEM, &menu_widget,
 				    -1);
 			 
-		if (EV_IS_SIDEBAR_LINKS (widget)
-		    && EV_IS_DOCUMENT_LINKS (document)
-		    && ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document))) {
-			ev_sidebar_links_set_document (EV_SIDEBAR_LINKS (widget), document);
-		} else if (EV_IS_SIDEBAR_THUMBNAILS (widget) &&
-			   EV_IS_DOCUMENT_THUMBNAILS (document)) {
-			ev_sidebar_thumbnails_set_document
-				(EV_SIDEBAR_THUMBNAILS (widget), document);
+
+		if (EV_IS_SIDEBAR_LINKS (widget)) {
+			if (EV_IS_DOCUMENT_LINKS (document) &&
+			        ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document))) {
+				ev_sidebar_links_set_document (EV_SIDEBAR_LINKS (widget), document);
+				continue;
+			} else {
+				gtk_widget_set_sensitive (menu_widget, FALSE);
+			}
+		}
+		
+		if (EV_IS_SIDEBAR_THUMBNAILS (widget)) {
+			if (EV_IS_DOCUMENT_THUMBNAILS (document) &&
+			    (ev_document_get_n_pages (document) > 1)) {
+				ev_sidebar_thumbnails_set_document (EV_SIDEBAR_THUMBNAILS (widget), document);
+				continue;
+			} else {
+				gtk_widget_set_sensitive (menu_widget, FALSE);
+			}
 		}
 	}
 }
+
+gboolean   
+ev_sidebar_supports_document (EvSidebar   *ev_sidebar,
+			      EvDocument  *document)
+{
+    gboolean need_thumbnails;
+    gboolean need_index;
+    
+    need_thumbnails = EV_IS_DOCUMENT_THUMBNAILS (document) && (ev_document_get_n_pages (document) > 1);
+    need_index = (EV_IS_DOCUMENT_LINKS (document));
+    
+    return need_thumbnails || need_index;
+}
+
+
+

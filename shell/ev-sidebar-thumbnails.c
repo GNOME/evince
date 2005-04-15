@@ -255,7 +255,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
 	 * icon.  */
 	g_mutex_lock (EV_DOC_MUTEX);
 	ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (priv->document),
-					       1, THUMBNAIL_WIDTH, &width, &height);
+					       0, THUMBNAIL_WIDTH, &width, &height);
 	g_mutex_unlock (EV_DOC_MUTEX);
 
 	loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);

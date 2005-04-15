@@ -503,14 +503,6 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	g_free (title);
 }
 
-/* This function assumes that ev_window just had ev_window->document set.
- */
-static gboolean
-document_supports_sidebar (EvDocument *document)
-{
-	return (EV_IS_DOCUMENT_THUMBNAILS (document) || (EV_IS_DOCUMENT_LINKS (document)));
-}
-
 static void
 hide_sidebar_and_actions (EvWindow *ev_window)
 {
@@ -565,7 +557,7 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
 
-	if (document_supports_sidebar (document)) 
+	if (ev_sidebar_supports_document (sidebar, document)) 
 		ev_sidebar_set_document (sidebar, document);
 	else
 		hide_sidebar_and_actions (ev_window);

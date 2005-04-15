@@ -50,14 +50,16 @@ struct _EvSidebarClass {
 	GtkVBoxClass base_class;
 };
 
-GType      ev_sidebar_get_type     (void);
-GtkWidget *ev_sidebar_new          (void);
-void       ev_sidebar_add_page     (EvSidebar   *ev_sidebar,
-				    const gchar *page_id,
-				    const gchar *title,
-				    GtkWidget   *main_widget);
-void       ev_sidebar_set_document (EvSidebar   *ev_sidebar,
-				    EvDocument  *document);
+GType      ev_sidebar_get_type  	   (void);
+GtkWidget *ev_sidebar_new         	   (void);
+void       ev_sidebar_add_page    	   (EvSidebar   *ev_sidebar,
+					    const gchar *page_id,
+					    const gchar *title,
+					    GtkWidget   *main_widget);
+void       ev_sidebar_set_document	   (EvSidebar   *ev_sidebar,
+					    EvDocument  *document);
+gboolean   ev_sidebar_supports_document	   (EvSidebar   *ev_sidebar,
+					    EvDocument  *document);
 
 G_END_DECLS
 
