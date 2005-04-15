@@ -281,6 +281,53 @@ doc_rect_to_view_rect (EvView *view, EvRectangle *doc_rect, GdkRectangle *view_r
 	view_rect->height = ceil (doc_rect->y2 * view->scale) + y_offset - view_rect->y;
 }
 
+static void
+compute_zoom_factor (EvView *view)
+{
+	int doc_width, doc_height;
+	double scale, scale_w, scale_h;
+	GtkBorder border;
+
+	if (view->width <= 0 && view->height <= 0) {
+		return;
+	}
+
+	doc_width = doc_height = 0;
+	scale = scale_w = scale_h = 1.0;
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				1.0,
+				&doc_width,
+				&doc_height);
+
+	/* FIXME: The border size isn't constant.  Ugh.  Still, if we have extra
+	 * space, we just cut it from the border */
+	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
+
+	if (doc_width == 0 || doc_height == 0) {
+		return;
+	}
+
+	if (view->width >= 0) {
+		int target_width;
+
+		target_width = view->width - (view->spacing * 2 + border.left + border.right);
+		scale = scale_w = (double)target_width / doc_width;
+	}
+
+	if (view->height >= 0) {
+		int target_height;
+
+		target_height = view->height - (view->spacing * 2 + border.top + border.bottom);
+		scale = scale_h = (double)target_height / doc_height;
+	}
+
+	if (view->width >= 0 && view->height >= 0) {
+		scale = (scale_w < scale_h) ? scale_w : scale_h;
+	}
+
+	view->scale = scale;
+}
 
 /* Called by size_request to make sure we have appropriate jobs running.
  */
@@ -300,6 +347,8 @@ ev_view_size_request (GtkWidget      *widget,
 		requisition->height = 1;
 		return;
 	}
+
+	compute_zoom_factor (view);
 
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
@@ -1410,6 +1459,8 @@ page_changed_cb (EvPageCache *page_cache,
 	view->current_page = new_page;
 	view->has_selection = FALSE;
 
+	compute_zoom_factor (view);
+
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->current_page,
 					view->current_page,
@@ -1518,65 +1569,20 @@ ev_view_zoom (EvView   *view,
 	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
 
 	view->scale = scale;
+	view->width = view->height = -1;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 void
 ev_view_zoom_in (EvView *view)
 {
-	view->width = view->height = -1;
 	ev_view_zoom (view, ZOOM_IN_FACTOR, TRUE);
 }
 
 void
 ev_view_zoom_out (EvView *view)
 {
-	view->width = view->height = -1;
 	ev_view_zoom (view, ZOOM_OUT_FACTOR, TRUE);
-}
-
-static double
-size_to_zoom_factor (EvView *view, int width, int height)
-{
-	int doc_width, doc_height;
-	double scale, scale_w, scale_h;
-	GtkBorder border;
-
-	doc_width = doc_height = 0;
-	scale = scale_w = scale_h = 1.0;
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->scale,
-				&doc_width,
-				&doc_height);
-
-	/* FIXME: The border size isn't constant.  Ugh.  Still, if we have extra
-	 * space, we just cut it from the border */
-	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
-
-	if (doc_width == 0 && doc_height == 0) {
-		return 0;
-	}
-
-	if (width >= 0) {
-		int target_width;
-
-		target_width = width - (view->spacing * 2 + border.left + border.right);
-		scale = scale_w = (double)target_width * view->scale / doc_width;
-	}
-
-	if (height >= 0) {
-		int target_height;
-
-		target_height = height - (view->spacing * 2 + border.top + border.bottom);
-		scale = scale_h = (double)target_height * view->scale / doc_height;
-	}
-
-	if (width >= 0 && height >= 0) {
-		scale = (scale_w < scale_h) ? scale_w : scale_h;
-	}
-
-	return scale;
 }
 
 void
@@ -1584,17 +1590,13 @@ ev_view_set_size (EvView     *view,
 		  int         width,
 		  int         height)
 {
-	double factor;
-
-	if (!view->document)
+	if (!view->document) {
 		return;
+	}
 
-	if (view->width != width ||
-	    view->height != height) {
+	if (width != view->width || height != view->height) {
 		view->width = width;
 		view->height = height;
-		factor = size_to_zoom_factor (view, width, height);
-		ev_view_zoom (view, factor, FALSE);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 }

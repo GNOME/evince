@@ -1,5 +1,14 @@
 2005-04-15  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* shell/ev-view.c: (compute_zoom_factor), (ev_view_size_request),
+	(page_changed_cb), (ev_view_zoom), (ev_view_zoom_in),
+	(ev_view_zoom_out), (ev_view_set_size):
+
+	Rework sizing to deal with documents with not uniform page
+	size.
+
+2005-04-15  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* backend/ev-page-cache.c: (_ev_page_cache_new):
 
 	Fix several page size caching bugs
