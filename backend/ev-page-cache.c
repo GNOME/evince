@@ -146,6 +146,9 @@ _ev_page_cache_new (EvDocument *document)
 
 	g_mutex_unlock (EV_DOC_MUTEX);
 
+	if (page_cache->n_pages > 0)
+		ev_page_cache_set_current_page (page_cache, 0);
+
 	return page_cache;
 }
 
