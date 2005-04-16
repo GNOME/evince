@@ -1,3 +1,21 @@
+2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-page-cache.c: (ev_page_cache_init),
+	(_ev_page_cache_new):
+
+	Remove some assertions, documents can have 0 pages.
+	Make initial current page -1.
+
+	* shell/ev-page-action.c: (page_changed_cb):
+
+	Show "" if current page is -1
+
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_setup_document):
+
+	When document has 0 pages do not set the view
+	and make nearly everything insensitive.
+
 2005-04-16  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-page-view.c:

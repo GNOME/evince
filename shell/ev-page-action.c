@@ -100,7 +100,7 @@ page_changed_cb (EvPageCache        *page_cache,
 {
 	g_assert (proxy);
 	
-	if (page_cache != NULL) {
+	if (page_cache != NULL && page >= 0) {
 		gchar *page_label = ev_page_cache_get_page_label (page_cache, page);
 		gtk_entry_set_text (GTK_ENTRY (proxy->entry), page_label);
 		gtk_editable_set_position (GTK_EDITABLE (proxy->entry), -1);

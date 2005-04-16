@@ -51,7 +51,7 @@ G_DEFINE_TYPE (EvPageCache, ev_page_cache, G_TYPE_OBJECT)
 static void
 ev_page_cache_init (EvPageCache *page_cache)
 {
-	page_cache->current_page = 0;
+	page_cache->current_page = -1;
 }
 
 static void
@@ -141,11 +141,8 @@ _ev_page_cache_new (EvDocument *document)
 	}
 
 	/* make some sanity check assertions */
-	g_assert (page_cache->n_pages > 0);
 	if (! page_cache->uniform)
 		g_assert (page_cache->size_cache != NULL);
-	if (page_cache->uniform)
-		g_assert (page_cache->uniform_width > 0 && page_cache->uniform_height > 0);
 
 	g_mutex_unlock (EV_DOC_MUTEX);
 

@@ -182,48 +182,44 @@ update_action_sensitivity (EvWindow *ev_window)
 {
 	EvDocument *document;
 	EvWindowPageMode page_mode;
-	EvView *view;
-	gboolean sensitive;
+	gboolean sensitive, has_pages = FALSE, has_document;
+	int n_pages = 0, page = -1;
 
 	document = ev_window->priv->document;
 	page_mode = ev_window->priv->page_mode;
-	view = EV_VIEW (ev_window->priv->view);
+	has_document = document != NULL;
+	if (has_document && ev_window->priv->page_cache) {
+		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+		has_pages = has_document && n_pages > 0;
+	}
 
 	/* File menu */
 	/* "FileOpen": always sensitive */
-	set_action_sensitive (ev_window, "FileSaveAs", document!=NULL);
-	set_action_sensitive (ev_window, "FilePrint", document!=NULL);
+	set_action_sensitive (ev_window, "FileSaveAs", has_document);
+	set_action_sensitive (ev_window, "FilePrint", has_pages);
 	/* "FileCloseWindow": always sensitive */
 
         /* Edit menu */
 
-	sensitive = document && ev_document_can_get_text (document);
+	sensitive = has_pages && ev_document_can_get_text (document);
 	set_action_sensitive (ev_window, "EditCopy", sensitive);
 	set_action_sensitive (ev_window, "EditSelectAll", sensitive);
-
-	if (document)
-		set_action_sensitive (ev_window, "EditFind", EV_IS_DOCUMENT_FIND (document));
-	else
-		set_action_sensitive (ev_window, "EditFind", FALSE);
-
+	set_action_sensitive (ev_window, "EditFind",
+			      has_pages && EV_IS_DOCUMENT_FIND (document));
 	set_action_sensitive (ev_window, "EditFindNext",
 			      ev_view_can_find_next (EV_VIEW (ev_window->priv->view)));
 
         /* View menu */
-	set_action_sensitive (ev_window, "ViewZoomIn", document!=NULL);
-	set_action_sensitive (ev_window, "ViewZoomOut", document!=NULL);
-	set_action_sensitive (ev_window, "ViewNormalSize", document!=NULL);
-	set_action_sensitive (ev_window, "ViewBestFit", document!=NULL);
-	set_action_sensitive (ev_window, "ViewPageWidth", document!=NULL);
-	set_action_sensitive (ev_window, "ViewReload", document!=NULL);
+	set_action_sensitive (ev_window, "ViewZoomIn", has_pages);
+	set_action_sensitive (ev_window, "ViewZoomOut", has_pages);
+	set_action_sensitive (ev_window, "ViewNormalSize", has_pages);
+	set_action_sensitive (ev_window, "ViewBestFit", has_pages);
+	set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
+	set_action_sensitive (ev_window, "ViewReload", has_pages);
 
         /* Go menu */
 	if (document) {
-		int n_pages;
-		int page;
-		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
-		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
-
 		set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
 		set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
 		set_action_sensitive (ev_window, "GoFirstPage", page > 0);
@@ -248,7 +244,7 @@ update_action_sensitivity (EvWindow *ev_window)
 	/* "HelpAbout": always sensitive */
 
 	/* Toolbar-specific actions: */
-	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, document!=NULL);
+	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
 }
 
 static void
@@ -562,7 +558,9 @@ ev_window_setup_document (EvWindow *ev_window)
 	else
 		hide_sidebar_and_actions (ev_window);
 
-	ev_view_set_document (view, document);
+	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
+		ev_view_set_document (view, document);
+	}
 
 	update_window_title (document, NULL, ev_window);
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
