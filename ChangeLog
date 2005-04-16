@@ -1,5 +1,16 @@
 2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* shell/ev-view.c: (compute_border), (compute_zoom_factor),
+	(ev_view_size_request), (expose_bin_window),
+	(ev_view_set_show_border), (ev_view_init), (page_changed_cb):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_unfullscreen),
+	(ev_window_cmd_view_fullscreen):
+
+	Do not draw the border in fulscreen
+
+2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* shell/ev-view.c: (ev_view_get_offsets), (compute_zoom_factor),
 	(ev_view_size_request), (expose_bin_window), (ev_view_select_all),
 	(find_page_at_location), (page_changed_cb):

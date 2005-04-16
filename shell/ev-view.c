@@ -115,6 +115,7 @@ struct _EvView {
 	int width;
 	int height;
 	GtkBorder border;
+	gboolean show_border;
 };
 
 struct _EvViewClass {
@@ -282,6 +283,19 @@ doc_rect_to_view_rect (EvView *view, EvRectangle *doc_rect, GdkRectangle *view_r
 }
 
 static void
+compute_border (EvView *view, int width, int height, GtkBorder *border)
+{
+	if (view->show_border) {
+		ev_document_misc_get_page_border_size (width, height, border);
+	} else {
+		border->left = 0;
+		border->right = 0;
+		border->top = 0;
+		border->bottom = 0;
+	}
+}
+
+static void
 compute_zoom_factor (EvView *view)
 {
 	int doc_width, doc_height;
@@ -300,7 +314,7 @@ compute_zoom_factor (EvView *view)
 				&doc_width,
 				&doc_height);
 
-	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
+	compute_border (view, doc_width, doc_height, &border);
 
 	if (doc_width == 0 || doc_height == 0) {
 		return;
@@ -354,11 +368,12 @@ ev_view_size_request (GtkWidget      *widget,
 				view->scale,
 				&width, &height);
 
+	compute_border (view, width, height, &(view->border));
+
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->current_page,
 					view->current_page,
 					view->scale);
-	ev_document_misc_get_page_border_size (width, height, &(view->border));
 
 	if (view->width >= 0) {
 		requisition->width = 0;
@@ -569,8 +584,11 @@ expose_bin_window (GtkWidget      *widget,
 	area.y = y_offset;
 	area.width = width + view->border.left + view->border.right;
 	area.height = height + view->border.top + view->border.bottom;
-	ev_document_misc_paint_one_page (view->bin_window, widget, &area,
-					 &(view->border));
+
+	if (view->show_border) {
+		ev_document_misc_paint_one_page (view->bin_window, widget, &area,
+						 &(view->border));
+	}
 
 	/* Render the document itself */
 	LOG ("Render area %d %d %d %d - Offset %d %d",
@@ -678,6 +696,16 @@ ev_view_copy (EvView *ev_view)
 					      GDK_SELECTION_CLIPBOARD);
 	gtk_clipboard_set_text (clipboard, text, -1);
 	g_free (text);
+}
+
+void
+ev_view_set_show_border (EvView *view, gboolean show_border)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	view->show_border = show_border;
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
@@ -1267,6 +1295,7 @@ ev_view_init (EvView *view)
 	view->current_page = 0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
+	view->show_border = TRUE;
 }
 
 static void
@@ -1451,8 +1480,7 @@ page_changed_cb (EvPageCache *page_cache,
 				view->scale,
 				&new_width, &new_height);
 
-	ev_document_misc_get_page_border_size
-		(new_width, new_height, &(view->border));
+	compute_border (view, new_width, new_height, &(view->border));
 
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->current_page,

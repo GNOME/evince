@@ -1433,6 +1433,7 @@ ev_window_unfullscreen (EvWindow *window)
 
 //	destroy_fullscreen_popup (window);
 
+	ev_view_set_show_border (EV_VIEW (window->priv->view), TRUE);
 	update_chrome_visibility (window);
 }
 
@@ -1450,6 +1451,8 @@ ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *ev_window)
 	} else {
 		gtk_window_unfullscreen (GTK_WINDOW (ev_window));
 	}
+
+	ev_view_set_show_border (EV_VIEW (ev_window->priv->view), FALSE);
 }
 
 static gboolean
