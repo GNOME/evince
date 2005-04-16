@@ -1,5 +1,17 @@
 2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* shell/ev-view.c: (ev_view_set_spacing), (ev_view_init):
+	* shell/ev-view.h:
+
+	Allow setting view spacing, default to 0
+
+	* shell/ev-window.c: (ev_window_unfullscreen),
+	(ev_window_cmd_view_fullscreen), (ev_window_init):
+
+	Remove spacing in fullscreen mode
+
+2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* shell/ev-view.c: (compute_border), (compute_zoom_factor),
 	(ev_view_size_request), (expose_bin_window),
 	(ev_view_set_show_border), (ev_view_init), (page_changed_cb):

@@ -150,7 +150,9 @@ static GtkTargetEntry ev_drop_types[] = {
 #define GCONF_CHROME_STATUSBAR	"/apps/evince/show_statusbar"
 
 #define GCONF_SIDEBAR_SIZE      "/apps/evince/sidebar_size"
+
 #define SIDEBAR_DEFAULT_SIZE    132
+#define VIEW_SPACING		10
 
 static void     ev_window_update_fullscreen_popup (EvWindow         *window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
@@ -1419,6 +1421,8 @@ ev_window_fullscreen (EvWindow *window)
 static void
 ev_window_unfullscreen (EvWindow *window)
 {
+	EvView *view = EV_VIEW (window->priv->view);
+
 	window->priv->fullscreen_mode = FALSE;
 
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
@@ -1427,32 +1431,34 @@ ev_window_unfullscreen (EvWindow *window)
 
 	fullscreen_clear_timeout (window);
 
-	g_signal_handlers_disconnect_by_func (window->priv->view,
+	g_signal_handlers_disconnect_by_func (view,
 					      (gpointer) fullscreen_motion_notify_cb,
 					      window);
 
-//	destroy_fullscreen_popup (window);
-
-	ev_view_set_show_border (EV_VIEW (window->priv->view), TRUE);
+	ev_view_set_show_border (view, TRUE);
+	ev_view_set_spacing (view, VIEW_SPACING);	
 	update_chrome_visibility (window);
 }
 
 static void
-ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 {
+	EvView *view;
 	gboolean fullscreen;
 
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
+        g_return_if_fail (EV_IS_WINDOW (window));
 
+	view = EV_VIEW (window->priv->view);
 	fullscreen = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 
 	if (fullscreen) {
-		gtk_window_fullscreen (GTK_WINDOW (ev_window));
+		gtk_window_fullscreen (GTK_WINDOW (window));
 	} else {
-		gtk_window_unfullscreen (GTK_WINDOW (ev_window));
+		gtk_window_unfullscreen (GTK_WINDOW (window));
 	}
 
-	ev_view_set_show_border (EV_VIEW (ev_window->priv->view), FALSE);
+	ev_view_set_show_border (view, FALSE);
+	ev_view_set_spacing (view, 0);	
 }
 
 static gboolean
@@ -2498,7 +2504,7 @@ ev_window_init (EvWindow *ev_window)
 			ev_window->priv->scrolled_window);
 
 	ev_window->priv->view = ev_view_new ();
-	//ev_window->priv->page_view = ev_page_view_new ();
+	ev_view_set_spacing (EV_VIEW (ev_window->priv->view), VIEW_SPACING);	
 	ev_window->priv->password_view = ev_password_view_new ();
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",

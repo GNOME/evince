@@ -1285,12 +1285,25 @@ ev_view_class_init (EvViewClass *class)
 	add_scroll_binding_shifted (binding_set, GDK_BackSpace, EV_SCROLL_PAGE_BACKWARD, EV_SCROLL_PAGE_FORWARD, FALSE);
 }
 
+void
+ev_view_set_spacing (EvView     *view,
+		     int         spacing)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	view->spacing = spacing;
+
+	if (view->document) {
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+}
+
 static void
 ev_view_init (EvView *view)
 {
 	GTK_WIDGET_SET_FLAGS (view, GTK_CAN_FOCUS);
 
-	view->spacing = 10;
+	view->spacing = 0;
 	view->scale = 1.0;
 	view->current_page = 0;
 	view->pressed_button = -1;
