@@ -114,6 +114,7 @@ struct _EvView {
 	double scale;
 	int width;
 	int height;
+	GtkBorder border;
 };
 
 struct _EvViewClass {
@@ -238,7 +239,6 @@ ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
 	EvDocument *document = view->document;
 	GtkWidget *widget = GTK_WIDGET (view);
 	int width, height, target_width, target_height;
-	GtkBorder border;
 
 	g_return_if_fail (EV_IS_DOCUMENT (document));
 
@@ -247,12 +247,12 @@ ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
 				view->scale,
 				&width, &height);
 
-	ev_document_misc_get_page_border_size (width, height, &border);
-
 	*x_offset = view->spacing;
 	*y_offset = view->spacing;
-	target_width = width + border.left + border.right + view->spacing * 2;
-	target_height = height + border.top + border.bottom + view->spacing * 2;
+	target_width = width + view->border.left +
+		       view->border.right + view->spacing * 2;
+	target_height = height + view->border.top +
+			view->border.bottom + view->spacing * 2;
 	*x_offset += MAX (0, (widget->allocation.width - target_width) / 2);
 	*y_offset += MAX (0, (widget->allocation.height - target_height) / 2);
 }
@@ -300,8 +300,6 @@ compute_zoom_factor (EvView *view)
 				&doc_width,
 				&doc_height);
 
-	/* FIXME: The border size isn't constant.  Ugh.  Still, if we have extra
-	 * space, we just cut it from the border */
 	ev_document_misc_get_page_border_size (doc_width, doc_height, &border);
 
 	if (doc_width == 0 || doc_height == 0) {
@@ -311,14 +309,16 @@ compute_zoom_factor (EvView *view)
 	if (view->width >= 0) {
 		int target_width;
 
-		target_width = view->width - (view->spacing * 2 + border.left + border.right);
+		target_width = view->width - (view->spacing * 2 + view->border.left +
+					      view->border.right);
 		scale = scale_w = (double)target_width / doc_width;
 	}
 
 	if (view->height >= 0) {
 		int target_height;
 
-		target_height = view->height - (view->spacing * 2 + border.top + border.bottom);
+		target_height = view->height - (view->spacing * 2 + view->border.top +
+						view->border.bottom);
 		scale = scale_h = (double)target_height / doc_height;
 	}
 
@@ -336,7 +336,6 @@ ev_view_size_request (GtkWidget      *widget,
 		      GtkRequisition *requisition)
 {
 	EvView *view = EV_VIEW (widget);
-	GtkBorder border;
 	gint width, height;
 
 	if (!GTK_WIDGET_REALIZED (widget))
@@ -359,20 +358,20 @@ ev_view_size_request (GtkWidget      *widget,
 					view->current_page,
 					view->current_page,
 					view->scale);
-	ev_document_misc_get_page_border_size (width, height, &border);
+	ev_document_misc_get_page_border_size (width, height, &(view->border));
 
 	if (view->width >= 0) {
 		requisition->width = 0;
 	} else {
-		requisition->width = width + border.left + border.right +
-				     view->spacing * 2;
+		requisition->width = width + view->border.left +
+				     view->border.right + view->spacing * 2;
 	}
 
 	if (view->height >= 0) {
 		requisition->height = 0;
 	} else {
-		requisition->height = height + border.top + border.bottom +
-				      view->spacing * 2;
+		requisition->height = height + view->border.top +
+				      view->border.bottom + view->spacing * 2;
 	}
 }
 
@@ -550,7 +549,6 @@ expose_bin_window (GtkWidget      *widget,
 		   GdkEventExpose *event)
 {
 	EvView *view = EV_VIEW (widget);
-	GtkBorder border;
 	gint width, height;
 	GdkRectangle area;
 	int x_offset, y_offset;
@@ -566,14 +564,13 @@ expose_bin_window (GtkWidget      *widget,
 				view->scale,
 				&width, &height);
 
-	ev_document_misc_get_page_border_size (width, height, &border);
-
 	/* Paint the frame */
 	area.x = x_offset;
 	area.y = y_offset;
-	area.width = width + border.left + border.right;
-	area.height = height + border.top + border.bottom;
-	ev_document_misc_paint_one_page (view->bin_window, widget, &area, &border);
+	area.width = width + view->border.left + view->border.right;
+	area.height = height + view->border.top + view->border.bottom;
+	ev_document_misc_paint_one_page (view->bin_window, widget, &area,
+					 &(view->border));
 
 	/* Render the document itself */
 	LOG ("Render area %d %d %d %d - Offset %d %d",
@@ -597,8 +594,8 @@ expose_bin_window (GtkWidget      *widget,
 				 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
 				 scaled_image,
 				 0, 0,
-				 area.x + border.left,
-				 area.y + border.top,
+				 area.x + view->border.left,
+				 area.y + view->border.top,
 				 width, height,
 				 GDK_RGB_DITHER_NORMAL,
 				 0, 0);
@@ -641,7 +638,6 @@ ev_view_select_all (EvView *ev_view)
 	GdkRectangle selection;
 	int width, height;
 	int x_offset, y_offset;
-	GtkBorder border;
 
 	g_return_if_fail (EV_IS_VIEW (ev_view));
 
@@ -651,11 +647,10 @@ ev_view_select_all (EvView *ev_view)
 				ev_view->current_page,
 				ev_view->scale,
 				&width, &height);
-	ev_document_misc_get_page_border_size (width, height, &border);
 
 	ev_view->has_selection = TRUE;
-	selection.x = x_offset + border.left;
-        selection.y = y_offset + border.top;
+	selection.x = x_offset + ev_view->border.left;
+        selection.y = y_offset + ev_view->border.top;
 	selection.width = width;
 	selection.height = height;
 	view_rect_to_doc_rect (ev_view, &selection, &ev_view->selection);
@@ -874,17 +869,15 @@ find_page_at_location (EvView  *view,
 		       gint    *x_offset,
 		       gint    *y_offset)
 {
-	GtkBorder border;
 	gint width, height;
 
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
 				view->scale,
 				&width, &height);
-	ev_document_misc_get_page_border_size (width, height, &border);
 
-	x -= (border.left + view->spacing);
-	y -= (border.top + view->spacing);
+	x -= (view->border.left + view->spacing);
+	y -= (view->border.top + view->spacing);
 
 	if ((x < 0) || (y < 0) ||
 	    (x >= width) || (y >= height)) {
@@ -1447,19 +1440,19 @@ page_changed_cb (EvPageCache *page_cache,
 				old_page,
 				view->scale,
 				&old_width, &old_height);
-	ev_page_cache_get_size (page_cache,
-				new_page,
-				view->scale,
-				&new_width, &new_height);
-
-	if (view->cursor != EV_VIEW_CURSOR_HIDDEN) {
-		//ev_view_set_cursor (view, EV_VIEW_CURSOR_WAIT);
-	}
 
 	view->current_page = new_page;
 	view->has_selection = FALSE;
 
 	compute_zoom_factor (view);
+
+	ev_page_cache_get_size (page_cache,
+				new_page,
+				view->scale,
+				&new_width, &new_height);
+
+	ev_document_misc_get_page_border_size
+		(new_width, new_height, &(view->border));
 
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->current_page,
