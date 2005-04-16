@@ -373,12 +373,6 @@ ev_window_open_page (EvWindow *ev_window, int page)
 	}
 }
 
-void
-ev_window_open_link (EvWindow *ev_window, EvLink *link)
-{
-	ev_view_go_to_link (EV_VIEW (ev_window->priv->view), link);
-}
-
 gboolean
 ev_window_is_empty (const EvWindow *ev_window)
 {
@@ -2012,7 +2006,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 		if (visible && search_string && search_string[0]) {
 			g_mutex_lock (EV_DOC_MUTEX);
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), 
-						ev_view_get_page (EV_VIEW (ev_window->priv->view)),
+						ev_page_cache_get_current_page (ev_window->priv->page_cache),
 						search_string,
 						case_sensitive);
 			g_mutex_unlock (EV_DOC_MUTEX);

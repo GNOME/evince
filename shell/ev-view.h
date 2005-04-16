@@ -38,15 +38,10 @@ GType		ev_view_get_type	(void) G_GNUC_CONST;
 GtkWidget*	ev_view_new		(void);
 void		ev_view_set_document	(EvView     *view,
 			   		 EvDocument *document);
-int             ev_view_get_page        (EvView     *view);
 
 /* Clipboard */
 void		ev_view_copy		(EvView     *view);
 void		ev_view_select_all	(EvView     *view);
-
-/* Navigation */
-void		ev_view_go_to_link	(EvView     *view,
-					 EvLink     *link);
 
 /* Page size */
 void		ev_view_zoom_in		(EvView     *view);

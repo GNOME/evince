@@ -210,8 +210,8 @@ ev_view_finalize (GObject *object)
 
 	LOG ("Finalize");
 
-
-	ev_view_set_scroll_adjustments (view, NULL, NULL);
+	g_free (view->status);
+	g_free (view->find_status);
 
 	G_OBJECT_CLASS (ev_view_parent_class)->finalize (object);
 }
@@ -975,6 +975,31 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	return TRUE;
 }
 
+/* FIXME: standardize this sometime */
+static void
+go_to_link (EvView *view, EvLink *link)
+{
+	EvLinkType type;
+	const char *uri;
+	int page;
+
+	type = ev_link_get_link_type (link);
+
+	switch (type) {
+		case EV_LINK_TYPE_TITLE:
+			break;
+		case EV_LINK_TYPE_PAGE:
+			page = ev_link_get_page (link);
+			ev_page_cache_set_current_page (view->page_cache, page);
+			break;
+		case EV_LINK_TYPE_EXTERNAL_URI:
+			uri = ev_link_get_uri (link);
+			gnome_vfs_url_show (uri);
+			break;
+	}
+}
+
+
 static gboolean
 ev_view_button_release_event (GtkWidget      *widget,
 			      GdkEventButton *event)
@@ -990,7 +1015,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 		link = get_link_at_location (view, event->x, event->y);
 		if (link) {
-			ev_view_go_to_link (view, link);
+			go_to_link (view, link);
 		}
 	}
 
@@ -1551,41 +1576,6 @@ ev_view_set_document (EvView     *view,
 
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
-}
-
-int
-ev_view_get_page        (EvView     *view)
-{
-	return view->current_page;
-}
-
-static void
-go_to_link (EvView *view, EvLink *link)
-{
-	EvLinkType type;
-	const char *uri;
-	int page;
-
-	type = ev_link_get_link_type (link);
-
-	switch (type) {
-		case EV_LINK_TYPE_TITLE:
-			break;
-		case EV_LINK_TYPE_PAGE:
-			page = ev_link_get_page (link);
-			ev_page_cache_set_current_page (view->page_cache, page);
-			break;
-		case EV_LINK_TYPE_EXTERNAL_URI:
-			uri = ev_link_get_uri (link);
-			gnome_vfs_url_show (uri);
-			break;
-	}
-}
-
-void
-ev_view_go_to_link (EvView *view, EvLink *link)
-{
-	go_to_link (view, link);
 }
 
 static void

@@ -173,6 +173,7 @@ selection_changed_cb (GtkTreeSelection   *selection,
 
 		g_signal_handler_block (ev_sidebar_links->priv->page_cache,
 					ev_sidebar_links->priv->page_changed_id);
+		/* FIXME: we should handle this better.  This breaks w/ URLs */
 		ev_page_cache_set_link (ev_sidebar_links->priv->page_cache, link);
 		g_signal_handler_unblock (ev_sidebar_links->priv->page_cache,
 					  ev_sidebar_links->priv->page_changed_id);
