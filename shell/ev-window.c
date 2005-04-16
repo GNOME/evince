@@ -1683,9 +1683,12 @@ update_view_size (EvWindow *window)
 	width = window->priv->scrolled_window->allocation.width;
 	height = window->priv->scrolled_window->allocation.height;
 
-	/* the scrolled window has a GTK_SHADOW_IN */
-	width -= 2 * window->priv->view->style->xthickness;
-	height -= 2 * window->priv->view->style->ythickness;
+	if (gtk_scrolled_window_get_shadow_type
+		(GTK_SCROLLED_WINDOW (window->priv->scrolled_window)) == GTK_SHADOW_IN)
+	{
+		width -= 2 * window->priv->view->style->xthickness;
+		height -= 2 * window->priv->view->style->ythickness;
+	}
 
 	if (window->priv->sizing_mode == EV_SIZING_BEST_FIT) {
 		ev_view_set_size (EV_VIEW (window->priv->view),

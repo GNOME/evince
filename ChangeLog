@@ -1,5 +1,12 @@
 2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* shell/ev-window.c: (update_view_size):
+
+	Calculate shadow size only when there is actually
+	a shadow.
+
+2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* shell/ev-view.c: (ev_view_set_spacing), (ev_view_init):
 	* shell/ev-view.h:
 
