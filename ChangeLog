@@ -1,5 +1,11 @@
 2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+
+	Initialize GError to NULL, fix a crash when loading fails.
+
+2005-04-16  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* shell/ev-window.c: (update_view_size):
 
 	Calculate shadow size only when there is actually

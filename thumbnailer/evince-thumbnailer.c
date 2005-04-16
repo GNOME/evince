@@ -35,7 +35,7 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 {
 	EvDocument *document = NULL;
 	char *mime_type;
-	GError *error;
+	GError *error = NULL;
 	GdkPixbuf *pixbuf;
 
 	mime_type = gnome_vfs_get_mime_type (uri);
