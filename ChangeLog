@@ -1,3 +1,16 @@
+2005-04-17  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* djvu/Makefile.am:
+	* dvi/Makefile.am:
+	* shell/Makefile.am:
+	
+	Move library dependencies to components.
+	
+	* shell/ev-window.c: (update_window_title),
+	(start_loading_document):
+	
+	Fix display of uris with spaces. Bug 168358.
+
 Sat Apr 16 18:53:47 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar-links.c: (selection_changed_cb):

@@ -444,7 +444,7 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	gboolean password_needed;
 
 	password_needed = (ev_window->priv->password_document != NULL);
-	if (document) {
+	if (document && ev_window->priv->page_cache) {
 		doc_title = ev_page_cache_get_title (ev_window->priv->page_cache);
 
 		/* Make sure we get a valid title back */
@@ -686,15 +686,18 @@ start_loading_document (EvWindow   *ev_window,
 
 	if (error->domain == EV_DOCUMENT_ERROR &&
 	    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
-		char *file_name;
+		gchar *base_name, *file_name;
 
 		ev_window->priv->password_document = g_object_ref (document);
 		ev_window->priv->password_uri = g_strdup (uri);
 
-		file_name = g_path_get_basename (uri);
+		base_name = g_path_get_basename (uri);
+		file_name = gnome_vfs_unescape_string_for_display (base_name);
+
 		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
 						file_name);
 		g_free (file_name);
+		g_free (base_name);
 		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
 
 		ev_window_popup_password_dialog (ev_window);

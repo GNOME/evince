@@ -20,6 +20,10 @@ libgtkdvi_la_SOURCES = \
 libgtkdvi_la_LIBADD = mdvi-lib/libmdvi.la	\
 	$(DVI_LIBS) -lkpathsea
 
+if WITH_TYPE1_FONTS
+libgtkdvi_la_LIBADD += -lt1lib
+endif
+
 
 
 

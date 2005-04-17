@@ -66,8 +66,6 @@ evince_LDADD=							\
 
 if ENABLE_DJVU
 evince_LDADD += 				\
-	-ldjvulibre 				\
-	-lpthread   				\
 	$(top_builddir)/djvu/libgtkdjvu.la	\
 	$(NULL)
 endif
@@ -76,10 +74,6 @@ if ENABLE_DVI
 evince_LDADD += 				\
 	$(top_builddir)/dvi/libgtkdvi.la	\
 	$(NULL)
-endif
-
-if WITH_TYPE1_FONTS
-evince_LDADD += -lt1lib
 endif
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
