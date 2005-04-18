@@ -29,7 +29,21 @@ evince_thumbnailer_LDADD=				\
 pixmapdir = $(pkgdatadir)
 pixmap_DATA = pdf-icon.png
 
+schema_files = \
+	evince-thumbnailer-dvi.schemas  \
+	evince-thumbnailer-djvu.schemas \
+	evince-thumbnailer.schemas
+
 schema_DATA = evince-thumbnailer.schemas
+
+if ENABLE_DJVU
+schema_DATA += evince-thumbnailer-djvu.schemas
+endif
+
+if ENABLE_DVI
+schema_DATA += evince-thumbnailer-dvi.schemas
+endif
+
 schemadir = $(GCONF_SCHEMA_FILE_DIR)
 
 install-data-local:
@@ -42,6 +56,6 @@ if GCONF_SCHEMAS_INSTALL
 endif
 
 EXTRA_DIST =         	\
-        $(pixmap_DATA)	\
-	$(schema_DATA)
+	$(pixmap_DATA)	\
+	$(schema_files)  
 
