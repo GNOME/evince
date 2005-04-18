@@ -509,6 +509,12 @@ get_page_orientation (PSDocument *gs, int page)
 		orientation = gs->doc->pages[page].orientation;
 	}
 	if (orientation == GTK_GS_ORIENTATION_NONE) {
+		orientation = gs->doc->default_page_orientation;
+	}
+	if (orientation == GTK_GS_ORIENTATION_NONE) {
+		orientation = gs->doc->orientation;
+	}
+	if (orientation == GTK_GS_ORIENTATION_NONE) {
 		orientation = GTK_GS_ORIENTATION_PORTRAIT;
 	}
 
