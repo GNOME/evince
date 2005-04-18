@@ -39,6 +39,7 @@
 #include "ev-print-job.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
+#include "ev-document-types.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
 #include "ev-job-queue.h"
@@ -46,16 +47,6 @@
 #include "egg-recent-view-gtk.h"
 #include "egg-recent-view.h"
 #include "egg-recent-model.h"
-
-#include "ev-poppler.h"
-#include "pixbuf-document.h"
-#include "ps-document.h"
-#ifdef ENABLE_DVI
-#include "dvi-document.h"
-#endif
-#ifdef ENABLE_DJVU
-#include "djvu-document.h"
-#endif
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -398,44 +389,6 @@ unable_to_load (EvWindow   *ev_window,
 	gtk_widget_destroy (dialog);
 }
 
-/* Would be nice to have this in gdk-pixbuf */
-static gboolean
-mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
-{
-	GSList *formats, *list;
-	gboolean retval = FALSE;
-
-	formats = gdk_pixbuf_get_formats ();
-
-	list = formats;
-	while (list) {
-		GdkPixbufFormat *format = list->data;
-		int i;
-		gchar **mime_types;
-
-		if (gdk_pixbuf_format_is_disabled (format))
-			continue;
-
-		mime_types = gdk_pixbuf_format_get_mime_types (format);
-
-		for (i = 0; mime_types[i] != NULL; i++) {
-			if (strcmp (mime_types[i], mime_type) == 0) {
-				retval = TRUE;
-				break;
-			}
-		}
-
-		if (retval)
-			break;
-
-		list = list->next;
-	}
-
-	g_slist_free (formats);
-
-	return retval;
-}
-
 static void
 update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_window)
 {
@@ -709,33 +662,6 @@ start_loading_document (EvWindow   *ev_window,
 	return FALSE;
 }
 
-static gboolean
-is_file_supported (const gchar *mime_type)
-{
-	static const char * const supported_types [] = {
-		"application/pdf",
-		"application/postscript",
-		"application/x-dvi",
-		"image/vnd.djvu",
-		"application/x-gzpostscript",
-		"image/x-eps",
-		NULL
-	};
-	gint   i;
-
-	g_return_val_if_fail (mime_type != NULL, FALSE);
-
-	if (mime_type_supported_by_gdk_pixbuf (mime_type))
-		return TRUE;
-	
-	for (i = 0; supported_types[i] != NULL; i++) {
-		if (g_ascii_strcasecmp (mime_type, supported_types[i]) == 0)
-			return TRUE;
-	}
-	
-	return FALSE;
-}
-
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
@@ -749,22 +675,13 @@ ev_window_open (EvWindow *ev_window, const char *uri)
 
 	if (mime_type == NULL)
 		document = NULL;
-	else if (!strcmp (mime_type, "application/pdf"))
-		document = g_object_new (PDF_TYPE_DOCUMENT, NULL);
-	else if (!strcmp (mime_type, "application/postscript") ||
-		 !strcmp (mime_type, "application/x-gzpostscript") ||
-		 !strcmp (mime_type, "image/x-eps"))
-		document = g_object_new (PS_TYPE_DOCUMENT, NULL);
-#ifdef ENABLE_DJVU
-	else if (!strcmp (mime_type, "image/vnd.djvu"))
-		document = g_object_new (DJVU_TYPE_DOCUMENT, NULL);
-#endif		
-	else if (mime_type_supported_by_gdk_pixbuf (mime_type))
-		document = g_object_new (PIXBUF_TYPE_DOCUMENT, NULL);
-#ifdef ENABLE_DVI
-	else if (!strcmp (mime_type, "application/x-dvi"))
-		document = g_object_new (DVI_TYPE_DOCUMENT, NULL);
-#endif
+	else {
+		GType document_type = ev_document_type_lookup (mime_type);
+
+		if (document_type!=G_TYPE_INVALID) {
+			document = g_object_new (document_type, NULL);
+		}
+	}
 
 	if (document) {
 		start_loading_document (ev_window, document, uri);
@@ -797,7 +714,7 @@ ev_window_open_uri_list (EvWindow *ev_window, GList *uri_list)
 		uri = gnome_vfs_uri_to_string (list->data, GNOME_VFS_URI_HIDE_NONE);
 		mime_type = gnome_vfs_get_mime_type (uri);
 		
-		if (is_file_supported (mime_type)) {
+		if (ev_document_type_lookup (mime_type)!=G_TYPE_INVALID) {
 			if (ev_window_is_empty (EV_WINDOW (ev_window))) {
 				ev_window_open (ev_window, uri);
 				

@@ -7,6 +7,7 @@ INCLUDES=					\
 	-I$(top_srcdir)/lib			\
 	-I$(top_srcdir)/pdf			\
 	-I$(top_srcdir)/backend			\
+	-I$(top_srcdir)/shell			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(THUMBNAILER_CFLAGS)			\
@@ -19,11 +20,10 @@ evince_thumbnailer_SOURCES=	\
 	evince-thumbnailer.c
 	$(NULL)
 
-evince_thumbnailer_LDADD=						\
-	$(THUMBNAILER_LIBS)					\
+evince_thumbnailer_LDADD=				\
+	$(THUMBNAILER_LIBS)				\
 	$(top_builddir)/lib/libev.la			\
-	$(top_builddir)/pdf/libpdfdocument.la	 	\
-	$(top_builddir)/backend/libevbackend.la		\
+	$(top_builddir)/shell/libevbackendfactory.la	\
 	$(NULL)
 
 pixmapdir = $(pkgdatadir)

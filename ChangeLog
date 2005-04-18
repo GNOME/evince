@@ -1,3 +1,21 @@
+2005-04-18  David Malcolm  <dmalcolm@redhat.com>
+
+	* shell/ev-document-types.h: 
+	* shell/ev-document-types.c: 
+	New files, handling the mapping from mimetypes to backends
+	
+	* shell/ev-window.c: 
+	* thumbnailer/evince-thumbnailer.c:	
+	Use the ev-document-types code
+	
+	* shell/Makefile.am: 
+	Added new convenience library libevbackendfactory_la, containing
+	the new mimetype->backend logic; moved the backends into it.
+
+	* thumbnailer/Makefile.am:
+	Make the thumbnailer link with the libevbackend.la convenience
+	library, rather than having a duplicate of the backend logic here.
+
 2005-04-18  Paolo Borelli  <pborelli@katamail.com>
 
 	* shell/ev-stock-icons.c: constify some vars.

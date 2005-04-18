@@ -18,6 +18,34 @@ INCLUDES=						\
 	$(NULL)
 
 bin_PROGRAMS=evince
+noinst_LTLIBRARIES = libevbackendfactory.la
+
+libevbackendfactory_la_SOURCES=         		\
+	ev-document-types.c				\
+	ev-document-types.h
+
+libevbackendfactory_la_LIBADD = 			\
+	$(top_builddir)/pdf/libpdfdocument.la	 	\
+	$(top_builddir)/pixbuf/libpixbufdocument.la	\
+	$(top_builddir)/ps/libgtkgs.la			\
+	$(top_builddir)/backend/libevbackend.la		\
+	$(NULL)
+
+if ENABLE_DJVU
+libevbackendfactory_la_LIBADD += 		\
+	$(top_builddir)/djvu/libgtkdjvu.la	\
+	$(NULL)
+endif
+
+if ENABLE_DVI
+libevbackendfactory_la_LIBADD += 		\
+	$(top_builddir)/dvi/libgtkdvi.la	\
+	$(NULL)
+endif
+
+if WITH_TYPE1_FONTS
+libevbackendfactory_la_LIBADD += -lt1lib
+endif
 
 evince_SOURCES=				\
 	dummy.cc			\
@@ -58,23 +86,8 @@ evince_LDADD=							\
 	$(SHELL_LIBS)						\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la	\
 	$(top_builddir)/lib/libev.la				\
-	$(top_builddir)/pdf/libpdfdocument.la	 		\
-	$(top_builddir)/pixbuf/libpixbufdocument.la		\
-	$(top_builddir)/ps/libgtkgs.la				\
-	$(top_builddir)/backend/libevbackend.la			\
+	libevbackendfactory.la					\
 	$(NULL)
-
-if ENABLE_DJVU
-evince_LDADD += 				\
-	$(top_builddir)/djvu/libgtkdjvu.la	\
-	$(NULL)
-endif
-
-if ENABLE_DVI
-evince_LDADD += 				\
-	$(top_builddir)/dvi/libgtkdvi.la	\
-	$(NULL)
-endif
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 
