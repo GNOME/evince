@@ -55,7 +55,7 @@ const EvDocumentType document_types[] = {
 
 #ifdef ENABLE_DJVU
 	/* djvu: */
-	{"image/vnd.djvu",             djvu_document_get_type),
+	{"image/vnd.djvu",             djvu_document_get_type},
 #endif		
 
 #ifdef ENABLE_DVI

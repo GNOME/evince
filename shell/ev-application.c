@@ -200,6 +200,10 @@ ev_application_open (EvApplication *application, GError *err)
 		ev_window_open (ev_window, uri);
 		gtk_widget_show (GTK_WIDGET (ev_window));
 		g_free (uri);
+	
+	} else {
+		if (!GTK_WIDGET_VISIBLE (ev_window))
+			gtk_widget_destroy (GTK_WIDGET (ev_window));
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (chooser));
