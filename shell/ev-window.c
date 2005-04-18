@@ -135,7 +135,7 @@ struct _EvWindowPrivate {
 	EggRecentViewGtk *recent_view;
 };
 
-static GtkTargetEntry ev_drop_types[] = {
+static const GtkTargetEntry ev_drop_types[] = {
 	{ "text/uri-list", 0, 0 }
 };
 
@@ -712,7 +712,7 @@ start_loading_document (EvWindow   *ev_window,
 static gboolean
 is_file_supported (const gchar *mime_type)
 {
-	static char *supported_types [] = {
+	static const char * const supported_types [] = {
 		"application/pdf",
 		"application/postscript",
 		"application/x-dvi",
@@ -722,7 +722,7 @@ is_file_supported (const gchar *mime_type)
 		NULL
 	};
 	gint   i;
-	
+
 	g_return_val_if_fail (mime_type != NULL, FALSE);
 
 	if (mime_type_supported_by_gdk_pixbuf (mime_type))
@@ -2094,7 +2094,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 }
 
 /* Normal items */
-static GtkActionEntry entries[] = {
+static const GtkActionEntry entries[] = {
 	{ "File", NULL, N_("_File") },
         { "Edit", NULL, N_("_Edit") },
 	{ "View", NULL, N_("_View") },
@@ -2176,7 +2176,7 @@ static GtkActionEntry entries[] = {
 };
 
 /* Toggle items */
-static GtkToggleActionEntry toggle_entries[] = {
+static const GtkToggleActionEntry toggle_entries[] = {
 	/* View Menu */
 	{ "ViewToolbar", NULL, N_("_Toolbar"), "<shift><control>T",
 	  N_("Show or hide the toolbar"),
@@ -2198,7 +2198,7 @@ static GtkToggleActionEntry toggle_entries[] = {
           G_CALLBACK (ev_window_cmd_view_page_width) },
 };
 
-static GtkRadioActionEntry page_view_entries[] = {
+static const GtkRadioActionEntry page_view_entries[] = {
 	{ "SinglePage", GTK_STOCK_DND, N_("Single"), NULL,
 	  N_("Show the document one page at a time"),
 	  PAGE_MODE_SINGLE_PAGE },

@@ -35,7 +35,7 @@ typedef struct {
 } EvStockIcon;
 
 /* Evince stock icons from gnome-icon-theme */
-static EvStockIcon stock_icons [] = {
+static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ZOOM_PAGE,        "stock_zoom-page" },
 	{ EV_STOCK_ZOOM_WIDTH,       "stock_zoom-page-width" },
 	{ EV_STOCK_LEAVE_FULLSCREEN, "stock_leave-fullscreen" }
