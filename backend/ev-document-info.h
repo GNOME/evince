@@ -82,7 +82,7 @@ struct _EvDocumentInfo
 	const char *keywords;
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
-	GDate *creation_date;
+	GDate creation_date;
 	guint ui_hints;
 
 	/* Mask of all the valid fields */
