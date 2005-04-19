@@ -54,9 +54,6 @@ struct _EvSidebarThumbnailsClass {
 GType      ev_sidebar_thumbnails_get_type (void);
 GtkWidget *ev_sidebar_thumbnails_new      (void);
 
-void ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
-					 EvDocument          *document);
-
 G_END_DECLS
 
 #endif /* __EV_SIDEBAR_THUMBNAILS_H__ */

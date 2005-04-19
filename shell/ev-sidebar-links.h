@@ -52,9 +52,6 @@ struct _EvSidebarLinksClass {
 
 GType      ev_sidebar_links_get_type       (void);
 GtkWidget *ev_sidebar_links_new            (void);
-void       ev_sidebar_links_set_document   (EvSidebarLinks *ev_sidebar_links,
-					    EvDocument         *document);
-void       ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links);
 
 G_END_DECLS
 

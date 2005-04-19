@@ -28,6 +28,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "ev-sidebar-page.h"
 #include "ev-sidebar-links.h"
 #include "ev-job-queue.h"
 #include "ev-document-links.h"
@@ -52,17 +53,30 @@ enum {
 };
 
 
-static void links_page_num_func  (GtkTreeViewColumn *tree_column,
-				  GtkCellRenderer   *cell,
-				  GtkTreeModel      *tree_model,
-				  GtkTreeIter       *iter,
-				  EvSidebarLinks    *sidebar_links);
-static void update_page_callback (EvPageCache       *page_cache,
-				  gint               current_page,
-				  EvSidebarLinks    *sidebar_links);
+static void links_page_num_func				(GtkTreeViewColumn *tree_column,
+							 GtkCellRenderer   *cell,
+							 GtkTreeModel      *tree_model,
+							 GtkTreeIter       *iter,
+							 EvSidebarLinks    *sidebar_links);
+static void update_page_callback 			(EvPageCache       *page_cache,
+							 gint               current_page,
+						         EvSidebarLinks    *sidebar_links);
+static void ev_sidebar_links_page_iface_init 		(EvSidebarPageIface *iface);
+static void ev_sidebar_links_clear_document     	(EvSidebarLinks *sidebar_links);
+static void ev_sidebar_links_set_document      	 	(EvSidebarPage  *sidebar_page,
+		    			        	 EvDocument     *document);
+static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
+						         EvDocument     *document);
+static const gchar* ev_sidebar_links_get_label 		(EvSidebarPage *sidebar_page);
 
 
-G_DEFINE_TYPE (EvSidebarLinks, ev_sidebar_links, GTK_TYPE_VBOX)
+G_DEFINE_TYPE_EXTENDED (EvSidebarLinks, 
+                        ev_sidebar_links, 
+                        GTK_TYPE_VBOX,
+                        0, 
+                        G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
+					       ev_sidebar_links_page_iface_init))
+
 
 #define EV_SIDEBAR_LINKS_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinksPrivate))
@@ -313,7 +327,7 @@ ev_sidebar_links_new (void)
 	return ev_sidebar_links;
 }
 
-void
+static void
 ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
 {
 	EvSidebarLinksPrivate *priv;
@@ -428,14 +442,17 @@ job_finished_cb (EvJobLinks     *job,
 
 }
 
-void
-ev_sidebar_links_set_document (EvSidebarLinks *sidebar_links,
+static void
+ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 			       EvDocument     *document)
 {
+	EvSidebarLinks *sidebar_links;
 	EvSidebarLinksPrivate *priv;
 
-	g_return_if_fail (EV_IS_SIDEBAR_LINKS (sidebar_links));
+	g_return_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page));
 	g_return_if_fail (EV_IS_DOCUMENT (document));
+	
+	sidebar_links = EV_SIDEBAR_LINKS (sidebar_page);
 
 	priv = sidebar_links->priv;
 
@@ -452,5 +469,27 @@ ev_sidebar_links_set_document (EvSidebarLinks *sidebar_links,
 	/* The priority doesn't matter for this job */
 	ev_job_queue_add_job (priv->job, EV_JOB_PRIORITY_LOW);
 
+}
+
+static gboolean
+ev_sidebar_links_support_document (EvSidebarPage  *sidebar_page,
+				   EvDocument *document)
+{
+	return (EV_IS_DOCUMENT_LINKS (document) &&
+		    ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document)));
+}
+
+static const gchar*
+ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
+{
+    return _("Index");
+}
+
+static void
+ev_sidebar_links_page_iface_init (EvSidebarPageIface *iface)
+{
+	iface->support_document = ev_sidebar_links_support_document;
+	iface->set_document = ev_sidebar_links_set_document;
+	iface->get_label = ev_sidebar_links_get_label;
 }
 

@@ -29,21 +29,12 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "ev-sidebar.h"
+#include "ev-sidebar-page.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
-#include "ev-sidebar-links.h"
-#include "ev-sidebar-thumbnails.h"
-
-typedef struct
-{
-	char *id;
-	char *title;
-	GtkWidget *main_widget;
-} EvSidebarPage;
 
 enum
 {
-	PAGE_COLUMN_ID,
 	PAGE_COLUMN_TITLE,
 	PAGE_COLUMN_MENU_ITEM,
 	PAGE_COLUMN_MAIN_WIDGET,
@@ -238,7 +229,6 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	ev_sidebar->priv->page_model = (GtkTreeModel *)
 			gtk_list_store_new (PAGE_COLUMN_NUM_COLS,
 					    G_TYPE_STRING,
-					    G_TYPE_STRING,
 					    GTK_TYPE_WIDGET,
 					    GTK_TYPE_WIDGET,
 					    G_TYPE_INT);
@@ -310,6 +300,8 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	gtk_box_pack_start (GTK_BOX (ev_sidebar), ev_sidebar->priv->notebook,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (ev_sidebar->priv->notebook);
+
+	gtk_widget_set_sensitive (GTK_WIDGET (ev_sidebar), FALSE);
 }
 
 /* Public functions */
@@ -326,19 +318,19 @@ ev_sidebar_new (void)
 
 void
 ev_sidebar_add_page (EvSidebar   *ev_sidebar,
-		     const gchar *page_id,
-		     const gchar *title,
 		     GtkWidget   *main_widget)
 {
 	GtkTreeIter iter;
 	GtkWidget *menu_item;
 	gchar *label_title;
+	const gchar *title;
 	int index;
 	   
 	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
-	g_return_if_fail (page_id != NULL);
-	g_return_if_fail (title != NULL);
+	g_return_if_fail (EV_IS_SIDEBAR_PAGE (main_widget));
 	g_return_if_fail (GTK_IS_WIDGET (main_widget));
+	
+	title = ev_sidebar_page_get_label (EV_SIDEBAR_PAGE (main_widget));
 	   
 	index = gtk_notebook_append_page (GTK_NOTEBOOK (ev_sidebar->priv->notebook),
 					  main_widget, NULL);
@@ -353,7 +345,6 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	   
 	gtk_list_store_insert_with_values (GTK_LIST_STORE (ev_sidebar->priv->page_model),
 					   &iter, 0,
-					   PAGE_COLUMN_ID, page_id,
 					   PAGE_COLUMN_TITLE, title,
 					   PAGE_COLUMN_MENU_ITEM, menu_item,
 					   PAGE_COLUMN_MAIN_WIDGET, main_widget,
@@ -380,19 +371,19 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 {
 	EvSidebarPrivate *priv;
 	GtkTreeIter iter;
-	gboolean result;
+	gboolean valid;
+	gboolean has_pages;
 	   
 	g_return_if_fail (EV_IS_SIDEBAR (sidebar));
 	g_return_if_fail (EV_IS_DOCUMENT (document));
 	   
 	priv = sidebar->priv;
 	
-	/* FIXME: We should prolly make sidebars have an interface.  For now, we	
-	 * do this bad hack (TM)	
-	 */
-	for (result = gtk_tree_model_get_iter_first (priv->page_model, &iter);
-	     result;
-	     result = gtk_tree_model_iter_next (priv->page_model, &iter)) {
+	has_pages = FALSE;
+	
+	for (valid = gtk_tree_model_get_iter_first (priv->page_model, &iter);
+	     valid;
+	     valid = gtk_tree_model_iter_next (priv->page_model, &iter)) {
 		GtkWidget *widget;
 		GtkWidget *menu_widget;
 
@@ -402,40 +393,18 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 				    -1);
 			 
 
-		if (EV_IS_SIDEBAR_LINKS (widget)) {
-			if (EV_IS_DOCUMENT_LINKS (document) &&
-			        ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document))) {
-				ev_sidebar_links_set_document (EV_SIDEBAR_LINKS (widget), document);
-				continue;
-			} else {
+		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (widget),	document)) {
+				ev_sidebar_page_set_document (EV_SIDEBAR_PAGE (widget), document);
+				has_pages = TRUE;
+		} else {
 				gtk_widget_set_sensitive (menu_widget, FALSE);
-			}
-		}
-		
-		if (EV_IS_SIDEBAR_THUMBNAILS (widget)) {
-			if (EV_IS_DOCUMENT_THUMBNAILS (document) &&
-			    (ev_document_get_n_pages (document) > 1)) {
-				ev_sidebar_thumbnails_set_document (EV_SIDEBAR_THUMBNAILS (widget), document);
-				continue;
-			} else {
-				gtk_widget_set_sensitive (menu_widget, FALSE);
-			}
 		}
 	}
+	
+	if (!has_pages) {
+		gtk_widget_hide (GTK_WIDGET (sidebar));
+	} else {
+		gtk_widget_set_sensitive (GTK_WIDGET (sidebar), TRUE);
+	}
 }
-
-gboolean   
-ev_sidebar_supports_document (EvSidebar   *ev_sidebar,
-			      EvDocument  *document)
-{
-    gboolean need_thumbnails;
-    gboolean need_index;
-    
-    need_thumbnails = EV_IS_DOCUMENT_THUMBNAILS (document) && (ev_document_get_n_pages (document) > 1);
-    need_index = (EV_IS_DOCUMENT_LINKS (document));
-    
-    return need_thumbnails || need_index;
-}
-
-
 

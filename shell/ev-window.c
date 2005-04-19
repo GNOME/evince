@@ -92,7 +92,6 @@ struct _EvWindowPrivate {
 	GtkWidget *toolbar;
 	GtkWidget *hpaned;
 	GtkWidget *sidebar;
-	GtkWidget *thumbs_sidebar;
 	GtkWidget *find_bar;
 	GtkWidget *scrolled_window;
 	GtkWidget *view;
@@ -449,21 +448,6 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 }
 
 static void
-hide_sidebar_and_actions (EvWindow *ev_window)
-{
-	GtkAction *action;
-	/* Alsthough we update the hiddenness of the sidebar, we don't want to
-	 * store the value */
-	g_signal_handlers_disconnect_by_func (ev_window->priv->sidebar,
-					      ev_window_sidebar_visibility_changed_cb,
-					      ev_window);
-	gtk_widget_hide (ev_window->priv->sidebar);
-	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
-	gtk_action_set_sensitive (action, FALSE);
-
-}
-
-static void
 find_changed_cb (EvDocument *document, int page, EvWindow *ev_window)
 {
 	update_action_sensitivity (ev_window);
@@ -502,10 +486,7 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
 
-	if (ev_sidebar_supports_document (sidebar, document)) 
-		ev_sidebar_set_document (sidebar, document);
-	else
-		hide_sidebar_and_actions (ev_window);
+	ev_sidebar_set_document (sidebar, document);
 
 	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
 		ev_view_set_document (view, document);
@@ -2400,16 +2381,12 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     "index",
-			     _("Index"),
 			     sidebar_widget);
 
-	ev_window->priv->thumbs_sidebar = ev_sidebar_thumbnails_new ();
-	gtk_widget_show (ev_window->priv->thumbs_sidebar);
+	sidebar_widget = ev_sidebar_thumbnails_new ();
+	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     "thumbnails",
-			     _("Thumbnails"),
-			     ev_window->priv->thumbs_sidebar);
+			     sidebar_widget);
 
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,

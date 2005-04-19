@@ -1,5 +1,35 @@
 2005-04-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* po/POTFILES.in:
+	
+	ev-sidebar-thumbnails now has translatable labels
+	
+	* shell/Makefile.am:
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_set_document),
+	(ev_sidebar_links_support_document), (ev_sidebar_links_get_label),
+	(ev_sidebar_links_page_iface_init):
+	* shell/ev-sidebar-links.h:
+	* shell/ev-sidebar-page.c: (ev_sidebar_page_get_type),
+	(ev_sidebar_page_support_document), (ev_sidebar_page_set_document),
+	(ev_sidebar_page_get_label):
+	* shell/ev-sidebar-page.h:
+	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_new),
+	(ev_sidebar_thumbnails_set_document),
+	(ev_sidebar_thumbnails_support_document),
+	(ev_sidebar_thumbnails_get_label),
+	(ev_sidebar_thumbnails_page_iface_init):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-sidebar.c: (ev_sidebar_init), (ev_sidebar_add_page),
+	(ev_sidebar_set_document):
+	* shell/ev-sidebar.h:
+	* shell/ev-window.c: (ev_window_setup_document), (ev_window_init):
+	
+	Small rework of sidebar code. Now sidebar pages should implement
+	EvSidebarPage interface. That makes page management in EvSidebar
+	easier. See bug #164811 for details
+
+2005-04-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-application.c: (ev_application_open):
 	* shell/ev-document-types.c:
 	

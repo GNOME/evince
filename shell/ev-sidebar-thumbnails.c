@@ -28,7 +28,9 @@
 
 #include <string.h>
 #include <gtk/gtk.h>
+#include <glib/gi18n.h>
 
+#include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
@@ -58,13 +60,24 @@ enum {
 	NUM_COLUMNS
 };
 
-G_DEFINE_TYPE (EvSidebarThumbnails, ev_sidebar_thumbnails, GTK_TYPE_VBOX);
+static void     ev_sidebar_thumbnails_clear_model 		(EvSidebarThumbnails *sidebar);
+static gboolean ev_sidebar_thumbnails_support_document		(EvSidebarPage   *sidebar_page,
+								 EvDocument *document);
+static void     ev_sidebar_thumbnails_page_iface_init		(EvSidebarPageIface *iface);
+static void	ev_sidebar_thumbnails_set_document 		(EvSidebarPage	*sidebar_page,
+	    				    		         EvDocument          *document);
+static const gchar* ev_sidebar_thumbnails_get_label 		(EvSidebarPage *sidebar_page);
+
+G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
+                        ev_sidebar_thumbnails, 
+                        GTK_TYPE_VBOX,
+                        0, 
+                        G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
+					       ev_sidebar_thumbnails_page_iface_init))
 
 #define EV_SIDEBAR_THUMBNAILS_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnailsPrivate));
 
-static void 
-ev_sidebar_thumbnails_clear_model (EvSidebarThumbnails *sidebar);
 
 static void
 ev_sidebar_thumbnails_dispose (GObject *object)
@@ -88,6 +101,16 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
 
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarThumbnailsPrivate));
+}
+
+GtkWidget *
+ev_sidebar_thumbnails_new (void)
+{
+	GtkWidget *ev_sidebar_thumbnails;
+
+	ev_sidebar_thumbnails = g_object_new (EV_TYPE_SIDEBAR_THUMBNAILS, NULL);
+
+	return ev_sidebar_thumbnails;
 }
 
 static void
@@ -186,16 +209,6 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	gtk_widget_show_all (swindow);
 }
 
-GtkWidget *
-ev_sidebar_thumbnails_new (void)
-{
-	GtkWidget *ev_sidebar_thumbnails;
-
-	ev_sidebar_thumbnails = g_object_new (EV_TYPE_SIDEBAR_THUMBNAILS, NULL);
-
-	return ev_sidebar_thumbnails;
-}
-
 static void
 page_changed_cb (EvPageCache         *page_cache,
 		 int                  page,
@@ -230,10 +243,11 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 			    -1);
 }
 
-void
-ev_sidebar_thumbnails_set_document (EvSidebarThumbnails *sidebar_thumbnails,
+static void
+ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 				    EvDocument          *document)
 {
+	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (sidebar_page);
 	GdkPixbuf *loading_icon;
 	gint i, n_pages;
 	GtkTreeIter iter;
@@ -324,4 +338,25 @@ ev_sidebar_thumbnails_clear_model (EvSidebarThumbnails *sidebar_thumbnails)
     gtk_list_store_clear (priv->list_store);
 }
 
+static gboolean
+ev_sidebar_thumbnails_support_document (EvSidebarPage   *sidebar_page,
+				        EvDocument *document)
+{
+	return (EV_IS_DOCUMENT_THUMBNAILS (document) &&
+		    (ev_document_get_n_pages (document) > 1));
+}
+
+static const gchar*
+ev_sidebar_thumbnails_get_label (EvSidebarPage *sidebar_page)
+{
+    return _("Thumbnails");
+}
+
+static void
+ev_sidebar_thumbnails_page_iface_init (EvSidebarPageIface *iface)
+{
+	iface->support_document = ev_sidebar_thumbnails_support_document;
+	iface->set_document = ev_sidebar_thumbnails_set_document;
+	iface->get_label = ev_sidebar_thumbnails_get_label;
+}
 
