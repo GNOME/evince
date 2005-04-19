@@ -156,6 +156,7 @@ static void     ev_window_set_sizing_mode         (EvWindow         *ev_window,
 						   EvSizingMode      sizing_mode);
 
 static void 	ev_window_add_recent (EvWindow *window, const char *filename);
+static void	ev_window_fullscreen (EvWindow *window);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -462,8 +463,17 @@ page_changed_cb (EvPageCache *page_cache,
 }
 
 static void
+update_document_mode (EvWindow *window, EvDocumentMode mode)
+{
+	if (mode == EV_DOCUMENT_MODE_FULL_SCREEN) {
+		gtk_window_fullscreen (GTK_WINDOW (window));
+	}
+}
+
+static void
 ev_window_setup_document (EvWindow *ev_window)
 {
+	EvDocumentInfo *info;
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
@@ -496,6 +506,10 @@ ev_window_setup_document (EvWindow *ev_window)
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	update_action_sensitivity (ev_window);
+
+	info = ev_document_get_info (document);
+	update_document_mode (ev_window, info->mode);
+	g_free (info);
 }
 
 static void
