@@ -89,6 +89,7 @@ ev_page_cache_finalize (GObject *object)
 EvPageCache *
 _ev_page_cache_new (EvDocument *document)
 {
+	EvDocumentInfo *doc_info;
 	EvPageCache *page_cache;
 	EvPageCacheInfo *info;
 	gint i;
@@ -102,8 +103,15 @@ _ev_page_cache_new (EvDocument *document)
 	/* Assume all pages are the same size until proven otherwise */
 	page_cache->uniform = TRUE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
-	page_cache->title = ev_document_get_title (document);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
+
+	doc_info = ev_document_get_info (document);
+	if (doc_info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
+		page_cache->title = g_strdup (doc_info->title);
+	} else {
+		page_cache->title = NULL;
+	}
+	g_free (doc_info);
 
 	for (i = 0; i < page_cache->n_pages; i++) {
 		double page_width = 0;

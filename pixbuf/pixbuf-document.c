@@ -20,11 +20,6 @@
 #include "pixbuf-document.h"
 #include "ev-document-thumbnails.h"
 
-enum {
-	PROP_0,
-	PROP_TITLE
-};
-
 struct _PixbufDocumentClass
 {
 	GObjectClass parent_class;
@@ -130,49 +125,28 @@ pixbuf_document_finalize (GObject *object)
 }
 
 static void
-pixbuf_document_set_property (GObject *object,
-		              guint prop_id,
-			      const GValue *value,
-			      GParamSpec *pspec)
-{
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			/* read only */
-			break;
-	}
-}
-
-static void
-pixbuf_document_get_property (GObject *object,
-		              guint prop_id,
-		              GValue *value,
-		              GParamSpec *pspec)
-{
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			g_value_set_string (value, NULL);
-			break;
-	}
-}
-
-static void
 pixbuf_document_class_init (PixbufDocumentClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->finalize = pixbuf_document_finalize;
-	gobject_class->get_property = pixbuf_document_get_property;
-	gobject_class->set_property = pixbuf_document_set_property;
-
-	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
 static gboolean
 pixbuf_document_can_get_text (EvDocument *document)
 {
 	return FALSE;
+}
+
+static EvDocumentInfo *
+pixbuf_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+
+	info = g_new0 (EvDocumentInfo, 1);
+	info->fields_mask = 0;
+
+	return info;
 }
 
 static void
@@ -184,6 +158,7 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = pixbuf_document_get_n_pages;
 	iface->get_page_size = pixbuf_document_get_page_size;
 	iface->render_pixbuf = pixbuf_document_render_pixbuf;
+	iface->get_info = pixbuf_document_get_info;
 }
 
 static GdkPixbuf *

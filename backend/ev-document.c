@@ -67,12 +67,6 @@ ev_document_error_quark (void)
 static void
 ev_document_class_init (gpointer g_class)
 {
-	g_object_interface_install_property (g_class,
-				g_param_spec_string ("title",
-						     "Document Title",
-						     "The title of the document",
-						     NULL,
-						     G_PARAM_READABLE));
 }
 
 #define PAGE_CACHE_STRING "ev-page-cache"
@@ -134,17 +128,6 @@ ev_document_save (EvDocument  *document,
 	return retval;
 }
 
-char *
-ev_document_get_title (EvDocument  *document)
-{
-	char *title;
-
-	LOG ("ev_document_get_title");
-	g_object_get (document, "title", &title, NULL);
-
-	return title;
-}
-
 int
 ev_document_get_n_pages (EvDocument  *document)
 {
@@ -188,6 +171,14 @@ ev_document_can_get_text (EvDocument  *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
 	return iface->can_get_text (document);
+}
+
+EvDocumentInfo *
+ev_document_get_info (EvDocument *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+
+	return iface->get_info (document);
 }
 
 char *
@@ -235,23 +226,4 @@ ev_document_render_pixbuf (EvDocument *document,
 	retval = iface->render_pixbuf (document, page, scale);
 
 	return retval;
-}
-
-
-EvDocumentInfo *
-ev_document_render_get_info (EvDocument *document)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	EvDocumentInfo *retval = NULL;
-
-	LOG ("ev_document_render_pixbuf");
-
-	if (iface->get_info != NULL)
-		retval = iface->get_info (document);
-
-	if (retval == NULL)
-		retval = g_new0 (EvDocumentInfo, 1);
-
-	return retval;
-
 }

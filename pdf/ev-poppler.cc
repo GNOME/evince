@@ -32,13 +32,6 @@
 #include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 
-
-enum {
-	PROP_0,
-	PROP_TITLE
-};
-
-
 typedef struct {
 	PdfDocument *document;
 	char *text;
@@ -94,34 +87,9 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_ps_exporter_iface_init);
 			 });
 
-
-static void
-pdf_document_get_property (GObject *object,
-		           guint prop_id,
-		           GValue *value,
-		           GParamSpec *pspec)
-{
-	PdfDocument *pdf_document = PDF_DOCUMENT (object);
-
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			if (pdf_document->document == NULL)
-				g_value_set_string (value, NULL);
-			else
-				g_object_get_property (G_OBJECT (pdf_document->document), "title", value);
-			break;
-	}
-}
-
 static void
 pdf_document_class_init (PdfDocumentClass *klass)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-
-	gobject_class->get_property = pdf_document_get_property;
-
-	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
 static void

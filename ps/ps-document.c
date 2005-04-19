@@ -68,11 +68,6 @@ GCond* pixbuf_cond = NULL;
 GMutex* pixbuf_mutex = NULL;
 GdkPixbuf *current_pixbuf = NULL;
 
-enum {
-	PROP_0,
-	PROP_TITLE
-};
-
 /* structure to describe section of file to send to ghostscript */
 struct record_list {
   FILE *fp;
@@ -152,41 +147,6 @@ ps_document_init (PSDocument *gs)
 }
 
 static void
-ps_document_set_property (GObject *object,
-		          guint prop_id,
-		          const GValue *value,
-		          GParamSpec *pspec)
-{
-	switch (prop_id)
-
-	{
-		case PROP_TITLE:
-			/* read only */
-			break;
-	}
-}
-
-static void
-ps_document_get_property (GObject *object,
-		          guint prop_id,
-		          GValue *value,
-		          GParamSpec *pspec)
-{
-	PSDocument *ps = PS_DOCUMENT (object);
-
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			if (ps->doc) {
-				g_value_set_string (value, ps->doc->title);
-			} else {
-				g_value_set_string (value, NULL);
-			}
-			break;
-	}
-}
-
-static void
 ps_document_class_init(PSDocumentClass *klass)
 {
 	GObjectClass *object_class;
@@ -196,15 +156,11 @@ ps_document_class_init(PSDocumentClass *klass)
 	gs_class = klass;
 
 	object_class->finalize = ps_document_finalize;
-	object_class->get_property = ps_document_get_property;
-	object_class->set_property = ps_document_set_property;
 
 	klass->gs_atom = gdk_atom_intern ("GHOSTVIEW", FALSE);
 	klass->next_atom = gdk_atom_intern ("NEXT", FALSE);
 	klass->page_atom = gdk_atom_intern ("PAGE", FALSE);
 	klass->string_atom = gdk_atom_intern ("STRING", FALSE);
-
-	g_object_class_override_property (object_class, PROP_TITLE, "title");
 }
 
 static void
@@ -1122,8 +1078,6 @@ document_load(PSDocument * gs, const gchar * fname)
     /* we grab the vital statistics!!! */
     gs->doc = psscan(gs->gs_psfile, TRUE, filename);
 
-    g_object_notify (G_OBJECT (gs), "title");
-
     if(gs->doc == NULL) {
       /* File does not seem to be a Postscript one */
       gchar buf[1024];
@@ -1409,6 +1363,19 @@ ps_document_render_pixbuf (EvDocument *document, int page, double scale)
 	return pixbuf;
 }
 
+static EvDocumentInfo *
+ps_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+	PSDocument *ps = PS_DOCUMENT (document);
+
+	info = g_new0 (EvDocumentInfo, 1);
+	info->fields_mask = EV_DOCUMENT_INFO_TITLE;
+	info->title = ps->doc->title;
+
+	return info;
+}
+
 static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
@@ -1418,6 +1385,7 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->render_pixbuf = ps_document_render_pixbuf;
+	iface->get_info = ps_document_get_info;
 }
 
 static void

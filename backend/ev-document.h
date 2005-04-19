@@ -92,38 +92,33 @@ struct _EvDocumentIface
 	EvDocumentInfo *(* get_info)    (EvDocument   *document);
 };
 
-GType        ev_document_get_type       (void);
-GQuark       ev_document_error_quark    (void);
-EvPageCache *ev_document_get_page_cache (EvDocument *document);
-GMutex      *ev_document_get_doc_mutex  (void);
-
-
-EvDocumentInfo *ev_document_get_info (EvDocument    *document);
-gboolean   ev_document_load          (EvDocument    *document,
-				      const char    *uri,
-				      GError       **error);
-gboolean   ev_document_save          (EvDocument    *document,
-				      const char    *uri,
-				      GError       **error);
-char      *ev_document_get_title     (EvDocument    *document);
-int        ev_document_get_n_pages   (EvDocument    *document);
-void       ev_document_get_page_size (EvDocument    *document,
-				      int            page,
-				      double        *width,
-				      double        *height);
-char      *ev_document_get_page_label(EvDocument    *document,
-				      int            page);
-gboolean   ev_document_can_get_text  (EvDocument    *document);
-char      *ev_document_get_text      (EvDocument    *document,
-				      int            page,
-				      EvRectangle   *rect);
-GList     *ev_document_get_links     (EvDocument    *document,
-				      int            page);
-GdkPixbuf *ev_document_render_pixbuf (EvDocument    *document,
-				      int            page,
-				      double         scale);
-EvDocumentInfo *ev_document_render_get_info (EvDocument *document);
-
+GType		ev_document_get_type       (void);
+GQuark		ev_document_error_quark    (void);
+EvPageCache    *ev_document_get_page_cache (EvDocument     *document);
+GMutex	       *ev_document_get_doc_mutex  (void);
+EvDocumentInfo *ev_document_get_info	   (EvDocument     *document);
+gboolean	ev_document_load	   (EvDocument     *document,
+					    const char     *uri,
+					    GError        **error);
+gboolean	ev_document_save	   (EvDocument     *document,
+					    const char     *uri,
+					    GError        **error);
+int		ev_document_get_n_pages	   (EvDocument     *document);
+void		ev_document_get_page_size  (EvDocument     *document,
+					    int             page,
+					    double         *width,
+					    double         *height);
+char	       *ev_document_get_page_label (EvDocument     *document,
+					    int             page);
+gboolean	ev_document_can_get_text   (EvDocument     *document);
+char	       *ev_document_get_text       (EvDocument     *document,
+					    int             page,
+					    EvRectangle    *rect);
+GList	       *ev_document_get_links      (EvDocument     *document,
+				            int             page);
+GdkPixbuf      *ev_document_render_pixbuf  (EvDocument     *document,
+				      	    int             page,
+					    double          scale);
 
 G_END_DECLS
 
