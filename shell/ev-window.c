@@ -1357,22 +1357,29 @@ ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 }
 
 static gboolean
-ev_window_state_event_cb (GtkWidget *widget, GdkEventWindowState *event, EvWindow *window)
+ev_window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 {
-	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN)
-	{
+	EvWindow *window = EV_WINDOW (widget);
+
+	if (event->changed_mask & GDK_WINDOW_STATE_MAXIMIZED) {
+		gboolean show;
+
+		show = (event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) == 0;
+
+		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar),
+						   show);
+	}
+
+	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN) {
 		GtkActionGroup *action_group;
 		GtkAction *action;
 		gboolean fullscreen;
 
 		fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
 
-		if (fullscreen)
-		{
+		if (fullscreen)	{
 			ev_window_fullscreen (window);
-		}
-		else
-		{
+		} else {
 			ev_window_unfullscreen (window);
 		}
 
@@ -1384,7 +1391,6 @@ ev_window_state_event_cb (GtkWidget *widget, GdkEventWindowState *event, EvWindo
 		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fullscreen);
 		g_signal_handlers_unblock_by_func
 			(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
-
 	}
 
 	return FALSE;
@@ -1985,6 +1991,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 
 	g_object_class->dispose = ev_window_dispose;
 
+	widget_class->window_state_event = ev_window_state_event;
 	widget_class->focus_in_event = ev_window_focus_in_event;
 	widget_class->focus_out_event = ev_window_focus_out_event;
 
@@ -2473,10 +2480,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->find_bar,
 			  "notify::visible",
 			  G_CALLBACK (find_bar_search_changed_cb),
-			  ev_window);
-
-	g_signal_connect (ev_window, "window-state-event",
-			  G_CALLBACK (ev_window_state_event_cb),
 			  ev_window);
 
 	/* Give focus to the scrolled window */
