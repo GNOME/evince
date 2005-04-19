@@ -27,6 +27,7 @@
 #include <gdk/gdk.h>
 
 #include "ev-link.h"
+#include "ev-document-info.h"
 
 G_BEGIN_DECLS
 
@@ -88,6 +89,7 @@ struct _EvDocumentIface
 	GdkPixbuf * (* render_pixbuf)   (EvDocument   *document,
 					 int           page,
 					 double        scale);
+	EvDocumentInfo *(* get_info)    (EvDocument   *document);
 };
 
 GType        ev_document_get_type       (void);
@@ -96,6 +98,7 @@ EvPageCache *ev_document_get_page_cache (EvDocument *document);
 GMutex      *ev_document_get_doc_mutex  (void);
 
 
+EvDocumentInfo *ev_document_get_info (EvDocument    *document);
 gboolean   ev_document_load          (EvDocument    *document,
 				      const char    *uri,
 				      GError       **error);
@@ -119,6 +122,7 @@ GList     *ev_document_get_links     (EvDocument    *document,
 GdkPixbuf *ev_document_render_pixbuf (EvDocument    *document,
 				      int            page,
 				      double         scale);
+EvDocumentInfo *ev_document_render_get_info (EvDocument *document);
 
 
 G_END_DECLS

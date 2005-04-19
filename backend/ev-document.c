@@ -237,3 +237,21 @@ ev_document_render_pixbuf (EvDocument *document,
 	return retval;
 }
 
+
+EvDocumentInfo *
+ev_document_render_get_info (EvDocument *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	EvDocumentInfo *retval = NULL;
+
+	LOG ("ev_document_render_pixbuf");
+
+	if (iface->get_info != NULL)
+		retval = iface->get_info (document);
+
+	if (retval == NULL)
+		retval = g_new0 (EvDocumentInfo, 1);
+
+	return retval;
+
+}

@@ -330,6 +330,101 @@ pdf_document_can_get_text (EvDocument *document)
 	return TRUE;
 }
 
+static EvDocumentInfo *
+pdf_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+	PopplerPageLayout layout;
+	PopplerPageMode mode;
+	PopplerViewerPreferences view_prefs;
+
+	info = g_new0 (EvDocumentInfo, 1);
+
+	info->fields_mask = EV_DOCUMENT_INFO_TITLE |
+			    EV_DOCUMENT_INFO_FORMAT |
+			    EV_DOCUMENT_INFO_AUTHOR |
+			    EV_DOCUMENT_INFO_SUBJECT |
+			    EV_DOCUMENT_INFO_KEYWORDS |
+			    EV_DOCUMENT_INFO_LAYOUT |
+			    EV_DOCUMENT_INFO_START_MODE |
+			    /* Missing EV_DOCUMENT_INFO_CREATION_DATE | */
+			    EV_DOCUMENT_INFO_UI_HINTS;
+
+
+	g_object_get (PDF_DOCUMENT (document)->document,
+		      "title", &(info->title),
+		      "format", &(info->format),
+		      "author", &(info->author),
+		      "subject", &(info->subject),
+		      "keywords", &(info->keywords),
+		      "page-mode", &mode,
+		      "page-layout", &layout,
+		      "viewer-preferences", &view_prefs,
+		      NULL);
+
+	switch (layout) {
+		case POPPLER_PAGE_LAYOUT_SINGLE_PAGE:
+			info->layout = EV_DOCUMENT_LAYOUT_SINGLE_PAGE;
+			break;
+		case POPPLER_PAGE_LAYOUT_ONE_COLUMN:
+			info->layout = EV_DOCUMENT_LAYOUT_ONE_COLUMN;
+			break;
+		case POPPLER_PAGE_LAYOUT_TWO_COLUMN_LEFT:
+			info->layout = EV_DOCUMENT_LAYOUT_TWO_COLUMN_LEFT;
+			break;
+		case POPPLER_PAGE_LAYOUT_TWO_COLUMN_RIGHT:
+			info->layout = EV_DOCUMENT_LAYOUT_TWO_COLUMN_RIGHT;
+		case POPPLER_PAGE_LAYOUT_TWO_PAGE_LEFT:
+			info->layout = EV_DOCUMENT_LAYOUT_TWO_PAGE_LEFT;
+			break;
+		case POPPLER_PAGE_LAYOUT_TWO_PAGE_RIGHT:
+			info->layout = EV_DOCUMENT_LAYOUT_TWO_PAGE_RIGHT;
+			break;
+	}
+
+	switch (mode) {
+		case POPPLER_PAGE_MODE_NONE:
+			info->mode = EV_DOCUMENT_MODE_NONE;
+			break;
+		case POPPLER_PAGE_MODE_USE_THUMBS:
+			info->mode = EV_DOCUMENT_MODE_USE_THUMBS;
+			break;
+		case POPPLER_PAGE_MODE_USE_OC:
+			info->mode = EV_DOCUMENT_MODE_USE_OC;
+			break;
+		case POPPLER_PAGE_MODE_FULL_SCREEN:
+			info->mode = EV_DOCUMENT_MODE_FULL_SCREEN;
+			break;
+		case POPPLER_PAGE_MODE_USE_ATTACHMENTS:
+			info->mode = EV_DOCUMENT_MODE_USE_ATTACHMENTS;
+	}
+
+	info->ui_hints = 0;
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_HIDE_TOOLBAR) {
+		info->ui_hints |= EV_DOCUMENT_UI_HINT_HIDE_TOOLBAR;
+	}
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_HIDE_MENUBAR) {
+		info->ui_hints |= EV_DOCUMENT_UI_HINT_HIDE_MENUBAR;
+	}
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_HIDE_WINDOWUI) {
+		info->ui_hints |= EV_DOCUMENT_UI_HINT_HIDE_WINDOWUI;
+	}
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_FIT_WINDOW) {
+		info->ui_hints |= EV_DOCUMENT_UI_HINT_FIT_WINDOW;
+	}
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_CENTER_WINDOW) {
+		info->ui_hints |= EV_DOCUMENT_UI_HINT_CENTER_WINDOW;
+	}
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_DISPLAY_DOC_TITLE) {
+		info->ui_hints |= EV_DOCUMENT_UI_HINT_DISPLAY_DOC_TITLE;
+	}
+	if (view_prefs & POPPLER_VIEWER_PREFERENCES_DIRECTION_RTL) {
+		info->ui_hints |=  EV_DOCUMENT_UI_HINT_DIRECTION_RTL;
+	}
+
+	return info;
+}
+
 static char *
 pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 {
@@ -362,6 +457,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->render_pixbuf = pdf_document_render_pixbuf;
 	iface->get_text = pdf_document_get_text;
 	iface->can_get_text = pdf_document_can_get_text;
+	iface->get_info = pdf_document_get_info;
 };
 
 static void
