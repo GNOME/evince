@@ -185,49 +185,27 @@ djvu_document_finalize (GObject *object)
 }
 
 static void
-djvu_document_set_property (GObject *object,
-		              guint prop_id,
-			      const GValue *value,
-			      GParamSpec *pspec)
-{
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			/* read only */
-			break;
-	}
-}
-
-static void
-djvu_document_get_property (GObject *object,
-		              guint prop_id,
-		              GValue *value,
-		              GParamSpec *pspec)
-{
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			g_value_set_string (value, NULL);
-			break;
-	}
-}
-
-static void
 djvu_document_class_init (DjvuDocumentClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->finalize = djvu_document_finalize;
-	gobject_class->get_property = djvu_document_get_property;
-	gobject_class->set_property = djvu_document_set_property;
-
-	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
 static gboolean
 djvu_document_can_get_text (EvDocument *document)
 {
 	return FALSE;
+}
+
+static EvDocumentInfo *
+djvu_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+
+	info = g_new0 (EvDocumentInfo, 1);
+
+	return info;
 }
 
 static void
@@ -239,6 +217,7 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = djvu_document_get_n_pages;
 	iface->get_page_size = djvu_document_get_page_size;
 	iface->render_pixbuf = djvu_document_render_pixbuf;
+	iface->get_info = djvu_document_get_info;
 }
 
 static void

@@ -198,33 +198,6 @@ dvi_document_finalize (GObject *object)
 	G_OBJECT_CLASS (dvi_document_parent_class)->finalize (object);
 }
 
-static void
-dvi_document_set_property (GObject *object,
-		              guint prop_id,
-			      const GValue *value,
-			      GParamSpec *pspec)
-{
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			/* read only */
-			break;
-	}
-}
-
-static void
-dvi_document_get_property (GObject *object,
-		              guint prop_id,
-		              GValue *value,
-		              GParamSpec *pspec)
-{
-	switch (prop_id)
-	{
-		case PROP_TITLE:
-			g_value_set_string (value, NULL);
-			break;
-	}
-}
 
 static void
 dvi_document_class_init (DviDocumentClass *klass)
@@ -232,16 +205,22 @@ dvi_document_class_init (DviDocumentClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->finalize = dvi_document_finalize;
-	gobject_class->get_property = dvi_document_get_property;
-	gobject_class->set_property = dvi_document_set_property;
-
-	g_object_class_override_property (gobject_class, PROP_TITLE, "title");
 }
 
 static gboolean
 dvi_document_can_get_text (EvDocument *document)
 {
 	return FALSE;
+}
+
+static EvDocumentInfo *
+dvi_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+
+	info = g_new0 (EvDocumentInfo, 1);
+
+	return info;
 }
 
 static void
@@ -253,6 +232,7 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = dvi_document_get_n_pages;
 	iface->get_page_size = dvi_document_get_page_size;
 	iface->render_pixbuf = dvi_document_render_pixbuf;
+	iface->get_info = dvi_document_get_info;
 }
 
 static void
