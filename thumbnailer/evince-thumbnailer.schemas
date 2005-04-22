@@ -8,8 +8,8 @@
             <type>bool</type>
             <default>true</default>
             <locale name="C">
-                <short></short>
-                <long></long>
+                <short>Enable thumbnailing of PDF Documents</short>
+                <long>Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails</long>
             </locale>
         </schema>
 
@@ -21,8 +21,8 @@
             <type>string</type>
             <default>evince-thumbnailer -s %s %u %o</default>
             <locale name="C">
-                <short></short>
-                <long></long>
+                <short>Thumbnail command for PDF Documents</short>
+                <long>Valid command plus arguments for the PDF Document thumbnailer.  See nautilus thumbnailer documentation for more information.</long>
             </locale>
         </schema>
 
