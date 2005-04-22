@@ -40,6 +40,7 @@ struct _EvSidebarLinksPrivate {
 	/* Keep these ids around for blocking */
 	guint selection_id;
 	guint page_changed_id;
+	guint row_activated_id;
 
 	EvJob *job;
 	GtkTreeModel *model;
@@ -61,6 +62,10 @@ static void links_page_num_func				(GtkTreeViewColumn *tree_column,
 static void update_page_callback 			(EvPageCache       *page_cache,
 							 gint               current_page,
 						         EvSidebarLinks    *sidebar_links);
+static void row_activated_callback 			(GtkTreeView *treeview,
+		                                         GtkTreePath *arg1,
+	                                                 GtkTreeViewColumn *arg2,
+		                                         gpointer user_data);
 static void ev_sidebar_links_page_iface_init 		(EvSidebarPageIface *iface);
 static void ev_sidebar_links_clear_document     	(EvSidebarLinks *sidebar_links);
 static void ev_sidebar_links_set_document      	 	(EvSidebarPage  *sidebar_page,
@@ -163,8 +168,8 @@ ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 }
 
 static void
-selection_changed_cb (GtkTreeSelection   *selection,
-		      EvSidebarLinks     *ev_sidebar_links)
+selection_changed_callback (GtkTreeSelection   *selection,
+		            EvSidebarLinks     *ev_sidebar_links)
 {
 	EvDocument *document;
 	GtkTreeModel *model;
@@ -391,6 +396,7 @@ update_page_callback (EvPageCache    *page_cache,
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
 
 	g_signal_handler_block (selection, sidebar_links->priv->selection_id);
+	g_signal_handler_block (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 
 	gtk_tree_selection_unselect_all (selection);
 	gtk_tree_model_foreach (sidebar_links->priv->model,
@@ -398,11 +404,27 @@ update_page_callback (EvPageCache    *page_cache,
 				sidebar_links);
 
 	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
+	g_signal_handler_unblock (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 }
 
+static void 
+row_activated_callback 			(GtkTreeView *treeview,
+                                         GtkTreePath *arg1,
+                                         GtkTreeViewColumn *arg2,
+                                         gpointer user_data)
+{	
+	if (gtk_tree_view_row_expanded (GTK_TREE_VIEW (treeview), arg1)) {
+		    gtk_tree_view_collapse_row (GTK_TREE_VIEW (treeview), arg1);
+	} else {
+		    gtk_tree_view_expand_row (GTK_TREE_VIEW (treeview), arg1, FALSE);
+	}
+	
+        return;
+}
+				
 static void
-job_finished_cb (EvJobLinks     *job,
-		 EvSidebarLinks *sidebar_links)
+job_finished_callback (EvJobLinks     *job,
+		       EvSidebarLinks *sidebar_links)
 {
 	EvSidebarLinksPrivate *priv;
 	GtkTreeSelection *selection;
@@ -431,11 +453,13 @@ job_finished_cb (EvJobLinks     *job,
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	priv->selection_id = g_signal_connect (selection, "changed",
-					       G_CALLBACK (selection_changed_cb),
+					       G_CALLBACK (selection_changed_callback),
 					       sidebar_links);
 	priv->page_changed_id = g_signal_connect (priv->page_cache, "page-changed",
 						  G_CALLBACK (update_page_callback),
 						  sidebar_links);
+	priv->row_activated_id = g_signal_connect (G_OBJECT (priv->tree_view), "row-activated",
+						    G_CALLBACK (row_activated_callback), sidebar_links);
 	update_page_callback (priv->page_cache,
 			      ev_page_cache_get_current_page (priv->page_cache),
 			      sidebar_links);
@@ -464,7 +488,7 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 	priv->job = ev_job_links_new (document);
 	g_signal_connect (priv->job,
 			  "finished",
-			  G_CALLBACK (job_finished_cb),
+			  G_CALLBACK (job_finished_callback),
 			  sidebar_links);
 	/* The priority doesn't matter for this job */
 	ev_job_queue_add_job (priv->job, EV_JOB_PRIORITY_LOW);

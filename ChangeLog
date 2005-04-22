@@ -1,3 +1,11 @@
+2005-04-23  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-sidebar-links.c: (selection_changed_callback),
+	(update_page_callback), (row_activated_callback),
+	(job_finished_callback), (ev_sidebar_links_set_document):
+	
+	Fix for bug #169901. Double click on links expands tree.
+
 2005-03-14  Bryan Clark  <clarkbw@cvs.gnome.org>
 
 	* shell/ev-window.c (ev_window_init): Removed fullscreen toolbar
