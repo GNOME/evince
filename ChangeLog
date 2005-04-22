@@ -1,3 +1,11 @@
+Thu Apr 21 23:37:52 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-pixbuf-cache.c (dispose_cache_job_info): actually
+	remove the job.
+
+	* backend/ev-document.h: Remove EV_DOC_MUTEX in favor of a locking
+	function.  This helps debugging.
+
 2005-04-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* djvu/djvu-document.c: (djvu_document_class_init),

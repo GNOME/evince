@@ -96,7 +96,7 @@ _ev_page_cache_new (EvDocument *document)
 
 	page_cache = (EvPageCache *) g_object_new (EV_TYPE_PAGE_CACHE, NULL);
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_lock ();
 
 	/* We read page information out of the document */
 
@@ -152,7 +152,7 @@ _ev_page_cache_new (EvDocument *document)
 	if (! page_cache->uniform)
 		g_assert (page_cache->size_cache != NULL);
 
-	g_mutex_unlock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_unlock ();
 
 	if (page_cache->n_pages > 0)
 		ev_page_cache_set_current_page (page_cache, 0);

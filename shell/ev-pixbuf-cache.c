@@ -119,6 +119,7 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		g_signal_handlers_disconnect_by_func (job_info->job,
 						      G_CALLBACK (job_finished_cb),
 						      data);
+		ev_job_queue_remove_job (job_info->job);
 		g_object_unref (G_OBJECT (job_info->job));
 		job_info->job = NULL;
 	}

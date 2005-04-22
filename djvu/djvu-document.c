@@ -164,7 +164,7 @@ djvu_document_render_pixbuf (EvDocument  *document,
                           &rrect,
                           djvu_document->d_format,
                 	  gdk_pixbuf_get_rowstride (pixbuf),
-                          gdk_pixbuf_get_pixels (pixbuf));
+                          (gchar *)gdk_pixbuf_get_pixels (pixbuf));
 	
     
 	return pixbuf;
@@ -250,7 +250,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	GdkPixbuf *pixbuf;
 	gint thumb_width, thumb_height;
 
-	gchar *pixels;
+	guchar *pixels;
 	
 	g_return_val_if_fail (djvu_document->d_document, NULL);
 	
@@ -273,7 +273,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 				&thumb_width, &thumb_height,
 				djvu_document->d_format,
 				gdk_pixbuf_get_rowstride (pixbuf), 
-				pixels);
+				(gchar *)pixels);
 	
 	return pixbuf;
 }

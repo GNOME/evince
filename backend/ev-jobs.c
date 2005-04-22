@@ -170,10 +170,10 @@ ev_job_links_run (EvJobLinks *job)
 {
 	g_return_if_fail (EV_IS_JOB_LINKS (job));
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_lock ();
 	job->model = ev_document_links_get_links_model (EV_DOCUMENT_LINKS (EV_JOB (job)->document));
 	EV_JOB (job)->finished = TRUE;
-	g_mutex_unlock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_unlock ();
 }
 
 
@@ -204,7 +204,7 @@ ev_job_render_run (EvJobRender *job)
 {
 	g_return_if_fail (EV_IS_JOB_RENDER (job));
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_lock ();
 
 	job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document,
 						 job->page,
@@ -212,8 +212,7 @@ ev_job_render_run (EvJobRender *job)
 	if (job->include_links)
 		job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->page);
 	EV_JOB (job)->finished = TRUE;
-
-	g_mutex_unlock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_unlock ();
 }
 
 EvJob *
@@ -237,7 +236,7 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 {
 	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_lock ();
 
 	job->thumbnail =
 		ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (EV_JOB (job)->document),
@@ -246,5 +245,5 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 						      TRUE);
 	EV_JOB (job)->finished = TRUE;
 
-	g_mutex_unlock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_unlock ();
 }

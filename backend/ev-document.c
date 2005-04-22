@@ -96,6 +96,19 @@ ev_document_get_doc_mutex (void)
 	return ev_doc_mutex;
 }
 
+void
+ev_document_doc_mutex_lock (void)
+{
+	g_mutex_lock (ev_document_get_doc_mutex ());
+}
+
+void
+ev_document_doc_mutex_unlock (void)
+{
+	g_mutex_unlock (ev_document_get_doc_mutex ());
+}
+
+
 
 gboolean
 ev_document_load (EvDocument  *document,

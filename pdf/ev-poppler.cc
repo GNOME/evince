@@ -192,7 +192,7 @@ pdf_document_get_page_label (EvDocument *document,
 	poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
 						  page);
 
-	g_object_get (poppler_page,
+	g_object_get (G_OBJECT (poppler_page),
 		      "label", &label,
 		      NULL);
 
@@ -348,6 +348,8 @@ pdf_document_get_info (EvDocument *document)
 		case POPPLER_PAGE_LAYOUT_TWO_PAGE_RIGHT:
 			info->layout = EV_DOCUMENT_LAYOUT_TWO_PAGE_RIGHT;
 			break;
+	        default:
+			break;
 	}
 
 	switch (mode) {
@@ -365,6 +367,8 @@ pdf_document_get_info (EvDocument *document)
 			break;
 		case POPPLER_PAGE_MODE_USE_ATTACHMENTS:
 			info->mode = EV_DOCUMENT_MODE_USE_ATTACHMENTS;
+	        default:
+			break;
 	}
 
 	info->ui_hints = 0;
@@ -662,9 +666,9 @@ pdf_document_search_idle_callback (void *data)
 	page = poppler_document_get_page (search->document->document,
 					  search->search_page);
 
-	g_mutex_lock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_lock ();
 	matches = poppler_page_find_text (page, search->text);
-	g_mutex_unlock (EV_DOC_MUTEX);
+	ev_document_doc_mutex_unlock ();
 
 	search->pages[search->search_page] = matches;
         n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
@@ -769,7 +773,6 @@ int
 pdf_document_find_get_n_results (EvDocumentFind *document_find, int page)
 {
 	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
-	int current_page;
 
 	if (search) {
 		return g_list_length (search->pages[page]);
@@ -788,7 +791,6 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 	PdfDocumentSearch *search = pdf_document->search;
 	PopplerPage *poppler_page;
 	PopplerRectangle *r;
-	int current_page;
 	double height;
 
 	if (search == NULL)

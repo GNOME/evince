@@ -525,10 +525,10 @@ password_dialog_response (GtkWidget *password_dialog,
 
 		password = ev_password_dialog_get_password (password_dialog);
 		if (password) {
-			g_mutex_lock (EV_DOC_MUTEX);
+			ev_document_doc_mutex_lock ();
 			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->password_document),
 							   password);
-			g_mutex_unlock (EV_DOC_MUTEX);
+			ev_document_doc_mutex_unlock ();
 		}
 		g_free (password);
 
@@ -906,9 +906,9 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 				continue;
 */
 		
-		g_mutex_lock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_lock ();
 		success = ev_document_save (ev_window->priv->document, uri, NULL);
-		g_mutex_unlock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_unlock ();
 
 		if (success)
 			break;
@@ -1925,16 +1925,16 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		if (visible && search_string && search_string[0]) {
-			g_mutex_lock (EV_DOC_MUTEX);
+			ev_document_doc_mutex_lock ();
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), 
 						ev_page_cache_get_current_page (ev_window->priv->page_cache),
 						search_string,
 						case_sensitive);
-			g_mutex_unlock (EV_DOC_MUTEX);
+			ev_document_doc_mutex_unlock ();
 		} else {
-			g_mutex_lock (EV_DOC_MUTEX);
+			ev_document_doc_mutex_lock ();
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
-			g_mutex_unlock (EV_DOC_MUTEX);
+			ev_document_doc_mutex_unlock ();
 
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 						      NULL);

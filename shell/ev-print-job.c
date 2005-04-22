@@ -234,10 +234,10 @@ idle_print_handler (EvPrintJob *job)
 	EvPageCache *page_cache;
 
 	if (!job->printing) {
-		g_mutex_lock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_begin (EV_PS_EXPORTER (job->document),
 				      job->temp_file);
-		g_mutex_unlock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_unlock ();
 		job->next_page = 0;
 		job->printing = TRUE;
 		return TRUE;
@@ -248,16 +248,16 @@ idle_print_handler (EvPrintJob *job)
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
 #endif
-		g_mutex_lock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_do_page (EV_PS_EXPORTER (job->document),
 					job->next_page);
-		g_mutex_unlock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_unlock ();
 		job->next_page++;
 		return TRUE;
 	} else { /* no more pages */
-		g_mutex_lock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_end (EV_PS_EXPORTER (job->document));
-		g_mutex_unlock (EV_DOC_MUTEX);
+		ev_document_doc_mutex_unlock ();
 
 		close (job->fd);
 		job->fd = 0;
