@@ -659,7 +659,7 @@ pdf_document_search_idle_callback (void *data)
 {
         PdfDocumentSearch *search = (PdfDocumentSearch*) data;
         PdfDocument *pdf_document = search->document;
-        int n_pages, changed_page;
+        int n_pages;
 	GList *matches;
 	PopplerPage *page;
 
@@ -671,9 +671,10 @@ pdf_document_search_idle_callback (void *data)
 	ev_document_doc_mutex_unlock ();
 
 	search->pages[search->search_page] = matches;
-        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
+	ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
+				  search->search_page);
 
-	changed_page = search->search_page;
+        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
         search->search_page += 1;
         if (search->search_page == n_pages) {
                 /* wrap around */
@@ -681,8 +682,6 @@ pdf_document_search_idle_callback (void *data)
         }
 
         if (search->search_page != search->start_page) {
-	        ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
-					  changed_page);
 	        return TRUE;
 	}
 

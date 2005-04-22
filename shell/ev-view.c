@@ -537,11 +537,11 @@ highlight_find_results (EvView *view)
 	g_return_if_fail (EV_IS_DOCUMENT_FIND (view->document));
 
 	find = EV_DOCUMENT_FIND (view->document);
-#if 0
+
 	ev_document_doc_mutex_lock ();
 	results = ev_document_find_get_n_results (find, view->current_page);
 	ev_document_doc_mutex_unlock ();
-#endif
+
 	for (i = 0; i < results; i++) {
 		EvRectangle rectangle;
 		GdkRectangle view_rectangle;
