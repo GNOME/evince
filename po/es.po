@@ -9,11 +9,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: Francisco Javier F. Serrador <serrador@cvs.gnome.org> \n"
 "POT-Creation-Date: 2005-04-12 10:42+0000\n"
-"PO-Revision-Date: 2005-04-17 18:38+0200\n"
-"Last-Translator: Daniel Fernandez <dfdez@ya.com> \n"
-"Language-Team:  Spanish Localization Group <traductores@es.gnome.org>\n"
+"PO-Revision-Date: 2005-04-22 18:00+0200\n"
+"Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
+"Language-Team:  <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -198,11 +198,11 @@ msgstr "Nombre de la cadena a ser buscada"
 
 #: ../shell/eggfindbar.c:162
 msgid "Case sensitive"
-msgstr "Distinguir capitalización"
+msgstr "Coincidir con capitalización"
 
 #: ../shell/eggfindbar.c:163
 msgid "TRUE for a case sensitive search"
-msgstr "VERDADERO si se desea hacer una búsqueda distinguiendo la capitalización"
+msgstr "VERDADERO si se desea coincidir con capitalización"
 
 #: ../shell/eggfindbar.c:170
 msgid "Highlight color"
@@ -234,13 +234,14 @@ msgstr "_Siguiente"
 
 #: ../shell/eggfindbar.c:321
 msgid "C_ase Sensitive"
-msgstr "Distinguir _capitalización"
+msgstr "Coi_ncidir con capitalización"
 
 #: ../shell/ev-application.c:134
 msgid "Open document"
 msgstr "Abrir documento"
 
 #: ../shell/ev-application.c:144
+
 msgid "All Documents"
 msgstr "Todos los documentos"
 
@@ -289,7 +290,9 @@ msgstr "No es posible encontrar el archivo glade"
 msgid ""
 "The glade file, %s, cannot be found.  Please check that your installation is "
 "complete."
-msgstr "El archivo glade, %s, no se pudo encontrar. Compruebe que su instalación esté completa."
+msgstr ""
+"El archivo glade, %s, no se pudo encontrar. Compruebe que su instalación "
+"está completa."
 
 #: ../shell/ev-password.c:104
 msgid "Password required"
@@ -353,7 +356,7 @@ msgstr "%s - Se requiere una contraseña"
 #: ../shell/ev-window.c:786
 #, c-format
 msgid "Unhandled MIME type: '%s'"
-msgstr "Tipo MIME no soportado: «%s»"
+msgstr "Tipo MIME no soportado: '%s'"
 
 #: ../shell/ev-window.c:953
 #, c-format
@@ -377,7 +380,9 @@ msgstr "La impresión no está soportada con esta impresora."
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
 "requires a PostScript printer driver."
-msgstr "Estuvo tratando de imprimir en una impresora usando el controlador «%s». Este programa requiere un controlador de impresora PostScript."
+msgstr ""
+"Ud. estuvo tratando de imprimir hacia una impresor usando el controlador «%"
+"s». Este programa requiere un controlador de impresora PostScript."
 
 #: ../shell/ev-window.c:1134
 msgid "The \"Find\" feature will not work with this document"
@@ -385,7 +390,7 @@ msgstr "La característica de «Búsqueda» no funcionará con este documento."
 
 #: ../shell/ev-window.c:1136
 msgid "Searching for text is only supported for PDF documents."
-msgstr "La búsqueda de texto sólo está soportada en documentos PDF."
+msgstr "La búsqueda de texto solo está soportada en documentos PDF."
 
 #. Toolbar-only
 #: ../shell/ev-window.c:1360 ../shell/ev-window.c:2155
@@ -407,10 +412,10 @@ msgid ""
 "the Free Software Foundation; either version 2 of the License, or\n"
 "(at your option) any later version.\n"
 msgstr ""
-"Evince es software libre, puede redistribuirlo y/o modificarlo\n"
-"bajo los términos de la Licencia Pública General de GNU tal como la \n"
-"publica la Free Software Foundation, ya sea en su versión 2 ó (a opción de usted)\n"
-"cualquier versión posterior.\n"
+"Evince es software libre; Ud. puede redistribuirlo y/o modificarlo\n"
+"bajo los términos de la Licencia Pública General de GNU publicada por \n"
+"la Free Software Foundation; ya sea en su versión 2 ó (a su criterio)\n"
+"en una versión posterior.\n"
 
 #: ../shell/ev-window.c:1761
 msgid ""
@@ -420,9 +425,9 @@ msgid ""
 "GNU General Public License for more details.\n"
 msgstr ""
 "Evince se distribuye con la esperanza que sea útil,\n"
-"pero SIN NINGUNA GARANTÍA; sin incluso la garantía implícita de\n"
-"COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR.  Vea la \n"
-"Licencia Pública General GNU para más detalles.\n"
+"pero SIN GARANTÍA; sin ninguna garantía implícita de\n"
+"COMERCIABILIDAD o IDONEIDAD PARA UN FIN DETERMINADO.  Mire la \n"
+"Licencia General GNU para más detalles.\n"
 
 #: ../shell/ev-window.c:1765
 msgid ""
@@ -430,8 +435,9 @@ msgid ""
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
-"Debería haber recibido una copia de la Licencia Pública General de GNU\n"
-"junto con Evince; si no es el caso, escriba a la Free Software Foundation, Inc.,\n"
+"Ud. debería haber recibido una copia de la Licencia Pública General de GNU\n"
+"junto con Evince; si no es el caso, escriba a Free Software Foundation, "
+"Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
 #: ../shell/ev-window.c:1787 ../shell/main.c:83
@@ -449,9 +455,8 @@ msgstr "Visor de archivos PostScript y PDF."
 #: ../shell/ev-window.c:1796
 msgid "translator-credits"
 msgstr ""
-"Daniel Fernández <dfdez@ya.com>\n"
 "Antonio Ognio <gnrfan@gnrfan.org>\n"
-"QA: Javer F. Serrador "
+"Daniel Fernández <dfdez@ya.com>"
 
 #: ../shell/ev-window.c:2083
 msgid "_File"
@@ -491,7 +496,7 @@ msgstr "Imprimir..."
 
 #: ../shell/ev-window.c:2097
 msgid "Print this document"
-msgstr "Imprime este documento"
+msgstr "Imprimir este documento"
 
 #: ../shell/ev-window.c:2100
 msgid "Close this window"
@@ -511,15 +516,15 @@ msgstr "Selecciona la página entera"
 
 #: ../shell/ev-window.c:2111
 msgid "Find a word or phrase in the document"
-msgstr "Busca una palabra o frase en el documento"
+msgstr "Buscar una palabra o frase en el documento"
 
 #: ../shell/ev-window.c:2113
 msgid "Find Ne_xt"
-msgstr "Buscar _siguiente"
+msgstr "Buscar s_iguiente"
 
 #: ../shell/ev-window.c:2114
 msgid "Find next occurrence of the word or phrase"
-msgstr "Busca la siguente aparición de la palabra o frase"
+msgstr "Busca la siguiente aparición de la palabra o frase"
 
 #: ../shell/ev-window.c:2119
 msgid "Enlarge the document"
@@ -548,40 +553,40 @@ msgstr "Página _anterior"
 
 #: ../shell/ev-window.c:2133
 msgid "Go to the previous page"
-msgstr "Va a la página anterior"
+msgstr "Ir a la página anterior"
 
 #: ../shell/ev-window.c:2135
 msgid "_Next Page"
-msgstr "Página _siguiente"
+msgstr "Página _Siguiente"
 
 #: ../shell/ev-window.c:2136
 msgid "Go to the next page"
-msgstr "Va a la página siguiente"
+msgstr "Ir a la página siguiente"
 
 #: ../shell/ev-window.c:2138
 msgid "_First Page"
-msgstr "_Primera página"
+msgstr "_Primera"
 
 #: ../shell/ev-window.c:2139
 msgid "Go to the first page"
-msgstr "Va a la primera página"
+msgstr "Ir a la primera página"
 
 #: ../shell/ev-window.c:2141
 msgid "_Last Page"
-msgstr "_Última página"
+msgstr "_Última"
 
 #: ../shell/ev-window.c:2142
 msgid "Go to the last page"
-msgstr "Va a la última página"
+msgstr "Ir a la última página"
 
 #. Help menu
 #: ../shell/ev-window.c:2146
 msgid "_Contents"
-msgstr "_Índice"
+msgstr "_Contenidos"
 
 #: ../shell/ev-window.c:2147
 msgid "Display help for the viewer application"
-msgstr "Muestra ayuda para la aplicación del visor"
+msgstr "Mostrar ayuda del visor"
 
 #: ../shell/ev-window.c:2150
 msgid "_About"
@@ -589,7 +594,7 @@ msgstr "A_cerca de"
 
 #: ../shell/ev-window.c:2151
 msgid "Display credits for the document viewer creators"
-msgstr "Muestra los créditos de los creadores del visor de documentos"
+msgstr "Mostrar créditos de los creadores del visor de documento"
 
 #: ../shell/ev-window.c:2156
 msgid "Leave fullscreen mode"
@@ -618,7 +623,7 @@ msgstr "_Panel lateral"
 
 #: ../shell/ev-window.c:2170
 msgid "Show or hide the side pane"
-msgstr "Muestra u oculta el panel lateral"
+msgstr "Muestra o oculta el panel lateral"
 
 #: ../shell/ev-window.c:2172
 msgid "_Fullscreen"
@@ -626,11 +631,11 @@ msgstr "Pantalla _completa"
 
 #: ../shell/ev-window.c:2173
 msgid "Expand the window to fill the screen"
-msgstr "Expande la ventana hasta llenar la pantalla"
+msgstr "Expandir la ventana para llenar la pantalla"
 
 #: ../shell/ev-window.c:2175
 msgid "_Best Fit"
-msgstr "Ajuste _óptimo"
+msgstr "Ajus_te óptimo"
 
 #: ../shell/ev-window.c:2176
 msgid "Make the current document fill the window"
