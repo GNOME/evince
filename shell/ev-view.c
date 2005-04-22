@@ -538,9 +538,7 @@ highlight_find_results (EvView *view)
 
 	find = EV_DOCUMENT_FIND (view->document);
 
-	ev_document_doc_mutex_lock ();
 	results = ev_document_find_get_n_results (find, view->current_page);
-	ev_document_doc_mutex_unlock ();
 
 	for (i = 0; i < results; i++) {
 		EvRectangle rectangle;
@@ -548,10 +546,8 @@ highlight_find_results (EvView *view)
 		guchar alpha;
 
 		alpha = (i == view->find_result) ? 0x90 : 0x20;
-		ev_document_doc_mutex_lock ();
 		ev_document_find_get_result (find, view->current_page,
 					     i, &rectangle);
-		ev_document_doc_mutex_unlock ();
 		doc_rect_to_view_rect (view, &rectangle, &view_rectangle);
 		draw_rubberband (GTK_WIDGET (view), view->bin_window,
 				 &view_rectangle, alpha);
