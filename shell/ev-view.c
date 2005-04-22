@@ -77,7 +77,7 @@ typedef enum {
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
 
 #define MIN_SCALE 0.05409
-#define MAX_SCALE 18.4884
+#define MAX_SCALE 6.0
 
 struct _EvView {
 	GtkWidget parent_instance;
@@ -1597,6 +1597,26 @@ ev_view_zoom (EvView   *view,
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
+gboolean
+ev_view_can_zoom_in (EvView *view)
+{
+	if (view->width != -1 || view->height != -1) {
+		return TRUE;
+	}
+
+	return view->scale * ZOOM_IN_FACTOR <= MAX_SCALE;
+}
+
+gboolean
+ev_view_can_zoom_out (EvView *view)
+{
+	if (view->width != -1 || view->height != -1) {
+		return TRUE;
+	}
+
+	return view->scale * ZOOM_OUT_FACTOR >= MIN_SCALE;
+}
+
 void
 ev_view_zoom_in (EvView *view)
 {
@@ -1607,6 +1627,12 @@ void
 ev_view_zoom_out (EvView *view)
 {
 	ev_view_zoom (view, ZOOM_OUT_FACTOR, TRUE);
+}
+
+void
+ev_view_zoom_normal (EvView *view)
+{
+	ev_view_zoom (view, 1.0, FALSE);
 }
 
 void

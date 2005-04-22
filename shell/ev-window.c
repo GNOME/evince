@@ -173,11 +173,13 @@ set_action_sensitive (EvWindow   *ev_window,
 static void
 update_action_sensitivity (EvWindow *ev_window)
 {
+	EvView *view;
 	EvDocument *document;
 	EvWindowPageMode page_mode;
 	gboolean sensitive, has_pages = FALSE, has_document;
 	int n_pages = 0, page = -1;
 
+	view = EV_VIEW (ev_window->priv->view);
 	document = ev_window->priv->document;
 	page_mode = ev_window->priv->page_mode;
 	has_document = document != NULL;
@@ -201,11 +203,13 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, "EditFind",
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
 	set_action_sensitive (ev_window, "EditFindNext",
-			      ev_view_can_find_next (EV_VIEW (ev_window->priv->view)));
+			      ev_view_can_find_next (view));
 
         /* View menu */
-	set_action_sensitive (ev_window, "ViewZoomIn", has_pages);
-	set_action_sensitive (ev_window, "ViewZoomOut", has_pages);
+	set_action_sensitive (ev_window, "ViewZoomIn",
+			      has_pages && ev_view_can_zoom_in (view));
+	set_action_sensitive (ev_window, "ViewZoomOut",
+			      has_pages && ev_view_can_zoom_out (view));
 	set_action_sensitive (ev_window, "ViewNormalSize", has_pages);
 	set_action_sensitive (ev_window, "ViewBestFit", has_pages);
 	set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
@@ -306,6 +310,7 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 	} else {
 		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
 	}
+	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -316,6 +321,7 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 	} else {
 		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
 	}
+	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -1480,8 +1486,8 @@ ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
-
 	ev_view_zoom_in (EV_VIEW (ev_window->priv->view));
+	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -1490,8 +1496,8 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
-
 	ev_view_zoom_out (EV_VIEW (ev_window->priv->view));
+	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -1499,7 +1505,8 @@ ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_size (EV_VIEW (ev_window->priv->view), -1, -1);
+	ev_view_zoom_normal (EV_VIEW (ev_window->priv->view));
+	update_action_sensitivity (ev_window);
 }
 
 static void

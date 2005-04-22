@@ -1,5 +1,19 @@
 2005-04-22  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* shell/ev-view.c: (ev_view_can_zoom_in), (ev_view_can_zoom_out),
+	(ev_view_zoom_out), (ev_view_zoom_normal):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_cmd_view_best_fit), (ev_window_cmd_view_page_width),
+	(ev_window_cmd_view_zoom_in), (ev_window_cmd_view_zoom_out),
+	(ev_window_cmd_view_normal_size):
+
+	Fix normal size zoom. Make zoom in/zoom out unsensitive when
+	they are behyond the limits. Tweak MAX_ZOOM to 6, sucks but
+	better than oom. 
+
+2005-04-22  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* configure.ac:
 
 	Depend on 2.57, 2.59 doesnt seem to be necessary

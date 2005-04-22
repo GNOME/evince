@@ -44,8 +44,11 @@ void		ev_view_copy		(EvView     *view);
 void		ev_view_select_all	(EvView     *view);
 
 /* Page size */
+gboolean	ev_view_can_zoom_in     (EvView     *view);
 void		ev_view_zoom_in		(EvView     *view);
+gboolean        ev_view_can_zoom_out    (EvView     *view);
 void		ev_view_zoom_out	(EvView     *view);
+void		ev_view_zoom_normal	(EvView     *view);
 void		ev_view_set_size        (EvView     *view,
 					 int         width,
 					 int         height);
