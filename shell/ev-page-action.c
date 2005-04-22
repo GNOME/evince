@@ -39,6 +39,7 @@ struct _EvPageActionWidget
 	GtkToolItem parent;
 
 	GtkWidget *entry;
+	GtkWidget *label;
 	EvPageCache *page_cache;
 	guint signal_id;
 	GtkTreeModel *filter_model;
@@ -94,6 +95,20 @@ enum {
 #define EPA_FILTER_MODEL_DATA "epa-filter-model"
 
 static void
+update_pages_label (EvPageActionWidget *proxy,
+		    gint                page,
+		    EvPageCache        *page_cache)
+{
+	char *label_text;
+	gint n_pages;
+
+	n_pages = page_cache ? ev_page_cache_get_n_pages (page_cache) : 0;
+	label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
+	gtk_label_set_text (GTK_LABEL (proxy->label), label_text);
+	g_free (label_text);
+}
+
+static void
 page_changed_cb (EvPageCache        *page_cache,
 		 gint                page,
 		 EvPageActionWidget *proxy)
@@ -108,6 +123,8 @@ page_changed_cb (EvPageCache        *page_cache,
 	} else {
 		gtk_entry_set_text (GTK_ENTRY (proxy->entry), "");
 	}
+
+	update_pages_label (proxy, page, page_cache);
 }
 
 static void
@@ -136,20 +153,29 @@ static GtkWidget *
 create_tool_item (GtkAction *action)
 {
 	EvPageActionWidget *proxy;
+	GtkWidget *hbox;
 
 	proxy = g_object_new (ev_page_action_widget_get_type (), NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (proxy), 6); 
 	gtk_widget_show (GTK_WIDGET (proxy));
 
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_set_spacing (GTK_BOX (hbox), 6);
+
 	proxy->entry = gtk_entry_new ();
 	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 5);
+	gtk_box_pack_start (GTK_BOX (hbox), proxy->entry, FALSE, FALSE, 0);
 	gtk_widget_show (proxy->entry);
-
 	g_signal_connect (proxy->entry, "activate",
 			  G_CALLBACK (activate_cb),
 			  action);
 
-	gtk_container_add (GTK_CONTAINER (proxy), proxy->entry);
+	proxy->label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (hbox), proxy->label, FALSE, FALSE, 0);
+	gtk_widget_show (proxy->label);
+
+	gtk_container_add (GTK_CONTAINER (proxy), hbox);
+	gtk_widget_show (hbox);
 
 	return GTK_WIDGET (proxy);
 }
