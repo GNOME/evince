@@ -2372,7 +2372,6 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->fullscreen_toolbar =
 		gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/LeaveFullscreenToolbar");
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (ev_window->priv->fullscreen_toolbar), TRUE);
-	gtk_toolbar_set_style (GTK_TOOLBAR (ev_window->priv->fullscreen_toolbar), GTK_TOOLBAR_BOTH_HORIZ);
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();
