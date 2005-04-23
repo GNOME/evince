@@ -1,3 +1,43 @@
+Sat Apr 23 13:13:04 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* TODO:
+	* backend/ev-page-cache.c: (_ev_page_cache_new),
+	(ev_page_cache_get_max_width_size),
+	(ev_page_cache_get_max_height_size):
+	* backend/ev-page-cache.h:
+	* data/evince-ui.xml:
+	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_init):
+	* shell/ev-view.c: (view_update_adjustments),
+	(view_update_range_and_current_page), (get_bounding_box_size),
+	(ev_view_size_request_continuous_and_dual_page),
+	(ev_view_size_request_continuous),
+	(ev_view_size_request_dual_page),
+	(ev_view_size_request_single_page), (ev_view_size_request),
+	(ev_view_size_allocate), (get_page_extents), (draw_one_page),
+	(ev_view_bin_expose), (ev_view_expose_event),
+	(ev_view_set_property), (ev_view_get_property),
+	(ev_view_class_init), (ev_view_init), (ev_view_new),
+	(page_changed_cb), (ev_view_zoom), (ev_view_set_continuous),
+	(ev_view_set_dual_page), (ev_view_set_full_screen),
+	(ev_view_set_presentation), (ev_view_set_sizing_mode),
+	(ev_view_can_zoom_in), (ev_view_can_zoom_out), (ev_view_zoom_in),
+	(ev_view_zoom_out), (zoom_for_size_fit_width),
+	(zoom_for_size_best_fit),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (ev_view_set_zoom_for_size),
+	(ev_view_show_cursor), (ev_sizing_mode_get_type):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_cmd_continuous), (ev_window_cmd_dual),
+	(ev_window_cmd_view_best_fit), (ev_window_cmd_view_page_width),
+	(update_sizing_buttons), (ev_window_cmd_view_zoom_in),
+	(ev_window_cmd_view_zoom_out), (update_view_size),
+	(ev_window_set_sizing_mode), (ev_window_init):
+
+	Add Continuous and Dual page modes.
+
 2005-04-23  James Bowes  <bowes@cs.dal.ca>
 
 	* dvi/dvi-document.c: (dvi_document_load),

@@ -4,11 +4,6 @@ Improve Find system
 	Display location of results in thumbnails?
 	Only display thumbnails of pages found?
 
-Move to three page views:
-
- * Single page (prolly default for some backends)
- * Continuous scrolling							bug 164597
- * Side-by-side continuous scrolling
 
 Sidebar improvements for ps/pixbuf, or PDF files without a TOC.		bug 164811
 
@@ -29,6 +24,11 @@ Move to having three sizing types:
  * also, maybe add a 1-1 button.  Possibly dubious, though.
 
 
+Add some code to sanity check documents, including:
+
+ * n_pages > 0
+ * size of each page > (0,0)
+
 -------  TODONE -------  (move finished TODO items here)
 
 Create a TODO list
@@ -39,3 +39,7 @@ Improve Find system
 	Find Next/Previous doesn't focus the results
 Improve look of combobox Thumbnails/Index				bug 166683
 Provide Desktop icon Thumbnailer for Documents				bug 163789
+Move to three page views:
+ * Single page (prolly default for some backends)
+ * Continuous scrolling							bug 164597
+ * Side-by-side continuous scrolling

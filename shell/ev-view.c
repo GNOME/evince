@@ -43,7 +43,12 @@
 enum {
 	PROP_0,
 	PROP_STATUS,
-	PROP_FIND_STATUS
+	PROP_FIND_STATUS,
+	PROP_CONTINUOUS,
+	PROP_DUAL_PAGE,
+	PROP_FULL_SCREEN,
+	PROP_PRESENTATION,
+	PROP_SIZING_MODE,
 };
 
 enum {
@@ -104,7 +109,10 @@ struct _EvView {
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
 
+	gint start_page;
+	gint end_page;
 	gint current_page;
+
 	EvJobRender *current_job;
 
 	int find_page;
@@ -112,10 +120,14 @@ struct _EvView {
 	int spacing;
 
 	double scale;
-	int width;
-	int height;
 	GtkBorder border;
 	gboolean show_border;
+
+	gboolean continuous;
+	gboolean dual_page;
+	gboolean full_screen;
+	gboolean presentation;
+	EvSizingMode sizing_mode;
 };
 
 struct _EvViewClass {
@@ -131,9 +143,14 @@ struct _EvViewClass {
 };
 
 
-static void ev_view_set_scroll_adjustments (EvView         *view,
-					    GtkAdjustment  *hadjustment,
-					    GtkAdjustment  *vadjustment);
+static void ev_view_set_scroll_adjustments     (EvView        *view,
+						GtkAdjustment *hadjustment,
+						GtkAdjustment *vadjustment);
+static void get_bounding_box_size              (EvView        *view,
+						int           *max_width,
+						int           *max_height);
+static void view_update_range_and_current_page (EvView        *view);
+
 
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 
@@ -158,8 +175,11 @@ view_update_adjustments (EvView *view)
 	if (GTK_WIDGET_REALIZED (view) &&
 	    (view->scroll_x != old_x || view->scroll_y != old_y)) {
 		gdk_window_move (view->bin_window, - view->scroll_x, - view->scroll_y);
-		gdk_window_process_updates (view->bin_window, TRUE);
+		//		gdk_window_process_updates (view->bin_window, TRUE);
 	}
+
+	if (view->document)
+		view_update_range_and_current_page (view);
 }
 
 static void
@@ -199,6 +219,71 @@ view_set_adjustment_values (EvView         *view,
 	gtk_adjustment_changed (adjustment);
 	if (value_changed)
 		gtk_adjustment_value_changed (adjustment);
+}
+
+static void
+view_update_range_and_current_page (EvView *view)
+{
+
+	/* Presentation trumps all other modes */
+	if (view->presentation) {
+		view->start_page = view->current_page;
+		view->end_page = view->current_page;
+	} else if (view->continuous) {
+		GdkRectangle current_area, unused, page_area;
+		gboolean found = FALSE;
+		int i;
+
+		current_area.x = view->hadjustment->value;
+		current_area.width = view->hadjustment->page_size;
+		current_area.y = view->vadjustment->value;
+		current_area.height = view->vadjustment->page_size;
+
+		get_bounding_box_size (view, &(page_area.width), &(page_area.height));
+		page_area.x = view->spacing;
+		page_area.y = view->spacing;
+
+		for (i = 0; i < ev_page_cache_get_n_pages (view->page_cache); i++) {
+			if (gdk_rectangle_intersect (&current_area, &page_area, &unused)) {
+				if (! found) {
+					view->start_page = i;
+					found = TRUE;
+				}
+				view->end_page = i;
+			} else if (found) {
+				break;
+			}
+			if (view->dual_page) {
+				if (i % 2 == 0) {
+					page_area.x += page_area.width + view->spacing;
+				} else {
+					page_area.x = view->spacing;
+					page_area.y += page_area.height + view->spacing;
+				}
+			} else {
+				page_area.y += page_area.height + view->spacing;
+			}
+		}
+	} else {
+		if (view->dual_page) {
+			if (view->current_page % 2 == 0) {
+				view->start_page = view->current_page;
+				if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
+					view->end_page = view->start_page + 1;
+			} else {
+				view->start_page = view->current_page - 1;
+				view->end_page = view->current_page;
+			}
+		} else {
+			view->start_page = view->current_page;
+			view->end_page = view->current_page;
+		}
+	}
+
+	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+					view->start_page,
+					view->end_page,
+					view->scale);
 }
 
 /*** Virtual function implementations ***/
@@ -296,98 +381,170 @@ compute_border (EvView *view, int width, int height, GtkBorder *border)
 }
 
 static void
-compute_zoom_factor (EvView *view)
+get_bounding_box_size (EvView *view, int *max_width, int *max_height)
 {
-	int doc_width, doc_height;
-	double scale, scale_w, scale_h;
 	GtkBorder border;
+	int width, height;
 
-	if (view->width <= 0 && view->height <= 0) {
-		return;
+	if (max_width) {
+		ev_page_cache_get_max_width_size (view->page_cache,
+						  view->scale,
+						  &width, &height);
+		compute_border (view, width, height, &border);
+		*max_width = width + border.left + border.right;
 	}
 
-	doc_width = doc_height = 0;
-	scale = scale_w = scale_h = 1.0;
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				1.0,
-				&doc_width,
-				&doc_height);
 
-	compute_border (view, doc_width, doc_height, &border);
-
-	if (doc_width == 0 || doc_height == 0) {
-		return;
+	if (max_height) {
+		ev_page_cache_get_max_height_size (view->page_cache,
+						   view->scale,
+						   &width, &height);
+		compute_border (view, width, height, &border);
+		*max_height = height + border.top + border.bottom;
 	}
-
-	if (view->width >= 0) {
-		int target_width;
-
-		target_width = view->width - (view->spacing * 2 + view->border.left +
-					      view->border.right);
-		scale = scale_w = (double)target_width / doc_width;
-	}
-
-	if (view->height >= 0) {
-		int target_height;
-
-		target_height = view->height - (view->spacing * 2 + view->border.top +
-						view->border.bottom);
-		scale = scale_h = (double)target_height / doc_height;
-	}
-
-	if (view->width >= 0 && view->height >= 0) {
-		scale = (scale_w < scale_h) ? scale_w : scale_h;
-	}
-
-	view->scale = scale;
 }
 
-/* Called by size_request to make sure we have appropriate jobs running.
- */
+
 static void
-ev_view_size_request (GtkWidget      *widget,
-		      GtkRequisition *requisition)
+ev_view_size_request_continuous_and_dual_page (EvView         *view,
+					       GtkRequisition *requisition)
 {
-	EvView *view = EV_VIEW (widget);
+	int max_width, max_height;
+	int n_rows;
+
+	get_bounding_box_size (view, &max_width, &max_height);
+
+	n_rows = (1 + ev_page_cache_get_n_pages (view->page_cache)) / 2;
+
+	requisition->width = (max_width * 2) + (view->spacing * 3);
+	requisition->height = max_height * n_rows + (view->spacing * (n_rows + 1));
+
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		requisition->width = 1;
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
+		requisition->width = 1;
+		/* FIXME: This could actually be set on one page docs or docs
+		 * with a strange aspect ratio. */
+		/* requisition->height = 1;*/
+	}
+}
+
+static void
+ev_view_size_request_continuous (EvView         *view,
+				 GtkRequisition *requisition)
+{
+	int max_width, max_height;
+	int n_pages;
+
+	get_bounding_box_size (view, &max_width, &max_height);
+
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+
+	requisition->width = max_width + (view->spacing * 2);
+	requisition->height = max_height * n_pages + (view->spacing * (n_pages + 1));
+
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		requisition->width = 1;
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
+		requisition->width = 1;
+		/* FIXME: This could actually be set on one page docs or docs
+		 * with a strange aspect ratio. */
+		/* requisition->height = 1;*/
+	}
+}
+
+static void
+ev_view_size_request_dual_page (EvView         *view,
+				GtkRequisition *requisition)
+{
+	GtkBorder border;
 	gint width, height;
 
-	if (!GTK_WIDGET_REALIZED (widget))
-		return;
+	/* Find the largest of the two. */
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				view->scale,
+				&width, &height);
+	if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache)) {
+		gint width_2, height_2;
+		ev_page_cache_get_size (view->page_cache,
+					view->current_page + 1,
+					view->scale,
+					&width_2, &height_2);
+		if (width_2 > width) {
+			width = width_2;
+			height = height_2;
+		}
+	}
+	compute_border (view, width, height, &border);
 
-	if (!view->document) {
+	requisition->width = ((width + border.left + border.right) * 2) +
+		(view->spacing * 3);
+	requisition->height = (height + border.top + border.bottom) +
+		(view->spacing * 2);
+
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		requisition->width = 1;
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
 		requisition->width = 1;
 		requisition->height = 1;
-		return;
 	}
+}
 
-	compute_zoom_factor (view);
+static void
+ev_view_size_request_single_page (EvView         *view,
+				  GtkRequisition *requisition)
+{
+	GtkBorder border;
+	gint width, height;
 
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
 				view->scale,
 				&width, &height);
+	compute_border (view, width, height, &border);
 
-	compute_border (view, width, height, &(view->border));
+	requisition->width = width + border.left + border.right + (2 * view->spacing);
+	requisition->height = height + border.top + border.bottom + (2 * view->spacing);
 
-	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
-					view->current_page,
-					view->current_page,
-					view->scale);
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		requisition->width = 1;
+		requisition->height = height + border.top + border.bottom + (2 * view->spacing);
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
+		requisition->width = 1;
+		requisition->height = 1;
+	}
+}
 
-	if (view->width >= 0) {
-		requisition->width = 0;
-	} else {
-		requisition->width = width + view->border.left +
-				     view->border.right + view->spacing * 2;
+static void
+ev_view_size_request (GtkWidget      *widget,
+		      GtkRequisition *requisition)
+{
+	EvView *view = EV_VIEW (widget);
+
+	if (!GTK_WIDGET_REALIZED (widget))
+		return;
+
+	if (view->document == NULL) {
+		requisition->width = 1;
+		requisition->height = 1;
+		return;
 	}
 
-	if (view->height >= 0) {
-		requisition->height = 0;
-	} else {
-		requisition->height = height + view->border.top +
-				      view->border.bottom + view->spacing * 2;
+	if (view->presentation) {
+		requisition->width = 1;
+		requisition->height = 1;
+		return;
 	}
+
+	if (view->continuous && view->dual_page)
+		ev_view_size_request_continuous_and_dual_page (view, requisition);
+	else if (view->continuous)
+		ev_view_size_request_continuous (view, requisition);
+	else if (view->dual_page)
+		ev_view_size_request_dual_page (view, requisition);
+	else
+		ev_view_size_request_single_page (view, requisition);
 }
 
 static void
@@ -406,6 +563,9 @@ ev_view_size_allocate (GtkWidget      *widget,
 				   MAX (widget->allocation.width, widget->requisition.width),
 				   MAX (widget->allocation.height, widget->requisition.height));
 	}
+
+	if (view->document)
+		view_update_range_and_current_page (view);
 }
 
 static void
@@ -482,6 +642,7 @@ ev_view_unrealize (GtkWidget *widget)
 	GTK_WIDGET_CLASS (ev_view_parent_class)->unrealize (widget);
 }
 
+#if 0
 static guint32
 ev_gdk_color_to_rgb (const GdkColor *color)
 {
@@ -528,6 +689,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	gdk_color_free (fill_color_gdk);
 }
 
+
 static void
 highlight_find_results (EvView *view)
 {
@@ -553,47 +715,159 @@ highlight_find_results (EvView *view)
 				 &view_rectangle, alpha);
         }
 }
+#endif
 
 
-static void
-expose_bin_window (GtkWidget      *widget,
-		   GdkEventExpose *event)
+static gboolean
+get_page_extents (EvView       *view,
+		  gint          page,
+		  GdkRectangle *page_area,
+		  GtkBorder    *border)
 {
-	EvView *view = EV_VIEW (widget);
-	gint width, height;
-	GdkRectangle area;
-	int x_offset, y_offset;
-	GdkPixbuf *scaled_image;
-	GdkPixbuf *current_pixbuf;
+	GtkWidget *widget;
+	int width, height;
 
-	if (view->document == NULL)
-		return;
+	widget = GTK_WIDGET (view);
 
-	ev_view_get_offsets (view, &x_offset, &y_offset);
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->scale,
-				&width, &height);
-
-	/* Paint the frame */
-	area.x = x_offset;
-	area.y = y_offset;
-	area.width = width + view->border.left + view->border.right;
-	area.height = height + view->border.top + view->border.bottom;
-
-	if (view->show_border) {
-		ev_document_misc_paint_one_page (view->bin_window, widget, &area,
-						 &(view->border));
+	/* Quick sanity check */
+	if (view->presentation) {
+		if (view->current_page != page)
+			return FALSE;
+	} else if (view->continuous) {
+		if (page < view->start_page ||
+		    page > view->end_page)
+			return FALSE;
+	} else if (view->dual_page) {
+		if (ABS (page - view->current_page) > 1)
+			return FALSE;
+	} else {
+		if (view->current_page != page)
+			return FALSE;
 	}
 
+	/* Get the size of the page */
+	ev_page_cache_get_size (view->page_cache, page,
+				view->scale,
+				&width, &height);
+	compute_border (view, width, height, border);
+	page_area->width = width + border->left + border->right;
+	page_area->height = height + border->top + border->bottom;
+
+	if (view->presentation) {
+		page_area->x = (MAX (0, widget->allocation.width - width))/2;
+		page_area->y = (MAX (0, widget->allocation.height - height))/2;
+	} else if (view->continuous) {
+		gint max_width, max_height;
+		gint x, y;
+
+		get_bounding_box_size (view, &max_width, &max_height);
+		/* Get the location of the bounding box */
+		if (view->dual_page) {
+			x = view->spacing + (page % 2) * (max_width + view->spacing);
+			y = view->spacing + (page / 2) * (max_height + view->spacing);
+			x = x + MAX (0, widget->allocation.width - (max_width * 2 + view->spacing * 3))/2;
+		} else {
+			x = view->spacing;
+			y = view->spacing + page * (max_height + view->spacing);
+			x = x + MAX (0, widget->allocation.width - (max_width + view->spacing * 2))/2;
+		}
+		page_area->x = x;
+		page_area->y = y;
+	} else {
+		gint x, y;
+		if (view->dual_page) {
+			gint width_2, height_2;
+			gint max_width = width;
+			gint max_height = height;
+			GtkBorder overall_border;
+			gint other_page;
+
+			other_page = page ^ 1;
+
+			/* First, we get the bounding box of the two pages */
+			if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
+				ev_page_cache_get_size (view->page_cache,
+							page + 1,
+							view->scale,
+							&width_2, &height_2);
+				if (width_2 > width)
+					max_width = width_2;
+				if (height_2 > height)
+					max_height = height_2;
+			}
+			compute_border (view, max_width, max_height, &overall_border);
+
+			/* Find the offsets */
+			x = view->spacing;
+			y = view->spacing;
+
+			/* Adjust for being the left or right page */
+			if (page % 2 == 0)
+				x = x + max_width - width;
+			else
+				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
+
+			y = y + (max_height - height)/2;
+
+			/* Adjust for extra allocation */
+			x = x + MAX (0, widget->allocation.width -
+				     ((max_width + overall_border.left + overall_border.right) * 2 + view->spacing * 3))/2;
+			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
+		} else {
+			x = view->spacing;
+			y = view->spacing;
+
+			/* Adjust for extra allocation */
+			x = x + MAX (0, widget->allocation.width - (width + view->spacing * 2))/2;
+			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
+		}
+
+		page_area->x = x;
+		page_area->y = y;
+	}
+
+	return TRUE;
+}
+
+static void
+draw_one_page (EvView       *view,
+	       gint          page,
+	       GdkRectangle *page_area,
+	       GtkBorder    *border,
+	       GdkRectangle *expose_area)
+{
+	gint width, height;
+	GdkPixbuf *scaled_image;
+	GdkPixbuf *current_pixbuf;
+	GdkRectangle overlap;
+	GdkRectangle real_page_area;
+
+	g_assert (view->document);
+
+	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
+		return;
+
+	ev_page_cache_get_size (view->page_cache,
+				page, view->scale,
+				&width, &height);
+
+	if (view->show_border)
+		ev_document_misc_paint_one_page (view->bin_window,
+						 GTK_WIDGET (view),
+						 page_area, border);
+
 	/* Render the document itself */
-	LOG ("Render area %d %d %d %d - Offset %d %d",
-	     event->area.x, event->area.y,
-             event->area.width, event->area.height,
-	     x_offset, y_offset);
+	real_page_area = *page_area;
 
-	current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, view->current_page);
+	real_page_area.x += border->left;
+	real_page_area.y += border->top;
+	real_page_area.width -= (border->left + border->right);
+	real_page_area.height -= (border->top + border->bottom);
 
+	if (! gdk_rectangle_intersect (&real_page_area, expose_area, &overlap))
+		return;
+
+	current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, page);
 	if (current_pixbuf == NULL)
 		scaled_image = NULL;
 	else if (width == gdk_pixbuf_get_width (current_pixbuf) &&
@@ -603,19 +877,40 @@ expose_bin_window (GtkWidget      *widget,
 		scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
 							width, height,
 							GDK_INTERP_NEAREST);
+
 	if (scaled_image) {
 		gdk_draw_pixbuf (view->bin_window,
 				 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
 				 scaled_image,
-				 0, 0,
-				 area.x + view->border.left,
-				 area.y + view->border.top,
-				 width, height,
+				 overlap.x - real_page_area.x,
+				 overlap.y - real_page_area.y,
+				 overlap.x, overlap.y,
+				 overlap.width, overlap.height,
 				 GDK_RGB_DITHER_NORMAL,
 				 0, 0);
 		g_object_unref (scaled_image);
 	}
+}
 
+static void
+ev_view_bin_expose (EvView         *view,
+		    GdkEventExpose *event)
+{
+	int i;
+
+	if (view->document == NULL)
+		return;
+
+	for (i = view->start_page; i <= view->end_page; i++) {
+		GdkRectangle page_area;
+		GtkBorder border;
+
+		if (! get_page_extents (view, i, &page_area, &border))
+			continue;
+		draw_one_page (view, i, &page_area, &border, &(event->area));
+	}
+
+#if 0
 	if (EV_IS_DOCUMENT_FIND (view->document)) {
 		highlight_find_results (view);
 	}
@@ -625,10 +920,11 @@ expose_bin_window (GtkWidget      *widget,
 
 		doc_rect_to_view_rect (view, &view->selection, &rubberband);
 		if (rubberband.width > 0 && rubberband.height > 0) {
-			draw_rubberband (widget, view->bin_window,
+			draw_rubberband (GTK_WIDGET (view), view->bin_window,
 					 &rubberband, 0x40);
 		}
 	}
+#endif
 }
 
 static gboolean
@@ -638,7 +934,7 @@ ev_view_expose_event (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 
 	if (event->window == view->bin_window)
-		expose_bin_window (widget, event);
+		ev_view_bin_expose (view, event);
 	else
 		return GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event (widget, event);
 
@@ -1198,17 +1494,32 @@ ev_view_scroll_view (EvView *view,
 }
 
 static void
-ev_view_set_property (GObject *object,
-		      guint prop_id,
+ev_view_set_property (GObject      *object,
+		      guint         prop_id,
 		      const GValue *value,
-		      GParamSpec *pspec)
+		      GParamSpec   *pspec)
 {
+	EvView *view = EV_VIEW (object);
+
 	switch (prop_id)
 	{
-		/* Read only */
-		case PROP_STATUS:
-		case PROP_FIND_STATUS:
-			break;
+	case PROP_CONTINUOUS:
+		ev_view_set_continuous (view, g_value_get_boolean (value));
+		break;
+	case PROP_DUAL_PAGE:
+		ev_view_set_dual_page (view, g_value_get_boolean (value));
+		break;
+	case PROP_FULL_SCREEN:
+		ev_view_set_full_screen (view, g_value_get_boolean (value));
+		break;
+	case PROP_PRESENTATION:
+		ev_view_set_presentation (view, g_value_get_boolean (value));
+		break;
+	case PROP_SIZING_MODE:
+		ev_view_set_sizing_mode (view, g_value_get_enum (value));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
 }
 
@@ -1222,12 +1533,29 @@ ev_view_get_property (GObject *object,
 
 	switch (prop_id)
 	{
-		case PROP_STATUS:
-			g_value_set_string (value, view->status);
-			break;
-		case PROP_FIND_STATUS:
-			g_value_set_string (value, view->status);
-			break;
+	case PROP_STATUS:
+		g_value_set_string (value, view->status);
+		break;
+	case PROP_FIND_STATUS:
+		g_value_set_string (value, view->status);
+		break;
+	case PROP_CONTINUOUS:
+		g_value_set_boolean (value, view->continuous);
+		break;
+	case PROP_DUAL_PAGE:
+		g_value_set_boolean (value, view->dual_page);
+		break;
+	case PROP_FULL_SCREEN:
+		g_value_set_boolean (value, view->full_screen);
+		break;
+	case PROP_PRESENTATION:
+		g_value_set_boolean (value, view->presentation);
+		break;
+	case PROP_SIZING_MODE:
+		g_value_set_enum (value, view->sizing_mode);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
 }
 
@@ -1292,6 +1620,45 @@ ev_view_class_init (EvViewClass *class)
 							      NULL,
 							      G_PARAM_READABLE));
 
+	g_object_class_install_property (object_class,
+					 PROP_CONTINUOUS,
+					 g_param_spec_boolean ("continuous",
+							       "Continuous",
+							       "Continuous scrolling mode",
+							       TRUE,
+							       G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class,
+					 PROP_DUAL_PAGE,
+					 g_param_spec_boolean ("dual-page",
+							       "Dual Page",
+							       "Two pages visible at once",
+							       FALSE,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_FULL_SCREEN,
+					 g_param_spec_boolean ("full-screen",
+							       "Full Screen",
+							       "Draw page in a full-screen fashion",
+							       FALSE,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_PRESENTATION,
+					 g_param_spec_boolean ("presentation",
+							       "Presentation",
+							       "Draw page in presentation mode",
+							       TRUE,
+							       G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class,
+					 PROP_SIZING_MODE,
+					 g_param_spec_enum ("sizing-mode",
+							    "Sizing Mode",
+							    "Sizing Mode",
+							    EV_TYPE_SIZING_MODE,
+							    EV_SIZING_FIT_WIDTH,
+							    G_PARAM_READWRITE));
+
 	binding_set = gtk_binding_set_by_class (class);
 
 	add_scroll_binding_keypad (binding_set, GDK_Left,  GTK_SCROLL_STEP_BACKWARD, TRUE);
@@ -1330,6 +1697,12 @@ ev_view_init (EvView *view)
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	view->show_border = TRUE;
+
+	view->continuous = TRUE;
+	view->dual_page = FALSE;
+	view->presentation = FALSE;
+	view->full_screen = FALSE;
+	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 }
 
 static void
@@ -1476,7 +1849,11 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 GtkWidget*
 ev_view_new (void)
 {
-	return g_object_new (EV_TYPE_VIEW, NULL);
+	GtkWidget *view;
+
+	view = g_object_new (EV_TYPE_VIEW, NULL);
+
+	return view;
 }
 
 static void
@@ -1507,19 +1884,12 @@ page_changed_cb (EvPageCache *page_cache,
 	view->current_page = new_page;
 	view->has_selection = FALSE;
 
-	compute_zoom_factor (view);
-
 	ev_page_cache_get_size (page_cache,
 				new_page,
 				view->scale,
 				&new_width, &new_height);
 
 	compute_border (view, new_width, new_height, &(view->border));
-
-	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
-					view->current_page,
-					view->current_page,
-					view->scale);
 
 	if (new_width != old_width || new_height != old_height)
 		gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1534,6 +1904,8 @@ page_changed_cb (EvPageCache *page_cache,
 		view->find_result = 0;
 		update_find_status_message (view);
 	}
+
+	view_update_range_and_current_page (view);
 }
 
 void
@@ -1574,6 +1946,7 @@ ev_view_set_document (EvView     *view,
 	}
 }
 
+#define EPSILON 0.0000001
 static void
 ev_view_zoom (EvView   *view,
 	      double    factor,
@@ -1588,42 +1961,312 @@ ev_view_zoom (EvView   *view,
 
 	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
 
+	if (ABS (view->scale - scale) < EPSILON)
+		return;
 	view->scale = scale;
-	view->width = view->height = -1;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
+
+
+void
+ev_view_set_continuous (EvView   *view,
+			gboolean  continuous)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	continuous = continuous != FALSE;
+
+	if (view->continuous != continuous) {
+		view->continuous = continuous;
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+
+	g_object_notify (G_OBJECT (view), "continuous");
+}
+
+void
+ev_view_set_dual_page (EvView   *view,
+		       gboolean  dual_page)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	dual_page = dual_page != FALSE;
+
+	if (view->dual_page == dual_page)
+		return;
+
+	view->dual_page = dual_page;
+	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
+	 * preload_cache_size to be 2 if dual_page is set.
+	 */
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+
+	g_object_notify (G_OBJECT (view), "dual-page");
+}
+
+void
+ev_view_set_full_screen (EvView   *view,
+			 gboolean  full_screen)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	full_screen = full_screen != FALSE;
+
+	if (view->full_screen != full_screen) {
+		view->full_screen = full_screen;
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+
+	g_object_notify (G_OBJECT (view), "full-screen");
+}
+
+void
+ev_view_set_presentation (EvView   *view,
+			  gboolean  presentation)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	presentation = presentation != FALSE;
+
+	if (view->presentation != presentation) {
+		view->presentation = presentation;
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+
+	g_object_notify (G_OBJECT (view), "presentation");
+}
+
+void
+ev_view_set_sizing_mode (EvView       *view,
+			 EvSizingMode  sizing_mode)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	if (view->sizing_mode != sizing_mode) {
+		view->sizing_mode = sizing_mode;
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+
+	g_object_notify (G_OBJECT (view), "sizing-mode");
+}
+
 
 gboolean
 ev_view_can_zoom_in (EvView *view)
 {
-	if (view->width != -1 || view->height != -1) {
-		return TRUE;
-	}
-
 	return view->scale * ZOOM_IN_FACTOR <= MAX_SCALE;
 }
 
 gboolean
 ev_view_can_zoom_out (EvView *view)
 {
-	if (view->width != -1 || view->height != -1) {
-		return TRUE;
-	}
-
 	return view->scale * ZOOM_OUT_FACTOR >= MIN_SCALE;
 }
 
 void
 ev_view_zoom_in (EvView *view)
 {
+	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
+
 	ev_view_zoom (view, ZOOM_IN_FACTOR, TRUE);
 }
 
 void
 ev_view_zoom_out (EvView *view)
 {
+	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
+
 	ev_view_zoom (view, ZOOM_OUT_FACTOR, TRUE);
 }
+
+
+
+static double
+zoom_for_size_fit_width (int doc_width,
+			 int doc_height,
+			 int target_width,
+			 int target_height,
+			 int vsb_width)
+{
+	double scale;
+
+	scale = (double)target_width / doc_width;
+
+	if (doc_height * scale > target_height)
+		scale = (double) (target_width - vsb_width) / doc_width;
+
+	return scale;
+}
+
+static double
+zoom_for_size_best_fit (int doc_width,
+			int doc_height,
+			int target_width,
+			int target_height,
+			int vsb_width,
+			int hsb_width)
+{
+	double w_scale;
+	double h_scale;
+
+	w_scale = (double)target_width / doc_width;
+	h_scale = (double)target_height / doc_height;
+
+	if (doc_height * w_scale > target_height)
+		w_scale = (double) (target_width - vsb_width) / doc_width;
+	if (doc_width * h_scale > target_width)
+		h_scale = (double) (target_height - hsb_width) / doc_height;
+
+	return MIN (w_scale, h_scale);
+}
+
+static void
+ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
+			   int     width,
+			   int     height,
+			   int     vsb_width,
+			   int     hsb_height)
+{
+	int doc_width, doc_height;
+	GtkBorder border;
+	gdouble scale;
+
+	ev_page_cache_get_max_width_size (view->page_cache,
+					  1.0,
+					  &doc_width, NULL);
+	ev_page_cache_get_max_height_size (view->page_cache,
+					   1.0,
+					   NULL, &doc_height);
+	compute_border (view, doc_width, doc_height, &border);
+
+	doc_width = doc_width * 2;
+	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
+	height -= (border.top + border.bottom + 2 * view->spacing);
+
+	/* FIXME: We really need to calculat the overall height here, not the
+	 * page height.  We assume there's always a vertical scrollbar for
+	 * now.  We need to fix this. */
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width - vsb_width, height, 0);
+	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width - vsb_width, height, 0, hsb_height);
+	else
+		g_assert_not_reached ();
+
+	ev_view_zoom (view, scale, FALSE);
+}
+
+static void
+ev_view_zoom_for_size_continuous (EvView *view,
+				  int     width,
+				  int     height,
+				  int     vsb_width,
+				  int     hsb_height)
+{
+	int doc_width, doc_height;
+	GtkBorder border;
+	gdouble scale;
+
+	ev_page_cache_get_max_width_size (view->page_cache,
+					  1.0,
+					  &doc_width, NULL);
+	ev_page_cache_get_max_height_size (view->page_cache,
+					   1.0,
+					   NULL, &doc_height);
+	compute_border (view, doc_width, doc_height, &border);
+
+	width -= (border.left + border.right + 2 * view->spacing);
+	height -= (border.top + border.bottom + 2 * view->spacing);
+
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
+	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
+	else
+		g_assert_not_reached ();
+
+	ev_view_zoom (view, scale, FALSE);
+}
+
+static void
+ev_view_zoom_for_size_dual_page (EvView *view,
+				 int     width,
+				 int     height,
+				 int     vsb_width,
+				 int     hsb_height)
+{
+	GtkBorder border;
+	gint doc_width, doc_height;
+	gdouble scale;
+	gint other_page;
+
+	other_page = view->current_page ^ 1;
+
+	/* Find the largest of the two. */
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				1.0,
+				&doc_width, &doc_height);
+
+	if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
+		gint width_2, height_2;
+		ev_page_cache_get_size (view->page_cache,
+					other_page,
+					1.0,
+					&width_2, &height_2);
+		if (width_2 > doc_width)
+			doc_width = width_2;
+		if (height_2 > doc_height)
+			doc_height = height_2;
+	}
+	compute_border (view, doc_width, doc_height, &border);
+
+	doc_width = doc_width * 2;
+	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
+	height -= (border.top + border.bottom + 2 * view->spacing);
+
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
+	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
+	else
+		g_assert_not_reached ();
+
+	ev_view_zoom (view, scale, FALSE);
+}
+
+static void
+ev_view_zoom_for_size_single_page (EvView *view,
+				   int     width,
+				   int     height,
+				   int     vsb_width,
+				   int     hsb_height)
+{
+	int doc_width, doc_height;
+	GtkBorder border;
+	gdouble scale;
+
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				1.0,
+				&doc_width,
+				&doc_height);
+	/* Get an approximate border */
+	compute_border (view, width, height, &border);
+
+	width -= (border.left + border.right + 2 * view->spacing);
+	height -= (border.top + border.bottom + 2 * view->spacing);
+
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
+	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
+	else
+		g_assert_not_reached ();
+
+	ev_view_zoom (view, scale, FALSE);
+}
+
 
 void
 ev_view_zoom_normal (EvView *view)
@@ -1632,19 +2275,28 @@ ev_view_zoom_normal (EvView *view)
 }
 
 void
-ev_view_set_size (EvView     *view,
-		  int         width,
-		  int         height)
+ev_view_set_zoom_for_size (EvView *view,
+			   int     width,
+			   int     height,
+			   int     vsb_width,
+			   int     hsb_height)
 {
-	if (!view->document) {
-		return;
-	}
+	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
+			  view->sizing_mode == EV_SIZING_BEST_FIT);
+	g_return_if_fail (width >= 0);
+	g_return_if_fail (height >= 0);
 
-	if (width != view->width || height != view->height) {
-		view->width = width;
-		view->height = height;
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	}
+	if (view->document == NULL)
+		return;
+
+	if (view->continuous && view->dual_page)
+		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height, vsb_width, hsb_height);
+	else if (view->continuous)
+		ev_view_zoom_for_size_continuous (view, width, height, vsb_width, hsb_height);
+	else if (view->dual_page)
+		ev_view_zoom_for_size_dual_page (view, width, height, vsb_width, hsb_height);
+	else
+		ev_view_zoom_for_size_single_page (view, width, height, vsb_width, hsb_height);
 }
 
 const char *
@@ -1751,4 +2403,21 @@ void
 ev_view_show_cursor (EvView *view)
 {
        ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+}
+
+
+GType
+ev_sizing_mode_get_type (void)
+{
+  static GType etype = 0;
+  if (etype == 0) {
+    static const GEnumValue values[] = {
+      { EV_SIZING_FIT_WIDTH, "EV_SIZING_FIT_WIDTH", "fit-width" },
+      { EV_SIZING_BEST_FIT, "EV_SIZING_BEST_FIT", "best-fit" },
+      { EV_SIZING_FREE, "EV_SIZING_FREE", "free" },
+      { 0, NULL, NULL }
+    };
+    etype = g_enum_register_static ("EvSizingMode", values);
+  }
+  return etype;
 }

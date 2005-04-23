@@ -65,12 +65,6 @@
 #include "ev-stock-icons.h"
 
 typedef enum {
-	EV_SIZING_BEST_FIT,
-	EV_SIZING_FIT_WIDTH,
-	EV_SIZING_FREE,
-} EvSizingMode;
-
-typedef enum {
 	PAGE_MODE_SINGLE_PAGE,
 	PAGE_MODE_CONTINUOUS_PAGE,
 	PAGE_MODE_PASSWORD,
@@ -117,7 +111,6 @@ struct _EvWindowPrivate {
 
 	EvChrome chrome;
 	gboolean fullscreen_mode;
-	EvSizingMode sizing_mode;
 	GSource *fullscreen_timeout_source;
 
 	/* recent file stuff */
@@ -153,7 +146,8 @@ static gboolean start_loading_document            (EvWindow         *ev_window,
 						   EvDocument       *document,
 						   const char       *uri);
 static void     ev_window_set_sizing_mode         (EvWindow         *ev_window,
-						   EvSizingMode      sizing_mode);
+						   EvSizingMode      sizing_mode,
+						   gboolean          first_time);
 
 static void 	ev_window_add_recent (EvWindow *window, const char *filename);
 static void	ev_window_fullscreen (EvWindow *window);
@@ -206,6 +200,8 @@ update_action_sensitivity (EvWindow *ev_window)
 			      ev_view_can_find_next (view));
 
         /* View menu */
+	set_action_sensitive (ev_window, "ViewContinuous", has_pages);
+	set_action_sensitive (ev_window, "ViewDual", has_pages);
 	set_action_sensitive (ev_window, "ViewZoomIn",
 			      has_pages && ev_view_can_zoom_in (view));
 	set_action_sensitive (ev_window, "ViewZoomOut",
@@ -303,12 +299,36 @@ update_chrome_flag (EvWindow *window, EvChrome flag, const char *pref, gboolean 
 }
 
 static void
+ev_window_cmd_continuous (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean continuous;
+
+	continuous = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	g_object_set (G_OBJECT (ev_window->priv->view),
+		      "continuous", continuous,
+		      NULL);
+	update_action_sensitivity (ev_window);
+}
+
+static void
+ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean dual_page;
+
+	dual_page = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	g_object_set (G_OBJECT (ev_window->priv->view),
+		      "dual-page", dual_page,
+		      NULL);
+	update_action_sensitivity (ev_window);
+}
+
+static void
 ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_BEST_FIT);
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_BEST_FIT, FALSE);
 	} else {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
 	}
 	update_action_sensitivity (ev_window);
 }
@@ -317,9 +337,9 @@ static void
 ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 {
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_FIT_WIDTH);
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_FIT_WIDTH, FALSE);
 	} else {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
+		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
 	}
 	update_action_sensitivity (ev_window);
 }
@@ -330,8 +350,16 @@ update_sizing_buttons (EvWindow *window)
 	GtkActionGroup *action_group = window->priv->action_group;
 	GtkAction *action;
 	gboolean best_fit, page_width;
+	EvSizingMode sizing_mode;
 
-	switch (window->priv->sizing_mode) {
+	if (window->priv->view == NULL)
+		return;
+
+	g_object_get (window->priv->view,
+		      "sizing_mode", &sizing_mode,
+		      NULL);
+
+	switch (sizing_mode) {
 	case EV_SIZING_BEST_FIT:
 		best_fit = TRUE;
 		page_width = FALSE;
@@ -1485,7 +1513,7 @@ ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
+	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
 	ev_view_zoom_in (EV_VIEW (ev_window->priv->view));
 	update_action_sensitivity (ev_window);
 }
@@ -1495,7 +1523,7 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE);
+	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
 	ev_view_zoom_out (EV_VIEW (ev_window->priv->view));
 	update_action_sensitivity (ev_window);
 }
@@ -1600,30 +1628,31 @@ update_view_size (EvWindow *window)
 {
 	int width, height;
 	GtkRequisition vsb_requisition;
+	GtkRequisition hsb_requisition;
 	int scrollbar_spacing;
 
+	/* Calculate the width available for the */
 	width = window->priv->scrolled_window->allocation.width;
 	height = window->priv->scrolled_window->allocation.height;
 
-	if (gtk_scrolled_window_get_shadow_type
-		(GTK_SCROLLED_WINDOW (window->priv->scrolled_window)) == GTK_SHADOW_IN)
-	{
+	if (gtk_scrolled_window_get_shadow_type (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)) == GTK_SHADOW_IN) {
 		width -= 2 * window->priv->view->style->xthickness;
 		height -= 2 * window->priv->view->style->ythickness;
 	}
 
-	if (window->priv->sizing_mode == EV_SIZING_BEST_FIT) {
-		ev_view_set_size (EV_VIEW (window->priv->view),
-				  MAX (1, width), MAX (1, height));
-	} else if (window->priv->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->vscrollbar,
-					 &vsb_requisition);
-		gtk_widget_style_get (window->priv->scrolled_window,
-				      "scrollbar_spacing", &scrollbar_spacing,
-				      NULL);
-		ev_view_set_size (EV_VIEW (window->priv->view),
-				  width - vsb_requisition.width - scrollbar_spacing, -1);
-	}
+	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->vscrollbar,
+				 &vsb_requisition);
+	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->hscrollbar,
+				 &hsb_requisition);
+	gtk_widget_style_get (window->priv->scrolled_window,
+			      "scrollbar_spacing", &scrollbar_spacing,
+			      NULL);
+
+	ev_view_set_zoom_for_size (EV_VIEW (window->priv->view),
+				   MAX (1, width),
+				   MAX (1, height),
+				   vsb_requisition.width + scrollbar_spacing,
+				   hsb_requisition.height + scrollbar_spacing);
 }
 
 static void
@@ -1636,16 +1665,26 @@ size_allocate_cb (GtkWidget     *scrolled_window,
 
 static void
 ev_window_set_sizing_mode (EvWindow     *ev_window,
-			   EvSizingMode  sizing_mode)
+			   EvSizingMode  sizing_mode,
+			   gboolean      first_time)
 {
 	GtkWidget *scrolled_window;
 
-	if (ev_window->priv->sizing_mode == sizing_mode)
-		return;
+	/* Short circuit the call if it's not the first time we call this */
+	if (!first_time) {
+		EvSizingMode old_sizing_mode;
+
+		g_object_get (ev_window->priv->view,
+			      "sizing-mode", &old_sizing_mode,
+			      NULL);
+		if (old_sizing_mode == sizing_mode)
+			return;
+	}
 
 	scrolled_window = ev_window->priv->scrolled_window;
-	ev_window->priv->sizing_mode = sizing_mode;
-
+	g_object_set (ev_window->priv->view,
+		      "sizing-mode", sizing_mode,
+		      NULL);
 	g_signal_handlers_disconnect_by_func (scrolled_window, size_allocate_cb, ev_window);
 
 	update_view_size (ev_window);
@@ -2113,6 +2152,12 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewSidebar", NULL, N_("Side _pane"), "F9",
 	  N_("Show or hide the side pane"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
+        { "ViewContinuous", NULL, N_("_Continuous"), NULL,
+	  N_("Show the entire document"),
+	  G_CALLBACK (ev_window_cmd_continuous), TRUE },
+        { "ViewDual", NULL, N_("_Dual"), NULL,
+	  N_("Show two pages at once"),
+	  G_CALLBACK (ev_window_cmd_dual), FALSE },
         { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
           G_CALLBACK (ev_window_cmd_view_fullscreen) },
@@ -2514,7 +2559,6 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (drag_data_received_cb), NULL);
 
 	/* Set it to something random to force a change */
-	ev_window->priv->sizing_mode = EV_SIZING_FREE;
-	ev_window_set_sizing_mode (ev_window,  EV_SIZING_FIT_WIDTH);
+	ev_window_set_sizing_mode (ev_window,  EV_SIZING_FIT_WIDTH, TRUE);
 	update_action_sensitivity (ev_window);
 }

@@ -28,13 +28,22 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_VIEW            (ev_view_get_type ())
+#define EV_TYPE_SIZING_MODE     (ev_sizing_mode_get_type())
 #define EV_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW, EvView))
 #define EV_IS_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW))
 
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
+
+typedef enum {
+	EV_SIZING_BEST_FIT,
+	EV_SIZING_FIT_WIDTH,
+	EV_SIZING_FREE,
+} EvSizingMode;
+
 GType		ev_view_get_type	(void) G_GNUC_CONST;
+GType           ev_sizing_mode_get_type (void) G_GNUC_CONST;
 GtkWidget*	ev_view_new		(void);
 void		ev_view_set_document	(EvView     *view,
 			   		 EvDocument *document);
@@ -43,11 +52,32 @@ void		ev_view_set_document	(EvView     *view,
 void		ev_view_copy		(EvView     *view);
 void		ev_view_select_all	(EvView     *view);
 
+
+/* sizing and behavior */
+/* These are all orthoganal to each other, with the exception of 'presentation'
+ */
+void ev_view_set_continuous   (EvView       *view,
+			       gboolean      continuous);
+void ev_view_set_dual_page    (EvView       *view,
+			       gboolean      dual_page);
+void ev_view_set_full_screen  (EvView       *view,
+			       gboolean      full_screen);
+void ev_view_set_presentation (EvView       *view,
+			       gboolean      presentation);
+void ev_view_set_sizing_mode  (EvView       *view,
+			       EvSizingMode  mode);
+
+
 /* Page size */
 gboolean	ev_view_can_zoom_in     (EvView     *view);
 void		ev_view_zoom_in		(EvView     *view);
 gboolean        ev_view_can_zoom_out    (EvView     *view);
 void		ev_view_zoom_out	(EvView     *view);
+void		ev_view_set_zoom_for_size (EvView     *view,
+					   int         width,
+					   int         height,
+					   int         vsb_width,
+					   int         hsb_height);
 void		ev_view_zoom_normal	(EvView     *view);
 void		ev_view_set_size        (EvView     *view,
 					 int         width,

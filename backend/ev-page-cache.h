@@ -28,29 +28,39 @@ G_BEGIN_DECLS
 #define EV_PAGE_CACHE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_CACHE, EvPageCache))
 #define EV_IS_PAGE_CACHE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PAGE_CACHE))
 
-GType          ev_page_cache_get_type         (void) G_GNUC_CONST;
-/* Used by ev-document.c only */
-EvPageCache   *_ev_page_cache_new             (EvDocument  *document);
+GType          ev_page_cache_get_type            (void) G_GNUC_CONST;
 
-gint           ev_page_cache_get_n_pages      (EvPageCache *page_cache);
-char          *ev_page_cache_get_title        (EvPageCache *page_cache);
-void           ev_page_cache_get_size         (EvPageCache *page_cache,
-					       gint         page,
-					       gfloat       scale,
-					       gint        *width,
-					       gint        *height);
-char          *ev_page_cache_get_page_label  (EvPageCache  *page_cache,
-					      gint          page);
+/* Used by ev-document.c only */
+EvPageCache   *_ev_page_cache_new                (EvDocument  *document);
+gint           ev_page_cache_get_n_pages         (EvPageCache *page_cache);
+char          *ev_page_cache_get_title           (EvPageCache *page_cache);
+void           ev_page_cache_get_size            (EvPageCache *page_cache,
+						  gint         page,
+						  gfloat       scale,
+						  gint        *width,
+						  gint        *height);
+void           ev_page_cache_get_max_width_size  (EvPageCache *page_cache,
+						  gfloat       scale,
+						  gint        *width,
+						  gint        *height);
+void           ev_page_cache_get_max_height_size (EvPageCache *page_cache,
+						  gfloat       scale,
+						  gint        *width,
+						  gint        *height);
+char          *ev_page_cache_get_page_label      (EvPageCache *page_cache,
+						  gint         page);
+
 /* Navigation */
-gint           ev_page_cache_get_current_page (EvPageCache *page_cache);
-void           ev_page_cache_set_current_page (EvPageCache *page_cache,
-					       int          page);
-gboolean       ev_page_cache_set_page_label   (EvPageCache *page_cache,
-					       const char  *page_label);
-void           ev_page_cache_set_link         (EvPageCache *page_cache,
-					       EvLink      *link);
-gboolean       ev_page_cache_next_page        (EvPageCache *page_cache);         
-gboolean       ev_page_cache_prev_page        (EvPageCache *page_cache);         
+gint           ev_page_cache_get_current_page    (EvPageCache *page_cache);
+void           ev_page_cache_set_current_page    (EvPageCache *page_cache,
+						  int          page);
+gboolean       ev_page_cache_set_page_label      (EvPageCache *page_cache,
+						  const char  *page_label);
+void           ev_page_cache_set_link            (EvPageCache *page_cache,
+						  EvLink      *link);
+gboolean       ev_page_cache_next_page           (EvPageCache *page_cache);
+gboolean       ev_page_cache_prev_page           (EvPageCache *page_cache);
+         
 
 G_END_DECLS
 
