@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(evince, 0.2.0)
+AC_INIT(evince, 0.2.1)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
@@ -37,7 +37,7 @@ PKG_CHECK_MODULES(THUMBNAILER, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 poppler-glib >= 0
 PKG_CHECK_MODULES(DVI, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(PS, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 libgnomeui-2.0)
-PKG_CHECK_MODULES(POPPLER_GLIB, poppler-glib >= 0.1.2)
+PKG_CHECK_MODULES(POPPLER_GLIB, poppler-glib >= 0.3.0)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)

@@ -26,3 +26,6 @@ DISTCLEANFILES = 		\
 	intltool-update
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install
+
+# Ignore scrollkeeper issues for now.  @#*$& scrollkeeper
+distuninstallcheck_listfiles = find . -type f -print | grep -v scrollkeeper | grep -v /share/gnome/help/ | grep -v \.omf

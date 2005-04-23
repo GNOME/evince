@@ -1,4 +1,54 @@
 ==============
+Evince   0.2.1
+==============
+
+New Features:
+
+	* new backend to support DJVU files.
+	* new backend to support DVI.
+	* Initial implementation of doc metadata.  No UI for this yet,
+	  though we respect docs requesting UI changes.
+	* support application/x-gzpostscript
+	* consolidate mime handling code so thumbnailer and main page
+          can use them.  Thumbnail all types we support.
+	* Respect document orientation 
+	* Implement print and save a copy for the ps backend.
+	* Badass completion of the document in the entry.  Only works
+	  with GTK+ >= 2.7.1
+	* User docs
+
+Bug Fixes:
+
+	* Faster Zooming
+	* Clean up Schemas
+	* README added.
+	* Small rework of sidebar code. Now sidebar pages should implement
+	  EvSidebarPage interface.
+	* lots of small bug fixes
+	* Actually fix the "FIXME: update priority" comment.
+	* Update egg-recent from libegg. This should fix long startup
+          problem.
+
+Interface Improvements:
+
+	* Shift + Space scrolls up.
+	* Removed fullscreen toolbar hard-coded style
+	* Fix normal size zoom. Make zoom in/zoom out unsensitive when
+	  they are behyond the limits.
+	* Doesn't show resize grip when maximized
+	* don't draw border in fullscreen
+	* Doesn't show thumbnails if document has 1 page. Make sidebar
+	  menu entries sensitive only if if they have sense. 
+	* Work around the Escape conflict (find bar and unfullscreen)
+	* Save accelerators on exit.
+	* Add Edit->Find Next
+
+Translations:
+
+	* Make all toolbar items translatable
+	* ru (Nickolay Shmyrev)
+
+==============
 Evince   0.2.0
 ==============
 
