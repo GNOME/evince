@@ -233,15 +233,26 @@ view_update_range_and_current_page (EvView *view)
 		GdkRectangle current_area, unused, page_area;
 		gboolean found = FALSE;
 		int i;
-
-		current_area.x = view->hadjustment->value;
-		current_area.width = view->hadjustment->page_size;
-		current_area.y = view->vadjustment->value;
-		current_area.height = view->vadjustment->page_size;
-
+		
 		get_bounding_box_size (view, &(page_area.width), &(page_area.height));
 		page_area.x = view->spacing;
 		page_area.y = view->spacing;
+
+		if (view->hadjustment) {
+			current_area.x = view->hadjustment->value;
+			current_area.width = view->hadjustment->page_size;
+		} else {
+			current_area.x = page_area.x;
+			current_area.width = page_area.width;
+		}
+
+		if (view->vadjustment) {
+			current_area.y = view->vadjustment->value;
+			current_area.height = view->vadjustment->page_size;
+		} else {
+			current_area.y = page_area.y;
+			current_area.height = page_area.height;
+		}
 
 		for (i = 0; i < ev_page_cache_get_n_pages (view->page_cache); i++) {
 			if (gdk_rectangle_intersect (&current_area, &page_area, &unused)) {
@@ -1872,6 +1883,7 @@ page_changed_cb (EvPageCache *page_cache,
 	int old_page = view->current_page;
 	int old_width, old_height;
 	int new_width, new_height;
+	int max_height, n_rows;
 
 	if (old_page == new_page)
 		return;
@@ -1895,9 +1907,21 @@ page_changed_cb (EvPageCache *page_cache,
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	else
 		gtk_widget_queue_draw (GTK_WIDGET (view));
+	
+	if (view->continuous) {
+		
+		n_rows = view->dual_page ? new_page / 2 : new_page;
+		
+		get_bounding_box_size (view, NULL, &max_height);
 
-	gtk_adjustment_set_value (view->vadjustment,
-				  view->vadjustment->lower);
+		gtk_adjustment_clamp_page(view->vadjustment,
+					  (max_height + view->spacing) * n_rows, 
+					  (max_height + view->spacing) * n_rows +
+					   view->vadjustment->page_size);
+	} else {
+		gtk_adjustment_set_value (view->vadjustment,
+					  view->vadjustment->lower);
+	}
 
 	if (EV_IS_DOCUMENT_FIND (view->document)) {
 		view->find_page = new_page;
