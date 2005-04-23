@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpdf cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-18 18:42+0000\n"
-"PO-Revision-Date: 2005-04-19 01:11+0200\n"
+"POT-Creation-Date: 2005-04-23 10:52+0000\n"
+"PO-Revision-Date: 2005-04-23 21:29+0200\n"
 "Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid "_Password:"
 msgstr "_Wachtwoord:"
 
 # viewer is ook nederlands
-#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:486
+#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:445
 msgid "Document Viewer"
 msgstr "Document-viewer"
 
@@ -51,28 +51,444 @@ msgid "Show sidebar by default"
 msgstr "Standaard de zijbalk tonen"
 
 #: ../data/evince.schemas.in.h:3
-msgid "Show sidebar by default."
-msgstr "Standaard de zijbalk tonen."
-
-#: ../data/evince.schemas.in.h:4
 msgid "Show statusbar by default"
 msgstr "Statusbalk standaard tonen"
 
-#: ../data/evince.schemas.in.h:5
-msgid "Show statusbar by default."
-msgstr "De statusbalk standaard weergeven."
-
-#: ../data/evince.schemas.in.h:6
+#: ../data/evince.schemas.in.h:4
 msgid "Show toolbar by default"
 msgstr "Werkbalk standaard tonen"
 
+#: ../data/evince.schemas.in.h:5
+msgid ""
+"Sidebar is the side item that contains the Index and Thumbnail lists. The "
+"default size sets the sidebar's width in pixels based from the side of the "
+"window. Any integer will be accepted. The sidebar will never shrink smaller "
+"than the size of the text required to display Thumbnails or Index. Large "
+"values will cause the sidebar to take up as much of the page display area as "
+"possible relative to the window's size."
+msgstr ""
+
+#: ../data/evince.schemas.in.h:6
+msgid ""
+"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+"boolean options, true makes sidebar visible by default while false makes "
+"sidebar not visible by default"
+msgstr "De zijbalk is het gedeelte van het scherm dat de index- en miniaturenlijst bevat. Er zijn twee boleese opties: bij true is de zijbalk standaard zichtbaar, en bij false is de zijbalk standaard niet zichtbaar."
+
 #: ../data/evince.schemas.in.h:7
-msgid "Show toolbar by default."
-msgstr "De werkbalk standaard weergeven."
+msgid ""
+"Statusbar is the standard bottom bar that display additional information "
+"about links and other actions. Two boolean options, true makes the statusbar "
+"visible by default while false makes sidebar not visible by default."
+msgstr ""
 
 #: ../data/evince.schemas.in.h:8
-msgid "The default sidebar size."
-msgstr "De standaardgrootte van de zijbalk."
+msgid ""
+"Toolbar is the top bar that contains navigation and zoom controls. Two "
+"boolean options, true makes toolbar visible by default while false makes "
+"toolbar not visible by default."
+msgstr ""
+
+#. this is EOF
+#: ../dvi/mdvi-lib/dviread.c:208
+msgid "unexpected EOF\n"
+msgstr "onverwacht EOF\n"
+
+#: ../dvi/mdvi-lib/dviread.c:429
+#, c-format
+msgid "could not load font `%s'\n"
+msgstr "kon lettertype `%s' niet laden\n"
+
+#: ../dvi/mdvi-lib/dviread.c:483
+#, c-format
+msgid "could not reload `%s'\n"
+msgstr "kon `%s' niet herladen\n"
+
+#: ../dvi/mdvi-lib/dviread.c:710
+#, c-format
+msgid "%s: unsupported DVI format (version %u)\n"
+msgstr "%s: niet ondersteund DVI-formaat (versie %u)\n"
+
+#: ../dvi/mdvi-lib/dviread.c:870
+msgid "no pages selected\n"
+msgstr "geen pagina's geselecteerd\n"
+
+#: ../dvi/mdvi-lib/dviread.c:903
+#, c-format
+msgid "%s: File corrupted, or not a DVI file\n"
+msgstr "%s: Bestand beschadigd, of geen DVI-bestand\n"
+
+#: ../dvi/mdvi-lib/dviread.c:984
+#, c-format
+msgid "%s: vf macro had errors\n"
+msgstr "%s: vf-macro bevatte fouten\n"
+
+#: ../dvi/mdvi-lib/dviread.c:987
+#, c-format
+msgid "%s: stack not empty after vf macro\n"
+msgstr "%s: stapel niet leeg na vf-macro\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1012
+#, c-format
+msgid "%s: could not reopen file (%s)\n"
+msgstr "%s: kon bestand (%s) niet heropenen.\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1029
+#, c-format
+msgid "%s: page %d out of range\n"
+msgstr "%s: pagina %d buiten bereik\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1036
+#, c-format
+msgid "%s: bad offset at page %d\n"
+msgstr "%s: foutieve verschuiving op pagina %d\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1099
+msgid "stack not empty at end of page\n"
+msgstr "stapel niet leeg op het einde van de pagina\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1286
+msgid "no default font set yet\n"
+msgstr "nog geen standaard lettertype ingesteld\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1296
+#, c-format
+msgid "requested character %d does not exist in `%s'\n"
+msgstr "het gevraagde teken %d bestaat niet in `%s'\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1369
+msgid "enlarging stack\n"
+msgstr "stapel vergroten\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1387
+msgid "stack underflow\n"
+msgstr ""
+
+# andere vertaling voor defined.
+#: ../dvi/mdvi-lib/dviread.c:1501 ../dvi/mdvi-lib/dviread.c:1523
+#, c-format
+msgid "font %d is not defined\n"
+msgstr "lettertype %d is niet gedefinieerd\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1563
+#, c-format
+msgid "font %d is not defined in postamble\n"
+msgstr "lettertype %d is niet gedefinieerd in postamble\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1575
+#, c-format
+msgid "unexpected opcode %d\n"
+msgstr "onverwachte opcode %d\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1581
+#, c-format
+msgid "undefined opcode %d\n"
+msgstr "ongedefinieerde opcode %d\n"
+
+#: ../dvi/mdvi-lib/font.c:464
+#, c-format
+msgid "%s: no fonts defined\n"
+msgstr "%s: geen lettertypes gedefinieerd\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:589
+#, c-format
+msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+msgstr "%s: %d: [%s] gevraagde tekenset `%s' komt niet overeen met vector `%s'\n"
+
+# vertaling voor fontmap
+#: ../dvi/mdvi-lib/fontmap.c:750
+#, c-format
+msgid "%s: could not load fontmap\n"
+msgstr "%s: kon fontmap niet laden\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:764
+#, c-format
+msgid "%s: could not set as default encoding\n"
+msgstr "%s: kon niet instellen als standaard tekenset\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:843
+#, c-format
+msgid "encoding vector `%s' is in use\n"
+msgstr "tekenset vector `%s' is in gebruik\n"
+
+#: ../dvi/mdvi-lib/gf.c:112
+#, c-format
+msgid "GF: invalid opcode %d in character %d\n"
+msgstr "GF: ongeldige opcode %d in teken %d\n"
+
+#: ../dvi/mdvi-lib/gf.c:210
+#, c-format
+msgid "(gf) Character %d: invalid opcode %d\n"
+msgstr "(gf) Teken %d: ongeldige opcode %d\n"
+
+#: ../dvi/mdvi-lib/gf.c:226
+#, c-format
+msgid "(gf) character %d has an incorrect bounding box\n"
+msgstr "(gf) teken %d heeft een onjuiste bounding box\n"
+
+#: ../dvi/mdvi-lib/gf.c:289
+#, c-format
+msgid "%s: bad checksum (expected %u, found %u)\n"
+msgstr "%s: foutieve checksum (verwachtte %u, vond %u)\n"
+
+#: ../dvi/mdvi-lib/gf.c:325
+#, c-format
+msgid "%s: junk in postamble\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/gf.c:362
+#, c-format
+msgid "%s: File corrupted, or not a GF file\n"
+msgstr "%s: Bestand beschadigd, of geen GF-bestand\n"
+
+#: ../dvi/mdvi-lib/pagesel.c:211
+#, c-format
+msgid "invalid page specification `%s'\n"
+msgstr "ongeldige pagina-opgave `%s'\n"
+
+#: ../dvi/mdvi-lib/pagesel.c:231
+msgid "garbage after DVI page specification ignored\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/pagesel.c:259
+msgid "more than 10 counters in page specification\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/pagesel.c:261
+msgid "garbage after TeX page specification ignored\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/paper.c:103 ../dvi/mdvi-lib/paper.c:110
+msgid "custom"
+msgstr "aangepast"
+
+#: ../dvi/mdvi-lib/pk.c:309
+msgid "Bad PK file: More bits than required\n"
+msgstr "Foutief PK-bestand: meer bits dan nodig\n"
+
+#: ../dvi/mdvi-lib/pk.c:362
+#, c-format
+msgid "%s: checksum mismatch (expected %u, got %u)\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/pk.c:419
+#, c-format
+msgid "%s: unexpected preamble\n"
+msgstr "%s: onverwachte preamble\n"
+
+#: ../dvi/mdvi-lib/pk.c:502
+#, c-format
+msgid "%s: unexpected end of file (no postamble)\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/pk.c:508
+msgid "invalid PK file! (junk in postamble)\n"
+msgstr "ongeldig PK-bestand! (troep in postamble)\n"
+
+#: ../dvi/mdvi-lib/pk.c:525
+#, c-format
+msgid "%s: File corrupted, or not a PK file\n"
+msgstr "%s: Bestand beschadigd, of geen PK-bestand\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:150
+#, c-format
+msgid "%s: malformed value for key `%s'\n"
+msgstr "%s: misvormde waarde voor sleutel `%s'\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:161
+#, c-format
+msgid "%s: unknown key `%s' ignored\n"
+msgstr "%s: onbekende sleutel `%s' genegeerd\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:166
+#, c-format
+msgid "%s: no argument for key `%s', using defaults\n"
+msgstr "%s: geen argument voor sleutel `%s', gebruik standaard\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:170
+#, c-format
+msgid "%s: argument `%s' ignored for key `%s'\n"
+msgstr "%s: argument `%s' genegeerd voor sleutel `%s'\n"
+
+#: ../dvi/mdvi-lib/special.c:242
+#, c-format
+msgid "%s: tried to pop top level layer\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/t1.c:182
+msgid "(t1) failed to reset device resolution\n"
+msgstr "(t1) apparaatresolute opnieuw instellen mislukt\n"
+
+#: ../dvi/mdvi-lib/t1.c:210
+#, c-format
+msgid "%s: could not encode font\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/t1.c:448
+#, c-format
+msgid "(t1) unsupported bitmap pad size %d\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tfm.c:177
+#, c-format
+msgid "%s: Checksum mismatch (got %u, expected %u)\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tfmfile.c:90
+#, c-format
+msgid "%s: Error reading AFM data\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tfmfile.c:180
+#, c-format
+msgid "Warning: TFM file `%s' has suspicious size\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tfmfile.c:230 ../dvi/mdvi-lib/tfmfile.c:511
+#, c-format
+msgid "%s: font coding scheme truncated to 40 bytes\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tfmfile.c:290 ../dvi/mdvi-lib/tfmfile.c:589
+#, c-format
+msgid "%s: File corrupted, or not a TFM file\n"
+msgstr "%s: Bestand beschadigd, of geen TFM bestand\n"
+
+#: ../dvi/mdvi-lib/tt.c:150
+#, c-format
+msgid "(tt) %s: could not load face: %s\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:158
+#, c-format
+msgid "(tt) %s: could not create face: %s\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:167
+#, c-format
+msgid "(tt) %s: could not create glyph: %s\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:200
+#, c-format
+msgid "(tt) %s: no acceptable map found, using #0\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:213
+#, c-format
+msgid "(tt) %s: could not set resolution: %s\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:220
+#, c-format
+msgid "(tt) %s: could not set point size: %s\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:239
+#, c-format
+msgid "(tt) %s: could not load PS name table\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:264
+#, c-format
+msgid "%s: no encoding vector found, expect bad output\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/tt.c:324
+#, c-format
+msgid "(tt) %s: no font metric data\n"
+msgstr ""
+
+# vertaling...
+#: ../dvi/mdvi-lib/util.c:148
+msgid "Crashing"
+msgstr "Crashen"
+
+#: ../dvi/mdvi-lib/util.c:158
+#, c-format
+msgid "%s: Error: "
+msgstr "%s: Fout: "
+
+#: ../dvi/mdvi-lib/util.c:165
+msgid "Error"
+msgstr "Fout"
+
+#: ../dvi/mdvi-lib/util.c:174
+#, c-format
+msgid "%s: Warning: "
+msgstr "%s: Waarschuwing: "
+
+#: ../dvi/mdvi-lib/util.c:181
+msgid "Warning"
+msgstr "Waarschuwing"
+
+# Ernstig
+#: ../dvi/mdvi-lib/util.c:190
+#, c-format
+msgid "%s: Fatal: "
+msgstr "%s: Fataal: "
+
+# ernstig
+#: ../dvi/mdvi-lib/util.c:197
+msgid "Fatal"
+msgstr "Fataal"
+
+#: ../dvi/mdvi-lib/util.c:211
+#, c-format
+msgid "out of memory allocating %u bytes\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/util.c:221
+msgid "attempted to reallocate with zero size\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/util.c:224
+#, c-format
+msgid "failed to reallocate %u bytes\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/util.c:233
+msgid "attempted to callocate 0 members\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/util.c:235
+#, c-format
+msgid "attempted to callocate %u members with size 0\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/util.c:239
+#, c-format
+msgid "failed to allocate %ux%u bytes\n"
+msgstr "alloceren van %ux%u bytes is mislukt\n"
+
+#: ../dvi/mdvi-lib/util.c:247
+msgid "attempted to free NULL pointer\n"
+msgstr "gepoogd een NULL pointer vrij te maken\n"
+
+#: ../dvi/mdvi-lib/vf.c:81
+#, c-format
+msgid "%s: Checksum mismatch (expected %u, got %u)\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/vf.c:129
+#, c-format
+msgid "(vf) %s: could not load font `%s'\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/vf.c:179
+#, c-format
+msgid "(vf) %s: character %d redefined\n"
+msgstr ""
+
+#: ../dvi/mdvi-lib/vf.c:202
+#, c-format
+msgid "(vf) %s: no postamble\n"
+msgstr "(vf) %s: geen postamble\n"
+
+#: ../dvi/mdvi-lib/vf.c:228
+#, c-format
+msgid "%s: File corrupted, or not a VF file.\n"
+msgstr "%s: Bestand beschadigd, of geen VF-bestand.\n"
 
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
@@ -147,43 +563,43 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10x14"
 
-#: ../ps/ps-document.c:145
+#: ../ps/ps-document.c:140
 msgid "No document loaded."
 msgstr "Geen document geladen"
 
-#: ../ps/ps-document.c:682
+#: ../ps/ps-document.c:638
 msgid "Broken pipe."
 msgstr "Gebroken pijp."
 
-#: ../ps/ps-document.c:869
+#: ../ps/ps-document.c:825
 msgid "Interpreter failed."
 msgstr "Analyse is mislukt."
 
 #. report error
-#: ../ps/ps-document.c:991
+#: ../ps/ps-document.c:947
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Fout bij het decomprimeren van %s:\n"
 
-#: ../ps/ps-document.c:1108
+#: ../ps/ps-document.c:1064
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Kan bestand %s niet openen.\n"
 
-#: ../ps/ps-document.c:1110
+#: ../ps/ps-document.c:1066
 msgid "File is not readable."
 msgstr "Bestand is onleesbaar"
 
-#: ../ps/ps-document.c:1130
+#: ../ps/ps-document.c:1084
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Fout bij het analyseren van bestand %s\n"
 
-#: ../ps/ps-document.c:1133
+#: ../ps/ps-document.c:1087
 msgid "The file is not a PostScript document."
 msgstr "Het bestand is geen PostScript-document"
 
-#: ../ps/ps-document.c:1145
+#: ../ps/ps-document.c:1099
 msgid "Document loaded."
 msgstr "Document geladen."
 
@@ -247,7 +663,7 @@ msgstr "Alle documenten"
 msgid "PostScript Documents"
 msgstr "PostScript documenten"
 
-#: ../shell/ev-application.c:166 ../shell/ev-window.c:974
+#: ../shell/ev-application.c:166 ../shell/ev-window.c:892
 msgid "PDF Documents"
 msgstr "PDF-documenten"
 
@@ -263,17 +679,21 @@ msgstr "Afbeeldingen"
 msgid "Djvu Documents"
 msgstr "Djvu-documenten"
 
-#: ../shell/ev-application.c:190 ../shell/ev-window.c:979
+#: ../shell/ev-application.c:190 ../shell/ev-window.c:897
 msgid "All Files"
 msgstr "Alle bestanden"
+
+# misschien beter: uit (ipv van): pagina 1 uit 5
+#: ../shell/ev-page-action.c:106
+#, c-format
+msgid "(%d of %d)"
+msgstr "(%d uit %d)"
 
 #: ../shell/ev-password-view.c:111
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
-msgstr ""
-"Het document is beveiligd en kan alleen worden gelezen door het juiste "
-"wachtwoord te geven."
+msgstr "Het document is beveiligd en kan alleen gelezen worden door het juiste wachtwoord te geven."
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
@@ -310,75 +730,83 @@ msgstr ""
 msgid "Incorrect password"
 msgstr "Onjuist wachtwoord"
 
-#: ../shell/ev-sidebar-links.c:196
+#: ../shell/ev-sidebar-links.c:215
 msgid "Loading..."
 msgstr "Aan het laden..."
 
-#: ../shell/ev-view.c:806
+#: ../shell/ev-sidebar-links.c:509
+msgid "Index"
+msgstr "Index"
+
+#: ../shell/ev-sidebar-thumbnails.c:352
+msgid "Thumbnails"
+msgstr "Miniaturen"
+
+#: ../shell/ev-view.c:802
 #, c-format
 msgid "Go to page %s"
 msgstr "Ga naar pagina %s"
 
 # overeenkomsten/gevonden/maal/keer gevonden
-#. g_mutex_unlock (EV_DOC_MUTEX);
+#. ev_document_doc_mutex_unlock ();
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:1356
+#: ../shell/ev-view.c:1352
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d keer gevonden op deze pagina"
 msgstr[1] "%d keer gevonden op deze pagina"
 
-#: ../shell/ev-view.c:1368
+#: ../shell/ev-view.c:1364
 msgid "Not found"
 msgstr "Niet gevonden"
 
-#: ../shell/ev-view.c:1370
+#: ../shell/ev-view.c:1366
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "Nog %3d%% te doorzoeken"
 
 # niet in staat/kon
-#: ../shell/ev-window.c:394
+#: ../shell/ev-window.c:391
 msgid "Unable to open document"
 msgstr "Kon het document niet openen"
 
 # viewer is ook nederlands
-#: ../shell/ev-window.c:480
+#: ../shell/ev-window.c:439
 msgid "Document Viewer - Password Required"
 msgstr "Document-viewer - Wachtwoord vereist"
 
-#: ../shell/ev-window.c:482
+#: ../shell/ev-window.c:441
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Wachtwoord vereist"
 
 # vrij vertaald
-#: ../shell/ev-window.c:778
+#: ../shell/ev-window.c:696
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "MIME-type '%s' niet bekend"
 
-#: ../shell/ev-window.c:945
+#: ../shell/ev-window.c:863
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Het bestand kon niet worden opgeslagen als \"%s\"."
 
-#: ../shell/ev-window.c:966
+#: ../shell/ev-window.c:884
 msgid "Save a Copy"
 msgstr "Een kopie opslaan"
 
-#: ../shell/ev-window.c:1048
+#: ../shell/ev-window.c:966
 msgid "Print"
 msgstr "Afdrukken"
 
-#: ../shell/ev-window.c:1071
+#: ../shell/ev-window.c:989
 msgid "Printing is not supported on this printer."
 msgstr "Afdrukken is niet ondersteund met deze printer."
 
-#: ../shell/ev-window.c:1074
+#: ../shell/ev-window.c:992
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -388,32 +816,32 @@ msgstr ""
 "Dit programma heeft een stuurprogramma voor een PostScript-printer nodig."
 
 # beschikbaar zijn/werken
-#: ../shell/ev-window.c:1126
+#: ../shell/ev-window.c:1044
 msgid "The \"Find\" feature will not work with this document"
 msgstr "De zoekmogelijkheid zal niet in dit document werken"
 
 # vrij vertaald
-#: ../shell/ev-window.c:1128
+#: ../shell/ev-window.c:1046
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Zoeken naar tekst is alleen mogelijk in PDF documenten."
 
 # schermvullend
 #. Toolbar-only
-#: ../shell/ev-window.c:1352 ../shell/ev-window.c:2170
+#: ../shell/ev-window.c:1270 ../shell/ev-window.c:2096
 msgid "Leave Fullscreen"
 msgstr "Volledig scherm verlaten"
 
 # geschreven door: velen
-#: ../shell/ev-window.c:1762
+#: ../shell/ev-window.c:1687
 msgid "Many..."
 msgstr "Velen..."
 
 # gedocumenteerd door: een kleiner aantal/niet zo veel
-#: ../shell/ev-window.c:1767
+#: ../shell/ev-window.c:1692
 msgid "Not so many..."
 msgstr "Niet zo veel..."
 
-#: ../shell/ev-window.c:1772
+#: ../shell/ev-window.c:1697
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -425,7 +853,7 @@ msgstr ""
 "door de Free Software Foundation; ofwel versie 2 van deze licentie of\n"
 "(zo u wilt) een latere versie.\n"
 
-#: ../shell/ev-window.c:1776
+#: ../shell/ev-window.c:1701
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -437,7 +865,7 @@ msgstr ""
 "van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL.  Zie de\n"
 "GNU General Public License voor meer details.\n"
 
-#: ../shell/ev-window.c:1780
+#: ../shell/ev-window.c:1705
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -448,294 +876,298 @@ msgstr ""
 "Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA 02111-1307  USA\n"
 
-#: ../shell/ev-window.c:1802 ../shell/main.c:83
+#: ../shell/ev-window.c:1727 ../shell/main.c:83
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:1805
+#: ../shell/ev-window.c:1730
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 De Evince auteurs"
 
-#: ../shell/ev-window.c:1808
+#: ../shell/ev-window.c:1733
 msgid "PostScript and PDF File Viewer."
 msgstr "PostScript en PDF bestands-viewer."
 
-#: ../shell/ev-window.c:1811
+#: ../shell/ev-window.c:1736
 msgid "translator-credits"
 msgstr ""
 "Tino Meinen\n"
 "Kijk voor meer info op http://nl.gnome.org/"
 
-#: ../shell/ev-window.c:2098
+#: ../shell/ev-window.c:2024
 msgid "_File"
 msgstr "_Bestand"
 
-#: ../shell/ev-window.c:2099
+#: ../shell/ev-window.c:2025
 msgid "_Edit"
 msgstr "Be_werken"
 
-#: ../shell/ev-window.c:2100
+#: ../shell/ev-window.c:2026
 msgid "_View"
 msgstr "Beel_d"
 
 # in overeenstemming met Nautilus: Ga naar
-#: ../shell/ev-window.c:2101
+#: ../shell/ev-window.c:2027
 msgid "_Go"
 msgstr "_Ga naar"
 
-#: ../shell/ev-window.c:2102
+#: ../shell/ev-window.c:2028
 msgid "_Help"
 msgstr "_Hulp"
 
-#: ../shell/ev-window.c:2106
+#: ../shell/ev-window.c:2032
 msgid "Open an existing document"
 msgstr "Een bestaand document openen"
 
-#: ../shell/ev-window.c:2108
+#: ../shell/ev-window.c:2034
 msgid "_Save a Copy..."
 msgstr "Een kopie op_slaan..."
 
-#: ../shell/ev-window.c:2109
+#: ../shell/ev-window.c:2035
 msgid "Save the current document with a new filename"
 msgstr "Het huidige document onder een nieuwe naam opslaan"
 
-#: ../shell/ev-window.c:2111
+#: ../shell/ev-window.c:2037
 msgid "Print..."
 msgstr "Afdrukken..."
 
-#: ../shell/ev-window.c:2112
+#: ../shell/ev-window.c:2038
 msgid "Print this document"
 msgstr "Dit document afdrukken"
 
-#: ../shell/ev-window.c:2115
+#: ../shell/ev-window.c:2041
 msgid "Close this window"
 msgstr "Dit venster sluiten"
 
-#: ../shell/ev-window.c:2120
+#: ../shell/ev-window.c:2046
 msgid "Copy text from the document"
 msgstr "Tekst uit het document kopiëren"
 
-#: ../shell/ev-window.c:2122
+#: ../shell/ev-window.c:2048
 msgid "Select _All"
 msgstr "_Alles selecteren"
 
-#: ../shell/ev-window.c:2123
+#: ../shell/ev-window.c:2049
 msgid "Select the entire page"
 msgstr "De gehele pagina bekijken"
 
-#: ../shell/ev-window.c:2126
+#: ../shell/ev-window.c:2052
 msgid "Find a word or phrase in the document"
 msgstr "Een woord of frase in het document zoeken"
 
 # volgende zoeken/volgende
 # Ik heb het hier kort gehouden, en het is ws net zo duidelijk
-#: ../shell/ev-window.c:2128
+#: ../shell/ev-window.c:2054
 msgid "Find Ne_xt"
 msgstr "V_olgende"
 
 # vrij vertaald
 # het volgende voorkomen van het woord of frase zoeken
 # is niet erg duidelijk
-#: ../shell/ev-window.c:2129
+#: ../shell/ev-window.c:2055
 msgid "Find next occurrence of the word or phrase"
 msgstr "Volgende zoekresultaat tonen"
 
-#: ../shell/ev-window.c:2134
+#: ../shell/ev-window.c:2060
 msgid "Enlarge the document"
 msgstr "Het document vergroten"
 
-#: ../shell/ev-window.c:2137
+#: ../shell/ev-window.c:2063
 msgid "Shrink the document"
 msgstr "Het document verkleinen"
 
-#: ../shell/ev-window.c:2140
+#: ../shell/ev-window.c:2066
 msgid "Reset the zoom level to the default value"
 msgstr "Het zoomniveau instellen op de standaardwaarde"
 
-#: ../shell/ev-window.c:2142
+#: ../shell/ev-window.c:2068
 msgid "_Reload"
 msgstr "He_rladen"
 
-#: ../shell/ev-window.c:2143
+#: ../shell/ev-window.c:2069
 msgid "Reload the document"
 msgstr "Het document herladen"
 
 #. Go menu
-#: ../shell/ev-window.c:2147
+#: ../shell/ev-window.c:2073
 msgid "_Previous Page"
 msgstr "_Vorige pagina"
 
-#: ../shell/ev-window.c:2148
+#: ../shell/ev-window.c:2074
 msgid "Go to the previous page"
 msgstr "Ga naar de vorige pagina"
 
-#: ../shell/ev-window.c:2150
+#: ../shell/ev-window.c:2076
 msgid "_Next Page"
 msgstr "_Volgende pagina"
 
-#: ../shell/ev-window.c:2151
+#: ../shell/ev-window.c:2077
 msgid "Go to the next page"
 msgstr "Ga naar de volgende pagina"
 
-#: ../shell/ev-window.c:2153
+#: ../shell/ev-window.c:2079
 msgid "_First Page"
 msgstr "_Eerste pagina"
 
-#: ../shell/ev-window.c:2154
+#: ../shell/ev-window.c:2080
 msgid "Go to the first page"
 msgstr "Ga naar de eerste pagina"
 
-#: ../shell/ev-window.c:2156
+#: ../shell/ev-window.c:2082
 msgid "_Last Page"
 msgstr "_Laatste pagina"
 
-#: ../shell/ev-window.c:2157
+#: ../shell/ev-window.c:2083
 msgid "Go to the last page"
 msgstr "Ga naar de laatste pagina"
 
 #. Help menu
-#: ../shell/ev-window.c:2161
+#: ../shell/ev-window.c:2087
 msgid "_Contents"
 msgstr "_Inhoud"
 
 # vrij vertaald
-#: ../shell/ev-window.c:2162
+#: ../shell/ev-window.c:2088
 msgid "Display help for the viewer application"
 msgstr "De hulp bij deze viewer weergeven"
 
-#: ../shell/ev-window.c:2165
+#: ../shell/ev-window.c:2091
 msgid "_About"
 msgstr "In_fo"
 
 # weergeven/tonen/voorstellen
-#: ../shell/ev-window.c:2166
+#: ../shell/ev-window.c:2092
 msgid "Display credits for the document viewer creators"
 msgstr "De makers van de documentviewer tonen"
 
-#: ../shell/ev-window.c:2171
+#: ../shell/ev-window.c:2097
 msgid "Leave fullscreen mode"
 msgstr "Schermvullende modus verlaten"
 
-#: ../shell/ev-window.c:2174
+#: ../shell/ev-window.c:2100
 msgid "Selection Caret"
 msgstr "Selectiecursor"
 
 #. View Menu
-#: ../shell/ev-window.c:2181
+#: ../shell/ev-window.c:2107
 msgid "_Toolbar"
 msgstr "_Werkbalk"
 
-#: ../shell/ev-window.c:2182
+#: ../shell/ev-window.c:2108
 msgid "Show or hide the toolbar"
 msgstr "De werkbalk tonen of verbergen"
 
-#: ../shell/ev-window.c:2184
+#: ../shell/ev-window.c:2110
 msgid "_Statusbar"
 msgstr "_Statusbalk"
 
-#: ../shell/ev-window.c:2185
+#: ../shell/ev-window.c:2111
 msgid "Show or hide the statusbar"
 msgstr "De statusbalk tonen of verbergen"
 
-#: ../shell/ev-window.c:2187
+#: ../shell/ev-window.c:2113
 msgid "Side _pane"
 msgstr "_Zijpaneel"
 
-#: ../shell/ev-window.c:2188
+#: ../shell/ev-window.c:2114
 msgid "Show or hide the side pane"
 msgstr "Het zijpaneel tonen of verbergen"
 
 # schermvullend
-#: ../shell/ev-window.c:2190
+#: ../shell/ev-window.c:2116
 msgid "_Fullscreen"
 msgstr "_Volledig scherm"
 
-#: ../shell/ev-window.c:2191
+#: ../shell/ev-window.c:2117
 msgid "Expand the window to fill the screen"
 msgstr "Het venster schermvullend maken"
 
 # was eerst _best passend, maar gewoon passend is beter.
-#: ../shell/ev-window.c:2193
+#: ../shell/ev-window.c:2119
 msgid "_Best Fit"
 msgstr "_Passend"
 
 # de pagina laten passen in het venster
-#: ../shell/ev-window.c:2194
+#: ../shell/ev-window.c:2120
 msgid "Make the current document fill the window"
 msgstr "Het huidige document passend weergeven in het venster"
 
-#: ../shell/ev-window.c:2196
+#: ../shell/ev-window.c:2122
 msgid "Fit Page _Width"
 msgstr "Pagina_breed passend"
 
 # de breedte van de pagina laten passen in het venster
-#: ../shell/ev-window.c:2197
+#: ../shell/ev-window.c:2123
 msgid "Make the current document fill the window width"
 msgstr "Het huidige document passend maken op de breedte van het venster"
 
 # per pagina/enkel/alleenstaand
-#: ../shell/ev-window.c:2202
+#: ../shell/ev-window.c:2128
 msgid "Single"
 msgstr "Enkel"
 
-#: ../shell/ev-window.c:2203
+#: ../shell/ev-window.c:2129
 msgid "Show the document one page at a time"
 msgstr "Het document pagina voor pagina tonen"
 
-#: ../shell/ev-window.c:2205
+#: ../shell/ev-window.c:2131
 msgid "Multi"
 msgstr "Multi"
 
-#: ../shell/ev-window.c:2206
+#: ../shell/ev-window.c:2132
 msgid "Show the full document at once"
 msgstr "Het gehele document in één keer tonen"
 
-#: ../shell/ev-window.c:2235
+#: ../shell/ev-window.c:2161
 msgid "Page"
 msgstr "Pagina"
 
-#: ../shell/ev-window.c:2236
+#: ../shell/ev-window.c:2162
 msgid "Select Page"
 msgstr "Pagina selecteren"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2249
+#: ../shell/ev-window.c:2175
 msgid "Previous"
 msgstr "Vorige"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2255
+#: ../shell/ev-window.c:2181
 msgid "Next"
 msgstr "Volgende"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2259
+#: ../shell/ev-window.c:2185
 msgid "Zoom In"
 msgstr "Inzoomen"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2264
+#: ../shell/ev-window.c:2190
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2269
+#: ../shell/ev-window.c:2195
 msgid "Best Fit"
 msgstr "Passend"
 
 # knoptekst?
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2274
+#: ../shell/ev-window.c:2200
 msgid "Fit Width"
 msgstr "Breedte"
 
-#: ../shell/ev-window.c:2487
-msgid "Index"
-msgstr "Index"
+#~ msgid "Show sidebar by default."
+#~ msgstr "Standaard de zijbalk tonen."
 
-#: ../shell/ev-window.c:2494
-msgid "Thumbnails"
-msgstr "Miniaturen"
+#~ msgid "Show statusbar by default."
+#~ msgstr "De statusbalk standaard weergeven."
+
+#~ msgid "Show toolbar by default."
+#~ msgstr "De werkbalk standaard weergeven."
+
+#~ msgid "The default sidebar size."
+#~ msgstr "De standaardgrootte van de zijbalk."
 
 #~ msgid "PostScript and PDF Documents"
 #~ msgstr "PostScript en PDF documenten"
@@ -745,10 +1177,6 @@ msgstr "Miniaturen"
 
 #~ msgid "File is not a valid PostScript document."
 #~ msgstr "Bestand is geen geldig PostScript-document"
-
-# misschien beter: uit (ipv van): pagina 1 uit 5
-#~ msgid "of %d"
-#~ msgstr "uit %d"
 
 # uitzetten?
 #~ msgid "Exit Fullscreen"
@@ -1093,10 +1521,6 @@ msgstr "Miniaturen"
 #~ msgstr ""
 #~ "Het PDF-bestand is beschadigd of het is geen PDF-bestand. Het kon niet "
 #~ "worden gerepareerd"
-
-# bezig met...
-#~ msgid "Printing"
-#~ msgstr "Afdrukken"
 
 #~ msgid "Printing: Preparing."
 #~ msgstr "Afdrukken: voorbereiding."
