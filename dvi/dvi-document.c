@@ -92,10 +92,10 @@ dvi_document_load (EvDocument  *document,
     mdvi_pixbuf_device_init (&dvi_document->context->device);
 
     dvi_document->base_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv 
-		+ 2 * unit2pix(dvi_document->params->dpi, MDVI_VMARGIN) / dvi_document->params->hshrink;
+		+ 2 * unit2pix(dvi_document->params->dpi, MDVI_HMARGIN) / dvi_document->params->hshrink;
 		
     dvi_document->base_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv 
-	        + 2 * unit2pix(dvi_document->params->dpi, MDVI_VMARGIN) / dvi_document->params->vshrink;
+	        + 2 * unit2pix(dvi_document->params->vdpi, MDVI_VMARGIN) / dvi_document->params->vshrink;
 
     dvi_context_mutex = g_mutex_new ();
 
@@ -272,7 +272,7 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 
 	mdvi_set_shrink (dvi_document->context, 
 			  (int)dvi_document->base_width * dvi_document->params->hshrink / thumb_width,
-			  (int)dvi_document->base_width * dvi_document->params->vshrink / thumb_height);
+			  (int)dvi_document->base_height * dvi_document->params->vshrink / thumb_height);
 
 	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
 	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
@@ -328,7 +328,7 @@ dvi_document_init_params (DviDocument *dvi_document)
 	dvi_document->params->hdrift   = 0;
 	dvi_document->params->vdrift   = 0;
 	dvi_document->params->hshrink  =  MDVI_SHRINK_FROM_DPI(dvi_document->params->dpi);
-	dvi_document->params->vshrink  =  MDVI_SHRINK_FROM_DPI(dvi_document->params->dpi);
+	dvi_document->params->vshrink  =  MDVI_SHRINK_FROM_DPI(dvi_document->params->vdpi);
 	dvi_document->params->orientation = MDVI_ORIENT_TBLR;
 
 	dvi_document->spec = NULL;
