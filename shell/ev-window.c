@@ -144,10 +144,8 @@ static void     ev_window_set_page_mode           (EvWindow         *window,
 static gboolean start_loading_document            (EvWindow         *ev_window,
 						   EvDocument       *document,
 						   const char       *uri);
-static void     ev_window_set_sizing_mode         (EvWindow         *ev_window,
-						   EvSizingMode      sizing_mode,
-						   gboolean          first_time);
-
+static void     ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
+				 		  EvWindow   *ev_window);
 static void 	ev_window_add_recent (EvWindow *window, const char *filename);
 static void	ev_window_fullscreen (EvWindow *window);
 
@@ -325,9 +323,9 @@ static void
 ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_BEST_FIT, FALSE);
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_BEST_FIT);
 	} else {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	}
 	update_action_sensitivity (ev_window);
 }
@@ -336,9 +334,9 @@ static void
 ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 {
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_FIT_WIDTH, FALSE);
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FIT_WIDTH);
 	} else {
-		ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	}
 	update_action_sensitivity (ev_window);
 }
@@ -1514,7 +1512,7 @@ ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
+	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	ev_view_zoom_in (EV_VIEW (ev_window->priv->view));
 	update_action_sensitivity (ev_window);
 }
@@ -1524,7 +1522,7 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_window_set_sizing_mode (ev_window, EV_SIZING_FREE, FALSE);
+	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	ev_view_zoom_out (EV_VIEW (ev_window->priv->view));
 	update_action_sensitivity (ev_window);
 }
@@ -1664,37 +1662,29 @@ size_allocate_cb (GtkWidget     *scrolled_window,
 	update_view_size (window);
 }
 
-static void
-ev_window_set_sizing_mode (EvWindow     *ev_window,
-			   EvSizingMode  sizing_mode,
-			   gboolean      first_time)
+static void     
+ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
+		 		  EvWindow   *ev_window)
 {
 	GtkWidget *scrolled_window;
+	EvSizingMode sizing_mode;
 
-	/* Short circuit the call if it's not the first time we call this */
-	if (!first_time) {
-		EvSizingMode old_sizing_mode;
-
-		g_object_get (ev_window->priv->view,
-			      "sizing-mode", &old_sizing_mode,
-			      NULL);
-		if (old_sizing_mode == sizing_mode)
-			return;
-	}
+	g_object_get (ev_window->priv->view,
+		      "sizing-mode", &sizing_mode,
+		      NULL);
 
 	scrolled_window = ev_window->priv->scrolled_window;
-	g_object_set (ev_window->priv->view,
-		      "sizing-mode", sizing_mode,
-		      NULL);
+
 	g_signal_handlers_disconnect_by_func (scrolled_window, size_allocate_cb, ev_window);
 
-	update_view_size (ev_window);
+	if (sizing_mode != EV_SIZING_FREE)
+	    	update_view_size (ev_window);
 
 	switch (sizing_mode) {
 	case EV_SIZING_BEST_FIT:
 		g_object_set (G_OBJECT (scrolled_window),
 			      "hscrollbar-policy", GTK_POLICY_NEVER,
-			      "vscrollbar-policy", GTK_POLICY_NEVER,
+			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
 			      NULL);
 		g_signal_connect (scrolled_window, "size-allocate",
 				  G_CALLBACK (size_allocate_cb),
@@ -2487,6 +2477,7 @@ ev_window_init (EvWindow *ev_window)
 
 	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),
 			   ev_window->priv->view);
+
 	g_signal_connect (ev_window->priv->view,
 			  "notify::find-status",
 			  G_CALLBACK (view_find_status_changed_cb),
@@ -2494,6 +2485,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->view,
 			  "notify::status",
 			  G_CALLBACK (view_status_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->view,
+			  "notify::sizing-mode",
+			  G_CALLBACK (ev_window_sizing_mode_changed_cb),
 			  ev_window);
 
 	ev_window->priv->statusbar = gtk_statusbar_new ();
@@ -2559,6 +2554,7 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (drag_data_received_cb), NULL);
 
 	/* Set it to something random to force a change */
-	ev_window_set_sizing_mode (ev_window,  EV_SIZING_FIT_WIDTH, TRUE);
+
+        ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	update_action_sensitivity (ev_window);
 }

@@ -653,6 +653,37 @@ ev_view_unrealize (GtkWidget *widget)
 	GTK_WIDGET_CLASS (ev_view_parent_class)->unrealize (widget);
 }
 
+static gboolean
+ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
+{
+ 	EvView *view = EV_VIEW (widget); 
+
+	if ((event->state & GDK_CONTROL_MASK) != 0) {	
+
+		 ev_view_set_sizing_mode (view, EV_SIZING_FREE);	 
+
+		 if ((event->direction == GDK_SCROLL_DOWN || 
+			event->direction == GDK_SCROLL_LEFT) &&
+			ev_view_can_zoom_in (view)) {
+				ev_view_zoom_in (view);
+		 } else if (ev_view_can_zoom_out (view)) {
+				ev_view_zoom_out (view);
+		 }		 
+
+		 return TRUE;
+	}
+	
+	if ((event->state & GDK_SHIFT_MASK) != 0) {	
+		if (event->direction == GDK_SCROLL_UP)
+			event->direction = GDK_SCROLL_LEFT;
+		if (event->direction == GDK_SCROLL_DOWN)
+			event->direction = GDK_SCROLL_RIGHT;
+	}
+
+	return FALSE;
+}
+
+
 #if 0
 static guint32
 ev_gdk_color_to_rgb (const GdkColor *color)
@@ -1594,6 +1625,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->size_allocate = ev_view_size_allocate;
 	widget_class->realize = ev_view_realize;
 	widget_class->unrealize = ev_view_unrealize;
+	widget_class->scroll_event = ev_view_scroll_event;
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
@@ -2061,7 +2093,6 @@ ev_view_set_sizing_mode (EvView       *view,
 		view->sizing_mode = sizing_mode;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
-
 	g_object_notify (G_OBJECT (view), "sizing-mode");
 }
 
@@ -2156,7 +2187,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 
 	doc_width = doc_width * 2;
 	width -= (2 * (border.left + border.right) + 3 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
 	/* FIXME: We really need to calculate the overall height here, not the
 	 * page height.  We assume there's always a vertical scrollbar for
@@ -2191,7 +2222,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	compute_border (view, doc_width, doc_height, &border);
 
 	width -= (border.left + border.right + 2 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
 	/* FIXME: We really need to calculate the overall height here, not the
 	 * page height.  We assume there's always a vertical scrollbar for

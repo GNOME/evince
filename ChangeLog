@@ -1,3 +1,17 @@
+2005-04-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view.c: (ev_view_scroll_event), (ev_view_class_init),
+	(ev_view_set_sizing_mode),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous):
+	* shell/ev-window.c: (ev_window_cmd_view_best_fit),
+	(ev_window_cmd_view_page_width), (ev_window_cmd_view_zoom_in),
+	(ev_window_cmd_view_zoom_out), (ev_window_sizing_mode_changed_cb),
+	(ev_window_init):
+
+	Control + Scroll does zooming, Shift + Scroll scrolls horizontally
+	Fix for 165473 and 165472.
+
 2005-04-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* po/POTFILES.in:
