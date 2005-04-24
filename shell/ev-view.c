@@ -662,7 +662,7 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 
 		 ev_view_set_sizing_mode (view, EV_SIZING_FREE);	 
 
-		 if ((event->direction == GDK_SCROLL_DOWN || 
+		 if ((event->direction == GDK_SCROLL_UP || 
 			event->direction == GDK_SCROLL_LEFT) &&
 			ev_view_can_zoom_in (view)) {
 				ev_view_zoom_in (view);
