@@ -1693,7 +1693,7 @@ ev_view_init (EvView *view)
 {
 	GTK_WIDGET_SET_FLAGS (view, GTK_CAN_FOCUS);
 
-	view->spacing = 0;
+	view->spacing = 10;
 	view->scale = 1.0;
 	view->current_page = 0;
 	view->pressed_button = -1;
