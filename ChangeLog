@@ -1,3 +1,16 @@
+Sun Apr 24 01:07:27 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c: (find_page_at_location),
+	(get_link_at_location),
+	(ev_view_set_show_border), (ev_view_set_spacing),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous): Fix links for dual/continuous.
+	Also, add a quick fix measuring of widths.  Also, removed
+	ev_view_set_spacing and ev_view_set_show_border.
+	
+	* shell/ev-window.c: (ev_window_unfullscreen),
+	(ev_window_cmd_view_fullscreen): Don't adjust the border/spacing.
+
 2005-04-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view.c: (view_update_range_and_current_page),

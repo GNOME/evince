@@ -135,7 +135,6 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define GCONF_SIDEBAR_SIZE      "/apps/evince/sidebar_size"
 
 #define SIDEBAR_DEFAULT_SIZE    132
-#define VIEW_SPACING		10
 
 static void     ev_window_update_fullscreen_popup (EvWindow         *window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
@@ -1378,8 +1377,9 @@ ev_window_unfullscreen (EvWindow *window)
 					      (gpointer) fullscreen_motion_notify_cb,
 					      window);
 
-	ev_view_set_show_border (view, TRUE);
-	ev_view_set_spacing (view, VIEW_SPACING);	
+	g_object_set (G_OBJECT (view),
+		      "full-screen", FALSE,
+		      NULL);
 	update_chrome_visibility (window);
 }
 
@@ -1400,8 +1400,9 @@ ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 		gtk_window_unfullscreen (GTK_WINDOW (window));
 	}
 
-	ev_view_set_show_border (view, FALSE);
-	ev_view_set_spacing (view, 0);	
+	g_object_set (G_OBJECT (view),
+		      "full-screen", TRUE,
+		      NULL);
 }
 
 static gboolean
@@ -2470,7 +2471,6 @@ ev_window_init (EvWindow *ev_window)
 			ev_window->priv->scrolled_window);
 
 	ev_window->priv->view = ev_view_new ();
-	ev_view_set_spacing (EV_VIEW (ev_window->priv->view), VIEW_SPACING);	
 	ev_window->priv->password_view = ev_password_view_new ();
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",

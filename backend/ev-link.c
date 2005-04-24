@@ -346,6 +346,7 @@ ev_link_mapping_find (GList   *link_mapping,
 	int i;
 	
 	i = 0;
+
 	for (list = link_mapping; list; list = list->next) {
 		EvLinkMapping *mapping = list->data;
 

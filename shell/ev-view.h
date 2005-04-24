@@ -82,10 +82,6 @@ void		ev_view_zoom_normal	(EvView     *view);
 void		ev_view_set_size        (EvView     *view,
 					 int         width,
 					 int         height);
-void		ev_view_set_spacing	(EvView     *view,
-					 int         spacing);
-void		ev_view_set_show_border (EvView     *view,
-					 gboolean    show_border);
 
 /* Find */
 gboolean	ev_view_can_find_next	(EvView     *view);

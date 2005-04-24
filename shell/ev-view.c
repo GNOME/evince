@@ -1001,16 +1001,6 @@ ev_view_copy (EvView *ev_view)
 	g_free (text);
 }
 
-void
-ev_view_set_show_border (EvView *view, gboolean show_border)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	view->show_border = show_border;
-
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-}
-
 static void
 ev_view_primary_get_cb (GtkClipboard     *clipboard,
 			GtkSelectionData *selection_data,
@@ -1200,24 +1190,34 @@ find_page_at_location (EvView  *view,
 		       gint    *x_offset,
 		       gint    *y_offset)
 {
-	gint width, height;
+	int i;
 
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->scale,
-				&width, &height);
-
-	x -= (view->border.left + view->spacing);
-	y -= (view->border.top + view->spacing);
-
-	if ((x < 0) || (y < 0) ||
-	    (x >= width) || (y >= height)) {
-		*page = -1;
+	if (view->document == NULL)
 		return;
+
+	g_assert (page);
+	g_assert (x_offset);
+	g_assert (y_offset);
+
+	for (i = view->start_page; i <= view->end_page; i++) {
+		GdkRectangle page_area;
+		GtkBorder border;
+
+		if (! get_page_extents (view, i, &page_area, &border))
+			continue;
+
+		if ((x >= page_area.x + border.left) &&
+		    (x < page_area.x + page_area.width - border.right) &&
+		    (y >= page_area.y + border.top) &&
+		    (y < page_area.y + page_area.height - border.bottom)) {
+			*page = i;
+			*x_offset = x - (page_area.x + border.left);
+			*y_offset = y - (page_area.y + border.top);
+			return;
+		}
 	}
-	*page = view->current_page;
-	*x_offset = (gint) x;
-	*y_offset = (gint) y;
+
+	*page = -1;
 }
 
 static EvLink *
@@ -1225,17 +1225,21 @@ get_link_at_location (EvView  *view,
 		      gdouble  x,
 		      gdouble  y)
 {
-	gint page;
-	gint x_offset, y_offset;
+	gint page = -1;
+	gint x_offset = 0, y_offset = 0;
 	GList *link_mapping;
 
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+
 	if (page == -1)
 		return NULL;
 
 	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
 
-	return ev_link_mapping_find (link_mapping, x_offset /view->scale, y_offset /view->scale);
+	if (link_mapping)
+		return ev_link_mapping_find (link_mapping, x_offset / view->scale, y_offset / view->scale);
+	else
+		return NULL;
 }
 
 
@@ -1682,19 +1686,6 @@ ev_view_class_init (EvViewClass *class)
 
 	add_scroll_binding_shifted (binding_set, GDK_space, EV_SCROLL_PAGE_FORWARD, EV_SCROLL_PAGE_BACKWARD, FALSE);
 	add_scroll_binding_shifted (binding_set, GDK_BackSpace, EV_SCROLL_PAGE_BACKWARD, EV_SCROLL_PAGE_FORWARD, FALSE);
-}
-
-void
-ev_view_set_spacing (EvView     *view,
-		     int         spacing)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	view->spacing = spacing;
-
-	if (view->document) {
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	}
 }
 
 static void
@@ -2164,10 +2155,10 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	compute_border (view, doc_width, doc_height, &border);
 
 	doc_width = doc_width * 2;
-	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
+	width -= (2 * (border.left + border.right) + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
-	/* FIXME: We really need to calculat the overall height here, not the
+	/* FIXME: We really need to calculate the overall height here, not the
 	 * page height.  We assume there's always a vertical scrollbar for
 	 * now.  We need to fix this. */
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
@@ -2202,10 +2193,13 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	width -= (border.left + border.right + 2 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
+	/* FIXME: We really need to calculate the overall height here, not the
+	 * page height.  We assume there's always a vertical scrollbar for
+	 * now.  We need to fix this. */
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width - vsb_width, height, 0);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width - vsb_width, height, 0, hsb_height);
 	else
 		g_assert_not_reached ();
 
