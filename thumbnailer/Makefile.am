@@ -30,9 +30,9 @@ pixmapdir = $(pkgdatadir)
 pixmap_DATA = pdf-icon.png
 
 schema_files = \
-	evince-thumbnailer-dvi.schemas  \
-	evince-thumbnailer-djvu.schemas \
-	evince-thumbnailer.schemas
+	evince-thumbnailer-dvi.schemas.in  \
+	evince-thumbnailer-djvu.schemas.in \
+	evince-thumbnailer.schemas.in
 
 schema_DATA = evince-thumbnailer.schemas
 
