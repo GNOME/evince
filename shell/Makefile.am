@@ -43,10 +43,6 @@ libevbackendfactory_la_LIBADD += 		\
 	$(NULL)
 endif
 
-if WITH_TYPE1_FONTS
-libevbackendfactory_la_LIBADD += -lt1lib
-endif
-
 evince_SOURCES=				\
 	dummy.cc			\
 	eggfindbar.c			\

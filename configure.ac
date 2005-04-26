@@ -152,6 +152,8 @@ if test "x$enable_dvi" = "xyes"; then
     if test "x$enable_type1_fonts" = xyes; then
         AC_DEFINE([WITH_TYPE1_FONTS], [1], [Enable t1lib support in dvi.])
     fi
+else 
+    enable_type1_fonts=no
 fi
 AM_CONDITIONAL(WITH_TYPE1_FONTS, test x$enable_type1_fonts = xyes)
 
