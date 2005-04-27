@@ -1996,11 +1996,16 @@ ev_window_dispose (GObject *object)
 		priv->action_group = NULL;
 	}
 
+	if (priv->page_cache) {
+		g_signal_handlers_disconnect_by_func (priv->page_cache, page_changed_cb, window);
+		priv->page_cache = NULL;
+	}
+
 	if (priv->document) {
 		g_object_unref (priv->document);
 		priv->document = NULL;
 	}
-
+	
 	if (priv->view) {
 		g_object_unref (priv->view);
 		priv->view = NULL;

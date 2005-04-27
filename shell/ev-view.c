@@ -151,6 +151,10 @@ static void get_bounding_box_size              (EvView        *view,
 						int           *max_height);
 static void view_update_range_and_current_page (EvView        *view);
 
+static void page_changed_cb 		       (EvPageCache *page_cache, 
+						int          new_page, 
+					        EvView      *view);
+
 
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 
@@ -224,13 +228,13 @@ view_set_adjustment_values (EvView         *view,
 static void
 view_update_range_and_current_page (EvView *view)
 {
-
 	/* Presentation trumps all other modes */
 	if (view->presentation) {
 		view->start_page = view->current_page;
 		view->end_page = view->current_page;
 	} else if (view->continuous) {
 		GdkRectangle current_area, unused, page_area;
+		gint current_page;
 		gboolean found = FALSE;
 		int i;
 		
@@ -259,6 +263,7 @@ view_update_range_and_current_page (EvView *view)
 				if (! found) {
 					view->start_page = i;
 					found = TRUE;
+					
 				}
 				view->end_page = i;
 			} else if (found) {
@@ -275,6 +280,14 @@ view_update_range_and_current_page (EvView *view)
 				page_area.y += page_area.height + view->spacing;
 			}
 		}
+
+		current_page = ev_page_cache_get_current_page (view->page_cache);
+
+		if (current_page < view->start_page || current_page > view->end_page) {
+			g_signal_handlers_block_by_func (view->page_cache, page_changed_cb, view);
+			ev_page_cache_set_current_page (view->page_cache, view->start_page);
+		    	g_signal_handlers_unblock_by_func (view->page_cache, page_changed_cb, view);
+		}			
 	} else {
 		if (view->dual_page) {
 			if (view->current_page % 2 == 0) {
@@ -294,7 +307,7 @@ view_update_range_and_current_page (EvView *view)
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->start_page,
 					view->end_page,
-					view->scale);
+					view->scale);	
 }
 
 /*** Virtual function implementations ***/

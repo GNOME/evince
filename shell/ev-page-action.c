@@ -415,6 +415,7 @@ ev_page_action_dispose (GObject *object)
 	EvPageAction *page = EV_PAGE_ACTION (object);
 
 	if (page->priv->page_cache) {
+		g_signal_handlers_disconnect_matched (page->priv->page_cache, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, page_changed_cb, NULL);
 		g_object_unref (page->priv->page_cache);
 		page->priv->page_cache = NULL;
 	}

@@ -1,3 +1,12 @@
+2005-04-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-page-action.c: (ev_page_action_dispose):
+	* shell/ev-view.c: (view_update_range_and_current_page):
+	* shell/ev-window.c: (ev_window_dispose):
+	
+	Set page on scroll in continuous mode. Fixes bug 301986.
+	Also cleanup callbacks on destroy of EvWindow and EvPageAction.
+
 2005-04-26  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* configure.ac:
