@@ -19,8 +19,10 @@ struct _EvPageCache
 	int n_pages;
 	char *title;
 	char **page_labels;
-
+	
+	gboolean has_labels;
 	gboolean uniform;
+	
 	double uniform_width;
 	double uniform_height;
 
@@ -107,6 +109,7 @@ _ev_page_cache_new (EvDocument *document)
 
 	/* Assume all pages are the same size until proven otherwise */
 	page_cache->uniform = TRUE;
+	page_cache->has_labels = FALSE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 	page_cache->max_width_page_width = 0;
@@ -125,9 +128,19 @@ _ev_page_cache_new (EvDocument *document)
 	for (i = 0; i < page_cache->n_pages; i++) {
 		double page_width = 0;
 		double page_height = 0;
-
+		
 		ev_document_get_page_size (document, i, &page_width, &page_height);
-		page_cache->page_labels[i] = ev_document_get_page_label (document, i);
+
+	    	page_cache->page_labels[i] = ev_document_get_page_label (document, i);
+
+		if (!page_cache->has_labels && page_cache->page_labels[i] != NULL) {
+			gchar *expected_label;
+			
+			expected_label = g_strdup_printf ("%d", i + 1);
+			if (strcmp (expected_label, page_cache->page_labels[i]))  
+				page_cache->has_labels = TRUE;
+			g_free (expected_label);
+		}
 
 		if (page_width > page_cache->max_width_page_width) {
 			page_cache->max_width_page_width = page_width;
@@ -223,7 +236,7 @@ ev_page_cache_set_page_label (EvPageCache *page_cache,
 	g_return_val_if_fail (page_label != NULL, FALSE);
 
 	/* First, look for a literal label match */
-	for (i = 0; i < page_cache->n_pages; i ++) {
+	for (i = 0; i < page_cache->n_pages && page_cache->has_labels; i ++) {
 		if (page_cache->page_labels[i] != NULL &&
 		    ! strcmp (page_label, page_cache->page_labels[i])) {
 			ev_page_cache_set_current_page (page_cache, i);
@@ -346,6 +359,12 @@ ev_page_cache_get_page_label (EvPageCache *page_cache,
 	return g_strdup (page_cache->page_labels[page]);
 }
 
+gboolean
+ev_page_cache_has_nonnumeric_page_labels (EvPageCache *page_cache)
+{
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
+	return page_cache->has_labels;
+}
 
 gboolean
 ev_page_cache_next_page (EvPageCache *page_cache)

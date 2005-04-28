@@ -49,6 +49,7 @@ void           ev_page_cache_get_max_height_size (EvPageCache *page_cache,
 						  gint        *height);
 char          *ev_page_cache_get_page_label      (EvPageCache *page_cache,
 						  gint         page);
+gboolean       ev_page_cache_has_nonnumeric_page_labels (EvPageCache *page_cache);
 
 /* Navigation */
 gint           ev_page_cache_get_current_page    (EvPageCache *page_cache);

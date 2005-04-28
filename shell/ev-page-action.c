@@ -103,7 +103,11 @@ update_pages_label (EvPageActionWidget *proxy,
 	gint n_pages;
 
 	n_pages = page_cache ? ev_page_cache_get_n_pages (page_cache) : 0;
-	label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
+	if (ev_page_cache_has_nonnumeric_page_labels (page_cache)) {
+    	        label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
+	} else {
+    	        label_text = g_strdup_printf (_("of %d"), n_pages);
+	}
 	gtk_label_set_text (GTK_LABEL (proxy->label), label_text);
 	g_free (label_text);
 }

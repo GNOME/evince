@@ -1,5 +1,16 @@
 2005-04-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* backend/ev-page-cache.c: (_ev_page_cache_new),
+	(ev_page_cache_set_page_label),
+	(ev_page_cache_has_nonnumeric_page_labels):
+	* backend/ev-page-cache.h:
+	* shell/ev-page-action.c: (update_pages_label):
+	
+	If all page labels are numeric, fallback to default
+	way to display number of pages. See bug 173185.
+
+2005-04-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-page-action.c: (ev_page_action_dispose):
 	* shell/ev-view.c: (view_update_range_and_current_page):
 	* shell/ev-window.c: (ev_window_dispose):
