@@ -197,10 +197,10 @@ update_page_cache (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *pr
 		g_signal_handler_disconnect (proxy->page_cache, proxy->signal_id);
 	
 	if (page_cache != NULL) {
-		signal_id = g_signal_connect (page_cache,
-					      "page-changed",
-					      G_CALLBACK (page_changed_cb),
-					      proxy);
+		signal_id = g_signal_connect_object (page_cache,
+					             "page-changed",
+					             G_CALLBACK (page_changed_cb),
+					             proxy, 0);
 		/* Set the initial value */
 		page_changed_cb (page_cache,
 				 ev_page_cache_get_current_page (page_cache),
@@ -419,7 +419,6 @@ ev_page_action_dispose (GObject *object)
 	EvPageAction *page = EV_PAGE_ACTION (object);
 
 	if (page->priv->page_cache) {
-		g_signal_handlers_disconnect_matched (page->priv->page_cache, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, page_changed_cb, NULL);
 		g_object_unref (page->priv->page_cache);
 		page->priv->page_cache = NULL;
 	}

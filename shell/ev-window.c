@@ -1181,11 +1181,6 @@ destroy_fullscreen_popup (EvWindow *window)
 {
 	if (window->priv->fullscreen_popup != NULL)
 	{
-		/* FIXME multihead */
-		g_signal_handlers_disconnect_by_func
-			(gdk_screen_get_default (),
-			 G_CALLBACK (screen_size_changed_cb), window);
-
 		gtk_widget_destroy (window->priv->fullscreen_popup);
 		window->priv->fullscreen_popup = NULL;
 	}
@@ -1321,10 +1316,12 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 	gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
 
 	/* FIXME multihead */
-	g_signal_connect (gdk_screen_get_default (), "size-changed",
-			  G_CALLBACK (screen_size_changed_cb), window);
-	g_signal_connect (popup, "size_request",
-			  G_CALLBACK (fullscreen_popup_size_request_cb), window);
+	g_signal_connect_object (gdk_screen_get_default (), "size-changed",
+			         G_CALLBACK (screen_size_changed_cb),
+				 window, 0);
+	g_signal_connect_object (popup, "size_request",
+			         G_CALLBACK (fullscreen_popup_size_request_cb),
+				 window, 0);
 
 	return popup;
 }
