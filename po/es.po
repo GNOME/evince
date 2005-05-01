@@ -1,4 +1,5 @@
-# translation of evince.HEAD.po to 
+# translation of es.po to 
+# translation of evince.HEAD.po to
 # Traducción de Evince al español.
 # Copyright (C) Spanish translation for Evince
 # This file is distributed under the same license as the Evince package.
@@ -8,16 +9,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince.HEAD\n"
+"Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-05-01 10:53+0000\n"
-"PO-Revision-Date: 2005-05-01 19:42+0200\n"
-"Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
-"Language-Team:  <traductores@es.gnome.org>\n"
+"PO-Revision-Date: 2005-05-01 21:02+0200\n"
+"Last-Translator: \n"
+"Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);"
+"X-Generator: KBabel 1.9.1\n"
 
 #: ../data/evince-password.glade.h:1
 msgid "*"
@@ -37,7 +39,7 @@ msgstr "Visor de documentos"
 
 #: ../data/evince.desktop.in.h:2 ../shell/main.c:88
 msgid "Evince Document Viewer"
-msgstr "Visor de Documentos Evince"
+msgstr "Visor de documentos Evince"
 
 #: ../data/evince.desktop.in.h:3
 msgid "View multipage documents"
@@ -88,7 +90,7 @@ msgid ""
 "Toolbar is the top bar that contains navigation and zoom controls. Two "
 "boolean options, true makes toolbar visible by default while false makes "
 "toolbar not visible by default."
-msgstr "La «Barra de herramientas» es la barra de arriba que contiene los controles de navegación y zoom. Dos opciones booleanas, verdadero muestra la barra de herramientas por omisión mientras que falso no hace visible la barra de herramientas por omisión."
+msgstr "La «Barra de herramientas» es la barra de arriba que contiene los controles de navegación y ampliación. Dos opciones booleanas, verdadero muestra la barra de herramientas por omisión mientras que falso no hace visible la barra de herramientas por omisión."
 
 #. this is EOF
 #: ../dvi/mdvi-lib/dviread.c:208
@@ -98,12 +100,12 @@ msgstr "fin de fichero no esperado\n"
 #: ../dvi/mdvi-lib/dviread.c:429
 #, c-format
 msgid "could not load font `%s'\n"
-msgstr "no se ha podido cargar la fuente `%s'\n"
+msgstr "no se ha podido cargar la tipografía «%s»\n"
 
 #: ../dvi/mdvi-lib/dviread.c:483
 #, c-format
 msgid "could not reload `%s'\n"
-msgstr "No ha sido posible recargar `%s'\n"
+msgstr "No ha sido posible recargar «%s»\n"
 
 #: ../dvi/mdvi-lib/dviread.c:710
 #, c-format
@@ -150,7 +152,7 @@ msgstr "pila sin vaciar en el final de la página\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1286
 msgid "no default font set yet\n"
-msgstr ""
+msgstr "no hay una tipografía predeterminada definida aún\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1296
 #, c-format
@@ -259,7 +261,7 @@ msgstr ""
 
 #: ../dvi/mdvi-lib/paper.c:103 ../dvi/mdvi-lib/paper.c:110
 msgid "custom"
-msgstr ""
+msgstr "personalizado"
 
 #: ../dvi/mdvi-lib/pk.c:309
 msgid "Bad PK file: More bits than required\n"
@@ -409,25 +411,25 @@ msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:165
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #: ../dvi/mdvi-lib/util.c:174
 #, c-format
 msgid "%s: Warning: "
-msgstr ""
+msgstr "%s: Atención: "
 
 #: ../dvi/mdvi-lib/util.c:181
 msgid "Warning"
-msgstr ""
+msgstr "Atención"
 
 #: ../dvi/mdvi-lib/util.c:190
 #, c-format
 msgid "%s: Fatal: "
-msgstr ""
+msgstr "%s: Fatal: "
 
 #: ../dvi/mdvi-lib/util.c:197
 msgid "Fatal"
-msgstr ""
+msgstr "Fatal"
 
 #: ../dvi/mdvi-lib/util.c:211
 #, c-format
@@ -681,12 +683,12 @@ msgstr "Todos los archivos"
 #: ../shell/ev-page-action.c:107
 #, c-format
 msgid "(%d of %d)"
-msgstr ""
+msgstr "(%d de %d)"
 
 #: ../shell/ev-page-action.c:109
 #, c-format
 msgid "of %d"
-msgstr ""
+msgstr "de %d"
 
 #: ../shell/ev-password-view.c:111
 msgid ""
@@ -1166,11 +1168,11 @@ msgstr ""
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
-msgstr ""
+msgstr "Activar miniaturas de documentos PDF"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
 msgid "Thumbnail command for PDF Documents"
-msgstr ""
+msgstr "Comando para sacar las miniatudas para los documentos PDF"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
 msgid ""
@@ -1178,14 +1180,3 @@ msgid ""
 "thumbnailer documentation for more information."
 msgstr ""
 
-#~ msgid "Show sidebar by default."
-#~ msgstr "Mostrar la barra lateral por omisión."
-
-#~ msgid "Show statusbar by default."
-#~ msgstr "Mostrar la barra de estado por omisión."
-
-#~ msgid "Show toolbar by default."
-#~ msgstr "Mostrar la barra de herramientas por omisión."
-
-#~ msgid "The default sidebar size."
-#~ msgstr "El tamaño predeterminado de la barra lateral."
