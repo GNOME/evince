@@ -110,7 +110,6 @@ struct _EvWindowPrivate {
 	char *password_uri;
 
 	EvChrome chrome;
-	gboolean fullscreen_mode;
 	GSource *fullscreen_timeout_source;
 
 	/* recent file stuff */
@@ -136,18 +135,29 @@ static const GtkTargetEntry ev_drop_types[] = {
 
 #define SIDEBAR_DEFAULT_SIZE    132
 
-static void     ev_window_update_fullscreen_popup (EvWindow         *window);
-static void     ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
-							 EvWindow   *ev_window);
-static void     ev_window_set_page_mode           (EvWindow         *window,
-						   EvWindowPageMode  page_mode);
-static gboolean start_loading_document            (EvWindow         *ev_window,
-						   EvDocument       *document,
-						   const char       *uri);
-static void     ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
-				 		  EvWindow   *ev_window);
-static void 	ev_window_add_recent (EvWindow *window, const char *filename);
-static void	ev_window_fullscreen (EvWindow *window);
+static void     ev_window_update_fullscreen_popup       (EvWindow         *window);
+static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
+							 GParamSpec       *pspec,
+							 EvWindow         *ev_window);
+static void     ev_window_set_page_mode                 (EvWindow         *window,
+							 EvWindowPageMode  page_mode);
+static gboolean start_loading_document                  (EvWindow         *ev_window,
+							 EvDocument       *document,
+							 const char       *uri);
+static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
+							 GParamSpec       *pspec,
+							 EvWindow         *ev_window);
+static void     ev_window_add_recent                    (EvWindow         *window,
+							 const char       *filename);
+static void     ev_window_fullscreen                    (EvWindow         *window);
+static void     ev_window_unfullscreen                  (EvWindow         *window);
+static void     ev_window_cmd_view_fullscreen           (GtkAction        *action,
+							 EvWindow         *window);
+static void     ev_window_run_presentation              (EvWindow         *window);
+static void     ev_window_stop_presentation             (EvWindow         *window);
+static void     ev_window_cmd_view_presentation         (GtkAction        *action,
+							 EvWindow         *window);
+
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -253,12 +263,17 @@ update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
 	gboolean menubar, toolbar, sidebar, findbar, statusbar, fullscreen_toolbar;
+	gboolean fullscreen_mode, presentation, fullscreen;
 
-	menubar = (priv->chrome & EV_CHROME_MENUBAR) != 0 && !priv->fullscreen_mode;
-	toolbar = (priv->chrome & EV_CHROME_TOOLBAR) != 0 && !priv->fullscreen_mode;
-	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !priv->fullscreen_mode;
+	presentation = ev_view_get_presentation (EV_VIEW (priv->view));
+	fullscreen = ev_view_get_fullscreen (EV_VIEW (priv->view));
+	fullscreen_mode = fullscreen || presentation;
+
+	menubar = (priv->chrome & EV_CHROME_MENUBAR) != 0 && !fullscreen_mode;
+	toolbar = (priv->chrome & EV_CHROME_TOOLBAR) != 0 && !fullscreen_mode;
+	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !fullscreen_mode;
 	fullscreen_toolbar = (priv->chrome & EV_CHROME_TOOLBAR) != 0;
-	statusbar = (priv->chrome & EV_CHROME_STATUSBAR) != 0 && !priv->fullscreen_mode;
+	statusbar = (priv->chrome & EV_CHROME_STATUSBAR) != 0 && !fullscreen_mode;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 
 	set_widget_visibility (priv->menubar, menubar);
@@ -269,7 +284,7 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
 
 	if (priv->fullscreen_popup != NULL) {
-		set_widget_visibility (priv->fullscreen_popup, priv->fullscreen_mode);
+		set_widget_visibility (priv->fullscreen_popup, fullscreen);
 	}
 }
 
@@ -300,6 +315,7 @@ ev_window_cmd_continuous (GtkAction *action, EvWindow *ev_window)
 {
 	gboolean continuous;
 
+	ev_window_stop_presentation (ev_window);
 	continuous = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 	g_object_set (G_OBJECT (ev_window->priv->view),
 		      "continuous", continuous,
@@ -312,6 +328,7 @@ ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
 {
 	gboolean dual_page;
 
+	ev_window_stop_presentation (ev_window);
 	dual_page = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 	g_object_set (G_OBJECT (ev_window->priv->view),
 		      "dual-page", dual_page,
@@ -322,6 +339,8 @@ ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
+	ev_window_stop_presentation (ev_window);
+
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
 		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_BEST_FIT);
 	} else {
@@ -333,6 +352,8 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 {
+	ev_window_stop_presentation (ev_window);
+
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
 		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FIT_WIDTH);
 	} else {
@@ -497,7 +518,9 @@ static void
 update_document_mode (EvWindow *window, EvDocumentMode mode)
 {
 	if (mode == EV_DOCUMENT_MODE_FULL_SCREEN) {
-		gtk_window_fullscreen (GTK_WINDOW (window));
+		ev_window_fullscreen (window);
+	} else if (mode == EV_DOCUMENT_MODE_PRESENTATION) {
+		ev_window_run_presentation (window);
 	}
 }
 
@@ -1326,11 +1349,25 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 	return popup;
 }
 
+
+static void
+ev_window_update_fullscreen_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewFullscreen");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_view_get_fullscreen (EV_VIEW (window->priv->view)));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
+}
+
 static void
 ev_window_fullscreen (EvWindow *window)
 {
-	window->priv->fullscreen_mode = TRUE;
-
+	ev_view_set_fullscreen (EV_VIEW (window->priv->view), TRUE);
 	if (window->priv->fullscreen_popup == NULL)
 		window->priv->fullscreen_popup
 			= ev_window_create_fullscreen_popup (window);
@@ -1351,7 +1388,8 @@ ev_window_fullscreen (EvWindow *window)
 	fullscreen_set_timeout (window);
 
 	gtk_widget_grab_focus (window->priv->view);
-
+	ev_window_update_fullscreen_action (window);
+	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_fullscreen_popup (window);
 }
 
@@ -1360,8 +1398,7 @@ ev_window_unfullscreen (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
 
-	window->priv->fullscreen_mode = FALSE;
-
+	ev_view_set_fullscreen (view, FALSE);
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
 		      "shadow-type", GTK_SHADOW_IN,
 		      NULL);
@@ -1371,33 +1408,86 @@ ev_window_unfullscreen (EvWindow *window)
 	g_signal_handlers_disconnect_by_func (view,
 					      (gpointer) fullscreen_motion_notify_cb,
 					      window);
-
-	g_object_set (G_OBJECT (view),
-		      "full-screen", FALSE,
-		      NULL);
+	g_signal_handlers_disconnect_by_func (view,
+					      (gpointer) fullscreen_leave_notify_cb,
+					      window);
+	ev_window_update_fullscreen_action (window);
+	gtk_window_unfullscreen (GTK_WINDOW (window));
 	update_chrome_visibility (window);
 }
 
 static void
 ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 {
-	EvView *view;
 	gboolean fullscreen;
 
         g_return_if_fail (EV_IS_WINDOW (window));
+	ev_window_stop_presentation (window);
 
-	view = EV_VIEW (window->priv->view);
 	fullscreen = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-
 	if (fullscreen) {
-		gtk_window_fullscreen (GTK_WINDOW (window));
+		ev_window_fullscreen (window);
 	} else {
-		gtk_window_unfullscreen (GTK_WINDOW (window));
+		ev_window_unfullscreen (window);
 	}
+}
 
-	g_object_set (G_OBJECT (view),
-		      "full-screen", TRUE,
+static void
+ev_window_update_presentation_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewPresentation");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_presentation), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_view_get_presentation (EV_VIEW (window->priv->view)));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_presentation), window);
+}
+
+static void
+ev_window_run_presentation (EvWindow *window)
+{
+	g_object_set (G_OBJECT (window->priv->scrolled_window),
+		      "shadow-type", GTK_SHADOW_NONE,
 		      NULL);
+
+	gtk_widget_grab_focus (window->priv->view);
+	ev_view_set_presentation (EV_VIEW (window->priv->view), TRUE);
+	gtk_window_fullscreen (GTK_WINDOW (window));
+	ev_window_update_presentation_action (window);
+	update_chrome_visibility (window);
+}
+
+static void
+ev_window_stop_presentation (EvWindow *window)
+{
+	if (! ev_view_get_presentation (EV_VIEW (window->priv->view)))
+		return;
+
+	g_object_set (G_OBJECT (window->priv->scrolled_window),
+		      "shadow-type", GTK_SHADOW_IN,
+		      NULL);
+	ev_view_set_presentation (EV_VIEW (window->priv->view), FALSE);
+	gtk_window_unfullscreen (GTK_WINDOW (window));
+	ev_window_update_presentation_action (window);
+	update_chrome_visibility (window);
+}
+
+static void
+ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
+{
+	gboolean presentation;
+
+        g_return_if_fail (EV_IS_WINDOW (window));
+
+	presentation = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	if (presentation) {
+		ev_window_run_presentation (window);
+	} else {
+		ev_window_stop_presentation (window);
+	}
 }
 
 static gboolean
@@ -1414,29 +1504,6 @@ ev_window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 						   show);
 	}
 
-	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN) {
-		GtkActionGroup *action_group;
-		GtkAction *action;
-		gboolean fullscreen;
-
-		fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
-
-		if (fullscreen)	{
-			ev_window_fullscreen (window);
-		} else {
-			ev_window_unfullscreen (window);
-		}
-
-		action_group = window->priv->action_group;
-
-		action = gtk_action_group_get_action (action_group, "ViewFullscreen");
-		g_signal_handlers_block_by_func
-			(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fullscreen);
-		g_signal_handlers_unblock_by_func
-			(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
-	}
-
 	return FALSE;
 }
 
@@ -1445,11 +1512,14 @@ ev_window_focus_in_event (GtkWidget *widget, GdkEventFocus *event)
 {
 	EvWindow *window = EV_WINDOW (widget);
 	EvWindowPrivate *priv = window->priv;
+	gboolean fullscreen;
 
-	if (priv->fullscreen_mode)
-	{
+	g_object_get (priv->view,
+		      "fullscreen", &fullscreen,
+		      NULL);
+
+	if (fullscreen)
 		gtk_widget_show (priv->fullscreen_popup);
-	}
 
 	return GTK_WIDGET_CLASS (ev_window_parent_class)->focus_in_event (widget, event);
 }
@@ -1459,11 +1529,14 @@ ev_window_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 {
 	EvWindow *window = EV_WINDOW (widget);
 	EvWindowPrivate *priv = window->priv;
+	gboolean fullscreen;
 
-	if (priv->fullscreen_mode)
-	{
+	g_object_get (priv->view,
+		      "fullscreen", &fullscreen,
+		      NULL);
+
+	if (fullscreen)
 		gtk_widget_hide (priv->fullscreen_popup);
-	}
 
 	return GTK_WIDGET_CLASS (ev_window_parent_class)->focus_out_event (widget, event);
 }
@@ -1615,7 +1688,21 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
 		update_chrome_flag (window, EV_CHROME_FINDBAR, NULL, FALSE);
 	} else {
-		gtk_window_unfullscreen (GTK_WINDOW (window));
+		gboolean fullscreen;
+		gboolean presentation;
+
+		g_object_get (window->priv->view,
+			      "fullscreen", &fullscreen,
+			      "presentation", &presentation,
+			      NULL);
+
+		if (fullscreen)
+			ev_window_unfullscreen (window);
+		if (presentation)
+			ev_window_stop_presentation (window);
+
+		if (fullscreen && presentation)
+			g_warning ("Both fullscreen and presentation set somehow");
 	}
 }
 
@@ -1795,14 +1882,17 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 					 EvWindow   *ev_window)
 {
 	GtkAction *action;
-	gboolean visible;
+	gboolean visible, fullscreen;
 
+	g_object_get (ev_window->priv->view,
+		      "fullscreen", &fullscreen,
+		      NULL);
 	visible = GTK_WIDGET_VISIBLE (ev_sidebar);
 
 	/* In fullscreen mode the sidebar is not visible,
 	 * but we don't want to update the chrome
 	 */
-	if (ev_window->priv->fullscreen_mode)
+	if (fullscreen)
 		return;
 	
 	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
@@ -2154,6 +2244,9 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
           G_CALLBACK (ev_window_cmd_view_fullscreen) },
+        { "ViewPresentation", NULL, N_("_Presentation"), "F12",
+          N_("Run document as a presentation"),
+          G_CALLBACK (ev_window_cmd_view_presentation) },
         { "ViewBestFit", EV_STOCK_ZOOM_PAGE, N_("_Best Fit"), NULL,
           N_("Make the current document fill the window"),
           G_CALLBACK (ev_window_cmd_view_best_fit) },

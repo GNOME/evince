@@ -54,18 +54,22 @@ void		ev_view_select_all	(EvView     *view);
 
 
 /* sizing and behavior */
-/* These are all orthoganal to each other, with the exception of 'presentation'
+/* These are all orthoganal to each other, except 'presentation' trumps all
+ * other behaviors
  */
-void ev_view_set_continuous   (EvView       *view,
-			       gboolean      continuous);
-void ev_view_set_dual_page    (EvView       *view,
-			       gboolean      dual_page);
-void ev_view_set_full_screen  (EvView       *view,
-			       gboolean      full_screen);
-void ev_view_set_presentation (EvView       *view,
-			       gboolean      presentation);
-void ev_view_set_sizing_mode  (EvView       *view,
-			       EvSizingMode  mode);
+void     ev_view_set_continuous   (EvView       *view,
+				   gboolean      continuous);
+void     ev_view_set_dual_page    (EvView       *view,
+				   gboolean      dual_page);
+void     ev_view_set_fullscreen   (EvView       *view,
+				   gboolean      fullscreen);
+gboolean ev_view_get_fullscreen   (EvView       *view);
+void     ev_view_set_presentation (EvView       *view,
+				   gboolean      presentation);
+gboolean ev_view_get_presentation (EvView       *view);
+void     ev_view_set_sizing_mode  (EvView       *view,
+				   EvSizingMode  mode);
+
 
 
 /* Page size */

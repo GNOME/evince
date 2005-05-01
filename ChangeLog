@@ -1,3 +1,31 @@
+Sun May  1 00:46:47 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_init): Change the
+	preview cache back to 1.  Don't know when it got set to 0.
+	
+	* shell/ev-view.c: (compute_border), (ev_view_realize),
+	(draw_one_page), (ev_view_set_property), (ev_view_get_property),
+	(ev_view_class_init), (ev_view_init), (ev_view_set_fullscreen),
+	(ev_view_get_fullscreen), (ev_view_set_presentation),
+	(ev_view_get_presentation), (ev_view_set_sizing_mode),
+	(ev_view_zoom_for_size_presentation), (ev_view_set_zoom_for_size):
+	* shell/ev-view.h:
+	* shell/ev-window.c:
+	(update_chrome_visibility),
+	(ev_window_cmd_continuous), (ev_window_cmd_dual),
+	(ev_window_cmd_view_best_fit), (ev_window_cmd_view_page_width),
+	(update_document_mode), (ev_window_update_fullscreen_action),
+	(ev_window_fullscreen), (ev_window_unfullscreen),
+	(ev_window_cmd_view_fullscreen),
+	(ev_window_update_presentation_action),
+	(ev_window_run_presentation), (ev_window_stop_presentation),
+	(ev_window_cmd_view_presentation), (ev_window_state_event),
+	(ev_window_focus_in_event), (ev_window_focus_out_event),
+	(ev_window_cmd_escape), (ev_window_sidebar_visibility_changed_cb):
+	* data/evince-ui.xml: Initial presentation mode.  We should
+	probably hide this until it's done, as it's quite rough.  Also,
+	change full-screen to fullscreen and add two getters to EvView.
+
 2005-04-29  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/ev-page-action.c: (update_page_cache),

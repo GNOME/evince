@@ -46,7 +46,7 @@ enum {
 	PROP_FIND_STATUS,
 	PROP_CONTINUOUS,
 	PROP_DUAL_PAGE,
-	PROP_FULL_SCREEN,
+	PROP_FULLSCREEN,
 	PROP_PRESENTATION,
 	PROP_SIZING_MODE,
 };
@@ -121,11 +121,10 @@ struct _EvView {
 
 	double scale;
 	GtkBorder border;
-	gboolean show_border;
 
 	gboolean continuous;
 	gboolean dual_page;
-	gboolean full_screen;
+	gboolean fullscreen;
 	gboolean presentation;
 	EvSizingMode sizing_mode;
 };
@@ -394,13 +393,13 @@ doc_rect_to_view_rect (EvView *view, EvRectangle *doc_rect, GdkRectangle *view_r
 static void
 compute_border (EvView *view, int width, int height, GtkBorder *border)
 {
-	if (view->show_border) {
-		ev_document_misc_get_page_border_size (width, height, border);
-	} else {
+	if (view->presentation) {
 		border->left = 0;
 		border->right = 0;
 		border->top = 0;
 		border->bottom = 0;
+	} else {
+		ev_document_misc_get_page_border_size (width, height, border);
 	}
 }
 
@@ -642,7 +641,10 @@ ev_view_realize (GtkWidget *widget)
 	gdk_window_show (view->bin_window);
 
 	widget->style = gtk_style_attach (widget->style, view->bin_window);
-	gdk_window_set_background (view->bin_window, &widget->style->mid[widget->state]);
+	if (view->presentation)
+		gdk_window_set_background (view->bin_window, &widget->style->black);
+	else
+		gdk_window_set_background (view->bin_window, &widget->style->mid [GTK_STATE_NORMAL]);
 
 	if (view->document) {
 		/* We can't get page size without a target, so we have to
@@ -906,10 +908,9 @@ draw_one_page (EvView       *view,
 				page, view->scale,
 				&width, &height);
 
-	if (view->show_border)
-		ev_document_misc_paint_one_page (view->bin_window,
-						 GTK_WIDGET (view),
-						 page_area, border);
+	ev_document_misc_paint_one_page (view->bin_window,
+					 GTK_WIDGET (view),
+					 page_area, border);
 
 	/* Render the document itself */
 	real_page_area = *page_area;
@@ -932,7 +933,6 @@ draw_one_page (EvView       *view,
 		scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
 							width, height,
 							GDK_INTERP_NEAREST);
-
 	if (scaled_image) {
 		gdk_draw_pixbuf (view->bin_window,
 				 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
@@ -1568,8 +1568,8 @@ ev_view_set_property (GObject      *object,
 	case PROP_DUAL_PAGE:
 		ev_view_set_dual_page (view, g_value_get_boolean (value));
 		break;
-	case PROP_FULL_SCREEN:
-		ev_view_set_full_screen (view, g_value_get_boolean (value));
+	case PROP_FULLSCREEN:
+		ev_view_set_fullscreen (view, g_value_get_boolean (value));
 		break;
 	case PROP_PRESENTATION:
 		ev_view_set_presentation (view, g_value_get_boolean (value));
@@ -1604,8 +1604,8 @@ ev_view_get_property (GObject *object,
 	case PROP_DUAL_PAGE:
 		g_value_set_boolean (value, view->dual_page);
 		break;
-	case PROP_FULL_SCREEN:
-		g_value_set_boolean (value, view->full_screen);
+	case PROP_FULLSCREEN:
+		g_value_set_boolean (value, view->fullscreen);
 		break;
 	case PROP_PRESENTATION:
 		g_value_set_boolean (value, view->presentation);
@@ -1696,10 +1696,10 @@ ev_view_class_init (EvViewClass *class)
 							       FALSE,
 							       G_PARAM_READWRITE));
 	g_object_class_install_property (object_class,
-					 PROP_FULL_SCREEN,
-					 g_param_spec_boolean ("full-screen",
+					 PROP_FULLSCREEN,
+					 g_param_spec_boolean ("fullscreen",
 							       "Full Screen",
-							       "Draw page in a full-screen fashion",
+							       "Draw page in a fullscreen fashion",
 							       FALSE,
 							       G_PARAM_READWRITE));
 	g_object_class_install_property (object_class,
@@ -1743,12 +1743,11 @@ ev_view_init (EvView *view)
 	view->current_page = 0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
-	view->show_border = TRUE;
 
 	view->continuous = TRUE;
 	view->dual_page = FALSE;
 	view->presentation = FALSE;
-	view->full_screen = FALSE;
+	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 }
 
@@ -2065,19 +2064,27 @@ ev_view_set_dual_page (EvView   *view,
 }
 
 void
-ev_view_set_full_screen (EvView   *view,
-			 gboolean  full_screen)
+ev_view_set_fullscreen (EvView   *view,
+			 gboolean  fullscreen)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
-	full_screen = full_screen != FALSE;
+	fullscreen = fullscreen != FALSE;
 
-	if (view->full_screen != full_screen) {
-		view->full_screen = full_screen;
+	if (view->fullscreen != fullscreen) {
+		view->fullscreen = fullscreen;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
-	g_object_notify (G_OBJECT (view), "full-screen");
+	g_object_notify (G_OBJECT (view), "fullscreen");
+}
+
+gboolean
+ev_view_get_fullscreen (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	return view->fullscreen;
 }
 
 void
@@ -2088,12 +2095,30 @@ ev_view_set_presentation (EvView   *view,
 
 	presentation = presentation != FALSE;
 
-	if (view->presentation != presentation) {
-		view->presentation = presentation;
-		gtk_widget_queue_resize (GTK_WIDGET (view));
+	if (view->presentation == presentation)
+		return;
+
+	view->presentation = presentation;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+	if (GTK_WIDGET_REALIZED (view)) {
+		if (view->presentation)
+			gdk_window_set_background (view->bin_window,
+						   &GTK_WIDGET (view)->style->black);
+		else
+			gdk_window_set_background (view->bin_window,
+						   &GTK_WIDGET (view)->style->mid [GTK_STATE_NORMAL]);
 	}
 
+
 	g_object_notify (G_OBJECT (view), "presentation");
+}
+
+gboolean
+ev_view_get_presentation (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	return view->presentation;
 }
 
 void
@@ -2102,10 +2127,12 @@ ev_view_set_sizing_mode (EvView       *view,
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
-	if (view->sizing_mode != sizing_mode) {
-		view->sizing_mode = sizing_mode;
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	}
+	if (view->sizing_mode == sizing_mode)
+		return;
+
+	view->sizing_mode = sizing_mode;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+	
 	g_object_notify (G_OBJECT (view), "sizing-mode");
 }
 
@@ -2177,6 +2204,24 @@ zoom_for_size_best_fit (int doc_width,
 		h_scale = (double) (target_height - hsb_width) / doc_height;
 
 	return MIN (w_scale, h_scale);
+}
+
+
+static void
+ev_view_zoom_for_size_presentation (EvView *view,
+				    int     width,
+				    int     height)
+{
+	int doc_width, doc_height;
+	gdouble scale;
+
+	ev_page_cache_get_size (view->page_cache,
+				view->current_page,
+				1.0,
+				&doc_width,
+				&doc_height);
+	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, 0, 0);
+	ev_view_zoom (view, scale, FALSE);
 }
 
 static void
@@ -2351,7 +2396,9 @@ ev_view_set_zoom_for_size (EvView *view,
 	if (view->document == NULL)
 		return;
 
-	if (view->continuous && view->dual_page)
+	if (view->presentation)
+		ev_view_zoom_for_size_presentation (view, width, height);
+	else if (view->continuous && view->dual_page)
 		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height, vsb_width, hsb_height);
 	else if (view->continuous)
 		ev_view_zoom_for_size_continuous (view, width, height, vsb_width, hsb_height);
