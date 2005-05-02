@@ -47,6 +47,8 @@
 #include "egg-recent-view-gtk.h"
 #include "egg-recent-view.h"
 #include "egg-recent-model.h"
+#include "ephy-zoom.h"
+#include "ephy-zoom-action.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -126,6 +128,7 @@ static const GtkTargetEntry ev_drop_types[] = {
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_WINDOW, EvWindowPrivate))
 
 #define PAGE_SELECTOR_ACTION	"PageSelector"
+#define ZOOM_CONTROL_ACTION	"ViewZoom"
 
 #define GCONF_CHROME_TOOLBAR	"/apps/evince/show_toolbar"
 #define GCONF_CHROME_SIDEBAR	"/apps/evince/show_sidebar"
@@ -245,6 +248,21 @@ update_action_sensitivity (EvWindow *ev_window)
 
 	/* Toolbar-specific actions: */
 	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
+	set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
+
+	if (has_pages && ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
+		GtkAction *action;
+		float      zoom;
+		float      real_zoom;
+
+		action = gtk_action_group_get_action (ev_window->priv->action_group, 
+						      ZOOM_CONTROL_ACTION);
+
+		real_zoom = ev_view_get_zoom (EV_VIEW (ev_window->priv->view));
+		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
+
+		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), zoom);
+	}
 }
 
 static void
@@ -405,6 +423,16 @@ update_sizing_buttons (EvWindow *window)
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), page_width);
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_view_page_width), window);
+
+	action = gtk_action_group_get_action (window->priv->action_group, 
+					      ZOOM_CONTROL_ACTION);	
+	if (best_fit) {
+		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), 
+						 EPHY_ZOOM_BEST_FIT);
+	} else if (page_width) {
+		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), 
+						 EPHY_ZOOM_FIT_WIDTH);
+	}
 }
 
 void
@@ -2068,6 +2096,28 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 }
 
 static void
+zoom_control_changed_cb (EphyZoomAction *action,
+			 float           zoom,
+			 EvWindow       *ev_window)
+{
+	EvSizingMode mode;
+	
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	if (zoom == EPHY_ZOOM_BEST_FIT) {
+		mode = EV_SIZING_BEST_FIT;
+	} else if (zoom == EPHY_ZOOM_FIT_WIDTH) {
+		mode = EV_SIZING_FIT_WIDTH;
+	} else {
+		mode = EV_SIZING_FREE;
+		ev_view_set_zoom (EV_VIEW (ev_window->priv->view), zoom, FALSE);
+	}
+	
+	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), mode);
+	update_action_sensitivity (ev_window);
+}
+
+static void
 ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
@@ -2292,6 +2342,18 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "label", _("Page"),
 			       "tooltip", _("Select Page"),
 			       NULL);
+	gtk_action_group_add_action (group, action);
+	g_object_unref (action);
+
+	action = g_object_new (EPHY_TYPE_ZOOM_ACTION,
+			       "name", ZOOM_CONTROL_ACTION,
+			       "label", _("Zoom"),
+			       "stock_id", GTK_STOCK_ZOOM_IN,
+			       "tooltip", _("Adjust the zoom level"),
+			       "zoom", 1.0,
+			       NULL);
+	g_signal_connect (action, "zoom_to_level",
+			  G_CALLBACK (zoom_control_changed_cb), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }

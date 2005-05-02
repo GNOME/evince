@@ -34,6 +34,7 @@ POPPLER_REQUIRED=0.3.0
 
 PKG_CHECK_MODULES(LIBEVPRIVATE, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)
+PKG_CHECK_MODULES(ZOOM_CONTROL, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= 2.6.0 libgnomeui-2.0 gnome-vfs-2.0 libgnomeprint-2.2 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
 PKG_CHECK_MODULES(THUMBNAILER, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 poppler-glib >= $POPPLER_REQUIRED)
 PKG_CHECK_MODULES(DVI, gtk+-2.0 >= 2.6.0)
@@ -219,6 +220,7 @@ AC_OUTPUT([
 Makefile
 cut-n-paste/Makefile
 cut-n-paste/recent-files/Makefile
+cut-n-paste/zoom-control/Makefile
 data/Makefile
 lib/Makefile
 pdf/Makefile

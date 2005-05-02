@@ -1,3 +1,33 @@
+2005-05-02  James Bowes  <bowes@cs.dal.ca>
+
+	* configure.ac: Output zoom-control Makefile.
+	* cut-n-paste/Makefile.am: build zoom-control subdir.
+	* cut-n-paste/zoom-control/ephy-zoom-action.c:
+	* cut-n-paste/zoom-control/ephy-zoom-action.h:
+	* cut-n-paste/zoom-control/ephy-zoom-control.c:
+	* cut-n-paste/zoom-control/ephy-zoom-control.h:
+	* cut-n-paste/zoom-control/ephy-zoom.c:
+	* cut-n-paste/zoom-control/ephy-zoom.h: New files imported
+	from epiphany, and modified to add a separator into the menu.
+	* cut-n-paste/zoom-control/Makefile.am: Build zoom-control.
+	* data/evince-ui.xml: Replace old zoom toolbar actions with new
+	zoom-control action.
+	* shell/Makefile.am: Include zoom-control flags.
+	* shell/ev-view.c: (ev_view_set_zoom), (ev_view_get_zoom),
+	(ev_view_get_sizing_mode), (ev_view_zoom_in), (ev_view_zoom_out),
+	(ev_view_zoom_for_size_presentation),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (ev_view_zoom_normal): 
+	s/ev_view_zoom/ev_view_set_zoom/ and make public, add 
+	ev_view_get_zoom and ev_view_get_sizing_mode.
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(update_sizing_buttons), (zoom_control_changed_cb),
+	(register_custom_actions): Initialize and use the zoom-control 
+	widget.
+
 Sun May  1 00:46:47 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_init): Change the

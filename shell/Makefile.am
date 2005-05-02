@@ -5,6 +5,7 @@ INCLUDES=						\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
 	-I$(top_srcdir)/lib				\
 	-I$(top_srcdir)/cut-n-paste/recent-files/	\
+	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/backend				\
 	-I$(top_srcdir)/pdf				\
 	-I$(top_srcdir)/pixbuf				\
@@ -80,11 +81,13 @@ evince_SOURCES=				\
 	main.c				\
 	$(NULL)
 
-evince_LDADD=							\
-	$(SHELL_LIBS)						\
-	$(top_builddir)/cut-n-paste/recent-files/librecent.la	\
-	$(top_builddir)/lib/libev.la				\
-	libevbackendfactory.la					\
+evince_LDADD=								\
+	$(SHELL_LIBS)							\
+	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
+	$(top_builddir)/cut-n-paste/zoom-control/libephymisc.la		\
+	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\
+	$(top_builddir)/lib/libev.la					\
+	libevbackendfactory.la						\
 	$(NULL)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c

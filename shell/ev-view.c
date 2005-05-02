@@ -2006,10 +2006,10 @@ ev_view_set_document (EvView     *view,
 }
 
 #define EPSILON 0.0000001
-static void
-ev_view_zoom (EvView   *view,
-	      double    factor,
-	      gboolean  relative)
+void
+ev_view_set_zoom (EvView   *view,
+		  double    factor,
+		  gboolean  relative)
 {
 	double scale;
 
@@ -2026,6 +2026,11 @@ ev_view_zoom (EvView   *view,
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
+double
+ev_view_get_zoom (EvView *view)
+{
+	return view->scale;
+}
 
 void
 ev_view_set_continuous (EvView   *view,
@@ -2136,6 +2141,13 @@ ev_view_set_sizing_mode (EvView       *view,
 	g_object_notify (G_OBJECT (view), "sizing-mode");
 }
 
+EvSizingMode
+ev_view_get_sizing_mode (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), EV_SIZING_FREE);
+
+	return view->sizing_mode;
+}
 
 gboolean
 ev_view_can_zoom_in (EvView *view)
@@ -2154,7 +2166,7 @@ ev_view_zoom_in (EvView *view)
 {
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
-	ev_view_zoom (view, ZOOM_IN_FACTOR, TRUE);
+	ev_view_set_zoom (view, ZOOM_IN_FACTOR, TRUE);
 }
 
 void
@@ -2162,7 +2174,7 @@ ev_view_zoom_out (EvView *view)
 {
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
-	ev_view_zoom (view, ZOOM_OUT_FACTOR, TRUE);
+	ev_view_set_zoom (view, ZOOM_OUT_FACTOR, TRUE);
 }
 
 
@@ -2221,7 +2233,7 @@ ev_view_zoom_for_size_presentation (EvView *view,
 				&doc_width,
 				&doc_height);
 	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, 0, 0);
-	ev_view_zoom (view, scale, FALSE);
+	ev_view_set_zoom (view, scale, FALSE);
 }
 
 static void
@@ -2257,7 +2269,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_zoom (view, scale, FALSE);
+	ev_view_set_zoom (view, scale, FALSE);
 }
 
 static void
@@ -2292,7 +2304,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_zoom (view, scale, FALSE);
+	ev_view_set_zoom (view, scale, FALSE);
 }
 
 static void
@@ -2339,7 +2351,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_zoom (view, scale, FALSE);
+	ev_view_set_zoom (view, scale, FALSE);
 }
 
 static void
@@ -2371,14 +2383,14 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_zoom (view, scale, FALSE);
+	ev_view_set_zoom (view, scale, FALSE);
 }
 
 
 void
 ev_view_zoom_normal (EvView *view)
 {
-	ev_view_zoom (view, 1.0, FALSE);
+	ev_view_set_zoom (view, 1.0, FALSE);
 }
 
 void

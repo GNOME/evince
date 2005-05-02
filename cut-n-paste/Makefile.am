@@ -1,1 +1,1 @@
-SUBDIRS = recent-files
+SUBDIRS = recent-files zoom-control
