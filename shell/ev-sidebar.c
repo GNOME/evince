@@ -45,7 +45,6 @@ enum
 struct _EvSidebarPrivate {
 	GtkWidget *notebook;
 	GtkWidget *menu;
-	GtkWidget *frame;
 	GtkWidget *hbox;
 	GtkWidget *label;
 	   
@@ -215,7 +214,6 @@ ev_sidebar_menu_item_activate_cb (GtkWidget *widget,
 static void
 ev_sidebar_init (EvSidebar *ev_sidebar)
 {
-	GtkWidget *frame;
 	GtkWidget *hbox;
 	GtkWidget *close_button;
 	GtkWidget *select_button;
@@ -234,14 +232,9 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 					    G_TYPE_INT);
 
 	/* top option menu */
-	frame = gtk_frame_new (NULL);
-	ev_sidebar->priv->frame = frame;
-	gtk_box_pack_start (GTK_BOX (ev_sidebar), frame, FALSE, FALSE, 0);
-	gtk_widget_show (frame);
-
 	hbox = gtk_hbox_new (FALSE, 0);
 	ev_sidebar->priv->hbox = hbox;
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
+	gtk_box_pack_start (GTK_BOX (ev_sidebar), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
 
 	select_button = gtk_toggle_button_new ();
