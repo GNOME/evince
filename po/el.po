@@ -8,14 +8,60 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-17 17:29+0200\n"
-"PO-Revision-Date: 2005-03-16 16:57+0000\n"
+"POT-Creation-Date: 2005-05-05 19:43+0300\n"
+"PO-Revision-Date: 2005-05-05 17:03+0100\n"
 "Last-Translator: Stylianos Papanastasiou <stelios@dcs.gla.ac.uk>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
+msgid "50%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:49
+msgid "75%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:50
+msgid "100%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:51
+msgid "125%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:52
+msgid "150%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:53
+msgid "175%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
+msgid "200%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
+msgid "300%"
+msgstr ""
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
+msgid "400%"
+msgstr ""
+
+#. translators: this is the label for toolbar button
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:58 ../shell/ev-window.c:2388
+msgid "Best Fit"
+msgstr "Καλύτερο Ταίριασμα"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
+#, fuzzy
+msgid "Fit Page Width"
+msgstr "Ταίριασμα στο π_λάτος της σελίδας"
 
 #: ../data/evince-password.glade.h:1
 msgid "*"
@@ -29,11 +75,11 @@ msgstr "<span size=\"smaller\"> </span>"
 msgid "_Password:"
 msgstr "_Κωδικός:"
 
-#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:470
+#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:519
 msgid "Document Viewer"
 msgstr "Προβολέας Εγγράφου"
 
-#: ../data/evince.desktop.in.h:2 ../shell/main.c:85
+#: ../data/evince.desktop.in.h:2 ../shell/main.c:88
 msgid "Evince Document Viewer"
 msgstr "Evince Προβολέας Εγγράφου"
 
@@ -50,28 +96,469 @@ msgid "Show sidebar by default"
 msgstr "Προεπιλεγμένη εμφάνιση πλευρικού ταμπλώ"
 
 #: ../data/evince.schemas.in.h:3
-msgid "Show sidebar by default."
-msgstr "Προεπιλεγμένη εμφάνιση πλευρικού ταμπλώ"
-
-#: ../data/evince.schemas.in.h:4
 msgid "Show statusbar by default"
 msgstr "Προεπιλεγμένη εμφάνιση της γραμμής κατάστασης"
 
-#: ../data/evince.schemas.in.h:5
-msgid "Show statusbar by default."
-msgstr "Προεπιλεγμένη εμφάνιση της γραμμής κατάστασης"
-
-#: ../data/evince.schemas.in.h:6
+#: ../data/evince.schemas.in.h:4
 msgid "Show toolbar by default"
 msgstr "Προεπιλεγμένη εμφάνιση εργαλειοθήκης"
 
+#: ../data/evince.schemas.in.h:5
+msgid ""
+"Sidebar is the side item that contains the Index and Thumbnail lists. The "
+"default size sets the sidebar's width in pixels based from the side of the "
+"window. Any integer will be accepted. The sidebar will never shrink smaller "
+"than the size of the text required to display Thumbnails or Index. Large "
+"values will cause the sidebar to take up as much of the page display area as "
+"possible relative to the window's size."
+msgstr ""
+"Η πλευρική στήλη είναι το κομμάτι που περιέχει τα περιεχόμενα και τη λίστα\n"
+"μικρογραφιών. Το προεπιλεγμένο μέγεθος ορίζει το πλάτος της πλευρική στήλης "
+"σε\n"
+"εικονοστοιχεία (pixels) σε σχέση με την πλευρά του παράθυρου. Οποιοσδήποτε\n"
+"ακέραιος είναι αποδεκτός. Η πλευρική στήλη ποτέ δεν μικραίνει περισσότερο "
+"από το\n"
+"χώρο του κειμένου που χρειάζεται για την προβολή των περιεχομένων ή της "
+"λίστας\n"
+"μικρογραφιών. Μεγάλες τιμές προκαλούν την πλευρική στήλη να καταλάβει όσο "
+"το\n"
+"δυνατόν περισσότερο χώρο στη σελίδα σε σχέση με το μέγεθος του παραθύρου."
+
+#: ../data/evince.schemas.in.h:6
+msgid ""
+"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+"boolean options, true makes sidebar visible by default while false makes "
+"sidebar not visible by default"
+msgstr ""
+"Η πλευρική στήλη είναι το κομμάτι που περιέχει τα περιεχόμενα και τη λίστα\n"
+"μικρογραφιών. Δύο τιμές boolean: true προκαλεί την εμφάνιση της πλευρικής "
+"στήλης\n"
+"κάθε φορά, ενώ το false δεν επιτρέπει την εμφάνιση αυτής αρχικά"
+
 #: ../data/evince.schemas.in.h:7
-msgid "Show toolbar by default."
-msgstr "Προεπιλεγμένη εμφάνιση εργαλειοθήκης"
+msgid ""
+"Statusbar is the standard bottom bar that display additional information "
+"about links and other actions. Two boolean options, true makes the statusbar "
+"visible by default while false makes sidebar not visible by default."
+msgstr ""
+"Η γραμμή κατάστασης είναι η γραμμή στο κάτω περιθώριο που εμφανίζει "
+"επιπλέον\n"
+"πληροφορίες σχετικά με συνδέσμους και άλλες ενέργιες. Δύο boolean επιλογές: "
+"true\n"
+"προκαλεί την εμφανίση της γραμμής κατάστασης κάθε φορά, ενώ το false δεν\n"
+"επιτρέπει την εμφανίση αυτής αρχικά."
 
 #: ../data/evince.schemas.in.h:8
-msgid "The default sidebar size."
-msgstr "Το προεπιλεγμένο μέγεθος της πλευρικής μπάρας."
+msgid ""
+"Toolbar is the top bar that contains navigation and zoom controls. Two "
+"boolean options, true makes toolbar visible by default while false makes "
+"toolbar not visible by default."
+msgstr ""
+"Η εργαλειοθήκη είναι η γραμμή στο άνω περιθώριο που περιέχει ελέγχους για\n"
+"περιήγηση και εστίαση. Δύο επιλογές boolean: true προκαλεί την εμφανίση της\n"
+"εργαλειοθήκης κάθε φορά, ενώ το false δεν επιτρέπει την εμφανίση αυτής "
+"αρχικά."
+
+#. this is EOF
+#: ../dvi/mdvi-lib/dviread.c:208
+msgid "unexpected EOF\n"
+msgstr "απρόσμενο τέλος αρχείου\n"
+
+#: ../dvi/mdvi-lib/dviread.c:429
+#, c-format
+msgid "could not load font `%s'\n"
+msgstr "αδυναμία μεταφόρτωσης γραμματοσειράς `%s'\n"
+
+#: ../dvi/mdvi-lib/dviread.c:483
+#, c-format
+msgid "could not reload `%s'\n"
+msgstr "αδυναμία επαναφόρτωσης `%s'\n"
+
+#: ../dvi/mdvi-lib/dviread.c:710
+#, c-format
+msgid "%s: unsupported DVI format (version %u)\n"
+msgstr "%s: μη υποστηριζόμενος τύπος DVI (έκδοση %u)\n"
+
+#: ../dvi/mdvi-lib/dviread.c:870
+msgid "no pages selected\n"
+msgstr "δεν έχουν επιλεχθεί σελίδες\n"
+
+#: ../dvi/mdvi-lib/dviread.c:903
+#, c-format
+msgid "%s: File corrupted, or not a DVI file\n"
+msgstr "%s: Ζημιά στο αρχείο ή το αρχείο δεν είναι τύπου DVI\n"
+
+#: ../dvi/mdvi-lib/dviread.c:984
+#, c-format
+msgid "%s: vf macro had errors\n"
+msgstr "%s: το vf macro περιέχει σφάλματα\n"
+
+#: ../dvi/mdvi-lib/dviread.c:987
+#, c-format
+msgid "%s: stack not empty after vf macro\n"
+msgstr "%s: η στοίβα δεν είναι κενή μετά από το vf macro\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1012
+#, c-format
+msgid "%s: could not reopen file (%s)\n"
+msgstr "%s: αδυναμία ανοίγματος αρχείου (%s)\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1029
+#, c-format
+msgid "%s: page %d out of range\n"
+msgstr "%s: η σελίδα %d είναι εκτός εύρους\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1036
+#, c-format
+msgid "%s: bad offset at page %d\n"
+msgstr "%s: εσφαλμένο offset στην σελίδα %d\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1099
+msgid "stack not empty at end of page\n"
+msgstr "%s: η στοίβα δεν είναι κενή στο τέλος της σελίδας\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1286
+msgid "no default font set yet\n"
+msgstr "δεν έχει τεθεί ακόμη προεπιλεγμένη γραμματοσειρά\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1296
+#, c-format
+msgid "requested character %d does not exist in `%s'\n"
+msgstr "ο απαιτούμενος χαρακτήρας %d δεν υπάρχει στο `%s'\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1369
+msgid "enlarging stack\n"
+msgstr "μεγένθυνση στοίβας\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1387
+msgid "stack underflow\n"
+msgstr "underflow στοίβας\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1501 ../dvi/mdvi-lib/dviread.c:1523
+#, c-format
+msgid "font %d is not defined\n"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1563
+#, c-format
+msgid "font %d is not defined in postamble\n"
+msgstr "η γραμματοσειρά %d δεν έχει ορισθεί στο postamble\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1575
+#, c-format
+msgid "unexpected opcode %d\n"
+msgstr "απρόσμενο opcode %d\n"
+
+#: ../dvi/mdvi-lib/dviread.c:1581
+#, c-format
+msgid "undefined opcode %d\n"
+msgstr "μη ορισμένο opcode %d\n"
+
+#: ../dvi/mdvi-lib/font.c:464
+#, c-format
+msgid "%s: no fonts defined\n"
+msgstr "%s: δεν έχουν ορισθεί γραμματοσειρές\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:589
+#, c-format
+msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+msgstr ""
+"%s: %d: [%s] η κωδικοποίηση `%s' που επιλέχθηκε δεν ταιριάζει με το "
+"διανυσματικό `%s'\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:750
+#, c-format
+msgid "%s: could not load fontmap\n"
+msgstr "%s: αδυναμία μεταφόρτωσης του fontmap\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:764
+#, c-format
+msgid "%s: could not set as default encoding\n"
+msgstr "%s: αδυναμία ορισμού ως προεπιλεγμένης κωδικοποίησης\n"
+
+#: ../dvi/mdvi-lib/fontmap.c:843
+#, c-format
+msgid "encoding vector `%s' is in use\n"
+msgstr "Το διανυσματικό κωδικοποίησης `%s' είναι σε χρήση\n"
+
+#: ../dvi/mdvi-lib/gf.c:112
+#, c-format
+msgid "GF: invalid opcode %d in character %d\n"
+msgstr "GF: μη έγκυρο opcode %d στον χαρακτήρα %d\n"
+
+#: ../dvi/mdvi-lib/gf.c:210
+#, c-format
+msgid "(gf) Character %d: invalid opcode %d\n"
+msgstr "(gf) Χαρακτήρας %d: μη έγκυρο opcode %d\n"
+
+#: ../dvi/mdvi-lib/gf.c:226
+#, c-format
+msgid "(gf) character %d has an incorrect bounding box\n"
+msgstr "(gf) ο χαρακτήρας %d έχει μη έγκυρο bounding box\n"
+
+#: ../dvi/mdvi-lib/gf.c:289
+#, c-format
+msgid "%s: bad checksum (expected %u, found %u)\n"
+msgstr "%s: σφάλμα στο άθροισμα ελέγχου (αναμενόταν %u, βρέθηκε %u)\n"
+
+#: ../dvi/mdvi-lib/gf.c:325
+#, c-format
+msgid "%s: junk in postamble\n"
+msgstr "%s: αχρείαστα στοιχεία στο postamble\n"
+
+#: ../dvi/mdvi-lib/gf.c:362
+#, c-format
+msgid "%s: File corrupted, or not a GF file\n"
+msgstr "%s: Ζημιά στο αρχείο ή το αρχείο δεν είναι τύπου GF\n"
+
+#: ../dvi/mdvi-lib/pagesel.c:211
+#, c-format
+msgid "invalid page specification `%s'\n"
+msgstr "μη έγκυρος καθορισμός σελίδας `%s'\n"
+
+#: ../dvi/mdvi-lib/pagesel.c:231
+msgid "garbage after DVI page specification ignored\n"
+msgstr "αγνοήθηκαν άχρηστα στοιχεία μετά τον καθορισμό της σελίδας τύπου DVI\n"
+
+#: ../dvi/mdvi-lib/pagesel.c:259
+msgid "more than 10 counters in page specification\n"
+msgstr "περισσότεροι από 10 μετρητές στον καθορισμό σελίδας\n"
+
+#: ../dvi/mdvi-lib/pagesel.c:261
+msgid "garbage after TeX page specification ignored\n"
+msgstr "αγνοήθηκαν άχρηστα στοιχεία μετά τον καθορισμό της σελίδας τύπου TeX\n"
+
+#: ../dvi/mdvi-lib/paper.c:103 ../dvi/mdvi-lib/paper.c:110
+msgid "custom"
+msgstr "προσαρμοσμένο"
+
+#: ../dvi/mdvi-lib/pk.c:309
+msgid "Bad PK file: More bits than required\n"
+msgstr "Εσφαλμένο αρχείο τύπου PK: Περισσότερα bits από όσα χρειάζονται\n"
+
+#: ../dvi/mdvi-lib/pk.c:362
+#, c-format
+msgid "%s: checksum mismatch (expected %u, got %u)\n"
+msgstr "%s: Μη ταίριασμα στο άθροισμα ελέγχου (αναμενόταν %u, βρέθηκε %u)\n"
+
+#: ../dvi/mdvi-lib/pk.c:419
+#, c-format
+msgid "%s: unexpected preamble\n"
+msgstr "%s: Απρόσμενο preamble\n"
+
+#: ../dvi/mdvi-lib/pk.c:502
+#, c-format
+msgid "%s: unexpected end of file (no postamble)\n"
+msgstr "%s: Απρόσμενο τέλος αρχείου (δεν υπάρχει postamble)\n"
+
+#: ../dvi/mdvi-lib/pk.c:508
+msgid "invalid PK file! (junk in postamble)\n"
+msgstr "Μη έγκυρο αρχείο τύπου PK! (άχρηστα στοιχεία στο postamble)\n"
+
+#: ../dvi/mdvi-lib/pk.c:525
+#, c-format
+msgid "%s: File corrupted, or not a PK file\n"
+msgstr "%s: Ζημιά στο αρχείο ή το αρχείο δεν είναι τύπου PK\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:150
+#, c-format
+msgid "%s: malformed value for key `%s'\n"
+msgstr "%s: κακοσχηματισμένη τιμή για το κλειδί `%s'\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:161
+#, c-format
+msgid "%s: unknown key `%s' ignored\n"
+msgstr "%s: Αγνοήθηκε το άγνωστο κλειδί `%s'\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:166
+#, c-format
+msgid "%s: no argument for key `%s', using defaults\n"
+msgstr ""
+"%s: δεν υπάρχει παράμετρος για το κλειδί `%s', χρησιμοποιείται "
+"προεπιλεγμένη\n"
+
+#: ../dvi/mdvi-lib/sp-epsf.c:170
+#, c-format
+msgid "%s: argument `%s' ignored for key `%s'\n"
+msgstr "%s: η παράμετρος `%s' αγνοήθηκε για το κλειδί `%s'\n"
+
+#: ../dvi/mdvi-lib/special.c:242
+#, c-format
+msgid "%s: tried to pop top level layer\n"
+msgstr "%s: επιχειρήθηκε ανάδυση κορυφαίου layer\n"
+
+#: ../dvi/mdvi-lib/t1.c:182
+msgid "(t1) failed to reset device resolution\n"
+msgstr "(t1) αποτυχία επαναφοράς της ανάλυσης της συσκευής\n"
+
+#: ../dvi/mdvi-lib/t1.c:210
+#, c-format
+msgid "%s: could not encode font\n"
+msgstr "%s: αδυναμία κωδικοποιήσης γραμματοσειράς\n"
+
+#: ../dvi/mdvi-lib/t1.c:448
+#, c-format
+msgid "(t1) unsupported bitmap pad size %d\n"
+msgstr "(t1) μη υποστηριζόμενο μέγεθος για το bitmap pad %d\n"
+
+#: ../dvi/mdvi-lib/tfm.c:177
+#, c-format
+msgid "%s: Checksum mismatch (got %u, expected %u)\n"
+msgstr "%s: Μη ταίριασμα στο άθροισμα ελέγχου (αναμενόταν %u, βρέθηκε %u)\n"
+
+#: ../dvi/mdvi-lib/tfmfile.c:90
+#, c-format
+msgid "%s: Error reading AFM data\n"
+msgstr "%s: Σφάλμα ανάγνωσης δεδομένων τύπου AFM\n"
+
+#: ../dvi/mdvi-lib/tfmfile.c:180
+#, c-format
+msgid "Warning: TFM file `%s' has suspicious size\n"
+msgstr "Προειδοποίηση: Το αρχείο `%s' τύπου TPM έχει ύποπτο μέγεθος\n"
+
+#: ../dvi/mdvi-lib/tfmfile.c:230 ../dvi/mdvi-lib/tfmfile.c:511
+#, c-format
+msgid "%s: font coding scheme truncated to 40 bytes\n"
+msgstr "%s: Η κωδικοποίηση γραμματοσειράς συμπυκνώθηκε στα 40 bytes\n"
+
+#: ../dvi/mdvi-lib/tfmfile.c:290 ../dvi/mdvi-lib/tfmfile.c:589
+#, c-format
+msgid "%s: File corrupted, or not a TFM file\n"
+msgstr "%s: Ζημιά στο αρχείο ή το αρχείο δεν είναι τύπου TPM\n"
+
+#: ../dvi/mdvi-lib/tt.c:150
+#, c-format
+msgid "(tt) %s: could not load face: %s\n"
+msgstr "(tt) %s: αδυναμία φόρτωσης πρόσοψης: %s\n"
+
+#: ../dvi/mdvi-lib/tt.c:158
+#, c-format
+msgid "(tt) %s: could not create face: %s\n"
+msgstr "(tt) %s: αδυναμία δημιουργίας πρόσοψης: %s\n"
+
+#: ../dvi/mdvi-lib/tt.c:167
+#, c-format
+msgid "(tt) %s: could not create glyph: %s\n"
+msgstr "(tt) %s: αδυναμία δημιουργίας glyph: %s\n"
+
+#: ../dvi/mdvi-lib/tt.c:200
+#, c-format
+msgid "(tt) %s: no acceptable map found, using #0\n"
+msgstr "(tt) %s: δεν βρέθηκε αποδεκτό map, χρησιμοποιείται το #0\n"
+
+#: ../dvi/mdvi-lib/tt.c:213
+#, c-format
+msgid "(tt) %s: could not set resolution: %s\n"
+msgstr "(tt) %s: αδυναμία ορισμού ανάλυσης: %s\n"
+
+#: ../dvi/mdvi-lib/tt.c:220
+#, c-format
+msgid "(tt) %s: could not set point size: %s\n"
+msgstr "(tt) %s: αδυναμία ορισμού του μεγέθους πόντου: %s\n"
+
+#: ../dvi/mdvi-lib/tt.c:239
+#, c-format
+msgid "(tt) %s: could not load PS name table\n"
+msgstr "(tt) %s: αδυναμία φόρτωσης του πίνακα ονομάτων του τύπου PS\n"
+
+#: ../dvi/mdvi-lib/tt.c:264
+#, c-format
+msgid "%s: no encoding vector found, expect bad output\n"
+msgstr ""
+"%s: δεν βρέθηκε διάνυσμα κωδικοποίησης, αναμείνατε εσφαλμένο αποτέλεσμα\n"
+
+#: ../dvi/mdvi-lib/tt.c:324
+#, c-format
+msgid "(tt) %s: no font metric data\n"
+msgstr "(tt) %s: δεν βρέθηκαν metric data για την γραμματοσειρά\n"
+
+#: ../dvi/mdvi-lib/util.c:148
+msgid "Crashing"
+msgstr "Κόλλημα"
+
+#: ../dvi/mdvi-lib/util.c:158
+#, c-format
+msgid "%s: Error: "
+msgstr "%s: Σφάλμα: "
+
+#: ../dvi/mdvi-lib/util.c:165
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: ../dvi/mdvi-lib/util.c:174
+#, c-format
+msgid "%s: Warning: "
+msgstr "%s: Προειδοποίηση: "
+
+#: ../dvi/mdvi-lib/util.c:181
+msgid "Warning"
+msgstr "Προειδοποίηση"
+
+#: ../dvi/mdvi-lib/util.c:190
+#, c-format
+msgid "%s: Fatal: "
+msgstr "%s: Μοιραίο σφάλμα: "
+
+#: ../dvi/mdvi-lib/util.c:197
+msgid "Fatal"
+msgstr "Σφάλμα"
+
+#: ../dvi/mdvi-lib/util.c:211
+#, c-format
+msgid "out of memory allocating %u bytes\n"
+msgstr "η μνήμη εξαντλήθηκε κατά την ανάθεση %u bytes\n"
+
+#: ../dvi/mdvi-lib/util.c:221
+msgid "attempted to reallocate with zero size\n"
+msgstr "επιχειρήθηκε επανάθεση με μηδενικό μέγεθος\n"
+
+#: ../dvi/mdvi-lib/util.c:224
+#, c-format
+msgid "failed to reallocate %u bytes\n"
+msgstr "αποτυχία επανάθεσης %u bytes\n"
+
+#: ../dvi/mdvi-lib/util.c:233
+msgid "attempted to callocate 0 members\n"
+msgstr "επιχειρήθηκε επανάθεση 0 μελών\n"
+
+#: ../dvi/mdvi-lib/util.c:235
+#, c-format
+msgid "attempted to callocate %u members with size 0\n"
+msgstr "επιχειρήθηκε επανάθεση %u μελών με μέγεθος 0\n"
+
+#: ../dvi/mdvi-lib/util.c:239
+#, c-format
+msgid "failed to allocate %ux%u bytes\n"
+msgstr "αποτυχία ανάθεσης %ux%u bytes\n"
+
+#: ../dvi/mdvi-lib/util.c:247
+msgid "attempted to free NULL pointer\n"
+msgstr "επιχειρήθηκε ελευθέρωση NULL pointer\n"
+
+#: ../dvi/mdvi-lib/vf.c:81
+#, c-format
+msgid "%s: Checksum mismatch (expected %u, got %u)\n"
+msgstr "%s: Μη ταίριασμα στο άθροισμα ελέγχου (αναμενόταν %u, βρέθηκε %u)\n"
+
+#: ../dvi/mdvi-lib/vf.c:129
+#, c-format
+msgid "(vf) %s: could not load font `%s'\n"
+msgstr "(vf) %s: αδυναμία φόρτωσης γραμματοσειράς `%s'\n"
+
+#: ../dvi/mdvi-lib/vf.c:179
+#, c-format
+msgid "(vf) %s: character %d redefined\n"
+msgstr "(vf) %s: ο χαρακτήρας %d επαναπροσδιορίστηκε\n"
+
+#: ../dvi/mdvi-lib/vf.c:202
+#, c-format
+msgid "(vf) %s: no postamble\n"
+msgstr "(vf) %s: δεν υπάρχει preamble\n"
+
+#: ../dvi/mdvi-lib/vf.c:228
+#, c-format
+msgid "%s: File corrupted, or not a VF file.\n"
+msgstr "%s: Ζημιά στο αρχείο ή το αρχείο δεν είναι τύπου VF\n"
 
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
@@ -145,123 +632,132 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10x14"
 
-#: ../ps/ps-document.c:287
+#: ../ps/ps-document.c:140
 msgid "No document loaded."
 msgstr "Δεν φορτώθηκε έγγραφο."
 
-#: ../ps/ps-document.c:746
+#: ../ps/ps-document.c:638
 msgid "Broken pipe."
 msgstr "Διακοπείσα σωλήνωση."
 
-#: ../ps/ps-document.c:942
+#: ../ps/ps-document.c:825
 msgid "Interpreter failed."
 msgstr "Αποτυχία διερμηνέα."
 
 #. report error
-#: ../ps/ps-document.c:1064
+#: ../ps/ps-document.c:947
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Σφάλμα κατά την αποσυμπίεση του αρχείου %s:\n"
 
-#: ../ps/ps-document.c:1242
-msgid "File is not a valid PostScript document."
-msgstr "Το αρχείο δεν είναι ένα έγκυρο έγγραφο Postscript."
-
-#: ../ps/ps-document.c:1293
+#: ../ps/ps-document.c:1064
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Αδυναμία ανοίγματος αρχείου %s.\n"
 
-#: ../ps/ps-document.c:1295
+#: ../ps/ps-document.c:1066
 msgid "File is not readable."
 msgstr "Το αρχείο δεν μπορεί να αναγνωστεί."
 
-#: ../ps/ps-document.c:1314
+#: ../ps/ps-document.c:1084
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Σφάλμα κατά την ανάγνωση του αρχείου %s\n"
 
-#: ../ps/ps-document.c:1317
+#: ../ps/ps-document.c:1087
 msgid "The file is not a PostScript document."
 msgstr "Το αρχείο δεν είναι ένα έγγραφο PostScript."
 
-#: ../ps/ps-document.c:1333
+#: ../ps/ps-document.c:1099
 msgid "Document loaded."
 msgstr "Το έγγραφο φορτώθηκε."
 
-#: ../shell/eggfindbar.c:141
+#: ../shell/eggfindbar.c:148
 msgid "Search string"
 msgstr "Αναζήτηση αλφαριθμητικού"
 
-#: ../shell/eggfindbar.c:142
+#: ../shell/eggfindbar.c:149
 msgid "The name of the string to be found"
 msgstr "Το όνομα του αλφαριθμητικού προς αναζήτηση"
 
-#: ../shell/eggfindbar.c:155
+#: ../shell/eggfindbar.c:162
 msgid "Case sensitive"
 msgstr "Ταίριασμα πεζών-κεφαλαίων"
 
-#: ../shell/eggfindbar.c:156
+#: ../shell/eggfindbar.c:163
 msgid "TRUE for a case sensitive search"
 msgstr "TRUE για ταίριασμα πεζών-κεφαλαίων κατά την αναζήτηση"
 
-#: ../shell/eggfindbar.c:163
+#: ../shell/eggfindbar.c:170
 msgid "Highlight color"
 msgstr "Χρώμα επισήμανσης"
 
-#: ../shell/eggfindbar.c:164
+#: ../shell/eggfindbar.c:171
 msgid "Color of highlight for all matches"
 msgstr "Χρώμα επισήμανσης ταιριασμάτων"
 
-#: ../shell/eggfindbar.c:170
+#: ../shell/eggfindbar.c:177
 msgid "Current color"
 msgstr "Τρέχον χρώμα"
 
-#: ../shell/eggfindbar.c:171
+#: ../shell/eggfindbar.c:178
 msgid "Color of highlight for the current match"
 msgstr "Χρώμα επισήμανσης για τρέχον ταίριασμα"
 
-#: ../shell/eggfindbar.c:288
+#: ../shell/eggfindbar.c:300
 msgid "F_ind:"
 msgstr "Ε_ύρεση:"
 
-#: ../shell/eggfindbar.c:301
+#: ../shell/eggfindbar.c:306
 msgid "_Previous"
 msgstr "_Προηγούμενο"
 
-#: ../shell/eggfindbar.c:302
+#: ../shell/eggfindbar.c:308
 msgid "_Next"
 msgstr "_Επόμενο"
 
-#: ../shell/eggfindbar.c:314
+#: ../shell/eggfindbar.c:321
 msgid "C_ase Sensitive"
 msgstr "_Διάκριση πεζών-κεφαλαίων"
 
-#: ../shell/ev-application.c:120
+#: ../shell/ev-application.c:134
 msgid "Open document"
 msgstr "Άνοιγμα Εγγράφου"
 
-#: ../shell/ev-application.c:130
-msgid "PostScript and PDF Documents"
-msgstr "Έγγραφα PostScript και PDF"
+#: ../shell/ev-application.c:144
+msgid "All Documents"
+msgstr "Όλα τα έγγραφα"
 
-#: ../shell/ev-application.c:138
+#: ../shell/ev-application.c:159
 msgid "PostScript Documents"
 msgstr "Έγγραφα PostScript"
 
-#: ../shell/ev-application.c:145 ../shell/ev-window.c:869
+#: ../shell/ev-application.c:166 ../shell/ev-window.c:968
 msgid "PDF Documents"
 msgstr "Έγγραφα PDF"
 
-#: ../shell/ev-application.c:150
+#: ../shell/ev-application.c:172
+msgid "DVI Documents"
+msgstr "Έγγραφα DVI"
+
+#: ../shell/ev-application.c:178
 msgid "Images"
 msgstr "Εικόνες"
 
-#: ../shell/ev-application.c:155 ../shell/ev-window.c:874
+#: ../shell/ev-application.c:184
+msgid "Djvu Documents"
+msgstr "Έγγραφα Djvu"
+
+#: ../shell/ev-application.c:190 ../shell/ev-window.c:973
 msgid "All Files"
 msgstr "Όλα τα αρχεία"
 
-#: ../shell/ev-page-action.c:71
+#: ../shell/ev-page-action.c:107
+#, c-format
+msgid "(%d of %d)"
+msgstr "(%d από %d)"
+
+#: ../shell/ev-page-action.c:109
 #, c-format
 msgid "of %d"
 msgstr "από %d"
@@ -307,66 +803,79 @@ msgstr ""
 msgid "Incorrect password"
 msgstr "Εσφαλμένος κωδικός"
 
-#: ../shell/ev-view.c:661
-#, c-format
-msgid "Go to page %d"
-msgstr "Μετάβαση στη σελίδα %d"
+#: ../shell/ev-sidebar-links.c:215
+msgid "Loading..."
+msgstr "Μεταφόρτωση..."
 
+#: ../shell/ev-sidebar-links.c:509
+msgid "Index"
+msgstr "Κατάλογος"
+
+#: ../shell/ev-sidebar-thumbnails.c:352
+msgid "Thumbnails"
+msgstr "Μικρογραφίες"
+
+#: ../shell/ev-view.c:1143
+#, c-format
+msgid "Go to page %s"
+msgstr "Μετάβαση στη σελίδα %s"
+
+#. ev_document_doc_mutex_unlock ();
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:1055
+#: ../shell/ev-view.c:1771
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d βρέθηκε σε αυτή τη σελίδα"
 msgstr[1] "%d βρέθηκαν σε αυτή τη σελίδα"
 
-#: ../shell/ev-view.c:1066
+#: ../shell/ev-view.c:1783
 msgid "Not found"
 msgstr "Δε βρέθηκε"
 
-#: ../shell/ev-view.c:1068
+#: ../shell/ev-view.c:1785
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% απομένουν για αναζήτηση"
 
-#: ../shell/ev-window.c:377
+#: ../shell/ev-window.c:465
 msgid "Unable to open document"
 msgstr "Αδυναμία ανοίγματος εγγράφου"
 
-#: ../shell/ev-window.c:464
+#: ../shell/ev-window.c:513
 msgid "Document Viewer - Password Required"
 msgstr "Προβολέας Εγγράφου - Απαιτείται Κωδικός"
 
-#: ../shell/ev-window.c:466
+#: ../shell/ev-window.c:515
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Απαιτείται Κωδικός"
 
-#: ../shell/ev-window.c:737
+#: ../shell/ev-window.c:772
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Σφάλμα του MIME τύπου που δεν μπορεί να χειρισθεί: '%s'"
 
-#: ../shell/ev-window.c:841
+#: ../shell/ev-window.c:939
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Το αρχείο δεν μπορεί να αποθηκευτεί ως \"%s\"."
 
-#: ../shell/ev-window.c:861
+#: ../shell/ev-window.c:960
 msgid "Save a Copy"
-msgstr "Αποθήκευση ενός αντιγράφου"
+msgstr "Αποθήκευση αντιγράφου"
 
-#: ../shell/ev-window.c:939
+#: ../shell/ev-window.c:1042
 msgid "Print"
 msgstr "Εκτύπωση"
 
-#: ../shell/ev-window.c:962
+#: ../shell/ev-window.c:1065
 msgid "Printing is not supported on this printer."
 msgstr "Η εκτύπωση δεν υποστηρίζεται σε αυτόν τον εκτυπωτή."
 
-#: ../shell/ev-window.c:965
+#: ../shell/ev-window.c:1068
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -375,29 +884,29 @@ msgstr ""
 "Προσπαθείτε να τυπώσετε σε ένα εκτυπωτή με την χρήση του οδηγού  \"%s\". "
 "Αυτό το πρόγραμμα απαιτεί έναν οδηγό εκτυπωτή PostScript."
 
-#: ../shell/ev-window.c:1017
+#: ../shell/ev-window.c:1120
 msgid "The \"Find\" feature will not work with this document"
 msgstr "Η λειτουργία \"Εύρεση\" δεν είναι διαθέσιμη για αυτό το έγγραφο"
 
-#: ../shell/ev-window.c:1019
+#: ../shell/ev-window.c:1122
 msgid "Searching for text is only supported for PDF documents."
 msgstr ""
 "Η λειτουργία εύρεσης κειμένου υποστηρίζεται μόνο για έγγραφα τύπου PDF."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1235 ../shell/ev-window.c:2029
+#: ../shell/ev-window.c:1341 ../shell/ev-window.c:2268
 msgid "Leave Fullscreen"
 msgstr "Έξοδος Πλήρης Οθόνης"
 
-#: ../shell/ev-window.c:1614
+#: ../shell/ev-window.c:1829
 msgid "Many..."
 msgstr "Πολλά..."
 
-#: ../shell/ev-window.c:1619
+#: ../shell/ev-window.c:1834
 msgid "Not so many..."
 msgstr "Όχι τοσο πολλά..."
 
-#: ../shell/ev-window.c:1624
+#: ../shell/ev-window.c:1839
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -410,7 +919,7 @@ msgstr ""
 " Free Software Foundation, έκδοση 2 , ή \n"
 "(προαιρετικά) οποιαδήποτε νεότερη 'εκδοση.\n"
 
-#: ../shell/ev-window.c:1628
+#: ../shell/ev-window.c:1843
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -421,7 +930,7 @@ msgstr ""
 "αλλά ΧΩΡΙΣ ΚΑΜΜΙΑ ΑΠΟΛΥΤΩΣ ΕΓΓΥΗΣΗ για συγκεκριμένο σκοπό.\n"
 "Δείτε για περισσότερες λεπτομέρειες την GNU General Public License.\n"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1847
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -431,251 +940,341 @@ msgstr ""
 "μαζί με το Ναυτίλο. Αν όχι γράψτε στο Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA 02111-1307 USA\n"
 
-#: ../shell/ev-window.c:1654 ../shell/main.c:81
+#: ../shell/ev-window.c:1869 ../shell/main.c:83
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:1657
+#: ../shell/ev-window.c:1872
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 Οι συγγραφείς του Evince"
 
-#: ../shell/ev-window.c:1660
+#: ../shell/ev-window.c:1875
 msgid "PostScript and PDF File Viewer."
 msgstr "Προβολέας Αρχείων PostScript και PDF"
 
-#: ../shell/ev-window.c:1663
+#: ../shell/ev-window.c:1878
 msgid "translator-credits"
 msgstr "Stylianos Papanastasiou <stelios@dcs.gla.ac.uk>"
 
-#: ../shell/ev-window.c:1960
+#: ../shell/ev-window.c:2196
 msgid "_File"
 msgstr "_Αρχείο"
 
-#: ../shell/ev-window.c:1961
+#: ../shell/ev-window.c:2197
 msgid "_Edit"
 msgstr "_Επεξεργασία"
 
-#: ../shell/ev-window.c:1962
+#: ../shell/ev-window.c:2198
 msgid "_View"
 msgstr "_Προβολή"
 
-#: ../shell/ev-window.c:1963
+#: ../shell/ev-window.c:2199
 msgid "_Go"
 msgstr "_Μετάβαση"
 
-#: ../shell/ev-window.c:1964
+#: ../shell/ev-window.c:2200
 msgid "_Help"
 msgstr "_Βοήθεια"
 
-#: ../shell/ev-window.c:1968
+#: ../shell/ev-window.c:2204
 msgid "Open an existing document"
 msgstr "Άν_οιγμα υπάρχοντος εγγράφου"
 
-#: ../shell/ev-window.c:1970
+#: ../shell/ev-window.c:2206
 msgid "_Save a Copy..."
 msgstr "Απο_θήκευση ενός αντιγράφου"
 
-#: ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:2207
 msgid "Save the current document with a new filename"
 msgstr "Αποθήκευση του τρέχοντος αντιγράφου με διαφορετικό όνομα"
 
-#: ../shell/ev-window.c:1973
+#: ../shell/ev-window.c:2209
 msgid "Print..."
 msgstr "Εκτύπωση..."
 
-#: ../shell/ev-window.c:1974
+#: ../shell/ev-window.c:2210
 msgid "Print this document"
 msgstr "Εκτύπωση αυτού του εγγράφου"
 
-#: ../shell/ev-window.c:1977
+#: ../shell/ev-window.c:2213
 msgid "Close this window"
 msgstr "Κλείσιμο αυτού του παραθύρου"
 
-#: ../shell/ev-window.c:1982
+#: ../shell/ev-window.c:2218
 msgid "Copy text from the document"
 msgstr "Αντιγραφή κειμένου από το έγγραφο"
 
-#: ../shell/ev-window.c:1984
+#: ../shell/ev-window.c:2220
 msgid "Select _All"
 msgstr "Επιλογή ό_λων"
 
-#: ../shell/ev-window.c:1985
+#: ../shell/ev-window.c:2221
 msgid "Select the entire page"
 msgstr "Επιλογή ολόκληρης σελίδας"
 
-#: ../shell/ev-window.c:1988
+#: ../shell/ev-window.c:2224
 msgid "Find a word or phrase in the document"
 msgstr "Εύρεση μίας λέξης ή μίας φράσης μέσα στη σελίδα"
 
-#: ../shell/ev-window.c:1993
+#: ../shell/ev-window.c:2226
+msgid "Find Ne_xt"
+msgstr "Εύρεση Ε_πομένου"
+
+#: ../shell/ev-window.c:2227
+msgid "Find next occurrence of the word or phrase"
+msgstr "Εύρεση επόμενης εμφάνισης της λέξης ή φράσης"
+
+#: ../shell/ev-window.c:2232
 msgid "Enlarge the document"
 msgstr "Μεγέθυνση εγγράφου"
 
-#: ../shell/ev-window.c:1996
+#: ../shell/ev-window.c:2235
 msgid "Shrink the document"
 msgstr "Σμίκρυνση εγγράφου"
 
-#: ../shell/ev-window.c:1999
+#: ../shell/ev-window.c:2238
 msgid "Reset the zoom level to the default value"
 msgstr "Επαναφορά του  επιπέδου εστίασης στην προεπιλεγμένη τιμή"
 
-#: ../shell/ev-window.c:2001
+#: ../shell/ev-window.c:2240
 msgid "_Reload"
 msgstr "_Επαναφόρτωση"
 
-#: ../shell/ev-window.c:2002
+#: ../shell/ev-window.c:2241
 msgid "Reload the document"
 msgstr "Επαναφόρτωση του εγγράφου"
 
 #. Go menu
-#: ../shell/ev-window.c:2006
+#: ../shell/ev-window.c:2245
 msgid "_Previous Page"
 msgstr "_Προηγούμενη σελίδα"
 
-#: ../shell/ev-window.c:2007
+#: ../shell/ev-window.c:2246
 msgid "Go to the previous page"
 msgstr "Μετάβαση στην προηγούμενη σελίδα"
 
-#: ../shell/ev-window.c:2009
+#: ../shell/ev-window.c:2248
 msgid "_Next Page"
 msgstr "Επόμε_νη σελίδα"
 
-#: ../shell/ev-window.c:2010
+#: ../shell/ev-window.c:2249
 msgid "Go to the next page"
 msgstr "Μετάβαση στην επόμενη σελίδα"
 
-#: ../shell/ev-window.c:2012
+#: ../shell/ev-window.c:2251
 msgid "_First Page"
 msgstr "_Πρώτη σελίδα"
 
-#: ../shell/ev-window.c:2013
+#: ../shell/ev-window.c:2252
 msgid "Go to the first page"
 msgstr "Μετάβαση στην πρώτη σελίδα"
 
-#: ../shell/ev-window.c:2015
+#: ../shell/ev-window.c:2254
 msgid "_Last Page"
 msgstr "_Τελευταία σελίδα"
 
-#: ../shell/ev-window.c:2016
+#: ../shell/ev-window.c:2255
 msgid "Go to the last page"
 msgstr "Μετάβαση στην τελευταία σελίδα"
 
 #. Help menu
-#: ../shell/ev-window.c:2020
+#: ../shell/ev-window.c:2259
 msgid "_Contents"
 msgstr "Περιε_χόμενα"
 
-#: ../shell/ev-window.c:2021
+#: ../shell/ev-window.c:2260
 msgid "Display help for the viewer application"
 msgstr "Εμφάνιση βοήθειας για την εφαρμογή του προβολέα"
 
-#: ../shell/ev-window.c:2024
+#: ../shell/ev-window.c:2263
 msgid "_About"
 msgstr "_Περί"
 
-#: ../shell/ev-window.c:2025
+#: ../shell/ev-window.c:2264
 msgid "Display credits for the document viewer creators"
 msgstr "Εμφάνιση μνείας των δημιουργών του προβολέα εγγράφων"
 
-#: ../shell/ev-window.c:2030
+#: ../shell/ev-window.c:2269
 msgid "Leave fullscreen mode"
 msgstr "Έξοδος από λειτουργία πλήρους οθόνη"
 
+#: ../shell/ev-window.c:2272
+msgid "Selection Caret"
+msgstr "Δρομέας επιλογής"
+
 #. View Menu
-#: ../shell/ev-window.c:2037
+#: ../shell/ev-window.c:2279
 msgid "_Toolbar"
 msgstr "_Εργαλειοθήκη"
 
-#: ../shell/ev-window.c:2038
+#: ../shell/ev-window.c:2280
 msgid "Show or hide the toolbar"
 msgstr "Προβολή ή απόκρυψη της εργαλειοθήκης"
 
-#: ../shell/ev-window.c:2040
+#: ../shell/ev-window.c:2282
 msgid "_Statusbar"
 msgstr "_Γραμμή Κατάστασης"
 
-#: ../shell/ev-window.c:2041
+#: ../shell/ev-window.c:2283
 msgid "Show or hide the statusbar"
 msgstr "Προβολή ή απόκρυψη της γραμμής κατάστασης"
 
-#: ../shell/ev-window.c:2043
+#: ../shell/ev-window.c:2285
 msgid "Side _pane"
 msgstr "Πλευρικό _Ταμπλώ"
 
-#: ../shell/ev-window.c:2044
+#: ../shell/ev-window.c:2286
 msgid "Show or hide the side pane"
 msgstr "Προβολή ή απόκρυψη πλευρικού ταμπλώ"
 
-#: ../shell/ev-window.c:2046
+#: ../shell/ev-window.c:2288
+msgid "_Continuous"
+msgstr "Συνε_χής"
+
+#: ../shell/ev-window.c:2289
+msgid "Show the entire document"
+msgstr "Εμφάνιση ολόκληρου του εγγράφου"
+
+#: ../shell/ev-window.c:2291
+msgid "_Dual"
+msgstr "_Διπλή"
+
+#: ../shell/ev-window.c:2292
+msgid "Show two pages at once"
+msgstr "Εμφάνιση δύο σελίδων ταυτόχρονα"
+
+#: ../shell/ev-window.c:2294
 msgid "_Fullscreen"
 msgstr "_Πλήρης οθόνη"
 
-#: ../shell/ev-window.c:2047
+#: ../shell/ev-window.c:2295
 msgid "Expand the window to fill the screen"
 msgstr "Ανάπτυξη παραθύρου ώστε να γεμίσει την οθόνη"
 
-#: ../shell/ev-window.c:2049
+#: ../shell/ev-window.c:2297
+msgid "_Presentation"
+msgstr ""
+
+#: ../shell/ev-window.c:2298
+msgid "Run document as a presentation"
+msgstr ""
+
+#: ../shell/ev-window.c:2300
 msgid "_Best Fit"
 msgstr "_Καλύτερο Ταίριασμα"
 
-#: ../shell/ev-window.c:2050
+#: ../shell/ev-window.c:2301
 msgid "Make the current document fill the window"
 msgstr "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το παράθυρο"
 
-#: ../shell/ev-window.c:2052
+#: ../shell/ev-window.c:2303
 msgid "Fit Page _Width"
 msgstr "Ταίριασμα στο π_λάτος της σελίδας"
 
-#: ../shell/ev-window.c:2053
+#: ../shell/ev-window.c:2304
 msgid "Make the current document fill the window width"
 msgstr ""
 "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το πλάτος του παραθύρου"
 
-#: ../shell/ev-window.c:2058
+#: ../shell/ev-window.c:2309
 msgid "Single"
 msgstr "Μονό"
 
-#: ../shell/ev-window.c:2059
+#: ../shell/ev-window.c:2310
 msgid "Show the document one page at a time"
 msgstr "Εμφάνιση εγγράφου μια σελίδα ανά φορά"
 
-#: ../shell/ev-window.c:2061
+#: ../shell/ev-window.c:2312
 msgid "Multi"
 msgstr "Πολλαπλά"
 
-#: ../shell/ev-window.c:2062
+#: ../shell/ev-window.c:2313
 msgid "Show the full document at once"
 msgstr "Εμφάνιση του ολόκληρου του εγγράφου ταυτόχρονα"
 
-#: ../shell/ev-window.c:2101
+#: ../shell/ev-window.c:2342
 msgid "Page"
 msgstr "Σελίδα"
 
-#: ../shell/ev-window.c:2102
+#: ../shell/ev-window.c:2343
 msgid "Select Page"
 msgstr "Επιλογή σελίδας"
 
+#: ../shell/ev-window.c:2350
+#, fuzzy
+msgid "Zoom"
+msgstr "Μεγέθυνση"
+
+#: ../shell/ev-window.c:2352
+msgid "Adjust the zoom level"
+msgstr ""
+
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2117
+#: ../shell/ev-window.c:2368
 msgid "Previous"
 msgstr "Προηγούμενο"
 
-#: ../shell/ev-window.c:2122
+#. translators: this is the label for toolbar button
+#: ../shell/ev-window.c:2374
 msgid "Next"
 msgstr "Επόμενο"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2125
+#: ../shell/ev-window.c:2378
+msgid "Zoom In"
+msgstr "Μεγέθυνση"
+
+#. translators: this is the label for toolbar button
+#: ../shell/ev-window.c:2383
+msgid "Zoom Out"
+msgstr "Σμίκρυνση"
+
+#. translators: this is the label for toolbar button
+#: ../shell/ev-window.c:2393
 msgid "Fit Width"
 msgstr "Ταίριασμα στο Πλάτος"
 
-#: ../shell/ev-window.c:2318
-msgid "Index"
-msgstr "Κατάλογος"
+#: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
+msgid ""
+"Boolean options available, true enables thumbnailing and false disables the "
+"creation of new thumbnails"
+msgstr ""
+"Διαθέσιμη επιλογή boolean: true ενεργοποιεί την δημιουργία μικρογραφιών ενώ\n"
+"false απενεργοποιεί τη δημιουργία νέων μικρογραφιών"
 
-#: ../shell/ev-window.c:2325
-msgid "Thumbnails"
-msgstr "Μικρογραφίες"
+#: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
+msgid "Enable thumbnailing of PDF Documents"
+msgstr "Ενεργοποίηση μικρογραφιών για έγγραφα τύπου PDF"
+
+#: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
+msgid "Thumbnail command for PDF Documents"
+msgstr "Εντολή για δημιουργία μικρογραφιών εγγράφων PDF"
+
+#: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
+msgid ""
+"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
+"thumbnailer documentation for more information."
+msgstr ""
+"Έγκυρη εντολή και παράμετροι για την δημιουργία μικρογραφιών για έγγραφα "
+"τύπου\n"
+"PDF. Για περισσότερες πληροφορίες δείτε την τεκμηρίωση του Ναυτίλου σχετικά "
+"με\n"
+"τις μικρογραφίες."
+
+#~ msgid "Show sidebar by default."
+#~ msgstr "Προεπιλεγμένη εμφάνιση πλευρικού ταμπλώ"
+
+#~ msgid "Show statusbar by default."
+#~ msgstr "Προεπιλεγμένη εμφάνιση της γραμμής κατάστασης"
+
+#~ msgid "Show toolbar by default."
+#~ msgstr "Προεπιλεγμένη εμφάνιση εργαλειοθήκης"
+
+#~ msgid "The default sidebar size."
+#~ msgstr "Το προεπιλεγμένο μέγεθος της πλευρικής μπάρας."
+
+#~ msgid "File is not a valid PostScript document."
+#~ msgstr "Το αρχείο δεν είναι ένα έγκυρο έγγραφο Postscript."
 
 #~ msgid "Error while converting pdf file %s:\n"
 #~ msgstr "Σφάλμα κατά την μετατροπή του αρχείου PDF %s:\n"
