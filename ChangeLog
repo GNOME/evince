@@ -1,5 +1,17 @@
 2005-05-07  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-view.c: (clear_selection), (ev_view_finalize),
+	(view_rect_to_doc_rect), (compute_selections),
+	(ev_view_bin_expose), (ev_view_select_all), (get_selected_text),
+	(ev_view_copy), (ev_view_primary_get_cb),
+	(ev_view_primary_clear_cb), (ev_view_update_primary_selection),
+	(ev_view_button_press_event), (ev_view_motion_notify_event),
+	(ev_view_button_release_event), (page_changed_cb):
+
+	Fix text selection
+
+2005-05-07  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-view.c: (compute_border), (get_page_extents),
 	(doc_rect_to_view_rect), (highlight_find_results),
 	(ev_view_bin_expose), (ev_view_select_all),

@@ -84,6 +84,11 @@ typedef enum {
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 6.0
 
+typedef struct {
+  EvRectangle rect;
+  int page;
+} EvViewSelection;
+
 struct _EvView {
 	GtkWidget parent_instance;
 
@@ -98,9 +103,8 @@ struct _EvView {
 	int scroll_y;
 
 	gboolean pressed_button;
-	gboolean has_selection;
 	GdkPoint selection_start;
-	EvRectangle selection;
+	GList *selections;
 	EvViewCursor cursor;
 
 	GtkAdjustment *hadjustment;
@@ -309,6 +313,13 @@ view_update_range_and_current_page (EvView *view)
 					view->scale);	
 }
 
+static void
+clear_selection (EvView *view)
+{
+	g_list_foreach (view->selections, (GFunc)g_free, NULL);
+	view->selections = NULL;
+}
+
 /*** Virtual function implementations ***/
 
 static void
@@ -320,6 +331,8 @@ ev_view_finalize (GObject *object)
 
 	g_free (view->status);
 	g_free (view->find_status);
+
+	clear_selection (view);
 
 	G_OBJECT_CLASS (ev_view_parent_class)->finalize (object);
 }
@@ -466,19 +479,47 @@ get_page_extents (EvView       *view,
 	return TRUE;
 }
 
-#if 0
 static void
-view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, EvRectangle *doc_rect)
+view_rect_to_doc_rect (EvView *view,
+		       GdkRectangle *view_rect,
+		       GdkRectangle *page_area,
+		       EvRectangle  *doc_rect)
 {
-	int x_offset, y_offset;
-
-	ev_view_get_offsets (view, &x_offset, &y_offset);
-	doc_rect->x1 = (double) (view_rect->x - x_offset) / view->scale;
-	doc_rect->y1 = (double) (view_rect->y - y_offset) / view->scale;
-	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
-	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
+	doc_rect->x1 = floor ((view_rect->x - page_area->x) / view->scale);
+	doc_rect->y1 = floor ((view_rect->y - page_area->y) / view->scale);
+	doc_rect->x2 = doc_rect->x1 + ceil (view_rect->width / view->scale);
+	doc_rect->y2 = doc_rect->y1 + ceil (view_rect->height / view->scale);
 }
-#endif
+
+static void
+compute_selections (EvView *view, GdkRectangle *view_rect)
+{
+	int n_pages, i;
+
+	clear_selection (view);
+
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	for (i = 0; i < n_pages; i++) {
+		GdkRectangle page_area;
+		GtkBorder border;
+
+		if (get_page_extents (view, i, &page_area, &border)) {
+			GdkRectangle overlap;
+
+			if (gdk_rectangle_intersect (&page_area, view_rect, &overlap)) {
+				EvViewSelection *selection;
+
+				selection = g_new0 (EvViewSelection, 1);
+				selection->page = i;
+				view_rect_to_doc_rect (view, &overlap, &page_area,
+						       &(selection->rect));
+
+				view->selections = g_list_append
+						(view->selections, selection);
+			}
+		}
+	}
+}
 
 static void
 doc_rect_to_view_rect (EvView       *view,
@@ -933,6 +974,8 @@ static void
 ev_view_bin_expose (EvView         *view,
 		    GdkEventExpose *event)
 {
+	GdkRectangle rubberband;
+	GList *l;
 	int i;
 
 	if (view->document == NULL)
@@ -952,17 +995,16 @@ ev_view_bin_expose (EvView         *view,
 		}
 	}
 
-#if 0
-	if (view->has_selection) {
-		GdkRectangle rubberband;
+	for (l = view->selections; l != NULL; l = l->next) {
+		EvViewSelection *selection = (EvViewSelection *)l->data;
 
-		doc_rect_to_view_rect (view, &view->selection, &rubberband);
+		doc_rect_to_view_rect (view, selection->page,
+				       &selection->rect, &rubberband);
 		if (rubberband.width > 0 && rubberband.height > 0) {
 			draw_rubberband (GTK_WIDGET (view), view->bin_window,
 					 &rubberband, 0x40);
 		}
 	}
-#endif
 }
 
 static gboolean
@@ -980,32 +1022,59 @@ ev_view_expose_event (GtkWidget      *widget,
 }
 
 void
-ev_view_select_all (EvView *ev_view)
+ev_view_select_all (EvView *view)
 {
-#if 0
-	GtkWidget *widget = GTK_WIDGET (ev_view);
-	GdkRectangle selection;
-	int width, height;
-	int x_offset, y_offset;
+	int n_pages, i;
 
-	g_return_if_fail (EV_IS_VIEW (ev_view));
+	clear_selection (view);
 
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	for (i = 0; i < n_pages; i++) {
+		int width, height;
+		EvViewSelection *selection;
 
-	ev_view_get_offsets (ev_view, &x_offset, &y_offset);
-	ev_page_cache_get_size (ev_view->page_cache,
-				ev_view->current_page,
-				ev_view->scale,
-				&width, &height);
+		ev_page_cache_get_size (view->page_cache,
+					view->current_page,
+					1.0,
+					&width,
+					&height);
 
-	ev_view->has_selection = TRUE;
-	selection.x = x_offset + ev_view->border.left;
-        selection.y = y_offset + ev_view->border.top;
-	selection.width = width;
-	selection.height = height;
-	view_rect_to_doc_rect (ev_view, &selection, &ev_view->selection);
+		selection = g_new0 (EvViewSelection, 1);
+		selection->page = i;
+		selection->rect.x1 = selection->rect.y1 = 0;
+		selection->rect.x2 = width;
+		selection->rect.y2 = height;
 
-	gtk_widget_queue_draw (widget);
-#endif
+		view->selections = g_list_append (view->selections, selection);
+	}
+
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static char *
+get_selected_text (EvView *ev_view)
+{
+	GString *text;
+	GList *l;
+
+	text = g_string_new (NULL);
+
+	ev_document_doc_mutex_lock ();
+
+	for (l = ev_view->selections; l != NULL; l = l->next) {
+		EvViewSelection *selection = (EvViewSelection *)l->data;
+		char *tmp;
+
+		tmp = ev_document_get_text (ev_view->document,
+					    selection->page,
+					    &selection->rect);
+		g_string_append (text, tmp);
+		g_free (tmp);
+	}
+
+	ev_document_doc_mutex_unlock ();
+
+	return g_string_free (text, FALSE);
 }
 
 void
@@ -1018,12 +1087,7 @@ ev_view_copy (EvView *ev_view)
 		return;
 	}
 
-	ev_document_doc_mutex_lock ();
-	text = ev_document_get_text (ev_view->document,
-				     ev_view->current_page,
-				     &ev_view->selection);
-	ev_document_doc_mutex_unlock ();
-
+	text = get_selected_text (ev_view);
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
 					      GDK_SELECTION_CLIPBOARD);
 	gtk_clipboard_set_text (clipboard, text, -1);
@@ -1043,21 +1107,18 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 		return;
 	}
 
-	ev_document_doc_mutex_lock ();
-	text = ev_document_get_text (ev_view->document,
-				     ev_view->current_page,
-				     &ev_view->selection);
-	ev_document_doc_mutex_unlock ();
+	text = get_selected_text (ev_view);
 	gtk_selection_data_set_text (selection_data, text, -1);
+	g_free (text);
 }
 
 static void
 ev_view_primary_clear_cb (GtkClipboard *clipboard,
 			  gpointer      data)
 {
-	EvView *ev_view = EV_VIEW (data);
+	EvView *view = EV_VIEW (data);
 
-	ev_view->has_selection = FALSE;
+	clear_selection (view);
 }
 
 static void
@@ -1068,7 +1129,7 @@ ev_view_update_primary_selection (EvView *ev_view)
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
                                               GDK_SELECTION_PRIMARY);
 
-	if (ev_view->has_selection) {
+	if (ev_view->selections) {
 		if (!gtk_clipboard_set_with_owner (clipboard,
 						   targets,
 						   G_N_ELEMENTS (targets),
@@ -1096,8 +1157,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 	switch (event->button) {
 		case 1:
-			if (view->has_selection) {
-				view->has_selection = FALSE;
+			if (view->selections) {
+				clear_selection (view);
 				gtk_widget_queue_draw (widget);
 			}
 
@@ -1281,14 +1342,12 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	if (view->pressed_button > 0) {
 		GdkRectangle selection;
 
-		view->has_selection = TRUE;
 		selection.x = MIN (view->selection_start.x, event->x);
 		selection.y = MIN (view->selection_start.y, event->y);
 		selection.width = ABS (view->selection_start.x - event->x) + 1;
 		selection.height = ABS (view->selection_start.y - event->y) + 1;
-#if 0
-		view_rect_to_doc_rect (view, &selection, &view->selection);
-#endif
+
+		compute_selections (view, &selection);
 
 		gtk_widget_queue_draw (widget);
 	} else if (view->document) {
@@ -1346,7 +1405,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->pressed_button = -1;
 
-	if (view->has_selection) {
+	if (view->selections) {
 		ev_view_update_primary_selection (view);
 	} else if (view->document) {
 		EvLink *link;
@@ -1913,7 +1972,6 @@ page_changed_cb (EvPageCache *page_cache,
 				&old_width, &old_height);
 
 	view->current_page = new_page;
-	view->has_selection = FALSE;
 
 	ev_page_cache_get_size (page_cache,
 				new_page,
