@@ -1,5 +1,12 @@
 2005-05-07  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-view.c: (ev_view_select_all):
+
+	Compute size of the actual page, not of
+	the current one.
+
+2005-05-07  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-view.c: (clear_selection), (ev_view_finalize),
 	(view_rect_to_doc_rect), (compute_selections),
 	(ev_view_bin_expose), (ev_view_select_all), (get_selected_text),
