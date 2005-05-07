@@ -343,29 +343,130 @@ ev_view_destroy (GtkObject *object)
 }
 
 static void
-ev_view_get_offsets (EvView *view, int *x_offset, int *y_offset)
+compute_border (EvView *view, int width, int height, GtkBorder *border)
 {
-	EvDocument *document = view->document;
-	GtkWidget *widget = GTK_WIDGET (view);
-	int width, height, target_width, target_height;
-
-	g_return_if_fail (EV_IS_DOCUMENT (document));
-
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->scale,
-				&width, &height);
-
-	*x_offset = view->spacing;
-	*y_offset = view->spacing;
-	target_width = width + view->border.left +
-		       view->border.right + view->spacing * 2;
-	target_height = height + view->border.top +
-			view->border.bottom + view->spacing * 2;
-	*x_offset += MAX (0, (widget->allocation.width - target_width) / 2);
-	*y_offset += MAX (0, (widget->allocation.height - target_height) / 2);
+	if (view->presentation) {
+		border->left = 0;
+		border->right = 0;
+		border->top = 0;
+		border->bottom = 0;
+	} else {
+		ev_document_misc_get_page_border_size (width, height, border);
+	}
 }
 
+static gboolean
+get_page_extents (EvView       *view,
+		  gint          page,
+		  GdkRectangle *page_area,
+		  GtkBorder    *border)
+{
+	GtkWidget *widget;
+	int width, height;
+
+	widget = GTK_WIDGET (view);
+
+	/* Quick sanity check */
+	if (view->presentation) {
+		if (view->current_page != page)
+			return FALSE;
+	} else if (view->continuous) {
+		if (page < view->start_page ||
+		    page > view->end_page)
+			return FALSE;
+	} else if (view->dual_page) {
+		if (ABS (page - view->current_page) > 1)
+			return FALSE;
+	} else {
+		if (view->current_page != page)
+			return FALSE;
+	}
+
+	/* Get the size of the page */
+	ev_page_cache_get_size (view->page_cache, page,
+				view->scale,
+				&width, &height);
+	compute_border (view, width, height, border);
+	page_area->width = width + border->left + border->right;
+	page_area->height = height + border->top + border->bottom;
+
+	if (view->presentation) {
+		page_area->x = (MAX (0, widget->allocation.width - width))/2;
+		page_area->y = (MAX (0, widget->allocation.height - height))/2;
+	} else if (view->continuous) {
+		gint max_width, max_height;
+		gint x, y;
+
+		get_bounding_box_size (view, &max_width, &max_height);
+		/* Get the location of the bounding box */
+		if (view->dual_page) {
+			x = view->spacing + (page % 2) * (max_width + view->spacing);
+			y = view->spacing + (page / 2) * (max_height + view->spacing);
+			x = x + MAX (0, widget->allocation.width - (max_width * 2 + view->spacing * 3))/2;
+		} else {
+			x = view->spacing;
+			y = view->spacing + page * (max_height + view->spacing);
+			x = x + MAX (0, widget->allocation.width - (max_width + view->spacing * 2))/2;
+		}
+		page_area->x = x;
+		page_area->y = y;
+	} else {
+		gint x, y;
+		if (view->dual_page) {
+			gint width_2, height_2;
+			gint max_width = width;
+			gint max_height = height;
+			GtkBorder overall_border;
+			gint other_page;
+
+			other_page = page ^ 1;
+
+			/* First, we get the bounding box of the two pages */
+			if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
+				ev_page_cache_get_size (view->page_cache,
+							page + 1,
+							view->scale,
+							&width_2, &height_2);
+				if (width_2 > width)
+					max_width = width_2;
+				if (height_2 > height)
+					max_height = height_2;
+			}
+			compute_border (view, max_width, max_height, &overall_border);
+
+			/* Find the offsets */
+			x = view->spacing;
+			y = view->spacing;
+
+			/* Adjust for being the left or right page */
+			if (page % 2 == 0)
+				x = x + max_width - width;
+			else
+				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
+
+			y = y + (max_height - height)/2;
+
+			/* Adjust for extra allocation */
+			x = x + MAX (0, widget->allocation.width -
+				     ((max_width + overall_border.left + overall_border.right) * 2 + view->spacing * 3))/2;
+			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
+		} else {
+			x = view->spacing;
+			y = view->spacing;
+
+			/* Adjust for extra allocation */
+			x = x + MAX (0, widget->allocation.width - (width + view->spacing * 2))/2;
+			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
+		}
+
+		page_area->x = x;
+		page_area->y = y;
+	}
+
+	return TRUE;
+}
+
+#if 0
 static void
 view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, EvRectangle *doc_rect)
 {
@@ -377,30 +478,26 @@ view_rect_to_doc_rect (EvView *view, GdkRectangle *view_rect, EvRectangle *doc_r
 	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
 	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
+#endif
 
 static void
-doc_rect_to_view_rect (EvView *view, EvRectangle *doc_rect, GdkRectangle *view_rect)
+doc_rect_to_view_rect (EvView       *view,
+                       int           page,
+		       EvRectangle  *doc_rect,
+		       GdkRectangle *view_rect)
 {
-	int x_offset, y_offset;
+	GdkRectangle page_area;
+	GtkBorder border;
+	int width, height;
 
-	ev_view_get_offsets (view, &x_offset, &y_offset);
-	view_rect->x = floor (doc_rect->x1 * view->scale) + x_offset;
-	view_rect->y = floor (doc_rect->y1 * view->scale) + y_offset;
-	view_rect->width = ceil (doc_rect->x2 * view->scale) + x_offset - view_rect->x;
-	view_rect->height = ceil (doc_rect->y2 * view->scale) + y_offset - view_rect->y;
-}
+	get_page_extents (view, page, &page_area, &border);
 
-static void
-compute_border (EvView *view, int width, int height, GtkBorder *border)
-{
-	if (view->presentation) {
-		border->left = 0;
-		border->right = 0;
-		border->top = 0;
-		border->bottom = 0;
-	} else {
-		ev_document_misc_get_page_border_size (width, height, border);
-	}
+	width = doc_rect->x2 - doc_rect->x1;
+	height = doc_rect->y2 - doc_rect->y1;
+	view_rect->x = floor (doc_rect->x1 * view->scale) + page_area.x;
+	view_rect->y = floor (doc_rect->y1 * view->scale) + page_area.y;
+	view_rect->width = ceil (width * view->scale);
+	view_rect->height = ceil (height * view->scale);
 }
 
 static void
@@ -698,8 +795,6 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	return FALSE;
 }
 
-
-#if 0
 static guint32
 ev_gdk_color_to_rgb (const GdkColor *color)
 {
@@ -748,7 +843,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 
 
 static void
-highlight_find_results (EvView *view)
+highlight_find_results (EvView *view, int page)
 {
 	EvDocumentFind *find;
 	int i, results = 0;
@@ -757,7 +852,7 @@ highlight_find_results (EvView *view)
 
 	find = EV_DOCUMENT_FIND (view->document);
 
-	results = ev_document_find_get_n_results (find, view->current_page);
+	results = ev_document_find_get_n_results (find, page);
 
 	for (i = 0; i < results; i++) {
 		EvRectangle rectangle;
@@ -765,125 +860,12 @@ highlight_find_results (EvView *view)
 		guchar alpha;
 
 		alpha = (i == view->find_result) ? 0x90 : 0x20;
-		ev_document_find_get_result (find, view->current_page,
+		ev_document_find_get_result (find, page,
 					     i, &rectangle);
-		doc_rect_to_view_rect (view, &rectangle, &view_rectangle);
+		doc_rect_to_view_rect (view, page, &rectangle, &view_rectangle);
 		draw_rubberband (GTK_WIDGET (view), view->bin_window,
 				 &view_rectangle, alpha);
         }
-}
-#endif
-
-
-static gboolean
-get_page_extents (EvView       *view,
-		  gint          page,
-		  GdkRectangle *page_area,
-		  GtkBorder    *border)
-{
-	GtkWidget *widget;
-	int width, height;
-
-	widget = GTK_WIDGET (view);
-
-	/* Quick sanity check */
-	if (view->presentation) {
-		if (view->current_page != page)
-			return FALSE;
-	} else if (view->continuous) {
-		if (page < view->start_page ||
-		    page > view->end_page)
-			return FALSE;
-	} else if (view->dual_page) {
-		if (ABS (page - view->current_page) > 1)
-			return FALSE;
-	} else {
-		if (view->current_page != page)
-			return FALSE;
-	}
-
-	/* Get the size of the page */
-	ev_page_cache_get_size (view->page_cache, page,
-				view->scale,
-				&width, &height);
-	compute_border (view, width, height, border);
-	page_area->width = width + border->left + border->right;
-	page_area->height = height + border->top + border->bottom;
-
-	if (view->presentation) {
-		page_area->x = (MAX (0, widget->allocation.width - width))/2;
-		page_area->y = (MAX (0, widget->allocation.height - height))/2;
-	} else if (view->continuous) {
-		gint max_width, max_height;
-		gint x, y;
-
-		get_bounding_box_size (view, &max_width, &max_height);
-		/* Get the location of the bounding box */
-		if (view->dual_page) {
-			x = view->spacing + (page % 2) * (max_width + view->spacing);
-			y = view->spacing + (page / 2) * (max_height + view->spacing);
-			x = x + MAX (0, widget->allocation.width - (max_width * 2 + view->spacing * 3))/2;
-		} else {
-			x = view->spacing;
-			y = view->spacing + page * (max_height + view->spacing);
-			x = x + MAX (0, widget->allocation.width - (max_width + view->spacing * 2))/2;
-		}
-		page_area->x = x;
-		page_area->y = y;
-	} else {
-		gint x, y;
-		if (view->dual_page) {
-			gint width_2, height_2;
-			gint max_width = width;
-			gint max_height = height;
-			GtkBorder overall_border;
-			gint other_page;
-
-			other_page = page ^ 1;
-
-			/* First, we get the bounding box of the two pages */
-			if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
-				ev_page_cache_get_size (view->page_cache,
-							page + 1,
-							view->scale,
-							&width_2, &height_2);
-				if (width_2 > width)
-					max_width = width_2;
-				if (height_2 > height)
-					max_height = height_2;
-			}
-			compute_border (view, max_width, max_height, &overall_border);
-
-			/* Find the offsets */
-			x = view->spacing;
-			y = view->spacing;
-
-			/* Adjust for being the left or right page */
-			if (page % 2 == 0)
-				x = x + max_width - width;
-			else
-				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
-
-			y = y + (max_height - height)/2;
-
-			/* Adjust for extra allocation */
-			x = x + MAX (0, widget->allocation.width -
-				     ((max_width + overall_border.left + overall_border.right) * 2 + view->spacing * 3))/2;
-			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
-		} else {
-			x = view->spacing;
-			y = view->spacing;
-
-			/* Adjust for extra allocation */
-			x = x + MAX (0, widget->allocation.width - (width + view->spacing * 2))/2;
-			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
-		}
-
-		page_area->x = x;
-		page_area->y = y;
-	}
-
-	return TRUE;
 }
 
 static void
@@ -962,14 +944,15 @@ ev_view_bin_expose (EvView         *view,
 
 		if (! get_page_extents (view, i, &page_area, &border))
 			continue;
+
 		draw_one_page (view, i, &page_area, &border, &(event->area));
+
+		if (EV_IS_DOCUMENT_FIND (view->document)) {
+			highlight_find_results (view, i);
+		}
 	}
 
 #if 0
-	if (EV_IS_DOCUMENT_FIND (view->document)) {
-		highlight_find_results (view);
-	}
-
 	if (view->has_selection) {
 		GdkRectangle rubberband;
 
@@ -999,6 +982,7 @@ ev_view_expose_event (GtkWidget      *widget,
 void
 ev_view_select_all (EvView *ev_view)
 {
+#if 0
 	GtkWidget *widget = GTK_WIDGET (ev_view);
 	GdkRectangle selection;
 	int width, height;
@@ -1021,6 +1005,7 @@ ev_view_select_all (EvView *ev_view)
 	view_rect_to_doc_rect (ev_view, &selection, &ev_view->selection);
 
 	gtk_widget_queue_draw (widget);
+#endif
 }
 
 void
@@ -1301,7 +1286,9 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		selection.y = MIN (view->selection_start.y, event->y);
 		selection.width = ABS (view->selection_start.x - event->x) + 1;
 		selection.height = ABS (view->selection_start.y - event->y) + 1;
+#if 0
 		view_rect_to_doc_rect (view, &selection, &view->selection);
+#endif
 
 		gtk_widget_queue_draw (widget);
 	} else if (view->document) {
@@ -1756,15 +1743,12 @@ update_find_status_message (EvView *view)
 {
 	char *message;
 
-//	ev_document_doc_mutex_lock ();
 	if (view->current_page == view->find_page) {
 		int results;
 
-//		ev_document_doc_mutex_lock ();
 		results = ev_document_find_get_n_results
 				(EV_DOCUMENT_FIND (view->document),
 				 view->current_page);
-//		ev_document_doc_mutex_unlock ();
 		/* TRANS: Sometimes this could be better translated as
 		   "%d hit(s) on this page".  Therefore this string
 		   contains plural cases. */
@@ -1834,18 +1818,19 @@ jump_to_find_result (EvView *view)
 	EvRectangle rect;
 	GdkRectangle view_rect;
 	int n_results;
+	int page = view->find_page;
 
 	ev_document_doc_mutex_lock ();
-	n_results = ev_document_find_get_n_results (find, view->current_page);
+	n_results = ev_document_find_get_n_results (find, page);
 	ev_document_doc_mutex_unlock ();
 
 	if (n_results > view->find_result) {
 		ev_document_doc_mutex_lock ();
 		ev_document_find_get_result
-			(find, view->current_page, view->find_result, &rect);
+			(find, page, view->find_result, &rect);
 		ev_document_doc_mutex_unlock ();
 
-		doc_rect_to_view_rect (view, &rect, &view_rect);
+		doc_rect_to_view_rect (view, page, &rect, &view_rect);
 		ensure_rectangle_is_visible (view, &view_rect);
 	}
 }
@@ -1866,7 +1851,6 @@ jump_to_find_page (EvView *view)
 			page = page - n_pages;
 		}
 
-		//		ev_document_doc_mutex_lock ();
 		has_results = ev_document_find_page_has_results
 				(EV_DOCUMENT_FIND (view->document), page);
 		if (has_results == -1) {
@@ -2514,6 +2498,7 @@ ev_view_find_previous (EvView *view)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
+
 void
 ev_view_hide_cursor (EvView *view)
 {
