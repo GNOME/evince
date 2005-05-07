@@ -900,7 +900,12 @@ highlight_find_results (EvView *view, int page)
 		GdkRectangle view_rectangle;
 		guchar alpha;
 
-		alpha = (i == view->find_result) ? 0x90 : 0x20;
+		if (i == view->find_result && page == view->find_page) {
+			alpha = 0x90;
+		} else {
+			alpha = 0x20;
+		}
+
 		ev_document_find_get_result (find, page,
 					     i, &rectangle);
 		doc_rect_to_view_rect (view, page, &rectangle, &view_rectangle);
