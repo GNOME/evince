@@ -59,3 +59,5 @@ EXTRA_DIST =         	\
 	$(pixmap_DATA)	\
 	$(schema_files)  
 
+DISTCLEANFILES = \
+	$(schema_DATA)
