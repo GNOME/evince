@@ -36,6 +36,9 @@
 #endif
 
 #include <string.h>
+#include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <libgnomevfs/gnome-vfs-file-info.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 
 typedef struct _EvDocumentType EvDocumentType;
 struct _EvDocumentType
@@ -102,16 +105,36 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 	return retval;
 }
 
-GType
-ev_document_type_lookup (const char *mime_type)
+static char *
+get_slow_mime_type (const char *uri)
+{
+        GnomeVFSFileInfo *info;
+        char *mime_type;
+        GnomeVFSResult result;
+
+        info = gnome_vfs_file_info_new ();
+        result = gnome_vfs_get_file_info (uri, info,
+                                          GNOME_VFS_FILE_INFO_GET_MIME_TYPE |
+                                          GNOME_VFS_FILE_INFO_FORCE_SLOW_MIME_TYPE |
+                                          GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
+        if (info->mime_type == NULL || result != GNOME_VFS_OK) {
+                mime_type = NULL;
+        } else {
+                mime_type = g_strdup (info->mime_type);
+        }
+        gnome_vfs_file_info_unref (info);
+
+        return mime_type;
+}
+
+static GType
+get_document_type_from_mime (const char *mime_type)
 {
 	int i;
 
-	g_return_val_if_fail (mime_type, G_TYPE_INVALID);
-
-	for (i=0;i<G_N_ELEMENTS (document_types);i++) {
-		if (0==strcmp(mime_type, document_types[i].mime_type)) {
-			g_assert (document_types[i].document_type_factory_callback!=NULL);
+	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
+		if (strcmp (mime_type, document_types[i].mime_type) == 0) {
+			g_assert (document_types[i].document_type_factory_callback != NULL);
 			return document_types[i].document_type_factory_callback();
 		}
 	}
@@ -121,4 +144,34 @@ ev_document_type_lookup (const char *mime_type)
 	}
 
 	return G_TYPE_INVALID;
+}
+
+GType
+ev_document_type_lookup (const char *uri, char **mime_type)
+{
+	GType type = G_TYPE_INVALID;
+	char *mime;
+
+	g_return_val_if_fail (uri, G_TYPE_INVALID);
+
+	mime = gnome_vfs_get_mime_type (uri);
+	if (mime) {
+		type = get_document_type_from_mime (mime);
+	}
+
+	if (type == G_TYPE_INVALID) {
+		g_free (mime);
+		mime = get_slow_mime_type (uri);
+		if (mime) {
+			type = get_document_type_from_mime (mime);
+		}
+	}
+
+	if (mime_type) {
+		*mime_type = mime;
+	} else {
+		g_free (mime);
+	}
+
+	return type;
 }

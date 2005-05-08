@@ -54,7 +54,6 @@
 #include <gtk/gtk.h>
 #include <gnome.h>
 
-#include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
@@ -743,21 +742,15 @@ void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
 	EvDocument *document = NULL;
-	char *mime_type;
+	GType document_type;
+	char *mime_type = NULL;
 
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
 
-	mime_type = gnome_vfs_get_mime_type (uri);
-
-	if (mime_type == NULL)
-		document = NULL;
-	else {
-		GType document_type = ev_document_type_lookup (mime_type);
-
-		if (document_type!=G_TYPE_INVALID) {
-			document = g_object_new (document_type, NULL);
-		}
+	document_type = ev_document_type_lookup (uri, &mime_type);
+	if (document_type != G_TYPE_INVALID) {
+		document = g_object_new (document_type, NULL);
 	}
 
 	if (document) {
@@ -782,16 +775,15 @@ static void
 ev_window_open_uri_list (EvWindow *ev_window, GList *uri_list)
 {
 	GList *list;
-	gchar *uri, *mime_type;
+	gchar *uri;
 	
 	g_return_if_fail (uri_list != NULL);
 	
 	list = uri_list;
 	while (list) {
 		uri = gnome_vfs_uri_to_string (list->data, GNOME_VFS_URI_HIDE_NONE);
-		mime_type = gnome_vfs_get_mime_type (uri);
 		
-		if (ev_document_type_lookup (mime_type)!=G_TYPE_INVALID) {
+		if (ev_document_type_lookup (uri, NULL) != G_TYPE_INVALID) {
 			if (ev_window_is_empty (EV_WINDOW (ev_window))) {
 				ev_window_open (ev_window, uri);
 				
@@ -806,7 +798,6 @@ ev_window_open_uri_list (EvWindow *ev_window, GList *uri_list)
 			}
 		}
 
-		g_free (mime_type);
 		g_free (uri);
 
 		list = g_list_next (list);

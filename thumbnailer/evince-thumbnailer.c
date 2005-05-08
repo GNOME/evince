@@ -33,17 +33,13 @@ static gboolean
 evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 {
 	EvDocument *document = NULL;
-	char *mime_type;
 	GError *error = NULL;
 	GdkPixbuf *pixbuf;
 	GType document_type;
+	char *mime_type = NULL;
 
-	mime_type = gnome_vfs_get_mime_type (uri);
-	if (mime_type == NULL)
-		return FALSE;
-
-	document_type = ev_document_type_lookup (mime_type);
-	if (document_type==G_TYPE_INVALID)
+	document_type = ev_document_type_lookup (uri, &mime_type);
+	if (document_type == G_TYPE_INVALID)
 		return FALSE;
 
 	document = g_object_new (document_type, NULL);
@@ -67,7 +63,7 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	if (pixbuf != NULL) {
 		const char *overlaid_icon_name = NULL;
 
-		if (strcmp(mime_type,"application/pdf")==0) {
+		if (strcmp (mime_type, "application/pdf") == 0) {
 			overlaid_icon_name = "pdf-icon.png";
 		}
 

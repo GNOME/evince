@@ -1,3 +1,17 @@
+2005-05-08  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-document-types.c: (get_slow_mime_type),
+	(get_document_type_from_mime), (ev_document_type_lookup):
+	* shell/ev-document-types.h:
+
+	Change api to lookup from uri. Do fast lookup first, if the
+	type is unknown try with data sniffing.
+
+	* shell/ev-window.c: (ev_window_open), (ev_window_open_uri_list):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+
+	Adapt to api change
+
 2005-05-07  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* thumbnailer/Makefile.am:
