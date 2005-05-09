@@ -1,7 +1,7 @@
 NULL =
 
 INCLUDES = \
-	$(EGG_CFLAGS) \
+	$(RECENT_FILES_CFLAGS) \
 	$(NULL)
 
 #	Uses the deprecated GnomeIconTheme
@@ -27,4 +27,4 @@ EXTRA_DIST = update-from-egg.sh
 
 EGGDIR=$(srcdir)/../../../libegg/libegg/recent-files
 regenerate-built-sources:
-	EGGFILES="$(EGG_FILES)" EGGDIR="$(EGGDIR)" $(srcdir)/update-from-egg.sh
+	EGGFILES="$(EGG_FILES)" EGGDIR="$(EGGDIR)" $(top_srcdir)/cut-n-paste/update-from-egg.sh

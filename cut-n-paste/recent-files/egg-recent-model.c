@@ -643,6 +643,8 @@ egg_recent_model_monitor_list (EggRecentModel *model, GList *list)
 static gboolean
 egg_recent_model_changed_timeout (EggRecentModel *model)
 {
+	model->priv->changed_timeout = 0;
+
 	egg_recent_model_changed (model);
 
 	return FALSE;
@@ -928,6 +930,10 @@ static void
 egg_recent_model_finalize (GObject *object)
 {
 	EggRecentModel *model = EGG_RECENT_MODEL (object);
+
+	if (model->priv->changed_timeout > 0) {
+		g_source_remove (model->priv->changed_timeout);
+	}
 
 	egg_recent_model_monitor (model, FALSE);
 

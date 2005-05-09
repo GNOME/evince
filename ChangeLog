@@ -1,3 +1,29 @@
+2005-05-09  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* cut-n-paste/update-from-egg.sh:
+	
+	Share it between all cut-n-paste subdirs
+
+	* cut-n-paste/recent-files/Makefile.am:
+
+	Fix to use "global" update-from-egg.sh
+
+	* cut-n-paste/recent-files/egg-recent-model.c:
+	(egg_recent_model_changed_timeout), (egg_recent_model_finalize):
+	* cut-n-paste/recent-files/egg-recent-view-gtk.c:
+	(egg_recent_view_gtk_clear), (egg_recent_view_gtk_set_list),
+	(egg_recent_view_gtk_finalize), (egg_recent_view_gtk_set_menu):
+
+	Update from libegg
+
+	* cut-n-paste/toolbar-editor/Makefile.am:
+
+	Fix to use "global" update-from-egg.sh
+
+	* cut-n-paste/toolbar-editor/eggmarshalers.list:
+
+	Update from libegg
+
 2005-05-09  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* configure.ac:
