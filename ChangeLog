@@ -1,3 +1,10 @@
+2005-05-09  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-sidebar-thumbnails.c: (page_changed_cb):
+
+	Use set_cursor instead of set_selection, so that
+	the keyboard focus moves too.
+
 2005-05-09  Aleksey Kliger <akliger@gmail.com>
 
 	* dvi/mdvi-lib/tfmfile.c: (lookup_font_metrics):

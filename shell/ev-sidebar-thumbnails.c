@@ -214,16 +214,12 @@ page_changed_cb (EvPageCache         *page_cache,
 		 int                  page,
 		 EvSidebarThumbnails *sidebar)
 {
+	GtkTreeView *tree_view = GTK_TREE_VIEW (sidebar->priv->tree_view);
 	GtkTreePath *path;
-	GtkTreeSelection *selection;
 
 	path = gtk_tree_path_new_from_indices (page, -1);
-	selection = gtk_tree_view_get_selection
-			(GTK_TREE_VIEW (sidebar->priv->tree_view));
-
-	gtk_tree_selection_select_path (selection, path);
-	gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (sidebar->priv->tree_view),
-				      path, NULL, FALSE, 0.0, 0.0);
+	gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
+	gtk_tree_view_scroll_to_cell (tree_view, path, NULL, FALSE, 0.0, 0.0);
 	gtk_tree_path_free (path);
 }
 
