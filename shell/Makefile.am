@@ -6,6 +6,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/lib				\
 	-I$(top_srcdir)/cut-n-paste/recent-files/	\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
+	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/backend				\
 	-I$(top_srcdir)/pdf				\
 	-I$(top_srcdir)/pixbuf				\
@@ -86,6 +87,7 @@ evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephymisc.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\
+	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/lib/libev.la					\
 	libevbackendfactory.la						\
 	$(NULL)

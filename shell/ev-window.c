@@ -47,6 +47,9 @@
 #include "egg-recent-view-gtk.h"
 #include "egg-recent-view.h"
 #include "egg-recent-model.h"
+#include "egg-toolbar-editor.h"
+#include "egg-toolbars-model.h"
+#include "egg-editable-toolbar.h"
 #include "ephy-zoom.h"
 #include "ephy-zoom-action.h"
 
@@ -92,8 +95,13 @@ struct _EvWindowPrivate {
 	GtkWidget *view;
 	GtkWidget *page_view;
 	GtkWidget *password_view;
+
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
+
+	gchar *toolbar_file;
+	EggToolbarsModel *toolbar_model;
+
 	GtkWidget *statusbar;
 	guint help_message_cid;
 	guint view_message_cid;
@@ -294,7 +302,10 @@ update_chrome_visibility (EvWindow *window)
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 
 	set_widget_visibility (priv->menubar, menubar);
+	
 	set_widget_visibility (priv->toolbar_dock, toolbar);
+	set_action_sensitive (window, "EditToolbar", toolbar);
+
 	set_widget_visibility (priv->sidebar, sidebar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->statusbar, statusbar);
@@ -1597,6 +1608,49 @@ ev_window_set_page_mode (EvWindow         *window,
 }
 
 static void
+ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+	EvWindow *ev_window = EV_WINDOW (data);
+        egg_editable_toolbar_set_edit_mode (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
+        egg_toolbars_model_save (ev_window->priv->toolbar_model, ev_window->priv->toolbar_file, "1.0");
+        gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
+{
+	GtkWidget *dialog;
+	GtkWidget *editor;
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+    
+	dialog = gtk_dialog_new_with_buttons (_("Toolbar editor"), GTK_WINDOW (ev_window), 
+				              GTK_DIALOG_DESTROY_WITH_PARENT, 
+					      GTK_STOCK_CLOSE,
+					      GTK_RESPONSE_CANCEL, 
+					      NULL);
+	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
+	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
+	  
+	editor = egg_toolbar_editor_new (ev_window->priv->ui_manager,
+					 ev_window->priv->toolbar_model);
+	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
+	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
+	             
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), editor);
+	egg_toolbar_editor_load_actions (EGG_TOOLBAR_EDITOR (editor),
+				      DATADIR"/evince-toolbar.xml");
+
+	egg_editable_toolbar_set_edit_mode
+		(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), TRUE);
+
+	gtk_widget_show_all (dialog);
+      
+	g_signal_connect (G_OBJECT (dialog), "response",
+			  G_CALLBACK (ev_window_cmd_edit_toolbar_cb),
+			  ev_window);
+}
+
+static void
 ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -2114,6 +2168,13 @@ ev_window_dispose (GObject *object)
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = window->priv;
 
+	if (priv->toolbar_model) {
+		g_object_unref (priv->toolbar_model);
+		g_free (priv->toolbar_file);
+		priv->toolbar_model = NULL;
+		priv->toolbar_file = NULL;
+	}
+
 	if (priv->ui_manager) {
 		g_object_unref (priv->ui_manager);
 		priv->ui_manager = NULL;
@@ -2217,6 +2278,9 @@ static const GtkActionEntry entries[] = {
 	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G",
 	  N_("Find next occurrence of the word or phrase"),
 	  G_CALLBACK (ev_window_cmd_edit_find_next) },
+        { "EditToolbar", NULL, N_("Toolbar..."), NULL,
+          N_("Open Toolbar Editor Dialog"),
+          G_CALLBACK (ev_window_cmd_edit_toolbar) },
 
         /* View menu */
         { "ViewZoomIn", GTK_STOCK_ZOOM_IN, NULL, "<control>plus",
@@ -2541,6 +2605,20 @@ ev_window_init (EvWindow *ev_window)
 			    ev_window->priv->menubar,
 			    FALSE, FALSE, 0);
 
+	/* Toolbar editor */
+	ev_window->priv->toolbar_model = egg_toolbars_model_new ();
+	
+	ev_window->priv->toolbar_file = g_build_filename
+			(g_get_home_dir (), ".gnome2/evince_toolbar.xml", NULL);
+
+	if (!g_file_test (ev_window->priv->toolbar_file, G_FILE_TEST_EXISTS)) {
+		egg_toolbars_model_load (ev_window->priv->toolbar_model,
+					 DATADIR"/evince-toolbar.xml");
+	} else {
+		egg_toolbars_model_load (ev_window->priv->toolbar_model,
+					 ev_window->priv->toolbar_file);
+	}
+	
 	/* This sucks, but there is no way to have a draw=no, expand=true separator
 	 * in a GtkUIManager-built toolbar. So, just add another toolbar.
 	 * See gtk+ bug 166489.
@@ -2550,9 +2628,10 @@ ev_window_init (EvWindow *ev_window)
 			    FALSE, FALSE, 0);
 	gtk_widget_show (toolbar_dock);
 
-	ev_window->priv->toolbar =
-		gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-					   "/ToolBar");
+	ev_window->priv->toolbar = egg_editable_toolbar_new_with_model
+				(ev_window->priv->ui_manager, ev_window->priv->toolbar_model);
+	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
+				   "DefaultToolBar");
 	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
@@ -2560,6 +2639,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->fullscreen_toolbar =
 		gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/LeaveFullscreenToolbar");
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (ev_window->priv->fullscreen_toolbar), TRUE);
+	
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();

@@ -6,6 +6,8 @@ NULL =
 uidir = $(pkgdatadir)
 ui_DATA =				\
 	evince-ui.xml			\
+	evince-toolbar.xml		\
+	hand-open.png			\
 	$(NULL)
 
 gladedir = $(pkgdatadir)

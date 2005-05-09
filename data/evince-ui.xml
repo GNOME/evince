@@ -17,6 +17,8 @@
       <separator/>
       <menuitem name="EditFindMenu" action="EditFind"/>
       <menuitem name="EditFindNextMenu" action="EditFindNext"/>
+      <separator/>
+      <menuitem name="EditToolbarMenu" action="EditToolbar"/>
     </menu>
 
     <menu name="ViewMenu" action="View">
@@ -51,20 +53,6 @@
       <menuitem name="HelpAboutMenu" action="HelpAbout"/>
     </menu>
   </menubar>
-
-  <toolbar name="ToolBar">
-    <toolitem action="GoPreviousPage"/>
-    <toolitem action="GoNextPage"/>
-    <separator/>
-    <toolitem action="PageSelector"/>
-    <separator/>
-    <toolitem action="ViewZoom"/>
-<!--
-    <separator/>
-    <toolitem action="SinglePage"/>
-    <toolitem action="ContinuousPage"/>
--->
-  </toolbar>
 
   <toolbar name="LeaveFullscreenToolbar">
     <toolitem action="GoPreviousPage"/>

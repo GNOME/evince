@@ -1,7 +1,7 @@
 NULL =
 
 INCLUDES = \
-	$(RECENT_FILES_CFLAGS)		\
+	$(EGG_CFLAGS) \
 	$(NULL)
 
 #	Uses the deprecated GnomeIconTheme
