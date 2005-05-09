@@ -1022,6 +1022,8 @@ using_postscript_printer (GnomePrintConfig *config)
 	} else 	if (transport) {
 		if (!strcmp ((const gchar *)transport, "CUPS"))
 			return TRUE;
+		else if (!strcmp ((const gchar *)transport, "LPD"))
+			return TRUE;
 	}
 
 	return FALSE;
