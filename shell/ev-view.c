@@ -75,7 +75,8 @@ typedef enum {
 	EV_VIEW_CURSOR_NORMAL,
 	EV_VIEW_CURSOR_LINK,
 	EV_VIEW_CURSOR_WAIT,
-	EV_VIEW_CURSOR_HIDDEN
+	EV_VIEW_CURSOR_HIDDEN,
+	EV_VIEW_CURSOR_DRAG
 } EvViewCursor;
 
 #define ZOOM_IN_FACTOR  1.2
@@ -85,9 +86,16 @@ typedef enum {
 #define MAX_SCALE 6.0
 
 typedef struct {
-  EvRectangle rect;
-  int page;
+	EvRectangle rect;
+	int page;
 } EvViewSelection;
+
+typedef struct {
+        gboolean dragging;
+	GdkPoint start;
+	gdouble hadj;
+	gdouble vadj;
+} DragInfo;
 
 struct _EvView {
 	GtkWidget parent_instance;
@@ -102,6 +110,7 @@ struct _EvView {
 	int scroll_x;
 	int scroll_y;
 
+	DragInfo drag_info;
 	gboolean pressed_button;
 	GdkPoint selection_start;
 	GList *selections;
@@ -1145,6 +1154,58 @@ ev_view_update_primary_selection (EvView *ev_view)
 	}
 }
 
+static GdkCursor *
+ev_view_create_invisible_cursor(void)
+{
+       GdkBitmap *empty;
+       GdkColor black = { 0, 0, 0, 0 };
+       static char bits[] = { 0x00 };
+
+       empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
+
+       return gdk_cursor_new_from_pixmap (empty, empty, &black, &black, 0, 0);
+}
+
+static void
+ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
+{
+	GdkCursor *cursor = NULL;
+	GdkDisplay *display;
+	GtkWidget *widget;
+
+	if (view->cursor == new_cursor) {
+		return;
+	}
+
+	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	display = gtk_widget_get_display (widget);
+	view->cursor = new_cursor;
+
+	switch (new_cursor) {
+		case EV_VIEW_CURSOR_NORMAL:
+			gdk_window_set_cursor (widget->window, NULL);
+			break;
+		case EV_VIEW_CURSOR_LINK:
+			cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
+			break;
+		case EV_VIEW_CURSOR_WAIT:
+			cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
+			break;
+                case EV_VIEW_CURSOR_HIDDEN:
+                        cursor = ev_view_create_invisible_cursor ();
+                        break;
+		case EV_VIEW_CURSOR_DRAG:
+			cursor = gdk_cursor_new_for_display (display, GDK_FLEUR);
+			break;
+	}
+
+	if (cursor) {
+		gdk_window_set_cursor (widget->window, cursor);
+		gdk_cursor_unref (cursor);
+		gdk_flush();
+	}
+}
+
 static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
@@ -1166,10 +1227,21 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 			view->selection_start.x = event->x;
 			view->selection_start.y = event->y;
-			break;
+			return TRUE;
+		case 2:
+			/* use root coordinates as reference point because
+			 * scrolling changes window relative coordinates */
+			view->drag_info.start.x = event->x_root;
+			view->drag_info.start.y = event->y_root;
+			view->drag_info.hadj = gtk_adjustment_get_value (view->hadjustment);
+			view->drag_info.vadj = gtk_adjustment_get_value (view->vadjustment);
+
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
+
+			return TRUE;
 	}
 
-	return TRUE;
+	return FALSE;
 }
 
 static char *
@@ -1222,57 +1294,6 @@ ev_view_set_find_status (EvView *view, const char *message)
 	view->find_status = g_strdup (message);
 	g_object_notify (G_OBJECT (view), "find-status");
 }
-
-static GdkCursor *
-ev_view_create_invisible_cursor(void)
-{
-       GdkBitmap *empty;
-       GdkColor black = { 0, 0, 0, 0 };
-       static char bits[] = { 0x00 };
-
-       empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
-
-       return gdk_cursor_new_from_pixmap (empty, empty, &black, &black, 0, 0);
-}
-
-static void
-ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
-{
-	GdkCursor *cursor = NULL;
-	GdkDisplay *display;
-	GtkWidget *widget;
-
-	if (view->cursor == new_cursor) {
-		return;
-	}
-
-	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
-	display = gtk_widget_get_display (widget);
-	view->cursor = new_cursor;
-
-	switch (new_cursor) {
-		case EV_VIEW_CURSOR_NORMAL:
-			gdk_window_set_cursor (widget->window, NULL);
-			break;
-		case EV_VIEW_CURSOR_LINK:
-			cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
-			break;
-		case EV_VIEW_CURSOR_WAIT:
-			cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
-			break;
-                case EV_VIEW_CURSOR_HIDDEN:
-                        cursor = ev_view_create_invisible_cursor ();
-                        break;
-
-	}
-
-	if (cursor) {
-		gdk_window_set_cursor (widget->window, cursor);
-		gdk_cursor_unref (cursor);
-		gdk_flush();
-	}
-}
-
 
 static void
 find_page_at_location (EvView  *view,
@@ -1341,7 +1362,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
-	if (view->pressed_button > 0) {
+	if (view->pressed_button == 1) {
 		GdkRectangle selection;
 
 		selection.x = MIN (view->selection_start.x, event->x);
@@ -1352,7 +1373,45 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		compute_selections (view, &selection);
 
 		gtk_widget_queue_draw (widget);
-	} else if (view->document) {
+
+		return TRUE;
+	} else if (view->pressed_button == 2) {
+		if (!view->drag_info.dragging) {
+			gboolean start;
+
+			start = gtk_drag_check_threshold (widget,
+							  view->drag_info.start.x,
+							  view->drag_info.start.y,
+							  event->x_root,
+							  event->y_root);
+			view->drag_info.dragging = start;
+		}
+
+		if (view->drag_info.dragging) {
+			int dx, dy;
+			gdouble dhadj_value, dvadj_value;
+
+			dx = event->x_root - view->drag_info.start.x;
+			dy = event->y_root - view->drag_info.start.y;
+
+			dhadj_value = view->hadjustment->page_size *
+				      (gdouble)dx / widget->allocation.width;
+			dvadj_value = view->vadjustment->page_size *
+				      (gdouble)dy / widget->allocation.height;
+
+			/* clamp scrolling to visible area */
+			gtk_adjustment_set_value (view->hadjustment,
+						  MIN(view->drag_info.hadj - dhadj_value,
+						      view->hadjustment->upper -
+						      view->hadjustment->page_size));
+			gtk_adjustment_set_value (view->vadjustment,
+						  MIN(view->drag_info.vadj - dvadj_value,
+						      view->vadjustment->upper -
+						      view->vadjustment->page_size));
+
+			return TRUE;
+		}
+	} else if (view->pressed_button <= 0 && view->document) {
 		EvLink *link;
 
 		link = get_link_at_location (view, event->x, event->y);
@@ -1369,9 +1428,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 			}
 		}
+		return TRUE;
 	}
 
-	return TRUE;
+	return FALSE;
 }
 
 /* FIXME: standardize this sometime */
@@ -1405,7 +1465,12 @@ ev_view_button_release_event (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
+	if (view->pressed_button == 2) {
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+	}
+
 	view->pressed_button = -1;
+	view->drag_info.dragging = FALSE;
 
 	if (view->selections) {
 		ev_view_update_primary_selection (view);
@@ -1791,6 +1856,7 @@ ev_view_init (EvView *view)
 	view->current_page = 0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
+	view->drag_info.dragging = FALSE;
 
 	view->continuous = TRUE;
 	view->dual_page = FALSE;

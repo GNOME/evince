@@ -1,3 +1,13 @@
+2005-05-09  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-view.c: (ev_view_create_invisible_cursor),
+	(ev_view_set_cursor), (ev_view_button_press_event),
+	(ev_view_motion_notify_event), (ev_view_button_release_event),
+	(ev_view_init):
+
+	Implement middle button scrolling. Based on a patch
+	by Tommi Komulainen <tommi.komulainen@iki.fi>.
+
 2005-05-08  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/ev-document-types.c: (get_slow_mime_type),
