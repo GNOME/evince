@@ -2260,8 +2260,12 @@ static const GtkActionEntry entries[] = {
 	  N_("Leave fullscreen mode"),
 	  G_CALLBACK (ev_window_cmd_leave_fullscreen) },
 
+	/* Accellerators */
 	{ "Escape", NULL, N_("Selection Caret"), "Escape", "",
-	  G_CALLBACK (ev_window_cmd_escape) }
+	  G_CALLBACK (ev_window_cmd_escape) },
+        { "Slash", GTK_STOCK_FIND, NULL, "slash",
+          N_("Find a word or phrase in the document"),
+          G_CALLBACK (ev_window_cmd_edit_find) }
 };
 
 /* Toggle items */
