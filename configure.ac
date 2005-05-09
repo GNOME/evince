@@ -106,7 +106,7 @@ dnl ======================== End of ggv checks =================================
 dnl ================== djvu checks ===================================================
 
 AC_ARG_ENABLE(djvu,
-            [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu=yes,enable_djvu=no)
+            [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu="$enableval",enable_djvu=no)
 
 if test "x$enable_djvu" = "xyes"; then
     AC_CHECK_HEADERS([libdjvu/ddjvuapi.h],enable_djvu=yes,enable_djvu=no,)
@@ -126,10 +126,10 @@ dnl ================== End of djvu checks ======================================
 dnl ================== dvi checks ===================================================
 
 AC_ARG_ENABLE(dvi,
-            [AC_HELP_STRING([--enable-dvi], [Compile with support of dvi viewer])],enable_dvi=yes,enable_dvi=no)
+            [AC_HELP_STRING([--enable-dvi], [Compile with support of dvi viewer])],enable_dvi="$enableval",enable_dvi=no)
 
 AC_ARG_ENABLE(t1lib,
-            [AC_HELP_STRING([--enable-t1lib], [Compile with support of t1lib for type1 fonts in dvi])],enable_type1_fonts=yes,enable_type1_fonts=no)
+            [AC_HELP_STRING([--enable-t1lib], [Compile with support of t1lib for type1 fonts in dvi])],enable_type1_fonts="$enableval",enable_type1_fonts=no)
 
 if test "x$enable_dvi" = "xyes"; then
     AC_C_CONST
