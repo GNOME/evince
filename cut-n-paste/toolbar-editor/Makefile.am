@@ -33,3 +33,7 @@ egg-marshal.c: eggmarshalers.c eggmarshalers.h
 
 EXTRA_DIST= \
 	eggmarshalers.list
+
+EGGDIR=$(srcdir)/../../../libegg/libegg
+regenerate-built-sources:
+	EGGFILES="$(EGGFILES) eggmarshalers.list" EGGDIR="$(EGGDIR)" $(top_srcdir)/cut-n-paste/update-from-egg.sh

@@ -99,7 +99,8 @@ egg_recent_view_gtk_clear (EggRecentViewGtk *view)
 	GObject *menu_item;
 	gint *menu_data=NULL;
 
-	g_return_if_fail (view->menu != NULL);
+	if (view->menu == NULL)
+		return;
 
 	menu_children = gtk_container_get_children (GTK_CONTAINER (view->menu));
 
@@ -336,7 +337,8 @@ egg_recent_view_gtk_set_list (EggRecentViewGtk *view, GList *list)
 	gint display=1;
 	gint index=1;
 
-	g_return_if_fail (view);
+	if (view->menu == NULL)
+		return;
 
 	egg_recent_view_gtk_clear (view);
 
@@ -497,7 +499,6 @@ egg_recent_view_gtk_finalize (GObject *object)
 
 	g_free (view->uid);
 
-	g_object_unref (view->menu);
 	g_object_unref (view->model);
 #ifndef USE_STABLE_LIBGNOMEUI
 	g_object_unref (view->theme);
@@ -695,13 +696,16 @@ egg_recent_view_gtk_set_menu (EggRecentViewGtk *view,
 {
 	g_return_if_fail (view);
 	g_return_if_fail (EGG_IS_RECENT_VIEW_GTK (view));
-	g_return_if_fail (menu);
 
 	if (view->menu != NULL)
-		g_object_unref (view->menu);
+		g_object_remove_weak_pointer (G_OBJECT (view->menu),
+					      (gpointer *) &view->menu);
 	
 	view->menu = menu;
-	g_object_ref (view->menu);
+
+	if (view->menu != NULL)
+		g_object_add_weak_pointer (G_OBJECT (view->menu),
+					   (gpointer *) &view->menu);
 }
 
 /**
