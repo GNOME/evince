@@ -601,6 +601,7 @@ char	*lookup_font_metrics(const char *name, int *type)
 #endif
 		case DviFontTFM:
 			file = kpse_find_tfm(name);
+                        *type = DviFontTFM;
 			break;
 		case DviFontOFM: {
 			file = kpse_find_ofm(name);
