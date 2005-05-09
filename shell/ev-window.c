@@ -2411,7 +2411,6 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "stock_id", GTK_STOCK_ZOOM_IN,
 			       "tooltip", _("Adjust the zoom level"),
 			       "zoom", 1.0,
-			       "visible_overflown", FALSE,
 			       NULL);
 	g_signal_connect (action, "zoom_to_level",
 			  G_CALLBACK (zoom_control_changed_cb), window);
