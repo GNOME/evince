@@ -236,7 +236,7 @@ ev_page_cache_set_page_label (EvPageCache *page_cache,
 	g_return_val_if_fail (page_label != NULL, FALSE);
 
 	/* First, look for a literal label match */
-	for (i = 0; i < page_cache->n_pages && page_cache->has_labels; i ++) {
+	for (i = 0; i < page_cache->n_pages; i ++) {
 		if (page_cache->page_labels[i] != NULL &&
 		    ! strcmp (page_label, page_cache->page_labels[i])) {
 			ev_page_cache_set_current_page (page_cache, i);
