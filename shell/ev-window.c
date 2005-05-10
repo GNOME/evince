@@ -2723,6 +2723,9 @@ ev_window_init (EvWindow *ev_window)
 		egg_toolbars_model_load (ev_window->priv->toolbar_model,
 					 ev_window->priv->toolbar_file);
 	}
+
+	egg_toolbars_model_set_flags (ev_window->priv->toolbar_model, 0,
+				      EGG_TB_MODEL_NOT_REMOVABLE); 
 	
 	/* This sucks, but there is no way to have a draw=no, expand=true separator
 	 * in a GtkUIManager-built toolbar. So, just add another toolbar.
