@@ -52,6 +52,7 @@ struct _EvSidebarLinksClass {
 
 GType      ev_sidebar_links_get_type       (void);
 GtkWidget *ev_sidebar_links_new            (void);
+GtkWidget *ev_sidebar_links_get_treeview   (EvSidebarLinks *sidebar);
 
 G_END_DECLS
 

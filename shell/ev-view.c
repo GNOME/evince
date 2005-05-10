@@ -59,11 +59,6 @@ enum {
   TARGET_TEXT_BUFFER_CONTENTS
 };
 
-enum {
-	EV_SCROLL_PAGE_FORWARD,
-	EV_SCROLL_PAGE_BACKWARD
-};
-
 static const GtkTargetEntry targets[] = {
 	{ "STRING", 0, TARGET_STRING },
 	{ "TEXT",   0, TARGET_TEXT },
@@ -1553,26 +1548,9 @@ add_scroll_binding_keypad (GtkBindingSet  *binding_set,
 				G_TYPE_BOOLEAN, horizontal);
 }
 
-static void
-add_scroll_binding_shifted (GtkBindingSet  *binding_set,
-    			    guint           keyval,
-    			    GtkScrollType   scroll_normal,
-    			    GtkScrollType   scroll_shifted,
-			    gboolean        horizontal)
-{
-  gtk_binding_entry_add_signal (binding_set, keyval, 0,
-                                "scroll_view", 2,
-                                GTK_TYPE_SCROLL_TYPE, scroll_normal,
-				G_TYPE_BOOLEAN, horizontal);
-  gtk_binding_entry_add_signal (binding_set, keyval, GDK_SHIFT_MASK,
-                                "scroll_view", 2,
-                                GTK_TYPE_SCROLL_TYPE, scroll_shifted,
-				G_TYPE_BOOLEAN, horizontal);
-}
-
-static void
-ev_view_jump (EvView        *view,
-	      GtkScrollType  scroll)
+void
+ev_view_scroll (EvView        *view,
+	        EvScrollType   scroll)
 {
 	GtkAdjustment *adjustment;
 	double value, increment;
@@ -1633,8 +1611,6 @@ ev_view_scroll_view (EvView *view,
 		ev_page_cache_prev_page (view->page_cache);
 	} else if (scroll == GTK_SCROLL_PAGE_FORWARD) {
 		ev_page_cache_next_page (view->page_cache);
-	} else if (scroll == EV_SCROLL_PAGE_BACKWARD || scroll == EV_SCROLL_PAGE_FORWARD) {
- 		ev_view_jump (view, scroll);
 	} else {
 		GtkAdjustment *adjustment;
 		double value;
@@ -1841,9 +1817,6 @@ ev_view_class_init (EvViewClass *class)
 
 	add_scroll_binding_keypad (binding_set, GDK_Page_Up,   GTK_SCROLL_PAGE_BACKWARD, FALSE);
 	add_scroll_binding_keypad (binding_set, GDK_Page_Down, GTK_SCROLL_PAGE_FORWARD,  FALSE);
-
-	add_scroll_binding_shifted (binding_set, GDK_space, EV_SCROLL_PAGE_FORWARD, EV_SCROLL_PAGE_BACKWARD, FALSE);
-	add_scroll_binding_shifted (binding_set, GDK_BackSpace, EV_SCROLL_PAGE_BACKWARD, EV_SCROLL_PAGE_FORWARD, FALSE);
 }
 
 static void

@@ -252,9 +252,6 @@ update_action_sensitivity (EvWindow *ev_window)
 		set_action_sensitive (ev_window, "SinglePage", FALSE);
 		set_action_sensitive (ev_window, "ContinuousPage", FALSE);
 	}
-	/* Help menu */
-	/* "HelpContents": always sensitive */
-	/* "HelpAbout": always sensitive */
 
 	/* Toolbar-specific actions: */
 	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
@@ -339,6 +336,18 @@ update_chrome_flag (EvWindow *window, EvChrome flag, const char *pref, gboolean 
 	}
 
 	update_chrome_visibility (window);
+}
+
+static void
+ev_window_cmd_scroll_forward (GtkAction *action, EvWindow *window)
+{
+	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD);
+}
+
+static void
+ev_window_cmd_scroll_backward (GtkAction *action, EvWindow *window)
+{
+	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_BACKWARD);
 }
 
 static void
@@ -2375,7 +2384,19 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_escape) },
         { "Slash", GTK_STOCK_FIND, NULL, "slash",
           N_("Find a word or phrase in the document"),
-          G_CALLBACK (ev_window_cmd_edit_find) }
+          G_CALLBACK (ev_window_cmd_edit_find) },
+        { "Space", GTK_STOCK_FIND, NULL, "space",
+          N_("Scroll one page forward"),
+          G_CALLBACK (ev_window_cmd_scroll_forward) },
+        { "ShiftSpace", GTK_STOCK_FIND, NULL, "<shift>space",
+          N_("Scroll one page backward"),
+          G_CALLBACK (ev_window_cmd_scroll_backward) },
+        { "BackSpace", GTK_STOCK_FIND, NULL, "BackSpace",
+          N_("Scroll one page backward"),
+          G_CALLBACK (ev_window_cmd_scroll_backward) },
+        { "ShiftBackSpace", GTK_STOCK_FIND, NULL, "<shift>BackSpace",
+          N_("Scroll one page forward"),
+          G_CALLBACK (ev_window_cmd_scroll_forward) }
 };
 
 /* Toggle items */
@@ -2589,13 +2610,48 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 	ev_page_action_set_model (EV_PAGE_ACTION (action), model);
 }
 
+
+static void
+set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
+{
+	if (window->priv->action_group) {
+		set_action_sensitive (window, "Space", sensitive);
+		set_action_sensitive (window, "ShiftSpace", sensitive);
+		set_action_sensitive (window, "BackSpace", sensitive);
+		set_action_sensitive (window, "ShiftBackSpace", sensitive);
+	}
+}
+
+static void
+view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
+{
+	set_view_actions_sensitivity (window, TRUE);
+}
+
+static void
+view_actions_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
+{
+	set_view_actions_sensitivity (window, FALSE);
+}
+
+static void
+enable_view_actions_for_widget (EvWindow *window, GtkWidget *widget)
+{
+	g_signal_connect_object (widget, "focus_in_event",
+			         G_CALLBACK (view_actions_focus_in_cb),
+				 window, 0);
+	g_signal_connect_object (widget, "focus_out_event",
+			         G_CALLBACK (view_actions_focus_out_cb),
+				 window, 0);
+}
+
 static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
-	GtkWidget *sidebar_widget, *toolbar_dock;
+	GtkWidget *sidebar_widget, *toolbar_dock, *tree_view;
 	GConfValue *value;
 	GConfClient *client;
 	int sidebar_size;
@@ -2632,6 +2688,8 @@ ev_window_init (EvWindow *ev_window)
 	accel_group =
 		gtk_ui_manager_get_accel_group (ev_window->priv->ui_manager);
 	gtk_window_add_accel_group (GTK_WINDOW (ev_window), accel_group);
+
+	set_view_actions_sensitivity (ev_window, FALSE);
 
 	g_signal_connect (ev_window->priv->ui_manager, "connect_proxy",
 			  G_CALLBACK (connect_proxy_cb), ev_window);
@@ -2721,11 +2779,17 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::model",
 			  G_CALLBACK (sidebar_widget_model_set),
 			  ev_window);
+	tree_view = ev_sidebar_links_get_treeview
+			(EV_SIDEBAR_LINKS (sidebar_widget));
+	enable_view_actions_for_widget (ev_window, tree_view);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
 
 	sidebar_widget = ev_sidebar_thumbnails_new ();
+	tree_view = ev_sidebar_thumbnails_get_treeview
+			(EV_SIDEBAR_THUMBNAILS (sidebar_widget));
+	enable_view_actions_for_widget (ev_window, tree_view);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
@@ -2745,8 +2809,8 @@ ev_window_init (EvWindow *ev_window)
 				  "unlock",
 				  G_CALLBACK (ev_window_popup_password_dialog),
 				  ev_window);
+	enable_view_actions_for_widget (ev_window, ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->view);
-	//gtk_widget_show (ev_window->priv->page_view);
 	gtk_widget_show (ev_window->priv->password_view);
 
 	/* We own a ref on these widgets, as we can swap them in and out */

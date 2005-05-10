@@ -163,6 +163,12 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 	ev_page_cache_set_current_page (page_cache, page);
 }
 
+GtkWidget *
+ev_sidebar_thumbnails_get_treeview (EvSidebarThumbnails *sidebar)
+{
+	return sidebar->priv->tree_view;
+}
+
 static void
 ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {

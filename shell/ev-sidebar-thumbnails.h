@@ -51,8 +51,9 @@ struct _EvSidebarThumbnailsClass {
 	GtkVBoxClass base_class;
 };
 
-GType      ev_sidebar_thumbnails_get_type (void);
-GtkWidget *ev_sidebar_thumbnails_new      (void);
+GType      ev_sidebar_thumbnails_get_type     (void);
+GtkWidget *ev_sidebar_thumbnails_new          (void);
+GtkWidget *ev_sidebar_thumbnails_get_treeview (EvSidebarThumbnails *sidebar);
 
 G_END_DECLS
 

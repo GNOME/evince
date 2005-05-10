@@ -509,6 +509,12 @@ ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
     return _("Index");
 }
 
+GtkWidget *
+ev_sidebar_links_get_treeview (EvSidebarLinks *sidebar)
+{
+	return sidebar->priv->tree_view;
+}
+
 static void
 ev_sidebar_links_page_iface_init (EvSidebarPageIface *iface)
 {

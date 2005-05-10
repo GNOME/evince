@@ -42,68 +42,73 @@ typedef enum {
 	EV_SIZING_FREE,
 } EvSizingMode;
 
-GType		ev_view_get_type	(void) G_GNUC_CONST;
-GType           ev_sizing_mode_get_type (void) G_GNUC_CONST;
-GtkWidget*	ev_view_new		(void);
-void		ev_view_set_document	(EvView     *view,
-			   		 EvDocument *document);
+typedef enum {
+	EV_SCROLL_PAGE_FORWARD,
+	EV_SCROLL_PAGE_BACKWARD
+} EvScrollType;
+
+GType		ev_view_get_type	  (void) G_GNUC_CONST;
+GType           ev_sizing_mode_get_type   (void) G_GNUC_CONST;
+GtkWidget*	ev_view_new		  (void);
+void		ev_view_set_document	  (EvView         *view,
+			   		   EvDocument     *document);
 
 /* Clipboard */
-void		ev_view_copy		(EvView     *view);
-void		ev_view_select_all	(EvView     *view);
-
+void		ev_view_copy		  (EvView         *view);
+void		ev_view_select_all	  (EvView         *view);
 
 /* sizing and behavior */
 /* These are all orthoganal to each other, except 'presentation' trumps all
  * other behaviors
  */
-void     	ev_view_set_continuous		(EvView       *view,
-						 gboolean      continuous);
-void     	ev_view_set_dual_page		(EvView       *view,
-						 gboolean      dual_page);
-void     	ev_view_set_fullscreen		(EvView       *view,
-						 gboolean      fullscreen);
-gboolean 	ev_view_get_fullscreen		(EvView       *view);
-void     	ev_view_set_presentation	(EvView       *view,
-						 gboolean      presentation);
-gboolean 	ev_view_get_presentation	(EvView       *view);
-void     	ev_view_set_sizing_mode		(EvView       *view,
-						 EvSizingMode  mode);
-EvSizingMode	ev_view_get_sizing_mode		(EvView       *view);
+void     	ev_view_set_continuous    (EvView         *view,
+					   gboolean        continuous);
+void     	ev_view_set_dual_page	  (EvView         *view,
+					   gboolean        dual_page);
+void     	ev_view_set_fullscreen	  (EvView         *view,
+					   gboolean        fullscreen);
+gboolean 	ev_view_get_fullscreen	  (EvView         *view);
+void     	ev_view_set_presentation  (EvView         *view,
+					   gboolean        presentation);
+gboolean 	ev_view_get_presentation  (EvView         *view);
+void     	ev_view_set_sizing_mode	  (EvView         *view,
+					   EvSizingMode    mode);
+EvSizingMode	ev_view_get_sizing_mode	  (EvView         *view);
 
 
 /* Page size */
-gboolean	ev_view_can_zoom_in     (EvView     *view);
-void		ev_view_zoom_in		(EvView     *view);
-gboolean        ev_view_can_zoom_out    (EvView     *view);
-void		ev_view_zoom_out	(EvView     *view);
-void		ev_view_set_zoom	(EvView     *view,
-					 double      factor,
-					 gboolean    relative);
-double		ev_view_get_zoom	(EvView      *view);
+gboolean	ev_view_can_zoom_in       (EvView         *view);
+void		ev_view_zoom_in		  (EvView         *view);
+gboolean        ev_view_can_zoom_out      (EvView         *view);
+void		ev_view_zoom_out	  (EvView         *view);
+void		ev_view_set_zoom	  (EvView         *view,
+					   double          factor,
+					   gboolean        relative);
+double		ev_view_get_zoom	  (EvView         *view);
 
-void		ev_view_set_zoom_for_size (EvView     *view,
-					   int         width,
-					   int         height,
-					   int         vsb_width,
-					   int         hsb_height);
-void		ev_view_zoom_normal	(EvView     *view);
-void		ev_view_set_size        (EvView     *view,
-					 int         width,
-					 int         height);
+void		ev_view_set_zoom_for_size (EvView         *view,
+					   int             width,
+					   int             height,
+					   int             vsb_width,
+					   int             hsb_height);
+void		ev_view_zoom_normal	  (EvView         *view);
 
 /* Find */
-gboolean	ev_view_can_find_next	(EvView     *view);
-void            ev_view_find_next       (EvView     *view);
-void            ev_view_find_previous   (EvView     *view);
+gboolean	ev_view_can_find_next	  (EvView         *view);
+void            ev_view_find_next         (EvView         *view);
+void            ev_view_find_previous     (EvView         *view);
 
 /* Status */
-const char     *ev_view_get_status      (EvView     *view);
-const char     *ev_view_get_find_status (EvView     *view);
+const char     *ev_view_get_status        (EvView         *view);
+const char     *ev_view_get_find_status   (EvView         *view);
 
 /* Cursor */
-void           ev_view_hide_cursor     (EvView     *view);
-void           ev_view_show_cursor     (EvView     *view);
+void           ev_view_hide_cursor        (EvView         *view);
+void           ev_view_show_cursor        (EvView         *view);
+
+/* Scrolling */
+void	       ev_view_scroll             (EvView         *view,
+	                                   EvScrollType    scroll);
 
 G_END_DECLS
 
