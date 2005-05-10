@@ -32,6 +32,7 @@
 #include "ev-stock-icons.h"
 #include "ev-debug.h"
 #include "ev-job-queue.h"
+#include "ev-file-helpers.h"
 
 static struct poptOption popt_options[] =
 {
@@ -87,6 +88,7 @@ main (int argc, char *argv[])
 	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
 
+	ev_file_helpers_init ();
 	ev_debug_init ();
 	ev_stock_icons_init ();
 	gtk_window_set_default_icon_name ("postscript-viewer");
@@ -102,6 +104,7 @@ main (int argc, char *argv[])
 
 	gnome_accelerators_sync ();
 	poptFreeContext (context);
+	ev_file_helpers_shutdown ();
 
 	return 0;
 }

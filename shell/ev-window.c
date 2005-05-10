@@ -52,6 +52,9 @@
 #include "egg-editable-toolbar.h"
 #include "ephy-zoom.h"
 #include "ephy-zoom-action.h"
+#include "ev-application.h"
+#include "ev-stock-icons.h"
+#include "ev-file-helpers.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -65,9 +68,6 @@
 #include <gconf/gconf-client.h>
 
 #include <string.h>
-
-#include "ev-application.h"
-#include "ev-stock-icons.h"
 
 typedef enum {
 	PAGE_MODE_SINGLE_PAGE,
@@ -1666,8 +1666,10 @@ static void
 ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
 {
 	EvWindow *ev_window = EV_WINDOW (data);
-        egg_editable_toolbar_set_edit_mode (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
-        egg_toolbars_model_save (ev_window->priv->toolbar_model, ev_window->priv->toolbar_file, "1.0");
+        egg_editable_toolbar_set_edit_mode
+			(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
+        egg_toolbars_model_save (ev_window->priv->toolbar_model,
+				 ev_window->priv->toolbar_file, "1.0");
         gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
@@ -2714,7 +2716,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->toolbar_model = egg_toolbars_model_new ();
 	
 	ev_window->priv->toolbar_file = g_build_filename
-			(g_get_home_dir (), ".gnome2/evince_toolbar.xml", NULL);
+			(ev_dot_dir (), "evince_toolbar.xml", NULL);
 
 	if (!g_file_test (ev_window->priv->toolbar_file, G_FILE_TEST_EXISTS)) {
 		egg_toolbars_model_load (ev_window->priv->toolbar_model,
