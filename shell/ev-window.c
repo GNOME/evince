@@ -70,9 +70,8 @@
 #include <string.h>
 
 typedef enum {
-	PAGE_MODE_SINGLE_PAGE,
-	PAGE_MODE_CONTINUOUS_PAGE,
-	PAGE_MODE_PASSWORD,
+	PAGE_MODE_DOCUMENT,
+	PAGE_MODE_PASSWORD
 } EvWindowPageMode;
 
 typedef enum {
@@ -242,15 +241,6 @@ update_action_sensitivity (EvWindow *ev_window)
 		set_action_sensitive (ev_window, "GoPreviousPage", FALSE);
 		set_action_sensitive (ev_window, "GoNextPage", FALSE);
 		set_action_sensitive (ev_window, "GoLastPage", FALSE);
-	}
-
-	/* Page View radio group */
-	if (document) {
-		set_action_sensitive (ev_window, "SinglePage", page_mode != PAGE_MODE_PASSWORD);
-		set_action_sensitive (ev_window, "ContinuousPage", page_mode != PAGE_MODE_PASSWORD);
-	} else {
-		set_action_sensitive (ev_window, "SinglePage", FALSE);
-		set_action_sensitive (ev_window, "ContinuousPage", FALSE);
 	}
 
 	/* Toolbar-specific actions: */
@@ -608,7 +598,7 @@ ev_window_setup_document (EvWindow *ev_window)
 				         ev_window, 0);
 	}
 
-	ev_window_set_page_mode (ev_window, PAGE_MODE_SINGLE_PAGE);
+	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 
 	ev_sidebar_set_document (sidebar, document);
 
@@ -1649,14 +1639,11 @@ ev_window_set_page_mode (EvWindow         *window,
 	window->priv->page_mode = page_mode;
 
 	switch (page_mode) {
-	case PAGE_MODE_SINGLE_PAGE:
+	case PAGE_MODE_DOCUMENT:
 		child = window->priv->view;
 		break;
 	case PAGE_MODE_PASSWORD:
 		child = window->priv->password_view;
-		break;
-	case PAGE_MODE_CONTINUOUS_PAGE:
-		child = window->priv->page_view;
 		break;
 	default:
 		g_assert_not_reached ();
@@ -2147,21 +2134,6 @@ find_bar_close_cb (EggFindBar *find_bar,
 }
 
 static void
-ev_window_page_mode_cb (GtkRadioAction *action,
-			GtkRadioAction *activated_action,
-			EvWindow       *window)
-{
-	int mode;
-
-	mode = gtk_radio_action_get_current_value (action);
-
-	g_assert (mode == PAGE_MODE_CONTINUOUS_PAGE ||
-		  mode == PAGE_MODE_SINGLE_PAGE);
-
-	ev_window_set_page_mode (window, (EvWindowPageMode) mode);
-}
-
-static void
 find_bar_search_changed_cb (EggFindBar *find_bar,
 			    GParamSpec *param,
 			    EvWindow   *ev_window)
@@ -2446,15 +2418,6 @@ static const GtkToggleActionEntry toggle_entries[] = {
           G_CALLBACK (ev_window_cmd_view_page_width) },
 };
 
-static const GtkRadioActionEntry page_view_entries[] = {
-	{ "SinglePage", GTK_STOCK_DND, N_("Single"), NULL,
-	  N_("Show the document one page at a time"),
-	  PAGE_MODE_SINGLE_PAGE },
-	{ "ContinuousPage", GTK_STOCK_DND_MULTIPLE, N_("Multi"), NULL,
-	  N_("Show the full document at once"),
-	  PAGE_MODE_CONTINUOUS_PAGE }
-};
-
 static void
 drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 		       gint x, gint y, GtkSelectionData *selection_data,
@@ -2673,7 +2636,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
-	ev_window->priv->page_mode = PAGE_MODE_SINGLE_PAGE;
+	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	update_window_title (NULL, NULL, ev_window);
 
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
@@ -2688,11 +2651,6 @@ ev_window_init (EvWindow *ev_window)
 	gtk_action_group_add_toggle_actions (action_group, toggle_entries,
 					     G_N_ELEMENTS (toggle_entries),
 					     ev_window);
-	gtk_action_group_add_radio_actions (action_group, page_view_entries,
-					    G_N_ELEMENTS (page_view_entries),
-					    ev_window->priv->page_mode,
-					    G_CALLBACK (ev_window_page_mode_cb),
-					    ev_window);
 	set_action_properties (action_group);
 	register_custom_actions (ev_window, action_group);
 
