@@ -59,6 +59,7 @@
 
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
 
 #include <gconf/gconf-client.h>
@@ -749,12 +750,39 @@ start_loading_document (EvWindow   *ev_window,
 	return FALSE;
 }
 
+static gboolean
+sanity_check_uri (EvWindow *window, const char *uri)
+{
+	gboolean result = FALSE;
+	GnomeVFSURI *vfs_uri;
+	char *err;
+
+	vfs_uri = gnome_vfs_uri_new (uri);
+	if (vfs_uri) {
+		if (gnome_vfs_uri_exists (vfs_uri)) {
+			result = TRUE;
+		}
+	}
+
+	if (!result) {
+		err = g_strdup_printf (_("The file %s does not exist."), uri);
+		unable_to_load (window, err);
+		g_free (err);
+	}
+
+	return result;
+}
+
 void
 ev_window_open (EvWindow *ev_window, const char *uri)
 {
 	EvDocument *document = NULL;
 	GType document_type;
 	char *mime_type = NULL;
+
+	if (!sanity_check_uri (ev_window, uri)) {
+		return;
+	}
 
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
