@@ -160,17 +160,17 @@ create_menu_item (GtkAction *action)
 			menu_item = gtk_radio_menu_item_new_with_label (group, 
 									zoom_levels[i].name);
 			group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
-		}
 
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item),
-						p->zoom == zoom_levels[i].level);
-
-		gtk_widget_show (menu_item);
+                        gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item),
+                                                        p->zoom == zoom_levels[i].level);
+        
+                        g_object_set_data (G_OBJECT (menu_item), "zoom-level", GINT_TO_POINTER (i));
+                        g_signal_connect_object (G_OBJECT (menu_item), "activate",
+                                                G_CALLBACK (proxy_menu_activate_cb), action, 0);
+                }
+        
+                gtk_widget_show (menu_item);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
-
-		g_object_set_data (G_OBJECT (menu_item), "zoom-level", GINT_TO_POINTER (i));
-		g_signal_connect_object (G_OBJECT (menu_item), "activate",
-					 G_CALLBACK (proxy_menu_activate_cb), action, 0);
 	}
 
 	gtk_widget_show (menu);
