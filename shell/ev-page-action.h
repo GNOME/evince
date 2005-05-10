@@ -60,7 +60,7 @@ void  ev_page_action_set_document (EvPageAction *page_action,
 				   EvDocument   *document);
 void  ev_page_action_set_model    (EvPageAction *page_action,
 				   GtkTreeModel *model);
-
+void  ev_page_action_grab_focus   (EvPageAction *page_action);
 
 G_END_DECLS
 

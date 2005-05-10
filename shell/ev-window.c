@@ -339,6 +339,16 @@ update_chrome_flag (EvWindow *window, EvChrome flag, const char *pref, gboolean 
 }
 
 static void
+ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
+{
+	GtkAction *action;
+	
+	action = gtk_action_group_get_action (window->priv->action_group,
+				     	      PAGE_SELECTOR_ACTION);
+	ev_page_action_grab_focus (EV_PAGE_ACTION (action));
+}
+
+static void
 ev_window_cmd_scroll_forward (GtkAction *action, EvWindow *window)
 {
 	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD);
@@ -2335,8 +2345,8 @@ static const GtkActionEntry entries[] = {
 	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G",
 	  N_("Find next occurrence of the word or phrase"),
 	  G_CALLBACK (ev_window_cmd_edit_find_next) },
-        { "EditToolbar", NULL, N_("Toolbar..."), NULL,
-          N_("Open Toolbar Editor Dialog"),
+        { "EditToolbar", NULL, N_("T_oolbar"), NULL,
+          N_("Customize the toolbar"),
           G_CALLBACK (ev_window_cmd_edit_toolbar) },
 
         /* View menu */
@@ -2382,23 +2392,26 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_leave_fullscreen) },
 
 	/* Accellerators */
-	{ "Escape", NULL, N_("Selection Caret"), "Escape", "",
+	{ "Escape", NULL, "", "Escape", "",
 	  G_CALLBACK (ev_window_cmd_escape) },
         { "Slash", GTK_STOCK_FIND, NULL, "slash",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
-        { "Space", GTK_STOCK_FIND, NULL, "space",
+        { "Space", NULL, "", "space",
           N_("Scroll one page forward"),
           G_CALLBACK (ev_window_cmd_scroll_forward) },
-        { "ShiftSpace", GTK_STOCK_FIND, NULL, "<shift>space",
+        { "ShiftSpace", NULL, "", "<shift>space",
           N_("Scroll one page backward"),
           G_CALLBACK (ev_window_cmd_scroll_backward) },
-        { "BackSpace", GTK_STOCK_FIND, NULL, "BackSpace",
+        { "BackSpace", NULL, "", "BackSpace",
           N_("Scroll one page backward"),
           G_CALLBACK (ev_window_cmd_scroll_backward) },
-        { "ShiftBackSpace", GTK_STOCK_FIND, NULL, "<shift>BackSpace",
+        { "ShiftBackSpace", NULL, "", "<shift>BackSpace",
           N_("Scroll one page forward"),
-          G_CALLBACK (ev_window_cmd_scroll_forward) }
+          G_CALLBACK (ev_window_cmd_scroll_forward) },
+        { "FocusPageSelector", NULL, "", "<control>l",
+          N_("Focus the page selector"),
+          G_CALLBACK (ev_window_cmd_focus_page_selector) }
 };
 
 /* Toggle items */

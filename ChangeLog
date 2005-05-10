@@ -1,5 +1,15 @@
 2005-05-10  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* data/evince-ui.xml:
+	* shell/ev-page-action.c: (ev_page_action_grab_focus):
+	* shell/ev-page-action.h:
+	* shell/ev-window.c: (ev_window_cmd_focus_page_selector):
+
+	Add mnemonic for edit toolbar.
+	ctrl+l focus the page entry.
+
+2005-05-10  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* lib/Makefile.am:
 	* shell/ev-window.c: (ev_window_cmd_edit_toolbar_cb),
 	(ev_window_init):
