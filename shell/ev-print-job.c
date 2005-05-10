@@ -50,6 +50,10 @@ struct _EvPrintJob {
 	int copies; /* FIXME unused */
 	int collate; /* FIXME unsued */
 
+	/* range printing */
+	int first_page;
+	int last_page;
+
 	int fd;
 	char *temp_file;
 	guint idle_id;
@@ -215,6 +219,7 @@ void
 ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialog)
 {
 	GnomePrintConfig *print_config;
+	EvPageCache *page_cache = ev_document_get_page_cache (job->document);
 
 	g_return_if_fail (EV_IS_PRINT_JOB (job));
 	g_return_if_fail (GNOME_IS_PRINT_DIALOG (dialog));
@@ -225,26 +230,42 @@ ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialo
 					  &job->width, &job->height);
 	gnome_print_config_get_boolean (print_config,
 					(guchar *)GNOME_PRINT_KEY_DUPLEX, &job->duplex);
+
+	page_cache = ev_document_get_page_cache (job->document);
+
+	/* get the printing ranges */
+	switch (gnome_print_dialog_get_range (dialog)) {
+	case GNOME_PRINT_RANGE_ALL:
+		job->first_page = 0;
+		job->last_page = ev_page_cache_get_n_pages (page_cache) - 1;
+		break;
+	case GNOME_PRINT_RANGE_RANGE:
+		gnome_print_dialog_get_range_page (dialog, &job->first_page, &job->last_page);
+		/* convert 1-based user interface to 0-based internal numbers */
+		job->first_page--;
+		job->last_page--;
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+
 	gnome_print_config_unref (print_config);
 }
 
 static gboolean
 idle_print_handler (EvPrintJob *job)
 {
-	EvPageCache *page_cache;
-
 	if (!job->printing) {
 		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_begin (EV_PS_EXPORTER (job->document),
 				      job->temp_file);
 		ev_document_doc_mutex_unlock ();
-		job->next_page = 0;
+		job->next_page = job->first_page;
 		job->printing = TRUE;
 		return TRUE;
 	}
 
-	page_cache = ev_document_get_page_cache (job->document);
-	if (job->next_page < ev_page_cache_get_n_pages (page_cache)) {
+	if (job->next_page <= job->last_page) {
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
 #endif

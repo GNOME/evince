@@ -1065,6 +1065,8 @@ ev_window_print (EvWindow *ev_window)
 	GnomePrintConfig *config;
 	GnomePrintJob *job;
 	GtkWidget *print_dialog;
+	EvPageCache *page_cache;
+	gchar *pages_label;
 	EvPrintJob *print_job = NULL;
 
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -1073,9 +1075,21 @@ ev_window_print (EvWindow *ev_window)
 	config = gnome_print_config_default ();
 	job = gnome_print_job_new (config);
 
+	page_cache = ev_document_get_page_cache (ev_window->priv->document);
+
 	print_dialog = gnome_print_dialog_new (job, (guchar *) _("Print"),
 					       (GNOME_PRINT_DIALOG_RANGE |
 						GNOME_PRINT_DIALOG_COPIES));
+
+	pages_label = g_strconcat (_("Pages"), " ", NULL);
+	gnome_print_dialog_construct_range_page (GNOME_PRINT_DIALOG (print_dialog),
+						 GNOME_PRINT_RANGE_ALL |
+						 GNOME_PRINT_RANGE_RANGE,
+						 1,
+						 ev_page_cache_get_n_pages (page_cache),
+						 NULL, (const guchar *)pages_label);
+	g_free (pages_label);
+						 
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (print_dialog),
 					   GNOME_PRINT_DIALOG_RESPONSE_PREVIEW,
 					   FALSE);
