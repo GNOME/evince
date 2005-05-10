@@ -1,5 +1,12 @@
 2005-05-10  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-page-action.c: (update_pages_label), (connect_proxy):
+
+	Update label when connecting proxy. Fix a warning with NULL
+	page_cache.
+
+2005-05-10  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* data/evince-ui.xml:
 	* shell/ev-page-action.c: (ev_page_action_grab_focus):
 	* shell/ev-page-action.h:

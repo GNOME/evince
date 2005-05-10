@@ -132,7 +132,7 @@ update_pages_label (EvPageActionWidget *proxy,
 	gint n_pages;
 
 	n_pages = page_cache ? ev_page_cache_get_n_pages (page_cache) : 0;
-	if (ev_page_cache_has_nonnumeric_page_labels (page_cache)) {
+	if (page_cache && ev_page_cache_has_nonnumeric_page_labels (page_cache)) {
     	        label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
 	} else {
     	        label_text = g_strdup_printf (_("of %d"), n_pages);
@@ -429,6 +429,8 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 		g_signal_connect_object (action, "notify::page-cache",
 					 G_CALLBACK (update_page_cache),
 					 proxy, 0);
+		update_page_cache (EV_PAGE_ACTION (action), NULL,
+				   EV_PAGE_ACTION_WIDGET (proxy));
 		/* We only go through this whole rigmarole if we can set
 		 * GtkEntryCompletion::popup-set-width, which appeared in
 		 * GTK+-2.7.0 */
