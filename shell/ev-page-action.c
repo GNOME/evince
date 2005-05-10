@@ -63,6 +63,9 @@ static GType ev_page_action_widget_get_type   (void);
 static void  ev_page_action_widget_init       (EvPageActionWidget      *action_widget);
 static void  ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget);
 
+#define EV_TYPE_PAGE_ACTION_WIDGET (ev_page_action_widget_get_type ())
+#define EV_PAGE_ACTION_WIDGET(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidget))
+
 G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_TOOL_ITEM)
 
 static void
@@ -72,11 +75,37 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 }
 
 static void
-ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget)
+ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
+				      EvPageCache        *page_cache)
 {
+	if (action_widget->page_cache != NULL) {
+		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
+					      (gpointer *)&action_widget->page_cache);
+		action_widget->page_cache = NULL;
+	}
+
+	if (page_cache != NULL) {
+		action_widget->page_cache = page_cache;
+		g_object_add_weak_pointer (G_OBJECT (page_cache),
+					   (gpointer *)&action_widget->page_cache);
+	}
 }
 
+static void
+ev_page_action_widget_finalize (GObject *object)
+{
+	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
 
+	ev_page_action_widget_set_page_cache (action_widget, NULL);
+}
+
+static void
+ev_page_action_widget_class_init (EvPageActionWidgetClass *class)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
+
+	object_class->finalize = ev_page_action_widget_finalize;
+}
 
 static void ev_page_action_init       (EvPageAction *action);
 static void ev_page_action_class_init (EvPageActionClass *class);
@@ -210,7 +239,7 @@ update_page_cache (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *pr
 		signal_id = 0;
 		page_changed_cb (NULL, 0, proxy);
 	}
-	proxy->page_cache = page_cache;
+	ev_page_action_widget_set_page_cache (proxy, page_cache);
 	proxy->signal_id = signal_id;
 }
 
