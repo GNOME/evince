@@ -214,6 +214,8 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, "EditSelectAll", sensitive);
 	set_action_sensitive (ev_window, "EditFind",
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
+	set_action_sensitive (ev_window, "Slash",
+			      has_pages && EV_IS_DOCUMENT_FIND (document));
 	set_action_sensitive (ev_window, "EditFindNext",
 			      ev_view_can_find_next (view));
 
