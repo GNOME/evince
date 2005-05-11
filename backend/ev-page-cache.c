@@ -308,9 +308,9 @@ ev_page_cache_get_size (EvPageCache *page_cache,
 	}
 
 	if (width)
-		*width = (*width) * scale;
+		*width = (int) ((*width) * scale + 0.5);
 	if (width)
-		*height = (*height) * scale;
+		*height = (int) ((*height) * scale + 0.5);
 
 }
 

@@ -254,8 +254,8 @@ pdf_document_render_pixbuf (EvDocument   *document,
 						  page);
 
 	poppler_page_get_size (poppler_page, &width_points, &height_points);
-	width = (int) ceil (width_points * scale);
-	height = (int) ceil (height_points * scale);
+	width = (int) ((width_points * scale) + 0.5);
+	height = (int) ((height_points * scale) + 0.5);
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
 				 FALSE, 8,

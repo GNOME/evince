@@ -1,3 +1,13 @@
+Wed May 11 01:18:29 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* pdf/ev-poppler.cc:
+	* backend/ev-page-cache.c: make page size calculation consistent
+	and set it to (int)( width * scale + 0.5).  This makes the weird
+	line going through the middle of the page go away.
+
+	* shell/ev-view.c: move painting the background page after
+	checking the expose area covers us.
+
 2005-05-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* data/evince-password.glade:

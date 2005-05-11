@@ -940,10 +940,6 @@ draw_one_page (EvView       *view,
 				page, view->scale,
 				&width, &height);
 
-	ev_document_misc_paint_one_page (view->bin_window,
-					 GTK_WIDGET (view),
-					 page_area, border);
-
 	/* Render the document itself */
 	real_page_area = *page_area;
 
@@ -955,7 +951,12 @@ draw_one_page (EvView       *view,
 	if (! gdk_rectangle_intersect (&real_page_area, expose_area, &overlap))
 		return;
 
+	ev_document_misc_paint_one_page (view->bin_window,
+					 GTK_WIDGET (view),
+					 page_area, border);
+
 	current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, page);
+
 	if (current_pixbuf == NULL)
 		scaled_image = NULL;
 	else if (width == gdk_pixbuf_get_width (current_pixbuf) &&
@@ -965,6 +966,7 @@ draw_one_page (EvView       *view,
 		scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
 							width, height,
 							GDK_INTERP_NEAREST);
+
 	if (scaled_image) {
 		gdk_draw_pixbuf (view->bin_window,
 				 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
