@@ -32,9 +32,9 @@ ephy_zoom_get_zoom_level_index (float level)
 
 	/* Handle our options at the end of the list. */
 	if (level == EPHY_ZOOM_BEST_FIT) {
-	  return n_zoom_levels - 2;
+	  return 0;
 	} else if (level == EPHY_ZOOM_FIT_WIDTH) {
-	  return n_zoom_levels - 1;
+	  return 1;
 	}
 
 	previous = zoom_levels[0].level;

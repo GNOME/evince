@@ -45,6 +45,9 @@ struct
 
 zoom_levels[] =
 {
+	{ N_("Best Fit"),       EPHY_ZOOM_BEST_FIT  },
+	{ N_("Fit Page Width"), EPHY_ZOOM_FIT_WIDTH },
+	{ NULL,                 EPHY_ZOOM_SEPARATOR },
 	{ N_("50%"), 0.7071067811 },
 	{ N_("75%"), 0.8408964152 },
 	{ N_("100%"), 1.0 },
@@ -53,10 +56,7 @@ zoom_levels[] =
 	{ N_("175%"), 1.6817928304 },
 	{ N_("200%"), 2.0 },
 	{ N_("300%"), 2.8284271247 },
-	{ N_("400%"), 4.0 },
-	{ NULL,                 EPHY_ZOOM_SEPARATOR },
-	{ N_("Best Fit"),       EPHY_ZOOM_BEST_FIT  },
-	{ N_("Fit Page Width"), EPHY_ZOOM_FIT_WIDTH }
+	{ N_("400%"), 4.0 }
 };
 static const guint n_zoom_levels = G_N_ELEMENTS (zoom_levels);
 
