@@ -2437,6 +2437,25 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 }
 
 static void
+activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
+{
+	g_return_if_fail (EV_IS_WINDOW (window));
+
+	ev_page_cache_set_link (window->priv->page_cache, link);
+	gtk_widget_grab_focus (window->priv->view);
+}
+
+static gboolean
+activate_label_cb (EvPageAction *page_action, char *label, EvWindow *window)
+{
+	g_return_val_if_fail (EV_IS_WINDOW (window), FALSE);
+
+	gtk_widget_grab_focus (window->priv->view);
+
+	return ev_page_cache_set_page_label (window->priv->page_cache, label);
+}
+
+static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
@@ -2447,6 +2466,10 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "tooltip", _("Select Page"),
 			       "visible_overflown", FALSE,
 			       NULL);
+	g_signal_connect (action, "activate_link",
+			  G_CALLBACK (activate_link_cb), window);
+	g_signal_connect (action, "activate_label",
+			  G_CALLBACK (activate_label_cb), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 

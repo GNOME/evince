@@ -24,6 +24,7 @@
 #include "ev-page-action.h"
 #include "ev-window.h"
 #include "ev-document-links.h"
+#include "ev-marshal.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtkentry.h>
@@ -49,6 +50,9 @@ struct _EvPageActionWidget
 struct _EvPageActionWidgetClass
 {
 	GtkToolItemClass parent_class;
+
+	void (* activate_link) (EvPageActionWidget *page_action,
+			        EvLink             *link);
 };
 
 struct _EvPageActionPrivate
@@ -65,6 +69,14 @@ static void  ev_page_action_widget_class_init (EvPageActionWidgetClass *action_w
 
 #define EV_TYPE_PAGE_ACTION_WIDGET (ev_page_action_widget_get_type ())
 #define EV_PAGE_ACTION_WIDGET(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidget))
+
+enum
+{
+	WIDGET_ACTIVATE_LINK,
+	WIDGET_N_SIGNALS
+};
+
+static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
 
 G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_TOOL_ITEM)
 
@@ -105,10 +117,29 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *class)
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
 	object_class->finalize = ev_page_action_widget_finalize;
+
+	widget_signals[WIDGET_ACTIVATE_LINK] = g_signal_new ("activate_link",
+					       G_OBJECT_CLASS_TYPE (object_class),
+					       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+					       G_STRUCT_OFFSET (EvPageActionClass, activate_link),
+					       NULL, NULL,
+					       g_cclosure_marshal_VOID__OBJECT,
+					       G_TYPE_NONE, 1,
+					       G_TYPE_OBJECT);
+
 }
 
 static void ev_page_action_init       (EvPageAction *action);
 static void ev_page_action_class_init (EvPageActionClass *class);
+
+enum
+{
+	ACTIVATE_LINK,
+	ACTIVATE_LABEL,
+	N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = {0, };
 
 G_DEFINE_TYPE (EvPageAction, ev_page_action, GTK_TYPE_ACTION)
 
@@ -166,11 +197,14 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 	EvPageAction *page = EV_PAGE_ACTION (action);
 	EvPageCache *page_cache;
 	const char *text;
+	gboolean changed;
 
 	text = gtk_entry_get_text (GTK_ENTRY (entry));
 	page_cache = page->priv->page_cache;
 
-	if (! ev_page_cache_set_page_label (page_cache, text)) {
+	g_signal_emit (action, signals[ACTIVATE_LABEL], 0, text, &changed);
+
+	if (!changed) {
 		/* rest the entry to the current page if we were unable to
 		 * change it */
 		gchar *page_label =
@@ -302,7 +336,8 @@ match_selected_cb (GtkEntryCompletion *completion,
 	gtk_tree_model_get (proxy->model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
-	ev_page_cache_set_link (proxy->page_cache, link);
+
+	g_signal_emit (proxy, signals[ACTIVATE_LINK], 0, link);
 	
 	return TRUE;
 }
@@ -423,12 +458,21 @@ update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 }
 
 static void
+activate_link_cb (EvPageActionWidget *proxy, EvLink *link, EvPageAction *action)
+{
+	g_signal_emit (action, signals[ACTIVATE_LINK], 0, link);
+}
+
+static void
 connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
 	if (GTK_IS_TOOL_ITEM (proxy)) {
 		g_signal_connect_object (action, "notify::page-cache",
 					 G_CALLBACK (update_page_cache),
 					 proxy, 0);
+		g_signal_connect (proxy, "activate_link",
+				  G_CALLBACK (activate_link_cb),
+				  action);
 		update_page_cache (EV_PAGE_ACTION (action), NULL,
 				   EV_PAGE_ACTION_WIDGET (proxy));
 		/* We only go through this whole rigmarole if we can set
@@ -569,6 +613,23 @@ ev_page_action_class_init (EvPageActionClass *class)
 	action_class->toolbar_item_type = GTK_TYPE_TOOL_ITEM;
 	action_class->create_tool_item = create_tool_item;
 	action_class->connect_proxy = connect_proxy;
+
+	signals[ACTIVATE_LINK] = g_signal_new ("activate_link",
+					       G_OBJECT_CLASS_TYPE (object_class),
+					       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+					       G_STRUCT_OFFSET (EvPageActionClass, activate_link),
+					       NULL, NULL,
+					       g_cclosure_marshal_VOID__OBJECT,
+					       G_TYPE_NONE, 1,
+					       G_TYPE_OBJECT);
+	signals[ACTIVATE_LABEL] = g_signal_new ("activate_label",
+					        G_OBJECT_CLASS_TYPE (object_class),
+					        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+					        G_STRUCT_OFFSET (EvPageActionClass, activate_link),
+					        NULL, NULL,
+					        ev_marshal_BOOLEAN__STRING,
+					        G_TYPE_BOOLEAN, 1,
+					        G_TYPE_STRING);
 
 	g_object_class_install_property (object_class,
 					 PROP_PAGE_CACHE,

@@ -51,8 +51,10 @@ struct _EvPageActionClass
 {
 	GtkActionClass parent_class;
 
-	void (* goto_page) (EvPageAction *page_action,
-			    int           page_number);
+	void     (* activate_link) (EvPageAction *page_action,
+			            EvLink       *link);
+	gboolean (*activate_label) (EvPageAction *page_action,
+				    char         *label);
 };
 
 GType ev_page_action_get_type     (void);

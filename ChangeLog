@@ -1,3 +1,20 @@
+2005-05-11  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-marshal.list:
+	* shell/ev-page-action.c: (ev_page_action_widget_class_init),
+	(activate_cb), (match_selected_cb), (activate_link_cb),
+	(connect_proxy), (ev_page_action_class_init):
+	* shell/ev-page-action.h:
+
+	Use signals to notify action activation. Hopefully
+	I did not break completion since I cant test...
+
+	* shell/ev-window.c: (activate_link_cb), (activate_label_cb),
+	(register_custom_actions):
+
+	Connect to page selector actions and also grab focus on
+	the view when activated.
+
 Wed May 11 01:18:29 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* pdf/ev-poppler.cc:
