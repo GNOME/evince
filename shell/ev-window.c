@@ -55,6 +55,7 @@
 #include "ev-application.h"
 #include "ev-stock-icons.h"
 #include "ev-file-helpers.h"
+#include <poppler.h>
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -1921,16 +1922,46 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 	update_sizing_buttons (ev_window);
 }
 
+static char *
+build_comments_string (void)
+{
+	PopplerBackend backend;
+	const char *backend_name;
+	const char *version;
+
+	backend = poppler_get_backend ();
+	version = poppler_get_version ();
+	switch (backend) {
+		case POPPLER_BACKEND_CAIRO:
+			backend_name = "cairo";
+			break;
+		case POPPLER_BACKEND_SPLASH:
+			backend_name = "splash";
+			break;
+		default:
+			backend_name = "unknown";
+			break;
+	}
+
+	return g_strdup_printf (_("PostScript and PDF File Viewer.\n"
+				  "Using poppler %s (%s)"),
+				version, backend_name);
+}
+
 static void
 ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 {
 	const char *authors[] = {
-		N_("Many..."),
+		"Martin Kretzschmar <m_kretzschmar@gmx.net>",
+		"Jonathan Blandford <jrb@gnome.org>",
+		"Marco Pesenti Gritti <marco@gnome.org>",
+		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+		"Bryan Clark <clarkbw@gnome.org>",
 		NULL
 	};
 
 	const char *documenters[] = {
-		N_("Not so many..."),
+		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
 		NULL
 	};
 
@@ -1949,6 +1980,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 	};
 
 	char *license_trans;
+	char *comments;
 
 #ifdef ENABLE_NLS
 	const char **p;
@@ -1962,6 +1994,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 
 	license_trans = g_strconcat (_(license[0]), "\n", _(license[1]), "\n",
 				     _(license[2]), "\n", NULL);
+	comments = build_comments_string ();
 
 	gtk_show_about_dialog (
 		GTK_WINDOW (ev_window),
@@ -1971,12 +2004,13 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		_("\xc2\xa9 1996-2004 The Evince authors"),
 		"license", license_trans,
 		"website", "http://www.gnome.org/projects/evince",
-		"comments", _("PostScript and PDF File Viewer."),
+		"comments", comments,
 		"authors", authors,
 		"documenters", documenters,
 		"translator-credits", _("translator-credits"),
 		NULL);
 
+	g_free (comments);
 	g_free (license_trans);
 }
 
