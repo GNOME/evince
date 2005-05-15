@@ -115,6 +115,15 @@ ev_sidebar_select_button_press_cb (GtkWidget      *widget,
 	EvSidebar *ev_sidebar = EV_SIDEBAR (user_data);
 
 	if (event->button == 1) {
+		GtkRequisition requisition;
+		gint width;
+		
+		width = widget->allocation.width;
+		gtk_widget_set_size_request (ev_sidebar->priv->menu, -1, -1);
+		gtk_widget_size_request (ev_sidebar->priv->menu, &requisition);
+		gtk_widget_set_size_request (ev_sidebar->priv->menu,
+					     MAX (width, requisition.width), -1);
+		
 		gtk_widget_grab_focus (widget);
 			 
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
