@@ -56,6 +56,9 @@ void		ev_window_open		(EvWindow       *ev_window,
 void		ev_window_open_page	(EvWindow       *ev_window,
 					 int             page);
 gboolean	ev_window_is_empty	(const EvWindow *ev_window);
+void		ev_window_print_range   (EvWindow       *ev_window,
+					 int             first_page,
+					 int		 last_page);
 
 G_END_DECLS
 

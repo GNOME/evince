@@ -223,6 +223,85 @@ create_loading_model (void)
 }
 
 static void
+print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
+{
+	GtkWidget *window;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+
+	selection = gtk_tree_view_get_selection
+		(GTK_TREE_VIEW (sidebar->priv->tree_view));
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		EvLink *link;
+		int first_page, last_page;
+
+		gtk_tree_model_get (model, &iter,
+				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+				    -1);
+		first_page = ev_link_get_page (link) + 1;
+
+		if (gtk_tree_model_iter_next (model, &iter)) {
+			gtk_tree_model_get (model, &iter,
+					    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+					    -1);
+			last_page = ev_link_get_page (link);
+		} else {
+			last_page = -1;
+		}
+	
+		window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
+		if (EV_IS_WINDOW (window)) {
+			ev_window_print_range (EV_WINDOW (window),
+					       first_page, last_page);
+		}
+	}
+}
+
+static gboolean
+button_press_cb (GtkWidget *treeview,
+                 GdkEventButton *event,
+                 EvSidebarLinks *sidebar)
+{
+	GtkTreePath *path = NULL;
+
+	if (event->button == 3) {
+	        if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (treeview),
+        	                                   event->x,
+                	                           event->y,
+	                                           &path,
+        	                                   NULL, NULL, NULL)) {
+			GtkWidget *menu;
+			GtkWidget *item;
+
+			gtk_tree_view_set_cursor (GTK_TREE_VIEW (treeview),
+						  path, NULL, FALSE);
+
+			menu = gtk_menu_new ();
+			item = gtk_image_menu_item_new_from_stock
+							(GTK_STOCK_PRINT, NULL);
+			gtk_label_set_label (GTK_LABEL (GTK_BIN (item)->child),
+					     _("Print..."));
+			gtk_widget_show (item);
+			gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+			g_signal_connect (item, "activate",
+					  G_CALLBACK (print_section_cb), sidebar);
+
+			gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 2,
+					gtk_get_current_event_time ());
+
+			gtk_tree_path_free (path);
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+
+static void
 ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 {
 	EvSidebarLinksPrivate *priv;
@@ -274,7 +353,10 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 						 (GtkTreeCellDataFunc) links_page_num_func,
 						 ev_sidebar_links, NULL);
 
-	
+	g_signal_connect (GTK_TREE_VIEW (priv->tree_view),
+			  "button_press_event",
+			  G_CALLBACK (button_press_cb),
+			  ev_sidebar_links);
 }
 
 static void
