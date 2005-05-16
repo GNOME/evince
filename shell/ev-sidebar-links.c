@@ -280,10 +280,13 @@ build_popup_menu (EvSidebarLinks *sidebar)
 static void
 popup_menu_cb (GtkWidget *treeview, EvSidebarLinks *sidebar)
 {
-	gtk_menu_popup (build_popup_menu (sidebar), NULL, NULL,
+	GtkMenu *menu = build_popup_menu (sidebar);
+
+	gtk_menu_popup (menu, NULL, NULL,
 			ev_gui_menu_position_tree_selection,
 			sidebar->priv->tree_view, 0,
 			gtk_get_current_event_time ());
+	gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
 }
 
 static gboolean
