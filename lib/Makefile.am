@@ -14,4 +14,6 @@ libev_la_SOURCES=				\
 	ev-debug.h				\
 	ev-file-helpers.c			\
 	ev-file-helpers.h			\
+	ev-gui.c				\
+	ev-gui.h				\
 	$(NULL)

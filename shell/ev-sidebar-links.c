@@ -33,6 +33,7 @@
 #include "ev-job-queue.h"
 #include "ev-document-links.h"
 #include "ev-window.h"
+#include "ev-gui.h"
 
 struct _EvSidebarLinksPrivate {
 	GtkWidget *tree_view;
@@ -259,6 +260,32 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 	}
 }
 
+static GtkMenu *
+build_popup_menu (EvSidebarLinks *sidebar)
+{
+	GtkWidget *menu;
+	GtkWidget *item;
+
+	menu = gtk_menu_new ();
+	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, NULL);
+	gtk_label_set_label (GTK_LABEL (GTK_BIN (item)->child), _("Print..."));
+	gtk_widget_show (item);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	g_signal_connect (item, "activate",
+			  G_CALLBACK (print_section_cb), sidebar);
+
+	return GTK_MENU (menu);
+}
+
+static void
+popup_menu_cb (GtkWidget *treeview, EvSidebarLinks *sidebar)
+{
+	gtk_menu_popup (build_popup_menu (sidebar), NULL, NULL,
+			ev_gui_menu_position_tree_selection,
+			sidebar->priv->tree_view, 0,
+			gtk_get_current_event_time ());
+}
+
 static gboolean
 button_press_cb (GtkWidget *treeview,
                  GdkEventButton *event,
@@ -272,25 +299,11 @@ button_press_cb (GtkWidget *treeview,
                 	                           event->y,
 	                                           &path,
         	                                   NULL, NULL, NULL)) {
-			GtkWidget *menu;
-			GtkWidget *item;
-
 			gtk_tree_view_set_cursor (GTK_TREE_VIEW (treeview),
 						  path, NULL, FALSE);
-
-			menu = gtk_menu_new ();
-			item = gtk_image_menu_item_new_from_stock
-							(GTK_STOCK_PRINT, NULL);
-			gtk_label_set_label (GTK_LABEL (GTK_BIN (item)->child),
-					     _("Print..."));
-			gtk_widget_show (item);
-			gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-			g_signal_connect (item, "activate",
-					  G_CALLBACK (print_section_cb), sidebar);
-
-			gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 2,
+			gtk_menu_popup (build_popup_menu (sidebar), NULL,
+					NULL, NULL, NULL, event->button,
 					gtk_get_current_event_time ());
-
 			gtk_tree_path_free (path);
 
 			return TRUE;
@@ -356,6 +369,10 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	g_signal_connect (GTK_TREE_VIEW (priv->tree_view),
 			  "button_press_event",
 			  G_CALLBACK (button_press_cb),
+			  ev_sidebar_links);
+	g_signal_connect (GTK_TREE_VIEW (priv->tree_view),
+			  "popup_menu",
+			  G_CALLBACK (popup_menu_cb),
 			  ev_sidebar_links);
 }
 
