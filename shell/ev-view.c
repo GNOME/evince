@@ -2471,13 +2471,6 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	ev_view_set_zoom (view, scale, FALSE);
 }
 
-
-void
-ev_view_zoom_normal (EvView *view)
-{
-	ev_view_set_zoom (view, 1.0, FALSE);
-}
-
 void
 ev_view_set_zoom_for_size (EvView *view,
 			   int     width,

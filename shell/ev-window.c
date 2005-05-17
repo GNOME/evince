@@ -226,7 +226,6 @@ update_action_sensitivity (EvWindow *ev_window)
 			      has_pages && ev_view_can_zoom_in (view));
 	set_action_sensitive (ev_window, "ViewZoomOut",
 			      has_pages && ev_view_can_zoom_out (view));
-	set_action_sensitive (ev_window, "ViewNormalSize", has_pages);
 	set_action_sensitive (ev_window, "ViewBestFit", has_pages);
 	set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
 	set_action_sensitive (ev_window, "ViewReload", has_pages);
@@ -1740,15 +1739,6 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_view_normal_size (GtkAction *action, EvWindow *ev_window)
-{
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
-
-	ev_view_zoom_normal (EV_VIEW (ev_window->priv->view));
-	update_action_sensitivity (ev_window);
-}
-
-static void
 ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -2376,9 +2366,6 @@ static const GtkActionEntry entries[] = {
         { "ViewZoomOut", GTK_STOCK_ZOOM_OUT, NULL, "<control>minus",
           N_("Shrink the document"),
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
-        { "ViewNormalSize", GTK_STOCK_ZOOM_100, NULL, "<control>0",
-          N_("Reset the zoom level to the default value"),
-          G_CALLBACK (ev_window_cmd_view_normal_size) },
         { "ViewReload", GTK_STOCK_REFRESH, N_("_Reload"), "<control>R",
           N_("Reload the document"),
           G_CALLBACK (ev_window_cmd_view_reload) },
