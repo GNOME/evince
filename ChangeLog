@@ -1,3 +1,17 @@
+Tue May 17 00:51:21 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document-info.h:
+	* backend/ev-document.c: (ev_document_info_free): Free the
+	EvDocumentInfo.
+
+	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_dispose),
+	(clear_range), (add_range), (update_visible_range),
+	(adjustment_changed_cb), (ev_sidebar_thumbnails_init),
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-window.c: (ev_window_setup_document): Only render the
+	visible thumbnails.  It takes an instant to render, but it uses
+	much less memory.
+
 2005-05-16  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/ev-sidebar-links.c: (popup_menu_cb):

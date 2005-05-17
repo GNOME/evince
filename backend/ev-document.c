@@ -240,3 +240,18 @@ ev_document_render_pixbuf (EvDocument *document,
 
 	return retval;
 }
+
+void
+ev_document_info_free (EvDocumentInfo *info)
+{
+	if (info == NULL)
+		return;
+
+	g_free (info->title);
+	g_free (info->format);
+	g_free (info->author);
+	g_free (info->subject);
+	g_free (info->keywords);
+
+	g_free (info);
+}

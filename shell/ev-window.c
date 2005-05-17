@@ -614,7 +614,7 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	info = ev_document_get_info (document);
 	update_document_mode (ev_window, info->mode);
-	g_free (info);
+	ev_document_info_free (info);
 }
 
 static void

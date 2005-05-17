@@ -75,11 +75,11 @@ typedef enum
 
 struct _EvDocumentInfo
 {
-	const char *title;
-	const char *format; /* eg, "pdf-1.5" */
-	const char *author;
-	const char *subject;
-	const char *keywords;
+	char *title;
+	char *format; /* eg, "pdf-1.5" */
+	char *author;
+	char *subject;
+	char *keywords;
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
 	GDate creation_date;
@@ -88,6 +88,8 @@ struct _EvDocumentInfo
 	/* Mask of all the valid fields */
 	guint fields_mask;
 };
+
+void ev_document_info_free (EvDocumentInfo *info);
 
 G_END_DECLS
 
