@@ -152,10 +152,16 @@ ephy_zoom_control_init (EphyZoomControl *control)
 	for (i = 0; i < n_zoom_levels; i++)
 	{
 		gtk_list_store_append (store, &iter);
-		gtk_list_store_set    (store, &iter,
-				       COL_TEXT, zoom_levels[i].name,
-				       COL_IS_SEP, zoom_levels[i].name == NULL,
-				       -1);
+
+		if (zoom_levels[i].name != NULL) {
+			gtk_list_store_set (store, &iter,
+				            COL_TEXT, _(zoom_levels[i].name),
+				            -1);
+		} else {
+			gtk_list_store_set (store, &iter,
+				            COL_IS_SEP, zoom_levels[i].name == NULL,
+				            -1);
+		}
 	}
 
 	p->combo = GTK_COMBO_BOX (gtk_combo_box_new_with_model (GTK_TREE_MODEL (store)));
