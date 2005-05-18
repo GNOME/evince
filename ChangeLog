@@ -1,3 +1,49 @@
+Tue May 17 22:54:17 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c: (view_update_adjustments),
+	(view_set_adjustment_values), (view_update_range_and_current_page),
+	(view_scroll_to_page), (set_scroll_adjustment),
+	(ev_view_set_scroll_adjustments), (add_scroll_binding_keypad),
+	(ev_view_scroll), (ev_view_scroll_view),
+	(ensure_rectangle_is_visible), (find_page_at_location),
+	(get_link_at_location), (go_to_link), (status_message_from_link),
+	(ev_view_size_request_continuous_dual_page),
+	(ev_view_size_request), (ev_view_size_allocate), (ev_view_realize),
+	(ev_view_unrealize), (ev_view_expose_event),
+	(ev_view_button_press_event), (ev_view_motion_notify_event),
+	(ev_view_button_release_event), (ev_gdk_color_to_rgb),
+	(draw_rubberband), (highlight_find_results), (draw_one_page),
+	(ev_view_finalize), (ev_view_destroy), (ev_view_class_init),
+	(ev_view_init), (find_changed_cb), (page_changed_cb),
+	(on_adjustment_value_changed), (ev_view_new),
+	(ev_view_set_document), (ev_view_set_zoom),
+	(ev_view_set_continuous), (ev_view_set_dual_page),
+	(ev_view_set_presentation), (ev_view_zoom_in), (ev_view_zoom_out),
+	(zoom_for_size_fit_width), (zoom_for_size_best_fit),
+	(ev_view_zoom_for_size_presentation),
+	(ev_view_zoom_for_size_continuous_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (ev_view_set_zoom_for_size),
+	(ev_view_get_status), (ev_view_set_status),
+	(update_find_status_message), (ev_view_get_find_status),
+	(ev_view_set_find_status), (jump_to_find_result),
+	(jump_to_find_page), (compute_selections), (clear_selection),
+	(ev_view_select_all), (get_selected_text), (ev_view_copy),
+	(ev_view_primary_get_cb), (ev_view_primary_clear_cb),
+	(ev_view_update_primary_selection),
+	(ev_view_create_invisible_cursor), (ev_view_set_cursor):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_open_page_label),
+	(ev_window_cmd_view_reload), (ev_window_sizing_mode_changed_cb),
+	(ev_window_init):
+	* shell/ev-window.h:
+	* shell/main.c: (load_files):
+
+	Massive code clean up from Nickolay Shmyrev.  Keep page offset
+	when resizing.  Remove the bin_window().  Also, patch from James
+	Bowes to fix command line page, #300641
+	
 2005-05-17  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* data/evince-ui.xml:

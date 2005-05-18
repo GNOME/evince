@@ -34,8 +34,11 @@
 #include "ev-job-queue.h"
 #include "ev-file-helpers.h"
 
+static char *page_label;
+
 static struct poptOption popt_options[] =
 {
+	{ "page-label", 'p', POPT_ARG_STRING, &page_label, 0, N_("The page of the document to display."), N_("PAGE")},
 	{ NULL, 0, 0, NULL, 0, NULL, NULL }
 };
 
@@ -59,9 +62,14 @@ load_files (const char **files)
 		window = GTK_WIDGET (ev_application_new_window (EV_APP));
 		gtk_widget_show (window);
 		ev_window_open (EV_WINDOW (window), uri);
+		
+		if (page_label != NULL)
+			ev_window_open_page_label (EV_WINDOW (window), page_label);
 
 		g_free (uri);
         }
+
+	g_free (page_label);
 }
 
 int
