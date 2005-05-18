@@ -868,14 +868,13 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 }
 
 static void
-pdf_document_ps_exporter_begin (EvPSExporter *exporter, const char *filename)
+pdf_document_ps_exporter_begin (EvPSExporter *exporter, const char *filename,
+				int first_page, int last_page)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
-	int n_pages;
 	
-	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (exporter));
-	pdf_document->ps_file = poppler_ps_file_new (pdf_document->document,
-						     filename, n_pages);
+	pdf_document->ps_file = poppler_ps_file_new (pdf_document->document, filename,
+						     first_page, last_page);
 }
 
 static void

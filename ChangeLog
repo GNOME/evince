@@ -1,5 +1,15 @@
 2005-05-18  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* backend/ev-ps-exporter.c: (ev_ps_exporter_begin):
+	* backend/ev-ps-exporter.h:
+	* pdf/ev-poppler.cc:
+	* ps/ps-document.c: (ps_document_ps_export_begin):
+	* shell/ev-print-job.c: (idle_print_handler):
+
+	Adapt to new poppler api
+
+2005-05-18  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* cut-n-paste/zoom-control/ephy-zoom-control.c:
 	(ephy_zoom_control_init):
 
@@ -249,6 +259,20 @@ Wed May 11 01:18:29 2005  Jonathan Blandford  <jrb@redhat.com>
 	dont try to disconnect the signal if the object is already
 	gone. Maybe there is a better way to cleanup reference handling
 	in page action though...
+
+2005-05-10  Juerg Billeter  <j@bitron.ch>
+
+	* backend/ev-ps-exporter.c: (ev_ps_exporter_begin):
+	* backend/ev-ps-exporter.h:
+	* pdf/ev-poppler.cc: (pdf_document_ps_exporter_begin):
+	* ps/ps-document.c: (ps_document_ps_export_begin):
+	
+	Change api to pass print range to ps_exporter_begin. The pdf backend
+	requires this information.
+	
+	* shell/ev-print-job.c: (idle_print_handler):
+	
+	Adapt to api change
 
 2005-05-10  Juerg Billeter  <j@bitron.ch>
 

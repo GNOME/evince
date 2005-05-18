@@ -1389,7 +1389,8 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 }
 
 static void
-ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename)
+ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
+			     int first_page, int last_page)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 
