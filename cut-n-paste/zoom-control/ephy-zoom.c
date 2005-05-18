@@ -30,16 +30,16 @@ ephy_zoom_get_zoom_level_index (float level)
 	guint i;
 	float previous, current, mean;
 
-	/* Handle our options at the end of the list. */
+	/* Handle our options at the beginning of the list. */
 	if (level == EPHY_ZOOM_BEST_FIT) {
 	  return 0;
 	} else if (level == EPHY_ZOOM_FIT_WIDTH) {
 	  return 1;
 	}
 
-	previous = zoom_levels[0].level;
+	previous = zoom_levels[3].level;
 
-	for (i = 1; i < n_zoom_levels - 2; i++)
+	for (i = 4; i < n_zoom_levels; i++)
 	{
 		current = zoom_levels[i].level;
 		mean = sqrt (previous * current);
@@ -49,7 +49,7 @@ ephy_zoom_get_zoom_level_index (float level)
 		previous = current;
 	}
 
-	return n_zoom_levels - 4;
+	return n_zoom_levels - 1;
 }
 
 
