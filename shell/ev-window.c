@@ -2873,8 +2873,8 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (find_bar_search_changed_cb),
 			  ev_window);
 
-	/* Give focus to the scrolled window */
-	gtk_widget_grab_focus (ev_window->priv->scrolled_window);
+	/* Give focus to the document view */
+	gtk_widget_grab_focus (ev_window->priv->view);
 
 	/* Drag and Drop */
 	gtk_drag_dest_unset (GTK_WIDGET (ev_window));

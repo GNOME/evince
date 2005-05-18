@@ -1,3 +1,8 @@
+2005-05-18  James Bowes  <bowes@cs.dal.ca>
+
+	* shell/ev-window.c: (ev_window_init): Give focus to the ev-view,
+	rather than the scrolled_window that it's in. Fixes bug #304655.
+
 Tue May 17 22:54:17 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-view.c: (view_update_adjustments),
