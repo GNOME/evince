@@ -667,38 +667,32 @@ ev_view_scroll_view (EvView *view,
 		     GtkScrollType scroll,
 		     gboolean horizontal)
 {
-	if (scroll == GTK_SCROLL_PAGE_BACKWARD) {
-		ev_page_cache_prev_page (view->page_cache);
-	} else if (scroll == GTK_SCROLL_PAGE_FORWARD) {
-		ev_page_cache_next_page (view->page_cache);
+	GtkAdjustment *adjustment;
+	double value;
+
+	if (horizontal) {
+		adjustment = view->hadjustment;
 	} else {
-		GtkAdjustment *adjustment;
-		double value;
-
-		if (horizontal) {
-			adjustment = view->hadjustment;
-		} else {
-			adjustment = view->vadjustment;
-		}
-
-		value = adjustment->value;
-
-		switch (scroll) {
-			case GTK_SCROLL_STEP_BACKWARD:
-				value -= adjustment->step_increment;
-				break;
-			case GTK_SCROLL_STEP_FORWARD:
-				value += adjustment->step_increment;
-				break;
-			default:
-				break;
-		}
-
-		value = CLAMP (value, adjustment->lower,
-			       adjustment->upper - adjustment->page_size);
-
-		gtk_adjustment_set_value (adjustment, value);
+		adjustment = view->vadjustment;
 	}
+
+	value = adjustment->value;
+
+	switch (scroll) {
+		case GTK_SCROLL_STEP_BACKWARD:
+			value -= adjustment->step_increment;
+			break;
+		case GTK_SCROLL_STEP_FORWARD:
+			value += adjustment->step_increment;
+			break;
+		default:
+			break;
+	}
+
+	value = CLAMP (value, adjustment->lower,
+		       adjustment->upper - adjustment->page_size);
+
+	gtk_adjustment_set_value (adjustment, value);
 }
 
 #define MARGIN 5
@@ -1824,9 +1818,6 @@ ev_view_class_init (EvViewClass *class)
 	add_scroll_binding_keypad (binding_set, GDK_Right, GTK_SCROLL_STEP_FORWARD,  TRUE);
 	add_scroll_binding_keypad (binding_set, GDK_Up,    GTK_SCROLL_STEP_BACKWARD, FALSE);
 	add_scroll_binding_keypad (binding_set, GDK_Down,  GTK_SCROLL_STEP_FORWARD,  FALSE);
-
-	add_scroll_binding_keypad (binding_set, GDK_Page_Up,   GTK_SCROLL_PAGE_BACKWARD, FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Page_Down, GTK_SCROLL_PAGE_FORWARD,  FALSE);
 }
 
 static void

@@ -2325,10 +2325,10 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_reload) },
 
         /* Go menu */
-        { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "Page_Up",
+        { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_window_cmd_go_previous_page) },
-        { "GoNextPage", GTK_STOCK_GO_FORWARD, N_("_Next Page"), "Page_Down",
+        { "GoNextPage", GTK_STOCK_GO_FORWARD, N_("_Next Page"), "<control>Page_Down",
           N_("Go to the next page"),
           G_CALLBACK (ev_window_cmd_go_next_page) },
         { "GoFirstPage", GTK_STOCK_GOTO_FIRST, N_("_First Page"), "<control>Home",
@@ -2358,6 +2358,12 @@ static const GtkActionEntry entries[] = {
         { "Slash", GTK_STOCK_FIND, NULL, "slash",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
+        { "PageDown", NULL, "", "Page_Down",
+          N_("Scroll one page forward"),
+          G_CALLBACK (ev_window_cmd_scroll_forward) },
+        { "PageUp", NULL, "", "Page_Up",
+          N_("Scroll one page backward"),
+          G_CALLBACK (ev_window_cmd_scroll_backward) },
         { "Space", NULL, "", "space",
           N_("Scroll one page forward"),
           G_CALLBACK (ev_window_cmd_scroll_forward) },
@@ -2605,6 +2611,8 @@ static void
 set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
 {
 	if (window->priv->action_group) {
+		set_action_sensitive (window, "PageDown", sensitive);
+		set_action_sensitive (window, "PageUp", sensitive);
 		set_action_sensitive (window, "Space", sensitive);
 		set_action_sensitive (window, "ShiftSpace", sensitive);
 		set_action_sensitive (window, "BackSpace", sensitive);
