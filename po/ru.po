@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-04 03:29+0400\n"
-"PO-Revision-Date: 2005-04-06 12:48+0400\n"
+"POT-Creation-Date: 2005-05-18 17:08+0400\n"
+"PO-Revision-Date: 2005-05-18 12:48+0400\n"
 "Last-Translator: Nickolay V. Shmyrev <nshmyrev@yandex.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,23 +19,64 @@ msgstr ""
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#. translators: this is the label for toolbar button
+#: cut-n-paste/zoom-control/ephy-zoom.h:48 shell/ev-window.c:2505
+msgid "Best Fit"
+msgstr "Уместить в окне"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:49
+msgid "Fit Page Width"
+msgstr "По ширине страницы"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:51
+msgid "50%"
+msgstr "50%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:52
+msgid "75%"
+msgstr "75%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:53
+msgid "100%"
+msgstr "100%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:54
+msgid "125%"
+msgstr "125%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:55
+msgid "150%"
+msgstr "150%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:56
+msgid "175%"
+msgstr "175%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:57
+msgid "200%"
+msgstr "200%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:58
+msgid "300%"
+msgstr "300%"
+
+#: cut-n-paste/zoom-control/ephy-zoom.h:59
+msgid "400%"
+msgstr "400%"
+
 #: data/evince-password.glade.h:1
 msgid "*"
 msgstr "*"
 
 #: data/evince-password.glade.h:2
-msgid "<span size=\"smaller\"> </span>"
-msgstr "<span size=\"smaller\"> </span>"
-
-#: data/evince-password.glade.h:3
 msgid "_Password:"
 msgstr "_Пароль:"
 
-#: data/evince.desktop.in.h:1 shell/ev-window.c:476
+#: data/evince.desktop.in.h:1 shell/ev-window.c:542
 msgid "Document Viewer"
 msgstr "Просмотр документов"
 
-#: data/evince.desktop.in.h:2 shell/main.c:87
+#: data/evince.desktop.in.h:2 shell/main.c:97
 msgid "Evince Document Viewer"
 msgstr "Просмотр документов Evince"
 
@@ -52,28 +93,464 @@ msgid "Show sidebar by default"
 msgstr "Показывать боковую панель"
 
 #: data/evince.schemas.in.h:3
-msgid "Show sidebar by default."
-msgstr "Показывать боковую панель."
-
-#: data/evince.schemas.in.h:4
 msgid "Show statusbar by default"
 msgstr "Показывать строку состояния"
 
-#: data/evince.schemas.in.h:5
-msgid "Show statusbar by default."
-msgstr "Показывать строку состояния."
-
-#: data/evince.schemas.in.h:6
+#: data/evince.schemas.in.h:4
 msgid "Show toolbar by default"
 msgstr "Показывать панель инструментов"
 
+#: data/evince.schemas.in.h:5
+msgid ""
+"Sidebar is the side item that contains the Index and Thumbnail lists. The "
+"default size sets the sidebar's width in pixels based from the side of the "
+"window. Any integer will be accepted. The sidebar will never shrink smaller "
+"than the size of the text required to display Thumbnails or Index. Large "
+"values will cause the sidebar to take up as much of the page display area as "
+"possible relative to the window's size."
+msgstr ""
+"Боковая панель область, содержащая список изображений страниц и оглавление  "
+"о ссылках. Любое целое значение задает размер этой панели в документах п "
+"умолчанию"
+
+#: data/evince.schemas.in.h:6
+msgid ""
+"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+"boolean options, true makes sidebar visible by default while false makes "
+"sidebar not visible by default"
+msgstr ""
+"Боковая панель область, содержащая список изображений страниц и оглавление  "
+"о ссылках. Два логических значения возможны, true делает боковую панель "
+"видимой по умолчанию,false скрывает."
+
 #: data/evince.schemas.in.h:7
-msgid "Show toolbar by default."
-msgstr "Показывать панель инструментов."
+msgid ""
+"Statusbar is the standard bottom bar that display additional information "
+"about links and other actions. Two boolean options, true makes the statusbar "
+"visible by default while false makes sidebar not visible by default."
+msgstr ""
+"Строка состояния это область внизу, отображающая дополнительную информацию  "
+"о ссылках. Два логических значения возможны, true делает строку состояния "
+"видимой по умолчанию,false скрывает."
 
 #: data/evince.schemas.in.h:8
-msgid "The default sidebar size."
-msgstr "Размер боковой панели."
+msgid ""
+"Toolbar is the top bar that contains navigation and zoom controls. Two "
+"boolean options, true makes toolbar visible by default while false makes "
+"toolbar not visible by default."
+msgstr ""
+"Панель инструменов это область, содержащая навигационные и масштабирующие "
+"кнопки Два логических значения возможны, true делает панель видимой по "
+"умолчанию,false скрывает."
+
+#: cut-n-paste/toolbar-editor/egg-toolbar-editor.c:554
+msgid "Separator"
+msgstr "Разделитель"
+
+#: cut-n-paste/toolbar-editor/egg-toolbar-editor.c:584
+msgid ""
+"Drag an item onto the toolbars above to add it, from the toolbars in the "
+"items table to remove it."
+msgstr ""
+"Захватите элемент и перенесите его на панель инструментов с помощью мыши."
+"Перенесите инструмент с панели для того, чтобы удалить его."
+
+#. this is EOF
+#: dvi/mdvi-lib/dviread.c:208
+msgid "unexpected EOF\n"
+msgstr "неожиданный конец файла\n"
+
+#: dvi/mdvi-lib/dviread.c:429
+#, c-format
+msgid "could not load font `%s'\n"
+msgstr "невозможно загрузить шрифт `%s'\n"
+
+#: dvi/mdvi-lib/dviread.c:483
+#, c-format
+msgid "could not reload `%s'\n"
+msgstr "невозможно обновить `%s'\n"
+
+#: dvi/mdvi-lib/dviread.c:710
+#, c-format
+msgid "%s: unsupported DVI format (version %u)\n"
+msgstr "%s: неподдерживаемый формат DVI (версия %u)\n"
+
+#: dvi/mdvi-lib/dviread.c:870
+msgid "no pages selected\n"
+msgstr "страницы не выбраны\n"
+
+#: dvi/mdvi-lib/dviread.c:903
+#, c-format
+msgid "%s: File corrupted, or not a DVI file\n"
+msgstr "%s: Файл поврежеден или не является файлом DVI\n"
+
+#: dvi/mdvi-lib/dviread.c:984
+#, c-format
+msgid "%s: vf macro had errors\n"
+msgstr "%s: макрос vf содержит ошибки\n"
+
+#: dvi/mdvi-lib/dviread.c:987
+#, c-format
+msgid "%s: stack not empty after vf macro\n"
+msgstr "%s: стек не пуст после выполнения макроса\n"
+
+#: dvi/mdvi-lib/dviread.c:1012
+#, c-format
+msgid "%s: could not reopen file (%s)\n"
+msgstr "%s: Невозможно заново открыть файл (%s)\n"
+
+#: dvi/mdvi-lib/dviread.c:1029
+#, c-format
+msgid "%s: page %d out of range\n"
+msgstr "%s: страница %d за пределами документа\n"
+
+#: dvi/mdvi-lib/dviread.c:1036
+#, c-format
+msgid "%s: bad offset at page %d\n"
+msgstr "%s: некорректный отступ на странице %d\n"
+
+#: dvi/mdvi-lib/dviread.c:1099
+msgid "stack not empty at end of page\n"
+msgstr "стек не пуст в конце страницы\n"
+
+#: dvi/mdvi-lib/dviread.c:1286
+msgid "no default font set yet\n"
+msgstr "Шрифт по умолчанию пока не установлен\n"
+
+#: dvi/mdvi-lib/dviread.c:1296
+#, c-format
+msgid "requested character %d does not exist in `%s'\n"
+msgstr "Запрошенный символ %d не существует в `%s'\n"
+
+#: dvi/mdvi-lib/dviread.c:1369
+msgid "enlarging stack\n"
+msgstr "увеличение стека\n"
+
+#: dvi/mdvi-lib/dviread.c:1387
+msgid "stack underflow\n"
+msgstr "перполнение стека\n"
+
+#: dvi/mdvi-lib/dviread.c:1501 dvi/mdvi-lib/dviread.c:1523
+#, c-format
+msgid "font %d is not defined\n"
+msgstr "Шрифт %d не определен\n"
+
+#: dvi/mdvi-lib/dviread.c:1563
+#, c-format
+msgid "font %d is not defined in postamble\n"
+msgstr "Шрифт %d не определен в послесловии\n"
+
+#: dvi/mdvi-lib/dviread.c:1575
+#, c-format
+msgid "unexpected opcode %d\n"
+msgstr "Неверный код операции %d\n"
+
+#: dvi/mdvi-lib/dviread.c:1581
+#, c-format
+msgid "undefined opcode %d\n"
+msgstr "Неизвестный код операции %d\n"
+
+#: dvi/mdvi-lib/font.c:464
+#, c-format
+msgid "%s: no fonts defined\n"
+msgstr "%s: шрифты не определены\n"
+
+#: dvi/mdvi-lib/fontmap.c:589
+#, c-format
+msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+msgstr ""
+"%s: %d: [%s] запросил кодировку `%s' которая не существует в векторе `%s'\n"
+
+#: dvi/mdvi-lib/fontmap.c:750
+#, c-format
+msgid "%s: could not load fontmap\n"
+msgstr "%s: невозможно загрузить карту шрифтов\n"
+
+#: dvi/mdvi-lib/fontmap.c:764
+#, c-format
+msgid "%s: could not set as default encoding\n"
+msgstr "%s: невозможно установить кодировку по умолчанию\n"
+
+#: dvi/mdvi-lib/fontmap.c:843
+#, c-format
+msgid "encoding vector `%s' is in use\n"
+msgstr "вектор кодировок `%s' используется\n"
+
+#: dvi/mdvi-lib/gf.c:112
+#, c-format
+msgid "GF: invalid opcode %d in character %d\n"
+msgstr "GF: некорректный код операции %d в символе %d\n"
+
+#: dvi/mdvi-lib/gf.c:210
+#, c-format
+msgid "(gf) Character %d: invalid opcode %d\n"
+msgstr "(gf) Символ %d: некорректный код операции %d\n"
+
+#: dvi/mdvi-lib/gf.c:226
+#, c-format
+msgid "(gf) character %d has an incorrect bounding box\n"
+msgstr "(gf) символ %d имеет некорректную ограничивающую область\n"
+
+#: dvi/mdvi-lib/gf.c:289
+#, c-format
+msgid "%s: bad checksum (expected %u, found %u)\n"
+msgstr "%s: неверная контрольная сумма (ожидается %u, получено %u)\n"
+
+#: dvi/mdvi-lib/gf.c:325
+#, c-format
+msgid "%s: junk in postamble\n"
+msgstr "%s: ошибка в послесловии\n"
+
+#: dvi/mdvi-lib/gf.c:362
+#, c-format
+msgid "%s: File corrupted, or not a GF file\n"
+msgstr "%s: Файл поврежден или не является файлом формата GF\n"
+
+#: dvi/mdvi-lib/pagesel.c:211
+#, c-format
+msgid "invalid page specification `%s'\n"
+msgstr "Неверная спецификация страницы `%s'\n"
+
+#: dvi/mdvi-lib/pagesel.c:231
+msgid "garbage after DVI page specification ignored\n"
+msgstr "Мусор после спецификации страницы DVI пропущен\n"
+
+#: dvi/mdvi-lib/pagesel.c:259
+msgid "more than 10 counters in page specification\n"
+msgstr "Более чем 10 счетчиков в спецификации страницы\n"
+
+#: dvi/mdvi-lib/pagesel.c:261
+msgid "garbage after TeX page specification ignored\n"
+msgstr "Мусор после спецификации страницы TeX пропущен\n"
+
+#: dvi/mdvi-lib/paper.c:103 dvi/mdvi-lib/paper.c:110
+msgid "custom"
+msgstr "Особая"
+
+#: dvi/mdvi-lib/pk.c:309
+msgid "Bad PK file: More bits than required\n"
+msgstr "Плохой файл PK: больше битов чем требуется\n"
+
+#: dvi/mdvi-lib/pk.c:362
+#, c-format
+msgid "%s: checksum mismatch (expected %u, got %u)\n"
+msgstr "%s: контрольная сумма не совпадает (ожидается %u, получено %u)\n"
+
+#: dvi/mdvi-lib/pk.c:419
+#, c-format
+msgid "%s: unexpected preamble\n"
+msgstr "%s: Неожиданный заголовок\n"
+
+#: dvi/mdvi-lib/pk.c:502
+#, c-format
+msgid "%s: unexpected end of file (no postamble)\n"
+msgstr "%s: неожиданный конец файла (нет окончания)\n"
+
+#: dvi/mdvi-lib/pk.c:508
+msgid "invalid PK file! (junk in postamble)\n"
+msgstr "Неверный файл PK! ошибка в послесловии\n"
+
+#: dvi/mdvi-lib/pk.c:525
+#, c-format
+msgid "%s: File corrupted, or not a PK file\n"
+msgstr "%s: Файл поврежден или не является файлом формата PK\n"
+
+#: dvi/mdvi-lib/sp-epsf.c:150
+#, c-format
+msgid "%s: malformed value for key `%s'\n"
+msgstr "%s: неверное значение для ключа `%s'\n"
+
+#: dvi/mdvi-lib/sp-epsf.c:161
+#, c-format
+msgid "%s: unknown key `%s' ignored\n"
+msgstr "%s: неизвестный ключ `%s' пропущен\n"
+
+#: dvi/mdvi-lib/sp-epsf.c:166
+#, c-format
+msgid "%s: no argument for key `%s', using defaults\n"
+msgstr "%s: нет параметров к ключу `%s', используются значения по умолчанию\n"
+
+#: dvi/mdvi-lib/sp-epsf.c:170
+#, c-format
+msgid "%s: argument `%s' ignored for key `%s'\n"
+msgstr "%s: параметр `%s' пропущен для ключа `%s'\n"
+
+#: dvi/mdvi-lib/special.c:242
+#, c-format
+msgid "%s: tried to pop top level layer\n"
+msgstr "%s: попытка взять верхний уровень\n"
+
+#: dvi/mdvi-lib/t1.c:182
+msgid "(t1) failed to reset device resolution\n"
+msgstr "(t1) не удалось сбросить разрешение устройства\n"
+
+#: dvi/mdvi-lib/t1.c:210
+#, c-format
+msgid "%s: could not encode font\n"
+msgstr "%s: невозможно закодировать шрифт\n"
+
+#: dvi/mdvi-lib/t1.c:448
+#, c-format
+msgid "(t1) unsupported bitmap pad size %d\n"
+msgstr "(t1) размер изображения %d не поддерживается\n"
+
+#: dvi/mdvi-lib/tfm.c:177
+#, c-format
+msgid "%s: Checksum mismatch (got %u, expected %u)\n"
+msgstr "%s: контрольная сумма не совпадает (получено %u, ожидается %u)\n"
+
+#: dvi/mdvi-lib/tfmfile.c:90
+#, c-format
+msgid "%s: Error reading AFM data\n"
+msgstr "%s: Ошибка при чтении данных AFM\n"
+
+#: dvi/mdvi-lib/tfmfile.c:180
+#, c-format
+msgid "Warning: TFM file `%s' has suspicious size\n"
+msgstr "Предупреждение: TFM файл `%s' имеет подозрительный размер\n"
+
+#: dvi/mdvi-lib/tfmfile.c:230 dvi/mdvi-lib/tfmfile.c:511
+#, c-format
+msgid "%s: font coding scheme truncated to 40 bytes\n"
+msgstr "%s: схема кодировки шрифта обрезана на 40 байтах\n"
+
+#: dvi/mdvi-lib/tfmfile.c:290 dvi/mdvi-lib/tfmfile.c:589
+#, c-format
+msgid "%s: File corrupted, or not a TFM file\n"
+msgstr "%s: Файл поврежден или не является файлом формата TFM\n"
+
+#: dvi/mdvi-lib/tt.c:150
+#, c-format
+msgid "(tt) %s: could not load face: %s\n"
+msgstr "(tt) %s: невозможно загрузить картинку: %s\n"
+
+#: dvi/mdvi-lib/tt.c:158
+#, c-format
+msgid "(tt) %s: could not create face: %s\n"
+msgstr "(tt) %s: невозможно создать картинку: %s\n"
+
+#: dvi/mdvi-lib/tt.c:167
+#, c-format
+msgid "(tt) %s: could not create glyph: %s\n"
+msgstr "(tt) %s: невозможно загрузить очертание: %s\n"
+
+#: dvi/mdvi-lib/tt.c:200
+#, c-format
+msgid "(tt) %s: no acceptable map found, using #0\n"
+msgstr "(tt) %s: нет подходящей карты, используется первая\n"
+
+#: dvi/mdvi-lib/tt.c:213
+#, c-format
+msgid "(tt) %s: could not set resolution: %s\n"
+msgstr "(tt) %s: не возможно установить разрешение: %s\n"
+
+#: dvi/mdvi-lib/tt.c:220
+#, c-format
+msgid "(tt) %s: could not set point size: %s\n"
+msgstr "(tt) %s: невозможно установить размер точки: %s\n"
+
+#: dvi/mdvi-lib/tt.c:239
+#, c-format
+msgid "(tt) %s: could not load PS name table\n"
+msgstr "(tt) %s: не возможно загрузить таблицу ps\n"
+
+#: dvi/mdvi-lib/tt.c:264
+#, c-format
+msgid "%s: no encoding vector found, expect bad output\n"
+msgstr "%s: вектрор кодировки ен найден. Ожидается неверный вывод\n"
+
+#: dvi/mdvi-lib/tt.c:324
+#, c-format
+msgid "(tt) %s: no font metric data\n"
+msgstr "(tt) %s: нет данных о метрике шрифта\n"
+
+#: dvi/mdvi-lib/util.c:148
+msgid "Crashing"
+msgstr "Падение"
+
+#: dvi/mdvi-lib/util.c:158
+#, c-format
+msgid "%s: Error: "
+msgstr "%s: Ошибка: "
+
+#: dvi/mdvi-lib/util.c:165
+msgid "Error"
+msgstr "Ошибка"
+
+#: dvi/mdvi-lib/util.c:174
+#, c-format
+msgid "%s: Warning: "
+msgstr "%s: Предупреждение "
+
+#: dvi/mdvi-lib/util.c:181
+msgid "Warning"
+msgstr "Предупреждение"
+
+#: dvi/mdvi-lib/util.c:190
+#, c-format
+msgid "%s: Fatal: "
+msgstr "%s: Неисправимая ошибка: "
+
+#: dvi/mdvi-lib/util.c:197
+msgid "Fatal"
+msgstr "Неисправимая ошибка"
+
+#: dvi/mdvi-lib/util.c:211
+#, c-format
+msgid "out of memory allocating %u bytes\n"
+msgstr "При выделении %u байт память закончилась\n"
+
+#: dvi/mdvi-lib/util.c:221
+msgid "attempted to reallocate with zero size\n"
+msgstr "Попытка перевыделить память с нулевым размером\n"
+
+#: dvi/mdvi-lib/util.c:224
+#, c-format
+msgid "failed to reallocate %u bytes\n"
+msgstr "Не удалось перевыделить %u байтов\n"
+
+#: dvi/mdvi-lib/util.c:233
+msgid "attempted to callocate 0 members\n"
+msgstr "Попытка выделить 0 элементов\n"
+
+#: dvi/mdvi-lib/util.c:235
+#, c-format
+msgid "attempted to callocate %u members with size 0\n"
+msgstr "Попытка выделить %u элементов размера 0\n"
+
+#: dvi/mdvi-lib/util.c:239
+#, c-format
+msgid "failed to allocate %ux%u bytes\n"
+msgstr "Не удалось выделить %ux%u байт\n"
+
+#: dvi/mdvi-lib/util.c:247
+msgid "attempted to free NULL pointer\n"
+msgstr "Попытка освободить нулевой указатель\n"
+
+#: dvi/mdvi-lib/vf.c:81
+#, c-format
+msgid "%s: Checksum mismatch (expected %u, got %u)\n"
+msgstr "%s: Контрольная сумма не совпадает (ожидается %u, получено %u)\n"
+
+#: dvi/mdvi-lib/vf.c:129
+#, c-format
+msgid "(vf) %s: could not load font `%s'\n"
+msgstr "(vf) %s: невозможно загрузить шрифт `%s'\n"
+
+#: dvi/mdvi-lib/vf.c:179
+#, c-format
+msgid "(vf) %s: character %d redefined\n"
+msgstr "(vf) %s: символ %d неопределен\n"
+
+#: dvi/mdvi-lib/vf.c:202
+#, c-format
+msgid "(vf) %s: no postamble\n"
+msgstr "(vf) %s: нет послесловия\n"
+
+#: dvi/mdvi-lib/vf.c:228
+#, c-format
+msgid "%s: File corrupted, or not a VF file.\n"
+msgstr "%s: Файл поврежден или не является файлом VF.\n"
 
 #: ps/gsdefaults.c:30
 msgid "BBox"
@@ -147,43 +624,43 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10x14"
 
-#: ps/ps-document.c:142
+#: ps/ps-document.c:140
 msgid "No document loaded."
 msgstr "Документ не выбран."
 
-#: ps/ps-document.c:538
+#: ps/ps-document.c:638
 msgid "Broken pipe."
 msgstr "Разрыв соединения с дочерним процессом."
 
-#: ps/ps-document.c:722
+#: ps/ps-document.c:825
 msgid "Interpreter failed."
 msgstr "Ошибка интерпретатора."
 
 #. report error
-#: ps/ps-document.c:844
+#: ps/ps-document.c:947
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Ошибка при распаковке файла %s: \n"
 
-#: ps/ps-document.c:1037
+#: ps/ps-document.c:1064
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Невозможно открыть файл %s.\n"
 
-#: ps/ps-document.c:1039
+#: ps/ps-document.c:1066
 msgid "File is not readable."
 msgstr "Файл недоступен для чтения."
 
-#: ps/ps-document.c:1059
+#: ps/ps-document.c:1084
 #, c-format
 msgid "Error while scanning file %s\n"
 msgstr "Ошибка сканирования файла %s\n"
 
-#: ps/ps-document.c:1062
+#: ps/ps-document.c:1087
 msgid "The file is not a PostScript document."
 msgstr "Файл не является документом формата PostScript."
 
-#: ps/ps-document.c:1075
+#: ps/ps-document.c:1099
 msgid "Document loaded."
 msgstr "Документ загружен."
 
@@ -247,7 +724,7 @@ msgstr "Все документы"
 msgid "PostScript Documents"
 msgstr "Документы формата PostScript"
 
-#: shell/ev-application.c:166 shell/ev-window.c:891
+#: shell/ev-application.c:166 shell/ev-window.c:1010
 msgid "PDF Documents"
 msgstr "Документы формата PDF"
 
@@ -263,16 +740,26 @@ msgstr "Изображения"
 msgid "Djvu Documents"
 msgstr "Документы формата Djvu"
 
-#: shell/ev-application.c:190 shell/ev-window.c:896
+#: shell/ev-application.c:190 shell/ev-window.c:1015
 msgid "All Files"
 msgstr "Все файлы"
+
+#: shell/ev-page-action.c:167
+#, c-format
+msgid "(%d of %d)"
+msgstr "(%d из %d)"
+
+#: shell/ev-page-action.c:169
+#, c-format
+msgid "of %d"
+msgstr "из %d"
 
 #: shell/ev-password-view.c:111
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
-msgstr "Этот документ заблогирова и может быть прочитан только после "
-"ввода пароля."
+msgstr ""
+"Этот документ заблокирован и может быть прочитан только после ввода пароля."
 
 #: shell/ev-password-view.c:120
 msgid "_Unlock Document"
@@ -299,27 +786,37 @@ msgstr "Требуется пароль"
 msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
 "opened."
-msgstr ""
-"Документ <i>%s</i> заблокирован и требует пароля для чтения."
+msgstr "Документ <i>%s</i> заблокирован и требует пароля для чтения."
 
 #: shell/ev-password.c:142
 msgid "Incorrect password"
 msgstr "Неверный пароль"
 
-#: shell/ev-sidebar-links.c:132
+#: shell/ev-sidebar-links.c:216
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: shell/ev-view.c:728
+#: shell/ev-sidebar-links.c:271 shell/ev-window.c:2292
+msgid "Print..."
+msgstr "Напечатать документ..."
+
+#: shell/ev-sidebar-links.c:611
+msgid "Index"
+msgstr "Индекс"
+
+#: shell/ev-sidebar-thumbnails.c:486
+msgid "Thumbnails"
+msgstr "Образцы страниц"
+
+#: shell/ev-view.c:1029
 #, c-format
 msgid "Go to page %s"
 msgstr "Перейти к странице %s"
 
-#. g_mutex_unlock (EV_DOC_MUTEX);
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: shell/ev-view.c:1223
+#: shell/ev-view.c:2387
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -327,51 +824,60 @@ msgstr[0] "%d совпадение"
 msgstr[1] "%d совпадения"
 msgstr[2] "%d совпадений"
 
-#: shell/ev-view.c:1235
+#: shell/ev-view.c:2399
 msgid "Not found"
 msgstr "Не найдено"
 
-#: shell/ev-view.c:1237
+#: shell/ev-view.c:2401
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% остается для поиска"
 
-#: shell/ev-window.c:384
+#: shell/ev-window.c:488
 msgid "Unable to open document"
 msgstr "Невозможно открыть документ"
 
-#: shell/ev-window.c:470
+#: shell/ev-window.c:536
 msgid "Document Viewer - Password Required"
 msgstr "Просмотр документа - требуется пароль"
 
-#: shell/ev-window.c:472
+#: shell/ev-window.c:538
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - требуется пароль"
 
-#: shell/ev-window.c:758
+#: shell/ev-window.c:780
+#, c-format
+msgid "The file %s does not exist."
+msgstr "Документ %s не существует."
+
+#: shell/ev-window.c:816
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Неизвестный тип документа: '%s'"
 
-#: shell/ev-window.c:862
+#: shell/ev-window.c:981
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Документ не может быть сохранен в файле \"%s\"."
 
-#: shell/ev-window.c:883
+#: shell/ev-window.c:1002
 msgid "Save a Copy"
 msgstr "Сохранить копию"
 
-#: shell/ev-window.c:965
+#: shell/ev-window.c:1105
 msgid "Print"
 msgstr "Напечатать"
 
-#: shell/ev-window.c:988
+#: shell/ev-window.c:1109
+msgid "Pages"
+msgstr "Страницы"
+
+#: shell/ev-window.c:1137
 msgid "Printing is not supported on this printer."
 msgstr "Печать на этом принтере не поддерживается."
 
-#: shell/ev-window.c:991
+#: shell/ev-window.c:1140
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -380,28 +886,33 @@ msgstr ""
 "Вы попытались напечатать документ используя драйвер \"%s\". Эта программа "
 "требует драйвер совместимый с принтерами PostScript."
 
-#: shell/ev-window.c:1043
+#: shell/ev-window.c:1192
 msgid "The \"Find\" feature will not work with this document"
 msgstr "Для этого документа поиск не будет работать"
 
-#: shell/ev-window.c:1045
+#: shell/ev-window.c:1194
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Поиск по тексту поддерживается только для документов в формате PDF."
 
 #. Toolbar-only
-#: shell/ev-window.c:1261 shell/ev-window.c:2048
+#: shell/ev-window.c:1413 shell/ev-window.c:2351
 msgid "Leave Fullscreen"
 msgstr "Выйти из полноэкранного режима"
 
-#: shell/ev-window.c:1646
-msgid "Many..."
-msgstr "Многие..."
+#: shell/ev-window.c:1695
+msgid "Toolbar editor"
+msgstr "_Панель инструментов"
 
-#: shell/ev-window.c:1651
-msgid "Not so many..."
-msgstr "Не так много..."
+#: shell/ev-window.c:1904
+#, c-format
+msgid ""
+"PostScript and PDF File Viewer.\n"
+"Using poppler %s (%s)"
+msgstr ""
+"Просмотр документов формата PostScript и PDF\n"
+"Испольузет poppler версии %s (%s)"
 
-#: shell/ev-window.c:1656
+#: shell/ev-window.c:1927
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -409,11 +920,12 @@ msgid ""
 "(at your option) any later version.\n"
 msgstr ""
 "Evince это свободное программное обеспечения. Вы можете распространять\n"
-"или изменять его при условиях соответствия GNU General Public License опубликованной\n"
+"или изменять его при условиях соответствия GNU General Public License "
+"опубликованной\n"
 "the Free Software Foundation; либо версии 2 лицензии\n"
 "(на ваше усмотрение) любой более поздней версии.\n"
 
-#: shell/ev-window.c:1660
+#: shell/ev-window.c:1931
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -425,258 +937,325 @@ msgstr ""
 "ЛЮБЫМ ТРЕБОВАНИЯМ. Для дальнейшей информации ознакомьтесь с \n"
 "GNU General Public License for more details.\n"
 
-#: shell/ev-window.c:1664
+#: shell/ev-window.c:1935
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 "Вы должны получить копию GNU General Public License\n"
-"вместе с Evince. Если это не так, напишите to the Free Software Foundation, Inc.,\n"
+"вместе с Evince. Если это не так, напишите to the Free Software Foundation, "
+"Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: shell/ev-window.c:1686 shell/main.c:82
+#: shell/ev-window.c:1959 shell/main.c:92
 msgid "Evince"
 msgstr "Evince"
 
-#: shell/ev-window.c:1689
-#: shell/ev-window.c:1689
+#: shell/ev-window.c:1962
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 The Evince authors"
 
-#: shell/ev-window.c:1692
-msgid "PostScript and PDF File Viewer."
-msgstr "Просмотр документов формата PostScript и PDF"
-
-#: shell/ev-window.c:1695
+#: shell/ev-window.c:1968
 msgid "translator-credits"
-msgstr "Команда русского перевода <gnome-cyr@gnome.org>"
+msgstr "Николай В. Шмырёв <nshmyrev@yandex.ru>"
 
-#: shell/ev-window.c:1979
+#: shell/ev-window.c:2279
 msgid "_File"
 msgstr "_Файл"
 
-#: shell/ev-window.c:1980
+#: shell/ev-window.c:2280
 msgid "_Edit"
 msgstr "_Правка"
 
-#: shell/ev-window.c:1981
+#: shell/ev-window.c:2281
 msgid "_View"
 msgstr "_Вид"
 
-#: shell/ev-window.c:1982
+#: shell/ev-window.c:2282
 msgid "_Go"
 msgstr "_Перейти"
 
-#: shell/ev-window.c:1983
+#: shell/ev-window.c:2283
 msgid "_Help"
 msgstr "_Справка"
 
-#: shell/ev-window.c:1987
+#: shell/ev-window.c:2287
 msgid "Open an existing document"
 msgstr "Открыть документ"
 
-#: shell/ev-window.c:1989
+#: shell/ev-window.c:2289
 msgid "_Save a Copy..."
 msgstr "Сохранить _копию"
 
-#: shell/ev-window.c:1990
+#: shell/ev-window.c:2290
 msgid "Save the current document with a new filename"
 msgstr "Сохранить документ под новым именем"
 
-#: shell/ev-window.c:1992
-msgid "Print..."
-msgstr "Напечатать документ..."
-
-#: shell/ev-window.c:1993
+#: shell/ev-window.c:2293
 msgid "Print this document"
 msgstr "Напечатать документ"
 
-#: shell/ev-window.c:1996
+#: shell/ev-window.c:2296
 msgid "Close this window"
 msgstr "Закрыть окно"
 
-#: shell/ev-window.c:2001
+#: shell/ev-window.c:2301
 msgid "Copy text from the document"
 msgstr "Скопировать текст из документа"
 
-#: shell/ev-window.c:2003
+#: shell/ev-window.c:2303
 msgid "Select _All"
 msgstr "Выбрать _Все"
 
-#: shell/ev-window.c:2004
+#: shell/ev-window.c:2304
 msgid "Select the entire page"
 msgstr "Выбрать всю страницу целиком"
 
-#: shell/ev-window.c:2007
+#: shell/ev-window.c:2307 shell/ev-window.c:2359
 msgid "Find a word or phrase in the document"
 msgstr "Найти слово или фразу в документе"
 
-#: shell/ev-window.c:2012
+#: shell/ev-window.c:2309
+msgid "Find Ne_xt"
+msgstr "Найти _следующее"
+
+#: shell/ev-window.c:2310
+msgid "Find next occurrence of the word or phrase"
+msgstr "Найти следующее вхождение слова или фразы"
+
+#: shell/ev-window.c:2312
+msgid "T_oolbar"
+msgstr "_Панель инструментов"
+
+#: shell/ev-window.c:2313
+msgid "Customize the toolbar"
+msgstr "Изменить панель инструментов"
+
+#: shell/ev-window.c:2318
 msgid "Enlarge the document"
 msgstr "Увеличить размер страницы"
 
-#: shell/ev-window.c:2015
+#: shell/ev-window.c:2321
 msgid "Shrink the document"
 msgstr "Уменьшить размер страницы"
 
-#: shell/ev-window.c:2018
-msgid "Reset the zoom level to the default value"
-msgstr "Сбросить масштаб к значению по умолчанию"
-
-#: shell/ev-window.c:2020
+#: shell/ev-window.c:2323
 msgid "_Reload"
 msgstr "_Обновить"
 
-#: shell/ev-window.c:2021
+#: shell/ev-window.c:2324
 msgid "Reload the document"
 msgstr "Обновить документ"
 
 #. Go menu
-#: shell/ev-window.c:2025
+#: shell/ev-window.c:2328
 msgid "_Previous Page"
 msgstr "_Назад"
 
-#: shell/ev-window.c:2026
+#: shell/ev-window.c:2329
 msgid "Go to the previous page"
 msgstr "Перейти к предыдущей странице"
 
-#: shell/ev-window.c:2028
+#: shell/ev-window.c:2331
 msgid "_Next Page"
 msgstr "_Вперед"
 
-#: shell/ev-window.c:2029
+#: shell/ev-window.c:2332
 msgid "Go to the next page"
 msgstr "Перейти к следующей странице"
 
-#: shell/ev-window.c:2031
+#: shell/ev-window.c:2334
 msgid "_First Page"
 msgstr "_Начало"
 
-#: shell/ev-window.c:2032
+#: shell/ev-window.c:2335
 msgid "Go to the first page"
 msgstr "Перейти к первой странице"
 
-#: shell/ev-window.c:2034
+#: shell/ev-window.c:2337
 msgid "_Last Page"
 msgstr "_Конец"
 
-#: shell/ev-window.c:2035
+#: shell/ev-window.c:2338
 msgid "Go to the last page"
 msgstr "Перейти к последней странице"
 
 #. Help menu
-#: shell/ev-window.c:2039
+#: shell/ev-window.c:2342
 msgid "_Contents"
 msgstr "_Содержание"
 
-#: shell/ev-window.c:2040
+#: shell/ev-window.c:2343
 msgid "Display help for the viewer application"
 msgstr "Показать справку по приложению"
 
-#: shell/ev-window.c:2043
+#: shell/ev-window.c:2346
 msgid "_About"
 msgstr "_О программе"
 
-#: shell/ev-window.c:2044
+#: shell/ev-window.c:2347
 msgid "Display credits for the document viewer creators"
 msgstr "Показывать благодарности создателям документа"
 
-#: shell/ev-window.c:2049
+#: shell/ev-window.c:2352
 msgid "Leave fullscreen mode"
 msgstr "Выйти из полноэкранного режима"
 
+#: shell/ev-window.c:2362 shell/ev-window.c:2371
+msgid "Scroll one page forward"
+msgstr "Перейти на страницу вперед"
+
+#: shell/ev-window.c:2365 shell/ev-window.c:2368
+msgid "Scroll one page backward"
+msgstr "Перейти на страницу назад"
+
+#: shell/ev-window.c:2374
+msgid "Focus the page selector"
+msgstr "Перейти к полю ввода страницы"
+
 #. View Menu
-#: shell/ev-window.c:2056
+#: shell/ev-window.c:2381
 msgid "_Toolbar"
 msgstr "_Панель инструментов"
 
-#: shell/ev-window.c:2057
+#: shell/ev-window.c:2382
 msgid "Show or hide the toolbar"
 msgstr "Показать или спрятать панель инструментов"
 
-#: shell/ev-window.c:2059
+#: shell/ev-window.c:2384
 msgid "_Statusbar"
 msgstr "_Строка состояния"
 
-#: shell/ev-window.c:2060
+#: shell/ev-window.c:2385
 msgid "Show or hide the statusbar"
 msgstr "Показать или спрятать строку состояния"
 
-#: shell/ev-window.c:2062
+#: shell/ev-window.c:2387
 msgid "Side _pane"
 msgstr "_Боковая панель"
 
-#: shell/ev-window.c:2063
+#: shell/ev-window.c:2388
 msgid "Show or hide the side pane"
 msgstr "Показать или спрятать боковую панель"
 
-#: shell/ev-window.c:2065
+#: shell/ev-window.c:2390
+msgid "_Continuous"
+msgstr "_Непрерывно"
+
+#: shell/ev-window.c:2391
+msgid "Show the entire document"
+msgstr "Показывать документ целиком"
+
+#: shell/ev-window.c:2393
+msgid "_Dual"
+msgstr "_Две страницы"
+
+#: shell/ev-window.c:2394
+msgid "Show two pages at once"
+msgstr "Показать по две страницы"
+
+#: shell/ev-window.c:2396
 msgid "_Fullscreen"
 msgstr "_Полноэкранный режим"
 
-#: shell/ev-window.c:2066
+#: shell/ev-window.c:2397
 msgid "Expand the window to fill the screen"
 msgstr "Показывать окно на весь экран"
 
-#: shell/ev-window.c:2068
+#: shell/ev-window.c:2399
+msgid "_Presentation"
+msgstr "_Презентация"
+
+#: shell/ev-window.c:2400
+msgid "Run document as a presentation"
+msgstr "Отображать документ как презентацию"
+
+#: shell/ev-window.c:2402
 msgid "_Best Fit"
 msgstr "_Уместить в окне"
 
-#: shell/ev-window.c:2069
+#: shell/ev-window.c:2403
 msgid "Make the current document fill the window"
 msgstr "Масштабировать документ для соответствия окну"
 
-#: shell/ev-window.c:2071
+#: shell/ev-window.c:2405
 msgid "Fit Page _Width"
 msgstr "По _ширине страницы"
 
-#: shell/ev-window.c:2072
+#: shell/ev-window.c:2406
 msgid "Make the current document fill the window width"
 msgstr "Масштабировать документ для соответствия ширине окна"
 
-#: shell/ev-window.c:2077
-msgid "Single"
-msgstr "Одна страница"
-
-#: shell/ev-window.c:2078
-msgid "Show the document one page at a time"
-msgstr "Показывать одну страницу"
-
-#: shell/ev-window.c:2080
-msgid "Multi"
-msgstr "Несколько страниц"
-
-#: shell/ev-window.c:2081
-msgid "Show the full document at once"
-msgstr "Показать весь документ сразу"
-
-#: shell/ev-window.c:2110
+#: shell/ev-window.c:2454
 msgid "Page"
 msgstr "Страница"
 
-#: shell/ev-window.c:2111
+#: shell/ev-window.c:2455
 msgid "Select Page"
 msgstr "Выбрать страницу"
 
+#: shell/ev-window.c:2467
+msgid "Zoom"
+msgstr "Масштаб"
+
+#: shell/ev-window.c:2469
+msgid "Adjust the zoom level"
+msgstr "Изменить масштаб"
+
 #. translators: this is the label for toolbar button
-#: shell/ev-window.c:2124
+#: shell/ev-window.c:2485
 msgid "Previous"
 msgstr "Предыдущая"
 
-#: shell/ev-window.c:2129
+#. translators: this is the label for toolbar button
+#: shell/ev-window.c:2491
 msgid "Next"
 msgstr "Следующая"
 
 #. translators: this is the label for toolbar button
-#: shell/ev-window.c:2132
+#: shell/ev-window.c:2495
+msgid "Zoom In"
+msgstr "Увеличить"
+
+#. translators: this is the label for toolbar button
+#: shell/ev-window.c:2500
+msgid "Zoom Out"
+msgstr "Уменьшить"
+
+#. translators: this is the label for toolbar button
+#: shell/ev-window.c:2510
 msgid "Fit Width"
 msgstr "По ширине страницы"
 
-#: shell/ev-window.c:2325
-msgid "Index"
-msgstr "Индекс"
+#: shell/main.c:41
+msgid "The page of the document to display."
+msgstr "Перейти к странице документа"
 
-#: shell/ev-window.c:2332
-msgid "Thumbnails"
-msgstr "Образцы страниц"
+#: shell/main.c:41
+msgid "PAGE"
+msgstr "Страница"
+
+#: thumbnailer/evince-thumbnailer.schemas.in.h:1
+msgid ""
+"Boolean options available, true enables thumbnailing and false disables the "
+"creation of new thumbnails"
+msgstr ""
+"Возможно логическое значение. true включает создание изображений, а false "
+"выключает"
+
+#: thumbnailer/evince-thumbnailer.schemas.in.h:2
+msgid "Enable thumbnailing of PDF Documents"
+msgstr "Включить просмотр документов PDF"
+
+#: thumbnailer/evince-thumbnailer.schemas.in.h:3
+msgid "Thumbnail command for PDF Documents"
+msgstr "Команда создания изображения для документов PDF"
+
+#: thumbnailer/evince-thumbnailer.schemas.in.h:4
+msgid ""
+"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
+"thumbnailer documentation for more information."
+msgstr ""
+"Коминда и аргументы для запуска программы создания изображенияДокумента PDF. "
+"Для дополнительной информации смотрите документацию поnautilus"
