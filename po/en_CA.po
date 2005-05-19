@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-05-04 01:26-0400\n"
-"PO-Revision-Date: 2005-05-04 10:30-0400\n"
+"POT-Creation-Date: 2005-05-19 13:55-0400\n"
+"PO-Revision-Date: 2005-05-19 10:30-0400\n"
 "Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
 "Language-Team: Canadian English <adamw@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,68 +17,64 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-msgid "50%"
-msgstr "50%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:49
-msgid "75%"
-msgstr "75%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:50
-msgid "100%"
-msgstr "100%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:51
-msgid "125%"
-msgstr "125%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:52
-msgid "150%"
-msgstr "150%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:53
-msgid "175%"
-msgstr "175%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
-msgid "200%"
-msgstr "200%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
-msgid "300%"
-msgstr "300%"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
-msgid "400%"
-msgstr "400%"
-
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:58 ../shell/ev-window.c:2388
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:2511
 msgid "Best Fit"
 msgstr "Best Fit"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:49
 msgid "Fit Page Width"
 msgstr "Fit Page Width"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:51
+msgid "50%"
+msgstr "50%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:52
+msgid "75%"
+msgstr "75%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:53
+msgid "100%"
+msgstr "100%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
+msgid "125%"
+msgstr "125%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
+msgid "150%"
+msgstr "150%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
+msgid "175%"
+msgstr "175%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:57
+msgid "200%"
+msgstr "200%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:58
+msgid "300%"
+msgstr "300%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
+msgid "400%"
+msgstr "400%"
 
 #: ../data/evince-password.glade.h:1
 msgid "*"
 msgstr "*"
 
 #: ../data/evince-password.glade.h:2
-msgid "<span size=\"smaller\"> </span>"
-msgstr "<span size=\"smaller\"> </span>"
-
-#: ../data/evince-password.glade.h:3
 msgid "_Password:"
 msgstr "_Password:"
 
-#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:519
+#: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:542
 msgid "Document Viewer"
 msgstr "Document Viewer"
 
-#: ../data/evince.desktop.in.h:2 ../shell/main.c:88
+#: ../data/evince.desktop.in.h:2 ../shell/main.c:97
 msgid "Evince Document Viewer"
 msgstr "Evince Document Viewer"
 
@@ -147,6 +143,18 @@ msgstr ""
 "Toolbar is the top bar that contains navigation and zoom controls. Two "
 "boolean options: true makes the toolbar visible by default while false makes "
 "toolbar not visible by default."
+
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:554
+msgid "Separator"
+msgstr "Separator"
+
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:584
+msgid ""
+"Drag an item onto the toolbars above to add it, from the toolbars in the "
+"items table to remove it."
+msgstr ""
+"Drag an item onto the toolbars above to add it. Drag an item from the "
+"toolbars in the items table to remove it."
 
 #. this is EOF
 #: ../dvi/mdvi-lib/dviread.c:208
@@ -716,7 +724,7 @@ msgstr "All Documents"
 msgid "PostScript Documents"
 msgstr "PostScript Documents"
 
-#: ../shell/ev-application.c:166 ../shell/ev-window.c:968
+#: ../shell/ev-application.c:166 ../shell/ev-window.c:1010
 msgid "PDF Documents"
 msgstr "PDF Documents"
 
@@ -732,16 +740,16 @@ msgstr "Images"
 msgid "Djvu Documents"
 msgstr "Djvu Documents"
 
-#: ../shell/ev-application.c:190 ../shell/ev-window.c:973
+#: ../shell/ev-application.c:190 ../shell/ev-window.c:1015
 msgid "All Files"
 msgstr "All Files"
 
-#: ../shell/ev-page-action.c:107
+#: ../shell/ev-page-action.c:167
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d of %d)"
 
-#: ../shell/ev-page-action.c:109
+#: ../shell/ev-page-action.c:169
 #, c-format
 msgid "of %d"
 msgstr "of %d"
@@ -788,79 +796,91 @@ msgstr ""
 msgid "Incorrect password"
 msgstr "Incorrect password"
 
-#: ../shell/ev-sidebar-links.c:215
+#: ../shell/ev-sidebar-links.c:216
 msgid "Loading..."
 msgstr "Loading..."
 
-#: ../shell/ev-sidebar-links.c:509
+#: ../shell/ev-sidebar-links.c:271 ../shell/ev-window.c:2292
+msgid "Print..."
+msgstr "Print..."
+
+#: ../shell/ev-sidebar-links.c:611
 msgid "Index"
 msgstr "Index"
 
-#: ../shell/ev-sidebar-thumbnails.c:352
+#: ../shell/ev-sidebar-thumbnails.c:486
 msgid "Thumbnails"
 msgstr "Thumbnails"
 
-#: ../shell/ev-view.c:1143
+#: ../shell/ev-view.c:1015
 #, c-format
 msgid "Go to page %s"
 msgstr "Go to page %s"
 
-#. ev_document_doc_mutex_unlock ();
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:1771
+#: ../shell/ev-view.c:2373
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d found on this page"
 msgstr[1] "%d found on this page"
 
-#: ../shell/ev-view.c:1783
+#: ../shell/ev-view.c:2385
 msgid "Not found"
 msgstr "Not found"
 
-#: ../shell/ev-view.c:1785
+#: ../shell/ev-view.c:2387
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% remaining to search"
 
-#: ../shell/ev-window.c:465
+#: ../shell/ev-window.c:488
 msgid "Unable to open document"
 msgstr "Unable to open document"
 
-#: ../shell/ev-window.c:513
+#: ../shell/ev-window.c:536
 msgid "Document Viewer - Password Required"
 msgstr "Document Viewer - Password Required"
 
-#: ../shell/ev-window.c:515
+#: ../shell/ev-window.c:538
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Password Required"
 
-#: ../shell/ev-window.c:772
+#: ../shell/ev-window.c:780
+#, c-format
+msgid "The file %s does not exist."
+msgstr "The file %s does not exist."
+
+#: ../shell/ev-window.c:816
 #, c-format
 msgid "Unhandled MIME type: '%s'"
 msgstr "Unhandled MIME type: '%s'"
 
-#: ../shell/ev-window.c:939
+#: ../shell/ev-window.c:981
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "The file could not be saved as \"%s\"."
 
-#: ../shell/ev-window.c:960
+#: ../shell/ev-window.c:1002
 msgid "Save a Copy"
 msgstr "Save a Copy"
 
-#: ../shell/ev-window.c:1042
+#: ../shell/ev-window.c:1105
 msgid "Print"
 msgstr "Print"
 
-#: ../shell/ev-window.c:1065
+#: ../shell/ev-window.c:1109
+msgid "Pages"
+msgstr "Pages"
+
+#: ../shell/ev-window.c:1137
 msgid "Printing is not supported on this printer."
 msgstr "Printing is not supported on this printer."
 
-#: ../shell/ev-window.c:1068
+#: ../shell/ev-window.c:1140
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -869,28 +889,33 @@ msgstr ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
 "requires a PostScript printer driver."
 
-#: ../shell/ev-window.c:1120
+#: ../shell/ev-window.c:1192
 msgid "The \"Find\" feature will not work with this document"
 msgstr "The \"Find\" feature will not work with this document"
 
-#: ../shell/ev-window.c:1122
+#: ../shell/ev-window.c:1194
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Searching for text is only supported for PDF documents."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1341 ../shell/ev-window.c:2268
+#: ../shell/ev-window.c:1413 ../shell/ev-window.c:2351
 msgid "Leave Fullscreen"
 msgstr "Leave Fullscreen"
 
-#: ../shell/ev-window.c:1829
-msgid "Many..."
-msgstr "Many..."
+#: ../shell/ev-window.c:1695
+msgid "Toolbar editor"
+msgstr "Toolbar editor"
 
-#: ../shell/ev-window.c:1834
-msgid "Not so many..."
-msgstr "Not so many..."
+#: ../shell/ev-window.c:1904
+#, c-format
+msgid ""
+"PostScript and PDF File Viewer.\n"
+"Using poppler %s (%s)"
+msgstr ""
+"PostScript and PDF File Viewer.\n"
+"Using poppler %s (%s)"
 
-#: ../shell/ev-window.c:1839
+#: ../shell/ev-window.c:1927
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -902,7 +927,7 @@ msgstr ""
 "the Free Software Foundation; either version 2 of the Licence, or\n"
 "(at your option) any later version.\n"
 
-#: ../shell/ev-window.c:1843
+#: ../shell/ev-window.c:1931
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -914,7 +939,7 @@ msgstr ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public Licence for more details.\n"
 
-#: ../shell/ev-window.c:1847
+#: ../shell/ev-window.c:1935
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -924,297 +949,295 @@ msgstr ""
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:1869 ../shell/main.c:83
+#: ../shell/ev-window.c:1959 ../shell/main.c:92
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:1872
+#: ../shell/ev-window.c:1962
 msgid "© 1996-2004 The Evince authors"
 msgstr "© 1996-2004 The Evince authors"
 
-#: ../shell/ev-window.c:1875
-msgid "PostScript and PDF File Viewer."
-msgstr "PostScript and PDF File Viewer."
-
-#: ../shell/ev-window.c:1878
+#: ../shell/ev-window.c:1968
 msgid "translator-credits"
 msgstr "Adam Weinberger <adamw@gnome.org>"
 
-#: ../shell/ev-window.c:2196
+#: ../shell/ev-window.c:2279
 msgid "_File"
 msgstr "_File"
 
-#: ../shell/ev-window.c:2197
+#: ../shell/ev-window.c:2280
 msgid "_Edit"
 msgstr "_Edit"
 
-#: ../shell/ev-window.c:2198
+#: ../shell/ev-window.c:2281
 msgid "_View"
 msgstr "_View"
 
-#: ../shell/ev-window.c:2199
+#: ../shell/ev-window.c:2282
 msgid "_Go"
 msgstr "_Go"
 
-#: ../shell/ev-window.c:2200
+#: ../shell/ev-window.c:2283
 msgid "_Help"
 msgstr "_Help"
 
-#: ../shell/ev-window.c:2204
+#: ../shell/ev-window.c:2287
 msgid "Open an existing document"
 msgstr "Open an existing document"
 
-#: ../shell/ev-window.c:2206
+#: ../shell/ev-window.c:2289
 msgid "_Save a Copy..."
 msgstr "_Save a Copy..."
 
-#: ../shell/ev-window.c:2207
+#: ../shell/ev-window.c:2290
 msgid "Save the current document with a new filename"
 msgstr "Save the current document with a new filename"
 
-#: ../shell/ev-window.c:2209
-msgid "Print..."
-msgstr "Print..."
-
-#: ../shell/ev-window.c:2210
+#: ../shell/ev-window.c:2293
 msgid "Print this document"
 msgstr "Print this document"
 
-#: ../shell/ev-window.c:2213
+#: ../shell/ev-window.c:2296
 msgid "Close this window"
 msgstr "Close this window"
 
-#: ../shell/ev-window.c:2218
+#: ../shell/ev-window.c:2301
 msgid "Copy text from the document"
 msgstr "Copy text from the document"
 
-#: ../shell/ev-window.c:2220
+#: ../shell/ev-window.c:2303
 msgid "Select _All"
 msgstr "Select _All"
 
-#: ../shell/ev-window.c:2221
+#: ../shell/ev-window.c:2304
 msgid "Select the entire page"
 msgstr "Select the entire page"
 
-#: ../shell/ev-window.c:2224
+#: ../shell/ev-window.c:2307 ../shell/ev-window.c:2359
 msgid "Find a word or phrase in the document"
 msgstr "Find a word or phrase in the document"
 
-#: ../shell/ev-window.c:2226
+#: ../shell/ev-window.c:2309
 msgid "Find Ne_xt"
 msgstr "Find Ne_xt"
 
-#: ../shell/ev-window.c:2227
+#: ../shell/ev-window.c:2310
 msgid "Find next occurrence of the word or phrase"
 msgstr "Find next occurrence of the word or phrase"
 
-#: ../shell/ev-window.c:2232
+#: ../shell/ev-window.c:2312
+msgid "T_oolbar"
+msgstr "T_oolbar"
+
+#: ../shell/ev-window.c:2313
+msgid "Customize the toolbar"
+msgstr "Customize the toolbar"
+
+#: ../shell/ev-window.c:2318
 msgid "Enlarge the document"
 msgstr "Enlarge the document"
 
-#: ../shell/ev-window.c:2235
+#: ../shell/ev-window.c:2321
 msgid "Shrink the document"
 msgstr "Shrink the document"
 
-#: ../shell/ev-window.c:2238
-msgid "Reset the zoom level to the default value"
-msgstr "Reset the zoom level to the default value"
-
-#: ../shell/ev-window.c:2240
+#: ../shell/ev-window.c:2323
 msgid "_Reload"
 msgstr "_Reload"
 
-#: ../shell/ev-window.c:2241
+#: ../shell/ev-window.c:2324
 msgid "Reload the document"
 msgstr "Reload the document"
 
 #. Go menu
-#: ../shell/ev-window.c:2245
+#: ../shell/ev-window.c:2328
 msgid "_Previous Page"
 msgstr "_Previous Page"
 
-#: ../shell/ev-window.c:2246
+#: ../shell/ev-window.c:2329
 msgid "Go to the previous page"
 msgstr "Go to the previous page"
 
-#: ../shell/ev-window.c:2248
+#: ../shell/ev-window.c:2331
 msgid "_Next Page"
 msgstr "_Next Page"
 
-#: ../shell/ev-window.c:2249
+#: ../shell/ev-window.c:2332
 msgid "Go to the next page"
 msgstr "Go to the next page"
 
-#: ../shell/ev-window.c:2251
+#: ../shell/ev-window.c:2334
 msgid "_First Page"
 msgstr "_First Page"
 
-#: ../shell/ev-window.c:2252
+#: ../shell/ev-window.c:2335
 msgid "Go to the first page"
 msgstr "Go to the first page"
 
-#: ../shell/ev-window.c:2254
+#: ../shell/ev-window.c:2337
 msgid "_Last Page"
 msgstr "_Last Page"
 
-#: ../shell/ev-window.c:2255
+#: ../shell/ev-window.c:2338
 msgid "Go to the last page"
 msgstr "Go to the last page"
 
 #. Help menu
-#: ../shell/ev-window.c:2259
+#: ../shell/ev-window.c:2342
 msgid "_Contents"
 msgstr "_Contents"
 
-#: ../shell/ev-window.c:2260
+#: ../shell/ev-window.c:2343
 msgid "Display help for the viewer application"
 msgstr "Display help for the viewer application"
 
-#: ../shell/ev-window.c:2263
+#: ../shell/ev-window.c:2346
 msgid "_About"
 msgstr "_About"
 
-#: ../shell/ev-window.c:2264
+#: ../shell/ev-window.c:2347
 msgid "Display credits for the document viewer creators"
 msgstr "Display credits for the document viewer creators"
 
-#: ../shell/ev-window.c:2269
+#: ../shell/ev-window.c:2352
 msgid "Leave fullscreen mode"
 msgstr "Leave fullscreen mode"
 
-#: ../shell/ev-window.c:2272
-msgid "Selection Caret"
-msgstr "Selection Caret"
+#: ../shell/ev-window.c:2362 ../shell/ev-window.c:2368
+#: ../shell/ev-window.c:2377
+msgid "Scroll one page forward"
+msgstr "Scroll one page forward"
+
+#: ../shell/ev-window.c:2365 ../shell/ev-window.c:2371
+#: ../shell/ev-window.c:2374
+msgid "Scroll one page backward"
+msgstr "Scroll one page backward"
+
+#: ../shell/ev-window.c:2380
+msgid "Focus the page selector"
+msgstr "Focus the page selector"
 
 #. View Menu
-#: ../shell/ev-window.c:2279
+#: ../shell/ev-window.c:2387
 msgid "_Toolbar"
 msgstr "_Toolbar"
 
-#: ../shell/ev-window.c:2280
+#: ../shell/ev-window.c:2388
 msgid "Show or hide the toolbar"
 msgstr "Show or hide the toolbar"
 
-#: ../shell/ev-window.c:2282
+#: ../shell/ev-window.c:2390
 msgid "_Statusbar"
 msgstr "_Statusbar"
 
-#: ../shell/ev-window.c:2283
+#: ../shell/ev-window.c:2391
 msgid "Show or hide the statusbar"
 msgstr "Show or hide the statusbar"
 
-#: ../shell/ev-window.c:2285
+#: ../shell/ev-window.c:2393
 msgid "Side _pane"
 msgstr "Side _pane"
 
-#: ../shell/ev-window.c:2286
+#: ../shell/ev-window.c:2394
 msgid "Show or hide the side pane"
 msgstr "Show or hide the side pane"
 
-#: ../shell/ev-window.c:2288
+#: ../shell/ev-window.c:2396
 msgid "_Continuous"
 msgstr "_Continuous"
 
-#: ../shell/ev-window.c:2289
+#: ../shell/ev-window.c:2397
 msgid "Show the entire document"
 msgstr "Show the entire document"
 
-#: ../shell/ev-window.c:2291
+#: ../shell/ev-window.c:2399
 msgid "_Dual"
 msgstr "_Dual"
 
-#: ../shell/ev-window.c:2292
+#: ../shell/ev-window.c:2400
 msgid "Show two pages at once"
 msgstr "Show two pages at once"
 
-#: ../shell/ev-window.c:2294
+#: ../shell/ev-window.c:2402
 msgid "_Fullscreen"
 msgstr "_Fullscreen"
 
-#: ../shell/ev-window.c:2295
+#: ../shell/ev-window.c:2403
 msgid "Expand the window to fill the screen"
 msgstr "Expand the window to fill the screen"
 
-#: ../shell/ev-window.c:2297
+#: ../shell/ev-window.c:2405
 msgid "_Presentation"
 msgstr "_Presentation"
 
-#: ../shell/ev-window.c:2298
+#: ../shell/ev-window.c:2406
 msgid "Run document as a presentation"
 msgstr "Run document as a presentation"
 
-#: ../shell/ev-window.c:2300
+#: ../shell/ev-window.c:2408
 msgid "_Best Fit"
 msgstr "_Best Fit"
 
-#: ../shell/ev-window.c:2301
+#: ../shell/ev-window.c:2409
 msgid "Make the current document fill the window"
 msgstr "Make the current document fill the window"
 
-#: ../shell/ev-window.c:2303
+#: ../shell/ev-window.c:2411
 msgid "Fit Page _Width"
 msgstr "Fit Page _Width"
 
-#: ../shell/ev-window.c:2304
+#: ../shell/ev-window.c:2412
 msgid "Make the current document fill the window width"
 msgstr "Make the current document fill the window width"
 
-#: ../shell/ev-window.c:2309
-msgid "Single"
-msgstr "Single"
-
-#: ../shell/ev-window.c:2310
-msgid "Show the document one page at a time"
-msgstr "Show the document one page at a time"
-
-#: ../shell/ev-window.c:2312
-msgid "Multi"
-msgstr "Multi"
-
-#: ../shell/ev-window.c:2313
-msgid "Show the full document at once"
-msgstr "Show the full document at once"
-
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2460
 msgid "Page"
 msgstr "Page"
 
-#: ../shell/ev-window.c:2343
+#: ../shell/ev-window.c:2461
 msgid "Select Page"
 msgstr "Select Page"
 
-#: ../shell/ev-window.c:2350
+#: ../shell/ev-window.c:2473
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../shell/ev-window.c:2352
+#: ../shell/ev-window.c:2475
 msgid "Adjust the zoom level"
 msgstr "Adjust the zoom level"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2368
+#: ../shell/ev-window.c:2491
 msgid "Previous"
 msgstr "Previous"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2374
+#: ../shell/ev-window.c:2497
 msgid "Next"
 msgstr "Next"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2378
+#: ../shell/ev-window.c:2501
 msgid "Zoom In"
 msgstr "Zoom In"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2383
+#: ../shell/ev-window.c:2506
 msgid "Zoom Out"
 msgstr "Zoom Out"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:2393
+#: ../shell/ev-window.c:2516
 msgid "Fit Width"
 msgstr "Fit Width"
+
+#: ../shell/main.c:41
+msgid "The page of the document to display."
+msgstr "The page of the document to display."
+
+#: ../shell/main.c:41
+msgid "PAGE"
+msgstr "PAGE"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid ""
