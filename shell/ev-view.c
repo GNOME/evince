@@ -537,7 +537,7 @@ view_scroll_to_page (EvView *view, gint new_page)
 	EvPageCache *page_cache = view->page_cache;
 	int old_width, old_height;
 	int new_width, new_height;
-	int max_height, n_rows;
+	int max_height, max_width, n_rows;
 
 	ev_page_cache_get_size (page_cache,
 				view->current_page,
@@ -556,11 +556,11 @@ view_scroll_to_page (EvView *view, gint new_page)
 	else
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	
-	if (view->continuous) {
+	get_bounding_box_size (view, &max_width, &max_height);
+	
+	if (view->continuous && view->vadjustment) {
 		
 		n_rows = view->dual_page ? new_page / 2 : new_page;
-		
-		get_bounding_box_size (view, NULL, &max_height);
 
 		gtk_adjustment_clamp_page(view->vadjustment,
 					  (max_height + view->spacing) * n_rows, 
@@ -569,6 +569,20 @@ view_scroll_to_page (EvView *view, gint new_page)
 	} else {
 		gtk_adjustment_set_value (view->vadjustment,
 					  view->vadjustment->lower);
+	}
+	
+	if (view->dual_page && view->hadjustment) {
+		if (new_page % 2 == 0) {
+			gtk_adjustment_set_value (view->hadjustment,
+						  view->hadjustment->lower);
+		} else {
+			gtk_adjustment_clamp_page (view->hadjustment,
+						   view->hadjustment->lower + 
+						   max_width + view->spacing, 
+						   view->hadjustment->lower +
+						   max_width + view->spacing +
+						   view->hadjustment->page_size);
+		}
 	}
 
 	view->current_page = new_page;
