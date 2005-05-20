@@ -149,6 +149,7 @@ struct _EvView {
 	EvSizingMode sizing_mode;
 	
 	PendingScroll pending_scroll;
+	gboolean pending_resize;
 };
 
 struct _EvViewClass {
@@ -376,9 +377,12 @@ view_update_adjustments (EvView *view)
 	} else {
 		view->scroll_y = 0;
 	}
-		
-	//	gtk_widget_queue_draw (GTK_WIDGET (view));
-	gdk_window_scroll (GTK_WIDGET (view)->window, dx, dy);
+	
+	
+	if (view->pending_resize)	
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	else
+		gdk_window_scroll (GTK_WIDGET (view)->window, dx, dy);
 
 
 	if (view->document)
@@ -1226,6 +1230,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
 
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+	view->pending_resize = FALSE;
 
 	if (view->document)
 		view_update_range_and_current_page (view);		
@@ -1995,6 +2000,7 @@ ev_view_set_zoom (EvView   *view,
 	if (ABS (view->scale - scale) < EPSILON)
 		return;
 	view->scale = scale;
+	view->pending_resize = TRUE;
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }

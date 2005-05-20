@@ -1,3 +1,9 @@
+Fri May 20 02:00:03 2005  Nickolay V. Shmyrev <nshmyrev@yandex.ru>
+
+	* shell/ev-view.c: Use gdk_widget_queue_draw to remove
+	flickering on resize but still use gdk_window_scroll on
+	scrolling
+
 Fri May 20 01:46:57 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-view.c: Patch from Nickolay Shmyrev to fix the -p
