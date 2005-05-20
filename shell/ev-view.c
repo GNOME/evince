@@ -1186,9 +1186,6 @@ ev_view_size_request (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
-	if (!GTK_WIDGET_REALIZED (widget))
-		return;
-
 	if (view->document == NULL) {
 		requisition->width = 1;
 		requisition->height = 1;
@@ -1274,15 +1271,6 @@ ev_view_realize (GtkWidget *widget)
 		gdk_window_set_background (widget->window, &widget->style->black);
 	else
 		gdk_window_set_background (widget->window, &widget->style->mid [GTK_STATE_NORMAL]);
-
-	if (view->document) {
-		/* We can't get page size without a target, so we have to
-		 * queue a size request at realization. Could be fixed
-		 * with EvDocument changes to allow setting a GdkScreen
-		 * without setting a target.
-		 */
-		gtk_widget_queue_resize (widget);
-	}
 }
 
 static void
@@ -1916,7 +1904,13 @@ page_changed_cb (EvPageCache *page_cache,
 {
 	if (view->current_page != new_page) {
 
-		view_scroll_to_page (view, new_page);
+		if (view->pending_scroll != SCROLL_TO_CURRENT_PAGE) {
+			/* Should scroll right now */
+			view_scroll_to_page (view, new_page);
+		} else {	
+			/* We'll scroll to new page on allocate */
+			view->current_page = new_page;
+		}
 
 		if (EV_IS_DOCUMENT_FIND (view->document)) {
 			view->find_page = new_page;
