@@ -1843,6 +1843,38 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 	}
 }
 
+static void
+update_view_size (EvView *view, EvWindow *window)
+{
+	int width, height;
+	GtkRequisition vsb_requisition;
+	GtkRequisition hsb_requisition;
+	int scrollbar_spacing;
+
+	/* Calculate the width available for the */
+	width = window->priv->scrolled_window->allocation.width;
+	height = window->priv->scrolled_window->allocation.height;
+
+	if (gtk_scrolled_window_get_shadow_type (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)) == GTK_SHADOW_IN) {
+		width -= 2 * window->priv->view->style->xthickness;
+		height -= 2 * window->priv->view->style->ythickness;
+	}
+
+	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->vscrollbar,
+				 &vsb_requisition);
+	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->hscrollbar,
+				 &hsb_requisition);
+	gtk_widget_style_get (window->priv->scrolled_window,
+			      "scrollbar_spacing", &scrollbar_spacing,
+			      NULL);
+
+	ev_view_set_zoom_for_size (EV_VIEW (window->priv->view),
+				   MAX (1, width),
+				   MAX (1, height),
+				   vsb_requisition.width + scrollbar_spacing,
+				   hsb_requisition.height + scrollbar_spacing);
+}
+
 static void     
 ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 		 		  EvWindow   *ev_window)
@@ -1856,18 +1888,29 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 
 	scrolled_window = ev_window->priv->scrolled_window;
 
+	g_signal_handlers_disconnect_by_func (ev_window->priv->view, update_view_size, ev_window);
+
+	if (sizing_mode != EV_SIZING_FREE)
+	    	update_view_size (NULL, ev_window);
+
 	switch (sizing_mode) {
 	case EV_SIZING_BEST_FIT:
 		g_object_set (G_OBJECT (scrolled_window),
 			      "hscrollbar-policy", GTK_POLICY_NEVER,
 			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
 			      NULL);
+		g_signal_connect (ev_window->priv->view, "zoom_invalid",
+				  G_CALLBACK (update_view_size),
+				  ev_window);
 		break;
 	case EV_SIZING_FIT_WIDTH:
 		g_object_set (G_OBJECT (scrolled_window),
 			      "hscrollbar-policy", GTK_POLICY_NEVER,
 			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
 			      NULL);
+		g_signal_connect (ev_window->priv->view, "zoom_invalid",
+				  G_CALLBACK (update_view_size),
+				  ev_window);
 		break;
 	case EV_SIZING_FREE:
 		g_object_set (G_OBJECT (scrolled_window),

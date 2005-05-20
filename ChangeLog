@@ -1,3 +1,27 @@
+Fri May 20 01:07:15 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c (view_update_adjustments): Use gdk_window_scroll
+	instead of gtk_widget_queue_draw.  Massive speedups in scrolling.
+
+Fri May 20 01:05:10 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* .cvsignore:
+	* shell/ev-view.c:(ev_view_size_allocate), (ev_view_class_init),
+	(zoom_for_size_fit_width), (zoom_for_size_best_fit),
+	(ev_view_zoom_for_size_presentation),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (ev_view_set_zoom_for_size):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_view_size),
+	(ev_window_sizing_mode_changed_cb):
+
+	Patch from Nickolay Shmyrev <nshmyrev@yandex.ru> to handle
+	the scrollbars.  It's not 100% right, but it's much closer.  Kills
+	an infinite loop, #304769
+
+
 2005-05-18  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* data/evince-ui.xml:
