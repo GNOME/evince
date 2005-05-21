@@ -15,8 +15,8 @@ glade_DATA = 				\
 	evince-password.glade		\
 	$(NULL)
 
-DESKTOP_IN_FILES= evince.desktop.in
-DESKTOP_FILES= $(DESKTOP_IN_FILES:.desktop.in=.desktop)
+DESKTOP_IN_FILES= evince.desktop.in.in
+DESKTOP_FILES= $(DESKTOP_IN_FILES:.desktop.in.in=.desktop)
 
 desktopdir = $(datadir)/applications
 desktop_DATA = $(DESKTOP_FILES)

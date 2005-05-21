@@ -164,6 +164,18 @@ AM_CONDITIONAL(WITH_TYPE1_FONTS, test x$enable_type1_fonts = xyes)
 
 dnl ================== End of dvi checks ===================================================
 
+dnl =================== Mime types list ====================================================
+
+EVINCE_MIME_TYPES="application/pdf;application/postscript;application/x-gzpostscript"
+
+if test "x$enable_dvi" = "xyes"; then
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-dvi"
+fi
+if test "x$enable_djvu" = "xyes"; then
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/vnd.djvu"
+fi
+AC_SUBST(EVINCE_MIME_TYPES)
+
 dnl Turn on the additional warnings last, so -Werror doesn't affect other tests.
 dnl stolen from nautilus and gnome-common
 
@@ -216,7 +228,6 @@ else
 	AC_MSG_RESULT(no)
 fi
 
-
 AC_OUTPUT([
 Makefile
 cut-n-paste/Makefile
@@ -224,6 +235,7 @@ cut-n-paste/recent-files/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/toolbar-editor/Makefile
 data/Makefile
+data/evince.desktop.in
 lib/Makefile
 pdf/Makefile
 pixbuf/Makefile
