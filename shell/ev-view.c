@@ -365,15 +365,15 @@ view_update_adjustments (EvView *view)
 		return;
 
 	if (view->hadjustment) {
-		dx = view->scroll_x - view->hadjustment->value;
-		view->scroll_x = view->hadjustment->value;
+		dx = view->scroll_x - (int) view->hadjustment->value;
+		view->scroll_x = (int) view->hadjustment->value;
 	} else {
 		view->scroll_x = 0;
 	}
 
 	if (view->vadjustment) {
-		dy = view->scroll_y - view->vadjustment->value;
-		view->scroll_y = view->vadjustment->value;
+		dy = view->scroll_y - (int) view->vadjustment->value;
+		view->scroll_y = (int) view->vadjustment->value;
 	} else {
 		view->scroll_y = 0;
 	}
@@ -435,7 +435,7 @@ view_set_adjustment_values (EvView         *view,
 	switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION: 
 			new_value = CLAMP (adjustment->upper * factor, 0, adjustment->upper - adjustment->page_size);
-			gtk_adjustment_set_value (adjustment, new_value);
+			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
     	        case SCROLL_TO_CURRENT_PAGE: 
 			if (orientation == GTK_ORIENTATION_VERTICAL) {
@@ -444,7 +444,7 @@ view_set_adjustment_values (EvView         *view,
 			break;
     	        case SCROLL_TO_CENTER: 
 			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5, 0, adjustment->upper - adjustment->page_size);
-			gtk_adjustment_set_value (adjustment, new_value);
+			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
 	}
 
@@ -1605,9 +1605,6 @@ draw_one_page (EvView       *view,
 
 	g_assert (view->document);
 
-	if (!gdk_rectangle_intersect (page_area, expose_area, &overlap))
-		return;
-
 	ev_page_cache_get_size (view->page_cache,
 				page, view->scale,
 				&width, &height);
@@ -1635,6 +1632,8 @@ draw_one_page (EvView       *view,
 		 height == gdk_pixbuf_get_height (current_pixbuf))
 		scaled_image = g_object_ref (current_pixbuf);
 	else
+		/* FIXME: We don't want to scale the whole area, just the right
+		 * area of it */
 		scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
 							width, height,
 							GDK_INTERP_NEAREST);

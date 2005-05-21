@@ -1,3 +1,12 @@
+Sat May 21 00:21:30 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c: (view_update_adjustments),
+	(view_set_adjustment_values): cast adjustmen->value to (int)
+	before using it.  Otherwise, we get off by a pixel in some
+	situations.
+
+	(draw_one_page): Draw the border on expose.
+
 Fri May 20 22:05:25 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* *shell/ev-view.c: Patch from Nickolay V. Shmyrev to reset the
