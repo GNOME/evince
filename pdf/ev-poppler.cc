@@ -874,7 +874,8 @@ pdf_document_ps_exporter_begin (EvPSExporter *exporter, const char *filename,
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	
 	pdf_document->ps_file = poppler_ps_file_new (pdf_document->document, filename,
-						     first_page, last_page);
+						     first_page,
+						     last_page - first_page + 1);
 }
 
 static void

@@ -2446,10 +2446,8 @@ update_find_status_message (EvView *view)
 	} else {
 		double percent;
 
-		ev_document_doc_mutex_lock ();
 		percent = ev_document_find_get_progress
 				(EV_DOCUMENT_FIND (view->document));
-		ev_document_doc_mutex_unlock ();
 		if (percent >= (1.0 - 1e-10)) {
 			message = g_strdup (_("Not found"));
 		} else {
@@ -2490,15 +2488,11 @@ jump_to_find_result (EvView *view)
 	int n_results;
 	int page = view->find_page;
 
-	ev_document_doc_mutex_lock ();
 	n_results = ev_document_find_get_n_results (find, page);
-	ev_document_doc_mutex_unlock ();
 
 	if (n_results > view->find_result) {
-		ev_document_doc_mutex_lock ();
 		ev_document_find_get_result
 			(find, page, view->find_result, &rect);
-		ev_document_doc_mutex_unlock ();
 
 		doc_rect_to_view_rect (view, page, &rect, &view_rect);
 		ensure_rectangle_is_visible (view, &view_rect);
@@ -2542,9 +2536,7 @@ ev_view_can_find_next (EvView *view)
 	if (EV_IS_DOCUMENT_FIND (view->document)) {
 		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
-		ev_document_doc_mutex_lock ();
 		n_results = ev_document_find_get_n_results (find, view->current_page);
-		ev_document_doc_mutex_unlock ();
 	}
 
 	return n_results > 0;
@@ -2558,9 +2550,7 @@ ev_view_find_next (EvView *view)
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
 	page_cache = ev_document_get_page_cache (view->document);
-	ev_document_doc_mutex_lock ();
 	n_results = ev_document_find_get_n_results (find, view->current_page);
-	ev_document_doc_mutex_unlock ();
 
 	n_pages = ev_page_cache_get_n_pages (page_cache);
 
@@ -2590,9 +2580,7 @@ ev_view_find_previous (EvView *view)
 
 	page_cache = ev_document_get_page_cache (view->document);
 
-	ev_document_doc_mutex_lock ();
 	n_results = ev_document_find_get_n_results (find, view->current_page);
-	ev_document_doc_mutex_unlock ();
 
 	n_pages = ev_page_cache_get_n_pages (page_cache);
 

@@ -1,3 +1,16 @@
+2005-05-21  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-view.c: (jump_to_find_result), (ev_view_can_find_next),
+	(ev_view_find_next), (ev_view_find_previous):
+
+	Remove the locks around get_n_results	
+
+2005-05-21  Juerg Billeter  <j@bitron.ch>
+
+	* pdf/ev-poppler.c: (pdf_document_ps_exporter_begin):
+
+	Pass correct number of pages to poppler.
+
 2005-05-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
