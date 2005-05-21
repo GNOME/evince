@@ -114,8 +114,8 @@ struct _EvView {
 	char *status;
 	char *find_status;
 
-	int scroll_x;
-	int scroll_y;
+	gint scroll_x;
+	gint scroll_y;
 
 	DragInfo drag_info;
 	gboolean pressed_button;
@@ -562,30 +562,40 @@ view_scroll_to_page (EvView *view, gint new_page)
 	
 	get_bounding_box_size (view, &max_width, &max_height);
 	
-	if (view->continuous && view->vadjustment) {
+	if (view->vadjustment) {
+		if (view->continuous) {
 		
-		n_rows = view->dual_page ? new_page / 2 : new_page;
+			n_rows = view->dual_page ? new_page / 2 : new_page;
 
-		gtk_adjustment_clamp_page(view->vadjustment,
-					  (max_height + view->spacing) * n_rows, 
-					  (max_height + view->spacing) * n_rows +
-					   view->vadjustment->page_size);
-	} else {
-		gtk_adjustment_set_value (view->vadjustment,
-					  view->vadjustment->lower);
+			gtk_adjustment_clamp_page(view->vadjustment,
+						  (max_height + view->spacing) * n_rows, 
+						  (max_height + view->spacing) * n_rows +
+						   view->vadjustment->page_size);
+		} else {
+			gtk_adjustment_set_value (view->vadjustment,
+		    				  view->vadjustment->lower);
+		}
 	}
 	
-	if (view->dual_page && view->hadjustment) {
-		if (new_page % 2 == 0) {
-			gtk_adjustment_set_value (view->hadjustment,
-						  view->hadjustment->lower);
+	if (view->hadjustment) {
+		if (view->dual_page) {
+			if (new_page % 2 == 0) {
+				gtk_adjustment_set_value (view->hadjustment,
+							  view->hadjustment->lower);
+			} else {
+				gtk_adjustment_clamp_page (view->hadjustment,
+							   view->hadjustment->lower + 
+							   max_width + view->spacing, 
+							   view->hadjustment->lower +
+							   max_width + view->spacing +
+							   view->hadjustment->page_size);
+			}
 		} else {
-			gtk_adjustment_clamp_page (view->hadjustment,
-						   view->hadjustment->lower + 
-						   max_width + view->spacing, 
-						   view->hadjustment->lower +
-						   max_width + view->spacing +
-						   view->hadjustment->page_size);
+				gtk_adjustment_set_value (view->hadjustment,
+							  CLAMP (view->hadjustment->value, 
+							  view->hadjustment->lower,
+							  view->hadjustment->upper - 
+							  view->hadjustment->page_size));
 		}
 	}
 
