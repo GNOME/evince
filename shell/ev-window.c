@@ -2419,6 +2419,12 @@ static const GtkActionEntry entries[] = {
         { "ShiftBackSpace", NULL, "", "<shift>BackSpace",
           N_("Scroll one page forward"),
           G_CALLBACK (ev_window_cmd_scroll_forward) },
+        { "Plus", GTK_STOCK_ZOOM_IN, NULL, "plus",
+          N_("Enlarge the document"),
+          G_CALLBACK (ev_window_cmd_view_zoom_in) },
+        { "Minus", GTK_STOCK_ZOOM_OUT, NULL, "minus",
+          N_("Shrink the document"),
+          G_CALLBACK (ev_window_cmd_view_zoom_out) },
         { "FocusPageSelector", NULL, "", "<control>l",
           N_("Focus the page selector"),
           G_CALLBACK (ev_window_cmd_focus_page_selector) }
@@ -2660,6 +2666,9 @@ set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
 		set_action_sensitive (window, "ShiftSpace", sensitive);
 		set_action_sensitive (window, "BackSpace", sensitive);
 		set_action_sensitive (window, "ShiftBackSpace", sensitive);
+		set_action_sensitive (window, "Slash", sensitive);
+		set_action_sensitive (window, "Plus", sensitive);
+		set_action_sensitive (window, "Minus", sensitive);
 	}
 }
 
