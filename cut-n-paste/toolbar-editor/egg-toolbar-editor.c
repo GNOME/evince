@@ -20,9 +20,9 @@
 
 #include "egg-toolbar-editor.h"
 #include "egg-editable-toolbar.h"
+#include "eggintl.h"
 
 #include <string.h>
-#include <glib/gi18n.h>
 #include <libxml/tree.h>
 #include <gtk/gtkimage.h>
 #include <gtk/gtkeventbox.h>

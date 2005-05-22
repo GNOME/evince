@@ -316,6 +316,11 @@ egg_recent_item_get_short_name (const EggRecentItem *item)
 		return NULL;
 
 	short_name = gnome_vfs_uri_extract_short_name (uri);
+	if (short_name == NULL) {
+		gnome_vfs_uri_unref (uri);
+		return NULL;
+	}
+
 	valid = FALSE;
 
 	if (strcmp (gnome_vfs_uri_get_scheme (uri), "file") == 0) {

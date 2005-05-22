@@ -4,17 +4,23 @@ INCLUDES = $(TOOLBAR_EDITOR_CFLAGS) \
 
 noinst_LTLIBRARIES = libtoolbareditor.la
 
-libtoolbareditor_la_SOURCES = 	\
+EGGSOURCES = \
 	egg-toolbars-model.c		\
 	egg-editable-toolbar.c		\
-	egg-toolbar-editor.c		\
-	egg-marshal.c			\
-	eggmarshalers.c	
+	egg-toolbar-editor.c
 
-noinst_HEADERS = 			\
+EGGHEADERS = \
+	eggintl.h			\
 	egg-toolbars-model.h		\
 	egg-editable-toolbar.h		\
-	egg-toolbar-editor.h		\
+	egg-toolbar-editor.h
+
+libtoolbareditor_la_SOURCES = \
+	$(EGGSOURCES)	\
+	eggmarshalers.c	
+
+noinst_HEADERS = \
+	$(EGGHEADERS)	\
 	eggmarshalers.h
 
 BUILT_SOURCES = eggmarshalers.h eggmarshalers.c
@@ -31,6 +37,7 @@ egg-marshal.c: eggmarshalers.c eggmarshalers.h
 EXTRA_DIST= \
 	eggmarshalers.list
 
+EGGFILES=$(EGGSOURCES) $(EGGHEADERS)
 EGGDIR=$(srcdir)/../../../libegg/libegg
 regenerate-built-sources:
 	EGGFILES="$(EGGFILES) eggmarshalers.list" EGGDIR="$(EGGDIR)" $(top_srcdir)/cut-n-paste/update-from-egg.sh
