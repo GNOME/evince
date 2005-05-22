@@ -10,6 +10,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/backend				\
 	-I$(top_srcdir)/pdf				\
 	-I$(top_srcdir)/pixbuf				\
+	-I$(top_srcdir)/tiff				\
 	-I$(top_srcdir)/ps	                	\
 	-I$(top_srcdir)/djvu				\
 	-I$(top_srcdir)/dvi				\
@@ -29,6 +30,7 @@ libevbackendfactory_la_SOURCES=         		\
 libevbackendfactory_la_LIBADD = 			\
 	$(top_builddir)/pdf/libpdfdocument.la	 	\
 	$(top_builddir)/pixbuf/libpixbufdocument.la	\
+	$(top_builddir)/tiff/libtiffdocument.la	\
 	$(top_builddir)/ps/libgtkgs.la			\
 	$(top_builddir)/backend/libevbackend.la		\
 	$(NULL)
@@ -84,6 +86,7 @@ evince_SOURCES=				\
 
 evince_LDADD=								\
 	$(SHELL_LIBS)							\
+	$(LIBTIFF)							\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephymisc.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\

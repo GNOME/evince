@@ -104,6 +104,36 @@ AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghos
 AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
 dnl ======================== End of ggv checks =================================
 
+dnl ================== tiff checks ===================================================
+AC_ARG_WITH(libtiff,
+            [AC_HELP_STRING([--without-libtiff],
+                            [disable TIFF loader for gdk-pixbuf])])
+
+dnl Test for libtiff
+  if test x$with_libtiff != xno && test -z "$LIBTIFF"; then
+    AC_CHECK_LIB(tiff, TIFFReadScanline,
+      [AC_CHECK_HEADER(tiffio.h,
+        TIFF='tiff'; LIBTIFF='-ltiff',
+        AC_MSG_WARN(*** TIFF loader will not be built (TIFF header files not found) ***))],
+      [AC_CHECK_LIB(tiff, TIFFWriteScanline,
+        [AC_CHECK_HEADER(tiffio.h,
+          TIFF='tiff'; LIBTIFF='-ltiff -ljpeg -lz',
+          AC_MSG_WARN(*** TIFF loader will not be built (TIFF header files not found) ***))],
+        [AC_CHECK_LIB(tiff34, TIFFFlushData,
+          [AC_CHECK_HEADER(tiffio.h,
+            TIFF='tiff'; LIBTIFF='-ltiff34 -ljpeg -lz',
+            AC_MSG_WARN(*** TIFF loader will not be built (TIFF header files not found) ***))],
+        AC_MSG_WARN(*** TIFF loader will not be built (TIFF library not found) ***), -ljpeg -lz -lm)], -ljpeg -lz -lm)], -lm)
+  fi
+
+  if test x$with_libtiff != xno && test -z "$LIBTIFF"; then
+     AC_MSG_ERROR([
+*** Checks for TIFF loader failed. You can build without it by passing 
+*** --without-libtiff to configure ])
+  fi
+AC_SUBST(LIBTIFF)
+dnl ================== end of tiff checks ============================================
+
 dnl ================== djvu checks ===================================================
 
 AC_ARG_ENABLE(djvu,
@@ -239,6 +269,7 @@ data/evince.desktop.in
 lib/Makefile
 pdf/Makefile
 pixbuf/Makefile
+tiff/Makefile
 ps/Makefile
 djvu/Makefile
 dvi/Makefile

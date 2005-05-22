@@ -27,6 +27,7 @@
 /* The various document type backends: */
 #include "ev-poppler.h"
 #include "pixbuf-document.h"
+#include "tiff-document.h"
 #include "ps-document.h"
 #ifdef ENABLE_DVI
 #include "dvi-document.h"
@@ -55,6 +56,9 @@ const EvDocumentType document_types[] = {
 	{"application/postscript",     ps_document_get_type},
 	{"application/x-gzpostscript", ps_document_get_type},
 	{"image/x-eps",                ps_document_get_type},
+
+	/* Tiff: */
+	{"image/tiff",                 tiff_document_get_type},
 
 #ifdef ENABLE_DJVU
 	/* djvu: */
