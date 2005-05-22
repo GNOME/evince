@@ -1,5 +1,20 @@
 2005-05-22  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* cut-n-paste/zoom-control/ephy-zoom.c:
+	(ephy_zoom_get_changed_zoom_level):
+	* cut-n-paste/zoom-control/ephy-zoom.h:
+	* shell/ev-view.c: (ev_view_scroll_event), (ev_view_set_property),
+	(ev_view_get_property), (ev_view_class_init), (ev_view_set_zoom):
+	* shell/ev-window.c: (ev_window_cmd_view_zoom_in),
+	(ev_window_cmd_view_zoom_out), (ev_window_zoom_changed_cb),
+	(zoom_control_changed_cb), (ev_window_init):
+	
+	Fix minor points related to moving best fit up. Introduce
+	"zoom" property and make zoom control change it's value on
+	notify::zoom signals. Fix for 305080.
+
+2005-05-22  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* data/evince-ui.xml:
 	* shell/ev-window.c: (set_view_actions_sensitivity):
 	

@@ -158,6 +158,9 @@ static gboolean start_loading_document                  (EvWindow         *ev_wi
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
+static void     ev_window_zoom_changed_cb 	        (EvView           *view,
+							 GParamSpec       *pspec,
+							 EvWindow         *ev_window);
 static void     ev_window_add_recent                    (EvWindow         *window,
 							 const char       *filename);
 static void     ev_window_fullscreen                    (EvWindow         *window);
@@ -1726,7 +1729,6 @@ ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 
 	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	ev_view_zoom_in (EV_VIEW (ev_window->priv->view));
-	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -1736,7 +1738,6 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 
 	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	ev_view_zoom_out (EV_VIEW (ev_window->priv->view));
-	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -1921,6 +1922,13 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 	}
 
 	update_sizing_buttons (ev_window);
+}
+
+static void     
+ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec,
+	  		   EvWindow   *ev_window)
+{
+        update_action_sensitivity (ev_window);
 }
 
 static char *
@@ -2233,7 +2241,6 @@ zoom_control_changed_cb (EphyZoomAction *action,
 	}
 	
 	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), mode);
-	update_action_sensitivity (ev_window);
 }
 
 static void
@@ -2880,6 +2887,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->view,
 			  "notify::sizing-mode",
 			  G_CALLBACK (ev_window_sizing_mode_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->view,
+			  "notify::zoom",
+			  G_CALLBACK (ev_window_zoom_changed_cb),
 			  ev_window);
 
 	ev_window->priv->statusbar = gtk_statusbar_new ();

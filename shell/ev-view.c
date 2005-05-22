@@ -49,6 +49,7 @@ enum {
 	PROP_FULLSCREEN,
 	PROP_PRESENTATION,
 	PROP_SIZING_MODE,
+	PROP_ZOOM,
 };
 
 enum {
@@ -86,7 +87,7 @@ typedef enum {
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
 
 #define MIN_SCALE 0.05409
-#define MAX_SCALE 6.0
+#define MAX_SCALE 4.0
 
 typedef struct {
 	EvRectangle rect;
@@ -1303,14 +1304,16 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 
 		 ev_view_set_sizing_mode (view, EV_SIZING_FREE);	 
 
-		 if ((event->direction == GDK_SCROLL_UP || 
-			event->direction == GDK_SCROLL_LEFT) &&
-			ev_view_can_zoom_in (view)) {
-				ev_view_zoom_in (view);
-		 } else if (ev_view_can_zoom_out (view)) {
-				ev_view_zoom_out (view);
-		 }		 
-
+		 if (event->direction == GDK_SCROLL_UP || 
+			event->direction == GDK_SCROLL_LEFT) {
+			    if (ev_view_can_zoom_in (view)) {
+		    		    ev_view_zoom_in (view);
+			    }
+		 } else {
+	    		    if (ev_view_can_zoom_out (view)) {
+				    ev_view_zoom_out (view);
+			    }	
+		 }
 		 return TRUE;
 	}
 	
@@ -1712,6 +1715,9 @@ ev_view_set_property (GObject      *object,
 	case PROP_SIZING_MODE:
 		ev_view_set_sizing_mode (view, g_value_get_enum (value));
 		break;
+	case PROP_ZOOM:
+		ev_view_set_zoom (view, g_value_get_double (value), FALSE);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
@@ -1747,6 +1753,9 @@ ev_view_get_property (GObject *object,
 		break;
 	case PROP_SIZING_MODE:
 		g_value_set_enum (value, view->sizing_mode);
+		break;
+	case PROP_ZOOM:
+		g_value_set_double (value, view->scale);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1862,6 +1871,16 @@ ev_view_class_init (EvViewClass *class)
 							    EV_TYPE_SIZING_MODE,
 							    EV_SIZING_FIT_WIDTH,
 							    G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class,
+					 PROP_ZOOM,
+					 g_param_spec_double ("zoom",
+							      "Zoom factor",
+							       "Zoom factor",
+							       MIN_SCALE, 
+							       MAX_SCALE,
+							       1.0,
+							       G_PARAM_READWRITE));
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -2008,10 +2027,13 @@ ev_view_set_zoom (EvView   *view,
 
 	if (ABS (view->scale - scale) < EPSILON)
 		return;
+
 	view->scale = scale;
 	view->pending_resize = TRUE;
-
+	
 	gtk_widget_queue_resize (GTK_WIDGET (view));
+
+	g_object_notify (G_OBJECT (view), "zoom");
 }
 
 double

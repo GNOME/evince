@@ -61,7 +61,7 @@ zoom_levels[] =
 static const guint n_zoom_levels = G_N_ELEMENTS (zoom_levels);
 
 #define ZOOM_MINIMAL	(EPHY_ZOOM_SEPARATOR)
-#define ZOOM_MAXIMAL	(zoom_levels[n_zoom_levels - 4].level)
+#define ZOOM_MAXIMAL	(zoom_levels[n_zoom_levels - 1].level)
 #define ZOOM_IN		(-1.0)
 #define ZOOM_OUT	(-2.0)
 
