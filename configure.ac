@@ -105,33 +105,23 @@ AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
 dnl ======================== End of ggv checks =================================
 
 dnl ================== tiff checks ===================================================
-AC_ARG_WITH(libtiff,
-            [AC_HELP_STRING([--without-libtiff],
-                            [disable TIFF loader for gdk-pixbuf])])
+AC_ARG_ENABLE(tiff,
+            [AC_HELP_STRING([--enable-tiff], [Compile with support of multipage tiff])],enable_tiff="$enableval",enable_tiff=yes)
 
-dnl Test for libtiff
-  if test x$with_libtiff != xno && test -z "$LIBTIFF"; then
-    AC_CHECK_LIB(tiff, TIFFReadScanline,
-      [AC_CHECK_HEADER(tiffio.h,
-        TIFF='tiff'; LIBTIFF='-ltiff',
-        AC_MSG_WARN(*** TIFF loader will not be built (TIFF header files not found) ***))],
-      [AC_CHECK_LIB(tiff, TIFFWriteScanline,
-        [AC_CHECK_HEADER(tiffio.h,
-          TIFF='tiff'; LIBTIFF='-ltiff -ljpeg -lz',
-          AC_MSG_WARN(*** TIFF loader will not be built (TIFF header files not found) ***))],
-        [AC_CHECK_LIB(tiff34, TIFFFlushData,
-          [AC_CHECK_HEADER(tiffio.h,
-            TIFF='tiff'; LIBTIFF='-ltiff34 -ljpeg -lz',
-            AC_MSG_WARN(*** TIFF loader will not be built (TIFF header files not found) ***))],
-        AC_MSG_WARN(*** TIFF loader will not be built (TIFF library not found) ***), -ljpeg -lz -lm)], -ljpeg -lz -lm)], -lm)
-  fi
+if test "x$enable_tiff" = "xyes"; then
+    AC_CHECK_HEADERS([tiff.h],enable_tiff=yes,enable_tiff=no,)
+    if test "x$enable_tiff" = "xyes"; then
+	AC_CHECK_LIB([tiff],TIFFOpen,enable_tiff=yes,enable_tiff=no,"-lz")
+        AC_CHECK_LIB([tiff],TIFFReadRGBAImageOriented,enable_tiff=yes,enable_tiff=no,"-lz")
+    fi
+    if test "x$enable_tiff" = "xyes"; then
+	    AC_DEFINE([ENABLE_TIFF], [1], [Enable multipage tiff support.])
+    else
+	    AC_MSG_WARN("Tiff support is disabled since tiff library version 3.6 or newer not found")
+    fi 
+fi
 
-  if test x$with_libtiff != xno && test -z "$LIBTIFF"; then
-     AC_MSG_ERROR([
-*** Checks for TIFF loader failed. You can build without it by passing 
-*** --without-libtiff to configure ])
-  fi
-AC_SUBST(LIBTIFF)
+AM_CONDITIONAL(ENABLE_TIFF, test x$enable_tiff = xyes)
 dnl ================== end of tiff checks ============================================
 
 dnl ================== djvu checks ===================================================
@@ -141,15 +131,17 @@ AC_ARG_ENABLE(djvu,
 
 if test "x$enable_djvu" = "xyes"; then
     AC_CHECK_HEADERS([libdjvu/ddjvuapi.h],enable_djvu=yes,enable_djvu=no,)
+    if test "x$enable_djvu" = "xyes"; then
+	AC_CHECK_LIB([djvulibre],ddjvu_context_create,enable_djvu=yes,enable_djvu=no,"-lpthread")
+    fi
+
+    if test "x$enable_djvu" = "xyes"; then
+        AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
+    else
+	AC_MSG_WARN("Djvu support is disabled since djvulibre library version 3.5.14 or newer is not found")
+    fi 
 fi
 
-if test "x$enable_djvu" = "xyes"; then
-    AC_CHECK_LIB([djvulibre],ddjvu_context_create,enable_djvu=yes,enable_djvu=no,"-lpthread")
-fi
-
-if test "x$enable_djvu" = "xyes"; then
-    AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
-fi
 AM_CONDITIONAL(ENABLE_DJVU, test x$enable_djvu = xyes)
 
 dnl ================== End of djvu checks ===================================================
@@ -174,6 +166,8 @@ if test "x$enable_dvi" = "xyes"; then
 
     if test "x$enable_dvi" = "xyes"; then
 	AC_DEFINE([ENABLE_DVI], [1], [Enable dvi viewer support.])
+    else
+        AC_MSG_WARN("Dvi support is disabled since kpathsea library is not found. Check your TeX installation.")
     fi
 fi
 AM_CONDITIONAL(ENABLE_DVI, test x$enable_dvi = xyes)
@@ -191,7 +185,6 @@ else
 fi
 AM_CONDITIONAL(WITH_TYPE1_FONTS, test x$enable_type1_fonts = xyes)
 
-
 dnl ================== End of dvi checks ===================================================
 
 dnl =================== Mime types list ====================================================
@@ -203,6 +196,9 @@ if test "x$enable_dvi" = "xyes"; then
 fi
 if test "x$enable_djvu" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/vnd.djvu"
+fi
+if test "x$enable_tiff" = "xyes"; then
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/tiff"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 

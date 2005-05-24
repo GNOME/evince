@@ -57,8 +57,10 @@ const EvDocumentType document_types[] = {
 	{"application/x-gzpostscript", ps_document_get_type},
 	{"image/x-eps",                ps_document_get_type},
 
+#ifdef ENABLE_TIFF
 	/* Tiff: */
 	{"image/tiff",                 tiff_document_get_type},
+#endif
 
 #ifdef ENABLE_DJVU
 	/* djvu: */

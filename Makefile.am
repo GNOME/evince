@@ -2,10 +2,14 @@ SUBDIRS = lib cut-n-paste backend po help data
 
 # Backends
 
-SUBDIRS += pdf ps pixbuf tiff
+SUBDIRS += pdf ps pixbuf
 
 if ENABLE_DJVU
      SUBDIRS += djvu
+endif
+
+if ENABLE_TIFF
+     SUBDIRS += tiff
 endif
 
 if ENABLE_DVI

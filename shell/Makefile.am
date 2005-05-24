@@ -30,7 +30,6 @@ libevbackendfactory_la_SOURCES=         		\
 libevbackendfactory_la_LIBADD = 			\
 	$(top_builddir)/pdf/libpdfdocument.la	 	\
 	$(top_builddir)/pixbuf/libpixbufdocument.la	\
-	$(top_builddir)/tiff/libtiffdocument.la	\
 	$(top_builddir)/ps/libgtkgs.la			\
 	$(top_builddir)/backend/libevbackend.la		\
 	$(NULL)
@@ -38,6 +37,12 @@ libevbackendfactory_la_LIBADD = 			\
 if ENABLE_DJVU
 libevbackendfactory_la_LIBADD += 		\
 	$(top_builddir)/djvu/libgtkdjvu.la	\
+	$(NULL)
+endif
+
+if ENABLE_TIFF
+libevbackendfactory_la_LIBADD += 		\
+	$(top_builddir)/tiff/libtiffdocument.la	\
 	$(NULL)
 endif
 
@@ -86,7 +91,6 @@ evince_SOURCES=				\
 
 evince_LDADD=								\
 	$(SHELL_LIBS)							\
-	$(LIBTIFF)							\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephymisc.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\
