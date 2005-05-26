@@ -81,9 +81,11 @@ djvu_document_load (EvDocument  *document,
 
 	djvu_document->d_document = doc;
 
-	while (!ddjvu_document_decoding_done (djvu_document->d_document))
-		    ddjvu_message_wait (djvu_document->d_context);	
-		
+	while (!ddjvu_document_decoding_done (djvu_document->d_document)) {
+		    ddjvu_message_wait (djvu_document->d_context);
+		    ddjvu_message_pop (djvu_document->d_context);	
+	}
+
 	return TRUE;
 }
 
@@ -121,8 +123,10 @@ djvu_document_get_page_size (EvDocument   *document,
 	
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, page);
 
-	while (!ddjvu_page_decoding_done (d_page))
-		    ddjvu_message_wait (djvu_document->d_context);	
+	while (!ddjvu_page_decoding_done (d_page)) {
+		    ddjvu_message_wait (djvu_document->d_context);
+		    ddjvu_message_pop (djvu_document->d_context);	
+	}
 
 	if (width)
 		*width = ddjvu_page_get_width (d_page) * SCALE_FACTOR;
@@ -147,8 +151,10 @@ djvu_document_render_pixbuf (EvDocument  *document,
 
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, page);
 	
-	while (!ddjvu_page_decoding_done (d_page))
-		    ddjvu_message_wait (djvu_document->d_context);	
+	while (!ddjvu_page_decoding_done (d_page)) {
+		    ddjvu_message_wait (djvu_document->d_context);
+		    ddjvu_message_pop (djvu_document->d_context);	
+	}
 	
 	page_width = ddjvu_page_get_width (d_page) * scale * SCALE_FACTOR;
 	page_height = ddjvu_page_get_height (d_page) * scale * SCALE_FACTOR;
@@ -266,8 +272,10 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 		pixels = gdk_pixbuf_get_pixels (pixbuf);
 	}
 	
-	while (ddjvu_thumbnail_status (djvu_document->d_document, page, 1) < DDJVU_JOB_OK)
-		    ddjvu_message_wait (djvu_document->d_context);	
+	while (ddjvu_thumbnail_status (djvu_document->d_document, page, 1) < DDJVU_JOB_OK) {
+		    ddjvu_message_wait (djvu_document->d_context);
+		    ddjvu_message_pop (djvu_document->d_context);	
+	}
 		    
 	ddjvu_thumbnail_render (djvu_document->d_document, page, 
 				&thumb_width, &thumb_height,
