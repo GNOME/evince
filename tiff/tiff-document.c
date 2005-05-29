@@ -167,6 +167,8 @@ tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
 {
   TiffDocument *tiff_document = TIFF_DOCUMENT (document);
   int width, height;
+  gint rowstride, bytes;
+  guchar *pixels = NULL;
   GdkPixbuf *pixbuf;
   GdkPixbuf *scaled_pixbuf;
 
@@ -180,8 +182,41 @@ tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
       return NULL;
     }
 
-  TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &width);
-  TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &height);
+  if (!TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &width))
+    {
+      pop_handlers ();
+      return NULL;
+    }
+
+  if (! TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &height))
+    {
+      pop_handlers ();
+      return NULL;
+    }
+
+  pop_handlers ();
+
+  /* Sanity check the doc */
+  if (width <= 0 || height <= 0)
+    return NULL;                
+        
+  rowstride = width * 4;
+  if (rowstride / 4 != width)
+    /* overflow */
+    return NULL;                
+        
+  bytes = height * rowstride;
+  if (bytes / rowstride != height)
+    /* overflow */
+    return NULL;                
+
+  pixels = g_try_malloc (bytes);
+  if (!pixels)
+    return NULL;
+
+  pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8, 
+				     width, height, rowstride,
+				     (GdkPixbufDestroyNotify) g_free, NULL);
 
   pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
   TIFFReadRGBAImageOriented (tiff_document->tiff, width, height, (uint32 *)gdk_pixbuf_get_pixels (pixbuf), ORIENTATION_TOPLEFT, 1);

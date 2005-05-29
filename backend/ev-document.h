@@ -99,6 +99,7 @@ EvPageCache    *ev_document_get_page_cache (EvDocument     *document);
 GMutex	       *ev_document_get_doc_mutex  (void);
 void            ev_document_doc_mutex_lock (void);
 void            ev_document_doc_mutex_unlock (void);
+
 EvDocumentInfo *ev_document_get_info	   (EvDocument     *document);
 gboolean	ev_document_load	   (EvDocument     *document,
 					    const char     *uri,

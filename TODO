@@ -4,7 +4,6 @@ Improve Find system
 	Display location of results in thumbnails?
 	Only display thumbnails of pages found?
 
-
 Sidebar improvements for ps/pixbuf, or PDF files without a TOC.		bug 164811
 
 Improve Printing Support: (libgnomeprintui?)
@@ -13,16 +12,6 @@ Improve Printing Support: (libgnomeprintui?)
  * Print Page Layout							bug 166564
 
 Document Properties Dialog for document meta-data			bug 164843
-
-Make an object that handles the page count.
-
-Move to having three sizing types:
-
- * Free zooming
- * constrain to width
- * constrain to height
- * also, maybe add a 1-1 button.  Possibly dubious, though.
-
 
 Add some code to sanity check documents, including:
 
@@ -43,3 +32,8 @@ Move to three page views:
  * Single page (prolly default for some backends)
  * Continuous scrolling							bug 164597
  * Side-by-side continuous scrolling
+Make an object that handles the page count.
+Move to having three sizing types:
+ * Free zooming
+ * constrain to width
+ * constrain to height

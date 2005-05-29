@@ -305,6 +305,7 @@ pdf_document_get_info (EvDocument *document)
 	PopplerPageLayout layout;
 	PopplerPageMode mode;
 	PopplerViewerPreferences view_prefs;
+	PopplerPermissions permissions;
 
 	info = g_new0 (EvDocumentInfo, 1);
 
@@ -316,6 +317,7 @@ pdf_document_get_info (EvDocument *document)
 			    EV_DOCUMENT_INFO_LAYOUT |
 			    EV_DOCUMENT_INFO_START_MODE |
 			    /* Missing EV_DOCUMENT_INFO_CREATION_DATE | */
+		            EV_DOCUMENT_INFO_PERMISSIONS |
 			    EV_DOCUMENT_INFO_UI_HINTS;
 
 
@@ -328,6 +330,7 @@ pdf_document_get_info (EvDocument *document)
 		      "page-mode", &mode,
 		      "page-layout", &layout,
 		      "viewer-preferences", &view_prefs,
+		      "permissions", &permissions,
 		      NULL);
 
 	switch (layout) {
@@ -394,6 +397,19 @@ pdf_document_get_info (EvDocument *document)
 		info->ui_hints |=  EV_DOCUMENT_UI_HINT_DIRECTION_RTL;
 	}
 
+	info->permissions = 0;
+	if (permissions & POPPLER_PERMISSIONS_OK_TO_PRINT) {
+		info->permissions |= EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT;
+	}
+	if (permissions & POPPLER_PERMISSIONS_OK_TO_MODIFY) {
+		info->permissions |= EV_DOCUMENT_PERMISSIONS_OK_TO_MODIFY;
+	}
+	if (permissions & POPPLER_PERMISSIONS_OK_TO_COPY) {
+		info->permissions |= EV_DOCUMENT_PERMISSIONS_OK_TO_COPY;
+	}
+	if (permissions & POPPLER_PERMISSIONS_OK_TO_ADD_NOTES) {
+		info->permissions |= EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES;
+	}
 	return info;
 }
 

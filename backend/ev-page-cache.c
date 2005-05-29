@@ -32,6 +32,7 @@ struct _EvPageCache
 	double max_height_page_height;
 
 	EvPageCacheInfo *size_cache;
+	EvDocumentInfo *page_info;
 };
 
 struct _EvPageCacheClass
@@ -91,6 +92,7 @@ ev_page_cache_finalize (GObject *object)
 
 	g_free (page_cache->title);
 	g_free (page_cache->size_cache);
+	ev_document_info_free (page_cache->page_info);
 }
 
 EvPageCache *
@@ -179,6 +181,8 @@ _ev_page_cache_new (EvDocument *document)
 			info->height = page_height;
 		}
 	}
+
+	page_cache->page_info = ev_document_get_info (document);
 
 	/* make some sanity check assertions */
 	if (! page_cache->uniform)
@@ -365,6 +369,15 @@ ev_page_cache_has_nonnumeric_page_labels (EvPageCache *page_cache)
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
 	return page_cache->has_labels;
 }
+
+const EvDocumentInfo *
+ev_page_cache_get_info (EvPageCache *page_cache)
+{
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), NULL);
+
+	return page_cache->page_info;
+}
+
 
 gboolean
 ev_page_cache_next_page (EvPageCache *page_cache)

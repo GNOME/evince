@@ -190,12 +190,17 @@ update_action_sensitivity (EvWindow *ev_window)
 {
 	EvView *view;
 	EvDocument *document;
+	const EvDocumentInfo *info = NULL;
 	EvWindowPageMode page_mode;
 	gboolean sensitive, has_pages = FALSE, has_document;
 	int n_pages = 0, page = -1;
+	gboolean ok_to_print = TRUE;
+	gboolean ok_to_copy = TRUE;
 
 	view = EV_VIEW (ev_window->priv->view);
 	document = ev_window->priv->document;
+	if (document)
+		info = ev_page_cache_get_info (ev_window->priv->page_cache);
 	page_mode = ev_window->priv->page_mode;
 	has_document = document != NULL;
 	if (has_document && ev_window->priv->page_cache) {
@@ -204,17 +209,22 @@ update_action_sensitivity (EvWindow *ev_window)
 		has_pages = has_document && n_pages > 0;
 	}
 
+	if (info && info->fields_mask & EV_DOCUMENT_INFO_PERMISSIONS) {
+		ok_to_print = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT);
+		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
+	}
+
 	/* File menu */
 	/* "FileOpen": always sensitive */
-	set_action_sensitive (ev_window, "FileSaveAs", has_document);
-	set_action_sensitive (ev_window, "FilePrint", has_pages);
+	set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
+	set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	/* "FileCloseWindow": always sensitive */
 
         /* Edit menu */
 
 	sensitive = has_pages && ev_document_can_get_text (document);
-	set_action_sensitive (ev_window, "EditCopy", sensitive);
-	set_action_sensitive (ev_window, "EditSelectAll", sensitive);
+	set_action_sensitive (ev_window, "EditCopy", sensitive && ok_to_copy);
+	set_action_sensitive (ev_window, "EditSelectAll", sensitive && ok_to_copy);
 	set_action_sensitive (ev_window, "EditFind",
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
 	set_action_sensitive (ev_window, "Slash",
@@ -581,7 +591,7 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 static void
 ev_window_setup_document (EvWindow *ev_window)
 {
-	EvDocumentInfo *info;
+	const EvDocumentInfo *info;
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
@@ -615,9 +625,8 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	update_action_sensitivity (ev_window);
 
-	info = ev_document_get_info (document);
+	info = ev_page_cache_get_info (ev_window->priv->page_cache);
 	update_document_mode (ev_window, info->mode);
-	ev_document_info_free (info);
 }
 
 static void

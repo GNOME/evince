@@ -1,3 +1,15 @@
+Sat May 28 07:38:03 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c (draw_one_page): modify the expose handling to
+	get the shadows.
+
+	* shell/ev-window.c (update_action_sensitivity): Respect
+	permissions field.  Kowtow to the man.
+
+	* pdf/ev-poppler.cc: Get the permissions field.
+
+	* tiff/*c: Make a tiny bit more robust.
+
 2005-05-26  Nickolay V. Shmyrev <nshmyrev@yandex.ru>
 
 	* djvu/djvu-document.c:

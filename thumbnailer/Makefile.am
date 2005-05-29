@@ -25,6 +25,7 @@ evince_thumbnailer_LDADD=				\
 	$(LIBTIFF)					\
 	$(top_builddir)/lib/libev.la			\
 	$(top_builddir)/shell/libevbackendfactory.la	\
+	-ltiff -lz					\
 	$(NULL)
 
 pixmapdir = $(pkgdatadir)

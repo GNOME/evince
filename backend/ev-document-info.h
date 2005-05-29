@@ -60,6 +60,19 @@ typedef enum
 	EV_DOCUMENT_UI_HINT_DIRECTION_RTL = 1 << 6,
 } EvDocumentUIHints;
 
+
+typedef enum
+{
+	EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT = 1 << 0,
+	EV_DOCUMENT_PERMISSIONS_OK_TO_MODIFY = 1 << 1,
+	EV_DOCUMENT_PERMISSIONS_OK_TO_COPY = 1 << 2,
+	EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES = 1 << 3,
+	EV_DOCUMENT_PERMISSIONS_FULL = (EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT
+					| EV_DOCUMENT_PERMISSIONS_OK_TO_MODIFY
+					| EV_DOCUMENT_PERMISSIONS_OK_TO_COPY
+					| EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES),
+} EvDocumentPermissions;
+
 typedef enum
 {
 	EV_DOCUMENT_INFO_TITLE = 1 << 0,
@@ -71,6 +84,7 @@ typedef enum
 	EV_DOCUMENT_INFO_START_MODE = 1 << 6,
 	EV_DOCUMENT_INFO_CREATION_DATE = 1 << 7,
 	EV_DOCUMENT_INFO_UI_HINTS = 1 << 8,
+	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 9,
 } EvDocumentInfoFields;
 
 struct _EvDocumentInfo
@@ -84,6 +98,7 @@ struct _EvDocumentInfo
 	EvDocumentMode mode;
 	GDate creation_date;
 	guint ui_hints;
+	guint permissions;
 
 	/* Mask of all the valid fields */
 	guint fields_mask;

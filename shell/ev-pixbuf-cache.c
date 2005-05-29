@@ -73,7 +73,7 @@ ev_pixbuf_cache_init (EvPixbufCache *pixbuf_cache)
 	pixbuf_cache->end_page = 0;
 	pixbuf_cache->job_list = g_new0 (CacheJobInfo, PAGE_CACHE_LEN (pixbuf_cache));
 
-	pixbuf_cache->preload_cache_size = 1;
+	pixbuf_cache->preload_cache_size = 2;
 	pixbuf_cache->prev_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
 	pixbuf_cache->next_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
 }

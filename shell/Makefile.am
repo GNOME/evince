@@ -96,6 +96,7 @@ evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/lib/libev.la					\
+	-ltiff -lz							\
 	libevbackendfactory.la						\
 	$(NULL)
 

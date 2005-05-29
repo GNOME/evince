@@ -900,8 +900,8 @@ get_page_extents (EvView       *view,
 			y = view->spacing;
 
 			/* Adjust for extra allocation */
-			x = x + MAX (0, widget->allocation.width - (width + view->spacing * 2))/2;
-			y = y + MAX (0, widget->allocation.height - (height + view->spacing * 2))/2;
+			x = x + MAX (0, widget->allocation.width - (width + border->left + border->right + view->spacing * 2))/2;
+			y = y + MAX (0, widget->allocation.height - (height + border->top + border->bottom +  view->spacing * 2))/2;
 		}
 
 		page_area->x = x;
@@ -1607,11 +1607,12 @@ draw_one_page (EvView       *view,
 	GdkRectangle real_page_area;
 
 	g_assert (view->document);
+	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
+		return;
 
 	ev_page_cache_get_size (view->page_cache,
 				page, view->scale,
 				&width, &height);
-
 	/* Render the document itself */
 	real_page_area = *page_area;
 
@@ -1620,38 +1621,37 @@ draw_one_page (EvView       *view,
 	real_page_area.width -= (border->left + border->right);
 	real_page_area.height -= (border->top + border->bottom);
 
-	if (! gdk_rectangle_intersect (&real_page_area, expose_area, &overlap))
-		return;
-
 	ev_document_misc_paint_one_page (GTK_WIDGET(view)->window,
 					 GTK_WIDGET (view),
 					 page_area, border);
 
-	current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, page);
+	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
+		current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, page);
 
-	if (current_pixbuf == NULL)
-		scaled_image = NULL;
-	else if (width == gdk_pixbuf_get_width (current_pixbuf) &&
-		 height == gdk_pixbuf_get_height (current_pixbuf))
-		scaled_image = g_object_ref (current_pixbuf);
-	else
-		/* FIXME: We don't want to scale the whole area, just the right
-		 * area of it */
-		scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
-							width, height,
-							GDK_INTERP_NEAREST);
+		if (current_pixbuf == NULL)
+			scaled_image = NULL;
+		else if (width == gdk_pixbuf_get_width (current_pixbuf) &&
+			 height == gdk_pixbuf_get_height (current_pixbuf))
+			scaled_image = g_object_ref (current_pixbuf);
+		else
+			/* FIXME: We don't want to scale the whole area, just the right
+			 * area of it */
+			scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
+								width, height,
+								GDK_INTERP_NEAREST);
 
-	if (scaled_image) {
-		gdk_draw_pixbuf (GTK_WIDGET(view)->window,
-				 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
-				 scaled_image,
-				 overlap.x - real_page_area.x,
-				 overlap.y - real_page_area.y,
-				 overlap.x, overlap.y,
-				 overlap.width, overlap.height,
-				 GDK_RGB_DITHER_NORMAL,
-				 0, 0);
-		g_object_unref (scaled_image);
+		if (scaled_image) {
+			gdk_draw_pixbuf (GTK_WIDGET(view)->window,
+					 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
+					 scaled_image,
+					 overlap.x - real_page_area.x,
+					 overlap.y - real_page_area.y,
+					 overlap.x, overlap.y,
+					 overlap.width, overlap.height,
+					 GDK_RGB_DITHER_NORMAL,
+					 0, 0);
+			g_object_unref (scaled_image);
+		}
 	}
 }
 
@@ -1895,7 +1895,7 @@ ev_view_init (EvView *view)
 {
 	GTK_WIDGET_SET_FLAGS (view, GTK_CAN_FOCUS);
 
-	view->spacing = 10;
+	view->spacing = 5;
 	view->scale = 1.0;
 	view->current_page = 0;
 	view->pressed_button = -1;
