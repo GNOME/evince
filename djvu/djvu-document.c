@@ -116,24 +116,19 @@ djvu_document_get_page_size (EvDocument   *document,
 			       double       *height)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-
-	ddjvu_page_t *d_page;
+        ddjvu_pageinfo_t info;
 	
 	g_return_if_fail (djvu_document->d_document);
 	
-	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, page);
-
-	while (!ddjvu_page_decoding_done (d_page)) {
+	while (ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info) < DDJVU_JOB_OK) {
 		    ddjvu_message_wait (djvu_document->d_context);
 		    ddjvu_message_pop (djvu_document->d_context);	
 	}
 
 	if (width)
-		*width = ddjvu_page_get_width (d_page) * SCALE_FACTOR;
+		*width = info.width * SCALE_FACTOR;
 	if (height)
-		*height = ddjvu_page_get_height (d_page) * SCALE_FACTOR;
-	
-	ddjvu_page_release (d_page);
+		*height = info.height * SCALE_FACTOR;
 }
 
 static GdkPixbuf *

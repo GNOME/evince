@@ -131,14 +131,24 @@ AC_ARG_ENABLE(djvu,
 
 if test "x$enable_djvu" = "xyes"; then
     AC_CHECK_HEADERS([libdjvu/ddjvuapi.h],enable_djvu=yes,enable_djvu=no,)
+
     if test "x$enable_djvu" = "xyes"; then
 	AC_CHECK_LIB([djvulibre],ddjvu_context_create,enable_djvu=yes,enable_djvu=no,"-lpthread")
+	AC_CHECK_LIB([djvulibre],ddjvu_document_get_pageinfo,enable_djvu=yes,enable_djvu=no,"-lpthread")
     fi
 
     if test "x$enable_djvu" = "xyes"; then
         AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
     else
-	AC_MSG_WARN("Djvu support is disabled since djvulibre library version 3.5.14 or newer is not found")
+	AC_MSG_WARN([	
+** Djvu support is disabled since recent version of djvulibre 
+** library was not found. To get proper djvu support you need to
+** install development version of djvulibre. You can get it from
+** anonymous CVS server on djvulibre.sf.net. Just use something
+** like:
+
+** cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/djvu co djvulibre-3.5
+])
     fi 
 fi
 

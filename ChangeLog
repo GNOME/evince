@@ -1,3 +1,11 @@
+2005-05-29  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* configure.ac:
+	* djvu/djvu-document.c: (djvu_document_get_page_size):
+
+	Require djvulibre CVS. Now djvu loading is much faster. Fix for
+	bug 301993.
+
 Sat May 28 07:38:03 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-view.c (draw_one_page): modify the expose handling to
