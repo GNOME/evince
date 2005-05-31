@@ -1944,6 +1944,11 @@ ev_view_set_document (EvView     *view,
 
                 }
 
+		if (view->pixbuf_cache) {
+			g_object_unref (view->pixbuf_cache);
+			view->pixbuf_cache = NULL;
+		}
+
 		view->document = document;
 		view->find_page = 0;
 		view->find_result = 0;

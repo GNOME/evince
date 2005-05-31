@@ -1,5 +1,12 @@
 2005-05-31  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* shell/ev-view.c: (ev_view_set_document):
+
+	Release ref on the pixbuf cache when changing
+	document.
+
+2005-05-31  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* ps/ps-document.c: (ps_document_get_info):
 
 	Fix a double free
