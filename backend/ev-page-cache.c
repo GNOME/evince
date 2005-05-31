@@ -20,6 +20,7 @@ struct _EvPageCache
 	char *title;
 	char **page_labels;
 	
+	gint max_label_chars;
 	gboolean has_labels;
 	gboolean uniform;
 	
@@ -60,6 +61,7 @@ static void
 ev_page_cache_init (EvPageCache *page_cache)
 {
 	page_cache->current_page = -1;
+	page_cache->max_label_chars = 0;
 }
 
 static void
@@ -134,14 +136,19 @@ _ev_page_cache_new (EvDocument *document)
 		ev_document_get_page_size (document, i, &page_width, &page_height);
 
 	    	page_cache->page_labels[i] = ev_document_get_page_label (document, i);
-
-		if (!page_cache->has_labels && page_cache->page_labels[i] != NULL) {
-			gchar *expected_label;
+		
+		if (page_cache->page_labels[i] != NULL) {
+		
+			page_cache->max_label_chars = MAX(page_cache->max_label_chars, 
+							    g_utf8_strlen (page_cache->page_labels[i], 256));
+			if (!page_cache->has_labels) {
+				gchar *expected_label;
 			
-			expected_label = g_strdup_printf ("%d", i + 1);
-			if (strcmp (expected_label, page_cache->page_labels[i]))  
-				page_cache->has_labels = TRUE;
-			g_free (expected_label);
+				expected_label = g_strdup_printf ("%d", i + 1);
+				if (strcmp (expected_label, page_cache->page_labels[i]))  
+					page_cache->has_labels = TRUE;
+				g_free (expected_label);
+			}
 		}
 
 		if (page_width > page_cache->max_width_page_width) {
@@ -349,6 +356,13 @@ ev_page_cache_get_max_height_size (EvPageCache *page_cache,
 		*height = page_cache->max_height_page_height * scale;
 }
 
+gint
+ev_page_cache_get_max_label_chars (EvPageCache *page_cache)
+{
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), 0);
+	
+	return page_cache->max_label_chars;
+}
 
 gchar *
 ev_page_cache_get_page_label (EvPageCache *page_cache,

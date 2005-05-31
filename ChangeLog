@@ -1,3 +1,13 @@
+2005-05-31  Nikolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/ev-page-cache.c: (ev_page_cache_init),
+	(_ev_page_cache_new), (ev_page_cache_get_max_label_chars):
+	* backend/ev-page-cache.h:
+	* shell/ev-page-action.c: (page_changed_cb):
+	
+	Set page action entry width depending on labels width. Fix
+	for bug 305202.
+
 2005-05-31  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* backend/ev-link.c: (ev_link_class_init):
