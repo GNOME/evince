@@ -1,3 +1,15 @@
+2005-05-31  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-view.c: (scroll_to_current_page),
+	(view_set_adjustment_values), (ev_view_set_scroll_adjustments),
+	(page_changed_cb), (on_adjustment_value_changed),
+	(ev_view_set_document):
+
+	Slightly modified patch by Nickolay V. Shmyrev  <nshmyrev@yandex.ru>.
+	Fix bug 305377
+
 2005-05-29  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:

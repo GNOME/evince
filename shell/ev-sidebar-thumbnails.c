@@ -440,8 +440,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 
 	/* Connect to the signal and trigger a fake callback */
 	g_signal_connect (page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
-	page_changed_cb (page_cache, ev_page_cache_get_current_page (page_cache), sidebar_thumbnails);
-
+	adjustment_changed_cb (sidebar_thumbnails);
 }
 
 static gboolean

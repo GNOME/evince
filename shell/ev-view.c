@@ -166,13 +166,10 @@ struct _EvViewClass {
 };
 
 /*** Scrolling ***/
-static void       view_update_adjustments                    (EvView             *view);
 static void       ev_view_set_scroll_adjustments             (EvView             *view,
 							      GtkAdjustment      *hadjustment,
 							      GtkAdjustment      *vadjustment);
 static void       view_update_range_and_current_page         (EvView             *view);
-static void       view_scroll_to_page                        (EvView             *view,
-							      gint                new_page);
 static void       set_scroll_adjustment                      (EvView             *view,
 							      GtkOrientation      orientation,
 							      GtkAdjustment      *adjustment);
@@ -358,36 +355,45 @@ static void       ev_view_update_primary_selection           (EvView            
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 
 static void
-view_update_adjustments (EvView *view)
+scroll_to_current_page (EvView *view, GtkOrientation orientation)
 {
-	int dx = 0, dy = 0;
-
-	if (! GTK_WIDGET_REALIZED (view))
-		return;
-
-	if (view->hadjustment) {
-		dx = view->scroll_x - (int) view->hadjustment->value;
-		view->scroll_x = (int) view->hadjustment->value;
-	} else {
-		view->scroll_x = 0;
-	}
-
-	if (view->vadjustment) {
-		dy = view->scroll_y - (int) view->vadjustment->value;
-		view->scroll_y = (int) view->vadjustment->value;
-	} else {
-		view->scroll_y = 0;
-	}
+	int max_width, max_height, n_rows;
 	
+	get_bounding_box_size (view, &max_width, &max_height);
 	
-	if (view->pending_resize)	
-		gtk_widget_queue_draw (GTK_WIDGET (view));
-	else
-		gdk_window_scroll (GTK_WIDGET (view)->window, dx, dy);
+	if (orientation == GTK_ORIENTATION_VERTICAL) {	
+		if (view->continuous) {
+		    	n_rows = view->dual_page ? view->current_page / 2 : view->current_page;
 
-
-	if (view->document)
-		view_update_range_and_current_page (view);
+    			gtk_adjustment_clamp_page (view->vadjustment,
+						   (max_height + view->spacing) * n_rows,
+						   (max_height + view->spacing) * n_rows +
+		    				   view->vadjustment->page_size);
+		} else {
+			gtk_adjustment_set_value (view->vadjustment,
+		    				  view->vadjustment->lower);
+		}
+	} else {
+		if (view->dual_page) {
+			if (view->current_page % 2 == 0) {
+				gtk_adjustment_set_value (view->hadjustment,
+							  view->hadjustment->lower);
+			} else {
+				gtk_adjustment_clamp_page (view->hadjustment,
+							   view->hadjustment->lower + 
+							   max_width + view->spacing, 
+							   view->hadjustment->lower +
+		    					   max_width + view->spacing +
+		    					   view->hadjustment->page_size);
+			}
+		} else {
+			gtk_adjustment_set_value (view->hadjustment,
+						  CLAMP (view->hadjustment->value, 
+						  view->hadjustment->lower,
+						  view->hadjustment->upper - 
+						  view->hadjustment->page_size));
+		}
+	}
 }
 
 static void
@@ -439,12 +445,11 @@ view_set_adjustment_values (EvView         *view,
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
     	        case SCROLL_TO_CURRENT_PAGE: 
-			if (orientation == GTK_ORIENTATION_VERTICAL) {
-				view_scroll_to_page (view, view->current_page);
-			}
+			scroll_to_current_page (view, orientation);
 			break;
     	        case SCROLL_TO_CENTER: 
-			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5, 0, adjustment->upper - adjustment->page_size);
+			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5,
+					   0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
 	}
@@ -537,74 +542,6 @@ view_update_range_and_current_page (EvView *view)
 }
 
 static void
-view_scroll_to_page (EvView *view, gint new_page)
-{
-	EvPageCache *page_cache = view->page_cache;
-	int old_width, old_height;
-	int new_width, new_height;
-	int max_height, max_width, n_rows;
-
-	ev_page_cache_get_size (page_cache,
-				view->current_page,
-				view->scale,
-				&old_width, &old_height);
-
-	ev_page_cache_get_size (page_cache,
-				new_page,
-				view->scale,
-				&new_width, &new_height);
-
-	compute_border (view, new_width, new_height, &(view->border));
-
-	if (new_width != old_width || new_height != old_height)
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	else
-		gtk_widget_queue_draw (GTK_WIDGET (view));
-	
-	get_bounding_box_size (view, &max_width, &max_height);
-	
-	if (view->vadjustment) {
-		if (view->continuous) {
-		
-			n_rows = view->dual_page ? new_page / 2 : new_page;
-
-			gtk_adjustment_clamp_page(view->vadjustment,
-						  (max_height + view->spacing) * n_rows, 
-						  (max_height + view->spacing) * n_rows +
-						   view->vadjustment->page_size);
-		} else {
-			gtk_adjustment_set_value (view->vadjustment,
-		    				  view->vadjustment->lower);
-		}
-	}
-	
-	if (view->hadjustment) {
-		if (view->dual_page) {
-			if (new_page % 2 == 0) {
-				gtk_adjustment_set_value (view->hadjustment,
-							  view->hadjustment->lower);
-			} else {
-				gtk_adjustment_clamp_page (view->hadjustment,
-							   view->hadjustment->lower + 
-							   max_width + view->spacing, 
-							   view->hadjustment->lower +
-							   max_width + view->spacing +
-							   view->hadjustment->page_size);
-			}
-		} else {
-				gtk_adjustment_set_value (view->hadjustment,
-							  CLAMP (view->hadjustment->value, 
-							  view->hadjustment->lower,
-							  view->hadjustment->upper - 
-							  view->hadjustment->page_size));
-		}
-	}
-
-	view->current_page = new_page;
-	view_update_range_and_current_page (view);
-}
-
-static void
 set_scroll_adjustment (EvView *view,
 		       GtkOrientation  orientation,
 		       GtkAdjustment  *adjustment)
@@ -643,7 +580,7 @@ ev_view_set_scroll_adjustments (EvView *view,
 	set_scroll_adjustment (view, GTK_ORIENTATION_HORIZONTAL, hadjustment);
 	set_scroll_adjustment (view, GTK_ORIENTATION_VERTICAL, vadjustment);
 
-	view_update_adjustments (view);
+	on_adjustment_value_changed (NULL, view);
 }
 
 static void
@@ -1936,14 +1873,10 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvView      *view)
 {
 	if (view->current_page != new_page) {
-
-		if (view->pending_scroll != SCROLL_TO_CURRENT_PAGE) {
-			/* Should scroll right now */
-			view_scroll_to_page (view, new_page);
-		} else {	
-			/* We'll scroll to new page on allocate */
-			view->current_page = new_page;
-		}
+		
+		view->current_page = new_page;
+		view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
+		gtk_widget_queue_resize (GTK_WIDGET (view));
 
 		if (EV_IS_DOCUMENT_FIND (view->document)) {
 			view->find_page = new_page;
@@ -1956,8 +1889,34 @@ page_changed_cb (EvPageCache *page_cache,
 static void on_adjustment_value_changed (GtkAdjustment  *adjustment,
 				         EvView *view)
 {
-	view_update_adjustments (view);
-}
+	int dx = 0, dy = 0;
+
+	if (! GTK_WIDGET_REALIZED (view))
+		return;
+
+	if (view->hadjustment) {
+		dx = view->scroll_x - (int) view->hadjustment->value;
+		view->scroll_x = (int) view->hadjustment->value;
+	} else {
+		view->scroll_x = 0;
+	}
+
+	if (view->vadjustment) {
+		dy = view->scroll_y - (int) view->vadjustment->value;
+		view->scroll_y = (int) view->vadjustment->value;
+	} else {
+		view->scroll_y = 0;
+	}
+	
+	
+	if (view->pending_resize)	
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	else
+		gdk_window_scroll (GTK_WIDGET (view)->window, dx, dy);
+
+
+	if (view->document)
+		view_update_range_and_current_page (view);}
 
 GtkWidget*
 ev_view_new (void)
@@ -1998,7 +1957,6 @@ ev_view_set_document (EvView     *view,
 						  view);
 			}
 			view->page_cache = ev_document_get_page_cache (view->document);
-			view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
 			g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
 			view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
 			g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
