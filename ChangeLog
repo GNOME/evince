@@ -1,5 +1,12 @@
 2005-05-31  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* ps/ps-document.c: (ps_document_dispose),
+	(ps_document_class_init), (stop_interpreter), (document_load):
+
+	Cleanup dispose a bit. Dont leak the whole pixmap.
+
+2005-05-31  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* pdf/ev-poppler.cc:
 
 	Release the poppler document on dispose

@@ -89,7 +89,6 @@ static gboolean broken_pipe = FALSE;
 /* Forward declarations */
 static void ps_document_init(PSDocument * gs);
 static void ps_document_class_init(PSDocumentClass * klass);
-static void ps_document_finalize(GObject * object);
 static void send_ps(PSDocument * gs, long begin, unsigned int len, gboolean close);
 static void close_pipe(int p[2]);
 static void output(gpointer data, gint source, GdkInputCondition condition);
@@ -147,6 +146,46 @@ ps_document_init (PSDocument *gs)
 }
 
 static void
+ps_document_dispose (GObject *object)
+{
+	PSDocument *gs = PS_DOCUMENT (object);
+
+	g_return_if_fail (gs != NULL);
+
+	if (gs->gs_psfile) {
+		fclose (gs->gs_psfile);
+		gs->gs_psfile = NULL;
+	}
+
+	if (gs->gs_filename) {
+		g_free (gs->gs_filename);
+		gs->gs_filename = NULL;
+	}
+
+	if (gs->doc) {
+		psfree (gs->doc);
+		gs->doc = NULL;
+	}
+
+	if (gs->gs_filename_unc) {
+		unlink(gs->gs_filename_unc);
+		g_free(gs->gs_filename_unc);
+		gs->gs_filename_unc = NULL;
+	}
+
+	if (gs->bpixmap) {
+		gdk_drawable_unref (gs->bpixmap);
+	}
+
+	if(gs->input_buffer) {
+		g_free(gs->input_buffer);
+		gs->input_buffer = NULL;
+	}
+
+	stop_interpreter (gs);
+}
+
+static void
 ps_document_class_init(PSDocumentClass *klass)
 {
 	GObjectClass *object_class;
@@ -155,7 +194,7 @@ ps_document_class_init(PSDocumentClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 	gs_class = klass;
 
-	object_class->finalize = ps_document_finalize;
+	object_class->dispose = ps_document_dispose;	
 
 	klass->gs_atom = gdk_atom_intern ("GHOSTVIEW", FALSE);
 	klass->next_atom = gdk_atom_intern ("NEXT", FALSE);
@@ -192,40 +231,6 @@ interpreter_failed (PSDocument *gs, char *msg)
 	stop_interpreter (gs);
 }
 
-static void
-ps_document_cleanup (PSDocument *gs)
-{
-	g_return_if_fail (gs != NULL);
-	g_return_if_fail (PS_IS_DOCUMENT (gs));
-
-	LOG ("Cleanup\n");
-
-	stop_interpreter (gs);
-
-	if (gs->gs_psfile) {
-		fclose (gs->gs_psfile);
-		gs->gs_psfile = NULL;
-	}
-
-	if (gs->gs_filename) {
-		g_free (gs->gs_filename);
-		gs->gs_filename = NULL;
-	}
-
-	if (gs->doc) {
-		psfree (gs->doc);
-		gs->doc = NULL;
-	}
-
-	if (gs->gs_filename_unc) {
-		unlink(gs->gs_filename_unc);
-		g_free(gs->gs_filename_unc);
-		gs->gs_filename_unc = NULL;
-	}
-
-	gs->loaded = FALSE;
-}
-
 static gboolean
 ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
@@ -244,29 +249,6 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	}
 
 	return TRUE;
-}
-
-static void
-ps_document_finalize (GObject * object)
-{
-	PSDocument *gs;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (PS_IS_DOCUMENT (object));
-
-	LOG ("Finalize");
-
-	gs = PS_DOCUMENT (object);
-
-	ps_document_cleanup (gs);
-	stop_interpreter (gs);
-
-	if(gs->input_buffer) {
-		g_free(gs->input_buffer);
-		gs->input_buffer = NULL;
-	}
-
-	(*G_OBJECT_CLASS (parent_class)->finalize) (object);
 }
 
 static void
@@ -821,7 +803,6 @@ stop_interpreter(PSDocument * gs)
     while((wait(&status) == -1) && (errno == EINTR)) ;
     gs->interpreter_pid = -1;
     if(status == 1) {
-      ps_document_cleanup(gs);
       gs->gs_status = _("Interpreter failed.");
     }
   }
@@ -1026,9 +1007,6 @@ document_load(PSDocument * gs, const gchar * fname)
 
   LOG ("Load the document");
 
-  /* clean up previous document */
-  ps_document_cleanup(gs);
-
   if(fname == NULL) {
     gs->gs_status = "";
     return FALSE;
@@ -1071,7 +1049,6 @@ document_load(PSDocument * gs, const gchar * fname)
 
     if(!filename || (gs->gs_psfile = fopen(filename, "r")) == NULL) {
       interpreter_failed (gs, NULL);
-      ps_document_cleanup(gs);
       return FALSE;
     }
 
@@ -1083,7 +1060,6 @@ document_load(PSDocument * gs, const gchar * fname)
       gchar buf[1024];
       g_snprintf(buf, 1024, _("Error while scanning file %s\n"), fname);
       interpreter_failed (gs, buf);
-      ps_document_cleanup(gs);
       gs->gs_status = _("The file is not a PostScript document.");
       return FALSE;
     }
