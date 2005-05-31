@@ -68,7 +68,6 @@ static void row_activated_callback 			(GtkTreeView *treeview,
 	                                                 GtkTreeViewColumn *arg2,
 		                                         gpointer user_data);
 static void ev_sidebar_links_page_iface_init 		(EvSidebarPageIface *iface);
-static void ev_sidebar_links_clear_document     	(EvSidebarLinks *sidebar_links);
 static void ev_sidebar_links_set_document      	 	(EvSidebarPage  *sidebar_page,
 		    			        	 EvDocument     *document);
 static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
@@ -86,15 +85,6 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarLinks,
 
 #define EV_SIDEBAR_LINKS_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinksPrivate))
-
-
-static void
-ev_sidebar_links_destroy (GtkObject *object)
-{
-	EvSidebarLinks *ev_sidebar_links = (EvSidebarLinks *) object;
-
-	ev_sidebar_links_clear_document (ev_sidebar_links);
-}
 
 static void
 ev_sidebar_links_set_property (GObject      *object,
@@ -142,20 +132,30 @@ ev_sidebar_links_get_property (GObject    *object,
 	}
 }
 
+static void
+ev_sidebar_links_dispose (GObject *object)
+{
+	EvSidebarLinks *sidebar = EV_SIDEBAR_LINKS (object);
+
+	if (sidebar->priv->document) {
+		g_object_unref (sidebar->priv->document);
+		sidebar->priv->document = NULL;
+		sidebar->priv->page_cache = NULL;
+	}
+
+	G_OBJECT_CLASS (ev_sidebar_links_parent_class)->dispose (object);
+}
 
 static void
 ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 {
 	GObjectClass *g_object_class;
-	GtkObjectClass *gtk_object_class;
 
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_links_class);
-	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_links_class);
 
 	g_object_class->set_property = ev_sidebar_links_set_property;
 	g_object_class->get_property = ev_sidebar_links_get_property;
-
-	gtk_object_class->destroy = ev_sidebar_links_destroy;
+	g_object_class->dispose = ev_sidebar_links_dispose;
 
 	g_object_class_install_property (g_object_class,
 					 PROP_MODEL,
@@ -434,24 +434,6 @@ ev_sidebar_links_new (void)
 	return ev_sidebar_links;
 }
 
-static void
-ev_sidebar_links_clear_document (EvSidebarLinks *sidebar_links)
-{
-	EvSidebarLinksPrivate *priv;
-
-	g_return_if_fail (EV_IS_SIDEBAR_LINKS (sidebar_links));
-
-	priv = sidebar_links->priv;
-
-	if (priv->document) {
-		g_object_unref (priv->document);
-		priv->document = NULL;
-		priv->page_cache = NULL;
-	}
-
-	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), NULL);
-}
-
 static gboolean
 update_page_callback_foreach (GtkTreeModel *model,
 			      GtkTreePath  *path,
@@ -582,9 +564,12 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 
 	priv = sidebar_links->priv;
 
-	g_object_ref (document);
+	if (priv->document) {
+		gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), NULL);
+		g_object_unref (priv->document);
+	}
 
-	priv->document = document;
+	priv->document = g_object_ref (document);
 	priv->page_cache = ev_document_get_page_cache (document);
 
 	priv->job = ev_job_links_new (document);
