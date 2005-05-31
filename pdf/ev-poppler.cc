@@ -88,8 +88,21 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 			 });
 
 static void
+pdf_document_dispose (GObject *object)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(object);
+
+	if (pdf_document->document) {
+		g_object_unref (pdf_document->document);
+	}
+}
+
+static void
 pdf_document_class_init (PdfDocumentClass *klass)
 {
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	g_object_class->dispose = pdf_document_dispose;
 }
 
 static void
