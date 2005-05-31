@@ -281,7 +281,7 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 					 g_param_spec_int ("page",
 							   "Link Page",
 							   "The link page",
-							    0,
+							    -1,
 							    G_MAXINT,
 							    0,
 							    G_PARAM_READWRITE));
