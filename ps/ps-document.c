@@ -1371,7 +1371,7 @@ ps_document_get_info (EvDocument *document)
 
 	info = g_new0 (EvDocumentInfo, 1);
 	info->fields_mask = EV_DOCUMENT_INFO_TITLE;
-	info->title = ps->doc->title;
+	info->title = g_strdup (ps->doc->title);
 
 	return info;
 }
