@@ -183,6 +183,8 @@ ps_document_dispose (GObject *object)
 	}
 
 	stop_interpreter (gs);
+
+	G_OBJECT_CLASS (parent_class)->dispose (object);
 }
 
 static void
