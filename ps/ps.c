@@ -69,19 +69,36 @@
 
     /* list of standard paper sizes from Adobe's PPD. */
 
-#if 1 //NeedFunctionPrototypes
-static char *readline(char *line, int size, FILE * fp,
-                      long *position, unsigned int *line_len);
+/*--------------------------------------------------*/
+/* Declarations for ps_io_*() routines. */
+
+typedef struct FileDataStruct_ *FileData;
+
+typedef struct FileDataStruct_ {
+   FILE *file;           /* file */
+   int   file_desc;      /* file descriptor corresponding to file */
+   int   filepos;        /* file position corresponding to the start of the line */
+   char *buf;            /* buffer */
+   int   buf_size;       /* size of buffer */
+   int   buf_end;        /* last char in buffer given as offset to buf */
+   int   line_begin;     /* start of the line given as offset to buf */
+   int   line_end;       /* end of the line given as offset to buf */
+   int   line_len;       /* length of line, i.e. (line_end-line_begin) */
+   char  line_termchar;  /* char exchanged for a '\0' at end of line */
+   int   status;         /* 0 = okay, 1 = failed */
+} FileDataStruct;
+
+static FileData ps_io_init (FILE *file);
+static void     ps_io_exit (FileData data);
+static char    *ps_io_fgetchars (FileData data, int offset);
+
+static char    *skipped_line = "% ps_io_fgetchars: skipped line";
+static char    *empty_string = "";
+
+static char *readline (FileData fd, char **lineP, long *positionP, unsigned int *line_lenP);
 static char *gettextline(char *line);
 static char *get_next_text(char *line, char **next_char);
 static int blank(char *line);
-#else
-static char *readline();
-static char *gettextline();
-static char *get_next_text();
-static int blank();
-#endif
-
 
 static struct page *
 pages_new(struct page *pages, int current, int maxpages)
@@ -229,7 +246,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
   unsigned int thispage;
   int ignore = 0;               /* whether to ignore page ordinals */
   char *label;
-  char line[PSLINELENGTH];      /* 255 characters + 1 newline + 1 NULL */
+  char *line;
   char text[PSLINELENGTH];      /* Temporary storage for text */
   long position;                /* Position of the current line */
   long beginsection;            /* Position of the beginning of the section */
@@ -239,15 +256,18 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
   char *cp;
   GtkGSPaperSize *dmp;
   GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes();
+  FileData fd;
 
   if(!file)
     return NULL;
 
   rewind(file);
 
-  if(!readline(line, sizeof line, file, &position, &line_len)) {
-    g_print("psscan: empty input file.\n");
-    return (NULL);
+  fd =  ps_io_init(file);
+  if (!readline(fd, &line, &position, &line_len)) {
+    fprintf(stderr, "Warning: empty file.\n");
+    ps_io_exit(fd);
+    return(NULL);
   }
 
   /* HP printer job language data follows. Some printer drivers add pjl
@@ -255,7 +275,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
    * follows, this seems to be a real pjl file. */
   if(iscomment(line, "\033%-12345X@PJL")) {
     /* read until first DSC comment */
-    while(readline(line, sizeof line, file, &position, &line_len)
+    while(readline(fd, &line, &position, &line_len)
           && (line[0] != '%')) ;
     if(line[0] != '%') {
       g_print("psscan error: input files seems to be a PJL file.\n");
@@ -321,7 +341,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
   }
 
   preread = 0;
-  while(preread || readline(line, sizeof line, file, &position, &line_len)) {
+  while(preread || readline(fd, &line, &position, &line_len)) {
     if(!preread)
       section_len += line_len;
     preread = 0;
@@ -452,7 +472,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
           g_free(doc->size[0].name);
       }
       preread = 1;
-      while(readline(line, sizeof line, file, &position, &line_len) &&
+      while(readline(fd, &line, &position, &line_len) &&
             DSCcomment(line) && iscomment(line + 2, "+")) {
         section_len += line_len;
         doc->size = g_renew(GtkGSPaperSize, doc->size, doc->numsizes + 1);
@@ -526,7 +546,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
           g_free(doc->size[doc->numsizes].name);
       }
       preread = 1;
-      while(readline(line, sizeof line, file, &position, &line_len) &&
+      while(readline(fd, &line, &position, &line_len) &&
             DSCcomment(line) && iscomment(line + 2, "+")) {
         section_len += line_len;
         next_char = line + length("%%+");
@@ -560,7 +580,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
   }
 
   if(DSCcomment(line) && iscomment(line + 2, "EndComments")) {
-    readline(line, sizeof line, file, &position, &line_len);
+    readline(fd, &line, &position, &line_len);
     section_len += line_len;
   }
   doc->endheader = position;
@@ -570,19 +590,19 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
 
   beginsection = position;
   section_len = line_len;
-  while(blank(line) && readline(line, sizeof line, file, &position, &line_len)) {
+  while(blank(line) && readline(fd, &line, &position, &line_len)) {
     section_len += line_len;
   }
 
   if(doc->epsf && DSCcomment(line) && iscomment(line + 2, "BeginPreview")) {
     doc->beginpreview = beginsection;
     beginsection = 0;
-    while(readline(line, sizeof line, file, &position, &line_len) &&
+    while(readline(fd, &line, &position, &line_len) &&
           !(DSCcomment(line) && iscomment(line + 2, "EndPreview"))) {
       section_len += line_len;
     }
     section_len += line_len;
-    readline(line, sizeof line, file, &position, &line_len);
+    readline(fd, &line, &position, &line_len);
     section_len += line_len;
     doc->endpreview = position;
     doc->lenpreview = section_len - line_len;
@@ -594,14 +614,14 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     beginsection = position;
     section_len = line_len;
   }
-  while(blank(line) && readline(line, sizeof line, file, &position, &line_len)) {
+  while(blank(line) && readline(fd, &line, &position, &line_len)) {
     section_len += line_len;
   }
 
   if(DSCcomment(line) && iscomment(line + 2, "BeginDefaults")) {
     doc->begindefaults = beginsection;
     beginsection = 0;
-    while(readline(line, sizeof line, file, &position, &line_len) &&
+    while(readline(fd, &line, &position, &line_len) &&
           !(DSCcomment(line) && iscomment(line + 2, "EndDefaults"))) {
       section_len += line_len;
       if(!DSCcomment(line)) {
@@ -661,7 +681,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
       }
     }
     section_len += line_len;
-    readline(line, sizeof line, file, &position, &line_len);
+    readline(fd, &line, &position, &line_len);
     section_len += line_len;
     doc->enddefaults = position;
     doc->lendefaults = section_len - line_len;
@@ -673,7 +693,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     beginsection = position;
     section_len = line_len;
   }
-  while(blank(line) && readline(line, sizeof line, file, &position, &line_len)) {
+  while(blank(line) && readline(fd, &line, &position, &line_len)) {
     section_len += line_len;
   }
 
@@ -686,7 +706,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     preread = 1;
 
     while((preread ||
-           readline(line, sizeof line, file, &position, &line_len)) &&
+           readline(fd, &line, &position, &line_len)) &&
           !(DSCcomment(line) &&
             (iscomment(line + 2, "EndProlog") ||
              iscomment(line + 2, "BeginSetup") ||
@@ -698,7 +718,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     }
     section_len += line_len;
     if(DSCcomment(line) && iscomment(line + 2, "EndProlog")) {
-      readline(line, sizeof line, file, &position, &line_len);
+      readline(fd, &line, &position, &line_len);
       section_len += line_len;
     }
     doc->endprolog = position;
@@ -711,7 +731,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     beginsection = position;
     section_len = line_len;
   }
-  while(blank(line) && readline(line, sizeof line, file, &position, &line_len)) {
+  while(blank(line) && readline(fd, &line, &position, &line_len)) {
     section_len += line_len;
   }
 
@@ -723,7 +743,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     beginsection = 0;
     preread = 1;
     while((preread ||
-           readline(line, sizeof line, file, &position, &line_len)) &&
+           readline(fd, &line, &position, &line_len)) &&
           !(DSCcomment(line) &&
             (iscomment(line + 2, "EndSetup") ||
              iscomment(line + 2, "Page:") ||
@@ -794,7 +814,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     }
     section_len += line_len;
     if(DSCcomment(line) && iscomment(line + 2, "EndSetup")) {
-      readline(line, sizeof line, file, &position, &line_len);
+      readline(fd, &line, &position, &line_len);
       section_len += line_len;
     }
     doc->endsetup = position;
@@ -819,7 +839,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
              (iscomment(line + 2, "Page:") ||
               iscomment(line + 2, "Trailer") ||
               (respect_eof && iscomment(line + 2, "EOF"))))) &&
-          (readline(line, sizeof line, file, &position, &line_len))) {
+          (readline(fd, &line, &position, &line_len))) {
       section_len += line_len;
       doc->lensetup = section_len - line_len;
       doc->endsetup = position;
@@ -833,7 +853,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     beginsection = position;
     section_len = line_len;
   }
-  while(blank(line) && readline(line, sizeof line, file, &position, &line_len)) {
+  while(blank(line) && readline(fd, &line, &position, &line_len)) {
     section_len += line_len;
   }
 
@@ -871,7 +891,7 @@ newpage:
       section_len = line_len;
     }
   continuepage:
-    while(readline(line, sizeof line, file, &position, &line_len) &&
+    while(readline(fd, &line, &position, &line_len) &&
           !(DSCcomment(line) &&
             (iscomment(line + 2, "Page:") ||
              iscomment(line + 2, "Trailer") ||
@@ -977,7 +997,7 @@ newpage:
 
   preread = 1;
   while((preread ||
-         readline(line, sizeof line, file, &position, &line_len)) &&
+         readline(fd, &line, &position, &line_len)) &&
         !(respect_eof && DSCcomment(line) && iscomment(line + 2, "EOF"))) {
     if(!preread)
       section_len += line_len;
@@ -1080,7 +1100,7 @@ newpage:
   }
   section_len += line_len;
   if(DSCcomment(line) && iscomment(line + 2, "EOF")) {
-    readline(line, sizeof line, file, &position, &line_len);
+    readline(fd, &line, &position, &line_len);
     section_len += line_len;
   }
   doc->endtrailer = position;
@@ -1291,277 +1311,6 @@ get_next_text(line, next_char)
     return NULL;
   return g_strdup(text);
 }
-
-/*
- *	readline -- Read the next line in the postscript file.
- *                  Automatically skip over data (as indicated by
- *                  %%BeginBinary/%%EndBinary or %%BeginData/%%EndData
- *		    comments.)
- *		    Also, skip over included documents (as indicated by
- *		    %%BeginDocument/%%EndDocument comments.)
- */
-/*
-static char * readline (fd, lineP, positionP, line_lenP)
-   FileData fd;
-   char **lineP;
-   long *positionP;
-   unsigned int *line_lenP;
-*/
-
-#ifdef WE_MIGHT_WANT_TO_INCLUDE_THIS_NEW_READLINE
-
-
-static char *
-readline(lineP, size, fp, positionP, line_lenP)
-     char *lineP;
-     int size;
-     FILE *fp;
-     long *positionP;
-     unsigned int *line_lenP;
-{
-  unsigned int nbytes = 0;
-  int skipped = 0;
-  char text[PSLINELENGTH];
-  char line[PSLINELENGTH];
-  char save[PSLINELENGTH];
-  char buf[BUFSIZ];
-  char *cp;
-  unsigned int num;
-  int i;
-
-  if(positionP)
-    *positionP = ftell(fp);
-  cp = fgets(line, size, fp);
-  if(cp == NULL) {
-    *line_lenP = 0;
-    *lineP = '\0';
-    return (NULL);
-  }
-
-  *line_lenP = strlen(line);
-
-#   define IS_COMMENT(comment)				\
-           (DSCcomment(line) && iscomment(line+2,(comment)))
-#   define IS_BEGIN(comment)				\
-           (iscomment(line+7,(comment)))
-
-#   define SKIP_WHILE(cond)				\
-	   while (readline(line, size, fp, NULL, &nbytes) \
-             && (cond)) *line_lenP += nbytes;\
-           skipped=1;
-
-#   define SKIP_UNTIL_1(comment) {				\
-           SKIP_WHILE((!IS_COMMENT(comment)))           \
-        }
-#   define SKIP_UNTIL_2(comment1,comment2) {		\
-           SKIP_WHILE((!IS_COMMENT(comment1) && !IS_COMMENT(comment2)))\
-        }
-
-  if(!IS_COMMENT("Begin")) {
-  }                             /* Do nothing */
-  else
-    ifIS_BEGIN("Document:") SKIP_UNTIL_1("EndDocument")
-      else
-    ifIS_BEGIN("Feature:") SKIP_UNTIL_1("EndFeature")
-#   ifdef USE_ACROREAD_WORKAROUND
-      else
-    ifIS_BEGIN("File") SKIP_UNTIL_2("EndFile", "EOF")
-#   else
-      else
-    ifIS_BEGIN("File") SKIP_UNTIL_1("EndFile")
-#   endif
-      else
-    ifIS_BEGIN("Font") SKIP_UNTIL_1("EndFont")
-      else
-    ifIS_BEGIN("ProcSet") SKIP_UNTIL_1("EndProcSet")
-      else
-    ifIS_BEGIN("Resource") SKIP_UNTIL_1("EndResource")
-      else
-    ifIS_BEGIN("Data:") {
-    text[0] = '\0';
-    strcpy(save, line + 7);
-    if(sscanf(line + length("%%BeginData:"), "%d %*s %256s", &num, text)
-       >= 1) {
-      if(strcmp(text, "Lines") == 0) {
-        for(i = 0; i < num; i++) {
-          cp = fgets(line, size, fp);
-          *line_lenP += cp ? strlen(line) : 0;
-        }
-      }
-      else {
-        while(num > BUFSIZ) {
-          fread(buf, sizeof(char), BUFSIZ, fp);
-          *line_lenP += BUFSIZ;
-          num -= BUFSIZ;
-        }
-        fread(buf, sizeof(char), num, fp);
-        *line_lenP += num;
-      }
-    }
-    SKIP_UNTIL_1("EndData")}
-  else
-  ifIS_BEGIN("Binary:") {
-    strcpy(save, line + 7);
-    if(sscanf(line + length("%%BeginBinary:"), "%d", &num) == 1) {
-      while(num > BUFSIZ) {
-        fread(buf, sizeof(char), BUFSIZ, fp);
-        *line_lenP += BUFSIZ;
-        num -= BUFSIZ;
-      }
-      fread(buf, sizeof(char), num, fp);
-      *line_lenP += num;
-    }
-    SKIP_UNTIL_1("EndBinary") * line_lenP += nbytes;
-  }
-
-  if(skipped) {
-    *line_lenP += nbytes;
-    strcpy(lineP, skipped_line);
-  }
-  else {
-    strcpy(lineP, line);
-  }
-  return lineP;
-}
-
-#endif
-
-static char *
-readline(line, size, fp, position, line_len)
-     char *line;
-     int size;
-     FILE *fp;
-     long *position;
-     unsigned int *line_len;
-{
-  char text[PSLINELENGTH];      /* Temporary storage for text */
-  char save[PSLINELENGTH];      /* Temporary storage for text */
-  char *cp;
-  unsigned int num;
-  unsigned int nbytes;
-  int i, j;
-  char buf[BUFSIZ];
-
-  if(position)
-    *position = ftell(fp);
-  cp = fgets(line, size, fp);
-  if(cp == NULL)
-    line[0] = '\0';
-  for(i = 0;
-      line[i] != '\0' && (line[i] == 0x0c || line[i] == ' '
-                          || line[i] == '\t'); i++) ;
-  if(i > 0 && line[i] == '%' && line[i + 1] == '%') {
-    for(j = i; line[j] != '\0'; j++)
-      line[j - i] = line[j];
-    line[j - i] = '\0';
-  }
-  *line_len = strlen(line);
-  if(!(DSCcomment(line) && iscomment(line + 2, "Begin"))) {
-    /* Do nothing */
-  }
-  else if(iscomment(line + 7, "Document:")) {
-    strcpy(save, line + 7);
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndDocument"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "Feature:")) {
-    strcpy(save, line + 7);
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndFeature"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "File:")) {
-    strcpy(save, line + 7);
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndFile"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "Font:")) {
-    strcpy(save, line + 7);
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndFont"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "ProcSet:")) {
-    strcpy(save, line + 7);
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndProcSet"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "Resource:")) {
-    strcpy(save, line + 7);
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndResource"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "Data:")) {
-    text[0] = '\0';
-    strcpy(save, line + 7);
-    if(sscanf(line + length("%%BeginData:"), "%d %*s %256s", &num, text)
-       >= 1) {
-      if(strcmp(text, "Lines") == 0) {
-        for(i = 0; i < num; i++) {
-          cp = fgets(line, size, fp);
-          *line_len += cp ? strlen(line) : 0;
-        }
-      }
-      else {
-        while(num > BUFSIZ) {
-          fread(buf, sizeof(char), BUFSIZ, fp);
-          *line_len += BUFSIZ;
-          num -= BUFSIZ;
-        }
-        fread(buf, sizeof(char), num, fp);
-        *line_len += num;
-      }
-    }
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndData"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  else if(iscomment(line + 7, "Binary:")) {
-    strcpy(save, line + 7);
-    if(sscanf(line + length("%%BeginBinary:"), "%d", &num) == 1) {
-      while(num > BUFSIZ) {
-        fread(buf, sizeof(char), BUFSIZ, fp);
-        *line_len += BUFSIZ;
-        num -= BUFSIZ;
-      }
-      fread(buf, sizeof(char), num, fp);
-      *line_len += num;
-    }
-    while(readline(line, size, fp, NULL, &nbytes) &&
-          !(DSCcomment(line) && iscomment(line + 2, "EndBinary"))) {
-      *line_len += nbytes;
-    }
-    *line_len += nbytes;
-    strcpy(line, save);
-  }
-  return cp;
-}
-
 
 /*
  *	pscopy -- copy lines of Postscript from a section of one file
@@ -1809,4 +1558,312 @@ pscopydoc(GtkGSDocSink * dest,
   }
 
   fclose(src_file);
+}
+
+/*----------------------------------------------------------*/
+/* ps_io_init */
+/*----------------------------------------------------------*/
+
+#define FD_FILE             (fd->file)
+#define FD_FILE_DESC        (fd->file_desc)
+#define FD_FILEPOS	    (fd->filepos)
+#define FD_LINE_BEGIN       (fd->line_begin)
+#define FD_LINE_END	    (fd->line_end)
+#define FD_LINE_LEN	    (fd->line_len)
+#define FD_LINE_TERMCHAR    (fd->line_termchar)
+#define FD_BUF		    (fd->buf)
+#define FD_BUF_END	    (fd->buf_end)
+#define FD_BUF_SIZE	    (fd->buf_size)
+#define FD_STATUS	    (fd->status)
+
+#define FD_STATUS_OKAY        0
+#define FD_STATUS_BUFTOOLARGE 1
+#define FD_STATUS_NOMORECHARS 2
+
+#define LINE_CHUNK_SIZE     4096
+#define MAX_PS_IO_FGETCHARS_BUF_SIZE 57344
+#define BREAK_PS_IO_FGETCHARS_BUF_SIZE 49152
+
+static FileData ps_io_init(file)
+   FILE *file;
+{
+   FileData fd;
+   size_t size = sizeof(FileDataStruct);
+
+   fd = (FileData) g_malloc(size);
+   memset((void*) fd ,0,(size_t)size);
+
+   rewind(file);
+   FD_FILE      = file;
+   FD_FILE_DESC = fileno(file);
+   FD_FILEPOS   = ftell(file);
+   FD_BUF_SIZE  = (2*LINE_CHUNK_SIZE)+1;
+   FD_BUF       = g_malloc(FD_BUF_SIZE);
+   FD_BUF[0]    = '\0';
+   return(fd);
+}
+
+/*----------------------------------------------------------*/
+/* ps_io_exit */
+/*----------------------------------------------------------*/
+
+static void
+ps_io_exit(fd)
+   FileData fd;
+{
+   g_free(FD_BUF);
+   g_free(fd);
+}
+
+/*----------------------------------------------------------*/
+/* ps_io_fseek */
+/*----------------------------------------------------------*/
+
+/*static int
+ps_io_fseek(fd,offset)
+   FileData fd;
+   int offset;
+{
+   int status;
+   status=fseek(FD_FILE,(long)offset,SEEK_SET);
+   FD_BUF_END = FD_LINE_BEGIN = FD_LINE_END = FD_LINE_LEN = 0;
+   FD_FILEPOS = offset;
+   FD_STATUS  = FD_STATUS_OKAY;
+   return(status);
+}*/
+
+/*----------------------------------------------------------*/
+/* ps_io_ftell */
+/*----------------------------------------------------------*/
+
+/*static int
+ps_io_ftell(fd)
+   FileData fd;
+{
+   return(FD_FILEPOS);
+}*/
+
+/*----------------------------------------------------------*/
+/* ps_io_fgetchars */
+/*----------------------------------------------------------*/
+
+#ifdef USE_MEMMOVE_CODE
+static void ps_memmove (d, s, l)
+  char *d;
+  const char *s;
+  unsigned l;
+{
+  if (s < d) for (s += l, d += l; l; --l) *--d = *--s;
+  else if (s != d) for (; l; --l)         *d++ = *s++;
+}
+#else
+#   define ps_memmove memmove
+#endif
+
+static char * ps_io_fgetchars(fd,num)
+   FileData fd;
+   int num;
+{
+   char *eol=NULL,*tmp;
+   size_t size_of_char = sizeof(char);
+
+   if (FD_STATUS != FD_STATUS_OKAY) {
+      return(NULL);
+   }
+
+   FD_BUF[FD_LINE_END] = FD_LINE_TERMCHAR; /* restoring char previously exchanged against '\0' */
+   FD_LINE_BEGIN       = FD_LINE_END;
+
+   do {
+      if (num<0) { /* reading whole line */
+         if (FD_BUF_END-FD_LINE_END) {
+ 	    /* strpbrk is faster but fails on lines with embedded NULLs 
+              eol = strpbrk(FD_BUF+FD_LINE_END,"\n\r");
+            */
+	    tmp = FD_BUF + FD_BUF_END;
+	    eol = FD_BUF + FD_LINE_END;
+	    while (eol < tmp && *eol != '\n' && *eol != '\r') eol++;
+	    if (eol >= tmp) eol = NULL;
+            if (eol) {
+               if (*eol=='\r' && *(eol+1)=='\n') eol += 2;
+               else eol++;
+               break;
+            }
+         }
+      } else { /* reading specified num of chars */
+	 if (FD_BUF_END >= FD_LINE_BEGIN+num) {
+            eol = FD_BUF+FD_LINE_BEGIN+num;
+            break;
+         }
+      }
+
+      if (FD_BUF_END - FD_LINE_BEGIN > BREAK_PS_IO_FGETCHARS_BUF_SIZE) {
+	eol = FD_BUF + FD_BUF_END - 1;
+	break;
+      }
+
+      while (FD_BUF_SIZE < FD_BUF_END+LINE_CHUNK_SIZE+1) {
+         if (FD_BUF_SIZE > MAX_PS_IO_FGETCHARS_BUF_SIZE) {
+	   /* we should never get here, since the line is broken
+             artificially after BREAK_PS_IO_FGETCHARS_BUF_SIZE bytes. */
+	    fprintf(stderr, "gv: ps_io_fgetchars: Fatal Error: buffer became too large.\n");
+	    exit(-1);
+         }
+         if (FD_LINE_BEGIN) {
+            ps_memmove((void*)FD_BUF,(void*)(FD_BUF+FD_LINE_BEGIN),
+                    ((size_t)(FD_BUF_END-FD_LINE_BEGIN+1))*size_of_char);
+            FD_BUF_END    -= FD_LINE_BEGIN; 
+            FD_LINE_BEGIN  = 0;
+         } else {
+            FD_BUF_SIZE    = FD_BUF_SIZE+LINE_CHUNK_SIZE+1;
+            FD_BUF         = g_realloc(FD_BUF,FD_BUF_SIZE);
+         }
+      }
+
+      FD_LINE_END = FD_BUF_END;
+#ifdef VMS
+      /* different existing VMS file formats require that we use read here ###jp###,10/12/96 */ 
+      if (num<0) FD_BUF_END += read(FD_FILE_DESC,FD_BUF+FD_BUF_END,LINE_CHUNK_SIZE);
+      else       FD_BUF_END += fread(FD_BUF+FD_BUF_END,size_of_char,LINE_CHUNK_SIZE,FD_FILE);
+#else
+      /* read() seems to fail sometimes (? ? ?) so we always use fread ###jp###,07/31/96*/
+      FD_BUF_END += fread(FD_BUF+FD_BUF_END,size_of_char,LINE_CHUNK_SIZE,FD_FILE);
+#endif
+
+      FD_BUF[FD_BUF_END] = '\0';
+      if (FD_BUF_END-FD_LINE_END == 0) {
+         FD_STATUS = FD_STATUS_NOMORECHARS;
+         return(NULL);
+      }
+   }
+   while (1);
+
+   FD_LINE_END          = eol - FD_BUF;
+   FD_LINE_LEN          = FD_LINE_END - FD_LINE_BEGIN;
+   FD_LINE_TERMCHAR     = FD_BUF[FD_LINE_END];
+   FD_BUF[FD_LINE_END]  = '\0';
+#ifdef USE_FTELL_FOR_FILEPOS
+   if (FD_LINE_END==FD_BUF_END) {
+      /*
+      For VMS we cannot assume that the record is FD_LINE_LEN bytes long
+      on the disk. For stream_lf and stream_cr that is true, but not for
+      other formats, since VAXC/DECC converts the formatting into a single \n.
+      eg. variable format files have a 2-byte length and padding to an even
+      number of characters. So, we use ftell for each record.
+      This still will not work if we need to fseek to a \n or \r inside a
+      variable record (ftell always returns the start of the record in this
+      case).
+      (Tim Adye, adye@v2.rl.ac.uk)
+      */
+      FD_FILEPOS         = ftell(FD_FILE);
+   } else
+#endif /* USE_FTELL_FOR_FILEPOS */
+      FD_FILEPOS        += FD_LINE_LEN;
+
+   return(FD_BUF+FD_LINE_BEGIN);
+}
+
+/*----------------------------------------------------------*/
+/*
+   readline()
+   Read the next line in the postscript file.
+   Automatically skip over data (as indicated by
+   %%BeginBinary/%%EndBinary or %%BeginData/%%EndData
+   comments.)
+   Also, skip over included documents (as indicated by
+   %%BeginDocument/%%EndDocument comments.)
+*/
+/*----------------------------------------------------------*/
+
+static char *readline (fd, lineP, positionP, line_lenP)
+   FileData fd;
+   char **lineP;
+   long *positionP;
+   unsigned int *line_lenP;
+{
+   unsigned int nbytes=0;
+   int skipped=0;
+   char *line;
+
+   if (positionP) *positionP = FD_FILEPOS;
+   line = ps_io_fgetchars(fd,-1);
+   if (!line) {
+      *line_lenP = 0;
+      *lineP     = empty_string;
+      return(NULL); 
+   }
+
+   *line_lenP = FD_LINE_LEN;
+
+#define IS_COMMENT(comment)				\
+           (DSCcomment(line) && iscomment(line+2,(comment)))
+#define IS_BEGIN(comment)				\
+           (iscomment(line+7,(comment)))
+#define SKIP_WHILE(cond)				\
+	   while (readline(fd, &line, NULL, &nbytes) && (cond)) *line_lenP += nbytes;\
+           skipped=1;
+#define SKIP_UNTIL_1(comment) {				\
+           SKIP_WHILE((!IS_COMMENT(comment)))		\
+        }
+#define SKIP_UNTIL_2(comment1,comment2) {		\
+           SKIP_WHILE((!IS_COMMENT(comment1) && !IS_COMMENT(comment2)))\
+        }
+
+   if  (!IS_COMMENT("Begin"))     {} /* Do nothing */
+   else if IS_BEGIN("Document:")  SKIP_UNTIL_1("EndDocument")
+   else if IS_BEGIN("Feature:")   SKIP_UNTIL_1("EndFeature")
+#ifdef USE_ACROREAD_WORKAROUND
+   else if IS_BEGIN("File")       SKIP_UNTIL_2("EndFile","EOF")
+#else
+   else if IS_BEGIN("File")       SKIP_UNTIL_1("EndFile")
+#endif
+   else if IS_BEGIN("Font")       SKIP_UNTIL_1("EndFont")
+   else if IS_BEGIN("ProcSet")    SKIP_UNTIL_1("EndProcSet")
+   else if IS_BEGIN("Resource")   SKIP_UNTIL_1("EndResource")
+   else if IS_BEGIN("Data:")      {
+      int  num;
+      char text[101];
+      if (FD_LINE_LEN > 100) FD_BUF[100] = '\0';
+      text[0] = '\0';
+      if (sscanf(line+length("%%BeginData:"), "%d %*s %s", &num, text) >= 1) {
+         if (strcmp(text, "Lines") == 0) {
+            while (num) {
+               line = ps_io_fgetchars(fd,-1);
+               if (line) *line_lenP += FD_LINE_LEN;
+               num--;
+            }
+         } else {
+            int read_chunk_size = LINE_CHUNK_SIZE;
+            while (num>0) {
+               if (num <= LINE_CHUNK_SIZE) read_chunk_size=num;
+               line = ps_io_fgetchars(fd,read_chunk_size);
+               if (line) *line_lenP += FD_LINE_LEN;
+               num -= read_chunk_size;
+            }
+         }
+      }
+      SKIP_UNTIL_1("EndData")
+   }
+   else if IS_BEGIN("Binary:") {
+      int  num;
+      if (sscanf(line+length("%%BeginBinary:"), "%d", &num) == 1) {
+         int read_chunk_size = LINE_CHUNK_SIZE;
+         while (num>0) {
+            if (num <= LINE_CHUNK_SIZE) read_chunk_size=num;
+            line = ps_io_fgetchars(fd,read_chunk_size);
+            if (line) *line_lenP += FD_LINE_LEN;
+            num -= read_chunk_size;
+         }
+         SKIP_UNTIL_1("EndBinary")
+      }
+   }
+
+   if (skipped) {
+      *line_lenP += nbytes;
+      *lineP = skipped_line;      
+   } else {
+      *lineP = FD_BUF+FD_LINE_BEGIN;
+   }
+
+   return(FD_BUF+FD_LINE_BEGIN);
 }
