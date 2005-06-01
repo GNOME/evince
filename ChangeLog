@@ -1,3 +1,10 @@
+2005-06-01  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document-misc.c:
+	(ev_document_misc_get_thumbnail_frame):
+
+	Pages can be 0 x 0, dont assert on this case
+
 2005-05-31  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* shell/ev-sidebar-links.c: (ev_sidebar_links_dispose),

@@ -28,7 +28,7 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	}
 
 	/* make sure no one is passing us garbage */
-	g_assert (width > 0 && height > 0);
+	g_assert (width >= 0 && height >= 0);
 
 	retval = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
 				 TRUE, 8,
