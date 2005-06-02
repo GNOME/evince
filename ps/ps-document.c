@@ -233,13 +233,6 @@ interpreter_failed (PSDocument *gs, char *msg)
 	stop_interpreter (gs);
 }
 
-static void
-interpreter_message (PSDocument *gs, char *msg)
-{
-	/* FIXME maybe we should display a dialog */
-	g_print (msg);
-}
-
 static gboolean
 ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
@@ -524,7 +517,7 @@ is_interpreter_ready (PSDocument *gs)
 static void
 output(gpointer data, gint source, GdkInputCondition condition)
 {
-  char buf[MAX_BUFSIZE + 1], *msg;
+  char buf[MAX_BUFSIZE + 1];
   guint bytes = 0;
   PSDocument *gs = PS_DOCUMENT(data);
 
@@ -564,8 +557,7 @@ output(gpointer data, gint source, GdkInputCondition condition)
   }
   if(bytes > 0) {
     buf[bytes] = '\0';
-    msg = g_strdup(buf);
-    interpreter_message (gs, msg);   
+    printf(buf);
   }
 }
 

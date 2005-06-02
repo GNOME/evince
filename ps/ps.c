@@ -322,18 +322,6 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
        In a way, this makes sense, a program PostScript does not need
        the !PS at the beginning.
      */
-    /* use a test command to determine if ghostscript can
-       understand this document! */
-    gchar *test_cmd;
-
-    test_cmd = g_strdup_printf
-      ("%s -dNOPAUSE -dBATCH -sDEVICE=nullpage %s "
-       "1>/dev/null 2>/dev/null", gtk_gs_defaults_get_interpreter_cmd(), fname);
-    if(system(test_cmd) != 0) {
-      g_free(test_cmd);
-      return NULL;
-    }
-    g_free(test_cmd);
     doc = g_new0(struct document, 1);
     doc->default_page_orientation = GTK_GS_ORIENTATION_NONE;
     doc->orientation = GTK_GS_ORIENTATION_NONE;
