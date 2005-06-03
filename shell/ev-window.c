@@ -37,6 +37,7 @@
 #include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-print-job.h"
+#include "ev-properties.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-types.h"
@@ -218,10 +219,10 @@ update_action_sensitivity (EvWindow *ev_window)
 	/* "FileOpen": always sensitive */
 	set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
 	set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
+	set_action_sensitive (ev_window, "FileProperties", has_document);
 	/* "FileCloseWindow": always sensitive */
 
         /* Edit menu */
-
 	sensitive = has_pages && ev_document_can_get_text (document);
 	set_action_sensitive (ev_window, "EditCopy", sensitive && ok_to_copy);
 	set_action_sensitive (ev_window, "EditSelectAll", sensitive && ok_to_copy);
@@ -1180,6 +1181,16 @@ ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
 	ev_window_print (ev_window);
 }
 
+static void
+ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
+{
+            GtkDialog *dialog;
+
+            dialog = ev_properties_new (ev_window->priv->document, GTK_WIDGET (ev_window));
+            gtk_dialog_run (dialog);
+            gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+					
 static void
 ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 {
@@ -2351,6 +2362,9 @@ static const GtkActionEntry entries[] = {
 	{ "FilePrint", GTK_STOCK_PRINT, N_("Print..."), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
+	{ "FileProperties", GTK_STOCK_PROPERTIES, N_("Properties"), "<alt>Return",
+	  N_("View the properties of this document"),
+	  G_CALLBACK (ev_window_cmd_file_properties) },			      
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W",
 	  N_("Close this window"),
 	  G_CALLBACK (ev_window_cmd_file_close_window) },

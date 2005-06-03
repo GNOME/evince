@@ -1,3 +1,17 @@
+2005-06-03  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document-info.h:
+	* data/Makefile.am:
+	* data/evince-ui.xml:
+	* pdf/ev-poppler.cc:
+	* shell/Makefile.am:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_cmd_file_properties):
+
+	Initial go at file properties. Patch by
+	Emil Soleyman-Zomalan <emil@soleyman.com>.
+	Needs love see #169583
+
 2005-06-02  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* ps/ps-document.c: (output):

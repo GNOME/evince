@@ -70,6 +70,8 @@ evince_SOURCES=				\
 	ev-pixbuf-cache.h		\
 	ev-print-job.c			\
 	ev-print-job.h			\
+	ev-properties.c			\
+	ev-properties.h			\
 	ev-utils.c			\
 	ev-utils.h			\
 	ev-view.c			\

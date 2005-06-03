@@ -329,9 +329,13 @@ pdf_document_get_info (EvDocument *document)
 			    EV_DOCUMENT_INFO_KEYWORDS |
 			    EV_DOCUMENT_INFO_LAYOUT |
 			    EV_DOCUMENT_INFO_START_MODE |
-			    /* Missing EV_DOCUMENT_INFO_CREATION_DATE | */
 		            EV_DOCUMENT_INFO_PERMISSIONS |
-			    EV_DOCUMENT_INFO_UI_HINTS;
+			    EV_DOCUMENT_INFO_UI_HINTS |
+			    EV_DOCUMENT_INFO_CREATOR |
+			    EV_DOCUMENT_INFO_PRODUCER |
+			    EV_DOCUMENT_INFO_CREATION_DATE |
+			    EV_DOCUMENT_INFO_MOD_DATE |
+			    EV_DOCUMENT_INFO_LINEARIZED;
 
 
 	g_object_get (PDF_DOCUMENT (document)->document,
@@ -344,6 +348,11 @@ pdf_document_get_info (EvDocument *document)
 		      "page-layout", &layout,
 		      "viewer-preferences", &view_prefs,
 		      "permissions", &permissions,
+		      "creator", &(info->creator),
+		      "producer", &(info->producer),
+		      "creation-date", &(info->creation_date),
+		      "mod-date", &(info->modified_date),
+		      "linearized", &(info->linearized),
 		      NULL);
 
 	switch (layout) {

@@ -13,6 +13,7 @@ ui_DATA =				\
 gladedir = $(pkgdatadir)
 glade_DATA = 				\
 	evince-password.glade		\
+	evince-properties.glade		\
 	$(NULL)
 
 DESKTOP_IN_FILES= evince.desktop.in.in

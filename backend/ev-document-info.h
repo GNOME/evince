@@ -81,10 +81,14 @@ typedef enum
 	EV_DOCUMENT_INFO_SUBJECT = 1 << 3,
 	EV_DOCUMENT_INFO_KEYWORDS = 1 << 4,
 	EV_DOCUMENT_INFO_LAYOUT = 1 << 5,
-	EV_DOCUMENT_INFO_START_MODE = 1 << 6,
-	EV_DOCUMENT_INFO_CREATION_DATE = 1 << 7,
-	EV_DOCUMENT_INFO_UI_HINTS = 1 << 8,
-	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 9,
+	EV_DOCUMENT_INFO_CREATOR = 1 << 6,
+	EV_DOCUMENT_INFO_PRODUCER = 1 << 7,
+	EV_DOCUMENT_INFO_CREATION_DATE = 1 << 8,
+	EV_DOCUMENT_INFO_MOD_DATE = 1 << 9,
+	EV_DOCUMENT_INFO_LINEARIZED = 1 << 10,
+	EV_DOCUMENT_INFO_START_MODE = 1 << 11,
+	EV_DOCUMENT_INFO_UI_HINTS = 1 << 12,
+	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 13
 } EvDocumentInfoFields;
 
 struct _EvDocumentInfo
@@ -94,9 +98,13 @@ struct _EvDocumentInfo
 	char *author;
 	char *subject;
 	char *keywords;
+	char *creator;
+	char *producer;
+	char *linearized;
+	GTime *creation_date;
+	GTime *modified_date;
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
-	GDate creation_date;
 	guint ui_hints;
 	guint permissions;
 
