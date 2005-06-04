@@ -505,14 +505,13 @@ build_fonts_list (PdfDocument      *pdf_document,
 	do {
 		GtkTreeIter list_iter;
 		PopplerIndexIter *child;
-		char *name;
+		const char *name;
 		
 		name = poppler_fonts_iter_get_name (iter);
 		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
 		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
 				    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
 				    -1);
-		g_free (name);
 	} while (poppler_fonts_iter_next (iter));
 #endif
 }
