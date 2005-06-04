@@ -422,16 +422,14 @@ view_set_adjustment_values (EvView         *view,
 		return;
 	
 	factor = 1.0;
-	/* We add 0.5 to the values before to average out our rounding errors.
-	 */
 	switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION: 
-			factor = (adjustment->value + 0.5) / adjustment->upper;
+			factor = (adjustment->value) / adjustment->upper;
 			break;
     	        case SCROLL_TO_CURRENT_PAGE: 
 			break;
     	        case SCROLL_TO_CENTER: 
-			factor = (adjustment->value + adjustment->page_size * 0.5 + 0.5) / adjustment->upper;
+			factor = (adjustment->value + adjustment->page_size * 0.5) / adjustment->upper;
 			break;
 	}
 
@@ -441,16 +439,19 @@ view_set_adjustment_values (EvView         *view,
 	adjustment->lower = 0;
 	adjustment->upper = MAX (allocation, requisition);
 
+	/* 
+	 * We add 0.5 to the values before to average out our rounding errors.
+	 */
 	switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION: 
-			new_value = CLAMP (adjustment->upper * factor, 0, adjustment->upper - adjustment->page_size);
+			new_value = CLAMP (adjustment->upper * factor + 0.5, 0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
     	        case SCROLL_TO_CURRENT_PAGE: 
 			scroll_to_current_page (view, orientation);
 			break;
     	        case SCROLL_TO_CENTER: 
-			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5,
+			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5 + 0.5,
 					   0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
