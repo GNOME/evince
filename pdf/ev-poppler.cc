@@ -495,13 +495,13 @@ pdf_document_security_iface_init (EvDocumentSecurityIface *iface)
 	iface->set_password = pdf_document_set_password;
 }
 
+#ifdef POPPLER_FONT_INFO
 static void
 build_fonts_list (PdfDocument      *pdf_document,
 	          GtkTreeModel     *model,
 	          GtkTreeIter      *parent,
 	          PopplerFontsIter *iter)
 {
-#ifdef POPPLER_FONT_INFO
 	do {
 		GtkTreeIter list_iter;
 		PopplerIndexIter *child;
@@ -513,15 +513,17 @@ build_fonts_list (PdfDocument      *pdf_document,
 				    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
 				    -1);
 	} while (poppler_fonts_iter_next (iter));
-#endif
 }
+#endif
 
 static GtkTreeModel *
 pdf_document_fonts_get_fonts_model (EvDocumentFonts *document_fonts)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
 	GtkTreeModel *model = NULL;
+#ifdef POPPLER_FONT_INFO
 	PopplerFontsIter *iter;
+#endif
 
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), NULL);
 
