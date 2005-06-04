@@ -68,18 +68,21 @@ static const PropertyInfo properties_info[] = {
 };
 
 /* Returns a locale specific date and time representation */
-static gchar *
+static char *
 ev_properties_format_date (GTime utime)
 {
-	struct tm *time;
-	gchar *date_string;
-	
-	date_string = g_new0 (char, 101);
-	
-	time = localtime ((const time_t *) &utime);			
-	strftime (date_string, 100, "%c", time);		
-	
-	return date_string;
+	time_t time = (time_t) utime;
+	struct tm t;
+	char s[256];
+	const char *fmt_hack = "%c";
+	size_t len;
+
+	if (!localtime_r (&time, &t)) return NULL;
+
+	len = strftime (s, sizeof (s), fmt_hack, &t);
+	if (len == 0 || s[0] == '\0') return NULL;
+
+	return g_locale_to_utf8 (s, -1, NULL, NULL, NULL);
 }
 
 static void
@@ -89,7 +92,8 @@ set_property (GladeXML *xml, Property property, const char *text)
 
 	widget = glade_xml_get_widget (xml, properties_info[property].label_id);
 	g_return_if_fail (GTK_IS_LABEL (widget));
-	gtk_label_set_text (GTK_LABEL (widget), text);
+
+	gtk_label_set_text (GTK_LABEL (widget), text ? text : "");
 }
 
 GtkDialog *
