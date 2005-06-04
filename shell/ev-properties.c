@@ -23,6 +23,7 @@
 #endif
 
 #include "ev-properties.h"
+#include "ev-document-fonts.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -96,8 +97,29 @@ set_property (GladeXML *xml, Property property, const char *text)
 	gtk_label_set_text (GTK_LABEL (widget), text ? text : "");
 }
 
+static void
+setup_fonts_view (GladeXML *xml, GtkTreeModel *fonts)
+{
+	GtkWidget *widget;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+
+	widget = glade_xml_get_widget (xml, "fonts_treeview");
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), fonts);
+
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (widget), column);
+
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
+	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
+					     "text", EV_DOCUMENT_FONTS_COLUMN_NAME,
+					     NULL);
+}
+
 GtkDialog *
-ev_properties_new (EvDocumentInfo *info)
+ev_properties_new (EvDocumentInfo *info, GtkTreeModel *fonts)
 {
 	GladeXML *xml;
 	GtkWidget *dialog;
@@ -157,6 +179,10 @@ ev_properties_new (EvDocumentInfo *info)
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_SECURITY) {
 		set_property (xml, SECURITY_PROPERTY, info->security);
+	}
+
+	if (fonts) {
+		setup_fonts_view (xml, fonts);
 	}
 
 	return GTK_DIALOG (dialog); 

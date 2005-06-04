@@ -22,13 +22,14 @@
 #define __EV_PROPERTIES_H__
 
 #include "ev-document.h"
-#include "ev-window.h"
 
 #include <gtk/gtkdialog.h>
+#include <gtk/gtktreemodel.h>
 
 G_BEGIN_DECLS
 
-GtkDialog *ev_properties_new (EvDocumentInfo *info);
+GtkDialog *ev_properties_new (EvDocumentInfo   *info,
+			      GtkTreeModel     *fonts);
 
 G_END_DECLS
 

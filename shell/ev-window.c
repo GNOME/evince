@@ -40,6 +40,7 @@
 #include "ev-properties.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
+#include "ev-document-fonts.h"
 #include "ev-document-types.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
@@ -1188,11 +1189,19 @@ ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 {
+	EvDocument *document = ev_window->priv->document;
 	EvDocumentInfo *info;
 	GtkDialog *dialog;
+	GtkTreeModel *fonts;
 
-	info = ev_document_get_info (ev_window->priv->document);
-	dialog = ev_properties_new (info);
+	if (EV_IS_DOCUMENT_FONTS (document)) {
+		fonts = ev_document_fonts_get_fonts_model (EV_DOCUMENT_FONTS (document));
+	} else {
+		fonts = NULL;
+	}
+
+	info = ev_document_get_info (document);
+	dialog = ev_properties_new (info, fonts);
 	gtk_dialog_run (dialog);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	ev_document_info_free (info);

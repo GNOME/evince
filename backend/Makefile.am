@@ -17,6 +17,8 @@ libevbackend_la_SOURCES=			\
 	ev-document.h				\
 	ev-document-thumbnails.c		\
 	ev-document-thumbnails.h		\
+	ev-document-fonts.c                     \
+	ev-document-fonts.h			\
 	ev-document-links.c			\
 	ev-document-links.h			\
 	ev-document-security.c			\

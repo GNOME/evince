@@ -30,6 +30,7 @@
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-document-links.h"
+#include "ev-document-fonts.h"
 #include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 
@@ -62,6 +63,7 @@ static void pdf_document_document_iface_init            (EvDocumentIface        
 static void pdf_document_security_iface_init            (EvDocumentSecurityIface   *iface);
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
+static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface      *iface);
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
 static void pdf_document_ps_exporter_iface_init         (EvPSExporterIface         *iface);
 static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
@@ -82,6 +84,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
 							pdf_document_document_links_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
+							pdf_document_document_fonts_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 							pdf_document_find_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
@@ -491,6 +495,55 @@ pdf_document_security_iface_init (EvDocumentSecurityIface *iface)
 	iface->set_password = pdf_document_set_password;
 }
 
+static void
+build_fonts_list (PdfDocument      *pdf_document,
+	          GtkTreeModel     *model,
+	          GtkTreeIter      *parent,
+	          PopplerFontsIter *iter)
+{
+#ifdef POPPLER_FONT_INFO
+	do {
+		GtkTreeIter list_iter;
+		PopplerIndexIter *child;
+		char *name;
+		
+		name = poppler_fonts_iter_get_name (iter);
+		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
+		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
+				    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
+				    -1);
+		g_free (name);
+	} while (poppler_fonts_iter_next (iter));
+#endif
+}
+
+static GtkTreeModel *
+pdf_document_fonts_get_fonts_model (EvDocumentFonts *document_fonts)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
+	GtkTreeModel *model = NULL;
+	PopplerFontsIter *iter;
+
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), NULL);
+
+	iter = poppler_fonts_iter_new (pdf_document->document);
+	/* Create the model iff we have items*/
+	if (iter != NULL) {
+		model = (GtkTreeModel *) gtk_list_store_new (EV_DOCUMENT_FONTS_COLUMN_NUM_COLUMNS,
+							     G_TYPE_STRING);
+		build_fonts_list (pdf_document, model, NULL, iter);
+		poppler_fonts_iter_free (iter);
+	}
+
+	return model;
+}
+
+static void
+pdf_document_document_fonts_iface_init (EvDocumentFontsIface *iface)
+{
+	iface->get_fonts_model = pdf_document_fonts_get_fonts_model;
+}
+
 static gboolean
 pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 {
@@ -525,7 +578,6 @@ ev_link_from_action (PopplerAction *action)
 
 	return link;	
 }
-
 
 static void
 build_tree (PdfDocument      *pdf_document,
@@ -582,14 +634,12 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	return model;
 }
 
-
 static void
 pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 {
 	iface->has_document_links = pdf_document_links_has_document_links;
 	iface->get_links_model = pdf_document_links_get_links_model;
 }
-
 
 static GdkPixbuf *
 make_thumbnail_for_size (PdfDocument *pdf_document,
