@@ -27,91 +27,48 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
+#include <time.h>
+#include <sys/time.h>
 
-GtkDialog *
-ev_properties_new (EvDocument	*document, 
-		   		   GtkWidget	*toplevel)
+typedef enum
 {
-	const char *glade_file = DATADIR "/evince-properties.glade";
-	GladeXML *xml;
-	GtkWidget *dialog = NULL;
-	EvDocumentInfo *info;
-	GtkWidget *title, *subject, *author, *keywords, *producer, *creator;
-	GtkWidget *created, *modified, *security, *version, *pages, *optimized;
-	gchar *n_pages, **format_str, *pdf_version;
-	gchar *creation_date, *modified_date;
-	gchar *secured_document;
-	
-	/* Create a new GladeXML object from XML file glade_file */
-	xml = glade_xml_new (glade_file, NULL, NULL);
-	g_return_val_if_fail (xml != NULL, NULL);
+	TITLE_PROPERTY,
+	SUBJECT_PROPERTY,
+	AUTHOR_PROPERTY,
+	KEYWORDS_PROPERTY,
+	PRODUCER_PROPERTY,
+	CREATOR_PROPERTY,
+	CREATION_DATE_PROPERTY,
+	MOD_DATE_PROPERTY,
+	N_PAGES_PROPERTY,
+	LINEARIZED_PROPERTY,
+	FORMAT_PROPERTY,
+	SECURITY_PROPERTY
+} Property;
 
-	/* Retrieve the document structure */
-	info = ev_document_get_info (document);
+typedef struct
+{
+	Property property;
+	const char *label_id;
+} PropertyInfo;
 
-	/* Assign variables to labels */
-	dialog = glade_xml_get_widget (xml, "properties_dialog"); 
-	title = glade_xml_get_widget (xml, "title");
-	subject = glade_xml_get_widget (xml, "subject");
-	author = glade_xml_get_widget (xml, "author");
-	keywords = glade_xml_get_widget (xml, "keywords");
-	producer = glade_xml_get_widget (xml, "producer");
-	creator = glade_xml_get_widget (xml, "creator");
-	created = glade_xml_get_widget (xml, "created");
-	modified = glade_xml_get_widget (xml, "modified");
-	security = glade_xml_get_widget (xml, "security");
-	version = glade_xml_get_widget (xml, "version");
-	pages = glade_xml_get_widget (xml, "pages");
-	optimized = glade_xml_get_widget (xml, "optimized");
-
-	/* Number of pages */
-	n_pages = g_strdup_printf (_("%d"), ev_document_get_n_pages (document));
-
-	/* PDF version */
-	format_str = g_strsplit (info->format, "-", 2);
-	pdf_version = g_strdup_printf (_("%s"), format_str[1]);
-	
-	/* Creation and modified date */
-	creation_date = ev_properties_format_date ((GTime) info->creation_date);
-	modified_date = ev_properties_format_date ((GTime) info->modified_date);
-	
-	/* Does the document have security? */
-	if (ev_document_security_has_document_security (EV_DOCUMENT_SECURITY (document))) {
-		secured_document = "Yes";
-	} else {
-		secured_document = "No";
-	}
-					
-	/* Shorten label values to fit window size by ellipsizing */
-	gtk_label_set_ellipsize (GTK_LABEL (title), PANGO_ELLIPSIZE_END);
-	gtk_label_set_ellipsize (GTK_LABEL (keywords), PANGO_ELLIPSIZE_END);
-	
-	/* Assign values to label fields */
-	gtk_label_set_text (GTK_LABEL (title), info->title);
-	gtk_label_set_text (GTK_LABEL (subject), info->subject);
-	gtk_label_set_text (GTK_LABEL (author), info->author);
-	gtk_label_set_text (GTK_LABEL (keywords), info->keywords);
-	gtk_label_set_text (GTK_LABEL (producer), info->producer);
-	gtk_label_set_text (GTK_LABEL (creator), info->creator);
-	gtk_label_set_text (GTK_LABEL (created), creation_date);
-	gtk_label_set_text (GTK_LABEL (modified), modified_date);
-	gtk_label_set_text (GTK_LABEL (security), secured_document);
-	gtk_label_set_text (GTK_LABEL (version), pdf_version);
-	gtk_label_set_text (GTK_LABEL (pages), n_pages);
-	gtk_label_set_text (GTK_LABEL (optimized), info->linearized);
-
-	/* Clean up */
-	g_strfreev (format_str);
-	g_free (n_pages);
-	g_free (pdf_version);
-	g_free (creation_date);
-	g_free (modified_date);	
-		
-	return GTK_DIALOG (dialog); 
-}
+static const PropertyInfo properties_info[] = {
+	{ TITLE_PROPERTY, "title" },
+	{ SUBJECT_PROPERTY, "subject" },
+	{ AUTHOR_PROPERTY, "author" },
+	{ KEYWORDS_PROPERTY, "keywords" },
+	{ PRODUCER_PROPERTY, "producer" },
+	{ CREATOR_PROPERTY, "creator" },
+	{ CREATION_DATE_PROPERTY, "created" },
+	{ MOD_DATE_PROPERTY, "modified" },
+	{ N_PAGES_PROPERTY, "pages" },
+	{ LINEARIZED_PROPERTY, "optimized" },
+	{ FORMAT_PROPERTY, "version" },
+	{ SECURITY_PROPERTY, "security" }
+};
 
 /* Returns a locale specific date and time representation */
-gchar *
+static gchar *
 ev_properties_format_date (GTime utime)
 {
 	struct tm *time;
@@ -120,21 +77,83 @@ ev_properties_format_date (GTime utime)
 	date_string = g_new0 (char, 101);
 	
 	time = localtime ((const time_t *) &utime);			
-	my_strftime (date_string, 100, "%c", time);		
+	strftime (date_string, 100, "%c", time);		
 	
 	return date_string;
 }
 
-/* Some buggy versions of gcc complain about the use of %c: 
- * warning: `%c' yields  only last 2 digits of year in some locales.
- * 
- * This is a relatively clean one is to add an intermediate
- * function thanks to the strftime(3) manpage
- */
-size_t  
-my_strftime (char  *s, size_t max, 
-			 const char *fmt, 
-			 const struct tm *tm) 
+static void
+set_property (GladeXML *xml, Property property, const char *text)
 {
-	return strftime (s, max, fmt, tm);
+	GtkWidget *widget;
+
+	widget = glade_xml_get_widget (xml, properties_info[property].label_id);
+	g_return_if_fail (GTK_IS_LABEL (widget));
+	gtk_label_set_text (GTK_LABEL (widget), text);
+}
+
+GtkDialog *
+ev_properties_new (EvDocumentInfo *info)
+{
+	GladeXML *xml;
+	GtkWidget *dialog;
+	char *text;
+	
+	/* Create a new GladeXML object from XML file glade_file */
+	xml = glade_xml_new (DATADIR "/evince-properties.glade", NULL, NULL);
+	g_return_val_if_fail (xml != NULL, NULL);
+
+	dialog = glade_xml_get_widget (xml, "properties_dialog");
+	g_return_val_if_fail (GTK_IS_DIALOG (dialog), NULL);
+					
+	if (info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
+		set_property (xml, TITLE_PROPERTY, info->title);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_SUBJECT) {
+		set_property (xml, SUBJECT_PROPERTY, info->subject);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_AUTHOR) {
+		set_property (xml, AUTHOR_PROPERTY, info->author);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_KEYWORDS) {
+		set_property (xml, KEYWORDS_PROPERTY, info->keywords);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_PRODUCER) {
+		set_property (xml, PRODUCER_PROPERTY, info->producer);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_CREATOR) {
+		set_property (xml, CREATOR_PROPERTY, info->creator);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATE) {
+		text = ev_properties_format_date ((GTime) info->creation_date);
+		set_property (xml, CREATION_DATE_PROPERTY, text);
+		g_free (text);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATE) {
+		text = ev_properties_format_date ((GTime) info->modified_date);
+		set_property (xml, MOD_DATE_PROPERTY, text);
+		g_free (text);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_FORMAT) {
+		char **format_str = g_strsplit (info->format, "-", 2);
+
+		text = g_strdup_printf (_("%s"), format_str[1]);
+		set_property (xml, FORMAT_PROPERTY, text);
+
+		g_free (text);
+		g_strfreev (format_str);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_N_PAGES) {
+		text = g_strdup_printf (_("%d"), info->n_pages);
+		set_property (xml, N_PAGES_PROPERTY, text);
+		g_free (text);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_LINEARIZED) {
+		set_property (xml, LINEARIZED_PROPERTY, info->linearized);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_SECURITY) {
+		set_property (xml, SECURITY_PROPERTY, info->security);
+	}
+
+	return GTK_DIALOG (dialog); 
 }

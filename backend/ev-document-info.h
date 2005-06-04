@@ -88,7 +88,9 @@ typedef enum
 	EV_DOCUMENT_INFO_LINEARIZED = 1 << 10,
 	EV_DOCUMENT_INFO_START_MODE = 1 << 11,
 	EV_DOCUMENT_INFO_UI_HINTS = 1 << 12,
-	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 13
+	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 13,
+	EV_DOCUMENT_INFO_N_PAGES = 1 << 14,
+	EV_DOCUMENT_INFO_SECURITY = 1 << 15
 } EvDocumentInfoFields;
 
 struct _EvDocumentInfo
@@ -101,12 +103,14 @@ struct _EvDocumentInfo
 	char *creator;
 	char *producer;
 	char *linearized;
+        char *security;
 	GTime *creation_date;
 	GTime *modified_date;
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
 	guint ui_hints;
 	guint permissions;
+	int   n_pages;
 
 	/* Mask of all the valid fields */
 	guint fields_mask;

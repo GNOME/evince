@@ -23,6 +23,7 @@
 #include <poppler.h>
 #include <poppler-document.h>
 #include <poppler-page.h>
+#include <glib/gi18n.h>
 
 #include "ev-poppler.h"
 #include "ev-ps-exporter.h"
@@ -335,7 +336,9 @@ pdf_document_get_info (EvDocument *document)
 			    EV_DOCUMENT_INFO_PRODUCER |
 			    EV_DOCUMENT_INFO_CREATION_DATE |
 			    EV_DOCUMENT_INFO_MOD_DATE |
-			    EV_DOCUMENT_INFO_LINEARIZED;
+			    EV_DOCUMENT_INFO_LINEARIZED |
+			    EV_DOCUMENT_INFO_N_PAGES |
+			    EV_DOCUMENT_INFO_SECURITY;
 
 
 	g_object_get (PDF_DOCUMENT (document)->document,
@@ -432,6 +435,17 @@ pdf_document_get_info (EvDocument *document)
 	if (permissions & POPPLER_PERMISSIONS_OK_TO_ADD_NOTES) {
 		info->permissions |= EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES;
 	}
+
+	info->n_pages = ev_document_get_n_pages (document);
+
+	if (ev_document_security_has_document_security (EV_DOCUMENT_SECURITY (document))) {
+		/* translators: this is the document security state */
+		info->security = g_strdup (_("Yes"));
+	} else {
+		/* translators: this is the document security state */
+		info->security = g_strdup (_("No"));
+	}
+
 	return info;
 }
 

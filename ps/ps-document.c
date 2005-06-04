@@ -1347,8 +1347,10 @@ ps_document_get_info (EvDocument *document)
 	PSDocument *ps = PS_DOCUMENT (document);
 
 	info = g_new0 (EvDocumentInfo, 1);
-	info->fields_mask = EV_DOCUMENT_INFO_TITLE;
+	info->fields_mask = EV_DOCUMENT_INFO_TITLE |
+			    EV_DOCUMENT_INFO_N_PAGES;
 	info->title = g_strdup (ps->doc->title);
+	info->n_pages = ev_document_get_n_pages (document);
 
 	return info;
 }

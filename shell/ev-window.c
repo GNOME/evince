@@ -1184,11 +1184,14 @@ ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 {
-            GtkDialog *dialog;
+	EvDocumentInfo *info;
+	GtkDialog *dialog;
 
-            dialog = ev_properties_new (ev_window->priv->document, GTK_WIDGET (ev_window));
-            gtk_dialog_run (dialog);
-            gtk_widget_destroy (GTK_WIDGET (dialog));
+	info = ev_document_get_info (ev_window->priv->document);
+	dialog = ev_properties_new (info);
+	gtk_dialog_run (dialog);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	ev_document_info_free (info);
 }
 					
 static void

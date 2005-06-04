@@ -1,3 +1,22 @@
+2005-06-04  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document-info.h:
+	* backend/ev-document.c: (ev_document_info_free):
+	* data/evince-properties.glade:
+	* pdf/ev-poppler.cc:
+	* ps/ps-document.c: (ps_document_get_info):
+	* shell/ev-properties.c: (ev_properties_format_date),
+	(set_property), (ev_properties_new):
+	* shell/ev-properties.h:
+	* shell/ev-window.c: (ev_window_cmd_file_properties):
+
+	Rework properties code to take only EvPropertyInfo
+	in the constructor so that it can be useful for
+	nautilus plugin too.
+
+	Deal with backends that doesnt support some properties.
+	Make set property code generic.
+
 2005-06-04  Christian Persch <chpe@gnome.org>
 
 	* data/evince-properties.glade:
