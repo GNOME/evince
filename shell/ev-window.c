@@ -1202,7 +1202,7 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 
 	info = ev_document_get_info (document);
 	dialog = ev_properties_new (info, fonts);
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW(window));
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (ev_window));
 	gtk_dialog_run (dialog);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	ev_document_info_free (info);
