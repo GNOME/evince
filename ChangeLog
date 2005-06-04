@@ -1,3 +1,16 @@
+Fri Jun  3 21:07:57 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-view.c (get_page_extents): other_page isn't necessarily
+	page + 1.
+
+	* shell/ev-window.c: Make sure we add the timeout when we get a
+	focus-in event.
+
+	* shell/ev-view.c (view_set_adjustment_values): Add 0.5 to
+	adjustment->value before calculating the zoom factor to average
+	out all of our rounding errors.  The page no longer 'drifts' when
+	resizing.
+
 2005-06-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* data/evince-properties.glade:

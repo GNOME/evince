@@ -172,7 +172,8 @@ static void     ev_window_run_presentation              (EvWindow         *windo
 static void     ev_window_stop_presentation             (EvWindow         *window);
 static void     ev_window_cmd_view_presentation         (GtkAction        *action,
 							 EvWindow         *window);
-
+static void     show_fullscreen_popup                   (EvWindow         *window);
+							
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -316,7 +317,10 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
 
 	if (priv->fullscreen_popup != NULL) {
-		set_widget_visibility (priv->fullscreen_popup, fullscreen);
+		if (fullscreen)
+			show_fullscreen_popup (window);
+		else
+			set_widget_visibility (priv->fullscreen_popup, FALSE);
 	}
 }
 
@@ -1388,6 +1392,18 @@ fullscreen_clear_timeout (EvWindow *window)
 	ev_view_show_cursor (EV_VIEW (window->priv->view));
 }
 
+
+static void
+show_fullscreen_popup (EvWindow *window)
+{
+	if (!GTK_WIDGET_VISIBLE (window->priv->fullscreen_popup)) {
+		g_object_set (window->priv->fullscreen_popup, "visible", TRUE, NULL);
+		ev_view_show_cursor (EV_VIEW (window->priv->view));
+	}
+
+	fullscreen_set_timeout (window);	
+}
+
 static gboolean
 fullscreen_motion_notify_cb (GtkWidget *widget,
 			     GdkEventMotion *event,
@@ -1395,12 +1411,7 @@ fullscreen_motion_notify_cb (GtkWidget *widget,
 {
 	EvWindow *window = EV_WINDOW (user_data);
 
-	if (!GTK_WIDGET_VISIBLE (window->priv->fullscreen_popup)) {
-		g_object_set (window->priv->fullscreen_popup, "visible", TRUE, NULL);
-		ev_view_show_cursor (EV_VIEW (window->priv->view));
-	}
-
-	fullscreen_set_timeout (window);
+	show_fullscreen_popup (window);
 
 	return FALSE;
 }
@@ -1645,7 +1656,7 @@ ev_window_focus_in_event (GtkWidget *widget, GdkEventFocus *event)
 		      NULL);
 
 	if (fullscreen)
-		gtk_widget_show (priv->fullscreen_popup);
+		show_fullscreen_popup (window);
 
 	return GTK_WIDGET_CLASS (ev_window_parent_class)->focus_in_event (widget, event);
 }
@@ -2327,6 +2338,10 @@ ev_window_dispose (GObject *object)
 		priv->find_bar = NULL;
 	}
 
+	if (window->priv->fullscreen_timeout_source) {
+		g_source_destroy (window->priv->fullscreen_timeout_source);
+		window->priv->fullscreen_timeout_source = NULL;
+	}
 	destroy_fullscreen_popup (window);
 
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);

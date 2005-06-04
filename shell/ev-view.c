@@ -422,14 +422,16 @@ view_set_adjustment_values (EvView         *view,
 		return;
 	
 	factor = 1.0;
+	/* We add 0.5 to the values before to average out our rounding errors.
+	 */
 	switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION: 
-			factor = adjustment->value / adjustment->upper;
+			factor = (adjustment->value + 0.5) / adjustment->upper;
 			break;
     	        case SCROLL_TO_CURRENT_PAGE: 
 			break;
     	        case SCROLL_TO_CENTER: 
-			factor = (adjustment->value + adjustment->page_size * 0.5) / adjustment->upper;
+			factor = (adjustment->value + adjustment->page_size * 0.5 + 0.5) / adjustment->upper;
 			break;
 	}
 
@@ -806,7 +808,7 @@ get_page_extents (EvView       *view,
 			/* First, we get the bounding box of the two pages */
 			if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
 				ev_page_cache_get_size (view->page_cache,
-							page + 1,
+							other_page,
 							view->scale,
 							&width_2, &height_2);
 				if (width_2 > width)
