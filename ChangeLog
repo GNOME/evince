@@ -1,5 +1,16 @@
 2005-06-04  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* data/evince-properties.glade:
+	* pdf/ev-poppler.cc:
+	* shell/ev-properties.c: (setup_fonts_view):
+
+	Set the column title. Show the dialog only
+	once everything is setup.
+	Getting font info can be very slow... will
+	prolly need to make this threaded too.
+
+2005-06-04  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* backend/Makefile.am:
 	* backend/ev-document-fonts.c: (ev_document_fonts_get_type),
 	(ev_document_fonts_get_fonts_model):

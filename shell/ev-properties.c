@@ -113,6 +113,7 @@ setup_fonts_view (GladeXML *xml, GtkTreeModel *fonts)
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
+	gtk_tree_view_column_set_title (GTK_TREE_VIEW_COLUMN (column), _("Name"));
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
 					     "text", EV_DOCUMENT_FONTS_COLUMN_NAME,
 					     NULL);
