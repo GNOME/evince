@@ -525,14 +525,18 @@ pdf_document_fonts_get_fonts_model (EvDocumentFonts *document_fonts)
 
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), NULL);
 
+#ifdef POPPLER_FONT_INFO
 	iter = poppler_fonts_iter_new (pdf_document->document);
 	/* Create the model iff we have items*/
 	if (iter != NULL) {
+#endif
 		model = (GtkTreeModel *) gtk_list_store_new (EV_DOCUMENT_FONTS_COLUMN_NUM_COLUMNS,
 							     G_TYPE_STRING);
+#ifdef POPPLER_FONT_INFO
 		build_fonts_list (pdf_document, model, NULL, iter);
 		poppler_fonts_iter_free (iter);
 	}
+#endif
 
 	return model;
 }
