@@ -32,6 +32,8 @@ G_BEGIN_DECLS
 #define EV_STOCK_ZOOM_PAGE              "stock_zoom-page" 
 #define EV_STOCK_ZOOM_WIDTH             "stock_zoom-page-width" 
 #define EV_STOCK_LEAVE_FULLSCREEN       "stock_leave-fullscreen"
+#define EV_STOCK_VIEW_DUAL       	"stock_view-dual-page"
+#define EV_STOCK_VIEW_CONTINUOUS        "stock_view-continuous"
 
 void ev_stock_icons_init (void);
 
