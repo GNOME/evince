@@ -27,10 +27,10 @@ struct _EvPageCache
 	double uniform_width;
 	double uniform_height;
 
-	double max_width_page_width;
-	double max_width_page_height;
-	double max_height_page_width;
-	double max_height_page_height;
+	double  max_width;
+	double  max_height;
+	double* height_to_page;
+	double* dual_height_to_page;
 
 	EvPageCacheInfo *size_cache;
 	EvDocumentInfo *page_info;
@@ -94,6 +94,9 @@ ev_page_cache_finalize (GObject *object)
 
 	g_free (page_cache->title);
 	g_free (page_cache->size_cache);
+	g_free (page_cache->height_to_page);
+	g_free (page_cache->dual_height_to_page);
+
 	ev_document_info_free (page_cache->page_info);
 }
 
@@ -104,6 +107,7 @@ _ev_page_cache_new (EvDocument *document)
 	EvPageCache *page_cache;
 	EvPageCacheInfo *info;
 	gint i;
+	double saved_height;
 
 	page_cache = (EvPageCache *) g_object_new (EV_TYPE_PAGE_CACHE, NULL);
 
@@ -116,10 +120,8 @@ _ev_page_cache_new (EvDocument *document)
 	page_cache->has_labels = FALSE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
-	page_cache->max_width_page_width = 0;
-	page_cache->max_width_page_height = 0;
-	page_cache->max_height_page_width = 0;
-	page_cache->max_height_page_height = 0;
+	page_cache->max_width = 0;
+	page_cache->max_height = 0;
 
 	doc_info = ev_document_get_info (document);
 	if (doc_info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
@@ -151,16 +153,14 @@ _ev_page_cache_new (EvDocument *document)
 			}
 		}
 
-		if (page_width > page_cache->max_width_page_width) {
-			page_cache->max_width_page_width = page_width;
-			page_cache->max_width_page_height = page_height;
+		if (page_width > page_cache->max_width) {
+			page_cache->max_width = page_width;
 		}
 
-		if (page_height > page_cache->max_height_page_height) {
-			page_cache->max_height_page_width = page_width;
-			page_cache->max_height_page_height = page_height;
+		if (page_height > page_cache->max_height) {
+			page_cache->max_height = page_height;
 		}
-
+			
 		if (i == 0) {
 			page_cache->uniform_width = page_width;
 			page_cache->uniform_height = page_height;
@@ -186,6 +186,39 @@ _ev_page_cache_new (EvDocument *document)
 
 			info->width = page_width;
 			info->height = page_height;
+		}
+	}
+
+	page_cache->height_to_page = g_new0(double, page_cache->n_pages);
+	page_cache->dual_height_to_page = g_new0(double, page_cache->n_pages / 2 + 1);
+	
+	saved_height = 0;
+	for (i = 0; i < page_cache->n_pages; i++) {
+
+		if (page_cache->uniform) {
+			page_cache->height_to_page [i] = (i + 1) * page_cache->uniform_height;
+		} else {
+			page_cache->height_to_page [i] = saved_height + page_cache->size_cache [i].height;
+			saved_height = page_cache->height_to_page [i];
+		}
+	}
+	
+	saved_height = 0;
+	for (i = 0; i < page_cache->n_pages; i += 2) {
+
+    		if (page_cache->uniform) {
+			page_cache->dual_height_to_page [i / 2] = (i / 2 + 1) * page_cache->uniform_height;
+		} else {
+			if (i == page_cache->n_pages - 1) {
+				page_cache->dual_height_to_page [i / 2] =
+					saved_height + page_cache->size_cache [i].height;
+			}
+			else {
+				page_cache->dual_height_to_page [i / 2] = saved_height +
+				       MAX(page_cache->size_cache [i].height,			    	    
+				    	   page_cache->size_cache [i + 1].height);
+				saved_height = page_cache->dual_height_to_page [i / 2];
+			}
 		}
 	}
 
@@ -326,34 +359,51 @@ ev_page_cache_get_size (EvPageCache *page_cache,
 }
 
 
-/* Note that these aren't necessarily from the same page.
- */
 void
-ev_page_cache_get_max_width_size (EvPageCache *page_cache,
+ev_page_cache_get_max_width      (EvPageCache *page_cache,
 				  gfloat       scale,
-				  gint        *width,
-				  gint        *height)
+				  gint        *width)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
 	if (width)
-		*width = page_cache->max_width_page_width * scale;
-	if (height)
-		*height = page_cache->max_width_page_height * scale;
+		*width = page_cache->max_width * scale;
 }
 
 void
-ev_page_cache_get_max_height_size (EvPageCache *page_cache,
+ev_page_cache_get_max_height      (EvPageCache *page_cache,
 				   gfloat       scale,
-				   gint        *width,
 				   gint        *height)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
-	if (width)
-		*width = page_cache->max_height_page_width * scale;
 	if (height)
-		*height = page_cache->max_height_page_height * scale;
+		*height = page_cache->max_height * scale;
+}
+
+void    
+ev_page_cache_get_height_to_page (EvPageCache *page_cache,
+				  gint page,
+				  gfloat       scale,
+				  gint        *height,
+				  gint 	      *dual_height)
+{
+	double result = 0.0;
+	double dual_result = 0.0;
+	
+	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
+
+	if (page > 0)
+		result = page_cache->height_to_page [page - 1];	
+	
+	if (height)
+		*height = result * scale;
+
+	if (page > 1)
+		dual_result = page_cache->dual_height_to_page [page / 2 - 1];	
+	
+	if (dual_height)
+		*dual_height = dual_result * scale;
 }
 
 gint

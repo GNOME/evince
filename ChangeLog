@@ -1,3 +1,18 @@
+2005-06-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/ev-page-cache.c: (ev_page_cache_finalize),
+	(_ev_page_cache_new), (ev_page_cache_get_max_width),
+	(ev_page_cache_get_max_height), (ev_page_cache_get_height_to_page):
+	* backend/ev-page-cache.h:
+	* shell/ev-view.c: (scroll_to_current_page),
+	(view_update_range_and_current_page), (get_page_y_offset),
+	(get_page_extents), (ev_view_size_request_continuous_dual_page),
+	(ev_view_size_request_continuous),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous):
+	
+	More compact EvView layout in document with pages of different size.
+
 Sat Jun  4 19:20:57 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-window.c (ev_window_cmd_file_properties): fix

@@ -39,14 +39,17 @@ void           ev_page_cache_get_size            (EvPageCache *page_cache,
 						  gfloat       scale,
 						  gint        *width,
 						  gint        *height);
-void           ev_page_cache_get_max_width_size  (EvPageCache *page_cache,
+void           ev_page_cache_get_max_width      (EvPageCache *page_cache,
 						  gfloat       scale,
-						  gint        *width,
-						  gint        *height);
-void           ev_page_cache_get_max_height_size (EvPageCache *page_cache,
+						  gint        *width);
+void           ev_page_cache_get_max_height      (EvPageCache *page_cache,
 						  gfloat       scale,
-						  gint        *width,
 						  gint        *height);
+void           ev_page_cache_get_height_to_page (EvPageCache *page_cache,
+						  gint page,
+						  gfloat       scale,
+						  gint        *height,
+						  gint	      *dual_height);
 gint           ev_page_cache_get_max_label_chars (EvPageCache *page_cache);
 char          *ev_page_cache_get_page_label      (EvPageCache *page_cache,
 						  gint         page);
