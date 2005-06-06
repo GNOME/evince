@@ -523,6 +523,7 @@ job_finished_callback (EvJobLinks     *job,
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
 	g_object_unref (job);
+	priv->job = NULL;
 
 	/* Expand one level of the tree */
 	path = gtk_tree_path_new_first ();
@@ -572,6 +573,13 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 	priv->document = g_object_ref (document);
 	priv->page_cache = ev_document_get_page_cache (document);
 
+	if (priv->job) {
+		g_signal_handlers_disconnect_by_func (priv->job,
+						      job_finished_callback,
+						      sidebar_links);
+		g_object_unref (priv->job);
+	}
+
 	priv->job = ev_job_links_new (document);
 	g_signal_connect (priv->job,
 			  "finished",
@@ -579,7 +587,6 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 			  sidebar_links);
 	/* The priority doesn't matter for this job */
 	ev_job_queue_add_job (priv->job, EV_JOB_PRIORITY_LOW);
-
 }
 
 static gboolean
