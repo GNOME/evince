@@ -366,7 +366,7 @@ drag_data_get_cb (GtkWidget          *widget,
     }
 
   gtk_selection_data_set (selection_data,
-			  selection_data->target, 8, target, strlen (target));
+			  selection_data->target, 8, (unsigned char *)target, strlen (target));
 }
 
 static gchar *
@@ -619,12 +619,12 @@ parse_item_list (EggToolbarEditor *t,
 {
   while (child)
     {
-      if (xmlStrEqual (child->name, "toolitem"))
+      if (xmlStrEqual (child->name, (xmlChar *)"toolitem"))
 	{
 	  xmlChar *name;
 
-	  name = xmlGetProp (child, "name");
-	  egg_toolbar_editor_add_action (t, name);
+	  name = xmlGetProp (child, (xmlChar *)"name");
+	  egg_toolbar_editor_add_action (t, (char *)name);
 	  xmlFree (name);
 	}
       child = child->next;
@@ -692,7 +692,7 @@ egg_toolbar_editor_load_actions (EggToolbarEditor *editor,
 
   while (child)
     {
-      if (xmlStrEqual (child->name, "available"))
+      if (xmlStrEqual (child->name, (xmlChar *)"available"))
 	{
 	  parse_item_list (editor, child->children);
 	}

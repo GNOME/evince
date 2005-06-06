@@ -54,7 +54,7 @@ static void dvi_pixbuf_draw_rule(DviContext *dvi, int x, int y, Uint w, Uint h, 
 {
 	DviPixbufDevice *c_device = (DviPixbufDevice *) dvi->device.device_data;
 	gint rowstride;
-	gchar *p;
+	guchar *p;
 	gint i, j;    
 	gint red, green, blue;
 	
@@ -140,7 +140,7 @@ static void dvi_pixbuf_free_image(void *ptr)
 
 static void dvi_pixbuf_put_pixel(void *image, int x, int y, Ulong color)
 {
-    gchar *p;
+    guchar *p;
     
     p = gdk_pixbuf_get_pixels (GDK_PIXBUF(image)) + y * gdk_pixbuf_get_rowstride(GDK_PIXBUF(image)) + x * 4;
 
