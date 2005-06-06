@@ -716,7 +716,6 @@ start_interpreter (PSDocument *gs)
 				  gdk_x11_drawable_get_xid (gs->bpixmap));
 	LOG ("Launching ghostview with env %s", gv_env);
 
-	gs->busy = TRUE;
 	gs->interpreter_pid = fork ();
 	switch (gs->interpreter_pid) {
 		case -1:                     /* error */
