@@ -103,7 +103,6 @@ ev_page_cache_finalize (GObject *object)
 EvPageCache *
 _ev_page_cache_new (EvDocument *document)
 {
-	EvDocumentInfo *doc_info;
 	EvPageCache *page_cache;
 	EvPageCacheInfo *info;
 	gint i;
@@ -122,14 +121,13 @@ _ev_page_cache_new (EvDocument *document)
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 	page_cache->max_width = 0;
 	page_cache->max_height = 0;
+	page_cache->page_info = ev_document_get_info (document);
 
-	doc_info = ev_document_get_info (document);
-	if (doc_info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
-		page_cache->title = g_strdup (doc_info->title);
+	if (page_cache->page_info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
+		page_cache->title = g_strdup (page_cache->page_info->title);
 	} else {
 		page_cache->title = NULL;
 	}
-	g_free (doc_info);
 
 	for (i = 0; i < page_cache->n_pages; i++) {
 		double page_width = 0;
@@ -221,8 +219,6 @@ _ev_page_cache_new (EvDocument *document)
 			}
 		}
 	}
-
-	page_cache->page_info = ev_document_get_info (document);
 
 	/* make some sanity check assertions */
 	if (! page_cache->uniform)
@@ -317,7 +313,7 @@ ev_page_cache_set_link (EvPageCache *page_cache,
 	ev_page_cache_set_current_page (page_cache, ev_link_get_page (link));
 }
 
-char *
+const char *
 ev_page_cache_get_title (EvPageCache *page_cache)
 {
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), NULL);

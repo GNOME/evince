@@ -520,13 +520,12 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 
 	password_needed = (ev_window->priv->password_document != NULL);
 	if (document && ev_window->priv->page_cache) {
-		doc_title = ev_page_cache_get_title (ev_window->priv->page_cache);
+		doc_title = g_strdup (ev_page_cache_get_title (ev_window->priv->page_cache));
 
 		/* Make sure we get a valid title back */
 		if (doc_title) {
 			if (doc_title[0] == '\000' ||
 			    !g_utf8_validate (doc_title, -1, NULL)) {
-				g_free (doc_title);
 				doc_title = NULL;
 			}
 		}

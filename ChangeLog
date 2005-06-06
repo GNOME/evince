@@ -1,5 +1,17 @@
 2005-06-06  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* backend/ev-page-cache.c: (_ev_page_cache_new):
+	* backend/ev-page-cache.h:
+
+	Use a const to return title so that we dont double
+	free it. Small cleanup and fix a leak.
+
+	* shell/ev-window.c: (update_window_title):
+
+	strdup value from get_title.
+
+2005-06-06  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* shell/ev-sidebar-links.c: (job_finished_callback),
 	(ev_sidebar_links_set_document):
 

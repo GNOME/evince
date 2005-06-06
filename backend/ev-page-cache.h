@@ -33,7 +33,7 @@ GType          ev_page_cache_get_type            (void) G_GNUC_CONST;
 /* Used by ev-document.c only */
 EvPageCache   *_ev_page_cache_new                (EvDocument  *document);
 gint           ev_page_cache_get_n_pages         (EvPageCache *page_cache);
-char          *ev_page_cache_get_title           (EvPageCache *page_cache);
+const char    *ev_page_cache_get_title           (EvPageCache *page_cache);
 void           ev_page_cache_get_size            (EvPageCache *page_cache,
 						  gint         page,
 						  gfloat       scale,
