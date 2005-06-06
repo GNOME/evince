@@ -67,6 +67,8 @@ static void row_activated_callback 			(GtkTreeView *treeview,
 		                                         GtkTreePath *arg1,
 	                                                 GtkTreeViewColumn *arg2,
 		                                         gpointer user_data);
+static void job_finished_callback 			(EvJobLinks     *job,
+				    		         EvSidebarLinks *sidebar_links);
 static void ev_sidebar_links_page_iface_init 		(EvSidebarPageIface *iface);
 static void ev_sidebar_links_set_document      	 	(EvSidebarPage  *sidebar_page,
 		    			        	 EvDocument     *document);
@@ -141,6 +143,14 @@ ev_sidebar_links_dispose (GObject *object)
 		g_object_unref (sidebar->priv->document);
 		sidebar->priv->document = NULL;
 		sidebar->priv->page_cache = NULL;
+	}
+
+	if (sidebar->priv->job) {
+		g_signal_handlers_disconnect_by_func (sidebar->priv->job,
+						      job_finished_callback, sidebar);
+		ev_job_queue_remove_job (sidebar->priv->job);						      
+		g_object_unref (sidebar->priv->job);
+		sidebar->priv->job = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_sidebar_links_parent_class)->dispose (object);
