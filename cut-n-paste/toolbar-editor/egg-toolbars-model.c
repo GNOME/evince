@@ -19,9 +19,7 @@
  *  $Id$
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "egg-toolbars-model.h"
 #include "eggmarshalers.h"
@@ -77,7 +75,7 @@ egg_toolbars_model_get_type (void)
 {
   static GType type = 0;
 
-  if (type == 0)
+  if (G_UNLIKELY (type == 0))
     {
       static const GTypeInfo our_info = {
 	sizeof (EggToolbarsModelClass),
@@ -110,16 +108,16 @@ egg_toolbars_model_to_xml (EggToolbarsModel *t)
   tl = t->priv->toolbars;
 
   xmlIndentTreeOutput = TRUE;
-  doc = xmlNewDoc ((xmlChar *)"1.0");
-  doc->children = xmlNewDocNode (doc, NULL, (xmlChar *)"toolbars", NULL);
+  doc = xmlNewDoc ((const xmlChar*) "1.0");
+  doc->children = xmlNewDocNode (doc, NULL, (const xmlChar*) "toolbars", NULL);
 
   for (l1 = tl->children; l1 != NULL; l1 = l1->next)
     {
       xmlNodePtr tnode;
       EggToolbarsToolbar *toolbar = l1->data;
 
-      tnode = xmlNewChild (doc->children, NULL, (xmlChar *)"toolbar", NULL);
-      xmlSetProp (tnode, (xmlChar *)"name", (xmlChar *)toolbar->name);
+      tnode = xmlNewChild (doc->children, NULL, (const xmlChar*) "toolbar", NULL);
+      xmlSetProp (tnode, (const xmlChar*) "name", (const xmlChar*) toolbar->name);
 
       for (l2 = l1->children; l2 != NULL; l2 = l2->next)
 	{
@@ -128,16 +126,16 @@ egg_toolbars_model_to_xml (EggToolbarsModel *t)
 
 	  if (item->separator)
 	    {
-	      node = xmlNewChild (tnode, NULL, (xmlChar *)"separator", NULL);
+	      node = xmlNewChild (tnode, NULL, (const xmlChar*) "separator", NULL);
 	    }
 	  else
 	    {
 	      char *data;
 
-	      node = xmlNewChild (tnode, NULL, (xmlChar *)"toolitem", NULL);
+	      node = xmlNewChild (tnode, NULL, (const xmlChar*) "toolitem", NULL);
 	      data = egg_toolbars_model_get_item_data (t, item->type, item->id);
-	      xmlSetProp (node, (xmlChar *)"type", (xmlChar *)item->type);
-	      xmlSetProp (node, (xmlChar *)"name", (xmlChar *)data);
+	      xmlSetProp (node, (const xmlChar*) "type", (const xmlChar*) item->type);
+	      xmlSetProp (node, (const xmlChar*) "name", (const xmlChar*) data);
 	      g_free (data);
 	    }
 	}
@@ -214,7 +212,7 @@ egg_toolbars_model_save (EggToolbarsModel *t,
 
   doc = egg_toolbars_model_to_xml (t);
   root = xmlDocGetRootElement (doc);
-  xmlSetProp (root, (xmlChar *)"version", (xmlChar *)version);
+  xmlSetProp (root, (const xmlChar*) "version", (const xmlChar*) version);
   safe_save_xml (xml_file, doc);
   xmlFreeDoc (doc);
 }
@@ -365,31 +363,31 @@ parse_item_list (EggToolbarsModel *t,
 {
   while (child)
     {
-      if (xmlStrEqual (child->name, (xmlChar *)"toolitem"))
+      if (xmlStrEqual (child->name, (const xmlChar*) "toolitem"))
 	{
 	  xmlChar *name, *type;
 	  char *id;
 
-	  name = xmlGetProp (child, (xmlChar *)"name");
-	  type = xmlGetProp (child, (xmlChar *)"type");
+	  name = xmlGetProp (child, (const xmlChar*) "name");
+	  type = xmlGetProp (child, (const xmlChar*) "type");
           if (type == NULL)
             {
-              type = xmlStrdup ((xmlChar *)EGG_TOOLBAR_ITEM_TYPE);
+              type = xmlCharStrdup (EGG_TOOLBAR_ITEM_TYPE);
             }
 
 	  if (name != NULL && name[0] != '\0' && type != NULL)
 	    {
-              id = egg_toolbars_model_get_item_id (t, (char *)type, (char *)name);
+              id = egg_toolbars_model_get_item_id (t, (const char*)type, (const char*)name);
 	      if (id != NULL)
 	        {
-	          egg_toolbars_model_add_item (t, position, -1, id, (char *)type);
+	          egg_toolbars_model_add_item (t, position, -1, id, (const char*)type);
                 }
               g_free (id);
             }
 	  xmlFree (name);
           xmlFree (type);
 	}
-      else if (xmlStrEqual (child->name, (xmlChar *)"separator"))
+      else if (xmlStrEqual (child->name, (const xmlChar*) "separator"))
 	{
 	  egg_toolbars_model_add_separator (t, position, -1);
 	}
@@ -425,21 +423,21 @@ parse_toolbars (EggToolbarsModel *t,
 {
   while (child)
     {
-      if (xmlStrEqual (child->name, (xmlChar *)"toolbar"))
+      if (xmlStrEqual (child->name, (const xmlChar*) "toolbar"))
 	{
 	  xmlChar *name;
 	  xmlChar *style;
 	  int position;
 
-	  name = xmlGetProp (child, (xmlChar *)"name");
-	  position = egg_toolbars_model_add_toolbar (t, -1, (char *)name);
+	  name = xmlGetProp (child, (const xmlChar*) "name");
+	  position = egg_toolbars_model_add_toolbar (t, -1, (const char*) name);
 	  xmlFree (name);
 
-	  style = xmlGetProp (child, (xmlChar *)"style");
-	  if (style && xmlStrEqual (style, (xmlChar *)"icons-only"))
+	  style = xmlGetProp (child, (const xmlChar*) "style");
+	  if (style && xmlStrEqual (style, (const xmlChar*) "icons-only"))
 	    {
 	      /* FIXME: use toolbar position instead of 0 */
-	      egg_toolbars_model_set_flags (t, 0, EGG_TB_MODEL_ICONS_ONLY);
+	      egg_toolbars_model_set_flags (t, 0, EGG_TB_MODEL_ICONS);
 	    }
 	  xmlFree (style);
 

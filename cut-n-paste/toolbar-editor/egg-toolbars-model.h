@@ -14,6 +14,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * 
+ *  $Id$
  */
 
 #ifndef EGG_TOOLBARS_MODEL_H
@@ -24,7 +26,6 @@
 #include <gdk/gdktypes.h>
 
 G_BEGIN_DECLS
-
 
 #define EGG_TYPE_TOOLBARS_MODEL             (egg_toolbars_model_get_type ())
 #define EGG_TOOLBARS_MODEL(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_TOOLBARS_MODEL, EggToolbarsModel))
@@ -42,10 +43,11 @@ typedef struct EggToolbarsModelClass	EggToolbarsModelClass;
 typedef enum
 {
   EGG_TB_MODEL_NOT_REMOVABLE	 = 1 << 0,
-  EGG_TB_MODEL_ICONS_ONLY	 = 1 << 1,
-  EGG_TB_MODEL_TEXT_ONLY	 = 1 << 2,
-  EGG_TB_MODEL_ICONS_TEXT	 = 1 << 3,
-  EGG_TB_MODEL_ICONS_TEXT_HORIZ	 = 1 << 4,
+  EGG_TB_MODEL_BOTH		 = 1 << 1,
+  EGG_TB_MODEL_BOTH_HORIZ	 = 1 << 2,
+  EGG_TB_MODEL_ICONS		 = 1 << 3,
+  EGG_TB_MODEL_TEXT		 = 1 << 4,
+  EGG_TB_MODEL_STYLES_MASK	 = 0x1F,
   EGG_TB_MODEL_ACCEPT_ITEMS_ONLY = 1 << 5
 } EggTbModelFlags;
 
@@ -91,6 +93,7 @@ struct EggToolbarsModelClass
 			    const char       *type);
 };
 
+GType		  egg_toolbars_model_flags_get_type (void);
 GType		  egg_toolbars_model_get_type       (void);
 EggToolbarsModel *egg_toolbars_model_new	    (void);
 gboolean          egg_toolbars_model_load           (EggToolbarsModel *model,

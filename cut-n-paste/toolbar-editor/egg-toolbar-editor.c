@@ -18,6 +18,8 @@
  *  $Id$
  */
 
+#include "config.h"
+
 #include "egg-toolbar-editor.h"
 #include "egg-editable-toolbar.h"
 #include "eggintl.h"
@@ -33,15 +35,13 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtkhbox.h>
 
-static GtkTargetEntry dest_drag_types[] = {
+static const GtkTargetEntry dest_drag_types[] = {
   {EGG_TOOLBAR_ITEM_TYPE, GTK_TARGET_SAME_APP, 0},
 };
-static int n_dest_drag_types = G_N_ELEMENTS (dest_drag_types);
 
-static GtkTargetEntry source_drag_types[] = {
+static const GtkTargetEntry source_drag_types[] = {
   {EGG_TOOLBAR_ITEM_TYPE, GTK_TARGET_SAME_APP, 0},
 };
-static int n_source_drag_types = G_N_ELEMENTS (source_drag_types);
 
 static void egg_toolbar_editor_class_init	(EggToolbarEditorClass *klass);
 static void egg_toolbar_editor_init		(EggToolbarEditor *t);
@@ -75,9 +75,9 @@ struct EggToolbarEditorPrivate
 GType
 egg_toolbar_editor_get_type (void)
 {
-  static GType egg_toolbar_editor_type = 0;
+  static GType type = 0;
 
-  if (egg_toolbar_editor_type == 0)
+  if (G_UNLIKELY (type == 0))
     {
       static const GTypeInfo our_info = {
 	sizeof (EggToolbarEditorClass),
@@ -91,12 +91,12 @@ egg_toolbar_editor_get_type (void)
 	(GInstanceInitFunc) egg_toolbar_editor_init
       };
 
-      egg_toolbar_editor_type = g_type_register_static (GTK_TYPE_VBOX,
-							"EggToolbarEditor",
-							&our_info, 0);
+      type = g_type_register_static (GTK_TYPE_VBOX,
+				     "EggToolbarEditor",
+				     &our_info, 0);
     }
 
-  return egg_toolbar_editor_type;
+  return type;
 }
 
 static gint
@@ -366,7 +366,8 @@ drag_data_get_cb (GtkWidget          *widget,
     }
 
   gtk_selection_data_set (selection_data,
-			  selection_data->target, 8, (unsigned char *)target, strlen (target));
+                          selection_data->target, 8,
+                          (const guchar *)target, strlen (target));
 }
 
 static gchar *
@@ -450,7 +451,7 @@ editor_create_item (EggToolbarEditor *editor,
   gtk_widget_show (event_box);
   gtk_drag_source_set (event_box,
 		       GDK_BUTTON1_MASK,
-		       source_drag_types, n_source_drag_types, action);
+		       source_drag_types, G_N_ELEMENTS (source_drag_types), action);
   g_signal_connect (event_box, "drag_data_get",
 		    G_CALLBACK (drag_data_get_cb), editor);
   g_signal_connect (event_box, "drag_data_delete",
@@ -507,7 +508,7 @@ update_editor_sheet (EggToolbarEditor *editor)
   gtk_scrolled_window_add_with_viewport
     (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window), table);
   gtk_drag_dest_set (table, GTK_DEST_DEFAULT_ALL,
-		     dest_drag_types, n_dest_drag_types, GDK_ACTION_MOVE);
+		     dest_drag_types, G_N_ELEMENTS (dest_drag_types), GDK_ACTION_MOVE);
   g_signal_connect (table, "drag_data_received",
 		    G_CALLBACK (editor_drag_data_received_cb), editor);
 
@@ -561,11 +562,6 @@ static void
 setup_editor (EggToolbarEditor *editor)
 {
   GtkWidget *scrolled_window;
-  GtkWidget *label_hbox;
-  GtkWidget *image;
-  GtkWidget *label;
-
-  g_return_if_fail (EGG_IS_TOOLBAR_EDITOR (editor));
 
   gtk_container_set_border_width (GTK_CONTAINER (editor), 12);
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -574,18 +570,6 @@ setup_editor (EggToolbarEditor *editor)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_box_pack_start (GTK_BOX (editor), scrolled_window, TRUE, TRUE, 0);
-  label_hbox = gtk_hbox_new (FALSE, 6);
-  gtk_widget_show (label_hbox);
-  gtk_box_pack_start (GTK_BOX (editor), label_hbox, FALSE, FALSE, 0);
-  image =
-    gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
-  gtk_widget_show (image);
-  gtk_box_pack_start (GTK_BOX (label_hbox), image, FALSE, FALSE, 0);
-  label = gtk_label_new (_("Drag an item onto the toolbars above to add it, "
-			   "from the toolbars in the items table to remove it."));
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (label_hbox), label, FALSE, TRUE, 0);
 }
 
 static void
@@ -619,12 +603,12 @@ parse_item_list (EggToolbarEditor *t,
 {
   while (child)
     {
-      if (xmlStrEqual (child->name, (xmlChar *)"toolitem"))
+      if (xmlStrEqual (child->name, (const xmlChar*) "toolitem"))
 	{
 	  xmlChar *name;
 
-	  name = xmlGetProp (child, (xmlChar *)"name");
-	  egg_toolbar_editor_add_action (t, (char *)name);
+	  name = xmlGetProp (child, (const xmlChar*) "name");
+	  egg_toolbar_editor_add_action (t, (const char*)name);
 	  xmlFree (name);
 	}
       child = child->next;
@@ -692,7 +676,7 @@ egg_toolbar_editor_load_actions (EggToolbarEditor *editor,
 
   while (child)
     {
-      if (xmlStrEqual (child->name, (xmlChar *)"available"))
+      if (xmlStrEqual (child->name, (const xmlChar*) "available"))
 	{
 	  parse_item_list (editor, child->children);
 	}
