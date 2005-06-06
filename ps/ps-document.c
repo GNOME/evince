@@ -557,7 +557,7 @@ output(gpointer data, gint source, GdkInputCondition condition)
   }
   if(bytes > 0) {
     buf[bytes] = '\0';
-    printf(buf);
+    printf("%s", buf);
   }
 }
 
