@@ -57,7 +57,6 @@ struct _PSDocument {
 
   gboolean busy;                /* Is gs busy drawing? */
   gboolean structured_doc;
-  gboolean loaded;
 
   struct record_list *ps_input;
   gchar *input_buffer_ptr;

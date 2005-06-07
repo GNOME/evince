@@ -1,5 +1,16 @@
 2005-06-07  Marco Pesenti Gritti <mpg@redhat.com>
 
+	* ps/ps-document.c: (ps_document_init),
+	(send_ps), (get_page_box), (output), (catchPipe), (input),
+	(stop_interpreter), (file_length), (file_readable),
+	(check_filecompressed), (ps_document_enable_interpreter),
+	(document_load), (ps_async_renderer_render_pixbuf):
+	* ps/ps-document.h:
+
+	Big cleanup of the ps code
+
+2005-06-07  Marco Pesenti Gritti <mpg@redhat.com>
+
 	* backend/Makefile.am:
 	* backend/ev-async-renderer.c: (ev_async_renderer_get_type),
 	(ev_async_renderer_class_init), (ev_async_renderer_render_pixbuf):

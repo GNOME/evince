@@ -49,56 +49,56 @@
 #include "ev-ps-exporter.h"
 #include "ev-async-renderer.h"
 
-#ifdef HAVE_LOCALE_H
-#   include <locale.h>
-#endif
-
-/* if POSIX O_NONBLOCK is not available, use O_NDELAY */
-#if !defined(O_NONBLOCK) && defined(O_NDELAY)
-#   define O_NONBLOCK O_NDELAY
-#endif
-
 #define MAX_BUFSIZE 1024
 
-#define PS_DOCUMENT_IS_COMPRESSED(gs)       (PS_DOCUMENT(gs)->gs_filename_unc != NULL)
-#define PS_DOCUMENT_GET_PS_FILE(gs)         (PS_DOCUMENT_IS_COMPRESSED(gs) ? \
-                                        PS_DOCUMENT(gs)->gs_filename_unc : \
-                                        PS_DOCUMENT(gs)->gs_filename)
+#define PS_DOCUMENT_IS_COMPRESSED(gs) (PS_DOCUMENT(gs)->gs_filename_unc != NULL)
+#define PS_DOCUMENT_GET_PS_FILE(gs)   (PS_DOCUMENT_IS_COMPRESSED(gs) ? \
+                                       PS_DOCUMENT(gs)->gs_filename_unc : \
+                                       PS_DOCUMENT(gs)->gs_filename)
 
 /* structure to describe section of file to send to ghostscript */
-struct record_list {
-  FILE *fp;
-  long begin;
-  guint len;
-  gboolean seek_needed;
-  gboolean close;
-  struct record_list *next;
+struct record_list
+{
+	FILE *fp;
+	long begin;
+	guint len;
+	gboolean seek_needed;
+	gboolean close;
+	struct record_list *next;
 };
-
-typedef struct {
-	int page;
-	double scale;
-	PSDocument *document;
-} PSRenderJob;
 
 static gboolean broken_pipe = FALSE;
 
 /* Forward declarations */
-static void ps_document_init(PSDocument * gs);
-static void ps_document_class_init(PSDocumentClass * klass);
-static void send_ps(PSDocument * gs, long begin, unsigned int len, gboolean close);
-static void close_pipe(int p[2]);
-static void output(gpointer data, gint source, GdkInputCondition condition);
-static void input(gpointer data, gint source, GdkInputCondition condition);
-static void stop_interpreter(PSDocument * gs);
-static gint start_interpreter(PSDocument * gs);
-static void ps_document_document_iface_init (EvDocumentIface *iface);
-static void ps_document_ps_exporter_iface_init (EvPSExporterIface *iface);
-static void ps_async_renderer_iface_init (EvAsyncRendererIface *iface);
-static gboolean ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data);
+static void	ps_document_init			(PSDocument           *gs);
+static void	ps_document_class_init			(PSDocumentClass      *klass);
+static void	send_ps					(PSDocument           *gs,
+							 long                  begin,
+							 unsigned int          len,
+							 gboolean	       close);
+static void	output					(gpointer              data,
+							 gint                  source,
+							 GdkInputCondition     condition);
+static void	input					(gpointer              data,
+							 gint		       source,
+							 GdkInputCondition     condition);
+static void	stop_interpreter			(PSDocument           *gs);
+static gint	start_interpreter			(PSDocument	      *gs);
+static void	ps_document_document_iface_init		(EvDocumentIface      *iface);
+static void	ps_document_ps_exporter_iface_init	(EvPSExporterIface    *iface);
+static void	ps_async_renderer_iface_init		(EvAsyncRendererIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (PSDocument, ps_document, G_TYPE_OBJECT,
+                         {
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
+							ps_document_document_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
+							ps_document_ps_exporter_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_ASYNC_RENDERER,
+							ps_async_renderer_iface_init);
+			 });
 
 static GObjectClass *parent_class = NULL;
-
 static PSDocumentClass *gs_class = NULL;
 
 static void
@@ -119,7 +119,6 @@ ps_document_init (PSDocument *gs)
 	gs->send_filename_to_gs = FALSE;
 
 	gs->doc = NULL;
-	gs->loaded = FALSE;
 
 	gs->interpreter_input = -1;
 	gs->interpreter_output = -1;
@@ -246,42 +245,41 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 }
 
 static void
-send_ps(PSDocument * gs, long begin, unsigned int len, gboolean close)
+send_ps (PSDocument *gs, long begin, unsigned int len, gboolean close)
 {
-  struct record_list *ps_new;
+	struct record_list *ps_new;
 
-  if(gs->interpreter_input < 0) {
-    g_critical("No pipe to gs: error in send_ps().");
-    return;
-  }
+	if (gs->interpreter_input < 0) {
+		g_critical("No pipe to gs: error in send_ps().");
+		return;
+	}
 
-  ps_new = (struct record_list *) g_malloc(sizeof(struct record_list));
-  ps_new->fp = gs->gs_psfile;
-  ps_new->begin = begin;
-  ps_new->len = len;
-  ps_new->seek_needed = TRUE;
-  ps_new->close = close;
-  ps_new->next = NULL;
+	ps_new = g_new0 (struct record_list, 1);
+	ps_new->fp = gs->gs_psfile;
+	ps_new->begin = begin;
+	ps_new->len = len;
+	ps_new->seek_needed = TRUE;
+	ps_new->close = close;
+	ps_new->next = NULL;
 
-  if(gs->input_buffer == NULL) {
-    gs->input_buffer = g_malloc(MAX_BUFSIZE);
-  }
+	if (gs->input_buffer == NULL) {
+		gs->input_buffer = g_malloc(MAX_BUFSIZE);
+	}
 
-  if(gs->ps_input == NULL) {
-    gs->input_buffer_ptr = gs->input_buffer;
-    gs->bytes_left = len;
-    gs->buffer_bytes_left = 0;
-    gs->ps_input = ps_new;
-    gs->interpreter_input_id =
-      gdk_input_add(gs->interpreter_input, GDK_INPUT_WRITE, input, gs);
-  }
-  else {
-    struct record_list *p = gs->ps_input;
-    while(p->next != NULL) {
-      p = p->next;
-    }
-    p->next = ps_new;
-  }
+	if (gs->ps_input == NULL) {
+		gs->input_buffer_ptr = gs->input_buffer;
+		gs->bytes_left = len;
+		gs->buffer_bytes_left = 0;
+		gs->ps_input = ps_new;
+		gs->interpreter_input_id = gdk_input_add
+			(gs->interpreter_input, GDK_INPUT_WRITE, input, gs);
+	} else {
+		struct record_list *p = gs->ps_input;
+		while (p->next != NULL) {
+			p = p->next;
+		}
+		p->next = ps_new;
+	}
 }
 
 static float
@@ -340,94 +338,88 @@ setup_pixmap (PSDocument *gs, int page, double scale)
 static void
 get_page_box (PSDocument *gs, int page, int *urx, int *ury, int *llx, int *lly)
 {
-  gint new_llx = 0;
-  gint new_lly = 0;
-  gint new_urx = 0;
-  gint new_ury = 0;
-  GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes();
-  int new_pagesize = -1;
+	gint new_llx = 0;
+	gint new_lly = 0;
+	gint new_urx = 0;
+	gint new_ury = 0;
+	GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes ();
+	int new_pagesize = -1;
 
-  g_return_if_fail(PS_IS_DOCUMENT(gs));
+	g_return_if_fail (PS_IS_DOCUMENT (gs));
 
-  if(new_pagesize == -1) {
-    new_pagesize = DEFAULT_PAGE_SIZE;
-    if(gs->doc) {
-      /* If we have a document:
-         We use -- the page size (if specified)
-         or the doc. size (if specified)
-         or the page bbox (if specified)
-         or the bounding box
-       */
-      if((page >= 0) && (gs->doc->numpages > page) &&
-         (gs->doc->pages) && (gs->doc->pages[page].size)) {
-        new_pagesize = gs->doc->pages[page].size - gs->doc->size;
-      }
-      else if(gs->doc->default_page_size != NULL) {
-        new_pagesize = gs->doc->default_page_size - gs->doc->size;
-      }
-      else if((page >= 0) &&
-              (gs->doc->numpages > page) &&
-              (gs->doc->pages) &&
-              (gs->doc->pages[page].boundingbox[URX] >
-               gs->doc->pages[page].boundingbox[LLX]) &&
-              (gs->doc->pages[page].boundingbox[URY] >
-               gs->doc->pages[page].boundingbox[LLY])) {
-        new_pagesize = -1;
-      }
-      else if((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
-              (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
-        new_pagesize = -1;
-      }
-    }
-  }
+	if (new_pagesize == -1) {
+		new_pagesize = DEFAULT_PAGE_SIZE;
+		if (gs->doc) {
+		/* If we have a document:
+         	 * We use -- the page size (if specified)
+	         * or the doc. size (if specified)
+	         * or the page bbox (if specified)
+	         * or the bounding box
+      		 */
+			if ((page >= 0) && (gs->doc->numpages > page) &&
+			    (gs->doc->pages) && (gs->doc->pages[page].size)) {
+				new_pagesize = gs->doc->pages[page].size - gs->doc->size;
+			} else if (gs->doc->default_page_size != NULL) {
+				new_pagesize = gs->doc->default_page_size - gs->doc->size;
+			} else if ((page >= 0) &&
+				   (gs->doc->numpages > page) &&
+				   (gs->doc->pages) &&
+				   (gs->doc->pages[page].boundingbox[URX] >
+				    gs->doc->pages[page].boundingbox[LLX]) &&
+              			   (gs->doc->pages[page].boundingbox[URY] >
+               			    gs->doc->pages[page].boundingbox[LLY])) {
+        			new_pagesize = -1;
+      			} else if ((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
+              			   (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
+				new_pagesize = -1;
+			}
+		}
+	}
 
-  /* Compute bounding box */
-  if(gs->doc && (gs->doc->epsf || new_pagesize == -1)) {    /* epsf or bbox */
-    if((page >= 0) &&
-       (gs->doc->pages) &&
-       (gs->doc->pages[page].boundingbox[URX] >
-        gs->doc->pages[page].boundingbox[LLX])
-       && (gs->doc->pages[page].boundingbox[URY] >
-           gs->doc->pages[page].boundingbox[LLY])) {
-      /* use page bbox */
-      new_llx = gs->doc->pages[page].boundingbox[LLX];
-      new_lly = gs->doc->pages[page].boundingbox[LLY];
-      new_urx = gs->doc->pages[page].boundingbox[URX];
-      new_ury = gs->doc->pages[page].boundingbox[URY];
-    }
-    else if((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
-            (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
-      /* use doc bbox */
-      new_llx = gs->doc->boundingbox[LLX];
-      new_lly = gs->doc->boundingbox[LLY];
-      new_urx = gs->doc->boundingbox[URX];
-      new_ury = gs->doc->boundingbox[URY];
-    }
-  }
-  else {
-    if(new_pagesize < 0)
-      new_pagesize = DEFAULT_PAGE_SIZE;
-    new_llx = new_lly = 0;
-    if(gs->doc && gs->doc->size &&
-       (new_pagesize < gs->doc->numsizes)) {
-      new_urx = gs->doc->size[new_pagesize].width;
-      new_ury = gs->doc->size[new_pagesize].height;
-    }
-    else {
-      new_urx = papersizes[new_pagesize].width;
-      new_ury = papersizes[new_pagesize].height;
-    }
-  }
+	/* Compute bounding box */
+	if (gs->doc && (gs->doc->epsf || new_pagesize == -1)) {    /* epsf or bbox */
+		if ((page >= 0) &&
+		    (gs->doc->pages) &&
+		    (gs->doc->pages[page].boundingbox[URX] >
+		     gs->doc->pages[page].boundingbox[LLX]) &&
+		    (gs->doc->pages[page].boundingbox[URY] >
+                     gs->doc->pages[page].boundingbox[LLY])) {
+			/* use page bbox */
+			new_llx = gs->doc->pages[page].boundingbox[LLX];
+			new_lly = gs->doc->pages[page].boundingbox[LLY];
+			new_urx = gs->doc->pages[page].boundingbox[URX];
+			new_ury = gs->doc->pages[page].boundingbox[URY];
+		} else if ((gs->doc->boundingbox[URX] > gs->doc->boundingbox[LLX]) &&
+        	           (gs->doc->boundingbox[URY] > gs->doc->boundingbox[LLY])) {
+			/* use doc bbox */
+			new_llx = gs->doc->boundingbox[LLX];
+			new_lly = gs->doc->boundingbox[LLY];
+			new_urx = gs->doc->boundingbox[URX];
+			new_ury = gs->doc->boundingbox[URY];
+		}
+	} else {
+		if (new_pagesize < 0)
+			new_pagesize = DEFAULT_PAGE_SIZE;
+		new_llx = new_lly = 0;
+		if (gs->doc && gs->doc->size &&
+		    (new_pagesize < gs->doc->numsizes)) {
+			new_urx = gs->doc->size[new_pagesize].width;
+			new_ury = gs->doc->size[new_pagesize].height;
+		} else {
+			new_urx = papersizes[new_pagesize].width;
+			new_ury = papersizes[new_pagesize].height;
+		}
+	}
 
-  if(new_urx <= new_llx)
-    new_urx = papersizes[12].width;
-  if(new_ury <= new_lly)
-    new_ury = papersizes[12].height;
+	if (new_urx <= new_llx)
+		new_urx = papersizes[12].width;
+	if (new_ury <= new_lly)
+		new_ury = papersizes[12].height;
 
-  *urx = new_urx;
-  *ury = new_ury;
-  *llx = new_llx;
-  *lly = new_lly;
+	*urx = new_urx;
+	*ury = new_ury;
+	*llx = new_llx;
+	*lly = new_lly;
 }
 
 static int
@@ -507,134 +499,127 @@ is_interpreter_ready (PSDocument *gs)
 }
 
 static void
-output(gpointer data, gint source, GdkInputCondition condition)
+output (gpointer data, gint source, GdkInputCondition condition)
 {
-  char buf[MAX_BUFSIZE + 1];
-  guint bytes = 0;
-  PSDocument *gs = PS_DOCUMENT(data);
+	char buf[MAX_BUFSIZE + 1];
+	guint bytes = 0;
+	PSDocument *gs = PS_DOCUMENT(data);
 
-  if(source == gs->interpreter_output) {
-    bytes = read(gs->interpreter_output, buf, MAX_BUFSIZE);
-    if(bytes == 0) {            /* EOF occurred */
-      close(gs->interpreter_output);
-      gs->interpreter_output = -1;
-      gdk_input_remove(gs->interpreter_output_id);
-      return;
-    }
-    else if(bytes == -1) {
-      /* trouble... */
-      interpreter_failed(gs, NULL);
-      return;
-    }
-    if(gs->interpreter_err == -1) {
-      interpreter_failed(gs, NULL);
-    }
-  }
-  else if(source == gs->interpreter_err) {
-    bytes = read(gs->interpreter_err, buf, MAX_BUFSIZE);
-    if(bytes == 0) {            /* EOF occurred */
-      close(gs->interpreter_err);
-      gs->interpreter_err = -1;
-      gdk_input_remove(gs->interpreter_error_id);
-      return;
-    }
-    else if(bytes == -1) {
-      /* trouble... */
-      interpreter_failed(gs, NULL);
-      return;
-    }
-    if(gs->interpreter_output == -1) {
-      interpreter_failed(gs, NULL);
-    }
-  }
-  if(bytes > 0) {
-    buf[bytes] = '\0';
-    printf("%s", buf);
-  }
+	if (source == gs->interpreter_output) {
+		bytes = read(gs->interpreter_output, buf, MAX_BUFSIZE);
+		if (bytes == 0) {            /* EOF occurred */
+			close (gs->interpreter_output);
+			gs->interpreter_output = -1;
+			gdk_input_remove (gs->interpreter_output_id);
+			return;
+		} else if (bytes == -1) {
+			/* trouble... */
+			interpreter_failed (gs, NULL);
+			return;
+		}
+		if (gs->interpreter_err == -1) {
+			interpreter_failed (gs, NULL);
+		}
+	} else if (source == gs->interpreter_err) {
+		bytes = read (gs->interpreter_err, buf, MAX_BUFSIZE);
+		if (bytes == 0) {            /* EOF occurred */
+			close (gs->interpreter_err);
+			gs->interpreter_err = -1;
+			gdk_input_remove (gs->interpreter_error_id);
+			return;
+		} else if (bytes == -1) {
+			/* trouble... */
+			interpreter_failed (gs, NULL);
+			return;
+		}
+		if (gs->interpreter_output == -1) {
+			interpreter_failed(gs, NULL);
+		}
+	}
+
+	if (bytes > 0) {
+		buf[bytes] = '\0';
+		printf ("%s", buf);
+	}
 }
 
 static void
-catchPipe(int i)
+catchPipe (int i)
 {
-  broken_pipe = True;
+	broken_pipe = True;
 }
 
 static void
 input(gpointer data, gint source, GdkInputCondition condition)
 {
-  PSDocument *gs = PS_DOCUMENT(data);
-  int bytes_written;
-  void (*oldsig) (int);
-  oldsig = signal(SIGPIPE, catchPipe);
+	PSDocument *gs = PS_DOCUMENT(data);
+	int bytes_written;
+	void (*oldsig) (int);
+	oldsig = signal(SIGPIPE, catchPipe);
 
-  LOG ("Input");
+	LOG ("Input");
 
-  do {
-    if(gs->buffer_bytes_left == 0) {
-      /* Get a new section if required */
-      if(gs->ps_input && gs->bytes_left == 0) {
-        struct record_list *ps_old = gs->ps_input;
-        gs->ps_input = ps_old->next;
-        if(ps_old->close && NULL != ps_old->fp)
-          fclose(ps_old->fp);
-        g_free((char *) ps_old);
-      }
-      /* Have to seek at the beginning of each section */
-      if(gs->ps_input && gs->ps_input->seek_needed) {
-        fseek(gs->ps_input->fp, gs->ps_input->begin, SEEK_SET);
-        gs->ps_input->seek_needed = FALSE;
-        gs->bytes_left = gs->ps_input->len;
-      }
+	do {
+		if (gs->buffer_bytes_left == 0) {
+			/* Get a new section if required */
+			if (gs->ps_input && gs->bytes_left == 0) {
+				struct record_list *ps_old = gs->ps_input;
+				gs->ps_input = ps_old->next;
+				if (ps_old->close && NULL != ps_old->fp)
+					fclose (ps_old->fp);
+				g_free (ps_old);
+			}
 
-      if(gs->bytes_left > MAX_BUFSIZE) {
-        gs->buffer_bytes_left =
-          fread(gs->input_buffer, sizeof(char), MAX_BUFSIZE, gs->ps_input->fp);
-      }
-      else if(gs->bytes_left > 0) {
-        gs->buffer_bytes_left =
-          fread(gs->input_buffer,
-                sizeof(char), gs->bytes_left, gs->ps_input->fp);
-      }
-      else {
-        gs->buffer_bytes_left = 0;
-      }
-      if(gs->bytes_left > 0 && gs->buffer_bytes_left == 0) {
-        interpreter_failed (gs, NULL); /* Error occurred */
-      }
-      gs->input_buffer_ptr = gs->input_buffer;
-      gs->bytes_left -= gs->buffer_bytes_left;
-    }
+			/* Have to seek at the beginning of each section */
+			if (gs->ps_input && gs->ps_input->seek_needed) {
+				fseek (gs->ps_input->fp, gs->ps_input->begin, SEEK_SET);
+				gs->ps_input->seek_needed = FALSE;
+				gs->bytes_left = gs->ps_input->len;
+			}
 
-    if(gs->buffer_bytes_left > 0) {
-      bytes_written = write(gs->interpreter_input,
-                            gs->input_buffer_ptr, gs->buffer_bytes_left);
+			if (gs->bytes_left > MAX_BUFSIZE) {
+				gs->buffer_bytes_left = fread (gs->input_buffer, sizeof(char),
+							       MAX_BUFSIZE, gs->ps_input->fp);
+			} else if (gs->bytes_left > 0) {
+				gs->buffer_bytes_left = fread (gs->input_buffer, sizeof(char),
+							       gs->bytes_left, gs->ps_input->fp);
+			} else {
+				gs->buffer_bytes_left = 0;
+			}
+			if (gs->bytes_left > 0 && gs->buffer_bytes_left == 0) {
+				interpreter_failed (gs, NULL); /* Error occurred */
+			}
+			gs->input_buffer_ptr = gs->input_buffer;
+			gs->bytes_left -= gs->buffer_bytes_left;
+		}
 
-      if(broken_pipe) {
-        interpreter_failed (gs, g_strdup(_("Broken pipe.")));
-        broken_pipe = FALSE;
-        interpreter_failed (gs, NULL);
-      }
-      else if(bytes_written == -1) {
-        if((errno != EWOULDBLOCK) && (errno != EAGAIN)) {
-          interpreter_failed (gs, NULL);   /* Something bad happened */
-        }
-      }
-      else {
-        gs->buffer_bytes_left -= bytes_written;
-        gs->input_buffer_ptr += bytes_written;
-      }
-    }
-  }
-  while(gs->ps_input && gs->buffer_bytes_left == 0);
+		if (gs->buffer_bytes_left > 0) {
+			bytes_written = write (gs->interpreter_input,
+                	                       gs->input_buffer_ptr, gs->buffer_bytes_left);
 
-  signal(SIGPIPE, oldsig);
+			if (broken_pipe) {
+				interpreter_failed (gs, g_strdup(_("Broken pipe.")));
+				broken_pipe = FALSE;
+				interpreter_failed (gs, NULL);
+			} else if (bytes_written == -1) {
+				if ((errno != EWOULDBLOCK) && (errno != EAGAIN)) {
+					interpreter_failed (gs, NULL);   /* Something bad happened */
+				}
+				} else {
+				gs->buffer_bytes_left -= bytes_written;
+				gs->input_buffer_ptr += bytes_written;
+			}
+		}
+	} while (gs->ps_input && gs->buffer_bytes_left == 0);
 
-  if(gs->ps_input == NULL && gs->buffer_bytes_left == 0) {
-    if(gs->interpreter_input_id != 0) {
-      gdk_input_remove(gs->interpreter_input_id);
-      gs->interpreter_input_id = 0;
-    }
-  }
+	signal (SIGPIPE, oldsig);
+
+	if (gs->ps_input == NULL && gs->buffer_bytes_left == 0) {
+		if (gs->interpreter_input_id != 0) {
+			gdk_input_remove (gs->interpreter_input_id);
+			gs->interpreter_input_id = 0;
+		}
+	}
 }
 
 static int
@@ -788,72 +773,71 @@ start_interpreter (PSDocument *gs)
 static void
 stop_interpreter(PSDocument * gs)
 {
-  if(gs->interpreter_pid > 0) {
-    int status = 0;
-    LOG ("Stop the interpreter");
-    kill(gs->interpreter_pid, SIGTERM);
-    while((wait(&status) == -1) && (errno == EINTR)) ;
-    gs->interpreter_pid = -1;
-    if(status == 1) {
-      gs->gs_status = _("Interpreter failed.");
-    }
-  }
+	if (gs->interpreter_pid > 0) {
+		int status = 0;
+		LOG ("Stop the interpreter");
+		kill (gs->interpreter_pid, SIGTERM);
+		while ((wait(&status) == -1) && (errno == EINTR));
+		gs->interpreter_pid = -1;
+		if (status == 1) {
+			gs->gs_status = _("Interpreter failed.");
+		}
+	}
 
-  if(gs->interpreter_input >= 0) {
-    close(gs->interpreter_input);
-    gs->interpreter_input = -1;
-    if(gs->interpreter_input_id != 0) {
-      gdk_input_remove(gs->interpreter_input_id);
-      gs->interpreter_input_id = 0;
-    }
-    while(gs->ps_input) {
-      struct record_list *ps_old = gs->ps_input;
-      gs->ps_input = gs->ps_input->next;
-      if(ps_old->close && NULL != ps_old->fp)
-        fclose(ps_old->fp);
-      g_free((char *) ps_old);
-    }
-  }
+	if (gs->interpreter_input >= 0) {
+		close (gs->interpreter_input);
+		gs->interpreter_input = -1;
+		if (gs->interpreter_input_id != 0) {
+			gdk_input_remove(gs->interpreter_input_id);
+			gs->interpreter_input_id = 0;
+		}
+		while (gs->ps_input) {
+			struct record_list *ps_old = gs->ps_input;
+			gs->ps_input = gs->ps_input->next;
+			if (ps_old->close && NULL != ps_old->fp)
+				fclose (ps_old->fp);
+			g_free (ps_old);
+		}
+	}
 
-  if(gs->interpreter_output >= 0) {
-    close(gs->interpreter_output);
-    gs->interpreter_output = -1;
-    if(gs->interpreter_output_id) {
-      gdk_input_remove(gs->interpreter_output_id);
-      gs->interpreter_output_id = 0;
-    }
-  }
+	if (gs->interpreter_output >= 0) {
+		close (gs->interpreter_output);
+		gs->interpreter_output = -1;
+		if (gs->interpreter_output_id) {
+			gdk_input_remove (gs->interpreter_output_id);
+			gs->interpreter_output_id = 0;
+		}
+	}
 
-  if(gs->interpreter_err >= 0) {
-    close(gs->interpreter_err);
-    gs->interpreter_err = -1;
-    if(gs->interpreter_error_id) {
-      gdk_input_remove(gs->interpreter_error_id);
-      gs->interpreter_error_id = 0;
-    }
-  }
+	if (gs->interpreter_err >= 0) {
+		close (gs->interpreter_err);
+		gs->interpreter_err = -1;
+		if (gs->interpreter_error_id) {
+			gdk_input_remove (gs->interpreter_error_id);
+			gs->interpreter_error_id = 0;
+		}
+	}
 
-  gs->busy = FALSE;
+	gs->busy = FALSE;
 }
 
 /* If file exists and is a regular file then return its length, else -1 */
 static gint
-file_length(const gchar * filename)
+file_length (const gchar * filename)
 {
-  struct stat stat_rec;
+	struct stat stat_rec;
 
-  if(filename && (stat(filename, &stat_rec) == 0)
-     && S_ISREG(stat_rec.st_mode))
-    return stat_rec.st_size;
-  else
-    return -1;
+	if (filename && (stat (filename, &stat_rec) == 0) && S_ISREG (stat_rec.st_mode))
+		return stat_rec.st_size;
+	else
+		return -1;
 }
 
 /* Test if file exists, is a regular file and its length is > 0 */
 static gboolean
 file_readable(const char *filename)
 {
-  return (file_length(filename) > 0);
+	return (file_length (filename) > 0);
 }
 
 /*
@@ -863,222 +847,143 @@ file_readable(const char *filename)
  * Return name of input file to use or NULL on error..
  */
 static gchar *
-check_filecompressed(PSDocument * gs)
+check_filecompressed (PSDocument * gs)
 {
-  FILE *file;
-  gchar buf[1024];
-  gchar *filename, *filename_unc, *filename_err, *cmdline;
-  const gchar *cmd;
-  int fd;
+	FILE *file;
+	gchar buf[1024];
+	gchar *filename, *filename_unc, *filename_err, *cmdline;
+	const gchar *cmd;
+	int fd;
 
-  cmd = NULL;
+	cmd = NULL;
 
-  if((file = fopen(gs->gs_filename, "r"))
-     && (fread(buf, sizeof(gchar), 3, file) == 3)) {
-    if((buf[0] == '\037') && ((buf[1] == '\235') || (buf[1] == '\213'))) {
-      /* file is gzipped or compressed */
-      cmd = gtk_gs_defaults_get_ungzip_cmd();
-    }
-    else if(strncmp(buf, "BZh", 3) == 0) {
-      /* file is compressed with bzip2 */
-      cmd = gtk_gs_defaults_get_unbzip2_cmd();
-    }
-  }
-  if(NULL != file)
-    fclose(file);
+	if ((file = fopen(gs->gs_filename, "r")) &&
+	    (fread (buf, sizeof(gchar), 3, file) == 3)) {
+		if ((buf[0] == '\037') && ((buf[1] == '\235') || (buf[1] == '\213'))) {
+			/* file is gzipped or compressed */
+			cmd = gtk_gs_defaults_get_ungzip_cmd ();
+		} else if (strncmp (buf, "BZh", 3) == 0) {
+			/* file is compressed with bzip2 */
+			cmd = gtk_gs_defaults_get_unbzip2_cmd ();
+		}
+	}
 
-  if(!cmd)
-    return gs->gs_filename;
+	if (NULL != file)
+		fclose(file);
 
-  /* do the decompression */
-  filename = g_shell_quote(gs->gs_filename);
-  filename_unc = g_strconcat(g_get_tmp_dir(), "/ggvXXXXXX", NULL);
-  if((fd = mkstemp(filename_unc)) < 0) {
-    g_free(filename_unc);
-    g_free(filename);
-    return NULL;
-  }
-  close(fd);
-  filename_err = g_strconcat(g_get_tmp_dir(), "/ggvXXXXXX", NULL);
-  if((fd = mkstemp(filename_err)) < 0) {
-    g_free(filename_err);
-    g_free(filename_unc);
-    g_free(filename);
-    return NULL;
-  }
-  close(fd);
-  cmdline = g_strdup_printf("%s %s >%s 2>%s", cmd,
-                            filename, filename_unc, filename_err);
-  if((system(cmdline) == 0)
-     && file_readable(filename_unc)
-     && (file_length(filename_err) == 0)) {
-    /* sucessfully uncompressed file */
-    gs->gs_filename_unc = filename_unc;
-  }
-  else {
-    /* report error */
-    g_snprintf(buf, 1024, _("Error while decompressing file %s:\n"),
-               gs->gs_filename);
-    interpreter_failed (gs, buf);
-    unlink(filename_unc);
-    g_free(filename_unc);
-    filename_unc = NULL;
-  }
-  unlink(filename_err);
-  g_free(filename_err);
-  g_free(cmdline);
-  g_free(filename);
-  return filename_unc;
+	if (!cmd)
+		return gs->gs_filename;
+
+	/* do the decompression */
+	filename = g_shell_quote (gs->gs_filename);
+	filename_unc = g_strconcat (g_get_tmp_dir (), "/evinceXXXXXX", NULL);
+	if ((fd = mkstemp (filename_unc)) < 0) {
+		g_free (filename_unc);
+		g_free (filename);
+		return NULL;
+	}
+	close (fd);
+
+	filename_err = g_strconcat (g_get_tmp_dir (), "/evinceXXXXXX", NULL);
+	if ((fd = mkstemp(filename_err)) < 0) {
+		g_free (filename_err);
+		g_free (filename_unc);
+		g_free (filename);
+		return NULL;
+	}
+	close (fd);
+
+	cmdline = g_strdup_printf ("%s %s >%s 2>%s", cmd,
+                                   filename, filename_unc, filename_err);
+	if (system (cmdline) == 0 &&
+	    file_readable (filename_unc) &&
+	    file_length (filename_err) == 0) {
+		/* sucessfully uncompressed file */
+		gs->gs_filename_unc = filename_unc;
+	} else {
+		/* report error */
+		g_snprintf (buf, 1024, _("Error while decompressing file %s:\n"),
+                            gs->gs_filename);
+		interpreter_failed (gs, buf);
+		unlink (filename_unc);
+		g_free (filename_unc);
+		filename_unc = NULL;
+	}
+
+	unlink (filename_err);
+	g_free (filename_err);
+	g_free (cmdline);
+	g_free (filename);
+
+	return filename_unc;
 }
 
 static gint
-ps_document_enable_interpreter(PSDocument * gs)
+ps_document_enable_interpreter(PSDocument *gs)
 {
-  g_return_val_if_fail(gs != NULL, FALSE);
-  g_return_val_if_fail(PS_IS_DOCUMENT(gs), FALSE);
+	g_return_val_if_fail (PS_IS_DOCUMENT (gs), FALSE);
 
-  if(!gs->gs_filename)
-    return 0;
+	if (!gs->gs_filename)
+		return 0;
 
-  return start_interpreter(gs);
-}
-
-/* publicly accessible functions */
-
-GType
-ps_document_get_type(void)
-{
-  static GType gs_type = 0;
-  if(!gs_type) {
-    GTypeInfo gs_info = {
-      sizeof(PSDocumentClass),
-      (GBaseInitFunc) NULL,
-      (GBaseFinalizeFunc) NULL,
-      (GClassInitFunc) ps_document_class_init,
-      (GClassFinalizeFunc) NULL,
-      NULL,                     /* class_data */
-      sizeof(PSDocument),
-      0,                        /* n_preallocs */
-      (GInstanceInitFunc) ps_document_init
-    };
-
-    static const GInterfaceInfo document_info =
-    {
-        (GInterfaceInitFunc) ps_document_document_iface_init,
-        NULL,
-        NULL
-    };
-
-    static const GInterfaceInfo ps_exporter_info =
-    {
-        (GInterfaceInitFunc) ps_document_ps_exporter_iface_init,
-        NULL,
-        NULL
-    };
-
-    static const GInterfaceInfo async_renderer_info =
-    {
-        (GInterfaceInitFunc) ps_async_renderer_iface_init,
-        NULL,
-        NULL
-    };
-
-    gs_type = g_type_register_static(G_TYPE_OBJECT,
-                                     "PSDocument", &gs_info, 0);
-
-    g_type_add_interface_static (gs_type,
-                                 EV_TYPE_DOCUMENT,
-                                 &document_info);
-    g_type_add_interface_static (gs_type,
-                                 EV_TYPE_PS_EXPORTER,
-                                 &ps_exporter_info);
-    g_type_add_interface_static (gs_type,
-                                 EV_TYPE_ASYNC_RENDERER,
-                                 &async_renderer_info);
-  }
-  return gs_type;
-
-
+	return start_interpreter (gs);
 }
 
 static gboolean
-document_load(PSDocument * gs, const gchar * fname)
+document_load (PSDocument *gs, const gchar *fname)
 {
-  g_return_val_if_fail(gs != NULL, FALSE);
-  g_return_val_if_fail(PS_IS_DOCUMENT(gs), FALSE);
+	g_return_val_if_fail (PS_IS_DOCUMENT(gs), FALSE);
 
-  LOG ("Load the document");
+	LOG ("Load the document");
 
-  if(fname == NULL) {
-    gs->gs_status = "";
-    return FALSE;
-  }
+	if (fname == NULL) {
+		gs->gs_status = "";
+		return FALSE;
+	}
 
-  /* prepare this document */
-  gs->structured_doc = FALSE;
-  gs->send_filename_to_gs = TRUE;
-  gs->loaded = FALSE;
-  if(*fname == '/') {
-    /* an absolute path */
-    gs->gs_filename = g_strdup(fname);
-  }
-  else {
-    /* path relative to our cwd: make it absolute */
-    gchar *cwd = g_get_current_dir();
-    gs->gs_filename = g_strconcat(cwd, "/", fname, NULL);
-    g_free(cwd);
-  }
+	/* prepare this document */
+	gs->structured_doc = FALSE;
+	gs->send_filename_to_gs = TRUE;
+	gs->gs_filename = g_strdup (fname);
 
-  if((gs->reading_from_pipe = (strcmp(fname, "-") == 0))) {
-    gs->send_filename_to_gs = FALSE;
-  }
-  else {
-    /*
-     * We need to make sure that the file is loadable/exists!
-     * otherwise we want to exit without loading new stuff...
-     */
-    gchar *filename = NULL;
+	if ((gs->reading_from_pipe = (strcmp (fname, "-") == 0))) {
+		gs->send_filename_to_gs = FALSE;
+	} else {
+		/*
+		 * We need to make sure that the file is loadable/exists!
+		 * otherwise we want to exit without loading new stuff...
+		 */
+		gchar *filename = NULL;
 
-    if(!file_readable(fname)) {
-      gchar buf[1024];
-      g_snprintf(buf, 1024, _("Cannot open file %s.\n"), fname);
-      interpreter_failed (gs, buf);
-      gs->gs_status = _("File is not readable.");
-    }
-    else {
-      filename = check_filecompressed(gs);
-    }
+		if (!file_readable(fname)) {
+			gchar buf[1024];
 
-    if(!filename || (gs->gs_psfile = fopen(filename, "r")) == NULL) {
-      interpreter_failed (gs, NULL);
-      return FALSE;
-    }
+			g_snprintf (buf, 1024, _("Cannot open file %s.\n"), fname);
+			interpreter_failed (gs, buf);
+			gs->gs_status = _("File is not readable.");
+		} else {
+			filename = check_filecompressed(gs);
+		}
 
-    /* we grab the vital statistics!!! */
-    gs->doc = psscan(gs->gs_psfile, TRUE, filename);
+		if (!filename || (gs->gs_psfile = fopen(filename, "r")) == NULL) {
+			interpreter_failed (gs, NULL);
+			return FALSE;
+		}
 
-    if(gs->doc == NULL) {
-      /* File does not seem to be a Postscript one */
-      gchar buf[1024];
-      g_snprintf(buf, 1024, _("Error while scanning file %s\n"), fname);
-      interpreter_failed (gs, buf);
-      gs->gs_status = _("The file is not a PostScript document.");
-      return FALSE;
-    }
+		/* we grab the vital statistics!!! */
+		gs->doc = psscan(gs->gs_psfile, TRUE, filename);
 
-    if((!gs->doc->epsf && gs->doc->numpages > 0) ||
-       (gs->doc->epsf && gs->doc->numpages > 1)) {
-      gs->structured_doc = TRUE;
-      gs->send_filename_to_gs = FALSE;
-    }
-  }
-  gs->loaded = TRUE;
+		if ((!gs->doc->epsf && gs->doc->numpages > 0) ||
+		    (gs->doc->epsf && gs->doc->numpages > 1)) {
+			gs->structured_doc = TRUE;
+			gs->send_filename_to_gs = FALSE;
+		}
+	}
 
-  gs->gs_status = _("Document loaded.");
+	gs->gs_status = _("Document loaded.");
 
-  return gs->loaded;
+	return TRUE;
 }
-
 
 static gboolean
 ps_document_next_page (PSDocument *gs)
@@ -1291,10 +1196,10 @@ ps_document_can_get_text (EvDocument *document)
 	return FALSE;
 }
 
-static gboolean
-render_pixbuf_idle (PSRenderJob *job)
+static void
+ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double scale)
 {
-	PSDocument *gs = job->document;
+	PSDocument *gs = PS_DOCUMENT (renderer);
 
 	if (gs->pstarget == NULL) {
 		GtkWidget *widget;
@@ -1310,23 +1215,10 @@ render_pixbuf_idle (PSRenderJob *job)
 			          gs);
 	}
 
-	setup_pixmap (gs, job->page, job->scale);
-	setup_page (gs, job->page, job->scale);
+	setup_pixmap (gs, page, scale);
+	setup_page (gs, page, scale);
 
-	render_page (gs, job->page);
-
-	return FALSE;
-}
-
-static void
-ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double scale)
-{
-	PSRenderJob job;
-
-	job.page = page;
-	job.scale = scale;
-	job.document = PS_DOCUMENT (renderer);
-	render_pixbuf_idle (&job);
+	render_page (gs, page);
 }
 
 static EvDocumentInfo *
