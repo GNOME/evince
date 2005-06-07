@@ -1,5 +1,6 @@
 #include "ev-pixbuf-cache.h"
 #include "ev-job-queue.h"
+#include "ev-page-cache.h"
 
 
 typedef struct _CacheJobInfo
@@ -306,7 +307,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	    pixbuf_cache->end_page == end_page)
 		return;
 
-	page_cache = ev_document_get_page_cache (pixbuf_cache->document);
+	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	new_job_list = g_new0 (CacheJobInfo, (end_page - start_page) + 1);
 	new_prev_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
@@ -417,7 +418,7 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 	EvPageCache *page_cache;
 	int i;
 
-	page_cache = ev_document_get_page_cache (pixbuf_cache->document);
+	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
 		check_job_size_and_unref (pixbuf_cache->job_list + i, page_cache, scale);
@@ -473,7 +474,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 	int page;
 	int i;
 
-	page_cache = ev_document_get_page_cache (pixbuf_cache->document);
+	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
 		job_info = (pixbuf_cache->job_list + i);
@@ -514,7 +515,7 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
 
 	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
 
-	page_cache = ev_document_get_page_cache (pixbuf_cache->document);
+	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	g_return_if_fail (start_page >= 0 && start_page < ev_page_cache_get_n_pages (page_cache));
 	g_return_if_fail (end_page >= 0 && end_page < ev_page_cache_get_n_pages (page_cache));

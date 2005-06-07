@@ -34,6 +34,7 @@
 
 #include "ev-ps-exporter.h"
 #include "ev-print-job.h"
+#include "ev-page-cache.h"
 
 #define EV_PRINT_JOB_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_PRINT_JOB, EvPrintJobClass))
 #define EV_IS_PRINT_JOB_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_PRINT_JOB))
@@ -219,7 +220,7 @@ void
 ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialog)
 {
 	GnomePrintConfig *print_config;
-	EvPageCache *page_cache = ev_document_get_page_cache (job->document);
+	EvPageCache *page_cache = ev_page_cache_get (job->document);
 
 	g_return_if_fail (EV_IS_PRINT_JOB (job));
 	g_return_if_fail (GNOME_IS_PRINT_DIALOG (dialog));
@@ -231,7 +232,7 @@ ev_print_job_use_print_dialog_settings (EvPrintJob *job, GnomePrintDialog *dialo
 	gnome_print_config_get_boolean (print_config,
 					(guchar *)GNOME_PRINT_KEY_DUPLEX, &job->duplex);
 
-	page_cache = ev_document_get_page_cache (job->document);
+	page_cache = ev_page_cache_get (job->document);
 
 	/* get the printing ranges */
 	switch (gnome_print_dialog_get_range (dialog)) {

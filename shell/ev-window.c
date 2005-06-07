@@ -41,10 +41,11 @@
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-fonts.h"
-#include "ev-document-types.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
 #include "ev-job-queue.h"
+#include "ev-jobs.h"
+#include "ev-statusbar.h"
 #include "eggfindbar.h"
 #include "egg-recent-view-gtk.h"
 #include "egg-recent-view.h"
@@ -62,12 +63,8 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gnome.h>
-
-#include <libgnomevfs/gnome-vfs-uri.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomeprintui/gnome-print-dialog.h>
-
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include <gconf/gconf-client.h>
 
 #include <string.h>
@@ -87,6 +84,9 @@ typedef enum {
 } EvChrome;
 
 struct _EvWindowPrivate {
+	/* UI */
+	EvChrome chrome;
+
 	GtkWidget *main_box;
 	GtkWidget *menubar;
 	GtkWidget *toolbar_dock;
@@ -98,31 +98,35 @@ struct _EvWindowPrivate {
 	GtkWidget *view;
 	GtkWidget *page_view;
 	GtkWidget *password_view;
+	GtkWidget *statusbar;
 
+	/* UI Builders */
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
 
 	gchar *toolbar_file;
 	EggToolbarsModel *toolbar_model;
-
-	GtkWidget *statusbar;
-	guint help_message_cid;
-	guint view_message_cid;
+	
+	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
 	GtkWidget *fullscreen_popup;
-	char *uri;
+	GSource *fullscreen_timeout_source;
 
+	/* Document */
+	char *uri;
 	EvDocument *document;
 	EvPageCache *page_cache;
 
 	EvWindowPageMode page_mode;
+
 	/* These members are used temporarily when in PAGE_MODE_PASSWORD */
 	EvDocument *password_document;
 	GtkWidget *password_dialog;
 	char *password_uri;
 
-	EvChrome chrome;
-	GSource *fullscreen_timeout_source;
+	/* Job used to load document */
+	EvJob *xfer_job;
+	EvJob *load_job;
 
 	/* recent file stuff */
 	EggRecentModel *recent_model;
@@ -154,9 +158,10 @@ static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_si
 							 EvWindow         *ev_window);
 static void     ev_window_set_page_mode                 (EvWindow         *window,
 							 EvWindowPageMode  page_mode);
-static gboolean start_loading_document                  (EvWindow         *ev_window,
-							 EvDocument       *document,
-							 const char       *uri);
+static void	ev_window_load_job_cb  			(EvJobLoad *job,
+							 gpointer data);
+static void	ev_window_xfer_job_cb  			(EvJobXfer *job,
+							 gpointer data);
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
@@ -491,7 +496,9 @@ ev_window_is_empty (const EvWindow *ev_window)
 {
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
 
-	return ev_window->priv->document == NULL;
+	return (ev_window->priv->document == NULL) && 
+		(ev_window->priv->load_job == NULL) &&
+		(ev_window->priv->xfer_job == NULL);
 }
 
 static void
@@ -603,7 +610,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	GtkAction *action;
 
 	document = ev_window->priv->document;
-	ev_window->priv->page_cache = ev_document_get_page_cache (ev_window->priv->document);
+	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
 	g_signal_connect (ev_window->priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), ev_window);
 
 	g_signal_connect_object (G_OBJECT (document),
@@ -659,11 +666,18 @@ password_dialog_response (GtkWidget *password_dialog,
 
 		ev_window->priv->password_document = NULL;
 		ev_window->priv->password_uri = NULL;
+		
+		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		
+		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
+				   EV_CONTEXT_PROGRESS,
+				   _("Loading document. Please wait"));
 
-		if (start_loading_document (ev_window, document, uri)) {
-			gtk_widget_destroy (password_dialog);
-		}
-
+	        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
+	    			            TRUE);
+	
+    		gtk_widget_destroy (password_dialog);
+			
 		g_object_unref (document);
 		g_free (uri);
 
@@ -674,7 +688,7 @@ password_dialog_response (GtkWidget *password_dialog,
 	gtk_widget_destroy (password_dialog);
 }
 
-/* Called either by start_loading_document or by the "unlock" callback on the
+/* Called either by ev_window_load_job_cb or by the "unlock" callback on the
  * password_view page.  It assumes that ev_window->priv->password_* has been set
  * correctly.  These are cleared by password_dialog_response() */
 
@@ -708,8 +722,32 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 	}
 }
 
-/* This wil try to load the document.  It might be called multiple times on the
- * same document by the password dialog.
+
+static void
+ev_window_clear_jobs (EvWindow *ev_window)
+{
+    if (ev_window->priv->load_job != NULL) {
+
+	if (!ev_window->priv->load_job->finished)
+	        ev_job_queue_remove_job (ev_window->priv->load_job);
+
+	g_signal_handlers_disconnect_by_func (ev_window->priv->load_job, ev_window_load_job_cb, ev_window);
+    	g_object_unref (ev_window->priv->load_job);
+	ev_window->priv->load_job = NULL;
+    }
+
+    if (ev_window->priv->xfer_job != NULL) {
+
+	if (!ev_window->priv->xfer_job->finished)
+	        ev_job_queue_remove_job (ev_window->priv->xfer_job);
+
+	g_signal_handlers_disconnect_by_func (ev_window->priv->xfer_job, ev_window_xfer_job_cb, ev_window);
+    	g_object_unref (ev_window->priv->xfer_job);
+	ev_window->priv->xfer_job = NULL;
+    }
+}
+
+/* This callback will executed when load job will be finished.
  *
  * Since the flow of the error dialog is very confusing, we assume that both
  * document and uri will go away after this function is called, and thus we need
@@ -717,17 +755,23 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
  * ev_window->priv->password_{uri,document}, and thus people who call this
  * function should _not_ necessarily expect those to exist after being
  * called. */
-static gboolean
-start_loading_document (EvWindow   *ev_window,
-			EvDocument *document,
-			const char *uri)
+static void
+ev_window_load_job_cb  (EvJobLoad *job,
+			gpointer data)
 {
-	gboolean result;
-	GError *error = NULL;
+	EvWindow *ev_window = EV_WINDOW (data);
+	EvDocument *document = EV_JOB (job)->document;
 
 	g_assert (document);
 	g_assert (document != ev_window->priv->document);
-	g_assert (uri);
+	g_assert (job->uri);
+
+	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
+			  EV_CONTEXT_PROGRESS);
+
+        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
+    			            FALSE);
+
 	if (ev_window->priv->password_document) {
 		g_object_unref (ev_window->priv->password_document);
 		ev_window->priv->password_document = NULL;
@@ -737,31 +781,27 @@ start_loading_document (EvWindow   *ev_window,
 		ev_window->priv->password_uri = NULL;
 	}
 
-	result = ev_document_load (document, uri, &error);
-
 	/* Success! */
-	if (result) {
+	if (job->error == NULL) {
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
 		ev_window_setup_document (ev_window);
 		
-		ev_window_add_recent (ev_window, uri);
-
-		return TRUE;
+		ev_window_add_recent (ev_window, job->uri);
+		ev_window_clear_jobs (ev_window);
+		
+		return;
 	}
 
-	/* unable to load the document */
-	g_assert (error != NULL);
-
-	if (error->domain == EV_DOCUMENT_ERROR &&
-	    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+	if (job->error->domain == EV_DOCUMENT_ERROR &&
+	    job->error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
 		gchar *base_name, *file_name;
 
 		ev_window->priv->password_document = g_object_ref (document);
-		ev_window->priv->password_uri = g_strdup (uri);
+		ev_window->priv->password_uri = g_strdup (job->uri);
 
-		base_name = g_path_get_basename (uri);
+		base_name = g_path_get_basename (job->uri);
 		file_name = gnome_vfs_unescape_string_for_display (base_name);
 
 		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
@@ -772,103 +812,102 @@ start_loading_document (EvWindow   *ev_window,
 
 		ev_window_popup_password_dialog (ev_window);
 	} else {
-		unable_to_load (ev_window, error->message);
-	}
-	g_error_free (error);
+		unable_to_load (ev_window, job->error->message);
+	}	
 
-	return FALSE;
-}
-
-static gboolean
-sanity_check_uri (EvWindow *window, const char *uri)
-{
-	gboolean result = FALSE;
-	GnomeVFSURI *vfs_uri;
-	char *err;
-
-	vfs_uri = gnome_vfs_uri_new (uri);
-	if (vfs_uri) {
-		if (gnome_vfs_uri_exists (vfs_uri)) {
-			result = TRUE;
-		}
-	}
-
-	if (!result) {
-		err = g_strdup_printf (_("The file %s does not exist."), uri);
-		unable_to_load (window, err);
-		g_free (err);
-	}
-
-	return result;
-}
-
-void
-ev_window_open (EvWindow *ev_window, const char *uri)
-{
-	EvDocument *document = NULL;
-	GType document_type;
-	char *mime_type = NULL;
-
-	if (!sanity_check_uri (ev_window, uri)) {
-		return;
-	}
-
-	g_free (ev_window->priv->uri);
-	ev_window->priv->uri = g_strdup (uri);
-
-	document_type = ev_document_type_lookup (uri, &mime_type);
-	if (document_type != G_TYPE_INVALID) {
-		document = g_object_new (document_type, NULL);
-	}
-
-	if (document) {
-		start_loading_document (ev_window, document, uri);
-		/* See the comment on start_loading_document on ref counting.
-		 * As the password dialog flow is confusing, we're very explicit
-		 * on ref counting. */
-		g_object_unref (document);
-	} else {
-		char *error_message;
-
-		error_message = g_strdup_printf (_("Unhandled MIME type: '%s'"),
-						 mime_type?mime_type:"<Unknown MIME Type>");
-		unable_to_load (ev_window, error_message);
-		g_free (error_message);
-	}
-
-	g_free (mime_type);
+	return;
 }
 
 static void
-ev_window_open_uri_list (EvWindow *ev_window, GList *uri_list)
+ev_window_xfer_job_cb  (EvJobXfer *job,
+			gpointer data)
 {
-	GList *list;
-	gchar *uri;
+	EvWindow *ev_window = EV_WINDOW (data);
+
+	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
+			  EV_CONTEXT_PROGRESS);
+
+        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
+    			            FALSE);
+	
+	if (job->error != NULL) {
+		unable_to_load (ev_window, job->error->message);
+		ev_window_clear_jobs (ev_window);
+	} else {
+		EvDocument *document = g_object_ref (EV_JOB (job)->document);
+
+		ev_window_clear_jobs (ev_window);
+		
+		ev_window->priv->load_job = ev_job_load_new (document, ev_window->priv->uri);
+		g_signal_connect (ev_window->priv->load_job,
+				  "finished",
+				  G_CALLBACK (ev_window_load_job_cb),
+				  ev_window);
+		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+
+		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
+				   EV_CONTEXT_PROGRESS,
+				   _("Loading document. Please wait"));
+	        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
+    				            TRUE);
+
+	}		
+}
+
+void
+ev_window_open_uri (EvWindow *ev_window, const char *uri)
+{
+	if (ev_window->priv->password_dialog)
+		gtk_widget_destroy (ev_window->priv->password_dialog);
+
+	g_free (ev_window->priv->uri);
+	ev_window->priv->uri = g_strdup (uri);
+	
+	ev_window_clear_jobs (ev_window);
+	
+	ev_window->priv->xfer_job = ev_job_xfer_new (uri);
+	g_signal_connect (ev_window->priv->xfer_job,
+			  "finished",
+			  G_CALLBACK (ev_window_xfer_job_cb),
+			  ev_window);
+	ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
+
+	ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
+			   EV_CONTEXT_PROGRESS,
+			   _("Loading document. Please wait"));
+        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
+    			            TRUE);
+}
+
+void
+ev_window_open_uri_list (EvWindow *ev_window, GSList *uri_list)
+{
+	GSList *list;
+	gchar  *uri;
 	
 	g_return_if_fail (uri_list != NULL);
 	
 	list = uri_list;
 	while (list) {
-		uri = gnome_vfs_uri_to_string (list->data, GNOME_VFS_URI_HIDE_NONE);
+
+		uri = (gchar *)list->data;
 		
-		if (ev_document_type_lookup (uri, NULL) != G_TYPE_INVALID) {
 			if (ev_window_is_empty (EV_WINDOW (ev_window))) {
-				ev_window_open (ev_window, uri);
-				
+				ev_window_open_uri (ev_window, uri);
+
 				gtk_widget_show (GTK_WIDGET (ev_window));
 			} else {
 				EvWindow *new_window;
-				
+
 				new_window = ev_application_new_window (EV_APP);
-				ev_window_open (new_window, uri);
-				
+				ev_window_open_uri (new_window, uri);
+
 				gtk_widget_show (GTK_WIDGET (new_window));
 			}
-		}
 
 		g_free (uri);
 
-		list = g_list_next (list);
+		list = g_slist_next (list);
 	}
 }
 
@@ -889,7 +928,7 @@ ev_window_cmd_recent_file_activate (EggRecentViewGtk *view, EggRecentItem *item,
 
 	window = GTK_WIDGET (ev_application_get_empty_window (EV_APP));
 	gtk_widget_show (window);
-	ev_window_open (EV_WINDOW (window), uri);
+	ev_window_open_uri (EV_WINDOW (window), uri);
 	
 	g_free (uri);
 }
@@ -1092,7 +1131,7 @@ ev_window_print (EvWindow *window)
 	EvPageCache *page_cache;
 	int last_page;
 
-	page_cache = ev_document_get_page_cache (window->priv->document);
+	page_cache = ev_page_cache_get (window->priv->document);
 	last_page = ev_page_cache_get_n_pages (page_cache);
 
 	ev_window_print_range (window, 1, -1);
@@ -1111,7 +1150,7 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
 
-	page_cache = ev_document_get_page_cache (ev_window->priv->document);
+	page_cache = ev_page_cache_get (ev_window->priv->document);
 	if (last_page == -1) {
 		last_page = ev_page_cache_get_n_pages (page_cache);
 	}
@@ -1641,12 +1680,12 @@ ev_window_state_event (GtkWidget *widget, GdkEventWindowState *event)
 	EvWindow *window = EV_WINDOW (widget);
 
 	if (event->changed_mask & GDK_WINDOW_STATE_MAXIMIZED) {
-		gboolean show;
+		gboolean maximized;
 
-		show = (event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) == 0;
+		maximized = (event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) == 0;
 
-		gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (window->priv->statusbar),
-						   show);
+		ev_statusbar_set_maximized (EV_STATUSBAR (window->priv->statusbar),
+					    maximized);
 	}
 
 	return FALSE;
@@ -1828,7 +1867,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 	page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 	uri = g_strdup (ev_window->priv->uri);
 
-	ev_window_open (ev_window, uri);
+	ev_window_open_uri (ev_window, uri);
 
 	/* In case the number of pages in the document has changed. */
 	page = CLAMP (page, 0, ev_page_cache_get_n_pages (ev_window->priv->page_cache));
@@ -2130,8 +2169,8 @@ menu_item_select_cb (GtkMenuItem *proxy, EvWindow *ev_window)
 
 	g_object_get (G_OBJECT (action), "tooltip", &message, NULL);
 	if (message) {
-		gtk_statusbar_push (GTK_STATUSBAR (ev_window->priv->statusbar),
-				    ev_window->priv->help_message_cid, message);
+		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
+				   EV_CONTEXT_VIEW, message);
 		g_free (message);
 	}
 }
@@ -2139,8 +2178,8 @@ menu_item_select_cb (GtkMenuItem *proxy, EvWindow *ev_window)
 static void
 menu_item_deselect_cb (GtkMenuItem *proxy, EvWindow *ev_window)
 {
-	gtk_statusbar_pop (GTK_STATUSBAR (ev_window->priv->statusbar),
-			   ev_window->priv->help_message_cid);
+	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
+			  EV_CONTEXT_VIEW);
 }
 
 static void
@@ -2175,13 +2214,13 @@ view_status_changed_cb (EvView     *view,
 {
 	const char *message;
 
-	gtk_statusbar_pop (GTK_STATUSBAR (ev_window->priv->statusbar),
-			   ev_window->priv->view_message_cid);
+	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
+			  EV_CONTEXT_HELP);
 
 	message = ev_view_get_status (view);
 	if (message) {
-		gtk_statusbar_push (GTK_STATUSBAR (ev_window->priv->statusbar),
-				    ev_window->priv->view_message_cid, message);
+		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
+				   EV_CONTEXT_HELP, message);
 	}
 }
 
@@ -2328,6 +2367,10 @@ ev_window_dispose (GObject *object)
 		priv->page_view = NULL;
 	}
 
+	if (priv->load_job || priv->xfer_job) {
+		ev_window_clear_jobs (window);
+	}
+
 	if (priv->password_document) {
 		g_object_unref (priv->password_document);
 		priv->password_document = NULL;
@@ -2336,6 +2379,10 @@ ev_window_dispose (GObject *object)
 	if (priv->password_uri) {
 		g_free (priv->password_uri);
 		priv->password_uri = NULL;
+	}
+
+	if (priv->password_dialog) {
+		gtk_widget_destroy (priv->password_dialog);
 	}
 
 	if (priv->find_bar) {
@@ -2523,14 +2570,25 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 		       gint x, gint y, GtkSelectionData *selection_data,
 		       guint info, guint time, gpointer gdata)
 {
-	GList    *uri_list = NULL;
+	GList  *uri_list = NULL;
+	GSList *uris = NULL;
+	gchar  *uri;
 
 	uri_list = gnome_vfs_uri_list_parse ((gchar *) selection_data->data);
 
 	if (uri_list) {
-		ev_window_open_uri_list (EV_WINDOW (widget), uri_list);
-		
+		while (uri_list) {
+			uri = gnome_vfs_uri_to_string (uri_list->data, GNOME_VFS_URI_HIDE_NONE);
+			uris = g_slist_append (uris, (gpointer) uri);
+			
+			uri_list = g_list_next (uri_list);
+		}
+
 		gnome_vfs_uri_list_free (uri_list);
+		
+		ev_window_open_uri_list (EV_WINDOW (widget), uris);
+		
+		g_slist_free (uris);
 
 		gtk_drag_finish (context, TRUE, FALSE, time);
 	}
@@ -2942,15 +3000,11 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (ev_window_zoom_changed_cb),
 			  ev_window);
 
-	ev_window->priv->statusbar = gtk_statusbar_new ();
+	ev_window->priv->statusbar = ev_statusbar_new ();
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
 			  ev_window->priv->statusbar,
 			  FALSE, TRUE, 0);
-	ev_window->priv->help_message_cid = gtk_statusbar_get_context_id
-		(GTK_STATUSBAR (ev_window->priv->statusbar), "help_message");
-	ev_window->priv->view_message_cid = gtk_statusbar_get_context_id
-		(GTK_STATUSBAR (ev_window->priv->statusbar), "view_message");
-
+    
 	ev_window->priv->find_bar = egg_find_bar_new ();
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
 			  ev_window->priv->find_bar,
@@ -3009,3 +3063,4 @@ ev_window_init (EvWindow *ev_window)
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	update_action_sensitivity (ev_window);
 }
+

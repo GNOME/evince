@@ -31,6 +31,8 @@ void        ev_file_helpers_init     (void);
 
 void        ev_file_helpers_shutdown (void);
 
+gchar*      ev_tmp_filename          (void);
+
 G_END_DECLS
 
 #endif /* EPHY_FILE_HELPERS_H */

@@ -1932,7 +1932,7 @@ ev_view_set_document (EvView     *view,
 						  G_CALLBACK (find_changed_cb),
 						  view);
 			}
-			view->page_cache = ev_document_get_page_cache (view->document);
+			view->page_cache = ev_page_cache_get (view->document);
 			g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
 			view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
 			g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
@@ -2505,7 +2505,7 @@ ev_view_find_next (EvView *view)
 	int n_results, n_pages;
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
-	page_cache = ev_document_get_page_cache (view->document);
+	page_cache = ev_page_cache_get (view->document);
 	n_results = ev_document_find_get_n_results (find, view->current_page);
 
 	n_pages = ev_page_cache_get_n_pages (page_cache);
@@ -2534,7 +2534,7 @@ ev_view_find_previous (EvView *view)
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 	EvPageCache *page_cache;
 
-	page_cache = ev_document_get_page_cache (view->document);
+	page_cache = ev_page_cache_get (view->document);
 
 	n_results = ev_document_find_get_n_results (find, view->current_page);
 

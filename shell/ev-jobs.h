@@ -37,6 +37,9 @@ typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
 typedef struct _EvJobLinks EvJobLinks;
 typedef struct _EvJobLinksClass EvJobLinksClass;
 
+typedef struct _EvJobLoad EvJobLoad;
+typedef struct _EvJobLoadClass EvJobLoadClass;
+
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
 #define EV_JOB_CLASS(klass)	             (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
@@ -56,6 +59,11 @@ typedef struct _EvJobLinksClass EvJobLinksClass;
 #define EV_JOB_THUMBNAIL(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnail))
 #define EV_JOB_THUMBNAIL_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
 #define EV_IS_JOB_THUMBNAIL(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_THUMBNAIL))
+
+#define EV_TYPE_JOB_LOAD		     (ev_job_load_get_type())
+#define EV_JOB_LOAD(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD, EvJobLoad))
+#define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
+#define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
 
 typedef enum {
 	EV_JOB_PRIORITY_LOW,
@@ -121,6 +129,17 @@ struct _EvJobThumbnailClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobLoad
+{
+	EvJob parent;
+	GError *error;
+	gchar *uri;
+};
+
+struct _EvJobLoadClass
+{
+	EvJobClass parent_class;
+};
 
 /* Base job class */
 GType           ev_job_get_type           (void);
@@ -148,6 +167,11 @@ EvJob          *ev_job_thumbnail_new      (EvDocument     *document,
 					   gint            requested_width);
 void            ev_job_thumbnail_run      (EvJobThumbnail *thumbnail);
 
+/* EvJobLoad */
+GType 		ev_job_load_get_type 	  (void);
+EvJob 	       *ev_job_load_new 	  (EvDocument      *document,
+					   const gchar 	   *uri);
+void		ev_job_load_run 	  (EvJobLoad 	   *load);					   
 
 G_END_DECLS
 

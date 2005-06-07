@@ -25,10 +25,13 @@
 #include <sys/stat.h>
 #include <glib.h>
 #include <libgnome/gnome-init.h>
+#include <unistd.h>
 
 #include "ev-file-helpers.h"
 
 static char *dot_dir = NULL;
+static char *tmp_dir = NULL;
+static int  count = 0;
 
 static gboolean
 ensure_dir_exists (const char *dir)
@@ -77,7 +80,47 @@ ev_file_helpers_init (void)
 
 void
 ev_file_helpers_shutdown (void)
-{
+{		
+	rmdir (tmp_dir);
+
+	g_free (tmp_dir);
 	g_free (dot_dir);
+
 	dot_dir = NULL;
+	tmp_dir = NULL;
+}
+
+gchar* 
+ev_tmp_filename (void)
+{
+	gchar *basename;
+	gchar *filename = NULL;
+
+	if (tmp_dir == NULL) {
+		gboolean exists;
+		gchar   *dirname;
+		
+		dirname = g_strdup_printf ("evince-%u", getpid());
+		tmp_dir = g_build_filename (g_get_tmp_dir (),
+					    dirname,
+					    NULL);
+		g_free (dirname);
+
+		exists = ensure_dir_exists (tmp_dir);
+		g_assert (exists);
+	}
+	
+	
+	do {
+		if (filename != NULL)
+			g_free (filename);
+			
+		basename = g_strdup_printf ("document-%d", count ++);
+		
+		filename = g_build_filename (tmp_dir, basename, NULL);
+		
+		g_free (basename);
+	} while (g_file_test (filename, G_FILE_TEST_EXISTS));
+			
+	return filename;
 }

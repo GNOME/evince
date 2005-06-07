@@ -43,7 +43,6 @@ typedef struct _EvDocumentIface   EvDocumentIface;
 typedef struct _EvPageCache       EvPageCache;
 typedef struct _EvPageCacheClass  EvPageCacheClass;
 
-#include "ev-page-cache.h"
 
 
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
@@ -95,7 +94,6 @@ struct _EvDocumentIface
 
 GType		ev_document_get_type       (void);
 GQuark		ev_document_error_quark    (void);
-EvPageCache    *ev_document_get_page_cache (EvDocument     *document);
 GMutex	       *ev_document_get_doc_mutex  (void);
 void            ev_document_doc_mutex_lock (void);
 void            ev_document_doc_mutex_unlock (void);

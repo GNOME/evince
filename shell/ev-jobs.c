@@ -12,6 +12,8 @@ static void ev_job_render_init          (EvJobRender         *job);
 static void ev_job_render_class_init    (EvJobRenderClass    *class);
 static void ev_job_thumbnail_init       (EvJobThumbnail      *job);
 static void ev_job_thumbnail_class_init (EvJobThumbnailClass *class);
+static void ev_job_load_init    	(EvJobLoad	     *job);
+static void ev_job_load_class_init 	(EvJobLoadClass	     *class);
 
 enum
 {
@@ -25,7 +27,7 @@ G_DEFINE_TYPE (EvJob, ev_job, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobRender, ev_job_render, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
-
+G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 
 static void ev_job_init (EvJob *job) { /* Do Nothing */ }
 
@@ -144,6 +146,38 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 	oclass = G_OBJECT_CLASS (class);
 
 	oclass->dispose = ev_job_thumbnail_dispose;
+}
+
+static void ev_job_load_init (EvJobLoad *job) { /* Do Nothing */ }
+
+static void
+ev_job_load_dispose (GObject *object)
+{
+	EvJobLoad *job;
+
+	job = EV_JOB_LOAD (object);
+
+	if (job->uri) {
+		g_free (job->uri);
+		job->uri = NULL;
+	}
+
+	if (job->error) {
+		g_error_free (job->error);
+		job->error = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_load_parent_class)->dispose) (object);
+}
+
+static void
+ev_job_load_class_init (EvJobLoadClass *class)
+{
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_load_dispose;
 }
 
 /* Public functions */
@@ -272,3 +306,38 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 
 	ev_document_doc_mutex_unlock ();
 }
+
+EvJob *
+ev_job_load_new (EvDocument *document,
+		 const gchar *uri)
+{
+	EvJobLoad *job;
+
+	job = g_object_new (EV_TYPE_JOB_LOAD, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+	job->uri = g_strdup (uri);
+
+	return EV_JOB (job);
+}
+
+void
+ev_job_load_run (EvJobLoad *job)
+{
+	g_return_if_fail (EV_IS_JOB_LOAD (job));
+
+	ev_document_doc_mutex_lock ();
+	
+	if (job->error) {
+	        g_error_free (job->error);
+		job->error = NULL;
+	}
+	    
+	ev_document_load (EV_JOB(job)->document, job->uri, &job->error);
+	
+	EV_JOB (job)->finished = TRUE;
+
+	ev_document_doc_mutex_unlock ();
+}
+
+

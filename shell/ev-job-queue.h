@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 #include "ev-jobs.h"
+#include "ev-job-xfer.h"
 
 G_BEGIN_DECLS
 

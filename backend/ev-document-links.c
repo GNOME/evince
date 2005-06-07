@@ -24,7 +24,6 @@
 #include "config.h"
 
 #include "ev-document-links.h"
-#include "ev-job-queue.h"
 
 GType
 ev_document_links_get_type (void)

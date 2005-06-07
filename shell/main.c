@@ -61,7 +61,7 @@ load_files (const char **files)
 
 		window = GTK_WIDGET (ev_application_new_window (EV_APP));
 		gtk_widget_show (window);
-		ev_window_open (EV_WINDOW (window), uri);
+		ev_window_open_uri (EV_WINDOW (window), uri);
 		
 		if (page_label != NULL)
 			ev_window_open_page_label (EV_WINDOW (window), page_label);

@@ -298,7 +298,7 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 	page = gtk_tree_path_get_indices (path)[0];
 	gtk_tree_path_free (path);
 
-	page_cache = ev_document_get_page_cache (priv->document);
+	page_cache = ev_page_cache_get (priv->document);
 	ev_page_cache_set_current_page (page_cache, page);
 }
 
@@ -403,7 +403,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 
 	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
 
-	page_cache = ev_document_get_page_cache (document);
+	page_cache = ev_page_cache_get (document);
 	n_pages = ev_page_cache_get_n_pages (page_cache);
 
 	priv->document = document;

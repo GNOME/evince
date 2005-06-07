@@ -23,7 +23,6 @@
 #include "ev-document.h"
 
 #include "ev-backend-marshalers.h"
-#include "ev-job-queue.h"
 
 static void ev_document_class_init (gpointer g_class);
 
@@ -69,24 +68,6 @@ ev_document_class_init (gpointer g_class)
 {
 }
 
-#define PAGE_CACHE_STRING "ev-page-cache"
-
-EvPageCache *
-ev_document_get_page_cache (EvDocument *document)
-{
-	EvPageCache *page_cache;
-
-	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
-
-	page_cache = g_object_get_data (G_OBJECT (document), PAGE_CACHE_STRING);
-	if (page_cache == NULL) {
-		page_cache = _ev_page_cache_new (document);
-		g_object_set_data_full (G_OBJECT (document), PAGE_CACHE_STRING, page_cache, g_object_unref);
-	}
-
-	return page_cache;
-}
-
 GMutex *
 ev_document_get_doc_mutex (void)
 {
@@ -119,10 +100,6 @@ ev_document_load (EvDocument  *document,
 	gboolean retval;
 	LOG ("ev_document_load");
 	retval = iface->load (document, uri, error);
-
-	/* Call this to make the initial cached copy */
-	if (retval)
-		ev_document_get_page_cache (document);
 
 	return retval;
 }

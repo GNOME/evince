@@ -581,7 +581,7 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 	}
 
 	priv->document = g_object_ref (document);
-	priv->page_cache = ev_document_get_page_cache (document);
+	priv->page_cache = ev_page_cache_get (document);
 
 	if (priv->job) {
 		g_signal_handlers_disconnect_by_func (priv->job,

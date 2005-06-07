@@ -101,7 +101,7 @@ ev_page_cache_finalize (GObject *object)
 }
 
 EvPageCache *
-_ev_page_cache_new (EvDocument *document)
+ev_page_cache_new (EvDocument *document)
 {
 	EvPageCache *page_cache;
 	EvPageCacheInfo *info;
@@ -463,4 +463,23 @@ ev_page_cache_prev_page (EvPageCache *page_cache)
 	ev_page_cache_set_current_page (page_cache, page_cache->current_page - 1);
 	return TRUE;
 }
+
+#define PAGE_CACHE_STRING "ev-page-cache"
+
+EvPageCache *
+ev_page_cache_get (EvDocument *document)
+{
+	EvPageCache *page_cache;
+
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
+	page_cache = g_object_get_data (G_OBJECT (document), PAGE_CACHE_STRING);
+	if (page_cache == NULL) {
+		page_cache = ev_page_cache_new (document);
+		g_object_set_data_full (G_OBJECT (document), PAGE_CACHE_STRING, page_cache, g_object_unref);
+	}
+
+	return page_cache;
+}
+
 

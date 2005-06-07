@@ -122,6 +122,7 @@ ev_application_open (EvApplication *application, GError *err)
 	GtkFileFilter *ps_filter;
 	GtkFileFilter *pixbuf_filter;
 	GtkFileFilter *all_filter;
+	static gchar  *folder = NULL;
 #ifdef ENABLE_DJVU
 	GtkFileFilter *djvu_filter;
 #endif
@@ -138,6 +139,11 @@ ev_application_open (EvApplication *application, GError *err)
 					       GTK_RESPONSE_CANCEL,
 					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 					       NULL);
+
+	if (folder) {
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
+						     folder);
+	}
 
 	documents_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (documents_filter,
@@ -193,14 +199,17 @@ ev_application_open (EvApplication *application, GError *err)
 	
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), documents_filter);
 
-	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {
-		char *uri;
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 
-		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (chooser));
-		ev_window_open (ev_window, uri);
-		gtk_widget_show (GTK_WIDGET (ev_window));
-		g_free (uri);
-	
+	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {
+		GSList *uris;
+
+		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
+		folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (chooser));
+
+		ev_window_open_uri_list (ev_window, uris);
+		
+		g_slist_free (uris);
 	} else {
 		if (!GTK_WIDGET_VISIBLE (ev_window))
 			gtk_widget_destroy (GTK_WIDGET (ev_window));

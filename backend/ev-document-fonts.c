@@ -24,7 +24,6 @@
 #include "config.h"
 
 #include "ev-document-fonts.h"
-#include "ev-job-queue.h"
 
 GType
 ev_document_fonts_get_type (void)

@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include "ev-page-action.h"
+#include "ev-page-cache.h"
 #include "ev-window.h"
 #include "ev-document-links.h"
 #include "ev-marshal.h"
@@ -569,7 +570,7 @@ ev_page_action_set_document (EvPageAction *page, EvDocument *document)
 	EvPageCache *page_cache = NULL;
 
 	if (document)
-		page_cache = ev_document_get_page_cache (document);
+		page_cache = ev_page_cache_get (document);
 	
 	g_object_set (page,
 		      "page-cache", page_cache,

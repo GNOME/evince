@@ -58,10 +58,18 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
+	ev-job-queue.h			\
+	ev-job-queue.c			\
+	ev-jobs.h			\
+	ev-jobs.c			\
+	ev-job-xfer.c			\
+	ev-job-xfer.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
 	ev-page-action.c		\
 	ev-page-action.h		\
+	ev-page-cache.h			\
+	ev-page-cache.c			\
 	ev-password.h			\
 	ev-password.c			\
 	ev-password-view.h		\
@@ -86,6 +94,8 @@ evince_SOURCES=				\
 	ev-sidebar-page.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
+	ev-statusbar.c			\
+	ev-statusbar.h			\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
 	main.c				\

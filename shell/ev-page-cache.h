@@ -31,7 +31,7 @@ G_BEGIN_DECLS
 GType          ev_page_cache_get_type            (void) G_GNUC_CONST;
 
 /* Used by ev-document.c only */
-EvPageCache   *_ev_page_cache_new                (EvDocument  *document);
+EvPageCache   *ev_page_cache_new                (EvDocument  *document);
 gint           ev_page_cache_get_n_pages         (EvPageCache *page_cache);
 const char    *ev_page_cache_get_title           (EvPageCache *page_cache);
 void           ev_page_cache_get_size            (EvPageCache *page_cache,
@@ -66,7 +66,8 @@ void           ev_page_cache_set_link            (EvPageCache *page_cache,
 						  EvLink      *link);
 gboolean       ev_page_cache_next_page           (EvPageCache *page_cache);
 gboolean       ev_page_cache_prev_page           (EvPageCache *page_cache);
-         
+
+EvPageCache*   ev_page_cache_get (EvDocument     *document);         
 
 G_END_DECLS
 

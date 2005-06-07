@@ -1,5 +1,109 @@
 2005-06-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* backend/Makefile.am:
+	* backend/ev-document-fonts.c:
+	* backend/ev-document-links.c:
+	* backend/ev-document.c: (ev_document_load):
+	* backend/ev-document.h:
+	* backend/ev-job-queue.c:
+	* backend/ev-job-queue.h:
+	* backend/ev-jobs.c:
+	* backend/ev-jobs.h:
+	* backend/ev-page-cache.c:
+	* backend/ev-page-cache.h:
+
+        EvPageCache and EvJobs are moved to shell.
+
+	* lib/ev-file-helpers.c: (ev_file_helpers_shutdown),
+	(ev_tmp_filename):
+	* lib/ev-file-helpers.h:
+	
+	New helper to work with temporary files
+	
+	* shell/Makefile.am:
+	* shell/ev-application.c: (ev_application_open):
+	* shell/ev-application.h:
+	* shell/ev-job-queue.c: (remove_job_from_queue_locked),
+	(remove_job_from_async_queue), (add_job_to_async_queue),
+	(add_job_to_queue_locked), (notify_finished), (job_finished_cb),
+	(handle_job), (search_for_jobs_unlocked),
+	(no_jobs_available_unlocked), (ev_render_thread),
+	(ev_job_queue_run_next), (ev_job_queue_init), (find_queue),
+	(ev_job_queue_add_job), (move_job_async), (move_job),
+	(ev_job_queue_update_job), (ev_job_queue_remove_job):
+	* shell/ev-job-queue.h:
+	* shell/ev-job-xfer.c: (ev_job_xfer_init), (ev_job_xfer_dispose),
+	(ev_job_xfer_class_init), (ev_job_xfer_new), (ev_job_xfer_run):
+	* shell/ev-job-xfer.h:
+	* shell/ev-jobs.c: (ev_job_init), (ev_job_dispose),
+	(ev_job_class_init), (ev_job_links_init), (ev_job_links_dispose),
+	(ev_job_links_class_init), (ev_job_render_init),
+	(ev_job_render_dispose), (ev_job_render_class_init),
+	(ev_job_thumbnail_init), (ev_job_thumbnail_dispose),
+	(ev_job_thumbnail_class_init), (ev_job_load_init),
+	(ev_job_load_dispose), (ev_job_load_class_init), (ev_job_finished),
+	(ev_job_links_new), (ev_job_links_run), (ev_job_render_new),
+	(render_finished_cb), (ev_job_render_run), (ev_job_thumbnail_new),
+	(ev_job_thumbnail_run), (ev_job_load_new), (ev_job_load_run):
+	* shell/ev-jobs.h:
+	* shell/ev-page-action.c: (ev_page_action_set_document):
+	* shell/ev-page-cache.c: (ev_page_cache_init),
+	(ev_page_cache_class_init), (ev_page_cache_finalize),
+	(ev_page_cache_new), (ev_page_cache_get_n_pages),
+	(ev_page_cache_get_current_page), (ev_page_cache_set_current_page),
+	(ev_page_cache_set_page_label), (ev_page_cache_set_link),
+	(ev_page_cache_get_title), (ev_page_cache_get_size),
+	(ev_page_cache_get_max_width), (ev_page_cache_get_max_height),
+	(ev_page_cache_get_height_to_page),
+	(ev_page_cache_get_max_label_chars),
+	(ev_page_cache_get_page_label),
+	(ev_page_cache_has_nonnumeric_page_labels),
+	(ev_page_cache_get_info), (ev_page_cache_next_page),
+	(ev_page_cache_prev_page), (ev_page_cache_get):
+	* shell/ev-page-cache.h:
+	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_update_range),
+	(ev_pixbuf_cache_clear_job_sizes),
+	(ev_pixbuf_cache_add_jobs_if_needed),
+	(ev_pixbuf_cache_set_page_range):
+	* shell/ev-print-job.c: (ev_print_job_use_print_dialog_settings):
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_set_document):
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_tree_selection_changed),
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-statusbar.c: (ev_statusbar_destroy),
+	(ev_statusbar_class_init), (ev_statusbar_init), (ev_statusbar_new),
+	(ev_statusbar_get_context_id), (ev_statusbar_push),
+	(ev_statusbar_pop), (ev_statusbar_set_maximized),
+	(ev_statusbar_pulse), (ev_statusbar_show_progress),
+	(ev_statusbar_set_progress):
+	* shell/ev-statusbar.h:
+	* shell/ev-view.c: (ev_view_set_document), (ev_view_find_next),
+	(ev_view_find_previous):
+	* shell/ev-window.c: (ev_window_is_empty),
+	(ev_window_setup_document), (password_dialog_response),
+	(ev_window_clear_jobs), (ev_window_load_job_cb),
+	(ev_window_xfer_job_cb), (ev_window_open_uri),
+	(ev_window_open_uri_list), (ev_window_cmd_recent_file_activate),
+	(ev_window_print), (ev_window_print_range),
+	(ev_window_state_event), (ev_window_cmd_view_reload),
+	(menu_item_select_cb), (menu_item_deselect_cb),
+	(view_status_changed_cb), (ev_window_dispose),
+	(drag_data_received_cb), (ev_window_init):
+	* shell/ev-window.h:
+	* shell/main.c: (load_files):
+	
+	New statusbar to show progress on idle. Two new jobs - 
+	xfer job and load job to load document in background. And update
+	of page_cache clients to new location of code.
+
+2005-06-08  Carlos Garcia Campos <carlosgc@gnome.org>
+  
+	* shell/ev-application.c, shell/ev-window.[ch]: Allow multiple
+ 	selection in open dialog. It also remembers the last visited directory 
+ 	in the current session.
+
+2005-06-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-properties.c: (ev_properties_new):
 	* shell/ev-properties.h:
 	* shell/ev-window.c: (ev_window_cmd_file_properties):
