@@ -120,7 +120,7 @@ setup_fonts_view (GladeXML *xml, GtkTreeModel *fonts)
 }
 
 GtkDialog *
-ev_properties_new (EvDocumentInfo *info, GtkTreeModel *fonts)
+ev_properties_new (const EvDocumentInfo *info, GtkTreeModel *fonts)
 {
 	GladeXML *xml;
 	GtkWidget *dialog;

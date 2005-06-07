@@ -1,9 +1,19 @@
+2005-06-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-properties.c: (ev_properties_new):
+	* shell/ev-properties.h:
+	* shell/ev-window.c: (ev_window_cmd_file_properties):
+	
+	Get document info from page cache instead of document itself.
+	This should fix crash related to race conditions described in
+	bug 306545.
+
 2005-06-07  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* ps/ps-document.c: (ps_document_init),
 	(send_ps), (get_page_box), (output), (catchPipe), (input),
 	(stop_interpreter), (file_length), (file_readable),
-	(check_filecompressed), (ps_document_enable_interpreter),
+	(check_filecompressedb), (ps_document_enable_interpreter),
 	(document_load), (ps_async_renderer_render_pixbuf):
 	* ps/ps-document.h:
 
