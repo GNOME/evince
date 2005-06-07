@@ -47,6 +47,7 @@
 #include "ev-debug.h"
 #include "gsdefaults.h"
 #include "ev-ps-exporter.h"
+#include "ev-async-renderer.h"
 
 #ifdef HAVE_LOCALE_H
 #   include <locale.h>
@@ -63,10 +64,6 @@
 #define PS_DOCUMENT_GET_PS_FILE(gs)         (PS_DOCUMENT_IS_COMPRESSED(gs) ? \
                                         PS_DOCUMENT(gs)->gs_filename_unc : \
                                         PS_DOCUMENT(gs)->gs_filename)
-
-GCond* pixbuf_cond = NULL;
-GMutex* pixbuf_mutex = NULL;
-GdkPixbuf *current_pixbuf = NULL;
 
 /* structure to describe section of file to send to ghostscript */
 struct record_list {
@@ -97,6 +94,7 @@ static void stop_interpreter(PSDocument * gs);
 static gint start_interpreter(PSDocument * gs);
 static void ps_document_document_iface_init (EvDocumentIface *iface);
 static void ps_document_ps_exporter_iface_init (EvPSExporterIface *iface);
+static void ps_async_renderer_iface_init (EvAsyncRendererIface *iface);
 static gboolean ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data);
 
 static GObjectClass *parent_class = NULL;
@@ -140,9 +138,6 @@ ps_document_init (PSDocument *gs)
 
 	gs->ps_export_pagelist = NULL;
 	gs->ps_export_filename = NULL;
-
-	pixbuf_cond = g_cond_new ();
-	pixbuf_mutex = g_mutex_new ();
 }
 
 static void
@@ -216,11 +211,8 @@ push_pixbuf (PSDocument *gs)
 	pixbuf =  gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
 				      	        0, 0, 0, 0,
 					        width, height);
-	g_mutex_lock (pixbuf_mutex);
-	current_pixbuf = pixbuf;
-	g_cond_signal (pixbuf_cond);
-	g_mutex_unlock (pixbuf_mutex);
-
+	g_signal_emit_by_name (gs, "render_finished", pixbuf);
+	g_object_unref (pixbuf);
 }
 
 static void
@@ -314,8 +306,8 @@ setup_pixmap (PSDocument *gs, int page, double scale)
 	int pixmap_width, pixmap_height;
 
 	ev_document_get_page_size (EV_DOCUMENT (gs), page, &width, &height);
-	pixmap_width = floor (width * scale);
-	pixmap_height = floor (height * scale);
+	pixmap_width = width * scale + 0.5;
+	pixmap_height = height * scale + 0.5;
 
 	if(gs->bpixmap) {
 		int w, h;
@@ -984,6 +976,13 @@ ps_document_get_type(void)
         NULL
     };
 
+    static const GInterfaceInfo async_renderer_info =
+    {
+        (GInterfaceInitFunc) ps_async_renderer_iface_init,
+        NULL,
+        NULL
+    };
+
     gs_type = g_type_register_static(G_TYPE_OBJECT,
                                      "PSDocument", &gs_info, 0);
 
@@ -993,6 +992,9 @@ ps_document_get_type(void)
     g_type_add_interface_static (gs_type,
                                  EV_TYPE_PS_EXPORTER,
                                  &ps_exporter_info);
+    g_type_add_interface_static (gs_type,
+                                 EV_TYPE_ASYNC_RENDERER,
+                                 &async_renderer_info);
   }
   return gs_type;
 
@@ -1316,27 +1318,15 @@ render_pixbuf_idle (PSRenderJob *job)
 	return FALSE;
 }
 
-static GdkPixbuf *
-ps_document_render_pixbuf (EvDocument *document, int page, double scale)
+static void
+ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double scale)
 {
-	GdkPixbuf *pixbuf;
 	PSRenderJob job;
 
 	job.page = page;
 	job.scale = scale;
-	job.document = PS_DOCUMENT (document);
-	g_idle_add ((GSourceFunc)render_pixbuf_idle, &job);
-
-	g_mutex_lock (pixbuf_mutex);
-	while (!current_pixbuf)
-		g_cond_wait (pixbuf_cond, pixbuf_mutex);
-	pixbuf = current_pixbuf;
-	current_pixbuf = NULL;
-	g_mutex_unlock (pixbuf_mutex);
-
-	LOG ("Pixbuf rendered %p\n", pixbuf);
-
-	return pixbuf;
+	job.document = PS_DOCUMENT (renderer);
+	render_pixbuf_idle (&job);
 }
 
 static EvDocumentInfo *
@@ -1362,8 +1352,13 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->can_get_text = ps_document_can_get_text;
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
-	iface->render_pixbuf = ps_document_render_pixbuf;
 	iface->get_info = ps_document_get_info;
+}
+
+static void
+ps_async_renderer_iface_init (EvAsyncRendererIface *iface)
+{
+	iface->render_pixbuf = ps_async_renderer_render_pixbuf;
 }
 
 static void

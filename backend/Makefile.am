@@ -10,6 +10,8 @@ INCLUDES=					\
 noinst_LTLIBRARIES = libevbackend.la
 
 libevbackend_la_SOURCES=			\
+	ev-async-renderer.c			\
+	ev-async-renderer.h			\
 	ev-backend-marshal.c			\
 	ev-link.c				\
 	ev-link.h				\

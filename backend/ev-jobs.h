@@ -67,6 +67,7 @@ struct _EvJob
 	GObject parent;
 	EvDocument *document;
 	gboolean finished;
+	gboolean async;
 };
 
 struct _EvJobClass

@@ -2,6 +2,7 @@
 #include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
+#include "ev-async-renderer.h"
 
 static void ev_job_init                 (EvJob               *job);
 static void ev_job_class_init           (EvJobClass          *class);
@@ -196,7 +197,22 @@ ev_job_render_new (EvDocument *document,
 	job->target_height = height;
 	job->include_links = include_links;
 
+	if (EV_IS_ASYNC_RENDERER (document)) {	
+		EV_JOB (job)->async = TRUE;
+	}
+
 	return EV_JOB (job);
+}
+
+static void
+render_finished_cb (EvDocument *document, GdkPixbuf *pixbuf, EvJobRender *job)
+{
+	g_signal_handlers_disconnect_by_func (EV_JOB (job)->document,
+					      render_finished_cb, job);
+
+	EV_JOB (job)->finished = TRUE;
+	job->pixbuf = g_object_ref (pixbuf);
+	ev_job_finished (EV_JOB (job));
 }
 
 void
@@ -206,12 +222,21 @@ ev_job_render_run (EvJobRender *job)
 
 	ev_document_doc_mutex_lock ();
 
-	job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document,
-						 job->page,
-						 job->scale);
-	if (job->include_links)
-		job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->page);
-	EV_JOB (job)->finished = TRUE;
+	if (EV_JOB (job)->async) {
+		EvAsyncRenderer *renderer = EV_ASYNC_RENDERER (EV_JOB (job)->document);
+		ev_async_renderer_render_pixbuf (renderer, job->page, job->scale);
+		g_signal_connect (EV_JOB (job)->document, "render_finished",
+				  G_CALLBACK (render_finished_cb), job);
+	} else {
+		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document,
+							 job->page,
+							 job->scale);
+		if (job->include_links)
+			job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->page);
+
+		EV_JOB (job)->finished = TRUE;
+	}
+
 	ev_document_doc_mutex_unlock ();
 }
 

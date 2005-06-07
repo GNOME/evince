@@ -1,3 +1,35 @@
+2005-06-07  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/Makefile.am:
+	* backend/ev-async-renderer.c: (ev_async_renderer_get_type),
+	(ev_async_renderer_class_init), (ev_async_renderer_render_pixbuf):
+	* backend/ev-async-renderer.h:
+
+	Add an async renderer interface (method + callback) which
+	is useful for backends like ps.
+
+	* backend/ev-job-queue.c: (remove_job_from_async_queue),
+	(add_job_to_async_queue), (job_finished_cb), (handle_job),
+	(ev_job_queue_run_next), (ev_job_queue_init), (find_queue),
+	(ev_job_queue_add_job), (move_job_async), (move_job),
+	(ev_job_queue_update_job), (ev_job_queue_remove_job):
+
+	Add queues for async renderer, these are executed on the
+	main thread.
+
+	* backend/ev-jobs.c: (ev_job_render_new), (render_finished_cb),
+	(ev_job_render_run):
+	* backend/ev-jobs.h:
+
+	If the backend support async renderer interface use it.
+
+	* ps/ps-document.c: (ps_document_init), (push_pixbuf),
+	(setup_pixmap), (ps_document_get_type),
+	(ps_async_renderer_render_pixbuf),
+	(ps_document_document_iface_init), (ps_async_renderer_iface_init):
+
+	Implement async renderer interface.
+
 2005-06-07  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
 
 	* shell/ev-sidebar-links.c: (ev_sidebar_links_dispose):
