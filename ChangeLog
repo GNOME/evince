@@ -1,3 +1,23 @@
+Wed Jun  8 01:04:22 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-sidebar-thumbnails.c: Use a GtkIconView in certain
+	situations.  That situation is that you're using GTK+-HEAD with
+	the patch at #306726 is applied, and you have a document with <
+	1500 pages in it.  It's not quite as uniformly nice as the
+	TreeView, but should be better in the long run.
+
+	I'm pretty sure I guarded against breaking compilation with
+	HAVE_GTK_ICON_VIEW_GET_VISIBLE_RANGE gaurds, though it's possible
+	I missed some.
+
+	* shell/ev-window.c (ev_window_init): We don't have our tree/list
+	widget yet, so I commented that code out
+	enable_view_actions_for_widget() for now.  Need to figure this
+	out.
+
+	* shell/ev-page-action.c (match_selected_cb): emit the right
+	signals.  Our cool C-l completion now works.
+
 2005-06-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* backend/Makefile.am:

@@ -344,7 +344,7 @@ match_selected_cb (GtkEntryCompletion *completion,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
-	g_signal_emit (proxy, signals[ACTIVATE_LINK], 0, link);
+	g_signal_emit (proxy, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
 	
 	return TRUE;
 }

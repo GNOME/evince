@@ -69,6 +69,11 @@ else
 fi
 AC_SUBST(EVINCE_DISABLE_DEPRECATED)
 
+evince_save_LIBS=$LIBS
+LIBS="$LIBS $GTK_LIBS"
+AC_CHECK_FUNCS(gtk_icon_view_get_visible_range)
+LIBS=$evince_save_LIBS
+
 AM_GCONF_SOURCE_2
 
 AC_PATH_PROG([GCONFTOOL], [gconftool-2], [no])

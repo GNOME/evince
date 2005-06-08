@@ -2951,7 +2951,7 @@ ev_window_init (EvWindow *ev_window)
 	sidebar_widget = ev_sidebar_thumbnails_new ();
 	tree_view = ev_sidebar_thumbnails_get_treeview
 			(EV_SIDEBAR_THUMBNAILS (sidebar_widget));
-	enable_view_actions_for_widget (ev_window, tree_view);
+	//enable_view_actions_for_widget (ev_window, tree_view);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
