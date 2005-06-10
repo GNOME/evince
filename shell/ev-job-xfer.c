@@ -24,6 +24,7 @@
 
 #include "ev-job-xfer.h"
 #include "ev-document-types.h"
+#include "ev-file-helpers.h"
 
 #include <glib/gi18n.h>
 #include <glib.h>
@@ -31,6 +32,7 @@
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-xfer.h>
 
 static void ev_job_xfer_init    	(EvJobXfer	     *job);
 static void ev_job_xfer_class_init 	(EvJobXferClass	     *class);
@@ -47,6 +49,11 @@ ev_job_xfer_dispose (GObject *object)
 	if (job->uri) {
 		g_free (job->uri);
 		job->uri = NULL;
+	}
+
+	if (job->local_uri) {
+		g_free (job->local_uri);
+		job->local_uri = NULL;
 	}
 
 	if (job->error) {
@@ -83,9 +90,10 @@ ev_job_xfer_new (const gchar *uri)
 void
 ev_job_xfer_run (EvJobXfer *job)
 {
-	GnomeVFSURI *vfs_uri;
-	char *mime_type;
 	GType document_type;
+	GError *error = NULL;
+	GnomeVFSURI *source_uri;
+	GnomeVFSURI *target_uri;
 
 	g_return_if_fail (EV_IS_JOB_XFER (job));
 	
@@ -94,34 +102,35 @@ ev_job_xfer_run (EvJobXfer *job)
 		job->error = NULL;
 	}
 
-	vfs_uri = gnome_vfs_uri_new (job->uri);
-	if (vfs_uri) {
-		if (!gnome_vfs_uri_exists (vfs_uri)) {
-			g_set_error (&job->error,
-				     EV_DOCUMENT_ERROR,
-				     0,
-				     _("The file %s does not exist."), 
-				     job->uri);
-			
-			EV_JOB (job)->finished = TRUE;
-			return;
-		}
-	}
-	gnome_vfs_uri_unref (vfs_uri);
-
-	document_type = ev_document_type_lookup (job->uri, &mime_type);
+	document_type = ev_document_type_lookup (job->uri, NULL, &error);
 
 	if (document_type != G_TYPE_INVALID) {
 		EV_JOB (job)->document = g_object_new (document_type, NULL);
 	} else {
-		g_set_error (&job->error,
-			     EV_DOCUMENT_ERROR,
-			     0,
-			     _("Unhandled MIME type: '%s'"),
-			     mime_type ? mime_type : "<Unknown MIME Type>");			
+		job->error = error;			
 		EV_JOB (job)->finished = TRUE;
 		return;	
 	}
+	
+	source_uri = gnome_vfs_uri_new (job->uri);
+	if (!gnome_vfs_uri_is_local (source_uri)) {
+		char *tmp_name;
+		
+		tmp_name = ev_tmp_filename ();
+		job->local_uri = g_strconcat ("file:", tmp_name, NULL);
+		g_free (tmp_name);
+		
+		target_uri = gnome_vfs_uri_new (job->local_uri);
+
+		gnome_vfs_xfer_uri (source_uri, target_uri, 
+				    GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				    GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				    GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				    NULL,
+				    job);
+		gnome_vfs_uri_unref (target_uri);
+	}
+	gnome_vfs_uri_unref (source_uri);
 
 	EV_JOB (job)->finished = TRUE;
 	return;

@@ -38,7 +38,8 @@ struct _EvJobXfer
 {
 	EvJob parent;
 	GError *error;
-	gchar *uri;
+	char *uri;
+	char *local_uri;
 };
 
 struct _EvJobXferClass

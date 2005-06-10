@@ -26,7 +26,8 @@
 G_BEGIN_DECLS
 
 GType ev_document_type_lookup (const char  *uri,
-			       char       **mime_type);
+			       gchar       **mime_type,
+			       GError      **error);
 
 G_END_DECLS
 

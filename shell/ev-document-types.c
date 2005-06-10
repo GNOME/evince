@@ -37,6 +37,7 @@
 #endif
 
 #include <string.h>
+#include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
@@ -111,32 +112,13 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 	return retval;
 }
 
-static char *
-get_slow_mime_type (const char *uri)
-{
-        GnomeVFSFileInfo *info;
-        char *mime_type;
-        GnomeVFSResult result;
-
-        info = gnome_vfs_file_info_new ();
-        result = gnome_vfs_get_file_info (uri, info,
-                                          GNOME_VFS_FILE_INFO_GET_MIME_TYPE |
-                                          GNOME_VFS_FILE_INFO_FORCE_SLOW_MIME_TYPE |
-                                          GNOME_VFS_FILE_INFO_FOLLOW_LINKS);
-        if (info->mime_type == NULL || result != GNOME_VFS_OK) {
-                mime_type = NULL;
-        } else {
-                mime_type = g_strdup (info->mime_type);
-        }
-        gnome_vfs_file_info_unref (info);
-
-        return mime_type;
-}
 
 static GType
-get_document_type_from_mime (const char *mime_type)
+ev_document_type_from_from_mime (const char *mime_type)
 {
 	int i;
+	
+	g_return_val_if_fail (mime_type, G_TYPE_INVALID);
 
 	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
 		if (strcmp (mime_type, document_types[i].mime_type) == 0) {
@@ -152,32 +134,82 @@ get_document_type_from_mime (const char *mime_type)
 	return G_TYPE_INVALID;
 }
 
+/**
+ * ev_document_type_get_type:
+ * @uri: String with uri
+ * @slow: Do we need to check slow gnome-vfs mime type
+ * @mime_type: If we've found handled type, the mime_type string is returned here.
+ * @error: Information about error occured
+ * 
+ * Return value: G_TYPE_INVALID on error, G_TYPE_NONE when we are not sure about
+ * mime type, and type of EvDocument implementation when we've found document.
+ **/
+static GType
+ev_document_type_get_type (const char *uri, gboolean slow, gchar **mime_type, GError **error)
+{
+        GnomeVFSFileInfo *info;
+        GnomeVFSResult result;
+
+        GType type = G_TYPE_INVALID;
+	
+        info = gnome_vfs_file_info_new ();
+        result = gnome_vfs_get_file_info (uri, info,
+	    			          GNOME_VFS_FILE_INFO_GET_MIME_TYPE |
+		                          GNOME_VFS_FILE_INFO_FOLLOW_LINKS | 
+					  (slow ? GNOME_VFS_FILE_INFO_FORCE_SLOW_MIME_TYPE : 0));
+        if (result != GNOME_VFS_OK) {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     0,
+			     gnome_vfs_result_to_string (result));			
+		gnome_vfs_file_info_unref (info);
+		return G_TYPE_INVALID;
+        } 
+	
+	if (info->mime_type == NULL) {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,	
+    			     0,
+			     _("Unknown MIME Type"));
+		gnome_vfs_file_info_unref (info);
+		return slow ? G_TYPE_INVALID : G_TYPE_NONE;
+	}
+	
+	type = ev_document_type_from_from_mime (info->mime_type);
+	
+	if (type == G_TYPE_INVALID) {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,	
+			     0,
+			     _("Unhandled MIME type: '%s'"), info->mime_type);
+		gnome_vfs_file_info_unref (info);
+		return slow ? G_TYPE_INVALID : G_TYPE_NONE;
+	}			
+
+	if (mime_type != NULL) {
+		    *mime_type = g_strdup (info->mime_type);
+	}
+        gnome_vfs_file_info_unref (info);
+	
+        return type;
+}
+
 GType
-ev_document_type_lookup (const char *uri, char **mime_type)
+ev_document_type_lookup (const char *uri, gchar **mime_type, GError **error)
 {
 	GType type = G_TYPE_INVALID;
-	char *mime;
+	
+	type = ev_document_type_get_type (uri, FALSE, mime_type, error);
 
-	g_return_val_if_fail (uri, G_TYPE_INVALID);
-
-	mime = gnome_vfs_get_mime_type (uri);
-	if (mime) {
-		type = get_document_type_from_mime (mime);
+	if (type != G_TYPE_NONE)
+		return type;
+		
+	if (error) {
+		g_error_free (*error);
+		*error = NULL;
 	}
 
-	if (type == G_TYPE_INVALID) {
-		g_free (mime);
-		mime = get_slow_mime_type (uri);
-		if (mime) {
-			type = get_document_type_from_mime (mime);
-		}
-	}
-
-	if (mime_type) {
-		*mime_type = mime;
-	} else {
-		g_free (mime);
-	}
+	type = ev_document_type_get_type (uri, TRUE, mime_type, error);
 
 	return type;
 }

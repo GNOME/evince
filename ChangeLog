@@ -1,3 +1,18 @@
+2005-06-10  Nickolay V. Shmyrev <nshmyrev@yandex.ru>
+
+	* shell/ev-application.c: (ev_application_open):
+	* shell/ev-document-types.c: (ev_document_type_from_from_mime),
+	(ev_document_type_get_type), (ev_document_type_lookup):
+	* shell/ev-document-types.h:
+	* shell/ev-job-xfer.c: (ev_job_xfer_dispose), (ev_job_xfer_run):
+	* shell/ev-job-xfer.h:
+	* shell/ev-window.c: (ev_window_clear_local_uri),
+	(ev_window_load_job_cb), (ev_window_xfer_job_cb),
+	(ev_window_open_uri), (ev_window_add_recent), (ev_window_dispose):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+	
+	Transfer remote documents to tmp directory to display them later.
+
 2005-06-10  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* backend/ev-document-info.h:

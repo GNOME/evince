@@ -38,8 +38,8 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	GType document_type;
 	char *mime_type = NULL;
 
-	document_type = ev_document_type_lookup (uri, &mime_type);
-	if (document_type == G_TYPE_INVALID)
+	document_type = ev_document_type_lookup (uri, &mime_type, &error);
+	if (document_type == G_TYPE_INVALID || error != NULL)
 		return FALSE;
 
 	document = g_object_new (document_type, NULL);

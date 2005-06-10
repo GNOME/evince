@@ -195,11 +195,12 @@ ev_application_open (EvApplication *application, GError *err)
 	all_filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (all_filter, _("All Files"));
 	gtk_file_filter_add_pattern (all_filter, "*");
+
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), all_filter);
-	
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), documents_filter);
 
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
 
 	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {
 		GSList *uris;

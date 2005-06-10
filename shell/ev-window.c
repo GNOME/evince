@@ -114,6 +114,7 @@ struct _EvWindowPrivate {
 
 	/* Document */
 	char *uri;
+	char *local_uri;
 	EvDocument *document;
 	EvPageCache *page_cache;
 
@@ -747,6 +748,22 @@ ev_window_clear_jobs (EvWindow *ev_window)
     }
 }
 
+static void
+ev_window_clear_local_uri (EvWindow *ev_window)
+{
+    char *filename;
+    
+    if (ev_window->priv->local_uri) {
+	    filename = g_filename_from_uri (ev_window->priv->local_uri, NULL, NULL);
+	    if (filename != NULL) {
+		    unlink (filename);
+		    g_free (filename);
+	    }
+	    g_free (ev_window->priv->local_uri);
+	    ev_window->priv->local_uri = NULL;
+    }
+}
+
 /* This callback will executed when load job will be finished.
  *
  * Since the flow of the error dialog is very confusing, we assume that both
@@ -788,7 +805,7 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		ev_window->priv->document = g_object_ref (document);
 		ev_window_setup_document (ev_window);
 		
-		ev_window_add_recent (ev_window, job->uri);
+		ev_window_add_recent (ev_window, ev_window->priv->uri);
 		ev_window_clear_jobs (ev_window);
 		
 		return;
@@ -824,33 +841,37 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 {
 	EvWindow *ev_window = EV_WINDOW (data);
 
-	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
-			  EV_CONTEXT_PROGRESS);
 
-        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
-    			            FALSE);
 	
 	if (job->error != NULL) {
+		ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
+				  EV_CONTEXT_PROGRESS);
+	        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
+    				            FALSE);
+
 		unable_to_load (ev_window, job->error->message);
 		ev_window_clear_jobs (ev_window);
 	} else {
+		char *uri;
+		
 		EvDocument *document = g_object_ref (EV_JOB (job)->document);
-
+		
+		if (job->local_uri) {
+			ev_window->priv->local_uri = g_strdup (job->local_uri);
+			uri = ev_window->priv->local_uri;
+		} else {
+			ev_window->priv->local_uri = NULL;
+			uri = ev_window->priv->uri;
+		}
+		
 		ev_window_clear_jobs (ev_window);
 		
-		ev_window->priv->load_job = ev_job_load_new (document, ev_window->priv->uri);
+		ev_window->priv->load_job = ev_job_load_new (document, uri);
 		g_signal_connect (ev_window->priv->load_job,
 				  "finished",
 				  G_CALLBACK (ev_window_load_job_cb),
 				  ev_window);
 		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
-
-		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
-				   EV_CONTEXT_PROGRESS,
-				   _("Loading document. Please wait"));
-	        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
-    				            TRUE);
-
 	}		
 }
 
@@ -864,6 +885,7 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 	ev_window->priv->uri = g_strdup (uri);
 	
 	ev_window_clear_jobs (ev_window);
+	ev_window_clear_local_uri (ev_window);
 	
 	ev_window->priv->xfer_job = ev_job_xfer_new (uri);
 	g_signal_connect (ev_window->priv->xfer_job,
@@ -937,9 +959,6 @@ static void
 ev_window_add_recent (EvWindow *window, const char *filename)
 {
 	EggRecentItem *item;
-
-	if (strstr (filename, "file:///") == NULL)
-		return;
 
 	item = egg_recent_item_new_from_uri (filename);
 	egg_recent_item_add_group (item, "Evince");
@@ -2369,6 +2388,10 @@ ev_window_dispose (GObject *object)
 
 	if (priv->load_job || priv->xfer_job) {
 		ev_window_clear_jobs (window);
+	}
+	
+	if (priv->local_uri) {
+		ev_window_clear_local_uri (window);
 	}
 
 	if (priv->password_document) {
