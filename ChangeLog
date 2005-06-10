@@ -1,3 +1,11 @@
+2005-06-10  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document-info.h:
+	* shell/ev-properties.c: (ev_properties_new):
+
+	s/GTime*/GTime. Not sure why we was using a pointer
+	at all there!
+
 Wed Jun  8 01:04:22 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-sidebar-thumbnails.c: Use a GtkIconView in certain

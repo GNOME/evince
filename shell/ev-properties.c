@@ -152,12 +152,12 @@ ev_properties_new (const EvDocumentInfo *info, GtkTreeModel *fonts)
 		set_property (xml, CREATOR_PROPERTY, info->creator);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATE) {
-		text = ev_properties_format_date ((GTime) info->creation_date);
+		text = ev_properties_format_date (info->creation_date);
 		set_property (xml, CREATION_DATE_PROPERTY, text);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATE) {
-		text = ev_properties_format_date ((GTime) info->modified_date);
+		text = ev_properties_format_date (info->modified_date);
 		set_property (xml, MOD_DATE_PROPERTY, text);
 		g_free (text);
 	}

@@ -104,8 +104,8 @@ struct _EvDocumentInfo
 	char *producer;
 	char *linearized;
         char *security;
-	GTime *creation_date;
-	GTime *modified_date;
+	GTime creation_date;
+	GTime modified_date;
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
 	guint ui_hints;
