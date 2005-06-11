@@ -28,8 +28,7 @@
 
 G_BEGIN_DECLS
 
-GtkDialog *ev_properties_new (const EvDocumentInfo   *info,
-			      GtkTreeModel     *fonts);
+GtkDialog *ev_properties_new (EvDocument *document, const EvDocumentInfo *info);
 
 G_END_DECLS
 

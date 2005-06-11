@@ -1,3 +1,30 @@
+2005-06-11  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document-fonts.c: (ev_document_fonts_fill_model):
+	* backend/ev-document-fonts.h:
+	* pdf/ev-poppler.cc:
+
+	Make fonts model fill incrementally.
+
+	* shell/ev-job-queue.c: (handle_job), (search_for_jobs_unlocked),
+	(no_jobs_available_unlocked), (ev_job_queue_init), (find_queue),
+	(ev_job_queue_remove_job):
+	* shell/ev-jobs.c: (ev_job_fonts_init), (ev_job_fonts_class_init),
+	(ev_job_fonts_new), (ev_job_fonts_run):
+	* shell/ev-jobs.h:
+
+	New job for fonts scanning
+
+	* shell/ev-properties.c: (job_fonts_finished_cb),
+	(fill_fonts_treeview), (setup_fonts_view), (ev_properties_new):
+	* shell/ev-properties.h:
+	* shell/ev-window.c: (ev_window_cmd_file_properties):
+
+	Incrementally feel the treeview using the new job. Show Loading...
+	message until scanning is completed.
+
+	Hopefully I didnt break the build without the poppler patch.
+
 2005-06-10  Nickolay V. Shmyrev <nshmyrev@yandex.ru>
 
 	* shell/ev-application.c: (ev_application_open):

@@ -495,58 +495,54 @@ pdf_document_security_iface_init (EvDocumentSecurityIface *iface)
 	iface->set_password = pdf_document_set_password;
 }
 
+static gboolean
+pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
+			       GtkTreeModel    *model,
+			       int              n_pages)
+{
 #ifdef POPPLER_FONT_INFO
-static void
-build_fonts_list (PdfDocument      *pdf_document,
-	          GtkTreeModel     *model,
-	          GtkTreeIter      *parent,
-	          PopplerFontsIter *iter)
-{
-	do {
-		GtkTreeIter list_iter;
-		PopplerIndexIter *child;
-		const char *name;
-		
-		name = poppler_fonts_iter_get_name (iter);
-		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
-		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
-				    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
-				    -1);
-	} while (poppler_fonts_iter_next (iter));
-}
-#endif
-
-static GtkTreeModel *
-pdf_document_fonts_get_fonts_model (EvDocumentFonts *document_fonts)
-{
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
-	GtkTreeModel *model = NULL;
-#ifdef POPPLER_FONT_INFO
+	PopplerFontInfo *info;
 	PopplerFontsIter *iter;
-#endif
+	gboolean result;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), NULL);
+	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), FALSE);
 
-#ifdef POPPLER_FONT_INFO
-	iter = poppler_fonts_iter_new (pdf_document->document);
-	/* Create the model iff we have items*/
-	if (iter != NULL) {
-#endif
-		model = (GtkTreeModel *) gtk_list_store_new (EV_DOCUMENT_FONTS_COLUMN_NUM_COLUMNS,
-							     G_TYPE_STRING);
-#ifdef POPPLER_FONT_INFO
-		build_fonts_list (pdf_document, model, NULL, iter);
+	info = (PopplerFontInfo *)g_object_get_data (G_OBJECT (model), "font_info");
+	if (info == NULL) {
+		info = poppler_font_info_new (pdf_document->document);
+		g_object_set_data_full (G_OBJECT (model), "font_info",
+					(PopplerFontInfo *)info,
+					(GDestroyNotify)poppler_font_info_free);
+	}
+
+	result = poppler_font_info_scan (info, n_pages, &iter);
+
+	if (iter) {
+		do {
+			GtkTreeIter list_iter;
+			PopplerIndexIter *child;
+			const char *name;
+		
+			name = poppler_fonts_iter_get_name (iter);
+			gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
+			gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
+					    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
+					    -1);
+		} while (poppler_fonts_iter_next (iter));
 		poppler_fonts_iter_free (iter);
 	}
-#endif
 
-	return model;
+	return result;
+#else
+	return FALSE;
+#endif
 }
 
 static void
 pdf_document_document_fonts_iface_init (EvDocumentFontsIface *iface)
 {
-	iface->get_fonts_model = pdf_document_fonts_get_fonts_model;
+	iface->fill_model = pdf_document_fonts_fill_model;
 }
 
 static gboolean

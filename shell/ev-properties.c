@@ -24,12 +24,20 @@
 
 #include "ev-properties.h"
 #include "ev-document-fonts.h"
+#include "ev-jobs.h"
+#include "ev-job-queue.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <time.h>
 #include <sys/time.h>
+
+enum
+{
+	FONT_NAME_COL,
+	NUM_COLS
+};
 
 typedef enum
 {
@@ -98,14 +106,57 @@ set_property (GladeXML *xml, Property property, const char *text)
 }
 
 static void
-setup_fonts_view (GladeXML *xml, GtkTreeModel *fonts)
+job_fonts_finished_cb (EvJob *job, GtkTreeView *tree_view)
+{
+	GtkTreeModel *model = EV_JOB_FONTS (job)->model;
+
+	if (EV_JOB_FONTS (job)->scan_completed) {
+		g_signal_handlers_disconnect_by_func
+				(job, job_fonts_finished_cb, tree_view);
+		gtk_tree_view_set_model (tree_view, model);
+	} else {
+		EvJob *new_job = ev_job_fonts_new (job->document, model);
+		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
+		g_object_unref (new_job);
+	}
+}
+
+static void
+fill_fonts_treeview (GtkTreeView  *tree_view,
+		     EvDocument   *document)
+{
+	GtkListStore *list_store;
+	EvJob *job;
+
+	list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING);
+	g_object_set_data_full (G_OBJECT (tree_view), "list_store",
+				list_store, g_object_unref);
+
+	job = ev_job_fonts_new (document, GTK_TREE_MODEL (list_store));
+	g_signal_connect_object (job, "finished",
+			         G_CALLBACK (job_fonts_finished_cb),
+				 tree_view, 0);
+	ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
+	g_object_unref (job);
+}
+
+static void
+setup_fonts_view (GladeXML *xml, EvDocument *document)
 {
 	GtkWidget *widget;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+	GtkListStore *list_store;
+	GtkTreeIter iter;
 
 	widget = glade_xml_get_widget (xml, "fonts_treeview");
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), fonts);
+
+	list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING);
+	gtk_list_store_append (list_store, &iter);
+	gtk_list_store_set (list_store, &iter, FONT_NAME_COL,  _("Loading..."), -1);
+
+	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (list_store));
+	g_object_unref (list_store);
 
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
@@ -117,10 +168,12 @@ setup_fonts_view (GladeXML *xml, GtkTreeModel *fonts)
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
 					     "text", EV_DOCUMENT_FONTS_COLUMN_NAME,
 					     NULL);
+
+	fill_fonts_treeview (GTK_TREE_VIEW (widget), document);
 }
 
 GtkDialog *
-ev_properties_new (const EvDocumentInfo *info, GtkTreeModel *fonts)
+ev_properties_new (EvDocument *document, const EvDocumentInfo *info)
 {
 	GladeXML *xml;
 	GtkWidget *dialog;
@@ -182,9 +235,7 @@ ev_properties_new (const EvDocumentInfo *info, GtkTreeModel *fonts)
 		set_property (xml, SECURITY_PROPERTY, info->security);
 	}
 
-	if (fonts) {
-		setup_fonts_view (xml, fonts);
-	}
+	setup_fonts_view (xml, document);
 
 	return GTK_DIALOG (dialog); 
 }

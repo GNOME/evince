@@ -14,6 +14,7 @@ static GQueue *thumbnail_queue_high = NULL;
 static GQueue *thumbnail_queue_low = NULL;
 static GQueue *load_queue = NULL;
 static GQueue *xfer_queue = NULL;
+static GQueue *fonts_queue = NULL;
 
 /* Queues used for backends supporting EvAsyncRender interface,
    they are executed on the main thread */
@@ -101,6 +102,8 @@ handle_job (EvJob *job)
 		ev_job_xfer_run (EV_JOB_XFER (job));
 	else if (EV_IS_JOB_RENDER (job))
 		ev_job_render_run (EV_JOB_RENDER (job));
+	else if (EV_IS_JOB_FONTS (job))
+		ev_job_fonts_run (EV_JOB_FONTS (job));
 
 	if (!EV_JOB (job)->async) {
 		/* We let the idle own a ref, as we (the queue) are done with the job. */
@@ -144,6 +147,10 @@ search_for_jobs_unlocked (void)
 	if (job)
 		return job;
 
+	job = (EvJob *) g_queue_pop_head (fonts_queue);
+	if (job)
+		return job;
+
 	return NULL;
 }
 
@@ -156,7 +163,8 @@ no_jobs_available_unlocked (void)
 		&& g_queue_is_empty (load_queue)
 		&& g_queue_is_empty (xfer_queue)
 		&& g_queue_is_empty (thumbnail_queue_high)
-		&& g_queue_is_empty (thumbnail_queue_low);
+		&& g_queue_is_empty (thumbnail_queue_low)
+		&& g_queue_is_empty (fonts_queue);
 }
 
 /* the thread mainloop function */
@@ -220,6 +228,7 @@ ev_job_queue_init (void)
 	async_render_queue_low = g_queue_new ();
 	thumbnail_queue_high = g_queue_new ();
 	thumbnail_queue_low = g_queue_new ();
+	fonts_queue = g_queue_new ();
 
 	g_thread_create (ev_render_thread, NULL, FALSE, NULL);
 
@@ -256,6 +265,9 @@ find_queue (EvJob         *job,
 		} else if (EV_IS_JOB_LINKS (job)) {
 			/* the priority doesn't effect links */
 			return links_queue;
+		} else if (EV_IS_JOB_FONTS (job)) {
+			/* the priority doesn't effect fonts */
+			return fonts_queue;
 		}
 	}
 
@@ -395,6 +407,8 @@ ev_job_queue_remove_job (EvJob *job)
 			retval = remove_job_from_queue_locked (load_queue, job);
 		} else if (EV_IS_JOB_XFER (job)) {
 			retval = remove_job_from_queue_locked (xfer_queue, job);
+		} else if (EV_IS_JOB_FONTS (job)) {
+			retval = remove_job_from_queue_locked (fonts_queue, job);
 		} else {
 			g_assert_not_reached ();
 		}

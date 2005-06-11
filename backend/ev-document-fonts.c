@@ -47,13 +47,12 @@ ev_document_fonts_get_type (void)
 	return type;
 }
 
-GtkTreeModel *
-ev_document_fonts_get_fonts_model (EvDocumentFonts *document_fonts)
+gboolean
+ev_document_fonts_fill_model (EvDocumentFonts *document_fonts,
+			      GtkTreeModel    *model,
+			      int              n_pages)
 {
 	EvDocumentFontsIface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
-	GtkTreeModel *retval;
 
-	retval = iface->get_fonts_model (document_fonts);
-
-	return retval;
+	return iface->fill_model (document_fonts, model, n_pages);
 }

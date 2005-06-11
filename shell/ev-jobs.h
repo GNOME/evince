@@ -40,6 +40,9 @@ typedef struct _EvJobLinksClass EvJobLinksClass;
 typedef struct _EvJobLoad EvJobLoad;
 typedef struct _EvJobLoadClass EvJobLoadClass;
 
+typedef struct _EvJobFonts EvJobFonts;
+typedef struct _EvJobFontsClass EvJobFontsClass;
+
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
 #define EV_JOB_CLASS(klass)	             (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
@@ -64,6 +67,11 @@ typedef struct _EvJobLoadClass EvJobLoadClass;
 #define EV_JOB_LOAD(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD, EvJobLoad))
 #define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
 #define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
+
+#define EV_TYPE_JOB_FONTS		     (ev_job_fonts_get_type())
+#define EV_JOB_FONTS(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FONTS, EvJobFonts))
+#define EV_JOB_FONTS_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_FONTS, EvJobFontsClass))
+#define EV_IS_JOB_FONTS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FONTS))
 
 typedef enum {
 	EV_JOB_PRIORITY_LOW,
@@ -141,6 +149,18 @@ struct _EvJobLoadClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobFonts
+{
+	EvJob parent;
+	GtkTreeModel *model;
+	gboolean scan_completed;
+};
+
+struct _EvJobFontsClass
+{
+        EvJobClass parent_class;
+};
+
 /* Base job class */
 GType           ev_job_get_type           (void);
 void            ev_job_finished           (EvJob          *job);
@@ -172,6 +192,12 @@ GType 		ev_job_load_get_type 	  (void);
 EvJob 	       *ev_job_load_new 	  (EvDocument      *document,
 					   const gchar 	   *uri);
 void		ev_job_load_run 	  (EvJobLoad 	   *load);					   
+
+/* EvJobFonts */
+GType 		ev_job_fonts_get_type 	  (void);
+EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document,
+					   GtkTreeModel    *model);
+void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
 G_END_DECLS
 

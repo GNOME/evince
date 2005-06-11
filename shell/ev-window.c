@@ -1249,16 +1249,9 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 	EvDocument *document = ev_window->priv->document;
 	const EvDocumentInfo *info;
 	GtkDialog *dialog;
-	GtkTreeModel *fonts;
-
-	if (EV_IS_DOCUMENT_FONTS (document)) {
-		fonts = ev_document_fonts_get_fonts_model (EV_DOCUMENT_FONTS (document));
-	} else {
-		fonts = NULL;
-	}
 
 	info = ev_page_cache_get_info (ev_window->priv->page_cache);
-	dialog = ev_properties_new (info, fonts);
+	dialog = ev_properties_new (document, info);
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (ev_window));
 	gtk_dialog_run (dialog);
 	gtk_widget_destroy (GTK_WIDGET (dialog));

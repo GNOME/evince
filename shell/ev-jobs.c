@@ -2,6 +2,7 @@
 #include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
+#include "ev-document-fonts.h"
 #include "ev-async-renderer.h"
 
 static void ev_job_init                 (EvJob               *job);
@@ -28,6 +29,7 @@ G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobRender, ev_job_render, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 
 static void ev_job_init (EvJob *job) { /* Do Nothing */ }
 
@@ -340,4 +342,37 @@ ev_job_load_run (EvJobLoad *job)
 	ev_document_doc_mutex_unlock ();
 }
 
+static void ev_job_fonts_init (EvJobFonts *job) { /* Do Nothing */ }
 
+static void ev_job_fonts_class_init (EvJobFontsClass *class) { /* Do Nothing */ }
+
+EvJob *
+ev_job_fonts_new (EvDocument   *document,
+		  GtkTreeModel *model)
+{
+	EvJobFonts *job;
+
+	job = g_object_new (EV_TYPE_JOB_FONTS, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+	job->model = g_object_ref (model);
+
+	return EV_JOB (job);
+}
+
+void
+ev_job_fonts_run (EvJobFonts *job)
+{
+	EvDocumentFonts *fonts;
+
+	g_return_if_fail (EV_IS_JOB_FONTS (job));
+
+	ev_document_doc_mutex_lock ();
+	
+	fonts = EV_DOCUMENT_FONTS (EV_JOB (job)->document);
+	job->scan_completed = !ev_document_fonts_fill_model (fonts, job->model, 20);
+	
+	EV_JOB (job)->finished = TRUE;
+
+	ev_document_doc_mutex_unlock ();
+}
