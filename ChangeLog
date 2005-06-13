@@ -1,3 +1,24 @@
+2005-06-13  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document-fonts.c: (ev_document_fonts_get_progress),
+	(ev_document_fonts_scan), (ev_document_fonts_fill_model):
+	* backend/ev-document-fonts.h:
+
+	Separate scan and fill so that we can incrementally fill from
+	the main thread. Add a progress api.
+
+	* data/evince-properties.glade:
+	* pdf/ev-poppler.cc:
+	* shell/ev-jobs.c: (ev_job_fonts_new), (ev_job_fonts_run):
+	* shell/ev-jobs.h:
+	* shell/ev-properties.c: (update_progress_label),
+	(job_fonts_finished_cb), (setup_fonts_view):
+
+	Incrementally feel the list and show the progress
+	percentage in a label like acrobat does.
+
+	You are going to need poppler cvs
+
 2005-06-11  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* backend/ev-document-fonts.c: (ev_document_fonts_fill_model):

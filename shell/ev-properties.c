@@ -106,61 +106,60 @@ set_property (GladeXML *xml, Property property, const char *text)
 }
 
 static void
+update_progress_label (GtkWidget *label, double progress)
+{
+	if (progress > 0) {
+		char *progress_text;
+		progress_text = g_strdup_printf (_("Gathering font information... %3d%%"),
+						 (int) (progress * 100));
+		gtk_label_set_text (GTK_LABEL (label), progress_text);
+		g_free (progress_text);
+	} else {
+		gtk_label_set_text (GTK_LABEL (label), "");
+	}
+}
+
+static void
 job_fonts_finished_cb (EvJob *job, GtkTreeView *tree_view)
 {
-	GtkTreeModel *model = EV_JOB_FONTS (job)->model;
+	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS (job->document);
+	GtkWidget *progress_label;
+	double progress;
+
+	progress_label = g_object_get_data (G_OBJECT (tree_view), "progress_label");
+	progress = ev_document_fonts_get_progress (document_fonts);
+	update_progress_label (progress_label, progress);
 
 	if (EV_JOB_FONTS (job)->scan_completed) {
 		g_signal_handlers_disconnect_by_func
 				(job, job_fonts_finished_cb, tree_view);
-		gtk_tree_view_set_model (tree_view, model);
 	} else {
-		EvJob *new_job = ev_job_fonts_new (job->document, model);
+		EvJob *new_job;
+
+		ev_document_fonts_fill_model (document_fonts,
+					      gtk_tree_view_get_model (tree_view));
+		new_job = ev_job_fonts_new (job->document);
 		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
 		g_object_unref (new_job);
 	}
 }
 
 static void
-fill_fonts_treeview (GtkTreeView  *tree_view,
-		     EvDocument   *document)
-{
-	GtkListStore *list_store;
-	EvJob *job;
-
-	list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING);
-	g_object_set_data_full (G_OBJECT (tree_view), "list_store",
-				list_store, g_object_unref);
-
-	job = ev_job_fonts_new (document, GTK_TREE_MODEL (list_store));
-	g_signal_connect_object (job, "finished",
-			         G_CALLBACK (job_fonts_finished_cb),
-				 tree_view, 0);
-	ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
-	g_object_unref (job);
-}
-
-static void
 setup_fonts_view (GladeXML *xml, EvDocument *document)
 {
-	GtkWidget *widget;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkListStore *list_store;
-	GtkTreeIter iter;
+	EvJob *job;
+	GtkWidget *tree_view;
+	GtkWidget *progress_label;
 
-	widget = glade_xml_get_widget (xml, "fonts_treeview");
-
-	list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING);
-	gtk_list_store_append (list_store, &iter);
-	gtk_list_store_set (list_store, &iter, FONT_NAME_COL,  _("Loading..."), -1);
-
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (list_store));
-	g_object_unref (list_store);
+	tree_view = glade_xml_get_widget (xml, "fonts_treeview");
+	progress_label = glade_xml_get_widget (xml, "font_progress_label");
 
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
-	gtk_tree_view_append_column (GTK_TREE_VIEW (widget), column);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tree_view), column);
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
@@ -169,7 +168,18 @@ setup_fonts_view (GladeXML *xml, EvDocument *document)
 					     "text", EV_DOCUMENT_FONTS_COLUMN_NAME,
 					     NULL);
 
-	fill_fonts_treeview (GTK_TREE_VIEW (widget), document);
+	list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING);
+	gtk_tree_view_set_model (GTK_TREE_VIEW (tree_view),
+				 GTK_TREE_MODEL (list_store));
+
+	job = ev_job_fonts_new (document);
+	g_object_set_data (G_OBJECT (tree_view), "progress_label",
+			   progress_label);
+	g_signal_connect_object (job, "finished",
+			         G_CALLBACK (job_fonts_finished_cb),
+				 tree_view, 0);
+	ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
+	g_object_unref (job);
 }
 
 GtkDialog *

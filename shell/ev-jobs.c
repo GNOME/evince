@@ -347,15 +347,13 @@ static void ev_job_fonts_init (EvJobFonts *job) { /* Do Nothing */ }
 static void ev_job_fonts_class_init (EvJobFontsClass *class) { /* Do Nothing */ }
 
 EvJob *
-ev_job_fonts_new (EvDocument   *document,
-		  GtkTreeModel *model)
+ev_job_fonts_new (EvDocument *document)
 {
 	EvJobFonts *job;
 
 	job = g_object_new (EV_TYPE_JOB_FONTS, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
-	job->model = g_object_ref (model);
 
 	return EV_JOB (job);
 }
@@ -370,7 +368,7 @@ ev_job_fonts_run (EvJobFonts *job)
 	ev_document_doc_mutex_lock ();
 	
 	fonts = EV_DOCUMENT_FONTS (EV_JOB (job)->document);
-	job->scan_completed = !ev_document_fonts_fill_model (fonts, job->model, 20);
+	job->scan_completed = !ev_document_fonts_scan (fonts, 20);
 	
 	EV_JOB (job)->finished = TRUE;
 

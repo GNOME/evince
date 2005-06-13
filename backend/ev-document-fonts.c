@@ -47,12 +47,28 @@ ev_document_fonts_get_type (void)
 	return type;
 }
 
-gboolean
-ev_document_fonts_fill_model (EvDocumentFonts *document_fonts,
-			      GtkTreeModel    *model,
-			      int              n_pages)
+double
+ev_document_fonts_get_progress (EvDocumentFonts *document_fonts)
 {
 	EvDocumentFontsIface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
 
-	return iface->fill_model (document_fonts, model, n_pages);
+	return iface->get_progress (document_fonts);
+}
+
+gboolean
+ev_document_fonts_scan (EvDocumentFonts *document_fonts,
+			int              n_pages)
+{
+	EvDocumentFontsIface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
+
+	return iface->scan (document_fonts, n_pages);
+}
+
+void
+ev_document_fonts_fill_model (EvDocumentFonts *document_fonts,
+			      GtkTreeModel    *model)
+{
+	EvDocumentFontsIface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
+
+	iface->fill_model (document_fonts, model);
 }

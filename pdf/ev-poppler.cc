@@ -56,6 +56,10 @@ struct _PdfDocument
 	PopplerPSFile *ps_file;
 	gchar *password;
 
+	PopplerFontInfo *font_info;
+	PopplerFontsIter *fonts_iter;
+	int fonts_scanned_pages;
+
 	PdfDocumentSearch *search;
 };
 
@@ -99,6 +103,14 @@ pdf_document_dispose (GObject *object)
 
 	if (pdf_document->document) {
 		g_object_unref (pdf_document->document);
+	}
+
+	if (pdf_document->font_info) { 
+		poppler_font_info_free (pdf_document->font_info);
+	}
+
+	if (pdf_document->fonts_iter) {
+		poppler_fonts_iter_free (pdf_document->fonts_iter);
 	}
 }
 
@@ -495,28 +507,55 @@ pdf_document_security_iface_init (EvDocumentSecurityIface *iface)
 	iface->set_password = pdf_document_set_password;
 }
 
-static gboolean
-pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
-			       GtkTreeModel    *model,
-			       int              n_pages)
+static gdouble
+pdf_document_fonts_get_progress (EvDocumentFonts *document_fonts)
 {
-#ifdef POPPLER_FONT_INFO
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
-	PopplerFontInfo *info;
-	PopplerFontsIter *iter;
+	int n_pages;
+
+        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
+
+	return (double)pdf_document->fonts_scanned_pages / (double)n_pages;
+}
+
+static gboolean
+pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
+			 int              n_pages)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
 	gboolean result;
 
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), FALSE);
 
-	info = (PopplerFontInfo *)g_object_get_data (G_OBJECT (model), "font_info");
-	if (info == NULL) {
-		info = poppler_font_info_new (pdf_document->document);
-		g_object_set_data_full (G_OBJECT (model), "font_info",
-					(PopplerFontInfo *)info,
-					(GDestroyNotify)poppler_font_info_free);
+	if (pdf_document->font_info == NULL) { 
+		pdf_document->font_info = poppler_font_info_new (pdf_document->document);
 	}
 
-	result = poppler_font_info_scan (info, n_pages, &iter);
+	if (pdf_document->fonts_iter) {
+		poppler_fonts_iter_free (pdf_document->fonts_iter);
+	}
+
+	pdf_document->fonts_scanned_pages += n_pages;
+
+	result = poppler_font_info_scan (pdf_document->font_info, n_pages,
+				         &pdf_document->fonts_iter);
+	if (!result) {
+		pdf_document->fonts_scanned_pages = 0;
+		poppler_font_info_free (pdf_document->font_info);
+		pdf_document->font_info = NULL;	
+	}
+
+	return result;
+}
+
+static void
+pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
+			       GtkTreeModel    *model)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
+	PopplerFontsIter *iter = pdf_document->fonts_iter;
+
+	g_return_if_fail (PDF_IS_DOCUMENT (document_fonts));
 
 	if (iter) {
 		do {
@@ -530,19 +569,15 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 					    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
 					    -1);
 		} while (poppler_fonts_iter_next (iter));
-		poppler_fonts_iter_free (iter);
 	}
-
-	return result;
-#else
-	return FALSE;
-#endif
 }
 
 static void
 pdf_document_document_fonts_iface_init (EvDocumentFontsIface *iface)
 {
 	iface->fill_model = pdf_document_fonts_fill_model;
+	iface->scan = pdf_document_fonts_scan;
+	iface->get_progress = pdf_document_fonts_get_progress;
 }
 
 static gboolean

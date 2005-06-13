@@ -152,7 +152,6 @@ struct _EvJobLoadClass
 struct _EvJobFonts
 {
 	EvJob parent;
-	GtkTreeModel *model;
 	gboolean scan_completed;
 };
 
@@ -195,8 +194,7 @@ void		ev_job_load_run 	  (EvJobLoad 	   *load);
 
 /* EvJobFonts */
 GType 		ev_job_fonts_get_type 	  (void);
-EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document,
-					   GtkTreeModel    *model);
+EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
 void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
 G_END_DECLS
