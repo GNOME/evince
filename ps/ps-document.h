@@ -74,6 +74,8 @@ struct _PSDocument {
   int *ps_export_pagelist;
   char *ps_export_filename;
 
+  GtkGSOrientation orientation;
+
   const gchar *gs_status;       /* PSDocument status */
 };
 
