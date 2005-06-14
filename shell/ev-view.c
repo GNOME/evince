@@ -1899,6 +1899,28 @@ ev_view_new (void)
 	return view;
 }
 
+static void
+setup_caches (EvView *view)
+{
+	view->page_cache = ev_page_cache_get (view->document);
+	g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
+	view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
+	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
+}
+
+static void
+clear_caches (EvView *view)
+{
+	if (view->pixbuf_cache) {
+		g_object_unref (view->pixbuf_cache);
+		view->pixbuf_cache = NULL;
+	}
+
+	if (view->document) {
+		ev_page_cache_clear (view->document);
+	}
+}
+
 void
 ev_view_set_document (EvView     *view,
 		      EvDocument *document)
@@ -1915,10 +1937,7 @@ ev_view_set_document (EvView     *view,
 
                 }
 
-		if (view->pixbuf_cache) {
-			g_object_unref (view->pixbuf_cache);
-			view->pixbuf_cache = NULL;
-		}
+		clear_caches (view);
 
 		view->document = document;
 		view->find_page = 0;
@@ -1932,10 +1951,8 @@ ev_view_set_document (EvView     *view,
 						  G_CALLBACK (find_changed_cb),
 						  view);
 			}
-			view->page_cache = ev_page_cache_get (view->document);
-			g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
-			view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
-			g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
+
+			setup_caches (view);
                 }
 
 		gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -2123,6 +2140,18 @@ ev_view_zoom_out (EvView *view)
 
 	view->pending_scroll = SCROLL_TO_CENTER;
 	ev_view_set_zoom (view, ZOOM_OUT_FACTOR, TRUE);
+}
+
+void
+ev_view_set_orientation (EvView         *view,
+			 EvOrientation   orientation)
+{
+	ev_document_set_orientation (view->document, orientation);
+
+	clear_caches (view);
+	setup_caches (view);
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static double

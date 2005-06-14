@@ -1782,6 +1782,27 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
 }
 
 static void
+ev_window_cmd_edit_landscape (GtkAction *action, EvWindow *ev_window)
+{
+	ev_view_set_orientation (EV_VIEW (ev_window->priv->view),
+				 EV_ORIENTATION_LANDSCAPE);
+}
+
+static void
+ev_window_cmd_edit_portrait (GtkAction *action, EvWindow *ev_window)
+{
+	ev_view_set_orientation (EV_VIEW (ev_window->priv->view),
+				 EV_ORIENTATION_PORTRAIT);
+}
+
+static void
+ev_window_cmd_edit_flip (GtkAction *action, EvWindow *ev_window)
+{
+	ev_view_set_orientation (EV_VIEW (ev_window->priv->view),
+				 EV_ORIENTATION_SEASCAPE);
+}
+
+static void
 ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 {
 	GtkWidget *dialog;
@@ -2474,6 +2495,15 @@ static const GtkActionEntry entries[] = {
         { "EditToolbar", NULL, N_("T_oolbar"), NULL,
           N_("Customize the toolbar"),
           G_CALLBACK (ev_window_cmd_edit_toolbar) },
+	{ "EditLandscape", NULL, N_("_Landscape"), NULL,
+	  N_("Change the document orientation to landscape"),
+	  G_CALLBACK (ev_window_cmd_edit_landscape) },
+	{ "EditPortrait", NULL, N_("_Portrait"), NULL,
+	  N_("Change the document orientation to portrait"),
+	  G_CALLBACK (ev_window_cmd_edit_portrait) },
+	{ "EditFlip", NULL, N_("_Flip"), NULL,
+	  N_("Flip the document"),
+	  G_CALLBACK (ev_window_cmd_edit_flip) },
 
         /* View menu */
         { "ViewZoomIn", GTK_STOCK_ZOOM_IN, NULL, "<control>plus",

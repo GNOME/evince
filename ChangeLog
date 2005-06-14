@@ -1,3 +1,30 @@
+2005-06-14  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* backend/ev-document.c: (ev_document_set_orientation):
+	* backend/ev-document.h:
+	* pdf/ev-poppler.cc:
+
+	Add orientation api. Currently poppler api is not optimal,
+	we need to set orientation every time we _get a page
+
+	* data/evince-ui.xml:
+	* shell/ev-window.c: (ev_window_cmd_edit_landscape),
+	(ev_window_cmd_edit_portrait), (ev_window_cmd_edit_flip):
+
+	Add orientation menu items
+
+	* shell/ev-page-cache.c: (ev_page_cache_clear):
+	* shell/ev-page-cache.h:
+
+	Add api to clear the cache
+
+	* shell/ev-view.c: (setup_caches), (clear_caches),
+	(ev_view_set_document), (ev_view_zoom_out),
+	(ev_view_set_orientation):
+	* shell/ev-view.h:
+
+	Implement orientation changing
+
 2005-06-13  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* backend/ev-document-fonts.c: (ev_document_fonts_get_progress),

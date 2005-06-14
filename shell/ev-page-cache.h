@@ -67,7 +67,8 @@ void           ev_page_cache_set_link            (EvPageCache *page_cache,
 gboolean       ev_page_cache_next_page           (EvPageCache *page_cache);
 gboolean       ev_page_cache_prev_page           (EvPageCache *page_cache);
 
-EvPageCache*   ev_page_cache_get (EvDocument     *document);         
+EvPageCache   *ev_page_cache_get		 (EvDocument *document);
+void	       ev_page_cache_clear		 (EvDocument *document);  
 
 G_END_DECLS
 

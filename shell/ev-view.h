@@ -85,12 +85,14 @@ void		ev_view_set_zoom	  (EvView         *view,
 					   double          factor,
 					   gboolean        relative);
 double		ev_view_get_zoom	  (EvView         *view);
+void		ev_view_set_zoom_for_size (EvView         *view,
+					   int             width,
+		    			   int             height,
+					   int             vsb_width,
+					   int             hsb_height);
+void		ev_view_set_orientation   (EvView         *view,
+					   EvOrientation   orientation);
 
-void		ev_view_set_zoom_for_size (EvView *view,
-					   int     width,
-		    			   int     height,
-					   int     vsb_width,
-					   int     hsb_height);
 /* Find */
 gboolean	ev_view_can_find_next	  (EvView         *view);
 void            ev_view_find_next         (EvView         *view);

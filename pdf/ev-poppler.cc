@@ -56,6 +56,8 @@ struct _PdfDocument
 	PopplerPSFile *ps_file;
 	gchar *password;
 
+	PopplerOrientation orientation;
+
 	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
 	int fonts_scanned_pages;
@@ -204,11 +206,11 @@ pdf_document_get_page_size (EvDocument   *document,
 			    double       *width,
 			    double       *height)
 {
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	PopplerPage *poppler_page;
 
-	poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document,
-						  page);
-
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page_set_orientation (poppler_page, pdf_document->orientation);
 	poppler_page_get_size (poppler_page, width, height);
 }
 
@@ -282,6 +284,7 @@ pdf_document_render_pixbuf (EvDocument   *document,
 	pdf_document = PDF_DOCUMENT (document);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  page);
+	poppler_page_set_orientation (poppler_page, pdf_document->orientation);
 
 	poppler_page_get_size (poppler_page, &width_points, &height_points);
 	width = (int) ((width_points * scale) + 0.5);
@@ -486,6 +489,33 @@ pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 }
 
 static void
+pdf_document_set_orientation (EvDocument *document, EvOrientation orientation)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerOrientation poppler_orientation;
+
+	switch (orientation) {
+		case EV_ORIENTATION_DOCUMENT:
+			poppler_orientation = POPPLER_ORIENTATION_DOCUMENT;
+			break;
+		case EV_ORIENTATION_PORTRAIT:
+			poppler_orientation = POPPLER_ORIENTATION_PORTRAIT;
+			break;
+		case EV_ORIENTATION_LANDSCAPE:
+			poppler_orientation = POPPLER_ORIENTATION_LANDSCAPE;
+			break;
+		case EV_ORIENTATION_UPSIDEDOWN:
+			poppler_orientation = POPPLER_ORIENTATION_UPSIDEDOWN;
+			break;
+		case EV_ORIENTATION_SEASCAPE:
+			poppler_orientation = POPPLER_ORIENTATION_SEASCAPE;
+			break;
+	}
+
+	pdf_document->orientation = poppler_orientation;
+}
+
+static void
 pdf_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->save = pdf_document_save;
@@ -498,6 +528,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_text = pdf_document_get_text;
 	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
+	iface->set_orientation = pdf_document_set_orientation;
 };
 
 static void
