@@ -245,7 +245,11 @@ ev_properties_new (EvDocument *document, const EvDocumentInfo *info)
 		set_property (xml, SECURITY_PROPERTY, info->security);
 	}
 
-	setup_fonts_view (xml, document);
+	if (EV_IS_DOCUMENT_FONTS (document)) {
+		setup_fonts_view (xml, document);
+	} else {
+		gtk_widget_hide (glade_xml_get_widget (xml, "fonts_page"));
+	}
 
 	return GTK_DIALOG (dialog); 
 }

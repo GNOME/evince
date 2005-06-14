@@ -137,6 +137,8 @@ ps_document_init (PSDocument *gs)
 
 	gs->ps_export_pagelist = NULL;
 	gs->ps_export_filename = NULL;
+
+	gs->orientation = GTK_GS_ORIENTATION_NONE;
 }
 
 static void
@@ -440,6 +442,9 @@ get_page_orientation (PSDocument *gs, int page)
 	}
 	if (orientation == GTK_GS_ORIENTATION_NONE) {
 		orientation = GTK_GS_ORIENTATION_PORTRAIT;
+	}
+	if (gs->orientation != GTK_GS_ORIENTATION_NONE) {
+		orientation = gs->orientation;
 	}
 
 	return orientation;
@@ -1237,6 +1242,32 @@ ps_document_get_info (EvDocument *document)
 }
 
 static void
+ps_document_set_orientation (EvDocument *document, EvOrientation orientation)
+{
+	PSDocument *ps = PS_DOCUMENT (document);
+
+	g_return_if_fail (ps != NULL);
+
+	switch (orientation) {
+		case EV_ORIENTATION_DOCUMENT:
+			ps->orientation = GTK_GS_ORIENTATION_NONE;
+			break;
+		case EV_ORIENTATION_PORTRAIT:
+			ps->orientation = GTK_GS_ORIENTATION_PORTRAIT;
+			break;
+		case EV_ORIENTATION_LANDSCAPE:
+			ps->orientation = GTK_GS_ORIENTATION_LANDSCAPE;
+			break;
+		case EV_ORIENTATION_UPSIDEDOWN:
+			ps->orientation = GTK_GS_ORIENTATION_UPSIDEDOWN;
+			break;
+		case EV_ORIENTATION_SEASCAPE:
+			ps->orientation = GTK_GS_ORIENTATION_SEASCAPE;
+			break;
+	}
+}
+
+static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = ps_document_load;
@@ -1245,6 +1276,7 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->get_info = ps_document_get_info;
+	iface->set_orientation = ps_document_set_orientation;
 }
 
 static void

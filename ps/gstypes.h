@@ -38,12 +38,6 @@ typedef enum {
   GTK_GS_ORIENTATION_LANDSCAPE = 1
 } GtkGSOrientation;
 
-typedef enum {
-  GTK_GS_ZOOM_ABSOLUTE = 0,
-  GTK_GS_ZOOM_FIT_WIDTH = 1,
-  GTK_GS_ZOOM_FIT_PAGE = 2
-} GtkGSZoomMode;
-
 struct _GtkGSPaperSize {
   gchar *name;
   gint width, height;
