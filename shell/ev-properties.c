@@ -191,8 +191,9 @@ update_progress_label (GtkWidget *label, double progress)
 						 (int) (progress * 100));
 		gtk_label_set_text (GTK_LABEL (label), progress_text);
 		g_free (progress_text);
+		gtk_widget_show (label);
 	} else {
-		gtk_label_set_text (GTK_LABEL (label), "");
+		gtk_widget_hide (label);
 	}
 }
 
