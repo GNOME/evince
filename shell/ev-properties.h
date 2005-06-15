@@ -23,12 +23,27 @@
 
 #include "ev-document.h"
 
-#include <gtk/gtkdialog.h>
-#include <gtk/gtktreemodel.h>
+#include <gtk/gtkwidget.h>
 
 G_BEGIN_DECLS
 
-GtkDialog *ev_properties_new (EvDocument *document, const EvDocumentInfo *info);
+typedef struct _EvProperties EvProperties;
+typedef struct _EvPropertiesClass EvPropertiesClass;
+typedef struct _EvPropertiesPrivate EvPropertiesPrivate;
+
+#define EV_TYPE_PROPERTIES		(ev_properties_get_type())
+#define EV_PROPERTIES(object)	        (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PROPERTIES, EvProperties))
+#define EV_PROPERTIES_CLASS(klass)	(G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_PROPERTIES, EvPropertiesClass))
+#define EV_IS_PROPERTIES(object)	(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PROPERTIES))
+#define EV_IS_PROPERTIES_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_PROPERTIES))
+#define EV_PROPERTIES_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PROPERTIES, EvPropertiesClass))
+
+GType	      ev_properties_get_type     (void);
+EvProperties *ev_properties_new          (void);
+void	      ev_properties_set_document (EvProperties *properties,
+					  EvDocument   *document);
+void	      ev_properties_show	 (EvProperties *properties,
+				          GtkWidget    *parent);
 
 G_END_DECLS
 

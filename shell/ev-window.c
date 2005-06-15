@@ -100,6 +100,9 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *statusbar;
 
+	/* Dialogs */
+	EvProperties *properties;
+
 	/* UI Builders */
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
@@ -640,6 +643,11 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	info = ev_page_cache_get_info (ev_window->priv->page_cache);
 	update_document_mode (ev_window, info->mode);
+
+	if (ev_window->priv->properties) {
+		ev_properties_set_document (ev_window->priv->properties,
+					    ev_window->priv->document);
+	}
 }
 
 static void
@@ -1246,15 +1254,15 @@ ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 {
-	EvDocument *document = ev_window->priv->document;
-	const EvDocumentInfo *info;
-	GtkDialog *dialog;
+	if (ev_window->priv->properties == NULL) {
+		ev_window->priv->properties = ev_properties_new ();
+		ev_properties_set_document (ev_window->priv->properties,
+					    ev_window->priv->document);
+		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->properties),
+					   (gpointer *) &(ev_window->priv->properties));
+	}
 
-	info = ev_page_cache_get_info (ev_window->priv->page_cache);
-	dialog = ev_properties_new (document, info);
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (ev_window));
-	gtk_dialog_run (dialog);
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	ev_properties_show (ev_window->priv->properties, GTK_WIDGET (ev_window));
 }
 					
 static void
