@@ -220,12 +220,14 @@ create_loading_model (void)
 	/* Creates a fake model to indicate that we're loading */
 	retval = (GtkTreeModel *)gtk_list_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 						     G_TYPE_STRING,
-						     G_TYPE_OBJECT);
+						     G_TYPE_OBJECT,
+						     G_TYPE_BOOLEAN);
 
 	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
 	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>", _("Loading..."));
 	gtk_list_store_set (GTK_LIST_STORE (retval), &iter,
 			    EV_DOCUMENT_LINKS_COLUMN_MARKUP, markup,
+			    EV_DOCUMENT_LINKS_COLUMN_EXPAND, FALSE,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, NULL,
 			    -1);
 	g_free (markup);
@@ -515,16 +517,39 @@ row_activated_callback 			(GtkTreeView *treeview,
 	
         return;
 }
-				
+
+static void
+expand_open_links (GtkTreeView *tree_view, GtkTreeModel *model, GtkTreeIter *parent)
+{
+	GtkTreeIter iter;
+	EvLink *link;
+	gboolean expand;
+
+	if (gtk_tree_model_iter_children (model, &iter, parent)) {
+		do {
+			gtk_tree_model_get (model, &iter,
+					    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, &expand,
+					    -1);
+			if (expand) {
+				GtkTreePath *path;
+
+				path = gtk_tree_model_get_path (model, &iter);
+				gtk_tree_view_expand_row (tree_view, path, FALSE);
+				gtk_tree_path_free (path);
+			}
+
+			expand_open_links (tree_view, model, &iter);
+		} while (gtk_tree_model_iter_next (model, &iter));
+	}
+}
+	
 static void
 job_finished_callback (EvJobLinks     *job,
 		       EvSidebarLinks *sidebar_links)
 {
 	EvSidebarLinksPrivate *priv;
 	GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	GtkTreePath *path;
-	gboolean result;
 
 	priv = sidebar_links->priv;
 
@@ -535,16 +560,8 @@ job_finished_callback (EvJobLinks     *job,
 	g_object_unref (job);
 	priv->job = NULL;
 
-	/* Expand one level of the tree */
-	path = gtk_tree_path_new_first ();
-	for (result = gtk_tree_model_get_iter_first (priv->model, &iter);
-	     result;
-	     result = gtk_tree_model_iter_next (priv->model, &iter)) {
-		gtk_tree_view_expand_row (GTK_TREE_VIEW (priv->tree_view), path, FALSE);
-		gtk_tree_path_next (path);
-	}
-	gtk_tree_path_free (path);
-	
+	expand_open_links (GTK_TREE_VIEW (priv->tree_view), priv->model, NULL);
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	priv->selection_id = g_signal_connect (selection, "changed",

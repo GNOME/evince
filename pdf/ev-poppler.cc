@@ -658,8 +658,14 @@ build_tree (PdfDocument      *pdf_document,
 		PopplerIndexIter *child;
 		PopplerAction *action;
 		EvLink *link;
+		gboolean expand;
 		
 		action = poppler_index_iter_get_action (iter);
+#ifdef POPPLER_LINK_IS_OPEN
+		expand = poppler_index_iter_is_open (iter);
+#else
+		expand = TRUE;
+#endif
 		if (action) {
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 			link = ev_link_from_action (action);
@@ -668,6 +674,7 @@ build_tree (PdfDocument      *pdf_document,
 			gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
 					    EV_DOCUMENT_LINKS_COLUMN_MARKUP, ev_link_get_title (link),
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
+					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, expand,
 					    -1);
 			child = poppler_index_iter_get_child (iter);
 			if (child)
@@ -688,16 +695,16 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), NULL);
 
 	iter = poppler_index_iter_new (pdf_document->document);
-	/* Create the model iff we have items*/
+	/* Create the model if we have items*/
 	if (iter != NULL) {
 		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 							     G_TYPE_STRING,
-							     G_TYPE_POINTER);
+							     G_TYPE_POINTER,
+							     G_TYPE_BOOLEAN);
 		build_tree (pdf_document, model, NULL, iter);
 		poppler_index_iter_free (iter);
 	}
 	
-
 	return model;
 }
 
