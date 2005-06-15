@@ -661,11 +661,7 @@ build_tree (PdfDocument      *pdf_document,
 		gboolean expand;
 		
 		action = poppler_index_iter_get_action (iter);
-#ifdef POPPLER_LINK_IS_OPEN
 		expand = poppler_index_iter_is_open (iter);
-#else
-		expand = TRUE;
-#endif
 		if (action) {
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 			link = ev_link_from_action (action);

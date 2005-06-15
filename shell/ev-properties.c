@@ -214,7 +214,9 @@ job_fonts_finished_cb (EvJob *job, EvProperties *properties)
 
 		model = gtk_tree_view_get_model
 				(GTK_TREE_VIEW (properties->fonts_treeview));
+		ev_document_doc_mutex_lock ();
 		ev_document_fonts_fill_model (document_fonts, model);
+		ev_document_doc_mutex_unlock ();
 		new_job = ev_job_fonts_new (job->document);
 		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
 		g_object_unref (new_job);
