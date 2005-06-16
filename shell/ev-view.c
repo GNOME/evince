@@ -2145,7 +2145,7 @@ ev_view_zoom_out (EvView *view)
 	ev_view_set_zoom (view, ZOOM_OUT_FACTOR, TRUE);
 }
 
-void
+static void
 ev_view_set_orientation (EvView         *view,
 			 EvOrientation   orientation)
 {
@@ -2155,6 +2155,42 @@ ev_view_set_orientation (EvView         *view,
 	setup_caches (view);
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+void
+ev_view_rotate_right (EvView *view)
+{
+	EvOrientation orientation, new_orientation;
+
+	orientation = ev_document_get_orientation (view->document);
+	if (orientation == EV_ORIENTATION_PORTRAIT) {
+		new_orientation = EV_ORIENTATION_LANDSCAPE;
+	} else if (orientation == EV_ORIENTATION_LANDSCAPE) {
+		new_orientation = EV_ORIENTATION_UPSIDEDOWN;
+	} else if (orientation == EV_ORIENTATION_UPSIDEDOWN) {
+		new_orientation = EV_ORIENTATION_SEASCAPE;
+	} else {
+		new_orientation = EV_ORIENTATION_PORTRAIT;
+	}
+	ev_view_set_orientation (view, new_orientation);
+}
+
+void
+ev_view_rotate_left (EvView *view)
+{
+	EvOrientation orientation, new_orientation;
+
+	orientation = ev_document_get_orientation (view->document);
+	if (orientation == EV_ORIENTATION_PORTRAIT) {
+		new_orientation = EV_ORIENTATION_SEASCAPE;
+	} else if (orientation == EV_ORIENTATION_SEASCAPE) {
+		new_orientation = EV_ORIENTATION_UPSIDEDOWN;
+	} else if (orientation == EV_ORIENTATION_UPSIDEDOWN) {
+		new_orientation = EV_ORIENTATION_LANDSCAPE;
+	} else {
+		new_orientation = EV_ORIENTATION_PORTRAIT;
+	}
+	ev_view_set_orientation (view, new_orientation);
 }
 
 static double

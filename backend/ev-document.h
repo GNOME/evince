@@ -57,7 +57,6 @@ typedef enum
 
 typedef enum
 {
-	EV_ORIENTATION_DOCUMENT,
 	EV_ORIENTATION_PORTRAIT,
 	EV_ORIENTATION_LANDSCAPE,
 	EV_ORIENTATION_UPSIDEDOWN,
@@ -98,6 +97,7 @@ struct _EvDocumentIface
 	GdkPixbuf      * (* render_pixbuf)   (EvDocument   *document,
 					      int           page,
 					      double        scale);
+	EvOrientation    (* get_orientation) (EvDocument   *document);
 	void	         (* set_orientation) (EvDocument   *document,
 					      EvOrientation orientation);
 	EvDocumentInfo * (* get_info)        (EvDocument   *document);
@@ -132,6 +132,7 @@ GList	       *ev_document_get_links       (EvDocument     *document,
 GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,
 				      	     int             page,
 					     double          scale);
+EvOrientation   ev_document_get_orientation (EvDocument     *document);
 void	        ev_document_set_orientation (EvDocument     *document,
 					     EvOrientation   orientation);
 

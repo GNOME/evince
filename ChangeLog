@@ -1,3 +1,22 @@
+2005-06-16  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* backend/ev-document.c: (ev_document_get_orientation):
+	* backend/ev-document.h:
+	* pdf/ev-poppler.cc:
+	* ps/ps-document.c: (ps_document_get_orientation),
+	(ps_document_set_orientation), (ps_document_document_iface_init):
+
+	Add a get_orientation api. Improve set_orientation.
+
+	* data/evince-ui.xml:
+	* shell/ev-view.c: (ev_view_set_orientation),
+	(ev_view_rotate_right), (ev_view_rotate_left):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_cmd_edit_rotate_left),
+	(ev_window_cmd_edit_rotate_right):
+
+	Better ui for changing document orientation
+
 2005-06-16  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-sidebar-links.c: (ev_sidebar_links_get_property),

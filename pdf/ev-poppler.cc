@@ -128,6 +128,7 @@ static void
 pdf_document_init (PdfDocument *pdf_document)
 {
 	pdf_document->password = NULL;
+	pdf_document->orientation = POPPLER_ORIENTATION_PORTRAIT;
 }
 
 static void
@@ -175,6 +176,24 @@ pdf_document_save (EvDocument  *document,
 	return retval;
 }
 
+static PopplerOrientation
+get_document_orientation (PdfDocument *pdf_document)
+{
+#ifdef POPPLER_ORIENTATION
+	PopplerPage *page;
+
+	/* Should prolly be smarter here and check more than first page */
+	page = poppler_document_get_page (pdf_document->document, 0);
+	if (page) {
+		return poppler_page_get_orientation (page);
+	} else {
+		return POPPLER_ORIENTATION_PORTRAIT;
+	}
+#else
+	return POPPLER_ORIENTATION_PORTRAIT;
+#endif
+}
+
 static gboolean
 pdf_document_load (EvDocument   *document,
 		   const char   *uri,
@@ -190,6 +209,8 @@ pdf_document_load (EvDocument   *document,
 		convert_error (poppler_error, error);
 		return FALSE;
 	}
+
+	pdf_document->orientation = get_document_orientation (pdf_document);
 
 	return TRUE;
 }
@@ -488,6 +509,30 @@ pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 	return poppler_page_get_text (poppler_page, &r);
 }
 
+static EvOrientation
+pdf_document_get_orientation (EvDocument *document)
+{
+	EvOrientation result;
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	
+	switch (pdf_document->orientation) {
+		case POPPLER_ORIENTATION_PORTRAIT:
+			result = EV_ORIENTATION_PORTRAIT;
+			break;
+		case POPPLER_ORIENTATION_LANDSCAPE:
+			result = EV_ORIENTATION_LANDSCAPE;
+			break;
+		case POPPLER_ORIENTATION_UPSIDEDOWN:
+			result = EV_ORIENTATION_UPSIDEDOWN;
+			break;
+		case POPPLER_ORIENTATION_SEASCAPE:
+			result = EV_ORIENTATION_SEASCAPE;
+			break;
+	}
+
+	return result;
+}
+
 static void
 pdf_document_set_orientation (EvDocument *document, EvOrientation orientation)
 {
@@ -495,9 +540,6 @@ pdf_document_set_orientation (EvDocument *document, EvOrientation orientation)
 	PopplerOrientation poppler_orientation;
 
 	switch (orientation) {
-		case EV_ORIENTATION_DOCUMENT:
-			poppler_orientation = POPPLER_ORIENTATION_DOCUMENT;
-			break;
 		case EV_ORIENTATION_PORTRAIT:
 			poppler_orientation = POPPLER_ORIENTATION_PORTRAIT;
 			break;
@@ -529,6 +571,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
 	iface->set_orientation = pdf_document_set_orientation;
+	iface->get_orientation = pdf_document_get_orientation;
 };
 
 static void
