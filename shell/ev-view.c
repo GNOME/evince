@@ -1322,6 +1322,9 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
+	if (!view->document)
+		return FALSE;
+
 	if (view->pressed_button == 1) {
 		GdkRectangle selection;
 
@@ -1371,7 +1374,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			return TRUE;
 		}
-	} else if (view->pressed_button <= 0 && view->document) {
+	} else if (view->pressed_button <= 0) {
 		EvLink *link;
 
 		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);

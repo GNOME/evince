@@ -53,7 +53,6 @@ struct _EvSidebarThumbnailsClass {
 
 GType      ev_sidebar_thumbnails_get_type     (void);
 GtkWidget *ev_sidebar_thumbnails_new          (void);
-GtkWidget *ev_sidebar_thumbnails_get_treeview (EvSidebarThumbnails *sidebar);
 
 G_END_DECLS
 

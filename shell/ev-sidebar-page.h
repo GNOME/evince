@@ -47,7 +47,7 @@ struct _EvSidebarPageIface
 				           EvDocument *document);
 	void 	    (* set_document)	  (EvSidebarPage   *sidebar_page,
 					   EvDocument *document);
-	const gchar* (* get_label)        (EvSidebarPage   *sidebar_page);
+	const gchar*(* get_label)         (EvSidebarPage  *sidebar_page);	
 };
 
 GType         ev_sidebar_page_get_type          (void);

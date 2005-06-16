@@ -23,6 +23,9 @@
 #endif
 
 #include "ev-sidebar-page.h"
+#include <gtk/gtk.h>
+
+static void ev_sidebar_page_iface_init (gpointer iface);
 
 GType
 ev_sidebar_page_get_type (void)
@@ -33,10 +36,10 @@ ev_sidebar_page_get_type (void)
 	{
 		static const GTypeInfo sidebar_page_info =
 		{
-			sizeof (EvDocumentIface),
+			sizeof (EvSidebarPageIface),
 			NULL,
 			NULL,
-			NULL
+			(GClassInitFunc)ev_sidebar_page_iface_init,
 		};
 
 		type = g_type_register_static (G_TYPE_INTERFACE,
@@ -96,3 +99,13 @@ ev_sidebar_page_get_label (EvSidebarPage    *sidebar_page)
 	return iface->get_label (sidebar_page);
 }
 
+
+static void ev_sidebar_page_iface_init (gpointer         iface)
+{
+	g_object_interface_install_property (iface,
+					     g_param_spec_object ("main-widget",
+					  		          "Main Widget",
+							          "Main page widget, used to handle focus",
+							          GTK_TYPE_WIDGET,
+							          G_PARAM_READABLE));
+}

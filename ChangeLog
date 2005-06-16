@@ -1,3 +1,25 @@
+2005-06-16  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_get_property),
+	(ev_sidebar_links_class_init), (ev_sidebar_links_get_label):
+	* shell/ev-sidebar-links.h:
+	* shell/ev-sidebar-page.c: (ev_sidebar_page_get_type),
+	(ev_sidebar_page_iface_init):
+	* shell/ev-sidebar-page.h:
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_get_property),
+	(ev_sidebar_thumbnails_class_init),
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-view.c: (ev_view_motion_notify_event):
+	* shell/ev-window.c: (update_chrome_visibility),
+	(ev_window_cmd_focus_page_selector),
+	(ev_window_update_fullscreen_popup), (view_actions_focus_in_cb),
+	(sidebar_page_main_widget_update_cb), (ev_window_init):
+	
+	Autoraise toolbar on GoToPage binding and fix bindings in
+	EvSidebarThumbnails page.
+
 2005-06-15  Christian Persch  <chpe@cvs.gnome.org>
 
 	* shell/ev-properties.c: (update_progress_label):

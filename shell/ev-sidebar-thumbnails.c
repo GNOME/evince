@@ -68,6 +68,11 @@ enum {
 	NUM_COLUMNS
 };
 
+enum {
+	PROP_0,
+	PROP_WIDGET,
+};
+
 static void         ev_sidebar_thumbnails_clear_model      (EvSidebarThumbnails *sidebar);
 static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage       *sidebar_page,
 							    EvDocument          *document);
@@ -102,6 +107,28 @@ ev_sidebar_thumbnails_dispose (GObject *object)
 }
 
 static void
+ev_sidebar_thumbnails_get_property (GObject    *object,
+			  	         guint       prop_id,
+			    		 GValue     *value,
+			    		 GParamSpec *pspec)
+{
+	EvSidebarThumbnails *sidebar = EV_SIDEBAR_THUMBNAILS (object);
+
+	switch (prop_id)
+	{
+	case PROP_WIDGET:
+		if (sidebar->priv->tree_view)
+			g_value_set_object (value, sidebar->priv->tree_view);
+		else
+			g_value_set_object (value, sidebar->priv->icon_view);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
 ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnails_class)
 {
 	GObjectClass *g_object_class;
@@ -111,6 +138,11 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_thumbnails_class);
 
 	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
+	g_object_class->get_property = ev_sidebar_thumbnails_get_property;
+
+	g_object_class_override_property (g_object_class,
+					  PROP_WIDGET,
+					  "main-widget");
 
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarThumbnailsPrivate));
 }
@@ -349,16 +381,6 @@ ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 	ev_page_cache_set_current_page (page_cache, page);
 }
 
-GtkWidget *
-ev_sidebar_thumbnails_get_treeview (EvSidebarThumbnails *sidebar)
-{
-	if (sidebar->priv->tree_view)
-		return sidebar->priv->tree_view;
-	else
-		return sidebar->priv->icon_view;
-}
-
-
 static void
 ev_sidebar_init_tree_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
@@ -552,18 +574,21 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 			priv->tree_view = NULL;
 		}
 
-		if (! priv->icon_view)
+		if (! priv->icon_view) {
 			ev_sidebar_init_icon_view (sidebar_thumbnails);
+			g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
+		}
 	} else {
 		if (priv->icon_view) {
 			gtk_container_remove (GTK_CONTAINER (priv->swindow), priv->icon_view);
 			priv->icon_view = NULL;
 		}
 
-		if (! priv->tree_view)
+		if (! priv->tree_view) {
 			ev_sidebar_init_tree_view (sidebar_thumbnails);
+			g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
+		}
 	}
-
 
 	/* Connect to the signal and trigger a fake callback */
 	g_signal_connect (page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);

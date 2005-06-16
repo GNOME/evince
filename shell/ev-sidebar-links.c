@@ -52,6 +52,7 @@ struct _EvSidebarLinksPrivate {
 enum {
 	PROP_0,
 	PROP_MODEL,
+	PROP_WIDGET,
 };
 
 
@@ -128,6 +129,9 @@ ev_sidebar_links_get_property (GObject    *object,
 	case PROP_MODEL:
 		g_value_set_object (value, ev_sidebar_links->priv->model);
 		break;
+	case PROP_WIDGET:
+		g_value_set_object (value, ev_sidebar_links->priv->tree_view);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -174,6 +178,9 @@ ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 							      "Current Model",
 							      GTK_TYPE_TREE_MODEL,
 							      G_PARAM_READWRITE));
+	g_object_class_override_property (g_object_class,
+					  PROP_WIDGET,
+					  "main-widget");
 
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarLinksPrivate));
 }
@@ -628,12 +635,6 @@ static const gchar*
 ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
 {
     return _("Index");
-}
-
-GtkWidget *
-ev_sidebar_links_get_treeview (EvSidebarLinks *sidebar)
-{
-	return sidebar->priv->tree_view;
 }
 
 static void

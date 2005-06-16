@@ -46,6 +46,7 @@
 #include "ev-job-queue.h"
 #include "ev-jobs.h"
 #include "ev-statusbar.h"
+#include "ev-sidebar-page.h"
 #include "eggfindbar.h"
 #include "egg-recent-view-gtk.h"
 #include "egg-recent-view.h"
@@ -80,6 +81,7 @@ typedef enum {
 	EV_CHROME_SIDEBAR	= 1 << 2,
 	EV_CHROME_FINDBAR	= 1 << 3,
 	EV_CHROME_STATUSBAR	= 1 << 4,
+	EV_CHROME_RAISE_TOOLBAR	= 1 << 5,
 	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR | EV_CHROME_STATUSBAR
 } EvChrome;
 
@@ -310,9 +312,11 @@ update_chrome_visibility (EvWindow *window)
 	fullscreen_mode = fullscreen || presentation;
 
 	menubar = (priv->chrome & EV_CHROME_MENUBAR) != 0 && !fullscreen_mode;
-	toolbar = (priv->chrome & EV_CHROME_TOOLBAR) != 0 && !fullscreen_mode;
+	toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0  || 
+		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !fullscreen_mode;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !fullscreen_mode;
-	fullscreen_toolbar = (priv->chrome & EV_CHROME_TOOLBAR) != 0;
+	fullscreen_toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0 ||
+			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0);
 	statusbar = (priv->chrome & EV_CHROME_STATUSBAR) != 0 && !fullscreen_mode;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 
@@ -360,6 +364,9 @@ static void
 ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 {
 	GtkAction *action;
+	
+	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, NULL, TRUE);
+	set_action_sensitive (window, "ViewToolbar", FALSE);
 	
 	action = gtk_action_group_get_action (window->priv->action_group,
 				     	      PAGE_SELECTOR_ACTION);
@@ -1343,7 +1350,8 @@ ev_window_update_fullscreen_popup (EvWindow *window)
 
 	g_return_if_fail (popup != NULL);
 
-	toolbar = (window->priv->chrome & EV_CHROME_TOOLBAR) != 0;
+	toolbar = (window->priv->chrome & EV_CHROME_TOOLBAR) != 0 || 
+		  (window->priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0;
 	popup_width = popup->requisition.width;
 	popup_height = popup->requisition.height;
 
@@ -2843,6 +2851,9 @@ set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
 static void
 view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
+	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, NULL, FALSE);
+	set_action_sensitive (window, "ViewToolbar", TRUE);
+
 	set_view_actions_sensitivity (window, TRUE);
 }
 
@@ -2853,14 +2864,22 @@ view_actions_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *wi
 }
 
 static void
-enable_view_actions_for_widget (EvWindow *window, GtkWidget *widget)
+sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
+				    GParamSpec         *pspec,
+				    EvWindow           *ev_window)
 {
+	GtkWidget *widget;
+	
+	g_object_get (ev_sidebar_page, "main_widget", &widget, NULL);
+
+	if (widget != NULL) {		
 	g_signal_connect_object (widget, "focus_in_event",
 			         G_CALLBACK (view_actions_focus_in_cb),
-				 window, 0);
+					 ev_window, 0);
 	g_signal_connect_object (widget, "focus_out_event",
 			         G_CALLBACK (view_actions_focus_out_cb),
-				 window, 0);
+					 ev_window, 0);
+	}
 }
 
 static void
@@ -2869,7 +2888,7 @@ ev_window_init (EvWindow *ev_window)
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
-	GtkWidget *sidebar_widget, *toolbar_dock, *tree_view;
+	GtkWidget *sidebar_widget, *toolbar_dock;
 	GConfValue *value;
 	GConfClient *client;
 	int sidebar_size;
@@ -2995,20 +3014,21 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::model",
 			  G_CALLBACK (sidebar_widget_model_set),
 			  ev_window);
-	tree_view = ev_sidebar_links_get_treeview
-			(EV_SIDEBAR_LINKS (sidebar_widget));
-	enable_view_actions_for_widget (ev_window, tree_view);
+	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
 
 	sidebar_widget = ev_sidebar_thumbnails_new ();
-	tree_view = ev_sidebar_thumbnails_get_treeview
-			(EV_SIDEBAR_THUMBNAILS (sidebar_widget));
-	//enable_view_actions_for_widget (ev_window, tree_view);
+	g_signal_connect (sidebar_widget,
+			  "notify::main-widget",
+			  G_CALLBACK (sidebar_page_main_widget_update_cb),
+			  ev_window);
+	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
+
 
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
@@ -3025,9 +3045,15 @@ ev_window_init (EvWindow *ev_window)
 				  "unlock",
 				  G_CALLBACK (ev_window_popup_password_dialog),
 				  ev_window);
-	enable_view_actions_for_widget (ev_window, ev_window->priv->view);
+	g_signal_connect_object (ev_window->priv->view, "focus_in_event",
+			         G_CALLBACK (view_actions_focus_in_cb),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "focus_out_event",
+			         G_CALLBACK (view_actions_focus_out_cb),
+			         ev_window, 0);
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
+
 
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);
