@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include "egg-toolbars-model.h"
+#include "eggtypebuiltins.h"
 #include "eggmarshalers.h"
 
 #include <unistd.h>
@@ -88,6 +89,10 @@ egg_toolbars_model_get_type (void)
 	0,			/* n_preallocs */
 	(GInstanceInitFunc) egg_toolbars_model_init
       };
+      volatile GType flags_type; /* work around gcc's optimiser */
+
+      /* make sure the flags type is known */
+      flags_type = EGG_TYPE_TB_MODEL_FLAGS;
 
       type = g_type_register_static (G_TYPE_OBJECT,
 				     "EggToolbarsModel",

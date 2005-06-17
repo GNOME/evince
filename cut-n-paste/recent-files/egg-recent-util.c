@@ -12,6 +12,10 @@
 #include <math.h>
 #include "egg-recent-util.h"
 
+#ifdef G_OS_WIN32
+#include <windows.h>
+#endif
+
 #define EGG_RECENT_UTIL_HOSTNAME_SIZE 512
 
 /* ripped out of gedit2 */
@@ -128,7 +132,14 @@ egg_recent_util_get_unique_id (void)
 	guint32 rand;
 	int pid;
 	
+#ifndef G_OS_WIN32
 	gethostname (hostname, EGG_RECENT_UTIL_HOSTNAME_SIZE);
+#else
+	{
+		DWORD size = EGG_RECENT_UTIL_HOSTNAME_SIZE;
+		GetComputerName (hostname, &size);
+	}
+#endif
 	
 	time (&the_time);
 	rand = g_random_int ();
