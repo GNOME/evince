@@ -13,19 +13,19 @@ noinst_HEADERS = \
 	eggmarshalers.h \
 	eggintl.h
 
-noinst_LTLIBRARIES = libegg.la
+noinst_LTLIBRARIES = libtoolbareditor.la
 
-libegg_la_SOURCES = 		\
+libtoolbareditor_la_SOURCES = 	\
 	$(BUILT_SOURCES) 	\
 	$(EGGSOURCES)		\
 	$(EGGHEADERS) 
 
-libegg_la_CPPFLAGS = \
+libtoolbareditor_la_CPPFLAGS = \
 	-I$(top_builddir)/lib/egg		\
 	-DCURSOR_DIR=\"$(pkgdatadir)/art\"	\
 	$(AM_CPPFLAGS)
 
-libegg_la_CFLAGS = \
+libtoolbareditor_la_CFLAGS = \
 	$(TOOLBAR_EDITOR_CFLAGS)		\
 	$(AM_CFLAGS)
 
