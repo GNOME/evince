@@ -287,14 +287,14 @@ ev_properties_set_document (EvProperties *properties,
 	if (info->fields_mask & EV_DOCUMENT_INFO_FORMAT) {
 		char **format_str = g_strsplit (info->format, "-", 2);
 
-		text = g_strdup_printf (_("%s"), format_str[1]);
+		text = g_strdup_printf ("%s", format_str[1]);
 		set_property (xml, FORMAT_PROPERTY, text);
 
 		g_free (text);
 		g_strfreev (format_str);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_N_PAGES) {
-		text = g_strdup_printf (_("%d"), info->n_pages);
+		text = g_strdup_printf ("%d", info->n_pages);
 		set_property (xml, N_PAGES_PROPERTY, text);
 		g_free (text);
 	}
