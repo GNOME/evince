@@ -57,6 +57,7 @@ struct _PdfDocument
 	gchar *password;
 
 	PopplerOrientation orientation;
+	gboolean orientation_set;
 
 	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
@@ -128,7 +129,6 @@ static void
 pdf_document_init (PdfDocument *pdf_document)
 {
 	pdf_document->password = NULL;
-	pdf_document->orientation = POPPLER_ORIENTATION_PORTRAIT;
 }
 
 static void
@@ -210,8 +210,6 @@ pdf_document_load (EvDocument   *document,
 		return FALSE;
 	}
 
-	pdf_document->orientation = get_document_orientation (pdf_document);
-
 	return TRUE;
 }
 
@@ -219,6 +217,15 @@ static int
 pdf_document_get_n_pages (EvDocument *document)
 {
 	return poppler_document_get_n_pages (PDF_DOCUMENT (document)->document);
+}
+
+/* FIXME This should not be necessary, poppler should rember it */
+static void
+set_page_orientation (PdfDocument *pdf_document, PopplerPage *page)
+{
+	if (pdf_document->orientation_set) {
+		poppler_page_set_orientation (page, pdf_document->orientation);
+	}
 }
 
 static void
@@ -231,7 +238,7 @@ pdf_document_get_page_size (EvDocument   *document,
 	PopplerPage *poppler_page;
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	poppler_page_set_orientation (poppler_page, pdf_document->orientation);
+	set_page_orientation (pdf_document, poppler_page);
 	poppler_page_get_size (poppler_page, width, height);
 }
 
@@ -305,7 +312,7 @@ pdf_document_render_pixbuf (EvDocument   *document,
 	pdf_document = PDF_DOCUMENT (document);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  page);
-	poppler_page_set_orientation (poppler_page, pdf_document->orientation);
+	set_page_orientation (pdf_document, poppler_page);
 
 	poppler_page_get_size (poppler_page, &width_points, &height_points);
 	width = (int) ((width_points * scale) + 0.5);
@@ -514,6 +521,10 @@ pdf_document_get_orientation (EvDocument *document)
 {
 	EvOrientation result;
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	if (!pdf_document->orientation_set) {
+		pdf_document->orientation = get_document_orientation (pdf_document);
+	}
 	
 	switch (pdf_document->orientation) {
 		case POPPLER_ORIENTATION_PORTRAIT:
