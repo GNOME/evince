@@ -604,10 +604,11 @@ page_changed_cb (EvPageCache *page_cache,
 static void
 update_document_mode (EvWindow *window, EvDocumentMode mode)
 {
-	if (mode == EV_DOCUMENT_MODE_FULL_SCREEN) {
-		ev_window_fullscreen (window);
-	} else if (mode == EV_DOCUMENT_MODE_PRESENTATION) {
+	if (mode == EV_DOCUMENT_MODE_PRESENTATION) {
 		ev_window_run_presentation (window);
+	}
+	else if (mode == EV_DOCUMENT_MODE_FULL_SCREEN) {
+		ev_window_fullscreen (window);
 	}
 }
 
