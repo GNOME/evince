@@ -133,7 +133,7 @@ pages_new(struct page *pages, int current, int maxpages)
  *      Page Size (for the Page Size), Bounding Box (to minimize backing
  *      pixmap size or determine window size for encapsulated PostScript), 
  *      Orientation of Paper (for default transformation matrix), and
- *      Page Order.  The title and CreationDate are also retrieved to
+ *      Page Order.  The Title, Creator, and CreationDate are also retrieved to
  *      help identify the document.
  *
  *      The following comments are examined:
@@ -144,6 +144,7 @@ pages_new(struct page *pages, int current, int maxpages)
  *
  *      %!PS-Adobe-* [EPSF-*]
  *      %%BoundingBox: <int> <int> <int> <int>|(atend)
+ *      %%Creator: <textline>
  *      %%CreationDate: <textline>
  *      %%Orientation: Portrait|Landscape|(atend)
  *      %%Pages: <uint> [<int>]|(atend)
@@ -347,6 +348,9 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     }
     else if(doc->date == NULL && iscomment(line + 2, "CreationDate:")) {
       doc->date = gettextline(line + length("%%CreationDate:"));
+    }
+    else if(doc->creator == NULL && iscomment(line + 2, "Creator:")) {
+      doc->creator = gettextline(line + length("%%Creator:"));
     }
     else if(bb_set == NONE && iscomment(line + 2, "BoundingBox:")) {
       sscanf(line + length("%%BoundingBox:"), "%256s", text);
@@ -1155,6 +1159,8 @@ psfree(doc)
       g_free(doc->title);
     if(doc->date)
       g_free(doc->date);
+    if(doc->creator)
+      g_free(doc->creator);
     if(doc->pages)
       g_free(doc->pages);
     if(doc->size)

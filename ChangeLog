@@ -1,3 +1,13 @@
+2005-06-17  Martin Kretzschmar  <martink@gnome.org>
+
+	* ps/ps.c (psscan, psfree): read "Creator:" comment, free creator
+	field if necessary.
+
+	* ps/ps.h: add creator field to document.
+
+	* ps/ps-document.c (ps_document_get_info): set format to PostScript,
+	set creator field.
+
 2005-06-17  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* data/evince-properties.glade:

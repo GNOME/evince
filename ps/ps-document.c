@@ -1234,8 +1234,13 @@ ps_document_get_info (EvDocument *document)
 
 	info = g_new0 (EvDocumentInfo, 1);
 	info->fields_mask = EV_DOCUMENT_INFO_TITLE |
+	                    EV_DOCUMENT_INFO_FORMAT |
+			    EV_DOCUMENT_INFO_CREATOR |
 			    EV_DOCUMENT_INFO_N_PAGES;
 	info->title = g_strdup (ps->doc->title);
+	info->format = ps->doc->epsf ? g_strdup (_("Encapsulated PostScript"))
+		                     : g_strdup (_("PostScript"));
+	info->creator = g_strdup (ps->doc->creator);
 	info->n_pages = ev_document_get_n_pages (document);
 
 	return info;

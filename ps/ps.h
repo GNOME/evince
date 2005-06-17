@@ -49,6 +49,7 @@ struct document {
   int epsf;                     /* Encapsulated PostScript flag. */
   char *title;                  /* Title of document. */
   char *date;                   /* Creation date. */
+  char *creator;                /* Program that created the file */
   int pageorder;                /* ASCEND, DESCEND, SPECIAL */
   long beginheader, endheader;  /* offsets into file */
   unsigned int lenheader;
