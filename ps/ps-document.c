@@ -43,10 +43,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#ifdef HAVE_LOCALE_H
-#include <locale.h>
-#endif
-
 #include "ps-document.h"
 #include "ev-debug.h"
 #include "gsdefaults.h"
@@ -459,32 +455,22 @@ setup_page (PSDocument *gs, int page, double scale)
 {
 	char buf[1024];
 	int urx, ury, llx, lly, orientation;
-#ifdef HAVE_LOCALE_H
-	char *savelocale;
-#endif
+	char scaled_xdpi[G_ASCII_DTOSTR_BUF_SIZE];	
+	char scaled_ydpi[G_ASCII_DTOSTR_BUF_SIZE];
 
 	LOG ("Setup the page");
 
-#ifdef HAVE_LOCALE_H
-	/* gs needs floating point parameters with '.' as decimal point
-	 * while some (european) locales use ',' instead, so we set the 
-	 * locale for this snprintf to "C".
-	 */
-	savelocale = setlocale (LC_NUMERIC, "C");
-#endif
 	get_page_box (gs, page, &urx, &ury, &llx, &lly);
 	orientation = get_page_orientation (gs, page);
+	g_ascii_dtostr (scaled_xdpi, G_ASCII_DTOSTR_BUF_SIZE, get_xdpi (gs) * scale);
+	g_ascii_dtostr (scaled_ydpi, G_ASCII_DTOSTR_BUF_SIZE, get_ydpi (gs) * scale);
 
-	g_snprintf (buf, 1024, "%ld %d %d %d %d %d %f %f %d %d %d %d",
+	g_snprintf (buf, 1024, "%ld %d %d %d %d %d %s %s %d %d %d %d",
 		    0L, orientation * 90, llx, lly, urx, ury,
-		    get_xdpi (gs) * scale,
-		    get_ydpi (gs) * scale,
+		    scaled_xdpi, scaled_ydpi,		    
 		    0, 0, 0, 0);
 	LOG ("GS property %s", buf);
 
-#ifdef HAVE_LOCALE_H
-	setlocale(LC_NUMERIC, savelocale);
-#endif
 	gdk_property_change (gs->pstarget, gs_class->gs_atom, gs_class->string_atom,
 			     8, GDK_PROP_MODE_REPLACE, (guchar *)buf, strlen(buf));
 	gdk_flush ();
