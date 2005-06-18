@@ -345,6 +345,8 @@ match_selected_cb (GtkEntryCompletion *completion,
 			    -1);
 
 	g_signal_emit (proxy, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
+
+	gtk_tree_iter_free (iter);
 	
 	return TRUE;
 }
@@ -368,6 +370,8 @@ display_completion_text (GtkCellLayout      *cell_layout,
 			    -1);
 
 	g_object_set (renderer, "text", ev_link_get_title (link), NULL);
+	
+	gtk_tree_iter_free (iter);
 }
 
 static gboolean
@@ -389,8 +393,11 @@ match_completion (GtkEntryCompletion *completion,
 			    -1);
 
 
-	if (link)
+	if (link) {
 		text = ev_link_get_title (link);
+	}
+
+	gtk_tree_iter_free (iter);
 
 	if (text && key ) {
 		gchar *normalized_text;
@@ -461,6 +468,8 @@ update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 						    (GtkCellLayoutDataFunc) display_completion_text,
 						    proxy, NULL);
 		gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
+
+		g_object_unref (model);
 	}
 }
 

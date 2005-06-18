@@ -1,3 +1,18 @@
+2005-06-18  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-page-action.c: (match_selected_cb),
+	(display_completion_text), (match_completion), (update_model):
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_dispose),
+	(expand_open_links):
+	* shell/ev-sidebar.c: (ev_sidebar_destroy),
+	(ev_sidebar_menu_item_activate_cb), (ev_sidebar_add_page),
+	(ev_sidebar_set_document):
+	* shell/ev-window.c: (ev_window_xfer_job_cb),
+	(sidebar_widget_model_set), (sidebar_page_main_widget_update_cb):
+	
+	Fixed lot's of memory leaks, for example, memory leak on reload, 
+	described in bug 307793.
+
 2005-06-18  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* pdf/ev-poppler.cc:

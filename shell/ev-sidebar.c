@@ -65,6 +65,12 @@ ev_sidebar_destroy (GtkObject *object)
 		gtk_menu_detach (GTK_MENU (ev_sidebar->priv->menu));
 		ev_sidebar->priv->menu = NULL;
 	}
+	
+	if (ev_sidebar->priv->page_model) {
+		g_object_unref (ev_sidebar->priv->page_model);
+		ev_sidebar->priv->page_model = NULL;
+	}
+		
 	   
 	(* GTK_OBJECT_CLASS (ev_sidebar_parent_class)->destroy) (object);
 }
@@ -217,6 +223,8 @@ ev_sidebar_menu_item_activate_cb (GtkWidget *widget,
 		} else {
 			valid = gtk_tree_model_iter_next (ev_sidebar->priv->page_model, &iter);
 		}
+		g_object_unref (item);
+		g_free (title);
 	}
 }
 
@@ -365,6 +373,7 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	gtk_label_set_text (GTK_LABEL (ev_sidebar->priv->label), label_title);
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (ev_sidebar->priv->notebook),
 				       index);
+	g_free (label_title);
 }
 
 void
@@ -401,6 +410,8 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 		} else {
 				gtk_widget_set_sensitive (menu_widget, FALSE);
 		}
+		g_object_unref (widget);
+		g_object_unref (menu_widget);
 	}
 	
 	if (!has_pages) {

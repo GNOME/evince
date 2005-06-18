@@ -889,6 +889,7 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 				  G_CALLBACK (ev_window_load_job_cb),
 				  ev_window);
 		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		g_object_unref (document);
 	}		
 }
 
@@ -2857,6 +2858,7 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_model (EV_PAGE_ACTION (action), model);
+	g_object_unref (model);
 }
 
 
@@ -2900,13 +2902,14 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 	
 	g_object_get (ev_sidebar_page, "main_widget", &widget, NULL);
 
-	if (widget != NULL) {		
-	g_signal_connect_object (widget, "focus_in_event",
-			         G_CALLBACK (view_actions_focus_in_cb),
+    	if (widget != NULL) {		
+		g_signal_connect_object (widget, "focus_in_event",
+				         G_CALLBACK (view_actions_focus_in_cb),
 					 ev_window, 0);
-	g_signal_connect_object (widget, "focus_out_event",
-			         G_CALLBACK (view_actions_focus_out_cb),
+		g_signal_connect_object (widget, "focus_out_event",
+				         G_CALLBACK (view_actions_focus_out_cb),
 					 ev_window, 0);
+		g_object_unref (widget);
 	}
 }
 

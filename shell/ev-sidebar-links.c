@@ -143,12 +143,6 @@ ev_sidebar_links_dispose (GObject *object)
 {
 	EvSidebarLinks *sidebar = EV_SIDEBAR_LINKS (object);
 
-	if (sidebar->priv->document) {
-		g_object_unref (sidebar->priv->document);
-		sidebar->priv->document = NULL;
-		sidebar->priv->page_cache = NULL;
-	}
-
 	if (sidebar->priv->job) {
 		g_signal_handlers_disconnect_by_func (sidebar->priv->job,
 						      job_finished_callback, sidebar);
@@ -156,6 +150,13 @@ ev_sidebar_links_dispose (GObject *object)
 		g_object_unref (sidebar->priv->job);
 		sidebar->priv->job = NULL;
 	}
+
+	if (sidebar->priv->document) {
+		g_object_unref (sidebar->priv->document);
+		sidebar->priv->document = NULL;
+		sidebar->priv->page_cache = NULL;
+	}
+
 
 	G_OBJECT_CLASS (ev_sidebar_links_parent_class)->dispose (object);
 }
@@ -529,13 +530,11 @@ static void
 expand_open_links (GtkTreeView *tree_view, GtkTreeModel *model, GtkTreeIter *parent)
 {
 	GtkTreeIter iter;
-	EvLink *link;
 	gboolean expand;
 
 	if (gtk_tree_model_iter_children (model, &iter, parent)) {
 		do {
 			gtk_tree_model_get (model, &iter,
-					    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, &expand,
 					    -1);
 			if (expand) {
