@@ -1898,6 +1898,33 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_go_forward (GtkAction *action, EvWindow *ev_window)
+{
+	int n_pages, current_page;
+	
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+	current_page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	
+	if (current_page + 10 < n_pages)
+		ev_page_cache_set_current_page (ev_window->priv->page_cache, current_page + 10);
+}
+
+static void
+ev_window_cmd_go_backward (GtkAction *action, EvWindow *ev_window)
+{
+	int current_page;
+	
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	current_page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	
+	if (current_page - 10 >= 0)
+		ev_page_cache_set_current_page (ev_window->priv->page_cache, current_page - 10);
+}
+
+static void
 ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
 	char *uri;
@@ -2584,7 +2611,13 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
         { "FocusPageSelector", NULL, "", "<control>l",
           N_("Focus the page selector"),
-          G_CALLBACK (ev_window_cmd_focus_page_selector) }
+          G_CALLBACK (ev_window_cmd_focus_page_selector) },
+        { "GoBackwardFast", NULL, "", "<shift>Page_Up",
+          N_("Go ten pages backward"),
+          G_CALLBACK (ev_window_cmd_go_backward) },
+        { "GoForwardFast", NULL, "", "<shift>Page_Down",
+          N_("Go ten pages forward"),
+          G_CALLBACK (ev_window_cmd_go_forward) },
 };
 
 /* Toggle items */
