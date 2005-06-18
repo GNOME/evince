@@ -30,8 +30,6 @@
 
 #include "ev-sidebar.h"
 #include "ev-sidebar-page.h"
-#include "ev-document-thumbnails.h"
-#include "ev-document-links.h"
 
 enum
 {

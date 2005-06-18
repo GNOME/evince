@@ -43,6 +43,10 @@
 #include <stdio.h>
 #include <math.h>
 
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
+
 #include "ps-document.h"
 #include "ev-debug.h"
 #include "gsdefaults.h"
