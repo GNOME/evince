@@ -853,7 +853,7 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 		for(i = 1; i <= 10; i++)
 			page[i] = fsget4(p);
 		page[0] = offset;
-		offset = (long)fuget4(p);
+		offset = fsget4(p);
 		/* check if the page is selected */
 		if(spec && mdvi_page_selected(spec, page, n) == 0) {
 			DEBUG((DBG_DVI, "Page %d (%ld.%ld.%ld.%ld.%ld.%ld.%ld.%ld.%ld.%ld) ignored by request\n",

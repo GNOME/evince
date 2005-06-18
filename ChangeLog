@@ -1,3 +1,12 @@
+2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* dvi/dvi-document.c: (dvi_document_load):
+	* dvi/mdvi-lib/dviread.c: (mdvi_init_context):
+	* po/POTFILES.in:
+	
+	Check for incorrect dvi files. Fix parsing dvi on AMD64
+	platform. Thanks to tester@tester.ca (Olivier Crete).
+
 2005-06-18  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-page-action.c: (match_selected_cb),

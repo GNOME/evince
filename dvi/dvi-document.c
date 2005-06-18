@@ -28,6 +28,7 @@
 #include "pixbuf-device.h"
 
 #include <gtk/gtk.h>
+#include <glib/gi18n.h>
 
 GMutex *dvi_context_mutex = NULL;
 
@@ -81,13 +82,26 @@ dvi_document_load (EvDocument  *document,
     
     filename = g_filename_from_uri (uri, NULL, error);
     
-    if (!filename)
-    	return FALSE;
+    if (!filename) {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     _("File not available"));
+        	return FALSE;
+    }
 	
     if (dvi_document->context)
 	mdvi_destroy_context (dvi_document->context);
 
     dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
+
+    if (!dvi_document->context) {
+    		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     _("DVI document has incorrect format"));
+        	return FALSE;
+    }
 
     mdvi_pixbuf_device_init (&dvi_document->context->device);
 
