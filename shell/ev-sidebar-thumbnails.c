@@ -53,6 +53,7 @@ struct _EvSidebarThumbnailsPrivate {
 	GtkListStore *list_store;
 	GdkPixbuf *loading_icon;
 	EvDocument *document;
+	EvPageCache *page_cache;
 
 	gint n_pages, pages_done;
 
@@ -162,12 +163,10 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 	     gint                 start_page,
 	     gint                 end_page)
 {
-	EvSidebarThumbnailsPrivate *priv;
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gboolean result;
-
-	priv = sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (sidebar_thumbnails);
 
 	g_assert (start_page <= end_page);
 
@@ -202,13 +201,11 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 	   gint                 start_page,
 	   gint                 end_page)
 {
-	EvSidebarThumbnailsPrivate *priv;
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gboolean result;
 	gint page = start_page;
-
-	priv = sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (sidebar_thumbnails);
 
 	g_assert (start_page <= end_page);
 
@@ -251,10 +248,8 @@ update_visible_range (EvSidebarThumbnails *sidebar_thumbnails,
 		      gint                 start_page,
 		      gint                 end_page)
 {
-	EvSidebarThumbnailsPrivate *priv;
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	int old_start_page, old_end_page;
-
-	priv = sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (sidebar_thumbnails);
 
 	old_start_page = priv->start_page;
 	old_end_page = priv->end_page;
@@ -279,13 +274,11 @@ update_visible_range (EvSidebarThumbnails *sidebar_thumbnails,
 static void
 adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 {
-	EvSidebarThumbnailsPrivate *priv;
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreePath *path = NULL;
 	GtkTreePath *path2 = NULL;
 	gint wy1;
 	gint wy2;
-
-	priv = sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (sidebar_thumbnails);
 
 	if (priv->tree_view) {
 		if (! GTK_WIDGET_REALIZED (priv->tree_view))
@@ -329,16 +322,46 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 }
 
 static void
+ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
+{
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
+	GtkTreeIter iter;
+	int i;
+
+	for (i = 0; i < sidebar_thumbnails->priv->n_pages; i++) {
+		gchar *page_label;
+		gchar *page_string;
+
+		page_label = ev_page_cache_get_page_label (priv->page_cache, i);
+		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
+
+		gtk_list_store_append (priv->list_store, &iter);
+		gtk_list_store_set (priv->list_store, &iter,
+				    COLUMN_PAGE_STRING, page_string,
+				    COLUMN_PIXBUF, priv->loading_icon,
+				    COLUMN_THUMBNAIL_SET, FALSE,
+				    -1);
+		g_free (page_label);
+		g_free (page_string);
+	}
+}
+
+void
+ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails)
+{
+	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
+	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
+	adjustment_changed_cb (sidebar_thumbnails);
+}
+
+static void
 ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 				   EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
-	EvSidebarThumbnailsPrivate *priv;
-	EvPageCache *page_cache;
+	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	int page;
-
-	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
 
 	if (!gtk_tree_selection_get_selected (selection, NULL, &iter))
 		return;
@@ -348,21 +371,17 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 	page = gtk_tree_path_get_indices (path)[0];
 	gtk_tree_path_free (path);
 
-	page_cache = ev_page_cache_get (priv->document);
-	ev_page_cache_set_current_page (page_cache, page);
+	ev_page_cache_set_current_page (priv->page_cache, page);
 }
 
 static void
 ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 				   EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
-	EvSidebarThumbnailsPrivate *priv;
-	EvPageCache *page_cache;
+	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
 	GtkTreePath *path;
 	GList *selected;
 	int page;
-
-	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
 
 	selected = gtk_icon_view_get_selected_items (icon_view);
 	if (selected == NULL)
@@ -377,8 +396,7 @@ ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 	gtk_tree_path_free (path);
 	g_list_free (selected);
 
-	page_cache = ev_page_cache_get (priv->document);
-	ev_page_cache_set_current_page (page_cache, page);
+	ev_page_cache_set_current_page (priv->page_cache, page);
 }
 
 static void
@@ -431,11 +449,8 @@ static gboolean
 ev_sidebar_thumbnails_use_icon_view (EvSidebarThumbnails *sidebar_thumbnails)
 {
 #ifdef HAVE_GTK_ICON_VIEW_GET_VISIBLE_RANGE
-	EvPageCache *page_cache;
-
-	page_cache = ev_page_cache_get (sidebar_thumbnails->priv->document);
-
-	if (ev_page_cache_get_n_pages (page_cache) > MAX_ICON_VIEW_PAGE_COUNT)
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
+	if (ev_page_cache_get_n_pages (priv->page_cache) > MAX_ICON_VIEW_PAGE_COUNT)
 		return FALSE;
 	return TRUE;
 #else
@@ -521,21 +536,16 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 				    EvDocument          *document)
 {
 	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (sidebar_page);
-	gint i, n_pages;
-	GtkTreeIter iter;
 	gint width = THUMBNAIL_WIDTH;
 	gint height = THUMBNAIL_WIDTH;
-	EvPageCache *page_cache;
 
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 
 	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
 
-	page_cache = ev_page_cache_get (document);
-	n_pages = ev_page_cache_get_n_pages (page_cache);
-
+	priv->page_cache = ev_page_cache_get (document);
 	priv->document = document;
-	priv->n_pages = n_pages;
+	priv->n_pages = ev_page_cache_get_n_pages (priv->page_cache);
 
 	/* We get the dimensions of the first doc so that we can make a blank
 	 * icon.  */
@@ -549,23 +559,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 	priv->loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
 
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
-	for (i = 0; i < n_pages; i++) {
-		gchar *page_label;
-		gchar *page_string;
-
-		page_label = ev_page_cache_get_page_label (page_cache, i);
-		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
-
-		gtk_list_store_append (priv->list_store, &iter);
-		gtk_list_store_set (priv->list_store, &iter,
-				    COLUMN_PAGE_STRING, page_string,
-				    COLUMN_PIXBUF, priv->loading_icon,
-				    COLUMN_THUMBNAIL_SET, FALSE,
-				    -1);
-		g_free (page_label);
-		g_free (page_string);
-	}
-
+	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
 
 	/* Create the view widget, and remove the old one, if needed */
 	if (ev_sidebar_thumbnails_use_icon_view (sidebar_thumbnails)) {
@@ -591,7 +585,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 	}
 
 	/* Connect to the signal and trigger a fake callback */
-	g_signal_connect (page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
+	g_signal_connect (priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
 	adjustment_changed_cb (sidebar_thumbnails);
 }
 

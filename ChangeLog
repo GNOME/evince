@@ -1,5 +1,26 @@
 2005-06-18  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* pdf/ev-poppler.cc:
+	* shell/ev-sidebar-thumbnails.c: (clear_range), (add_range),
+	(update_visible_range), (adjustment_changed_cb),
+	(ev_sidebar_thumbnails_fill_model),
+	(ev_sidebar_thumbnails_refresh),
+	(ev_sidebar_tree_selection_changed),
+	(ev_sidebar_icon_selection_changed),
+	(ev_sidebar_thumbnails_use_icon_view),
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-window.c: (ev_window_cmd_edit_rotate_left),
+	(ev_window_cmd_edit_rotate_right), (ev_window_init):
+
+	Refresh thumbnails when changing orientation. Not fully
+	working yet becuase of a sidebar bug.
+
+	Set page orientation to poppler page everywhere. This sucks
+	really need to fix poppler.
+
+2005-06-18  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* cut-n-paste/recent-files/egg-recent-view-gtk.c:
 	(egg_recent_view_gtk_new_menu_item),
 	(egg_recent_view_gtk_set_property),

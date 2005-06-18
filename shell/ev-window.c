@@ -101,6 +101,7 @@ struct _EvWindowPrivate {
 	GtkWidget *page_view;
 	GtkWidget *password_view;
 	GtkWidget *statusbar;
+	GtkWidget *sidebar_thumbs;
 
 	/* Dialogs */
 	EvProperties *properties;
@@ -1802,12 +1803,14 @@ static void
 ev_window_cmd_edit_rotate_left (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_left (EV_VIEW (ev_window->priv->view));
+	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (ev_window->priv->sidebar_thumbs));
 }
 
 static void
 ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_right (EV_VIEW (ev_window->priv->view));
+	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (ev_window->priv->sidebar_thumbs));
 }
 
 static void
@@ -3045,6 +3048,7 @@ ev_window_init (EvWindow *ev_window)
 			     sidebar_widget);
 
 	sidebar_widget = ev_sidebar_thumbnails_new ();
+	ev_window->priv->sidebar_thumbs = sidebar_widget;
 	g_signal_connect (sidebar_widget,
 			  "notify::main-widget",
 			  G_CALLBACK (sidebar_page_main_widget_update_cb),

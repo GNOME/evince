@@ -505,6 +505,7 @@ pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 	double height;
 	
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	set_page_orientation (pdf_document, poppler_page);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	poppler_page_get_size (poppler_page, NULL, &height);
@@ -566,6 +567,7 @@ pdf_document_set_orientation (EvDocument *document, EvOrientation orientation)
 	}
 
 	pdf_document->orientation = poppler_orientation;
+	pdf_document->orientation_set = TRUE;
 }
 
 static void
@@ -649,6 +651,10 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 			const char *name;
 		
 			name = poppler_fonts_iter_get_name (iter);
+			if (name == NULL) {
+				name = _("No name");
+			}
+
 			gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
 			gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
 					    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
@@ -779,7 +785,7 @@ make_thumbnail_for_size (PdfDocument *pdf_document,
 	gdouble unscaled_width, unscaled_height;
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
-
+	set_page_orientation (pdf_document, poppler_page);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document), page, size, &width, &height);
@@ -819,6 +825,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	set_page_orientation (pdf_document, poppler_page);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
@@ -851,6 +858,7 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	set_page_orientation (pdf_document, poppler_page);
 
 	g_return_if_fail (width != NULL);
 	g_return_if_fail (height != NULL);
@@ -891,6 +899,7 @@ pdf_document_search_idle_callback (void *data)
 
 	page = poppler_document_get_page (search->document->document,
 					  search->search_page);
+	set_page_orientation (pdf_document, page);
 
 	ev_document_doc_mutex_lock ();
 	matches = poppler_page_find_text (page, search->text);
@@ -1027,6 +1036,7 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 		return FALSE;
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	set_page_orientation (pdf_document, poppler_page);
 	poppler_page_get_size (poppler_page, NULL, &height);
 	rectangle->x1 = r->x1;
 	rectangle->y1 = height - r->y2;
@@ -1113,6 +1123,7 @@ pdf_document_ps_exporter_do_page (EvPSExporter *exporter, int page)
 	g_return_if_fail (pdf_document->ps_file != NULL);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	set_page_orientation (pdf_document, poppler_page);
 	poppler_page_render_to_ps (poppler_page, pdf_document->ps_file);
 }
 
