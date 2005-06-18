@@ -37,6 +37,8 @@
 #include "egg-recent-util.h"
 #include "egg-recent-item.h"
 
+#define DEFAULT_LABEL_WIDTH 30
+
 struct _EggRecentViewGtk {
 	GObject parent_instance;	/* We emit signals */
 
@@ -63,6 +65,8 @@ struct _EggRecentViewGtk {
 	EggRecentModel *model;
 	GConfClient *client;
 	GtkIconSize icon_size;
+
+	gint label_width;
 };
 
 
@@ -85,7 +89,8 @@ enum {
 	PROP_MENU,
 	PROP_START_MENU_ITEM,
 	PROP_SHOW_ICONS,
-	PROP_SHOW_NUMBERS
+	PROP_SHOW_NUMBERS,
+	PROP_LABEL_WIDTH
 };
 
 static guint view_signals[LAST_SIGNAL] = { 0 };
@@ -214,6 +219,7 @@ egg_recent_view_gtk_new_menu_item (EggRecentViewGtk *view,
 	EggRecentViewGtkMenuData *md;
 	gchar *mime_type;
 	GtkWidget *image;
+	GtkWidget *label;
 	GdkPixbuf *pixbuf;
 	gchar *text;
 	gchar *short_name;
@@ -272,6 +278,10 @@ egg_recent_view_gtk_new_menu_item (EggRecentViewGtk *view,
 	menu_item = gtk_image_menu_item_new_with_mnemonic (text);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),
 				       image);
+
+	label = GTK_BIN (menu_item)->child;
+	gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
+	gtk_label_set_max_width_chars (GTK_LABEL (label), view->label_width);
 
 	md = g_new0 (EggRecentViewGtkMenuData, 1);
 	md->view = view;
@@ -455,6 +465,10 @@ egg_recent_view_gtk_set_property (GObject *object,
 			egg_recent_view_gtk_show_numbers (view,
 					g_value_get_boolean (value));
 		break;
+		case PROP_LABEL_WIDTH:
+		        egg_recent_view_gtk_set_label_width (view,
+					g_value_get_int (value));
+		break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -482,6 +496,9 @@ egg_recent_view_gtk_get_property (GObject *object,
 		break;
 		case PROP_SHOW_NUMBERS:
 			g_value_set_boolean (value, view->show_numbers);
+		break;
+		case PROP_LABEL_WIDTH:
+			g_value_set_int (value, view->label_width);
 		break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -559,6 +576,16 @@ egg_recent_view_gtk_class_init (EggRecentViewGtkClass * klass)
 					   TRUE,
 					   G_PARAM_READWRITE));
 
+	g_object_class_install_property (object_class,
+					 PROP_LABEL_WIDTH,
+					 g_param_spec_int ("label-width",
+					   "Label Width",
+					   "The desired width of the menu label, in characters",
+					   -1,
+					   G_MAXINT,
+					   DEFAULT_LABEL_WIDTH,
+					   G_PARAM_READWRITE));
+
 	klass->activate = NULL;
 }
 
@@ -631,6 +658,8 @@ egg_recent_view_gtk_init (EggRecentViewGtk * view)
 	view->tooltip_func_data = NULL;
 
 	view->icon_size = GTK_ICON_SIZE_MENU;
+
+	view->label_width = DEFAULT_LABEL_WIDTH;
 }
 
 void
@@ -679,6 +708,23 @@ egg_recent_view_gtk_set_tooltip_func (EggRecentViewGtk *view,
 	
 	if (view->model)
 		egg_recent_model_changed (view->model);
+}
+
+void
+egg_recent_view_gtk_set_label_width (EggRecentViewGtk *view,
+				     gint              chars)
+{
+	g_return_if_fail (EGG_IS_RECENT_VIEW_GTK (view));
+
+	view->label_width = chars;
+}
+
+gint
+egg_recent_view_gtk_get_label_width (EggRecentViewGtk *view)
+{
+	g_return_val_if_fail (EGG_IS_RECENT_VIEW_GTK (view), -1);
+
+	return view->label_width;
 }
 
 /**

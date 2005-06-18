@@ -59,6 +59,10 @@ void egg_recent_view_gtk_set_icon_size       (EggRecentViewGtk *view,
 					      GtkIconSize icon_size);
 GtkIconSize egg_recent_view_gtk_get_icon_size (EggRecentViewGtk *view);
 
+void egg_recent_view_gtk_set_label_width    (EggRecentViewGtk *view,
+					     gint              chars);
+gint egg_recent_view_gtk_get_label_width    (EggRecentViewGtk *view);
+
 G_END_DECLS
 
 #endif /* __EGG_RECENT_VIEW_GTK_H__ */
