@@ -1,3 +1,13 @@
+2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* lib/ev-file-helpers.c: (ev_file_helpers_shutdown):
+	* shell/ev-sidebar-links.c: (create_loading_model):
+	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_dispose):
+	* shell/ev-view.c: (ev_view_set_document):
+	* shell/ev-window.c: (ev_window_dispose):
+	
+	Various small fixes, mostly memory leaks. Thanks to valgrind.
+
 2005-06-19  Martin Kretzschmar  <martink@gnome.org>
 
 	* ps/ps-document.c: remove the locale.h include again ;-). And

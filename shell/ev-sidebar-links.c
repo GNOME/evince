@@ -228,7 +228,7 @@ create_loading_model (void)
 	/* Creates a fake model to indicate that we're loading */
 	retval = (GtkTreeModel *)gtk_list_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 						     G_TYPE_STRING,
-						     G_TYPE_OBJECT,
+						     G_TYPE_POINTER,
 						     G_TYPE_BOOLEAN);
 
 	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);

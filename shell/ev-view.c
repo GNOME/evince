@@ -1931,6 +1931,8 @@ ev_view_set_document (EvView     *view,
 	g_return_if_fail (EV_IS_VIEW (view));
 
 	if (document != view->document) {
+		clear_caches (view);
+
 		if (view->document) {
                         g_signal_handlers_disconnect_by_func (view->document,
                                                               find_changed_cb,
@@ -1939,8 +1941,6 @@ ev_view_set_document (EvView     *view,
 			view->page_cache = NULL;
 
                 }
-
-		clear_caches (view);
 
 		view->document = document;
 		view->find_page = 0;

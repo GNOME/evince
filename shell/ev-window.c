@@ -2409,6 +2409,11 @@ ev_window_dispose (GObject *object)
 		priv->toolbar_file = NULL;
 	}
 
+	if (priv->recent_model) {
+		g_object_unref (priv->recent_model);
+		priv->recent_model = NULL;
+	}
+
 	if (priv->ui_manager) {
 		g_object_unref (priv->ui_manager);
 		priv->ui_manager = NULL;

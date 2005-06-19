@@ -80,8 +80,9 @@ ev_file_helpers_init (void)
 
 void
 ev_file_helpers_shutdown (void)
-{		
-	rmdir (tmp_dir);
+{	
+	if (tmp_dir != NULL)	
+		rmdir (tmp_dir);
 
 	g_free (tmp_dir);
 	g_free (dot_dir);
