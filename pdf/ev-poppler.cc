@@ -755,7 +755,7 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	if (iter != NULL) {
 		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 							     G_TYPE_STRING,
-							     G_TYPE_POINTER,
+							     G_TYPE_OBJECT,
 							     G_TYPE_BOOLEAN);
 		build_tree (pdf_document, model, NULL, iter);
 		poppler_index_iter_free (iter);

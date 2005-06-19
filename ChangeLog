@@ -1,5 +1,28 @@
 2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* cut-n-paste/recent-files/egg-recent-view-gtk.c:
+	(egg_recent_view_gtk_finalize):
+
+	Fix memory leak
+
+	* cut-n-paste/toolbar-editor/Makefile.am:
+	
+	Fix location of cursor icon.
+	
+	* pdf/ev-poppler.cc:
+	* shell/ev-page-action.c: (build_new_tree_cb), (match_selected_cb),
+	(display_completion_text), (match_completion):
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_dispose),
+	(selection_changed_callback), (create_loading_model),
+	(print_section_cb), (links_page_num_func),
+	(update_page_callback_foreach):
+	* shell/ev-window.c: (ev_window_dispose):
+	
+	Small memory fixes. Links model now store objects instead
+	of pointers to improve memory management. 
+
+2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c: (zoom_control_changed_cb):
 	
 	Fix update of zoom control (bug 308268).

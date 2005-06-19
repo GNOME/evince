@@ -22,11 +22,11 @@ libtoolbareditor_la_SOURCES = 	\
 
 libtoolbareditor_la_CPPFLAGS = \
 	-I$(top_builddir)/lib/egg		\
-	-DCURSOR_DIR=\"$(pkgdatadir)/art\"	\
 	$(AM_CPPFLAGS)
 
 libtoolbareditor_la_CFLAGS = \
 	$(TOOLBAR_EDITOR_CFLAGS)		\
+	-DCURSOR_DIR=\"$(pkgdatadir)\"		\
 	$(AM_CFLAGS)
 
 BUILT_SOURCES = \

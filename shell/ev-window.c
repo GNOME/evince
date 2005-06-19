@@ -2417,6 +2417,12 @@ ev_window_dispose (GObject *object)
 		priv->recent_model = NULL;
 	}
 
+	if (priv->recent_view) {
+		g_object_unref (priv->recent_view);
+		priv->recent_view = NULL;
+	}
+
+
 	if (priv->ui_manager) {
 		g_object_unref (priv->ui_manager);
 		priv->ui_manager = NULL;

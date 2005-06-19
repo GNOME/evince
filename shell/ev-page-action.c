@@ -306,6 +306,9 @@ build_new_tree_cb (GtkTreeModel *model,
 				    -1);
 	}
 	
+	if (link)
+		g_object_unref (link);
+	
 	return FALSE;
 }
 
@@ -346,6 +349,9 @@ match_selected_cb (GtkEntryCompletion *completion,
 
 	g_signal_emit (proxy, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
 
+	if (link)
+		g_object_unref (link);
+
 	gtk_tree_iter_free (iter);
 	
 	return TRUE;
@@ -370,6 +376,9 @@ display_completion_text (GtkCellLayout      *cell_layout,
 			    -1);
 
 	g_object_set (renderer, "text", ev_link_get_title (link), NULL);
+
+	if (link)
+		g_object_unref (link);
 	
 	gtk_tree_iter_free (iter);
 }
@@ -395,6 +404,7 @@ match_completion (GtkEntryCompletion *completion,
 
 	if (link) {
 		text = ev_link_get_title (link);
+		g_object_unref (link);
 	}
 
 	gtk_tree_iter_free (iter);

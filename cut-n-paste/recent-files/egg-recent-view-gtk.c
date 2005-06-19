@@ -523,6 +523,8 @@ egg_recent_view_gtk_finalize (GObject *object)
 	g_object_unref (view->client);
 
 	g_object_unref (view->tooltips);
+	
+	egg_recent_view_gtk_clear (view);
 }
 
 static void

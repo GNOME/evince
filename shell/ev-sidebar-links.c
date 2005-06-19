@@ -151,6 +151,11 @@ ev_sidebar_links_dispose (GObject *object)
 		sidebar->priv->job = NULL;
 	}
 
+	if (sidebar->priv->model) {
+		g_object_unref (sidebar->priv->model);
+		sidebar->priv->model = NULL;
+	}
+
 	if (sidebar->priv->document) {
 		g_object_unref (sidebar->priv->document);
 		sidebar->priv->document = NULL;
@@ -215,6 +220,8 @@ selection_changed_callback (GtkTreeSelection   *selection,
 		ev_page_cache_set_link (ev_sidebar_links->priv->page_cache, link);
 		g_signal_handler_unblock (ev_sidebar_links->priv->page_cache,
 					  ev_sidebar_links->priv->page_changed_id);
+
+		g_object_unref (link);
 	}
 }
 
@@ -228,7 +235,7 @@ create_loading_model (void)
 	/* Creates a fake model to indicate that we're loading */
 	retval = (GtkTreeModel *)gtk_list_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 						     G_TYPE_STRING,
-						     G_TYPE_POINTER,
+						     G_TYPE_OBJECT,
 						     G_TYPE_BOOLEAN);
 
 	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
@@ -263,11 +270,17 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 				    -1);
 		first_page = ev_link_get_page (link) + 1;
 
+		if (link)
+			g_object_unref (link);
+
 		if (gtk_tree_model_iter_next (model, &iter)) {
 			gtk_tree_model_get (model, &iter,
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 					    -1);
 			last_page = ev_link_get_page (link);
+
+			if (link)
+		    		g_object_unref (link);
 		} else {
 			last_page = -1;
 		}
@@ -440,6 +453,9 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 			      "visible", FALSE,
 			      NULL);
 	}
+
+	if (link)
+		g_object_unref (link);
 }
 
 /* Public Functions */
@@ -477,10 +493,14 @@ update_page_callback_foreach (GtkTreeModel *model,
 			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
 
 			gtk_tree_selection_select_path (selection, path);
-
+	
+			g_object_unref (link);
 			return TRUE;
 		}
 	}
+
+	if (link)
+		g_object_unref (link);
 	
 	return FALSE;
 }
