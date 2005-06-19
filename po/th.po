@@ -1,20 +1,21 @@
-# English (British) translation for evince
-# Copyright (C) 2005 The Gnome Foundation
+# Thai translation for evince
+# Copyright (C) 2005 Free Software Foundation, Inc.
 # This file is distributed under the same licence as the evince package.
 # Isriya Paireepairit <markpeak@gmail.com>, 2005.
-#
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-04-24 01:56+0100\n"
-"PO-Revision-Date: 2005-04-24 02:00+0100\n"
-"Last-Translator: Isriya Paireepairit <markpeak@gmail.com>\n"
+"PO-Revision-Date: 2005-06-19 13:52+0700\n"
+"Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n@opentle.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=1; plural=0;"
 
 #: ../data/evince-password.glade.h:1
 msgid "*"
@@ -30,7 +31,7 @@ msgstr "_รหัสผ่าน:"
 
 #: ../data/evince.desktop.in.h:1 ../shell/ev-window.c:473
 msgid "Document Viewer"
-msgstr "ตัวอ่านเอกสาร"
+msgstr "อ่านเอกสาร"
 
 #: ../data/evince.desktop.in.h:2 ../shell/main.c:88
 msgid "Evince Document Viewer"
@@ -101,7 +102,7 @@ msgstr ""
 #. this is EOF
 #: ../dvi/mdvi-lib/dviread.c:208
 msgid "unexpected EOF\n"
-msgstr "unexpected EOF\n"
+msgstr "พบ EOF กลางคัน\n"
 
 #: ../dvi/mdvi-lib/dviread.c:429
 #, c-format
@@ -135,7 +136,7 @@ msgstr "%s: vf macro ผิดพลาด\n"
 #: ../dvi/mdvi-lib/dviread.c:987
 #, c-format
 msgid "%s: stack not empty after vf macro\n"
-msgstr "%s: stack not empty after vf macro\n"
+msgstr "%s: สแต็กมีข้อมูลค้างหลังจบ vf macro\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1012
 #, c-format
@@ -145,16 +146,16 @@ msgstr "%s: ไม่สามารถเปิดแฟ้ม (%s) ใหม�
 #: ../dvi/mdvi-lib/dviread.c:1029
 #, c-format
 msgid "%s: page %d out of range\n"
-msgstr "%s: page %d out of range\n"
+msgstr "%s: หน้า %d ออกนอกช่วง\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1036
 #, c-format
 msgid "%s: bad offset at page %d\n"
-msgstr "%s: bad offset at page %d\n"
+msgstr "%s: ออฟเซ็ตไม่ถูกต้องที่หน้า %d\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1099
 msgid "stack not empty at end of page\n"
-msgstr "stack not empty at end of page\n"
+msgstr "สแต็กมีข้อมูลค้างหลังจบหน้า\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1286
 msgid "no default font set yet\n"
@@ -167,11 +168,11 @@ msgstr "ตัวอักษร %d ที่ต้องการ ไม่ป�
 
 #: ../dvi/mdvi-lib/dviread.c:1369
 msgid "enlarging stack\n"
-msgstr "enlarging stack\n"
+msgstr "กำลังขยายขนาดสแต็ก\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1387
 msgid "stack underflow\n"
-msgstr "stack underflow\n"
+msgstr "สแต็กไม่มีข้อมูลให้อ่าน\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1501 ../dvi/mdvi-lib/dviread.c:1523
 #, c-format
@@ -181,17 +182,17 @@ msgstr "ไม่ได้กำหนดแบบอักษร %d\n"
 #: ../dvi/mdvi-lib/dviread.c:1563
 #, c-format
 msgid "font %d is not defined in postamble\n"
-msgstr "font %d is not defined in postamble\n"
+msgstr "ไม่ได้กำหนดฟอนต์ %d ใน postamble\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1575
 #, c-format
 msgid "unexpected opcode %d\n"
-msgstr "unexpected opcode %d\n"
+msgstr "opcode %d ผิดตำแหน่ง\n"
 
 #: ../dvi/mdvi-lib/dviread.c:1581
 #, c-format
 msgid "undefined opcode %d\n"
-msgstr "undefined opcode %d\n"
+msgstr "opcode %d ไม่รู้จัก\n"
 
 #: ../dvi/mdvi-lib/font.c:464
 #, c-format
@@ -201,12 +202,12 @@ msgstr "%s: ไม่ได้กำหนดแบบอักษรไว้\n
 #: ../dvi/mdvi-lib/fontmap.c:589
 #, c-format
 msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
-msgstr "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/fontmap.c:750
 #, c-format
 msgid "%s: could not load fontmap\n"
-msgstr "%s: could not load fontmap\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/fontmap.c:764
 #, c-format
@@ -216,32 +217,32 @@ msgstr "%s: ไม่สามารถตั้งเป็นรหัสอ�
 #: ../dvi/mdvi-lib/fontmap.c:843
 #, c-format
 msgid "encoding vector `%s' is in use\n"
-msgstr "encoding vector `%s' is in use\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/gf.c:112
 #, c-format
 msgid "GF: invalid opcode %d in character %d\n"
-msgstr "GF: invalid opcode %d in character %d\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/gf.c:210
 #, c-format
 msgid "(gf) Character %d: invalid opcode %d\n"
-msgstr "(gf) Character %d: invalid opcode %d\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/gf.c:226
 #, c-format
 msgid "(gf) character %d has an incorrect bounding box\n"
-msgstr "(gf) character %d has an incorrect bounding box\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/gf.c:289
 #, c-format
 msgid "%s: bad checksum (expected %u, found %u)\n"
-msgstr "%s: bad checksum (expected %u, found %u)\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/gf.c:325
 #, c-format
 msgid "%s: junk in postamble\n"
-msgstr "%s: junk in postamble\n"
+msgstr "%s: มีขยะใน postamble\n"
 
 #: ../dvi/mdvi-lib/gf.c:362
 #, c-format
@@ -251,19 +252,19 @@ msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แ�
 #: ../dvi/mdvi-lib/pagesel.c:211
 #, c-format
 msgid "invalid page specification `%s'\n"
-msgstr "invalid page specification `%s'\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/pagesel.c:231
 msgid "garbage after DVI page specification ignored\n"
-msgstr "garbage after DVI page specification ignored\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/pagesel.c:259
 msgid "more than 10 counters in page specification\n"
-msgstr "more than 10 counters in page specification\n"
+msgstr "more than 10 counters in page specification\"
 
 #: ../dvi/mdvi-lib/pagesel.c:261
 msgid "garbage after TeX page specification ignored\n"
-msgstr "garbage after TeX page specification ignored\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/paper.c:103 ../dvi/mdvi-lib/paper.c:110
 msgid "custom"
@@ -271,144 +272,144 @@ msgstr "กำหนดเอง"
 
 #: ../dvi/mdvi-lib/pk.c:309
 msgid "Bad PK file: More bits than required\n"
-msgstr "Bad PK file: More bits than required\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/pk.c:362
 #, c-format
 msgid "%s: checksum mismatch (expected %u, got %u)\n"
-msgstr "%s: checksum mismatch (expected %u, got %u)\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/pk.c:419
 #, c-format
 msgid "%s: unexpected preamble\n"
-msgstr "%s: unexpected preamble\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/pk.c:502
 #, c-format
 msgid "%s: unexpected end of file (no postamble)\n"
-msgstr "%s: unexpected end of file (no postamble)\n"
+msgstr "%s: แฟ้มจบกลางคัน (ไม่มี postamble)\n"
 
 #: ../dvi/mdvi-lib/pk.c:508
 msgid "invalid PK file! (junk in postamble)\n"
-msgstr "invalid PK file! (junk in postamble)\n"
+msgstr "แฟ้ม PK ผิดพลาด! (มีขยะใน postamble)\n"
 
 #: ../dvi/mdvi-lib/pk.c:525
 #, c-format
 msgid "%s: File corrupted, or not a PK file\n"
-msgstr "%s: File corrupted, or not a PK file\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/sp-epsf.c:150
 #, c-format
 msgid "%s: malformed value for key `%s'\n"
-msgstr "%s: malformed value for key `%s'\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/sp-epsf.c:161
 #, c-format
 msgid "%s: unknown key `%s' ignored\n"
-msgstr "%s: unknown key `%s' ignored\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/sp-epsf.c:166
 #, c-format
 msgid "%s: no argument for key `%s', using defaults\n"
-msgstr "%s: no argument for key `%s', using defaults\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/sp-epsf.c:170
 #, c-format
 msgid "%s: argument `%s' ignored for key `%s'\n"
-msgstr "%s: argument `%s' ignored for key `%s'\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/special.c:242
 #, c-format
 msgid "%s: tried to pop top level layer\n"
-msgstr "%s: tried to pop top level layer\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/t1.c:182
 msgid "(t1) failed to reset device resolution\n"
-msgstr "(t1) failed to reset device resolution\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/t1.c:210
 #, c-format
 msgid "%s: could not encode font\n"
-msgstr "%s: could not encode font\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/t1.c:448
 #, c-format
 msgid "(t1) unsupported bitmap pad size %d\n"
-msgstr "(t1) unsupported bitmap pad size %d\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tfm.c:177
 #, c-format
 msgid "%s: Checksum mismatch (got %u, expected %u)\n"
-msgstr "%s: Checksum mismatch (got %u, expected %u)\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tfmfile.c:90
 #, c-format
 msgid "%s: Error reading AFM data\n"
-msgstr "%s: Error reading AFM data\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tfmfile.c:180
 #, c-format
 msgid "Warning: TFM file `%s' has suspicious size\n"
-msgstr "Warning: TFM file `%s' has suspicious size\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tfmfile.c:230 ../dvi/mdvi-lib/tfmfile.c:511
 #, c-format
 msgid "%s: font coding scheme truncated to 40 bytes\n"
-msgstr "%s: font coding scheme truncated to 40 bytes\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tfmfile.c:290 ../dvi/mdvi-lib/tfmfile.c:589
 #, c-format
 msgid "%s: File corrupted, or not a TFM file\n"
-msgstr "%s: File corrupted, or not a TFM file\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:150
 #, c-format
 msgid "(tt) %s: could not load face: %s\n"
-msgstr "(tt) %s: could not load face: %s\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:158
 #, c-format
 msgid "(tt) %s: could not create face: %s\n"
-msgstr "(tt) %s: could not create face: %s\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:167
 #, c-format
 msgid "(tt) %s: could not create glyph: %s\n"
-msgstr "(tt) %s: could not create glyph: %s\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:200
 #, c-format
 msgid "(tt) %s: no acceptable map found, using #0\n"
-msgstr "(tt) %s: no acceptable map found, using #0\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:213
 #, c-format
 msgid "(tt) %s: could not set resolution: %s\n"
-msgstr "(tt) %s: could not set resolution: %s\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:220
 #, c-format
 msgid "(tt) %s: could not set point size: %s\n"
-msgstr "(tt) %s: could not set point size: %s\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:239
 #, c-format
 msgid "(tt) %s: could not load PS name table\n"
-msgstr "(tt) %s: could not load PS name table\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:264
 #, c-format
 msgid "%s: no encoding vector found, expect bad output\n"
-msgstr "%s: no encoding vector found, expect bad output\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/tt.c:324
 #, c-format
 msgid "(tt) %s: no font metric data\n"
-msgstr "(tt) %s: no font metric data\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:148
 msgid "Crashing"
-msgstr "Crashing"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:158
 #, c-format
@@ -431,68 +432,68 @@ msgstr "คำเตือน"
 #: ../dvi/mdvi-lib/util.c:190
 #, c-format
 msgid "%s: Fatal: "
-msgstr "%s: Fatal: "
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:197
 msgid "Fatal"
-msgstr "Fatal"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:211
 #, c-format
 msgid "out of memory allocating %u bytes\n"
-msgstr "out of memory allocating %u bytes\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:221
 msgid "attempted to reallocate with zero size\n"
-msgstr "attempted to reallocate with zero size\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:224
 #, c-format
 msgid "failed to reallocate %u bytes\n"
-msgstr "failed to reallocate %u bytes\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:233
 msgid "attempted to callocate 0 members\n"
-msgstr "attempted to callocate 0 members\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:235
 #, c-format
 msgid "attempted to callocate %u members with size 0\n"
-msgstr "attempted to callocate %u members with size 0\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:239
 #, c-format
 msgid "failed to allocate %ux%u bytes\n"
-msgstr "failed to allocate %ux%u bytes\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/util.c:247
 msgid "attempted to free NULL pointer\n"
-msgstr "attempted to free NULL pointer\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/vf.c:81
 #, c-format
 msgid "%s: Checksum mismatch (expected %u, got %u)\n"
-msgstr "%s: Checksum mismatch (expected %u, got %u)\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/vf.c:129
 #, c-format
 msgid "(vf) %s: could not load font `%s'\n"
-msgstr "(vf) %s: could not load font `%s'\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/vf.c:179
 #, c-format
 msgid "(vf) %s: character %d redefined\n"
-msgstr "(vf) %s: character %d redefined\n"
+msgstr ""
 
 #: ../dvi/mdvi-lib/vf.c:202
 #, c-format
 msgid "(vf) %s: no postamble\n"
-msgstr "(vf) %s: no postamble\n"
+msgstr "(vf) %s: ไม่มี postamble\n"
 
 #: ../dvi/mdvi-lib/vf.c:228
 #, c-format
 msgid "%s: File corrupted, or not a VF file.\n"
-msgstr "%s: File corrupted, or not a VF file.\n"
+msgstr ""
 
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
@@ -572,11 +573,11 @@ msgstr "เอกสารไม่ถูกอ่าน"
 
 #: ../ps/ps-document.c:638
 msgid "Broken pipe."
-msgstr "Broken pipe."
+msgstr ""
 
 #: ../ps/ps-document.c:825
 msgid "Interpreter failed."
-msgstr "Interpreter failed."
+msgstr ""
 
 #. report error
 #: ../ps/ps-document.c:947
@@ -783,7 +784,7 @@ msgstr "%s - ต้องการรหัสผ่าน"
 #: ../shell/ev-window.c:724
 #, c-format
 msgid "Unhandled MIME type: '%s'"
-msgstr "Unhandled MIME type: '%s'"
+msgstr ""
 
 #: ../shell/ev-window.c:891
 #, c-format
@@ -826,11 +827,11 @@ msgstr "เลิกแบบเต็มจอ"
 
 #: ../shell/ev-window.c:1726
 msgid "Many..."
-msgstr "Many..."
+msgstr ""
 
 #: ../shell/ev-window.c:1731
 msgid "Not so many..."
-msgstr "Not so many..."
+msgstr ""
 
 #: ../shell/ev-window.c:1736
 msgid ""
@@ -839,10 +840,6 @@ msgid ""
 "the Free Software Foundation; either version 2 of the License, or\n"
 "(at your option) any later version.\n"
 msgstr ""
-"Evince is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public Licence as published by\n"
-"the Free Software Foundation; either version 2 of the Licence, or\n"
-"(at your option) any later version.\n"
 
 #: ../shell/ev-window.c:1740
 msgid ""
@@ -851,10 +848,6 @@ msgid ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details.\n"
 msgstr ""
-"Evince is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public Licence for more details.\n"
 
 #: ../shell/ev-window.c:1744
 msgid ""
@@ -862,9 +855,6 @@ msgid ""
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
-"You should have received a copy of the GNU General Public Licence\n"
-"along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
 #: ../shell/ev-window.c:1766 ../shell/main.c:83
 msgid "Evince"
@@ -880,7 +870,7 @@ msgstr "ตัวอ่านเอกสารแบบ PostScript และ PD
 
 #: ../shell/ev-window.c:1775
 msgid "translator-credits"
-msgstr "David Lodge <dave@cirt.net>"
+msgstr "Isriya Paireepairit <markpeak@gmail.com>"
 
 #: ../shell/ev-window.c:2063
 msgid "_File"
@@ -1026,7 +1016,7 @@ msgstr "ออกจากการแสดงผลเต็มจอ"
 
 #: ../shell/ev-window.c:2139
 msgid "Selection Caret"
-msgstr "Selection Caret"
+msgstr ""
 
 #. View Menu
 #: ../shell/ev-window.c:2146
