@@ -48,7 +48,7 @@
 #include "ev-statusbar.h"
 #include "ev-sidebar-page.h"
 #include "eggfindbar.h"
-#include "egg-recent-view-gtk.h"
+#include "egg-recent-view-uimanager.h"
 #include "egg-recent-view.h"
 #include "egg-recent-model.h"
 #include "egg-toolbar-editor.h"
@@ -137,7 +137,7 @@ struct _EvWindowPrivate {
 
 	/* recent file stuff */
 	EggRecentModel *recent_model;
-	EggRecentViewGtk *recent_view;
+	EggRecentViewUIManager *recent_view;
 };
 
 static const GtkTargetEntry ev_drop_types[] = {
@@ -958,14 +958,18 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_recent_file_activate (EggRecentViewGtk *view, EggRecentItem *item,
+ev_window_cmd_recent_file_activate (GtkAction *action,
         	                    EvWindow *ev_window)
 {
 	char *uri;
+	EggRecentItem *item;
 	GtkWidget *window;
 
-	uri = egg_recent_item_get_uri (item);
+	item = egg_recent_view_uimanager_get_item (ev_window->priv->recent_view,
+						   action);
 
+	uri = egg_recent_item_get_uri (item);
+	
 	window = GTK_WIDGET (ev_application_get_empty_window (EV_APP));
 	gtk_widget_show (window);
 	ev_window_open_uri (EV_WINDOW (window), uri);
@@ -986,23 +990,20 @@ ev_window_add_recent (EvWindow *window, const char *filename)
 static void
 ev_window_setup_recent (EvWindow *ev_window)
 {
-	GtkWidget *menu_item;
-	GtkWidget *menu;
 
-	menu_item = gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/MainMenu/FileMenu");
-	menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (menu_item));
-	menu_item = gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/MainMenu/FileMenu/RecentFilesMenu");
 
-	g_return_if_fail (menu != NULL);
-	g_return_if_fail (menu_item != NULL);
 
 	/* it would be better if we just filtered by mime-type, but there
 	 * doesn't seem to be an easy way to figure out which mime-types we
 	 * can handle */
 	ev_window->priv->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
 
-	ev_window->priv->recent_view = egg_recent_view_gtk_new (menu, menu_item);
-	egg_recent_view_gtk_show_icons (EGG_RECENT_VIEW_GTK (ev_window->priv->recent_view), FALSE);
+	ev_window->priv->recent_view = egg_recent_view_uimanager_new (ev_window->priv->ui_manager,
+								      "/MainMenu/FileMenu/RecentFilesMenu",
+								      G_CALLBACK (ev_window_cmd_recent_file_activate), 
+								      ev_window);	
+
+        egg_recent_view_uimanager_show_icons (EGG_RECENT_VIEW_UIMANAGER (ev_window->priv->recent_view), FALSE);
 	egg_recent_model_set_limit (ev_window->priv->recent_model, 5);
 
 	egg_recent_view_set_model (EGG_RECENT_VIEW (ev_window->priv->recent_view),
@@ -1011,7 +1012,7 @@ ev_window_setup_recent (EvWindow *ev_window)
 	egg_recent_model_set_filter_groups (ev_window->priv->recent_model,
     	    	    			    "Evince", NULL);
 
-	egg_recent_view_gtk_set_trailing_sep (ev_window->priv->recent_view, TRUE);
+	egg_recent_view_uimanager_set_trailing_sep (ev_window->priv->recent_view, TRUE);
 	
 	g_signal_connect (ev_window->priv->recent_view, "activate",
 			G_CALLBACK (ev_window_cmd_recent_file_activate), ev_window);

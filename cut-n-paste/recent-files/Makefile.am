@@ -14,8 +14,8 @@ EGG_FILES =				\
         egg-recent-item.h		\
         egg-recent-view.c		\
         egg-recent-view.h		\
-        egg-recent-view-gtk.c		\
-        egg-recent-view-gtk.h		\
+        egg-recent-view-uimanager.c	\
+        egg-recent-view-uimanager.h	\
         egg-recent-util.c		\
 	egg-recent-util.h
 

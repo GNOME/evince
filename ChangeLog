@@ -1,5 +1,21 @@
 2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* cut-n-paste/recent-files/Makefile.am:
+	* cut-n-paste/recent-files/egg-recent-view-gtk.c:
+	* cut-n-paste/recent-files/egg-recent-view-gtk.h:
+	
+	Removed EggRecentViewGtk
+	
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.c:
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.h:
+	* shell/ev-window.c: (ev_window_cmd_recent_file_activate),
+	(ev_window_setup_recent):
+	
+	Use ViewUIManager instead of ViewGtk. Less leaks, more compatibility
+        with other projects
+
+2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* cut-n-paste/recent-files/egg-recent-view-gtk.c:
 	(egg_recent_view_gtk_finalize):
 
