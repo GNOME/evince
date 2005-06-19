@@ -2481,6 +2481,7 @@ update_find_status_message (EvView *view)
 
 	}
 	ev_view_set_find_status (view, message);
+	g_free (message);
 }
 
 const char *

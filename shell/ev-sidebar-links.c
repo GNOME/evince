@@ -578,11 +578,12 @@ job_finished_callback (EvJobLinks     *job,
 	GtkTreeSelection *selection;
 
 	priv = sidebar_links->priv;
-
-	priv->model = g_object_ref (job->model);
+	
+	priv->model = job->model;
 	g_object_notify (G_OBJECT (sidebar_links), "model");
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
+	
 	g_object_unref (job);
 	priv->job = NULL;
 

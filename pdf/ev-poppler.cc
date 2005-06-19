@@ -189,6 +189,7 @@ get_document_orientation (PdfDocument *pdf_document)
 	} else {
 		return POPPLER_ORIENTATION_PORTRAIT;
 	}
+	g_object_unref (page);
 #else
 	return POPPLER_ORIENTATION_PORTRAIT;
 #endif
@@ -240,6 +241,7 @@ pdf_document_get_page_size (EvDocument   *document,
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
 	set_page_orientation (pdf_document, poppler_page);
 	poppler_page_get_size (poppler_page, width, height);
+	g_object_unref (poppler_page);
 }
 
 static char *
@@ -255,6 +257,7 @@ pdf_document_get_page_label (EvDocument *document,
 	g_object_get (G_OBJECT (poppler_page),
 		      "label", &label,
 		      NULL);
+	g_object_unref (poppler_page);
 
 	return label;
 }
@@ -293,6 +296,7 @@ pdf_document_get_links (EvDocument *document,
 	}
 
 	poppler_page_free_link_mapping (mapping_list);
+	g_object_unref (poppler_page);
 
 	return g_list_reverse (retval);
 }
@@ -328,7 +332,9 @@ pdf_document_render_pixbuf (EvDocument   *document,
 				       scale,
 				       pixbuf,
 				       0, 0);
-
+	
+	g_object_unref (poppler_page);
+	
 	return pixbuf;
 }
 
@@ -503,6 +509,7 @@ pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 	PopplerPage *poppler_page;
 	PopplerRectangle r;
 	double height;
+	char *text;
 	
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
 	set_page_orientation (pdf_document, poppler_page);
@@ -514,7 +521,11 @@ pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 	r.x2 = rect->x2;
 	r.y2 = height - rect->y1;
 
-	return poppler_page_get_text (poppler_page, &r);
+	text = poppler_page_get_text (poppler_page, &r);
+
+	g_object_unref (poppler_page);
+
+	return text;
 }
 
 static EvOrientation
@@ -810,6 +821,7 @@ make_thumbnail_for_size (PdfDocument *pdf_document,
 				       scale, pixbuf,
 				       x_offset, y_offset);
 
+	g_object_unref (poppler_page);
 	return pixbuf;
 }
 
@@ -830,6 +842,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
+	
 	if (pixbuf != NULL) {
 		/* The document provides its own thumbnails. */
 		if (border) {
@@ -843,6 +856,9 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		/* There is no provided thumbnail.  We need to make one. */
 		pixbuf = make_thumbnail_for_size (pdf_document, page, size, border);
 	}
+
+	g_object_unref (poppler_page);
+	
 	return pixbuf;
 }
 
@@ -879,6 +895,7 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 			*height = size;
 		}
 	}
+	g_object_unref (poppler_page);
 }
 
 static void
@@ -905,6 +922,8 @@ pdf_document_search_idle_callback (void *data)
 	ev_document_doc_mutex_lock ();
 	matches = poppler_page_find_text (page, search->text);
 	ev_document_doc_mutex_unlock ();
+
+	g_object_unref (page);
 
 	search->pages[search->search_page] = matches;
 	ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
@@ -1043,7 +1062,8 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 	rectangle->y1 = height - r->y2;
 	rectangle->x2 = r->x2;
 	rectangle->y2 = height - r->y1;
-	
+	g_object_unref (poppler_page);
+		
 	return TRUE;
 }
 
@@ -1126,6 +1146,7 @@ pdf_document_ps_exporter_do_page (EvPSExporter *exporter, int page)
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
 	set_page_orientation (pdf_document, poppler_page);
 	poppler_page_render_to_ps (poppler_page, pdf_document->ps_file);
+	g_object_unref (poppler_page);
 }
 
 static void
