@@ -206,7 +206,7 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 							 escaped);
 			g_free (escaped);
 		} else 
-			label = basename;
+			label = escaped;
 
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", name,
