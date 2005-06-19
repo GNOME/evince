@@ -1,3 +1,12 @@
+Sat Jun 18 22:46:42 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* shell/ev-properties.c (set_property): escape the text correctly.
+	Handles non-UTF-8 properties and escaped properties.  Also, sets
+	the text to "<i>None</i>" if the property isn't set.
+
+	* data/evince-properties.glade: Change the label to be ellipsized,
+	and give it a minimum size.
+
 2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* lib/ev-file-helpers.c: (ev_file_helpers_shutdown):

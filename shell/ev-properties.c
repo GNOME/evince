@@ -33,6 +33,7 @@
 #include <glade/glade.h>
 #include <time.h>
 #include <sys/time.h>
+#include <string.h>
 
 enum
 {
@@ -171,15 +172,71 @@ ev_properties_format_date (GTime utime)
 	return g_locale_to_utf8 (s, -1, NULL, NULL, NULL);
 }
 
+/* This is cut out of gconvert.c from glib (and mildly modified).  Not all
+   backends give valid UTF-8 for properties, so we make sure that is.
+ */
+static gchar *
+make_valid_utf8 (const gchar *name)
+{
+  GString *string;
+  const gchar *remainder, *invalid;
+  gint remaining_bytes, valid_bytes;
+  
+  string = NULL;
+  remainder = name;
+  remaining_bytes = strlen (name);
+  
+  while (remaining_bytes != 0) 
+    {
+      if (g_utf8_validate (remainder, remaining_bytes, &invalid)) 
+	break;
+      valid_bytes = invalid - remainder;
+    
+      if (string == NULL) 
+	string = g_string_sized_new (remaining_bytes);
+
+      g_string_append_len (string, remainder, valid_bytes);
+      g_string_append_c (string, '?');
+      
+      remaining_bytes -= valid_bytes + 1;
+      remainder = invalid + 1;
+    }
+  
+  if (string == NULL)
+    return g_strdup (name);
+  
+  g_string_append (string, remainder);
+
+  g_assert (g_utf8_validate (string->str, -1, NULL));
+  
+  return g_string_free (string, FALSE);
+}
+
 static void
 set_property (GladeXML *xml, Property property, const char *text)
 {
 	GtkWidget *widget;
+	char *valid_text;
 
 	widget = glade_xml_get_widget (xml, properties_info[property].label_id);
 	g_return_if_fail (GTK_IS_LABEL (widget));
 
-	gtk_label_set_text (GTK_LABEL (widget), text ? text : "");
+	if (text == NULL || text[0] == '\000') {
+		gchar *markup;
+
+		markup = g_markup_printf_escaped ("<i>%s</i>", _("None"));
+		gtk_label_set_markup (GTK_LABEL (widget), markup);
+		g_free (markup);
+
+		return;
+	}
+	text = text ? text : "";
+
+	valid_text = make_valid_utf8 (text);
+
+	gtk_label_set_text (GTK_LABEL (widget), valid_text);
+
+	g_free (valid_text);
 }
 
 static void
