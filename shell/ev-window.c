@@ -2390,10 +2390,13 @@ zoom_control_changed_cb (EphyZoomAction *action,
 		mode = EV_SIZING_FIT_WIDTH;
 	} else {
 		mode = EV_SIZING_FREE;
-		ev_view_set_zoom (EV_VIEW (ev_window->priv->view), zoom, FALSE);
 	}
 	
 	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), mode);
+	
+	if (mode == EV_SIZING_FREE) {
+		ev_view_set_zoom (EV_VIEW (ev_window->priv->view), zoom, FALSE);
+	}
 }
 
 static void
