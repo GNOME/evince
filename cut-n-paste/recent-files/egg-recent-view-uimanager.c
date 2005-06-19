@@ -43,6 +43,8 @@
 #define EGG_RECENT_ACTION "EggRecentFile"
 #define EGG_RECENT_SEPARATOR (NULL)
 
+#define LABEL_WIDTH_CHARS 32
+
 struct _EggRecentViewUIManager {
 	GObject         parent_instance;
 
@@ -115,6 +117,23 @@ egg_recent_view_uimanager_clear (EggRecentViewUIManager *view)
 }
 
 static void
+connect_proxy_cb (GtkActionGroup *action_group,
+                  GtkAction *action,
+                  GtkWidget *proxy)
+{
+        if (GTK_IS_MENU_ITEM (proxy))
+        {
+                GtkLabel *label;
+
+                label = (GtkLabel *) ((GtkBin *) proxy)->child;
+
+                gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
+                gtk_label_set_max_width_chars (label, LABEL_WIDTH_CHARS);
+        }
+}
+		
+
+static void
 egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 {
 	GList  *scan;
@@ -131,7 +150,9 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		gchar *group = g_strdup_printf ("EggRecentActions%u", 
 						view->merge_id);
 		view->action_group = gtk_action_group_new (group);
-		gtk_ui_manager_insert_action_group (view->uimanager, view->action_group, 0);
+		g_signal_connect (view->action_group, "connect-proxy",
+				  G_CALLBACK (connect_proxy_cb), view);
+		gtk_ui_manager_insert_action_group (view->uimanager, view->action_group, -1);
 		g_free (group);
 	}
 
@@ -155,7 +176,6 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		gchar         *uri;
 		gchar         *basename;
 		gchar         *escaped;
-		gchar 	      *ellipsized;
 		gchar         *label;
 		gchar         *tooltip = NULL;
 
@@ -174,26 +194,19 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 		escaped = egg_recent_util_escape_underlines (basename);
 		g_free (basename);
 		g_free (uri);
-	    
-		if (strlen (escaped) > 40) {
-			ellipsized = g_strdup_printf ("%.40s...", escaped);
-			g_free (escaped);
-		} else {	
-			ellipsized = escaped;
-		}
 
 		if (view->show_numbers) {
 			if (index >= 10)
 				label = g_strdup_printf ("%d.  %s", 
 							 index, 
-							 ellipsized);
+							 escaped);
 			else
 				label = g_strdup_printf ("_%d.  %s", 
 							 index, 
-							 ellipsized);
-			g_free (ellipsized);
+							 escaped);
+			g_free (escaped);
 		} else 
-			label = ellipsized;
+			label = basename;
 
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", name,

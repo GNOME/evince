@@ -732,6 +732,7 @@ build_tree (PdfDocument      *pdf_document,
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
 					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, expand,
 					    -1);
+			g_object_unref (link);
 			child = poppler_index_iter_get_child (iter);
 			if (child)
 				build_tree (pdf_document, model, &tree_iter, child);
