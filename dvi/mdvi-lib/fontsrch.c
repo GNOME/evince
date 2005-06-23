@@ -96,7 +96,7 @@ char	**mdvi_list_font_class(int klass)
 	list = xnalloc(char *, n + 1);
 	fc = (DviFontClass *)font_classes[klass].head;
 	for(i = 0; i < n; fc = fc->next, i++) {
-		list[i] = xstrdup(fc->info.name);
+		list[i] = mdvi_strdup(fc->info.name);
 	}
 	list[i] = NULL;
 	return list;
@@ -115,7 +115,7 @@ int	mdvi_register_font_type(DviFontInfo *info, int klass)
 	fc = xalloc(struct _DviFontClass);
 	fc->links = 0;
 	fc->id = klass;
-	fc->info.name = xstrdup(info->name);
+	fc->info.name = mdvi_strdup(info->name);
 	fc->info.scalable = info->scalable;
 	fc->info.load = info->load;
 	fc->info.getglyph = info->getglyph;
@@ -160,8 +160,8 @@ int	mdvi_unregister_font_type(const char *name, int klass)
 	listh_remove(&font_classes[k], LIST(fc));
 	
 	/* and destroy it */
-	xfree(fc->info.name);
-	xfree(fc);
+	mdvi_free(fc->info.name);
+	mdvi_free(fc);
 	return 0;
 }
 
@@ -182,7 +182,7 @@ static char *lookup_font(DviFontClass *ptr, const char *name, Ushort *h, Ushort 
 			ptr->info.kpse_type, &type);
 		/* if kpathsea returned a fallback font, reject it */
 		if(filename && type.source == kpse_glyph_source_fallback) {
-			xfree(filename);
+			mdvi_free(filename);
 			filename = NULL;
 		} else if(filename)
 			*h = *v = type.dpi;
@@ -323,13 +323,13 @@ DviFont	*mdvi_add_font(const char *name, Int32 sum,
 	DviFont	*font;
 	
 	font = xalloc(DviFont);
-	font->fontname = xstrdup(name);
+	font->fontname = mdvi_strdup(name);
 	SEARCH_INIT(font->search, font->fontname, hdpi, vdpi);
 	font->filename = mdvi_lookup_font(&font->search);
 	if(font->filename == NULL) {
 		/* this answer is final */
-		xfree(font->fontname);
-		xfree(font);
+		mdvi_free(font->fontname);
+		mdvi_free(font);
 		return NULL;
 	}
 	font->hdpi = font->search.actual_hdpi;
@@ -360,7 +360,7 @@ int	mdvi_font_retry(DviParams *params, DviFont *font)
 	filename = mdvi_lookup_font(&font->search);
 	if(filename == NULL)
 		return -1;
-	xfree(font->filename);
+	mdvi_free(font->filename);
 	font->filename = filename;
 	/* copy the new information */
 	font->hdpi = font->search.actual_hdpi;

@@ -202,19 +202,19 @@ extern void __debug __PROTO((int, const char *, ...));
 
 /* memory allocation */
 
-extern void  xfree __PROTO((void *));
-extern void *xmalloc __PROTO((size_t));
-extern void *xrealloc __PROTO((void *, size_t));
-extern void *xcalloc __PROTO((size_t, size_t));
-extern char *xstrncpy __PROTO((char *, const char *, size_t));
-extern char *xstrdup __PROTO((const char *));
-extern char *xstrndup __PROTO((const char *, size_t));
-extern void *xmemdup __PROTO((const void *, size_t));
+extern void  mdvi_free __PROTO((void *));
+extern void *mdvi_malloc __PROTO((size_t));
+extern void *mdvi_realloc __PROTO((void *, size_t));
+extern void *mdvi_calloc __PROTO((size_t, size_t));
+extern char *mdvi_strncpy __PROTO((char *, const char *, size_t));
+extern char *mdvi_strdup __PROTO((const char *));
+extern char *mdvi_strndup __PROTO((const char *, size_t));
+extern void *mdvi_memdup __PROTO((const void *, size_t));
 
 /* macros to make memory allocation nicer */
-#define xalloc(t)	(t *)xmalloc(sizeof(t))
-#define xnalloc(t,n)	(t *)xcalloc((n), sizeof(t))
-#define xresize(p,t,n)	(t *)xrealloc((p), (n) * sizeof(t))
+#define xalloc(t)	(t *)mdvi_malloc(sizeof(t))
+#define xnalloc(t,n)	(t *)mdvi_calloc((n), sizeof(t))
+#define xresize(p,t,n)	(t *)mdvi_realloc((p), (n) * sizeof(t))
 
 extern char *xstradd __PROTO((char *, size_t *, size_t, const char *, size_t));
 

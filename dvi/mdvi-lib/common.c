@@ -72,9 +72,9 @@ char	*read_string(FILE *in, int s, char *buffer, size_t len)
 	
 	n = fugetn(in, s ? s : 1);
 	if((str = buffer) == NULL || n + 1 > len)
-		str = xmalloc(n + 1);
+		str = mdvi_malloc(n + 1);
 	if(fread(str, 1, n, in) != n) {
-		if(str != buffer) xfree(str);
+		if(str != buffer) mdvi_free(str);
 		return NULL;
 	}
 	str[n] = 0;
@@ -139,7 +139,7 @@ static Int32	scaled_width(Int32 fix, int scale)
 void	buff_free(Buffer *buf)
 {
 	if(buf->data)
-		xfree(buf->data);
+		mdvi_free(buf->data);
 	buff_init(buf);	
 }
 
@@ -156,7 +156,7 @@ size_t	buff_add(Buffer *buf, const char *data, size_t len)
 		len = strlen(data);
 	if(buf->length + len + 1 > buf->size) {
 		buf->size = buf->length + len + 256;
-		buf->data = xrealloc(buf->data, buf->size);
+		buf->data = mdvi_realloc(buf->data, buf->size);
 	}
 	memcpy(buf->data + buf->length, data, len);
 	buf->length += len;
@@ -174,7 +174,7 @@ char	*buff_gets(Buffer *buf, size_t *length)
 		return NULL;
 	ptr++; /* include newline */
 	len = ptr - buf->data;
-	ret = xmalloc(len + 1);
+	ret = mdvi_malloc(len + 1);
 	if(len > 0) {
 		memcpy(ret, buf->data, len);
 		memmove(buf->data, buf->data + len, buf->length - len);

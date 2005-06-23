@@ -1,3 +1,58 @@
+2005-06-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* dvi/mdvi-lib/bitmap.c: (bitmap_alloc), (bitmap_alloc_raw),
+	(bitmap_flip_horizontally), (bitmap_flip_vertically),
+	(bitmap_flip_diagonally), (bitmap_rotate_clockwise),
+	(bitmap_rotate_counter_clockwise), (bitmap_flip_rotate_clockwise),
+	(bitmap_flip_rotate_counter_clockwise):
+	* dvi/mdvi-lib/color.c: (mdvi_push_color), (get_color_table):
+	* dvi/mdvi-lib/common.c: (read_string), (buff_free), (buff_add),
+	(buff_gets):
+	* dvi/mdvi-lib/common.h:
+	* dvi/mdvi-lib/dvimisc.c: (mdvi_push_color):
+	* dvi/mdvi-lib/dviread.c: (get_bytes), (dreset), (define_font),
+	(opendvi), (mdvi_reload), (mdvi_init_context),
+	(mdvi_destroy_context), (mdvi_dopage), (special):
+	* dvi/mdvi-lib/font.c: (font_drop_one), (font_free_unused):
+	* dvi/mdvi-lib/fontmap.c: (read_encoding), (destroy_encoding),
+	(file_hash_free), (register_encoding), (parse_spec),
+	(mdvi_load_fontmap), (free_ent), (mdvi_init_fontmaps),
+	(mdvi_add_fontmap_file), (mdvi_ps_read_fontmap),
+	(mdvi_ps_flush_fonts), (mdvi_ps_find_font), (mdvi_ps_get_metrics):
+	* dvi/mdvi-lib/fontsrch.c: (mdvi_list_font_class),
+	(mdvi_register_font_type), (mdvi_unregister_font_type),
+	(lookup_font), (mdvi_add_font), (mdvi_font_retry):
+	* dvi/mdvi-lib/gf.c: (gf_read_bitmap), (gf_load_font):
+	* dvi/mdvi-lib/hash.c: (mdvi_hash_remove), (mdvi_hash_remove_ptr),
+	(mdvi_hash_destroy_key), (mdvi_hash_reset):
+	* dvi/mdvi-lib/pagesel.c: (mdvi_parse_range),
+	(mdvi_parse_page_spec), (mdvi_free_page_spec), (main):
+	* dvi/mdvi-lib/paper.c: (mdvi_free_paper_specs):
+	* dvi/mdvi-lib/pk.c: (pk_lookup), (pk_lookupn), (pk_load_font):
+	* dvi/mdvi-lib/sp-epsf.c: (epsf_special):
+	* dvi/mdvi-lib/special.c: (mdvi_register_special),
+	(mdvi_unregister_special), (mdvi_flush_specials):
+	* dvi/mdvi-lib/t1.c: (t1_lookup_font), (t1_really_load_font),
+	(t1_font_remove):
+	* dvi/mdvi-lib/tfm.c: (get_tfm_chars):
+	* dvi/mdvi-lib/tfmfile.c: (afm_load_file), (tfm_load_file),
+	(ofm1_load_file), (ofm_load_file), (get_font_metrics),
+	(free_font_metrics), (flush_font_metrics):
+	* dvi/mdvi-lib/tt.c: (tt_really_load_font), (tt_get_bitmap),
+	(tt_font_remove):
+	* dvi/mdvi-lib/util.c: (mdvi_malloc), (mdvi_realloc),
+	(mdvi_calloc), (mdvi_free), (mdvi_strdup), (mdvi_strncpy),
+	(mdvi_strndup), (mdvi_memdup), (xstradd), (dstring_append),
+	(dstring_insert), (dstring_new), (dstring_reset):
+	* dvi/mdvi-lib/vf.c: (vf_load_font), (vf_free_macros):
+	
+	Rename xmalloc and xfree to mdvi_malloc and mdvi_free to
+	avoid conflict with libtool on FC4
+	
+	* shell/ev-window.c: (ev_window_cmd_help_about):
+	
+	Update copyright year. Fix for bug 308828.
+
 2005-06-23  Nikolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view.c: (add_scroll_binding_keypad),

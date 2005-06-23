@@ -123,7 +123,7 @@ char	*t1_lookup_font(const char *name, Ushort *hdpi, Ushort *vdpi)
 		DEBUG((DBG_TYPE1, "(t1) %s: found `%s' (cached)\n",
 			name, info.fullfile));
 		/* this is a cached lookup */
-		return xstrdup(info.fullfile);
+		return mdvi_strdup(info.fullfile);
 	}
 	
 	/* no file associated to this font? */
@@ -142,7 +142,7 @@ char	*t1_lookup_font(const char *name, Ushort *hdpi, Ushort *vdpi)
 
 	/* get the `base' name */
 	if(ext) {
-		newname = xstrdup(name);
+		newname = mdvi_strdup(name);
 		newname[ext - info.fontfile - 1] = 0;
 	} else
 		newname = (char *)name; /* we don't modify this */
@@ -154,7 +154,7 @@ char	*t1_lookup_font(const char *name, Ushort *hdpi, Ushort *vdpi)
 
 	/* we don't need this anymore */
 	if(newname != name)
-		xfree(newname);
+		mdvi_free(newname);
 	if(filename == NULL) {
 		DEBUG((DBG_TYPE1, "(t1) %s: not found\n", name));
 		return NULL;
@@ -312,7 +312,7 @@ static int t1_really_load_font(DviParams *params, DviFont *font, T1Info *info)
 	i = info->tfminfo->hic - info->tfminfo->loc + 1;
 	if(i != font->hic - font->loc + 1) {
 		/* reset to optimal size */
-		font->chars = xrealloc(font->chars, i * sizeof(DviFontChar));
+		font->chars = mdvi_realloc(font->chars, i * sizeof(DviFontChar));
 	}
 
 	/* get the scaled characters metrics */
@@ -330,7 +330,7 @@ t1_error:
 	/* first destroy the private data */
 	t1_font_remove(info);
 	/* now reset all chars -- this is the important part */
-	xfree(font->chars);
+	mdvi_free(font->chars);
 	font->chars = NULL;
 	font->loc = font->hic = 0;
 	return -1;
@@ -598,8 +598,8 @@ static void t1_font_remove(T1Info *info)
 
 	if(info->tfminfo)
 		free_font_metrics(info->tfminfo);
-	/*xfree(info->fontname);*/
-	xfree(info);
+	/*mdvi_free(info->fontname);*/
+	mdvi_free(info);
 }
 
 static void t1_free_data(DviFont *font)

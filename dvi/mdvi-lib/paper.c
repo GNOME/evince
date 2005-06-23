@@ -166,5 +166,5 @@ DviPaperSpec *mdvi_get_paper_specs(DviPaperClass pclass)
 
 void	mdvi_free_paper_specs(DviPaperSpec *spec)
 {
-	xfree(spec);
+	mdvi_free(spec);
 }

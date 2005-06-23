@@ -274,7 +274,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 
 tt_error:
 	tt_font_remove(info);
-	xfree(font->chars);
+	mdvi_free(font->chars);
 	font->chars = NULL;
 	font->loc = font->hic = 0;
 	return -1;
@@ -377,13 +377,13 @@ static int tt_get_bitmap(DviParams *params, DviFont *font,
 	raster.cols = ROUND(w, 8);
 	raster.size = h * raster.cols;
 	raster.flow = TT_Flow_Down;
-	raster.bitmap = xcalloc(h, raster.cols);
+	raster.bitmap = mdvi_calloc(h, raster.cols);
 	
 	TT_Translate_Outline(&outline, -bbox.xMin, -bbox.yMin);
 	TT_Get_Outline_Bitmap(tt_handle, &outline, &raster);
 	glyph->data = bitmap_convert_msb8(raster.bitmap, w, h);
 	TT_Done_Outline(&outline);
-	xfree(raster.bitmap);
+	mdvi_free(raster.bitmap);
 	
 	return 0;
 tt_error:
@@ -474,8 +474,8 @@ static void tt_font_remove(FTInfo *info)
 	if(info->tfminfo)
 		free_font_metrics(info->tfminfo);
 	if(info->fmfname)
-		xfree(info->fmfname);
-	xfree(info);
+		mdvi_free(info->fmfname);
+	mdvi_free(info);
 }
 
 static void tt_free_data(DviFont *font)

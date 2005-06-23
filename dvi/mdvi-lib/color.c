@@ -34,7 +34,7 @@ void	mdvi_push_color(DviContext *dvi, Ulong fg, Ulong bg)
 {
 	if(dvi->color_top == dvi->color_size) {
 		dvi->color_size += 32;
-		dvi->color_stack = xrealloc(dvi->color_stack,
+		dvi->color_stack = mdvi_realloc(dvi->color_stack,
 			dvi->color_size * sizeof(DviColorPair));
 	}
 	dvi->color_stack[dvi->color_top].fg = dvi->curr_fg;
@@ -115,13 +115,13 @@ Ulong	*get_color_table(DviDevice *dev,
 		cc->pixels = NULL;
 	} else {
 		cc = tofree;
-		xfree(cc->pixels);
+		mdvi_free(cc->pixels);
 	}
 	pixels = xnalloc(Ulong, nlevels);
 	status = dev->alloc_colors(dev->device_data, 
 		pixels, nlevels, fg, bg, gamma, density);
 	if(status < 0) {
-		xfree(pixels);
+		mdvi_free(pixels);
 		return NULL;
 	}
 	cc->fg = fg;

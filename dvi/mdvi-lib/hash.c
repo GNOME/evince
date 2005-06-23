@@ -156,7 +156,7 @@ void	*mdvi_hash_remove(DviHashTable *hash, DviHashKey key)
 
 	if(buck) {
 		data = buck->data;
-		xfree(buck);
+		mdvi_free(buck);
 	}
 	return data;
 }
@@ -184,7 +184,7 @@ void	*mdvi_hash_remove_ptr(DviHashTable *hash, DviHashKey key)
 	hash->nkeys--;
 	/* destroy the bucket */
 	ptr = buck->data;
-	xfree(buck);
+	mdvi_free(buck);
 	return ptr;
 }
 
@@ -196,7 +196,7 @@ int	mdvi_hash_destroy_key(DviHashTable *hash, DviHashKey key)
 		return -1;
 	if(hash->hash_free)
 		hash->hash_free(buck->key, buck->data);
-	xfree(buck);
+	mdvi_free(buck);
 	return 0;	
 }
 
@@ -211,12 +211,12 @@ void	mdvi_hash_reset(DviHashTable *hash, int reuse)
 			hash->buckets[i] = buck->next;
 			if(hash->hash_free)
 				hash->hash_free(buck->key, buck->data);
-			xfree(buck);
+			mdvi_free(buck);
 		}
 	}
 	hash->nkeys = 0;
 	if(!reuse && hash->buckets) {
-		xfree(hash->buckets);
+		mdvi_free(hash->buckets);
 		hash->buckets = NULL;
 		hash->nbucks = 0;
 	} /* otherwise, it is left empty, ready to be reused */

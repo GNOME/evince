@@ -99,12 +99,12 @@ int	mdvi_register_special(const char *label, const char *prefix,
 	sp = find_special_prefix(prefix);
 	if(sp == NULL) {
 		sp = xalloc(DviSpecial);
-		sp->prefix = xstrdup(prefix);
+		sp->prefix = mdvi_strdup(prefix);
 		newsp = 1;
 	} else if(!replace)
 		return -1;
 	else {
-		xfree(sp->label);
+		mdvi_free(sp->label);
 		sp->label = NULL;
 	}
 
@@ -115,15 +115,15 @@ int	mdvi_register_special(const char *label, const char *prefix,
 	}
 	if(regex && regcomp(&sp->reg, regex, REG_NOSUB) != 0) {
 		if(newsp) {
-			xfree(sp->prefix);
-			xfree(sp);
+			mdvi_free(sp->prefix);
+			mdvi_free(sp);
 		}
 		return -1;
 	}
 	sp->has_reg = (regex != NULL);
 #endif
 	sp->handler = handler;
-	sp->label = xstrdup(label);
+	sp->label = mdvi_strdup(label);
 	sp->plen = strlen(prefix);
 	if(newsp)
 		listh_prepend(&specials, LIST(sp));		
@@ -140,13 +140,13 @@ int	mdvi_unregister_special(const char *prefix)
 	sp = find_special_prefix(prefix);	
 	if(sp == NULL)
 		return -1;
-	xfree(sp->prefix);
+	mdvi_free(sp->prefix);
 #ifdef WITH_REGEX_SPECIALS
 	if(sp->has_reg)
 		regfree(&sp->reg);
 #endif
 	listh_remove(&specials, LIST(sp));
-	xfree(sp);
+	mdvi_free(sp);
 	return 0;
 }
 
@@ -216,13 +216,13 @@ void	mdvi_flush_specials(void)
 	
 	for(list = (DviSpecial *)specials.head; (sp = list); ) {
 		list = sp->next;
-		if(sp->prefix) xfree(sp->prefix);
-		if(sp->label) xfree(sp->label);
+		if(sp->prefix) mdvi_free(sp->prefix);
+		if(sp->label) mdvi_free(sp->label);
 #ifdef WITH_REGEX_SPECIALS
 		if(sp->has_reg)
 			regfree(&sp->reg);
 #endif
-		xfree(sp);
+		mdvi_free(sp);
 	}
 	specials.head = NULL;
 	specials.tail = NULL;

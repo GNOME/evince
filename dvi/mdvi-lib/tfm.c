@@ -93,7 +93,7 @@ int	get_tfm_chars(DviParams *params, DviFont *font, TFMInfo *info, int loaded)
 	
 	n = info->hic - info->loc + 1;
 	if(n != FONT_GLYPH_COUNT(font)) {
-		font->chars = xrealloc(font->chars,
+		font->chars = mdvi_realloc(font->chars,
 			n * sizeof(DviFontChar));
 	}
 	font->loc = info->loc;

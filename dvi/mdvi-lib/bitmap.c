@@ -210,7 +210,7 @@ BITMAP	*bitmap_alloc(int w, int h)
 	bm->height = h;
 	bm->stride = BM_BYTES_PER_LINE(bm);
 	if(h && bm->stride)
-		bm->data = (BmUnit *)xcalloc(h, bm->stride);
+		bm->data = (BmUnit *)mdvi_calloc(h, bm->stride);
 	else
 		bm->data = NULL;
 	
@@ -226,7 +226,7 @@ BITMAP	*bitmap_alloc_raw(int w, int h)
 	bm->height = h;
 	bm->stride = BM_BYTES_PER_LINE(bm);
 	if(h && bm->stride)
-		bm->data = (BmUnit *)xmalloc(h * bm->stride);
+		bm->data = (BmUnit *)mdvi_malloc(h * bm->stride);
 	else
 		bm->data = NULL;
 	
@@ -386,7 +386,7 @@ void bitmap_flip_horizontally(BITMAP *bm)
 	nb.width = bm->width;
 	nb.height = bm->height;
 	nb.stride = bm->stride;
-	nb.data = xcalloc(bm->height, bm->stride);
+	nb.data = mdvi_calloc(bm->height, bm->stride);
 		
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width-1, 0);
@@ -416,7 +416,7 @@ void bitmap_flip_horizontally(BITMAP *bm)
 	}
 	DEBUG((DBG_BITMAP_OPS, "flip_horizontally (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -432,7 +432,7 @@ void	bitmap_flip_vertically(BITMAP *bm)
 	nb.width = bm->width;
 	nb.height = bm->height;
 	nb.stride = bm->stride;
-	nb.data = xcalloc(bm->height, bm->stride);
+	nb.data = mdvi_calloc(bm->height, bm->stride);
 	
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, 0, nb.height-1);
@@ -457,7 +457,7 @@ void	bitmap_flip_vertically(BITMAP *bm)
 	}
 	DEBUG((DBG_BITMAP_OPS, "flip_vertically (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -473,7 +473,7 @@ void	bitmap_flip_diagonally(BITMAP *bm)
 	nb.width = bm->width;
 	nb.height = bm->height;
 	nb.stride = bm->stride;
-	nb.data = xcalloc(bm->height, bm->stride);
+	nb.data = mdvi_calloc(bm->height, bm->stride);
 	
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width-1, nb.height-1);
@@ -503,7 +503,7 @@ void	bitmap_flip_diagonally(BITMAP *bm)
 	}
 	DEBUG((DBG_BITMAP_OPS, "flip_diagonally (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -519,7 +519,7 @@ void	bitmap_rotate_clockwise(BITMAP *bm)
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
-	nb.data = xcalloc(nb.height, nb.stride);
+	nb.data = mdvi_calloc(nb.height, nb.stride);
 	
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width - 1, 0);
@@ -552,7 +552,7 @@ void	bitmap_rotate_clockwise(BITMAP *bm)
 
 	DEBUG((DBG_BITMAP_OPS, "rotate_clockwise (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
 	bm->height = nb.height;	
@@ -571,7 +571,7 @@ void	bitmap_rotate_counter_clockwise(BITMAP *bm)
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
-	nb.data = xcalloc(nb.height, nb.stride);
+	nb.data = mdvi_calloc(nb.height, nb.stride);
 	
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, 0, nb.height - 1);
@@ -604,7 +604,7 @@ void	bitmap_rotate_counter_clockwise(BITMAP *bm)
 
 	DEBUG((DBG_BITMAP_OPS, "rotate_counter_clockwise (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
 	bm->height = nb.height;	
@@ -623,7 +623,7 @@ void	bitmap_flip_rotate_clockwise(BITMAP *bm)
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
-	nb.data = xcalloc(nb.height, nb.stride);
+	nb.data = mdvi_calloc(nb.height, nb.stride);
 	
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width-1, nb.height-1);
@@ -655,7 +655,7 @@ void	bitmap_flip_rotate_clockwise(BITMAP *bm)
 	}
 	DEBUG((DBG_BITMAP_OPS, "flip_rotate_clockwise (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
 	bm->height = nb.height;	
@@ -674,7 +674,7 @@ void	bitmap_flip_rotate_counter_clockwise(BITMAP *bm)
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
-	nb.data = xcalloc(nb.height, nb.stride);
+	nb.data = mdvi_calloc(nb.height, nb.stride);
 	
 	fptr = bm->data;
 	tptr = nb.data;
@@ -707,7 +707,7 @@ void	bitmap_flip_rotate_counter_clockwise(BITMAP *bm)
 
 	DEBUG((DBG_BITMAP_OPS, "flip_rotate_counter_clockwise (%d,%d) -> (%d,%d)\n",
 		bm->width, bm->height, nb.width, nb.height));
-	xfree(bm->data);
+	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
 	bm->height = nb.height;	

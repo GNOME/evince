@@ -191,7 +191,7 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 				s = read_string(p, op - GF_XXX1 + 1, NULL, 0);
 				DEBUG((DBG_SPECIAL, "(gf) Character %d: Special \"%s\"\n",
 					ch->code, s));
-				xfree(s);
+				mdvi_free(s);
 #else
 				n = fugetn(p, op - GF_XXX1 + 1);
 				fseek(p, (long)n, SEEK_CUR);
@@ -362,7 +362,7 @@ badgf:
 	error(_("%s: File corrupted, or not a GF file\n"), font->fontname);
 error:
 	if(font->chars) {
-		xfree(font->chars);
+		mdvi_free(font->chars);
 		font->chars = NULL;
 	}
 	font->loc = font->hic = 0;

@@ -33,7 +33,7 @@ void	mdvi_push_color(DviContext *dvi, Ulong fg, Ulong bg)
 {
 	if(dvi->color_top == dvi->color_size) {
 		dvi->color_size += 32;
-		dvi->color_stack = xrealloc(dvi->color_stack,
+		dvi->color_stack = mdvi_realloc(dvi->color_stack,
 			dvi->color_size * sizeof(DviColorPair));
 	}
 	dvi->color_stack[dvi->color_top].fg = dvi->curr_fg;

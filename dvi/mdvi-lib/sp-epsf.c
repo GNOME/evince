@@ -242,7 +242,7 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 	
 	file = parse_epsf_special(&box, &special, prefix, arg);
 	if(file != NULL)
-		xfree(special);
+		mdvi_free(special);
 	/* 
 	 * draw the bounding box. Notice that it is in PostScript units,
 	 * so we have to convert it into pixels

@@ -116,7 +116,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		hdpi = FROUND(params->mag * params->dpi * scale / design);
 		vdpi = FROUND(params->mag * params->vdpi * scale / design);
 		n = fuget1(p) + fuget1(p);
-		name = xmalloc(n + 1);
+		name = mdvi_malloc(n + 1);
 		fread(name, 1, n, p);
 		name[n] = 0;
 		DEBUG((DBG_FONTS, "(vf) %s: defined font `%s' at %.1fpt (%dx%d dpi)\n",
@@ -130,7 +130,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 				font->fontname, name);
 			goto error;
 		}
-		xfree(name);
+		mdvi_free(name);
 		if(last == NULL)
 			font->subfonts = last = ref;
 		else
@@ -228,13 +228,13 @@ badvf:
 	error(_("%s: File corrupted, or not a VF file.\n"), font->fontname);
 error:
 	if(font->chars)
-		xfree(font->chars);
+		mdvi_free(font->chars);
 	if(macros)
-		xfree(macros);
+		mdvi_free(macros);
 	return -1;
 }
 
 static void vf_free_macros(DviFont *font)
 {
-	xfree(font->private);	
+	mdvi_free(font->private);	
 }

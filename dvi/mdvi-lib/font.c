@@ -74,7 +74,7 @@ void	font_drop_one(DviFontRef *ref)
 	DviFont *font;
 	
 	font = ref->ref;
-	xfree(ref);
+	mdvi_free(ref);
 	/* drop all children */
 	for(ref = font->subfonts; ref; ref = ref->next) {
 		/* just adjust the reference counts */
@@ -131,7 +131,7 @@ int	font_free_unused(DviDevice *dev)
 		/* get rid of subfonts (but can't use `drop_chain' here) */
 		for(; (ref = font->subfonts); ) {
 			font->subfonts = ref->next;
-			xfree(ref);
+			mdvi_free(ref);
 		}
 		/* remove this font */
 		font_reset_font_glyphs(dev, font, MDVI_FONTSEL_GLYPH);
@@ -140,10 +140,10 @@ int	font_free_unused(DviDevice *dev)
 			font->finfo->freedata(font);
 		/* destroy characters */
 		if(font->chars)
-			xfree(font->chars);
-		xfree(font->fontname);
-		xfree(font->filename);
-		xfree(font);
+			mdvi_free(font->chars);
+		mdvi_free(font->fontname);
+		mdvi_free(font->filename);
+		mdvi_free(font);
 	}
 	DEBUG((DBG_FONTS, "%d unused fonts removed\n", count));
 	return count;

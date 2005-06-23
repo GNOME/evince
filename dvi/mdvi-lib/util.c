@@ -203,7 +203,7 @@ void	fatal(const char *format, ...)
 #endif
 }
 
-void	*xmalloc(size_t nelems)
+void	*mdvi_malloc(size_t nelems)
 {
 	void	*ptr = malloc(nelems);
 	
@@ -213,7 +213,7 @@ void	*xmalloc(size_t nelems)
 	return ptr;
 }
 
-void	*xrealloc(void *data, size_t newsize)
+void	*mdvi_realloc(void *data, size_t newsize)
 {
 	void	*ptr;
 	
@@ -225,7 +225,7 @@ void	*xrealloc(void *data, size_t newsize)
 	return ptr;	
 }
 
-void	*xcalloc(size_t nmemb, size_t size)
+void	*mdvi_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
 	
@@ -241,33 +241,33 @@ void	*xcalloc(size_t nmemb, size_t size)
 	return ptr;
 }
 
-void	xfree(void *ptr)
+void	mdvi_free(void *ptr)
 {
 	if(ptr == NULL)
 		crash(_("attempted to free NULL pointer\n"));
 	free(ptr);
 }
 
-char	*xstrdup(const char *string)
+char	*mdvi_strdup(const char *string)
 {
 	int	length;
 	char	*ptr;
 	
 	length = strlen(string) + 1;
-	ptr = (char *)xmalloc(length);
+	ptr = (char *)mdvi_malloc(length);
 	memcpy(ptr, string, length);
 	return ptr;
 }
 
 /* `to' should have room for length+1 bytes */
-char	*xstrncpy(char *to, const char *from, size_t length)
+char	*mdvi_strncpy(char *to, const char *from, size_t length)
 {
 	strncpy(to, from, length);
 	to[length] = '\0';
 	return to;
 }
 
-char	*xstrndup(const char *string, size_t length)
+char	*mdvi_strndup(const char *string, size_t length)
 {
 	int	n;
 	char	*ptr;
@@ -275,14 +275,14 @@ char	*xstrndup(const char *string, size_t length)
 	n = strlen(string);
 	if(n > length)
 		n = length;
-	ptr = (char *)xmalloc(n + 1);
+	ptr = (char *)mdvi_malloc(n + 1);
 	memcpy(ptr, string, n);
 	return ptr;
 }
 
-void	*xmemdup(const void *data, size_t length)
+void	*mdvi_memdup(const void *data, size_t length)
 {
-	void	*ptr = xmalloc(length);
+	void	*ptr = mdvi_malloc(length);
 	
 	memcpy(ptr, data, length);
 	return ptr;
@@ -352,7 +352,7 @@ char	*xstradd(char *dest, size_t *size, size_t n, const char *src, size_t m)
 	if(m == 0)
 		m = strlen(src);
 	if(n + m >= *size) {
-		dest = xrealloc(dest, n + m + 1);
+		dest = mdvi_realloc(dest, n + m + 1);
 		*size = n + m + 1;
 	}
 	memcpy(dest + n, src, m);
@@ -421,7 +421,7 @@ int	dstring_append(Dstring *dstr, const char *string, int len)
 	if(len) {
 		if(dstr->length + len >= dstr->size) {
 			dstr->size = pow2(dstr->length + len + 1);
-			dstr->data = xrealloc(dstr->data, dstr->size);
+			dstr->data = mdvi_realloc(dstr->data, dstr->size);
 		}
 		memcpy(dstr->data + dstr->length, string, len);
 		dstr->length += len;
@@ -429,7 +429,7 @@ int	dstring_append(Dstring *dstr, const char *string, int len)
 	} else if(dstr->size == 0) {
 		ASSERT(dstr->data == NULL);
 		dstr->size = 8;
-		dstr->data = xmalloc(8);
+		dstr->data = mdvi_malloc(8);
 		dstr->data[0] = 0;
 	}
 		
@@ -461,7 +461,7 @@ int	dstring_insert(Dstring *dstr, int pos, const char *string, int len)
 	if(len) {
 		if(dstr->length + len >= dstr->size) {
 			dstr->size = pow2(dstr->length + len + 1);
-			dstr->data = xrealloc(dstr->data, dstr->size);
+			dstr->data = mdvi_realloc(dstr->data, dstr->size);
 		}
 		/* make room */
 		memmove(dstr->data + pos, dstr->data + pos + len, len);
@@ -479,7 +479,7 @@ int	dstring_new(Dstring *dstr, const char *string, int len)
 		len = strlen(string);
 	if(len) {
 		dstr->size = pow2(len + 1);
-		dstr->data = xmalloc(dstr->size * len);
+		dstr->data = mdvi_malloc(dstr->size * len);
 		memcpy(dstr->data, string, len);
 	} else
 		dstring_init(dstr);
@@ -489,7 +489,7 @@ int	dstring_new(Dstring *dstr, const char *string, int len)
 void	dstring_reset(Dstring *dstr)
 {
 	if(dstr->data)
-		xfree(dstr->data);
+		mdvi_free(dstr->data);
 	dstring_init(dstr);
 }
 

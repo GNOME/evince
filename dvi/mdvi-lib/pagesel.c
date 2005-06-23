@@ -53,7 +53,7 @@ DviRange *mdvi_parse_range(const char *format, DviRange *limit, int *nitems, cha
 	size  = 0;
 	curr  = 0;
 	range = NULL;
-	copy  = xstrdup(format);
+	copy  = mdvi_strdup(format);
 	done  = 0;
 	lower = 0;
 	upper = 0;
@@ -167,7 +167,7 @@ finish:
 		
 		if(curr == size) {
 			size += 8;
-			range = xrealloc(range, size * sizeof(DviRange));
+			range = mdvi_realloc(range, size * sizeof(DviRange));
 		}
 		memcpy(&range[curr++], &one, sizeof(DviRange));
 		*cp = ch;
@@ -180,9 +180,9 @@ finish:
 	if(endptr)
 		*endptr = (char *)format + (cp - copy);
 	if(curr && curr < size)
-		range = xrealloc(range, curr * sizeof(DviRange));
+		range = mdvi_realloc(range, curr * sizeof(DviRange));
 	*nitems = curr;
-	xfree(copy);
+	mdvi_free(copy);
 	return range;
 }
 
@@ -207,7 +207,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 	if(*format != '*') {
 		range = mdvi_parse_range(format, NULL, &count, &ptr);
 		if(ptr == format) {
-			if(range) xfree(range);
+			if(range) mdvi_free(range);
 			error(_("invalid page specification `%s'\n"), format);
 			return NULL;
 		}
@@ -242,7 +242,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 			
 			range = mdvi_parse_range(ptr, NULL, &count, &end);
 			if(end == ptr) {
-				if(range) xfree(range);
+				if(range) mdvi_free(range);
 				range = NULL;
 			} else
 				ptr = end;
@@ -294,10 +294,10 @@ void	mdvi_free_page_spec(DviPageSpec *spec)
 	
 	for(i = 0; i < 11; i++)
 		if(spec[i]) {
-			xfree(spec[i]->ranges);
-			xfree(spec[i]);
+			mdvi_free(spec[i]->ranges);
+			mdvi_free(spec[i]);
 		}
-	xfree(spec);
+	mdvi_free(spec);
 }
 
 int	mdvi_in_range(DviRange *range, int nitems, int value)
@@ -449,7 +449,7 @@ int main()
 			}
 		}
 #endif
-		if(range) xfree(range);
+		if(range) mdvi_free(range);
 	}
 #else
 	DviPageSpec *spec;

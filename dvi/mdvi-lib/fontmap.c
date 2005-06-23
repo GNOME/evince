@@ -136,14 +136,14 @@ static int read_encoding(DviEncoding *enc)
 	/* setup the hash table */
 	mdvi_hash_create(&enc->nametab, ENCNAME_HASH_SIZE);
 	/* setup the encoding vector */
-	enc->vector = (char **)xmalloc(256 * sizeof(char *));
+	enc->vector = (char **)mdvi_malloc(256 * sizeof(char *));
 
 	/* jump to the beginning of the interesting part */
 	fseek(in, enc->offset, SEEK_SET);
 	/* and read everything */
 	if(fread(enc->private, st.st_size, 1, in) != 1) {
 		fclose(in);
-		xfree(enc->private);
+		mdvi_free(enc->private);
 		enc->private = NULL;
 		return -1;
 	}
@@ -188,8 +188,8 @@ static int read_encoding(DviEncoding *enc)
 	}
 	if(curr == 0) {
 		mdvi_hash_reset(&enc->nametab, 0);
-		xfree(enc->private);
-		xfree(enc);
+		mdvi_free(enc->private);
+		mdvi_free(enc);
 		return -1;
 	}
 	while(curr < 256)
@@ -213,21 +213,21 @@ static void destroy_encoding(DviEncoding *enc)
 	if(enc != tex_text_encoding) {
 		mdvi_hash_reset(&enc->nametab, 0);
 		if(enc->private) {
-			xfree(enc->private);
-			xfree(enc->vector);
+			mdvi_free(enc->private);
+			mdvi_free(enc->vector);
 		}
 		if(enc->name)
-			xfree(enc->name);
+			mdvi_free(enc->name);
 		if(enc->filename)
-			xfree(enc->filename);
-		xfree(enc);
+			mdvi_free(enc->filename);
+		mdvi_free(enc);
 	}
 }
 
 /* this is used for the `enctable_file' hash table */
 static void file_hash_free(DviHashKey key, void *data)
 {
-	xfree(key);
+	mdvi_free(key);
 }
 
 static DviEncoding *register_encoding(const char *basefile, int replace)
@@ -264,11 +264,11 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 
 	/* finally try the given name */
 	if(filename == NULL)
-		filename = xstrdup(basefile);
+		filename = mdvi_strdup(basefile);
 
 	in = fopen(filename, "r");
 	if(in == NULL) {
-		xfree(filename);
+		mdvi_free(filename);
 		return NULL;
 	}
 	
@@ -299,7 +299,7 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 		DEBUG((DBG_FMAP, 
 			"%s: could not determine name of encoding\n",
 			basefile));
-		xfree(filename);
+		mdvi_free(filename);
 		return NULL;
 	}
 	
@@ -315,7 +315,7 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 	} else if(enc) {
 		/* if the encoding is being used, refuse to remove it */
 		if(enc->links) {
-			xfree(filename);
+			mdvi_free(filename);
 			dstring_reset(&input);
 			return NULL;
 		}
@@ -330,13 +330,13 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 			DEBUG((DBG_FMAP, "%s: overriding encoding\n", name));
 			destroy_encoding(enc);
 		} else {
-			xfree(filename);
+			mdvi_free(filename);
 			dstring_reset(&input);
 			return enc; /* no error */
 		}
 	}
 	enc = xalloc(DviEncoding);
-	enc->name = xstrdup(name);
+	enc->name = mdvi_strdup(name);
 	enc->filename = filename;
 	enc->links = 0;
 	enc->offset = offset;
@@ -348,7 +348,7 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 		default_encoding = enc;
 	mdvi_hash_add(&enctable, MDVI_KEY(enc->name), 
 		enc, MDVI_HASH_UNCHECKED);
-	mdvi_hash_add(&enctable_file, MDVI_KEY(xstrdup(basefile)), 
+	mdvi_hash_add(&enctable_file, MDVI_KEY(mdvi_strdup(basefile)), 
 		enc, MDVI_HASH_REPLACE);
 	listh_prepend(&encodings, LIST(enc));
 	DEBUG((DBG_FMAP, "%s: encoding `%s' registered\n",
@@ -441,8 +441,8 @@ static void parse_spec(DviFontMapEnt *ent, char *spec)
 			ent->extend = SFROUND(x);
 		} else if(STREQ(command, "ReEncodeFont")) {
 			if(ent->encoding)
-				xfree(ent->encoding);
-			ent->encoding = xstrdup(arg);
+				mdvi_free(ent->encoding);
+			ent->encoding = mdvi_strdup(arg);
 		}
 	}
 }
@@ -480,7 +480,7 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 		in = fopen(file, "r");			
 	else {
 		in = fopen(ptr, "r");
-		xfree(ptr);
+		mdvi_free(ptr);
 	}
 	if(in == NULL)
 		return NULL;
@@ -566,10 +566,10 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 
 		if(tex_name == NULL)
 			continue;
-		ent->fontname = xstrdup(tex_name);
-		ent->psname   = ps_name   ? xstrdup(ps_name)   : NULL;
-		ent->fontfile = font_file ? xstrdup(font_file) : NULL;
-		ent->encfile  = vec_name  ? xstrdup(vec_name)  : NULL;
+		ent->fontname = mdvi_strdup(tex_name);
+		ent->psname   = ps_name   ? mdvi_strdup(ps_name)   : NULL;
+		ent->fontfile = font_file ? mdvi_strdup(font_file) : NULL;
+		ent->encfile  = vec_name  ? mdvi_strdup(vec_name)  : NULL;
 		ent->fullfile = NULL;
 		enc = NULL; /* we don't have this yet */
 
@@ -589,7 +589,7 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 	_("%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"),
 					file, lineno);
 			} else if(!ent->encoding)
-				ent->encoding = xstrdup(enc->name);
+				ent->encoding = mdvi_strdup(enc->name);
 		}
 		
 		/* add it to the list */
@@ -606,18 +606,18 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 static void free_ent(DviFontMapEnt *ent)
 {
 	ASSERT(ent->fontname != NULL);
-	xfree(ent->fontname);
+	mdvi_free(ent->fontname);
 	if(ent->psname)
-		xfree(ent->psname);
+		mdvi_free(ent->psname);
 	if(ent->fontfile)
-		xfree(ent->fontfile);
+		mdvi_free(ent->fontfile);
 	if(ent->encoding)
-		xfree(ent->encoding);
+		mdvi_free(ent->encoding);
 	if(ent->encfile)
-		xfree(ent->encfile);
+		mdvi_free(ent->encfile);
 	if(ent->fullfile)
-		xfree(ent->fullfile);
-	xfree(ent);
+		mdvi_free(ent->fullfile);
+	mdvi_free(ent);
 }
 
 void	mdvi_install_fontmap(DviFontMapEnt *head)
@@ -729,7 +729,7 @@ static int	mdvi_init_fontmaps(void)
 		in = fopen(config, "r");
 	else {
 		in = fopen(file, "r");
-		xfree(file);
+		mdvi_free(file);
 	}
 	if(in == NULL)
 		return -1;
@@ -768,14 +768,14 @@ static int	mdvi_init_fontmaps(void)
 			if(!psinitialized)
 				ps_init_default_paths();
 			if(psfontdir)
-				xfree(psfontdir);
+				mdvi_free(psfontdir);
 			psfontdir = kpse_path_expand(arg);
 		} else if(STRNEQ(line, "pslibpath", 9)) {
 			arg = getstring(line + 10, " \t", &line); *line = 0;
 			if(!psinitialized)
 				ps_init_default_paths();
 			if(pslibdir)
-				xfree(pslibdir);
+				mdvi_free(pslibdir);
 			pslibdir = kpse_path_expand(arg);
 		} else if(STRNEQ(line, "psfontmap", 9)) {
 			arg = getstring(line + 9, " \t", &line); *line = 0;
@@ -822,8 +822,8 @@ int	mdvi_add_fontmap_file(const char *name, const char *fullpath)
 	if(ent == NULL)
 		return -1;
 	if(ent->fullfile)
-		xfree(ent->fullfile);
-	ent->fullfile = xstrdup(fullpath);
+		mdvi_free(ent->fullfile);
+	ent->fullfile = mdvi_strdup(fullpath);
 	return 0;
 }
 
@@ -907,7 +907,7 @@ int	mdvi_ps_read_fontmap(const char *name)
 	in = fopen(fullname, "r");
 	if(in == NULL) {
 		if(fullname != name)
-			xfree(fullname);
+			mdvi_free(fullname);
 		return -1;
 	}
 	dstring_init(&dstr);
@@ -956,18 +956,18 @@ int	mdvi_ps_read_fontmap(const char *name)
 			DEBUG((DBG_FMAP, 
 				"(ps) replacing font `%s' (%s) by `%s'\n",
 				name, ps->mapname, mapname));
-			xfree(ps->mapname);
-			ps->mapname = xstrdup(mapname);
+			mdvi_free(ps->mapname);
+			ps->mapname = mdvi_strdup(mapname);
 			if(ps->fullname) {
-				xfree(ps->fullname);
+				mdvi_free(ps->fullname);
 				ps->fullname = NULL;
 			}
 		} else {
 			DEBUG((DBG_FMAP, "(ps) adding font `%s' as `%s'\n",
 				name, mapname));
 			ps = xalloc(PSFontMap);
-			ps->psname   = xstrdup(name);
-			ps->mapname  = xstrdup(mapname);
+			ps->psname   = mdvi_strdup(name);
+			ps->mapname  = mdvi_strdup(mapname);
 			ps->fullname = NULL;
 			listh_append(&psfonts, LIST(ps));
 			mdvi_hash_add(&pstable, MDVI_KEY(ps->psname),
@@ -994,19 +994,19 @@ void	mdvi_ps_flush_fonts(void)
 	mdvi_hash_reset(&pstable, 0);
 	for(; (map = (PSFontMap *)psfonts.head); ) {
 		psfonts.head = LIST(map->next);
-		xfree(map->psname);
-		xfree(map->mapname);
+		mdvi_free(map->psname);
+		mdvi_free(map->mapname);
 		if(map->fullname)
-			xfree(map->fullname);
-		xfree(map);
+			mdvi_free(map->fullname);
+		mdvi_free(map);
 	}
 	listh_init(&psfonts);
 	if(pslibdir) {
-		xfree(pslibdir);
+		mdvi_free(pslibdir);
 		pslibdir = NULL;
 	}
 	if(psfontdir) {
-		xfree(psfontdir);
+		mdvi_free(psfontdir);
 		psfontdir = NULL;
 	}
 	psinitialized = 0;
@@ -1025,7 +1025,7 @@ char	*mdvi_ps_find_font(const char *psname)
 	if(map == NULL)
 		return NULL;
 	if(map->fullname)
-		return xstrdup(map->fullname);
+		return mdvi_strdup(map->fullname);
 
 	/* is it an alias? */
 	smap = map;
@@ -1043,11 +1043,11 @@ char	*mdvi_ps_find_font(const char *psname)
 	if(psfontdir)
 		filename = kpse_path_search(psfontdir, smap->mapname, 1);
 	else if(file_exists(map->mapname))
-		filename = xstrdup(map->mapname);
+		filename = mdvi_strdup(map->mapname);
 	else
 		filename = NULL;
 	if(filename)
-		map->fullname = xstrdup(filename);
+		map->fullname = mdvi_strdup(filename);
 		
 	return filename;
 }
@@ -1113,21 +1113,21 @@ TFMInfo *mdvi_ps_get_metrics(const char *fontname)
 	if(baselen + 4 < 64)
 		afmfile = &buffer[0];
 	else
-		afmfile = xmalloc(baselen + 5);
+		afmfile = mdvi_malloc(baselen + 5);
 	strcpy(afmfile, basefile);
 	strcpy(afmfile + baselen, ".afm");
 	/* we don't need this anymore */
-	xfree(psfont);
+	mdvi_free(psfont);
 	DEBUG((DBG_FMAP, "(ps) %s: looking for `%s'\n",
 		fontname, afmfile));
 	/* lookup the file */
 	psfont = kpse_path_search(psfontdir, afmfile, 1);
 	/* don't need this anymore */
 	if(afmfile != &buffer[0])
-		xfree(afmfile);
+		mdvi_free(afmfile);
 	if(psfont != NULL) {
 		info = get_font_metrics(fontname, DviFontAFM, psfont);
-		xfree(psfont);
+		mdvi_free(psfont);
 	} else
 		info = NULL;
 	if(info == NULL || (!map.extend && !map.slant))

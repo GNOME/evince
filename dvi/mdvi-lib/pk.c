@@ -106,7 +106,7 @@ static char *pk_lookup(const char *name, Ushort *hdpi, Ushort *vdpi)
 	filename = kpse_find_glyph(name, Max(*hdpi, *vdpi),
 		kpse_pk_format, &type);
 	if(filename && type.source == kpse_glyph_source_fallback) {
-		xfree(filename);
+		mdvi_free(filename);
 		filename = NULL;
 	} else if(filename) {
 		*hdpi = *vdpi = type.dpi;
@@ -126,7 +126,7 @@ static char *pk_lookupn(const char *name, Ushort *hdpi, Ushort *vdpi)
 	filename = kpse_find_glyph(name, Max(*hdpi, *vdpi),
 		kpse_pk_format, &type);
 	if(filename && type.source == kpse_glyph_source_fallback) {
-		xfree(filename);
+		mdvi_free(filename);
 		filename = NULL;
 	} else if(filename) {
 		*hdpi = *vdpi = type.dpi;
@@ -392,14 +392,14 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 				if(i < 256)
 					t = &s[0];
 				else
-					t = xmalloc(i + 1);
+					t = mdvi_malloc(i + 1);
 				for(n = 0; n < i; n++)
 					t[n] = fuget1(p);
 				t[n] = 0;
 				DEBUG((DBG_SPECIAL, "(pk) %s: Special \"%s\"\n",
 					font->fontname, t));
 				if(t != &s[0])
-					xfree(t);
+					mdvi_free(t);
 #else
 				i = fugetn(p, flag_byte - PK_X1 + 1);
 				while(i-- > 0)
@@ -524,7 +524,7 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 badpk:
 	error(_("%s: File corrupted, or not a PK file\n"), font->fontname);
 error:
-	xfree(font->chars);
+	mdvi_free(font->chars);
 	font->chars = NULL;
 	font->loc = font->hic = 0;
 	return -1;

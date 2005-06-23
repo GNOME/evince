@@ -98,8 +98,8 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 	info->design = 0xa00000; /* fake -- 10pt */
 	info->checksum = 0; /* no checksum */
 	info->type = DviFontAFM;
-	xstrncpy(info->coding, fi->gfi->encodingScheme, 63);
-	xstrncpy(info->family, fi->gfi->familyName, 63);
+	mdvi_strncpy(info->coding, fi->gfi->encodingScheme, 63);
+	mdvi_strncpy(info->family, fi->gfi->familyName, 63);
 
 	/* now get the data */
 	for(cm = fi->cmi; cm < fi->cmi + fi->numOfChars; cm++) {
@@ -135,7 +135,7 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 		memmove(&info->chars[0],
 			&info->chars[info->loc],
 			(info->hic - info->loc + 1) * sizeof(TFMChar));
-		info->chars = xrealloc(info->chars,
+		info->chars = mdvi_realloc(info->chars,
 			(info->hic - info->loc + 1) * sizeof(TFMChar));
 	}
 
@@ -179,7 +179,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	if(size != st.st_size)
 		warning(_("Warning: TFM file `%s' has suspicious size\n"), 
 			filename);
-	tfm = (Uchar *)xmalloc(size);
+	tfm = (Uchar *)mdvi_malloc(size);
 	if(fread(tfm, st.st_size, 1, in) != 1)
 		goto error;
 	/* we don't need this anymore */
@@ -282,14 +282,14 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	}
 
 	/* free everything */
-	xfree(tfm);
+	mdvi_free(tfm);
 	
 	return 0;
 
 bad_tfm:
 	error(_("%s: File corrupted, or not a TFM file\n"), filename);
 error:
-	if(tfm) xfree(tfm);
+	if(tfm) mdvi_free(tfm);
 	if(in)  fclose(in);
 	return -1;	
 }
@@ -391,7 +391,7 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	tfm = xnalloc(Int32, size);
 	/* read them in one sweep */
 	if(fread(tfm, 4, size, in) != size) {
-		xfree(tfm);
+		mdvi_free(tfm);
 		goto bad_tfm;
 	}
 
@@ -418,11 +418,11 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	}
 
 	/* NOW we're done */
-	xfree(tfm);
+	mdvi_free(tfm);
 	return 0;
 
 bad_tfm:
-	if(tfm) xfree(tfm);
+	if(tfm) mdvi_free(tfm);
 	return -1;
 }
 
@@ -533,7 +533,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	size = 2*(ec - bc + 1) + nw + nh + nd;
 	tfm = xnalloc(Int32, size * sizeof(Int32));
 	if(fread(tfm, 4, size, in) != size) {
-		xfree(tfm);
+		mdvi_free(tfm);
 		goto bad_tfm;
 	}
 	/* byte-swap all the tables at once */
@@ -547,7 +547,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	depths   = cb;
 
 	if(widths[0] || heights[0] || depths[0]) {
-	   	xfree(tfm);
+	   	mdvi_free(tfm);
 		goto bad_tfm;
 	}
 
@@ -582,7 +582,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		info->chars[i-bc].depth = depths[ndx];
 	}
 
-	xfree(tfm);
+	mdvi_free(tfm);
 	return 0;
 
 bad_tfm:
@@ -686,12 +686,12 @@ TFMInfo	*get_font_metrics(const char *short_name, int type, const char *filename
 		break;
 	}
 	if(file != filename)
-		xfree(file);
+		mdvi_free(file);
 	if(status < 0) {
-		xfree(tfm);
+		mdvi_free(tfm);
 		return NULL;
 	}
-	tfm->short_name = xstrdup(short_name);
+	tfm->short_name = mdvi_strdup(short_name);
 	
 	/* add it to the pool */
 	if(tfmpool.count == 0)
@@ -726,9 +726,9 @@ void	free_font_metrics(TFMInfo *info)
 
 	DEBUG((DBG_FONTS, "(mt) removing unused TFM data for `%s'\n", tfm->short_name));
 	listh_remove(&tfmpool, LIST(tfm));
-	xfree(tfm->short_name);
-	xfree(tfm->tfminfo.chars);
-	xfree(tfm);	
+	mdvi_free(tfm->short_name);
+	mdvi_free(tfm->tfminfo.chars);
+	mdvi_free(tfm);	
 }
 
 void	flush_font_metrics(void)
@@ -738,9 +738,9 @@ void	flush_font_metrics(void)
 	for(; (ptr = (TFMPool *)tfmpool.head); ) {
 		tfmpool.head = LIST(ptr->next);
 		
-		xfree(ptr->short_name);
-		xfree(ptr->tfminfo.chars);
-		xfree(ptr);
+		mdvi_free(ptr->short_name);
+		mdvi_free(ptr->tfminfo.chars);
+		mdvi_free(ptr);
 	}
 	mdvi_hash_reset(&tfmhash, 0);
 }

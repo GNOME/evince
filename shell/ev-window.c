@@ -2174,7 +2174,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"name", _("Evince"),
 		"version", VERSION,
 		"copyright",
-		_("\xc2\xa9 1996-2004 The Evince authors"),
+		_("\xc2\xa9 1996-2005 The Evince authors"),
 		"license", license_trans,
 		"website", "http://www.gnome.org/projects/evince",
 		"comments", comments,

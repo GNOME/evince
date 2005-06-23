@@ -212,7 +212,7 @@ static int get_bytes(DviContext *dvi, size_t n)
 		if(dvi->buffer.data == NULL) {
 			/* first allocation */
 			dvi->buffer.size = Max(DVI_BUFLEN, n);
-			dvi->buffer.data = (Uchar *)xmalloc(dvi->buffer.size);
+			dvi->buffer.data = (Uchar *)mdvi_malloc(dvi->buffer.size);
 			dvi->buffer.length = 0;
 			dvi->buffer.frozen = 0;
 		} else if(dvi->buffer.pos < dvi->buffer.length) {
@@ -299,7 +299,7 @@ static long dtell(DviContext *dvi)
 static void dreset(DviContext *dvi)
 {
 	if(!dvi->buffer.frozen && dvi->buffer.data)
-		xfree(dvi->buffer.data);
+		mdvi_free(dvi->buffer.data);
 	dvi->buffer.data = NULL;
 	dvi->buffer.size = 0;
 	dvi->buffer.length = 0;
@@ -418,7 +418,7 @@ static DviFontRef *define_font(DviContext *dvi, int op)
 	hdpi = FROUND(dvi->params.mag * dvi->params.dpi * scale / dsize);
 	vdpi = FROUND(dvi->params.mag * dvi->params.vdpi * scale / dsize);
 	n = duget1(dvi) + duget1(dvi);
-	name = xmalloc(n + 1);
+	name = mdvi_malloc(n + 1);
 	dread(dvi, name, n);
 	name[n] = 0;
 	DEBUG((DBG_FONTS, "requesting font %d = `%s' at %.1fpt (%dx%d dpi)\n",
@@ -427,10 +427,10 @@ static DviFontRef *define_font(DviContext *dvi, int op)
 	ref = font_reference(&dvi->params, arg, name, checksum, hdpi, vdpi, scale);
 	if(ref == NULL) {
 		error(_("could not load font `%s'\n"), name);
-		xfree(name);
+		mdvi_free(name);
 		return NULL;
 	}
-	xfree(name);
+	mdvi_free(name);
 	return ref;
 }
 
@@ -444,11 +444,11 @@ static char *opendvi(const char *name)
 	if(len >= 4 && STREQ(name+len-4, ".dvi")) {
 		DEBUG((DBG_DVI|DBG_FILES, "opendvi: Trying `%s'\n", name));
 		if(access(name, R_OK) == 0)
-			return xstrdup(name);
+			return mdvi_strdup(name);
 	}
 		
 	/* try appending .dvi */
-	file = xmalloc(len + 5);
+	file = mdvi_malloc(len + 5);
 	strcpy(file, name);
 	strcpy(file+len, ".dvi");
 	DEBUG((DBG_DVI|DBG_FILES, "opendvi: Trying `%s'\n", file));
@@ -459,7 +459,7 @@ static char *opendvi(const char *name)
 	DEBUG((DBG_DVI|DBG_FILES, "opendvi: Trying `%s'\n", file));
 	if(access(file, R_OK) == 0)
 		return file;
-	xfree(file);
+	mdvi_free(file);
 	return NULL;
 }
 
@@ -488,7 +488,7 @@ int	mdvi_reload(DviContext *dvi, DviParams *np)
 	font_drop_chain(dvi->fonts);
 	/* destroy our font map */
 	if(dvi->fontmap)
-		xfree(dvi->fontmap);
+		mdvi_free(dvi->fontmap);
 	dvi->currfont = NULL;
 
 	/* and use the ones we just loaded */
@@ -505,27 +505,27 @@ int	mdvi_reload(DviContext *dvi, DviParams *np)
 	dvi->dvivconv = newdvi->dvivconv;
 	dvi->modtime = newdvi->modtime;
 
-	if(dvi->fileid) xfree(dvi->fileid);
+	if(dvi->fileid) mdvi_free(dvi->fileid);
 	dvi->fileid = newdvi->fileid;
 		
 	dvi->dvi_page_w = newdvi->dvi_page_w;
 	dvi->dvi_page_h = newdvi->dvi_page_h;
 
-	xfree(dvi->pagemap);
+	mdvi_free(dvi->pagemap);
 	dvi->pagemap = newdvi->pagemap;
 	dvi->npages = newdvi->npages;
 	if(dvi->currpage > dvi->npages-1)
 		dvi->currpage = 0;
 		
-	xfree(dvi->stack);
+	mdvi_free(dvi->stack);
 	dvi->stack = newdvi->stack;
 	dvi->stacksize = newdvi->stacksize;
 
 	/* remove fonts that are not being used anymore */
 	font_free_unused(&dvi->device);
 		
-	xfree(newdvi->filename);		
-	xfree(newdvi);
+	mdvi_free(newdvi->filename);		
+	mdvi_free(newdvi);
 
 	DEBUG((DBG_DVI, "%s: reload successful\n", dvi->filename));
 	if(dvi->device.refresh)
@@ -686,7 +686,7 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	p = fopen(filename, "r");
 	if(p == NULL) {
 		perror(file);
-		xfree(filename);
+		mdvi_free(filename);
 		return NULL;
 	}
 	dvi = xalloc(DviContext);
@@ -759,7 +759,7 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 
 	/* get the comment from the preamble */
 	n = fuget1(p);
-	dvi->fileid = xmalloc(n + 1);
+	dvi->fileid = mdvi_malloc(n + 1);
 	fread(dvi->fileid, 1, n, p);
 	dvi->fileid[n] = 0;
 	DEBUG((DBG_DVI, "%s: %s\n", filename, dvi->fileid));
@@ -918,23 +918,23 @@ void	mdvi_destroy_context(DviContext *dvi)
 		font_free_unused(&dvi->device);
 	}
 	if(dvi->fontmap)
-		xfree(dvi->fontmap);
+		mdvi_free(dvi->fontmap);
 	if(dvi->filename)
-		xfree(dvi->filename);
+		mdvi_free(dvi->filename);
 	if(dvi->stack)
-		xfree(dvi->stack);
+		mdvi_free(dvi->stack);
 	if(dvi->pagemap)
-		xfree(dvi->pagemap);
+		mdvi_free(dvi->pagemap);
 	if(dvi->fileid)
-		xfree(dvi->fileid);
+		mdvi_free(dvi->fileid);
 	if(dvi->in)
 		fclose(dvi->in);
 	if(dvi->buffer.data && !dvi->buffer.frozen)
-		xfree(dvi->buffer.data);
+		mdvi_free(dvi->buffer.data);
 	if(dvi->color_stack)
-		xfree(dvi->color_stack);
+		mdvi_free(dvi->color_stack);
 	
-	xfree(dvi);
+	mdvi_free(dvi);
 }
 
 void	mdvi_setpage(DviContext *dvi, int pageno)
@@ -1049,7 +1049,7 @@ again:
 	dvi->curr_layer = 0;
 	
 	if(dvi->buffer.data && !dvi->buffer.frozen)
-		xfree(dvi->buffer.data);
+		mdvi_free(dvi->buffer.data);
 
 	/* reset our buffer */
 	dvi->buffer.data   = NULL;
@@ -1536,13 +1536,13 @@ int	special(DviContext *dvi, int opcode)
 	Int32	arg;
 	
 	arg = dugetn(dvi, opcode - DVI_XXX1 + 1);
-	s = xmalloc(arg + 1);
+	s = mdvi_malloc(arg + 1);
 	dread(dvi, s, arg);
 	s[arg] = 0;
 	mdvi_do_special(dvi, s);
 	SHOWCMD((dvi, "XXXX", opcode - DVI_XXX1 + 1,
 		"[%s]", s));
-	xfree(s);
+	mdvi_free(s);
 	return 0;
 }
 
