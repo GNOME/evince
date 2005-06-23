@@ -213,13 +213,18 @@ update_action_sensitivity (EvWindow *ev_window)
 	int n_pages = 0, page = -1;
 	gboolean ok_to_print = TRUE;
 	gboolean ok_to_copy = TRUE;
+	gboolean has_properties = TRUE;
 
 	view = EV_VIEW (ev_window->priv->view);
+
 	document = ev_window->priv->document;
+
 	if (document)
 		info = ev_page_cache_get_info (ev_window->priv->page_cache);
+
 	page_mode = ev_window->priv->page_mode;
 	has_document = document != NULL;
+
 	if (has_document && ev_window->priv->page_cache) {
 		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
@@ -231,11 +236,15 @@ update_action_sensitivity (EvWindow *ev_window)
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
 	}
 
+	if (!info || info->fields_mask == 0) {
+		has_properties = FALSE;
+	}
+
 	/* File menu */
 	/* "FileOpen": always sensitive */
 	set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
 	set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
-	set_action_sensitive (ev_window, "FileProperties", has_document);
+	set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 	/* "FileCloseWindow": always sensitive */
 
         /* Edit menu */

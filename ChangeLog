@@ -1,5 +1,12 @@
 2005-06-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-window.c: (update_action_sensitivity):
+	
+	Make properties unsensitive if document backend doesn't provide
+	any info
+
+2005-06-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* dvi/mdvi-lib/bitmap.c: (bitmap_alloc), (bitmap_alloc_raw),
 	(bitmap_flip_horizontally), (bitmap_flip_vertically),
 	(bitmap_flip_diagonally), (bitmap_rotate_clockwise),
