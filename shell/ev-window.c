@@ -2216,17 +2216,18 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 					 EvWindow   *ev_window)
 {
 	GtkAction *action;
-	gboolean visible, fullscreen;
+	gboolean visible, fullscreen_mode;
 
-	g_object_get (ev_window->priv->view,
-		      "fullscreen", &fullscreen,
-		      NULL);
+
+	fullscreen_mode = ev_view_get_presentation (EV_VIEW (ev_window->priv->view)) ||
+			       ev_view_get_fullscreen (EV_VIEW (ev_window->priv->view));
+
 	visible = GTK_WIDGET_VISIBLE (ev_sidebar);
 
 	/* In fullscreen mode the sidebar is not visible,
 	 * but we don't want to update the chrome
 	 */
-	if (fullscreen)
+	if (fullscreen_mode)
 		return;
 	
 	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
