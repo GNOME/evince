@@ -22,12 +22,16 @@
 #define EV_DOCUMENT_TYPES_H
 
 #include "ev-document.h"
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
 GType ev_document_type_lookup (const char  *uri,
 			       gchar       **mime_type,
 			       GError      **error);
+
+void ev_document_types_add_filters	    (GtkWidget *chooser);
+void ev_document_types_add_filters_for_type (GtkWidget *chooser, GType type);
 
 G_END_DECLS
 

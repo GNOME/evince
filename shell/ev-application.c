@@ -25,6 +25,8 @@
 #endif
 
 #include "ev-application.h"
+#include "ev-utils.h"
+#include "ev-document-types.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -117,18 +119,7 @@ ev_application_open (EvApplication *application, GError *err)
 {
 	EvWindow *ev_window;
 	GtkWidget *chooser;
-	GtkFileFilter *documents_filter;
-	GtkFileFilter *pdf_filter;
-	GtkFileFilter *ps_filter;
-	GtkFileFilter *pixbuf_filter;
-	GtkFileFilter *all_filter;
-	static gchar  *folder = NULL;
-#ifdef ENABLE_DJVU
-	GtkFileFilter *djvu_filter;
-#endif
-#ifdef ENABLE_DVI
-	GtkFileFilter *dvi_filter;
-#endif
+	static char *folder = NULL;
 
 	ev_window = ev_application_get_empty_window (application);
 
@@ -141,64 +132,11 @@ ev_application_open (EvApplication *application, GError *err)
 					       NULL);
 
 	if (folder) {
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
-						     folder);
-	}
+		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (chooser),
+						         folder);
+    	}
 
-	documents_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (documents_filter,
-				  _("All Documents"));
-	gtk_file_filter_add_mime_type (documents_filter, "application/postscript");
-	gtk_file_filter_add_mime_type (documents_filter, "application/x-gzpostscript");
-	gtk_file_filter_add_mime_type (documents_filter, "image/x-eps");
-	gtk_file_filter_add_mime_type (documents_filter, "application/pdf");
-#ifdef ENABLE_DVI
-	gtk_file_filter_add_mime_type (documents_filter, "application/x-dvi");
-#endif
-	gtk_file_filter_add_pixbuf_formats (documents_filter);
-#ifdef ENABLE_DJVU
-	gtk_file_filter_add_mime_type (documents_filter, "image/vnd.djvu");
-#endif
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), documents_filter);
-
-	ps_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (ps_filter, _("PostScript Documents"));
-	gtk_file_filter_add_mime_type (ps_filter, "application/postscript");
-	gtk_file_filter_add_mime_type (ps_filter, "application/x-gzpostscript");
-	gtk_file_filter_add_mime_type (ps_filter, "image/x-eps");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), ps_filter);
-
-	pdf_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (pdf_filter, _("PDF Documents"));
-	gtk_file_filter_add_mime_type (pdf_filter, "application/pdf");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), pdf_filter);
-
-#ifdef ENABLE_DVI
-	dvi_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (dvi_filter, _("DVI Documents"));
-	gtk_file_filter_add_mime_type (dvi_filter, "application/x-dvi");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), dvi_filter);
-#endif
-
-	pixbuf_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (pixbuf_filter, _("Images"));
-	gtk_file_filter_add_pixbuf_formats (pixbuf_filter);
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), pixbuf_filter);
-
-#ifdef ENABLE_DJVU
-	djvu_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (djvu_filter, _("Djvu Documents"));
-	gtk_file_filter_add_mime_type (djvu_filter, "image/vnd.djvu");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), djvu_filter);
-#endif	
-	
-	all_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (all_filter, _("All Files"));
-	gtk_file_filter_add_pattern (all_filter, "*");
-
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), all_filter);
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), documents_filter);
-
+	ev_document_types_add_filters (chooser);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
 
@@ -206,7 +144,11 @@ ev_application_open (EvApplication *application, GError *err)
 		GSList *uris;
 
 		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
-		folder = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (chooser));
+
+		if (folder != NULL)
+			g_free (folder);
+				
+		folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (chooser));
 
 		ev_window_open_uri_list (ev_window, uris);
 		

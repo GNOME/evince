@@ -1,3 +1,14 @@
+2005-06-23  Nikolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-application.c: (ev_application_open):
+	* shell/ev-document-types.c: (ev_document_types_add_filters),
+	(ev_document_types_add_filters_for_type):
+	* shell/ev-document-types.h:
+	* shell/ev-window.c: (ev_window_cmd_save_as):
+	
+	Suggest basename as template when saving, provide filters
+	for save dialog. It's bug 308402
+
 2005-06-20  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* pdf/ev-poppler.cc:

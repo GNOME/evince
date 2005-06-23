@@ -43,6 +43,7 @@
 #include "ev-document-fonts.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
+#include "ev-document-types.h"
 #include "ev-job-queue.h"
 #include "ev-jobs.h"
 #include "ev-statusbar.h"
@@ -59,6 +60,7 @@
 #include "ev-application.h"
 #include "ev-stock-icons.h"
 #include "ev-file-helpers.h"
+
 #include <poppler.h>
 
 #include <glib/gi18n.h>
@@ -1088,8 +1090,11 @@ static void
 ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 {
 	GtkWidget *fc;
-	GtkFileFilter *pdf_filter, *all_filter;
-	gchar *uri = NULL;
+
+	gchar *uri;
+	gchar *basename;
+	static char* folder = NULL;
+
 	gboolean success;
 
 	fc = gtk_file_chooser_dialog_new (
@@ -1100,18 +1105,17 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		NULL);
 	gtk_window_set_modal (GTK_WINDOW (fc), TRUE);
 
-	pdf_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (pdf_filter, _("PDF Documents"));
-	gtk_file_filter_add_mime_type (pdf_filter, "application/pdf");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), pdf_filter);
-
-	all_filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (all_filter, _("All Files"));
-	gtk_file_filter_add_pattern (all_filter, "*");
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), all_filter);
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (fc), pdf_filter);
-
+	ev_document_types_add_filters_for_type (fc, G_TYPE_FROM_INSTANCE (ev_window->priv->document));
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
+	
+	if (folder) {
+		gtk_file_chooser_set_current_folder_uri(GTK_FILE_CHOOSER (fc), 
+							folder);
+    	}
+	
+	basename = g_path_get_basename (ev_window->priv->uri);
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), basename);
+	g_free (basename);
 
 	gtk_widget_show (fc);
 
@@ -1133,6 +1137,12 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		else
 			save_error_dialog (GTK_WINDOW (fc), uri);
 	}
+
+	if (folder != NULL)
+		g_free (folder);
+				
+	folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (fc));
+
 	gtk_widget_destroy (fc);
 }
 
