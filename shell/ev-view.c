@@ -53,7 +53,7 @@ enum {
 };
 
 enum {
-	SIGNAL_SCROLL_VIEW,
+	SIGNAL_BINDING_ACTIVATED,
 	SIGNAL_ZOOM_INVALID,
 	N_SIGNALS,
 };
@@ -158,7 +158,7 @@ struct _EvViewClass {
 	void	(*set_scroll_adjustments) (EvView         *view,
 					   GtkAdjustment  *hadjustment,
 					   GtkAdjustment  *vadjustment);
-	void    (*scroll_view)		  (EvView         *view,
+	void    (*binding_activated)	  (EvView         *view,
 					   GtkScrollType   scroll,
 					   gboolean        horizontal);
 	void    (*zoom_invalid)		  (EvView         *view);
@@ -181,7 +181,7 @@ static void       add_scroll_binding_keypad                  (GtkBindingSet     
 							      guint               keyval,
 							      GtkScrollType       scroll,
 							      gboolean            horizontal);
-static void       ev_view_scroll_view                        (EvView             *view,
+static void       ev_view_binding_activated                  (EvView             *view,
 							      GtkScrollType       scroll,
 							      gboolean            horizontal);
 static void       ensure_rectangle_is_visible                (EvView             *view,
@@ -569,11 +569,11 @@ add_scroll_binding_keypad (GtkBindingSet  *binding_set,
   guint keypad_keyval = keyval - GDK_Left + GDK_KP_Left;
 
   gtk_binding_entry_add_signal (binding_set, keyval, 0,
-                                "scroll_view", 2,
+                                "binding_activated", 2,
                                 GTK_TYPE_SCROLL_TYPE, scroll,
 				G_TYPE_BOOLEAN, horizontal);
   gtk_binding_entry_add_signal (binding_set, keypad_keyval, 0,
-                                "scroll_view", 2,
+                                "binding_activated", 2,
                                 GTK_TYPE_SCROLL_TYPE, scroll,
 				G_TYPE_BOOLEAN, horizontal);
 }
@@ -633,12 +633,26 @@ ev_view_scroll (EvView        *view,
 }
 
 static void
-ev_view_scroll_view (EvView *view,
-		     GtkScrollType scroll,
-		     gboolean horizontal)
+ev_view_binding_activated (EvView *view,
+		    	   GtkScrollType scroll,
+		    	   gboolean horizontal)
 {
 	GtkAdjustment *adjustment;
 	double value;
+	
+	if (view->presentation) {
+		switch (scroll) {
+			case GTK_SCROLL_STEP_BACKWARD:
+				ev_page_cache_prev_page (view->page_cache);
+				break;
+			case GTK_SCROLL_STEP_FORWARD:
+				ev_page_cache_next_page (view->page_cache);
+				break;
+			default:
+				break;
+		}
+		return;
+	}
 
 	if (horizontal) {
 		adjustment = view->hadjustment;
@@ -1697,7 +1711,7 @@ ev_view_class_init (EvViewClass *class)
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
-	class->scroll_view = ev_view_scroll_view;
+	class->binding_activated = ev_view_binding_activated;
 
 	widget_class->set_scroll_adjustments_signal =  
 	    g_signal_new ("set-scroll-adjustments",
@@ -1710,10 +1724,10 @@ ev_view_class_init (EvViewClass *class)
 			  GTK_TYPE_ADJUSTMENT,
 			  GTK_TYPE_ADJUSTMENT);
 
-	signals[SIGNAL_SCROLL_VIEW] = g_signal_new ("scroll-view",
+	signals[SIGNAL_BINDING_ACTIVATED] = g_signal_new ("binding_activated",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		         G_STRUCT_OFFSET (EvViewClass, scroll_view),
+		         G_STRUCT_OFFSET (EvViewClass, binding_activated),
 		         NULL, NULL,
 		         ev_marshal_VOID__ENUM_BOOLEAN,
 		         G_TYPE_NONE, 2,
@@ -1890,7 +1904,8 @@ static void on_adjustment_value_changed (GtkAdjustment  *adjustment,
 
 
 	if (view->document)
-		view_update_range_and_current_page (view);}
+		view_update_range_and_current_page (view);
+}
 
 GtkWidget*
 ev_view_new (void)

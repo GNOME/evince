@@ -1,5 +1,13 @@
 2005-06-23  Nikolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-view.c: (add_scroll_binding_keypad),
+	(ev_view_binding_activated), (ev_view_class_init),
+	(on_adjustment_value_changed):
+	
+	Bug 170874: Arrow keys switch pages in presentation mode
+
+2005-06-23  Nikolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c: (ev_window_sidebar_visibility_changed_cb):
 	
 	Fix for Bug 308265: Sidebar dissappears coming out of 
