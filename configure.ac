@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(evince, 0.3.1)
+AC_INIT(evince, 0.3.2)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
@@ -32,7 +32,7 @@ GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 
-POPPLER_REQUIRED=0.3.2
+POPPLER_REQUIRED=0.3.3
 
 PKG_CHECK_MODULES(LIBEVPRIVATE, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(TOOLBAR_EDITOR, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)

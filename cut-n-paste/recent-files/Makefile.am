@@ -23,8 +23,6 @@ noinst_LTLIBRARIES = librecent.la
 
 librecent_la_SOURCES = $(EGG_FILES)
 
-EXTRA_DIST = update-from-egg.sh
-
 EGGDIR=$(srcdir)/../../../libegg/libegg/recent-files
 regenerate-built-sources:
 	EGGFILES="$(EGG_FILES)" EGGDIR="$(EGGDIR)" $(top_srcdir)/cut-n-paste/update-from-egg.sh
