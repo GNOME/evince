@@ -36,6 +36,7 @@ struct _TiffDocument
 
   TIFF *tiff;
   gint n_pages;
+  EvOrientation orientation;
 };
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
@@ -157,9 +158,50 @@ tiff_document_get_page_size (EvDocument   *document,
   TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &w);
   TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &h);
 
-  *width = w;
-  *height = h;
+  if (tiff_document->orientation == EV_ORIENTATION_PORTRAIT ||
+      tiff_document->orientation ==  EV_ORIENTATION_UPSIDEDOWN) {
+    *width = w;
+    *height = h;
+  } else {
+    *width = h;
+    *height = w;
+  }
   pop_handlers ();
+}
+
+static EvOrientation
+tiff_document_get_orientation (EvDocument *document)
+{
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+
+	return tiff_document->orientation;
+}
+
+static void
+tiff_document_set_orientation (EvDocument *document,
+			     EvOrientation   orientation)
+{
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+
+	tiff_document->orientation = orientation;
+}
+
+static GdkPixbuf *
+rotate_pixbuf (EvDocument *document, GdkPixbuf *pixbuf)
+{
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+
+	switch (tiff_document->orientation)
+	{
+		case EV_ORIENTATION_LANDSCAPE:
+			return gdk_pixbuf_rotate_simple (pixbuf, 90);
+		case EV_ORIENTATION_UPSIDEDOWN:
+			return gdk_pixbuf_rotate_simple (pixbuf, 180);
+		case EV_ORIENTATION_SEASCAPE:
+			return gdk_pixbuf_rotate_simple (pixbuf, 270);
+		default:
+			return g_object_ref (pixbuf);
+	}
 }
 
 static GdkPixbuf *
@@ -171,6 +213,7 @@ tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
   guchar *pixels = NULL;
   GdkPixbuf *pixbuf;
   GdkPixbuf *scaled_pixbuf;
+  GdkPixbuf *rotated_pixbuf;
 
   g_return_val_if_fail (TIFF_IS_DOCUMENT (document), 0);
   g_return_val_if_fail (tiff_document->tiff != NULL, 0);
@@ -228,7 +271,10 @@ tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
 					   GDK_INTERP_BILINEAR);
   g_object_unref (pixbuf);
 
-  return scaled_pixbuf;
+  rotated_pixbuf = rotate_pixbuf (document, scaled_pixbuf);
+  g_object_unref (scaled_pixbuf);
+
+  return rotated_pixbuf;
 }
 
 static void
@@ -276,6 +322,8 @@ tiff_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = tiff_document_get_page_size;
 	iface->render_pixbuf = tiff_document_render_pixbuf;
 	iface->get_info = tiff_document_get_info;
+	iface->get_orientation = tiff_document_get_orientation;
+	iface->set_orientation = tiff_document_set_orientation;
 }
 
 static GdkPixbuf *
@@ -336,4 +384,5 @@ static void
 tiff_document_init (TiffDocument *tiff_document)
 {
   tiff_document->n_pages = -1;
+  tiff_document->orientation = EV_ORIENTATION_PORTRAIT;
 }

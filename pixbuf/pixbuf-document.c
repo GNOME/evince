@@ -30,9 +30,7 @@ struct _PixbufDocument
 	GObject parent_instance;
 
 	GdkPixbuf *pixbuf;
-	GdkDrawable *target;
-
-	gint x_offset, y_offset;
+	EvOrientation orientation;
 };
 
 typedef struct _PixbufDocumentClass PixbufDocumentClass;
@@ -87,6 +85,41 @@ pixbuf_document_get_n_pages (EvDocument  *document)
 	return 1;
 }
 
+static EvOrientation
+pixbuf_document_get_orientation (EvDocument *document)
+{
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+
+	return pixbuf_document->orientation;
+}
+
+static void
+pixbuf_document_set_orientation (EvDocument *document,
+			         EvOrientation   orientation)
+{
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+
+	pixbuf_document->orientation = orientation;
+}
+
+static GdkPixbuf *
+rotate_pixbuf (EvDocument *document, GdkPixbuf *pixbuf)
+{
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+
+	switch (pixbuf_document->orientation)
+	{
+		case EV_ORIENTATION_LANDSCAPE:
+			return gdk_pixbuf_rotate_simple (pixbuf, 90);
+		case EV_ORIENTATION_UPSIDEDOWN:
+			return gdk_pixbuf_rotate_simple (pixbuf, 180);
+		case EV_ORIENTATION_SEASCAPE:
+			return gdk_pixbuf_rotate_simple (pixbuf, 270);
+		default:
+			return g_object_ref (pixbuf);
+	}
+}
+
 static void
 pixbuf_document_get_page_size (EvDocument   *document,
 			       int           page,
@@ -95,23 +128,31 @@ pixbuf_document_get_page_size (EvDocument   *document,
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 
-	if (width)
+	if (pixbuf_document->orientation == EV_ORIENTATION_PORTRAIT ||
+	    pixbuf_document->orientation ==  EV_ORIENTATION_UPSIDEDOWN) {
 		*width = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
-	if (height)
 		*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
-
-	printf ("get_page_size, page=%d, *width=%f, *height=%f\n",
-		page, *width, *height);
+	} else {
+		*width = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
+		*height = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
+	}
 }
 
 static GdkPixbuf*
 pixbuf_document_render_pixbuf (EvDocument  *document, int page, double scale)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-	return gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
-					gdk_pixbuf_get_width (pixbuf_document->pixbuf) * scale,
-					gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale,
-					GDK_INTERP_BILINEAR);
+	GdkPixbuf *scaled_pixbuf, *rotated_pixbuf;
+
+	scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
+					         gdk_pixbuf_get_width (pixbuf_document->pixbuf) * scale,
+					         gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale,
+					         GDK_INTERP_BILINEAR);
+
+	rotated_pixbuf = rotate_pixbuf (document, scaled_pixbuf);
+	g_object_unref (scaled_pixbuf);
+
+	return rotated_pixbuf;
 }
 
 static void
@@ -159,6 +200,8 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = pixbuf_document_get_page_size;
 	iface->render_pixbuf = pixbuf_document_render_pixbuf;
 	iface->get_info = pixbuf_document_get_info;
+	iface->get_orientation = pixbuf_document_get_orientation;
+	iface->set_orientation = pixbuf_document_set_orientation;
 }
 
 static GdkPixbuf *
@@ -209,6 +252,4 @@ pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface
 static void
 pixbuf_document_init (PixbufDocument *pixbuf_document)
 {
-	pixbuf_document->x_offset = 0;
-	pixbuf_document->y_offset = 0;
 }
