@@ -179,20 +179,19 @@ pdf_document_save (EvDocument  *document,
 static PopplerOrientation
 get_document_orientation (PdfDocument *pdf_document)
 {
-#ifdef POPPLER_ORIENTATION
+	PopplerOrientation orientation;
 	PopplerPage *page;
 
 	/* Should prolly be smarter here and check more than first page */
 	page = poppler_document_get_page (pdf_document->document, 0);
 	if (page) {
-		return poppler_page_get_orientation (page);
+		orientation = poppler_page_get_orientation (page);
 	} else {
-		return POPPLER_ORIENTATION_PORTRAIT;
+		orientation = POPPLER_ORIENTATION_PORTRAIT;
 	}
 	g_object_unref (page);
-#else
-	return POPPLER_ORIENTATION_PORTRAIT;
-#endif
+
+	return orientation;
 }
 
 static gboolean
