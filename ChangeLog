@@ -1,3 +1,14 @@
+2005-06-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* pdf/ev-poppler.cc:
+	
+	Fix for Bug 309080: crash on window close.
+	
+	* shell/ev-page-action.c: (page_changed_cb):
+	
+	Fix for Bug 309168: Fix build with gcc 2.95. Thanks to
+	jensgr@gmx.net (Jens Granseuer).
+
 2005-06-25  Marcel Telka  <marcel@telka.sk>
 
 	* configure.in (ALL_LINGUAS): Added sk.

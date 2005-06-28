@@ -104,6 +104,11 @@ pdf_document_dispose (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(object);
 
+	if (pdf_document->search) {
+		pdf_document_search_free (pdf_document->search);
+		pdf_document->search = NULL;
+	}
+
 	if (pdf_document->document) {
 		g_object_unref (pdf_document->document);
 	}
