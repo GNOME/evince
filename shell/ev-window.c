@@ -3011,9 +3011,9 @@ window_configure_event_cb (EvWindow *window, gpointer dummy)
 
 	ev_metadata_manager_set_int (window->priv->uri, "window_width", width);
 	ev_metadata_manager_set_int (window->priv->uri, "window_height", height);
+#endif
 
 	return FALSE;
-#endif
 }
 
 static void
