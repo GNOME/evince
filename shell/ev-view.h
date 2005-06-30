@@ -43,6 +43,11 @@ typedef enum {
 } EvSizingMode;
 
 typedef enum {
+	EV_VIEW_SELECTION_TEXT,
+	EV_VIEW_SELECTION_RECTANGLE,
+} EvViewSelectionMode;
+
+typedef enum {
 	EV_SCROLL_PAGE_FORWARD,
 	EV_SCROLL_PAGE_BACKWARD
 } EvScrollType;

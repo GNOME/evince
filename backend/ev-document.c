@@ -203,9 +203,8 @@ ev_document_get_links (EvDocument *document,
 
 
 GdkPixbuf *
-ev_document_render_pixbuf (EvDocument *document,
-			   int         page,
-			   double      scale)
+ev_document_render_pixbuf (EvDocument      *document,
+			   EvRenderContext *rc)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	GdkPixbuf *retval;
@@ -213,7 +212,7 @@ ev_document_render_pixbuf (EvDocument *document,
 	LOG ("ev_document_render_pixbuf");
 	g_assert (iface->render_pixbuf);
 
-	retval = iface->render_pixbuf (document, page, scale);
+	retval = iface->render_pixbuf (document, rc);
 
 	return retval;
 }
@@ -249,4 +248,23 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->security);
 
 	g_free (info);
+}
+
+
+/* Compares two rects.  returns 0 if they're equal */
+#define EPSILON 0.0000001
+
+gint
+ev_rect_cmp (EvRectangle *a,
+	     EvRectangle *b)
+{
+	if (a == b)
+		return 0;
+	if (a == NULL || b == NULL)
+		return 1;
+
+	return ! ((ABS (a->x1 - b->x1) < EPSILON) &&
+		  (ABS (a->y1 - b->y1) < EPSILON) &&
+		  (ABS (a->x2 - b->x2) < EPSILON) &&
+		  (ABS (a->y2 - b->y2) < EPSILON));
 }

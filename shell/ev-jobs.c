@@ -3,6 +3,7 @@
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-fonts.h"
+#include "ev-selection.h"
 #include "ev-async-renderer.h"
 
 static void ev_job_init                 (EvJob               *job);
@@ -110,6 +111,11 @@ ev_job_render_dispose (GObject *object)
 		job->pixbuf = NULL;
 	}
 
+	if (job->rc) {
+		g_object_unref (job->rc);
+		job->rc = NULL;
+	}
+
 	(* G_OBJECT_CLASS (ev_job_render_parent_class)->dispose) (object);
 }
 
@@ -215,23 +221,31 @@ ev_job_links_run (EvJobLinks *job)
 
 
 EvJob *
-ev_job_render_new (EvDocument *document,
-		   gint        page,
-		   double      scale,
-		   gint        width,
-		   gint        height,
-		   gboolean    include_links)
+ev_job_render_new (EvDocument      *document,
+		   EvRenderContext *rc,
+		   gint             width,
+		   gint             height,
+		   EvRectangle     *selection_points,
+		   gboolean         include_links,
+		   gboolean         include_selection)
 {
 	EvJobRender *job;
+
+	g_return_val_if_fail (EV_IS_RENDER_CONTEXT (rc), NULL);
+	if (include_selection)
+		g_return_val_if_fail (selection_points != NULL, NULL);
 
 	job = g_object_new (EV_TYPE_JOB_RENDER, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
-	job->page = page;
-	job->scale = scale;
+	job->rc = g_object_ref (rc);
 	job->target_width = width;
 	job->target_height = height;
 	job->include_links = include_links;
+	job->include_selection = include_selection;
+
+	if (include_selection)
+		job->selection_points = *selection_points;
 
 	if (EV_IS_ASYNC_RENDERER (document)) {	
 		EV_JOB (job)->async = TRUE;
@@ -260,15 +274,19 @@ ev_job_render_run (EvJobRender *job)
 
 	if (EV_JOB (job)->async) {
 		EvAsyncRenderer *renderer = EV_ASYNC_RENDERER (EV_JOB (job)->document);
-		ev_async_renderer_render_pixbuf (renderer, job->page, job->scale);
+		ev_async_renderer_render_pixbuf (renderer, job->rc->page, job->rc->scale);
 		g_signal_connect (EV_JOB (job)->document, "render_finished",
 				  G_CALLBACK (render_finished_cb), job);
 	} else {
-		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document,
-							 job->page,
-							 job->scale);
+		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document, job->rc);
 		if (job->include_links)
-			job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->page);
+			job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->rc->page);
+		if (job->include_selection && EV_IS_SELECTION (EV_JOB (job)->document))
+			ev_selection_render_selection (EV_SELECTION (EV_JOB (job)->document),
+						       job->rc,
+						       &(job->selection),
+						       &(job->selection_points),
+						       NULL);
 
 		EV_JOB (job)->finished = TRUE;
 	}

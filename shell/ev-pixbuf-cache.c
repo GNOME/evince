@@ -1,13 +1,21 @@
 #include "ev-pixbuf-cache.h"
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
-
+#include "ev-selection.h"
 
 typedef struct _CacheJobInfo
 {
 	EvJob *job;
 	GdkPixbuf *pixbuf;
+	EvRenderContext *rc;
 	GList *link_mapping;
+
+	/* Selection info.  If the *_points structs are unset, we put -1 in x1.
+	 * selection_points are the coordinates encapsulated in selection.
+	 * new_points is the target selection size. */
+	EvRectangle selection_points;
+	GdkPixbuf *selection;
+	EvRectangle new_points;
 } CacheJobInfo;
 
 struct _EvPixbufCache
@@ -55,6 +63,10 @@ static CacheJobInfo *find_job_cache             (EvPixbufCache      *pixbuf_cach
 static void          copy_job_to_job_info       (EvJobRender        *job_render,
 						 CacheJobInfo       *job_info,
 						 EvPixbufCache      *pixbuf_cache);
+static gboolean      new_selection_pixbuf_needed(EvPixbufCache *pixbuf_cache,
+						 CacheJobInfo  *job_info,
+						 gint           page,
+						 gfloat         scale);
 
 
 /* These are used for iterating through the prev and next arrays */
@@ -132,6 +144,13 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = NULL;
 	}
+	if (job_info->selection) {
+		g_object_unref (G_OBJECT (job_info->selection));
+		job_info->selection = NULL;
+	}
+
+	job_info->selection_points.x1 = -1;
+	job_info->new_points.x1 = -1;
 }
 
 static void
@@ -173,13 +192,13 @@ job_finished_cb (EvJob         *job,
 	GdkPixbuf *pixbuf;
 
 	/* If the job is outside of our interest, we silently discard it */
-	if ((job_render->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
-	    (job_render->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
+	if ((job_render->rc->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
+	    (job_render->rc->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
 		g_object_unref (job);
 		return;
 	}
 	
-	job_info = find_job_cache (pixbuf_cache, job_render->page);
+	job_info = find_job_cache (pixbuf_cache, job_render->rc->page);
 
 	pixbuf = g_object_ref (job_render->pixbuf);
 	if (job_info->pixbuf)
@@ -190,6 +209,13 @@ job_finished_cb (EvJob         *job,
 		if (job_info->link_mapping)
 			ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = job_render->link_mapping;
+	}
+	if (job_render->include_selection) {
+		if (job_info->selection)
+			g_object_unref (job_info->selection);
+		job_info->selection_points = job_render->selection_points;
+		job_info->selection = job_render->selection;
+		g_assert (job_info->selection_points.x1 >= 0);
 	}
 	
 	if (job_info->job == job)
@@ -216,7 +242,7 @@ check_job_size_and_unref (CacheJobInfo *job_info,
 		return;
 
 	ev_page_cache_get_size (page_cache,
-				EV_JOB_RENDER (job_info->job)->page,
+				EV_JOB_RENDER (job_info->job)->rc->page,
 				scale,
 				&width, &height);
 				
@@ -336,7 +362,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 			      pixbuf_cache, page,
 			      new_job_list, new_prev_job, new_next_job,
 			      start_page, end_page, EV_JOB_PRIORITY_HIGH);
-		page++;
+		page ++;
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
@@ -441,6 +467,8 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		   gfloat         scale,
 		   EvJobPriority  priority)
 {
+	gboolean include_links = FALSE;
+	gboolean include_selection = FALSE;
 	int width, height;
 
 	if (job_info->job)
@@ -456,10 +484,27 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		return;
 
 	/* make a new job now */
+	if (job_info->rc == NULL) {
+		job_info->rc = ev_render_context_new (EV_ORIENTATION_PORTRAIT,
+						      page, scale);
+	} else {
+		ev_render_context_set_page (job_info->rc, page);
+		ev_render_context_set_scale (job_info->rc, scale);
+	}
+
+	/* Figure out what else we need for this job */
+	if (job_info->link_mapping == NULL)
+		include_links = TRUE;
+	if (new_selection_pixbuf_needed (pixbuf_cache, job_info, page, scale)) {
+		include_selection = TRUE;
+	}
+
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
-					   page, scale,
+					   job_info->rc,
 					   width, height,
-					   (job_info->link_mapping == NULL)?TRUE:FALSE);
+					   &(job_info->new_points),
+					   include_links,
+					   include_selection);
 	ev_job_queue_add_job (job_info->job, priority);
 	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
 }
@@ -509,7 +554,8 @@ void
 ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
 				gint           start_page,
 				gint           end_page,
-				gfloat         scale)
+				gfloat         scale,
+				GList          *selection_list)
 {
 	EvPageCache *page_cache;
 
@@ -528,6 +574,9 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
 	/* Then, we update the current jobs to see if any of them are the wrong
 	 * size, we remove them if we need to. */
 	ev_pixbuf_cache_clear_job_sizes (pixbuf_cache, scale);
+
+	/* Next, we update the target selection for our pages */
+	ev_pixbuf_cache_set_selection_list (pixbuf_cache, selection_list);
 
 	/* Finally, we add the new jobs for all the sizes that don't have a
 	 * pixbuf */
@@ -570,4 +619,213 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 	}
 	
 	return job_info->link_mapping;
+}
+
+/* Selection */
+static gboolean
+new_selection_pixbuf_needed (EvPixbufCache *pixbuf_cache,
+			     CacheJobInfo  *job_info,
+			     gint           page,
+			     gfloat         scale)
+{
+	EvPageCache *page_cache;
+	gint width, height;
+
+	if (job_info->selection) {
+		page_cache = ev_page_cache_get (pixbuf_cache->document);
+		ev_page_cache_get_size (page_cache, page, scale,
+					&width, &height);
+		
+		if (width != gdk_pixbuf_get_width (job_info->selection) ||
+		    height != gdk_pixbuf_get_height (job_info->selection))
+			return TRUE;
+	} else {
+		if (job_info->new_points.x1 >= 0)
+			return TRUE;
+	}
+	return FALSE;
+}
+
+static void
+clear_selection_if_needed (EvPixbufCache *pixbuf_cache,
+			   CacheJobInfo  *job_info,
+			   gint           page,
+			   gfloat         scale)
+{
+	if (new_selection_pixbuf_needed (pixbuf_cache, job_info, page, scale)) {
+		g_object_unref (job_info->selection);
+		job_info->selection = NULL;
+		job_info->selection_points.x1 = -1;
+	}
+}
+
+GList *
+ev_pixbuf_cach_get_text_mapping      (EvPixbufCache *pixbuf_cache,
+				      gint           page)
+{
+	return NULL;
+}
+
+GdkPixbuf *
+ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
+				      gint           page,
+				      gfloat         scale)
+{
+	CacheJobInfo *job_info;
+
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* No selection on this page */
+	if (job_info->new_points.x1 < 0)
+		return NULL;
+
+	/* If we have a running job, we just return what we have under the
+	 * assumption that it'll be updated later and we can scale it as need
+	 * be */
+	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
+		return job_info->selection;
+
+	/* Now, lets see if we need to resize the image.  If we do, we clear the
+	 * old one. */
+	clear_selection_if_needed (pixbuf_cache, job_info, page, scale);
+
+	/* Finally, we see if the two scales are the same, and get a new pixbuf
+	 * if needed.  We do this synchronously for now.  At some point, we
+	 * _should_ be able to get rid of the doc_mutex, so the synchronicity
+	 * doesn't kill us.  Rendering a few glyphs should really be fast.
+	 */
+	if (ev_rect_cmp (&(job_info->new_points), &(job_info->selection_points))) {
+		EvRenderContext *rc;
+
+		rc = ev_render_context_new (EV_ORIENTATION_PORTRAIT,
+					    page,
+					    scale);
+
+		/* we need to get a new selection pixbuf */
+		ev_document_doc_mutex_lock ();
+		if (job_info->selection_points.x1 < 0) {
+			g_assert (job_info->selection == NULL);
+			ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
+						       rc, &(job_info->selection),
+						       &(job_info->new_points),
+						       NULL);
+		} else {
+			g_assert (job_info->selection != NULL);
+			ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
+						       rc, &(job_info->selection),
+						       &(job_info->new_points),
+						       &(job_info->selection_points));
+		}
+		job_info->selection_points = job_info->new_points;
+		ev_document_doc_mutex_unlock ();
+
+	}
+	return job_info->selection;
+}
+
+
+static void
+update_job_selection (CacheJobInfo    *job_info,
+		      EvViewSelection *selection)
+{
+	if (job_info->selection == NULL)
+		job_info->selection_points.x1 = -1;
+	job_info->new_points = selection->rect;
+}
+
+static void
+clear_job_selection (CacheJobInfo *job_info)
+{
+	job_info->selection_points.x1 = -1;
+	job_info->new_points.x1 = -1;
+
+	if (job_info->selection) {
+		g_object_unref (job_info->selection);
+		job_info->selection = NULL;
+	}
+}
+
+/* This function will reset the selection on pages that no longer have them, and
+ * will update the target_selection on those that need it.
+ */
+void
+ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
+				    GList         *selection_list)
+{
+	EvPageCache *page_cache;
+	EvViewSelection *selection;
+	GList *list = selection_list;
+	int page;
+	int i;
+
+	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
+
+	page_cache = ev_page_cache_get (pixbuf_cache->document);
+
+	/* We check each area to see what needs updating, and what needs freeing; */
+	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		if (page < 0) {
+			page ++;
+			continue;
+		}
+
+		selection = NULL;
+		while (list) {
+			if (((EvViewSelection *)list->data)->page == page) {
+				selection = list->data;
+				break;
+			} else if (((EvViewSelection *)list->data)->page > page) 
+				break;
+			list = list->next;
+		}
+
+		if (selection)
+			update_job_selection (pixbuf_cache->prev_job + i, selection);
+		else
+			clear_job_selection (pixbuf_cache->prev_job + i);
+		page ++;
+	}
+
+	page = pixbuf_cache->start_page;
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+		selection = NULL;
+		while (list) {
+			if (((EvViewSelection *)list->data)->page == page) {
+				selection = list->data;
+				break;
+			} else if (((EvViewSelection *)list->data)->page > page) 
+				break;
+			list = list->next;
+		}
+
+		if (selection)
+			update_job_selection (pixbuf_cache->job_list + i, selection);
+		else
+			clear_job_selection (pixbuf_cache->job_list + i);
+		page ++;
+	}
+
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		if (page >= ev_page_cache_get_n_pages (page_cache))
+			break;
+		
+		selection = NULL;
+		while (list) {
+			if (((EvViewSelection *)list->data)->page == page) {
+				selection = list->data;
+				break;
+			} else if (((EvViewSelection *)list->data)->page > page) 
+				break;
+			list = list->next;
+		}
+
+		if (selection)
+			update_job_selection (pixbuf_cache->next_job + i, selection);
+		else
+			clear_job_selection (pixbuf_cache->next_job + i);
+		page ++;
+	}
 }

@@ -30,6 +30,10 @@ libevbackend_la_SOURCES=			\
 	ev-document-info.h			\
 	ev-ps-exporter.c			\
 	ev-ps-exporter.h			\
+	ev-render-context.h			\
+	ev-render-context.c			\
+	ev-selection.h				\
+	ev-selection.c				\
 	ev-document-misc.h			\
 	ev-document-misc.c			\
 	$(NULL)

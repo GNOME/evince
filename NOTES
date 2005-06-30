@@ -25,6 +25,29 @@ Thoughts on threading:
 
  * The primary thing we are trying to do is minimize switching pages, as
    doing so is slow for backends.  Additionally, some operations on the
-   backend are slow, leaving poor interactivity.  This
+   backend are slow, leaving poor interactivity.
 
 --
+
+Thoughts on selection:
+
+ * On button_press, we record selection_start, and set in_selection.
+
+ * selection_list must be ordered!!!
+
+ * On motion_notify, we update selection_end and call compute_selection,
+   that keeps an ordered list of the selections.  
+
+ * If any of the selection changes, we notify the pixbuf_cache right
+   away.
+
+ * On button_release, we unset in_selection, and trim all the current
+   pixbufs.
+
+ * If a resize (somehow) occurs, during a selection, we clear
+   in_selection and abort.
+
+ * I'd like to support shift-click to handle extending the selection,
+   but for that to survive resizing, I might need to store the points as
+   doubles, etc.  It should be possible to reconstruct it from the
+   existing EvViewSelection structs, so maybe I don't need it.

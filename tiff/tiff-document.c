@@ -205,7 +205,8 @@ rotate_pixbuf (EvDocument *document, GdkPixbuf *pixbuf)
 }
 
 static GdkPixbuf *
-tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
+tiff_document_render_pixbuf (EvDocument      *document,
+			     EvRenderContext *rc)
 {
   TiffDocument *tiff_document = TIFF_DOCUMENT (document);
   int width, height;
@@ -219,7 +220,7 @@ tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
   g_return_val_if_fail (tiff_document->tiff != NULL, 0);
 
   push_handlers ();
-  if (TIFFSetDirectory (tiff_document->tiff, page) != 1)
+  if (TIFFSetDirectory (tiff_document->tiff, rc->page) != 1)
     {
       pop_handlers ();
       return NULL;
@@ -266,8 +267,8 @@ tiff_document_render_pixbuf (EvDocument  *document, int page, double scale)
   pop_handlers ();
 
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
-					   width * scale,
-					   height * scale,
+					   width * rc->scale,
+					   height * rc->scale,
 					   GDK_INTERP_BILINEAR);
   g_object_unref (pixbuf);
 
@@ -332,6 +333,7 @@ tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 					gint                  size,
 					gboolean              border)
 {
+  EvRenderContext *rc;
   GdkPixbuf *pixbuf;
   gdouble w, h;
 
@@ -339,9 +341,9 @@ tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 			       page,
 			       &w, &h);
 
-  pixbuf = tiff_document_render_pixbuf (EV_DOCUMENT (document),
-					page,
-					size/w);
+  rc = ev_render_context_new (EV_ORIENTATION_PORTRAIT, page, size/w);
+  pixbuf = tiff_document_render_pixbuf (EV_DOCUMENT (document), rc);
+  g_object_unref (G_OBJECT (rc));
 
   if (border)
     {

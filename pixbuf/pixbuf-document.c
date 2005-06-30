@@ -139,14 +139,15 @@ pixbuf_document_get_page_size (EvDocument   *document,
 }
 
 static GdkPixbuf*
-pixbuf_document_render_pixbuf (EvDocument  *document, int page, double scale)
+pixbuf_document_render_pixbuf (EvDocument      *document,
+			       EvRenderContext *rc)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 	GdkPixbuf *scaled_pixbuf, *rotated_pixbuf;
 
 	scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
-					         gdk_pixbuf_get_width (pixbuf_document->pixbuf) * scale,
-					         gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale,
+					         gdk_pixbuf_get_width (pixbuf_document->pixbuf) * rc->scale,
+					         gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale,
 					         GDK_INTERP_BILINEAR);
 
 	rotated_pixbuf = rotate_pixbuf (document, scaled_pixbuf);

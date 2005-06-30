@@ -28,6 +28,7 @@
 
 #include "ev-link.h"
 #include "ev-document-info.h"
+#include "ev-render-context.h"
 
 G_BEGIN_DECLS
 
@@ -54,14 +55,6 @@ typedef enum
 	EV_DOCUMENT_ERROR_INVALID,
 	EV_DOCUMENT_ERROR_ENCRYPTED
 } EvDocumentError;
-
-typedef enum
-{
-	EV_ORIENTATION_PORTRAIT,
-	EV_ORIENTATION_LANDSCAPE,
-	EV_ORIENTATION_UPSIDEDOWN,
-	EV_ORIENTATION_SEASCAPE
-} EvOrientation;
 
 typedef struct {
 	double x1;
@@ -94,9 +87,8 @@ struct _EvDocumentIface
 					      EvRectangle  *rect);
 	GList          * (* get_links)	     (EvDocument   *document,
 					      int           page);
-	GdkPixbuf      * (* render_pixbuf)   (EvDocument   *document,
-					      int           page,
-					      double        scale);
+	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
+					      EvRenderContext *rc);
 	EvOrientation    (* get_orientation) (EvDocument   *document);
 	void	         (* set_orientation) (EvDocument   *document,
 					      EvOrientation orientation);
@@ -130,11 +122,15 @@ char	       *ev_document_get_text        (EvDocument     *document,
 GList	       *ev_document_get_links       (EvDocument     *document,
 				             int             page);
 GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,
-				      	     int             page,
-					     double          scale);
+					     EvRenderContext *rc);
 EvOrientation   ev_document_get_orientation (EvDocument     *document);
 void	        ev_document_set_orientation (EvDocument     *document,
 					     EvOrientation   orientation);
+
+
+gint            ev_rect_cmp                 (EvRectangle    *a,
+					     EvRectangle    *b);
+
 
 G_END_DECLS
 

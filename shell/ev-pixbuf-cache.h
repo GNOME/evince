@@ -17,6 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+/* This File is basically an extention of EvView, and is out here just to keep
+ * ev-view.c from exploding.
+ */
+
 #ifndef __EV_PIXBUF_CACHE_H__
 #define __EV_PIXBUF_CACHE_H__
 
@@ -30,24 +34,38 @@ G_BEGIN_DECLS
 #define EV_PIXBUF_CACHE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PIXBUF_CACHE, EvPixbufCache))
 #define EV_IS_PIXBUF_CACHE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PIXBUF_CACHE))
 
-/* This is basically an extention of ev-view.c, and is out here just to keep
- * ev-view.c from exploding.
+
+
+/* The coordinates in the rect here are at scale == 1.0, so that we can ignore
+ * resizings.  There is one per page, maximum.
  */
+typedef struct {
+	int page;
+	EvRectangle rect;
+} EvViewSelection;
 
 typedef struct _EvPixbufCache       EvPixbufCache;
 typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
 GType          ev_pixbuf_cache_get_type         (void) G_GNUC_CONST;
-EvPixbufCache *ev_pixbuf_cache_new              (EvDocument    *document);
-void           ev_pixbuf_cache_set_page_range   (EvPixbufCache *pixbuf_cache,
-						 gint           start_page,
-						 gint           end_page,
-						 gfloat         scale);
-GdkPixbuf     *ev_pixbuf_cache_get_pixbuf       (EvPixbufCache *pixbuf_cache,
-						 gint           page);
-GList         *ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
-						 gint           page);
-
+EvPixbufCache *ev_pixbuf_cache_new                  (EvDocument    *document);
+void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
+						     gint           start_page,
+						     gint           end_page,
+						     gfloat         scale,
+						     GList          *selection_list);
+GdkPixbuf     *ev_pixbuf_cache_get_pixbuf           (EvPixbufCache *pixbuf_cache,
+						     gint           page);
+GList         *ev_pixbuf_cache_get_link_mapping     (EvPixbufCache *pixbuf_cache,
+						     gint           page);
+/* Selection */
+GList         *ev_pixbuf_cach_get_text_mapping      (EvPixbufCache *pixbuf_cache,
+						     gint           page);
+GdkPixbuf     *ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
+						     gint           page,
+						     gfloat         scale);
+void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
+						     GList         *selection_list);
 
 G_END_DECLS
 

@@ -45,32 +45,32 @@ typedef struct _EvJobFontsClass EvJobFontsClass;
 
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
-#define EV_JOB_CLASS(klass)	             (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
+#define EV_JOB_CLASS(klass)	             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
 #define EV_IS_JOB(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB))
 
 #define EV_TYPE_JOB_LINKS		     (ev_job_links_get_type())
 #define EV_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LINKS, EvJobLinks))
-#define EV_JOB_LINKS_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_LINKS, EvJobLinksClass))
+#define EV_JOB_LINKS_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LINKS, EvJobLinksClass))
 #define EV_IS_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LINKS))
 
 #define EV_TYPE_JOB_RENDER		     (ev_job_render_get_type())
 #define EV_JOB_RENDER(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_RENDER, EvJobRender))
-#define EV_JOB_RENDER_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_RENDER, EvJobRenderClass))
+#define EV_JOB_RENDER_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_RENDER, EvJobRenderClass))
 #define EV_IS_JOB_RENDER(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_RENDER))
 
 #define EV_TYPE_JOB_THUMBNAIL		     (ev_job_thumbnail_get_type())
 #define EV_JOB_THUMBNAIL(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnail))
-#define EV_JOB_THUMBNAIL_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
+#define EV_JOB_THUMBNAIL_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
 #define EV_IS_JOB_THUMBNAIL(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_THUMBNAIL))
 
 #define EV_TYPE_JOB_LOAD		     (ev_job_load_get_type())
 #define EV_JOB_LOAD(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD, EvJobLoad))
-#define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
+#define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
 #define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
 
 #define EV_TYPE_JOB_FONTS		     (ev_job_fonts_get_type())
 #define EV_JOB_FONTS(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FONTS, EvJobFonts))
-#define EV_JOB_FONTS_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_FONTS, EvJobFontsClass))
+#define EV_JOB_FONTS_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FONTS, EvJobFontsClass))
 #define EV_IS_JOB_FONTS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FONTS))
 
 typedef enum {
@@ -109,13 +109,18 @@ struct _EvJobRender
 {
 	EvJob parent;
 
-	gint page;
-	double scale;
+	EvRenderContext *rc;
 	gint target_width;
 	gint target_height;
 	GdkPixbuf *pixbuf;
+
 	GList *link_mapping;
-	gboolean include_links;
+
+	GdkPixbuf *selection;
+	EvRectangle selection_points;
+
+	gint include_links : 1;
+	gint include_selection : 1;
 };
 
 struct _EvJobRenderClass
@@ -171,13 +176,14 @@ void            ev_job_links_run          (EvJobLinks     *thumbnail);
 
 /* EvJobRender */
 GType           ev_job_render_get_type    (void);
-EvJob          *ev_job_render_new         (EvDocument     *document,
-					   gint            page,
-					   double          scale,
-					   gint            width,
-					   gint            height,
-					   gboolean        include_links);
-void            ev_job_render_run         (EvJobRender    *thumbnail);
+EvJob          *ev_job_render_new         (EvDocument      *document,
+					   EvRenderContext *rc,
+					   gint             width,
+					   gint             height,
+					   EvRectangle     *selection_points,
+					   gboolean         include_links,
+					   gboolean         include_selection);
+void            ev_job_render_run         (EvJobRender     *thumbnail);
 
 /* EvJobThumbnail */
 GType           ev_job_thumbnail_get_type (void);

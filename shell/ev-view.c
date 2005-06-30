@@ -29,6 +29,7 @@
 
 #include "ev-marshal.h"
 #include "ev-view.h"
+#include "ev-selection.h"
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-debug.h"
@@ -89,17 +90,20 @@ typedef enum {
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
+/* Information for middle clicking and moving around the doc */
 typedef struct {
-	EvRectangle rect;
-	int page;
-} EvViewSelection;
-
-typedef struct {
-        gboolean dragging;
+        gboolean in_drag;
 	GdkPoint start;
 	gdouble hadj;
 	gdouble vadj;
 } DragInfo;
+
+/* Information for handling selection */
+typedef struct {
+	gboolean in_selection;
+	GdkPoint start;
+	GList *selections;
+} SelectionInfo;
 
 typedef enum {
 	SCROLL_TO_KEEP_POSITION,
@@ -118,10 +122,14 @@ struct _EvView {
 	gint scroll_x;
 	gint scroll_y;
 
+	/* Information for middle clicking and dragging around. */
 	DragInfo drag_info;
+
+	/* Selection */
+	EvViewSelectionMode selection_mode;
+	SelectionInfo selection_info;
+
 	gboolean pressed_button;
-	GdkPoint selection_start;
-	GList *selections;
 	EvViewCursor cursor;
 
 	GtkAdjustment *hadjustment;
@@ -147,7 +155,7 @@ struct _EvView {
 	gboolean fullscreen;
 	gboolean presentation;
 	EvSizingMode sizing_mode;
-	
+
 	PendingScroll pending_scroll;
 	gboolean pending_resize;
 };
@@ -165,7 +173,7 @@ struct _EvViewClass {
 };
 
 /*** Scrolling ***/
-static void       scroll_to_current_page 		     (EvView *view, 
+static void       scroll_to_current_page 		     (EvView *view,
 							      GtkOrientation orientation);
 static void       ev_view_set_scroll_adjustments             (EvView             *view,
 							      GtkAdjustment      *hadjustment,
@@ -353,7 +361,7 @@ static void       ev_view_primary_clear_cb                   (GtkClipboard      
 							      gpointer            data);
 static void       ev_view_update_primary_selection           (EvView             *ev_view);
 
-						
+
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 
 static void
@@ -364,7 +372,7 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 
 	get_page_extents (view, view->current_page, &page_area, &border);
 
-	if (orientation == GTK_ORIENTATION_VERTICAL) {	
+	if (orientation == GTK_ORIENTATION_VERTICAL) {
 		if (view->continuous) {
     			gtk_adjustment_clamp_page (view->vadjustment,
 						   page_area.y - view->spacing,
@@ -376,13 +384,13 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 	} else {
 		if (view->dual_page) {
 			gtk_adjustment_clamp_page (view->hadjustment,
-						   page_area.x, 
+						   page_area.x,
 						   page_area.x + view->hadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->hadjustment,
-						  CLAMP (view->hadjustment->value, 
+						  CLAMP (view->hadjustment->value,
 						  view->hadjustment->lower,
-						  view->hadjustment->upper - 
+						  view->hadjustment->upper -
 						  view->hadjustment->page_size));
 		}
 	}
@@ -412,15 +420,15 @@ view_set_adjustment_values (EvView         *view,
 
 	if (!adjustment)
 		return;
-	
+
 	factor = 1.0;
 	switch (view->pending_scroll) {
-    	        case SCROLL_TO_KEEP_POSITION: 
+    	        case SCROLL_TO_KEEP_POSITION:
 			factor = (adjustment->value) / adjustment->upper;
 			break;
-    	        case SCROLL_TO_CURRENT_PAGE: 
+    	        case SCROLL_TO_CURRENT_PAGE:
 			break;
-    	        case SCROLL_TO_CENTER: 
+    	        case SCROLL_TO_CENTER:
 			factor = (adjustment->value + adjustment->page_size * 0.5) / adjustment->upper;
 			break;
 	}
@@ -431,18 +439,18 @@ view_set_adjustment_values (EvView         *view,
 	adjustment->lower = 0;
 	adjustment->upper = MAX (allocation, requisition);
 
-	/* 
+	/*
 	 * We add 0.5 to the values before to average out our rounding errors.
 	 */
 	switch (view->pending_scroll) {
-    	        case SCROLL_TO_KEEP_POSITION: 
+    	        case SCROLL_TO_KEEP_POSITION:
 			new_value = CLAMP (adjustment->upper * factor + 0.5, 0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
-    	        case SCROLL_TO_CURRENT_PAGE: 
+    	        case SCROLL_TO_CURRENT_PAGE:
 			scroll_to_current_page (view, orientation);
 			break;
-    	        case SCROLL_TO_CENTER: 
+    	        case SCROLL_TO_CENTER:
 			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5 + 0.5,
 					   0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
@@ -465,10 +473,10 @@ view_update_range_and_current_page (EvView *view)
 		gint current_page;
 		gboolean found = FALSE;
 		int i;
-		
+
 		if (!(view->vadjustment && view->hadjustment))
 			return;
-		
+
 		current_area.x = view->hadjustment->value;
 		current_area.width = view->hadjustment->upper;
 		current_area.y = view->vadjustment->value;
@@ -477,25 +485,25 @@ view_update_range_and_current_page (EvView *view)
 		for (i = 0; i < ev_page_cache_get_n_pages (view->page_cache); i++) {
 
 			get_page_extents (view, i, &page_area, &border);
-			
+
 			if (gdk_rectangle_intersect (&current_area, &page_area, &unused)) {
 				if (! found) {
 					view->start_page = i;
 					found = TRUE;
-					
+
 				}
 				view->end_page = i;
 			} else if (found) {
 				break;
 			}
 		}
-		
+
 		current_page = ev_page_cache_get_current_page (view->page_cache);
 
 		if (current_page < view->start_page || current_page > view->end_page) {
 			view->current_page = view->start_page;
 			ev_page_cache_set_current_page (view->page_cache, view->start_page);
-		}			
+		}
 	} else {
 		if (view->dual_page) {
 			if (view->current_page % 2 == 0) {
@@ -515,7 +523,8 @@ view_update_range_and_current_page (EvView *view)
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->start_page,
 					view->end_page,
-					view->scale);	
+					view->scale,
+					view->selection_info.selections);
 }
 
 static void
@@ -639,7 +648,7 @@ ev_view_binding_activated (EvView *view,
 {
 	GtkAdjustment *adjustment;
 	double value;
-	
+
 	if (view->presentation) {
 		switch (scroll) {
 			case GTK_SCROLL_STEP_BACKWARD:
@@ -735,13 +744,13 @@ static void       get_page_y_offset                          (EvView *view,
 {
 	int max_width, offset;
 	GtkBorder border;
-	
+
 	g_return_if_fail (y_offset != NULL);
-		
+
 	ev_page_cache_get_max_width (view->page_cache, zoom, &max_width);
 
 	compute_border (view, max_width, max_width, &border);
-	
+
 	if (view->dual_page) {
 		ev_page_cache_get_height_to_page (view->page_cache, page, zoom, NULL, &offset);
 		offset += (page / 2 + 1) * view->spacing + (page / 2) * (border.top + border.bottom);
@@ -749,7 +758,7 @@ static void       get_page_y_offset                          (EvView *view,
 		ev_page_cache_get_height_to_page (view->page_cache, page, zoom, &offset, NULL);
 		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
 	}
-	
+
 	*y_offset = offset;
 	return;
 }
@@ -1150,15 +1159,15 @@ ev_view_size_allocate (GtkWidget      *widget,
 		       GtkAllocation  *allocation)
 {
 	EvView *view = EV_VIEW (widget);
-	
+
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 		  view->sizing_mode == EV_SIZING_BEST_FIT) {
 
 		g_signal_emit (view, signals[SIGNAL_ZOOM_INVALID], 0);
-		
+
 		ev_view_size_request (widget, &widget->requisition);
 	}
-	
+
 	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
 	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
 
@@ -1166,7 +1175,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 	view->pending_resize = FALSE;
 
 	if (view->document)
-		view_update_range_and_current_page (view);		
+		view_update_range_and_current_page (view);
 
 	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
 }
@@ -1220,13 +1229,13 @@ ev_view_unrealize (GtkWidget *widget)
 static gboolean
 ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 {
- 	EvView *view = EV_VIEW (widget); 
+ 	EvView *view = EV_VIEW (widget);
 
-	if ((event->state & GDK_CONTROL_MASK) != 0) {	
+	if ((event->state & GDK_CONTROL_MASK) != 0) {
 
-		 ev_view_set_sizing_mode (view, EV_SIZING_FREE);	 
+		 ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 
-		 if (event->direction == GDK_SCROLL_UP || 
+		 if (event->direction == GDK_SCROLL_UP ||
 			event->direction == GDK_SCROLL_LEFT) {
 			    if (ev_view_can_zoom_in (view)) {
 		    		    ev_view_zoom_in (view);
@@ -1234,12 +1243,12 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 		 } else {
 	    		    if (ev_view_can_zoom_out (view)) {
 				    ev_view_zoom_out (view);
-			    }	
+			    }
 		 }
 		 return TRUE;
 	}
-	
-	if ((event->state & GDK_SHIFT_MASK) != 0) {	
+
+	if ((event->state & GDK_SHIFT_MASK) != 0) {
 		if (event->direction == GDK_SCROLL_UP)
 			event->direction = GDK_SCROLL_LEFT;
 		if (event->direction == GDK_SCROLL_DOWN)
@@ -1249,13 +1258,29 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	return FALSE;
 }
 
+static EvViewSelection *
+find_selection_for_page (EvView *view,
+			 gint    page)
+{
+	GList *list;
+
+	for (list = view->selection_info.selections; list != NULL; list = list->next) {
+		EvViewSelection *selection;
+
+		selection = (EvViewSelection *) list->data;
+
+		if (selection->page == page)
+			return selection;
+	}
+
+	return NULL;
+}
+
 static gboolean
 ev_view_expose_event (GtkWidget      *widget,
 		      GdkEventExpose *event)
 {
 	EvView *view = EV_VIEW (widget);
-	GdkRectangle rubberband;
-	GList *l;
 	int i;
 
 	if (view->document == NULL)
@@ -1267,26 +1292,14 @@ ev_view_expose_event (GtkWidget      *widget,
 
 		if (!get_page_extents (view, i, &page_area, &border))
 			continue;
-		    
+
 		page_area.x -= view->scroll_x;
 		page_area.y -= view->scroll_y;
-		    
+
 		draw_one_page (view, i, &page_area, &border, &(event->area));
 
-		if (EV_IS_DOCUMENT_FIND (view->document)) {
+		if (EV_IS_DOCUMENT_FIND (view->document))
 			highlight_find_results (view, i);
-		}
-	}
-
-	for (l = view->selections; l != NULL; l = l->next) {
-		EvViewSelection *selection = (EvViewSelection *)l->data;
-
-		doc_rect_to_view_rect (view, selection->page,
-				       &selection->rect, &rubberband);
-		if (rubberband.width > 0 && rubberband.height > 0) {
-			draw_rubberband (GTK_WIDGET (view), GTK_WIDGET(view)->window,
-					 &rubberband, 0x40);
-		}
 	}
 
 	return FALSE;
@@ -1306,13 +1319,13 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 	switch (event->button) {
 		case 1:
-			if (view->selections) {
+			if (view->selection_info.selections) {
 				clear_selection (view);
 				gtk_widget_queue_draw (widget);
 			}
 
-			view->selection_start.x = event->x;
-			view->selection_start.y = event->y;
+			view->selection_info.start.x = event->x;
+			view->selection_info.start.y = event->y;
 			return TRUE;
 		case 2:
 			/* use root coordinates as reference point because
@@ -1341,19 +1354,18 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 	if (view->pressed_button == 1) {
 		GdkRectangle selection;
+		view->selection_info.in_selection = TRUE;
 
-		selection.x = MIN (view->selection_start.x, event->x) + view->scroll_x;
-		selection.y = MIN (view->selection_start.y, event->y) + view->scroll_y;
-		selection.width = ABS (view->selection_start.x - event->x) + 1;
-		selection.height = ABS (view->selection_start.y - event->y) + 1;
+		selection.x = MIN (view->selection_info.start.x, event->x) + view->scroll_x;
+		selection.y = MIN (view->selection_info.start.y, event->y) + view->scroll_y;
+		selection.width = ABS (view->selection_info.start.x - event->x) + 1;
+		selection.height = ABS (view->selection_info.start.y - event->y) + 1;
 
 		compute_selections (view, &selection);
 
-		gtk_widget_queue_draw (widget);
-
 		return TRUE;
 	} else if (view->pressed_button == 2) {
-		if (!view->drag_info.dragging) {
+		if (!view->drag_info.in_drag) {
 			gboolean start;
 
 			start = gtk_drag_check_threshold (widget,
@@ -1361,10 +1373,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 							  view->drag_info.start.y,
 							  event->x_root,
 							  event->y_root);
-			view->drag_info.dragging = start;
+			view->drag_info.in_drag = start;
 		}
 
-		if (view->drag_info.dragging) {
+		if (view->drag_info.in_drag) {
 			int dx, dy;
 			gdouble dhadj_value, dvadj_value;
 
@@ -1422,9 +1434,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 	}
 
 	view->pressed_button = -1;
-	view->drag_info.dragging = FALSE;
+	view->drag_info.in_drag = FALSE;
 
-	if (view->selections) {
+	if (view->selection_info.selections) {
 		ev_view_update_primary_selection (view);
 	} else if (view->document) {
 		EvLink *link;
@@ -1458,7 +1470,7 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 	GdkPixbuf *pixbuf;
 	GdkColor *fill_color_gdk;
 	guint fill_color;
-	
+
 	fill_color_gdk = gdk_color_copy (&GTK_WIDGET (widget)->style->base[GTK_STATE_SELECTED]);
 	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | alpha;
 
@@ -1519,22 +1531,23 @@ highlight_find_results (EvView *view, int page)
 }
 
 static void
-draw_one_page (EvView       *view,
-	       gint          page,
-	       GdkRectangle *page_area,
-	       GtkBorder    *border,
-	       GdkRectangle *expose_area)
+draw_one_page (EvView          *view,
+	       gint             page,
+	       GdkRectangle    *page_area,
+	       GtkBorder       *border,
+	       GdkRectangle    *expose_area)
 {
 	gint width, height;
-	GdkPixbuf *scaled_image;
 	GdkPixbuf *current_pixbuf;
 	GdkRectangle overlap;
 	GdkRectangle real_page_area;
+	EvViewSelection *selection;
 
 	g_assert (view->document);
 	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
 		return;
 
+	selection = find_selection_for_page (view, page);
 	ev_page_cache_get_size (view->page_cache,
 				page, view->scale,
 				&width, &height);
@@ -1551,7 +1564,17 @@ draw_one_page (EvView       *view,
 					 page_area, border);
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
+		GdkPixbuf *selection_pixbuf = NULL;
+		GdkPixbuf *scaled_image;
+		GdkPixbuf *scaled_selection;
+
 		current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, page);
+
+		/* Get the selection pixbuf iff we have something to draw */
+		if (current_pixbuf && view->selection_mode == EV_VIEW_SELECTION_TEXT && selection)
+			selection_pixbuf = ev_pixbuf_cache_get_selection_pixbuf (view->pixbuf_cache,
+										 page,
+										 view->scale);
 
 		if (current_pixbuf == NULL)
 			scaled_image = NULL;
@@ -1565,6 +1588,18 @@ draw_one_page (EvView       *view,
 								width, height,
 								GDK_INTERP_NEAREST);
 
+		if (selection_pixbuf == NULL)
+			scaled_selection = NULL;
+		else if (width == gdk_pixbuf_get_width (selection_pixbuf) &&
+			 height == gdk_pixbuf_get_height (selection_pixbuf))
+			scaled_selection = g_object_ref (selection_pixbuf);
+		else
+			/* FIXME: We don't want to scale the whole area, just the right
+			 * area of it */
+			scaled_selection = gdk_pixbuf_scale_simple (selection_pixbuf,
+								    width, height,
+								    GDK_INTERP_NEAREST);
+
 		if (scaled_image) {
 			gdk_draw_pixbuf (GTK_WIDGET(view)->window,
 					 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
@@ -1576,6 +1611,19 @@ draw_one_page (EvView       *view,
 					 GDK_RGB_DITHER_NORMAL,
 					 0, 0);
 			g_object_unref (scaled_image);
+		}
+
+		if (scaled_selection) {
+			gdk_draw_pixbuf (GTK_WIDGET(view)->window,
+					 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
+					 scaled_selection,
+					 overlap.x - real_page_area.x,
+					 overlap.y - real_page_area.y,
+					 overlap.x, overlap.y,
+					 overlap.width, overlap.height,
+					 GDK_RGB_DITHER_NORMAL,
+					 0, 0);
+			g_object_unref (scaled_selection);
 		}
 	}
 }
@@ -1713,7 +1761,7 @@ ev_view_class_init (EvViewClass *class)
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
 	class->binding_activated = ev_view_binding_activated;
 
-	widget_class->set_scroll_adjustments_signal =  
+	widget_class->set_scroll_adjustments_signal =
 	    g_signal_new ("set-scroll-adjustments",
 			  G_OBJECT_CLASS_TYPE (object_class),
 			  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
@@ -1802,7 +1850,7 @@ ev_view_class_init (EvViewClass *class)
 					 g_param_spec_double ("zoom",
 							      "Zoom factor",
 							       "Zoom factor",
-							       MIN_SCALE, 
+							       MIN_SCALE,
 							       MAX_SCALE,
 							       1.0,
 							       G_PARAM_READWRITE));
@@ -1825,8 +1873,10 @@ ev_view_init (EvView *view)
 	view->current_page = 0;
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
-	view->drag_info.dragging = FALSE;
+	view->drag_info.in_drag = FALSE;
+	view->selection_info.in_selection = FALSE;
 
+	view->selection_mode = EV_VIEW_SELECTION_TEXT;
 	view->continuous = TRUE;
 	view->dual_page = FALSE;
 	view->presentation = FALSE;
@@ -1861,7 +1911,7 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvView      *view)
 {
 	if (view->current_page != new_page) {
-		
+
 		view->current_page = new_page;
 		view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1895,9 +1945,9 @@ static void on_adjustment_value_changed (GtkAdjustment  *adjustment,
 	} else {
 		view->scroll_y = 0;
 	}
-	
-	
-	if (view->pending_resize)	
+
+
+	if (view->pending_resize)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	else
 		gdk_window_scroll (GTK_WIDGET (view)->window, dx, dy);
@@ -1999,7 +2049,7 @@ ev_view_set_zoom (EvView   *view,
 
 	view->scale = scale;
 	view->pending_resize = TRUE;
-	
+
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	g_object_notify (G_OBJECT (view), "zoom");
@@ -2038,7 +2088,7 @@ ev_view_set_dual_page (EvView   *view,
 
 	if (view->dual_page == dual_page)
 		return;
-    
+
 	view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
 	view->dual_page = dual_page;
 	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
@@ -2118,7 +2168,7 @@ ev_view_set_sizing_mode (EvView       *view,
 
 	view->sizing_mode = sizing_mode;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
-	
+
 	g_object_notify (G_OBJECT (view), "sizing-mode");
 }
 
@@ -2146,7 +2196,7 @@ void
 ev_view_zoom_in (EvView *view)
 {
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
-	
+
 	view->pending_scroll = SCROLL_TO_CENTER;
 	ev_view_set_zoom (view, ZOOM_IN_FACTOR, TRUE);
 }
@@ -2421,7 +2471,7 @@ ev_view_set_zoom_for_size (EvView *view,
 			   int     height,
 			   int     vsb_width,
 			   int     hsb_height)
-{	
+{
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 			  view->sizing_mode == EV_SIZING_BEST_FIT);
 	g_return_if_fail (width >= 0);
@@ -2643,14 +2693,20 @@ ev_view_find_previous (EvView *view)
 
 /*** Selections ***/
 
-static void
-compute_selections (EvView *view, GdkRectangle *view_rect)
+/* compute_new_selection_rect/text calculates the area currently selected by
+ * view_rect.  each handles a different mode;
+ */
+static GList *
+compute_new_selection_rect (EvView       *view,
+			    GdkRectangle *view_rect)
 {
 	int n_pages, i;
+	GList *list = NULL;
 
-	clear_selection (view);
+	g_assert (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE);
 
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+
 	for (i = 0; i < n_pages; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
@@ -2666,18 +2722,137 @@ compute_selections (EvView *view, GdkRectangle *view_rect)
 				view_rect_to_doc_rect (view, &overlap, &page_area,
 						       &(selection->rect));
 
-				view->selections = g_list_append
-						(view->selections, selection);
+				list = g_list_append (list, selection);
 			}
 		}
 	}
+
+	return list;
+}
+
+static GList *
+compute_new_selection_text (EvView       *view,
+			    GdkRectangle *view_rect)
+{
+	int n_pages, i;
+	GList *list = NULL;
+	EvViewSelection *first_selection = NULL;
+	EvViewSelection *last_selection = NULL;
+	gint width, height;
+
+	g_assert (view->selection_mode == EV_VIEW_SELECTION_TEXT);
+
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+
+	/* We get the two edge pages */
+	for (i = 0; i < n_pages; i++) {
+		GdkRectangle page_area;
+		GtkBorder border;
+
+		if (get_page_extents (view, i, &page_area, &border)) {
+			GdkRectangle overlap;
+
+			if (gdk_rectangle_intersect (&page_area, view_rect, &overlap)) {
+				EvViewSelection *selection;
+
+				if (first_selection == NULL) {
+					first_selection = g_new0 (EvViewSelection, 1);
+					selection = first_selection;
+				} else if (last_selection == NULL) {
+					last_selection = g_new0 (EvViewSelection, 1);
+					selection = last_selection;
+				} else {
+					selection = last_selection;
+				}
+
+				selection->page = i;
+				view_rect_to_doc_rect (view, &overlap, &page_area,
+						       &(selection->rect));
+			}
+		}
+	}
+
+	/* No overlap */
+	if (first_selection == NULL)
+		return NULL;
+
+	/* only one selection.  Return a page of it */
+	if (last_selection == NULL)
+		return g_list_append (NULL, first_selection);
+
+	/*clean up the selections;
+	 */
+	ev_page_cache_get_size (view->page_cache, first_selection->page,
+				1.0, &width, &height);
+	first_selection->rect.x2 = width;
+	first_selection->rect.y2 = height;
+	list = g_list_append (NULL, first_selection);
+
+	/* Add all the intervening pages */
+	for (i = first_selection->page + 1; i < last_selection->page; i++) {
+		EvViewSelection *selection;
+
+		selection = g_new0 (EvViewSelection, 1);
+		selection->page = i;
+		ev_page_cache_get_size (view->page_cache, i,
+					1.0, &width, &height);
+		selection->rect.x1 = selection->rect.y1 = 0;
+		selection->rect.x2 = width;
+		selection->rect.y2 = height;
+		g_list_append (list, selection);
+	}
+
+	/* Clean up the last page */
+	last_selection->rect.x1 = 0;
+	last_selection->rect.y1 = 0;
+	list = g_list_append (list, last_selection);
+
+	return list;
+}
+
+/* This function takes the newly calculated list, and figures out which regions
+ * have changed.  It then queues a redraw approporiately.
+ */
+static void
+merge_selection_region (EvView *view,
+			GList  *list)
+{
+
+	/* FIXME: actually write... */
+	clear_selection (view);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+
+	view->selection_info.selections = list;
+	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, list);
+}
+
+static void
+compute_selections (EvView       *view,
+		    GdkRectangle *view_rect)
+{
+	GList *list;
+
+	if (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE)
+		list = compute_new_selection_rect (view, view_rect);
+	else
+		list = compute_new_selection_text (view, view_rect);
+	merge_selection_region (view, list);
+}
+
+/* Free's the selection.  It's up to the caller to queue redraws if needed.
+ */
+static void
+selection_free (EvViewSelection *selection)
+{
+	g_free (selection);
 }
 
 static void
 clear_selection (EvView *view)
 {
-	g_list_foreach (view->selections, (GFunc)g_free, NULL);
-	view->selections = NULL;
+	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
+	view->selection_info.selections = NULL;
+	view->selection_info.in_selection = FALSE;
 }
 
 
@@ -2702,9 +2877,10 @@ ev_view_select_all (EvView *view)
 		selection->rect.x2 = width;
 		selection->rect.y2 = height;
 
-		view->selections = g_list_append (view->selections, selection);
+		view->selection_info.selections = g_list_append (view->selection_info.selections, selection);
 	}
 
+	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, view->selection_info.selections);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
@@ -2718,7 +2894,7 @@ get_selected_text (EvView *ev_view)
 
 	ev_document_doc_mutex_lock ();
 
-	for (l = ev_view->selections; l != NULL; l = l->next) {
+	for (l = ev_view->selection_info.selections; l != NULL; l = l->next) {
 		EvViewSelection *selection = (EvViewSelection *)l->data;
 		char *tmp;
 
@@ -2786,7 +2962,7 @@ ev_view_update_primary_selection (EvView *ev_view)
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
                                               GDK_SELECTION_PRIMARY);
 
-	if (ev_view->selections) {
+	if (ev_view->selection_info.selections) {
 		if (!gtk_clipboard_set_with_owner (clipboard,
 						   targets,
 						   G_N_ELEMENTS (targets),
