@@ -80,6 +80,8 @@ static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails   
 							 gint                       size,
 							 gint                      *width,
 							 gint                      *height);
+static int  pdf_document_get_n_pages			(EvDocument                *document);
+
 static EvLink * ev_link_from_action (PopplerAction *action);
 
 
