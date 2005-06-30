@@ -1,5 +1,10 @@
 2005-06-30  Kristian Høgsberg  <krh@redhat.com>
 
+	* shell/ev-view.c (ev_view_button_press_event): Fix
+	event->y + view->scroll_x typo.
+
+2005-06-30  Kristian Høgsberg  <krh@redhat.com>
+
 	* pdf/ev-poppler.cc: Adjust to poppler API changes; use a
 	sub-GdkPixbuf instead of passing dest_x and dest_y.
 	

@@ -1337,7 +1337,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 			}
 
 			view->selection_info.start.x = event->x + view->scroll_x;
-			view->selection_info.start.y = event->y + view->scroll_x;
+			view->selection_info.start.y = event->y + view->scroll_y;
 			return TRUE;
 		case 2:
 			/* use root coordinates as reference point because
