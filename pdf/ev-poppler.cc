@@ -83,6 +83,7 @@ static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails   
 static int  pdf_document_get_n_pages			(EvDocument                *document);
 
 static EvLink * ev_link_from_action (PopplerAction *action);
+static void pdf_document_search_free (PdfDocumentSearch   *search);
 
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
@@ -358,8 +359,7 @@ pdf_document_render_pixbuf (EvDocument   *document,
 				       0, 0,
 				       width, height,
 				       rc->scale,
-				       pixbuf,
-				       0, 0);
+				       pixbuf);
 	
 	g_object_unref (poppler_page);
 	
@@ -821,7 +821,7 @@ make_thumbnail_for_size (PdfDocument *pdf_document,
 			 gboolean     border)
 {
 	PopplerPage *poppler_page;
-	GdkPixbuf *pixbuf;
+	GdkPixbuf *pixbuf, *sub_pixbuf;
 	int width, height;
 	int x_offset, y_offset;
 	double scale;
@@ -837,20 +837,24 @@ make_thumbnail_for_size (PdfDocument *pdf_document,
 
 	if (border) {
 		pixbuf = ev_document_misc_get_thumbnail_frame (width, height, NULL);
-		x_offset = 1;
-		y_offset = 1;
+
+		sub_pixbuf = gdk_pixbuf_new_subpixbuf (pixbuf,
+						       1, 1,
+						       width - 1, height - 1);
 	} else {
 		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
 					 width, height);
 		gdk_pixbuf_fill (pixbuf, 0xffffffff);
-		x_offset = 0;
-		y_offset = 0;
+		sub_pixbuf = gdk_pixbuf_new_subpixbuf (pixbuf,
+						       0, 0,
+						       width, height);
 	}
 
 	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
 				       width, height,
-				       scale, pixbuf,
-				       x_offset, y_offset);
+				       scale, sub_pixbuf);
+
+	g_object_unref (G_OBJECT (sub_pixbuf));
 
 	g_object_unref (poppler_page);
 	return pixbuf;

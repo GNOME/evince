@@ -1,3 +1,16 @@
+2005-06-30  Kristian Høgsberg  <krh@redhat.com>
+
+	* pdf/ev-poppler.cc: Adjust to poppler API changes; use a
+	sub-GdkPixbuf instead of passing dest_x and dest_y.
+	
+	* shell/ev-view.c: (view_point_to_doc_point),
+	(view_rect_to_doc_rect), (ev_view_button_press_event),
+	(ev_view_motion_notify_event), (compute_new_selection_rect),
+	(gdk_rectangle_point_in), (compute_new_selection_text),
+	(compute_selections): Update selection code to keep the selection
+	around as two points and not as a normalized rectangle, and fix
+	page level selection in two-column mode.
+
 2005-06-30  Alex Duggan  <aldug@astrolinux.com>
 
 	* shell/ev-window.c: (window_configure_event_cb): 

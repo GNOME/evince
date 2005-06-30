@@ -350,7 +350,8 @@ static void       jump_to_find_page                          (EvView            
 
 /*** Selection ***/
 static void       compute_selections                         (EvView             *view,
-							      GdkRectangle       *view_rect);
+							      GdkPoint           *start,
+							      GdkPoint           *stop);
 static void       clear_selection                            (EvView             *view);
 static char*      get_selected_text                          (EvView             *ev_view);
 static void       ev_view_primary_get_cb                     (GtkClipboard       *clipboard,
@@ -863,15 +864,26 @@ get_page_extents (EvView       *view,
 }
 
 static void
+view_point_to_doc_point (EvView *view,
+			 GdkPoint *view_point,
+			 GdkRectangle *page_area,
+			 double  *doc_point_x,
+			 double  *doc_point_y)
+{
+	*doc_point_x = (double) (view_point->x - page_area->x) / view->scale;
+	*doc_point_y = (double) (view_point->y - page_area->y) / view->scale;
+}
+
+static void
 view_rect_to_doc_rect (EvView *view,
 		       GdkRectangle *view_rect,
 		       GdkRectangle *page_area,
 		       EvRectangle  *doc_rect)
 {
-	doc_rect->x1 = floor ((view_rect->x - page_area->x) / view->scale);
-	doc_rect->y1 = floor ((view_rect->y - page_area->y) / view->scale);
-	doc_rect->x2 = doc_rect->x1 + ceil (view_rect->width / view->scale);
-	doc_rect->y2 = doc_rect->y1 + ceil (view_rect->height / view->scale);
+	doc_rect->x1 = (double) (view_rect->x - page_area->x) / view->scale;
+	doc_rect->y1 = (double) (view_rect->y - page_area->y) / view->scale;
+	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
+	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
 
 static void
@@ -1324,8 +1336,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 				gtk_widget_queue_draw (widget);
 			}
 
-			view->selection_info.start.x = event->x;
-			view->selection_info.start.y = event->y;
+			view->selection_info.start.x = event->x + view->scroll_x;
+			view->selection_info.start.y = event->y + view->scroll_x;
 			return TRUE;
 		case 2:
 			/* use root coordinates as reference point because
@@ -1353,15 +1365,12 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		return FALSE;
 
 	if (view->pressed_button == 1) {
-		GdkRectangle selection;
+		GdkPoint point;
+
 		view->selection_info.in_selection = TRUE;
-
-		selection.x = MIN (view->selection_info.start.x, event->x) + view->scroll_x;
-		selection.y = MIN (view->selection_info.start.y, event->y) + view->scroll_y;
-		selection.width = ABS (view->selection_info.start.x - event->x) + 1;
-		selection.height = ABS (view->selection_info.start.y - event->y) + 1;
-
-		compute_selections (view, &selection);
+		point.x = event->x + view->scroll_x;
+		point.y = event->y + view->scroll_y;
+		compute_selections (view, &view->selection_info.start, &point);
 
 		return TRUE;
 	} else if (view->pressed_button == 2) {
@@ -2698,23 +2707,30 @@ ev_view_find_previous (EvView *view)
  */
 static GList *
 compute_new_selection_rect (EvView       *view,
-			    GdkRectangle *view_rect)
+			    GdkPoint     *start,
+			    GdkPoint     *stop)
 {
+	GdkRectangle view_rect;
 	int n_pages, i;
 	GList *list = NULL;
 
 	g_assert (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE);
+	
+	view_rect.x = MIN (start->x, stop->x);
+	view_rect.y = MIN (start->y, stop->y);
+	view_rect.width = MAX (start->x, stop->x) - view_rect.x;
+	view_rect.width = MAX (start->y, stop->y) - view_rect.y;
 
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	for (i = 0; i < n_pages; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
-
+		
 		if (get_page_extents (view, i, &page_area, &border)) {
 			GdkRectangle overlap;
 
-			if (gdk_rectangle_intersect (&page_area, view_rect, &overlap)) {
+			if (gdk_rectangle_intersect (&page_area, &view_rect, &overlap)) {
 				EvViewSelection *selection;
 
 				selection = g_new0 (EvViewSelection, 1);
@@ -2730,82 +2746,92 @@ compute_new_selection_rect (EvView       *view,
 	return list;
 }
 
-static GList *
-compute_new_selection_text (EvView       *view,
-			    GdkRectangle *view_rect)
+static gboolean
+gdk_rectangle_point_in (GdkRectangle *rectangle,
+			GdkPoint     *point)
 {
-	int n_pages, i;
+	return rectangle->x <= point->x &&
+		rectangle->y <= point->y &&
+		point->x < rectangle->x + rectangle->width &&
+		point->y < rectangle->y + rectangle->height;
+}
+
+static GList *
+compute_new_selection_text (EvView   *view,
+			    GdkPoint *start,
+			    GdkPoint *stop)
+{
+	int n_pages, i, first, last;
 	GList *list = NULL;
-	EvViewSelection *first_selection = NULL;
-	EvViewSelection *last_selection = NULL;
+	EvViewSelection *selection;
 	gint width, height;
 
 	g_assert (view->selection_mode == EV_VIEW_SELECTION_TEXT);
 
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
-	/* We get the two edge pages */
+	/* First figure out the range of pages the selection
+	 * affects. */
+	first = n_pages;
+	last = 0;
 	for (i = 0; i < n_pages; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
-
-		if (get_page_extents (view, i, &page_area, &border)) {
-			GdkRectangle overlap;
-
-			if (gdk_rectangle_intersect (&page_area, view_rect, &overlap)) {
-				EvViewSelection *selection;
-
-				if (first_selection == NULL) {
-					first_selection = g_new0 (EvViewSelection, 1);
-					selection = first_selection;
-				} else if (last_selection == NULL) {
-					last_selection = g_new0 (EvViewSelection, 1);
-					selection = last_selection;
-				} else {
-					selection = last_selection;
-				}
-
-				selection->page = i;
-				view_rect_to_doc_rect (view, &overlap, &page_area,
-						       &(selection->rect));
-			}
+		
+		get_page_extents (view, i, &page_area, &border);
+		if (gdk_rectangle_point_in (&page_area, start) || 
+		    gdk_rectangle_point_in (&page_area, stop)) {
+			if (first == n_pages)
+				first = i;
+			last = i;
 		}
+
 	}
 
-	/* No overlap */
-	if (first_selection == NULL)
-		return NULL;
 
-	/* only one selection.  Return a page of it */
-	if (last_selection == NULL)
-		return g_list_append (NULL, first_selection);
 
-	/*clean up the selections;
-	 */
-	ev_page_cache_get_size (view->page_cache, first_selection->page,
-				1.0, &width, &height);
-	first_selection->rect.x2 = width;
-	first_selection->rect.y2 = height;
-	list = g_list_append (NULL, first_selection);
+	/* Now create a list of EvViewSelection's for the affected
+	 * pages.  This could be an empty list, a list of just one
+	 * page or a number of pages.*/
+	for (i = first; i < last + 1; i++) {
+		GdkRectangle page_area;
+		GtkBorder border;
+		GdkPoint *point;
 
-	/* Add all the intervening pages */
-	for (i = first_selection->page + 1; i < last_selection->page; i++) {
-		EvViewSelection *selection;
+		ev_page_cache_get_size (view->page_cache, i,
+					1.0, &width, &height);
 
 		selection = g_new0 (EvViewSelection, 1);
 		selection->page = i;
-		ev_page_cache_get_size (view->page_cache, i,
-					1.0, &width, &height);
 		selection->rect.x1 = selection->rect.y1 = 0;
 		selection->rect.x2 = width;
 		selection->rect.y2 = height;
-		g_list_append (list, selection);
-	}
 
-	/* Clean up the last page */
-	last_selection->rect.x1 = 0;
-	last_selection->rect.y1 = 0;
-	list = g_list_append (list, last_selection);
+		get_page_extents (view, i, &page_area, &border);
+
+		if (gdk_rectangle_point_in (&page_area, start))
+			point = start;
+		else
+			point = stop;
+
+		if (i == first)
+			view_point_to_doc_point (view, point, &page_area,
+						 &selection->rect.x1,
+						 &selection->rect.y1);
+
+		/* If the selection is contained within just one page,
+		 * make sure we don't write 'start' into both points
+		 * in selection->rect. */
+		if (first == last)
+			point = stop;
+
+		if (i == last)
+			view_point_to_doc_point (view, point, &page_area,
+						 &selection->rect.x2,
+						 &selection->rect.y2);
+
+		list = g_list_append (list, selection);
+	}
 
 	return list;
 }
@@ -2827,15 +2853,16 @@ merge_selection_region (EvView *view,
 }
 
 static void
-compute_selections (EvView       *view,
-		    GdkRectangle *view_rect)
+compute_selections (EvView   *view,
+		    GdkPoint *start,
+		    GdkPoint *stop)
 {
 	GList *list;
 
 	if (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE)
-		list = compute_new_selection_rect (view, view_rect);
+		list = compute_new_selection_rect (view, start, stop);
 	else
-		list = compute_new_selection_text (view, view_rect);
+		list = compute_new_selection_text (view, start, stop);
 	merge_selection_region (view, list);
 }
 
