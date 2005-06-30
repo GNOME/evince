@@ -44,20 +44,23 @@ typedef struct _EvApplicationPrivate EvApplicationPrivate;
 #define EV_APP					(ev_application_get_instance ())
 
 struct _EvApplication {
-	GObject			 base_instance;
-	EvApplicationPrivate	*priv;
+	GObject base_instance;
 };
 
 struct _EvApplicationClass {
-	GObjectClass		 base_class;
+	GObjectClass base_class;
 };
 
-GType		 ev_application_get_type		(void);
-EvApplication	*ev_application_get_instance		(void);
-void		 ev_application_open			(EvApplication *application,
-							 GError        *err);
-EvWindow	*ev_application_new_window		(EvApplication *application);
-EvWindow * 	 ev_application_get_empty_window 	(EvApplication *application);
+GType	       ev_application_get_type	       (void);
+gboolean       ev_application_register_service (EvApplication   *application);
+EvApplication *ev_application_get_instance     (void);
+void	       ev_application_open_window      (EvApplication   *application);
+void	       ev_application_open_uri         (EvApplication   *application,
+				                const char      *uri,
+					        const char      *page_label);
+void	       ev_application_open_uri_list    (EvApplication   *application,
+					        GSList          *uri_list);
+void	       ev_application_shutdown	       (EvApplication   *application);
 
 G_END_DECLS
 

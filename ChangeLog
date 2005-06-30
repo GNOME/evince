@@ -1,3 +1,20 @@
+2005-06-24  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-application-service.xml:
+	* configure.ac:
+	* shell/Makefile.am:
+	* shell/ev-application.c:
+	* shell/ev-application.h:
+	* shell/ev-window.c:
+	* shell/ev-window.h:
+	* shell/main.c:
+
+	Add an optional dbus interface (--enable-dbus).
+	Rework application code, mainly to be easier to
+	use "remotely".
+	Do not open multiple windows with the same document,
+	spatial evince!
+
 Thu Jun 30 01:50:14 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-pixbuf-cache.c (clear_selection_if_needed): unref the

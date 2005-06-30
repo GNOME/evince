@@ -29,48 +29,89 @@
 #include <libgnomeui/gnome-app-helper.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
+#ifdef ENABLE_DBUS
+#include <dbus/dbus-glib-bindings.h>
+#endif
+
 #include "ev-stock-icons.h"
 #include "ev-debug.h"
 #include "ev-job-queue.h"
 #include "ev-file-helpers.h"
 
-static char *page_label;
+static char *ev_page_label;
 
 static struct poptOption popt_options[] =
 {
-	{ "page-label", 'p', POPT_ARG_STRING, &page_label, 0, N_("The page of the document to display."), N_("PAGE")},
+	{ "page-label", 'p', POPT_ARG_STRING, &ev_page_label, 0, N_("The page of the document to display."), N_("PAGE")},
 	{ NULL, 0, 0, NULL, 0, NULL, NULL }
 };
 
 static void
 load_files (const char **files)
 {
-	GtkWidget *window;
 	int i;
 
 	if (!files) {
-		window = GTK_WIDGET (ev_application_new_window (EV_APP));
-		gtk_widget_show (window);
+		ev_application_open_window (EV_APP);
 		return;
 	}
 
 	for (i = 0; files[i]; i++) {
 		char *uri;
 
-		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);		
-
-		window = GTK_WIDGET (ev_application_new_window (EV_APP));
-		gtk_widget_show (window);
-		ev_window_open_uri (EV_WINDOW (window), uri);
-		
-		if (page_label != NULL)
-			ev_window_open_page_label (EV_WINDOW (window), page_label);
-
+		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
+		ev_application_open_uri (EV_APP, uri, ev_page_label);		
 		g_free (uri);
         }
-
-	g_free (page_label);
 }
+
+#ifdef ENABLE_DBUS
+static void
+load_files_remote (const char **files)
+{
+	int i;
+	GError *error;
+	DBusGConnection *connection;
+	DBusGPendingCall *call;
+	DBusGProxy *remote_object;
+
+	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	if (connection == NULL) {
+		g_warning (error->message);
+		return;
+	}
+
+	remote_object = dbus_g_proxy_new_for_name (connection,
+						   "org.gnome.evince.ApplicationService",
+                                                   "/org/gnome/evince/Evince",
+                                                   "org.gnome.evince.Application");
+	if (!files) {
+		call = dbus_g_proxy_begin_call (remote_object, "OpenWindow", DBUS_TYPE_INVALID);
+		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
+			g_warning (error->message);
+		}
+		return;
+	}
+
+	for (i = 0; files[i]; i++) {
+		const char *page_label;
+		char *uri;
+
+		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
+		page_label = ev_page_label ? ev_page_label : ""; 
+
+		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
+						DBUS_TYPE_STRING, &uri,
+						DBUS_TYPE_STRING, &page_label,
+						DBUS_TYPE_INVALID);
+		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
+			g_warning (error->message);
+		}
+		
+		g_free (uri);
+        }
+}
+#endif
 
 int
 main (int argc, char *argv[])
@@ -92,6 +133,21 @@ main (int argc, char *argv[])
                                       GNOME_PARAM_HUMAN_READABLE_NAME, _("Evince"),
 				      GNOME_PARAM_APP_DATADIR, GNOMEDATADIR,
                                       NULL);
+	g_object_get_property (G_OBJECT (program),
+                               GNOME_PARAM_POPT_CONTEXT,
+                               g_value_init (&context_as_value, G_TYPE_POINTER));
+        context = g_value_get_pointer (&context_as_value);
+
+
+#ifdef ENABLE_DBUS
+	if (!ev_application_register_service (EV_APP)) {
+		load_files_remote (poptGetArgs (context));
+		g_warning ("Another process was running.");
+		return 0;
+	} else {
+		g_warning ("Starting evince process.");
+	}
+#endif
 
 	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
@@ -100,11 +156,6 @@ main (int argc, char *argv[])
 	ev_debug_init ();
 	ev_stock_icons_init ();
 	gtk_window_set_default_icon_name ("postscript-viewer");
-
-	g_object_get_property (G_OBJECT (program),
-                               GNOME_PARAM_POPT_CONTEXT,
-                               g_value_init (&context_as_value, G_TYPE_POINTER));
-        context = g_value_get_pointer (&context_as_value);
 
 	load_files (poptGetArgs (context));
 

@@ -20,6 +20,10 @@ INCLUDES=						\
 	$(EVINCE_DISABLE_DEPRECATED)			\
 	$(NULL)
 
+if ENABLE_DBUS
+INCLUDES += $(DBUS_CFLAGS)
+endif
+
 bin_PROGRAMS=evince
 noinst_LTLIBRARIES = libevbackendfactory.la
 
@@ -112,7 +116,15 @@ evince_LDADD=								\
 	libevbackendfactory.la						\
 	$(NULL)
 
+if ENABLE_DBUS
+evince_LDADD += $(DBUS_LIBS)
+endif
+
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
+
+if ENABLE_DBUS
+BUILT_SOURCES += ev-application-service.h
+endif
 
 EXTRA_DIST = ev-marshal.list
 
@@ -122,3 +134,6 @@ ev-marshal.h: ev-marshal.list
 ev-marshal.c: ev-marshal.list
 	echo '#include "ev-marshal.h"' > ev-marshal.c
 	glib-genmarshal --prefix=ev_marshal ev-marshal.list --body >> ev-marshal.c
+
+ev-application-service.h: ev-application-service.xml
+	dbus-binding-tool --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml

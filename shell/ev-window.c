@@ -932,42 +932,49 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
     			            TRUE);
 }
 
-void
-ev_window_open_uri_list (EvWindow *ev_window, GSList *uri_list)
-{
-	GSList *list;
-	gchar  *uri;
-	
-	g_return_if_fail (uri_list != NULL);
-	
-	list = uri_list;
-	while (list) {
-
-		uri = (gchar *)list->data;
-		
-			if (ev_window_is_empty (EV_WINDOW (ev_window))) {
-				ev_window_open_uri (ev_window, uri);
-
-				gtk_widget_show (GTK_WIDGET (ev_window));
-			} else {
-				EvWindow *new_window;
-
-				new_window = ev_application_new_window (EV_APP);
-				ev_window_open_uri (new_window, uri);
-
-				gtk_widget_show (GTK_WIDGET (new_window));
-			}
-
-		g_free (uri);
-
-		list = g_slist_next (list);
-	}
-}
-
 static void
-ev_window_cmd_file_open (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 {
-	ev_application_open (EV_APP, NULL);
+	GtkWidget *chooser;
+	static char *folder = NULL;
+
+	chooser = gtk_file_chooser_dialog_new (_("Open document"),
+					       GTK_WINDOW (window),
+					       GTK_FILE_CHOOSER_ACTION_OPEN,
+					       GTK_STOCK_CANCEL,
+					       GTK_RESPONSE_CANCEL,
+					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+					       NULL);
+
+	if (folder) {
+		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (chooser),
+						         folder);
+    	}
+
+	ev_document_types_add_filters (chooser);
+	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
+
+	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {
+		GSList *uris;
+
+		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
+
+		if (folder != NULL)
+			g_free (folder);
+				
+		folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (chooser));
+
+		ev_application_open_uri_list (EV_APP, uris);
+	
+		g_slist_foreach (uris, (GFunc)g_free, NULL);	
+		g_slist_free (uris);
+	} else {
+		if (!GTK_WIDGET_VISIBLE (window))
+			gtk_widget_destroy (GTK_WIDGET (window));
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (chooser));
 }
 
 static void
@@ -976,16 +983,13 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 {
 	char *uri;
 	EggRecentItem *item;
-	GtkWidget *window;
 
 	item = egg_recent_view_uimanager_get_item (ev_window->priv->recent_view,
 						   action);
 
 	uri = egg_recent_item_get_uri (item);
-	
-	window = GTK_WIDGET (ev_application_get_empty_window (EV_APP));
-	gtk_widget_show (window);
-	ev_window_open_uri (EV_WINDOW (window), uri);
+
+	ev_application_open_uri (EV_APP, uri, NULL);	
 	
 	g_free (uri);
 }
@@ -1194,6 +1198,12 @@ ev_window_print (EvWindow *window)
 	last_page = ev_page_cache_get_n_pages (page_cache);
 
 	ev_window_print_range (window, 1, -1);
+}
+
+const char *
+ev_window_get_uri (EvWindow *ev_window)
+{
+	return ev_window->priv->uri;
 }
 
 void
@@ -2423,6 +2433,20 @@ zoom_control_changed_cb (EphyZoomAction *action,
 }
 
 static void
+ev_window_finalize (GObject *object)
+{
+	GList *windows = gtk_window_list_toplevels ();
+
+	if (windows == NULL) {
+		ev_application_shutdown (EV_APP);
+	} else {
+		g_list_free (windows);
+	}
+
+	G_OBJECT_CLASS (ev_window_parent_class)->finalize (object);
+}
+
+static void
 ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
@@ -2522,6 +2546,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (ev_window_class);
 
 	g_object_class->dispose = ev_window_dispose;
+	g_object_class->finalize = ev_window_finalize;
 
 	widget_class->window_state_event = ev_window_state_event;
 	widget_class->focus_in_event = ev_window_focus_in_event;
@@ -2714,7 +2739,7 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 
 		gnome_vfs_uri_list_free (uri_list);
 		
-		ev_window_open_uri_list (EV_WINDOW (widget), uris);
+		ev_application_open_uri_list (EV_APP, uris);
 		
 		g_slist_free (uris);
 
@@ -3212,4 +3237,19 @@ ev_window_init (EvWindow *ev_window)
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	update_action_sensitivity (ev_window);
 }
+
+GtkWidget *
+ev_window_new (void)
+{
+	GtkWidget *ev_window;
+
+	ev_window = GTK_WIDGET (g_object_new (EV_TYPE_WINDOW,
+					      "type", GTK_WINDOW_TOPLEVEL,
+					      "default-width", 600,
+					      "default-height", 600,
+					      NULL));
+
+	return ev_window;
+}
+
 

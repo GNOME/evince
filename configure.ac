@@ -33,6 +33,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 
 POPPLER_REQUIRED=0.3.3
+DBUS_GLIB_REQUIRED=0.33
 
 PKG_CHECK_MODULES(LIBEVPRIVATE, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(TOOLBAR_EDITOR, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)
@@ -47,6 +48,20 @@ PKG_CHECK_MODULES(POPPLER_GLIB, poppler-glib >= $POPPLER_REQUIRED)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
+
+AC_ARG_ENABLE([dbus],
+        AS_HELP_STRING([--enable-dbus],[Enable DBUS (default=no)]),
+        [enable_dbus=$enableval],
+        [enable_dbus=no])
+
+AC_MSG_RESULT([$enable_dbus])
+
+if test "x$enable_dbus" = "xyes" ; then
+        AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
+        PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
+fi
+
+AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
 
 dnl Compile with disable-deprecated switches
 

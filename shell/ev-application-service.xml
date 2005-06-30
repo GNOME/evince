@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<node name="/org/gnome/evince/Evince">
+
+  <interface name="org.gnome.evince.Application">
+    <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application"/>
+
+    <method name="OpenWindow">
+      <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_window"/>
+    </method>
+
+    <method name="OpenURI">
+      <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_uri"/>
+      <arg type="s" name="uri" direction="in"/>
+      <arg type="s" name="page_label" direction="in"/>
+    </method>
+
+  </interface>
+
+</node>
