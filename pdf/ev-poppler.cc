@@ -104,6 +104,25 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 			 });
 
 static void
+pdf_document_search_free (PdfDocumentSearch   *search)
+{
+        PdfDocument *pdf_document = search->document;
+	int n_pages;
+	int i;
+
+        if (search->idle != 0)
+                g_source_remove (search->idle);
+
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
+	for (i = 0; i < n_pages; i++) {
+		g_list_foreach (search->pages[i], (GFunc) g_free, NULL);
+		g_list_free (search->pages[i]);
+	}
+	
+        g_free (search->text);
+}
+
+static void
 pdf_document_dispose (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(object);
@@ -987,25 +1006,6 @@ pdf_document_search_new (PdfDocument *pdf_document,
         search->search_page = start_page;
 
 	return search;
-}
-
-static void
-pdf_document_search_free (PdfDocumentSearch   *search)
-{
-        PdfDocument *pdf_document = search->document;
-	int n_pages;
-	int i;
-
-        if (search->idle != 0)
-                g_source_remove (search->idle);
-
-	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
-	for (i = 0; i < n_pages; i++) {
-		g_list_foreach (search->pages[i], (GFunc) g_free, NULL);
-		g_list_free (search->pages[i]);
-	}
-	
-        g_free (search->text);
 }
 
 static void
