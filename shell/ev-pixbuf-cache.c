@@ -653,7 +653,8 @@ clear_selection_if_needed (EvPixbufCache *pixbuf_cache,
 			   gfloat         scale)
 {
 	if (new_selection_pixbuf_needed (pixbuf_cache, job_info, page, scale)) {
-		g_object_unref (job_info->selection);
+		if (job_info->selection)
+			g_object_unref (job_info->selection);
 		job_info->selection = NULL;
 		job_info->selection_points.x1 = -1;
 	}
