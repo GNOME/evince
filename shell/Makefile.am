@@ -105,6 +105,12 @@ evince_SOURCES=				\
 	main.c				\
 	$(NULL)
 
+if ENABLE_METADATA
+evince_SOURCES += \
+	ev-metadata-manager.h		\
+	ev-metadata-manager.c
+endif
+
 evince_LDADD=								\
 	$(SHELL_LIBS)							\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\

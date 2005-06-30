@@ -60,6 +60,7 @@
 #include "ev-application.h"
 #include "ev-stock-icons.h"
 #include "ev-file-helpers.h"
+#include "ev-metadata-manager.h"
 
 #include <poppler.h>
 
@@ -906,6 +907,23 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	}		
 }
 
+#ifdef ENABLE_METADATA
+static void
+ev_window_setup_from_metadata (EvWindow *window)
+{
+	char *uri = window->priv->uri;
+	GValue width = { 0, };
+	GValue height = { 0, };
+
+	ev_metadata_manager_get (uri, "window_width", &width);
+	ev_metadata_manager_get (uri, "window_height", &height);
+
+	gtk_window_set_default_size (GTK_WINDOW (window),
+				     g_value_get_int (&width),
+				     g_value_get_int (&height));
+}
+#endif
+
 void
 ev_window_open_uri (EvWindow *ev_window, const char *uri)
 {
@@ -914,6 +932,10 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
+
+#ifdef ENABLE_METADATA
+	ev_window_setup_from_metadata (ev_window);
+#endif
 	
 	ev_window_clear_jobs (ev_window);
 	ev_window_clear_local_uri (ev_window);
@@ -2975,6 +2997,25 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 	}
 }
 
+static gboolean
+window_configure_event_cb (EvWindow *window, gpointer dummy)
+{
+#ifdef ENABLE_METADATA
+	int width, height;
+
+	if (window->priv->uri == NULL) {
+		return FALSE;
+	}
+
+	gtk_window_get_size (GTK_WINDOW (window), &width, &height);
+
+	ev_metadata_manager_set_int (window->priv->uri, "window_width", width);
+	ev_metadata_manager_set_int (window->priv->uri, "window_height", height);
+
+	return FALSE;
+#endif
+}
+
 static void
 ev_window_init (EvWindow *ev_window)
 {
@@ -2985,6 +3026,9 @@ ev_window_init (EvWindow *ev_window)
 	GConfValue *value;
 	GConfClient *client;
 	int sidebar_size;
+
+	g_signal_connect (ev_window, "configure_event",
+			  G_CALLBACK (window_configure_event_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 

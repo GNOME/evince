@@ -1,3 +1,37 @@
+2005-06-30  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/Makefile.am:
+	* shell/ev-metadata-manager.c: (item_free),
+	(ev_metadata_manager_init), (ev_metadata_manager_shutdown),
+	(parse_value), (parseItem), (load_values),
+	(ev_metadata_manager_get), (value_free), (ev_metadata_manager_set),
+	(save_values), (save_item), (get_oldest), (resize_items),
+	(ev_metadata_manager_save), (ev_metadata_manager_set_int):
+	* shell/ev-metadata-manager.h:
+
+	Metadata manager from gedit but modified to use GValue, so that
+	we dont need to keep converting from strings.
+
+	* configure.ac:
+
+	ENABLE_METADATA conditional, on when dbus is on
+
+	* shell/ev-application.c: (ev_application_open_uri):
+
+	Show the window after load so that we can initialize
+	window size before it's showed.
+
+	* shell/ev-window.c: (ev_window_setup_from_metadata),
+	(ev_window_open_uri), (window_configure_event_cb),
+	(ev_window_init):
+
+	Save and load metadata information about window size.
+	Not yet keeping states in account.
+
+	* shell/main.c: (main):
+
+	Shutdown metadata manager.
+
 2005-06-24  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/ev-application-service.xml:

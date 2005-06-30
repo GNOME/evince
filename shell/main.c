@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include "ev-application.h"
+#include "ev-metadata-manager.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtkmain.h>
@@ -164,6 +165,9 @@ main (int argc, char *argv[])
 	gnome_accelerators_sync ();
 	poptFreeContext (context);
 	ev_file_helpers_shutdown ();
+#if ENABLE_METADATA
+	ev_metadata_manager_shutdown ();
+#endif
 
 	return 0;
 }

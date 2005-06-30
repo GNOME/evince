@@ -177,9 +177,9 @@ ev_application_open_uri (EvApplication *application,
 		new_window = EV_WINDOW (ev_window_new ());
 	}
 	
-	gtk_window_present (GTK_WINDOW (new_window));
-
 	ev_window_open_uri (new_window, uri);
+
+	gtk_window_present (GTK_WINDOW (new_window));
 
 	if (page_label != NULL) {
 		ev_window_open_page_label (new_window, page_label);

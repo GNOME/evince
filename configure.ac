@@ -58,10 +58,12 @@ AC_MSG_RESULT([$enable_dbus])
 
 if test "x$enable_dbus" = "xyes" ; then
         AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
+	 AC_DEFINE([ENABLE_METADATA],[1],[Define if metadata support is enabled])
         PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
 fi
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
+AM_CONDITIONAL([ENABLE_METADATA], [test "x$enable_dbus" = "xyes"])
 
 dnl Compile with disable-deprecated switches
 
