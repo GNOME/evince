@@ -54,6 +54,8 @@ struct _DviDocument
 	
 	double base_width;
 	double base_height;
+
+	EvOrientation orientation;
 };
 
 typedef struct _DviDocumentClass DviDocumentClass;
@@ -134,6 +136,24 @@ dvi_document_get_n_pages (EvDocument  *document)
     return dvi_document->context->npages;
 }
 
+static EvOrientation
+dvi_document_get_orientation (EvDocument *document)
+{
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
+
+	return dvi_document->orientation;
+}
+
+static void
+dvi_document_set_orientation (EvDocument *document,
+		 	      EvOrientation   orientation)
+{
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
+
+	dvi_document->orientation = orientation;
+}
+
+
 static void
 dvi_document_get_page_size (EvDocument   *document,
 			    int       page,
@@ -141,20 +161,43 @@ dvi_document_get_page_size (EvDocument   *document,
 			    double    *height)
 {
 	DviDocument * dvi_document = DVI_DOCUMENT (document);	
-	
-	if (width != NULL)
-    	    *width = dvi_document->base_width;
 
-	if (height != NULL)
-	    *height = dvi_document->base_height;
-			    
+	if (dvi_document->orientation == EV_ORIENTATION_PORTRAIT ||
+            dvi_document->orientation ==  EV_ORIENTATION_UPSIDEDOWN) {
+	        *width = dvi_document->base_width;
+	        *height = dvi_document->base_height;;
+	} else {
+	        *width = dvi_document->base_height;
+	        *height = dvi_document->base_width;
+	}
+				    
 	return;
 }
 
 static GdkPixbuf *
-dvi_document_render_pixbuf (EvDocument  *document, int page, double scale)
+rotate_pixbuf (EvDocument *document, GdkPixbuf *pixbuf)
+{
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
+
+	switch (dvi_document->orientation)
+	{
+		case EV_ORIENTATION_LANDSCAPE:
+			return gdk_pixbuf_rotate_simple (pixbuf, 90);
+		case EV_ORIENTATION_UPSIDEDOWN:
+			return gdk_pixbuf_rotate_simple (pixbuf, 180);
+		case EV_ORIENTATION_SEASCAPE:
+			return gdk_pixbuf_rotate_simple (pixbuf, 270);
+		default:
+			return g_object_ref (pixbuf);
+	}
+}
+
+static GdkPixbuf *
+dvi_document_render_pixbuf (EvDocument  *document,
+			    EvRenderContext *rc)
 {
 	GdkPixbuf *pixbuf;
+	GdkPixbuf *rotated_pixbuf;
 
 	DviDocument *dvi_document = DVI_DOCUMENT(document);
 
@@ -168,14 +211,14 @@ dvi_document_render_pixbuf (EvDocument  *document, int page, double scale)
 	 */
 	g_mutex_lock (dvi_context_mutex);
 	
-	mdvi_setpage(dvi_document->context,  page);
+	mdvi_setpage(dvi_document->context,  rc->page);
 	
 	mdvi_set_shrink (dvi_document->context, 
-			 (int)((dvi_document->params->hshrink - 1) / scale) + 1,
-			 (int)((dvi_document->params->vshrink - 1) / scale) + 1);
+			 (int)((dvi_document->params->hshrink - 1) / rc->scale) + 1,
+			 (int)((dvi_document->params->vshrink - 1) / rc->scale) + 1);
 
-	required_width = dvi_document->base_width * scale;
-	required_height = dvi_document->base_height * scale;
+	required_width = dvi_document->base_width * rc->scale;
+	required_height = dvi_document->base_height * rc->scale;
 	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
 	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
 	
@@ -192,7 +235,10 @@ dvi_document_render_pixbuf (EvDocument  *document, int page, double scale)
 
 	g_mutex_unlock (dvi_context_mutex);
 
-	return pixbuf;
+        rotated_pixbuf = rotate_pixbuf (document, pixbuf);
+        g_object_unref (pixbuf);
+
+	return rotated_pixbuf;
 }
 
 static void
@@ -247,6 +293,8 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = dvi_document_get_page_size;
 	iface->render_pixbuf = dvi_document_render_pixbuf;
 	iface->get_info = dvi_document_get_info;
+	iface->get_orientation = dvi_document_get_orientation;
+	iface->set_orientation = dvi_document_set_orientation;
 }
 
 static void
