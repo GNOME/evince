@@ -115,11 +115,13 @@ struct _EvJobRender
 	GdkPixbuf *pixbuf;
 
 	GList *link_mapping;
+	GdkRegion *text_mapping;
 
 	GdkPixbuf *selection;
 	EvRectangle selection_points;
 
 	gint include_links : 1;
+	gint include_text : 1;
 	gint include_selection : 1;
 };
 
@@ -182,6 +184,7 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 					   gint             height,
 					   EvRectangle     *selection_points,
 					   gboolean         include_links,
+					   gboolean         include_text,
 					   gboolean         include_selection);
 void            ev_job_render_run         (EvJobRender     *thumbnail);
 

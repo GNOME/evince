@@ -70,11 +70,21 @@ ev_selection_render_selection (EvSelection      *selection,
 				 points, old_points);
 }
 
-GdkRegion *ev_selection_get_selection_region (EvSelection     *selection,
-					      EvRenderContext *rc,
-					      EvRectangle     *points)
+GdkRegion *
+ev_selection_get_selection_region (EvSelection     *selection,
+				   EvRenderContext *rc,
+				   EvRectangle     *points)
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
 	return iface->get_selection_region (selection, rc, points);
+}
+
+GdkRegion *
+ev_selection_get_selection_map (EvSelection     *selection,
+				EvRenderContext *rc)
+{
+	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
+
+	return iface->get_selection_map (selection, rc);
 }

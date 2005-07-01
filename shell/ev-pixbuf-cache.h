@@ -58,9 +58,9 @@ GdkPixbuf     *ev_pixbuf_cache_get_pixbuf           (EvPixbufCache *pixbuf_cache
 						     gint           page);
 GList         *ev_pixbuf_cache_get_link_mapping     (EvPixbufCache *pixbuf_cache,
 						     gint           page);
-/* Selection */
-GList         *ev_pixbuf_cach_get_text_mapping      (EvPixbufCache *pixbuf_cache,
+GdkRegion     *ev_pixbuf_cache_get_text_mapping     (EvPixbufCache *pixbuf_cache,
 						     gint           page);
+/* Selection */
 GdkPixbuf     *ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 						     gint           page,
 						     gfloat         scale);

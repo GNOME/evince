@@ -78,6 +78,7 @@ static guint signals[N_SIGNALS];
 
 typedef enum {
 	EV_VIEW_CURSOR_NORMAL,
+	EV_VIEW_CURSOR_IBEAM,
 	EV_VIEW_CURSOR_LINK,
 	EV_VIEW_CURSOR_WAIT,
 	EV_VIEW_CURSOR_HIDDEN,
@@ -944,6 +945,28 @@ find_page_at_location (EvView  *view,
 	*page = -1;
 }
 
+static gboolean
+location_in_text (EvView  *view,
+		  gdouble  x,
+		  gdouble  y)
+{
+	GdkRegion *region;
+	gint page = -1;
+	gint x_offset = 0, y_offset = 0;
+
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+
+	if (page == -1)
+		return FALSE;
+	
+	region = ev_pixbuf_cache_get_text_mapping (view->pixbuf_cache, page);
+
+	if (region)
+		return gdk_region_point_in (region, x_offset / view->scale, y_offset / view->scale);
+	else
+		return FALSE;
+}
+
 /*** Hyperref ***/
 static EvLink *
 get_link_at_location (EvView  *view,
@@ -1420,11 +1443,13 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			ev_view_set_status (view, msg);
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 			g_free (msg);
+		} else if (location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y)) {
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 		} else {
 			ev_view_set_status (view, NULL);
-			if (view->cursor == EV_VIEW_CURSOR_LINK) {
+			if (view->cursor == EV_VIEW_CURSOR_LINK ||
+			    view->cursor == EV_VIEW_CURSOR_IBEAM)
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
-			}
 		}
 		return TRUE;
 	}
@@ -3035,6 +3060,9 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 	switch (new_cursor) {
 		case EV_VIEW_CURSOR_NORMAL:
 			gdk_window_set_cursor (widget->window, NULL);
+			break;
+		case EV_VIEW_CURSOR_IBEAM:
+			cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
 			break;
 		case EV_VIEW_CURSOR_LINK:
 			cursor = gdk_cursor_new_for_display (display, GDK_HAND2);

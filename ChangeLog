@@ -1,3 +1,19 @@
+Fri Jul  1 00:10:15 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-selection.c: (ev_selection_get_selection_region),
+	(ev_selection_get_selection_map):
+	* backend/ev-selection.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-jobs.c: (ev_job_render_new), (ev_job_render_run):
+	* shell/ev-jobs.h:
+	* shell/ev-pixbuf-cache.c: (dispose_cache_job_info),
+	(job_finished_cb), (copy_job_to_job_info), (add_job_if_needed),
+	(ev_pixbuf_cache_get_text_mapping):
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-view.c: (location_in_text),
+	(ev_view_motion_notify_event), (ev_view_set_cursor): Add I-Beam
+	support to EvView.  Now we can see where we can select!  Sweet!
+
 2005-06-30  Kristian Høgsberg  <krh@redhat.com>
 
 	* shell/ev-view.c (ev_view_button_press_event): Fix

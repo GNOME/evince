@@ -823,7 +823,6 @@ make_thumbnail_for_size (PdfDocument *pdf_document,
 	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf, *sub_pixbuf;
 	int width, height;
-	int x_offset, y_offset;
 	double scale;
 	gdouble unscaled_width, unscaled_height;
 
@@ -1239,11 +1238,35 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 	return retval;
 }
 
+GdkRegion *
+pdf_selection_get_selection_map (EvSelection     *selection,
+				 EvRenderContext *rc)
+{
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	PopplerRectangle points;
+	GdkRegion *retval;
+
+	pdf_document = PDF_DOCUMENT (selection);
+	poppler_page = poppler_document_get_page (pdf_document->document,
+						  rc->page);
+	set_page_orientation (pdf_document, poppler_page);
+
+	points.x1 = 0.0;
+	points.y1 = 0.0;
+	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
+	retval = poppler_page_get_selection_region (poppler_page, 1.0, &points);
+	g_object_unref (poppler_page);
+
+	return retval;
+}
+
 static void
 pdf_selection_iface_init (EvSelectionIface *iface)
 {
         iface->render_selection = pdf_selection_render_selection;
         iface->get_selection_region = pdf_selection_get_selection_region;
+        iface->get_selection_map = pdf_selection_get_selection_map;
 }
 
 PdfDocument *

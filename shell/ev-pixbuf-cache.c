@@ -9,6 +9,7 @@ typedef struct _CacheJobInfo
 	GdkPixbuf *pixbuf;
 	EvRenderContext *rc;
 	GList *link_mapping;
+	GdkRegion *text_mapping;
 
 	/* Selection info.  If the *_points structs are unset, we put -1 in x1.
 	 * selection_points are the coordinates encapsulated in selection.
@@ -144,6 +145,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = NULL;
 	}
+	if (job_info->text_mapping) {
+		gdk_region_destroy (job_info->text_mapping);
+		job_info->text_mapping = NULL;
+	}
 	if (job_info->selection) {
 		g_object_unref (G_OBJECT (job_info->selection));
 		job_info->selection = NULL;
@@ -210,6 +215,13 @@ job_finished_cb (EvJob         *job,
 			ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = job_render->link_mapping;
 	}
+
+	if (job_render->text_mapping) {
+		if (job_info->text_mapping)
+			gdk_region_destroy (job_info->text_mapping);
+		job_info->text_mapping = job_render->text_mapping;
+	}
+
 	if (job_render->include_selection) {
 		if (job_info->selection)
 			g_object_unref (job_info->selection);
@@ -403,6 +415,8 @@ copy_job_to_job_info (EvJobRender   *job_render,
 	job_info->pixbuf = pixbuf;
 	if (job_render->link_mapping)
 		job_info->link_mapping = job_render->link_mapping;
+	if (job_render->text_mapping)
+		job_info->text_mapping = job_render->text_mapping;	
 }
 
 static CacheJobInfo *
@@ -468,6 +482,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		   EvJobPriority  priority)
 {
 	gboolean include_links = FALSE;
+	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
 	int width, height;
 
@@ -495,6 +510,8 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	/* Figure out what else we need for this job */
 	if (job_info->link_mapping == NULL)
 		include_links = TRUE;
+	if (job_info->text_mapping == NULL)
+		include_text = TRUE;
 	if (new_selection_pixbuf_needed (pixbuf_cache, job_info, page, scale)) {
 		include_selection = TRUE;
 	}
@@ -504,6 +521,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 					   width, height,
 					   &(job_info->new_points),
 					   include_links,
+					   include_text,
 					   include_selection);
 	ev_job_queue_add_job (job_info->job, priority);
 	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
@@ -660,11 +678,23 @@ clear_selection_if_needed (EvPixbufCache *pixbuf_cache,
 	}
 }
 
-GList *
-ev_pixbuf_cach_get_text_mapping      (EvPixbufCache *pixbuf_cache,
+GdkRegion *
+ev_pixbuf_cache_get_text_mapping      (EvPixbufCache *pixbuf_cache,
 				      gint           page)
 {
-	return NULL;
+	CacheJobInfo *job_info;
+
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* We don't need to wait for the idle to handle the callback */
+	if (job_info->job &&
+	    EV_JOB (job_info->job)->finished) {
+		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+	}
+	
+	return job_info->text_mapping;
 }
 
 GdkPixbuf *
