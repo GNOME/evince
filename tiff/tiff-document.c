@@ -90,7 +90,7 @@ tiff_document_load (EvDocument  *document,
   if (tiff)
     {
       guint32 w, h;
-      
+      /* FIXME: unused data? why bother here */
       TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &w);
       TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &h);
     }
@@ -143,6 +143,7 @@ tiff_document_get_page_size (EvDocument   *document,
 			     double       *height)
 {
   guint32 w, h;
+  gfloat x_res, y_res;
   TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 
   g_return_if_fail (TIFF_IS_DOCUMENT (document));
@@ -157,6 +158,9 @@ tiff_document_get_page_size (EvDocument   *document,
 
   TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &w);
   TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &h);
+  TIFFGetField (tiff_document->tiff, TIFFTAG_XRESOLUTION, &x_res);
+  TIFFGetField (tiff_document->tiff, TIFFTAG_YRESOLUTION, &y_res);
+  h = h * (x_res / y_res);
 
   if (tiff_document->orientation == EV_ORIENTATION_PORTRAIT ||
       tiff_document->orientation ==  EV_ORIENTATION_UPSIDEDOWN) {
@@ -210,6 +214,7 @@ tiff_document_render_pixbuf (EvDocument      *document,
 {
   TiffDocument *tiff_document = TIFF_DOCUMENT (document);
   int width, height;
+  float x_res, y_res;
   gint rowstride, bytes;
   guchar *pixels = NULL;
   GdkPixbuf *pixbuf;
@@ -233,6 +238,18 @@ tiff_document_render_pixbuf (EvDocument      *document,
     }
 
   if (! TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &height))
+    {
+      pop_handlers ();
+      return NULL;
+    }
+
+  if (!TIFFGetField (tiff_document->tiff, TIFFTAG_XRESOLUTION, &x_res))
+    {
+      pop_handlers ();
+      return NULL;
+    }
+
+  if (! TIFFGetField (tiff_document->tiff, TIFFTAG_YRESOLUTION, &y_res))
     {
       pop_handlers ();
       return NULL;
@@ -268,7 +285,7 @@ tiff_document_render_pixbuf (EvDocument      *document,
 
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
 					   width * rc->scale,
-					   height * rc->scale,
+					   height * rc->scale * (x_res/y_res),
 					   GDK_INTERP_BILINEAR);
   g_object_unref (pixbuf);
 
