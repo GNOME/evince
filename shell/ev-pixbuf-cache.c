@@ -704,6 +704,10 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 {
 	CacheJobInfo *job_info;
 
+	/* the document does not implement the selection interface */
+	if (!EV_IS_SELECTION (pixbuf_cache->document))
+		return NULL;
+
 	job_info = find_job_cache (pixbuf_cache, page);
 	if (job_info == NULL)
 		return NULL;

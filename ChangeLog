@@ -1,5 +1,11 @@
 2005-07-02  Matthew S. Wilson  <msw@rpath.com>
 
+	* shell/ev-pixbuf-cache.c (ev_pixbuf_cache_get_selection_pixbuf):
+	return NULL if the document does not implement the selection
+	interface.
+
+2005-07-02  Matthew S. Wilson  <msw@rpath.com>
+
 	* tiff/tiff-document.c (tiff_document_get_page_size): scale the
 	reported height by using the resolution aspect ratio
 	(tiff_document_render_pixbuf): scale the pixbuf using the
