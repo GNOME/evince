@@ -1,3 +1,19 @@
+2005-07-03  Matthew S. Wilson  <msw@rpath.com>
+
+	* tiff/tiff-document.c (tiff_document_ps_export_begin) 
+	(tiff_document_ps_export_do_page, tiff_document_ps_export_end) 
+	(tiff_document_document_ps_exporter_iface_init): implement the ps
+	exporter interface for tiff documents
+
+	* tiff/tiff2ps.c: added a modified version of tiff2ps.c from
+	libtiff to implement TIFF postscript export
+
+	* tiff/tiff2ps.h: added a header file for external tiff2ps
+	functions.
+
+	* tiff/Makefile.am (libtiffdocument_la_SOURCES): add tiff2ps.c and
+	tiff2ps.h
+
 2005-07-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view.c: (scroll_to_current_page),

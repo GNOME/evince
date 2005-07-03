@@ -1,4 +1,3 @@
-
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  * Copyright (C) 2005, Jonathan Blandford <jrb@gnome.org>
@@ -18,12 +17,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* FIXME: Shoudl probably buffer calls to libtiff with TIFFSetWarningHandler
+/* FIXME: Should probably buffer calls to libtiff with TIFFSetWarningHandler
  */
+
+#include <stdio.h>
+#include <glib.h>
+#include <glib/gstdio.h>
+
 #include "tiffio.h"
+#include "tiff2ps.h"
 #include "tiff-document.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
+#include "ev-document-thumbnails.h"
+#include "ev-ps-exporter.h"
 
 struct _TiffDocumentClass
 {
@@ -37,18 +43,23 @@ struct _TiffDocument
   TIFF *tiff;
   gint n_pages;
   EvOrientation orientation;
+  FILE *ps_export_file;
+  gint ps_export_pages;
 };
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
 
 static void tiff_document_document_iface_init (EvDocumentIface *iface);
 static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void tiff_document_document_ps_exporter_iface_init (EvPSExporterIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (TiffDocument, tiff_document, G_TYPE_OBJECT,
                          { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
 						  tiff_document_document_iface_init);
 			   G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 						  tiff_document_document_thumbnails_iface_init);
+			   G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
+						  tiff_document_document_ps_exporter_iface_init);
 			 });
 
 static TIFFErrorHandler orig_error_handler = NULL;
@@ -398,6 +409,55 @@ tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
   iface->get_dimensions = tiff_document_thumbnails_get_dimensions;
 }
 
+/* postscript exporter implementation */
+
+static void
+tiff_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
+			       int first_page, int last_page)
+{
+	TiffDocument *document = TIFF_DOCUMENT (exporter);
+
+	document->ps_export_file = g_fopen (filename, "w");
+	if (document->ps_export_file == NULL)
+		return;
+	document->ps_export_pages = 0;
+}
+
+static void
+tiff_document_ps_export_do_page (EvPSExporter *exporter, int page)
+{
+	TiffDocument *document = TIFF_DOCUMENT (exporter);
+
+	if (document->ps_export_file == NULL)
+		return;
+	if (TIFFSetDirectory (document->tiff, page) != 1)
+		return;
+	TIFF2PS (document->ps_export_file,
+		 document->tiff,
+		 0, 0, 0, 0, 0,
+		 &document->ps_export_pages);
+}
+
+static void
+tiff_document_ps_export_end (EvPSExporter *exporter)
+{
+	TiffDocument *document = TIFF_DOCUMENT (exporter);
+
+	if (document->ps_export_file == NULL)
+		return;
+	if (document->ps_export_pages)
+		TIFFPSTail (document->ps_export_file,
+			    document->ps_export_pages);
+	fclose (document->ps_export_file);
+}
+
+static void
+tiff_document_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+{
+	iface->begin = tiff_document_ps_export_begin;
+	iface->do_page = tiff_document_ps_export_do_page;
+	iface->end = tiff_document_ps_export_end;
+}
 
 static void
 tiff_document_init (TiffDocument *tiff_document)
