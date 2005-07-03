@@ -371,7 +371,7 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 {
 	GdkRectangle page_area;
 	GtkBorder border;
-
+	
 	get_page_extents (view, view->current_page, &page_area, &border);
 
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
@@ -2141,11 +2141,12 @@ ev_view_set_fullscreen (EvView   *view,
 
 	fullscreen = fullscreen != FALSE;
 
-	if (view->fullscreen != fullscreen) {
-		view->fullscreen = fullscreen;
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	}
-
+	if (view->fullscreen == fullscreen) 
+		return;
+		
+	view->fullscreen = fullscreen;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+	
 	g_object_notify (G_OBJECT (view), "fullscreen");
 }
 
@@ -2169,7 +2170,9 @@ ev_view_set_presentation (EvView   *view,
 		return;
 
 	view->presentation = presentation;
+	view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
+
 	if (GTK_WIDGET_REALIZED (view)) {
 		if (view->presentation)
 			gdk_window_set_background (GTK_WIDGET(view)->window,
