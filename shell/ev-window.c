@@ -180,8 +180,8 @@ static void     ev_window_zoom_changed_cb 	        (EvView           *view,
 							 EvWindow         *ev_window);
 static void     ev_window_add_recent                    (EvWindow         *window,
 							 const char       *filename);
-static void     ev_window_fullscreen                    (EvWindow         *window);
-static void     ev_window_unfullscreen                  (EvWindow         *window);
+static void     ev_window_run_fullscreen                (EvWindow         *window);
+static void     ev_window_stop_fullscreen               (EvWindow         *window);
 static void     ev_window_cmd_view_fullscreen           (GtkAction        *action,
 							 EvWindow         *window);
 static void     ev_window_run_presentation              (EvWindow         *window);
@@ -623,7 +623,7 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 		ev_window_run_presentation (window);
 	}
 	else if (mode == EV_DOCUMENT_MODE_FULL_SCREEN) {
-		ev_window_fullscreen (window);
+		ev_window_run_fullscreen (window);
 	}
 }
 
@@ -1634,7 +1634,7 @@ ev_window_update_fullscreen_action (EvWindow *window)
 }
 
 static void
-ev_window_fullscreen (EvWindow *window)
+ev_window_run_fullscreen (EvWindow *window)
 {
 	ev_view_set_fullscreen (EV_VIEW (window->priv->view), TRUE);
 	if (window->priv->fullscreen_popup == NULL)
@@ -1663,9 +1663,12 @@ ev_window_fullscreen (EvWindow *window)
 }
 
 static void
-ev_window_unfullscreen (EvWindow *window)
+ev_window_stop_fullscreen (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
+
+	if (!ev_view_get_fullscreen (EV_VIEW (view)))
+		return;
 
 	ev_view_set_fullscreen (view, FALSE);
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
@@ -1695,9 +1698,9 @@ ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 
 	fullscreen = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 	if (fullscreen) {
-		ev_window_fullscreen (window);
+		ev_window_run_fullscreen (window);
 	} else {
-		ev_window_unfullscreen (window);
+		ev_window_stop_fullscreen (window);
 	}
 }
 
@@ -1732,7 +1735,7 @@ ev_window_run_presentation (EvWindow *window)
 static void
 ev_window_stop_presentation (EvWindow *window)
 {
-	if (! ev_view_get_presentation (EV_VIEW (window->priv->view)))
+	if (!ev_view_get_presentation (EV_VIEW (window->priv->view)))
 		return;
 
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
@@ -1750,6 +1753,7 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 	gboolean presentation;
 
         g_return_if_fail (EV_IS_WINDOW (window));
+	ev_window_stop_fullscreen (window);
 
 	presentation = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 	if (presentation) {
@@ -2042,7 +2046,7 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 			      NULL);
 
 		if (fullscreen)
-			ev_window_unfullscreen (window);
+			ev_window_stop_fullscreen (window);
 		if (presentation)
 			ev_window_stop_presentation (window);
 
