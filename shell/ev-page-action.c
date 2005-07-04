@@ -479,7 +479,8 @@ update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 						    (GtkCellLayoutDataFunc) display_completion_text,
 						    proxy, NULL);
 		gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
-
+		
+		g_object_unref (completion);
 		g_object_unref (model);
 	}
 }
