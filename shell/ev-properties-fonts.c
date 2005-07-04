@@ -31,12 +31,6 @@
 #include <gtk/gtktreeview.h>
 #include <glade/glade.h>
 
-enum
-{
-	FONT_NAME_COL,
-	NUM_COLS
-};
-
 struct _EvPropertiesFonts {
 	GtkVBox base_instance;
 
@@ -156,7 +150,8 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 
 	properties->document = document;
 
-	list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING);
+	list_store = gtk_list_store_new (EV_DOCUMENT_FONTS_COLUMN_NUM_COLUMNS,
+					 G_TYPE_STRING);
 	gtk_tree_view_set_model (tree_view, GTK_TREE_MODEL (list_store));
 
 	job = ev_job_fonts_new (properties->document);
