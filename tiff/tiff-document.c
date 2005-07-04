@@ -22,7 +22,6 @@
 
 #include <stdio.h>
 #include <glib.h>
-#include <glib/gstdio.h>
 
 #include "tiffio.h"
 #include "tiff2ps.h"
@@ -43,8 +42,7 @@ struct _TiffDocument
   TIFF *tiff;
   gint n_pages;
   EvOrientation orientation;
-  FILE *ps_export_file;
-  gint ps_export_pages;
+  TIFF2PSContext *ps_export_ctx;
 };
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
@@ -417,10 +415,7 @@ tiff_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
-	document->ps_export_file = g_fopen (filename, "w");
-	if (document->ps_export_file == NULL)
-		return;
-	document->ps_export_pages = 0;
+	document->ps_export_ctx = tiff2ps_context_new(filename);
 }
 
 static void
@@ -428,14 +423,12 @@ tiff_document_ps_export_do_page (EvPSExporter *exporter, int page)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
-	if (document->ps_export_file == NULL)
+	if (document->ps_export_ctx == NULL)
 		return;
 	if (TIFFSetDirectory (document->tiff, page) != 1)
 		return;
-	TIFF2PS (document->ps_export_file,
-		 document->tiff,
-		 0, 0, 0, 0, 0,
-		 &document->ps_export_pages);
+	tiff2ps_process_page (document->ps_export_ctx, document->tiff,
+			      0, 0, 0, 0, 0);
 }
 
 static void
@@ -443,12 +436,9 @@ tiff_document_ps_export_end (EvPSExporter *exporter)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
-	if (document->ps_export_file == NULL)
+	if (document->ps_export_ctx == NULL)
 		return;
-	if (document->ps_export_pages)
-		TIFFPSTail (document->ps_export_file,
-			    document->ps_export_pages);
-	fclose (document->ps_export_file);
+	tiff2ps_context_finalize(document->ps_export_ctx);
 }
 
 static void

@@ -1,3 +1,16 @@
+2005-07-04  Matthew S. Wilson  <msw@rpath.com>
+
+	* tiff/tiff-document.c (tiff_document_ps_export_begin) 
+	(tiff_document_ps_export_do_page, tiff_document_ps_export_end):
+	use the new tiff2ps interfaces
+
+	* tiff/tiff2ps.h (tiff2ps_context_new, tiff2ps_process_page) 
+	(tiff2ps_context_finalize): implement new interfaces for tiff2ps
+
+	* tiff/tiff2ps.c: refactor tiff2ps code to use a context
+	structure instead of global variables.  Remove use of static
+	variables in functions.
+
 2005-07-04  Carlos Garcia Campos <carlosgc@gnome.org>
 
 	* shell/ev-page-action.c: unref the completion after setting it to the
