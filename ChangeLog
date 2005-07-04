@@ -1,3 +1,11 @@
+2005-07-04  Martin Kretzschmar  <martink@gnome.org>
+
+	* shell/main.c: include libgnomeui/gnome-authentication-manager.h
+	(main): to call gnome_authentication_manager_init. Should fix
+	Bug #308510
+
+	* configure.ac: that requires libgnomeui 2.6.0.
+
 2005-07-04  Matthew S. Wilson  <msw@rpath.com>
 
 	* tiff/tiff-document.c (tiff_document_ps_export_begin) 

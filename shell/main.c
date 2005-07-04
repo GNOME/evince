@@ -28,6 +28,7 @@
 #include <libgnome/gnome-program.h>
 #include <libgnomeui/gnome-ui-init.h>
 #include <libgnomeui/gnome-app-helper.h>
+#include <libgnomeui/gnome-authentication-manager.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
 #ifdef ENABLE_DBUS
@@ -149,6 +150,8 @@ main (int argc, char *argv[])
 		g_warning ("Starting evince process.");
 	}
 #endif
+
+	gnome_authentication_manager_init ();
 
 	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
