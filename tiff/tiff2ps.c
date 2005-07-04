@@ -107,11 +107,6 @@
 /*
  * NB: this code assumes uint32 works with printf's %l[ud].
  */
-#ifndef TRUE
-#define	TRUE	1
-#define	FALSE	0
-#endif
-
 
 struct _TIFF2PSContext
 {
@@ -377,6 +372,8 @@ PlaceImage(TIFF2PSContext *ctx, double pagewidth, double pageheight,
 	double subimageheight;
 	double splitheight;
 	double overlap;
+	/* buffers for locale-insitive number formatting */
+	gchar buf[2][G_ASCII_DTOSTR_BUF_SIZE];
 
 	pagewidth *= PS_UNIT_SIZE;
 	pageheight *= PS_UNIT_SIZE;
@@ -427,11 +424,16 @@ PlaceImage(TIFF2PSContext *ctx, double pagewidth, double pageheight,
 
 	bottom_offset += ytran / (cnt?2:1);
 	if (cnt)
-	    left_offset += xtran / 2;
-	fprintf(ctx->fd, "%f %f translate\n", left_offset, bottom_offset);
-	fprintf(ctx->fd, "%f %f scale\n", xscale, yscale);
+		left_offset += xtran / 2;
+
+	fprintf(ctx->fd, "%s %s translate\n",
+		g_ascii_dtostr(buf[0], sizeof(buf[0]), left_offset),
+		g_ascii_dtostr(buf[1], sizeof(buf[1]), bottom_offset));
+	fprintf(ctx->fd, "%s %s scale\n",
+		g_ascii_dtostr(buf[0], sizeof(buf[0]), xscale),
+		g_ascii_dtostr(buf[1], sizeof(buf[1]), yscale));
 	if (ctx->rotate)
-	    fputs ("1 1 translate 180 ctx->rotate\n", ctx->fd);
+		fputs ("1 1 translate 180 ctx->rotate\n", ctx->fd);
 
 	return splitpage;
 }
@@ -449,6 +451,8 @@ tiff2ps_process_page(TIFF2PSContext* ctx, TIFF* tif, double pw, double ph,
 	double bottom_offset = bm * PS_UNIT_SIZE;
 	uint16* sampleinfo;
 	int split;
+	/* buffers for locale-insitive number formatting */
+	gchar buf[2][G_ASCII_DTOSTR_BUF_SIZE];
 
 	if (!TIFFGetField(tif, TIFFTAG_XPOSITION, &ox))
 		ox = 0;
@@ -509,8 +513,9 @@ tiff2ps_process_page(TIFF2PSContext* ctx, TIFF* tif, double pw, double ph,
 			} else
 				psh=ctx->rotate ? prw:prh;
 			fprintf(ctx->fd,
-				"1 dict begin /PageSize [ %f %f ] def currentdict end setpagedevice\n",
-				psw, psh);
+				"1 dict begin /PageSize [ %s %s ] def currentdict end setpagedevice\n",
+				g_ascii_dtostr(buf[0], sizeof(buf[0]), psw),
+				g_ascii_dtostr(buf[1], sizeof(buf[1]), psh));
 			fputs(
 			      "<<\n  /Policies <<\n    /PageSize 3\n  >>\n>> setpagedevice\n",
 			      ctx->fd);
@@ -553,15 +558,19 @@ tiff2ps_process_page(TIFF2PSContext* ctx, TIFF* tif, double pw, double ph,
 					left_offset +=
 						(pw - prw * scale) / 2;
 				}
-				fprintf(ctx->fd, "%f %f translate\n",
-					left_offset, bottom_offset);
-				fprintf(ctx->fd, "%f %f scale\n",
-					prw * scale, prh * scale);
+				fprintf(ctx->fd, "%s %s translate\n",
+					g_ascii_dtostr(buf[0], sizeof(buf[0]), left_offset),
+					g_ascii_dtostr(buf[1], sizeof(buf[1]), bottom_offset));
+				fprintf(ctx->fd, "%s %s scale\n",
+					g_ascii_dtostr(buf[0], sizeof(buf[0]), prw * scale),
+					g_ascii_dtostr(buf[1], sizeof(buf[1]), prh * scale));
 				if (ctx->rotate)
 					fputs ("1 1 translate 180 ctx->rotate\n", ctx->fd);
 			}
 		} else {
-			fprintf(ctx->fd, "%f %f scale\n", prw, prh);
+			fprintf(ctx->fd, "%s %s scale\n",
+				g_ascii_dtostr(buf[0], sizeof(buf[0]), prw),
+				g_ascii_dtostr(buf[1], sizeof(buf[1]), prh));
 			if (ctx->rotate)
 				fputs ("1 1 translate 180 ctx->rotate\n", ctx->fd);
 		}

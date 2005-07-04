@@ -1,3 +1,11 @@
+2005-07-04  Matthew S. Wilson  <msw@rpath.com>
+
+	* tiff/tiff2ps.c: remove TRUE and FALSE definitions, glib provides
+	them
+	(PlaceImage, tiff2ps_process_page): use
+	g_ascii_dtostr to convert floats to strings in a locale-safe way.
+
+
 2005-07-04  Martin Kretzschmar  <martink@gnome.org>
 
 	* shell/main.c: include libgnomeui/gnome-authentication-manager.h
