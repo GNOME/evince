@@ -38,6 +38,7 @@
 #include "ev-password-view.h"
 #include "ev-print-job.h"
 #include "ev-properties-dialog.h"
+#include "ev-ps-exporter.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-fonts.h"
@@ -236,6 +237,9 @@ update_action_sensitivity (EvWindow *ev_window)
 		ok_to_print = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT);
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
 	}
+
+	if (has_document && !EV_IS_PS_EXPORTER(document))
+		ok_to_print = FALSE;
 
 	if (!info || info->fields_mask == 0) {
 		has_properties = FALSE;
