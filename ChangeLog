@@ -1,3 +1,36 @@
+2005-07-04  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* Makefile.am:
+	* configure.ac:
+	* data/evince-properties.glade:
+	* properties/.cvsignore:
+	* properties/Makefile.am:
+	* properties/ev-properties-view.c: (ev_properties_view_dispose),
+	(ev_properties_view_class_init), (ev_properties_view_format_date),
+	(make_valid_utf8), (set_property), (ev_properties_view_set_info),
+	(ev_properties_view_init), (ev_properties_view_new):
+	* properties/ev-properties-view.h:
+	* shell/Makefile.am:
+	* shell/ev-properties-dialog.c: (ev_properties_dialog_class_init),
+	(ev_properties_dialog_init), (ev_properties_dialog_set_document),
+	(ev_properties_dialog_new):
+	* shell/ev-properties-dialog.h:
+	* shell/ev-properties-fonts.c: (ev_properties_fonts_dispose),
+	(ev_properties_fonts_class_init), (ev_properties_fonts_init),
+	(update_progress_label), (job_fonts_finished_cb),
+	(ev_properties_fonts_set_document), (ev_properties_fonts_new):
+	* shell/ev-properties-fonts.h:
+	* shell/ev-properties.c:
+	* shell/ev-properties.h:
+	* shell/ev-window.c: (ev_window_setup_document),
+	(ev_window_cmd_file_properties):
+
+	Split the properties pages in two different objects, depend
+	only on the backend where possible, use widgets instead
+	of gobject for the glade part, reimplement the dialog
+	itself with gtk.
+	I need this to implement nautilus properties page.
+
 2005-07-03  Matthew S. Wilson  <msw@rpath.com>
 
 	* tiff/tiff-document.c (tiff_document_ps_export_begin) 

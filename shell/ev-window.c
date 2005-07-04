@@ -37,7 +37,7 @@
 #include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-print-job.h"
-#include "ev-properties.h"
+#include "ev-properties-dialog.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-fonts.h"
@@ -107,7 +107,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_thumbs;
 
 	/* Dialogs */
-	EvProperties *properties;
+	GtkWidget *properties;
 
 	/* UI Builders */
 	GtkActionGroup *action_group;
@@ -668,8 +668,8 @@ ev_window_setup_document (EvWindow *ev_window)
 	update_document_mode (ev_window, info->mode);
 
 	if (ev_window->priv->properties) {
-		ev_properties_set_document (ev_window->priv->properties,
-					    ev_window->priv->document);
+		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
+					           ev_window->priv->document);
 	}
 }
 
@@ -1319,14 +1319,16 @@ static void
 ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 {
 	if (ev_window->priv->properties == NULL) {
-		ev_window->priv->properties = ev_properties_new ();
-		ev_properties_set_document (ev_window->priv->properties,
-					    ev_window->priv->document);
+		ev_window->priv->properties = ev_properties_dialog_new ();
+		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
+					           ev_window->priv->document);
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->properties),
 					   (gpointer *) &(ev_window->priv->properties));
+		gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->properties),
+					      GTK_WINDOW (ev_window));
 	}
 
-	ev_properties_show (ev_window->priv->properties, GTK_WIDGET (ev_window));
+	gtk_widget_show (ev_window->priv->properties);
 }
 					
 static void

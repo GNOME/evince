@@ -18,7 +18,7 @@ endif
 
 # Applications 
 
-SUBDIRS += shell thumbnailer
+SUBDIRS += properties shell thumbnailer
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 

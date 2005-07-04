@@ -306,6 +306,7 @@ dvi/Makefile
 dvi/mdvi-lib/Makefile
 po/Makefile.in
 backend/Makefile
+properties/Makefile
 shell/Makefile
 thumbnailer/Makefile
 help/Makefile

@@ -10,6 +10,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/backend				\
 	-I$(top_srcdir)/pdf				\
 	-I$(top_srcdir)/pixbuf				\
+	-I$(top_srcdir)/properties			\
 	-I$(top_srcdir)/tiff				\
 	-I$(top_srcdir)/ps	                	\
 	-I$(top_srcdir)/djvu				\
@@ -82,8 +83,10 @@ evince_SOURCES=				\
 	ev-pixbuf-cache.h		\
 	ev-print-job.c			\
 	ev-print-job.h			\
-	ev-properties.c			\
-	ev-properties.h			\
+	ev-properties-dialog.c		\
+	ev-properties-dialog.h		\
+	ev-properties-fonts.c		\
+	ev-properties-fonts.h		\
 	ev-utils.c			\
 	ev-utils.h			\
 	ev-view.c			\
@@ -117,6 +120,7 @@ evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/zoom-control/libephymisc.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
+	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/lib/libev.la					\
 	-ltiff -lz							\
 	libevbackendfactory.la						\
