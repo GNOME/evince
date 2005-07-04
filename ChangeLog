@@ -1,3 +1,17 @@
+2005-07-05  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* configure.ac:
+	* properties/Makefile.am:
+	* properties/ev-properties-view.c:
+	(ev_properties_view_register_type):
+	* properties/ev-properties-view.h:
+	* properties/ev-properties-main.h:
+
+	Implement nautilus plugin for properties.
+	Works only for pdf atm, I need to rework the
+	document types stuff to get this to work
+	for all backends...
+
 2005-07-04  Martin Kretzschmar  <martink@gnome.org>
 
 	* shell/ev-properties-fonts.c (enum): kill redundant columns enum

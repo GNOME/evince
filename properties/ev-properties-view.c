@@ -251,6 +251,12 @@ ev_properties_view_init (EvPropertiesView *properties)
 			    TRUE, TRUE, 0);
 }
 
+void
+ev_properties_view_register_type (GTypeModule *module)
+{
+	ev_properties_view_get_type ();
+}
+
 GtkWidget *
 ev_properties_view_new (void)
 {

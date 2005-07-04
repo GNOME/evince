@@ -38,10 +38,11 @@ typedef struct _EvPropertiesViewPrivate EvPropertiesViewPrivate;
 #define EV_IS_PROPERTIES_VIEW_CLASS(klass)   	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_PROPERTIES))
 #define EV_PROPERTIES_VIEW_GET_CLASS(object) 	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PROPERTIES, EvPropertiesViewClass))
 
-GType		ev_properties_view_get_type     (void);
-GtkWidget      *ev_properties_view_new          (void);
-void		ev_properties_view_set_info     (EvPropertiesView     *properties,
-						 const EvDocumentInfo *info);
+GType		ev_properties_view_get_type		(void);
+void		ev_properties_view_register_type	(GTypeModule *module);
+GtkWidget      *ev_properties_view_new			(void);
+void		ev_properties_view_set_info		(EvPropertiesView     *properties,
+							 const EvDocumentInfo *info);
 
 G_END_DECLS
 

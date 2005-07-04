@@ -41,6 +41,7 @@ PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(ZOOM_CONTROL, gtk+-2.0 >= 2.4.0)
 PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= 2.6.0 libgnomeui-2.0 >= 2.6.0 gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
 PKG_CHECK_MODULES(THUMBNAILER, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(PROPERTIES, gtk+-2.0 >= 2.6.0 libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
 PKG_CHECK_MODULES(DVI, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
 PKG_CHECK_MODULES(PS, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 libgnomeui-2.0)
@@ -64,6 +65,28 @@ fi
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
 AM_CONDITIONAL([ENABLE_METADATA], [test "x$enable_dbus" = "xyes"])
+
+dnl Check for Nautilus property page build
+AC_ARG_ENABLE(nautilus,
+	AC_HELP_STRING([--enable-nautilus],[compile the nautilus plugin]),
+	[case "${enableval}" in
+	yes) ENABLE_NAUTILUS=yes ;;
+	no) ENABLE_NAUTILUS=no ;;
+	*) AC_MSG_ERROR(bad value ${enableval} for --enable-nautilus) ;;
+	esac],
+	[ENABLE_NAUTILUS=yes]) dnl Default value
+
+if test x$ENABLE_NAUTILUS = "xyes" ; then
+	PKG_CHECK_MODULES(NAUTILUS, gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension,
+			[HAVE_NAUTILUS=yes], [HAVE_NAUTILUS=no])
+fi
+
+AC_SUBST(NAUTILUS_CFLAGS)
+AC_SUBST(NAUTILUS_LIBS)
+if test x$HAVE_NAUTILUS = "xyes"; then
+	AC_DEFINE(HAVE_NAUTILUS, 1, [defined if you build the nautilus plugin])
+fi
+AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
 
 dnl Compile with disable-deprecated switches
 
