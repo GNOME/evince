@@ -54,7 +54,7 @@ load_files (const char **files)
 	int i;
 
 	if (!files) {
-		ev_application_open_window (EV_APP);
+		ev_application_open_window (EV_APP, NULL);
 		return;
 	}
 
@@ -62,7 +62,7 @@ load_files (const char **files)
 		char *uri;
 
 		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
-		ev_application_open_uri (EV_APP, uri, ev_page_label);		
+		ev_application_open_uri (EV_APP, uri, ev_page_label, NULL);		
 		g_free (uri);
         }
 }
@@ -72,7 +72,7 @@ static void
 load_files_remote (const char **files)
 {
 	int i;
-	GError *error;
+	GError *error = NULL;
 	DBusGConnection *connection;
 	DBusGPendingCall *call;
 	DBusGProxy *remote_object;
@@ -80,6 +80,8 @@ load_files_remote (const char **files)
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (connection == NULL) {
 		g_warning (error->message);
+		g_error_free (error);
+		
 		return;
 	}
 
@@ -88,9 +90,11 @@ load_files_remote (const char **files)
                                                    "/org/gnome/evince/Evince",
                                                    "org.gnome.evince.Application");
 	if (!files) {
-		call = dbus_g_proxy_begin_call (remote_object, "OpenWindow", DBUS_TYPE_INVALID);
-		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
+		call = dbus_g_proxy_begin_call (remote_object, "OpenWindow", G_TYPE_INVALID);
+
+		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
 			g_warning (error->message);
+			g_clear_error (&error);
 		}
 		return;
 	}
@@ -103,17 +107,19 @@ load_files_remote (const char **files)
 		page_label = ev_page_label ? ev_page_label : ""; 
 
 		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
-						DBUS_TYPE_STRING, &uri,
-						DBUS_TYPE_STRING, &page_label,
-						DBUS_TYPE_INVALID);
-		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
+						G_TYPE_STRING, uri,
+						G_TYPE_STRING, page_label,
+						G_TYPE_INVALID);
+
+		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
 			g_warning (error->message);
+			g_clear_error (&error);
 		}
 		
 		g_free (uri);
         }
 }
-#endif
+#endif /* ENABLE_DBUS */
 
 int
 main (int argc, char *argv[])

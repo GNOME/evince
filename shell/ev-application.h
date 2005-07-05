@@ -54,10 +54,12 @@ struct _EvApplicationClass {
 GType	       ev_application_get_type	       (void);
 gboolean       ev_application_register_service (EvApplication   *application);
 EvApplication *ev_application_get_instance     (void);
-void	       ev_application_open_window      (EvApplication   *application);
-void	       ev_application_open_uri         (EvApplication   *application,
+gboolean       ev_application_open_window      (EvApplication   *application,
+						GError         **error);
+gboolean       ev_application_open_uri         (EvApplication   *application,
 				                const char      *uri,
-					        const char      *page_label);
+					        const char      *page_label,
+						GError         **error);
 void	       ev_application_open_uri_list    (EvApplication   *application,
 					        GSList          *uri_list);
 void	       ev_application_shutdown	       (EvApplication   *application);

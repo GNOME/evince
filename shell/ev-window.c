@@ -190,7 +190,7 @@ static void     ev_window_stop_presentation             (EvWindow         *windo
 static void     ev_window_cmd_view_presentation         (GtkAction        *action,
 							 EvWindow         *window);
 static void     show_fullscreen_popup                   (EvWindow         *window);
-							
+
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -1015,7 +1015,7 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 
 	uri = egg_recent_item_get_uri (item);
 
-	ev_application_open_uri (EV_APP, uri, NULL);	
+	ev_application_open_uri (EV_APP, uri, NULL, NULL);	
 	
 	g_free (uri);
 }
@@ -1651,7 +1651,7 @@ ev_window_run_fullscreen (EvWindow *window)
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
 		      "shadow-type", GTK_SHADOW_NONE,
 		      NULL);
-
+	
 	g_signal_connect (window->priv->view,
 			  "motion-notify-event",
 			  G_CALLBACK (fullscreen_motion_notify_cb),
@@ -2500,7 +2500,6 @@ ev_window_dispose (GObject *object)
 		g_object_unref (priv->recent_view);
 		priv->recent_view = NULL;
 	}
-
 
 	if (priv->ui_manager) {
 		g_object_unref (priv->ui_manager);

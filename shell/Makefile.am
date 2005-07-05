@@ -130,7 +130,8 @@ if ENABLE_DBUS
 BUILT_SOURCES += ev-application-service.h
 endif
 
-EXTRA_DIST = ev-marshal.list
+EXTRA_DIST = ev-marshal.list \
+	     ev-application-service.h
 
 ev-marshal.h: ev-marshal.list
 	glib-genmarshal --prefix=ev_marshal ev-marshal.list --header > ev-marshal.h
@@ -139,5 +140,10 @@ ev-marshal.c: ev-marshal.list
 	echo '#include "ev-marshal.h"' > ev-marshal.c
 	glib-genmarshal --prefix=ev_marshal ev-marshal.list --body >> ev-marshal.c
 
+if DBUS_TOOL_NO_PREFIX
 ev-application-service.h: ev-application-service.xml
 	dbus-binding-tool --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
+else
+ev-application-service.h: ev-application-service.xml
+	dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
+endif

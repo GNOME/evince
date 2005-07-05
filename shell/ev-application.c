@@ -61,6 +61,9 @@ ev_application_register_service (EvApplication *application)
 	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &err);
 	if (connection == NULL) {
 		g_warning ("Service registration failed.");
+		g_error_free (err);
+
+		return FALSE;
 	}
 
 	driver_proxy = dbus_g_proxy_new_for_name (connection,
@@ -70,24 +73,30 @@ ev_application_register_service (EvApplication *application)
 
 	if (!org_freedesktop_DBus_request_name (driver_proxy,
                                         	APPLICATION_SERVICE_NAME,
-						0, &request_name_result, &err))
-	{
+						0, &request_name_result, &err)) {
 		g_warning ("Service registration failed.");
+		g_clear_error (&err);
 	}
 
 	if (request_name_result == DBUS_REQUEST_NAME_REPLY_EXISTS) {
 		return FALSE;
 	}
 
+#if DBUS_VERSION == 33
 	dbus_g_object_class_install_info (G_OBJECT_GET_CLASS (application),
-                                          &dbus_glib_ev_application_object_info);
+					  &dbus_glib_ev_application_object_info);
+#else
+	dbus_g_object_type_install_info (EV_TYPE_APPLICATION,
+					 &dbus_glib_ev_application_object_info);
+#endif
+
 	dbus_g_connection_register_g_object (connection,
 					     "/org/gnome/evince/Evince",
                                              G_OBJECT (application));
 
 	return TRUE;
 }
-#endif
+#endif /* ENABLE_DBUS */
 
 EvApplication *
 ev_application_get_instance (void)
@@ -101,10 +110,13 @@ ev_application_get_instance (void)
 	return instance;
 }
 
-void
-ev_application_open_window (EvApplication *application)
+gboolean
+ev_application_open_window (EvApplication  *application,
+			    GError        **error)
 {
 	gtk_widget_show (ev_window_new ());
+
+	return TRUE;
 }
 
 static EvWindow *
@@ -156,19 +168,21 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 	return uri_window;
 }
 
-void
-ev_application_open_uri (EvApplication *application,
-			 const char    *uri,
-			 const char    *page_label)
+gboolean
+ev_application_open_uri (EvApplication  *application,
+			 const char     *uri,
+			 const char     *page_label,
+			 GError        **error)
 {
 	EvWindow *new_window;
 
-	g_return_if_fail (uri != NULL);
+	g_return_val_if_fail (uri != NULL, FALSE);
 
 	new_window = ev_application_get_uri_window (application, uri);
 	if (new_window != NULL) {
 		gtk_window_present (GTK_WINDOW (new_window));
-		return;
+		
+		return TRUE;
 	}
 
 	new_window = ev_application_get_empty_window (application);
@@ -184,6 +198,8 @@ ev_application_open_uri (EvApplication *application,
 	if (page_label != NULL) {
 		ev_window_open_page_label (new_window, page_label);
 	}
+
+	return TRUE;
 }
 
 void
@@ -192,7 +208,7 @@ ev_application_open_uri_list (EvApplication *application, GSList *uri_list)
 	GSList *l;
 
 	for (l = uri_list; l != NULL; l = l->next) {
-		ev_application_open_uri (application, (char *)l->data, NULL);
+		ev_application_open_uri (application, (char *)l->data, NULL, NULL);
 	}
 }
 
