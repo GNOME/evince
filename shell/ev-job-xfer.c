@@ -90,7 +90,7 @@ ev_job_xfer_new (const gchar *uri)
 void
 ev_job_xfer_run (EvJobXfer *job)
 {
-	GType document_type;
+	EvDocument *document;
 	GError *error = NULL;
 	GnomeVFSURI *source_uri;
 	GnomeVFSURI *target_uri;
@@ -102,10 +102,10 @@ ev_job_xfer_run (EvJobXfer *job)
 		job->error = NULL;
 	}
 
-	document_type = ev_document_type_lookup (job->uri, NULL, &error);
+	document = ev_document_types_get_document (job->uri, NULL, &error);
 
-	if (document_type != G_TYPE_INVALID) {
-		EV_JOB (job)->document = g_object_new (document_type, NULL);
+	if (document != NULL) {
+		EV_JOB (job)->document = document;
 	} else {
 		job->error = error;			
 		EV_JOB (job)->finished = TRUE;

@@ -106,7 +106,8 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 			gtk_widget_show (properties->fonts_page);
 		}
 
-		ev_properties_fonts_set_document (EV_PROPERTIES_FONTS (properties->fonts_page), document);
+		ev_properties_fonts_set_document
+			(EV_PROPERTIES_FONTS (properties->fonts_page), document);
 	}
 }
 

@@ -35,14 +35,11 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	EvDocument *document = NULL;
 	GError *error = NULL;
 	GdkPixbuf *pixbuf;
-	GType document_type;
 	char *mime_type = NULL;
 
-	document_type = ev_document_type_lookup (uri, &mime_type, &error);
-	if (document_type == G_TYPE_INVALID || error != NULL)
+	document = ev_document_types_get_document (uri, &mime_type, &error);
+	if (document == NULL)
 		return FALSE;
-
-	document = g_object_new (document_type, NULL);
 
 	if (!ev_document_load (document, uri, &error)) {
 		if (error->domain == EV_DOCUMENT_ERROR &&

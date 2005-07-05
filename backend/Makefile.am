@@ -3,6 +3,12 @@ NULL=
 INCLUDES=					\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"	\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-I$(top_srcdir)/pdf			\
+	-I$(top_srcdir)/pixbuf			\
+	-I$(top_srcdir)/tiff			\
+	-I$(top_srcdir)/ps	                \
+	-I$(top_srcdir)/djvu			\
+	-I$(top_srcdir)/dvi			\
 	$(SHELL_CFLAGS)				\
 	$(EVINCE_DISABLE_DEPRECATED)		\
 	$(NULL)
@@ -17,6 +23,8 @@ libevbackend_la_SOURCES=			\
 	ev-link.h				\
 	ev-document.c				\
 	ev-document.h				\
+	ev-document-factory.c			\
+	ev-document-factory.h			\
 	ev-document-thumbnails.c		\
 	ev-document-thumbnails.h		\
 	ev-document-fonts.c                     \

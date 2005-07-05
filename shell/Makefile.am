@@ -8,13 +8,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/backend				\
-	-I$(top_srcdir)/pdf				\
-	-I$(top_srcdir)/pixbuf				\
 	-I$(top_srcdir)/properties			\
-	-I$(top_srcdir)/tiff				\
-	-I$(top_srcdir)/ps	                	\
-	-I$(top_srcdir)/djvu				\
-	-I$(top_srcdir)/dvi				\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\

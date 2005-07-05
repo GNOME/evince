@@ -1,3 +1,32 @@
+2005-07-05  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* backend/Makefile.am:
+	* backend/ev-document-factory.c:
+	(mime_type_supported_by_gdk_pixbuf),
+	(ev_document_type_get_from_mime),
+	(ev_document_factory_get_document),
+	(ev_document_factory_get_backend),
+	(ev_document_factory_get_mime_types),
+	(ev_document_factory_get_all_mime_types):
+	* backend/ev-document-factory.h:
+	* shell/Makefile.am:
+	* shell/ev-document-types.c: (get_document_from_uri),
+	(ev_document_types_get_document),
+	(file_filter_add_mime_list_and_free),
+	(ev_document_types_add_filters):
+	* shell/ev-document-types.h:
+	* shell/ev-job-xfer.c: (ev_job_xfer_run):
+	* shell/ev-properties-dialog.c:
+	(ev_properties_dialog_set_document):
+	* shell/ev-window.c: (ev_window_cmd_file_open),
+	(ev_window_cmd_save_as):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+
+	Rework document types managing to avoid code duplication
+	and actually abstract from backend implementations.
+	Also provide a minimal factory api that can be used by
+	thumbnailer/properties.
+
 2005-07-05  Christian Persch  <chpe@cvs.gnome.org>
 
 	* properties/ev-properties-view.c: (ev_properties_view_set_info):

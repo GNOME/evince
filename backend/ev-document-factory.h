@@ -18,19 +18,26 @@
  *
  */
 
-#ifndef EV_DOCUMENT_TYPES_H
-#define EV_DOCUMENT_TYPES_H
+#ifndef EV_DOCUMENT_FACTORY_H
+#define EV_DOCUMENT_FACTORY_H
 
 #include "ev-document.h"
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-EvDocument     *ev_document_types_get_document		(const char   *uri,
-			     	 			 gchar       **mime_type,
-			  			         GError      **error);
-void		ev_document_types_add_filters		(GtkWidget    *chooser,
-							 EvDocument   *document);
+typedef enum {
+	EV_BACKEND_PDF,
+	EV_BACKEND_PS,
+	EV_BACKEND_TIFF,
+	EV_BACKEND_PIXBUF,
+	EV_BACKEND_DJVU,
+	EV_BACKEND_DVI
+} EvBackend;
+
+EvDocument *ev_document_factory_get_document		(const char *mime_type);
+EvBackend   ev_document_factory_get_backend		(EvDocument *document);
+GList      *ev_document_factory_get_mime_types		(EvBackend   backend);
+GList      *ev_document_factory_get_all_mime_types	(void);
 
 G_END_DECLS
 
