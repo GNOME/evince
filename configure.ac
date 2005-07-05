@@ -50,18 +50,14 @@ PKG_CHECK_MODULES(POPPLER_GLIB, poppler-glib >= $POPPLER_REQUIRED)
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
 
-AC_ARG_ENABLE([dbus],
-        AS_HELP_STRING([--enable-dbus],[Enable DBUS (default=no)]),
-        [enable_dbus=$enableval],
-        [enable_dbus=no])
+PKG_CHECK_EXISTS([dbus-glib-1 >= $DBUS_GLIB_REQUIRED], [enable_dbus=yes],
+		  [AC_MSG_WARN("DBUS support is disabled since dbus 0.33 or higher was not found")
+		  enable_dbus=no])
 
-AC_MSG_RESULT([$enable_dbus])
-
-DBUS_VERSION=
 if test "x$enable_dbus" = "xyes" ; then
+	PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
         AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
 	AC_DEFINE([ENABLE_METADATA],[1],[Define if metadata support is enabled])
-        PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
 
 	DBUS_VERSION=`$PKG_CONFIG --modversion dbus-glib-1 | sed 's/0.\([[0-9]]*\)/\1/'`
 	AC_DEFINE_UNQUOTED(DBUS_VERSION, $DBUS_VERSION, [DBUS version.])
