@@ -5,9 +5,7 @@ NULL=
 INCLUDES=					\
 	-DDATADIR=\"$(pkgdatadir)\"		\
 	-I$(top_srcdir)/lib			\
-	-I$(top_srcdir)/pdf			\
 	-I$(top_srcdir)/backend			\
-	-I$(top_srcdir)/shell			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(THUMBNAILER_CFLAGS)			\

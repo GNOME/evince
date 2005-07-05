@@ -28,7 +28,7 @@
  */
 
 #include "ev-properties-view.h"
-#include "pdf-document.h"
+#include "ev-document-factory.h"
 
 #include <config.h>
 #include <string.h>
@@ -83,6 +83,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 			 GList *files)
 {
 	GError *error;
+	char *mime;
 	EvDocument *document;
 	GList *pages = NULL;
 	NautilusFileInfo *file;
@@ -95,12 +96,12 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 		goto end;
 	file = files->data;
 
-	if (!nautilus_file_info_is_mime_type (file, "application/pdf")) {
-		goto end;
-        }
 
 	/* okay, make the page */
-	document = EV_DOCUMENT (pdf_document_new ());
+	mime = nautilus_file_info_get_mime_type (file);
+	document = ev_document_factory_get_document (mime);
+	g_free (mime);
+
 	uri = nautilus_file_info_get_uri (file);
 	if (!ev_document_load (document, uri, &error)) {
 		g_error_free (error);

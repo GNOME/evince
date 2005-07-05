@@ -22,9 +22,7 @@ endif
 bin_PROGRAMS=evince
 noinst_LTLIBRARIES = libevbackendfactory.la
 
-libevbackendfactory_la_SOURCES=         		\
-	ev-document-types.c				\
-	ev-document-types.h
+libevbackendfactory_la_SOURCES =
 
 libevbackendfactory_la_LIBADD = 			\
 	$(top_builddir)/pdf/libpdfdocument.la	 	\
@@ -57,6 +55,8 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
+	ev-document-types.c		\
+	ev-document-types.h		\
 	ev-job-queue.h			\
 	ev-job-queue.c			\
 	ev-jobs.h			\

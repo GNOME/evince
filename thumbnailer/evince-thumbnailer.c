@@ -20,14 +20,41 @@
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-init.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 
 #include <ev-document.h>
-#include <ev-document-types.h>
 #include <ev-document-thumbnails.h>
+#include <ev-document-factory.h>
 
 #include <string.h>
 
 #define THUMBNAIL_SIZE 128
+
+static EvDocument *
+get_document_from_uri (const char *uri, gboolean slow, gchar **mime_type)
+{
+	EvDocument *document = NULL;
+        GnomeVFSFileInfo *info;
+        GnomeVFSResult result;
+
+        info = gnome_vfs_file_info_new ();
+        result = gnome_vfs_get_file_info (uri, info,
+	    			          GNOME_VFS_FILE_INFO_GET_MIME_TYPE |
+		                          GNOME_VFS_FILE_INFO_FOLLOW_LINKS | 
+					  (slow ? GNOME_VFS_FILE_INFO_FORCE_SLOW_MIME_TYPE : 0));
+        if (result != GNOME_VFS_OK || info->mime_type == NULL) {
+		goto end;
+        } 
+	
+	document = ev_document_factory_get_document (info->mime_type);
+	if (mime_type != NULL) {
+		*mime_type = info->mime_type ? g_strdup (info->mime_type) : NULL;
+	}
+
+end:
+        gnome_vfs_file_info_unref (info);	
+        return document;
+}
 
 static gboolean
 evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
@@ -37,9 +64,13 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	GdkPixbuf *pixbuf;
 	char *mime_type = NULL;
 
-	document = ev_document_types_get_document (uri, &mime_type, &error);
-	if (document == NULL)
+	document = get_document_from_uri (uri, FALSE, &mime_type);
+	if (document == NULL) {
+		document = get_document_from_uri (uri, TRUE, &mime_type);
+	}
+	if (document == NULL) {
 		return FALSE;
+	}
 
 	if (!ev_document_load (document, uri, &error)) {
 		if (error->domain == EV_DOCUMENT_ERROR &&

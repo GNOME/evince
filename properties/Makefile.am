@@ -4,7 +4,6 @@ INCLUDES=					\
 	-DDATADIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-I$(top_srcdir)/backend			\
-	-I$(top_srcdir)/pdf			\
 	$(PROPERTIES_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)			\
 	$(EVINCE_DISABLE_DEPRECATED)		\
@@ -33,6 +32,6 @@ libevince_properties_page_la_SOURCES = 	\
 libevince_properties_page_la_LIBADD = 			\
 	$(PROPERTIES_LIBS)				\
 	libevproperties.la				\
-	$(top_builddir)/pdf/libpdfdocument.la		\
-	$(top_builddir)/backend/libevbackend.la		\
-	$(top_builddir)/lib/libev.la
+	$(top_builddir)/shell/libevbackendfactory.la	\
+	$(top_builddir)/lib/libev.la			\
+	-ltiff -lz
