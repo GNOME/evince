@@ -95,14 +95,17 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 	}
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (properties->general_page), info);
 
-	if (properties->fonts_page == NULL && EV_IS_DOCUMENT_FONTS (document)) {
-		label = gtk_label_new (_("Fonts"));
-		properties->fonts_page = ev_properties_fonts_new ();
-		gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
-					  properties->fonts_page, label);
-		gtk_widget_show (properties->fonts_page);
+	if (EV_IS_DOCUMENT_FONTS (document)) {
+		if (properties->fonts_page == NULL) {
+			label = gtk_label_new (_("Fonts"));
+			properties->fonts_page = ev_properties_fonts_new ();
+			gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
+						  properties->fonts_page, label);
+			gtk_widget_show (properties->fonts_page);
+		}
+
+		ev_properties_fonts_set_document (EV_PROPERTIES_FONTS (properties->fonts_page), document);
 	}
-	ev_properties_fonts_set_document (EV_PROPERTIES_FONTS (properties->fonts_page), document);
 }
 
 GtkWidget *
