@@ -222,6 +222,7 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 	if (info->fields_mask & EV_DOCUMENT_INFO_FORMAT) {
 		text = g_strdup_printf ("%s", info->format);
 		set_property (xml, FORMAT_PROPERTY, text);
+		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_N_PAGES) {
 		text = g_strdup_printf ("%d", info->n_pages);
