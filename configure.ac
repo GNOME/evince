@@ -56,6 +56,12 @@ PKG_CHECK_EXISTS([dbus-glib-1 >= $DBUS_GLIB_REQUIRED], [enable_dbus=yes],
 
 if test "x$enable_dbus" = "xyes" ; then
 	PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
+        AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
+
+        if test x$DBUS_BINDING_TOOL = "xno" ; then
+        	AC_MSG_ERROR([dbus-binding-tool executable not found in your path - should be installed with dbus glib bindings])
+        fi                                            
+
         AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
 	AC_DEFINE([ENABLE_METADATA],[1],[Define if metadata support is enabled])
 
