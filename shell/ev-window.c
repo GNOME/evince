@@ -619,7 +619,9 @@ page_changed_cb (EvPageCache *page_cache,
 {
 	update_action_sensitivity (ev_window);
 
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
+#endif
 }
 
 static void
@@ -1736,7 +1738,9 @@ ev_window_run_fullscreen (EvWindow *window)
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_fullscreen_popup (window);
 
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
+#endif
 }
 
 static void
@@ -1764,7 +1768,9 @@ ev_window_stop_fullscreen (EvWindow *window)
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 	update_chrome_visibility (window);
 
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
+#endif
 }
 
 static void
@@ -1810,7 +1816,9 @@ ev_window_run_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
+#endif
 }
 
 static void
@@ -1827,7 +1835,9 @@ ev_window_stop_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
+#endif
 }
 
 static void
@@ -2241,8 +2251,10 @@ ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
         update_action_sensitivity (ev_window);
 
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
 				        ev_view_get_zoom (EV_VIEW (ev_window->priv->view)));
+#endif
 }
 
 static void
@@ -2277,16 +2289,22 @@ static void
 ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
 	ev_window_update_continuous_action (ev_window);
+
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
 				         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+#endif
 }
 
 static void     
 ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
 	ev_window_update_dual_page_action (ev_window);
+
+#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
 				         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
+#endif
 }
 
 static char *
@@ -3453,5 +3471,3 @@ ev_window_new (void)
 
 	return ev_window;
 }
-
-

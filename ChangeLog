@@ -1,3 +1,23 @@
+2005-07-06  Christian Persch  <chpe@cvs.gnome.org>
+
+	* configure.ac:
+
+	Fix DBUS configure checks.
+
+	* shell/ev-metadata-manager.c: (ev_metadata_manager_set_int),
+	(ev_metadata_manager_set_double), (ev_metadata_manager_set_string),
+	(ev_metadata_manager_set_boolean):
+
+	Plug mem leaks.
+
+	* shell/ev-window.c: (page_changed_cb), (ev_window_run_fullscreen),
+	(ev_window_stop_fullscreen), (ev_window_run_presentation),
+	(ev_window_stop_presentation), (ev_window_zoom_changed_cb),
+	(ev_window_continuous_changed_cb),
+	(ev_window_dual_mode_changed_cb), (ev_window_new):
+
+	Fix the build without DBUS.
+
 2005-07-06  Marco Pesenti Gritti  <set EMAIL_ADDRESS environment variable>
 
 	* shell/ev-metadata-manager.c: (parse_value), (save_values),

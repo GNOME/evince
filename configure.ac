@@ -50,12 +50,16 @@ PKG_CHECK_MODULES(POPPLER_GLIB, poppler-glib >= $POPPLER_REQUIRED)
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
 
-PKG_CHECK_EXISTS([dbus-glib-1 >= $DBUS_GLIB_REQUIRED], [enable_dbus=yes],
-		  [AC_MSG_WARN("DBUS support is disabled since dbus 0.33 or higher was not found")
-		  enable_dbus=no])
+PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED],
+	[enable_dbus=yes],[enable_dbus=no])
+AC_SUBST([DBUS_CFLAGS])
+AC_SUBST([DBUS_LIBS])
+
+if test "x$enable_dbus" = "xno"; then
+	AC_MSG_WARN([DBUS support is disabled since dbus $DBUS_GLIB_REQUIRED or higher was not found])
+fi
 
 if test "x$enable_dbus" = "xyes" ; then
-	PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
         AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
 
         if test x$DBUS_BINDING_TOOL = "xno" ; then
