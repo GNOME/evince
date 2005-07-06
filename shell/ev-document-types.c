@@ -123,12 +123,13 @@ ev_document_types_add_filters (GtkWidget *chooser, EvDocument *document)
 	GList *mime_types;
 	GtkFileFilter *filter;
 	GtkFileFilter *default_filter;
+	GtkFileFilter *document_filter;
 
 	if (document != NULL) {
 		backend = ev_document_factory_get_backend (document);
 	}
 
-	default_filter = filter = gtk_file_filter_new ();
+	default_filter = document_filter = filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Documents"));
 	mime_types = ev_document_factory_get_all_mime_types ();
 	file_filter_add_mime_list_and_free (filter, mime_types);
@@ -183,5 +184,6 @@ ev_document_types_add_filters (GtkWidget *chooser, EvDocument *document)
 	gtk_file_filter_add_pattern (filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 
-	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), default_filter);
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser),
+				     document == NULL ? document_filter : default_filter);
 }
