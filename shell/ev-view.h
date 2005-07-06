@@ -28,9 +28,11 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_VIEW            (ev_view_get_type ())
-#define EV_TYPE_SIZING_MODE     (ev_sizing_mode_get_type())
 #define EV_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW, EvView))
 #define EV_IS_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW))
+
+#define EV_TYPE_SIZING_MODE     (ev_sizing_mode_get_type())
+#define EV_SIZING_MODE_CLASS    (g_type_class_peek (EV_TYPE_SIZING_MODE))
 
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
@@ -66,8 +68,10 @@ void		ev_view_select_all	  (EvView         *view);
 /* These are all orthoganal to each other, except 'presentation' trumps all
  * other behaviors
  */
+gboolean	ev_view_get_continuous	  (EvView         *view);
 void     	ev_view_set_continuous    (EvView         *view,
 					   gboolean        continuous);
+gboolean	ev_view_get_dual_page	  (EvView         *view);
 void     	ev_view_set_dual_page	  (EvView         *view,
 					   gboolean        dual_page);
 void     	ev_view_set_fullscreen	  (EvView         *view,

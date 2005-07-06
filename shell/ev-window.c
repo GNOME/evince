@@ -618,6 +618,8 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvWindow    *ev_window)
 {
 	update_action_sensitivity (ev_window);
+
+	ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
 }
 
 static void
@@ -630,6 +632,22 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 		ev_window_run_fullscreen (window);
 	}
 }
+
+#ifdef ENABLE_METADATA
+static void
+setup_document_from_metadata (EvWindow *window)
+{
+	char *uri = window->priv->uri;
+	GValue page = { 0, };
+
+	/* Page */
+	if (ev_metadata_manager_get (uri, "page", &page)) {
+		ev_page_cache_set_current_page (window->priv->page_cache,
+						g_value_get_int (&page));
+	}
+
+}
+#endif
 
 static void
 ev_window_setup_document (EvWindow *ev_window)
@@ -675,6 +693,10 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
 					           ev_window->priv->document);
 	}
+
+#ifdef ENABLE_METADATA
+	setup_document_from_metadata (ev_window);
+#endif
 }
 
 static void
@@ -913,18 +935,65 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 
 #ifdef ENABLE_METADATA
 static void
-ev_window_setup_from_metadata (EvWindow *window)
+setup_view_from_metadata (EvWindow *window)
 {
+	EvView *view = EV_VIEW (window->priv->view);
 	char *uri = window->priv->uri;
+	GEnumValue *enum_value;
 	GValue width = { 0, };
 	GValue height = { 0, };
+	GValue sizing_mode = { 0, };
+	GValue zoom = { 0, };
+	GValue continuous = { 0, };
+	GValue dual_page = { 0, };
+	GValue presentation = { 0, };
+	GValue fullscreen = { 0, };
 
-	ev_metadata_manager_get (uri, "window_width", &width);
-	ev_metadata_manager_get (uri, "window_height", &height);
+	/* Window size */
+	if (ev_metadata_manager_get (uri, "window_width", &width) &&
+	    ev_metadata_manager_get (uri, "window_height", &height)) {
+		gtk_window_set_default_size (GTK_WINDOW (window),
+					     g_value_get_int (&width),
+					     g_value_get_int (&height));
+	}
 
-	gtk_window_set_default_size (GTK_WINDOW (window),
-				     g_value_get_int (&width),
-				     g_value_get_int (&height));
+	/* Sizing mode */
+	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode)) {
+		enum_value = g_enum_get_value_by_nick
+			(EV_SIZING_MODE_CLASS, g_value_get_string (&sizing_mode));
+		g_value_unset (&sizing_mode);
+		ev_view_set_sizing_mode (view, enum_value->value);
+	}
+
+	/* Zoom */
+	if (ev_metadata_manager_get (uri, "zoom", &zoom) &&
+	    ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
+		ev_view_set_zoom (view, g_value_get_double (&zoom), FALSE);
+	}
+
+	/* Continuous */
+	if (ev_metadata_manager_get (uri, "continuous", &continuous)) {
+		ev_view_set_continuous (view, g_value_get_boolean (&continuous));
+	}
+
+	/* Dual page */
+	if (ev_metadata_manager_get (uri, "dual-page", &dual_page)) {
+		ev_view_set_dual_page (view, g_value_get_boolean (&dual_page));
+	}
+
+	/* Presentation */
+	if (ev_metadata_manager_get (uri, "presentation", &presentation)) {
+		if (g_value_get_boolean (&presentation)) {
+			ev_window_run_presentation (window);
+		}
+	}
+
+	/* Fullscreen */
+	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen)) {
+		if (g_value_get_boolean (&fullscreen)) {
+			ev_window_run_fullscreen (window);
+		}
+	}
 }
 #endif
 
@@ -938,7 +1007,7 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 	ev_window->priv->uri = g_strdup (uri);
 
 #ifdef ENABLE_METADATA
-	ev_window_setup_from_metadata (ev_window);
+	setup_view_from_metadata (ev_window);
 #endif
 	
 	ev_window_clear_jobs (ev_window);
@@ -1666,6 +1735,8 @@ ev_window_run_fullscreen (EvWindow *window)
 	ev_window_update_fullscreen_action (window);
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_fullscreen_popup (window);
+
+	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
 }
 
 static void
@@ -1692,6 +1763,8 @@ ev_window_stop_fullscreen (EvWindow *window)
 	ev_window_update_fullscreen_action (window);
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 	update_chrome_visibility (window);
+
+	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
 }
 
 static void
@@ -1736,6 +1809,8 @@ ev_window_run_presentation (EvWindow *window)
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
+
+	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
 }
 
 static void
@@ -1751,6 +1826,8 @@ ev_window_stop_presentation (EvWindow *window)
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
+
+	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
 }
 
 static void
@@ -2093,6 +2170,23 @@ update_view_size (EvView *view, EvWindow *window)
 				   hsb_requisition.height + scrollbar_spacing);
 }
 
+static void
+save_sizing_mode (EvWindow *window)
+{
+#ifdef ENABLE_METADATA
+	EvSizingMode mode;
+	GEnumValue *enum_value;
+
+	if (window->priv->uri) {
+		mode = ev_view_get_sizing_mode (EV_VIEW (window->priv->view));
+		enum_value = g_enum_get_value (EV_SIZING_MODE_CLASS, mode);
+
+		ev_metadata_manager_set_string (window->priv->uri, "sizing_mode",
+						enum_value->value_nick);
+	}
+#endif
+}
+
 static void     
 ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 		 		  EvWindow   *ev_window)
@@ -2139,13 +2233,60 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 	}
 
 	update_sizing_buttons (ev_window);
+	save_sizing_mode (ev_window);
 }
 
 static void     
-ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec,
-	  		   EvWindow   *ev_window)
+ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
         update_action_sensitivity (ev_window);
+
+	ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
+				        ev_view_get_zoom (EV_VIEW (ev_window->priv->view)));
+}
+
+static void
+ev_window_update_continuous_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewContinuous");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_continuous), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_view_get_continuous (EV_VIEW (window->priv->view)));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_continuous), window);
+}
+
+static void
+ev_window_update_dual_page_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewDual");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_dual), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_view_get_dual_page (EV_VIEW (window->priv->view)));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_dual), window);
+}
+
+static void     
+ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
+{
+	ev_window_update_continuous_action (ev_window);
+	ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
+				         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+}
+
+static void     
+ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
+{
+	ev_window_update_dual_page_action (ev_window);
+	ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
+				         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
 }
 
 static char *
@@ -3225,6 +3366,14 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->view,
 			  "notify::zoom",
 			  G_CALLBACK (ev_window_zoom_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->view,
+			  "notify::dual-page",
+			  G_CALLBACK (ev_window_dual_mode_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->view,
+			  "notify::continuous",
+			  G_CALLBACK (ev_window_continuous_changed_cb),
 			  ev_window);
 
 	ev_window->priv->statusbar = ev_statusbar_new ();

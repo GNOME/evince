@@ -149,6 +149,12 @@ parse_value (xmlChar *value, xmlChar *type)
 		case G_TYPE_INT:
 			g_value_set_int (ret, atoi ((char *)value));
 			break;
+		case G_TYPE_DOUBLE:
+			g_value_set_double (ret, atof ((char *)value));
+			break;
+		case G_TYPE_BOOLEAN:
+			g_value_set_boolean (ret, atoi ((char *)value));
+			break;
 	}
 
 	return ret;
@@ -426,6 +432,12 @@ save_values (const gchar *key, GValue *value, xmlNodePtr parent)
                 case G_TYPE_INT:
 			string_value = g_strdup_printf ("%d", g_value_get_int (value));
                         break;
+                case G_TYPE_DOUBLE:
+			string_value = g_strdup_printf ("%f", g_value_get_double (value));
+                        break;
+                case G_TYPE_BOOLEAN:
+			string_value = g_strdup_printf ("%d", g_value_get_boolean (value));
+                        break;
 		default:
 			string_value = NULL;
 			g_assert_not_reached ();
@@ -546,6 +558,39 @@ ev_metadata_manager_set_int (const gchar *uri, const gchar *key, int value)
 
 	g_value_init (&val, G_TYPE_INT);
 	g_value_set_int (&val, value);
+
+	ev_metadata_manager_set (uri, key, &val);
+}
+
+void
+ev_metadata_manager_set_double (const gchar *uri, const gchar *key, double value)
+{
+	GValue val = { 0, };
+
+	g_value_init (&val, G_TYPE_DOUBLE);
+	g_value_set_double (&val, value);
+
+	ev_metadata_manager_set (uri, key, &val);
+}
+
+void
+ev_metadata_manager_set_string (const gchar *uri, const gchar *key, const gchar *value)
+{
+	GValue val = { 0, };
+
+	g_value_init (&val, G_TYPE_STRING);
+	g_value_set_string (&val, value);
+
+	ev_metadata_manager_set (uri, key, &val);
+}
+
+void
+ev_metadata_manager_set_boolean (const gchar *uri, const gchar *key, gboolean value)
+{
+	GValue val = { 0, };
+
+	g_value_init (&val, G_TYPE_BOOLEAN);
+	g_value_set_boolean (&val, value);
 
 	ev_metadata_manager_set (uri, key, &val);
 }

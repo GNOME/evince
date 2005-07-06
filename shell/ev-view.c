@@ -371,7 +371,11 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 {
 	GdkRectangle page_area;
 	GtkBorder border;
-	
+
+	if (view->document == NULL) {
+		return;
+	}
+
 	get_page_extents (view, view->current_page, &page_area, &border);
 
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
@@ -2095,6 +2099,14 @@ ev_view_get_zoom (EvView *view)
 	return view->scale;
 }
 
+gboolean
+ev_view_get_continuous (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	return view->continuous;
+}
+
 void
 ev_view_set_continuous (EvView   *view,
 			gboolean  continuous)
@@ -2110,6 +2122,14 @@ ev_view_set_continuous (EvView   *view,
 	}
 
 	g_object_notify (G_OBJECT (view), "continuous");
+}
+
+gboolean
+ev_view_get_dual_page (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	return view->dual_page;
 }
 
 void

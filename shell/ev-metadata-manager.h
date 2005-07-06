@@ -37,6 +37,15 @@ void		ev_metadata_manager_set		(const gchar  *uri,
 void		ev_metadata_manager_set_int	(const gchar  *uri,
 					 	 const gchar  *key,
 					 	 int           value);
+void		ev_metadata_manager_set_double	(const gchar  *uri,
+						 const gchar  *key,
+						 double        value);
+void		ev_metadata_manager_set_string	(const gchar  *uri,
+						 const gchar  *key,
+						 const gchar  *value);
+void		ev_metadata_manager_set_boolean (const gchar  *uri,
+						 const gchar  *key,
+						 gboolean      value);
 void		ev_metadata_manager_shutdown 	(void);
 
 G_END_DECLS
