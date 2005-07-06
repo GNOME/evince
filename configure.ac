@@ -24,7 +24,7 @@ AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
 GNOME_DEBUG_CHECK
 
-ALL_LINGUAS="bg ca cs da de el en_CA en_GB es fi fr hu ja ko lt nb nl no pt_BR ru rw sk sv th uk wa zh_CN zh_TW"
+ALL_LINGUAS="bg ca cs da de el en_CA en_GB es eu fi fr hu ja ko lt nb nl no pt_BR ru rw sk sv th uk wa zh_CN zh_TW"
 
 AM_GLIB_GNU_GETTEXT
 
