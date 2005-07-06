@@ -955,12 +955,17 @@ setup_view_from_metadata (EvWindow *window)
 	GValue fullscreen = { 0, };
 
 	/* Window size */
-	if (ev_metadata_manager_get (uri, "window_maximized", &maximized)) {
-		if (g_value_get_boolean (&maximized) && !GTK_WIDGET_VISIBLE (window)) {
-			gtk_window_maximize (GTK_WINDOW (window));
+	if (!GTK_WIDGET_VISIBLE (window)) {
+		gboolean restore_size = TRUE;
+
+		if (ev_metadata_manager_get (uri, "window_maximized", &maximized)) {
+			if (g_value_get_boolean (&maximized)) {
+				gtk_window_maximize (GTK_WINDOW (window));
+				restore_size = FALSE;
+			}
 		}
 
-		if (!g_value_get_boolean (&maximized) &&
+		if (restore_size &&
 		    ev_metadata_manager_get (uri, "window_x", &x) &&
 		    ev_metadata_manager_get (uri, "window_y", &y) &&
 		    ev_metadata_manager_get (uri, "window_width", &width) &&

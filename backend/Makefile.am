@@ -46,6 +46,30 @@ libevbackend_la_SOURCES=			\
 	ev-document-misc.c			\
 	$(NULL)
 
+libevbackend_la_LIBADD = 				\
+	$(top_builddir)/pdf/libpdfdocument.la	 	\
+	$(top_builddir)/pixbuf/libpixbufdocument.la	\
+	$(top_builddir)/ps/libgtkgs.la			\
+	$(NULL)
+
+if ENABLE_DJVU
+libevbackend_la_LIBADD += 			\
+	$(top_builddir)/djvu/libgtkdjvu.la	\
+	$(NULL)
+endif
+
+if ENABLE_TIFF
+libevbackend_la_LIBADD += 			\
+	$(top_builddir)/tiff/libtiffdocument.la	\
+	$(NULL)
+endif
+
+if ENABLE_DVI
+libevbackend_la_LIBADD += 			\
+	$(top_builddir)/dvi/libgtkdvi.la	\
+	$(NULL)
+endif
+
 BUILT_SOURCES=				\
 	ev-backend-marshalers.h		\
 	ev-backend-marshalers.c

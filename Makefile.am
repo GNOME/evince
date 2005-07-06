@@ -1,4 +1,4 @@
-SUBDIRS = lib cut-n-paste backend po help data
+SUBDIRS = lib cut-n-paste po help data
 
 # Backends
 
@@ -16,9 +16,15 @@ if ENABLE_DVI
      SUBDIRS += dvi
 endif
 
+SUBDIRS += backend
+
+# Properties (library and application)
+
+SUBDIRS += properties
+
 # Applications 
 
-SUBDIRS += shell thumbnailer properties
+SUBDIRS += shell thumbnailer
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 

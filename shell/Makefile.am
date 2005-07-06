@@ -20,34 +20,6 @@ INCLUDES += $(DBUS_CFLAGS)
 endif
 
 bin_PROGRAMS=evince
-noinst_LTLIBRARIES = libevbackendfactory.la
-
-libevbackendfactory_la_SOURCES =
-
-libevbackendfactory_la_LIBADD = 			\
-	$(top_builddir)/pdf/libpdfdocument.la	 	\
-	$(top_builddir)/pixbuf/libpixbufdocument.la	\
-	$(top_builddir)/ps/libgtkgs.la			\
-	$(top_builddir)/backend/libevbackend.la		\
-	$(NULL)
-
-if ENABLE_DJVU
-libevbackendfactory_la_LIBADD += 		\
-	$(top_builddir)/djvu/libgtkdjvu.la	\
-	$(NULL)
-endif
-
-if ENABLE_TIFF
-libevbackendfactory_la_LIBADD += 		\
-	$(top_builddir)/tiff/libtiffdocument.la	\
-	$(NULL)
-endif
-
-if ENABLE_DVI
-libevbackendfactory_la_LIBADD += 		\
-	$(top_builddir)/dvi/libgtkdvi.la	\
-	$(NULL)
-endif
 
 evince_SOURCES=				\
 	dummy.cc			\
@@ -116,8 +88,8 @@ evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/lib/libev.la					\
+	$(top_builddir)/backend/libevbackend.la				\
 	-ltiff -lz							\
-	libevbackendfactory.la						\
 	$(NULL)
 
 if ENABLE_DBUS
