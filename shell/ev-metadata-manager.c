@@ -561,7 +561,7 @@ ev_metadata_manager_set_int (const gchar *uri, const gchar *key, int value)
 
 	ev_metadata_manager_set (uri, key, &val);
 
-	g_value_unset (&value);
+	g_value_unset (&val);
 }
 
 void
@@ -574,7 +574,7 @@ ev_metadata_manager_set_double (const gchar *uri, const gchar *key, double value
 
 	ev_metadata_manager_set (uri, key, &val);
 
-	g_value_unset (&value);
+	g_value_unset (&val);
 }
 
 void
@@ -587,7 +587,7 @@ ev_metadata_manager_set_string (const gchar *uri, const gchar *key, const gchar 
 
 	ev_metadata_manager_set (uri, key, &val);
 
-	g_value_unset (&value);
+	g_value_unset (&val);
 }
 
 void
@@ -600,5 +600,5 @@ ev_metadata_manager_set_boolean (const gchar *uri, const gchar *key, gboolean va
 
 	ev_metadata_manager_set (uri, key, &val);
 
-	g_value_unset (&value);
+	g_value_unset (&val);
 }
