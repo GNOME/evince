@@ -944,6 +944,9 @@ setup_view_from_metadata (EvWindow *window)
 	GEnumValue *enum_value;
 	GValue width = { 0, };
 	GValue height = { 0, };
+	GValue maximized = { 0, };
+	GValue x = { 0, };
+	GValue y = { 0, };
 	GValue sizing_mode = { 0, };
 	GValue zoom = { 0, };
 	GValue continuous = { 0, };
@@ -952,11 +955,22 @@ setup_view_from_metadata (EvWindow *window)
 	GValue fullscreen = { 0, };
 
 	/* Window size */
-	if (ev_metadata_manager_get (uri, "window_width", &width) &&
-	    ev_metadata_manager_get (uri, "window_height", &height)) {
-		gtk_window_set_default_size (GTK_WINDOW (window),
-					     g_value_get_int (&width),
-					     g_value_get_int (&height));
+	if (ev_metadata_manager_get (uri, "window_maximized", &maximized)) {
+		if (g_value_get_boolean (&maximized) && !GTK_WIDGET_VISIBLE (window)) {
+			gtk_window_maximize (GTK_WINDOW (window));
+		}
+
+		if (!g_value_get_boolean (&maximized) &&
+		    ev_metadata_manager_get (uri, "window_x", &x) &&
+		    ev_metadata_manager_get (uri, "window_y", &y) &&
+		    ev_metadata_manager_get (uri, "window_width", &width) &&
+	            ev_metadata_manager_get (uri, "window_height", &height)) {
+			gtk_window_set_default_size (GTK_WINDOW (window),
+						     g_value_get_int (&width),
+						     g_value_get_int (&height));
+			gtk_window_move (GTK_WINDOW (window), g_value_get_int (&x),
+					 g_value_get_int (&y));
+		}
 	}
 
 	/* Sizing mode */
@@ -3166,19 +3180,41 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 }
 
 static gboolean
-window_configure_event_cb (EvWindow *window, gpointer dummy)
+window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer dummy)
 {
 #ifdef ENABLE_METADATA
-	int width, height;
+	char *uri = window->priv->uri;
 
-	if (window->priv->uri == NULL) {
-		return FALSE;
+	if (uri && !(event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN)) {
+		gboolean maximized;
+
+		maximized = event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
+		ev_metadata_manager_set_boolean (uri, "window_maximized", maximized);
 	}
+#endif
 
-	gtk_window_get_size (GTK_WINDOW (window), &width, &height);
+	return FALSE;
+}
 
-	ev_metadata_manager_set_int (window->priv->uri, "window_width", width);
-	ev_metadata_manager_set_int (window->priv->uri, "window_height", height);
+static gboolean
+window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer dummy)
+{
+#ifdef ENABLE_METADATA
+	char *uri = window->priv->uri;
+	GdkWindowState state;
+	int x, y, width, height;
+
+	state = gdk_window_get_state (GTK_WIDGET (window)->window);
+
+	if (uri && !(state & GDK_WINDOW_STATE_FULLSCREEN)) {
+		gtk_window_get_position (GTK_WINDOW (window), &x, &y);
+		gtk_window_get_size (GTK_WINDOW (window), &width, &height);
+
+		ev_metadata_manager_set_int (uri, "window_x", x);
+		ev_metadata_manager_set_int (uri, "window_y", y);
+		ev_metadata_manager_set_int (uri, "window_width", width);
+		ev_metadata_manager_set_int (uri, "window_height", height);
+	}
 #endif
 
 	return FALSE;
@@ -3197,6 +3233,8 @@ ev_window_init (EvWindow *ev_window)
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
+	g_signal_connect (ev_window, "window_state_event",
+			  G_CALLBACK (window_state_event_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 

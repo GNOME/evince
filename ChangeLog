@@ -1,3 +1,11 @@
+2005-07-06  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-window.c: (setup_view_from_metadata),
+	(window_state_event_cb), (window_configure_event_cb),
+	(ev_window_init):
+
+	Remember window position and maximized state
+
 2005-07-06  Christian Persch  <chpe@cvs.gnome.org>
 
 	* configure.ac:
@@ -18,7 +26,7 @@
 
 	Fix the build without DBUS.
 
-2005-07-06  Marco Pesenti Gritti  <set EMAIL_ADDRESS environment variable>
+2005-07-06  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/ev-metadata-manager.c: (parse_value), (save_values),
 	(ev_metadata_manager_set_int), (ev_metadata_manager_set_double),
