@@ -1,5 +1,3 @@
-NULL=
-
 INCLUDES=						\
 	-DDATADIR=\"$(pkgdatadir)\"			\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
@@ -13,12 +11,7 @@ INCLUDES=						\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\
 	$(WARN_CFLAGS)					\
-	$(DISABLE_DEPRECATED)				\
-	$(NULL)
-
-if ENABLE_DBUS
-INCLUDES += $(DBUS_CFLAGS)
-endif
+	$(DISABLE_DEPRECATED)
 
 bin_PROGRAMS=evince
 
@@ -71,8 +64,7 @@ evince_SOURCES=				\
 	ev-statusbar.h			\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
-	main.c				\
-	$(NULL)
+	main.c
 
 if ENABLE_METADATA
 evince_SOURCES += \
@@ -83,18 +75,10 @@ endif
 evince_LDADD=								\
 	$(SHELL_LIBS)							\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
-	$(top_builddir)/cut-n-paste/zoom-control/libephymisc.la		\
-	$(top_builddir)/cut-n-paste/zoom-control/libephywidgets.la	\
+	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/lib/libev.la					\
-	$(top_builddir)/backend/libevbackend.la				\
-	-ltiff -lz							\
-	$(NULL)
-
-if ENABLE_DBUS
-evince_LDADD += $(DBUS_LIBS)
-endif
+	$(top_builddir)/lib/libev.la
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 
