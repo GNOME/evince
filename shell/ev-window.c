@@ -2271,8 +2271,10 @@ ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
         update_action_sensitivity (ev_window);
 
 #ifdef ENABLE_METADATA
-	ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
-				        ev_view_get_zoom (EV_VIEW (ev_window->priv->view)));
+	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
+		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
+					        ev_view_get_zoom (view));
+	}
 #endif
 }
 

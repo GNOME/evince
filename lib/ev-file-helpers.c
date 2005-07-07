@@ -61,8 +61,7 @@ ev_dot_dir (void)
 	{
 		gboolean exists;
 
-		dot_dir = g_build_filename (g_get_home_dir (),
-					    GNOME_DOT_GNOME,
+		dot_dir = g_build_filename (gnome_user_dir_get (),
 					    "evince",
 					    NULL);
 
