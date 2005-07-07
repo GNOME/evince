@@ -1971,13 +1971,15 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 {
 	GtkWidget *dialog;
 	GtkWidget *editor;
-	g_return_if_fail (EV_IS_WINDOW (ev_window));
     
-	dialog = gtk_dialog_new_with_buttons (_("Toolbar editor"), GTK_WINDOW (ev_window), 
+	dialog = gtk_dialog_new_with_buttons (_("Toolbar editor"),
+					      GTK_WINDOW (ev_window), 
 				              GTK_DIALOG_DESTROY_WITH_PARENT, 
 					      GTK_STOCK_CLOSE,
-					      GTK_RESPONSE_CANCEL, 
+					      GTK_RESPONSE_CLOSE, 
 					      NULL);
+	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)), 5);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 18);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
 	  
@@ -1985,19 +1987,18 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 					 ev_window->priv->toolbar_model);
 	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
 	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
-	             
+             
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), editor);
 	egg_toolbar_editor_load_actions (EGG_TOOLBAR_EDITOR (editor),
-				      DATADIR"/evince-toolbar.xml");
+				         DATADIR "/evince-toolbar.xml");
 
 	egg_editable_toolbar_set_edit_mode
 		(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), TRUE);
 
-	gtk_widget_show_all (dialog);
-      
-	g_signal_connect (G_OBJECT (dialog), "response",
+	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_window_cmd_edit_toolbar_cb),
 			  ev_window);
+	gtk_widget_show_all (dialog);
 }
 
 static void
