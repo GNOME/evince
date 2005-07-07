@@ -30,6 +30,8 @@ evince_SOURCES=				\
 	ev-job-xfer.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
+	ev-metadata-manager.c		\
+	ev-metadata-manager.h		\
 	ev-page-action.c		\
 	ev-page-action.h		\
 	ev-page-cache.h			\
@@ -65,12 +67,6 @@ evince_SOURCES=				\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
 	main.c
-
-if ENABLE_METADATA
-evince_SOURCES += \
-	ev-metadata-manager.h		\
-	ev-metadata-manager.c
-endif
 
 evince_LDADD=								\
 	$(SHELL_LIBS)							\

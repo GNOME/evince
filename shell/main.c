@@ -149,9 +149,7 @@ load_files_remote (const char **files)
 int
 main (int argc, char *argv[])
 {
-#ifdef ENABLE_METADATA
 	gboolean enable_metadata = FALSE;
-#endif
 	poptContext context;
         GValue context_as_value = { 0 };
 	GnomeProgram *program;
@@ -189,11 +187,10 @@ main (int argc, char *argv[])
 
 	gnome_authentication_manager_init ();
 
-#if ENABLE_METADATA
+
 	if (enable_metadata) {
 		ev_metadata_manager_init ();
 	}
-#endif
 
 	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
@@ -211,11 +208,9 @@ main (int argc, char *argv[])
 	poptFreeContext (context);
 	ev_file_helpers_shutdown ();
 
-#if ENABLE_METADATA
 	if (enable_metadata) {
 		ev_metadata_manager_shutdown ();
 	}
-#endif
 
 	return 0;
 }

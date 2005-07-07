@@ -73,7 +73,6 @@ if test "x$enable_dbus" = "xyes" ; then
         fi                                            
 
         AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
-	AC_DEFINE([ENABLE_METADATA],[1],[Define if metadata support is enabled])
 
 	DBUS_VERSION=`$PKG_CONFIG --modversion dbus-glib-1 | sed 's/0.\([[0-9]]*\)/\1/'`
 	AC_DEFINE_UNQUOTED(DBUS_VERSION, $DBUS_VERSION, [DBUS version.])
@@ -90,7 +89,6 @@ AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
-AM_CONDITIONAL([ENABLE_METADATA], [test "x$enable_dbus" = "xyes"])
 AM_CONDITIONAL([DBUS_TOOL_NO_PREFIX], [test "x$DBUS_VERSION" = "x33"])
 
 dnl Check for Nautilus property page build
