@@ -68,21 +68,23 @@ load_files (const char **files)
 }
 
 #ifdef ENABLE_DBUS
-static void
+static gboolean
 load_files_remote (const char **files)
 {
 	int i;
 	GError *error = NULL;
 	DBusGConnection *connection;
+#if DBUS_VERSION < 35
 	DBusGPendingCall *call;
+#endif
 	DBusGProxy *remote_object;
 
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (connection == NULL) {
 		g_warning (error->message);
-		g_error_free (error);
-		
-		return;
+		g_error_free (error);	
+
+		return FALSE;
 	}
 
 	remote_object = dbus_g_proxy_new_for_name (connection,
@@ -90,22 +92,32 @@ load_files_remote (const char **files)
                                                    "/org/gnome/evince/Evince",
                                                    "org.gnome.evince.Application");
 	if (!files) {
+#if DBUS_VERSION < 35
 		call = dbus_g_proxy_begin_call (remote_object, "OpenWindow", G_TYPE_INVALID);
 
 		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
+			return FALSE;
 		}
-		return;
+#else
+		if (!dbus_g_proxy_call (remote_object, "OpenWindow", &error, G_TYPE_INVALID)) {
+			g_warning (error->message);
+			g_clear_error (&error);
+			return FALSE;
+		}
+#endif
+		return TRUE;
 	}
 
 	for (i = 0; files[i]; i++) {
+		gboolean result = TRUE;
 		const char *page_label;
 		char *uri;
 
 		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
 		page_label = ev_page_label ? ev_page_label : ""; 
-
+#if DBUS_VERSION < 35
 		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
 						G_TYPE_STRING, uri,
 						G_TYPE_STRING, page_label,
@@ -114,16 +126,32 @@ load_files_remote (const char **files)
 		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
+			result = FALSE;
 		}
-		
+#else
+		if (!dbus_g_proxy_call (remote_object, "OpenURI", &error,
+					G_TYPE_STRING, uri,
+					G_TYPE_STRING, page_label,
+					G_TYPE_INVALID)) {
+			g_warning (error->message);
+			g_clear_error (&error);
+			result = FALSE;
+		}
+#endif
 		g_free (uri);
+		return result;
         }
+
+	return TRUE;
 }
 #endif /* ENABLE_DBUS */
 
 int
 main (int argc, char *argv[])
 {
+#ifdef ENABLE_METADATA
+	gboolean enable_metadata = FALSE;
+#endif
 	poptContext context;
         GValue context_as_value = { 0 };
 	GnomeProgram *program;
@@ -149,15 +177,23 @@ main (int argc, char *argv[])
 
 #ifdef ENABLE_DBUS
 	if (!ev_application_register_service (EV_APP)) {
-		load_files_remote (poptGetArgs (context));
-		g_warning ("Another process was running.");
-		return 0;
+		if (load_files_remote (poptGetArgs (context))) {
+			g_warning ("Another process was running.");
+			return 0;
+		}
 	} else {
 		g_warning ("Starting evince process.");
+		enable_metadata = TRUE;
 	}
 #endif
 
 	gnome_authentication_manager_init ();
+
+#if ENABLE_METADATA
+	if (enable_metadata) {
+		ev_metadata_manager_init ();
+	}
+#endif
 
 	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
@@ -174,8 +210,11 @@ main (int argc, char *argv[])
 	gnome_accelerators_sync ();
 	poptFreeContext (context);
 	ev_file_helpers_shutdown ();
+
 #if ENABLE_METADATA
-	ev_metadata_manager_shutdown ();
+	if (enable_metadata) {
+		ev_metadata_manager_shutdown ();
+	}
 #endif
 
 	return 0;

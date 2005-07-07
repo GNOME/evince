@@ -87,12 +87,9 @@ item_free (gpointer data)
 	g_free (item);
 }
 
-static gboolean
+void
 ev_metadata_manager_init (void)
 {
-	if (ev_metadata_manager != NULL)
-		return TRUE;
-
 	ev_metadata_manager = g_new0 (GeditMetadataManager, 1);
 
 	ev_metadata_manager->values_loaded = FALSE;
@@ -110,8 +107,6 @@ ev_metadata_manager_init (void)
 				    (GSourceFunc)ev_metadata_manager_save,
 				    NULL,
 				    NULL);
-	
-	return TRUE;
 }
 
 /* This function must be called before exiting ev */
@@ -303,7 +298,7 @@ ev_metadata_manager_get (const gchar *uri,
 	g_return_val_if_fail (key != NULL, FALSE);
 
 	if (ev_metadata_manager == NULL)
-		ev_metadata_manager_init ();
+		return FALSE;
 
 	if (!ev_metadata_manager->values_loaded)
 	{
@@ -358,7 +353,7 @@ ev_metadata_manager_set (const gchar  *uri,
 	g_return_if_fail (key != NULL);
 
 	if (ev_metadata_manager == NULL)
-		ev_metadata_manager_init ();
+		return;
 
 	if (!ev_metadata_manager->values_loaded)
 	{

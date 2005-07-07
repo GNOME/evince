@@ -619,9 +619,7 @@ page_changed_cb (EvPageCache *page_cache,
 {
 	update_action_sensitivity (ev_window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
-#endif
 }
 
 static void
@@ -635,7 +633,6 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 	}
 }
 
-#ifdef ENABLE_METADATA
 static void
 setup_document_from_metadata (EvWindow *window)
 {
@@ -649,7 +646,6 @@ setup_document_from_metadata (EvWindow *window)
 	}
 
 }
-#endif
 
 static void
 ev_window_setup_document (EvWindow *ev_window)
@@ -696,9 +692,7 @@ ev_window_setup_document (EvWindow *ev_window)
 					           ev_window->priv->document);
 	}
 
-#ifdef ENABLE_METADATA
 	setup_document_from_metadata (ev_window);
-#endif
 }
 
 static void
@@ -935,7 +929,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	}		
 }
 
-#ifdef ENABLE_METADATA
 static void
 setup_view_from_metadata (EvWindow *window)
 {
@@ -1016,7 +1009,6 @@ setup_view_from_metadata (EvWindow *window)
 		}
 	}
 }
-#endif
 
 void
 ev_window_open_uri (EvWindow *ev_window, const char *uri)
@@ -1027,9 +1019,7 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
 
-#ifdef ENABLE_METADATA
 	setup_view_from_metadata (ev_window);
-#endif
 	
 	ev_window_clear_jobs (ev_window);
 	ev_window_clear_local_uri (ev_window);
@@ -1757,9 +1747,7 @@ ev_window_run_fullscreen (EvWindow *window)
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_fullscreen_popup (window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
-#endif
 }
 
 static void
@@ -1787,9 +1775,7 @@ ev_window_stop_fullscreen (EvWindow *window)
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 	update_chrome_visibility (window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
-#endif
 }
 
 static void
@@ -1835,9 +1821,7 @@ ev_window_run_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
-#endif
 }
 
 static void
@@ -1854,9 +1838,7 @@ ev_window_stop_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
-#endif
 }
 
 static void
@@ -2202,7 +2184,6 @@ update_view_size (EvView *view, EvWindow *window)
 static void
 save_sizing_mode (EvWindow *window)
 {
-#ifdef ENABLE_METADATA
 	EvSizingMode mode;
 	GEnumValue *enum_value;
 
@@ -2213,7 +2194,6 @@ save_sizing_mode (EvWindow *window)
 		ev_metadata_manager_set_string (window->priv->uri, "sizing_mode",
 						enum_value->value_nick);
 	}
-#endif
 }
 
 static void     
@@ -2270,12 +2250,10 @@ ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
         update_action_sensitivity (ev_window);
 
-#ifdef ENABLE_METADATA
 	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
 		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
 					        ev_view_get_zoom (view));
 	}
-#endif
 }
 
 static void
@@ -2311,10 +2289,8 @@ ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_w
 {
 	ev_window_update_continuous_action (ev_window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
 				         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
-#endif
 }
 
 static void     
@@ -2322,10 +2298,8 @@ ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_wi
 {
 	ev_window_update_dual_page_action (ev_window);
 
-#ifdef ENABLE_METADATA
 	ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
 				         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
-#endif
 }
 
 static char *
@@ -3189,7 +3163,6 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 static gboolean
 window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer dummy)
 {
-#ifdef ENABLE_METADATA
 	char *uri = window->priv->uri;
 
 	if (uri && !(event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN)) {
@@ -3198,7 +3171,6 @@ window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer du
 		maximized = event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
 		ev_metadata_manager_set_boolean (uri, "window_maximized", maximized);
 	}
-#endif
 
 	return FALSE;
 }
@@ -3206,7 +3178,6 @@ window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer du
 static gboolean
 window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer dummy)
 {
-#ifdef ENABLE_METADATA
 	char *uri = window->priv->uri;
 	GdkWindowState state;
 	int x, y, width, height;
@@ -3222,7 +3193,6 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 		ev_metadata_manager_set_int (uri, "window_width", width);
 		ev_metadata_manager_set_int (uri, "window_height", height);
 	}
-#endif
 
 	return FALSE;
 }

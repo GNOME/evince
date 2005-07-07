@@ -28,6 +28,7 @@
 
 G_BEGIN_DECLS
 
+void		ev_metadata_manager_init	(void);
 gboolean	ev_metadata_manager_get		(const gchar  *uri,
 					 	 const gchar  *key,
 					 	 GValue       *value);

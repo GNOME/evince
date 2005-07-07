@@ -1,5 +1,35 @@
 2005-07-07  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-metadata-manager.c: (ev_metadata_manager_init),
+	(ev_metadata_manager_get), (ev_metadata_manager_set):
+	* shell/ev-metadata-manager.h:
+
+	Add an _init functions that enabled metadata management
+	at runtime.
+
+	* shell/ev-window.c: (page_changed_cb),
+	(setup_document_from_metadata), (ev_window_setup_document),
+	(setup_view_from_metadata), (ev_window_open_uri),
+	(ev_window_run_fullscreen), (ev_window_stop_fullscreen),
+	(ev_window_run_presentation), (ev_window_stop_presentation),
+	(save_sizing_mode), (ev_window_zoom_changed_cb),
+	(ev_window_continuous_changed_cb),
+	(ev_window_dual_mode_changed_cb), (window_state_event_cb),
+	(window_configure_event_cb):
+
+	Remove all ugly metadata define since we deal with it
+	at runtime now.
+
+	* shell/main.c: (load_files_remote), (main):
+
+	Add support for dbus cvs head. Hopefully didnt break one
+	of the other versions now!
+
+	If we dont get a response from the dbus server just
+	give up with it and not enable metadata.
+
+2005-07-07  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* Makefile.am:
 	* backend/Makefile.am:
 	* configure.ac:
