@@ -5,7 +5,7 @@ INCLUDES = \
 	-I$(top_srcdir)/backend					\
 	-I$(top_srcdir)/lib					\
 	-I./mdvi-lib						\
-	$(DVI_CFLAGS)
+	$(LIB_CFLAGS)
 
 noinst_LTLIBRARIES = libgtkdvi.la
     
