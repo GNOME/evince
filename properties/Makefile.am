@@ -36,5 +36,4 @@ libevince_properties_page_la_LIBADD = 			\
 	$(PROPERTIES_LIBS)				\
 	libevproperties.la				\
 	$(top_builddir)/backend/libevbackend.la		\
-	$(top_builddir)/lib/libev.la			\
-	-ltiff -lz
+	$(top_builddir)/lib/libev.la

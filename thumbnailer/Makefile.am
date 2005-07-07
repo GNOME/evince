@@ -21,10 +21,8 @@ evince_thumbnailer_SOURCES=	\
 
 evince_thumbnailer_LDADD=				\
 	$(THUMBNAILER_LIBS)				\
-	$(LIBTIFF)					\
 	$(top_builddir)/lib/libev.la			\
 	$(top_builddir)/backend/libevbackend.la		\
-	-ltiff -lz					\
 	$(NULL)
 
 pixmapdir = $(pkgdatadir)

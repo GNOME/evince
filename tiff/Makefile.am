@@ -12,6 +12,6 @@ libtiffdocument_la_SOURCES =	\
 	tiff2ps.c		\
 	tiff2ps.h
 
-libtiffdocument_la_LIBADD = \
-	-ltiff -lz
-
+libtiffdocument_la_LIBADD = 	\
+	$(TIFF_LIBS)		\
+	-ltiff
