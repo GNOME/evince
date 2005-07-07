@@ -1,4 +1,4 @@
-SUBDIRS = lib cut-n-paste po help data
+SUBDIRS = cut-n-paste po help data
 
 # Backends
 
@@ -17,6 +17,10 @@ if ENABLE_DVI
 endif
 
 SUBDIRS += backend
+
+# Library
+
+SUBDIRS += lib
 
 # Properties (library and application)
 

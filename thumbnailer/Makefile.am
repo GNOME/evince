@@ -1,29 +1,23 @@
 @INTLTOOL_SCHEMAS_RULE@
 
-NULL=
-
 INCLUDES=					\
 	-DDATADIR=\"$(pkgdatadir)\"		\
 	-I$(top_srcdir)/lib			\
 	-I$(top_srcdir)/backend			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
-	$(THUMBNAILER_CFLAGS)			\
+	$(FRONTEND_CFLAGS)			\
 	$(DISABLE_DEPRECATED)			\
-	$(WARN_CFLAGS)				\
-	$(NULL)
+	$(WARN_CFLAGS)
 
 bin_PROGRAMS=evince-thumbnailer
 
 evince_thumbnailer_SOURCES=	\
 	evince-thumbnailer.c
-	$(NULL)
 
 evince_thumbnailer_LDADD=				\
-	$(THUMBNAILER_LIBS)				\
-	$(top_builddir)/lib/libev.la			\
-	$(top_builddir)/backend/libevbackend.la		\
-	$(NULL)
+	$(FRONTEND_LIBS)				\
+	$(top_builddir)/lib/libev.la
 
 pixmapdir = $(pkgdatadir)
 pixmap_DATA = pdf-icon.png

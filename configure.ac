@@ -34,26 +34,24 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 
 dnl Check dependencies
+
+# LIB_CFLAGS       for helpers and generic widgets. (lib, cut-and-paste)
+# BACKEND_CFLAGS   for backend implementations.
+# FRONTEND_CFLAGS  for frontend implementations. (properties, thumbnailer)
+# FRONTEND_LIBS
+# SHELL_CFLAGS     for shell implementation.
+# SHELL_LIBS
+
 POPPLER_REQUIRED=0.3.3
 DBUS_GLIB_REQUIRED=0.33
 GTK_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
 
-PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnome-2.0)
-PKG_CHECK_MODULES(TOOLBAR_EDITOR, gtk+-2.0 >= $GTK_REQUIRED libxml-2.0)
-PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
-PKG_CHECK_MODULES(ZOOM_CONTROL, gtk+-2.0 >= $GTK_REQUIRED)
-
-PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(THUMBNAILER, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
-PKG_CHECK_MODULES(PROPERTIES, gtk+-2.0 >= $GTK_REQUIRED libglade-2.0)
-
+PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
-PKG_CHECK_MODULES(DVI, gtk+-2.0 >= $GTK_REQUIRED)
-PKG_CHECK_MODULES(PS, gtk+-2.0 >= $GTK_REQUIRED)
-PKG_CHECK_MODULES(PDF, gtk+-2.0 >= $GTK_REQUIRED poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(PIXBUF, gtk+-2.0 >= $GTK_REQUIRED)
-PKG_CHECK_MODULES(TIFF, gtk+-2.0 >= $GTK_REQUIRED)
+PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
@@ -80,6 +78,16 @@ if test "x$enable_dbus" = "xyes" ; then
 	DBUS_VERSION=`$PKG_CONFIG --modversion dbus-glib-1 | sed 's/0.\([[0-9]]*\)/\1/'`
 	AC_DEFINE_UNQUOTED(DBUS_VERSION, $DBUS_VERSION, [DBUS version.])
 fi
+
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS -ltiff -lz"
+AC_SUBST(SHELL_CFLAGS)
+AC_SUBST(SHELL_LIBS)
+
+FRONTEND_CFLAGS="$FRONTEND_CORE_CFLAGS"
+FRONTEND_LIBS="$FRONTEND_CORE_LIBS -ltiff -lz"
+AC_SUBST(FRONTEND_CFLAGS)
+AC_SUBST(FRONTEND_LIBS)
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
 AM_CONDITIONAL([ENABLE_METADATA], [test "x$enable_dbus" = "xyes"])

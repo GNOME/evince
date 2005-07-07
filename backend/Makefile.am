@@ -1,5 +1,3 @@
-NULL=
-
 INCLUDES=					\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"	\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
@@ -11,8 +9,7 @@ INCLUDES=					\
 	-I$(top_srcdir)/dvi			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\
-	$(DISABLE_DEPRECATED)			\
-	$(NULL)
+	$(DISABLE_DEPRECATED)
 
 noinst_LTLIBRARIES = libevbackend.la
 
@@ -44,31 +41,26 @@ libevbackend_la_SOURCES=			\
 	ev-selection.h				\
 	ev-selection.c				\
 	ev-document-misc.h			\
-	ev-document-misc.c			\
-	$(NULL)
+	ev-document-misc.c
 
 libevbackend_la_LIBADD = 				\
 	$(top_builddir)/pdf/libpdfdocument.la	 	\
 	$(top_builddir)/pixbuf/libpixbufdocument.la	\
-	$(top_builddir)/ps/libpsdocument.la		\
-	$(NULL)
+	$(top_builddir)/ps/libpsdocument.la
 
 if ENABLE_DJVU
 libevbackend_la_LIBADD += 			\
-	$(top_builddir)/djvu/libgtkdjvu.la	\
-	$(NULL)
+	$(top_builddir)/djvu/libgtkdjvu.la
 endif
 
 if ENABLE_TIFF
 libevbackend_la_LIBADD += 			\
-	$(top_builddir)/tiff/libtiffdocument.la	\
-	$(NULL)
+	$(top_builddir)/tiff/libtiffdocument.la
 endif
 
 if ENABLE_DVI
 libevbackend_la_LIBADD += 			\
-	$(top_builddir)/dvi/libgtkdvi.la	\
-	$(NULL)
+	$(top_builddir)/dvi/libgtkdvi.la
 endif
 
 BUILT_SOURCES=				\
