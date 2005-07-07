@@ -14,9 +14,12 @@ libephywidgets_la_CPPFLAGS = \
 
 libephywidgets_la_CFLAGS = \
 	$(ZOOM_CONTROL_CFLAGS)	\
+	$(WARNING_CFLAGS)	\
+	$(DISABLE_DEPRECATED)	\
 	$(AM_CFLAGS)
 
 libephywidgets_la_LIBADD = \
+	$(ZOOM_CONTROL_LIBS)
 	libephymisc.la
 
 NOINST_H_FILES = \

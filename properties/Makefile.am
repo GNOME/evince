@@ -6,7 +6,8 @@ INCLUDES=					\
 	-I$(top_srcdir)/backend			\
 	$(PROPERTIES_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)			\
-	$(EVINCE_DISABLE_DEPRECATED)		\
+	$(DISABLE_DEPRECATED)			\
+	$(WARN_CFLAGS)				\
 	$(NULL)
 
 noinst_LTLIBRARIES = libevproperties.la
@@ -15,6 +16,8 @@ libevproperties_la_SOURCES=			\
 	ev-properties-view.c			\
 	ev-properties-view.h			\
 	$(NULL)
+
+libevproperties_la_LIBADD = $(PROPERTIES_LIBS)
 
 if HAVE_NAUTILUS
 EVINCE_PROPERTIES_PAGE = libevince-properties-page.la

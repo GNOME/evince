@@ -1,5 +1,25 @@
 2005-07-07  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* backend/Makefile.am:
+	* configure.ac:
+	* cut-n-paste/recent-files/Makefile.am:
+	* cut-n-paste/toolbar-editor/Makefile.am:
+	* cut-n-paste/zoom-control/Makefile.am:
+	* lib/Makefile.am:
+	* pdf/Makefile.am:
+	* pixbuf/Makefile.am:
+	* properties/Makefile.am:
+	* ps/Makefile.am:
+	* shell/Makefile.am:
+	* thumbnailer/Makefile.am:
+	* tiff/Makefile.am:
+
+	Use gnome-common macros when possible.
+	Cleanup dependencies.
+	Actually disable deprecated where possible.
+
+2005-07-07  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* Makefile.am:
 	* backend/Makefile.am:
 	* properties/Makefile.am:

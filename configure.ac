@@ -4,8 +4,10 @@ AC_PREREQ(2.57)
 AC_INIT(evince, 0.3.2)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
-dnl make sure we keep ACLOCAL_FLAGS around for maintainer builds to work
-AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
+GNOME_COMMON_INIT
+GNOME_MAINTAINER_MODE_DEFINES
+GNOME_COMPILE_WARNINGS
+GNOME_CXX_WARNINGS
 
 AM_CONFIG_HEADER(config.h)
 
@@ -34,18 +36,22 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 
 POPPLER_REQUIRED=0.3.3
 DBUS_GLIB_REQUIRED=0.33
+GTK_REQUIRED=2.6.0
+LIBGNOMEUI_REQUIRED=2.6.0
 
-PKG_CHECK_MODULES(LIBEVPRIVATE, gtk+-2.0 >= 2.4.0)
-PKG_CHECK_MODULES(TOOLBAR_EDITOR, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)
-PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= 2.4.0 libgnomeui-2.0 >= 2.4.0)
-PKG_CHECK_MODULES(ZOOM_CONTROL, gtk+-2.0 >= 2.4.0)
-PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= 2.6.0 libgnomeui-2.0 >= 2.6.0 gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(THUMBNAILER, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(PROPERTIES, gtk+-2.0 >= 2.6.0 libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(DVI, gtk+-2.0 >= 2.6.0)
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
-PKG_CHECK_MODULES(PS, gtk+-2.0 >= 2.6.0 gnome-vfs-2.0 libgnomeui-2.0)
-PKG_CHECK_MODULES(POPPLER_GLIB, poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(TOOLBAR_EDITOR, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
+PKG_CHECK_MODULES(RECENT_FILES, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
+PKG_CHECK_MODULES(ZOOM_CONTROL, gtk+-2.0 >= $GTK_REQUIRED)
+PKG_CHECK_MODULES(SHELL, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(THUMBNAILER, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
+PKG_CHECK_MODULES(PROPERTIES, gtk+-2.0 >= $GTK_REQUIRED libglade-2.0)
+PKG_CHECK_MODULES(DVI, gtk+-2.0 >= $GTK_REQUIRED)
+PKG_CHECK_MODULES(PS, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0 libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
+PKG_CHECK_MODULES(PDF, gtk+-2.0 >= $GTK_REQUIRED poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(PIXBUF, gtk+-2.0 >= $GTK_REQUIRED)
+PKG_CHECK_MODULES(TIFF, gtk+-2.0 >= $GTK_REQUIRED)
+PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
+PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
@@ -98,29 +104,6 @@ if test x$HAVE_NAUTILUS = "xyes"; then
 	AC_DEFINE(HAVE_NAUTILUS, 1, [defined if you build the nautilus plugin])
 fi
 AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
-
-dnl Compile with disable-deprecated switches
-
-AC_ARG_ENABLE(deprecated,
-AC_HELP_STRING([--disable-deprecated],
-	       [Don't allow any deprecated GTK+/etc. features.]),
-set_enable_deprecated="$enableval",[
-if test -f $srcdir/autogen.sh; then
-	is_cvs_version=true
-	set_enable_deprecated=no
-else
-	set_enable_deprecated=yes
-	fi
-])
-AC_MSG_CHECKING([whether to disable deprecated glib/gtk+/etc. features])
-if test "$set_enable_deprecated" != "yes"; then
-	AC_MSG_RESULT(yes)
-	EVINCE_DISABLE_DEPRECATED="-DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGNOME_DISABLE_DEPRECATED -DBONOBO_DISABLE_DEPRECATED"
-else
-	AC_MSG_RESULT(no)
-	EVINCE_DISABLE_DEPRECATED=""
-fi
-AC_SUBST(EVINCE_DISABLE_DEPRECATED)
 
 evince_save_LIBS=$LIBS
 LIBS="$LIBS $GTK_LIBS"
@@ -269,58 +252,6 @@ if test "x$enable_tiff" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/tiff"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
-
-dnl Turn on the additional warnings last, so -Werror doesn't affect other tests.
-dnl stolen from nautilus and gnome-common
-
-AC_ARG_ENABLE(more-warnings,
-[  --enable-more-warnings  Maximum compiler warnings],
-set_more_warnings="$enableval",[
-if test -f $srcdir/autogen.sh; then
-	is_cvs_version=true
-	set_more_warnings=yes
-else
-	set_more_warnings=no
-fi
-])
-AC_MSG_CHECKING(for more warnings, including -Werror)
-if test "$GCC" = "yes" -a "$set_more_warnings" != "no"; then
-	AC_MSG_RESULT([yes, using gcc])
-	CFLAGS="\
-	-Wall \
-	-Wchar-subscripts -Wmissing-declarations -Wmissing-prototypes \
-	-Wnested-externs -Wpointer-arith \
-	-Wcast-align -Wsign-compare \
-	-Werror \
-	$CFLAGS"
-
-dnl 	case " $CFLAGS " in
-dnl 	    *[\ \	]-ansi[\ \	]*) ;;
-dnl 	    *) CFLAGS="$CFLAGS -ansi" ;;
-dnl 	esac
-dnl 	case " $CFLAGS " in
-dnl 	    *[\ \	]-pedantic[\ \	]*) ;;
-dnl 	    *) CFLAGS="$CFLAGS -pedantic" ;;
-dnl 	esac
-
-	for option in -Wno-strict-aliasing -Wno-sign-compare; do
-		SAVE_CFLAGS="$CFLAGS"
-		CFLAGS="$CFLAGS $option"
-		AC_MSG_CHECKING([whether gcc understands $option])
-		AC_TRY_COMPILE([], [],
-			has_option=yes,
-			has_option=no,)
-		if test $has_option = no; then
-			CFLAGS="$SAVE_CFLAGS"
-		fi
-		AC_MSG_RESULT($has_option)
-		unset has_option
-		unset SAVE_CFLAGS
-	done
-	unset option
-else
-	AC_MSG_RESULT(no)
-fi
 
 AC_OUTPUT([
 Makefile

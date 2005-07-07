@@ -9,7 +9,8 @@ INCLUDES=					\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(THUMBNAILER_CFLAGS)			\
-	$(EVINCE_DISABLE_DEPRECATED)		\
+	$(DISABLE_DEPRECATED)			\
+	$(WARN_CFLAGS)				\
 	$(NULL)
 
 bin_PROGRAMS=evince-thumbnailer

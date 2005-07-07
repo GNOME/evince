@@ -12,7 +12,8 @@ INCLUDES=						\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\
-	$(EVINCE_DISABLE_DEPRECATED)			\
+	$(WARN_CFLAGS)					\
+	$(DISABLE_DEPRECATED)				\
 	$(NULL)
 
 if ENABLE_DBUS

@@ -2,10 +2,10 @@ NULL =
 
 INCLUDES = \
 	$(RECENT_FILES_CFLAGS) \
+	$(WARN_CFLAGS) \
 	$(NULL)
 
-#	Uses the deprecated GnomeIconTheme
-#	$(EVINCE_DISABLE_DEPRECATED)
+#	$(DISABLE_DEPRECATED)
 
 EGG_FILES =				\
         egg-recent-model.c		\

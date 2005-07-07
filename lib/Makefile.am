@@ -3,8 +3,9 @@ NULL=
 INCLUDES=					\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"	\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	$(SHELL_CFLAGS)				\
-	$(EVINCE_DISABLE_DEPRECATED)		\
+	$(LIB_CFLAGS)				\
+	$(WARN_CFLAGS)				\
+	$(DISABLE_DEPRECATED)			\
 	$(NULL)
 
 noinst_LTLIBRARIES = libev.la
@@ -17,3 +18,5 @@ libev_la_SOURCES=				\
 	ev-gui.c				\
 	ev-gui.h				\
 	$(NULL)
+
+libev_la_LIBADD = $(LIB_LIBS)

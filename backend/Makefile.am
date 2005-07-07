@@ -9,8 +9,9 @@ INCLUDES=					\
 	-I$(top_srcdir)/ps	                \
 	-I$(top_srcdir)/djvu			\
 	-I$(top_srcdir)/dvi			\
-	$(SHELL_CFLAGS)				\
-	$(EVINCE_DISABLE_DEPRECATED)		\
+	$(BACKEND_CFLAGS)			\
+	$(WARN_CFLAGS)				\
+	$(DISABLE_DEPRECATED)			\
 	$(NULL)
 
 noinst_LTLIBRARIES = libevbackend.la
@@ -49,7 +50,7 @@ libevbackend_la_SOURCES=			\
 libevbackend_la_LIBADD = 				\
 	$(top_builddir)/pdf/libpdfdocument.la	 	\
 	$(top_builddir)/pixbuf/libpixbufdocument.la	\
-	$(top_builddir)/ps/libgtkgs.la			\
+	$(top_builddir)/ps/libpsdocument.la		\
 	$(NULL)
 
 if ENABLE_DJVU
