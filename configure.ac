@@ -115,7 +115,7 @@ AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
 
 dnl Check for gtk_icon_view_get_visible_range
 evince_save_LIBS=$LIBS
-LIBS="$LIBS $GTK_LIBS"
+LIBS="$LIBS $FRONTEND_CORE_LIBS"
 AC_CHECK_FUNCS(gtk_icon_view_get_visible_range)
 LIBS=$evince_save_LIBS
 
