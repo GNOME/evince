@@ -1,3 +1,11 @@
+2005-07-08  Marco Pesenti Gritti  <marco@gnome.org>
+
+	* backend/ev-document-factory.c:
+	(ev_document_factory_get_document):
+
+	Do not try to create the object if type
+	is invalid.
+
 2005-07-08  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* ps/ps-document.c: (ps_document_dispose),

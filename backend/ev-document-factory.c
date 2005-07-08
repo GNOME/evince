@@ -138,7 +138,7 @@ ev_document_factory_get_document (const char *mime_type)
 	
 	type = ev_document_type_get_from_mime (mime_type);
 
-	if (type != G_TYPE_NONE) {
+	if (type != G_TYPE_INVALID) {
 		return g_object_new (type, NULL);
 	}
 		
