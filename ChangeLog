@@ -28,6 +28,13 @@ Thu Jul  7 23:10:01 2005  Jonathan Blandford  <jrb@redhat.com>
 
 2005-07-07  Christian Persch  <chpe@cvs.gnome.org>
 
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.c: (new_pixbuf_from_widget),
+	(new_separator_pixbuf):
+
+	Don't leak windows.
+
+2005-07-07  Christian Persch  <chpe@cvs.gnome.org>
+
 	* shell/ev-window.c: (ev_window_cmd_edit_toolbar):
 
 	HIGification of toolbar editor dialogue.
