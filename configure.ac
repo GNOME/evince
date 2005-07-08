@@ -263,7 +263,7 @@ if test "x$enable_tiff" = "xyes"; then
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 cut-n-paste/Makefile
 cut-n-paste/recent-files/Makefile
@@ -287,3 +287,5 @@ thumbnailer/Makefile
 help/Makefile
 help/C/Makefile
 ])
+
+AC_OUTPUT
