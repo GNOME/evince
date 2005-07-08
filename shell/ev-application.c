@@ -245,18 +245,19 @@ ev_application_init (EvApplication *ev_application)
 	ev_application->toolbars_file = g_build_filename
 			(ev_dot_dir (), "evince_toolbar.xml", NULL);
 
-	if (!g_file_test (ev_application->toolbars_file, G_FILE_TEST_EXISTS)) {
+	if (!egg_toolbars_model_load (ev_application->toolbars_model,
+				      ev_application->toolbars_file)) {
 		egg_toolbars_model_load (ev_application->toolbars_model,
 					 DATADIR"/evince-toolbar.xml");
-	} else {
-		egg_toolbars_model_load (ev_application->toolbars_model,
-					 ev_application->toolbars_file);
 	}
 
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE); 
 				      
 	ev_application->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
+	/* FIXME we should add a mime type filter but current eggrecent
+           has only a varargs style api which does not work well when
+	   the list of mime types is dynamic */
 	egg_recent_model_set_limit (ev_application->recent_model, 5);	
 	egg_recent_model_set_filter_groups (ev_application->recent_model,
     	    	    			    "Evince", NULL);
