@@ -25,6 +25,7 @@
 #define __PS_DOCUMENT_H__
 
 #include <sys/types.h>
+#include <gtk/gtkwidget.h>
 
 #include "ev-document.h"
 #include "ps.h"
@@ -43,6 +44,7 @@ typedef struct _PSDocumentClass PSDocumentClass;
 struct _PSDocument {
   GObject object;
 
+  GtkWidget *target_window;
   GdkWindow *pstarget;
   GdkPixmap *bpixmap;
   long message_window;          /* Used by ghostview to receive messages from app */

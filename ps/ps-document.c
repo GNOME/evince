@@ -178,6 +178,12 @@ ps_document_dispose (GObject *object)
 		gs->input_buffer = NULL;
 	}
 
+	if (gs->target_window) {
+		gtk_widget_destroy (gs->target_window);
+		gs->target_window = NULL;
+		gs->pstarget = NULL;
+	}
+
 	stop_interpreter (gs);
 
 	G_OBJECT_CLASS (parent_class)->dispose (object);
@@ -1197,15 +1203,13 @@ ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double sca
 	PSDocument *gs = PS_DOCUMENT (renderer);
 
 	if (gs->pstarget == NULL) {
-		GtkWidget *widget;
-
-		widget = gtk_window_new (GTK_WINDOW_POPUP);
-	        gtk_widget_realize (widget);
-		gs->pstarget = widget->window;
+		gs->target_window = gtk_window_new (GTK_WINDOW_POPUP);
+	        gtk_widget_realize (gs->target_window);
+		gs->pstarget = gs->target_window->window;
 
 	        g_assert (gs->pstarget != NULL);
 
-		g_signal_connect (widget, "event",
+		g_signal_connect (gs->target_window, "event",
 			    	  G_CALLBACK (ps_document_widget_event),
 			          gs);
 	}
