@@ -27,6 +27,7 @@
 #include "ev-application.h"
 #include "ev-utils.h"
 #include "ev-document-types.h"
+#include "ev-file-helpers.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -215,6 +216,18 @@ ev_application_open_uri_list (EvApplication *application, GSList *uri_list)
 void
 ev_application_shutdown (EvApplication *application)
 {
+	if (application->toolbars_model) {
+		g_object_unref (application->toolbars_model);
+		g_free (application->toolbars_file);
+		application->toolbars_model = NULL;
+		application->toolbars_file = NULL;
+	}
+
+	if (application->recent_model) {
+		g_object_unref (application->recent_model);
+		application->recent_model = NULL;
+	}
+
 	g_object_unref (application);
 	gtk_main_quit ();
 }
@@ -227,5 +240,42 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
+	ev_application->toolbars_model = egg_toolbars_model_new ();
+
+	ev_application->toolbars_file = g_build_filename
+			(ev_dot_dir (), "evince_toolbar.xml", NULL);
+
+	if (!g_file_test (ev_application->toolbars_file, G_FILE_TEST_EXISTS)) {
+		egg_toolbars_model_load (ev_application->toolbars_model,
+					 DATADIR"/evince-toolbar.xml");
+	} else {
+		egg_toolbars_model_load (ev_application->toolbars_model,
+					 ev_application->toolbars_file);
+	}
+
+	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
+				      EGG_TB_MODEL_NOT_REMOVABLE); 
+				      
+	ev_application->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
+	egg_recent_model_set_limit (ev_application->recent_model, 5);	
+	egg_recent_model_set_filter_groups (ev_application->recent_model,
+    	    	    			    "Evince", NULL);
 }
+
+EggToolbarsModel *ev_application_get_toolbars_model (EvApplication *application)
+{
+	return application->toolbars_model;
+}
+
+EggRecentModel *ev_application_get_recent_model (EvApplication *application)
+{
+	return application->recent_model;
+}
+
+void ev_application_save_toolbars_model (EvApplication *application)
+{
+        egg_toolbars_model_save (application->toolbars_model,
+				 application->toolbars_file, "1.0");
+}
+
 

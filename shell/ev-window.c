@@ -52,15 +52,14 @@
 #include "eggfindbar.h"
 #include "egg-recent-view-uimanager.h"
 #include "egg-recent-view.h"
-#include "egg-recent-model.h"
 #include "egg-toolbar-editor.h"
-#include "egg-toolbars-model.h"
 #include "egg-editable-toolbar.h"
+#include "egg-recent-model.h"
+#include "egg-toolbars-model.h"
 #include "ephy-zoom.h"
 #include "ephy-zoom-action.h"
 #include "ev-application.h"
 #include "ev-stock-icons.h"
-#include "ev-file-helpers.h"
 #include "ev-metadata-manager.h"
 
 #include <poppler.h>
@@ -114,13 +113,10 @@ struct _EvWindowPrivate {
 	GtkActionGroup *action_group;
 	GtkUIManager *ui_manager;
 
-	gchar *toolbar_file;
-	EggToolbarsModel *toolbar_model;
-	
 	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
 	GtkWidget *fullscreen_popup;
-	GSource *fullscreen_timeout_source;
+	GSource   *fullscreen_timeout_source;
 
 	/* Document */
 	char *uri;
@@ -139,8 +135,6 @@ struct _EvWindowPrivate {
 	EvJob *xfer_job;
 	EvJob *load_job;
 
-	/* recent file stuff */
-	EggRecentModel *recent_model;
 	EggRecentViewUIManager *recent_view;
 };
 
@@ -1107,19 +1101,12 @@ ev_window_add_recent (EvWindow *window, const char *filename)
 
 	item = egg_recent_item_new_from_uri (filename);
 	egg_recent_item_add_group (item, "Evince");
-	egg_recent_model_add_full (window->priv->recent_model, item);
+	egg_recent_model_add_full (ev_application_get_recent_model (EV_APP), item);
 }
 
 static void
 ev_window_setup_recent (EvWindow *ev_window)
 {
-
-
-
-	/* it would be better if we just filtered by mime-type, but there
-	 * doesn't seem to be an easy way to figure out which mime-types we
-	 * can handle */
-	ev_window->priv->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
 
 	ev_window->priv->recent_view = egg_recent_view_uimanager_new (ev_window->priv->ui_manager,
 								      "/MainMenu/FileMenu/RecentFilesMenu",
@@ -1127,13 +1114,9 @@ ev_window_setup_recent (EvWindow *ev_window)
 								      ev_window);	
 
         egg_recent_view_uimanager_show_icons (EGG_RECENT_VIEW_UIMANAGER (ev_window->priv->recent_view), FALSE);
-	egg_recent_model_set_limit (ev_window->priv->recent_model, 5);
 
 	egg_recent_view_set_model (EGG_RECENT_VIEW (ev_window->priv->recent_view),
-				   ev_window->priv->recent_model);
-
-	egg_recent_model_set_filter_groups (ev_window->priv->recent_model,
-    	    	    			    "Evince", NULL);
+				   ev_application_get_recent_model (EV_APP));
 
 	egg_recent_view_uimanager_set_trailing_sep (ev_window->priv->recent_view, TRUE);
 	
@@ -1947,8 +1930,7 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
 	EvWindow *ev_window = EV_WINDOW (data);
         egg_editable_toolbar_set_edit_mode
 			(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
-        egg_toolbars_model_save (ev_window->priv->toolbar_model,
-				 ev_window->priv->toolbar_file, "1.0");
+	ev_application_save_toolbars_model (EV_APP);
         gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
@@ -1984,7 +1966,7 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
 	  
 	editor = egg_toolbar_editor_new (ev_window->priv->ui_manager,
-					 ev_window->priv->toolbar_model);
+					 ev_application_get_toolbars_model (EV_APP));
 	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
 	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
              
@@ -2639,18 +2621,6 @@ ev_window_dispose (GObject *object)
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = window->priv;
 
-	if (priv->toolbar_model) {
-		g_object_unref (priv->toolbar_model);
-		g_free (priv->toolbar_file);
-		priv->toolbar_model = NULL;
-		priv->toolbar_file = NULL;
-	}
-
-	if (priv->recent_model) {
-		g_object_unref (priv->recent_model);
-		priv->recent_model = NULL;
-	}
-
 	if (priv->recent_view) {
 		g_object_unref (priv->recent_view);
 		priv->recent_view = NULL;
@@ -3263,23 +3233,6 @@ ev_window_init (EvWindow *ev_window)
 			    ev_window->priv->menubar,
 			    FALSE, FALSE, 0);
 
-	/* Toolbar editor */
-	ev_window->priv->toolbar_model = egg_toolbars_model_new ();
-	
-	ev_window->priv->toolbar_file = g_build_filename
-			(ev_dot_dir (), "evince_toolbar.xml", NULL);
-
-	if (!g_file_test (ev_window->priv->toolbar_file, G_FILE_TEST_EXISTS)) {
-		egg_toolbars_model_load (ev_window->priv->toolbar_model,
-					 DATADIR"/evince-toolbar.xml");
-	} else {
-		egg_toolbars_model_load (ev_window->priv->toolbar_model,
-					 ev_window->priv->toolbar_file);
-	}
-
-	egg_toolbars_model_set_flags (ev_window->priv->toolbar_model, 0,
-				      EGG_TB_MODEL_NOT_REMOVABLE); 
-	
 	/* This sucks, but there is no way to have a draw=no, expand=true separator
 	 * in a GtkUIManager-built toolbar. So, just add another toolbar.
 	 * See gtk+ bug 166489.
@@ -3290,17 +3243,17 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (toolbar_dock);
 
 	ev_window->priv->toolbar = egg_editable_toolbar_new_with_model
-				(ev_window->priv->ui_manager, ev_window->priv->toolbar_model);
+				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");
 	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
 
-	ev_window->priv->fullscreen_toolbar =
-		gtk_ui_manager_get_widget (ev_window->priv->ui_manager, "/LeaveFullscreenToolbar");
-	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (ev_window->priv->fullscreen_toolbar), TRUE);
-	
+	ev_window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
+				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
+	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
+				   "DefaultToolBar");	
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();

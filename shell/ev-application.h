@@ -28,6 +28,9 @@
 
 #include "ev-window.h"
 
+#include "egg-toolbars-model.h"
+#include "egg-recent-model.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvApplication EvApplication;
@@ -45,24 +48,36 @@ typedef struct _EvApplicationPrivate EvApplicationPrivate;
 
 struct _EvApplication {
 	GObject base_instance;
+	
+	gchar *toolbars_file;
+	
+	EggToolbarsModel *toolbars_model;
+	EggRecentModel  *recent_model;
 };
 
 struct _EvApplicationClass {
 	GObjectClass base_class;
 };
 
-GType	       ev_application_get_type	       (void);
-gboolean       ev_application_register_service (EvApplication   *application);
-EvApplication *ev_application_get_instance     (void);
-gboolean       ev_application_open_window      (EvApplication   *application,
-						GError         **error);
-gboolean       ev_application_open_uri         (EvApplication   *application,
-				                const char      *uri,
-					        const char      *page_label,
-						GError         **error);
-void	       ev_application_open_uri_list    (EvApplication   *application,
-					        GSList          *uri_list);
-void	       ev_application_shutdown	       (EvApplication   *application);
+GType	          ev_application_get_type	     (void);
+EvApplication    *ev_application_get_instance        (void);
+gboolean          ev_application_register_service    (EvApplication   *application);
+void	          ev_application_shutdown	     (EvApplication   *application);
+
+
+gboolean          ev_application_open_window         (EvApplication   *application,
+						      GError         **error);
+gboolean          ev_application_open_uri            (EvApplication   *application,
+				                      const char      *uri,
+					              const char      *page_label,
+						      GError         **error);
+void	          ev_application_open_uri_list       (EvApplication   *application,
+		  			              GSList          *uri_list);
+
+
+EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
+void              ev_application_save_toolbars_model (EvApplication   *application);
+EggRecentModel   *ev_application_get_recent_model    (EvApplication   *application);
 
 G_END_DECLS
 

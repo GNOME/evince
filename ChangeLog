@@ -1,3 +1,19 @@
+2005-07-08  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* data/evince-ui.xml:
+	* shell/ev-application.c: (ev_application_shutdown),
+	(ev_application_init), (ev_application_get_toolbars_model),
+	(ev_application_get_recent_model),
+	(ev_application_save_toolbars_model):
+	* shell/ev-application.h:
+	* shell/ev-window.c: (ev_window_add_recent),
+	(ev_window_setup_recent), (ev_window_cmd_edit_toolbar_cb),
+	(ev_window_cmd_edit_toolbar), (ev_window_dispose),
+	(ev_window_init):
+
+	Use common toolbar and recent models for all windows.
+	Patch by Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 Thu Jul  7 23:10:01 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* configure.ac: add FRONTEND_CORE_LIBS to evince_save_LIBS so we
