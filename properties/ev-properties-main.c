@@ -96,11 +96,13 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 		goto end;
 	file = files->data;
 
-
 	/* okay, make the page */
 	mime = nautilus_file_info_get_mime_type (file);
 	document = ev_document_factory_get_document (mime);
 	g_free (mime);
+
+	if (document == NULL)
+		goto end;
 
 	uri = nautilus_file_info_get_uri (file);
 	if (!ev_document_load (document, uri, &error)) {
