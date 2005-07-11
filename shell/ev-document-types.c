@@ -152,12 +152,14 @@ ev_document_types_add_filters (GtkWidget *chooser, EvDocument *document)
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	}
 
+#ifdef ENABLE_PIXBUF
 	if (document == NULL || backend == EV_BACKEND_PIXBUF) {
 		default_filter = filter = gtk_file_filter_new ();
 		gtk_file_filter_set_name (filter, _("Images"));
 		gtk_file_filter_add_pixbuf_formats (filter);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	}
+#endif
 
 #ifdef ENABLE_DVI
 	if (document == NULL || backend == EV_BACKEND_DVI) {

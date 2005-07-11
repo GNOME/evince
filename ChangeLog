@@ -1,5 +1,22 @@
 2005-07-11  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* Makefile.am:
+	* backend/Makefile.am:
+	* backend/ev-document-factory.c: (ev_document_type_get_from_mime):
+	* configure.ac:
+	* shell/ev-document-types.c: (ev_document_types_add_filters):
+
+	Allow to enable/disable the pixbuf backend.
+	Default to off for now. If we want it enabled we should
+	really put mime types in the desktop, implement properties etc.
+
+	* properties/evince-properties.c:
+
+	Initialize error to NULL.
+	Check error is not NULL before freeing.
+
+2005-07-11  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-window.c:
 
 	Use F5 as presentation accell

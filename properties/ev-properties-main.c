@@ -82,7 +82,7 @@ static GList *
 ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 			 GList *files)
 {
-	GError *error;
+	GError *error = NULL;
 	char *mime;
 	EvDocument *document;
 	GList *pages = NULL;
@@ -106,7 +106,9 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 
 	uri = nautilus_file_info_get_uri (file);
 	if (!ev_document_load (document, uri, &error)) {
-		g_error_free (error);
+		if (error) {
+			g_error_free (error);
+		}
 		goto end;
 	}
 	label = gtk_label_new (_("Document"));

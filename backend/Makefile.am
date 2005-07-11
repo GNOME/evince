@@ -45,8 +45,12 @@ libevbackend_la_SOURCES=			\
 
 libevbackend_la_LIBADD = 				\
 	$(top_builddir)/pdf/libpdfdocument.la	 	\
-	$(top_builddir)/pixbuf/libpixbufdocument.la	\
 	$(top_builddir)/ps/libpsdocument.la
+
+if ENABLE_PIXBUF
+libevbackend_la_LIBADD += 			\
+	$(top_builddir)/pixbuf/libpixbufdocument.la
+endif
 
 if ENABLE_DJVU
 libevbackend_la_LIBADD += 			\

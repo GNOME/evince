@@ -123,10 +123,11 @@ ev_document_type_get_from_mime (const char *mime_type)
 			return document_types[i].document_type_factory_callback();
 		}
 	}
-
+#ifdef ENABLE_PIXBUF
 	if (mime_type_supported_by_gdk_pixbuf (mime_type)) {
 		return pixbuf_document_get_type ();
 	}
+#endif
 
 	return G_TYPE_INVALID;
 }

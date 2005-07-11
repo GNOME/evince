@@ -2,18 +2,22 @@ SUBDIRS = cut-n-paste po help data
 
 # Backends
 
-SUBDIRS += pdf ps pixbuf
+SUBDIRS += pdf ps
+
+if ENABLE_PIXBUF
+SUBDIRS += pixbuf    
+endif
 
 if ENABLE_DJVU
-     SUBDIRS += djvu
+SUBDIRS += djvu
 endif
 
 if ENABLE_TIFF
-     SUBDIRS += tiff
+SUBDIRS += tiff
 endif
 
 if ENABLE_DVI
-     SUBDIRS += dvi
+SUBDIRS += dvi
 endif
 
 SUBDIRS += backend

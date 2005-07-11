@@ -248,6 +248,17 @@ AM_CONDITIONAL(WITH_TYPE1_FONTS, test x$enable_type1_fonts = xyes)
 
 dnl ================== End of dvi checks ===================================================
 
+dnl ================== pixbuf checks ===================================================
+
+AC_ARG_ENABLE(pixbuf,
+            [AC_HELP_STRING([--enable-pixbuf], [Compile with support of pixbuf])],enable_pixbuf="$enableval",enable_pixbuf=no)
+if test "x$enable_pixbuf" = "xyes"; then
+	AC_DEFINE([ENABLE_PIXBUF], [1], [Enable pixbuf support.])
+fi
+AM_CONDITIONAL(ENABLE_PIXBUF, test x$enable_pixbuf = xyes)
+
+dnl ================== End of dvi checks ===================================================
+
 dnl =================== Mime types list ====================================================
 
 EVINCE_MIME_TYPES="application/pdf;application/postscript;application/x-gzpostscript"
