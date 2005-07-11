@@ -2867,7 +2867,7 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewFullscreen", NULL, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
           G_CALLBACK (ev_window_cmd_view_fullscreen) },
-        { "ViewPresentation", NULL, N_("_Presentation"), "F12",
+        { "ViewPresentation", NULL, N_("_Presentation"), "F5",
           N_("Run document as a presentation"),
           G_CALLBACK (ev_window_cmd_view_presentation) },
         { "ViewBestFit", EV_STOCK_ZOOM_PAGE, N_("_Best Fit"), NULL,
