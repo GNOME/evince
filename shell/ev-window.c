@@ -341,13 +341,14 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->sidebar, sidebar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->statusbar, statusbar);
-	set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
 
 	if (priv->fullscreen_popup != NULL) {
 		if (fullscreen)
 			show_fullscreen_popup (window);
 		else
 			set_widget_visibility (priv->fullscreen_popup, FALSE);
+
+		set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
 	}
 }
 
@@ -1661,6 +1662,9 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 	GtkWidget *popup;
 	GtkWidget *hbox;
 	GtkWidget *button;
+
+	window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
+			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
 
 	popup = gtk_window_new (GTK_WINDOW_POPUP);
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -3253,11 +3257,6 @@ ev_window_init (EvWindow *ev_window)
 	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
-
-	ev_window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
-				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
-	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
-				   "DefaultToolBar");	
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();

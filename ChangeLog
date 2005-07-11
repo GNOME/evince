@@ -1,5 +1,12 @@
 2005-07-11  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-window.c: (update_chrome_visibility),
+	(ev_window_create_fullscreen_popup), (ev_window_init):
+
+	Do not leak the fullscreen toolbar
+
+2005-07-11  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-window.c: (view_actions_focus_in_cb),
 	(view_actions_focus_out_cb):
 
