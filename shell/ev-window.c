@@ -3096,19 +3096,23 @@ set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
 	}
 }
 
-static void
+static gboolean
 view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, NULL, FALSE);
 	set_action_sensitive (window, "ViewToolbar", TRUE);
 
 	set_view_actions_sensitivity (window, TRUE);
+
+	return FALSE;
 }
 
-static void
+static gboolean
 view_actions_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
 	set_view_actions_sensitivity (window, FALSE);
+
+	return FALSE;
 }
 
 static void
