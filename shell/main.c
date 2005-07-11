@@ -74,6 +74,7 @@ load_files_remote (const char **files)
 	int i;
 	GError *error = NULL;
 	DBusGConnection *connection;
+	gboolean result = FALSE;
 #if DBUS_VERSION < 35
 	DBusGPendingCall *call;
 #endif
@@ -119,7 +120,6 @@ load_files_remote (const char **files)
 	}
 
 	for (i = 0; files[i]; i++) {
-		gboolean result = TRUE;
 		const char *page_label;
 		char *uri;
 
@@ -134,7 +134,8 @@ load_files_remote (const char **files)
 		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
-			result = FALSE;
+			g_free (uri);
+			continue;
 		}
 #elif DBUS_VERSION == 34
 		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
@@ -145,7 +146,8 @@ load_files_remote (const char **files)
 		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
-			result = FALSE;
+			g_free (uri);
+			continue;
 		}
 #else
 		if (!dbus_g_proxy_call (remote_object, "OpenURI", &error,
@@ -154,14 +156,15 @@ load_files_remote (const char **files)
 					G_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
-			result = FALSE;
+			g_free (uri);
+			continue;
 		}
 #endif
 		g_free (uri);
-		return result;
+		result = TRUE;
         }
 
-	return TRUE;
+	return result;
 }
 #endif /* ENABLE_DBUS */
 
