@@ -2844,6 +2844,12 @@ static const GtkActionEntry entries[] = {
         { "GoForwardFast", NULL, "", "<shift>Page_Down",
           N_("Go ten pages forward"),
           G_CALLBACK (ev_window_cmd_go_forward) },
+        { "KpPlus", GTK_STOCK_ZOOM_IN, NULL, "KP_Add",
+          N_("Enlarge the document"),
+          G_CALLBACK (ev_window_cmd_view_zoom_in) },
+        { "KpMinus", GTK_STOCK_ZOOM_OUT, NULL, "KP_Subtract",
+          N_("Shrink the document"),
+          G_CALLBACK (ev_window_cmd_view_zoom_out) },
 };
 
 /* Toggle items */
@@ -3085,7 +3091,7 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 
 
 static void
-set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
+ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 {
 	if (window->priv->action_group) {
 		set_action_sensitive (window, "PageDown", sensitive);
@@ -3097,6 +3103,8 @@ set_view_actions_sensitivity (EvWindow *window, gboolean sensitive)
 		set_action_sensitive (window, "Slash", sensitive);
 		set_action_sensitive (window, "Plus", sensitive);
 		set_action_sensitive (window, "Minus", sensitive);
+		set_action_sensitive (window, "KpPlus", sensitive);
+		set_action_sensitive (window, "KpMinus", sensitive);
 	}
 }
 
@@ -3106,7 +3114,7 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, NULL, FALSE);
 	set_action_sensitive (window, "ViewToolbar", TRUE);
 
-	set_view_actions_sensitivity (window, TRUE);
+	ev_window_set_view_accels_sensitivity (window, TRUE);
 
 	return FALSE;
 }
@@ -3114,7 +3122,7 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 static gboolean
 view_actions_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
-	set_view_actions_sensitivity (window, FALSE);
+	ev_window_set_view_accels_sensitivity (window, FALSE);
 
 	return FALSE;
 }
@@ -3220,7 +3228,7 @@ ev_window_init (EvWindow *ev_window)
 		gtk_ui_manager_get_accel_group (ev_window->priv->ui_manager);
 	gtk_window_add_accel_group (GTK_WINDOW (ev_window), accel_group);
 
-	set_view_actions_sensitivity (ev_window, FALSE);
+	ev_window_set_view_accels_sensitivity (ev_window, FALSE);
 
 	g_signal_connect (ev_window->priv->ui_manager, "connect_proxy",
 			  G_CALLBACK (connect_proxy_cb), ev_window);
