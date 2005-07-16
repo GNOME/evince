@@ -258,6 +258,8 @@ static gboolean   ev_view_motion_notify_event                (GtkWidget         
 							      GdkEventMotion     *event);
 static gboolean   ev_view_button_release_event               (GtkWidget          *widget,
 							      GdkEventButton     *event);
+static gboolean   ev_view_leave_notify_event                 (GtkWidget          *widget,
+							      GdkEventCrossing   *event);
 
 /*** Drawing ***/
 static guint32    ev_gdk_color_to_rgb                        (const GdkColor     *color);
@@ -1488,6 +1490,13 @@ ev_view_button_release_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+static gboolean
+ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
+{
+	ev_view_set_cursor (EV_VIEW (widget), EV_VIEW_CURSOR_NORMAL);
+	return FALSE;
+}
+
 /*** Drawing ***/
 
 static guint32
@@ -1794,6 +1803,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->realize = ev_view_realize;
 	widget_class->unrealize = ev_view_unrealize;
 	widget_class->scroll_event = ev_view_scroll_event;
+	widget_class->leave_notify_event = ev_view_leave_notify_event;
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
