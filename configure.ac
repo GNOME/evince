@@ -192,13 +192,9 @@ if test "x$enable_djvu" = "xyes"; then
         AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
     else
 	AC_MSG_WARN([	
-** Djvu support is disabled since recent version of djvulibre 
-** library was not found. To get proper djvu support you need to
-** install development version of djvulibre. You can get it from
-** anonymous CVS server on djvulibre.sf.net. Just use something
-** like:
-
-** cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/djvu co djvulibre-3.5
+** Djvu support is disabled since a recent version of the djvulibre 
+** library was not found. You need at least djvulibre-3.5.15 which 
+** can be found on http://djvulibre.djvuzone.org 
 ])
     fi 
 fi
