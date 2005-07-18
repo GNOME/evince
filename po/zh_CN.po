@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-15 06:39+0800\n"
-"PO-Revision-Date: 2005-05-29 18:19+0800\n"
+"POT-Creation-Date: 2005-07-17 21:26+0000\n"
+"PO-Revision-Date: 2005-07-18 13:26+0800\n"
 "Last-Translator: Funda Wang <fundawang@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:534
-#, fuzzy
 msgid "_Remove Toolbar"
-msgstr "工具栏(_T)"
+msgstr "删除工具栏(_R)"
 
 #: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:555
 msgid "Separator"
@@ -91,51 +90,51 @@ msgstr "密码(_P)："
 
 #: ../data/evince-properties.glade.h:1
 msgid "<b>Author:</b>"
-msgstr ""
+msgstr "<b>作者：</b>"
 
 #: ../data/evince-properties.glade.h:2
 msgid "<b>Created:</b>"
-msgstr ""
+msgstr "<b>创建时间：</b>"
 
 #: ../data/evince-properties.glade.h:3
 msgid "<b>Creator:</b>"
-msgstr ""
+msgstr "<b>创建者：</b>"
 
 #: ../data/evince-properties.glade.h:4
 msgid "<b>Format:</b>"
-msgstr ""
+msgstr "<b>格式：</b>"
 
 #: ../data/evince-properties.glade.h:5
 msgid "<b>Keywords:</b>"
-msgstr ""
+msgstr "<b>关键字：</b>"
 
 #: ../data/evince-properties.glade.h:6
 msgid "<b>Modified:</b>"
-msgstr ""
+msgstr "<b>修改时间：</b>"
 
 #: ../data/evince-properties.glade.h:7
 msgid "<b>Number of Pages:</b>"
-msgstr ""
+msgstr "<b>页数：</b>"
 
 #: ../data/evince-properties.glade.h:8
 msgid "<b>Optimized:</b>"
-msgstr ""
+msgstr "<b>优化：</b>"
 
 #: ../data/evince-properties.glade.h:9
 msgid "<b>Producer:</b>"
-msgstr ""
+msgstr "<b>制作者：</b>"
 
 #: ../data/evince-properties.glade.h:10
 msgid "<b>Security:</b>"
-msgstr ""
+msgstr "<b>安全性：</b>"
 
 #: ../data/evince-properties.glade.h:11
 msgid "<b>Subject:</b>"
-msgstr ""
+msgstr "<b>主题：</b>"
 
 #: ../data/evince-properties.glade.h:12
 msgid "<b>Title:</b>"
-msgstr ""
+msgstr "<b>标题：</b>"
 
 #: ../data/evince.schemas.in.h:1
 msgid "Default sidebar size"
@@ -162,6 +161,9 @@ msgid ""
 "values will cause the sidebar to take up as much of the page display area as "
 "possible relative to the window's size."
 msgstr ""
+"侧边栏是包含索引和缩略图列表的侧边栏项目。默认大小(以像素计)设定了基于窗口"
+"一侧的侧边栏宽度。这里可以接受任何整数。侧边栏绝对不会缩小到无法容纳缩略图或索引。"
+"较大的值将会使得侧边栏尽可能占用更多的页面显示区域。"
 
 #: ../data/evince.schemas.in.h:6
 msgid ""
@@ -169,6 +171,8 @@ msgid ""
 "boolean options, true makes sidebar visible by default while false makes "
 "sidebar not visible by default"
 msgstr ""
+"侧边栏是包含索引和缩略图列表的侧边栏项目。此值若为 TRUE，则代表侧边栏默认可见，"
+"而 FALSE 代表侧边栏默认不可见。"
 
 #: ../data/evince.schemas.in.h:7
 msgid ""
@@ -176,6 +180,8 @@ msgid ""
 "about links and other actions. Two boolean options, true makes the statusbar "
 "visible by default while false makes sidebar not visible by default."
 msgstr ""
+"状态栏位于窗口底部，其中显示了关于连接和其它动作的额外信息。此值若为 TRUE，则代表"
+"状态栏默认可见，而 FALSE 代表状态栏默认不可见。"
 
 #: ../data/evince.schemas.in.h:8
 msgid ""
@@ -183,136 +189,137 @@ msgid ""
 "boolean options, true makes toolbar visible by default while false makes "
 "toolbar not visible by default."
 msgstr ""
+"工具栏位于窗口上部，其中包含了导航和缩放控制。此值若为 TRUE，则代表工具栏默认可见，"
+"而 FALSE 代表工具栏默认不可见。"
 
 #: ../dvi/dvi-document.c:91
 msgid "File not available"
-msgstr ""
+msgstr "文件不可用"
 
 #: ../dvi/dvi-document.c:104
 msgid "DVI document has incorrect format"
-msgstr ""
+msgstr "DVI 文档的格式不对"
 
 #. translators: this is the document security state
 #: ../pdf/ev-poppler.cc:524
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #. translators: this is the document security state
 #: ../pdf/ev-poppler.cc:527
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: ../pdf/ev-poppler.cc:697
 msgid "No name"
-msgstr ""
+msgstr "无名称"
 
 #: ../properties/ev-properties-main.c:114
-#, fuzzy
 msgid "Document"
-msgstr "DVI 文档"
+msgstr "文档"
 
 #: ../properties/ev-properties-view.c:173
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
-msgstr ""
+msgstr "BBox"
 
 #: ../ps/gsdefaults.c:31
 msgid "Letter"
-msgstr ""
+msgstr "Letter"
 
 #: ../ps/gsdefaults.c:32
 msgid "Tabloid"
-msgstr ""
+msgstr "Tabloid"
 
 #: ../ps/gsdefaults.c:33
 msgid "Ledger"
-msgstr ""
+msgstr "Ledger"
 
 #: ../ps/gsdefaults.c:34
 msgid "Legal"
-msgstr ""
+msgstr "Legal"
 
 #: ../ps/gsdefaults.c:35
 msgid "Statement"
-msgstr ""
+msgstr "Statement"
 
 #: ../ps/gsdefaults.c:36
 msgid "Executive"
-msgstr ""
+msgstr "Executive"
 
 #: ../ps/gsdefaults.c:37
 msgid "A0"
-msgstr ""
+msgstr "A0"
 
 #: ../ps/gsdefaults.c:38
 msgid "A1"
-msgstr ""
+msgstr "A1"
 
 #: ../ps/gsdefaults.c:39
 msgid "A2"
-msgstr ""
+msgstr "A2"
 
 #: ../ps/gsdefaults.c:40
 msgid "A3"
-msgstr ""
+msgstr "A3"
 
 #: ../ps/gsdefaults.c:41
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #: ../ps/gsdefaults.c:42
 msgid "A5"
-msgstr ""
+msgstr "A5"
 
 #: ../ps/gsdefaults.c:43
 msgid "B4"
-msgstr ""
+msgstr "B4"
 
 #: ../ps/gsdefaults.c:44
 msgid "B5"
-msgstr ""
+msgstr "B5"
 
 #: ../ps/gsdefaults.c:45
 msgid "Folio"
-msgstr ""
+msgstr "Folio"
 
 #: ../ps/gsdefaults.c:46
 msgid "Quarto"
-msgstr ""
+msgstr "Quarto"
 
 #: ../ps/gsdefaults.c:47
 msgid "10x14"
-msgstr ""
+msgstr "10x14"
 
 #: ../ps/ps-document.c:136
 msgid "No document loaded."
-msgstr ""
+msgstr "未装入文档。"
 
 #: ../ps/ps-document.c:602
 msgid "Broken pipe."
-msgstr ""
+msgstr "管道损坏。"
 
 #: ../ps/ps-document.c:784
 msgid "Interpreter failed."
-msgstr ""
+msgstr "解释器失败。"
 
 #. report error
 #: ../ps/ps-document.c:906
 #, c-format
 msgid "Error while decompressing file %s:\n"
-msgstr ""
+msgstr "解压缩文件 %s 出错：\n"
 
 #: ../ps/ps-document.c:962
 #, c-format
 msgid "Cannot open file %s.\n"
-msgstr ""
+msgstr "无法打开文件 %s。\n"
 
 #: ../ps/ps-document.c:964
 msgid "File is not readable."
-msgstr ""
+msgstr "文件不可读。"
 
 #: ../ps/ps-document.c:984
 msgid "Document loaded."
@@ -320,36 +327,35 @@ msgstr "文档已装入。"
 
 #: ../ps/ps-document.c:1235
 msgid "Encapsulated PostScript"
-msgstr ""
+msgstr "封装的 PostScript"
 
 #: ../ps/ps-document.c:1236
-#, fuzzy
 msgid "PostScript"
-msgstr "PostScript 文档"
+msgstr "PostScript"
 
 #: ../shell/eggfindbar.c:148
 msgid "Search string"
-msgstr ""
+msgstr "搜索字符串"
 
 #: ../shell/eggfindbar.c:149
 msgid "The name of the string to be found"
-msgstr ""
+msgstr "要查找的字符串名称"
 
 #: ../shell/eggfindbar.c:162
 msgid "Case sensitive"
-msgstr ""
+msgstr "区分大小写"
 
 #: ../shell/eggfindbar.c:163
 msgid "TRUE for a case sensitive search"
-msgstr ""
+msgstr "TRUE 代表进行区分大小写的搜索"
 
 #: ../shell/eggfindbar.c:170
 msgid "Highlight color"
-msgstr ""
+msgstr "高亮颜色"
 
 #: ../shell/eggfindbar.c:171
 msgid "Color of highlight for all matches"
-msgstr ""
+msgstr "全部匹配的高亮颜色"
 
 #: ../shell/eggfindbar.c:177
 msgid "Current color"
@@ -357,7 +363,7 @@ msgstr "当前颜色"
 
 #: ../shell/eggfindbar.c:178
 msgid "Color of highlight for the current match"
-msgstr ""
+msgstr "当前匹配的高亮颜色"
 
 #: ../shell/eggfindbar.c:300
 msgid "F_ind:"
@@ -377,7 +383,7 @@ msgstr "区分大小写(_A)"
 
 #: ../shell/ev-document-types.c:60
 msgid "Unknown MIME Type"
-msgstr ""
+msgstr "未知的 MIME 类型"
 
 #: ../shell/ev-document-types.c:71
 #, c-format
@@ -415,12 +421,12 @@ msgstr "全部文件"
 #: ../shell/ev-page-action.c:168
 #, c-format
 msgid "(%d of %d)"
-msgstr ""
+msgstr "(第%d页，共%d页)"
 
 #: ../shell/ev-page-action.c:170
 #, c-format
 msgid "of %d"
-msgstr ""
+msgstr "共%d页"
 
 #: ../shell/ev-password.c:88
 msgid "Unable to find glade file"
@@ -431,7 +437,7 @@ msgstr "找不到 glade 文件"
 msgid ""
 "The glade file, %s, cannot be found.  Please check that your installation is "
 "complete."
-msgstr ""
+msgstr "找不到 glade 文件 %s。请检查您的安装是否完整。"
 
 #: ../shell/ev-password.c:104
 msgid "Password required"
@@ -442,7 +448,7 @@ msgstr "需要密码"
 msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
 "opened."
-msgstr ""
+msgstr "文档 <i>%s</i> 已装入，但在打开之前需要密码。"
 
 #: ../shell/ev-password.c:142
 msgid "Incorrect password"
@@ -460,24 +466,24 @@ msgstr "取消文档锁定(_U)"
 
 #: ../shell/ev-properties-dialog.c:61 ../shell/ev-window.c:2736
 msgid "Properties"
-msgstr ""
+msgstr "属性"
 
 #: ../shell/ev-properties-dialog.c:92
 msgid "General"
-msgstr ""
+msgstr "常规"
 
 #: ../shell/ev-properties-dialog.c:102
 msgid "Fonts"
-msgstr ""
+msgstr "字体"
 
 #: ../shell/ev-properties-fonts.c:95
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #: ../shell/ev-properties-fonts.c:106
 #, c-format
 msgid "Gathering font information... %3d%%"
-msgstr ""
+msgstr "正在搜集字体信息... %3%%"
 
 #: ../shell/ev-sidebar-links.c:242
 msgid "Loading..."
@@ -495,7 +501,7 @@ msgstr "索引"
 msgid "Thumbnails"
 msgstr "缩略图"
 
-#: ../shell/ev-view.c:1037
+#: ../shell/ev-view.c:1039
 #, c-format
 msgid "Go to page %s"
 msgstr "转到第%s页"
@@ -503,20 +509,20 @@ msgstr "转到第%s页"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2588
+#: ../shell/ev-view.c:2598
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "本页上找到 %d 次"
 
-#: ../shell/ev-view.c:2598
+#: ../shell/ev-view.c:2608
 msgid "Not found"
 msgstr "未找到"
 
-#: ../shell/ev-view.c:2600
+#: ../shell/ev-view.c:2610
 #, c-format
 msgid "%3d%% remaining to search"
-msgstr ""
+msgstr "搜索还剩 %3d%%"
 
 #: ../shell/ev-window.c:539
 msgid "Unable to open document"
@@ -533,7 +539,7 @@ msgstr "%s - 需要密码"
 
 #: ../shell/ev-window.c:723 ../shell/ev-window.c:1031
 msgid "Loading document. Please wait"
-msgstr ""
+msgstr "正在装入文档。请稍候"
 
 #: ../shell/ev-window.c:1042
 msgid "Open document"
@@ -602,6 +608,8 @@ msgid ""
 "the Free Software Foundation; either version 2 of the License, or\n"
 "(at your option) any later version.\n"
 msgstr ""
+"Evince 是自由软件；您可以按照自由软件基金会所发布的 GNU GPL 许可对其"
+"再发放和/或修改它；至于 GPL 的版本，您可以使用第二版或任何更新的版本。\n"
 
 #: ../shell/ev-window.c:2340
 msgid ""
@@ -623,9 +631,8 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:2371
-#, fuzzy
 msgid "© 1996-2005 The Evince authors"
-msgstr "(C) 1996-2004 Evince 作者"
+msgstr "(C) 1996-2005 Evince 作者"
 
 #: ../shell/ev-window.c:2377
 msgid "translator-credits"
@@ -668,9 +675,8 @@ msgid "Print this document"
 msgstr "打印此文档"
 
 #: ../shell/ev-window.c:2737
-#, fuzzy
 msgid "View the properties of this document"
-msgstr "显示整篇文档"
+msgstr "查看此文档的属性"
 
 #: ../shell/ev-window.c:2740
 msgid "Close this window"
@@ -710,21 +716,19 @@ msgstr "自定义工具栏"
 
 #: ../shell/ev-window.c:2759
 msgid "Rotate _Left"
-msgstr ""
+msgstr "向左旋转(_L)"
 
 #: ../shell/ev-window.c:2760
-#, fuzzy
 msgid "Rotate the document to the left"
-msgstr "重新装入文档"
+msgstr "向左旋转文档"
 
 #: ../shell/ev-window.c:2762
 msgid "Rotate _Right"
-msgstr ""
+msgstr "向右旋转(_R)"
 
 #: ../shell/ev-window.c:2763
-#, fuzzy
 msgid "Rotate the document to the right"
-msgstr "重新装入文档"
+msgstr "向右旋转文档"
 
 #: ../shell/ev-window.c:2768 ../shell/ev-window.c:2830
 #: ../shell/ev-window.c:2833 ../shell/ev-window.c:2848
@@ -801,26 +805,24 @@ msgstr "离开全屏模式"
 #: ../shell/ev-window.c:2812 ../shell/ev-window.c:2818
 #: ../shell/ev-window.c:2827
 msgid "Scroll one page forward"
-msgstr "向前滚动一页"
+msgstr "向下滚动一页"
 
 #: ../shell/ev-window.c:2815 ../shell/ev-window.c:2821
 #: ../shell/ev-window.c:2824
 msgid "Scroll one page backward"
-msgstr "向后滚动一页"
+msgstr "向上滚动一页"
 
 #: ../shell/ev-window.c:2839
 msgid "Focus the page selector"
 msgstr "聚焦页面选择器"
 
 #: ../shell/ev-window.c:2842
-#, fuzzy
 msgid "Go ten pages backward"
-msgstr "向后滚动一页"
+msgstr "向上滚动十页"
 
 #: ../shell/ev-window.c:2845
-#, fuzzy
 msgid "Go ten pages forward"
-msgstr "向前滚动一页"
+msgstr "向下滚动十页"
 
 #. View Menu
 #: ../shell/ev-window.c:2858
@@ -885,7 +887,7 @@ msgstr "最适合(_B)"
 
 #: ../shell/ev-window.c:2880
 msgid "Make the current document fill the window"
-msgstr ""
+msgstr "让当前文档适合窗口"
 
 #: ../shell/ev-window.c:2882
 msgid "Fit Page _Width"
@@ -949,6 +951,7 @@ msgid ""
 "Boolean options available, true enables thumbnailing and false disables the "
 "creation of new thumbnails"
 msgstr ""
+"布尔值选项，TRUE 代表允许缩略图，FALSE 代表禁止创建新缩略图"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
@@ -963,6 +966,4 @@ msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
 msgstr ""
-
-#~ msgid "The file %s does not exist."
-#~ msgstr "文件 %s 不存在。"
+"生成 PDF 文档缩略图的有效命令及参数。请参看 nautilus 的缩略图生成文档中的更多信息。"
