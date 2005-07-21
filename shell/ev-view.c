@@ -1493,7 +1493,14 @@ ev_view_button_release_event (GtkWidget      *widget,
 static gboolean
 ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 {
-	ev_view_set_cursor (EV_VIEW (widget), EV_VIEW_CURSOR_NORMAL);
+	EvView *view = EV_VIEW (widget);
+    
+	ev_view_set_status (view, NULL);
+
+	if (view->cursor == EV_VIEW_CURSOR_LINK ||
+	    view->cursor == EV_VIEW_CURSOR_IBEAM)
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+
 	return FALSE;
 }
 
