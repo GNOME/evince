@@ -1,0 +1,666 @@
+# translation of evince.HEAD.po to Nepali
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Pawan Chitrakar <pawan@mpp.org.np>, 2005.
+# Shiva Prasad Pokharel <pokharelshiva@hotmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evince.HEAD\n"
+"Report-Msgid-Bugs-To: <info@mpp.org.np>\n"
+"POT-Creation-Date: 2005-04-04 02:52+0200\n"
+"PO-Revision-Date: 2005-06-08 11:53+0545\n"
+"Last-Translator: Shiva Prasad Pokharel <pokharelshiva@hotmail.com>\n"
+"Language-Team: Nepali <info@mpp.org.np>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: Nplurals=2;plural=(n!=1)\n"
+"X-Generator: KBabel 1.9.1\n"
+
+#: data/evince-password.glade.h:1
+msgid "*"
+msgstr "*"
+
+#: data/evince-password.glade.h:2
+msgid "<span size=\"smaller\"> </span>"
+msgstr "<span size=\"smaller\"> </span>"
+
+#: data/evince-password.glade.h:3
+msgid "_Password:"
+msgstr "_पासवर्ड:चिन्ह:"
+
+#: data/evince.desktop.in.h:1 shell/ev-window.c:470
+msgid "Document Viewer"
+msgstr "कागजात दृश्यक"
+
+#: data/evince.desktop.in.h:2 shell/main.c:87
+msgid "Evince Document Viewer"
+msgstr "ईभाइन्स कागजात दृश्यक"
+
+#: data/evince.desktop.in.h:3
+msgid "View multipage documents"
+msgstr "वहुपृष्ठ कागजात दृश्य गर्नुहोस"
+
+#: data/evince.schemas.in.h:1
+msgid "Default sidebar size"
+msgstr "पूर्वनिर्देशित छेउपट्टिको आकार"
+
+#: data/evince.schemas.in.h:2
+msgid "Show sidebar by default"
+msgstr "पूर्वनिर्धारणको आधारमा छेउपट्टि देखाउनुहोस"
+
+#: data/evince.schemas.in.h:3
+msgid "Show sidebar by default."
+msgstr "पुर्वनिर्धारण द्वारा छेउपट्टि देखाउनुहोस"
+
+#: data/evince.schemas.in.h:4
+msgid "Show statusbar by default"
+msgstr "पूर्वनिर्धारणद्वाराट स्थितिपट्टी देखाउनुहोस"
+
+#: data/evince.schemas.in.h:5
+msgid "Show statusbar by default."
+msgstr "पूर्वनिर्धारणद्वारा स्थितिपट्टी देखाउनुहोस"
+
+#: data/evince.schemas.in.h:6
+msgid "Show toolbar by default"
+msgstr "पूर्वनिर्धारणद्वारा औजारतिपट्टी देखाउनुहोस"
+
+#: data/evince.schemas.in.h:7
+msgid "Show toolbar by default."
+msgstr "पूर्वनिर्धारणद्वारा औजारतिपट्टी देखाउनुहोस"
+
+#: data/evince.schemas.in.h:8
+msgid "The default sidebar size."
+msgstr "पूर्वनिर्धारितवछेउ औजारतिपआकार.नुहोस"
+
+#: ps/gsdefaults.c:30
+msgid "BBox"
+msgstr "बि-बाकस"
+
+#: ps/gsdefaults.c:31
+msgid "Letter"
+msgstr "चिठ्ठि"
+
+#: ps/gsdefaults.c:32
+msgid "Tabloid"
+msgstr "टेबलायड"
+
+#: ps/gsdefaults.c:33
+msgid "Ledger"
+msgstr "लेजर"
+
+#: ps/gsdefaults.c:34
+msgid "Legal"
+msgstr "बैध"
+
+#: ps/gsdefaults.c:35
+msgid "Statement"
+msgstr "भनाई"
+
+#: ps/gsdefaults.c:36
+msgid "Executive"
+msgstr "कार्यकारिणी"
+
+#: ps/gsdefaults.c:37
+msgid "A0"
+msgstr "ए०"
+
+#: ps/gsdefaults.c:38
+msgid "A1"
+msgstr "ए१"
+
+#: ps/gsdefaults.c:39
+msgid "A2"
+msgstr "ए२"
+
+#: ps/gsdefaults.c:40
+msgid "A3"
+msgstr "ए३"
+
+#: ps/gsdefaults.c:41
+msgid "A4"
+msgstr "ए४"
+
+#: ps/gsdefaults.c:42
+msgid "A5"
+msgstr "ए५"
+
+#: ps/gsdefaults.c:43
+msgid "B4"
+msgstr "बि४"
+
+#: ps/gsdefaults.c:44
+msgid "B5"
+msgstr "बि५"
+
+#: ps/gsdefaults.c:45
+msgid "Folio"
+msgstr "फोलिओ"
+
+#: ps/gsdefaults.c:46
+msgid "Quarto"
+msgstr "क्वर्टो"
+
+#: ps/gsdefaults.c:47
+msgid "10x14"
+msgstr "१०x१४"
+
+#: ps/ps-document.c:142
+msgid "No document loaded."
+msgstr "कुनै लेखोट लोड गरिएन"
+
+#: ps/ps-document.c:538
+msgid "Broken pipe."
+msgstr "फुटेको पाइप"
+
+#: ps/ps-document.c:722
+msgid "Interpreter failed."
+msgstr "व्याख्याकार असफल"
+
+#. report error
+#: ps/ps-document.c:844
+#, c-format
+msgid "Error while decompressing file %s:\n"
+msgstr "%s फाईल असङ्कुचन गर्दा गल्ति:\n"
+
+#: ps/ps-document.c:1037
+#, c-format
+msgid "Cannot open file %s.\n"
+msgstr "%s लेखपत्र खुल्न सकेन.\n"
+
+#: ps/ps-document.c:1039
+msgid "File is not readable."
+msgstr "लेखपत्र पढ्नयोग्य छेन"
+
+#: ps/ps-document.c:1059
+#, c-format
+msgid "Error while scanning file %s\n"
+msgstr "%s लेखपत्र स्क्यान गर्दा त्रुटि\n"
+
+#: ps/ps-document.c:1062
+msgid "The file is not a PostScript document."
+msgstr "यो लेखपत्र एउटा पाश्चलिपि लेखोट होइन"
+
+#: ps/ps-document.c:1075
+msgid "Document loaded."
+msgstr "लेखोट लोड गरियो"
+
+#: shell/eggfindbar.c:148
+msgid "Search string"
+msgstr "रससी खोज्नुहोस"
+
+#: shell/eggfindbar.c:149
+msgid "The name of the string to be found"
+msgstr "रससी को नाम पत्ता लगाउन वाँकी"
+
+#: shell/eggfindbar.c:162
+msgid "Case sensitive"
+msgstr "संबेदनसिल अवस्था॒"
+
+#: shell/eggfindbar.c:163
+msgid "TRUE for a case sensitive search"
+msgstr "अति संवेदनशिल खोजाईको लागि सत्य"
+
+#: shell/eggfindbar.c:170
+msgid "Highlight color"
+msgstr "रङ्गलाई हाईलाईट गर्नुहोस"
+
+#: shell/eggfindbar.c:171
+msgid "Color of highlight for all matches"
+msgstr "सवै म्याचहरुलाई हाईलाईट गर्ने रङ्ग"
+
+#: shell/eggfindbar.c:177
+msgid "Current color"
+msgstr "चालु रङ्ग"
+
+#: shell/eggfindbar.c:178
+msgid "Color of highlight for the current match"
+msgstr "चालु म्याचहरुलाई हाईलाईट गर्ने रङ्ग"
+
+#: shell/eggfindbar.c:300
+msgid "F_ind:"
+msgstr "_खोज्नुहोस्:"
+
+#: shell/eggfindbar.c:306
+msgid "_Previous"
+msgstr "_अघिल्लो"
+
+#: shell/eggfindbar.c:308
+msgid "_Next"
+msgstr "_पछिल्लो"
+
+#: shell/eggfindbar.c:321
+msgid "C_ase Sensitive"
+msgstr "_अति संवेदनशिल"
+
+#: shell/ev-application.c:120
+msgid "Open document"
+msgstr "कागजात खोल्नुहोस"
+
+#: shell/ev-application.c:130
+msgid "PostScript and PDF Documents"
+msgstr "पोस्टस्क्रिप्ट र पिडिएफ कागजातहरु"
+
+#: shell/ev-application.c:138
+msgid "PostScript Documents"
+msgstr "पाश्चलिपि कागजातहरु"
+
+#: shell/ev-application.c:145 shell/ev-window.c:875
+msgid "PDF Documents"
+msgstr "पिडियफ कागजातहरु"
+
+#: shell/ev-application.c:150
+msgid "Images"
+msgstr "तस्विरहरु"
+
+#: shell/ev-application.c:155 shell/ev-window.c:880
+msgid "All Files"
+msgstr "सबै लेखपत्रहरु"
+
+#: shell/ev-password-view.c:111
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
+msgstr "यो कागजात लक गरियको छ र यस्लाइ पढ्नलाई ठिक पासवर्ड राख्नुपर्छ."
+
+#: shell/ev-password-view.c:120
+msgid "_Unlock Document"
+msgstr "कागजात कुञ्ज लाई खोल्नुहोस"
+
+#: shell/ev-password.c:88
+msgid "Unable to find glade file"
+msgstr "वनमार्ग फाईल भेट्टाउन असक्षम"
+
+#: shell/ev-password.c:90
+#, c-format
+msgid ""
+"The glade file, %s, cannot be found.  Please check that your installation is "
+"complete."
+msgstr "वनमार्ग फाईल,%s, भेट्टाउन सक्दैन.कृपया स्थापना पुरा भयो कि जाँच गर्नुहोस."
+
+#: shell/ev-password.c:104
+msgid "Password required"
+msgstr "पासवर्ड चाहियो"
+
+#: shell/ev-password.c:105
+#, c-format
+msgid ""
+"The document <i>%s</i> is locked and requires a password before it can be "
+"opened."
+msgstr "<i>%s</i> कागजात वन्द छ त्यसैले यसलाई खोल्नुभन्दा पहिले पासवर्ड चाहिन्छ."
+
+#: shell/ev-password.c:142
+msgid "Incorrect password"
+msgstr "गलत पासवर्ड"
+
+#: shell/ev-sidebar-links.c:132
+msgid "Loading..."
+msgstr "लोड हुँदैछ..."
+
+#: shell/ev-view.c:725
+#, c-format
+msgid "Go to page %s"
+msgstr "%s पानामा जानुहोस"
+
+#. g_mutex_unlock (EV_DOC_MUTEX);
+#. TRANS: Sometimes this could be better translated as
+#. "%d hit(s) on this page".  Therefore this string
+#. contains plural cases.
+#: shell/ev-view.c:1220
+#, c-format
+msgid "%d found on this page"
+msgid_plural "%d found on this page"
+msgstr[0] "यो पानामा %d भेट्टियो"
+msgstr[1] "यो पानामा %d भेट्टियो"
+
+#: shell/ev-view.c:1232
+msgid "Not found"
+msgstr "भेट्टियन"
+
+#: shell/ev-view.c:1234
+#, c-format
+msgid "%3d%% remaining to search"
+msgstr "%3d%% खोजको लागि वाँकी"
+
+#: shell/ev-window.c:378
+msgid "Unable to open document"
+msgstr "कागजात खोल्न सकेन"
+
+#: shell/ev-window.c:464
+msgid "Document Viewer - Password Required"
+msgstr "कागजात दृश्यक - पासवर्ड आवश्यक"
+
+#: shell/ev-window.c:466
+#, c-format
+msgid "%s - Password Required"
+msgstr "%s - पासवर्ड आवश्यक्ता"
+
+#: shell/ev-window.c:742
+#, c-format
+msgid "Unhandled MIME type: '%s'"
+msgstr "ह्याण्डल नगरियको मिमि प्रकार: '%s'"
+
+#: shell/ev-window.c:846
+#, c-format
+msgid "The file could not be saved as \"%s\"."
+msgstr "\"%s\" जस्तै यस फाईललाई संचय गर्न सकिएन."
+
+#: shell/ev-window.c:867
+msgid "Save a Copy"
+msgstr "एउटा नक्कल संचय गर"
+
+#: shell/ev-window.c:949
+msgid "Print"
+msgstr "मुद्रण"
+
+#: shell/ev-window.c:972
+msgid "Printing is not supported on this printer."
+msgstr "यस मुद्रकमा छपाई कार्य समर्थन गरिदैन."
+
+#: shell/ev-window.c:975
+#, c-format
+msgid ""
+"You were trying to print to a printer using the \"%s\" driver. This program "
+"requires a PostScript printer driver."
+msgstr ""
+"\"%s\" ड्राइभर प्रयोग गरेर, तपाईले एउटा मुद्रकबाट छपाईकार्य गर्न खोज्नु भएको थियो। यो "
+"कार्यक्रमलाई एउटा पोस्टस्क्रिप्ट मुद्रक ड्राइभर आवश्यक पर्छ।"
+
+#: shell/ev-window.c:1027
+msgid "The \"Find\" feature will not work with this document"
+msgstr "\"खोज\" गुणले यो कागजातसंग काम गर्न सक्दैन"
+
+#: shell/ev-window.c:1029
+msgid "Searching for text is only supported for PDF documents."
+msgstr "खोजियको पाठ पिडिएफ कागजातहरुमा मात्र सहायतायोग्य हुन्छ."
+
+#. Toolbar-only
+#: shell/ev-window.c:1245 shell/ev-window.c:2032
+msgid "Leave Fullscreen"
+msgstr "पुर्णपर्दालाई छाड्नुहोस"
+
+#: shell/ev-window.c:1630
+msgid "Many..."
+msgstr "अनेक..."
+
+#: shell/ev-window.c:1635
+msgid "Not so many..."
+msgstr "त्यति धेरै होईन..."
+
+#: shell/ev-window.c:1640
+msgid ""
+"Evince is free software; you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation; either version 2 of the License, or\n"
+"(at your option) any later version.\n"
+msgstr ""
+"ईभाईन्स निशुल्क सफ्टवेयर हो,तपाईले यस्लाइ पुनर्वितरण गर्न र/वा सुधार गर्न\n"
+"निशुल्क सफ्टवेयर संस्था द्वारा प्रकाशित,\n"
+"जिएनयु सामान्य सार्वजनिक लाईसेन्सको शर्त भित्र रहेर;वा लाईसेन्सको २ संस्करण, वा \n"
+"(तपाईको विकल्प )मा पछिका कुनै संस्करण वाट सक्नुहुनेछ.\n"
+
+#: shell/ev-window.c:1644
+msgid ""
+"Evince is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+msgstr ""
+"ईभाईन्स ऊपयोगि हुने आशामा वितरण गरियको हो\n"
+"तर कुनै वारेन्टि विना,यधपि व्यापारिकरण वा कुनै निश्चित उदेश्य संगको कुनै सुचित वारेन्टि विना नै\n.वृस्तित जानकारि को लागि जिएनयु सामान्य सार्वजनिक ईजाजत हेर्नुहोस.\n"
+
+#: shell/ev-window.c:1648
+msgid ""
+"You should have received a copy of the GNU General Public License\n"
+"along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
+"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr ""
+"तपाईले ईभाईन्स संगै जिएनयु सामान्य सार्वजनिक इजाजतको नक्कल पाउनु पर्छ;यदि नभय,निशुल्क सफ्टवेयर संस्था, इन्क.,\n"
+"५९ टेम्पल प्लेस,सुट ३३०, वोस्टोन, एमए  ०२१११-१३०७ यु एस ए\n"
+
+#: shell/ev-window.c:1670 shell/main.c:82
+msgid "Evince"
+msgstr "ईभाईन्स"
+
+#: shell/ev-window.c:1673
+msgid "© 1996-2004 The Evince authors"
+msgstr "©२९९६-२००४ ईभाईन्स लेखकहरु"
+
+#: shell/ev-window.c:1676
+msgid "PostScript and PDF File Viewer."
+msgstr "पोस्टस्क्रिप्ट र पि डि एफ फाईल दृश्यक."
+
+#: shell/ev-window.c:1679
+msgid "translator-credits"
+msgstr "अनुवादकको श्रेय"
+
+#: shell/ev-window.c:1963
+msgid "_File"
+msgstr "_फाईल"
+
+#: shell/ev-window.c:1964
+msgid "_Edit"
+msgstr "_सम्पादन गर्नुहोस"
+
+#: shell/ev-window.c:1965
+msgid "_View"
+msgstr "_दृष्य"
+
+#: shell/ev-window.c:1966
+msgid "_Go"
+msgstr "_जानुहोस"
+
+#: shell/ev-window.c:1967
+msgid "_Help"
+msgstr "_मद्दत"
+
+#: shell/ev-window.c:1971
+msgid "Open an existing document"
+msgstr "रहेको कागजातलाई खोल्नुहोस"
+
+#: shell/ev-window.c:1973
+msgid "_Save a Copy..."
+msgstr "_एउटा नक्कल संचय गर..."
+
+#: shell/ev-window.c:1974
+msgid "Save the current document with a new filename"
+msgstr "चालु कागजातलाई नयाँ फाईलनामले वचत गर्नुहोस"
+
+#: shell/ev-window.c:1976
+msgid "Print..."
+msgstr "मुद्रण..."
+
+#: shell/ev-window.c:1977
+msgid "Print this document"
+msgstr "यो कागजातलाई मुद्रण गर्नुहोस"
+
+#: shell/ev-window.c:1980
+msgid "Close this window"
+msgstr "यो विन्डो बन्द गर्नुहोस"
+
+#: shell/ev-window.c:1985
+msgid "Copy text from the document"
+msgstr "कागजात वाट पाठलाई नक्कल गर्नुहोस"
+
+#: shell/ev-window.c:1987
+msgid "Select _All"
+msgstr "सबै_छान्नुहोला"
+
+#: shell/ev-window.c:1988
+msgid "Select the entire page"
+msgstr "पूरै पानात छनोट गर्नहोुस"
+
+#: shell/ev-window.c:1991
+msgid "Find a word or phrase in the document"
+msgstr "कागजातमा शव्द वा पद भेट्टाउनुहोस"
+
+#: shell/ev-window.c:1996
+msgid "Enlarge the document"
+msgstr "कागजात लाई ठुलो वनाउनुहोस"
+
+#: shell/ev-window.c:1999
+msgid "Shrink the document"
+msgstr "कागजात लाई खुम्च्याउनुहोस"
+
+#: shell/ev-window.c:2002
+msgid "Reset the zoom level to the default value"
+msgstr "पुर्वनिर्धारित मापदण्डमा जुम तहलाई पुन:सेट गर्नुहोस"
+
+#: shell/ev-window.c:2004
+msgid "_Reload"
+msgstr "_फेरि लोडगर्नुस्"
+
+#: shell/ev-window.c:2005
+msgid "Reload the document"
+msgstr "कागजातलाई पुन:लोड गर्नुहोस"
+
+#. Go menu
+#: shell/ev-window.c:2009
+msgid "_Previous Page"
+msgstr "_पहिलेको पृष्ठ"
+
+#: shell/ev-window.c:2010
+msgid "Go to the previous page"
+msgstr "पहिलेकै स्थानमा जानुहोस"
+
+#: shell/ev-window.c:2012
+msgid "_Next Page"
+msgstr "_आगामी पृष्ठ"
+
+#: shell/ev-window.c:2013
+msgid "Go to the next page"
+msgstr "अर्को पानामा जानुहोस"
+
+#: shell/ev-window.c:2015
+msgid "_First Page"
+msgstr "_पहिलो पृष्ठ"
+
+#: shell/ev-window.c:2016
+msgid "Go to the first page"
+msgstr "पहिलो पृष्ठमा जानुहोस"
+
+#: shell/ev-window.c:2018
+msgid "_Last Page"
+msgstr "_अन्तिम पृष्ठ"
+
+#: shell/ev-window.c:2019
+msgid "Go to the last page"
+msgstr "अन्तिम पृष्ठमा जाऊ"
+
+#. Help menu
+#: shell/ev-window.c:2023
+msgid "_Contents"
+msgstr "_विषयसूचीहरु"
+
+#: shell/ev-window.c:2024
+msgid "Display help for the viewer application"
+msgstr "दृश्यक अनुप्रयोगकोलागि मद्दत देखाउनुहोस"
+
+#: shell/ev-window.c:2027
+msgid "_About"
+msgstr "_बारेमा"
+
+#: shell/ev-window.c:2028
+msgid "Display credits for the document viewer creators"
+msgstr "कागजात दृश्यक सिर्जकहरुको लागि श्रेय देखाउनुहोस"
+
+#: shell/ev-window.c:2033
+msgid "Leave fullscreen mode"
+msgstr "पुरा पर्दा अवस्था था छोड्नुहोस"
+
+#. View Menu
+#: shell/ev-window.c:2040
+msgid "_Toolbar"
+msgstr "_औजारपट्टीर"
+
+#: shell/ev-window.c:2041
+msgid "Show or hide the toolbar"
+msgstr "उपकरणपट्टीलाई देखाउनुहोस् वा लुकाउनुहोस्"
+
+#: shell/ev-window.c:2043
+msgid "_Statusbar"
+msgstr "_तह पट्टीर"
+
+#: shell/ev-window.c:2044
+msgid "Show or hide the statusbar"
+msgstr "अवस्थापट्टिलाई देखाउनुहोस वा लुकाउनुहोस"
+
+#: shell/ev-window.c:2046
+msgid "Side _pane"
+msgstr "छेउ _फलक"
+
+#: shell/ev-window.c:2047
+msgid "Show or hide the side pane"
+msgstr "छेउ फलकलाईिलाई देखाउनुहोस वा लुकाउनुहोस"
+
+#: shell/ev-window.c:2049
+msgid "_Fullscreen"
+msgstr "_पूरा पर्दा"
+
+#: shell/ev-window.c:2050
+msgid "Expand the window to fill the screen"
+msgstr "पर्दा लाई भर्नको लागि सन्झ्याललाई वढाउनुहोस"
+
+#: shell/ev-window.c:2052
+msgid "_Best Fit"
+msgstr "_ सवै भन्दा मिलेको"
+
+#: shell/ev-window.c:2053
+msgid "Make the current document fill the window"
+msgstr "चालु कागजात लाई सन्झ्याल भरिने वनाउनुहोस"
+
+#: shell/ev-window.c:2055
+msgid "Fit Page _Width"
+msgstr "पृष्ठको_चौडाई मिलाउनुहोस"
+
+#: shell/ev-window.c:2056
+msgid "Make the current document fill the window width"
+msgstr "सन्झ्यालको चौडाई भरिने गरि चालु कागजात वनाउनुहोस"
+
+#: shell/ev-window.c:2061
+msgid "Single"
+msgstr "एकल"
+
+#: shell/ev-window.c:2062
+msgid "Show the document one page at a time"
+msgstr "ठिक समयमा कागजातलाई देखाउनुहोस"
+
+#: shell/ev-window.c:2064
+msgid "Multi"
+msgstr "वहु"
+
+#: shell/ev-window.c:2065
+msgid "Show the full document at once"
+msgstr "पुरा कागजात एकै पटक देखाउनुहोस"
+
+#: shell/ev-window.c:2094
+msgid "Page"
+msgstr "पृष्ठष्ठ॒"
+
+#: shell/ev-window.c:2095
+msgid "Select Page"
+msgstr "पृष्ठ छान्नुहोस"
+
+#. translators: this is the label for toolbar button
+#: shell/ev-window.c:2108
+msgid "Previous"
+msgstr "पहिलेको"
+
+#: shell/ev-window.c:2113
+msgid "Next"
+msgstr "अर्को"
+
+#. translators: this is the label for toolbar button
+#: shell/ev-window.c:2116
+msgid "Fit Width"
+msgstr "चौडाइ मिलाउनुहोस"
+
+#: shell/ev-window.c:2309
+msgid "Index"
+msgstr "अनुक्रमणिका"
+
+#: shell/ev-window.c:2316
+msgid "Thumbnails"
+msgstr "थम्बनेलहरु"
+
