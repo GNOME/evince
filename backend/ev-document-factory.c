@@ -71,6 +71,7 @@ const EvDocumentType document_types[] = {
 #endif
 };
 
+#ifdef ENABLE_PIXBUF
 /* Would be nice to have this in gdk-pixbuf */
 static gboolean
 mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
@@ -108,7 +109,7 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 
 	return retval;
 }
-
+#endif
 
 static GType
 ev_document_type_get_from_mime (const char *mime_type)
