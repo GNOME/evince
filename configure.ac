@@ -20,6 +20,7 @@ AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
 AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
 GNOME_COMMON_INIT
+GNOME_DOC_INIT
 GNOME_MAINTAINER_MODE_DEFINES
 GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
@@ -292,7 +293,6 @@ properties/Makefile
 shell/Makefile
 thumbnailer/Makefile
 help/Makefile
-help/C/Makefile
 ])
 
 AC_OUTPUT
