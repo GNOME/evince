@@ -678,6 +678,30 @@ pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
 	return result;
 }
 
+static const char *
+font_type_to_string (PopplerFontType type)
+{
+	switch (type)
+	{
+	case POPPLER_FONT_TYPE_TYPE1:
+		return _("Type 1");
+	case POPPLER_FONT_TYPE_TYPE1C:
+		return _("Type 1C");
+	case POPPLER_FONT_TYPE_TYPE3:
+		return _("Type 3");
+	case POPPLER_FONT_TYPE_TRUETYPE:
+		return _("TrueType");
+	case POPPLER_FONT_TYPE_CID_TYPE0:
+		return _("Type 1 (CID)");
+	case POPPLER_FONT_TYPE_CID_TYPE0C:
+		return _("Type 1C (CID)");
+	case POPPLER_FONT_TYPE_CID_TYPE2:
+		return _("TrueType (CID)");
+	default:
+		return _("Unknown font type ");
+	}
+}
+
 static void
 pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 			       GtkTreeModel    *model)
@@ -687,22 +711,44 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 
 	g_return_if_fail (PDF_IS_DOCUMENT (document_fonts));
 
-	if (iter) {
-		do {
-			GtkTreeIter list_iter;
-			const char *name;
-		
-			name = poppler_fonts_iter_get_name (iter);
-			if (name == NULL) {
-				name = _("No name");
-			}
+	if (!iter)
+		return;
 
-			gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
-			gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
-					    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
-					    -1);
-		} while (poppler_fonts_iter_next (iter));
-	}
+	do {
+		GtkTreeIter list_iter;
+		const char *name;
+		const char *type;
+		const char *embedded;
+		char *details;
+		
+		name = poppler_fonts_iter_get_name (iter);
+
+		if (name == NULL) {
+			name = _("No name");
+		}
+
+		type = font_type_to_string (
+			poppler_fonts_iter_get_font_type (iter));
+
+		if (poppler_fonts_iter_is_embedded (iter)) {
+			if (poppler_fonts_iter_is_subset (iter))
+				embedded = _("Embedded subset");
+			else
+				embedded = _("Embedded");
+		} else {
+			embedded = _("Not embedded");
+		}
+
+		details = g_markup_printf_escaped ("%s\n%s", type, embedded);
+
+		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
+		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
+				    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
+				    EV_DOCUMENT_FONTS_COLUMN_DETAILS, details,
+				    -1);
+
+		g_free (details);
+	} while (poppler_fonts_iter_next (iter));
 }
 
 static void

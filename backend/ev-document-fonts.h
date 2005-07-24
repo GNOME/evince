@@ -46,6 +46,7 @@ typedef struct _EvDocumentFontsIface EvDocumentFontsIface;
 
 enum {
 	EV_DOCUMENT_FONTS_COLUMN_NAME,
+	EV_DOCUMENT_FONTS_COLUMN_DETAILS,
 	EV_DOCUMENT_FONTS_COLUMN_NUM_COLUMNS
 };
 

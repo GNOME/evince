@@ -1,3 +1,20 @@
+2005-07-24  Martin Kretzschmar  <martink@gnome.org>
+
+	Bug #311280
+	
+	* pdf/ev-poppler.cc (font_type_to_string): new, returns user readable
+	name for PopplerFontTypes
+	(pdf_document_fonts_fill_model): add font type to the detail column
+
+	* backend/ev-document-fonts.h: added
+	EV_DOCUMENT_FONTS_COLUMN_DETAILS.
+
+	* shell/ev-properties-fonts.c (font_cell_data_func): glue together
+	font name and font details, add a little markup.
+	(ev_properties_fonts_init): use the new cell data func, specify ypad
+	property for the cell renderer.
+	(ev_properties_fonts_set_document): add the details column.
+
 2005-07-24  Artur Flinta  <aflinta@cvs.gnome.org>
 
         * configure.ac: Added "pl" to ALL_LINGUAS.

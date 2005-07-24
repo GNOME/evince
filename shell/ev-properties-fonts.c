@@ -68,6 +68,33 @@ ev_properties_fonts_class_init (EvPropertiesFontsClass *properties_class)
 }
 
 static void
+font_cell_data_func (GtkTreeViewColumn *col, GtkCellRenderer *renderer,
+		     GtkTreeModel *model, GtkTreeIter *iter, gpointer user_data)
+{
+	char *name;
+	char *details;
+	char *markup;
+
+	gtk_tree_model_get(model, iter,
+			   EV_DOCUMENT_FONTS_COLUMN_NAME, &name,
+			   EV_DOCUMENT_FONTS_COLUMN_DETAILS, &details,
+			   -1);	
+
+	if (details) {
+		markup = g_strdup_printf ("<b><big>%s</big></b>\n<small>%s</small>",
+					  name, details);
+	} else {
+		markup = g_strdup_printf ("<b><big>%s</big></b>", name);
+	}
+
+	g_object_set (renderer, "markup", markup, NULL);
+	
+	g_free (markup);
+	g_free (details);
+	g_free (name);
+}
+
+static void
 ev_properties_fonts_init (EvPropertiesFonts *properties)
 {
 	GladeXML *xml;
@@ -90,12 +117,13 @@ ev_properties_fonts_init (EvPropertiesFonts *properties)
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (properties->fonts_treeview), column);
 
-	renderer = gtk_cell_renderer_text_new ();
+	renderer = GTK_CELL_RENDERER (g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
+						    "ypad", 6, NULL));
 	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
-	gtk_tree_view_column_set_title (GTK_TREE_VIEW_COLUMN (column), _("Name"));
-	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
-					     "text", EV_DOCUMENT_FONTS_COLUMN_NAME,
-					     NULL);
+	gtk_tree_view_column_set_title (GTK_TREE_VIEW_COLUMN (column), _("Font"));
+	gtk_tree_view_column_set_cell_data_func (column, renderer,
+						 font_cell_data_func,
+						 NULL, NULL);
 }
 
 static void
@@ -151,7 +179,7 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 	properties->document = document;
 
 	list_store = gtk_list_store_new (EV_DOCUMENT_FONTS_COLUMN_NUM_COLUMNS,
-					 G_TYPE_STRING);
+					 G_TYPE_STRING, G_TYPE_STRING);
 	gtk_tree_view_set_model (tree_view, GTK_TREE_MODEL (list_store));
 
 	job = ev_job_fonts_new (properties->document);
