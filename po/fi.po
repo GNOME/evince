@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-12 16:48+0300\n"
-"PO-Revision-Date: 2005-07-12 16:16+0300\n"
+"POT-Creation-Date: 2005-07-24 22:15+0300\n"
+"PO-Revision-Date: 2005-07-24 22:17+0300\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -217,9 +217,53 @@ msgstr "Kyllä"
 msgid "No"
 msgstr "Ei"
 
+#: ../pdf/ev-poppler.cc:687
+msgid "Type 1"
+msgstr "Tyyppi 1"
+
+#: ../pdf/ev-poppler.cc:689
+msgid "Type 1C"
+msgstr "Tyyppi 1C"
+
+#: ../pdf/ev-poppler.cc:691
+msgid "Type 3"
+msgstr "Tyyppi 3"
+
+#: ../pdf/ev-poppler.cc:693
+msgid "TrueType"
+msgstr "TrueType"
+
+#: ../pdf/ev-poppler.cc:695
+msgid "Type 1 (CID)"
+msgstr "Tyyppi 1 (CID)"
+
 #: ../pdf/ev-poppler.cc:697
+msgid "Type 1C (CID)"
+msgstr "Tyyppi 1C (CID)"
+
+#: ../pdf/ev-poppler.cc:699
+msgid "TrueType (CID)"
+msgstr "TrueType (CID)"
+
+#: ../pdf/ev-poppler.cc:701
+msgid "Unknown font type "
+msgstr "Tuntematon kirjasintyyppi"
+
+#: ../pdf/ev-poppler.cc:727
 msgid "No name"
 msgstr "Ei nimeä"
+
+#: ../pdf/ev-poppler.cc:735
+msgid "Embedded subset"
+msgstr "Upotettu osajoukko"
+
+#: ../pdf/ev-poppler.cc:737
+msgid "Embedded"
+msgstr "Upotettu"
+
+#: ../pdf/ev-poppler.cc:739
+msgid "Not embedded"
+msgstr "Ei upotettu"
 
 #: ../properties/ev-properties-main.c:114
 msgid "Document"
@@ -487,11 +531,11 @@ msgstr "Yleinen"
 msgid "Fonts"
 msgstr "Kirjasimet"
 
-#: ../shell/ev-properties-fonts.c:95
-msgid "Name"
-msgstr "Nimi"
+#: ../shell/ev-properties-fonts.c:123
+msgid "Font"
+msgstr "Kirjasin"
 
-#: ../shell/ev-properties-fonts.c:106
+#: ../shell/ev-properties-fonts.c:134
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Kerätään kirjasintietoa... %3d %%"
@@ -512,7 +556,7 @@ msgstr "Hakemisto"
 msgid "Thumbnails"
 msgstr "Pienoiskuvat"
 
-#: ../shell/ev-view.c:1037
+#: ../shell/ev-view.c:1039
 #, c-format
 msgid "Go to page %s"
 msgstr "Hyppää sivulle %s"
@@ -520,18 +564,18 @@ msgstr "Hyppää sivulle %s"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2588
+#: ../shell/ev-view.c:2605
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d osuma tällä sivulla"
 msgstr[1] "%d osumaa tällä sivulla"
 
-#: ../shell/ev-view.c:2598
+#: ../shell/ev-view.c:2615
 msgid "Not found"
 msgstr "Ei löytynyt"
 
-#: ../shell/ev-view.c:2600
+#: ../shell/ev-view.c:2617
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d %% haettavasta jäljellä"
@@ -993,6 +1037,9 @@ msgid ""
 msgstr ""
 "Kelvollinen komento sekä argumentit PDF-asiakirjan pienoiskuvien "
 "tuottajaksi. Katso nautiluksen pienoiskuvien tuottajan ohjeista lisätietoa."
+
+#~ msgid "Name"
+#~ msgstr "Nimi"
 
 #~ msgid "<span size=\"smaller\"> </span>"
 #~ msgstr "<span size=\"smaller\"> </span>"
