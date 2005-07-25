@@ -698,7 +698,7 @@ font_type_to_string (PopplerFontType type)
 	case POPPLER_FONT_TYPE_CID_TYPE2:
 		return _("TrueType (CID)");
 	default:
-		return _("Unknown font type ");
+		return _("Unknown font type");
 	}
 }
 
