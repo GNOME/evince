@@ -1252,6 +1252,24 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 }
 
 static gboolean
+using_pdf_printer (GnomePrintConfig *config)
+{
+	const guchar *driver;
+
+	driver = gnome_print_config_get (
+		config, (const guchar *)"Settings.Engine.Backend.Driver");
+
+	if (driver) {
+		if (!strcmp ((const gchar *)driver, "gnome-print-pdf"))
+			return TRUE;
+		else
+			return FALSE;
+	}
+
+	return FALSE;
+}
+
+static gboolean
 using_postscript_printer (GnomePrintConfig *config)
 {
 	const guchar *driver;
@@ -1268,7 +1286,7 @@ using_postscript_printer (GnomePrintConfig *config)
 			return TRUE;
 		else
 			return FALSE;
-	} else 	if (transport) {
+	} else 	if (transport) { /* these transports default to PostScript */
 		if (!strcmp ((const gchar *)transport, "CUPS"))
 			return TRUE;
 		else if (!strcmp ((const gchar *)transport, "LPD"))
@@ -1343,7 +1361,18 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 		/* FIXME: Change this when we have the first backend
 		 * that can print more than postscript
 		 */
-		if (!using_postscript_printer (config)) {
+		if (using_pdf_printer (config)) {
+			GtkWidget *dialog;
+
+			dialog = gtk_message_dialog_new (
+				GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
+				GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+				_("Generating PDF is not supported"));
+			gtk_dialog_run (GTK_DIALOG (dialog));
+			gtk_widget_destroy (dialog);
+			
+			continue;
+		} else if (!using_postscript_printer (config)) {
 			GtkWidget *dialog;
 
 			dialog = gtk_message_dialog_new (
