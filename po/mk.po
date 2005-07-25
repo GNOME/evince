@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-17 21:26+0000\n"
-"PO-Revision-Date: 2005-07-18 02:46+0200\n"
+"POT-Creation-Date: 2005-07-25 13:27+0000\n"
+"PO-Revision-Date: 2005-07-25 17:28+0200\n"
 "Last-Translator: Арангел Ангов <ufo@linux.net.mk>\n"
 "Language-Team: Macedonian <ossm-members@hedona.on.net.mk>\n"
 "MIME-Version: 1.0\n"
@@ -218,9 +218,53 @@ msgstr "Да"
 msgid "No"
 msgstr "Не"
 
+#: ../pdf/ev-poppler.cc:687
+msgid "Type 1"
+msgstr "Тип 1"
+
+#: ../pdf/ev-poppler.cc:689
+msgid "Type 1C"
+msgstr "Тип 1Ц"
+
+#: ../pdf/ev-poppler.cc:691
+msgid "Type 3"
+msgstr "Тип 3"
+
+#: ../pdf/ev-poppler.cc:693
+msgid "TrueType"
+msgstr "TrueType"
+
+#: ../pdf/ev-poppler.cc:695
+msgid "Type 1 (CID)"
+msgstr "Тип 1 (CID)"
+
 #: ../pdf/ev-poppler.cc:697
+msgid "Type 1C (CID)"
+msgstr "Тип 1Ц (CID)"
+
+#: ../pdf/ev-poppler.cc:699
+msgid "TrueType (CID)"
+msgstr "TrueType (CID)"
+
+#: ../pdf/ev-poppler.cc:701
+msgid "Unknown font type"
+msgstr "Непознат тип на фонт"
+
+#: ../pdf/ev-poppler.cc:727
 msgid "No name"
 msgstr "Нема име"
+
+#: ../pdf/ev-poppler.cc:735
+msgid "Embedded subset"
+msgstr "Вградено поставување"
+
+#: ../pdf/ev-poppler.cc:737
+msgid "Embedded"
+msgstr "Вградено"
+
+#: ../pdf/ev-poppler.cc:739
+msgid "Not embedded"
+msgstr "Надворешно"
 
 #: ../properties/ev-properties-main.c:114
 msgid "Document"
@@ -490,11 +534,11 @@ msgstr "Општо"
 msgid "Fonts"
 msgstr "Фонтови"
 
-#: ../shell/ev-properties-fonts.c:95
-msgid "Name"
-msgstr "Име"
+#: ../shell/ev-properties-fonts.c:123
+msgid "Font"
+msgstr "Фонт"
 
-#: ../shell/ev-properties-fonts.c:106
+#: ../shell/ev-properties-fonts.c:134
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Собирам информации за фонтови... %3d%%"
@@ -523,7 +567,7 @@ msgstr "Оди на страна %s"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2598
+#: ../shell/ev-view.c:2605
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -531,11 +575,11 @@ msgstr[0] "%d пронајден на оваа страна"
 msgstr[1] "%d пронајдени на оваа страна"
 msgstr[2] "%d пронајдени на оваа страна"
 
-#: ../shell/ev-view.c:2608
+#: ../shell/ev-view.c:2615
 msgid "Not found"
 msgstr "Не е пронајдено"
 
-#: ../shell/ev-view.c:2610
+#: ../shell/ev-view.c:2617
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% останати за пребарување"
