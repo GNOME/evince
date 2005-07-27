@@ -44,7 +44,10 @@ struct _EvPSExporterIface {
 	void		(* begin)	(EvPSExporter *exporter,
 					 const char   *filename,
 					 int	       first_page,
-					 int	       last_page);
+					 int	       last_page,
+                                         double        paper_width,
+                                         double        paper_height,
+                                         gboolean      duplex);
 	void		(* do_page)	(EvPSExporter *exporter,
 					 int	       page);
 	void		(* end)		(EvPSExporter *exporter);
@@ -52,7 +55,9 @@ struct _EvPSExporterIface {
 
 GType	ev_ps_exporter_get_type (void);
 void	ev_ps_exporter_begin	(EvPSExporter *exporter, const char *filename,
-				 int first_page, int last_page);
+				 int first_page, int last_page,
+                                 double paper_width, double paper_height,
+                                 gboolean duplex);
 void	ev_ps_exporter_do_page	(EvPSExporter *exporter, int page);
 void	ev_ps_exporter_end	(EvPSExporter *exporter);
 

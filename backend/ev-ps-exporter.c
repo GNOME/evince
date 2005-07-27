@@ -48,11 +48,13 @@ ev_ps_exporter_get_type (void)
 
 void
 ev_ps_exporter_begin (EvPSExporter *exporter, const char *filename,
-		      int first_page, int last_page)
+		      int first_page, int last_page,
+                      double paper_width, double paper_height, gboolean duplex)
 {
 	EvPSExporterIface *iface = EV_PS_EXPORTER_GET_IFACE (exporter);
 
-	iface->begin (exporter, filename, first_page, last_page);
+	iface->begin (exporter, filename, first_page, last_page,
+                      paper_width, paper_height, duplex);
 }
 
 void

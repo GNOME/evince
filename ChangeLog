@@ -1,3 +1,16 @@
+2005-07-27  Martin Kretzschmar  <martink@gnome.org>
+
+	* backend/ev-ps-exporter.h: add paper_width, paper_height, and
+	duplex parameters to ::begin.
+
+	* tiff/tiff-document.c (tiff_document_ps_export_begin): 
+	* shell/ev-print-job.c (idle_print_handler): 
+	* ps/ps-document.c (ps_document_ps_export_begin): 
+	* pdf/ev-poppler.cc (pdf_document_ps_exporter_begin): 
+	* backend/ev-ps-exporter.c (ev_ps_exporter_begin): update
+	implementations. Poppler backend needs poppler cvs. Rest has
+	unchanged behavior.
+
 2005-07-25  Martin Kretzschmar  <martink@gnome.org>
 
 	* shell/ev-window.c (using_pdf_printer): new function.

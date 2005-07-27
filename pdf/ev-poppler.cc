@@ -1187,13 +1187,16 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 
 static void
 pdf_document_ps_exporter_begin (EvPSExporter *exporter, const char *filename,
-				int first_page, int last_page)
+				int first_page, int last_page,
+				double width, double height, gboolean duplex)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	
 	pdf_document->ps_file = poppler_ps_file_new (pdf_document->document, filename,
 						     first_page,
 						     last_page - first_page + 1);
+	poppler_ps_file_set_paper_size (pdf_document->ps_file, width, height);
+	poppler_ps_file_set_duplex (pdf_document->ps_file, duplex);
 }
 
 static void

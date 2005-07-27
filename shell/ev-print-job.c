@@ -258,9 +258,10 @@ idle_print_handler (EvPrintJob *job)
 {
 	if (!job->printing) {
 		ev_document_doc_mutex_lock ();
-		ev_ps_exporter_begin (EV_PS_EXPORTER (job->document),
-				      job->temp_file, job->first_page,
-				      job->last_page);
+		ev_ps_exporter_begin (
+                        EV_PS_EXPORTER (job->document),
+                        job->temp_file, job->first_page, job->last_page,
+                        job->width, job->height, job->duplex);
 		ev_document_doc_mutex_unlock ();
 		job->next_page = job->first_page;
 		job->printing = TRUE;

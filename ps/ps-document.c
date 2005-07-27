@@ -1313,7 +1313,8 @@ ps_async_renderer_iface_init (EvAsyncRendererIface *iface)
 
 static void
 ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
-			     int first_page, int last_page)
+			     int first_page, int last_page,
+                             double width, double height, gboolean duplex)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 

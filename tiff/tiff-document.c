@@ -411,7 +411,8 @@ tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 
 static void
 tiff_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
-			       int first_page, int last_page)
+			       int first_page, int last_page,
+			       double width, double height, gboolean duplex)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
