@@ -31,23 +31,26 @@ G_BEGIN_DECLS
 GType          ev_page_cache_get_type            (void) G_GNUC_CONST;
 
 /* Used by ev-document.c only */
-EvPageCache   *ev_page_cache_new                 (EvDocument   *document);
-gint           ev_page_cache_get_n_pages         (EvPageCache  *page_cache);
-const char    *ev_page_cache_get_title           (EvPageCache  *page_cache);
-void           ev_page_cache_get_size            (EvPageCache  *page_cache,
-						  gint          page,
-						  EvOrientation orientation,
-						  gfloat        scale,
-						  gint         *width,
-						  gint         *height);
-void           ev_page_cache_get_max_width      (EvPageCache   *page_cache,
-						  gfloat        scale,
-						  gint         *width);
-void           ev_page_cache_get_max_height      (EvPageCache  *page_cache,
-						  gfloat        scale,
-						  gint         *height);
+EvPageCache   *ev_page_cache_new                 (EvDocument    *document);
+gint           ev_page_cache_get_n_pages         (EvPageCache   *page_cache);
+const char    *ev_page_cache_get_title           (EvPageCache   *page_cache);
+void           ev_page_cache_get_size            (EvPageCache   *page_cache,
+						  gint           page,
+						  EvOrientation  orientation,
+						  gfloat         scale,
+						  gint          *width,
+						  gint          *height);
+void           ev_page_cache_get_max_width       (EvPageCache   *page_cache,
+						  EvOrientation  orientation,
+						  gfloat         scale,
+						  gint          *width);
+void           ev_page_cache_get_max_height      (EvPageCache   *page_cache,
+						  EvOrientation  orientation,
+						  gfloat         scale,
+						  gint          *height);
 void           ev_page_cache_get_height_to_page  (EvPageCache   *page_cache,
-						 		 gint page,
+						  gint           page,
+						  EvOrientation  orientation,
 						  gfloat         scale,
 						  gint          *height,
 						  gint	        *dual_height);

@@ -29,8 +29,11 @@ struct _EvPageCache
 
 	double  max_width;
 	double  max_height;
+
 	double* height_to_page;
 	double* dual_height_to_page;
+
+	EvOrientation orientation;
 
 	EvPageCacheInfo *size_cache;
 	EvDocumentInfo *page_info;
@@ -100,13 +103,79 @@ ev_page_cache_finalize (GObject *object)
 	ev_document_info_free (page_cache->page_info);
 }
 
+static void
+build_height_to_page (EvPageCache *page_cache)
+{
+	gboolean swap;
+	int i;
+	double uniform_height, page_height, next_page_height;
+	double saved_height;
+
+	swap = (page_cache->orientation == EV_ORIENTATION_LANDSCAPE ||
+		page_cache->orientation == EV_ORIENTATION_SEASCAPE);
+
+	g_free (page_cache->height_to_page);
+	g_free (page_cache->dual_height_to_page);
+
+	page_cache->height_to_page = g_new0(double, page_cache->n_pages);
+	page_cache->dual_height_to_page = g_new0(double, page_cache->n_pages / 2 + 1);
+	
+	saved_height = 0;
+	for (i = 0; i < page_cache->n_pages; i++) {
+		if (page_cache->uniform) {
+			if (!swap) {
+				uniform_height = page_cache->uniform_height;
+			} else {
+				uniform_height = page_cache->uniform_width;
+			}
+			page_cache->height_to_page [i] = (i + 1) * uniform_height;
+		} else {
+			if (swap) {
+				page_height = page_cache->size_cache [i].height;
+			} else {
+				page_height = page_cache->size_cache [i].width;
+			}
+			page_cache->height_to_page [i] = saved_height + page_height;
+			saved_height = page_cache->height_to_page [i];
+		}
+	}
+	
+	saved_height = 0;
+	for (i = 0; i < page_cache->n_pages; i += 2) {
+    		if (page_cache->uniform) {
+			if (!swap) {
+				uniform_height = page_cache->uniform_height;
+			} else {
+				uniform_height = page_cache->uniform_width;
+			}
+			page_cache->dual_height_to_page [i / 2] = (i / 2 + 1) * uniform_height;
+		} else {
+			if (!swap) {
+				page_height = page_cache->size_cache [i].height;
+				next_page_height = page_cache->size_cache [i + 1].height;
+			} else {
+				page_height = page_cache->size_cache [i].width;
+				next_page_height = page_cache->size_cache [i + 1].width;
+			}
+			if (i == page_cache->n_pages - 1) {
+				page_cache->dual_height_to_page [i / 2] =
+					saved_height + page_height;
+			}
+			else {
+				page_cache->dual_height_to_page [i / 2] = saved_height +
+				       MAX(page_height, next_page_height);			    	    
+				saved_height = page_cache->dual_height_to_page [i / 2];
+			}
+		}
+	}
+}
+
 EvPageCache *
 ev_page_cache_new (EvDocument *document)
 {
 	EvPageCache *page_cache;
 	EvPageCacheInfo *info;
 	gint i;
-	double saved_height;
 
 	page_cache = (EvPageCache *) g_object_new (EV_TYPE_PAGE_CACHE, NULL);
 
@@ -117,6 +186,7 @@ ev_page_cache_new (EvDocument *document)
 	/* Assume all pages are the same size until proven otherwise */
 	page_cache->uniform = TRUE;
 	page_cache->has_labels = FALSE;
+	page_cache->orientation = ev_document_get_orientation (document);
 	page_cache->n_pages = ev_document_get_n_pages (document);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 	page_cache->max_width = 0;
@@ -187,38 +257,7 @@ ev_page_cache_new (EvDocument *document)
 		}
 	}
 
-	page_cache->height_to_page = g_new0(double, page_cache->n_pages);
-	page_cache->dual_height_to_page = g_new0(double, page_cache->n_pages / 2 + 1);
-	
-	saved_height = 0;
-	for (i = 0; i < page_cache->n_pages; i++) {
-
-		if (page_cache->uniform) {
-			page_cache->height_to_page [i] = (i + 1) * page_cache->uniform_height;
-		} else {
-			page_cache->height_to_page [i] = saved_height + page_cache->size_cache [i].height;
-			saved_height = page_cache->height_to_page [i];
-		}
-	}
-	
-	saved_height = 0;
-	for (i = 0; i < page_cache->n_pages; i += 2) {
-
-    		if (page_cache->uniform) {
-			page_cache->dual_height_to_page [i / 2] = (i / 2 + 1) * page_cache->uniform_height;
-		} else {
-			if (i == page_cache->n_pages - 1) {
-				page_cache->dual_height_to_page [i / 2] =
-					saved_height + page_cache->size_cache [i].height;
-			}
-			else {
-				page_cache->dual_height_to_page [i / 2] = saved_height +
-				       MAX(page_cache->size_cache [i].height,			    	    
-				    	   page_cache->size_cache [i + 1].height);
-				saved_height = page_cache->dual_height_to_page [i / 2];
-			}
-		}
-	}
+	build_height_to_page (page_cache);
 
 	/* make some sanity check assertions */
 	if (! page_cache->uniform)
@@ -348,47 +387,73 @@ ev_page_cache_get_size (EvPageCache  *page_cache,
 			*height = info->height;
 	}
 
-	if (width)
-		*width = (int) ((*width) * scale + 0.5);
-	if (width)
-		*height = (int) ((*height) * scale + 0.5);
-
-}
-
-
-void
-ev_page_cache_get_max_width      (EvPageCache *page_cache,
-				  gfloat       scale,
-				  gint        *width)
-{
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-
-	if (width)
-		*width = page_cache->max_width * scale;
+	if (orientation == EV_ORIENTATION_PORTRAIT ||
+	    orientation == EV_ORIENTATION_UPSIDEDOWN) {
+		if (width)
+			*width = (int) ((*width) * scale + 0.5);
+		if (height)
+			*height = (int) ((*height) * scale + 0.5);
+	} else {
+		if (width)
+			*width = (int) ((*height) * scale + 0.5);
+		if (height)
+			*height = (int) ((*width) * scale + 0.5);
+	}
 }
 
 void
-ev_page_cache_get_max_height      (EvPageCache *page_cache,
-				   gfloat       scale,
-				   gint        *height)
+ev_page_cache_get_max_width (EvPageCache   *page_cache,
+			     EvOrientation  orientation,
+			     gfloat         scale,
+			     gint          *width)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
-	if (height)
-		*height = page_cache->max_height * scale;
+	if (width) {
+		if (orientation == EV_ORIENTATION_PORTRAIT ||
+		    orientation == EV_ORIENTATION_UPSIDEDOWN) {
+			*width = page_cache->max_width * scale;
+		} else {
+			*width = page_cache->max_height * scale;
+		}
+	}
+}
+
+void
+ev_page_cache_get_max_height (EvPageCache   *page_cache,
+			      EvOrientation  orientation,
+			      gfloat         scale,
+			      gint          *height)
+{
+	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
+
+	if (height) {
+		if (orientation == EV_ORIENTATION_PORTRAIT ||
+		    orientation == EV_ORIENTATION_UPSIDEDOWN) {
+			*height = page_cache->max_height * scale;
+		} else {
+			*height = page_cache->max_width * scale;
+		}
+	}
 }
 
 void    
-ev_page_cache_get_height_to_page (EvPageCache *page_cache,
-				  gint page,
-				  gfloat       scale,
-				  gint        *height,
-				  gint 	      *dual_height)
+ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
+				  gint           page,
+				  EvOrientation  orientation,
+				  gfloat         scale,
+				  gint          *height,
+				  gint 	        *dual_height)
 {
 	double result = 0.0;
 	double dual_result = 0.0;
 	
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
+
+	if (page_cache->orientation != orientation) {
+		page_cache->orientation = orientation;
+		build_height_to_page (page_cache);
+	}
 
 	if (page > 0)
 		result = page_cache->height_to_page [page - 1];	

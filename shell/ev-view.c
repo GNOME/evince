@@ -749,25 +749,25 @@ compute_border (EvView *view, int width, int height, GtkBorder *border)
 	}
 }
 
-static void       get_page_y_offset                          (EvView *view,
-							      int page,
-							      double zoom,
-							      int *y_offset)
+static void
+get_page_y_offset (EvView *view, int page, double zoom, int *y_offset)
 {
 	int max_width, offset;
 	GtkBorder border;
 
 	g_return_if_fail (y_offset != NULL);
 
-	ev_page_cache_get_max_width (view->page_cache, zoom, &max_width);
+	ev_page_cache_get_max_width (view->page_cache, view->orientation, zoom, &max_width);
 
 	compute_border (view, max_width, max_width, &border);
 
 	if (view->dual_page) {
-		ev_page_cache_get_height_to_page (view->page_cache, page, zoom, NULL, &offset);
+		ev_page_cache_get_height_to_page (view->page_cache, page,
+						  view->orientation, zoom, NULL, &offset);
 		offset += (page / 2 + 1) * view->spacing + (page / 2) * (border.top + border.bottom);
 	} else {
-		ev_page_cache_get_height_to_page (view->page_cache, page, zoom, &offset, NULL);
+		ev_page_cache_get_height_to_page (view->page_cache, page,
+						  view->orientation, zoom, &offset, NULL);
 		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
 	}
 
@@ -802,7 +802,8 @@ get_page_extents (EvView       *view,
 		gint max_width;
 		gint x, y;
 
-		ev_page_cache_get_max_width (view->page_cache, view->scale, &max_width);
+		ev_page_cache_get_max_width (view->page_cache, view->scale,
+					     view->orientation, &max_width);
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (view->dual_page) {
@@ -1066,7 +1067,8 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 	gint n_pages;
 	GtkBorder border;
 
-	ev_page_cache_get_max_width (view->page_cache, view->scale, &max_width);
+	ev_page_cache_get_max_width (view->page_cache, view->orientation,
+				     view->scale, &max_width);
 	compute_border (view, max_width, max_width, &border);
 
 	n_pages = ev_page_cache_get_n_pages (view->page_cache) + 1;
@@ -1093,7 +1095,8 @@ ev_view_size_request_continuous (EvView         *view,
 	GtkBorder border;
 
 
-	ev_page_cache_get_max_width (view->page_cache, view->scale, &max_width);
+	ev_page_cache_get_max_width (view->page_cache, view->orientation,
+				     view->scale, &max_width);
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 	compute_border (view, max_width, max_width, &border);
 
@@ -2410,9 +2413,11 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	gdouble scale;
 
 	ev_page_cache_get_max_width (view->page_cache,
+				     view->orientation,
 				     1.0,
 				     &doc_width);
 	ev_page_cache_get_max_height (view->page_cache,
+				      view->orientation,
 				      1.0,
 				      &doc_height);
 	compute_border (view, doc_width, doc_height, &border);
@@ -2446,9 +2451,11 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	gdouble scale;
 
 	ev_page_cache_get_max_width (view->page_cache,
+				     view->orientation,
 				     1.0,
 				     &doc_width);
 	ev_page_cache_get_max_height (view->page_cache,
+				      view->orientation,
 				      1.0,
 				      &doc_height);
 	compute_border (view, doc_width, doc_height, &border);

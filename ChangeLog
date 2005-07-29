@@ -1,5 +1,20 @@
 2005-07-29  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-page-cache.c: (build_height_to_page),
+	(ev_page_cache_new), (ev_page_cache_get_size),
+	(ev_page_cache_get_max_width), (ev_page_cache_get_max_height),
+	(ev_page_cache_get_height_to_page):
+	* shell/ev-page-cache.h:
+	* shell/ev-view.c: (get_page_y_offset), (get_page_extents),
+	(ev_view_size_request_continuous_dual_page),
+	(ev_view_size_request_continuous),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous):
+
+	Make the page cache aware of page orientation.
+
+2005-07-29  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* backend/ev-document-thumbnails.c:
 	(ev_document_thumbnails_get_thumbnail):
 	* backend/ev-document-thumbnails.h:
