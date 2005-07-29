@@ -52,6 +52,7 @@ EvPixbufCache *ev_pixbuf_cache_new                  (EvDocument    *document);
 void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
 						     gint           start_page,
 						     gint           end_page,
+						     EvOrientation  orientation,
 						     gfloat         scale,
 						     GList          *selection_list);
 GdkPixbuf     *ev_pixbuf_cache_get_pixbuf           (EvPixbufCache *pixbuf_cache,

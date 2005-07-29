@@ -47,6 +47,7 @@ ev_document_thumbnails_get_type (void)
 GdkPixbuf *
 ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 				      gint 		      page,
+				      EvOrientation	      orientation,
 				      gint		      size,
 				      gboolean                border)
 {
@@ -55,7 +56,8 @@ ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	g_return_val_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document), NULL);
 
 	iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
-	return iface->get_thumbnail (document, page, size, border);
+
+	return iface->get_thumbnail (document, page, orientation, size, border);
 }
 
 void

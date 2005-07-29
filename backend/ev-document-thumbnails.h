@@ -23,6 +23,8 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include "ev-render-context.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_THUMBNAILS         (ev_document_thumbnails_get_type ())
@@ -42,6 +44,7 @@ struct _EvDocumentThumbnailsIface
         /* Methods  */
         GdkPixbuf *  (* get_thumbnail)  (EvDocumentThumbnails *document,
                                          gint                  page,
+					 EvOrientation         orientation,
                                          gint                  size,
 					 gboolean              border);
         void         (* get_dimensions) (EvDocumentThumbnails *document,
@@ -60,6 +63,7 @@ GType      ev_document_thumbnails_get_type       (void);
 
 GdkPixbuf *ev_document_thumbnails_get_thumbnail  (EvDocumentThumbnails *document,
                                                   gint                  page,
+						  EvOrientation		orientation,
                                                   gint                  size,
                                                   gboolean              border);
 void       ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,

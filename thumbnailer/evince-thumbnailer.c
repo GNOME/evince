@@ -86,7 +86,8 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	}
 
 	pixbuf = ev_document_thumbnails_get_thumbnail
-			(EV_DOCUMENT_THUMBNAILS (document), 0, size, FALSE);
+			(EV_DOCUMENT_THUMBNAILS (document), 0,
+			 EV_ORIENTATION_PORTRAIT, size, FALSE);
 	
 	if (pixbuf != NULL) {
 		const char *overlaid_icon_name = NULL;

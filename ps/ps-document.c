@@ -1270,29 +1270,6 @@ ps_document_get_orientation (EvDocument *document)
 }
 
 static void
-ps_document_set_orientation (EvDocument *document, EvOrientation orientation)
-{
-	PSDocument *ps = PS_DOCUMENT (document);
-
-	g_return_if_fail (ps != NULL);
-
-	switch (orientation) {
-		case EV_ORIENTATION_PORTRAIT:
-			ps->orientation = GTK_GS_ORIENTATION_PORTRAIT;
-			break;
-		case EV_ORIENTATION_LANDSCAPE:
-			ps->orientation = GTK_GS_ORIENTATION_LANDSCAPE;
-			break;
-		case EV_ORIENTATION_UPSIDEDOWN:
-			ps->orientation = GTK_GS_ORIENTATION_UPSIDEDOWN;
-			break;
-		case EV_ORIENTATION_SEASCAPE:
-			ps->orientation = GTK_GS_ORIENTATION_SEASCAPE;
-			break;
-	}
-}
-
-static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = ps_document_load;
@@ -1301,7 +1278,6 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->get_info = ps_document_get_info;
-	iface->set_orientation = ps_document_set_orientation;
 	iface->get_orientation = ps_document_get_orientation;
 }
 
@@ -1325,11 +1301,11 @@ ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
 }
 
 static void
-ps_document_ps_export_do_page (EvPSExporter *exporter, int page)
+ps_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 	
-	document->ps_export_pagelist[page] = 1;
+	document->ps_export_pagelist[rc->page] = 1;
 }
 
 static void

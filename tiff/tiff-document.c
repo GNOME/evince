@@ -41,7 +41,6 @@ struct _TiffDocument
 
   TIFF *tiff;
   gint n_pages;
-  EvOrientation orientation;
   TIFF2PSContext *ps_export_ctx;
 };
 
@@ -171,40 +170,24 @@ tiff_document_get_page_size (EvDocument   *document,
   TIFFGetField (tiff_document->tiff, TIFFTAG_YRESOLUTION, &y_res);
   h = h * (x_res / y_res);
 
-  if (tiff_document->orientation == EV_ORIENTATION_PORTRAIT ||
-      tiff_document->orientation ==  EV_ORIENTATION_UPSIDEDOWN) {
-    *width = w;
-    *height = h;
-  } else {
-    *width = h;
-    *height = w;
-  }
+  *width = w;
+  *height = h;
+
   pop_handlers ();
 }
 
 static EvOrientation
 tiff_document_get_orientation (EvDocument *document)
 {
-	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
-
-	return tiff_document->orientation;
-}
-
-static void
-tiff_document_set_orientation (EvDocument *document,
-			     EvOrientation   orientation)
-{
-	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
-
-	tiff_document->orientation = orientation;
+	return EV_ORIENTATION_PORTRAIT;
 }
 
 static GdkPixbuf *
-rotate_pixbuf (EvDocument *document, GdkPixbuf *pixbuf)
+rotate_pixbuf (EvDocument *document, EvOrientation orientation, GdkPixbuf *pixbuf)
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 
-	switch (tiff_document->orientation)
+	switch (orientation)
 	{
 		case EV_ORIENTATION_LANDSCAPE:
 			return gdk_pixbuf_rotate_simple (pixbuf, 90);
@@ -298,7 +281,7 @@ tiff_document_render_pixbuf (EvDocument      *document,
 					   GDK_INTERP_BILINEAR);
   g_object_unref (pixbuf);
 
-  rotated_pixbuf = rotate_pixbuf (document, scaled_pixbuf);
+  rotated_pixbuf = rotate_pixbuf (document, rc->orientation, scaled_pixbuf);
   g_object_unref (scaled_pixbuf);
 
   return rotated_pixbuf;
@@ -350,12 +333,12 @@ tiff_document_document_iface_init (EvDocumentIface *iface)
 	iface->render_pixbuf = tiff_document_render_pixbuf;
 	iface->get_info = tiff_document_get_info;
 	iface->get_orientation = tiff_document_get_orientation;
-	iface->set_orientation = tiff_document_set_orientation;
 }
 
 static GdkPixbuf *
 tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 					gint 		      page,
+					EvOrientation	      orientation,
 					gint                  size,
 					gboolean              border)
 {
@@ -420,13 +403,13 @@ tiff_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
 }
 
 static void
-tiff_document_ps_export_do_page (EvPSExporter *exporter, int page)
+tiff_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
 	if (document->ps_export_ctx == NULL)
 		return;
-	if (TIFFSetDirectory (document->tiff, page) != 1)
+	if (TIFFSetDirectory (document->tiff, rc->page) != 1)
 		return;
 	tiff2ps_process_page (document->ps_export_ctx, document->tiff,
 			      0, 0, 0, 0, 0);
@@ -454,5 +437,4 @@ static void
 tiff_document_init (TiffDocument *tiff_document)
 {
   tiff_document->n_pages = -1;
-  tiff_document->orientation = EV_ORIENTATION_PORTRAIT;
 }

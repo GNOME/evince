@@ -322,11 +322,12 @@ ev_page_cache_get_title (EvPageCache *page_cache)
 }
 
 void
-ev_page_cache_get_size (EvPageCache *page_cache,
-			gint         page,
-			gfloat       scale,
-			gint        *width,
-			gint        *height)
+ev_page_cache_get_size (EvPageCache  *page_cache,
+			gint          page,
+			EvOrientation orientation,
+			gfloat        scale,
+			gint         *width,
+			gint         *height)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 	g_return_if_fail (page >= 0 && page < page_cache->n_pages);
@@ -480,12 +481,4 @@ ev_page_cache_get (EvDocument *document)
 	}
 
 	return page_cache;
-}
-
-void
-ev_page_cache_clear (EvDocument *document)
-{
-	g_return_if_fail (EV_IS_DOCUMENT (document));
-
-	g_object_set_data (G_OBJECT (document), PAGE_CACHE_STRING, NULL);
 }

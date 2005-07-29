@@ -31,28 +31,29 @@ G_BEGIN_DECLS
 GType          ev_page_cache_get_type            (void) G_GNUC_CONST;
 
 /* Used by ev-document.c only */
-EvPageCache   *ev_page_cache_new                (EvDocument  *document);
-gint           ev_page_cache_get_n_pages         (EvPageCache *page_cache);
-const char    *ev_page_cache_get_title           (EvPageCache *page_cache);
-void           ev_page_cache_get_size            (EvPageCache *page_cache,
-						  gint         page,
-						  gfloat       scale,
-						  gint        *width,
-						  gint        *height);
-void           ev_page_cache_get_max_width      (EvPageCache *page_cache,
-						  gfloat       scale,
-						  gint        *width);
-void           ev_page_cache_get_max_height      (EvPageCache *page_cache,
-						  gfloat       scale,
-						  gint        *height);
-void           ev_page_cache_get_height_to_page (EvPageCache *page_cache,
-						  gint page,
-						  gfloat       scale,
-						  gint        *height,
-						  gint	      *dual_height);
-gint           ev_page_cache_get_max_label_chars (EvPageCache *page_cache);
-char          *ev_page_cache_get_page_label      (EvPageCache *page_cache,
-						  gint         page);
+EvPageCache   *ev_page_cache_new                 (EvDocument   *document);
+gint           ev_page_cache_get_n_pages         (EvPageCache  *page_cache);
+const char    *ev_page_cache_get_title           (EvPageCache  *page_cache);
+void           ev_page_cache_get_size            (EvPageCache  *page_cache,
+						  gint          page,
+						  EvOrientation orientation,
+						  gfloat        scale,
+						  gint         *width,
+						  gint         *height);
+void           ev_page_cache_get_max_width      (EvPageCache   *page_cache,
+						  gfloat        scale,
+						  gint         *width);
+void           ev_page_cache_get_max_height      (EvPageCache  *page_cache,
+						  gfloat        scale,
+						  gint         *height);
+void           ev_page_cache_get_height_to_page  (EvPageCache   *page_cache,
+						 		 gint page,
+						  gfloat         scale,
+						  gint          *height,
+						  gint	        *dual_height);
+gint           ev_page_cache_get_max_label_chars (EvPageCache   *page_cache);
+char          *ev_page_cache_get_page_label      (EvPageCache   *page_cache,
+						  gint           page);
 gboolean       ev_page_cache_has_nonnumeric_page_labels (EvPageCache *page_cache);
 const EvDocumentInfo *ev_page_cache_get_info            (EvPageCache *page_cache);
 
@@ -68,7 +69,6 @@ gboolean       ev_page_cache_next_page           (EvPageCache *page_cache);
 gboolean       ev_page_cache_prev_page           (EvPageCache *page_cache);
 
 EvPageCache   *ev_page_cache_get		 (EvDocument *document);
-void	       ev_page_cache_clear		 (EvDocument *document);  
 
 G_END_DECLS
 

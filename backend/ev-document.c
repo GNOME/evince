@@ -226,15 +226,6 @@ ev_document_get_orientation (EvDocument *document)
 }
 
 void
-ev_document_set_orientation (EvDocument     *document,
-			     EvOrientation   orientation)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	iface->set_orientation (document, orientation);
-}
-
-void
 ev_document_info_free (EvDocumentInfo *info)
 {
 	if (info == NULL)

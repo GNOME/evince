@@ -25,6 +25,8 @@
 
 #include <glib-object.h>
 
+#include "ev-render-context.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_PS_EXPORTER	       (ev_ps_exporter_get_type ())
@@ -41,16 +43,16 @@ struct _EvPSExporterIface {
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	void		(* begin)	(EvPSExporter *exporter,
-					 const char   *filename,
-					 int	       first_page,
-					 int	       last_page,
-                                         double        paper_width,
-                                         double        paper_height,
-                                         gboolean      duplex);
-	void		(* do_page)	(EvPSExporter *exporter,
-					 int	       page);
-	void		(* end)		(EvPSExporter *exporter);
+	void		(* begin)	(EvPSExporter    *exporter,
+					 const char      *filename,
+					 int	          first_page,
+					 int	          last_page,
+                                         double           paper_width,
+                                         double           paper_height,
+                                         gboolean         duplex);
+	void		(* do_page)	(EvPSExporter    *exporter,
+					 EvRenderContext *rc);
+	void		(* end)		(EvPSExporter    *exporter);
 };
 
 GType	ev_ps_exporter_get_type (void);
@@ -58,7 +60,7 @@ void	ev_ps_exporter_begin	(EvPSExporter *exporter, const char *filename,
 				 int first_page, int last_page,
                                  double paper_width, double paper_height,
                                  gboolean duplex);
-void	ev_ps_exporter_do_page	(EvPSExporter *exporter, int page);
+void	ev_ps_exporter_do_page	(EvPSExporter *exporter, EvRenderContext *rc);
 void	ev_ps_exporter_end	(EvPSExporter *exporter);
 
 G_END_DECLS

@@ -58,11 +58,11 @@ ev_ps_exporter_begin (EvPSExporter *exporter, const char *filename,
 }
 
 void
-ev_ps_exporter_do_page	(EvPSExporter *exporter, int page)
+ev_ps_exporter_do_page	(EvPSExporter *exporter, EvRenderContext *rc)
 {
 	EvPSExporterIface *iface = EV_PS_EXPORTER_GET_IFACE (exporter);
 
-	iface->do_page (exporter, page);
+	iface->do_page (exporter, rc);
 }
 
 void
