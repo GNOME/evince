@@ -36,21 +36,21 @@ gint           ev_page_cache_get_n_pages         (EvPageCache   *page_cache);
 const char    *ev_page_cache_get_title           (EvPageCache   *page_cache);
 void           ev_page_cache_get_size            (EvPageCache   *page_cache,
 						  gint           page,
-						  EvOrientation  orientation,
+						  gint           rotation,
 						  gfloat         scale,
 						  gint          *width,
 						  gint          *height);
 void           ev_page_cache_get_max_width       (EvPageCache   *page_cache,
-						  EvOrientation  orientation,
+						  gint           rotation,
 						  gfloat         scale,
 						  gint          *width);
 void           ev_page_cache_get_max_height      (EvPageCache   *page_cache,
-						  EvOrientation  orientation,
+						  gint           rotation,
 						  gfloat         scale,
 						  gint          *height);
 void           ev_page_cache_get_height_to_page  (EvPageCache   *page_cache,
 						  gint           page,
-						  EvOrientation  orientation,
+						  gint           rotation,
 						  gfloat         scale,
 						  gint          *height,
 						  gint	        *dual_height);

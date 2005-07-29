@@ -33,7 +33,7 @@ struct _EvPageCache
 	double* height_to_page;
 	double* dual_height_to_page;
 
-	EvOrientation orientation;
+	int rotation;
 
 	EvPageCacheInfo *size_cache;
 	EvDocumentInfo *page_info;
@@ -111,8 +111,8 @@ build_height_to_page (EvPageCache *page_cache)
 	double uniform_height, page_height, next_page_height;
 	double saved_height;
 
-	swap = (page_cache->orientation == EV_ORIENTATION_LANDSCAPE ||
-		page_cache->orientation == EV_ORIENTATION_SEASCAPE);
+	swap = (page_cache->rotation == 90 ||
+		page_cache->rotation == 270);
 
 	g_free (page_cache->height_to_page);
 	g_free (page_cache->dual_height_to_page);
@@ -130,7 +130,7 @@ build_height_to_page (EvPageCache *page_cache)
 			}
 			page_cache->height_to_page [i] = (i + 1) * uniform_height;
 		} else {
-			if (swap) {
+			if (!swap) {
 				page_height = page_cache->size_cache [i].height;
 			} else {
 				page_height = page_cache->size_cache [i].width;
@@ -186,7 +186,6 @@ ev_page_cache_new (EvDocument *document)
 	/* Assume all pages are the same size until proven otherwise */
 	page_cache->uniform = TRUE;
 	page_cache->has_labels = FALSE;
-	page_cache->orientation = ev_document_get_orientation (document);
 	page_cache->n_pages = ev_document_get_n_pages (document);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 	page_cache->max_width = 0;
@@ -363,7 +362,7 @@ ev_page_cache_get_title (EvPageCache *page_cache)
 void
 ev_page_cache_get_size (EvPageCache  *page_cache,
 			gint          page,
-			EvOrientation orientation,
+			gint          rotation,
 			gfloat        scale,
 			gint         *width,
 			gint         *height)
@@ -387,8 +386,7 @@ ev_page_cache_get_size (EvPageCache  *page_cache,
 			*height = info->height;
 	}
 
-	if (orientation == EV_ORIENTATION_PORTRAIT ||
-	    orientation == EV_ORIENTATION_UPSIDEDOWN) {
+	if (rotation == 0 || rotation == 180) {
 		if (width)
 			*width = (int) ((*width) * scale + 0.5);
 		if (height)
@@ -403,15 +401,14 @@ ev_page_cache_get_size (EvPageCache  *page_cache,
 
 void
 ev_page_cache_get_max_width (EvPageCache   *page_cache,
-			     EvOrientation  orientation,
+			     gint	    rotation,
 			     gfloat         scale,
 			     gint          *width)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
 	if (width) {
-		if (orientation == EV_ORIENTATION_PORTRAIT ||
-		    orientation == EV_ORIENTATION_UPSIDEDOWN) {
+		if (rotation == 0 || rotation == 180) {
 			*width = page_cache->max_width * scale;
 		} else {
 			*width = page_cache->max_height * scale;
@@ -421,15 +418,14 @@ ev_page_cache_get_max_width (EvPageCache   *page_cache,
 
 void
 ev_page_cache_get_max_height (EvPageCache   *page_cache,
-			      EvOrientation  orientation,
+			      gint           rotation,
 			      gfloat         scale,
 			      gint          *height)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
 	if (height) {
-		if (orientation == EV_ORIENTATION_PORTRAIT ||
-		    orientation == EV_ORIENTATION_UPSIDEDOWN) {
+		if (rotation == 0 || rotation == 180) {
 			*height = page_cache->max_height * scale;
 		} else {
 			*height = page_cache->max_width * scale;
@@ -440,7 +436,7 @@ ev_page_cache_get_max_height (EvPageCache   *page_cache,
 void    
 ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
 				  gint           page,
-				  EvOrientation  orientation,
+				  gint           rotation,
 				  gfloat         scale,
 				  gint          *height,
 				  gint 	        *dual_height)
@@ -450,8 +446,8 @@ ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
 	
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
-	if (page_cache->orientation != orientation) {
-		page_cache->orientation = orientation;
+	if (page_cache->rotation != rotation) {
+		page_cache->rotation = rotation;
 		build_height_to_page (page_cache);
 	}
 

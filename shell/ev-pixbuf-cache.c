@@ -255,7 +255,7 @@ check_job_size_and_unref (CacheJobInfo *job_info,
 
 	ev_page_cache_get_size (page_cache,
 				EV_JOB_RENDER (job_info->job)->rc->page,
-				EV_JOB_RENDER (job_info->job)->rc->orientation,
+				EV_JOB_RENDER (job_info->job)->rc->rotation,
 				scale,
 				&width, &height);
 				
@@ -479,7 +479,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		   CacheJobInfo  *job_info,
 		   EvPageCache   *page_cache,
 		   gint           page,
-		   EvOrientation  orientation,
+		   gint           rotation,
 		   gfloat         scale,
 		   EvJobPriority  priority)
 {
@@ -491,7 +491,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	if (job_info->job)
 		return;
 
-	ev_page_cache_get_size (page_cache, page, orientation,
+	ev_page_cache_get_size (page_cache, page, rotation,
 				scale, &width, &height);
 
 	if (job_info->pixbuf &&
@@ -501,11 +501,11 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 
 	/* make a new job now */
 	if (job_info->rc == NULL) {
-		job_info->rc = ev_render_context_new (orientation, page, scale);
+		job_info->rc = ev_render_context_new (rotation, page, scale);
 	} else {
 		ev_render_context_set_page (job_info->rc, page);
 		ev_render_context_set_scale (job_info->rc, scale);
-		ev_render_context_set_orientation (job_info->rc, orientation);
+		ev_render_context_set_rotation (job_info->rc, rotation);
 	}
 
 	/* Figure out what else we need for this job */
@@ -531,7 +531,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 
 static void
 ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
-				    EvOrientation  orientation,
+				    gint           rotation,
 				    gfloat         scale)
 {
 	EvPageCache *page_cache;
@@ -546,7 +546,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 		page = pixbuf_cache->start_page + i;
 
 		add_job_if_needed (pixbuf_cache, job_info,
-				   page_cache, page, orientation, scale,
+				   page_cache, page, rotation, scale,
 				   EV_JOB_PRIORITY_HIGH);
 	}
 
@@ -555,7 +555,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 		page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size + i;
 
 		add_job_if_needed (pixbuf_cache, job_info,
-				   page_cache, page, orientation, scale,
+				   page_cache, page, rotation, scale,
 				   EV_JOB_PRIORITY_LOW);
 	}
 
@@ -564,18 +564,18 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 		page = pixbuf_cache->end_page + 1 + i;
 
 		add_job_if_needed (pixbuf_cache, job_info,
-				   page_cache, page, orientation, scale,
+				   page_cache, page, rotation, scale,
 				   EV_JOB_PRIORITY_LOW);
 	}
 
 }
 
 void
-ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
-				gint           start_page,
-				gint           end_page,
-				EvOrientation  orientation,
-				gfloat         scale,
+ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
+				gint            start_page,
+				gint            end_page,
+				gint            rotation,
+				gfloat          scale,
 				GList          *selection_list)
 {
 	EvPageCache *page_cache;
@@ -601,7 +601,7 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache *pixbuf_cache,
 
 	/* Finally, we add the new jobs for all the sizes that don't have a
 	 * pixbuf */
-	ev_pixbuf_cache_add_jobs_if_needed (pixbuf_cache, orientation, scale);
+	ev_pixbuf_cache_add_jobs_if_needed (pixbuf_cache, rotation, scale);
 }
 
 GdkPixbuf *
@@ -654,7 +654,7 @@ new_selection_pixbuf_needed (EvPixbufCache *pixbuf_cache,
 
 	if (job_info->selection) {
 		page_cache = ev_page_cache_get (pixbuf_cache->document);
-		ev_page_cache_get_size (page_cache, page, job_info->rc->orientation,
+		ev_page_cache_get_size (page_cache, page, job_info->rc->rotation,
 					scale, &width, &height);
 		
 		if (width != gdk_pixbuf_get_width (job_info->selection) ||
@@ -737,9 +737,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 	if (ev_rect_cmp (&(job_info->new_points), &(job_info->selection_points))) {
 		EvRenderContext *rc;
 
-		rc = ev_render_context_new (EV_ORIENTATION_PORTRAIT,
-					    page,
-					    scale);
+		rc = ev_render_context_new (0, page, scale);
 
 		/* we need to get a new selection pixbuf */
 		ev_document_doc_mutex_lock ();

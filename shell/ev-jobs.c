@@ -301,7 +301,7 @@ ev_job_render_run (EvJobRender *job)
 EvJob *
 ev_job_thumbnail_new (EvDocument   *document,
 		      gint          page,
-		      EvOrientation orientation,
+		      int           rotation,
 		      gint          requested_width)
 {
 	EvJobThumbnail *job;
@@ -310,7 +310,7 @@ ev_job_thumbnail_new (EvDocument   *document,
 
 	EV_JOB (job)->document = g_object_ref (document);
 	job->page = page;
-	job->orientation = orientation;
+	job->rotation = rotation;
 	job->requested_width = requested_width;
 
 	return EV_JOB (job);
@@ -326,7 +326,7 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 	job->thumbnail =
 		ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (EV_JOB (job)->document),
 						      job->page,
-						      job->orientation,
+						      job->rotation,
 						      job->requested_width,
 						      TRUE);
 	EV_JOB (job)->finished = TRUE;

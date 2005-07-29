@@ -229,8 +229,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 				    -1);
 
 		if (job == NULL && !thumbnail_set) {
-			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, THUMBNAIL_WIDTH,
-								      EV_ORIENTATION_PORTRAIT);
+			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, THUMBNAIL_WIDTH, 0);
 			ev_job_queue_add_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),

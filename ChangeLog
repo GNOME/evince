@@ -1,5 +1,52 @@
 2005-07-29  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* backend/ev-document-thumbnails.c:
+	(ev_document_thumbnails_get_thumbnail):
+	* backend/ev-document-thumbnails.h:
+	* backend/ev-document.c:
+	* backend/ev-document.h:
+	* backend/ev-render-context.c: (ev_render_context_new),
+	(ev_render_context_set_rotation):
+	* backend/ev-render-context.h:
+	* pdf/ev-poppler.cc:
+	* ps/ps-document.c: (ps_document_document_iface_init):
+	* shell/ev-jobs.c: (ev_job_thumbnail_new), (ev_job_thumbnail_run):
+	* shell/ev-jobs.h:
+	* shell/ev-page-cache.c: (build_height_to_page),
+	(ev_page_cache_new), (ev_page_cache_get_size),
+	(ev_page_cache_get_max_width), (ev_page_cache_get_max_height),
+	(ev_page_cache_get_height_to_page):
+	* shell/ev-page-cache.h:
+	* shell/ev-pixbuf-cache.c: (check_job_size_and_unref),
+	(add_job_if_needed), (ev_pixbuf_cache_add_jobs_if_needed),
+	(ev_pixbuf_cache_set_page_range), (new_selection_pixbuf_needed),
+	(ev_pixbuf_cache_get_selection_pixbuf):
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-print-job.c: (idle_print_handler):
+	* shell/ev-sidebar-thumbnails.c: (add_range):
+	* shell/ev-view.c: (view_update_range_and_current_page),
+	(get_page_y_offset), (get_page_extents),
+	(ev_view_size_request_continuous_dual_page),
+	(ev_view_size_request_continuous),
+	(ev_view_size_request_dual_page),
+	(ev_view_size_request_single_page), (draw_one_page),
+	(ev_view_set_rotation), (ev_view_rotate_right),
+	(ev_view_rotate_left), (ev_view_zoom_for_size_presentation),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (compute_new_selection_text),
+	(ev_view_select_all):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+	* tiff/tiff-document.c: (tiff_document_render_pixbuf),
+	(tiff_document_document_iface_init),
+	(tiff_document_thumbnails_get_thumbnail):
+
+	Use rotation rather than orientation. It's easier and enough
+	for our needs.
+
+2005-07-29  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-page-cache.c: (build_height_to_page),
 	(ev_page_cache_new), (ev_page_cache_get_size),
 	(ev_page_cache_get_max_width), (ev_page_cache_get_max_height),

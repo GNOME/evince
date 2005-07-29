@@ -135,7 +135,7 @@ struct _EvJobThumbnail
 	EvJob parent;
 
 	gint page;
-	EvOrientation orientation;
+	gint rotation;
 	gint requested_width;
 	GdkPixbuf *thumbnail;
 };
@@ -193,7 +193,7 @@ void            ev_job_render_run         (EvJobRender     *thumbnail);
 GType           ev_job_thumbnail_get_type (void);
 EvJob          *ev_job_thumbnail_new      (EvDocument     *document,
 					   gint            page,
-					   EvOrientation   orientation,
+					   int             rotation,
 					   gint            requested_width);
 void            ev_job_thumbnail_run      (EvJobThumbnail *thumbnail);
 

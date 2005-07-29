@@ -204,24 +204,6 @@ pdf_document_save (EvDocument  *document,
 	return retval;
 }
 
-static PopplerOrientation
-get_document_orientation (PdfDocument *pdf_document)
-{
-	PopplerOrientation orientation;
-	PopplerPage *page;
-
-	/* Should prolly be smarter here and check more than first page */
-	page = poppler_document_get_page (pdf_document->document, 0);
-	if (page) {
-		orientation = poppler_page_get_orientation (page);
-	} else {
-		orientation = POPPLER_ORIENTATION_PORTRAIT;
-	}
-	g_object_unref (page);
-
-	return orientation;
-}
-
 static gboolean
 pdf_document_load (EvDocument   *document,
 		   const char   *uri,
@@ -247,30 +229,28 @@ pdf_document_get_n_pages (EvDocument *document)
 	return poppler_document_get_n_pages (PDF_DOCUMENT (document)->document);
 }
 
-/* FIXME This should not be necessary, poppler should rember it */
 static void
-set_page_orientation (PdfDocument *pdf_document, PopplerPage *page, EvOrientation orientation)
+set_page_orientation (PdfDocument *pdf_document, PopplerPage *page, int rotation)
 {
-	PopplerOrientation poppler_orientation;
+	PopplerOrientation orientation;
+	int r = rotation;
 
-	switch (orientation) {
-		case EV_ORIENTATION_PORTRAIT:
-			poppler_orientation = POPPLER_ORIENTATION_PORTRAIT;
-			break;
-		case EV_ORIENTATION_LANDSCAPE:
-			poppler_orientation = POPPLER_ORIENTATION_LANDSCAPE;
-			break;
-		case EV_ORIENTATION_UPSIDEDOWN:
-			poppler_orientation = POPPLER_ORIENTATION_UPSIDEDOWN;
-			break;
-		case EV_ORIENTATION_SEASCAPE:
-			poppler_orientation = POPPLER_ORIENTATION_SEASCAPE;
-			break;
-		default:
-			g_assert_not_reached ();
+	orientation = poppler_page_get_orientation (page);
+
+	while (r > 0) {
+		if (orientation == POPPLER_ORIENTATION_PORTRAIT) {
+			orientation = POPPLER_ORIENTATION_LANDSCAPE;
+		} else if (orientation == POPPLER_ORIENTATION_LANDSCAPE) {
+			orientation = POPPLER_ORIENTATION_UPSIDEDOWN;
+		} else if (orientation == POPPLER_ORIENTATION_UPSIDEDOWN) {
+			orientation = POPPLER_ORIENTATION_SEASCAPE;
+		} else {
+			orientation = POPPLER_ORIENTATION_PORTRAIT;
+		}
+		r -= 90;
 	}
 
-	poppler_page_set_orientation (page, poppler_orientation);
+	poppler_page_set_orientation (page, orientation);
 }
 
 static void
@@ -358,7 +338,7 @@ pdf_document_render_pixbuf (EvDocument   *document,
 	pdf_document = PDF_DOCUMENT (document);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->orientation);
+	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
 	poppler_page_get_size (poppler_page, &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
@@ -568,32 +548,6 @@ pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
 	return text;
 }
 
-static EvOrientation
-pdf_document_get_orientation (EvDocument *document)
-{
-	EvOrientation result;
-	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-
-	switch (get_document_orientation (pdf_document)) {
-	case POPPLER_ORIENTATION_PORTRAIT:
-		result = EV_ORIENTATION_PORTRAIT;
-		break;
-	case POPPLER_ORIENTATION_LANDSCAPE:
-		result = EV_ORIENTATION_LANDSCAPE;
-		break;
-	case POPPLER_ORIENTATION_UPSIDEDOWN:
-		result = EV_ORIENTATION_UPSIDEDOWN;
-		break;
-	case POPPLER_ORIENTATION_SEASCAPE:
-		result = EV_ORIENTATION_SEASCAPE;
-		break;
-	default:
-		g_assert_not_reached ();
-	}
-
-	return result;
-}
-
 static void
 pdf_document_document_iface_init (EvDocumentIface *iface)
 {
@@ -607,7 +561,6 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_text = pdf_document_get_text;
 	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
-	iface->get_orientation = pdf_document_get_orientation;
 };
 
 static void
@@ -843,7 +796,7 @@ pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 static GdkPixbuf *
 make_thumbnail_for_size (PdfDocument   *pdf_document,
 			 gint           page,
-			 EvOrientation  orientation,
+			 int            rotation,
 			 gint           size,
 			 gboolean       border)
 {
@@ -854,7 +807,7 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 	gdouble unscaled_width, unscaled_height;
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	set_page_orientation (pdf_document, poppler_page, orientation);
+	set_page_orientation (pdf_document, poppler_page, rotation);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document), page,
@@ -890,7 +843,7 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 static GdkPixbuf *
 pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 	 			       gint 		     page,
-				       EvOrientation         orientation,
+				       gint                  rotation,
  				       gint                  size,
 		 		       gboolean              border)
 {
@@ -901,7 +854,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	set_page_orientation (pdf_document, poppler_page, orientation);
+	set_page_orientation (pdf_document, poppler_page, rotation);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
@@ -917,7 +870,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		}
 	} else {
 		/* There is no provided thumbnail.  We need to make one. */
-		pixbuf = make_thumbnail_for_size (pdf_document, page, orientation, size, border);
+		pixbuf = make_thumbnail_for_size (pdf_document, page, rotation, size, border);
 	}
 
 	g_object_unref (poppler_page);
@@ -1188,7 +1141,7 @@ pdf_document_ps_exporter_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 	g_return_if_fail (pdf_document->ps_file != NULL);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->orientation);
+	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 	poppler_page_render_to_ps (poppler_page, pdf_document->ps_file);
 	g_object_unref (poppler_page);
 }
@@ -1226,7 +1179,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->orientation);
+	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
 	poppler_page_get_size (poppler_page, &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
@@ -1259,7 +1212,7 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->orientation);
+	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
 	retval = poppler_page_get_selection_region (poppler_page, rc->scale, (PopplerRectangle *) points);
 	g_object_unref (poppler_page);
@@ -1279,7 +1232,7 @@ pdf_selection_get_selection_map (EvSelection     *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->orientation);
+	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
 	points.x1 = 0.0;
 	points.y1 = 0.0;

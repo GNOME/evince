@@ -176,30 +176,6 @@ tiff_document_get_page_size (EvDocument   *document,
   pop_handlers ();
 }
 
-static EvOrientation
-tiff_document_get_orientation (EvDocument *document)
-{
-	return EV_ORIENTATION_PORTRAIT;
-}
-
-static GdkPixbuf *
-rotate_pixbuf (EvDocument *document, EvOrientation orientation, GdkPixbuf *pixbuf)
-{
-	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
-
-	switch (orientation)
-	{
-		case EV_ORIENTATION_LANDSCAPE:
-			return gdk_pixbuf_rotate_simple (pixbuf, 90);
-		case EV_ORIENTATION_UPSIDEDOWN:
-			return gdk_pixbuf_rotate_simple (pixbuf, 180);
-		case EV_ORIENTATION_SEASCAPE:
-			return gdk_pixbuf_rotate_simple (pixbuf, 270);
-		default:
-			return g_object_ref (pixbuf);
-	}
-}
-
 static GdkPixbuf *
 tiff_document_render_pixbuf (EvDocument      *document,
 			     EvRenderContext *rc)
@@ -281,7 +257,7 @@ tiff_document_render_pixbuf (EvDocument      *document,
 					   GDK_INTERP_BILINEAR);
   g_object_unref (pixbuf);
 
-  rotated_pixbuf = rotate_pixbuf (document, rc->orientation, scaled_pixbuf);
+  rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf, rc->rotation);
   g_object_unref (scaled_pixbuf);
 
   return rotated_pixbuf;
@@ -332,13 +308,12 @@ tiff_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = tiff_document_get_page_size;
 	iface->render_pixbuf = tiff_document_render_pixbuf;
 	iface->get_info = tiff_document_get_info;
-	iface->get_orientation = tiff_document_get_orientation;
 }
 
 static GdkPixbuf *
 tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 					gint 		      page,
-					EvOrientation	      orientation,
+					gint	              rotation,
 					gint                  size,
 					gboolean              border)
 {
@@ -350,7 +325,7 @@ tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 			       page,
 			       &w, &h);
 
-  rc = ev_render_context_new (EV_ORIENTATION_PORTRAIT, page, size/w);
+  rc = ev_render_context_new (rotation, page, size/w);
   pixbuf = tiff_document_render_pixbuf (EV_DOCUMENT (document), rc);
   g_object_unref (G_OBJECT (rc));
 

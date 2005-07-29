@@ -35,7 +35,7 @@ ev_render_context_class_init (EvRenderContextClass *class)
 
 
 EvRenderContext *
-ev_render_context_new (EvOrientation orientation,
+ev_render_context_new (int           rotation,
 		       gint          page,
 		       gdouble       scale)
 {
@@ -43,7 +43,7 @@ ev_render_context_new (EvOrientation orientation,
 
 	rc = (EvRenderContext *) g_object_new (EV_TYPE_RENDER_CONTEXT, NULL);
 
-	rc->orientation = orientation;
+	rc->rotation = rotation;
 	rc->page = page;
 	rc->scale = scale;
 
@@ -60,12 +60,12 @@ ev_render_context_set_page (EvRenderContext *rc,
 }
 
 void
-ev_render_context_set_orientation (EvRenderContext *rc,
-				   EvOrientation    orientation)
+ev_render_context_set_rotation (EvRenderContext *rc,
+				int              rotation)
 {
 	g_return_if_fail (rc != NULL);
 
-	rc->orientation = orientation;
+	rc->rotation = rotation;
 }
 
 void

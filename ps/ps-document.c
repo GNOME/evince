@@ -1240,35 +1240,6 @@ ps_document_get_info (EvDocument *document)
 	return info;
 }
 
-static EvOrientation
-ps_document_get_orientation (EvDocument *document)
-{
-	EvOrientation orientation;
-	PSDocument *ps = PS_DOCUMENT (document);
-
-	g_return_val_if_fail (ps != NULL, EV_ORIENTATION_PORTRAIT);
-
-	switch (ps->orientation) {
-		case GTK_GS_ORIENTATION_PORTRAIT:
-			orientation = EV_ORIENTATION_PORTRAIT;
-			break;
-		case GTK_GS_ORIENTATION_LANDSCAPE:
-			orientation = EV_ORIENTATION_LANDSCAPE;
-			break;
-		case GTK_GS_ORIENTATION_UPSIDEDOWN:
-			orientation = EV_ORIENTATION_UPSIDEDOWN;
-			break;
-		case GTK_GS_ORIENTATION_SEASCAPE:
-			orientation = EV_ORIENTATION_SEASCAPE;
-			break;
-		default:
-			orientation = EV_ORIENTATION_PORTRAIT;
-			break;
-	}
-
-	return orientation;
-}
-
 static void
 ps_document_document_iface_init (EvDocumentIface *iface)
 {
@@ -1278,7 +1249,6 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->get_info = ps_document_get_info;
-	iface->get_orientation = ps_document_get_orientation;
 }
 
 static void

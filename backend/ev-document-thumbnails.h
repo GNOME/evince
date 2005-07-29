@@ -44,7 +44,7 @@ struct _EvDocumentThumbnailsIface
         /* Methods  */
         GdkPixbuf *  (* get_thumbnail)  (EvDocumentThumbnails *document,
                                          gint                  page,
-					 EvOrientation         orientation,
+					 gint                  rotation,
                                          gint                  size,
 					 gboolean              border);
         void         (* get_dimensions) (EvDocumentThumbnails *document,
@@ -63,7 +63,7 @@ GType      ev_document_thumbnails_get_type       (void);
 
 GdkPixbuf *ev_document_thumbnails_get_thumbnail  (EvDocumentThumbnails *document,
                                                   gint                  page,
-						  EvOrientation		orientation,
+						  gint		        rotation,
                                                   gint                  size,
                                                   gboolean              border);
 void       ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,

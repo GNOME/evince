@@ -149,7 +149,7 @@ struct _EvView {
 	int find_result;
 	int spacing;
 
-	EvOrientation orientation;
+	int rotation;
 	double scale;
 
 	gboolean continuous;
@@ -532,7 +532,7 @@ view_update_range_and_current_page (EvView *view)
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->start_page,
 					view->end_page,
-					view->orientation,
+					view->rotation,
 					view->scale,
 					view->selection_info.selections);
 }
@@ -757,17 +757,17 @@ get_page_y_offset (EvView *view, int page, double zoom, int *y_offset)
 
 	g_return_if_fail (y_offset != NULL);
 
-	ev_page_cache_get_max_width (view->page_cache, view->orientation, zoom, &max_width);
+	ev_page_cache_get_max_width (view->page_cache, view->rotation, zoom, &max_width);
 
 	compute_border (view, max_width, max_width, &border);
 
 	if (view->dual_page) {
 		ev_page_cache_get_height_to_page (view->page_cache, page,
-						  view->orientation, zoom, NULL, &offset);
+						  view->rotation, zoom, NULL, &offset);
 		offset += (page / 2 + 1) * view->spacing + (page / 2) * (border.top + border.bottom);
 	} else {
 		ev_page_cache_get_height_to_page (view->page_cache, page,
-						  view->orientation, zoom, &offset, NULL);
+						  view->rotation, zoom, &offset, NULL);
 		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
 	}
 
@@ -788,7 +788,7 @@ get_page_extents (EvView       *view,
 
 	/* Get the size of the page */
 	ev_page_cache_get_size (view->page_cache, page,
-				view->orientation,
+				view->rotation,
 				view->scale,
 				&width, &height);
 	compute_border (view, width, height, border);
@@ -803,7 +803,7 @@ get_page_extents (EvView       *view,
 		gint x, y;
 
 		ev_page_cache_get_max_width (view->page_cache, view->scale,
-					     view->orientation, &max_width);
+					     view->rotation, &max_width);
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (view->dual_page) {
@@ -835,7 +835,7 @@ get_page_extents (EvView       *view,
 			if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
 				ev_page_cache_get_size (view->page_cache,
 							other_page,
-							view->orientation,
+							view->rotation,
 							view->scale,
 							&width_2, &height_2);
 				if (width_2 > width)
@@ -1067,7 +1067,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 	gint n_pages;
 	GtkBorder border;
 
-	ev_page_cache_get_max_width (view->page_cache, view->orientation,
+	ev_page_cache_get_max_width (view->page_cache, view->rotation,
 				     view->scale, &max_width);
 	compute_border (view, max_width, max_width, &border);
 
@@ -1095,7 +1095,7 @@ ev_view_size_request_continuous (EvView         *view,
 	GtkBorder border;
 
 
-	ev_page_cache_get_max_width (view->page_cache, view->orientation,
+	ev_page_cache_get_max_width (view->page_cache, view->rotation,
 				     view->scale, &max_width);
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 	compute_border (view, max_width, max_width, &border);
@@ -1123,14 +1123,14 @@ ev_view_size_request_dual_page (EvView         *view,
 	/* Find the largest of the two. */
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
-				view->orientation,
+				view->rotation,
 				view->scale,
 				&width, &height);
 	if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache)) {
 		gint width_2, height_2;
 		ev_page_cache_get_size (view->page_cache,
 					view->current_page + 1,
-					view->orientation,
+					view->rotation,
 					view->scale,
 					&width_2, &height_2);
 		if (width_2 > width) {
@@ -1162,7 +1162,7 @@ ev_view_size_request_single_page (EvView         *view,
 
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
-				view->orientation,
+				view->rotation,
 				view->scale,
 				&width, &height);
 	compute_border (view, width, height, &border);
@@ -1615,7 +1615,7 @@ draw_one_page (EvView          *view,
 
 	selection = find_selection_for_page (view, page);
 	ev_page_cache_get_size (view->page_cache,
-				page, view->orientation,
+				page, view->rotation,
 				view->scale,
 				&width, &height);
 	/* Render the document itself */
@@ -2299,10 +2299,9 @@ ev_view_zoom_out (EvView *view)
 }
 
 static void
-ev_view_set_orientation (EvView         *view,
-			 EvOrientation   orientation)
+ev_view_set_rotation (EvView *view, int rotation)
 {
-	view->orientation = orientation;
+	view->rotation = rotation;
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
@@ -2310,37 +2309,13 @@ ev_view_set_orientation (EvView         *view,
 void
 ev_view_rotate_right (EvView *view)
 {
-	EvOrientation orientation;
-
-	if (view->orientation == EV_ORIENTATION_PORTRAIT) {
-		orientation = EV_ORIENTATION_LANDSCAPE;
-	} else if (view->orientation == EV_ORIENTATION_LANDSCAPE) {
-		orientation = EV_ORIENTATION_UPSIDEDOWN;
-	} else if (view->orientation == EV_ORIENTATION_UPSIDEDOWN) {
-		orientation = EV_ORIENTATION_SEASCAPE;
-	} else {
-		orientation = EV_ORIENTATION_PORTRAIT;
-	}
-
-	ev_view_set_orientation (view, orientation);
+	ev_view_set_rotation (view, view->rotation + 90);
 }
 
 void
 ev_view_rotate_left (EvView *view)
 {
-	EvOrientation orientation;
-
-	if (view->orientation == EV_ORIENTATION_PORTRAIT) {
-		orientation = EV_ORIENTATION_SEASCAPE;
-	} else if (view->orientation == EV_ORIENTATION_SEASCAPE) {
-		orientation = EV_ORIENTATION_UPSIDEDOWN;
-	} else if (view->orientation == EV_ORIENTATION_UPSIDEDOWN) {
-		orientation = EV_ORIENTATION_LANDSCAPE;
-	} else {
-		orientation = EV_ORIENTATION_PORTRAIT;
-	}
-
-	ev_view_set_orientation (view, orientation);
+	ev_view_set_rotation (view, view->rotation - 90);
 }
 
 static double
@@ -2393,7 +2368,7 @@ ev_view_zoom_for_size_presentation (EvView *view,
 
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
-				view->orientation,
+				view->rotation,
 				1.0,
 				&doc_width,
 				&doc_height);
@@ -2413,11 +2388,11 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	gdouble scale;
 
 	ev_page_cache_get_max_width (view->page_cache,
-				     view->orientation,
+				     view->rotation,
 				     1.0,
 				     &doc_width);
 	ev_page_cache_get_max_height (view->page_cache,
-				      view->orientation,
+				      view->rotation,
 				      1.0,
 				      &doc_height);
 	compute_border (view, doc_width, doc_height, &border);
@@ -2451,11 +2426,11 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	gdouble scale;
 
 	ev_page_cache_get_max_width (view->page_cache,
-				     view->orientation,
+				     view->rotation,
 				     1.0,
 				     &doc_width);
 	ev_page_cache_get_max_height (view->page_cache,
-				      view->orientation,
+				      view->rotation,
 				      1.0,
 				      &doc_height);
 	compute_border (view, doc_width, doc_height, &border);
@@ -2493,7 +2468,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	/* Find the largest of the two. */
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
-				view->orientation,
+				view->rotation,
 				1.0,
 				&doc_width, &doc_height);
 
@@ -2501,7 +2476,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 		gint width_2, height_2;
 		ev_page_cache_get_size (view->page_cache,
 					other_page,
-					view->orientation,
+					view->rotation,
 					1.0,
 					&width_2, &height_2);
 		if (width_2 > doc_width)
@@ -2538,7 +2513,7 @@ ev_view_zoom_for_size_single_page (EvView *view,
 
 	ev_page_cache_get_size (view->page_cache,
 				view->current_page,
-				view->orientation,
+				view->rotation,
 				1.0,
 				&doc_width,
 				&doc_height);
@@ -2883,7 +2858,7 @@ compute_new_selection_text (EvView   *view,
 		GdkPoint *point;
 
 		ev_page_cache_get_size (view->page_cache, i,
-					view->orientation,
+					view->rotation,
 					1.0, &width, &height);
 
 		selection = g_new0 (EvViewSelection, 1);
@@ -2981,7 +2956,7 @@ ev_view_select_all (EvView *view)
 		EvViewSelection *selection;
 
 		ev_page_cache_get_size (view->page_cache,
-					view->orientation,
+					view->rotation,
 					i, 1.0, &width, &height);
 
 		selection = g_new0 (EvViewSelection, 1);

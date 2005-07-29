@@ -32,15 +32,6 @@ typedef struct _EvRenderContextClass EvRenderContextClass;
 #define EV_RENDER_CONTEXT_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_RENDER_CONTEXT, EvRenderContext))
 #define EV_IS_RENDER_CONTEXT(object)	(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_RENDER_CONTEXT))
 
-typedef enum
-{
-	EV_ORIENTATION_PORTRAIT,
-	EV_ORIENTATION_LANDSCAPE,
-	EV_ORIENTATION_UPSIDEDOWN,
-	EV_ORIENTATION_SEASCAPE
-} EvOrientation;
-
-
 struct _EvRenderContextClass
 {
 	GObjectClass klass;
@@ -49,7 +40,7 @@ struct _EvRenderContextClass
 struct _EvRenderContext
 {
 	GObject parent;
-	EvOrientation orientation;
+	int rotation;
 	gint page;
 	gdouble scale;
 
@@ -59,13 +50,13 @@ struct _EvRenderContext
 
 
 GType            ev_render_context_get_type        (void) G_GNUC_CONST;
-EvRenderContext *ev_render_context_new             (EvOrientation    orientation,
+EvRenderContext *ev_render_context_new             (int              rotation,
 						    gint             page,
 						    gdouble          scale);
 void             ev_render_context_set_page        (EvRenderContext *rc,
 						    gint             page);
-void             ev_render_context_set_orientation (EvRenderContext *rc,
-						    EvOrientation    orientation);
+void             ev_render_context_set_rotation    (EvRenderContext *rc,
+						    int              rotation);
 void             ev_render_context_set_scale       (EvRenderContext *rc,
 						    gdouble          scale);
 

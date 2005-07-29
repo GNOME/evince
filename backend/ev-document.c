@@ -217,14 +217,6 @@ ev_document_render_pixbuf (EvDocument      *document,
 	return retval;
 }
 
-EvOrientation
-ev_document_get_orientation (EvDocument *document)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	return iface->get_orientation (document);
-}
-
 void
 ev_document_info_free (EvDocumentInfo *info)
 {

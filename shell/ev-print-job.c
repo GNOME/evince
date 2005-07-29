@@ -273,8 +273,7 @@ idle_print_handler (EvPrintJob *job)
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
 #endif
-		rc = ev_render_context_new (EV_ORIENTATION_PORTRAIT,
-					    job->next_page, 1.0);
+		rc = ev_render_context_new (0, job->next_page, 1.0);
 
 		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_do_page (EV_PS_EXPORTER (job->document), rc);

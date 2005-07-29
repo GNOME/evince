@@ -89,7 +89,6 @@ struct _EvDocumentIface
 					      int           page);
 	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
 					      EvRenderContext *rc);
-	EvOrientation    (* get_orientation) (EvDocument   *document);
 	EvDocumentInfo * (* get_info)        (EvDocument   *document);
 };
 
@@ -121,10 +120,6 @@ GList	       *ev_document_get_links       (EvDocument     *document,
 				             int             page);
 GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,
 					     EvRenderContext *rc);
-EvOrientation   ev_document_get_orientation (EvDocument     *document);
-void	        ev_document_set_orientation (EvDocument     *document,
-					     EvOrientation   orientation);
-
 
 gint            ev_rect_cmp                 (EvRectangle    *a,
 					     EvRectangle    *b);
