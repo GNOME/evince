@@ -90,8 +90,6 @@ struct _EvDocumentIface
 	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
 					      EvRenderContext *rc);
 	EvOrientation    (* get_orientation) (EvDocument   *document);
-	void	         (* set_orientation) (EvDocument   *document,
-					      EvOrientation orientation);
 	EvDocumentInfo * (* get_info)        (EvDocument   *document);
 };
 
