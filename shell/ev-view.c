@@ -705,6 +705,8 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 	GtkAdjustment *adjustment;
 	int value;
 
+	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+
 	adjustment = view->vadjustment;
 
 	if (rect->y < adjustment->value) {
