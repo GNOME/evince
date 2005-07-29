@@ -908,16 +908,44 @@ doc_rect_to_view_rect (EvView       *view,
 {
 	GdkRectangle page_area;
 	GtkBorder border;
+	double x, y, w, h;
 	int width, height;
+
+	ev_page_cache_get_size (view->page_cache, page,
+				view->rotation,
+				1.0,
+				&width, &height);
+
+	if (view->rotation == 0) {
+		x = doc_rect->x1;
+		y = doc_rect->y1;
+		w = doc_rect->x2 - doc_rect->x1;
+		h = doc_rect->y2 - doc_rect->y1;
+	} else if (view->rotation == 90) {
+		x = width - doc_rect->y2;
+		y = doc_rect->x1;
+		w = doc_rect->y2 - doc_rect->y1;
+		h = doc_rect->x2 - doc_rect->x1;
+	} else if (view->rotation == 180) {
+		x = width - doc_rect->x2;
+		y = height - doc_rect->y2;
+		w = doc_rect->x2 - doc_rect->x1;
+		h = doc_rect->y2 - doc_rect->y1;
+	} else if (view->rotation == 270) {
+		x = doc_rect->y1;
+		y = height - doc_rect->x2;
+		w = doc_rect->y2 - doc_rect->y1;
+		h = doc_rect->x2 - doc_rect->x1;
+	} else {
+		g_assert_not_reached ();
+	}
 
 	get_page_extents (view, page, &page_area, &border);
 
-	width = doc_rect->x2 - doc_rect->x1;
-	height = doc_rect->y2 - doc_rect->y1;
-	view_rect->x = floor (doc_rect->x1 * view->scale) + page_area.x;
-	view_rect->y = floor (doc_rect->y1 * view->scale) + page_area.y;
-	view_rect->width = ceil (width * view->scale);
-	view_rect->height = ceil (height * view->scale);
+	view_rect->x = x * view->scale + page_area.x;
+	view_rect->y = y * view->scale + page_area.y;
+	view_rect->width = w * view->scale;
+	view_rect->height = h * view->scale;
 }
 
 static void
@@ -2309,13 +2337,25 @@ ev_view_set_rotation (EvView *view, int rotation)
 void
 ev_view_rotate_right (EvView *view)
 {
-	ev_view_set_rotation (view, view->rotation + 90);
+	int rotation = view->rotation + 90;
+
+	if (rotation >= 360) {
+		rotation -= 360;
+	}
+
+	ev_view_set_rotation (view, rotation);
 }
 
 void
 ev_view_rotate_left (EvView *view)
 {
-	ev_view_set_rotation (view, view->rotation - 90);
+	int rotation = view->rotation - 90;
+
+	if (rotation < 0) {
+		rotation += 360;
+	}
+
+	ev_view_set_rotation (view, rotation);
 }
 
 static double
