@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 22:30+0200\n"
+"POT-Creation-Date: 2005-07-30 12:01+0200\n"
 "PO-Revision-Date: 2005-07-27 22:32+0200\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Language-Team:  <traductores@es.gnome.org>\n"
@@ -165,8 +165,8 @@ msgid ""
 "values will cause the sidebar to take up as much of the page display area as "
 "possible relative to the window's size."
 msgstr ""
-"La barra lateral el el elemento que contiene las listas de índices y "
-"miniaturas. El tamayo predeterminado establece la anchura de la barra "
+"La barra lateral es el elemento que contiene las listas de índices y "
+"miniaturas. El tamaño predeterminado establece la anchura de la barra "
 "lateral en tomando como referencia el lado de la ventana. Cualquier entero "
 "será aceptado. La barra lateral nunca se encogerá hasta un tamaño más "
 "pequeño que el tamaño de texto necesario para mostrar miniaturas o índices. "
@@ -179,9 +179,9 @@ msgid ""
 "boolean options, true makes sidebar visible by default while false makes "
 "sidebar not visible by default"
 msgstr ""
-"Barra lateral es el elemento que contiene las listas de miniaturas y el "
-"índice. Dos opciones booleanas, «true» hace visible la barra lateral por "
-"omisión, mientras que «false» ha hace no visible por omisión."
+"La «Barra lateral» es el elemento que contiene las listas de miniaturas y el "
+"índice. Dos opciones booleanas; \"true\" hace visible la barra lateral por "
+"omisión, mientras que \"false\" la hace invisible por omisión."
 
 #: ../data/evince.schemas.in.h:7
 msgid ""
@@ -190,9 +190,9 @@ msgid ""
 "visible by default while false makes sidebar not visible by default."
 msgstr ""
 "La «Barra de estado» es la barra estándar de abajo que muestra información "
-"adicional sobre enlaces y otras acciones. Dos opciones booleanas, verdadero "
-"muestra la barra de estado predeterminada mientras que falso no hace visible "
-"la barra de estado por omisión."
+"adicional sobre enlaces y otras acciones. Dos opciones booleanas; \"true\" "
+"muestra la barra de estado predeterminada, mientras que \"false\" no hace "
+"visible la barra de estado por omisión."
 
 #: ../data/evince.schemas.in.h:8
 msgid ""
@@ -200,10 +200,10 @@ msgid ""
 "boolean options, true makes toolbar visible by default while false makes "
 "toolbar not visible by default."
 msgstr ""
-"La «Barra de herramientas» es la barra de arriba que contiene los controles "
-"de navegación y ampliación. Dos opciones booleanas, verdadero muestra la "
-"barra de herramientas por omisión mientras que falso no hace visible la "
-"barra de herramientas por omisión."
+"La «Barra de herramientas» es la barra superior que contiene los controles "
+"de navegación y ampliación. Dos opciones booleanas; \"true\" hace que por "
+"omisión se muestre la barra de herramientas, mientras que \"false\" no hace "
+"visible la barra de herramientas."
 
 #: ../dvi/dvi-document.c:91
 msgid "File not available"
@@ -445,7 +445,7 @@ msgstr "Tipo MIME desconocido"
 #: ../shell/ev-document-types.c:71
 #, c-format
 msgid "Unhandled MIME type: '%s'"
-msgstr "Tipo MIME no soportado: '%s'"
+msgstr "Tipo MIME no soportado: «%s»"
 
 #: ../shell/ev-document-types.c:133
 msgid "All Documents"
@@ -640,8 +640,8 @@ msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
 "requires a PostScript printer driver."
 msgstr ""
-"Ud. estuvo tratando de imprimir hacia una impresor usando el controlador «%"
-"s». Este programa requiere un controlador de impresora PostScript."
+"Estaba tratando de imprimir en una impresora usando el controlador «%s». "
+"Este programa requiere un controlador de impresora PostScript."
 
 #: ../shell/ev-window.c:1452
 msgid "The \"Find\" feature will not work with this document"
@@ -649,7 +649,7 @@ msgstr "La característica de «Búsqueda» no funcionará con este documento"
 
 #: ../shell/ev-window.c:1454
 msgid "Searching for text is only supported for PDF documents."
-msgstr "La búsqueda de texto solo está soportada en documentos PDF."
+msgstr "La búsqueda de texto sólo está soportada en documentos PDF."
 
 #. Toolbar-only
 #: ../shell/ev-window.c:1681 ../shell/ev-window.c:2830
@@ -690,7 +690,7 @@ msgid ""
 msgstr ""
 "Evince se distribuye con la esperanza que sea útil,\n"
 "pero SIN GARANTÍA; sin ninguna garantía implícita de\n"
-"COMERCIABILIDAD o IDONEIDAD PARA UN FIN DETERMINADO.  Mire la \n"
+"COMERCIALIDAD o IDONEIDAD PARA UN FIN DETERMINADO.  Mire la \n"
 "Licencia General GNU para más detalles.\n"
 
 #: ../shell/ev-window.c:2373
@@ -716,11 +716,12 @@ msgstr "© 1996-2005 Los autores de Evince"
 msgid "translator-credits"
 msgstr ""
 "Antonio Ognio <gnrfan@gnrfan.org>\n"
-"Daniel Fernández <dfdez@ya.com>"
+"Daniel Fernández <dfdez@ya.com>\n"
+"Francisco Javier F. Serrador>"
 
 #: ../shell/ev-window.c:2749
 msgid "_File"
-msgstr "_Archivo"
+msgstr "_Archivar"
 
 #: ../shell/ev-window.c:2750
 msgid "_Edit"
@@ -864,7 +865,7 @@ msgstr "Ir a la última página"
 #. Help menu
 #: ../shell/ev-window.c:2821
 msgid "_Contents"
-msgstr "_Contenidos"
+msgstr "_Contenido"
 
 #: ../shell/ev-window.c:2822
 msgid "Display help for the viewer application"
@@ -951,7 +952,7 @@ msgstr "Pantalla _completa"
 
 #: ../shell/ev-window.c:2903
 msgid "Expand the window to fill the screen"
-msgstr "Expandir la ventana para llenar la pantalla"
+msgstr "Expandir la ventana hasta llenar la pantalla"
 
 #: ../shell/ev-window.c:2905
 msgid "_Presentation"
@@ -1020,7 +1021,7 @@ msgstr "Ajustar anchura"
 
 #: ../shell/main.c:47
 msgid "The page of the document to display."
-msgstr "La página del documento a mostrar."
+msgstr "La página del documento que mostrar."
 
 #: ../shell/main.c:47
 msgid "PAGE"
@@ -1048,100 +1049,4 @@ msgid ""
 "thumbnailer documentation for more information."
 msgstr ""
 "Comando válido y argumentos para el miniaturizador de documentos PDF. Vea la "
-"documentación para el miniaturizador de nautilus para más información."
-
-#~ msgid "Name"
-#~ msgstr "Nombre"
-
-#~ msgid "unexpected EOF\n"
-#~ msgstr "fin de fichero no esperado\n"
-
-#~ msgid "could not load font `%s'\n"
-#~ msgstr "no se ha podido cargar la tipografía «%s»\n"
-
-#~ msgid "could not reload `%s'\n"
-#~ msgstr "No ha sido posible recargar «%s»\n"
-
-#~ msgid "%s: unsupported DVI format (version %u)\n"
-#~ msgstr "%s: formato DVI no soportado (versión %u)\n"
-
-#~ msgid "no pages selected\n"
-#~ msgstr "No hay páginas seleccionadas\n"
-
-#~ msgid "%s: File corrupted, or not a DVI file\n"
-#~ msgstr "%s: Archivo corrupto, o no es un archivo DVI\n"
-
-#~ msgid "%s: vf macro had errors\n"
-#~ msgstr "%s: vf macro tiene errores\n"
-
-#~ msgid "%s: stack not empty after vf macro\n"
-#~ msgstr "%s: pila sin vaciar después de la macro vf\n"
-
-#~ msgid "%s: could not reopen file (%s)\n"
-#~ msgstr "%s: No se puede reabrir el archivo (%s).\n"
-
-#~ msgid "%s: page %d out of range\n"
-#~ msgstr "%s: página %d fuera de rango\n"
-
-#~ msgid "%s: bad offset at page %d\n"
-#~ msgstr "%s: desplazamiento incorrecto en la página %d\n"
-
-#~ msgid "stack not empty at end of page\n"
-#~ msgstr "pila sin vaciar en el final de la página\n"
-
-#~ msgid "no default font set yet\n"
-#~ msgstr "no hay una tipografía predeterminada definida aún\n"
-
-#~ msgid "requested character %d does not exist in `%s'\n"
-#~ msgstr "el carácter requerido %d no existe en «%s»\n"
-
-#~ msgid "font %d is not defined\n"
-#~ msgstr "la tipografía %d no está definida\n"
-
-#~ msgid "custom"
-#~ msgstr "personalizado"
-
-#~ msgid "%s: unexpected preamble\n"
-#~ msgstr "%s: preámbulo inesperado\n"
-
-#~ msgid "%s: argument `%s' ignored for key `%s'\n"
-#~ msgstr "%s: argumento «%s» ignorado para clave «%s»\n"
-
-#~ msgid "%s: Error reading AFM data\n"
-#~ msgstr "%s: Error al leer datos AFM\n"
-
-#~ msgid "%s: Error: "
-#~ msgstr "%s: Error: "
-
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "%s: Warning: "
-#~ msgstr "%s: Atención: "
-
-#~ msgid "Warning"
-#~ msgstr "Atención"
-
-#~ msgid "%s: Fatal: "
-#~ msgstr "%s: Fatal: "
-
-#~ msgid "Fatal"
-#~ msgstr "Fatal"
-
-#~ msgid "Error while scanning file %s\n"
-#~ msgstr "Se produjo un error al escrutar el archivo %s\n"
-
-#~ msgid "The file is not a PostScript document."
-#~ msgstr "El archivo no es un documento PostScript."
-
-#~ msgid "The file %s does not exist."
-#~ msgstr "El archivo %s no existe."
-
-#~ msgid "Many..."
-#~ msgstr "Muchos..."
-
-#~ msgid "Not so many..."
-#~ msgstr "No tantos..."
-
-#~ msgid "Reset the zoom level to the default value"
-#~ msgstr "Restablece el nivel de ampliación al valor predeterminado"
+"documentación para el miniaturizador de Nautilus para más información."
