@@ -116,9 +116,9 @@ ev_sidebar_thumbnails_dispose (GObject *object)
 
 static void
 ev_sidebar_thumbnails_get_property (GObject    *object,
-			  	         guint       prop_id,
-			    		 GValue     *value,
-			    		 GParamSpec *pspec)
+				    guint       prop_id,
+				    GValue     *value,
+				    GParamSpec *pspec)
 {
 	EvSidebarThumbnails *sidebar = EV_SIDEBAR_THUMBNAILS (object);
 
@@ -229,7 +229,8 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 				    -1);
 
 		if (job == NULL && !thumbnail_set) {
-			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, THUMBNAIL_WIDTH, 0);
+			/* FIXME: Need rotation */
+			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, 0, THUMBNAIL_WIDTH);
 			ev_job_queue_add_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
@@ -307,7 +308,8 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 #ifdef HAVE_GTK_ICON_VIEW_GET_VISIBLE_RANGE
 		if (! GTK_WIDGET_REALIZED (priv->icon_view))
 			return;
-		gtk_icon_view_get_visible_range (GTK_ICON_VIEW (priv->icon_view), &path, &path2);
+		if (! gtk_icon_view_get_visible_range (GTK_ICON_VIEW (priv->icon_view), &path, &path2))
+			return;
 #else
 		g_assert_not_reached ();
 #endif

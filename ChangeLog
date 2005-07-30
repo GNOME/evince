@@ -1,9 +1,20 @@
-2005-07-29  set REAL_NAME environment variable  <set EMAIL_ADDRESS environment variable>
+Sat Jul 30 19:09:34 2005  Jonathan Blandford  <jrb@redhat.com>
 
-	reviewed by: <delete if not using a buddy>
+	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_clear):
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_get_property), (add_range),
+	(adjustment_changed_cb):
+	* shell/ev-view.c: (ev_view_set_rotation): Fix rotation and the
+	pixbuf cache.  Make thumbnailing work again.  Also, fix bug where
+	we were thumbnailing the entire docment on startup, slowing us
+	down hugely. 
+
+Fri Jul 29 23:14:28 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-page-cache.c: (ev_page_cache_new):
-	* shell/ev-window.c: (update_action_sensitivity):
+	* shell/ev-window.c: (update_action_sensitivity): Handle n_pages
+	== 0, fixes #310306.
 
 2005-07-29  Marco Pesenti Gritti  <mpg@redhat.com>
 

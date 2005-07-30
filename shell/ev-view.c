@@ -2331,6 +2331,7 @@ ev_view_set_rotation (EvView *view, int rotation)
 {
 	view->rotation = rotation;
 
+	ev_pixbuf_cache_clear (view->pixbuf_cache);
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 

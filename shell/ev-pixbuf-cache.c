@@ -700,6 +700,24 @@ ev_pixbuf_cache_get_text_mapping      (EvPixbufCache *pixbuf_cache,
 	return job_info->text_mapping;
 }
 
+/* Clears the cache of jobs and pixbufs.
+ */
+void
+ev_pixbuf_cache_clear (EvPixbufCache *pixbuf_cache)
+{
+	int i;
+
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		dispose_cache_job_info (pixbuf_cache->prev_job + i, pixbuf_cache);
+		dispose_cache_job_info (pixbuf_cache->next_job + i, pixbuf_cache);
+	}
+
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+		dispose_cache_job_info (pixbuf_cache->job_list + i, pixbuf_cache);
+	}
+}
+
+
 GdkPixbuf *
 ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 				      gint           page,
