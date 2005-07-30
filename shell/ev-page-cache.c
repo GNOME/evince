@@ -261,7 +261,7 @@ ev_page_cache_new (EvDocument *document)
 	/* make some sanity check assertions */
 	if (! page_cache->uniform)
 		g_assert (page_cache->size_cache != NULL);
-	if (page_cache->uniform)
+	if (page_cache->uniform && page_cache->n_pages > 0)
 		g_assert (page_cache->uniform_width > 0 && page_cache->uniform_height > 0);
 
 	ev_document_doc_mutex_unlock ();

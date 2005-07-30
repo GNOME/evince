@@ -256,8 +256,8 @@ update_action_sensitivity (EvWindow *ev_window)
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
 	set_action_sensitive (ev_window, "EditFindNext",
 			      ev_view_can_find_next (view));
-	set_action_sensitive (ev_window, "EditRotateLeft", has_document);
-	set_action_sensitive (ev_window, "EditRotateRight", has_document);
+	set_action_sensitive (ev_window, "EditRotateLeft", has_pages);
+	set_action_sensitive (ev_window, "EditRotateRight", has_pages);
 
         /* View menu */
 	set_action_sensitive (ev_window, "ViewContinuous", has_pages);
