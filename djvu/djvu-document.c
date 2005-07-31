@@ -44,8 +44,6 @@ struct _DjvuDocument
 	ddjvu_context_t  *d_context;
 	ddjvu_document_t *d_document;
 	ddjvu_format_t   *d_format;
-	
-	EvOrientation    orientation;
 };
 
 typedef struct _DjvuDocumentClass DjvuDocumentClass;
@@ -111,23 +109,6 @@ djvu_document_get_n_pages (EvDocument  *document)
 	return ddjvu_document_get_pagenum (djvu_document->d_document);
 }
 
-static EvOrientation
-djvu_document_get_orientation (EvDocument *document)
-{
-	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-
-	return djvu_document->orientation;
-}
-
-static void
-djvu_document_set_orientation (EvDocument *document,
-		 	      EvOrientation   orientation)
-{
-	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-
-	djvu_document->orientation = orientation;
-}
-
 static void
 djvu_document_get_page_size (EvDocument   *document,
 			       int           page,
@@ -144,32 +125,8 @@ djvu_document_get_page_size (EvDocument   *document,
 		    ddjvu_message_pop (djvu_document->d_context);	
 	}
 
-	if (djvu_document->orientation == EV_ORIENTATION_PORTRAIT ||
-            djvu_document->orientation ==  EV_ORIENTATION_UPSIDEDOWN) {
-	        *width = info.width * SCALE_FACTOR; 
-	        *height = info.height * SCALE_FACTOR;
-	} else {
-	        *width = info.height * SCALE_FACTOR;
-	        *height = info.width * SCALE_FACTOR;
-	}
-}
-
-static GdkPixbuf *
-rotate_pixbuf (EvDocument *document, GdkPixbuf *pixbuf)
-{
-	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-
-	switch (djvu_document->orientation)
-	{
-		case EV_ORIENTATION_LANDSCAPE:
-			return gdk_pixbuf_rotate_simple (pixbuf, 90);
-		case EV_ORIENTATION_UPSIDEDOWN:
-			return gdk_pixbuf_rotate_simple (pixbuf, 180);
-		case EV_ORIENTATION_SEASCAPE:
-			return gdk_pixbuf_rotate_simple (pixbuf, 270);
-		default:
-			return g_object_ref (pixbuf);
-	}
+        *width = info.width * SCALE_FACTOR; 
+        *height = info.height * SCALE_FACTOR;
 }
 
 static GdkPixbuf *
@@ -209,8 +166,7 @@ djvu_document_render_pixbuf (EvDocument  *document,
                 	  gdk_pixbuf_get_rowstride (pixbuf),
                           (gchar *)gdk_pixbuf_get_pixels (pixbuf));
 	
-    
-	rotated_pixbuf = rotate_pixbuf (document, pixbuf);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rc->rotation);
 	g_object_unref (pixbuf);
 	
 	return rotated_pixbuf;
@@ -264,8 +220,6 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = djvu_document_get_page_size;
 	iface->render_pixbuf = djvu_document_render_pixbuf;
 	iface->get_info = djvu_document_get_info;
-	iface->set_orientation = djvu_document_set_orientation;
-	iface->get_orientation = djvu_document_get_orientation;
 }
 
 static void
@@ -291,11 +245,12 @@ djvu_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 static GdkPixbuf *
 djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 					  gint 			 page,
+				  	  gint	                 rotation,
 					  gint			 width,
 					  gboolean 		 border)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-	GdkPixbuf *pixbuf;
+	GdkPixbuf *pixbuf, *rotated_pixbuf;
 	gint thumb_width, thumb_height;
 
 	guchar *pixels;
@@ -324,8 +279,11 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 				djvu_document->d_format,
 				gdk_pixbuf_get_rowstride (pixbuf), 
 				(gchar *)pixels);
+
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rotation);
+	g_object_unref (pixbuf);
 	
-	return pixbuf;
+	return rotated_pixbuf;
 }
 
 static void
