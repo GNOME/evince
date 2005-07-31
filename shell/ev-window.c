@@ -157,6 +157,8 @@ static const GtkTargetEntry ev_drop_types[] = {
 
 #define SIDEBAR_DEFAULT_SIZE    132
 
+#define PRINT_CONFIG_FILENAME	"ev-print-config.xml"
+
 static void     ev_window_update_fullscreen_popup       (EvWindow         *window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
@@ -1296,6 +1298,49 @@ using_postscript_printer (GnomePrintConfig *config)
 	return FALSE;
 }
 
+static GnomePrintConfig *
+load_print_config_from_file (void)
+{
+	GnomePrintConfig *print_config = NULL;
+	char *file_name, *contents = NULL;
+
+	file_name = g_build_filename (ev_dot_dir (), PRINT_CONFIG_FILENAME,
+				      NULL);
+
+	if (g_file_get_contents (file_name, &contents, NULL, NULL)) {
+		print_config = gnome_print_config_from_string (contents, 0);
+		g_free (contents);
+	}
+
+	if (print_config == NULL) {
+		print_config = gnome_print_config_default ();
+	}
+
+	g_free (file_name);
+
+	return print_config;
+}
+
+static void
+save_print_config_to_file (GnomePrintConfig *config)
+{
+	char *file_name, *str;
+
+	g_return_if_fail (config != NULL);
+
+	str = gnome_print_config_to_string (config, 0);
+	if (str == NULL) return;
+
+	file_name = g_build_filename (ev_dot_dir (),
+				      PRINT_CONFIG_FILENAME,
+				      NULL);
+	
+	g_file_set_contents (file_name, str, -1, NULL);
+
+	g_free (file_name);
+	g_free (str);
+}
+
 static void
 ev_window_print (EvWindow *window)
 {
@@ -1332,7 +1377,7 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 		last_page = ev_page_cache_get_n_pages (page_cache);
 	}
 
-	config = gnome_print_config_default ();
+	config = load_print_config_from_file ();
 	job = gnome_print_job_new (config);
 
 	print_dialog = gnome_print_dialog_new (job, (guchar *) _("Print"),
@@ -1390,6 +1435,8 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 			continue;
 		}
 
+		save_print_config_to_file (config);
+
 		print_job = g_object_new (EV_TYPE_PRINT_JOB,
 					  "gnome_print_job", job,
 					  "document", ev_window->priv->document,
@@ -1404,6 +1451,8 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 		ev_print_job_print (print_job, GTK_WINDOW (ev_window));
 		g_object_unref (print_job);
 	}
+
+	g_object_unref (config);
 }
 
 static void
@@ -1986,7 +2035,7 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 {
 	GtkWidget *dialog;
 	GtkWidget *editor;
-    
+
 	dialog = gtk_dialog_new_with_buttons (_("Toolbar editor"),
 					      GTK_WINDOW (ev_window), 
 				              GTK_DIALOG_DESTROY_WITH_PARENT, 
