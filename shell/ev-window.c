@@ -153,7 +153,8 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define GCONF_CHROME_TOOLBAR	"/apps/evince/show_toolbar"
 #define GCONF_CHROME_SIDEBAR	"/apps/evince/show_sidebar"
 #define GCONF_CHROME_STATUSBAR	"/apps/evince/show_statusbar"
-
+#define GCONF_LOCKDOWN_SAVE     "/desktop/gnome/lockdown/disable_save_to_disk"
+#define GCONF_LOCKDOWN_PRINT    "/desktop/gnome/lockdown/disable_printing"
 #define GCONF_SIDEBAR_SIZE      "/apps/evince/sidebar_size"
 
 #define SIDEBAR_DEFAULT_SIZE    132
@@ -213,6 +214,7 @@ update_action_sensitivity (EvWindow *ev_window)
 	gboolean ok_to_print = TRUE;
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
+	GConfClient *client;
 
 	view = EV_VIEW (ev_window->priv->view);
 
@@ -240,6 +242,16 @@ update_action_sensitivity (EvWindow *ev_window)
 
 	if (!info || info->fields_mask == 0) {
 		has_properties = FALSE;
+	}
+	
+	client = gconf_client_get_default ();
+
+	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_SAVE, NULL)) {
+		ok_to_copy = FALSE;
+	}
+
+	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_PRINT, NULL)) {
+		ok_to_print = FALSE;
 	}
 
 	/* File menu */

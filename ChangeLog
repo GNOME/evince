@@ -1,5 +1,12 @@
 2005-08-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-window.c: (update_action_sensitivity):
+	
+	Disable print and save respect to lockdown gconf keys. Fix
+	for 312342.
+
+2005-08-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* configure.ac:
 	* shell/ev-utils.c: (rename_file), (set_umask_permissions),
 	(write_to_temp_file), (ev_file_set_contents):
