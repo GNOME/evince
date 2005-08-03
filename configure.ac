@@ -114,10 +114,11 @@ if test x$HAVE_NAUTILUS = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
 
-dnl Check for gtk_icon_view_get_visible_range
+dnl Check for functions not present in gtk 2.6
 evince_save_LIBS=$LIBS
 LIBS="$LIBS $FRONTEND_CORE_LIBS"
 AC_CHECK_FUNCS(gtk_icon_view_get_visible_range)
+AC_CHECK_FUNCS(g_file_set_contents)
 LIBS=$evince_save_LIBS
 
 dnl GConf configuration

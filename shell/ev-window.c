@@ -61,6 +61,7 @@
 #include "ev-application.h"
 #include "ev-stock-icons.h"
 #include "ev-metadata-manager.h"
+#include "ev-file-helpers.h"
 
 #include <poppler.h>
 
@@ -1334,8 +1335,12 @@ save_print_config_to_file (GnomePrintConfig *config)
 	file_name = g_build_filename (ev_dot_dir (),
 				      PRINT_CONFIG_FILENAME,
 				      NULL);
-	
+
+#ifdef HAVE_G_FILE_SET_CONTENTS
 	g_file_set_contents (file_name, str, -1, NULL);
+#else
+	ev_file_set_contents (file_name, str, -1, NULL);
+#endif
 
 	g_free (file_name);
 	g_free (str);

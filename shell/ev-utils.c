@@ -177,3 +177,216 @@ ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
 }
 
 
+#ifndef HAVE_G_FILE_SET_CONTENTS
+
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+
+static gboolean
+rename_file (const char *old_name,
+	     const char *new_name,
+	     GError **err)
+{
+  errno = 0;
+  if (g_rename (old_name, new_name) == -1)
+    {
+      return FALSE;
+    }
+  
+  return TRUE;
+}
+
+static gboolean
+set_umask_permissions (int	     fd,
+		       GError      **err)
+{
+  /* All of this function is just to work around the fact that
+   * there is no way to get the umask without changing it.
+   *
+   * We can't just change-and-reset the umask because that would
+   * lead to a race condition if another thread tried to change
+   * the umask in between the getting and the setting of the umask.
+   * So we have to do the whole thing in a child process.
+   */
+
+  int save_errno;
+  pid_t pid;
+
+  pid = fork ();
+  
+  if (pid == -1)
+    {
+      return FALSE;
+    }
+  else if (pid == 0)
+    {
+      /* child */
+      mode_t mask = umask (0666);
+
+      errno = 0;
+      if (fchmod (fd, 0666 & ~mask) == -1)
+	_exit (errno);
+      else
+	_exit (0);
+
+      return TRUE; /* To quiet gcc */
+    }
+  else
+    { 
+      /* parent */
+      int status;
+
+      errno = 0;
+      if (waitpid (pid, &status, 0) == -1)
+	{
+	  return FALSE;
+	}
+
+      if (WIFEXITED (status))
+	{
+	  save_errno = WEXITSTATUS (status);
+
+	  if (save_errno == 0)
+	    {
+	      return TRUE;
+	    }
+	  else
+	    {
+	      return FALSE;
+	    }
+	}
+      else if (WIFSIGNALED (status))
+	{
+	  return FALSE;
+	}
+      else
+	{
+	  return FALSE;
+	}
+    }
+}
+
+static gchar *
+write_to_temp_file (const gchar *contents,
+		    gssize length,
+		    const gchar *template,
+		    GError **err)
+{
+  gchar *tmp_name;
+  gchar *display_name;
+  gchar *retval;
+  FILE *file;
+  gint fd;
+  int save_errno;
+
+  retval = NULL;
+  
+  tmp_name = g_strdup_printf ("%s.XXXXXX", template);
+
+  errno = 0;
+  fd = g_mkstemp (tmp_name);
+  display_name = g_filename_display_name (tmp_name);
+      
+  if (fd == -1)
+    {
+      goto out;
+    }
+
+  if (!set_umask_permissions (fd, err))
+    {
+      close (fd);
+      g_unlink (tmp_name);
+
+      goto out;
+    }
+  
+  errno = 0;
+  file = fdopen (fd, "wb");
+  if (!file)
+    {
+      close (fd);
+      g_unlink (tmp_name);
+      
+      goto out;
+    }
+
+  if (length > 0)
+    {
+      size_t n_written;
+      
+      errno = 0;
+
+      n_written = fwrite (contents, 1, length, file);
+
+      if (n_written < length)
+	{
+	  fclose (file);
+	  g_unlink (tmp_name);
+	  
+	  goto out;
+	}
+    }
+   
+  errno = 0;
+  if (fclose (file) == EOF)
+    { 
+      g_unlink (tmp_name);
+      
+      goto out;
+    }
+
+  retval = g_strdup (tmp_name);
+  
+ out:
+  g_free (tmp_name);
+  g_free (display_name);
+  
+  return retval;
+}
+
+gboolean
+ev_file_set_contents (const gchar *filename,
+		      const gchar *contents,
+		      gssize	     length,
+		      GError	   **error)
+{
+  gchar *tmp_filename;
+  gboolean retval;
+  GError *rename_error = NULL;
+  
+  g_return_val_if_fail (filename != NULL, FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+  g_return_val_if_fail (contents != NULL || length == 0, FALSE);
+  g_return_val_if_fail (length >= -1, FALSE);
+  
+  if (length == -1)
+    length = strlen (contents);
+
+  tmp_filename = write_to_temp_file (contents, length, filename, error);
+  
+  if (!tmp_filename)
+    {
+      retval = FALSE;
+      goto out;
+    }
+
+  if (!rename_file (tmp_filename, filename, &rename_error))
+    {
+      g_unlink (tmp_filename);
+      g_propagate_error (error, rename_error);
+      retval = FALSE;
+      goto out;
+    }
+
+  retval = TRUE;
+  
+ out:
+  g_free (tmp_filename);
+  return retval;
+}
+
+#endif /* HAVE_G_FILE_SET_CONTENTS */
+

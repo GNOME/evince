@@ -1,3 +1,14 @@
+2005-08-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* configure.ac:
+	* shell/ev-utils.c: (rename_file), (set_umask_permissions),
+	(write_to_temp_file), (ev_file_set_contents):
+	* shell/ev-utils.h:
+	* shell/ev-window.c: (save_print_config_to_file):
+	
+	Copy-paste g_file_set_contents to keep compatibility with gtk 2.6
+	Fix for bug 312228
+
 2005-07-31  Christian Persch  <chpe@cvs.gnome.org>
 
 	* shell/ev-window.c: (load_print_config_from_file),

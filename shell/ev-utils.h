@@ -28,6 +28,14 @@ G_BEGIN_DECLS
 GdkPixbuf *ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
 				 int x_offset, int y_offset, double opacity);
 
+#ifndef HAVE_G_FILE_SET_CONTENTS
+
+gboolean   ev_file_set_contents (const gchar *filename,
+		    		 const gchar *contents,
+		    		 gssize	     length,
+		    		 GError	   **error);
+#endif /* HAVE_G_FILE_SET_CONTENTS */
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */
