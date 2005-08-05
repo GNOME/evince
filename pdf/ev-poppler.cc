@@ -1191,10 +1191,14 @@ pdf_selection_render_selection (EvSelection      *selection,
 					   width, height);
 	}
 	
+	/* FIXME: Hardcoded clearlooks selection color.  We should
+	 * track theme color changes and focus out event and update
+	 * selection color accordingly. */
 	poppler_page_render_selection (poppler_page,
 				       rc->scale, *pixbuf,
 				       (PopplerRectangle *)points,
-				       (PopplerRectangle *)old_points);
+				       (PopplerRectangle *)old_points,
+				       0x00ffffff, 0x007c99ad);
 	g_object_unref (poppler_page);
 
 }
