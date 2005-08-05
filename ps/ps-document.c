@@ -1091,7 +1091,8 @@ save_page_list (PSDocument *document, int *page_list, const char *filename)
 	FILE *f;
 	gchar *buf;
 
-	pscopydoc (sink, document->gs_filename, document->doc, page_list);
+	pscopydoc (sink, PS_DOCUMENT_GET_PS_FILE(document), 
+		   document->doc, page_list);
 	
 	buf = gtk_gs_doc_sink_get_buffer (sink);
 	
