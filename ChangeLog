@@ -1,3 +1,19 @@
+2005-08-06  Kristian Høgsberg  <krh@redhat.com>
+
+	* backend/ev-selection.c: (ev_selection_render_selection):
+	* backend/ev-selection.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-jobs.c: (ev_job_render_new):
+	* shell/ev-jobs.h:
+	* shell/ev-pixbuf-cache.c: (get_selection_colors),
+	(add_job_if_needed), (ev_pixbuf_cache_get_selection_pixbuf):
+	* shell/ev-view.c: (ev_view_focus_in), (ev_view_focus_out),
+	(ev_view_class_init):
+
+	Change selection color on focus in and focus out events.  Also,
+	poppler now uses GdkColor for specifying the selection colors, so
+	drop some awkward conversion code.
+
 2005-08-06  Yair Hershkovitz  <yairhr@gmail.com>
 
 	* configure.ac: Added Hebrew translation

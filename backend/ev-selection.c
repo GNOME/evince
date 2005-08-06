@@ -62,8 +62,8 @@ ev_selection_render_selection (EvSelection      *selection,
 			       GdkPixbuf       **pixbuf,
 			       EvRectangle      *points,
 			       EvRectangle      *old_points,
-			       guint             text,
-			       guint             base)
+			       GdkColor        *text,
+			       GdkColor        *base)
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 

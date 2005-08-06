@@ -120,8 +120,8 @@ struct _EvJobRender
 	GdkPixbuf *selection;
 	GdkRegion *selection_region;
 	EvRectangle selection_points;
-	guint base;
-	guint text; 
+	GdkColor *base;
+	GdkColor *text; 
 
 	gint include_links : 1;
 	gint include_text : 1;
@@ -187,8 +187,8 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 					   gint             width,
 					   gint             height,
 					   EvRectangle     *selection_points,
-					   guint            text,
-					   guint            base,
+					   GdkColor        *text,
+					   GdkColor        *base,
 					   gboolean         include_links,
 					   gboolean         include_text,
 					   gboolean         include_selection);

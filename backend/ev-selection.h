@@ -48,8 +48,8 @@ struct _EvSelectionIface
 					      GdkPixbuf       **pixbuf,
 					      EvRectangle      *points,
 					      EvRectangle      *old_points,
-					      guint             text,
-					      guint             base);
+					      GdkColor        *text,
+					      GdkColor        *base);
 	GdkRegion * (* get_selection_map)    (EvSelection      *selection,
 					      EvRenderContext  *rc);
 	GdkRegion * (* get_selection_region) (EvSelection      *selection,
@@ -63,8 +63,8 @@ void       ev_selection_render_selection     (EvSelection      *selection,
 					      GdkPixbuf       **pixbuf,
 					      EvRectangle      *points,
 					      EvRectangle      *old_points,
-					      guint             text,
-					      guint             base);
+					      GdkColor         *text,
+					      GdkColor         *base);
 GdkRegion *ev_selection_get_selection_map    (EvSelection      *selection,
 					      EvRenderContext  *rc);
 GdkRegion *ev_selection_get_selection_region (EvSelection      *selection,

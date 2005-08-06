@@ -67,7 +67,6 @@ static CacheJobInfo *find_job_cache             (EvPixbufCache      *pixbuf_cach
 static void          copy_job_to_job_info       (EvJobRender        *job_render,
 						 CacheJobInfo       *job_info,
 						 EvPixbufCache      *pixbuf_cache);
-static guint         convert_gdk_color_to_uint  (GdkColor           *color);
 static gboolean      new_selection_pixbuf_needed(EvPixbufCache      *pixbuf_cache,
 						 CacheJobInfo       *job_info,
 						 gint                page,
@@ -490,6 +489,18 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 	(MAX (0, pixbuf_cache->preload_cache_size + 1 - pixbuf_cache->start_page))
 
 static void
+get_selection_colors (GtkWidget *widget, GdkColor **text, GdkColor **base)
+{
+    if (GTK_WIDGET_HAS_FOCUS (widget)) {
+	*text = &widget->style->text [GTK_STATE_SELECTED];
+	*base = &widget->style->base [GTK_STATE_SELECTED];
+    } else {
+	*text = &widget->style->text [GTK_STATE_ACTIVE];
+	*base = &widget->style->base [GTK_STATE_ACTIVE];
+    }
+}
+
+static void
 add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		   CacheJobInfo  *job_info,
 		   EvPageCache   *page_cache,
@@ -502,7 +513,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
 	int width, height;
-	guint text, base;
+	GdkColor *text, *base;
 
 	if (job_info->job)
 		return;
@@ -535,8 +546,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 
 	gtk_widget_ensure_style (pixbuf_cache->view);
 
-	text = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->text [GTK_STATE_SELECTED]));
-	base = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->base [GTK_STATE_SELECTED]));
+	get_selection_colors (pixbuf_cache->view, &text, &base);
 
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   job_info->rc,
@@ -662,18 +672,6 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 	}
 	
 	return job_info->link_mapping;
-}
-
-/* Selection */
-static guint
-convert_gdk_color_to_uint (GdkColor *color)
-{
-	g_assert (color);
-
-	return 0xff << 24 |
-		(color->red & 0xff00) << 8 |
-		(color->green & 0xff00) |
-		(color->blue & 0xff00) >> 8;
 }
 
 static gboolean
@@ -825,7 +823,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 	 */
 	if (ev_rect_cmp (&(job_info->new_points), &(job_info->selection_points))) {
 		EvRectangle *old_points;
-		guint text, base;
+		GdkColor *text, *base;
 
 		/* we need to get a new selection pixbuf */
 		ev_document_doc_mutex_lock ();
@@ -846,8 +844,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 
 		gtk_widget_ensure_style (pixbuf_cache->view);
 
-		text = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->text [GTK_STATE_SELECTED]));
-		base = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->base [GTK_STATE_SELECTED]));
+		get_selection_colors (pixbuf_cache->view, &text, &base);
 
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
 					       job_info->rc, &(job_info->selection),

@@ -1566,6 +1566,28 @@ ev_view_button_release_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+static gint
+ev_view_focus_in (GtkWidget     *widget,
+		  GdkEventFocus *event)
+{
+	if (EV_VIEW (widget)->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
+	gtk_widget_queue_draw (widget);
+
+	return FALSE;
+}
+
+static gint
+ev_view_focus_out (GtkWidget     *widget,
+		     GdkEventFocus *event)
+{
+	if (EV_VIEW (widget)->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
+	gtk_widget_queue_draw (widget);
+
+	return FALSE;
+}
+
 static gboolean
 ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 {
@@ -1894,6 +1916,8 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->button_press_event = ev_view_button_press_event;
 	widget_class->motion_notify_event = ev_view_motion_notify_event;
 	widget_class->button_release_event = ev_view_button_release_event;
+	widget_class->focus_in_event = ev_view_focus_in;
+	widget_class->focus_out_event = ev_view_focus_out;
 	widget_class->size_request = ev_view_size_request;
 	widget_class->size_allocate = ev_view_size_allocate;
 	widget_class->realize = ev_view_realize;

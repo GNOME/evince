@@ -1182,8 +1182,8 @@ pdf_selection_render_selection (EvSelection      *selection,
 				GdkPixbuf       **pixbuf,
 				EvRectangle      *points,
 				EvRectangle      *old_points,
-				guint             text,
-				guint             base)
+				GdkColor        *text,
+				GdkColor        *base)
 {
 	PdfDocument *pdf_document;
 	double width_points, height_points;
