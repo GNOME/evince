@@ -103,6 +103,20 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_selection_iface_init);
 			 });
 
+
+static void
+set_rc_data (PdfDocument     *pdf_document,
+	     EvRenderContext *rc)
+{
+	if (rc->data == NULL) {
+		rc->data = poppler_document_get_page (pdf_document->document,
+						      rc->page);
+		rc->destroy = g_object_unref;
+	} else {
+		g_assert (rc->page == poppler_page_get_index (POPPLER_PAGE (rc->data)));
+	}
+}
+
 static void
 pdf_document_search_free (PdfDocumentSearch   *search)
 {
@@ -330,17 +344,16 @@ pdf_document_render_pixbuf (EvDocument   *document,
 			    EvRenderContext *rc)
 {
 	PdfDocument *pdf_document;
-	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf;
 	double width_points, height_points;
 	gint width, height;
 
 	pdf_document = PDF_DOCUMENT (document);
-	poppler_page = poppler_document_get_page (pdf_document->document,
-						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
-	poppler_page_get_size (poppler_page, &width_points, &height_points);
+	set_rc_data (pdf_document, rc);
+	set_page_orientation (pdf_document, POPPLER_PAGE (rc->data), rc->rotation);
+
+	poppler_page_get_size (POPPLER_PAGE (rc->data), &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
 	height = (int) ((height_points * rc->scale) + 0.5);
 
@@ -348,13 +361,12 @@ pdf_document_render_pixbuf (EvDocument   *document,
 				 FALSE, 8,
 				 width, height);
 
-	poppler_page_render_to_pixbuf (poppler_page,
+	poppler_page_render_to_pixbuf (POPPLER_PAGE (rc->data),
 				       0, 0,
 				       width, height,
 				       rc->scale,
 				       pixbuf);
 	
-	g_object_unref (poppler_page);
 	
 	return pixbuf;
 }
@@ -1169,19 +1181,20 @@ pdf_selection_render_selection (EvSelection      *selection,
 				EvRenderContext  *rc,
 				GdkPixbuf       **pixbuf,
 				EvRectangle      *points,
-				EvRectangle      *old_points)
+				EvRectangle      *old_points,
+				guint             text,
+				guint             base)
 {
 	PdfDocument *pdf_document;
-	PopplerPage *poppler_page;
 	double width_points, height_points;
 	gint width, height;
 
 	pdf_document = PDF_DOCUMENT (selection);
-	poppler_page = poppler_document_get_page (pdf_document->document,
-						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->rotation);
+	set_rc_data (pdf_document, rc);
 
-	poppler_page_get_size (poppler_page, &width_points, &height_points);
+	set_page_orientation (pdf_document, POPPLER_PAGE (rc->data), rc->rotation);
+
+	poppler_page_get_size (POPPLER_PAGE (rc->data), &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
 	height = (int) ((height_points * rc->scale) + 0.5);
 
@@ -1191,16 +1204,12 @@ pdf_selection_render_selection (EvSelection      *selection,
 					   width, height);
 	}
 	
-	/* FIXME: Hardcoded clearlooks selection color.  We should
-	 * track theme color changes and focus out event and update
-	 * selection color accordingly. */
-	poppler_page_render_selection (poppler_page,
+	poppler_page_render_selection (POPPLER_PAGE (rc->data),
 				       rc->scale, *pixbuf,
 				       (PopplerRectangle *)points,
 				       (PopplerRectangle *)old_points,
-				       0x00ffffff, 0x007c99ad);
-	g_object_unref (poppler_page);
-
+				       text,
+				       base);
 }
 
 
@@ -1210,16 +1219,14 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 				    EvRectangle     *points)
 {
 	PdfDocument *pdf_document;
-	PopplerPage *poppler_page;
 	GdkRegion *retval;
 
 	pdf_document = PDF_DOCUMENT (selection);
-	poppler_page = poppler_document_get_page (pdf_document->document,
-						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
-	retval = poppler_page_get_selection_region (poppler_page, rc->scale, (PopplerRectangle *) points);
-	g_object_unref (poppler_page);
+	set_rc_data (pdf_document, rc);
+	set_page_orientation (pdf_document, POPPLER_PAGE (rc->data), rc->rotation);
+
+	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data, rc->scale, (PopplerRectangle *) points);
 
 	return retval;
 }

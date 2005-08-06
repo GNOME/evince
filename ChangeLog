@@ -1,3 +1,31 @@
+Sat Aug  6 01:12:44 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* NOTES:
+	* backend/ev-selection.c: (ev_selection_render_selection):
+	* backend/ev-selection.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-jobs.c: (ev_job_render_dispose), (ev_job_render_new),
+	(ev_job_render_run):
+	* shell/ev-jobs.h:
+	* shell/ev-pixbuf-cache.c: (dispose_cache_job_info),
+	(ev_pixbuf_cache_new), (job_finished_cb), (add_job_if_needed),
+	(convert_gdk_color_to_uint), (ev_pixbuf_cache_get_text_mapping),
+	(ev_pixbuf_cache_style_changed),
+	(ev_pixbuf_cache_get_selection_pixbuf),
+	(ev_pixbuf_cache_set_selection_list),
+	(ev_pixbuf_cache_get_selection_list):
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-utils.c: (ev_print_region_contents):
+	* shell/ev-utils.h:
+	* shell/ev-view.c: (ev_view_queue_draw_page),
+	(selection_update_idle_cb), (ev_view_motion_notify_event),
+	(ev_view_style_set), (draw_one_page), (ev_view_class_init),
+	(setup_caches), (ev_view_find_next), (merge_selection_region),
+	(selection_free):
+	* shell/ev-window.c: (ev_window_update_fullscreen_popup):
+
+	Clean up selection to be much smoother!
+
 2005-08-05  Kristian Høgsberg  <krh@redhat.com>
 
 	* pdf/ev-poppler.cc (pdf_selection_render_selection): Pass colors

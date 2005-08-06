@@ -116,6 +116,16 @@ ev_job_render_dispose (GObject *object)
 		job->rc = NULL;
 	}
 
+	if (job->selection) {
+		g_object_unref (job->selection);
+		job->selection = NULL;
+	}
+
+	if (job->selection_region) {
+		gdk_region_destroy (job->selection_region);
+		job->selection_region = NULL;
+	}
+
 	(* G_OBJECT_CLASS (ev_job_render_parent_class)->dispose) (object);
 }
 
@@ -226,6 +236,8 @@ ev_job_render_new (EvDocument      *document,
 		   gint             width,
 		   gint             height,
 		   EvRectangle     *selection_points,
+		   guint            text,
+		   guint            base,
 		   gboolean         include_links,
 		   gboolean         include_text,
 		   gboolean         include_selection)
@@ -242,6 +254,8 @@ ev_job_render_new (EvDocument      *document,
 	job->rc = g_object_ref (rc);
 	job->target_width = width;
 	job->target_height = height;
+	job->text = text;
+	job->base = base;
 	job->include_links = include_links;
 	job->include_text = include_text;
 	job->include_selection = include_selection;
@@ -285,12 +299,18 @@ ev_job_render_run (EvJobRender *job)
 			job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->rc->page);
 		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
 			job->text_mapping = ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document), job->rc);
-		if (job->include_selection && EV_IS_SELECTION (EV_JOB (job)->document))
+		if (job->include_selection && EV_IS_SELECTION (EV_JOB (job)->document)) {
 			ev_selection_render_selection (EV_SELECTION (EV_JOB (job)->document),
 						       job->rc,
 						       &(job->selection),
 						       &(job->selection_points),
-						       NULL);
+						       NULL,
+						       job->text, job->base);
+			job->selection_region =
+				ev_selection_get_selection_region (EV_SELECTION (EV_JOB (job)->document),
+								   job->rc,
+								   &(job->selection_points));
+		}
 
 		EV_JOB (job)->finished = TRUE;
 	}

@@ -29,6 +29,7 @@
 
 #include "ev-marshal.h"
 #include "ev-view.h"
+#include "ev-utils.h"
 #include "ev-selection.h"
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
@@ -120,6 +121,10 @@ struct _EvView {
 	char *status;
 	char *find_status;
 
+	/* Scrolling */
+	GtkAdjustment *hadjustment;
+	GtkAdjustment *vadjustment;
+
 	gint scroll_x;
 	gint scroll_y;
 
@@ -127,14 +132,15 @@ struct _EvView {
 	DragInfo drag_info;
 
 	/* Selection */
+	gint motion_x;
+	gint motion_y;
+	guint selection_update_id;
+
 	EvViewSelectionMode selection_mode;
 	SelectionInfo selection_info;
 
-	gboolean pressed_button;
+	int pressed_button;
 	EvViewCursor cursor;
-
-	GtkAdjustment *hadjustment;
-	GtkAdjustment *vadjustment;
 
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
@@ -224,6 +230,8 @@ static void       find_page_at_location                      (EvView            
 							      gint               *page,
 							      gint               *x_offset,
 							      gint               *y_offset);
+static void       ev_view_queue_draw_page                    (EvView             *view,
+							      gint                page);
 
 /*** Hyperrefs ***/
 static EvLink*    get_link_at_location                       (EvView             *view,
@@ -261,6 +269,8 @@ static gboolean   ev_view_button_release_event               (GtkWidget         
 							      GdkEventButton     *event);
 static gboolean   ev_view_leave_notify_event                 (GtkWidget          *widget,
 							      GdkEventCrossing   *event);
+static void       ev_view_style_set                          (GtkWidget          *widget,
+							      GtkStyle           *old_style);
 
 /*** Drawing ***/
 static guint32    ev_gdk_color_to_rgb                        (const GdkColor     *color);
@@ -357,6 +367,7 @@ static void       compute_selections                         (EvView            
 							      GdkPoint           *start,
 							      GdkPoint           *stop);
 static void       clear_selection                            (EvView             *view);
+static void       selection_free                             (EvViewSelection    *selection);
 static char*      get_selected_text                          (EvView             *ev_view);
 static void       ev_view_primary_get_cb                     (GtkClipboard       *clipboard,
 							      GtkSelectionData   *selection_data,
@@ -986,6 +997,14 @@ find_page_at_location (EvView  *view,
 	*page = -1;
 }
 
+static void
+ev_view_queue_draw_page (EvView *view,
+			 gint    page)
+{
+	/* FIXME: write */
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
 static gboolean
 location_in_text (EvView  *view,
 		  gdouble  x,
@@ -1424,6 +1443,19 @@ ev_view_button_press_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+
+static gboolean
+selection_update_idle_cb (EvView *view)
+{
+	GdkPoint point;
+	point.x = view->motion_x;
+	point.y = view->motion_y;
+	compute_selections (view, &view->selection_info.start, &point);
+
+	view->selection_update_id = 0;
+	return FALSE;
+}
+
 static gboolean
 ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
@@ -1434,12 +1466,16 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		return FALSE;
 
 	if (view->pressed_button == 1) {
-		GdkPoint point;
-
 		view->selection_info.in_selection = TRUE;
-		point.x = event->x + view->scroll_x;
-		point.y = event->y + view->scroll_y;
-		compute_selections (view, &view->selection_info.start, &point);
+		view->motion_x = event->x + view->scroll_x;
+		view->motion_y = event->y + view->scroll_y;
+
+		/* Queue an idle to handle the motion.  We do this because
+		 * handling any selection events in the motion is probably going
+		 * to be slower than new motion events reach us.  This means that */
+
+		if (! view->selection_update_id)
+			view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
 
 		return TRUE;
 	} else if (view->pressed_button == 2) {
@@ -1543,6 +1579,17 @@ ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 
 	return FALSE;
 }
+
+static void
+ev_view_style_set (GtkWidget *widget,
+		   GtkStyle  *old_style)
+{
+	if (EV_VIEW (widget)->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
+
+	GTK_WIDGET_CLASS (ev_view_parent_class)->style_set (widget, old_style);
+}
+
 
 /*** Drawing ***/
 
@@ -1669,7 +1716,8 @@ draw_one_page (EvView          *view,
 		if (current_pixbuf && view->selection_mode == EV_VIEW_SELECTION_TEXT && selection)
 			selection_pixbuf = ev_pixbuf_cache_get_selection_pixbuf (view->pixbuf_cache,
 										 page,
-										 view->scale);
+										 view->scale,
+										 NULL);
 
 		if (current_pixbuf == NULL)
 			scaled_image = NULL;
@@ -1852,6 +1900,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->unrealize = ev_view_unrealize;
 	widget_class->scroll_event = ev_view_scroll_event;
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
+	widget_class->style_set = ev_view_style_set;
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
@@ -2068,7 +2117,7 @@ setup_caches (EvView *view)
 {
 	view->page_cache = ev_page_cache_get (view->document);
 	g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
-	view->pixbuf_cache = ev_pixbuf_cache_new (view->document);
+	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
 }
 
@@ -2744,14 +2793,12 @@ ev_view_can_find_next (EvView *view)
 void
 ev_view_find_next (EvView *view)
 {
-	EvPageCache *page_cache;
 	int n_results, n_pages;
 	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
 
-	page_cache = ev_page_cache_get (view->document);
 	n_results = ev_document_find_get_n_results (find, view->current_page);
 
-	n_pages = ev_page_cache_get_n_pages (page_cache);
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	view->find_result++;
 
@@ -2942,15 +2989,114 @@ compute_new_selection_text (EvView   *view,
  */
 static void
 merge_selection_region (EvView *view,
-			GList  *list)
+			GList  *new_list)
 {
+	GList *old_list;
+	GList *new_list_ptr, *old_list_ptr;
 
-	/* FIXME: actually write... */
-	clear_selection (view);
-	gtk_widget_queue_draw (GTK_WIDGET (view));
+	/* Update the selection */
+	old_list = ev_pixbuf_cache_get_selection_list (view->pixbuf_cache);
+	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
+	view->selection_info.selections = new_list;
+	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, new_list);
 
-	view->selection_info.selections = list;
-	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, list);
+	new_list_ptr = new_list;
+	old_list_ptr = old_list;
+
+	while (new_list_ptr || old_list_ptr) {
+		EvViewSelection *old_sel, *new_sel;
+		int cur_page;
+		GdkRegion *region = NULL;
+
+		new_sel = (new_list_ptr) ? (new_list_ptr->data) : NULL;
+		old_sel = (old_list_ptr) ? (old_list_ptr->data) : NULL;
+
+		/* Assume that the lists are in order, and we run through them
+		 * comparing them, one page at a time.  We come out with the
+		 * first page we see. */
+		if (new_sel && old_sel) {
+			if (new_sel->page < old_sel->page) {
+				new_list_ptr = new_list_ptr->next;
+				old_sel = NULL;
+			} else if (new_sel->page > old_sel->page) {
+				old_list_ptr = old_list_ptr->next;
+				new_sel = NULL;
+			} else {
+				new_list_ptr = new_list_ptr->next;
+				old_list_ptr = old_list_ptr->next;
+			}
+		} else if (new_sel) {
+			new_list_ptr = new_list_ptr->next;
+		} else if (old_sel) {
+			old_list_ptr = old_list_ptr->next;
+		}
+
+		g_assert (new_sel || old_sel);
+
+		/* is the page we're looking at on the screen?*/
+		cur_page = new_sel ? new_sel->page : old_sel->page;
+		if (cur_page < view->start_page || cur_page > view->end_page)
+			continue;
+
+		/* seed the cache with a new page.  We are going to need the new
+		 * region too. */
+		if (new_sel) {
+			GdkRegion *tmp_region = NULL;
+			ev_pixbuf_cache_get_selection_pixbuf (view->pixbuf_cache,
+							      cur_page,
+							      view->scale,
+							      &tmp_region);
+			if (tmp_region) {
+				new_sel->covered_region = gdk_region_copy (tmp_region);
+			}
+		}
+
+		/* Now we figure out what needs redrawing */
+		if (old_sel && new_sel) {
+			if (old_sel->covered_region &&
+			    new_sel->covered_region) {
+				/* We only want to redraw the areas that have
+				 * changed, so we xor the old and new regions
+				 * and redraw if it's different */
+				region = gdk_region_copy (old_sel->covered_region);
+				gdk_region_xor (region, new_sel->covered_region);
+				if (gdk_region_empty (region)) {
+					gdk_region_destroy (region);
+					region = NULL;
+				}
+			} else if (old_sel->covered_region) {
+				region = gdk_region_copy (old_sel->covered_region);
+			} else if (new_sel->covered_region) {
+				region = gdk_region_copy (new_sel->covered_region);
+			}
+		} else if (old_sel && !new_sel) {
+			if (old_sel->covered_region && !gdk_region_empty (old_sel->covered_region)) {
+				region = gdk_region_copy (old_sel->covered_region);
+			}
+		} else if (!old_sel && new_sel) {
+			if (new_sel->covered_region && !gdk_region_empty (new_sel->covered_region)) {
+				region = gdk_region_copy (new_sel->covered_region);
+			}
+		} else {
+			g_assert_not_reached ();
+		}
+
+		/* Redraw the damaged region! */
+		if (region) {
+			GdkRectangle page_area;
+			GtkBorder border;
+
+			get_page_extents (view, cur_page, &page_area, &border);
+			gdk_region_offset (region,
+					   page_area.x + border.left - view->scroll_x,
+					   page_area.y + border.top - view->scroll_y);
+			gdk_window_invalidate_region (GTK_WIDGET (view)->window, region, TRUE);
+			gdk_region_destroy (region);
+		}
+	}
+
+	/* Free the old list, now that we're done with it. */
+	g_list_foreach (old_list, (GFunc) selection_free, NULL);
 }
 
 static void
@@ -2972,6 +3118,8 @@ compute_selections (EvView   *view,
 static void
 selection_free (EvViewSelection *selection)
 {
+	if (selection->covered_region)
+		gdk_region_destroy (selection->covered_region);
 	g_free (selection);
 }
 

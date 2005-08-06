@@ -177,6 +177,35 @@ ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
 }
 
 
+/* Simple function to output the contents of a region.  Used solely for testing
+ * the region code.
+ */
+void
+ev_print_region_contents (GdkRegion *region)
+{
+	GdkRectangle *rectangles = NULL;
+	gint n_rectangles, i;
+
+	if (region == NULL) {
+		g_print ("<empty region>\n");
+		return;
+	}
+
+	g_print ("<region %p>\n", region);
+	gdk_region_get_rectangles (region, &rectangles, &n_rectangles);
+	for (i = 0; i < n_rectangles; i++) {
+		g_print ("\t(%d %d, %d %d) [%dx%d]\n",
+			 rectangles[i].x,
+			 rectangles[i].y,
+			 rectangles[i].x + rectangles[i].width,
+			 rectangles[i].y + rectangles[i].height,
+			 rectangles[i].width,
+			 rectangles[i].height);
+	}
+	g_free (rectangles);
+}
+
+
 #ifndef HAVE_G_FILE_SET_CONTENTS
 
 #include <errno.h>

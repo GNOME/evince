@@ -10,12 +10,13 @@ typedef struct _CacheJobInfo
 	EvRenderContext *rc;
 	GList *link_mapping;
 	GdkRegion *text_mapping;
-
+	
 	/* Selection info.  If the *_points structs are unset, we put -1 in x1.
 	 * selection_points are the coordinates encapsulated in selection.
 	 * new_points is the target selection size. */
 	EvRectangle selection_points;
 	GdkPixbuf *selection;
+	GdkRegion *selection_region;
 	EvRectangle new_points;
 } CacheJobInfo;
 
@@ -23,7 +24,9 @@ struct _EvPixbufCache
 {
 	GObject parent;
 
-	EvDocument  *document;
+	/* We keep a link to our containing view just for style information. */
+	GtkWidget *view;
+	EvDocument *document;
 	int start_page;
 	int end_page;
 
@@ -64,10 +67,11 @@ static CacheJobInfo *find_job_cache             (EvPixbufCache      *pixbuf_cach
 static void          copy_job_to_job_info       (EvJobRender        *job_render,
 						 CacheJobInfo       *job_info,
 						 EvPixbufCache      *pixbuf_cache);
-static gboolean      new_selection_pixbuf_needed(EvPixbufCache *pixbuf_cache,
-						 CacheJobInfo  *job_info,
-						 gint           page,
-						 gfloat         scale);
+static guint         convert_gdk_color_to_uint  (GdkColor           *color);
+static gboolean      new_selection_pixbuf_needed(EvPixbufCache      *pixbuf_cache,
+						 CacheJobInfo       *job_info,
+						 gint                page,
+						 gfloat              scale);
 
 
 /* These are used for iterating through the prev and next arrays */
@@ -153,6 +157,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		g_object_unref (G_OBJECT (job_info->selection));
 		job_info->selection = NULL;
 	}
+	if (job_info->selection_region) {
+		gdk_region_destroy (job_info->selection_region);
+		job_info->selection_region = NULL;
+	}
 
 	job_info->selection_points.x1 = -1;
 	job_info->new_points.x1 = -1;
@@ -178,11 +186,14 @@ ev_pixbuf_cache_dispose (GObject *object)
 
 
 EvPixbufCache *
-ev_pixbuf_cache_new (EvDocument *document)
+ev_pixbuf_cache_new (GtkWidget  *view,
+		     EvDocument *document)
 {
 	EvPixbufCache *pixbuf_cache;
 
 	pixbuf_cache = (EvPixbufCache *) g_object_new (EV_TYPE_PIXBUF_CACHE, NULL);
+	/* This is a backlink, so we don't ref this */ 
+	pixbuf_cache->view = view;
 	pixbuf_cache->document = document;
 
 	return pixbuf_cache;
@@ -223,10 +234,14 @@ job_finished_cb (EvJob         *job,
 	}
 
 	if (job_render->include_selection) {
+		pixbuf = g_object_ref (job_render->selection);
 		if (job_info->selection)
 			g_object_unref (job_info->selection);
+		if (job_info->selection_region)
+			gdk_region_destroy (job_info->selection_region);
 		job_info->selection_points = job_render->selection_points;
-		job_info->selection = job_render->selection;
+		job_info->selection_region = gdk_region_copy (job_render->selection_region);
+		job_info->selection = pixbuf;
 		g_assert (job_info->selection_points.x1 >= 0);
 	}
 	
@@ -487,6 +502,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
 	int width, height;
+	guint text, base;
 
 	if (job_info->job)
 		return;
@@ -503,9 +519,9 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	if (job_info->rc == NULL) {
 		job_info->rc = ev_render_context_new (rotation, page, scale);
 	} else {
+		ev_render_context_set_rotation (job_info->rc, rotation);
 		ev_render_context_set_page (job_info->rc, page);
 		ev_render_context_set_scale (job_info->rc, scale);
-		ev_render_context_set_rotation (job_info->rc, rotation);
 	}
 
 	/* Figure out what else we need for this job */
@@ -517,10 +533,16 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		include_selection = TRUE;
 	}
 
+	gtk_widget_ensure_style (pixbuf_cache->view);
+
+	text = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->text [GTK_STATE_SELECTED]));
+	base = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->base [GTK_STATE_SELECTED]));
+
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   job_info->rc,
 					   width, height,
 					   &(job_info->new_points),
+					   text, base,
 					   include_links,
 					   include_text,
 					   include_selection);
@@ -643,6 +665,17 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 }
 
 /* Selection */
+static guint
+convert_gdk_color_to_uint (GdkColor *color)
+{
+	g_assert (color);
+
+	return 0xff << 24 |
+		(color->red & 0xff00) << 8 |
+		(color->green & 0xff00) |
+		(color->blue & 0xff00) >> 8;
+}
+
 static gboolean
 new_selection_pixbuf_needed (EvPixbufCache *pixbuf_cache,
 			     CacheJobInfo  *job_info,
@@ -683,7 +716,7 @@ clear_selection_if_needed (EvPixbufCache *pixbuf_cache,
 
 GdkRegion *
 ev_pixbuf_cache_get_text_mapping      (EvPixbufCache *pixbuf_cache,
-				      gint           page)
+				       gint           page)
 {
 	CacheJobInfo *job_info;
 
@@ -718,10 +751,44 @@ ev_pixbuf_cache_clear (EvPixbufCache *pixbuf_cache)
 }
 
 
+void
+ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
+{
+	gint i;
+
+	/* FIXME: doesn't update running jobs. */
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		CacheJobInfo *job_info;
+
+		job_info = pixbuf_cache->prev_job + i;
+		if (job_info->selection) {
+			g_object_unref (G_OBJECT (job_info->selection));
+			job_info->selection = NULL;
+		}
+
+		job_info = pixbuf_cache->next_job + i;
+		if (job_info->selection) {
+			g_object_unref (G_OBJECT (job_info->selection));
+			job_info->selection = NULL;
+		}
+	}
+
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+		CacheJobInfo *job_info;
+
+		job_info = pixbuf_cache->job_list + i;
+		if (job_info->selection) {
+			g_object_unref (G_OBJECT (job_info->selection));
+			job_info->selection = NULL;
+		}
+	}
+}
+
 GdkPixbuf *
-ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
-				      gint           page,
-				      gfloat         scale)
+ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
+				      gint            page,
+				      gfloat          scale,
+				      GdkRegion     **region)
 {
 	CacheJobInfo *job_info;
 
@@ -736,6 +803,10 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 	/* No selection on this page */
 	if (job_info->new_points.x1 < 0)
 		return NULL;
+
+	/* Update the rc */
+	g_assert (job_info->rc);
+	ev_render_context_set_scale (job_info->rc, scale);
 
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
@@ -753,32 +824,43 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 	 * doesn't kill us.  Rendering a few glyphs should really be fast.
 	 */
 	if (ev_rect_cmp (&(job_info->new_points), &(job_info->selection_points))) {
-		EvRenderContext *rc;
-
-		rc = ev_render_context_new (0, page, scale);
+		EvRectangle *old_points;
+		guint text, base;
 
 		/* we need to get a new selection pixbuf */
 		ev_document_doc_mutex_lock ();
 		if (job_info->selection_points.x1 < 0) {
 			g_assert (job_info->selection == NULL);
-			ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
-						       rc, &(job_info->selection),
-						       &(job_info->new_points),
-						       NULL);
+			old_points = NULL;
 		} else {
 			g_assert (job_info->selection != NULL);
-			ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
-						       rc, &(job_info->selection),
-						       &(job_info->new_points),
-						       &(job_info->selection_points));
+			old_points = &(job_info->selection_points);
 		}
+
+		if (job_info->selection_region)
+			gdk_region_destroy (job_info->selection_region);
+		job_info->selection_region =
+			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
+							   job_info->rc,
+							   &(job_info->new_points));
+
+		gtk_widget_ensure_style (pixbuf_cache->view);
+
+		text = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->text [GTK_STATE_SELECTED]));
+		base = convert_gdk_color_to_uint (& (pixbuf_cache->view->style->base [GTK_STATE_SELECTED]));
+
+		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
+					       job_info->rc, &(job_info->selection),
+					       &(job_info->new_points),
+					       old_points,
+					       text, base);
 		job_info->selection_points = job_info->new_points;
 		ev_document_doc_mutex_unlock ();
-
 	}
+	if (region)
+		*region = job_info->selection_region;
 	return job_info->selection;
 }
-
 
 static void
 update_job_selection (CacheJobInfo    *job_info,
@@ -802,7 +884,8 @@ clear_job_selection (CacheJobInfo *job_info)
 }
 
 /* This function will reset the selection on pages that no longer have them, and
- * will update the target_selection on those that need it.
+ * will update the target_selection on those that need it.  It will _not_ free
+ * the previous selection_list -- that's up to caller to do.
  */
 void
 ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
@@ -865,7 +948,7 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
 		if (page >= ev_page_cache_get_n_pages (page_cache))
 			break;
-		
+
 		selection = NULL;
 		while (list) {
 			if (((EvViewSelection *)list->data)->page == page) {
@@ -883,3 +966,73 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 		page ++;
 	}
 }
+
+
+/* Returns what the pixbuf cache thinks is */
+
+GList *
+ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
+{
+	EvPageCache *page_cache;
+	EvViewSelection *selection;
+	GList *retval = NULL;
+	int page;
+	int i;
+
+	g_return_val_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache), NULL);
+
+	page_cache = ev_page_cache_get (pixbuf_cache->document);
+
+	/* We check each area to see what needs updating, and what needs freeing; */
+	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		if (page < 0) {
+			page ++;
+			continue;
+		}
+
+		if (pixbuf_cache->prev_job[i].selection_points.x1 != -1) {
+			selection = g_new0 (EvViewSelection, 1);
+			selection->page = page;
+			selection->rect = pixbuf_cache->prev_job[i].selection_points;
+			if (pixbuf_cache->prev_job[i].selection_region)
+				selection->covered_region = gdk_region_copy (pixbuf_cache->prev_job[i].selection_region);
+			retval = g_list_append (retval, selection);
+		}
+		
+		page ++;
+	}
+
+	page = pixbuf_cache->start_page;
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+		if (pixbuf_cache->job_list[i].selection_points.x1 != -1) {
+			selection = g_new0 (EvViewSelection, 1);
+			selection->page = page;
+			selection->rect = pixbuf_cache->job_list[i].selection_points;
+			if (pixbuf_cache->job_list[i].selection_region)
+				selection->covered_region = gdk_region_copy (pixbuf_cache->job_list[i].selection_region);
+			retval = g_list_append (retval, selection);
+		}
+		
+		page ++;
+	}
+
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		if (page >= ev_page_cache_get_n_pages (page_cache))
+			break;
+
+		if (pixbuf_cache->next_job[i].selection_points.x1 != -1) {
+			selection = g_new0 (EvViewSelection, 1);
+			selection->page = page;
+			selection->rect = pixbuf_cache->next_job[i].selection_points;
+			if (pixbuf_cache->next_job[i].selection_region)
+				selection->covered_region = gdk_region_copy (pixbuf_cache->next_job[i].selection_region);
+			retval = g_list_append (retval, selection);
+		}
+		
+		page ++;
+	}
+
+	return retval;
+}
+

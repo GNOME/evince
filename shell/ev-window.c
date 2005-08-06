@@ -1572,6 +1572,9 @@ ev_window_update_fullscreen_popup (EvWindow *window)
 
 	g_return_if_fail (popup != NULL);
 
+	if (GTK_WIDGET (window)->window == NULL)
+		return;
+
 	toolbar = (window->priv->chrome & EV_CHROME_TOOLBAR) != 0 || 
 		  (window->priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0;
 	popup_width = popup->requisition.width;

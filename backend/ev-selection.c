@@ -61,13 +61,16 @@ ev_selection_render_selection (EvSelection      *selection,
 			       EvRenderContext  *rc,
 			       GdkPixbuf       **pixbuf,
 			       EvRectangle      *points,
-			       EvRectangle      *old_points)
+			       EvRectangle      *old_points,
+			       guint             text,
+			       guint             base)
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
 	iface->render_selection (selection, rc,
 				 pixbuf,
-				 points, old_points);
+				 points, old_points,
+				 text, base);
 }
 
 GdkRegion *

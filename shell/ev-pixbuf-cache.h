@@ -42,13 +42,15 @@ G_BEGIN_DECLS
 typedef struct {
 	int page;
 	EvRectangle rect;
+	GdkRegion *covered_region;
 } EvViewSelection;
 
 typedef struct _EvPixbufCache       EvPixbufCache;
 typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
 GType          ev_pixbuf_cache_get_type         (void) G_GNUC_CONST;
-EvPixbufCache *ev_pixbuf_cache_new                  (EvDocument    *document);
+EvPixbufCache *ev_pixbuf_cache_new                  (GtkWidget     *view,
+						     EvDocument    *document);
 void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
 						     gint           start_page,
 						     gint           end_page,
@@ -62,13 +64,16 @@ GList         *ev_pixbuf_cache_get_link_mapping     (EvPixbufCache *pixbuf_cache
 GdkRegion     *ev_pixbuf_cache_get_text_mapping     (EvPixbufCache *pixbuf_cache,
 						     gint           page);
 void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache);
+void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
 
 /* Selection */
 GdkPixbuf     *ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
 						     gint           page,
-						     gfloat         scale);
+						     gfloat         scale,
+						     GdkRegion     **region);
 void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
 						     GList         *selection_list);
+GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);
 
 G_END_DECLS
 
