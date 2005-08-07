@@ -483,6 +483,9 @@ view_set_adjustment_values (EvView         *view,
 static void
 view_update_range_and_current_page (EvView *view)
 {
+	if (view->pending_scroll != SCROLL_TO_KEEP_POSITION)
+		return;
+
 	/* Presentation trumps all other modes */
 	if (view->presentation) {
 		view->start_page = view->current_page;

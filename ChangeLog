@@ -1,5 +1,11 @@
 2005-08-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-view.c: (view_update_range_and_current_page):
+	Don't update page range if we are scrolling to some document
+	point.
+
+2005-08-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-view.c: (get_page_extents): reverse rotation/scale
 	when getting max_page_width, fix drawing in dual mode.
 
