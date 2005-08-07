@@ -3169,8 +3169,9 @@ ev_view_select_all (EvView *view)
 		EvViewSelection *selection;
 
 		ev_page_cache_get_size (view->page_cache,
+					i,
 					view->rotation,
-					i, 1.0, &width, &height);
+					1.0, &width, &height);
 
 		selection = g_new0 (EvViewSelection, 1);
 		selection->page = i;
