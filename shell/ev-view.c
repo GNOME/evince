@@ -813,8 +813,8 @@ get_page_extents (EvView       *view,
 		gint max_width;
 		gint x, y;
 
-		ev_page_cache_get_max_width (view->page_cache, view->scale,
-					     view->rotation, &max_width);
+		ev_page_cache_get_max_width (view->page_cache, view->rotation,
+					     view->scale, &max_width);
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (view->dual_page) {
