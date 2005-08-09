@@ -254,8 +254,8 @@ ev_job_render_new (EvDocument      *document,
 	job->rc = g_object_ref (rc);
 	job->target_width = width;
 	job->target_height = height;
-	job->text = text;
-	job->base = base;
+	job->text = *text;
+	job->base = *base;
 	job->include_links = include_links;
 	job->include_text = include_text;
 	job->include_selection = include_selection;
@@ -305,7 +305,7 @@ ev_job_render_run (EvJobRender *job)
 						       &(job->selection),
 						       &(job->selection_points),
 						       NULL,
-						       job->text, job->base);
+						       &(job->text), &(job->base));
 			job->selection_region =
 				ev_selection_get_selection_region (EV_SELECTION (EV_JOB (job)->document),
 								   job->rc,
