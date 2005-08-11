@@ -653,7 +653,7 @@ ev_page_action_class_init (EvPageActionClass *class)
 	signals[ACTIVATE_LABEL] = g_signal_new ("activate_label",
 					        G_OBJECT_CLASS_TYPE (object_class),
 					        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-					        G_STRUCT_OFFSET (EvPageActionClass, activate_link),
+					        G_STRUCT_OFFSET (EvPageActionClass, activate_label),
 					        NULL, NULL,
 					        ev_marshal_BOOLEAN__STRING,
 					        G_TYPE_BOOLEAN, 1,
