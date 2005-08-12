@@ -42,6 +42,7 @@
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
 #define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
 
+
 enum {
 	PROP_0,
 	PROP_STATUS,
@@ -85,6 +86,11 @@ typedef enum {
 	EV_VIEW_CURSOR_HIDDEN,
 	EV_VIEW_CURSOR_DRAG
 } EvViewCursor;
+
+typedef enum {
+	EV_VIEW_FIND_NEXT,
+	EV_VIEW_FIND_PREV
+} EvViewFindDirection;
 
 #define ZOOM_IN_FACTOR  1.2
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
@@ -360,7 +366,8 @@ static void       ev_view_set_find_status                    (EvView            
 							      const char         *message);
 /*** Find ***/
 static void       jump_to_find_result                        (EvView             *view);
-static void       jump_to_find_page                          (EvView             *view);
+static void       jump_to_find_page                          (EvView             *view, 
+							      EvViewFindDirection direction);
 
 /*** Selection ***/
 static void       compute_selections                         (EvView             *view,
@@ -2062,7 +2069,7 @@ ev_view_init (EvView *view)
 static void
 find_changed_cb (EvDocument *document, int page, EvView *view)
 {
-	jump_to_find_page (view);
+	jump_to_find_page (view, EV_VIEW_FIND_NEXT);
 	jump_to_find_result (view);
 	update_find_status_message (view);
 
@@ -2765,7 +2772,7 @@ jump_to_find_result (EvView *view)
 
 	n_results = ev_document_find_get_n_results (find, page);
 
-	if (n_results > view->find_result) {
+	if (n_results > 0  && view->find_result < n_results) {
 		ev_document_find_get_result
 			(find, page, view->find_result, &rect);
 
@@ -2775,7 +2782,7 @@ jump_to_find_result (EvView *view)
 }
 
 static void
-jump_to_find_page (EvView *view)
+jump_to_find_page (EvView *view, EvViewFindDirection direction)
 {
 	int n_pages, i;
 
@@ -2784,12 +2791,19 @@ jump_to_find_page (EvView *view)
 	for (i = 0; i < n_pages; i++) {
 		int has_results;
 		int page;
+		
+		if (direction == EV_VIEW_FIND_NEXT)
+			page = view->find_page + i;
+		else
+			page = view->find_page - i;
 
-		page = i + view->find_page;
+
 		if (page >= n_pages) {
 			page = page - n_pages;
 		}
-
+		if (page < 0) 
+			page = page + n_pages;
+		
 		has_results = ev_document_find_page_has_results
 				(EV_DOCUMENT_FIND (view->document), page);
 		if (has_results == -1) {
@@ -2797,7 +2811,6 @@ jump_to_find_page (EvView *view)
 			break;
 		} else if (has_results == 1) {
 			ev_page_cache_set_current_page (view->page_cache, page);
-			jump_to_find_result (view);
 			break;
 		}
 	}
@@ -2830,14 +2843,15 @@ ev_view_find_next (EvView *view)
 	view->find_result++;
 
 	if (view->find_result >= n_results) {
+
 		view->find_result = 0;
 		view->find_page++;
-
 		if (view->find_page >= n_pages) {
 			view->find_page = 0;
 		}
 
-		jump_to_find_page (view);
+		jump_to_find_page (view, EV_VIEW_FIND_NEXT);
+		jump_to_find_result (view);
 	} else {
 		jump_to_find_result (view);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -2860,14 +2874,15 @@ ev_view_find_previous (EvView *view)
 	view->find_result--;
 
 	if (view->find_result < 0) {
-		view->find_result = 0;
-		view->find_page--;
 
+		view->find_page--;
 		if (view->find_page < 0) {
 			view->find_page = n_pages - 1;
 		}
 
-		jump_to_find_page (view);
+		jump_to_find_page (view, EV_VIEW_FIND_PREV);
+		view->find_result = ev_document_find_get_n_results (find, view->current_page) - 1;
+		jump_to_find_result (view);
 	} else {
 		jump_to_find_result (view);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
