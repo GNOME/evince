@@ -1074,7 +1074,7 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 	GtkWidget *chooser;
 	static char *folder = NULL;
 
-	chooser = gtk_file_chooser_dialog_new (_("Open document"),
+	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
 					       GTK_WINDOW (window),
 					       GTK_FILE_CHOOSER_ACTION_OPEN,
 					       GTK_STOCK_CANCEL,
@@ -2859,16 +2859,16 @@ static const GtkActionEntry entries[] = {
 	{ "Help", NULL, N_("_Help") },
 
 	/* File menu */
-	{ "FileOpen", GTK_STOCK_OPEN, NULL, "<control>O",
+	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open..."), "<control>O",
 	  N_("Open an existing document"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), NULL,
 	  N_("Save the current document with a new filename"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePrint", GTK_STOCK_PRINT, N_("Print..."), "<control>P",
+	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print..."), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
-	{ "FileProperties", GTK_STOCK_PROPERTIES, N_("Properties"), "<alt>Return",
+	{ "FileProperties", GTK_STOCK_PROPERTIES, N_("P_roperties"), "<alt>Return",
 	  N_("View the properties of this document"),
 	  G_CALLBACK (ev_window_cmd_file_properties) },			      
 	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W",
@@ -2996,7 +2996,7 @@ static const GtkToggleActionEntry toggle_entries[] = {
 	{ "ViewStatusbar", NULL, N_("_Statusbar"), NULL,
 	  N_("Show or hide the statusbar"),
 	  G_CALLBACK (ev_window_view_statusbar_cb), TRUE },
-        { "ViewSidebar", NULL, N_("Side _pane"), "F9",
+        { "ViewSidebar", NULL, N_("Side _Pane"), "F9",
 	  N_("Show or hide the side pane"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
         { "ViewContinuous", EV_STOCK_VIEW_CONTINUOUS, N_("_Continuous"), NULL,
