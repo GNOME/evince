@@ -1,12 +1,14 @@
 Mon Aug 15 00:40:21 2005  Jonathan Blandford  <jrb@redhat.com>
 
-	* pdf/ev-poppler.cc: * shell/ev-metadata-manager.c:
-	(ev_metadata_manager_init): * shell/ev-view.c:
-	(ev_view_rotate_left), (ev_view_set_rotation),
-	(ev_view_get_rotation): * shell/ev-view.h: * shell/ev-window.c:
-	(setup_view_from_metadata),
+	* pdf/ev-poppler.cc:
+	* shell/ev-metadata-manager.c: (ev_metadata_manager_init):
+	* shell/ev-view.c: (ev_view_rotate_left), (ev_view_set_rotation),
+	(ev_view_get_rotation):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (setup_view_from_metadata),
 	(save_rotation_to_file), (ev_window_cmd_edit_rotate_left),
-	(ev_window_cmd_edit_rotate_right): Fix rotation.  Save it to disk.
+	(ev_window_cmd_edit_rotate_right): Fix rotation.  Save it to
+	disk.
 
 2005-08-14  Baris Cicek <baris@teamforce.name.tr>
 
