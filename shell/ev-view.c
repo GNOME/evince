@@ -2409,15 +2409,6 @@ ev_view_zoom_out (EvView *view)
 	ev_view_set_zoom (view, ZOOM_OUT_FACTOR, TRUE);
 }
 
-static void
-ev_view_set_rotation (EvView *view, int rotation)
-{
-	view->rotation = rotation;
-
-	ev_pixbuf_cache_clear (view->pixbuf_cache);
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-}
-
 void
 ev_view_rotate_right (EvView *view)
 {
@@ -2440,6 +2431,23 @@ ev_view_rotate_left (EvView *view)
 	}
 
 	ev_view_set_rotation (view, rotation);
+}
+
+void
+ev_view_set_rotation (EvView *view, int rotation)
+{
+	view->rotation = rotation;
+
+	if (view->pixbuf_cache) {
+		ev_pixbuf_cache_clear (view->pixbuf_cache);
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+}
+
+int
+ev_view_get_rotation (EvView *view)
+{
+	return view->rotation;
 }
 
 static double

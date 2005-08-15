@@ -956,6 +956,7 @@ setup_view_from_metadata (EvWindow *window)
 	GValue dual_page = { 0, };
 	GValue presentation = { 0, };
 	GValue fullscreen = { 0, };
+	GValue rotation = { 0, };
 
 	/* Window size */
 	if (!GTK_WIDGET_VISIBLE (window)) {
@@ -1016,6 +1017,25 @@ setup_view_from_metadata (EvWindow *window)
 	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen)) {
 		if (g_value_get_boolean (&fullscreen)) {
 			ev_window_run_fullscreen (window);
+		}
+	}
+
+	/* Rotation */
+	if (ev_metadata_manager_get (uri, "rotation", &rotation)) {
+		if (g_value_get_int (&rotation)) {
+			switch (g_value_get_int (&rotation)) {
+			case 90:
+				ev_view_set_rotation (view, 90);
+				break;
+			case 180:
+				ev_view_set_rotation (view, 180);
+				break;
+			case 270:
+				ev_view_set_rotation (view, 270);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }
@@ -2036,11 +2056,27 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
         gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
+/* should these be hooked up to properties?? */
+static void
+save_rotation_to_file (EvWindow *window)
+{
+	int rotation;
+
+	if (window->priv->uri) {
+		rotation = ev_view_get_rotation (EV_VIEW (window->priv->view));
+		ev_metadata_manager_set_int (window->priv->uri, "rotation",
+					     rotation);
+	}
+
+
+}
+
 static void
 ev_window_cmd_edit_rotate_left (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_left (EV_VIEW (ev_window->priv->view));
 	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (ev_window->priv->sidebar_thumbs));
+	save_rotation_to_file (ev_window);
 }
 
 static void
@@ -2048,6 +2084,7 @@ ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_right (EV_VIEW (ev_window->priv->view));
 	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (ev_window->priv->sidebar_thumbs));
+	save_rotation_to_file (ev_window);
 }
 
 static void

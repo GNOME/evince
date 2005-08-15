@@ -101,6 +101,9 @@ void		ev_view_set_zoom_for_size (EvView         *view,
 					   int             hsb_height);
 void		ev_view_rotate_left       (EvView         *view);
 void            ev_view_rotate_right      (EvView         *view);
+void            ev_view_set_rotation      (EvView         *view,
+					   int             rotation);
+int             ev_view_get_rotation      (EvView         *view);
 
 /* Find */
 gboolean	ev_view_can_find_next	  (EvView         *view);

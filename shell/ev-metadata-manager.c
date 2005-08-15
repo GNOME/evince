@@ -43,7 +43,7 @@
 
 #define MAX_ITEMS	50
 
-typedef struct _GeditMetadataManager GeditMetadataManager;
+typedef struct _EvMetadataManager EvMetadataManager;
 
 typedef struct _Item Item;
 
@@ -54,7 +54,7 @@ struct _Item
 	GHashTable	*values;
 };
 	
-struct _GeditMetadataManager
+struct _EvMetadataManager
 {
 	gboolean	 values_loaded; /* It is true if the file 
 					   has been read */
@@ -70,7 +70,7 @@ struct _GeditMetadataManager
 static gboolean ev_metadata_manager_save (gpointer data);
 
 
-static GeditMetadataManager *ev_metadata_manager = NULL;
+static EvMetadataManager *ev_metadata_manager = NULL;
 
 static void
 item_free (gpointer data)
@@ -90,7 +90,7 @@ item_free (gpointer data)
 void
 ev_metadata_manager_init (void)
 {
-	ev_metadata_manager = g_new0 (GeditMetadataManager, 1);
+	ev_metadata_manager = g_new0 (EvMetadataManager, 1);
 
 	ev_metadata_manager->values_loaded = FALSE;
 	ev_metadata_manager->modified = FALSE;

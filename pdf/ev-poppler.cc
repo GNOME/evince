@@ -247,21 +247,19 @@ static void
 set_page_orientation (PdfDocument *pdf_document, PopplerPage *page, int rotation)
 {
 	PopplerOrientation orientation;
-	int r = rotation;
 
-	orientation = poppler_page_get_orientation (page);
-
-	while (r > 0) {
-		if (orientation == POPPLER_ORIENTATION_PORTRAIT) {
-			orientation = POPPLER_ORIENTATION_LANDSCAPE;
-		} else if (orientation == POPPLER_ORIENTATION_LANDSCAPE) {
-			orientation = POPPLER_ORIENTATION_UPSIDEDOWN;
-		} else if (orientation == POPPLER_ORIENTATION_UPSIDEDOWN) {
-			orientation = POPPLER_ORIENTATION_SEASCAPE;
-		} else {
-			orientation = POPPLER_ORIENTATION_PORTRAIT;
-		}
-		r -= 90;
+	switch (rotation) {
+	case 90:
+		orientation = POPPLER_ORIENTATION_LANDSCAPE;
+		break;
+	case 180:
+		orientation = POPPLER_ORIENTATION_UPSIDEDOWN;
+		break;
+	case 270:
+		orientation = POPPLER_ORIENTATION_SEASCAPE;
+		break;
+	default:
+		orientation = POPPLER_ORIENTATION_PORTRAIT;
 	}
 
 	poppler_page_set_orientation (page, orientation);
