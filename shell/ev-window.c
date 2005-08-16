@@ -2255,6 +2255,7 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 	widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
 		update_chrome_flag (window, EV_CHROME_FINDBAR, NULL, FALSE);
+		gtk_widget_grab_focus (window->priv->view);
 	} else {
 		gboolean fullscreen;
 		gboolean presentation;
