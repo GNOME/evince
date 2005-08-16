@@ -589,11 +589,11 @@ update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_windo
 	}
 
 	if (doc_title == NULL && ev_window->priv->uri) {
-		char *basename;
+		char *display_name;
 
-		basename = g_path_get_basename (ev_window->priv->uri);
-		doc_title = gnome_vfs_unescape_string_for_display (basename);
-		g_free (basename);
+		display_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
+		doc_title = g_path_get_basename (display_name);
+		g_free (display_name);
 	}
 
 	if (password_needed) {
@@ -766,20 +766,21 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 
 	update_window_title (ev_window->priv->password_document, NULL, ev_window);
 	if (ev_window->priv->password_dialog == NULL) {
-		gchar *basename, *file_name;
+		gchar *base_name, *file_name;
 
-		basename = g_path_get_basename (ev_window->priv->password_uri);
-		file_name = gnome_vfs_unescape_string_for_display (basename);
+		file_name = gnome_vfs_format_uri_for_display (ev_window->priv->password_uri);
+		base_name = g_path_get_basename (file_name);
 		ev_window->priv->password_dialog =
-			ev_password_dialog_new (GTK_WIDGET (ev_window), file_name);
+			ev_password_dialog_new (GTK_WIDGET (ev_window), base_name);
+		g_free (base_name);
+		g_free (file_name);
+
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
 					   (gpointer *) &(ev_window->priv->password_dialog));
 		g_signal_connect (ev_window->priv->password_dialog,
 				  "response",
 				  G_CALLBACK (password_dialog_response),
 				  ev_window);
-		g_free (basename);
-		g_free (file_name);
 		gtk_widget_show (ev_window->priv->password_dialog);
 	} else {
 		ev_password_dialog_set_bad_pass (ev_window->priv->password_dialog);
@@ -881,11 +882,10 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		ev_window->priv->password_document = g_object_ref (document);
 		ev_window->priv->password_uri = g_strdup (job->uri);
 
-		base_name = g_path_get_basename (job->uri);
-		file_name = gnome_vfs_unescape_string_for_display (base_name);
-
+		file_name = gnome_vfs_format_uri_for_display (job->uri);
+		base_name = g_path_get_basename (file_name);
 		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
-						file_name);
+						base_name);
 		g_free (file_name);
 		g_free (base_name);
 		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
@@ -1232,7 +1232,8 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 
 	gchar *uri;
-	gchar *basename;
+	gchar *base_name;
+	gchar *file_name;
 	static char* folder = NULL;
 
 	gboolean success;
@@ -1253,9 +1254,11 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 							folder);
     	}
 	
-	basename = g_path_get_basename (ev_window->priv->uri);
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), basename);
-	g_free (basename);
+	file_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
+	base_name = g_path_get_basename (file_name);
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
+	g_free (file_name);
+	g_free (base_name);
 
 	gtk_widget_show (fc);
 

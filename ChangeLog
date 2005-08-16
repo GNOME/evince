@@ -1,3 +1,12 @@
+2005-08-16  Nickolay V. Shmyrev <nshmyrev@yandex.ru>
+
+	* shell/ev-window.c: (update_window_title),
+	(ev_window_popup_password_dialog), (ev_window_load_job_cb),
+	(ev_window_cmd_save_as):
+	
+	Correct conversion from uri to displayable string. Fix for
+	bug 313296.
+
 2005-08-16  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* ps/ps-document.c: convert filename to utf8 when there is an error
