@@ -62,6 +62,7 @@
 #include "ev-stock-icons.h"
 #include "ev-metadata-manager.h"
 #include "ev-file-helpers.h"
+#include "ev-utils.h"
 
 #include <poppler.h>
 

@@ -213,6 +213,7 @@ ev_print_region_contents (GdkRegion *region)
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
+#include <glib/gstdio.h>
 
 static gboolean
 rename_file (const char *old_name,
@@ -240,8 +241,6 @@ set_umask_permissions (int	     fd,
    * the umask in between the getting and the setting of the umask.
    * So we have to do the whole thing in a child process.
    */
-
-  int save_errno;
   pid_t pid;
 
   pid = fork ();
@@ -276,9 +275,7 @@ set_umask_permissions (int	     fd,
 
       if (WIFEXITED (status))
 	{
-	  save_errno = WEXITSTATUS (status);
-
-	  if (save_errno == 0)
+	  if (WEXITSTATUS (status) == 0)
 	    {
 	      return TRUE;
 	    }
@@ -309,7 +306,6 @@ write_to_temp_file (const gchar *contents,
   gchar *retval;
   FILE *file;
   gint fd;
-  int save_errno;
 
   retval = NULL;
   
