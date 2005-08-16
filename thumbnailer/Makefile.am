@@ -19,9 +19,6 @@ evince_thumbnailer_LDADD=				\
 	$(FRONTEND_LIBS)				\
 	$(top_builddir)/lib/libev.la
 
-pixmapdir = $(pkgdatadir)
-pixmap_DATA = pdf-icon.png
-
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \
 	evince-thumbnailer-djvu.schemas.in \
@@ -49,7 +46,6 @@ if GCONF_SCHEMAS_INSTALL
 endif
 
 EXTRA_DIST =         	\
-	$(pixmap_DATA)	\
 	$(schema_files)  
 
 DISTCLEANFILES = \

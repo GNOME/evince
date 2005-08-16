@@ -91,10 +91,6 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	if (pixbuf != NULL) {
 		const char *overlaid_icon_name = NULL;
 
-		if (strcmp (mime_type, "application/pdf") == 0) {
-			overlaid_icon_name = "pdf-icon.png";
-		}
-
 		if (overlaid_icon_name) {
 			GdkPixbuf *overlaid_pixbuf;
 
