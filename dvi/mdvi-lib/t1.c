@@ -173,8 +173,12 @@ static void t1_reset_resolution(int xdpi, int ydpi)
 
 	DEBUG((DBG_TYPE1, "(t1) resetting device resolution (current: (%d,%d))\n",
 		t1lib_xdpi, t1lib_ydpi));
-
+#if T1LIB_VERSION < 5
 	nfonts = T1_Get_no_fonts();
+#else
+	nfonts = T1_GetNoFonts();
+#endif	
+
 	for(i = 0; i < nfonts; i++)
 		T1_DeleteAllSizes(i);
 	/* reset device resolutions */
@@ -261,7 +265,7 @@ static int t1_really_load_font(DviParams *params, DviFont *font, T1Info *info)
 	font->design = info->tfminfo->design;
 
 	/* check if we have a font with this name (maybe at a different size) */
-	old = (T1Info *)mdvi_hash_lookup(&t1hash, info->fontname);
+	old = (T1Info *)mdvi_hash_lookup(&t1hash, (unsigned char *)info->fontname);
 	if(old == info) {
 		/* let's avoid confusion */
 		old = NULL;
@@ -290,8 +294,8 @@ static int t1_really_load_font(DviParams *params, DviFont *font, T1Info *info)
 	if(old && old->t1id == -1) {
 		DEBUG((DBG_TYPE1, "(t1) font `%s' exchanged in hash table\n",
 			info->fontname));
-		mdvi_hash_remove(&t1hash, old->fontname);
-		mdvi_hash_add(&t1hash, info->fontname, 
+		mdvi_hash_remove(&t1hash, (unsigned char *)old->fontname);
+		mdvi_hash_add(&t1hash, (unsigned char *)info->fontname, 
 			info, MDVI_HASH_UNCHECKED);
 	}
 
@@ -404,7 +408,7 @@ static int t1_load_font(DviParams *params, DviFont *font)
 	/* create the hash table if we have not done so yet */
 	if(t1hash.nbucks == 0)
 		mdvi_hash_create(&t1hash, T1_HASH_SIZE);
-	mdvi_hash_add(&t1hash, info->fontname, info, MDVI_HASH_UNIQUE);		
+	mdvi_hash_add(&t1hash, (unsigned char *) info->fontname, info, MDVI_HASH_UNIQUE);		
 	listh_append(&t1fonts, LIST(info));
 
 	font->private = info;
@@ -442,7 +446,7 @@ static inline BITMAP *t1_glyph_bitmap(GLYPH *glyph)
 		return MDVI_GLYPH_EMPTY;
 	switch(glyph->bpp << 3) {
 		case 8: 
-			bm = bitmap_convert_lsb8(glyph->bits, w, h);
+			bm = bitmap_convert_lsb8((unsigned char *)glyph->bits, w, h);
 			break;
 		default:
 			warning(_("(t1) unsupported bitmap pad size %d\n"),
@@ -568,16 +572,16 @@ static void t1_font_remove(T1Info *info)
 	listh_remove(&t1fonts, LIST(info));
 
 	/* it it's in the hash table, we may need to replace this by another font */
-	old = (T1Info *)mdvi_hash_lookup(&t1hash, info->fontname);
+	old = (T1Info *)mdvi_hash_lookup(&t1hash, (unsigned char *)info->fontname);
 	if(old == info) {
-		mdvi_hash_remove(&t1hash, info->fontname);
+		mdvi_hash_remove(&t1hash, (unsigned char *) info->fontname);
 		/* go through the list and see if there is another 
 		 * font with this name */
 		for(old = (T1Info *)t1fonts.head; old; old = old->next)
 			if(STREQ(old->fontname, info->fontname))
 				break;
 		if(old != NULL)
-			mdvi_hash_add(&t1hash, old->fontname, old, 
+			mdvi_hash_add(&t1hash, (unsigned char *) old->fontname, old, 
 				MDVI_HASH_UNCHECKED);
 	}
 	/* release our encoding vector */
