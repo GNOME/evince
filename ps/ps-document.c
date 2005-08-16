@@ -459,7 +459,7 @@ get_page_orientation (PSDocument *gs, int page)
 static void
 setup_page (PSDocument *gs, int page, double scale)
 {
-	char buf[1024];
+	gchar *buf;
 	int urx, ury, llx, lly, orientation;
 	char scaled_xdpi[G_ASCII_DTOSTR_BUF_SIZE];	
 	char scaled_ydpi[G_ASCII_DTOSTR_BUF_SIZE];
@@ -471,14 +471,16 @@ setup_page (PSDocument *gs, int page, double scale)
 	g_ascii_dtostr (scaled_xdpi, G_ASCII_DTOSTR_BUF_SIZE, get_xdpi (gs) * scale);
 	g_ascii_dtostr (scaled_ydpi, G_ASCII_DTOSTR_BUF_SIZE, get_ydpi (gs) * scale);
 
-	g_snprintf (buf, 1024, "%ld %d %d %d %d %d %s %s %d %d %d %d",
-		    0L, orientation * 90, llx, lly, urx, ury,
-		    scaled_xdpi, scaled_ydpi,		    
-		    0, 0, 0, 0);
+	buf = g_strdup_printf ("%ld %d %d %d %d %d %s %s %d %d %d %d",
+			       0L, orientation * 90, llx, lly, urx, ury,
+			       scaled_xdpi, scaled_ydpi,
+			       0, 0, 0, 0);
 	LOG ("GS property %s", buf);
 
 	gdk_property_change (gs->pstarget, gs_class->gs_atom, gs_class->string_atom,
 			     8, GDK_PROP_MODE_REPLACE, (guchar *)buf, strlen(buf));
+	g_free (buf);
+	
 	gdk_flush ();
 }
 
@@ -902,10 +904,22 @@ check_filecompressed (PSDocument * gs)
 		/* sucessfully uncompressed file */
 		gs->gs_filename_unc = filename_unc;
 	} else {
+		gchar *utf8 = NULL;
+		gchar *msg;
+
 		/* report error */
-		g_snprintf (buf, 1024, _("Error while decompressing file %s:\n"),
-                            gs->gs_filename);
-		interpreter_failed (gs, buf);
+		utf8 = g_locale_to_utf8 (gs->gs_filename, -1, NULL, NULL, NULL);
+		
+		if (utf8) {
+			msg = g_strdup_printf (_("Error while decompressing file %s:\n"), utf8);
+		} else {
+			msg = g_strdup (_("Error while decompressing file\n"));
+		}
+
+		g_free (utf8);
+		
+		interpreter_failed (gs, msg);
+		g_free (msg);
 		unlink (filename_unc);
 		g_free (filename_unc);
 		filename_unc = NULL;
@@ -957,10 +971,21 @@ document_load (PSDocument *gs, const gchar *fname)
 		gchar *filename = NULL;
 
 		if (!file_readable(fname)) {
-			gchar buf[1024];
+			gchar *utf8 = NULL;
+			gchar *msg;
 
-			g_snprintf (buf, 1024, _("Cannot open file %s.\n"), fname);
-			interpreter_failed (gs, buf);
+			utf8 = g_locale_to_utf8 (fname, -1, NULL, NULL, NULL);
+
+			if (utf8) {
+				msg = g_strdup_printf (_("Cannot open file %s.\n"), utf8);
+			} else {
+				msg = g_strdup (_("Cannot open file.\n"));
+			}
+
+			g_free (utf8);
+			
+			interpreter_failed (gs, msg);
+			g_free (msg);
 			gs->gs_status = _("File is not readable.");
 		} else {
 			filename = check_filecompressed(gs);
@@ -1072,10 +1097,22 @@ ps_document_load (EvDocument  *document,
 
 	result = document_load (PS_DOCUMENT (document), filename);
 	if (!result) {
-		g_set_error (error, G_FILE_ERROR,
-			     G_FILE_ERROR_FAILED,
-			     "Failed to load document '%s'\n",
-			     uri);
+		gchar *utf8 = NULL;
+
+		utf8 = g_locale_to_utf8 (filename, -1, NULL, NULL, NULL);
+
+		if (utf8) {
+			g_set_error (error, G_FILE_ERROR,
+				     G_FILE_ERROR_FAILED,
+				     _("Failed to load document '%s'"),
+				     utf8);
+		} else {
+			g_set_error (error, G_FILE_ERROR,
+				     G_FILE_ERROR_FAILED,
+				     _("Failed to load document"));
+		}
+
+		g_free (utf8);
 	}
 
 	g_free (filename);
