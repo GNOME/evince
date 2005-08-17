@@ -904,19 +904,13 @@ check_filecompressed (PSDocument * gs)
 		/* sucessfully uncompressed file */
 		gs->gs_filename_unc = filename_unc;
 	} else {
-		gchar *utf8 = NULL;
+		gchar *filename_dsp;
 		gchar *msg;
 
 		/* report error */
-		utf8 = g_locale_to_utf8 (gs->gs_filename, -1, NULL, NULL, NULL);
-		
-		if (utf8) {
-			msg = g_strdup_printf (_("Error while decompressing file %s:\n"), utf8);
-		} else {
-			msg = g_strdup (_("Error while decompressing file\n"));
-		}
-
-		g_free (utf8);
+		filename_dsp = g_filename_display_name (gs->gs_filename);
+		msg = g_strdup_printf (_("Error while decompressing file %s:\n"), filename_dsp);
+		g_free (filename_dsp);
 		
 		interpreter_failed (gs, msg);
 		g_free (msg);
@@ -971,18 +965,12 @@ document_load (PSDocument *gs, const gchar *fname)
 		gchar *filename = NULL;
 
 		if (!file_readable(fname)) {
-			gchar *utf8 = NULL;
+			gchar *filename_dsp;
 			gchar *msg;
 
-			utf8 = g_locale_to_utf8 (fname, -1, NULL, NULL, NULL);
-
-			if (utf8) {
-				msg = g_strdup_printf (_("Cannot open file %s.\n"), utf8);
-			} else {
-				msg = g_strdup (_("Cannot open file.\n"));
-			}
-
-			g_free (utf8);
+			filename_dsp = g_filename_display_name (fname);
+			msg = g_strdup_printf (_("Cannot open file %s.\n"), filename_dsp);
+			g_free (filename_dsp);
 			
 			interpreter_failed (gs, msg);
 			g_free (msg);
@@ -1097,22 +1085,16 @@ ps_document_load (EvDocument  *document,
 
 	result = document_load (PS_DOCUMENT (document), filename);
 	if (!result) {
-		gchar *utf8 = NULL;
+		gchar *filename_dsp;
 
-		utf8 = g_locale_to_utf8 (filename, -1, NULL, NULL, NULL);
+		filename_dsp = g_filename_display_name (filename);
 
-		if (utf8) {
-			g_set_error (error, G_FILE_ERROR,
-				     G_FILE_ERROR_FAILED,
-				     _("Failed to load document '%s'"),
-				     utf8);
-		} else {
-			g_set_error (error, G_FILE_ERROR,
-				     G_FILE_ERROR_FAILED,
-				     _("Failed to load document"));
-		}
+		g_set_error (error, G_FILE_ERROR,
+			     G_FILE_ERROR_FAILED,
+			     _("Failed to load document '%s'"),
+			     filename_dsp);
 
-		g_free (utf8);
+		g_free (filename_dsp);
 	}
 
 	g_free (filename);
