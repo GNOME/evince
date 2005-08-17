@@ -236,8 +236,6 @@ static void       find_page_at_location                      (EvView            
 							      gint               *page,
 							      gint               *x_offset,
 							      gint               *y_offset);
-static void       ev_view_queue_draw_page                    (EvView             *view,
-							      gint                page);
 
 /*** Hyperrefs ***/
 static EvLink*    get_link_at_location                       (EvView             *view,
@@ -1005,14 +1003,6 @@ find_page_at_location (EvView  *view,
 	}
 
 	*page = -1;
-}
-
-static void
-ev_view_queue_draw_page (EvView *view,
-			 gint    page)
-{
-	/* FIXME: write */
-	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 static gboolean

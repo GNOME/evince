@@ -82,8 +82,10 @@ if ENABLE_DBUS
 BUILT_SOURCES += ev-application-service.h
 endif
 
-EXTRA_DIST = ev-marshal.list \
-	     ev-application-service.h
+EXTRA_DIST = ev-marshal.list		\
+	ev-application-service.h	\
+	ev-application-service.xml
+
 
 ev-marshal.h: ev-marshal.list
 	glib-genmarshal --prefix=ev_marshal ev-marshal.list --header > ev-marshal.h
