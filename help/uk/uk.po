@@ -1,0 +1,605 @@
+# Ukrainian translation to evince.
+# Copyright (C) Free Software Foundation, 2005
+# This file is distributed under the same license as the epiphany package.
+# Maxim Dziumanenko <mvd@mylinux.ua>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: evince manual\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-17 02:00+0300\n"
+"PO-Revision-Date: 2005-08-17 12:57+0300\n"
+"Last-Translator: Maxim Dziumanenko <mvd@mylinux.ua>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../C/evince.xml:25(title) ../C/evince.xml:85(revnumber) 
+msgid "Evince Document Viewer Manual V1.0"
+msgstr "Довідка з переглядача документів Evince версії 1.0"
+
+#: ../C/evince.xml:27(para) 
+msgid "User manual for the Evince Document Viewer."
+msgstr "Довідка з програми перегляду документів Evince"
+
+#: ../C/evince.xml:30(year) 
+msgid "2005"
+msgstr "2005"
+
+#: ../C/evince.xml:31(holder) ../C/evince.xml:88(para) 
+msgid "Nickolay V. Shmyrev"
+msgstr "Nickolay V. Shmyrev"
+
+#: ../C/evince.xml:34(year) 
+msgid "2004"
+msgstr "2004"
+
+#: ../C/evince.xml:35(holder) ../C/evince.xml:58(orgname) 
+msgid "Sun Microsystems"
+msgstr "Sun Microsystems"
+
+#: ../C/evince.xml:46(publishername) ../C/evince.xml:64(orgname) ../C/evince.xml:89(para) 
+msgid "GNOME Documentation Project"
+msgstr "Проект документування GNOME"
+
+#: ../C/evince.xml:56(firstname) 
+msgid "Sun"
+msgstr "Sun"
+
+#: ../C/evince.xml:57(surname) 
+msgid "GNOME Documentation Team"
+msgstr "Команда документування GNOME"
+
+#: ../C/evince.xml:61(firstname) 
+msgid "Nickolay V."
+msgstr "Nickolay V."
+
+#: ../C/evince.xml:62(surname) 
+msgid "Shmyrev"
+msgstr "Shmyrev"
+
+#: ../C/evince.xml:65(email) 
+msgid "nshmyrev@yandex.ru"
+msgstr "nshmyrev@yandex.ru"
+
+#: ../C/evince.xml:86(date) 
+msgid "2005-04-06"
+msgstr "2005-04-06"
+
+#: ../C/evince.xml:94(releaseinfo) 
+msgid "This manual describes version 0.2 of Evince Document Viewer"
+msgstr "У цьому довіднику описується Переглядач документів Evince версії 0.2."
+
+#: ../C/evince.xml:97(title) 
+msgid "Feedback"
+msgstr "Зворотний зв'язок"
+
+#: ../C/evince.xml:98(para) 
+msgid "To report a bug or make a suggestion regarding the Evince Document Viewer application or this manual, follow the directions in the <ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
+msgstr "Щоб сповістити про помилку або внести пропозицію відносно програми Переглядач документів Evince або цієї довідки, дотримуйтесь інструкцій на сторінці <ulink url=\"ghelp:gnome-feedback\" type=\"help\">Зворотний зв'язок з GNOME</ulink>."
+
+#: ../C/evince.xml:108(primary) 
+msgid "evince"
+msgstr "evince"
+
+#: ../C/evince.xml:116(title) 
+msgid "Introduction"
+msgstr "Вступ"
+
+#: ../C/evince.xml:117(para) 
+msgid "The <application>Evince Document Viewer</application> application enables you to view documents of various formats like Portable Document Format (PDF) files and PostScript files. <application>Evince Document Viewer</application> follows Freedesktop.org and GNOME standards to provide integration with Desktop Environment."
+msgstr "Програма <application>Переглядач документів Evince</application> дозволяє переглядати документи різних форматів, наприклад файлів Portable Document Format (PDF) чи PostScript. У забезпеченні інтеграції з робочим середовищем <application>Переглядач документів Evince</application> відповідає стандартам Freedesktop.org та GNOME."
+
+#: ../C/evince.xml:124(title) 
+msgid "Getting Started"
+msgstr "Початок роботи"
+
+#: ../C/evince.xml:127(title) 
+msgid "To Start Evince Document Viewer"
+msgstr "Запуск програми Evince"
+
+#: ../C/evince.xml:128(para) 
+msgid "You can start <application>Evince Document Viewer</application> in the following ways:"
+msgstr "Програму <application>Переглядач документів Evince</application> можна запустити наступними способами:"
+
+#: ../C/evince.xml:132(term) 
+msgid "<guimenu>Applications</guimenu> menu"
+msgstr "З меню <guimenu>Програми</guimenu>"
+
+#: ../C/evince.xml:134(para) 
+msgid "Choose <menuchoice><guisubmenu>Graphics</guisubmenu><guimenuitem>Evince Document Viewer</guimenuitem></menuchoice>."
+msgstr "Виберіть <menuchoice><guisubmenu>Графіка</guisubmenu><guimenuitem>Перегляд документів</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:139(term) 
+msgid "Command line"
+msgstr "З командного рядка"
+
+#: ../C/evince.xml:141(para) 
+msgid "Execute the following command: <command>evince</command>"
+msgstr "Виконайте наступну команду: <command>evince</command>"
+
+#: ../C/evince.xml:149(title) 
+msgid "When You Start Evince Document Viewer"
+msgstr "Після першого запуску програми Evince"
+
+#: ../C/evince.xml:150(para) 
+msgid "When you start <application>Evince Document Viewer</application>, the following window is displayed."
+msgstr "Після запуску програми <application>Переглядач документів Evince</application> відкриється наступне вікно."
+
+#: ../C/evince.xml:154(title) 
+msgid "Evince Document Viewer Window"
+msgstr "Вікно програми перегляду документів Evince."
+
+#: ../C/evince.xml:161(phrase) 
+msgid "Shows Evince Document Viewer main window. Contains titlebar, menubar, toolbar and display area. Menubar contains File, Edit, View, Go and Help menus."
+msgstr "Показано головне вікно програми Переглядач документів Evince. Вікно містить заголовок, панель меню, панель інструментів та область відображення. Меню містить пункти Файл, Правка, Вигляд, Перейти та Довідка."
+
+#: ../C/evince.xml:167(para) 
+msgid "The <application>Evince Document Viewer</application> window contains the following elements:"
+msgstr "Вікно програми <application>Переглядач документів Evince</application> містить наступні елементи:"
+
+#: ../C/evince.xml:171(term) ../C/evince.xml:219(para) 
+msgid "Menubar"
+msgstr "Панель меню"
+
+#: ../C/evince.xml:173(para) 
+msgid "The menus on the menubar contain all of the commands that you need to work with documents in <application>Evince Document Viewer</application>."
+msgstr "Меню містить усі необхідні для роботи з документами команди."
+
+#: ../C/evince.xml:177(term) 
+msgid "Toolbar"
+msgstr "Панель меню"
+
+#: ../C/evince.xml:179(para) 
+msgid "The toolbar contains a subset of the commands that you can access from the menubar."
+msgstr "Панель меню містить піднабір доступних у меню команд."
+
+#: ../C/evince.xml:183(term) 
+msgid "Display area"
+msgstr "Область відображення"
+
+#: ../C/evince.xml:185(para) 
+msgid "The display area displays the document."
+msgstr "Область відображення показує вміст документу."
+
+#: ../C/evince.xml:199(para) 
+msgid "UI Component"
+msgstr "Компонент інтерфейсу"
+
+#: ../C/evince.xml:201(para) 
+msgid "Action"
+msgstr "Дія"
+
+#: ../C/evince.xml:206(para) 
+msgid "Window"
+msgstr "Вікно"
+
+#: ../C/evince.xml:210(para) 
+msgid "Drag a file into the <application>Evince Document Viewer</application> window from another application such as a file manager."
+msgstr "Перетягніть файл у вікно програми <application>Переглядач документів Evince</application> з іншої прогами, наприклад, менеджера файлів."
+
+#: ../C/evince.xml:213(para) 
+msgid "Double-click on the file name in the file manager"
+msgstr "Двічі клацніть на назві файлу у файловому менеджері"
+
+#: ../C/evince.xml:220(para) ../C/evince.xml:247(para) 
+msgid "Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice>."
+msgstr "Виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Відкрити</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:224(para) 
+msgid "Shortcut keys"
+msgstr "Комбінації клавіш"
+
+#: ../C/evince.xml:225(para) 
+msgid "Press <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
+msgstr "Натисніть <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
+
+#: ../C/evince.xml:190(para) 
+msgid "In <application>Evince Document Viewer</application>, you can perform the same action in several ways. For example, you can open a document in the following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><thead><row valign=\"top\"><entry colname=\"COLSPEC0\"><placeholder-1/></entry><entry colname=\"COLSPEC1\" align=\"left\"><placeholder-2/></entry></row></thead><tbody><row valign=\"top\"><placeholder-3/><entry><placeholder-4/></entry></row><row valign=\"top\"><placeholder-5/><entry><placeholder-6/></entry></row><row valign=\"top\"><placeholder-7/><placeholder-8/></row></tbody></tgroup></informaltable>"
+msgstr "У програмі <application>Переглядач документів Evince</application> одні й ті самі дії можна виконувати кількома способами. Наприклад, документ можна відкрити наступним чином: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></tgroup></informaltable>"
+
+#: ../C/evince.xml:231(para) 
+msgid "This manual documents functionality from the menubar."
+msgstr "У цьому документі описуються дії з використанням меню."
+
+#: ../C/evince.xml:239(title) 
+msgid "Usage"
+msgstr "Використання"
+
+#: ../C/evince.xml:243(title) 
+msgid "To Open a File"
+msgstr "Відкривання файлу"
+
+#: ../C/evince.xml:244(para) 
+msgid "To open a File, perform the following steps:"
+msgstr "Щоб контролювати файл журналу, виконайте наступні кроки:"
+
+#: ../C/evince.xml:251(para) 
+msgid "In the <guilabel>Load file</guilabel> dialog, select the file you want to open."
+msgstr "У діалоговому вікні <guilabel>Відкрити документ</guilabel> виберіть потрібний файл."
+
+#: ../C/evince.xml:256(para) 
+msgid "Click <guibutton>Open</guibutton>. <application>Evince Document Viewer</application> displays the name of the document in the titlebar of the window."
+msgstr "Натисніть <guibutton>Відкрити</guibutton>. <application>Переглядач документів Evince</application> відобразить назву документу у заголовку вікна."
+
+#: ../C/evince.xml:261(para) 
+msgid "To open another document, choose <menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. <application>Evince Document Viewer</application> opens each file in a new window."
+msgstr "Щоб відкрити інший документ знову виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Відкрити</guimenuitem></menuchoice>. <application>Переглядач документів Evince</application> відкриває кожен файл у новому вікні."
+
+#: ../C/evince.xml:264(para) 
+msgid "If you try to open a document with format that <application>Evince Document Viewer</application> does not recognize, the application displays an error message."
+msgstr "Якщо ви відкриваєте документ у невідомому програмі форматі, відобразиться повідомлення про помилку."
+
+#: ../C/evince.xml:270(title) 
+msgid "To Navigate Through a Document"
+msgstr "Навігація по документу"
+
+#: ../C/evince.xml:271(para) 
+msgid "You can navigate through a file as follows:"
+msgstr "Переміщуватись по документу можна наступним чином:"
+
+#: ../C/evince.xml:274(para) 
+msgid "To view the next page, choose <menuchoice><guimenu>Go</guimenu><guimenuitem>Next Page</guimenuitem></menuchoice>."
+msgstr "Щоб перейти до наступної сторінки, виберіть <menuchoice><guimenu>Перейти</guimenu><guimenuitem>Вперед</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:278(para) 
+msgid "To view the previous page, choose <menuchoice><guimenu>Go</guimenu><guimenuitem>Previous Page</guimenuitem></menuchoice>."
+msgstr "Щоб перейти до попередньої сторінки виберіть <menuchoice><guimenu>Перейти</guimenu><guimenuitem>Назад</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:282(para) 
+msgid "To view the first page in the document, choose <menuchoice><guimenu>Go</guimenu><guimenuitem>First Page</guimenuitem></menuchoice>."
+msgstr "Щоб перейти до першої сторінки виберіть <menuchoice><guimenu>Перейти</guimenu><guimenuitem>Початок</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:286(para) 
+msgid "To view the last page in the document, choose <menuchoice><guimenu>Go</guimenu><guimenuitem>Last Page</guimenuitem></menuchoice>."
+msgstr "Щоб перейти до останньої сторінки виберіть <menuchoice><guimenu>Перейти</guimenu><guimenuitem>Кінець</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:290(para) 
+msgid "To view a particular page, enter the page number or page label in the text box on the toolbar, then press <keycap>Return</keycap>."
+msgstr "Щоб перейти до певної сторінки введіть її номер або позначку у текстовому полі на панелі інструментів та натисніть <keycap>Enter</keycap>.."
+
+#: ../C/evince.xml:297(title) 
+msgid "To Scroll a Page"
+msgstr "Прокрутка сторінки"
+
+#: ../C/evince.xml:298(para) 
+msgid "To display the page contents that are not currently displayed in the display area, use the following methods:"
+msgstr "Переглянути вміст сторінки, який не помістився у області відображення, можна таким чином:"
+
+#: ../C/evince.xml:301(para) 
+msgid "Use the arrow keys or space key on the keyboard."
+msgstr "Скористайтесь клавішами зі стрілками."
+
+#: ../C/evince.xml:304(para) 
+msgid "Drag the display area in the opposite direction to the direction in which you want to scroll. For example, to scroll down the page, drag the display area upwards in the window."
+msgstr "Перетягніть область відображення у напрямку протилежному до напрямку куди ви хочете прокрутити сторінку. Наприклад, щоб прокрутити сторінку вниз, перетягніть область відображення вікна вгору."
+
+#: ../C/evince.xml:307(para) 
+msgid "Use the scrollbars on the window."
+msgstr "Скористайтесь смугами прокрутки вікна."
+
+#: ../C/evince.xml:314(title) 
+msgid "To Change the Page Size"
+msgstr "Зміна розміру сторінки"
+
+#: ../C/evince.xml:315(para) 
+msgid "You can use the following methods to resize a page in the <application>Evince Document Viewer</application> display area:"
+msgstr "Змінити розмір сторінки у вікні програми <application>переглядач документів Evince</application> можна так:"
+
+#: ../C/evince.xml:320(para) 
+msgid "To increase the page size, choose <menuchoice><guimenu>View</guimenu><guimenuitem>Zoom In</guimenuitem></menuchoice>."
+msgstr "Для збільшення сторінки виберіть <menuchoice><guimenu>Вигляд</guimenu><guimenuitem>Збільшити</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:325(para) 
+msgid "To decrease the page size, choose <menuchoice><guimenu>View</guimenu><guimenuitem>Zoom Out</guimenuitem></menuchoice>."
+msgstr "Для зменшення сторінки виберіть <menuchoice><guimenu>Вигляд</guimenu><guimenuitem>Зменшити</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:330(para) 
+msgid "To resize a page to have the same width as the <application>Evince Document Viewer</application> display area, choose <menuchoice><guimenu>View</guimenu><guimenuitem>Fit page width</guimenuitem></menuchoice>."
+msgstr "Щоб змінити розмір сторінки так, щоб її ширина дорівнювала ширині області відображення програми виберіть <menuchoice><guimenu>Вигляд</guimenu><guimenuitem>По ширині сторінки</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:335(para) 
+msgid "To resize a page to fit within the <application>Evince Document Viewer</application> display area, choose <menuchoice><guimenu>View</guimenu><guimenuitem>Best Fit</guimenuitem></menuchoice>."
+msgstr "Щоб змінити розмір сторінки так, щоб її розмір дорівнював області відображення програми виберіть <menuchoice><guimenu>Вигляд</guimenu><guimenuitem>По ширині сторінки</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:340(para) 
+msgid "To resize the <application>Evince Document Viewer</application> window to have the same width and height as the screen, choose <menuchoice><guimenu>View</guimenu><guimenuitem>Full Screen</guimenuitem></menuchoice>. To resize the <application>Evince Document Viewer</application> window to the original size, click on the <guibutton>Exit Full Screen</guibutton> button."
+msgstr "Щоб змінити розмір вінка програми <application>Переглядач документів Evince</application> до розмірів екрану виберіть <menuchoice><guimenu>Вигляд</guimenu><guimenuitem>На повний екран</guimenuitem></menuchoice>. Для відновлення початкового розміру вікна програми <application>Переглядач документів Evince</application> натисніть кнопку <guibutton>Вийти з повноекранного режиму</guibutton>."
+
+#: ../C/evince.xml:348(title) 
+msgid "To View Pages or Document Structore"
+msgstr "Перегляд сторінок чи структури документу"
+
+#: ../C/evince.xml:349(para) 
+msgid "To view bookmarks or pages, perform the following steps:"
+msgstr "Для перегляду закладок чи сторінок виконайте наступні дії:"
+
+#: ../C/evince.xml:353(para) 
+msgid "Choose <menuchoice><guimenu>View</guimenu><guimenuitem>Sidebar</guimenuitem></menuchoice> or press <keycap>F9</keycap>."
+msgstr "Виберіть <menuchoice><guimenu>Вигляд</guimenu><guimenuitem>Бічна панель</guimenuitem></menuchoice> або натисніть <keycap>F9</keycap>."
+
+#: ../C/evince.xml:358(para) 
+msgid "Use the drop-down list in the side-pane header to select whether to display document structure or pages in the side pane."
+msgstr "Використовуючи розкривний список у заголовку бічної панелі вкажіть чи відображати у бічній панелі структуру документа, або ж сторінки."
+
+#: ../C/evince.xml:363(para) 
+msgid "Use the side-pane scrollbars to display the required item or page in the side pane."
+msgstr "Користуйтесь смугою прокрутки бічної панелі для відображення потрібного пункту або сторінки."
+
+#: ../C/evince.xml:368(para) 
+msgid "Click on an entry to navigate to that location in the document. Click on a page to navigate to that page in the document."
+msgstr "Клацніть на елементі для переходу у відповідне місце документа. Натисніть на сторінці для переходу до цієї сторінки документу."
+
+#: ../C/evince.xml:374(title) 
+msgid "To View the Properties of a Document"
+msgstr "Перегляд властивостей документа"
+
+#: ../C/evince.xml:375(para) 
+msgid "To view the properties of a document, choose <menuchoice><guimenu>File</guimenu><guimenuitem>Properties</guimenuitem></menuchoice>."
+msgstr "Щоб переглянути властивості документа виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Властивості</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:381(para) 
+msgid "The <guilabel>Properties</guilabel> dialog displays all information available"
+msgstr "Уся наявна інформація відобразиться у діалоговому вікні <guilabel>Властивості</guilabel>"
+
+#: ../C/evince.xml:387(title) 
+msgid "To Print a Document"
+msgstr "Друк документу"
+
+#: ../C/evince.xml:388(para) 
+msgid "To print a Document, choose <menuchoice><guimenu>File</guimenu><guimenuitem>Print</guimenuitem></menuchoice>."
+msgstr "Щоб надрукувати документ виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Друк</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:392(para) 
+msgid "If you cannot choose the <guimenuitem>Print</guimenuitem> menu item, the author of the document has disabled the print option for this document. To enable the print option, you must enter the master password when you open the document. See <xref linkend=\"evince-password\"/> for more information about password-protected files."
+msgstr "Якщо ви не можете вибрати пункт меню <guimenuitem>Друк</guimenuitem>, автор документа заборонив друк цього документу. Щоб надрукувати документ треба ввести пароль до відкритого документу. Докладніше про захищені паролем файли дивіться у <xref linkend=\"evince-password\"/>."
+
+#: ../C/evince.xml:396(para) 
+msgid "The <guilabel>Print</guilabel> dialog has the following tabbed sections:"
+msgstr "Діалогове вікно <guilabel>Друк</guilabel> має наступні вкладки:"
+
+#: ../C/evince.xml:402(link) ../C/evince.xml:418(title) 
+msgid "Job"
+msgstr "Завдання"
+
+#: ../C/evince.xml:407(link) ../C/evince.xml:440(title) ../C/evince.xml:442(guilabel) 
+msgid "Printer"
+msgstr "Принтер"
+
+#: ../C/evince.xml:412(link) ../C/evince.xml:534(title) 
+msgid "Paper"
+msgstr "Папір"
+
+#: ../C/evince.xml:420(guilabel) 
+msgid "Print range"
+msgstr "Діапазон друку"
+
+#: ../C/evince.xml:422(para) 
+msgid "Select one of the following options to determine how many pages to print:"
+msgstr "Для визначення кількості сторінок для друку виберіть один з наступних параметрів:"
+
+#: ../C/evince.xml:425(guilabel) 
+msgid "All"
+msgstr "Усе"
+
+#: ../C/evince.xml:426(para) 
+msgid "Select this option to print all of the pages in the document."
+msgstr "Відмітьте цей параметр для друкування усіх сторінок документа."
+
+#: ../C/evince.xml:429(guilabel) 
+msgid "Pages From"
+msgstr "Сторінки від"
+
+#: ../C/evince.xml:430(para) 
+msgid "Select this option to print the selected range of pages in the document. Use the spin boxes to specify the first page and last page of the range."
+msgstr "Відмітьте цей параметр для друкування діапазону сторінок документа. Користуючись полем зі стрілками вкажіть першу та останню сторінки діапазону."
+
+#: ../C/evince.xml:444(para) 
+msgid "Use this drop-down list to select the printer to which you want to print the document."
+msgstr "Використовуючи розкривний список виберіть принтер, на який треба надрукувати документ."
+
+#: ../C/evince.xml:446(para) 
+msgid "The <guilabel>Create a PDF document</guilabel> option is not supported in this version of <application>Evince Document Viewer</application>."
+msgstr "Параметр <guilabel>Створити документ PDF</guilabel> не підтримується у цій версії програми."
+
+#: ../C/evince.xml:452(guilabel) 
+msgid "Settings"
+msgstr "Параметри"
+
+#: ../C/evince.xml:454(para) 
+msgid "Use this drop-down list to select the printer settings."
+msgstr "Використовуючи розкривний список виберіть параметри принтера."
+
+#: ../C/evince.xml:456(para) 
+msgid "To configure the printer, click <guibutton>Configure</guibutton>. For example, you can enable or disable duplex printing, or schedule delayed printing, if this functionality is supported by the printer."
+msgstr "Для налаштовування принтера натисніть <guibutton>Налаштувати</guibutton>. Наприклад, можна увімкнути аьбо вимкнути дуплексний друк, або відкласти друк до певного часу, якщо ця функціональність підтримужється принтером."
+
+#: ../C/evince.xml:460(guilabel) 
+msgid "Location"
+msgstr "Розташування"
+
+#: ../C/evince.xml:462(para) 
+msgid "Use this drop-down list to select one of the following print destinations:"
+msgstr "Використовуючи розкривний список виберіть одну з наступних цілей для друку:"
+
+#: ../C/evince.xml:467(guilabel) 
+msgid "CUPS"
+msgstr "CUPS"
+
+#: ../C/evince.xml:469(para) 
+msgid "Print the document to a CUPS printer."
+msgstr "Друкувати документ на принтер CUPS."
+
+#: ../C/evince.xml:473(para) 
+msgid "If the selected printer is a CUPS printer, <guilabel>CUPS</guilabel> is the only entry in this drop-down list."
+msgstr "Якщо виділений притер є принтером CUPS, тоді у цьому розкривному списку є єдиний елемент - <guilabel>CUPS</guilabel>."
+
+#: ../C/evince.xml:480(guilabel) 
+msgid "lpr"
+msgstr "lpr"
+
+#: ../C/evince.xml:482(para) 
+msgid "Print the document to a printer."
+msgstr "Друкувати документ на принтер."
+
+#: ../C/evince.xml:488(guilabel) 
+msgid "File"
+msgstr "Файл"
+
+#: ../C/evince.xml:490(para) 
+msgid "Print the document to a PostScript file."
+msgstr "Друкувати документ у файл PostScript."
+
+#: ../C/evince.xml:493(para) 
+msgid "Click <guibutton>Save As</guibutton> to display a dialog where you specify the name and location of the PostScript file."
+msgstr "Натисніть <guibutton>Зберегти як</guibutton> щоб відкрити діалогове вікно,якому вказується назва та розташування файлу PostScript."
+
+#: ../C/evince.xml:499(guilabel) 
+msgid "Custom"
+msgstr "Інший"
+
+#: ../C/evince.xml:501(para) 
+msgid "Use the specified command to print the document."
+msgstr "Для друку на принтер використовується вказана команда."
+
+#: ../C/evince.xml:504(para) 
+msgid "Type the name of the command in the text box. Include all command-line arguments."
+msgstr "Введіть у текстовому полі назву команди та її аргументи."
+
+#: ../C/evince.xml:512(guilabel) 
+msgid "State"
+msgstr "Стан"
+
+#: ../C/evince.xml:514(para) ../C/evince.xml:520(para) ../C/evince.xml:526(para) 
+msgid "This functionality is not supported in this version of <application>Evince Document Viewer</application>."
+msgstr "Ця функціональність не підтримується цією версією програми <application>Переглядач документів Evince</application>."
+
+#: ../C/evince.xml:518(guilabel) 
+msgid "Type"
+msgstr "Тип"
+
+#: ../C/evince.xml:524(guilabel) 
+msgid "Comment"
+msgstr "Коментар"
+
+#: ../C/evince.xml:536(guilabel) 
+msgid "Paper size"
+msgstr "Розмір аркуша"
+
+#: ../C/evince.xml:538(para) 
+msgid "Use this drop-down list to select the size of the paper to which you want to print the document."
+msgstr "У цьому розкривному списку можна вибрати розмір аркушів, на які ви збираєтесь друкувати документ."
+
+#: ../C/evince.xml:541(guilabel) 
+msgid "Width"
+msgstr "Ширина"
+
+#: ../C/evince.xml:543(para) 
+msgid "Use this spin box to specify the width of the paper. Use the adjacent drop-down list to change the measurement unit."
+msgstr "У цьому полі з прокруткою визначається ширина сторінки. Одиниці виміру можна змінити у розташованому ліворуч розкривному списку."
+
+#: ../C/evince.xml:546(guilabel) 
+msgid "Height"
+msgstr "Висота"
+
+#: ../C/evince.xml:548(para) 
+msgid "Use this spin box to specify the height of the paper."
+msgstr "У цьому полі з прокруткою визначається висота сторінки."
+
+#: ../C/evince.xml:551(guilabel) 
+msgid "Feed orientation"
+msgstr "Орієнтація подачі"
+
+#: ../C/evince.xml:553(para) 
+msgid "Use this drop-down list to select the orientation of the paper in the printer."
+msgstr "У цьому розкривному списку виберіть орієнтацію паперу у принтері."
+
+#: ../C/evince.xml:556(guilabel) 
+msgid "Page orientation"
+msgstr "Орієнтація аркуша"
+
+#: ../C/evince.xml:558(para) 
+msgid "Use this drop-down list to select the page orientation."
+msgstr "У цьому розкривному списку виберіть орієнтацію сторінки."
+
+#: ../C/evince.xml:561(guilabel) 
+msgid "Layout"
+msgstr "Схема розташування"
+
+#: ../C/evince.xml:563(para) 
+msgid "Use this drop-down list to select the page layout. A preview of each layout that you select is displayed in the <guilabel>Preview</guilabel> area."
+msgstr "У цьому розкривному списку виберіть схему розташування сторінки. Попередній вигляд компоновки сторінки відображається у полі <guilabel>Попередній перегляд</guilabel>."
+
+#: ../C/evince.xml:566(guilabel) 
+msgid "Paper Tray"
+msgstr "Лоток"
+
+#: ../C/evince.xml:568(para) 
+msgid "Use this drop-down list to select the paper tray."
+msgstr "У цьому розкривному списку вкажіть лоток з папером."
+
+#: ../C/evince.xml:578(title) 
+msgid "To Copy a Document"
+msgstr "Копіювання документу"
+
+#: ../C/evince.xml:579(para) 
+msgid "To copy a file, perform the following steps:"
+msgstr "Для копіювання файлу виконайте наступні кроки:"
+
+#: ../C/evince.xml:583(para) 
+msgid "Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Save a Copy</guimenuitem></menuchoice>."
+msgstr "Виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Зберегти копію</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:588(para) 
+msgid "Type the new filename in the <guilabel>Filename</guilabel> text box in the <guilabel>Save a Copy</guilabel> dialog."
+msgstr "Введіть назву нового файлу у текстовому полі <guilabel>Назва</guilabel> діалогового вікна <guilabel>Зберегти копію</guilabel>."
+
+#: ../C/evince.xml:591(para) 
+msgid "If necessary, specify the location of the copied document. By default, copies are saved in your home directory."
+msgstr "При потребі, вкажіть розташування копії документа. Типово копія зберігається у вашому домашньому каталозі."
+
+#: ../C/evince.xml:596(para) 
+msgid "Click <guibutton>Save</guibutton>."
+msgstr "Натисніть <guibutton>Зберегти</guibutton>."
+
+#: ../C/evince.xml:605(title) 
+msgid "To Work With Password-Protected Documents"
+msgstr "Робота із захищеними паролем документами"
+
+#: ../C/evince.xml:606(para) 
+msgid "An author can use the following password levels to protect a document:"
+msgstr "Автор може використовувати для захисту документа наступні рівні паролів:"
+
+#: ../C/evince.xml:611(para) 
+msgid "User password that allows others only to read the document."
+msgstr "Пароль, що дозволяє читати документ."
+
+#: ../C/evince.xml:615(para) 
+msgid "Master password that allows others to perform additional actions, such as print the document."
+msgstr "Головний пароль, що дозволяє виконувати додаткові дії, наприклад друк документа."
+
+#: ../C/evince.xml:619(para) 
+msgid "When you try to open a password-protected document, <application>Evince Document Viewer</application> displays a security dialog. Type either the user password or the master password in the <guilabel>Enter document password</guilabel> text box, then click <guibutton>Open Document</guibutton>."
+msgstr "Коли ви намагаєтесь відкрити захищений паролем документ, <application>Переглядач документів Evince</application> відображає вікно безпеки. Введіть у текстовому полі або пароль, або головний пароль, потім натисніть <guibutton>Відкрити документ</guibutton>."
+
+#: ../C/evince.xml:626(title) 
+msgid "To Close a Document"
+msgstr "Закривання документа"
+
+#: ../C/evince.xml:627(para) 
+msgid "To close a document, choose <menuchoice><guimenu>File</guimenu><guimenuitem>Close</guimenuitem></menuchoice>."
+msgstr "Щоб закрити документ, виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Закрити</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:629(para) 
+msgid "If the window is the last <application>Evince Document Viewer</application> window open, the application exits."
+msgstr "Якщо це вікно - останнє відкрите вікно програми <application>Переглядач документів Evince</application>, програма завершується."
+
+#: ../C/evince.xml:632(para) 
+msgid "To quit <application>Evince Document Viewer</application> at any time, no matter how many windows are open, choose <menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>."
+msgstr "Щоб вийти з програми <application>Переглядач документів Evince</application> у будь-який час, незалежно від кількості відкритих вікон, виберіть <menuchoice><guimenu>Файл</guimenu><guimenuitem>Вийти</guimenuitem></menuchoice>."
+
+#: ../C/evince.xml:634(para) 
+msgid "When you quit, <application>Evince Document Viewer</application> closes all documents opened in the current session."
+msgstr "При виході <application>Переглядач документів Evince</application> закриває усі відкриті у поточному сеансі документи."
+
