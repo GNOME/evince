@@ -75,7 +75,7 @@ if test "x$enable_dbus" = "xyes" ; then
 
         AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
 
-	DBUS_VERSION=`$PKG_CONFIG --modversion dbus-glib-1 | sed 's/0\.\([[0-9]]*\)\.\?\([[0-9]]*\)/\1/'`
+	DBUS_VERSION=`$PKG_CONFIG --modversion dbus-glib-1 | sed 's/0\.\([[0-9]]*\)\.\{0,1\}\([[0-9]]*\)/\1/'`
 	AC_DEFINE_UNQUOTED(DBUS_VERSION, $DBUS_VERSION, [DBUS version.])
 fi
 

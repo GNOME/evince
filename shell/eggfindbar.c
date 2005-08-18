@@ -236,7 +236,8 @@ entry_activate_callback (GtkEntry *entry,
 
   /* We activate the "next" button here so we'll get a nice
      animation */
-  gtk_widget_activate (priv->next_button);
+  if (find_bar->priv->search_string != NULL)
+	  gtk_widget_activate (priv->next_button);
 }
 
 static void
@@ -252,7 +253,7 @@ entry_changed_callback (GtkEntry *entry,
   text = g_strdup (gtk_entry_get_text (entry));
 
   egg_find_bar_set_search_string (find_bar, text);
-
+  
   g_free (text);
 }
 
@@ -305,8 +306,11 @@ egg_find_bar_init (EggFindBar *find_bar)
 
   priv->previous_button = gtk_button_new_with_mnemonic (_("_Previous"));
   gtk_button_set_focus_on_click (GTK_BUTTON (priv->previous_button), FALSE);
+  gtk_widget_set_sensitive (GTK_WIDGET (priv->previous_button), FALSE);
+
   priv->next_button = gtk_button_new_with_mnemonic (_("_Next"));
   gtk_button_set_focus_on_click (GTK_BUTTON (priv->next_button), FALSE);
+  gtk_widget_set_sensitive (GTK_WIDGET (priv->next_button), FALSE);
 
   image_back = gtk_image_new_from_stock (GTK_STOCK_GO_BACK,
                                          GTK_ICON_SIZE_BUTTON);
@@ -583,6 +587,8 @@ egg_find_bar_set_search_string  (EggFindBar *find_bar,
           (old && search_string &&
            strcmp (old, search_string) != 0))
         {
+	  gboolean not_empty;
+	  
           priv->search_string = g_strdup (search_string);
           g_free (old);
           
@@ -590,7 +596,12 @@ egg_find_bar_set_search_string  (EggFindBar *find_bar,
                               priv->search_string ?
                               priv->search_string :
                               "");
-          
+	   
+          not_empty = (search_string == NULL) ? FALSE : TRUE;		 
+
+          gtk_widget_set_sensitive (GTK_WIDGET (find_bar->priv->next_button), not_empty);
+          gtk_widget_set_sensitive (GTK_WIDGET (find_bar->priv->previous_button), not_empty);
+
           g_object_notify (G_OBJECT (find_bar),
                            "search_string");
         }
