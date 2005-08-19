@@ -83,7 +83,6 @@ BUILT_SOURCES += ev-application-service.h
 endif
 
 EXTRA_DIST = ev-marshal.list		\
-	ev-application-service.h	\
 	ev-application-service.xml
 
 
