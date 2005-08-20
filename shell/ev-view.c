@@ -1471,9 +1471,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		view->motion_y = event->y + view->scroll_y;
 
 		/* Queue an idle to handle the motion.  We do this because
-		 * handling any selection events in the motion is probably going
-		 * to be slower than new motion events reach us.  This means that */
-
+		 * handling any selection events in the motion could be slower
+		 * than new motion events reach us.  We always put it in the
+		 * idle to make sure we catch up and don't visibly lag the
+		 * mouse. */
 		if (! view->selection_update_id)
 			view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
 
@@ -2952,6 +2953,7 @@ compute_new_selection_text (EvView   *view,
 	GList *list = NULL;
 	EvViewSelection *selection;
 	gint width, height;
+	int start_page, end_page;
 
 	g_assert (view->selection_mode == EV_VIEW_SELECTION_TEXT);
 
@@ -2961,7 +2963,18 @@ compute_new_selection_text (EvView   *view,
 	 * affects. */
 	first = n_pages;
 	last = 0;
-	for (i = 0; i < n_pages; i++) {
+	if (view->continuous) {
+		start_page = 0;
+		end_page = n_pages;
+	} else if (view->dual_page) {
+		start_page = view->start_page;
+		end_page = view->end_page + 1;
+	} else {
+		start_page = view->current_page;
+		end_page = view->current_page + 1;
+	}
+
+	for (i = start_page; i < end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
 		
