@@ -198,11 +198,9 @@ main (int argc, char *argv[])
 #ifdef ENABLE_DBUS
 	if (!ev_application_register_service (EV_APP)) {
 		if (load_files_remote (poptGetArgs (context))) {
-			g_warning ("Another process was running.");
 			return 0;
 		}
 	} else {
-		g_warning ("Starting evince process.");
 		enable_metadata = TRUE;
 	}
 #endif
