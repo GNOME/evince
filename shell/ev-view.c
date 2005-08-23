@@ -1686,8 +1686,7 @@ highlight_find_results (EvView *view, int page)
 			alpha = 0x20;
 		}
 
-		ev_document_find_get_result (find, page,
-					     i, &rectangle);
+		ev_document_find_get_result (find, page, i, &rectangle);
 		doc_rect_to_view_rect (view, page, &rectangle, &view_rectangle);
 		draw_rubberband (GTK_WIDGET (view), GTK_WIDGET(view)->window,
 				 &view_rectangle, alpha);

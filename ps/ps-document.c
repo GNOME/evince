@@ -215,9 +215,11 @@ push_pixbuf (PSDocument *gs)
 
 	cmap = gdk_window_get_colormap (gs->pstarget);
 	gdk_drawable_get_size (gs->bpixmap, &width, &height);
+	LOG ("Get from drawable\n");
 	pixbuf =  gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
 				      	        0, 0, 0, 0,
 					        width, height);
+	LOG ("Get from drawable done\n");
 	g_signal_emit_by_name (gs, "render_finished", pixbuf);
 	g_object_unref (pixbuf);
 }
@@ -247,6 +249,7 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 		gs->busy = FALSE;
 
 		push_pixbuf (gs);
+		LOG ("Pixbuf pushed");
 	}
 
 	return TRUE;

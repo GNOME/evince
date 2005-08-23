@@ -244,28 +244,6 @@ pdf_document_get_n_pages (EvDocument *document)
 }
 
 static void
-set_page_orientation (PdfDocument *pdf_document, PopplerPage *page, int rotation)
-{
-	PopplerOrientation orientation;
-
-	switch (rotation) {
-	case 90:
-		orientation = POPPLER_ORIENTATION_LANDSCAPE;
-		break;
-	case 180:
-		orientation = POPPLER_ORIENTATION_UPSIDEDOWN;
-		break;
-	case 270:
-		orientation = POPPLER_ORIENTATION_SEASCAPE;
-		break;
-	default:
-		orientation = POPPLER_ORIENTATION_PORTRAIT;
-	}
-
-	poppler_page_set_orientation (page, orientation);
-}
-
-static void
 pdf_document_get_page_size (EvDocument   *document,
 			    int           page,
 			    double       *width,
@@ -349,11 +327,16 @@ pdf_document_render_pixbuf (EvDocument   *document,
 	pdf_document = PDF_DOCUMENT (document);
 
 	set_rc_data (pdf_document, rc);
-	set_page_orientation (pdf_document, POPPLER_PAGE (rc->data), rc->rotation);
 
 	poppler_page_get_size (POPPLER_PAGE (rc->data), &width_points, &height_points);
-	width = (int) ((width_points * rc->scale) + 0.5);
-	height = (int) ((height_points * rc->scale) + 0.5);
+
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		width = (int) ((height_points * rc->scale) + 0.5);
+		height = (int) ((width_points * rc->scale) + 0.5);
+	} else {
+		width = (int) ((width_points * rc->scale) + 0.5);
+		height = (int) ((height_points * rc->scale) + 0.5);
+	}
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
 				 FALSE, 8,
@@ -363,6 +346,7 @@ pdf_document_render_pixbuf (EvDocument   *document,
 				       0, 0,
 				       width, height,
 				       rc->scale,
+				       rc->rotation,
 				       pixbuf);
 	
 	
@@ -817,7 +801,6 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 	gdouble unscaled_width, unscaled_height;
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	set_page_orientation (pdf_document, poppler_page, rotation);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document), page,
@@ -842,7 +825,7 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 
 	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
 				       width, height,
-				       scale, sub_pixbuf);
+				       scale, rotation, sub_pixbuf);
 
 	g_object_unref (G_OBJECT (sub_pixbuf));
 
@@ -864,7 +847,6 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	set_page_orientation (pdf_document, poppler_page, rotation);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
@@ -1151,7 +1133,6 @@ pdf_document_ps_exporter_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 	g_return_if_fail (pdf_document->ps_file != NULL);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 	poppler_page_render_to_ps (poppler_page, pdf_document->ps_file);
 	g_object_unref (poppler_page);
 }
@@ -1190,8 +1171,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 	set_rc_data (pdf_document, rc);
 
-	set_page_orientation (pdf_document, POPPLER_PAGE (rc->data), rc->rotation);
-
 	poppler_page_get_size (POPPLER_PAGE (rc->data), &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
 	height = (int) ((height_points * rc->scale) + 0.5);
@@ -1222,7 +1201,6 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 
 	set_rc_data (pdf_document, rc);
-	set_page_orientation (pdf_document, POPPLER_PAGE (rc->data), rc->rotation);
 
 	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data, rc->scale, (PopplerRectangle *) points);
 
@@ -1241,7 +1219,6 @@ pdf_selection_get_selection_map (EvSelection     *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 	poppler_page = poppler_document_get_page (pdf_document->document,
 						  rc->page);
-	set_page_orientation (pdf_document, poppler_page, rc->rotation);
 
 	points.x1 = 0.0;
 	points.y1 = 0.0;

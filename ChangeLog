@@ -1,3 +1,12 @@
+2005-08-23  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* pdf/ev-poppler.cc:
+	* ps/ps-document.c: (push_pixbuf), (ps_document_widget_event):
+	* shell/ev-view.c: (highlight_find_results):
+
+	Adapt to the new poppler rotation API. Fix text maps on landscape
+	documents.
+
 Sat Aug 20 17:13:48 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-view.c (compute_new_selection_text): get the correct
