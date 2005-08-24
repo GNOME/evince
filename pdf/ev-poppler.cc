@@ -1182,7 +1182,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 	}
 	
 	poppler_page_render_selection (POPPLER_PAGE (rc->data),
-				       rc->scale, *pixbuf,
+				       rc->scale, rc->rotation, *pixbuf,
 				       (PopplerRectangle *)points,
 				       (PopplerRectangle *)old_points,
 				       text,
