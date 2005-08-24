@@ -1,3 +1,15 @@
+2005-08-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* djvu/djvu-document.c: (djvu_document_render_pixbuf),
+	(djvu_document_thumbnails_get_thumbnail):
+	* dvi/dvi-document.c: (dvi_document_render_pixbuf),
+	(dvi_document_thumbnails_get_thumbnail):
+	* pixbuf/pixbuf-document.c: (pixbuf_document_render_pixbuf),
+	(pixbuf_document_thumbnails_get_thumbnail):
+	* tiff/tiff-document.c: (tiff_document_render_pixbuf):
+	
+	Update rotation direction of backends to fit with pdf and ps.
+
 2005-08-24  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* backend/ev-async-renderer.c: (ev_async_renderer_render_pixbuf):

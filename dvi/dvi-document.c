@@ -191,7 +191,7 @@ dvi_document_render_pixbuf (EvDocument  *document,
 
 	g_mutex_unlock (dvi_context_mutex);
 
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rc->rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
 	g_object_unref (pixbuf);
 
 	return rotated_pixbuf;
@@ -321,7 +321,7 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	}
 	
 	
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
 	g_object_unref (pixbuf);
 
 	return rotated_pixbuf;

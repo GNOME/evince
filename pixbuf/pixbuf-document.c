@@ -108,7 +108,7 @@ pixbuf_document_render_pixbuf (EvDocument      *document,
 					         gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale,
 					         GDK_INTERP_BILINEAR);
 
-        rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf, rc->rotation);
+        rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf, 360 - rc->rotation);
         g_object_unref (scaled_pixbuf);
 
 	return rotated_pixbuf;
@@ -180,7 +180,7 @@ pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf, size, height,
 					  GDK_INTERP_BILINEAR);
 
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
         g_object_unref (pixbuf);
 
         return rotated_pixbuf;

@@ -166,7 +166,7 @@ djvu_document_render_pixbuf (EvDocument  *document,
                 	  gdk_pixbuf_get_rowstride (pixbuf),
                           (gchar *)gdk_pixbuf_get_pixels (pixbuf));
 	
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rc->rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
 	g_object_unref (pixbuf);
 	
 	return rotated_pixbuf;
@@ -280,7 +280,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 				gdk_pixbuf_get_rowstride (pixbuf), 
 				(gchar *)pixels);
 
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
 	g_object_unref (pixbuf);
 	
 	return rotated_pixbuf;
