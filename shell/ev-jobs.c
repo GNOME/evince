@@ -290,7 +290,8 @@ ev_job_render_run (EvJobRender *job)
 
 	if (EV_JOB (job)->async) {
 		EvAsyncRenderer *renderer = EV_ASYNC_RENDERER (EV_JOB (job)->document);
-		ev_async_renderer_render_pixbuf (renderer, job->rc->page, job->rc->scale);
+		ev_async_renderer_render_pixbuf (renderer, job->rc->page, job->rc->scale,
+						 job->rc->rotation);
 		g_signal_connect (EV_JOB (job)->document, "render_finished",
 				  G_CALLBACK (render_finished_cb), job);
 	} else {

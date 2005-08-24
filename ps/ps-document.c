@@ -137,8 +137,6 @@ ps_document_init (PSDocument *gs)
 
 	gs->ps_export_pagelist = NULL;
 	gs->ps_export_filename = NULL;
-
-	gs->orientation = GTK_GS_ORIENTATION_NONE;
 }
 
 static void
@@ -306,7 +304,7 @@ get_ydpi (PSDocument *gs)
 }
 
 static void
-setup_pixmap (PSDocument *gs, int page, double scale)
+setup_pixmap (PSDocument *gs, int page, double scale, int rotation)
 {
 	GdkGC *fill;
 	GdkColor white = { 0, 0xFFFF, 0xFFFF, 0xFFFF };   /* pixel, r, g, b */
@@ -315,8 +313,14 @@ setup_pixmap (PSDocument *gs, int page, double scale)
 	int pixmap_width, pixmap_height;
 
 	ev_document_get_page_size (EV_DOCUMENT (gs), page, &width, &height);
-	pixmap_width = width * scale + 0.5;
-	pixmap_height = height * scale + 0.5;
+
+	if (rotation == 90 || rotation == 270) {
+		pixmap_height = width * scale + 0.5;
+		pixmap_width = height * scale + 0.5;
+	} else {
+		pixmap_width = width * scale + 0.5;
+		pixmap_height = height * scale + 0.5;
+	}
 
 	if(gs->bpixmap) {
 		int w, h;
@@ -433,49 +437,22 @@ get_page_box (PSDocument *gs, int page, int *urx, int *ury, int *llx, int *lly)
 	*lly = new_lly;
 }
 
-static int
-get_page_orientation (PSDocument *gs, int page)
-{
-	int orientation;
-
-	orientation = GTK_GS_ORIENTATION_NONE;
-
-	if (gs->structured_doc) {
-		orientation = gs->doc->pages[page].orientation;
-	}
-	if (orientation == GTK_GS_ORIENTATION_NONE) {
-		orientation = gs->doc->default_page_orientation;
-	}
-	if (orientation == GTK_GS_ORIENTATION_NONE) {
-		orientation = gs->doc->orientation;
-	}
-	if (orientation == GTK_GS_ORIENTATION_NONE) {
-		orientation = GTK_GS_ORIENTATION_PORTRAIT;
-	}
-	if (gs->orientation != GTK_GS_ORIENTATION_NONE) {
-		orientation = gs->orientation;
-	}
-
-	return orientation;
-}
-
 static void
-setup_page (PSDocument *gs, int page, double scale)
+setup_page (PSDocument *gs, int page, double scale, int rotation)
 {
 	gchar *buf;
-	int urx, ury, llx, lly, orientation;
 	char scaled_xdpi[G_ASCII_DTOSTR_BUF_SIZE];	
 	char scaled_ydpi[G_ASCII_DTOSTR_BUF_SIZE];
+	int urx, ury, llx, lly;
 
 	LOG ("Setup the page");
 
 	get_page_box (gs, page, &urx, &ury, &llx, &lly);
-	orientation = get_page_orientation (gs, page);
 	g_ascii_dtostr (scaled_xdpi, G_ASCII_DTOSTR_BUF_SIZE, get_xdpi (gs) * scale);
 	g_ascii_dtostr (scaled_ydpi, G_ASCII_DTOSTR_BUF_SIZE, get_ydpi (gs) * scale);
 
 	buf = g_strdup_printf ("%ld %d %d %d %d %d %s %s %d %d %d %d",
-			       0L, orientation * 90, llx, lly, urx, ury,
+			       0L, rotation, llx, lly, urx, ury,
 			       scaled_xdpi, scaled_ydpi,
 			       0, 0, 0, 0);
 	LOG ("GS property %s", buf);
@@ -1182,35 +1159,16 @@ ps_document_get_page_size (EvDocument   *document,
 			   double       *height)
 {
 	PSDocument *gs = PS_DOCUMENT (document);
-	int w, h;
-	int urx, ury, llx, lly, orientation;
+	int urx, ury, llx, lly;
 
 	get_page_box (PS_DOCUMENT (document), page, &urx, &ury, &llx, &lly);
-	orientation = get_page_orientation (PS_DOCUMENT (document), page);
-
-	switch (orientation) {
-		case GTK_GS_ORIENTATION_PORTRAIT:
-		case GTK_GS_ORIENTATION_UPSIDEDOWN:
-			w = (urx - llx) / 72.0 * get_xdpi (gs) + 0.5;
-			h = (ury - lly) / 72.0 * get_ydpi (gs) + 0.5;
-			break;
-		case GTK_GS_ORIENTATION_LANDSCAPE:
-		case GTK_GS_ORIENTATION_SEASCAPE:
-			w = (ury - lly) / 72.0 * get_xdpi (gs) + 0.5;
-			h = (urx - llx) / 72.0 * get_ydpi (gs) + 0.5;
-			break;
-		default:
-			w = h = 0;
-			g_assert_not_reached ();
-			break;
-	}
 
 	if (width) {
-		*width = w;
+		*width = (urx - llx) / 72.0 * get_xdpi (gs) + 0.5;
 	}
 
 	if (height) {
-		*height = h;
+		*height = (ury - lly) / 72.0 * get_ydpi (gs) + 0.5;
 	}
 }
 
@@ -1221,7 +1179,7 @@ ps_document_can_get_text (EvDocument *document)
 }
 
 static void
-ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double scale)
+ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double scale, int rotation)
 {
 	PSDocument *gs = PS_DOCUMENT (renderer);
 
@@ -1237,8 +1195,8 @@ ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer, int page, double sca
 			          gs);
 	}
 
-	setup_pixmap (gs, page, scale);
-	setup_page (gs, page, scale);
+	setup_pixmap (gs, page, scale, rotation);
+	setup_page (gs, page, scale, rotation);
 
 	render_page (gs, page);
 }

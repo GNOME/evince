@@ -1,3 +1,15 @@
+2005-08-24  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* backend/ev-async-renderer.c: (ev_async_renderer_render_pixbuf):
+	* backend/ev-async-renderer.h:
+	* ps/ps-document.c: (ps_document_init), (setup_pixmap),
+	(setup_page), (ps_document_get_page_size),
+	(ps_async_renderer_render_pixbuf):
+	* ps/ps-document.h:
+	* shell/ev-jobs.c: (ev_job_render_run):
+
+	Fix orientation in the postscript document
+
 2005-08-23  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* pdf/ev-poppler.cc:

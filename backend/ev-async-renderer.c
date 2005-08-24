@@ -73,9 +73,10 @@ ev_async_renderer_class_init (gpointer g_class)
 void
 ev_async_renderer_render_pixbuf (EvAsyncRenderer *async_renderer,
 			         int              page,
-			         double           scale)
+			         double           scale,
+				 int              rotation)
 {
 	EvAsyncRendererIface *iface = EV_ASYNC_RENDERER_GET_IFACE (async_renderer);
 
-	iface->render_pixbuf (async_renderer, page, scale);
+	iface->render_pixbuf (async_renderer, page, scale, rotation);
 }

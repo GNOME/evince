@@ -46,13 +46,15 @@ struct _EvAsyncRendererIface
 
 	void        (* render_pixbuf)   (EvAsyncRenderer *renderer,
 					 int              page,
-					 double           scale);
+					 double           scale,
+					 int              rotation);
 };
 
 GType		ev_async_renderer_get_type       (void);
 void		ev_async_renderer_render_pixbuf  (EvAsyncRenderer *renderer,
 				      	          int              page,
-						  double           scale);
+						  double           scale,
+						  int              rotation);
 
 G_END_DECLS
 
