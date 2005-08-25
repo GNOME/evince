@@ -809,12 +809,22 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 	scale = width / unscaled_width;
 
 	if (border) {
-		pixbuf = ev_document_misc_get_thumbnail_frame (width, height, NULL);
+		pixbuf = ev_document_misc_get_thumbnail_frame (width, height, rotation, NULL);
 
+		width = gdk_pixbuf_get_width (pixbuf);
+		height = gdk_pixbuf_get_height (pixbuf);
 		sub_pixbuf = gdk_pixbuf_new_subpixbuf (pixbuf,
 						       1, 1,
 						       width - 1, height - 1);
 	} else {
+		/* rotate */
+		if (rotation == 90 || rotation == 270) {
+			int temp;
+			temp = width;
+			width = height;
+			height = temp;
+		}
+
 		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
 					 width, height);
 		gdk_pixbuf_fill (pixbuf, 0xffffffff);
@@ -856,7 +866,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		if (border) {
 			GdkPixbuf *real_pixbuf;
 
-			real_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
+			real_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
 			g_object_unref (pixbuf);
 			pixbuf = real_pixbuf;
 		}

@@ -53,6 +53,7 @@ enum {
 	PROP_PRESENTATION,
 	PROP_SIZING_MODE,
 	PROP_ZOOM,
+	PROP_ROTATION,
 };
 
 enum {
@@ -1465,7 +1466,11 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	if (!view->document)
 		return FALSE;
 
-	if (view->pressed_button == 1) {
+	/* For the Evince 0.4.x release, we limit selection to un-rotated
+	 * documents only.
+	 */
+	if (view->pressed_button == 1 &&
+	    view->rotation == 0) {
 		view->selection_info.in_selection = TRUE;
 		view->motion_x = event->x + view->scroll_x;
 		view->motion_y = event->y + view->scroll_y;
@@ -1515,7 +1520,11 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			return TRUE;
 		}
-	} else if (view->pressed_button <= 0) {
+	/* For the Evince 0.4.x release, we limit links to un-rotated documents
+	 * only.
+	 */
+	} else if (view->pressed_button <= 0 &&
+		   view->rotation == 0) {
 		EvLink *link;
 
 		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
@@ -1856,6 +1865,9 @@ ev_view_set_property (GObject      *object,
 	case PROP_ZOOM:
 		ev_view_set_zoom (view, g_value_get_double (value), FALSE);
 		break;
+	case PROP_ROTATION:
+		ev_view_set_rotation (view, g_value_get_int (value));
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
@@ -1894,6 +1906,9 @@ ev_view_get_property (GObject *object,
 		break;
 	case PROP_ZOOM:
 		g_value_set_double (value, view->scale);
+		break;
+	case PROP_ROTATION:
+		g_value_set_int (value, view->rotation);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -2022,6 +2037,15 @@ ev_view_class_init (EvViewClass *class)
 							       MIN_SCALE,
 							       MAX_SCALE,
 							       1.0,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_ROTATION,
+					 g_param_spec_double ("rotation",
+							      "Rotation",
+							       "Rotation",
+							       0,
+							       360,
+							       0,
 							       G_PARAM_READWRITE));
 
 	binding_set = gtk_binding_set_by_class (class);
@@ -2432,6 +2456,8 @@ ev_view_set_rotation (EvView *view, int rotation)
 		ev_pixbuf_cache_clear (view->pixbuf_cache);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
+	
+	g_object_notify (G_OBJECT (view), "rotation");
 }
 
 int

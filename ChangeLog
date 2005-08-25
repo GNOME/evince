@@ -1,3 +1,25 @@
+Thu Aug 25 02:32:32 2005  Jonathan Blandford  <jrb@redhat.com>
+
+	* backend/ev-document-misc.c:
+	(ev_document_misc_get_thumbnail_frame):
+	* backend/ev-document-misc.h:
+	* configure.ac:
+	* pdf/ev-poppler.cc:
+	* shell/Makefile.am:
+	* shell/ev-sidebar-thumbnails.c: (add_range),
+	(ev_sidebar_thumbnails_set_loading_icon),
+	(ev_sidebar_thumbnails_refresh),
+	(ev_sidebar_thumbnails_set_document):
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-view.c: (ev_view_motion_notify_event),
+	(ev_view_set_property), (ev_view_get_property),
+	(ev_view_class_init), (ev_view_set_rotation):
+	* shell/ev-window.c: (ev_window_cmd_edit_rotate_left),
+	(ev_window_cmd_edit_rotate_right), (ev_window_rotation_changed_cb),
+	(ev_window_init):
+	* tiff/tiff-document.c: (tiff_document_thumbnails_get_thumbnail):
+	Redo rotation (again).  prepare for 0.4.0
+
 2005-08-24  Kristian Høgsberg  <krh@redhat.com>
 
 	* configure.ac: Bump poppler requirement to 0.4.1.

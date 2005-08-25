@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 
 GdkPixbuf *ev_document_misc_get_thumbnail_frame  (int           width,
 						  int           height,
+						  int           rotation,
 						  GdkPixbuf    *source_pixbuf);
 void       ev_document_misc_get_page_border_size (gint          page_width,
 						  gint          page_height,

@@ -53,7 +53,8 @@ struct _EvSidebarThumbnailsClass {
 
 GType      ev_sidebar_thumbnails_get_type     (void);
 GtkWidget *ev_sidebar_thumbnails_new          (void);
-void       ev_sidebar_thumbnails_refresh      (EvSidebarThumbnails *sidebar_thumbnails);
+void       ev_sidebar_thumbnails_refresh      (EvSidebarThumbnails *sidebar_thumbnails,
+					       int                  rotation);
 
 G_END_DECLS
 

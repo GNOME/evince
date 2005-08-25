@@ -332,7 +332,7 @@ tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
   if (border)
     {
       GdkPixbuf *tmp_pixbuf = pixbuf;
-      pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
+      pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
       g_object_unref (tmp_pixbuf);
     }
 

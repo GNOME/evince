@@ -57,6 +57,8 @@ struct _EvSidebarThumbnailsPrivate {
 
 	gint n_pages, pages_done;
 
+	int rotation;
+
 	/* Visible pages */
 	gint start_page, end_page;
 };
@@ -230,7 +232,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 
 		if (job == NULL && !thumbnail_set) {
 			/* FIXME: Need rotation */
-			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, 0, THUMBNAIL_WIDTH);
+			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, priv->rotation, THUMBNAIL_WIDTH);
 			ev_job_queue_add_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
@@ -355,11 +357,47 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 	}
 }
 
-void
-ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails)
+
+static void
+ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 {
+	gint width = THUMBNAIL_WIDTH;
+	gint height = THUMBNAIL_WIDTH;
+
+	if (sidebar_thumbnails->priv->loading_icon)
+		g_object_unref (sidebar_thumbnails->priv->loading_icon);
+
+	if (sidebar_thumbnails->priv->document) {
+		/* We get the dimensions of the first doc so that we can make a blank
+		 * icon.  */
+		ev_document_doc_mutex_lock ();
+		ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (sidebar_thumbnails->priv->document),
+						       0, THUMBNAIL_WIDTH, &width, &height);
+		ev_document_doc_mutex_unlock ();
+		sidebar_thumbnails->priv->loading_icon =
+			ev_document_misc_get_thumbnail_frame (width, height, sidebar_thumbnails->priv->rotation, NULL);
+	} else {
+		sidebar_thumbnails->priv->loading_icon = NULL;
+	}
+
+}
+void
+ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
+
+			       int                  rotation)
+{
+	sidebar_thumbnails->priv->rotation = rotation;
+	ev_sidebar_thumbnails_set_loading_icon (sidebar_thumbnails);
+
+	if (sidebar_thumbnails->priv->document == NULL)
+		return;
+
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
+
+	/* Trigger a redraw */
+	sidebar_thumbnails->priv->start_page = 0;
+	sidebar_thumbnails->priv->end_page = 0;
 	adjustment_changed_cb (sidebar_thumbnails);
 }
 
@@ -545,8 +583,6 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 				    EvDocument          *document)
 {
 	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (sidebar_page);
-	gint width = THUMBNAIL_WIDTH;
-	gint height = THUMBNAIL_WIDTH;
 
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 
@@ -556,16 +592,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 	priv->document = document;
 	priv->n_pages = ev_page_cache_get_n_pages (priv->page_cache);
 
-	/* We get the dimensions of the first doc so that we can make a blank
-	 * icon.  */
-	ev_document_doc_mutex_lock ();
-	ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (priv->document),
-					       0, THUMBNAIL_WIDTH, &width, &height);
-	ev_document_doc_mutex_unlock ();
-
-	if (priv->loading_icon)
-		g_object_unref (priv->loading_icon);
-	priv->loading_icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
+	ev_sidebar_thumbnails_set_loading_icon (sidebar_thumbnails);
 
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
@@ -595,6 +622,8 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 
 	/* Connect to the signal and trigger a fake callback */
 	g_signal_connect (priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
+	sidebar_thumbnails->priv->start_page = 0;
+	sidebar_thumbnails->priv->end_page = 0;
 	adjustment_changed_cb (sidebar_thumbnails);
 }
 

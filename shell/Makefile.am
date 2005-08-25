@@ -93,6 +93,9 @@ ev-marshal.c: ev-marshal.list
 	echo '#include "ev-marshal.h"' > ev-marshal.c
 	glib-genmarshal --prefix=ev_marshal ev-marshal.list --body >> ev-marshal.c
 
+DISTCLEANFILES= \
+	ev-application-service.h
+
 if DBUS_TOOL_NO_PREFIX
 ev-application-service.h: $(srcdir)/ev-application-service.xml
 	dbus-binding-tool --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml

@@ -2060,35 +2060,16 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
         gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
-/* should these be hooked up to properties?? */
-static void
-save_rotation_to_file (EvWindow *window)
-{
-	int rotation;
-
-	if (window->priv->uri) {
-		rotation = ev_view_get_rotation (EV_VIEW (window->priv->view));
-		ev_metadata_manager_set_int (window->priv->uri, "rotation",
-					     rotation);
-	}
-
-
-}
-
 static void
 ev_window_cmd_edit_rotate_left (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_left (EV_VIEW (ev_window->priv->view));
-	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (ev_window->priv->sidebar_thumbs));
-	save_rotation_to_file (ev_window);
 }
 
 static void
 ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_right (EV_VIEW (ev_window->priv->view));
-	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (ev_window->priv->sidebar_thumbs));
-	save_rotation_to_file (ev_window);
 }
 
 static void
@@ -2418,6 +2399,22 @@ ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_w
 
 	ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
 				         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+}
+
+static void     
+ev_window_rotation_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window)
+{
+	int rotation;
+
+	rotation = ev_view_get_rotation (EV_VIEW (window->priv->view));
+
+	if (window->priv->uri) {
+		ev_metadata_manager_set_int (window->priv->uri, "rotation",
+					     rotation);
+	}
+
+	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (window->priv->sidebar_thumbs),
+				       rotation);
 }
 
 static void     
@@ -3512,6 +3509,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->view,
 			  "notify::continuous",
 			  G_CALLBACK (ev_window_continuous_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->view,
+			  "notify::rotation",
+			  G_CALLBACK (ev_window_rotation_changed_cb),
 			  ev_window);
 
 	ev_window->priv->statusbar = ev_statusbar_new ();
