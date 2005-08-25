@@ -243,7 +243,7 @@ ev_properties_view_init (EvPropertiesView *properties)
 	GladeXML *xml;
 
 	/* Create a new GladeXML object from XML file glade_file */
-	xml = glade_xml_new (DATADIR "/evince-properties.glade", "general_page_root", NULL);
+	xml = glade_xml_new (DATADIR "/evince-properties.glade", "general_page_root", GETTEXT_PACKAGE);
 	properties->xml = xml;
 	g_assert (xml != NULL);
 
