@@ -1,3 +1,13 @@
+2005-08-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* djvu/djvu-document.c: (djvu_document_thumbnails_get_thumbnail):
+	* dvi/Makefile.am:
+	* dvi/dvi-document.c: (dvi_document_thumbnails_get_thumbnail):
+	* dvi/mdvi-lib/Makefile.am:
+	
+	Fix rotation of thumbnails, ported to new API. Moved library
+	dependencies earlier, probably it will fix linkage problem.
+
 Thu Aug 25 02:32:32 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* backend/ev-document-misc.c:

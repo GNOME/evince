@@ -17,12 +17,8 @@ libgtkdvi_la_SOURCES = \
 	fonts.c		\
 	fonts.h
 
-libgtkdvi_la_LIBADD = mdvi-lib/libmdvi.la	\
-	$(DVI_LIBS) -lkpathsea
+libgtkdvi_la_LIBADD = mdvi-lib/libmdvi.la
 
-if WITH_TYPE1_FONTS
-libgtkdvi_la_LIBADD += -lt1lib
-endif
 
 
 

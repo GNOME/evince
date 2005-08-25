@@ -259,15 +259,10 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	
 	djvu_document_thumbnails_get_dimensions (document, page, width, &thumb_width, &thumb_height);
 	
-	if (border) {
-		pixbuf = ev_document_misc_get_thumbnail_frame (thumb_width, thumb_height, NULL);
-		pixels = gdk_pixbuf_get_pixels (pixbuf) + gdk_pixbuf_get_rowstride (pixbuf) + 4;
-	} else {
-		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
-					 thumb_width, thumb_height);
-		gdk_pixbuf_fill (pixbuf, 0xffffffff);
-		pixels = gdk_pixbuf_get_pixels (pixbuf);
-	}
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+				 thumb_width, thumb_height);
+	gdk_pixbuf_fill (pixbuf, 0xffffffff);
+	pixels = gdk_pixbuf_get_pixels (pixbuf);
 	
 	while (ddjvu_thumbnail_status (djvu_document->d_document, page, 1) < DDJVU_JOB_OK) {
 		    ddjvu_message_wait (djvu_document->d_context);
@@ -282,6 +277,12 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 
 	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
 	g_object_unref (pixbuf);
+
+        if (border) {
+	      GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
+	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
+	      g_object_unref (tmp_pixbuf);
+	}
 	
 	return rotated_pixbuf;
 }

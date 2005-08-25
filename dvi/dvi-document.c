@@ -310,19 +310,15 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	pixbuf = mdvi_pixbuf_device_get_pixbuf (&dvi_document->context->device);
 
 	g_mutex_unlock (dvi_context_mutex);
-
-	if (border) {
-	        border_pixbuf = ev_document_misc_get_thumbnail_frame (thumb_width, thumb_height, NULL);
-		gdk_pixbuf_copy_area (pixbuf, 0, 0, 
-				      thumb_width - 2, thumb_height - 2,
-				      border_pixbuf, 2, 2);
-		g_object_unref (pixbuf);
-		pixbuf = border_pixbuf;
-	}
-	
 	
 	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
 	g_object_unref (pixbuf);
+	
+        if (border) {
+	      GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
+	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
+	      g_object_unref (tmp_pixbuf);
+	}
 
 	return rotated_pixbuf;
 }
