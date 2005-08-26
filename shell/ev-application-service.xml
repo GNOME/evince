@@ -7,12 +7,14 @@
 
     <method name="OpenWindow">
       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_window"/>
+      <arg type="u" name="timestamp" direction="in"/>
     </method>
 
     <method name="OpenURI">
       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_uri"/>
       <arg type="s" name="uri" direction="in"/>
       <arg type="s" name="page_label" direction="in"/>
+      <arg type="u" name="timestamp" direction="in"/>
     </method>
 
   </interface>

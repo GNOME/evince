@@ -1,3 +1,29 @@
+2005-08-25  Ryan Lortie  <desrt@desrt.ca>
+
+	* shell/ev-application-service.xml: Add 'timestamp' argument to
+	  ev_application_open_window and ev_application_open_uri methods.
+
+	* shell/ev-application.h: Add 'timestamp' argument to
+	  ev_application_open_window, ev_application_open_uri,
+	  and ev_application_open_uri_list functions.
+
+	* shell/ev-application.c (ev_application_open_window,
+	  ev_application_open_uri, ev_application_open_uri_list): Change
+	  functions that show/present windows to use a timestamp if one
+	  is passed in.
+
+	* shell/ev-window.c (ev_window_cmd_file_open,
+	  ev_window_cmd_recent_file_activate, drag_data_received_cb):
+	* shell/main.c (load_files): Modify calls to ev_application to
+	  include GDK_CURRENT_TIME as timestamp.
+
+	* shell/main.c (load_files_remote): Obtain timestamp for client
+	  instance from GDK and pass to server instance so new windows are
+	  focused properly.  Fix dbus_g_proxy_call() calls by including second
+	  G_TYPE_INVALID.
+	  
+	Closes bug #314475.
+
 Thu Aug 25 22:13:08 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-window.c (ev_window_finalize): Check for

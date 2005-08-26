@@ -113,9 +113,14 @@ ev_application_get_instance (void)
 
 gboolean
 ev_application_open_window (EvApplication  *application,
+			    guint32         timestamp,
 			    GError        **error)
 {
-	gtk_widget_show (ev_window_new ());
+	GtkWidget *new_window = ev_window_new ();
+
+	gtk_widget_show (new_window);
+	gtk_window_present_with_time (GTK_WINDOW (new_window),
+				      timestamp);
 
 	return TRUE;
 }
@@ -173,6 +178,7 @@ gboolean
 ev_application_open_uri (EvApplication  *application,
 			 const char     *uri,
 			 const char     *page_label,
+			 guint           timestamp,
 			 GError        **error)
 {
 	EvWindow *new_window;
@@ -181,7 +187,8 @@ ev_application_open_uri (EvApplication  *application,
 
 	new_window = ev_application_get_uri_window (application, uri);
 	if (new_window != NULL) {
-		gtk_window_present (GTK_WINDOW (new_window));
+		gtk_window_present_with_time (GTK_WINDOW (new_window),
+					      timestamp);
 		
 		return TRUE;
 	}
@@ -190,11 +197,12 @@ ev_application_open_uri (EvApplication  *application,
 
 	if (new_window == NULL) {
 		new_window = EV_WINDOW (ev_window_new ());
+		gtk_widget_show (GTK_WIDGET (new_window));
 	}
 	
 	ev_window_open_uri (new_window, uri);
 
-	gtk_window_present (GTK_WINDOW (new_window));
+	gtk_window_present_with_time (GTK_WINDOW (new_window), timestamp);
 
 	if (page_label != NULL) {
 		ev_window_open_page_label (new_window, page_label);
@@ -204,12 +212,17 @@ ev_application_open_uri (EvApplication  *application,
 }
 
 void
-ev_application_open_uri_list (EvApplication *application, GSList *uri_list)
+ev_application_open_uri_list (EvApplication *application,
+			      GSList        *uri_list,
+			      guint          timestamp)
 {
 	GSList *l;
 
 	for (l = uri_list; l != NULL; l = l->next) {
-		ev_application_open_uri (application, (char *)l->data, NULL, NULL);
+		ev_application_open_uri (application, (char *)l->data,
+					 NULL,
+					 timestamp,
+					 NULL);
 	}
 }
 

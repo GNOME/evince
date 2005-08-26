@@ -66,13 +66,16 @@ void	          ev_application_shutdown	     (EvApplication   *application);
 
 
 gboolean          ev_application_open_window         (EvApplication   *application,
+						      guint32         timestamp,
 						      GError         **error);
 gboolean          ev_application_open_uri            (EvApplication   *application,
 				                      const char      *uri,
 					              const char      *page_label,
+						      guint32         timestamp,
 						      GError         **error);
 void	          ev_application_open_uri_list       (EvApplication   *application,
-		  			              GSList          *uri_list);
+		  			              GSList          *uri_list,
+    						      guint32          timestamp);
 
 
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);

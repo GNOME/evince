@@ -1102,7 +1102,7 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 				
 		folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (chooser));
 
-		ev_application_open_uri_list (EV_APP, uris);
+		ev_application_open_uri_list (EV_APP, uris, GDK_CURRENT_TIME);
 	
 		g_slist_foreach (uris, (GFunc)g_free, NULL);	
 		g_slist_free (uris);
@@ -1126,7 +1126,7 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 
 	uri = egg_recent_item_get_uri (item);
 
-	ev_application_open_uri (EV_APP, uri, NULL, NULL);	
+	ev_application_open_uri (EV_APP, uri, NULL, GDK_CURRENT_TIME, NULL);
 	
 	g_free (uri);
 }
@@ -3051,7 +3051,7 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 
 		gnome_vfs_uri_list_free (uri_list);
 		
-		ev_application_open_uri_list (EV_APP, uris);
+		ev_application_open_uri_list (EV_APP, uris, 0);
 		
 		g_slist_free (uris);
 
