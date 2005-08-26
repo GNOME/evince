@@ -2456,7 +2456,10 @@ ev_view_set_rotation (EvView *view, int rotation)
 		ev_pixbuf_cache_clear (view->pixbuf_cache);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
-	
+
+	if (rotation != 0)
+		clear_selection (view);
+
 	g_object_notify (G_OBJECT (view), "rotation");
 }
 
@@ -3214,6 +3217,10 @@ void
 ev_view_select_all (EvView *view)
 {
 	int n_pages, i;
+
+	/* Disable selection on rotated pages for the 0.4.0 series */
+	if (view->rotation != 0)
+		return;
 
 	clear_selection (view);
 

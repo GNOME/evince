@@ -119,8 +119,13 @@ ev_application_open_window (EvApplication  *application,
 	GtkWidget *new_window = ev_window_new ();
 
 	gtk_widget_show (new_window);
+	
+#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	gtk_window_present_with_time (GTK_WINDOW (new_window),
 				      timestamp);
+#else
+	gtk_window_present (GTK_WINDOW (new_window));
+#endif
 
 	return TRUE;
 }

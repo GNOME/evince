@@ -5,6 +5,22 @@ Evince   0.3.4
 Bug Fixes:
 
     * Depend on poppler 0.4.0
+    * Pass in timestamp to to handle opening multiple windows over dbus
+      better (Ryan Lortie)
+    * Really quit when rendering postscript files.
+    * Set textdomain to libglade. 
+    * Fix rotation of thumbnails multiple times
+    * Fix selection for non-continuous case
+    * Disable selection for rotated case
+    * findbar fixes
+
+==============
+Evince   0.3.4
+==============
+
+Bug Fixes:
+
+    * Depend on poppler 0.4.0
     * Convert filenames to utf8 when showing them in the UI
     * Return focus back to view on escape
     * Fix compatibility with dbus 0.34.2
@@ -194,7 +210,7 @@ Interface improvements
 
 New features
 
-	* Use page labels as page numbers (Jhonatan)
+	* Use page labels as page numbers (Jonathan)
 
 ==============
 Evince   0.1.9
