@@ -26,6 +26,8 @@
 #include <glib/gi18n.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtkmain.h>
+#include <stdlib.h>
+#include <string.h>
 #include <libgnome/gnome-program.h>
 #include <libgnomeui/gnome-ui-init.h>
 #include <libgnomeui/gnome-app-helper.h>
@@ -123,7 +125,9 @@ load_files_remote (const char **files)
 	DBusGPendingCall *call;
 #endif
 	DBusGProxy *remote_object;
+#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	GdkDisplay *display;
+#endif
 	guint32 timestamp;
 
 #ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
