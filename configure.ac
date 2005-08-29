@@ -26,7 +26,7 @@ GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
 GNOME_DEBUG_CHECK
 
-ALL_LINGUAS="bg ca cs da de el en_CA en_GB es et eu fi fr gl gu he hi hu id ja ko lt nb ne nl no pa pl pt_BR ru rw sk sq sr sr@Latn sv th tr uk wa zh_CN zh_TW"
+ALL_LINGUAS="bg ca cs da de el en_CA en_GB es et eu fi fr gl gu he hi hu id ja ko lt nb ne nl no pa pl pt pt_BR ru rw sk sq sr sr@Latn sv th tr uk wa zh_CN zh_TW"
 
 AM_GLIB_GNU_GETTEXT
 
