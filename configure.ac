@@ -130,6 +130,11 @@ if test "x$GCONFTOOL" = "xno"; then
 	AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
 fi
 
+dnl ================== portability checks ===========================================
+
+dnl for backtrace()
+AC_CHECK_HEADERS([execinfo.h])
+
 dnl ================== ggv checks ===================================================
 AC_ARG_WITH(gs-pkg,
             [  --with-gs=dir       Directory Where GhostScript package is installed.])

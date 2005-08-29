@@ -1,3 +1,11 @@
+2005-08-29  Christian Persch  <chpe@cvs.gnome.org>
+
+	* configure.ac:
+	* lib/ev-debug.c: (trap_handler):
+
+	Check for execinfo.h and use it only if it exists.
+	Ported from Epiphany (bug #314776).
+
 2005-08-29  Duarte Loreto <happyguy_pt@hotmail.com>
 
 	* configure.ac: Added Portuguese (pt) to ALL_LINGUAS.
