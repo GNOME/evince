@@ -1486,6 +1486,8 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 		break;
 	}
 
+	g_object_unref (job);
+
 	gtk_widget_destroy (print_dialog);
 
 	if (print_job != NULL) {
@@ -2834,6 +2836,11 @@ ev_window_dispose (GObject *object)
 			 G_CALLBACK (find_bar_close_cb),
 			 window);
 		priv->find_bar = NULL;
+	}
+
+	if (priv->uri) {
+		g_free (priv->uri);
+		priv->uri = NULL;
 	}
 
 	if (window->priv->fullscreen_timeout_source) {

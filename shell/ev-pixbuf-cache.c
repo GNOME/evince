@@ -160,6 +160,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		gdk_region_destroy (job_info->selection_region);
 		job_info->selection_region = NULL;
 	}
+	if (job_info->rc) {
+		g_object_unref (G_OBJECT (job_info->rc));
+		job_info->rc = NULL;
+	}
 
 	job_info->selection_points.x1 = -1;
 	job_info->new_points.x1 = -1;
