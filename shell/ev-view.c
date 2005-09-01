@@ -2178,7 +2178,6 @@ clear_caches (EvView *view)
 	}
 
 	if (view->page_cache) {
-		g_object_unref (view->page_cache);
 		view->page_cache = NULL;
 	}
 }
