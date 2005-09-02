@@ -12,17 +12,6 @@
       </locale>
     </schema>
     <schema>
-      <key>/schemas/apps/evince/show_sidebar</key>
-      <applyto>/apps/evince/show_sidebar</applyto>
-      <owner>evince</owner>
-      <type>bool</type>
-      <default>true</default>
-      <locale name="C">
-        <short>Show sidebar by default</short>
-        <long>Sidebar is the side item that contains the Index and Thumbnail lists.  Two boolean options, true makes sidebar visible by default while false makes sidebar not visible by default.</long>
-      </locale>
-    </schema>
-    <schema>
       <key>/schemas/apps/evince/show_statusbar</key>
       <applyto>/apps/evince/show_statusbar</applyto>
       <owner>evince</owner>
@@ -31,17 +20,6 @@
       <locale name="C">
         <short>Show statusbar by default</short>
         <long>Statusbar is the standard bottom bar that display additional information about links and other actions.  Two boolean options, true makes the statusbar visible by default while false makes sidebar not visible by default.</long>
-      </locale>
-    </schema>
-    <schema>
-      <key>/schemas/apps/evince/sidebar_size</key>
-      <applyto>/apps/evince/sidebar_size</applyto>
-      <owner>evince</owner>
-      <type>int</type>
-      <default>132</default>
-      <locale name="C">
-        <short>Default sidebar size</short>
-        <long>Sidebar is the side item that contains the Index and Thumbnail lists.  The default size sets the sidebar's width in pixels based from the side of the window.  Any integer will be accepted.  The sidebar will never shrink smaller than the size of the text required to display Thumbnails or Index.  Large values will cause the sidebar to take up as much of the page display area as possible relative to the window's size.</long>
       </locale>
     </schema>
   </schemalist>
