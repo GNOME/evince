@@ -1703,6 +1703,51 @@ highlight_find_results (EvView *view, int page)
 }
 
 static void
+draw_loading_text (EvView       *view,
+		   GdkRectangle *page_area,
+		   GdkRectangle *expose_area)
+{
+	PangoLayout *layout;
+	PangoFontDescription *font_desc;
+	PangoRectangle logical_rect;
+	double real_scale;
+	int target_width;
+
+	const char *loading_text = _("Loading...");	
+
+	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
+
+	font_desc = pango_font_description_new ();
+
+
+	/* We set the font to be 10 points, get the size, and scale appropriately */
+	pango_font_description_set_size (font_desc, 10 * PANGO_SCALE);
+	pango_layout_set_font_description (layout, font_desc);
+	pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+
+	/* Make sure we fit the middle of the page */
+	target_width = MAX (page_area->width / 2, 1);
+	real_scale = ((double)target_width / (double) logical_rect.width) * (PANGO_SCALE * 10);
+	pango_font_description_set_size (font_desc, (int)real_scale);
+	pango_layout_set_font_description (layout, font_desc);
+	pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+
+	gtk_paint_layout (GTK_WIDGET (view)->style,
+			  GTK_WIDGET (view)->window,
+			  GTK_WIDGET_STATE (view),
+			  FALSE,
+			  page_area,
+			  GTK_WIDGET (view),
+			  NULL,
+			  page_area->x + (target_width/2),
+			  page_area->y + (page_area->height - logical_rect.height) / 2,
+			  layout);
+
+	pango_font_description_free (font_desc);
+	g_object_unref (layout);
+}
+
+static void
 draw_one_page (EvView          *view,
 	       gint             page,
 	       GdkRectangle    *page_area,
@@ -1785,6 +1830,10 @@ draw_one_page (EvView          *view,
 					 GDK_RGB_DITHER_NORMAL,
 					 0, 0);
 			g_object_unref (scaled_image);
+		} else {
+			draw_loading_text (view,
+					   &real_page_area,
+					   expose_area);
 		}
 
 		if (scaled_selection) {
