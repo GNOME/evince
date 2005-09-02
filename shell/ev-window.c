@@ -106,6 +106,7 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *statusbar;
 	GtkWidget *sidebar_thumbs;
+	GtkWidget *sidebar_links;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -156,6 +157,8 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define GCONF_LOCKDOWN_PRINT    "/desktop/gnome/lockdown/disable_printing"
 
 #define SIDEBAR_DEFAULT_SIZE    132
+#define LINKS_SIDEBAR_ID "links"
+#define THUMBNAILS_SIDEBAR_ID "thumbnails"
 
 #define PRINT_CONFIG_FILENAME	"ev-print-config.xml"
 
@@ -965,6 +968,7 @@ setup_view_from_metadata (EvWindow *window)
 	GValue fullscreen = { 0, };
 	GValue rotation = { 0, };
 	GValue sidebar_size = { 0, };
+	GValue sidebar_page = { 0, };
 
 	/* Window size */
 	if (!GTK_WIDGET_VISIBLE (window)) {
@@ -1051,6 +1055,18 @@ setup_view_from_metadata (EvWindow *window)
 	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size)) {
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
 					g_value_get_int (&sidebar_size));
+	}
+
+	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page)) {
+		const char *page_id = g_value_get_string (&sidebar_page);
+
+		if (strcmp (page_id, "links") == 0) {
+			ev_sidebar_set_page (EV_SIDEBAR (window->priv->sidebar),
+					     window->priv->sidebar_links);
+		} else if (strcmp (page_id, "thumbnails")) {
+			ev_sidebar_set_page (EV_SIDEBAR (window->priv->sidebar),
+					     window->priv->sidebar_thumbs);
+		}
 	}
 
 	update_sidebar_visibility (window);
@@ -2560,6 +2576,29 @@ ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
+					   GParamSpec *pspec,
+					   EvWindow   *ev_window)
+{
+	GtkWidget *current_page;
+	const char *id;
+
+	g_object_get (G_OBJECT (ev_sidebar), "current_page", &current_page, NULL);
+
+	if (current_page == ev_window->priv->sidebar_links) {
+		id = LINKS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_thumbs) {
+		id = THUMBNAILS_SIDEBAR_ID;
+	} else {
+		g_assert_not_reached();
+	}
+
+	g_object_unref (current_page);
+
+	ev_metadata_manager_set_string (ev_window->priv->uri, "sidebar_page", id);
+}
+
+static void
 ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
 					 EvWindow   *ev_window)
 {
@@ -3425,6 +3464,7 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Stub sidebar, for now */
 	sidebar_widget = ev_sidebar_links_new ();
+	ev_window->priv->sidebar_links = sidebar_widget;
 	g_signal_connect (sidebar_widget,
 			  "notify::model",
 			  G_CALLBACK (sidebar_widget_model_set),
@@ -3528,7 +3568,11 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::visible",
 			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
 			  ev_window);
-	
+	g_signal_connect (ev_window->priv->sidebar,
+			  "notify::current-page",
+			  G_CALLBACK (ev_window_sidebar_current_page_changed_cb),
+			  ev_window);
+
 	/* Connect to find bar signals */
 	g_signal_connect (ev_window->priv->find_bar,
 			  "previous",

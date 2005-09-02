@@ -1,5 +1,21 @@
 2005-09-02  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-sidebar.h:
+	* shell/ev-sidebar.c: (ev_sidebar_set_property),
+	(ev_sidebar_get_current_page), (ev_sidebar_get_property),
+	(ev_sidebar_class_init), (ev_sidebar_select_page),
+	(ev_sidebar_menu_item_activate_cb), (ev_sidebar_new),
+	(ev_sidebar_set_page):
+
+	Add a current page property and allow to get/set it
+
+	* shell/ev-window.c: (setup_view_from_metadata),
+	(ev_window_sidebar_current_page_changed_cb), (ev_window_init):
+
+	Persist current sidebar page per document
+
+2005-09-02  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* data/evince.schemas.in:
 	* shell/ev-window.c: (update_chrome_visibility),
 	(setup_document_from_metadata), (update_sidebar_visibility),

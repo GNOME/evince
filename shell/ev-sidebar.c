@@ -33,6 +33,12 @@
 
 enum
 {
+	PROP_0,
+	PROP_CURRENT_PAGE
+};
+
+enum
+{
 	PAGE_COLUMN_TITLE,
 	PAGE_COLUMN_MENU_ITEM,
 	PAGE_COLUMN_MAIN_WIDGET,
@@ -74,6 +80,96 @@ ev_sidebar_destroy (GtkObject *object)
 }
 
 static void
+ev_sidebar_select_page (EvSidebar *ev_sidebar,  GtkTreeIter *iter)
+{
+	char *title;
+	int index;
+
+	gtk_tree_model_get (ev_sidebar->priv->page_model, iter,
+			    PAGE_COLUMN_TITLE, &title, 
+			    PAGE_COLUMN_NOTEBOOK_INDEX, &index,
+			    -1);
+
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (ev_sidebar->priv->notebook), index);
+	gtk_label_set_text (GTK_LABEL (ev_sidebar->priv->label), title);
+
+	g_free (title);
+}
+
+void
+ev_sidebar_set_page (EvSidebar   *ev_sidebar,
+		     GtkWidget   *main_widget)
+{
+	GtkTreeIter iter;
+	gboolean valid;
+
+	valid = gtk_tree_model_get_iter_first (ev_sidebar->priv->page_model, &iter);
+	   
+	while (valid) {
+		GtkWidget *widget;
+
+		gtk_tree_model_get (ev_sidebar->priv->page_model, &iter,
+				    PAGE_COLUMN_MAIN_WIDGET, &widget,
+				    -1);
+			 
+		if (widget == main_widget) {
+			ev_sidebar_select_page (ev_sidebar, &iter);
+			valid = FALSE;
+		} else {
+			valid = gtk_tree_model_iter_next (ev_sidebar->priv->page_model, &iter);
+		}
+		g_object_unref (widget);
+	}
+
+	g_object_notify (G_OBJECT (ev_sidebar), "current-page");
+}
+
+static void
+ev_sidebar_set_property (GObject      *object,
+		         guint         prop_id,
+		         const GValue *value,
+		         GParamSpec   *pspec)
+{
+	EvSidebar *sidebar = EV_SIDEBAR (object);
+
+	switch (prop_id)
+	{
+	case PROP_CURRENT_PAGE:
+		ev_sidebar_set_page (sidebar, g_value_get_object (value));	
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static GtkWidget *
+ev_sidebar_get_current_page (EvSidebar *sidebar)
+{
+	GtkNotebook *notebook = GTK_NOTEBOOK (sidebar->priv->notebook);
+
+	return gtk_notebook_get_nth_page
+		(notebook, gtk_notebook_get_current_page (notebook));
+}
+
+static void
+ev_sidebar_get_property (GObject *object,
+		         guint prop_id,
+		         GValue *value,
+		         GParamSpec *pspec)
+{
+	EvSidebar *sidebar = EV_SIDEBAR (object);
+
+	switch (prop_id)
+	{
+	case PROP_CURRENT_PAGE:
+		g_value_set_object (value, ev_sidebar_get_current_page (sidebar));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
 ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 {
 	GObjectClass *g_object_class;
@@ -87,6 +183,16 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarPrivate));
 	   
 	gtk_object_klass->destroy = ev_sidebar_destroy;
+	g_object_class->get_property = ev_sidebar_get_property;
+	g_object_class->set_property = ev_sidebar_set_property;
+
+	g_object_class_install_property (g_object_class,
+					 PROP_CURRENT_PAGE,
+					 g_param_spec_object ("current-page",
+							      "Current page",
+							      "The currently visible page",
+							      GTK_TYPE_WIDGET,
+							      G_PARAM_READWRITE));
 }
 
 static void
@@ -198,32 +304,26 @@ ev_sidebar_menu_item_activate_cb (GtkWidget *widget,
 	EvSidebar *ev_sidebar = EV_SIDEBAR (user_data);
 	GtkTreeIter iter;
 	GtkWidget *menu_item, *item;
-	gchar *title;
 	gboolean valid;
-	gint index;
 
 	menu_item = gtk_menu_get_active (GTK_MENU (ev_sidebar->priv->menu));
 	valid = gtk_tree_model_get_iter_first (ev_sidebar->priv->page_model, &iter);
 	   
 	while (valid) {
-		gtk_tree_model_get (ev_sidebar->priv->page_model,
-				    &iter,
-				    PAGE_COLUMN_TITLE, &title, 
+		gtk_tree_model_get (ev_sidebar->priv->page_model, &iter,
 				    PAGE_COLUMN_MENU_ITEM, &item,
-				    PAGE_COLUMN_NOTEBOOK_INDEX, &index,
 				    -1);
 			 
 		if (item == menu_item) {
-			gtk_notebook_set_current_page
-				(GTK_NOTEBOOK (ev_sidebar->priv->notebook), index);
-			gtk_label_set_text (GTK_LABEL (ev_sidebar->priv->label), title);
+			ev_sidebar_select_page (ev_sidebar, &iter);
 			valid = FALSE;
 		} else {
 			valid = gtk_tree_model_iter_next (ev_sidebar->priv->page_model, &iter);
 		}
 		g_object_unref (item);
-		g_free (title);
 	}
+
+	g_object_notify (G_OBJECT (ev_sidebar), "current-page");
 }
 
 static void

@@ -54,6 +54,8 @@ GType      ev_sidebar_get_type  	   (void);
 GtkWidget *ev_sidebar_new         	   (void);
 void       ev_sidebar_add_page    	   (EvSidebar   *ev_sidebar,
 					    GtkWidget   *main_widget);
+void       ev_sidebar_set_page    	   (EvSidebar   *ev_sidebar,
+					    GtkWidget   *main_widget);
 void       ev_sidebar_set_document	   (EvSidebar   *ev_sidebar,
 					    EvDocument  *document);
 
