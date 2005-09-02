@@ -2101,14 +2101,14 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *dialog;
 	GtkWidget *editor;
 
-	dialog = gtk_dialog_new_with_buttons (_("Toolbar editor"),
+	dialog = gtk_dialog_new_with_buttons (_("Toolbar Editor"),
 					      GTK_WINDOW (ev_window), 
 				              GTK_DIALOG_DESTROY_WITH_PARENT, 
 					      GTK_STOCK_CLOSE,
 					      GTK_RESPONSE_CLOSE, 
 					      NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)), 5);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 18);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 2);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
 	  
