@@ -1101,10 +1101,28 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 }
 
 static void
+file_open_dialog_response_cb (GtkWidget *chooser,
+			      gint       response_id,
+			      EvWindow  *ev_window)
+{
+	if (response_id == GTK_RESPONSE_OK) {
+		GSList *uris;
+
+		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
+
+		ev_application_open_uri_list (EV_APP, uris, GDK_CURRENT_TIME);
+	
+		g_slist_foreach (uris, (GFunc)g_free, NULL);	
+		g_slist_free (uris);
+	}
+
+	gtk_widget_destroy (chooser);
+}
+
+static void
 ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 {
 	GtkWidget *chooser;
-	static char *folder = NULL;
 
 	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
 					       GTK_WINDOW (window),
@@ -1114,35 +1132,15 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 					       NULL);
 
-	if (folder) {
-		gtk_file_chooser_set_current_folder_uri (GTK_FILE_CHOOSER (chooser),
-						         folder);
-    	}
-
 	ev_document_types_add_filters (chooser, NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
 
-	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_OK) {
-		GSList *uris;
+	g_signal_connect (chooser, "response",
+			  G_CALLBACK (file_open_dialog_response_cb),
+			  window);
 
-		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
-
-		if (folder != NULL)
-			g_free (folder);
-				
-		folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (chooser));
-
-		ev_application_open_uri_list (EV_APP, uris, GDK_CURRENT_TIME);
-	
-		g_slist_foreach (uris, (GFunc)g_free, NULL);	
-		g_slist_free (uris);
-	} else {
-		if (!GTK_WIDGET_VISIBLE (window))
-			gtk_widget_destroy (GTK_WIDGET (window));
-	}
-
-	gtk_widget_destroy (GTK_WIDGET (chooser));
+	gtk_widget_show (chooser);
 }
 
 static void
@@ -1259,32 +1257,45 @@ save_error_dialog (GtkWindow *window, const gchar *file_name)
 }
 
 static void
+file_save_dialog_response_cb (GtkWidget *fc,
+			      gint       response_id,
+			      EvWindow  *ev_window)
+{
+	gboolean success;
+
+	if (response_id == GTK_RESPONSE_OK) {
+		const char *uri;
+
+		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+
+		ev_document_doc_mutex_lock ();
+		success = ev_document_save (ev_window->priv->document, uri, NULL);
+		ev_document_doc_mutex_unlock ();
+
+		if (!success) {
+			save_error_dialog (GTK_WINDOW (fc), uri);
+		}
+	}
+
+	gtk_widget_destroy (fc);
+}
+
+static void
 ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 {
 	GtkWidget *fc;
-
-	gchar *uri;
 	gchar *base_name;
 	gchar *file_name;
-	static char* folder = NULL;
-
-	gboolean success;
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
-		NULL, GTK_FILE_CHOOSER_ACTION_SAVE,
+		GTK_WINDOW (ev_window), GTK_FILE_CHOOSER_ACTION_SAVE,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
 		NULL);
-	gtk_window_set_modal (GTK_WINDOW (fc), TRUE);
 
 	ev_document_types_add_filters (fc, ev_window->priv->document);
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
-	
-	if (folder) {
-		gtk_file_chooser_set_current_folder_uri(GTK_FILE_CHOOSER (fc), 
-							folder);
-    	}
 	
 	file_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
 	base_name = g_path_get_basename (file_name);
@@ -1292,33 +1303,11 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	g_free (file_name);
 	g_free (base_name);
 
+	g_signal_connect (fc, "response",
+			  G_CALLBACK (file_save_dialog_response_cb),
+			  ev_window);
+
 	gtk_widget_show (fc);
-
-	while (gtk_dialog_run (GTK_DIALOG (fc)) == GTK_RESPONSE_OK) {
-		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
-
-/* FIXME
-		if (g_file_test (uri, G_FILE_TEST_EXISTS) &&
-		    !overwrite_existing_file (GTK_WINDOW (fc), uri))
-				continue;
-*/
-		
-		ev_document_doc_mutex_lock ();
-		success = ev_document_save (ev_window->priv->document, uri, NULL);
-		ev_document_doc_mutex_unlock ();
-
-		if (success)
-			break;
-		else
-			save_error_dialog (GTK_WINDOW (fc), uri);
-	}
-
-	if (folder != NULL)
-		g_free (folder);
-				
-	folder = gtk_file_chooser_get_current_folder_uri (GTK_FILE_CHOOSER (fc));
-
-	gtk_widget_destroy (fc);
 }
 
 static gboolean

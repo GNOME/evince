@@ -1,5 +1,13 @@
 2005-09-02  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-window.c: (file_open_dialog_response_cb),
+	(ev_window_cmd_file_open), (file_save_dialog_response_cb),
+	(ev_window_cmd_save_as):
+
+	Make file pickers not modal and refactor code some
+
+2005-09-02  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-sidebar.h:
 	* shell/ev-sidebar.c: (ev_sidebar_set_property),
 	(ev_sidebar_get_current_page), (ev_sidebar_get_property),
