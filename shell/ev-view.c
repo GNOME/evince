@@ -37,6 +37,7 @@
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
+#include "ev-tooltip.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -148,6 +149,7 @@ struct _EvView {
 
 	int pressed_button;
 	EvViewCursor cursor;
+	GtkWidget *link_tooltip;
 
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
@@ -244,7 +246,7 @@ static EvLink*    get_link_at_location                       (EvView            
 							      gdouble             y);
 static void       go_to_link                                 (EvView             *view,
 							      EvLink             *link);
-static char*      status_message_from_link                   (EvView             *view,
+static char*      tip_from_link                              (EvView             *view,
 							      EvLink             *link);
 
 /*** GtkWidget implementation ***/
@@ -1076,7 +1078,7 @@ go_to_link (EvView *view, EvLink *link)
 }
 
 static char *
-status_message_from_link (EvView *view, EvLink *link)
+tip_from_link (EvView *view, EvLink *link)
 {
 	EvLinkType type;
 	char *msg = NULL;
@@ -1528,13 +1530,23 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		EvLink *link;
 
 		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
-                if (link) {
-			char *msg;
 
-			msg = status_message_from_link (view, link);
-			ev_view_set_status (view, msg);
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
+		if (!link && view->link_tooltip) {
+			gtk_widget_hide (view->link_tooltip);
+		}
+
+                if (link) {
+			char *msg = tip_from_link (view, link);
+
+			if (view->link_tooltip == NULL) {
+				view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
+			}
+			ev_tooltip_set_position (EV_TOOLTIP (view->link_tooltip), event->x, event->y);
+			ev_tooltip_set_text (EV_TOOLTIP (view->link_tooltip), msg);
+			gtk_widget_show (view->link_tooltip);
 			g_free (msg);
+
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 		} else if (location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y)) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 		} else {
@@ -1881,6 +1893,11 @@ ev_view_destroy (GtkObject *object)
 		g_object_unref (view->pixbuf_cache);
 		view->pixbuf_cache = NULL;
 	}
+	if (view->link_tooltip) {
+		gtk_widget_destroy (view->link_tooltip);
+		view->link_tooltip = NULL;
+	}
+
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
 	GTK_OBJECT_CLASS (ev_view_parent_class)->destroy (object);
