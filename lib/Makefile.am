@@ -11,7 +11,9 @@ libev_la_SOURCES =				\
 	ev-file-helpers.c			\
 	ev-file-helpers.h			\
 	ev-gui.c				\
-	ev-gui.h
+	ev-gui.h				\
+	ev-tooltip.c				\
+	ev-tooltip.h
 
 libev_la_LIBADD = 					\
 	$(top_builddir)/backend/libevbackend.la
