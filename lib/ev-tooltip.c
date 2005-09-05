@@ -3,7 +3,7 @@
  *  Copyright (C) 2004 Red Hat, Inc.
  *
  *  Author:
- *    Jonathan Blandford <jrb@alum.mit.edu>
+ *    Marco Pesenti Gritti <marco@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -87,6 +87,8 @@ ev_tooltip_init (EvTooltip *tooltip)
 
 	tooltip->priv = EV_TOOLTIP_GET_PRIVATE (tooltip);
 
+	gtk_widget_set_app_paintable (GTK_WIDGET (tooltip), TRUE);
+	gtk_window_set_resizable (GTK_WINDOW (tooltip), FALSE);
 	gtk_widget_set_name (window, "gtk-tooltips");
 
 	label = gtk_label_new (NULL);
