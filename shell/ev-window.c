@@ -47,7 +47,6 @@
 #include "ev-document-types.h"
 #include "ev-job-queue.h"
 #include "ev-jobs.h"
-#include "ev-statusbar.h"
 #include "ev-sidebar-page.h"
 #include "eggfindbar.h"
 #include "egg-recent-view-uimanager.h"
@@ -84,9 +83,8 @@ typedef enum {
 	EV_CHROME_MENUBAR	= 1 << 0,
 	EV_CHROME_TOOLBAR	= 1 << 1,
 	EV_CHROME_FINDBAR	= 1 << 2,
-	EV_CHROME_STATUSBAR	= 1 << 3,
-	EV_CHROME_RAISE_TOOLBAR	= 1 << 4,
-	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR | EV_CHROME_STATUSBAR
+	EV_CHROME_RAISE_TOOLBAR	= 1 << 3,
+	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR
 } EvChrome;
 
 struct _EvWindowPrivate {
@@ -104,7 +102,6 @@ struct _EvWindowPrivate {
 	GtkWidget *view;
 	GtkWidget *page_view;
 	GtkWidget *password_view;
-	GtkWidget *statusbar;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
 
@@ -152,7 +149,6 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
 
 #define GCONF_CHROME_TOOLBAR	"/apps/evince/show_toolbar"
-#define GCONF_CHROME_STATUSBAR	"/apps/evince/show_statusbar"
 #define GCONF_LOCKDOWN_SAVE     "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT    "/desktop/gnome/lockdown/disable_printing"
 
@@ -333,7 +329,7 @@ static void
 update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
-	gboolean menubar, toolbar, findbar, statusbar, fullscreen_toolbar;
+	gboolean menubar, toolbar, findbar, fullscreen_toolbar;
 	gboolean fullscreen_mode, presentation, fullscreen;
 
 	presentation = ev_view_get_presentation (EV_VIEW (priv->view));
@@ -345,7 +341,6 @@ update_chrome_visibility (EvWindow *window)
 		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !fullscreen_mode;
 	fullscreen_toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0 ||
 			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0);
-	statusbar = (priv->chrome & EV_CHROME_STATUSBAR) != 0 && !fullscreen_mode;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 
 	set_widget_visibility (priv->menubar, menubar);
@@ -354,7 +349,6 @@ update_chrome_visibility (EvWindow *window)
 	set_action_sensitive (window, "EditToolbar", toolbar);
 
 	set_widget_visibility (priv->find_bar, findbar);
-	set_widget_visibility (priv->statusbar, statusbar);
 
 	if (priv->fullscreen_popup != NULL) {
 		if (fullscreen)
@@ -731,13 +725,6 @@ password_dialog_response (GtkWidget *password_dialog,
 		
 		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 		
-		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
-				   EV_CONTEXT_PROGRESS,
-				   _("Loading document. Please wait"));
-
-	        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
-	    			            TRUE);
-	
     		gtk_widget_destroy (password_dialog);
 			
 		g_object_unref (document);
@@ -845,12 +832,6 @@ ev_window_load_job_cb  (EvJobLoad *job,
 	g_assert (document != ev_window->priv->document);
 	g_assert (job->uri);
 
-	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
-			  EV_CONTEXT_PROGRESS);
-
-        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
-    			            FALSE);
-
 	if (ev_window->priv->password_document) {
 		g_object_unref (ev_window->priv->password_document);
 		ev_window->priv->password_document = NULL;
@@ -905,11 +886,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 
 	
 	if (job->error != NULL) {
-		ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
-				  EV_CONTEXT_PROGRESS);
-	        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
-    				            FALSE);
-
 		unable_to_load (ev_window, job->error->message);
 		ev_window_clear_jobs (ev_window);
 	} else {
@@ -1092,12 +1068,6 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 			  G_CALLBACK (ev_window_xfer_job_cb),
 			  ev_window);
 	ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
-
-	ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
-			   EV_CONTEXT_PROGRESS,
-			   _("Loading document. Please wait"));
-        ev_statusbar_set_progress  (EV_STATUSBAR (ev_window->priv->statusbar), 
-    			            TRUE);
 }
 
 static void
@@ -1990,23 +1960,6 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 }
 
 static gboolean
-ev_window_state_event (GtkWidget *widget, GdkEventWindowState *event)
-{
-	EvWindow *window = EV_WINDOW (widget);
-
-	if (event->changed_mask & GDK_WINDOW_STATE_MAXIMIZED) {
-		gboolean maximized;
-
-		maximized = (event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) == 0;
-
-		ev_statusbar_set_maximized (EV_STATUSBAR (window->priv->statusbar),
-					    maximized);
-	}
-
-	return FALSE;
-}
-
-static gboolean
 ev_window_focus_in_event (GtkWidget *widget, GdkEventFocus *event)
 {
 	EvWindow *window = EV_WINDOW (widget);
@@ -2550,14 +2503,6 @@ ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_view_statusbar_cb (GtkAction *action, EvWindow *ev_window)
-{
-	update_chrome_flag (ev_window, EV_CHROME_STATUSBAR,
-			    GCONF_CHROME_STATUSBAR,
-			    gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
-}
-
-static void
 ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 {
 	set_widget_visibility (ev_window->priv->sidebar,
@@ -2606,72 +2551,6 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 	if (!ev_view_get_presentation (view) && !ev_view_get_fullscreen (view)) {
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "sidebar_visibility",
 					         GTK_WIDGET_VISIBLE (ev_sidebar));
-	}
-}
-
-static void
-menu_item_select_cb (GtkMenuItem *proxy, EvWindow *ev_window)
-{
-	GtkAction *action;
-	char *message;
-
-	action = g_object_get_data (G_OBJECT (proxy), "gtk-action");
-	g_return_if_fail (action != NULL);
-
-	g_object_get (G_OBJECT (action), "tooltip", &message, NULL);
-	if (message) {
-		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
-				   EV_CONTEXT_VIEW, message);
-		g_free (message);
-	}
-}
-
-static void
-menu_item_deselect_cb (GtkMenuItem *proxy, EvWindow *ev_window)
-{
-	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
-			  EV_CONTEXT_VIEW);
-}
-
-static void
-connect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
-		  GtkWidget *proxy, EvWindow *ev_window)
-{
-	if (GTK_IS_MENU_ITEM (proxy)) {
-		g_signal_connect (proxy, "select",
-				  G_CALLBACK (menu_item_select_cb), ev_window);
-		g_signal_connect (proxy, "deselect",
-				  G_CALLBACK (menu_item_deselect_cb),
-				  ev_window);
-	}
-}
-
-static void
-disconnect_proxy_cb (GtkUIManager *ui_manager, GtkAction *action,
-		     GtkWidget *proxy, EvWindow *ev_window)
-{
-	if (GTK_IS_MENU_ITEM (proxy)) {
-		g_signal_handlers_disconnect_by_func
-			(proxy, G_CALLBACK (menu_item_select_cb), ev_window);
-		g_signal_handlers_disconnect_by_func
-			(proxy, G_CALLBACK (menu_item_deselect_cb), ev_window);
-	}
-}
-
-static void
-view_status_changed_cb (EvView     *view,
-			GParamSpec *pspec,
-			EvWindow   *ev_window)
-{
-	const char *message;
-
-	ev_statusbar_pop (EV_STATUSBAR (ev_window->priv->statusbar),
-			  EV_CONTEXT_HELP);
-
-	message = ev_view_get_status (view);
-	if (message) {
-		ev_statusbar_push (EV_STATUSBAR (ev_window->priv->statusbar),
-				   EV_CONTEXT_HELP, message);
 	}
 }
 
@@ -2895,7 +2774,6 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	g_object_class->dispose = ev_window_dispose;
 	g_object_class->finalize = ev_window_finalize;
 
-	widget_class->window_state_event = ev_window_state_event;
 	widget_class->focus_in_event = ev_window_focus_in_event;
 	widget_class->focus_out_event = ev_window_focus_out_event;
 
@@ -3045,9 +2923,6 @@ static const GtkToggleActionEntry toggle_entries[] = {
 	{ "ViewToolbar", NULL, N_("_Toolbar"), "<shift><control>T",
 	  N_("Show or hide the toolbar"),
 	  G_CALLBACK (ev_window_view_toolbar_cb), TRUE },
-	{ "ViewStatusbar", NULL, N_("_Statusbar"), NULL,
-	  N_("Show or hide the statusbar"),
-	  G_CALLBACK (ev_window_view_statusbar_cb), TRUE },
         { "ViewSidebar", NULL, N_("Side _Pane"), "F9",
 	  N_("Show or hide the side pane"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
@@ -3203,14 +3078,6 @@ set_chrome_actions (EvWindow *window)
 				      (priv->chrome & EV_CHROME_TOOLBAR) != 0);
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
-
-	action= gtk_action_group_get_action (action_group, "ViewStatusbar");
-	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_view_statusbar_cb), window);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      (priv->chrome & EV_CHROME_STATUSBAR) != 0);
-	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_view_statusbar_cb), window);
 }
 
 static EvChrome
@@ -3226,14 +3093,6 @@ load_chrome (void)
 	if (value != NULL) {
 		if (value->type == GCONF_VALUE_BOOL && !gconf_value_get_bool (value)) {
 			chrome &= ~EV_CHROME_TOOLBAR;
-		}
-		gconf_value_free (value);
-	}
-
-	value = gconf_client_get (client, GCONF_CHROME_STATUSBAR, NULL);
-	if (value != NULL) {
-		if (value->type == GCONF_VALUE_BOOL && !gconf_value_get_bool (value)) {
-			chrome &= ~EV_CHROME_STATUSBAR;
 		}
 		gconf_value_free (value);
 	}
@@ -3398,11 +3257,6 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window_set_view_accels_sensitivity (ev_window, FALSE);
 
-	g_signal_connect (ev_window->priv->ui_manager, "connect_proxy",
-			  G_CALLBACK (connect_proxy_cb), ev_window);
-	g_signal_connect (ev_window->priv->ui_manager, "disconnect_proxy",
-			  G_CALLBACK (disconnect_proxy_cb), ev_window);
-
 	if (!gtk_ui_manager_add_ui_from_file (ev_window->priv->ui_manager,
 					      DATADIR"/evince-ui.xml",
 					      &error)) {
@@ -3513,10 +3367,6 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (view_find_status_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->view,
-			  "notify::status",
-			  G_CALLBACK (view_status_changed_cb),
-			  ev_window);
-	g_signal_connect (ev_window->priv->view,
 			  "notify::sizing-mode",
 			  G_CALLBACK (ev_window_sizing_mode_changed_cb),
 			  ev_window);
@@ -3537,11 +3387,6 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (ev_window_rotation_changed_cb),
 			  ev_window);
 
-	ev_window->priv->statusbar = ev_statusbar_new ();
-	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
-			  ev_window->priv->statusbar,
-			  FALSE, TRUE, 0);
-    
 	ev_window->priv->find_bar = egg_find_bar_new ();
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
 			  ev_window->priv->find_bar,

@@ -1,3 +1,17 @@
+2005-09-05  Marco Pesenti Gritti <mpg@redhat.com>
+
+	* data/evince-ui.xml:
+	* data/evince.schemas.in:
+	* shell/Makefile.am:
+	* shell/ev-window.c: (update_chrome_visibility),
+	(password_dialog_response), (ev_window_load_job_cb),
+	(ev_window_xfer_job_cb), (ev_window_open_uri),
+	(ev_window_class_init), (set_chrome_actions), (load_chrome),
+	(ev_window_init):
+
+	Remove the statusbar. This regress loading feedback, need to
+	check with Bryan what we want to do there...
+
 2005-09-05  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* lib/ev-tooltip.c: (ev_tooltip_init):
