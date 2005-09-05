@@ -28,8 +28,15 @@
 
 #include <gtk/gtklabel.h>
 
+#define DEFAULT_DELAY 500
+#define STICKY_DELAY 0
+#define STICKY_REVERT_DELAY 1000
+
 struct _EvTooltipPrivate {
 	GtkWidget *label;
+	GTimeVal last_deactivate;
+	int timer_tag;
+	gboolean active;
 };
 
 G_DEFINE_TYPE (EvTooltip, ev_tooltip, GTK_TYPE_WINDOW)
@@ -50,11 +57,23 @@ ev_tooltip_expose_event (GtkWidget      *widget,
 }
 
 static void
+ev_tooltip_dispose (GObject *object)
+{
+	EvTooltip *tooltip = EV_TOOLTIP (object);
+
+	if (tooltip->priv->timer_tag) {
+		g_source_remove (tooltip->priv->timer_tag);
+		tooltip->priv->timer_tag = 0;
+	}
+}
+
+static void
 ev_tooltip_class_init (EvTooltipClass *class)
 {
 	GObjectClass *g_object_class = G_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
+	g_object_class->dispose = ev_tooltip_dispose;
 	widget_class->expose_event = ev_tooltip_expose_event;
 
 	g_type_class_add_private (g_object_class, sizeof (EvTooltipPrivate));
@@ -114,4 +133,68 @@ ev_tooltip_set_position (EvTooltip *tooltip, int x, int y)
 	}
 
 	gtk_window_move (GTK_WINDOW (tooltip), x + root_x, y + root_y);
+}
+
+static gboolean
+ev_tooltip_recently_shown (EvTooltip *tooltip)
+{
+	GTimeVal now;
+	glong msec;
+  
+	g_get_current_time (&now);
+
+	msec = (now.tv_sec  - tooltip->priv->last_deactivate.tv_sec) * 1000 +
+	       (now.tv_usec - tooltip->priv->last_deactivate.tv_usec) / 1000;
+
+	return (msec < STICKY_REVERT_DELAY);
+}
+
+static gint
+ev_tooltip_timeout (gpointer data)
+{
+	GtkWidget *tooltip = GTK_WIDGET (data);
+
+	gtk_widget_show (tooltip);
+
+	return FALSE;
+}
+
+void
+ev_tooltip_activate (EvTooltip *tooltip)
+{
+	int delay;
+
+	if (tooltip->priv->active) {
+		return;
+	} else {
+		tooltip->priv->active = TRUE;
+	}
+
+	if (ev_tooltip_recently_shown (tooltip)) {
+		delay = STICKY_DELAY;
+	} else {
+		delay = DEFAULT_DELAY;
+	}
+
+	tooltip->priv->timer_tag = g_timeout_add (delay, ev_tooltip_timeout,
+					          (gpointer)tooltip);
+}
+
+void
+ev_tooltip_deactivate (EvTooltip *tooltip)
+{
+	if (!tooltip->priv->active) {
+		return;
+	} else {
+		tooltip->priv->active = FALSE;
+	}
+
+	if (tooltip->priv->timer_tag) {
+		g_source_remove (tooltip->priv->timer_tag);
+		tooltip->priv->timer_tag = 0;
+	}
+
+	gtk_widget_hide (GTK_WIDGET (tooltip));
+
+	g_get_current_time (&tooltip->priv->last_deactivate);
 }

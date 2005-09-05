@@ -1532,7 +1532,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
 
 		if (!link && view->link_tooltip) {
-			gtk_widget_hide (view->link_tooltip);
+			ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
 		}
 
                 if (link) {
@@ -1543,7 +1543,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			}
 			ev_tooltip_set_position (EV_TOOLTIP (view->link_tooltip), event->x, event->y);
 			ev_tooltip_set_text (EV_TOOLTIP (view->link_tooltip), msg);
-			gtk_widget_show (view->link_tooltip);
+			ev_tooltip_activate (EV_TOOLTIP (view->link_tooltip));
 			g_free (msg);
 
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);

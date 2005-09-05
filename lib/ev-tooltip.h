@@ -58,6 +58,8 @@ void       ev_tooltip_set_text	   (EvTooltip  *tooltip,
 void       ev_tooltip_set_position (EvTooltip  *tooltip,
 				    int         x,
 				    int         y);
+void       ev_tooltip_activate     (EvTooltip  *tooltip);
+void       ev_tooltip_deactivate   (EvTooltip  *tooltip);
 
 G_END_DECLS
 
