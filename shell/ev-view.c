@@ -150,6 +150,7 @@ struct _EvView {
 	int pressed_button;
 	EvViewCursor cursor;
 	GtkWidget *link_tooltip;
+	EvLink *hovered_link;
 
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
@@ -1588,16 +1589,18 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
 
-		if (!link && view->link_tooltip) {
+		if (view->link_tooltip == NULL) {
+			view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
+		}
+
+		if (view->hovered_link != link) {
+			view->hovered_link = link;
 			ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
 		}
 
                 if (link) {
 			char *msg = tip_from_link (view, link);
 
-			if (view->link_tooltip == NULL) {
-				view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
-			}
 			ev_tooltip_set_position (EV_TOOLTIP (view->link_tooltip), event->x, event->y);
 			ev_tooltip_set_text (EV_TOOLTIP (view->link_tooltip), msg);
 			ev_tooltip_activate (EV_TOOLTIP (view->link_tooltip));
@@ -1946,13 +1949,14 @@ ev_view_destroy (GtkObject *object)
 		g_object_unref (view->document);
 		view->document = NULL;
 	}
+
 	if (view->pixbuf_cache) {
 		g_object_unref (view->pixbuf_cache);
 		view->pixbuf_cache = NULL;
 	}
+
 	if (view->link_tooltip) {
 		gtk_widget_destroy (view->link_tooltip);
-		view->link_tooltip = NULL;
 	}
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
@@ -2191,7 +2195,6 @@ ev_view_init (EvView *view)
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	view->drag_info.in_drag = FALSE;
 	view->selection_info.in_selection = FALSE;
-
 	view->selection_mode = EV_VIEW_SELECTION_TEXT;
 	view->continuous = TRUE;
 	view->dual_page = FALSE;

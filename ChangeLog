@@ -1,5 +1,16 @@
 2005-09-07  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* lib/ev-tooltip.c:
+
+	Use mozilla style vs gtk style, way better for links.
+
+	* shell/ev-view.c: (ev_view_motion_notify_event),
+	(ev_view_destroy), (ev_view_init):
+
+	Deactive tooltip when the link hovered is changed.
+
+2005-09-07  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* backend/ev-document.h:
 	* backend/ev-link.c: (ev_link_type_get_type), (ev_link_get_top),
 	(ev_link_get_left), (ev_link_get_zoom), (ev_link_get_property),

@@ -29,7 +29,7 @@
 #include <gtk/gtklabel.h>
 
 #define DEFAULT_DELAY 500
-#define STICKY_DELAY 0
+#define STICKY_DELAY 500
 #define STICKY_REVERT_DELAY 1000
 
 struct _EvTooltipPrivate {
