@@ -43,6 +43,7 @@ typedef enum
 {
 	EV_LINK_TYPE_TITLE,
 	EV_LINK_TYPE_PAGE,
+	EV_LINK_TYPE_PAGE_XYZ,
 	EV_LINK_TYPE_EXTERNAL_URI,
 	/* We'll probably fill this in more as we support the other types of
 	 * links */
@@ -54,20 +55,21 @@ GType		ev_link_get_type	(void);
 EvLink	       *ev_link_new_title	(const char     *title);
 EvLink	       *ev_link_new_page	(const char     *title,
 					 int             page);
+EvLink	       *ev_link_new_page_xyz	(const char     *title,
+					 int             page,
+					 double          top,
+					 double          left,
+					 double          zoom);
 EvLink	       *ev_link_new_external	(const char     *title,
 					 const char     *uri);
+
 const char     *ev_link_get_title	(EvLink     *link);
-void		ev_link_set_title	(EvLink     *link,
-					 const char     *title);
 const char     *ev_link_get_uri		(EvLink     *link);
-void		ev_link_set_uri		(EvLink     *link,
-					 const char     *uri);
 EvLinkType	ev_link_get_link_type	(EvLink     *link);
-void		ev_link_set_link_type	(EvLink     *link,
-					 EvLinkType  type);
 int		ev_link_get_page	(EvLink     *link);
-void		ev_link_set_page	(EvLink     *link,
-					 int             page);
+double		ev_link_get_top		(EvLink     *link);
+double		ev_link_get_left	(EvLink     *link);
+double		ev_link_get_zoom	(EvLink     *link);
 
 /* Link Mapping stuff */
 

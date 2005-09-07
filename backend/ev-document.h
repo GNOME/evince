@@ -57,6 +57,11 @@ typedef enum
 } EvDocumentError;
 
 typedef struct {
+	double x;
+	double y;
+} EvPoint;
+
+typedef struct {
 	double x1;
 	double y1;
 	double x2;

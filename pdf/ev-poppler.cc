@@ -703,18 +703,94 @@ pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 }
 
 static EvLink *
-ev_link_from_action (PopplerAction *action)
+ev_link_from_dest (PopplerAction *action)
 {
 	EvLink *link;
+	const char *unimplemented_dest = NULL;
+
+	switch (action->goto_dest.dest->type) {
+	case POPPLER_DEST_UNKNOWN:
+		unimplemented_dest = "POPPLER_DEST_UNKNOWN";
+		break;
+	case POPPLER_DEST_XYZ:
+		link = ev_link_new_page_xyz (action->any.title,
+					     action->goto_dest.dest->page_num - 1,
+					     action->goto_dest.dest->left,
+					     action->goto_dest.dest->top,
+					     action->goto_dest.dest->zoom);
+		break;
+	case POPPLER_DEST_FIT:
+		unimplemented_dest = "POPPLER_DEST_FIT";
+		break;
+	case POPPLER_DEST_FITH:
+		unimplemented_dest = "POPPLER_DEST_FITH";
+		break;
+	case POPPLER_DEST_FITV:
+		unimplemented_dest = "POPPLER_DEST_FITV";
+		break;
+	case POPPLER_DEST_FITR:
+		unimplemented_dest = "POPPLER_DEST_FITR";
+		break;
+	case POPPLER_DEST_FITB:
+		unimplemented_dest = "POPPLER_DEST_FITB";
+		break;
+	case POPPLER_DEST_FITBH:
+		unimplemented_dest = "POPPLER_DEST_FITBH";
+		break;
+	case POPPLER_DEST_FITBV:
+		unimplemented_dest = "POPPLER_DEST_FITBV";
+		break;
+	}
+
+	if (unimplemented_dest) {
+		g_warning ("Unimplemented destination: %s, please post a bug report with a testcase.",
+			   unimplemented_dest);
+	}
+
+	link = ev_link_new_page (action->any.title, action->goto_dest.dest->page_num - 1);
+
+	return link;
+}
+
+static EvLink *
+ev_link_from_action (PopplerAction *action)
+{
+	EvLink *link = NULL;
 	const char *title;
+	const char *unimplemented_action = NULL;
 
 	title = action->any.title;
-	
-	if (action->type == POPPLER_ACTION_GOTO_DEST) {
-		link = ev_link_new_page (title, action->goto_dest.dest->page_num - 1);
-	} else if (action->type == POPPLER_ACTION_URI) {
+
+	switch (action->type) {
+	case POPPLER_ACTION_UNKNOWN:
+		g_warning ("Unknown action"); 
+		break;
+	case POPPLER_ACTION_GOTO_DEST:
+		link = ev_link_from_dest (action);
+		break;
+	case POPPLER_ACTION_GOTO_REMOTE:
+		unimplemented_action = "POPPLER_ACTION_GOTO_REMOTE";
+		break;
+	case POPPLER_ACTION_LAUNCH:
+		unimplemented_action = "POPPLER_ACTION_LAUNCH";
+		break;
+	case POPPLER_ACTION_URI:
 		link = ev_link_new_external (title, action->uri.uri);
-	} else {
+		break;
+	case POPPLER_ACTION_NAMED:
+		unimplemented_action = "POPPLER_ACTION_NAMED";
+		break;
+	case POPPLER_ACTION_MOVIE:
+		unimplemented_action = "POPPLER_ACTION_MOVIE";
+		break;
+	}
+
+	if (unimplemented_action) {
+		g_warning ("Unimplemented action: %s, please post a bug report with a testcase.",
+			   unimplemented_action);
+	}
+
+	if (link == NULL) {
 		link = ev_link_new_title (title);
 	}
 

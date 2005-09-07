@@ -923,6 +923,44 @@ view_rect_to_doc_rect (EvView *view,
 }
 
 static void
+doc_point_to_view_point (EvView       *view,
+                         int           page,
+		         EvPoint      *doc_point,
+		         GdkPoint     *view_point)
+{
+	GdkRectangle page_area;
+	GtkBorder border;
+	double x, y;
+	int width, height;
+
+	ev_page_cache_get_size (view->page_cache, page,
+				view->rotation,
+				1.0,
+				&width, &height);
+
+	if (view->rotation == 0) {
+		x = doc_point->x;
+		y = doc_point->y;
+	} else if (view->rotation == 90) {
+		x = width - doc_point->y;
+		y = doc_point->x;
+	} else if (view->rotation == 180) {
+		x = width - doc_point->x;
+		y = height - doc_point->y;
+	} else if (view->rotation == 270) {
+		x = doc_point->y;
+		y = height - doc_point->x;
+	} else {
+		g_assert_not_reached ();
+	}
+
+	get_page_extents (view, page, &page_area, &border);
+
+	view_point->x = x * view->scale + page_area.x;
+	view_point->y = y * view->scale + page_area.y;
+}
+
+static void
 doc_rect_to_view_rect (EvView       *view,
                        int           page,
 		       EvRectangle  *doc_rect,
@@ -1053,7 +1091,22 @@ get_link_at_location (EvView  *view,
 		return NULL;
 }
 
-/* FIXME: standardize this sometime */
+static void
+scroll_to_xyz_link (EvView *view, EvLink *link)
+{
+	GdkPoint view_point;
+	EvPoint doc_point;
+
+	doc_point.x = ev_link_get_left (link);
+	doc_point.y = ev_link_get_top (link);
+
+	doc_point_to_view_point (view, ev_link_get_page (link),
+				 &doc_point, &view_point);
+
+	gtk_adjustment_set_value (view->hadjustment, view_point.x);
+	gtk_adjustment_set_value (view->vadjustment, view_point.y);
+}
+
 static void
 go_to_link (EvView *view, EvLink *link)
 {
@@ -1069,6 +1122,9 @@ go_to_link (EvView *view, EvLink *link)
 		case EV_LINK_TYPE_PAGE:
 			page = ev_link_get_page (link);
 			ev_page_cache_set_current_page (view->page_cache, page);
+			break;
+		case EV_LINK_TYPE_PAGE_XYZ:
+			scroll_to_xyz_link (view, link);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
 			uri = ev_link_get_uri (link);
@@ -1092,6 +1148,7 @@ tip_from_link (EvView *view, EvLink *link)
 				msg = g_strdup (ev_link_get_title (link));
 			break;
 		case EV_LINK_TYPE_PAGE:
+		case EV_LINK_TYPE_PAGE_XYZ:
 			page_label = ev_page_cache_get_page_label (view->page_cache, ev_link_get_page (link));
 			msg = g_strdup_printf (_("Go to page %s"), page_label);
 			g_free (page_label);

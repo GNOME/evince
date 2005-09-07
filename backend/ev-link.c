@@ -29,7 +29,10 @@ enum {
 	PROP_TITLE,
 	PROP_TYPE,
 	PROP_PAGE,
-	PROP_URI
+	PROP_URI,
+	PROP_LEFT,
+	PROP_TOP,
+	PROP_ZOOM
 };
 
 
@@ -47,6 +50,9 @@ struct _EvLinkPrivate {
 	char *uri;
 	EvLinkType type;
 	int page;
+	double top;
+	double left;
+	double zoom;
 };
 
 G_DEFINE_TYPE (EvLink, ev_link, G_TYPE_OBJECT)
@@ -63,6 +69,7 @@ ev_link_type_get_type (void)
 		static const GEnumValue values[] = {
 			{ EV_LINK_TYPE_TITLE, "EV_LINK_TYPE_TITLE", "title" },
 			{ EV_LINK_TYPE_PAGE, "EV_LINK_TYPE_PAGE", "page" },
+			{ EV_LINK_TYPE_PAGE_XYZ, "EV_LINK_TYPE_PAGE_XYZ", "page-xyz" },
 			{ EV_LINK_TYPE_EXTERNAL_URI, "EV_LINK_TYPE_EXTERNAL_URI", "external" },
 			{ 0, NULL, NULL }
                 };
@@ -81,43 +88,12 @@ ev_link_get_title (EvLink *self)
 	return self->priv->title;
 }
 
-void
-ev_link_set_title (EvLink* self, const char *title)
-{
-	g_assert (EV_IS_LINK (self));
-
-	if (self->priv->title != NULL) {
-		g_free (self->priv->title);
-	}
-	if (title)
-		self->priv->title = g_strdup (title);
-	else
-		self->priv->title = NULL;
-
-	g_object_notify (G_OBJECT (self), "title");
-}
-
 const char *
 ev_link_get_uri (EvLink *self)
 {
 	g_return_val_if_fail (EV_IS_LINK (self), NULL);
 	
 	return self->priv->uri;
-}
-
-void
-ev_link_set_uri (EvLink* self, const char *uri)
-{
-	g_assert (EV_IS_LINK (self));
-	g_assert (uri != NULL);
-
-	if (self->priv->uri != NULL) {
-		g_free (self->priv->uri);
-	}
-
-	self->priv->uri = g_strdup (uri);
-
-	g_object_notify (G_OBJECT (self), "uri");
 }
 
 EvLinkType
@@ -128,16 +104,6 @@ ev_link_get_link_type (EvLink *self)
 	return self->priv->type;
 }
 
-void
-ev_link_set_link_type (EvLink* self, EvLinkType type)
-{
-	g_assert (EV_IS_LINK (self));
-
-	self->priv->type = type;
-
-	g_object_notify (G_OBJECT (self), "type");
-}
-
 int
 ev_link_get_page (EvLink *self)
 {
@@ -146,14 +112,28 @@ ev_link_get_page (EvLink *self)
 	return self->priv->page;
 }
 
-void
-ev_link_set_page (EvLink* self, int page)
+double
+ev_link_get_top (EvLink *self)
 {
-	g_assert (EV_IS_LINK (self));
+	g_return_val_if_fail (EV_IS_LINK (self), 0);
+	
+	return self->priv->top;
+}
 
-	self->priv->page = page;
+double
+ev_link_get_left (EvLink *self)
+{
+	g_return_val_if_fail (EV_IS_LINK (self), 0);
+	
+	return self->priv->left;
+}
 
-	g_object_notify (G_OBJECT (self), "page");
+double
+ev_link_get_zoom (EvLink *self)
+{
+	g_return_val_if_fail (EV_IS_LINK (self), 0);
+	
+	return self->priv->zoom;
 }
 
 static void
@@ -177,6 +157,15 @@ ev_link_get_property (GObject *object, guint prop_id, GValue *value,
 	case PROP_PAGE:
 		g_value_set_int (value, self->priv->page);
 		break;
+	case PROP_TOP:
+		g_value_set_double (value, self->priv->top);
+		break;
+	case PROP_LEFT:
+		g_value_set_double (value, self->priv->left);
+		break;
+	case PROP_ZOOM:
+		g_value_set_double (value, self->priv->zoom);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
 						   prop_id,
@@ -189,23 +178,31 @@ static void
 ev_link_set_property (GObject *object, guint prop_id, const GValue *value,
 		      GParamSpec *param_spec)
 {
-	EvLink *self;
-	
-	self = EV_LINK (object);
+	EvLink *link = EV_LINK (object);
 	
 	switch (prop_id) {
 	case PROP_TITLE:
-		ev_link_set_title (self, g_value_get_string (value));
+		link->priv->title = g_strdup (g_value_get_string (value));	
 		break;
 	case PROP_URI:
-		ev_link_set_uri (self, g_value_get_string (value));
+		link->priv->uri = g_strdup (g_value_get_string (value));
 		break;
 	case PROP_TYPE:
-		ev_link_set_link_type (self, g_value_get_enum (value));
+		link->priv->type = g_value_get_enum (value);
 		break;
 	case PROP_PAGE:
-		ev_link_set_page (self, g_value_get_int (value));
+		link->priv->page = g_value_get_int (value);
 		break;
+	case PROP_TOP:
+		link->priv->top = g_value_get_double (value);
+		break;
+	case PROP_LEFT:
+		link->priv->left = g_value_get_double (value);
+		break;
+	case PROP_ZOOM:
+		link->priv->zoom = g_value_get_double (value);
+		break;
+
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
 						   prop_id,
@@ -226,6 +223,11 @@ ev_window_dispose (GObject *object)
 	if (priv->title) {
 		g_free (priv->title);
 		priv->title = NULL;
+	}
+
+	if (priv->uri) {
+		g_free (priv->uri);
+		priv->uri = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_link_parent_class)->dispose (object);
@@ -257,16 +259,16 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 				     	 		      "Link Title",
 				     			      "The link title",
 							      NULL,
-				     			      G_PARAM_READWRITE));
-
+							      G_PARAM_READWRITE |
+				     			      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (g_object_class,
 					 PROP_URI,
 					 g_param_spec_string ("uri",
 				     	 		      "Link URI",
 				     			      "The link URI",
 							      NULL,
-				     			      G_PARAM_READWRITE));
-
+							      G_PARAM_READWRITE |
+				     			      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (g_object_class,
 					 PROP_TYPE,
 			 		 g_param_spec_enum  ("type",
@@ -274,8 +276,8 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 							     "The link type",
 							     EV_TYPE_LINK_TYPE,
 							     EV_LINK_TYPE_TITLE,
-							     G_PARAM_READWRITE));
-
+							     G_PARAM_READWRITE |
+							     G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (g_object_class,
 					 PROP_PAGE,
 					 g_param_spec_int ("page",
@@ -284,7 +286,38 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 							    -1,
 							    G_MAXINT,
 							    0,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+							    G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_LEFT,
+					 g_param_spec_double ("left",
+							      "Left coordinate",
+							      "The left coordinate",
+							      0,
+							      G_MAXDOUBLE,
+							      0,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_TOP,
+					 g_param_spec_double ("top",
+							      "Top coordinate",
+							      "The top coordinate",
+							      0,
+							      G_MAXDOUBLE,
+							      0,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_ZOOM,
+					 g_param_spec_double ("zoom",
+							      "Zoom",
+							      "Zoom",
+							      0,
+							      G_MAXDOUBLE,
+							      0,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
 }
 
 EvLink *
@@ -303,6 +336,23 @@ ev_link_new_page (const char *title, int page)
 				      "title", title,
 				      "page", page,
 				      "type", EV_LINK_TYPE_PAGE,
+				      NULL));
+}
+
+EvLink *
+ev_link_new_page_xyz (const char *title,
+		      int         page,
+		      double      top,
+		      double      left,
+		      double      zoom)
+{
+	return EV_LINK (g_object_new (EV_TYPE_LINK,
+				      "title", title,
+				      "page", page,
+				      "type", EV_LINK_TYPE_PAGE_XYZ,
+				      "left", left,
+				      "top", top,
+				      "zoom", zoom,
 				      NULL));
 }
 
