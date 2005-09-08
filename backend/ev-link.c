@@ -342,8 +342,8 @@ ev_link_new_page (const char *title, int page)
 EvLink *
 ev_link_new_page_xyz (const char *title,
 		      int         page,
-		      double      top,
 		      double      left,
+		      double      top,
 		      double      zoom)
 {
 	return EV_LINK (g_object_new (EV_TYPE_LINK,

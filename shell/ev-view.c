@@ -1091,16 +1091,25 @@ get_link_at_location (EvView  *view,
 }
 
 static void
-scroll_to_xyz_link (EvView *view, EvLink *link)
+goto_xyz_link (EvView *view, EvLink *link)
 {
 	GdkPoint view_point;
 	EvPoint doc_point;
+	int height, page;
+	double zoom;
+
+	zoom = ev_link_get_zoom (link);
+	page = ev_link_get_page (link);
+	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, NULL, &height);
+
+	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	if (zoom != 0) {
+		ev_view_set_zoom (view, zoom, FALSE);
+	}
 
 	doc_point.x = ev_link_get_left (link);
-	doc_point.y = ev_link_get_top (link);
-
-	doc_point_to_view_point (view, ev_link_get_page (link),
-				 &doc_point, &view_point);
+	doc_point.y = height - ev_link_get_top (link);
+	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
 	gtk_adjustment_set_value (view->hadjustment, view_point.x);
 	gtk_adjustment_set_value (view->vadjustment, view_point.y);
@@ -1123,7 +1132,7 @@ ev_view_goto_link (EvView *view, EvLink *link)
 			ev_page_cache_set_current_page (view->page_cache, page);
 			break;
 		case EV_LINK_TYPE_PAGE_XYZ:
-			scroll_to_xyz_link (view, link);
+			goto_xyz_link (view, link);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
 			uri = ev_link_get_uri (link);

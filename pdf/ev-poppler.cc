@@ -705,7 +705,7 @@ pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 static EvLink *
 ev_link_from_dest (PopplerAction *action)
 {
-	EvLink *link;
+	EvLink *link = NULL;
 	const char *unimplemented_dest = NULL;
 
 	switch (action->goto_dest.dest->type) {
@@ -747,7 +747,9 @@ ev_link_from_dest (PopplerAction *action)
 			   unimplemented_dest);
 	}
 
-	link = ev_link_new_page (action->any.title, action->goto_dest.dest->page_num - 1);
+	if (link == NULL) {
+		link = ev_link_new_page (action->any.title, action->goto_dest.dest->page_num - 1);
+	}
 
 	return link;
 }
