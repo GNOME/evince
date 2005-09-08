@@ -622,7 +622,9 @@ page_changed_cb (EvPageCache *page_cache,
 {
 	update_action_sensitivity (ev_window);
 
-	ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
+	if (ev_window->priv->uri) {
+		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
+	}
 }
 
 static void
@@ -643,7 +645,7 @@ setup_document_from_metadata (EvWindow *window)
 	GValue page = { 0, };
 
 	/* Page */
-	if (ev_metadata_manager_get (uri, "page", &page)) {
+	if (uri && ev_metadata_manager_get (uri, "page", &page)) {
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						g_value_get_int (&page));
 	}
@@ -919,7 +921,7 @@ update_sidebar_visibility (EvWindow *window)
 	char *uri = window->priv->uri;
 	GValue sidebar_visibility = { 0, };
 
-	if (ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility)) {
+	if (uri && ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility)) {
 		set_widget_visibility (window->priv->sidebar,
 				       g_value_get_boolean (&sidebar_visibility));
 	}
@@ -945,6 +947,10 @@ setup_view_from_metadata (EvWindow *window)
 	GValue rotation = { 0, };
 	GValue sidebar_size = { 0, };
 	GValue sidebar_page = { 0, };
+
+	if (window->priv->uri == NULL) {
+		return;
+	}
 
 	/* Window size */
 	if (!GTK_WIDGET_VISIBLE (window)) {
@@ -1846,7 +1852,9 @@ ev_window_run_fullscreen (EvWindow *window)
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_fullscreen_popup (window);
 
-	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
+	if (window->priv->uri) {
+		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
+	}
 }
 
 static void
@@ -1875,7 +1883,9 @@ ev_window_stop_fullscreen (EvWindow *window)
 	update_chrome_visibility (window);
 	update_sidebar_visibility (window);
 
-	ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
+	if (window->priv->uri) {
+		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
+	}
 }
 
 static void
@@ -1922,7 +1932,9 @@ ev_window_run_presentation (EvWindow *window)
 	update_chrome_visibility (window);
 	gtk_widget_hide (window->priv->sidebar);
 
-	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
+	if (window->priv->uri) {
+		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
+	}
 }
 
 static void
@@ -1940,7 +1952,9 @@ ev_window_stop_presentation (EvWindow *window)
 	update_chrome_visibility (window);
 	update_sidebar_visibility (window);
 
-	ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
+	if (window->priv->uri) {
+		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
+	}
 }
 
 static void
@@ -2373,8 +2387,10 @@ ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_w
 {
 	ev_window_update_continuous_action (ev_window);
 
-	ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
-				         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+	if (ev_window->priv->uri) {
+		ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
+					         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+	}
 }
 
 static void     
@@ -2398,8 +2414,10 @@ ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_wi
 {
 	ev_window_update_dual_page_action (ev_window);
 
-	ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
-				         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
+	if (ev_window->priv->uri) {
+		ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
+					         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
+	}
 }
 
 static char *
@@ -2529,7 +2547,9 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 
 	g_object_unref (current_page);
 
-	ev_metadata_manager_set_string (ev_window->priv->uri, "sidebar_page", id);
+	if (ev_window->priv->uri) {
+		ev_metadata_manager_set_string (ev_window->priv->uri, "sidebar_page", id);
+	}
 }
 
 static void
