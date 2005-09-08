@@ -31,6 +31,7 @@
 #define DEFAULT_DELAY 500
 #define STICKY_DELAY 500
 #define STICKY_REVERT_DELAY 1000
+#define SPACE_FROM_CURSOR 10
 
 struct _EvTooltipPrivate {
 	GtkWidget *label;
@@ -128,13 +129,15 @@ ev_tooltip_set_text (EvTooltip *tooltip, const char *text)
 void
 ev_tooltip_set_position (EvTooltip *tooltip, int x, int y)
 {
-	int root_x = 0, root_y = 0;
+	int root_x, root_y;
 
 	if (tooltip->parent != NULL) {
 		gdk_window_get_origin (tooltip->parent->window, &root_x, &root_y);
 	}
 
-	gtk_window_move (GTK_WINDOW (tooltip), x + root_x, y + root_y);
+	gtk_window_move (GTK_WINDOW (tooltip),
+			 x + root_x + SPACE_FROM_CURSOR,
+			 y + root_y + SPACE_FROM_CURSOR);
 }
 
 static gboolean
