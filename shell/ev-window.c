@@ -1687,6 +1687,7 @@ fullscreen_timeout_cb (gpointer data)
 
 	g_object_set (window->priv->fullscreen_popup, "visible", FALSE, NULL);
 	ev_view_hide_cursor (EV_VIEW (window->priv->view));
+	g_source_unref (window->priv->fullscreen_timeout_source);
 	window->priv->fullscreen_timeout_source = NULL;
 
 	return FALSE;
@@ -1697,8 +1698,10 @@ fullscreen_set_timeout (EvWindow *window)
 {
 	GSource *source;
 
-	if (window->priv->fullscreen_timeout_source != NULL)
+	if (window->priv->fullscreen_timeout_source != NULL) {
+		g_source_unref (window->priv->fullscreen_timeout_source);
 		g_source_destroy (window->priv->fullscreen_timeout_source);
+	}
 
 	source = g_timeout_source_new (1000);
 	g_source_set_callback (source, fullscreen_timeout_cb, window, NULL);
@@ -1709,8 +1712,10 @@ fullscreen_set_timeout (EvWindow *window)
 static void
 fullscreen_clear_timeout (EvWindow *window)
 {
-	if (window->priv->fullscreen_timeout_source != NULL)
+	if (window->priv->fullscreen_timeout_source != NULL) {
+		g_source_unref (window->priv->fullscreen_timeout_source);
 		g_source_destroy (window->priv->fullscreen_timeout_source);
+	}
 
 	window->priv->fullscreen_timeout_source = NULL;
 	ev_view_show_cursor (EV_VIEW (window->priv->view));
@@ -2837,6 +2842,7 @@ ev_window_dispose (GObject *object)
 	}
 
 	if (window->priv->fullscreen_timeout_source) {
+		g_source_unref (window->priv->fullscreen_timeout_source);
 		g_source_destroy (window->priv->fullscreen_timeout_source);
 		window->priv->fullscreen_timeout_source = NULL;
 	}
