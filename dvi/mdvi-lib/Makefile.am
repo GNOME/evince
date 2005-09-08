@@ -42,5 +42,5 @@ libmdvi_la_LIBADD = \
 	-lkpathsea
 
 if WITH_TYPE1_FONTS
-libmdvi_la_LIBADD += -lt1lib
+libmdvi_la_LIBADD += -lt1
 endif

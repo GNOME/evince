@@ -239,7 +239,7 @@ AM_CONDITIONAL(ENABLE_DVI, test x$enable_dvi = xyes)
 
 if test "x$enable_dvi" = "xyes"; then
     if test "x$enable_type1_fonts" = "xyes"; then
-	AC_CHECK_LIB([t1lib],T1_InitLib,enable_type1_fonts=yes,enable_type1_fonts=no)
+	AC_CHECK_LIB([t1],T1_InitLib,enable_type1_fonts=yes,enable_type1_fonts=no,[-lm])
     fi
 
     if test "x$enable_type1_fonts" = xyes; then
