@@ -67,12 +67,12 @@ evince_SOURCES=				\
 	main.c
 
 evince_LDADD=								\
-	$(SHELL_LIBS)							\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/lib/libev.la
+	$(top_builddir)/lib/libev.la	\
+	$(SHELL_LIBS)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 

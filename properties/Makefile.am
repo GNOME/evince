@@ -27,7 +27,9 @@ libevince_properties_page_la_SOURCES = 	\
 	ev-properties-main.c
 
 libevince_properties_page_la_LIBADD = 		\
-	$(FRONTEND_LIBS)			\
-	$(NAUTILUS_LIBS)			\
 	$(top_builddir)/lib/libev.la		\
-	libevproperties.la
+	libevproperties.la			\
+	$(FRONTEND_LIBS)			\
+	$(NAUTILUS_LIBS)
+
+libevince_properties_page_la_LDFLAGS = -module -avoid-version -no-undefined
