@@ -118,9 +118,11 @@ const char     *ev_view_get_find_status   (EvView         *view);
 void           ev_view_hide_cursor        (EvView         *view);
 void           ev_view_show_cursor        (EvView         *view);
 
-/* Scrolling */
+/* Navigation */
 void	       ev_view_scroll             (EvView         *view,
 	                                   EvScrollType    scroll);
+void	       ev_view_goto_link          (EvView         *view,
+					   EvLink         *link);
 
 G_END_DECLS
 

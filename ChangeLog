@@ -1,5 +1,25 @@
 2005-09-08  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_class_init),
+	(selection_changed_callback):
+	* shell/ev-sidebar-links.h:
+
+	Add a signal for link activation.
+
+	* shell/ev-view.c: (ev_view_goto_link),
+	(ev_view_button_release_event):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (sidebar_links_link_activated_cb),
+	(ev_window_init):
+
+	Implement the signal so that we can handle all link types.
+
+	* shell/ev-page-cache.c:
+
+	Remove unused set_link function
+
+2005-09-08  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* lib/ev-tooltip.c: (ev_tooltip_set_position):
 
 	Add some space from the cursor, hardcoded but I couldnt

@@ -2980,7 +2980,7 @@ activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
 {
 	g_return_if_fail (EV_IS_WINDOW (window));
 
-	ev_page_cache_set_link (window->priv->page_cache, link);
+	ev_view_goto_link (EV_VIEW (window->priv->view), link);
 	gtk_widget_grab_focus (window->priv->view);
 }
 
@@ -3215,6 +3215,12 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 }
 
 static void
+sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, EvWindow *window)
+{
+	ev_view_goto_link (EV_VIEW (window->priv->view), link);
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -3311,6 +3317,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (sidebar_widget,
 			  "notify::model",
 			  G_CALLBACK (sidebar_widget_model_set),
+			  ev_window);
+	g_signal_connect (sidebar_widget,
+			  "link_activated",
+			  G_CALLBACK (sidebar_links_link_activated_cb),
 			  ev_window);
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);

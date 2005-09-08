@@ -341,16 +341,6 @@ ev_page_cache_set_page_label (EvPageCache *page_cache,
 	return FALSE;
 }
 
-void
-ev_page_cache_set_link (EvPageCache *page_cache,
-			EvLink      *link)
-{
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-	g_return_if_fail (EV_IS_LINK (link));
-
-	ev_page_cache_set_current_page (page_cache, ev_link_get_page (link));
-}
-
 const char *
 ev_page_cache_get_title (EvPageCache *page_cache)
 {

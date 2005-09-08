@@ -55,6 +55,10 @@ enum {
 	PROP_WIDGET,
 };
 
+enum {
+	LINK_ACTIVATED,
+	N_SIGNALS
+};
 
 static void links_page_num_func				(GtkTreeViewColumn *tree_column,
 							 GtkCellRenderer   *cell,
@@ -77,6 +81,7 @@ static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
 						         EvDocument     *document);
 static const gchar* ev_sidebar_links_get_label 		(EvSidebarPage *sidebar_page);
 
+static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarLinks, 
                         ev_sidebar_links, 
@@ -177,6 +182,14 @@ ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 	g_object_class->get_property = ev_sidebar_links_get_property;
 	g_object_class->dispose = ev_sidebar_links_dispose;
 
+	signals[LINK_ACTIVATED] = g_signal_new ("link-activated",
+			 G_TYPE_FROM_CLASS (g_object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvSidebarLinksClass, link_activated),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__OBJECT,
+		         G_TYPE_NONE, 1, G_TYPE_OBJECT);
+
 	g_object_class_install_property (g_object_class,
 					 PROP_MODEL,
 					 g_param_spec_object ("model",
@@ -216,8 +229,7 @@ selection_changed_callback (GtkTreeSelection   *selection,
 
 		g_signal_handler_block (ev_sidebar_links->priv->page_cache,
 					ev_sidebar_links->priv->page_changed_id);
-		/* FIXME: we should handle this better.  This breaks w/ URLs */
-		ev_page_cache_set_link (ev_sidebar_links->priv->page_cache, link);
+		g_signal_emit (ev_sidebar_links, signals[LINK_ACTIVATED], 0, link);
 		g_signal_handler_unblock (ev_sidebar_links->priv->page_cache,
 					  ev_sidebar_links->priv->page_changed_id);
 

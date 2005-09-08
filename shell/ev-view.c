@@ -245,8 +245,6 @@ static void       find_page_at_location                      (EvView            
 static EvLink*    get_link_at_location                       (EvView             *view,
 							      gdouble             x,
 							      gdouble             y);
-static void       go_to_link                                 (EvView             *view,
-							      EvLink             *link);
 static char*      tip_from_link                              (EvView             *view,
 							      EvLink             *link);
 
@@ -1108,8 +1106,8 @@ scroll_to_xyz_link (EvView *view, EvLink *link)
 	gtk_adjustment_set_value (view->vadjustment, view_point.y);
 }
 
-static void
-go_to_link (EvView *view, EvLink *link)
+void
+ev_view_goto_link (EvView *view, EvLink *link)
 {
 	EvLinkType type;
 	const char *uri;
@@ -1641,7 +1639,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
 		if (link) {
-			go_to_link (view, link);
+			ev_view_goto_link (view, link);
 		}
 	}
 

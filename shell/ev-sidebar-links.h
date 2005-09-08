@@ -48,6 +48,9 @@ struct _EvSidebarLinks {
 
 struct _EvSidebarLinksClass {
 	GtkVBoxClass base_class;
+
+	void    (* link_activated) (EvSidebarLinks *sidebar_links,
+				    EvLink         *link);
 };
 
 GType      ev_sidebar_links_get_type       (void);
