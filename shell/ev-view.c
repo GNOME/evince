@@ -247,7 +247,9 @@ static EvLink*    get_link_at_location                       (EvView            
 							      gdouble             y);
 static char*      tip_from_link                              (EvView             *view,
 							      EvLink             *link);
-
+static void       handle_link_over_xy                        (EvView *view, 
+							      gint x, 
+							      gint y);
 /*** GtkWidget implementation ***/
 static void       ev_view_size_request_continuous_dual_page  (EvView             *view,
 							      GtkRequisition     *requisition);
@@ -273,6 +275,8 @@ static gboolean   ev_view_motion_notify_event                (GtkWidget         
 							      GdkEventMotion     *event);
 static gboolean   ev_view_button_release_event               (GtkWidget          *widget,
 							      GdkEventButton     *event);
+static gboolean   ev_view_enter_notify_event                 (GtkWidget          *widget,
+							      GdkEventCrossing   *event);
 static gboolean   ev_view_leave_notify_event                 (GtkWidget          *widget,
 							      GdkEventCrossing   *event);
 static void       ev_view_style_set                          (GtkWidget          *widget,
@@ -1171,6 +1175,41 @@ tip_from_link (EvView *view, EvLink *link)
 	return msg;
 }
 
+static void
+handle_link_over_xy (EvView *view, gint x, gint y)
+{
+	EvLink *link;
+
+	link = get_link_at_location (view, x + view->scroll_x, y + view->scroll_y);
+
+	if (view->link_tooltip == NULL) {
+		view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
+	}
+
+	if (view->hovered_link != link) {
+		view->hovered_link = link;
+		ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
+	}
+
+        if (link) {
+		char *msg = tip_from_link (view, link);
+
+		ev_tooltip_set_position (EV_TOOLTIP (view->link_tooltip), x, y);
+		ev_tooltip_set_text (EV_TOOLTIP (view->link_tooltip), msg);
+		ev_tooltip_activate (EV_TOOLTIP (view->link_tooltip));
+		g_free (msg);
+
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
+	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
+	} else {
+		ev_view_set_status (view, NULL);
+		if (view->cursor == EV_VIEW_CURSOR_LINK ||
+		    view->cursor == EV_VIEW_CURSOR_IBEAM)
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+	}
+	return;
+}
 
 /*** GtkWidget implementation ***/
 
@@ -1372,6 +1411,7 @@ ev_view_realize (GtkWidget *widget)
 				GDK_SCROLL_MASK |
 				GDK_KEY_PRESS_MASK |
 				GDK_POINTER_MOTION_MASK |
+		                GDK_ENTER_NOTIFY_MASK |
 		                GDK_LEAVE_NOTIFY_MASK;
 
 	widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
@@ -1592,36 +1632,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	 */
 	} else if (view->pressed_button <= 0 &&
 		   view->rotation == 0) {
-		EvLink *link;
-
-		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
-
-		if (view->link_tooltip == NULL) {
-			view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
-		}
-
-		if (view->hovered_link != link) {
-			view->hovered_link = link;
-			ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
-		}
-
-                if (link) {
-			char *msg = tip_from_link (view, link);
-
-			ev_tooltip_set_position (EV_TOOLTIP (view->link_tooltip), event->x, event->y);
-			ev_tooltip_set_text (EV_TOOLTIP (view->link_tooltip), msg);
-			ev_tooltip_activate (EV_TOOLTIP (view->link_tooltip));
-			g_free (msg);
-
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-		} else if (location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y)) {
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
-		} else {
-			ev_view_set_status (view, NULL);
-			if (view->cursor == EV_VIEW_CURSOR_LINK ||
-			    view->cursor == EV_VIEW_CURSOR_IBEAM)
-				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
-		}
+		handle_link_over_xy (view, event->x, event->y);
 		return TRUE;
 	}
 
@@ -1688,6 +1699,21 @@ ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 	    view->cursor == EV_VIEW_CURSOR_IBEAM)
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 
+	if (view->link_tooltip) {
+		view->hovered_link = NULL;
+		ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
+	}
+
+	return FALSE;
+}
+
+static gboolean
+ev_view_enter_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
+{
+	EvView *view = EV_VIEW (widget);
+
+	handle_link_over_xy (view, event->x, event->y);
+    
 	return FALSE;
 }
 
@@ -2072,6 +2098,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->realize = ev_view_realize;
 	widget_class->unrealize = ev_view_unrealize;
 	widget_class->scroll_event = ev_view_scroll_event;
+	widget_class->enter_notify_event = ev_view_enter_notify_event;
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
 	widget_class->style_set = ev_view_style_set;
 	gtk_object_class->destroy = ev_view_destroy;

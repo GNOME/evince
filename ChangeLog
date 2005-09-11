@@ -1,3 +1,12 @@
+2005-09-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view.c: (handle_link_over_xy), (ev_view_realize),
+	(ev_view_motion_notify_event), (ev_view_leave_notify_event),
+	(ev_view_enter_notify_event), (ev_view_class_init):
+	
+	More precise handling of enter_notify/leave_notify events
+	in EvView. Fix for bug 315470.
+
 2005-09-08  Christopher Aillon  <caillon@redhat.com>
 
 	* shell/ev-window.c: (fullscreen_timeout_cb),
