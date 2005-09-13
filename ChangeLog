@@ -1,3 +1,21 @@
+2005-09-13  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* configure.ac:
+	* data/evince-password.glade:
+	* shell/ev-password.c: (ev_password_dialog_set_property),
+	(ev_password_dialog_finalize), (ev_password_dialog_class_init),
+	(ev_password_dialog_init), (ev_password_set_bad_password_label),
+	(ev_password_dialog_entry_changed_cb),
+	(ev_password_dialog_entry_activated_cb),
+	(ev_password_dialog_save_password), (ev_password_keyring_found_cb),
+	(ev_password_search_in_keyring), (ev_password_dialog_get_password),
+	(ev_password_dialog_set_bad_pass):
+	* shell/ev-password.h:
+	* shell/ev-window.c: (password_dialog_response),
+	(ev_window_popup_password_dialog):
+	
+	Support for gnome-keyring for encrypted PDF's.
+
 2005-09-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view.c: (handle_link_over_xy), (ev_view_realize),

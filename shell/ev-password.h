@@ -20,14 +20,38 @@
 #ifndef __EV_PASSWORD_H__
 #define __EV_PASSWORD_H__
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtkdialog.h>
 
 G_BEGIN_DECLS
 
-GtkWidget *ev_password_dialog_new          (GtkWidget   *toplevel,
-					    const gchar *uri);
-char      *ev_password_dialog_get_password (GtkWidget *password);
-void       ev_password_dialog_set_bad_pass (GtkWidget *password);
+#define EV_TYPE_PASSWORD_DIALOG            (ev_password_dialog_get_type ())
+#define EV_PASSWORD_DIALOG(object)         (G_TYPE_CHECK_INSTANCE_CAST ((object), EV_TYPE_PASSWORD_DIALOG, EvPasswordDialog))
+#define EV_PASSWORD_DIALOG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_PASSWORD_DIALOG, EvPasswordDialogClass))
+#define EV_IS_PASSWORD_DIALOG(object)      (G_TYPE_CHECK_INSTANCE_TYPE ((object), EV_TYPE_PASSWORD_DIALOG))
+#define EV_IS_PASSWORD_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_PASSWORD_DIALOG))
+#define EV_PASSWORD_DIALOG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_PASSWORD_DIALOG, EvPasswordDialogClass))
+
+typedef struct _EvPasswordDialog EvPasswordDialog;
+typedef struct _EvPasswordDialogClass EvPasswordDialogClass;
+typedef struct _EvPasswordDialogPrivate EvPasswordDialogPrivate;
+
+struct _EvPasswordDialog 
+{
+  GtkDialog parent_instance;
+
+  EvPasswordDialogPrivate* priv;
+};
+
+struct _EvPasswordDialogClass 
+{
+  GtkDialogClass parent_class;
+};
+
+GType     ev_password_dialog_get_type               (void) G_GNUC_CONST;
+
+char      *ev_password_dialog_get_password  (EvPasswordDialog *dialog);
+void       ev_password_dialog_set_bad_pass  (EvPasswordDialog *dialog);
+void	   ev_password_dialog_save_password (EvPasswordDialog *dialog);
 
 G_END_DECLS
 

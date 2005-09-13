@@ -47,12 +47,13 @@ POPPLER_REQUIRED=0.4.1
 DBUS_GLIB_REQUIRED=0.33
 GTK_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
+KEYRING_REQUIRED=0.4.2
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
 PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED)
+PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED gnome-keyring-1 >= $KEYRING_REQUIRED)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)

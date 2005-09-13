@@ -710,7 +710,7 @@ password_dialog_response (GtkWidget *password_dialog,
 		EvDocument *document;
 		gchar *uri;
 
-		password = ev_password_dialog_get_password (password_dialog);
+		password = ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog));
 		if (password) {
 			ev_document_doc_mutex_lock ();
 			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->password_document),
@@ -718,6 +718,8 @@ password_dialog_response (GtkWidget *password_dialog,
 			ev_document_doc_mutex_unlock ();
 		}
 		g_free (password);
+
+		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
 
 		document = ev_window->priv->password_document;
 		uri = ev_window->priv->password_uri;
@@ -753,14 +755,9 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 
 	update_window_title (ev_window->priv->password_document, NULL, ev_window);
 	if (ev_window->priv->password_dialog == NULL) {
-		gchar *base_name, *file_name;
-
-		file_name = gnome_vfs_format_uri_for_display (ev_window->priv->password_uri);
-		base_name = g_path_get_basename (file_name);
 		ev_window->priv->password_dialog =
-			ev_password_dialog_new (GTK_WIDGET (ev_window), base_name);
-		g_free (base_name);
-		g_free (file_name);
+ 			g_object_new (EV_TYPE_PASSWORD_DIALOG, "uri", ev_window->priv->password_uri, NULL);
+		gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->password_dialog), GTK_WINDOW (ev_window));
 
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
 					   (gpointer *) &(ev_window->priv->password_dialog));
@@ -770,7 +767,7 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 				  ev_window);
 		gtk_widget_show (ev_window->priv->password_dialog);
 	} else {
-		ev_password_dialog_set_bad_pass (ev_window->priv->password_dialog);
+		ev_password_dialog_set_bad_pass (EV_PASSWORD_DIALOG (ev_window->priv->password_dialog));
 	}
 }
 
