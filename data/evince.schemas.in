@@ -11,5 +11,16 @@
         <long>Toolbar is the top bar that contains navigation and zoom controls.  Two boolean options, true makes toolbar visible by default while false makes toolbar not visible by default.</long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/apps/evince/override_restrictions</key>
+      <applyto>/apps/evince/override_restrictions</applyto>
+      <owner>evince</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Override document restrictions</short>
+        <long>Override document restrictions, like restriction to copy or to print.</long>
+      </locale>
+    </schema>
   </schemalist>
 </gconfschemafile>

@@ -148,9 +148,10 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define PAGE_SELECTOR_ACTION	"PageSelector"
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
 
-#define GCONF_CHROME_TOOLBAR	"/apps/evince/show_toolbar"
-#define GCONF_LOCKDOWN_SAVE     "/desktop/gnome/lockdown/disable_save_to_disk"
-#define GCONF_LOCKDOWN_PRINT    "/desktop/gnome/lockdown/disable_printing"
+#define GCONF_CHROME_TOOLBAR        "/apps/evince/show_toolbar"
+#define GCONF_OVERRIDE_RESTRICTIONS "/apps/evince/override_restrictions"
+#define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
+#define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
@@ -211,6 +212,7 @@ update_action_sensitivity (EvWindow *ev_window)
 	gboolean ok_to_print = TRUE;
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
+	gboolean override_restrictions = FALSE;
 	GConfClient *client;
 
 	view = EV_VIEW (ev_window->priv->view);
@@ -229,7 +231,11 @@ update_action_sensitivity (EvWindow *ev_window)
 		has_pages = has_document && n_pages > 0;
 	}
 
-	if (info && info->fields_mask & EV_DOCUMENT_INFO_PERMISSIONS) {
+	client = gconf_client_get_default ();
+	override_restrictions = gconf_client_get_bool (client, 
+						       GCONF_OVERRIDE_RESTRICTIONS, 
+						       NULL);
+	if (!override_restrictions && info && info->fields_mask & EV_DOCUMENT_INFO_PERMISSIONS) {
 		ok_to_print = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT);
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
 	}
@@ -241,8 +247,6 @@ update_action_sensitivity (EvWindow *ev_window)
 		has_properties = FALSE;
 	}
 	
-	client = gconf_client_get_default ();
-
 	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_SAVE, NULL)) {
 		ok_to_copy = FALSE;
 	}
@@ -250,6 +254,8 @@ update_action_sensitivity (EvWindow *ev_window)
 	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_PRINT, NULL)) {
 		ok_to_print = FALSE;
 	}
+	
+	g_object_unref (client);
 
 	/* File menu */
 	/* "FileOpen": always sensitive */
