@@ -873,7 +873,7 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 			 gboolean       border)
 {
 	PopplerPage *poppler_page;
-	GdkPixbuf *pixbuf, *sub_pixbuf;
+	GdkPixbuf *pixbuf, *border_pixbuf;
 	int width, height;
 	double scale;
 	gdouble unscaled_width, unscaled_height;
@@ -886,38 +886,30 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 	poppler_page_get_size (poppler_page, &unscaled_width, &unscaled_height);
 	scale = width / unscaled_width;
 
-	if (border) {
-		pixbuf = ev_document_misc_get_thumbnail_frame (width, height, rotation, NULL);
-
-		width = gdk_pixbuf_get_width (pixbuf);
-		height = gdk_pixbuf_get_height (pixbuf);
-		sub_pixbuf = gdk_pixbuf_new_subpixbuf (pixbuf,
-						       1, 1,
-						       width - 1, height - 1);
-	} else {
-		/* rotate */
-		if (rotation == 90 || rotation == 270) {
-			int temp;
-			temp = width;
-			width = height;
-			height = temp;
-		}
-
-		pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
-					 width, height);
-		gdk_pixbuf_fill (pixbuf, 0xffffffff);
-		sub_pixbuf = gdk_pixbuf_new_subpixbuf (pixbuf,
-						       0, 0,
-						       width, height);
+	/* rotate */
+	if (rotation == 90 || rotation == 270) {
+		int temp;
+		temp = width;
+		width = height;
+		height = temp;
 	}
+
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+				 width, height);
+	gdk_pixbuf_fill (pixbuf, 0xffffffff);
 
 	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
 				       width, height,
-				       scale, rotation, sub_pixbuf);
-
-	g_object_unref (G_OBJECT (sub_pixbuf));
+				       scale, rotation, pixbuf);
+       
+        if (border) {		
+		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
+		g_object_unref (pixbuf);
+		pixbuf = border_pixbuf;
+	}		
 
 	g_object_unref (poppler_page);
+
 	return pixbuf;
 }
 
