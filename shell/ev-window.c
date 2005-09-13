@@ -1586,6 +1586,7 @@ ev_window_update_fullscreen_popup (EvWindow *window)
 {
 	GtkWidget *popup = window->priv->fullscreen_popup;
 	int popup_width, popup_height;
+	GdkScreen *screen;
 	GdkRectangle screen_rect;
 	gboolean toolbar;
 
@@ -1599,10 +1600,10 @@ ev_window_update_fullscreen_popup (EvWindow *window)
 	popup_width = popup->requisition.width;
 	popup_height = popup->requisition.height;
 
-	/* FIXME multihead */
-	gdk_screen_get_monitor_geometry (gdk_screen_get_default (),
+	screen = gtk_widget_get_screen (GTK_WIDGET (window));
+	gdk_screen_get_monitor_geometry (screen,
 			gdk_screen_get_monitor_at_window
-                        (gdk_screen_get_default (),
+                        (screen,
                          GTK_WIDGET (window)->window),
                          &screen_rect);
 	if (toolbar) {
@@ -1780,6 +1781,7 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 	GtkWidget *popup;
 	GtkWidget *hbox;
 	GtkWidget *button;
+	GdkScreen *screen;
 
 	window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
 			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
@@ -1798,13 +1800,16 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 
 	gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
 
-	/* FIXME multihead */
-	g_signal_connect_object (gdk_screen_get_default (), "size-changed",
+	screen = gtk_widget_get_screen (GTK_WIDGET (window));
+	g_signal_connect_object (screen, "size-changed",
 			         G_CALLBACK (screen_size_changed_cb),
 				 window, 0);
 	g_signal_connect_object (popup, "size_request",
 			         G_CALLBACK (fullscreen_popup_size_request_cb),
 				 window, 0);
+
+	gtk_window_set_screen (GTK_WINDOW (popup),
+			       gtk_widget_get_screen (GTK_WIDGET (window)));
 
 	return popup;
 }
@@ -2007,6 +2012,32 @@ ev_window_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 		gtk_widget_hide (priv->fullscreen_popup);
 
 	return GTK_WIDGET_CLASS (ev_window_parent_class)->focus_out_event (widget, event);
+}
+
+static void
+ev_window_screen_changed (GtkWidget *widget,
+			  GdkScreen *old_screen)
+{
+	EvWindow *window = EV_WINDOW (widget);
+	EvWindowPrivate *priv = window->priv;
+	GdkScreen *screen;
+
+	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
+		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
+	}
+
+	if (priv->fullscreen_popup != NULL) {
+		g_signal_handlers_disconnect_by_func
+			(old_screen, G_CALLBACK (screen_size_changed_cb), window);
+
+		screen = gtk_widget_get_screen (widget);
+		g_signal_connect_object (screen, "size-changed",
+					 G_CALLBACK (screen_size_changed_cb),
+					 window, 0);
+		gtk_window_set_screen (GTK_WINDOW (priv->fullscreen_popup), screen);
+
+		ev_window_update_fullscreen_popup (window);
+	}
 }
 
 static void
@@ -2799,6 +2830,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 
 	widget_class->focus_in_event = ev_window_focus_in_event;
 	widget_class->focus_out_event = ev_window_focus_out_event;
+	widget_class->screen_changed = ev_window_screen_changed;
 
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
 }
