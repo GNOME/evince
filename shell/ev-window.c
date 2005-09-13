@@ -153,6 +153,8 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 
+#define FULLSCREEN_TIMEOUT 5 * 1000
+
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
@@ -1701,7 +1703,7 @@ fullscreen_set_timeout (EvWindow *window)
 		g_source_destroy (window->priv->fullscreen_timeout_source);
 	}
 
-	source = g_timeout_source_new (1000);
+	source = g_timeout_source_new (FULLSCREEN_TIMEOUT);
 	g_source_set_callback (source, fullscreen_timeout_cb, window, NULL);
 	g_source_attach (source, NULL);
 	window->priv->fullscreen_timeout_source = source;
