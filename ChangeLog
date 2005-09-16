@@ -1,5 +1,13 @@
 2005-09-16  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-window-title.c: (get_filename_from_uri),
+	(ev_window_title_set_document):
+
+	When title has a confusing extension, show also
+	the document filename inside ()
+
+2005-09-16  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/Makefile.am:
 	* shell/ev-window-title.c: (ev_window_title_new),
 	(ev_window_title_update), (ev_window_title_set_type),

@@ -18,9 +18,16 @@
  */
 
 #include "ev-window-title.h"
+#include "ev-document-factory.h"
 
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+
+typedef struct
+{
+	EvBackend backend;
+	const char *ext;
+} BadExtensionEntry;
 
 struct _EvWindowTitle
 {
@@ -28,6 +35,11 @@ struct _EvWindowTitle
 	EvDocument *document;
 	EvWindowTitleType type;
 	char *title;
+};
+
+static const BadExtensionEntry bad_extensions[] = {
+	{ EV_BACKEND_PS, ".dvi" },
+	{ EV_BACKEND_PDF, ".doc" }
 };
 
 EvWindowTitle *
@@ -69,6 +81,19 @@ ev_window_title_set_type (EvWindowTitle *window_title, EvWindowTitleType type)
 	ev_window_title_update (window_title);
 }
 
+static char *
+get_filename_from_uri (const char *uri)
+{
+	char *filename;
+	char *display_name;
+
+	display_name = gnome_vfs_format_uri_for_display (uri);
+	filename = g_path_get_basename (display_name);
+	g_free (display_name);
+
+	return filename;
+}
+
 void
 ev_window_title_set_document (EvWindowTitle *window_title,
 			      EvDocument    *document,
@@ -76,6 +101,7 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 {
 	EvPageCache *page_cache;
 	const char *title;
+	int i;
 
 	window_title->document = document;
 
@@ -96,6 +122,22 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 		window_title->title = g_strdup (title);
 	}
 
+	/* Some docs report titles with confusing extensions (ex. .doc for pdf).
+           Let's show the filename in this case */
+	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
+		if (bad_extensions[i].backend == ev_document_factory_get_backend (document) &&
+		    g_str_has_suffix (window_title->title, bad_extensions[i].ext)) {
+			char *new_title;
+			char *filename = get_filename_from_uri (uri);
+
+			new_title = g_strdup_printf ("%s (%s)", window_title->title, filename);
+			g_free (window_title->title);
+			window_title->title = new_title;
+
+			g_free (filename);
+		}
+	} 
+
 	if (window_title->title) {
 		char *p;
 
@@ -107,11 +149,7 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 	}
 
 	if (window_title->title == NULL && uri) {
-		char *display_name;
-
-		display_name = gnome_vfs_format_uri_for_display (uri);
-		window_title->title = g_path_get_basename (display_name);
-		g_free (display_name);
+		window_title->title = get_filename_from_uri (uri);
 	}
 
 	if (window_title->title == NULL) {
