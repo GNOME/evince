@@ -543,6 +543,14 @@ ev_window_is_empty (const EvWindow *ev_window)
 }
 
 static void
+unable_to_load_dialog_response_cb (GtkWidget *dialog,
+			           gint       response_id,
+			           EvWindow  *ev_window)
+{
+	gtk_widget_destroy (dialog);
+}
+
+static void
 unable_to_load (EvWindow   *ev_window,
 		const char *error_message)
 {
@@ -555,8 +563,10 @@ unable_to_load (EvWindow   *ev_window,
 					 _("Unable to open document"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
 						  "%s", error_message);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
+	g_signal_connect (dialog, "response",
+			  G_CALLBACK (unable_to_load_dialog_response_cb),
+			  ev_window);
+	gtk_widget_show (dialog);
 }
 
 static void
