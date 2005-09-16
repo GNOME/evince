@@ -293,7 +293,7 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 					 g_param_spec_double ("left",
 							      "Left coordinate",
 							      "The left coordinate",
-							      0,
+							      -G_MAXDOUBLE,
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
@@ -303,7 +303,7 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 					 g_param_spec_double ("top",
 							      "Top coordinate",
 							      "The top coordinate",
-							      0,
+							      -G_MAXDOUBLE,
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
