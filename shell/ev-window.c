@@ -29,6 +29,7 @@
 #endif
 
 #include "ev-window.h"
+#include "ev-window-title.h"
 #include "ev-page-action.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
@@ -62,6 +63,7 @@
 #include "ev-metadata-manager.h"
 #include "ev-file-helpers.h"
 #include "ev-utils.h"
+#include "ev-debug.h"
 
 #include <poppler.h>
 
@@ -104,6 +106,8 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
+
+	EvWindowTitle *title;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -570,64 +574,6 @@ unable_to_load (EvWindow   *ev_window,
 }
 
 static void
-update_window_title (EvDocument *document, GParamSpec *pspec, EvWindow *ev_window)
-{
-	char *title = NULL;
-	char *doc_title = NULL;
-	gboolean password_needed;
-
-	password_needed = (ev_window->priv->password_document != NULL);
-	if (document && ev_window->priv->page_cache) {
-		doc_title = g_strdup (ev_page_cache_get_title (ev_window->priv->page_cache));
-
-		/* Make sure we get a valid title back */
-		if (doc_title) {
-			if (doc_title[0] == '\000' ||
-			    !g_utf8_validate (doc_title, -1, NULL)) {
-				doc_title = NULL;
-			}
-		}
-	}
-
-	if (doc_title) {
-		char *p;
-
-		for (p = doc_title; *p; ++p) {
-			/* an '\n' byte is always ASCII, no need for UTF-8 special casing */
-			if (*p == '\n')
-				*p = ' ';
-		}
-	}
-
-	if (doc_title == NULL && ev_window->priv->uri) {
-		char *display_name;
-
-		display_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
-		doc_title = g_path_get_basename (display_name);
-		g_free (display_name);
-	}
-
-	if (password_needed) {
-		if (doc_title == NULL) {
-			title = g_strdup (_("Document Viewer - Password Required"));
-		} else {
-			title = g_strdup_printf (_("%s - Password Required"), doc_title);
-		}
-	} else {
-		if (doc_title == NULL) {
-			title = g_strdup (_("Document Viewer"));
-		} else {
-			title = g_strdup (doc_title);
-		}
-	}
-
-	gtk_window_set_title (GTK_WINDOW (ev_window), title);
-
-	g_free (doc_title);
-	g_free (title);
-}
-
-static void
 find_changed_cb (EvDocument *document, int page, EvWindow *ev_window)
 {
 	update_action_sensitivity (ev_window);
@@ -682,10 +628,6 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
 	g_signal_connect (ev_window->priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), ev_window);
 
-	g_signal_connect_object (G_OBJECT (document),
-				 "notify::title",
-				 G_CALLBACK (update_window_title),
-				 ev_window, 0);
 	if (EV_IS_DOCUMENT_FIND (document)) {
 		g_signal_connect_object (G_OBJECT (document),
 				         "find_changed",
@@ -701,7 +643,7 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_view_set_document (view, document);
 	}
 
-	update_window_title (document, NULL, ev_window);
+	ev_window_title_set_document (ev_window->priv->title, document, ev_window->priv->uri);
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	update_action_sensitivity (ev_window);
@@ -744,7 +686,9 @@ password_dialog_response (GtkWidget *password_dialog,
 
 		ev_window->priv->password_document = NULL;
 		ev_window->priv->password_uri = NULL;
-		
+
+		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
+
 		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 		
     		gtk_widget_destroy (password_dialog);
@@ -771,7 +715,8 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 
 	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
 
-	update_window_title (ev_window->priv->password_document, NULL, ev_window);
+	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_PASSWORD);
+
 	if (ev_window->priv->password_dialog == NULL) {
 		ev_window->priv->password_dialog =
  			g_object_new (EV_TYPE_PASSWORD_DIALOG, "uri", ev_window->priv->password_uri, NULL);
@@ -2757,6 +2702,11 @@ ev_window_dispose (GObject *object)
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = window->priv;
 
+	if (priv->title) {
+		ev_window_title_free (priv->title);
+		priv->title = NULL;
+	}
+
 	if (priv->recent_view) {
 		g_object_unref (priv->recent_view);
 		priv->recent_view = NULL;
@@ -3309,7 +3259,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
-	update_window_title (NULL, NULL, ev_window);
+	ev_window->priv->title = ev_window_title_new (ev_window);
 
 	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);

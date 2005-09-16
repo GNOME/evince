@@ -1,5 +1,18 @@
 2005-09-16  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/Makefile.am:
+	* shell/ev-window-title.c: (ev_window_title_new),
+	(ev_window_title_update), (ev_window_title_set_type),
+	(ev_window_title_set_document), (ev_window_title_free):
+	* shell/ev-window-title.h:
+	* shell/ev-window.c: (ev_window_setup_document),
+	(password_dialog_response), (ev_window_popup_password_dialog),
+	(ev_window_dispose), (ev_window_init):
+
+	Factor out and cleanup window title code
+
+2005-09-16  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-window.c: (unable_to_load_dialog_response_cb),
 	(unable_to_load):
 

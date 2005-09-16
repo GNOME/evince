@@ -54,6 +54,8 @@ evince_SOURCES=				\
 	ev-view.h			\
 	ev-window.c			\
 	ev-window.h			\
+	ev-window-title.c		\
+	ev-window-title.h		\
 	ev-sidebar.c			\
 	ev-sidebar.h			\
 	ev-sidebar-links.c		\
