@@ -544,6 +544,8 @@ view_update_range_and_current_page (EvView *view)
 				view->start_page = view->current_page;
 				if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
 					view->end_page = view->start_page + 1;
+				else 
+					view->end_page = view->start_page;
 			} else {
 				view->start_page = view->current_page - 1;
 				view->end_page = view->current_page;
