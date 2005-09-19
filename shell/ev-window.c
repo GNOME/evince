@@ -2130,7 +2130,7 @@ ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_page_cache_prev_page (ev_window->priv->page_cache);
+	ev_view_previous_page (ev_window->priv->view);
 }
 
 static void
@@ -2138,7 +2138,7 @@ ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_page_cache_next_page (ev_window->priv->page_cache);
+	ev_view_next_page (ev_window->priv->view);
 }
 
 static void

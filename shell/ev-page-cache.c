@@ -487,32 +487,6 @@ ev_page_cache_get_info (EvPageCache *page_cache)
 	return page_cache->page_info;
 }
 
-
-gboolean
-ev_page_cache_next_page (EvPageCache *page_cache)
-{
-	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
-
-	if (page_cache->current_page >= page_cache->n_pages - 1)
-		return FALSE;
-
-	ev_page_cache_set_current_page (page_cache, page_cache->current_page + 1);
-	return TRUE;
-
-}
-
-gboolean
-ev_page_cache_prev_page (EvPageCache *page_cache)
-{
-	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), FALSE);
-
-	if (page_cache->current_page <= 0)
-		return FALSE;
-
-	ev_page_cache_set_current_page (page_cache, page_cache->current_page - 1);
-	return TRUE;
-}
-
 #define PAGE_CACHE_STRING "ev-page-cache"
 
 EvPageCache *

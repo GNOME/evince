@@ -689,10 +689,10 @@ ev_view_binding_activated (EvView *view,
 	if (view->presentation) {
 		switch (scroll) {
 			case GTK_SCROLL_STEP_BACKWARD:
-				ev_page_cache_prev_page (view->page_cache);
+				ev_view_previous_page (view);
 				break;
 			case GTK_SCROLL_STEP_FORWARD:
-				ev_page_cache_next_page (view->page_cache);
+				ev_view_next_page (view);
 				break;
 			default:
 				break;
@@ -3569,6 +3569,42 @@ ev_view_show_cursor (EvView *view)
        ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }
 
+gboolean
+ev_view_next_page (EvView *view)
+{
+	int page;
+
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	page = ev_page_cache_get_current_page (view->page_cache);
+	page = ev_view_get_dual_page (view) ? page + 2 : page + 1;
+
+	if (page < ev_page_cache_get_n_pages (view->page_cache)) {
+		ev_page_cache_set_current_page (view->page_cache, page);
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
+gboolean
+ev_view_previous_page (EvView *view)
+{
+	int page;
+
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	page = ev_page_cache_get_current_page (view->page_cache);
+	page = ev_view_get_dual_page (view) ? page - 2 : page - 1;
+
+	if (page >= 0) {
+		ev_page_cache_set_current_page (view->page_cache, page);
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
 /*** Enum description for usage in signal ***/
 
 GType
@@ -3586,4 +3622,3 @@ ev_sizing_mode_get_type (void)
   }
   return etype;
 }
-

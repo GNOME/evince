@@ -66,8 +66,6 @@ void           ev_page_cache_set_current_page    (EvPageCache *page_cache,
 						  int          page);
 gboolean       ev_page_cache_set_page_label      (EvPageCache *page_cache,
 						  const char  *page_label);
-gboolean       ev_page_cache_next_page           (EvPageCache *page_cache);
-gboolean       ev_page_cache_prev_page           (EvPageCache *page_cache);
 
 EvPageCache   *ev_page_cache_get		 (EvDocument *document);
 
