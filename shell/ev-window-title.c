@@ -122,24 +122,24 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 		window_title->title = g_strdup (title);
 	}
 
-	/* Some docs report titles with confusing extensions (ex. .doc for pdf).
-           Let's show the filename in this case */
-	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
-		if (bad_extensions[i].backend == ev_document_factory_get_backend (document) &&
-		    g_str_has_suffix (window_title->title, bad_extensions[i].ext)) {
-			char *new_title;
-			char *filename = get_filename_from_uri (uri);
-
-			new_title = g_strdup_printf ("%s (%s)", window_title->title, filename);
-			g_free (window_title->title);
-			window_title->title = new_title;
-
-			g_free (filename);
-		}
-	} 
-
 	if (window_title->title) {
 		char *p;
+
+		/* Some docs report titles with confusing extensions (ex. .doc for pdf).
+	           Let's show the filename in this case */
+		for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
+			if (bad_extensions[i].backend == ev_document_factory_get_backend (document) &&
+			    g_str_has_suffix (window_title->title, bad_extensions[i].ext)) {
+				char *new_title;
+				char *filename = get_filename_from_uri (uri);
+
+				new_title = g_strdup_printf ("%s (%s)", window_title->title, filename);
+				g_free (window_title->title);
+				window_title->title = new_title;
+
+				g_free (filename);
+			}
+		}
 
 		for (p = window_title->title; *p; ++p) {
 			/* an '\n' byte is always ASCII, no need for UTF-8 special casing */
