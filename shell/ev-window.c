@@ -603,6 +603,18 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 }
 
 static void
+update_sidebar_visibility (EvWindow *window)
+{
+	char *uri = window->priv->uri;
+	GValue sidebar_visibility = { 0, };
+
+	if (uri && ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility)) {
+		set_widget_visibility (window->priv->sidebar,
+				       g_value_get_boolean (&sidebar_visibility));
+	}
+}
+
+static void
 setup_document_from_metadata (EvWindow *window)
 {
 	char *uri = window->priv->uri;
@@ -613,6 +625,40 @@ setup_document_from_metadata (EvWindow *window)
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						g_value_get_int (&page));
 	}
+}
+
+static void
+setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
+{
+	char *uri = window->priv->uri;
+	GtkWidget *sidebar = window->priv->sidebar;
+	GtkWidget *links = window->priv->sidebar_links;
+	GtkWidget *thumbs = window->priv->sidebar_thumbs;
+	GValue sidebar_size = { 0, };
+	GValue sidebar_page = { 0, };
+
+	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size)) {
+		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
+					g_value_get_int (&sidebar_size));
+	}
+
+	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page)) {
+		const char *page_id = g_value_get_string (&sidebar_page);
+
+		if (strcmp (page_id, "links") == 0) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
+		} else if (strcmp (page_id, "thumbnails")) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
+		}
+	} else {
+		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
+		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
+		}
+	}
+
+	update_sidebar_visibility (window);
 }
 
 static void
@@ -657,6 +703,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	}
 
 	setup_document_from_metadata (ev_window);
+	setup_sidebar_from_metadata (ev_window, document);
 }
 
 static void
@@ -876,18 +923,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 }
 
 static void
-update_sidebar_visibility (EvWindow *window)
-{
-	char *uri = window->priv->uri;
-	GValue sidebar_visibility = { 0, };
-
-	if (uri && ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility)) {
-		set_widget_visibility (window->priv->sidebar,
-				       g_value_get_boolean (&sidebar_visibility));
-	}
-}
-
-static void
 setup_view_from_metadata (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
@@ -905,8 +940,6 @@ setup_view_from_metadata (EvWindow *window)
 	GValue presentation = { 0, };
 	GValue fullscreen = { 0, };
 	GValue rotation = { 0, };
-	GValue sidebar_size = { 0, };
-	GValue sidebar_page = { 0, };
 
 	if (window->priv->uri == NULL) {
 		return;
@@ -992,26 +1025,6 @@ setup_view_from_metadata (EvWindow *window)
 			}
 		}
 	}
-
-	/* Sidebar */
-	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size)) {
-		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
-					g_value_get_int (&sidebar_size));
-	}
-
-	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page)) {
-		const char *page_id = g_value_get_string (&sidebar_page);
-
-		if (strcmp (page_id, "links") == 0) {
-			ev_sidebar_set_page (EV_SIDEBAR (window->priv->sidebar),
-					     window->priv->sidebar_links);
-		} else if (strcmp (page_id, "thumbnails")) {
-			ev_sidebar_set_page (EV_SIDEBAR (window->priv->sidebar),
-					     window->priv->sidebar_thumbs);
-		}
-	}
-
-	update_sidebar_visibility (window);
 }
 
 void
