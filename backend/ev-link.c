@@ -70,6 +70,8 @@ ev_link_type_get_type (void)
 			{ EV_LINK_TYPE_TITLE, "EV_LINK_TYPE_TITLE", "title" },
 			{ EV_LINK_TYPE_PAGE, "EV_LINK_TYPE_PAGE", "page" },
 			{ EV_LINK_TYPE_PAGE_XYZ, "EV_LINK_TYPE_PAGE_XYZ", "page-xyz" },
+			{ EV_LINK_TYPE_PAGE_FIT, "EV_LINK_TYPE_PAGE_FIT", "page-fit" },
+			{ EV_LINK_TYPE_PAGE_FITH, "EV_LINK_TYPE_PAGE_FITH", "page-fith" },
 			{ EV_LINK_TYPE_EXTERNAL_URI, "EV_LINK_TYPE_EXTERNAL_URI", "external" },
 			{ 0, NULL, NULL }
                 };
@@ -353,6 +355,30 @@ ev_link_new_page_xyz (const char *title,
 				      "left", left,
 				      "top", top,
 				      "zoom", zoom,
+				      NULL));
+}
+
+EvLink *
+ev_link_new_page_fit (const char *title,
+		      int         page)
+{
+	return EV_LINK (g_object_new (EV_TYPE_LINK,
+				      "title", title,
+				      "page", page,
+				      "type", EV_LINK_TYPE_PAGE_FIT,
+				      NULL));
+}
+
+EvLink *
+ev_link_new_page_fith (const char *title,
+		       int         page,
+		       double      top)
+{
+	return EV_LINK (g_object_new (EV_TYPE_LINK,
+				      "title", title,
+				      "page", page,
+				      "type", EV_LINK_TYPE_PAGE_FITH,
+				      "top", top,
 				      NULL));
 }
 

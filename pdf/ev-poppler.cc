@@ -720,10 +720,13 @@ ev_link_from_dest (PopplerAction *action)
 					     action->goto_dest.dest->zoom);
 		break;
 	case POPPLER_DEST_FIT:
-		unimplemented_dest = "POPPLER_DEST_FIT";
+		link = ev_link_new_page_fit (action->any.title,
+					     action->goto_dest.dest->page_num - 1);
 		break;
 	case POPPLER_DEST_FITH:
-		unimplemented_dest = "POPPLER_DEST_FITH";
+		link = ev_link_new_page_fith (action->any.title,
+					      action->goto_dest.dest->page_num - 1,
+					      action->goto_dest.dest->top);
 		break;
 	case POPPLER_DEST_FITV:
 		unimplemented_dest = "POPPLER_DEST_FITV";

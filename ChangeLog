@@ -1,5 +1,16 @@
 2005-09-19  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* backend/ev-link.c: (ev_link_type_get_type),
+	(ev_link_new_page_xyz), (ev_link_new_page_fit),
+	(ev_link_new_page_fith):
+	* backend/ev-link.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-view.c: (goto_fith_link), (ev_view_goto_link):
+
+	Implement FIT and FITH links
+
+2005-09-19  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* pdf/ev-poppler.cc:
 
 	Return 0 results when search is not in progress.
