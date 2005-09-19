@@ -2130,7 +2130,7 @@ ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_previous_page (ev_window->priv->view);
+	ev_view_previous_page (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -2138,7 +2138,7 @@ ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_next_page (ev_window->priv->view);
+	ev_view_next_page (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -2656,6 +2656,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
 			ev_document_doc_mutex_unlock ();
 
+			update_action_sensitivity (ev_window);
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 						      NULL);
 			gtk_widget_queue_draw (GTK_WIDGET (ev_window->priv->view));

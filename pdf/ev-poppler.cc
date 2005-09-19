@@ -1139,9 +1139,7 @@ pdf_document_find_page_has_results (EvDocumentFind *document_find,
 {
 	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
 
-	g_return_val_if_fail (search != NULL, FALSE);
-
-	return search->pages[page] != NULL;
+	return search && search->pages[page] != NULL;
 }
 
 double

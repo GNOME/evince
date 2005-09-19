@@ -1,5 +1,16 @@
 2005-09-19  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* pdf/ev-poppler.cc:
+
+	Return 0 results when search is not in progress.
+
+	* shell/ev-window.c: (ev_window_cmd_go_previous_page),
+	(ev_window_cmd_go_next_page), (find_bar_search_changed_cb):
+
+	Update menu sensitivity when cancelling search
+
+2005-09-19  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-view.c: (ev_view_can_find_next):
 
 	Take all pages in consideration, not just current one
