@@ -357,7 +357,7 @@ ev_page_cache_get_size (EvPageCache  *page_cache,
 			gint         *width,
 			gint         *height)
 {
-	int w, h;
+	double w, h;
 
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 	g_return_if_fail (page >= 0 && page < page_cache->n_pages);
@@ -374,15 +374,15 @@ ev_page_cache_get_size (EvPageCache  *page_cache,
 		h = info->height;
 	}
 
-	w = (int) (w * scale + 0.5);
-	h = (int) (h * scale + 0.5);
+	w = w * scale + 0.5;
+	h = h * scale + 0.5;
 
 	if (rotation == 0 || rotation == 180) {
-		if (width) *width = w;
-		if (height) *height = h;
+		if (width) *width = (int)w;
+		if (height) *height = (int)h;
 	} else {
-		if (width) *width = h;
-		if (height) *height = w;
+		if (width) *width = (int)h;
+		if (height) *height = (int)w;
 	}
 }
 
