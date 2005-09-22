@@ -1,3 +1,10 @@
+2005-09-22  Christian Persch  <chpe@cvs.gnome.org>
+
+	* shell/ev-view.c: (ev_view_scroll_event), (ev_view_class_init):
+	Remove unused unrealize handler. Add scroll handling to
+	ev_view_scroll_event for presentation mode (bug #316708),
+	and fix the event state checks there.
+
 2005-09-22  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/ev-page-action.c: (page_changed_cb):

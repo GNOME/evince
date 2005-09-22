@@ -264,7 +264,6 @@ static void       ev_view_size_request                       (GtkWidget         
 static void       ev_view_size_allocate                      (GtkWidget          *widget,
 							      GtkAllocation      *allocation);
 static void       ev_view_realize                            (GtkWidget          *widget);
-static void       ev_view_unrealize                          (GtkWidget          *widget);
 static gboolean   ev_view_scroll_event                       (GtkWidget          *widget,
 							      GdkEventScroll     *event);
 static gboolean   ev_view_expose_event                       (GtkWidget          *widget,
@@ -1457,39 +1456,59 @@ ev_view_realize (GtkWidget *widget)
 		gdk_window_set_background (widget->window, &widget->style->mid [GTK_STATE_NORMAL]);
 }
 
-static void
-ev_view_unrealize (GtkWidget *widget)
-{
-	GTK_WIDGET_CLASS (ev_view_parent_class)->unrealize (widget);
-}
-
 static gboolean
 ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 {
- 	EvView *view = EV_VIEW (widget);
+	EvView *view = EV_VIEW (widget);
+	guint state;
 
-	if ((event->state & GDK_CONTROL_MASK) != 0) {
+	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
-		 ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	if (state == GDK_CONTROL_MASK && view->presentation == FALSE) {
+		ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 
-		 if (event->direction == GDK_SCROLL_UP ||
-			event->direction == GDK_SCROLL_LEFT) {
-			    if (ev_view_can_zoom_in (view)) {
-		    		    ev_view_zoom_in (view);
-			    }
-		 } else {
-	    		    if (ev_view_can_zoom_out (view)) {
-				    ev_view_zoom_out (view);
-			    }
-		 }
-		 return TRUE;
+		if (event->direction == GDK_SCROLL_UP ||
+		    event->direction == GDK_SCROLL_LEFT) {
+			if (ev_view_can_zoom_in (view)) {
+				ev_view_zoom_in (view);
+			}
+		} else {
+			if (ev_view_can_zoom_out (view)) {
+				ev_view_zoom_out (view);
+			}
+		}
+
+		return TRUE;
 	}
 
-	if ((event->state & GDK_SHIFT_MASK) != 0) {
+	/* Shift+Wheel scrolls the in the perpendicular direction */
+	if (state & GDK_SHIFT_MASK) {
 		if (event->direction == GDK_SCROLL_UP)
 			event->direction = GDK_SCROLL_LEFT;
+		if (event->direction == GDK_SCROLL_LEFT)
+			event->direction = GDK_SCROLL_UP;
 		if (event->direction == GDK_SCROLL_DOWN)
 			event->direction = GDK_SCROLL_RIGHT;
+		if (event->direction == GDK_SCROLL_RIGHT)
+			event->direction = GDK_SCROLL_DOWN;
+
+		event->state &= ~GDK_SHIFT_MASK;
+		state &= ~GDK_SHIFT_MASK;
+	}
+
+	if (state == 0 && view->presentation) {
+		switch (event->direction) {
+		case GDK_SCROLL_DOWN:
+		case GDK_SCROLL_RIGHT:
+			ev_view_next_page (view);	
+			break;
+		case GDK_SCROLL_UP:
+		case GDK_SCROLL_LEFT:
+			ev_view_previous_page (view);
+			break;
+		}
+
+		return TRUE;
 	}
 
 	return FALSE;
@@ -2137,7 +2156,6 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->size_request = ev_view_size_request;
 	widget_class->size_allocate = ev_view_size_allocate;
 	widget_class->realize = ev_view_realize;
-	widget_class->unrealize = ev_view_unrealize;
 	widget_class->scroll_event = ev_view_scroll_event;
 	widget_class->enter_notify_event = ev_view_enter_notify_event;
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
