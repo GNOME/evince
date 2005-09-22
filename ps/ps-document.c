@@ -1083,6 +1083,45 @@ ps_document_load (EvDocument  *document,
 }
 
 static gboolean
+save_document (PSDocument *document, const char *filename)
+{
+	gboolean result = TRUE;
+	GtkGSDocSink *sink = gtk_gs_doc_sink_new ();
+	FILE *f, *src_file;
+	gchar *buf;
+
+	src_file = fopen (PS_DOCUMENT_GET_PS_FILE(document), "r");
+	if (src_file) {
+		struct stat stat_rec;
+
+		if (stat (PS_DOCUMENT_GET_PS_FILE(document), &stat_rec) == 0) {
+			pscopy (src_file, sink, 0, stat_rec.st_size - 1);
+		}
+
+		fclose (src_file);
+	}
+	
+	buf = gtk_gs_doc_sink_get_buffer (sink);
+	if (buf == NULL) {
+		return FALSE;
+	}
+	
+	f = fopen (filename, "w");
+	if (f) {
+		fputs (buf, f);
+		fclose (f);
+	} else {
+		result = FALSE;
+	}
+
+	g_free (buf);
+	gtk_gs_doc_sink_free (sink);
+	g_free (sink);
+
+	return result;
+}
+
+static gboolean
 save_page_list (PSDocument *document, int *page_list, const char *filename)
 {
 	gboolean result = TRUE;
@@ -1116,23 +1155,15 @@ ps_document_save (EvDocument  *document,
 		  GError     **error)
 {
 	PSDocument *ps = PS_DOCUMENT (document);
-	int *page_list;
 	gboolean result;
-	int i;
 	char *filename;
 
 	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename)
 		return FALSE;
 
-	page_list = g_new0 (int, ps->doc->numpages);
-	for (i = 0; i < ps->doc->numpages; i++) {
-		page_list[i] = 1;
-	}
+	result = save_document (ps, filename);
 
-	result = save_page_list (ps, page_list, filename);
-
-	g_free (page_list);
 	g_free (filename);
 
 	return result;
@@ -1245,9 +1276,12 @@ ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 
-	g_free (document->ps_export_pagelist);
+	if (document->structured_doc) {
+		g_free (document->ps_export_pagelist);
 	
-	document->ps_export_pagelist = g_new0 (int, document->doc->numpages);
+		document->ps_export_pagelist = g_new0 (int, document->doc->numpages);
+	}
+
 	document->ps_export_filename = g_strdup (filename);
 }
 
@@ -1256,7 +1290,9 @@ ps_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 	
-	document->ps_export_pagelist[rc->page] = 1;
+	if (document->structured_doc) {
+		document->ps_export_pagelist[rc->page] = 1;
+	}
 }
 
 static void
@@ -1264,13 +1300,16 @@ ps_document_ps_export_end (EvPSExporter *exporter)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 
-	save_page_list (document, document->ps_export_pagelist,
-			document->ps_export_filename);
-
-	g_free (document->ps_export_pagelist);
-	g_free (document->ps_export_filename);	
-	document->ps_export_pagelist = NULL;
-	document->ps_export_filename = NULL;
+	if (!document->structured_doc) {
+		save_document (document, document->ps_export_filename);
+	} else {
+		save_page_list (document, document->ps_export_pagelist,
+				document->ps_export_filename);
+		g_free (document->ps_export_pagelist);
+		g_free (document->ps_export_filename);	
+		document->ps_export_pagelist = NULL;
+		document->ps_export_filename = NULL;
+	}
 }
 
 static void
