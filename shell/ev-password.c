@@ -219,12 +219,20 @@ ev_password_dialog_entry_activated_cb (GtkEntry *entry,
 	gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 }
 
+static void
+ev_password_item_created_callback (GnomeKeyringResult result,
+				   guint32            val,
+				   gpointer           data)
+{
+	/* Nothing yet */
+	return;
+}				   
+
 void
 ev_password_dialog_save_password (EvPasswordDialog *dialog)
 {
 	GnomeKeyringAttributeList *attributes;
 	GnomeKeyringAttribute attribute;
-	guint32 item_id;
 	gchar *name;
 	gchar *unescaped_uri;
 
@@ -244,23 +252,23 @@ ev_password_dialog_save_password (EvPasswordDialog *dialog)
 	name = g_strdup_printf (_("Password for document %s"), unescaped_uri);	
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->priv->check_default))) {
-		gnome_keyring_item_create_sync (NULL,
-					        GNOME_KEYRING_ITEM_GENERIC_SECRET,
-					        name,
-					        attributes,
-					        ev_password_dialog_get_password (dialog),
-				    		TRUE,
-				    		&item_id);
+		gnome_keyring_item_create (NULL,
+					   GNOME_KEYRING_ITEM_GENERIC_SECRET,
+					   name,
+					   attributes,
+					   ev_password_dialog_get_password (dialog),
+				    	   TRUE, ev_password_item_created_callback, 
+					   NULL, NULL);
 	}
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->priv->check_session))) {
-		gnome_keyring_item_create_sync ("session",
-					        GNOME_KEYRING_ITEM_GENERIC_SECRET,
-					        name,
-					        attributes,
-					        ev_password_dialog_get_password (dialog),
-				    		TRUE,
-				    		&item_id);
+		gnome_keyring_item_create ("session",
+					   GNOME_KEYRING_ITEM_GENERIC_SECRET,
+					   name,
+					   attributes,
+    				           ev_password_dialog_get_password (dialog),
+				    	   TRUE, ev_password_item_created_callback, 
+					   NULL, NULL);
 	}
 	
 	gnome_keyring_attribute_list_free (attributes);

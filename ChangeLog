@@ -1,3 +1,10 @@
+2005-09-22  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-password.c: (ev_password_item_created_callback),
+	(ev_password_dialog_save_password):
+	
+	Fix for bug 316972. Use async gnome-keyring API.
+
 2005-09-22  Christian Persch  <chpe@cvs.gnome.org>
 
 	* shell/ev-view.c: (ev_view_scroll_event), (ev_view_class_init):
