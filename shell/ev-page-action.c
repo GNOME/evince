@@ -185,7 +185,7 @@ page_changed_cb (EvPageCache        *page_cache,
 
 		gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 
 					   CLAMP (ev_page_cache_get_max_label_chars (page_cache), 
-					   4, 12));	
+					   6, 12));	
 		
 		page_label = ev_page_cache_get_page_label (page_cache, page);
 		gtk_entry_set_text (GTK_ENTRY (proxy->entry), page_label);
