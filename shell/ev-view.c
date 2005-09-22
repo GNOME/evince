@@ -1673,9 +1673,17 @@ ev_view_button_release_event (GtkWidget      *widget,
 			      GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
+	EvLink *link;
 
 	if (view->pressed_button == 2) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+	}
+
+	if (view->document) {
+		link = get_link_at_location (view, event->x + view->scroll_x,
+					     event->y + view->scroll_y);
+	} else {
+		link = NULL;
 	}
 
 	view->pressed_button = -1;
@@ -1683,15 +1691,19 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	if (view->selection_info.selections) {
 		ev_view_update_primary_selection (view);
-	} else if (view->document) {
-		EvLink *link;
-
-		link = get_link_at_location (view, event->x + view->scroll_x, event->y + view->scroll_y);
-		if (link) {
-			ev_view_goto_link (view, link);
+	} else if (link) {
+		ev_view_goto_link (view, link);
+	} else if (view->presentation) {
+		switch (event->button) {
+		case 1:
+			ev_view_next_page (view);	
+			return TRUE;
+		case 3:
+			ev_view_previous_page (view);	
+			return TRUE;
 		}
 	}
-
+ 
 	return FALSE;
 }
 
