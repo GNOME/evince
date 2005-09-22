@@ -205,10 +205,13 @@ ev_application_open_uri (EvApplication  *application,
 
 	if (new_window == NULL) {
 		new_window = EV_WINDOW (ev_window_new ());
-		gtk_widget_show (GTK_WIDGET (new_window));
 	}
-	
+
+	/* We need to load uri before showing the window, so
+	   we can restore window size without flickering */	
 	ev_window_open_uri (new_window, uri);
+
+	gtk_widget_show (GTK_WIDGET (new_window));
 
 #ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	gtk_window_present_with_time (GTK_WINDOW (new_window),
