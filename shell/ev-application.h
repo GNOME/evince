@@ -76,7 +76,7 @@ gboolean          ev_application_open_uri            (EvApplication   *applicati
 void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,
     						      guint32          timestamp);
-
+GList		 *ev_application_get_windows	     (EvApplication   *application);
 
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
 void              ev_application_save_toolbars_model (EvApplication   *application);

@@ -2691,21 +2691,13 @@ zoom_control_changed_cb (EphyZoomAction *action,
 static void
 ev_window_finalize (GObject *object)
 {
-	gboolean empty = TRUE;
-	GList *list, *windows;
+	GList *windows = ev_application_get_windows (EV_APP);
 
-
-	windows = gtk_window_list_toplevels ();
-
-	for (list = windows; list; list = list->next) {
-		if (EV_IS_WINDOW (list->data)) {
-			empty = FALSE;
-			break;
-		}
-	}
-	
-	if (empty)
+	if (windows == NULL) {
 		ev_application_shutdown (EV_APP);
+	} else {
+		g_list_free (windows);
+	}
 	
 	g_list_free (windows);
 	G_OBJECT_CLASS (ev_window_parent_class)->finalize (object);

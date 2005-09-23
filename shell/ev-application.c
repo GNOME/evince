@@ -36,6 +36,7 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkmain.h>
+#include <libgnomeui/gnome-client.h>
 #include <string.h>
 
 #ifdef ENABLE_DBUS
@@ -111,6 +112,54 @@ ev_application_get_instance (void)
 	return instance;
 }
 
+static void
+removed_from_session (GnomeClient *client, EvApplication *application)
+{
+	ev_application_shutdown (application);
+}
+
+static gint
+save_session (GnomeClient *client, gint phase, GnomeSaveStyle save_style, gint shutdown,
+	      GnomeInteractStyle interact_style, gint fast, EvApplication *application)
+{
+	GList *windows, *l;
+	char **restart_argv;
+	int argc = 0, k;
+
+	windows = ev_application_get_windows (application);
+	restart_argv = g_new (char *, g_list_length (windows) + 1);
+	restart_argv[argc++] = g_strdup ("evince");
+
+	for (l = windows; l != NULL; l = l->next) {
+		EvWindow *window = EV_WINDOW (l->data);
+		restart_argv[argc++] = g_strdup (ev_window_get_uri (window));
+	}
+
+	gnome_client_set_restart_command (client, argc, restart_argv);
+
+	for (k = 0; k < argc; k++) {
+		g_free (restart_argv[k]);
+	}
+
+	g_list_free (windows);
+	g_free (restart_argv);
+	
+	return TRUE;
+}
+
+static void
+init_session (EvApplication *application)
+{
+	GnomeClient *client;
+
+	client = gnome_master_client ();
+
+	g_signal_connect (client, "save_yourself",
+			  G_CALLBACK (save_session), application);	
+	g_signal_connect (client, "die",
+			  G_CALLBACK (removed_from_session), application);
+}
+
 gboolean
 ev_application_open_window (EvApplication  *application,
 			    guint32         timestamp,
@@ -134,17 +183,15 @@ static EvWindow *
 ev_application_get_empty_window (EvApplication *application)
 {
 	EvWindow *empty_window = NULL;
-	GList *windows = gtk_window_list_toplevels ();
+	GList *windows = ev_application_get_windows (application);
 	GList *l;
 
 	for (l = windows; l != NULL; l = l->next) {
-		if (EV_IS_WINDOW (l->data)) {
-			EvWindow *window = EV_WINDOW (l->data);
+		EvWindow *window = EV_WINDOW (l->data);
 
-			if (ev_window_is_empty (window)) {
-				empty_window = window;
-				break;
-			}
+		if (ev_window_is_empty (window)) {
+			empty_window = window;
+			break;
 		}
 	}
 
@@ -269,6 +316,8 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
+	init_session (ev_application);
+
 	ev_application->toolbars_model = egg_toolbars_model_new ();
 
 	ev_application->toolbars_file = g_build_filename
@@ -290,6 +339,25 @@ ev_application_init (EvApplication *ev_application)
 	egg_recent_model_set_limit (ev_application->recent_model, 5);	
 	egg_recent_model_set_filter_groups (ev_application->recent_model,
     	    	    			    "Evince", NULL);
+}
+
+GList *
+ev_application_get_windows (EvApplication *application)
+{
+	GList *l, *toplevels;
+	GList *windows = NULL;
+
+	toplevels = gtk_window_list_toplevels ();
+
+	for (l = toplevels; l != NULL; l = l->next) {
+		if (EV_IS_WINDOW (l->data)) {
+			windows = g_list_append (windows, l->data);
+		}
+	}
+
+	g_list_free (toplevels);
+
+	return windows;
 }
 
 EggToolbarsModel *ev_application_get_toolbars_model (EvApplication *application)

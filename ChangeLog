@@ -1,3 +1,16 @@
+2005-09-23  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* shell/ev-application.c: (removed_from_session), (save_session),
+	(init_session), (ev_application_get_empty_window),
+	(ev_application_init), (ev_application_get_windows):
+	* shell/ev-application.h:
+	* shell/ev-window.c: (ev_window_finalize):
+
+	Add a function to retrieve window list and share it where
+	necessary.
+	Implement session handling, works pretty well thanks to the
+	metadata system.
+
 2005-09-22  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-password.c: (ev_password_item_created_callback),
