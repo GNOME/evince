@@ -32,9 +32,9 @@ typedef struct
 struct _EvWindowTitle
 {
 	EvWindow *window;
-	EvDocument *document;
 	EvWindowTitleType type;
-	char *title;
+	EvDocument *document;
+	char *uri;
 };
 
 static const BadExtensionEntry bad_extensions[] = {
@@ -54,19 +54,84 @@ ev_window_title_new (EvWindow *window)
 	return window_title;
 }
 
+static char *
+get_filename_from_uri (const char *uri)
+{
+	char *filename;
+	char *display_name;
+
+	display_name = gnome_vfs_format_uri_for_display (uri);
+	filename = g_path_get_basename (display_name);
+	g_free (display_name);
+
+	return filename;
+}
+
+/* Some docs report titles with confusing extensions (ex. .doc for pdf).
+   Let's show the filename in this case */
+static void
+ev_window_title_sanitize_extension (EvWindowTitle *window_title, char **title) {
+	EvBackend backend;
+	int i;
+
+	backend = ev_document_factory_get_backend (window_title->document);
+	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
+		if (bad_extensions[i].backend == backend &&
+		    g_str_has_suffix (*title, bad_extensions[i].ext)) {
+			char *new_title;
+			char *filename = get_filename_from_uri (window_title->uri);
+
+			new_title = g_strdup_printf ("%s (%s)", *title, filename);
+			g_free (*title);
+			*title = new_title;
+
+			g_free (filename);
+		}
+	}
+}
+
 static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
-	char *password_title;
+	char *title = NULL, *password_title, *p;
+	EvPageCache *page_cache;
+
+	if (window_title->document != NULL) {
+		const char *doc_title;
+
+		page_cache = ev_page_cache_get (window_title->document);
+		g_return_if_fail (page_cache != NULL);
+		doc_title = ev_page_cache_get_title (page_cache);
+
+		/* Make sure we get a valid title back */
+		if (doc_title && doc_title[0] != '\000' &&
+		    g_utf8_validate (doc_title, -1, NULL)) {
+			title = g_strdup (doc_title);
+		}
+	}
+
+	if (title) {
+		ev_window_title_sanitize_extension (window_title, &title);
+	} else {
+		if (window_title->uri) {
+			title = get_filename_from_uri (window_title->uri);
+		} else {
+			title = g_strdup (_("Document Viewer"));
+		}
+	}
+
+	for (p = title; *p; ++p) {
+		/* an '\n' byte is always ASCII, no need for UTF-8 special casing */
+		if (*p == '\n')	*p = ' ';
+	}
 
 	switch (window_title->type) {
 	case EV_WINDOW_TITLE_DOCUMENT:
-		gtk_window_set_title (window, window_title->title);
+		gtk_window_set_title (window, title);
 		break;
 	case EV_WINDOW_TITLE_PASSWORD:
-		password_title = g_strdup_printf (_("%s - Password Required"),
-						  window_title->title);
+		password_title = g_strdup_printf (_("%s - Password Required"), title);
 		gtk_window_set_title (window, password_title);
 		g_free (password_title);
 		break;
@@ -81,80 +146,21 @@ ev_window_title_set_type (EvWindowTitle *window_title, EvWindowTitleType type)
 	ev_window_title_update (window_title);
 }
 
-static char *
-get_filename_from_uri (const char *uri)
+void
+ev_window_title_set_document (EvWindowTitle *window_title,
+			      EvDocument    *document)
 {
-	char *filename;
-	char *display_name;
+	window_title->document = document;
 
-	display_name = gnome_vfs_format_uri_for_display (uri);
-	filename = g_path_get_basename (display_name);
-	g_free (display_name);
-
-	return filename;
+	ev_window_title_update (window_title);
 }
 
 void
-ev_window_title_set_document (EvWindowTitle *window_title,
-			      EvDocument    *document,
-			      const char    *uri)
+ev_window_title_set_uri (EvWindowTitle *window_title,
+			 const char    *uri)
 {
-	EvPageCache *page_cache;
-	const char *title;
-	int i;
-
-	window_title->document = document;
-
-	g_free (window_title->title);
-
-	if (document == NULL) {
-		window_title->title = NULL;
-		return;
-	}
-
-	page_cache = ev_page_cache_get (document);
-	g_return_if_fail (page_cache != NULL);
-
-	title = ev_page_cache_get_title (page_cache);
-
-	/* Make sure we get a valid title back */
-	if (title && title[0] != '\000' && g_utf8_validate (title, -1, NULL)) {
-		window_title->title = g_strdup (title);
-	}
-
-	if (window_title->title) {
-		char *p;
-
-		/* Some docs report titles with confusing extensions (ex. .doc for pdf).
-	           Let's show the filename in this case */
-		for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
-			if (bad_extensions[i].backend == ev_document_factory_get_backend (document) &&
-			    g_str_has_suffix (window_title->title, bad_extensions[i].ext)) {
-				char *new_title;
-				char *filename = get_filename_from_uri (uri);
-
-				new_title = g_strdup_printf ("%s (%s)", window_title->title, filename);
-				g_free (window_title->title);
-				window_title->title = new_title;
-
-				g_free (filename);
-			}
-		}
-
-		for (p = window_title->title; *p; ++p) {
-			/* an '\n' byte is always ASCII, no need for UTF-8 special casing */
-			if (*p == '\n')
-				*p = ' ';
-		}
-	}
-
-	if (window_title->title == NULL && uri) {
-		window_title->title = get_filename_from_uri (uri);
-	}
-
-	if (window_title->title == NULL) {
-		window_title->title = g_strdup (_("Document Viewer"));
-	}
+	g_free (window_title->uri);
+	window_title->uri = g_strdup (uri);
 
 	ev_window_title_update (window_title);
 }
@@ -162,6 +168,6 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 void
 ev_window_title_free (EvWindowTitle *window_title)
 {
-	g_free (window_title->title);
+	g_free (window_title->uri);
 	g_free (window_title);
 }

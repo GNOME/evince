@@ -37,8 +37,9 @@ EvWindowTitle *ev_window_title_new	    (EvWindow *window);
 void	       ev_window_title_set_type     (EvWindowTitle     *window_title,
 					     EvWindowTitleType  type);
 void           ev_window_title_set_document (EvWindowTitle     *window_title,
-					     EvDocument        *document,
-					     const char        *uri);
+					     EvDocument        *document);
+void	       ev_window_title_set_uri      (EvWindowTitle     *window_title,
+			 		     const char        *uri);
 void	       ev_window_title_free         (EvWindowTitle     *window_title);
 
 G_END_DECLS

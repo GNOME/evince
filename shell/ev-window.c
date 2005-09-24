@@ -689,7 +689,8 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_view_set_document (view, document);
 	}
 
-	ev_window_title_set_document (ev_window->priv->title, document, ev_window->priv->uri);
+	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
+	ev_window_title_set_document (ev_window->priv->title, document);
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	update_action_sensitivity (ev_window);
@@ -762,6 +763,7 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 
 	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
 
+	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->password_uri);
 	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_PASSWORD);
 
 	if (ev_window->priv->password_dialog == NULL) {

@@ -1,5 +1,18 @@
 2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-window-title.c: (get_filename_from_uri),
+	(ev_window_title_sanitize_extension), (ev_window_title_update),
+	(ev_window_title_set_document), (ev_window_title_set_uri),
+	(ev_window_title_free):
+	* shell/ev-window-title.h:
+	* shell/ev-window.c: (ev_window_setup_document),
+	(ev_window_popup_password_dialog):
+
+	Refactor window title building while fixing it for
+	password documents.
+
+2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* pdf/ev-poppler.cc:
 
 	Escape link title before setting it in the model
