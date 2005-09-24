@@ -327,6 +327,11 @@ static double   zoom_for_size_fit_width	 		     (int doc_width,
 	    						      int target_width,
 							      int target_height,
 							      int vsb_width);
+static double   zoom_for_size_fit_height		     (int doc_width,
+			  				      int doc_height,
+							      int target_width,
+							      int target_height,
+							      int vsb_height);
 static double	zoom_for_size_best_fit 			     (int doc_width,
 							      int doc_height,
 							      int target_width,
@@ -1072,6 +1077,18 @@ location_in_text (EvView  *view,
 		return FALSE;
 }
 
+static int
+ev_view_get_width (EvView *view)
+{
+	return GTK_WIDGET (view)->allocation.width;
+}
+
+static int
+ev_view_get_height (EvView *view)
+{
+	return GTK_WIDGET (view)->allocation.height;
+}
+
 /*** Hyperref ***/
 static EvLink *
 get_link_at_location (EvView  *view,
@@ -1100,16 +1117,23 @@ goto_fitv_link (EvView *view, EvLink *link)
 {
 	GdkPoint view_point;
 	EvPoint doc_point;
-	int page;
+	int doc_width, doc_height, page;
+	double zoom;
 
 	page = ev_link_get_page (link);
-
-	ev_view_set_sizing_mode (view, EV_SIZING_FIT_HEIGHT);
+	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
 	doc_point.x = ev_link_get_left (link);
 	doc_point.y = 0;
 	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
+	zoom = zoom_for_size_fit_height (doc_width - doc_point.x , doc_height,
+					 ev_view_get_width (view),
+				         ev_view_get_height (view), 0);
+
+	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	ev_view_set_zoom (view, zoom, FALSE);
+	ev_page_cache_set_current_page (view->page_cache, page);
 	gtk_adjustment_set_value (view->hadjustment, view_point.x);
 }
 
@@ -1118,18 +1142,41 @@ goto_fith_link (EvView *view, EvLink *link)
 {
 	GdkPoint view_point;
 	EvPoint doc_point;
-	int height, page;
+	int doc_width, doc_height, page;
+	double zoom;
 
 	page = ev_link_get_page (link);
-	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, NULL, &height);
-
-	ev_view_set_sizing_mode (view, EV_SIZING_FIT_WIDTH);
+	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
 	doc_point.x = 0;
-	doc_point.y = height - ev_link_get_top (link);
+	doc_point.y = doc_height - ev_link_get_top (link);
 	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
+	zoom = zoom_for_size_fit_width (doc_width, ev_link_get_top (link),
+					ev_view_get_width (view),
+				        ev_view_get_height (view), 0);
+
+	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	ev_view_set_zoom (view, zoom, FALSE);
 	gtk_adjustment_set_value (view->vadjustment, view_point.y);
+}
+
+static void
+goto_fit_link (EvView *view, EvLink *link)
+{
+	double zoom;
+	int doc_width, doc_height;
+	int page;
+
+	page = ev_link_get_page (link);
+	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
+
+	zoom = zoom_for_size_best_fit (doc_width, doc_height, ev_view_get_width (view),
+				       ev_view_get_height (view), 0, 0);
+
+	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	ev_view_set_zoom (view, zoom, FALSE);
+	ev_page_cache_set_current_page (view->page_cache, page);
 }
 
 static void
@@ -1174,9 +1221,7 @@ ev_view_goto_link (EvView *view, EvLink *link)
 			ev_page_cache_set_current_page (view->page_cache, page);
 			break;
 		case EV_LINK_TYPE_PAGE_FIT:
-			page = ev_link_get_page (link);
-			ev_page_cache_set_current_page (view->page_cache, page);
-			ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
+			goto_fit_link (view, link);
 			break;
 		case EV_LINK_TYPE_PAGE_FITH:
 			goto_fith_link (view, link);
@@ -1281,8 +1326,6 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		requisition->width = 1;
-	} else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT) {
-		requisition->height = 1;
 	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
 		requisition->width = 1;
 		/* FIXME: This could actually be set on one page docs or docs
@@ -1310,8 +1353,6 @@ ev_view_size_request_continuous (EvView         *view,
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		requisition->width = 1;
-	} else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT) {
-		requisition->height = 1;
 	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
 		requisition->width = 1;
 		/* FIXME: This could actually be set on one page docs or docs
@@ -1354,8 +1395,6 @@ ev_view_size_request_dual_page (EvView         *view,
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		requisition->width = 1;
-	} else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT) {
-		requisition->height = 1;
 	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
 		requisition->width = 1;
 		requisition->height = 1;
@@ -1382,8 +1421,6 @@ ev_view_size_request_single_page (EvView         *view,
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		requisition->width = 1;
 		requisition->height = height + border.top + border.bottom + (2 * view->spacing);
-	} else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT) {
-		requisition->height = 1;
 	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
 		requisition->width = 1;
 		requisition->height = 1;
@@ -1425,7 +1462,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
-	    view->sizing_mode == EV_SIZING_FIT_HEIGHT ||
 	    view->sizing_mode == EV_SIZING_BEST_FIT) {
 
 		g_signal_emit (view, signals[SIGNAL_ZOOM_INVALID], 0);
@@ -2822,8 +2858,6 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	 * now.  We need to fix this. */
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - vsb_width, height, 0);
-	else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT)
-		 scale = zoom_for_size_fit_height (doc_width, doc_height, width - vsb_width, height, hsb_height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width - vsb_width, height, 0, hsb_height);
 	else
@@ -2861,8 +2895,6 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	 * now.  We need to fix this. */
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - vsb_width, height, 0);
-	else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT)
-		scale = zoom_for_size_fit_height (doc_width, doc_height, width - vsb_width, height, hsb_height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width - vsb_width, height, 0, hsb_height);
 	else
@@ -2912,8 +2944,6 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
-	else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT)
-		scale = zoom_for_size_fit_height (doc_width, doc_height, width, height, hsb_height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
 	else
@@ -2947,8 +2977,6 @@ ev_view_zoom_for_size_single_page (EvView *view,
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
-	else if (view->sizing_mode == EV_SIZING_FIT_HEIGHT)
-		scale = zoom_for_size_fit_height (doc_width, doc_height, width, height, hsb_height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
 	else
@@ -2965,7 +2993,6 @@ ev_view_set_zoom_for_size (EvView *view,
 			   int     hsb_height)
 {
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
-			  view->sizing_mode == EV_SIZING_FIT_HEIGHT ||
 			  view->sizing_mode == EV_SIZING_BEST_FIT);
 	g_return_if_fail (width >= 0);
 	g_return_if_fail (height >= 0);
@@ -3731,7 +3758,6 @@ ev_sizing_mode_get_type (void)
   if (etype == 0) {
     static const GEnumValue values[] = {
       { EV_SIZING_FIT_WIDTH, "EV_SIZING_FIT_WIDTH", "fit-width" },
-      { EV_SIZING_FIT_HEIGHT, "EV_SIZING_FIT_HEIGHT", "fit-height" },
       { EV_SIZING_BEST_FIT, "EV_SIZING_BEST_FIT", "best-fit" },
       { EV_SIZING_FREE, "EV_SIZING_FREE", "free" },
       { 0, NULL, NULL }

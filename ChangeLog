@@ -1,5 +1,24 @@
 2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-view.c: (ev_view_get_width), (ev_view_get_height),
+	(goto_fitv_link), (goto_fith_link), (goto_fit_link),
+	(ev_view_goto_link), (ev_view_size_request_continuous_dual_page),
+	(ev_view_size_request_continuous),
+	(ev_view_size_request_dual_page),
+	(ev_view_size_request_single_page), (ev_view_size_allocate),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (ev_view_set_zoom_for_size),
+	(ev_sizing_mode_get_type):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_sizing_mode_changed_cb):
+
+	Do not use modes for link, we need to calculate size ad hoc.
+	Still not perfect because of the usual scrollbar issues grrr.
+
+2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* backend/ev-link.c: (ev_link_type_get_type),
 	(ev_link_new_page_fith), (ev_link_new_page_fitv):
 	* backend/ev-link.h:
