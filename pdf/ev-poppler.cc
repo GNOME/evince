@@ -819,16 +819,22 @@ build_tree (PdfDocument      *pdf_document,
 		action = poppler_index_iter_get_action (iter);
 		expand = poppler_index_iter_is_open (iter);
 		if (action) {
+			char *title_markup;
+
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 			link = ev_link_from_action (action);
 			poppler_action_free (action);
+			title_markup = g_markup_escape_text (ev_link_get_title (link), -1);
 
 			gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
-					    EV_DOCUMENT_LINKS_COLUMN_MARKUP, ev_link_get_title (link),
+					    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title_markup,
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
 					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, expand,
 					    -1);
+
+			g_free (title_markup);
 			g_object_unref (link);
+
 			child = poppler_index_iter_get_child (iter);
 			if (child)
 				build_tree (pdf_document, model, &tree_iter, child);
