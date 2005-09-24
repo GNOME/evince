@@ -729,7 +729,9 @@ ev_link_from_dest (PopplerAction *action)
 					      action->goto_dest.dest->top);
 		break;
 	case POPPLER_DEST_FITV:
-		unimplemented_dest = "POPPLER_DEST_FITV";
+		link = ev_link_new_page_fitv (action->any.title,
+					      action->goto_dest.dest->page_num - 1,
+					      action->goto_dest.dest->left);
 		break;
 	case POPPLER_DEST_FITR:
 		unimplemented_dest = "POPPLER_DEST_FITR";

@@ -1,5 +1,28 @@
 2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* backend/ev-link.c: (ev_link_type_get_type),
+	(ev_link_new_page_fith), (ev_link_new_page_fitv):
+	* backend/ev-link.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-view.c: (goto_fitv_link), (goto_fith_link),
+	(ev_view_goto_link), (ev_view_size_request_continuous_dual_page),
+	(ev_view_size_request_continuous),
+	(ev_view_size_request_dual_page),
+	(ev_view_size_request_single_page), (ev_view_size_allocate),
+	(zoom_for_size_fit_height),
+	(ev_view_zoom_for_size_continuous_and_dual_page),
+	(ev_view_zoom_for_size_continuous),
+	(ev_view_zoom_for_size_dual_page),
+	(ev_view_zoom_for_size_single_page), (ev_view_set_zoom_for_size),
+	(ev_sizing_mode_get_type):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_sizing_mode_changed_cb):
+
+	Implement FIT_HEIGHT mode (only for links).
+	Implement FITH links
+
+2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* shell/ev-window-title.c: (get_filename_from_uri),
 	(ev_window_title_sanitize_extension), (ev_window_title_update),
 	(ev_window_title_set_document), (ev_window_title_set_uri),

@@ -311,7 +311,9 @@ update_action_sensitivity (EvWindow *ev_window)
 	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
 	set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
 
-	if (has_pages && ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
+	if (has_pages &&
+	    ev_view_get_sizing_mode (view) != EV_SIZING_FIT_WIDTH &&
+	    ev_view_get_sizing_mode (view) != EV_SIZING_BEST_FIT) {
 		GtkAction *action;
 		float      zoom;
 		float      real_zoom;
@@ -2338,6 +2340,15 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 		g_object_set (G_OBJECT (scrolled_window),
 			      "hscrollbar-policy", GTK_POLICY_NEVER,
 			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+			      NULL);
+		g_signal_connect (ev_window->priv->view, "zoom_invalid",
+				  G_CALLBACK (update_view_size),
+				  ev_window);
+		break;
+	case EV_SIZING_FIT_HEIGHT:
+		g_object_set (G_OBJECT (scrolled_window),
+			      "hscrollbar-policy", GTK_POLICY_AUTOMATIC,
+			      "vscrollbar-policy", GTK_POLICY_NEVER,
 			      NULL);
 		g_signal_connect (ev_window->priv->view, "zoom_invalid",
 				  G_CALLBACK (update_view_size),
