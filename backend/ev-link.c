@@ -32,6 +32,8 @@ enum {
 	PROP_URI,
 	PROP_LEFT,
 	PROP_TOP,
+	PROP_BOTTOM,
+	PROP_RIGHT,
 	PROP_ZOOM
 };
 
@@ -52,6 +54,8 @@ struct _EvLinkPrivate {
 	int page;
 	double top;
 	double left;
+	double bottom;
+	double right;
 	double zoom;
 };
 
@@ -73,6 +77,7 @@ ev_link_type_get_type (void)
 			{ EV_LINK_TYPE_PAGE_FIT, "EV_LINK_TYPE_PAGE_FIT", "page-fit" },
 			{ EV_LINK_TYPE_PAGE_FITH, "EV_LINK_TYPE_PAGE_FITH", "page-fith" },
 			{ EV_LINK_TYPE_PAGE_FITV, "EV_LINK_TYPE_PAGE_FITV", "page-fitv" },
+			{ EV_LINK_TYPE_PAGE_FITR, "EV_LINK_TYPE_PAGE_FITR", "page-fitr" },
 			{ EV_LINK_TYPE_EXTERNAL_URI, "EV_LINK_TYPE_EXTERNAL_URI", "external" },
 			{ 0, NULL, NULL }
                 };
@@ -132,6 +137,22 @@ ev_link_get_left (EvLink *self)
 }
 
 double
+ev_link_get_bottom (EvLink *self)
+{
+	g_return_val_if_fail (EV_IS_LINK (self), 0);
+	
+	return self->priv->bottom;
+}
+
+double
+ev_link_get_right (EvLink *self)
+{
+	g_return_val_if_fail (EV_IS_LINK (self), 0);
+	
+	return self->priv->right;
+}
+
+double
 ev_link_get_zoom (EvLink *self)
 {
 	g_return_val_if_fail (EV_IS_LINK (self), 0);
@@ -164,6 +185,12 @@ ev_link_get_property (GObject *object, guint prop_id, GValue *value,
 		g_value_set_double (value, self->priv->top);
 		break;
 	case PROP_LEFT:
+		g_value_set_double (value, self->priv->left);
+		break;
+	case PROP_BOTTOM:
+		g_value_set_double (value, self->priv->bottom);
+		break;
+	case PROP_RIGHT:
 		g_value_set_double (value, self->priv->left);
 		break;
 	case PROP_ZOOM:
@@ -201,6 +228,12 @@ ev_link_set_property (GObject *object, guint prop_id, const GValue *value,
 		break;
 	case PROP_LEFT:
 		link->priv->left = g_value_get_double (value);
+		break;
+	case PROP_BOTTOM:
+		link->priv->bottom = g_value_get_double (value);
+		break;
+	case PROP_RIGHT:
+		link->priv->right = g_value_get_double (value);
 		break;
 	case PROP_ZOOM:
 		link->priv->zoom = g_value_get_double (value);
@@ -312,6 +345,27 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (g_object_class,
+					 PROP_BOTTOM,
+					 g_param_spec_double ("bottom",
+							      "Bottom coordinate",
+							      "The bottom coordinate",
+							      -G_MAXDOUBLE,
+							      G_MAXDOUBLE,
+							      0,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_RIGHT,
+					 g_param_spec_double ("right",
+							      "Right coordinate",
+							      "The right coordinate",
+							      -G_MAXDOUBLE,
+							      G_MAXDOUBLE,
+							      0,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
+
+	g_object_class_install_property (g_object_class,
 					 PROP_ZOOM,
 					 g_param_spec_double ("zoom",
 							      "Zoom",
@@ -393,6 +447,25 @@ ev_link_new_page_fitv (const char *title,
 				      "page", page,
 				      "type", EV_LINK_TYPE_PAGE_FITV,
 				      "left", left,
+				      NULL));
+}
+
+EvLink *
+ev_link_new_page_fitr (const char     *title,
+		       int             page,
+		       double          left,
+		       double          bottom,
+		       double          right,
+		       double          top)
+{
+	return EV_LINK (g_object_new (EV_TYPE_LINK,
+				      "title", title,
+				      "page", page,
+				      "type", EV_LINK_TYPE_PAGE_FITR,
+				      "left", left,
+				      "bottom", bottom,
+				      "right", right,
+				      "top", top,
 				      NULL));
 }
 

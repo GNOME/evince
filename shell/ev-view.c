@@ -1113,6 +1113,32 @@ get_link_at_location (EvView  *view,
 }
 
 static void
+goto_fitr_link (EvView *view, EvLink *link)
+{
+	GdkPoint view_point;
+	EvPoint doc_point;
+	int doc_width, doc_height, page;
+	double zoom;
+
+	page = ev_link_get_page (link);
+	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
+
+	doc_point.x = ev_link_get_left (link);
+	doc_point.y = ev_link_get_top (link);
+	doc_point_to_view_point (view, page, &doc_point, &view_point);
+
+	zoom = zoom_for_size_best_fit (ev_link_get_right (link) - ev_link_get_left (link),
+				       ev_link_get_top (link) - ev_link_get_bottom (link),
+				       ev_view_get_width (view),
+				       ev_view_get_height (view), 0, 0);
+
+	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	ev_view_set_zoom (view, zoom, FALSE);
+	ev_page_cache_set_current_page (view->page_cache, page);
+	gtk_adjustment_set_value (view->hadjustment, view_point.x);
+}
+
+static void
 goto_fitv_link (EvView *view, EvLink *link)
 {
 	GdkPoint view_point;
@@ -1228,6 +1254,9 @@ ev_view_goto_link (EvView *view, EvLink *link)
 			break;
 		case EV_LINK_TYPE_PAGE_FITV:
 			goto_fitv_link (view, link);
+			break;
+		case EV_LINK_TYPE_PAGE_FITR:
+			goto_fitr_link (view, link);
 			break;
 		case EV_LINK_TYPE_PAGE_XYZ:
 			goto_xyz_link (view, link);
