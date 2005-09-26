@@ -1,5 +1,12 @@
 2005-09-26  Marco Pesenti Gritti  <mpg@redhat.com>
 
+	* shell/ev-view.c: (doc_point_to_view_point), (goto_fitr_link),
+	(goto_fitv_link), (goto_fith_link), (goto_xyz_link):
+
+	Ignore link coordinates if they are outside page bounds
+
+2005-09-26  Marco Pesenti Gritti  <mpg@redhat.com>
+
 	* backend/ev-link.c: (ev_link_type_get_type),
 	(ev_link_get_filename), (ev_link_get_params),
 	(ev_link_get_property), (ev_link_set_property),

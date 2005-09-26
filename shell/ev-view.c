@@ -934,7 +934,7 @@ view_rect_to_doc_rect (EvView *view,
 	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
 
-static void
+static gboolean
 doc_point_to_view_point (EvView       *view,
                          int           page,
 		         EvPoint      *doc_point,
@@ -942,7 +942,7 @@ doc_point_to_view_point (EvView       *view,
 {
 	GdkRectangle page_area;
 	GtkBorder border;
-	double x, y;
+	double x, y, view_x, view_y;
 	int width, height;
 
 	ev_page_cache_get_size (view->page_cache, page,
@@ -968,8 +968,13 @@ doc_point_to_view_point (EvView       *view,
 
 	get_page_extents (view, page, &page_area, &border);
 
-	view_point->x = x * view->scale + page_area.x;
-	view_point->y = y * view->scale + page_area.y;
+	view_x = x * view->scale;
+	view_y = y * view->scale;
+	view_point->x = view_x + page_area.x;
+	view_point->y = view_y + page_area.y;
+
+	return (view_x > 0 && view_x <= page_area.width &&
+		view_y > 0 && view_y <= page_area.height);
 }
 
 static void
@@ -1128,7 +1133,6 @@ goto_fitr_link (EvView *view, EvLink *link)
 
 	doc_point.x = ev_link_get_left (link);
 	doc_point.y = ev_link_get_top (link);
-	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
 	zoom = zoom_for_size_best_fit (ev_link_get_right (link) - ev_link_get_left (link),
 				       ev_link_get_top (link) - ev_link_get_bottom (link),
@@ -1138,7 +1142,11 @@ goto_fitr_link (EvView *view, EvLink *link)
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
 	ev_page_cache_set_current_page (view->page_cache, page);
-	gtk_adjustment_set_value (view->hadjustment, view_point.x);
+
+	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
+		gtk_adjustment_set_value (view->hadjustment, view_point.x);
+		gtk_adjustment_set_value (view->vadjustment, view_point.y);
+	}
 }
 
 static void
@@ -1154,7 +1162,6 @@ goto_fitv_link (EvView *view, EvLink *link)
 
 	doc_point.x = ev_link_get_left (link);
 	doc_point.y = 0;
-	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
 	zoom = zoom_for_size_fit_height (doc_width - doc_point.x , doc_height,
 					 ev_view_get_width (view),
@@ -1163,7 +1170,10 @@ goto_fitv_link (EvView *view, EvLink *link)
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
 	ev_page_cache_set_current_page (view->page_cache, page);
-	gtk_adjustment_set_value (view->hadjustment, view_point.x);
+
+	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
+		gtk_adjustment_set_value (view->hadjustment, view_point.x);
+	}
 }
 
 static void
@@ -1179,7 +1189,6 @@ goto_fith_link (EvView *view, EvLink *link)
 
 	doc_point.x = 0;
 	doc_point.y = doc_height - ev_link_get_top (link);
-	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
 	zoom = zoom_for_size_fit_width (doc_width, ev_link_get_top (link),
 					ev_view_get_width (view),
@@ -1187,7 +1196,12 @@ goto_fith_link (EvView *view, EvLink *link)
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
-	gtk_adjustment_set_value (view->vadjustment, view_point.y);
+
+	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
+		gtk_adjustment_set_value (view->vadjustment, view_point.y);
+	} else {
+		ev_page_cache_set_current_page (view->page_cache, page);
+	}
 }
 
 static void
@@ -1227,10 +1241,13 @@ goto_xyz_link (EvView *view, EvLink *link)
 
 	doc_point.x = ev_link_get_left (link);
 	doc_point.y = height - ev_link_get_top (link);
-	doc_point_to_view_point (view, page, &doc_point, &view_point);
 
-	gtk_adjustment_set_value (view->hadjustment, view_point.x);
-	gtk_adjustment_set_value (view->vadjustment, view_point.y);
+	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
+		gtk_adjustment_set_value (view->hadjustment, view_point.x);
+		gtk_adjustment_set_value (view->vadjustment, view_point.y);
+	} else {
+		ev_page_cache_set_current_page (view->page_cache, page);
+	}
 }
 
 void
