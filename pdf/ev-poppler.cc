@@ -775,7 +775,7 @@ ev_link_from_action (PopplerAction *action)
 
 	switch (action->type) {
 	case POPPLER_ACTION_UNKNOWN:
-		g_warning ("Unknown action"); 
+		link = ev_link_new_title (title);
 		break;
 	case POPPLER_ACTION_GOTO_DEST:
 		link = ev_link_from_dest (action);
