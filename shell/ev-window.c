@@ -3244,10 +3244,10 @@ launch_link (EvWindow *window, EvLink *link)
 			resolved_uri = gnome_vfs_uri_resolve_relative (base_uri, filename);	
 			if (resolved_uri) {
 				uri = gnome_vfs_uri_to_string (resolved_uri, GNOME_VFS_URI_HIDE_NONE);
+				gnome_vfs_uri_unref (resolved_uri);
 			}
-			gnome_vfs_uri_unref (resolved_uri);
+			gnome_vfs_uri_unref (base_uri);
 		}
-		gnome_vfs_uri_unref (base_uri);
 	}
 
 	if (uri) {
