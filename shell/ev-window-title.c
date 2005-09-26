@@ -105,12 +105,14 @@ ev_window_title_update (EvWindowTitle *window_title)
 		g_return_if_fail (page_cache != NULL);
 		doc_title = (char *)ev_page_cache_get_title (page_cache);
 
-		doc_title = g_strstrip (doc_title);
-
 		/* Make sure we get a valid title back */
-		if (doc_title && doc_title[0] != '\000' &&
-		    g_utf8_validate (doc_title, -1, NULL)) {
-			title = g_strdup (doc_title);
+		if (doc_title != NULL) {
+			doc_title = g_strstrip (doc_title);
+
+			if (doc_title[0] != '\0' &&
+			    g_utf8_validate (doc_title, -1, NULL)) {
+				title = g_strdup (doc_title);
+			}
 		}
 	}
 
