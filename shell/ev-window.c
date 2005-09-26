@@ -3229,6 +3229,58 @@ sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, Ev
 }
 
 static void
+launch_link (EvWindow *window, EvLink *link)
+{
+	const char *filename = ev_link_get_filename (link);
+	char *uri = NULL;
+
+	if (g_path_is_absolute (filename)) {
+		uri = g_strconcat ("file://", filename, NULL);
+	} else {
+		GnomeVFSURI *base_uri, *resolved_uri;
+
+		base_uri = gnome_vfs_uri_new (window->priv->uri);
+		if (base_uri) {
+			resolved_uri = gnome_vfs_uri_resolve_relative (base_uri, filename);	
+			if (resolved_uri) {
+				uri = gnome_vfs_uri_to_string (resolved_uri, GNOME_VFS_URI_HIDE_NONE);
+			}
+			gnome_vfs_uri_unref (resolved_uri);
+		}
+		gnome_vfs_uri_unref (base_uri);
+	}
+
+	if (uri) {
+		gnome_vfs_url_show (uri);
+	} else {
+		gnome_vfs_url_show (filename);
+	}
+
+	g_free (uri);
+
+	/* According to the PDF spec filename can be an executable. I'm not sure
+	   allowing to launch executables is a good idea though. -- marco */
+}
+
+static void
+view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
+{
+	const char *uri;
+
+	switch (ev_link_get_link_type (link)) {
+	case EV_LINK_TYPE_EXTERNAL_URI:
+		uri = ev_link_get_uri (link);
+		gnome_vfs_url_show (uri);
+		break;
+	case EV_LINK_TYPE_LAUNCH:
+		launch_link (window, link);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -3367,6 +3419,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "focus_out_event",
 			         G_CALLBACK (view_actions_focus_out_cb),
+			         ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "external-link",
+			         G_CALLBACK (view_external_link_cb),
 			         ev_window, 0);
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);

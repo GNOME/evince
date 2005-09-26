@@ -60,6 +60,7 @@ enum {
 enum {
 	SIGNAL_BINDING_ACTIVATED,
 	SIGNAL_ZOOM_INVALID,
+	SIGNAL_EXTERNAL_LINK,
 	N_SIGNALS,
 };
 
@@ -188,6 +189,8 @@ struct _EvViewClass {
 					   GtkScrollType   scroll,
 					   gboolean        horizontal);
 	void    (*zoom_invalid)		  (EvView         *view);
+	void    (*external_link)	  (EvView         *view,
+					   EvLink         *link);
 };
 
 /*** Scrolling ***/
@@ -1234,7 +1237,6 @@ void
 ev_view_goto_link (EvView *view, EvLink *link)
 {
 	EvLinkType type;
-	const char *uri;
 	int page;
 
 	type = ev_link_get_link_type (link);
@@ -1262,8 +1264,8 @@ ev_view_goto_link (EvView *view, EvLink *link)
 			goto_xyz_link (view, link);
 			break;
 		case EV_LINK_TYPE_EXTERNAL_URI:
-			uri = ev_link_get_uri (link);
-			gnome_vfs_url_show (uri);
+		case EV_LINK_TYPE_LAUNCH:
+			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, link);
 			break;
 	}
 }
@@ -2288,6 +2290,14 @@ ev_view_class_init (EvViewClass *class)
 		         NULL, NULL,
 		         ev_marshal_VOID__VOID,
 		         G_TYPE_NONE, 0, G_TYPE_NONE);
+	signals[SIGNAL_EXTERNAL_LINK] = g_signal_new ("external-link",
+	  	         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, external_link),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__OBJECT,
+		         G_TYPE_NONE, 1,
+			 G_TYPE_OBJECT);
 
 	g_object_class_install_property (object_class,
 					 PROP_STATUS,

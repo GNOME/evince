@@ -34,7 +34,9 @@ enum {
 	PROP_TOP,
 	PROP_BOTTOM,
 	PROP_RIGHT,
-	PROP_ZOOM
+	PROP_ZOOM,
+	PROP_FILENAME,
+	PROP_PARAMS
 };
 
 
@@ -50,6 +52,8 @@ struct _EvLinkClass {
 struct _EvLinkPrivate {
 	char *title;
 	char *uri;
+	char *filename;
+	char *params;
 	EvLinkType type;
 	int page;
 	double top;
@@ -79,6 +83,7 @@ ev_link_type_get_type (void)
 			{ EV_LINK_TYPE_PAGE_FITV, "EV_LINK_TYPE_PAGE_FITV", "page-fitv" },
 			{ EV_LINK_TYPE_PAGE_FITR, "EV_LINK_TYPE_PAGE_FITR", "page-fitr" },
 			{ EV_LINK_TYPE_EXTERNAL_URI, "EV_LINK_TYPE_EXTERNAL_URI", "external" },
+			{ EV_LINK_TYPE_LAUNCH, "EV_LINK_TYPE_LAUNCH", "launch" },
 			{ 0, NULL, NULL }
                 };
 
@@ -152,6 +157,22 @@ ev_link_get_right (EvLink *self)
 	return self->priv->right;
 }
 
+const char *
+ev_link_get_filename (EvLink *link)
+{
+	g_return_val_if_fail (EV_IS_LINK (link), NULL);
+
+	return link->priv->filename;
+}
+
+const char *
+ev_link_get_params (EvLink *link)
+{
+	g_return_val_if_fail (EV_IS_LINK (link), NULL);
+
+	return link->priv->params;
+}
+
 double
 ev_link_get_zoom (EvLink *self)
 {
@@ -196,6 +217,10 @@ ev_link_get_property (GObject *object, guint prop_id, GValue *value,
 	case PROP_ZOOM:
 		g_value_set_double (value, self->priv->zoom);
 		break;
+	case PROP_FILENAME:
+		g_value_set_string (value, self->priv->filename);
+	case PROP_PARAMS:
+		g_value_set_string (value, self->priv->params);
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
 						   prop_id,
@@ -238,6 +263,14 @@ ev_link_set_property (GObject *object, guint prop_id, const GValue *value,
 	case PROP_ZOOM:
 		link->priv->zoom = g_value_get_double (value);
 		break;
+	case PROP_FILENAME:
+		g_free (link->priv->filename);
+		link->priv->filename = g_strdup (g_value_get_string (value));
+		break;
+	case PROP_PARAMS:
+		g_free (link->priv->params);
+		link->priv->params = g_strdup (g_value_get_string (value));
+		break;
 
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -264,6 +297,16 @@ ev_window_dispose (GObject *object)
 	if (priv->uri) {
 		g_free (priv->uri);
 		priv->uri = NULL;
+	}
+
+	if (priv->filename) {
+		g_free (priv->filename);
+		priv->filename = NULL;
+	}
+
+	if (priv->params) {
+		g_free (priv->params);
+		priv->params = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_link_parent_class)->dispose (object);
@@ -302,6 +345,22 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 					 g_param_spec_string ("uri",
 				     	 		      "Link URI",
 				     			      "The link URI",
+							      NULL,
+							      G_PARAM_READWRITE |
+				     			      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_FILENAME,
+					 g_param_spec_string ("filename",
+				     	 		      "Filename",
+				     			      "The link filename",
+							      NULL,
+							      G_PARAM_READWRITE |
+				     			      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_PARAMS,
+					 g_param_spec_string ("params",
+				     	 		      "Params",
+				     			      "The link params",
 							      NULL,
 							      G_PARAM_READWRITE |
 				     			      G_PARAM_CONSTRUCT_ONLY));
@@ -479,7 +538,18 @@ ev_link_new_external (const char *title, const char *uri)
 				      NULL));
 }
 
-
+EvLink *
+ev_link_new_launch (const char *title,
+		    const char *filename,
+		    const char *params)
+{
+	return EV_LINK (g_object_new (EV_TYPE_LINK,
+				      "title", title,
+				      "filename", filename,
+				      "params", params,
+				      "type", EV_LINK_TYPE_LAUNCH,
+				      NULL));
+}
 
 static void
 ev_link_mapping_free_foreach (EvLinkMapping *mapping)

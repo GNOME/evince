@@ -49,6 +49,7 @@ typedef enum
 	EV_LINK_TYPE_PAGE_FITV,
 	EV_LINK_TYPE_PAGE_FITR,
 	EV_LINK_TYPE_EXTERNAL_URI,
+	EV_LINK_TYPE_LAUNCH
 	/* We'll probably fill this in more as we support the other types of
 	 * links */
 } EvLinkType;
@@ -80,6 +81,9 @@ EvLink	       *ev_link_new_page_fit	(const char     *title,
 					 int             page);
 EvLink	       *ev_link_new_external	(const char     *title,
 					 const char     *uri);
+EvLink	       *ev_link_new_launch	(const char     *title,
+					 const char     *filename,
+					 const char     *params);
 
 const char     *ev_link_get_title	(EvLink     *link);
 const char     *ev_link_get_uri		(EvLink     *link);
@@ -90,6 +94,8 @@ double		ev_link_get_left	(EvLink     *link);
 double		ev_link_get_bottom	(EvLink     *link);
 double		ev_link_get_right	(EvLink     *link);
 double		ev_link_get_zoom	(EvLink     *link);
+const char     *ev_link_get_filename    (EvLink     *link);
+const char     *ev_link_get_params      (EvLink     *link);
 
 /* Link Mapping stuff */
 

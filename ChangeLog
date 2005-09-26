@@ -1,3 +1,18 @@
+2005-09-26  Marco Pesenti Gritti  <mpg@redhat.com>
+
+	* backend/ev-link.c: (ev_link_type_get_type),
+	(ev_link_get_filename), (ev_link_get_params),
+	(ev_link_get_property), (ev_link_set_property),
+	(ev_window_dispose), (ev_link_class_init), (ev_link_new_launch):
+	* backend/ev-link.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-view.c: (ev_view_goto_link), (ev_view_class_init):
+	* shell/ev-window.c: (launch_link), (view_external_link_cb),
+	(ev_window_init):
+
+	Implement launch links. Delegate external link opening to
+	the window.
+
 2005-09-24  Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* backend/ev-link.c: (ev_link_type_get_type), (ev_link_get_bottom),

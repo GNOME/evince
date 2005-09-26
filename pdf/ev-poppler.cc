@@ -784,7 +784,8 @@ ev_link_from_action (PopplerAction *action)
 		unimplemented_action = "POPPLER_ACTION_GOTO_REMOTE";
 		break;
 	case POPPLER_ACTION_LAUNCH:
-		unimplemented_action = "POPPLER_ACTION_LAUNCH";
+		link = ev_link_new_launch (title, action->launch.file_name,
+					   action->launch.params);
 		break;
 	case POPPLER_ACTION_URI:
 		link = ev_link_new_external (title, action->uri.uri);
