@@ -99,11 +99,13 @@ ev_window_title_update (EvWindowTitle *window_title)
 	EvPageCache *page_cache;
 
 	if (window_title->document != NULL) {
-		const char *doc_title;
+		char *doc_title;
 
 		page_cache = ev_page_cache_get (window_title->document);
 		g_return_if_fail (page_cache != NULL);
-		doc_title = ev_page_cache_get_title (page_cache);
+		doc_title = (char *)ev_page_cache_get_title (page_cache);
+
+		doc_title = g_strstrip (doc_title);
 
 		/* Make sure we get a valid title back */
 		if (doc_title && doc_title[0] != '\000' &&
