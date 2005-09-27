@@ -1363,9 +1363,13 @@ handle_link_over_xy (EvView *view, gint x, gint y)
         if (link) {
 		char *msg = tip_from_link (view, link);
 
-		ev_tooltip_set_position (EV_TOOLTIP (view->link_tooltip), x, y);
-		ev_tooltip_set_text (EV_TOOLTIP (view->link_tooltip), msg);
-		ev_tooltip_activate (EV_TOOLTIP (view->link_tooltip));
+		if (msg && g_utf8_validate (msg, -1, NULL)) {
+			EvTooltip *tooltip = EV_TOOLTIP (view->link_tooltip);
+
+			ev_tooltip_set_position (tooltip, x, y);
+			ev_tooltip_set_text (tooltip, msg);
+			ev_tooltip_activate (tooltip);
+		}
 		g_free (msg);
 
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
