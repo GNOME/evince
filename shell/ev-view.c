@@ -19,6 +19,7 @@
  */
 
 #include <math.h>
+#include <string.h>
 #include <gtk/gtkalignment.h>
 #include <glib/gi18n.h>
 #include <gtk/gtkbindings.h>
@@ -112,6 +113,7 @@ typedef struct {
 /* Information for handling selection */
 typedef struct {
 	gboolean in_selection;
+	gboolean in_drag;
 	GdkPoint start;
 	GList *selections;
 } SelectionInfo;
@@ -1097,6 +1099,31 @@ ev_view_get_height (EvView *view)
 	return GTK_WIDGET (view)->allocation.height;
 }
 
+static gboolean
+location_in_selected_text (EvView  *view,
+			   gdouble  x,
+			   gdouble  y)
+{
+	gint page = -1;
+	gint x_offset = 0, y_offset = 0;
+	EvViewSelection *selection;
+	GList *l = NULL;
+
+	for (l = view->selection_info.selections; l != NULL; l = l->next) {
+		selection = (EvViewSelection *)l->data;
+		
+		find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+		
+		if (page != selection->page)
+			continue;
+		
+		if (gdk_region_point_in (selection->covered_region, x_offset, y_offset))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
 /*** Hyperref ***/
 static EvLink *
 get_link_at_location (EvView  *view,
@@ -1680,22 +1707,31 @@ ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
-
+	
 	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
 		gtk_widget_grab_focus (widget);
 	}
-
+	
 	view->pressed_button = event->button;
-
+	view->selection_info.in_drag = FALSE;
+	
 	switch (event->button) {
-		case 1:
+	        case 1:
 			if (view->selection_info.selections) {
-				clear_selection (view);
+				if (location_in_selected_text (view,
+							       event->x + view->scroll_x,
+							       event->y + view->scroll_y)) {
+					view->selection_info.in_drag = TRUE;
+				} else {
+					clear_selection (view);
+				}
+				
 				gtk_widget_queue_draw (widget);
 			}
 
 			view->selection_info.start.x = event->x + view->scroll_x;
 			view->selection_info.start.y = event->y + view->scroll_y;
+			
 			return TRUE;
 		case 2:
 			/* use root coordinates as reference point because
@@ -1709,10 +1745,30 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 			return TRUE;
 	}
-
+	
 	return FALSE;
 }
 
+static void
+ev_view_drag_data_get (GtkWidget        *widget,
+		       GdkDragContext   *context,
+		       GtkSelectionData *selection_data,
+		       guint             info,
+		       guint             time)
+{
+	EvView *view = EV_VIEW (widget);
+
+	if (view->selection_info.selections &&
+	    ev_document_can_get_text (view->document)) {
+		gchar *text;
+
+		text = get_selected_text (view);
+
+		gtk_selection_data_set_text (selection_data, text, strlen (text));
+
+		g_free (text);
+	}
+}
 
 static gboolean
 selection_update_idle_cb (EvView *view)
@@ -1735,19 +1791,40 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	if (!view->document)
 		return FALSE;
 
+	if (view->selection_info.in_drag) {
+		if (gtk_drag_check_threshold (widget,
+					      view->selection_info.start.x,
+					      view->selection_info.start.y,
+					      event->x, event->y)) {
+			GdkDragContext *context;
+			GtkTargetList *target_list = gtk_target_list_new (NULL, 0);
+
+			gtk_target_list_add_text_targets (target_list, 0);
+
+			context = gtk_drag_begin (widget, target_list,
+						  GDK_ACTION_COPY,
+						  1, (GdkEvent *)event);
+
+			view->selection_info.in_drag = FALSE;
+
+			gtk_target_list_unref (target_list);
+
+			return TRUE;
+		}
+	}
+	
 	/* For the Evince 0.4.x release, we limit selection to un-rotated
 	 * documents only.
 	 */
-	if (view->pressed_button == 1 &&
-	    view->rotation == 0) {
+	if (view->pressed_button == 1 && view->rotation == 0) {
 		view->selection_info.in_selection = TRUE;
 		view->motion_x = event->x + view->scroll_x;
 		view->motion_y = event->y + view->scroll_y;
 
-		/* Queue an idle to handle the motion.  We do this because
-		 * handling any selection events in the motion could be slower
-		 * than new motion events reach us.  We always put it in the
-		 * idle to make sure we catch up and don't visibly lag the
+		/* Queue an idle to handle the motion.  We do this because	
+		 * handling any selection events in the motion could be slower	
+		 * than new motion events reach us.  We always put it in the	
+		 * idle to make sure we catch up and don't visibly lag the	
 		 * mouse. */
 		if (! view->selection_update_id)
 			view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
@@ -1824,6 +1901,13 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	if (view->selection_info.selections) {
 		ev_view_update_primary_selection (view);
+		
+		if (view->selection_info.in_drag) {
+			clear_selection (view);
+			gtk_widget_queue_draw (widget);
+		}
+		
+		view->selection_info.in_drag = FALSE;
 	} else if (link) {
 		ev_view_goto_link (view, link);
 	} else if (view->presentation) {
@@ -2274,6 +2358,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->enter_notify_event = ev_view_enter_notify_event;
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
 	widget_class->style_set = ev_view_style_set;
+	widget_class->drag_data_get = ev_view_drag_data_get;
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
@@ -2410,6 +2495,7 @@ ev_view_init (EvView *view)
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	view->drag_info.in_drag = FALSE;
 	view->selection_info.in_selection = FALSE;
+	view->selection_info.in_drag = FALSE;
 	view->selection_mode = EV_VIEW_SELECTION_TEXT;
 	view->continuous = TRUE;
 	view->dual_page = FALSE;
