@@ -3247,13 +3247,13 @@ launch_link (EvWindow *window, EvLink *link)
 	const char *filename = ev_link_get_filename (link);
 	char *uri = NULL;
 
-	if (g_path_is_absolute (filename)) {
-		uri = g_strconcat ("file://", filename, NULL);
+	if (filename  && g_path_is_absolute (filename)) {
+		uri = gnome_vfs_get_uri_from_local_path (filename);
 	} else {
 		GnomeVFSURI *base_uri, *resolved_uri;
 
 		base_uri = gnome_vfs_uri_new (window->priv->uri);
-		if (base_uri) {
+		if (base_uri && filename) {
 			resolved_uri = gnome_vfs_uri_resolve_relative (base_uri, filename);	
 			if (resolved_uri) {
 				uri = gnome_vfs_uri_to_string (resolved_uri, GNOME_VFS_URI_HIDE_NONE);
@@ -3276,14 +3276,24 @@ launch_link (EvWindow *window, EvLink *link)
 }
 
 static void
-view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
+launch_external_uri (EvWindow *window, EvLink *link)
 {
 	const char *uri;
+	char *escaped;
 
+	uri = ev_link_get_uri (link);
+	escaped = gnome_vfs_escape_host_and_path_string (uri);
+
+	gnome_vfs_url_show (escaped);
+	g_free (escaped);
+}
+
+static void
+view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
+{
 	switch (ev_link_get_link_type (link)) {
 	case EV_LINK_TYPE_EXTERNAL_URI:
-		uri = ev_link_get_uri (link);
-		gnome_vfs_url_show (uri);
+		launch_external_uri (window, link);
 		break;
 	case EV_LINK_TYPE_LAUNCH:
 		launch_link (window, link);

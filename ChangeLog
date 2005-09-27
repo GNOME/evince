@@ -1,3 +1,10 @@
+2005-09-27  Christian Persch  <chpe@cvs.gnome.org>
+
+	* shell/ev-window.c: (launch_link), (launch_external_uri),
+	(view_external_link_cb):
+
+	URL-escape link before passing it to gnome_vfs_url_show.
+
 2005-09-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.[ch], shell/ev-window.c: Disable copy action when
