@@ -219,6 +219,8 @@ update_action_sensitivity (EvWindow *ev_window)
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
 	gboolean override_restrictions = FALSE;
+	gboolean can_get_text = FALSE;
+	gboolean ok_to_copy_text = FALSE;
 	GConfClient *client;
 
 	view = EV_VIEW (ev_window->priv->view);
@@ -263,6 +265,11 @@ update_action_sensitivity (EvWindow *ev_window)
 	
 	g_object_unref (client);
 
+	if (has_document && ev_document_can_get_text (document)) {
+		can_get_text = TRUE;
+		ok_to_copy_text = ev_view_get_has_selection (view);
+	}
+	
 	/* File menu */
 	/* "FileOpen": always sensitive */
 	set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
@@ -272,8 +279,8 @@ update_action_sensitivity (EvWindow *ev_window)
 
         /* Edit menu */
 	sensitive = has_pages && ev_document_can_get_text (document);
-	set_action_sensitive (ev_window, "EditCopy", sensitive && ok_to_copy);
-	set_action_sensitive (ev_window, "EditSelectAll", sensitive && ok_to_copy);
+	set_action_sensitive (ev_window, "EditCopy", sensitive && ok_to_copy_text);
+	set_action_sensitive (ev_window, "EditSelectAll", sensitive && can_get_text);
 	set_action_sensitive (ev_window, "EditFind",
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
 	set_action_sensitive (ev_window, "Slash",
@@ -2423,6 +2430,12 @@ ev_window_rotation_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window
 				       rotation);
 }
 
+static void
+ev_window_has_selection_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window)
+{
+	update_action_sensitivity (window);
+}
+
 static void     
 ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
@@ -3458,6 +3471,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->view,
 			  "notify::rotation",
 			  G_CALLBACK (ev_window_rotation_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->view,
+			  "notify::has-selection",
+			  G_CALLBACK (ev_window_has_selection_changed_cb),
 			  ev_window);
 
 	ev_window->priv->find_bar = egg_find_bar_new ();

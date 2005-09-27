@@ -63,6 +63,7 @@ void		ev_view_set_document	  (EvView         *view,
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);
 void		ev_view_select_all	  (EvView         *view);
+gboolean        ev_view_get_has_selection (EvView         *view);
 
 /* sizing and behavior */
 /* These are all orthoganal to each other, except 'presentation' trumps all

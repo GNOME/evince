@@ -56,6 +56,7 @@ enum {
 	PROP_SIZING_MODE,
 	PROP_ZOOM,
 	PROP_ROTATION,
+	PROP_HAS_SELECTION,
 };
 
 enum {
@@ -1117,7 +1118,8 @@ location_in_selected_text (EvView  *view,
 		if (page != selection->page)
 			continue;
 		
-		if (gdk_region_point_in (selection->covered_region, x_offset, y_offset))
+		if (selection->covered_region &&
+		    gdk_region_point_in (selection->covered_region, x_offset, y_offset))
 			return TRUE;
 	}
 
@@ -2332,6 +2334,10 @@ ev_view_get_property (GObject *object,
 	case PROP_ROTATION:
 		g_value_set_int (value, view->rotation);
 		break;
+	case PROP_HAS_SELECTION:
+		g_value_set_boolean (value,
+				     view->selection_info.selections != NULL);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
@@ -2478,6 +2484,13 @@ ev_view_class_init (EvViewClass *class)
 							       360,
 							       0,
 							       G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_HAS_SELECTION,
+					 g_param_spec_boolean ("has-selection",
+							       "Has selection",
+							       "The view has selections",
+							       FALSE,
+							       G_PARAM_READABLE));
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -2498,6 +2511,7 @@ ev_view_init (EvView *view)
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	view->drag_info.in_drag = FALSE;
+	view->selection_info.selections = NULL;
 	view->selection_info.in_selection = FALSE;
 	view->selection_info.in_drag = FALSE;
 	view->selection_mode = EV_VIEW_SELECTION_TEXT;
@@ -3531,6 +3545,7 @@ merge_selection_region (EvView *view,
 	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
 	view->selection_info.selections = new_list;
 	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, new_list);
+	g_object_notify (G_OBJECT (view), "has-selection");
 
 	new_list_ptr = new_list;
 	old_list_ptr = old_list;
@@ -3661,6 +3676,7 @@ clear_selection (EvView *view)
 	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
 	view->selection_info.selections = NULL;
 	view->selection_info.in_selection = FALSE;
+	g_object_notify (G_OBJECT (view), "has-selection");
 }
 
 
@@ -3695,7 +3711,14 @@ ev_view_select_all (EvView *view)
 	}
 
 	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, view->selection_info.selections);
+	g_object_notify (G_OBJECT (view), "has-selection");
 	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+gboolean
+ev_view_get_has_selection (EvView *view)
+{
+	return view->selection_info.selections != NULL;
 }
 
 static char *
