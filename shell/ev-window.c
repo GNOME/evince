@@ -2924,6 +2924,8 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
         { "CtrlEqual", GTK_STOCK_ZOOM_IN, NULL, "<control>equal", NULL,
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
+        { "Equal", GTK_STOCK_ZOOM_IN, NULL, "equal", NULL,
+          G_CALLBACK (ev_window_cmd_view_zoom_in) },
         { "Minus", GTK_STOCK_ZOOM_OUT, NULL, "minus", NULL,
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
         { "FocusPageSelector", NULL, "", "<control>l", NULL,
@@ -2935,6 +2937,10 @@ static const GtkActionEntry entries[] = {
         { "KpPlus", GTK_STOCK_ZOOM_IN, NULL, "KP_Add", NULL,
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
         { "KpMinus", GTK_STOCK_ZOOM_OUT, NULL, "KP_Subtract", NULL,
+          G_CALLBACK (ev_window_cmd_view_zoom_out) },
+        { "CtrlKpPlus", GTK_STOCK_ZOOM_IN, NULL, "<control>KP_Add", NULL,
+          G_CALLBACK (ev_window_cmd_view_zoom_in) },
+        { "CtrlKpMinus", GTK_STOCK_ZOOM_OUT, NULL, "<control>KP_Subtract", NULL,
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
 };
 
@@ -3156,6 +3162,7 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 		set_action_sensitive (window, "Minus", sensitive);
 		set_action_sensitive (window, "KpPlus", sensitive);
 		set_action_sensitive (window, "KpMinus", sensitive);
+		set_action_sensitive (window, "Equal", sensitive);
 	}
 }
 
