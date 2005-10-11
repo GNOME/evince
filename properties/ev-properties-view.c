@@ -110,7 +110,7 @@ ev_properties_view_format_date (GTime utime)
 	const char *fmt_hack = "%c";
 	size_t len;
 
-	if (!localtime_r (&time, &t)) return NULL;
+	if (time == 0 || !localtime_r (&time, &t)) return NULL;
 
 	len = strftime (s, sizeof (s), fmt_hack, &t);
 	if (len == 0 || s[0] == '\0') return NULL;
