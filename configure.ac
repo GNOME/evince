@@ -81,12 +81,12 @@ if test "x$enable_dbus" = "xyes" ; then
 fi
 
 SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS -ltiff -lz"
+SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS -lz"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
 FRONTEND_CFLAGS="$FRONTEND_CORE_CFLAGS"
-FRONTEND_LIBS="$FRONTEND_CORE_LIBS -ltiff -lz"
+FRONTEND_LIBS="$FRONTEND_CORE_LIBS -lz"
 AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
 
@@ -176,6 +176,8 @@ if test "x$enable_tiff" = "xyes"; then
     fi
     if test "x$enable_tiff" = "xyes"; then
 	    AC_DEFINE([ENABLE_TIFF], [1], [Enable multipage tiff support.])
+	    FRONTEND_LIBS="$FRONTEND_LIBS -ltiff"
+	    SHELL_LIBS="$SHELL_LIBS -ltiff"
     else
 	    AC_MSG_WARN("Tiff support is disabled since tiff library version 3.6 or newer not found")
     fi 
