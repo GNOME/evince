@@ -117,7 +117,7 @@ ev_window_title_update (EvWindowTitle *window_title)
 		}
 	}
 
-	if (title) {
+	if (title && window_title->uri) {
 		ev_window_title_sanitize_extension (window_title, &title);
 	} else {
 		if (window_title->uri) {

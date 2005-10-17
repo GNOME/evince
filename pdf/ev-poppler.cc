@@ -886,11 +886,10 @@ static GdkPixbuf *
 make_thumbnail_for_size (PdfDocument   *pdf_document,
 			 gint           page,
 			 int            rotation,
-			 gint           size,
-			 gboolean       border)
+			 gint           size)
 {
 	PopplerPage *poppler_page;
-	GdkPixbuf *pixbuf, *border_pixbuf;
+	GdkPixbuf *pixbuf;
 	int width, height;
 	double scale;
 	gdouble unscaled_width, unscaled_height;
@@ -919,11 +918,6 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 				       width, height,
 				       scale, rotation, pixbuf);
        
-        if (border) {		
-		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
-		g_object_unref (pixbuf);
-		pixbuf = border_pixbuf;
-	}		
 
 	g_object_unref (poppler_page);
 
@@ -935,11 +929,12 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	 			       gint 		     page,
 				       gint                  rotation,
  				       gint                  size,
-		 		       gboolean              border)
+				       gboolean              border)
 {
 	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf;
+	GdkPixbuf *border_pixbuf;
 
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
 
@@ -948,19 +943,16 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
 	
-	if (pixbuf != NULL) {
-		/* The document provides its own thumbnails. */
-		if (border) {
-			GdkPixbuf *real_pixbuf;
-
-			real_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
-			g_object_unref (pixbuf);
-			pixbuf = real_pixbuf;
-		}
-	} else {
+	if (pixbuf == NULL) {
 		/* There is no provided thumbnail.  We need to make one. */
-		pixbuf = make_thumbnail_for_size (pdf_document, page, rotation, size, border);
+		pixbuf = make_thumbnail_for_size (pdf_document, page, rotation, size);
 	}
+
+        if (border) {		
+		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
+		g_object_unref (pixbuf);
+		pixbuf = border_pixbuf;
+	}		
 
 	g_object_unref (poppler_page);
 	
@@ -991,13 +983,8 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 		double page_width, page_height;
 
 		poppler_page_get_size (poppler_page, &page_width, &page_height);
-		if (page_width > page_height) {
-			*width = size;
-			*height = (int) (size * page_height / page_width);
-		} else {
-			*width = (int) (size * page_width / page_height);
-			*height = size;
-		}
+		*width = size;
+		*height = (int) (size * page_height / page_width);
 	}
 	g_object_unref (poppler_page);
 }
