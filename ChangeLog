@@ -1,4 +1,18 @@
-2005-10-17  Daniel Gryniewicz <dang@gentoo.org >
+2005-10-17  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+
+	* configure.ac:
+	* djvu/djvu-document.c: (djvu_document_load), (djvu_document_save),
+	(djvu_document_finalize):
+	* dvi/dvi-document.c: (dvi_document_load), (dvi_document_save),
+	(dvi_document_finalize):
+	* pixbuf/pixbuf-document.c: (pixbuf_document_load),
+	(pixbuf_document_save), (pixbuf_document_finalize):
+	* tiff/tiff-document.c: (tiff_document_load), (tiff_document_save),
+	(tiff_document_finalize):
+	
+	Save a copy implemented for various backends.
+
+2005-10-17  Daniel Gryniewicz <dang@gentoo.org>
 
 	* configure.ac:
 	

@@ -30,6 +30,11 @@
 #include "ev-document-thumbnails.h"
 #include "ev-ps-exporter.h"
 
+#include <libgnomevfs/gnome-vfs-uri.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-xfer.h>
+
 struct _TiffDocumentClass
 {
   GObjectClass parent_class;
@@ -42,6 +47,8 @@ struct _TiffDocument
   TIFF *tiff;
   gint n_pages;
   TIFF2PSContext *ps_export_ctx;
+  
+  gchar *uri;
 };
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
@@ -108,6 +115,8 @@ tiff_document_load (EvDocument  *document,
       return FALSE;
     }
   tiff_document->tiff = tiff;
+  g_free (tiff_document->uri);
+  tiff_document->uri = g_strdup (uri);
 
   pop_handlers ();
   return TRUE;
@@ -117,8 +126,33 @@ static gboolean
 tiff_document_save (EvDocument  *document,
 		      const char  *uri,
 		      GError     **error)
-{
-	return FALSE;
+{		
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+	GnomeVFSResult result;
+	GnomeVFSURI *source_uri;
+	GnomeVFSURI *target_uri;
+	
+	if (!tiff_document->uri)
+		return FALSE;
+	
+	source_uri = gnome_vfs_uri_new (tiff_document->uri);
+	target_uri = gnome_vfs_uri_new (uri);
+
+	result = gnome_vfs_xfer_uri (source_uri, target_uri, 
+				     GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				     GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				     GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				     NULL,
+				     NULL);
+	gnome_vfs_uri_unref (target_uri);
+	gnome_vfs_uri_unref (source_uri);
+    
+	if (result != GNOME_VFS_OK)
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     0,
+			     gnome_vfs_result_to_string (result));			
+	return (result == GNOME_VFS_OK);
 }
 
 static int
@@ -269,6 +303,7 @@ tiff_document_finalize (GObject *object)
 	TiffDocument *tiff_document = TIFF_DOCUMENT (object);
 
 	TIFFClose (tiff_document->tiff);
+	g_free (tiff_document->uri);
 
 	G_OBJECT_CLASS (tiff_document_parent_class)->finalize (object);
 }

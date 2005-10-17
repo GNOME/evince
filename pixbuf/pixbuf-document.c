@@ -20,6 +20,11 @@
 #include "pixbuf-document.h"
 #include "ev-document-thumbnails.h"
 
+#include <libgnomevfs/gnome-vfs-uri.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-xfer.h>
+
 struct _PixbufDocumentClass
 {
 	GObjectClass parent_class;
@@ -30,6 +35,8 @@ struct _PixbufDocument
 	GObject parent_instance;
 
 	GdkPixbuf *pixbuf;
+	
+	gchar *uri;
 };
 
 typedef struct _PixbufDocumentClass PixbufDocumentClass;
@@ -65,6 +72,8 @@ pixbuf_document_load (EvDocument  *document,
 		return FALSE;
 
 	pixbuf_document->pixbuf = pixbuf;
+	g_free (pixbuf_document->uri);
+	pixbuf_document->uri = g_strdup (uri);
 	
 	return TRUE;
 }
@@ -74,8 +83,32 @@ pixbuf_document_save (EvDocument  *document,
 		      const char  *uri,
 		      GError     **error)
 {
-	g_warning ("pixbuf_document_save not implemented"); /* FIXME */
-	return TRUE;
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+	GnomeVFSResult result;
+	GnomeVFSURI *source_uri;
+	GnomeVFSURI *target_uri;
+	
+	if (!pixbuf_document->uri)
+		return FALSE;
+	
+	source_uri = gnome_vfs_uri_new (pixbuf_document->uri);
+	target_uri = gnome_vfs_uri_new (uri);
+
+	result = gnome_vfs_xfer_uri (source_uri, target_uri, 
+				     GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				     GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				     GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				     NULL,
+				     NULL);
+	gnome_vfs_uri_unref (target_uri);
+	gnome_vfs_uri_unref (source_uri);
+    
+	if (result != GNOME_VFS_OK)
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     0,
+			     gnome_vfs_result_to_string (result));			
+	return (result == GNOME_VFS_OK);
 }
 
 static int
@@ -120,6 +153,7 @@ pixbuf_document_finalize (GObject *object)
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (object);
 
 	g_object_unref (pixbuf_document->pixbuf);
+	g_free (pixbuf_document->uri);
 	
 	G_OBJECT_CLASS (pixbuf_document_parent_class)->finalize (object);
 }
