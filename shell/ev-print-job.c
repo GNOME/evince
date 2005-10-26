@@ -48,8 +48,8 @@ struct _EvPrintJob {
 	double width; /* FIXME unused */
 	double height; /* FIXME unused */
 	gboolean duplex; /* FIXME unused */
-	int copies; /* FIXME unused */
-	int collate; /* FIXME unsued */
+	int copies;
+	int collate;
 
 	/* range printing */
 	int first_page;
@@ -60,6 +60,7 @@ struct _EvPrintJob {
 	guint idle_id;
 	gboolean printing;
 	int next_page;
+	int copies_done;
 };
 
 struct _EvPrintJobClass {
@@ -281,9 +282,25 @@ idle_print_handler (EvPrintJob *job)
 
 		g_object_unref (rc);
 
-		job->next_page++;
+		if (job->collate) {
+			/* collate must repeat the same page */
+			job->copies_done++;
+			if(job->copies == job->copies_done) {
+				job->next_page++;
+				job->copies_done = 0;
+			}
+		} else {
+			job->next_page++;
+			if (job->next_page > job->last_page){
+			        job->copies_done++;
+				if(job->copies_done < job->copies) {
+					/* more copies to go, restart to the first page */
+					job->next_page = job->first_page;
+				}
+			}
+		}
 		return TRUE;
-	} else { /* no more pages */
+	} else { /* no more pages or copies */
 		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_end (EV_PS_EXPORTER (job->document));
 		ev_document_doc_mutex_unlock ();
