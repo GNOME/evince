@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-24 06:24+0000\n"
-"PO-Revision-Date: 2005-08-16 08:47+0800\n"
+"POT-Creation-Date: 2005-10-27 13:23+0200\n"
+"PO-Revision-Date: 2005-10-27 22:19+0800\n"
 "Last-Translator: Funda Wang <fundawang@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgid "Separator"
 msgstr "分隔符"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3133
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3082
 msgid "Best Fit"
 msgstr "最适合"
 
@@ -69,7 +69,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:608
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:126
 msgid "Document Viewer"
 msgstr "文档查看器"
 
@@ -82,6 +82,14 @@ msgid "*"
 msgstr "*"
 
 #: ../data/evince-password.glade.h:2
+msgid "Remember password for this session"
+msgstr "此会话记住密码"
+
+#: ../data/evince-password.glade.h:3
+msgid "Save password in keyring"
+msgstr "在密钥环中保存密码"
+
+#: ../data/evince-password.glade.h:4
 msgid "_Password:"
 msgstr "密码(_P)："
 
@@ -134,53 +142,18 @@ msgid "<b>Title:</b>"
 msgstr "<b>标题：</b>"
 
 #: ../data/evince.schemas.in.h:1
-msgid "Default sidebar size"
-msgstr "默认侧边栏大小"
+msgid "Override document restrictions"
+msgstr "忽略文档限制"
 
 #: ../data/evince.schemas.in.h:2
-msgid "Show sidebar by default"
-msgstr "默认显示侧边栏"
+msgid "Override document restrictions, like restriction to copy or to print."
+msgstr "忽略文档限制，比如限制复制或打印。"
 
 #: ../data/evince.schemas.in.h:3
-msgid "Show statusbar by default"
-msgstr "默认显示状态栏"
-
-#: ../data/evince.schemas.in.h:4
 msgid "Show toolbar by default"
 msgstr "默认显示工具栏"
 
-#: ../data/evince.schemas.in.h:5
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. The "
-"default size sets the sidebar's width in pixels based from the side of the "
-"window. Any integer will be accepted. The sidebar will never shrink smaller "
-"than the size of the text required to display Thumbnails or Index. Large "
-"values will cause the sidebar to take up as much of the page display area as "
-"possible relative to the window's size."
-msgstr ""
-"侧边栏是包含索引和缩略图列表的侧边栏项目。默认大小(以像素计)设定了基于窗口一"
-"侧的侧边栏宽度。这里可以接受任何整数。侧边栏绝对不会缩小到无法容纳缩略图或索"
-"引。较大的值将会使得侧边栏尽可能占用更多的页面显示区域。"
-
-#: ../data/evince.schemas.in.h:6
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
-"boolean options, true makes sidebar visible by default while false makes "
-"sidebar not visible by default"
-msgstr ""
-"侧边栏是包含索引和缩略图列表的侧边栏项目。此值若为 TRUE，则代表侧边栏默认可"
-"见，而 FALSE 代表侧边栏默认不可见。"
-
-#: ../data/evince.schemas.in.h:7
-msgid ""
-"Statusbar is the standard bottom bar that display additional information "
-"about links and other actions. Two boolean options, true makes the statusbar "
-"visible by default while false makes sidebar not visible by default."
-msgstr ""
-"状态栏位于窗口底部，其中显示了关于连接和其它动作的额外信息。此值若为 TRUE，则"
-"代表状态栏默认可见，而 FALSE 代表状态栏默认不可见。"
-
-#: ../data/evince.schemas.in.h:8
+#: ../data/evince.schemas.in.h:4
 msgid ""
 "Toolbar is the top bar that contains navigation and zoom controls. Two "
 "boolean options, true makes toolbar visible by default while false makes "
@@ -189,11 +162,11 @@ msgstr ""
 "工具栏位于窗口上部，其中包含了导航和缩放控制。此值若为 TRUE，则代表工具栏默认"
 "可见，而 FALSE 代表工具栏默认不可见。"
 
-#: ../dvi/dvi-document.c:89
+#: ../dvi/dvi-document.c:95
 msgid "File not available"
 msgstr "文件不可用"
 
-#: ../dvi/dvi-document.c:102
+#: ../dvi/dvi-document.c:108
 msgid "DVI document has incorrect format"
 msgstr "DVI 文档的格式不对"
 
@@ -339,42 +312,42 @@ msgstr "10x14"
 msgid "No document loaded."
 msgstr "未装入文档。"
 
-#: ../ps/ps-document.c:607
+#: ../ps/ps-document.c:584
 msgid "Broken pipe."
 msgstr "管道损坏。"
 
-#: ../ps/ps-document.c:789
+#: ../ps/ps-document.c:766
 msgid "Interpreter failed."
 msgstr "解释器失败。"
 
-#: ../ps/ps-document.c:915
+#: ../ps/ps-document.c:892
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "解压缩文件 %s 出错：\n"
 
-#: ../ps/ps-document.c:975
+#: ../ps/ps-document.c:952
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "无法打开文件 %s。\n"
 
-#: ../ps/ps-document.c:980
+#: ../ps/ps-document.c:957
 msgid "File is not readable."
 msgstr "文件不可读。"
 
-#: ../ps/ps-document.c:1000
+#: ../ps/ps-document.c:977
 msgid "Document loaded."
 msgstr "文档已装入。"
 
-#: ../ps/ps-document.c:1097
+#: ../ps/ps-document.c:1074
 #, c-format
 msgid "Failed to load document '%s'"
 msgstr "装入文档“%s”失败"
 
-#: ../ps/ps-document.c:1258
+#: ../ps/ps-document.c:1247
 msgid "Encapsulated PostScript"
 msgstr "封装的 PostScript"
 
-#: ../ps/ps-document.c:1259
+#: ../ps/ps-document.c:1248
 msgid "PostScript"
 msgstr "PostScript"
 
@@ -473,29 +446,27 @@ msgstr "(第%d页，共%d页)"
 msgid "of %d"
 msgstr "共%d页"
 
-#: ../shell/ev-password.c:88
-msgid "Unable to find glade file"
-msgstr "找不到 glade 文件"
-
-#: ../shell/ev-password.c:90
-#, c-format
-msgid ""
-"The glade file, %s, cannot be found.  Please check that your installation is "
-"complete."
-msgstr "找不到 glade 文件 %s。请检查您的安装是否完整。"
-
-#: ../shell/ev-password.c:104
+#: ../shell/ev-password.c:83
 msgid "Password required"
 msgstr "需要密码"
 
-#: ../shell/ev-password.c:105
+#: ../shell/ev-password.c:84
 #, c-format
 msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
 "opened."
 msgstr "文档 <i>%s</i> 已装入，但在打开之前需要密码。"
 
-#: ../shell/ev-password.c:142
+#: ../shell/ev-password.c:149
+msgid "Enter password"
+msgstr "输入密码"
+
+#: ../shell/ev-password.c:252
+#, c-format
+msgid "Password for document %s"
+msgstr "文档 %s 的密码"
+
+#: ../shell/ev-password.c:334
 msgid "Incorrect password"
 msgstr "密码不正确"
 
@@ -513,11 +484,11 @@ msgstr "取消文档锁定(_U)"
 msgid "Properties"
 msgstr "属性"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:94
 msgid "General"
 msgstr "常规"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:104
 msgid "Fonts"
 msgstr "字体"
 
@@ -530,23 +501,23 @@ msgstr "字体"
 msgid "Gathering font information... %3d%%"
 msgstr "正在搜集字体信息... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:242
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2085
 msgid "Loading..."
 msgstr "正在装入..."
 
-#: ../shell/ev-sidebar-links.c:304
+#: ../shell/ev-sidebar-links.c:316
 msgid "Print..."
 msgstr "打印..."
 
-#: ../shell/ev-sidebar-links.c:657
+#: ../shell/ev-sidebar-links.c:669
 msgid "Index"
 msgstr "索引"
 
-#: ../shell/ev-sidebar-thumbnails.c:640
+#: ../shell/ev-sidebar-thumbnails.c:669
 msgid "Thumbnails"
 msgstr "缩略图"
 
-#: ../shell/ev-view.c:1093
+#: ../shell/ev-view.c:1336
 #, c-format
 msgid "Go to page %s"
 msgstr "转到第%s页"
@@ -554,68 +525,55 @@ msgstr "转到第%s页"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2721
+#: ../shell/ev-view.c:3211
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "本页上找到 %d 次"
 
-#: ../shell/ev-view.c:2731
+#: ../shell/ev-view.c:3221
 msgid "Not found"
 msgstr "未找到"
 
-#: ../shell/ev-view.c:2733
+#: ../shell/ev-view.c:3223
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "搜索还剩 %3d%%"
 
-#: ../shell/ev-window.c:555
+#: ../shell/ev-window.c:576
 msgid "Unable to open document"
 msgstr "无法打开文档"
 
-#: ../shell/ev-window.c:602
-msgid "Document Viewer - Password Required"
-msgstr "文档查看器 - 需要密码"
-
-#: ../shell/ev-window.c:604
-#, c-format
-msgid "%s - Password Required"
-msgstr "%s - 需要密码"
-
-#: ../shell/ev-window.c:739 ../shell/ev-window.c:1067
-msgid "Loading document. Please wait"
-msgstr "正在装入文档。请稍候"
-
-#: ../shell/ev-window.c:1078
+#: ../shell/ev-window.c:1087
 msgid "Open Document"
 msgstr "打开文档"
 
-#: ../shell/ev-window.c:1218
+#: ../shell/ev-window.c:1207
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "文件无法另存为“%s”。"
 
-#: ../shell/ev-window.c:1243
+#: ../shell/ev-window.c:1251
 msgid "Save a Copy"
 msgstr "保存副本"
 
-#: ../shell/ev-window.c:1424
+#: ../shell/ev-window.c:1404
 msgid "Print"
 msgstr "打印"
 
-#: ../shell/ev-window.c:1428
+#: ../shell/ev-window.c:1408
 msgid "Pages"
 msgstr "页面"
 
-#: ../shell/ev-window.c:1456
+#: ../shell/ev-window.c:1436
 msgid "Generating PDF is not supported"
 msgstr "不支持生成 PDF"
 
-#: ../shell/ev-window.c:1467
+#: ../shell/ev-window.c:1447
 msgid "Printing is not supported on this printer."
 msgstr "此打印机不支持打印。"
 
-#: ../shell/ev-window.c:1470
+#: ../shell/ev-window.c:1450
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -624,24 +582,24 @@ msgstr ""
 "您正在尝试使用“%s”驱动程序打印到打印机。此程序需要 PostScript 打印机驱动程"
 "序。"
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1524
 msgid "The \"Find\" feature will not work with this document"
 msgstr "“查找”特性无法在此文档中工作"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1526
 msgid "Searching for text is only supported for PDF documents."
 msgstr "目前只支持 PDF 文档的文本搜索。"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1774 ../shell/ev-window.c:2941
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:2902
 msgid "Leave Fullscreen"
 msgstr "离开全屏"
 
-#: ../shell/ev-window.c:2100
-msgid "Toolbar editor"
+#: ../shell/ev-window.c:2091
+msgid "Toolbar Editor"
 msgstr "工具栏编辑器"
 
-#: ../shell/ev-window.c:2453
+#: ../shell/ev-window.c:2471
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -650,7 +608,7 @@ msgstr ""
 "PostScript 和 PDF 文件查看器。\n"
 "使用 poppler %s(%s)"
 
-#: ../shell/ev-window.c:2476
+#: ../shell/ev-window.c:2494
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -660,7 +618,7 @@ msgstr ""
 "Evince 是自由软件；您可以按照自由软件基金会所发布的 GNU GPL 许可对其再发放和/"
 "或修改它；至于 GPL 的版本，您可以使用第二版或任何更新的版本。\n"
 
-#: ../shell/ev-window.c:2480
+#: ../shell/ev-window.c:2498
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -671,7 +629,7 @@ msgstr ""
 "它提供任何形式的担保，也无法保证它可以在特定用途中得到您希望的\n"
 "结果。请参看 GNU GPL 许可中的更多细节。\n"
 
-#: ../shell/ev-window.c:2484
+#: ../shell/ev-window.c:2502
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -681,340 +639,269 @@ msgstr ""
 "的话，您可以写信给自由软件基金会，地址是：\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2508 ../shell/main.c:189
+#: ../shell/ev-window.c:2526 ../shell/main.c:259
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2511
+#: ../shell/ev-window.c:2529
 msgid "© 1996-2005 The Evince authors"
 msgstr "(C) 1996-2005 Evince 作者"
 
-#: ../shell/ev-window.c:2517
+#: ../shell/ev-window.c:2535
 msgid "translator-credits"
 msgstr "GNOME 简体中文翻译组 http://i18n.linux.net.cn"
 
-#: ../shell/ev-window.c:2860
+#: ../shell/ev-window.c:2832
 msgid "_File"
 msgstr "文件(_F)"
 
-#: ../shell/ev-window.c:2861
+#: ../shell/ev-window.c:2833
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: ../shell/ev-window.c:2862
+#: ../shell/ev-window.c:2834
 msgid "_View"
 msgstr "查看(_V)"
 
-#: ../shell/ev-window.c:2863
+#: ../shell/ev-window.c:2835
 msgid "_Go"
 msgstr "转到(_G)"
 
-#: ../shell/ev-window.c:2864
+#: ../shell/ev-window.c:2836
 msgid "_Help"
 msgstr "帮助(_H)"
 
 #. File menu
-#: ../shell/ev-window.c:2867
+#: ../shell/ev-window.c:2839
 msgid "_Open..."
 msgstr "打开(_O)..."
 
-#: ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:2840
 msgid "Open an existing document"
 msgstr "打开已有文档"
 
-#: ../shell/ev-window.c:2870
+#: ../shell/ev-window.c:2842
 msgid "_Save a Copy..."
 msgstr "保存副本(_S)..."
 
-#: ../shell/ev-window.c:2871
-msgid "Save the current document with a new filename"
-msgstr "将当前文档以新文件名保存"
-
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2844
 msgid "_Print..."
 msgstr "打印(_P)..."
 
-#: ../shell/ev-window.c:2874
+#: ../shell/ev-window.c:2845
 msgid "Print this document"
 msgstr "打印此文档"
 
-#: ../shell/ev-window.c:2876
+#: ../shell/ev-window.c:2847
 msgid "P_roperties"
 msgstr "属性(_R)"
 
-#: ../shell/ev-window.c:2877
-msgid "View the properties of this document"
-msgstr "查看此文档的属性"
-
-#: ../shell/ev-window.c:2880
-msgid "Close this window"
-msgstr "关闭窗口"
-
-#: ../shell/ev-window.c:2885
-msgid "Copy text from the document"
-msgstr "从文档中复制文本"
-
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2855
 msgid "Select _All"
 msgstr "全选(_A)"
 
-#: ../shell/ev-window.c:2888
-msgid "Select the entire page"
-msgstr "选择整页"
-
-#: ../shell/ev-window.c:2891 ../shell/ev-window.c:2949
+#: ../shell/ev-window.c:2858
 msgid "Find a word or phrase in the document"
 msgstr "在文档中查找单词或短语"
 
-#: ../shell/ev-window.c:2893
+#: ../shell/ev-window.c:2860
 msgid "Find Ne_xt"
 msgstr "查找下一个(_X)"
 
-#: ../shell/ev-window.c:2894
-msgid "Find next occurrence of the word or phrase"
-msgstr "查找单词或短语的下一次出现"
-
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2862
 msgid "T_oolbar"
 msgstr "工具栏(_O)"
 
-#: ../shell/ev-window.c:2897
-msgid "Customize the toolbar"
-msgstr "自定义工具栏"
-
-#: ../shell/ev-window.c:2899
+#: ../shell/ev-window.c:2864
 msgid "Rotate _Left"
 msgstr "向左旋转(_L)"
 
-#: ../shell/ev-window.c:2900
-msgid "Rotate the document to the left"
-msgstr "向左旋转文档"
-
-#: ../shell/ev-window.c:2902
+#: ../shell/ev-window.c:2866
 msgid "Rotate _Right"
 msgstr "向右旋转(_R)"
 
-#: ../shell/ev-window.c:2903
-msgid "Rotate the document to the right"
-msgstr "向右旋转文档"
-
-#: ../shell/ev-window.c:2908 ../shell/ev-window.c:2970
-#: ../shell/ev-window.c:2973 ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2871
 msgid "Enlarge the document"
 msgstr "放大文档"
 
-#: ../shell/ev-window.c:2911 ../shell/ev-window.c:2976
-#: ../shell/ev-window.c:2991
+#: ../shell/ev-window.c:2874
 msgid "Shrink the document"
 msgstr "缩小文档"
 
-#: ../shell/ev-window.c:2913
+#: ../shell/ev-window.c:2876
 msgid "_Reload"
 msgstr "重新装入(_R)"
 
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:2877
 msgid "Reload the document"
 msgstr "重新装入文档"
 
 #. Go menu
-#: ../shell/ev-window.c:2918
+#: ../shell/ev-window.c:2881
 msgid "_Previous Page"
 msgstr "上一页(_P)"
 
-#: ../shell/ev-window.c:2919
+#: ../shell/ev-window.c:2882
 msgid "Go to the previous page"
 msgstr "转到上一页"
 
-#: ../shell/ev-window.c:2921
+#: ../shell/ev-window.c:2884
 msgid "_Next Page"
 msgstr "下一页(_N)"
 
-#: ../shell/ev-window.c:2922
+#: ../shell/ev-window.c:2885
 msgid "Go to the next page"
 msgstr "转到下一页"
 
-#: ../shell/ev-window.c:2924
+#: ../shell/ev-window.c:2887
 msgid "_First Page"
 msgstr "第一页(_F)"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:2888
 msgid "Go to the first page"
 msgstr "转到第一页"
 
-#: ../shell/ev-window.c:2927
+#: ../shell/ev-window.c:2890
 msgid "_Last Page"
 msgstr "最后一页(_L)"
 
-#: ../shell/ev-window.c:2928
+#: ../shell/ev-window.c:2891
 msgid "Go to the last page"
 msgstr "转到最后一页"
 
 #. Help menu
-#: ../shell/ev-window.c:2932
+#: ../shell/ev-window.c:2895
 msgid "_Contents"
 msgstr "目录(_C)"
 
-#: ../shell/ev-window.c:2933
-msgid "Display help for the viewer application"
-msgstr "显示查看器应用程序的帮助"
-
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:2898
 msgid "_About"
 msgstr "关于(_A)"
 
-#: ../shell/ev-window.c:2937
-msgid "Display credits for the document viewer creators"
-msgstr "显示文档查看器创建者的致谢"
-
-#: ../shell/ev-window.c:2942
+#: ../shell/ev-window.c:2903
 msgid "Leave fullscreen mode"
 msgstr "离开全屏模式"
 
-#: ../shell/ev-window.c:2952 ../shell/ev-window.c:2958
-#: ../shell/ev-window.c:2967
-msgid "Scroll one page forward"
-msgstr "向下滚动一页"
-
-#: ../shell/ev-window.c:2955 ../shell/ev-window.c:2961
-#: ../shell/ev-window.c:2964
-msgid "Scroll one page backward"
-msgstr "向上滚动一页"
-
-#: ../shell/ev-window.c:2979
-msgid "Focus the page selector"
-msgstr "聚焦页面选择器"
-
-#: ../shell/ev-window.c:2982
-msgid "Go ten pages backward"
-msgstr "向上滚动十页"
-
-#: ../shell/ev-window.c:2985
-msgid "Go ten pages forward"
-msgstr "向下滚动十页"
-
 #. View Menu
-#: ../shell/ev-window.c:2998
+#: ../shell/ev-window.c:2950
 msgid "_Toolbar"
 msgstr "工具栏(_T)"
 
-#: ../shell/ev-window.c:2999
+#: ../shell/ev-window.c:2951
 msgid "Show or hide the toolbar"
 msgstr "显示或隐藏工具栏"
 
-#: ../shell/ev-window.c:3001
-msgid "_Statusbar"
-msgstr "状态栏(_S)"
-
-#: ../shell/ev-window.c:3002
-msgid "Show or hide the statusbar"
-msgstr "显示或隐藏状态栏"
-
-#: ../shell/ev-window.c:3004
+#: ../shell/ev-window.c:2953
 msgid "Side _Pane"
 msgstr "侧边栏(_P)"
 
-#: ../shell/ev-window.c:3005
+#: ../shell/ev-window.c:2954
 msgid "Show or hide the side pane"
 msgstr "显示或隐藏侧边栏"
 
-#: ../shell/ev-window.c:3007
+#: ../shell/ev-window.c:2956
 msgid "_Continuous"
 msgstr "连续(_C)"
 
-#: ../shell/ev-window.c:3008
+#: ../shell/ev-window.c:2957
 msgid "Show the entire document"
 msgstr "显示整篇文档"
 
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:2959
 msgid "_Dual"
 msgstr "双页(_D)"
 
-#: ../shell/ev-window.c:3011
+#: ../shell/ev-window.c:2960
 msgid "Show two pages at once"
 msgstr "一次显示两页"
 
-#: ../shell/ev-window.c:3013
+#: ../shell/ev-window.c:2962
 msgid "_Fullscreen"
 msgstr "全屏(_F)"
 
-#: ../shell/ev-window.c:3014
+#: ../shell/ev-window.c:2963
 msgid "Expand the window to fill the screen"
 msgstr "将窗口展开为全屏幕"
 
-#: ../shell/ev-window.c:3016
+#: ../shell/ev-window.c:2965
 msgid "_Presentation"
 msgstr "放映(_P)"
 
-#: ../shell/ev-window.c:3017
+#: ../shell/ev-window.c:2966
 msgid "Run document as a presentation"
 msgstr "将文档以演示文稿放映"
 
-#: ../shell/ev-window.c:3019
+#: ../shell/ev-window.c:2968
 msgid "_Best Fit"
 msgstr "最适合(_B)"
 
-#: ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:2969
 msgid "Make the current document fill the window"
 msgstr "让当前文档适合窗口"
 
-#: ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:2971
 msgid "Fit Page _Width"
 msgstr "适合页宽(_W)"
 
-#: ../shell/ev-window.c:3023
+#: ../shell/ev-window.c:2972
 msgid "Make the current document fill the window width"
 msgstr "让当前文档适合窗口宽度"
 
-#: ../shell/ev-window.c:3082
+#: ../shell/ev-window.c:3031
 msgid "Page"
 msgstr "页面"
 
-#: ../shell/ev-window.c:3083
+#: ../shell/ev-window.c:3032
 msgid "Select Page"
 msgstr "选择页面"
 
-#: ../shell/ev-window.c:3095
+#: ../shell/ev-window.c:3044
 msgid "Zoom"
 msgstr "缩放"
 
-#: ../shell/ev-window.c:3097
+#: ../shell/ev-window.c:3046
 msgid "Adjust the zoom level"
 msgstr "调整缩放级别"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3113
+#: ../shell/ev-window.c:3062
 msgid "Previous"
 msgstr "上一页"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3119
+#: ../shell/ev-window.c:3068
 msgid "Next"
 msgstr "下一页"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3123
+#: ../shell/ev-window.c:3072
 msgid "Zoom In"
 msgstr "放大"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3128
+#: ../shell/ev-window.c:3077
 msgid "Zoom Out"
 msgstr "缩小"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3138
+#: ../shell/ev-window.c:3087
 msgid "Fit Width"
 msgstr "适合宽度"
 
-#: ../shell/main.c:47
+#: ../shell/ev-window-title.c:140
+#, c-format
+msgid "%s - Password Required"
+msgstr "%s - 需要密码"
+
+#: ../shell/main.c:50
 msgid "The page of the document to display."
 msgstr "要显示的文档的页面。"
 
-#: ../shell/main.c:47
+#: ../shell/main.c:50
 msgid "PAGE"
 msgstr "页面"
 
-#: ../shell/main.c:216
+#: ../shell/main.c:286
 msgid "Evince Document Viewer"
 msgstr "Evince 文档查看器"
 
@@ -1039,3 +926,109 @@ msgid ""
 msgstr ""
 "生成 PDF 文档缩略图的有效命令及参数。请参看 nautilus 的缩略图生成文档中的更多"
 "信息。"
+
+#~ msgid "Default sidebar size"
+#~ msgstr "默认侧边栏大小"
+
+#~ msgid "Show sidebar by default"
+#~ msgstr "默认显示侧边栏"
+
+#~ msgid "Show statusbar by default"
+#~ msgstr "默认显示状态栏"
+
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
+#~ "default size sets the sidebar's width in pixels based from the side of "
+#~ "the window. Any integer will be accepted. The sidebar will never shrink "
+#~ "smaller than the size of the text required to display Thumbnails or "
+#~ "Index. Large values will cause the sidebar to take up as much of the page "
+#~ "display area as possible relative to the window's size."
+#~ msgstr ""
+#~ "侧边栏是包含索引和缩略图列表的侧边栏项目。默认大小(以像素计)设定了基于窗口"
+#~ "一侧的侧边栏宽度。这里可以接受任何整数。侧边栏绝对不会缩小到无法容纳缩略图"
+#~ "或索引。较大的值将会使得侧边栏尽可能占用更多的页面显示区域。"
+
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+#~ "boolean options, true makes sidebar visible by default while false makes "
+#~ "sidebar not visible by default"
+#~ msgstr ""
+#~ "侧边栏是包含索引和缩略图列表的侧边栏项目。此值若为 TRUE，则代表侧边栏默认"
+#~ "可见，而 FALSE 代表侧边栏默认不可见。"
+
+#~ msgid ""
+#~ "Statusbar is the standard bottom bar that display additional information "
+#~ "about links and other actions. Two boolean options, true makes the "
+#~ "statusbar visible by default while false makes sidebar not visible by "
+#~ "default."
+#~ msgstr ""
+#~ "状态栏位于窗口底部，其中显示了关于连接和其它动作的额外信息。此值若为 "
+#~ "TRUE，则代表状态栏默认可见，而 FALSE 代表状态栏默认不可见。"
+
+#~ msgid "Unable to find glade file"
+#~ msgstr "找不到 glade 文件"
+
+#~ msgid ""
+#~ "The glade file, %s, cannot be found.  Please check that your installation "
+#~ "is complete."
+#~ msgstr "找不到 glade 文件 %s。请检查您的安装是否完整。"
+
+#~ msgid "Document Viewer - Password Required"
+#~ msgstr "文档查看器 - 需要密码"
+
+#~ msgid "Loading document. Please wait"
+#~ msgstr "正在装入文档。请稍候"
+
+#~ msgid "Save the current document with a new filename"
+#~ msgstr "将当前文档以新文件名保存"
+
+#~ msgid "View the properties of this document"
+#~ msgstr "查看此文档的属性"
+
+#~ msgid "Close this window"
+#~ msgstr "关闭窗口"
+
+#~ msgid "Copy text from the document"
+#~ msgstr "从文档中复制文本"
+
+#~ msgid "Select the entire page"
+#~ msgstr "选择整页"
+
+#~ msgid "Find next occurrence of the word or phrase"
+#~ msgstr "查找单词或短语的下一次出现"
+
+#~ msgid "Customize the toolbar"
+#~ msgstr "自定义工具栏"
+
+#~ msgid "Rotate the document to the left"
+#~ msgstr "向左旋转文档"
+
+#~ msgid "Rotate the document to the right"
+#~ msgstr "向右旋转文档"
+
+#~ msgid "Display help for the viewer application"
+#~ msgstr "显示查看器应用程序的帮助"
+
+#~ msgid "Display credits for the document viewer creators"
+#~ msgstr "显示文档查看器创建者的致谢"
+
+#~ msgid "Scroll one page forward"
+#~ msgstr "向下滚动一页"
+
+#~ msgid "Scroll one page backward"
+#~ msgstr "向上滚动一页"
+
+#~ msgid "Focus the page selector"
+#~ msgstr "聚焦页面选择器"
+
+#~ msgid "Go ten pages backward"
+#~ msgstr "向上滚动十页"
+
+#~ msgid "Go ten pages forward"
+#~ msgstr "向下滚动十页"
+
+#~ msgid "_Statusbar"
+#~ msgstr "状态栏(_S)"
+
+#~ msgid "Show or hide the statusbar"
+#~ msgstr "显示或隐藏状态栏"
