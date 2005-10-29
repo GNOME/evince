@@ -30,6 +30,7 @@
 
 #include "ev-marshal.h"
 #include "ev-view.h"
+#include "ev-view-private.h"
 #include "ev-utils.h"
 #include "ev-selection.h"
 #include "ev-document-find.h"
@@ -84,15 +85,6 @@ static const GtkTargetEntry targets[] = {
 static guint signals[N_SIGNALS];
 
 typedef enum {
-	EV_VIEW_CURSOR_NORMAL,
-	EV_VIEW_CURSOR_IBEAM,
-	EV_VIEW_CURSOR_LINK,
-	EV_VIEW_CURSOR_WAIT,
-	EV_VIEW_CURSOR_HIDDEN,
-	EV_VIEW_CURSOR_DRAG
-} EvViewCursor;
-
-typedef enum {
 	EV_VIEW_FIND_NEXT,
 	EV_VIEW_FIND_PREV
 } EvViewFindDirection;
@@ -102,99 +94,6 @@ typedef enum {
 
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
-
-/* Information for middle clicking and moving around the doc */
-typedef struct {
-        gboolean in_drag;
-	GdkPoint start;
-	gdouble hadj;
-	gdouble vadj;
-} DragInfo;
-
-/* Information for handling selection */
-typedef struct {
-	gboolean in_selection;
-	gboolean in_drag;
-	GdkPoint start;
-	GList *selections;
-} SelectionInfo;
-
-typedef enum {
-	SCROLL_TO_KEEP_POSITION,
-	SCROLL_TO_CURRENT_PAGE,
-	SCROLL_TO_CENTER
-} PendingScroll;
-
-struct _EvView {
-	GtkWidget parent_instance;
-
-	EvDocument *document;
-
-	char *status;
-	char *find_status;
-
-	/* Scrolling */
-	GtkAdjustment *hadjustment;
-	GtkAdjustment *vadjustment;
-
-	gint scroll_x;
-	gint scroll_y;
-
-	/* Information for middle clicking and dragging around. */
-	DragInfo drag_info;
-
-	/* Selection */
-	gint motion_x;
-	gint motion_y;
-	guint selection_update_id;
-
-	EvViewSelectionMode selection_mode;
-	SelectionInfo selection_info;
-
-	int pressed_button;
-	EvViewCursor cursor;
-	GtkWidget *link_tooltip;
-	EvLink *hovered_link;
-
-	EvPageCache *page_cache;
-	EvPixbufCache *pixbuf_cache;
-
-	gint start_page;
-	gint end_page;
-	gint current_page;
-
-	EvJobRender *current_job;
-
-	int find_page;
-	int find_result;
-	int spacing;
-
-	int rotation;
-	double scale;
-
-	gboolean continuous;
-	gboolean dual_page;
-	gboolean fullscreen;
-	gboolean presentation;
-	EvSizingMode sizing_mode;
-
-	PendingScroll pending_scroll;
-	gboolean pending_resize;
-};
-
-struct _EvViewClass {
-	GtkWidgetClass parent_class;
-
-	void	(*set_scroll_adjustments) (EvView         *view,
-					   GtkAdjustment  *hadjustment,
-					   GtkAdjustment  *vadjustment);
-	void    (*binding_activated)	  (EvView         *view,
-					   GtkScrollType   scroll,
-					   gboolean        horizontal);
-	void    (*zoom_invalid)		  (EvView         *view);
-	void    (*external_link)	  (EvView         *view,
-					   EvLink         *link);
-};
 
 /*** Scrolling ***/
 static void       scroll_to_current_page 		     (EvView *view,
@@ -286,6 +185,8 @@ static gboolean   ev_view_leave_notify_event                 (GtkWidget         
 							      GdkEventCrossing   *event);
 static void       ev_view_style_set                          (GtkWidget          *widget,
 							      GtkStyle           *old_style);
+
+static AtkObject *ev_view_get_accessible                     (GtkWidget *widget);
 
 /*** Drawing ***/
 static guint32    ev_gdk_color_to_rgb                        (const GdkColor     *color);
@@ -1991,7 +1892,6 @@ ev_view_style_set (GtkWidget *widget,
 	GTK_WIDGET_CLASS (ev_view_parent_class)->style_set (widget, old_style);
 }
 
-
 /*** Drawing ***/
 
 static guint32
@@ -2297,6 +2197,37 @@ ev_view_set_property (GObject      *object,
 	}
 }
 
+static AtkObject *
+ev_view_get_accessible (GtkWidget *widget)
+{
+	static gboolean first_time = TRUE;
+
+	if (first_time)	{
+		AtkObjectFactory *factory;
+		AtkRegistry *registry;
+		GType derived_type; 
+		GType derived_atk_type; 
+
+		/*
+		 * Figure out whether accessibility is enabled by looking at the
+		 * type of the accessible object which would be created for
+		 * the parent type of EvView.
+		 */
+		derived_type = g_type_parent (EV_TYPE_VIEW);
+
+		registry = atk_get_default_registry ();
+		factory = atk_registry_get_factory (registry,
+						    derived_type);
+		derived_atk_type = atk_object_factory_get_accessible_type (factory);
+		if (g_type_is_a (derived_atk_type, GTK_TYPE_ACCESSIBLE)) 
+			atk_registry_set_factory_type (registry, 
+						       EV_TYPE_VIEW,
+						       ev_view_accessible_factory_get_type ());
+		first_time = FALSE;
+	} 
+	return GTK_WIDGET_CLASS (ev_view_parent_class)->get_accessible (widget);
+}
+
 static void
 ev_view_get_property (GObject *object,
 		      guint prop_id,
@@ -2361,6 +2292,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->button_release_event = ev_view_button_release_event;
 	widget_class->focus_in_event = ev_view_focus_in;
 	widget_class->focus_out_event = ev_view_focus_out;
+ 	widget_class->get_accessible = ev_view_get_accessible;
 	widget_class->size_request = ev_view_size_request;
 	widget_class->size_allocate = ev_view_size_allocate;
 	widget_class->realize = ev_view_realize;

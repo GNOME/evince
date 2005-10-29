@@ -1,3 +1,46 @@
+2005-10-29  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* po/POTFILES.in:
+	* shell/Makefile.am:
+	* shell/ev-view-accessible.c: (ev_view_accessible_get_priv),
+	(ev_view_accessible_free_priv), (ev_view_accessible_class_init),
+	(ev_view_accessible_get_text),
+	(ev_view_accessible_get_character_at_offset),
+	(ev_view_accessible_get_text_before_offset),
+	(ev_view_accessible_get_text_at_offset),
+	(ev_view_accessible_get_text_after_offset),
+	(ev_view_accessible_get_character_count),
+	(ev_view_accessible_get_caret_offset),
+	(ev_view_accessible_set_caret_offset),
+	(ev_view_accessible_get_run_attributes),
+	(ev_view_accessible_get_default_attributes),
+	(ev_view_accessible_get_character_extents),
+	(ev_view_accessible_get_offset_at_point),
+	(ev_view_accessible_get_n_selections),
+	(ev_view_accessible_get_selection),
+	(ev_view_accessible_add_selection),
+	(ev_view_accessible_remove_selection),
+	(ev_view_accessible_set_selection),
+	(ev_view_accessible_text_iface_init),
+	(ev_view_accessible_idle_do_action),
+	(ev_view_accessible_action_do_action),
+	(ev_view_accessible_action_get_n_actions),
+	(ev_view_accessible_action_get_description),
+	(ev_view_accessible_action_get_name),
+	(ev_view_accessible_action_set_description),
+	(ev_view_accessible_action_iface_init),
+	(ev_view_accessible_get_type), (ev_view_accessible_new),
+	(ev_view_accessible_factory_get_accessible_type),
+	(ev_view_accessible_factory_create_accessible),
+	(ev_view_accessible_factory_class_init),
+	(ev_view_accessible_factory_get_type):
+	* shell/ev-view-accessible.h:
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_get_accessible), (ev_view_class_init):
+	* shell/ev-view.h:
+	
+	Initial accessibility support.
+
 2005-10-27  Erdal Ronahi  <erdal.ronahi@gmail.com>
 
 	* configure.ac: Added ku (Kurdish) to ALL_LINGUAS

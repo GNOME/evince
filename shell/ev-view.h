@@ -24,6 +24,7 @@
 
 #include "ev-document.h"
 #include "ev-link.h"
+#include "ev-view-accessible.h"
 
 G_BEGIN_DECLS
 

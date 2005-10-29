@@ -50,6 +50,9 @@ evince_SOURCES=				\
 	ev-properties-fonts.h		\
 	ev-utils.c			\
 	ev-utils.h			\
+	ev-view-accessible.c		\
+	ev-view-accessible.h		\
+	ev-view-private.h		\
 	ev-view.c			\
 	ev-view.h			\
 	ev-window.c			\
