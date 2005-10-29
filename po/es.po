@@ -1,5 +1,3 @@
-# translation of es.po to 
-#
 # Traducción de Evince al español.
 # Copyright (C) Spanish translation for Evince
 # This file is distributed under the same license as the Evince package.
@@ -8,10 +6,10 @@
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005.
 msgid ""
 msgstr ""
-"Project-Id-Version: es\n"
+"Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-10-22 15:05+0200\n"
-"PO-Revision-Date: 2005-10-22 15:08+0200\n"
+"POT-Creation-Date: 2005-10-29 14:26+0200\n"
+"PO-Revision-Date: 2005-10-29 14:28+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -152,7 +150,9 @@ msgstr "Saltarse las restricciones del documento"
 
 #: ../data/evince.schemas.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr "Saltarse las restricciones del documento, como restriccción para copiar o imprimir."
+msgstr ""
+"Saltarse las restricciones del documento, como restriccción para copiar o "
+"imprimir."
 
 #: ../data/evince.schemas.in.h:3
 msgid "Show toolbar by default"
@@ -512,7 +512,7 @@ msgstr "Tipografía"
 msgid "Gathering font information... %3d%%"
 msgstr "Obteniendo información tipográfica... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2085
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:1985
 msgid "Loading..."
 msgstr "Cargando..."
 
@@ -528,7 +528,27 @@ msgstr "Índice"
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
-#: ../shell/ev-view.c:1336
+#: ../shell/ev-view-accessible.c:42
+msgid "Scroll Up"
+msgstr "Desplazar arriba"
+
+#: ../shell/ev-view-accessible.c:43
+msgid "Scroll Down"
+msgstr "Desplazar abajo"
+
+#: ../shell/ev-view-accessible.c:49
+msgid "Scroll View Up"
+msgstr "Desplaza la vista arriba"
+
+#: ../shell/ev-view-accessible.c:50
+msgid "Scroll View Down"
+msgstr "Desplaza la vista abajo"
+
+#: ../shell/ev-view-accessible.c:535
+msgid "Document View"
+msgstr "Vista de documento"
+
+#: ../shell/ev-view.c:1237
 #, c-format
 msgid "Go to page %s"
 msgstr "Ir a la página %s"
@@ -536,18 +556,18 @@ msgstr "Ir a la página %s"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3211
+#: ../shell/ev-view.c:3143
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d encontrado en esta página"
 msgstr[1] "%d encontrados en esta página"
 
-#: ../shell/ev-view.c:3221
+#: ../shell/ev-view.c:3153
 msgid "Not found"
 msgstr "No encontrado"
 
-#: ../shell/ev-view.c:3223
+#: ../shell/ev-view.c:3155
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante para buscar"
@@ -947,4 +967,3 @@ msgid ""
 msgstr ""
 "Comando válido y argumentos para el miniaturizador de documentos PDF. Vea la "
 "documentación para el miniaturizador de Nautilus para más información."
-
