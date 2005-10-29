@@ -93,7 +93,6 @@ tiff_document_load (EvDocument  *document,
   TIFF *tiff;
 
   push_handlers ();
-  /* FIXME: We could actually load uris  */
   filename = g_filename_from_uri (uri, NULL, error);
   if (!filename)
     {
@@ -116,6 +115,7 @@ tiff_document_load (EvDocument  *document,
     }
   tiff_document->tiff = tiff;
   g_free (tiff_document->uri);
+  g_free (filename);
   tiff_document->uri = g_strdup (uri);
 
   pop_handlers ();
