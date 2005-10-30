@@ -1,3 +1,9 @@
+2005-10-30  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-window.c: (ev_window_finalize):
+	
+	Fix double free that cause crash.
+
 2005-10-29  Bastien Nocera <hadess@hadess.net>
 
 	* tiff/tiff-document.c: (tiff_document_load):

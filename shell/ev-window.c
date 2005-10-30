@@ -2716,7 +2716,6 @@ ev_window_finalize (GObject *object)
 		g_list_free (windows);
 	}
 	
-	g_list_free (windows);
 	G_OBJECT_CLASS (ev_window_parent_class)->finalize (object);
 }
 
