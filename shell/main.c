@@ -137,7 +137,7 @@ load_files_remote (const char **files)
 	/* Fake it for GTK+2.6 */
 	timestamp = get_startup_time ();
 #endif
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
 	if (connection == NULL) {
 		g_warning (error->message);
 		g_error_free (error);	
