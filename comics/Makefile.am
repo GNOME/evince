@@ -11,15 +11,18 @@ libcomicsdocument_la_SOURCES = \
 	comics-document.h
 
 # need to respect $XDG_DATA_DIR probably
-xdgmimedir = $(gnome_data)/mime/packages
+xdgmimedir = $(datadir)/mime/packages
 xdgmime_DATA = ev-cbr-mime.xml
 
 EXTRA_DIST = $(xdgmime_DATA)
 
+if ENABLE_UPDATE_MIMEDB
+
 install-data-hook:
-	update-mime-database $(gnome_data)/mime
+	$(UPDATE_MIME_DB) $(DESTDIR)$(datadir)/mime
 
 uninstall-hook:
-	update-mime-database $(gnome_data)/mime
+	$(UPDATE_MIME_DB) $(DESTDIR)$(datadir)/mime
 
+endif # ENABLE_UPDATE_MIMEDB
 

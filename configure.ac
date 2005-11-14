@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(evince, 0.4.0)
+AC_INIT(evince, 0.5.0)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 AM_CONFIG_HEADER(config.h)
@@ -272,8 +272,18 @@ AC_ARG_ENABLE(comics,
  	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics=yes,enable_comics=no)
 if test "x$enable_comics" = "xyes"; then
 	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
+
 fi 
 AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
+
+AC_PATH_PROG(UPDATE_MIME_DB, update-mime-database, no)
+AC_SUBST(UPDATE_MIME_DB)
+
+AC_ARG_ENABLE(update-mimedb,
+   AC_HELP_STRING([--disable-update-mimedb],
+                   [disable the update-mime-database after install [default=no]]),,
+    enable_update_mimedb=yes)
+AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
 dnl ================== End of comic book checks ============================================
 

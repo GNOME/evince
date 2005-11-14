@@ -184,7 +184,7 @@ ev_document_types_add_filters (GtkWidget *chooser, EvDocument *document)
 #ifdef ENABLE_COMICS
 	if (document == NULL || backend == EV_BACKEND_COMICS) {
 		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("Comics Books"));
+		gtk_file_filter_set_name (filter, _("Comic Books"));
 		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_COMICS);
 		file_filter_add_mime_list_and_free (filter, mime_types);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
