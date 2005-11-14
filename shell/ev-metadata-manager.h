@@ -31,7 +31,8 @@ G_BEGIN_DECLS
 void		ev_metadata_manager_init	(void);
 gboolean	ev_metadata_manager_get		(const gchar  *uri,
 					 	 const gchar  *key,
-					 	 GValue       *value);
+					 	 GValue       *value, 
+						 gboolean      ignore_last);
 void		ev_metadata_manager_set		(const gchar  *uri,
 					 	 const gchar  *key,
 					 	 const GValue *value);

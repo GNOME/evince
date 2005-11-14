@@ -1,5 +1,23 @@
 2005-11-14  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* data/evince.schemas.in:
+	* shell/ev-metadata-manager.c: (value_free),
+	(ev_metadata_manager_get_last), (ev_metadata_manager_set_last),
+	(ev_metadata_manager_get), (ev_metadata_manager_set):
+	* shell/ev-metadata-manager.h:
+	* shell/ev-window.c: (update_chrome_flag),
+	(ev_window_cmd_focus_page_selector), (update_sidebar_visibility),
+	(setup_document_from_metadata), (setup_chrome_from_metadata),
+	(setup_sidebar_from_metadata), (setup_view_from_metadata),
+	(ev_window_cmd_edit_find), (ev_window_cmd_escape),
+	(ev_window_view_toolbar_cb),
+	(ev_window_sidebar_visibility_changed_cb), (find_bar_close_cb),
+	(view_actions_focus_in_cb), (ev_window_init), (ev_window_new):
+	
+	Save last document settings and reuse them for new documents.
+
+2005-11-14  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* Makefile.am:
 	* backend/Makefile.am:
 	* backend/ev-document-factory.c:

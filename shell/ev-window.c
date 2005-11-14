@@ -152,7 +152,6 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define PAGE_SELECTOR_ACTION	"PageSelector"
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
 
-#define GCONF_CHROME_TOOLBAR        "/apps/evince/show_toolbar"
 #define GCONF_OVERRIDE_RESTRICTIONS "/apps/evince/override_restrictions"
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
@@ -382,22 +381,14 @@ update_chrome_visibility (EvWindow *window)
 }
 
 static void
-update_chrome_flag (EvWindow *window, EvChrome flag, const char *pref, gboolean active)
+update_chrome_flag (EvWindow *window, EvChrome flag, gboolean active)
 {
 	EvWindowPrivate *priv = window->priv;
-	GConfClient *client;
 	
 	if (active) {
 		priv->chrome |= flag;
-	}
-	else {
+	} else {
 		priv->chrome &= ~flag;
-	}
-
-	if (pref != NULL) {
-		client = gconf_client_get_default ();
-		gconf_client_set_bool (client, pref, active, NULL);
-		g_object_unref (client);
 	}
 
 	update_chrome_visibility (window);
@@ -408,7 +399,7 @@ ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 {
 	GtkAction *action;
 	
-	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, NULL, TRUE);
+	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	set_action_sensitive (window, "ViewToolbar", FALSE);
 	
 	action = gtk_action_group_get_action (window->priv->action_group,
@@ -617,7 +608,7 @@ update_sidebar_visibility (EvWindow *window)
 	char *uri = window->priv->uri;
 	GValue sidebar_visibility = { 0, };
 
-	if (uri && ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility)) {
+	if (uri && ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility, TRUE)) {
 		set_widget_visibility (window->priv->sidebar,
 				       g_value_get_boolean (&sidebar_visibility));
 	}
@@ -630,11 +621,25 @@ setup_document_from_metadata (EvWindow *window)
 	GValue page = { 0, };
 
 	/* Page */
-	if (uri && ev_metadata_manager_get (uri, "page", &page)) {
+	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						g_value_get_int (&page));
 	}
 }
+
+static void
+setup_chrome_from_metadata (EvWindow *window)
+{
+	EvChrome chrome = EV_CHROME_NORMAL;
+	GValue show_toolbar = { 0, };
+
+	if (ev_metadata_manager_get (NULL, "show_toolbar", &show_toolbar, FALSE)) {
+		if (!g_value_get_boolean (&show_toolbar));
+			chrome &= ~EV_CHROME_TOOLBAR;
+	}
+	window->priv->chrome = chrome;
+}
+
 
 static void
 setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
@@ -646,12 +651,12 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 	GValue sidebar_size = { 0, };
 	GValue sidebar_page = { 0, };
 
-	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size)) {
+	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size, FALSE)) {
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
 					g_value_get_int (&sidebar_size));
 	}
 
-	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page)) {
+	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, FALSE)) {
 		const char *page_id = g_value_get_string (&sidebar_page);
 
 		if (strcmp (page_id, "links") == 0) {
@@ -952,15 +957,11 @@ setup_view_from_metadata (EvWindow *window)
 	GValue fullscreen = { 0, };
 	GValue rotation = { 0, };
 
-	if (window->priv->uri == NULL) {
-		return;
-	}
-
 	/* Window size */
 	if (!GTK_WIDGET_VISIBLE (window)) {
 		gboolean restore_size = TRUE;
 
-		if (ev_metadata_manager_get (uri, "window_maximized", &maximized)) {
+		if (ev_metadata_manager_get (uri, "window_maximized", &maximized, TRUE)) {
 			if (g_value_get_boolean (&maximized)) {
 				gtk_window_maximize (GTK_WINDOW (window));
 				restore_size = FALSE;
@@ -968,20 +969,22 @@ setup_view_from_metadata (EvWindow *window)
 		}
 
 		if (restore_size &&
-		    ev_metadata_manager_get (uri, "window_x", &x) &&
-		    ev_metadata_manager_get (uri, "window_y", &y) &&
-		    ev_metadata_manager_get (uri, "window_width", &width) &&
-	            ev_metadata_manager_get (uri, "window_height", &height)) {
+		    ev_metadata_manager_get (uri, "window_width", &width, TRUE) &&
+	            ev_metadata_manager_get (uri, "window_height", &height, TRUE)) {
 			gtk_window_set_default_size (GTK_WINDOW (window),
 						     g_value_get_int (&width),
 						     g_value_get_int (&height));
+		}
+		if (restore_size &&
+		    ev_metadata_manager_get (uri, "window_x", &x, TRUE) &&
+		    ev_metadata_manager_get (uri, "window_y", &y, TRUE)) {
 			gtk_window_move (GTK_WINDOW (window), g_value_get_int (&x),
 					 g_value_get_int (&y));
 		}
 	}
 
 	/* Sizing mode */
-	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode)) {
+	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode, FALSE)) {
 		enum_value = g_enum_get_value_by_nick
 			(EV_SIZING_MODE_CLASS, g_value_get_string (&sizing_mode));
 		g_value_unset (&sizing_mode);
@@ -989,37 +992,37 @@ setup_view_from_metadata (EvWindow *window)
 	}
 
 	/* Zoom */
-	if (ev_metadata_manager_get (uri, "zoom", &zoom) &&
+	if (ev_metadata_manager_get (uri, "zoom", &zoom, FALSE) &&
 	    ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
 		ev_view_set_zoom (view, g_value_get_double (&zoom), FALSE);
 	}
 
 	/* Continuous */
-	if (ev_metadata_manager_get (uri, "continuous", &continuous)) {
+	if (ev_metadata_manager_get (uri, "continuous", &continuous, FALSE)) {
 		ev_view_set_continuous (view, g_value_get_boolean (&continuous));
 	}
 
 	/* Dual page */
-	if (ev_metadata_manager_get (uri, "dual-page", &dual_page)) {
+	if (ev_metadata_manager_get (uri, "dual-page", &dual_page, FALSE)) {
 		ev_view_set_dual_page (view, g_value_get_boolean (&dual_page));
 	}
 
 	/* Presentation */
-	if (ev_metadata_manager_get (uri, "presentation", &presentation)) {
+	if (ev_metadata_manager_get (uri, "presentation", &presentation, FALSE)) {
 		if (g_value_get_boolean (&presentation)) {
 			ev_window_run_presentation (window);
 		}
 	}
 
 	/* Fullscreen */
-	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen)) {
+	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen, FALSE)) {
 		if (g_value_get_boolean (&fullscreen)) {
 			ev_window_run_fullscreen (window);
 		}
 	}
 
 	/* Rotation */
-	if (ev_metadata_manager_get (uri, "rotation", &rotation)) {
+	if (ev_metadata_manager_get (uri, "rotation", &rotation, TRUE)) {
 		if (g_value_get_int (&rotation)) {
 			switch (g_value_get_int (&rotation)) {
 			case 90:
@@ -1546,7 +1549,7 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 	} else if (!EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		find_not_supported_dialog (ev_window);
 	} else {
-		update_chrome_flag (ev_window, EV_CHROME_FINDBAR, NULL, TRUE);
+		update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
 
 		gtk_widget_grab_focus (ev_window->priv->find_bar);
 	}
@@ -2247,7 +2250,7 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 
 	widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
-		update_chrome_flag (window, EV_CHROME_FINDBAR, NULL, FALSE);
+		update_chrome_flag (window, EV_CHROME_FINDBAR, FALSE);
 		gtk_widget_grab_focus (window->priv->view);
 	} else {
 		gboolean fullscreen;
@@ -2542,9 +2545,11 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
 {
-	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR,
-			    GCONF_CHROME_TOOLBAR,
-			    gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
+	gboolean active;
+	
+	active = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR, active);
+	ev_metadata_manager_set_boolean (NULL, "show_toolbar", active);
 }
 
 static void
@@ -2595,7 +2600,8 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_view_sidebar_cb), ev_window);
 
-	if (!ev_view_get_presentation (view) && !ev_view_get_fullscreen (view)) {
+	if (!ev_view_get_presentation (view) && 
+	    !ev_view_get_fullscreen (view)) {
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "sidebar_visibility",
 					         GTK_WIDGET_VISIBLE (ev_sidebar));
 	}
@@ -2631,7 +2637,7 @@ static void
 find_bar_close_cb (EggFindBar *find_bar,
 		   EvWindow   *ev_window)
 {
-	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, NULL, FALSE);
+	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, FALSE);
 }
 
 static void
@@ -3106,28 +3112,6 @@ set_chrome_actions (EvWindow *window)
 		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
 }
 
-static EvChrome
-load_chrome (void)
-{
-	EvChrome chrome = EV_CHROME_NORMAL;
-	GConfClient *client;
-	GConfValue *value;
-
-	client = gconf_client_get_default ();
-
-	value = gconf_client_get (client, GCONF_CHROME_TOOLBAR, NULL);
-	if (value != NULL) {
-		if (value->type == GCONF_VALUE_BOOL && !gconf_value_get_bool (value)) {
-			chrome &= ~EV_CHROME_TOOLBAR;
-		}
-		gconf_value_free (value);
-	}
-
-	g_object_unref (client);
-
-	return chrome;
-}
-
 static void
 sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 			  GParamSpec     *pspec,
@@ -3168,7 +3152,7 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 static gboolean
 view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
-	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, NULL, FALSE);
+	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
 	set_action_sensitive (window, "ViewToolbar", TRUE);
 
 	ev_window_set_view_accels_sensitivity (window, TRUE);
@@ -3455,6 +3439,10 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
 
+	ev_window->priv->find_bar = egg_find_bar_new ();
+	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
+			  ev_window->priv->find_bar,
+			  FALSE, TRUE, 0);
 
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);
@@ -3493,17 +3481,7 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (ev_window_has_selection_changed_cb),
 			  ev_window);
 
-	ev_window->priv->find_bar = egg_find_bar_new ();
-	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
-			  ev_window->priv->find_bar,
-			  FALSE, TRUE, 0);
-
-	ev_window_setup_recent (ev_window);
-	ev_window->priv->chrome = load_chrome ();
-	set_chrome_actions (ev_window);
-	update_chrome_visibility (ev_window);
-
-	/* Connect sidebar signals */
+     	/* Connect sidebar signals */
 	g_signal_connect (ev_window->priv->sidebar,
 			  "notify::visible",
 			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
@@ -3550,7 +3528,16 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (G_OBJECT (ev_window), "drag_data_received",
 			  G_CALLBACK (drag_data_received_cb), NULL);
 
-	/* Set it to something random to force a change */
+	/* Set it user interface params */
+
+	ev_window_setup_recent (ev_window);
+	setup_chrome_from_metadata (ev_window);
+	set_chrome_actions (ev_window);
+	update_chrome_visibility (ev_window);
+
+	gtk_window_set_default_size (GTK_WINDOW (ev_window),
+			             600, 600);
+	setup_view_from_metadata (ev_window);
 
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	update_action_sensitivity (ev_window);
@@ -3563,8 +3550,6 @@ ev_window_new (void)
 
 	ev_window = GTK_WIDGET (g_object_new (EV_TYPE_WINDOW,
 					      "type", GTK_WINDOW_TOPLEVEL,
-					      "default-width", 600,
-					      "default-height", 600,
 					      NULL));
 
 	return ev_window;

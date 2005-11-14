@@ -286,15 +286,107 @@ load_values ()
 	return TRUE;
 }
 
+static void
+value_free (gpointer data)
+{
+	GValue *value = (GValue *)data;
+
+	g_value_unset (value);
+	g_free (value);
+}
+
+
+#define LAST_URI "last-used-value"
+
+static gboolean
+ev_metadata_manager_get_last (const gchar *key,
+		        	 GValue      *value,
+				 gboolean     ignore)
+{
+	Item *item;
+	GValue *ret;
+
+	g_assert (ev_metadata_manager->values_loaded);
+	
+	if (ignore)
+		return FALSE;
+
+	item = (Item *)g_hash_table_lookup (ev_metadata_manager->items,
+					    LAST_URI);
+
+	if (item == NULL)
+		return FALSE;
+
+	item->atime = time (NULL);
+	
+	if (item->values == NULL)
+		return FALSE;
+	
+	ret = (GValue *)g_hash_table_lookup (item->values, key);
+
+	if (ret != NULL) {
+		g_value_init (value, G_VALUE_TYPE (ret));
+		g_value_copy (ret, value);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static void
+ev_metadata_manager_set_last (const gchar *key,
+		              const GValue *value)
+{
+	Item *item;
+	
+	g_assert (ev_metadata_manager->values_loaded);
+
+	item = (Item *)g_hash_table_lookup (ev_metadata_manager->items,
+					    LAST_URI);
+
+	if (item == NULL)
+	{
+		item = g_new0 (Item, 1);
+
+		g_hash_table_insert (ev_metadata_manager->items,
+				     g_strdup (LAST_URI),
+				     item);
+	}
+	
+	if (item->values == NULL)
+		 item->values = g_hash_table_new_full (g_str_hash, 
+				 		       g_str_equal, 
+						       g_free, 
+						       value_free);
+	if (value != NULL) {
+		GValue *new;
+
+		new = g_new0 (GValue, 1);
+	        g_value_init (new, G_VALUE_TYPE (value));
+	        g_value_copy (value, new);
+
+		g_hash_table_insert (item->values,
+				     g_strdup (key),
+				     new);
+	} else {
+		g_hash_table_remove (item->values,
+				     key);
+	}
+
+	item->atime = time (NULL);
+	ev_metadata_manager->modified = TRUE;
+	return;
+}
+				 
 gboolean
 ev_metadata_manager_get (const gchar *uri,
 			 const gchar *key,
-			 GValue      *value)
+			 GValue      *value, 
+			 gboolean     ignore_last)
 {
 	Item *item;
 	GValue *ret;
 	
-	g_return_val_if_fail (uri != NULL, FALSE);
 	g_return_val_if_fail (key != NULL, FALSE);
 
 	if (ev_metadata_manager == NULL)
@@ -307,39 +399,32 @@ ev_metadata_manager_get (const gchar *uri,
 		res = load_values ();
 
 		if (!res)
-			return FALSE;
+			return ev_metadata_manager_get_last (key, value, ignore_last);
 	}
+
+	if (uri == NULL)
+		return ev_metadata_manager_get_last (key, value, ignore_last);
 
 	item = (Item *)g_hash_table_lookup (ev_metadata_manager->items,
 					    uri);
 
 	if (item == NULL)
-		return FALSE;
+		return ev_metadata_manager_get_last (key, value, ignore_last);
 
 	item->atime = time (NULL);
 	
 	if (item->values == NULL)
-		return FALSE;
+		return ev_metadata_manager_get_last (key, value, ignore_last);
 	
 	ret = (GValue *)g_hash_table_lookup (item->values, key);
 
-	if (ret == NULL) {
-		return FALSE;
-	} else {
+	if (ret != NULL) {
 		g_value_init (value, G_VALUE_TYPE (ret));
 		g_value_copy (ret, value);
-
 		return TRUE;
 	}
-}
 
-static void
-value_free (gpointer data)
-{
-	GValue *value = (GValue *)data;
-
-	g_value_unset (value);
-	g_free (value);
+	return ev_metadata_manager_get_last (key, value, ignore_last);
 }
 
 void
@@ -349,7 +434,6 @@ ev_metadata_manager_set (const gchar  *uri,
 {
 	Item *item;
 
-	g_return_if_fail (uri != NULL);
 	g_return_if_fail (key != NULL);
 
 	if (ev_metadata_manager == NULL)
@@ -363,6 +447,12 @@ ev_metadata_manager_set (const gchar  *uri,
 
 		if (!res)
 			return;
+	}
+
+	if (uri == NULL)
+	{
+		ev_metadata_manager_set_last (key, value);
+		return;
 	}
 
 	item = (Item *)g_hash_table_lookup (ev_metadata_manager->items,
@@ -392,6 +482,7 @@ ev_metadata_manager_set (const gchar  *uri,
 		g_hash_table_insert (item->values,
 				     g_strdup (key),
 				     new);
+		ev_metadata_manager_set_last (key, value);
 	} else {
 		g_hash_table_remove (item->values,
 				     key);
