@@ -91,6 +91,9 @@ ev_application_register_service (EvApplication *application)
 	dbus_g_object_type_install_info (EV_TYPE_APPLICATION,
 					 &dbus_glib_ev_application_object_info);
 #endif
+#ifdef ENABLE_COMICS
+	GtkFileFilter *comics_filter;
+#endif
 
 	dbus_g_connection_register_g_object (connection,
 					     "/org/gnome/evince/Evince",

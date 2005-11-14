@@ -35,6 +35,9 @@
 #ifdef ENABLE_DJVU
 #include "djvu-document.h"
 #endif
+#ifdef ENABLE_COMICS
+#include "comics-document.h"
+#endif
 
 #include <string.h>
 
@@ -68,6 +71,12 @@ const EvDocumentType document_types[] = {
 #ifdef ENABLE_DVI
 	/* dvi: */
 	{"application/x-dvi",          EV_BACKEND_DVI,  dvi_document_get_type},
+#endif
+
+#ifdef ENABLE_DVI
+	/* cbr/cbz: */
+	{"application/cbr",           EV_BACKEND_COMICS,  comics_document_get_type},
+	{"application/cbz",           EV_BACKEND_COMICS,  comics_document_get_type},
 #endif
 };
 

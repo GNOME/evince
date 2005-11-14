@@ -1,3 +1,32 @@
+2005-11-14  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* Makefile.am:
+	* backend/Makefile.am:
+	* backend/ev-document-factory.c:
+	* backend/ev-document-factory.h:
+	* comics/Makefile.am:
+	* comics/comics-document.c: (G_DEFINE_TYPE_WITH_CODE),
+	(comics_document_load), (comics_document_save),
+	(comics_document_get_n_pages), (comics_document_get_page_size),
+	(get_page_size_area_prepared_cb), (comics_document_render_pixbuf)	(render_pixbuf_size_prepared_cb), (comics_document_finalize),
+	(comics_document_class_init), (comics_document_can_get_text),
+	(comics_document_get_info), (comics_document_document_iface_init),
+	(comics_document_init), (get_supported_image_extensions),
+	(comics_document_thumbnails_get_geometry),
+	(comics_document_thumbnails_get_thumbnail),
+	(comics_document_thumbnails_get_dimensions),
+	(comics_document_document_thumbnails_iface_init), (extract_argv):
+	* comics/comics-document.h:
+	* comics/ev-cbr-mime.xml:
+	* configure.ac:
+	* po/POTFILES.in:
+	* shell/ev-application.c: (ev_application_register_service):
+	* shell/ev-document-types.c: (ev_document_types_add_filters):
+	* thumbnailer/Makefile.am:
+	* thumbnailer/evince-thumbnailer-comics.schemas.in:
+	
+	New CBR/CBZ backend for comic books.
+
 2005-11-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/main.c: (load_files_remote):

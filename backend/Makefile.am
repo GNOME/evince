@@ -7,6 +7,7 @@ INCLUDES=					\
 	-I$(top_srcdir)/ps	                \
 	-I$(top_srcdir)/djvu			\
 	-I$(top_srcdir)/dvi			\
+	-I$(top_srcdir)/comics			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)
@@ -65,6 +66,11 @@ endif
 if ENABLE_DVI
 libevbackend_la_LIBADD += 			\
 	$(top_builddir)/dvi/libgtkdvi.la
+endif
+
+if ENABLE_COMICS
+libevbackend_la_LIBADD += 			\
+	$(top_builddir)/comics/libcomicsdocument.la
 endif
 
 BUILT_SOURCES=				\

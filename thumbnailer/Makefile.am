@@ -22,6 +22,7 @@ evince_thumbnailer_LDADD=				\
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \
 	evince-thumbnailer-djvu.schemas.in \
+	evince-thumbnailer-comics.schemas.in \
 	evince-thumbnailer.schemas.in
 
 schema_DATA = evince-thumbnailer.schemas
@@ -32,6 +33,10 @@ endif
 
 if ENABLE_DVI
 schema_DATA += evince-thumbnailer-dvi.schemas
+endif
+
+if ENABLE_COMICS
+schema_DATA += evince-thumbnailer-comics.schemas
 endif
 
 schemadir = $(GCONF_SCHEMA_FILE_DIR)

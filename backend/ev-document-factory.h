@@ -31,7 +31,8 @@ typedef enum {
 	EV_BACKEND_TIFF,
 	EV_BACKEND_PIXBUF,
 	EV_BACKEND_DJVU,
-	EV_BACKEND_DVI
+	EV_BACKEND_DVI,
+	EV_BACKEND_COMICS
 } EvBackend;
 
 EvDocument *ev_document_factory_get_document		(const char *mime_type);

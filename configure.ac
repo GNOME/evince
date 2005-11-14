@@ -47,7 +47,7 @@ POPPLER_REQUIRED=0.4.1
 DBUS_GLIB_REQUIRED=0.33
 GTK_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
-KEYRING_REQUIRED=0.4.2
+KEYRING_REQUIRED=0.4.0
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
@@ -264,7 +264,18 @@ if test "x$enable_pixbuf" = "xyes"; then
 fi
 AM_CONDITIONAL(ENABLE_PIXBUF, test x$enable_pixbuf = xyes)
 
-dnl ================== End of dvi checks ===================================================
+dnl ================== End of pixbuf checks ===================================================
+
+dnl ================== comic book checks ===================================================
+ 
+AC_ARG_ENABLE(comics,
+ 	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics=yes,enable_comics=no)
+if test "x$enable_comics" = "xyes"; then
+	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
+fi 
+AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
+
+dnl ================== End of comic book checks ============================================
 
 dnl =================== Mime types list ====================================================
 
@@ -278,6 +289,9 @@ if test "x$enable_djvu" = "xyes"; then
 fi
 if test "x$enable_tiff" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/tiff"
+fi
+if test "x$enable_comics" = "xyes"; then
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/cbr;application/cbz"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
@@ -297,6 +311,7 @@ ps/Makefile
 djvu/Makefile
 dvi/Makefile
 dvi/mdvi-lib/Makefile
+comics/Makefile
 po/Makefile.in
 backend/Makefile
 properties/Makefile

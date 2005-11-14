@@ -20,6 +20,10 @@ if ENABLE_DVI
 SUBDIRS += dvi
 endif
 
+if ENABLE_COMICS
+     SUBDIRS += comics
+endif
+
 SUBDIRS += backend
 
 # Library
