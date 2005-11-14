@@ -73,7 +73,7 @@ const EvDocumentType document_types[] = {
 	{"application/x-dvi",          EV_BACKEND_DVI,  dvi_document_get_type},
 #endif
 
-#ifdef ENABLE_DVI
+#ifdef ENABLE_COMICS
 	/* cbr/cbz: */
 	{"application/cbr",           EV_BACKEND_COMICS,  comics_document_get_type},
 	{"application/cbz",           EV_BACKEND_COMICS,  comics_document_get_type},
