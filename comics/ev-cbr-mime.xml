@@ -1,18 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-    <mime-type type="application/cbr">
-      <comment>CBR document</comment>
-      <magic priority="50">
-        <match value="Rar!" type="string" offset="0"/>
-      </magic>
-      <glob pattern="*.cbr"/>
-    </mime-type>
-    <mime-type type="application/cbz">
-      <comment>CBZ document</comment>
-      <magic priority="50">
-        <match value="PK\003\004" type="string" offset="0"/>
-      </magic>
-      <glob pattern="*.cbz"/>
-    </mime-type>
-</mime-info>
+<mime-type type="application/cbr">
+  <sub-class-of type="application/x-rar"/>
+  <comment>CBR document</comment>
+  <comment xml:lang="cy">Dogfen CBR</comment>
+  <comment xml:lang="da">CBR-dokument</comment>
+  <comment xml:lang="de">CBR-Dokument</comment>
+  <comment xml:lang="fi">CBR-asiakirja</comment>
+  <comment xml:lang="nn">CBR-dokument</comment>
+  <comment xml:lang="no">CBR-dokument</comment>
+  <comment xml:lang="ru">CBR документ</comment>
+  <comment xml:lang="sr">CBR документ</comment>
+  <comment xml:lang="sv">CBR-dokument</comment>
+  <glob pattern="*.cbr"/>
+</mime-type>
+<mime-type type="application/cbz">
+  <sub-class-of type="application/zip"/>
+  <comment>CBZ document</comment>
+  <comment xml:lang="cy">Dogfen CBZ</comment>
+  <comment xml:lang="da">CBZ-dokument</comment>
+  <comment xml:lang="de">CBZ-Dokument</comment>
+  <comment xml:lang="fi">CBZ-asiakirja</comment>
+  <comment xml:lang="nn">CBZ-dokument</comment>
+  <comment xml:lang="no">CBZ-dokument</comment>
+  <comment xml:lang="ru">CBZ-документ</comment>
+  <comment xml:lang="sr">CBZ-документ</comment>
+  <comment xml:lang="sv">CBZ-dokument</comment>
+  <glob pattern="*.cbz"/>
+</mime-type>
 
