@@ -6,18 +6,20 @@
 typedef struct _CacheJobInfo
 {
 	EvJob *job;
-	GdkPixbuf *pixbuf;
 	EvRenderContext *rc;
+
+	/* Data we get from rendering */
+	GdkPixbuf *pixbuf;
 	GList *link_mapping;
 	GdkRegion *text_mapping;
 	
-	/* Selection info.  If the *_points structs are unset, we put -1 in x1.
+	/* Selection data.  If the *_points structs are unset, we put -1 in x1.
 	 * selection_points are the coordinates encapsulated in selection.
-	 * new_points is the target selection size. */
+	 * target_points is the target selection size. */
 	EvRectangle selection_points;
+	EvRectangle target_points;
 	GdkPixbuf *selection;
 	GdkRegion *selection_region;
-	EvRectangle new_points;
 } CacheJobInfo;
 
 struct _EvPixbufCache
@@ -166,7 +168,7 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 	}
 
 	job_info->selection_points.x1 = -1;
-	job_info->new_points.x1 = -1;
+	job_info->target_points.x1 = -1;
 }
 
 static void
@@ -219,38 +221,7 @@ job_finished_cb (EvJob         *job,
 	
 	job_info = find_job_cache (pixbuf_cache, job_render->rc->page);
 
-	pixbuf = g_object_ref (job_render->pixbuf);
-	if (job_info->pixbuf)
-		g_object_unref (job_info->pixbuf);
-	job_info->pixbuf = pixbuf;
-
-	if (job_render->link_mapping) {
-		if (job_info->link_mapping)
-			ev_link_mapping_free (job_info->link_mapping);
-		job_info->link_mapping = job_render->link_mapping;
-	}
-
-	if (job_render->text_mapping) {
-		if (job_info->text_mapping)
-			gdk_region_destroy (job_info->text_mapping);
-		job_info->text_mapping = job_render->text_mapping;
-	}
-
-	if (job_render->include_selection) {
-		pixbuf = g_object_ref (job_render->selection);
-		if (job_info->selection)
-			g_object_unref (job_info->selection);
-		if (job_info->selection_region)
-			gdk_region_destroy (job_info->selection_region);
-		job_info->selection_points = job_render->selection_points;
-		job_info->selection_region = gdk_region_copy (job_render->selection_region);
-		job_info->selection = pixbuf;
-		g_assert (job_info->selection_points.x1 >= 0);
-	}
-	
-	if (job_info->job == job)
-		job_info->job = NULL;
-	g_object_unref (job);
+	copy_job_to_job_info (job_render, job_info, pixbuf_cache);
 
 	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
 }
@@ -426,16 +397,29 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		      EvPixbufCache *pixbuf_cache)
 {
 	GdkPixbuf *pixbuf;
+	EvRenderContext *rc;
 
 	pixbuf = g_object_ref (job_render->pixbuf);
+	rc = g_object_ref (job_render->rc);
 
 	dispose_cache_job_info (job_info, pixbuf_cache);
 
 	job_info->pixbuf = pixbuf;
+	job_info->rc = rc;
+	
 	if (job_render->link_mapping)
 		job_info->link_mapping = job_render->link_mapping;
 	if (job_render->text_mapping)
 		job_info->text_mapping = job_render->text_mapping;	
+
+	if (job_render->include_selection) {
+		pixbuf = g_object_ref (job_render->selection);
+		job_info->selection_points = job_render->selection_points;
+		job_info->selection_region = gdk_region_copy (job_render->selection_region);
+		job_info->selection = pixbuf;
+		g_assert (job_info->selection_points.x1 >= 0);
+	}
+
 }
 
 static CacheJobInfo *
@@ -555,7 +539,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   job_info->rc,
 					   width, height,
-					   &(job_info->new_points),
+					   &(job_info->target_points),
 					   text, base,
 					   include_links,
 					   include_text,
@@ -696,7 +680,7 @@ new_selection_pixbuf_needed (EvPixbufCache *pixbuf_cache,
 		    height != gdk_pixbuf_get_height (job_info->selection))
 			return TRUE;
 	} else {
-		if (job_info->new_points.x1 >= 0)
+		if (job_info->target_points.x1 >= 0)
 			return TRUE;
 	}
 	return FALSE;
@@ -803,7 +787,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 		return NULL;
 
 	/* No selection on this page */
-	if (job_info->new_points.x1 < 0)
+	if (job_info->target_points.x1 < 0)
 		return NULL;
 
 	/* Update the rc */
@@ -825,7 +809,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 	 * _should_ be able to get rid of the doc_mutex, so the synchronicity
 	 * doesn't kill us.  Rendering a few glyphs should really be fast.
 	 */
-	if (ev_rect_cmp (&(job_info->new_points), &(job_info->selection_points))) {
+	if (ev_rect_cmp (&(job_info->target_points), &(job_info->selection_points))) {
 		EvRectangle *old_points;
 		GdkColor *text, *base;
 
@@ -844,7 +828,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 		job_info->selection_region =
 			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
 							   job_info->rc,
-							   &(job_info->new_points));
+							   &(job_info->target_points));
 
 		gtk_widget_ensure_style (pixbuf_cache->view);
 
@@ -852,10 +836,10 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
 					       job_info->rc, &(job_info->selection),
-					       &(job_info->new_points),
+					       &(job_info->target_points),
 					       old_points,
 					       text, base);
-		job_info->selection_points = job_info->new_points;
+		job_info->selection_points = job_info->target_points;
 		ev_document_doc_mutex_unlock ();
 	}
 	if (region)
@@ -869,14 +853,14 @@ update_job_selection (CacheJobInfo    *job_info,
 {
 	if (job_info->selection == NULL)
 		job_info->selection_points.x1 = -1;
-	job_info->new_points = selection->rect;
+	job_info->target_points = selection->rect;
 }
 
 static void
 clear_job_selection (CacheJobInfo *job_info)
 {
 	job_info->selection_points.x1 = -1;
-	job_info->new_points.x1 = -1;
+	job_info->target_points.x1 = -1;
 
 	if (job_info->selection) {
 		g_object_unref (job_info->selection);

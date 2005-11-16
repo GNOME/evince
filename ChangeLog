@@ -1,9 +1,19 @@
+2005-11-17  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-pixbuf-cache.c: (dispose_cache_job_info),
+	(job_finished_cb), (copy_job_to_job_info), (add_job_if_needed),
+	(new_selection_pixbuf_needed),
+	(ev_pixbuf_cache_get_selection_pixbuf), (update_job_selection),
+	(clear_job_selection):
+	
+	Too early for 0.5. Pixbuf cache code cleaned a bit.
+
 2005-11-14  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
 	* configure.ac:
 	
-	Release 0.5.0
+	Release 0.5.0 preparation
 
 2005-11-14  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
