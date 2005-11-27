@@ -2925,6 +2925,10 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_scroll_backward) },
         { "ShiftBackSpace", NULL, "", "<shift>BackSpace", NULL,
           G_CALLBACK (ev_window_cmd_scroll_forward) },
+        { "Return", NULL, "", "Return", NULL,
+          G_CALLBACK (ev_window_cmd_scroll_forward) },
+        { "ShiftReturn", NULL, "", "<shift>Return", NULL,
+          G_CALLBACK (ev_window_cmd_scroll_backward) },
         { "Plus", GTK_STOCK_ZOOM_IN, NULL, "plus", NULL,
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
         { "CtrlEqual", GTK_STOCK_ZOOM_IN, NULL, "<control>equal", NULL,
@@ -3140,6 +3144,8 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 		set_action_sensitive (window, "ShiftSpace", sensitive);
 		set_action_sensitive (window, "BackSpace", sensitive);
 		set_action_sensitive (window, "ShiftBackSpace", sensitive);
+		set_action_sensitive (window, "Return", sensitive);
+		set_action_sensitive (window, "ShiftReturn", sensitive);
 		set_action_sensitive (window, "Slash", sensitive);
 		set_action_sensitive (window, "Plus", sensitive);
 		set_action_sensitive (window, "Minus", sensitive);
