@@ -1,7 +1,7 @@
 # Lithuanian translation of Evince.
 # Copyright (C) 2005 The GNOME Foundation.
 # This file is distributed under the same license as the Evince package.
-# Žygimantas Beručka <uid0@akl.lt>, 2005.
+# Žygimantas Beručka <zygis@gnome.org>, 2005.
 # Justina Klingaitė <justina.klingaite@gmail.com>, 2005.
 # 
 # 
@@ -9,14 +9,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-19 00:32+0300\n"
-"PO-Revision-Date: 2005-08-19 00:42+0300\n"
-"Last-Translator: Žygimantas Beručka <uid0@akl.lt>\n"
+"POT-Creation-Date: 2005-12-02 17:58+0200\n"
+"PO-Revision-Date: 2005-12-02 18:07+0200\n"
+"Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../comics/comics-document.c:116
+msgid "File corrupted."
+msgstr "Byla sugadinta."
+
+#: ../comics/comics-document.c:152
+#, c-format
+msgid "No images found in archive %s"
+msgstr "Archyve %s nereasta jokių paveikslėlių"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:534
 msgid "_Remove Toolbar"
@@ -27,7 +36,7 @@ msgid "Separator"
 msgstr "Skirtukas"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3133
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3091
 msgid "Best Fit"
 msgstr "Geriausiai tinkantis"
 
@@ -71,7 +80,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:608
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:126
 msgid "Document Viewer"
 msgstr "Dokumentų peržiūros programa"
 
@@ -84,6 +93,14 @@ msgid "*"
 msgstr "*"
 
 #: ../data/evince-password.glade.h:2
+msgid "Remember password for this session"
+msgstr "Atsiminti slaptažodį šiai sesijai"
+
+#: ../data/evince-password.glade.h:3
+msgid "Save password in keyring"
+msgstr "Išsaugoti slaptažodį raktų žiede"
+
+#: ../data/evince-password.glade.h:4
 msgid "_Password:"
 msgstr "_Slaptažodis:"
 
@@ -136,130 +153,78 @@ msgid "<b>Title:</b>"
 msgstr "<b>Pavadinimas:</b>"
 
 #: ../data/evince.schemas.in.h:1
-msgid "Default sidebar size"
-msgstr "Numatytasis šoninės juostos dydis"
+msgid "Override document restrictions"
+msgstr "Nepaisyti dokumento apribojimų"
 
 #: ../data/evince.schemas.in.h:2
-msgid "Show sidebar by default"
-msgstr "Standartiškai rodyti šoninę juostą"
-
-#: ../data/evince.schemas.in.h:3
-msgid "Show statusbar by default"
-msgstr "Standartiškai rodyti būsenos juostą"
-
-#: ../data/evince.schemas.in.h:4
-msgid "Show toolbar by default"
-msgstr "Standartiškai rodyti įrankinę"
-
-#: ../data/evince.schemas.in.h:5
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. The "
-"default size sets the sidebar's width in pixels based from the side of the "
-"window. Any integer will be accepted. The sidebar will never shrink smaller "
-"than the size of the text required to display Thumbnails or Index. Large "
-"values will cause the sidebar to take up as much of the page display area as "
-"possible relative to the window's size."
+msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
-"Šoninė juosta yra šoninis elementas, kuriame yra rodyklė ir mini vaizdų "
-"sąrašai. Numatytasis dydis nustato juostos plotį taškais nuo lango šono. Bet "
-"kokia sveikoji vertė bus priimtina. Šoninė juosta niekada nesusitrauks "
-"mažiau nei teksto, reikalingo pavaizduoti mini vaizdus ar rodyklę, ilgis. "
-"Naudojant dideles reikšmes juosta gali užimti tiek pat vietos kiek visas "
-"realiatyvus lango dydžiui puslapio plotis."
+"Nepaisyti dokumento apribojimų, pvz., apsaugojimo nuo kopijavimo ar "
+"spausdinimo."
 
-#: ../data/evince.schemas.in.h:6
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
-"boolean options, true makes sidebar visible by default while false makes "
-"sidebar not visible by default"
-msgstr ""
-"Šoninė juosta yra šoninis elementas, kuriame yra rodyklė ir mini vaizdų "
-"sąrašai. Dvi loginės reikšmės, teigiama - šoninė juosta matoma, neigiama - "
-"nematoma"
-
-#: ../data/evince.schemas.in.h:7
-msgid ""
-"Statusbar is the standard bottom bar that display additional information "
-"about links and other actions. Two boolean options, true makes the statusbar "
-"visible by default while false makes sidebar not visible by default."
-msgstr ""
-"Būsenos juosta yra standartinė apatinė juosta, kurioje yra rodoma papildoma "
-"nuorodų ir veiksmų informacija. Dvi loginės reikšmės, teigiama - būsenos "
-"juosta matoma, neigiama - nematoma."
-
-#: ../data/evince.schemas.in.h:8
-msgid ""
-"Toolbar is the top bar that contains navigation and zoom controls. Two "
-"boolean options, true makes toolbar visible by default while false makes "
-"toolbar not visible by default."
-msgstr ""
-"Įrankių juosta, tai viršutinė juosta, kurioje yra navigacijos ir mastelio "
-"valdymo mygtukai. Dvi loginės reikšmės, teigiama - būsenos juosta matoma, "
-"neigiama - nematoma."
-
-#: ../dvi/dvi-document.c:89
+#: ../dvi/dvi-document.c:95
 msgid "File not available"
 msgstr "Byla neprieinama."
 
-#: ../dvi/dvi-document.c:102
+#: ../dvi/dvi-document.c:108
 msgid "DVI document has incorrect format"
 msgstr "DVI dokumentas yra neteisingo formato"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:527
+#: ../pdf/ev-poppler.cc:511
 msgid "Yes"
 msgstr "Taip"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:530
+#: ../pdf/ev-poppler.cc:514
 msgid "No"
 msgstr "Ne"
 
-#: ../pdf/ev-poppler.cc:630
+#: ../pdf/ev-poppler.cc:614
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../pdf/ev-poppler.cc:632
+#: ../pdf/ev-poppler.cc:616
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../pdf/ev-poppler.cc:634
+#: ../pdf/ev-poppler.cc:618
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../pdf/ev-poppler.cc:636
+#: ../pdf/ev-poppler.cc:620
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../pdf/ev-poppler.cc:638
+#: ../pdf/ev-poppler.cc:622
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../pdf/ev-poppler.cc:640
+#: ../pdf/ev-poppler.cc:624
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../pdf/ev-poppler.cc:642
+#: ../pdf/ev-poppler.cc:626
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../pdf/ev-poppler.cc:644
+#: ../pdf/ev-poppler.cc:628
 msgid "Unknown font type"
 msgstr "Nežinomas šrifto tipas"
 
-#: ../pdf/ev-poppler.cc:670
+#: ../pdf/ev-poppler.cc:654
 msgid "No name"
 msgstr "Be pavadinimo"
 
-#: ../pdf/ev-poppler.cc:678
+#: ../pdf/ev-poppler.cc:662
 msgid "Embedded subset"
 msgstr "Įmontuotas poaibis"
 
-#: ../pdf/ev-poppler.cc:680
+#: ../pdf/ev-poppler.cc:664
 msgid "Embedded"
 msgstr "Įmontuotas"
 
-#: ../pdf/ev-poppler.cc:682
+#: ../pdf/ev-poppler.cc:666
 msgid "Not embedded"
 msgstr "Neįmontuotas"
 
@@ -347,42 +312,42 @@ msgstr "10x14"
 msgid "No document loaded."
 msgstr "Nėra įkeltų dokumentų."
 
-#: ../ps/ps-document.c:604
+#: ../ps/ps-document.c:584
 msgid "Broken pipe."
 msgstr "Sugadintas konvejeris."
 
-#: ../ps/ps-document.c:786
+#: ../ps/ps-document.c:766
 msgid "Interpreter failed."
 msgstr "Interpretatoriaus klaida."
 
-#: ../ps/ps-document.c:912
+#: ../ps/ps-document.c:892
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "Išskleidžiant bylą %s įvyko klaida:\n"
 
-#: ../ps/ps-document.c:972
+#: ../ps/ps-document.c:952
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "Nepavyko atverti bylos %s.\n"
 
-#: ../ps/ps-document.c:977
+#: ../ps/ps-document.c:957
 msgid "File is not readable."
 msgstr "Byla neperskaitoma."
 
-#: ../ps/ps-document.c:997
+#: ../ps/ps-document.c:977
 msgid "Document loaded."
 msgstr "Dokumentas įkeltas."
 
-#: ../ps/ps-document.c:1094
+#: ../ps/ps-document.c:1074
 #, c-format
 msgid "Failed to load document '%s'"
 msgstr "Nepavyko atverti dokumento „%s“"
 
-#: ../ps/ps-document.c:1255
+#: ../ps/ps-document.c:1247
 msgid "Encapsulated PostScript"
 msgstr "Encapsulated PostScript"
 
-#: ../ps/ps-document.c:1256
+#: ../ps/ps-document.c:1248
 msgid "PostScript"
 msgstr "PostScript"
 
@@ -467,7 +432,11 @@ msgstr "DVI dokumentai"
 msgid "Djvu Documents"
 msgstr "Djvu dokumentai"
 
-#: ../shell/ev-document-types.c:185
+#: ../shell/ev-document-types.c:187
+msgid "Comic Books"
+msgstr "Komiksų knygos"
+
+#: ../shell/ev-document-types.c:195
 msgid "All Files"
 msgstr "Visos bylos"
 
@@ -481,22 +450,11 @@ msgstr "(%d iš %d)"
 msgid "of %d"
 msgstr "iš %d"
 
-#: ../shell/ev-password.c:88
-msgid "Unable to find glade file"
-msgstr "Nepavyko rasti glade bylos"
-
-#: ../shell/ev-password.c:90
-#, c-format
-msgid ""
-"The glade file, %s, cannot be found.  Please check that your installation is "
-"complete."
-msgstr "Glade byla %s nerasta. Patikrinkite ar programa pilnai instaliuota."
-
-#: ../shell/ev-password.c:104
+#: ../shell/ev-password.c:83
 msgid "Password required"
 msgstr "Reikalingas slaptažodis"
 
-#: ../shell/ev-password.c:105
+#: ../shell/ev-password.c:84
 #, c-format
 msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
@@ -504,7 +462,16 @@ msgid ""
 msgstr ""
 "Dokumentas <i>%s</i> yra užrakintas ir jam atidaryti reikalingas slaptažodis."
 
-#: ../shell/ev-password.c:142
+#: ../shell/ev-password.c:149
+msgid "Enter password"
+msgstr "Įveskite slaptažodį"
+
+#: ../shell/ev-password.c:252
+#, c-format
+msgid "Password for document %s"
+msgstr "Dokumento „%s“ slaptažodis"
+
+#: ../shell/ev-password.c:334
 msgid "Incorrect password"
 msgstr "Slaptažodis neteisingas"
 
@@ -524,11 +491,11 @@ msgstr "_Atrakinti dokumentą"
 msgid "Properties"
 msgstr "Savybės"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:94
 msgid "General"
 msgstr "Pagrindinės"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:104
 msgid "Fonts"
 msgstr "Šriftai"
 
@@ -541,23 +508,43 @@ msgstr "Šriftas"
 msgid "Gathering font information... %3d%%"
 msgstr "Renkama šriftų informacija... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:242
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:1985
 msgid "Loading..."
 msgstr "Įkeliama..."
 
-#: ../shell/ev-sidebar-links.c:304
+#: ../shell/ev-sidebar-links.c:316
 msgid "Print..."
 msgstr "Spausdinti..."
 
-#: ../shell/ev-sidebar-links.c:657
+#: ../shell/ev-sidebar-links.c:669
 msgid "Index"
 msgstr "Rodyklė"
 
-#: ../shell/ev-sidebar-thumbnails.c:640
+#: ../shell/ev-sidebar-thumbnails.c:669
 msgid "Thumbnails"
 msgstr "Mini vaizdai"
 
-#: ../shell/ev-view.c:1093
+#: ../shell/ev-view-accessible.c:42
+msgid "Scroll Up"
+msgstr "Slinkti aukštyn"
+
+#: ../shell/ev-view-accessible.c:43
+msgid "Scroll Down"
+msgstr "Slinkti žemyn"
+
+#: ../shell/ev-view-accessible.c:49
+msgid "Scroll View Up"
+msgstr "Slinkti vaizdą aukštyn"
+
+#: ../shell/ev-view-accessible.c:50
+msgid "Scroll View Down"
+msgstr "Slinkti vaizdą žemyn"
+
+#: ../shell/ev-view-accessible.c:535
+msgid "Document View"
+msgstr "Dokumentų vaizdas"
+
+#: ../shell/ev-view.c:1237
 #, c-format
 msgid "Go to page %s"
 msgstr "Eiti į %s puslapį"
@@ -565,7 +552,7 @@ msgstr "Eiti į %s puslapį"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2721
+#: ../shell/ev-view.c:3143
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -573,62 +560,49 @@ msgstr[0] "šiame puslapyje rastas %d"
 msgstr[1] "šiame puslapyje rasti %d"
 msgstr[2] "šiame puslapyje rasta %d"
 
-#: ../shell/ev-view.c:2731
+#: ../shell/ev-view.c:3153
 msgid "Not found"
 msgstr "Nerasta"
 
-#: ../shell/ev-view.c:2733
+#: ../shell/ev-view.c:3155
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "liko ieškoti %3d%%"
 
-#: ../shell/ev-window.c:555
+#: ../shell/ev-window.c:567
 msgid "Unable to open document"
 msgstr "Nepavyko atverti dokumento"
 
-#: ../shell/ev-window.c:602
-msgid "Document Viewer - Password Required"
-msgstr "Dokumentų peržiūros programa - Reikalingas slaptažodis"
-
-#: ../shell/ev-window.c:604
-#, c-format
-msgid "%s - Password Required"
-msgstr "%s - Reikalingas slaptažodis"
-
-#: ../shell/ev-window.c:739 ../shell/ev-window.c:1067
-msgid "Loading document. Please wait"
-msgstr "Dokumetas įkeliamas. Palaukite"
-
-#: ../shell/ev-window.c:1078
+#: ../shell/ev-window.c:1090
 msgid "Open Document"
 msgstr "Atidaryti dokumentą"
 
-#: ../shell/ev-window.c:1218
+#: ../shell/ev-window.c:1210
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "Bylos išsaugoti kaip „%s“ nepavyko."
 
-#: ../shell/ev-window.c:1243
+#: ../shell/ev-window.c:1254
 msgid "Save a Copy"
 msgstr "Išsaugoti kopiją"
 
-#: ../shell/ev-window.c:1424
+#: ../shell/ev-window.c:1407
 msgid "Print"
 msgstr "Spausdinti"
 
-#: ../shell/ev-window.c:1428
+#: ../shell/ev-window.c:1411
 msgid "Pages"
 msgstr "Puslapiai"
 
-#: ../shell/ev-window.c:1456
+#: ../shell/ev-window.c:1439
 msgid "Generating PDF is not supported"
 msgstr "PDF generavimas nepalaikomas"
 
-#: ../shell/ev-window.c:1467
+#: ../shell/ev-window.c:1450
 msgid "Printing is not supported on this printer."
 msgstr "Spaudinimas šiuo spausdintuvu nepalaikomas."
 
-#: ../shell/ev-window.c:1470
+#: ../shell/ev-window.c:1453
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -637,24 +611,24 @@ msgstr ""
 "Jūs bandėte spausdinti spausdintuvu naudojančiu „%s“ tvarkyklę. Šiai "
 "programai reikalinga PostScript spausdintuvo tvarkyklė."
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1527
 msgid "The \"Find\" feature will not work with this document"
 msgstr "Šiame dokumente funkcija „Rasti“ neveiks"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1529
 msgid "Searching for text is only supported for PDF documents."
 msgstr "Teksto paieška galima tik PDF dokumentuose."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1774 ../shell/ev-window.c:2941
+#: ../shell/ev-window.c:1761 ../shell/ev-window.c:2907
 msgid "Leave Fullscreen"
 msgstr "Palikti viso ekrano režimą"
 
-#: ../shell/ev-window.c:2100
-msgid "Toolbar editor"
+#: ../shell/ev-window.c:2094
+msgid "Toolbar Editor"
 msgstr "Įrankinės redaktorius"
 
-#: ../shell/ev-window.c:2453
+#: ../shell/ev-window.c:2474
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -663,7 +637,7 @@ msgstr ""
 "PostScript ir PDF bylų peržiūros programa.\n"
 "Naudojama poppler biblioteka %s (%s)"
 
-#: ../shell/ev-window.c:2476
+#: ../shell/ev-window.c:2497
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -675,7 +649,7 @@ msgstr ""
 "paskelbtos Laisvosios programinės įrangos fondo; 2-osios arba\n"
 "(Jūsų pasirinkimu) bet kurios vėlesnės licencijos versijos sąlygomis.\n"
 
-#: ../shell/ev-window.c:2480
+#: ../shell/ev-window.c:2501
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -687,7 +661,7 @@ msgstr ""
 "TINKAMUMO TAM TIKRAM TIKSLUI garantijų. Dėl išsamesnės informacijos\n"
 "žiūrėkite GNU bendrąją viešąją licenciją.\n"
 
-#: ../shell/ev-window.c:2484
+#: ../shell/ev-window.c:2505
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -697,342 +671,271 @@ msgstr ""
 "Evince; jeigu negavote, rašykite Laisvosios programinės įrangos\n"
 "fondui, 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2508 ../shell/main.c:189
+#: ../shell/ev-window.c:2529 ../shell/main.c:259
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2511
+#: ../shell/ev-window.c:2532
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 Evince autoriai"
 
-#: ../shell/ev-window.c:2517
+#: ../shell/ev-window.c:2538
 msgid "translator-credits"
 msgstr ""
 "Justina Klingaitė <justina.klingaite@gmail.com>,\n"
 "Žygimantas Beručka <uid0@akl.lt>"
 
-#: ../shell/ev-window.c:2860
+#: ../shell/ev-window.c:2837
 msgid "_File"
 msgstr "_Byla"
 
-#: ../shell/ev-window.c:2861
+#: ../shell/ev-window.c:2838
 msgid "_Edit"
 msgstr "_Keisti"
 
-#: ../shell/ev-window.c:2862
+#: ../shell/ev-window.c:2839
 msgid "_View"
 msgstr "_Rodyti"
 
-#: ../shell/ev-window.c:2863
+#: ../shell/ev-window.c:2840
 msgid "_Go"
 msgstr "_Eiti"
 
-#: ../shell/ev-window.c:2864
+#: ../shell/ev-window.c:2841
 msgid "_Help"
 msgstr "_Pagalba"
 
 #. File menu
-#: ../shell/ev-window.c:2867
+#: ../shell/ev-window.c:2844
 msgid "_Open..."
 msgstr "_Atverti..."
 
-#: ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:2845
 msgid "Open an existing document"
 msgstr "Atverti egzistuojantį dokumentą"
 
-#: ../shell/ev-window.c:2870
+#: ../shell/ev-window.c:2847
 msgid "_Save a Copy..."
 msgstr "_Išsaugoti kopiją..."
 
-#: ../shell/ev-window.c:2871
-msgid "Save the current document with a new filename"
-msgstr "Išsaugoti esamą dokumentą nauju pavadinimu"
-
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2849
 msgid "_Print..."
 msgstr "_Spausdinti..."
 
-#: ../shell/ev-window.c:2874
+#: ../shell/ev-window.c:2850
 msgid "Print this document"
 msgstr "Atspaudinti šį dokumentą"
 
-#: ../shell/ev-window.c:2876
+#: ../shell/ev-window.c:2852
 msgid "P_roperties"
 msgstr "S_avybės"
 
-#: ../shell/ev-window.c:2877
-msgid "View the properties of this document"
-msgstr "Žiūrėti šio dokumento savybes"
-
-#: ../shell/ev-window.c:2880
-msgid "Close this window"
-msgstr "Uždaryti šį langą"
-
-#: ../shell/ev-window.c:2885
-msgid "Copy text from the document"
-msgstr "Kopijuoti tekstą iš dokumento"
-
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2860
 msgid "Select _All"
 msgstr "Pasirinkti _viską"
 
-#: ../shell/ev-window.c:2888
-msgid "Select the entire page"
-msgstr "Pasirinkti visą puslapį"
-
-#: ../shell/ev-window.c:2891 ../shell/ev-window.c:2949
+#: ../shell/ev-window.c:2863
 msgid "Find a word or phrase in the document"
 msgstr "Rasti dokumente žodį ar frazę"
 
-#: ../shell/ev-window.c:2893
+#: ../shell/ev-window.c:2865
 msgid "Find Ne_xt"
 msgstr "Rasti se_kantį"
 
-#: ../shell/ev-window.c:2894
-msgid "Find next occurrence of the word or phrase"
-msgstr "Rasti sekantį žodžio ar frazės pasikartojimą"
-
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2867
 msgid "T_oolbar"
 msgstr "Įr_ankinė"
 
-#: ../shell/ev-window.c:2897
-msgid "Customize the toolbar"
-msgstr "Derinti įrankinę"
-
-#: ../shell/ev-window.c:2899
+#: ../shell/ev-window.c:2869
 msgid "Rotate _Left"
 msgstr "Pasukti _kairėn"
 
-#: ../shell/ev-window.c:2900
-msgid "Rotate the document to the left"
-msgstr "Pasukti dokumentą į kairę"
-
-#: ../shell/ev-window.c:2902
+#: ../shell/ev-window.c:2871
 msgid "Rotate _Right"
 msgstr "Pasukti _dešinėn"
 
-#: ../shell/ev-window.c:2903
-msgid "Rotate the document to the right"
-msgstr "Pasukti dokumentą į dešinę"
-
-#: ../shell/ev-window.c:2908 ../shell/ev-window.c:2970
-#: ../shell/ev-window.c:2973 ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2876
 msgid "Enlarge the document"
 msgstr "Išdidinti dokumentą"
 
-#: ../shell/ev-window.c:2911 ../shell/ev-window.c:2976
-#: ../shell/ev-window.c:2991
+#: ../shell/ev-window.c:2879
 msgid "Shrink the document"
 msgstr "Sutraukti dokumentą"
 
-#: ../shell/ev-window.c:2913
+#: ../shell/ev-window.c:2881
 msgid "_Reload"
 msgstr "_Perkrauti"
 
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:2882
 msgid "Reload the document"
 msgstr "Perkrauti dokumentą"
 
 #. Go menu
-#: ../shell/ev-window.c:2918
+#: ../shell/ev-window.c:2886
 msgid "_Previous Page"
 msgstr "_Ankstesnis puslapis"
 
-#: ../shell/ev-window.c:2919
+#: ../shell/ev-window.c:2887
 msgid "Go to the previous page"
 msgstr "Eiti į ankstesnįjį puslapį"
 
-#: ../shell/ev-window.c:2921
+#: ../shell/ev-window.c:2889
 msgid "_Next Page"
 msgstr "_Sekantis puslapis"
 
-#: ../shell/ev-window.c:2922
+#: ../shell/ev-window.c:2890
 msgid "Go to the next page"
 msgstr "Eiti į sekantį puslapį"
 
-#: ../shell/ev-window.c:2924
+#: ../shell/ev-window.c:2892
 msgid "_First Page"
 msgstr "_Pirmas puslapis"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:2893
 msgid "Go to the first page"
 msgstr "Eiti į pirmą puslapį"
 
-#: ../shell/ev-window.c:2927
+#: ../shell/ev-window.c:2895
 msgid "_Last Page"
 msgstr "_Paskutinis puslapis"
 
-#: ../shell/ev-window.c:2928
+#: ../shell/ev-window.c:2896
 msgid "Go to the last page"
 msgstr "Eiti į paskutinį puslapį"
 
 #. Help menu
-#: ../shell/ev-window.c:2932
+#: ../shell/ev-window.c:2900
 msgid "_Contents"
 msgstr "_Turinys"
 
-#: ../shell/ev-window.c:2933
-msgid "Display help for the viewer application"
-msgstr "Rodyti žiūryklės pagalbą"
-
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:2903
 msgid "_About"
 msgstr "_Apie"
 
-#: ../shell/ev-window.c:2937
-msgid "Display credits for the document viewer creators"
-msgstr "Parodyti padėkas žiūryklės kūrėjams"
-
-#: ../shell/ev-window.c:2942
+#: ../shell/ev-window.c:2908
 msgid "Leave fullscreen mode"
 msgstr "Palikti viso ekrano režimą"
 
-#: ../shell/ev-window.c:2952 ../shell/ev-window.c:2958
-#: ../shell/ev-window.c:2967
-msgid "Scroll one page forward"
-msgstr "Slinkti per vieną puslapį į priekį"
-
-#: ../shell/ev-window.c:2955 ../shell/ev-window.c:2961
-#: ../shell/ev-window.c:2964
-msgid "Scroll one page backward"
-msgstr "Slinkti per vieną puslapį atgal"
-
-#: ../shell/ev-window.c:2979
-msgid "Focus the page selector"
-msgstr "Fokusuoti puslapio parinkiklį"
-
-#: ../shell/ev-window.c:2982
-msgid "Go ten pages backward"
-msgstr "Eiti 10 puslapių atgal"
-
-#: ../shell/ev-window.c:2985
-msgid "Go ten pages forward"
-msgstr "Eiti 10 puslapių į priekį"
-
 #. View Menu
-#: ../shell/ev-window.c:2998
+#: ../shell/ev-window.c:2959
 msgid "_Toolbar"
 msgstr "Į_rankinė"
 
-#: ../shell/ev-window.c:2999
+#: ../shell/ev-window.c:2960
 msgid "Show or hide the toolbar"
 msgstr "Rodyti arba slėpti įrankinę"
 
-#: ../shell/ev-window.c:3001
-msgid "_Statusbar"
-msgstr "_Būsenos juosta"
-
-#: ../shell/ev-window.c:3002
-msgid "Show or hide the statusbar"
-msgstr "Rodyti arba slėpti būsenos juostą"
-
-#: ../shell/ev-window.c:3004
+#: ../shell/ev-window.c:2962
 msgid "Side _Pane"
 msgstr "Šoninis _skydelis"
 
-#: ../shell/ev-window.c:3005
+#: ../shell/ev-window.c:2963
 msgid "Show or hide the side pane"
 msgstr "Rodyti arba slėpti šoninį skydelį"
 
-#: ../shell/ev-window.c:3007
+#: ../shell/ev-window.c:2965
 msgid "_Continuous"
 msgstr "_Vientisas"
 
-#: ../shell/ev-window.c:3008
+#: ../shell/ev-window.c:2966
 msgid "Show the entire document"
 msgstr "Rodyti visą dokumentą"
 
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:2968
 msgid "_Dual"
 msgstr "_Dvigubas"
 
-#: ../shell/ev-window.c:3011
+#: ../shell/ev-window.c:2969
 msgid "Show two pages at once"
 msgstr "Rodyti du puslapius iš karto"
 
-#: ../shell/ev-window.c:3013
+#: ../shell/ev-window.c:2971
 msgid "_Fullscreen"
 msgstr "_Visame ekrane"
 
-#: ../shell/ev-window.c:3014
+#: ../shell/ev-window.c:2972
 msgid "Expand the window to fill the screen"
 msgstr "Išplėsti langą per visą ekraną"
 
-#: ../shell/ev-window.c:3016
+#: ../shell/ev-window.c:2974
 msgid "_Presentation"
 msgstr "_Prezentacija"
 
-#: ../shell/ev-window.c:3017
+#: ../shell/ev-window.c:2975
 msgid "Run document as a presentation"
 msgstr "Paleisti dokumentą kaip prezentaciją"
 
-#: ../shell/ev-window.c:3019
+#: ../shell/ev-window.c:2977
 msgid "_Best Fit"
 msgstr "_Geriausiai tinkantis"
 
-#: ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:2978
 msgid "Make the current document fill the window"
 msgstr "Dokumentas užpildo visą langą"
 
-#: ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:2980
 msgid "Fit Page _Width"
 msgstr "Tinkantis prie puslapio pl_očio"
 
-#: ../shell/ev-window.c:3023
+#: ../shell/ev-window.c:2981
 msgid "Make the current document fill the window width"
 msgstr "Dokumentas užpildo lango plotį"
 
-#: ../shell/ev-window.c:3082
+#: ../shell/ev-window.c:3040
 msgid "Page"
 msgstr "Puslapis"
 
-#: ../shell/ev-window.c:3083
+#: ../shell/ev-window.c:3041
 msgid "Select Page"
 msgstr "Pasirinkite puslapį"
 
-#: ../shell/ev-window.c:3095
+#: ../shell/ev-window.c:3053
 msgid "Zoom"
 msgstr "Mastelis"
 
-#: ../shell/ev-window.c:3097
+#: ../shell/ev-window.c:3055
 msgid "Adjust the zoom level"
 msgstr "Nustatyti vaizdo mastelį"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3113
+#: ../shell/ev-window.c:3071
 msgid "Previous"
 msgstr "Ankstesnis"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3119
+#: ../shell/ev-window.c:3077
 msgid "Next"
 msgstr "Sekantis"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3123
+#: ../shell/ev-window.c:3081
 msgid "Zoom In"
 msgstr "Pritraukti"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3128
+#: ../shell/ev-window.c:3086
 msgid "Zoom Out"
 msgstr "Atitraukti"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3138
+#: ../shell/ev-window.c:3096
 msgid "Fit Width"
 msgstr "Tinka plotis"
 
-#: ../shell/main.c:47
+#: ../shell/ev-window-title.c:140
+#, c-format
+msgid "%s - Password Required"
+msgstr "%s - Reikalingas slaptažodis"
+
+#: ../shell/main.c:50
 msgid "The page of the document to display."
 msgstr "Rodytinas dokumento puslapis."
 
-#: ../shell/main.c:47
+#: ../shell/main.c:50
 msgid "PAGE"
 msgstr "PUSLAPIS"
 
-#: ../shell/main.c:218
+#: ../shell/main.c:286
 msgid "Evince Document Viewer"
 msgstr "Dokumentų žiūryklė Evince"
 
@@ -1059,3 +962,126 @@ msgid ""
 msgstr ""
 "Teisinga komanda su argumentais PDF dokumentų mini vaizdams. Žiūrėkite "
 "Nautiliaus mini vaizdų generatoriaus dokumentaciją."
+
+#~ msgid "Default sidebar size"
+#~ msgstr "Numatytasis šoninės juostos dydis"
+
+#~ msgid "Show sidebar by default"
+#~ msgstr "Standartiškai rodyti šoninę juostą"
+
+#~ msgid "Show statusbar by default"
+#~ msgstr "Standartiškai rodyti būsenos juostą"
+
+#~ msgid "Show toolbar by default"
+#~ msgstr "Standartiškai rodyti įrankinę"
+
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
+#~ "default size sets the sidebar's width in pixels based from the side of "
+#~ "the window. Any integer will be accepted. The sidebar will never shrink "
+#~ "smaller than the size of the text required to display Thumbnails or "
+#~ "Index. Large values will cause the sidebar to take up as much of the page "
+#~ "display area as possible relative to the window's size."
+#~ msgstr ""
+#~ "Šoninė juosta yra šoninis elementas, kuriame yra rodyklė ir mini vaizdų "
+#~ "sąrašai. Numatytasis dydis nustato juostos plotį taškais nuo lango šono. "
+#~ "Bet kokia sveikoji vertė bus priimtina. Šoninė juosta niekada "
+#~ "nesusitrauks mažiau nei teksto, reikalingo pavaizduoti mini vaizdus ar "
+#~ "rodyklę, ilgis. Naudojant dideles reikšmes juosta gali užimti tiek pat "
+#~ "vietos kiek visas realiatyvus lango dydžiui puslapio plotis."
+
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+#~ "boolean options, true makes sidebar visible by default while false makes "
+#~ "sidebar not visible by default"
+#~ msgstr ""
+#~ "Šoninė juosta yra šoninis elementas, kuriame yra rodyklė ir mini vaizdų "
+#~ "sąrašai. Dvi loginės reikšmės, teigiama - šoninė juosta matoma, neigiama "
+#~ "- nematoma"
+
+#~ msgid ""
+#~ "Statusbar is the standard bottom bar that display additional information "
+#~ "about links and other actions. Two boolean options, true makes the "
+#~ "statusbar visible by default while false makes sidebar not visible by "
+#~ "default."
+#~ msgstr ""
+#~ "Būsenos juosta yra standartinė apatinė juosta, kurioje yra rodoma "
+#~ "papildoma nuorodų ir veiksmų informacija. Dvi loginės reikšmės, teigiama "
+#~ "- būsenos juosta matoma, neigiama - nematoma."
+
+#~ msgid ""
+#~ "Toolbar is the top bar that contains navigation and zoom controls. Two "
+#~ "boolean options, true makes toolbar visible by default while false makes "
+#~ "toolbar not visible by default."
+#~ msgstr ""
+#~ "Įrankių juosta, tai viršutinė juosta, kurioje yra navigacijos ir mastelio "
+#~ "valdymo mygtukai. Dvi loginės reikšmės, teigiama - būsenos juosta matoma, "
+#~ "neigiama - nematoma."
+
+#~ msgid "Unable to find glade file"
+#~ msgstr "Nepavyko rasti glade bylos"
+
+#~ msgid ""
+#~ "The glade file, %s, cannot be found.  Please check that your installation "
+#~ "is complete."
+#~ msgstr "Glade byla %s nerasta. Patikrinkite ar programa pilnai instaliuota."
+
+#~ msgid "Document Viewer - Password Required"
+#~ msgstr "Dokumentų peržiūros programa - Reikalingas slaptažodis"
+
+#~ msgid "Loading document. Please wait"
+#~ msgstr "Dokumetas įkeliamas. Palaukite"
+
+#~ msgid "Save the current document with a new filename"
+#~ msgstr "Išsaugoti esamą dokumentą nauju pavadinimu"
+
+#~ msgid "View the properties of this document"
+#~ msgstr "Žiūrėti šio dokumento savybes"
+
+#~ msgid "Close this window"
+#~ msgstr "Uždaryti šį langą"
+
+#~ msgid "Copy text from the document"
+#~ msgstr "Kopijuoti tekstą iš dokumento"
+
+#~ msgid "Select the entire page"
+#~ msgstr "Pasirinkti visą puslapį"
+
+#~ msgid "Find next occurrence of the word or phrase"
+#~ msgstr "Rasti sekantį žodžio ar frazės pasikartojimą"
+
+#~ msgid "Customize the toolbar"
+#~ msgstr "Derinti įrankinę"
+
+#~ msgid "Rotate the document to the left"
+#~ msgstr "Pasukti dokumentą į kairę"
+
+#~ msgid "Rotate the document to the right"
+#~ msgstr "Pasukti dokumentą į dešinę"
+
+#~ msgid "Display help for the viewer application"
+#~ msgstr "Rodyti žiūryklės pagalbą"
+
+#~ msgid "Display credits for the document viewer creators"
+#~ msgstr "Parodyti padėkas žiūryklės kūrėjams"
+
+#~ msgid "Scroll one page forward"
+#~ msgstr "Slinkti per vieną puslapį į priekį"
+
+#~ msgid "Scroll one page backward"
+#~ msgstr "Slinkti per vieną puslapį atgal"
+
+#~ msgid "Focus the page selector"
+#~ msgstr "Fokusuoti puslapio parinkiklį"
+
+#~ msgid "Go ten pages backward"
+#~ msgstr "Eiti 10 puslapių atgal"
+
+#~ msgid "Go ten pages forward"
+#~ msgstr "Eiti 10 puslapių į priekį"
+
+#~ msgid "_Statusbar"
+#~ msgstr "_Būsenos juosta"
+
+#~ msgid "Show or hide the statusbar"
+#~ msgstr "Rodyti arba slėpti būsenos juostą"
