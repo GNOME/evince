@@ -1,3 +1,12 @@
+2005-12-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-pixbuf-cache.c: (dispose_cache_job_info),
+	(job_finished_cb), (new_selection_pixbuf_needed),
+	(ev_pixbuf_cache_get_selection_pixbuf), (update_job_selection),
+	(clear_job_selection), (ev_pixbuf_cache_set_selection_list):
+	
+	Rework selection job info logic and fix critical warning.
+
 2005-12-17  Abel Cheung  <maddog@linuxhall.org>
 
 	* configure.ac: Added "cy" "fa" "mk" "vi" to ALL_LINGUAS.

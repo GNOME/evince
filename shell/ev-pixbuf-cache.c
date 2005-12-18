@@ -13,11 +13,13 @@ typedef struct _CacheJobInfo
 	GList *link_mapping;
 	GdkRegion *text_mapping;
 	
-	/* Selection data.  If the *_points structs are unset, we put -1 in x1.
-	 * selection_points are the coordinates encapsulated in selection.
+	/* Selection data. 
+	 * Selection_points are the coordinates encapsulated in selection.
 	 * target_points is the target selection size. */
 	EvRectangle selection_points;
 	EvRectangle target_points;
+	gboolean    points_set;
+	
 	GdkPixbuf *selection;
 	GdkRegion *selection_region;
 } CacheJobInfo;
@@ -167,8 +169,7 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		job_info->rc = NULL;
 	}
 
-	job_info->selection_points.x1 = -1;
-	job_info->target_points.x1 = -1;
+	job_info->points_set = FALSE;
 }
 
 static void
@@ -210,7 +211,6 @@ job_finished_cb (EvJob         *job,
 {
 	CacheJobInfo *job_info;
 	EvJobRender *job_render = EV_JOB_RENDER (job);
-	GdkPixbuf *pixbuf;
 
 	/* If the job is outside of our interest, we silently discard it */
 	if ((job_render->rc->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
@@ -680,7 +680,7 @@ new_selection_pixbuf_needed (EvPixbufCache *pixbuf_cache,
 		    height != gdk_pixbuf_get_height (job_info->selection))
 			return TRUE;
 	} else {
-		if (job_info->target_points.x1 >= 0)
+		if (job_info->points_set)
 			return TRUE;
 	}
 	return FALSE;
@@ -787,7 +787,7 @@ ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache  *pixbuf_cache,
 		return NULL;
 
 	/* No selection on this page */
-	if (job_info->target_points.x1 < 0)
+	if (!job_info->points_set)
 		return NULL;
 
 	/* Update the rc */
@@ -851,16 +851,14 @@ static void
 update_job_selection (CacheJobInfo    *job_info,
 		      EvViewSelection *selection)
 {
-	if (job_info->selection == NULL)
-		job_info->selection_points.x1 = -1;
+	job_info->points_set = TRUE;		
 	job_info->target_points = selection->rect;
 }
 
 static void
 clear_job_selection (CacheJobInfo *job_info)
 {
-	job_info->selection_points.x1 = -1;
-	job_info->target_points.x1 = -1;
+	job_info->points_set = FALSE;
 
 	if (job_info->selection) {
 		g_object_unref (job_info->selection);
@@ -883,6 +881,9 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 	int i;
 
 	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
+
+	if (!EV_IS_SELECTION (pixbuf_cache->document))
+		return;
 
 	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
