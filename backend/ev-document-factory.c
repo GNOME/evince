@@ -75,8 +75,8 @@ const EvDocumentType document_types[] = {
 
 #ifdef ENABLE_COMICS
 	/* cbr/cbz: */
-	{"application/cbr",           EV_BACKEND_COMICS,  comics_document_get_type},
-	{"application/cbz",           EV_BACKEND_COMICS,  comics_document_get_type},
+	{"application/x-cbr",           EV_BACKEND_COMICS,  comics_document_get_type},
+	{"application/x-cbz",           EV_BACKEND_COMICS,  comics_document_get_type},
 #endif
 };
 

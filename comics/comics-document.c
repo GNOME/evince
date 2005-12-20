@@ -87,12 +87,12 @@ comics_document_load (EvDocument *document,
 
 	/* FIXME, use proper cbr/cbz mime types once they're
 	 * included in shared-mime-info */
-	if (!strcmp (mime_type, "application/cbr")) {
+	if (!strcmp (mime_type, "application/x-cbr")) {
 		comics_document->extract_command =
 			g_strdup ("unrar p -c- -ierr");
 		list_files_command =
 			g_strdup_printf ("unrar vb -c- -- %s", quoted_file);
-	} else if (!strcmp (mime_type, "application/cbz")) {
+	} else if (!strcmp (mime_type, "application/x-cbz")) {
 		comics_document->extract_command =
 			g_strdup ("unzip -p -C");
 		list_files_command = 

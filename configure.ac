@@ -272,18 +272,8 @@ AC_ARG_ENABLE(comics,
  	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics=yes,enable_comics=no)
 if test "x$enable_comics" = "xyes"; then
 	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
-
 fi 
 AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
-
-AC_PATH_PROG(UPDATE_MIME_DB, update-mime-database, no)
-AC_SUBST(UPDATE_MIME_DB)
-
-AC_ARG_ENABLE(update-mimedb,
-   AC_HELP_STRING([--disable-update-mimedb],
-                   [disable the update-mime-database after install [default=no]]),,
-    enable_update_mimedb=yes)
-AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
 dnl ================== End of comic book checks ============================================
 
@@ -301,7 +291,7 @@ if test "x$enable_tiff" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/tiff"
 fi
 if test "x$enable_comics" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/cbr;application/cbz"
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-cbr;application/x-cbz"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 

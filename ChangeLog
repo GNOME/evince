@@ -1,5 +1,16 @@
 2005-12-20  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* backend/ev-document-factory.c:
+	* comics/Makefile.am:
+	* comics/comics-document.c: (comics_document_load):
+	* comics/ev-cbr-mime.xml:
+	* configure.ac:
+	
+	Comics mime types are added to shared-mime-info CVS. Now
+	we don't need to install our own mime types.
+
+2005-12-20  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c:
 	
 	Add shortcut for "save a copy" menu entry. Fix for
