@@ -28,7 +28,9 @@
 #include "ev-poppler.h"
 #include "pixbuf-document.h"
 #include "tiff-document.h"
+#ifdef ENABLE_PS
 #include "ps-document.h"
+#endif
 #ifdef ENABLE_DVI
 #include "dvi-document.h"
 #endif
@@ -53,10 +55,12 @@ const EvDocumentType document_types[] = {
 	/* PDF: */
 	{"application/pdf",            EV_BACKEND_PDF,  pdf_document_get_type},
 
+#ifdef ENABLE_PS
 	/* Postscript: */
 	{"application/postscript",     EV_BACKEND_PS,   ps_document_get_type},
 	{"application/x-gzpostscript", EV_BACKEND_PS,   ps_document_get_type},
 	{"image/x-eps",                EV_BACKEND_PS,   ps_document_get_type},
+#endif
 
 #ifdef ENABLE_TIFF
 	/* Tiff: */

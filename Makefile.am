@@ -2,7 +2,11 @@ SUBDIRS = cut-n-paste po help data
 
 # Backends
 
-SUBDIRS += pdf ps
+SUBDIRS += pdf
+
+if ENABLE_PS 
+SUBDIRS += ps
+endif
 
 if ENABLE_PIXBUF
 SUBDIRS += pixbuf    

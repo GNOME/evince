@@ -45,8 +45,12 @@ libevbackend_la_SOURCES=			\
 	ev-document-misc.c
 
 libevbackend_la_LIBADD = 				\
-	$(top_builddir)/pdf/libpdfdocument.la	 	\
+	$(top_builddir)/pdf/libpdfdocument.la
+
+if ENABLE_PS
+libevbackend_la_LIBADD += 			\
 	$(top_builddir)/ps/libpsdocument.la
+endif
 
 if ENABLE_PIXBUF
 libevbackend_la_LIBADD += 			\

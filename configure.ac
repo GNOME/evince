@@ -137,6 +137,15 @@ dnl for backtrace()
 AC_CHECK_HEADERS([execinfo.h])
 
 dnl ================== ggv checks ===================================================
+AC_ARG_ENABLE(ps,
+  	[AC_HELP_STRING([--disable-ps], [Compile without PostScript backend])],enable_ps=$enableval,enable_ps="yes")
+
+if test x$enable_ps = xyes; then
+ 	AC_DEFINE([ENABLE_PS], [1], [Enable support for PostScript files.])
+fi 
+
+AM_CONDITIONAL(ENABLE_PS, test x$enable_ps = xyes)
+if test x$enable_ps = xyes; then
 AC_ARG_WITH(gs-pkg,
             [  --with-gs=dir       Directory Where GhostScript package is installed.])
 
@@ -162,6 +171,7 @@ fi
 AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS"
 AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghostscript.])
 AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
+fi
 dnl ======================== End of ggv checks =================================
 
 dnl ================== tiff checks ===================================================
@@ -279,8 +289,11 @@ dnl ================== End of comic book checks ================================
 
 dnl =================== Mime types list ====================================================
 
-EVINCE_MIME_TYPES="application/pdf;application/postscript;application/x-gzpostscript"
+EVINCE_MIME_TYPES="application/pdf"
 
+if test "x$disable_ps" = "xno" ; then
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/postscript;application/x-gzpostscript"
+fi
 if test "x$enable_dvi" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-dvi"
 fi
