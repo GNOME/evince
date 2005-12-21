@@ -279,7 +279,7 @@ dnl ================== End of pixbuf checks ====================================
 dnl ================== comic book checks ===================================================
  
 AC_ARG_ENABLE(comics,
- 	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics=yes,enable_comics=no)
+ 	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics="$enableval",enable_comics=no)
 if test "x$enable_comics" = "xyes"; then
 	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
 fi 
