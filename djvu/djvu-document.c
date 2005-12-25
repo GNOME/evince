@@ -293,7 +293,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	
 	djvu_document_thumbnails_get_dimensions (document, page, width, &thumb_width, &thumb_height);
 	
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 thumb_width, thumb_height);
 	gdk_pixbuf_fill (pixbuf, 0xffffffff);
 	pixels = gdk_pixbuf_get_pixels (pixbuf);

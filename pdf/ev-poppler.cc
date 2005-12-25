@@ -910,7 +910,7 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 		height = temp;
 	}
 
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 width, height);
 	gdk_pixbuf_fill (pixbuf, 0xffffffff);
 

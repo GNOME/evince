@@ -128,7 +128,7 @@ static int dvi_pixbuf_interpolate_colors(void *device_data,
 static void *dvi_pixbuf_create_image(void *device_data, Uint w, Uint h, Uint bpp)
 {
 
-    return gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, w, h);
+    return gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, w, h);
     
     return NULL;
 }
@@ -207,7 +207,7 @@ mdvi_pixbuf_device_render (DviContext * dvi)
   page_width = dvi->dvi_page_w * dvi->params.conv + 2 * c_device->xmargin;
   page_height = dvi->dvi_page_h * dvi->params.vconv + 2 * c_device->ymargin;
     
-  c_device->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, page_width, page_height);
+  c_device->pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, page_width, page_height);
   gdk_pixbuf_fill (c_device->pixbuf, 0xffffffff);
 
   mdvi_dopage (dvi, dvi->currpage);

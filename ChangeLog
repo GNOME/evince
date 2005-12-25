@@ -1,5 +1,15 @@
 2005-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* djvu/djvu-document.c: (djvu_document_thumbnails_get_thumbnail):
+	* dvi/pixbuf-device.c: (dvi_pixbuf_create_image),
+	(mdvi_pixbuf_device_render):
+	* pdf/ev-poppler.cc:
+
+	Don't generate thumbnails with alpha. See bug #324077.
+	Thanks to Jeroen Zwartepoorte <jeroen.zwartepoorte@gmail.com>.
+
+2005-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c: (setup_chrome_from_metadata):
 	
 	Fix typo that was hiding toolbar.
