@@ -128,6 +128,8 @@ struct _EvViewClass {
 	void    (*zoom_invalid)		  (EvView         *view);
 	void    (*external_link)	  (EvView         *view,
 					   EvLink         *link);
+	void    (*popup_menu)		  (EvView         *view,
+					   EvLink         *link);
 };
 
 #endif  /* __EV_VIEW_PRIVATE_H__ */

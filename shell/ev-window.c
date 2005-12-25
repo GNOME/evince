@@ -114,12 +114,18 @@ struct _EvWindowPrivate {
 
 	/* UI Builders */
 	GtkActionGroup *action_group;
+	GtkActionGroup *popups_action_group;
 	GtkUIManager *ui_manager;
 
 	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
 	GtkWidget *fullscreen_popup;
 	GSource   *fullscreen_timeout_source;
+	
+	/* Popup link */
+	GtkWidget *popup;
+	GtkWidget *link_popup;
+	EvLink    *link;
 
 	/* Document */
 	char *uri;
@@ -191,6 +197,10 @@ static void     ev_window_stop_presentation             (EvWindow         *windo
 static void     ev_window_cmd_view_presentation         (GtkAction        *action,
 							 EvWindow         *window);
 static void     show_fullscreen_popup                   (EvWindow         *window);
+static void     ev_popup_cmd_open_link                  (GtkAction        *action,
+							 EvWindow         *window);
+static void     ev_popup_cmd_copy_link_address          (GtkAction        *action,
+							 EvWindow         *window);
 
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
@@ -2607,6 +2617,30 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 	}
 }
 
+static gboolean
+view_menu_popup_cb (EvView         *view,
+		    EvLink         *link,
+		    EvWindow       *ev_window)
+{
+	GtkWidget *popup;
+	
+	if (ev_window->priv->link)
+		g_object_unref (ev_window->priv->link);
+	ev_window->priv->link = link;
+
+	if (ev_window->priv->link &&
+		 (ev_link_get_link_type (ev_window->priv->link) == EV_LINK_TYPE_EXTERNAL_URI)) {
+		popup = ev_window->priv->link_popup;
+	} else {
+		popup = ev_window->priv->popup;
+	}
+
+	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
+			NULL, NULL,
+			3, gtk_get_current_event_time ());
+	return TRUE;
+}
+
 static void
 view_find_status_changed_cb (EvView     *view,
 			     GParamSpec *pspec,
@@ -2751,6 +2785,11 @@ ev_window_dispose (GObject *object)
 		priv->action_group = NULL;
 	}
 
+	if (priv->popups_action_group) {
+		g_object_unref (priv->popups_action_group);
+		priv->popups_action_group = NULL;
+	}
+
 	if (priv->page_cache) {
 		g_signal_handlers_disconnect_by_func (priv->page_cache, page_changed_cb, window);
 		priv->page_cache = NULL;
@@ -2791,6 +2830,11 @@ ev_window_dispose (GObject *object)
 
 	if (priv->password_dialog) {
 		gtk_widget_destroy (priv->password_dialog);
+	}
+
+	if (priv->link) {
+		g_object_unref (priv->link);
+		priv->link = NULL;
 	}
 
 	if (priv->find_bar) {
@@ -2981,6 +3025,16 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
           N_("Make the current document fill the window width"),
           G_CALLBACK (ev_window_cmd_view_page_width) },
+};
+
+/* Popups specific items */
+static const GtkActionEntry popups_entries [] = {
+	/* Links */
+	{ "OpenLink", GTK_STOCK_OPEN, N_("_Open Link"), NULL,
+	  NULL, G_CALLBACK (ev_popup_cmd_open_link) },
+	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
+	  NULL,
+	  G_CALLBACK (ev_popup_cmd_copy_link_address) },
 };
 
 static void
@@ -3301,6 +3355,25 @@ view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
 }
 
 static void
+ev_popup_cmd_open_link (GtkAction *action, EvWindow *window)
+{
+	launch_external_uri (window, window->priv->link);
+}
+
+static void
+ev_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
+{
+	GtkClipboard *clipboard;
+	const gchar *uri;
+
+	uri = ev_link_get_uri (window->priv->link);
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
+					      GDK_SELECTION_CLIPBOARD);
+	gtk_clipboard_set_text (clipboard, uri, -1);
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -3342,6 +3415,14 @@ ev_window_init (EvWindow *ev_window)
 	gtk_window_add_accel_group (GTK_WINDOW (ev_window), accel_group);
 
 	ev_window_set_view_accels_sensitivity (ev_window, FALSE);
+
+	action_group = gtk_action_group_new ("PopupsActions");
+	ev_window->priv->popups_action_group = action_group;
+	gtk_action_group_set_translation_domain (action_group, NULL);
+	gtk_action_group_add_actions (action_group, popups_entries,
+				      G_N_ELEMENTS (popups_entries), ev_window);
+	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
+					    action_group, 0);
 
 	if (!gtk_ui_manager_add_ui_from_file (ev_window->priv->ui_manager,
 					      DATADIR"/evince-ui.xml",
@@ -3443,6 +3524,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "external-link",
 			         G_CALLBACK (view_external_link_cb),
 			         ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view,
+			         "popup",
+				 G_CALLBACK (view_menu_popup_cb),
+				 ev_window, 0);
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
 
@@ -3523,6 +3608,13 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::visible",
 			  G_CALLBACK (find_bar_search_changed_cb),
 			  ev_window);
+
+	/* Popups */
+	ev_window->priv->link_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
+		 		    			        "/ExternalLinkPopup");
+	ev_window->priv->popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
+				    	    		   "/DocumentPopup");
+	ev_window->priv->link = NULL;
 
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);

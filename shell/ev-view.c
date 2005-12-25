@@ -64,6 +64,7 @@ enum {
 	SIGNAL_BINDING_ACTIVATED,
 	SIGNAL_ZOOM_INVALID,
 	SIGNAL_EXTERNAL_LINK,
+	SIGNAL_POPUP_MENU,
 	N_SIGNALS,
 };
 
@@ -149,9 +150,9 @@ static void       find_page_at_location                      (EvView            
 							      gint               *y_offset);
 
 /*** Hyperrefs ***/
-static EvLink*    get_link_at_location                       (EvView             *view,
-							      gdouble             x,
-							      gdouble             y);
+static EvLink *   ev_view_get_link_at_location 		     (EvView  *view,
+				  	         	      gdouble  x,
+		            				      gdouble  y);
 static char*      tip_from_link                              (EvView             *view,
 							      EvLink             *link);
 static void       handle_link_over_xy                        (EvView *view, 
@@ -1031,13 +1032,16 @@ location_in_selected_text (EvView  *view,
 
 /*** Hyperref ***/
 static EvLink *
-get_link_at_location (EvView  *view,
-		      gdouble  x,
-		      gdouble  y)
+ev_view_get_link_at_location (EvView  *view,
+  	         	      gdouble  x,
+		              gdouble  y)
 {
 	gint page = -1;
 	gint x_offset = 0, y_offset = 0;
 	GList *link_mapping;
+	
+	x += view->scroll_x;
+	y += view->scroll_y;
 
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
@@ -1254,7 +1258,7 @@ handle_link_over_xy (EvView *view, gint x, gint y)
 {
 	EvLink *link;
 
-	link = get_link_at_location (view, x + view->scroll_x, y + view->scroll_y);
+	link = ev_view_get_link_at_location (view, x, y);
 
 	if (view->link_tooltip == NULL) {
 		view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
@@ -1617,6 +1621,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
+	EvLink *link;
 	
 	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
 		gtk_widget_grab_focus (widget);
@@ -1653,6 +1658,10 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
 
+			return TRUE;
+		case 3:
+			link = ev_view_get_link_at_location (view, event->x, event->y);
+			g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
 			return TRUE;
 	}
 	
@@ -1835,8 +1844,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 	}
 
 	if (view->document) {
-		link = get_link_at_location (view, event->x + view->scroll_x,
-					     event->y + view->scroll_y);
+		link = ev_view_get_link_at_location (view, event->x, event->y);
 	} else {
 		link = NULL;
 	}
@@ -2395,6 +2403,14 @@ ev_view_class_init (EvViewClass *class)
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, external_link),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__OBJECT,
+		         G_TYPE_NONE, 1,
+			 G_TYPE_OBJECT);
+	signals[SIGNAL_POPUP_MENU] = g_signal_new ("popup",
+	  	         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, popup_menu),
 		         NULL, NULL,
 		         g_cclosure_marshal_VOID__OBJECT,
 		         G_TYPE_NONE, 1,

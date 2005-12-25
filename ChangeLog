@@ -1,5 +1,25 @@
 2005-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* NEWS:
+	* configure.ac:
+	
+	Update NEWS and require poppler 0.5.0.
+
+2005-12-25  Carlos Garcia Campos  <carlosgc@gnome.org>
+	
+	* data/evince-ui.xml:
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_get_link_at_location),
+	(handle_link_over_xy), (ev_view_button_press_event),
+	(ev_view_button_release_event), (ev_view_class_init):
+	* shell/ev-window.c: (view_menu_popup_cb), (ev_window_dispose),
+	(ev_popup_cmd_open_link), (ev_popup_cmd_copy_link_address),
+	(ev_window_init):
+	
+	Implement right-click context menu.
+
+2005-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* djvu/djvu-document.c: (djvu_document_thumbnails_get_thumbnail):
 	* dvi/pixbuf-device.c: (dvi_pixbuf_create_image),
 	(mdvi_pixbuf_device_render):
