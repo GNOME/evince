@@ -1,5 +1,13 @@
 2005-12-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-metadata-manager.c: (parse_value):
+	* shell/ev-view.c: (goto_xyz_link):
+	
+	Correct zoom setup and metadata save broken in 
+	some locales.
+
+2005-12-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-view-private.h:
 	* shell/ev-view.c: (scroll_to_current_page),
 	(view_set_adjustment_values), (goto_fitr_link), (goto_fitv_link),

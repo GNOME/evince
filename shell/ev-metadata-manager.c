@@ -145,7 +145,7 @@ parse_value (xmlChar *value, xmlChar *type)
 			g_value_set_int (ret, atoi ((char *)value));
 			break;
 		case G_TYPE_DOUBLE:
-			g_value_set_double (ret, atof ((char *)value));
+			g_value_set_double (ret, g_ascii_strtod ((char *)value, NULL));
 			break;
 		case G_TYPE_BOOLEAN:
 			g_value_set_boolean (ret, atoi ((char *)value));

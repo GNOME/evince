@@ -1177,8 +1177,8 @@ goto_xyz_link (EvView *view, EvLink *link)
 	page = ev_link_get_page (link);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, NULL, &height);
 
-	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	if (zoom != 0) {
+		ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 		ev_view_set_zoom (view, zoom, FALSE);
 	}
 
