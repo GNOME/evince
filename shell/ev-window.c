@@ -2626,7 +2626,10 @@ view_menu_popup_cb (EvView         *view,
 	
 	if (ev_window->priv->link)
 		g_object_unref (ev_window->priv->link);
-	ev_window->priv->link = link;
+	if (link)
+		ev_window->priv->link = g_object_ref (link);
+	else	
+		ev_window->priv->link = NULL;
 
 	if (ev_window->priv->link &&
 		 (ev_link_get_link_type (ev_window->priv->link) == EV_LINK_TYPE_EXTERNAL_URI)) {
