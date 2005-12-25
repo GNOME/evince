@@ -148,7 +148,10 @@ static void       find_page_at_location                      (EvView            
 							      gint               *page,
 							      gint               *x_offset,
 							      gint               *y_offset);
-
+static gboolean  doc_point_to_view_point 		     (EvView       *view,
+				                              int           page,
+							      EvPoint      *doc_point,
+					     	              GdkPoint     *view_point);
 /*** Hyperrefs ***/
 static EvLink *   ev_view_get_link_at_location 		     (EvView  *view,
 				  	         	      gdouble  x,
@@ -308,32 +311,34 @@ G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
 static void
 scroll_to_current_page (EvView *view, GtkOrientation orientation)
 {
-	GdkRectangle page_area;
-	GtkBorder border;
+	GdkPoint view_point;
 
 	if (view->document == NULL) {
 		return;
 	}
 
-	get_page_extents (view, view->current_page, &page_area, &border);
+        doc_point_to_view_point (view, view->current_page, &view->pending_point, &view_point);
+
+	view->pending_point.x = 0;
+	view->pending_point.y = 0;
 
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
 		if (view->continuous) {
     			gtk_adjustment_clamp_page (view->vadjustment,
-						   page_area.y - view->spacing,
-						   page_area.y + view->vadjustment->page_size);
+						   view_point.y - view->spacing,
+						   view_point.y + view->vadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->vadjustment,
-		    				  view->vadjustment->lower);
+		    				  view_point.y);
 		}
 	} else {
 		if (view->dual_page) {
 			gtk_adjustment_clamp_page (view->hadjustment,
-						   page_area.x,
-						   page_area.x + view->hadjustment->page_size);
+						   view_point.x,
+						   view_point.x + view->hadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->hadjustment,
-						  CLAMP (view->hadjustment->value,
+						  CLAMP (view_point.x,
 						  view->hadjustment->lower,
 						  view->hadjustment->upper -
 						  view->hadjustment->page_size));
@@ -371,7 +376,7 @@ view_set_adjustment_values (EvView         *view,
     	        case SCROLL_TO_KEEP_POSITION:
 			factor = (adjustment->value) / adjustment->upper;
 			break;
-    	        case SCROLL_TO_CURRENT_PAGE:
+    	        case SCROLL_TO_PAGE_POSITION:
 			break;
     	        case SCROLL_TO_CENTER:
 			factor = (adjustment->value + adjustment->page_size * 0.5) / adjustment->upper;
@@ -392,7 +397,7 @@ view_set_adjustment_values (EvView         *view,
 			new_value = CLAMP (adjustment->upper * factor + 0.5, 0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
-    	        case SCROLL_TO_CURRENT_PAGE:
+    	        case SCROLL_TO_PAGE_POSITION:
 			scroll_to_current_page (view, orientation);
 			break;
     	        case SCROLL_TO_CENTER:
@@ -1059,16 +1064,9 @@ ev_view_get_link_at_location (EvView  *view,
 static void
 goto_fitr_link (EvView *view, EvLink *link)
 {
-	GdkPoint view_point;
 	EvPoint doc_point;
-	int doc_width, doc_height, page;
+	int page;
 	double zoom;
-
-	page = ev_link_get_page (link);
-	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
-
-	doc_point.x = ev_link_get_left (link);
-	doc_point.y = ev_link_get_top (link);
 
 	zoom = zoom_for_size_best_fit (ev_link_get_right (link) - ev_link_get_left (link),
 				       ev_link_get_top (link) - ev_link_get_bottom (link),
@@ -1077,18 +1075,21 @@ goto_fitr_link (EvView *view, EvLink *link)
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
-	ev_page_cache_set_current_page (view->page_cache, page);
 
-	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
-		gtk_adjustment_set_value (view->hadjustment, view_point.x);
-		gtk_adjustment_set_value (view->vadjustment, view_point.y);
-	}
+	page = ev_link_get_page (link);
+	doc_point.x = ev_link_get_left (link);
+	doc_point.y = ev_link_get_top (link);
+	
+	view->current_page = page;
+	view->pending_point = doc_point;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
 goto_fitv_link (EvView *view, EvLink *link)
 {
-	GdkPoint view_point;
 	EvPoint doc_point;
 	int doc_width, doc_height, page;
 	double zoom;
@@ -1105,17 +1106,17 @@ goto_fitv_link (EvView *view, EvLink *link)
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
-	ev_page_cache_set_current_page (view->page_cache, page);
 
-	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
-		gtk_adjustment_set_value (view->hadjustment, view_point.x);
-	}
+	view->current_page = page;
+	view->pending_point = doc_point;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
 goto_fith_link (EvView *view, EvLink *link)
 {
-	GdkPoint view_point;
 	EvPoint doc_point;
 	int doc_width, doc_height, page;
 	double zoom;
@@ -1133,11 +1134,11 @@ goto_fith_link (EvView *view, EvLink *link)
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
 
-	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
-		gtk_adjustment_set_value (view->vadjustment, view_point.y);
-	} else {
-		ev_page_cache_set_current_page (view->page_cache, page);
-	}
+	view->current_page = page;
+	view->pending_point = doc_point;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
@@ -1155,13 +1156,16 @@ goto_fit_link (EvView *view, EvLink *link)
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
-	ev_page_cache_set_current_page (view->page_cache, page);
+
+	view->current_page = page;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
 goto_xyz_link (EvView *view, EvLink *link)
 {
-	GdkPoint view_point;
 	EvPoint doc_point;
 	int height, page;
 	double zoom;
@@ -1178,12 +1182,11 @@ goto_xyz_link (EvView *view, EvLink *link)
 	doc_point.x = ev_link_get_left (link);
 	doc_point.y = height - ev_link_get_top (link);
 
-	if (doc_point_to_view_point (view, page, &doc_point, &view_point)) {
-		gtk_adjustment_set_value (view->hadjustment, view_point.x);
-		gtk_adjustment_set_value (view->vadjustment, view_point.y);
-	} else {
-		ev_page_cache_set_current_page (view->page_cache, page);
-	}
+	view->current_page = page;
+	view->pending_point = doc_point;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 void
@@ -2556,7 +2559,7 @@ page_changed_cb (EvPageCache *page_cache,
 	if (view->current_page != new_page) {
 
 		view->current_page = new_page;
-		view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
+		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 
 		if (EV_IS_DOCUMENT_FIND (view->document)) {
@@ -2722,7 +2725,7 @@ ev_view_set_continuous (EvView   *view,
 
 	if (view->continuous != continuous) {
 		view->continuous = continuous;
-		view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
+		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
@@ -2748,7 +2751,7 @@ ev_view_set_dual_page (EvView   *view,
 	if (view->dual_page == dual_page)
 		return;
 
-	view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	view->dual_page = dual_page;
 	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
 	 * preload_cache_size to be 2 if dual_page is set.
@@ -2795,7 +2798,7 @@ ev_view_set_presentation (EvView   *view,
 		return;
 
 	view->presentation = presentation;
-	view->pending_scroll = SCROLL_TO_CURRENT_PAGE;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	if (GTK_WIDGET_REALIZED (view)) {

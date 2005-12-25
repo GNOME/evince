@@ -43,8 +43,8 @@ typedef struct {
 
 typedef enum {
 	SCROLL_TO_KEEP_POSITION,
-	SCROLL_TO_CURRENT_PAGE,
-	SCROLL_TO_CENTER
+	SCROLL_TO_PAGE_POSITION,
+	SCROLL_TO_CENTER,
 } PendingScroll;
 
 typedef enum {
@@ -78,7 +78,8 @@ struct _EvView {
 	gint scroll_y;	
 
 	PendingScroll pending_scroll;
-	gboolean pending_resize;
+	gboolean      pending_resize;
+	EvPoint       pending_point;
 
 	/* Current geometry */
     

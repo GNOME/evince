@@ -1,3 +1,15 @@
+2005-12-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (scroll_to_current_page),
+	(view_set_adjustment_values), (goto_fitr_link), (goto_fitv_link),
+	(goto_fith_link), (goto_fit_link), (goto_xyz_link),
+	(page_changed_cb), (ev_view_set_continuous),
+	(ev_view_set_dual_page), (ev_view_set_presentation):
+	
+	Delay scroll until allocation to correctly position page. Fix
+	for the bug #317334.
+
 2005-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
