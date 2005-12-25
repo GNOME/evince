@@ -634,7 +634,7 @@ setup_chrome_from_metadata (EvWindow *window)
 	GValue show_toolbar = { 0, };
 
 	if (ev_metadata_manager_get (NULL, "show_toolbar", &show_toolbar, FALSE)) {
-		if (!g_value_get_boolean (&show_toolbar));
+		if (!g_value_get_boolean (&show_toolbar))
 			chrome &= ~EV_CHROME_TOOLBAR;
 	}
 	window->priv->chrome = chrome;
