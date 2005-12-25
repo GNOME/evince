@@ -95,6 +95,8 @@ typedef enum {
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
+#define SCROLL_TIME 150
+
 /*** Scrolling ***/
 static void       scroll_to_current_page 		     (EvView *view,
 							      GtkOrientation orientation);
@@ -1487,6 +1489,7 @@ ev_view_realize (GtkWidget *widget)
 				GDK_SCROLL_MASK |
 				GDK_KEY_PRESS_MASK |
 				GDK_POINTER_MOTION_MASK |
+				GDK_POINTER_MOTION_HINT_MASK |
 		                GDK_ENTER_NOTIFY_MASK |
 		                GDK_LEAVE_NOTIFY_MASK;
 
@@ -1680,13 +1683,32 @@ ev_view_drag_data_get (GtkWidget        *widget,
 static gboolean
 selection_update_idle_cb (EvView *view)
 {
-	GdkPoint point;
-	point.x = view->motion_x;
-	point.y = view->motion_y;
-	compute_selections (view, &view->selection_info.start, &point);
-
+	compute_selections (view, &view->selection_info.start, &view->motion);
 	view->selection_update_id = 0;
 	return FALSE;
+}
+
+static gboolean
+selection_scroll_timeout_cb (EvView *view)
+{	
+	gint y, shift = 0;
+	GtkWidget *widget = GTK_WIDGET (view);
+	
+	gtk_widget_get_pointer (widget, NULL, &y);
+
+	if (y > widget->allocation.height) {
+		shift = (y - widget->allocation.height) / 2;
+	} else if (y < 0) {
+		shift = y / 2;
+	}
+
+	if (shift)
+		gtk_adjustment_set_value (view->vadjustment,
+					  CLAMP (view->vadjustment->value + shift,
+					  view->vadjustment->lower,
+					  view->vadjustment->upper -
+					  view->vadjustment->page_size));	
+	return TRUE;
 }
 
 static gboolean
@@ -1694,15 +1716,23 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
 {
 	EvView *view = EV_VIEW (widget);
+	gint x, y;
 
 	if (!view->document)
 		return FALSE;
+		
+        if (event->is_hint || event->window != widget->window) {
+	    gtk_widget_get_pointer (widget, &x, &y);
+        } else {
+	    x = event->x;
+	    y = event->y;
+	}
 
 	if (view->selection_info.in_drag) {
 		if (gtk_drag_check_threshold (widget,
 					      view->selection_info.start.x,
 					      view->selection_info.start.y,
-					      event->x, event->y)) {
+					      x, y)) {
 			GdkDragContext *context;
 			GtkTargetList *target_list = gtk_target_list_new (NULL, 0);
 
@@ -1724,16 +1754,24 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	 * documents only.
 	 */
 	if (view->pressed_button == 1 && view->rotation == 0) {
+
+		/* Schedule timeout to scroll during selection and additionally 
+		 * scroll once to allow arbitrary speed. */
+		if (!view->selection_scroll_id)
+		    view->selection_scroll_id = g_timeout_add (SCROLL_TIME, (GSourceFunc)selection_scroll_timeout_cb, view);
+		else 
+		    selection_scroll_timeout_cb (view);
+
 		view->selection_info.in_selection = TRUE;
-		view->motion_x = event->x + view->scroll_x;
-		view->motion_y = event->y + view->scroll_y;
+		view->motion.x = x + view->scroll_x;
+		view->motion.y = y + view->scroll_y;
 
 		/* Queue an idle to handle the motion.  We do this because	
 		 * handling any selection events in the motion could be slower	
 		 * than new motion events reach us.  We always put it in the	
 		 * idle to make sure we catch up and don't visibly lag the	
 		 * mouse. */
-		if (! view->selection_update_id)
+		if (!view->selection_update_id)
 			view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
 
 		return TRUE;
@@ -1778,7 +1816,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	 */
 	} else if (view->pressed_button <= 0 &&
 		   view->rotation == 0) {
-		handle_link_over_xy (view, event->x, event->y);
+		handle_link_over_xy (view, x, y);
 		return TRUE;
 	}
 
@@ -1805,6 +1843,15 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->pressed_button = -1;
 	view->drag_info.in_drag = FALSE;
+
+	if (view->selection_scroll_id) {
+	    g_source_remove (view->selection_scroll_id);
+	    view->selection_scroll_id = 0;
+	}
+	if (view->selection_update_id) {
+	    g_source_remove (view->selection_update_id);
+	    view->selection_update_id = 0;
+	}
 
 	if (view->selection_info.selections) {
 		ev_view_update_primary_selection (view);
@@ -2154,6 +2201,16 @@ ev_view_destroy (GtkObject *object)
 
 	if (view->link_tooltip) {
 		gtk_widget_destroy (view->link_tooltip);
+	}
+
+	if (view->selection_scroll_id) {
+	    g_source_remove (view->selection_scroll_id);
+	    view->selection_scroll_id = 0;
+	}
+
+	if (view->selection_update_id) {
+	    g_source_remove (view->selection_update_id);
+	    view->selection_update_id = 0;
 	}
 
 	ev_view_set_scroll_adjustments (view, NULL, NULL);

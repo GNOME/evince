@@ -1,3 +1,13 @@
+2005-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_realize), (selection_update_idle_cb),
+	(selection_scroll_timeout_cb), (ev_view_motion_notify_event),
+	(ev_view_button_release_event), (ev_view_destroy):
+	
+	Small cleanup and autoscrolling during selection. Thanks to 
+	Ricardo Markiewicz  <rmarkie@fi.uba.ar>.
+
 2005-12-22  Jani Monoses <jani.monoses@gmail.com>
 
 	* configure.ac:

@@ -35,9 +35,9 @@ typedef struct {
 
 /* Information for handling selection */
 typedef struct {
-	gboolean in_selection;
 	gboolean in_drag;
 	GdkPoint start;
+	gboolean in_selection;
 	GList *selections;
 } SelectionInfo;
 
@@ -63,45 +63,33 @@ struct _EvView {
 
 	char *status;
 	char *find_status;
+	int find_result;
+	
+	EvPageCache *page_cache;
+	EvPixbufCache *pixbuf_cache;
+	EvViewCursor cursor;
+	EvJobRender *current_job;
 
 	/* Scrolling */
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
 
 	gint scroll_x;
-	gint scroll_y;
+	gint scroll_y;	
 
-	/* Information for middle clicking and dragging around. */
-	DragInfo drag_info;
+	PendingScroll pending_scroll;
+	gboolean pending_resize;
 
-	/* Selection */
-	gint motion_x;
-	gint motion_y;
-	guint selection_update_id;
-
-	EvViewSelectionMode selection_mode;
-	SelectionInfo selection_info;
-
-	int pressed_button;
-	EvViewCursor cursor;
-	GtkWidget *link_tooltip;
-	EvLink *hovered_link;
-
-	EvPageCache *page_cache;
-	EvPixbufCache *pixbuf_cache;
-
+	/* Current geometry */
+    
 	gint start_page;
 	gint end_page;
 	gint current_page;
-
-	EvJobRender *current_job;
-
-	int find_page;
-	int find_result;
-	int spacing;
+	gint find_page;
 
 	int rotation;
 	double scale;
+	int spacing;
 
 	gboolean continuous;
 	gboolean dual_page;
@@ -109,8 +97,23 @@ struct _EvView {
 	gboolean presentation;
 	EvSizingMode sizing_mode;
 
-	PendingScroll pending_scroll;
-	gboolean pending_resize;
+	/* Common for button press handling */
+	int pressed_button;
+
+	/* Information for middle clicking and dragging around. */
+	DragInfo drag_info;
+
+	/* Selection */
+	GdkPoint motion;
+	guint selection_update_id;
+	guint selection_scroll_id;
+
+	EvViewSelectionMode selection_mode;
+	SelectionInfo selection_info;
+
+	/* Links */
+	GtkWidget *link_tooltip;
+	EvLink *hovered_link;
 };
 
 struct _EvViewClass {
