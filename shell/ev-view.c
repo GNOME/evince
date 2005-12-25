@@ -319,8 +319,11 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 
         doc_point_to_view_point (view, view->current_page, &view->pending_point, &view_point);
 
-	view->pending_point.x = 0;
-	view->pending_point.y = 0;
+	if (orientation == GTK_ORIENTATION_VERTICAL) {
+		view->pending_point.y = 0;
+	} else {
+		view->pending_point.x = 0;
+	}
 
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
 		if (view->continuous) {
