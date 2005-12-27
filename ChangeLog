@@ -1,5 +1,14 @@
 2005-12-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* data/evince-ui.xml:
+	* shell/ev-window.c: (view_menu_popup_cb),
+	(ev_popup_cmd_open_link), (ev_window_init):
+	
+	Update context menu for internal links. Fix for the bug
+	#325066.
+
+2005-12-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-view.c: (ev_view_popup_menu), (ev_view_class_init):
 	
 	Bind context menu to keyboard also. Fix for the bug

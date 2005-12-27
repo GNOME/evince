@@ -59,17 +59,16 @@
   </menubar>
 
   <popup name="DocumentPopup" action="PopupAction">
+    <menuitem name="OpenLink" action="OpenLink"/>
+    <menuitem name="CopyLinkAddress" action="CopyLinkAddress"/>
+    <menuitem name="GoLink" action="GoLink"/>
+    <separator/>
     <menuitem name="GoPreviousPage" action="GoPreviousPage"/>
     <menuitem name="GoNextPage" action="GoNextPage"/>
     <menuitem name="ViewReload" action="ViewReload"/>
     <separator/>
     <menuitem name="EditCopy" action="EditCopy"/>
     <menuitem name="EditSelectAllPopup" action="EditSelectAll"/>
-  </popup>
-
-  <popup name="ExternalLinkPopup" action="PopupAction">
-    <menuitem name="OpenLink" action="OpenLink"/>
-    <menuitem name="CopyLinkAddress" action="CopyLinkAddress"/>
   </popup>
 
   <accelerator name="PageDownAccel" action="PageDown"/>

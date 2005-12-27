@@ -124,7 +124,6 @@ struct _EvWindowPrivate {
 	
 	/* Popup link */
 	GtkWidget *popup;
-	GtkWidget *link_popup;
 	EvLink    *link;
 
 	/* Document */
@@ -2623,6 +2622,9 @@ view_menu_popup_cb (EvView         *view,
 		    EvWindow       *ev_window)
 {
 	GtkWidget *popup;
+	gboolean   show_external = FALSE;
+	gboolean   show_internal = FALSE;
+	GtkAction *action;
 	
 	if (ev_window->priv->link)
 		g_object_unref (ev_window->priv->link);
@@ -2631,12 +2633,37 @@ view_menu_popup_cb (EvView         *view,
 	else	
 		ev_window->priv->link = NULL;
 
-	if (ev_window->priv->link &&
-		 (ev_link_get_link_type (ev_window->priv->link) == EV_LINK_TYPE_EXTERNAL_URI)) {
-		popup = ev_window->priv->link_popup;
-	} else {
-		popup = ev_window->priv->popup;
-	}
+	popup = ev_window->priv->popup;
+
+	if (ev_window->priv->link) 
+		switch (ev_link_get_link_type (ev_window->priv->link)) {
+			case EV_LINK_TYPE_PAGE:
+	    		case EV_LINK_TYPE_PAGE_FIT:
+			case EV_LINK_TYPE_PAGE_FITH:
+			case EV_LINK_TYPE_PAGE_FITV:
+			case EV_LINK_TYPE_PAGE_FITR:
+			case EV_LINK_TYPE_PAGE_XYZ:
+				show_internal = TRUE;
+				break;
+			case EV_LINK_TYPE_EXTERNAL_URI:
+			case EV_LINK_TYPE_LAUNCH:	
+				show_external = TRUE;
+				break;
+			default:
+				break;
+		}
+	
+	action = gtk_action_group_get_action (ev_window->priv->popups_action_group,
+					      "OpenLink");
+	gtk_action_set_visible (action, show_external);
+
+	action = gtk_action_group_get_action (ev_window->priv->popups_action_group,
+					      "CopyLinkAddress");
+	gtk_action_set_visible (action, show_external);
+
+	action = gtk_action_group_get_action (ev_window->priv->popups_action_group,
+					      "GoLink");
+	gtk_action_set_visible (action, show_internal);
 
 	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
 			NULL, NULL,
@@ -3035,6 +3062,8 @@ static const GtkActionEntry popups_entries [] = {
 	/* Links */
 	{ "OpenLink", GTK_STOCK_OPEN, N_("_Open Link"), NULL,
 	  NULL, G_CALLBACK (ev_popup_cmd_open_link) },
+	{ "GoLink", GTK_STOCK_GO_FORWARD, N_("_Go To"), NULL,
+	  NULL, G_CALLBACK (ev_popup_cmd_open_link) },
 	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
 	  NULL,
 	  G_CALLBACK (ev_popup_cmd_copy_link_address) },
@@ -3360,7 +3389,7 @@ view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
 static void
 ev_popup_cmd_open_link (GtkAction *action, EvWindow *window)
 {
-	launch_external_uri (window, window->priv->link);
+	ev_view_goto_link (EV_VIEW (window->priv->view), window->priv->link);
 }
 
 static void
@@ -3613,8 +3642,6 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 
 	/* Popups */
-	ev_window->priv->link_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-		 		    			        "/ExternalLinkPopup");
 	ev_window->priv->popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
 				    	    		   "/DocumentPopup");
 	ev_window->priv->link = NULL;
