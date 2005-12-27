@@ -179,6 +179,7 @@ static gboolean   ev_view_scroll_event                       (GtkWidget         
 							      GdkEventScroll     *event);
 static gboolean   ev_view_expose_event                       (GtkWidget          *widget,
 							      GdkEventExpose     *event);
+static gboolean   ev_view_popup_menu                         (GtkWidget 	 *widget);
 static gboolean   ev_view_button_press_event                 (GtkWidget          *widget,
 							      GdkEventButton     *event);
 static gboolean   ev_view_motion_notify_event                (GtkWidget          *widget,
@@ -1623,6 +1624,19 @@ ev_view_expose_event (GtkWidget      *widget,
 }
 
 static gboolean
+ev_view_popup_menu (GtkWidget *widget)
+{
+    gint x, y;
+    EvLink *link;
+    EvView *view = EV_VIEW (widget);
+    
+    gtk_widget_get_pointer (widget, &x, &y);
+    link = ev_view_get_link_at_location (view, x, y);
+    g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
+    return TRUE;
+}
+
+static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
@@ -2386,6 +2400,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
 	widget_class->style_set = ev_view_style_set;
 	widget_class->drag_data_get = ev_view_drag_data_get;
+	widget_class->popup_menu = ev_view_popup_menu;
 	gtk_object_class->destroy = ev_view_destroy;
 
 	class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
