@@ -1706,10 +1706,10 @@ selection_update_idle_cb (EvView *view)
 static gboolean
 selection_scroll_timeout_cb (EvView *view)
 {	
-	gint y, shift = 0;
+	gint x, y, shift = 0;
 	GtkWidget *widget = GTK_WIDGET (view);
 	
-	gtk_widget_get_pointer (widget, NULL, &y);
+	gtk_widget_get_pointer (widget, &x, &y);
 
 	if (y > widget->allocation.height) {
 		shift = (y - widget->allocation.height) / 2;
@@ -1723,6 +1723,20 @@ selection_scroll_timeout_cb (EvView *view)
 					  view->vadjustment->lower,
 					  view->vadjustment->upper -
 					  view->vadjustment->page_size));	
+
+	if (x > widget->allocation.width) {
+		shift = (x - widget->allocation.width) / 2;
+	} else if (x < 0) {
+		shift = x / 2;
+	}
+
+	if (shift)
+		gtk_adjustment_set_value (view->hadjustment,
+					  CLAMP (view->hadjustment->value + shift,
+					  view->hadjustment->lower,
+					  view->hadjustment->upper -
+					  view->hadjustment->page_size));	
+
 	return TRUE;
 }
 
