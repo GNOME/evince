@@ -120,7 +120,7 @@ ev_link_get_link_type (EvLink *self)
 int
 ev_link_get_page (EvLink *self)
 {
-	g_return_val_if_fail (EV_IS_LINK (self), 0);
+	g_return_val_if_fail (EV_IS_LINK (self), -1);
 	
 	return self->priv->page;
 }
@@ -316,7 +316,7 @@ static void
 ev_link_init (EvLink *ev_link)
 {
 	ev_link->priv = EV_LINK_GET_PRIVATE (ev_link);
-
+	ev_link->priv->page = -1;
 	ev_link->priv->type = EV_LINK_TYPE_TITLE;
 }
 

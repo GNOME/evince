@@ -1,5 +1,22 @@
 2005-12-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* backend/ev-link.c: (ev_link_get_page), (ev_link_init):
+	* shell/ev-page-action.c: (build_new_tree_cb):
+	* shell/ev-sidebar-links.c: (links_page_num_func),
+	(update_page_callback_foreach), (update_page_callback):
+	* shell/ev-view.c: (scroll_to_current_page):
+	
+	Fix for the bug #325067 with more intelligent selection
+	of current link in sidebar. Make sidebar handle links
+	of FITR-like type more correctly.
+
+	* dvi/pixbuf-device.c: (dvi_pixbuf_draw_rule),
+	(dvi_pixbuf_put_pixel):
+	
+	Fix memory consumtion with disabled alpha channel.
+
+2005-12-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* data/evince-ui.xml:
 	* shell/ev-window.c: (view_menu_popup_cb),
 	(ev_popup_cmd_open_link), (ev_window_init):

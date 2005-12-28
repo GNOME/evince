@@ -329,7 +329,7 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
 		if (view->continuous) {
     			gtk_adjustment_clamp_page (view->vadjustment,
-						   view_point.y - view->spacing,
+						   view_point.y - view->spacing / 2,
 						   view_point.y + view->vadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->vadjustment,

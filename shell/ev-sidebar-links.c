@@ -446,7 +446,7 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 			    -1);
 	
 	if (link != NULL &&
-	    ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+	    ev_link_get_page (link) >= 0) {
 		gchar *page_label;
 		gchar *page_string;
 
@@ -495,7 +495,7 @@ update_page_callback_foreach (GtkTreeModel *model,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
-	if (link && ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+	if (link) {
 		int current_page;
 
 		current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
@@ -503,17 +503,14 @@ update_page_callback_foreach (GtkTreeModel *model,
 			GtkTreeSelection *selection;
 
 			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
-
 			gtk_tree_selection_select_path (selection, path);
-	
 			g_object_unref (link);
+			
 			return TRUE;
 		}
+		g_object_unref (link);
 	}
 
-	if (link)
-		g_object_unref (link);
-	
 	return FALSE;
 }
 
@@ -523,19 +520,37 @@ update_page_callback (EvPageCache    *page_cache,
 		      EvSidebarLinks *sidebar_links)
 {
 	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		EvLink *link;
+
+		gtk_tree_model_get (model, &iter,
+				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+				    -1);
+		if (link) {
+			gint current_page;		
+			current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
+			if (ev_link_get_page (link) == current_page) {
+				g_object_unref (link);
+				return;
+			}
+			g_object_unref (link);
+		}
+	}		
+
 	/* We go through the tree linearly looking for the first page that
 	 * matches.  This is pretty inefficient.  We can do something neat with
 	 * a GtkTreeModelSort here to make it faster, if it turns out to be
 	 * slow.
 	 */
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
-
 	g_signal_handler_block (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_block (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 
-	gtk_tree_selection_unselect_all (selection);
-	gtk_tree_model_foreach (sidebar_links->priv->model,
+	gtk_tree_model_foreach (model,
 				update_page_callback_foreach,
 				sidebar_links);
 

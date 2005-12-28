@@ -298,7 +298,7 @@ build_new_tree_cb (GtkTreeModel *model,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
-	if (link && ev_link_get_link_type (link) == EV_LINK_TYPE_PAGE) {
+	if (link && ev_link_get_page (link) >= 0) {
 		GtkTreeIter filter_iter;
 
 		gtk_list_store_append (GTK_LIST_STORE (filter_model), &filter_iter);

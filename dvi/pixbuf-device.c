@@ -70,25 +70,22 @@ static void dvi_pixbuf_draw_rule(DviContext *dvi, int x, int y, Uint w, Uint h, 
 	    return;
 	
 	rowstride = gdk_pixbuf_get_rowstride (c_device->pixbuf);
-	p = gdk_pixbuf_get_pixels (c_device->pixbuf) + rowstride * y + 4 * x;
+	p = gdk_pixbuf_get_pixels (c_device->pixbuf) + rowstride * y + 3 * x;
 
 	for (i = 0; i < h; i++) {
 	    if (i == 0 || i == h - 1 || fill) {
 		  for (j = 0; j < w; j++) {
-			p[j * 4] = red;
-		        p[j * 4 + 1] = green;
-			p[j * 4 + 2] = blue;
-			p[j * 4 + 3] = 0xff;
+			p[j * 3] = red;
+		        p[j * 3 + 1] = green;
+			p[j * 3 + 2] = blue;
 		  }
     	    } else {
 		p[0] = red;
 		p[1] = green;
 		p[2] = blue;
-		p[3] = 0xff;
-		p[(w - 1) * 4] = red;
-		p[(w - 1) * 4 + 1] = green;
-		p[(w - 1) * 4 + 2] = blue;
-		p[(w - 1) * 4 + 3] = 0xff;
+		p[(w - 1) * 3] = red;
+		p[(w - 1) * 3 + 1] = green;
+		p[(w - 1) * 3 + 2] = blue;
     	    }
 	    p += rowstride;
       }
@@ -142,12 +139,11 @@ static void dvi_pixbuf_put_pixel(void *image, int x, int y, Ulong color)
 {
     guchar *p;
     
-    p = gdk_pixbuf_get_pixels (GDK_PIXBUF(image)) + y * gdk_pixbuf_get_rowstride(GDK_PIXBUF(image)) + x * 4;
+    p = gdk_pixbuf_get_pixels (GDK_PIXBUF(image)) + y * gdk_pixbuf_get_rowstride(GDK_PIXBUF(image)) + x * 3;
 
     p[0] = (color >> 16) & 0xff;
     p[1] = (color >> 8) & 0xff;
     p[2] = color & 0xff;
-    p[3] = (color >> 24) & 0xff;
 }
 
 static void dvi_pixbuf_set_color(void *device_data, Ulong fg, Ulong bg)
