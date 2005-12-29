@@ -970,7 +970,7 @@ setup_view_from_metadata (EvWindow *window)
 	if (!GTK_WIDGET_VISIBLE (window)) {
 		gboolean restore_size = TRUE;
 
-		if (ev_metadata_manager_get (uri, "window_maximized", &maximized, TRUE)) {
+		if (ev_metadata_manager_get (uri, "window_maximized", &maximized, FALSE)) {
 			if (g_value_get_boolean (&maximized)) {
 				gtk_window_maximize (GTK_WINDOW (window));
 				restore_size = FALSE;
