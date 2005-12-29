@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.gu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-26 05:19+0100\n"
-"PO-Revision-Date: 2005-12-26 17:04+0530\n"
+"POT-Creation-Date: 2005-12-29 05:39+0100\n"
+"PO-Revision-Date: 2005-12-29 11:04+0530\n"
 "Last-Translator: Ankit Patel <ankit644@yahoo.com>\n"
 "Language-Team: Gujarati <indianoss-gujarati@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -13,6 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
+"\n"
 "\n"
 "\n"
 "\n"
@@ -36,7 +37,7 @@ msgid "Separator"
 msgstr "વિભાજક"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3149
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3178
 msgid "Best Fit"
 msgstr "શ્રેષ્ઠ રીતે બંધબેસતું"
 
@@ -503,7 +504,7 @@ msgstr "ફોન્ટ"
 msgid "Gathering font information... %3d%%"
 msgstr "ફોન્ટ જાણકારી ભેગી કરી રહ્યા છીએ... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2046
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2074
 msgid "Loading..."
 msgstr "લાવી રહ્યા છીએ..."
 
@@ -511,7 +512,7 @@ msgstr "લાવી રહ્યા છીએ..."
 msgid "Print..."
 msgstr "છાપો..."
 
-#: ../shell/ev-sidebar-links.c:669
+#: ../shell/ev-sidebar-links.c:684
 msgid "Index"
 msgstr "અનુક્રમણિકા"
 
@@ -539,7 +540,7 @@ msgstr "દેખાવ નીચે સરકાવો"
 msgid "Document View"
 msgstr "દસ્તાવેજ દૃશ્ય"
 
-#: ../shell/ev-view.c:1249
+#: ../shell/ev-view.c:1250
 #, c-format
 msgid "Go to page %s"
 msgstr "પાનાં %s પર જાવ"
@@ -547,56 +548,56 @@ msgstr "પાનાં %s પર જાવ"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3222
+#: ../shell/ev-view.c:3251
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d આ પાનાં પર મળી આવ્યું"
 msgstr[1] "%d આ પાનાં પર મળી આવ્યા"
 
-#: ../shell/ev-view.c:3232
+#: ../shell/ev-view.c:3261
 msgid "Not found"
 msgstr "મળ્યું નહિં"
 
-#: ../shell/ev-view.c:3234
+#: ../shell/ev-view.c:3263
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% શોધવામાં બાકી"
 
-#: ../shell/ev-window.c:577
+#: ../shell/ev-window.c:576
 msgid "Unable to open document"
 msgstr "દસ્તાવેજ ખોલવામાં અસમર્થ"
 
-#: ../shell/ev-window.c:1100
+#: ../shell/ev-window.c:1099
 msgid "Open Document"
 msgstr "દસ્તાવેજ ખોલો"
 
-#: ../shell/ev-window.c:1220
+#: ../shell/ev-window.c:1219
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "ફાઈલ \"%s\" તરીકે સંગ્રહી શકાઈ નહિં."
 
-#: ../shell/ev-window.c:1264
+#: ../shell/ev-window.c:1263
 msgid "Save a Copy"
 msgstr "નકલ સંગ્રહો"
 
-#: ../shell/ev-window.c:1417
+#: ../shell/ev-window.c:1416
 msgid "Print"
 msgstr "છાપો"
 
-#: ../shell/ev-window.c:1421
+#: ../shell/ev-window.c:1420
 msgid "Pages"
 msgstr "પાનાંઓ"
 
-#: ../shell/ev-window.c:1449
+#: ../shell/ev-window.c:1448
 msgid "Generating PDF is not supported"
 msgstr "PDF બનાવવાનું આધારભૂત નથી"
 
-#: ../shell/ev-window.c:1460
+#: ../shell/ev-window.c:1459
 msgid "Printing is not supported on this printer."
 msgstr "આ પ્રિન્ટર પર છાપવાનું આધારભૂત નથી."
 
-#: ../shell/ev-window.c:1463
+#: ../shell/ev-window.c:1462
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -605,24 +606,24 @@ msgstr ""
 "તમે \"%s\" ડ્રાઈવરની મદદથી પ્રિન્ટર પર છાપવાનો પ્રયત્ન કરી રહ્યા હતા. આ કાર્યક્રમ માટે "
 "PostScript પ્રિન્ટર ડ્રાઈવર જરૂરી છે."
 
-#: ../shell/ev-window.c:1537
+#: ../shell/ev-window.c:1536
 msgid "The \"Find\" feature will not work with this document"
 msgstr "\"શોધો\" લક્ષણ આ દસ્તાવેજ સાથે કામ કરશે નહિં"
 
-#: ../shell/ev-window.c:1539
+#: ../shell/ev-window.c:1538
 msgid "Searching for text is only supported for PDF documents."
 msgstr "લખાણ માટે શોધવાનું એ માત્ર PDF દસ્તાવેજો માટે જ આધારભૂત છે."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1771 ../shell/ev-window.c:2955
+#: ../shell/ev-window.c:1770 ../shell/ev-window.c:2982
 msgid "Leave Fullscreen"
 msgstr "પૂર્ણ સ્ક્રીન છોડો"
 
-#: ../shell/ev-window.c:2104
+#: ../shell/ev-window.c:2103
 msgid "Toolbar Editor"
 msgstr "સાધનપટ્ટી સંપાદક"
 
-#: ../shell/ev-window.c:2484
+#: ../shell/ev-window.c:2483
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -631,7 +632,7 @@ msgstr ""
 "PostScript અને PDF ફાઈલ દર્શક.\n"
 "poppler %s (%s) વાપરીને"
 
-#: ../shell/ev-window.c:2507
+#: ../shell/ev-window.c:2506
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -643,7 +644,7 @@ msgstr ""
 "ની શરતો અને કાયદાઓ હેઠળ; ક્યાં તો લાઈસન્સની આવૃત્તિ ૨, અથવા તો\n"
 "(તમારા વિકલ્પે) કોઈપણ પહેલાંની આવૃત્તિ.\n"
 
-#: ../shell/ev-window.c:2511
+#: ../shell/ev-window.c:2510
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -655,7 +656,7 @@ msgstr ""
 "PARTICULAR PURPOSE ની કોઈપણ વોરંટી વિના પણ.  વધુ વિગતો માટે\n"
 "GNU General Public License જુઓ.\n"
 
-#: ../shell/ev-window.c:2515
+#: ../shell/ev-window.c:2514
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -665,265 +666,269 @@ msgstr ""
 "હોવી જોઈએ; જો નહિં તો, Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA ને લખો\n"
 
-#: ../shell/ev-window.c:2539 ../shell/main.c:259
+#: ../shell/ev-window.c:2538 ../shell/main.c:259
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2542
+#: ../shell/ev-window.c:2541
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 The Evince authors"
 
-#: ../shell/ev-window.c:2548
+#: ../shell/ev-window.c:2547
 msgid "translator-credits"
 msgstr "અંકિત પટેલ <ankit644@yahoo.com>"
 
-#: ../shell/ev-window.c:2884
+#: ../shell/ev-window.c:2911
 msgid "_File"
 msgstr "ફાઈલ (_F)"
 
-#: ../shell/ev-window.c:2885
+#: ../shell/ev-window.c:2912
 msgid "_Edit"
 msgstr "ફેરફાર (_E)"
 
-#: ../shell/ev-window.c:2886
+#: ../shell/ev-window.c:2913
 msgid "_View"
 msgstr "દેખાવ (_V)"
 
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2914
 msgid "_Go"
 msgstr "જાઓ (_G)"
 
-#: ../shell/ev-window.c:2888
+#: ../shell/ev-window.c:2915
 msgid "_Help"
 msgstr "મદદ (_H)"
 
 #. File menu
-#: ../shell/ev-window.c:2891
+#: ../shell/ev-window.c:2918
 msgid "_Open..."
 msgstr "ખોલો (_O)..."
 
-#: ../shell/ev-window.c:2892
+#: ../shell/ev-window.c:2919
 msgid "Open an existing document"
 msgstr "વર્તમાન દસ્તાવેજ ખોલો"
 
-#: ../shell/ev-window.c:2894
+#: ../shell/ev-window.c:2921
 msgid "_Save a Copy..."
 msgstr "નકલ સંગ્રહો (_S)..."
 
-#: ../shell/ev-window.c:2895
+#: ../shell/ev-window.c:2922
 msgid "Save a copy of the current document"
 msgstr "વર્તમાન દસ્તાવેજની નકલ સંગ્રહો"
 
-#: ../shell/ev-window.c:2897
+#: ../shell/ev-window.c:2924
 msgid "_Print..."
 msgstr "છાપો (_P)..."
 
-#: ../shell/ev-window.c:2898
+#: ../shell/ev-window.c:2925
 msgid "Print this document"
 msgstr "આ દસ્તાવેજ છાપો"
 
-#: ../shell/ev-window.c:2900
+#: ../shell/ev-window.c:2927
 msgid "P_roperties"
 msgstr "ગુણધર્મો (_r)"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2935
 msgid "Select _All"
 msgstr "બધું પસંદ કરો (_A)"
 
-#: ../shell/ev-window.c:2911
+#: ../shell/ev-window.c:2938
 msgid "Find a word or phrase in the document"
 msgstr "દસ્તાવેજમાં શબ્દ અથવા મહાવરો શોધો"
 
-#: ../shell/ev-window.c:2913
+#: ../shell/ev-window.c:2940
 msgid "Find Ne_xt"
 msgstr "આગળનું શોધો (_x)"
 
-#: ../shell/ev-window.c:2915
+#: ../shell/ev-window.c:2942
 msgid "T_oolbar"
 msgstr "સાધનપટ્ટી (_o)"
 
-#: ../shell/ev-window.c:2917
+#: ../shell/ev-window.c:2944
 msgid "Rotate _Left"
 msgstr "ડાબે ફેરવો (_L)"
 
-#: ../shell/ev-window.c:2919
+#: ../shell/ev-window.c:2946
 msgid "Rotate _Right"
 msgstr "જમણે ફેરવો (_R)"
 
-#: ../shell/ev-window.c:2924
+#: ../shell/ev-window.c:2951
 msgid "Enlarge the document"
 msgstr "દસ્તાવેજ મોટું કરો"
 
-#: ../shell/ev-window.c:2927
+#: ../shell/ev-window.c:2954
 msgid "Shrink the document"
 msgstr "દસ્તાવેજ સંકોચો"
 
-#: ../shell/ev-window.c:2929
+#: ../shell/ev-window.c:2956
 msgid "_Reload"
 msgstr "પુનઃલાવો (_R)"
 
-#: ../shell/ev-window.c:2930
+#: ../shell/ev-window.c:2957
 msgid "Reload the document"
 msgstr "દસ્તાવેજ પાછું લાવો"
 
 #. Go menu
-#: ../shell/ev-window.c:2934
+#: ../shell/ev-window.c:2961
 msgid "_Previous Page"
 msgstr "પહેલાનું પાનું (_P)"
 
-#: ../shell/ev-window.c:2935
+#: ../shell/ev-window.c:2962
 msgid "Go to the previous page"
 msgstr "પહેલાના પાનાં પર જાઓ"
 
-#: ../shell/ev-window.c:2937
+#: ../shell/ev-window.c:2964
 msgid "_Next Page"
 msgstr "આગળનું પાનું (_N)"
 
-#: ../shell/ev-window.c:2938
+#: ../shell/ev-window.c:2965
 msgid "Go to the next page"
 msgstr "આગળના પાનાં પર જાઓ"
 
-#: ../shell/ev-window.c:2940
+#: ../shell/ev-window.c:2967
 msgid "_First Page"
 msgstr "પ્રથમ પાનું (_F)"
 
-#: ../shell/ev-window.c:2941
+#: ../shell/ev-window.c:2968
 msgid "Go to the first page"
 msgstr "પ્રથમ પાનાં પર જાઓ"
 
-#: ../shell/ev-window.c:2943
+#: ../shell/ev-window.c:2970
 msgid "_Last Page"
 msgstr "છેલ્લું પાનું (_L)"
 
-#: ../shell/ev-window.c:2944
+#: ../shell/ev-window.c:2971
 msgid "Go to the last page"
 msgstr "છેલ્લા પાના પર જાઓ"
 
 #. Help menu
-#: ../shell/ev-window.c:2948
+#: ../shell/ev-window.c:2975
 msgid "_Contents"
 msgstr "સમાવિષ્ટો (_C)"
 
-#: ../shell/ev-window.c:2951
+#: ../shell/ev-window.c:2978
 msgid "_About"
 msgstr "વિશે (_A)"
 
-#: ../shell/ev-window.c:2956
+#: ../shell/ev-window.c:2983
 msgid "Leave fullscreen mode"
 msgstr "પૂર્ણસ્ક્રીન સ્થિતિ છોડી મૂકો"
 
 #. View Menu
-#: ../shell/ev-window.c:3007
+#: ../shell/ev-window.c:3034
 msgid "_Toolbar"
 msgstr "સાધનપટ્ટી (_T)"
 
-#: ../shell/ev-window.c:3008
+#: ../shell/ev-window.c:3035
 msgid "Show or hide the toolbar"
 msgstr "સાધનપટ્ટી બતાવો અથવા છુપાવો"
 
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:3037
 msgid "Side _Pane"
 msgstr "બાજુની તકતી (_P)"
 
-#: ../shell/ev-window.c:3011
+#: ../shell/ev-window.c:3038
 msgid "Show or hide the side pane"
 msgstr "બાજુની તકતી બતાવો અથવા છુપાવો"
 
-#: ../shell/ev-window.c:3013
+#: ../shell/ev-window.c:3040
 msgid "_Continuous"
 msgstr "સતત (_C)"
 
-#: ../shell/ev-window.c:3014
+#: ../shell/ev-window.c:3041
 msgid "Show the entire document"
 msgstr "વર્તમાન દસ્તાવેજ બતાવો"
 
-#: ../shell/ev-window.c:3016
+#: ../shell/ev-window.c:3043
 msgid "_Dual"
 msgstr "દ્વિ (_D)"
 
-#: ../shell/ev-window.c:3017
+#: ../shell/ev-window.c:3044
 msgid "Show two pages at once"
 msgstr "બે પાનાંઓ એકસાથે બતાવો"
 
-#: ../shell/ev-window.c:3019
+#: ../shell/ev-window.c:3046
 msgid "_Fullscreen"
 msgstr "પૂર્ણસ્ક્રીન (_F)"
 
-#: ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:3047
 msgid "Expand the window to fill the screen"
 msgstr "વિન્ડોને પૂર્ણ સ્ક્રીનમાં વિસ્તૃત બનાવો"
 
-#: ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:3049
 msgid "_Presentation"
 msgstr "રજૂઆત (_P)"
 
-#: ../shell/ev-window.c:3023
+#: ../shell/ev-window.c:3050
 msgid "Run document as a presentation"
 msgstr "દસ્તાવેજને રજૂઆત તરીકે ચલાવો"
 
-#: ../shell/ev-window.c:3025
+#: ../shell/ev-window.c:3052
 msgid "_Best Fit"
 msgstr "શ્રેષ્ઠ રીતે બંધબેસતું (_B)"
 
-#: ../shell/ev-window.c:3026
+#: ../shell/ev-window.c:3053
 msgid "Make the current document fill the window"
 msgstr "વર્તમાન દસ્તાવેજથી વિન્ડો ભરો"
 
-#: ../shell/ev-window.c:3028
+#: ../shell/ev-window.c:3055
 msgid "Fit Page _Width"
 msgstr "પાનાંની પહોળાઈ પ્રમાણે બંધબેસાડો (_W)"
 
-#: ../shell/ev-window.c:3029
+#: ../shell/ev-window.c:3056
 msgid "Make the current document fill the window width"
 msgstr "વર્તમાન દસ્તાવેજથી વિન્ડોની પહોળાઈ ભરો"
 
 #. Links
-#: ../shell/ev-window.c:3036
+#: ../shell/ev-window.c:3063
 msgid "_Open Link"
 msgstr "કડી ખોલો (_O)"
 
-#: ../shell/ev-window.c:3038
+#: ../shell/ev-window.c:3065
+msgid "_Go To"
+msgstr "પર જાઓ (_G)"
+
+#: ../shell/ev-window.c:3067
 msgid "_Copy Link Address"
 msgstr "કડી સરનામાની નકલ કરો (_C)"
 
-#: ../shell/ev-window.c:3098
+#: ../shell/ev-window.c:3127
 msgid "Page"
 msgstr "પાનું"
 
-#: ../shell/ev-window.c:3099
+#: ../shell/ev-window.c:3128
 msgid "Select Page"
 msgstr "પાનું પસંદ કરો"
 
-#: ../shell/ev-window.c:3111
+#: ../shell/ev-window.c:3140
 msgid "Zoom"
 msgstr "નાનુમોટુ કરવું"
 
-#: ../shell/ev-window.c:3113
+#: ../shell/ev-window.c:3142
 msgid "Adjust the zoom level"
 msgstr "નાનામોટાપણાનું સ્તર સંતુલિત કરો"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3129
+#: ../shell/ev-window.c:3158
 msgid "Previous"
 msgstr "પહેલાનું"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3135
+#: ../shell/ev-window.c:3164
 msgid "Next"
 msgstr "આગળનું"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3139
+#: ../shell/ev-window.c:3168
 msgid "Zoom In"
 msgstr "મોટું કરો"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3144
+#: ../shell/ev-window.c:3173
 msgid "Zoom Out"
 msgstr "નાનું કરો"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3154
+#: ../shell/ev-window.c:3183
 msgid "Fit Width"
 msgstr "પહોળાઈથી બંધબેસાડો"
 
