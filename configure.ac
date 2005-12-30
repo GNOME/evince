@@ -145,9 +145,10 @@ if test x$enable_ps = xyes; then
 fi 
 
 AM_CONDITIONAL(ENABLE_PS, test x$enable_ps = xyes)
+
 if test x$enable_ps = xyes; then
-AC_ARG_WITH(gs-pkg,
-            [  --with-gs=dir       Directory Where GhostScript package is installed.])
+AC_ARG_WITH(gs,
+            [AC_HELP_STRING([--with-gs=dir], [Directory Where GhostScript package is installed.])])
 
 if test "x$with_gs" = "x"; then
         AC_PATH_PROG(GS_PROG, gs)
@@ -160,7 +161,6 @@ fi
 
 AC_DEFINE_UNQUOTED(GS_PATH, "$GS_PROG", [Path to the 'gs' executable.])
 
-
 dnl check for GS version
 AC_MSG_CHECKING(for Ghostscript version...)
 GS_VERSION=`gs --version | head -n 1 | sed 's/\([[0-9]]*\)\.\([[0-9]]*\).*/\1/'`
@@ -168,9 +168,14 @@ AC_MSG_RESULT(found $GS_VERSION)
 if test "$GS_VERSION" -lt "7"; then
 	AC_MSG_ERROR([You need Ghostscript version >= 7 in order to run evince])
 fi
-AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS"
+
+AC_ARG_WITH(gs-aa-params,
+            [AC_HELP_STRING([--with-gs-aa-params], [Define antialiasing params for ghostscript])],AA_PARAMS=$withval,
+	    AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS -dGraphicsAlphaBits=4 -dTextAlphaBits=4 -dDOINTERPOLATE"
+	    )
 AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghostscript.])
 AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
+
 fi
 dnl ======================== End of ggv checks =================================
 
