@@ -294,7 +294,7 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 			if (link)
 		    		g_object_unref (link);
 		} else {
-			last_page = -1;
+			last_page =  ev_page_cache_get_n_pages (sidebar->priv->page_cache);
 		}
 	
 		window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));

@@ -107,15 +107,15 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
 
-	EvWindowTitle *title;
-
 	/* Dialogs */
 	GtkWidget *properties;
+	GtkWidget *print_dialog;
+	GtkWidget *password_dialog;
 
 	/* UI Builders */
 	GtkActionGroup *action_group;
 	GtkActionGroup *popups_action_group;
-	GtkUIManager *ui_manager;
+	GtkUIManager   *ui_manager;
 
 	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
@@ -130,22 +130,19 @@ struct _EvWindowPrivate {
 	char *uri;
 	char *local_uri;
 	char *loaded_uri;
+	char *password_uri;
 	
 	EvDocument *document;
-	EvPageCache *page_cache;
-
-	EvWindowPageMode page_mode;
-
-	/* These members are used temporarily when in PAGE_MODE_PASSWORD */
 	EvDocument *password_document;
-	GtkWidget *password_dialog;
-	char *password_uri;
+	EvPageCache *page_cache;
+	EvWindowPageMode page_mode;
+	EvWindowTitle *title;
+	EggRecentViewUIManager *recent_view;
 
 	/* Job used to load document */
 	EvJob *xfer_job;
 	EvJob *load_job;
-
-	EggRecentViewUIManager *recent_view;
+	GnomePrintJob *print_job;
 };
 
 static const GtkTargetEntry ev_drop_types[] = {
@@ -1054,17 +1051,41 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	}		
 }
 
-void
-ev_window_open_uri (EvWindow *ev_window, const char *uri)
+const char *
+ev_window_get_uri (EvWindow *ev_window)
+{
+	return ev_window->priv->uri;
+}
+
+static void
+ev_window_close_dialogs (EvWindow *ev_window)
 {
 	if (ev_window->priv->password_dialog)
 		gtk_widget_destroy (ev_window->priv->password_dialog);
+	ev_window->priv->password_dialog = NULL;
+
+	if (ev_window->priv->print_dialog) {
+		gtk_widget_destroy (ev_window->priv->print_dialog);
+		g_object_unref (ev_window->priv->print_job);
+	}
+	ev_window->priv->print_dialog = NULL;
+	ev_window->priv->print_job = NULL;
+
+	if (ev_window->priv->properties)
+		gtk_widget_destroy (ev_window->priv->properties);
+	ev_window->priv->properties = NULL;
+}
+
+void
+ev_window_open_uri (EvWindow *ev_window, const char *uri)
+{
 
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
 
 	setup_view_from_metadata (ev_window);
 	
+	ev_window_close_dialogs (ev_window);
 	ev_window_clear_jobs (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	
@@ -1251,113 +1272,114 @@ ev_window_print (EvWindow *window)
 	page_cache = ev_page_cache_get (window->priv->document);
 	last_page = ev_page_cache_get_n_pages (page_cache);
 
-	ev_window_print_range (window, 1, -1);
+	ev_window_print_range (window, 1, last_page);
 }
 
-const char *
-ev_window_get_uri (EvWindow *ev_window)
+
+static gboolean
+ev_window_print_dialog_response_cb (GtkDialog *print_dialog, gint response, gpointer data)
 {
-	return ev_window->priv->uri;
+    EvWindow *ev_window = EV_WINDOW (data);
+    EvPrintJob *print_job;
+    GnomePrintConfig *config;
+    
+    if (response != GNOME_PRINT_DIALOG_RESPONSE_PRINT) {
+	    gtk_widget_destroy (GTK_WIDGET (print_dialog));
+	    ev_window->priv->print_dialog = NULL;
+	    g_object_unref (ev_window->priv->print_job);
+	    ev_window->priv->print_job = NULL;
+	    return FALSE;
+    }
+
+    config = gnome_print_dialog_get_config (GNOME_PRINT_DIALOG (print_dialog));
+
+    /* FIXME: Change this when we have the first backend
+     * that can print more than postscript
+     */
+    if (using_pdf_printer (config)) {
+	    GtkWidget *dialog;
+	    dialog = gtk_message_dialog_new (GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
+    					     GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+					    _("Generating PDF is not supported"));
+	    gtk_dialog_run (GTK_DIALOG (dialog));
+	    gtk_widget_destroy (dialog);
+	    return FALSE;
+    } else if (!using_postscript_printer (config)) {
+	    GtkWidget *dialog;
+
+	    dialog = gtk_message_dialog_new (GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
+					     GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+					     _("Printing is not supported on this printer."));
+					     gtk_message_dialog_format_secondary_text (
+							GTK_MESSAGE_DIALOG (dialog),
+							_("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
+							gnome_print_config_get (config, (guchar *)"Settings.Engine.Backend.Driver"));
+	    gtk_dialog_run (GTK_DIALOG (dialog));
+	    gtk_widget_destroy (dialog);
+	    return FALSE;
+    }
+
+    save_print_config_to_file (config);
+    
+    print_job = g_object_new (EV_TYPE_PRINT_JOB,
+			      "gnome_print_job", ev_window->priv->print_job,
+			      "document", ev_window->priv->document,
+			      "print_dialog", print_dialog,
+			       NULL);
+
+    if (print_job != NULL) {
+	ev_print_job_print (print_job, GTK_WINDOW (ev_window));
+	g_object_unref (print_job);
+    }
+
+    g_object_unref (config);
+
+    gtk_widget_destroy (GTK_WIDGET (print_dialog));
+    ev_window->priv->print_dialog = NULL;
+    g_object_unref (ev_window->priv->print_job);
+    ev_window->priv->print_job = NULL;
+
+    return FALSE;
 }
 
 void
 ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 {
 	GnomePrintConfig *config;
-	GnomePrintJob *job;
-	GtkWidget *print_dialog;
 	gchar *pages_label;
-	EvPrintJob *print_job = NULL;
-	EvPageCache *page_cache;
 
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
 
-	page_cache = ev_page_cache_get (ev_window->priv->document);
-	if (last_page == -1) {
-		last_page = ev_page_cache_get_n_pages (page_cache);
-	}
-
 	config = load_print_config_from_file ();
-	job = gnome_print_job_new (config);
 
-	print_dialog = gnome_print_dialog_new (job, (guchar *) _("Print"),
-					       (GNOME_PRINT_DIALOG_RANGE |
-						GNOME_PRINT_DIALOG_COPIES));
+	if (ev_window->priv->print_job == NULL)
+		ev_window->priv->print_job = gnome_print_job_new (config);
+	
+	if (ev_window->priv->print_dialog == NULL)
+		ev_window->priv->print_dialog = gnome_print_dialog_new (ev_window->priv->print_job, (guchar *) _("Print"),
+								       (GNOME_PRINT_DIALOG_RANGE |
+									GNOME_PRINT_DIALOG_COPIES));
+	gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->print_dialog), GTK_WINDOW (ev_window));								
+	g_object_unref (config);								
 
 	pages_label = g_strconcat (_("Pages"), " ", NULL);
-	gnome_print_dialog_construct_range_page (GNOME_PRINT_DIALOG (print_dialog),
+	gnome_print_dialog_construct_range_page (GNOME_PRINT_DIALOG (ev_window->priv->print_dialog),
 						 GNOME_PRINT_RANGE_ALL |
 						 GNOME_PRINT_RANGE_RANGE,
 						 first_page, last_page,
 						 NULL, (const guchar *)pages_label);
 	g_free (pages_label);
 						 
-	gtk_dialog_set_response_sensitive (GTK_DIALOG (print_dialog),
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (ev_window->priv->print_dialog),
 					   GNOME_PRINT_DIALOG_RESPONSE_PREVIEW,
 					   FALSE);
 
-	while (TRUE) {
-		int response;
-		response = gtk_dialog_run (GTK_DIALOG (print_dialog));
-
-		if (response != GNOME_PRINT_DIALOG_RESPONSE_PRINT)
-			break;
-
-		/* FIXME: Change this when we have the first backend
-		 * that can print more than postscript
-		 */
-		if (using_pdf_printer (config)) {
-			GtkWidget *dialog;
-
-			dialog = gtk_message_dialog_new (
-				GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
-				GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-				_("Generating PDF is not supported"));
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (dialog);
-			
-			continue;
-		} else if (!using_postscript_printer (config)) {
-			GtkWidget *dialog;
-
-			dialog = gtk_message_dialog_new (
-				GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
-				GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-				_("Printing is not supported on this printer."));
-			gtk_message_dialog_format_secondary_text (
-				GTK_MESSAGE_DIALOG (dialog),
-				_("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
-				gnome_print_config_get (
-					config, (guchar *)"Settings.Engine.Backend.Driver"));
-			gtk_dialog_run (GTK_DIALOG (dialog));
-			gtk_widget_destroy (dialog);
-
-			continue;
-		}
-
-		save_print_config_to_file (config);
-
-		print_job = g_object_new (EV_TYPE_PRINT_JOB,
-					  "gnome_print_job", job,
-					  "document", ev_window->priv->document,
-					  "print_dialog", print_dialog,
-					  NULL);
-		break;
-	}
-
-	g_object_unref (job);
-
-	gtk_widget_destroy (print_dialog);
-
-	if (print_job != NULL) {
-		ev_print_job_print (print_job, GTK_WINDOW (ev_window));
-		g_object_unref (print_job);
-	}
-
-	g_object_unref (config);
+	g_signal_connect (G_OBJECT (ev_window->priv->print_dialog), "response", G_CALLBACK (ev_window_print_dialog_response_cb), ev_window);
+	gtk_widget_show (ev_window->priv->print_dialog);
+	return;
 }
-
+	
 static void
 ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)
 {
@@ -2703,9 +2725,7 @@ ev_window_dispose (GObject *object)
 		priv->password_uri = NULL;
 	}
 
-	if (priv->password_dialog) {
-		gtk_widget_destroy (priv->password_dialog);
-	}
+	ev_window_close_dialogs (window);
 
 	if (priv->link) {
 		g_object_unref (priv->link);

@@ -1,5 +1,15 @@
 2006-01-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-sidebar-links.c: (print_section_cb):
+	* shell/ev-window.c: (ev_window_get_uri),
+	(ev_window_close_dialogs), (ev_window_open_uri), (ev_window_print),
+	(ev_window_print_dialog_response_cb), (ev_window_print_range),
+	(ev_window_dispose):
+	
+	Make print dialog non-modal. Fix for the bug #325622.
+
+2006-01-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-metadata-manager.c:
 	* shell/ev-utils.c: (using_pdf_printer),
 	(using_postscript_printer), (load_print_config_from_file),
