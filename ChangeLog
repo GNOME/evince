@@ -1,3 +1,26 @@
+2006-01-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-metadata-manager.c:
+	* shell/ev-utils.c: (using_pdf_printer),
+	(using_postscript_printer), (load_print_config_from_file),
+	(save_print_config_to_file):
+	* shell/ev-utils.h:
+	* shell/ev-window.c: (update_sizing_buttons), (page_changed_cb),
+	(update_sidebar_visibility), (setup_sidebar_from_metadata),
+	(setup_view_from_metadata), (ev_window_setup_document),
+	(ev_window_load_job_cb), (ev_window_sidebar_position_change_cb),
+	(ev_window_run_fullscreen), (ev_window_stop_fullscreen),
+	(ev_window_run_presentation), (ev_window_stop_presentation),
+	(save_sizing_mode), (ev_window_zoom_changed_cb),
+	(ev_window_continuous_changed_cb), (ev_window_rotation_changed_cb),
+	(ev_window_dual_mode_changed_cb),
+	(ev_window_sidebar_current_page_changed_cb),
+	(ev_window_sidebar_visibility_changed_cb), (ev_window_dispose),
+	(window_state_event_cb), (window_configure_event_cb),
+	(ev_window_init):
+	
+	Setting saving behaviour fixes.
+
 2005-12-30  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:

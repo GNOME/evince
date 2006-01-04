@@ -23,21 +23,20 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
+#include <libgnomeprintui/gnome-print-dialog.h>
 
 G_BEGIN_DECLS
 
-GdkPixbuf *ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
-				 int x_offset, int y_offset, double opacity);
+GdkPixbuf*		ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
+					      int x_offset, int y_offset, double opacity);
 
-void       ev_print_region_contents (GdkRegion *region);
+void			ev_print_region_contents (GdkRegion *region);
 
-#ifndef HAVE_G_FILE_SET_CONTENTS
 
-gboolean   ev_file_set_contents (const gchar *filename,
-		    		 const gchar *contents,
-		    		 gssize	     length,
-		    		 GError	   **error);
-#endif /* HAVE_G_FILE_SET_CONTENTS */
+GnomePrintConfig* 	load_print_config_from_file (void);
+void       		save_print_config_to_file (GnomePrintConfig *config);
+gboolean		using_postscript_printer (GnomePrintConfig *config);
+gboolean		using_pdf_printer (GnomePrintConfig *config);
 
 G_END_DECLS
 

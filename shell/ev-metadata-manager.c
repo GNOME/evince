@@ -378,6 +378,17 @@ ev_metadata_manager_set_last (const gchar *key,
 	return;
 }
 				 
+/**
+ * ev_metadata_manager_set:
+ * @uri: Uri to set data for, if @NULL, we return default value
+ * @key: Key to set uri
+ * @value: GValue struct filled up with value
+ * @ignore_last: if @TRUE, default value is ignored
+ * 
+ * Retrieve value for uri in metadata database
+ * 
+ * Returns: @TRUE if value was taken.
+ **/
 gboolean
 ev_metadata_manager_get (const gchar *uri,
 			 const gchar *key,
@@ -427,6 +438,14 @@ ev_metadata_manager_get (const gchar *uri,
 	return ev_metadata_manager_get_last (key, value, ignore_last);
 }
 
+/**
+ * ev_metadata_manager_set:
+ * @uri: Uri to set data for, if @NULL, we set default value
+ * @key: Key to set uri
+ * @value: GValue struct containing value
+ * 
+ * Set value for key in metadata database
+ **/
 void
 ev_metadata_manager_set (const gchar  *uri,
 			 const gchar  *key,

@@ -18,8 +18,13 @@
  *
  */
 
+#include <config.h>
+
 #include "ev-utils.h"
+#include "ev-file-helpers.h"
 #include <math.h>
+
+#define PRINT_CONFIG_FILENAME	"ev-print-config.xml"
 
 typedef struct
 {
@@ -372,7 +377,7 @@ write_to_temp_file (const gchar *contents,
   return retval;
 }
 
-gboolean
+static gboolean
 ev_file_set_contents (const gchar *filename,
 		      const gchar *contents,
 		      gssize	     length,
@@ -414,4 +419,97 @@ ev_file_set_contents (const gchar *filename,
 }
 
 #endif /* HAVE_G_FILE_SET_CONTENTS */
+
+gboolean
+using_pdf_printer (GnomePrintConfig *config)
+{
+	const guchar *driver;
+
+	driver = gnome_print_config_get (
+		config, (const guchar *)"Settings.Engine.Backend.Driver");
+
+	if (driver) {
+		if (!strcmp ((const gchar *)driver, "gnome-print-pdf"))
+			return TRUE;
+		else
+			return FALSE;
+	}
+
+	return FALSE;
+}
+
+gboolean
+using_postscript_printer (GnomePrintConfig *config)
+{
+	const guchar *driver;
+	const guchar *transport;
+
+	driver = gnome_print_config_get (
+		config, (const guchar *)"Settings.Engine.Backend.Driver");
+
+	transport = gnome_print_config_get (
+		config, (const guchar *)"Settings.Transport.Backend");
+
+	if (driver) {
+		if (!strcmp ((const gchar *)driver, "gnome-print-ps"))
+			return TRUE;
+		else
+			return FALSE;
+	} else 	if (transport) { /* these transports default to PostScript */
+		if (!strcmp ((const gchar *)transport, "CUPS"))
+			return TRUE;
+		else if (!strcmp ((const gchar *)transport, "LPD"))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+GnomePrintConfig *
+load_print_config_from_file (void)
+{
+	GnomePrintConfig *print_config = NULL;
+	char *file_name, *contents = NULL;
+
+	file_name = g_build_filename (ev_dot_dir (), PRINT_CONFIG_FILENAME,
+				      NULL);
+
+	if (g_file_get_contents (file_name, &contents, NULL, NULL)) {
+		print_config = gnome_print_config_from_string (contents, 0);
+		g_free (contents);
+	}
+
+	if (print_config == NULL) {
+		print_config = gnome_print_config_default ();
+	}
+
+	g_free (file_name);
+
+	return print_config;
+}
+
+void
+save_print_config_to_file (GnomePrintConfig *config)
+{
+	char *file_name, *str;
+
+	g_return_if_fail (config != NULL);
+
+	str = gnome_print_config_to_string (config, 0);
+	if (str == NULL) return;
+
+	file_name = g_build_filename (ev_dot_dir (),
+				      PRINT_CONFIG_FILENAME,
+				      NULL);
+
+#ifdef HAVE_G_FILE_SET_CONTENTS
+	g_file_set_contents (file_name, str, -1, NULL);
+#else
+	ev_file_set_contents (file_name, str, -1, NULL);
+#endif
+
+	g_free (file_name);
+	g_free (str);
+}
+
 
