@@ -333,7 +333,10 @@ scroll_to_current_page (EvView *view, GtkOrientation orientation)
 						   view_point.y + view->vadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->vadjustment,
-		    				  view_point.y);
+						  CLAMP (view_point.y,
+						  view->vadjustment->lower,
+						  view->vadjustment->upper -
+						  view->vadjustment->page_size));
 		}
 	} else {
 		if (view->dual_page) {
