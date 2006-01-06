@@ -129,8 +129,6 @@ struct _EvWindowPrivate {
 	/* Document */
 	char *uri;
 	char *local_uri;
-	char *loaded_uri;
-	char *password_uri;
 	
 	EvDocument *document;
 	EvDocument *password_document;
@@ -595,7 +593,8 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvWindow    *ev_window)
 {
 	update_action_sensitivity (ev_window);
-	ev_metadata_manager_set_int (ev_window->priv->loaded_uri, "page", page);
+	if (!ev_window_is_empty (ev_window))
+		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
 }
 
 static void
@@ -803,12 +802,12 @@ ev_window_setup_document (EvWindow *ev_window)
 				         ev_window, 0);
 	}
 
-	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 	ev_sidebar_set_document (sidebar, document);
 
 	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
 		ev_view_set_document (view, document);
 	}
+	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
@@ -837,8 +836,6 @@ password_dialog_response (GtkWidget *password_dialog,
 	char *password;
 	
 	if (response_id == GTK_RESPONSE_OK) {
-		EvDocument *document;
-		gchar *uri;
 
 		password = ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog));
 		if (password) {
@@ -851,21 +848,14 @@ password_dialog_response (GtkWidget *password_dialog,
 
 		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
 
-		document = ev_window->priv->password_document;
-		uri = ev_window->priv->password_uri;
-
+		g_object_unref (ev_window->priv->password_document);
 		ev_window->priv->password_document = NULL;
-		ev_window->priv->password_uri = NULL;
 
 		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-
 		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 		
     		gtk_widget_destroy (password_dialog);
 			
-		g_object_unref (document);
-		g_free (uri);
-
 		return;
 	}
 
@@ -881,16 +871,15 @@ static void
 ev_window_popup_password_dialog (EvWindow *ev_window)
 {
 	g_assert (ev_window->priv->password_document);
-	g_assert (ev_window->priv->password_uri);
 
 	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
 
-	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->password_uri);
+	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
 	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_PASSWORD);
 
 	if (ev_window->priv->password_dialog == NULL) {
 		ev_window->priv->password_dialog =
- 			g_object_new (EV_TYPE_PASSWORD_DIALOG, "uri", ev_window->priv->password_uri, NULL);
+ 			g_object_new (EV_TYPE_PASSWORD_DIALOG, "uri", ev_window->priv->uri, NULL);
 		gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->password_dialog), GTK_WINDOW (ev_window));
 
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
@@ -969,24 +958,16 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		g_object_unref (ev_window->priv->password_document);
 		ev_window->priv->password_document = NULL;
 	}
-	if (ev_window->priv->password_uri) {
-		g_free (ev_window->priv->password_uri);
-		ev_window->priv->password_uri = NULL;
-	}
 
 	/* Success! */
 	if (job->error == NULL) {
+		
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
+		
 		ev_window_setup_document (ev_window);
-		
-		ev_window_add_recent (ev_window, ev_window->priv->uri);
-		
-		if (ev_window->priv->loaded_uri)
-			g_free (ev_window->priv->loaded_uri);
-		ev_window->priv->loaded_uri = g_strdup (ev_window->priv->uri);
-		
+		ev_window_add_recent (ev_window, ev_window->priv->uri);		
 		ev_window_clear_jobs (ev_window);
 		
 		return;
@@ -997,7 +978,6 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		gchar *base_name, *file_name;
 
 		ev_window->priv->password_document = g_object_ref (document);
-		ev_window->priv->password_uri = g_strdup (job->uri);
 
 		file_name = gnome_vfs_format_uri_for_display (job->uri);
 		base_name = g_path_get_basename (file_name);
@@ -1528,8 +1508,9 @@ static void
 ev_window_sidebar_position_change_cb (GObject *object, GParamSpec *pspec,
 				      EvWindow *ev_window)
 {
-	ev_metadata_manager_set_int (ev_window->priv->loaded_uri, "sidebar_size",
-				     gtk_paned_get_position (GTK_PANED (object)));
+	if (!ev_window_is_empty (ev_window))
+		ev_metadata_manager_set_int (ev_window->priv->uri, "sidebar_size",
+					     gtk_paned_get_position (GTK_PANED (object)));
 }
 
 static void
@@ -1746,7 +1727,8 @@ ev_window_run_fullscreen (EvWindow *window)
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	ev_window_update_fullscreen_popup (window);
 
-	ev_metadata_manager_set_boolean (window->priv->loaded_uri, "fullscreen", TRUE);
+	if (!ev_window_is_empty (window))
+		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
 }
 
 static void
@@ -1775,7 +1757,8 @@ ev_window_stop_fullscreen (EvWindow *window)
 	update_chrome_visibility (window);
 	update_sidebar_visibility (window);
 
-	ev_metadata_manager_set_boolean (window->priv->loaded_uri, "fullscreen", FALSE);
+	if (!ev_window_is_empty (window))
+		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
 }
 
 static void
@@ -1822,7 +1805,8 @@ ev_window_run_presentation (EvWindow *window)
 	update_chrome_visibility (window);
 	gtk_widget_hide (window->priv->sidebar);
 
-	ev_metadata_manager_set_boolean (window->priv->loaded_uri, "presentation", TRUE);
+	if (!ev_window_is_empty (window))
+		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
 }
 
 static void
@@ -1840,7 +1824,8 @@ ev_window_stop_presentation (EvWindow *window)
 	update_chrome_visibility (window);
 	update_sidebar_visibility (window);
 
-	ev_metadata_manager_set_boolean (window->priv->loaded_uri, "presentation", FALSE);
+	if (!ev_window_is_empty (window))
+		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
 }
 
 static void
@@ -2201,8 +2186,9 @@ save_sizing_mode (EvWindow *window)
 	mode = ev_view_get_sizing_mode (EV_VIEW (window->priv->view));
 	enum_value = g_enum_get_value (EV_SIZING_MODE_CLASS, mode);
 
-	ev_metadata_manager_set_string (window->priv->loaded_uri, "sizing_mode",
-					enum_value->value_nick);
+	if (!ev_window_is_empty (window))
+		ev_metadata_manager_set_string (window->priv->uri, "sizing_mode",
+						enum_value->value_nick);
 }
 
 static void     
@@ -2259,8 +2245,8 @@ ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
         update_action_sensitivity (ev_window);
 
-	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
-		ev_metadata_manager_set_double (ev_window->priv->loaded_uri, "zoom",
+	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE && !ev_window_is_empty (ev_window)) {
+		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
 					        ev_view_get_zoom (view));
 	}
 }
@@ -2297,8 +2283,10 @@ static void
 ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
 	ev_window_update_continuous_action (ev_window);
-	ev_metadata_manager_set_boolean (ev_window->priv->loaded_uri, "continuous",
-				         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+
+	if (!ev_window_is_empty (ev_window))
+		ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
+					         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
 }
 
 static void     
@@ -2308,8 +2296,9 @@ ev_window_rotation_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window
 
 	rotation = ev_view_get_rotation (EV_VIEW (window->priv->view));
 
-	ev_metadata_manager_set_int (window->priv->loaded_uri, "rotation",
-				     rotation);
+	if (!ev_window_is_empty (window))
+		ev_metadata_manager_set_int (window->priv->uri, "rotation",
+					     rotation);
 
 	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (window->priv->sidebar_thumbs),
 				       rotation);
@@ -2325,8 +2314,10 @@ static void
 ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
 	ev_window_update_dual_page_action (ev_window);
-	ev_metadata_manager_set_boolean (ev_window->priv->loaded_uri, "dual-page",
-				         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
+
+	if (!ev_window_is_empty (ev_window))
+		ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
+					         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
 }
 
 static char *
@@ -2457,7 +2448,9 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 	}
 
 	g_object_unref (current_page);
-	ev_metadata_manager_set_string (ev_window->priv->loaded_uri, "sidebar_page", id);
+
+	if (!ev_window_is_empty (ev_window))
+		ev_metadata_manager_set_string (ev_window->priv->uri, "sidebar_page", id);
 }
 
 static void
@@ -2477,8 +2470,9 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 		(action, G_CALLBACK (ev_window_view_sidebar_cb), ev_window);
 
 	if (!ev_view_get_presentation (view) && 
-	    !ev_view_get_fullscreen (view)) {
-		ev_metadata_manager_set_boolean (ev_window->priv->loaded_uri, "sidebar_visibility",
+	    !ev_view_get_fullscreen (view) &&
+	    !ev_window_is_empty (ev_window)) {
+		ev_metadata_manager_set_boolean (ev_window->priv->uri, "sidebar_visibility",
 					         GTK_WIDGET_VISIBLE (ev_sidebar));
 	}
 }
@@ -2720,11 +2714,6 @@ ev_window_dispose (GObject *object)
 		priv->password_document = NULL;
 	}
 	
-	if (priv->password_uri) {
-		g_free (priv->password_uri);
-		priv->password_uri = NULL;
-	}
-
 	ev_window_close_dialogs (window);
 
 	if (priv->link) {
@@ -2738,11 +2727,6 @@ ev_window_dispose (GObject *object)
 			 G_CALLBACK (find_bar_close_cb),
 			 window);
 		priv->find_bar = NULL;
-	}
-
-	if (priv->loaded_uri) {
-		g_free (priv->loaded_uri);
-		priv->loaded_uri = NULL;
 	}
 
 	if (priv->uri) {
@@ -3158,7 +3142,8 @@ window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer du
 		gboolean maximized;
 
 		maximized = event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
-		ev_metadata_manager_set_boolean (window->priv->loaded_uri, "window_maximized", maximized);
+		if (!ev_window_is_empty (window))
+			ev_metadata_manager_set_boolean (window->priv->uri, "window_maximized", maximized);
 	}
 
 	return FALSE;
@@ -3167,7 +3152,7 @@ window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer du
 static gboolean
 window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer dummy)
 {
-	char *uri = window->priv->loaded_uri;
+	char *uri = window->priv->uri;
 	GdkWindowState state;
 	int x, y, width, height;
 
@@ -3177,10 +3162,12 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 		gtk_window_get_position (GTK_WINDOW (window), &x, &y);
 		gtk_window_get_size (GTK_WINDOW (window), &width, &height);
 
-		ev_metadata_manager_set_int (uri, "window_x", x);
-		ev_metadata_manager_set_int (uri, "window_y", y);
-		ev_metadata_manager_set_int (uri, "window_width", width);
-		ev_metadata_manager_set_int (uri, "window_height", height);
+		if (!ev_window_is_empty (window)) {
+			ev_metadata_manager_set_int (uri, "window_x", x);
+			ev_metadata_manager_set_int (uri, "window_y", y);
+			ev_metadata_manager_set_int (uri, "window_width", width);
+			ev_metadata_manager_set_int (uri, "window_height", height);
+		}
 	}
 
 	return FALSE;

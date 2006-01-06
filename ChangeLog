@@ -1,5 +1,34 @@
 2006-01-06  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* backend/ev-document-factory.c: (gdk_pixbuf_mime_type_list),
+	(mime_type_supported_by_gdk_pixbuf),
+	(ev_document_factory_get_mime_types),
+	(ev_document_factory_get_all_mime_types):
+	
+	Don't add pixbuf mime types if pixbuf backend is disabled.
+	
+	* shell/ev-application.c: (ev_application_get_uri_window):
+	
+	Fix for the bug 325815 - unhandled MIME type message doesn't 
+	appear a second time. 
+	
+	* shell/ev-document-types.c: (ev_document_types_add_filters):
+	* shell/ev-window.c: (page_changed_cb), (ev_window_setup_document),
+	(password_dialog_response), (ev_window_popup_password_dialog),
+	(ev_window_load_job_cb), (ev_window_sidebar_position_change_cb),
+	(ev_window_run_fullscreen), (ev_window_stop_fullscreen),
+	(ev_window_run_presentation), (ev_window_stop_presentation),
+	(save_sizing_mode), (ev_window_zoom_changed_cb),
+	(ev_window_continuous_changed_cb), (ev_window_rotation_changed_cb),
+	(ev_window_dual_mode_changed_cb),
+	(ev_window_sidebar_current_page_changed_cb),
+	(ev_window_sidebar_visibility_changed_cb), (ev_window_dispose),
+	(window_state_event_cb), (window_configure_event_cb):
+	
+	Cleanup additional uris holded by EvWindow.
+
+2006-01-06  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-view.c: (ev_view_scroll), (ev_view_previous_page),
 	(ev_view_can_previous_page), (ev_view_can_next_page):
 	* shell/ev-view.h:

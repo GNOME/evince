@@ -214,7 +214,7 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 			EvWindow *window = EV_WINDOW (l->data);
 			const char *window_uri = ev_window_get_uri (window);
 
-			if (window_uri && strcmp (window_uri, uri) == 0) {
+			if (window_uri && strcmp (window_uri, uri) == 0 && !ev_window_is_empty (window)) {
 				uri_window = window;
 				break;
 			}

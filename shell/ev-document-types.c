@@ -133,7 +133,6 @@ ev_document_types_add_filters (GtkWidget *chooser, EvDocument *document)
 	gtk_file_filter_set_name (filter, _("All Documents"));
 	mime_types = ev_document_factory_get_all_mime_types ();
 	file_filter_add_mime_list_and_free (filter, mime_types);
-	gtk_file_filter_add_pixbuf_formats (filter);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 
 #ifdef ENABLE_PS
@@ -158,7 +157,8 @@ ev_document_types_add_filters (GtkWidget *chooser, EvDocument *document)
 	if (document == NULL || backend == EV_BACKEND_PIXBUF) {
 		default_filter = filter = gtk_file_filter_new ();
 		gtk_file_filter_set_name (filter, _("Images"));
-		gtk_file_filter_add_pixbuf_formats (filter);
+		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_PIXBUF);
+		file_filter_add_mime_list_and_free (filter, mime_types);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	}
 #endif

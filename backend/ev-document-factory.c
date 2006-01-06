@@ -85,17 +85,17 @@ const EvDocumentType document_types[] = {
 };
 
 #ifdef ENABLE_PIXBUF
-/* Would be nice to have this in gdk-pixbuf */
-static gboolean
-mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
+
+static GList*
+gdk_pixbuf_mime_type_list ()
 {
 	GSList *formats, *list;
-	gboolean retval = FALSE;
+	GList *result;
 
 	formats = gdk_pixbuf_get_formats ();
+	result = NULL;
 
-	list = formats;
-	while (list) {
+	for (list = formats; list != NULL; list = list->next) {
 		GdkPixbufFormat *format = list->data;
 		int i;
 		gchar **mime_types;
@@ -106,19 +106,32 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 		mime_types = gdk_pixbuf_format_get_mime_types (format);
 
 		for (i = 0; mime_types[i] != NULL; i++) {
-			if (strcmp (mime_types[i], mime_type) == 0) {
-				retval = TRUE;
-				break;
-			}
+			result = g_list_append (result, mime_types[i]);
 		}
-
-		if (retval)
-			break;
-
-		list = list->next;
 	}
-
 	g_slist_free (formats);
+
+	return result;
+}
+
+/* Would be nice to have this in gdk-pixbuf */
+static gboolean
+mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
+{
+	GList *mime_types;
+	GList *list;
+	gboolean retval = FALSE;
+	
+	mime_types = gdk_pixbuf_mime_type_list ();
+	for (list = mime_types; list; list = list->next) {
+		if (strcmp ((char *)list->data, mime_type) == 0) {
+			retval = TRUE;
+			break;
+		}
+	}
+	
+	g_list_foreach (mime_types, (GFunc)g_free, NULL);
+	g_list_free (mime_types);
 
 	return retval;
 }
@@ -183,6 +196,12 @@ ev_document_factory_get_mime_types (EvBackend backend)
 	GList *types = NULL;
 	int i;
 	
+#ifdef ENABLE_PIXBUF
+	if (backend == EV_BACKEND_PIXBUF) {
+		return gdk_pixbuf_mime_type_list ();
+	}
+#endif
+	
 	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
 		if (document_types[i].backend == backend) {
 			types = g_list_append (types, g_strdup (document_types[i].mime_type));
@@ -201,6 +220,10 @@ ev_document_factory_get_all_mime_types (void)
 	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
 		types = g_list_append (types, g_strdup (document_types[i].mime_type));
 	}
+	
+#ifdef ENABLE_PIXBUF
+	types = g_list_concat (types, gdk_pixbuf_mime_type_list ());
+#endif
 
 	return types;
 }
