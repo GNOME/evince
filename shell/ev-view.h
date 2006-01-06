@@ -127,6 +127,8 @@ void	       ev_view_goto_link          (EvView         *view,
 					   EvLink         *link);
 gboolean       ev_view_next_page	  (EvView         *view);
 gboolean       ev_view_previous_page	  (EvView         *view);
+gboolean       ev_view_can_next_page	  (EvView         *view);
+gboolean       ev_view_can_previous_page  (EvView         *view);
 
 G_END_DECLS
 

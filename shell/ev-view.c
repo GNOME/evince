@@ -578,7 +578,7 @@ ev_view_scroll (EvView        *view,
 				/* At the top of a page, assign the upper bound limit of previous page */
 			} else if (value == (adjustment->lower)) {
 				value = adjustment->upper - adjustment->page_size;
-				ev_page_cache_set_current_page (view->page_cache, view->current_page - 1);
+				ev_view_previous_page (view);
 				/* Jump to the top */
 			} else {
 				value = MAX (value - increment, adjustment->lower);
@@ -591,7 +591,7 @@ ev_view_scroll (EvView        *view,
 			/* At the bottom of a page, assign the lower bound limit of next page */
 			} else if (value == (adjustment->upper - adjustment->page_size)) {
 				value = 0;
-				ev_page_cache_set_current_page (view->page_cache, view->current_page + 1);
+				ev_view_next_page (view);
 			/* Jump to the bottom */
 			} else {
 				value = MIN (value + increment, adjustment->upper - adjustment->page_size);
@@ -3959,6 +3959,31 @@ ev_view_previous_page (EvView *view)
 	} else {
 		return FALSE;
 	}
+}
+
+gboolean
+ev_view_can_previous_page (EvView *view)
+{
+	int page;
+
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	page = ev_page_cache_get_current_page (view->page_cache);
+	page = ev_view_get_dual_page (view) ? page - 2 : page - 1;
+	
+	return (page >=0);
+}
+
+gboolean ev_view_can_next_page (EvView *view)
+{
+	int page;
+
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	page = ev_page_cache_get_current_page (view->page_cache);
+	page = ev_view_get_dual_page (view) ? page + 2 : page + 1;
+
+	return (page < ev_page_cache_get_n_pages (view->page_cache));
 }
 
 /*** Enum description for usage in signal ***/

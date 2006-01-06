@@ -1,3 +1,13 @@
+2006-01-06  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view.c: (ev_view_scroll), (ev_view_previous_page),
+	(ev_view_can_previous_page), (ev_view_can_next_page):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (update_action_sensitivity):
+	
+	Two page scrolling with Space and PageUp in dual mode. Second fix 
+	for the bug #316608.
+
 2006-01-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view.c: (scroll_to_current_page):

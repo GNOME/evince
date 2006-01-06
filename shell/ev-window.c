@@ -311,8 +311,8 @@ update_action_sensitivity (EvWindow *ev_window)
 
         /* Go menu */
 	if (document) {
-		set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
-		set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
+		set_action_sensitive (ev_window, "GoPreviousPage", ev_view_can_previous_page (view));
+		set_action_sensitive (ev_window, "GoNextPage", ev_view_can_next_page (view));
 		set_action_sensitive (ev_window, "GoFirstPage", page > 0);
 		set_action_sensitive (ev_window, "GoLastPage", page < n_pages - 1);
 	} else {
