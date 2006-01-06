@@ -625,11 +625,12 @@ setup_document_from_metadata (EvWindow *window)
 {
 	char *uri = window->priv->uri;
 	GValue page = { 0, };
+	gint new_page;
 
-	/* Page */
 	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
+		new_page = CLAMP (g_value_get_int (&page), 0, ev_page_cache_get_n_pages (window->priv->page_cache) - 1);
 		ev_page_cache_set_current_page (window->priv->page_cache,
-						g_value_get_int (&page));
+						new_page);
 	}
 }
 
@@ -2089,7 +2090,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 	ev_window_open_uri (ev_window, uri);
 
 	/* In case the number of pages in the document has changed. */
-	page = CLAMP (page, 0, ev_page_cache_get_n_pages (ev_window->priv->page_cache));
+	page = CLAMP (page, 0, ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
 
 	ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
 
