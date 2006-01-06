@@ -142,13 +142,13 @@ parse_value (xmlChar *value, xmlChar *type)
 			g_value_set_string (ret, (char *)value);
 			break;
 		case G_TYPE_INT:
-			g_value_set_int (ret, atoi ((char *)value));
+			g_value_set_int (ret, g_ascii_strtoull ((char *)value, NULL, 0));
 			break;
 		case G_TYPE_DOUBLE:
 			g_value_set_double (ret, g_ascii_strtod ((char *)value, NULL));
 			break;
 		case G_TYPE_BOOLEAN:
-			g_value_set_boolean (ret, atoi ((char *)value));
+			g_value_set_boolean (ret, g_ascii_strtoull ((char *)value, NULL, 0));
 			break;
 	}
 
@@ -179,7 +179,7 @@ parseItem (xmlDocPtr doc, xmlNodePtr cur)
 
 	item = g_new0 (Item, 1);
 
-	item->atime = atol ((char *)atime);
+	item->atime = g_ascii_strtoull((char*)atime, NULL, 0);
 	
 	item->values = g_hash_table_new_full (g_str_hash, 
 					      g_str_equal, 
@@ -569,10 +569,8 @@ save_item (const gchar *key, const gpointer *data, xmlNodePtr parent)
 	
 	xmlSetProp (xml_node, (const xmlChar *)"uri", (const xmlChar *)key);
 
-	/* FIXME: is the cast right? - Paolo */
-	atime = g_strdup_printf ("%d", (int)item->atime);
-	xmlSetProp (xml_node, (const xmlChar *)"atime", (const xmlChar *)atime);	
-
+	atime = g_strdup_printf ("%ld", item->atime);
+	xmlSetProp (xml_node, (const xmlChar *)"atime", (const xmlChar *)atime);
 	g_free (atime);
 
     	g_hash_table_foreach (item->values,

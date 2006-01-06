@@ -619,7 +619,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
       if(!DSCcomment(line)) {
         /* Do nothing */
       }
-      else if(doc->default_page_orientation == NONE &&
+      else if(doc->default_page_orientation == GTK_GS_ORIENTATION_NONE &&
               iscomment(line + 2, "PageOrientation:")) {
         sscanf(line + length("%%PageOrientation:"), "%256s", text);
         if(strcmp(text, "Portrait") == 0) {
@@ -747,7 +747,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
       if(!DSCcomment(line)) {
         /* Do nothing */
       }
-      else if(doc->default_page_orientation == NONE &&
+      else if(doc->default_page_orientation == GTK_GS_ORIENTATION_NONE &&
               iscomment(line + 2, "PageOrientation:")) {
         sscanf(line + length("%%PageOrientation:"), "%256s", text);
         if(strcmp(text, "Portrait") == 0) {
@@ -813,13 +813,21 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     doc->lensetup = section_len - line_len;
   }
 
-  /* Added this (Nov. 2, 1999) when I noticed that
-     a Postscript file would load in gv but not in ggv
+  /* HACK: Mozilla 1.8 Workaround.
+  
+     It seems that Mozilla 1.8 generates important postscript code 
+     after the '%%EndProlog' and before the first page comment '%%Page: x y'.
+     See comment below also.
+   */
+   
+  if(doc->beginprolog && !doc->beginsetup) {
+      doc->lenprolog += section_len - line_len;
+      doc->endprolog = position;
+  }
+  
+  /* HACK: Windows NT Workaround
 
-     dmg@csg.uwaterloo.ca */
-
-  /* BEGIN Windows NT fix ###jp###
-     Mark Pfeifer (pfeiferm%ppddev@comet.cmis.abbott.com) told me
+     Mark Pfeifer (pfeiferm%ppddev@comet.cmis.abbott.com) noticed
      about problems when viewing Windows NT 3.51 generated postscript
      files with gv. He found that the relevant postscript files
      show important postscript code after the '%%EndSetup' and before
@@ -837,7 +845,6 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
       doc->endsetup = position;
     }
   }
-  /* END Windows NT fix ###jp## */
 
   /* Individual Pages */
 
