@@ -117,54 +117,73 @@ build_height_to_page (EvPageCache *page_cache)
 	g_free (page_cache->height_to_page);
 	g_free (page_cache->dual_height_to_page);
 
-	page_cache->height_to_page = g_new0(double, page_cache->n_pages);
-	page_cache->dual_height_to_page = g_new0(double, page_cache->n_pages / 2 + 1);
+	page_cache->height_to_page = g_new0(double, page_cache->n_pages + 1);
+	page_cache->dual_height_to_page = g_new0(double, page_cache->n_pages + 2);
 	
 	saved_height = 0;
-	for (i = 0; i < page_cache->n_pages; i++) {
+	for (i = 0; i <= page_cache->n_pages; i++) {
 		if (page_cache->uniform) {
 			if (!swap) {
 				uniform_height = page_cache->uniform_height;
 			} else {
 				uniform_height = page_cache->uniform_width;
 			}
-			page_cache->height_to_page [i] = (i + 1) * uniform_height;
+			page_cache->height_to_page [i] = i * uniform_height;
 		} else {
 			if (!swap) {
 				page_height = page_cache->size_cache [i].height;
 			} else {
 				page_height = page_cache->size_cache [i].width;
 			}
-			page_cache->height_to_page [i] = saved_height + page_height;
-			saved_height = page_cache->height_to_page [i];
+			page_cache->height_to_page [i] = saved_height;
+			saved_height += page_height;
 		}
 	}
-	
-	saved_height = 0;
-	for (i = 0; i < page_cache->n_pages; i += 2) {
+
+	if (DUAL_EVEN_LEFT && !page_cache->uniform) {
+		if (!swap) {
+			saved_height = page_cache->size_cache [0].height;
+		} else {
+			saved_height = page_cache->size_cache [0].width;
+		}
+	} else {
+		saved_height = 0;
+	}
+	for (i = DUAL_EVEN_LEFT; i < page_cache->n_pages + 2; i += 2) {
     		if (page_cache->uniform) {
 			if (!swap) {
 				uniform_height = page_cache->uniform_height;
 			} else {
 				uniform_height = page_cache->uniform_width;
 			}
-			page_cache->dual_height_to_page [i / 2] = (i / 2 + 1) * uniform_height;
+			page_cache->dual_height_to_page [i] = ((i + DUAL_EVEN_LEFT) / 2) * uniform_height;
+			if (i + 1 < page_cache->n_pages + 2)
+				page_cache->dual_height_to_page [i + 1] = ((i + DUAL_EVEN_LEFT) / 2) * uniform_height;
 		} else {
-			if (!swap) {
-				page_height = page_cache->size_cache [i].height;
-				next_page_height = page_cache->size_cache [i + 1].height;
+			if (i + 1 < page_cache->n_pages) {
+				if (!swap) {
+					next_page_height = page_cache->size_cache [i + 1].height;
+				} else {
+					next_page_height = page_cache->size_cache [i + 1].width;
+				}
 			} else {
-				page_height = page_cache->size_cache [i].width;
-				next_page_height = page_cache->size_cache [i + 1].width;
+				next_page_height = 0;
 			}
-			if (i == page_cache->n_pages - 1) {
-				page_cache->dual_height_to_page [i / 2] =
-					saved_height + page_height;
+			if (i < page_cache->n_pages) {
+				if (!swap) {
+					page_height = page_cache->size_cache [i].height;
+				} else {
+					page_height = page_cache->size_cache [i].width;
+				}
+			} else {
+				page_height = 0;
 			}
-			else {
-				page_cache->dual_height_to_page [i / 2] = saved_height +
-				       MAX(page_height, next_page_height);			    	    
-				saved_height = page_cache->dual_height_to_page [i / 2];
+			if (i + 1 < page_cache->n_pages + 2) {
+				page_cache->dual_height_to_page [i] = saved_height;
+				page_cache->dual_height_to_page [i + 1] = saved_height;
+				saved_height += MAX(page_height, next_page_height);
+			} else {
+				page_cache->dual_height_to_page [i] = saved_height;
 			}
 		}
 	}
@@ -428,27 +447,18 @@ ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
 				  gint          *height,
 				  gint 	        *dual_height)
 {
-	double result = 0.0;
-	double dual_result = 0.0;
-	
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
 
 	if (page_cache->rotation != rotation) {
 		page_cache->rotation = rotation;
 		build_height_to_page (page_cache);
 	}
-
-	if (page > 0)
-		result = page_cache->height_to_page [page - 1];	
 	
 	if (height)
-		*height = result * scale;
+		*height = page_cache->height_to_page [page] * scale;
 
-	if (page > 1)
-		dual_result = page_cache->dual_height_to_page [page / 2 - 1];	
-	
 	if (dual_height)
-		*dual_height = dual_result * scale;
+		*dual_height = page_cache->dual_height_to_page [page] * scale;
 }
 
 gint

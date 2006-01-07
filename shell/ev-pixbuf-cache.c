@@ -230,7 +230,8 @@ job_finished_cb (EvJob         *job,
  * given a scale.  If it won't, it removes the job and clears it to NULL.
  */
 static void
-check_job_size_and_unref (CacheJobInfo *job_info,
+check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
+			  CacheJobInfo *job_info,
 			  EvPageCache  *page_cache,
 			  gfloat        scale)
 {
@@ -252,12 +253,11 @@ check_job_size_and_unref (CacheJobInfo *job_info,
 	    height == EV_JOB_RENDER (job_info->job)->target_height)
 		return;
 
-	/* Try to remove the job.  If we can't, then the thread has already
-	 * picked it up and we are going get a signal when it's done.  If we
-	 * can, then the job is fully dead and will never rnu.. */
-	if (ev_job_queue_remove_job (job_info->job))
-		g_object_unref (job_info->job);
-
+	g_signal_handlers_disconnect_by_func (job_info->job,
+					      G_CALLBACK (job_finished_cb),
+					      pixbuf_cache);
+	ev_job_queue_remove_job (job_info->job);
+	g_object_unref (job_info->job);
 	job_info->job = NULL;
 }
 
@@ -464,12 +464,12 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
-		check_job_size_and_unref (pixbuf_cache->job_list + i, page_cache, scale);
+		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->job_list + i, page_cache, scale);
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		check_job_size_and_unref (pixbuf_cache->prev_job + i, page_cache, scale);
-		check_job_size_and_unref (pixbuf_cache->next_job + i, page_cache, scale);
+		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->prev_job + i, page_cache, scale);
+		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->next_job + i, page_cache, scale);
 	}
 }
 

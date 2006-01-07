@@ -420,6 +420,8 @@ view_set_adjustment_values (EvView         *view,
 static void
 view_update_range_and_current_page (EvView *view)
 {
+	gint current_page;
+	
 	if (view->pending_scroll != SCROLL_TO_KEEP_POSITION)
 		return;
 
@@ -430,7 +432,6 @@ view_update_range_and_current_page (EvView *view)
 	} else if (view->continuous) {
 		GdkRectangle current_area, unused, page_area;
 		GtkBorder border;
-		gint current_page;
 		gboolean found = FALSE;
 		int i;
 
@@ -458,28 +459,33 @@ view_update_range_and_current_page (EvView *view)
 			}
 		}
 
-		current_page = ev_page_cache_get_current_page (view->page_cache);
-
-		if (current_page < view->start_page || current_page > view->end_page) {
-			view->current_page = view->start_page;
-			ev_page_cache_set_current_page (view->page_cache, view->start_page);
-		}
 	} else {
 		if (view->dual_page) {
-			if (view->current_page % 2 == 0) {
+			if (view->current_page % 2 == DUAL_EVEN_LEFT) {
 				view->start_page = view->current_page;
 				if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
 					view->end_page = view->start_page + 1;
 				else 
 					view->end_page = view->start_page;
 			} else {
-				view->start_page = view->current_page - 1;
+				if (view->current_page - 1 < 0)
+					view->start_page = view->current_page;
+				else
+					view->start_page = view->current_page - 1;
 				view->end_page = view->current_page;
 			}
 		} else {
 			view->start_page = view->current_page;
 			view->end_page = view->current_page;
 		}
+
+	}
+
+	current_page = ev_page_cache_get_current_page (view->page_cache);
+
+	if (current_page < view->start_page || current_page > view->end_page) {
+		view->current_page = view->start_page;
+		ev_page_cache_set_current_page (view->page_cache, view->start_page);
 	}
 
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
@@ -717,7 +723,7 @@ get_page_y_offset (EvView *view, int page, double zoom, int *y_offset)
 	if (view->dual_page) {
 		ev_page_cache_get_height_to_page (view->page_cache, page,
 						  view->rotation, zoom, NULL, &offset);
-		offset += (page / 2 + 1) * view->spacing + (page / 2) * (border.top + border.bottom);
+		offset += ((page + DUAL_EVEN_LEFT) / 2 + 1) * view->spacing + ((page + DUAL_EVEN_LEFT) / 2 ) * (border.top + border.bottom);
 	} else {
 		ev_page_cache_get_height_to_page (view->page_cache, page,
 						  view->rotation, zoom, &offset, NULL);
@@ -760,9 +766,9 @@ get_page_extents (EvView       *view,
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (view->dual_page) {
-			x = view->spacing + (page % 2) * (max_width + view->spacing);
+			x = view->spacing + ((page % 2 == DUAL_EVEN_LEFT) ? 0 : 1) * (max_width + view->spacing);
 			x = x + MAX (0, widget->allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
-			if (page % 2 == 0)
+			if (page % 2 == DUAL_EVEN_LEFT)
 				x = x + (max_width - width - border->left - border->right);
 		} else {
 			x = view->spacing;
@@ -782,10 +788,11 @@ get_page_extents (EvView       *view,
 			GtkBorder overall_border;
 			gint other_page;
 
-			other_page = page ^ 1;
+			other_page = (page % 2 == DUAL_EVEN_LEFT) ? page + 1: page - 1;
 
 			/* First, we get the bounding box of the two pages */
-			if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
+			if (other_page < ev_page_cache_get_n_pages (view->page_cache)
+			    && (0 <= other_page)) {
 				ev_page_cache_get_size (view->page_cache,
 							other_page,
 							view->rotation,
@@ -803,7 +810,7 @@ get_page_extents (EvView       *view,
 			y = view->spacing;
 
 			/* Adjust for being the left or right page */
-			if (page % 2 == 0)
+			if (page % 2 == DUAL_EVEN_LEFT)
 				x = x + max_width - width;
 			else
 				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
@@ -3938,6 +3945,9 @@ ev_view_next_page (EvView *view)
 	if (page < ev_page_cache_get_n_pages (view->page_cache)) {
 		ev_page_cache_set_current_page (view->page_cache, page);
 		return TRUE;
+	} else if (ev_view_get_dual_page (view) && page == ev_page_cache_get_n_pages (view->page_cache)) {
+		ev_page_cache_set_current_page (view->page_cache, page - 1);
+		return TRUE;
 	} else {
 		return FALSE;
 	}
@@ -3956,34 +3966,12 @@ ev_view_previous_page (EvView *view)
 	if (page >= 0) {
 		ev_page_cache_set_current_page (view->page_cache, page);
 		return TRUE;
-	} else {
+	} else if (ev_view_get_dual_page (view) && page == -1) {
+		ev_page_cache_set_current_page (view->page_cache, 0);
+		return TRUE;
+	} else {	
 		return FALSE;
 	}
-}
-
-gboolean
-ev_view_can_previous_page (EvView *view)
-{
-	int page;
-
-	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-
-	page = ev_page_cache_get_current_page (view->page_cache);
-	page = ev_view_get_dual_page (view) ? page - 2 : page - 1;
-	
-	return (page >=0);
-}
-
-gboolean ev_view_can_next_page (EvView *view)
-{
-	int page;
-
-	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-
-	page = ev_page_cache_get_current_page (view->page_cache);
-	page = ev_view_get_dual_page (view) ? page + 2 : page + 1;
-
-	return (page < ev_page_cache_get_n_pages (view->page_cache));
 }
 
 /*** Enum description for usage in signal ***/

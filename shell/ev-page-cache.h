@@ -23,6 +23,8 @@
 #include <gtk/gtkwidget.h>
 #include "ev-document.h"
 
+#define DUAL_EVEN_LEFT 1
+
 G_BEGIN_DECLS
 #define EV_TYPE_PAGE_CACHE            (ev_page_cache_get_type ())
 #define EV_PAGE_CACHE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_CACHE, EvPageCache))

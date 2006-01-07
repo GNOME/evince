@@ -309,8 +309,8 @@ update_action_sensitivity (EvWindow *ev_window)
 
         /* Go menu */
 	if (document) {
-		set_action_sensitive (ev_window, "GoPreviousPage", ev_view_can_previous_page (view));
-		set_action_sensitive (ev_window, "GoNextPage", ev_view_can_next_page (view));
+		set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
+		set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
 		set_action_sensitive (ev_window, "GoFirstPage", page > 0);
 		set_action_sensitive (ev_window, "GoLastPage", page < n_pages - 1);
 	} else {
@@ -751,14 +751,14 @@ setup_view_from_metadata (EvWindow *window)
 
 	/* Presentation */
 	if (ev_metadata_manager_get (uri, "presentation", &presentation, FALSE)) {
-		if (g_value_get_boolean (&presentation)) {
+		if (g_value_get_boolean (&presentation) && uri) {
 			ev_window_run_presentation (window);
 		}
 	}
 
 	/* Fullscreen */
 	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen, FALSE)) {
-		if (g_value_get_boolean (&fullscreen)) {
+		if (g_value_get_boolean (&fullscreen) && uri) {
 			ev_window_run_fullscreen (window);
 		}
 	}
@@ -2487,6 +2487,9 @@ view_menu_popup_cb (EvView         *view,
 	gboolean   show_external = FALSE;
 	gboolean   show_internal = FALSE;
 	GtkAction *action;
+
+	if (ev_view_get_presentation (EV_VIEW (ev_window->priv->view)))
+		return FALSE;
 	
 	if (ev_window->priv->link)
 		g_object_unref (ev_window->priv->link);
@@ -2530,7 +2533,7 @@ view_menu_popup_cb (EvView         *view,
 	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
 			NULL, NULL,
 			3, gtk_get_current_event_time ());
-	return TRUE;
+	return FALSE;
 }
 
 static void
