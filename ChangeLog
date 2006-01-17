@@ -1,3 +1,45 @@
+2006-01-18  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* cut-n-paste/recent-files/egg-recent-item.c:
+	(get_uri_shortname_for_display), (egg_recent_item_get_short_name):
+	* cut-n-paste/recent-files/egg-recent-model.c: (parse_info_init),
+	(parse_info_free), (valid_element), (start_element_handler),
+	(end_element_handler), (text_handler), (egg_recent_model_filter),
+	(egg_recent_model_monitor_cb), (egg_recent_model_poll_timeout),
+	(egg_recent_model_monitor), (egg_recent_model_read),
+	(egg_recent_model_open_file), (egg_recent_model_lock_file),
+	(egg_recent_model_unlock_file), (egg_recent_model_finalize),
+	(egg_recent_model_set_property), (egg_recent_model_class_init),
+	(egg_recent_model_init), (egg_recent_model_add_full),
+	(egg_recent_model_delete), (egg_recent_model_get_list),
+	(egg_recent_model_clear), (egg_recent_model_clear_mime_filter),
+	(egg_recent_model_set_filter_mime_types),
+	(egg_recent_model_clear_group_filter),
+	(egg_recent_model_set_filter_groups),
+	(egg_recent_model_clear_scheme_filter),
+	(egg_recent_model_set_filter_uri_schemes),
+	(egg_recent_model_remove_expired):
+	* cut-n-paste/recent-files/egg-recent-util.c:
+	(egg_recent_util_get_icon):
+	* cut-n-paste/recent-files/egg-recent-util.h:
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.c:
+	(connect_proxy_cb), (egg_recent_view_uimanager_set_list),
+	(egg_recent_view_uimanager_set_empty_list), (model_changed_cb),
+	(egg_recent_view_uimanager_set_property),
+	(egg_recent_view_uimanager_get_property),
+	(egg_recent_view_uimanager_class_init),
+	(egg_recent_view_uimanager_init),
+	(egg_recent_view_uimanager_set_label_width),
+	(egg_recent_view_uimanager_get_label_width):
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.h:
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.c:
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.h:
+	* cut-n-paste/toolbar-editor/egg-toolbar-editor.c:
+	* cut-n-paste/toolbar-editor/egg-toolbars-model.c:
+	* cut-n-paste/toolbar-editor/egg-toolbars-model.h:
+	
+	Update from libegg.
+
 2006-01-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-page-cache.c: (build_height_to_page),

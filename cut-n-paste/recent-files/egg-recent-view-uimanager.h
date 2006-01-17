@@ -53,6 +53,9 @@ void                    egg_recent_view_uimanager_set_icon_size    (EggRecentVie
 GtkIconSize             egg_recent_view_uimanager_get_icon_size    (EggRecentViewUIManager   *view);
 EggRecentItem          *egg_recent_view_uimanager_get_item         (EggRecentViewUIManager   *view,
 								    GtkAction                *action);
+void                    egg_recent_view_uimanager_set_label_width  (EggRecentViewUIManager   *view,
+								    gint                      chars);
+gint                    egg_recent_view_uimanager_get_label_width  (EggRecentViewUIManager   *view);
 
 G_END_DECLS
 

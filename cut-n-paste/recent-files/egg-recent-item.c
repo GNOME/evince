@@ -101,84 +101,6 @@ egg_recent_item_new_from_uri (const gchar *uri)
 	return item;
 }
 
-/*
-static GList *
-egg_recent_item_copy_groups (const GList *list)
-{
-	GList *newlist = NULL;
-
-	while (list) {
-		gchar *group = (gchar *)list->data;
-
-		newlist = g_list_prepend (newlist, g_strdup (group));
-
-		list = list->next;
-	}
-
-	return newlist;
-}
-
-
-EggRecentItem *
-egg_recent_item_copy (const EggRecentItem *item)
-{
-	EggRecentItem *newitem;
-
-	newitem = egg_recent_item_new ();
-	newitem->uri = g_strdup (item->uri);
-	if (item->mime_type)
-		newitem->mime_type = g_strdup (item->mime_type);
-	newitem->mime_type_is_explicit = item->mime_type_is_explicit
-	newitem->timestamp = item->timestamp;
-	newitem->private_data = item->private_data;
-	newitem->groups = egg_recent_item_copy_groups (item->groups);
-
-	return newitem;
-}
-*/
-
-/*
-EggRecentItem *
-egg_recent_item_new_valist (const gchar *uri, va_list args)
-{
-	EggRecentItem *item;
-	EggRecentArg arg;
-	gchar *str1;
-	gchar *str2;
-	gboolean priv;
-
-	item = egg_recent_item_new ();
-
-	arg = va_arg (args, EggRecentArg);
-
-	while (arg != EGG_RECENT_ARG_NONE) {
-		switch (arg) {
-			case EGG_RECENT_ARG_MIME_TYPE:
-				str1 = va_arg (args, gchar*);
-
-				egg_recent_item_set_mime_type (item, str1);
-			break;
-			case EGG_RECENT_ARG_GROUP:
-				str1 = va_arg (args, gchar*);
-
-				egg_recent_item_add_group (item, str1);
-			break;
-			case EGG_RECENT_ARG_PRIVATE:
-				priv = va_arg (args, gboolean);
-
-				egg_recent_item_set_private (item, priv);
-			break;
-			default:
-			break;
-		}
-
-		arg = va_arg (args, EggRecentArg);
-	}
-
-	return item;
-}
-*/
-
 static void
 egg_recent_item_update_mime_type (EggRecentItem *item)
 {
@@ -288,6 +210,70 @@ make_valid_utf8 (const char *name)
 	return g_string_free (string, FALSE);
 }
 
+static gchar *
+get_uri_shortname_for_display (GnomeVFSURI *uri)
+{
+	gchar    *name;	
+	gboolean  validated;
+
+	validated = FALSE;
+	name = gnome_vfs_uri_extract_short_name (uri);
+	
+	if (name == NULL)
+	{
+		name = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_PASSWORD);
+	}
+	else if (g_ascii_strcasecmp (uri->method_string, "file") == 0)
+	{
+		gchar *text_uri;
+		gchar *local_file;
+		text_uri = gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_PASSWORD);
+		local_file = gnome_vfs_get_local_path_from_uri (text_uri);
+		
+		if (local_file != NULL)
+		{
+			g_free (name);
+			name = g_filename_display_basename (local_file);
+			validated = TRUE;
+		}
+		
+		g_free (local_file);
+		g_free (text_uri);
+	} 
+	else if (!gnome_vfs_uri_has_parent (uri)) 
+	{
+		const gchar *method;
+		
+		method = uri->method_string;
+		
+		if (name == NULL ||
+		    strcmp (name, GNOME_VFS_URI_PATH_STR) == 0) 
+		{
+			g_free (name);
+			name = g_strdup (method);
+		} 
+		else 
+		{
+			gchar *tmp;
+			
+			tmp = name;
+			name = g_strdup_printf ("%s: %s", method, name);
+			g_free (tmp);
+		}
+	}
+
+	if (!validated && !g_utf8_validate (name, -1, NULL)) 
+	{
+		gchar *utf8_name;
+		
+		utf8_name = make_valid_utf8 (name);
+		g_free (name);
+		name = utf8_name;
+	}
+
+	return name;
+}
+
 /**
  * egg_recent_item_get_short_name:
  * @item: an #EggRecentItem
@@ -303,8 +289,7 @@ gchar *
 egg_recent_item_get_short_name (const EggRecentItem *item)
 {
 	GnomeVFSURI *uri;
-	char *short_name;
-	gboolean valid;
+	gchar *short_name;
 
 	g_return_val_if_fail (item != NULL, NULL);
 
@@ -315,33 +300,7 @@ egg_recent_item_get_short_name (const EggRecentItem *item)
 	if (uri == NULL)
 		return NULL;
 
-	short_name = gnome_vfs_uri_extract_short_name (uri);
-	if (short_name == NULL) {
-		gnome_vfs_uri_unref (uri);
-		return NULL;
-	}
-
-	valid = FALSE;
-
-	if (strcmp (gnome_vfs_uri_get_scheme (uri), "file") == 0) {
-		char *tmp;
-
-		tmp = g_filename_to_utf8 (short_name, -1, NULL, NULL, NULL);
-		if (tmp) {
-			g_free (short_name);
-			short_name = tmp;
-			valid = TRUE;
-		}
-	}
-
-	if (!valid) {
-		char *tmp;
-
-		tmp = make_valid_utf8 (short_name);
-		g_assert (tmp != NULL);
-		g_free (short_name);
-		short_name = tmp;
-	}
+	short_name = get_uri_shortname_for_display (uri);
 
 	gnome_vfs_uri_unref (uri);
 
