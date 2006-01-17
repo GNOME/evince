@@ -185,6 +185,10 @@ ev_document_factory_get_backend (EvDocument *document)
 		}
 	}
 
+#ifdef ENABLE_PIXBUF
+	if (G_TYPE_FROM_INSTANCE (document) == pixbuf_document_get_type ())
+	        return EV_BACKEND_PIXBUF;
+#endif
 	g_assert_not_reached ();
 	
 	return 0;
