@@ -10,8 +10,7 @@ INCLUDES=						\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\
-	$(WARN_CFLAGS)					\
-	$(DISABLE_DEPRECATED)
+	$(WARN_CFLAGS)					
 
 bin_PROGRAMS=evince
 
