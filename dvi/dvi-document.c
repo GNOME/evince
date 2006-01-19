@@ -29,10 +29,6 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-uri.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
-#include <libgnomevfs/gnome-vfs-xfer.h>
 
 GMutex *dvi_context_mutex = NULL;
 
@@ -132,32 +128,8 @@ dvi_document_save (EvDocument  *document,
 		      GError     **error)
 {
 	DviDocument *dvi_document = DVI_DOCUMENT (document);
-	GnomeVFSResult result;
-	GnomeVFSURI *source_uri;
-	GnomeVFSURI *target_uri;
-	
-	if (!dvi_document->uri)
-		return FALSE;
-	
-	source_uri = gnome_vfs_uri_new (dvi_document->uri);
-	target_uri = gnome_vfs_uri_new (uri);
 
-	result = gnome_vfs_xfer_uri (source_uri, target_uri, 
-				     GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
-				     GNOME_VFS_XFER_ERROR_MODE_ABORT,
-				     GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
-				     NULL,
-				     NULL);
-	gnome_vfs_uri_unref (target_uri);
-	gnome_vfs_uri_unref (source_uri);
-    
-	if (result != GNOME_VFS_OK)
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     0,
-			     gnome_vfs_result_to_string (result));			
-	return (result == GNOME_VFS_OK);
-	return TRUE;
+	return ev_xfer_uri_simple (dvi_document->uri, uri, error);
 }
 
 static int

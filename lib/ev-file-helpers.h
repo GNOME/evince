@@ -33,6 +33,10 @@ void        ev_file_helpers_shutdown (void);
 
 gchar*      ev_tmp_filename          (void);
 
+gboolean   ev_xfer_uri_simple        (const char *from,
+    				      const char *to,
+				      GError     **error);
+
 G_END_DECLS
 
 #endif /* EPHY_FILE_HELPERS_H */

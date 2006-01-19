@@ -23,9 +23,13 @@
 #endif
 
 #include <sys/stat.h>
+#include <unistd.h>
 #include <glib.h>
 #include <libgnome/gnome-init.h>
-#include <unistd.h>
+#include <libgnomevfs/gnome-vfs-uri.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-xfer.h>
 
 #include "ev-file-helpers.h"
 
@@ -123,4 +127,37 @@ ev_tmp_filename (void)
 	} while (g_file_test (filename, G_FILE_TEST_EXISTS));
 			
 	return filename;
+}
+
+gboolean
+ev_xfer_uri_simple (const char *from,
+		    const char *to,
+		    GError     **error)
+{
+	GnomeVFSResult result;
+	GnomeVFSURI *source_uri;
+	GnomeVFSURI *target_uri;
+	
+	if (!from)
+		return FALSE;
+	
+	source_uri = gnome_vfs_uri_new (from);
+	target_uri = gnome_vfs_uri_new (to);
+
+	result = gnome_vfs_xfer_uri (source_uri, target_uri, 
+				     GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				     GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				     GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				     NULL,
+				     NULL);
+	gnome_vfs_uri_unref (target_uri);
+	gnome_vfs_uri_unref (source_uri);
+    
+	if (result != GNOME_VFS_OK)
+		g_set_error (error,
+			     G_FILE_ERROR,
+			     G_FILE_ERROR_FAILED,
+			     gnome_vfs_result_to_string (result));
+	return (result == GNOME_VFS_OK);
+
 }

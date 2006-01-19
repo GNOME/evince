@@ -21,7 +21,6 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
-#include <libgnomevfs/gnome-vfs-xfer.h>
 
 #include "comics-document.h"
 #include "ev-document-misc.h"
@@ -164,22 +163,8 @@ comics_document_save (EvDocument *document,
 		      GError    **error)
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
-	GnomeVFSURI *source, *target;
-	GnomeVFSResult ret;
- 
-	source = gnome_vfs_uri_new (comics_document->archive);
-	target = gnome_vfs_uri_new (uri);
 
-	ret = gnome_vfs_xfer_uri (source, target,
-				  GNOME_VFS_XFER_DEFAULT,
-				  GNOME_VFS_XFER_ERROR_MODE_ABORT,
-				  GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
-				  NULL, NULL);
-
-	gnome_vfs_uri_unref (source);
-	gnome_vfs_uri_unref (target);
-
-	return ret == GNOME_VFS_OK;
+	return ev_xfer_uri_simple (comics_document->archive, uri, error);
 }
 
 static int

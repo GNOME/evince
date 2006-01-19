@@ -1,3 +1,15 @@
+2006-01-19  Jani Monoses <jani.monoses@gmail.com>
+
+	* comics/comics-document.c: (comics_document_save):
+	* djvu/djvu-document.c: (djvu_document_save):
+	* dvi/dvi-document.c: (dvi_document_save):
+	* lib/ev-file-helpers.c: (ev_tmp_filename), (ev_xfer_uri_simple):
+	* lib/ev-file-helpers.h:
+	* pixbuf/pixbuf-document.c: (pixbuf_document_save):
+	* tiff/tiff-document.c: (tiff_document_save):
+	
+	Use common save function for backends.
+
 2006-01-18  Jani Monoses <jani.monoses@gmail.com>
 
 	* backend/ev-document-types.c:
