@@ -304,7 +304,9 @@ ev_application_shutdown (EvApplication *application)
 		application->recent_model = NULL;
 	}
 
+	g_free (application->last_chooser_uri);
 	g_object_unref (application);
+	
 	gtk_main_quit ();
 }
 
@@ -376,4 +378,14 @@ void ev_application_save_toolbars_model (EvApplication *application)
 				 application->toolbars_file, "1.0");
 }
 
+void ev_application_set_chooser_uri (EvApplication *application, gchar *uri)
+{
+	g_free (application->last_chooser_uri);
+	application->last_chooser_uri = g_strdup (uri);
+}
+
+const gchar* ev_application_get_chooser_uri (EvApplication *application)
+{
+	return application->last_chooser_uri;
+}
 

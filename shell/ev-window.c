@@ -1093,6 +1093,8 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 		g_slist_foreach (uris, (GFunc)g_free, NULL);	
 		g_slist_free (uris);
 	}
+	ev_application_set_chooser_uri (EV_APP, 
+			  	        gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (chooser)));
 
 	gtk_widget_destroy (chooser);
 }
@@ -1113,7 +1115,10 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 	ev_document_types_add_filters (chooser, NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
-
+	if (ev_application_get_chooser_uri (EV_APP) != NULL)
+		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
+					  ev_application_get_chooser_uri (EV_APP));
+	
 	g_signal_connect (chooser, "response",
 			  G_CALLBACK (file_open_dialog_response_cb),
 			  window);

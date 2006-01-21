@@ -53,6 +53,8 @@ struct _EvApplication {
 	
 	EggToolbarsModel *toolbars_model;
 	EggRecentModel  *recent_model;
+	
+	gchar *last_chooser_uri;
 };
 
 struct _EvApplicationClass {
@@ -81,6 +83,9 @@ GList		 *ev_application_get_windows	     (EvApplication   *application);
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
 void              ev_application_save_toolbars_model (EvApplication   *application);
 EggRecentModel   *ev_application_get_recent_model    (EvApplication   *application);
+void 		  ev_application_set_chooser_uri     (EvApplication *application, 
+						      gchar *uri);
+const gchar	 *ev_application_get_chooser_uri     (EvApplication *application);
 
 G_END_DECLS
 

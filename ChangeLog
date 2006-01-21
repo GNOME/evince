@@ -1,3 +1,13 @@
+2006-01-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-application.c: (ev_application_shutdown),
+	(ev_application_set_chooser_uri), (ev_application_get_chooser_uri):
+	* shell/ev-application.h:
+	* shell/ev-window.c: (file_open_dialog_response_cb),
+	(ev_window_cmd_file_open):
+	
+	Save last uri in file chooser dialog. Fix for the bug #327950.
+
 2006-01-20  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
