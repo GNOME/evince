@@ -115,9 +115,11 @@ ev_job_xfer_run (EvJobXfer *job)
 	source_uri = gnome_vfs_uri_new (job->uri);
 	if (!gnome_vfs_uri_is_local (source_uri)) {
 		char *tmp_name;
+		char *base_name;
 		
 		tmp_name = ev_tmp_filename ();
-		job->local_uri = g_strconcat ("file:", tmp_name, NULL);
+		base_name = g_path_get_basename (job->uri);
+		job->local_uri = g_strconcat ("file:", tmp_name, base_name, NULL);
 		g_free (tmp_name);
 		
 		target_uri = gnome_vfs_uri_new (job->local_uri);
