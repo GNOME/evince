@@ -2,8 +2,8 @@
     <schemalist>
 
         <schema>
-            <key>/schemas/desktop/gnome/thumbnailers/application@cbz/enable</key>
-            <applyto>/desktop/gnome/thumbnailers/application@cbz/enable</applyto>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-cbz/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-cbz/enable</applyto>
             <owner>evince</owner>
             <type>bool</type>
             <default>true</default>
@@ -15,8 +15,8 @@
 
 
         <schema>
-            <key>/schemas/desktop/gnome/thumbnailers/application@cbz/command</key>
-            <applyto>/desktop/gnome/thumbnailers/application@cbz/command</applyto>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-cbz/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-cbz/command</applyto>
             <owner>evince</owner>
             <type>string</type>
             <default>evince-thumbnailer -s %s %u %o</default>
@@ -27,8 +27,8 @@
         </schema>
 
         <schema>
-            <key>/schemas/desktop/gnome/thumbnailers/application@cbr/enable</key>
-            <applyto>/desktop/gnome/thumbnailers/application@cbz/enable</applyto>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-cbr/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-cbr/enable</applyto>
             <owner>evince</owner>
             <type>bool</type>
             <default>true</default>
@@ -40,8 +40,8 @@
 
 
         <schema>
-            <key>/schemas/desktop/gnome/thumbnailers/application@cbr/command</key>
-            <applyto>/desktop/gnome/thumbnailers/application@cbz/command</applyto>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-cbr/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-cbr/command</applyto>
             <owner>evince</owner>
             <type>string</type>
             <default>evince-thumbnailer -s %s %u %o</default>
