@@ -1,3 +1,9 @@
+2006-01-31  Christopher Aillon  <caillon@redhat.com>
+
+	* data/evince-password.glade: Don't explicitly set
+	invisible_char to the current default value in case
+	the default changes; let GTK+ do its magic.
+
 2006-01-29  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-job-xfer.c: (ev_job_xfer_run): Append
