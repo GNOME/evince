@@ -462,7 +462,7 @@ view_update_range_and_current_page (EvView *view)
 
 	} else {
 		if (view->dual_page) {
-			if (view->current_page % 2 == DUAL_EVEN_LEFT) {
+			if (view->current_page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) {
 				view->start_page = view->current_page;
 				if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
 					view->end_page = view->start_page + 1;
@@ -731,7 +731,7 @@ get_page_y_offset (EvView *view, int page, double zoom, int *y_offset)
 	if (view->dual_page) {
 		ev_page_cache_get_height_to_page (view->page_cache, page,
 						  view->rotation, zoom, NULL, &offset);
-		offset += ((page + DUAL_EVEN_LEFT) / 2 + 1) * view->spacing + ((page + DUAL_EVEN_LEFT) / 2 ) * (border.top + border.bottom);
+		offset += ((page + ev_page_cache_get_dual_even_left (view->page_cache)) / 2 + 1) * view->spacing + ((page + ev_page_cache_get_dual_even_left (view->page_cache)) / 2 ) * (border.top + border.bottom);
 	} else {
 		ev_page_cache_get_height_to_page (view->page_cache, page,
 						  view->rotation, zoom, &offset, NULL);
@@ -774,9 +774,9 @@ get_page_extents (EvView       *view,
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (view->dual_page) {
-			x = view->spacing + ((page % 2 == DUAL_EVEN_LEFT) ? 0 : 1) * (max_width + view->spacing);
+			x = view->spacing + ((page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) ? 0 : 1) * (max_width + view->spacing);
 			x = x + MAX (0, widget->allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
-			if (page % 2 == DUAL_EVEN_LEFT)
+			if (page % 2 == ev_page_cache_get_dual_even_left (view->page_cache))
 				x = x + (max_width - width - border->left - border->right);
 		} else {
 			x = view->spacing;
@@ -796,7 +796,7 @@ get_page_extents (EvView       *view,
 			GtkBorder overall_border;
 			gint other_page;
 
-			other_page = (page % 2 == DUAL_EVEN_LEFT) ? page + 1: page - 1;
+			other_page = (page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) ? page + 1: page - 1;
 
 			/* First, we get the bounding box of the two pages */
 			if (other_page < ev_page_cache_get_n_pages (view->page_cache)
@@ -818,7 +818,7 @@ get_page_extents (EvView       *view,
 			y = view->spacing;
 
 			/* Adjust for being the left or right page */
-			if (page % 2 == DUAL_EVEN_LEFT)
+			if (page % 2 == ev_page_cache_get_dual_even_left (view->page_cache))
 				x = x + max_width - width;
 			else
 				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;

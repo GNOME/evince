@@ -1,3 +1,15 @@
+2006-02-01  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-page-cache.c: (build_height_to_page),
+	(ev_page_cache_new), (ev_page_cache_get_max_label_chars),
+	(ev_page_cache_get_dual_even_left):
+	* shell/ev-page-cache.h:
+	* shell/ev-view.c: (view_update_range_and_current_page),
+	(get_page_y_offset), (get_page_extents):
+	
+	Place even pages to the left if document has less then
+	two pages. Fix for the bug #328856.
+
 2006-01-31  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* thumbnailer/evince-thumbnailer-comics.schemas.in:

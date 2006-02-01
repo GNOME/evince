@@ -23,6 +23,7 @@ struct _EvPageCache
 	gint max_label_chars;
 	gboolean has_labels;
 	gboolean uniform;
+	gboolean dual_even_left;
 	
 	double uniform_width;
 	double uniform_height;
@@ -140,7 +141,7 @@ build_height_to_page (EvPageCache *page_cache)
 		}
 	}
 
-	if (DUAL_EVEN_LEFT && !page_cache->uniform) {
+	if (page_cache->dual_even_left && !page_cache->uniform) {
 		if (!swap) {
 			saved_height = page_cache->size_cache [0].height;
 		} else {
@@ -149,16 +150,16 @@ build_height_to_page (EvPageCache *page_cache)
 	} else {
 		saved_height = 0;
 	}
-	for (i = DUAL_EVEN_LEFT; i < page_cache->n_pages + 2; i += 2) {
+	for (i = page_cache->dual_even_left; i < page_cache->n_pages + 2; i += 2) {
     		if (page_cache->uniform) {
 			if (!swap) {
 				uniform_height = page_cache->uniform_height;
 			} else {
 				uniform_height = page_cache->uniform_width;
 			}
-			page_cache->dual_height_to_page [i] = ((i + DUAL_EVEN_LEFT) / 2) * uniform_height;
+			page_cache->dual_height_to_page [i] = ((i + page_cache->dual_even_left) / 2) * uniform_height;
 			if (i + 1 < page_cache->n_pages + 2)
-				page_cache->dual_height_to_page [i + 1] = ((i + DUAL_EVEN_LEFT) / 2) * uniform_height;
+				page_cache->dual_height_to_page [i + 1] = ((i + page_cache->dual_even_left) / 2) * uniform_height;
 		} else {
 			if (i + 1 < page_cache->n_pages) {
 				if (!swap) {
@@ -206,6 +207,7 @@ ev_page_cache_new (EvDocument *document)
 	page_cache->uniform = TRUE;
 	page_cache->has_labels = FALSE;
 	page_cache->n_pages = ev_document_get_n_pages (document);
+	page_cache->dual_even_left = (page_cache->n_pages > 2);
 	page_cache->page_labels = g_new0 (char *, page_cache->n_pages);
 	page_cache->max_width = 0;
 	page_cache->max_height = 0;
@@ -467,6 +469,14 @@ ev_page_cache_get_max_label_chars (EvPageCache *page_cache)
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), 0);
 	
 	return page_cache->max_label_chars;
+}
+
+gboolean
+ev_page_cache_get_dual_even_left (EvPageCache *page_cache)
+{
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), 0);
+	
+	return page_cache->dual_even_left;
 }
 
 gchar *
