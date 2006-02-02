@@ -39,6 +39,7 @@ struct _ComicsDocument
 	GSList *page_names;
 	int     n_pages;
 	char   *extract_command;
+	gboolean regex_arg;
 };
 
 typedef struct _ComicsDocumentClass ComicsDocumentClass;
@@ -66,6 +67,36 @@ G_DEFINE_TYPE_WITH_CODE (
 				       comics_document_document_thumbnails_iface_init);
 	} );
 
+static char *
+comics_regex_quote (const char *s)
+{
+    char *ret, *d;
+
+    d = ret = g_malloc (strlen (s) * 2 + 3);
+    
+    *d++ = '\'';
+
+    for (; *s; s++, d++) {
+	switch (*s) {
+	case '?':
+	case '|':
+	case '[':
+	case ']':
+	case '*':
+	case '\\':
+	case '\'':
+	    *d++ = '\\';
+	    break;
+	}
+	*d = *s;
+    }
+    
+    *d++ = '\'';
+    *d = '\0';
+
+    return ret;
+}
+
 static gboolean
 comics_document_load (EvDocument *document,
 		      const char *uri,
@@ -91,11 +122,13 @@ comics_document_load (EvDocument *document,
 			g_strdup ("unrar p -c- -ierr");
 		list_files_command =
 			g_strdup_printf ("unrar vb -c- -- %s", quoted_file);
+		comics_document->regex_arg = FALSE;
 	} else if (!strcmp (mime_type, "application/x-cbz")) {
 		comics_document->extract_command =
 			g_strdup ("unzip -p -C");
 		list_files_command = 
 			g_strdup_printf ("zipinfo -1 -- %s", quoted_file);
+		comics_document->regex_arg = TRUE;
 	}
 
 	g_free (quoted_file);
@@ -455,8 +488,13 @@ extract_argv (EvDocument *document, gint page)
 	char *command_line, *quoted_archive, *quoted_filename;
 
 	quoted_archive = g_shell_quote (comics_document->archive);
-	quoted_filename = g_shell_quote (
-		g_slist_nth_data (comics_document->page_names, page));
+	if (comics_document->regex_arg) {
+		quoted_filename = comics_regex_quote (
+			g_slist_nth_data (comics_document->page_names, page));
+	} else {
+		quoted_filename = g_shell_quote (
+			g_slist_nth_data (comics_document->page_names, page));
+	}
 
 	command_line = g_strdup_printf ("%s -- %s %s",
 					comics_document->extract_command,
