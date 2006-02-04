@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-29 23:44+0100\n"
-"PO-Revision-Date: 2006-01-29 23:43+0100\n"
+"POT-Creation-Date: 2006-02-04 17:21+0100\n"
+"PO-Revision-Date: 2006-02-04 17:20+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk> \n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../comics/comics-document.c:115
+#: ../comics/comics-document.c:148
 msgid "File corrupted."
 msgstr "Fil ødelagt."
 
-#: ../comics/comics-document.c:151
+#: ../comics/comics-document.c:184
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Ingen billeder fundet i arkivet %s"
@@ -86,18 +86,14 @@ msgid "View multipage documents"
 msgstr "Vis dokumenter med flere sider"
 
 #: ../data/evince-password.glade.h:1
-msgid "*"
-msgstr "*"
-
-#: ../data/evince-password.glade.h:2
 msgid "Remember password for this session"
 msgstr "Husk adgangskode i denne session"
 
-#: ../data/evince-password.glade.h:3
+#: ../data/evince-password.glade.h:2
 msgid "Save password in keyring"
 msgstr "Gem adgangskode i nøglering"
 
-#: ../data/evince-password.glade.h:4
+#: ../data/evince-password.glade.h:3
 msgid "_Password:"
 msgstr "_Adgangskode:"
 
@@ -342,7 +338,7 @@ msgstr "Kunne ikke indlæse dokumentet \"%s\""
 
 #: ../ps/ps-document.c:1247
 msgid "Encapsulated PostScript"
-msgstr "Encapsulated PostScript"
+msgstr "Indkapslet PostScript"
 
 #: ../ps/ps-document.c:1248
 msgid "PostScript"
@@ -398,7 +394,7 @@ msgstr "_Skeln mellem store/små bogstaver"
 
 #: ../shell/ev-document-types.c:60
 msgid "Unknown MIME Type"
-msgstr "Ukent MIME-type"
+msgstr "Ukendt MIME-type"
 
 #: ../shell/ev-document-types.c:71
 #, c-format
@@ -503,7 +499,7 @@ msgstr "Skrifttype"
 #: ../shell/ev-properties-fonts.c:134
 #, c-format
 msgid "Gathering font information... %3d%%"
-msgstr "Indsamler skrifttype-oplysninger... %3d%%"
+msgstr "Indsamler oplysninger om skrifttype... %3d%%"
 
 #: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2092
 msgid "Loading..."
@@ -609,7 +605,7 @@ msgstr "Sider"
 
 #: ../shell/ev-window.c:1412
 msgid "The \"Find\" feature will not work with this document"
-msgstr "Søgefunktionen vil ikke virke med dette dokument"
+msgstr "Søgefunktionen virker ikke for dette dokument"
 
 #: ../shell/ev-window.c:1414
 msgid "Searching for text is only supported for PDF documents."
@@ -945,7 +941,7 @@ msgstr "%s - adgangskode påkrævet"
 
 #: ../shell/main.c:50
 msgid "The page of the document to display."
-msgstr "Den side i dokumentet som skal vises."
+msgstr "Den side af dokumentet som skal vises."
 
 #: ../shell/main.c:50
 msgid "PAGE"
@@ -976,6 +972,9 @@ msgid ""
 msgstr ""
 "Gyldig kommando plus parametre til miniaturegenerering af PDF-dokumenter. Se "
 "dokumentationen for Nautilus' miniaturegenerering for flere oplysninger."
+
+#~ msgid "*"
+#~ msgstr "*"
 
 #~ msgid "<span size=\"smaller\"> </span>"
 #~ msgstr "<span size=\"smaller\"> </span>"
