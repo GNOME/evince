@@ -60,6 +60,8 @@ GType           ev_sizing_mode_get_type   (void) G_GNUC_CONST;
 GtkWidget*	ev_view_new		  (void);
 void		ev_view_set_document	  (EvView         *view,
 			   		   EvDocument     *document);
+void 		ev_view_set_loading       (EvView 	  *view,
+				           gboolean        loading);
 
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);

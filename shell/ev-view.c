@@ -209,6 +209,9 @@ static void       draw_one_page                              (EvView            
 							      GdkRectangle       *page_area,
 							      GtkBorder          *border,
 							      GdkRectangle       *expose_area);
+static void	  draw_loading_text 			     (EvView             *view,
+							      GdkRectangle       *page_area,
+							      GdkRectangle       *expose_area);
 
 /*** Callbacks ***/
 static void       find_changed_cb                            (EvDocument         *document,
@@ -1619,6 +1622,12 @@ ev_view_expose_event (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 	int i;
 
+	if (view->loading) {
+		draw_loading_text (view,
+				   &(widget->allocation),
+				   &(event->area));
+	}
+
 	if (view->document == NULL)
 		return FALSE;
 
@@ -2690,11 +2699,21 @@ clear_caches (EvView *view)
 }
 
 void
+ev_view_set_loading (EvView 	  *view,
+		     gboolean      loading)
+{
+	view->loading = loading;
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+void
 ev_view_set_document (EvView     *view,
 		      EvDocument *document)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
+	view->loading = FALSE;
+	
 	if (document != view->document) {
 		clear_caches (view);
 

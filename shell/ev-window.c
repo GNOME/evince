@@ -102,7 +102,6 @@ struct _EvWindowPrivate {
 	GtkWidget *find_bar;
 	GtkWidget *scrolled_window;
 	GtkWidget *view;
-	GtkWidget *page_view;
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
@@ -954,6 +953,8 @@ ev_window_load_job_cb  (EvJobLoad *job,
 	g_assert (document);
 	g_assert (document != ev_window->priv->document);
 	g_assert (job->uri);
+	
+	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 
 	if (ev_window->priv->password_document) {
 		g_object_unref (ev_window->priv->password_document);
@@ -1007,6 +1008,7 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	if (job->error != NULL) {
 		unable_to_load (ev_window, job->error->message);
 		ev_window_clear_jobs (ev_window);
+		ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 	} else {
 		char *uri;
 		
@@ -1069,6 +1071,7 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_jobs (ev_window);
 	ev_window_clear_local_uri (ev_window);
+	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 	
 	ev_window->priv->xfer_job = ev_job_xfer_new (uri);
 	g_signal_connect (ev_window->priv->xfer_job,
@@ -2705,11 +2708,6 @@ ev_window_dispose (GObject *object)
 		priv->view = NULL;
 	}
 
-	if (priv->page_view) {
-		g_object_unref (priv->page_view);
-		priv->page_view = NULL;
-	}
-
 	if (priv->load_job || priv->xfer_job) {
 		ev_window_clear_jobs (window);
 	}
@@ -3434,7 +3432,6 @@ ev_window_init (EvWindow *ev_window)
 
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);
-	//g_object_ref (ev_window->priv->page_view);
 	g_object_ref (ev_window->priv->password_view);
 
 	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),

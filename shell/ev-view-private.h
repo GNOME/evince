@@ -92,6 +92,7 @@ struct _EvView {
 	double scale;
 	int spacing;
 
+	gboolean loading;
 	gboolean continuous;
 	gboolean dual_page;
 	gboolean fullscreen;

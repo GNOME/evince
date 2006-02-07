@@ -1,3 +1,15 @@
+2006-02-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_expose_event), (ev_view_set_loading),
+	(ev_view_set_document):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_load_job_cb),
+	(ev_window_xfer_job_cb), (ev_window_open_uri), (ev_window_dispose),
+	(ev_window_init):
+
+	Draw Loading message during xfer job. Fix for the bug #329495.
+
 2006-02-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* comics/comics-document.c: (comics_regex_quote),
