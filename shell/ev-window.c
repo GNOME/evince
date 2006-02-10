@@ -37,7 +37,6 @@
 #include "ev-view.h"
 #include "ev-password.h"
 #include "ev-password-view.h"
-#include "ev-print-job.h"
 #include "ev-properties-dialog.h"
 #include "ev-ps-exporter.h"
 #include "ev-document-thumbnails.h"
@@ -65,12 +64,16 @@
 #include "ev-utils.h"
 #include "ev-debug.h"
 
+#ifdef WITH_GNOME_PRINT
+#include "ev-print-job.h"
+#include <libgnomeprintui/gnome-print-dialog.h>
+#endif
+
 #include <poppler.h>
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gnome.h>
-#include <libgnomeprintui/gnome-print-dialog.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <gconf/gconf-client.h>
 
@@ -108,7 +111,9 @@ struct _EvWindowPrivate {
 
 	/* Dialogs */
 	GtkWidget *properties;
+#ifdef WITH_GNOME_PRINT
 	GtkWidget *print_dialog;
+#endif
 	GtkWidget *password_dialog;
 
 	/* UI Builders */
@@ -139,7 +144,9 @@ struct _EvWindowPrivate {
 	/* Job used to load document */
 	EvJob *xfer_job;
 	EvJob *load_job;
+#ifdef WITH_GNOME_PRINT
 	GnomePrintJob *print_job;
+#endif
 };
 
 static const GtkTargetEntry ev_drop_types[] = {
@@ -275,6 +282,10 @@ update_action_sensitivity (EvWindow *ev_window)
 		ok_to_copy_text = ev_view_get_has_selection (view);
 	}
 	
+#ifndef WITH_GNOME_PRINT
+	ok_to_print = FALSE;
+#endif
+
 	/* File menu */
 	/* "FileOpen": always sensitive */
 	set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
@@ -1047,12 +1058,14 @@ ev_window_close_dialogs (EvWindow *ev_window)
 		gtk_widget_destroy (ev_window->priv->password_dialog);
 	ev_window->priv->password_dialog = NULL;
 
+#ifdef WITH_GNOME_PRINT
 	if (ev_window->priv->print_dialog) {
 		gtk_widget_destroy (ev_window->priv->print_dialog);
 		g_object_unref (ev_window->priv->print_job);
 	}
 	ev_window->priv->print_dialog = NULL;
 	ev_window->priv->print_job = NULL;
+#endif
 
 	if (ev_window->priv->properties)
 		gtk_widget_destroy (ev_window->priv->properties);
@@ -1261,10 +1274,13 @@ ev_window_print (EvWindow *window)
 	page_cache = ev_page_cache_get (window->priv->document);
 	last_page = ev_page_cache_get_n_pages (page_cache);
 
+#ifdef WITH_GNOME_PRINT
 	ev_window_print_range (window, 1, last_page);
+#endif
 }
 
 
+#ifdef WITH_GNOME_PRINT
 static gboolean
 ev_window_print_dialog_response_cb (GtkDialog *print_dialog, gint response, gpointer data)
 {
@@ -1368,6 +1384,7 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 	gtk_widget_show (ev_window->priv->print_dialog);
 	return;
 }
+#endif /* WITH_GNOME_PRINT */
 	
 static void
 ev_window_cmd_file_print (GtkAction *action, EvWindow *ev_window)

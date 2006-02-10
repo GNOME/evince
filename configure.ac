@@ -48,16 +48,40 @@ DBUS_GLIB_REQUIRED=0.33
 GTK_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
 KEYRING_REQUIRED=0.4.0
+LIBGNOMEPRINTUI_REQUIRED=2.5.1
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
 PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libgnomeprint-2.2 >= 2.5.1 libgnomeprintui-2.2 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED gnome-keyring-1 >= $KEYRING_REQUIRED)
+PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED gnome-keyring-1 >= $KEYRING_REQUIRED)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
 
+
+dnl ========= Check for libgnomeprintui
+AC_ARG_ENABLE(gnome-print,
+  	[AC_HELP_STRING([--disable-gnome-print], [Compile without print support])],
+	enable_gnome_print="$enableval",
+	enable_gnome_print=yes)
+
+if test x$enable_gnome_print = xyes; then
+	PKG_CHECK_MODULES(GNOME_PRINT, 
+		libgnomeprintui-2.2 >= $LIBGNOMEPRINTUI_REQUIRED,
+		enable_gnome_print=yes, enable_gnome_print=no)
+fi
+
+AC_SUBST(GNOME_PRINT_CFLAGS)
+AC_SUBST(GNOME_PRINT_LIBS)
+
+if test x$enable_gnome_print = xyes; then
+ 	AC_DEFINE([WITH_GNOME_PRINT],[1],[Enable Print Support.])
+fi 
+
+AM_CONDITIONAL(WITH_GNOME_PRINT, test x$enable_gnome_print = xyes)
+
+dnl ========= Check for DBUS
 PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED],
 	[enable_dbus=yes],[enable_dbus=no])
 AC_SUBST([DBUS_CFLAGS])
@@ -339,3 +363,17 @@ help/Makefile
 ])
 
 AC_OUTPUT
+
+echo "
+Configure summary:
+	Print Support......:  $enable_gnome_print
+	DBUS Support.......:  $enable_dbus
+	Nautilus Plugin....:  $HAVE_NAUTILUS
+
+	PostScript Backend.:  $enable_ps
+	TIFF Backend.......:  $enable_tiff
+	DJVU Backend.......:  $enable_djvu
+	DVI Backend........:  $enable_dvi
+	Pixbuf Backend.....:  $enable_pixbuf
+	Comics Backend.....:  $enable_comics
+"

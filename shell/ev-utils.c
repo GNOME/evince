@@ -420,6 +420,7 @@ ev_file_set_contents (const gchar *filename,
 
 #endif /* HAVE_G_FILE_SET_CONTENTS */
 
+#ifdef WITH_GNOME_PRINT
 gboolean
 using_pdf_printer (GnomePrintConfig *config)
 {
@@ -511,5 +512,6 @@ save_print_config_to_file (GnomePrintConfig *config)
 	g_free (file_name);
 	g_free (str);
 }
+#endif /* WITH_GNOME_PRINT */
 
 

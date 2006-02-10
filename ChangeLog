@@ -1,3 +1,17 @@
+2006-02-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* configure.ac:
+	* shell/Makefile.am:
+	* shell/ev-sidebar-links.c: (print_section_cb):
+	* shell/ev-utils.c:
+	* shell/ev-utils.h:
+	* shell/ev-window.c: (update_action_sensitivity),
+	(ev_window_close_dialogs), (ev_window_print):
+	* shell/ev-window.h:
+	
+	Make printing support optional. Patch from Eduardo de Barros Lima
+	<eduardo.lima@indt.org.br> for the bug #330546.
+
 2006-02-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view-private.h:

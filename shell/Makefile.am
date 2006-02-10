@@ -10,7 +10,8 @@ INCLUDES=						\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\
-	$(WARN_CFLAGS)					
+	$(WARN_CFLAGS)					\
+	$(GNOME_PRINT_CFLAGS)
 
 bin_PROGRAMS=evince
 
@@ -41,8 +42,6 @@ evince_SOURCES=				\
 	ev-password-view.c		\
 	ev-pixbuf-cache.c		\
 	ev-pixbuf-cache.h		\
-	ev-print-job.c			\
-	ev-print-job.h			\
 	ev-properties-dialog.c		\
 	ev-properties-dialog.h		\
 	ev-properties-fonts.c		\
@@ -70,13 +69,21 @@ evince_SOURCES=				\
 	ev-stock-icons.h		\
 	main.c
 
+if WITH_GNOME_PRINT
+evince_SOURCES+=			\
+	ev-print-job.c			\
+	ev-print-job.h
+endif
+
+
 evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/lib/libev.la	\
-	$(SHELL_LIBS)
+	$(top_builddir)/lib/libev.la					\
+	$(SHELL_LIBS)							\
+	$(GNOME_PRINT_LIBS)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 
