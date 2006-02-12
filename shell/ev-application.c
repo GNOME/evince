@@ -73,12 +73,22 @@ ev_application_register_service (EvApplication *application)
 						  DBUS_PATH_DBUS,
 						  DBUS_INTERFACE_DBUS);
 
+#if DBUS_VERSION >= 60	
 	if (!org_freedesktop_DBus_request_name (driver_proxy,
                                         	APPLICATION_SERVICE_NAME,
+						DBUS_NAME_FLAG_DO_NOT_QUEUE,
+						&request_name_result, &err)) {
+		g_warning ("Service registration failed.");
+		g_clear_error (&err);
+	}
+#else
+	if (!org_freedesktop_DBus_request_name (driver_proxy,
+						APPLICATION_SERVICE_NAME,
 						0, &request_name_result, &err)) {
 		g_warning ("Service registration failed.");
 		g_clear_error (&err);
 	}
+#endif	
 
 	if (request_name_result == DBUS_REQUEST_NAME_REPLY_EXISTS) {
 		return FALSE;

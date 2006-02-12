@@ -1,3 +1,10 @@
+2006-02-12  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-application.c: 
+
+	Use DBUS_NAME_FLAG_DO_NOT_QUEUE flag in RequestName method when
+	dbus>=0.60, so that the request is not queued. 
+
 2006-02-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
