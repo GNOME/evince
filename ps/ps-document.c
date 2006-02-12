@@ -616,7 +616,7 @@ start_interpreter (PSDocument *gs)
 #define NUM_GS_ARGS (NUM_ARGS - 20)
 #define NUM_ALPHA_ARGS 10
 
-	char *argv[NUM_ARGS], *dir, *gv_env;
+	char *argv[NUM_ARGS], *dir, *gv_env, *gs_path;
 	char **gs_args, **alpha_args = NULL;
 	int argc = 0, i;
 
@@ -628,7 +628,9 @@ start_interpreter (PSDocument *gs)
 	stop_interpreter(gs);
 
 	/* set up the args... */
-	gs_args = g_strsplit (gtk_gs_defaults_get_interpreter_cmd (), " ", NUM_GS_ARGS);
+	gs_path = g_find_program_in_path ("gs");
+	gs_args = g_strsplit (gs_path, " ", NUM_GS_ARGS);
+	g_free (gs_path);
 	for(i = 0; i < NUM_GS_ARGS && gs_args[i]; i++, argc++) {
 		argv[argc] = gs_args[i];
 	}
@@ -1056,27 +1058,39 @@ ps_document_load (EvDocument  *document,
 		  const char  *uri,
 		  GError     **error)
 {
-	gboolean result;
 	char *filename;
+	char *gs_path;
+	gboolean result;
 
 	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename)
 		return FALSE;
 
-	result = document_load (PS_DOCUMENT (document), filename);
-	if (!result) {
-		gchar *filename_dsp;
-
-		filename_dsp = g_filename_display_name (filename);
-
-		g_set_error (error, G_FILE_ERROR,
-			     G_FILE_ERROR_FAILED,
-			     _("Failed to load document '%s'"),
-			     filename_dsp);
-
-		g_free (filename_dsp);
+	gs_path = g_find_program_in_path ("gs");
+	if (!gs_path) {
+        	    gchar *filename_dsp;
+	    	    filename_dsp = g_filename_display_name (filename);
+		    g_set_error(error,
+				G_FILE_ERROR,
+				G_FILE_ERROR_NOENT,
+				_("Failed to load document '%s'. Ghostscript interpreter was not found in path"),
+				filename);
+		    g_free (filename_dsp);
+		    result = FALSE;	
+	} else {
+		result = document_load (PS_DOCUMENT (document), filename);
+		if (!result) {
+	    		gchar *filename_dsp;
+	    		filename_dsp = g_filename_display_name (filename);
+			
+			g_set_error (error, G_FILE_ERROR,
+				     G_FILE_ERROR_FAILED,
+				     _("Failed to load document '%s'"),
+				     filename_dsp);
+			g_free (filename_dsp);
+		}
+		g_free (gs_path);
 	}
-
 	g_free (filename);
 
 	return result;

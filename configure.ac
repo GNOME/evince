@@ -171,19 +171,6 @@ fi
 AM_CONDITIONAL(ENABLE_PS, test x$enable_ps = xyes)
 
 if test x$enable_ps = xyes; then
-AC_ARG_WITH(gs,
-            [AC_HELP_STRING([--with-gs=dir], [Directory Where GhostScript package is installed.])])
-
-if test "x$with_gs" = "x"; then
-        AC_PATH_PROG(GS_PROG, gs)
-        if test -z "$GS_PROG"; then
-                AC_MSG_ERROR(Unable to find GhostScript in the PATH. Provide the full path for GhostScript(--with-gs=PATH). You need to have Ghostscript installed in order to run evince)
-        fi
-else
-        GS_PROG=$with_gs
-fi
-
-AC_DEFINE_UNQUOTED(GS_PATH, "$GS_PROG", [Path to the 'gs' executable.])
 
 dnl check for GS version
 AC_MSG_CHECKING(for Ghostscript version...)

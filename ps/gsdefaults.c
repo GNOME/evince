@@ -51,13 +51,7 @@ GtkGSPaperSize gtk_gs_paper_sizes[] = {
 GtkGSPaperSize *
 gtk_gs_defaults_get_paper_sizes()
 {
-  return gtk_gs_paper_sizes;
-}
-
-const gchar *
-gtk_gs_defaults_get_interpreter_cmd()
-{
-    return GS_PATH;
+	return gtk_gs_paper_sizes;
 }
 
 const gchar *

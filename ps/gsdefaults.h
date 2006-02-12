@@ -31,7 +31,6 @@ G_BEGIN_DECLS
 /* defaults accessors */
 
 GtkGSPaperSize *gtk_gs_defaults_get_paper_sizes(void);
-const gchar *gtk_gs_defaults_get_interpreter_cmd(void);
 const gchar *gtk_gs_defaults_get_ungzip_cmd(void);
 const gchar *gtk_gs_defaults_get_unbzip2_cmd(void);
 
