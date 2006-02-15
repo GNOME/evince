@@ -307,7 +307,7 @@ dnl =================== Mime types list ========================================
 
 EVINCE_MIME_TYPES="application/pdf"
 
-if test "x$disable_ps" = "xno" ; then
+if test "x$enable_ps" = "xyes" ; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/postscript;application/x-gzpostscript"
 fi
 if test "x$enable_dvi" = "xyes"; then
