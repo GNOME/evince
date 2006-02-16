@@ -210,6 +210,9 @@ push_pixbuf (PSDocument *gs)
 	GdkColormap *cmap;
 	GdkPixbuf *pixbuf;
 	int width, height;
+	
+	if (gs->pstarget == NULL)
+		return;
 
 	cmap = gdk_window_get_colormap (gs->pstarget);
 	gdk_drawable_get_size (gs->bpixmap, &width, &height);
@@ -311,6 +314,9 @@ setup_pixmap (PSDocument *gs, int page, double scale, int rotation)
 	GdkColormap *colormap;
 	double width, height;
 	int pixmap_width, pixmap_height;
+	
+	if (gs->pstarget == NULL)
+		return;
 
 	ev_document_get_page_size (EV_DOCUMENT (gs), page, &width, &height);
 
