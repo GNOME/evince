@@ -2912,7 +2912,7 @@ static const GtkToggleActionEntry toggle_entries[] = {
 	{ "ViewToolbar", NULL, N_("_Toolbar"), "<shift><control>T",
 	  N_("Show or hide the toolbar"),
 	  G_CALLBACK (ev_window_view_toolbar_cb), TRUE },
-        { "ViewSidebar", NULL, N_("Side _Pane"), "F9",
+        { "ViewSidebar", GTK_STOCK_INDEX, N_("Side _Pane"), "F9",
 	  N_("Show or hide the side pane"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
         { "ViewContinuous", EV_STOCK_VIEW_CONTINUOUS, N_("_Continuous"), NULL,
