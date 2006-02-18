@@ -61,6 +61,7 @@ struct _EvPrintJob {
 	gboolean printing;
 	int next_page;
 	int copies_done;
+	int shift;
 };
 
 struct _EvPrintJobClass {
@@ -261,15 +262,18 @@ idle_print_handler (EvPrintJob *job)
 		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_begin (
                         EV_PS_EXPORTER (job->document),
-                        job->temp_file, job->first_page, job->last_page,
+                        job->temp_file, 
+			MIN (job->first_page, job->last_page),
+			MAX (job->first_page, job->last_page),
                         job->width, job->height, job->duplex);
 		ev_document_doc_mutex_unlock ();
 		job->next_page = job->first_page;
+		job->shift = (job->first_page > job->last_page) ? -1 : 1;
 		job->printing = TRUE;
 		return TRUE;
 	}
-
-	if (job->next_page <= job->last_page) {
+	
+	if ((job->next_page - job->last_page) * job->shift <= 0) {
 		EvRenderContext *rc;
 #if 0
 		g_printerr ("Printing page %d\n", job->next_page);
@@ -286,12 +290,12 @@ idle_print_handler (EvPrintJob *job)
 			/* collate must repeat the same page */
 			job->copies_done++;
 			if(job->copies == job->copies_done) {
-				job->next_page++;
+				job->next_page += job->shift;
 				job->copies_done = 0;
 			}
 		} else {
-			job->next_page++;
-			if (job->next_page > job->last_page){
+			job->next_page += job->shift;
+			if ((job->next_page - job->last_page) * job->shift > 0){
 			        job->copies_done++;
 				if(job->copies_done < job->copies) {
 					/* more copies to go, restart to the first page */
