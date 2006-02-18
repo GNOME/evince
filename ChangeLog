@@ -1,5 +1,13 @@
 2006-02-18  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* configure.ac:
+	* shell/ev-window.c: (ev_window_cmd_save_as):
+	
+	Ask filechooser to confirm overwrite. Fix for the bug #328266.
+	Thanks to Gary Coady <gary@lyranthe.org>
+
+2006-02-18  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-print-job.c: (idle_print_handler):
 	
 	Inverse order printing, bug #320919.
