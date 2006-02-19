@@ -9,7 +9,12 @@ noinst_LTLIBRARIES = libgtkdjvu.la
 
 libgtkdjvu_la_SOURCES = \
 	djvu-document.c	\
-	djvu-document.h
+	djvu-document.h \
+	djvu-document-private.h \
+	djvu-text.c	\
+	djvu-text.h	\
+	djvu-text-page.c \
+	djvu-text-page.h
 
 libgtkdjvu_la_LIBADD = -lpthread -ldjvulibre
 

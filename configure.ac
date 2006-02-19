@@ -224,6 +224,7 @@ if test "x$enable_djvu" = "xyes"; then
     if test "x$enable_djvu" = "xyes"; then
 	AC_CHECK_LIB([djvulibre],ddjvu_context_create,enable_djvu=yes,enable_djvu=no,"-lpthread")
 	AC_CHECK_LIB([djvulibre],ddjvu_document_get_pageinfo,enable_djvu=yes,enable_djvu=no,"-lpthread")
+	AC_CHECK_LIB([djvulibre],ddjvu_document_get_pagetext,enable_djvu=yes,enable_djvu=no,"-lpthread")
     fi
 
     if test "x$enable_djvu" = "xyes"; then
@@ -231,7 +232,7 @@ if test "x$enable_djvu" = "xyes"; then
     else
 	AC_MSG_WARN([	
 ** Djvu support is disabled since a recent version of the djvulibre 
-** library was not found. You need at least djvulibre-3.5.15 which 
+** library was not found. You need at least djvulibre-3.5.16 which 
 ** can be found on http://djvulibre.djvuzone.org 
 ])
     fi 

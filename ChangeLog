@@ -1,3 +1,36 @@
+2006-02-19  Michael Hofmann <mh21@piware.de>
+
+	* configure.ac:
+	* djvu/Makefile.am:
+	* djvu/djvu-document-private.h:
+	* djvu/djvu-document.c: (G_DEFINE_TYPE_WITH_CODE),
+	(djvu_handle_events), (djvu_document_load), (djvu_document_save),
+	(djvu_document_get_page_size), (djvu_document_render_pixbuf),
+	(djvu_document_can_get_text), (djvu_document_get_text),
+	(djvu_document_document_iface_init),
+	(djvu_document_thumbnails_get_thumbnail),
+	(djvu_document_find_begin), (djvu_document_find_get_n_results),
+	(djvu_document_find_get_result),
+	(djvu_document_find_page_has_results),
+	(djvu_document_find_get_progress), (djvu_document_find_cancel),
+	(djvu_document_find_iface_init):
+	* djvu/djvu-text-page.c: (djvu_text_page_selection_process),
+	(djvu_text_page_selection), (djvu_text_page_limits_process),
+	(djvu_text_page_limits), (djvu_text_page_copy),
+	(djvu_text_page_position), (djvu_text_page_union),
+	(djvu_text_page_sexpr_process), (djvu_text_page_sexpr),
+	(djvu_text_page_box), (djvu_text_page_append_text),
+	(djvu_text_page_search), (djvu_text_page_prepare_search),
+	(djvu_text_page_new), (djvu_text_page_free):
+	* djvu/djvu-text-page.h:
+	* djvu/djvu-text.c: (djvu_text_idle_callback), (djvu_text_new),
+	(djvu_text_copy), (djvu_text_free), (djvu_text_get_text),
+	(djvu_text_n_results), (djvu_text_has_results),
+	(djvu_text_get_result), (djvu_text_get_progress):
+	* djvu/djvu-text.h:
+	
+	Text search in djvu. Fix for the bug #303415.
+
 2006-02-18  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
