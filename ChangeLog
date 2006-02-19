@@ -1,3 +1,14 @@
+2006-02-20  Antoine Dopffer <antoine.dopffer@free.fr>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (view_update_range_and_current_page),
+	(highlight_find_results), (find_changed_cb), (page_changed_cb),
+	(ev_view_set_document), (update_find_status_message),
+	(jump_to_find_result), (jump_to_find_page), (ev_view_find_next),
+	(ev_view_find_previous):
+	
+	Fix for the bug #319137. Search now takes account for scrolling.
+
 2006-02-19  Michael Hofmann <mh21@piware.de>
 
 	* configure.ac:

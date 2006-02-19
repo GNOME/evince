@@ -287,13 +287,15 @@ static void       ev_view_set_cursor                         (EvView            
 /*** Status messages ***/
 static void       ev_view_set_status                         (EvView             *view,
 							      const char         *message);
-static void       update_find_status_message                 (EvView             *view);
+static void       update_find_status_message                 (EvView             *view,
+							      gboolean            this_page);
 static void       ev_view_set_find_status                    (EvView             *view,
 							      const char         *message);
 /*** Find ***/
 static void       jump_to_find_result                        (EvView             *view);
 static void       jump_to_find_page                          (EvView             *view, 
-							      EvViewFindDirection direction);
+							      EvViewFindDirection direction,
+							      gint                shift);
 
 /*** Selection ***/
 static void       compute_selections                         (EvView             *view,
@@ -488,7 +490,6 @@ view_update_range_and_current_page (EvView *view)
 	current_page = ev_page_cache_get_current_page (view->page_cache);
 
 	if (current_page < view->start_page || current_page > view->end_page) {
-		view->current_page = view->start_page;
 		ev_page_cache_set_current_page (view->page_cache, view->start_page);
 	}
 
@@ -2074,7 +2075,7 @@ highlight_find_results (EvView *view, int page)
 		GdkRectangle view_rectangle;
 		guchar alpha;
 
-		if (i == view->find_result && page == view->find_page) {
+		if (i == view->find_result && page == view->current_page) {
 			alpha = 0x90;
 		} else {
 			alpha = 0x20;
@@ -2599,10 +2600,15 @@ ev_view_init (EvView *view)
 static void
 find_changed_cb (EvDocument *document, int page, EvView *view)
 {
-	jump_to_find_page (view, EV_VIEW_FIND_NEXT);
-	jump_to_find_result (view);
-	update_find_status_message (view);
+	double percent;
+	int n_pages;
 
+	percent = ev_document_find_get_progress
+		        (EV_DOCUMENT_FIND (view->document)); 
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+	jump_to_find_result (view);
+	update_find_status_message (view, percent * n_pages >= n_pages - 1 );
 	if (view->current_page == page)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
@@ -2626,9 +2632,8 @@ page_changed_cb (EvPageCache *page_cache,
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 
 		if (EV_IS_DOCUMENT_FIND (view->document)) {
-			view->find_page = new_page;
 			view->find_result = 0;
-			update_find_status_message (view);
+			update_find_status_message (view, TRUE);
 		}
 	}
 }
@@ -2727,7 +2732,6 @@ ev_view_set_document (EvView     *view,
                 }
 
 		view->document = document;
-		view->find_page = 0;
 		view->find_result = 0;
 
 		if (view->document) {
@@ -3276,11 +3280,11 @@ ev_view_set_status (EvView *view, const char *message)
 }
 
 static void
-update_find_status_message (EvView *view)
+update_find_status_message (EvView *view, gboolean this_page)
 {
 	char *message;
 
-	if (view->current_page == view->find_page) {
+	if (this_page) {
 		int results;
 
 		results = ev_document_find_get_n_results
@@ -3298,13 +3302,9 @@ update_find_status_message (EvView *view)
 
 		percent = ev_document_find_get_progress
 				(EV_DOCUMENT_FIND (view->document));
-		if (percent >= (1.0 - 1e-10)) {
-			message = g_strdup (_("Not found"));
-		} else {
-			message = g_strdup_printf (_("%3d%% remaining to search"),
-						   (int) ((1.0 - percent) * 100));
-		}
-
+		message = g_strdup_printf (_("%3d%% remaining to search"),
+					   (int) ((1.0 - percent) * 100));
+		
 	}
 	ev_view_set_find_status (view, message);
 	g_free (message);
@@ -3337,7 +3337,7 @@ jump_to_find_result (EvView *view)
 	EvRectangle rect;
 	GdkRectangle view_rect;
 	int n_results;
-	int page = view->find_page;
+	int page = view->current_page;
 
 	n_results = ev_document_find_get_n_results (find, page);
 
@@ -3350,8 +3350,18 @@ jump_to_find_result (EvView *view)
 	}
 }
 
+/**
+ * jump_to_find_page
+ * @view: #EvView instance
+ * @direction: Direction to look
+ * @shift: Shift from current page
+ *
+ * Jumps to the first page that has occurences of searched word.
+ * Uses a direction where to look and a shift from current page. 
+ *
+ */
 static void
-jump_to_find_page (EvView *view, EvViewFindDirection direction)
+jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 {
 	int n_pages, i;
 
@@ -3362,11 +3372,11 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction)
 		int page;
 		
 		if (direction == EV_VIEW_FIND_NEXT)
-			page = view->find_page + i;
+			page = view->current_page + i;
 		else
-			page = view->find_page - i;
-
-
+			page = view->current_page - i;		
+		page += shift;
+		
 		if (page >= n_pages) {
 			page = page - n_pages;
 		}
@@ -3376,7 +3386,6 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction)
 		has_results = ev_document_find_page_has_results
 				(EV_DOCUMENT_FIND (view->document), page);
 		if (has_results == -1) {
-			view->find_page = page;
 			break;
 		} else if (has_results == 1) {
 			ev_page_cache_set_current_page (view->page_cache, page);
@@ -3418,12 +3427,7 @@ ev_view_find_next (EvView *view)
 	if (view->find_result >= n_results) {
 
 		view->find_result = 0;
-		view->find_page++;
-		if (view->find_page >= n_pages) {
-			view->find_page = 0;
-		}
-
-		jump_to_find_page (view, EV_VIEW_FIND_NEXT);
+		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 1);
 		jump_to_find_result (view);
 	} else {
 		jump_to_find_result (view);
@@ -3448,12 +3452,7 @@ ev_view_find_previous (EvView *view)
 
 	if (view->find_result < 0) {
 
-		view->find_page--;
-		if (view->find_page < 0) {
-			view->find_page = n_pages - 1;
-		}
-
-		jump_to_find_page (view, EV_VIEW_FIND_PREV);
+		jump_to_find_page (view, EV_VIEW_FIND_PREV, -1);
 		view->find_result = ev_document_find_get_n_results (find, view->current_page) - 1;
 		jump_to_find_result (view);
 	} else {

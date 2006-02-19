@@ -86,7 +86,6 @@ struct _EvView {
 	gint start_page;
 	gint end_page;
 	gint current_page;
-	gint find_page;
 
 	int rotation;
 	double scale;
