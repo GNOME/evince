@@ -49,6 +49,7 @@ struct _EggFindBarClass
   void (* next)	    (EggFindBar *find_bar);
   void (* previous) (EggFindBar *find_bar);
   void (* close)    (EggFindBar *find_bar);
+  void (* scroll)   (EggFindBar *find_bar, GtkScrollType* scroll);
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);

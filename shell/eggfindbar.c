@@ -80,6 +80,7 @@ enum
     NEXT,
     PREVIOUS,
     CLOSE,
+    SCROLL,
     LAST_SIGNAL
   };
 
@@ -134,6 +135,15 @@ egg_find_bar_class_init (EggFindBarClass *klass)
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
 		  G_TYPE_NONE, 0);
+  find_bar_signals[SCROLL] =
+    g_signal_new ("scroll",
+		  G_OBJECT_CLASS_TYPE (object_class),
+		  G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                  G_STRUCT_OFFSET (EggFindBarClass, scroll),
+		  NULL, NULL,
+		  g_cclosure_marshal_VOID__ENUM,
+		  G_TYPE_NONE, 1,
+		  GTK_TYPE_SCROLL_TYPE);
 
   /**
    * EggFindBar:search_string:
@@ -185,6 +195,14 @@ egg_find_bar_class_init (EggFindBarClass *klass)
 
   gtk_binding_entry_add_signal (binding_set, GDK_Escape, 0,
 				"close", 0);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Up, 0,
+                                "scroll", 1,
+                                GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_Down, 0,
+                                "scroll", 1,
+                                GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD);
 }
 
 static void

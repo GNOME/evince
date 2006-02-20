@@ -1,3 +1,19 @@
+2006-02-21  Stanislav Slusny <slusnys@gmail.com>
+
+	* shell/eggfindbar.c: (egg_find_bar_class_init):
+	* shell/eggfindbar.h:
+	* shell/ev-view-accessible.c: (ev_view_accessible_idle_do_action):
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (add_scroll_binding_keypad), (ev_view_scroll),
+	(ev_view_class_init), (ev_sizing_mode_get_type),
+	(ev_scroll_type_get_type):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_cmd_scroll_forward),
+	(ev_window_cmd_scroll_backward), (find_bar_scroll),
+	(ev_window_init):
+	
+	Fix for the bug 319133 - Find entry should allow text scroll.
+
 2006-02-20  Antoine Dopffer <antoine.dopffer@free.fr>
 
 	* shell/ev-view-private.h:

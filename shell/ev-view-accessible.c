@@ -371,7 +371,8 @@ ev_view_accessible_idle_do_action (gpointer data)
 	EvViewAccessiblePriv* priv = ev_view_accessible_get_priv (ATK_OBJECT (data));
 	
 	ev_view_scroll (EV_VIEW (GTK_ACCESSIBLE (data)->widget), 
-			priv->idle_scroll);
+			priv->idle_scroll,
+			FALSE);
 	priv->action_idle_handler = 0;
 	return FALSE;
 }

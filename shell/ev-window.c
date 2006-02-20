@@ -482,13 +482,13 @@ ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 static void
 ev_window_cmd_scroll_forward (GtkAction *action, EvWindow *window)
 {
-	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD);
+	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD, FALSE);
 }
 
 static void
 ev_window_cmd_scroll_backward (GtkAction *action, EvWindow *window)
 {
-	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_BACKWARD);
+	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_BACKWARD, FALSE);
 }
 
 static void
@@ -2645,6 +2645,12 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 }
 
 static void
+find_bar_scroll(EggFindBar *find_bar, GtkScrollType scroll, EvWindow* ev_window)
+{
+	ev_view_scroll(EV_VIEW(ev_window->priv->view), scroll, FALSE);
+}
+
+static void
 zoom_control_changed_cb (EphyZoomAction *action,
 			 float           zoom,
 			 EvWindow       *ev_window)
@@ -3520,6 +3526,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->find_bar,
 			  "notify::visible",
 			  G_CALLBACK (find_bar_search_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "scroll",
+			  G_CALLBACK (find_bar_scroll),
 			  ev_window);
 
 	/* Popups */
