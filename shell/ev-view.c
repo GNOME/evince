@@ -569,6 +569,8 @@ ev_view_scroll (EvView        *view,
 	gboolean first_page = FALSE;
 	gboolean last_page = FALSE;
 
+	view->jump_to_find_result = FALSE;
+
 	if (view->presentation) {
 		switch (scroll) {
 			case EV_SCROLL_STEP_BACKWARD:
@@ -1540,6 +1542,7 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 		return TRUE;
 	}
 
+	view->jump_to_find_result = FALSE;
 	/* Shift+Wheel scrolls the in the perpendicular direction */
 	if (state & GDK_SHIFT_MASK) {
 		if (event->direction == GDK_SCROLL_UP)
@@ -2568,6 +2571,7 @@ ev_view_init (EvView *view)
 	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+	view->jump_to_find_result = TRUE;
 }
 
 /*** Callbacks ***/
@@ -2581,8 +2585,11 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 	percent = ev_document_find_get_progress
 		        (EV_DOCUMENT_FIND (view->document)); 
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
-	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
-	jump_to_find_result (view);
+	
+	if (view->jump_to_find_result == TRUE) {
+		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+		jump_to_find_result (view);
+	}
 	update_find_status_message (view, percent * n_pages >= n_pages - 1 );
 	if (view->current_page == page)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -3434,6 +3441,12 @@ ev_view_find_previous (EvView *view)
 		jump_to_find_result (view);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
+}
+
+void ev_view_search_changed (EvView *view)
+{
+	/* search string has changed, focus on new search result */
+	view->jump_to_find_result = TRUE;
 }
 
 /*** Selections ***/

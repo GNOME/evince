@@ -2621,6 +2621,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 #if 0
 	g_printerr ("search for '%s'\n", search_string ? search_string : "(nil)");
 #endif
+	ev_view_search_changed (EV_VIEW(ev_window->priv->view));
 
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {

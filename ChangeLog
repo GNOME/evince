@@ -1,3 +1,15 @@
+2006-02-24  Stanislav Slusny <slusnys@gmail.com>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_scroll), (ev_view_scroll_event),
+	(ev_view_init), (find_changed_cb), (ev_view_find_previous),
+	(ev_view_search_changed):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (find_bar_search_changed_cb):
+	
+	Dont't jump to find result if window was scrolled during search.
+	Fix for the bug #313266.
+
 2006-02-21  Stanislav Slusny <slusnys@gmail.com>
 
 	* shell/eggfindbar.c: (egg_find_bar_class_init):

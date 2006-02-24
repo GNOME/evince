@@ -122,6 +122,7 @@ int             ev_view_get_rotation      (EvView         *view);
 gboolean	ev_view_can_find_next	  (EvView         *view);
 void            ev_view_find_next         (EvView         *view);
 void            ev_view_find_previous     (EvView         *view);
+void            ev_view_search_changed    (EvView         *view);
 
 /* Status */
 const char     *ev_view_get_status        (EvView         *view);
