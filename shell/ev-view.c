@@ -2123,11 +2123,14 @@ draw_one_page (EvView          *view,
 	GdkRectangle overlap;
 	GdkRectangle real_page_area;
 	EvViewSelection *selection;
+	gint current_page;
 
 	g_assert (view->document);
+	
 	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
 		return;
-
+	
+	current_page = ev_page_cache_get_current_page (view->page_cache);
 	selection = find_selection_for_page (view, page);
 	ev_page_cache_get_size (view->page_cache,
 				page, view->rotation,
@@ -2143,7 +2146,8 @@ draw_one_page (EvView          *view,
 
 	ev_document_misc_paint_one_page (GTK_WIDGET(view)->window,
 					 GTK_WIDGET (view),
-					 page_area, border);
+					 page_area, border, 
+					 page == current_page);
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
 		GdkPixbuf *selection_pixbuf = NULL;

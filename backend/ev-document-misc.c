@@ -105,10 +105,12 @@ void
 ev_document_misc_paint_one_page (GdkDrawable  *drawable,
 				 GtkWidget    *widget,
 				 GdkRectangle *area,
-				 GtkBorder    *border)
+				 GtkBorder    *border,
+				 gboolean highlight)
 {
 	gdk_draw_rectangle (drawable,
-			    widget->style->black_gc,
+			    highlight ?
+			    	    widget->style->text_gc[widget->state] : widget->style->dark_gc[widget->state],
 			    TRUE,
 			    area->x,
 			    area->y,

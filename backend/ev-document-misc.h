@@ -39,7 +39,8 @@ void       ev_document_misc_get_page_border_size (gint          page_width,
 void       ev_document_misc_paint_one_page       (GdkDrawable  *drawable,
 						  GtkWidget    *widget,
 						  GdkRectangle *area,
-						  GtkBorder    *border);
+						  GtkBorder    *border,
+						  gboolean      highlight);
 
 G_END_DECLS
 
