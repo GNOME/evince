@@ -3962,7 +3962,11 @@ ev_view_next_page (EvView *view)
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
 	page = ev_page_cache_get_current_page (view->page_cache);
-	page = ev_view_get_dual_page (view) ? page + 2 : page + 1;
+
+	if (view->dual_page && !view->presentation)
+	        page = page + 2; 
+	else 
+		page = page + 1;
 
 	if (page < ev_page_cache_get_n_pages (view->page_cache)) {
 		ev_page_cache_set_current_page (view->page_cache, page);
@@ -3983,7 +3987,11 @@ ev_view_previous_page (EvView *view)
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
 	page = ev_page_cache_get_current_page (view->page_cache);
-	page = ev_view_get_dual_page (view) ? page - 2 : page - 1;
+
+	if (view->dual_page && !view->presentation)
+	        page = page - 2; 
+	else 
+		page = page - 1;
 
 	if (page >= 0) {
 		ev_page_cache_set_current_page (view->page_cache, page);
