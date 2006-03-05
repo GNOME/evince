@@ -471,7 +471,7 @@ view_update_range_and_current_page (EvView *view)
 				else 
 					view->end_page = view->start_page;
 			} else {
-				if (view->current_page - 1 < 0)
+				if (view->current_page < 1)
 					view->start_page = view->current_page;
 				else
 					view->start_page = view->current_page - 1;
@@ -487,6 +487,7 @@ view_update_range_and_current_page (EvView *view)
 	current_page = ev_page_cache_get_current_page (view->page_cache);
 
 	if (current_page < view->start_page || current_page > view->end_page) {
+		view->current_page = view->start_page;
 		ev_page_cache_set_current_page (view->page_cache, view->start_page);
 	}
 
@@ -2612,15 +2613,16 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvView      *view)
 {
 	if (view->current_page != new_page) {
-
 		view->current_page = new_page;
 		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
+	} else {
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
 
-		if (EV_IS_DOCUMENT_FIND (view->document)) {
-			view->find_result = 0;
-			update_find_status_message (view, TRUE);
-		}
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
+		view->find_result = 0;
+		update_find_status_message (view, TRUE);
 	}
 }
 

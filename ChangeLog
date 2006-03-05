@@ -1,3 +1,10 @@
+2006-03-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view.c: (view_update_range_and_current_page),
+	(page_changed_cb):
+	
+	Don't jump on scrolling, fix for the bug #333127.
+
 2006-03-01  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view.c: (ev_view_next_page), (ev_view_previous_page):
