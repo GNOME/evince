@@ -1,21 +1,31 @@
 # Persian translation of evince.
-# Copyright (C) 2003, 2004, 2005 Sharif FarsiWeb, Inc.
+# Copyright (C) 2003, 2004, 2005, 2006 Sharif FarsiWeb, Inc.
 # This file is distributed under the same license as the evince package.
 # Roozbeh Pournader <roozbeh@farsiweb.info>, 2003, 2004, 2005.
 # Meelad Zakaria <meelad@farsiweb.info>, 2004, 2005.
+# Elnaz Sarbar <elnaz@farsiweb.info>, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-18 05:57+0000\n"
-"PO-Revision-Date: 2005-08-18 19:50+0430\n"
-"Last-Translator: Roozbeh Pournader <roozbeh@farsiweb.info>\n"
-"Language-Team: Persian <farsi@lists.sharif.edu>\n"
+"POT-Creation-Date: 2006-02-15 06:10+0100\n"
+"PO-Revision-Date: 2006-02-15 20:28+0330\n"
+"Last-Translator: Elnaz Sarbar <elnaz@farsiweb.info>\n"
+"Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../comics/comics-document.c:148
+msgid "File corrupted."
+msgstr ""
+
+#: ../comics/comics-document.c:184
+#, c-format
+msgid "No images found in archive %s"
+msgstr ""
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:534
 msgid "_Remove Toolbar"
@@ -26,7 +36,7 @@ msgid "Separator"
 msgstr "جداساز"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3133
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3056
 msgid "Best Fit"
 msgstr "بهترین اندازه"
 
@@ -70,7 +80,7 @@ msgstr "٪۳۰۰"
 msgid "400%"
 msgstr "٪۴۰۰"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:608
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:126
 msgid "Document Viewer"
 msgstr "نمایشگر نوشتار"
 
@@ -79,10 +89,14 @@ msgid "View multipage documents"
 msgstr "نمایش چندین نوشتار"
 
 #: ../data/evince-password.glade.h:1
-msgid "*"
-msgstr "*"
+msgid "Remember password for this session"
+msgstr ""
 
 #: ../data/evince-password.glade.h:2
+msgid "Save password in keyring"
+msgstr ""
+
+#: ../data/evince-password.glade.h:3
 msgid "_Password:"
 msgstr "_گذرواژه:"
 
@@ -135,130 +149,76 @@ msgid "<b>Title:</b>"
 msgstr "<b>عنوان:</b>"
 
 #: ../data/evince.schemas.in.h:1
-msgid "Default sidebar size"
-msgstr "اندازه‌ی پیش‌فرض نوار کناری"
+msgid "Override document restrictions"
+msgstr "نادیده گرفتن محدودیت‌های نوشتار"
 
 #: ../data/evince.schemas.in.h:2
-msgid "Show sidebar by default"
-msgstr "نشان دادن نوار کناری به طور پیش‌فرض"
-
-#: ../data/evince.schemas.in.h:3
-msgid "Show statusbar by default"
-msgstr "نشان دادن نوار وضعیت به طور پیش‌فرض"
-
-#: ../data/evince.schemas.in.h:4
-msgid "Show toolbar by default"
-msgstr "نشان دادن نوار ابزار به طور پیش‌فرض"
-
-#: ../data/evince.schemas.in.h:5
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. The "
-"default size sets the sidebar's width in pixels based from the side of the "
-"window. Any integer will be accepted. The sidebar will never shrink smaller "
-"than the size of the text required to display Thumbnails or Index. Large "
-"values will cause the sidebar to take up as much of the page display area as "
-"possible relative to the window's size."
+msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
-"نوار کناری شیئی جانبی است که حاوی فهرست‌های نمایه و مسطوره است. اندازه‌ی "
-"پیش‌فرض، عرض نوار کناری را نسبت به لبه‌ی کنار پنجره برحسب نقطه تعیین می‌کند. هر عدد "
-"صحیحی قابل قبول است. نوار کناری هیچ‌وقت از اندازه‌ی متن لازم برای نمایش مسطوره‌ها "
-"یا نمایه کوچکتر نمی‌شود. مقادیر بزرگ سبب می‌شوند که بسته به اندازه‌ی پنجره، نوار "
-"کناری تا جایی از محوطه‌ی نمایش صفحه را که امکان دارد، اشغال کند."
 
-#: ../data/evince.schemas.in.h:6
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
-"boolean options, true makes sidebar visible by default while false makes "
-"sidebar not visible by default"
-msgstr ""
-"نوار کناری شیئی جانبی است که حاوی فهرست‌های نمایه و مسطوره است. دو گزینه‌ی "
-"بولی ممکن است: درست باعث می‌شود نوار کناری به طور پیش‌فرض مرئی باشد در حالی که نادرست باعث "
-"می‌شود نوار کناری به طور پیش‌فرض مرئی نباشد."
-
-#: ../data/evince.schemas.in.h:7
-msgid ""
-"Statusbar is the standard bottom bar that display additional information "
-"about links and other actions. Two boolean options, true makes the statusbar "
-"visible by default while false makes sidebar not visible by default."
-msgstr ""
-"نوار وضعیت، نوار دکمه‌ی استانداردی است که اطلاعات اضافی درباره‌ی پیوند‌ها و "
-"کنش‌های دیگر نمایش می‌دهد. دو گزینه‌ی بولی ممکن است: درست باعث می‌شود نوار وضعیت به طور "
-"پیش‌فرض مرئی باشد در حالی که نادرست باعث می‌شود نوار وضعیت به طور پیش‌فرض مرئی "
-"نباشد."
-
-#: ../data/evince.schemas.in.h:8
-msgid ""
-"Toolbar is the top bar that contains navigation and zoom controls. Two "
-"boolean options, true makes toolbar visible by default while false makes "
-"toolbar not visible by default."
-msgstr ""
-"نوار ابزار، نوار بالای صفحه است که حاوی کنترل‌های حرکت و زوم است. دو گزینه‌ی "
-"بولی ممکن است: درست باعث می‌شود نوار ابزار به طور پیش‌فرض مرئی باشد در حالی که نادرست باعث "
-"می‌شود نوار ابزار به طور پیش‌فرض مرئی نباشد."
-
-#: ../dvi/dvi-document.c:89
+#: ../dvi/dvi-document.c:91
 msgid "File not available"
 msgstr "پرونده موجود نیست"
 
-#: ../dvi/dvi-document.c:102
+#: ../dvi/dvi-document.c:104
 msgid "DVI document has incorrect format"
 msgstr "نوشتار DVI قالب نادرستی دارد"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:527
+#: ../pdf/ev-poppler.cc:511
 msgid "Yes"
 msgstr "بله"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:530
+#: ../pdf/ev-poppler.cc:514
 msgid "No"
 msgstr "خیر"
 
-#: ../pdf/ev-poppler.cc:630
+#: ../pdf/ev-poppler.cc:614
 msgid "Type 1"
 msgstr "نوع ۱"
 
-#: ../pdf/ev-poppler.cc:632
+#: ../pdf/ev-poppler.cc:616
 msgid "Type 1C"
 msgstr "نوع ‎1C"
 
-#: ../pdf/ev-poppler.cc:634
+#: ../pdf/ev-poppler.cc:618
 msgid "Type 3"
 msgstr "نوع ۳"
 
-#: ../pdf/ev-poppler.cc:636
+#: ../pdf/ev-poppler.cc:620
 msgid "TrueType"
 msgstr "تروتایپ"
 
-#: ../pdf/ev-poppler.cc:638
+#: ../pdf/ev-poppler.cc:622
 msgid "Type 1 (CID)"
 msgstr "نوع ۱ (CID)"
 
-#: ../pdf/ev-poppler.cc:640
+#: ../pdf/ev-poppler.cc:624
 msgid "Type 1C (CID)"
 msgstr "نوع ‏1C‏ (CID)"
 
-#: ../pdf/ev-poppler.cc:642
+#: ../pdf/ev-poppler.cc:626
 msgid "TrueType (CID)"
 msgstr "تروتایپ (CID)"
 
-#: ../pdf/ev-poppler.cc:644
+#: ../pdf/ev-poppler.cc:628
 msgid "Unknown font type"
 msgstr "نوع قلم نامعلوم"
 
-#: ../pdf/ev-poppler.cc:670
+#: ../pdf/ev-poppler.cc:654
 msgid "No name"
 msgstr "بدون نام"
 
-#: ../pdf/ev-poppler.cc:678
+#: ../pdf/ev-poppler.cc:662
 msgid "Embedded subset"
 msgstr "زیرمجموعه‌ی توکار"
 
-#: ../pdf/ev-poppler.cc:680
+#: ../pdf/ev-poppler.cc:664
 msgid "Embedded"
 msgstr "توکار"
 
-#: ../pdf/ev-poppler.cc:682
+#: ../pdf/ev-poppler.cc:666
 msgid "Not embedded"
 msgstr "غیر توکار"
 
@@ -346,42 +306,48 @@ msgstr "۱۰×۱۴ اینچ"
 msgid "No document loaded."
 msgstr "هیچ پرونده‌ای بار نشده است."
 
-#: ../ps/ps-document.c:604
+#: ../ps/ps-document.c:584
 msgid "Broken pipe."
 msgstr "لوله‌ی شکسته."
 
-#: ../ps/ps-document.c:786
+#: ../ps/ps-document.c:768
 msgid "Interpreter failed."
 msgstr "مفسر شکست خورد."
 
-#: ../ps/ps-document.c:912
+#: ../ps/ps-document.c:894
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "خطا در باز کردن پرونده‌ی فشرده‌ی %s:\n"
 
-#: ../ps/ps-document.c:972
+#: ../ps/ps-document.c:954
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "نمی‌توان پرونده‌ی %s را باز کرد.\n"
 
-#: ../ps/ps-document.c:977
+#: ../ps/ps-document.c:959
 msgid "File is not readable."
 msgstr "پرونده قابل خواندن نیست."
 
-#: ../ps/ps-document.c:997
+#: ../ps/ps-document.c:979
 msgid "Document loaded."
 msgstr "نوشتار بار شد."
 
-#: ../ps/ps-document.c:1094
+#: ../ps/ps-document.c:1076
+#, c-format
+msgid ""
+"Failed to load document '%s'. Ghostscript interpreter was not found in path"
+msgstr ""
+
+#: ../ps/ps-document.c:1088
 #, c-format
 msgid "Failed to load document '%s'"
 msgstr "باز کردن نوشتار «%s» ممکن نیست"
 
-#: ../ps/ps-document.c:1255
+#: ../ps/ps-document.c:1261
 msgid "Encapsulated PostScript"
 msgstr "پست‌اسکریپت بسته‌بندی‌شده"
 
-#: ../ps/ps-document.c:1256
+#: ../ps/ps-document.c:1262
 msgid "PostScript"
 msgstr "پست‌اسکریپت"
 
@@ -417,19 +383,19 @@ msgstr "رنگ فعلی"
 msgid "Color of highlight for the current match"
 msgstr "رنگ پررنگی برای تطابق فعلی"
 
-#: ../shell/eggfindbar.c:300
+#: ../shell/eggfindbar.c:301
 msgid "F_ind:"
 msgstr "پ_یدا کردن:"
 
-#: ../shell/eggfindbar.c:306
+#: ../shell/eggfindbar.c:307
 msgid "_Previous"
 msgstr "_قبلی"
 
-#: ../shell/eggfindbar.c:308
+#: ../shell/eggfindbar.c:311
 msgid "_Next"
 msgstr "_بعدی"
 
-#: ../shell/eggfindbar.c:321
+#: ../shell/eggfindbar.c:325
 msgid "C_ase Sensitive"
 msgstr "_حساس به کوچکی و بزرگی حروف"
 
@@ -450,23 +416,27 @@ msgstr "همه‌ی نوشتارها"
 msgid "PostScript Documents"
 msgstr "نوشتارهای پست‌اسکریپت"
 
-#: ../shell/ev-document-types.c:149
+#: ../shell/ev-document-types.c:150
 msgid "PDF Documents"
 msgstr "نوشتارهای PDF"
 
-#: ../shell/ev-document-types.c:158
+#: ../shell/ev-document-types.c:159
 msgid "Images"
 msgstr "تصاویر"
 
-#: ../shell/ev-document-types.c:167
+#: ../shell/ev-document-types.c:169
 msgid "DVI Documents"
 msgstr "نوشتارهای DVI"
 
-#: ../shell/ev-document-types.c:177
+#: ../shell/ev-document-types.c:179
 msgid "Djvu Documents"
 msgstr "نوشتارهای Djvu"
 
-#: ../shell/ev-document-types.c:185
+#: ../shell/ev-document-types.c:189
+msgid "Comic Books"
+msgstr ""
+
+#: ../shell/ev-document-types.c:197
 msgid "All Files"
 msgstr "همه‌ی پرونده‌ها"
 
@@ -480,30 +450,27 @@ msgstr "(%Id از %Id)"
 msgid "of %d"
 msgstr "از %Id"
 
-#: ../shell/ev-password.c:88
-msgid "Unable to find glade file"
-msgstr "ذخیره‌ی پرونده‌ی glade ممکن نیست"
-
-#: ../shell/ev-password.c:90
-#, c-format
-msgid ""
-"The glade file, %s, cannot be found.  Please check that your installation is "
-"complete."
-msgstr ""
-"پرونده‌ی glade به نام %s یافته نشد.  لطفاً بررسی کنید که نصبتان کامل باشد."
-
-#: ../shell/ev-password.c:104
+#: ../shell/ev-password.c:83
 msgid "Password required"
 msgstr "گذرواژه لازم است"
 
-#: ../shell/ev-password.c:105
+#: ../shell/ev-password.c:84
 #, c-format
 msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
 "opened."
 msgstr "نوشتار <i>%s</i> قفل شده است و پیش از باز شدن به گذرواژه نیاز دارد."
 
-#: ../shell/ev-password.c:142
+#: ../shell/ev-password.c:149
+msgid "Enter password"
+msgstr "گذرواژه را وارد کنید"
+
+#: ../shell/ev-password.c:252
+#, c-format
+msgid "Password for document %s"
+msgstr "گذرواژه‌ی نوشتار %s"
+
+#: ../shell/ev-password.c:334
 msgid "Incorrect password"
 msgstr "گذرواژه‌ی نادرست"
 
@@ -522,11 +489,11 @@ msgstr "باز کردن _قفل نوشتار"
 msgid "Properties"
 msgstr "ویژگی‌ها"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:94
 msgid "General"
 msgstr "کلیات"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:104
 msgid "Fonts"
 msgstr "قلم‌ها"
 
@@ -539,23 +506,43 @@ msgstr "قلم"
 msgid "Gathering font information... %3d%%"
 msgstr "در حال جمع‌آوری اطلاعات قلم... ٪%I3d"
 
-#: ../shell/ev-sidebar-links.c:242
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2101
 msgid "Loading..."
 msgstr "در حال بار کردن..."
 
-#: ../shell/ev-sidebar-links.c:304
+#: ../shell/ev-sidebar-links.c:318
 msgid "Print..."
 msgstr "چاپ..."
 
-#: ../shell/ev-sidebar-links.c:657
+#: ../shell/ev-sidebar-links.c:686
 msgid "Index"
 msgstr "نمایه"
 
-#: ../shell/ev-sidebar-thumbnails.c:640
+#: ../shell/ev-sidebar-thumbnails.c:669
 msgid "Thumbnails"
 msgstr "مسطوره‌ها"
 
-#: ../shell/ev-view.c:1093
+#: ../shell/ev-view-accessible.c:42
+msgid "Scroll Up"
+msgstr ""
+
+#: ../shell/ev-view-accessible.c:43
+msgid "Scroll Down"
+msgstr ""
+
+#: ../shell/ev-view-accessible.c:49
+msgid "Scroll View Up"
+msgstr ""
+
+#: ../shell/ev-view-accessible.c:50
+msgid "Scroll View Down"
+msgstr ""
+
+#: ../shell/ev-view-accessible.c:535
+msgid "Document View"
+msgstr "نمایش نوشتار"
+
+#: ../shell/ev-view.c:1271
 #, c-format
 msgid "Go to page %s"
 msgstr "رفتن به صفحه‌ی %s"
@@ -563,69 +550,47 @@ msgstr "رفتن به صفحه‌ی %s"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2721
+#: ../shell/ev-view.c:3292
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%Id مورد در این صفحه"
 
-#: ../shell/ev-view.c:2731
+#: ../shell/ev-view.c:3302
 msgid "Not found"
 msgstr "پیدا نشد"
 
-#: ../shell/ev-view.c:2733
+#: ../shell/ev-view.c:3304
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "٪%I3d از جستجو باقی مانده"
 
-#: ../shell/ev-window.c:555
+#: ../shell/ev-window.c:585
 msgid "Unable to open document"
 msgstr "باز کردن نوشتار ممکن نیست"
 
-#: ../shell/ev-window.c:602
-msgid "Document Viewer - Password Required"
-msgstr "نمایشگر نوشتار ـ گذرواژه لازم است"
-
-#: ../shell/ev-window.c:604
-#, c-format
-msgid "%s - Password Required"
-msgstr ""
-"‏%s ـ گذرواژه لازم است"
-
-#: ../shell/ev-window.c:739 ../shell/ev-window.c:1067
-msgid "Loading document. Please wait"
-msgstr "در حال بار کردن نوشتار. لطفاً صبر کنید"
-
-#: ../shell/ev-window.c:1078
+#: ../shell/ev-window.c:1123
 msgid "Open Document"
 msgstr "باز کردن نوشتار"
 
-#: ../shell/ev-window.c:1218
+#: ../shell/ev-window.c:1202
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "نمی‌توان این پرونده را به عنوان «%s» ذخیره کرد."
 
-#: ../shell/ev-window.c:1243
+#: ../shell/ev-window.c:1246
 msgid "Save a Copy"
 msgstr "ذخیره‌ی یک نسخه"
 
-#: ../shell/ev-window.c:1424
-msgid "Print"
-msgstr "چاپ"
-
-#: ../shell/ev-window.c:1428
-msgid "Pages"
-msgstr "صفحات"
-
-#: ../shell/ev-window.c:1456
+#: ../shell/ev-window.c:1308
 msgid "Generating PDF is not supported"
 msgstr "تولید PDF پشتیبانی نمی‌شود"
 
-#: ../shell/ev-window.c:1467
+#: ../shell/ev-window.c:1317
 msgid "Printing is not supported on this printer."
 msgstr "چاپ با این چاپگر پشتیبانی نمی‌شود."
 
-#: ../shell/ev-window.c:1470
+#: ../shell/ev-window.c:1320
 #, c-format
 msgid ""
 "You were trying to print to a printer using the \"%s\" driver. This program "
@@ -634,24 +599,32 @@ msgstr ""
 "شما سعی می‌کردید با استفاده از گرداننده‌ی «%s» روی چاپگری چاپ کنید. این برنامه "
 "به یک گرداننده‌ی چاپگر پست‌اسکریپت نیاز دارد."
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1365
+msgid "Print"
+msgstr "چاپ"
+
+#: ../shell/ev-window.c:1371
+msgid "Pages"
+msgstr "صفحات"
+
+#: ../shell/ev-window.c:1432
 msgid "The \"Find\" feature will not work with this document"
 msgstr "امکانات «پیدا کردن» در این نوشتار کار نمی‌کند"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1434
 msgid "Searching for text is only supported for PDF documents."
 msgstr "جستجو به دنبال متن فقط برای نوشتارهای PDF پشتیبانی می‌شود."
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1774 ../shell/ev-window.c:2941
+#: ../shell/ev-window.c:1665 ../shell/ev-window.c:2860
 msgid "Leave Fullscreen"
 msgstr "ترک حالت تمام‌صفحه"
 
-#: ../shell/ev-window.c:2100
-msgid "Toolbar editor"
+#: ../shell/ev-window.c:1994
+msgid "Toolbar Editor"
 msgstr "ویرایشگر نوار ابزار"
 
-#: ../shell/ev-window.c:2453
+#: ../shell/ev-window.c:2370
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -660,19 +633,20 @@ msgstr ""
 "نمایشگر پرونده‌های PDF و پست‌اسکریپت.\n"
 "با استفاده از poppler نسخه‌ی %s ‏(پسانه‌ی %s)"
 
-#: ../shell/ev-window.c:2476
+#: ../shell/ev-window.c:2393
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
 "the Free Software Foundation; either version 2 of the License, or\n"
 "(at your option) any later version.\n"
 msgstr ""
-"نرم‌افزار Evince، نرم‌افزار آزاد است: شما می‌توانید تحت شرایط مجوز عمومی همگانی گنو\n"
+"نرم‌افزار Evince، نرم‌افزار آزاد است: شما می‌توانید تحت شرایط مجوز عمومی همگانی "
+"گنو\n"
 "که به وسیله‌ی بنیاد نرم‌افزارهای آزاد منتشر شده است، آن را توزیع مجدد کنید\n"
 "و یا تغییر دهید؛ می‌توانید از نسخه‌ی 2 مجوز یا (اگر خواستید)\n"
 "هر نسخه‌ی بعد از آن استفاده کنید.\n"
 
-#: ../shell/ev-window.c:2480
+#: ../shell/ev-window.c:2397
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -684,7 +658,7 @@ msgstr ""
 "یا مناسب بودن برای منظوری خاص.  برای جزئیات بیشتر\n"
 "مجوز عمومی همگانی گنو را ببینید.\n"
 
-#: ../shell/ev-window.c:2484
+#: ../shell/ev-window.c:2401
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -695,342 +669,289 @@ msgstr ""
 "Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2508 ../shell/main.c:189
+#: ../shell/ev-window.c:2425 ../shell/main.c:259
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2511
+#: ../shell/ev-window.c:2428
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 The Evince authors"
 
-#: ../shell/ev-window.c:2517
+#: ../shell/ev-window.c:2434
 msgid "translator-credits"
 msgstr ""
 "روزبه پورنادر <roozbeh@farsiweb.info>‏\n"
-"میلاد زکریا <meelad@farsiweb.info>"
+"میلاد زکریا <meelad@farsiweb.info>‏\n"
+"الناز سربر <elnaz@farsiweb.info>"
 
-#: ../shell/ev-window.c:2860
+#: ../shell/ev-window.c:2789
 msgid "_File"
 msgstr "_پرونده"
 
-#: ../shell/ev-window.c:2861
+#: ../shell/ev-window.c:2790
 msgid "_Edit"
 msgstr "_ویرایش"
 
-#: ../shell/ev-window.c:2862
+#: ../shell/ev-window.c:2791
 msgid "_View"
 msgstr "_نما"
 
-#: ../shell/ev-window.c:2863
+#: ../shell/ev-window.c:2792
 msgid "_Go"
 msgstr "_رفتن"
 
-#: ../shell/ev-window.c:2864
+#: ../shell/ev-window.c:2793
 msgid "_Help"
 msgstr "_راهنما"
 
 #. File menu
-#: ../shell/ev-window.c:2867
+#: ../shell/ev-window.c:2796
 msgid "_Open..."
 msgstr "_باز کردن..."
 
-#: ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:2797
 msgid "Open an existing document"
 msgstr "باز کردن یک نوشتار موجود"
 
-#: ../shell/ev-window.c:2870
+#: ../shell/ev-window.c:2799
 msgid "_Save a Copy..."
 msgstr "_ذخیره‌ی یک نسخه..."
 
-#: ../shell/ev-window.c:2871
-msgid "Save the current document with a new filename"
-msgstr "ذخیره‌ی نوشتار فعلی با یک نام پرونده‌ی جدید"
+#: ../shell/ev-window.c:2800
+msgid "Save a copy of the current document"
+msgstr "ذخیره‌ی یک نسخه از نوشتار فعلی"
 
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2802
 msgid "_Print..."
 msgstr "_چاپ..."
 
-#: ../shell/ev-window.c:2874
+#: ../shell/ev-window.c:2803
 msgid "Print this document"
 msgstr "چاپ این نوشتار"
 
-#: ../shell/ev-window.c:2876
+#: ../shell/ev-window.c:2805
 msgid "P_roperties"
 msgstr "ویژ_گی‌ها"
 
-#: ../shell/ev-window.c:2877
-msgid "View the properties of this document"
-msgstr "نمایش ویژگی‌های این نوشتار"
-
-#: ../shell/ev-window.c:2880
-msgid "Close this window"
-msgstr "بستن این پنجره"
-
-#: ../shell/ev-window.c:2885
-msgid "Copy text from the document"
-msgstr "نسخه‌برداری از متن  نوشتار"
-
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2813
 msgid "Select _All"
 msgstr "انتخاب _همه"
 
-#: ../shell/ev-window.c:2888
-msgid "Select the entire page"
-msgstr "انتخاب کل صفحه"
-
-#: ../shell/ev-window.c:2891 ../shell/ev-window.c:2949
+#: ../shell/ev-window.c:2816
 msgid "Find a word or phrase in the document"
 msgstr "پیدا کردن یک کلمه یا عبارت در نوشتار"
 
-#: ../shell/ev-window.c:2893
+#: ../shell/ev-window.c:2818
 msgid "Find Ne_xt"
 msgstr "پیدا کردن ب_عدی"
 
-#: ../shell/ev-window.c:2894
-msgid "Find next occurrence of the word or phrase"
-msgstr "پیدا کردن مورد بعدی وقوع کلمه یا عبارت"
-
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2820
 msgid "T_oolbar"
 msgstr "نوار اب_زار"
 
-#: ../shell/ev-window.c:2897
-msgid "Customize the toolbar"
-msgstr "سفارشی کردن نوار ابزار"
-
-#: ../shell/ev-window.c:2899
+#: ../shell/ev-window.c:2822
 msgid "Rotate _Left"
 msgstr "چرخش به _چپ"
 
-#: ../shell/ev-window.c:2900
-msgid "Rotate the document to the left"
-msgstr "چرخاندن نوشتار به چپ"
-
-#: ../shell/ev-window.c:2902
+#: ../shell/ev-window.c:2824
 msgid "Rotate _Right"
 msgstr "چرخش به _راست"
 
-#: ../shell/ev-window.c:2903
-msgid "Rotate the document to the right"
-msgstr "چرخاندن نوشتار به راست"
-
-#: ../shell/ev-window.c:2908 ../shell/ev-window.c:2970
-#: ../shell/ev-window.c:2973 ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2829
 msgid "Enlarge the document"
 msgstr "بزرگ کردن نوشتار"
 
-#: ../shell/ev-window.c:2911 ../shell/ev-window.c:2976
-#: ../shell/ev-window.c:2991
+#: ../shell/ev-window.c:2832
 msgid "Shrink the document"
 msgstr "کوچک کردن نوشتار"
 
-#: ../shell/ev-window.c:2913
+#: ../shell/ev-window.c:2834
 msgid "_Reload"
 msgstr "_بازخوانی"
 
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:2835
 msgid "Reload the document"
 msgstr "بازخوانی نوشتار"
 
 #. Go menu
-#: ../shell/ev-window.c:2918
+#: ../shell/ev-window.c:2839
 msgid "_Previous Page"
 msgstr "صفحه‌ی _قبلی"
 
-#: ../shell/ev-window.c:2919
+#: ../shell/ev-window.c:2840
 msgid "Go to the previous page"
 msgstr "رفتن به صفحه‌ی قبل"
 
-#: ../shell/ev-window.c:2921
+#: ../shell/ev-window.c:2842
 msgid "_Next Page"
 msgstr "صفحه‌ی _بعدی"
 
-#: ../shell/ev-window.c:2922
+#: ../shell/ev-window.c:2843
 msgid "Go to the next page"
 msgstr "رفتن به صفحه‌ی بعد"
 
-#: ../shell/ev-window.c:2924
+#: ../shell/ev-window.c:2845
 msgid "_First Page"
 msgstr "صفحه‌ی _اول"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:2846
 msgid "Go to the first page"
 msgstr "رفتن به صفحه‌ی اول"
 
-#: ../shell/ev-window.c:2927
+#: ../shell/ev-window.c:2848
 msgid "_Last Page"
 msgstr "آ_خرین صفحه"
 
-#: ../shell/ev-window.c:2928
+#: ../shell/ev-window.c:2849
 msgid "Go to the last page"
 msgstr "رفتن به صفحه‌ی آخر"
 
 #. Help menu
-#: ../shell/ev-window.c:2932
+#: ../shell/ev-window.c:2853
 msgid "_Contents"
 msgstr "_محتویات"
 
-#: ../shell/ev-window.c:2933
-msgid "Display help for the viewer application"
-msgstr "نمایش راهنمای برنامه‌ی نمایشگر"
-
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:2856
 msgid "_About"
 msgstr "_درباره"
 
-#: ../shell/ev-window.c:2937
-msgid "Display credits for the document viewer creators"
-msgstr "نمایش فهرست اسامی سازندگان نمایشگر نوشتار"
-
-#: ../shell/ev-window.c:2942
+#: ../shell/ev-window.c:2861
 msgid "Leave fullscreen mode"
 msgstr "ترک حالت تمام صفحه"
 
-#: ../shell/ev-window.c:2952 ../shell/ev-window.c:2958
-#: ../shell/ev-window.c:2967
-msgid "Scroll one page forward"
-msgstr "لغزش به یک صفحه جلوتر"
-
-#: ../shell/ev-window.c:2955 ../shell/ev-window.c:2961
-#: ../shell/ev-window.c:2964
-msgid "Scroll one page backward"
-msgstr "لغزش به یک صفحه عقب‌تر"
-
-#: ../shell/ev-window.c:2979
-msgid "Focus the page selector"
-msgstr "تمرکز روی انتخاب‌گر صفحه"
-
-#: ../shell/ev-window.c:2982
-msgid "Go ten pages backward"
-msgstr "رفتن به ده صفحه عقب‌تر"
-
-#: ../shell/ev-window.c:2985
-msgid "Go ten pages forward"
-msgstr "رفتن به ده صفحه جلوتر"
-
 #. View Menu
-#: ../shell/ev-window.c:2998
+#: ../shell/ev-window.c:2912
 msgid "_Toolbar"
 msgstr "نوار ا_بزار"
 
-#: ../shell/ev-window.c:2999
+#: ../shell/ev-window.c:2913
 msgid "Show or hide the toolbar"
 msgstr "نشان دادن یا مخفی کردن نوار ابزار"
 
-#: ../shell/ev-window.c:3001
-msgid "_Statusbar"
-msgstr "نوار _وضعیت"
-
-#: ../shell/ev-window.c:3002
-msgid "Show or hide the statusbar"
-msgstr "نشان دادن یا مخفی کردن نوار وضعیت"
-
-#: ../shell/ev-window.c:3004
+#: ../shell/ev-window.c:2915
 msgid "Side _Pane"
 msgstr "_قاب کناری"
 
-#: ../shell/ev-window.c:3005
+#: ../shell/ev-window.c:2916
 msgid "Show or hide the side pane"
 msgstr "نشان دادن یا مخفی کردن نوار کناری"
 
-#: ../shell/ev-window.c:3007
+#: ../shell/ev-window.c:2918
 msgid "_Continuous"
 msgstr "_پیوسته"
 
-#: ../shell/ev-window.c:3008
+#: ../shell/ev-window.c:2919
 msgid "Show the entire document"
 msgstr "نشان دادن همه‌ی نوشتار"
 
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:2921
 msgid "_Dual"
 msgstr "_دوتایی"
 
-#: ../shell/ev-window.c:3011
+#: ../shell/ev-window.c:2922
 msgid "Show two pages at once"
 msgstr "نشان دادن دو صفحه در یک زمان"
 
-#: ../shell/ev-window.c:3013
+#: ../shell/ev-window.c:2924
 msgid "_Fullscreen"
 msgstr "_تمام‌صفحه"
 
-#: ../shell/ev-window.c:3014
+#: ../shell/ev-window.c:2925
 msgid "Expand the window to fill the screen"
 msgstr "بزرگ کردن پنجره تا جایی که تمام صفحه را پر کند"
 
-#: ../shell/ev-window.c:3016
+#: ../shell/ev-window.c:2927
 msgid "_Presentation"
 msgstr "ا_رائه"
 
-#: ../shell/ev-window.c:3017
+#: ../shell/ev-window.c:2928
 msgid "Run document as a presentation"
 msgstr "اجرای نوشتار به صورت ارائه‌ی مطلب"
 
-#: ../shell/ev-window.c:3019
+#: ../shell/ev-window.c:2930
 msgid "_Best Fit"
 msgstr "_بهترین اندازه"
 
-#: ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:2931
 msgid "Make the current document fill the window"
 msgstr "نوشتار فعلی تمام پنجره را پر کند"
 
-#: ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:2933
 msgid "Fit Page _Width"
 msgstr "جا دادن _عرض صفحه"
 
-#: ../shell/ev-window.c:3023
+#: ../shell/ev-window.c:2934
 msgid "Make the current document fill the window width"
 msgstr "نوشتار فعلی عرض پنجره را پر کند"
 
-#: ../shell/ev-window.c:3082
+#. Links
+#: ../shell/ev-window.c:2941
+msgid "_Open Link"
+msgstr ""
+
+#: ../shell/ev-window.c:2943
+msgid "_Go To"
+msgstr "_رفتن به"
+
+#: ../shell/ev-window.c:2945
+msgid "_Copy Link Address"
+msgstr ""
+
+#: ../shell/ev-window.c:3005
 msgid "Page"
 msgstr "صفحه"
 
-#: ../shell/ev-window.c:3083
+#: ../shell/ev-window.c:3006
 msgid "Select Page"
 msgstr "انتخاب صفحه"
 
-#: ../shell/ev-window.c:3095
+#: ../shell/ev-window.c:3018
 msgid "Zoom"
 msgstr "زوم"
 
-#: ../shell/ev-window.c:3097
+#: ../shell/ev-window.c:3020
 msgid "Adjust the zoom level"
 msgstr "تنظیم سطح زوم"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3113
+#: ../shell/ev-window.c:3036
 msgid "Previous"
 msgstr "قبلی"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3119
+#: ../shell/ev-window.c:3042
 msgid "Next"
 msgstr "بعدی"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3123
+#: ../shell/ev-window.c:3046
 msgid "Zoom In"
 msgstr "زوم به داخل"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3128
+#: ../shell/ev-window.c:3051
 msgid "Zoom Out"
 msgstr "زوم به خارج"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3138
+#: ../shell/ev-window.c:3061
 msgid "Fit Width"
 msgstr "جا دادن عرض"
 
-#: ../shell/main.c:47
+#: ../shell/ev-window-title.c:140
+#, c-format
+msgid "%s - Password Required"
+msgstr "‏%s ـ گذرواژه لازم است"
+
+#: ../shell/main.c:50
 msgid "The page of the document to display."
 msgstr "صفحه‌ای از نوشتار که نمایش داده شود."
 
-#: ../shell/main.c:47
+#: ../shell/main.c:50
 msgid "PAGE"
 msgstr "صفحه"
 
-#: ../shell/main.c:218
+#: ../shell/main.c:286
 msgid "Evince Document Viewer"
 msgstr "نمایشگر نوشتار Evince"
 
@@ -1057,3 +978,131 @@ msgid ""
 msgstr ""
 "فرمان معتبر به همراه آرگومان‌هایی برای نوشتار PDF. برای اطلاعات بیشتر مستندات "
 "مسطوره‌ساز ناتیلوس را ببینید."
+
+#~ msgid "*"
+#~ msgstr "*"
+
+#~ msgid "Default sidebar size"
+#~ msgstr "اندازه‌ی پیش‌فرض نوار کناری"
+
+#~ msgid "Show sidebar by default"
+#~ msgstr "نشان دادن نوار کناری به طور پیش‌فرض"
+
+#~ msgid "Show statusbar by default"
+#~ msgstr "نشان دادن نوار وضعیت به طور پیش‌فرض"
+
+#~ msgid "Show toolbar by default"
+#~ msgstr "نشان دادن نوار ابزار به طور پیش‌فرض"
+
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
+#~ "default size sets the sidebar's width in pixels based from the side of "
+#~ "the window. Any integer will be accepted. The sidebar will never shrink "
+#~ "smaller than the size of the text required to display Thumbnails or "
+#~ "Index. Large values will cause the sidebar to take up as much of the page "
+#~ "display area as possible relative to the window's size."
+#~ msgstr ""
+#~ "نوار کناری شیئی جانبی است که حاوی فهرست‌های نمایه و مسطوره است. اندازه‌ی "
+#~ "پیش‌فرض، عرض نوار کناری را نسبت به لبه‌ی کنار پنجره برحسب نقطه تعیین می‌کند. "
+#~ "هر عدد صحیحی قابل قبول است. نوار کناری هیچ‌وقت از اندازه‌ی متن لازم برای "
+#~ "نمایش مسطوره‌ها یا نمایه کوچکتر نمی‌شود. مقادیر بزرگ سبب می‌شوند که بسته به "
+#~ "اندازه‌ی پنجره، نوار کناری تا جایی از محوطه‌ی نمایش صفحه را که امکان دارد، "
+#~ "اشغال کند."
+
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+#~ "boolean options, true makes sidebar visible by default while false makes "
+#~ "sidebar not visible by default"
+#~ msgstr ""
+#~ "نوار کناری شیئی جانبی است که حاوی فهرست‌های نمایه و مسطوره است. دو گزینه‌ی "
+#~ "بولی ممکن است: درست باعث می‌شود نوار کناری به طور پیش‌فرض مرئی باشد در حالی "
+#~ "که نادرست باعث می‌شود نوار کناری به طور پیش‌فرض مرئی نباشد."
+
+#~ msgid ""
+#~ "Statusbar is the standard bottom bar that display additional information "
+#~ "about links and other actions. Two boolean options, true makes the "
+#~ "statusbar visible by default while false makes sidebar not visible by "
+#~ "default."
+#~ msgstr ""
+#~ "نوار وضعیت، نوار دکمه‌ی استانداردی است که اطلاعات اضافی درباره‌ی پیوند‌ها و "
+#~ "کنش‌های دیگر نمایش می‌دهد. دو گزینه‌ی بولی ممکن است: درست باعث می‌شود نوار "
+#~ "وضعیت به طور پیش‌فرض مرئی باشد در حالی که نادرست باعث می‌شود نوار وضعیت به "
+#~ "طور پیش‌فرض مرئی نباشد."
+
+#~ msgid ""
+#~ "Toolbar is the top bar that contains navigation and zoom controls. Two "
+#~ "boolean options, true makes toolbar visible by default while false makes "
+#~ "toolbar not visible by default."
+#~ msgstr ""
+#~ "نوار ابزار، نوار بالای صفحه است که حاوی کنترل‌های حرکت و زوم است. دو "
+#~ "گزینه‌ی بولی ممکن است: درست باعث می‌شود نوار ابزار به طور پیش‌فرض مرئی باشد "
+#~ "در حالی که نادرست باعث می‌شود نوار ابزار به طور پیش‌فرض مرئی نباشد."
+
+#~ msgid "Unable to find glade file"
+#~ msgstr "ذخیره‌ی پرونده‌ی glade ممکن نیست"
+
+#~ msgid ""
+#~ "The glade file, %s, cannot be found.  Please check that your installation "
+#~ "is complete."
+#~ msgstr ""
+#~ "پرونده‌ی glade به نام %s یافته نشد.  لطفاً بررسی کنید که نصبتان کامل باشد."
+
+#~ msgid "Document Viewer - Password Required"
+#~ msgstr "نمایشگر نوشتار ـ گذرواژه لازم است"
+
+#~ msgid "Loading document. Please wait"
+#~ msgstr "در حال بار کردن نوشتار. لطفاً صبر کنید"
+
+#~ msgid "Save the current document with a new filename"
+#~ msgstr "ذخیره‌ی نوشتار فعلی با یک نام پرونده‌ی جدید"
+
+#~ msgid "View the properties of this document"
+#~ msgstr "نمایش ویژگی‌های این نوشتار"
+
+#~ msgid "Close this window"
+#~ msgstr "بستن این پنجره"
+
+#~ msgid "Copy text from the document"
+#~ msgstr "نسخه‌برداری از متن  نوشتار"
+
+#~ msgid "Select the entire page"
+#~ msgstr "انتخاب کل صفحه"
+
+#~ msgid "Find next occurrence of the word or phrase"
+#~ msgstr "پیدا کردن مورد بعدی وقوع کلمه یا عبارت"
+
+#~ msgid "Customize the toolbar"
+#~ msgstr "سفارشی کردن نوار ابزار"
+
+#~ msgid "Rotate the document to the left"
+#~ msgstr "چرخاندن نوشتار به چپ"
+
+#~ msgid "Rotate the document to the right"
+#~ msgstr "چرخاندن نوشتار به راست"
+
+#~ msgid "Display help for the viewer application"
+#~ msgstr "نمایش راهنمای برنامه‌ی نمایشگر"
+
+#~ msgid "Display credits for the document viewer creators"
+#~ msgstr "نمایش فهرست اسامی سازندگان نمایشگر نوشتار"
+
+#~ msgid "Scroll one page forward"
+#~ msgstr "لغزش به یک صفحه جلوتر"
+
+#~ msgid "Scroll one page backward"
+#~ msgstr "لغزش به یک صفحه عقب‌تر"
+
+#~ msgid "Focus the page selector"
+#~ msgstr "تمرکز روی انتخاب‌گر صفحه"
+
+#~ msgid "Go ten pages backward"
+#~ msgstr "رفتن به ده صفحه عقب‌تر"
+
+#~ msgid "Go ten pages forward"
+#~ msgstr "رفتن به ده صفحه جلوتر"
+
+#~ msgid "_Statusbar"
+#~ msgstr "نوار _وضعیت"
+
+#~ msgid "Show or hide the statusbar"
+#~ msgstr "نشان دادن یا مخفی کردن نوار وضعیت"
