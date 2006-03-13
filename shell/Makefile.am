@@ -95,12 +95,12 @@ EXTRA_DIST = ev-marshal.list		\
 	ev-application-service.xml
 
 
-ev-marshal.h: ev-marshal.list
-	glib-genmarshal --prefix=ev_marshal ev-marshal.list --header > ev-marshal.h
+ev-marshal.h: $(srcdir)/ev-marshal.list
+	$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
 
-ev-marshal.c: ev-marshal.list
+ev-marshal.c: $(srcdir)/ev-marshal.list
 	echo '#include "ev-marshal.h"' > ev-marshal.c
-	glib-genmarshal --prefix=ev_marshal ev-marshal.list --body >> ev-marshal.c
+	$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
 
 DISTCLEANFILES= \
 	ev-application-service.h
