@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(evince, 0.5.1)
+AC_INIT(evince, 0.5.2)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 AM_CONFIG_HEADER(config.h)
@@ -43,7 +43,7 @@ dnl Check dependencies
 # SHELL_CFLAGS     for shell implementation.
 # SHELL_LIBS
 
-POPPLER_REQUIRED=0.5.0
+POPPLER_REQUIRED=0.5.1
 DBUS_GLIB_REQUIRED=0.33
 GTK_REQUIRED=2.6.0
 LIBGNOMEUI_REQUIRED=2.6.0
