@@ -1,5 +1,11 @@
 2006-03-14  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window-title (ev_window_title_update):
+
+	Fix memory leak in window title. Fixes bug #333944
+
+2006-03-14  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-metadata-manager.c (parseItem):
 
 	Fix memory leaks. Fixes bug #333945

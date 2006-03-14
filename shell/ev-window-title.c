@@ -142,6 +142,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 		g_free (password_title);
 		break;
 	}
+
+	g_free (title);
 }
 
 void
