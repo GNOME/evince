@@ -127,6 +127,15 @@ ev_metadata_manager_shutdown (void)
 	ev_metadata_manager = NULL;
 }
 
+static void
+value_free (gpointer data)
+{
+	GValue *value = (GValue *)data;
+
+	g_value_unset (value);
+	g_free (value);
+}
+
 static GValue *
 parse_value (xmlChar *value, xmlChar *type)
 {
@@ -184,7 +193,7 @@ parseItem (xmlDocPtr doc, xmlNodePtr cur)
 	item->values = g_hash_table_new_full (g_str_hash, 
 					      g_str_equal, 
 					      g_free, 
-					      g_free);
+					      value_free);
 
 	cur = cur->xmlChildrenNode;
 		
@@ -195,7 +204,7 @@ parseItem (xmlDocPtr doc, xmlNodePtr cur)
 			xmlChar *key;
 			xmlChar *xml_value;
 			xmlChar *type;
-			GValue *value;
+			GValue  *value;
 			
 			key = xmlGetProp (cur, (const xmlChar *)"key");
 			xml_value = xmlGetProp (cur, (const xmlChar *)"value");
@@ -209,6 +218,8 @@ parseItem (xmlDocPtr doc, xmlNodePtr cur)
 
 			if (key != NULL)
 				xmlFree (key);
+			if (type != NULL)
+				xmlFree (type);
 			if (xml_value != NULL)
 				xmlFree (xml_value);
 		}
@@ -285,16 +296,6 @@ load_values ()
 
 	return TRUE;
 }
-
-static void
-value_free (gpointer data)
-{
-	GValue *value = (GValue *)data;
-
-	g_value_unset (value);
-	g_free (value);
-}
-
 
 #define LAST_URI "last-used-value"
 
