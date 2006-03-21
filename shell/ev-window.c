@@ -170,6 +170,7 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define LINKS_SIDEBAR_ID "links"
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
 
+static void	ev_window_update_actions	 	(EvWindow *ev_window);
 static void     ev_window_update_fullscreen_popup       (EvWindow         *window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
@@ -209,46 +210,52 @@ static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action,
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
 static void
-set_action_sensitive (EvWindow   *ev_window,
-		      const char *name,
-		      gboolean    sensitive)
+ev_window_set_action_sensitive (EvWindow   *ev_window,
+		    	        const char *name,
+		  	        gboolean    sensitive)
 {
 	GtkAction *action = gtk_action_group_get_action (ev_window->priv->action_group,
 							 name);
 	gtk_action_set_sensitive (action, sensitive);
 }
 
+
 static void
-update_action_sensitivity (EvWindow *ev_window)
+ev_window_setup_action_sensitivity (EvWindow *ev_window)
 {
-	EvView *view;
-	EvDocument *document;
+	EvDocument *document = ev_window->priv->document;
 	const EvDocumentInfo *info = NULL;
-	EvWindowPageMode page_mode;
-	gboolean sensitive, has_pages = FALSE, has_document;
-	int n_pages = 0, page = -1;
+
+	gboolean has_document = FALSE;
 	gboolean ok_to_print = TRUE;
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
 	gboolean override_restrictions = FALSE;
 	gboolean can_get_text = FALSE;
-	gboolean ok_to_copy_text = FALSE;
+	gboolean has_pages = FALSE;
+	gboolean can_find = FALSE;
+
 	GConfClient *client;
 
-	view = EV_VIEW (ev_window->priv->view);
-
-	document = ev_window->priv->document;
-
-	if (document)
+	if (document) {
+		has_document = TRUE;
 		info = ev_page_cache_get_info (ev_window->priv->page_cache);
-
-	page_mode = ev_window->priv->page_mode;
-	has_document = document != NULL;
+	}
 
 	if (has_document && ev_window->priv->page_cache) {
-		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
-		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
-		has_pages = has_document && n_pages > 0;
+		has_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0;
+	}
+
+	if (!info || info->fields_mask == 0) {
+		has_properties = FALSE;
+	}
+
+	if (has_document && ev_document_can_get_text (document)) {
+		can_get_text = TRUE;
+	}
+	
+	if (has_document && EV_IS_DOCUMENT_FIND (document)) {
+		can_find = TRUE;
 	}
 
 	client = gconf_client_get_default ();
@@ -263,9 +270,6 @@ update_action_sensitivity (EvWindow *ev_window)
 	if (has_document && !EV_IS_PS_EXPORTER(document))
 		ok_to_print = FALSE;
 
-	if (!info || info->fields_mask == 0) {
-		has_properties = FALSE;
-	}
 	
 	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_SAVE, NULL)) {
 		ok_to_copy = FALSE;
@@ -274,65 +278,74 @@ update_action_sensitivity (EvWindow *ev_window)
 	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_PRINT, NULL)) {
 		ok_to_print = FALSE;
 	}
-	
-	g_object_unref (client);
-
-	if (has_document && ev_document_can_get_text (document)) {
-		can_get_text = TRUE;
-		ok_to_copy_text = ev_view_get_has_selection (view);
-	}
-	
 #ifndef WITH_GNOME_PRINT
 	ok_to_print = FALSE;
 #endif
+	g_object_unref (client);
+
 
 	/* File menu */
-	/* "FileOpen": always sensitive */
-	set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
-	set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
-	set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
-	/* "FileCloseWindow": always sensitive */
+	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
+	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
+	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 
         /* Edit menu */
-	sensitive = has_pages && ev_document_can_get_text (document);
-	set_action_sensitive (ev_window, "EditCopy", sensitive && ok_to_copy_text);
-	set_action_sensitive (ev_window, "EditSelectAll", sensitive && can_get_text);
-	set_action_sensitive (ev_window, "EditFind",
+	ev_window_set_action_sensitive (ev_window, "EditSelectAll", has_pages && can_get_text);
+	ev_window_set_action_sensitive (ev_window, "EditFind",
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
-	set_action_sensitive (ev_window, "Slash",
+	ev_window_set_action_sensitive (ev_window, "Slash",
 			      has_pages && EV_IS_DOCUMENT_FIND (document));
-	set_action_sensitive (ev_window, "EditFindNext",
-			      ev_view_can_find_next (view));
-	set_action_sensitive (ev_window, "EditRotateLeft", has_pages);
-	set_action_sensitive (ev_window, "EditRotateRight", has_pages);
+	ev_window_set_action_sensitive (ev_window, "EditRotateLeft", has_pages);
+	ev_window_set_action_sensitive (ev_window, "EditRotateRight", has_pages);
 
         /* View menu */
-	set_action_sensitive (ev_window, "ViewContinuous", has_pages);
-	set_action_sensitive (ev_window, "ViewDual", has_pages);
-	set_action_sensitive (ev_window, "ViewZoomIn",
-			      has_pages && ev_view_can_zoom_in (view));
-	set_action_sensitive (ev_window, "ViewZoomOut",
-			      has_pages && ev_view_can_zoom_out (view));
-	set_action_sensitive (ev_window, "ViewBestFit", has_pages);
-	set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
-	set_action_sensitive (ev_window, "ViewReload", has_pages);
-
-        /* Go menu */
-	if (document) {
-		set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
-		set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
-		set_action_sensitive (ev_window, "GoFirstPage", page > 0);
-		set_action_sensitive (ev_window, "GoLastPage", page < n_pages - 1);
-	} else {
-  		set_action_sensitive (ev_window, "GoFirstPage", FALSE);
-		set_action_sensitive (ev_window, "GoPreviousPage", FALSE);
-		set_action_sensitive (ev_window, "GoNextPage", FALSE);
-		set_action_sensitive (ev_window, "GoLastPage", FALSE);
-	}
+	ev_window_set_action_sensitive (ev_window, "ViewContinuous", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewBestFit", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
 
 	/* Toolbar-specific actions: */
-	set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
-	set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
+	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
+	ev_window_set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
+
+        ev_window_update_actions (ev_window);
+}
+
+static void
+ev_window_update_actions (EvWindow *ev_window)
+{
+	EvView *view = EV_VIEW (ev_window->priv->view);
+	int n_pages = 0, page = -1;
+	gboolean has_pages = FALSE;
+
+	if (ev_window->priv->document && ev_window->priv->page_cache) {
+		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+		has_pages = n_pages > 0;
+	}
+
+	ev_window_set_action_sensitive (ev_window, "EditCopy", has_pages && ev_view_get_has_selection (view));
+	ev_window_set_action_sensitive (ev_window, "EditFindNext",
+			      ev_view_can_find_next (view));
+
+	ev_window_set_action_sensitive (ev_window, "ViewZoomIn",
+			      has_pages && ev_view_can_zoom_in (view));
+	ev_window_set_action_sensitive (ev_window, "ViewZoomOut",
+			      has_pages && ev_view_can_zoom_out (view));
+
+        /* Go menu */
+	if (has_pages) {
+		ev_window_set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
+		ev_window_set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
+		ev_window_set_action_sensitive (ev_window, "GoFirstPage", page > 0);
+		ev_window_set_action_sensitive (ev_window, "GoLastPage", page < n_pages - 1);
+	} else {
+  		ev_window_set_action_sensitive (ev_window, "GoFirstPage", FALSE);
+		ev_window_set_action_sensitive (ev_window, "GoPreviousPage", FALSE);
+		ev_window_set_action_sensitive (ev_window, "GoNextPage", FALSE);
+		ev_window_set_action_sensitive (ev_window, "GoLastPage", FALSE);
+	}
 
 	if (has_pages &&
 	    ev_view_get_sizing_mode (view) != EV_SIZING_FIT_WIDTH &&
@@ -348,6 +361,27 @@ update_action_sensitivity (EvWindow *ev_window)
 		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
 
 		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), zoom);
+	}
+}
+
+static void
+ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
+{
+	if (window->priv->action_group) {
+		ev_window_set_action_sensitive (window, "PageDown", sensitive);
+		ev_window_set_action_sensitive (window, "PageUp", sensitive);
+		ev_window_set_action_sensitive (window, "Space", sensitive);
+		ev_window_set_action_sensitive (window, "ShiftSpace", sensitive);
+		ev_window_set_action_sensitive (window, "BackSpace", sensitive);
+		ev_window_set_action_sensitive (window, "ShiftBackSpace", sensitive);
+		ev_window_set_action_sensitive (window, "Return", sensitive);
+		ev_window_set_action_sensitive (window, "ShiftReturn", sensitive);
+		ev_window_set_action_sensitive (window, "Slash", sensitive);
+		ev_window_set_action_sensitive (window, "Plus", sensitive);
+		ev_window_set_action_sensitive (window, "Minus", sensitive);
+		ev_window_set_action_sensitive (window, "KpPlus", sensitive);
+		ev_window_set_action_sensitive (window, "KpMinus", sensitive);
+		ev_window_set_action_sensitive (window, "Equal", sensitive);
 	}
 }
 
@@ -383,7 +417,7 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->menubar, menubar);
 	
 	set_widget_visibility (priv->toolbar_dock, toolbar);
-	set_action_sensitive (window, "EditToolbar", toolbar);
+	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
 
 	set_widget_visibility (priv->find_bar, findbar);
 
@@ -472,7 +506,7 @@ ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 	GtkAction *action;
 	
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
-	set_action_sensitive (window, "ViewToolbar", FALSE);
+	ev_window_set_action_sensitive (window, "ViewToolbar", FALSE);
 	
 	action = gtk_action_group_get_action (window->priv->action_group,
 				     	      PAGE_SELECTOR_ACTION);
@@ -501,7 +535,7 @@ ev_window_cmd_continuous (GtkAction *action, EvWindow *ev_window)
 	g_object_set (G_OBJECT (ev_window->priv->view),
 		      "continuous", continuous,
 		      NULL);
-	update_action_sensitivity (ev_window);
+	ev_window_update_actions (ev_window);
 }
 
 static void
@@ -514,7 +548,7 @@ ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
 	g_object_set (G_OBJECT (ev_window->priv->view),
 		      "dual-page", dual_page,
 		      NULL);
-	update_action_sensitivity (ev_window);
+	ev_window_update_actions (ev_window);
 }
 
 static void
@@ -527,7 +561,7 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 	} else {
 		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	}
-	update_action_sensitivity (ev_window);
+	ev_window_update_actions (ev_window);
 }
 
 static void
@@ -540,7 +574,7 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 	} else {
 		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
 	}
-	update_action_sensitivity (ev_window);
+	ev_window_update_actions (ev_window);
 }
 
 
@@ -594,7 +628,7 @@ unable_to_load (EvWindow   *ev_window,
 static void
 find_changed_cb (EvDocument *document, int page, EvWindow *ev_window)
 {
-	update_action_sensitivity (ev_window);
+	ev_window_update_actions (ev_window);
 }
 
 static void
@@ -602,7 +636,8 @@ page_changed_cb (EvPageCache *page_cache,
 		 gint         page,
 		 EvWindow    *ev_window)
 {
-	update_action_sensitivity (ev_window);
+	ev_window_update_actions (ev_window);
+
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
 }
@@ -825,7 +860,7 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
-	update_action_sensitivity (ev_window);
+	ev_window_setup_action_sensitivity (ev_window);
 
 	if (ev_window->priv->properties) {
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
@@ -904,7 +939,6 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 		ev_password_dialog_set_bad_pass (EV_PASSWORD_DIALOG (ev_window->priv->password_dialog));
 	}
 }
-
 
 static void
 ev_window_clear_jobs (EvWindow *ev_window)
@@ -1420,26 +1454,6 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-find_not_supported_dialog (EvWindow   *ev_window)
-{
-	GtkWidget *dialog;
-
-	/* If you change this so it isn't modal, be sure you don't
-	 * allow multiple copies of the dialog...
-	 */
-
- 	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
-					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR,
-					 GTK_BUTTONS_CLOSE,
-					 _("The \"Find\" feature will not work with this document"));
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
- 						  _("Searching for text is only supported for PDF documents."));
-	gtk_dialog_run (GTK_DIALOG (dialog));
- 	gtk_widget_destroy (dialog);
-}
-
-static void
 ev_window_cmd_edit_select_all (GtkAction *action, EvWindow *ev_window)
 {
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -1452,15 +1466,13 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	if (ev_window->priv->document == NULL) {
-		g_printerr ("We should have set the Find menu item insensitive since there's no document\n");
-	} else if (!EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
-		find_not_supported_dialog (ev_window);
-	} else {
-		update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	if (ev_window->priv->document == NULL || !EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
+		g_error ("Find action should be insensitive since document doesn't support find");
+		return;
+	} 
 
-		gtk_widget_grab_focus (ev_window->priv->find_bar);
-	}
+	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	gtk_widget_grab_focus (ev_window->priv->find_bar);
 }
 
 static void
@@ -1963,18 +1975,9 @@ ev_window_set_page_mode (EvWindow         *window,
 		gtk_container_add (GTK_CONTAINER (window->priv->scrolled_window),
 				   child);
 	}
-	update_action_sensitivity (window);
+	ev_window_update_actions (window);
 }
 
-static void
-ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
-{
-	EvWindow *ev_window = EV_WINDOW (data);
-        egg_editable_toolbar_set_edit_mode
-			(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
-	ev_application_save_toolbars_model (EV_APP);
-        gtk_widget_destroy (GTK_WIDGET (dialog));
-}
 
 static void
 ev_window_cmd_edit_rotate_left (GtkAction *action, EvWindow *ev_window)
@@ -1986,6 +1989,16 @@ static void
 ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_rotate_right (EV_VIEW (ev_window->priv->view));
+}
+
+static void
+ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
+{
+	EvWindow *ev_window = EV_WINDOW (data);
+        egg_editable_toolbar_set_edit_mode
+			(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
+	ev_application_save_toolbars_model (EV_APP);
+        gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
@@ -2272,7 +2285,7 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 static void     
 ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 {
-        update_action_sensitivity (ev_window);
+        ev_window_update_actions (ev_window);
 
 	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE && !ev_window_is_empty (ev_window)) {
 		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
@@ -2336,7 +2349,7 @@ ev_window_rotation_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window
 static void
 ev_window_has_selection_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window)
 {
-	update_action_sensitivity (window);
+        ev_window_update_actions (window);
 }
 
 static void     
@@ -2618,9 +2631,6 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	visible = GTK_WIDGET_VISIBLE (find_bar);
 	search_string = egg_find_bar_get_search_string (find_bar);
 
-#if 0
-	g_printerr ("search for '%s'\n", search_string ? search_string : "(nil)");
-#endif
 	ev_view_search_changed (EV_VIEW(ev_window->priv->view));
 
 	if (ev_window->priv->document &&
@@ -2637,7 +2647,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 			ev_document_find_cancel (EV_DOCUMENT_FIND (ev_window->priv->document));
 			ev_document_doc_mutex_unlock ();
 
-			update_action_sensitivity (ev_window);
+		        ev_window_update_actions (ev_window);
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar),
 						      NULL);
 			gtk_widget_queue_draw (GTK_WIDGET (ev_window->priv->view));
@@ -3108,33 +3118,11 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 	g_object_unref (model);
 }
 
-
-static void
-ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
-{
-	if (window->priv->action_group) {
-		set_action_sensitive (window, "PageDown", sensitive);
-		set_action_sensitive (window, "PageUp", sensitive);
-		set_action_sensitive (window, "Space", sensitive);
-		set_action_sensitive (window, "ShiftSpace", sensitive);
-		set_action_sensitive (window, "BackSpace", sensitive);
-		set_action_sensitive (window, "ShiftBackSpace", sensitive);
-		set_action_sensitive (window, "Return", sensitive);
-		set_action_sensitive (window, "ShiftReturn", sensitive);
-		set_action_sensitive (window, "Slash", sensitive);
-		set_action_sensitive (window, "Plus", sensitive);
-		set_action_sensitive (window, "Minus", sensitive);
-		set_action_sensitive (window, "KpPlus", sensitive);
-		set_action_sensitive (window, "KpMinus", sensitive);
-		set_action_sensitive (window, "Equal", sensitive);
-	}
-}
-
 static gboolean
 view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
-	set_action_sensitive (window, "ViewToolbar", TRUE);
+	ev_window_set_action_sensitive (window, "ViewToolbar", TRUE);
 
 	ev_window_set_view_accels_sensitivity (window, TRUE);
 
@@ -3562,7 +3550,7 @@ ev_window_init (EvWindow *ev_window)
 	setup_view_from_metadata (ev_window);
 
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
-	update_action_sensitivity (ev_window);
+	ev_window_setup_action_sensitivity (ev_window);
 }
 
 GtkWidget *

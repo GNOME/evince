@@ -1,3 +1,20 @@
+2006-03-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-window.c: (ev_window_set_action_sensitive),
+	(ev_window_setup_action_sensitivity), (ev_window_update_actions),
+	(ev_window_set_view_accels_sensitivity),
+	(update_chrome_visibility), (ev_window_cmd_focus_page_selector),
+	(ev_window_cmd_continuous), (ev_window_cmd_dual),
+	(ev_window_cmd_view_best_fit), (ev_window_cmd_view_page_width),
+	(find_changed_cb), (page_changed_cb), (ev_window_setup_document),
+	(ev_window_cmd_edit_find), (ev_window_set_page_mode),
+	(ev_window_cmd_edit_toolbar_cb), (ev_window_zoom_changed_cb),
+	(ev_window_has_selection_changed_cb), (find_bar_search_changed_cb),
+	(view_actions_focus_in_cb), (ev_window_init):
+	
+	Fix for the bug #333902, now it's possible to search
+	words with slash.
+
 2006-03-16  Jérémy Ar Floc'h <jérémy.lefloch@gmail.com>
 
 	* configure.ac: Added Breton translation.
