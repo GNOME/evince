@@ -574,9 +574,11 @@ ev_view_scroll (EvView        *view,
 
 	if (view->presentation) {
 		switch (scroll) {
+			case EV_SCROLL_PAGE_BACKWARD:
 			case EV_SCROLL_STEP_BACKWARD:
 				ev_view_previous_page (view);
 				break;
+			case EV_SCROLL_PAGE_FORWARD:
 			case EV_SCROLL_STEP_FORWARD:
 				ev_view_next_page (view);
 				break;

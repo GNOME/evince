@@ -1,5 +1,12 @@
 2006-03-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-view.c: (ev_view_scroll):
+	
+	Fix for the bug #334854, page down and page up switch
+	pages in presentation mode.
+
+2006-03-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c: (ev_window_set_action_sensitive),
 	(ev_window_setup_action_sensitivity), (ev_window_update_actions),
 	(ev_window_set_view_accels_sensitivity),
