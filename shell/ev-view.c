@@ -1605,8 +1605,13 @@ ev_view_expose_event (GtkWidget      *widget,
 	int i;
 
 	if (view->loading) {
+		GdkRectangle area = {0};
+		
+		area.width = widget->allocation.width;
+		area.height = widget->allocation.height;
+		
 		draw_loading_text (view,
-				   &(widget->allocation),
+				   &area,
 				   &(event->area));
 	}
 
