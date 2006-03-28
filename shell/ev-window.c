@@ -414,12 +414,12 @@ update_chrome_visibility (EvWindow *window)
 			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0);
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 
-	set_widget_visibility (priv->menubar, menubar);
-	
+	set_widget_visibility (priv->menubar, menubar);	
 	set_widget_visibility (priv->toolbar_dock, toolbar);
-	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
-
 	set_widget_visibility (priv->find_bar, findbar);
+
+	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
+	gtk_widget_set_sensitive (priv->menubar, menubar);
 
 	if (priv->fullscreen_popup != NULL) {
 		if (fullscreen)
