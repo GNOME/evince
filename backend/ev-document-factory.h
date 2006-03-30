@@ -21,6 +21,7 @@
 #ifndef EV_DOCUMENT_FACTORY_H
 #define EV_DOCUMENT_FACTORY_H
 
+#include <gtk/gtk.h>
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -35,10 +36,10 @@ typedef enum {
 	EV_BACKEND_COMICS
 } EvBackend;
 
-EvDocument *ev_document_factory_get_document		(const char *mime_type);
-EvBackend   ev_document_factory_get_backend		(EvDocument *document);
-GList      *ev_document_factory_get_mime_types		(EvBackend   backend);
-GList      *ev_document_factory_get_all_mime_types	(void);
+EvDocument* ev_document_factory_get_from_mime (const char *mime_type);
+EvDocument* ev_document_factory_get_document (const char *uri, gchar **mime_type, GError **error);
+EvBackend   ev_document_factory_get_backend  (EvDocument *document);
+void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 
 G_END_DECLS
 

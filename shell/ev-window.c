@@ -44,7 +44,7 @@
 #include "ev-document-fonts.h"
 #include "ev-document-find.h"
 #include "ev-document-security.h"
-#include "ev-document-types.h"
+#include "ev-document-factory.h"
 #include "ev-job-queue.h"
 #include "ev-jobs.h"
 #include "ev-sidebar-page.h"
@@ -1162,7 +1162,7 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 					       NULL);
 
-	ev_document_types_add_filters (chooser, NULL);
+	ev_document_factory_add_filters (chooser, NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
 	if (ev_application_get_chooser_uri (EV_APP) != NULL)
@@ -1283,7 +1283,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
 		NULL);
 
-	ev_document_types_add_filters (fc, ev_window->priv->document);
+	ev_document_factory_add_filters (fc, ev_window->priv->document);
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
 #ifdef HAVE_GTK_FILE_CHOOSER_SET_DO_OVERWRITE_CONFIRMATION

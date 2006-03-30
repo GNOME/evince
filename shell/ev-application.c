@@ -26,8 +26,8 @@
 
 #include "ev-application.h"
 #include "ev-utils.h"
-#include "ev-document-types.h"
 #include "ev-file-helpers.h"
+#include "ev-document-factory.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>

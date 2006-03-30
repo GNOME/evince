@@ -23,8 +23,8 @@
 
 
 #include "ev-job-xfer.h"
-#include "ev-document-types.h"
 #include "ev-file-helpers.h"
+#include "ev-document-factory.h"
 
 #include <glib/gi18n.h>
 #include <glib.h>
@@ -102,7 +102,7 @@ ev_job_xfer_run (EvJobXfer *job)
 		job->error = NULL;
 	}
 
-	document = ev_document_types_get_document (job->uri, NULL, &error);
+	document = ev_document_factory_get_document (job->uri, NULL, &error);
 
 	if (document != NULL) {
 		EV_JOB (job)->document = document;

@@ -20,8 +20,6 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
-	ev-document-types.c		\
-	ev-document-types.h		\
 	ev-job-queue.h			\
 	ev-job-queue.c			\
 	ev-jobs.h			\

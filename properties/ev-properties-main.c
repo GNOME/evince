@@ -90,6 +90,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	char *uri = NULL;
 	GtkWidget *page, *label;
 	NautilusPropertyPage *property_page;
+	GType type = G_TYPE_INVALID;
 
 	/* only add properties page if a single file is selected */
 	if (files == NULL || files->next != NULL)
@@ -98,7 +99,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 
 	/* okay, make the page */
 	mime = nautilus_file_info_get_mime_type (file);
-	document = ev_document_factory_get_document (mime);
+	document = ev_document_factory_get_from_mime (mime);
 	g_free (mime);
 
 	if (document == NULL)
