@@ -102,13 +102,13 @@ ev_sidebar_thumbnails_dispose (GObject *object)
 {
 	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (object);
 	
-	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	if (sidebar_thumbnails->priv->loading_icon) {
 		g_object_unref (sidebar_thumbnails->priv->loading_icon);
 		sidebar_thumbnails->priv->loading_icon = NULL;
 	}
 	
 	if (sidebar_thumbnails->priv->list_store) {
+		ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 		g_object_unref (sidebar_thumbnails->priv->list_store);
 		sidebar_thumbnails->priv->list_store = NULL;
 	}
