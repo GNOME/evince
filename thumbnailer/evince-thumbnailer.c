@@ -36,20 +36,21 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 	EvDocument *document = NULL;
 	GError *error = NULL;
 	GdkPixbuf *pixbuf;
-	char *mime_type = NULL;
 
-	document = ev_document_factory_get_document  (uri, &mime_type, &error);
+	document = ev_document_factory_get_document  (uri, &error);
 
-	if (document == NULL || error) {
-		return FALSE;
-	}
-
-	if (!ev_document_load (document, uri, &error)) {
+	if (error) {
 		if (error->domain == EV_DOCUMENT_ERROR &&
-            	    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+	    	    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
 			/* FIXME: Create a thumb for cryp docs */
+			g_error_free (error);
+			return FALSE;
 		}
 		g_error_free (error);
+		return FALSE;
+	}
+	
+	if (document == NULL) {
 		return FALSE;
 	}
 

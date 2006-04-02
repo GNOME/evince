@@ -1,3 +1,34 @@
+2006-04-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/ev-document-factory.c: (get_document_from_uri),
+	(ev_document_factory_get_document):
+	* backend/ev-document-factory.h:
+	* properties/ev-properties-main.c: (ev_properties_get_pages):
+	* shell/Makefile.am:
+	* shell/ev-job-queue.c: (handle_job), (search_for_jobs_unlocked),
+	(no_jobs_available_unlocked), (ev_job_queue_init), (find_queue),
+	(ev_job_queue_remove_job):
+	* shell/ev-job-queue.h:
+	* shell/ev-job-xfer.c:
+	* shell/ev-job-xfer.h:
+	* shell/ev-jobs.c: (ev_job_fonts_init), (ev_job_fonts_class_init),
+	(ev_job_fonts_new), (ev_job_fonts_run), (ev_job_xfer_init),
+	(ev_job_xfer_dispose), (ev_job_xfer_class_init), (ev_job_xfer_new),
+	(ev_job_xfer_run):
+	* shell/ev-jobs.h:
+	* shell/ev-window.c: (ev_window_is_empty),
+	(password_dialog_response), (ev_window_clear_xfer_job),
+	(ev_window_xfer_job_cb), (ev_window_open_uri),
+	(ev_window_cmd_focus_page_selector),
+	(ev_window_cmd_scroll_forward), (ev_window_cmd_scroll_backward),
+	(ev_window_cmd_continuous), (ev_window_cmd_dual),
+	(ev_window_cmd_view_best_fit), (ev_window_cmd_view_page_width),
+	(ev_window_dispose):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+	
+	* Cleanup mime type detection on document load. Fix for the
+	bug #336448.
+
 2006-04-02  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_dispose):

@@ -37,11 +37,11 @@ typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
 typedef struct _EvJobLinks EvJobLinks;
 typedef struct _EvJobLinksClass EvJobLinksClass;
 
-typedef struct _EvJobLoad EvJobLoad;
-typedef struct _EvJobLoadClass EvJobLoadClass;
-
 typedef struct _EvJobFonts EvJobFonts;
 typedef struct _EvJobFontsClass EvJobFontsClass;
+
+typedef struct _EvJobXfer EvJobXfer;
+typedef struct _EvJobXferClass EvJobXferClass;
 
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
@@ -63,15 +63,15 @@ typedef struct _EvJobFontsClass EvJobFontsClass;
 #define EV_JOB_THUMBNAIL_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
 #define EV_IS_JOB_THUMBNAIL(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_THUMBNAIL))
 
-#define EV_TYPE_JOB_LOAD		     (ev_job_load_get_type())
-#define EV_JOB_LOAD(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD, EvJobLoad))
-#define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
-#define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
-
 #define EV_TYPE_JOB_FONTS		     (ev_job_fonts_get_type())
 #define EV_JOB_FONTS(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FONTS, EvJobFonts))
 #define EV_JOB_FONTS_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FONTS, EvJobFontsClass))
 #define EV_IS_JOB_FONTS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FONTS))
+
+#define EV_TYPE_JOB_XFER		     (ev_job_xfer_get_type())
+#define EV_JOB_XFER(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_XFER, EvJobXfer))
+#define EV_JOB_XFER_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_XFER, EvJobXferClass))
+#define EV_IS_JOB_XFER(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_XFER))
 
 typedef enum {
 	EV_JOB_PRIORITY_LOW,
@@ -148,18 +148,6 @@ struct _EvJobThumbnailClass
 	EvJobClass parent_class;
 };
 
-struct _EvJobLoad
-{
-	EvJob parent;
-	GError *error;
-	gchar *uri;
-};
-
-struct _EvJobLoadClass
-{
-	EvJobClass parent_class;
-};
-
 struct _EvJobFonts
 {
 	EvJob parent;
@@ -169,6 +157,19 @@ struct _EvJobFonts
 struct _EvJobFontsClass
 {
         EvJobClass parent_class;
+};
+
+struct _EvJobXfer
+{
+	EvJob parent;
+	GError *error;
+	char *uri;
+	char *local_uri;
+};
+
+struct _EvJobXferClass
+{
+	EvJobClass parent_class;
 };
 
 /* Base job class */
@@ -202,16 +203,15 @@ EvJob          *ev_job_thumbnail_new      (EvDocument     *document,
 					   gint            requested_width);
 void            ev_job_thumbnail_run      (EvJobThumbnail *thumbnail);
 
-/* EvJobLoad */
-GType 		ev_job_load_get_type 	  (void);
-EvJob 	       *ev_job_load_new 	  (EvDocument      *document,
-					   const gchar 	   *uri);
-void		ev_job_load_run 	  (EvJobLoad 	   *load);					   
-
 /* EvJobFonts */
 GType 		ev_job_fonts_get_type 	  (void);
 EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
 void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
+
+/* EvJobXfer */
+GType 		ev_job_xfer_get_type 	  (void);
+EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri);
+void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);					   
 
 G_END_DECLS
 

@@ -36,8 +36,7 @@ typedef enum {
 	EV_BACKEND_COMICS
 } EvBackend;
 
-EvDocument* ev_document_factory_get_from_mime (const char *mime_type);
-EvDocument* ev_document_factory_get_document (const char *uri, gchar **mime_type, GError **error);
+EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
 EvBackend   ev_document_factory_get_backend  (EvDocument *document);
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 

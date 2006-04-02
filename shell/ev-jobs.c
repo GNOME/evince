@@ -2,9 +2,16 @@
 #include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
+#include "ev-document-factory.h"
+#include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
 #include "ev-selection.h"
 #include "ev-async-renderer.h"
+
+#include <libgnomevfs/gnome-vfs-uri.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
+#include <libgnomevfs/gnome-vfs-xfer.h>
 
 static void ev_job_init                 (EvJob               *job);
 static void ev_job_class_init           (EvJobClass          *class);
@@ -14,8 +21,8 @@ static void ev_job_render_init          (EvJobRender         *job);
 static void ev_job_render_class_init    (EvJobRenderClass    *class);
 static void ev_job_thumbnail_init       (EvJobThumbnail      *job);
 static void ev_job_thumbnail_class_init (EvJobThumbnailClass *class);
-static void ev_job_load_init    	(EvJobLoad	     *job);
-static void ev_job_load_class_init 	(EvJobLoadClass	     *class);
+static void ev_job_xfer_init    	(EvJobXfer	     *job);
+static void ev_job_xfer_class_init 	(EvJobXferClass	     *class);
 
 enum
 {
@@ -29,8 +36,8 @@ G_DEFINE_TYPE (EvJob, ev_job, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobRender, ev_job_render, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
-G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobXfer, ev_job_xfer, EV_TYPE_JOB)
 
 static void ev_job_init (EvJob *job) { /* Do Nothing */ }
 
@@ -164,38 +171,6 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 	oclass = G_OBJECT_CLASS (class);
 
 	oclass->dispose = ev_job_thumbnail_dispose;
-}
-
-static void ev_job_load_init (EvJobLoad *job) { /* Do Nothing */ }
-
-static void
-ev_job_load_dispose (GObject *object)
-{
-	EvJobLoad *job;
-
-	job = EV_JOB_LOAD (object);
-
-	if (job->uri) {
-		g_free (job->uri);
-		job->uri = NULL;
-	}
-
-	if (job->error) {
-		g_error_free (job->error);
-		job->error = NULL;
-	}
-
-	(* G_OBJECT_CLASS (ev_job_load_parent_class)->dispose) (object);
-}
-
-static void
-ev_job_load_class_init (EvJobLoadClass *class)
-{
-	GObjectClass *oclass;
-
-	oclass = G_OBJECT_CLASS (class);
-
-	oclass->dispose = ev_job_load_dispose;
 }
 
 /* Public functions */
@@ -355,39 +330,6 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 	ev_document_doc_mutex_unlock ();
 }
 
-EvJob *
-ev_job_load_new (EvDocument *document,
-		 const gchar *uri)
-{
-	EvJobLoad *job;
-
-	job = g_object_new (EV_TYPE_JOB_LOAD, NULL);
-
-	EV_JOB (job)->document = g_object_ref (document);
-	job->uri = g_strdup (uri);
-
-	return EV_JOB (job);
-}
-
-void
-ev_job_load_run (EvJobLoad *job)
-{
-	g_return_if_fail (EV_IS_JOB_LOAD (job));
-
-	ev_document_doc_mutex_lock ();
-	
-	if (job->error) {
-	        g_error_free (job->error);
-		job->error = NULL;
-	}
-	    
-	ev_document_load (EV_JOB(job)->document, job->uri, &job->error);
-	
-	EV_JOB (job)->finished = TRUE;
-
-	ev_document_doc_mutex_unlock ();
-}
-
 static void ev_job_fonts_init (EvJobFonts *job) { /* Do Nothing */ }
 
 static void ev_job_fonts_class_init (EvJobFontsClass *class) { /* Do Nothing */ }
@@ -420,3 +362,93 @@ ev_job_fonts_run (EvJobFonts *job)
 
 	ev_document_doc_mutex_unlock ();
 }
+
+static void ev_job_xfer_init (EvJobXfer *job) { /* Do Nothing */ }
+
+static void
+ev_job_xfer_dispose (GObject *object)
+{
+	EvJobXfer *job = EV_JOB_XFER (object);
+
+	if (job->uri) {
+		g_free (job->uri);
+		job->uri = NULL;
+	}
+
+	if (job->local_uri) {
+		g_free (job->local_uri);
+		job->local_uri = NULL;
+	}
+
+	if (job->error) {
+		g_error_free (job->error);
+		job->error = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_xfer_parent_class)->dispose) (object);
+}
+
+static void
+ev_job_xfer_class_init (EvJobXferClass *class)
+{
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_xfer_dispose;
+}
+
+
+EvJob *
+ev_job_xfer_new (const gchar *uri)
+{
+	EvJobXfer *job;
+
+	job = g_object_new (EV_TYPE_JOB_XFER, NULL);
+
+	job->uri = g_strdup (uri);
+
+	return EV_JOB (job);
+}
+
+void
+ev_job_xfer_run (EvJobXfer *job)
+{
+	GnomeVFSURI *source_uri;
+	GnomeVFSURI *target_uri;
+
+	g_return_if_fail (EV_IS_JOB_XFER (job));
+	
+	if (job->error) {
+	        g_error_free (job->error);
+		job->error = NULL;
+	}
+
+	source_uri = gnome_vfs_uri_new (job->uri);
+	if (!gnome_vfs_uri_is_local (source_uri) && !job->local_uri) {
+		char *tmp_name;
+		char *base_name;
+		
+		tmp_name = ev_tmp_filename ();
+		base_name = g_path_get_basename (job->uri);
+		job->local_uri = g_strconcat ("file:", tmp_name, base_name, NULL);
+		g_free (tmp_name);
+		
+		target_uri = gnome_vfs_uri_new (job->local_uri);
+
+		gnome_vfs_xfer_uri (source_uri, target_uri, 
+				    GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				    GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				    GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				    NULL,
+				    job);
+		gnome_vfs_uri_unref (target_uri);
+	}
+	gnome_vfs_uri_unref (source_uri);
+
+	EV_JOB(job)->document = ev_document_factory_get_document (job->local_uri ? job->local_uri : job->uri, &job->error);
+	EV_JOB (job)->finished = TRUE;
+
+	return;
+}
+

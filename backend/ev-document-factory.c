@@ -142,7 +142,7 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 }
 #endif
 
-EvDocument*
+static EvDocument*
 ev_document_factory_get_from_mime (const char *mime_type)
 {
 	int i;
@@ -230,7 +230,7 @@ ev_document_factory_get_all_mime_types (void)
 }
 
 static EvDocument *
-get_document_from_uri (const char *uri, gboolean slow, gchar **mime_type, GError **error)
+get_document_from_uri (const char *uri, gboolean slow, GError **error)
 {
 	EvDocument *document = NULL;
 
@@ -271,32 +271,36 @@ get_document_from_uri (const char *uri, gboolean slow, gchar **mime_type, GError
 		return NULL;
 	}			
 
-	if (mime_type != NULL) {
-		    *mime_type = g_strdup (info->mime_type);
-	}
-
         gnome_vfs_file_info_unref (info);
 	
         return document;
 }
 
 EvDocument *
-ev_document_factory_get_document (const char *uri, gchar **mime_type, GError **error)
+ev_document_factory_get_document (const char *uri, GError **error)
 {
 	EvDocument *document;
 	
-	document = get_document_from_uri (uri, FALSE, mime_type, error);
+	document = get_document_from_uri (uri, FALSE, error);
 
-	if (document != NULL) {
-		return document;
+	if (*error != NULL) {
+		return NULL;
 	}
+
+	ev_document_load (document, uri, error);
 		
-	if (error) {
+	if (*error) {
 		g_error_free (*error);
 		*error = NULL;
 	}
 
-	document = get_document_from_uri (uri, TRUE, mime_type, error);
+	document = get_document_from_uri (uri, TRUE, error);
+
+	if (*error != NULL) {
+		return NULL;
+	}
+
+	ev_document_load (document, uri, error);
 
 	return document;
 }

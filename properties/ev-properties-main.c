@@ -83,7 +83,6 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 			 GList *files)
 {
 	GError *error = NULL;
-	char *mime;
 	EvDocument *document;
 	GList *pages = NULL;
 	NautilusFileInfo *file;
@@ -98,20 +97,18 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	file = files->data;
 
 	/* okay, make the page */
-	mime = nautilus_file_info_get_mime_type (file);
-	document = ev_document_factory_get_from_mime (mime);
-	g_free (mime);
 
 	if (document == NULL)
 		goto end;
 
 	uri = nautilus_file_info_get_uri (file);
-	if (!ev_document_load (document, uri, &error)) {
-		if (error) {
-			g_error_free (error);
-		}
+	document = ev_document_factory_get_document (uri, &error);
+
+	if (error) {
+		g_error_free (error);
 		goto end;
 	}
+
 	label = gtk_label_new (_("Document"));
 	page = ev_properties_view_new ();
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (page),

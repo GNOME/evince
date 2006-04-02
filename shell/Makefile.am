@@ -24,8 +24,6 @@ evince_SOURCES=				\
 	ev-job-queue.c			\
 	ev-jobs.h			\
 	ev-jobs.c			\
-	ev-job-xfer.c			\
-	ev-job-xfer.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
 	ev-metadata-manager.c		\

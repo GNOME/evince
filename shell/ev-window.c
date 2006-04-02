@@ -141,9 +141,7 @@ struct _EvWindowPrivate {
 	EvWindowTitle *title;
 	EggRecentViewUIManager *recent_view;
 
-	/* Job used to load document */
 	EvJob *xfer_job;
-	EvJob *load_job;
 #ifdef WITH_GNOME_PRINT
 	GnomePrintJob *print_job;
 #endif
@@ -177,8 +175,6 @@ static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_si
 							 EvWindow         *ev_window);
 static void     ev_window_set_page_mode                 (EvWindow         *window,
 							 EvWindowPageMode  page_mode);
-static void	ev_window_load_job_cb  			(EvJobLoad *job,
-							 gpointer data);
 static void	ev_window_xfer_job_cb  			(EvJobXfer *job,
 							 gpointer data);
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
@@ -500,84 +496,6 @@ update_sizing_buttons (EvWindow *window)
 	}
 }
 
-static void
-ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
-{
-	GtkAction *action;
-	
-	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
-	ev_window_set_action_sensitive (window, "ViewToolbar", FALSE);
-	
-	action = gtk_action_group_get_action (window->priv->action_group,
-				     	      PAGE_SELECTOR_ACTION);
-	ev_page_action_grab_focus (EV_PAGE_ACTION (action));
-}
-
-static void
-ev_window_cmd_scroll_forward (GtkAction *action, EvWindow *window)
-{
-	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD, FALSE);
-}
-
-static void
-ev_window_cmd_scroll_backward (GtkAction *action, EvWindow *window)
-{
-	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_BACKWARD, FALSE);
-}
-
-static void
-ev_window_cmd_continuous (GtkAction *action, EvWindow *ev_window)
-{
-	gboolean continuous;
-
-	ev_window_stop_presentation (ev_window);
-	continuous = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-	g_object_set (G_OBJECT (ev_window->priv->view),
-		      "continuous", continuous,
-		      NULL);
-	ev_window_update_actions (ev_window);
-}
-
-static void
-ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
-{
-	gboolean dual_page;
-
-	ev_window_stop_presentation (ev_window);
-	dual_page = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-	g_object_set (G_OBJECT (ev_window->priv->view),
-		      "dual-page", dual_page,
-		      NULL);
-	ev_window_update_actions (ev_window);
-}
-
-static void
-ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
-{
-	ev_window_stop_presentation (ev_window);
-
-	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_BEST_FIT);
-	} else {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
-	}
-	ev_window_update_actions (ev_window);
-}
-
-static void
-ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
-{
-	ev_window_stop_presentation (ev_window);
-
-	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FIT_WIDTH);
-	} else {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
-	}
-	ev_window_update_actions (ev_window);
-}
-
-
 void
 ev_window_open_page_label (EvWindow   *ev_window, 
 			   const char *label)
@@ -594,7 +512,6 @@ ev_window_is_empty (const EvWindow *ev_window)
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
 
 	return (ev_window->priv->document == NULL) && 
-		(ev_window->priv->load_job == NULL) &&
 		(ev_window->priv->xfer_job == NULL);
 }
 
@@ -898,7 +815,7 @@ password_dialog_response (GtkWidget *password_dialog,
 		ev_window->priv->password_document = NULL;
 
 		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
 		
     		gtk_widget_destroy (password_dialog);
 			
@@ -909,7 +826,7 @@ password_dialog_response (GtkWidget *password_dialog,
 	gtk_widget_destroy (password_dialog);
 }
 
-/* Called either by ev_window_load_job_cb or by the "unlock" callback on the
+/* Called either by ev_window_xfer_job_cb or by the "unlock" callback on the
  * password_view page.  It assumes that ev_window->priv->password_* has been set
  * correctly.  These are cleared by password_dialog_response() */
 
@@ -941,18 +858,8 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 }
 
 static void
-ev_window_clear_jobs (EvWindow *ev_window)
+ev_window_clear_xfer_job (EvWindow *ev_window)
 {
-    if (ev_window->priv->load_job != NULL) {
-
-	if (!ev_window->priv->load_job->finished)
-	        ev_job_queue_remove_job (ev_window->priv->load_job);
-
-	g_signal_handlers_disconnect_by_func (ev_window->priv->load_job, ev_window_load_job_cb, ev_window);
-    	g_object_unref (ev_window->priv->load_job);
-	ev_window->priv->load_job = NULL;
-    }
-
     if (ev_window->priv->xfer_job != NULL) {
 
 	if (!ev_window->priv->xfer_job->finished)
@@ -989,14 +896,12 @@ ev_window_clear_local_uri (EvWindow *ev_window)
  * function should _not_ necessarily expect those to exist after being
  * called. */
 static void
-ev_window_load_job_cb  (EvJobLoad *job,
+ev_window_xfer_job_cb  (EvJobXfer *job,
 			gpointer data)
 {
 	EvWindow *ev_window = EV_WINDOW (data);
 	EvDocument *document = EV_JOB (job)->document;
 
-	g_assert (document);
-	g_assert (document != ev_window->priv->document);
 	g_assert (job->uri);
 	
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
@@ -1008,6 +913,16 @@ ev_window_load_job_cb  (EvJobLoad *job,
 
 	/* Success! */
 	if (job->error == NULL) {
+
+		g_free (ev_window->priv->uri);
+		ev_window->priv->uri = g_strdup (job->uri);
+		setup_view_from_metadata (ev_window);
+
+		if (job->local_uri) {
+			ev_window->priv->local_uri = g_strdup (job->local_uri);
+		} else {
+			ev_window->priv->local_uri = NULL;
+		}
 		
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
@@ -1015,7 +930,7 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		
 		ev_window_setup_document (ev_window);
 		ev_window_add_recent (ev_window, ev_window->priv->uri);		
-		ev_window_clear_jobs (ev_window);
+		ev_window_clear_xfer_job (ev_window);
 		
 		return;
 	}
@@ -1023,6 +938,10 @@ ev_window_load_job_cb  (EvJobLoad *job,
 	if (job->error->domain == EV_DOCUMENT_ERROR &&
 	    job->error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
 		gchar *base_name, *file_name;
+
+		g_free (ev_window->priv->uri);
+		ev_window->priv->uri = g_strdup (job->uri);
+		setup_view_from_metadata (ev_window);
 
 		ev_window->priv->password_document = g_object_ref (document);
 
@@ -1037,46 +956,10 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		ev_window_popup_password_dialog (ev_window);
 	} else {
 		unable_to_load (ev_window, job->error->message);
+		ev_window_clear_xfer_job (ev_window);
 	}	
 
 	return;
-}
-
-static void
-ev_window_xfer_job_cb  (EvJobXfer *job,
-			gpointer data)
-{
-	EvWindow *ev_window = EV_WINDOW (data);
-
-
-	
-	if (job->error != NULL) {
-		unable_to_load (ev_window, job->error->message);
-		ev_window_clear_jobs (ev_window);
-		ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
-	} else {
-		char *uri;
-		
-		EvDocument *document = g_object_ref (EV_JOB (job)->document);
-		
-		if (job->local_uri) {
-			ev_window->priv->local_uri = g_strdup (job->local_uri);
-			uri = ev_window->priv->local_uri;
-		} else {
-			ev_window->priv->local_uri = NULL;
-			uri = ev_window->priv->uri;
-		}
-		
-		ev_window_clear_jobs (ev_window);
-		
-		ev_window->priv->load_job = ev_job_load_new (document, uri);
-		g_signal_connect (ev_window->priv->load_job,
-				  "finished",
-				  G_CALLBACK (ev_window_load_job_cb),
-				  ev_window);
-		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
-		g_object_unref (document);
-	}		
 }
 
 const char *
@@ -1109,14 +992,11 @@ ev_window_close_dialogs (EvWindow *ev_window)
 void
 ev_window_open_uri (EvWindow *ev_window, const char *uri)
 {
-
 	g_free (ev_window->priv->uri);
-	ev_window->priv->uri = g_strdup (uri);
-
-	setup_view_from_metadata (ev_window);
+	ev_window->priv->uri = NULL;
 	
 	ev_window_close_dialogs (ev_window);
-	ev_window_clear_jobs (ev_window);
+	ev_window_clear_xfer_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 	
@@ -1452,6 +1332,84 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 
 	gtk_widget_destroy (GTK_WIDGET (ev_window));
 }
+
+static void
+ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
+{
+	GtkAction *action;
+	
+	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
+	ev_window_set_action_sensitive (window, "ViewToolbar", FALSE);
+	
+	action = gtk_action_group_get_action (window->priv->action_group,
+				     	      PAGE_SELECTOR_ACTION);
+	ev_page_action_grab_focus (EV_PAGE_ACTION (action));
+}
+
+static void
+ev_window_cmd_scroll_forward (GtkAction *action, EvWindow *window)
+{
+	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD, FALSE);
+}
+
+static void
+ev_window_cmd_scroll_backward (GtkAction *action, EvWindow *window)
+{
+	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_BACKWARD, FALSE);
+}
+
+static void
+ev_window_cmd_continuous (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean continuous;
+
+	ev_window_stop_presentation (ev_window);
+	continuous = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	g_object_set (G_OBJECT (ev_window->priv->view),
+		      "continuous", continuous,
+		      NULL);
+	ev_window_update_actions (ev_window);
+}
+
+static void
+ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean dual_page;
+
+	ev_window_stop_presentation (ev_window);
+	dual_page = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	g_object_set (G_OBJECT (ev_window->priv->view),
+		      "dual-page", dual_page,
+		      NULL);
+	ev_window_update_actions (ev_window);
+}
+
+static void
+ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
+{
+	ev_window_stop_presentation (ev_window);
+
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_BEST_FIT);
+	} else {
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
+	}
+	ev_window_update_actions (ev_window);
+}
+
+static void
+ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
+{
+	ev_window_stop_presentation (ev_window);
+
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FIT_WIDTH);
+	} else {
+		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
+	}
+	ev_window_update_actions (ev_window);
+}
+
 
 static void
 ev_window_cmd_edit_select_all (GtkAction *action, EvWindow *ev_window)
@@ -2745,8 +2703,8 @@ ev_window_dispose (GObject *object)
 		priv->view = NULL;
 	}
 
-	if (priv->load_job || priv->xfer_job) {
-		ev_window_clear_jobs (window);
+	if (priv->xfer_job) {
+		ev_window_clear_xfer_job (window);
 	}
 	
 	if (priv->local_uri) {
