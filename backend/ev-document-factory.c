@@ -283,12 +283,10 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	
 	document = get_document_from_uri (uri, FALSE, error);
 
-	if (*error != NULL) {
-		return NULL;
+	if (*error == NULL) {
+		ev_document_load (document, uri, error);
 	}
-
-	ev_document_load (document, uri, error);
-		
+	
 	if (*error) {
 		g_error_free (*error);
 		*error = NULL;
