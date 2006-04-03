@@ -494,12 +494,14 @@ ev_attachment_bar_init (EvAttachmentBar *ev_attachbar)
 								g_object_unref);
 
 	/* Drag and Drop */
+#ifdef HAVE_GTK_ICON_VIEW_ENABLE_MODEL_DRAG_SOURCE
 	gtk_icon_view_enable_model_drag_source (
 		GTK_ICON_VIEW (ev_attachbar->priv->icon_view),
 			       GDK_BUTTON1_MASK,
 			       drag_targets,
 			       G_N_ELEMENTS (drag_targets),
-			       GDK_ACTION_MOVE);
+			       GDK_ACTION_COPY);
+#endif
 	g_signal_connect (G_OBJECT (ev_attachbar->priv->icon_view),
 			  "drag-data-get",
 			  G_CALLBACK (ev_attachment_bar_drag_data_get),
