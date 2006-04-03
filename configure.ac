@@ -146,6 +146,7 @@ AC_CHECK_FUNCS(gtk_icon_view_get_visible_range)
 AC_CHECK_FUNCS(gtk_window_present_with_time)
 AC_CHECK_FUNCS(g_file_set_contents)
 AC_CHECK_FUNCS(gtk_file_chooser_set_do_overwrite_confirmation)
+AC_CHECK_FUNCS(gtk_icon_view_enable_model_drag_source)
 LIBS=$evince_save_LIBS
 
 dnl GConf configuration

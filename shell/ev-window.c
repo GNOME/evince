@@ -37,6 +37,7 @@
 #include "ev-view.h"
 #include "ev-password.h"
 #include "ev-password-view.h"
+#include "ev-attachment-bar.h"
 #include "ev-properties-dialog.h"
 #include "ev-ps-exporter.h"
 #include "ev-document-thumbnails.h"
@@ -108,6 +109,7 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
+	GtkWidget *attachment_bar;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -118,7 +120,8 @@ struct _EvWindowPrivate {
 
 	/* UI Builders */
 	GtkActionGroup *action_group;
-	GtkActionGroup *popups_action_group;
+	GtkActionGroup *view_popup_action_group;
+	GtkActionGroup *attachment_popup_action_group;
 	GtkUIManager   *ui_manager;
 
 	/* Fullscreen mode */
@@ -127,8 +130,12 @@ struct _EvWindowPrivate {
 	GSource   *fullscreen_timeout_source;
 	
 	/* Popup link */
-	GtkWidget *popup;
+	GtkWidget *view_popup;
 	EvLink    *link;
+
+	/* Popup attachment */
+	GtkWidget    *attachment_popup;
+	EvAttachment *attachment;
 
 	/* Document */
 	char *uri;
@@ -194,10 +201,14 @@ static void     ev_window_stop_presentation             (EvWindow         *windo
 static void     ev_window_cmd_view_presentation         (GtkAction        *action,
 							 EvWindow         *window);
 static void     show_fullscreen_popup                   (EvWindow         *window);
-static void     ev_popup_cmd_open_link                  (GtkAction        *action,
+static void     ev_view_popup_cmd_open_link             (GtkAction        *action,
 							 EvWindow         *window);
-static void     ev_popup_cmd_copy_link_address          (GtkAction        *action,
+static void     ev_view_popup_cmd_copy_link_address     (GtkAction        *action,
 							 EvWindow         *window);
+static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
+							 EvWindow *window);
+static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, 
+							 EvWindow *window);
 static void	ev_window_cmd_view_best_fit 		(GtkAction 	  *action, 
 							 EvWindow 	  *ev_window);
 static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action, 
@@ -384,7 +395,7 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 static void
 set_widget_visibility (GtkWidget *widget, gboolean visible)
 {
-	g_return_if_fail (GTK_IS_WIDGET (widget));
+	g_assert (GTK_IS_WIDGET (widget));
 	
 	if (visible)
 		gtk_widget_show (widget);
@@ -516,7 +527,7 @@ ev_window_is_empty (const EvWindow *ev_window)
 }
 
 static void
-unable_to_load_dialog_response_cb (GtkWidget *dialog,
+ev_window_error_dialog_response_cb (GtkWidget *dialog,
 			           gint       response_id,
 			           EvWindow  *ev_window)
 {
@@ -524,21 +535,20 @@ unable_to_load_dialog_response_cb (GtkWidget *dialog,
 }
 
 static void
-unable_to_load (EvWindow   *ev_window,
-		const char *error_message)
+ev_window_error_dialog (GtkWindow *window, const gchar *msg, GError *error)
 {
 	GtkWidget *dialog;
 
-	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+	dialog = gtk_message_dialog_new (GTK_WINDOW (window),
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_ERROR,
 					 GTK_BUTTONS_CLOSE,
-					 _("Unable to open document"));
+					 msg);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  "%s", error_message);
+						  "%s", error->message);
 	g_signal_connect (dialog, "response",
-			  G_CALLBACK (unable_to_load_dialog_response_cb),
-			  ev_window);
+			  G_CALLBACK (ev_window_error_dialog_response_cb),
+			   window);
 	gtk_widget_show (dialog);
 }
 
@@ -580,6 +590,14 @@ update_sidebar_visibility (EvWindow *window)
 		set_widget_visibility (window->priv->sidebar,
 				       g_value_get_boolean (&sidebar_visibility));
 	}
+}
+
+static void
+update_attachment_bar_visibility (EvWindow *window)
+{
+	set_widget_visibility (window->priv->attachment_bar,
+			       (window->priv->document &&
+			       ev_document_has_attachments (window->priv->document)));
 }
 
 static void
@@ -752,6 +770,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
+	EvAttachmentBar *attachbar = EV_ATTACHMENT_BAR (ev_window->priv->attachment_bar);
 	GtkAction *action;
 
 	document = ev_window->priv->document;
@@ -771,6 +790,9 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_view_set_document (view, document);
 	}
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
+
+	ev_attachment_bar_set_document (attachbar, document);
+	update_attachment_bar_visibility (ev_window);
 
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
@@ -955,7 +977,9 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 
 		ev_window_popup_password_dialog (ev_window);
 	} else {
-		unable_to_load (ev_window, job->error->message);
+		ev_window_error_dialog (GTK_WINDOW (ev_window), 
+				        _("Unable to open document"),
+					job->error);
 		ev_window_clear_xfer_job (ev_window);
 	}	
 
@@ -1104,28 +1128,6 @@ ev_window_setup_recent (EvWindow *ev_window)
 }
 
 static void
-save_error_dialog (GtkWindow *window, const gchar *file_name)
-{
-	GtkWidget *error_dialog;
-
-	error_dialog = gtk_message_dialog_new (
-		window,
-		(GtkDialogFlags)GTK_DIALOG_DESTROY_WITH_PARENT,
-		GTK_MESSAGE_ERROR,
-		GTK_BUTTONS_CLOSE,
-		_("The file could not be saved as \"%s\"."),
-		file_name);
-
-	/* Easy way to make the text bold while keeping the string
-	 * above free from pango markup (FIXME ?) */
-	gtk_message_dialog_format_secondary_text (
-		GTK_MESSAGE_DIALOG (error_dialog), " ");
-
-	gtk_dialog_run (GTK_DIALOG (error_dialog));
-	gtk_widget_destroy (error_dialog);
-}
-
-static void
 file_save_dialog_response_cb (GtkWidget *fc,
 			      gint       response_id,
 			      EvWindow  *ev_window)
@@ -1134,15 +1136,19 @@ file_save_dialog_response_cb (GtkWidget *fc,
 
 	if (response_id == GTK_RESPONSE_OK) {
 		const char *uri;
+		GError *err = NULL;
 
 		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
 
 		ev_document_doc_mutex_lock ();
-		success = ev_document_save (ev_window->priv->document, uri, NULL);
+		success = ev_document_save (ev_window->priv->document, uri, &err);
 		ev_document_doc_mutex_unlock ();
 
-		if (!success) {
-			save_error_dialog (GTK_WINDOW (fc), uri);
+		if (err) {
+			gchar *msg;
+			msg = g_strdup_printf (_("The file could not be saved as \"%s\"."), uri);
+			ev_window_error_dialog (GTK_WINDOW (fc), msg, err);
+			g_free (msg);
 		}
 	}
 
@@ -1232,10 +1238,9 @@ ev_window_print_dialog_response_cb (GtkDialog *print_dialog, gint response, gpoi
 	    dialog = gtk_message_dialog_new (GTK_WINDOW (print_dialog), GTK_DIALOG_MODAL,
 					     GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
 					     _("Printing is not supported on this printer."));
-					     gtk_message_dialog_format_secondary_text (
-							GTK_MESSAGE_DIALOG (dialog),
-							_("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
-							gnome_print_config_get (config, (guchar *)"Settings.Engine.Backend.Driver"));
+           gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+						     _("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
+						     gnome_print_config_get (config, (guchar *)"Settings.Engine.Backend.Driver"));
 	    gtk_dialog_run (GTK_DIALOG (dialog));
 	    gtk_widget_destroy (dialog);
 	    return FALSE;
@@ -1706,6 +1711,7 @@ ev_window_run_fullscreen (EvWindow *window)
 
 	update_chrome_visibility (window);
 	gtk_widget_hide (window->priv->sidebar);
+	gtk_widget_hide (window->priv->attachment_bar);
 
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
 		      "shadow-type", GTK_SHADOW_NONE,
@@ -1755,6 +1761,7 @@ ev_window_stop_fullscreen (EvWindow *window)
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 	update_chrome_visibility (window);
 	update_sidebar_visibility (window);
+	update_attachment_bar_visibility (window);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
@@ -1803,6 +1810,7 @@ ev_window_run_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 	gtk_widget_hide (window->priv->sidebar);
+	gtk_widget_hide (window->priv->attachment_bar);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
@@ -1822,6 +1830,7 @@ ev_window_stop_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 	update_sidebar_visibility (window);
+	update_attachment_bar_visibility (window);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
@@ -2355,6 +2364,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"Marco Pesenti Gritti <marco@gnome.org>",
 		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
 		"Bryan Clark <clarkbw@gnome.org>",
+		"Carlos Garcia Campos  <carlosgc@gnome.org>",
 		NULL
 	};
 
@@ -2477,6 +2487,18 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspe
 	}
 }
 
+static void
+ev_window_attachment_bar_toggled_cb (EvAttachmentBar *ev_attachbar,
+				     GParamSpec      *param_spec,
+				     EvWindow        *ev_window)
+{
+	if (gtk_expander_get_expanded (GTK_EXPANDER (ev_attachbar))) {
+		gtk_widget_grab_focus (GTK_WIDGET (ev_attachbar));
+	} else {
+		gtk_widget_grab_focus (ev_window->priv->view);
+	}
+}
+
 static gboolean
 view_menu_popup_cb (EvView         *view,
 		    EvLink         *link,
@@ -2497,7 +2519,7 @@ view_menu_popup_cb (EvView         *view,
 	else	
 		ev_window->priv->link = NULL;
 
-	popup = ev_window->priv->popup;
+	popup = ev_window->priv->view_popup;
 
 	if (ev_window->priv->link) 
 		switch (ev_link_get_link_type (ev_window->priv->link)) {
@@ -2517,15 +2539,15 @@ view_menu_popup_cb (EvView         *view,
 				break;
 		}
 	
-	action = gtk_action_group_get_action (ev_window->priv->popups_action_group,
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
 					      "OpenLink");
 	gtk_action_set_visible (action, show_external);
 
-	action = gtk_action_group_get_action (ev_window->priv->popups_action_group,
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
 					      "CopyLinkAddress");
 	gtk_action_set_visible (action, show_external);
 
-	action = gtk_action_group_get_action (ev_window->priv->popups_action_group,
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
 					      "GoLink");
 	gtk_action_set_visible (action, show_internal);
 
@@ -2533,6 +2555,27 @@ view_menu_popup_cb (EvView         *view,
 			NULL, NULL,
 			3, gtk_get_current_event_time ());
 	return FALSE;
+}
+
+static void
+attachment_bar_menu_popup_cb (EvAttachmentBar *attachbar,
+			      EvAttachment    *attachment,
+			      EvWindow        *ev_window)
+{
+	GtkWidget *popup;
+
+	if (ev_window->priv->attachment)
+		g_object_unref (ev_window->priv->attachment);
+	if (attachment)
+		ev_window->priv->attachment = g_object_ref (attachment);
+	else
+		ev_window->priv->attachment = NULL;
+	
+	popup = ev_window->priv->attachment_popup;
+
+	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
+			NULL, NULL,
+			3, gtk_get_current_event_time ());
 }
 
 static void
@@ -2683,9 +2726,14 @@ ev_window_dispose (GObject *object)
 		priv->action_group = NULL;
 	}
 
-	if (priv->popups_action_group) {
-		g_object_unref (priv->popups_action_group);
-		priv->popups_action_group = NULL;
+	if (priv->view_popup_action_group) {
+		g_object_unref (priv->view_popup_action_group);
+		priv->view_popup_action_group = NULL;
+	}
+
+	if (priv->attachment_popup_action_group) {
+		g_object_unref (priv->attachment_popup_action_group);
+		priv->attachment_popup_action_group = NULL;
 	}
 
 	if (priv->page_cache) {
@@ -2721,6 +2769,11 @@ ev_window_dispose (GObject *object)
 	if (priv->link) {
 		g_object_unref (priv->link);
 		priv->link = NULL;
+	}
+
+	if (priv->attachment) {
+		g_object_unref (priv->attachment);
+		priv->attachment = NULL;
 	}
 
 	if (priv->find_bar) {
@@ -2914,15 +2967,22 @@ static const GtkToggleActionEntry toggle_entries[] = {
 };
 
 /* Popups specific items */
-static const GtkActionEntry popups_entries [] = {
+static const GtkActionEntry view_popup_entries [] = {
 	/* Links */
 	{ "OpenLink", GTK_STOCK_OPEN, N_("_Open Link"), NULL,
-	  NULL, G_CALLBACK (ev_popup_cmd_open_link) },
+	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link) },
 	{ "GoLink", GTK_STOCK_GO_FORWARD, N_("_Go To"), NULL,
-	  NULL, G_CALLBACK (ev_popup_cmd_open_link) },
+	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link) },
 	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
 	  NULL,
-	  G_CALLBACK (ev_popup_cmd_copy_link_address) },
+	  G_CALLBACK (ev_view_popup_cmd_copy_link_address) },
+};
+
+static const GtkActionEntry attachment_popup_entries [] = {
+	{ "OpenAttachment", GTK_STOCK_OPEN, N_("_Open..."), NULL,
+	  NULL, G_CALLBACK (ev_attachment_popup_cmd_open_attachment) },
+	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), NULL,
+	  NULL, G_CALLBACK (ev_attachment_popup_cmd_save_attachment_as) },
 };
 
 static void
@@ -2949,8 +3009,6 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 		ev_application_open_uri_list (EV_APP, uris, 0);
 		
 		g_slist_free (uris);
-
-		gtk_drag_finish (context, TRUE, FALSE, time);
 	}
 }
 
@@ -3222,13 +3280,13 @@ view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
 }
 
 static void
-ev_popup_cmd_open_link (GtkAction *action, EvWindow *window)
+ev_view_popup_cmd_open_link (GtkAction *action, EvWindow *window)
 {
 	ev_view_goto_link (EV_VIEW (window->priv->view), window->priv->link);
 }
 
 static void
-ev_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
+ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 {
 	GtkClipboard *clipboard;
 	const gchar *uri;
@@ -3238,6 +3296,77 @@ ev_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
 					      GDK_SELECTION_CLIPBOARD);
 	gtk_clipboard_set_text (clipboard, uri, -1);
+}
+
+static void
+ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
+{
+	GError *error = NULL;
+	
+	if (!window->priv->attachment)
+		return;
+	
+	ev_attachment_open (window->priv->attachment, &error);
+
+	if (error) {
+		ev_window_error_dialog (GTK_WINDOW (window),
+					_("Unable to open attachment"),
+					error);
+		g_error_free (error);
+	}
+}
+
+static void
+attachment_save_dialog_response_cb (GtkWidget *fc,
+				    gint       response_id,
+				    EvWindow  *ev_window)
+{
+	if (response_id == GTK_RESPONSE_OK) {
+		const char *uri;
+		GError     *error = NULL;
+
+		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+
+		ev_attachment_save (ev_window->priv->attachment, uri, &error);
+
+		if (error) {
+			ev_window_error_dialog (GTK_WINDOW (fc),
+						 _("The attachment could not be saved."),
+						 error);
+			g_error_free (error);
+		}
+	}
+
+	gtk_widget_destroy (fc);
+}
+
+static void
+ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
+{
+	GtkWidget *fc;
+
+	fc = gtk_file_chooser_dialog_new (_("Save a Copy"),
+					  GTK_WINDOW (window),
+					  GTK_FILE_CHOOSER_ACTION_SAVE,
+					  GTK_STOCK_CANCEL,
+					  GTK_RESPONSE_CANCEL,
+					  GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					  NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
+
+#ifdef HAVE_GTK_FILE_CHOOSER_SET_DO_OVERWRITE_CONFIRMATION
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
+#endif
+
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc),
+					   ev_attachment_get_name (window->priv->attachment));
+
+	g_signal_connect (fc, "response",
+			  G_CALLBACK (attachment_save_dialog_response_cb),
+			  window);
+
+	gtk_widget_show (fc);
 }
 
 static void
@@ -3283,11 +3412,21 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window_set_view_accels_sensitivity (ev_window, FALSE);
 
-	action_group = gtk_action_group_new ("PopupsActions");
-	ev_window->priv->popups_action_group = action_group;
+	action_group = gtk_action_group_new ("ViewPopupActions");
+	ev_window->priv->view_popup_action_group = action_group;
 	gtk_action_group_set_translation_domain (action_group, NULL);
-	gtk_action_group_add_actions (action_group, popups_entries,
-				      G_N_ELEMENTS (popups_entries), ev_window);
+	gtk_action_group_add_actions (action_group, view_popup_entries,
+				      G_N_ELEMENTS (view_popup_entries),
+				      ev_window);
+	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
+					    action_group, 0);
+
+	action_group = gtk_action_group_new ("AttachmentPopupActions");
+	ev_window->priv->attachment_popup_action_group = action_group;
+	gtk_action_group_set_translation_domain (action_group, NULL);
+	gtk_action_group_add_actions (action_group, attachment_popup_entries,
+				      G_N_ELEMENTS (attachment_popup_entries),
+				      ev_window);
 	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
 					    action_group, 0);
 
@@ -3398,6 +3537,17 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
 
+	/* Attachments Bar */
+	ev_window->priv->attachment_bar = ev_attachment_bar_new ();
+	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
+			  ev_window->priv->attachment_bar,
+			  FALSE, TRUE, 0);
+	g_signal_connect_object (ev_window->priv->attachment_bar,
+				 "popup",
+				 G_CALLBACK (attachment_bar_menu_popup_cb),
+				 ev_window, 0);
+
+	/* Find Bar */
 	ev_window->priv->find_bar = egg_find_bar_new ();
 	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
 			  ev_window->priv->find_bar,
@@ -3449,6 +3599,12 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (ev_window_sidebar_current_page_changed_cb),
 			  ev_window);
 
+	/* Connect attachment bar sgignals */
+	g_signal_connect (G_OBJECT (ev_window->priv->attachment_bar),
+			  "notify::expanded",
+			  G_CALLBACK (ev_window_attachment_bar_toggled_cb),
+			  ev_window);
+
 	/* Connect to find bar signals */
 	g_signal_connect (ev_window->priv->find_bar,
 			  "previous",
@@ -3480,19 +3636,24 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 
 	/* Popups */
-	ev_window->priv->popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-				    	    		   "/DocumentPopup");
+	ev_window->priv->view_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
+								 "/DocumentPopup");
 	ev_window->priv->link = NULL;
+
+	ev_window->priv->attachment_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
+								       "/AttachmentPopup");
+	ev_window->priv->attachment = NULL;
 
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
 
 	/* Drag and Drop */
 	gtk_drag_dest_unset (GTK_WIDGET (ev_window));
-	gtk_drag_dest_set (GTK_WIDGET (ev_window), GTK_DEST_DEFAULT_ALL, ev_drop_types,
+	gtk_drag_dest_set (GTK_WIDGET (ev_window), GTK_DEST_DEFAULT_ALL,
+			   ev_drop_types,
 			   sizeof (ev_drop_types) / sizeof (ev_drop_types[0]),
 			   GDK_ACTION_COPY);
-	g_signal_connect (G_OBJECT (ev_window), "drag_data_received",
+	g_signal_connect (G_OBJECT (ev_window), "drag-data-received",
 			  G_CALLBACK (drag_data_received_cb), NULL);
 
 	/* Set it user interface params */
@@ -3502,6 +3663,7 @@ ev_window_init (EvWindow *ev_window)
 	set_chrome_actions (ev_window);
 	update_chrome_visibility (ev_window);
 	update_sidebar_visibility (ev_window);
+	update_attachment_bar_visibility (ev_window);
 
 	gtk_window_set_default_size (GTK_WINDOW (ev_window),
 			             600, 600);

@@ -92,6 +92,8 @@ struct _EvDocumentIface
 					      EvRectangle  *rect);
 	GList          * (* get_links)	     (EvDocument   *document,
 					      int           page);
+	gboolean         (* has_attachments) (EvDocument   *document);
+	GList          * (* get_attachments) (EvDocument   *document);
 	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
 					      EvRenderContext *rc);
 	EvDocumentInfo * (* get_info)        (EvDocument   *document);
@@ -123,6 +125,8 @@ char	       *ev_document_get_text        (EvDocument     *document,
 					     EvRectangle    *rect);
 GList	       *ev_document_get_links       (EvDocument     *document,
 				             int             page);
+gboolean        ev_document_has_attachments (EvDocument     *document);
+GList          *ev_document_get_attachments (EvDocument     *document);
 GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,
 					     EvRenderContext *rc);
 

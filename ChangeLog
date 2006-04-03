@@ -1,3 +1,19 @@
+2006-04-02  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/Makefile.am:
+	* data/evince-ui.xml:
+	* backend/ev-attachment.[ch]:
+	* backend/ev-document.[ch]: (ev_document_has_attachments),
+	(ev_document_get_attachments):
+	* pdf/ev-poppler.cc: (pdf_document_has_attachments),
+	(attachment_save_to_buffer), (pdf_document_get_attachments),
+	(pdf_document_document_iface_init):
+	* shell/Makefile.am:
+	* shell/ev-attachment-bar.[ch]:
+	* shell/ev-window.c:
+
+ 	Add support for PDF attachments. Fixes bug #325143
+
 2006-04-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* backend/ev-document-factory.c: (get_document_from_uri),

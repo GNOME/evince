@@ -61,6 +61,8 @@ evince_SOURCES=				\
 	ev-sidebar-page.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
+	ev-attachment-bar.c		\
+	ev-attachment-bar.h		\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
 	main.c

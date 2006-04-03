@@ -200,7 +200,30 @@ ev_document_get_links (EvDocument *document,
 	return retval;
 }
 
+gboolean
+ev_document_has_attachments (EvDocument *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
+	if (iface->has_attachments == NULL)
+		return FALSE;
+	
+	return iface->has_attachments (document);
+}
+
+GList *
+ev_document_get_attachments (EvDocument *document)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	GList *retval;
+
+	LOG ("ev_document_get_attachments");
+	if (iface->get_attachments == NULL)
+		return NULL;
+	retval = iface->get_attachments (document);
+
+	return retval;
+}
 
 GdkPixbuf *
 ev_document_render_pixbuf (EvDocument      *document,

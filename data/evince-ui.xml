@@ -58,7 +58,7 @@
     </menu>
   </menubar>
 
-  <popup name="DocumentPopup" action="PopupAction">
+  <popup name="DocumentPopup" action="DocumentPopupAction">
     <menuitem name="OpenLink" action="OpenLink"/>
     <menuitem name="CopyLinkAddress" action="CopyLinkAddress"/>
     <menuitem name="GoLink" action="GoLink"/>
@@ -69,6 +69,12 @@
     <separator/>
     <menuitem name="EditCopy" action="EditCopy"/>
     <menuitem name="EditSelectAllPopup" action="EditSelectAll"/>
+  </popup>
+
+  <popup name="AttachmentPopup" action="AttachmentPopupAction">
+    <menuitem name="OpenAttachment" action="OpenAttachment"/>
+    <separator/>
+    <menuitem name="SaveAttachmentAs" action="SaveAttachmentAs"/>
   </popup>
 
   <accelerator name="PageDownAccel" action="PageDown"/>
