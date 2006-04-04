@@ -364,12 +364,24 @@ ev_attachment_open (EvAttachment *attachment,
 		    GError      **error)
 {
 
-	gboolean retval = FALSE;
+	gboolean                 retval = FALSE;
+	GnomeVFSMimeApplication *default_app = NULL;
 
 	if (!attachment->priv->app)
-		attachment->priv->app =
-			gnome_vfs_mime_get_default_application (attachment->priv->mime_type);
+		default_app = gnome_vfs_mime_get_default_application (attachment->priv->mime_type);
 
+	if (!default_app) {
+		g_set_error (error,
+			     EV_ATTACHMENT_ERROR,
+			     0,
+			     _("Couldn't open attachment '%s'"),
+			     attachment->priv->name);
+		
+		return FALSE;
+	}
+
+	attachment->priv->app = default_app;
+	
 	if (attachment->priv->tmp_uri &&
 	    g_file_test (attachment->priv->tmp_uri, G_FILE_TEST_EXISTS)) {
 		retval = ev_attachment_launch_app (attachment, error);
