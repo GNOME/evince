@@ -259,7 +259,7 @@ get_document_from_uri (const char *uri, gboolean slow, GError **error)
 		gnome_vfs_file_info_unref (info);
 		return NULL;
 	}
-	
+
 	document = ev_document_factory_get_from_mime (info->mime_type);
 		
 	if (document == NULL) {
@@ -280,7 +280,7 @@ EvDocument *
 ev_document_factory_get_document (const char *uri, GError **error)
 {
 	EvDocument *document;
-	
+
 	document = get_document_from_uri (uri, FALSE, error);
 
 	if (*error == NULL) {
@@ -290,6 +290,8 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	if (*error) {
 		g_error_free (*error);
 		*error = NULL;
+	} else {
+		return document;
 	}
 
 	document = get_document_from_uri (uri, TRUE, error);
