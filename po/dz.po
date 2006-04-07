@@ -1,20 +1,28 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Dzongkha translation of evince
+# Copyright @ 2006 Free Software Foundation, Inc.
+# Mindu Dorji.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.dz\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-21 04:43+0100\n"
-"PO-Revision-Date: 2006-03-20 10:04-0500\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2006-04-05 05:08+0200\n"
+"PO-Revision-Date: 2006-04-07 18:45-0500\n"
+"Last-Translator: Mindu Dorji\n"
 "Language-Team: DZONGKHA <pgeyleg@dit.gov.bt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2;plural=(n!=1);\n"
+
+#: ../comics/comics-document.c:148
+msgid "File corrupted."
+msgstr "ཡིག་སྣོད་ངན་ཅན་ལུ་གྱུར་ཡོདཔ།"
+
+#: ../comics/comics-document.c:184
+#, c-format
+msgid "No images found in archive %s"
+msgstr "ཡིག་མཛོད་%sནང་གཟུགས་བརྙན་འཚོལ་མ་ཐོབ།"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:534
 msgid "_Remove Toolbar"
@@ -26,7 +34,7 @@ msgstr "དབྱེ་བྱེད།"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:3145
+#: ../shell/ev-window.c:3066
 msgid "Best Fit"
 msgstr "ལེགས་སྒྲིག"
 
@@ -71,7 +79,7 @@ msgid "400%"
 msgstr "%༤༠༠"
 
 #: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window.c:608
+#: ../shell/ev-window-title.c:126
 msgid "Document Viewer"
 msgstr "ཡིག་ཆ་མཐོང་བྱེད།"
 
@@ -80,10 +88,14 @@ msgid "View multipage documents"
 msgstr "སྣ་མང་ཤོག་ལེབ་ཡིག་ཆ་ཚུ་སྟོན།"
 
 #: ../data/evince-password.glade.h:1
-msgid "*"
-msgstr "*"
+msgid "Remember password for this session"
+msgstr "ལཱ་ཡུན་འདི་གི་དོན་ལུ་ཆོག་ཡིག་སེམས་ཁར་བཞག"
 
 #: ../data/evince-password.glade.h:2
+msgid "Save password in keyring"
+msgstr "ཆོག་ཡིག་ལྡེ་འཁོར་ནང་སྲུངས།"
+
+#: ../data/evince-password.glade.h:3
 msgid "_Password:"
 msgstr "ཆོག་ཡིག་:(_P)"
 
@@ -136,42 +148,18 @@ msgid "<b>Title:</b>"
 msgstr "<b>མགོ་མིང་་:</b>"
 
 #: ../data/evince.schemas.in.h:1
-msgid "Default sidebar size"
-msgstr "ཟུར་ཁའི་ཕྲ་རིང་གི་ཚད་ སྔོན་སྒྲིག་འབད།"
+msgid "Override document restrictions"
+msgstr "ཡིག་ཆའི་བཀག་ཆ་ཟུར་བཞག་འབད།"
 
 #: ../data/evince.schemas.in.h:2
-msgid "Show sidebar by default"
-msgstr "ཟུར་ཁའི་ཕྲ་རིང་ སྔོན་སྒྲིག་ཐོག་ལུ་སྟོན།"
+msgid "Override document restrictions, like restriction to copy or to print."
+msgstr "ཡིག་ཆའི་བཀག་ཆ་ དཔེར་ན་ འདྲ་བཤུས་བརྐྱབ་ནི་དང་ དཔར་བསྐྲུན་འབད་ནིའི་བཀག་ཆ་ཚུ་ ཟུར་བཞག་འབད། "
 
-#: ../data/evince.schemas.in.h:3
-msgid "Show statusbar by default"
-msgstr "གནས་ཚད་ཕྲ་རིང་ སྔོན་སྒྲིག་ཐོག་ལས་སྟོན།"
-
-#: ../data/evince.schemas.in.h:4
-msgid "Show toolbar by default"
-msgstr "ལག་ཆས་ཕྲ་རིང་ སྔོན་སྒྲིག་ཐོག་ལས་སྟོན།"
-
-#: ../data/evince.schemas.in.h:5
-msgid "Sidebar is the side item that contains the Index and Thumbnail lists. The default size sets the sidebar's width in pixels based from the side of the window. Any integer will be accepted. The sidebar will never shrink smaller than the size of the text required to display Thumbnails or Index. Large values will cause the sidebar to take up as much of the page display area as possible relative to the window's size."
-msgstr "ཟུར་ཁའི་ཕྲ་རིང་དེ་ ཟུར་ཐོ་དང་ མཐེ་གཟེར་ཐོ་ཡིག་ཚུ་ཡོད་པའི་ ཟུར་ཁའི་རྣམ་གྲངས་ཅིག་ཨིན། ཚད་སྔོན་སྒྲིག་གིས་ སྒོ་སྒྲིག་གི་ཟུར་ལུ་ གཞི་བཞག་སྟེ་ ཟུར་ཁའི་གྲ་རིང་གི་རྒྱ་ཚད་ པིག་སེལསི་ནང་ གཞི་སྒྲིག་འབདཝ་ཨིན། ཧྲིང་ཨང་ག་ཅི་ཨིན་རུང་ དང་ལེན་འབད་འོང་། ཟུར་ཁའི་ཕྲ་རིང་དེ་ མཐེ་གཟེར་དང་ ཟུར་ཐོ་བཀྲམ་སྟོན་འབད་དགོ་པའི་ ཚིག་ཡིག་ལས་ཆུངམ་སྦེ་ ནམ་ཡང་མི་བསྐུམ། བེ་ལུ་ཆེ་བ་གིས་ སྒོ་སྒྲིག་གི་ཚད་དང་འཁྲིལ་ཏེ་ ཟུར་ཁའི་ཕྲ་རིང་དེ་གིས་ ཤོག་ལེབ་བཀྲམ་སྟོན་འབད་ནིའི་མངའ་ཁོངས་ ག་དེ་མང་མང་བཟུང་ནི་ལུ་ རྒྱུ་རྐྱེན་འབདཝ་ཨིན།"
-
-#: ../data/evince.schemas.in.h:6
-msgid "Sidebar is the side item that contains the Index and Thumbnail lists. Two boolean options, true makes sidebar visible by default while false makes sidebar not visible by default"
-msgstr "ཟུར་ཁའི་ཕྲ་རིང་དེ་ ཟུར་ཐོ་དང་ མཐེ་གཟེར་ཐོ་ཡིག་ཚུ་ཡོད་པའི་ ཟུར་ཁའི་རྣམ་གྲངས་དེ་ཨིན། བུ་ལིན་གྱི་གདམ་ཁ་གཉིས་ཡོད་མི་དེ་ཡང་ བདེན་པ་གིས་ ཟུར་ཁའི་ཕྲ་རིང་དེ་ སྔོན་སྒྲིག་ཐོག་ལས་ མཐོང་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་པ་གིས་ སྔོན་སྒྲིག་ཐོག་ལས་ ཟུར་ཁའི་ཕྲ་རིང་ མཐོང་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
-
-#: ../data/evince.schemas.in.h:7
-msgid "Statusbar is the standard bottom bar that display additional information about links and other actions. Two boolean options, true makes the statusbar visible by default while false makes sidebar not visible by default."
-msgstr "ཟུར་ཁའི་ཕྲ་རིང་དེ་ འབྲེལ་ལམ་དང་ བྱ་བ་གཞན་ཚུ་གི་སྐོར་ལས་ བརྡ་དོན་ཁ་སྐོང་བཀྲམ་སྟོན་འབད་མི་ ཚད་ལྡན་གཤམ་གྱི་ཕྲ རིང་དེ་ཨིན། བུ་ལིན་གྱི་གདམ་ཁ་གཉིས་ཡོད་མི་དེ་ཡང་ བདེན་པ་གིས་ ཟུར་ཁའི་ཕྲ་རིང་དེ་ སྔོན་སྒྲིག་ཐོག་ལས་ མཐོང་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་པ་གིས་ སྔོན་སྒྲིག་ཐོག་ལས་ ཟུར་ཁའི་ཕྲ་རིང་ མཐོང་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
-
-#: ../data/evince.schemas.in.h:8
-msgid "Toolbar is the top bar that contains navigation and zoom controls. Two boolean options, true makes toolbar visible by default while false makes toolbar not visible by default."
-msgstr "ཟུར་ཁའི་ཕྲ་རིང་དེ་ འགྲུལ་བསྐྱོད་དང་ རྒྱས་ཟུམ་ཚད་འཛིན་ཡོད་མི་ མགོའི་ཕྲ་རིང་དེ་ཨིན། བུ་ལིན་གྱི་གདམ་ཁ་གཉིས་ཡོད་མི་དེ་ཡང་ བདེན་པ་གིས་ ཟུར་ཁའི་ཕྲ་རིང་དེ་ སྔོན་སྒྲིག་ཐོག་ལས་ མཐོང་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་པ་གིས་ སྔོན་སྒྲིག་ཐོག་ལས་ ཟུར་ཁའི་ཕྲ་རིང་ མཐོང་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
-
-#: ../dvi/dvi-document.c:89
+#: ../dvi/dvi-document.c:91
 msgid "File not available"
 msgstr "ཡིག་སྣོད་འཐོབ་མི་ཚུགས་པས།"
 
-#: ../dvi/dvi-document.c:102
+#: ../dvi/dvi-document.c:104
 msgid "DVI document has incorrect format"
 msgstr "ཌིི་ཝི་ཨའི་ཡིག་ཆ་དེ་ལུ་ བདེན་མེད་རྩ་སྒྲིག་འདུག"
 
@@ -317,90 +305,95 @@ msgstr "༡༠x༡༤།"
 msgid "No document loaded."
 msgstr "ཡིག་ཆ་ག་ནི་ཡང་ མངོན་གསལ་མ་འབད་བས།"
 
-#: ../ps/ps-document.c:584
+#: ../ps/ps-document.c:590
 msgid "Broken pipe."
 msgstr "རྒྱུན་ཆད་པའི་རྒྱུད་དུང་།"
 
-#: ../ps/ps-document.c:766
+#: ../ps/ps-document.c:774
 msgid "Interpreter failed."
 msgstr "དོ་རོ་ཁ་སྒྱིར་མི་མ་བཏུབ།"
 
-#: ../ps/ps-document.c:892
+#: ../ps/ps-document.c:900
 #, c-format
 msgid "Error while decompressing file %s:\n"
 msgstr "ཡིག་སྣོད་%s:ཨེབ་བཙུགས་བཤོལ་བའི་སྐབས་ འཛོལ་བ་བྱུང་ཡི།\n"
 
-#: ../ps/ps-document.c:952
+#: ../ps/ps-document.c:960
 #, c-format
 msgid "Cannot open file %s.\n"
 msgstr "ཡིག་སྣོད་%sཁ་ཕྱེ་མ་ཚུགས།\n"
 
-#: ../ps/ps-document.c:957
+#: ../ps/ps-document.c:965
 msgid "File is not readable."
 msgstr "ཡིག་སྣོད་ལྷག་མི་བཏུབ་པས།"
 
-#: ../ps/ps-document.c:977
+#: ../ps/ps-document.c:985
 msgid "Document loaded."
 msgstr "ཡིག་ཆ་མངོན་གསལ་འབད་ཡི།"
 
-#: ../ps/ps-document.c:1074
+#: ../ps/ps-document.c:1082
+#, c-format
+msgid "Failed to load document '%s'. Ghostscript interpreter was not found in path"
+msgstr "ཡིག་ཆ་'%s'མངོན་གསལ་འབད་མ་ཚུགས། གྲིབ་ཡིག་ཁ་སྒྱུར་པ་དེ་ འགྲུལ་ལམ་ནང་འཚོལ་མ་ཐོབ།"
+
+#: ../ps/ps-document.c:1094
 #, c-format
 msgid "Failed to load document '%s'"
 msgstr "ཡིག་ཆ་ %s' མངོན་གསལ་འབད་མ་ཚུགས།"
 
-#: ../ps/ps-document.c:1216
+#: ../ps/ps-document.c:1267
 msgid "Encapsulated PostScript"
 msgstr "བསྡུས་ཡོད་པའི་ པོསིཊི་སི་ཀོརིཔཊི།"
 
-#: ../ps/ps-document.c:1217
+#: ../ps/ps-document.c:1268
 msgid "PostScript"
 msgstr "པོསིཊི་སི་ཀོརིཔཊི།"
 
-#: ../shell/eggfindbar.c:148
+#: ../shell/eggfindbar.c:158
 msgid "Search string"
 msgstr "འཚོལ་ཞིབ་ཡིག་རྒྱུན།"
 
-#: ../shell/eggfindbar.c:149
+#: ../shell/eggfindbar.c:159
 msgid "The name of the string to be found"
 msgstr "འཐོབ་དགོ་པའི་ ཡིག་རྒྱུན་གྱི་མིང་།"
 
-#: ../shell/eggfindbar.c:162
+#: ../shell/eggfindbar.c:172
 msgid "Case sensitive"
 msgstr "གནད་དོན་ཉེན་ཅན།"
 
-#: ../shell/eggfindbar.c:163
+#: ../shell/eggfindbar.c:173
 msgid "TRUE for a case sensitive search"
 msgstr "གནད་དོན་ཉེན་ཅན་ཅིག་ འཚོལ་ཞིབ་ཀྱི་དོན་ལུ་བདེན་པ།"
 
-#: ../shell/eggfindbar.c:170
+#: ../shell/eggfindbar.c:180
 msgid "Highlight color"
 msgstr "ཚོས་གཞི་གཙོ་དམིགས་འབད།"
 
-#: ../shell/eggfindbar.c:171
+#: ../shell/eggfindbar.c:181
 msgid "Color of highlight for all matches"
 msgstr "མཐུན་སྒྲིག་ཆ་མཉམ་གྱི་དོན་ལུ་ གཙོ་དམིགས་ཀྱི་ཚོས་གཞི།"
 
-#: ../shell/eggfindbar.c:177
+#: ../shell/eggfindbar.c:187
 msgid "Current color"
 msgstr "ད་ལྟོའི་ཚོས་གཞི།"
 
-#: ../shell/eggfindbar.c:178
+#: ../shell/eggfindbar.c:188
 msgid "Color of highlight for the current match"
 msgstr "ད་ལྟོའི་མཐུན་སྒྲིག་གི་དོན་ལུ་ གཙོ་དམིགས་ཀྱི་ཚོས་གཞི།"
 
-#: ../shell/eggfindbar.c:301
+#: ../shell/eggfindbar.c:319
 msgid "F_ind:"
 msgstr "འཚོལ།(_i)"
 
-#: ../shell/eggfindbar.c:307
+#: ../shell/eggfindbar.c:325
 msgid "_Previous"
 msgstr "ཧེ་མམ།(_P)"
 
-#: ../shell/eggfindbar.c:311
+#: ../shell/eggfindbar.c:329
 msgid "_Next"
 msgstr "ཤུལ་མམ།(_N)"
 
-#: ../shell/eggfindbar.c:325
+#: ../shell/eggfindbar.c:343
 msgid "C_ase Sensitive"
 msgstr "གནད་དོན་ཉེན་ཅན།(_a)"
 
@@ -421,23 +414,27 @@ msgstr "ཡིག་ཆ་ཆ་མཉམ།"
 msgid "PostScript Documents"
 msgstr "པོསཊི་སི་ཀིརིཔཊི་ཡིག་ཆ་ཚུ།"
 
-#: ../shell/ev-document-types.c:149
+#: ../shell/ev-document-types.c:150
 msgid "PDF Documents"
 msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ།"
 
-#: ../shell/ev-document-types.c:158
+#: ../shell/ev-document-types.c:159
 msgid "Images"
 msgstr "གཟུགས་བརྙན་ཚུ།"
 
-#: ../shell/ev-document-types.c:167
+#: ../shell/ev-document-types.c:169
 msgid "DVI Documents"
 msgstr "ཌི་ཝི་ཨའི་ཡིག་ཆ་ཚུ།"
 
-#: ../shell/ev-document-types.c:177
+#: ../shell/ev-document-types.c:179
 msgid "Djvu Documents"
 msgstr "ཌིཇི་བུ་ཡིག་ཆ།"
 
-#: ../shell/ev-document-types.c:185
+#: ../shell/ev-document-types.c:189
+msgid "Comic Books"
+msgstr "པར་སྲུང་ཀི་དེབ།"
+
+#: ../shell/ev-document-types.c:197
 msgid "All Files"
 msgstr "ཡིག་སྣོད་ཆ་མཉམ།"
 
@@ -451,25 +448,25 @@ msgstr "(%d གི་ %d)"
 msgid "of %d"
 msgstr "%d གི།"
 
-#: ../shell/ev-password.c:88
-msgid "Unable to find glade file"
-msgstr "གེ་ལེཌི་ཡིག་སྣོད་འཚོལ་མ་ཐོབ།"
-
-#: ../shell/ev-password.c:90
-#, c-format
-msgid "The glade file, %s, cannot be found.  Please check that your installation is complete."
-msgstr "གེ་ལེཌི་ཡིག་སྣོད་%sའཚོལ་མི་འཐོབ་པས། ཁྱོད་རའི་གཞི་བཙུགས་ ཆ་ཚང་ཨིནམ་མེནམ་ ཞིབ་དཔྱད་འབད་གནང་།"
-
-#: ../shell/ev-password.c:104
+#: ../shell/ev-password.c:83
 msgid "Password required"
 msgstr "ཆོག་ཡིག་དགོ་པ།"
 
-#: ../shell/ev-password.c:105
+#: ../shell/ev-password.c:84
 #, c-format
 msgid "The document <i>%s</i> is locked and requires a password before it can be opened."
 msgstr "ཡིག་ཆ་ <i>%s</i>དེ་ལྡེ་མིག་བརྐྱབས་ཏེ་ཡོདཔ་ལས་ དེ་ཁ་མ་ཕྱེ་བའི་ཧེ་མར་ ཆོག་ཡིག་ཅིག་དགོ་པས།"
 
-#: ../shell/ev-password.c:142
+#: ../shell/ev-password.c:149
+msgid "Enter password"
+msgstr "ཆོག་ཡིག་བཙུགས།"
+
+#: ../shell/ev-password.c:252
+#, c-format
+msgid "Password for document %s"
+msgstr "ཡིག་ཆ་ %s གི་དོན་ལུ་ཆོག་ཡིག"
+
+#: ../shell/ev-password.c:334
 msgid "Incorrect password"
 msgstr "ཆོག་ཡིག་ངེས་བདེན་མེན་པས།"
 
@@ -479,17 +476,17 @@ msgstr "ཡིག་ཆ་འདི་ ལྡེ་མིག་བརྐྱབ�
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
-msgstr "ཡིག་ཆ་ལྡེ་མིག་ཕྱེ།(_u)"
+msgstr "ཡིག་ཆ་ལྡེ་མིག་ཕྱེ།(_U)"
 
 #: ../shell/ev-properties-dialog.c:61
 msgid "Properties"
 msgstr "རྒྱུ་དངོས་ཚུ།"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:94
 msgid "General"
 msgstr "ཡོངས་ཁྱབ།"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:104
 msgid "Fonts"
 msgstr "ཡིག་གཟུགས་ཚུ།"
 
@@ -502,23 +499,44 @@ msgstr "ཡིག་གཟུགས།"
 msgid "Gathering font information... %3d%%"
 msgstr "ཡིག་གཟུགས་བརྡ་དོན་...%3d%%བསྡུ་ལེན་འབད་དོ།"
 
-#: ../shell/ev-sidebar-links.c:242
+#: ../shell/ev-sidebar-links.c:254
+#: ../shell/ev-view.c:2081
 msgid "Loading..."
 msgstr "མངོན་གསལ་འབད་དོ་..."
 
-#: ../shell/ev-sidebar-links.c:304
+#: ../shell/ev-sidebar-links.c:318
 msgid "Print..."
 msgstr "དཔར་བསྐྲུན་..."
 
-#: ../shell/ev-sidebar-links.c:657
+#: ../shell/ev-sidebar-links.c:686
 msgid "Index"
 msgstr "ཟུར་ཐོ།"
 
 #: ../shell/ev-sidebar-thumbnails.c:669
 msgid "Thumbnails"
-msgstr "མཐེ་གཟེར།"
+msgstr "མཐེབ་གཟེར།"
 
-#: ../shell/ev-view.c:1094
+#: ../shell/ev-view-accessible.c:42
+msgid "Scroll Up"
+msgstr "ཡར་སྒྲིལ།"
+
+#: ../shell/ev-view-accessible.c:43
+msgid "Scroll Down"
+msgstr "མར་སྒྲིལ།"
+
+#: ../shell/ev-view-accessible.c:49
+msgid "Scroll View Up"
+msgstr "བཤུད་སྒྲིལ་མཐོང་སྣང་ཡར།"
+
+#: ../shell/ev-view-accessible.c:50
+msgid "Scroll View Down"
+msgstr "བཤུད་སྒྲིལ་མཐོང་སྣང་མར།"
+
+#: ../shell/ev-view-accessible.c:536
+msgid "Document View"
+msgstr "ཡིག་ཆའི་མཐོང་སྣང་།"
+
+#: ../shell/ev-view.c:1250
 #, c-format
 msgid "Go to page %s"
 msgstr "ཤོག་ལེབ་%sལུ་འགྱོ།"
@@ -526,93 +544,75 @@ msgstr "ཤོག་ལེབ་%sལུ་འགྱོ།"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2750
+#: ../shell/ev-view.c:3284
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d ཤོག་ལེབ་འདི་གེ་ཐོབ་ཅི།"
 msgstr[1] "%d ཤོག་ལེབ་འདི་གེ་ཐོབ་ཅི།"
 
-#: ../shell/ev-view.c:2760
-msgid "Not found"
-msgstr "མ་ཐོབ།"
-
-#: ../shell/ev-view.c:2762
+#: ../shell/ev-view.c:3293
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "འཚོལ་ཞིབ་འབད་ནི་ %3d%% ལྷག་ལུས་ཡོད།"
 
-#: ../shell/ev-window.c:555
+#: ../shell/ev-window.c:585
 msgid "Unable to open document"
 msgstr "ཡིག་ཆ་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:602
-msgid "Document Viewer - Password Required"
-msgstr "ཡིག་ཆ་མཐོང་བྱེད་ - ཆོག་ཡིག་དགོ་པས།"
-
-#: ../shell/ev-window.c:604
-#, c-format
-msgid "%s - Password Required"
-msgstr "%s - ལུ་ཆོག་ཡིག་དགོ་པས།"
-
-#: ../shell/ev-window.c:739
-#: ../shell/ev-window.c:1067
-msgid "Loading document. Please wait"
-msgstr "ཡིག་ཆ་མངོན་གསལ་འབད་དོ། བསྒུག་གནང་།"
-
-#: ../shell/ev-window.c:1078
+#: ../shell/ev-window.c:1123
 msgid "Open Document"
 msgstr "ཡིག་ཆ་ཁ་ཕྱེ།"
 
-#: ../shell/ev-window.c:1218
+#: ../shell/ev-window.c:1202
 #, c-format
 msgid "The file could not be saved as \"%s\"."
 msgstr "ཡིག་སྣོད་དེ་ \"%s\" སྦེ་བསྲུང་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:1243
+#: ../shell/ev-window.c:1246
 msgid "Save a Copy"
 msgstr "འདྲ་ཅིག་སྲུངས།"
 
-#: ../shell/ev-window.c:1424
-msgid "Print"
-msgstr "དཔར་བསྐྲུན།"
-
-#: ../shell/ev-window.c:1428
-msgid "Pages"
-msgstr "ཤོག་གྲངས།"
-
-#: ../shell/ev-window.c:1456
+#: ../shell/ev-window.c:1311
 msgid "Generating PDF is not supported"
 msgstr "པི་ཌི་ཨེཕ་བཟོ་བཏོན་འབད་ནི་ལུ་ རྒྱབ་སྐྱོར་མིན་འདུག"
 
-#: ../shell/ev-window.c:1467
+#: ../shell/ev-window.c:1320
 msgid "Printing is not supported on this printer."
 msgstr "དཔར་འཕྲུལ་འདི་གུ་ དཔར་བསྐྲུན་ལུ་ རྒྱབ་སྐྱོར་མིན་འདུག"
 
-#: ../shell/ev-window.c:1470
+#: ../shell/ev-window.c:1323
 #, c-format
 msgid "You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."
 msgstr "ཁྱོད་ཀྱིས་འདྲེན་བྱེད་ \"%s\"ལག་ལེན་འཐབ་ཐོག་ལས་ དཔར་བསྐྲུན་འབད་ནིའི་རྩིས་བརྐྱབས་དོ། ལས་རིམ་འདི་ལུ་ པོསིཊི་སི་ཀིརིཔཊི་ དཔར་འཕྲུལ་འདྲེན་བྱེད་ཅིག་དགོ"
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1368
+msgid "Print"
+msgstr "དཔར་བསྐྲུན།"
+
+#: ../shell/ev-window.c:1374
+msgid "Pages"
+msgstr "ཤོག་གྲངས།"
+
+#: ../shell/ev-window.c:1435
 msgid "The \"Find\" feature will not work with this document"
 msgstr "\"Find\" ཁྱད་རྣམ་དེ་གིས་ ཡིག་ཆ་འདི་དང་གཅིག་ཁར་ ལཱ་འབད་མི་བཏུབ།"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1437
 msgid "Searching for text is only supported for PDF documents."
 msgstr "ཚིག་ཡིག་གི་དོན་ལུ་ འཚོལ་ཞིབ་འབད་ནི་དེ་ པི་ཌི་ཨེཕ་ཡིག་ཆའི་དོན་ལུ་རྐྱངམ་གཅིག་ རྒྱབ་སྐྱོར་ཡོད།"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1779
-#: ../shell/ev-window.c:2953
+#: ../shell/ev-window.c:1668
+#: ../shell/ev-window.c:2870
 msgid "Leave Fullscreen"
 msgstr "གསལ་གཞང་གངམ་བཞག"
 
-#: ../shell/ev-window.c:2086
-msgid "Toolbar editor"
+#: ../shell/ev-window.c:1997
+msgid "Toolbar Editor"
 msgstr "ལག་ཆས་ཕྲ་རིང་ཞུན་དགཔ།"
 
-#: ../shell/ev-window.c:2455
+#: ../shell/ev-window.c:2373
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -621,7 +621,7 @@ msgstr ""
 "པོསིཊི་སི་ཀིརིཔཊི་དང་ པི་ཌི་ཨེཕ་ཡིག་སྣོད་མཐོང་བྱེད།\n"
 "པོཔ་ལར་ %s (%s)ལག་ལེན་འཐབ་དོ།"
 
-#: ../shell/ev-window.c:2478
+#: ../shell/ev-window.c:2396
 msgid ""
 "Evince is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -632,7 +632,7 @@ msgstr ""
 " དཔེ་བསྐྲུན་འབད་མི་ ཇི་ཨེན་ཡུ་ཡོངས་ཁྱབ་མི་མང་ཆོག་ཐམ་གྱི་ཁ་ཚིག་དང་འཁྲིལ་ཏེ་\n"
 " ཁྱོད་ཀྱིས་ཆོག་ཐམ་ཐོན་རིམ་༢ ཡང་ན་ (ཁྱོད་རའི་གདམ་ཁ་བཞིན) ཤུལ་ལས་ཀྱི་ཐོན་རིམ་གང་རུང་ བསྐྱར་འགྲེམ་འབད་བའམ་ ལེགས་བཅོས་འབད་ཆོག\n"
 
-#: ../shell/ev-window.c:2482
+#: ../shell/ev-window.c:2400
 msgid ""
 "Evince is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -643,7 +643,7 @@ msgstr ""
 "དམིགས་བསལ་དགོས་དོན་ཅིག་གི་དོན་ལུ་ ཚུད་སྒྲིག་ཡོད་མེད་ཀྱི་\n"
 "ཉེན་ལེན་ཙམ་ཡང་མེད། ཁ་གསལ་གྱི་དོན་ལུ་ ཇི་ཨེན་ཡུ་ མི་མང་ཆོག་ཐམ་ལུ་གཟིགས་གནང་།\n"
 
-#: ../shell/ev-window.c:2486
+#: ../shell/ev-window.c:2404
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
@@ -653,337 +653,277 @@ msgstr ""
 "འདྲ་ཅིག་ཐོ་ཐོབ་འོང་། གལ་སྲིད་མ་ཐོབ་པ་ཅིན་ གཤམ་གསལ་ཁ་བྱང་ ལུ་ཡི་གུ་སྐྱེལ་གནང་:Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2510
+#: ../shell/ev-window.c:2428
 #: ../shell/main.c:259
 msgid "Evince"
 msgstr "ཨི་བིནསི།"
 
-#: ../shell/ev-window.c:2513
+#: ../shell/ev-window.c:2431
 msgid "© 1996-2005 The Evince authors"
 msgstr "འདྲ་བཤུད་བདག་དབང་ ༡༩༩༦-༢༠༠༥ ཨི་བིནསི་རྩོམ་པ་རོ་ཚུ་ལུ་ཡོད།"
 
-#: ../shell/ev-window.c:2519
+#: ../shell/ev-window.c:2437
 msgid "translator-credits"
 msgstr "\"ཨའི་ཌི་ཨར་སི་གི་མ་དངུལ་རྒྱབ་སྐྱོར་ཐོག་ལས་ བརྡ་དོན་འཕྲུལ་རིག་ལས་ཁུངས་ནང་ སྐད་བསྒྱུར་འབད་ཡི། ཁ་གསལ་གྱི་དོན་ལུ་ འབྲེལ་བ་འཐབ་ས་: <pema_geyleg@druknet.bt>/<pgeyleg@dit.gov.bt>\"།"
 
-#: ../shell/ev-window.c:2872
+#: ../shell/ev-window.c:2799
 msgid "_File"
 msgstr "ཡིག་སྣོད།(_F)"
 
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2800
 msgid "_Edit"
 msgstr "ཞུན་དག(_E)"
 
-#: ../shell/ev-window.c:2874
+#: ../shell/ev-window.c:2801
 msgid "_View"
 msgstr "མཐོང་སྣང་།(_V)"
 
-#: ../shell/ev-window.c:2875
+#: ../shell/ev-window.c:2802
 msgid "_Go"
 msgstr "འགྱོ།(_G)"
 
-#: ../shell/ev-window.c:2876
+#: ../shell/ev-window.c:2803
 msgid "_Help"
 msgstr "གྲོགས་རམ།(_H)"
 
 #. File menu
-#: ../shell/ev-window.c:2879
+#: ../shell/ev-window.c:2806
 msgid "_Open..."
 msgstr "ཁ་ཕྱེ་...(_O)"
 
-#: ../shell/ev-window.c:2880
+#: ../shell/ev-window.c:2807
 msgid "Open an existing document"
 msgstr "གནས་བཞིན་པའི་ཡིག་ཆ་ཅིག་ཁ་ཕྱེ།"
 
-#: ../shell/ev-window.c:2882
+#: ../shell/ev-window.c:2809
 msgid "_Save a Copy..."
 msgstr "འདྲ་བཤུས་ཅིག་སྲུངས་...(_S)"
 
-#: ../shell/ev-window.c:2883
-msgid "Save the current document with a new filename"
-msgstr "ད་ལྟོའི་ཡིག་ཆ་དེ་ ཡིག་སྣོད་མིང་གསརཔ་ཅིག་གི་ཐོག་ལས་སྲུངས།"
+#: ../shell/ev-window.c:2810
+msgid "Save a copy of the current document"
+msgstr "ད་ལྟོའི་ཡིག་ཆའི་འདྲ་ཅིག་སྲུངས།"
 
-#: ../shell/ev-window.c:2885
+#: ../shell/ev-window.c:2812
 msgid "_Print..."
 msgstr "དཔར་བསྐྲུན་...(_P)"
 
-#: ../shell/ev-window.c:2886
+#: ../shell/ev-window.c:2813
 msgid "Print this document"
 msgstr "ཡིག་ཆ་འདི་དཔར་བསྐྲུན་འབད།"
 
-#: ../shell/ev-window.c:2888
+#: ../shell/ev-window.c:2815
 msgid "P_roperties"
 msgstr "རྒྱུ་དངོས་ཚུ།(_r)"
 
-#: ../shell/ev-window.c:2889
-msgid "View the properties of this document"
-msgstr "ཡིག་ཆ་འདི་གི་རྒྱུ་དངོས་ཚུ་སྟོན།"
-
-#: ../shell/ev-window.c:2892
-msgid "Close this window"
-msgstr "སྒོ་སྒྲིག་འདི་ཁ་བསྡམས།"
-
-#: ../shell/ev-window.c:2897
-msgid "Copy text from the document"
-msgstr "ཡིག་ཆ་ནང་ལས་ཚིག་ཡིག་འདྲ་བཤུས་རྐྱབས།"
-
-#: ../shell/ev-window.c:2899
+#: ../shell/ev-window.c:2823
 msgid "Select _All"
 msgstr "ཆ་མཉམ་སེལ་འཐུ་འབད།(_A)"
 
-#: ../shell/ev-window.c:2900
-msgid "Select the entire page"
-msgstr "ཤོག་ལེབ་ཧྲིལ་བུ་སེལ་འཐུ་འབད།"
-
-#: ../shell/ev-window.c:2903
-#: ../shell/ev-window.c:2961
+#: ../shell/ev-window.c:2826
 msgid "Find a word or phrase in the document"
 msgstr "ཡིག་ཆའི་ནང་ མིང་ཚིག་ཅིག་ ཡང་ན་ ཚིག་ཚན་ཅིག་འཚོལ།"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:2828
 msgid "Find Ne_xt"
 msgstr "ཤུལ་མམ་འཚོལ།(_x)"
 
-#: ../shell/ev-window.c:2906
-msgid "Find next occurrence of the word or phrase"
-msgstr "མིང་ཚིག་་ཡང་ན་ ཚིག་ཚན་གྱི་འབྱུང་བ་འཚོལ།"
-
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2830
 msgid "T_oolbar"
 msgstr "ལག་ཆས་ཕྲ་རིང་།(_o)"
 
-#: ../shell/ev-window.c:2909
-msgid "Customize the toolbar"
-msgstr "ལག་ཆས་ཕྲ་རིང་སྲོལ་སྒྲིག་འབད།"
-
-#: ../shell/ev-window.c:2911
+#: ../shell/ev-window.c:2832
 msgid "Rotate _Left"
 msgstr "གཡོན་ལུ་བསྒྱིར།(_L)"
 
-#: ../shell/ev-window.c:2912
-msgid "Rotate the document to the left"
-msgstr "ཡིག་ཆ་དེ་གཡོན་ལུ་བསྒྱིར།"
-
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:2834
 msgid "Rotate _Right"
 msgstr "གཡས་ལུ་བསྒྱིར།(_R)"
 
-#: ../shell/ev-window.c:2915
-msgid "Rotate the document to the right"
-msgstr "ཡིག་ཆ་དེ་གཡས་ལུ་བསྒྱིར།"
-
-#: ../shell/ev-window.c:2920
-#: ../shell/ev-window.c:2982
-#: ../shell/ev-window.c:2985
-#: ../shell/ev-window.c:3000
+#: ../shell/ev-window.c:2839
 msgid "Enlarge the document"
 msgstr "ཡིག་ཆ་ཆེར་བསྐྱེད།"
 
-#: ../shell/ev-window.c:2923
-#: ../shell/ev-window.c:2988
-#: ../shell/ev-window.c:3003
+#: ../shell/ev-window.c:2842
 msgid "Shrink the document"
 msgstr "ཡིག་ཆ་སྐུམས།"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:2844
 msgid "_Reload"
 msgstr "སླར་མངོན་གསལ་འབད།(_R)"
 
-#: ../shell/ev-window.c:2926
+#: ../shell/ev-window.c:2845
 msgid "Reload the document"
 msgstr "ཡིག་ཆ་སླར་མངོན་གསལ་འབད།"
 
 #. Go menu
-#: ../shell/ev-window.c:2930
+#: ../shell/ev-window.c:2849
 msgid "_Previous Page"
 msgstr "ཤོག་ལེབ་ཧེ་མམ།(_P)"
 
-#: ../shell/ev-window.c:2931
+#: ../shell/ev-window.c:2850
 msgid "Go to the previous page"
 msgstr "ཤོག་ལེབ་ཧེ་མམ་ལུ་འགྱོ།"
 
-#: ../shell/ev-window.c:2933
+#: ../shell/ev-window.c:2852
 msgid "_Next Page"
 msgstr "ཤོག་ལེབ་ཤུལ་མམ།(_N)"
 
-#: ../shell/ev-window.c:2934
+#: ../shell/ev-window.c:2853
 msgid "Go to the next page"
 msgstr "ཤོག་ལེབ་ཤུལ་མམ་ལུ་འགྱོ།"
 
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:2855
 msgid "_First Page"
 msgstr "ཤོག་ལེབ་དང་པ།(_F)"
 
-#: ../shell/ev-window.c:2937
+#: ../shell/ev-window.c:2856
 msgid "Go to the first page"
 msgstr "ཤོག་ལེབ་དང་པ་ལུ་འགྱོ།"
 
-#: ../shell/ev-window.c:2939
+#: ../shell/ev-window.c:2858
 msgid "_Last Page"
 msgstr "མཐའ་མཇུག་ཤོག་ལེབ།(_L)"
 
-#: ../shell/ev-window.c:2940
+#: ../shell/ev-window.c:2859
 msgid "Go to the last page"
 msgstr "མཐའ་མཇུག་ཤོག་ལེབ་ལུ་འགྱོ།"
 
 #. Help menu
-#: ../shell/ev-window.c:2944
+#: ../shell/ev-window.c:2863
 msgid "_Contents"
 msgstr "ནང་དོན་ཚུ།(_C)"
 
-#: ../shell/ev-window.c:2945
-msgid "Display help for the viewer application"
-msgstr "མཐོང་བྱེད་གློག་རིམ་གྱི་དོན་ལུ་ གྲོགས་རམ་སྟོན།"
-
-#: ../shell/ev-window.c:2948
+#: ../shell/ev-window.c:2866
 msgid "_About"
 msgstr "སྐོར་ལས།(_A)"
 
-#: ../shell/ev-window.c:2949
-msgid "Display credits for the document viewer creators"
-msgstr "ཡིག་ཆ་མཐོང་བྱེད་ གསར་སྐྲུན་པའི་དོན་ལུ་ ངོ་བསྟོད་བཀྲམ་སྟོན་འབད།"
-
-#: ../shell/ev-window.c:2954
+#: ../shell/ev-window.c:2871
 msgid "Leave fullscreen mode"
 msgstr "གསལ་གཞི་གངམ་གི་ཐབས་ལམ་བཞག"
 
-#: ../shell/ev-window.c:2964
-#: ../shell/ev-window.c:2970
-#: ../shell/ev-window.c:2979
-msgid "Scroll one page forward"
-msgstr "ཤོག་ལེབ་གཅིག་གདོང་ཕྱོགས་ལུ་སྒྲིལ།"
-
-#: ../shell/ev-window.c:2967
-#: ../shell/ev-window.c:2973
-#: ../shell/ev-window.c:2976
-msgid "Scroll one page backward"
-msgstr "ཤོག་ལེབ་གཅིག་རྒྱབ་ཕྱོགས་ལུ་སྒྲིལ།"
-
-#: ../shell/ev-window.c:2991
-msgid "Focus the page selector"
-msgstr "ཤོག་ལེབ་སེལ་བྱེད་དེ་ལུ་ཆེད་དམིགས་འབད།"
-
-#: ../shell/ev-window.c:2994
-msgid "Go ten pages backward"
-msgstr "ཤོག་ལེབ་བཅུ་ཐམ་གྱི་རྒྱབ་ཁར་སོང་།"
-
-#: ../shell/ev-window.c:2997
-msgid "Go ten pages forward"
-msgstr "ཤོག་ལེབ་བཅུ་ཐམ་གྱི་གདོང་ཁར་སོང་།"
-
 #. View Menu
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:2922
 msgid "_Toolbar"
 msgstr "ལག་ཆས་ཕྲ་རིང་།(_T)"
 
-#: ../shell/ev-window.c:3011
+#: ../shell/ev-window.c:2923
 msgid "Show or hide the toolbar"
 msgstr "ལག་ཆས་ཕྲ་རིང་སྟོན་ ཡང་ན་ སྦ་བཞག"
 
-#: ../shell/ev-window.c:3013
-msgid "_Statusbar"
-msgstr "གནས་ཚད་ཕྲ་རིང་།(_S)"
-
-#: ../shell/ev-window.c:3014
-msgid "Show or hide the statusbar"
-msgstr "གནས་ཚད་ཕྲ་རིང་སྟོན་ ཡང་ན་ སྦ་བཞག"
-
-#: ../shell/ev-window.c:3016
+#: ../shell/ev-window.c:2925
 msgid "Side _Pane"
-msgstr "ཟུར་ཁའི་པེན།"
+msgstr "ཟུར་ཁའི་པེན།(_P)"
 
-#: ../shell/ev-window.c:3017
+#: ../shell/ev-window.c:2926
 msgid "Show or hide the side pane"
 msgstr "ཟུར་ཁའི་པེན་སྟོན་ ཡང་ན་ སྦ་བཞག"
 
-#: ../shell/ev-window.c:3019
+#: ../shell/ev-window.c:2928
 msgid "_Continuous"
 msgstr "འཕྲོ་མཐུད་ཅན།(_C)"
 
-#: ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:2929
 msgid "Show the entire document"
 msgstr "ཡིག་ཆ་ཧྲིལ་བུ་སྟོན།"
 
-#: ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:2931
 msgid "_Dual"
 msgstr "ྒགཉིས་ལྡན།(_D)"
 
-#: ../shell/ev-window.c:3023
+#: ../shell/ev-window.c:2932
 msgid "Show two pages at once"
 msgstr "ཤོག་ལེབ་གཉིས་སྟབས་གཅིག་ཁར་སྟོན།"
 
-#: ../shell/ev-window.c:3025
+#: ../shell/ev-window.c:2934
 msgid "_Fullscreen"
 msgstr "གསལ་གཞི་གངམ།(_F)"
 
-#: ../shell/ev-window.c:3026
+#: ../shell/ev-window.c:2935
 msgid "Expand the window to fill the screen"
 msgstr "གསལ་གཞི་གང་ནིའི་དོན་ལུ་ སྒོ་སྒྲིག་རྒྱ་འཕར།"
 
-#: ../shell/ev-window.c:3028
+#: ../shell/ev-window.c:2937
 msgid "_Presentation"
 msgstr "གསལ་སྟོན།(_P)"
 
-#: ../shell/ev-window.c:3029
+#: ../shell/ev-window.c:2938
 msgid "Run document as a presentation"
 msgstr "ཡིག་ཆ་གསལ་སྟོན་བཟུམ་ཅིག་སྦེ་གཡོག་བཀོལ།"
 
-#: ../shell/ev-window.c:3031
+#: ../shell/ev-window.c:2940
 msgid "_Best Fit"
 msgstr "ལེགས་སྒྲིག(_B)"
 
-#: ../shell/ev-window.c:3032
+#: ../shell/ev-window.c:2941
 msgid "Make the current document fill the window"
 msgstr "ད་ལྟོའང་ཡིག་ཆ་དེ་གིས་ སྒོ་སྒྲིག་བཀང་།"
 
-#: ../shell/ev-window.c:3034
+#: ../shell/ev-window.c:2943
 msgid "Fit Page _Width"
 msgstr "ཤོག་ལེབ་ཀྱི་རྒྱ་ཚད་སྒྲིག(_W)"
 
-#: ../shell/ev-window.c:3035
+#: ../shell/ev-window.c:2944
 msgid "Make the current document fill the window width"
 msgstr "ད་ལྟོའི་ཡིག་ཆ་དེ་གིས་ སྒོ་སྒྲིག་གི་རྒྱ་ཚད་བཀང་།"
 
-#: ../shell/ev-window.c:3094
+#. Links
+#: ../shell/ev-window.c:2951
+msgid "_Open Link"
+msgstr "འབྲེལ་ལམ་ཁ་ཕྱེ།(_O)"
+
+#: ../shell/ev-window.c:2953
+msgid "_Go To"
+msgstr "ལུ་འགྱོ།(_G)"
+
+#: ../shell/ev-window.c:2955
+msgid "_Copy Link Address"
+msgstr "འབྲེལ་ལམ་ཁ་བྱང་འདྲ་བཤུས་རྐྱབས།(_C)"
+
+#: ../shell/ev-window.c:3015
 msgid "Page"
 msgstr "ཤོག་ལེབ།"
 
-#: ../shell/ev-window.c:3095
+#: ../shell/ev-window.c:3016
 msgid "Select Page"
 msgstr "ཤོག་ལེབ་སེལ་འཐུ་འབད།"
 
-#: ../shell/ev-window.c:3107
+#: ../shell/ev-window.c:3028
 msgid "Zoom"
 msgstr "རྒྱས་ཟུམ།"
 
-#: ../shell/ev-window.c:3109
+#: ../shell/ev-window.c:3030
 msgid "Adjust the zoom level"
 msgstr "རྒྱས་ཟུམ་གནས་རིམ་བདེ་སྒྲིག་འབད།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3125
+#: ../shell/ev-window.c:3046
 msgid "Previous"
 msgstr "ཧེ་མམ།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3131
+#: ../shell/ev-window.c:3052
 msgid "Next"
 msgstr "ཤུལ་མམ།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3135
+#: ../shell/ev-window.c:3056
 msgid "Zoom In"
 msgstr "ཕྱིར་རྒྱས།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3140
+#: ../shell/ev-window.c:3061
 msgid "Zoom Out"
 msgstr "ནང་ན་ཟུམ།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3150
+#: ../shell/ev-window.c:3071
 msgid "Fit Width"
 msgstr "རྒྱ་ཚད་སྒྲིགས།"
+
+#: ../shell/ev-window-title.c:140
+#, c-format
+msgid "%s - Password Required"
+msgstr "%s - ལུ་ཆོག་ཡིག་དགོ་པས།"
 
 #: ../shell/main.c:50
 msgid "The page of the document to display."
@@ -999,17 +939,116 @@ msgstr "ཨི་བིནསི་ཡིག་ཆ་མཐོང་བྱེད
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid "Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails"
-msgstr "འཐོབ་ཚུགས་པའི་བུ་ལིན་གྱི་གདམ་ཁ། བདེན་པ་གིས་མཐེ་གཟེར་བརྡབ་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་པ་གིས་མཐེ་གཟེར་གསར་བསྐྲུན་འབད་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
+msgstr "འཐོབ་ཚུགས་པའི་བུ་ལིན་གྱི་གདམ་ཁ། བདེན་པ་གིས་མཐེབ་གཟེར་བརྡབ་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་པ་གིས་མཐེབ་གཟེར་གསར་བསྐྲུན་འབད་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
-msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ་ལུ་ མཐེ་གཟེར་བརྡབ་ནི་ལྕོགས་ཅན་བཟོ།"
+msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ་ལུ་ མཐེབ་གཟེར་བརྡབ་ནི་ལྕོགས་ཅན་བཟོ།"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
 msgid "Thumbnail command for PDF Documents"
-msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ་གི་དོན་ལུ་ མཐེ་གཟེར་གྱི་བརྡ་བཀོད།"
+msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ་གི་དོན་ལུ་ མཐེབ་གཟེར་གྱི་བརྡ་བཀོད།"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
 msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
-msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ལུ་མཐེ་གཟེར་བརྡབས་མིའི་ ནུས་ཅན་བརྡ་བཀོད་དང་སྒྲུབ་རྟགས་ཚུ། བརྡ་དོན་ཧེང་བཀལ་གྱི་དོན་ལུ་ ནའུ་ཊི་ལཱསི་མཐེ་གཟེར་བརྡབས་མིའི་ཡིག་ཆ་ལུ་བལྟ།"
+msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ལུ་མཐེབ་གཟེར་བརྡབས་མིའི་ ནུས་ཅན་བརྡ་བཀོད་དང་སྒྲུབ་རྟགས་ཚུ། བརྡ་དོན་ཧེང་བཀལ་གྱི་དོན་ལུ་ ནའུ་ཊི་ལཱསི་མཐེབ་གཟེར་བརྡབ་མིའི་ཡིག་ཆ་ལུ་བལྟ།"
+
+#~ msgid "*"
+#~ msgstr "*"
+#~ msgid "Default sidebar size"
+#~ msgstr "ཟུར་ཁའི་ཕྲ་རིང་གི་ཚད་ སྔོན་སྒྲིག་འབད།"
+#~ msgid "Show sidebar by default"
+#~ msgstr "ཟུར་ཁའི་ཕྲ་རིང་ སྔོན་སྒྲིག་ཐོག་ལུ་སྟོན།"
+#~ msgid "Show statusbar by default"
+#~ msgstr "གནས་ཚད་ཕྲ་རིང་ སྔོན་སྒྲིག་ཐོག་ལས་སྟོན།"
+#~ msgid "Show toolbar by default"
+#~ msgstr "ལག་ཆས་ཕྲ་རིང་ སྔོན་སྒྲིག་ཐོག་ལས་སྟོན།"
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
+#~ "default size sets the sidebar's width in pixels based from the side of "
+#~ "the window. Any integer will be accepted. The sidebar will never shrink "
+#~ "smaller than the size of the text required to display Thumbnails or "
+#~ "Index. Large values will cause the sidebar to take up as much of the page "
+#~ "display area as possible relative to the window's size."
+#~ msgstr ""
+#~ "ཟུར་ཁའི་ཕྲ་རིང་དེ་ ཟུར་ཐོ་དང་ མཐེབ་གཟེར་ཐོ་ཡིག་ཚུ་ཡོད་པའི་ ཟུར་ཁའི་རྣམ་གྲངས་ཅིག་ཨིན། ཚད་སྔོན་སྒྲིག་"
+#~ "གིས་ སྒོ་སྒྲིག་གི་ཟུར་ལུ་ གཞི་བཞག་སྟེ་ ཟུར་ཁའི་གྲ་རིང་གི་རྒྱ་ཚད་ པིག་སེལསི་ནང་ གཞི་སྒྲིག་འབདཝ་ཨིན། "
+#~ "ཧྲིང་ཨང་ག་ཅི་ཨིན་རུང་ དང་ལེན་འབད་འོང་། ཟུར་ཁའི་ཕྲ་རིང་དེ་ མཐེབ་གཟེར་དང་ ཟུར་ཐོ་བཀྲམ་སྟོན་འབད་"
+#~ "དགོ་པའི་ ཚིག་ཡིག་ལས་ཆུངམ་སྦེ་ ནམ་ཡང་མི་བསྐུམ། བེ་ལུ་ཆེ་བ་གིས་ སྒོ་སྒྲིག་གི་ཚད་དང་འཁྲིལ་ཏེ་ ཟུར་ཁའི་"
+#~ "ཕྲ་རིང་དེ་གིས་ ཤོག་ལེབ་བཀྲམ་སྟོན་འབད་ནིའི་མངའ་ཁོངས་ ག་དེ་མང་མང་བཟུང་ནི་ལུ་ རྒྱུ་རྐྱེན་འབདཝ་ཨིན།"
+#~ msgid ""
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+#~ "boolean options, true makes sidebar visible by default while false makes "
+#~ "sidebar not visible by default"
+#~ msgstr ""
+#~ "ཟུར་ཁའི་ཕྲ་རིང་དེ་ ཟུར་ཐོ་དང་ མཐེབ་གཟེར་ཐོ་ཡིག་ཚུ་ཡོད་པའི་ ཟུར་ཁའི་རྣམ་གྲངས་དེ་ཨིན། བུ་ལིན་གྱི་གདམ་"
+#~ "ཁ་གཉིས་ཡོད་མི་དེ་ཡང་ བདེན་པ་གིས་ ཟུར་ཁའི་ཕྲ་རིང་དེ་ སྔོན་སྒྲིག་ཐོག་ལས་ མཐོང་ཚུགསཔ་བཟོ་ནི་དང་ "
+#~ "རྫུན་པ་གིས་ སྔོན་སྒྲིག་ཐོག་ལས་ ཟུར་ཁའི་ཕྲ་རིང་ མཐོང་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
+#~ msgid ""
+#~ "Statusbar is the standard bottom bar that display additional information "
+#~ "about links and other actions. Two boolean options, true makes the "
+#~ "statusbar visible by default while false makes sidebar not visible by "
+#~ "default."
+#~ msgstr ""
+#~ "ཟུར་ཁའི་ཕྲ་རིང་དེ་ འབྲེལ་ལམ་དང་ བྱ་བ་གཞན་ཚུ་གི་སྐོར་ལས་ བརྡ་དོན་ཁ་སྐོང་བཀྲམ་སྟོན་འབད་མི་ ཚད་"
+#~ "ལྡན་གཤམ་གྱི་ཕྲ རིང་དེ་ཨིན། བུ་ལིན་གྱི་གདམ་ཁ་གཉིས་ཡོད་མི་དེ་ཡང་ བདེན་པ་གིས་ ཟུར་ཁའི་ཕྲ་རིང་དེ་ "
+#~ "སྔོན་སྒྲིག་ཐོག་ལས་ མཐོང་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་པ་གིས་ སྔོན་སྒྲིག་ཐོག་ལས་ ཟུར་ཁའི་ཕྲ་རིང་ མཐོང་མ་"
+#~ "ཚུགསཔ་བཟོཝ་ཨིན།"
+#~ msgid ""
+#~ "Toolbar is the top bar that contains navigation and zoom controls. Two "
+#~ "boolean options, true makes toolbar visible by default while false makes "
+#~ "toolbar not visible by default."
+#~ msgstr ""
+#~ "ཟུར་ཁའི་ཕྲ་རིང་དེ་ འགྲུལ་བསྐྱོད་དང་ རྒྱས་ཟུམ་ཚད་འཛིན་ཡོད་མི་ མགོའི་ཕྲ་རིང་དེ་ཨིན། བུ་ལིན་གྱི་གདམ་ཁ་"
+#~ "གཉིས་ཡོད་མི་དེ་ཡང་ བདེན་པ་གིས་ ཟུར་ཁའི་ཕྲ་རིང་དེ་ སྔོན་སྒྲིག་ཐོག་ལས་ མཐོང་ཚུགསཔ་བཟོ་ནི་དང་ རྫུན་"
+#~ "པ་གིས་ སྔོན་སྒྲིག་ཐོག་ལས་ ཟུར་ཁའི་ཕྲ་རིང་ མཐོང་མ་ཚུགསཔ་བཟོཝ་ཨིན།"
+#~ msgid "Unable to find glade file"
+#~ msgstr "གེ་ལེཌི་ཡིག་སྣོད་འཚོལ་མ་ཐོབ།"
+#~ msgid ""
+#~ "The glade file, %s, cannot be found.  Please check that your installation "
+#~ "is complete."
+#~ msgstr ""
+#~ "གེ་ལེཌི་ཡིག་སྣོད་%sའཚོལ་མི་འཐོབ་པས། ཁྱོད་རའི་གཞི་བཙུགས་ ཆ་ཚང་ཨིནམ་མེནམ་ ཞིབ་དཔྱད་འབད་གནང་།"
+#~ msgid "Not found"
+#~ msgstr "མ་ཐོབ།"
+#~ msgid "Document Viewer - Password Required"
+#~ msgstr "ཡིག་ཆ་མཐོང་བྱེད་ - ཆོག་ཡིག་དགོ་པས།"
+#~ msgid "Loading document. Please wait"
+#~ msgstr "ཡིག་ཆ་མངོན་གསལ་འབད་དོ། བསྒུག་གནང་།"
+#~ msgid "Save the current document with a new filename"
+#~ msgstr "ད་ལྟོའི་ཡིག་ཆ་དེ་ ཡིག་སྣོད་མིང་གསརཔ་ཅིག་གི་ཐོག་ལས་སྲུངས།"
+#~ msgid "View the properties of this document"
+#~ msgstr "ཡིག་ཆ་འདི་གི་རྒྱུ་དངོས་ཚུ་སྟོན།"
+#~ msgid "Close this window"
+#~ msgstr "སྒོ་སྒྲིག་འདི་ཁ་བསྡམས།"
+#~ msgid "Copy text from the document"
+#~ msgstr "ཡིག་ཆ་ནང་ལས་ཚིག་ཡིག་འདྲ་བཤུས་རྐྱབས།"
+#~ msgid "Select the entire page"
+#~ msgstr "ཤོག་ལེབ་ཧྲིལ་བུ་སེལ་འཐུ་འབད།"
+#~ msgid "Find next occurrence of the word or phrase"
+#~ msgstr "མིང་ཚིག་་ཡང་ན་ ཚིག་ཚན་གྱི་འབྱུང་བ་འཚོལ།"
+#~ msgid "Customize the toolbar"
+#~ msgstr "ལག་ཆས་ཕྲ་རིང་སྲོལ་སྒྲིག་འབད།"
+#~ msgid "Rotate the document to the left"
+#~ msgstr "ཡིག་ཆ་དེ་གཡོན་ལུ་བསྒྱིར།"
+#~ msgid "Rotate the document to the right"
+#~ msgstr "ཡིག་ཆ་དེ་གཡས་ལུ་བསྒྱིར།"
+#~ msgid "Display help for the viewer application"
+#~ msgstr "མཐོང་བྱེད་གློག་རིམ་གྱི་དོན་ལུ་ གྲོགས་རམ་སྟོན།"
+#~ msgid "Display credits for the document viewer creators"
+#~ msgstr "ཡིག་ཆ་མཐོང་བྱེད་ གསར་སྐྲུན་པའི་དོན་ལུ་ ངོ་བསྟོད་བཀྲམ་སྟོན་འབད།"
+#~ msgid "Scroll one page forward"
+#~ msgstr "ཤོག་ལེབ་གཅིག་གདོང་ཕྱོགས་ལུ་སྒྲིལ།"
+#~ msgid "Scroll one page backward"
+#~ msgstr "ཤོག་ལེབ་གཅིག་རྒྱབ་ཕྱོགས་ལུ་སྒྲིལ།"
+#~ msgid "Focus the page selector"
+#~ msgstr "ཤོག་ལེབ་སེལ་བྱེད་དེ་ལུ་ཆེད་དམིགས་འབད།"
+#~ msgid "Go ten pages backward"
+#~ msgstr "ཤོག་ལེབ་བཅུ་ཐམ་གྱི་རྒྱབ་ཁར་སོང་།"
+#~ msgid "Go ten pages forward"
+#~ msgstr "ཤོག་ལེབ་བཅུ་ཐམ་གྱི་གདོང་ཁར་སོང་།"
+#~ msgid "_Statusbar"
+#~ msgstr "གནས་ཚད་ཕྲ་རིང་།(_S)"
+#~ msgid "Show or hide the statusbar"
+#~ msgstr "གནས་ཚད་ཕྲ་རིང་སྟོན་ ཡང་ན་ སྦ་བཞག"
 
