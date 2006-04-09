@@ -26,7 +26,8 @@ GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
 GNOME_DEBUG_CHECK
 
-ALL_LINGUAS="be bg bn br ca cs cy da de dz el en_CA en_GB es et eu fa fi fr gl gu he hi hu id it ja ka ko ku lt lv mk nb ne nl no pa pl pt pt_BR ro ru rw sk sq sr sr@Latn sv th tr uk vi wa zh_CN zh_HK zh_TW"
+AC_SUBST([CONFIG_STATUS_DEPENDENCIES],['$(top_srcdir)/po/LINGUAS'])
+ALL_LINGUAS="`cat "$srcdir/po/LINGUAS" | grep -v '^#'`"
 
 AM_GLIB_GNU_GETTEXT
 
