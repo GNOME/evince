@@ -27,7 +27,7 @@ GNOME_CXX_WARNINGS
 GNOME_DEBUG_CHECK
 
 AC_SUBST([CONFIG_STATUS_DEPENDENCIES],['$(top_srcdir)/po/LINGUAS'])
-ALL_LINGUAS="`cat "$srcdir/po/LINGUAS" | grep -v '^#'`"
+ALL_LINGUAS="`grep -v '^#' "$srcdir/po/LINGUAS"`"
 
 AM_GLIB_GNU_GETTEXT
 
