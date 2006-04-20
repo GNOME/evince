@@ -1,3 +1,15 @@
+2006-04-20  Wouter Bolsterlee  <uws+gnome@xs4all.nl>
+
+	* data/evince-ui.xml:
+	* shell/ev-view.c: (ev_view_can_find_previous):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_update_actions),
+	(ev_window_cmd_edit_find_previous):
+
+	Add support for "Find Previous" as dictated by the GNOME HIG. A
+	menu item is added and some glue code to make it all work is added
+	to various files.
+
 2006-04-09  Wouter Bolsterlee  <uws+gnome@xs4all.nl>
 
 	* configure.ac: Award myself the "useless use of cat" award.

@@ -3430,6 +3430,23 @@ ev_view_find_next (EvView *view)
 	}
 }
 
+gboolean
+ev_view_can_find_previous (EvView *view)
+{
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
+		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+		int i, n_pages;
+
+		n_pages = ev_page_cache_get_n_pages (view->page_cache);
+		for (i = n_pages - 1; i >= 0; i--) {
+			if (ev_document_find_get_n_results (find, i) > 0) {
+				return TRUE;
+			}
+		}
+	}
+
+	return FALSE;
+}
 void
 ev_view_find_previous (EvView *view)
 {

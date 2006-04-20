@@ -335,6 +335,8 @@ ev_window_update_actions (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "EditCopy", has_pages && ev_view_get_has_selection (view));
 	ev_window_set_action_sensitive (ev_window, "EditFindNext",
 			      ev_view_can_find_next (view));
+	ev_window_set_action_sensitive (ev_window, "EditFindPrevious",
+			      ev_view_can_find_previous (view));
 
 	ev_window_set_action_sensitive (ev_window, "ViewZoomIn",
 			      has_pages && ev_view_can_zoom_in (view));
@@ -1444,6 +1446,14 @@ ev_window_cmd_edit_find_next (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	ev_view_find_next (EV_VIEW (ev_window->priv->view));
+}
+
+static void
+ev_window_cmd_edit_find_previous (GtkAction *action, EvWindow *ev_window)
+{
+        g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	ev_view_find_previous (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -2848,6 +2858,8 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_edit_find) },
 	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_find_next) },
+	{ "EditFindPrevious", NULL, N_("Find Pre_vious"), "<shift><control>G", NULL,
+	  G_CALLBACK (ev_window_cmd_edit_find_previous) },
         { "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
           G_CALLBACK (ev_window_cmd_edit_toolbar) },
 	{ "EditRotateLeft", NULL, N_("Rotate _Left"), NULL, NULL,
