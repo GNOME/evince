@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-21 17:07+0200\n"
-"PO-Revision-Date: 2006-04-21 17:07+0200\n"
-"Last-Translator: Wouter Bolsterlee <uws+gnome@xs4all.nl>\n"
+"POT-Creation-Date: 2006-04-23 13:41+0200\n"
+"PO-Revision-Date: 2006-04-23 18:56+0200\n"
+"Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,7 @@ msgstr "Alle documenten"
 
 #: ../backend/ev-document-factory.c:343
 msgid "PostScript Documents"
-msgstr "PostScript documenten"
+msgstr "PostScript-documenten"
 
 #: ../backend/ev-document-factory.c:352
 msgid "PDF Documents"
@@ -157,6 +157,7 @@ msgstr "400%"
 msgid "Document Viewer"
 msgstr "Documentenviewer"
 
+# dit is de tooltip die in het hoofdmenu bij het programma Evince verschijnt
 # multipagina-documenten
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multipage documents"
@@ -178,9 +179,10 @@ msgstr "_Wachtwoord:"
 msgid "<b>Author:</b>"
 msgstr "<b>Auteur:</b>"
 
+# er komt te staan: Aangemaakt op: [datum]
 #: ../data/evince-properties.glade.h:2
 msgid "<b>Created:</b>"
-msgstr "<b>Aangemaakt:</b>"
+msgstr "<b>Aangemaakt op:</b>"
 
 #: ../data/evince-properties.glade.h:3
 msgid "<b>Creator:</b>"
@@ -191,14 +193,16 @@ msgstr "<b>Maker:</b>"
 msgid "<b>Format:</b>"
 msgstr "<b>Formaattype:</b>"
 
+# Sleutelwoorden/trefwoorden
 #: ../data/evince-properties.glade.h:5
 msgid "<b>Keywords:</b>"
-msgstr "<b>Sleutelwoorden:</b>"
+msgstr "<b>Trefwoorden:</b>"
 
 # gewijzigd/aangepast
+# Er komt te staan: Laatste wijziging: [datum]
 #: ../data/evince-properties.glade.h:6
 msgid "<b>Modified:</b>"
-msgstr "<b>Aangepast:</b>"
+msgstr "<b>Laatste wijziging:</b>"
 
 #: ../data/evince-properties.glade.h:7
 msgid "<b>Number of Pages:</b>"
@@ -208,13 +212,17 @@ msgstr "<b>Aantal pagina's:</b>"
 msgid "<b>Optimized:</b>"
 msgstr "<b>Geoptimaliseerd:</b>"
 
+# hier wordt het programma weergegeven waarmee het document
+# is gemaakt: dus bijv:
+# Programma: Acrobat distiller 6.0.1. for Macintosh
 #: ../data/evince-properties.glade.h:9
 msgid "<b>Producer:</b>"
-msgstr "<b>Producent:</b>"
+msgstr "<b>Programma:</b>"
 
+# er komt te staan: beveiligd: ja/nee
 #: ../data/evince-properties.glade.h:10
 msgid "<b>Security:</b>"
-msgstr "<b>Beveiliging:</b>"
+msgstr "<b>Beveiligd:</b>"
 
 #: ../data/evince-properties.glade.h:11
 msgid "<b>Subject:</b>"
@@ -284,10 +292,10 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "Onbekend soort lettertype"
 
-# was eerst: geen
+# geen/naamloos/zonder naam/geen naam
 #: ../pdf/ev-poppler.cc:772
 msgid "No name"
-msgstr "Geen naam"
+msgstr "Naamloos"
 
 # deel/onderdeel
 #: ../pdf/ev-poppler.cc:780
@@ -306,10 +314,12 @@ msgstr "Niet ingebed"
 msgid "Document"
 msgstr "Document"
 
+# Niets/geen
 #: ../properties/ev-properties-view.c:173
 msgid "None"
 msgstr "Geen"
 
+# technische term
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
 msgstr "BBox"
@@ -319,22 +329,27 @@ msgstr "BBox"
 msgid "Letter"
 msgstr "Letter"
 
+# papierformaat
 #: ../ps/gsdefaults.c:32
 msgid "Tabloid"
 msgstr "Tabloid"
 
+# papierformaat
 #: ../ps/gsdefaults.c:33
 msgid "Ledger"
 msgstr "Ledger"
 
+# papierformaat
 #: ../ps/gsdefaults.c:34
 msgid "Legal"
 msgstr "Legal"
 
+# papierformaat
 #: ../ps/gsdefaults.c:35
 msgid "Statement"
 msgstr "Statement"
 
+# papierformaat
 #: ../ps/gsdefaults.c:36
 msgid "Executive"
 msgstr "Executive"
@@ -385,11 +400,11 @@ msgstr "10x14"
 
 #: ../ps/ps-document.c:136
 msgid "No document loaded."
-msgstr "Geen document geladen"
+msgstr "Geen document geladen."
 
 #: ../ps/ps-document.c:590
 msgid "Broken pipe."
-msgstr "Gebroken pijp."
+msgstr "Gebroken pijplijn."
 
 #: ../ps/ps-document.c:774
 msgid "Interpreter failed."
@@ -407,7 +422,7 @@ msgstr "Kan bestand %s niet openen.\n"
 
 #: ../ps/ps-document.c:965
 msgid "File is not readable."
-msgstr "Bestand is onleesbaar"
+msgstr "Bestand is onleesbaar."
 
 #: ../ps/ps-document.c:985
 msgid "Document loaded."
@@ -428,6 +443,7 @@ msgstr ""
 msgid "Failed to load document '%s'"
 msgstr "Kon het document '%s' niet openen"
 
+# technische term?
 #: ../ps/ps-document.c:1267
 msgid "Encapsulated PostScript"
 msgstr "Ingekapseld PostScript"
@@ -524,13 +540,11 @@ msgstr ""
 msgid "Enter password"
 msgstr "Voer wachtwoord in"
 
-# niet in staat/kon
 #: ../shell/ev-password.c:252
 #, c-format
 msgid "Password for document %s"
 msgstr "Wachtwoord voor document %s"
 
-# invoeren hier met opzet weggelaten
 #: ../shell/ev-password.c:334
 msgid "Incorrect password"
 msgstr "Onjuist wachtwoord"
@@ -728,6 +742,7 @@ msgstr ""
 msgid "Evince"
 msgstr "Evince"
 
+# makers/auteurs
 #: ../shell/ev-window.c:2422
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 De auteurs van Evince"
@@ -736,6 +751,8 @@ msgstr "© 1996-2005 De auteurs van Evince"
 msgid "translator-credits"
 msgstr ""
 "Tino Meinen\n"
+"Wouter Bolsterlee\n"
+"Reinout van Schouwen\n"
 "Kijk voor meer informatie op http://nl.gnome.org/"
 
 #: ../shell/ev-window.c:2830
@@ -815,13 +832,15 @@ msgstr "Vo_rige zoeken"
 msgid "T_oolbar"
 msgstr "_Werkbalk"
 
+# Linksom/naar links
 #: ../shell/ev-window.c:2865
 msgid "Rotate _Left"
-msgstr "_Links draaien"
+msgstr "_Linksom draaien"
 
+# rechtsom/naar rechts
 #: ../shell/ev-window.c:2867
 msgid "Rotate _Right"
-msgstr "_Rechts draaien"
+msgstr "_Rechtsom draaien"
 
 #: ../shell/ev-window.c:2872
 msgid "Enlarge the document"
