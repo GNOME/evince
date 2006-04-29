@@ -221,7 +221,7 @@ if test "x$enable_djvu" = "xyes"; then
 
 DJVULIBRE_REQUIRED=3.5.17
 
-PKG_CHECK_MODULES(DJVU, ddjvuapi >= 3.5.17, enable_djvu=yes, enable_djvu=no)
+PKG_CHECK_MODULES(DJVU, ddjvuapi >= $DJVULIBRE_REQUIRED, enable_djvu=yes, enable_djvu=no)
 
     if test "x$enable_djvu" = "xyes"; then
         AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])

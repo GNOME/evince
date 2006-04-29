@@ -424,6 +424,7 @@ static void
 view_update_range_and_current_page (EvView *view)
 {
 	gint current_page;
+	gint best_current_page = -1;
 	
 	if (view->pending_scroll != SCROLL_TO_KEEP_POSITION)
 		return;
@@ -436,6 +437,7 @@ view_update_range_and_current_page (EvView *view)
 		GdkRectangle current_area, unused, page_area;
 		GtkBorder border;
 		gboolean found = FALSE;
+		gint area_max, area;
 		int i;
 
 		if (!(view->vadjustment && view->hadjustment))
@@ -451,44 +453,50 @@ view_update_range_and_current_page (EvView *view)
 			get_page_extents (view, i, &page_area, &border);
 
 			if (gdk_rectangle_intersect (&current_area, &page_area, &unused)) {
-				if (! found) {
+				area = unused.width * unused.height;
+
+				if (!found) {
+					area_max = area;
 					view->start_page = i;
 					found = TRUE;
-
+					best_current_page = i;
 				}
+				if (area > area_max) {
+					best_current_page = (area == area_max) ? MIN (i, best_current_page) : i;
+					area_max = area;
+				}
+
 				view->end_page = i;
 			} else if (found) {
 				break;
 			}
 		}
 
-	} else {
-		if (view->dual_page) {
-			if (view->current_page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) {
-				view->start_page = view->current_page;
-				if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
-					view->end_page = view->start_page + 1;
-				else 
-					view->end_page = view->start_page;
-			} else {
-				if (view->current_page < 1)
-					view->start_page = view->current_page;
-				else
-					view->start_page = view->current_page - 1;
-				view->end_page = view->current_page;
-			}
-		} else {
+	} else if (view->dual_page) {
+		if (view->current_page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) {
 			view->start_page = view->current_page;
+			if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
+				view->end_page = view->start_page + 1;
+			else 
+				view->end_page = view->start_page;
+		} else {
+			if (view->current_page < 1)
+				view->start_page = view->current_page;
+			else
+				view->start_page = view->current_page - 1;
 			view->end_page = view->current_page;
 		}
-
+	} else {
+		view->start_page = view->current_page;
+		view->end_page = view->current_page;
 	}
 
+	best_current_page = MAX (best_current_page, view->start_page);
 	current_page = ev_page_cache_get_current_page (view->page_cache);
 
-	if (current_page < view->start_page || current_page > view->end_page) {
-		view->current_page = view->start_page;
-		ev_page_cache_set_current_page (view->page_cache, view->start_page);
+	if (current_page != best_current_page) {
+		view->current_page = best_current_page;
+		ev_page_cache_set_current_page (view->page_cache, best_current_page);
 	}
 
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
@@ -646,7 +654,6 @@ ev_view_scroll (EvView        *view,
 		       adjustment->upper - adjustment->page_size);	
 
 	gtk_adjustment_set_value (adjustment, value);
-
 }
 
 #define MARGIN 5
