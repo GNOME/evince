@@ -218,20 +218,17 @@ AC_ARG_ENABLE(djvu,
             [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu="$enableval",enable_djvu=no)
 
 if test "x$enable_djvu" = "xyes"; then
-    AC_CHECK_HEADERS([libdjvu/ddjvuapi.h],enable_djvu=yes,enable_djvu=no,)
 
-    if test "x$enable_djvu" = "xyes"; then
-	AC_CHECK_LIB([djvulibre],ddjvu_context_create,enable_djvu=yes,enable_djvu=no,"-lpthread")
-	AC_CHECK_LIB([djvulibre],ddjvu_document_get_pageinfo,enable_djvu=yes,enable_djvu=no,"-lpthread")
-	AC_CHECK_LIB([djvulibre],ddjvu_document_get_pagetext,enable_djvu=yes,enable_djvu=no,"-lpthread")
-    fi
+DJVULIBRE_REQUIRED=3.5.17
+
+PKG_CHECK_MODULES(DJVU, ddjvuapi >= 3.5.17, enable_djvu=yes, enable_djvu=no)
 
     if test "x$enable_djvu" = "xyes"; then
         AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
     else
 	AC_MSG_WARN([	
 ** Djvu support is disabled since a recent version of the djvulibre 
-** library was not found. You need at least djvulibre-3.5.16 which 
+** library was not found. You need at least djvulibre-3.5.17 which 
 ** can be found on http://djvulibre.djvuzone.org 
 ])
     fi 

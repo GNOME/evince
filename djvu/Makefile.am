@@ -3,7 +3,8 @@ INCLUDES = \
 	-I$(top_srcdir)/backend					\
 	-I$(top_srcdir)/lib					\
 	-DGNOMEICONDIR=\""${prefix}/${DATADIRNAME}/pixmaps"\" 	\
-	$(LIB_CFLAGS)
+	$(LIB_CFLAGS)						\
+	$(DJVU_CFLAGS)
 
 noinst_LTLIBRARIES = libgtkdjvu.la
 
@@ -16,6 +17,6 @@ libgtkdjvu_la_SOURCES = \
 	djvu-text-page.c \
 	djvu-text-page.h
 
-libgtkdjvu_la_LIBADD = -lpthread -ldjvulibre
+libgtkdjvu_la_LIBADD = -lpthread $(DVJU_LIBS)
 
 

@@ -23,10 +23,7 @@
 
 #include <glib.h>
 #include <libdjvu/ddjvuapi.h>
-
-typedef struct miniexp_s* miniexp_t;
-extern const miniexp_t miniexp_nil;
-extern const miniexp_t miniexp_dummy;
+#include <libdjvu/miniexp.h>
 
 typedef struct _DjvuText DjvuText;
 
