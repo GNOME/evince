@@ -135,7 +135,7 @@ struct _EvWindowPrivate {
 
 	/* Popup attachment */
 	GtkWidget    *attachment_popup;
-	EvAttachment *attachment;
+	GList        *attach_list;
 
 	/* Document */
 	char *uri;
@@ -1137,7 +1137,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 	gboolean success;
 
 	if (response_id == GTK_RESPONSE_OK) {
-		const char *uri;
+		gchar *uri;
 		GError *err = NULL;
 
 		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
@@ -1152,6 +1152,8 @@ file_save_dialog_response_cb (GtkWidget *fc,
 			ev_window_error_dialog (GTK_WINDOW (fc), msg, err);
 			g_free (msg);
 		}
+
+		g_free (uri);
 	}
 
 	gtk_widget_destroy (fc);
@@ -2567,25 +2569,30 @@ view_menu_popup_cb (EvView         *view,
 	return FALSE;
 }
 
-static void
+static gboolean
 attachment_bar_menu_popup_cb (EvAttachmentBar *attachbar,
-			      EvAttachment    *attachment,
+			      GList           *attach_list,
 			      EvWindow        *ev_window)
 {
 	GtkWidget *popup;
 
-	if (ev_window->priv->attachment)
-		g_object_unref (ev_window->priv->attachment);
-	if (attachment)
-		ev_window->priv->attachment = g_object_ref (attachment);
-	else
-		ev_window->priv->attachment = NULL;
+	g_assert (attach_list != NULL);
+
+	if (ev_window->priv->attach_list) {
+		g_list_foreach (ev_window->priv->attach_list,
+				(GFunc) g_object_unref, NULL);
+		g_list_free (ev_window->priv->attach_list);
+	}
+	
+	ev_window->priv->attach_list = attach_list;
 	
 	popup = ev_window->priv->attachment_popup;
 
 	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
 			NULL, NULL,
 			3, gtk_get_current_event_time ());
+
+	return TRUE;
 }
 
 static void
@@ -2781,9 +2788,12 @@ ev_window_dispose (GObject *object)
 		priv->link = NULL;
 	}
 
-	if (priv->attachment) {
-		g_object_unref (priv->attachment);
-		priv->attachment = NULL;
+	if (priv->attach_list) {
+		g_list_foreach (priv->attach_list,
+				(GFunc) g_object_unref,
+				NULL);
+		g_list_free (priv->attach_list);
+		priv->attach_list = NULL;
 	}
 
 	if (priv->find_bar) {
@@ -3313,18 +3323,25 @@ ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 static void
 ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 {
-	GError *error = NULL;
+	GList *l;
 	
-	if (!window->priv->attachment)
+	if (!window->priv->attach_list)
 		return;
-	
-	ev_attachment_open (window->priv->attachment, &error);
 
-	if (error) {
-		ev_window_error_dialog (GTK_WINDOW (window),
-					_("Unable to open attachment"),
-					error);
-		g_error_free (error);
+	for (l = window->priv->attach_list; l && l->data; l = g_list_next (l)) {
+		EvAttachment *attachment;
+		GError       *error = NULL;
+		
+		attachment = (EvAttachment *) l->data;
+		
+		ev_attachment_open (attachment, &error);
+
+		if (error) {
+			ev_window_error_dialog (GTK_WINDOW (window),
+						_("Unable to open attachment"),
+						error);
+			g_error_free (error);
+		}
 	}
 }
 
@@ -3333,21 +3350,48 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 				    gint       response_id,
 				    EvWindow  *ev_window)
 {
-	if (response_id == GTK_RESPONSE_OK) {
-		const char *uri;
-		GError     *error = NULL;
+	gchar                *uri;
+	GList                *l;
+	GtkFileChooserAction  fc_action;
+	gboolean              is_dir;
+	
+	if (response_id != GTK_RESPONSE_OK) {
+		gtk_widget_destroy (fc);
+		return;
+	}
 
-		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+	
+	g_object_get (G_OBJECT (fc), "action", &fc_action, NULL);
+	is_dir = (fc_action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	
+	for (l = ev_window->priv->attach_list; l && l->data; l = g_list_next (l)) {
+		EvAttachment *attachment;
+		gchar        *filename;
+		GError       *error = NULL;
+		
+		attachment = (EvAttachment *) l->data;
 
-		ev_attachment_save (ev_window->priv->attachment, uri, &error);
-
+		if (is_dir) {
+			filename = g_strjoin ("/", uri,
+					      ev_attachment_get_name (attachment),
+					      NULL);
+		} else {
+			filename = g_strdup (uri);
+		}
+		
+		ev_attachment_save (attachment, filename, &error);
+		g_free (filename);
+		
 		if (error) {
 			ev_window_error_dialog (GTK_WINDOW (fc),
-						 _("The attachment could not be saved."),
-						 error);
+						_("The attachment could not be saved."),
+						error);
 			g_error_free (error);
 		}
 	}
+
+	g_free (uri);
 
 	gtk_widget_destroy (fc);
 }
@@ -3355,15 +3399,23 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 static void
 ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
 {
-	GtkWidget *fc;
+	GtkWidget    *fc;
+	EvAttachment *attachment = NULL;
 
-	fc = gtk_file_chooser_dialog_new (_("Save a Copy"),
-					  GTK_WINDOW (window),
-					  GTK_FILE_CHOOSER_ACTION_SAVE,
-					  GTK_STOCK_CANCEL,
-					  GTK_RESPONSE_CANCEL,
-					  GTK_STOCK_SAVE, GTK_RESPONSE_OK,
-					  NULL);
+	if (!window->priv->attach_list)
+		return;
+
+	if (g_list_length (window->priv->attach_list) == 1)
+		attachment = (EvAttachment *) window->priv->attach_list->data;
+	
+	fc = gtk_file_chooser_dialog_new (
+		_("Save a Copy"),
+		GTK_WINDOW (window),
+		attachment ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+		GTK_STOCK_CANCEL,
+		GTK_RESPONSE_CANCEL,
+		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+		NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
@@ -3371,8 +3423,9 @@ ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
 #endif
 
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc),
-					   ev_attachment_get_name (window->priv->attachment));
+	if (attachment)
+		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc),
+						   ev_attachment_get_name (attachment));
 
 	g_signal_connect (fc, "response",
 			  G_CALLBACK (attachment_save_dialog_response_cb),
@@ -3654,19 +3707,21 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->attachment_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
 								       "/AttachmentPopup");
-	ev_window->priv->attachment = NULL;
+	ev_window->priv->attach_list = NULL;
 
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
 
 	/* Drag and Drop */
-	gtk_drag_dest_unset (GTK_WIDGET (ev_window));
-	gtk_drag_dest_set (GTK_WIDGET (ev_window), GTK_DEST_DEFAULT_ALL,
+	gtk_drag_dest_unset (GTK_WIDGET (ev_window->priv->view));
+	gtk_drag_dest_set (GTK_WIDGET (ev_window->priv->view),
+			   GTK_DEST_DEFAULT_ALL,
 			   ev_drop_types,
 			   sizeof (ev_drop_types) / sizeof (ev_drop_types[0]),
 			   GDK_ACTION_COPY);
-	g_signal_connect (G_OBJECT (ev_window), "drag-data-received",
-			  G_CALLBACK (drag_data_received_cb), NULL);
+	g_signal_connect_swapped (G_OBJECT (ev_window->priv->view), "drag-data-received",
+				  G_CALLBACK (drag_data_received_cb),
+				  ev_window);
 
 	/* Set it user interface params */
 

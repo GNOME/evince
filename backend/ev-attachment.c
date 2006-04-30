@@ -367,10 +367,14 @@ ev_attachment_open (EvAttachment *attachment,
 	gboolean                 retval = FALSE;
 	GnomeVFSMimeApplication *default_app = NULL;
 
-	if (!attachment->priv->app)
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
+	
+	if (!attachment->priv->app) {
 		default_app = gnome_vfs_mime_get_default_application (attachment->priv->mime_type);
+		attachment->priv->app = default_app;
+	}
 
-	if (!default_app) {
+	if (!attachment->priv->app) {
 		g_set_error (error,
 			     EV_ATTACHMENT_ERROR,
 			     0,
@@ -380,8 +384,6 @@ ev_attachment_open (EvAttachment *attachment,
 		return FALSE;
 	}
 
-	attachment->priv->app = default_app;
-	
 	if (attachment->priv->tmp_uri &&
 	    g_file_test (attachment->priv->tmp_uri, G_FILE_TEST_EXISTS)) {
 		retval = ev_attachment_launch_app (attachment, error);

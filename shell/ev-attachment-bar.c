@@ -21,6 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
@@ -201,13 +205,76 @@ ev_attachment_bar_get_attachment_at_pos (EvAttachmentBar *ev_attachbar,
 }
 
 static gboolean
+ev_attachment_bar_popup_menu_show (EvAttachmentBar *ev_attachbar,
+				   gint             x,
+				   gint             y)
+{
+	GtkIconView *icon_view;
+	GtkTreePath *path;
+	GList       *selected = NULL, *l;
+	GList       *attach_list = NULL;
+
+	icon_view = GTK_ICON_VIEW (ev_attachbar->priv->icon_view);
+	
+	path = gtk_icon_view_get_path_at_pos (icon_view, x, y);
+	if (!path)
+		return FALSE;
+
+	if (!gtk_icon_view_path_is_selected (icon_view, path)) {
+		gtk_icon_view_unselect_all (icon_view);
+		gtk_icon_view_select_path (icon_view, path);
+	}
+
+	gtk_tree_path_free (path);
+	
+	selected = gtk_icon_view_get_selected_items (icon_view);
+	if (!selected)
+		return FALSE;
+
+	for (l = selected; l && l->data; l = g_list_next (l)) {
+		GtkTreeIter   iter;
+		EvAttachment *attachment = NULL;
+
+		path = (GtkTreePath *) l->data;
+
+		gtk_tree_model_get_iter (GTK_TREE_MODEL (ev_attachbar->priv->model),
+					 &iter, path);
+		gtk_tree_model_get (GTK_TREE_MODEL (ev_attachbar->priv->model), &iter,
+				    COLUMN_ATTACHMENT, &attachment,
+				    -1);
+
+		if (attachment)
+			attach_list = g_list_prepend (attach_list, attachment);
+
+		gtk_tree_path_free (path);
+	}
+
+	g_list_free (selected);
+
+	if (!attach_list)
+		return FALSE;
+
+	g_signal_emit (ev_attachbar, signals[SIGNAL_POPUP_MENU], 0, attach_list);
+
+	return TRUE;
+}
+
+static gboolean
+ev_attachment_bar_popup_menu (GtkWidget *widget)
+{
+	EvAttachmentBar *ev_attachbar = EV_ATTACHMENT_BAR (widget);
+	gint             x, y;
+
+	gtk_widget_get_pointer (widget, &x, &y);
+
+	return ev_attachment_bar_popup_menu_show (ev_attachbar, x, y);
+}
+
+static gboolean
 ev_attachment_bar_button_press (EvAttachmentBar *ev_attachbar,
 				GdkEventButton  *event,
 				GtkWidget       *icon_view)
 {
-	EvAttachment *attachment;
-	gboolean      handled = FALSE;
-
 	if (!GTK_WIDGET_HAS_FOCUS (icon_view)) {
 		gtk_widget_grab_focus (icon_view);
 	}
@@ -215,37 +282,35 @@ ev_attachment_bar_button_press (EvAttachmentBar *ev_attachbar,
 	if (event->button == 2)
 		return FALSE;
 
-	attachment = ev_attachment_bar_get_attachment_at_pos (ev_attachbar,
-							      event->x,
-							      event->y);
-	if (!attachment)
-		return FALSE;
-
 	switch (event->button) {
 	case 1:
 		if (event->type == GDK_2BUTTON_PRESS) {
 			GError *error = NULL;
+			EvAttachment *attachment;
 
+			attachment = ev_attachment_bar_get_attachment_at_pos (ev_attachbar,
+									      event->x,
+									      event->y);
+			if (!attachment)
+				return FALSE;
+			
 			ev_attachment_open (attachment, &error);
 
 			if (error) {
 				g_warning (error->message);
 				g_error_free (error);
 			}
+
+			g_object_unref (attachment);
 					    
-			handled = TRUE;
+			return TRUE;
 		}
 		break;
-	case 3:
-		g_signal_emit (ev_attachbar, signals[SIGNAL_POPUP_MENU], 0, attachment);
-		handled = TRUE;
-		
-		break;
+	case 3: 
+		return ev_attachment_bar_popup_menu_show (ev_attachbar, event->x, event->y);
 	}
 
-	g_object_unref (attachment);
-
-	return handled;
+	return FALSE;
 }
 
 static gboolean
@@ -256,24 +321,6 @@ ev_attachment_bar_focus_in (GtkWidget     *widget,
 
 	if (gtk_expander_get_expanded (GTK_EXPANDER (ev_attachbar)))
 		gtk_widget_grab_focus (ev_attachbar->priv->icon_view);
-
-	return TRUE;
-}
-
-static gboolean
-ev_attachment_bar_popup_menu (GtkWidget *widget)
-{
-	EvAttachmentBar *ev_attachbar = EV_ATTACHMENT_BAR (widget);
-	EvAttachment    *attachment;
-	gint             x, y;
-
-	gtk_widget_get_pointer (widget, &x, &y);
-	attachment = ev_attachment_bar_get_attachment_at_pos (ev_attachbar,
-							      x, y);
-	if (!attachment)
-		return FALSE;
-
-	g_signal_emit (ev_attachbar, signals[SIGNAL_POPUP_MENU], 0, attachment);
 
 	return TRUE;
 }
@@ -327,67 +374,63 @@ ev_attachment_bar_drag_data_get (GtkWidget        *widget,
 				 gpointer          user_data)
 {
 	EvAttachmentBar *ev_attachbar = EV_ATTACHMENT_BAR (user_data);
-	EvAttachment    *attachment;
-	GtkTreePath     *path;
-	GtkTreeIter      iter;
-	GList           *selected = NULL;
-	gchar           *uri, *filename;
-	GError          *error = NULL;
+	GString         *uri_list;
+	gchar           *uris = NULL;
+	GList           *selected = NULL, *l;
 
 	selected = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (ev_attachbar->priv->icon_view));
 	if (!selected)
 		return;
 
-	path = (GtkTreePath *) selected->data;
-
-	gtk_tree_model_get_iter (GTK_TREE_MODEL (ev_attachbar->priv->model),
-				 &iter, path);
-	gtk_tree_model_get (GTK_TREE_MODEL (ev_attachbar->priv->model), &iter,
-			    COLUMN_ATTACHMENT, &attachment,
-			    -1);
-
-	filename = g_build_filename (g_get_tmp_dir (),
-				     ev_attachment_get_name (attachment),
-				     NULL);
-	uri = g_filename_to_uri (filename, NULL, NULL);
-
-	g_object_set_data_full (G_OBJECT (drag_context),
-				"tmp-filename", filename,
-				g_free);
+	uri_list = g_string_new (NULL);
 	
+	for (l = selected; l && l->data; l = g_list_next (l)) {
+		EvAttachment *attachment;
+		GtkTreePath  *path;
+		GtkTreeIter   iter;
+		gchar        *uri, *filename;
+		GError       *error = NULL;
+		
+		path = (GtkTreePath *) l->data;
+
+		gtk_tree_model_get_iter (GTK_TREE_MODEL (ev_attachbar->priv->model),
+					 &iter, path);
+		gtk_tree_model_get (GTK_TREE_MODEL (ev_attachbar->priv->model), &iter,
+				    COLUMN_ATTACHMENT, &attachment,
+				    -1);
+
+		filename = g_build_filename (g_get_tmp_dir (),
+					     ev_attachment_get_name (attachment),
+					     NULL);
+		
+		uri = g_filename_to_uri (filename, NULL, NULL);
+
+		if (ev_attachment_save (attachment, filename, &error)) {
+			g_string_append (uri_list, uri);
+			g_string_append_c (uri_list, '\n');
+		}
 	
-	if (ev_attachment_save (attachment, uri, &error)) {
+		if (error) {
+			g_warning (error->message);
+			g_error_free (error);
+		}
+
+		g_free (uri);
+		gtk_tree_path_free (path);
+		g_object_unref (attachment);
+	}
+
+	uris = g_string_free (uri_list, FALSE);
+
+	if (uris) {
 		gtk_selection_data_set (data,
 					data->target,
 					8,
-					(guchar *)uri,
-					strlen (uri));
-	}
-	
-	if (error) {
-		g_warning (error->message);
-		g_error_free (error);
+					(guchar *)uris,
+					strlen (uris));
 	}
 
-	g_free (uri);
-	g_object_unref (attachment);
-	g_list_foreach (selected,
-			(GFunc) gtk_tree_path_free,
-			NULL);
 	g_list_free (selected);
-}
-
-static void
-ev_attachment_bar_drag_data_delete (GtkWidget      *widget,
-				    GdkDragContext *drag_context,
-				    gpointer        user_data)
-{
-	gchar *filename;
-
-	filename = g_object_get_data (G_OBJECT (drag_context), "tmp-filename");
-	
-	if (filename && g_file_test (filename, G_FILE_TEST_EXISTS))
-		g_unlink (filename);
 }
 
 static void
@@ -432,9 +475,9 @@ ev_attachment_bar_class_init (EvAttachmentBarClass *ev_attachbar_class)
 			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 			      G_STRUCT_OFFSET (EvAttachmentBarClass, popup_menu),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__OBJECT,
+			      g_cclosure_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
-			      G_TYPE_OBJECT);
+			      G_TYPE_POINTER);
 }
 
 static void
@@ -462,6 +505,8 @@ ev_attachment_bar_init (EvAttachmentBar *ev_attachbar)
 	/* Icon View */
 	ev_attachbar->priv->icon_view =
 		gtk_icon_view_new_with_model (GTK_TREE_MODEL (ev_attachbar->priv->model));
+	gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (ev_attachbar->priv->icon_view),
+					  GTK_SELECTION_MULTIPLE);
 	gtk_icon_view_set_columns (GTK_ICON_VIEW (ev_attachbar->priv->icon_view), -1);
 	g_object_set (G_OBJECT (ev_attachbar->priv->icon_view),
 		      "text-column", COLUMN_NAME,
@@ -505,10 +550,6 @@ ev_attachment_bar_init (EvAttachmentBar *ev_attachbar)
 	g_signal_connect (G_OBJECT (ev_attachbar->priv->icon_view),
 			  "drag-data-get",
 			  G_CALLBACK (ev_attachment_bar_drag_data_get),
-			  (gpointer) ev_attachbar);
-	g_signal_connect (G_OBJECT (ev_attachbar->priv->icon_view),
-			  "drag-data-delete",
-			  G_CALLBACK (ev_attachment_bar_drag_data_delete),
 			  (gpointer) ev_attachbar);
 
 	g_signal_connect (G_OBJECT (ev_attachbar),
