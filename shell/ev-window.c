@@ -127,7 +127,7 @@ struct _EvWindowPrivate {
 	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
 	GtkWidget *fullscreen_popup;
-	GSource   *fullscreen_timeout_source;
+	guint      fullscreen_timeout_id;
 	
 	/* Popup link */
 	GtkWidget *view_popup;
@@ -1563,8 +1563,8 @@ fullscreen_timeout_cb (gpointer data)
 
 	g_object_set (window->priv->fullscreen_popup, "visible", FALSE, NULL);
 	ev_view_hide_cursor (EV_VIEW (window->priv->view));
-	g_source_unref (window->priv->fullscreen_timeout_source);
-	window->priv->fullscreen_timeout_source = NULL;
+
+	window->priv->fullscreen_timeout_id = 0;
 
 	return FALSE;
 }
@@ -1572,28 +1572,22 @@ fullscreen_timeout_cb (gpointer data)
 static void
 fullscreen_set_timeout (EvWindow *window)
 {
-	GSource *source;
-
-	if (window->priv->fullscreen_timeout_source != NULL) {
-		g_source_unref (window->priv->fullscreen_timeout_source);
-		g_source_destroy (window->priv->fullscreen_timeout_source);
+	if (window->priv->fullscreen_timeout_id != 0) {
+		g_source_remove (window->priv->fullscreen_timeout_id);
 	}
-
-	source = g_timeout_source_new (FULLSCREEN_TIMEOUT);
-	g_source_set_callback (source, fullscreen_timeout_cb, window, NULL);
-	g_source_attach (source, NULL);
-	window->priv->fullscreen_timeout_source = source;
+	
+	window->priv->fullscreen_timeout_id = 
+	    g_timeout_add (FULLSCREEN_TIMEOUT, fullscreen_timeout_cb, window);
 }
 
 static void
 fullscreen_clear_timeout (EvWindow *window)
 {
-	if (window->priv->fullscreen_timeout_source != NULL) {
-		g_source_unref (window->priv->fullscreen_timeout_source);
-		g_source_destroy (window->priv->fullscreen_timeout_source);
+	if (window->priv->fullscreen_timeout_id != 0) {
+		g_source_remove (window->priv->fullscreen_timeout_id);
 	}
 
-	window->priv->fullscreen_timeout_source = NULL;
+	window->priv->fullscreen_timeout_id = 0;
 	ev_view_show_cursor (EV_VIEW (window->priv->view));
 }
 
@@ -2428,6 +2422,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"authors", authors,
 		"documenters", documenters,
 		"translator-credits", _("translator-credits"),
+		"logo-icon-name", "evince",
 		NULL);
 
 	g_free (comments);
@@ -2809,10 +2804,9 @@ ev_window_dispose (GObject *object)
 		priv->uri = NULL;
 	}
 
-	if (window->priv->fullscreen_timeout_source) {
-		g_source_unref (window->priv->fullscreen_timeout_source);
-		g_source_destroy (window->priv->fullscreen_timeout_source);
-		window->priv->fullscreen_timeout_source = NULL;
+	if (priv->fullscreen_timeout_id) {
+		g_source_remove (priv->fullscreen_timeout_id);
+		priv->fullscreen_timeout_id = 0;
 	}
 	destroy_fullscreen_popup (window);
 

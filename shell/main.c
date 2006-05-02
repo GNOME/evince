@@ -288,7 +288,7 @@ main (int argc, char *argv[])
 	ev_file_helpers_init ();
 	ev_debug_init ();
 	ev_stock_icons_init ();
-	gtk_window_set_default_icon_name ("postscript-viewer");
+	gtk_window_set_default_icon_name ("evince");
 
 	load_files (poptGetArgs (context));
 

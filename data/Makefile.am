@@ -26,6 +26,16 @@ schema_in_files = evince.schemas.in
 schemadir = $(GCONF_SCHEMA_FILE_DIR)
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 
+icon_16dir = $(datadir)/icons/hicolor/16x16/apps
+icon_16_DATA = evince-16.png
+icon_22dir = $(datadir)/icons/hicolor/22x22/apps
+icon_22_DATA = evince-22.png
+icondir = $(datadir)/icons/hicolor/48x48/apps
+icon_DATA = evince.png
+svgicondir = $(datadir)/icons/hicolor/scalable/apps
+svgicon_DATA = evince.svg
+gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
+
 install-data-local:
 if GCONF_SCHEMAS_INSTALL
 	if test -z "$(DESTDIR)" ; then \
@@ -34,14 +44,27 @@ if GCONF_SCHEMAS_INSTALL
 	done \
 	fi
 endif
+	if test -z "$(DESTDIR)"; then \
+	        echo "Updating Gtk icon cache."; \
+	        $(gtk_update_icon_cache); \
+	else \
+	        echo "*** Icon cache not updated.  After install, run this:"; \
+	        echo "***   $(gtk_update_icon_cache)"; \
+	        fi
 
 EXTRA_DIST =				\
 	$(glade_DATA)			\
 	$(ui_DATA)			\
 	$(DESKTOP_IN_FILES)		\
 	$(schema_in_files)		\
-	$(NULL)
+	$(icon_16_DATA)			\
+	$(icon_22_DATA)			\
+	$(icon_DATA)			\
+	$(svgicon_DATA)			\
+	$(NULL)				
 
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
 	$(schema_DATA)
+
+

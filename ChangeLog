@@ -1,3 +1,20 @@
+2006-05-02  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* data/Makefile.am:
+	* data/evince.png:
+	* data/evince-16.png:
+	* data/evince-22.png:
+	* data/evince.svg:
+	* shell/main.c: (main):
+	
+	Evince use it's own icon. Fix for the bug #313392.
+
+	* shell/ev-window.c: (fullscreen_timeout_cb),
+	(fullscreen_set_timeout), (fullscreen_clear_timeout),
+	(ev_window_cmd_help_about), (ev_window_dispose):
+	
+	Simplify fullscreen timeout code.
+
 2006-04-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/ev-attachment.c: 
