@@ -44,8 +44,6 @@ typedef struct _EvDocumentIface   EvDocumentIface;
 typedef struct _EvPageCache       EvPageCache;
 typedef struct _EvPageCacheClass  EvPageCacheClass;
 
-
-
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
 #define EV_DOC_MUTEX_LOCK (ev_document_doc_mutex_lock ())
 #define EV_DOC_MUTEX_UNLOCK (ev_document_doc_mutex_unlock ())
@@ -90,8 +88,6 @@ struct _EvDocumentIface
 	char	       * (* get_text)	     (EvDocument   *document,
 					      int           page,
 					      EvRectangle  *rect);
-	GList          * (* get_links)	     (EvDocument   *document,
-					      int           page);
 	gboolean         (* has_attachments) (EvDocument   *document);
 	GList          * (* get_attachments) (EvDocument   *document);
 	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
@@ -123,8 +119,6 @@ gboolean	ev_document_can_get_text    (EvDocument     *document);
 char	       *ev_document_get_text        (EvDocument     *document,
 					     int             page,
 					     EvRectangle    *rect);
-GList	       *ev_document_get_links       (EvDocument     *document,
-				             int             page);
 gboolean        ev_document_has_attachments (EvDocument     *document);
 GList          *ev_document_get_attachments (EvDocument     *document);
 GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,

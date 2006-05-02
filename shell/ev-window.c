@@ -140,6 +140,7 @@ struct _EvWindowPrivate {
 	/* Document */
 	char *uri;
 	char *local_uri;
+	EvLinkDest *dest;
 	
 	EvDocument *document;
 	EvDocument *password_document;
@@ -470,18 +471,17 @@ update_sizing_buttons (EvWindow *window)
 		      NULL);
 
 	switch (sizing_mode) {
-	case EV_SIZING_BEST_FIT:
-		best_fit = TRUE;
-		page_width = FALSE;
-		break;
-	case EV_SIZING_FIT_WIDTH:
-		best_fit = FALSE;
-		page_width = TRUE;
-		break;
-
-	default:
-		best_fit = page_width = FALSE;
-		break;
+	        case EV_SIZING_BEST_FIT:
+			best_fit = TRUE;
+			page_width = FALSE;
+			break;
+	        case EV_SIZING_FIT_WIDTH:
+			best_fit = FALSE;
+			page_width = TRUE;
+			break;
+	        default:
+			best_fit = page_width = FALSE;
+			break;
 	}
 
 	action = gtk_action_group_get_action (action_group, "ViewBestFit");
@@ -749,17 +749,17 @@ setup_view_from_metadata (EvWindow *window)
 	if (ev_metadata_manager_get (uri, "rotation", &rotation, TRUE)) {
 		if (g_value_get_int (&rotation)) {
 			switch (g_value_get_int (&rotation)) {
-			case 90:
-				ev_view_set_rotation (view, 90);
-				break;
-			case 180:
-				ev_view_set_rotation (view, 180);
-				break;
-			case 270:
-				ev_view_set_rotation (view, 270);
-				break;
-			default:
-				break;
+			        case 90:
+					ev_view_set_rotation (view, 90);
+					break;
+			        case 180:
+					ev_view_set_rotation (view, 180);
+					break;
+			        case 270:
+					ev_view_set_rotation (view, 270);
+					break;
+			        default:
+					break;
 			}
 		}
 	}
@@ -955,6 +955,9 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		ev_window_setup_document (ev_window);
 		ev_window_add_recent (ev_window, ev_window->priv->uri);		
 		ev_window_clear_xfer_job (ev_window);
+
+		if (ev_window->priv->dest)
+			ev_window_goto_dest (ev_window, ev_window->priv->dest);
 		
 		return;
 	}
@@ -1016,10 +1019,14 @@ ev_window_close_dialogs (EvWindow *ev_window)
 }
 
 void
-ev_window_open_uri (EvWindow *ev_window, const char *uri)
+ev_window_open_uri (EvWindow *ev_window, const char *uri, EvLinkDest *dest)
 {
 	g_free (ev_window->priv->uri);
 	ev_window->priv->uri = NULL;
+
+	if (ev_window->priv->dest)
+		g_object_unref (ev_window->priv->dest);
+	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
 	
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_xfer_job (ev_window);
@@ -1032,6 +1039,12 @@ ev_window_open_uri (EvWindow *ev_window, const char *uri)
 			  G_CALLBACK (ev_window_xfer_job_cb),
 			  ev_window);
 	ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
+}
+
+void
+ev_window_goto_dest (EvWindow *ev_window, EvLinkDest *dest)
+{
+	ev_view_goto_dest (EV_VIEW (ev_window->priv->view), dest);
 }
 
 static void
@@ -1931,14 +1944,14 @@ ev_window_set_page_mode (EvWindow         *window,
 	window->priv->page_mode = page_mode;
 
 	switch (page_mode) {
-	case PAGE_MODE_DOCUMENT:
-		child = window->priv->view;
-		break;
-	case PAGE_MODE_PASSWORD:
-		child = window->priv->password_view;
-		break;
-	default:
-		g_assert_not_reached ();
+	        case PAGE_MODE_DOCUMENT:
+			child = window->priv->view;
+			break;
+	        case PAGE_MODE_PASSWORD:
+			child = window->priv->password_view;
+			break;
+	        default:
+			g_assert_not_reached ();
 	}
 
 	real_child = gtk_bin_get_child (GTK_BIN (window->priv->scrolled_window));
@@ -2101,7 +2114,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 	page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 	uri = g_strdup (ev_window->priv->uri);
 
-	ev_window_open_uri (ev_window, uri);
+	ev_window_open_uri (ev_window, uri, NULL);
 
 	/* In case the number of pages in the document has changed. */
 	page = CLAMP (page, 0, ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
@@ -2225,30 +2238,30 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 	    	update_view_size (NULL, ev_window);
 
 	switch (sizing_mode) {
-	case EV_SIZING_BEST_FIT:
-		g_object_set (G_OBJECT (scrolled_window),
-			      "hscrollbar-policy", GTK_POLICY_NEVER,
-			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-			      NULL);
-		g_signal_connect (ev_window->priv->view, "zoom_invalid",
-				  G_CALLBACK (update_view_size),
-				  ev_window);
-		break;
-	case EV_SIZING_FIT_WIDTH:
-		g_object_set (G_OBJECT (scrolled_window),
-			      "hscrollbar-policy", GTK_POLICY_NEVER,
-			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-			      NULL);
-		g_signal_connect (ev_window->priv->view, "zoom_invalid",
-				  G_CALLBACK (update_view_size),
-				  ev_window);
-		break;
-	case EV_SIZING_FREE:
-		g_object_set (G_OBJECT (scrolled_window),
-			      "hscrollbar-policy", GTK_POLICY_AUTOMATIC,
-			      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-			      NULL);
-		break;
+	        case EV_SIZING_BEST_FIT:
+			g_object_set (G_OBJECT (scrolled_window),
+				      "hscrollbar-policy", GTK_POLICY_NEVER,
+				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+				      NULL);
+			g_signal_connect (ev_window->priv->view, "zoom_invalid",
+					  G_CALLBACK (update_view_size),
+					  ev_window);
+			break;
+	        case EV_SIZING_FIT_WIDTH:
+			g_object_set (G_OBJECT (scrolled_window),
+				      "hscrollbar-policy", GTK_POLICY_NEVER,
+				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+				      NULL);
+			g_signal_connect (ev_window->priv->view, "zoom_invalid",
+					  G_CALLBACK (update_view_size),
+					  ev_window);
+			break;
+	        case EV_SIZING_FREE:
+			g_object_set (G_OBJECT (scrolled_window),
+				      "hscrollbar-policy", GTK_POLICY_AUTOMATIC,
+				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+				      NULL);
+			break;
 	}
 
 	update_sizing_buttons (ev_window);
@@ -2507,9 +2520,9 @@ ev_window_attachment_bar_toggled_cb (EvAttachmentBar *ev_attachbar,
 }
 
 static gboolean
-view_menu_popup_cb (EvView         *view,
-		    EvLink         *link,
-		    EvWindow       *ev_window)
+view_menu_popup_cb (EvView   *view,
+		    EvLink   *link,
+		    EvWindow *ev_window)
 {
 	GtkWidget *popup;
 	gboolean   show_external = FALSE;
@@ -2521,6 +2534,7 @@ view_menu_popup_cb (EvView         *view,
 	
 	if (ev_window->priv->link)
 		g_object_unref (ev_window->priv->link);
+	
 	if (link)
 		ev_window->priv->link = g_object_ref (link);
 	else	
@@ -2528,23 +2542,26 @@ view_menu_popup_cb (EvView         *view,
 
 	popup = ev_window->priv->view_popup;
 
-	if (ev_window->priv->link) 
-		switch (ev_link_get_link_type (ev_window->priv->link)) {
-			case EV_LINK_TYPE_PAGE:
-	    		case EV_LINK_TYPE_PAGE_FIT:
-			case EV_LINK_TYPE_PAGE_FITH:
-			case EV_LINK_TYPE_PAGE_FITV:
-			case EV_LINK_TYPE_PAGE_FITR:
-			case EV_LINK_TYPE_PAGE_XYZ:
+	if (ev_window->priv->link) {
+		EvLinkAction *ev_action;
+
+		ev_action = ev_link_get_action (link);
+		if (!ev_action)
+			return FALSE;
+		
+		switch (ev_link_action_get_action_type (ev_action)) {
+		        case EV_LINK_ACTION_TYPE_GOTO_DEST:
+		        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
 				show_internal = TRUE;
 				break;
-			case EV_LINK_TYPE_EXTERNAL_URI:
-			case EV_LINK_TYPE_LAUNCH:	
+		        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+		        case EV_LINK_ACTION_TYPE_LAUNCH:
 				show_external = TRUE;
 				break;
-			default:
+		        default:
 				break;
 		}
+	}
 	
 	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
 					      "OpenLink");
@@ -2561,7 +2578,7 @@ view_menu_popup_cb (EvView         *view,
 	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
 			NULL, NULL,
 			3, gtk_get_current_event_time ());
-	return FALSE;
+	return TRUE;
 }
 
 static gboolean
@@ -2804,6 +2821,11 @@ ev_window_dispose (GObject *object)
 		priv->uri = NULL;
 	}
 
+	if (priv->dest) {
+		g_object_unref (priv->dest);
+		priv->dest = NULL;
+	}
+
 	if (priv->fullscreen_timeout_id) {
 		g_source_remove (priv->fullscreen_timeout_id);
 		priv->fullscreen_timeout_id = 0;
@@ -3031,9 +3053,7 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 static void
 activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
 {
-	g_return_if_fail (EV_IS_WINDOW (window));
-
-	ev_view_goto_link (EV_VIEW (window->priv->view), link);
+	ev_view_handle_link (EV_VIEW (window->priv->view), link);
 	gtk_widget_grab_focus (window->priv->view);
 }
 
@@ -3230,13 +3250,13 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 static void
 sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, EvWindow *window)
 {
-	ev_view_goto_link (EV_VIEW (window->priv->view), link);
+	ev_view_handle_link (EV_VIEW (window->priv->view), link);
 }
 
 static void
-launch_link (EvWindow *window, EvLink *link)
+launch_action (EvWindow *window, EvLinkAction *action)
 {
-	const char *filename = ev_link_get_filename (link);
+	const char *filename = ev_link_action_get_filename (action);
 	char *uri = NULL;
 
 	if (filename  && g_path_is_absolute (filename)) {
@@ -3268,12 +3288,12 @@ launch_link (EvWindow *window, EvLink *link)
 }
 
 static void
-launch_external_uri (EvWindow *window, EvLink *link)
+launch_external_uri (EvWindow *window, EvLinkAction *action)
 {
 	const char *uri;
 	char *escaped;
 
-	uri = ev_link_get_uri (link);
+	uri = ev_link_action_get_uri (action);
 	escaped = gnome_vfs_escape_host_and_path_string (uri);
 
 	gnome_vfs_url_show (escaped);
@@ -3281,33 +3301,60 @@ launch_external_uri (EvWindow *window, EvLink *link)
 }
 
 static void
-view_external_link_cb (EvView *view, EvLink *link, EvWindow *window)
+open_remote_link (EvWindow *window, EvLinkAction *action)
 {
-	switch (ev_link_get_link_type (link)) {
-	case EV_LINK_TYPE_EXTERNAL_URI:
-		launch_external_uri (window, link);
-		break;
-	case EV_LINK_TYPE_LAUNCH:
-		launch_link (window, link);
-		break;
-	default:
-		g_assert_not_reached ();
+	gchar *uri;
+	gchar *dir;
+
+	dir = g_path_get_dirname (window->priv->uri);
+	
+	uri = g_build_filename (dir, ev_link_action_get_filename (action),
+				NULL);
+	g_free (dir);
+	
+	ev_application_open_uri_at_dest (EV_APP, uri,
+					 ev_link_action_get_dest (action),
+					 GDK_CURRENT_TIME);
+
+	g_free (uri);
+}
+
+static void
+view_external_link_cb (EvView *view, EvLinkAction *action, EvWindow *window)
+{
+	switch (ev_link_action_get_action_type (action)) {
+	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+			launch_external_uri (window, action);
+			break;
+	        case EV_LINK_ACTION_TYPE_LAUNCH:
+			launch_action (window, action);
+			break;
+	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+			open_remote_link (window, action);
+			break;
+	        default:
+			g_assert_not_reached ();
 	}
 }
 
 static void
 ev_view_popup_cmd_open_link (GtkAction *action, EvWindow *window)
 {
-	ev_view_goto_link (EV_VIEW (window->priv->view), window->priv->link);
+	ev_view_handle_link (EV_VIEW (window->priv->view), window->priv->link);
 }
 
 static void
 ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 {
 	GtkClipboard *clipboard;
+	EvLinkAction *ev_action;
 	const gchar *uri;
 
-	uri = ev_link_get_uri (window->priv->link);
+	ev_action = ev_link_get_action (window->priv->link);
+	if (!ev_action)
+		return;
+
+	uri = ev_link_action_get_uri (ev_action);
 
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
 					      GDK_SELECTION_CLIPBOARD);
@@ -3442,6 +3489,8 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (window_state_event_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
+
+	ev_window->priv->dest = NULL;
 
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	ev_window->priv->title = ev_window_title_new (ev_window);

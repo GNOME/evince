@@ -33,6 +33,7 @@
 #include "ev-view-private.h"
 #include "ev-utils.h"
 #include "ev-selection.h"
+#include "ev-document-links.h"
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-debug.h"
@@ -1075,23 +1076,23 @@ ev_view_get_link_at_location (EvView  *view,
 }
 
 static void
-goto_fitr_link (EvView *view, EvLink *link)
+goto_fitr_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	int page;
 	double zoom;
 
-	zoom = zoom_for_size_best_fit (ev_link_get_right (link) - ev_link_get_left (link),
-				       ev_link_get_top (link) - ev_link_get_bottom (link),
+	zoom = zoom_for_size_best_fit (ev_link_dest_get_right (dest) - ev_link_dest_get_left (dest),
+				       ev_link_dest_get_top (dest) - ev_link_dest_get_bottom (dest),
 				       ev_view_get_width (view),
 				       ev_view_get_height (view), 0, 0);
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
 
-	page = ev_link_get_page (link);
-	doc_point.x = ev_link_get_left (link);
-	doc_point.y = ev_link_get_top (link);
+	page = ev_link_dest_get_page (dest);
+	doc_point.x = ev_link_dest_get_left (dest);
+	doc_point.y = ev_link_dest_get_top (dest);
 	
 	view->current_page = page;
 	view->pending_point = doc_point;
@@ -1101,16 +1102,16 @@ goto_fitr_link (EvView *view, EvLink *link)
 }
 
 static void
-goto_fitv_link (EvView *view, EvLink *link)
+goto_fitv_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	int doc_width, doc_height, page;
 	double zoom;
 
-	page = ev_link_get_page (link);
+	page = ev_link_dest_get_page (dest);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
-	doc_point.x = ev_link_get_left (link);
+	doc_point.x = ev_link_dest_get_left (dest);
 	doc_point.y = 0;
 
 	zoom = zoom_for_size_fit_height (doc_width - doc_point.x , doc_height,
@@ -1128,19 +1129,19 @@ goto_fitv_link (EvView *view, EvLink *link)
 }
 
 static void
-goto_fith_link (EvView *view, EvLink *link)
+goto_fith_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	int doc_width, doc_height, page;
 	double zoom;
 
-	page = ev_link_get_page (link);
+	page = ev_link_dest_get_page (dest);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
 	doc_point.x = 0;
-	doc_point.y = doc_height - ev_link_get_top (link);
+	doc_point.y = doc_height - ev_link_dest_get_top (dest);
 
-	zoom = zoom_for_size_fit_width (doc_width, ev_link_get_top (link),
+	zoom = zoom_for_size_fit_width (doc_width, ev_link_dest_get_top (dest),
 					ev_view_get_width (view),
 				        ev_view_get_height (view), 0);
 
@@ -1155,13 +1156,13 @@ goto_fith_link (EvView *view, EvLink *link)
 }
 
 static void
-goto_fit_link (EvView *view, EvLink *link)
+goto_fit_dest (EvView *view, EvLinkDest *dest)
 {
 	double zoom;
 	int doc_width, doc_height;
 	int page;
 
-	page = ev_link_get_page (link);
+	page = ev_link_dest_get_page (dest);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
 	zoom = zoom_for_size_best_fit (doc_width, doc_height, ev_view_get_width (view),
@@ -1177,14 +1178,14 @@ goto_fit_link (EvView *view, EvLink *link)
 }
 
 static void
-goto_xyz_link (EvView *view, EvLink *link)
+goto_xyz_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	int height, page;
 	double zoom;
 
-	zoom = ev_link_get_zoom (link);
-	page = ev_link_get_page (link);
+	zoom = ev_link_dest_get_zoom (dest);
+	page = ev_link_dest_get_page (dest);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, NULL, &height);
 
 	if (zoom != 0) {
@@ -1192,8 +1193,8 @@ goto_xyz_link (EvView *view, EvLink *link)
 		ev_view_set_zoom (view, zoom, FALSE);
 	}
 
-	doc_point.x = ev_link_get_left (link);
-	doc_point.y = height - ev_link_get_top (link);
+	doc_point.x = ev_link_dest_get_left (dest);
+	doc_point.y = height - ev_link_dest_get_top (dest);
 
 	view->current_page = page;
 	view->pending_point = doc_point;
@@ -1202,70 +1203,176 @@ goto_xyz_link (EvView *view, EvLink *link)
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
-void
-ev_view_goto_link (EvView *view, EvLink *link)
+static void
+goto_dest (EvView *view, EvLinkDest *dest)
 {
-	EvLinkType type;
-	int page;
+	EvLinkDestType type;
+	int page, n_pages;
 
-	type = ev_link_get_link_type (link);
+	page = ev_link_dest_get_page (dest);
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+
+	if (page < 0 || page >= n_pages)
+		return;
+	
+	type = ev_link_dest_get_dest_type (dest);
 
 	switch (type) {
-		case EV_LINK_TYPE_TITLE:
-			break;
-		case EV_LINK_TYPE_PAGE:
-			page = ev_link_get_page (link);
+	        case EV_LINK_DEST_TYPE_PAGE:
 			ev_page_cache_set_current_page (view->page_cache, page);
 			break;
-		case EV_LINK_TYPE_PAGE_FIT:
-			goto_fit_link (view, link);
+	        case EV_LINK_DEST_TYPE_FIT:
+			goto_fit_dest (view, dest);
 			break;
-		case EV_LINK_TYPE_PAGE_FITH:
-			goto_fith_link (view, link);
+	        case EV_LINK_DEST_TYPE_FITH:
+			goto_fith_dest (view, dest);
 			break;
-		case EV_LINK_TYPE_PAGE_FITV:
-			goto_fitv_link (view, link);
+	        case EV_LINK_DEST_TYPE_FITV:
+			goto_fitv_dest (view, dest);
 			break;
-		case EV_LINK_TYPE_PAGE_FITR:
-			goto_fitr_link (view, link);
+	        case EV_LINK_DEST_TYPE_FITR:
+			goto_fitr_dest (view, dest);
 			break;
-		case EV_LINK_TYPE_PAGE_XYZ:
-			goto_xyz_link (view, link);
+	        case EV_LINK_DEST_TYPE_XYZ:
+			goto_xyz_dest (view, dest);
 			break;
-		case EV_LINK_TYPE_EXTERNAL_URI:
-		case EV_LINK_TYPE_LAUNCH:
-			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, link);
+	        default:
+			g_assert_not_reached ();
+	}
+}
+
+void
+ev_view_goto_dest (EvView *view, EvLinkDest *dest)
+{
+	EvLinkDestType type;
+
+	type = ev_link_dest_get_dest_type (dest);
+
+	if (type == EV_LINK_DEST_TYPE_NAMED) {
+		EvLinkDest  *dest2;	
+		const gchar *named_dest;
+
+		named_dest = ev_link_dest_get_named_dest (dest);
+		dest2 = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
+							  named_dest);
+		if (dest2) {
+			goto_dest (view, dest2);
+			g_object_unref (dest2);
+		}
+
+		return;
+	}
+
+	goto_dest (view, dest);
+}
+	
+void
+ev_view_handle_link (EvView *view, EvLink *link)
+{
+	EvLinkAction    *action = NULL;
+	EvLinkActionType type;
+
+	action = ev_link_get_action (link);
+	if (!action)
+		return;
+	
+	type = ev_link_action_get_action_type (action);
+
+	switch (type) {
+	        case EV_LINK_ACTION_TYPE_GOTO_DEST: {
+			EvLinkDest *dest;
+			
+			dest = ev_link_action_get_dest (action);
+			ev_view_goto_dest (view, dest);
+		}
+			break;
+	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+	        case EV_LINK_ACTION_TYPE_LAUNCH:
+			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, action);
 			break;
 	}
+}
+
+static gchar *
+page_label_from_dest (EvView *view, EvLinkDest *dest)
+{
+	EvLinkDestType type;
+	gchar *msg = NULL;
+
+	type = ev_link_dest_get_dest_type (dest);
+
+	switch (type) {
+	        case EV_LINK_DEST_TYPE_NAMED: {
+			EvLinkDest  *dest2;
+			const gchar *named_dest;
+			
+			named_dest = ev_link_dest_get_named_dest (dest);
+			dest2 = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
+								  named_dest);
+			if (dest2) {
+				msg = ev_page_cache_get_page_label (view->page_cache,
+								    ev_link_dest_get_page (dest2));
+				g_object_unref (dest2);
+			}
+		}
+			
+			break;
+	        default: 
+			msg = ev_page_cache_get_page_label (view->page_cache,
+							    ev_link_dest_get_page (dest));
+	}
+	
+	return msg;
 }
 
 static char *
 tip_from_link (EvView *view, EvLink *link)
 {
-	EvLinkType type;
+	EvLinkAction *action;
+	EvLinkActionType type;
 	char *msg = NULL;
 	char *page_label;
+	const char *title;
 
-	type = ev_link_get_link_type (link);
+	action = ev_link_get_action (link);
+	title = ev_link_get_title (link);
+	
+	if (!action)
+		return title ? g_strdup (title) : NULL;
+		
+	type = ev_link_action_get_action_type (action);
 
 	switch (type) {
-		case EV_LINK_TYPE_TITLE:
-			if (ev_link_get_title (link))
-				msg = g_strdup (ev_link_get_title (link));
-			break;
-		case EV_LINK_TYPE_PAGE:
-		case EV_LINK_TYPE_PAGE_XYZ:
-			page_label = ev_page_cache_get_page_label (view->page_cache, ev_link_get_page (link));
+	        case EV_LINK_ACTION_TYPE_GOTO_DEST:
+			page_label = page_label_from_dest (view,
+							   ev_link_action_get_dest (action));
 			msg = g_strdup_printf (_("Go to page %s"), page_label);
 			g_free (page_label);
 			break;
-		case EV_LINK_TYPE_EXTERNAL_URI:
-			msg = g_strdup (ev_link_get_uri (link));
+	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+			if (title) {
+				msg = g_strdup_printf (_("Go to %s on file %s"), title,
+						       ev_link_action_get_filename (action));
+			} else {
+				msg = g_strdup_printf (_("Go to file %s"),
+						       ev_link_action_get_filename (action));
+			}
+			
 			break;
-		default:
+	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+			msg = g_strdup (ev_link_action_get_uri (action));
+			break;
+	        case EV_LINK_ACTION_TYPE_LAUNCH:
+			msg = g_strdup_printf (_("Launch %s"),
+					       ev_link_action_get_filename (action));
+			break;
+	        default:
+			if (title)
+				msg = g_strdup (title);
 			break;
 	}
-
+	
 	return msg;
 }
 
@@ -1570,14 +1677,14 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 
 	if (state == 0 && view->presentation) {
 		switch (event->direction) {
-		case GDK_SCROLL_DOWN:
-		case GDK_SCROLL_RIGHT:
-			ev_view_next_page (view);	
-			break;
-		case GDK_SCROLL_UP:
-		case GDK_SCROLL_LEFT:
-			ev_view_previous_page (view);
-			break;
+		        case GDK_SCROLL_DOWN:
+		        case GDK_SCROLL_RIGHT:
+				ev_view_next_page (view);	
+				break;
+		        case GDK_SCROLL_UP:
+		        case GDK_SCROLL_LEFT:
+				ev_view_previous_page (view);
+				break;
 		}
 
 		return TRUE;
@@ -1926,15 +2033,15 @@ ev_view_button_release_event (GtkWidget      *widget,
 		
 		view->selection_info.in_drag = FALSE;
 	} else if (link) {
-		ev_view_goto_link (view, link);
+		ev_view_handle_link (view, link);
 	} else if (view->presentation) {
 		switch (event->button) {
-		case 1:
-			ev_view_next_page (view);	
-			return TRUE;
-		case 3:
-			ev_view_previous_page (view);	
-			return TRUE;
+		        case 1:
+				ev_view_next_page (view);	
+				return TRUE;
+		        case 3:
+				ev_view_previous_page (view);	
+				return TRUE;
 		}
 	}
  
@@ -2293,31 +2400,30 @@ ev_view_set_property (GObject      *object,
 {
 	EvView *view = EV_VIEW (object);
 
-	switch (prop_id)
-	{
-	case PROP_CONTINUOUS:
-		ev_view_set_continuous (view, g_value_get_boolean (value));
-		break;
-	case PROP_DUAL_PAGE:
-		ev_view_set_dual_page (view, g_value_get_boolean (value));
-		break;
-	case PROP_FULLSCREEN:
-		ev_view_set_fullscreen (view, g_value_get_boolean (value));
-		break;
-	case PROP_PRESENTATION:
-		ev_view_set_presentation (view, g_value_get_boolean (value));
-		break;
-	case PROP_SIZING_MODE:
-		ev_view_set_sizing_mode (view, g_value_get_enum (value));
-		break;
-	case PROP_ZOOM:
-		ev_view_set_zoom (view, g_value_get_double (value), FALSE);
-		break;
-	case PROP_ROTATION:
-		ev_view_set_rotation (view, g_value_get_int (value));
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	switch (prop_id) {
+	        case PROP_CONTINUOUS:
+			ev_view_set_continuous (view, g_value_get_boolean (value));
+			break;
+	        case PROP_DUAL_PAGE:
+			ev_view_set_dual_page (view, g_value_get_boolean (value));
+			break;
+	        case PROP_FULLSCREEN:
+			ev_view_set_fullscreen (view, g_value_get_boolean (value));
+			break;
+	        case PROP_PRESENTATION:
+			ev_view_set_presentation (view, g_value_get_boolean (value));
+			break;
+	        case PROP_SIZING_MODE:
+			ev_view_set_sizing_mode (view, g_value_get_enum (value));
+			break;
+	        case PROP_ZOOM:
+			ev_view_set_zoom (view, g_value_get_double (value), FALSE);
+			break;
+	        case PROP_ROTATION:
+			ev_view_set_rotation (view, g_value_get_int (value));
+			break;
+	        default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
 }
 
@@ -2360,41 +2466,40 @@ ev_view_get_property (GObject *object,
 {
 	EvView *view = EV_VIEW (object);
 
-	switch (prop_id)
-	{
-	case PROP_STATUS:
-		g_value_set_string (value, view->status);
-		break;
-	case PROP_FIND_STATUS:
-		g_value_set_string (value, view->status);
-		break;
-	case PROP_CONTINUOUS:
-		g_value_set_boolean (value, view->continuous);
-		break;
-	case PROP_DUAL_PAGE:
-		g_value_set_boolean (value, view->dual_page);
-		break;
-	case PROP_FULLSCREEN:
-		g_value_set_boolean (value, view->fullscreen);
-		break;
-	case PROP_PRESENTATION:
-		g_value_set_boolean (value, view->presentation);
-		break;
-	case PROP_SIZING_MODE:
-		g_value_set_enum (value, view->sizing_mode);
-		break;
-	case PROP_ZOOM:
-		g_value_set_double (value, view->scale);
-		break;
-	case PROP_ROTATION:
-		g_value_set_int (value, view->rotation);
-		break;
-	case PROP_HAS_SELECTION:
-		g_value_set_boolean (value,
-				     view->selection_info.selections != NULL);
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	switch (prop_id) {
+	        case PROP_STATUS:
+			g_value_set_string (value, view->status);
+			break;
+	        case PROP_FIND_STATUS:
+			g_value_set_string (value, view->status);
+			break;
+	        case PROP_CONTINUOUS:
+			g_value_set_boolean (value, view->continuous);
+			break;
+	        case PROP_DUAL_PAGE:
+			g_value_set_boolean (value, view->dual_page);
+			break;
+	        case PROP_FULLSCREEN:
+			g_value_set_boolean (value, view->fullscreen);
+			break;
+	        case PROP_PRESENTATION:
+			g_value_set_boolean (value, view->presentation);
+			break;
+	        case PROP_SIZING_MODE:
+			g_value_set_enum (value, view->sizing_mode);
+			break;
+	        case PROP_ZOOM:
+			g_value_set_double (value, view->scale);
+			break;
+	        case PROP_ROTATION:
+			g_value_set_int (value, view->rotation);
+			break;
+	        case PROP_HAS_SELECTION:
+			g_value_set_boolean (value,
+					     view->selection_info.selections != NULL);
+			break;
+	        default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
 }
 

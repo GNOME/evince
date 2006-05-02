@@ -80,7 +80,8 @@ static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails   
 							 gint                      *height);
 static int  pdf_document_get_n_pages			(EvDocument                *document);
 
-static EvLink * ev_link_from_action (PopplerAction *action);
+static EvLinkDest *ev_link_dest_from_dest (PopplerDest *dest);
+static EvLink *ev_link_from_action (PopplerAction *action);
 static void pdf_document_search_free (PdfDocumentSearch   *search);
 
 
@@ -274,45 +275,6 @@ pdf_document_get_page_label (EvDocument *document,
 	g_object_unref (poppler_page);
 
 	return label;
-}
-
-static GList *
-pdf_document_get_links (EvDocument *document,
-			int         page)
-{
-	PdfDocument *pdf_document;
-	PopplerPage *poppler_page;
-	GList *retval = NULL;
-	GList *mapping_list;
-	GList *list;
-	double height;
-
-	pdf_document = PDF_DOCUMENT (document);
-	poppler_page = poppler_document_get_page (pdf_document->document,
-						  page);
-	mapping_list = poppler_page_get_link_mapping (poppler_page);
-	poppler_page_get_size (poppler_page, NULL, &height);
-
-	for (list = mapping_list; list; list = list->next) {
-		PopplerLinkMapping *link_mapping;
-		EvLinkMapping *ev_link_mapping;
-
-		link_mapping = (PopplerLinkMapping *)list->data;
-		ev_link_mapping = g_new (EvLinkMapping, 1);
-		ev_link_mapping->link = ev_link_from_action (link_mapping->action);
-		ev_link_mapping->x1 = link_mapping->area.x1;
-		ev_link_mapping->x2 = link_mapping->area.x2;
-		/* Invert this for X-style coordinates */
-		ev_link_mapping->y1 = height - link_mapping->area.y2;
-		ev_link_mapping->y2 = height - link_mapping->area.y1;
-
-		retval = g_list_prepend (retval, ev_link_mapping);
-	}
-
-	poppler_page_free_link_mapping (mapping_list);
-	g_object_unref (poppler_page);
-
-	return g_list_reverse (retval);
 }
 
 static gboolean
@@ -666,7 +628,6 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = pdf_document_get_n_pages;
 	iface->get_page_size = pdf_document_get_page_size;
 	iface->get_page_label = pdf_document_get_page_label;
-	iface->get_links = pdf_document_get_links;
 	iface->has_attachments = pdf_document_has_attachments;
 	iface->get_attachments = pdf_document_get_attachments;
 	iface->render_pixbuf = pdf_document_render_pixbuf;
@@ -726,24 +687,23 @@ pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
 static const char *
 font_type_to_string (PopplerFontType type)
 {
-	switch (type)
-	{
-	case POPPLER_FONT_TYPE_TYPE1:
-		return _("Type 1");
-	case POPPLER_FONT_TYPE_TYPE1C:
-		return _("Type 1C");
-	case POPPLER_FONT_TYPE_TYPE3:
-		return _("Type 3");
-	case POPPLER_FONT_TYPE_TRUETYPE:
-		return _("TrueType");
-	case POPPLER_FONT_TYPE_CID_TYPE0:
-		return _("Type 1 (CID)");
-	case POPPLER_FONT_TYPE_CID_TYPE0C:
-		return _("Type 1C (CID)");
-	case POPPLER_FONT_TYPE_CID_TYPE2:
-		return _("TrueType (CID)");
-	default:
-		return _("Unknown font type");
+	switch (type) {
+	        case POPPLER_FONT_TYPE_TYPE1:
+			return _("Type 1");
+	        case POPPLER_FONT_TYPE_TYPE1C:
+			return _("Type 1C");
+	        case POPPLER_FONT_TYPE_TYPE3:
+			return _("Type 3");
+	        case POPPLER_FONT_TYPE_TRUETYPE:
+			return _("TrueType");
+	        case POPPLER_FONT_TYPE_CID_TYPE0:
+			return _("Type 1 (CID)");
+	        case POPPLER_FONT_TYPE_CID_TYPE0C:
+			return _("Type 1C (CID)");
+	        case POPPLER_FONT_TYPE_CID_TYPE2:
+			return _("TrueType (CID)");
+	        default:
+			return _("Unknown font type");
 	}
 }
 
@@ -820,111 +780,115 @@ pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 	return TRUE;
 }
 
-static EvLink *
-ev_link_from_dest (PopplerAction *action)
+static EvLinkDest *
+ev_link_dest_from_dest (PopplerDest *dest)
 {
-	EvLink *link = NULL;
+	EvLinkDest *ev_dest = NULL;
 	const char *unimplemented_dest = NULL;
 
-	switch (action->goto_dest.dest->type) {
-	case POPPLER_DEST_UNKNOWN:
-		unimplemented_dest = "POPPLER_DEST_UNKNOWN";
-		break;
-	case POPPLER_DEST_XYZ:
-		link = ev_link_new_page_xyz (action->any.title,
-					     action->goto_dest.dest->page_num - 1,
-					     action->goto_dest.dest->left,
-					     action->goto_dest.dest->top,
-					     action->goto_dest.dest->zoom);
-		break;
-	case POPPLER_DEST_FIT:
-		link = ev_link_new_page_fit (action->any.title,
-					     action->goto_dest.dest->page_num - 1);
-		break;
-	case POPPLER_DEST_FITH:
-		link = ev_link_new_page_fith (action->any.title,
-					      action->goto_dest.dest->page_num - 1,
-					      action->goto_dest.dest->top);
-		break;
-	case POPPLER_DEST_FITV:
-		link = ev_link_new_page_fitv (action->any.title,
-					      action->goto_dest.dest->page_num - 1,
-					      action->goto_dest.dest->left);
-		break;
-	case POPPLER_DEST_FITR:
-		link = ev_link_new_page_fitr (action->any.title,
-					      action->goto_dest.dest->page_num - 1,
-					      action->goto_dest.dest->left,
-					      action->goto_dest.dest->bottom,
-					      action->goto_dest.dest->right,
-					      action->goto_dest.dest->top);
-		break;
-	case POPPLER_DEST_FITB:
-		unimplemented_dest = "POPPLER_DEST_FITB";
-		break;
-	case POPPLER_DEST_FITBH:
-		unimplemented_dest = "POPPLER_DEST_FITBH";
-		break;
-	case POPPLER_DEST_FITBV:
-		unimplemented_dest = "POPPLER_DEST_FITBV";
-		break;
+	g_assert (dest != NULL);
+	
+	switch (dest->type) {
+	        case POPPLER_DEST_XYZ:
+			ev_dest = ev_link_dest_new_xyz (dest->page_num - 1,
+							dest->left,
+							dest->top,
+							dest->zoom);
+			break;
+	        case POPPLER_DEST_FIT:
+			ev_dest = ev_link_dest_new_fit (dest->page_num - 1);
+			break;
+	        case POPPLER_DEST_FITH:
+			ev_dest = ev_link_dest_new_fith (dest->page_num - 1,
+							 dest->top);
+			break;
+	        case POPPLER_DEST_FITV:
+			ev_dest = ev_link_dest_new_fitv (dest->page_num - 1,
+							 dest->left);
+			break;
+	        case POPPLER_DEST_FITR:
+			ev_dest = ev_link_dest_new_fitr (dest->page_num - 1,
+							 dest->left,
+							 dest->bottom,
+							 dest->right,
+							 dest->top);
+			break;
+	        case POPPLER_DEST_FITB:
+			unimplemented_dest = "POPPLER_DEST_FITB";
+			break;
+	        case POPPLER_DEST_FITBH:
+			unimplemented_dest = "POPPLER_DEST_FITBH";
+			break;
+	        case POPPLER_DEST_FITBV:
+			unimplemented_dest = "POPPLER_DEST_FITBV";
+			break;
+	        case POPPLER_DEST_NAMED:
+			ev_dest = ev_link_dest_new_named (dest->named_dest);
+			break;
+	        case POPPLER_DEST_UNKNOWN:
+			unimplemented_dest = "POPPLER_DEST_UNKNOWN";
+			break;
 	}
-
+	
 	if (unimplemented_dest) {
 		g_warning ("Unimplemented destination: %s, please post a bug report with a testcase.",
 			   unimplemented_dest);
 	}
 
-	if (link == NULL) {
-		link = ev_link_new_page (action->any.title, action->goto_dest.dest->page_num - 1);
-	}
-
-	return link;
+	if (!ev_dest)
+		ev_dest = ev_link_dest_new_page (dest->page_num - 1);
+	
+	return ev_dest;
 }
 
 static EvLink *
 ev_link_from_action (PopplerAction *action)
 {
-	EvLink *link = NULL;
-	const char *title;
-	const char *unimplemented_action = NULL;
-
-	title = action->any.title;
+	EvLink       *link = NULL;
+	EvLinkAction *ev_action = NULL;
+	const char   *unimplemented_action = NULL;
 
 	switch (action->type) {
-	case POPPLER_ACTION_UNKNOWN:
-		link = ev_link_new_title (title);
-		break;
-	case POPPLER_ACTION_GOTO_DEST:
-		link = ev_link_from_dest (action);
-		break;
-	case POPPLER_ACTION_GOTO_REMOTE:
-		unimplemented_action = "POPPLER_ACTION_GOTO_REMOTE";
-		break;
-	case POPPLER_ACTION_LAUNCH:
-		link = ev_link_new_launch (title, action->launch.file_name,
-					   action->launch.params);
-		break;
-	case POPPLER_ACTION_URI:
-		link = ev_link_new_external (title, action->uri.uri);
-		break;
-	case POPPLER_ACTION_NAMED:
-		unimplemented_action = "POPPLER_ACTION_NAMED";
-		break;
-	case POPPLER_ACTION_MOVIE:
-		unimplemented_action = "POPPLER_ACTION_MOVIE";
-		break;
+	        case POPPLER_ACTION_GOTO_DEST: {
+			EvLinkDest *dest;
+			
+			dest = ev_link_dest_from_dest (action->goto_dest.dest);
+			ev_action = ev_link_action_new_dest (dest);
+		}
+			break;
+	        case POPPLER_ACTION_GOTO_REMOTE: {
+			EvLinkDest *dest;
+			
+			dest = ev_link_dest_from_dest (action->goto_remote.dest);
+			ev_action = ev_link_action_new_remote (dest, 
+							       action->goto_remote.file_name);
+			
+		}
+			break;
+	        case POPPLER_ACTION_LAUNCH:
+			ev_action = ev_link_action_new_launch (action->launch.file_name,
+							       action->launch.params);
+			break;
+	        case POPPLER_ACTION_URI:
+			ev_action = ev_link_action_new_external_uri (action->uri.uri);
+			break;
+	        case POPPLER_ACTION_NAMED:
+			unimplemented_action = "POPPLER_ACTION_NAMED";
+			break;
+	        case POPPLER_ACTION_MOVIE:
+			unimplemented_action = "POPPLER_ACTION_MOVIE";
+			break;
+	        case POPPLER_ACTION_UNKNOWN:
+			unimplemented_action = "POPPLER_ACTION_UNKNOWN";
 	}
-
+	
 	if (unimplemented_action) {
 		g_warning ("Unimplemented action: %s, please post a bug report with a testcase.",
 			   unimplemented_action);
 	}
-
-	if (link == NULL) {
-		link = ev_link_new_title (title);
-	}
-
+	
+	link = ev_link_new (action->any.title, ev_action);
+	
 	return link;	
 }
 
@@ -934,41 +898,75 @@ build_tree (PdfDocument      *pdf_document,
 	    GtkTreeIter      *parent,
 	    PopplerIndexIter *iter)
 {
-
+	
 	do {
 		GtkTreeIter tree_iter;
 		PopplerIndexIter *child;
 		PopplerAction *action;
-		EvLink *link;
+		EvLink *link = NULL;
 		gboolean expand;
+		char *title_markup;
 		
 		action = poppler_index_iter_get_action (iter);
 		expand = poppler_index_iter_is_open (iter);
-		if (action) {
-			char *title_markup;
 
-			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
-			link = ev_link_from_action (action);
-			poppler_action_free (action);
-			title_markup = g_markup_escape_text (ev_link_get_title (link), -1);
+		if (!action)
+			continue;
 
-			gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
-					    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title_markup,
-					    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
-					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, expand,
-					    -1);
-
-			g_free (title_markup);
-			g_object_unref (link);
-
-			child = poppler_index_iter_get_child (iter);
-			if (child)
-				build_tree (pdf_document, model, &tree_iter, child);
-			poppler_index_iter_free (child);
+		switch (action->type) {
+		        case POPPLER_ACTION_GOTO_DEST: {
+				/* For bookmarks, solve named destinations */
+				if (action->goto_dest.dest->type == POPPLER_DEST_NAMED) {
+					PopplerDest *dest;
+					EvLinkDest *ev_dest = NULL;
+					EvLinkAction *ev_action;
+					
+					dest = poppler_document_find_dest (pdf_document->document,
+									   action->goto_dest.dest->named_dest);
+					if (!dest) {
+						link = ev_link_from_action (action);
+						break;
+					}
+					
+					ev_dest = ev_link_dest_from_dest (dest);
+					poppler_dest_free (dest);
+					
+					ev_action = ev_link_action_new_dest (ev_dest);
+					link = ev_link_new (action->any.title, ev_action);
+				} else {
+					link = ev_link_from_action (action);
+				}
+			}
+				break;
+		        default:
+				link = ev_link_from_action (action);
+				break;
 		}
+		
+		if (!link) {
+			poppler_action_free (action);
+			continue;
+		}
+
+		gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
+		title_markup = g_markup_escape_text (ev_link_get_title (link), -1);
+		
+		gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
+				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title_markup,
+				    EV_DOCUMENT_LINKS_COLUMN_LINK, link,
+				    EV_DOCUMENT_LINKS_COLUMN_EXPAND, expand,
+				    -1);
+		
+		g_free (title_markup);
+		g_object_unref (link);
+		
+		child = poppler_index_iter_get_child (iter);
+		if (child)
+			build_tree (pdf_document, model, &tree_iter, child);
+		poppler_index_iter_free (child);
+		
 	} while (poppler_index_iter_next (iter));
 }
-
 
 static GtkTreeModel *
 pdf_document_links_get_links_model (EvDocumentLinks *document_links)
@@ -976,7 +974,7 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_links);
 	GtkTreeModel *model = NULL;
 	PopplerIndexIter *iter;
-
+	
 	g_return_val_if_fail (PDF_IS_DOCUMENT (document_links), NULL);
 
 	iter = poppler_index_iter_new (pdf_document->document);
@@ -993,11 +991,71 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	return model;
 }
 
+static GList *
+pdf_document_links_get_links (EvDocumentLinks *document_links,
+			      gint             page)
+{
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	GList *retval = NULL;
+	GList *mapping_list;
+	GList *list;
+	double height;
+
+	pdf_document = PDF_DOCUMENT (document_links);
+	poppler_page = poppler_document_get_page (pdf_document->document,
+						  page);
+	mapping_list = poppler_page_get_link_mapping (poppler_page);
+	poppler_page_get_size (poppler_page, NULL, &height);
+
+	for (list = mapping_list; list; list = list->next) {
+		PopplerLinkMapping *link_mapping;
+		EvLinkMapping *ev_link_mapping;
+
+		link_mapping = (PopplerLinkMapping *)list->data;
+		ev_link_mapping = g_new (EvLinkMapping, 1);
+		ev_link_mapping->link = ev_link_from_action (link_mapping->action);
+		ev_link_mapping->x1 = link_mapping->area.x1;
+		ev_link_mapping->x2 = link_mapping->area.x2;
+		/* Invert this for X-style coordinates */
+		ev_link_mapping->y1 = height - link_mapping->area.y2;
+		ev_link_mapping->y2 = height - link_mapping->area.y1;
+
+		retval = g_list_prepend (retval, ev_link_mapping);
+	}
+
+	poppler_page_free_link_mapping (mapping_list);
+	g_object_unref (poppler_page);
+
+	return g_list_reverse (retval);
+}
+
+static EvLinkDest *
+pdf_document_links_find_link_dest (EvDocumentLinks  *document_links,
+				   const gchar      *link_name)
+{
+	PdfDocument *pdf_document;
+	PopplerDest *dest;
+	EvLinkDest *ev_dest = NULL;
+
+	pdf_document = PDF_DOCUMENT (document_links);
+	dest = poppler_document_find_dest (pdf_document->document,
+					   link_name);
+	if (dest) {
+		ev_dest = ev_link_dest_from_dest (dest);
+		poppler_dest_free (dest);
+	}
+
+	return ev_dest;
+}
+
 static void
 pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 {
 	iface->has_document_links = pdf_document_links_has_document_links;
 	iface->get_links_model = pdf_document_links_get_links_model;
+	iface->get_links = pdf_document_links_get_links;
+	iface->find_link_dest = pdf_document_links_find_link_dest;
 }
 
 static GdkPixbuf *

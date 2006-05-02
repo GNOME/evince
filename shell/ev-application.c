@@ -185,7 +185,6 @@ ev_application_open_window (EvApplication  *application,
 #else
 	gtk_window_present (GTK_WINDOW (new_window));
 #endif
-
 	return TRUE;
 }
 
@@ -236,16 +235,15 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 	return uri_window;
 }
 
-gboolean
-ev_application_open_uri (EvApplication  *application,
-			 const char     *uri,
-			 const char     *page_label,
-			 guint           timestamp,
-			 GError        **error)
+void
+ev_application_open_uri_at_dest (EvApplication  *application,
+				 const char     *uri,
+				 EvLinkDest     *dest,
+				 guint           timestamp)
 {
 	EvWindow *new_window;
 
-	g_return_val_if_fail (uri != NULL, FALSE);
+	g_return_if_fail (uri != NULL);
 
 	new_window = ev_application_get_uri_window (application, uri);
 	if (new_window != NULL) {
@@ -254,8 +252,11 @@ ev_application_open_uri (EvApplication  *application,
 					      timestamp);
 #else
 		gtk_window_present (GTK_WINDOW (new_window));
-#endif	
-		return TRUE;
+#endif
+		if (dest)
+			ev_window_goto_dest (new_window, dest);
+
+		return;
 	}
 
 	new_window = ev_application_get_empty_window (application);
@@ -266,7 +267,7 @@ ev_application_open_uri (EvApplication  *application,
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
-	ev_window_open_uri (new_window, uri);
+	ev_window_open_uri (new_window, uri, dest);
 
 	gtk_widget_show (GTK_WIDGET (new_window));
 
@@ -276,9 +277,22 @@ ev_application_open_uri (EvApplication  *application,
 #else
 	gtk_window_present (GTK_WINDOW (new_window));
 #endif
+}
 
-	if (page_label != NULL) {
-		ev_window_open_page_label (new_window, page_label);
+gboolean
+ev_application_open_uri (EvApplication  *application,
+			 const char     *uri,
+			 const char     *page_label,
+			 guint           timestamp,
+			 GError        **error)
+{
+	ev_application_open_uri_at_dest (application, uri, NULL, timestamp);
+	
+	if (page_label && strcmp (page_label, "") != 0) {
+		EvWindow *window;
+
+		window = ev_application_get_uri_window (application, uri);
+		ev_window_open_page_label (window, page_label);
 	}
 
 	return TRUE;
@@ -293,9 +307,7 @@ ev_application_open_uri_list (EvApplication *application,
 
 	for (l = uri_list; l != NULL; l = l->next) {
 		ev_application_open_uri (application, (char *)l->data,
-					 NULL,
-					 timestamp,
-					 NULL);
+					 NULL, timestamp, NULL);
 	}
 }
 
@@ -388,7 +400,7 @@ void ev_application_save_toolbars_model (EvApplication *application)
 				 application->toolbars_file, "1.0");
 }
 
-void ev_application_set_chooser_uri (EvApplication *application, gchar *uri)
+void ev_application_set_chooser_uri (EvApplication *application, const gchar *uri)
 {
 	g_free (application->last_chooser_uri);
 	application->last_chooser_uri = g_strdup (uri);

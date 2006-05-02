@@ -185,21 +185,6 @@ ev_document_get_text (EvDocument  *document,
 	return retval;
 }
 
-GList *
-ev_document_get_links (EvDocument *document,
-		       int         page)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	GList *retval;
-
-	LOG ("ev_document_get_link");
-	if (iface->get_links == NULL)
-		return NULL;
-	retval = iface->get_links (document, page);
-
-	return retval;
-}
-
 gboolean
 ev_document_has_attachments (EvDocument *document)
 {

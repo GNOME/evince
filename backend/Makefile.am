@@ -22,6 +22,10 @@ libevbackend_la_SOURCES=			\
 	ev-backend-marshal.c			\
 	ev-link.c				\
 	ev-link.h				\
+	ev-link-action.c			\
+	ev-link-action.h			\
+	ev-link-dest.c				\
+	ev-link-dest.h				\
 	ev-document.c				\
 	ev-document.h				\
 	ev-document-factory.c			\

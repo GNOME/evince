@@ -293,12 +293,25 @@ build_new_tree_cb (GtkTreeModel *model,
 {
 	GtkTreeModel *filter_model = GTK_TREE_MODEL (data);
 	EvLink *link;
+	EvLinkAction *action;
+	EvLinkActionType type;
 
 	gtk_tree_model_get (model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
-	if (link && ev_link_get_page (link) >= 0) {
+	if (!link)
+		return FALSE;
+
+	action = ev_link_get_action (link);
+	if (!action) {
+		g_object_unref (link);
+		return FALSE;
+	}
+	
+	type = ev_link_action_get_action_type (action);
+
+	if (type == EV_LINK_ACTION_TYPE_GOTO_DEST) {
 		GtkTreeIter filter_iter;
 
 		gtk_list_store_append (GTK_LIST_STORE (filter_model), &filter_iter);
@@ -307,8 +320,7 @@ build_new_tree_cb (GtkTreeModel *model,
 				    -1);
 	}
 	
-	if (link)
-		g_object_unref (link);
+	g_object_unref (link);
 	
 	return FALSE;
 }
@@ -410,7 +422,7 @@ match_completion (GtkEntryCompletion *completion,
 
 	gtk_tree_iter_free (iter);
 
-	if (text && key ) {
+	if (text && key) {
 		gchar *normalized_text;
 		gchar *normalized_key;
 		gchar *case_normalized_text;

@@ -188,7 +188,7 @@ load_files_remote (const char **files)
 		char *uri;
 
 		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
-		page_label = ev_page_label ? ev_page_label : ""; 
+		page_label = ev_page_label ? ev_page_label : "";
 #if DBUS_VERSION <= 33
 		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
 						DBUS_TYPE_STRING, &uri,

@@ -56,13 +56,22 @@ struct _EvDocumentLinksIface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	gboolean      (* has_document_links) (EvDocumentLinks      *document_links);
-	GtkTreeModel *(* get_links_model)    (EvDocumentLinks      *document_links);
+	gboolean      (* has_document_links) (EvDocumentLinks *document_links);
+	GtkTreeModel *(* get_links_model)    (EvDocumentLinks *document_links);
+	GList        *(* get_links)          (EvDocumentLinks *document_links,
+					      gint             page);
+	EvLinkDest   *(* find_link_dest)     (EvDocumentLinks *document_links,
+					      const gchar     *link_name);
 };
 
 GType         ev_document_links_get_type           (void);
 gboolean      ev_document_links_has_document_links (EvDocumentLinks *document_links);
 GtkTreeModel *ev_document_links_get_links_model    (EvDocumentLinks *document_links);
+
+GList        *ev_document_links_get_links          (EvDocumentLinks *document_links,
+						    gint             page);
+EvLinkDest   *ev_document_links_find_link_dest     (EvDocumentLinks *document_links,
+						    const gchar     *link_name);
 
 G_END_DECLS
 

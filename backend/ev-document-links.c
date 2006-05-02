@@ -30,10 +30,8 @@ ev_document_links_get_type (void)
 {
 	static GType type = 0;
 
-	if (G_UNLIKELY (type == 0))
-	{
-		static const GTypeInfo our_info =
-		{
+	if (G_UNLIKELY (type == 0)) {
+		static const GTypeInfo our_info = {
 			sizeof (EvDocumentLinksIface),
 			NULL,
 			NULL,
@@ -65,6 +63,30 @@ ev_document_links_get_links_model (EvDocumentLinks *document_links)
 	GtkTreeModel *retval;
 
 	retval = iface->get_links_model (document_links);
+
+	return retval;
+}
+
+GList *
+ev_document_links_get_links (EvDocumentLinks *document_links,
+			     gint             page)
+{
+	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	GList *retval;
+
+	retval = iface->get_links (document_links, page);
+
+	return retval;
+}
+
+EvLinkDest *
+ev_document_links_find_link_dest (EvDocumentLinks *document_links,
+				  const gchar     *link_name)
+{
+	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvLinkDest *retval;
+
+	retval = iface->find_link_dest (document_links, link_name);
 
 	return retval;
 }

@@ -272,9 +272,13 @@ ev_job_render_run (EvJobRender *job)
 	} else {
 		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document, job->rc);
 		if (job->include_links)
-			job->link_mapping = ev_document_get_links (EV_JOB (job)->document, job->rc->page);
+			job->link_mapping =
+				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
+							     job->rc->page);
 		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
-			job->text_mapping = ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document), job->rc);
+			job->text_mapping =
+				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document),
+								job->rc);
 		if (job->include_selection && EV_IS_SELECTION (EV_JOB (job)->document)) {
 			ev_selection_render_selection (EV_SELECTION (EV_JOB (job)->document),
 						       job->rc,

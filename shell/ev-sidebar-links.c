@@ -262,6 +262,27 @@ create_loading_model (void)
 	return retval;
 }
 
+static gint
+get_page_from_link (EvLink *link)
+{
+	EvLinkAction *action;
+	EvLinkDest *dest;
+
+	action = ev_link_get_action (link);
+	if (!action)
+		return -1;
+
+	if (ev_link_action_get_action_type (action) !=
+	    EV_LINK_ACTION_TYPE_GOTO_DEST)
+		return -1;
+
+	dest = ev_link_action_get_dest (action);
+	if (dest)
+		return ev_link_dest_get_page (dest);
+		
+	return -1;
+}
+
 static void
 print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 {
@@ -275,27 +296,39 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
 		EvLink *link;
-		int first_page, last_page;
+		int first_page, last_page = -1;
 
 		gtk_tree_model_get (model, &iter,
 				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 				    -1);
-		first_page = ev_link_get_page (link) + 1;
 
-		if (link)
+		if (!link)
+			return;
+
+		first_page = get_page_from_link (link) + 1;
+		if (first_page == -1) {
 			g_object_unref (link);
+			return;
+		}
+		
+		first_page++;
+		g_object_unref (link);
 
 		if (gtk_tree_model_iter_next (model, &iter)) {
 			gtk_tree_model_get (model, &iter,
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 					    -1);
-			last_page = ev_link_get_page (link);
 
-			if (link)
-		    		g_object_unref (link);
+			if (link) {
+				last_page = get_page_from_link (link);
+				g_object_unref (link);
+			}
 		} else {
-			last_page =  ev_page_cache_get_n_pages (sidebar->priv->page_cache);
+			last_page = ev_page_cache_get_n_pages (sidebar->priv->page_cache);
 		}
+
+		if (last_page == -1)
+			last_page = ev_page_cache_get_n_pages (sidebar->priv->page_cache);
 	
 		window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
 		if (EV_IS_WINDOW (window)) {
@@ -442,17 +475,27 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 		     EvSidebarLinks    *sidebar_links)
 {
 	EvLink *link;
+	gint page;
 
 	gtk_tree_model_get (tree_model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
-	
-	if (link != NULL &&
-	    ev_link_get_page (link) >= 0) {
+
+	if (!link) {
+		g_object_set (cell,
+			      "visible", FALSE,
+			      NULL);
+		return;
+	}
+
+	page = get_page_from_link (link);
+
+	if (page >= 0) {
 		gchar *page_label;
 		gchar *page_string;
 
-		page_label = ev_page_cache_get_page_label (sidebar_links->priv->page_cache, ev_link_get_page (link));
+		page_label = ev_page_cache_get_page_label (sidebar_links->priv->page_cache,
+							   page);
 		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
 
 		g_object_set (cell,
@@ -468,8 +511,7 @@ links_page_num_func (GtkTreeViewColumn *tree_column,
 			      NULL);
 	}
 
-	if (link)
-		g_object_unref (link);
+	g_object_unref (link);
 }
 
 /* Public Functions */
@@ -499,18 +541,23 @@ update_page_callback_foreach (GtkTreeModel *model,
 
 	if (link) {
 		int current_page;
+		int dest_page;
 
+		dest_page = get_page_from_link (link);
+		g_object_unref (link);
+		
 		current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
-		if (ev_link_get_page (link) == current_page) {
+			 
+		if (dest_page == current_page) {
 			GtkTreeSelection *selection;
 
 			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+			gtk_tree_view_expand_to_path (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
+						      path);
 			gtk_tree_selection_select_path (selection, path);
-			g_object_unref (link);
 			
 			return TRUE;
 		}
-		g_object_unref (link);
 	}
 
 	return FALSE;
@@ -524,7 +571,7 @@ update_page_callback (EvPageCache    *page_cache,
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -534,13 +581,15 @@ update_page_callback (EvPageCache    *page_cache,
 				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 				    -1);
 		if (link) {
-			gint current_page;		
-			current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
-			if (ev_link_get_page (link) == current_page) {
-				g_object_unref (link);
-				return;
-			}
+			gint current_page;
+			gint dest_page;
+
+			dest_page = get_page_from_link (link);
 			g_object_unref (link);
+			
+			current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
+			if (dest_page == current_page)
+				return;
 		}
 	}		
 
@@ -555,6 +604,7 @@ update_page_callback (EvPageCache    *page_cache,
 	gtk_tree_model_foreach (model,
 				update_page_callback_foreach,
 				sidebar_links);
+	
 
 	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_unblock (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
