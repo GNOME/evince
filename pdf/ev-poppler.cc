@@ -873,7 +873,7 @@ ev_link_from_action (PopplerAction *action)
 			ev_action = ev_link_action_new_external_uri (action->uri.uri);
 			break;
 	        case POPPLER_ACTION_NAMED:
-			unimplemented_action = "POPPLER_ACTION_NAMED";
+			ev_action = ev_link_action_new_named (action->named.named_dest);
 			break;
 	        case POPPLER_ACTION_MOVIE:
 			unimplemented_action = "POPPLER_ACTION_MOVIE";

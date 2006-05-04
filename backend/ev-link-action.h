@@ -44,6 +44,7 @@ typedef enum {
 	EV_LINK_ACTION_TYPE_GOTO_REMOTE,
 	EV_LINK_ACTION_TYPE_EXTERNAL_URI,
 	EV_LINK_ACTION_TYPE_LAUNCH,
+	EV_LINK_ACTION_TYPE_NAMED
 	/* We'll probably fill this in more as we support the other types of
 	 * actions */
 } EvLinkActionType;
@@ -56,6 +57,7 @@ EvLinkDest      *ev_link_action_get_dest         (EvLinkAction *self);
 const gchar     *ev_link_action_get_uri          (EvLinkAction *self);
 const gchar     *ev_link_action_get_filename     (EvLinkAction *self);
 const gchar     *ev_link_action_get_params       (EvLinkAction *self);
+const gchar     *ev_link_action_get_name         (EvLinkAction *self);
 
 EvLinkAction    *ev_link_action_new_dest         (EvLinkDest   *dest);
 EvLinkAction    *ev_link_action_new_remote       (EvLinkDest   *dest,
@@ -63,6 +65,7 @@ EvLinkAction    *ev_link_action_new_remote       (EvLinkDest   *dest,
 EvLinkAction    *ev_link_action_new_external_uri (const gchar  *uri);
 EvLinkAction    *ev_link_action_new_launch       (const gchar  *filename,
 						  const gchar  *params);
+EvLinkAction    *ev_link_action_new_named        (const gchar  *name);
 
 G_END_DECLS
 

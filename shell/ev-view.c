@@ -1289,6 +1289,7 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
 	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
 	        case EV_LINK_ACTION_TYPE_LAUNCH:
+	        case EV_LINK_ACTION_TYPE_NAMED:
 			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, action);
 			break;
 	}
@@ -1324,6 +1325,28 @@ page_label_from_dest (EvView *view, EvLinkDest *dest)
 	}
 	
 	return msg;
+}
+
+static char *
+tip_from_action_named (EvLinkAction *action)
+{
+	const gchar *name = ev_link_action_get_name (action);
+	
+	if (g_ascii_strcasecmp (name, "FirstPage") == 0) {
+		return g_strdup (_("Got to fisrt page"));
+	} else if (g_ascii_strcasecmp (name, "PrevPage") == 0) {
+		return g_strdup (_("Got to previuos page"));
+	} else if (g_ascii_strcasecmp (name, "NextPage") == 0) {
+		return g_strdup (_("Got to next page"));
+	} else if (g_ascii_strcasecmp (name, "LastPage") == 0) {
+		return g_strdup (_("Got to last page"));
+	} else if (g_ascii_strcasecmp (name, "GoToPage") == 0) {
+		return g_strdup (_("Got to page"));
+	} else if (g_ascii_strcasecmp (name, "Find") == 0) {
+		return g_strdup (_("Find"));
+	}
+	
+	return NULL;
 }
 
 static char *
@@ -1366,6 +1389,9 @@ tip_from_link (EvView *view, EvLink *link)
 	        case EV_LINK_ACTION_TYPE_LAUNCH:
 			msg = g_strdup_printf (_("Launch %s"),
 					       ev_link_action_get_filename (action));
+			break;
+	        case EV_LINK_ACTION_TYPE_NAMED:
+			msg = tip_from_action_named (action);
 			break;
 	        default:
 			if (title)

@@ -26,7 +26,8 @@ enum {
 	PROP_DEST,
 	PROP_URI,
 	PROP_FILENAME,
-	PROP_PARAMS
+	PROP_PARAMS,
+	PROP_NAME
 };
 
 struct _EvLinkAction {
@@ -45,6 +46,7 @@ struct _EvLinkActionPrivate {
 	gchar            *uri;
 	gchar            *filename;
 	gchar            *params;
+	gchar            *name;
 };
 
 G_DEFINE_TYPE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
@@ -63,6 +65,7 @@ ev_link_action_type_get_type (void)
 			{ EV_LINK_ACTION_TYPE_GOTO_REMOTE, "EV_LINK_ACTION_TYPE_GOTO_REMOTE", "goto-remote" },
 			{ EV_LINK_ACTION_TYPE_LAUNCH, "EV_LINK_ACTION_TYPE_LAUNCH", "launch" },
 			{ EV_LINK_ACTION_TYPE_EXTERNAL_URI, "EV_LINK_ACTION_TYPE_EXTERNAL_URI", "external-uri"},
+			{ EV_LINK_ACTION_TYPE_NAMED, "EV_LINK_ACTION_TYPE_NAMED", "named"},
 			{ 0, NULL, NULL }
 		};
 
@@ -112,6 +115,14 @@ ev_link_action_get_params (EvLinkAction *self)
 	return self->priv->params;
 }
 
+const gchar *
+ev_link_action_get_name (EvLinkAction *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+
+	return self->priv->name;
+}
+
 static void
 ev_link_action_get_property (GObject    *object,
 			     guint       prop_id,
@@ -137,6 +148,9 @@ ev_link_action_get_property (GObject    *object,
 			break;
 	        case PROP_PARAMS:
 			g_value_set_string (value, self->priv->params);
+			break;
+	        case PROP_NAME:
+			g_value_set_string (value, self->priv->name);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -173,6 +187,10 @@ ev_link_action_set_property (GObject      *object,
 			g_free (self->priv->params);
 			self->priv->params = g_value_dup_string (value);
 			break;
+	        case PROP_NAME:
+			g_free (self->priv->name);
+			self->priv->name = g_value_dup_string (value);
+			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
 							   prop_id,
@@ -208,6 +226,11 @@ ev_link_action_finalize (GObject *object)
 		priv->params = NULL;
 	}
 
+	if (priv->name) {
+		g_free (priv->name);
+		priv->name = NULL;
+	}
+
 	G_OBJECT_CLASS (ev_link_action_parent_class)->finalize (object);
 }
 
@@ -220,6 +243,7 @@ ev_link_action_init (EvLinkAction *ev_link_action)
 	ev_link_action->priv->uri = NULL;
 	ev_link_action->priv->filename = NULL;
 	ev_link_action->priv->params = NULL;
+	ev_link_action->priv->name = NULL;
 }
 
 static void
@@ -276,6 +300,14 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							      NULL,
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_NAME,
+					 g_param_spec_string ("name",
+							      "Name",
+							      "The link action name",
+							      NULL,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
 }
 
 EvLinkAction *
@@ -315,5 +347,14 @@ ev_link_action_new_launch (const gchar *filename,
 					     "filename", filename,
 					     "params", params,
 					     "type", EV_LINK_ACTION_TYPE_LAUNCH,
+					     NULL));
+}
+
+EvLinkAction *
+ev_link_action_new_named (const gchar *name)
+{
+	return EV_LINK_ACTION (g_object_new (EV_TYPE_LINK_ACTION,
+					     "name", name,
+					     "type", EV_LINK_ACTION_TYPE_NAMED,
 					     NULL));
 }

@@ -3320,6 +3320,29 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 }
 
 static void
+do_action_named (EvWindow *window, EvLinkAction *action)
+{
+	const gchar *name = ev_link_action_get_name (action);
+
+	if (g_ascii_strcasecmp (name, "FirstPage") == 0) {
+		ev_window_cmd_go_first_page (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "PrevPage") == 0) {
+		ev_window_cmd_go_previous_page (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "NextPage") == 0) {
+		ev_window_cmd_go_next_page (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "LastPage") == 0) {
+		ev_window_cmd_go_last_page (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "GoToPage") == 0) {
+		ev_window_cmd_focus_page_selector (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "Find") == 0) {
+		ev_window_cmd_edit_find (NULL, window);
+	} else {
+		g_warning ("Unimplemented named action: %s, please post a bug report with a testcase.",
+			   name);
+	}
+}
+
+static void
 view_external_link_cb (EvView *view, EvLinkAction *action, EvWindow *window)
 {
 	switch (ev_link_action_get_action_type (action)) {
@@ -3331,6 +3354,9 @@ view_external_link_cb (EvView *view, EvLinkAction *action, EvWindow *window)
 			break;
 	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
 			open_remote_link (window, action);
+			break;
+	        case EV_LINK_ACTION_TYPE_NAMED:
+			do_action_named (window, action);
 			break;
 	        default:
 			g_assert_not_reached ();
