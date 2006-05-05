@@ -20,4 +20,3 @@ libpsdocument_la_SOURCES = 	\
 	gsdefaults.c		\
 	gsdefaults.h
 
-libpsdocument_la_LIBADD = $(PS_LIBS)

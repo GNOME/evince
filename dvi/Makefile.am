@@ -22,5 +22,3 @@ libgtkdvi_la_LIBADD = mdvi-lib/libmdvi.la
 
 
 
-
-

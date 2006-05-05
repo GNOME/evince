@@ -1,4 +1,18 @@
-2006-05-05  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+2006-05-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* djvu/Makefile.am:
+	* dvi/Makefile.am:
+	* dvi/mdvi-lib/Makefile.am:
+	* properties/Makefile.am:
+	* ps/Makefile.am:
+	* shell/Makefile.am:
+	* thumbnailer/Makefile.am:
+	
+	Due to broken libtool that is unable to track dependencies
+	of noinst libraries we are forced to explicitely point
+	libraries for binary. Fix for the bug #333334.
+
+2006-05-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* data/evince.desktop.in.in:
 	* shell/ev-view.c: (view_update_range_and_current_page),

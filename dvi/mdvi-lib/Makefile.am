@@ -38,9 +38,3 @@ libmdvi_la_SOURCES = \
 	util.c	     \
 	vf.c         
 
-libmdvi_la_LIBADD = \
-	-lkpathsea
-
-if WITH_TYPE1_FONTS
-libmdvi_la_LIBADD += -lt1
-endif

@@ -20,6 +20,17 @@ evince_thumbnailer_LDADD=		\
 	$(FRONTEND_LIBS)		\
 	$(DJVU_LIBS)
 
+if ENABLE_DJVU
+evince_thumbnailer_LDADD += $(DJVU_LIBS)
+endif
+
+if ENABLE_DJVU
+evince_thumbnailer_LDADD += -lkpathsea
+endif
+
+if WITH_TYPE1_FONTS
+evince_thumbnailer_LDADD += -lt1
+endif
 
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \

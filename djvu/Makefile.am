@@ -17,6 +17,5 @@ libgtkdjvu_la_SOURCES = \
 	djvu-text-page.c \
 	djvu-text-page.h
 
-libgtkdjvu_la_LIBADD = -lpthread $(DVJU_LIBS)
 
 
