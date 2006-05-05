@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.gu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-03 05:53+0200\n"
-"PO-Revision-Date: 2006-05-03 10:07+0530\n"
+"POT-Creation-Date: 2006-05-05 05:49+0200\n"
+"PO-Revision-Date: 2006-05-05 11:09+0530\n"
 "Last-Translator: Ankit Patel <ankit644@yahoo.com>\n"
 "Language-Team: Gujarati <indianoss-gujarati@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -13,6 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.9.1\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
+"\n"
 "\n"
 "\n"
 "\n"
@@ -542,7 +543,7 @@ msgstr "ફોન્ટ"
 msgid "Gathering font information... %3d%%"
 msgstr "ફોન્ટ જાણકારી ભેગી કરી રહ્યા છીએ... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2202
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2228
 msgid "Loading..."
 msgstr "લાવી રહ્યા છીએ..."
 
@@ -578,22 +579,46 @@ msgstr "દેખાવ નીચે સરકાવો"
 msgid "Document View"
 msgstr "દસ્તાવેજ દૃશ્ય"
 
-#: ../shell/ev-view.c:1350
+#: ../shell/ev-view.c:1336
+msgid "Got to fisrt page"
+msgstr "પ્રથમ પાનાં પર જાઓ"
+
+#: ../shell/ev-view.c:1338
+msgid "Got to previuos page"
+msgstr "પહેલાના પાનાં પર જાઓ"
+
+#: ../shell/ev-view.c:1340
+msgid "Got to next page"
+msgstr "આગળના પાનાં પર જાઓ"
+
+#: ../shell/ev-view.c:1342
+msgid "Got to last page"
+msgstr "છેલ્લા પાના પર જાઓ"
+
+#: ../shell/ev-view.c:1344
+msgid "Got to page"
+msgstr "પાનાં પર જાવ"
+
+#: ../shell/ev-view.c:1346
+msgid "Find"
+msgstr "શોધો"
+
+#: ../shell/ev-view.c:1373
 #, c-format
 msgid "Go to page %s"
 msgstr "પાનાં %s પર જાવ"
 
-#: ../shell/ev-view.c:1355
+#: ../shell/ev-view.c:1378
 #, c-format
 msgid "Go to %s on file %s"
 msgstr "%s પર ફાઈલ %s માં જાવ"
 
-#: ../shell/ev-view.c:1358
+#: ../shell/ev-view.c:1381
 #, c-format
 msgid "Go to file %s"
 msgstr "ફાઈલ %s પર જાવ"
 
-#: ../shell/ev-view.c:1367
+#: ../shell/ev-view.c:1390
 #, c-format
 msgid "Launch %s"
 msgstr "%s લોન્ચ કરો"
@@ -601,14 +626,14 @@ msgstr "%s લોન્ચ કરો"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3403
+#: ../shell/ev-view.c:3429
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d આ પાનાં પર મળી આવ્યું"
 msgstr[1] "%d આ પાનાં પર મળી આવ્યા"
 
-#: ../shell/ev-view.c:3412
+#: ../shell/ev-view.c:3438
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% શોધવામાં બાકી"
@@ -626,7 +651,7 @@ msgstr "દસ્તાવેજ ખોલો"
 msgid "The file could not be saved as \"%s\"."
 msgstr "ફાઈલ \"%s\" તરીકે સંગ્રહી શકાઈ નહિં."
 
-#: ../shell/ev-window.c:1183 ../shell/ev-window.c:3453
+#: ../shell/ev-window.c:1183 ../shell/ev-window.c:3479
 msgid "Save a Copy"
 msgstr "નકલ સંગ્રહો"
 
@@ -981,11 +1006,11 @@ msgstr "નાનું કરો"
 msgid "Fit Width"
 msgstr "પહોળાઈથી બંધબેસાડો"
 
-#: ../shell/ev-window.c:3382
+#: ../shell/ev-window.c:3408
 msgid "Unable to open attachment"
 msgstr "જોડાણ ખોલવામાં અસમર્થ"
 
-#: ../shell/ev-window.c:3429
+#: ../shell/ev-window.c:3455
 msgid "The attachment could not be saved."
 msgstr "જોડાણ સંગ્રહી શક્યા નહિં."
 
