@@ -1,3 +1,23 @@
+2006-05-05  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+
+	* data/evince.desktop.in.in:
+	* shell/ev-view.c: (view_update_range_and_current_page),
+	(ev_view_next_page), (ev_view_previous_page):
+	* shell/ev-window.c: (update_chrome_visibility),
+	(setup_sidebar_from_metadata), (ev_window_setup_document),
+	(ev_window_update_fullscreen_popup), (fullscreen_timeout_cb),
+	(fullscreen_set_timeout), (fullscreen_clear_timeout),
+	(fullscreen_motion_notify_cb), (ev_window_run_fullscreen),
+	(ev_window_stop_fullscreen), (ev_window_run_presentation),
+	(ev_window_stop_presentation), (ev_window_focus_in_event),
+	(ev_window_focus_out_event), (ev_window_view_sidebar_cb),
+	(ev_window_init):
+	* thumbnailer/Makefile.am:
+	
+	Update fullscreen and presentation timeout handling. Hide
+	cursor in presentation after timeout. Fix for the bugs
+	#136359 and #336981.
+
 2006-05-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/ev-link-action.[ch]:

@@ -15,9 +15,11 @@ bin_PROGRAMS=evince-thumbnailer
 evince_thumbnailer_SOURCES=	\
 	evince-thumbnailer.c
 
-evince_thumbnailer_LDADD=				\
+evince_thumbnailer_LDADD=		\
 	$(top_builddir)/lib/libev.la	\
-	$(FRONTEND_LIBS)
+	$(FRONTEND_LIBS)		\
+	$(DJVU_LIBS)
+
 
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \

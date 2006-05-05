@@ -438,7 +438,7 @@ view_update_range_and_current_page (EvView *view)
 		GdkRectangle current_area, unused, page_area;
 		GtkBorder border;
 		gboolean found = FALSE;
-		gint area_max, area;
+		gint area_max = -1, area;
 		int i;
 
 		if (!(view->vadjustment && view->hadjustment))
@@ -4124,6 +4124,9 @@ ev_view_next_page (EvView *view)
 	int page;
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+	
+	if (!view->page_cache)
+		return FALSE;
 
 	page = ev_page_cache_get_current_page (view->page_cache);
 
@@ -4149,6 +4152,9 @@ ev_view_previous_page (EvView *view)
 	int page;
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	if (!view->page_cache)
+		return FALSE;
 
 	page = ev_page_cache_get_current_page (view->page_cache);
 
