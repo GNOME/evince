@@ -1333,15 +1333,15 @@ tip_from_action_named (EvLinkAction *action)
 	const gchar *name = ev_link_action_get_name (action);
 	
 	if (g_ascii_strcasecmp (name, "FirstPage") == 0) {
-		return g_strdup (_("Got to fisrt page"));
+		return g_strdup (_("Go to first page"));
 	} else if (g_ascii_strcasecmp (name, "PrevPage") == 0) {
-		return g_strdup (_("Got to previuos page"));
+		return g_strdup (_("Go to previous page"));
 	} else if (g_ascii_strcasecmp (name, "NextPage") == 0) {
-		return g_strdup (_("Got to next page"));
+		return g_strdup (_("Go to next page"));
 	} else if (g_ascii_strcasecmp (name, "LastPage") == 0) {
-		return g_strdup (_("Got to last page"));
+		return g_strdup (_("Go to last page"));
 	} else if (g_ascii_strcasecmp (name, "GoToPage") == 0) {
-		return g_strdup (_("Got to page"));
+		return g_strdup (_("Go to page"));
 	} else if (g_ascii_strcasecmp (name, "Find") == 0) {
 		return g_strdup (_("Find"));
 	}
