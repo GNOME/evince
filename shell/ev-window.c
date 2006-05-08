@@ -2443,7 +2443,7 @@ static void
 ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 {
 	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
-			       gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
+			    gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
 
 static void
@@ -2471,20 +2471,16 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 }
 
 static void
-ev_window_sidebar_visibility_changed_cb (EvSidebar *ev_sidebar, GParamSpec *pspec,
+ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
+					 GParamSpec *pspec,
 					 EvWindow   *ev_window)
 {
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	GtkAction *action;
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
-	
-	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_view_sidebar_cb), ev_window);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
 				      GTK_WIDGET_VISIBLE (ev_sidebar));
-	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_view_sidebar_cb), ev_window);
 
 	if (!ev_view_get_presentation (view) && 
 	    !ev_view_get_fullscreen (view) &&
@@ -3778,7 +3774,7 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_swapped (G_OBJECT (ev_window->priv->view), "drag-data-received",
 				  G_CALLBACK (drag_data_received_cb),
 				  ev_window);
-
+	
 	/* Set it user interface params */
 
 	ev_window_setup_recent (ev_window);
