@@ -46,20 +46,22 @@
 
 G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 
-#define EV_APPLICATION_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_APPLICATION, EvApplicationPrivate))
-
 #define APPLICATION_SERVICE_NAME "org.gnome.evince.ApplicationService"
 
 #ifdef ENABLE_DBUS
 gboolean
 ev_application_register_service (EvApplication *application)
 {
-	DBusGConnection *connection;
+	static DBusGConnection *connection = NULL;
 	DBusGProxy *driver_proxy;
 	GError *err = NULL;
 	guint request_name_result;
 
+	if (connection) {
+		g_warning ("Service already registered.");
+		return FALSE;
+	}
+	
 	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &err);
 	if (connection == NULL) {
 		g_warning ("Service registration failed.");
@@ -90,6 +92,8 @@ ev_application_register_service (EvApplication *application)
 	}
 #endif	
 
+	g_object_unref (driver_proxy);
+	
 	if (request_name_result == DBUS_REQUEST_NAME_REPLY_EXISTS) {
 		return FALSE;
 	}
@@ -325,7 +329,7 @@ ev_application_shutdown (EvApplication *application)
 		g_object_unref (application->recent_model);
 		application->recent_model = NULL;
 	}
-
+	
 	g_free (application->last_chooser_uri);
 	g_object_unref (application);
 	

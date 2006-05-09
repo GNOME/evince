@@ -35,7 +35,6 @@ G_BEGIN_DECLS
 
 typedef struct _EvApplication EvApplication;
 typedef struct _EvApplicationClass EvApplicationClass;
-typedef struct _EvApplicationPrivate EvApplicationPrivate;
 
 #define EV_TYPE_APPLICATION			(ev_application_get_type ())
 #define EV_APPLICATION(object)			(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_APPLICATION, EvApplication))

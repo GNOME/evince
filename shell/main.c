@@ -158,6 +158,8 @@ load_files_remote (const char **files)
 		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
+			g_object_unref (remote_object);
+			dbus_g_connection_unref (connection);
 			return FALSE;
 		}
 #elif DBUS_VERSION == 34
@@ -168,6 +170,8 @@ load_files_remote (const char **files)
 		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
+			g_object_unref (remote_object);
+			dbus_g_connection_unref (connection);
 			return FALSE;
 		}
 #else
@@ -177,9 +181,14 @@ load_files_remote (const char **files)
 					G_TYPE_INVALID)) {
 			g_warning (error->message);
 			g_clear_error (&error);
+			g_object_unref (remote_object);
+			dbus_g_connection_unref (connection);
 			return FALSE;
 		}
 #endif
+		g_object_unref (remote_object);
+		dbus_g_connection_unref (connection);
+		
 		return TRUE;
 	}
 
@@ -231,6 +240,9 @@ load_files_remote (const char **files)
 		g_free (uri);
 		result = TRUE;
         }
+
+	g_object_unref (remote_object);
+	dbus_g_connection_unref (connection);
 
 	gdk_notify_startup_complete ();
 

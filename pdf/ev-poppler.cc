@@ -964,6 +964,7 @@ build_tree (PdfDocument      *pdf_document,
 		if (child)
 			build_tree (pdf_document, model, &tree_iter, child);
 		poppler_index_iter_free (child);
+		poppler_action_free (action);
 		
 	} while (poppler_index_iter_next (iter));
 }
