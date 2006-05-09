@@ -65,9 +65,9 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (properties)->vbox), 12);
 
 	gtk_dialog_add_button (GTK_DIALOG (properties), GTK_STOCK_CLOSE,
-			       GTK_RESPONSE_ACCEPT);
+			       GTK_RESPONSE_CANCEL);
 	gtk_dialog_set_default_response (GTK_DIALOG (properties), 
-			                 GTK_RESPONSE_ACCEPT);
+			                 GTK_RESPONSE_CANCEL);
 
 	properties->notebook = gtk_notebook_new ();
 	gtk_container_set_border_width (GTK_CONTAINER (properties->notebook), 5);

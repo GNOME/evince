@@ -1,3 +1,15 @@
+2006-05-09  Wouter Bolsterlee  <uws+gnome@xs4all.nl>
+
+	* shell/ev-properties-dialog.c: (ev_properties_dialog_init):
+
+	Change the properties dialog response to
+	GTK_RESPONSE_CANCEL instead of GTK_RESPONSE_CLOSE. This
+	will make the dialog go away when the user presses
+	enter. With gtk+ >= 2.9 this will happen anyway, but for
+	older gtk+ versions only GTK_RESPONSE_CANCEL is bound to
+	escape by default. Fixes bug #340539. See also bug
+	#101293 for the gtk+ part.
+
 2006-05-08  Francisco Javier F. Serrador  <serrador@cvs.gnome.org>
 
 	* shell/ev-view.c (tip_from_action_named): Replace some strings
