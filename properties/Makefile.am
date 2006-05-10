@@ -36,7 +36,7 @@ if ENABLE_DJVU
 libevince_properties_page_la_LIBADD += 	$(DJVU_LIBS)
 endif
 
-if ENABLE_DJVU
+if ENABLE_DVI
 libevince_properties_page_la_LIBADD += 	-lkpathsea
 endif
 

@@ -33,11 +33,11 @@
 #include "ev-page-action.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
+#include "ev-sidebar-attachments.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-view.h"
 #include "ev-password.h"
 #include "ev-password-view.h"
-#include "ev-attachment-bar.h"
 #include "ev-properties-dialog.h"
 #include "ev-ps-exporter.h"
 #include "ev-document-thumbnails.h"
@@ -92,7 +92,6 @@ typedef enum {
 	EV_CHROME_RAISE_TOOLBAR	= 1 << 3,
 	EV_CHROME_FULLSCREEN_TOOLBAR	= 1 << 4,
 	EV_CHROME_SIDEBAR	= 1 << 5,
-	EV_CHROME_ATTACHBAR	= 1 << 6,
 	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
 
@@ -112,7 +111,7 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
-	GtkWidget *attachment_bar;
+	GtkWidget *sidebar_attachments;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -178,6 +177,7 @@ static const GtkTargetEntry ev_drop_types[] = {
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
+#define ATTACHMENTS_SIDEBAR_ID "attachments"
 
 static void	ev_window_update_actions	 	(EvWindow *ev_window);
 static void     ev_window_update_fullscreen_popup       (EvWindow         *window);
@@ -419,7 +419,7 @@ static void
 update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
-	gboolean menubar, toolbar, findbar, fullscreen_toolbar, sidebar, attachbar;
+	gboolean menubar, toolbar, findbar, fullscreen_toolbar, sidebar;
 	gboolean fullscreen_mode, presentation, fullscreen;
 
 	presentation = ev_view_get_presentation (EV_VIEW (priv->view));
@@ -433,13 +433,11 @@ update_chrome_visibility (EvWindow *window)
 			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && fullscreen;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !fullscreen_mode;
-	attachbar = (priv->chrome & EV_CHROME_ATTACHBAR) != 0 && !fullscreen_mode;
 
 	set_widget_visibility (priv->menubar, menubar);	
 	set_widget_visibility (priv->toolbar_dock, toolbar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->sidebar, sidebar);
-	set_widget_visibility (priv->attachment_bar, attachbar);
 
 	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
 	gtk_widget_set_sensitive (priv->menubar, menubar);
@@ -626,6 +624,7 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 	GtkWidget *sidebar = window->priv->sidebar;
 	GtkWidget *links = window->priv->sidebar_links;
 	GtkWidget *thumbs = window->priv->sidebar_thumbs;
+	GtkWidget *attachments = window->priv->sidebar_attachments;
 	GValue sidebar_size = { 0, };
 	GValue sidebar_page = { 0, };
 	GValue sidebar_visibility = { 0, };
@@ -638,9 +637,11 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, FALSE)) {
 		const char *page_id = g_value_get_string (&sidebar_page);
 
-		if (strcmp (page_id, "links") == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
+		if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
-		} else if (strcmp (page_id, "thumbnails") && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
+		} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
+		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
 		}
 	} else {
@@ -764,7 +765,6 @@ ev_window_setup_document (EvWindow *ev_window)
 	EvDocument *document;
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
-	EvAttachmentBar *attachbar = EV_ATTACHMENT_BAR (ev_window->priv->attachment_bar);
 	GtkAction *action;
 
 	document = ev_window->priv->document;
@@ -784,11 +784,6 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_view_set_document (view, document);
 	}
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
-
-	ev_attachment_bar_set_document (attachbar, document);
-	update_chrome_flag (ev_window, EV_CHROME_ATTACHBAR, 
-		           (ev_window->priv->document &&
-			    ev_document_has_attachments (ev_window->priv->document)));
 
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
@@ -2460,6 +2455,8 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 		id = LINKS_SIDEBAR_ID;
 	} else if (current_page == ev_window->priv->sidebar_thumbs) {
 		id = THUMBNAILS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_attachments) {
+		id = ATTACHMENTS_SIDEBAR_ID;
 	} else {
 		g_assert_not_reached();
 	}
@@ -2487,18 +2484,6 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 	    !ev_window_is_empty (ev_window)) {
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "sidebar_visibility",
 					         GTK_WIDGET_VISIBLE (ev_sidebar));
-	}
-}
-
-static void
-ev_window_attachment_bar_toggled_cb (EvAttachmentBar *ev_attachbar,
-				     GParamSpec      *param_spec,
-				     EvWindow        *ev_window)
-{
-	if (gtk_expander_get_expanded (GTK_EXPANDER (ev_attachbar))) {
-		gtk_widget_grab_focus (GTK_WIDGET (ev_attachbar));
-	} else {
-		gtk_widget_grab_focus (ev_window->priv->view);
 	}
 }
 
@@ -2565,7 +2550,7 @@ view_menu_popup_cb (EvView   *view,
 }
 
 static gboolean
-attachment_bar_menu_popup_cb (EvAttachmentBar *attachbar,
+attachment_bar_menu_popup_cb (EvSidebarAttachments *attachbar,
 			      GList           *attach_list,
 			      EvWindow        *ev_window)
 {
@@ -3596,6 +3581,27 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->sidebar);
 
 	/* Stub sidebar, for now */
+
+	sidebar_widget = ev_sidebar_thumbnails_new ();
+	ev_window->priv->sidebar_thumbs = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "notify::main-widget",
+			  G_CALLBACK (sidebar_page_main_widget_update_cb),
+			  ev_window);
+	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     sidebar_widget);
+
+	sidebar_widget = ev_sidebar_attachments_new ();
+	ev_window->priv->sidebar_attachments = sidebar_widget;
+	g_signal_connect_object (sidebar_widget,
+				 "popup",
+				 G_CALLBACK (attachment_bar_menu_popup_cb),
+				 ev_window, 0);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     sidebar_widget);
+
 	sidebar_widget = ev_sidebar_links_new ();
 	ev_window->priv->sidebar_links = sidebar_widget;
 	g_signal_connect (sidebar_widget,
@@ -3610,18 +3616,6 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
-
-	sidebar_widget = ev_sidebar_thumbnails_new ();
-	ev_window->priv->sidebar_thumbs = sidebar_widget;
-	g_signal_connect (sidebar_widget,
-			  "notify::main-widget",
-			  G_CALLBACK (sidebar_page_main_widget_update_cb),
-			  ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
-
 
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
@@ -3653,16 +3647,6 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
-
-	/* Attachments Bar */
-	ev_window->priv->attachment_bar = ev_attachment_bar_new ();
-	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
-			  ev_window->priv->attachment_bar,
-			  FALSE, TRUE, 0);
-	g_signal_connect_object (ev_window->priv->attachment_bar,
-				 "popup",
-				 G_CALLBACK (attachment_bar_menu_popup_cb),
-				 ev_window, 0);
 
 	/* Find Bar */
 	ev_window->priv->find_bar = egg_find_bar_new ();
@@ -3714,12 +3698,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->sidebar,
 			  "notify::current-page",
 			  G_CALLBACK (ev_window_sidebar_current_page_changed_cb),
-			  ev_window);
-
-	/* Connect attachment bar sgignals */
-	g_signal_connect (G_OBJECT (ev_window->priv->attachment_bar),
-			  "notify::expanded",
-			  G_CALLBACK (ev_window_attachment_bar_toggled_cb),
 			  ev_window);
 
 	/* Connect to find bar signals */

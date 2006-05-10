@@ -1,3 +1,38 @@
+2006-05-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* po/POTFILES.in:
+	* properties/Makefile.am:
+	* shell/Makefile.am:
+	* shell/ev-attachment-bar.c:
+	* shell/ev-attachment-bar.h:
+	* shell/ev-sidebar-attachments.c:
+	(ev_sidebar_attachments_icon_cache_add),
+	(icon_theme_get_pixbuf_from_mime_type),
+	(ev_sidebar_attachments_icon_cache_get), (icon_cache_update_icon),
+	(ev_sidebar_attachments_icon_cache_refresh),
+	(ev_sidebar_attachments_get_attachment_at_pos),
+	(ev_sidebar_attachments_popup_menu_show),
+	(ev_sidebar_attachments_popup_menu),
+	(ev_sidebar_attachments_button_press),
+	(ev_sidebar_attachments_update_icons),
+	(ev_sidebar_attachments_drag_data_get),
+	(ev_sidebar_attachments_get_property),
+	(ev_sidebar_attachments_destroy),
+	(ev_sidebar_attachments_class_init), (ev_sidebar_attachments_init),
+	(ev_sidebar_attachments_new),
+	(ev_sidebar_attachments_set_document),
+	(ev_sidebar_attachments_support_document),
+	(ev_sidebar_attachments_get_label),
+	(ev_sidebar_attachments_page_iface_init):
+	* shell/ev-sidebar-attachments.h:
+	* shell/ev-window.c: (update_chrome_visibility),
+	(setup_sidebar_from_metadata), (ev_window_setup_document),
+	(ev_window_sidebar_current_page_changed_cb),
+	(attachment_bar_menu_popup_cb), (ev_window_init):
+	* thumbnailer/Makefile.am:
+	
+	Move attachments bar to sidebar.
+
 2006-05-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* pdf/ev-poppler.cc:
@@ -29,7 +64,6 @@
 
 	Update sidebar chrome flag when sidebar visibility changes. Fixes bug
 	#341049
-
 
 2006-05-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
@@ -3897,7 +3931,7 @@ Wed Jun  8 01:04:22 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	Implement async renderer interface.
 
-2005-06-07  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+2005-06-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-sidebar-links.c: (ev_sidebar_links_dispose):
 
@@ -3949,7 +3983,7 @@ Wed Jun  8 01:04:22 2005  Jonathan Blandford  <jrb@redhat.com>
 
 	Cleanup the old job when changing document
 
-2005-06-05  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+2005-06-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-stock-icons.c:
 	* shell/ev-stock-icons.h:

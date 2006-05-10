@@ -55,14 +55,14 @@ evince_SOURCES=				\
 	ev-window-title.h		\
 	ev-sidebar.c			\
 	ev-sidebar.h			\
+	ev-sidebar-attachments.c	\
+	ev-sidebar-attachments.h	\
 	ev-sidebar-links.c		\
 	ev-sidebar-links.h		\
 	ev-sidebar-page.c		\
 	ev-sidebar-page.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
-	ev-attachment-bar.c		\
-	ev-attachment-bar.h		\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
 	main.c
@@ -87,7 +87,7 @@ if ENABLE_DJVU
 evince_LDADD +=	$(DJVU_LIBS)
 endif
 
-if ENABLE_DJVU
+if ENABLE_DVI
 evince_LDADD +=	-lkpathsea
 endif
 

@@ -24,7 +24,7 @@ if ENABLE_DJVU
 evince_thumbnailer_LDADD += $(DJVU_LIBS)
 endif
 
-if ENABLE_DJVU
+if ENABLE_DVI
 evince_thumbnailer_LDADD += -lkpathsea
 endif
 
