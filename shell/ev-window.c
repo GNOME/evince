@@ -3582,11 +3582,15 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Stub sidebar, for now */
 
-	sidebar_widget = ev_sidebar_thumbnails_new ();
-	ev_window->priv->sidebar_thumbs = sidebar_widget;
+	sidebar_widget = ev_sidebar_links_new ();
+	ev_window->priv->sidebar_links = sidebar_widget;
 	g_signal_connect (sidebar_widget,
-			  "notify::main-widget",
-			  G_CALLBACK (sidebar_page_main_widget_update_cb),
+			  "notify::model",
+			  G_CALLBACK (sidebar_widget_model_set),
+			  ev_window);
+	g_signal_connect (sidebar_widget,
+			  "link_activated",
+			  G_CALLBACK (sidebar_links_link_activated_cb),
 			  ev_window);
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
@@ -3602,15 +3606,11 @@ ev_window_init (EvWindow *ev_window)
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
 
-	sidebar_widget = ev_sidebar_links_new ();
-	ev_window->priv->sidebar_links = sidebar_widget;
+	sidebar_widget = ev_sidebar_thumbnails_new ();
+	ev_window->priv->sidebar_thumbs = sidebar_widget;
 	g_signal_connect (sidebar_widget,
-			  "notify::model",
-			  G_CALLBACK (sidebar_widget_model_set),
-			  ev_window);
-	g_signal_connect (sidebar_widget,
-			  "link_activated",
-			  G_CALLBACK (sidebar_links_link_activated_cb),
+			  "notify::main-widget",
+			  G_CALLBACK (sidebar_page_main_widget_update_cb),
 			  ev_window);
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);

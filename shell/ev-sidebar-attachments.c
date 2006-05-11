@@ -521,12 +521,10 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 
 	gtk_container_add (GTK_CONTAINER (swindow),
 			   ev_attachbar->priv->icon_view);
-	gtk_widget_show (ev_attachbar->priv->icon_view);
 
 	gtk_container_add (GTK_CONTAINER (ev_attachbar),
 			   swindow);
-	gtk_widget_show (swindow);
-
+	gtk_widget_show_all (GTK_WIDGET (ev_attachbar));
 	/* Icon Theme */
 	ev_attachbar->priv->icon_theme = gtk_icon_theme_get_default ();
 	g_signal_connect_swapped (G_OBJECT (ev_attachbar->priv->icon_theme),

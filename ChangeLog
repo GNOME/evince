@@ -1,8 +1,13 @@
+2006-05-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-sidebar-attachments.c: (ev_sidebar_attachments_init):
+	* shell/ev-window.c: (ev_window_init):
+	
+	Show attachments page.
+
 2006-05-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* po/POTFILES.in:
-	* properties/Makefile.am:
-	* shell/Makefile.am:
 	* shell/ev-attachment-bar.c:
 	* shell/ev-attachment-bar.h:
 	* shell/ev-sidebar-attachments.c:
@@ -29,7 +34,6 @@
 	(setup_sidebar_from_metadata), (ev_window_setup_document),
 	(ev_window_sidebar_current_page_changed_cb),
 	(attachment_bar_menu_popup_cb), (ev_window_init):
-	* thumbnailer/Makefile.am:
 	
 	Move attachments bar to sidebar.
 
