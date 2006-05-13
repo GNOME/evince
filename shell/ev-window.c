@@ -2373,16 +2373,16 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 	};
 
 	const char *license[] = {
-		N_("Evince is free software; you can redistribute it and/or modify\n"
-		   "it under the terms of the GNU General Public License as published by\n"
-		   "the Free Software Foundation; either version 2 of the License, or\n"
+		N_("Evince is free software; you can redistribute it and/or modify "
+		   "it under the terms of the GNU General Public License as published by "
+		   "the Free Software Foundation; either version 2 of the License, or "
 		   "(at your option) any later version.\n"),
-		N_("Evince is distributed in the hope that it will be useful,\n"
-		   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+		N_("Evince is distributed in the hope that it will be useful, "
+		   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
 		   "GNU General Public License for more details.\n"),
-		N_("You should have received a copy of the GNU General Public License\n"
-		   "along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
+		N_("You should have received a copy of the GNU General Public License "
+		   "along with Evince; if not, write to the Free Software Foundation, Inc., "
 		   "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n")
 	};
 
@@ -2416,6 +2416,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"documenters", documenters,
 		"translator-credits", _("translator-credits"),
 		"logo-icon-name", "evince",
+		"wrap-license", TRUE,
 		NULL);
 
 	g_free (comments);
