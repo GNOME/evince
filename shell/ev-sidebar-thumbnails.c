@@ -307,14 +307,10 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 					       1, wy2 -1, &path2,
 					       NULL, NULL, NULL);
 	} else if (priv->icon_view) {
-#ifdef HAVE_GTK_ICON_VIEW_GET_VISIBLE_RANGE
 		if (! GTK_WIDGET_REALIZED (priv->icon_view))
 			return;
 		if (! gtk_icon_view_get_visible_range (GTK_ICON_VIEW (priv->icon_view), &path, &path2))
 			return;
-#else
-		g_assert_not_reached ();
-#endif
 	} else {
 		return;
 	}
@@ -495,14 +491,10 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 static gboolean
 ev_sidebar_thumbnails_use_icon_view (EvSidebarThumbnails *sidebar_thumbnails)
 {
-#ifdef HAVE_GTK_ICON_VIEW_GET_VISIBLE_RANGE
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	if (ev_page_cache_get_n_pages (priv->page_cache) > MAX_ICON_VIEW_PAGE_COUNT)
 		return FALSE;
 	return TRUE;
-#else
-	return FALSE;
-#endif
 }
 
 static void
@@ -552,11 +544,8 @@ page_changed_cb (EvPageCache         *page_cache,
 		gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
 		gtk_tree_view_scroll_to_cell (tree_view, path, NULL, FALSE, 0.0, 0.0);
 	} else if (sidebar->priv->icon_view) {
-		/* Guard against gtk-2.6 */
-#ifdef HAVE_GTK_ICON_VIEW_GET_VISIBLE_RANGE 
 		gtk_icon_view_select_path (GTK_ICON_VIEW (sidebar->priv->icon_view), path);
 		gtk_icon_view_set_cursor (GTK_ICON_VIEW (sidebar->priv->icon_view), path, NULL, FALSE);
-#endif
 	}
 
 	gtk_tree_path_free (path);

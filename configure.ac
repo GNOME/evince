@@ -43,9 +43,10 @@ dnl Check dependencies
 
 POPPLER_REQUIRED=0.5.1
 DBUS_GLIB_REQUIRED=0.33
-GTK_REQUIRED=2.6.0
-LIBGNOMEUI_REQUIRED=2.6.0
+GTK_REQUIRED=2.8.15
 KEYRING_REQUIRED=0.4.0
+
+LIBGNOMEUI_REQUIRED=2.6.0
 LIBGNOMEPRINTUI_REQUIRED=2.5.1
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
@@ -136,16 +137,6 @@ if test x$HAVE_NAUTILUS = "xyes"; then
 	AC_DEFINE(HAVE_NAUTILUS, 1, [defined if you build the nautilus plugin])
 fi
 AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
-
-dnl Check for functions not present in gtk 2.6
-evince_save_LIBS=$LIBS
-LIBS="$LIBS $FRONTEND_CORE_LIBS"
-AC_CHECK_FUNCS(gtk_icon_view_get_visible_range)
-AC_CHECK_FUNCS(gtk_window_present_with_time)
-AC_CHECK_FUNCS(g_file_set_contents)
-AC_CHECK_FUNCS(gtk_file_chooser_set_do_overwrite_confirmation)
-AC_CHECK_FUNCS(gtk_icon_view_enable_model_drag_source)
-LIBS=$evince_save_LIBS
 
 dnl GConf configuration
 AM_GCONF_SOURCE_2

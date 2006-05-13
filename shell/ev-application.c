@@ -183,12 +183,8 @@ ev_application_open_window (EvApplication  *application,
 
 	gtk_widget_show (new_window);
 	
-#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	gtk_window_present_with_time (GTK_WINDOW (new_window),
 				      timestamp);
-#else
-	gtk_window_present (GTK_WINDOW (new_window));
-#endif
 	return TRUE;
 }
 
@@ -251,12 +247,8 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	new_window = ev_application_get_uri_window (application, uri);
 	if (new_window != NULL) {
-#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 		gtk_window_present_with_time (GTK_WINDOW (new_window),
 					      timestamp);
-#else
-		gtk_window_present (GTK_WINDOW (new_window));
-#endif
 		if (dest)
 			ev_window_goto_dest (new_window, dest);
 
@@ -275,12 +267,8 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	gtk_widget_show (GTK_WIDGET (new_window));
 
-#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	gtk_window_present_with_time (GTK_WINDOW (new_window),
 				      timestamp);
-#else
-	gtk_window_present (GTK_WINDOW (new_window));
-#endif
 }
 
 gboolean

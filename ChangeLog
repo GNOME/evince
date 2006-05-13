@@ -1,3 +1,19 @@
+2006-05-13  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* configure.ac:
+	* properties/ev-properties-main.c: (ev_properties_get_pages):
+	* shell/ev-application.c: (ev_application_open_window),
+	(ev_application_open_uri_at_dest):
+	* shell/ev-sidebar-attachments.c: (ev_sidebar_attachments_init):
+	* shell/ev-sidebar-thumbnails.c: (adjustment_changed_cb),
+	(ev_sidebar_thumbnails_use_icon_view), (page_changed_cb):
+	* shell/ev-utils.c: (save_print_config_to_file):
+	* shell/ev-window.c: (ev_window_cmd_save_as),
+	(ev_attachment_popup_cmd_save_attachment_as):
+	* shell/main.c: (load_files_remote):
+	
+	Bump requirements to gtk 2.8 and drop all idfefs used.
+
 2006-05-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-sidebar-attachments.c: (ev_sidebar_attachments_init):

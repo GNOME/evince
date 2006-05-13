@@ -89,18 +89,13 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	char *uri = NULL;
 	GtkWidget *page, *label;
 	NautilusPropertyPage *property_page;
-	GType type = G_TYPE_INVALID;
-
+	
 	/* only add properties page if a single file is selected */
 	if (files == NULL || files->next != NULL)
 		goto end;
 	file = files->data;
 
 	/* okay, make the page */
-
-	if (document == NULL)
-		goto end;
-
 	uri = nautilus_file_info_get_uri (file);
 	document = ev_document_factory_get_document (uri, &error);
 

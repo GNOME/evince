@@ -73,47 +73,6 @@ load_files (const char **files)
 
 #ifdef ENABLE_DBUS
 
-#ifndef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
-static guint32
-get_startup_time (void)
-{
-	const char *envvar, *timestamp;
-	unsigned long value;
-	char *end;
-
-	envvar = getenv ("DESKTOP_STARTUP_ID");
-
-	if (envvar == NULL)
-		return 0;
-
-/* DESKTOP_STARTUP_ID is of form "<unique>_TIME<timestamp>".
- *
- * <unique> might contain a T but <timestamp> is an integer.  As such,
- * the last 'T' in the string must be the start of "TIME".
- */
-	timestamp = rindex (envvar, 'T');
-
-/* Maybe the word "TIME" was not found... */
-	if (timestamp == NULL || strncmp (timestamp, "TIME", 4))
-		return 0;
-
-	timestamp += 4;
-
-/* strtoul sets errno = ERANGE on overflow, but it is not specified
- * if it sets it to 0 on success.  Doing so ourselves is the only
- * way to know for sure.
- */
-	errno = 0;
-	value = strtoul (timestamp, &end, 10);
-
-/* unsigned long might be 64bit, so double-check! */
-	if (errno != 0 || *end != '\0' || value > G_MAXINT32)
-		return 0;
-
-	return value;
-}
-#endif
-
 static gboolean
 load_files_remote (const char **files)
 {
@@ -125,19 +84,13 @@ load_files_remote (const char **files)
 	DBusGPendingCall *call;
 #endif
 	DBusGProxy *remote_object;
-#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	GdkDisplay *display;
-#endif
 	guint32 timestamp;
 
-#ifdef HAVE_GTK_WINDOW_PRESENT_WITH_TIME
 	display = gdk_display_get_default();
 	timestamp = gdk_x11_display_get_user_time (display);
-#else
-	/* Fake it for GTK+2.6 */
-	timestamp = get_startup_time ();
-#endif
 	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
+
 	if (connection == NULL) {
 		g_warning (error->message);
 		g_error_free (error);	

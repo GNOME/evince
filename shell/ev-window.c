@@ -1178,9 +1178,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	ev_document_factory_add_filters (fc, ev_window->priv->document);
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
-#ifdef HAVE_GTK_FILE_CHOOSER_SET_DO_OVERWRITE_CONFIRMATION
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER (fc), TRUE);	
-#endif	
 	file_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
 	base_name = g_path_get_basename (file_name);
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
@@ -3453,10 +3451,7 @@ ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
 		NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
-
-#ifdef HAVE_GTK_FILE_CHOOSER_SET_DO_OVERWRITE_CONFIRMATION
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
-#endif
 
 	if (attachment)
 		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc),
