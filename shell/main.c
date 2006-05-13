@@ -44,11 +44,13 @@
 #include "ev-file-helpers.h"
 
 static char *ev_page_label;
+static char **file_arguments = NULL;
 
-static struct poptOption popt_options[] =
+static const GOptionEntry goption_options[] =
 {
-	{ "page-label", 'p', POPT_ARG_STRING, &ev_page_label, 0, N_("The page of the document to display."), N_("PAGE")},
-	{ NULL, 0, 0, NULL, 0, NULL, NULL }
+	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page of the document to display."), N_("PAGE")},
+	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, N_("[FILE...]") },
+	{ NULL }
 };
 
 static void
@@ -207,32 +209,31 @@ int
 main (int argc, char *argv[])
 {
 	gboolean enable_metadata = FALSE;
-	poptContext context;
-        GValue context_as_value = { 0 };
+	GOptionContext *context;
 	GnomeProgram *program;
+
+	context = g_option_context_new (_("GNOME Document Viewer"));
 
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
+#else
+	g_option_context_add_main_entries (context, goption_options, NULL);
 #endif
 
 	program = gnome_program_init (PACKAGE, VERSION,
                                       LIBGNOMEUI_MODULE, argc, argv,
-                                      GNOME_PARAM_POPT_TABLE, popt_options,
+                                      GNOME_PARAM_GOPTION_CONTEXT, context,
                                       GNOME_PARAM_HUMAN_READABLE_NAME, _("Evince"),
 				      GNOME_PARAM_APP_DATADIR, GNOMEDATADIR,
                                       NULL);
-	g_object_get_property (G_OBJECT (program),
-                               GNOME_PARAM_POPT_CONTEXT,
-                               g_value_init (&context_as_value, G_TYPE_POINTER));
-        context = g_value_get_pointer (&context_as_value);
-
 
 #ifdef ENABLE_DBUS
 	if (!ev_application_register_service (EV_APP)) {
-		if (load_files_remote (poptGetArgs (context))) {
+		if (load_files_remote (file_arguments)) {
 			return 0;
 		}
 	} else {
@@ -255,17 +256,17 @@ main (int argc, char *argv[])
 	ev_stock_icons_init ();
 	gtk_window_set_default_icon_name ("evince");
 
-	load_files (poptGetArgs (context));
+	load_files (file_arguments);
 
 	gtk_main ();
 
 	gnome_accelerators_sync ();
-	poptFreeContext (context);
 	ev_file_helpers_shutdown ();
 
 	if (enable_metadata) {
 		ev_metadata_manager_shutdown ();
 	}
+ 	g_object_unref(program);
 
 	return 0;
 }

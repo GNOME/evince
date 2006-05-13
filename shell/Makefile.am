@@ -11,6 +11,7 @@ INCLUDES=						\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\
 	$(WARN_CFLAGS)					\
+	$(DISABLE_DEPRECATED)				\
 	$(GNOME_PRINT_CFLAGS)
 
 bin_PROGRAMS=evince
