@@ -7,14 +7,17 @@
 # Christophe Merlet (RedFox) <redfox@redfoxcenter.org>, 2005.
 # Vincent Untz <vuntz@gnome.org>, 2005.
 # Thomas Vergnaud <thomas.vergnaud@laposte.net>, 2006.
+# Guillaume Desmottes <cass@skynet.be>, 2006.
+# Jonathan Ernst <jonathan@ernstfamily.ch>, 2006.
+# Robert-André Mauchin <zebob.m@gmail.com>, 2006.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Evince 0.5.1\n"
+"Project-Id-Version: Evince 0.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-12 09:53+0100\n"
-"PO-Revision-Date: 2006-01-18 20:54+0100\n"
-"Last-Translator: Thomas Vergnaud <thomas.vergnaud@laposte.net>\n"
+"POT-Creation-Date: 2006-05-14 17:47+0200\n"
+"PO-Revision-Date: 2006-14-05 17:09+0200 \n"
+"Last-Translator: Robert-André Mauchin <zebob.m@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +124,7 @@ msgstr "<b>Format :</b>"
 
 #: ../data/evince-properties.glade.h:5
 msgid "<b>Keywords:</b>"
-msgstr "<b>Mots clés :</b>"
+msgstr "<b>Mots-clés :</b>"
 
 #: ../data/evince-properties.glade.h:6
 msgid "<b>Modified:</b>"
@@ -217,15 +220,15 @@ msgstr "Sans nom"
 
 #: ../pdf/ev-poppler.cc:662
 msgid "Embedded subset"
-msgstr "Sous-ensemble inclus"
+msgstr "Sous-ensemble intégré"
 
 #: ../pdf/ev-poppler.cc:664
 msgid "Embedded"
-msgstr "Incluse"
+msgstr "Intégré"
 
 #: ../pdf/ev-poppler.cc:666
 msgid "Not embedded"
-msgstr "Non incluse"
+msgstr "Non intégré"
 
 #: ../properties/ev-properties-main.c:114
 msgid "Document"
@@ -245,11 +248,11 @@ msgstr "Letter"
 
 #: ../ps/gsdefaults.c:32
 msgid "Tabloid"
-msgstr "Tabloid"
+msgstr "Tabloïd"
 
 #: ../ps/gsdefaults.c:33
 msgid "Ledger"
-msgstr "Ledger"
+msgstr "Livre"
 
 #: ../ps/gsdefaults.c:34
 msgid "Legal"
@@ -257,11 +260,11 @@ msgstr "Legal"
 
 #: ../ps/gsdefaults.c:35
 msgid "Statement"
-msgstr "Statement"
+msgstr "Déclaration"
 
 #: ../ps/gsdefaults.c:36
 msgid "Executive"
-msgstr "Executive"
+msgstr "Fiche"
 
 #: ../ps/gsdefaults.c:37
 msgid "A0"
@@ -342,11 +345,12 @@ msgstr "Document chargé."
 msgid ""
 "Failed to load document '%s'. Ghostscript interpreter was not found in path"
 msgstr ""
+"Le chargement du document « %s » a échoué. Impossible de trouver l'interpréteur Ghostscript dans le chemin"
 
 #: ../ps/ps-document.c:1094
 #, c-format
 msgid "Failed to load document '%s'"
-msgstr "Impossible d'ouvrir le document « %s »"
+msgstr "Le chargement du document « %s » a échoué"
 
 #: ../ps/ps-document.c:1267
 msgid "Encapsulated PostScript"
@@ -358,11 +362,11 @@ msgstr "PostScript"
 
 #: ../shell/eggfindbar.c:158
 msgid "Search string"
-msgstr "Chercher la chaîne"
+msgstr "Rechercher la chaîne"
 
 #: ../shell/eggfindbar.c:159
 msgid "The name of the string to be found"
-msgstr "Le nom de la chaîne qui doit être recherchée"
+msgstr "Le nom de la chaîne à rechercher"
 
 #: ../shell/eggfindbar.c:172
 msgid "Case sensitive"
@@ -370,7 +374,7 @@ msgstr "Respecter la casse"
 
 #: ../shell/eggfindbar.c:173
 msgid "TRUE for a case sensitive search"
-msgstr "TRUE pour une recherche sensible à la casse"
+msgstr "VRAI pour une recherche sensible à la casse"
 
 #: ../shell/eggfindbar.c:180
 msgid "Highlight color"
@@ -382,11 +386,11 @@ msgstr "Couleur de mise en surbrillance pour toutes les correspondances"
 
 #: ../shell/eggfindbar.c:187
 msgid "Current color"
-msgstr "Couleur courante"
+msgstr "Couleur actuelle"
 
 #: ../shell/eggfindbar.c:188
 msgid "Color of highlight for the current match"
-msgstr "Couleur de mise en surbrillance pour la correspondance courante"
+msgstr "Couleur de mise en surbrillance pour la correspondance actuelle"
 
 #: ../shell/eggfindbar.c:319
 msgid "F_ind:"
@@ -438,7 +442,6 @@ msgid "Djvu Documents"
 msgstr "Documents Djvu"
 
 #: ../shell/ev-document-types.c:189
-#, fuzzy
 msgid "Comic Books"
 msgstr "Bandes dessinées"
 
@@ -466,8 +469,8 @@ msgid ""
 "The document <i>%s</i> is locked and requires a password before it can be "
 "opened."
 msgstr ""
-"Le document <i>%s</i> est verrouillé et nécessite un mot de passe avant "
-"d'être ouvert."
+"Le document <i>%s</i> est verrouillé et nécessite un mot de passe avant de "
+"pouvoir être ouvert."
 
 #: ../shell/ev-password.c:149
 msgid "Enter password"
@@ -487,8 +490,8 @@ msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
-"Ce document est verrouillé et peut seulement être lu en saisissant le mot de "
-"passe correct."
+"Ce document est verrouillé et ne peut être lu qu'en saisissant le mot "
+"de passe correct."
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
@@ -513,7 +516,7 @@ msgstr "Police"
 #: ../shell/ev-properties-fonts.c:134
 #, c-format
 msgid "Gathering font information... %3d%%"
-msgstr "Récupération des informations de polices...%3d%%"
+msgstr "Collecte des informations de polices... %3d%%"
 
 #: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2081
 msgid "Loading..."
@@ -548,7 +551,6 @@ msgid "Scroll View Down"
 msgstr "Faire défiler la vue vers le bas"
 
 #: ../shell/ev-view-accessible.c:536
-#, fuzzy
 msgid "Document View"
 msgstr "Vue du document"
 
@@ -595,7 +597,7 @@ msgstr "La génération de PDF n'est pas prise en charge"
 
 #: ../shell/ev-window.c:1320
 msgid "Printing is not supported on this printer."
-msgstr "L'impression n'est pas prise en charge par cette imprimante."
+msgstr "L'impression par cette imprimante n'est pas prise en charge."
 
 #: ../shell/ev-window.c:1323
 #, c-format
@@ -616,7 +618,7 @@ msgstr "Pages"
 
 #: ../shell/ev-window.c:1435
 msgid "The \"Find\" feature will not work with this document"
-msgstr "La fonctionnalité « Rechercher » ne fonctionnera pas avec ce document."
+msgstr "La fonctionnalité « Rechercher » ne fonctionnera pas avec ce document"
 
 #: ../shell/ev-window.c:1437
 msgid "Searching for text is only supported for PDF documents."
@@ -660,7 +662,7 @@ msgid ""
 "GNU General Public License for more details.\n"
 msgstr ""
 "Evince est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE\n"
-"GARANTIE ; sans même la garantie implicite de COMMERCIALISATION ou\n"
+"GARANTIE ; sans même la garantie implicite de COMMERCIALISATION ou\n"
 "D'ADAPTATION À UN OBJET PARTICULIER. Pour plus de détails, voir la\n"
 "Licence Publique Générale GNU.\n"
 
@@ -688,7 +690,10 @@ msgid "translator-credits"
 msgstr ""
 "Vincent Carriere <carriere_vincent@yahoo.fr>\n"
 "Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
-"Thomas Vergnaud <thomas.vergnaud@laposte.net>"
+"Thomas Vergnaud <thomas.vergnaud@laposte.net>\n"
+"Guillaume Desmottes <cass@skynet.be>\n"
+"Jonathan Ernst <jonathan@ernstfamily.ch>\n"
+"Robert-André Mauchin <zebob.m@gmail.com>"
 
 #: ../shell/ev-window.c:2799
 msgid "_File"
@@ -700,7 +705,7 @@ msgstr "É_dition"
 
 #: ../shell/ev-window.c:2801
 msgid "_View"
-msgstr "_Affichage"
+msgstr "Afficha_ge"
 
 #: ../shell/ev-window.c:2802
 msgid "_Go"
@@ -725,7 +730,7 @@ msgstr "_Enregistrer une copie..."
 
 #: ../shell/ev-window.c:2810
 msgid "Save a copy of the current document"
-msgstr "Enregistrer une copie du document courant"
+msgstr "Enregistrer une copie du document actuele"
 
 #: ../shell/ev-window.c:2812
 msgid "_Print..."
@@ -856,7 +861,7 @@ msgstr "Pages _doubles"
 
 #: ../shell/ev-window.c:2932
 msgid "Show two pages at once"
-msgstr "Afficher deux pages à la fois"
+msgstr "Affiche deux pages à la fois"
 
 #: ../shell/ev-window.c:2934
 msgid "_Fullscreen"
@@ -864,7 +869,7 @@ msgstr "_Plein écran"
 
 #: ../shell/ev-window.c:2935
 msgid "Expand the window to fill the screen"
-msgstr "Agrandi la fenêtre pour occuper tout l'écran"
+msgstr "Agrandit la fenêtre pour occuper tout l'écran"
 
 #: ../shell/ev-window.c:2937
 msgid "_Presentation"
@@ -872,7 +877,7 @@ msgstr "_Présentation"
 
 #: ../shell/ev-window.c:2938
 msgid "Run document as a presentation"
-msgstr "Afficher le document comme une présentation"
+msgstr "Affiche le document comme une présentation"
 
 #: ../shell/ev-window.c:2940
 msgid "_Best Fit"
@@ -880,7 +885,7 @@ msgstr "Taille _idéale"
 
 #: ../shell/ev-window.c:2941
 msgid "Make the current document fill the window"
-msgstr "Ajuster le document à la taille de la fenêtre"
+msgstr "Ajuste le document à la taille de la fenêtre"
 
 #: ../shell/ev-window.c:2943
 msgid "Fit Page _Width"
@@ -888,7 +893,7 @@ msgstr "_Ajuster à la largeur de la page"
 
 #: ../shell/ev-window.c:2944
 msgid "Make the current document fill the window width"
-msgstr "Ajuster le document à la largeur de la fenêtre"
+msgstr "Ajuste le document à la largeur de la fenêtre"
 
 #. Links
 #: ../shell/ev-window.c:2951
@@ -909,7 +914,7 @@ msgstr "Page"
 
 #: ../shell/ev-window.c:3016
 msgid "Select Page"
-msgstr "Sélectionner la page"
+msgstr "Sélectionne la page"
 
 #: ../shell/ev-window.c:3028
 msgid "Zoom"
@@ -917,7 +922,7 @@ msgstr "Zoom"
 
 #: ../shell/ev-window.c:3030
 msgid "Adjust the zoom level"
-msgstr "Ajuster le niveau de zoom"
+msgstr "Ajuste le niveau de zoom"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:3046
@@ -966,8 +971,8 @@ msgid ""
 "Boolean options available, true enables thumbnailing and false disables the "
 "creation of new thumbnails"
 msgstr ""
-"Valeurs booléennes disponibles, true active la création de vignettes et "
-"false désactive la création de nouvelles vignettes"
+"Valeurs booléennes disponibles, VRAI active la création de vignettes et FAUX "
+"désactive la création de nouvelles vignettes"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
@@ -983,140 +988,5 @@ msgid ""
 "thumbnailer documentation for more information."
 msgstr ""
 "Commande valide et ses arguments pour le créateur de vignettes des documents "
-"PDF. Reportez vous à la documentation de nautilus thumbnailer pour plus "
+"PDF. Reportez vous à la documentation de Nautilus thumbnailer pour plus "
 "d'informations."
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "Not found"
-#~ msgstr "Non trouvé"
-
-#~ msgid "Default sidebar size"
-#~ msgstr "Taille par défaut du panneau latéral"
-
-#~ msgid "Show sidebar by default"
-#~ msgstr "Afficher le panneau latéral par défaut"
-
-#~ msgid "Show statusbar by default"
-#~ msgstr "Afficher la barre d'état par défaut"
-
-#~ msgid "Show toolbar by default"
-#~ msgstr "Afficher la barre d'outils par défaut"
-
-#~ msgid ""
-#~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
-#~ "default size sets the sidebar's width in pixels based from the side of "
-#~ "the window. Any integer will be accepted. The sidebar will never shrink "
-#~ "smaller than the size of the text required to display Thumbnails or "
-#~ "Index. Large values will cause the sidebar to take up as much of the page "
-#~ "display area as possible relative to the window's size."
-#~ msgstr ""
-#~ "Le panneau latéral est l'élément situé sur le coté qui contient les "
-#~ "listes d'index et de vignettes. La taille par défaut définit la largeur "
-#~ "du panneau latéral en pixels à partir du bord de la fenêtre. Tout entier "
-#~ "sera accepté. Le panneau latéral ne sera jamais réduit plus que la taille "
-#~ "nécessaire à l'affichage du texte des vignettes ou de l'index. Des "
-#~ "valeurs importantes forceront le panneau latéral à occuper au plus la "
-#~ "surface d'affichage relative à la taille de la fenêtre."
-
-#~ msgid ""
-#~ "Sidebar is the side item that contains the Index and Thumbnail lists. Two "
-#~ "boolean options, true makes sidebar visible by default while false makes "
-#~ "sidebar not visible by default"
-#~ msgstr ""
-#~ "Le panneau latéral est l'élément situé sur le côté qui contient les "
-#~ "listes d'index et de vignettes. Deux valeurs booléennes, true rends le "
-#~ "panneau latéral visible par défaut alors que false ne l'affiche pas par "
-#~ "défaut"
-
-#~ msgid ""
-#~ "Statusbar is the standard bottom bar that display additional information "
-#~ "about links and other actions. Two boolean options, true makes the "
-#~ "statusbar visible by default while false makes sidebar not visible by "
-#~ "default."
-#~ msgstr ""
-#~ "La barre d'état est la barre située en bas de la fenêtre affichant des "
-#~ "informations supplémentaires sur les liens et les actions. Deux valeurs "
-#~ "booléennes, true rends la barre d'état visible par défaut alors que false "
-#~ "ne l'affiche pas par défaut."
-
-#~ msgid ""
-#~ "Toolbar is the top bar that contains navigation and zoom controls. Two "
-#~ "boolean options, true makes toolbar visible by default while false makes "
-#~ "toolbar not visible by default."
-#~ msgstr ""
-#~ "La barre d'outils est la barre située en haut de la fenêtre contenant les "
-#~ "commandes contrôlant la navigation et le niveau de zoom. Deux valeurs."
-#~ "booléennes, true rends la barre d'outils visible par défaut alors que "
-#~ "false ne l'affiche pas par défaut."
-
-#~ msgid "Unable to find glade file"
-#~ msgstr "Impossible de trouver le fichier glade"
-
-#~ msgid ""
-#~ "The glade file, %s, cannot be found.  Please check that your installation "
-#~ "is complete."
-#~ msgstr ""
-#~ "Le fichier glade, %s, ne peut pas être trouvé. Veuillez vérifier que "
-#~ "votre installation est correcte."
-
-#~ msgid "Document Viewer - Password Required"
-#~ msgstr "Visionneur de documents - Mot de passe requis"
-
-#~ msgid "Loading document. Please wait"
-#~ msgstr "Chargement du document. Veuillez patienter"
-
-#~ msgid "Save the current document with a new filename"
-#~ msgstr "Enregistre le document courant sous un nouveau nom"
-
-#~ msgid "View the properties of this document"
-#~ msgstr "Affiche les propriétés de ce document"
-
-#~ msgid "Close this window"
-#~ msgstr "Ferme cette fenêtre"
-
-#~ msgid "Copy text from the document"
-#~ msgstr "Copie le texte depuis le document"
-
-#~ msgid "Select the entire page"
-#~ msgstr "Sélectionne la page entière"
-
-#~ msgid "Find next occurrence of the word or phrase"
-#~ msgstr "Recherche la prochaine occurrence du mot ou de la phrase"
-
-#~ msgid "Customize the toolbar"
-#~ msgstr "Personnalise la barre d'outils"
-
-#~ msgid "Rotate the document to the left"
-#~ msgstr "Tourne le document vers la gauche"
-
-#~ msgid "Rotate the document to the right"
-#~ msgstr "Tourne le document vers la droite"
-
-#~ msgid "Display help for the viewer application"
-#~ msgstr "Affiche l'aide du visionneur"
-
-#~ msgid "Display credits for the document viewer creators"
-#~ msgstr "Affiche les noms des créateurs du visionneur de documents"
-
-#~ msgid "Scroll one page forward"
-#~ msgstr "Défile d'une page vers l'avant"
-
-#~ msgid "Scroll one page backward"
-#~ msgstr "Défile d'une page vers l'arrière"
-
-#~ msgid "Focus the page selector"
-#~ msgstr "Active le sélecteur de pages"
-
-#~ msgid "Go ten pages backward"
-#~ msgstr "Défile de dix pages vers l'arrière"
-
-#~ msgid "Go ten pages forward"
-#~ msgstr "Défile de dix pages vers l'avant"
-
-#~ msgid "_Statusbar"
-#~ msgstr "Barre d'é_tat"
-
-#~ msgid "Show or hide the statusbar"
-#~ msgstr "Affiche ou masque la barre d'état"
