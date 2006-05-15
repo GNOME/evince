@@ -1,11 +1,46 @@
 ==============
+Evince   0.5.3
+==============
+
+New Features:
+
+    * Evince supports attachments in PDF files
+    * We require gtk 2.8 and djvulibre 3.5.17 now
+    * Links system is reworked allowing named links
+
+Interface imporovements:
+
+    * Esc closes properties dialog
+    * Cursor is hidden in presentation mode
+    * Find previous item is added to the menu
+
+Bug Fixes:
+
+    * GOption port and po/LINGUAS work
+    * Fixed mime type detection by file contents
+    * Several memory leaks were found
+    * Crash on exit related to thumbnailer
+    * Current page is selected more intelligently
+    * Work around libtool build bug is created
+
+Translations:
+
+    * es gu zh_HK zh_TW gu es gu es zh_CN gu gl bg gu nb et gu nl gl gu
+      nl gu no vi gl nn fi dz et et br vi ro bn et
+    
+Thanks:     
+
+    Michael Plump, Carlos Garcia Campos, Wouter Bolsterlee, Francisco
+    Javier F. Serrador, Kjartan Maraas and especially all translators.
+        
+==============
 Evince   0.5.2
 ==============
 
 Bug Fixes:
 
-    * View don't jump on scrolling.
-    * In presentation mode we scroll by one page.
+    * View don't jump on scrolling
+    * In presentation mode we scroll by one page
 
 Translations:
 

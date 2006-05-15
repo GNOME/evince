@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(evince, 0.5.2)
+AC_INIT(evince, 0.5.3)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 AM_CONFIG_HEADER(config.h)
@@ -15,7 +15,7 @@ AC_PROG_CC
 AM_PROG_CC_STDC
 AC_PROG_CXX
 AC_STDC_HEADERS
-IT_PROG_INTLTOOL([0.34.90])
+IT_PROG_INTLTOOL([0.35.0])
 AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
 AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
