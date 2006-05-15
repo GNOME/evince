@@ -36,7 +36,7 @@ svgicondir = $(datadir)/icons/hicolor/scalable/apps
 svgicon_DATA = evince.svg
 gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
 
-install-data-local:
+install-data-hook:
 if GCONF_SCHEMAS_INSTALL
 	if test -z "$(DESTDIR)" ; then \
 	for p in $(schema_DATA) ; do \
