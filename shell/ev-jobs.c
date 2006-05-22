@@ -271,7 +271,7 @@ ev_job_render_run (EvJobRender *job)
 				  G_CALLBACK (render_finished_cb), job);
 	} else {
 		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document, job->rc);
-		if (job->include_links)
+		if (job->include_links && EV_IS_LINK (EV_JOB (job)->document))
 			job->link_mapping =
 				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
 							     job->rc->page);
