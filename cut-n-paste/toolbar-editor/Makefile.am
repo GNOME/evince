@@ -10,8 +10,7 @@ EGGHEADERS = \
 
 noinst_HEADERS = \
 	$(EGGHEADERS) \
-	eggmarshalers.h \
-	eggintl.h
+	eggmarshalers.h
 
 noinst_LTLIBRARIES = libtoolbareditor.la
 

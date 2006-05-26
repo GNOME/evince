@@ -339,9 +339,12 @@ ev_application_init (EvApplication *ev_application)
 	ev_application->toolbars_file = g_build_filename
 			(ev_dot_dir (), "evince_toolbar.xml", NULL);
 
-	if (!egg_toolbars_model_load (ev_application->toolbars_model,
+	egg_toolbars_model_load_names (ev_application->toolbars_model,
+				       DATADIR "/evince-toolbar.xml");
+
+	if (!egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
 				      ev_application->toolbars_file)) {
-		egg_toolbars_model_load (ev_application->toolbars_model,
+		egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
 					 DATADIR"/evince-toolbar.xml");
 	}
 
@@ -388,8 +391,8 @@ EggRecentModel *ev_application_get_recent_model (EvApplication *application)
 
 void ev_application_save_toolbars_model (EvApplication *application)
 {
-        egg_toolbars_model_save (application->toolbars_model,
-				 application->toolbars_file, "1.0");
+        egg_toolbars_model_save_toolbars (application->toolbars_model,
+			 	          application->toolbars_file, "1.0");
 }
 
 void ev_application_set_chooser_uri (EvApplication *application, const gchar *uri)

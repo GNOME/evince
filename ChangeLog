@@ -1,3 +1,85 @@
+2006-05-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* cut-n-paste/toolbar-editor/Makefile.am:
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.c:
+	(get_dock_position), (get_toolbar_position), (get_toolbar_nth),
+	(find_action), (drag_data_delete_cb), (drag_begin_cb),
+	(drag_end_cb), (drag_data_get_cb), (move_item_cb),
+	(remove_item_cb), (remove_toolbar_cb), (popup_context_deactivate),
+	(popup_context_menu_cb), (button_press_event_cb),
+	(configure_item_sensitivity), (configure_item_cursor),
+	(configure_item_tooltip), (connect_widget_signals),
+	(action_sensitive_cb), (create_item_from_action),
+	(create_item_from_position), (toolbar_drag_data_received_cb),
+	(toolbar_drag_drop_cb), (toolbar_drag_motion_cb),
+	(toolbar_drag_leave_cb), (configure_drag_dest),
+	(toggled_visibility_cb), (toolbar_visibility_refresh),
+	(create_dock), (toolbar_changed_cb), (unparent_fixed),
+	(update_fixed), (toolbar_added_cb), (toolbar_removed_cb),
+	(item_added_cb), (item_removed_cb), (egg_editable_toolbar_build),
+	(egg_editable_toolbar_set_model), (egg_editable_toolbar_init),
+	(egg_editable_toolbar_dispose),
+	(egg_editable_toolbar_set_ui_manager),
+	(egg_editable_toolbar_get_selected),
+	(egg_editable_toolbar_set_selected), (set_edit_mode),
+	(egg_editable_toolbar_set_property),
+	(egg_editable_toolbar_get_property),
+	(egg_editable_toolbar_class_init), (egg_editable_toolbar_new),
+	(egg_editable_toolbar_new_with_model),
+	(egg_editable_toolbar_get_edit_mode),
+	(egg_editable_toolbar_set_edit_mode),
+	(egg_editable_toolbar_add_visibility), (egg_editable_toolbar_show),
+	(egg_editable_toolbar_hide), (egg_editable_toolbar_set_fixed):
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.h:
+	* cut-n-paste/toolbar-editor/egg-toolbar-editor.c: (compare_items),
+	(item_added_or_removed_cb), (toolbar_removed_cb),
+	(egg_toolbar_editor_set_model), (egg_toolbar_editor_class_init),
+	(egg_toolbar_editor_finalize), (drag_begin_cb), (drag_end_cb),
+	(drag_data_get_cb), (set_drag_cursor), (editor_create_item),
+	(editor_create_item_from_name), (append_table),
+	(update_editor_sheet), (egg_toolbar_editor_init):
+	* cut-n-paste/toolbar-editor/egg-toolbar-editor.h:
+	* cut-n-paste/toolbar-editor/egg-toolbars-model.c:
+	(egg_toolbars_model_to_xml), (egg_toolbars_model_save_toolbars),
+	(is_unique), (toolbar_node_new), (item_node_new), (item_node_free),
+	(toolbar_node_free), (egg_toolbars_model_get_flags),
+	(egg_toolbars_model_set_flags), (egg_toolbars_model_get_data),
+	(egg_toolbars_model_get_name), (impl_add_item),
+	(egg_toolbars_model_add_item), (egg_toolbars_model_add_toolbar),
+	(parse_data_list), (parse_item_list), (parse_toolbars),
+	(egg_toolbars_model_load_toolbars), (parse_available_list),
+	(parse_names), (egg_toolbars_model_load_names),
+	(egg_toolbars_model_class_init), (egg_toolbars_model_init),
+	(egg_toolbars_model_finalize), (egg_toolbars_model_remove_toolbar),
+	(egg_toolbars_model_remove_item), (egg_toolbars_model_move_item),
+	(egg_toolbars_model_delete_item), (egg_toolbars_model_n_items),
+	(egg_toolbars_model_item_nth), (egg_toolbars_model_n_toolbars),
+	(egg_toolbars_model_toolbar_nth), (egg_toolbars_model_get_types),
+	(egg_toolbars_model_set_types), (fill_avail_array),
+	(egg_toolbars_model_get_name_avail),
+	(egg_toolbars_model_get_name_flags),
+	(egg_toolbars_model_set_name_flags):
+	* cut-n-paste/toolbar-editor/egg-toolbars-model.h:
+	* cut-n-paste/toolbar-editor/eggintl.h:
+	* cut-n-paste/toolbar-editor/eggtreemultidnd.c:
+	(egg_tree_multi_drag_source_get_type),
+	(egg_tree_multi_drag_source_row_draggable),
+	(egg_tree_multi_drag_source_drag_data_delete),
+	(egg_tree_multi_drag_source_drag_data_get), (stop_drag_check),
+	(egg_tree_multi_drag_button_release_event), (selection_foreach),
+	(path_list_free), (set_context_data), (get_context_data),
+	(get_info), (egg_tree_multi_drag_drag_data_get),
+	(egg_tree_multi_drag_motion_event),
+	(egg_tree_multi_drag_button_press_event),
+	(egg_tree_multi_drag_add_drag_support):
+	* cut-n-paste/toolbar-editor/eggtreemultidnd.h:
+	* shell/ev-application.c: (ev_application_init),
+	(ev_application_save_toolbars_model):
+	* shell/ev-window.c: (ev_window_create_fullscreen_popup),
+	(ev_window_cmd_edit_toolbar), (ev_window_init):
+	
+	Sync toolbareditor with epiphany and libegg
+
 2006-05-23  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac: 

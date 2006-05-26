@@ -43,13 +43,22 @@ typedef struct EggToolbarsModelClass	EggToolbarsModelClass;
 typedef enum
 {
   EGG_TB_MODEL_NOT_REMOVABLE	 = 1 << 0,
-  EGG_TB_MODEL_BOTH		 = 1 << 1,
-  EGG_TB_MODEL_BOTH_HORIZ	 = 1 << 2,
-  EGG_TB_MODEL_ICONS		 = 1 << 3,
-  EGG_TB_MODEL_TEXT		 = 1 << 4,
-  EGG_TB_MODEL_STYLES_MASK	 = 0x1F,
-  EGG_TB_MODEL_ACCEPT_ITEMS_ONLY = 1 << 5
+  EGG_TB_MODEL_NOT_EDITABLE	 = 1 << 1,
+  EGG_TB_MODEL_BOTH		 = 1 << 2,
+  EGG_TB_MODEL_BOTH_HORIZ	 = 1 << 3,
+  EGG_TB_MODEL_ICONS		 = 1 << 4,
+  EGG_TB_MODEL_TEXT		 = 1 << 5,
+  EGG_TB_MODEL_STYLES_MASK	 = 0x3C,
+  EGG_TB_MODEL_ACCEPT_ITEMS_ONLY = 1 << 6,
+  EGG_TB_MODEL_HIDDEN            = 1 << 7
 } EggTbModelFlags;
+
+typedef enum
+{
+  EGG_TB_MODEL_NAME_USED         = 1 << 0,
+  EGG_TB_MODEL_NAME_INFINITE     = 1 << 1,
+  EGG_TB_MODEL_NAME_KNOWN        = 1 << 2
+} EggTbModelNameFlags;
 
 struct EggToolbarsModel
 {
@@ -76,57 +85,83 @@ struct EggToolbarsModelClass
 			    int position);
   void (* toolbar_removed) (EggToolbarsModel *model,
 			    int position);
-  char * (* get_item_type) (EggToolbarsModel *model,
-			    GdkAtom           dnd_type);
-  char * (* get_item_id)   (EggToolbarsModel *model,
-			    const char       *type,
-			    const char       *data);
-  char * (* get_item_data) (EggToolbarsModel *model,
-			    const char       *type,
-			    const char       *id);
 
   /* Virtual Table */
   gboolean (* add_item)    (EggToolbarsModel *t,
 			    int	              toolbar_position,
 			    int               position,
-			    const char       *id,
-			    const char       *type);
+			    const char       *name);
+};
+
+typedef struct EggToolbarsItemType EggToolbarsItemType;
+
+struct EggToolbarsItemType
+{
+  GdkAtom type;
+        
+  gboolean (* has_data) (EggToolbarsItemType *type,
+                         const char          *name);
+  char *   (* get_data) (EggToolbarsItemType *type,
+                         const char          *name);
+  
+  char *   (* new_name) (EggToolbarsItemType *type,
+                         const char          *data);
+  char *   (* get_name) (EggToolbarsItemType *type,
+                         const char          *data);
 };
 
 GType		  egg_toolbars_model_flags_get_type (void);
 GType		  egg_toolbars_model_get_type       (void);
 EggToolbarsModel *egg_toolbars_model_new	    (void);
-gboolean          egg_toolbars_model_load           (EggToolbarsModel *model,
+gboolean          egg_toolbars_model_load_names     (EggToolbarsModel *model,
 						     const char *xml_file);
-void              egg_toolbars_model_save           (EggToolbarsModel *model,
+gboolean          egg_toolbars_model_load_toolbars  (EggToolbarsModel *model,
+						     const char *xml_file);
+void              egg_toolbars_model_save_toolbars  (EggToolbarsModel *model,
 						     const char *xml_file,
 						     const char *version);
-int               egg_toolbars_model_add_toolbar    (EggToolbarsModel *model,
-						     int               position,
-						     const char       *name);
+
+/* Functions for manipulating the types of portable data this toolbar understands. */
+GList *           egg_toolbars_model_get_types      (EggToolbarsModel *model);
+void              egg_toolbars_model_set_types      (EggToolbarsModel *model,
+                                                     GList            *types);
+
+/* Functions for converting between name and portable data. */
+char *            egg_toolbars_model_get_name       (EggToolbarsModel *model,
+                                                     GdkAtom           type,
+                                                     const char       *data,
+                                                     gboolean          create);
+char *            egg_toolbars_model_get_data       (EggToolbarsModel *model,
+                                                     GdkAtom           type,
+                                                     const char       *name);
+
+/* Functions for retrieving what items are available for adding to the toolbars. */
+GPtrArray *       egg_toolbars_model_get_name_avail (EggToolbarsModel *model);
+gint              egg_toolbars_model_get_name_flags (EggToolbarsModel *model,
+						     const char *name);
+void              egg_toolbars_model_set_name_flags (EggToolbarsModel *model,
+						     const char *name,
+						     gint flags);
+
+/* Functions for manipulating flags on individual toolbars. */
 EggTbModelFlags   egg_toolbars_model_get_flags      (EggToolbarsModel *model,
 						     int               toolbar_position);
 void              egg_toolbars_model_set_flags      (EggToolbarsModel *model,
 						     int	       toolbar_position,
 						     EggTbModelFlags   flags);
-void              egg_toolbars_model_add_separator  (EggToolbarsModel *model,
-						     int               toolbar_position,
+
+/* Functions for adding and removing toolbars. */
+int               egg_toolbars_model_add_toolbar    (EggToolbarsModel *model,
+						     int               position,
+						     const char       *name);
+void		  egg_toolbars_model_remove_toolbar (EggToolbarsModel *model,
 						     int               position);
-char             *egg_toolbars_model_get_item_type  (EggToolbarsModel *model,
-				                     GdkAtom           dnd_type);
-char             *egg_toolbars_model_get_item_id    (EggToolbarsModel *model,
-						     const char       *type,
-			                             const char       *name);
-char             *egg_toolbars_model_get_item_data  (EggToolbarsModel *model,
-						     const char       *type,
-			                             const char       *id);
+
+/* Functions for adding, removing and moving items. */
 gboolean	  egg_toolbars_model_add_item       (EggToolbarsModel *model,
 						     int	       toolbar_position,
 				                     int               position,
-						     const char       *id,
-						     const char       *type);
-void		  egg_toolbars_model_remove_toolbar (EggToolbarsModel *model,
-						     int               position);
+						     const char       *name);
 void		  egg_toolbars_model_remove_item    (EggToolbarsModel *model,
 						     int               toolbar_position,
 						     int               position);
@@ -135,14 +170,17 @@ void		  egg_toolbars_model_move_item      (EggToolbarsModel *model,
 						     int               position,
 						     int	       new_toolbar_position,
 						     int               new_position);
+void		  egg_toolbars_model_delete_item    (EggToolbarsModel *model,
+						     const char       *name);
+
+/* Functions for accessing the names of items. */
 int		  egg_toolbars_model_n_items	    (EggToolbarsModel *model,
 						     int               toolbar_position);
-void	 	  egg_toolbars_model_item_nth	    (EggToolbarsModel *model,
+const char *      egg_toolbars_model_item_nth	    (EggToolbarsModel *model,
 						     int	       toolbar_position,
-						     int               position,
-						     gboolean         *is_separator,
-						     const char      **id,
-						     const char      **type);
+						     int               position);
+
+/* Functions for accessing the names of toolbars. */
 int		  egg_toolbars_model_n_toolbars	    (EggToolbarsModel *model);
 const char	 *egg_toolbars_model_toolbar_nth    (EggToolbarsModel *model,
 						     int               position);

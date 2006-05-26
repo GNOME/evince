@@ -1655,7 +1655,7 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 	GdkScreen *screen;
 
 	window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
-			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
+			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP), NULL);
 
 	popup = gtk_window_new (GTK_WINDOW_POPUP);
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -1991,8 +1991,6 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
              
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), editor);
-	egg_toolbar_editor_load_actions (EGG_TOOLBAR_EDITOR (editor),
-				         DATADIR "/evince-toolbar.xml");
 
 	egg_editable_toolbar_set_edit_mode
 		(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), TRUE);
@@ -3552,7 +3550,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (toolbar_dock);
 
 	ev_window->priv->toolbar = egg_editable_toolbar_new_with_model
-				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP));
+				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP), NULL);
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");
 	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
