@@ -81,7 +81,7 @@ ev_password_dialog_set_property (GObject      *object,
 		base_name = g_path_get_basename (file_name);
 		format = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
 					  _("Password required"),
-					  _("The document <i>%s</i> is locked and requires a password before it can be opened."));
+					  _("The document “%s” is locked and requires a password before it can be opened."));
 		markup = g_markup_printf_escaped (format, base_name);
 
 		gtk_label_set_markup (GTK_LABEL (dialog->priv->label), markup);

@@ -268,7 +268,7 @@ load_values ()
 	cur = xmlDocGetRootElement (doc);
 	if (cur == NULL) 
 	{
-		g_message ("The metadata file '%s' is empty", METADATA_FILE);
+		g_message ("The metadata file “%s” is empty", METADATA_FILE);
 		xmlFreeDoc (doc);
 	
 		return FALSE;
@@ -276,7 +276,7 @@ load_values ()
 
 	if (xmlStrcmp (cur->name, (const xmlChar *) "metadata")) 
 	{
-		g_message ("File '%s' is of the wrong type", METADATA_FILE);
+		g_message ("File “%s” is of the wrong type", METADATA_FILE);
 		xmlFreeDoc (doc);
 		
 		return FALSE;

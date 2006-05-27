@@ -1,5 +1,22 @@
 2006-05-27  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* backend/ev-attachment.c: (ev_attachment_save),
+	(ev_attachment_launch_app), (ev_attachment_open):
+	* backend/ev-document-factory.c: (get_document_from_uri):
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.c:
+	(egg_recent_view_uimanager_set_list):
+	* ps/ps-document.c: (check_filecompressed), (document_load),
+	(ps_document_load):
+	* shell/ev-metadata-manager.c: (load_values):
+	* shell/ev-password.c: (ev_password_dialog_set_property):
+	* shell/ev-view.c: (tip_from_link):
+	* shell/ev-window.c: (file_save_dialog_response_cb),
+	(ev_window_print_dialog_response_cb):
+	
+	Use consistent quoting style. Fix for the bug #320285.
+
+2006-05-27  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-jobs.c: (ev_job_xfer_run):
 	* shell/main.c: (load_files):
 		

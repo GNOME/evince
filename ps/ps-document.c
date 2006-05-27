@@ -897,7 +897,7 @@ check_filecompressed (PSDocument * gs)
 
 		/* report error */
 		filename_dsp = g_filename_display_name (gs->gs_filename);
-		msg = g_strdup_printf (_("Error while decompressing file %s:\n"), filename_dsp);
+		msg = g_strdup_printf (_("Error while decompressing file “%s”:\n"), filename_dsp);
 		g_free (filename_dsp);
 		
 		interpreter_failed (gs, msg);
@@ -957,7 +957,7 @@ document_load (PSDocument *gs, const gchar *fname)
 			gchar *msg;
 
 			filename_dsp = g_filename_display_name (fname);
-			msg = g_strdup_printf (_("Cannot open file %s.\n"), filename_dsp);
+			msg = g_strdup_printf (_("Cannot open file “%s”.\n"), filename_dsp);
 			g_free (filename_dsp);
 			
 			interpreter_failed (gs, msg);
@@ -1079,7 +1079,7 @@ ps_document_load (EvDocument  *document,
 		    g_set_error(error,
 				G_FILE_ERROR,
 				G_FILE_ERROR_NOENT,
-				_("Failed to load document '%s'. Ghostscript interpreter was not found in path"),
+				_("Failed to load document “%s”. Ghostscript interpreter was not found in path"),
 				filename);
 		    g_free (filename_dsp);
 		    result = FALSE;	
@@ -1091,7 +1091,7 @@ ps_document_load (EvDocument  *document,
 			
 			g_set_error (error, G_FILE_ERROR,
 				     G_FILE_ERROR_FAILED,
-				     _("Failed to load document '%s'"),
+				     _("Failed to load document “%s”"),
 				     filename_dsp);
 			g_free (filename_dsp);
 		}

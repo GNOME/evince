@@ -202,7 +202,7 @@ egg_recent_view_uimanager_set_list (EggRecentViewUIManager *view, GList *list)
 			tooltip = (*view->tooltip_func) (item, view->tooltip_func_data);
 
 		if (!tooltip)
-			tooltip = g_strdup_printf (_("Open '%s'"), uri);
+			tooltip = g_strdup_printf (_("Open “%s”"), uri);
 
 		basename = egg_recent_item_get_short_name (item);
 		escaped = egg_recent_util_escape_underlines (basename);

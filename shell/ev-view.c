@@ -1379,10 +1379,10 @@ tip_from_link (EvView *view, EvLink *link)
 			break;
 	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
 			if (title) {
-				msg = g_strdup_printf (_("Go to %s on file %s"), title,
+				msg = g_strdup_printf (_("Go to %s on file “%s”"), title,
 						       ev_link_action_get_filename (action));
 			} else {
-				msg = g_strdup_printf (_("Go to file %s"),
+				msg = g_strdup_printf (_("Go to file “%s”"),
 						       ev_link_action_get_filename (action));
 			}
 			

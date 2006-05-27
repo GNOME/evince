@@ -1137,7 +1137,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 
 		if (err) {
 			gchar *msg;
-			msg = g_strdup_printf (_("The file could not be saved as \"%s\"."), uri);
+			msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
 			ev_window_error_dialog (GTK_WINDOW (fc), msg, err);
 			g_free (msg);
 		}
@@ -1230,7 +1230,7 @@ ev_window_print_dialog_response_cb (GtkDialog *print_dialog, gint response, gpoi
 					     GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
 					     _("Printing is not supported on this printer."));
            gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						     _("You were trying to print to a printer using the \"%s\" driver. This program requires a PostScript printer driver."),
+						     _("You were trying to print to a printer using the “%s” driver. This program requires a PostScript printer driver."),
 						     gnome_print_config_get (config, (guchar *)"Settings.Engine.Backend.Driver"));
 	    gtk_dialog_run (GTK_DIALOG (dialog));
 	    gtk_widget_destroy (dialog);

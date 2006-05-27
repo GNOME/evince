@@ -266,7 +266,7 @@ get_document_from_uri (const char *uri, gboolean slow, GError **error)
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
 			     0,
-			     _("Unhandled MIME type: '%s'"), info->mime_type);
+			     _("Unhandled MIME type: “%s”"), info->mime_type);
 		gnome_vfs_file_info_unref (info);
 		return NULL;
 	}			
