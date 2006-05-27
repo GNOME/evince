@@ -1762,7 +1762,7 @@ ev_view_expose_event (GtkWidget      *widget,
 	for (i = view->start_page; i <= view->end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
-		gboolean page_ready;
+		gboolean page_ready = TRUE;
 
 		if (!get_page_extents (view, i, &page_area, &border))
 			continue;
