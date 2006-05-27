@@ -2294,6 +2294,7 @@ draw_one_page (EvView          *view,
 	real_page_area.y += border->top;
 	real_page_area.width -= (border->left + border->right);
 	real_page_area.height -= (border->top + border->bottom);
+	*page_ready = TRUE;
 
 	ev_document_misc_paint_one_page (GTK_WIDGET(view)->window,
 					 GTK_WIDGET (view),
@@ -2349,7 +2350,6 @@ draw_one_page (EvView          *view,
 					 GDK_RGB_DITHER_NORMAL,
 					 0, 0);
 			g_object_unref (scaled_image);
-			*page_ready = TRUE;
 		} else {
 			draw_loading_text (view,
 					   &real_page_area,
