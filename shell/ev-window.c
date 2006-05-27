@@ -516,16 +516,6 @@ update_sizing_buttons (EvWindow *window)
 	}
 }
 
-void
-ev_window_open_page_label (EvWindow   *ev_window, 
-			   const char *label)
-{
-	if (ev_window->priv->page_cache) {
-		ev_page_cache_set_page_label (ev_window->priv->page_cache, 
-					      label);
-	}
-}
-
 gboolean
 ev_window_is_empty (const EvWindow *ev_window)
 {

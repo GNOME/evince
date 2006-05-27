@@ -59,8 +59,6 @@ void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   EvLinkDest     *dest);
 void            ev_window_goto_dest       (EvWindow       *ev_window,
 					   EvLinkDest     *dest);
-void		ev_window_open_page_label (EvWindow       *ev_window,
-					   const char     *label);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);
 #ifdef WITH_GNOME_PRINT
 void		ev_window_print_range     (EvWindow       *ev_window,

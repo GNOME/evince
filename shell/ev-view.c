@@ -1237,6 +1237,9 @@ goto_dest (EvView *view, EvLinkDest *dest)
 	        case EV_LINK_DEST_TYPE_XYZ:
 			goto_xyz_dest (view, dest);
 			break;
+	        case EV_LINK_DEST_TYPE_PAGE_LABEL:
+			ev_page_cache_set_page_label (view->page_cache, ev_link_dest_get_page_label (dest));
+			break;
 	        default:
 			g_assert_not_reached ();
 	}

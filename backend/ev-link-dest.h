@@ -46,6 +46,7 @@ typedef enum {
 	EV_LINK_DEST_TYPE_FITV,
 	EV_LINK_DEST_TYPE_FITR,
 	EV_LINK_DEST_TYPE_NAMED,
+	EV_LINK_DEST_TYPE_PAGE_LABEL,
 	EV_LINK_DEST_TYPE_UNKNOWN
 } EvLinkDestType; 
 
@@ -60,6 +61,7 @@ gdouble         ev_link_dest_get_bottom     (EvLinkDest  *self);
 gdouble         ev_link_dest_get_right      (EvLinkDest  *self);
 gdouble         ev_link_dest_get_zoom       (EvLinkDest  *self);
 const gchar    *ev_link_dest_get_named_dest (EvLinkDest  *self);
+const gchar    *ev_link_dest_get_page_label (EvLinkDest  *self);
 
 EvLinkDest     *ev_link_dest_new_page       (gint         page);
 EvLinkDest     *ev_link_dest_new_xyz        (gint         page,
@@ -77,6 +79,7 @@ EvLinkDest     *ev_link_dest_new_fitr       (gint         page,
 					     gdouble      right,
 					     gdouble      top);
 EvLinkDest     *ev_link_dest_new_named      (const gchar *named_dest);
+EvLinkDest     *ev_link_dest_new_page_label (const gchar *page_label);
 
 G_END_DECLS
 

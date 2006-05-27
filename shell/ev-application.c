@@ -278,13 +278,16 @@ ev_application_open_uri (EvApplication  *application,
 			 guint           timestamp,
 			 GError        **error)
 {
-	ev_application_open_uri_at_dest (application, uri, NULL, timestamp);
 	
 	if (page_label && strcmp (page_label, "") != 0) {
-		EvWindow *window;
+		EvLinkDest *dest;
+		
+		dest = ev_link_dest_new_page_label (page_label);
 
-		window = ev_application_get_uri_window (application, uri);
-		ev_window_open_page_label (window, page_label);
+		ev_application_open_uri_at_dest (application, uri, dest, timestamp);
+		g_object_unref (dest);
+	} else {
+		ev_application_open_uri_at_dest (application, uri, NULL, timestamp);
 	}
 
 	return TRUE;

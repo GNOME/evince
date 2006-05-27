@@ -29,7 +29,8 @@ enum {
 	PROP_BOTTOM,
 	PROP_RIGHT,
 	PROP_ZOOM,
-	PROP_NAMED
+	PROP_NAMED,
+	PROP_PAGE_LABEL
 };
 
 struct _EvLinkDest {
@@ -51,6 +52,7 @@ struct _EvLinkDestPrivate {
 	double         right;
 	double         zoom;
 	gchar         *named;
+	gchar	      *page_label;
 };
 
 G_DEFINE_TYPE (EvLinkDest, ev_link_dest, G_TYPE_OBJECT)
@@ -72,6 +74,7 @@ ev_link_dest_type_get_type (void)
 			{ EV_LINK_DEST_TYPE_FITV, "EV_LINK_DEST_TYPE_FITV", "fitv" },
 			{ EV_LINK_DEST_TYPE_FITR, "EV_LINK_DEST_TYPE_FITR", "fitr" },
 			{ EV_LINK_DEST_TYPE_NAMED, "EV_LINK_DEST_TYPE_NAMED", "named" },
+			{ EV_LINK_DEST_TYPE_PAGE_LABEL, "EV_LINK_DEST_TYPE_PAGE_LABEL", "page_label" },
 			{ EV_LINK_DEST_TYPE_UNKNOWN, "EV_LINK_DEST_TYPE_UNKNOWN", "unknown" },
 			{ 0, NULL, NULL }
 		};
@@ -146,6 +149,14 @@ ev_link_dest_get_named_dest (EvLinkDest *self)
 	return self->priv->named;
 }
 
+const gchar *
+ev_link_dest_get_page_label (EvLinkDest *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_DEST (self), NULL);
+
+	return self->priv->page_label;
+}
+
 static void
 ev_link_dest_get_property (GObject    *object,
 			   guint       prop_id,
@@ -180,6 +191,9 @@ ev_link_dest_get_property (GObject    *object,
 			break;
 	        case PROP_NAMED:
 			g_value_set_string (value, self->priv->named);
+			break;
+	        case PROP_PAGE_LABEL:
+			g_value_set_string (value, self->priv->page_label);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -222,6 +236,9 @@ ev_link_dest_set_property (GObject      *object,
 	        case PROP_NAMED:
 			self->priv->named = g_value_dup_string (value);
 			break;
+	        case PROP_PAGE_LABEL:
+			self->priv->page_label = g_value_dup_string (value);
+			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
 							   prop_id,
@@ -240,6 +257,10 @@ ev_link_dest_finalize (GObject *object)
 	if (priv->named) {
 		g_free (priv->named);
 		priv->named = NULL;
+	}
+	if (priv->page_label) {
+		g_free (priv->page_label);
+		priv->page_label = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_link_dest_parent_class)->finalize (object);
@@ -345,6 +366,14 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      NULL,
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_PAGE_LABEL,
+					 g_param_spec_string ("page_label",
+							      "Label of the page",
+							      "The label of the destination page",
+							      NULL,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY));
 }
 
 EvLinkDest *
@@ -425,5 +454,14 @@ ev_link_dest_new_named (const gchar *named_dest)
 	return EV_LINK_DEST (g_object_new (EV_TYPE_LINK_DEST,
 					   "named", named_dest,
 					   "type", EV_LINK_DEST_TYPE_NAMED,
+					   NULL));
+}
+
+EvLinkDest *
+ev_link_dest_new_page_label (const gchar *page_label)
+{
+	return EV_LINK_DEST (g_object_new (EV_TYPE_LINK_DEST,
+					   "page_label", page_label,
+					   "type", EV_LINK_DEST_TYPE_PAGE_LABEL,
 					   NULL));
 }
