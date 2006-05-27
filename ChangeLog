@@ -1,3 +1,11 @@
+2006-05-27  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-window.c: (setup_sidebar_from_metadata),
+	(ev_window_sidebar_visibility_changed_cb), (ev_window_init):
+	
+	Setup sidebar from metadata even if there is no document
+	loaded. Fix for the bug #342807.
+
 2006-05-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* cut-n-paste/toolbar-editor/Makefile.am:

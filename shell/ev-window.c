@@ -616,7 +616,6 @@ setup_chrome_from_metadata (EvWindow *window)
 	window->priv->chrome = chrome;
 }
 
-
 static void
 setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 {
@@ -633,8 +632,8 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
 					g_value_get_int (&sidebar_size));
 	}
-
-	if (ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, FALSE)) {
+	
+	if (document && ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, FALSE)) {
 		const char *page_id = g_value_get_string (&sidebar_page);
 
 		if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
@@ -644,10 +643,8 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
 		}
-	} else {
-		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
-		}
+	} else if (document && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
+		ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
 	}
 
 	if (ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility, FALSE)) {
@@ -2477,8 +2474,7 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 				      GTK_WIDGET_VISIBLE (ev_sidebar));
 
 	if (!ev_view_get_presentation (view) && 
-	    !ev_view_get_fullscreen (view) &&
-	    !ev_window_is_empty (ev_window)) {
+	    !ev_view_get_fullscreen (view)) {
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "sidebar_visibility",
 					         GTK_WIDGET_VISIBLE (ev_sidebar));
 	}
@@ -3757,6 +3753,7 @@ ev_window_init (EvWindow *ev_window)
 
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
 	setup_view_from_metadata (ev_window);
+	setup_sidebar_from_metadata (ev_window, NULL);
 
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	ev_window_setup_action_sensitivity (ev_window);
