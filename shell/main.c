@@ -44,7 +44,7 @@
 #include "ev-file-helpers.h"
 
 static char *ev_page_label;
-static char **file_arguments = NULL;
+static const char **file_arguments = NULL;
 
 static const GOptionEntry goption_options[] =
 {
@@ -65,10 +65,20 @@ load_files (const char **files)
 
 	for (i = 0; files[i]; i++) {
 		char *uri;
+		char *label;
 
 		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
-		ev_application_open_uri (EV_APP, uri, ev_page_label,
-					 GDK_CURRENT_TIME, NULL);
+		
+		label = strchr (uri, GNOME_VFS_URI_MAGIC_CHR);
+		
+		if (label) {
+			*label = 0; label++;
+			ev_application_open_uri (EV_APP, uri, label,
+						 GDK_CURRENT_TIME, NULL);
+		} else {	
+			ev_application_open_uri (EV_APP, uri, ev_page_label,
+						 GDK_CURRENT_TIME, NULL);
+		}
 		g_free (uri);
         }
 }

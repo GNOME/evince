@@ -433,9 +433,13 @@ ev_job_xfer_run (EvJobXfer *job)
 		char *tmp_name;
 		char *base_name;
 		
+		/* We'd like to keep extension of source uri since
+		 * it helps to resolve some mime types, say cbz */
+		
 		tmp_name = ev_tmp_filename ();
-		base_name = g_path_get_basename (job->uri);
-		job->local_uri = g_strconcat ("file:", tmp_name, base_name, NULL);
+		base_name = gnome_vfs_uri_extract_short_name (source_uri);
+		job->local_uri = g_strconcat ("file:", tmp_name, "-", base_name, NULL);
+		g_free (base_name);
 		g_free (tmp_name);
 		
 		target_uri = gnome_vfs_uri_new (job->local_uri);

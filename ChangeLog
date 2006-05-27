@@ -1,5 +1,12 @@
 2006-05-27  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-jobs.c: (ev_job_xfer_run):
+	* shell/main.c: (load_files):
+		
+	Open links with anchors. Fix for the bug #339836.
+
+2006-05-27  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* backend/ev-link-dest.c: (ev_link_dest_type_get_type),
 	(ev_link_dest_get_page_label), (ev_link_dest_get_property),
 	(ev_link_dest_set_property), (ev_link_dest_finalize),
