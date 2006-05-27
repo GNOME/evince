@@ -206,7 +206,8 @@ static void       draw_one_page                              (EvView            
 							      gint                page,
 							      GdkRectangle       *page_area,
 							      GtkBorder          *border,
-							      GdkRectangle       *expose_area);
+							      GdkRectangle       *expose_area,
+							      gboolean		 *page_ready);
 static void	  draw_loading_text 			     (EvView             *view,
 							      GdkRectangle       *page_area,
 							      GdkRectangle       *expose_area);
@@ -1761,6 +1762,7 @@ ev_view_expose_event (GtkWidget      *widget,
 	for (i = view->start_page; i <= view->end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
+		gboolean page_ready;
 
 		if (!get_page_extents (view, i, &page_area, &border))
 			continue;
@@ -1768,9 +1770,9 @@ ev_view_expose_event (GtkWidget      *widget,
 		page_area.x -= view->scroll_x;
 		page_area.y -= view->scroll_y;
 
-		draw_one_page (view, i, &page_area, &border, &(event->area));
+		draw_one_page (view, i, &page_area, &border, &(event->area), &page_ready);
 
-		if (EV_IS_DOCUMENT_FIND (view->document))
+		if (page_ready && EV_IS_DOCUMENT_FIND (view->document))
 			highlight_find_results (view, i);
 	}
 
@@ -2264,7 +2266,8 @@ draw_one_page (EvView          *view,
 	       gint             page,
 	       GdkRectangle    *page_area,
 	       GtkBorder       *border,
-	       GdkRectangle    *expose_area)
+	       GdkRectangle    *expose_area,
+	       gboolean        *page_ready)
 {
 	gint width, height;
 	GdkPixbuf *current_pixbuf;
@@ -2346,10 +2349,12 @@ draw_one_page (EvView          *view,
 					 GDK_RGB_DITHER_NORMAL,
 					 0, 0);
 			g_object_unref (scaled_image);
+			*page_ready = TRUE;
 		} else {
 			draw_loading_text (view,
 					   &real_page_area,
 					   expose_area);
+			*page_ready = FALSE;
 		}
 
 		if (scaled_selection) {

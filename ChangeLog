@@ -1,3 +1,10 @@
+2006-05-27  Ricardo Markiewicz  <rmarkie@fi.uba.ar>
+
+	* shell/ev-view.c: (ev_view_expose_event), (draw_one_page):
+	
+	Don't show highlight rects if page can't be showed. Fix for 
+	the bug #342076
+
 2006-05-27  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-window.c: (setup_sidebar_from_metadata),
