@@ -379,7 +379,6 @@ ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 }
 void
 ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
-
 			       int                  rotation)
 {
 	sidebar_thumbnails->priv->rotation = rotation;
@@ -596,6 +595,8 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 		if (! priv->icon_view) {
 			ev_sidebar_init_icon_view (sidebar_thumbnails);
 			g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
+		} else {
+			gtk_widget_queue_resize (priv->icon_view);
 		}
 	} else {
 		if (priv->icon_view) {
