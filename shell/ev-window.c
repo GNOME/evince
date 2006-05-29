@@ -930,11 +930,11 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		
 		ev_window_setup_document (ev_window);
 		ev_window_add_recent (ev_window, ev_window->priv->uri);		
-		ev_window_clear_xfer_job (ev_window);
 
-		if (ev_window->priv->dest)
-			ev_window_goto_dest (ev_window, ev_window->priv->dest);
-		
+		if (job->dest)
+			ev_window_goto_dest (ev_window, job->dest);
+
+		ev_window_clear_xfer_job (ev_window);		
 		return;
 	}
 
@@ -997,19 +997,12 @@ ev_window_close_dialogs (EvWindow *ev_window)
 void
 ev_window_open_uri (EvWindow *ev_window, const char *uri, EvLinkDest *dest)
 {
-	g_free (ev_window->priv->uri);
-	ev_window->priv->uri = NULL;
-
-	if (ev_window->priv->dest)
-		g_object_unref (ev_window->priv->dest);
-	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
-	
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_xfer_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 	
-	ev_window->priv->xfer_job = ev_job_xfer_new (uri);
+	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest);
 	g_signal_connect (ev_window->priv->xfer_job,
 			  "finished",
 			  G_CALLBACK (ev_window_xfer_job_cb),
@@ -2072,19 +2065,12 @@ static void
 ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
 	char *uri;
-	int page;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 	uri = g_strdup (ev_window->priv->uri);
 
 	ev_window_open_uri (ev_window, uri, NULL);
-
-	/* In case the number of pages in the document has changed. */
-	page = CLAMP (page, 0, ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
-
-	ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
 
 	g_free (uri);
 }
@@ -3463,8 +3449,6 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (window_state_event_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
-
-	ev_window->priv->dest = NULL;
 
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	ev_window->priv->title = ev_window_title_new (ev_window);

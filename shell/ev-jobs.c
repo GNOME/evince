@@ -389,6 +389,11 @@ ev_job_xfer_dispose (GObject *object)
 		job->error = NULL;
 	}
 
+	if (job->dest) {
+		g_object_unref (job->dest);
+		job->dest = NULL;
+	}
+
 	(* G_OBJECT_CLASS (ev_job_xfer_parent_class)->dispose) (object);
 }
 
@@ -404,13 +409,15 @@ ev_job_xfer_class_init (EvJobXferClass *class)
 
 
 EvJob *
-ev_job_xfer_new (const gchar *uri)
+ev_job_xfer_new (const gchar *uri, EvLinkDest *dest)
 {
 	EvJobXfer *job;
 
 	job = g_object_new (EV_TYPE_JOB_XFER, NULL);
 
 	job->uri = g_strdup (uri);
+	if (dest)
+		job->dest = g_object_ref (dest);
 
 	return EV_JOB (job);
 }

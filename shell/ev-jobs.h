@@ -162,6 +162,7 @@ struct _EvJobFontsClass
 struct _EvJobXfer
 {
 	EvJob parent;
+	EvLinkDest *dest;
 	GError *error;
 	char *uri;
 	char *local_uri;
@@ -210,7 +211,7 @@ void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
 /* EvJobXfer */
 GType 		ev_job_xfer_get_type 	  (void);
-EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri);
+EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri, EvLinkDest *dest);
 void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);					   
 
 G_END_DECLS

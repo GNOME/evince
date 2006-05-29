@@ -1,3 +1,12 @@
+2006-05-29  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+
+	* shell/ev-jobs.c: (ev_job_xfer_dispose), (ev_job_xfer_new):
+	* shell/ev-jobs.h:
+	* shell/ev-window.c: (ev_window_xfer_job_cb), (ev_window_open_uri),
+	(ev_window_cmd_view_reload), (ev_window_init):
+	
+	Don't crash on reload. Fix for the bug #343167.
+
 2006-05-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-jobs.c: (ev_job_render_run):
