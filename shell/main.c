@@ -250,9 +250,9 @@ main (int argc, char *argv[])
 		enable_metadata = TRUE;
 	}
 #endif
-
+	
+	gdk_threads_init ();
 	gnome_authentication_manager_init ();
-
 
 	if (enable_metadata) {
 		ev_metadata_manager_init ();

@@ -1,3 +1,9 @@
+2006-06-01  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+
+	* shell/main.c: (main): Call gdk_threads_init. Thus
+	we'll avoid errors in auth dialog. Fix for the bug
+	#343347.
+
 2006-06-01  Wouter Bolsterlee  <uws+gnome@xs4all.nl>
 
 	* configure.ac: Advertise pixbuf support, fix
