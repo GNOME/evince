@@ -311,6 +311,9 @@ fi
 if test "x$enable_comics" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-cbr;application/x-cbz"
 fi
+if test "x$enable_pixbuf" = "xyes"; then
+       EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/*"
+fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
 AC_CONFIG_FILES([
