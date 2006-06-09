@@ -434,6 +434,17 @@ ev_job_xfer_run (EvJobXfer *job)
 	        g_error_free (job->error);
 		job->error = NULL;
 	}
+	
+	/* This job may already have a document even if the job didn't complete
+	   because, e.g., a password is required - if so, just reload rather than
+	   creating a new instance */
+	if (EV_JOB (job)->document) {
+		ev_document_load (EV_JOB (job)->document,
+				  job->local_uri ? job->local_uri : job->uri,
+				  &job->error);
+		EV_JOB (job)->finished = TRUE;
+		return;
+	}
 
 	source_uri = gnome_vfs_uri_new (job->uri);
 	if (!gnome_vfs_uri_is_local (source_uri) && !job->local_uri) {

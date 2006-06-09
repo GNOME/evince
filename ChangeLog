@@ -1,3 +1,13 @@
+2006-06-09  Pat Rondon  <pmr@patrondon.org>
+
+	* shell/ev-jobs.c: (ev_job_xfer_run):
+	* shell/ev-window.c: (password_dialog_response),
+	(ev_window_popup_password_dialog), (ev_window_xfer_job_cb),
+	(ev_window_dispose):
+	Fixes bug #344160: if the xfer job doesn't complete
+	because a password is required, reload the existing
+	instance instead of creating a new one.
+
 2006-06-01  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
 
 	* shell/main.c: (main): Call gdk_threads_init. Thus

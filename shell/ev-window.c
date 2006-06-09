@@ -145,7 +145,7 @@ struct _EvWindowPrivate {
 	EvLinkDest *dest;
 	
 	EvDocument *document;
-	EvDocument *password_document;
+
 	EvPageCache *page_cache;
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
@@ -803,16 +803,13 @@ password_dialog_response (GtkWidget *password_dialog,
 		password = ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog));
 		if (password) {
 			ev_document_doc_mutex_lock ();
-			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->password_document),
+			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->xfer_job->document),
 							   password);
 			ev_document_doc_mutex_unlock ();
 		}
 		g_free (password);
 
 		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
-
-		g_object_unref (ev_window->priv->password_document);
-		ev_window->priv->password_document = NULL;
 
 		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
 		ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
@@ -833,7 +830,7 @@ password_dialog_response (GtkWidget *password_dialog,
 static void
 ev_window_popup_password_dialog (EvWindow *ev_window)
 {
-	g_assert (ev_window->priv->password_document);
+	g_assert (ev_window->priv->xfer_job);
 
 	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
 
@@ -906,11 +903,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 
-	if (ev_window->priv->password_document) {
-		g_object_unref (ev_window->priv->password_document);
-		ev_window->priv->password_document = NULL;
-	}
-
 	/* Success! */
 	if (job->error == NULL) {
 
@@ -946,7 +938,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		ev_window->priv->uri = g_strdup (job->uri);
 		setup_view_from_metadata (ev_window);
 
-		ev_window->priv->password_document = g_object_ref (document);
 
 		file_name = gnome_vfs_format_uri_for_display (job->uri);
 		base_name = g_path_get_basename (file_name);
@@ -2723,11 +2714,6 @@ ev_window_dispose (GObject *object)
 	
 	if (priv->local_uri) {
 		ev_window_clear_local_uri (window);
-	}
-
-	if (priv->password_document) {
-		g_object_unref (priv->password_document);
-		priv->password_document = NULL;
 	}
 	
 	ev_window_close_dialogs (window);
