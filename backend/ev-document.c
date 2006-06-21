@@ -259,3 +259,52 @@ ev_rect_cmp (EvRectangle *a,
 		  (ABS (a->x2 - b->x2) < EPSILON) &&
 		  (ABS (a->y2 - b->y2) < EPSILON));
 }
+
+GList*
+ev_document_get_form_field_mapping (EvDocument *document,
+			     int 	 page)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	GList *retval;
+
+	LOG ("ev_document_get_form_fields");
+	if (iface->get_form_field_mapping == NULL)
+		return NULL;
+	retval = iface->get_form_field_mapping (document, page);
+	return retval;
+}
+
+gboolean
+ev_document_get_crop_box (EvDocument *document,
+			  int 	      page,
+			  EvRectangle *rect)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	LOG("ev_document_get_crop_box");
+	if (iface->get_crop_box == NULL)
+		return FALSE;
+	iface->get_crop_box(document, page, rect);
+	return TRUE;
+}
+
+gchar *
+ev_document_get_form_field_content (EvDocument *document, int field_id)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
+	gchar* retval;
+	LOG("ev_document_get_form_field_content");
+	if (iface->get_field_content == NULL)
+		return NULL;
+	retval = iface->get_field_content(document, field_id);
+	return retval;
+}
+
+void 
+ev_document_set_form_field_content (EvDocument *document, int field_id, gchar* content)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
+	LOG("ev_document_set_form_field_content");
+	if (iface->set_field_content == NULL)
+		return;
+	iface->set_field_content(document, field_id, content);
+}

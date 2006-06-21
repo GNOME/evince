@@ -84,6 +84,13 @@ static EvLinkDest *ev_link_dest_from_dest (PopplerDest *dest);
 static EvLink *ev_link_from_action (PopplerAction *action);
 static void pdf_document_search_free (PdfDocumentSearch   *search);
 
+static void pdf_document_get_crop_box (EvDocument *document, int page, EvRectangle *rect);
+static GList *pdf_document_get_form_field_mapping (EvDocument *document, int page);
+static gchar* pdf_document_get_field_content (EvDocument *document, int field_id);
+static gboolean pdf_document_set_field_content (EvDocument *document, int field_id, gchar* content);
+
+
+
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
@@ -632,8 +639,12 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_attachments = pdf_document_get_attachments;
 	iface->render_pixbuf = pdf_document_render_pixbuf;
 	iface->get_text = pdf_document_get_text;
+	iface->get_form_field_mapping = pdf_document_get_form_field_mapping;
+	iface->get_crop_box = pdf_document_get_crop_box;
 	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
+	iface->set_field_content = pdf_document_set_field_content;
+	iface->get_field_content = pdf_document_get_field_content;
 };
 
 static void
@@ -1500,4 +1511,91 @@ PdfDocument *
 pdf_document_new (void)
 {
 	return PDF_DOCUMENT (g_object_new (PDF_TYPE_DOCUMENT, NULL));
+}
+
+
+static GList *
+pdf_document_get_form_field_mapping (EvDocument *document,
+ 			      int 	 page)
+{
+ 	PdfDocument *pdf_document;
+ 	PopplerPage *poppler_page;
+ 	GList *retval = NULL;
+ 	GList *fields;
+ 	GList *list;
+ 	double height;
+	EvRectangle crop_box;
+
+ 	pdf_document = PDF_DOCUMENT (document);
+ 	poppler_page = poppler_document_get_page (pdf_document->document,
+ 						  page);
+ 	fields = poppler_page_get_form_fields (poppler_page);
+ 	poppler_page_get_size (poppler_page, NULL, &height);
+
+	pdf_document_get_crop_box(document, page, &crop_box);
+ 
+ 	for (list = fields; list; list = list->next) {
+ 		PopplerFormField *field;
+ 		EvFormField *field_mapping;
+		double rect[4];	
+		
+ 		field = (PopplerFormField *)list->data;
+ 		/* Invert y for X-style coordinates */
+		rect[0] = field->area.x1; rect[1] = height - field->area.y2;
+		rect[2] = field->area.x2; rect[3] = height - field->area.y1;
+
+ 		field_mapping = g_new (EvFormField, 1);
+		field_mapping->content = NULL;
+		field_mapping->type = (EvFormFieldType)field->type;
+		field_mapping->id = field->id;
+		field_mapping->x1 = rect[0];
+ 		field_mapping->x2 = rect[2];
+ 		field_mapping->y1 = rect[1];
+		field_mapping->y2 = rect[3];
+		/* Add crop box to form area */
+		field_mapping->x1 -= crop_box.x1;
+		field_mapping->y1 += crop_box.y1;
+		field_mapping->x2 -= crop_box.x1;
+		field_mapping->y2 += crop_box.y1;
+		field_mapping->content = poppler_document_get_form_field_content(pdf_document->document, field->id);
+
+
+ 		retval = g_list_prepend(retval, field_mapping);
+ 	}
+ 	poppler_page_free_form_fields(fields);
+ 	g_object_unref (poppler_page);
+ 
+	return g_list_reverse(retval);
+}
+
+static void
+pdf_document_get_crop_box (EvDocument *document,
+			   int page,
+			   EvRectangle *rect)
+{
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	PopplerRectangle poppler_rect;
+
+	pdf_document = PDF_DOCUMENT (document);
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page_get_crop_box (poppler_page, &poppler_rect);
+	rect->x1 = poppler_rect.x1;
+	rect->x2 = poppler_rect.x2;
+	rect->y1 = poppler_rect.y1;
+	rect->y2 = poppler_rect.y2;
+}
+
+static gchar * 
+pdf_document_get_field_content (EvDocument *document, int field_id)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(document);
+	return poppler_document_get_form_field_content(pdf_document->document, field_id);
+}
+
+static gboolean pdf_document_set_field_content (EvDocument *document, int field_id, gchar* content)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(document);
+	poppler_document_set_form_field_content(pdf_document->document, field_id, content);
+	return true;
 }

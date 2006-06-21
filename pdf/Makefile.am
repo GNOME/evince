@@ -8,6 +8,7 @@ INCLUDES =					\
 
 noinst_LTLIBRARIES = libpdfdocument.la
 
+
 libpdfdocument_la_SOURCES =			\
 	ev-poppler.cc				\
 	ev-poppler.h

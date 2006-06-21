@@ -256,6 +256,9 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = dvi_document_get_page_size;
 	iface->render_pixbuf = dvi_document_render_pixbuf;
 	iface->get_info = dvi_document_get_info;
+	iface->get_form_field_mapping = NULL;
+	iface->get_field_content = NULL;
+	iface->set_field_content = NULL;
 }
 
 static void

@@ -1,3 +1,44 @@
+2006-06-21  Julien Rebetez  <julienr@cvs.gnome.org>
+
+	* backend/Makefile.am:
+	* backend/ev-document.c: (ev_document_get_form_field_mapping),
+	(ev_document_get_crop_box), (ev_document_get_form_field_content),
+	(ev_document_set_form_field_content):
+	* backend/ev-document.h:
+	* comics/comics-document.c: (comics_document_document_iface_init):
+	* djvu/djvu-document.c: (djvu_document_document_iface_init):
+	* dvi/dvi-document.c: (dvi_document_document_iface_init):
+	* pdf/Makefile.am:
+	* pdf/ev-poppler.cc:
+	* pixbuf/pixbuf-document.c: (pixbuf_document_document_iface_init):
+	* ps/ps-document.c: (ps_document_document_iface_init):
+	* shell/ev-jobs.c: (ev_job_render_new), (ev_job_render_run):
+	* shell/ev-jobs.h:
+	* shell/ev-pixbuf-cache.c: (dispose_cache_job_info),
+	(move_one_job), (copy_job_to_job_info), (add_job_if_needed),
+	(ev_pixbuf_cache_get_form_field_mapping):
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_size_request), (ev_view_size_allocate),
+	(ev_view_realize), (ev_view_expose_event),
+	(ev_view_button_press_event), (ev_view_motion_notify_event),
+	(draw_one_page), (ev_view_class_init), (ev_view_init),
+	(on_adjustment_value_changed), (ev_scroll_type_get_type),
+	(ev_view_get_form_field_at_location),
+	(render_form_field_content_for_page), (handle_click_at_location),
+	(handle_form_field_over_xy), (form_field_widgets_resize),
+	(ev_view_map), (ev_view_add), (ev_view_remove),
+	(ev_view_remove_all), (ev_view_put), (ev_view_forall), (get_child),
+	(ev_view_move_internal), (ev_view_allocate_child),
+	(ev_view_set_child_property), (ev_view_get_child_property):
+	* shell/ev-view.h:
+	* tiff/tiff-document.c: (tiff_document_document_iface_init):
+	Beginning of 'PDF Interactive form' support (bug #304575), 
+	currently add the possibility to fill text field.
+	These changes rely on a patch against Poppler. (see the wiki)
+	More informations are available on the dedicated wiki page:
+	http://live.gnome.org/Evince/Forms
+
 2006-06-09  Pat Rondon  <pmr@patrondon.org>
 
 	* shell/ev-jobs.c: (ev_job_xfer_run):

@@ -21,6 +21,7 @@
 #define __EV_VIEW_H__
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtkcontainer.h>
 
 #include "ev-document.h"
 #include "ev-link.h"

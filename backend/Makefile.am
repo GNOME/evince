@@ -41,6 +41,8 @@ libevbackend_la_SOURCES=			\
 	ev-document-find.c			\
 	ev-document-find.h			\
 	ev-document-info.h			\
+	ev-form-field.h			\
+	ev-form-field.c 		\
 	ev-ps-exporter.c			\
 	ev-ps-exporter.h			\
 	ev-render-context.h			\

@@ -27,6 +27,7 @@
 #include <gdk/gdk.h>
 
 #include "ev-link.h"
+#include "ev-form-field.h"
 #include "ev-document-info.h"
 #include "ev-render-context.h"
 
@@ -88,11 +89,21 @@ struct _EvDocumentIface
 	char	       * (* get_text)	     (EvDocument   *document,
 					      int           page,
 					      EvRectangle  *rect);
+	GList 	       * (* get_form_field_mapping) (EvDocument   *document,
+					      int 	    page);
 	gboolean         (* has_attachments) (EvDocument   *document);
 	GList          * (* get_attachments) (EvDocument   *document);
 	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
 					      EvRenderContext *rc);
 	EvDocumentInfo * (* get_info)        (EvDocument   *document);
+	void 	         (* get_crop_box)    (EvDocument   *document,
+					      int 	    page,
+					      EvRectangle  *rect);
+	gchar 	       * (* get_field_content) (EvDocument *document,
+						int field_id);
+	gboolean	 (* set_field_content) (EvDocument *document,
+					 	int field_id,
+						gchar* content);
 };
 
 GType		ev_document_get_type       (void);
@@ -126,6 +137,17 @@ GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,
 
 gint            ev_rect_cmp                 (EvRectangle    *a,
 					     EvRectangle    *b);
+
+GList 		*ev_document_get_form_field_mapping (EvDocument    *document,
+					      int 	    page);
+
+gchar 		*ev_document_get_form_field_content (EvDocument *document, int field_id);
+void 		ev_document_set_form_field_content (EvDocument *document, int field_id, gchar* content);
+
+gboolean	ev_document_get_crop_box (EvDocument *document,
+					  int page,
+					  EvRectangle *rect);
+
 
 
 G_END_DECLS

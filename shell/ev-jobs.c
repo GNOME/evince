@@ -213,6 +213,7 @@ ev_job_render_new (EvDocument      *document,
 		   EvRectangle     *selection_points,
 		   GdkColor        *text,
 		   GdkColor        *base,
+		   gboolean 	    include_form,
 		   gboolean         include_links,
 		   gboolean         include_text,
 		   gboolean         include_selection)
@@ -231,6 +232,7 @@ ev_job_render_new (EvDocument      *document,
 	job->target_height = height;
 	job->text = *text;
 	job->base = *base;
+	job->include_form = include_form;
 	job->include_links = include_links;
 	job->include_text = include_text;
 	job->include_selection = include_selection;
@@ -271,6 +273,8 @@ ev_job_render_run (EvJobRender *job)
 				  G_CALLBACK (render_finished_cb), job);
 	} else {
 		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document, job->rc);
+		if (job->include_form)
+			job->form_field_mapping = ev_document_get_form_field_mapping(EV_JOB(job)->document, job->rc->page);
 		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
 			job->link_mapping =
 				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),

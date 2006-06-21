@@ -1281,6 +1281,9 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->get_info = ps_document_get_info;
+	iface->get_form_field_mapping = NULL;
+	iface->get_field_content = NULL;
+	iface->set_field_content = NULL;
 }
 
 static void

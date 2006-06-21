@@ -41,6 +41,17 @@ typedef struct {
 	GList *selections;
 } SelectionInfo;
 
+/* Info for form fields/container */
+typedef struct {
+	GtkWidget *widget;
+	gint x;
+	gint y;
+	EvPoint p[2];
+	gint page;
+	int field_id; //id of the field represented by this child
+} EvViewChild;
+
+
 typedef enum {
 	SCROLL_TO_KEEP_POSITION,
 	SCROLL_TO_PAGE_POSITION,
@@ -57,7 +68,7 @@ typedef enum {
 } EvViewCursor;
 
 struct _EvView {
-	GtkWidget parent_instance;
+	GtkContainer parent_instance;
 
 	EvDocument *document;
 
@@ -116,10 +127,15 @@ struct _EvView {
 	/* Links */
 	GtkWidget *link_tooltip;
 	EvLink *hovered_link;
+
+	/* Container */
+	gint current_width;
+	gint current_height;
+	EvViewChild *child;
 };
 
 struct _EvViewClass {
-	GtkWidgetClass parent_class;
+	GtkContainerClass parent_class;
 
 	void	(*set_scroll_adjustments) (EvView         *view,
 					   GtkAdjustment  *hadjustment,
