@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-03 10:14+0300\n"
-"PO-Revision-Date: 2006-05-03 10:13+0300\n"
+"POT-Creation-Date: 2006-07-05 14:02+0300\n"
+"PO-Revision-Date: 2006-07-05 13:23+0300\n"
 "Last-Translator: Rostislav \"zbrox\" Raykov <zbrox@i-space.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,17 +19,17 @@ msgstr ""
 
 #: ../backend/ev-attachment.c:303 ../backend/ev-attachment.c:316
 #, c-format
-msgid "Couldn't save attachment '%s': %s"
+msgid "Couldn't save attachment “%s”: %s"
 msgstr "Неуспех при запазването на прикрепения файл „%s“: %s"
 
 #: ../backend/ev-attachment.c:348
 #, c-format
-msgid "Couldn't open attachment '%s': %s"
+msgid "Couldn't open attachment “%s”: %s"
 msgstr "Неуспех при отварянето на прикрепения файл „%s“:·%s"
 
 #: ../backend/ev-attachment.c:381
 #, c-format
-msgid "Couldn't open attachment '%s'"
+msgid "Couldn't open attachment “%s”"
 msgstr "Неуспех при отварянето на прикрепения файл „%s“"
 
 #: ../backend/ev-document-factory.c:258
@@ -38,7 +38,7 @@ msgstr "Неясен/непознат вид MIME"
 
 #: ../backend/ev-document-factory.c:269
 #, c-format
-msgid "Unhandled MIME type: '%s'"
+msgid "Unhandled MIME type: “%s”"
 msgstr "Неподдържан MIME тип: „%s“"
 
 #: ../backend/ev-document-factory.c:335
@@ -84,23 +84,55 @@ msgstr "В архива %s няма намерени изображения"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
 #, c-format
-msgid "Open '%s'"
+msgid "Open “%s”"
 msgstr "Отваряне на „%s“"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
 msgid "Empty"
 msgstr "Празно"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:534
-msgid "_Remove Toolbar"
+#. Translaters: This string is for a toggle to display a toolbar.
+#. * The name of the toolbar is automatically computed from the widgets
+#. * on the toolbar, and is placed at the %s. Note the _ before the %s
+#. * which is used to add mnemonics. We know that this is likely to
+#. * produce duplicates, but don't worry about it. If your language
+#. * normally has a mnemonic at the start, please use the _. If not,
+#. * please remove.
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:902
+#, c-format
+msgid "Show “_%s”"
+msgstr "Показване на “_%s”"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1362
+msgid "_Move on Toolbar"
+msgstr "П_оставяне в лентата с инструменти"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1363
+msgid "Move the selected item on the toolbar"
+msgstr "Преместване на избрания обект в лентата с инструменти"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1364
+msgid "_Remove from Toolbar"
+msgstr "Пр_емахване от лентата с инструменти"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1365
+msgid "Remove the selected item from the toolbar"
+msgstr "Премахване на избрания обект от лентата с инструменти"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1366
+msgid "_Delete Toolbar"
 msgstr "П_ремахване на лентата с инструменти"
 
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:555
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1367
+msgid "Remove the selected toolbar"
+msgstr "Премахване на лентата с инструменти"
+
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:439
 msgid "Separator"
 msgstr "Разделител"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3128
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3051
 msgid "Best Fit"
 msgstr "Запълване"
 
@@ -288,7 +320,7 @@ msgstr "Вградени"
 msgid "Not embedded"
 msgstr "Не е вграден"
 
-#: ../properties/ev-properties-main.c:112
+#: ../properties/ev-properties-main.c:107
 msgid "Document"
 msgstr "Документ"
 
@@ -382,12 +414,12 @@ msgstr "Грешка на интерпретатора."
 
 #: ../ps/ps-document.c:900
 #, c-format
-msgid "Error while decompressing file %s:\n"
+msgid "Error while decompressing file “%s”:\n"
 msgstr "Грешка при декомпресиране на файла %s:\n"
 
 #: ../ps/ps-document.c:960
 #, c-format
-msgid "Cannot open file %s.\n"
+msgid "Cannot open file “%s”.\n"
 msgstr "Файлът %s не може да бъде отворен.\n"
 
 #: ../ps/ps-document.c:965
@@ -401,15 +433,15 @@ msgstr "Документът е зареден."
 #: ../ps/ps-document.c:1082
 #, c-format
 msgid ""
-"Failed to load document '%s'. Ghostscript interpreter was not found in path"
+"Failed to load document “%s”. Ghostscript interpreter was not found in path"
 msgstr ""
 "Документът „%s“ не може да се зареди, защото интерпретаторът Ghostscript не "
 "е открит в пътя."
 
 #: ../ps/ps-document.c:1094
 #, c-format
-msgid "Failed to load document '%s'"
-msgstr "Документът „%s“ не може да бъде отворен"
+msgid "Failed to load document “%s”"
+msgstr "Документът „%s“ не може да бъде зареден."
 
 #: ../ps/ps-document.c:1267
 msgid "Encapsulated PostScript"
@@ -467,14 +499,6 @@ msgstr "_Следваща"
 msgid "C_ase Sensitive"
 msgstr "Има р_азлика големи/малки букви"
 
-#: ../shell/ev-attachment-bar.c:171
-msgid "Hide attachments bar"
-msgstr "Скриване на лентата за прикрепените файлове"
-
-#: ../shell/ev-attachment-bar.c:174 ../shell/ev-attachment-bar.c:576
-msgid "Show attachments bar"
-msgstr "Показване на лентата за прикрепените файлове"
-
 #: ../shell/ev-page-action.c:168
 #, c-format
 msgid "(%d of %d)"
@@ -492,9 +516,8 @@ msgstr "Изисква се парола"
 #: ../shell/ev-password.c:84
 #, c-format
 msgid ""
-"The document <i>%s</i> is locked and requires a password before it can be "
-"opened."
-msgstr "Документът <i>%s</i> е заключен и изисква парола, за да бъде отворен."
+"The document “%s” is locked and requires a password before it can be opened."
+msgstr "Документът „%s“ е заключен и изисква парола, за да бъде отворен."
 
 #: ../shell/ev-password.c:149
 msgid "Enter password"
@@ -542,7 +565,11 @@ msgstr "Шрифт"
 msgid "Gathering font information... %3d%%"
 msgstr "Събиране на информация за шрифтовете... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2202
+#: ../shell/ev-sidebar-attachments.c:615
+msgid "Attachments"
+msgstr "Прикачени файлове"
+
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2233
 msgid "Loading..."
 msgstr "Зареждане..."
 
@@ -554,7 +581,7 @@ msgstr "Печат..."
 msgid "Index"
 msgstr "Съдържание"
 
-#: ../shell/ev-sidebar-thumbnails.c:669
+#: ../shell/ev-sidebar-thumbnails.c:659
 msgid "Thumbnails"
 msgstr "Мини изображения"
 
@@ -578,22 +605,46 @@ msgstr "Прелистване на изгледа надолу"
 msgid "Document View"
 msgstr "Преглед на документи"
 
+#: ../shell/ev-view.c:1340
+msgid "Go to first page"
+msgstr "Първа страница"
+
+#: ../shell/ev-view.c:1342
+msgid "Go to previous page"
+msgstr "Предишна страница"
+
+#: ../shell/ev-view.c:1344
+msgid "Go to next page"
+msgstr "Следваща страница"
+
+#: ../shell/ev-view.c:1346
+msgid "Go to last page"
+msgstr "Последна страница"
+
+#: ../shell/ev-view.c:1348
+msgid "Go to page"
+msgstr "Отиване на страница"
+
 #: ../shell/ev-view.c:1350
+msgid "Find"
+msgstr "Търсене"
+
+#: ../shell/ev-view.c:1377
 #, c-format
 msgid "Go to page %s"
 msgstr "Отиване на страница %s"
 
-#: ../shell/ev-view.c:1355
+#: ../shell/ev-view.c:1382
 #, c-format
-msgid "Go to %s on file %s"
-msgstr "Отиване при %s във файла %s"
+msgid "Go to %s on file “%s”"
+msgstr "Отиване при %s във файла „%s“"
 
-#: ../shell/ev-view.c:1358
+#: ../shell/ev-view.c:1385
 #, c-format
-msgid "Go to file %s"
-msgstr "Отиване при файла %s"
+msgid "Go to file “%s”"
+msgstr "Отиване при файла „%s“"
 
-#: ../shell/ev-view.c:1367
+#: ../shell/ev-view.c:1394
 #, c-format
 msgid "Launch %s"
 msgstr "Стартиране на %s"
@@ -601,70 +652,70 @@ msgstr "Стартиране на %s"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3403
+#: ../shell/ev-view.c:3437
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d открит на тази страница"
 msgstr[1] "%d открити на тази страница"
 
-#: ../shell/ev-view.c:3412
+#: ../shell/ev-view.c:3446
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% остават да бъдат претърсени"
 
-#: ../shell/ev-window.c:986
+#: ../shell/ev-window.c:953
 msgid "Unable to open document"
 msgstr "Документът не може да бъде отворен"
 
-#: ../shell/ev-window.c:1076
+#: ../shell/ev-window.c:1036
 msgid "Open Document"
 msgstr "Отваряне на документ"
 
-#: ../shell/ev-window.c:1164
+#: ../shell/ev-window.c:1124
 #, c-format
-msgid "The file could not be saved as \"%s\"."
+msgid "The file could not be saved as “%s”."
 msgstr "Файлът не може да бъде запазен като „%s“."
 
-#: ../shell/ev-window.c:1183 ../shell/ev-window.c:3453
+#: ../shell/ev-window.c:1143 ../shell/ev-window.c:3402
 msgid "Save a Copy"
 msgstr "Запазване на копие"
 
-#: ../shell/ev-window.c:1248
+#: ../shell/ev-window.c:1206
 msgid "Generating PDF is not supported"
 msgstr "Генерирането на PDF не се поддържа"
 
-#: ../shell/ev-window.c:1257
+#: ../shell/ev-window.c:1215
 msgid "Printing is not supported on this printer."
 msgstr "Разпечатването чрез този принтер не се поддържа."
 
-#: ../shell/ev-window.c:1259
+#: ../shell/ev-window.c:1217
 #, c-format
 msgid ""
-"You were trying to print to a printer using the \"%s\" driver. This program "
+"You were trying to print to a printer using the “%s” driver. This program "
 "requires a PostScript printer driver."
 msgstr ""
 "Опитахте се да печатате към принтер използвайки драйвера „%s“. Тази програма "
 "изисква драйвер за принтер с PostScript."
 
-#: ../shell/ev-window.c:1304
+#: ../shell/ev-window.c:1262
 msgid "Print"
 msgstr "Печат"
 
-#: ../shell/ev-window.c:1310
+#: ../shell/ev-window.c:1268
 msgid "Pages"
 msgstr "Страници"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1662 ../shell/ev-window.c:2929
+#: ../shell/ev-window.c:1613 ../shell/ev-window.c:2852
 msgid "Leave Fullscreen"
 msgstr "Напускане на режим „Цял екран“"
 
-#: ../shell/ev-window.c:1996
+#: ../shell/ev-window.c:1947
 msgid "Toolbar Editor"
 msgstr "Редактор на лентата с инструменти"
 
-#: ../shell/ev-window.c:2372
+#: ../shell/ev-window.c:2314
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -673,12 +724,12 @@ msgstr ""
 "Програма за преглед на файлове от типа PostScript и PDF.\n"
 "Използва се poppler %s (%s)"
 
-#: ../shell/ev-window.c:2396
+#: ../shell/ev-window.c:2338
 msgid ""
-"Evince is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
+"Evince is free software; you can redistribute it and/or modify it under the "
+"terms of the GNU General Public License as published by the Free Software "
+"Foundation; either version 2 of the License, or (at your option) any later "
+"version.\n"
 msgstr ""
 "Evince e свободен софтуер; може да разпространявате програмата и/или да я "
 "променяте\n"
@@ -686,38 +737,37 @@ msgstr ""
 "версия 2\n"
 "на лиценза, или (по ваше желание) някоя по-късна версия.\n"
 
-#: ../shell/ev-window.c:2400
+#: ../shell/ev-window.c:2342
 msgid ""
-"Evince is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
+"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+"details.\n"
 msgstr ""
 "Evince се разпространява с надеждата, че ще бъде полезна програма,\n"
 "но без каквато и да е ГАРАНЦИЯ; без дори гаранцията за използваемост за "
 "каквато\n"
 "и да било използваемост за дадена цел.  Вижте GNU GPL за повече информация.\n"
 
-#: ../shell/ev-window.c:2404
+#: ../shell/ev-window.c:2346
 msgid ""
-"You should have received a copy of the GNU General Public License\n"
-"along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"You should have received a copy of the GNU General Public License along with "
+"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 "Трябва да сте получили копие на GNU GPL заедно с Evince; ако не сте, пишете "
-"до \n"
-"Free Software Foundation, Inc, 59 Temple Place, Suite 330, Boston, MA\n"
+"до Free Software Foundation, Inc, 59 Temple Place, Suite 330, Boston, MA  "
 "02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2428 ../shell/main.c:259
+#: ../shell/ev-window.c:2370 ../shell/main.c:240
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2431
+#: ../shell/ev-window.c:2373
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 Авторите на Evince"
 
-#: ../shell/ev-window.c:2437
+#: ../shell/ev-window.c:2379
 msgid "translator-credits"
 msgstr ""
 "Владимир „Kaladan“ Петков <vpetkov@i-space.org>\n"
@@ -727,273 +777,273 @@ msgstr ""
 "Научете повече за нас на http://gnome.cult.bg\n"
 "Докладвайте за грешки на http://gnome.cult.bg/bugs"
 
-#: ../shell/ev-window.c:2856
+#: ../shell/ev-window.c:2779
 msgid "_File"
 msgstr "_Файл"
 
-#: ../shell/ev-window.c:2857
+#: ../shell/ev-window.c:2780
 msgid "_Edit"
 msgstr "_Редактиране"
 
-#: ../shell/ev-window.c:2858
+#: ../shell/ev-window.c:2781
 msgid "_View"
 msgstr "_Изглед"
 
-#: ../shell/ev-window.c:2859
+#: ../shell/ev-window.c:2782
 msgid "_Go"
 msgstr "_Отиване"
 
-#: ../shell/ev-window.c:2860
+#: ../shell/ev-window.c:2783
 msgid "_Help"
 msgstr "_Помощ"
 
 #. File menu
-#: ../shell/ev-window.c:2863 ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:2786 ../shell/ev-window.c:2943
 msgid "_Open..."
 msgstr "_Отваряне..."
 
-#: ../shell/ev-window.c:2864
+#: ../shell/ev-window.c:2787
 msgid "Open an existing document"
 msgstr "Отваряне на съществуващ документ"
 
-#: ../shell/ev-window.c:2866 ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:2789 ../shell/ev-window.c:2945
 msgid "_Save a Copy..."
 msgstr "_Запазване на копие..."
 
-#: ../shell/ev-window.c:2867
+#: ../shell/ev-window.c:2790
 msgid "Save a copy of the current document"
 msgstr "Запазване на копие на текущия документ"
 
-#: ../shell/ev-window.c:2869
+#: ../shell/ev-window.c:2792
 msgid "_Print..."
 msgstr "_Печат..."
 
-#: ../shell/ev-window.c:2870
+#: ../shell/ev-window.c:2793
 msgid "Print this document"
 msgstr "Печатане на този документ"
 
-#: ../shell/ev-window.c:2872
+#: ../shell/ev-window.c:2795
 msgid "P_roperties"
 msgstr "_Настройки"
 
-#: ../shell/ev-window.c:2880
+#: ../shell/ev-window.c:2803
 msgid "Select _All"
 msgstr "Избор на _всичко"
 
-#: ../shell/ev-window.c:2882
+#: ../shell/ev-window.c:2805
 msgid "_Find..."
 msgstr "_Търсене..."
 
-#: ../shell/ev-window.c:2883
+#: ../shell/ev-window.c:2806
 msgid "Find a word or phrase in the document"
 msgstr "Търсене на дума или фраза в документа"
 
-#: ../shell/ev-window.c:2885
+#: ../shell/ev-window.c:2808
 msgid "Find Ne_xt"
 msgstr "Следващо търсене"
 
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2810
 msgid "Find Pre_vious"
 msgstr "Преди_шно търсене"
 
-#: ../shell/ev-window.c:2889
+#: ../shell/ev-window.c:2812
 msgid "T_oolbar"
 msgstr "Лента с _инструменти"
 
-#: ../shell/ev-window.c:2891
+#: ../shell/ev-window.c:2814
 msgid "Rotate _Left"
 msgstr "Завъртане на_ляво"
 
-#: ../shell/ev-window.c:2893
+#: ../shell/ev-window.c:2816
 msgid "Rotate _Right"
 msgstr "Завъртане на_дясно"
 
-#: ../shell/ev-window.c:2898
+#: ../shell/ev-window.c:2821
 msgid "Enlarge the document"
 msgstr "Увеличаване на документа"
 
-#: ../shell/ev-window.c:2901
+#: ../shell/ev-window.c:2824
 msgid "Shrink the document"
 msgstr "Смаляване на документа"
 
-#: ../shell/ev-window.c:2903
+#: ../shell/ev-window.c:2826
 msgid "_Reload"
 msgstr "П_резареждане"
 
-#: ../shell/ev-window.c:2904
+#: ../shell/ev-window.c:2827
 msgid "Reload the document"
 msgstr "Презареждане на документа"
 
 #. Go menu
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2831
 msgid "_Previous Page"
 msgstr "_Предишна страница"
 
-#: ../shell/ev-window.c:2909
+#: ../shell/ev-window.c:2832
 msgid "Go to the previous page"
 msgstr "Отиване на предишната страница"
 
-#: ../shell/ev-window.c:2911
+#: ../shell/ev-window.c:2834
 msgid "_Next Page"
 msgstr "_Следваща страница"
 
-#: ../shell/ev-window.c:2912
+#: ../shell/ev-window.c:2835
 msgid "Go to the next page"
 msgstr "Отиване на следващата страница"
 
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:2837
 msgid "_First Page"
 msgstr "Пър_ва страница"
 
-#: ../shell/ev-window.c:2915
+#: ../shell/ev-window.c:2838
 msgid "Go to the first page"
 msgstr "Отиване на първата страница"
 
-#: ../shell/ev-window.c:2917
+#: ../shell/ev-window.c:2840
 msgid "_Last Page"
 msgstr "Пос_ледна страница"
 
-#: ../shell/ev-window.c:2918
+#: ../shell/ev-window.c:2841
 msgid "Go to the last page"
 msgstr "Отиване на последната страница"
 
 #. Help menu
-#: ../shell/ev-window.c:2922
+#: ../shell/ev-window.c:2845
 msgid "_Contents"
 msgstr "_Ръководство"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:2848
 msgid "_About"
 msgstr "_Относно"
 
-#: ../shell/ev-window.c:2930
+#: ../shell/ev-window.c:2853
 msgid "Leave fullscreen mode"
 msgstr "Оставане в режим цял екран"
 
 #. View Menu
-#: ../shell/ev-window.c:2981
+#: ../shell/ev-window.c:2904
 msgid "_Toolbar"
 msgstr "Лента с _инструменти"
 
-#: ../shell/ev-window.c:2982
+#: ../shell/ev-window.c:2905
 msgid "Show or hide the toolbar"
 msgstr "Показване или скриване на лентата с инструментите"
 
-#: ../shell/ev-window.c:2984
+#: ../shell/ev-window.c:2907
 msgid "Side _Pane"
 msgstr "Страничен _панел"
 
-#: ../shell/ev-window.c:2985
+#: ../shell/ev-window.c:2908
 msgid "Show or hide the side pane"
 msgstr "Показване или скриване на страничния панел"
 
-#: ../shell/ev-window.c:2987
+#: ../shell/ev-window.c:2910
 msgid "_Continuous"
 msgstr "_Без прекъсване"
 
-#: ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2911
 msgid "Show the entire document"
 msgstr "Показване на целия документ"
 
-#: ../shell/ev-window.c:2990
+#: ../shell/ev-window.c:2913
 msgid "_Dual"
 msgstr "_Двойно"
 
-#: ../shell/ev-window.c:2991
+#: ../shell/ev-window.c:2914
 msgid "Show two pages at once"
 msgstr "Показване на две страници едновременно"
 
-#: ../shell/ev-window.c:2993
+#: ../shell/ev-window.c:2916
 msgid "_Fullscreen"
 msgstr "_Цял екран"
 
-#: ../shell/ev-window.c:2994
+#: ../shell/ev-window.c:2917
 msgid "Expand the window to fill the screen"
 msgstr "Разширяване на прозореца, така че да запълни екрана"
 
-#: ../shell/ev-window.c:2996
+#: ../shell/ev-window.c:2919
 msgid "_Presentation"
 msgstr "_Презентация"
 
-#: ../shell/ev-window.c:2997
+#: ../shell/ev-window.c:2920
 msgid "Run document as a presentation"
 msgstr "Стартиране на документа като презентация"
 
-#: ../shell/ev-window.c:2999
+#: ../shell/ev-window.c:2922
 msgid "_Best Fit"
 msgstr "За_пълване на екрана"
 
-#: ../shell/ev-window.c:3000
+#: ../shell/ev-window.c:2923
 msgid "Make the current document fill the window"
 msgstr "Текущия документ да запълни прозореца"
 
-#: ../shell/ev-window.c:3002
+#: ../shell/ev-window.c:2925
 msgid "Fit Page _Width"
 msgstr "Запълване на страницата по ширина"
 
-#: ../shell/ev-window.c:3003
+#: ../shell/ev-window.c:2926
 msgid "Make the current document fill the window width"
 msgstr "Текущия документ да запълни прозореца по ширина"
 
 #. Links
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:2933
 msgid "_Open Link"
 msgstr "_Отваряне на връзка"
 
-#: ../shell/ev-window.c:3012
+#: ../shell/ev-window.c:2935
 msgid "_Go To"
 msgstr "_Отиване"
 
-#: ../shell/ev-window.c:3014
+#: ../shell/ev-window.c:2937
 msgid "_Copy Link Address"
 msgstr "_Копиране на адреса на връзката"
 
-#: ../shell/ev-window.c:3077
+#: ../shell/ev-window.c:3000
 msgid "Page"
 msgstr "Страница"
 
-#: ../shell/ev-window.c:3078
+#: ../shell/ev-window.c:3001
 msgid "Select Page"
 msgstr "Избор на страница"
 
-#: ../shell/ev-window.c:3090
+#: ../shell/ev-window.c:3013
 msgid "Zoom"
 msgstr "Мащаб"
 
-#: ../shell/ev-window.c:3092
+#: ../shell/ev-window.c:3015
 msgid "Adjust the zoom level"
 msgstr "Настройване на мащаба"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3108
+#: ../shell/ev-window.c:3031
 msgid "Previous"
 msgstr "Предишна"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3114
+#: ../shell/ev-window.c:3037
 msgid "Next"
 msgstr "Следваща"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3118
+#: ../shell/ev-window.c:3041
 msgid "Zoom In"
 msgstr "Увеличаване"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3123
+#: ../shell/ev-window.c:3046
 msgid "Zoom Out"
 msgstr "Намаляване"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3133
+#: ../shell/ev-window.c:3056
 msgid "Fit Width"
 msgstr "Запълване по ширина"
 
-#: ../shell/ev-window.c:3382
+#: ../shell/ev-window.c:3331
 msgid "Unable to open attachment"
 msgstr "Неуспех при отварянето на прикрепения файл"
 
-#: ../shell/ev-window.c:3429
+#: ../shell/ev-window.c:3378
 msgid "The attachment could not be saved."
 msgstr "Прикрепеният файл не може да бъде запазен."
 
@@ -1002,15 +1052,23 @@ msgstr "Прикрепеният файл не може да бъде запаз
 msgid "%s - Password Required"
 msgstr "%s - изисква се парола"
 
-#: ../shell/main.c:50
+#: ../shell/main.c:51
 msgid "The page of the document to display."
 msgstr "Коя страница от документа да се показва."
 
-#: ../shell/main.c:50
+#: ../shell/main.c:51
 msgid "PAGE"
 msgstr "СТРАНИЦА"
 
-#: ../shell/main.c:286
+#: ../shell/main.c:52
+msgid "[FILE...]"
+msgstr "[ФАЙЛ...]"
+
+#: ../shell/main.c:225
+msgid "GNOME Document Viewer"
+msgstr "Преглед на документи"
+
+#: ../shell/main.c:262
 msgid "Evince Document Viewer"
 msgstr "Преглед на документи (Evince)"
 
