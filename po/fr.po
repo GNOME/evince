@@ -10,13 +10,14 @@
 # Guillaume Desmottes <cass@skynet.be>, 2006.
 # Jonathan Ernst <jonathan@ernstfamily.ch>, 2006.
 # Robert-André Mauchin <zebob.m@gmail.com>, 2006.
+# Damien Durand <splinux@fedoraproject.org>, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince 0.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-02 23:29+0200\n"
-"PO-Revision-Date: 2006-05-15 18:05+0100\n"
+"POT-Creation-Date: 2006-07-08 21:50+0200\n"
+"PO-Revision-Date: 2006-07-08 18:17+0200\n"
 "Last-Translator: Jonathan Ernst <jonathan@ernstfamily.ch>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,17 +26,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: ../backend/ev-attachment.c:303 ../backend/ev-attachment.c:316
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Impossible d'enregistrer la pièce jointe « %s » : %s"
 
 #: ../backend/ev-attachment.c:348
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Impossible d'ouvrir la pièce jointe « %s » : %s"
 
 #: ../backend/ev-attachment.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Impossible d'ouvrir la pièce jointe « %s »"
 
@@ -44,7 +45,7 @@ msgid "Unknown MIME Type"
 msgstr "Type MIME inconnu"
 
 #: ../backend/ev-document-factory.c:269
-#, fuzzy, c-format
+#, c-format
 msgid "Unhandled MIME type: “%s”"
 msgstr "Type MIME non pris en charge : « %s »"
 
@@ -90,7 +91,7 @@ msgid "No images found in archive %s"
 msgstr "Aucune image trouvée dans l'archive %s"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
-#, fuzzy, c-format
+#, c-format
 msgid "Open “%s”"
 msgstr "Ouvrir « %s »"
 
@@ -108,30 +109,27 @@ msgstr "Vide"
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:902
 #, c-format
 msgid "Show “_%s”"
-msgstr ""
+msgstr "Afficher « _%s »"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1362
-#, fuzzy
 msgid "_Move on Toolbar"
-msgstr "Supprimer la barre d'_outils"
+msgstr ""
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1363
 msgid "Move the selected item on the toolbar"
-msgstr ""
+msgstr "Déplacer l'élément sélectionné sur la barre d'outils"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1364
-#, fuzzy
 msgid "_Remove from Toolbar"
-msgstr "Supprimer la barre d'_outils"
+msgstr "_Retirer de la barre d'outils"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1365
 msgid "Remove the selected item from the toolbar"
-msgstr ""
+msgstr "Retirer l'élément sélectionné de la barre d'outils"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1366
-#, fuzzy
 msgid "_Delete Toolbar"
-msgstr "Supprimer la barre d'_outils"
+msgstr "_Supprimer la barre d'outils"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1367
 #, fuzzy
@@ -429,9 +427,9 @@ msgid "Error while decompressing file “%s”:\n"
 msgstr "Erreur lors de la décompression du fichier %s :\n"
 
 #: ../ps/ps-document.c:960
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot open file “%s”.\n"
-msgstr "Impossible d'ouvrir le fichier %s.\n"
+msgstr "Impossible d'ouvrir le fichier « %s ».\n"
 
 #: ../ps/ps-document.c:965
 msgid "File is not readable."
@@ -442,7 +440,7 @@ msgid "Document loaded."
 msgstr "Document chargé."
 
 #: ../ps/ps-document.c:1082
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to load document “%s”. Ghostscript interpreter was not found in path"
 msgstr ""
@@ -450,7 +448,7 @@ msgstr ""
 "l'interpréteur Ghostscript dans le chemin"
 
 #: ../ps/ps-document.c:1094
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load document “%s”"
 msgstr "Le chargement du document « %s » a échoué"
 
@@ -525,11 +523,11 @@ msgid "Password required"
 msgstr "Mot de passe requis"
 
 #: ../shell/ev-password.c:84
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr ""
-"Le document <i>%s</i> est verrouillé et nécessite un mot de passe avant de "
+"Le document « %s » est verrouillé et nécessite un mot de passe avant de "
 "pouvoir être ouvert."
 
 #: ../shell/ev-password.c:149
@@ -579,9 +577,8 @@ msgid "Gathering font information... %3d%%"
 msgstr "Collecte des informations de polices... %3d%%"
 
 #: ../shell/ev-sidebar-attachments.c:615
-#, fuzzy
 msgid "Attachments"
-msgstr "Masque la barre des pièces jointes"
+msgstr "Pièces-jointes"
 
 #: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2233
 msgid "Loading..."
@@ -620,34 +617,28 @@ msgid "Document View"
 msgstr "Vue du document"
 
 #: ../shell/ev-view.c:1340
-#, fuzzy
 msgid "Go to first page"
 msgstr "Aller à la première page"
 
 #: ../shell/ev-view.c:1342
-#, fuzzy
 msgid "Go to previous page"
 msgstr "Aller à la page précédente"
 
 #: ../shell/ev-view.c:1344
-#, fuzzy
 msgid "Go to next page"
 msgstr "Aller à la page suivante"
 
 #: ../shell/ev-view.c:1346
-#, fuzzy
 msgid "Go to last page"
 msgstr "Aller à la dernière page"
 
 #: ../shell/ev-view.c:1348
-#, fuzzy
 msgid "Go to page"
-msgstr "Aller à la page %s"
+msgstr "Aller à la page"
 
 #: ../shell/ev-view.c:1350
-#, fuzzy
 msgid "Find"
-msgstr "_Rechercher :"
+msgstr "Rechercher"
 
 #: ../shell/ev-view.c:1377
 #, c-format
@@ -657,17 +648,17 @@ msgstr "Aller à la page %s"
 #: ../shell/ev-view.c:1382
 #, c-format
 msgid "Go to %s on file “%s”"
-msgstr ""
+msgstr "Aller à %s sur le fichier « %s »"
 
 #: ../shell/ev-view.c:1385
-#, fuzzy, c-format
+#, c-format
 msgid "Go to file “%s”"
-msgstr "Aller à la page %s"
+msgstr "Aller à la page « %s »"
 
 #: ../shell/ev-view.c:1394
 #, c-format
 msgid "Launch %s"
-msgstr ""
+msgstr "Lancer %s"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -677,7 +668,7 @@ msgstr ""
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "Trouvé %d fois sur cette page"
-msgstr[1] "Trouvé %d fois sur cette page"
+msgstr[1] "Trouvés %d fois sur cette page"
 
 #: ../shell/ev-view.c:3446
 #, c-format
@@ -693,7 +684,7 @@ msgid "Open Document"
 msgstr "Ouvrir un document"
 
 #: ../shell/ev-window.c:1124
-#, fuzzy, c-format
+#, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Le fichier ne peut pas être enregistré sous « %s »."
 
@@ -710,13 +701,13 @@ msgid "Printing is not supported on this printer."
 msgstr "L'impression par cette imprimante n'est pas prise en charge."
 
 #: ../shell/ev-window.c:1217
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
 "requires a PostScript printer driver."
 msgstr ""
-"Vous essayez d'imprimer sur une imprimante utilisant le pilote « %s ». Ce "
-"programme nécessite un pilote d'impression PostScript."
+"Vous avez essayé d'imprimer sur une imprimante utilisant le pilote « %s ». "
+"Ce programme nécessite un pilote d'impression PostScript."
 
 #: ../shell/ev-window.c:1262
 msgid "Print"
@@ -745,7 +736,6 @@ msgstr ""
 "Utilise poppler %s (%s)"
 
 #: ../shell/ev-window.c:2338
-#, fuzzy
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -758,29 +748,26 @@ msgstr ""
 "ou encore (à votre choix) toute version ultérieure.\n"
 
 #: ../shell/ev-window.c:2342
-#, fuzzy
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
 msgstr ""
-"Evince est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE\n"
-"GARANTIE ; sans même la garantie implicite de COMMERCIALISATION ou\n"
-"D'ADAPTATION À UN OBJET PARTICULIER. Pour plus de détails, voir la\n"
-"Licence Publique Générale GNU.\n"
+"Evince est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE "
+"GARANTIE ; sans même la garantie implicite de COMMERCIALISATION ou "
+"D'ADAPTATION À UN OBJET PARTICULIER. Pour plus de détails, voir la Licence "
+"Publique Générale GNU.\n"
 
 #: ../shell/ev-window.c:2346
-#, fuzzy
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
-"Un exemplaire de la Licence Publique Générale GNU doit être fourni\n"
-"avec Evince ; si ce n'est pas le cas, écrivez à la Free Software\n"
-"Foundation Inc., \n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"Un exemplaire de la Licence Publique Générale GNU doit être fourni avec "
+"Evince ; si ce n'est pas le cas, écrivez à la Free Software Foundation, "
+"Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
 #: ../shell/ev-window.c:2370 ../shell/main.c:240
 msgid "Evince"
@@ -798,7 +785,8 @@ msgstr ""
 "Thomas Vergnaud <thomas.vergnaud@laposte.net>\n"
 "Guillaume Desmottes <cass@skynet.be>\n"
 "Jonathan Ernst <jonathan@ernstfamily.ch>\n"
-"Robert-André Mauchin <zebob.m@gmail.com>"
+"Robert-André Mauchin <zebob.m@gmail.com>\n"
+"Damien Durand <splinux@fedoraproject.org>"
 
 #: ../shell/ev-window.c:2779
 msgid "_File"
@@ -854,9 +842,8 @@ msgid "Select _All"
 msgstr "_Tout sélectionner"
 
 #: ../shell/ev-window.c:2805
-#, fuzzy
 msgid "_Find..."
-msgstr "_Imprimer..."
+msgstr "_Rechercher..."
 
 #: ../shell/ev-window.c:2806
 msgid "Find a word or phrase in the document"
@@ -1087,12 +1074,11 @@ msgstr "PAGE"
 
 #: ../shell/main.c:52
 msgid "[FILE...]"
-msgstr ""
+msgstr "[FICHIER...]"
 
 #: ../shell/main.c:225
-#, fuzzy
 msgid "GNOME Document Viewer"
-msgstr "Visionneur de documents"
+msgstr "Visionneur de documents de GNOME"
 
 #: ../shell/main.c:262
 msgid "Evince Document Viewer"
