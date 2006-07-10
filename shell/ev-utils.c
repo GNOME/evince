@@ -251,6 +251,8 @@ using_postscript_printer (GnomePrintConfig *config)
 			return TRUE;
 		else if (!strcmp ((const gchar *)transport, "LPD"))
 			return TRUE;
+		else if (!strcmp ((const gchar *)transport, "PAPI"))
+			return TRUE;
 	}
 
 	return FALSE;
