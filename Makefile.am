@@ -28,6 +28,10 @@ if ENABLE_COMICS
      SUBDIRS += comics
 endif
 
+if ENABLE_IMPRESS
+     SUBDIRS += impress
+endif
+
 SUBDIRS += backend
 
 # Library

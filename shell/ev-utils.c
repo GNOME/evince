@@ -22,6 +22,8 @@
 
 #include "ev-utils.h"
 #include "ev-file-helpers.h"
+
+#include <string.h>
 #include <math.h>
 
 #define PRINT_CONFIG_FILENAME	"ev-print-config.xml"

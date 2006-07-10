@@ -7,6 +7,7 @@ INCLUDES=					\
 	-I$(top_srcdir)/ps	                \
 	-I$(top_srcdir)/djvu			\
 	-I$(top_srcdir)/dvi			\
+	-I$(top_srcdir)/impress			\
 	-I$(top_srcdir)/comics			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\
@@ -81,6 +82,11 @@ endif
 if ENABLE_COMICS
 libevbackend_la_LIBADD += 			\
 	$(top_builddir)/comics/libcomicsdocument.la
+endif
+
+if ENABLE_IMPRESS
+libevbackend_la_LIBADD += 			\
+	$(top_builddir)/impress/libimpressdocument.la
 endif
 
 BUILT_SOURCES=				\

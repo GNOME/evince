@@ -292,6 +292,17 @@ AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
 
 dnl ================== End of comic book checks ============================================
 
+dnl ================== comic book checks ===================================================
+
+AC_ARG_ENABLE(impress,
+ 	[AC_HELP_STRING([--enable-impress], [Compile with support for impress presentations])],enable_impress="$enableval",enable_impress=no)
+if test "x$enable_impress" = "xyes"; then
+	AC_DEFINE([ENABLE_IMPRESS], [1], [Enable support for impress.])
+fi 
+AM_CONDITIONAL(ENABLE_IMPRESS, test x$enable_impress = xyes)
+
+dnl ================== End of comic book checks ============================================
+
 dnl =================== Mime types list ====================================================
 
 EVINCE_MIME_TYPES="application/pdf"
@@ -314,6 +325,9 @@ fi
 if test "x$enable_pixbuf" = "xyes"; then
        EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/*"
 fi
+if test "x$enable_impress" = "xyes"; then
+       EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/vnd.sun.xml.impress"
+fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
 AC_CONFIG_FILES([
@@ -332,6 +346,7 @@ ps/Makefile
 djvu/Makefile
 dvi/Makefile
 dvi/mdvi-lib/Makefile
+impress/Makefile
 comics/Makefile
 po/Makefile.in
 backend/Makefile
@@ -355,4 +370,5 @@ Configure summary:
 	DVI Backend........:  $enable_dvi
 	Pixbuf Backend.....:  $enable_pixbuf
 	Comics Backend.....:  $enable_comics
+	Impress Backend....:  $enable_impress
 "

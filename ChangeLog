@@ -1,3 +1,87 @@
+2006-07-11  Bastien Nocera <hadess@hadess.net>
+
+	* Makefile.am:
+	* backend/Makefile.am:
+	* backend/ev-document-factory.c: (ev_document_factory_add_filters):
+	* backend/ev-document-factory.h:
+	* configure.ac:
+	* impress/.cvsignore:
+	* impress/Makefile.am:
+	* impress/common.h:
+	* impress/document.c: (_imp_load_xml), (imp_open), (imp_nr_pages),
+	(imp_get_page), (imp_next_page), (imp_prev_page),
+	(imp_get_page_no), (imp_get_page_name), (imp_get_xml), (imp_close):
+	* impress/f_oasis.c: (render_object), (render_page),
+	(get_geometry), (_imp_oasis_load):
+	* impress/f_oo13.c: (render_object), (render_page), (get_geometry),
+	(_imp_oo13_load):
+	* impress/iksemel.c: (iks_malloc), (iks_free), (iks_set_mem_funcs),
+	(iks_strdup), (iks_strcat), (iks_strcmp), (iks_strcasecmp),
+	(iks_strncmp), (iks_strncasecmp), (iks_strlen), (iks_escape),
+	(iks_unescape), (find_space), (iks_stack_new), (iks_stack_alloc),
+	(iks_stack_strdup), (iks_stack_strcat), (iks_stack_stat),
+	(iks_stack_delete), (iks_sax_new), (iks_sax_extend),
+	(iks_parser_stack), (iks_user_data), (iks_nr_bytes),
+	(iks_nr_lines), (stack_init), (stack_expand), (sax_core),
+	(iks_parse), (iks_parser_reset), (iks_parser_delete), (iks_new),
+	(iks_new_within), (iks_insert), (iks_insert_cdata),
+	(iks_insert_attrib), (iks_insert_node), (iks_hide), (iks_delete),
+	(iks_next), (iks_next_tag), (iks_prev), (iks_prev_tag),
+	(iks_parent), (iks_root), (iks_child), (iks_first_tag),
+	(iks_attrib), (iks_find), (iks_find_cdata), (iks_find_attrib),
+	(iks_find_with_attrib), (iks_stack), (iks_type), (iks_name),
+	(iks_cdata), (iks_cdata_size), (iks_has_children),
+	(iks_has_attribs), (escape_size), (my_strcat), (escape),
+	(iks_string), (iks_copy_within), (iks_copy), (tagHook),
+	(cdataHook), (deleteHook), (iks_dom_new), (iks_set_size_hint),
+	(iks_tree), (iks_load), (iks_save):
+	* impress/iksemel.h:
+	* impress/imposter.h:
+	* impress/impress-document.c: (G_DEFINE_TYPE_WITH_CODE),
+	(imp_render_draw_bezier_real), (imp_render_get_size),
+	(imp_render_set_fg_color), (imp_render_draw_line),
+	(imp_render_draw_rect), (imp_render_draw_polygon),
+	(imp_render_draw_arc), (imp_render_draw_bezier),
+	(imp_render_open_image), (imp_render_get_image_size),
+	(imp_render_scale_image), (imp_render_draw_image),
+	(imp_render_close_image), (imp_render_markup),
+	(imp_render_get_text_size), (imp_render_draw_text),
+	(impress_document_load), (impress_document_save),
+	(impress_document_get_n_pages), (impress_document_get_page_size),
+	(imp_render_get_from_drawable), (impress_document_render_pixbuf),
+	(impress_document_finalize), (impress_document_class_init),
+	(impress_document_can_get_text), (impress_document_get_info),
+	(impress_document_document_iface_init),
+	(impress_document_thumbnails_get_thumbnail),
+	(impress_document_thumbnails_get_dimensions),
+	(impress_document_document_thumbnails_iface_init),
+	(impress_document_init):
+	* impress/impress-document.h:
+	* impress/internal.h:
+	* impress/r_back.c: (_imp_fill_back):
+	* impress/r_draw.c: (_imp_draw_rect), (_imp_draw_line_end),
+	(_imp_draw_image), (_imp_tile_image):
+	* impress/r_geometry.c: (r_parse_color), (r_get_color), (fg_color),
+	(r_get_x), (r_get_y), (r_get_angle), (r_get_viewbox), (r_polygon),
+	(r_polyline):
+	* impress/r_gradient.c: (poly_rotate), (r_draw_gradient_simple),
+	(r_draw_gradient_complex), (r_draw_gradient):
+	* impress/r_style.c: (get_style), (r_get_style), (get_style_x),
+	(r_get_bullet):
+	* impress/r_text.c: (add_line), (add_span), (calc_sizes),
+	(calc_pos), (_imp_draw_layout), (text_span), (text_p), (text_list),
+	(r_text):
+	* impress/render.c: (imp_create_context), (imp_context_set_page),
+	(imp_context_set_step), (imp_render), (imp_delete_context):
+	* impress/render.h:
+	* impress/zip.c: (zip_error), (find_cd), (get_long), (get_word),
+	(list_files), (zip_open), (zip_close), (find_file), (seek_file),
+	(zip_load_xml), (zip_get_size), (zip_load):
+	* impress/zip.h:
+	* shell/ev-utils.c:
+	
+	New backend to support impress slides. Fixes bug #30867.
+
 2006-07-10  Ghee Teo  <ghee.teo@sun.com>
 
 	* shell/ev-utils.c: (using_postscript_printer):
@@ -15,7 +99,7 @@
 	because a password is required, reload the existing
 	instance instead of creating a new one.
 
-2006-06-01  Nickolay V. Shmyrev  <<nshmyrev@yandex.ru>>
+2006-06-01  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/main.c: (main): Call gdk_threads_init. Thus
 	we'll avoid errors in auth dialog. Fix for the bug
@@ -189,7 +273,7 @@
 	* configure.ac: 
 
 	Depend on poppler 0.5.2
-	
+
 2006-05-22  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-jobs.c: (ev_job_render_run):

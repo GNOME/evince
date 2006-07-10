@@ -28,6 +28,8 @@
 #include "ev-poppler.h"
 #include "pixbuf-document.h"
 #include "tiff-document.h"
+#include "impress-document.h"
+
 #ifdef ENABLE_PS
 #include "ps-document.h"
 #endif
@@ -65,6 +67,11 @@ const EvDocumentType document_types[] = {
 	{"application/postscript",     EV_BACKEND_PS,   ps_document_get_type},
 	{"application/x-gzpostscript", EV_BACKEND_PS,   ps_document_get_type},
 	{"image/x-eps",                EV_BACKEND_PS,   ps_document_get_type},
+#endif
+
+#ifdef ENABLE_IMPRESS
+	/* Impress slides: */
+	{"application/vnd.sun.xml.impress", EV_BACKEND_IMPRESS, impress_document_get_type},
 #endif
 
 #ifdef ENABLE_TIFF
@@ -390,6 +397,16 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 		default_filter = filter = gtk_file_filter_new ();
 		gtk_file_filter_set_name (filter, _("Comic Books"));
 		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_COMICS);
+		file_filter_add_mime_list_and_free (filter, mime_types);
+		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+	}
+#endif	
+
+#ifdef ENABLE_IMPRESS
+	if (document == NULL || backend == EV_BACKEND_IMPRESS) {
+		default_filter = filter = gtk_file_filter_new ();
+		gtk_file_filter_set_name (filter, _("Impress Slides"));
+		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_IMPRESS);
 		file_filter_add_mime_list_and_free (filter, mime_types);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	}
