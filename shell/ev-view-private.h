@@ -132,6 +132,9 @@ struct _EvView {
 	gint current_width;
 	gint current_height;
 	EvViewChild *child;
+
+	/* Forms */
+	GArray* pendingFormFields;
 };
 
 struct _EvViewClass {

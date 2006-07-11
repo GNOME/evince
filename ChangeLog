@@ -1,3 +1,10 @@
+2006-07-11  Julien Rebetez  <julienr@cvs.gnome.org>
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (job_finished_cb),
+	(render_form_field_content_for_page), (handle_click_at_location):
+	Evince now only render (using Pango) field content which hasn't
+	been rendered by Poppler.
+
 2006-06-21  Julien Rebetez  <julienr@cvs.gnome.org>
 
 	* backend/Makefile.am:

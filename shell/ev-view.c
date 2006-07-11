@@ -2874,6 +2874,9 @@ job_finished_cb (EvPixbufCache *pixbuf_cache,
 		 EvView        *view)
 {
 	gtk_widget_queue_draw (GTK_WIDGET (view));
+	if(view->pendingFormFields)
+		g_array_free(view->pendingFormFields, TRUE);
+	view->pendingFormFields = g_array_new(FALSE, TRUE, sizeof(int));
 }
 
 static void
@@ -4380,12 +4383,25 @@ render_form_field_content_for_page (EvView *view, gint page)
 		GdkPoint d[2];
 		gint v[4];
 		gint x,y;
+		int i;
 		EvFormField *field = tmp_list->data;
 		PangoLayout* playout; 
 		PangoFontDescription* pfontdesc; 
 		gchar* content;
+		gboolean pending = FALSE;
 
 		tmp_list = tmp_list->next;
+		
+		if (view->pendingFormFields) {
+			for(i=0; i<view->pendingFormFields->len; i++) {
+				if (g_array_index(view->pendingFormFields, int, i) == field->id) {
+					pending = TRUE;
+					break;
+				}
+			}
+		}
+		if (!pending)
+			continue;
 
 
 		content = ev_document_get_form_field_content(view->document, field->id);
@@ -4463,6 +4479,8 @@ handle_click_at_location (EvView *view,
 			ev_document_set_form_field_content(view->document,
 							   view->child->field_id,
 							   gtk_entry_get_text(GTK_ENTRY(view->child->widget)));
+			if(view->pendingFormFields)
+				g_array_append_val(view->pendingFormFields,view->child->field_id);
 		}
 	}
 
