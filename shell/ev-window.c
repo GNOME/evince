@@ -204,6 +204,7 @@ static void     ev_window_run_presentation              (EvWindow         *windo
 static void     ev_window_stop_presentation             (EvWindow         *window);
 static void     ev_window_cmd_view_presentation         (GtkAction        *action,
 							 EvWindow         *window);
+static void     ev_window_run_preview                   (EvWindow         *window);
 static void     ev_view_popup_cmd_open_link             (GtkAction        *action,
 							 EvWindow         *window);
 static void     ev_view_popup_cmd_copy_link_address     (GtkAction        *action,
@@ -926,6 +927,20 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		if (job->dest)
 			ev_window_goto_dest (ev_window, job->dest);
 
+		switch (job->mode) {
+		        case EV_WINDOW_MODE_FULLSCREEN:
+				ev_window_run_fullscreen (ev_window);
+				break;
+		        case EV_WINDOW_MODE_PRESENTATION:
+				ev_window_run_presentation (ev_window);
+				break;
+		        case EV_WINDOW_MODE_PREVIEW:
+				ev_window_run_preview (ev_window);
+				break;
+		        default:
+				break;
+		}
+
 		ev_window_clear_xfer_job (ev_window);		
 		return;
 	}
@@ -986,14 +1001,17 @@ ev_window_close_dialogs (EvWindow *ev_window)
 }
 
 void
-ev_window_open_uri (EvWindow *ev_window, const char *uri, EvLinkDest *dest)
+ev_window_open_uri (EvWindow       *ev_window,
+		    const char     *uri,
+		    EvLinkDest     *dest,
+		    EvWindowRunMode mode)
 {
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_xfer_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 	
-	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest);
+	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest, mode);
 	g_signal_connect (ev_window->priv->xfer_job,
 			  "finished",
 			  G_CALLBACK (ev_window_xfer_job_cb),
@@ -1830,6 +1848,35 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 	}
 }
 
+static void
+ev_window_run_preview (EvWindow *window)
+{
+	EggToolbarsModel *model;
+	EggTbModelFlags   flags;
+
+	model = egg_toolbars_model_new ();
+
+	egg_toolbars_model_load_toolbars (model,
+					  DATADIR"/evince-toolbar.xml");
+	
+	flags = egg_toolbars_model_get_flags (model, 1);
+	egg_toolbars_model_set_flags (model, 1, flags &= ~(EGG_TB_MODEL_HIDDEN));
+
+	egg_editable_toolbar_set_model (EGG_EDITABLE_TOOLBAR (window->priv->toolbar),
+					model);
+	
+	egg_editable_toolbar_hide (EGG_EDITABLE_TOOLBAR (window->priv->toolbar),
+				   "DefaultToolBar");
+	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (window->priv->toolbar),
+				   "PreviewToolBar");
+
+	ev_view_set_continuous (EV_VIEW (window->priv->view), FALSE); 
+	
+	update_chrome_flag (window, EV_CHROME_MENUBAR, FALSE);
+	update_chrome_flag (window, EV_CHROME_SIDEBAR, FALSE);
+	update_chrome_visibility (window);
+}
+
 static gboolean
 ev_window_focus_in_event (GtkWidget *widget, GdkEventFocus *event)
 {
@@ -2061,7 +2108,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 
 	uri = g_strdup (ev_window->priv->uri);
 
-	ev_window_open_uri (ev_window, uri, NULL);
+	ev_window_open_uri (ev_window, uri, NULL, 0);
 
 	g_free (uri);
 }
@@ -3237,6 +3284,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 	
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 ev_link_action_get_dest (action),
+					 0,
 					 GDK_CURRENT_TIME);
 
 	g_free (uri);
@@ -3553,6 +3601,7 @@ ev_window_init (EvWindow *ev_window)
 				 "popup",
 				 G_CALLBACK (attachment_bar_menu_popup_cb),
 				 ev_window, 0);
+	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
 
@@ -3712,6 +3761,7 @@ ev_window_init (EvWindow *ev_window)
 	update_chrome_visibility (ev_window);
 
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
+
 	setup_view_from_metadata (ev_window);
 	setup_sidebar_from_metadata (ev_window, NULL);
 

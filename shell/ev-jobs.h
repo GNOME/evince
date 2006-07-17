@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 #include "ev-document.h"
+#include "ev-window.h"
 
 G_BEGIN_DECLS
 
@@ -163,6 +164,7 @@ struct _EvJobXfer
 {
 	EvJob parent;
 	EvLinkDest *dest;
+	EvWindowRunMode mode;
 	GError *error;
 	char *uri;
 	char *local_uri;
@@ -211,7 +213,9 @@ void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
 /* EvJobXfer */
 GType 		ev_job_xfer_get_type 	  (void);
-EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri, EvLinkDest *dest);
+EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri,
+					   EvLinkDest      *dest,
+					   EvWindowRunMode  mode);
 void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);					   
 
 G_END_DECLS

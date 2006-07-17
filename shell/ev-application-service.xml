@@ -13,7 +13,7 @@
     <method name="OpenURI">
       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_uri"/>
       <arg type="s" name="uri" direction="in"/>
-      <arg type="s" name="page_label" direction="in"/>
+      <arg type="a{sv}" name="args" direction="in"/>
       <arg type="u" name="timestamp" direction="in"/>
     </method>
 

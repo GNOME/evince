@@ -31,6 +31,13 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+	EV_WINDOW_MODE_NORMAL,
+	EV_WINDOW_MODE_FULLSCREEN,
+	EV_WINDOW_MODE_PRESENTATION,
+	EV_WINDOW_MODE_PREVIEW
+} EvWindowRunMode;
+
 typedef struct _EvWindow EvWindow;
 typedef struct _EvWindowClass EvWindowClass;
 typedef struct _EvWindowPrivate EvWindowPrivate;
@@ -41,6 +48,7 @@ typedef struct _EvWindowPrivate EvWindowPrivate;
 #define EV_IS_WINDOW(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_WINDOW))
 #define EV_IS_WINDOW_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_WINDOW))
 #define EV_WINDOW_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_WINDOW, EvWindowClass))
+
 
 struct _EvWindow {
 	GtkWindow		base_instance;
@@ -56,7 +64,8 @@ GtkWidget      *ev_window_new             (void);
 const char     *ev_window_get_uri         (EvWindow       *ev_window);
 void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   const char     *uri,
-					   EvLinkDest     *dest);
+					   EvLinkDest     *dest,
+					   EvWindowRunMode mode);
 void            ev_window_goto_dest       (EvWindow       *ev_window,
 					   EvLinkDest     *dest);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);

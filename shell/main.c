@@ -43,18 +43,70 @@
 #include "ev-job-queue.h"
 #include "ev-file-helpers.h"
 
-static char *ev_page_label;
+static gchar   *ev_page_label;
+static gboolean preview_mode = FALSE;
+static gboolean fullscren_mode = FALSE;
+static gboolean presentation_mode = FALSE;
 static const char **file_arguments = NULL;
 
 static const GOptionEntry goption_options[] =
 {
 	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page of the document to display."), N_("PAGE")},
+	{ "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscren_mode, N_("Run evince in fullscreen mode"), NULL },
+	{ "presentation", 's', 0, G_OPTION_ARG_NONE, &presentation_mode, N_("Run evince in presentation mode"), NULL },
+	{ "preview", 'w', 0, G_OPTION_ARG_NONE, &preview_mode, N_("Run evince as a previewer"), NULL },
 	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, N_("[FILE...]") },
 	{ NULL }
 };
 
 static void
-load_files (const char **files)
+value_free (GValue *value)
+{
+	g_value_unset (value);
+	g_free (value);
+}
+
+static GHashTable *
+arguments_parse (void)
+{
+	GHashTable      *args;
+	GValue          *value;
+	EvWindowRunMode  mode;
+
+	args = g_hash_table_new_full (g_str_hash,
+				      g_str_equal,
+				      (GDestroyNotify)g_free,
+				      (GDestroyNotify)value_free);
+
+	if (ev_page_label) {
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_STRING);
+		g_value_set_string (value, ev_page_label);
+
+		g_hash_table_insert (args, g_strdup ("page-label"), value);
+	}
+
+	if (fullscren_mode)
+		mode = EV_WINDOW_MODE_FULLSCREEN;
+	else if (presentation_mode)
+		mode = EV_WINDOW_MODE_PRESENTATION;
+	else if (preview_mode)
+		mode = EV_WINDOW_MODE_PREVIEW;
+	else
+		return args;
+
+	value = g_new0 (GValue, 1);
+	g_value_init (value, G_TYPE_UINT);
+	g_value_set_uint (value, mode);
+
+	g_hash_table_insert (args, g_strdup ("mode"), value);
+
+	return args;
+}
+
+static void
+load_files (const char **files,
+	    GHashTable  *args)
 {
 	int i;
 
@@ -64,21 +116,35 @@ load_files (const char **files)
 	}
 
 	for (i = 0; files[i]; i++) {
-		char *uri;
-		char *label;
+		char   *uri;
+		char   *label;
+		GValue *old = NULL;
 
 		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
 		
 		label = strchr (uri, GNOME_VFS_URI_MAGIC_CHR);
-		
+
 		if (label) {
+			GValue *new;
+
 			*label = 0; label++;
-			ev_application_open_uri (EV_APP, uri, label,
-						 GDK_CURRENT_TIME, NULL);
-		} else {	
-			ev_application_open_uri (EV_APP, uri, ev_page_label,
-						 GDK_CURRENT_TIME, NULL);
+			
+			old = g_hash_table_lookup (args, "page-label");
+			
+			new = g_new0 (GValue, 1);
+			g_value_init (new, G_TYPE_STRING);
+			g_value_set_string (new, label);
+
+			g_hash_table_insert (args, g_strdup ("page-label"), new);
+
 		}
+
+		ev_application_open_uri (EV_APP, uri, args,
+					 GDK_CURRENT_TIME, NULL);
+
+		if (old)
+			g_hash_table_insert (args, g_strdup ("page-label"), old);
+		
 		g_free (uri);
         }
 }
@@ -86,7 +152,8 @@ load_files (const char **files)
 #ifdef ENABLE_DBUS
 
 static gboolean
-load_files_remote (const char **files)
+load_files_remote (const char **files,
+		   GHashTable  *args)
 {
 	int i;
 	GError *error = NULL;
@@ -192,7 +259,7 @@ load_files_remote (const char **files)
 #else
 		if (!dbus_g_proxy_call (remote_object, "OpenURI", &error,
 					G_TYPE_STRING, uri,
-					G_TYPE_STRING, page_label,
+					dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
 					G_TYPE_UINT, timestamp,
 					G_TYPE_INVALID,
 					G_TYPE_INVALID)) {
@@ -220,6 +287,7 @@ main (int argc, char *argv[])
 {
 	gboolean enable_metadata = FALSE;
 	GOptionContext *context;
+	GHashTable *args;
 	GnomeProgram *program;
 
 	context = g_option_context_new (_("GNOME Document Viewer"));
@@ -241,9 +309,13 @@ main (int argc, char *argv[])
 				      GNOME_PARAM_APP_DATADIR, GNOMEDATADIR,
                                       NULL);
 
+	args = arguments_parse ();
+
 #ifdef ENABLE_DBUS
 	if (!ev_application_register_service (EV_APP)) {
-		if (load_files_remote (file_arguments)) {
+		if (load_files_remote (file_arguments, args)) {
+			g_hash_table_destroy (args);
+			
 			return 0;
 		}
 	} else {
@@ -266,7 +338,8 @@ main (int argc, char *argv[])
 	ev_stock_icons_init ();
 	gtk_window_set_default_icon_name ("evince");
 
-	load_files (file_arguments);
+	load_files (file_arguments, args);
+	g_hash_table_destroy (args);
 
 	gtk_main ();
 
@@ -276,7 +349,7 @@ main (int argc, char *argv[])
 	if (enable_metadata) {
 		ev_metadata_manager_shutdown ();
 	}
- 	g_object_unref(program);
+ 	g_object_unref (program);
 
 	return 0;
 }

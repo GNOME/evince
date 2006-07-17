@@ -71,12 +71,13 @@ gboolean          ev_application_open_window         (EvApplication   *applicati
 						      GError         **error);
 gboolean          ev_application_open_uri            (EvApplication   *application,
 						      const char      *uri,
-						      const char      *page_label,
+						      GHashTable      *args,
 						      guint            timestamp,
 						      GError         **error);
 void              ev_application_open_uri_at_dest    (EvApplication   *application,
 						      const char      *uri,
 						      EvLinkDest      *dest,
+						      EvWindowRunMode  mode,
 						      guint32          timestamp);
 void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,

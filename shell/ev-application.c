@@ -239,6 +239,7 @@ void
 ev_application_open_uri_at_dest (EvApplication  *application,
 				 const char     *uri,
 				 EvLinkDest     *dest,
+				 EvWindowRunMode mode,
 				 guint           timestamp)
 {
 	EvWindow *new_window;
@@ -263,7 +264,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
-	ev_window_open_uri (new_window, uri, dest);
+	ev_window_open_uri (new_window, uri, dest, mode);
 
 	gtk_widget_show (GTK_WIDGET (new_window));
 
@@ -274,21 +275,34 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 gboolean
 ev_application_open_uri (EvApplication  *application,
 			 const char     *uri,
-			 const char     *page_label,
+			 GHashTable     *args,
 			 guint           timestamp,
 			 GError        **error)
 {
-	
-	if (page_label && strcmp (page_label, "") != 0) {
-		EvLinkDest *dest;
-		
-		dest = ev_link_dest_new_page_label (page_label);
+	EvLinkDest      *dest = NULL;
+	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 
-		ev_application_open_uri_at_dest (application, uri, dest, timestamp);
-		g_object_unref (dest);
-	} else {
-		ev_application_open_uri_at_dest (application, uri, NULL, timestamp);
+	if (args) {
+		GValue *value = NULL;
+		
+		value = g_hash_table_lookup (args, "page-label");
+		if (value) {
+			const gchar *page_label;
+			
+			page_label = g_value_get_string (value);
+			dest = ev_link_dest_new_page_label (page_label);
+		}
+		
+		value = g_hash_table_lookup (args, "mode");
+		if (value) {
+			mode = g_value_get_uint (value);
+		}
 	}
+	
+	ev_application_open_uri_at_dest (application, uri, dest, mode, timestamp);
+
+	if (dest)
+		g_object_unref (dest);
 
 	return TRUE;
 }
@@ -346,9 +360,9 @@ ev_application_init (EvApplication *ev_application)
 				       DATADIR "/evince-toolbar.xml");
 
 	if (!egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
-				      ev_application->toolbars_file)) {
+					       ev_application->toolbars_file)) {
 		egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
-					 DATADIR"/evince-toolbar.xml");
+						  DATADIR"/evince-toolbar.xml");
 	}
 
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,

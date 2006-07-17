@@ -409,7 +409,7 @@ ev_job_xfer_class_init (EvJobXferClass *class)
 
 
 EvJob *
-ev_job_xfer_new (const gchar *uri, EvLinkDest *dest)
+ev_job_xfer_new (const gchar *uri, EvLinkDest *dest, EvWindowRunMode mode)
 {
 	EvJobXfer *job;
 
@@ -418,6 +418,8 @@ ev_job_xfer_new (const gchar *uri, EvLinkDest *dest)
 	job->uri = g_strdup (uri);
 	if (dest)
 		job->dest = g_object_ref (dest);
+
+	job->mode = mode;
 
 	return EV_JOB (job);
 }
