@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-29 11:31+0200\n"
-"PO-Revision-Date: 2006-05-29 11:35+0200\n"
+"POT-Creation-Date: 2006-07-17 12:44+0200\n"
+"PO-Revision-Date: 2006-07-17 12:44+0200\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,44 +36,48 @@ msgstr "No se pudo abrir el adjunto «%s»: %s"
 msgid "Couldn't open attachment “%s”"
 msgstr "No se pudo abrir el adjunto «%s»"
 
-#: ../backend/ev-document-factory.c:258
+#: ../backend/ev-document-factory.c:265
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
-#: ../backend/ev-document-factory.c:269
+#: ../backend/ev-document-factory.c:276
 #, c-format
 msgid "Unhandled MIME type: “%s”"
 msgstr "Tipo MIME no soportado: «%s»"
 
-#: ../backend/ev-document-factory.c:335
+#: ../backend/ev-document-factory.c:342
 msgid "All Documents"
 msgstr "Todos los documentos"
 
-#: ../backend/ev-document-factory.c:343
+#: ../backend/ev-document-factory.c:350
 msgid "PostScript Documents"
 msgstr "Documentos PostScript"
 
-#: ../backend/ev-document-factory.c:352
+#: ../backend/ev-document-factory.c:359
 msgid "PDF Documents"
 msgstr "Documentos PDF"
 
-#: ../backend/ev-document-factory.c:361
+#: ../backend/ev-document-factory.c:368
 msgid "Images"
 msgstr "Imágenes"
 
-#: ../backend/ev-document-factory.c:371
+#: ../backend/ev-document-factory.c:378
 msgid "DVI Documents"
 msgstr "Documentos DVI"
 
-#: ../backend/ev-document-factory.c:381
+#: ../backend/ev-document-factory.c:388
 msgid "Djvu Documents"
 msgstr "Documentos Djvu"
 
-#: ../backend/ev-document-factory.c:391
+#: ../backend/ev-document-factory.c:398
 msgid "Comic Books"
 msgstr "Libros de cómics"
 
-#: ../backend/ev-document-factory.c:399
+#: ../backend/ev-document-factory.c:408
+msgid "Impress Slides"
+msgstr "Diapositivas Impress"
+
+#: ../backend/ev-document-factory.c:416
 msgid "All Files"
 msgstr "Todos los archivos"
 
@@ -136,7 +140,7 @@ msgid "Separator"
 msgstr "Separador"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3079
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3051
 msgid "Best Fit"
 msgstr "Ajuste óptimo"
 
@@ -436,7 +440,8 @@ msgstr "Documento cargado."
 
 #: ../ps/ps-document.c:1082
 #, c-format
-msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
+msgid ""
+"Failed to load document “%s”. Ghostscript interpreter was not found in path"
 msgstr ""
 "Falló al cargar el documento «%s». El intérprete de GhostScript no se "
 "encontró en la ruta"
@@ -518,7 +523,8 @@ msgstr "Se requiere una contraseña"
 
 #: ../shell/ev-password.c:84
 #, c-format
-msgid "The document “%s” is locked and requires a password before it can be opened."
+msgid ""
+"The document “%s” is locked and requires a password before it can be opened."
 msgstr ""
 "El documento «%s» está bloqueado y requiere una contraseña antes de que "
 "pueda abrirse."
@@ -585,7 +591,7 @@ msgstr "Imprimir…"
 msgid "Index"
 msgstr "Índice"
 
-#: ../shell/ev-sidebar-thumbnails.c:658
+#: ../shell/ev-sidebar-thumbnails.c:659
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -668,58 +674,58 @@ msgstr[1] "%d encontrados en esta página"
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante para buscar"
 
-#: ../shell/ev-window.c:962
+#: ../shell/ev-window.c:953
 msgid "Unable to open document"
 msgstr "No se pudo abrir el documento"
 
-#: ../shell/ev-window.c:1052
+#: ../shell/ev-window.c:1036
 msgid "Open Document"
 msgstr "Abrir un documento"
 
-#: ../shell/ev-window.c:1140
+#: ../shell/ev-window.c:1124
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "El archivo no se pudo guardar como «%s»."
 
-#: ../shell/ev-window.c:1159 ../shell/ev-window.c:3430
+#: ../shell/ev-window.c:1143 ../shell/ev-window.c:3402
 msgid "Save a Copy"
 msgstr "Guardar una copia"
 
-#: ../shell/ev-window.c:1222
+#: ../shell/ev-window.c:1206
 msgid "Generating PDF is not supported"
 msgstr "La generación de PDF no está soportada"
 
-#: ../shell/ev-window.c:1231
+#: ../shell/ev-window.c:1215
 msgid "Printing is not supported on this printer."
 msgstr "La impresión no está soportada con esta impresora."
 
-#: ../shell/ev-window.c:1233
+#: ../shell/ev-window.c:1217
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
 "requires a PostScript printer driver."
 msgstr ""
-"Estaba intentando imprimir en una impresora usando el controlador «%s». "
-"Este programa requiere un controlador de impresora PostScript."
+"Estaba intentando imprimir en una impresora usando el controlador «%s». Este "
+"programa requiere un controlador de impresora PostScript."
 
-#: ../shell/ev-window.c:1278
+#: ../shell/ev-window.c:1262
 msgid "Print"
 msgstr "Imprimir"
 
-#: ../shell/ev-window.c:1284
+#: ../shell/ev-window.c:1268
 msgid "Pages"
 msgstr "Páginas"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1629 ../shell/ev-window.c:2880
+#: ../shell/ev-window.c:1613 ../shell/ev-window.c:2852
 msgid "Leave Fullscreen"
 msgstr "Salir de «Pantalla completa»"
 
-#: ../shell/ev-window.c:1963
+#: ../shell/ev-window.c:1947
 msgid "Toolbar Editor"
 msgstr "Editor de la barra de herramientas"
 
-#: ../shell/ev-window.c:2337
+#: ../shell/ev-window.c:2314
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -728,7 +734,7 @@ msgstr ""
 "Visor de archivos PostScript y PDF.\n"
 "Usando poppler %s (%s)"
 
-#: ../shell/ev-window.c:2361
+#: ../shell/ev-window.c:2338
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -740,7 +746,7 @@ msgstr ""
 "Software Foundation; ya sea en su versión 2 ó (a su criterio)en una versión "
 "posterior.\n"
 
-#: ../shell/ev-window.c:2365
+#: ../shell/ev-window.c:2342
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -751,7 +757,7 @@ msgstr ""
 "ninguna garantía implícita de COMERCIALIDAD o IDONEIDAD PARA UN FIN "
 "DETERMINADO.  Mire la Licencia General GNU para más detalles.\n"
 
-#: ../shell/ev-window.c:2369
+#: ../shell/ev-window.c:2346
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -761,288 +767,288 @@ msgstr ""
 "con Evince; si no es el caso, escriba a Free Software Foundation, Inc., 59 "
 "Temple Place, Suite 330, Boston, MA  02111-1307  EEUU\n"
 
-#: ../shell/ev-window.c:2393 ../shell/main.c:240
+#: ../shell/ev-window.c:2370 ../shell/main.c:240
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2396
+#: ../shell/ev-window.c:2373
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 Los autores de Evince"
 
-#: ../shell/ev-window.c:2402
+#: ../shell/ev-window.c:2379
 msgid "translator-credits"
 msgstr ""
 "Antonio Ognio <gnrfan@gnrfan.org>\n"
 "Daniel Fernández <dfdez@ya.com>\n"
 "Francisco Javier F. Serrador>"
 
-#: ../shell/ev-window.c:2807
+#: ../shell/ev-window.c:2779
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../shell/ev-window.c:2808
+#: ../shell/ev-window.c:2780
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../shell/ev-window.c:2809
+#: ../shell/ev-window.c:2781
 msgid "_View"
 msgstr "_Ver"
 
-#: ../shell/ev-window.c:2810
+#: ../shell/ev-window.c:2782
 msgid "_Go"
 msgstr "_Ir"
 
-#: ../shell/ev-window.c:2811
+#: ../shell/ev-window.c:2783
 msgid "_Help"
 msgstr "A_yuda"
 
 #. File menu
-#: ../shell/ev-window.c:2814 ../shell/ev-window.c:2971
+#: ../shell/ev-window.c:2786 ../shell/ev-window.c:2943
 msgid "_Open..."
 msgstr "_Abrir…"
 
-#: ../shell/ev-window.c:2815
+#: ../shell/ev-window.c:2787
 msgid "Open an existing document"
 msgstr "Abre un documento existente"
 
-#: ../shell/ev-window.c:2817 ../shell/ev-window.c:2973
+#: ../shell/ev-window.c:2789 ../shell/ev-window.c:2945
 msgid "_Save a Copy..."
 msgstr "Guardar una _copia…"
 
-#: ../shell/ev-window.c:2818
+#: ../shell/ev-window.c:2790
 msgid "Save a copy of the current document"
 msgstr "Guarda una copia del documento actual"
 
-#: ../shell/ev-window.c:2820
+#: ../shell/ev-window.c:2792
 msgid "_Print..."
 msgstr "Im_primir…"
 
-#: ../shell/ev-window.c:2821
+#: ../shell/ev-window.c:2793
 msgid "Print this document"
 msgstr "Imprime este documento"
 
-#: ../shell/ev-window.c:2823
+#: ../shell/ev-window.c:2795
 msgid "P_roperties"
 msgstr "_Propiedades"
 
-#: ../shell/ev-window.c:2831
+#: ../shell/ev-window.c:2803
 msgid "Select _All"
 msgstr "Seleccionar _todo"
 
-#: ../shell/ev-window.c:2833
+#: ../shell/ev-window.c:2805
 msgid "_Find..."
 msgstr "_Buscar…"
 
-#: ../shell/ev-window.c:2834
+#: ../shell/ev-window.c:2806
 msgid "Find a word or phrase in the document"
 msgstr "Busca una palabra o frase en el documento"
 
-#: ../shell/ev-window.c:2836
+#: ../shell/ev-window.c:2808
 msgid "Find Ne_xt"
 msgstr "Buscar _siguiente"
 
-#: ../shell/ev-window.c:2838
+#: ../shell/ev-window.c:2810
 msgid "Find Pre_vious"
 msgstr "Buscar _anterior"
 
-#: ../shell/ev-window.c:2840
+#: ../shell/ev-window.c:2812
 msgid "T_oolbar"
 msgstr "_Barra de herramientas"
 
-#: ../shell/ev-window.c:2842
+#: ../shell/ev-window.c:2814
 msgid "Rotate _Left"
 msgstr "Rotar a la _izquierda"
 
-#: ../shell/ev-window.c:2844
+#: ../shell/ev-window.c:2816
 msgid "Rotate _Right"
 msgstr "Rotar a la _derecha"
 
-#: ../shell/ev-window.c:2849
+#: ../shell/ev-window.c:2821
 msgid "Enlarge the document"
 msgstr "Amplía el documento"
 
-#: ../shell/ev-window.c:2852
+#: ../shell/ev-window.c:2824
 msgid "Shrink the document"
 msgstr "Reduce el documento"
 
-#: ../shell/ev-window.c:2854
+#: ../shell/ev-window.c:2826
 msgid "_Reload"
 msgstr "_Recargar"
 
-#: ../shell/ev-window.c:2855
+#: ../shell/ev-window.c:2827
 msgid "Reload the document"
 msgstr "Recarga el documento"
 
 #. Go menu
-#: ../shell/ev-window.c:2859
+#: ../shell/ev-window.c:2831
 msgid "_Previous Page"
 msgstr "Página _anterior"
 
-#: ../shell/ev-window.c:2860
+#: ../shell/ev-window.c:2832
 msgid "Go to the previous page"
 msgstr "Ir a la página anterior"
 
-#: ../shell/ev-window.c:2862
+#: ../shell/ev-window.c:2834
 msgid "_Next Page"
 msgstr "Página _siguiente"
 
-#: ../shell/ev-window.c:2863
+#: ../shell/ev-window.c:2835
 msgid "Go to the next page"
 msgstr "Ir a la página siguiente"
 
-#: ../shell/ev-window.c:2865
+#: ../shell/ev-window.c:2837
 msgid "_First Page"
 msgstr "_Primera"
 
-#: ../shell/ev-window.c:2866
+#: ../shell/ev-window.c:2838
 msgid "Go to the first page"
 msgstr "Ir a la primera página"
 
-#: ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:2840
 msgid "_Last Page"
 msgstr "_Última"
 
-#: ../shell/ev-window.c:2869
+#: ../shell/ev-window.c:2841
 msgid "Go to the last page"
 msgstr "Ir a la última página"
 
 #. Help menu
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2845
 msgid "_Contents"
 msgstr "_Contenido"
 
-#: ../shell/ev-window.c:2876
+#: ../shell/ev-window.c:2848
 msgid "_About"
 msgstr "_Acerca de"
 
-#: ../shell/ev-window.c:2881
+#: ../shell/ev-window.c:2853
 msgid "Leave fullscreen mode"
 msgstr "Deja el modo a pantalla completa"
 
 #. View Menu
-#: ../shell/ev-window.c:2932
+#: ../shell/ev-window.c:2904
 msgid "_Toolbar"
 msgstr "_Barra de herramientas"
 
-#: ../shell/ev-window.c:2933
+#: ../shell/ev-window.c:2905
 msgid "Show or hide the toolbar"
 msgstr "Muestra u oculta la barra de herramientas"
 
-#: ../shell/ev-window.c:2935
+#: ../shell/ev-window.c:2907
 msgid "Side _Pane"
 msgstr "_Panel lateral"
 
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:2908
 msgid "Show or hide the side pane"
 msgstr "Muestra o oculta el panel lateral"
 
-#: ../shell/ev-window.c:2938
+#: ../shell/ev-window.c:2910
 msgid "_Continuous"
 msgstr "_Continuo"
 
-#: ../shell/ev-window.c:2939
+#: ../shell/ev-window.c:2911
 msgid "Show the entire document"
 msgstr "Mostrar el documento completo"
 
-#: ../shell/ev-window.c:2941
+#: ../shell/ev-window.c:2913
 msgid "_Dual"
 msgstr "_Dual"
 
-#: ../shell/ev-window.c:2942
+#: ../shell/ev-window.c:2914
 msgid "Show two pages at once"
 msgstr "Mostrar dos páginas a la vez"
 
-#: ../shell/ev-window.c:2944
+#: ../shell/ev-window.c:2916
 msgid "_Fullscreen"
 msgstr "Pantalla _completa"
 
-#: ../shell/ev-window.c:2945
+#: ../shell/ev-window.c:2917
 msgid "Expand the window to fill the screen"
 msgstr "Expandir la ventana hasta llenar la pantalla"
 
-#: ../shell/ev-window.c:2947
+#: ../shell/ev-window.c:2919
 msgid "_Presentation"
 msgstr "_Presentación"
 
-#: ../shell/ev-window.c:2948
+#: ../shell/ev-window.c:2920
 msgid "Run document as a presentation"
 msgstr "Ver el documento como una presentación"
 
-#: ../shell/ev-window.c:2950
+#: ../shell/ev-window.c:2922
 msgid "_Best Fit"
 msgstr "Ajuste óp_timo"
 
-#: ../shell/ev-window.c:2951
+#: ../shell/ev-window.c:2923
 msgid "Make the current document fill the window"
 msgstr "Hace que el documento actual llene la ventana"
 
-#: ../shell/ev-window.c:2953
+#: ../shell/ev-window.c:2925
 msgid "Fit Page _Width"
 msgstr "Ajustar al _ancho de página"
 
-#: ../shell/ev-window.c:2954
+#: ../shell/ev-window.c:2926
 msgid "Make the current document fill the window width"
 msgstr "Hace que el documento actual llene la anchura de la ventana"
 
 #. Links
-#: ../shell/ev-window.c:2961
+#: ../shell/ev-window.c:2933
 msgid "_Open Link"
 msgstr "_Abrir enlace"
 
-#: ../shell/ev-window.c:2963
+#: ../shell/ev-window.c:2935
 msgid "_Go To"
 msgstr "_Ir"
 
-#: ../shell/ev-window.c:2965
+#: ../shell/ev-window.c:2937
 msgid "_Copy Link Address"
 msgstr "_Copiar dirección del enlace"
 
-#: ../shell/ev-window.c:3028
+#: ../shell/ev-window.c:3000
 msgid "Page"
 msgstr "Página"
 
-#: ../shell/ev-window.c:3029
+#: ../shell/ev-window.c:3001
 msgid "Select Page"
 msgstr "Seleccione la página"
 
-#: ../shell/ev-window.c:3041
+#: ../shell/ev-window.c:3013
 msgid "Zoom"
 msgstr "Ampliar"
 
-#: ../shell/ev-window.c:3043
+#: ../shell/ev-window.c:3015
 msgid "Adjust the zoom level"
 msgstr "Ajustar el nivel de ampliación"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3059
+#: ../shell/ev-window.c:3031
 msgid "Previous"
 msgstr "Anterior"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3065
+#: ../shell/ev-window.c:3037
 msgid "Next"
 msgstr "Siguiente"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3069
+#: ../shell/ev-window.c:3041
 msgid "Zoom In"
 msgstr "Ampliar"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3074
+#: ../shell/ev-window.c:3046
 msgid "Zoom Out"
 msgstr "Reducir"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3084
+#: ../shell/ev-window.c:3056
 msgid "Fit Width"
 msgstr "Ajustar anchura"
 
-#: ../shell/ev-window.c:3359
+#: ../shell/ev-window.c:3331
 msgid "Unable to open attachment"
 msgstr "No se pudo abrir el adjunto"
 
-#: ../shell/ev-window.c:3406
+#: ../shell/ev-window.c:3378
 msgid "The attachment could not be saved."
 msgstr "El adjunto no se pudo guardar."
 
@@ -1094,4 +1100,3 @@ msgid ""
 msgstr ""
 "Comando válido y argumentos para el miniaturizador de documentos PDF. Vea la "
 "documentación para el miniaturizador de Nautilus para más información."
-
