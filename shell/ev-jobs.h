@@ -44,6 +44,9 @@ typedef struct _EvJobFontsClass EvJobFontsClass;
 typedef struct _EvJobXfer EvJobXfer;
 typedef struct _EvJobXferClass EvJobXferClass;
 
+typedef struct _EvJobPrint EvJobPrint;
+typedef struct _EvJobPrintClass EvJobPrintClass;
+
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
 #define EV_JOB_CLASS(klass)	             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
@@ -73,6 +76,11 @@ typedef struct _EvJobXferClass EvJobXferClass;
 #define EV_JOB_XFER(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_XFER, EvJobXfer))
 #define EV_JOB_XFER_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_XFER, EvJobXferClass))
 #define EV_IS_JOB_XFER(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_XFER))
+
+#define EV_TYPE_JOB_PRINT                     (ev_job_print_get_type())
+#define EV_JOB_PRINT(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
+#define EV_JOB_PRINT_CLASS(klass)             (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
+#define EV_IS_JOB_PRINT(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
 
 typedef enum {
 	EV_JOB_PRIORITY_LOW,
@@ -175,17 +183,32 @@ struct _EvJobXferClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobPrint
+{
+	EvJob parent;
+
+	GError *error;
+	gchar  *temp_file;
+	gdouble width;
+	gdouble height;
+};
+
+struct _EvJobPrintClass
+{
+	EvJobClass parent_class;
+};
+
 /* Base job class */
-GType           ev_job_get_type           (void);
+GType           ev_job_get_type           (void) G_GNUC_CONST;
 void            ev_job_finished           (EvJob          *job);
 
 /* EvJobLinks */
-GType           ev_job_links_get_type     (void);
+GType           ev_job_links_get_type     (void) G_GNUC_CONST;
 EvJob          *ev_job_links_new          (EvDocument     *document);
 void            ev_job_links_run          (EvJobLinks     *thumbnail);
 
 /* EvJobRender */
-GType           ev_job_render_get_type    (void);
+GType           ev_job_render_get_type    (void) G_GNUC_CONST;
 EvJob          *ev_job_render_new         (EvDocument      *document,
 					   EvRenderContext *rc,
 					   gint             width,
@@ -199,7 +222,7 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 void            ev_job_render_run         (EvJobRender     *thumbnail);
 
 /* EvJobThumbnail */
-GType           ev_job_thumbnail_get_type (void);
+GType           ev_job_thumbnail_get_type (void) G_GNUC_CONST;
 EvJob          *ev_job_thumbnail_new      (EvDocument     *document,
 					   gint            page,
 					   int             rotation,
@@ -207,16 +230,23 @@ EvJob          *ev_job_thumbnail_new      (EvDocument     *document,
 void            ev_job_thumbnail_run      (EvJobThumbnail *thumbnail);
 
 /* EvJobFonts */
-GType 		ev_job_fonts_get_type 	  (void);
+GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
 void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
 /* EvJobXfer */
-GType 		ev_job_xfer_get_type 	  (void);
+GType 		ev_job_xfer_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri,
 					   EvLinkDest      *dest,
 					   EvWindowRunMode  mode);
-void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);					   
+void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);
+
+/* EvJobPrint */
+GType           ev_job_print_get_type     (void) G_GNUC_CONST;
+EvJob          *ev_job_print_new          (EvDocument      *document,
+					   gdouble          width,
+					   gdouble          height);
+void            ev_job_print_run          (EvJobPrint      *print);
 
 G_END_DECLS
 

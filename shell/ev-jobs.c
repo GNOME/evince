@@ -7,7 +7,10 @@
 #include "ev-document-fonts.h"
 #include "ev-selection.h"
 #include "ev-async-renderer.h"
+#include "ev-ps-exporter.h"
 
+#include <glib/gstdio.h>
+#include <unistd.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
@@ -23,6 +26,8 @@ static void ev_job_thumbnail_init       (EvJobThumbnail      *job);
 static void ev_job_thumbnail_class_init (EvJobThumbnailClass *class);
 static void ev_job_xfer_init    	(EvJobXfer	     *job);
 static void ev_job_xfer_class_init 	(EvJobXferClass	     *class);
+static void ev_job_print_init           (EvJobPrint          *job);
+static void ev_job_print_class_init     (EvJobPrintClass     *class);
 
 enum
 {
@@ -38,6 +43,7 @@ G_DEFINE_TYPE (EvJobRender, ev_job_render, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobXfer, ev_job_xfer, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobPrint, ev_job_print, EV_TYPE_JOB)
 
 static void ev_job_init (EvJob *job) { /* Do Nothing */ }
 
@@ -171,6 +177,39 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 	oclass = G_OBJECT_CLASS (class);
 
 	oclass->dispose = ev_job_thumbnail_dispose;
+}
+
+static void ev_job_print_init (EvJobPrint *job) { /* Do Nothing */ }
+
+static void
+ev_job_print_dispose (GObject *object)
+{
+	EvJobPrint *job;
+
+	job = EV_JOB_PRINT (object);
+
+	if (job->temp_file) {
+		g_unlink (job->temp_file);
+		g_free (job->temp_file);
+		job->temp_file = NULL;
+	}
+
+	if (job->error) {
+		g_error_free (job->error);
+		job->error = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_print_parent_class)->dispose) (object);
+}
+
+static void
+ev_job_print_class_init (EvJobPrintClass *class)
+{
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_print_dispose;
 }
 
 /* Public functions */
@@ -480,3 +519,77 @@ ev_job_xfer_run (EvJobXfer *job)
 	return;
 }
 
+EvJob *
+ev_job_print_new (EvDocument *document,
+		  gdouble     width,
+		  gdouble     height)
+{
+	EvJobPrint *job;
+
+	job = g_object_new (EV_TYPE_JOB_PRINT, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+
+	job->temp_file = NULL;
+	job->error = NULL;
+	
+	job->width = width;
+	job->height = height;
+
+	return EV_JOB (job);
+}
+
+void
+ev_job_print_run (EvJobPrint *job)
+{
+	EvDocument *document = EV_JOB (job)->document;
+	gint        fd;
+	gint        last_page;
+	gint        i;
+	
+	g_return_if_fail (EV_IS_JOB_PRINT (job));
+
+	if (job->temp_file)
+		g_free (job->temp_file);
+	job->temp_file = NULL;
+	
+	if (job->error)
+		g_error_free (job->error);
+	job->error = NULL;
+	
+	fd = g_file_open_tmp ("evince_print.ps.XXXXXX", &job->temp_file, &job->error);
+	if (fd <= -1) {
+		EV_JOB (job)->finished = TRUE;
+		return;
+	}
+
+	last_page = ev_document_get_n_pages (document) - 1;
+	
+	ev_document_doc_mutex_lock ();
+	ev_ps_exporter_begin (EV_PS_EXPORTER (document),
+			      job->temp_file,
+			      MIN (0, last_page),
+			      MAX (0, last_page),
+			      job->width, job->height, FALSE);
+	ev_document_doc_mutex_unlock ();
+
+	for (i = 0; i <= last_page; i++) {
+		EvRenderContext *rc;
+
+		rc = ev_render_context_new (0, i, 1.0);
+		
+		ev_document_doc_mutex_lock ();
+		ev_ps_exporter_do_page (EV_PS_EXPORTER (document), rc);
+		ev_document_doc_mutex_unlock ();
+
+		g_object_unref (rc);
+	}
+
+	ev_document_doc_mutex_lock ();
+	ev_ps_exporter_end (EV_PS_EXPORTER (document));
+	ev_document_doc_mutex_unlock ();
+
+	close (fd);
+	
+	EV_JOB (job)->finished = TRUE;
+}

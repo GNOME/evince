@@ -49,6 +49,8 @@ KEYRING_REQUIRED=0.4.0
 LIBGNOMEUI_REQUIRED=2.14.0
 LIBGNOMEPRINTUI_REQUIRED=2.6.0
 
+GTK_PRINT_REQUIRED=2.10.0
+
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
@@ -58,27 +60,54 @@ PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGN
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
 
+dnl ========= Print support
+AC_ARG_WITH(print,
+	    [AC_HELP_STRING([--with-print=no/gtk/gnome/auto], [Compile with print support [default=auto]])],
+	    PRINT=$withval,
+            PRINT="auto")
 
-dnl ========= Check for libgnomeprintui
-AC_ARG_ENABLE(gnome-print,
-  	[AC_HELP_STRING([--disable-gnome-print], [Compile without print support])],
-	enable_gnome_print="$enableval",
-	enable_gnome_print=yes)
-
-if test x$enable_gnome_print = xyes; then
-	PKG_CHECK_MODULES(GNOME_PRINT, 
-		libgnomeprintui-2.2 >= $LIBGNOMEPRINTUI_REQUIRED,
-		enable_gnome_print=yes, enable_gnome_print=no)
+PKG_CHECK_MODULES(GNOME_PRINT, 
+		  libgnomeprintui-2.2 >= $LIBGNOMEPRINTUI_REQUIRED,
+		  enable_gnome_print=yes, enable_gnome_print=no)
+PKG_CHECK_MODULES(GTK_PRINT,
+		  gtk+-unix-print-2.0 >= $GTK_PRINT_REQUIRED,
+		  enable_gtk_print=yes, enable_gtk_print=no)
+enable_print=no
+if test x$PRINT = xgnome -a x$enable_gnome_print = xyes; then
+   enable_print=gnome
+else
+   if test x$PRINT = xgtk -a x$enable_gtk_print = xyes; then
+      enable_print=gtk
+   else
+      if test x$PRINT = xauto; then
+	 if test x$enable_gtk_print = xyes; then
+	    enable_print=gtk
+	 else
+	    if test x$enable_gnome_print = xyes; then
+	       enable_print=gnome
+	    fi
+	 fi
+      fi
+   fi
 fi
 
-AC_SUBST(GNOME_PRINT_CFLAGS)
-AC_SUBST(GNOME_PRINT_LIBS)
+if test x$enable_print = xgnome; then
+   AC_SUBST(GNOME_PRINT_CFLAGS)
+   AC_SUBST(GNOME_PRINT_LIBS)
+   AC_DEFINE([WITH_GNOME_PRINT],[1],[Enable GNOME Print Support.])
+   AC_DEFINE([WITH_PRINT],[1],[Enable Print Support.])
+fi
 
-if test x$enable_gnome_print = xyes; then
- 	AC_DEFINE([WITH_GNOME_PRINT],[1],[Enable Print Support.])
-fi 
+if test x$enable_print = xgtk; then   
+   AC_SUBST(GTK_PRINT_CFLAGS)
+   AC_SUBST(GTK_PRINT_LIBS)
+   AC_DEFINE([WITH_GTK_PRINT],[1],[Enable GTK Print Support.])
+   AC_DEFINE([WITH_PRINT],[1],[Enable Print Support.])
+fi
+   
+AM_CONDITIONAL(WITH_GNOME_PRINT, test x$enable_print = xgnome)
+AM_CONDITIONAL(WITH_GTK_PRINT, test x$enable_print = xgtk)
 
-AM_CONDITIONAL(WITH_GNOME_PRINT, test x$enable_gnome_print = xyes)
 
 dnl ========= Check for DBUS
 PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED],
@@ -360,7 +389,7 @@ AC_OUTPUT
 
 echo "
 Configure summary:
-	Print Support......:  $enable_gnome_print
+	Print Support......:  $enable_print
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
 

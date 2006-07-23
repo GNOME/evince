@@ -1,3 +1,15 @@
+2006-07-23  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* shell/Makefile.am:
+	* shell/ev-job-queue.c:
+	* shell/ev-jobs.[ch]:
+	* shell/ev-sidebar-links.c:
+	* shell/ev-window.[ch]:
+	
+	Use GtkPrint instead of GnomePrint when it's available. Fixes bug
+	#348422
+	
 2006-07-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* data/evince-toolbar.xml: Add preview toolbar (hidden by default)
