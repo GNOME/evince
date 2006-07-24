@@ -4427,7 +4427,15 @@ render_form_field_content_for_page (EvView *view, gint page)
 		pango_layout_set_width(playout, PANGO_SCALE*(v[2]-v[1]));
 		pango_layout_set_font_description(playout, pfontdesc);
 
-
+		//draw a rectangle to hide the not-up-to-date text from the last poppler rendering
+		//FIXME: the rect color is fixed to white.. perhaps it should be the same as the pdf background
+		gdk_draw_rectangle(GTK_WIDGET(view)->window,
+				GTK_WIDGET(view)->style->white_gc,
+				TRUE,
+				v[0],
+				v[1],
+				v[2]-v[0],
+				v[3]-v[1]);
 		gdk_draw_layout(GTK_WIDGET(view)->window,
 				GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
 				v[0], 
@@ -4470,8 +4478,9 @@ handle_click_at_location (EvView *view,
 	
 	new_field = ev_form_field_mapping_find (form_field_mapping, x_offset/view->scale, y_offset/view->scale);
 
-	if (!new_field)
+/*	if (!new_field) {
 		return;
+	}*/
 
 	//store current entry text
 	if (view->child) {
@@ -4481,11 +4490,17 @@ handle_click_at_location (EvView *view,
 							   gtk_entry_get_text(GTK_ENTRY(view->child->widget)));
 			if(view->pendingFormFields)
 				g_array_append_val(view->pendingFormFields,view->child->field_id);
+
+			ev_pixbuf_cache_reload_page(view->pixbuf_cache, page, view->rotation, view->scale);  
 		}
 	}
 
 	//clean current view widgets
 	ev_view_remove_all(GTK_CONTAINER(view));
+
+	if (!new_field) {
+		return;
+	}
 
 
 	p[0].x = new_field->x1;

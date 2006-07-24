@@ -40,9 +40,9 @@ G_BEGIN_DECLS
  * resizings.  There is one per page, maximum.
  */
 typedef struct {
-	int page;
-	EvRectangle rect;
-	GdkRegion *covered_region;
+        int page;
+        EvRectangle rect;
+        GdkRegion *covered_region;
 } EvViewSelection;
 
 typedef struct _EvPixbufCache       EvPixbufCache;
@@ -50,33 +50,39 @@ typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
 GType          ev_pixbuf_cache_get_type         (void) G_GNUC_CONST;
 EvPixbufCache *ev_pixbuf_cache_new                  (GtkWidget     *view,
-						     EvDocument    *document);
+                                                     EvDocument    *document);
 void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
-						     gint           start_page,
-						     gint           end_page,
-						     gint	    rotation,
-						     gfloat         scale,
-						     GList          *selection_list);
+                                                     gint           start_page,
+                                                     gint           end_page,
+                                                     gint           rotation,
+                                                     gfloat         scale,
+                                                     GList          *selection_list);
 GdkPixbuf     *ev_pixbuf_cache_get_pixbuf           (EvPixbufCache *pixbuf_cache,
-						     gint           page);
+                                                     gint           page);
 GList         *ev_pixbuf_cache_get_link_mapping     (EvPixbufCache *pixbuf_cache,
-						     gint           page);
+                                                     gint           page);
 GdkRegion     *ev_pixbuf_cache_get_text_mapping     (EvPixbufCache *pixbuf_cache,
-						     gint           page);
-GList 	      *ev_pixbuf_cache_get_form_field_mapping     (EvPixbufCache *pixbuf_cache,
-						     gint 	    page);
+                                                     gint           page);
+GList         *ev_pixbuf_cache_get_form_field_mapping     (EvPixbufCache *pixbuf_cache,
+                                                     gint           page);
 
 void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache);
 void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
 
+void           ev_pixbuf_cache_reload_page          (EvPixbufCache *pixbuf_cache, 
+                                                     gint           page,
+                                                     gint           rotation,
+                                                     gfloat         scale);
+
 /* Selection */
 GdkPixbuf     *ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
-						     gint           page,
-						     gfloat         scale,
-						     GdkRegion     **region);
+                                                     gint           page,
+                                                     gfloat         scale,
+                                                     GdkRegion     **region);
 void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
-						     GList         *selection_list);
+                                                     GList         *selection_list);
 GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);
+
 
 G_END_DECLS
 

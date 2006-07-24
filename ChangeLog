@@ -1,3 +1,14 @@
+2006-07-23  Julien Rebetez  <julienr@cvs.gnome.org>
+	* shell/ev-pixbuf-cache.c: (add_job_if_needed),
+	(ev_pixbuf_cache_get_selection_list), (add_job),
+	(ev_pixbuf_cache_reload_page):
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-view.c: (render_form_field_content_for_page),
+	(handle_click_at_location):
+	Automatic Poppler re-rendering on field unfocus.
+	Added an add_job function to pixbuf-cache which allow to
+	force to add a new job.
+
 2006-07-11  Julien Rebetez  <julienr@cvs.gnome.org>
 	* shell/ev-view-private.h:
 	* shell/ev-view.c: (job_finished_cb),
