@@ -3591,7 +3591,9 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 	} else if (g_ascii_strcasecmp (name, "Find") == 0) {
 		ev_window_cmd_edit_find (NULL, window);
 	} else {
-		g_warning ("Unimplemented named action: %s, please post a bug report with a testcase.",
+		g_warning ("Unimplemented named action: %s, please post a "
+		           "bug report in Evince bugzilla "
+		           "(http://bugzilla.gnome.org) with a testcase.",
 			   name);
 	}
 }

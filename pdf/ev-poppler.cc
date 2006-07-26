@@ -831,7 +831,9 @@ ev_link_dest_from_dest (PopplerDest *dest)
 	}
 	
 	if (unimplemented_dest) {
-		g_warning ("Unimplemented destination: %s, please post a bug report with a testcase.",
+		g_warning ("Unimplemented named action: %s, please post a "
+		           "bug report in Evince bugzilla "
+		           "(http://bugzilla.gnome.org) with a testcase.",
 			   unimplemented_dest);
 	}
 
