@@ -8,6 +8,7 @@
 #include "ev-selection.h"
 #include "ev-async-renderer.h"
 #include "ev-ps-exporter.h"
+#include "ev-window.h"
 
 #include <glib/gstdio.h>
 #include <unistd.h>
@@ -197,6 +198,12 @@ ev_job_print_dispose (GObject *object)
 	if (job->error) {
 		g_error_free (job->error);
 		job->error = NULL;
+	}
+
+	if (job->ranges) {
+		g_free (job->ranges);
+		job->ranges = NULL;
+		job->n_ranges = 0;
 	}
 
 	(* G_OBJECT_CLASS (ev_job_print_parent_class)->dispose) (object);
@@ -520,9 +527,11 @@ ev_job_xfer_run (EvJobXfer *job)
 }
 
 EvJob *
-ev_job_print_new (EvDocument *document,
-		  gdouble     width,
-		  gdouble     height)
+ev_job_print_new (EvDocument   *document,
+		  EvPrintRange *ranges,
+		  gint          n_ranges,
+		  gdouble       width,
+		  gdouble       height)
 {
 	EvJobPrint *job;
 
@@ -532,11 +541,66 @@ ev_job_print_new (EvDocument *document,
 
 	job->temp_file = NULL;
 	job->error = NULL;
+
+	job->ranges = ranges;
+	job->n_ranges = n_ranges;
 	
 	job->width = width;
 	job->height = height;
 
 	return EV_JOB (job);
+}
+
+static gint
+ev_print_job_get_first_page (EvJobPrint *job)
+{
+	gint i;
+	gint first_page = G_MAXINT;
+	
+	if (job->n_ranges == 0)
+		return 0;
+
+	for (i = 0; i < job->n_ranges; i++) {
+		if (job->ranges[i].start < first_page)
+			first_page = job->ranges[i].start;
+	}
+
+	return MAX (0, first_page);
+}
+
+static gint
+ev_print_job_get_last_page (EvJobPrint *job)
+{
+	gint i;
+	gint last_page = G_MININT;
+	gint max_page;
+
+	max_page = ev_document_get_n_pages (EV_JOB (job)->document) - 1;
+
+	if (job->n_ranges == 0)
+		return max_page;
+
+	for (i = 0; i < job->n_ranges; i++) {
+		if (job->ranges[i].end > last_page)
+			last_page = job->ranges[i].end;
+	}
+
+	return MIN (max_page, last_page);
+}
+
+static gboolean
+ev_print_job_print_page (EvJobPrint *job,
+			 gint        page)
+{
+	gint i;
+
+	for (i = 0; i < job->n_ranges; i++) {
+		if (page >= job->ranges[i].start &&
+		    page <= job->ranges[i].end)
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 void
@@ -545,6 +609,7 @@ ev_job_print_run (EvJobPrint *job)
 	EvDocument *document = EV_JOB (job)->document;
 	gint        fd;
 	gint        last_page;
+	gint        first_page;
 	gint        i;
 	
 	g_return_if_fail (EV_IS_JOB_PRINT (job));
@@ -563,21 +628,26 @@ ev_job_print_run (EvJobPrint *job)
 		return;
 	}
 
-	last_page = ev_document_get_n_pages (document) - 1;
-	
+	first_page = ev_print_job_get_first_page (job);
+	last_page = ev_print_job_get_last_page (job);
+
 	ev_document_doc_mutex_lock ();
 	ev_ps_exporter_begin (EV_PS_EXPORTER (document),
 			      job->temp_file,
-			      MIN (0, last_page),
-			      MAX (0, last_page),
+			      MIN (first_page, last_page),
+			      MAX (first_page, last_page),
 			      job->width, job->height, FALSE);
 	ev_document_doc_mutex_unlock ();
 
-	for (i = 0; i <= last_page; i++) {
+	for (i = first_page; i <= last_page; i++) {
 		EvRenderContext *rc;
 
-		rc = ev_render_context_new (0, i, 1.0);
+		if (job->n_ranges > 0 &&
+		    !ev_print_job_print_page (job, i))
+			continue;
 		
+		rc = ev_render_context_new (0, i, 1.0);
+
 		ev_document_doc_mutex_lock ();
 		ev_ps_exporter_do_page (EV_PS_EXPORTER (document), rc);
 		ev_document_doc_mutex_unlock ();

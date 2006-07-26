@@ -305,7 +305,7 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 		if (!link)
 			return;
 
-		first_page = get_page_from_link (link) + 1;
+		first_page = get_page_from_link (link);
 		if (first_page == -1) {
 			g_object_unref (link);
 			return;

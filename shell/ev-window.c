@@ -1285,8 +1285,9 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 				    gint       response,
 				    EvWindow  *window)
 {
-	EvBackend document_type;
-	gboolean  export_to_ps = TRUE;
+	EvBackend     document_type;
+	gboolean      export_to_ps = TRUE;
+	GtkPrintPages print_pages;
 	
 	if (response != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -1310,16 +1311,27 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 		gtk_print_unix_dialog_get_page_setup (GTK_PRINT_UNIX_DIALOG (dialog)));
 
 	document_type = ev_document_factory_get_backend (window->priv->document);
-	switch (document_type) {
-	        case EV_BACKEND_PDF:
-			export_to_ps = !gtk_printer_accepts_pdf (window->priv->printer);
-			break;
-	        case EV_BACKEND_PS:
-			export_to_ps = FALSE;
-			break;
-	        default:
-			export_to_ps = TRUE;
-			break;
+	print_pages = gtk_print_settings_get_print_pages (window->priv->print_settings);
+	
+	if (print_pages == GTK_PRINT_PAGES_ALL) {
+		switch (document_type) {
+		        case EV_BACKEND_PDF:
+				/* Export to ps when printing to file */
+				if (gtk_print_settings_has_key (window->priv->print_settings,
+								GTK_PRINT_SETTINGS_OUTPUT_URI)) {
+					export_to_ps = TRUE;
+				} else {
+					export_to_ps = !gtk_printer_accepts_pdf (window->priv->printer);
+				}
+
+				break;
+	                case EV_BACKEND_PS:
+				export_to_ps = FALSE;
+				break;
+	                default:
+				export_to_ps = TRUE;
+				break;
+		}
 	}
 
 	if ((export_to_ps || document_type == EV_BACKEND_PS) &&
@@ -1339,21 +1351,52 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	}
 
 	if (export_to_ps) {
-		EvPageCache *page_cache;
-		gint         width;
-		gint         height;
+		EvPrintRange *ranges = NULL;
+		EvPageCache  *page_cache;
+		gint          n_ranges = 0;
+		gint          current_page;
+		gint          width;
+		gint          height;
 
 		ev_window_clear_print_job (window);
 
+		current_page =
+			gtk_print_unix_dialog_get_current_page (GTK_PRINT_UNIX_DIALOG (dialog));
+
+		switch (print_pages) {
+		        case GTK_PRINT_PAGES_CURRENT:
+				ranges = g_new0 (EvPrintRange, 1);
+
+				ranges->start = current_page;
+				ranges->end = current_page;
+				n_ranges = 1;
+				
+				break;
+		        case GTK_PRINT_PAGES_RANGES: {
+				GtkPageRange *page_range;
+
+				page_range = gtk_print_settings_get_page_ranges (window->priv->print_settings,
+										 &n_ranges);
+				if (n_ranges > 0)
+					ranges = g_memdup (page_range, n_ranges * sizeof (GtkPageRange));
+			}
+				break;
+		        default:
+				break;
+		}
+				
 		page_cache = ev_page_cache_get (window->priv->document);
 		ev_page_cache_get_size (page_cache,
-					ev_page_cache_get_current_page (page_cache),
-					0, 1.0, &width, &height);
+					current_page,
+					0, 1.0,
+					&width, &height);
 	
 		window->priv->print_job =
 			ev_job_print_new (window->priv->document,
+					  ranges, n_ranges,
 					  (gdouble)width,
 					  (gdouble)height);
+		
 		g_signal_connect (window->priv->print_job, "finished",
 				  G_CALLBACK (ev_window_print_job_cb),
 				  window);
@@ -1393,15 +1436,15 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 	current_page = ev_page_cache_get_current_page (page_cache);
 	document_last_page = ev_page_cache_get_n_pages (page_cache);
 
-	
 	if (!ev_window->priv->print_settings)
 		ev_window->priv->print_settings = gtk_print_settings_new ();
 
-	if (first_page != 1 && last_page != document_last_page) {
+	if (first_page != 1 || last_page != document_last_page) {
 		GtkPageRange range;
 
-		range.start = first_page;
-		range.end = last_page;
+		/* Ranges in GtkPrint are 0 - N */
+		range.start = first_page - 1;
+		range.end = last_page - 1;
 		
 		gtk_print_settings_set_print_pages (ev_window->priv->print_settings,
 						    GTK_PRINT_PAGES_RANGES);
@@ -1411,6 +1454,13 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 
 	dialog = gtk_print_unix_dialog_new (_("Print"), GTK_WINDOW (ev_window));
 	ev_window->priv->print_dialog = dialog;
+	gtk_print_unix_dialog_set_manual_capabilities (GTK_PRINT_UNIX_DIALOG (dialog),
+						       GTK_PRINT_CAPABILITY_PAGE_SET |
+						       GTK_PRINT_CAPABILITY_COPIES |
+						       GTK_PRINT_CAPABILITY_COLLATE |
+						       GTK_PRINT_CAPABILITY_REVERSE |
+						       GTK_PRINT_CAPABILITY_SCALE |
+						       GTK_PRINT_CAPABILITY_GENERATE_PS);
 	gtk_print_unix_dialog_set_current_page (GTK_PRINT_UNIX_DIALOG (dialog),
 						current_page);
 	

@@ -38,6 +38,11 @@ typedef enum {
 	EV_WINDOW_MODE_PREVIEW
 } EvWindowRunMode;
 
+typedef struct {
+	gint start;
+	gint end;
+} EvPrintRange;
+
 typedef struct _EvWindow EvWindow;
 typedef struct _EvWindowClass EvWindowClass;
 typedef struct _EvWindowPrivate EvWindowPrivate;
