@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-11 06:47+0300\n"
-"PO-Revision-Date: 2006-07-11 06:47+0300\n"
+"POT-Creation-Date: 2006-07-27 13:17+0300\n"
+"PO-Revision-Date: 2006-07-27 13:18+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgid "Separator"
 msgstr "Erotin"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3051
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3431
 msgid "Best Fit"
 msgstr "Paras sovitus"
 
@@ -665,32 +665,40 @@ msgstr[1] "%d osumaa tällä sivulla"
 msgid "%3d%% remaining to search"
 msgstr "%3d %% haettavasta jäljellä"
 
-#: ../shell/ev-window.c:953
+#: ../shell/ev-window.c:982
 msgid "Unable to open document"
 msgstr "Asiakirjaa ei voitu avata"
 
-#: ../shell/ev-window.c:1036
+#: ../shell/ev-window.c:1071
 msgid "Open Document"
 msgstr "Avaa asiakirja"
 
-#: ../shell/ev-window.c:1124
+#: ../shell/ev-window.c:1159
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Tiedostoa ei voitu tallentaa nimellä \"%s\"."
 
-#: ../shell/ev-window.c:1143 ../shell/ev-window.c:3402
+#: ../shell/ev-window.c:1178 ../shell/ev-window.c:3785
 msgid "Save a Copy"
 msgstr "Tallenna kopio"
 
-#: ../shell/ev-window.c:1206
-msgid "Generating PDF is not supported"
-msgstr "PDF:n generoinnille ei ole tukea"
+#: ../shell/ev-window.c:1231
+msgid "Failed to print document"
+msgstr "Asiakirjaa ei voitu tulostaa"
 
-#: ../shell/ev-window.c:1215
+#: ../shell/ev-window.c:1345 ../shell/ev-window.c:1520
 msgid "Printing is not supported on this printer."
 msgstr "Tulostamista ei ole tuettu tämän tulostimen kohdalla."
 
-#: ../shell/ev-window.c:1217
+#: ../shell/ev-window.c:1455 ../shell/ev-window.c:1571
+msgid "Print"
+msgstr "Tulosta"
+
+#: ../shell/ev-window.c:1510
+msgid "Generating PDF is not supported"
+msgstr "PDF:n generoinnille ei ole tukea"
+
+#: ../shell/ev-window.c:1522
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
@@ -699,24 +707,20 @@ msgstr ""
 "Yritit tulostaa käyttäen \"%s\"-ajuria. Tämä ohjelma vaatii PostScript-"
 "tulostinajurin."
 
-#: ../shell/ev-window.c:1262
-msgid "Print"
-msgstr "Tulosta"
-
-#: ../shell/ev-window.c:1268
+#: ../shell/ev-window.c:1580
 msgid "Pages"
 msgstr "Sivut"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:1613 ../shell/ev-window.c:2852
+#: ../shell/ev-window.c:1940 ../shell/ev-window.c:3232
 msgid "Leave Fullscreen"
 msgstr "Lopeta kokoruutu"
 
-#: ../shell/ev-window.c:1947
+#: ../shell/ev-window.c:2303
 msgid "Toolbar Editor"
 msgstr "Työkalupalkin muokkain"
 
-#: ../shell/ev-window.c:2314
+#: ../shell/ev-window.c:2670
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -725,7 +729,7 @@ msgstr ""
 "PostScript- ja PDF-tiedostojen katselin.\n"
 "Käytössä poppler %s (%s)"
 
-#: ../shell/ev-window.c:2338
+#: ../shell/ev-window.c:2694
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -737,7 +741,7 @@ msgstr ""
 "sen määritellyt; voit halutessasi käyttää lisenssin versiota 2 taikka mitä "
 "tahansa tämän jälkeen ilmestynyttä versiota.\n"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2698
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -749,7 +753,7 @@ msgstr ""
 "SOVELTUMISESTA TIETTYYN ERITYISEEN TARKOITUKSEEN. Yksityiskohtien osalta "
 "katso GNU:n GPL-lisenssiä.\n"
 
-#: ../shell/ev-window.c:2346
+#: ../shell/ev-window.c:2702
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -759,15 +763,15 @@ msgstr ""
 "sitä saanut, niin lähetä kirje Free Software Foundation, Inc. :lle, 59 "
 "Temple Place - Suite 330, Boston, MA 02111-1307, USA\n"
 
-#: ../shell/ev-window.c:2370 ../shell/main.c:240
+#: ../shell/ev-window.c:2726 ../shell/main.c:308
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2373
+#: ../shell/ev-window.c:2729
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 Evincen tekijät"
 
-#: ../shell/ev-window.c:2379
+#: ../shell/ev-window.c:2735
 msgid "translator-credits"
 msgstr ""
 "Tommi Vainikainen, 2005\n"
@@ -775,273 +779,273 @@ msgstr ""
 "\n"
 "http://gnome.fi/"
 
-#: ../shell/ev-window.c:2779
+#: ../shell/ev-window.c:3159
 msgid "_File"
 msgstr "_Tiedosto"
 
-#: ../shell/ev-window.c:2780
+#: ../shell/ev-window.c:3160
 msgid "_Edit"
 msgstr "_Muokkaa"
 
-#: ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:3161
 msgid "_View"
 msgstr "_Näytä"
 
-#: ../shell/ev-window.c:2782
+#: ../shell/ev-window.c:3162
 msgid "_Go"
 msgstr "_Siirry"
 
-#: ../shell/ev-window.c:2783
+#: ../shell/ev-window.c:3163
 msgid "_Help"
 msgstr "O_hje"
 
 #. File menu
-#: ../shell/ev-window.c:2786 ../shell/ev-window.c:2943
+#: ../shell/ev-window.c:3166 ../shell/ev-window.c:3323
 msgid "_Open..."
 msgstr "_Avaa..."
 
-#: ../shell/ev-window.c:2787
+#: ../shell/ev-window.c:3167
 msgid "Open an existing document"
 msgstr "Avaa olemassaoleva asiakirja"
 
-#: ../shell/ev-window.c:2789 ../shell/ev-window.c:2945
+#: ../shell/ev-window.c:3169 ../shell/ev-window.c:3325
 msgid "_Save a Copy..."
 msgstr "_Tallenna kopio..."
 
-#: ../shell/ev-window.c:2790
+#: ../shell/ev-window.c:3170
 msgid "Save a copy of the current document"
 msgstr "Tallenna kopio tämänhetkisestä asiakirjasta"
 
-#: ../shell/ev-window.c:2792
+#: ../shell/ev-window.c:3172
 msgid "_Print..."
 msgstr "Tul_osta..."
 
-#: ../shell/ev-window.c:2793
+#: ../shell/ev-window.c:3173
 msgid "Print this document"
 msgstr "Tulosta tämä asiakirja"
 
-#: ../shell/ev-window.c:2795
+#: ../shell/ev-window.c:3175
 msgid "P_roperties"
 msgstr "O_minaisuudet"
 
-#: ../shell/ev-window.c:2803
+#: ../shell/ev-window.c:3183
 msgid "Select _All"
 msgstr "Valitse k_aikki"
 
-#: ../shell/ev-window.c:2805
+#: ../shell/ev-window.c:3185
 msgid "_Find..."
 msgstr "_Etsi..."
 
-#: ../shell/ev-window.c:2806
+#: ../shell/ev-window.c:3186
 msgid "Find a word or phrase in the document"
 msgstr "Etsi sanaa tai lausetta asiakirjasta"
 
-#: ../shell/ev-window.c:2808
+#: ../shell/ev-window.c:3188
 msgid "Find Ne_xt"
 msgstr "Etsi _seuraava"
 
-#: ../shell/ev-window.c:2810
+#: ../shell/ev-window.c:3190
 msgid "Find Pre_vious"
 msgstr "Etsi edellinen"
 
-#: ../shell/ev-window.c:2812
+#: ../shell/ev-window.c:3192
 msgid "T_oolbar"
 msgstr "_Työkalupalkki"
 
-#: ../shell/ev-window.c:2814
+#: ../shell/ev-window.c:3194
 msgid "Rotate _Left"
 msgstr "Kierrä _vasemmalle"
 
-#: ../shell/ev-window.c:2816
+#: ../shell/ev-window.c:3196
 msgid "Rotate _Right"
 msgstr "Kierrä _oikealle"
 
-#: ../shell/ev-window.c:2821
+#: ../shell/ev-window.c:3201
 msgid "Enlarge the document"
 msgstr "Suurenna asiakirjaa"
 
-#: ../shell/ev-window.c:2824
+#: ../shell/ev-window.c:3204
 msgid "Shrink the document"
 msgstr "Kutista asiakirjaa"
 
-#: ../shell/ev-window.c:2826
+#: ../shell/ev-window.c:3206
 msgid "_Reload"
 msgstr "_Lataa uudestaan"
 
-#: ../shell/ev-window.c:2827
+#: ../shell/ev-window.c:3207
 msgid "Reload the document"
 msgstr "Lataa asiakirja uudestaan"
 
 #. Go menu
-#: ../shell/ev-window.c:2831
+#: ../shell/ev-window.c:3211
 msgid "_Previous Page"
 msgstr "E_dellinen sivu"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:3212
 msgid "Go to the previous page"
 msgstr "Siirry edelliselle sivulle"
 
-#: ../shell/ev-window.c:2834
+#: ../shell/ev-window.c:3214
 msgid "_Next Page"
 msgstr "_Seuraava sivu"
 
-#: ../shell/ev-window.c:2835
+#: ../shell/ev-window.c:3215
 msgid "Go to the next page"
 msgstr "Siirry seuraavalle sivulle"
 
-#: ../shell/ev-window.c:2837
+#: ../shell/ev-window.c:3217
 msgid "_First Page"
 msgstr "_Ensimmäinen sivu"
 
-#: ../shell/ev-window.c:2838
+#: ../shell/ev-window.c:3218
 msgid "Go to the first page"
 msgstr "Siirry ensimmäiselle sivulle"
 
-#: ../shell/ev-window.c:2840
+#: ../shell/ev-window.c:3220
 msgid "_Last Page"
 msgstr "_Viimeinen sivu"
 
-#: ../shell/ev-window.c:2841
+#: ../shell/ev-window.c:3221
 msgid "Go to the last page"
 msgstr "Siirry viimeiselle sivulle"
 
 #. Help menu
-#: ../shell/ev-window.c:2845
+#: ../shell/ev-window.c:3225
 msgid "_Contents"
 msgstr "_Sisältö"
 
-#: ../shell/ev-window.c:2848
+#: ../shell/ev-window.c:3228
 msgid "_About"
 msgstr "_Tietoja"
 
-#: ../shell/ev-window.c:2853
+#: ../shell/ev-window.c:3233
 msgid "Leave fullscreen mode"
 msgstr "Lopeta kokoruututila"
 
 #. View Menu
-#: ../shell/ev-window.c:2904
+#: ../shell/ev-window.c:3284
 msgid "_Toolbar"
 msgstr "_Työkalupalkki"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:3285
 msgid "Show or hide the toolbar"
 msgstr "Näytä tai piilota työkalupalkki"
 
-#: ../shell/ev-window.c:2907
+#: ../shell/ev-window.c:3287
 msgid "Side _Pane"
 msgstr "_Sivupaneeli"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:3288
 msgid "Show or hide the side pane"
 msgstr "Näytä tai piilota sivupaneeli"
 
-#: ../shell/ev-window.c:2910
+#: ../shell/ev-window.c:3290
 msgid "_Continuous"
 msgstr "_Jatkuva"
 
-#: ../shell/ev-window.c:2911
+#: ../shell/ev-window.c:3291
 msgid "Show the entire document"
 msgstr "Näytä koko asiakirja"
 
-#: ../shell/ev-window.c:2913
+#: ../shell/ev-window.c:3293
 msgid "_Dual"
 msgstr "K_aksi"
 
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:3294
 msgid "Show two pages at once"
 msgstr "Näytä kaksi sivua kerrallaan"
 
-#: ../shell/ev-window.c:2916
+#: ../shell/ev-window.c:3296
 msgid "_Fullscreen"
 msgstr "_Kokoruutu"
 
-#: ../shell/ev-window.c:2917
+#: ../shell/ev-window.c:3297
 msgid "Expand the window to fill the screen"
 msgstr "Laajenna ikkuna täyttämään näyttö"
 
-#: ../shell/ev-window.c:2919
+#: ../shell/ev-window.c:3299
 msgid "_Presentation"
 msgstr "_Esitys"
 
-#: ../shell/ev-window.c:2920
+#: ../shell/ev-window.c:3300
 msgid "Run document as a presentation"
 msgstr "Näytä asiakirja esityksenä"
 
-#: ../shell/ev-window.c:2922
+#: ../shell/ev-window.c:3302
 msgid "_Best Fit"
 msgstr "_Paras sovitus"
 
-#: ../shell/ev-window.c:2923
+#: ../shell/ev-window.c:3303
 msgid "Make the current document fill the window"
 msgstr "Sovita nykyinen asiakirja ikkunan kokoiseksi"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:3305
 msgid "Fit Page _Width"
 msgstr "So_vita sivun leveys"
 
-#: ../shell/ev-window.c:2926
+#: ../shell/ev-window.c:3306
 msgid "Make the current document fill the window width"
 msgstr "Sovita nykyinen asiakirja täyttämään ikkunan leveys"
 
 #. Links
-#: ../shell/ev-window.c:2933
+#: ../shell/ev-window.c:3313
 msgid "_Open Link"
 msgstr "_Avaa linkkki"
 
-#: ../shell/ev-window.c:2935
+#: ../shell/ev-window.c:3315
 msgid "_Go To"
 msgstr "_Siirry"
 
-#: ../shell/ev-window.c:2937
+#: ../shell/ev-window.c:3317
 msgid "_Copy Link Address"
 msgstr "_Kopioi linkin osoite"
 
-#: ../shell/ev-window.c:3000
+#: ../shell/ev-window.c:3380
 msgid "Page"
 msgstr "Sivu"
 
-#: ../shell/ev-window.c:3001
+#: ../shell/ev-window.c:3381
 msgid "Select Page"
 msgstr "Valitse sivu"
 
-#: ../shell/ev-window.c:3013
+#: ../shell/ev-window.c:3393
 msgid "Zoom"
 msgstr "Kuvasuhde"
 
-#: ../shell/ev-window.c:3015
+#: ../shell/ev-window.c:3395
 msgid "Adjust the zoom level"
 msgstr "Muuta kuvasuhdetta"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3031
+#: ../shell/ev-window.c:3411
 msgid "Previous"
 msgstr "Edellinen"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3037
+#: ../shell/ev-window.c:3417
 msgid "Next"
 msgstr "Seuraava"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3041
+#: ../shell/ev-window.c:3421
 msgid "Zoom In"
 msgstr "Lähennä"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3046
+#: ../shell/ev-window.c:3426
 msgid "Zoom Out"
 msgstr "Loitonna"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3056
+#: ../shell/ev-window.c:3436
 msgid "Fit Width"
 msgstr "Sovita leveyteen"
 
-#: ../shell/ev-window.c:3331
+#: ../shell/ev-window.c:3714
 msgid "Unable to open attachment"
 msgstr "Liitettä ei voi avata"
 
-#: ../shell/ev-window.c:3378
+#: ../shell/ev-window.c:3761
 msgid "The attachment could not be saved."
 msgstr "Liitettä ei voi tallentaa."
 
@@ -1050,23 +1054,35 @@ msgstr "Liitettä ei voi tallentaa."
 msgid "%s - Password Required"
 msgstr "%s - vaaditaan salasana"
 
-#: ../shell/main.c:51
+#: ../shell/main.c:54
 msgid "The page of the document to display."
 msgstr "Asiakirjan sivu, joka näytetään."
 
-#: ../shell/main.c:51
+#: ../shell/main.c:54
 msgid "PAGE"
 msgstr "SIVU"
 
-#: ../shell/main.c:52
+#: ../shell/main.c:55
+msgid "Run evince in fullscreen mode"
+msgstr "Suorita evince kokoruututilassa"
+
+#: ../shell/main.c:56
+msgid "Run evince in presentation mode"
+msgstr "Suorita evince esitystilassa"
+
+#: ../shell/main.c:57
+msgid "Run evince as a previewer"
+msgstr "Suorita evince esikatselimena"
+
+#: ../shell/main.c:58
 msgid "[FILE...]"
 msgstr "[TIEDOSTO...]"
 
-#: ../shell/main.c:225
+#: ../shell/main.c:293
 msgid "GNOME Document Viewer"
 msgstr "Gnomen asiakirjakatselin"
 
-#: ../shell/main.c:262
+#: ../shell/main.c:334
 msgid "Evince Document Viewer"
 msgstr "Evince-asiakirjakatselin"
 
