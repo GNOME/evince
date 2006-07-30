@@ -29,32 +29,38 @@ Boston, MA 02111-1307, USA.
 #include <gtk/gtklabel.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtkbindings.h>
+#include <gtk/gtkalignment.h>
+#include <gtk/gtktoolbutton.h>
+#include <gtk/gtkseparatortoolitem.h>
+#include <gtk/gtkarrow.h>
+#include <gtk/gtktoggletoolbutton.h>
 
 #include <string.h>
 
 struct _EggFindBarPrivate
 {
   gchar *search_string;
-  GtkWidget *hbox;
+
+  GtkToolItem *next_button;
+  GtkToolItem *previous_button;
+  GtkToolItem *status_separator;
+  GtkToolItem *status_item;
+  GtkToolItem *case_button;
+
   GtkWidget *find_entry;
-  GtkWidget *next_button;
-  GtkWidget *previous_button;
-  GtkWidget *case_button;
-  GtkWidget *status_separator;
   GtkWidget *status_label;
+
   gulong set_focus_handler;
   guint case_sensitive : 1;
 };
 
 #define EGG_FIND_BAR_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EGG_TYPE_FIND_BAR, EggFindBarPrivate))
 
-
-enum
-  {
+enum {
     PROP_0,
     PROP_SEARCH_STRING,
     PROP_CASE_SENSITIVE
-  };
+};
 
 static void egg_find_bar_finalize      (GObject        *object);
 static void egg_find_bar_get_property  (GObject        *object,
@@ -65,15 +71,11 @@ static void egg_find_bar_set_property  (GObject        *object,
                                         guint           prop_id,
                                         const GValue   *value,
                                         GParamSpec     *pspec);
-static void egg_find_bar_size_request  (GtkWidget      *widget,
-                                        GtkRequisition *requisition);
-static void egg_find_bar_size_allocate (GtkWidget      *widget,
-                                        GtkAllocation  *allocation);
 static void egg_find_bar_show          (GtkWidget *widget);
 static void egg_find_bar_hide          (GtkWidget *widget);
 static void egg_find_bar_grab_focus    (GtkWidget *widget);
 
-G_DEFINE_TYPE (EggFindBar, egg_find_bar, GTK_TYPE_BIN);
+G_DEFINE_TYPE (EggFindBar, egg_find_bar, GTK_TYPE_TOOLBAR);
 
 enum
   {
@@ -91,24 +93,21 @@ egg_find_bar_class_init (EggFindBarClass *klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
-  GtkBinClass *bin_class;
   GtkBindingSet *binding_set;
         
   egg_find_bar_parent_class = g_type_class_peek_parent (klass);
 
   object_class = (GObjectClass *)klass;
   widget_class = (GtkWidgetClass *)klass;
-  bin_class = (GtkBinClass *)klass;
 
   object_class->set_property = egg_find_bar_set_property;
   object_class->get_property = egg_find_bar_get_property;
 
   object_class->finalize = egg_find_bar_finalize;
 
-  widget_class->size_request = egg_find_bar_size_request;
-  widget_class->size_allocate = egg_find_bar_size_allocate;
   widget_class->show = egg_find_bar_show;
   widget_class->hide = egg_find_bar_hide;
+  
   widget_class->grab_focus = egg_find_bar_grab_focus;
 
   find_bar_signals[NEXT] =
@@ -250,12 +249,9 @@ entry_activate_callback (GtkEntry *entry,
                           void     *data)
 {
   EggFindBar *find_bar = EGG_FIND_BAR (data);
-  EggFindBarPrivate *priv = (EggFindBarPrivate *)find_bar->priv;
 
-  /* We activate the "next" button here so we'll get a nice
-     animation */
   if (find_bar->priv->search_string != NULL)
-	  gtk_widget_activate (priv->next_button);
+    egg_find_bar_emit_next (find_bar);
 }
 
 static void
@@ -301,98 +297,67 @@ egg_find_bar_init (EggFindBar *find_bar)
 {
   EggFindBarPrivate *priv;
   GtkWidget *label;
-  GtkWidget *separator;
-  GtkWidget *image_back;
-  GtkWidget *image_forward;
+  GtkWidget *alignment;
+  GtkWidget *box;
+  GtkToolItem *item;
+  GtkWidget *arrow;
 
   /* Data */
   priv = EGG_FIND_BAR_GET_PRIVATE (find_bar);
-  find_bar->priv = priv;
-
+  
+  find_bar->priv = priv;  
   priv->search_string = NULL;
 
-  /* Widgets */
-  gtk_widget_push_composite_child ();
-  priv->hbox = gtk_hbox_new (FALSE, 6);
-  gtk_container_set_border_width (GTK_CONTAINER (priv->hbox), 3);
+  gtk_toolbar_set_style (GTK_TOOLBAR (find_bar), GTK_TOOLBAR_BOTH_HORIZ);
 
-  label = gtk_label_new_with_mnemonic (_("F_ind:"));
-  separator = gtk_vseparator_new ();
+  /* Find: |_____| */
+  item = gtk_tool_item_new ();
+  box = gtk_hbox_new (FALSE, 12);
+  
+  alignment = gtk_alignment_new (0.0, 0.5, 1.0, 0.0);
+  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 2, 2);
+
+  label = gtk_label_new_with_mnemonic (_("Find:"));
 
   priv->find_entry = gtk_entry_new ();
+  gtk_entry_set_width_chars (GTK_ENTRY (priv->find_entry), 32);
+  gtk_entry_set_max_length (GTK_ENTRY (priv->find_entry), 512);
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), priv->find_entry);
 
-  priv->previous_button = gtk_button_new_with_mnemonic (_("_Previous"));
-  gtk_button_set_focus_on_click (GTK_BUTTON (priv->previous_button), FALSE);
-  gtk_widget_set_sensitive (GTK_WIDGET (priv->previous_button), FALSE);
+  /* Prev */
+  arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
+  priv->previous_button = gtk_tool_button_new (arrow, Q_("Find Previous"));
+  gtk_tool_item_set_is_important (priv->previous_button, TRUE);
+  gtk_tool_item_set_tooltip (priv->previous_button, GTK_TOOLBAR (find_bar)->tooltips,
+		             _("Find previous occurrence of the search string"),
+		             NULL);
 
-  priv->next_button = gtk_button_new_with_mnemonic (_("_Next"));
-  gtk_button_set_focus_on_click (GTK_BUTTON (priv->next_button), FALSE);
-  gtk_widget_set_sensitive (GTK_WIDGET (priv->next_button), FALSE);
+  /* Next */
+  arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+  priv->next_button = gtk_tool_button_new (arrow, Q_("Find Next"));
+  gtk_tool_item_set_is_important (priv->next_button, TRUE);
+  gtk_tool_item_set_tooltip (priv->next_button, GTK_TOOLBAR (find_bar)->tooltips,
+		             _("Find next occurrence of the search string"),
+		             NULL);
 
-  image_back = gtk_image_new_from_stock (GTK_STOCK_GO_BACK,
-                                         GTK_ICON_SIZE_BUTTON);
-  image_forward = gtk_image_new_from_stock (GTK_STOCK_GO_FORWARD,
-                                            GTK_ICON_SIZE_BUTTON);
+  /* Separator*/
+  priv->status_separator = gtk_separator_tool_item_new();
 
-  gtk_button_set_image (GTK_BUTTON (priv->previous_button),
-                        image_back);
-  gtk_button_set_image (GTK_BUTTON (priv->next_button),
-                        image_forward);
-  
-  priv->case_button = gtk_check_button_new_with_mnemonic (_("C_ase Sensitive"));
-
-  priv->status_separator = gtk_vseparator_new ();
-
+  /* Case button */
+  priv->case_button = gtk_toggle_tool_button_new ();
+  g_object_set (G_OBJECT (priv->case_button), "label", _("C_ase Sensitive"), NULL);
+  gtk_tool_item_set_is_important (priv->case_button, TRUE);
+  gtk_tool_item_set_tooltip (priv->case_button, GTK_TOOLBAR (find_bar)->tooltips,
+		             _("Toggle case sensitive help"),
+		             NULL);
+  /* Status */
+  priv->status_item = gtk_tool_item_new();
+  gtk_tool_item_set_expand (priv->status_item, TRUE);
   priv->status_label = gtk_label_new (NULL);
   gtk_label_set_ellipsize (GTK_LABEL (priv->status_label),
                            PANGO_ELLIPSIZE_END);
   gtk_misc_set_alignment (GTK_MISC (priv->status_label), 0.0, 0.5);
-  
-#if 0
- {
-   GtkWidget *button_label;
-   /* This hack doesn't work because GtkCheckButton doesn't pass the
-    * larger size allocation to the label, it always gives the label
-    * its exact request. If you un-ifdef this, set the box back
-    * on case_button to TRUE, TRUE below
-    */
-   button_label = gtk_bin_get_child (GTK_BIN (priv->case_button));
-   gtk_label_set_ellipsize (GTK_LABEL (button_label),
-                            PANGO_ELLIPSIZE_END);
- }
-#endif
 
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->find_entry, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->previous_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->next_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      separator, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->case_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->status_separator, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (priv->hbox),
-                      priv->status_label, TRUE, TRUE, 0);
-  
-  gtk_container_add (GTK_CONTAINER (find_bar), priv->hbox);
-
-  gtk_widget_show (priv->hbox);
-  gtk_widget_show (priv->find_entry);
-  gtk_widget_show (priv->previous_button);
-  gtk_widget_show (priv->next_button);
-  gtk_widget_show (separator);
-  gtk_widget_show (label);
-  gtk_widget_show (image_back);
-  gtk_widget_show (image_forward);
-  /* don't show status separator/label until they are set */
-
-  gtk_widget_pop_composite_child ();
 
   g_signal_connect (priv->find_entry, "changed",
                     G_CALLBACK (entry_changed_callback),
@@ -409,6 +374,25 @@ egg_find_bar_init (EggFindBar *find_bar)
   g_signal_connect (priv->case_button, "toggled",
                     G_CALLBACK (case_sensitive_toggled_callback),
                     find_bar);
+
+  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), priv->find_entry, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (alignment), box);
+  gtk_container_add (GTK_CONTAINER (item), alignment);
+  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), item, -1);
+  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->previous_button, -1);
+  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->next_button, -1);
+  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->case_button, -1);
+  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->status_separator, -1);
+  gtk_container_add  (GTK_CONTAINER (priv->status_item), priv->status_label);
+  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->status_item, -1);
+
+  /* don't show status separator/label until they are set */
+
+  gtk_widget_show_all (GTK_WIDGET (item));
+  gtk_widget_show_all (GTK_WIDGET (priv->next_button));
+  gtk_widget_show_all (GTK_WIDGET (priv->previous_button));
+  gtk_widget_show (priv->status_label);
 }
 
 static void
@@ -465,37 +449,6 @@ egg_find_bar_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
-}
-
-static void
-egg_find_bar_size_request (GtkWidget      *widget,
-                           GtkRequisition *requisition)
-{
-  GtkBin *bin = GTK_BIN (widget);
-  GtkRequisition child_requisition;
-  if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
-    {
-      gtk_widget_size_request (bin->child, &child_requisition);
-
-      *requisition = child_requisition;
-    }
-  else
-    {
-      requisition->width = 0;
-      requisition->height = 0;
-    }
-}
-
-static void
-egg_find_bar_size_allocate (GtkWidget     *widget,
-                            GtkAllocation *allocation)
-{
-  GtkBin *bin = GTK_BIN (widget);
-
-  widget->allocation = *allocation;
-
-  if (bin->child && GTK_WIDGET_VISIBLE (bin->child))
-    gtk_widget_size_allocate (bin->child, allocation);
 }
 
 static void
@@ -781,16 +734,7 @@ egg_find_bar_set_status_text (EggFindBar *find_bar,
 
   priv = (EggFindBarPrivate *)find_bar->priv;
   
-  if (text == NULL || *text == '\0')
-    {
-      gtk_widget_hide (priv->status_label);
-      gtk_widget_hide (priv->status_separator);
-      gtk_label_set_text (GTK_LABEL (priv->status_label), NULL);
-    }
-  else
-    {
-      gtk_label_set_text (GTK_LABEL (priv->status_label), text);
-      gtk_widget_show (priv->status_label);
-      gtk_widget_show (priv->status_separator);
-    }
+  gtk_label_set_text (GTK_LABEL (priv->status_label), text);
+  g_object_set (priv->status_separator, "visible", text != NULL && *text != '\0', NULL);
+  g_object_set (priv->status_item, "visible", text != NULL && *text !='\0', NULL);
 }

@@ -19,7 +19,7 @@ Boston, MA 02111-1307, USA.
 #ifndef __EGG_FIND_BAR_H__
 #define __EGG_FIND_BAR_H__
 
-#include <gtk/gtkbin.h>
+#include <gtk/gtktoolbar.h>
 
 G_BEGIN_DECLS
 
@@ -36,7 +36,7 @@ typedef struct _EggFindBarPrivate EggFindBarPrivate;
 
 struct _EggFindBar
 {
-  GtkBin parent_instance;
+  GtkToolbar parent;
 
   /*< private >*/
   EggFindBarPrivate *priv;
@@ -44,7 +44,7 @@ struct _EggFindBar
 
 struct _EggFindBarClass
 {
-  GtkBinClass parent_class;
+  GtkToolbarClass parent_class;
 
   void (* next)	    (EggFindBar *find_bar);
   void (* previous) (EggFindBar *find_bar);
