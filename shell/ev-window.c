@@ -605,6 +605,7 @@ setup_document_from_metadata (EvWindow *window)
 		new_page = CLAMP (g_value_get_int (&page), 0, ev_page_cache_get_n_pages (window->priv->page_cache) - 1);
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						new_page);
+		g_value_unset (&page);
 	}
 }
 
@@ -617,6 +618,7 @@ setup_chrome_from_metadata (EvWindow *window)
 	if (ev_metadata_manager_get (NULL, "show_toolbar", &show_toolbar, FALSE)) {
 		if (!g_value_get_boolean (&show_toolbar))
 			chrome &= ~EV_CHROME_TOOLBAR;
+		g_value_unset (&show_toolbar);
 	}
 	window->priv->chrome = chrome;
 }
@@ -636,11 +638,12 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size, FALSE)) {
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
 					g_value_get_int (&sidebar_size));
+		g_value_unset(&sidebar_size);
 	}
 	
 	if (document && ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, FALSE)) {
 		const char *page_id = g_value_get_string (&sidebar_page);
-
+		
 		if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
 		} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
@@ -648,12 +651,14 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
 		}
+		g_value_unset (&sidebar_page);
 	} else if (document && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
 		ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
 	}
 
 	if (ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility, FALSE)) {
 		update_chrome_flag (window, EV_CHROME_SIDEBAR, g_value_get_boolean (&sidebar_visibility));
+		g_value_unset (&sidebar_visibility);
 	}
 }
 
@@ -686,6 +691,7 @@ setup_view_from_metadata (EvWindow *window)
 		} else {
 			gtk_window_unmaximize (GTK_WINDOW (window));
 		}
+		g_value_unset (&maximized);
 	}
 
 	if (restore_size &&
@@ -694,12 +700,16 @@ setup_view_from_metadata (EvWindow *window)
 		gtk_window_resize (GTK_WINDOW (window),
 				   g_value_get_int (&width),
 				   g_value_get_int (&height));
+		g_value_unset (&width);
+		g_value_unset (&height);		
 	}
 	if (restore_size &&
 	    ev_metadata_manager_get (uri, "window_x", &x, TRUE) &&
 	    ev_metadata_manager_get (uri, "window_y", &y, TRUE)) {
 		gtk_window_move (GTK_WINDOW (window), g_value_get_int (&x),
 				 g_value_get_int (&y));
+	        g_value_unset (&x);
+	        g_value_unset (&y);
 	}
 
 	/* Sizing mode */
@@ -714,16 +724,19 @@ setup_view_from_metadata (EvWindow *window)
 	if (ev_metadata_manager_get (uri, "zoom", &zoom, FALSE) &&
 	    ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
 		ev_view_set_zoom (view, g_value_get_double (&zoom), FALSE);
+		g_value_unset (&zoom);
 	}
 
 	/* Continuous */
 	if (ev_metadata_manager_get (uri, "continuous", &continuous, FALSE)) {
 		ev_view_set_continuous (view, g_value_get_boolean (&continuous));
+		g_value_unset (&continuous);
 	}
 
 	/* Dual page */
 	if (ev_metadata_manager_get (uri, "dual-page", &dual_page, FALSE)) {
 		ev_view_set_dual_page (view, g_value_get_boolean (&dual_page));
+		g_value_unset (&dual_page);
 	}
 
 	/* Presentation */
@@ -731,6 +744,7 @@ setup_view_from_metadata (EvWindow *window)
 		if (g_value_get_boolean (&presentation) && uri) {
 			ev_window_run_presentation (window);
 		}
+		g_value_unset (&presentation);
 	}
 
 	/* Fullscreen */
@@ -738,6 +752,7 @@ setup_view_from_metadata (EvWindow *window)
 		if (g_value_get_boolean (&fullscreen) && uri) {
 			ev_window_run_fullscreen (window);
 		}
+		g_value_unset (&fullscreen);
 	}
 
 	/* Rotation */
@@ -757,6 +772,7 @@ setup_view_from_metadata (EvWindow *window)
 					break;
 			}
 		}
+		g_value_unset (&rotation);
 	}
 }
 
