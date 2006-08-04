@@ -348,7 +348,7 @@ egg_find_bar_init (EggFindBar *find_bar)
   g_object_set (G_OBJECT (priv->case_button), "label", _("C_ase Sensitive"), NULL);
   gtk_tool_item_set_is_important (priv->case_button, TRUE);
   gtk_tool_item_set_tooltip (priv->case_button, GTK_TOOLBAR (find_bar)->tooltips,
-		             _("Toggle case sensitive help"),
+		             _("Toggle case sensitive search"),
 		             NULL);
   /* Status */
   priv->status_item = gtk_tool_item_new();
