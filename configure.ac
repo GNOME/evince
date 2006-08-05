@@ -171,7 +171,7 @@ dnl Check for GtkRecent
 PKG_CHECK_MODULES(GTK_RECENT, gtk+-2.0 >= 2.10.0, 
 		  [HAVE_GTK_RECENT=yes], [HAVE_GTK_RECENT=no])
 if test x$HAVE_GTK_RECENT = xyes; then
-   AC_DEFINE(HAVE_GTK_RECENT, 1, [defined if GtkRecent is available])
+   AC_DEFINE([HAVE_GTK_RECENT], [1], [defined if GtkRecent is available])
 fi
 AM_CONDITIONAL(HAVE_GTK_RECENT, test x$HAVE_GTK_RECENT = "xyes")
 
