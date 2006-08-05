@@ -2,7 +2,6 @@ INCLUDES=						\
 	-DDATADIR=\"$(pkgdatadir)\"			\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
 	-I$(top_srcdir)/lib				\
-	-I$(top_srcdir)/cut-n-paste/recent-files/	\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/backend				\
@@ -14,6 +13,12 @@ INCLUDES=						\
 	$(DISABLE_DEPRECATED)				\
 	$(GNOME_PRINT_CFLAGS)				\
 	$(GTK_PRINT_CFLAGS)
+
+if HAVE_GTK_RECENT
+INCLUDES +=
+else
+INCLUDES += -I$(top_srcdir)/cut-n-paste/recent-files/
+endif
 
 bin_PROGRAMS=evince
 
@@ -77,13 +82,18 @@ endif
 
 
 evince_LDADD=								\
-	$(top_builddir)/cut-n-paste/recent-files/librecent.la		\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/lib/libev.la					\
 	$(SHELL_LIBS)							\
 	$(GNOME_PRINT_LIBS)
+
+if HAVE_GTK_RECENT
+evince_LDADD +=
+else
+evince_LDADD += $(top_builddir)/cut-n-paste/recent-files/librecent.la
+endif
 
 if ENABLE_DJVU
 evince_LDADD +=	$(DJVU_LIBS)

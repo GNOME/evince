@@ -50,11 +50,15 @@
 #include "ev-jobs.h"
 #include "ev-sidebar-page.h"
 #include "eggfindbar.h"
+
+#ifndef HAVE_GTK_RECENT
 #include "egg-recent-view-uimanager.h"
 #include "egg-recent-view.h"
+#include "egg-recent-model.h"
+#endif
+
 #include "egg-toolbar-editor.h"
 #include "egg-editable-toolbar.h"
-#include "egg-recent-model.h"
 #include "egg-toolbars-model.h"
 #include "ephy-zoom.h"
 #include "ephy-zoom-action.h"
@@ -125,10 +129,15 @@ struct _EvWindowPrivate {
 	GtkWidget *password_dialog;
 
 	/* UI Builders */
-	GtkActionGroup *action_group;
-	GtkActionGroup *view_popup_action_group;
-	GtkActionGroup *attachment_popup_action_group;
-	GtkUIManager   *ui_manager;
+	GtkActionGroup   *action_group;
+	GtkActionGroup   *view_popup_action_group;
+	GtkActionGroup   *attachment_popup_action_group;
+#ifdef HAVE_GTK_RECENT
+	GtkRecentManager *recent_manager;
+	GtkActionGroup   *recent_action_group;
+	guint             recent_ui_id;
+#endif
+	GtkUIManager     *ui_manager;
 
 	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
@@ -153,7 +162,9 @@ struct _EvWindowPrivate {
 	EvPageCache *page_cache;
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
+#ifndef HAVE_GTK_RECENT
 	EggRecentViewUIManager *recent_view;
+#endif
 
 	EvJob *xfer_job;
 #ifdef WITH_GNOME_PRINT
@@ -1043,7 +1054,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_window_clear_xfer_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
-	
+
 	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest, mode);
 	g_signal_connect (ev_window->priv->xfer_job,
 			  "finished",
@@ -1106,6 +1117,18 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 	gtk_widget_show (chooser);
 }
 
+#ifdef HAVE_GTK_RECENT
+static void
+ev_window_cmd_recent_file_activate (GtkAction     *action,
+				    GtkRecentInfo *info)
+{
+	const gchar *uri;
+
+	uri = gtk_recent_info_get_uri (info);
+	
+	ev_application_open_uri (EV_APP, uri, NULL, GDK_CURRENT_TIME, NULL);
+}
+#else
 static void
 ev_window_cmd_recent_file_activate (GtkAction *action,
         	                    EvWindow *ev_window)
@@ -1122,21 +1145,126 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 	
 	g_free (uri);
 }
+#endif /* HAVE_GTK_RECENT */
 
 static void
 ev_window_add_recent (EvWindow *window, const char *filename)
 {
+#ifdef HAVE_GTK_RECENT
+	gtk_recent_manager_add_item (window->priv->recent_manager, filename);
+#else
 	EggRecentItem *item;
 
 	item = egg_recent_item_new_from_uri (filename);
 	egg_recent_item_add_group (item, "Evince");
 	egg_recent_model_add_full (ev_application_get_recent_model (EV_APP), item);
+#endif /* HAVE_GTK_RECENT */
 }
+
+#ifdef HAVE_GTK_RECENT
+static gint
+compare_recent_items (GtkRecentInfo *a, GtkRecentInfo *b)
+{
+	gboolean     has_ev_a, has_ev_b;
+	const gchar *evince = g_get_application_name ();
+
+	has_ev_a = gtk_recent_info_has_application (a, evince);
+	has_ev_b = gtk_recent_info_has_application (b, evince);
+	
+	if (has_ev_a && has_ev_b) {
+		time_t time_a, time_b;
+
+		time_a = gtk_recent_info_get_modified (a);
+		time_b = gtk_recent_info_get_modified (b);
+
+		return (time_b - time_a);
+	} else if (has_ev_a) {
+		return -1;
+	} else if (has_ev_b) {
+		return 1;
+	}
+
+	return 0;
+}
+#endif /* HAVE_GTK_RECENT */
 
 static void
 ev_window_setup_recent (EvWindow *ev_window)
 {
+#ifdef HAVE_GTK_RECENT
+	GList        *items, *l;
+	guint         n_items = 0;
+	const gchar  *evince = g_get_application_name ();
+	static guint  i = 0;
 
+	if (ev_window->priv->recent_ui_id > 0) {
+		gtk_ui_manager_remove_ui (ev_window->priv->ui_manager,
+					  ev_window->priv->recent_ui_id);
+		gtk_ui_manager_ensure_update (ev_window->priv->ui_manager);
+	}
+	ev_window->priv->recent_ui_id = gtk_ui_manager_new_merge_id (ev_window->priv->ui_manager);
+
+	if (ev_window->priv->recent_action_group) {
+		gtk_ui_manager_remove_action_group (ev_window->priv->ui_manager,
+						    ev_window->priv->recent_action_group);
+		g_object_unref (ev_window->priv->recent_action_group);
+	}
+	ev_window->priv->recent_action_group = gtk_action_group_new ("RecentFilesActions");
+	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
+					    ev_window->priv->recent_action_group, 0);
+
+	items = gtk_recent_manager_get_items (ev_window->priv->recent_manager);
+	items = g_list_sort (items, (GCompareFunc) compare_recent_items);
+
+	for (l = items; l && l->data; l = g_list_next (l)) {
+		GtkRecentInfo *info;
+		GtkAction     *action;
+		gchar         *action_name;
+		gchar         *label;
+
+		info = (GtkRecentInfo *) l->data;
+
+		if (!gtk_recent_info_has_application (info, evince))
+			continue;
+
+		action_name = g_strdup_printf ("RecentFile%u", i++);
+		label = g_strdup_printf ("_%d.  %s",
+					 n_items + 1,
+					 gtk_recent_info_get_display_name (info));
+		
+		action = g_object_new (GTK_TYPE_ACTION,
+				       "name", action_name,
+				       "label", label,
+				       NULL);
+
+		g_object_weak_ref (G_OBJECT (action),
+				   (GWeakNotify) gtk_recent_info_unref,
+				   gtk_recent_info_ref (info));
+		g_signal_connect (G_OBJECT (action), "activate",
+				  G_CALLBACK (ev_window_cmd_recent_file_activate),
+				  (gpointer) info);
+
+		gtk_action_group_add_action (ev_window->priv->recent_action_group,
+					     action);
+		g_object_unref (action);
+
+		gtk_ui_manager_add_ui (ev_window->priv->ui_manager,
+				       ev_window->priv->recent_ui_id,
+				       "/MainMenu/FileMenu/RecentFilesMenu",
+				       label,
+				       action_name,
+				       GTK_UI_MANAGER_MENUITEM,
+				       FALSE);
+		g_free (action_name);
+		g_free (label);
+
+		if (++n_items == 5)
+			break;
+	}
+	
+	g_list_foreach (items, (GFunc) gtk_recent_info_unref, NULL);
+	g_list_free (items);
+#else /* HAVE_GTK_RECENT */
 	ev_window->priv->recent_view = egg_recent_view_uimanager_new (ev_window->priv->ui_manager,
 								      "/MainMenu/FileMenu/RecentFilesMenu",
 								      G_CALLBACK (ev_window_cmd_recent_file_activate), 
@@ -1151,6 +1279,7 @@ ev_window_setup_recent (EvWindow *ev_window)
 	
 	g_signal_connect (ev_window->priv->recent_view, "activate",
 			G_CALLBACK (ev_window_cmd_recent_file_activate), ev_window);
+#endif /* HAVE_GTK_RECENT */
 }
 
 static void
@@ -3040,11 +3169,6 @@ ev_window_dispose (GObject *object)
 		priv->title = NULL;
 	}
 
-	if (priv->recent_view) {
-		g_object_unref (priv->recent_view);
-		priv->recent_view = NULL;
-	}
-
 	if (priv->ui_manager) {
 		g_object_unref (priv->ui_manager);
 		priv->ui_manager = NULL;
@@ -3064,6 +3188,27 @@ ev_window_dispose (GObject *object)
 		g_object_unref (priv->attachment_popup_action_group);
 		priv->attachment_popup_action_group = NULL;
 	}
+
+#ifdef HAVE_GTK_RECENT
+	if (priv->recent_action_group) {
+		g_object_unref (priv->recent_action_group);
+		priv->recent_action_group = NULL;
+	}
+
+	if (priv->recent_manager) {
+		g_signal_handlers_disconnect_by_func (priv->recent_manager,
+						      ev_window_setup_recent,
+						      window);
+		priv->recent_manager = NULL;
+	}
+
+	priv->recent_ui_id = 0;
+#else
+	if (priv->recent_view) {
+		g_object_unref (priv->recent_view);
+		priv->recent_view = NULL;
+	}
+#endif /* HAVE_GTK_RECENT */
 
 	if (priv->page_cache) {
 		g_signal_handlers_disconnect_by_func (priv->page_cache, page_changed_cb, window);
@@ -3887,7 +4032,17 @@ ev_window_init (EvWindow *ev_window)
 		g_warning ("building menus failed: %s", error->message);
 		g_error_free (error);
 	}
-
+	
+#ifdef HAVE_GTK_RECENT
+	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
+	ev_window->priv->recent_action_group = NULL;
+	ev_window->priv->recent_ui_id = 0;
+	g_signal_connect_swapped (ev_window->priv->recent_manager,
+				  "changed",
+				  G_CALLBACK (ev_window_setup_recent),
+				  ev_window);
+#endif /* HAVE_GTK_RECENT */
+	
 	ev_window->priv->menubar =
 		 gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
 					    "/MainMenu");

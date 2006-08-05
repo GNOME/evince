@@ -1,3 +1,15 @@
+2006-08-05  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* cut-n-paste/Makefile.am:
+	* data/evince-ui.xml:
+	* shell/Makefile.am:
+	* shell/ev-application.[ch]:
+	* shell/ev-window.c:
+
+	Use GtkRecent instead of EggRecent when it's available. Fixes bug
+	#349273
+
 2006-08-04  Wouter Bolsterlee  <uws+gnome@xs4all.nl>
 
 	* shell/eggfindbar.c: (egg_find_bar_init): Fixed typo in

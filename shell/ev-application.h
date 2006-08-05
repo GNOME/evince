@@ -29,7 +29,9 @@
 #include "ev-window.h"
 
 #include "egg-toolbars-model.h"
+#ifndef HAVE_GTK_RECENT
 #include "egg-recent-model.h"
+#endif
 
 G_BEGIN_DECLS
 
@@ -51,7 +53,9 @@ struct _EvApplication {
 	gchar *toolbars_file;
 	
 	EggToolbarsModel *toolbars_model;
+#ifndef HAVE_GTK_RECENT
 	EggRecentModel  *recent_model;
+#endif
 	
 	gchar *last_chooser_uri;
 };
@@ -86,7 +90,9 @@ GList		 *ev_application_get_windows	     (EvApplication   *application);
 
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
 void              ev_application_save_toolbars_model (EvApplication   *application);
+#ifndef HAVE_GTK_RECENT
 EggRecentModel   *ev_application_get_recent_model    (EvApplication   *application);
+#endif
 void 		  ev_application_set_chooser_uri     (EvApplication   *application, 
 						      const gchar     *uri);
 const gchar	 *ev_application_get_chooser_uri     (EvApplication   *application);
