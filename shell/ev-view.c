@@ -1080,22 +1080,20 @@ static void
 goto_fitr_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	int page;
 	double zoom;
 
 	zoom = zoom_for_size_best_fit (ev_link_dest_get_right (dest) - ev_link_dest_get_left (dest),
-				       ev_link_dest_get_top (dest) - ev_link_dest_get_bottom (dest),
+				       ev_link_dest_get_bottom (dest) - ev_link_dest_get_top (dest),
 				       ev_view_get_width (view),
 				       ev_view_get_height (view), 0, 0);
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
 
-	page = ev_link_dest_get_page (dest);
 	doc_point.x = ev_link_dest_get_left (dest);
 	doc_point.y = ev_link_dest_get_top (dest);
 	
-	view->current_page = page;
+	view->current_page = ev_link_dest_get_page (dest);
 	view->pending_point = doc_point;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
@@ -1140,7 +1138,7 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
 	doc_point.x = 0;
-	doc_point.y = doc_height - ev_link_dest_get_top (dest);
+	doc_point.y = ev_link_dest_get_top (dest);
 
 	zoom = zoom_for_size_fit_width (doc_width, ev_link_dest_get_top (dest),
 					ev_view_get_width (view),
@@ -1195,7 +1193,7 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 	}
 
 	doc_point.x = ev_link_dest_get_left (dest);
-	doc_point.y = height - ev_link_dest_get_top (dest);
+	doc_point.y = ev_link_dest_get_top (dest);
 
 	view->current_page = page;
 	view->pending_point = doc_point;

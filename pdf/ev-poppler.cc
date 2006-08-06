@@ -80,9 +80,11 @@ static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails   
 							 gint                      *height);
 static int  pdf_document_get_n_pages			(EvDocument                *document);
 
-static EvLinkDest *ev_link_dest_from_dest (PopplerDest *dest);
-static EvLink *ev_link_from_action (PopplerAction *action);
-static void pdf_document_search_free (PdfDocumentSearch   *search);
+static EvLinkDest *ev_link_dest_from_dest   (PdfDocument       *pdf_document,
+					     PopplerDest       *dest);
+static EvLink     *ev_link_from_action      (PdfDocument       *pdf_document,
+					     PopplerAction     *action);
+static void        pdf_document_search_free (PdfDocumentSearch *search);
 
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
@@ -781,37 +783,62 @@ pdf_document_links_has_document_links (EvDocumentLinks *document_links)
 }
 
 static EvLinkDest *
-ev_link_dest_from_dest (PopplerDest *dest)
+ev_link_dest_from_dest (PdfDocument *pdf_document,
+			PopplerDest *dest)
 {
 	EvLinkDest *ev_dest = NULL;
 	const char *unimplemented_dest = NULL;
 
 	g_assert (dest != NULL);
-	
+
 	switch (dest->type) {
-	        case POPPLER_DEST_XYZ:
+	        case POPPLER_DEST_XYZ: {
+			PopplerPage *poppler_page;
+			double height;
+
+			poppler_page = poppler_document_get_page (pdf_document->document,
+								  MAX (0, dest->page_num - 1));
+			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_xyz (dest->page_num - 1,
 							dest->left,
-							dest->top,
+							height - dest->top,
 							dest->zoom);
+			g_object_unref (poppler_page);
+		}
 			break;
 	        case POPPLER_DEST_FIT:
 			ev_dest = ev_link_dest_new_fit (dest->page_num - 1);
 			break;
-	        case POPPLER_DEST_FITH:
+	        case POPPLER_DEST_FITH: {
+			PopplerPage *poppler_page;
+			double height;
+
+			poppler_page = poppler_document_get_page (pdf_document->document,
+								  MAX (0, dest->page_num - 1));
+			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_fith (dest->page_num - 1,
-							 dest->top);
+							 height - dest->top);
+			g_object_unref (poppler_page);
+		}
 			break;
 	        case POPPLER_DEST_FITV:
 			ev_dest = ev_link_dest_new_fitv (dest->page_num - 1,
 							 dest->left);
 			break;
-	        case POPPLER_DEST_FITR:
+	        case POPPLER_DEST_FITR: {
+			PopplerPage *poppler_page;
+			double height;
+
+			poppler_page = poppler_document_get_page (pdf_document->document,
+								  MAX (0, dest->page_num - 1));
+			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_fitr (dest->page_num - 1,
 							 dest->left,
-							 dest->bottom,
+							 height - dest->bottom,
 							 dest->right,
-							 dest->top);
+							 height - dest->top);
+			g_object_unref (poppler_page);
+		}
 			break;
 	        case POPPLER_DEST_FITB:
 			unimplemented_dest = "POPPLER_DEST_FITB";
@@ -829,7 +856,7 @@ ev_link_dest_from_dest (PopplerDest *dest)
 			unimplemented_dest = "POPPLER_DEST_UNKNOWN";
 			break;
 	}
-	
+
 	if (unimplemented_dest) {
 		g_warning ("Unimplemented named action: %s, please post a "
 		           "bug report in Evince bugzilla "
@@ -844,7 +871,8 @@ ev_link_dest_from_dest (PopplerDest *dest)
 }
 
 static EvLink *
-ev_link_from_action (PopplerAction *action)
+ev_link_from_action (PdfDocument   *pdf_document,
+		     PopplerAction *action)
 {
 	EvLink       *link = NULL;
 	EvLinkAction *ev_action = NULL;
@@ -854,14 +882,14 @@ ev_link_from_action (PopplerAction *action)
 	        case POPPLER_ACTION_GOTO_DEST: {
 			EvLinkDest *dest;
 			
-			dest = ev_link_dest_from_dest (action->goto_dest.dest);
+			dest = ev_link_dest_from_dest (pdf_document, action->goto_dest.dest);
 			ev_action = ev_link_action_new_dest (dest);
 		}
 			break;
 	        case POPPLER_ACTION_GOTO_REMOTE: {
 			EvLinkDest *dest;
 			
-			dest = ev_link_dest_from_dest (action->goto_remote.dest);
+			dest = ev_link_dest_from_dest (pdf_document, action->goto_remote.dest);
 			ev_action = ev_link_action_new_remote (dest, 
 							       action->goto_remote.file_name);
 			
@@ -926,22 +954,22 @@ build_tree (PdfDocument      *pdf_document,
 					dest = poppler_document_find_dest (pdf_document->document,
 									   action->goto_dest.dest->named_dest);
 					if (!dest) {
-						link = ev_link_from_action (action);
+						link = ev_link_from_action (pdf_document, action);
 						break;
 					}
 					
-					ev_dest = ev_link_dest_from_dest (dest);
+					ev_dest = ev_link_dest_from_dest (pdf_document, dest);
 					poppler_dest_free (dest);
 					
 					ev_action = ev_link_action_new_dest (ev_dest);
 					link = ev_link_new (action->any.title, ev_action);
 				} else {
-					link = ev_link_from_action (action);
+					link = ev_link_from_action (pdf_document, action);
 				}
 			}
 				break;
 		        default:
-				link = ev_link_from_action (action);
+				link = ev_link_from_action (pdf_document, action);
 				break;
 		}
 		
@@ -1017,7 +1045,8 @@ pdf_document_links_get_links (EvDocumentLinks *document_links,
 
 		link_mapping = (PopplerLinkMapping *)list->data;
 		ev_link_mapping = g_new (EvLinkMapping, 1);
-		ev_link_mapping->link = ev_link_from_action (link_mapping->action);
+		ev_link_mapping->link = ev_link_from_action (pdf_document,
+							     link_mapping->action);
 		ev_link_mapping->x1 = link_mapping->area.x1;
 		ev_link_mapping->x2 = link_mapping->area.x2;
 		/* Invert this for X-style coordinates */
@@ -1045,7 +1074,7 @@ pdf_document_links_find_link_dest (EvDocumentLinks  *document_links,
 	dest = poppler_document_find_dest (pdf_document->document,
 					   link_name);
 	if (dest) {
-		ev_dest = ev_link_dest_from_dest (dest);
+		ev_dest = ev_link_dest_from_dest (pdf_document, dest);
 		poppler_dest_free (dest);
 	}
 

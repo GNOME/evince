@@ -1,3 +1,14 @@
+2006-08-06  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* pdf/ev-poppler.cc: (ev_link_dest_from_dest), (ev_link_from_action),
+	(build_tree), (pdf_document_links_get_links),
+	(pdf_document_links_find_link_dest):
+	* shell/ev-view.c: (goto_fitr_dest), (goto_fith_dest),
+	(goto_xyz_dest):
+
+	Convert from PDF style coordinates to X style coordinates in the
+	backend rather than in the view. Fixes bug #338440
+
 2006-08-06  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-window.c:
