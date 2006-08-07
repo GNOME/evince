@@ -211,8 +211,10 @@ static void     ev_window_set_page_mode                 (EvWindow         *windo
 							 EvWindowPageMode  page_mode);
 static void	ev_window_xfer_job_cb  			(EvJobXfer        *job,
 							 gpointer          data);
+#ifdef WITH_GTK_PRINT
 static void     ev_window_print_job_cb                  (EvJobPrint       *job,
 							 EvWindow         *window);
+#endif
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
@@ -2606,10 +2608,14 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 			      "presentation", &presentation,
 			      NULL);
 
-		if (fullscreen)
+		if (fullscreen) {
 			ev_window_stop_fullscreen (window);
-		if (presentation)
+		} else if (presentation) {
 			ev_window_stop_presentation (window);
+			gtk_widget_grab_focus (window->priv->view);
+		} else {
+			gtk_widget_grab_focus (window->priv->view);
+		}
 
 		if (fullscreen && presentation)
 			g_warning ("Both fullscreen and presentation set somehow");
