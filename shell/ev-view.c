@@ -1144,7 +1144,7 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 					ev_view_get_width (view),
 				        ev_view_get_height (view), 0);
 
-	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	ev_view_set_sizing_mode (view, EV_SIZING_FIT_WIDTH);
 	ev_view_set_zoom (view, zoom, FALSE);
 
 	view->current_page = page;
@@ -1167,7 +1167,7 @@ goto_fit_dest (EvView *view, EvLinkDest *dest)
 	zoom = zoom_for_size_best_fit (doc_width, doc_height, ev_view_get_width (view),
 				       ev_view_get_height (view), 0, 0);
 
-	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
+	ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
 	ev_view_set_zoom (view, zoom, FALSE);
 
 	view->current_page = page;
@@ -1180,14 +1180,13 @@ static void
 goto_xyz_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	int height, page;
+	gint page;
 	double zoom;
 
 	zoom = ev_link_dest_get_zoom (dest);
 	page = ev_link_dest_get_page (dest);
-	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, NULL, &height);
 
-	if (zoom != 0) {
+	if (zoom > 1) {
 		ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 		ev_view_set_zoom (view, zoom, FALSE);
 	}
@@ -2278,7 +2277,7 @@ draw_one_page (EvView          *view,
 	gint current_page;
 
 	g_assert (view->document);
-	
+
 	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
 		return;
 	
@@ -2407,6 +2406,7 @@ ev_view_destroy (GtkObject *object)
 
 	if (view->link_tooltip) {
 		gtk_widget_destroy (view->link_tooltip);
+		view->link_tooltip = NULL;
 	}
 
 	if (view->selection_scroll_id) {

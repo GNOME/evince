@@ -1,3 +1,11 @@
+2006-08-10  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (goto_fith_dest), (goto_fit_dest), (goto_xyz_dest):
+
+	Ignore zoom for xyz destinations when it's <= 1, keeping user
+	preferences instead. Set correct sizing-mode for fith and fitv
+	destinations rather than EV_SIZING_FREE. Fixes bug #349433
+
 2006-08-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
