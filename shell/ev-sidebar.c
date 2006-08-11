@@ -386,7 +386,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 			  ev_sidebar);
 	   
 	image = gtk_image_new_from_stock (GTK_STOCK_CLOSE,
-					  GTK_ICON_SIZE_SMALL_TOOLBAR);
+					  GTK_ICON_SIZE_MENU);
 	gtk_container_add (GTK_CONTAINER (close_button), image);
 	gtk_widget_show (image);
    
