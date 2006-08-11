@@ -1128,7 +1128,8 @@ ev_window_cmd_recent_file_activate (GtkAction     *action,
 
 	uri = gtk_recent_info_get_uri (info);
 	
-	ev_application_open_uri (EV_APP, uri, NULL, GDK_CURRENT_TIME, NULL);
+	ev_application_open_uri (EV_APP, uri, NULL,
+				 GDK_CURRENT_TIME, NULL);
 }
 #else
 static void
@@ -1143,7 +1144,8 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 
 	uri = egg_recent_item_get_uri (item);
 
-	ev_application_open_uri (EV_APP, uri, NULL, GDK_CURRENT_TIME, NULL);
+	ev_application_open_uri (EV_APP, -1, uri, NULL,
+				 GDK_CURRENT_TIME, NULL);
 	
 	g_free (uri);
 }
@@ -2367,6 +2369,24 @@ ev_window_screen_changed (GtkWidget *widget,
 	EvWindowPrivate *priv = window->priv;
 	GdkScreen *screen;
 
+	screen = gtk_widget_get_screen (widget);
+	if (screen == old_screen)
+		return;
+
+#ifdef HAVE_GTK_RECENT
+	if (old_screen) {
+		g_signal_handlers_disconnect_by_func (
+			gtk_recent_manager_get_for_screen (old_screen),
+			G_CALLBACK (ev_window_setup_recent), window);
+	}
+
+	priv->recent_manager = gtk_recent_manager_get_for_screen (screen);
+	g_signal_connect_swapped (priv->recent_manager,
+				  "changed",
+				  G_CALLBACK (ev_window_setup_recent),
+				  window);
+#endif
+	
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
 	}
@@ -2375,7 +2395,6 @@ ev_window_screen_changed (GtkWidget *widget,
 		g_signal_handlers_disconnect_by_func
 			(old_screen, G_CALLBACK (screen_size_changed_cb), window);
 
-		screen = gtk_widget_get_screen (widget);
 		g_signal_connect_object (screen, "size-changed",
 					 G_CALLBACK (screen_size_changed_cb),
 					 window, 0);
@@ -3231,6 +3250,11 @@ ev_window_dispose (GObject *object)
 		priv->view = NULL;
 	}
 
+	if (priv->password_view) {
+		g_object_unref (priv->password_view);
+		priv->password_view = NULL;
+	}
+
 	if (priv->xfer_job) {
 		ev_window_clear_xfer_job (window);
 	}
@@ -3781,7 +3805,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 	uri = g_build_filename (dir, ev_link_action_get_filename (action),
 				NULL);
 	g_free (dir);
-	
+
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 ev_link_action_get_dest (action),
 					 0,
@@ -4040,7 +4064,8 @@ ev_window_init (EvWindow *ev_window)
 	}
 	
 #ifdef HAVE_GTK_RECENT
-	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
+	ev_window->priv->recent_manager = gtk_recent_manager_get_for_screen (
+		gtk_widget_get_screen (GTK_WIDGET (ev_window)));
 	ev_window->priv->recent_action_group = NULL;
 	ev_window->priv->recent_ui_id = 0;
 	g_signal_connect_swapped (ev_window->priv->recent_manager,
