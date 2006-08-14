@@ -62,7 +62,7 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (properties), TRUE);
 	gtk_dialog_set_has_separator (GTK_DIALOG (properties), FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (properties), 5);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (properties)->vbox), 12);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (properties)->vbox), 2);
 
 	gtk_dialog_add_button (GTK_DIALOG (properties), GTK_STOCK_CLOSE,
 			       GTK_RESPONSE_CANCEL);
