@@ -85,6 +85,7 @@ static void         ev_sidebar_thumbnails_set_document     (EvSidebarPage       
 static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage       *sidebar_page);
 static void         thumbnail_job_completed_callback       (EvJobThumbnail      *job,
 							    EvSidebarThumbnails *sidebar_thumbnails);
+static void         adjustment_changed_cb                  (EvSidebarThumbnails *sidebar_thumbnails);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
                         ev_sidebar_thumbnails, 
@@ -124,8 +125,7 @@ ev_sidebar_thumbnails_get_property (GObject    *object,
 {
 	EvSidebarThumbnails *sidebar = EV_SIDEBAR_THUMBNAILS (object);
 
-	switch (prop_id)
-	{
+	switch (prop_id) {
 	case PROP_WIDGET:
 		if (sidebar->priv->tree_view)
 			g_value_set_object (value, sidebar->priv->tree_view);
@@ -139,16 +139,31 @@ ev_sidebar_thumbnails_get_property (GObject    *object,
 }
 
 static void
+ev_sidebar_thumbnails_map (GtkWidget *widget)
+{
+	EvSidebarThumbnails *sidebar;
+
+	sidebar = EV_SIDEBAR_THUMBNAILS (widget);
+
+	GTK_WIDGET_CLASS (ev_sidebar_thumbnails_parent_class)->map (widget);
+	
+	adjustment_changed_cb (sidebar);
+}
+
+static void
 ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnails_class)
 {
 	GObjectClass *g_object_class;
 	GtkObjectClass *gtk_object_class;
+	GtkWidgetClass *widget_class;
 
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_thumbnails_class);
 	gtk_object_class = GTK_OBJECT_CLASS (ev_sidebar_thumbnails_class);
+	widget_class = GTK_WIDGET_CLASS (ev_sidebar_thumbnails_class);
 
 	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
 	g_object_class->get_property = ev_sidebar_thumbnails_get_property;
+	widget_class->map = ev_sidebar_thumbnails_map;
 
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,
@@ -290,6 +305,10 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	gint wy1;
 	gint wy2;
 
+	/* Widget is not currently visible */
+	if (!GTK_WIDGET_MAPPED (sidebar_thumbnails))
+		return;
+	
 	if (priv->tree_view) {
 		if (! GTK_WIDGET_REALIZED (priv->tree_view))
 			return;
