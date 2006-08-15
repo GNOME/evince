@@ -1144,7 +1144,7 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 
 	uri = egg_recent_item_get_uri (item);
 
-	ev_application_open_uri (EV_APP, -1, uri, NULL,
+	ev_application_open_uri (EV_APP, uri, NULL,
 				 GDK_CURRENT_TIME, NULL);
 	
 	g_free (uri);
