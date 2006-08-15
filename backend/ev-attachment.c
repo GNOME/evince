@@ -293,8 +293,7 @@ ev_attachment_save (EvAttachment *attachment,
 	g_return_val_if_fail (uri != NULL, FALSE);
 
 	result = gnome_vfs_create (&handle, uri,
-				   GNOME_VFS_OPEN_WRITE |
-				   GNOME_VFS_OPEN_TRUNCATE,
+				   GNOME_VFS_OPEN_WRITE,
 				   FALSE, 0644);
 	if (result != GNOME_VFS_OK) {
 		g_set_error (error,

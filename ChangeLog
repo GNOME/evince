@@ -1,4 +1,12 @@
+2006-08-14  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/ev-attachment.c: (ev_attachment_save):
+
+	Remove GNOME_VFS_OPEN_TRUNCATE flag which is only available with
+	gnome-vfs >= 2.9.3 and it's not really needed. Fixes bug #351493
+
 2006-08-15  Julien Rebetez  <julienr@cvs.gnome.org>
+	
 	* shell/ev-window.c: (ev_window_cmd_recent_file_activate):
 	Fixed a compilation error if HAVE_GTK_RECENT isn't defined.
 
