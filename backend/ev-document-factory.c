@@ -287,19 +287,27 @@ EvDocument *
 ev_document_factory_get_document (const char *uri, GError **error)
 {
 	EvDocument *document;
+	int result;
 
 	document = get_document_from_uri (uri, FALSE, error);
 
-	if (*error == NULL) {
-		ev_document_load (document, uri, error);
+	if (*error != NULL) {
+		return NULL;
 	}
+
+	result = ev_document_load (document, uri, error);
 	
-	if (*error) {
-		g_error_free (*error);
-		*error = NULL;
+	if (result == FALSE || *error) {
+		if (document)
+			g_object_unref (document);
+		document = NULL;
 	} else {
 		return document;
 	}
+
+	if (*error)
+		g_error_free (*error);
+	*error = NULL;
 
 	document = get_document_from_uri (uri, TRUE, error);
 
@@ -307,7 +315,20 @@ ev_document_factory_get_document (const char *uri, GError **error)
 		return NULL;
 	}
 
-	ev_document_load (document, uri, error);
+	result = ev_document_load (document, uri, error);
+	
+	if (result == FALSE || *error) {
+		if (document)
+			g_object_unref (document);
+		document = NULL;
+	}
+
+	if (result == FALSE && *error == NULL)  {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     0,
+			     _("Unknown MIME Type"));
+	}
 
 	return document;
 }
