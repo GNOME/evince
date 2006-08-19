@@ -136,8 +136,10 @@ pdf_document_search_free (PdfDocumentSearch   *search)
 		g_list_foreach (search->pages[i], (GFunc) g_free, NULL);
 		g_list_free (search->pages[i]);
 	}
+	g_free (search->pages);
 	
-        g_free (search->text);
+	g_free (search->text);
+	g_free (search);
 }
 
 static void
@@ -1259,10 +1261,6 @@ pdf_document_search_new (PdfDocument *pdf_document,
 
 	search->text = g_strdup (text);
         search->pages = g_new0 (GList *, n_pages);
-	for (i = 0; i < n_pages; i++) {
-		search->pages[i] = NULL;
-	}
-
         search->document = pdf_document;
 
         /* We add at low priority so the progress bar repaints */
