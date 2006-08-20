@@ -166,8 +166,8 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->render_pixbuf = pixbuf_document_render_pixbuf;
 	iface->get_info = pixbuf_document_get_info;
 	iface->get_form_field_mapping = NULL;
-	iface->get_field_content = NULL;
-	iface->set_field_content = NULL;
+	iface->get_text_field_content = NULL;
+	iface->set_text_field_content = NULL;
 }
 
 static GdkPixbuf *

@@ -4404,7 +4404,7 @@ render_form_field_content_for_page (EvView *view, gint page)
 			continue;
 
 
-		content = ev_document_get_form_field_content(view->document, field->id);
+		content = ev_document_get_form_field_text_content(view->document, field->id);
 		if (!content)
 			continue;
 
@@ -4478,14 +4478,10 @@ handle_click_at_location (EvView *view,
 	
 	new_field = ev_form_field_mapping_find (form_field_mapping, x_offset/view->scale, y_offset/view->scale);
 
-/*	if (!new_field) {
-		return;
-	}*/
-
 	//store current entry text
 	if (view->child) {
 		if (GTK_IS_ENTRY(view->child->widget)) {
-			ev_document_set_form_field_content(view->document,
+			ev_document_set_form_field_text_content(view->document,
 							   view->child->field_id,
 							   gtk_entry_get_text(GTK_ENTRY(view->child->widget)));
 			if(view->pendingFormFields)
@@ -4516,11 +4512,15 @@ handle_click_at_location (EvView *view,
 
 	switch (new_field->type) {
 		case EV_FORM_FIELD_TYPE_BUTTON:
-			wid = gtk_button_new_with_label("Button");
-			break;
+			/*wid = gtk_button_new_with_label("Button");*/
+			printf("button clicked\n");
+			ev_document_set_form_field_button_state(view->document, new_field->id, 0, TRUE);
+			ev_pixbuf_cache_reload_page(view->pixbuf_cache, page, view->rotation, view->scale); 
+			return;
+			//break;
 		case EV_FORM_FIELD_TYPE_TEXT:
 			wid = gtk_entry_new();
-			content = ev_document_get_form_field_content(view->document, new_field->id);
+			content = ev_document_get_form_field_text_content(view->document, new_field->id);
 			if (content)
 				gtk_entry_set_text(GTK_ENTRY(wid), content);
 			gtk_entry_set_has_frame(GTK_ENTRY(wid), FALSE);

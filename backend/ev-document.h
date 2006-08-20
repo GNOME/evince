@@ -99,11 +99,15 @@ struct _EvDocumentIface
 	void 	         (* get_crop_box)    (EvDocument   *document,
 					      int 	    page,
 					      EvRectangle  *rect);
-	gchar 	       * (* get_field_content) (EvDocument *document,
+	gchar 	       * (* get_text_field_content) (EvDocument *document,
 						int field_id);
-	gboolean	 (* set_field_content) (EvDocument *document,
+	gboolean	 (* set_text_field_content) (EvDocument *document,
 					 	int field_id,
 						gchar* content);
+	void 		 (* set_button_state) (EvDocument *document,
+						int field_id,
+						int index,
+						gboolean state);
 };
 
 GType		ev_document_get_type       (void);
@@ -141,8 +145,10 @@ gint            ev_rect_cmp                 (EvRectangle    *a,
 GList 		*ev_document_get_form_field_mapping (EvDocument    *document,
 					      int 	    page);
 
-gchar 		*ev_document_get_form_field_content (EvDocument *document, int field_id);
-void 		ev_document_set_form_field_content (EvDocument *document, int field_id, gchar* content);
+gchar 		*ev_document_get_form_field_text_content (EvDocument *document, int field_id);
+void 		ev_document_set_form_field_text_content (EvDocument *document, int field_id, gchar* content);
+
+void 		ev_document_set_form_field_button_state (EvDocument *document, int field_id, int index, gboolean state);
 
 gboolean	ev_document_get_crop_box (EvDocument *document,
 					  int page,

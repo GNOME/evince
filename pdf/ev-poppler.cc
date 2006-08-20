@@ -86,8 +86,10 @@ static void pdf_document_search_free (PdfDocumentSearch   *search);
 
 static void pdf_document_get_crop_box (EvDocument *document, int page, EvRectangle *rect);
 static GList *pdf_document_get_form_field_mapping (EvDocument *document, int page);
-static gchar* pdf_document_get_field_content (EvDocument *document, int field_id);
-static gboolean pdf_document_set_field_content (EvDocument *document, int field_id, gchar* content);
+static gchar* pdf_document_get_text_field_content (EvDocument *document, int field_id);
+static gboolean pdf_document_set_text_field_content (EvDocument *document, int field_id, gchar* content);
+static void pdf_document_set_form_field_button_state (EvDocument *document, int field_id, int index, gboolean state);
+
 
 
 
@@ -643,8 +645,9 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_crop_box = pdf_document_get_crop_box;
 	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
-	iface->set_field_content = pdf_document_set_field_content;
-	iface->get_field_content = pdf_document_get_field_content;
+	iface->set_text_field_content = pdf_document_set_text_field_content;
+	iface->get_text_field_content = pdf_document_get_text_field_content;
+	iface->set_button_state = pdf_document_set_form_field_button_state;
 };
 
 static void
@@ -1514,6 +1517,14 @@ pdf_document_new (void)
 }
 
 
+void copy_form_poppler_evince (PopplerFormField *source, EvFormField *dest, double height, EvRectangle crop_box)
+{
+	dest->x1 = source->area.x1 - crop_box.x1;
+	dest->x2 = source->area.x2 - crop_box.x1;
+	dest->y1 = height - source->area.y2 + crop_box.y1;
+	dest->y2 = height - source->area.y1 + crop_box.y1;
+}
+
 static GList *
 pdf_document_get_form_field_mapping (EvDocument *document,
  			      int 	 page)
@@ -1540,24 +1551,35 @@ pdf_document_get_form_field_mapping (EvDocument *document,
 		double rect[4];	
 		
  		field = (PopplerFormField *)list->data;
- 		/* Invert y for X-style coordinates */
-		rect[0] = field->area.x1; rect[1] = height - field->area.y2;
-		rect[2] = field->area.x2; rect[3] = height - field->area.y1;
 
  		field_mapping = g_new (EvFormField, 1);
 		field_mapping->content = NULL;
 		field_mapping->type = (EvFormFieldType)field->type;
 		field_mapping->id = field->id;
-		field_mapping->x1 = rect[0];
- 		field_mapping->x2 = rect[2];
- 		field_mapping->y1 = rect[1];
-		field_mapping->y2 = rect[3];
-		/* Add crop box to form area */
-		field_mapping->x1 -= crop_box.x1;
-		field_mapping->y1 += crop_box.y1;
-		field_mapping->x2 -= crop_box.x1;
-		field_mapping->y2 += crop_box.y1;
-		field_mapping->content = poppler_document_get_form_field_content(pdf_document->document, field->id);
+		
+		copy_form_poppler_evince(field, field_mapping, height, crop_box);
+
+		if(field_mapping->type == EV_FORM_FIELD_TYPE_TEXT)
+			field_mapping->content = poppler_document_get_form_field_text_content(pdf_document->document, field->id);
+		if(field_mapping->type == EV_FORM_FIELD_TYPE_BUTTON) {
+			field_mapping->num_kids = field->button.num_kids;
+			printf("num_kids: %i\n", field_mapping->num_kids);
+			field_mapping->kids = g_new(EvFormField, field_mapping->num_kids);
+			for (int i=0; i<field_mapping->num_kids; i++) {
+				PopplerFormField *poppler_kid;
+				EvFormField *kid = &field_mapping->kids[i];
+				poppler_kid = poppler_document_get_form_field_button_kid(pdf_document->document, field->id, i);
+				if (!poppler_kid) {
+					g_warning("pdf_document_get_form_field_mapping : unable to get kid for field with id %i\n", field->id);
+					break;
+				}
+				kid->id = poppler_kid->id;
+				kid->type = (EvFormFieldType)poppler_kid->type;
+				copy_form_poppler_evince(poppler_kid, kid, height, crop_box);
+				g_free(poppler_kid);
+			}
+
+		}
 
 
  		retval = g_list_prepend(retval, field_mapping);
@@ -1587,15 +1609,25 @@ pdf_document_get_crop_box (EvDocument *document,
 }
 
 static gchar * 
-pdf_document_get_field_content (EvDocument *document, int field_id)
+pdf_document_get_text_field_content (EvDocument *document, int field_id)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(document);
-	return poppler_document_get_form_field_content(pdf_document->document, field_id);
+	return poppler_document_get_form_field_text_content(pdf_document->document, field_id);
 }
 
-static gboolean pdf_document_set_field_content (EvDocument *document, int field_id, gchar* content)
+static gboolean pdf_document_set_text_field_content (EvDocument *document, int field_id, gchar* content)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(document);
-	poppler_document_set_form_field_content(pdf_document->document, field_id, content);
+	poppler_document_set_form_field_text_content(pdf_document->document, field_id, content);
 	return true;
 }
+
+static void 
+pdf_document_set_form_field_button_state (EvDocument *document, int field_id, int index, gboolean state)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(document);
+	poppler_document_set_form_field_button_state(pdf_document->document, field_id, index, state);
+}
+
+
+

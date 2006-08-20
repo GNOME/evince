@@ -28,7 +28,11 @@ typedef enum
 	EV_FORM_FIELD_TYPE_BUTTON,
 	EV_FORM_FIELD_TYPE_TEXT,
 	EV_FORM_FIELD_TYPE_CHOICE,
-	EV_FORM_FIELD_TYPE_SIGNATURE
+	EV_FORM_FIELD_TYPE_SIGNATURE,
+	
+	EV_FORM_FIELD_TYPE_BUTTON_CHECK,
+	EV_FORM_FIELD_TYPE_BUTTON_PUSH,
+	EV_FORM_FIELD_TYPE_BUTTON_RADIO
 } EvFormFieldType;
 
 
@@ -37,11 +41,15 @@ struct _EvFormField
 {
 	EvFormFieldType type;
 	int id;
-	gchar *content;
 	gdouble x1;
 	gdouble y1;
 	gdouble x2;
 	gdouble y2;
+	//text field specific
+	gchar *content;
+	//button specific
+	EvFormField *kids;
+	int num_kids;
 };
 
 EvFormField *ev_form_field_new ();

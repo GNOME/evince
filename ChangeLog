@@ -1,3 +1,18 @@
+2006-08-20  Julien Rebetez  <julienr@cvs.gnome.org>
+	* backend/ev-document.c: (ev_document_get_form_field_text_content),
+	(ev_document_set_form_field_text_content),
+	(ev_document_set_form_field_button_state):
+	* backend/ev-document.h:
+	* backend/ev-form-field.h:
+	* pdf/ev-poppler.cc:
+	* pixbuf/pixbuf-document.c: (pixbuf_document_document_iface_init):
+	* ps/ps-document.c: (ps_document_document_iface_init):
+	* shell/ev-view.c: (render_form_field_content_for_page),
+	(handle_click_at_location):
+	* tiff/tiff-document.c: (tiff_document_document_iface_init):
+	Added support for check boxes, you'll need a patched poppler.
+	See http://live.gnome.org/Evince/Forms for more informations.
+
 2006-07-23  Julien Rebetez  <julienr@cvs.gnome.org>
 	* shell/ev-pixbuf-cache.c: (add_job_if_needed),
 	(ev_pixbuf_cache_get_selection_list), (add_job),
