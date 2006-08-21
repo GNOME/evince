@@ -296,14 +296,20 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	}
 
 	result = ev_document_load (document, uri, error);
-	
+
 	if (result == FALSE || *error) {
-		if (document)
-			g_object_unref (document);
-		document = NULL;
+		if (*error &&
+		    (*error)->domain == EV_DOCUMENT_ERROR &&
+		    (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED)
+			return document;
 	} else {
 		return document;
 	}
+
+	/* Try again with slow mime detection */
+	if (document)
+		g_object_unref (document);
+	document = NULL;
 
 	if (*error)
 		g_error_free (*error);
@@ -316,20 +322,23 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	}
 
 	result = ev_document_load (document, uri, error);
-	
-	if (result == FALSE || *error) {
+
+	if (result == FALSE) {
+		if (*error == NULL) {
+			g_set_error (error,
+				     EV_DOCUMENT_ERROR,
+				     0,
+				     _("Unknown MIME Type"));
+		} else if ((*error)->domain == EV_DOCUMENT_ERROR &&
+			   (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+			return document;
+		}
+
 		if (document)
 			g_object_unref (document);
 		document = NULL;
 	}
-
-	if (result == FALSE && *error == NULL)  {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     0,
-			     _("Unknown MIME Type"));
-	}
-
+	
 	return document;
 }
 
