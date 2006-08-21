@@ -310,12 +310,12 @@ main (int argc, char *argv[])
                                       NULL);
 
 	args = arguments_parse ();
-	g_option_context_free (context);
 
 #ifdef ENABLE_DBUS
 	if (!ev_application_register_service (EV_APP)) {
 		if (load_files_remote (file_arguments, args)) {
 			g_hash_table_destroy (args);
+			g_object_unref (program);
 			
 			return 0;
 		}

@@ -2,6 +2,13 @@
 
 	* shell/main.c: (main):
 
+	Revert my previous commit, gnome_program_init owns the option context.
+	Fix another memory leak in main. Both caught by Christian Persch. 
+
+2006-08-21  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/main.c: (main):
+
 	Fix memory leak.
 
 2006-08-21  Carlos Garcia Campos  <carlosgc@gnome.org>
