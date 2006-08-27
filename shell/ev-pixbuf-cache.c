@@ -396,33 +396,61 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		      CacheJobInfo  *job_info,
 		      EvPixbufCache *pixbuf_cache)
 {
-	GdkPixbuf *pixbuf;
-	EvRenderContext *rc;
 
-	pixbuf = g_object_ref (job_render->pixbuf);
-	rc = g_object_ref (job_render->rc);
+	job_info->points_set = FALSE;
 
-	dispose_cache_job_info (job_info, pixbuf_cache);
+	if (job_info->pixbuf) {
+		g_object_unref (G_OBJECT (job_info->pixbuf));
+	}
+	job_info->pixbuf = g_object_ref (job_render->pixbuf);
 
-	job_info->pixbuf = pixbuf;
-	job_info->rc = rc;
-	
-	if (job_render->link_mapping)
+	if (job_info->rc) {
+		g_object_unref (G_OBJECT (job_info->rc));
+	}
+	job_info->rc = g_object_ref (job_render->rc);
+
+	if (job_render->include_links) {
+		if (job_info->link_mapping)
+			ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = job_render->link_mapping;
-	if (job_render->text_mapping)
-		job_info->text_mapping = job_render->text_mapping;	
+	}
+
+	if (job_render->include_text) {
+		if (job_info->text_mapping)
+			gdk_region_destroy (job_info->text_mapping);
+		job_info->text_mapping = job_render->text_mapping;
+	}
+	
 
 	if (job_render->include_selection) {
-		pixbuf = g_object_ref (job_render->selection);
+
+		if (job_info->selection) {
+			g_object_unref (G_OBJECT (job_info->selection));
+			job_info->selection = NULL;
+		}
+		if (job_info->selection_region) {
+			gdk_region_destroy (job_info->selection_region);
+			job_info->selection_region = NULL;
+		}
+		
 		job_info->selection_points = job_render->selection_points;
 		job_info->selection_region = gdk_region_copy (job_render->selection_region);
-		job_info->selection = pixbuf;
+		job_info->selection = g_object_ref (job_render->selection);
 		g_assert (job_info->selection_points.x1 >= 0);
+	}
+
+	if (job_info->job) {
+		g_signal_handlers_disconnect_by_func (job_info->job,
+						      G_CALLBACK (job_finished_cb),
+						      pixbuf_cache);
+		ev_job_queue_remove_job (job_info->job);
+		g_object_unref (G_OBJECT (job_info->job));
+		job_info->job = NULL;
 	}
 
 }
 
-static CacheJobInfo *
+static CacheJobInfo*
 find_job_cache (EvPixbufCache *pixbuf_cache,
 		int            page)
 {
