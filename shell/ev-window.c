@@ -963,7 +963,7 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
-		
+
 		ev_window_setup_document (ev_window);
 		ev_window_add_recent (ev_window, ev_window->priv->uri);		
 
@@ -3831,6 +3831,8 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 		ev_window_cmd_focus_page_selector (NULL, window);
 	} else if (g_ascii_strcasecmp (name, "Find") == 0) {
 		ev_window_cmd_edit_find (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "Close") == 0) {
+		ev_window_cmd_file_close_window (NULL, window);
 	} else {
 		g_warning ("Unimplemented named action: %s, please post a "
 		           "bug report in Evince bugzilla "

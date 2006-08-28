@@ -1,5 +1,10 @@
 2006-08-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-window.c: (ev_window_xfer_job_cb), (do_action_named):
+	Implement Close named action. Patch by Carlos Garcia Campos.
+
+2006-08-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-pixbuf-cache.c: (copy_job_to_job_info):
 	
 	Don't clear link mapping on copy_job_to_job_info. Fixes
