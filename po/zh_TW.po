@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: evince 0.5.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-08-28 16:36+0200\n"
-"PO-Revision-Date: 2006-08-29 12:30+0800\n"
+"PO-Revision-Date: 2006-09-04 05:03+0800\n"
 "Last-Translator: Woodman Tuen <wmtuen@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) <community@linuxhall.org>\n"
 "MIME-Version: 1.0\n"
@@ -252,11 +252,11 @@ msgstr "<b>標題：</b>"
 
 #: ../data/evince.schemas.in.h:1
 msgid "Override document restrictions"
-msgstr "壓過文件的限制"
+msgstr "不理會文件的限制"
 
 #: ../data/evince.schemas.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr "壓過文件的限制，像是不准複製或列印"
+msgstr "不理會文件的限制，例如不准複製或列印"
 
 #: ../dvi/dvi-document.c:91
 msgid "File not available"
@@ -715,9 +715,7 @@ msgstr "不支援產生 PDF 文件"
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
 "requires a PostScript printer driver."
-msgstr ""
-"您剛剛試著利用“%s”驅動程式來讓印表機列印，可是本程式須要 PostScript 印表機驅"
-"動程式。"
+msgstr "您剛剛試著利用“%s”印表機驅動程式，可是本程式需要 PostScript 印表機驅動程式。"
 
 #: ../shell/ev-window.c:1729
 msgid "Pages"
@@ -748,10 +746,7 @@ msgid ""
 "terms of the GNU General Public License as published by the Free Software "
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
-msgstr ""
-"Evince 為自由軟體；您可依據自由軟體基金會所發表的 GNU 通用公共授權條款規定，"
-"就本程式再為散布與／或修改；無論您依據的是本授權的第二版或（您自行選擇的）任"
-"一日後發行的版本。\n"
+msgstr "Evince 為自由軟體；您可依據自由軟體基金會所發表的 GNU 通用公共授權條款規定，就本程式再為散佈與／或修改；無論您依據的是本授權的第二版或（您自行選擇的）任一日後發行的版本。\n"
 
 #: ../shell/ev-window.c:2868
 msgid ""
@@ -759,18 +754,14 @@ msgid ""
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
-msgstr ""
-"Evince 係基於使用目的而加以散布，然而不負任何擔保責任；亦無對適售性或特定目的"
-"適用性所為的默示性擔保。詳情請參照 GNU 通用公共授權。\n"
+msgstr "Evince 係基於使用目的而加以散佈，然而不負任何擔保責任；亦無對適售性或特定目的適用性所為的默示性擔保。詳情請參照 GNU 通用公共授權。\n"
 
 #: ../shell/ev-window.c:2872
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
-"您應已收到附隨於 Evince 的 GNU 通用公共授權的副本；如無，請寫信至自由軟體基金"
-"會：59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr "您應已收到附隨於 Evince 的 GNU 通用公共授權的副本；如無，請寫信至自由軟體基金會：59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
 #: ../shell/ev-window.c:2896 ../shell/main.c:308
 msgid "Evince"
@@ -784,7 +775,7 @@ msgstr "© 1996-2005 Evince 作者"
 msgid "translator-credits"
 msgstr ""
 "如對翻譯有任何意見，請送一封電子郵件給\n"
-"以下地址，GNOME 翻譯團隊會盡快回覆您：\n"
+"以下地址，GNOME 翻譯團隊會儘快回覆您：\n"
 "community@linuxhall.org\n"
 "\n"
 "趙惟倫 <chaoweilun@pcmail.com.tw>, 2005\n"
@@ -1102,7 +1093,7 @@ msgstr "Evince 文件檢視器"
 msgid ""
 "Boolean options available, true enables thumbnailing and false disables the "
 "creation of new thumbnails"
-msgstr "可用的布林選項中，“true”開啟縮圖功能，而“false”停止建立新的縮圖"
+msgstr "可用的布林選項中，“true”開啟縮圖功能，而“false”停止建構新的縮圖"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
@@ -1116,23 +1107,5 @@ msgstr "PDF 文件的縮圖命令"
 msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
-msgstr ""
-"正確的命令加上 PDF 文件縮圖的引數。請參見 nautilus 縮圖文件以得到更多資訊。"
+msgstr "正確的指令加上代表 PDF 文件縮圖的選項。請參見 nautilus 縮圖文件以得到更多資訊。"
 
-#~ msgid "_Previous"
-#~ msgstr "上一個(_P)"
-
-#~ msgid "_Next"
-#~ msgstr "下一個(_N)"
-
-#~ msgid "The \"Find\" feature will not work with this document"
-#~ msgstr "本文件無法使用「尋找」功能"
-
-#~ msgid "Searching for text is only supported for PDF documents."
-#~ msgstr "只有 PDF 文件支援搜尋文字的功能。"
-
-#~ msgid "Not found"
-#~ msgstr "沒有找到"
-
-#~ msgid "*"
-#~ msgstr "*"
