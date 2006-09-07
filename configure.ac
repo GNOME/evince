@@ -374,6 +374,12 @@ cut-n-paste/zoom-control/Makefile
 cut-n-paste/toolbar-editor/Makefile
 data/Makefile
 data/evince.desktop.in
+data/icons/Makefile
+data/icons/16x16/Makefile
+data/icons/22x22/Makefile
+data/icons/48x48/Makefile
+data/icons/scalable/Makefile
+
 lib/Makefile
 pdf/Makefile
 pixbuf/Makefile
