@@ -2033,7 +2033,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
 
-	if (view->document) {
+	if (view->document && view->pressed_button == 1) {
 		link = ev_view_get_link_at_location (view, event->x, event->y);
 	} else {
 		link = NULL;
