@@ -247,16 +247,10 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	g_return_if_fail (uri != NULL);
 
 	new_window = ev_application_get_uri_window (application, uri);
-	if (new_window != NULL) {
-		gtk_window_present_with_time (GTK_WINDOW (new_window),
-					      timestamp);
-		if (dest)
-			ev_window_goto_dest (new_window, dest);
-
-		return;
+	
+	if (new_window == NULL) {
+		new_window = ev_application_get_empty_window (application);
 	}
-
-	new_window = ev_application_get_empty_window (application);
 
 	if (new_window == NULL) {
 		new_window = EV_WINDOW (ev_window_new ());
