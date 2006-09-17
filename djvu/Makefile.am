@@ -12,6 +12,8 @@ libgtkdjvu_la_SOURCES = \
 	djvu-document.c	\
 	djvu-document.h \
 	djvu-document-private.h \
+	djvu-links.c	\
+	djvu-links.h	\
 	djvu-text.c	\
 	djvu-text.h	\
 	djvu-text-page.c \

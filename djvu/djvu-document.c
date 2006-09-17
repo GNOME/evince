@@ -19,12 +19,15 @@
 
 #include "djvu-document.h"
 #include "djvu-text.h"
+#include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
 #include "ev-document-find.h"
+#include "ev-document-links.h"
 
 #include <libdjvu/ddjvuapi.h>
+#include <libdjvu/miniexp.h>
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf-core.h>
 #include <glib/gunicode.h>
@@ -47,6 +50,7 @@ typedef struct _DjvuDocumentClass DjvuDocumentClass;
 static void djvu_document_document_iface_init (EvDocumentIface *iface);
 static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void djvu_document_find_iface_init (EvDocumentFindIface *iface);
+static void djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE 
     (DjvuDocument, djvu_document, G_TYPE_OBJECT, 
@@ -54,6 +58,7 @@ G_DEFINE_TYPE_WITH_CODE
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT, djvu_document_document_iface_init);    
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init)
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
+      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
      });
 
 
@@ -450,4 +455,20 @@ djvu_document_find_iface_init (EvDocumentFindIface *iface)
 	iface->page_has_results = djvu_document_find_page_has_results;
 	iface->get_progress = djvu_document_find_get_progress;
         iface->cancel = djvu_document_find_cancel;
+}
+
+static GList *
+djvu_document_links_get_links (EvDocumentLinks *document_links,
+			       gint             page)
+{
+	return djvu_links_get_links (document_links, page, SCALE_FACTOR);
+}
+
+static void
+djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface)
+{
+	iface->has_document_links = djvu_links_has_document_links;
+	iface->get_links_model = djvu_links_get_links_model;
+	iface->get_links = djvu_document_links_get_links;
+	iface->find_link_dest = djvu_links_find_link_dest;
 }
