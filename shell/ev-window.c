@@ -1192,6 +1192,47 @@ compare_recent_items (GtkRecentInfo *a, GtkRecentInfo *b)
 }
 #endif /* HAVE_GTK_RECENT */
 
+/*
+ * Doubles underscore to avoid spurious menu accels.
+ */
+static gchar * 
+ev_window_get_recent_file_label (gint index, const gchar *filename)
+{
+	GString *str;
+	gint length;
+	const gchar *p;
+	const gchar *end;
+ 
+	g_return_val_if_fail (filename != NULL, NULL);
+	
+	length = strlen (filename);
+	str = g_string_sized_new (length + 10);
+	g_string_printf (str, "_%d.  ", index);
+
+	p = filename;
+	end = filename + length;
+ 
+	while (p != end)
+	{
+		const gchar *next;
+		next = g_utf8_next_char (p);
+ 
+		switch (*p)
+		{
+			case '_':
+				g_string_append (str, "__");
+				break;
+			default:
+				g_string_append_len (str, p, next - p);
+				break;
+		}
+ 
+		p = next;
+	}
+ 
+	return g_string_free (str, FALSE);
+}
+
 static void
 ev_window_setup_recent (EvWindow *ev_window)
 {
@@ -1232,9 +1273,8 @@ ev_window_setup_recent (EvWindow *ev_window)
 			continue;
 
 		action_name = g_strdup_printf ("RecentFile%u", i++);
-		label = g_strdup_printf ("_%d.  %s",
-					 n_items + 1,
-					 gtk_recent_info_get_display_name (info));
+		label = ev_window_get_recent_file_label (
+			n_items + 1, gtk_recent_info_get_display_name (info));
 		
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", action_name,

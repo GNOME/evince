@@ -1,9 +1,16 @@
+2006-09-24  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+        * shell/ev-window.c: (ev_window_setup_recent), 
+        (ev_window_get_recent_file_label):
+
+        Escape underscores in filenames of recent file items.
+
 2006-09-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
 	
 	Bumped poppler requirements, really 0.5.3 is very 
-	buggy, now we require 0.5.4
+	buggy, now we require 0.5.4.
 
 2006-09-17  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
