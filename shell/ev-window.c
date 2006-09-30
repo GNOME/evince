@@ -1108,9 +1108,13 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 	ev_document_factory_add_filters (chooser, NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
-	if (ev_application_get_chooser_uri (EV_APP) != NULL)
+	if (ev_application_get_chooser_uri (EV_APP) != NULL) {
 		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
 					  ev_application_get_chooser_uri (EV_APP));
+	} else if (window->priv->uri != NULL) {
+		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
+					  window->priv->uri);
+	}
 	
 	g_signal_connect (chooser, "response",
 			  G_CALLBACK (file_open_dialog_response_cb),

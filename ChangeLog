@@ -1,9 +1,15 @@
+2006-10-01  Wouter Bolsterlee  <wbolster@gnome.org>
+
+	* shell/ev-window.c: (ev_window_cmd_file_open): Make the
+	open dialog fall back to the current document uri if the
+	filechooser hasn't been used before. Fixes bug #356980.
+
 2006-09-24  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
-        * shell/ev-window.c: (ev_window_setup_recent), 
-        (ev_window_get_recent_file_label):
+	* shell/ev-window.c: (ev_window_setup_recent), 
+	(ev_window_get_recent_file_label):
 
-        Escape underscores in filenames of recent file items.
+	Escape underscores in filenames of recent file items.
 
 2006-09-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
@@ -1021,7 +1027,7 @@
 
 2006-03-01  Vladimer SIchinava <vlsichinava@gmail.com>
 
-        * configure.ac: Added ka (Georgian) to ALL_LINGUAS line.
+	* configure.ac: Added ka (Georgian) to ALL_LINGUAS line.
 
 2006-02-28  Clytie Siddall <clytie@riverland.net.au>
 
@@ -2239,7 +2245,7 @@
 
 2005-09-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
-        * configure.ac, dvi/mdvi/Makefile.am: 
+	* configure.ac, dvi/mdvi/Makefile.am: 
 	
 	Use lt1 instead lt1lib. Thanks to yselkowitz@users.sourceforge.net
 
@@ -2646,7 +2652,7 @@ Sat Aug 20 13:10:01 2005  Jonathan Blandford  <jrb@redhat.com>
 	Fix warnings and compilation with t1lib-5.0 and newer. Fix for 
 	bug 313623.
 
-2005-08-16  Nickolay V. Shmyrev   <nshmyrev@yandex.ru>
+2005-08-16  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-utils.c: (set_umask_permissions), (write_to_temp_file):
 	* shell/ev-window.c:
@@ -3049,7 +3055,7 @@ Fri Jul 29 23:14:28 2005  Jonathan Blandford  <jrb@redhat.com>
 
 2005-07-24  Artur Flinta  <aflinta@cvs.gnome.org>
 
-        * configure.ac: Added "pl" to ALL_LINGUAS.
+	* configure.ac: Added "pl" to ALL_LINGUAS.
 
 2005-07-24  Danilo Šegan  <danilo@gnome.org>
 
@@ -3465,7 +3471,7 @@ Thu Jul  7 23:10:01 2005  Jonathan Blandford  <jrb@redhat.com>
 	disabled.
 
 2005-07-05  Carlos Garcia Campos  <carlosgc@gnome.org>
-	    Marco Pesenti Gritti  <mpg@redhat.com>
+	Marco Pesenti Gritti  <mpg@redhat.com>
 
 	* shell/Makefile.am: Add --prefix for dbus-binding-tool script
 	
@@ -3989,7 +3995,7 @@ Thu Jun 30 01:43:00 2005  Jonathan Blandford  <jrb@redhat.com>
 	(ev_window_setup_recent):
 	
 	Use ViewUIManager instead of ViewGtk. Less leaks, more compatibility
-        with other projects
+	with other projects
 
 2005-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
@@ -4044,7 +4050,7 @@ Sat Jun 18 22:46:42 2005  Jonathan Blandford  <jrb@redhat.com>
 	* ps/ps-document.c: remove the locale.h include again ;-). And
 	kill the (bogus) setlocale/savelocale business.
 
-2005-06-19   Jaap A. Haitsma <jaap@haitsma.org>
+2005-06-19  Jaap A. Haitsma <jaap@haitsma.org>
 
 	* ps/ps-document.c:
 	
@@ -4427,7 +4433,7 @@ Wed Jun  8 01:04:22 2005  Jonathan Blandford  <jrb@redhat.com>
 	* backend/ev-page-cache.c:
 	* backend/ev-page-cache.h:
 
-        EvPageCache and EvJobs are moved to shell.
+	EvPageCache and EvJobs are moved to shell.
 
 	* lib/ev-file-helpers.c: (ev_file_helpers_shutdown),
 	(ev_tmp_filename):
@@ -5836,7 +5842,7 @@ Fri Apr 22 19:57:46 2005  Jonathan Blandford  <jrb@redhat.com>
 2005-03-14  Bryan Clark  <clarkbw@cvs.gnome.org>
 
 	* shell/ev-window.c (ev_window_init): Removed fullscreen toolbar
-        hard-coded style. Fix for bug 170111
+	hard-coded style. Fix for bug 170111
 
 2005-04-22  Kristian Høgsberg  <krh@redhat.com>
 
@@ -5900,8 +5906,8 @@ Thu Apr 21 23:37:52 2005  Jonathan Blandford  <jrb@redhat.com>
 	* dvi/dvi-document.c: (dvi_document_class_init),
 	(dvi_document_get_info), (dvi_document_document_iface_init):
 
-       Dummy implementation of get_info method for dvi and djvu. Fix
-       crashes with those backends
+	Dummy implementation of get_info method for dvi and
+	djvu. Fix crashes with those backends
 
 2005-04-20  Marco Pesenti Gritti <mpg@redhat.com>
 
@@ -6183,7 +6189,7 @@ Sat Apr 16 18:53:47 2005  Jonathan Blandford  <jrb@redhat.com>
 	
 	Implement print and save a copy for the ps backend.
 
-2005-04-14   Marco Pesenti Gritti <mpg@redhat.com>
+2005-04-14  Marco Pesenti Gritti <mpg@redhat.com>
 
 	* backend/ev-document.h:
 	* djvu/djvu-document.c: (djvu_document_can_get_text),
@@ -6460,7 +6466,7 @@ Sat Apr  2 18:57:00 2005  Jonathan Blandford  <jrb@redhat.com>
 
 2005-04-01  Steve Murphy  <murf@e-tools.com>
 
-        * configure.in: Added "rw" to ALL_LINGUAS.
+	* configure.in: Added "rw" to ALL_LINGUAS.
 
 Fri Apr  1 02:33:41 2005  Jonathan Blandford  <jrb@redhat.com>
 
@@ -6515,7 +6521,7 @@ Thu Mar 31 13:27:50 2005  Jonathan Blandford  <jrb@redhat.com>
 	* shell/ev-window.c: (document_supports_sidebar): Add in page
 	label support.  It's not perfect yet, but it's the first 'feature'
 	in a while.
-        Also, fix a bogus comment noticed by crispin. 
+	Also, fix a bogus comment noticed by crispin. 
 
 Thu Mar 31 01:21:58 2005  Jonathan Blandford  <jrb@redhat.com>
 
@@ -6962,7 +6968,7 @@ Sun Feb 27 23:00:31 2005  Jonathan Blandford  <jrb@redhat.com>
 	Make page width the default sizing mode
 
 2005-02-25  Carlos Garcia Campos <carlosgc@gnome.org>
-	    Marco Pesenti Gritti <marco@gnome.org>
+	Marco Pesenti Gritti <marco@gnome.org>
 
 	* shell/ev-window.c: Remember the sidebar size
 
@@ -7127,8 +7133,8 @@ Mon Feb 21 17:52:08 2005  Jonathan Blandford  <jrb@redhat.com>
 	Do not try to best fit if the view is not realized
 
 2005-02-20  Kostas Papadimas <pkst@gnome.org>
-          
-        * configure.ac (ALL_LINGUAS): Added "el" (Greek).
+	  
+	* configure.ac (ALL_LINGUAS): Added "el" (Greek).
 
 Fri Feb 18 16:06:39 2005  Jonathan Blandford  <jrb@redhat.com>
 
@@ -9065,7 +9071,7 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 	* shell/ev-application.c (EV_APPLICATION_GET_PRIVATE)
 	(ev_application_finalize, ev_application_class_init)
 	(ev_application_init): use GType instance private data for priv.
-    
+
 	* shell/ev-window.c (EV_WINDOW_GET_PRIVATE)
 	(ev_window_finalize, ev_window_class_init)
 	(ev_window_init): ditto.
@@ -9074,9 +9080,9 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 
 	* shell/ev-application.c (ev_application_new_window): make public
 	(ev_application_show_initial_window): kill.
-    
+
 	* shell/ev-application.h: update prototypes.
-    
+
 	* shell/main.cc (main): inline ev_application_show_initial_window.
 
 2004-10-27  Martin Kretzschmar  <m_kretzschmar@gmx.net>
@@ -9086,32 +9092,32 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 	(is_window_empty, ev_application_get_empty_window): returns an
 	existing empty window or a new one.
 	(ev_application_open): from ev_window_cmd_file_open.
-    
+
 	* shell/ev-application.h: update prototypes
-    
+
 	* shell/ev-window.c (ev_window_is_empty): impl.
 	(ev_window_open): make public.
 	(ev_window_cmd_file_open): use ev_application_open
-    
+
 	* shell/ev-window.h: update prototypes, remove unused.
 
 2004-10-26  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* shell/ev-window.c (ev_window_destroy, ev_window_class_init):
 	move destroy handler out of here...
-    
+
 	* shell/ev-application.c, shell/ev-application.h: ...into this new
 	class. Also handles initial window creation.
-    
+
 	* shell/main.cc (main): use EvApplication to create initial
 	window.
 
 2004-10-26  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* Makefile.am (SUBDIRS): add cut-n-paste
-    
+
 	* cut-n-paste/Makefile.am: add
-    
+
 	* configure.ac: generate Makefiles in cut-n-paste
 
 2004-10-26  Martin Kretzschmar  <m_kretzschmar@gmx.net>
@@ -9132,7 +9138,7 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 
 	* configure.ac: add more pkg-config library checks for gnome-vfs,
 	bonobo etc.
-    
+
 	* gpdf/configure.in: temporarily disable libpaper
 	checks. Otherwise I'd have to add the checks for the shell, too.
 
@@ -9152,14 +9158,14 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 2004-10-24  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* data/evince-ui.xml: add View->Toolbar and View->Statusbar.
-    
+
 	* shell/ev-window.c (menu_item_select_cb, menu_item_select_cb)
 	(ev_window_init): implement those menuitems.
 
 2004-10-24  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* data/evince-ui.xml: add a toolbar (with FileOpen action)
-    
+
 	* shell/ev-window.c (ev_window_init): use the toolbar.
 
 2004-10-24  Martin Kretzschmar  <m_kretzschmar@gmx.net>
@@ -9169,26 +9175,26 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 2004-10-24  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* configure.ac: add "de" to ALL_LINGUAS.
-    
+
 	* po/de.po: add German translation.
 
 2004-10-24  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* Makefile.am (SUBDIRS): add po
-    
+
 	* configure.ac: check intltool, glib-gettext etc, generate
 	po/Makefile.in
-    
+
 	* po, po/POTFILES.in, po/POTFILES.skip: new.
 
 2004-10-24  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* shell/Makefile.am (INCLUDES): define GNOMELOCALEDIR which we
 	already use (#ifdef ENABLE_NLS)
-    
+
 	* shell/ev-window.c (ev_window_cmd_help_about): fix two star
 	pointer indirection thinko.
-    
+
 	* shell/main.c: include gi18n.h for bindtextdomain etc.
 
 2004-10-23  Martin Kretzschmar  <m_kretzschmar@gmx.net>
@@ -9205,7 +9211,7 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 2004-10-23  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* data/evince-ui.xml: Add File->Open menu item
-    
+
 	* shell/ev-window.c (ev_window_cmd_file_open): impl. (shows a file
 	chooser), hook it up in the ui manager.
 
@@ -9216,26 +9222,26 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 2004-10-23 Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* configure.ac: set CFLAGS for libevprivate.
-    
+
 	* lib/ev-stock-icons.h, lib/ev-stock-icons.c: stock icon
 	definitions, factory etc.
-    
+
 	* lib/Makefile.am: build libevprivate.a (only stock icon code).
-    
+
 	* shell/Makefile.am: link against libevprivate.a.
-    
+
 	* shell/ev-window.c (entries): add stock icon to Help->About.
-    
+
 	* shell/main.c (main): init stock icon code.
 
 2004-10-23  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* lib/recent-files: egg recent files code
-    
+
 	* lib/Makefile.am: add.
-    
+
 	* Makefile.am: add lib subdir.
-    
+
 	* configure.ac: gen. lib/Makefile and lib/recent-files/Makefile,
 	set CFLAGS for recent-files.
 
@@ -9248,13 +9254,13 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 
 	* configure.ac: add --disable-deprecated flag (defaults to on in
 	"cvs" builds).
-    
+
 	* shell/Makefile.am (INCLUDES): use it.
 
 2004-10-23  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* shell/main.c: add missing #include.
-    
+
 	* shell/ev-window.c: fix for pedantic gcc.
 	(ev_window_cmd_help_about): split license into paragraphs for
 	translators and pedantic compilers.
@@ -9267,7 +9273,7 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 2004-10-23  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* data/evince-ui.xml: add File and File->Close menu.
-    
+
 	* shell/ev-window.c (ev_window_cmd_file_close_window): impl.
 	(ev_window_destroy): quit after destroy.
 	(ev_window_class_init): override GtkObject::destroy.
@@ -9276,15 +9282,15 @@ Tue Dec 21 16:08:17 2004  Jonathan Blandford  <jrb@redhat.com>
 2004-10-23  Martin Kretzschmar  <m_kretzschmar@gmx.net>
 
 	* Makefile.am (SUBDIRS): add data subdir.
-    
+
 	* configure.ac (UIDIR): gen data/Makefile, define UIDIR.  Require
 	gtk+ 2.5.0 for GtkAboutDialog.
-    
+
 	* data/Makefile.am, data/evince-ui.xml: add, ui definition for the
 	main window.
-    
+
 	* shell/Makefile.am (INCLUDES): propagate UIDIR definition.
-    
+
 	* shell/ev-window.c (ev_window_init): create a menubar, using a ui
 	manager.
 	(ev_window_cmd_help_about): about command, using GtkAboutDialog.
