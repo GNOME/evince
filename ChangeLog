@@ -1,3 +1,11 @@
+2006-10-01  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity),
+	(ev_window_set_view_accels_sensitivity):
+	
+	Don't enable Splash on documents which don't support
+	find. Fixes bug #358648.
+
 2006-10-01  Wouter Bolsterlee  <wbolster@gnome.org>
 
 	* shell/ev-window.c: (ev_window_cmd_file_open): Make the

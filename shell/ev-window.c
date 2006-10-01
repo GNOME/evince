@@ -299,7 +299,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		can_get_text = TRUE;
 	}
 	
-	if (has_document && EV_IS_DOCUMENT_FIND (document)) {
+	if (has_pages && EV_IS_DOCUMENT_FIND (document)) {
 		can_find = TRUE;
 	}
 
@@ -336,10 +336,8 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 
         /* Edit menu */
 	ev_window_set_action_sensitive (ev_window, "EditSelectAll", has_pages && can_get_text);
-	ev_window_set_action_sensitive (ev_window, "EditFind",
-			      has_pages && EV_IS_DOCUMENT_FIND (document));
-	ev_window_set_action_sensitive (ev_window, "Slash",
-			      has_pages && EV_IS_DOCUMENT_FIND (document));
+	ev_window_set_action_sensitive (ev_window, "EditFind", can_find);
+	ev_window_set_action_sensitive (ev_window, "Slash", can_find);
 	ev_window_set_action_sensitive (ev_window, "EditRotateLeft", has_pages);
 	ev_window_set_action_sensitive (ev_window, "EditRotateRight", has_pages);
 
@@ -414,6 +412,11 @@ ev_window_update_actions (EvWindow *ev_window)
 static void
 ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 {
+	gboolean can_find;
+	
+	can_find = window->priv->document && 
+	    EV_IS_DOCUMENT_FIND (window->priv->document);
+
 	if (window->priv->action_group) {
 		ev_window_set_action_sensitive (window, "PageDown", sensitive);
 		ev_window_set_action_sensitive (window, "PageUp", sensitive);
@@ -423,12 +426,13 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 		ev_window_set_action_sensitive (window, "ShiftBackSpace", sensitive);
 		ev_window_set_action_sensitive (window, "Return", sensitive);
 		ev_window_set_action_sensitive (window, "ShiftReturn", sensitive);
-		ev_window_set_action_sensitive (window, "Slash", sensitive);
 		ev_window_set_action_sensitive (window, "Plus", sensitive);
 		ev_window_set_action_sensitive (window, "Minus", sensitive);
 		ev_window_set_action_sensitive (window, "KpPlus", sensitive);
 		ev_window_set_action_sensitive (window, "KpMinus", sensitive);
 		ev_window_set_action_sensitive (window, "Equal", sensitive);
+
+		ev_window_set_action_sensitive (window, "Slash", sensitive && can_find);
 	}
 }
 
