@@ -1,5 +1,12 @@
 2006-10-01  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-sidebar.c: (ev_sidebar_init), (ev_sidebar_set_document):
+	
+	Don't make sidebar close button insensitive. Fixes
+	bug #357871.
+
+2006-10-01  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c: (ev_window_setup_action_sensitivity),
 	(ev_window_set_view_accels_sensitivity):
 	
