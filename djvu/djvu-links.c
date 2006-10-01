@@ -154,6 +154,7 @@ build_tree (const DjvuDocument *djvu_document,
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, ev_link,
 					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, FALSE,
 					    -1);
+			g_object_unref (ev_link);
 		} else {
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 			gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
