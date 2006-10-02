@@ -712,8 +712,8 @@ setup_view_from_metadata (EvWindow *window)
 	}
 
 	if (restore_size &&
-	    ev_metadata_manager_get (uri, "window_width", &width, TRUE) &&
-            ev_metadata_manager_get (uri, "window_height", &height, TRUE)) {
+	    ev_metadata_manager_get (uri, "window_width", &width, FALSE) &&
+            ev_metadata_manager_get (uri, "window_height", &height, FALSE)) {
 		gtk_window_resize (GTK_WINDOW (window),
 				   g_value_get_int (&width),
 				   g_value_get_int (&height));
