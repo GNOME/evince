@@ -1,5 +1,16 @@
 2006-10-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-metadata-manager.c: (save_values):
+	* shell/ev-window.c: (setup_size_from_metadata),
+	(setup_view_from_metadata), (ev_window_setup_document),
+	(ev_window_xfer_job_cb), (window_configure_event_cb):
+	
+	Set size according to the document size/page size ratio.
+	That should correct rather wierd behaviour of the previous
+	commit.
+
+2006-10-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-window.c: (setup_view_from_metadata):
 	
 	Set size for new windows from previous window size.

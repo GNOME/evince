@@ -539,8 +539,12 @@ save_values (const gchar *key, GValue *value, xmlNodePtr parent)
 			string_value = g_strdup_printf ("%d", g_value_get_int (value));
                         break;
                 case G_TYPE_DOUBLE:
-			string_value = g_strdup_printf ("%f", g_value_get_double (value));
-                        break;
+            		{
+            			gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
+            			g_ascii_dtostr (buf, G_ASCII_DTOSTR_BUF_SIZE, g_value_get_double (value));
+				string_value = g_strdup_printf ("%s", buf);
+			}
+            	        break;
                 case G_TYPE_BOOLEAN:
 			string_value = g_strdup_printf ("%d", g_value_get_boolean (value));
                         break;

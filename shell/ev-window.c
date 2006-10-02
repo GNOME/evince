@@ -680,16 +680,73 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 }
 
 static void
+setup_size_from_metadata (EvWindow *window)
+{
+	char *uri = window->priv->uri;
+	GValue width = { 0, };
+	GValue height = { 0, };
+	GValue width_ratio = { 0, };
+	GValue height_ratio = { 0, };
+	GValue maximized = { 0, };
+	GValue x = { 0, };
+	GValue y = { 0, };
+
+	if (ev_metadata_manager_get (uri, "window_maximized", &maximized, FALSE)) {
+		if (g_value_get_boolean (&maximized)) {
+			gtk_window_maximize (GTK_WINDOW (window));
+			return;
+		} else {
+			gtk_window_unmaximize (GTK_WINDOW (window));
+		}
+		g_value_unset (&maximized);
+	}
+
+	if (ev_metadata_manager_get (uri, "window_x", &x, TRUE) &&
+	    ev_metadata_manager_get (uri, "window_y", &y, TRUE)) {
+		gtk_window_move (GTK_WINDOW (window), g_value_get_int (&x),
+				 g_value_get_int (&y));
+	        g_value_unset (&x);
+	        g_value_unset (&y);
+	}
+
+        if (ev_metadata_manager_get (uri, "window_width", &width, TRUE) &&
+	    ev_metadata_manager_get (uri, "window_height", &height, TRUE)) {
+		gtk_window_resize (GTK_WINDOW (window),
+				   g_value_get_int (&width),
+				   g_value_get_int (&height));
+	    	g_value_unset (&width);
+		g_value_unset (&height);
+		return;
+	}
+
+        if (window->priv->page_cache &&
+    	    ev_metadata_manager_get (uri, "window_width_ratio", &width_ratio, FALSE) &&
+	    ev_metadata_manager_get (uri, "window_height_ratio", &height_ratio, FALSE)) {
+		gint document_width;
+		gint document_height;
+
+		ev_page_cache_get_max_width (window->priv->page_cache, 
+					     0, 1.0,
+					     &document_width);
+		ev_page_cache_get_max_height (window->priv->page_cache, 
+					     0, 1.0,
+					     &document_height);			
+		
+		gtk_window_resize (GTK_WINDOW (window),
+				   g_value_get_double (&width_ratio) * document_width,
+				   g_value_get_double (&height_ratio) * document_height);
+	    	g_value_unset (&width_ratio);
+		g_value_unset (&height_ratio);
+	}
+
+}
+
+static void
 setup_view_from_metadata (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
 	char *uri = window->priv->uri;
 	GEnumValue *enum_value;
-	GValue width = { 0, };
-	GValue height = { 0, };
-	GValue maximized = { 0, };
-	GValue x = { 0, };
-	GValue y = { 0, };
 	GValue sizing_mode = { 0, };
 	GValue zoom = { 0, };
 	GValue continuous = { 0, };
@@ -697,36 +754,16 @@ setup_view_from_metadata (EvWindow *window)
 	GValue presentation = { 0, };
 	GValue fullscreen = { 0, };
 	GValue rotation = { 0, };
-	gboolean restore_size = TRUE;
+	GValue maximized = { 0, };
 
-	/* Window size */
-
+	/* Maximized */
 	if (ev_metadata_manager_get (uri, "window_maximized", &maximized, FALSE)) {
 		if (g_value_get_boolean (&maximized)) {
 			gtk_window_maximize (GTK_WINDOW (window));
-			restore_size = FALSE;
 		} else {
 			gtk_window_unmaximize (GTK_WINDOW (window));
 		}
 		g_value_unset (&maximized);
-	}
-
-	if (restore_size &&
-	    ev_metadata_manager_get (uri, "window_width", &width, FALSE) &&
-            ev_metadata_manager_get (uri, "window_height", &height, FALSE)) {
-		gtk_window_resize (GTK_WINDOW (window),
-				   g_value_get_int (&width),
-				   g_value_get_int (&height));
-		g_value_unset (&width);
-		g_value_unset (&height);		
-	}
-	if (restore_size &&
-	    ev_metadata_manager_get (uri, "window_x", &x, TRUE) &&
-	    ev_metadata_manager_get (uri, "window_y", &y, TRUE)) {
-		gtk_window_move (GTK_WINDOW (window), g_value_get_int (&x),
-				 g_value_get_int (&y));
-	        g_value_unset (&x);
-	        g_value_unset (&y);
 	}
 
 	/* Sizing mode */
@@ -832,6 +869,7 @@ ev_window_setup_document (EvWindow *ev_window)
 					           ev_window->priv->document);
 	}
 	
+	setup_size_from_metadata (ev_window);
 	setup_document_from_metadata (ev_window);
 	setup_sidebar_from_metadata (ev_window, document);
 
@@ -954,22 +992,22 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	/* Success! */
 	if (job->error == NULL) {
 
-		g_free (ev_window->priv->uri);
+		if (ev_window->priv->uri)
+			g_free (ev_window->priv->uri);
 		ev_window->priv->uri = g_strdup (job->uri);
-		setup_view_from_metadata (ev_window);
 
-		if (job->local_uri) {
-			ev_window->priv->local_uri = g_strdup (job->local_uri);
-		} else {
-			ev_window->priv->local_uri = NULL;
-		}
+		if (ev_window->priv->local_uri)
+			g_free (ev_window->priv->local_uri);
+		ev_window->priv->local_uri = 
+		    job->local_uri ? g_strdup (job->local_uri) : NULL;
 		
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
 
+		setup_view_from_metadata (ev_window);
 		ev_window_setup_document (ev_window);
-		ev_window_add_recent (ev_window, ev_window->priv->uri);		
+		ev_window_add_recent (ev_window, ev_window->priv->uri);
 
 		if (job->dest)
 			ev_window_goto_dest (ev_window, job->dest);
@@ -1000,7 +1038,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		ev_window->priv->uri = g_strdup (job->uri);
 		setup_view_from_metadata (ev_window);
 
-
 		file_name = gnome_vfs_format_uri_for_display (job->uri);
 		base_name = g_path_get_basename (file_name);
 		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
@@ -1008,7 +1045,7 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		g_free (file_name);
 		g_free (base_name);
 		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
-
+		
 		ev_window_popup_password_dialog (ev_window);
 	} else {
 		ev_window_error_dialog (GTK_WINDOW (ev_window), 
@@ -3770,7 +3807,7 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 {
 	char *uri = window->priv->uri;
 	GdkWindowState state;
-	int x, y, width, height;
+	int x, y, width, height, document_width, document_height;
 
 	state = gdk_window_get_state (GTK_WIDGET (window)->window);
 
@@ -3778,11 +3815,19 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 		gtk_window_get_position (GTK_WINDOW (window), &x, &y);
 		gtk_window_get_size (GTK_WINDOW (window), &width, &height);
 
-		if (!ev_window_is_empty (window)) {
+		if (!ev_window_is_empty (window) && window->priv->page_cache) {
+			ev_page_cache_get_max_width (window->priv->page_cache, 
+						     0, 1.0,
+						     &document_width);
+			ev_page_cache_get_max_height (window->priv->page_cache, 
+						      0, 1.0,
+						      &document_height);			
 			ev_metadata_manager_set_int (uri, "window_x", x);
 			ev_metadata_manager_set_int (uri, "window_y", y);
-			ev_metadata_manager_set_int (uri, "window_width", width);
-			ev_metadata_manager_set_int (uri, "window_height", height);
+			ev_metadata_manager_set_double (uri, "window_width_ratio", 
+							(double)width/document_width);
+			ev_metadata_manager_set_double (uri, "window_height_ratio", 
+							(double)height/document_height);
 		}
 	}
 
