@@ -16,7 +16,7 @@ _imp_fill_back(ImpRenderCtx *ctx, void *drw_data, iks *node)
 	iks *x;
 
 	type = r_get_style(ctx, node, "draw:fill");
-	if (G_UNLIKELY (type == 0)) return 0;
+	if (type == 0) return 0;
 
 	if (strcmp(type, "solid") == 0) {
 		if (r_get_color(ctx, node, "draw:fill-color", &col)) {
