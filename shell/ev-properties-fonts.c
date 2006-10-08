@@ -38,6 +38,7 @@ struct _EvPropertiesFonts {
 
 	GtkWidget *fonts_treeview;
 	GtkWidget *fonts_progress_label;
+	EvJob     *fonts_job;
 
 	EvDocument *document;
 };
@@ -45,6 +46,9 @@ struct _EvPropertiesFonts {
 struct _EvPropertiesFontsClass {
 	GtkVBoxClass base_class;
 };
+
+static void
+job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties);
 
 G_DEFINE_TYPE (EvPropertiesFonts, ev_properties_fonts, GTK_TYPE_VBOX)
 
@@ -56,6 +60,18 @@ ev_properties_fonts_dispose (GObject *object)
 	if (properties->xml) {
 		g_object_unref (properties->xml);
 		properties->xml = NULL;
+	}
+	
+	if (properties->fonts_job) {
+
+		g_signal_handlers_disconnect_by_func
+				(properties->fonts_job, 
+				 job_fonts_finished_cb, 
+				 properties);
+		ev_job_queue_remove_job (properties->fonts_job);
+
+		g_object_unref (properties->fonts_job);		
+		properties->fonts_job = NULL;
 	}
 }
 
@@ -146,25 +162,25 @@ job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties)
 {	
 	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS (job->document);
 	double progress;
-
+	
 	progress = ev_document_fonts_get_progress (document_fonts);
 	update_progress_label (properties->fonts_progress_label, progress);
 
 	if (EV_JOB_FONTS (job)->scan_completed) {
 		g_signal_handlers_disconnect_by_func
 				(job, job_fonts_finished_cb, properties);
+		g_object_unref (properties->fonts_job);
+		properties->fonts_job = NULL;
 	} else {
 		GtkTreeModel *model;
-		EvJob *new_job;
 
 		model = gtk_tree_view_get_model
 				(GTK_TREE_VIEW (properties->fonts_treeview));
 		ev_document_doc_mutex_lock ();
 		ev_document_fonts_fill_model (document_fonts, model);
 		ev_document_doc_mutex_unlock ();
-		new_job = ev_job_fonts_new (job->document);
+
 		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
-		g_object_unref (new_job);
 	}
 }
 
@@ -174,7 +190,6 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 {
 	GtkTreeView *tree_view = GTK_TREE_VIEW (properties->fonts_treeview);
 	GtkListStore *list_store;
-	EvJob *job;
 
 	properties->document = document;
 
@@ -182,12 +197,11 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 					 G_TYPE_STRING, G_TYPE_STRING);
 	gtk_tree_view_set_model (tree_view, GTK_TREE_MODEL (list_store));
 
-	job = ev_job_fonts_new (properties->document);
-	g_signal_connect_object (job, "finished",
-			         G_CALLBACK (job_fonts_finished_cb),
-				 properties, 0);
-	ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
-	g_object_unref (job);
+	properties->fonts_job = ev_job_fonts_new (properties->document);
+	g_signal_connect (properties->fonts_job, "finished",
+			  G_CALLBACK (job_fonts_finished_cb),
+			  properties);
+	ev_job_queue_add_job (properties->fonts_job, EV_JOB_PRIORITY_LOW);
 }
 
 GtkWidget *

@@ -1,3 +1,10 @@
+2006-10-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-properties-fonts.c: (ev_properties_fonts_dispose),
+	(job_fonts_finished_cb), (ev_properties_fonts_set_document):
+	
+	Correctly disconnect from job signals on destroy.
+
 2006-10-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view-private.h:
