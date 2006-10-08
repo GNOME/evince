@@ -1,3 +1,12 @@
+2006-10-08  Wouter Bolsterlee  <wbolster@gnome.org>
+
+	* backend/ev-document-factory.c:
+	* configure.ac:
+	Assigned OpenDocument presenation MIME type to the
+	Impress backend. Added some missing (but harmless)
+	#ifdefs in the document factory as well to make things
+	consistent again. Fixes bug #360658.
+
 2006-10-08  Christian Persch  <chpe@cvs.gnome.org>
 
 	* backend/ev-async-renderer.c: (ev_async_renderer_get_type):

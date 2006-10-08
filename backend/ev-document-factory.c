@@ -26,21 +26,27 @@
 
 /* The various document type backends: */
 #include "ev-poppler.h"
-#include "pixbuf-document.h"
-#include "tiff-document.h"
-#include "impress-document.h"
 
 #ifdef ENABLE_PS
 #include "ps-document.h"
 #endif
+#ifdef ENABLE_TIFF
+#include "tiff-document.h"
+#endif
 #ifdef ENABLE_DVI
 #include "dvi-document.h"
+#endif
+#ifdef ENABLE_PIXBUF
+#include "pixbuf-document.h"
 #endif
 #ifdef ENABLE_DJVU
 #include "djvu-document.h"
 #endif
 #ifdef ENABLE_COMICS
 #include "comics-document.h"
+#endif
+#ifdef ENABLE_IMPRESS
+#include "impress-document.h"
 #endif
 
 #include <string.h>
@@ -69,11 +75,6 @@ const EvDocumentType document_types[] = {
 	{"image/x-eps",                EV_BACKEND_PS,   ps_document_get_type},
 #endif
 
-#ifdef ENABLE_IMPRESS
-	/* Impress slides: */
-	{"application/vnd.sun.xml.impress", EV_BACKEND_IMPRESS, impress_document_get_type},
-#endif
-
 #ifdef ENABLE_TIFF
 	/* Tiff: */
 	{"image/tiff",                 EV_BACKEND_TIFF, tiff_document_get_type},
@@ -94,6 +95,13 @@ const EvDocumentType document_types[] = {
 	{"application/x-cbr",           EV_BACKEND_COMICS,  comics_document_get_type},
 	{"application/x-cbz",           EV_BACKEND_COMICS,  comics_document_get_type},
 #endif
+
+#ifdef ENABLE_IMPRESS
+	/* Impress slides: */
+	{"application/vnd.sun.xml.impress", EV_BACKEND_IMPRESS, impress_document_get_type},
+	{"application/vnd.oasis.opendocument.presentation", EV_BACKEND_IMPRESS, impress_document_get_type},
+#endif
+
 };
 
 #ifdef ENABLE_PIXBUF
