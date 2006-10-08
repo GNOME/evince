@@ -1941,7 +1941,7 @@ egg_recent_model_get_type (void)
 	static GType egg_recent_model_type = 0;
 
 	if(!egg_recent_model_type) {
-		static const GTypeInfo egg_recent_model_info = {
+		const GTypeInfo egg_recent_model_info = {
 			sizeof (EggRecentModelClass),
 			NULL, /* base init */
 			NULL, /* base finalize */

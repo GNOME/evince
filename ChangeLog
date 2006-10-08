@@ -1,3 +1,42 @@
+2006-10-08  Christian Persch  <chpe@cvs.gnome.org>
+
+	* backend/ev-async-renderer.c: (ev_async_renderer_get_type):
+	* backend/ev-document-find.c: (ev_document_find_get_type):
+	* backend/ev-document-fonts.c: (ev_document_fonts_get_type):
+	* backend/ev-document-links.c: (ev_document_links_get_type):
+	* backend/ev-document-security.c: (ev_document_security_get_type):
+	* backend/ev-document-thumbnails.c:
+	(ev_document_thumbnails_get_type):
+	* backend/ev-document.c: (ev_document_get_type):
+	* backend/ev-ps-exporter.c: (ev_ps_exporter_get_type):
+	* backend/ev-selection.c: (ev_selection_get_type):
+	* cut-n-paste/recent-files/egg-recent-model.c:
+	(egg_recent_model_get_type):
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.c:
+	(egg_recent_view_uimanager_get_type):
+	* cut-n-paste/recent-files/egg-recent-view.c:
+	(egg_recent_view_get_type):
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.c:
+	(egg_editable_toolbar_get_type):
+	* cut-n-paste/toolbar-editor/egg-toolbar-editor.c:
+	(egg_toolbar_editor_get_type):
+	* cut-n-paste/toolbar-editor/egg-toolbars-model.c:
+	(egg_toolbars_model_get_type):
+	* cut-n-paste/toolbar-editor/eggtreemultidnd.c:
+	(egg_tree_multi_drag_source_get_type):
+	* cut-n-paste/zoom-control/ephy-zoom-action.c:
+	(ephy_zoom_action_get_type):
+	* cut-n-paste/zoom-control/ephy-zoom-control.c:
+	(ephy_zoom_control_get_type):
+	* impress/r_back.c: (_imp_fill_back):
+	* properties/ev-properties-main.c:
+	(ev_properties_plugin_register_type):
+	* shell/ev-sidebar-page.c: (ev_sidebar_page_get_type):
+	* shell/ev-view-accessible.c: (ev_view_accessible_get_type),
+	(ev_view_accessible_factory_get_type):
+
+	Reduce relocations. Bug #360616.
+
 2006-10-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* backend/ev-document-factory.c:

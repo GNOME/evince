@@ -838,7 +838,7 @@ egg_recent_view_uimanager_get_type (void)
 	static GType egg_recent_view_uimanager_type = 0;
 
 	if(!egg_recent_view_uimanager_type) {
-		static const GTypeInfo egg_recent_view_uimanager_info = {
+		const GTypeInfo egg_recent_view_uimanager_info = {
 			sizeof (EggRecentViewUIManagerClass),
 			NULL, /* base init */
 			NULL, /* base finalize */
@@ -850,7 +850,7 @@ egg_recent_view_uimanager_get_type (void)
 			(GInstanceInitFunc) egg_recent_view_uimanager_init
 		};
 
-		static const GInterfaceInfo view_info =
+		const GInterfaceInfo view_info =
 		{
 			(GInterfaceInitFunc) egg_recent_view_init,
 			NULL,

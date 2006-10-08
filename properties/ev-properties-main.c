@@ -46,7 +46,7 @@ static GList *ev_properties_get_pages
 static void
 ev_properties_plugin_register_type (GTypeModule *module)
 {
-	static const GTypeInfo info = {
+	const GTypeInfo info = {
 		sizeof (GObjectClass),
 		(GBaseInitFunc) NULL,
 		(GBaseFinalizeFunc) NULL,
@@ -57,7 +57,7 @@ ev_properties_plugin_register_type (GTypeModule *module)
 		0,
 		(GInstanceInitFunc) NULL
 	};
-	static const GInterfaceInfo property_page_provider_iface_info = {
+	const GInterfaceInfo property_page_provider_iface_info = {
 		(GInterfaceInitFunc)property_page_provider_iface_init,
 		NULL,
 		NULL

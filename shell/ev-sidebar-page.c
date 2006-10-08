@@ -34,7 +34,7 @@ ev_sidebar_page_get_type (void)
 
 	if (G_UNLIKELY (type == 0))
 	{
-		static const GTypeInfo sidebar_page_info =
+		const GTypeInfo sidebar_page_info =
 		{
 			sizeof (EvSidebarPageIface),
 			NULL,

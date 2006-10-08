@@ -467,8 +467,8 @@ GType ev_view_accessible_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
-		static GTypeInfo tinfo = {
+	if (G_UNLIKELY (type == 0)) {
+		GTypeInfo tinfo = {
 			0,	/* class size */
 			(GBaseInitFunc) NULL,	/* base init */
 			(GBaseFinalizeFunc) NULL,	/* base finalize */
@@ -481,14 +481,14 @@ GType ev_view_accessible_get_type (void)
 			NULL	/* value table */
 		};
 
-		static const GInterfaceInfo atk_text_info = {
+		const GInterfaceInfo atk_text_info = {
 			(GInterfaceInitFunc)
 			    ev_view_accessible_text_iface_init,
 			(GInterfaceFinalizeFunc) NULL,
 			NULL
 		};
 
-		static const GInterfaceInfo atk_action_info = {
+		const GInterfaceInfo atk_action_info = {
 			(GInterfaceInitFunc)
 			    ev_view_accessible_action_iface_init,
 			(GInterfaceFinalizeFunc) NULL,
@@ -566,8 +566,8 @@ GType ev_view_accessible_factory_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
-		static const GTypeInfo tinfo = {
+	if (G_UNLIKELY (type == 0)) {
+		const GTypeInfo tinfo = {
 			sizeof(AtkObjectFactoryClass),
 			NULL,	/* base_init */
 			NULL,	/* base_finalize */

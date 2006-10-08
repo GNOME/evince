@@ -35,7 +35,7 @@ egg_recent_view_get_type (void)
 
 	if (!view_type)
 	{
-		static const GTypeInfo view_info =
+		const GTypeInfo view_info =
 		{
 			sizeof (EggRecentViewClass),  /* class_size */
 			NULL,			    /* base_init */
