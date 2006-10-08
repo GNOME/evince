@@ -291,21 +291,19 @@ ev_document_factory_get_document (const char *uri, GError **error)
 
 	document = get_document_from_uri (uri, FALSE, error);
 
-	if (*error != NULL) {
-		return NULL;
-	}
+	if (*error == NULL) {
+		result = ev_document_load (document, uri, error);
 
-	result = ev_document_load (document, uri, error);
-
-	if (result == FALSE || *error) {
-		if (*error &&
-		    (*error)->domain == EV_DOCUMENT_ERROR &&
-		    (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED)
+		if (result == FALSE || *error) {
+			if (*error &&
+			    (*error)->domain == EV_DOCUMENT_ERROR &&
+			    (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED)
+				return document;
+		} else {
 			return document;
-	} else {
-		return document;
+		}
 	}
-
+	
 	/* Try again with slow mime detection */
 	if (document)
 		g_object_unref (document);
