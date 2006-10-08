@@ -45,6 +45,7 @@ typedef enum {
 	SCROLL_TO_KEEP_POSITION,
 	SCROLL_TO_PAGE_POSITION,
 	SCROLL_TO_CENTER,
+	SCROLL_TO_FIND_LOCATION,
 } PendingScroll;
 
 typedef enum {

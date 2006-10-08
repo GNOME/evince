@@ -1,3 +1,12 @@
+2006-10-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (view_set_adjustment_values),
+	(view_update_range_and_current_page),
+	(ensure_rectangle_is_visible), (ev_view_size_allocate):
+	
+	Fixes bug #343199, current page now follows find page.
+
 2006-10-08  Wouter Bolsterlee  <wbolster@gnome.org>
 
 	* backend/ev-document-factory.c:

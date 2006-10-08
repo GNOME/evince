@@ -386,6 +386,7 @@ view_set_adjustment_values (EvView         *view,
 	factor = 1.0;
 	switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION:
+    	        case SCROLL_TO_FIND_LOCATION:
 			factor = (adjustment->value) / adjustment->upper;
 			break;
     	        case SCROLL_TO_PAGE_POSITION:
@@ -406,6 +407,7 @@ view_set_adjustment_values (EvView         *view,
 	 */
 	switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION:
+    	        case SCROLL_TO_FIND_LOCATION:
 			new_value = CLAMP (adjustment->upper * factor + 0.5, 0, adjustment->upper - adjustment->page_size);
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
@@ -428,9 +430,6 @@ view_update_range_and_current_page (EvView *view)
 	gint current_page;
 	gint best_current_page = -1;
 	
-	if (view->pending_scroll != SCROLL_TO_KEEP_POSITION)
-		return;
-
 	/* Presentation trumps all other modes */
 	if (view->presentation) {
 		view->start_page = view->current_page;
@@ -496,7 +495,7 @@ view_update_range_and_current_page (EvView *view)
 	best_current_page = MAX (best_current_page, view->start_page);
 	current_page = ev_page_cache_get_current_page (view->page_cache);
 
-	if (current_page != best_current_page) {
+	if ((current_page != best_current_page) && (view->pending_scroll == SCROLL_TO_KEEP_POSITION)) {
 		view->current_page = best_current_page;
 		ev_page_cache_set_current_page (view->page_cache, best_current_page);
 	}
@@ -667,7 +666,7 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 	GtkAdjustment *adjustment;
 	int value;
 
-	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+	view->pending_scroll = SCROLL_TO_FIND_LOCATION;
 
 	adjustment = view->vadjustment;
 
@@ -692,6 +691,8 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 			     widget->allocation.width + MARGIN);
 		gtk_adjustment_set_value (view->hadjustment, value);
 	}
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 /*** Geometry computations ***/
@@ -1610,11 +1611,11 @@ ev_view_size_allocate (GtkWidget      *widget,
 	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
 	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
 
-	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
-	view->pending_resize = FALSE;
-
 	if (view->document)
 		view_update_range_and_current_page (view);
+
+	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+	view->pending_resize = FALSE;
 
 	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
 }
