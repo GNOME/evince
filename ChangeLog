@@ -1,3 +1,11 @@
+2006-10-19  Wouter Bolsterlee  <wbolster@cvs.gnome.org>
+
+	* shell/ev-view.c: (ev_view_scroll):
+	Page Up/Down should do page jumps in "Best fit" mode.
+	If a user has explicitly chosen to view exactly one page
+	at a time, scrolling just a part of the page when
+	pressing Page Up/Down is not right. Fixes bug #323107.
+
 2006-10-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:

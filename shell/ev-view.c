@@ -581,7 +581,7 @@ ev_view_scroll (EvView        *view,
 
 	view->jump_to_find_result = FALSE;
 
-	if (view->presentation) {
+	if (view->presentation || view->sizing_mode == EV_SIZING_BEST_FIT) {
 		switch (scroll) {
 			case EV_SCROLL_PAGE_BACKWARD:
 			case EV_SCROLL_STEP_BACKWARD:
