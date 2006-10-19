@@ -40,6 +40,7 @@ struct _EvWindowTitle
 static const BadExtensionEntry bad_extensions[] = {
 	{ EV_BACKEND_PS, ".dvi" },
 	{ EV_BACKEND_PDF, ".doc" },
+	{ EV_BACKEND_PDF, ".dvi" },
 	{ EV_BACKEND_PDF, ".indd" },
 	{ EV_BACKEND_PDF, ".rtf" }
 };
