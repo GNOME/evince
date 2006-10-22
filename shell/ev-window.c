@@ -2089,9 +2089,12 @@ fullscreen_popup_size_request_cb (GtkWidget *popup, GtkRequisition *req, EvWindo
 }
 
 static gboolean
-fullscreen_timeout_cb (gpointer data)
+fullscreen_timeout_cb (EvWindow *window)
 {
-	EvWindow *window = EV_WINDOW (data);
+	EvView *view = EV_VIEW (window->priv->view);
+
+	if (!view || !ev_view_get_fullscreen (EV_VIEW (view)))
+		return FALSE;
 	
 	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
 	ev_view_hide_cursor (EV_VIEW (window->priv->view));
@@ -2108,7 +2111,7 @@ fullscreen_set_timeout (EvWindow *window)
 	}
 	
 	window->priv->fullscreen_timeout_id = 
-	    g_timeout_add (FULLSCREEN_TIMEOUT, fullscreen_timeout_cb, window);
+	    g_timeout_add (FULLSCREEN_TIMEOUT, (GSourceFunc)fullscreen_timeout_cb, window);
 
 	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, TRUE);
 	update_chrome_visibility (window);
@@ -4102,6 +4105,8 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (window_configure_event_cb), NULL);
 	g_signal_connect (ev_window, "window_state_event",
 			  G_CALLBACK (window_state_event_cb), NULL);
+	g_signal_connect (ev_window, "notify",
+			  G_CALLBACK (fullscreen_timeout_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
