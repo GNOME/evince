@@ -191,6 +191,9 @@ struct _EvJobPrint
 	gchar  *temp_file;
 	EvPrintRange *ranges;
 	gint n_ranges;
+	gint copies;
+	gboolean collate;
+	gboolean reverse;
 	gdouble width;
 	gdouble height;
 };
@@ -246,10 +249,13 @@ void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);
 /* EvJobPrint */
 GType           ev_job_print_get_type     (void) G_GNUC_CONST;
 EvJob          *ev_job_print_new          (EvDocument      *document,
+					   gdouble          width,
+					   gdouble          height,
 					   EvPrintRange    *ranges,
 					   gint             n_ranges,
-					   gdouble          width,
-					   gdouble          height);
+					   gint             copies,
+					   gdouble          collate,
+					   gdouble          reverse);
 void            ev_job_print_run          (EvJobPrint      *print);
 
 G_END_DECLS

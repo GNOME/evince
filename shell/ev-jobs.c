@@ -528,10 +528,13 @@ ev_job_xfer_run (EvJobXfer *job)
 
 EvJob *
 ev_job_print_new (EvDocument   *document,
-		  EvPrintRange *ranges,
-		  gint          n_ranges,
-		  gdouble       width,
-		  gdouble       height)
+		  gdouble          width,
+		  gdouble          height,
+		  EvPrintRange    *ranges,
+		  gint             n_ranges,
+		  gint             copies,
+		  gdouble          collate,
+		  gdouble          reverse)
 {
 	EvJobPrint *job;
 
@@ -542,12 +545,16 @@ ev_job_print_new (EvDocument   *document,
 	job->temp_file = NULL;
 	job->error = NULL;
 
+	job->width = width;
+	job->height = height;
+	
 	job->ranges = ranges;
 	job->n_ranges = n_ranges;
 	
-	job->width = width;
-	job->height = height;
-
+	job->copies = copies;
+	job->collate = collate;
+	job->reverse = reverse;
+	
 	return EV_JOB (job);
 }
 
@@ -603,6 +610,17 @@ ev_print_job_print_page (EvJobPrint *job,
 	return FALSE;
 }
 
+static void
+ev_job_print_do_page (EvJobPrint *job, gint page)
+{
+	EvDocument      *document = EV_JOB (job)->document;
+	EvRenderContext *rc;
+
+	rc = ev_render_context_new (0, page, 1.0);
+	ev_ps_exporter_do_page (EV_PS_EXPORTER (document), rc);
+	g_object_unref (rc);
+}
+
 void
 ev_job_print_run (EvJobPrint *job)
 {
@@ -637,25 +655,36 @@ ev_job_print_run (EvJobPrint *job)
 			      MIN (first_page, last_page),
 			      MAX (first_page, last_page),
 			      job->width, job->height, FALSE);
-	ev_document_doc_mutex_unlock ();
 
-	for (i = first_page; i <= last_page; i++) {
-		EvRenderContext *rc;
-
-		if (job->n_ranges > 0 &&
-		    !ev_print_job_print_page (job, i))
-			continue;
+	for (i = 0; i < job->copies; i++) {
+		gint page, step;
 		
-		rc = ev_render_context_new (0, i, 1.0);
+		step = job->reverse ? -1 : 1;
+		page = job->reverse ? last_page : first_page;
+		while ((job->reverse && (page >= first_page)) ||
+		       (!job->reverse && (page <= last_page))) {
+			gint n_pages = 1;
+			gint j;
 
-		ev_document_doc_mutex_lock ();
-		ev_ps_exporter_do_page (EV_PS_EXPORTER (document), rc);
-		ev_document_doc_mutex_unlock ();
+			if (job->n_ranges > 0 && !ev_print_job_print_page (job, page)) {
+				page += step;
+				continue;
+			}
 
-		g_object_unref (rc);
+			if (job->collate)
+				n_pages = job->copies;
+
+			for (j = 0; j < n_pages; j++) {
+				ev_job_print_do_page (job, page);
+			}
+
+			page += step;
+		}
+
+		if (job->collate)
+			break;
 	}
 
-	ev_document_doc_mutex_lock ();
 	ev_ps_exporter_end (EV_PS_EXPORTER (document));
 	ev_document_doc_mutex_unlock ();
 
