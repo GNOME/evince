@@ -2228,6 +2228,12 @@ draw_loading_text (EvView       *view,
 	double real_scale;
 	int target_width;
 
+	/* Don't annoy users with loading messages during presentations.
+	 * FIXME: Temporary "workaround" for
+	 * http://bugzilla.gnome.org/show_bug.cgi?id=320352 */
+	if (view->presentation)
+		return;
+
 	const char *loading_text = _("Loading...");	
 
 	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
