@@ -2,6 +2,9 @@
 
 # This test opens a password encrypted file and tries to unlock it.
 
+import os
+os.environ['LANG']='en_US.UTF-8'
+
 from dogtail.procedural import *
 
 run('evince', arguments=' ./test-encrypt.pdf',)
