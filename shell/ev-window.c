@@ -900,7 +900,7 @@ password_dialog_response (GtkWidget *password_dialog,
 		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
 		ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
 		
-    		gtk_widget_destroy (password_dialog);
+		gtk_widget_destroy (password_dialog);
 			
 		return;
 	}
