@@ -1,22 +1,24 @@
 #!/usr/bin/python
 
+# This test opens a password encrypted file and tries to unlock it.
+
 from dogtail.procedural import *
-from dogtail.utils import screenshot
 
-import os
+run('evince', arguments=' ./test-encrypt.pdf',)
 
-os.environ['LANG']='en_US.UTF-8'
-os.system ('rm -rf ~/.gnome2/evince')
-
-run('evince',arguments=' ./test-encrypt.pdf',)
+# Try an incorrect password first
 focus.dialog('Enter password')
 focus.widget('Password Entry', roleName='password text')
-type("wrong password")
+type('wrong password')
 click('OK', roleName='push button')
 click('Cancel', roleName='push button')
+
+# Try again with the correct password
 click('Unlock Document', roleName='push button')
 focus.widget('Password Entry', roleName='password text')
-type("Foo")
+type('Foo')
 click('OK', roleName='push button')
-click('Close', roleName='menu item')
 
+# Close evince
+click('File', roleName='menu')
+click('Close', roleName='menu item')
