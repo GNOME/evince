@@ -2912,7 +2912,8 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"Marco Pesenti Gritti <marco@gnome.org>",
 		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
 		"Bryan Clark <clarkbw@gnome.org>",
-		"Carlos Garcia Campos  <carlosgc@gnome.org>",
+		"Carlos Garcia Campos <carlosgc@gnome.org>",
+		"Wouter Bolsterlee <wbolster@gnome.org>",
 		NULL
 	};
 
