@@ -1519,17 +1519,18 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 				    gint       response,
 				    EvWindow  *window)
 {
-	EvPrintRange *ranges = NULL;
-	EvPageCache  *page_cache;
-	gint          n_ranges = 0;
-	gint          copies;
-	gboolean      collate;
-	gboolean      reverse;
-	gdouble       scale;
-	gint          current_page;
-	gint          width;
-	gint          height;
-	GtkPrintPages print_pages;
+	EvPrintRange  *ranges = NULL;
+	EvPrintPageSet page_set;
+	EvPageCache   *page_cache;
+	gint           n_ranges = 0;
+	gint           copies;
+	gboolean       collate;
+	gboolean       reverse;
+	gdouble        scale;
+	gint           current_page;
+	gint           width;
+	gint           height;
+	GtkPrintPages  print_pages;
 	
 	if (response != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -1594,6 +1595,8 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 		break;
 	}
 
+	page_set = (EvPrintPageSet)gtk_print_settings_get_page_set (window->priv->print_settings);
+
 	scale = gtk_print_settings_get_scale (window->priv->print_settings) * 0.01;
 	page_cache = ev_page_cache_get (window->priv->document);
 	ev_page_cache_get_size (page_cache,
@@ -1609,7 +1612,9 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 						    (gdouble)width,
 						    (gdouble)height,
 						    ranges, n_ranges,
-						    copies, collate, reverse);
+						    page_set,
+						    copies, collate,
+						    reverse);
 	
 	g_signal_connect (window->priv->print_job, "finished",
 			  G_CALLBACK (ev_window_print_job_cb),

@@ -43,6 +43,12 @@ typedef struct {
 	gint end;
 } EvPrintRange;
 
+typedef enum {
+	EV_PRINT_PAGE_SET_ALL,
+	EV_PRINT_PAGE_SET_EVEN,
+	EV_PRINT_PAGE_SET_ODD
+} EvPrintPageSet;
+
 typedef struct _EvWindow EvWindow;
 typedef struct _EvWindowClass EvWindowClass;
 typedef struct _EvWindowPrivate EvWindowPrivate;

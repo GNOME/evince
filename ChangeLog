@@ -1,3 +1,12 @@
+2006-10-30  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-jobs.[ch]: (ev_job_print_new),
+	(ev_print_job_print_page_in_range), (ev_print_job_print_page_in_set),
+	(ev_job_print_do_page):
+	* shell/ev-window.[ch]: (ev_window_print_dialog_response_cb):
+
+	Allow printing only odd/even pages. Fixes bug #367289.
+
 2006-10-29  Wouter Bolsterlee  <wbolster@cvs.gnome.org>
 
 	* test/test1.py:

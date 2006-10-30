@@ -527,14 +527,15 @@ ev_job_xfer_run (EvJobXfer *job)
 }
 
 EvJob *
-ev_job_print_new (EvDocument   *document,
-		  gdouble          width,
-		  gdouble          height,
-		  EvPrintRange    *ranges,
-		  gint             n_ranges,
-		  gint             copies,
-		  gdouble          collate,
-		  gdouble          reverse)
+ev_job_print_new (EvDocument    *document,
+		  gdouble        width,
+		  gdouble        height,
+		  EvPrintRange  *ranges,
+		  gint           n_ranges,
+		  EvPrintPageSet page_set,
+		  gint           copies,
+		  gdouble        collate,
+		  gdouble        reverse)
 {
 	EvJobPrint *job;
 
@@ -550,6 +551,8 @@ ev_job_print_new (EvDocument   *document,
 	
 	job->ranges = ranges;
 	job->n_ranges = n_ranges;
+
+	job->page_set = page_set;
 	
 	job->copies = copies;
 	job->collate = collate;
@@ -596,14 +599,30 @@ ev_print_job_get_last_page (EvJobPrint *job)
 }
 
 static gboolean
-ev_print_job_print_page (EvJobPrint *job,
-			 gint        page)
+ev_print_job_print_page_in_range (EvJobPrint *job,
+				  gint        page)
 {
 	gint i;
 
 	for (i = 0; i < job->n_ranges; i++) {
 		if (page >= job->ranges[i].start &&
 		    page <= job->ranges[i].end)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+static gboolean
+ev_print_job_print_page_in_set (EvJobPrint *job,
+				gint        page)
+{
+	switch (job->page_set) {
+	        case EV_PRINT_PAGE_SET_EVEN:
+			return page % 2 == 0;
+	        case EV_PRINT_PAGE_SET_ODD:
+			return page % 2 != 0;
+	        case EV_PRINT_PAGE_SET_ALL:
 			return TRUE;
 	}
 
@@ -666,7 +685,13 @@ ev_job_print_run (EvJobPrint *job)
 			gint n_pages = 1;
 			gint j;
 
-			if (job->n_ranges > 0 && !ev_print_job_print_page (job, page)) {
+			if (job->n_ranges > 0 &&
+			    !ev_print_job_print_page_in_range (job, page)) {
+				page += step;
+				continue;
+			}
+
+			if (!ev_print_job_print_page_in_set (job, page + 1)) {
 				page += step;
 				continue;
 			}

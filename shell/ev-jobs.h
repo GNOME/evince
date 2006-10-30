@@ -191,6 +191,7 @@ struct _EvJobPrint
 	gchar  *temp_file;
 	EvPrintRange *ranges;
 	gint n_ranges;
+	EvPrintPageSet page_set;
 	gint copies;
 	gboolean collate;
 	gboolean reverse;
@@ -253,6 +254,7 @@ EvJob          *ev_job_print_new          (EvDocument      *document,
 					   gdouble          height,
 					   EvPrintRange    *ranges,
 					   gint             n_ranges,
+					   EvPrintPageSet   page_set,
 					   gint             copies,
 					   gdouble          collate,
 					   gdouble          reverse);
