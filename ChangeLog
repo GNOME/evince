@@ -1,3 +1,16 @@
+2006-10-31  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-application-service.xml:
+	* shell/ev-application.[ch]: (ev_application_open_window),
+	(ev_application_get_empty_window), (ev_application_open_uri_at_dest),
+	(ev_application_open_uri), (ev_application_open_uri_list):
+	* shell/ev-window.c: (file_open_dialog_response_cb),
+	(ev_window_cmd_recent_file_activate), (ev_window_setup_recent),
+	(drag_data_received_cb), (open_remote_link):
+	* shell/main.c: (arguments_parse), (load_files), (load_files_remote):
+
+	Add support for multiscreen systems. Fixes bug #316206.
+
 2006-10-30  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-jobs.[ch]: (ev_job_print_new),

@@ -71,6 +71,7 @@ void	          ev_application_shutdown	     (EvApplication   *application);
 
 
 gboolean          ev_application_open_window         (EvApplication   *application,
+						      GHashTable      *args,
 						      guint32          timestamp,
 						      GError         **error);
 gboolean          ev_application_open_uri            (EvApplication   *application,
@@ -80,11 +81,13 @@ gboolean          ev_application_open_uri            (EvApplication   *applicati
 						      GError         **error);
 void              ev_application_open_uri_at_dest    (EvApplication   *application,
 						      const char      *uri,
+						      GdkScreen       *screen,
 						      EvLinkDest      *dest,
 						      EvWindowRunMode  mode,
 						      guint32          timestamp);
 void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,
+						      GdkScreen       *screen,
     						      guint32          timestamp);
 GList		 *ev_application_get_windows	     (EvApplication   *application);
 

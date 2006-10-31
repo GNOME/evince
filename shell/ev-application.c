@@ -174,13 +174,109 @@ init_session (EvApplication *application)
 			  G_CALLBACK (removed_from_session), application);
 }
 
+static GdkDisplay *
+ev_display_open_if_needed (const gchar *name)
+{
+	GSList     *displays;
+	GSList     *l;
+	GdkDisplay *display = NULL;
+
+	displays = gdk_display_manager_list_displays (gdk_display_manager_get ());
+
+	for (l = displays; l != NULL; l = l->next) {
+		const gchar *display_name = gdk_display_get_name ((GdkDisplay *) l->data);
+
+		if (g_ascii_strcasecmp (display_name, name) == 0) {
+			display = l->data;
+			break;
+		}
+	}
+
+	g_slist_free (displays);
+
+	return display != NULL ? display : gdk_display_open (name);
+}
+
+static GdkScreen *
+get_screen_from_args (GHashTable *args)
+{
+	GValue     *value = NULL;
+	GdkDisplay *display = NULL;
+	GdkScreen  *screen = NULL;
+
+	g_assert (args != NULL);
+	
+	value = g_hash_table_lookup (args, "display");
+	if (value) {
+		const gchar *display_name;
+		
+		display_name = g_value_get_string (value);
+		display = ev_display_open_if_needed (display_name);
+	}
+	
+	value = g_hash_table_lookup (args, "screen");
+	if (value) {
+		gint screen_number;
+		
+		screen_number = g_value_get_int (value);
+		screen = gdk_display_get_screen (display, screen_number);
+	}
+
+	return screen;
+}
+
+static EvWindowRunMode
+get_window_run_mode_from_args (GHashTable *args)
+{
+	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
+	GValue          *value = NULL;
+
+	g_assert (args != NULL);
+
+	value = g_hash_table_lookup (args, "mode");
+	if (value) {
+		mode = g_value_get_uint (value);
+	}
+
+	return mode;
+}
+
+static EvLinkDest *
+get_destination_from_args (GHashTable *args)
+{
+	EvLinkDest *dest = NULL;
+	GValue     *value = NULL;
+	
+	g_assert (args != NULL);
+	
+	value = g_hash_table_lookup (args, "page-label");
+	if (value) {
+		const gchar *page_label;
+
+		page_label = g_value_get_string (value);
+		dest = ev_link_dest_new_page_label (page_label);
+	}
+
+	return dest;
+}
+
 gboolean
 ev_application_open_window (EvApplication  *application,
+			    GHashTable     *args,
 			    guint32         timestamp,
 			    GError        **error)
 {
 	GtkWidget *new_window = ev_window_new ();
+	GdkScreen *screen = NULL;
 
+	if (args) {
+		screen = get_screen_from_args (args);
+	}
+	
+	if (screen) {
+		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
+	}
+	
 	gtk_widget_show (new_window);
 	
 	gtk_window_present_with_time (GTK_WINDOW (new_window),
@@ -189,7 +285,8 @@ ev_application_open_window (EvApplication  *application,
 }
 
 static EvWindow *
-ev_application_get_empty_window (EvApplication *application)
+ev_application_get_empty_window (EvApplication *application,
+				 GdkScreen     *screen)
 {
 	EvWindow *empty_window = NULL;
 	GList *windows = ev_application_get_windows (application);
@@ -198,7 +295,8 @@ ev_application_get_empty_window (EvApplication *application)
 	for (l = windows; l != NULL; l = l->next) {
 		EvWindow *window = EV_WINDOW (l->data);
 
-		if (ev_window_is_empty (window)) {
+		if (ev_window_is_empty (window) &&
+		    gtk_window_get_screen (GTK_WINDOW (window)) == screen) {
 			empty_window = window;
 			break;
 		}
@@ -238,6 +336,7 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 void
 ev_application_open_uri_at_dest (EvApplication  *application,
 				 const char     *uri,
+				 GdkScreen      *screen,
 				 EvLinkDest     *dest,
 				 EvWindowRunMode mode,
 				 guint           timestamp)
@@ -249,12 +348,15 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	new_window = ev_application_get_uri_window (application, uri);
 	
 	if (new_window == NULL) {
-		new_window = ev_application_get_empty_window (application);
+		new_window = ev_application_get_empty_window (application, screen);
 	}
 
 	if (new_window == NULL) {
 		new_window = EV_WINDOW (ev_window_new ());
 	}
+
+	if (screen)
+		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
@@ -275,25 +377,16 @@ ev_application_open_uri (EvApplication  *application,
 {
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
+	GdkScreen       *screen = NULL;
 
 	if (args) {
-		GValue *value = NULL;
-		
-		value = g_hash_table_lookup (args, "page-label");
-		if (value) {
-			const gchar *page_label;
-			
-			page_label = g_value_get_string (value);
-			dest = ev_link_dest_new_page_label (page_label);
-		}
-		
-		value = g_hash_table_lookup (args, "mode");
-		if (value) {
-			mode = g_value_get_uint (value);
-		}
+		screen = get_screen_from_args (args);
+		dest = get_destination_from_args (args);
+		mode = get_window_run_mode_from_args (args);
 	}
 	
-	ev_application_open_uri_at_dest (application, uri, dest, mode, timestamp);
+	ev_application_open_uri_at_dest (application, uri, screen,
+					 dest, mode, timestamp);
 
 	if (dest)
 		g_object_unref (dest);
@@ -304,13 +397,14 @@ ev_application_open_uri (EvApplication  *application,
 void
 ev_application_open_uri_list (EvApplication *application,
 			      GSList        *uri_list,
+			      GdkScreen     *screen,
 			      guint          timestamp)
 {
 	GSList *l;
 
 	for (l = uri_list; l != NULL; l = l->next) {
-		ev_application_open_uri (application, (char *)l->data,
-					 NULL, timestamp, NULL);
+		ev_application_open_uri_at_dest (application, (char *)l->data,
+						 screen, NULL, 0, timestamp);
 	}
 }
 

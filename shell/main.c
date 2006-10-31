@@ -72,11 +72,31 @@ arguments_parse (void)
 	GHashTable      *args;
 	GValue          *value;
 	EvWindowRunMode  mode;
+	GdkScreen       *screen;
+	GdkDisplay      *display;
+	const gchar     *display_name;
+	gint             screen_number;
 
 	args = g_hash_table_new_full (g_str_hash,
 				      g_str_equal,
 				      (GDestroyNotify)g_free,
 				      (GDestroyNotify)value_free);
+	
+	screen = gdk_screen_get_default ();
+	display = gdk_screen_get_display (screen);
+
+	display_name = gdk_display_get_name (display);
+	screen_number = gdk_screen_get_number (screen);
+
+	value = g_new0 (GValue, 1);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_string (value, display_name);
+	g_hash_table_insert (args, g_strdup ("display"), value);
+
+	value = g_new0 (GValue, 1);
+	g_value_init (value, G_TYPE_INT);
+	g_value_set_int (value, screen_number);
+	g_hash_table_insert (args, g_strdup ("screen"), value);
 
 	if (ev_page_label) {
 		value = g_new0 (GValue, 1);
@@ -111,7 +131,7 @@ load_files (const char **files,
 	int i;
 
 	if (!files) {
-		ev_application_open_window (EV_APP, GDK_CURRENT_TIME, NULL);
+		ev_application_open_window (EV_APP, args, GDK_CURRENT_TIME, NULL);
 		return;
 	}
 
@@ -166,7 +186,7 @@ load_files_remote (const char **files,
 	GdkDisplay *display;
 	guint32 timestamp;
 
-	display = gdk_display_get_default();
+	display = gdk_display_get_default ();
 	timestamp = gdk_x11_display_get_user_time (display);
 	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
 
@@ -208,6 +228,7 @@ load_files_remote (const char **files,
 		}
 #else
 		if (!dbus_g_proxy_call (remote_object, "OpenWindow", &error,
+					dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
 					G_TYPE_UINT, timestamp,
 					G_TYPE_INVALID,
 					G_TYPE_INVALID)) {

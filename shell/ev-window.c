@@ -1122,7 +1122,9 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 
 		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
 
-		ev_application_open_uri_list (EV_APP, uris, GDK_CURRENT_TIME);
+		ev_application_open_uri_list (EV_APP, uris,
+					      gtk_window_get_screen (GTK_WINDOW (ev_window)),
+					      GDK_CURRENT_TIME);
 	
 		g_slist_foreach (uris, (GFunc)g_free, NULL);	
 		g_slist_free (uris);
@@ -1167,14 +1169,20 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 #ifdef HAVE_GTK_RECENT
 static void
 ev_window_cmd_recent_file_activate (GtkAction     *action,
-				    GtkRecentInfo *info)
+				    EvWindow      *window)
 {
-	const gchar *uri;
+	GtkRecentInfo *info;
+	const gchar   *uri;
 
+	info = g_object_get_data (G_OBJECT (action), "gtk-recent-info");
+	g_assert (info != NULL);
+	
 	uri = gtk_recent_info_get_uri (info);
 	
-	ev_application_open_uri (EV_APP, uri, NULL,
-				 GDK_CURRENT_TIME, NULL);
+	ev_application_open_uri_at_dest (EV_APP, uri,
+					 gtk_window_get_screen (GTK_WINDOW (window)),
+					 NULL, 0,
+					 GDK_CURRENT_TIME);
 }
 #else
 static void
@@ -1326,12 +1334,14 @@ ev_window_setup_recent (EvWindow *ev_window)
 				       "label", label,
 				       NULL);
 
-		g_object_weak_ref (G_OBJECT (action),
-				   (GWeakNotify) gtk_recent_info_unref,
-				   gtk_recent_info_ref (info));
+		g_object_set_data_full (G_OBJECT (action),
+					"gtk-recent-info",
+					gtk_recent_info_ref (info),
+					(GDestroyNotify) gtk_recent_info_unref);
+		
 		g_signal_connect (G_OBJECT (action), "activate",
 				  G_CALLBACK (ev_window_cmd_recent_file_activate),
-				  (gpointer) info);
+				  (gpointer) ev_window);
 
 		gtk_action_group_add_action (ev_window->priv->recent_action_group,
 					     action);
@@ -3605,7 +3615,9 @@ drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
 
 		gnome_vfs_uri_list_free (uri_list);
 		
-		ev_application_open_uri_list (EV_APP, uris, 0);
+		ev_application_open_uri_list (EV_APP, uris,
+					      gtk_widget_get_screen (widget),
+					      0);
 		
 		g_slist_free (uris);
 	}
@@ -3878,6 +3890,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 	g_free (dir);
 
 	ev_application_open_uri_at_dest (EV_APP, uri,
+					 gtk_window_get_screen (GTK_WINDOW (window)),
 					 ev_link_action_get_dest (action),
 					 0,
 					 GDK_CURRENT_TIME);
