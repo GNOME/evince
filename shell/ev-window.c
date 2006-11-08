@@ -331,6 +331,15 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
+
+#ifdef WITH_GTK_PRINT
+	ev_window_set_action_sensitive (ev_window, "FilePrintSetup", has_pages && ok_to_print);
+#endif
+
+#ifdef WITH_GNOME_PRINT
+	ev_window_set_action_sensitive (ev_window, "FilePrintSetup", FALSE);
+#endif
+	
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 
@@ -1444,6 +1453,34 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 
 #ifdef WITH_GTK_PRINT
 static void
+ev_window_print_page_setup_done_cb (GtkPageSetup *page_setup,
+				    EvWindow     *window)
+{
+	/* Dialog was canceled */
+	if (!page_setup)
+		return;
+
+	if (window->priv->print_page_setup)
+		g_object_unref (window->priv->print_page_setup);
+	window->priv->print_page_setup = g_object_ref (page_setup);
+}
+#endif /* WITH_GTK_PRINT */
+
+static void
+ev_window_cmd_file_print_setup (GtkAction *action, EvWindow *ev_window)
+{
+#ifdef WITH_GTK_PRINT
+	gtk_print_run_page_setup_dialog_async (
+		GTK_WINDOW (ev_window),
+		ev_window->priv->print_page_setup,
+		ev_window->priv->print_settings,
+		(GtkPageSetupDoneFunc) ev_window_print_page_setup_done_cb,
+		ev_window);
+#endif /* WITH_GTK_PRINT */
+}
+
+#ifdef WITH_GTK_PRINT
+static void
 ev_window_clear_print_job (EvWindow *window)
 {
 	if (window->priv->print_job) {
@@ -1531,15 +1568,14 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 {
 	EvPrintRange  *ranges = NULL;
 	EvPrintPageSet page_set;
-	EvPageCache   *page_cache;
 	gint           n_ranges = 0;
 	gint           copies;
 	gboolean       collate;
 	gboolean       reverse;
 	gdouble        scale;
 	gint           current_page;
-	gint           width;
-	gint           height;
+	gdouble        width;
+	gdouble        height;
 	GtkPrintPages  print_pages;
 	
 	if (response != GTK_RESPONSE_OK) {
@@ -1608,19 +1644,23 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	page_set = (EvPrintPageSet)gtk_print_settings_get_page_set (window->priv->print_settings);
 
 	scale = gtk_print_settings_get_scale (window->priv->print_settings) * 0.01;
-	page_cache = ev_page_cache_get (window->priv->document);
-	ev_page_cache_get_size (page_cache,
-				current_page,
-				0, scale,
-				&width, &height);
+	
+	width = gtk_page_setup_get_page_width (window->priv->print_page_setup,
+					       GTK_UNIT_PIXEL);
+	height = gtk_page_setup_get_page_height (window->priv->print_page_setup,
+						 GTK_UNIT_PIXEL);
+
+	if (scale != 1.0) {
+		width *= scale;
+		height *= scale;
+	}
 	
 	copies = gtk_print_settings_get_n_copies (window->priv->print_settings);
 	collate = gtk_print_settings_get_collate (window->priv->print_settings);
 	reverse = gtk_print_settings_get_reverse (window->priv->print_settings);
 	
 	window->priv->print_job = ev_job_print_new (window->priv->document,
-						    (gdouble)width,
-						    (gdouble)height,
+						    width, height,
 						    ranges, n_ranges,
 						    page_set,
 						    copies, collate,
@@ -3438,6 +3478,9 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
+	{ "FilePrintSetup", NULL, N_("Print Set_up..."), NULL,
+	  N_("Setup the page settings for printing"),
+	  G_CALLBACK (ev_window_cmd_file_print_setup) },
 	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print..."), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },

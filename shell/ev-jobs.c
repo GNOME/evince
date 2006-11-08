@@ -548,7 +548,7 @@ ev_job_print_new (EvDocument    *document,
 
 	job->width = width;
 	job->height = height;
-	
+
 	job->ranges = ranges;
 	job->n_ranges = n_ranges;
 
