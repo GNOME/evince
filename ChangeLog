@@ -2,6 +2,13 @@
 
 	* shell/ev-window.c: (ev_window_print_range):
 
+	Revert my previuos commit, since printing to PDF is not supported by
+	evince yet. 
+
+2006-11-08  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_print_range):
+
 	Enable print to a PDF. Fixes bug #332121.
 
 2006-10-31  Carlos Garcia Campos  <carlosgc@gnome.org>

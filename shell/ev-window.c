@@ -1682,8 +1682,8 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 						       GTK_PRINT_CAPABILITY_COLLATE |
 						       GTK_PRINT_CAPABILITY_REVERSE |
 						       GTK_PRINT_CAPABILITY_SCALE |
-						       GTK_PRINT_CAPABILITY_GENERATE_PS |
-						       GTK_PRINT_CAPABILITY_GENERATE_PDF);
+						       GTK_PRINT_CAPABILITY_GENERATE_PS);
+
 	gtk_print_unix_dialog_set_current_page (GTK_PRINT_UNIX_DIALOG (dialog),
 						current_page);
 	
