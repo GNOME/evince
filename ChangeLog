@@ -1,3 +1,10 @@
+2006-11-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
+
+	Do not take margins into consideration for paper size when printing.
+	Really fixes bug #350491.
+
 2006-11-08  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* data/evince-ui.xml:

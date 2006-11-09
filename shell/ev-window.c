@@ -1645,16 +1645,16 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 
 	scale = gtk_print_settings_get_scale (window->priv->print_settings) * 0.01;
 	
-	width = gtk_page_setup_get_page_width (window->priv->print_page_setup,
-					       GTK_UNIT_PIXEL);
-	height = gtk_page_setup_get_page_height (window->priv->print_page_setup,
-						 GTK_UNIT_PIXEL);
+	width = gtk_page_setup_get_paper_width (window->priv->print_page_setup,
+						GTK_UNIT_PIXEL);
+	height = gtk_page_setup_get_paper_height (window->priv->print_page_setup,
+						  GTK_UNIT_PIXEL);
 
 	if (scale != 1.0) {
 		width *= scale;
 		height *= scale;
 	}
-	
+
 	copies = gtk_print_settings_get_n_copies (window->priv->print_settings);
 	collate = gtk_print_settings_get_collate (window->priv->print_settings);
 	reverse = gtk_print_settings_get_reverse (window->priv->print_settings);
