@@ -47,6 +47,7 @@ static gchar   *ev_page_label;
 static gboolean preview_mode = FALSE;
 static gboolean fullscren_mode = FALSE;
 static gboolean presentation_mode = FALSE;
+static gboolean unlink_temp_file = FALSE;
 static const char **file_arguments = NULL;
 
 static const GOptionEntry goption_options[] =
@@ -55,6 +56,7 @@ static const GOptionEntry goption_options[] =
 	{ "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscren_mode, N_("Run evince in fullscreen mode"), NULL },
 	{ "presentation", 's', 0, G_OPTION_ARG_NONE, &presentation_mode, N_("Run evince in presentation mode"), NULL },
 	{ "preview", 'w', 0, G_OPTION_ARG_NONE, &preview_mode, N_("Run evince as a previewer"), NULL },
+	{ "unlink-temp-file", 'u', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &unlink_temp_file, NULL, NULL },
 	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, N_("[FILE...]") },
 	{ NULL }
 };
@@ -120,6 +122,16 @@ arguments_parse (void)
 	g_value_set_uint (value, mode);
 
 	g_hash_table_insert (args, g_strdup ("mode"), value);
+
+	if (mode == EV_WINDOW_MODE_PREVIEW && unlink_temp_file) {
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_BOOLEAN);
+		g_value_set_boolean (value, unlink_temp_file);
+
+		g_hash_table_insert (args,
+				     g_strdup ("unlink-temp-file"),
+				     value);
+	}
 
 	return args;
 }

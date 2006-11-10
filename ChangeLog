@@ -1,3 +1,14 @@
+2006-11-10  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-application.[ch]: (get_unlink_temp_file_from_args),
+	(ev_application_open_uri_at_dest), (ev_application_open_uri):
+	* shell/ev-window.[ch]: (ev_window_clear_temp_file),
+	(ev_window_open_uri):
+	* shell/main.c: (arguments_parse):
+
+	Remove temp file created when evince is used by GTK+ in
+	preview mode. Fixes bug #365282. 
+
 2006-11-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-window.c: (ev_window_sidebar_visibility_changed_cb):

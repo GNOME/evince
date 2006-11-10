@@ -80,6 +80,7 @@
 
 #include <poppler.h>
 
+#include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gnome.h>
@@ -158,6 +159,7 @@ struct _EvWindowPrivate {
 	char *uri;
 	char *local_uri;
 	EvLinkDest *dest;
+	gboolean unlink_temp_file;
 	
 	EvDocument *document;
 
@@ -976,12 +978,42 @@ ev_window_clear_local_uri (EvWindow *ev_window)
     if (ev_window->priv->local_uri) {
 	    filename = g_filename_from_uri (ev_window->priv->local_uri, NULL, NULL);
 	    if (filename != NULL) {
-		    unlink (filename);
+		    g_unlink (filename);
 		    g_free (filename);
 	    }
 	    g_free (ev_window->priv->local_uri);
 	    ev_window->priv->local_uri = NULL;
     }
+}
+
+static void
+ev_window_clear_temp_file (EvWindow *ev_window)
+{
+	GnomeVFSURI *uri;
+	gchar       *filename;
+	gchar       *dir;
+
+	if (!ev_window->priv->uri)
+		return;
+
+	uri = gnome_vfs_uri_new (ev_window->priv->uri);
+	if (!gnome_vfs_uri_is_local (uri)) {
+		gnome_vfs_uri_unref (uri);
+		return;
+	}
+	gnome_vfs_uri_unref (uri);
+
+	filename = g_filename_from_uri (ev_window->priv->uri, NULL, NULL);
+	if (!filename)
+		return;
+
+	dir = g_path_get_dirname (filename);
+	if (g_ascii_strcasecmp (dir, g_get_tmp_dir ()) == 0) {
+		g_unlink (filename);
+	}
+
+	g_free (dir);
+	g_free (filename);
 }
 
 /* This callback will executed when load job will be finished.
@@ -1105,13 +1137,17 @@ void
 ev_window_open_uri (EvWindow       *ev_window,
 		    const char     *uri,
 		    EvLinkDest     *dest,
-		    EvWindowRunMode mode)
+		    EvWindowRunMode mode,
+		    gboolean        unlink_temp_file)
 {
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_xfer_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 
+	ev_window->priv->unlink_temp_file =
+		(mode == EV_WINDOW_MODE_PREVIEW) ? unlink_temp_file : FALSE;
+	
 	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest, mode);
 	g_signal_connect (ev_window->priv->xfer_job,
 			  "finished",
@@ -1195,7 +1231,7 @@ ev_window_cmd_recent_file_activate (GtkAction     *action,
 	
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0,
+					 NULL, 0, FALSE,
 					 GDK_CURRENT_TIME);
 }
 #else
@@ -2690,7 +2726,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 
 	uri = g_strdup (ev_window->priv->uri);
 
-	ev_window_open_uri (ev_window, uri, NULL, 0);
+	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE);
 
 	g_free (uri);
 }
@@ -3421,6 +3457,8 @@ ev_window_dispose (GObject *object)
 	}
 
 	if (priv->uri) {
+		if (priv->unlink_temp_file)
+			ev_window_clear_temp_file (window);
 		g_free (priv->uri);
 		priv->uri = NULL;
 	}
@@ -3929,6 +3967,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 					 gtk_window_get_screen (GTK_WINDOW (window)),
 					 ev_link_action_get_dest (action),
 					 0,
+					 FALSE,
 					 GDK_CURRENT_TIME);
 
 	g_free (uri);

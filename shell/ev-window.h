@@ -76,7 +76,8 @@ const char     *ev_window_get_uri         (EvWindow       *ev_window);
 void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   const char     *uri,
 					   EvLinkDest     *dest,
-					   EvWindowRunMode mode);
+					   EvWindowRunMode mode,
+					   gboolean        unlink_temp_file);
 void            ev_window_goto_dest       (EvWindow       *ev_window,
 					   EvLinkDest     *dest);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);

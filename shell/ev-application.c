@@ -260,6 +260,22 @@ get_destination_from_args (GHashTable *args)
 	return dest;
 }
 
+static gboolean
+get_unlink_temp_file_from_args (GHashTable *args)
+{
+	gboolean unlink_temp_file = FALSE;
+	GValue  *value = NULL;
+
+	g_assert (args != NULL);
+
+	value = g_hash_table_lookup (args, "unlink-temp-file");
+	if (value) {
+		unlink_temp_file = g_value_get_boolean (value);
+	}
+	
+	return unlink_temp_file;
+}
+
 gboolean
 ev_application_open_window (EvApplication  *application,
 			    GHashTable     *args,
@@ -339,6 +355,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 GdkScreen      *screen,
 				 EvLinkDest     *dest,
 				 EvWindowRunMode mode,
+				 gboolean        unlink_temp_file,
 				 guint           timestamp)
 {
 	EvWindow *new_window;
@@ -360,7 +377,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
-	ev_window_open_uri (new_window, uri, dest, mode);
+	ev_window_open_uri (new_window, uri, dest, mode, unlink_temp_file);
 
 	gtk_widget_show (GTK_WIDGET (new_window));
 
@@ -377,16 +394,20 @@ ev_application_open_uri (EvApplication  *application,
 {
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
+	gboolean         unlink_temp_file = FALSE;
 	GdkScreen       *screen = NULL;
 
 	if (args) {
 		screen = get_screen_from_args (args);
 		dest = get_destination_from_args (args);
 		mode = get_window_run_mode_from_args (args);
+		unlink_temp_file = (mode == EV_WINDOW_MODE_PREVIEW &&
+				    get_unlink_temp_file_from_args (args));
 	}
 	
 	ev_application_open_uri_at_dest (application, uri, screen,
-					 dest, mode, timestamp);
+					 dest, mode, unlink_temp_file, 
+					 timestamp);
 
 	if (dest)
 		g_object_unref (dest);
@@ -404,7 +425,8 @@ ev_application_open_uri_list (EvApplication *application,
 
 	for (l = uri_list; l != NULL; l = l->next) {
 		ev_application_open_uri_at_dest (application, (char *)l->data,
-						 screen, NULL, 0, timestamp);
+						 screen, NULL, 0, FALSE, 
+						 timestamp);
 	}
 }
 

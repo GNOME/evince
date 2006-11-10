@@ -86,6 +86,7 @@ void              ev_application_open_uri_at_dest    (EvApplication   *applicati
 						      GdkScreen       *screen,
 						      EvLinkDest      *dest,
 						      EvWindowRunMode  mode,
+						      gboolean         unlink_temp_file,
 						      guint32          timestamp);
 void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,
