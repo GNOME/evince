@@ -100,6 +100,7 @@ typedef enum {
 	EV_CHROME_RAISE_TOOLBAR	= 1 << 3,
 	EV_CHROME_FULLSCREEN_TOOLBAR	= 1 << 4,
 	EV_CHROME_SIDEBAR	= 1 << 5,
+	EV_CHROME_PREVIEW_TOOLBAR       = 1 << 6,
 	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
 
@@ -120,6 +121,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
 	GtkWidget *sidebar_attachments;
+	GtkWidget *preview_toolbar;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -462,6 +464,7 @@ update_chrome_visibility (EvWindow *window)
 	EvWindowPrivate *priv = window->priv;
 	gboolean menubar, toolbar, findbar, fullscreen_toolbar, sidebar;
 	gboolean fullscreen_mode, presentation, fullscreen;
+	gboolean preview_toolbar;
 
 	presentation = ev_view_get_presentation (EV_VIEW (priv->view));
 	fullscreen = ev_view_get_fullscreen (EV_VIEW (priv->view));
@@ -474,11 +477,13 @@ update_chrome_visibility (EvWindow *window)
 			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && fullscreen;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !fullscreen_mode;
+	preview_toolbar = (priv->chrome& EV_CHROME_PREVIEW_TOOLBAR);
 
 	set_widget_visibility (priv->menubar, menubar);	
 	set_widget_visibility (priv->toolbar_dock, toolbar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->sidebar, sidebar);
+	set_widget_visibility (priv->preview_toolbar, preview_toolbar);
 
 	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
 	gtk_widget_set_sensitive (priv->menubar, menubar);
@@ -2219,7 +2224,7 @@ ev_window_create_fullscreen_popup (EvWindow *window)
 	GdkScreen *screen;
 
 	window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
-			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP), NULL);
+			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP, FALSE), NULL);
 
 	popup = gtk_window_new (GTK_WINDOW_POPUP);
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -2426,29 +2431,14 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 static void
 ev_window_run_preview (EvWindow *window)
 {
-	EggToolbarsModel *model;
-	EggTbModelFlags   flags;
-
-	model = egg_toolbars_model_new ();
-
-	egg_toolbars_model_load_toolbars (model,
-					  DATADIR"/evince-toolbar.xml");
-	
-	flags = egg_toolbars_model_get_flags (model, 1);
-	egg_toolbars_model_set_flags (model, 1, flags &= ~(EGG_TB_MODEL_HIDDEN));
-
-	egg_editable_toolbar_set_model (EGG_EDITABLE_TOOLBAR (window->priv->toolbar),
-					model);
-	
-	egg_editable_toolbar_hide (EGG_EDITABLE_TOOLBAR (window->priv->toolbar),
-				   "DefaultToolBar");
-	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (window->priv->toolbar),
-				   "PreviewToolBar");
-
 	ev_view_set_continuous (EV_VIEW (window->priv->view), FALSE); 
 	
+	update_chrome_flag (window, EV_CHROME_TOOLBAR, FALSE);
 	update_chrome_flag (window, EV_CHROME_MENUBAR, FALSE);
 	update_chrome_flag (window, EV_CHROME_SIDEBAR, FALSE);
+
+	update_chrome_flag (window, EV_CHROME_PREVIEW_TOOLBAR, TRUE);
+
 	update_chrome_visibility (window);
 }
 
@@ -2596,7 +2586,7 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
 	  
 	editor = egg_toolbar_editor_new (ev_window->priv->ui_manager,
-					 ev_application_get_toolbars_model (EV_APP));
+					 ev_application_get_toolbars_model (EV_APP, FALSE));
 	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
 	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
              
@@ -4223,12 +4213,18 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (toolbar_dock);
 
 	ev_window->priv->toolbar = egg_editable_toolbar_new_with_model
-				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP), NULL);
+				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP, FALSE), NULL);
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");
 	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
+
+	/* Preview toolbar */
+	ev_window->priv->preview_toolbar = egg_editable_toolbar_new_with_model
+				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP, TRUE), NULL);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), ev_window->priv->preview_toolbar,
+			    FALSE, FALSE, 0);
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();

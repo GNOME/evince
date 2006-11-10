@@ -1,3 +1,18 @@
+2006-11-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* cut-n-paste/toolbar-editor/egg-toolbar-editor.c: (setup_editor):
+	* data/Makefile.am:
+	* data/evince-preview-toolbar.xml:
+	* data/evince-toolbar.xml:
+	* shell/ev-application.c: (ev_application_shutdown),
+	(ev_application_init), (ev_application_get_toolbars_model):
+	* shell/ev-application.h:
+	* shell/ev-window.c: (update_chrome_visibility),
+	(ev_window_create_fullscreen_popup), (ev_window_run_preview),
+	(ev_window_cmd_edit_toolbar), (ev_window_init):
+	
+	Fixes bug #364364 - toolbar editor shows zoom actions again.
+
 2006-11-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_print_dialog_response_cb):

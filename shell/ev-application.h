@@ -53,6 +53,8 @@ struct _EvApplication {
 	gchar *toolbars_file;
 	
 	EggToolbarsModel *toolbars_model;
+	EggToolbarsModel *preview_toolbars_model;
+	
 #ifndef HAVE_GTK_RECENT
 	EggRecentModel  *recent_model;
 #endif
@@ -91,7 +93,8 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
     						      guint32          timestamp);
 GList		 *ev_application_get_windows	     (EvApplication   *application);
 
-EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
+EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application, 
+						      gboolean preview);
 void              ev_application_save_toolbars_model (EvApplication   *application);
 #ifndef HAVE_GTK_RECENT
 EggRecentModel   *ev_application_get_recent_model    (EvApplication   *application);

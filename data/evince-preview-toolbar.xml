@@ -1,30 +1,25 @@
 <?xml version="1.0"?>
 <toolbars version="1.0">
 <available>
-    <toolitem name="ViewContinuous"/>
-    <toolitem name="ViewDual"/>
     <toolitem name="GoPreviousPage"/>
     <toolitem name="GoNextPage"/>
     <toolitem name="PageSelector"/>
-    <toolitem name="ViewZoom"/>
     <toolitem name="ViewZoomIn"/>
     <toolitem name="ViewZoomOut"/>
     <toolitem name="ViewBestFit"/>
     <toolitem name="ViewPageWidth"/>
-    <toolitem name="FileOpen"/>
-    <toolitem name="EditFind"/>
-    <toolitem name="FilePrint"/>
-    <toolitem name="GoFirstPage"/>
-    <toolitem name="GoLastPage"/>
-    <toolitem name="ViewReload"/>
-    <toolitem name="ViewSidebar"/>
 </available>
- <toolbar name="DefaultToolBar">
+
+<toolbar name="PreviewTooBar" editable="false">
     <toolitem name="GoPreviousPage"/>
     <toolitem name="GoNextPage"/>
     <separator/>
     <toolitem name="PageSelector"/>
     <separator/>
-    <toolitem name="ViewZoom"/>
- </toolbar>
+    <toolitem name="ViewPageWidth"/>
+    <toolitem name="ViewBestFit"/>
+    <toolitem name="ViewZoomIn"/>
+    <toolitem name="ViewZoomOut"/>
+</toolbar>
+
 </toolbars>

@@ -9,6 +9,7 @@ uidir = $(pkgdatadir)
 ui_DATA =				\
 	evince-ui.xml			\
 	evince-toolbar.xml		\
+	evince-preview-toolbar.xml		\
 	hand-open.png			\
 	$(NULL)
 

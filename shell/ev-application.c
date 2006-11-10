@@ -413,8 +413,10 @@ ev_application_shutdown (EvApplication *application)
 {
 	if (application->toolbars_model) {
 		g_object_unref (application->toolbars_model);
+		g_object_unref (application->preview_toolbars_model);
 		g_free (application->toolbars_file);
 		application->toolbars_model = NULL;
+		application->preview_toolbars_model = NULL;
 		application->toolbars_file = NULL;
 	}
 
@@ -458,6 +460,14 @@ ev_application_init (EvApplication *ev_application)
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE); 
 
+	ev_application->preview_toolbars_model = egg_toolbars_model_new ();
+
+	egg_toolbars_model_load_toolbars (ev_application->preview_toolbars_model,
+					  DATADIR"/evince-preview-toolbar.xml");
+
+	egg_toolbars_model_set_flags (ev_application->preview_toolbars_model, 0,
+				      EGG_TB_MODEL_NOT_REMOVABLE); 
+
 #ifndef HAVE_GTK_RECENT
 	ev_application->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
 	/* FIXME we should add a mime type filter but current eggrecent
@@ -488,9 +498,11 @@ ev_application_get_windows (EvApplication *application)
 	return windows;
 }
 
-EggToolbarsModel *ev_application_get_toolbars_model (EvApplication *application)
+EggToolbarsModel *ev_application_get_toolbars_model (EvApplication *application,
+						     gboolean preview)
 {
-	return application->toolbars_model;
+	return preview ? 
+	    application->preview_toolbars_model : application->toolbars_model;
 }
 
 #ifndef HAVE_GTK_RECENT
