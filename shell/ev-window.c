@@ -3071,11 +3071,13 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 	GtkAction *action;
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      GTK_WIDGET_VISIBLE (ev_sidebar));
 
 	if (!ev_view_get_presentation (view) && 
 	    !ev_view_get_fullscreen (view)) {
+
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+					      GTK_WIDGET_VISIBLE (ev_sidebar));
+
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "sidebar_visibility",
 					         GTK_WIDGET_VISIBLE (ev_sidebar));
 	}

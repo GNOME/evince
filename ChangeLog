@@ -1,5 +1,12 @@
 2006-11-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-window.c: (ev_window_sidebar_visibility_changed_cb):
+	
+	Fixes bug #372474 - Side pane disabled when entering 
+	and leaving fullscreen mode.
+
+2006-11-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* cut-n-paste/toolbar-editor/egg-toolbar-editor.c: (setup_editor):
 	* data/Makefile.am:
 	* data/evince-preview-toolbar.xml:
