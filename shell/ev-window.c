@@ -3533,9 +3533,9 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_edit_find_previous) },
         { "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
           G_CALLBACK (ev_window_cmd_edit_toolbar) },
-	{ "EditRotateLeft", NULL, N_("Rotate _Left"), NULL, NULL,
+	{ "EditRotateLeft", "object-rotate-left", N_("Rotate _Left"), NULL, NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_left) },
-	{ "EditRotateRight", NULL, N_("Rotate _Right"), NULL, NULL,
+	{ "EditRotateRight", "object-rotate-right", N_("Rotate _Right"), NULL, NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_right) },
 
         /* View menu */
