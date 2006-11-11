@@ -1,7 +1,20 @@
+2006-11-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* data/evince-toolbar.xml:
+	
+	Add rotate right and rotate left to available items for toolbar.
+	
+	* data/evince-ui.xml:
+	* shell/ev-window.c: (ev_window_init):
+	
+	Customize toolbar with right click. Fixes bug #372451.
+
 2006-11-11  Claudio Saavedra  <csaavedra@alumnos.utalca.cl>
 
-	* shell/ev-window.c: Use "object-rotate-{left,right}" stock icons. 
-	Fixes bug #373863.
+	* shell/ev-window.c: 
+	
+	Use "object-rotate-{left,right}" stock icons. Fixes 
+	bug #373863.
 
 2006-11-10  Carlos Garcia Campos  <carlosgc@gnome.org>
 

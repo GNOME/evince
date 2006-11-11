@@ -4253,8 +4253,13 @@ ev_window_init (EvWindow *ev_window)
 			    FALSE, FALSE, 0);
 	gtk_widget_show (toolbar_dock);
 
-	ev_window->priv->toolbar = egg_editable_toolbar_new_with_model
-				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP, FALSE), NULL);
+	ev_window->priv->toolbar = GTK_WIDGET 
+	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
+			 "ui-manager", ev_window->priv->ui_manager,
+			 "popup-path", "/ToolbarPopup",
+			 "model", ev_application_get_toolbars_model (EV_APP, FALSE),
+			 NULL));
+
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");
 	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
