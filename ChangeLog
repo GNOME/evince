@@ -1,3 +1,15 @@
+2006-11-14  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* data/evince-ui.xml:
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity),
+	(ev_window_xfer_job_cb), (ev_window_get_copy_tmp_name),
+	(ev_window_cmd_file_open_copy_at_dest),
+	(ev_window_cmd_file_open_copy), (view_menu_popup_cb),
+	(ev_view_popup_cmd_open_link_new_window):
+
+	Allow opening a copy of the current document in a new window. Fixes bug
+	#357472
+
 2006-11-11  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* data/evince-toolbar.xml:

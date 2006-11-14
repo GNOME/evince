@@ -238,6 +238,8 @@ static void     ev_window_cmd_view_presentation         (GtkAction        *actio
 static void     ev_window_run_preview                   (EvWindow         *window);
 static void     ev_view_popup_cmd_open_link             (GtkAction        *action,
 							 EvWindow         *window);
+static void     ev_view_popup_cmd_open_link_new_window  (GtkAction        *action,
+							 EvWindow         *window);
 static void     ev_view_popup_cmd_copy_link_address     (GtkAction        *action,
 							 EvWindow         *window);
 static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
@@ -334,6 +336,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 
 
 	/* File menu */
+	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
 	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
 
 #ifdef WITH_GTK_PRINT
@@ -1051,9 +1054,12 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
 
-		setup_view_from_metadata (ev_window);
+		if (!ev_window->priv->unlink_temp_file) {
+			setup_view_from_metadata (ev_window);
+			ev_window_add_recent (ev_window, ev_window->priv->uri);
+		}
+
 		ev_window_setup_document (ev_window);
-		ev_window_add_recent (ev_window, ev_window->priv->uri);
 
 		if (job->dest)
 			ev_window_goto_dest (ev_window, job->dest);
@@ -1145,8 +1151,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 
-	ev_window->priv->unlink_temp_file =
-		(mode == EV_WINDOW_MODE_PREVIEW) ? unlink_temp_file : FALSE;
+	ev_window->priv->unlink_temp_file = unlink_temp_file;
 	
 	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest, mode);
 	g_signal_connect (ev_window->priv->xfer_job,
@@ -1214,6 +1219,88 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 			  window);
 
 	gtk_widget_show (chooser);
+}
+
+static gchar *
+ev_window_get_copy_tmp_name (const gchar *filename)
+{
+	gchar *tmp_filename = NULL;
+	gchar *name;
+	guint  i = 0;
+
+	name = g_path_get_basename (filename);
+	
+	do {
+		gchar *basename;
+
+		basename = g_strdup_printf ("%s-%d", name, i);
+		tmp_filename = g_build_filename (g_get_tmp_dir (),
+						 basename, NULL);
+		g_free (basename);
+	} while (g_file_test (tmp_filename, G_FILE_TEST_EXISTS));
+
+	g_free (name);
+	
+	return tmp_filename;
+}
+
+static void
+ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
+{
+	gchar *symlink_uri;
+	gchar *old_filename;
+	gchar *new_filename;
+
+	old_filename = g_filename_from_uri (window->priv->uri, NULL, NULL);
+	new_filename = ev_window_get_copy_tmp_name (old_filename);
+	
+	if (symlink (old_filename, new_filename) != 0) {
+		gchar  *msg;
+		GError *error;
+
+		msg = g_strdup_printf (_("Cannot open a copy."));
+		error = g_error_new (G_FILE_ERROR,
+				     g_file_error_from_errno (errno),
+				     _("Couldn't create symlink “%s”: %s"),
+				     new_filename, strerror (errno));
+		ev_window_error_dialog (GTK_WINDOW (window), msg, error);
+		g_free (msg);
+		g_error_free (error);
+
+		g_free (old_filename);
+		g_free (new_filename);
+
+		return;
+	}
+		
+	g_free (old_filename);
+
+	symlink_uri = g_filename_to_uri (new_filename, NULL, NULL);
+	g_free (new_filename);
+
+	ev_application_open_uri_at_dest (EV_APP,
+					 symlink_uri,
+					 gtk_window_get_screen (GTK_WINDOW (window)),
+					 dest,
+					 0,
+					 TRUE,
+					 GDK_CURRENT_TIME);
+	g_free (symlink_uri);
+}
+
+static void
+ev_window_cmd_file_open_copy (GtkAction *action, EvWindow *window)
+{
+	EvPageCache *page_cache;
+	EvLinkDest  *dest;
+	gint         current_page;
+
+	page_cache = ev_page_cache_get (window->priv->document);
+	current_page = ev_page_cache_get_current_page (page_cache);
+	
+	dest = ev_link_dest_new_page (current_page);
+	ev_window_cmd_file_open_copy_at_dest (window, dest);
+	g_object_unref (dest);
 }
 
 #ifdef HAVE_GTK_RECENT
@@ -3175,6 +3262,10 @@ view_menu_popup_cb (EvView   *view,
 					      "GoLink");
 	gtk_action_set_visible (action, show_internal);
 
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
+					      "OpenLinkNewWindow");
+	gtk_action_set_visible (action, show_internal);
+
 	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
 			NULL, NULL,
 			3, gtk_get_current_event_time ());
@@ -3505,6 +3596,9 @@ static const GtkActionEntry entries[] = {
 	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open..."), "<control>O",
 	  N_("Open an existing document"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
+	{ "FileOpenCopy", NULL, N_("Open a _Copy"), NULL,
+	  N_("Open a copy of the current document in a new window"),
+	  G_CALLBACK (ev_window_cmd_file_open_copy) },
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
@@ -3656,6 +3750,8 @@ static const GtkActionEntry view_popup_entries [] = {
 	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link) },
 	{ "GoLink", GTK_STOCK_GO_FORWARD, N_("_Go To"), NULL,
 	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link) },
+	{ "OpenLinkNewWindow", NULL, N_("Open in New _Window"), NULL,
+	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link_new_window) },
 	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
 	  NULL,
 	  G_CALLBACK (ev_view_popup_cmd_copy_link_address) },
@@ -4025,6 +4121,23 @@ static void
 ev_view_popup_cmd_open_link (GtkAction *action, EvWindow *window)
 {
 	ev_view_handle_link (EV_VIEW (window->priv->view), window->priv->link);
+}
+
+static void
+ev_view_popup_cmd_open_link_new_window (GtkAction *action, EvWindow *window)
+{
+	EvLinkAction *ev_action = NULL;
+	EvLinkDest   *dest;
+
+	ev_action = ev_link_get_action (window->priv->link);
+	if (!ev_action)
+		return;
+
+	dest = ev_link_action_get_dest (ev_action);
+	if (!dest)
+		return;
+
+	ev_window_cmd_file_open_copy_at_dest (window, dest);
 }
 
 static void
