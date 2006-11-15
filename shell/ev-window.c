@@ -994,7 +994,7 @@ ev_window_clear_temp_file (EvWindow *ev_window)
 {
 	GnomeVFSURI *uri;
 	gchar       *filename;
-	gchar       *dir;
+	const gchar *tempdir;
 
 	if (!ev_window->priv->uri)
 		return;
@@ -1010,12 +1010,11 @@ ev_window_clear_temp_file (EvWindow *ev_window)
 	if (!filename)
 		return;
 
-	dir = g_path_get_dirname (filename);
-	if (g_ascii_strcasecmp (dir, g_get_tmp_dir ()) == 0) {
+	tempdir = g_get_tmp_dir ();
+	if (g_ascii_strncasecmp (filename, tempdir, strlen (tempdir)) == 0) {
 		g_unlink (filename);
 	}
 
-	g_free (dir);
 	g_free (filename);
 }
 

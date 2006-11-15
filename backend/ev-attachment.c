@@ -22,6 +22,7 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include "ev-file-helpers.h"
 #include "ev-attachment.h"
 
 enum
@@ -389,7 +390,7 @@ ev_attachment_open (EvAttachment *attachment,
 	} else {
 		gchar *uri, *filename;
 		
-		filename = g_build_filename (g_get_tmp_dir (), attachment->priv->name, NULL);
+		filename = g_build_filename (ev_tmp_dir (), attachment->priv->name, NULL);
 		uri = g_filename_to_uri (filename, NULL, NULL);
 
 		if (ev_attachment_save (attachment, uri, error)) {

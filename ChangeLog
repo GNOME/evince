@@ -1,3 +1,17 @@
+2006-11-15  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/Makefile.am:
+	* backend/ev-attachment.c: (ev_attachment_open):
+	* lib/ev-file-helpers.[ch]: (ensure_dir_exists), (ev_dot_dir),
+	(ev_tmp_dir), (ev_tmp_filename):
+	* shell/ev-sidebar-attachments.c:
+	(ev_sidebar_attachments_drag_data_get):
+	* shell/ev-window.c: (ev_window_clear_temp_file):
+
+	Use always ev_tmp_dir instead of g_get_tmp_dir. Fix a race condition
+	in ensure_dir_exists. Abort without crashing when we can't create
+	user's directory.
+
 2006-11-14  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* data/evince-ui.xml:

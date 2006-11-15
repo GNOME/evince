@@ -25,17 +25,19 @@
 
 G_BEGIN_DECLS
 
-const char *ev_dot_dir               (void);
+const gchar *ev_dot_dir               (void);
 
-void        ev_file_helpers_init     (void);
+const gchar *ev_tmp_dir               (void);
 
-void        ev_file_helpers_shutdown (void);
+void         ev_file_helpers_init     (void);
 
-gchar*      ev_tmp_filename          (void);
+void         ev_file_helpers_shutdown (void);
 
-gboolean   ev_xfer_uri_simple        (const char *from,
-    				      const char *to,
-				      GError     **error);
+gchar*       ev_tmp_filename          (void);
+
+gboolean     ev_xfer_uri_simple       (const char *from,
+				       const char *to,
+				       GError     **error);
 
 G_END_DECLS
 

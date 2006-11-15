@@ -22,9 +22,12 @@
 #include "config.h"
 #endif
 
-#include <sys/stat.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <libgnome/gnome-init.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
@@ -33,36 +36,30 @@
 
 #include "ev-file-helpers.h"
 
-static char *dot_dir = NULL;
-static char *tmp_dir = NULL;
-static int  count = 0;
+static gchar *dot_dir = NULL;
+static gchar *tmp_dir = NULL;
+static gint   count = 0;
 
 static gboolean
 ensure_dir_exists (const char *dir)
 {
-	if (g_file_test (dir, G_FILE_TEST_IS_DIR) == FALSE)
-	{
-		if (g_file_test (dir, G_FILE_TEST_EXISTS) == TRUE)
-		{
-			g_warning ("%s exists, please move it out of the way.", dir);
-			return FALSE;
-		}
+	if (g_file_test (dir, G_FILE_TEST_IS_DIR))
+		return TRUE;
+	
+	if (g_mkdir (dir, 488) == 0)
+		return TRUE;
 
-		if (mkdir (dir, 488) != 0)
-		{
-			g_warning ("Failed to create directory %s.", dir);
-			return FALSE;
-		}
-	}
-
-	return TRUE;
+	if (errno == EEXIST)
+		return g_file_test (dir, G_FILE_TEST_IS_DIR);
+	
+	g_warning ("Failed to create directory %s: %s", dir, strerror (errno));
+	return FALSE;
 }
 
-const char *
+const gchar *
 ev_dot_dir (void)
 {
-	if (dot_dir == NULL)
-	{
+	if (dot_dir == NULL) {
 		gboolean exists;
 
 		dot_dir = g_build_filename (gnome_user_dir_get (),
@@ -70,10 +67,31 @@ ev_dot_dir (void)
 					    NULL);
 
 		exists = ensure_dir_exists (dot_dir);
-		g_assert (exists);
+		if (!exists)
+			exit (1);
 	}
 
 	return dot_dir;
+}
+
+const gchar *
+ev_tmp_dir (void)
+{
+	if (tmp_dir == NULL) {
+		gboolean exists;
+		gchar   *dirname;
+
+		dirname = g_strdup_printf ("evince-%u", getpid ());
+		tmp_dir = g_build_filename (g_get_tmp_dir (),
+					    dirname,
+					    NULL);
+		g_free (dirname);
+
+		exists = ensure_dir_exists (tmp_dir);
+		g_assert (exists);
+	}
+
+	return tmp_dir;
 }
 
 void
@@ -85,7 +103,7 @@ void
 ev_file_helpers_shutdown (void)
 {	
 	if (tmp_dir != NULL)	
-		rmdir (tmp_dir);
+		g_rmdir (tmp_dir);
 
 	g_free (tmp_dir);
 	g_free (dot_dir);
@@ -94,34 +112,20 @@ ev_file_helpers_shutdown (void)
 	tmp_dir = NULL;
 }
 
-gchar* 
+gchar * 
 ev_tmp_filename (void)
 {
 	gchar *basename;
 	gchar *filename = NULL;
 
-	if (tmp_dir == NULL) {
-		gboolean exists;
-		gchar   *dirname;
-		
-		dirname = g_strdup_printf ("evince-%u", getpid());
-		tmp_dir = g_build_filename (g_get_tmp_dir (),
-					    dirname,
-					    NULL);
-		g_free (dirname);
-
-		exists = ensure_dir_exists (tmp_dir);
-		g_assert (exists);
-	}
-	
-	
 	do {
 		if (filename != NULL)
 			g_free (filename);
 			
 		basename = g_strdup_printf ("document-%d", count ++);
 		
-		filename = g_build_filename (tmp_dir, basename, NULL);
+		filename = g_build_filename (ev_tmp_dir (),
+					     basename, NULL);
 		
 		g_free (basename);
 	} while (g_file_test (filename, G_FILE_TEST_EXISTS));

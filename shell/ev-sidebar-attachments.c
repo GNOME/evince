@@ -31,6 +31,7 @@
 #include <string.h>
 #include <libgnomeui/gnome-icon-lookup.h>
 
+#include "ev-file-helpers.h"
 #include "ev-sidebar-attachments.h"
 #include "ev-sidebar-page.h"
 
@@ -409,7 +410,7 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 				    COLUMN_ATTACHMENT, &attachment,
 				    -1);
 
-		filename = g_build_filename (g_get_tmp_dir (),
+		filename = g_build_filename (ev_tmp_dir (),
 					     ev_attachment_get_name (attachment),
 					     NULL);
 		

@@ -1,6 +1,7 @@
 INCLUDES=					\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"	\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-I$(top_srcdir)/lib			\
 	-I$(top_srcdir)/pdf			\
 	-I$(top_srcdir)/pixbuf			\
 	-I$(top_srcdir)/tiff			\
