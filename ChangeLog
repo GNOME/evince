@@ -1,3 +1,11 @@
+2006-11-16  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* dvi/dvi-document.c: (dvi_document_load), (dvi_document_finalize),
+	(dvi_document_class_init), (dvi_document_init_params):
+	* dvi/mdvi-lib/font.c: (font_reference):
+	
+	Add reference to subfont. Fixes bug #374277.
+
 2006-11-16  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_create_tmp_symlink),

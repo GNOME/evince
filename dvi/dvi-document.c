@@ -92,10 +92,12 @@ dvi_document_load (EvDocument  *document,
         	return FALSE;
     }
 	
+    g_mutex_lock (dvi_context_mutex);
     if (dvi_document->context)
 	mdvi_destroy_context (dvi_document->context);
 
     dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
+    g_mutex_unlock (dvi_context_mutex);
 
     if (!dvi_document->context) {
     		g_set_error (error,
@@ -112,8 +114,6 @@ dvi_document_load (EvDocument  *document,
 		
     dvi_document->base_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv 
 	        + 2 * unit2pix(dvi_document->params->vdpi, MDVI_VMARGIN) / dvi_document->params->vshrink;
-
-    dvi_context_mutex = g_mutex_new ();
 
     g_free (dvi_document->uri);
     dvi_document->uri = g_strdup (uri);
@@ -206,12 +206,14 @@ static void
 dvi_document_finalize (GObject *object)
 {	
 	DviDocument *dvi_document = DVI_DOCUMENT(object);
-
+	
+	g_mutex_lock (dvi_context_mutex);
 	if (dvi_document->context)
 	    {
 		mdvi_pixbuf_device_free (&dvi_document->context->device);
 		mdvi_destroy_context (dvi_document->context);
 	    }
+	g_mutex_unlock (dvi_context_mutex);
 
 	if (dvi_document->params)
 		g_free (dvi_document->params);
@@ -228,6 +230,11 @@ dvi_document_class_init (DviDocumentClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->finalize = dvi_document_finalize;
+
+	mdvi_init_kpathsea("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
+	mdvi_register_fonts ();
+
+	dvi_context_mutex = g_mutex_new ();
 }
 
 static gboolean
@@ -359,10 +366,6 @@ dvi_document_init_params (DviDocument *dvi_document)
 	
         dvi_document->params->bg = 0xffffffff;
         dvi_document->params->fg = 0xff000000;
-
-	mdvi_init_kpathsea("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
-	
-	mdvi_register_fonts ();
 }
 
 static void

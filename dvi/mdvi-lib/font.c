@@ -162,6 +162,7 @@ font_reference(
 {
 	DviFont	*font;
 	DviFontRef *ref;
+	DviFontRef *subfont_ref;
 	
 	/* see if there is a font with the same characteristics */
 	for(font = (DviFont *)fontlist.head; font; font = font->next) {
@@ -185,7 +186,13 @@ font_reference(
 	}
 	ref = xalloc(DviFontRef);
 	ref->ref = font;
+
 	font->links++;
+	for(subfont_ref = font->subfonts; subfont_ref; subfont_ref = subfont_ref->next) {
+		/* just adjust the reference counts */
+		subfont_ref->ref->links++;
+	}
+
 	ref->fontid = id;
 
 	if(LIST(font) != fontlist.head) {
