@@ -1,3 +1,12 @@
+2006-11-16  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_create_tmp_symlink),
+	(ev_window_cmd_file_open_copy_at_dest):
+
+	Fix a race condition when creating symlink. Increase the counter
+	avoiding an infinite loop. Really fixes bug #357472. (Based on patch by
+	Mathias Hasselmann).
+
 2006-11-15  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/Makefile.am:

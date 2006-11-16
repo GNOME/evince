@@ -1221,10 +1221,11 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 }
 
 static gchar *
-ev_window_get_copy_tmp_name (const gchar *filename)
+ev_window_create_tmp_symlink (const gchar *filename, GError **error)
 {
 	gchar *tmp_filename = NULL;
 	gchar *name;
+	gint   res;
 	guint  i = 0;
 
 	name = g_path_get_basename (filename);
@@ -1232,13 +1233,30 @@ ev_window_get_copy_tmp_name (const gchar *filename)
 	do {
 		gchar *basename;
 
-		basename = g_strdup_printf ("%s-%d", name, i);
-		tmp_filename = g_build_filename (g_get_tmp_dir (),
+		if (tmp_filename)
+			g_free (tmp_filename);
+
+		basename = g_strdup_printf ("%s-%d", name, i++);
+		tmp_filename = g_build_filename (ev_tmp_dir (),
 						 basename, NULL);
+		
 		g_free (basename);
-	} while (g_file_test (tmp_filename, G_FILE_TEST_EXISTS));
+	} while ((res = symlink (filename, tmp_filename)) != 0 && errno == EEXIST);
 
 	g_free (name);
+	
+	if (res != 0 && errno != EEXIST) {
+		if (error) {
+			*error = g_error_new (G_FILE_ERROR,
+					      g_file_error_from_errno (errno),
+					      _("Couldn't create symlink “%s”: %s"),
+					      tmp_filename, strerror (errno));
+		}
+
+		g_free (tmp_filename);
+
+		return NULL;
+	}
 	
 	return tmp_filename;
 }
@@ -1246,26 +1264,20 @@ ev_window_get_copy_tmp_name (const gchar *filename)
 static void
 ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 {
+	GError *error = NULL;
 	gchar *symlink_uri;
 	gchar *old_filename;
 	gchar *new_filename;
 
 	old_filename = g_filename_from_uri (window->priv->uri, NULL, NULL);
-	new_filename = ev_window_get_copy_tmp_name (old_filename);
-	
-	if (symlink (old_filename, new_filename) != 0) {
-		gchar  *msg;
-		GError *error;
+	new_filename = ev_window_create_tmp_symlink (old_filename, &error);
 
-		msg = g_strdup_printf (_("Cannot open a copy."));
-		error = g_error_new (G_FILE_ERROR,
-				     g_file_error_from_errno (errno),
-				     _("Couldn't create symlink “%s”: %s"),
-				     new_filename, strerror (errno));
-		ev_window_error_dialog (GTK_WINDOW (window), msg, error);
-		g_free (msg);
+	if (error) {
+		ev_window_error_dialog (GTK_WINDOW (window),
+					_("Cannot open a copy."),
+					error);
+
 		g_error_free (error);
-
 		g_free (old_filename);
 		g_free (new_filename);
 
