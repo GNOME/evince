@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-04 13:49+0200\n"
+"POT-Creation-Date: 2006-11-17 14:16+0100\n"
 "PO-Revision-Date: 2006-08-04 13:50+0200\n"
 "Last-Translator: Wouter Bolsterlee <uws+gnome@xs4all.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -38,50 +38,50 @@ msgstr "De bijlage ‘%s’ kon niet geopend worden: %s"
 msgid "Couldn't open attachment “%s”"
 msgstr "De bijlage ‘%s’ kon niet geopend worden"
 
-#: ../backend/ev-document-factory.c:265
+#: ../backend/ev-document-factory.c:273 ../backend/ev-document-factory.c:337
 msgid "Unknown MIME Type"
 msgstr "Onbekend MIME-type"
 
 # vrij vertaald
-#: ../backend/ev-document-factory.c:276
+#: ../backend/ev-document-factory.c:284
 #, c-format
 msgid "Unhandled MIME type: “%s”"
 msgstr "MIME-type ‘%s’ niet bekend"
 
-#: ../backend/ev-document-factory.c:342
+#: ../backend/ev-document-factory.c:378
 msgid "All Documents"
 msgstr "Alle documenten"
 
-#: ../backend/ev-document-factory.c:350
+#: ../backend/ev-document-factory.c:386
 msgid "PostScript Documents"
 msgstr "PostScript-documenten"
 
-#: ../backend/ev-document-factory.c:359
+#: ../backend/ev-document-factory.c:395
 msgid "PDF Documents"
 msgstr "PDF-documenten"
 
-#: ../backend/ev-document-factory.c:368
+#: ../backend/ev-document-factory.c:404
 msgid "Images"
 msgstr "Afbeeldingen"
 
-#: ../backend/ev-document-factory.c:378
+#: ../backend/ev-document-factory.c:414
 msgid "DVI Documents"
 msgstr "DVI-documenten"
 
-#: ../backend/ev-document-factory.c:388
+#: ../backend/ev-document-factory.c:424
 msgid "Djvu Documents"
 msgstr "Djvu-documenten"
 
-#: ../backend/ev-document-factory.c:398
+#: ../backend/ev-document-factory.c:434
 msgid "Comic Books"
 msgstr "Stripboeken"
 
 # Vrije vertaling (Wouter Bolsterlee)
-#: ../backend/ev-document-factory.c:408
+#: ../backend/ev-document-factory.c:444
 msgid "Impress Slides"
 msgstr "Impress-presentatie"
 
-#: ../backend/ev-document-factory.c:416
+#: ../backend/ev-document-factory.c:452
 msgid "All Files"
 msgstr "Alle bestanden"
 
@@ -144,7 +144,7 @@ msgid "Separator"
 msgstr "Scheidingsteken"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3447
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3893
 msgid "Best Fit"
 msgstr "Passend"
 
@@ -191,7 +191,7 @@ msgstr "400%"
 
 # Misschien Evince documentenviewer
 # viewer is ook nederlands
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:126
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "Documentenviewer"
 
@@ -202,14 +202,18 @@ msgid "View multipage documents"
 msgstr "Documenten met meerdere pagina's weergeven"
 
 #: ../data/evince-password.glade.h:1
+msgid "Password Entry"
+msgstr "Wachtwoordinvoer"
+
+#: ../data/evince-password.glade.h:2
 msgid "Remember password for this session"
 msgstr "Wachtwoord onthouden voor deze sessie"
 
-#: ../data/evince-password.glade.h:2
+#: ../data/evince-password.glade.h:3
 msgid "Save password in keyring"
 msgstr "Wachtwoord opslaan in sleutelbos"
 
-#: ../data/evince-password.glade.h:3
+#: ../data/evince-password.glade.h:4
 msgid "_Password:"
 msgstr "_Wachtwoord:"
 
@@ -284,69 +288,105 @@ msgid "File not available"
 msgstr "Bestand is niet beschikbaar"
 
 # ongeldig/onjuist/foutief
-#: ../dvi/dvi-document.c:104
+#: ../dvi/dvi-document.c:106
 msgid "DVI document has incorrect format"
 msgstr "DVI-document heeft onjuist format"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:589
+#: ../pdf/ev-poppler.cc:593
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:592
+#: ../pdf/ev-poppler.cc:596
 msgid "No"
 msgstr "Nee"
 
-#: ../pdf/ev-poppler.cc:692
+#: ../pdf/ev-poppler.cc:696
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../pdf/ev-poppler.cc:694
+#: ../pdf/ev-poppler.cc:698
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../pdf/ev-poppler.cc:696
+#: ../pdf/ev-poppler.cc:700
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../pdf/ev-poppler.cc:698
+#: ../pdf/ev-poppler.cc:702
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../pdf/ev-poppler.cc:700
+#: ../pdf/ev-poppler.cc:704
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../pdf/ev-poppler.cc:702
+#: ../pdf/ev-poppler.cc:706
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../pdf/ev-poppler.cc:704
+#: ../pdf/ev-poppler.cc:708
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../pdf/ev-poppler.cc:706
+#: ../pdf/ev-poppler.cc:710
 msgid "Unknown font type"
 msgstr "Onbekend soort lettertype"
 
 # geen/naamloos/zonder naam/geen naam
-#: ../pdf/ev-poppler.cc:732
+#: ../pdf/ev-poppler.cc:736
 msgid "No name"
 msgstr "Naamloos"
 
 # deel/onderdeel
-#: ../pdf/ev-poppler.cc:740
+#: ../pdf/ev-poppler.cc:744
 msgid "Embedded subset"
 msgstr "Ingebed deel"
 
-#: ../pdf/ev-poppler.cc:742
+#: ../pdf/ev-poppler.cc:746
 msgid "Embedded"
 msgstr "Ingebed"
 
-#: ../pdf/ev-poppler.cc:744
+#: ../pdf/ev-poppler.cc:748
 msgid "Not embedded"
 msgstr "Niet ingebed"
+
+#: ../impress/zip.c:50
+msgid "No error"
+msgstr "Geen fout"
+
+#: ../impress/zip.c:53
+msgid "Not enough memory"
+msgstr "Onvoldoende geheugen"
+
+#: ../impress/zip.c:56
+msgid "Cannot find zip signature"
+msgstr "Kon zip-signatuur niet vinden"
+
+#: ../impress/zip.c:59
+msgid "Invalid zip file"
+msgstr "Ongeldig zip-bestand"
+
+#: ../impress/zip.c:62
+msgid "Multi file zips are not supported"
+msgstr "Zipbestanden met meerdere bestanden worden niet ondersteund"
+
+#: ../impress/zip.c:65
+msgid "Cannot open the file"
+msgstr "Kan zipbestand niet openen."
+
+#: ../impress/zip.c:68
+msgid "Cannot read data from file"
+msgstr "Kon gegevens niet lezen van bestand"
+
+#: ../impress/zip.c:71
+msgid "Cannot find file in the zip archive"
+msgstr "Kon bestand niet in zipbestand vinden"
+
+#: ../impress/zip.c:74
+msgid "Unknown error"
+msgstr "Onbekende fout"
 
 #: ../properties/ev-properties-main.c:107
 msgid "Document"
@@ -617,20 +657,20 @@ msgstr "Algemeen"
 msgid "Fonts"
 msgstr "Lettertypes"
 
-#: ../shell/ev-properties-fonts.c:123
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "Lettertype"
 
-#: ../shell/ev-properties-fonts.c:134
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Verzamelen van lettertype-informatie... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:615
+#: ../shell/ev-sidebar-attachments.c:663
 msgid "Attachments"
 msgstr "Bijlagen"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2233
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2237
 msgid "Loading..."
 msgstr "Laden..."
 
@@ -638,11 +678,11 @@ msgstr "Laden..."
 msgid "Print..."
 msgstr "Afdrukken..."
 
-#: ../shell/ev-sidebar-links.c:736
+#: ../shell/ev-sidebar-links.c:739
 msgid "Index"
 msgstr "Index"
 
-#: ../shell/ev-sidebar-thumbnails.c:659
+#: ../shell/ev-sidebar-thumbnails.c:678
 msgid "Thumbnails"
 msgstr "Miniaturen"
 
@@ -667,46 +707,46 @@ msgstr "Beeld omlaag schuiven"
 msgid "Document View"
 msgstr "Documentbeeld"
 
-#: ../shell/ev-view.c:1340
+#: ../shell/ev-view.c:1338
 msgid "Go to first page"
 msgstr "Ga naar de eerste pagina"
 
-#: ../shell/ev-view.c:1342
+#: ../shell/ev-view.c:1340
 msgid "Go to previous page"
 msgstr "Ga naar de vorige pagina"
 
-#: ../shell/ev-view.c:1344
+#: ../shell/ev-view.c:1342
 msgid "Go to next page"
 msgstr "Ga naar de volgende pagina"
 
-#: ../shell/ev-view.c:1346
+#: ../shell/ev-view.c:1344
 msgid "Go to last page"
 msgstr "Ga naar de laatste pagina"
 
-#: ../shell/ev-view.c:1348
+#: ../shell/ev-view.c:1346
 msgid "Go to page"
 msgstr "Ga naar pagina"
 
-#: ../shell/ev-view.c:1350
+#: ../shell/ev-view.c:1348
 msgid "Find"
 msgstr "Zoeken"
 
-#: ../shell/ev-view.c:1377
+#: ../shell/ev-view.c:1375
 #, c-format
 msgid "Go to page %s"
 msgstr "Ga naar pagina %s"
 
-#: ../shell/ev-view.c:1382
+#: ../shell/ev-view.c:1380
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ga naar %s in bestand ‘%s’"
 
-#: ../shell/ev-view.c:1385
+#: ../shell/ev-view.c:1383
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ga naar bestand ‘%s’"
 
-#: ../shell/ev-view.c:1394
+#: ../shell/ev-view.c:1392
 #, c-format
 msgid "Launch %s"
 msgstr "%s opstarten"
@@ -715,54 +755,63 @@ msgstr "%s opstarten"
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3437
+#: ../shell/ev-view.c:3442
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d keer op deze pagina gevonden"
 msgstr[1] "%d keer op deze pagina gevonden"
 
-#: ../shell/ev-view.c:3446
+#: ../shell/ev-view.c:3451
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "Nog %3d%% te doorzoeken"
 
 # niet in staat/kon
-#: ../shell/ev-window.c:998
+#: ../shell/ev-window.c:1108
 msgid "Unable to open document"
 msgstr "Kon het document niet openen"
 
-#: ../shell/ev-window.c:1087
+#: ../shell/ev-window.c:1202
 msgid "Open Document"
 msgstr "Document openen"
 
-#: ../shell/ev-window.c:1175
+#: ../shell/ev-window.c:1257
+#, c-format
+msgid "Couldn't create symlink “%s”: %s"
+msgstr "Kon symbolische verwijzing ‘%s’ niet aanmaken: %s"
+
+#: ../shell/ev-window.c:1282
+msgid "Cannot open a copy."
+msgstr "Kan geen kopie openen."
+
+#: ../shell/ev-window.c:1556
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Het bestand kon niet worden opgeslagen als ‘%s’."
 
-#: ../shell/ev-window.c:1194 ../shell/ev-window.c:3801
+#: ../shell/ev-window.c:1575 ../shell/ev-window.c:4274
 msgid "Save a Copy"
 msgstr "Een kopie opslaan"
 
 # niet in staat/kon
-#: ../shell/ev-window.c:1247
+#: ../shell/ev-window.c:1656
 msgid "Failed to print document"
 msgstr "Afdrukken van het document is mislukt"
 
-#: ../shell/ev-window.c:1361 ../shell/ev-window.c:1536
+#: ../shell/ev-window.c:1753 ../shell/ev-window.c:1927
 msgid "Printing is not supported on this printer."
 msgstr "Afdrukken is niet mogelijk met deze printer."
 
-#: ../shell/ev-window.c:1471 ../shell/ev-window.c:1587
+#: ../shell/ev-window.c:1861 ../shell/ev-window.c:1978
 msgid "Print"
 msgstr "Afdrukken"
 
-#: ../shell/ev-window.c:1526
+#: ../shell/ev-window.c:1917
 msgid "Generating PDF is not supported"
 msgstr "Het genereren van een PDF is helaas niet mogelijk"
 
-#: ../shell/ev-window.c:1538
+#: ../shell/ev-window.c:1929
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
@@ -771,22 +820,22 @@ msgstr ""
 "U probeerde af te drukken naar een printer met het stuurprogramma ‘%s’. Dit "
 "programma heeft een stuurprogramma voor een PostScript-printer nodig."
 
-#: ../shell/ev-window.c:1596
+#: ../shell/ev-window.c:1987
 msgid "Pages"
 msgstr "Pagina's"
 
 # schermvullend
 # kde gebruikt Volledig scherm
 #. Toolbar-only
-#: ../shell/ev-window.c:1956 ../shell/ev-window.c:3248
+#: ../shell/ev-window.c:2352 ../shell/ev-window.c:3692
 msgid "Leave Fullscreen"
 msgstr "Volledig scherm verlaten"
 
-#: ../shell/ev-window.c:2319
+#: ../shell/ev-window.c:2723
 msgid "Toolbar Editor"
 msgstr "Werkbalk-editor"
 
-#: ../shell/ev-window.c:2686
+#: ../shell/ev-window.c:3094
 #, c-format
 msgid ""
 "PostScript and PDF File Viewer.\n"
@@ -795,7 +844,7 @@ msgstr ""
 "PostScript en PDF-viewer.\n"
 "Maakt gebruik van poppler %s (%s)"
 
-#: ../shell/ev-window.c:2710
+#: ../shell/ev-window.c:3119
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -807,7 +856,7 @@ msgstr ""
 "door de Free Software Foundation; ofwel versie 2 van deze licentie of\n"
 "(zo u wilt) een latere versie.\n"
 
-#: ../shell/ev-window.c:2714
+#: ../shell/ev-window.c:3123
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -819,7 +868,7 @@ msgstr ""
 "van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL.  Zie de\n"
 "GNU General Public License voor meer details.\n"
 
-#: ../shell/ev-window.c:2718
+#: ../shell/ev-window.c:3127
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -830,16 +879,16 @@ msgstr ""
 "Free Software Foundation, Inc.,\n"
 "59 Temple Place, Suite 330, Boston, MA 02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2742 ../shell/main.c:308
+#: ../shell/ev-window.c:3151 ../shell/main.c:341
 msgid "Evince"
 msgstr "Evince"
 
 # makers/auteurs
-#: ../shell/ev-window.c:2745
+#: ../shell/ev-window.c:3154
 msgid "© 1996-2005 The Evince authors"
 msgstr "© 1996-2005 De auteurs van Evince"
 
-#: ../shell/ev-window.c:2751
+#: ../shell/ev-window.c:3160
 msgid "translator-credits"
 msgstr ""
 "Tino Meinen\n"
@@ -847,335 +896,356 @@ msgstr ""
 "Reinout van Schouwen\n"
 "Kijk voor meer informatie op http://nl.gnome.org/"
 
-#: ../shell/ev-window.c:3175
+#: ../shell/ev-window.c:3613
 msgid "_File"
 msgstr "_Bestand"
 
-#: ../shell/ev-window.c:3176
+#: ../shell/ev-window.c:3614
 msgid "_Edit"
 msgstr "Be_werken"
 
-#: ../shell/ev-window.c:3177
+#: ../shell/ev-window.c:3615
 msgid "_View"
 msgstr "Beel_d"
 
 # in overeenstemming met Nautilus: Ga naar
-#: ../shell/ev-window.c:3178
+#: ../shell/ev-window.c:3616
 msgid "_Go"
 msgstr "_Ga naar"
 
-#: ../shell/ev-window.c:3179
+#: ../shell/ev-window.c:3617
 msgid "_Help"
 msgstr "_Hulp"
 
 #. File menu
-#: ../shell/ev-window.c:3182 ../shell/ev-window.c:3339
+#: ../shell/ev-window.c:3620 ../shell/ev-window.c:3785
 msgid "_Open..."
 msgstr "_Openen..."
 
-#: ../shell/ev-window.c:3183
+#: ../shell/ev-window.c:3621
 msgid "Open an existing document"
 msgstr "Een bestaand document openen"
 
-#: ../shell/ev-window.c:3185 ../shell/ev-window.c:3341
+#: ../shell/ev-window.c:3623
+msgid "Open a _Copy"
+msgstr "Een _kopie openen"
+
+#: ../shell/ev-window.c:3624
+msgid "Open a copy of the current document in a new window"
+msgstr "Een kopie van het huidige document openen in een nieuw venster"
+
+#: ../shell/ev-window.c:3626 ../shell/ev-window.c:3787
 msgid "_Save a Copy..."
 msgstr "Een kopie op_slaan..."
 
-#: ../shell/ev-window.c:3186
+#: ../shell/ev-window.c:3627
 msgid "Save a copy of the current document"
 msgstr "Sla een kopie van het huidige document op"
 
-#: ../shell/ev-window.c:3188
-msgid "_Print..."
-msgstr "Af_drukken..."
+#: ../shell/ev-window.c:3629
+msgid "Print Set_up..."
+msgstr "Af_drukinstellingen..."
 
-#: ../shell/ev-window.c:3189
+# Vrij vertaald (Wouter Bolsterlee)
+#: ../shell/ev-window.c:3630
+msgid "Setup the page settings for printing"
+msgstr "De afdrukinstellingen wijzigen"
+
+#: ../shell/ev-window.c:3632
+msgid "_Print..."
+msgstr "_Afdrukken..."
+
+#: ../shell/ev-window.c:3633
 msgid "Print this document"
 msgstr "Dit document afdrukken"
 
-#: ../shell/ev-window.c:3191
+#: ../shell/ev-window.c:3635
 msgid "P_roperties"
 msgstr "_Eigenschappen"
 
-#: ../shell/ev-window.c:3199
+#: ../shell/ev-window.c:3643
 msgid "Select _All"
 msgstr "_Alles selecteren"
 
-#: ../shell/ev-window.c:3201
+#: ../shell/ev-window.c:3645
 msgid "_Find..."
 msgstr "_Zoeken..."
 
 # zinsdeel/zin/frase
-#: ../shell/ev-window.c:3202
+#: ../shell/ev-window.c:3646
 msgid "Find a word or phrase in the document"
 msgstr "Een woord of een zin in het document zoeken"
 
 # volgende zoeken/volgende
 # Ik heb het hier kort gehouden, en het is ws net zo duidelijk
-#: ../shell/ev-window.c:3204
+#: ../shell/ev-window.c:3648
 msgid "Find Ne_xt"
 msgstr "V_olgende zoeken"
 
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3650
 msgid "Find Pre_vious"
 msgstr "Vo_rige zoeken"
 
-#: ../shell/ev-window.c:3208
+#: ../shell/ev-window.c:3652
 msgid "T_oolbar"
 msgstr "_Werkbalk"
 
 # Linksom/naar links
-#: ../shell/ev-window.c:3210
+#: ../shell/ev-window.c:3654
 msgid "Rotate _Left"
 msgstr "_Linksom draaien"
 
 # rechtsom/naar rechts
-#: ../shell/ev-window.c:3212
+#: ../shell/ev-window.c:3656
 msgid "Rotate _Right"
 msgstr "_Rechtsom draaien"
 
-#: ../shell/ev-window.c:3217
+#: ../shell/ev-window.c:3661
 msgid "Enlarge the document"
 msgstr "Het document vergroten"
 
-#: ../shell/ev-window.c:3220
+#: ../shell/ev-window.c:3664
 msgid "Shrink the document"
 msgstr "Het document verkleinen"
 
-#: ../shell/ev-window.c:3222
+#: ../shell/ev-window.c:3666
 msgid "_Reload"
 msgstr "He_rladen"
 
-#: ../shell/ev-window.c:3223
+#: ../shell/ev-window.c:3667
 msgid "Reload the document"
 msgstr "Het document herladen"
 
 #. Go menu
-#: ../shell/ev-window.c:3227
+#: ../shell/ev-window.c:3671
 msgid "_Previous Page"
 msgstr "Vo_rige pagina"
 
-#: ../shell/ev-window.c:3228
+#: ../shell/ev-window.c:3672
 msgid "Go to the previous page"
 msgstr "Ga naar de vorige pagina"
 
-#: ../shell/ev-window.c:3230
+#: ../shell/ev-window.c:3674
 msgid "_Next Page"
 msgstr "V_olgende pagina"
 
-#: ../shell/ev-window.c:3231
+#: ../shell/ev-window.c:3675
 msgid "Go to the next page"
 msgstr "Ga naar de volgende pagina"
 
-#: ../shell/ev-window.c:3233
+#: ../shell/ev-window.c:3677
 msgid "_First Page"
 msgstr "_Eerste pagina"
 
-#: ../shell/ev-window.c:3234
+#: ../shell/ev-window.c:3678
 msgid "Go to the first page"
 msgstr "Ga naar de eerste pagina"
 
-#: ../shell/ev-window.c:3236
+#: ../shell/ev-window.c:3680
 msgid "_Last Page"
 msgstr "_Laatste pagina"
 
-#: ../shell/ev-window.c:3237
+#: ../shell/ev-window.c:3681
 msgid "Go to the last page"
 msgstr "Ga naar de laatste pagina"
 
 # Sneltoets op 'h' gezet
 # beter zichtbaar de de 'i' en komt overeen met emacs
 #. Help menu
-#: ../shell/ev-window.c:3241
+#: ../shell/ev-window.c:3685
 msgid "_Contents"
 msgstr "In_houd"
 
-#: ../shell/ev-window.c:3244
+#: ../shell/ev-window.c:3688
 msgid "_About"
 msgstr "I_nfo"
 
-#: ../shell/ev-window.c:3249
+#: ../shell/ev-window.c:3693
 msgid "Leave fullscreen mode"
 msgstr "Schermvullende modus verlaten"
 
 #. View Menu
-#: ../shell/ev-window.c:3300
+#: ../shell/ev-window.c:3744
 msgid "_Toolbar"
 msgstr "_Werkbalk"
 
-#: ../shell/ev-window.c:3301
+#: ../shell/ev-window.c:3745
 msgid "Show or hide the toolbar"
 msgstr "De werkbalk tonen of verbergen"
 
-#: ../shell/ev-window.c:3303
+#: ../shell/ev-window.c:3747
 msgid "Side _Pane"
 msgstr "_Zijpaneel"
 
-#: ../shell/ev-window.c:3304
+#: ../shell/ev-window.c:3748
 msgid "Show or hide the side pane"
 msgstr "Het zijpaneel tonen of verbergen"
 
-#: ../shell/ev-window.c:3306
+#: ../shell/ev-window.c:3750
 msgid "_Continuous"
 msgstr "_Doorlopend"
 
 # hele/gehele/complete document
-#: ../shell/ev-window.c:3307
+#: ../shell/ev-window.c:3751
 msgid "Show the entire document"
 msgstr "Het gehele document tonen"
 
 # Duaal is zo'n raar woord
-#: ../shell/ev-window.c:3309
+#: ../shell/ev-window.c:3753
 msgid "_Dual"
 msgstr "_Twee"
 
-#: ../shell/ev-window.c:3310
+#: ../shell/ev-window.c:3754
 msgid "Show two pages at once"
 msgstr "Twee pagina's tegelijk tonen"
 
 # schermvullend
 # kde gebruikt: vollgedig scherm
-#: ../shell/ev-window.c:3312
+#: ../shell/ev-window.c:3756
 msgid "_Fullscreen"
 msgstr "_Volledig scherm"
 
-#: ../shell/ev-window.c:3313
+#: ../shell/ev-window.c:3757
 msgid "Expand the window to fill the screen"
 msgstr "Het venster schermvullend maken"
 
-#: ../shell/ev-window.c:3315
+#: ../shell/ev-window.c:3759
 msgid "_Presentation"
 msgstr "_Presentatie"
 
-#: ../shell/ev-window.c:3316
+#: ../shell/ev-window.c:3760
 msgid "Run document as a presentation"
 msgstr "Document als een diapresentatie tonen"
 
 # was eerst _best passend, maar gewoon passend is beter.
 # _P wordt gebruikt voor _Presentatie
-#: ../shell/ev-window.c:3318
+#: ../shell/ev-window.c:3762
 msgid "_Best Fit"
 msgstr "P_assend"
 
 # de pagina laten passen in het venster
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3763
 msgid "Make the current document fill the window"
 msgstr "Het huidige document passend weergeven in het venster"
 
-#: ../shell/ev-window.c:3321
+#: ../shell/ev-window.c:3765
 msgid "Fit Page _Width"
 msgstr "Pagina_breed passend"
 
 # de breedte van de pagina laten passen in het venster
-#: ../shell/ev-window.c:3322
+#: ../shell/ev-window.c:3766
 msgid "Make the current document fill the window width"
 msgstr "Het huidige document passend maken op de breedte van het venster"
 
 # link/verwijzing
 #. Links
-#: ../shell/ev-window.c:3329
+#: ../shell/ev-window.c:3773
 msgid "_Open Link"
 msgstr "Verwijzing _openen"
 
 # in overeenstemming met Nautilus: Ga naar
-#: ../shell/ev-window.c:3331
+#: ../shell/ev-window.c:3775
 msgid "_Go To"
 msgstr "_Ga naar"
 
+#: ../shell/ev-window.c:3777
+msgid "Open in New _Window"
+msgstr "In _nieuw venster openen"
+
 # verwijzing/verwijzingsadres/link-adres
-#: ../shell/ev-window.c:3333
+#: ../shell/ev-window.c:3779
 msgid "_Copy Link Address"
 msgstr "Verwijzingsadres _kopiëren"
 
-#: ../shell/ev-window.c:3396
+#: ../shell/ev-window.c:3844
 msgid "Page"
 msgstr "Pagina"
 
-#: ../shell/ev-window.c:3397
+#: ../shell/ev-window.c:3845
 msgid "Select Page"
 msgstr "Pagina selecteren"
 
 # Zoomen
-#: ../shell/ev-window.c:3409
+#: ../shell/ev-window.c:3857
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../shell/ev-window.c:3411
+#: ../shell/ev-window.c:3859
 msgid "Adjust the zoom level"
 msgstr "Het zoomniveau aanpassen"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3427
+#: ../shell/ev-window.c:3876
 msgid "Previous"
 msgstr "Vorige"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3433
+#: ../shell/ev-window.c:3881
 msgid "Next"
 msgstr "Volgende"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3437
+#: ../shell/ev-window.c:3885
 msgid "Zoom In"
 msgstr "Inzoomen"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3442
+#: ../shell/ev-window.c:3889
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
 # knoptekst?
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3452
+#: ../shell/ev-window.c:3897
 msgid "Fit Width"
 msgstr "Breedte"
 
 # niet in staat/kon
-#: ../shell/ev-window.c:3730
+#: ../shell/ev-window.c:4203
 msgid "Unable to open attachment"
 msgstr "De bijlage kon niet geopend worden"
 
-#: ../shell/ev-window.c:3777
+#: ../shell/ev-window.c:4250
 msgid "The attachment could not be saved."
 msgstr "De bijlage kon niet worden opgeslagen."
 
-#: ../shell/ev-window-title.c:140
+#: ../shell/ev-window-title.c:141
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Wachtwoord vereist"
 
-#: ../shell/main.c:54
+#: ../shell/main.c:55
 msgid "The page of the document to display."
 msgstr "De pagina van het document dat weergegeven moet worden."
 
-#: ../shell/main.c:54
+#: ../shell/main.c:55
 msgid "PAGE"
 msgstr "PAGINA"
 
-#: ../shell/main.c:55
+#: ../shell/main.c:56
 msgid "Run evince in fullscreen mode"
 msgstr "Starten met volledig scherm"
 
-#: ../shell/main.c:56
+#: ../shell/main.c:57
 msgid "Run evince in presentation mode"
 msgstr "Starten als diapresentatie"
 
 # Vrij vertaald (Wouter Bolsterlee)
-#: ../shell/main.c:57
+#: ../shell/main.c:58
 msgid "Run evince as a previewer"
 msgstr "Starten in voorbeeldmodus"
 
-#: ../shell/main.c:58
+#: ../shell/main.c:60
 msgid "[FILE...]"
 msgstr "[BESTAND...]"
 
 # Misschien Evince documentenviewer
 # viewer is ook nederlands
-#: ../shell/main.c:293
+#: ../shell/main.c:326
 msgid "GNOME Document Viewer"
 msgstr "GNOME documentenviewer"
 
-#: ../shell/main.c:334
+#: ../shell/main.c:368
 msgid "Evince Document Viewer"
 msgstr "Evince documentenviewer"
 
@@ -1570,9 +1640,6 @@ msgstr ""
 
 #~ msgid "%s: Error: "
 #~ msgstr "%s: Fout: "
-
-#~ msgid "Error"
-#~ msgstr "Fout"
 
 #~ msgid "%s: Warning: "
 #~ msgstr "%s: Waarschuwing: "
@@ -1977,9 +2044,6 @@ msgstr ""
 
 #~ msgid "PDF Version:"
 #~ msgstr "PDF-versie:"
-
-#~ msgid "Unknown"
-#~ msgstr "Onbekend"
 
 #~ msgid "Select sidebar page by title for displaying it"
 #~ msgstr "Zijbalkpagina per titel selecteren voor weergave"
@@ -2563,9 +2627,6 @@ msgstr ""
 
 #~ msgid "Cancel"
 #~ msgstr "Annuleren"
-
-#~ msgid "Open in new window"
-#~ msgstr "In nieuw venster openen"
 
 #~ msgid "Open in this window"
 #~ msgstr "In dit venster openen"
