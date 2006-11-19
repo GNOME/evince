@@ -40,7 +40,9 @@ static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ZOOM_WIDTH,       "stock_zoom-page-width" },
 	{ EV_STOCK_LEAVE_FULLSCREEN, "stock_leave-fullscreen" },
 	{ EV_STOCK_VIEW_DUAL,        "stock_preview-two-pages" },
-	{ EV_STOCK_VIEW_CONTINUOUS,  "stock_new-master-document" }
+	{ EV_STOCK_VIEW_CONTINUOUS,  "stock_new-master-document" },
+	{ EV_STOCK_ROTATE_LEFT,      "object-rotate-left"},
+	{ EV_STOCK_ROTATE_RIGHT,     "object-rotate-right"},
 };
 
 

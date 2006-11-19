@@ -31,12 +31,20 @@ evince_SOURCES=				\
 	ev-job-queue.c			\
 	ev-jobs.h			\
 	ev-jobs.c			\
+	ev-history.c			\
+	ev-history.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
 	ev-metadata-manager.c		\
 	ev-metadata-manager.h		\
+	ev-navigation-action.c		\
+	ev-navigation-action.h		\
+	ev-navigation-action-widget.c	\
+	ev-navigation-action-widget.h	\
 	ev-page-action.c		\
 	ev-page-action.h		\
+	ev-page-action-widget.c		\
+	ev-page-action-widget.h		\
 	ev-page-cache.h			\
 	ev-page-cache.c			\
 	ev-password.h			\

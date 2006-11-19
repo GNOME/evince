@@ -34,6 +34,8 @@ G_BEGIN_DECLS
 #define EV_STOCK_LEAVE_FULLSCREEN       "stock_leave-fullscreen"
 #define EV_STOCK_VIEW_DUAL       	"stock_view-dual-page"
 #define EV_STOCK_VIEW_CONTINUOUS        "stock_view-continuous"
+#define EV_STOCK_ROTATE_LEFT            "object-rotate-left"
+#define EV_STOCK_ROTATE_RIGHT           "object-rotate-right"
 
 void ev_stock_icons_init (void);
 

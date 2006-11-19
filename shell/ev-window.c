@@ -30,6 +30,7 @@
 
 #include "ev-window.h"
 #include "ev-window-title.h"
+#include "ev-navigation-action.h"
 #include "ev-page-action.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
@@ -68,6 +69,7 @@
 #include "ev-file-helpers.h"
 #include "ev-utils.h"
 #include "ev-debug.h"
+#include "ev-history.h"
 
 #ifdef WITH_GNOME_PRINT
 #include "ev-print-job.h"
@@ -162,7 +164,7 @@ struct _EvWindowPrivate {
 	gboolean unlink_temp_file;
 	
 	EvDocument *document;
-
+	EvHistory *history;
 	EvPageCache *page_cache;
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
@@ -194,6 +196,7 @@ static const GtkTargetEntry ev_drop_types[] = {
 
 #define PAGE_SELECTOR_ACTION	"PageSelector"
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
+#define NAVIGATION_ACTION	"Navigation"
 
 #define GCONF_OVERRIDE_RESTRICTIONS "/apps/evince/override_restrictions"
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
@@ -367,6 +370,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	/* Toolbar-specific actions: */
 	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
 	ev_window_set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
+	ev_window_set_action_sensitive (ev_window, NAVIGATION_ACTION,  has_pages);
 
         ev_window_update_actions (ev_window);
 }
@@ -614,6 +618,9 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvWindow    *ev_window)
 {
 	ev_window_update_actions (ev_window);
+	
+	if (ev_window->priv->history)
+		ev_history_add_page (ev_window->priv->history, page);
 
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
@@ -883,6 +890,13 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	ev_window_setup_action_sensitivity (ev_window);
 
+	if (ev_window->priv->history)
+		g_object_unref (ev_window->priv->history);
+	ev_window->priv->history = ev_history_new ();
+	action = gtk_action_group_get_action (ev_window->priv->action_group, NAVIGATION_ACTION);
+        ev_navigation_action_set_history (EV_NAVIGATION_ACTION (action), ev_window->priv->history);
+        ev_navigation_action_set_window (EV_NAVIGATION_ACTION (action), ev_window);
+	
 	if (ev_window->priv->properties) {
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
 					           ev_window->priv->document);
@@ -3570,6 +3584,11 @@ ev_window_dispose (GObject *object)
 		priv->dest = NULL;
 	}
 
+	if (priv->history) {
+		g_object_unref (priv->history);
+		priv->history = NULL;
+	}
+
 	if (priv->fullscreen_timeout_id) {
 		g_source_remove (priv->fullscreen_timeout_id);
 		priv->fullscreen_timeout_id = 0;
@@ -3638,9 +3657,9 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_edit_find_previous) },
         { "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
           G_CALLBACK (ev_window_cmd_edit_toolbar) },
-	{ "EditRotateLeft", "object-rotate-left", N_("Rotate _Left"), NULL, NULL,
+	{ "EditRotateLeft", EV_STOCK_ROTATE_LEFT, N_("Rotate _Left"), NULL, NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_left) },
-	{ "EditRotateRight", "object-rotate-right", N_("Rotate _Right"), NULL, NULL,
+	{ "EditRotateRight", EV_STOCK_ROTATE_RIGHT, N_("Rotate _Right"), NULL, NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_right) },
 
         /* View menu */
@@ -3848,6 +3867,17 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       NULL);
 	g_signal_connect (action, "zoom_to_level",
 			  G_CALLBACK (zoom_control_changed_cb), window);
+	gtk_action_group_add_action (group, action);
+	g_object_unref (action);
+
+	action = g_object_new (EV_TYPE_NAVIGATION_ACTION,
+			       "name", NAVIGATION_ACTION,
+			       "label", _("Navigation"),
+			       "is_important", TRUE,
+			       "short_label", _("Back"),
+			       "stock_id", GTK_STOCK_GO_DOWN,
+			       "tooltip", _("Move across visited pages"),
+			       NULL);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }
