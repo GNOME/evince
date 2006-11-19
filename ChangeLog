@@ -1,3 +1,41 @@
+2006-11-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* data/evince-toolbar.xml:
+	* po/POTFILES.in:
+	* shell/Makefile.am:
+	* shell/ev-navigation-action-widget.c:
+	(ev_navigation_action_widget_init),
+	(ev_navigation_action_widget_class_init), (menu_deactivate_cb),
+	(menu_detacher), (ev_navigation_action_widget_set_menu),
+	(menu_position_func), (popup_menu_under_arrow),
+	(ev_navigation_action_widget_toggled),
+	(ev_navigation_action_widget_button_press_event):
+	* shell/ev-navigation-action-widget.h:
+	* shell/ev-navigation-action.c: (ev_navigation_action_set_history),
+	(ev_navigation_action_set_window), (activate_menu_item_cb),
+	(new_history_menu_item), (new_empty_history_menu_item),
+	(build_menu), (menu_activated_cb), (connect_proxy),
+	(create_tool_item), (ev_navigation_action_init),
+	(ev_navigation_action_finalize), (ev_navigation_action_class_init):
+	* shell/ev-navigation-action.h:
+	* shell/ev-page-action-widget.c: (ev_page_action_widget_init),
+	(ev_page_action_widget_set_page_cache),
+	(ev_page_action_widget_finalize),
+	(ev_page_action_widget_class_init), (match_selected_cb),
+	(display_completion_text), (match_completion), (build_new_tree_cb),
+	(get_filter_model_from_model),
+	(ev_page_action_widget_update_model):
+	* shell/ev-page-action-widget.h:
+	* shell/ev-page-action.c: (activate_link_cb), (update_model),
+	(connect_proxy):
+	* shell/ev-page-action.h:
+	* shell/ev-stock-icons.c:
+	* shell/ev-stock-icons.h:
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity),
+	(page_changed_cb), (ev_window_setup_document), (ev_window_dispose),
+	(register_custom_actions):
+	* shell/main.c:
+
 2006-11-16  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* dvi/dvi-document.c: (dvi_document_load), (dvi_document_finalize),
