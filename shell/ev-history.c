@@ -164,7 +164,7 @@ ev_history_add_link (EvHistory *history, EvLink *link)
 }
 
 void
-ev_history_add_page (EvHistory *history, int page)
+ev_history_add_page (EvHistory *history, int page, const gchar *label)
 {
 	EvLink *link;
 	EvLinkDest *dest;
@@ -172,7 +172,8 @@ ev_history_add_page (EvHistory *history, int page)
 	gchar *title;
 
 	g_return_if_fail (EV_IS_HISTORY (history));
-	title = g_strdup_printf (_("Page: %d"), page);
+	
+	title = g_strdup_printf (_("Page: %s"), label);
 
 	dest = ev_link_dest_new_page (page);
 	action = ev_link_action_new_dest (dest);

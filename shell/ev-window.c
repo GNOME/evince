@@ -617,10 +617,15 @@ page_changed_cb (EvPageCache *page_cache,
 		 gint         page,
 		 EvWindow    *ev_window)
 {
+	gchar *label;
+	
 	ev_window_update_actions (ev_window);
 	
-	if (ev_window->priv->history)
-		ev_history_add_page (ev_window->priv->history, page);
+	if (ev_window->priv->history) {
+		label = ev_page_cache_get_page_label (ev_window->priv->page_cache, page);
+		ev_history_add_page (ev_window->priv->history, page, label);
+		g_free (label);
+	}
 
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
