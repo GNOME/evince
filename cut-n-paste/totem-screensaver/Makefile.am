@@ -1,0 +1,11 @@
+noinst_LTLIBRARIES = libtotemscrsaver.la
+libtotemscrsaver_la_SOURCES = \
+	totem-scrsaver.h \
+	totem-scrsaver.c
+
+libtotemscrsaver_la_CFLAGS = \
+	-I$(top_srcdir)/lib	\
+	$(LIB_CFLAGS)		\
+	$(DBUS_CFLAGS)		\
+	$(WARNING_CFLAGS)	\
+	$(DISABLE_DEPRECATED)

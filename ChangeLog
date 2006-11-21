@@ -1,3 +1,21 @@
+2006-11-22  Wouter Bolsterlee  <wbolster@cvs.gnome.org>
+
+	* configure.ac:
+	* cut-n-paste/Makefile.am:
+	* cut-n-paste/totem-screensaver/.cvsignore
+	* cut-n-paste/totem-screensaver/Makefile.am:
+	* cut-n-paste/totem-screensaver/README:
+	* cut-n-paste/totem-screensaver/totem-scrsaver.c:
+	* cut-n-paste/totem-screensaver/totem-scrsaver.h:
+	* shell/Makefile.am:
+	* shell/ev-window.c: (ev_window_run_presentation),
+	(ev_window_stop_presentation), (ev_window_cmd_help_about),
+	(ev_window_init):
+
+	Implemented screensaver enabling/disabling for
+	presentation mode (not fullscreen mode). Code stolen
+	from Totem (with some minor tweaks). Fixes bug #338889.
+
 2006-11-19  Wouter Bolsterlee  <wbolster@cvs.gnome.org>
 
 	* configure.ac:

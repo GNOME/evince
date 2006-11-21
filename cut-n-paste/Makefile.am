@@ -6,4 +6,4 @@ else
 SUBDIRS += recent-files 
 endif
 
-SUBDIRS += zoom-control toolbar-editor
+SUBDIRS += zoom-control toolbar-editor totem-screensaver

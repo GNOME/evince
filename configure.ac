@@ -374,6 +374,7 @@ cut-n-paste/Makefile
 cut-n-paste/recent-files/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
+cut-n-paste/totem-screensaver/Makefile
 data/evince.desktop.in
 data/icons/16x16/Makefile
 data/icons/22x22/Makefile

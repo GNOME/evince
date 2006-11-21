@@ -89,6 +89,8 @@
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <gconf/gconf-client.h>
 
+#include "totem-scrsaver.h"
+
 #include <string.h>
 
 typedef enum {
@@ -148,7 +150,10 @@ struct _EvWindowPrivate {
 	GtkWidget *fullscreen_toolbar;
 	GtkWidget *fullscreen_popup;
 	guint      fullscreen_timeout_id;
-	
+
+	/* Screensaver */
+	TotemScrsaver *screensaver;
+
 	/* Popup link */
 	GtkWidget *view_popup;
 	EvLink    *link;
@@ -2535,6 +2540,8 @@ ev_window_run_presentation (EvWindow *window)
 			  window);
 	fullscreen_set_timeout (window);
 
+	totem_scrsaver_disable (window->priv->screensaver);
+
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
 }
@@ -2560,6 +2567,8 @@ ev_window_stop_presentation (EvWindow *window)
 					      (gpointer) fullscreen_leave_notify_cb,
 					      window);
 	fullscreen_clear_timeout (window);
+
+	totem_scrsaver_enable (window->priv->screensaver);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
@@ -3157,7 +3166,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"name", _("Evince"),
 		"version", VERSION,
 		"copyright",
-		_("\xc2\xa9 1996-2005 The Evince authors"),
+		_("\xc2\xa9 1996-2007 The Evince authors"),
 		"license", license_trans,
 		"website", "http://www.gnome.org/projects/evince",
 		"comments", comments,
@@ -4621,7 +4630,11 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_swapped (G_OBJECT (ev_window->priv->view), "drag-data-received",
 				  G_CALLBACK (drag_data_received_cb),
 				  ev_window);
-	
+
+	/* Screensaver */
+
+	ev_window->priv->screensaver = totem_scrsaver_new ();
+
 	/* Set it user interface params */
 
 	ev_window_setup_recent (ev_window);

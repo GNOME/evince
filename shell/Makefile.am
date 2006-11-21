@@ -4,6 +4,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/lib				\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
+	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
 	-I$(top_srcdir)/backend				\
 	-I$(top_srcdir)/properties			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
@@ -82,6 +83,7 @@ evince_SOURCES=				\
 	ev-stock-icons.h		\
 	main.c
 
+
 if WITH_GNOME_PRINT
 evince_SOURCES+=			\
 	ev-print-job.c			\
@@ -92,6 +94,7 @@ endif
 evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
+	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/lib/libev.la					\
 	$(SHELL_LIBS)							\
