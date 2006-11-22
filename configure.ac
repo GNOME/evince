@@ -378,6 +378,7 @@ cut-n-paste/totem-screensaver/Makefile
 data/evince.desktop.in
 data/icons/16x16/Makefile
 data/icons/22x22/Makefile
+data/icons/24x24/Makefile
 data/icons/48x48/Makefile
 data/icons/Makefile
 data/icons/scalable/Makefile
