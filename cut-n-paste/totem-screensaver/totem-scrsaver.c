@@ -32,7 +32,6 @@
 #include <X11/keysym.h>
 
 #ifdef ENABLE_DBUS
-#include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
 #define GS_SERVICE   "org.gnome.ScreenSaver"
