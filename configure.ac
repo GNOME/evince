@@ -329,7 +329,7 @@ AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
 
 dnl ================== End of comic book checks ============================================
 
-dnl ================== comic book checks ===================================================
+dnl ================== impress book checks ===================================================
 
 AC_ARG_ENABLE(impress,
  	[AC_HELP_STRING([--enable-impress], [Compile with support for impress presentations])],enable_impress="$enableval",enable_impress=no)
@@ -338,7 +338,7 @@ if test "x$enable_impress" = "xyes"; then
 fi 
 AM_CONDITIONAL(ENABLE_IMPRESS, test x$enable_impress = xyes)
 
-dnl ================== End of comic book checks ============================================
+dnl ================== End of impress book checks ============================================
 
 dnl =================== Mime types list ====================================================
 
