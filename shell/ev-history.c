@@ -37,8 +37,6 @@ enum {
 static void ev_history_init       (EvHistory *history);
 static void ev_history_class_init (EvHistoryClass *class);
 
-static GObjectClass *parent_class = NULL;
-
 G_DEFINE_TYPE (EvHistory, ev_history, G_TYPE_OBJECT)
 
 #define EV_HISTORY_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_HISTORY, EvHistoryPrivate))
@@ -66,7 +64,7 @@ ev_history_finalize (GObject *object)
 
 	free_links_list (history->priv->links);
 
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (ev_history_parent_class)->finalize (object);
 }
 
 static void
@@ -117,8 +115,6 @@ ev_history_class_init (EvHistoryClass *class)
 	object_class->finalize = ev_history_finalize;
 	object_class->set_property = ev_history_set_property;
 	object_class->get_property = ev_history_get_property;
-
-	parent_class = g_type_class_peek_parent (class);
 
 	g_object_class_install_property (object_class,
 					 PROP_INDEX,

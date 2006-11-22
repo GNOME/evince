@@ -42,8 +42,6 @@ struct _EvNavigationActionPrivate
 static void ev_navigation_action_init       (EvNavigationAction *action);
 static void ev_navigation_action_class_init (EvNavigationActionClass *class);
 
-static GObjectClass *parent_class = NULL;
-
 G_DEFINE_TYPE (EvNavigationAction, ev_navigation_action, GTK_TYPE_ACTION)
 
 #define MAX_LABEL_LENGTH 48
@@ -180,7 +178,7 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 	g_signal_connect (proxy, "show-menu",
 			  G_CALLBACK (menu_activated_cb), action);
 
-	GTK_ACTION_CLASS (parent_class)->connect_proxy (action, proxy);
+	GTK_ACTION_CLASS (ev_navigation_action_parent_class)->connect_proxy (action, proxy);
 }
 
 static GtkWidget *
@@ -210,7 +208,7 @@ ev_navigation_action_finalize (GObject *object)
 					   (gpointer *) &action->priv->history);
 	}
 
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (ev_navigation_action_parent_class)->finalize (object);
 }
 
 static void
@@ -220,7 +218,6 @@ ev_navigation_action_class_init (EvNavigationActionClass *class)
 	GtkActionClass *action_class = GTK_ACTION_CLASS (class);
 
 	object_class->finalize = ev_navigation_action_finalize;
-	parent_class = g_type_class_peek_parent (class);
 
 	action_class->toolbar_item_type = GTK_TYPE_TOOL_ITEM;
 	action_class->create_tool_item = create_tool_item;

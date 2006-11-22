@@ -1,3 +1,11 @@
+2006-11-22  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-history.c: (ev_history_finalize), (ev_history_class_init):
+	* shell/ev-navigation-action.c: (connect_proxy),
+	(ev_navigation_action_finalize), (ev_navigation_action_class_init):
+	
+	Do not call g_type_class_peek_parent twice.
+
 2006-11-22  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
