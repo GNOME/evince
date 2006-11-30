@@ -40,7 +40,6 @@ dnl Check dependencies
 # SHELL_CFLAGS     for shell implementation.
 # SHELL_LIBS
 
-POPPLER_REQUIRED=0.5.4
 DBUS_GLIB_REQUIRED=0.33
 GTK_REQUIRED=2.8.15
 KEYRING_REQUIRED=0.4.0
@@ -53,9 +52,8 @@ GTK_PRINT_REQUIRED=2.10.0
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
-PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED libglade-2.0 poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 poppler-glib >= $POPPLER_REQUIRED gnome-keyring-1 >= $KEYRING_REQUIRED)
+PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED libglade-2.0)
+PKG_CHECK_MODULES(SHELL_CORE, gtk+-2.0 >= $GTK_REQUIRED libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 gnome-keyring-1 >= $KEYRING_REQUIRED)
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
@@ -187,6 +185,26 @@ dnl ================== portability checks ======================================
 
 dnl for backtrace()
 AC_CHECK_HEADERS([execinfo.h])
+
+dnl ================== pdf checks ===================================================
+AC_ARG_ENABLE(pdf,
+              [AC_HELP_STRING([--enable-pdf], [Compile with pdf support])],enable_pdf="$enableval",enable_pdf=yes)
+
+if test "x$enable_pdf" = "xyes"; then
+    POPPLER_REQUIRED=0.5.4
+    PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED,enable_pdf=yes,enable_pdf=no)
+
+    if test "x$enable_pdf" = "xyes"; then
+	    AC_DEFINE([ENABLE_PDF], [1], [Enable pdf support.])
+	    FRONTEND_LIBS="$FRONTEND_LIBS $POPPLER_LIBS"
+	    SHELL_LIBS="$SHELL_LIBS $POPPLER_LIBS"
+    else
+	    AC_MSG_WARN("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
+    fi 
+fi
+
+AM_CONDITIONAL(ENABLE_PDF, test x$enable_pdf = xyes)
+dnl ================== end of pdf checks ============================================
 
 dnl ================== ggv checks ===================================================
 AC_ARG_ENABLE(ps,
@@ -342,8 +360,9 @@ dnl ================== End of impress book checks ==============================
 
 dnl =================== Mime types list ====================================================
 
-EVINCE_MIME_TYPES="application/pdf"
-
+if test "x$enable_pdf" = "xyes" ; then
+	EVINCE_MIME_TYPES="application/pdf"
+fi
 if test "x$enable_ps" = "xyes" ; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/postscript;application/x-gzpostscript"
 fi
@@ -409,6 +428,7 @@ Configure summary:
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
 
+	PDF Backend........:  $enable_pdf
 	PostScript Backend.:  $enable_ps
 	TIFF Backend.......:  $enable_tiff
 	DJVU Backend.......:  $enable_djvu
