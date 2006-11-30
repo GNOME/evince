@@ -1231,7 +1231,8 @@ get_next_text(line, next_char)
     int level = 0;
     quoted = 1;
     line++;
-    while(*line && !(*line == ')' && level == 0)) {
+    while(*line && !(*line == ')' && level == 0)
+	  && (cp - text) < PSLINELENGTH - 1) {
       if(*line == '\\') {
         if(*(line + 1) == 'n') {
           *cp++ = '\n';
@@ -1302,7 +1303,8 @@ get_next_text(line, next_char)
     }
   }
   else {
-    while(*line && !(*line == ' ' || *line == '\t' || *line == '\n'))
+    while(*line && !(*line == ' ' || *line == '\t' || *line == '\n')
+	  && (cp - text) < PSLINELENGTH - 1)
       *cp++ = *line++;
   }
   *cp = '\0';
