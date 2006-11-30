@@ -198,6 +198,7 @@ if test "x$enable_pdf" = "xyes"; then
 	    AC_DEFINE([ENABLE_PDF], [1], [Enable pdf support.])
 	    FRONTEND_LIBS="$FRONTEND_LIBS $POPPLER_LIBS"
 	    SHELL_LIBS="$SHELL_LIBS $POPPLER_LIBS"
+	    SHELL_CFLAGS="$SHELL_CFLAGS $POPPLER_CFLAGS"
     else
 	    AC_MSG_WARN("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 

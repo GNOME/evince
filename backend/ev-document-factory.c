@@ -65,8 +65,10 @@ struct _EvDocumentType
 };
 
 const EvDocumentType document_types[] = {
+#ifdef ENABLE_PDF
 	/* PDF: */
 	{"application/pdf",            EV_BACKEND_PDF,  pdf_document_get_type},
+#endif
 
 #ifdef ENABLE_PS
 	/* Postscript: */
@@ -390,6 +392,7 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 	}
 #endif
 
+#ifdef ENABLE_PDF
 	if (document == NULL || backend == EV_BACKEND_PDF) {
 		default_filter = filter = gtk_file_filter_new ();
 		gtk_file_filter_set_name (filter, _("PDF Documents"));
@@ -397,6 +400,7 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 		file_filter_add_mime_list_and_free (filter, mime_types);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	}
+#endif
 
 #ifdef ENABLE_PIXBUF
 	if (document == NULL || backend == EV_BACKEND_PIXBUF) {

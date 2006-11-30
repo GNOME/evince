@@ -52,8 +52,12 @@ libevbackend_la_SOURCES=			\
 	ev-document-misc.h			\
 	ev-document-misc.c
 
-libevbackend_la_LIBADD = 				\
+libevbackend_la_LIBADD =
+
+if ENABLE_PDF
+libevbackend_la_LIBADD += 			\
 	$(top_builddir)/pdf/libpdfdocument.la
+endif
 
 if ENABLE_PS
 libevbackend_la_LIBADD += 			\

@@ -80,7 +80,9 @@
 #include <gtk/gtkprintunixdialog.h>
 #endif
 
+#ifdef ENABLE_PDF
 #include <poppler.h>
+#endif
 
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
@@ -3088,6 +3090,7 @@ ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_wi
 static char *
 build_comments_string (void)
 {
+#ifdef ENABLE_PDF
 	PopplerBackend backend;
 	const char *backend_name;
 	const char *version;
@@ -3109,6 +3112,9 @@ build_comments_string (void)
 	return g_strdup_printf (_("PostScript and PDF File Viewer.\n"
 				  "Using poppler %s (%s)"),
 				version, backend_name);
+#else
+	return g_strdup_printf (_("Document Viewer."));
+#endif
 }
 
 static void
