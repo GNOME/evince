@@ -199,6 +199,10 @@ if test "x$enable_pdf" = "xyes"; then
 	    FRONTEND_LIBS="$FRONTEND_LIBS $POPPLER_LIBS"
 	    SHELL_LIBS="$SHELL_LIBS $POPPLER_LIBS"
 	    SHELL_CFLAGS="$SHELL_CFLAGS $POPPLER_CFLAGS"
+	    evince_save_LIBS=$LIBS
+	    LIBS="$LIBS $FRONTEND_LIBS"
+	    AC_CHECK_FUNCS(poppler_page_render)
+	    LIBS=$evince_save_LIBS
     else
 	    AC_MSG_WARN("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 

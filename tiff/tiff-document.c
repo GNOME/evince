@@ -28,7 +28,7 @@
 #include "tiff-document.h"
 #include "ev-document-misc.h"
 #include "ev-document-thumbnails.h"
-#include "ev-ps-exporter.h"
+#include "ev-file-exporter.h"
 
 struct _TiffDocumentClass
 {
@@ -50,15 +50,15 @@ typedef struct _TiffDocumentClass TiffDocumentClass;
 
 static void tiff_document_document_iface_init (EvDocumentIface *iface);
 static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-static void tiff_document_document_ps_exporter_iface_init (EvPSExporterIface *iface);
+static void tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (TiffDocument, tiff_document, G_TYPE_OBJECT,
                          { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
 						  tiff_document_document_iface_init);
 			   G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 						  tiff_document_document_thumbnails_iface_init);
-			   G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
-						  tiff_document_document_ps_exporter_iface_init);
+			   G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						  tiff_document_document_file_exporter_iface_init);
 			 });
 
 static TIFFErrorHandler orig_error_handler = NULL;
@@ -376,10 +376,22 @@ tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 
 /* postscript exporter implementation */
 
+static gboolean
+tiff_document_file_exporter_format_supported (EvFileExporter      *exporter,
+					      EvFileExporterFormat format)
+{
+	return (format == EV_FILE_FORMAT_PS);
+}
+
 static void
-tiff_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
-			       int first_page, int last_page,
-			       double width, double height, gboolean duplex)
+tiff_document_file_exporter_begin (EvFileExporter      *exporter,
+				   EvFileExporterFormat format,
+				   const char          *filename,
+				   int                  first_page,
+				   int                  last_page,
+				   double               width,
+				   double               height,
+				   gboolean             duplex)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
@@ -387,7 +399,7 @@ tiff_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
 }
 
 static void
-tiff_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
+tiff_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
@@ -400,7 +412,7 @@ tiff_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 }
 
 static void
-tiff_document_ps_export_end (EvPSExporter *exporter)
+tiff_document_file_exporter_end (EvFileExporter *exporter)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
@@ -410,11 +422,12 @@ tiff_document_ps_export_end (EvPSExporter *exporter)
 }
 
 static void
-tiff_document_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-	iface->begin = tiff_document_ps_export_begin;
-	iface->do_page = tiff_document_ps_export_do_page;
-	iface->end = tiff_document_ps_export_end;
+	iface->format_supported = tiff_document_file_exporter_format_supported;
+	iface->begin = tiff_document_file_exporter_begin;
+	iface->do_page = tiff_document_file_exporter_do_page;
+	iface->end = tiff_document_file_exporter_end;
 }
 
 static void

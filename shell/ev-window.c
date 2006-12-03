@@ -40,7 +40,7 @@
 #include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-properties-dialog.h"
-#include "ev-ps-exporter.h"
+#include "ev-file-exporter.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-fonts.h"
@@ -328,7 +328,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
 	}
 
-	if (has_document && !EV_IS_PS_EXPORTER(document))
+	if (has_document && !EV_IS_FILE_EXPORTER(document))
 		ok_to_print = FALSE;
 
 	
@@ -1742,6 +1742,7 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	gdouble        width;
 	gdouble        height;
 	GtkPrintPages  print_pages;
+	const gchar   *file_format;
 	
 	if (response != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
@@ -1764,6 +1765,9 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	window->priv->print_page_setup = g_object_ref (
 		gtk_print_unix_dialog_get_page_setup (GTK_PRINT_UNIX_DIALOG (dialog)));
 
+	file_format = gtk_print_settings_get (window->priv->print_settings,
+					      GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
+	
 	if (!gtk_printer_accepts_ps (window->priv->printer)) {
 		GtkWidget *msgdialog;
 
@@ -1825,6 +1829,7 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	reverse = gtk_print_settings_get_reverse (window->priv->print_settings);
 	
 	window->priv->print_job = ev_job_print_new (window->priv->document,
+						    file_format ? file_format : "ps",
 						    width, height,
 						    ranges, n_ranges,
 						    page_set,
@@ -1846,10 +1851,11 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 void
 ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 {
-	GtkWidget   *dialog;
-	EvPageCache *page_cache;
-	gint         current_page;
-	gint         document_last_page;
+	GtkWidget           *dialog;
+	EvPageCache         *page_cache;
+	gint                 current_page;
+	gint                 document_last_page;
+	GtkPrintCapabilities capabilities;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
@@ -1881,13 +1887,22 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 
 	dialog = gtk_print_unix_dialog_new (_("Print"), GTK_WINDOW (ev_window));
 	ev_window->priv->print_dialog = dialog;
+	
+	capabilities = GTK_PRINT_CAPABILITY_PAGE_SET |
+		GTK_PRINT_CAPABILITY_COPIES |
+		GTK_PRINT_CAPABILITY_COLLATE |
+		GTK_PRINT_CAPABILITY_REVERSE |
+		GTK_PRINT_CAPABILITY_SCALE |
+		GTK_PRINT_CAPABILITY_GENERATE_PS;
+	
+	if (EV_IS_FILE_EXPORTER (ev_window->priv->document) &&
+	    ev_file_exporter_format_supported (EV_FILE_EXPORTER (ev_window->priv->document),
+					       EV_FILE_FORMAT_PDF)) {
+		capabilities |= GTK_PRINT_CAPABILITY_GENERATE_PDF;
+	}
+	
 	gtk_print_unix_dialog_set_manual_capabilities (GTK_PRINT_UNIX_DIALOG (dialog),
-						       GTK_PRINT_CAPABILITY_PAGE_SET |
-						       GTK_PRINT_CAPABILITY_COPIES |
-						       GTK_PRINT_CAPABILITY_COLLATE |
-						       GTK_PRINT_CAPABILITY_REVERSE |
-						       GTK_PRINT_CAPABILITY_SCALE |
-						       GTK_PRINT_CAPABILITY_GENERATE_PS);
+						       capabilities);
 
 	gtk_print_unix_dialog_set_current_page (GTK_PRINT_UNIX_DIALOG (dialog),
 						current_page);

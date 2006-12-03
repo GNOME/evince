@@ -7,7 +7,7 @@
 #include "ev-document-fonts.h"
 #include "ev-selection.h"
 #include "ev-async-renderer.h"
-#include "ev-ps-exporter.h"
+#include "ev-file-exporter.h"
 #include "ev-window.h"
 
 #include <glib/gstdio.h>
@@ -528,6 +528,7 @@ ev_job_xfer_run (EvJobXfer *job)
 
 EvJob *
 ev_job_print_new (EvDocument    *document,
+		  const gchar   *format,
 		  gdouble        width,
 		  gdouble        height,
 		  EvPrintRange  *ranges,
@@ -543,6 +544,8 @@ ev_job_print_new (EvDocument    *document,
 
 	EV_JOB (job)->document = g_object_ref (document);
 
+	job->format = format;
+	
 	job->temp_file = NULL;
 	job->error = NULL;
 
@@ -636,7 +639,7 @@ ev_job_print_do_page (EvJobPrint *job, gint page)
 	EvRenderContext *rc;
 
 	rc = ev_render_context_new (0, page, 1.0);
-	ev_ps_exporter_do_page (EV_PS_EXPORTER (document), rc);
+	ev_file_exporter_do_page (EV_FILE_EXPORTER (document), rc);
 	g_object_unref (rc);
 }
 
@@ -648,6 +651,7 @@ ev_job_print_run (EvJobPrint *job)
 	gint        last_page;
 	gint        first_page;
 	gint        i;
+	gchar      *filename;
 	
 	g_return_if_fail (EV_IS_JOB_PRINT (job));
 
@@ -658,8 +662,10 @@ ev_job_print_run (EvJobPrint *job)
 	if (job->error)
 		g_error_free (job->error);
 	job->error = NULL;
-	
-	fd = g_file_open_tmp ("evince_print.ps.XXXXXX", &job->temp_file, &job->error);
+
+	filename = g_strdup_printf ("evince_print.%s.XXXXXX", job->format);
+	fd = g_file_open_tmp (filename, &job->temp_file, &job->error);
+	g_free (filename);
 	if (fd <= -1) {
 		EV_JOB (job)->finished = TRUE;
 		return;
@@ -669,17 +675,21 @@ ev_job_print_run (EvJobPrint *job)
 	last_page = ev_print_job_get_last_page (job);
 
 	ev_document_doc_mutex_lock ();
-	ev_ps_exporter_begin (EV_PS_EXPORTER (document),
-			      job->temp_file,
-			      MIN (first_page, last_page),
-			      MAX (first_page, last_page),
-			      job->width, job->height, FALSE);
+	ev_file_exporter_begin (EV_FILE_EXPORTER (document),
+				g_ascii_strcasecmp (job->format, "pdf") == 0 ?
+				EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS,
+				job->temp_file,
+				MIN (first_page, last_page),
+				MAX (first_page, last_page),
+				job->width, job->height, FALSE);
+	ev_document_doc_mutex_unlock ();
 
 	for (i = 0; i < job->copies; i++) {
 		gint page, step;
 		
 		step = job->reverse ? -1 : 1;
 		page = job->reverse ? last_page : first_page;
+		
 		while ((job->reverse && (page >= first_page)) ||
 		       (!job->reverse && (page <= last_page))) {
 			gint n_pages = 1;
@@ -700,7 +710,9 @@ ev_job_print_run (EvJobPrint *job)
 				n_pages = job->copies;
 
 			for (j = 0; j < n_pages; j++) {
+				ev_document_doc_mutex_lock ();
 				ev_job_print_do_page (job, page);
+				ev_document_doc_mutex_unlock ();
 			}
 
 			page += step;
@@ -710,7 +722,8 @@ ev_job_print_run (EvJobPrint *job)
 			break;
 	}
 
-	ev_ps_exporter_end (EV_PS_EXPORTER (document));
+	ev_document_doc_mutex_lock ();
+	ev_file_exporter_end (EV_FILE_EXPORTER (document));
 	ev_document_doc_mutex_unlock ();
 
 	close (fd);

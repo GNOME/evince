@@ -46,7 +46,7 @@
 #include "ps-document.h"
 #include "ev-debug.h"
 #include "gsdefaults.h"
-#include "ev-ps-exporter.h"
+#include "ev-file-exporter.h"
 #include "ev-async-renderer.h"
 
 #define MAX_BUFSIZE 1024
@@ -70,30 +70,30 @@ struct record_list
 static gboolean broken_pipe = FALSE;
 
 /* Forward declarations */
-static void	ps_document_init			(PSDocument           *gs);
-static void	ps_document_class_init			(PSDocumentClass      *klass);
-static void	send_ps					(PSDocument           *gs,
-							 long                  begin,
-							 unsigned int          len,
-							 gboolean	       close);
-static void	output					(gpointer              data,
-							 gint                  source,
-							 GdkInputCondition     condition);
-static void	input					(gpointer              data,
-							 gint		       source,
-							 GdkInputCondition     condition);
-static void	stop_interpreter			(PSDocument           *gs);
-static gint	start_interpreter			(PSDocument	      *gs);
-static void	ps_document_document_iface_init		(EvDocumentIface      *iface);
-static void	ps_document_ps_exporter_iface_init	(EvPSExporterIface    *iface);
-static void	ps_async_renderer_iface_init		(EvAsyncRendererIface *iface);
+static void	ps_document_init			(PSDocument             *gs);
+static void	ps_document_class_init			(PSDocumentClass        *klass);
+static void	send_ps					(PSDocument             *gs,
+							 long                    begin,
+							 unsigned int            len,
+							 gboolean	         close);
+static void	output					(gpointer                data,
+							 gint                    source,
+							 GdkInputCondition       condition);
+static void	input					(gpointer                data,
+							 gint		         source,
+							 GdkInputCondition       condition);
+static void	stop_interpreter			(PSDocument             *gs);
+static gint	start_interpreter			(PSDocument	        *gs);
+static void	ps_document_document_iface_init		(EvDocumentIface        *iface);
+static void	ps_document_file_exporter_iface_init	(EvFileExporterIface    *iface);
+static void	ps_async_renderer_iface_init		(EvAsyncRendererIface   *iface);
 
 G_DEFINE_TYPE_WITH_CODE (PSDocument, ps_document, G_TYPE_OBJECT,
                          {
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
 							ps_document_document_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
-							ps_document_ps_exporter_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+							ps_document_file_exporter_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_ASYNC_RENDERER,
 							ps_async_renderer_iface_init);
 			 });
@@ -1289,10 +1289,22 @@ ps_async_renderer_iface_init (EvAsyncRendererIface *iface)
 	iface->render_pixbuf = ps_async_renderer_render_pixbuf;
 }
 
+static gboolean
+ps_document_file_exporter_format_supported (EvFileExporter      *exporter,
+					    EvFileExporterFormat format)
+{
+	return (format == EV_FILE_FORMAT_PS);
+}
+
 static void
-ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
-			     int first_page, int last_page,
-                             double width, double height, gboolean duplex)
+ps_document_file_exporter_begin (EvFileExporter      *exporter,
+				 EvFileExporterFormat format,
+				 const char          *filename,
+				 int                  first_page,
+				 int                  last_page,
+				 double               width,
+				 double               height,
+				 gboolean             duplex)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 
@@ -1306,7 +1318,7 @@ ps_document_ps_export_begin (EvPSExporter *exporter, const char *filename,
 }
 
 static void
-ps_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
+ps_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 	
@@ -1316,7 +1328,7 @@ ps_document_ps_export_do_page (EvPSExporter *exporter, EvRenderContext *rc)
 }
 
 static void
-ps_document_ps_export_end (EvPSExporter *exporter)
+ps_document_file_exporter_end (EvFileExporter *exporter)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 
@@ -1333,9 +1345,10 @@ ps_document_ps_export_end (EvPSExporter *exporter)
 }
 
 static void
-ps_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+ps_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-	iface->begin = ps_document_ps_export_begin;
-	iface->do_page = ps_document_ps_export_do_page;
-	iface->end = ps_document_ps_export_end;
+	iface->format_supported = ps_document_file_exporter_format_supported;
+	iface->begin = ps_document_file_exporter_begin;
+	iface->do_page = ps_document_file_exporter_do_page;
+	iface->end = ps_document_file_exporter_end;
 }

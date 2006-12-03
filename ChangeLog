@@ -1,5 +1,19 @@
 2006-12-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* backend/Makefile.am:
+	* backend/ev-file-exporter.[ch]:
+	* pdf/ev-poppler.cc: (pdf_document_file_exporter_*):
+	* ps/ps-document.c: (ps_document_file_exporter_*):
+	* tiff/tiff-document.c: (tiff_document_document_file_exporter_*):
+	* shell/ev-jobs.[ch]: (ev_job_print_new), (ev_job_print_run):
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity),
+	(ev_window_print_dialog_response_cb), (ev_window_print_range):
+
+	Allow printing to PDF when suppoted by the backend.
+	
+2006-12-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (build_comments_string):
 
 	Use always "Document Viewer" in about dialog. 

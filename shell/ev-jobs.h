@@ -188,6 +188,7 @@ struct _EvJobPrint
 	EvJob parent;
 
 	GError *error;
+	const gchar *format;
 	gchar  *temp_file;
 	EvPrintRange *ranges;
 	gint n_ranges;
@@ -250,6 +251,7 @@ void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);
 /* EvJobPrint */
 GType           ev_job_print_get_type     (void) G_GNUC_CONST;
 EvJob          *ev_job_print_new          (EvDocument      *document,
+					   const gchar     *format,
 					   gdouble          width,
 					   gdouble          height,
 					   EvPrintRange    *ranges,

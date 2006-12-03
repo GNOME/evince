@@ -17,16 +17,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include <math.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include <poppler.h>
 #include <poppler-document.h>
 #include <poppler-page.h>
+#include <cairo-pdf.h>
 #include <glib/gi18n.h>
 
 #include "ev-poppler.h"
-#include "ev-ps-exporter.h"
+#include "ev-file-exporter.h"
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-document-links.h"
@@ -45,6 +48,12 @@ typedef struct {
 	int search_page;
 } PdfDocumentSearch;
 
+typedef struct {
+	EvFileExporterFormat format;
+	PopplerPSFile *ps_file;
+	cairo_t *pdf_cairo;
+} PdfPrintContext;
+
 struct _PdfDocumentClass
 {
 	GObjectClass parent_class;
@@ -55,7 +64,6 @@ struct _PdfDocument
 	GObject parent_instance;
 
 	PopplerDocument *document;
-	PopplerPSFile *ps_file;
 	gchar *password;
 
 	PopplerFontInfo *font_info;
@@ -63,6 +71,7 @@ struct _PdfDocument
 	int fonts_scanned_pages;
 
 	PdfDocumentSearch *search;
+	PdfPrintContext *print_ctx;
 };
 
 static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
@@ -71,7 +80,7 @@ static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIfa
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
 static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface      *iface);
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
-static void pdf_document_ps_exporter_iface_init         (EvPSExporterIface         *iface);
+static void pdf_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
 static void pdf_selection_iface_init                    (EvSelectionIface          *iface);
 static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
 							 gint                       page,
@@ -85,6 +94,7 @@ static EvLinkDest *ev_link_dest_from_dest   (PdfDocument       *pdf_document,
 static EvLink     *ev_link_from_action      (PdfDocument       *pdf_document,
 					     PopplerAction     *action);
 static void        pdf_document_search_free (PdfDocumentSearch *search);
+static void        pdf_print_context_free   (PdfPrintContext   *ctx);
 
 
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
@@ -101,8 +111,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_fonts_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 							pdf_document_find_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_PS_EXPORTER,
-							pdf_document_ps_exporter_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+							pdf_document_file_exporter_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
 							pdf_selection_iface_init);
 			 });
@@ -147,6 +157,11 @@ pdf_document_dispose (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(object);
 
+	if (pdf_document->print_ctx) {
+		pdf_print_context_free (pdf_document->print_ctx);
+		pdf_document->print_ctx = NULL;
+	}
+	
 	if (pdf_document->search) {
 		pdf_document_search_free (pdf_document->search);
 		pdf_document->search = NULL;
@@ -1398,50 +1413,127 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
         iface->cancel = pdf_document_find_cancel;
 }
 
+static const gboolean supported_formats[] = {
+	TRUE, /* EV_FILE_FORMAT_PS */
+#ifdef HAVE_POPPLER_PAGE_RENDER
+	TRUE, /* EV_FILE_FORMAT_PDF */
+#else
+	FALSE, /* EV_FILE_FORMAT_PDF */
+#endif
+};
+
 static void
-pdf_document_ps_exporter_begin (EvPSExporter *exporter, const char *filename,
-				int first_page, int last_page,
-				double width, double height, gboolean duplex)
+pdf_print_context_free (PdfPrintContext *ctx)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
-	
-	pdf_document->ps_file = poppler_ps_file_new (pdf_document->document, filename,
-						     first_page,
-						     last_page - first_page + 1);
-	poppler_ps_file_set_paper_size (pdf_document->ps_file, width, height);
-	poppler_ps_file_set_duplex (pdf_document->ps_file, duplex);
+	if (!ctx)
+		return;
+
+	if (ctx->ps_file) {
+		poppler_ps_file_free (ctx->ps_file);
+		ctx->ps_file = NULL;
+	}
+
+	if (ctx->pdf_cairo) {
+		cairo_destroy (ctx->pdf_cairo);
+		ctx->pdf_cairo = NULL;
+	}
+
+	g_free (ctx);
+}
+
+static gboolean
+pdf_document_file_exporter_format_supported (EvFileExporter      *exporter,
+					     EvFileExporterFormat format)
+{
+	return supported_formats[format];
 }
 
 static void
-pdf_document_ps_exporter_do_page (EvPSExporter *exporter, EvRenderContext *rc)
+pdf_document_file_exporter_begin (EvFileExporter      *exporter,
+				  EvFileExporterFormat format,
+				  const char          *filename,
+				  int                  first_page,
+				  int                  last_page,
+				  double               width,
+				  double               height,
+				  gboolean             duplex)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+	PdfPrintContext *ctx;
+
+	if (pdf_document->print_ctx)
+		pdf_print_context_free (pdf_document->print_ctx);
+	pdf_document->print_ctx = g_new0 (PdfPrintContext, 1);
+	ctx = pdf_document->print_ctx;
+	ctx->format = format;
+	
+	switch (format) {
+	        case EV_FILE_FORMAT_PS:
+			ctx->ps_file = poppler_ps_file_new (pdf_document->document,
+							    filename, first_page,
+							    last_page - first_page + 1);
+			poppler_ps_file_set_paper_size (ctx->ps_file, width, height);
+			poppler_ps_file_set_duplex (ctx->ps_file, duplex);
+
+			break;
+	        case EV_FILE_FORMAT_PDF: {
+			cairo_surface_t *surface;
+			
+			surface = cairo_pdf_surface_create (filename, width, height);
+			ctx->pdf_cairo = cairo_create (surface);
+			cairo_surface_destroy (surface);
+		}
+			break;
+	        default:
+			g_assert_not_reached ();
+	}
+}
+
+static void
+pdf_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+	PdfPrintContext *ctx = pdf_document->print_ctx;
 	PopplerPage *poppler_page;
 
-	g_return_if_fail (pdf_document->ps_file != NULL);
+	g_return_if_fail (pdf_document->print_ctx != NULL);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
-	poppler_page_render_to_ps (poppler_page, pdf_document->ps_file);
+
+	switch (ctx->format) {
+	        case EV_FILE_FORMAT_PS:
+			poppler_page_render_to_ps (poppler_page, ctx->ps_file);
+			break;
+	        case EV_FILE_FORMAT_PDF:
+#ifdef HAVE_POPPLER_PAGE_RENDER
+			poppler_page_render (poppler_page, ctx->pdf_cairo);
+#endif
+			cairo_show_page (ctx->pdf_cairo);
+			break;
+	        default:
+			g_assert_not_reached ();
+	}
+	
 	g_object_unref (poppler_page);
 }
 
 static void
-pdf_document_ps_exporter_end (EvPSExporter *exporter)
+pdf_document_file_exporter_end (EvFileExporter *exporter)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 
-	poppler_ps_file_free (pdf_document->ps_file);
-	pdf_document->ps_file = NULL;
+	pdf_print_context_free (pdf_document->print_ctx);
+	pdf_document->print_ctx = NULL;
 }
 
 static void
-pdf_document_ps_exporter_iface_init (EvPSExporterIface *iface)
+pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-        iface->begin = pdf_document_ps_exporter_begin;
-        iface->do_page = pdf_document_ps_exporter_do_page;
-        iface->end = pdf_document_ps_exporter_end;
+	iface->format_supported = pdf_document_file_exporter_format_supported;
+        iface->begin = pdf_document_file_exporter_begin;
+        iface->do_page = pdf_document_file_exporter_do_page;
+        iface->end = pdf_document_file_exporter_end;
 }
-
 
 void
 pdf_selection_render_selection (EvSelection      *selection,
