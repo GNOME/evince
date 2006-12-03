@@ -147,10 +147,14 @@ djvu_document_get_page_size (EvDocument   *document,
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
         ddjvu_pageinfo_t info;
+	ddjvu_status_t r;
 	
 	g_return_if_fail (djvu_document->d_document);
 	
-	while (ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info) < DDJVU_JOB_OK)
+	while ((r = ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info)) < DDJVU_JOB_OK)
+		djvu_handle_events(djvu_document, TRUE);
+
+	if (r >= DDJVU_JOB_FAILED)
 		djvu_handle_events(djvu_document, TRUE);
 
         *width = info.width * SCALE_FACTOR; 
