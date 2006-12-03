@@ -32,6 +32,7 @@
 #ifndef HAVE_GTK_RECENT
 #include "egg-recent-model.h"
 #endif
+#include "totem-scrsaver.h"
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,8 @@ struct _EvApplication {
 #ifndef HAVE_GTK_RECENT
 	EggRecentModel  *recent_model;
 #endif
+
+	TotemScrsaver *scr_saver;
 	
 	gchar *last_chooser_uri;
 };
@@ -103,7 +106,8 @@ EggRecentModel   *ev_application_get_recent_model    (EvApplication   *applicati
 void 		  ev_application_set_chooser_uri     (EvApplication   *application, 
 						      const gchar     *uri);
 const gchar	 *ev_application_get_chooser_uri     (EvApplication   *application);
-
+void		  ev_application_screensaver_enable  (EvApplication   *application);
+void		  ev_application_screensaver_disable (EvApplication   *application);
 G_END_DECLS
 
 #endif /* !EV_APPLICATION_H */

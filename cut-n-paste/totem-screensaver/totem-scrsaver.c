@@ -188,13 +188,16 @@ gs_proxy_destroy_cb (GObject *proxy,
 }
 #endif
 
-static void
-screensaver_init_dbus (TotemScrsaver *scr)
-{
 #ifdef ENABLE_DBUS
+static void
+screensaver_init_dbus (TotemScrsaver *scr, DBusGConnection *connection)
+{
 	GError *error = NULL;
 
-	scr->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	if (!connection)
+		scr->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+	else
+		scr->priv->connection = connection;
 
 	if (! scr->priv->connection) {
 		if (error) {
@@ -218,8 +221,8 @@ screensaver_init_dbus (TotemScrsaver *scr)
 
 	}
 
-#endif /* ENABLE_DBUS */
 }
+#endif /* ENABLE_DBUS */
 
 static void
 screensaver_finalize_dbus (TotemScrsaver *scr)
@@ -355,19 +358,35 @@ totem_scrsaver_class_init (TotemScrsaverClass *klass)
 	object_class->finalize = totem_scrsaver_finalize;
 }
 
+#ifdef ENABLE_DBUS
 TotemScrsaver *
-totem_scrsaver_new (void)
+totem_scrsaver_new	(DBusGConnection *connection)
 {
-	return TOTEM_SCRSAVER (g_object_new (TOTEM_TYPE_SCRSAVER, NULL));
+	TotemScrsaver * scr;
+	scr = TOTEM_SCRSAVER (g_object_new (TOTEM_TYPE_SCRSAVER, NULL));
+
+	screensaver_init_dbus (scr, connection);
+	screensaver_init_x11 (scr);
+	
+	return scr;
 }
+#else
+TotemScrsaver *
+totem_scrsaver_new()
+{
+	TotemScrsaver * scr;
+	scr = TOTEM_SCRSAVER (g_object_new (TOTEM_TYPE_SCRSAVER, NULL));
+
+	screensaver_init_x11 (scr);
+	
+	return scr;
+}
+#endif
 
 static void
 totem_scrsaver_init (TotemScrsaver *scr)
 {
 	scr->priv = g_new0 (TotemScrsaverPrivate, 1);
-
-	screensaver_init_dbus (scr);
-	screensaver_init_x11 (scr);
 }
 
 void

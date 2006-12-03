@@ -109,7 +109,9 @@ ev_application_register_service (EvApplication *application)
 	dbus_g_connection_register_g_object (connection,
 					     "/org/gnome/evince/Evince",
                                              G_OBJECT (application));
-
+	
+	application->scr_saver = totem_scrsaver_new (connection);
+	
 	return TRUE;
 }
 #endif /* ENABLE_DBUS */
@@ -551,3 +553,14 @@ const gchar* ev_application_get_chooser_uri (EvApplication *application)
 	return application->last_chooser_uri;
 }
 
+void ev_application_screensaver_enable  (EvApplication   *application)
+{
+	if (application->scr_saver)
+		totem_scrsaver_enable (application->scr_saver);	
+}
+
+void ev_application_screensaver_disable (EvApplication   *application)
+{
+	if (application->scr_saver)
+		totem_scrsaver_disable (application->scr_saver);	
+}

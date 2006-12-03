@@ -22,6 +22,10 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#ifdef ENABLE_DBUS
+#include <dbus/dbus-glib.h>
+#endif
+
 #define TOTEM_TYPE_SCRSAVER		(totem_scrsaver_get_type ())
 #define TOTEM_SCRSAVER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), TOTEM_TYPE_SCRSAVER, TotemScrsaver))
 #define TOTEM_SCRSAVER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), TOTEM_TYPE_SCRSAVER, TotemScrsaverClass))
@@ -43,7 +47,11 @@ struct TotemScrsaverClass {
 };
 
 GType totem_scrsaver_get_type		(void);
-TotemScrsaver *totem_scrsaver_new	(void);
+#ifdef ENABLE_DBUS
+TotemScrsaver *totem_scrsaver_new	(DBusGConnection *connection);
+#else
+TotemScrsaver *totem_scrsaver_new	();
+#endif
 void totem_scrsaver_enable		(TotemScrsaver *scr);
 void totem_scrsaver_disable		(TotemScrsaver *scr);
 

@@ -91,8 +91,6 @@
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <gconf/gconf-client.h>
 
-#include "totem-scrsaver.h"
-
 #include <string.h>
 
 typedef enum {
@@ -152,9 +150,6 @@ struct _EvWindowPrivate {
 	GtkWidget *fullscreen_toolbar;
 	GtkWidget *fullscreen_popup;
 	guint      fullscreen_timeout_id;
-
-	/* Screensaver */
-	TotemScrsaver *screensaver;
 
 	/* Popup link */
 	GtkWidget *view_popup;
@@ -2557,8 +2552,8 @@ ev_window_run_presentation (EvWindow *window)
 			  window);
 	fullscreen_set_timeout (window);
 
-	totem_scrsaver_disable (window->priv->screensaver);
-
+	ev_application_screensaver_disable (EV_APP);
+	
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", TRUE);
 }
@@ -2585,7 +2580,7 @@ ev_window_stop_presentation (EvWindow *window)
 					      window);
 	fullscreen_clear_timeout (window);
 
-	totem_scrsaver_enable (window->priv->screensaver);
+	ev_application_screensaver_enable (EV_APP);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "presentation", FALSE);
@@ -3128,7 +3123,7 @@ build_comments_string (void)
 				  "Using poppler %s (%s)"),
 				version, backend_name);
 #else
-	return g_strdup_printf (_("Document Viewer."));
+	return g_strdup_printf (_("Document Viewer"));
 #endif
 }
 
@@ -4651,10 +4646,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_swapped (G_OBJECT (ev_window->priv->view), "drag-data-received",
 				  G_CALLBACK (drag_data_received_cb),
 				  ev_window);
-
-	/* Screensaver */
-
-	ev_window->priv->screensaver = totem_scrsaver_new ();
 
 	/* Set it user interface params */
 
