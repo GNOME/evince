@@ -3109,7 +3109,7 @@ build_comments_string (void)
 			break;
 	}
 
-	return g_strdup_printf (_("PostScript and PDF File Viewer.\n"
+	return g_strdup_printf (_("Document Viewer.\n"
 				  "Using poppler %s (%s)"),
 				version, backend_name);
 #else
