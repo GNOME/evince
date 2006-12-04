@@ -503,8 +503,8 @@ pdf_document_get_info (EvDocument *document)
 			    EV_DOCUMENT_INFO_MOD_DATE |
 			    EV_DOCUMENT_INFO_LINEARIZED |
 			    EV_DOCUMENT_INFO_N_PAGES |
-			    EV_DOCUMENT_INFO_SECURITY;
-
+			    EV_DOCUMENT_INFO_SECURITY | 
+		            EV_DOCUMENT_INFO_PAPER_SIZE;
 
 	g_object_get (PDF_DOCUMENT (document)->document,
 		      "title", &(info->title),
@@ -522,6 +522,14 @@ pdf_document_get_info (EvDocument *document)
 		      "mod-date", &(info->modified_date),
 		      "linearized", &(info->linearized),
 		      NULL);
+
+	pdf_document_get_page_size(document, 0,
+				   &(info->paper_width),
+				   &(info->paper_height));
+
+	// Convert to mm.
+	info->paper_width = info->paper_width / 72.0f * 25.4f;
+	info->paper_height = info->paper_height / 72.0f * 25.4f;
 
 	switch (layout) {
 		case POPPLER_PAGE_LAYOUT_SINGLE_PAGE:

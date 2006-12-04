@@ -31,6 +31,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <string.h>
+#include <langinfo.h>
 
 typedef enum
 {
@@ -45,7 +46,8 @@ typedef enum
 	N_PAGES_PROPERTY,
 	LINEARIZED_PROPERTY,
 	FORMAT_PROPERTY,
-	SECURITY_PROPERTY
+	SECURITY_PROPERTY,
+	PAPER_SIZE_PROPERTY
 } Property;
 
 typedef struct
@@ -66,7 +68,8 @@ static const PropertyInfo properties_info[] = {
 	{ N_PAGES_PROPERTY, "pages" },
 	{ LINEARIZED_PROPERTY, "optimized" },
 	{ FORMAT_PROPERTY, "version" },
-	{ SECURITY_PROPERTY, "security" }
+	{ SECURITY_PROPERTY, "security" },
+	{ PAPER_SIZE_PROPERTY, "papersize" }
 };
 
 struct _EvPropertiesView {
@@ -185,6 +188,106 @@ set_property (GladeXML *xml, Property property, const char *text)
 	g_free (valid_text);
 }
 
+/*
+ * All values are in mm. 
+ * Source: http://en.wikipedia.org/wiki/Paper_size
+ */
+struct regular_paper_size {
+	double width;
+	double height;
+	double width_tolerance;
+	double height_tolerance;
+	const char *description;
+} const regular_paper_sizes[] = {
+	// ISO 216 paper sizes
+	{  841.0f, 1189.0f, 3.0f, 3.0f, "A0"  },
+	{  594.0f,  841.0f, 2.0f, 3.0f, "A1"  },
+	{  420.0f,  594.0f, 2.0f, 2.0f, "A2"  },
+	{  297.0f,  420.0f, 2.0f, 2.0f, "A3"  },
+	{  210.0f,  297.0f, 2.0f, 2.0f, "A4"  },
+	{  148.0f,  210.0f, 1.5f, 2.0f, "A5"  },
+	{  105.0f,  148.0f, 1.5f, 1.5f, "A6"  },
+	{   74.0f,  105.0f, 1.5f, 1.5f, "A7"  },
+	{   52.0f,   74.0f, 1.5f, 1.5f, "A8"  },
+	{   37.0f,   52.0f, 1.5f, 1.5f, "A9"  },
+	{   26.0f,   37.0f, 1.5f, 1.5f, "A10" },
+	{ 1000.0f, 1414.0f, 3.0f, 3.0f, "B0"  },
+	{  707.0f, 1000.0f, 3.0f, 3.0f, "B1"  },
+	{  500.0f,  707.0f, 2.0f, 3.0f, "B2"  },
+	{  353.0f,  500.0f, 2.0f, 2.0f, "B3"  },
+	{  250.0f,  353.0f, 2.0f, 2.0f, "B4"  },
+	{  176.0f,  250.0f, 2.0f, 2.0f, "B5"  },
+	{  125.0f,  176.0f, 1.5f, 2.0f, "B6"  },
+	{   88.0f,  125.0f, 1.5f, 1.5f, "B7"  },
+	{   62.0f,   88.0f, 1.5f, 1.5f, "B8"  },
+	{   44.0f,   62.0f, 1.5f, 1.5f, "B9"  },
+	{   31.0f,   44.0f, 1.5f, 1.5f, "B10" },
+	{  917.0f, 1297.0f, 3.0f, 3.0f, "C0"  },
+	{  648.0f,  917.0f, 3.0f, 3.0f, "C1"  },
+	{  458.0f,  648.0f, 2.0f, 3.0f, "C2"  },
+	{  324.0f,  458.0f, 2.0f, 2.0f, "C3"  },
+	{  229.0f,  324.0f, 2.0f, 2.0f, "C4"  },
+	{  162.0f,  229.0f, 2.0f, 2.0f, "C5"  },
+	{  114.0f,  162.0f, 1.5f, 2.0f, "C6"  },
+	{   81.0f,  114.0f, 1.5f, 1.5f, "C7"  },
+	{   57.0f,   81.0f, 1.5f, 1.5f, "C8"  },
+	{   40.0f,   57.0f, 1.5f, 1.5f, "C9"  },
+	{   28.0f,   40.0f, 1.5f, 1.5f, "C10" },
+
+	// US paper sizes
+	{  279.0f,  216.0f, 3.0f, 3.0f, "Letter" },
+	{  356.0f,  216.0f, 3.0f, 3.0f, "Legal"  },
+	{  432.0f,  279.0f, 3.0f, 3.0f, "Ledger" }
+};
+
+static char *
+ev_regular_paper_size (const EvDocumentInfo *info)
+{
+	const struct regular_paper_size *size;   
+	char *exact_size = NULL;
+	char *imperial = NULL;
+	char *str = NULL;
+	int i;
+	
+        imperial = nl_langinfo(_NL_MEASUREMENT_MEASUREMENT);
+        if ( imperial && imperial[0] == 2 )
+		/* Imperial measurement (inches) */
+		exact_size = g_strdup_printf( _("%.2f x %.2f in"),
+					      info->paper_width  / 25.4f,
+					      info->paper_height / 25.4f );
+	else
+		/* Metric measurement (millimeters) */
+		exact_size = g_strdup_printf( _("%.0f x %.0f mm"),
+					      info->paper_width,
+					      info->paper_height );
+	
+	for (i = G_N_ELEMENTS ( regular_paper_sizes ) - 1; i >= 0; i--) {
+		size = &regular_paper_sizes[i];
+
+		if ( ABS( info->paper_height - size->height ) <= size->height_tolerance &&
+		     ABS( info->paper_width  - size->width  ) <= size->width_tolerance ) {
+			/* Note to translators: first placeholder is the paper name (eg.
+			 * A4), second placeholder is the paper size (eg. 297x210 mm) */
+			str = g_strdup_printf ( _("%s, Portrait (%s)"),
+						size->description,
+						exact_size );
+		} else if ( ABS( info->paper_width  - size->height ) <= size->height_tolerance &&
+			    ABS( info->paper_height - size->width  ) <= size->width_tolerance ) {
+			/* Note to translators: first placeholder is the paper name (eg.
+			 * A4), second placeholder is the paper size (eg. 297x210 mm) */
+			str = g_strdup_printf ( _("%s, Landscape (%s)"),
+						size->description,
+						exact_size );
+		}
+	}
+
+	if (str != NULL) {
+		g_free (exact_size);
+		return str;
+	} else
+		return exact_size;
+}
+
 void
 ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo *info)
 {
@@ -234,6 +337,11 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_SECURITY) {
 		set_property (xml, SECURITY_PROPERTY, info->security);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_PAPER_SIZE) {
+		text = ev_regular_paper_size (info);
+		set_property (xml, PAPER_SIZE_PROPERTY, text);
+		g_free (text);
 	}
 }
 

@@ -90,7 +90,8 @@ typedef enum
 	EV_DOCUMENT_INFO_UI_HINTS = 1 << 12,
 	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 13,
 	EV_DOCUMENT_INFO_N_PAGES = 1 << 14,
-	EV_DOCUMENT_INFO_SECURITY = 1 << 15
+	EV_DOCUMENT_INFO_SECURITY = 1 << 15,
+	EV_DOCUMENT_INFO_PAPER_SIZE = 1 << 16
 } EvDocumentInfoFields;
 
 struct _EvDocumentInfo
@@ -111,6 +112,8 @@ struct _EvDocumentInfo
 	guint ui_hints;
 	guint permissions;
 	int   n_pages;
+	double paper_height;
+	double paper_width;
 
 	/* Mask of all the valid fields */
 	guint fields_mask;
