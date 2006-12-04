@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-04 00:10+0100\n"
-"PO-Revision-Date: 2006-12-04 00:10+0100 \n"
+"POT-Creation-Date: 2006-12-04 12:49+0100\n"
+"PO-Revision-Date: 2006-12-04 12:49+0100 \n"
 "Last-Translator: Wouter Bolsterlee <uws+gnome@xs4all.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -256,23 +256,27 @@ msgstr "<b>Aantal pagina's:</b>"
 msgid "<b>Optimized:</b>"
 msgstr "<b>Geoptimaliseerd:</b>"
 
+#: ../data/evince-properties.glade.h:9
+msgid "<b>Paper Size:</b>"
+msgstr "<b>Papierformaat:</b>"
+
 # hier wordt het programma weergegeven waarmee het document
 # is gemaakt: dus bijv:
 # Programma: Acrobat distiller 6.0.1. for Macintosh
-#: ../data/evince-properties.glade.h:9
+#: ../data/evince-properties.glade.h:10
 msgid "<b>Producer:</b>"
 msgstr "<b>Programma:</b>"
 
 # er komt te staan: beveiligd: ja/nee
-#: ../data/evince-properties.glade.h:10
+#: ../data/evince-properties.glade.h:11
 msgid "<b>Security:</b>"
 msgstr "<b>Beveiligd:</b>"
 
-#: ../data/evince-properties.glade.h:11
+#: ../data/evince-properties.glade.h:12
 msgid "<b>Subject:</b>"
 msgstr "<b>Onderwerp:</b>"
 
-#: ../data/evince-properties.glade.h:12
+#: ../data/evince-properties.glade.h:13
 msgid "<b>Title:</b>"
 msgstr "<b>Titel:</b>"
 
@@ -295,62 +299,62 @@ msgid "DVI document has incorrect format"
 msgstr "DVI-document heeft onjuist format"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:608
+#: ../pdf/ev-poppler.cc:616
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:611
+#: ../pdf/ev-poppler.cc:619
 msgid "No"
 msgstr "Nee"
 
-#: ../pdf/ev-poppler.cc:711
+#: ../pdf/ev-poppler.cc:719
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../pdf/ev-poppler.cc:713
+#: ../pdf/ev-poppler.cc:721
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../pdf/ev-poppler.cc:715
+#: ../pdf/ev-poppler.cc:723
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../pdf/ev-poppler.cc:717
+#: ../pdf/ev-poppler.cc:725
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../pdf/ev-poppler.cc:719
+#: ../pdf/ev-poppler.cc:727
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../pdf/ev-poppler.cc:721
+#: ../pdf/ev-poppler.cc:729
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../pdf/ev-poppler.cc:723
+#: ../pdf/ev-poppler.cc:731
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../pdf/ev-poppler.cc:725
+#: ../pdf/ev-poppler.cc:733
 msgid "Unknown font type"
 msgstr "Onbekend soort lettertype"
 
 # geen/naamloos/zonder naam/geen naam
-#: ../pdf/ev-poppler.cc:751
+#: ../pdf/ev-poppler.cc:759
 msgid "No name"
 msgstr "Naamloos"
 
 # deel/onderdeel
-#: ../pdf/ev-poppler.cc:759
+#: ../pdf/ev-poppler.cc:767
 msgid "Embedded subset"
 msgstr "Ingebed deel"
 
-#: ../pdf/ev-poppler.cc:761
+#: ../pdf/ev-poppler.cc:769
 msgid "Embedded"
 msgstr "Ingebed"
 
-#: ../pdf/ev-poppler.cc:763
+#: ../pdf/ev-poppler.cc:771
 msgid "Not embedded"
 msgstr "Niet ingebed"
 
@@ -395,9 +399,35 @@ msgid "Document"
 msgstr "Document"
 
 # Niets/geen
-#: ../properties/ev-properties-view.c:173
+#: ../properties/ev-properties-view.c:176
 msgid "None"
 msgstr "Geen"
+
+#. Imperial measurement (inches)
+#: ../properties/ev-properties-view.c:255
+#, c-format
+msgid "%.2f x %.2f in"
+msgstr "%.2f × %.2f inch"
+
+#. Metric measurement (millimeters)
+#: ../properties/ev-properties-view.c:260
+#, c-format
+msgid "%.0f x %.0f mm"
+msgstr "%.0f × %.0f mm"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:271
+#, c-format
+msgid "%s, Portrait (%s)"
+msgstr "%s, staand (%s)"
+
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:278
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr "%s, liggend (%s)"
 
 # technische term
 #: ../ps/gsdefaults.c:30
@@ -524,12 +554,12 @@ msgid "Failed to load document “%s”"
 msgstr "Open van document ‘%s’ mislukt"
 
 # technische term?
-#: ../ps/ps-document.c:1267
+#: ../ps/ps-document.c:1270
 msgid "Encapsulated PostScript"
 msgstr "Ingekapseld PostScript"
 
 # kleine letters
-#: ../ps/ps-document.c:1268
+#: ../ps/ps-document.c:1271
 msgid "PostScript"
 msgstr "Postscript"
 
@@ -2684,12 +2714,6 @@ msgstr ""
 
 #~ msgid " - GGV"
 #~ msgstr " - GGV"
-
-#~ msgid "Portrait"
-#~ msgstr "Staand"
-
-#~ msgid "Landscape"
-#~ msgstr "Liggend"
 
 #~ msgid "Upside Down"
 #~ msgstr "Ondersteboven"
