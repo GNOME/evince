@@ -2297,9 +2297,11 @@ fullscreen_timeout_cb (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
 
-	if (!view || !ev_view_get_fullscreen (EV_VIEW (view)))
+	if (!view ||
+	    (!ev_view_get_fullscreen (EV_VIEW (view)) &&
+	     !ev_view_get_presentation (EV_VIEW (view))))
 		return FALSE;
-	
+
 	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
 	ev_view_hide_cursor (EV_VIEW (window->priv->view));
 	window->priv->fullscreen_timeout_id = 0;
