@@ -3678,7 +3678,7 @@ static const GtkActionEntry entries[] = {
         /* Edit menu */
         { "EditCopy", GTK_STOCK_COPY, NULL, "<control>C", NULL,
           G_CALLBACK (ev_window_cmd_edit_copy) },
- 	{ "EditSelectAll", NULL, N_("Select _All"), "<control>A", NULL,
+ 	{ "EditSelectAll", GTK_STOCK_SELECT_ALL, N_("Select _All"), "<control>A", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_select_all) },
         { "EditFind", GTK_STOCK_FIND, N_("_Find..."), "<control>F",
           N_("Find a word or phrase in the document"),
