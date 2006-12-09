@@ -1051,6 +1051,47 @@ location_in_selected_text (EvView  *view,
 	return FALSE;
 }
 
+static gboolean
+get_doc_point_from_offset (EvView *view, 
+			   gint    page, 
+			   gint    x_offset, 
+			   gint    y_offset, 
+			   gint   *x_new, 
+			   gint   *y_new)
+{
+        int width, height;
+	double x, y;
+
+        ev_page_cache_get_size (view->page_cache, page,
+                                view->rotation,
+                                1.0,
+                                &width, &height);
+
+	x_offset = x_offset / view->scale;
+	y_offset = y_offset / view->scale;
+
+        if (view->rotation == 0) {
+                x = x_offset;
+                y = y_offset;
+        } else if (view->rotation == 90) {
+                x = y_offset;
+                y = width - x_offset;
+        } else if (view->rotation == 180) {
+                x = width - x_offset;
+                y = height - y_offset;
+        } else if (view->rotation == 270) {
+                x = height - y_offset; 
+                y = x_offset;
+        } else {
+                g_assert_not_reached ();
+        }
+
+	*x_new = x;
+	*y_new = y;
+	
+	return TRUE;
+}
+
 /*** Hyperref ***/
 static EvLink *
 ev_view_get_link_at_location (EvView  *view,
@@ -1059,6 +1100,7 @@ ev_view_get_link_at_location (EvView  *view,
 {
 	gint page = -1;
 	gint x_offset = 0, y_offset = 0;
+	gint x_new = 0, y_new = 0;
 	GList *link_mapping;
 	
 	x += view->scroll_x;
@@ -1069,10 +1111,15 @@ ev_view_get_link_at_location (EvView  *view,
 	if (page == -1)
 		return NULL;
 
+	
+	if (get_doc_point_from_offset (view, page, x_offset, 
+				       y_offset, &x_new, &y_new) == FALSE)
+		return NULL;
+
 	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
 
 	if (link_mapping)
-		return ev_link_mapping_find (link_mapping, x_offset / view->scale, y_offset / view->scale);
+		return ev_link_mapping_find (link_mapping, x_new, y_new);
 	else
 		return NULL;
 }
@@ -2058,11 +2105,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			return TRUE;
 		}
-	/* For the Evince 0.4.x release, we limit links to un-rotated documents
-	 * only.
-	 */
-	} else if (view->pressed_button <= 0 &&
-		   view->rotation == 0) {
+	} else if (view->pressed_button <= 0) {
 		handle_link_over_xy (view, x, y);
 		return TRUE;
 	}
