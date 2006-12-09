@@ -1739,6 +1739,42 @@ find_selection_for_page (EvView *view,
 	return NULL;
 }
 
+static void
+draw_end_presentation_page (EvView       *view,
+			    GdkRectangle *page_area)
+{
+	PangoLayout *layout;
+	PangoFontDescription *font_desc;
+	gchar *markup;
+	const gchar *text = _("End of presentation, press Escape to exit.");
+
+	if (!view->end_presentation)
+		return;
+
+	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), NULL);
+	markup = g_strdup_printf ("<span foreground=\"white\">%s</span>", text);
+	pango_layout_set_markup (layout, markup, -1);
+	g_free (markup);
+
+	font_desc = pango_font_description_new ();
+	pango_font_description_set_size (font_desc, 16 * PANGO_SCALE);
+	pango_layout_set_font_description (layout, font_desc);
+
+	gtk_paint_layout (GTK_WIDGET (view)->style,
+			  GTK_WIDGET (view)->window,
+			  GTK_WIDGET_STATE (view),
+			  FALSE,
+			  page_area,
+			  GTK_WIDGET (view),
+			  NULL,
+			  page_area->x + 15,
+			  page_area->y + 15,
+			  layout);
+
+	pango_font_description_free (font_desc);
+	g_object_unref (layout);
+}
+
 static gboolean
 ev_view_expose_event (GtkWidget      *widget,
 		      GdkEventExpose *event)
@@ -1746,6 +1782,17 @@ ev_view_expose_event (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 	int i;
 
+	if (view->end_presentation) {
+		GdkRectangle area = {0};
+
+		area.width = widget->allocation.width;
+		area.height = widget->allocation.height;
+		
+		draw_end_presentation_page (view, &area);
+
+		return FALSE;
+	}
+	
 	if (view->loading) {
 		GdkRectangle area = {0};
 		
@@ -2731,6 +2778,7 @@ ev_view_init (EvView *view)
 	view->continuous = TRUE;
 	view->dual_page = FALSE;
 	view->presentation = FALSE;
+	view->end_presentation = FALSE;
 	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
@@ -3020,6 +3068,9 @@ ev_view_set_presentation (EvView   *view,
 	if (view->presentation == presentation)
 		return;
 
+	if (!presentation)
+		view->end_presentation = FALSE;
+	
 	view->presentation = presentation;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -3032,7 +3083,6 @@ ev_view_set_presentation (EvView   *view,
 			gdk_window_set_background (GTK_WIDGET(view)->window,
 						   &GTK_WIDGET (view)->style->mid [GTK_STATE_NORMAL]);
 	}
-
 
 	g_object_notify (G_OBJECT (view), "presentation");
 }
@@ -4134,7 +4184,7 @@ ev_view_show_cursor (EvView *view)
 gboolean
 ev_view_next_page (EvView *view)
 {
-	int page;
+	int page, n_pages;
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 	
@@ -4142,16 +4192,21 @@ ev_view_next_page (EvView *view)
 		return FALSE;
 
 	page = ev_page_cache_get_current_page (view->page_cache);
+	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	if (view->dual_page && !view->presentation)
 	        page = page + 2; 
 	else 
 		page = page + 1;
 
-	if (page < ev_page_cache_get_n_pages (view->page_cache)) {
+	if (page < n_pages) {
 		ev_page_cache_set_current_page (view->page_cache, page);
 		return TRUE;
-	} else if (ev_view_get_dual_page (view) && page == ev_page_cache_get_n_pages (view->page_cache)) {
+	} else if (view->presentation && page == n_pages) {
+		view->end_presentation = TRUE;
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+		return TRUE;
+	} else if (view->dual_page && page == n_pages) {
 		ev_page_cache_set_current_page (view->page_cache, page - 1);
 		return TRUE;
 	} else {
@@ -4168,6 +4223,12 @@ ev_view_previous_page (EvView *view)
 
 	if (!view->page_cache)
 		return FALSE;
+
+	if (view->end_presentation) {
+		view->end_presentation = FALSE;
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+		return TRUE;
+	}
 
 	page = ev_page_cache_get_current_page (view->page_cache);
 

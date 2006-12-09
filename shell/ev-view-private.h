@@ -98,6 +98,7 @@ struct _EvView {
 	gboolean dual_page;
 	gboolean fullscreen;
 	gboolean presentation;
+	gboolean end_presentation;
 	EvSizingMode sizing_mode;
 
 	/* Common for button press handling */
