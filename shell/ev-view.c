@@ -1795,7 +1795,7 @@ draw_end_presentation_page (EvView       *view,
 	gchar *markup;
 	const gchar *text = _("End of presentation, press Escape to exit.");
 
-	if (!view->end_presentation)
+	if (view->presentation_state != EV_PRESENTATION_END)
 		return;
 
 	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), NULL);
@@ -1829,15 +1829,24 @@ ev_view_expose_event (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 	int i;
 
-	if (view->end_presentation) {
-		GdkRectangle area = {0};
+	if (view->presentation) {
+		switch (view->presentation_state) {
+		        case EV_PRESENTATION_END: {
+				GdkRectangle area = {0};
 
-		area.width = widget->allocation.width;
-		area.height = widget->allocation.height;
-		
-		draw_end_presentation_page (view, &area);
-
-		return FALSE;
+				area.width = widget->allocation.width;
+				area.height = widget->allocation.height;
+				
+				draw_end_presentation_page (view, &area);
+			}
+				return FALSE;
+		        case EV_PRESENTATION_BLACK:
+		        case EV_PRESENTATION_WHITE:
+				return FALSE;
+		        case EV_PRESENTATION_NORMAL:
+		        default:
+				break;
+		}
 	}
 	
 	if (view->loading) {
@@ -2165,6 +2174,60 @@ ev_view_button_release_event (GtkWidget      *widget,
 	}
  
 	return FALSE;
+}
+
+static gboolean
+ev_view_key_press_event (GtkWidget   *widget,
+			 GdkEventKey *event)
+{
+	EvView *view = EV_VIEW (widget);
+	EvPresentationState current;
+
+	if (!view->presentation ||
+	    view->presentation_state == EV_PRESENTATION_END)
+		return FALSE;
+
+	current = view->presentation_state;
+
+	switch (event->keyval) {
+	        case GDK_b:
+	        case GDK_B:
+			view->presentation_state =
+				(view->presentation_state == EV_PRESENTATION_BLACK) ?
+				EV_PRESENTATION_NORMAL : EV_PRESENTATION_BLACK;
+			break;
+	        case GDK_w:
+	        case GDK_W:
+			view->presentation_state =
+				(view->presentation_state == EV_PRESENTATION_WHITE) ?
+				EV_PRESENTATION_NORMAL : EV_PRESENTATION_WHITE;
+			break;
+	        default:
+			if (view->presentation_state == EV_PRESENTATION_BLACK ||
+			    view->presentation_state == EV_PRESENTATION_WHITE) {
+				view->presentation_state = EV_PRESENTATION_NORMAL;
+			}
+	}
+
+	if (current == view->presentation_state)
+		return FALSE;
+
+	switch (view->presentation_state) {
+	        case EV_PRESENTATION_NORMAL:
+	        case EV_PRESENTATION_BLACK:
+			gdk_window_set_background (widget->window,
+						   &widget->style->black);
+			break;
+	        case EV_PRESENTATION_WHITE:
+			gdk_window_set_background (widget->window,
+						   &widget->style->white);
+			break;
+	        default:
+			return FALSE;
+	}
+
+	gtk_widget_queue_draw (widget);
+	return TRUE;
 }
 
 static gint
@@ -2648,6 +2711,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->button_press_event = ev_view_button_press_event;
 	widget_class->motion_notify_event = ev_view_motion_notify_event;
 	widget_class->button_release_event = ev_view_button_release_event;
+	widget_class->key_press_event = ev_view_key_press_event;
 	widget_class->focus_in_event = ev_view_focus_in;
 	widget_class->focus_out_event = ev_view_focus_out;
  	widget_class->get_accessible = ev_view_get_accessible;
@@ -2821,7 +2885,7 @@ ev_view_init (EvView *view)
 	view->continuous = TRUE;
 	view->dual_page = FALSE;
 	view->presentation = FALSE;
-	view->end_presentation = FALSE;
+	view->presentation_state = EV_PRESENTATION_NORMAL;
 	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
@@ -3112,7 +3176,7 @@ ev_view_set_presentation (EvView   *view,
 		return;
 
 	if (!presentation)
-		view->end_presentation = FALSE;
+		view->presentation_state = EV_PRESENTATION_NORMAL;
 	
 	view->presentation = presentation;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
@@ -4224,6 +4288,19 @@ ev_view_show_cursor (EvView *view)
        ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }
 
+static void
+ev_view_reset_presentation_state (EvView *view)
+{
+	if (!view->presentation ||
+	    view->presentation_state == EV_PRESENTATION_NORMAL)
+		return;
+
+	view->presentation_state = EV_PRESENTATION_NORMAL;
+	gdk_window_set_background (GTK_WIDGET (view)->window,
+				   &GTK_WIDGET (view)->style->black);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
 gboolean
 ev_view_next_page (EvView *view)
 {
@@ -4234,6 +4311,8 @@ ev_view_next_page (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
+	ev_view_reset_presentation_state (view);
+	
 	page = ev_page_cache_get_current_page (view->page_cache);
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
@@ -4246,7 +4325,7 @@ ev_view_next_page (EvView *view)
 		ev_page_cache_set_current_page (view->page_cache, page);
 		return TRUE;
 	} else if (view->presentation && page == n_pages) {
-		view->end_presentation = TRUE;
+		view->presentation_state = EV_PRESENTATION_END;
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 		return TRUE;
 	} else if (view->dual_page && page == n_pages) {
@@ -4267,11 +4346,13 @@ ev_view_previous_page (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	if (view->end_presentation) {
-		view->end_presentation = FALSE;
-		gtk_widget_queue_draw (GTK_WIDGET (view));
+	if (view->presentation &&
+	    view->presentation_state == EV_PRESENTATION_END) {
+		ev_view_reset_presentation_state (view);
 		return TRUE;
 	}
+
+	ev_view_reset_presentation_state (view);
 
 	page = ev_page_cache_get_current_page (view->page_cache);
 

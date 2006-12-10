@@ -57,6 +57,13 @@ typedef enum {
 	EV_VIEW_CURSOR_DRAG
 } EvViewCursor;
 
+typedef enum {
+	EV_PRESENTATION_NORMAL,
+	EV_PRESENTATION_BLACK,
+	EV_PRESENTATION_WHITE,
+	EV_PRESENTATION_END
+} EvPresentationState;
+
 struct _EvView {
 	GtkWidget parent_instance;
 
@@ -98,7 +105,7 @@ struct _EvView {
 	gboolean dual_page;
 	gboolean fullscreen;
 	gboolean presentation;
-	gboolean end_presentation;
+	EvPresentationState presentation_state;
 	EvSizingMode sizing_mode;
 
 	/* Common for button press handling */
