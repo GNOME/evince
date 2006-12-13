@@ -2185,7 +2185,8 @@ ev_view_key_press_event (GtkWidget   *widget,
 
 	if (!view->presentation ||
 	    view->presentation_state == EV_PRESENTATION_END)
-		return FALSE;
+		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+
 
 	current = view->presentation_state;
 
@@ -2210,7 +2211,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 	}
 
 	if (current == view->presentation_state)
-		return FALSE;
+		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
 
 	switch (view->presentation_state) {
 	        case EV_PRESENTATION_NORMAL:
@@ -2223,7 +2224,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 						   &widget->style->white);
 			break;
 	        default:
-			return FALSE;
+			return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
 	}
 
 	gtk_widget_queue_draw (widget);
