@@ -1793,7 +1793,7 @@ draw_end_presentation_page (EvView       *view,
 	PangoLayout *layout;
 	PangoFontDescription *font_desc;
 	gchar *markup;
-	const gchar *text = _("End of presentation, press Escape to exit.");
+	const gchar *text = _("End of presentation. Press Escape to exit.");
 
 	if (view->presentation_state != EV_PRESENTATION_END)
 		return;
