@@ -1,4 +1,4 @@
-SUBDIRS = cut-n-paste po help data
+SUBDIRS = cut-n-paste po help data test
 
 # Backends
 

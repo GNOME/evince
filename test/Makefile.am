@@ -1,4 +1,6 @@
 
-TESTS = test1.py test2.py
+dist_check_SCRIPTS = test1.py test2.py
 
-EXTRA_DIST = test-encrypted.pdf test-links.pdf
+TESTS = $(dist_check_SCRIPTS)
+
+EXTRA_DIST = test-encrypt.pdf test-links.pdf
