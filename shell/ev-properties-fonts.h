@@ -33,7 +33,7 @@ typedef struct _EvPropertiesFontsPrivate EvPropertiesFontsPrivate;
 
 #define EV_TYPE_PROPERTIES_FONTS		(ev_properties_fonts_get_type())
 #define EV_PROPERTIES_FONTS(object)	        (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PROPERTIES_FONTS, EvPropertiesFonts))
-#define EV_PROPERTIES_FONTS_CLASS(klass)	(G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_PROPERTIES_FONTS, EvPropertiesFontsClass))
+#define EV_PROPERTIES_FONTS_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_PROPERTIES_FONTS, EvPropertiesFontsClass))
 #define EV_IS_PROPERTIES(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PROPERTIES_FONTS))
 #define EV_IS_PROPERTIES_CLASS(klass)   	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_PROPERTIES_FONTS))
 #define EV_PROPERTIES_FONTS_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PROPERTIES_FONTS, EvPropertiesFontsClass))

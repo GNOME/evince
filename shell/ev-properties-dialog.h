@@ -31,7 +31,7 @@ typedef struct _EvPropertiesDialogPrivate EvPropertiesDialogPrivate;
 
 #define EV_TYPE_PROPERTIES_DIALOG		(ev_properties_dialog_get_type())
 #define EV_PROPERTIES_DIALOG(object)	        (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PROPERTIES_DIALOG, EvPropertiesDialog))
-#define EV_PROPERTIES_DIALOG_CLASS(klass)	(G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_PROPERTIES_DIALOG, EvPropertiesDialogClass))
+#define EV_PROPERTIES_DIALOG_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_PROPERTIES_DIALOG, EvPropertiesDialogClass))
 #define EV_IS_PROPERTIES_DIALOG(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PROPERTIES_DIALOG))
 #define EV_IS_PROPERTIES_DIALOG_CLASS(klass)  	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_PROPERTIES_DIALOG))
 #define EV_PROPERTIES_DIALOG_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PROPERTIES_DIALOG, EvPropertiesDialogClass))

@@ -35,7 +35,7 @@ typedef struct _EvSidebarLinksPrivate EvSidebarLinksPrivate;
 
 #define EV_TYPE_SIDEBAR_LINKS		   (ev_sidebar_links_get_type())
 #define EV_SIDEBAR_LINKS(object)	   (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinks))
-#define EV_SIDEBAR_LINKS_CLASS(klass)	   (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinksClass))
+#define EV_SIDEBAR_LINKS_CLASS(klass)	   (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinksClass))
 #define EV_IS_SIDEBAR_LINKS(object)	   (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_SIDEBAR_LINKS))
 #define EV_IS_SIDEBAR_LINKS_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_SIDEBAR_LINKS))
 #define EV_SIDEBAR_LINKS_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinksClass))

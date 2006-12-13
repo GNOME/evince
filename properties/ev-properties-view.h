@@ -33,7 +33,7 @@ typedef struct _EvPropertiesViewPrivate EvPropertiesViewPrivate;
 
 #define EV_TYPE_PROPERTIES			(ev_properties_view_get_type())
 #define EV_PROPERTIES_VIEW(object)	        (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PROPERTIES, EvPropertiesView))
-#define EV_PROPERTIES_VIEW_CLASS(klass)		(G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_PROPERTIES, EvPropertiesViewClass))
+#define EV_PROPERTIES_VIEW_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_PROPERTIES, EvPropertiesViewClass))
 #define EV_IS_PROPERTIES_VIEW(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PROPERTIES))
 #define EV_IS_PROPERTIES_VIEW_CLASS(klass)   	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_PROPERTIES))
 #define EV_PROPERTIES_VIEW_GET_CLASS(object) 	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PROPERTIES, EvPropertiesViewClass))

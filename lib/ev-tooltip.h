@@ -34,7 +34,7 @@ typedef struct _EvTooltipPrivate EvTooltipPrivate;
 
 #define EV_TYPE_TOOLTIP		     (ev_tooltip_get_type())
 #define EV_TOOLTIP(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_TOOLTIP, EvTooltip))
-#define EV_TOOLTIP_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_TOOLTIP, EvTooltipClass))
+#define EV_TOOLTIP_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_TOOLTIP, EvTooltipClass))
 #define EV_IS_TOOLTIP(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_TOOLTIP))
 #define EV_IS_TOOLTIP_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_TOOLTIP))
 #define EV_TOOLTIP_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_TOOLTIP, EvTooltipClass))

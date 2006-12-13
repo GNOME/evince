@@ -55,7 +55,7 @@ typedef struct _EvWindowPrivate EvWindowPrivate;
 
 #define EV_TYPE_WINDOW			(ev_window_get_type())
 #define EV_WINDOW(object)		(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_WINDOW, EvWindow))
-#define EV_WINDOW_CLASS(klass)		(G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_WINDOW, EvWindowClass))
+#define EV_WINDOW_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_WINDOW, EvWindowClass))
 #define EV_IS_WINDOW(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_WINDOW))
 #define EV_IS_WINDOW_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_WINDOW))
 #define EV_WINDOW_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_WINDOW, EvWindowClass))

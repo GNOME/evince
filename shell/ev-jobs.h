@@ -74,12 +74,12 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 
 #define EV_TYPE_JOB_XFER		     (ev_job_xfer_get_type())
 #define EV_JOB_XFER(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_XFER, EvJobXfer))
-#define EV_JOB_XFER_CLASS(klass)	     (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_XFER, EvJobXferClass))
+#define EV_JOB_XFER_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_XFER, EvJobXferClass))
 #define EV_IS_JOB_XFER(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_XFER))
 
 #define EV_TYPE_JOB_PRINT                     (ev_job_print_get_type())
 #define EV_JOB_PRINT(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
-#define EV_JOB_PRINT_CLASS(klass)             (G_TYPE_CHACK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
+#define EV_JOB_PRINT_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
 #define EV_IS_JOB_PRINT(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
 
 typedef enum {
