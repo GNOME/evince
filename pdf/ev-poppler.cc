@@ -1323,7 +1323,7 @@ pdf_document_find_begin (EvDocumentFind   *document,
 							search_string);
 }
 
-int
+static int
 pdf_document_find_get_n_results (EvDocumentFind *document_find, int page)
 {
 	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
@@ -1335,7 +1335,7 @@ pdf_document_find_get_n_results (EvDocumentFind *document_find, int page)
 	}
 }
 
-gboolean
+static gboolean
 pdf_document_find_get_result (EvDocumentFind *document_find,
 			      int             page,
 			      int             n_result,
@@ -1366,7 +1366,7 @@ pdf_document_find_get_result (EvDocumentFind *document_find,
 	return TRUE;
 }
 
-int
+static int
 pdf_document_find_page_has_results (EvDocumentFind *document_find,
 				    int             page)
 {
@@ -1375,7 +1375,7 @@ pdf_document_find_page_has_results (EvDocumentFind *document_find,
 	return search && search->pages[page] != NULL;
 }
 
-double
+static double
 pdf_document_find_get_progress (EvDocumentFind *document_find)
 {
 	PdfDocumentSearch *search;
@@ -1543,7 +1543,7 @@ pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
         iface->end = pdf_document_file_exporter_end;
 }
 
-void
+static void
 pdf_selection_render_selection (EvSelection      *selection,
 				EvRenderContext  *rc,
 				GdkPixbuf       **pixbuf,
@@ -1578,7 +1578,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 }
 
 
-GdkRegion *
+static GdkRegion *
 pdf_selection_get_selection_region (EvSelection     *selection,
 				    EvRenderContext *rc,
 				    EvRectangle     *points)
@@ -1595,7 +1595,7 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 	return retval;
 }
 
-GdkRegion *
+static GdkRegion *
 pdf_selection_get_selection_map (EvSelection     *selection,
 				 EvRenderContext *rc)
 {
