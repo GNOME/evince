@@ -610,6 +610,7 @@ start_interpreter (PSDocument *gs)
 
 	char *argv[NUM_ARGS], *dir, *gv_env, *gs_path;
 	char **gs_args, **alpha_args = NULL;
+	char **gv_env_vars = NULL;
 	int argc = 0, i;
 
 	LOG ("Start the interpreter");
@@ -665,9 +666,10 @@ start_interpreter (PSDocument *gs)
 		return -1;
 	}
 
-	gv_env = g_strdup_printf ("GHOSTVIEW=%ld %ld",
+	gv_env = g_strdup_printf ("GHOSTVIEW=%ld %ld;DISPLAY=%s",
                            	  gdk_x11_drawable_get_xid (gs->pstarget),
-				  gdk_x11_drawable_get_xid (gs->bpixmap));
+				  gdk_x11_drawable_get_xid (gs->bpixmap),
+				  gdk_display_get_name (gdk_drawable_get_display (gs->pstarget)));
 	LOG ("Launching ghostview with env %s", gv_env);
 
 	gs->interpreter_pid = fork ();
@@ -703,7 +705,11 @@ start_interpreter (PSDocument *gs)
 				}
 			}
 
-			putenv(gv_env);
+			gv_env_vars = g_strsplit (gv_env, ";", -1);
+			g_free (gv_env);
+			for (i = 0; gv_env_vars[i]; i++) {
+				putenv (gv_env_vars[i]);
+			}
 
 			/* change to directory where the input file is. This helps
 			 * with postscript-files which include other files using
@@ -717,8 +723,8 @@ start_interpreter (PSDocument *gs)
 			/* Notify error */
 			g_critical ("Unable to execute [%s]\n", argv[0]);
 			g_strfreev (gs_args);
-			g_free (gv_env);
 			g_strfreev (alpha_args);
+			g_strfreev (gv_env_vars);
 			_exit (1);
 			break;
 		default:                     /* parent */
@@ -976,7 +982,10 @@ document_load (PSDocument *gs, const gchar *fname)
 static gboolean
 ps_document_next_page (PSDocument *gs)
 {
-	XEvent event;
+	XEvent      event;
+	GdkScreen  *screen;
+	GdkDisplay *display;
+	Display    *dpy;
 
 	LOG ("Make ghostscript render next page");
 
@@ -986,14 +995,20 @@ ps_document_next_page (PSDocument *gs)
 
 	gs->busy = TRUE;
 
+	screen = gtk_window_get_screen (GTK_WINDOW (gs->target_window));
+	display = gdk_screen_get_display (screen);
+	dpy = gdk_x11_display_get_xdisplay (display);
+
 	event.xclient.type = ClientMessage;
-	event.xclient.display = gdk_display;
+	event.xclient.display = dpy;
 	event.xclient.window = gs->message_window;
-	event.xclient.message_type = gdk_x11_atom_to_xatom(gs_class->next_atom);
+	event.xclient.message_type =
+		gdk_x11_atom_to_xatom_for_display (display,
+						   gs_class->next_atom);
 	event.xclient.format = 32;
 
 	gdk_error_trap_push ();
-	XSendEvent (gdk_display, gs->message_window, FALSE, 0, &event);
+	XSendEvent (dpy, gs->message_window, FALSE, 0, &event);
 	gdk_flush ();
 	gdk_error_trap_pop ();
 
