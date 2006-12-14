@@ -294,18 +294,6 @@ send_ps (PSDocument *gs, long begin, unsigned int len, gboolean close)
 	}
 }
 
-static float
-get_xdpi (PSDocument *gs)
-{
-	return 25.4 * gdk_screen_width() / gdk_screen_width_mm();
-}
-
-static float
-get_ydpi (PSDocument *gs)
-{
-	return 25.4 * gdk_screen_height() / gdk_screen_height_mm();
-}
-
 static void
 setup_pixmap (PSDocument *gs, int page, double scale, int rotation)
 {
@@ -447,19 +435,17 @@ static void
 setup_page (PSDocument *gs, int page, double scale, int rotation)
 {
 	gchar *buf;
-	char scaled_xdpi[G_ASCII_DTOSTR_BUF_SIZE];	
-	char scaled_ydpi[G_ASCII_DTOSTR_BUF_SIZE];
+	char scaled_dpi[G_ASCII_DTOSTR_BUF_SIZE];	
 	int urx, ury, llx, lly;
 
 	LOG ("Setup the page");
 
 	get_page_box (gs, page, &urx, &ury, &llx, &lly);
-	g_ascii_dtostr (scaled_xdpi, G_ASCII_DTOSTR_BUF_SIZE, get_xdpi (gs) * scale);
-	g_ascii_dtostr (scaled_ydpi, G_ASCII_DTOSTR_BUF_SIZE, get_ydpi (gs) * scale);
+	g_ascii_dtostr (scaled_dpi, G_ASCII_DTOSTR_BUF_SIZE, 72.0 * scale);
 
 	buf = g_strdup_printf ("%ld %d %d %d %d %d %s %s %d %d %d %d",
 			       0L, rotation, llx, lly, urx, ury,
-			       scaled_xdpi, scaled_ydpi,
+			       scaled_dpi, scaled_dpi,
 			       0, 0, 0, 0);
 	LOG ("GS property %s", buf);
 
@@ -1212,14 +1198,14 @@ ps_document_get_page_size (EvDocument   *document,
 	PSDocument *gs = PS_DOCUMENT (document);
 	int urx, ury, llx, lly;
 
-	get_page_box (PS_DOCUMENT (document), page, &urx, &ury, &llx, &lly);
+	get_page_box (gs, page, &urx, &ury, &llx, &lly);
 
 	if (width) {
-		*width = (urx - llx) / 72.0 * get_xdpi (gs) + 0.5;
+		*width = (urx - llx) + 0.5;
 	}
 
 	if (height) {
-		*height = (ury - lly) / 72.0 * get_ydpi (gs) + 0.5;
+		*height = (ury - lly) + 0.5;
 	}
 }
 

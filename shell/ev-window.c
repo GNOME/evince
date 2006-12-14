@@ -265,6 +265,20 @@ static gboolean fullscreen_leave_notify_cb 		(GtkWidget *widget,
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
+static gdouble
+ev_window_get_screen_dpi (EvWindow *ev_window)
+{
+	GdkScreen *screen;
+	gdouble    xdpi, ydpi;
+
+	screen = gtk_window_get_screen (GTK_WINDOW (ev_window));
+
+	xdpi = 25.4 * gdk_screen_get_width (screen) / gdk_screen_get_width_mm (screen);
+	ydpi = 25.4 * gdk_screen_get_height (screen) / gdk_screen_get_height_mm (screen);
+	
+	return (xdpi + ydpi) / 2.0;
+}
+
 static void
 ev_window_set_action_sensitive (EvWindow   *ev_window,
 		    	        const char *name,
@@ -425,6 +439,7 @@ ev_window_update_actions (EvWindow *ev_window)
 						      ZOOM_CONTROL_ACTION);
 
 		real_zoom = ev_view_get_zoom (EV_VIEW (ev_window->priv->view));
+		real_zoom *= 72.0 / ev_window_get_screen_dpi (ev_window);
 		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
 
 		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), zoom);
@@ -810,7 +825,11 @@ setup_view_from_metadata (EvWindow *window)
 	/* Zoom */
 	if (ev_metadata_manager_get (uri, "zoom", &zoom, FALSE) &&
 	    ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
-		ev_view_set_zoom (view, g_value_get_double (&zoom), FALSE);
+		gdouble zoom_value;
+
+		zoom_value = g_value_get_double (&zoom);
+		zoom_value *= ev_window_get_screen_dpi (window) / 72.0;
+		ev_view_set_zoom (view, zoom_value, FALSE);
 		g_value_unset (&zoom);
 	}
 
@@ -3025,8 +3044,11 @@ ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
         ev_window_update_actions (ev_window);
 
 	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE && !ev_window_is_empty (ev_window)) {
-		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom",
-					        ev_view_get_zoom (view));
+		gdouble zoom;
+
+		zoom = ev_view_get_zoom (view);
+		zoom *= 72.0 / ev_window_get_screen_dpi (ev_window);
+		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom", zoom);
 	}
 }
 
@@ -3459,7 +3481,9 @@ zoom_control_changed_cb (EphyZoomAction *action,
 	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), mode);
 	
 	if (mode == EV_SIZING_FREE) {
-		ev_view_set_zoom (EV_VIEW (ev_window->priv->view), zoom, FALSE);
+		ev_view_set_zoom (EV_VIEW (ev_window->priv->view),
+				  zoom * ev_window_get_screen_dpi (ev_window) / 72.0,
+				  FALSE);
 	}
 }
 
