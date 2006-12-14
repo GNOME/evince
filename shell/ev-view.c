@@ -4387,7 +4387,7 @@ render_form_field_content_for_page (EvView *view, gint page)
 		EvFormField *field = tmp_list->data;
 		PangoLayout* playout; 
 		PangoFontDescription* pfontdesc; 
-		gchar* content;
+		gchar* content = NULL;
 		gboolean pending = FALSE;
 
 		tmp_list = tmp_list->next;
@@ -4402,11 +4402,33 @@ render_form_field_content_for_page (EvView *view, gint page)
 		}
 		if (!pending)
 			continue;
+                printf("found pending\n");
 
-
-		content = ev_document_get_form_field_text_content(view->document, field->id);
-		if (!content)
-			continue;
+                if (field->type == EV_FORM_FIELD_TYPE_TEXT) {
+		  	int length;
+			gchar *txt = ev_document_get_form_field_text_content(view->document, field->id, &length);
+			if (txt) {
+				content = g_convert(txt,
+			    		    length,
+					    "UTF8",
+					    "UTF16",
+					    NULL,
+					    NULL,
+					    NULL);
+			} else {
+			  	content = NULL;
+			}
+        		//content = ev_document_get_form_field_text_content(view->document, field->id);
+	        	if (!content)
+		        	continue;
+                } else if (field->type == EV_FORM_FIELD_TYPE_BUTTON) {
+                        gboolean state = ev_document_get_form_field_button_state(view->document, field->id);
+                        
+                        if (!state)
+                                continue;
+                        content = "x";
+                        printf("ev-view.c:render_form_field_content_for_page content = x");
+                }
 
 
 		p[0].x = field->x1;
@@ -4461,6 +4483,7 @@ handle_click_at_location (EvView *view,
 	GdkPoint d[2];
 	gint v[4];
 	gchar *content;
+        gboolean current_state;
 
 
 	x += view->scroll_x;
@@ -4481,14 +4504,36 @@ handle_click_at_location (EvView *view,
 	//store current entry text
 	if (view->child) {
 		if (GTK_IS_ENTRY(view->child->widget)) {
-			ev_document_set_form_field_text_content(view->document,
-							   view->child->field_id,
-							   gtk_entry_get_text(GTK_ENTRY(view->child->widget)));
+		  	gchar *txt = gtk_entry_get_text(GTK_ENTRY(view->child->widget));
+			if (txt) {
+			  	int i;
+			  	gsize length;
+			  	gchar *tmp = g_convert (gtk_entry_get_text(GTK_ENTRY(view->child->widget)),
+							     		    -1,
+									    "UTF16",
+									    "UTF8",
+									    NULL,
+									    &length,
+									    NULL);
+				printf("ev-view.c: handle_click_at_location g_convert : wrote %i bytes, %s , strlen(tmp): %i\n", length, tmp, strlen(tmp));
+				for(i=0; i<length; i++) {
+					if(tmp[i] == '\0') printf("found nul at %i\n", i);
+				}
+				if (tmp[length-1] == '\0') printf("ev-view.c: handle_click_at_location nul terminated string\n");
+				ev_document_set_form_field_text_content(view->document, view->child->field_id, tmp, length);
+			} else {
+			  	ev_document_set_form_field_text_content(view->document, view->child->field_id, NULL, 0);
+			}
+
 			if(view->pendingFormFields)
 				g_array_append_val(view->pendingFormFields,view->child->field_id);
 
-			ev_pixbuf_cache_reload_page(view->pixbuf_cache, page, view->rotation, view->scale);  
-		}
+			ev_pixbuf_cache_reload_page(view->pixbuf_cache, page, view->rotation, view->scale); 
+               } else if (GTK_IS_COMBO_BOX(view->child->widget)) {
+			gchar *txt = gtk_combo_box_get_active_text(GTK_COMBO_BOX(view->child->widget));
+			printf("ev-view.c: handle_click_at_location: choice selected %s %i\n", txt, gtk_combo_box_get_active(GTK_COMBO_BOX(view->child->widget)));
+			ev_document_set_form_field_choice_content(view->document, view->child->field_id, gtk_combo_box_get_active(GTK_COMBO_BOX(view->child->widget)));
+	       }
 	}
 
 	//clean current view widgets
@@ -4514,20 +4559,49 @@ handle_click_at_location (EvView *view,
 		case EV_FORM_FIELD_TYPE_BUTTON:
 			/*wid = gtk_button_new_with_label("Button");*/
 			printf("button clicked\n");
-			ev_document_set_form_field_button_state(view->document, new_field->id, 0, TRUE);
+                        current_state = ev_document_get_form_field_button_state(view->document, new_field->id);
+                        printf("old state: %i, new state: %i\n", current_state, !current_state);
+			ev_document_set_form_field_button_state(view->document, new_field->id, !current_state);
+
+                        g_array_append_val(view->pendingFormFields,new_field->id);
+                        
 			ev_pixbuf_cache_reload_page(view->pixbuf_cache, page, view->rotation, view->scale); 
+                        gtk_widget_queue_draw(GTK_WIDGET(view));
 			return;
 			//break;
 		case EV_FORM_FIELD_TYPE_TEXT:
-			wid = gtk_entry_new();
-			content = ev_document_get_form_field_text_content(view->document, new_field->id);
-			if (content)
-				gtk_entry_set_text(GTK_ENTRY(wid), content);
-			gtk_entry_set_has_frame(GTK_ENTRY(wid), FALSE);
-			break;
+			{
+				wid = gtk_entry_new();
+				int txt_length;
+				gchar *txt = ev_document_get_form_field_text_content(view->document, new_field->id, &txt_length);
+				if (txt) {
+					content = g_convert(txt,
+				    		    txt_length,
+						    "UTF8",
+						    "UTF16",
+						    NULL,
+						    NULL,
+						    NULL);
+				} else {
+				  	content = NULL;
+				}
+	
+				if (content)
+					gtk_entry_set_text(GTK_ENTRY(wid), content);
+				gtk_entry_set_has_frame(GTK_ENTRY(wid), FALSE);
+				break;
+			}
 		case EV_FORM_FIELD_TYPE_CHOICE:
-			wid = gtk_label_new ("choice");
-			break;
+			{
+				int i;
+				int count = ev_document_get_form_field_choice_count(view->document, new_field->id);
+				wid = gtk_combo_box_new_text();
+				for(i=0; i<count; i++) {
+			 		gchar *txt = ev_document_get_form_field_choice_content(view->document, new_field->id, i);
+					gtk_combo_box_append_text(GTK_COMBO_BOX(wid), txt);
+				}
+				break;
+			}
 		case EV_FORM_FIELD_TYPE_SIGNATURE:
 			wid = gtk_label_new ("signature");
 			break;

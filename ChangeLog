@@ -1,3 +1,18 @@
+2006-12-14  Julien Rebetez,  <julienr@cvs.gnome.org>
+	* backend/ev-document.c: (ev_document_get_form_field_text_content),
+	(ev_document_set_form_field_text_content),
+	(ev_document_get_form_field_choice_content),
+	(ev_document_set_form_field_choice_content),
+	(ev_document_get_form_field_choice_count),
+	(ev_document_set_form_field_button_state),
+	(ev_document_get_form_field_button_state):
+	* backend/ev-document.h:
+	* backend/ev-form-field.h:
+	* pdf/ev-poppler.cc:
+	* shell/ev-view.c: (render_form_field_content_for_page),
+	(handle_click_at_location):
+  Start of choice fields support, now uses UTF16 for text fields
+
 2006-08-20  Julien Rebetez  <julienr@cvs.gnome.org>
 	* backend/ev-document.c: (ev_document_get_form_field_text_content),
 	(ev_document_set_form_field_text_content),

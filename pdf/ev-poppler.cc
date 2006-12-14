@@ -86,10 +86,13 @@ static void pdf_document_search_free (PdfDocumentSearch   *search);
 
 static void pdf_document_get_crop_box (EvDocument *document, int page, EvRectangle *rect);
 static GList *pdf_document_get_form_field_mapping (EvDocument *document, int page);
-static gchar* pdf_document_get_text_field_content (EvDocument *document, int field_id);
-static gboolean pdf_document_set_text_field_content (EvDocument *document, int field_id, gchar* content);
-static void pdf_document_set_form_field_button_state (EvDocument *document, int field_id, int index, gboolean state);
-
+static gchar* pdf_document_get_text_field_content (EvDocument *document, int field_id, int *length);
+static gboolean pdf_document_set_text_field_content (EvDocument *document, int field_id, gchar* content, int length);
+static void pdf_document_set_form_field_button_state (EvDocument *document, int field_id, gboolean state);
+static gboolean pdf_document_get_form_field_button_state (EvDocument *document, int field_id);
+static gchar* pdf_document_get_form_field_choice_content (EvDocument *document, int field_id, int index);
+static int pdf_document_get_form_field_choice_count (EvDocument *document, int field_id);
+static void pdf_document_set_form_field_choice_content (EvDocument *document, int field_id, int index);
 
 
 
@@ -648,6 +651,10 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->set_text_field_content = pdf_document_set_text_field_content;
 	iface->get_text_field_content = pdf_document_get_text_field_content;
 	iface->set_button_state = pdf_document_set_form_field_button_state;
+	iface->get_button_state = pdf_document_get_form_field_button_state;
+	iface->get_choice_field_content = pdf_document_get_form_field_choice_content;
+	iface->get_choice_field_count = pdf_document_get_form_field_choice_count;
+	iface->set_choice_field_content = pdf_document_set_form_field_choice_content;
 };
 
 static void
@@ -1560,9 +1567,10 @@ pdf_document_get_form_field_mapping (EvDocument *document,
 		copy_form_poppler_evince(field, field_mapping, height, crop_box);
 
 		if(field_mapping->type == EV_FORM_FIELD_TYPE_TEXT)
-			field_mapping->content = poppler_document_get_form_field_text_content(pdf_document->document, field->id);
+			field_mapping->content = poppler_document_get_form_field_text_content(pdf_document->document, field->id, &field_mapping->length);
 		if(field_mapping->type == EV_FORM_FIELD_TYPE_BUTTON) {
-			field_mapping->num_kids = field->button.num_kids;
+			field_mapping->state = poppler_document_get_form_field_button_state(pdf_document->document, field->id);
+			/*field_mapping->num_kids = field->button.num_kids;
 			printf("num_kids: %i\n", field_mapping->num_kids);
 			field_mapping->kids = g_new(EvFormField, field_mapping->num_kids);
 			for (int i=0; i<field_mapping->num_kids; i++) {
@@ -1577,7 +1585,7 @@ pdf_document_get_form_field_mapping (EvDocument *document,
 				kid->type = (EvFormFieldType)poppler_kid->type;
 				copy_form_poppler_evince(poppler_kid, kid, height, crop_box);
 				g_free(poppler_kid);
-			}
+			}*/
 
 		}
 
@@ -1609,25 +1617,52 @@ pdf_document_get_crop_box (EvDocument *document,
 }
 
 static gchar * 
-pdf_document_get_text_field_content (EvDocument *document, int field_id)
+pdf_document_get_text_field_content (EvDocument *document, int field_id, int *length)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(document);
-	return poppler_document_get_form_field_text_content(pdf_document->document, field_id);
+	return poppler_document_get_form_field_text_content(pdf_document->document, field_id, length);
 }
 
-static gboolean pdf_document_set_text_field_content (EvDocument *document, int field_id, gchar* content)
+static gboolean pdf_document_set_text_field_content (EvDocument *document, int field_id, gchar* content, int length)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(document);
-	poppler_document_set_form_field_text_content(pdf_document->document, field_id, content);
+	poppler_document_set_form_field_text_content(pdf_document->document, field_id, content, length);
 	return true;
 }
 
 static void 
-pdf_document_set_form_field_button_state (EvDocument *document, int field_id, int index, gboolean state)
+pdf_document_set_form_field_button_state (EvDocument *document, int field_id, gboolean state)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(document);
-	poppler_document_set_form_field_button_state(pdf_document->document, field_id, index, state);
+	poppler_document_set_form_field_button_state(pdf_document->document, field_id, state);
+}
+
+static gboolean
+pdf_document_get_form_field_button_state (EvDocument *document, int field_id)
+{
+  PdfDocument *pdf_document = PDF_DOCUMENT(document);
+  return poppler_document_get_form_field_button_state(pdf_document->document, field_id);
 }
 
 
+static gchar* 
+pdf_document_get_form_field_choice_content (EvDocument *document, int field_id, int index)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(document);
+	return poppler_document_get_form_field_choice_content(pdf_document->document, field_id, index);
+}
+
+static void
+pdf_document_set_form_field_choice_content (EvDocument *document, int field_id, int index)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(document);
+	return poppler_document_set_form_field_choice_content(pdf_document->document, field_id, index);
+}
+
+static int 
+pdf_document_get_form_field_choice_count (EvDocument *document, int field_id)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT(document);
+	return poppler_document_get_form_field_choice_num_choices(pdf_document->document, field_id);
+}
 

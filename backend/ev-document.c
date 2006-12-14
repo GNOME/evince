@@ -288,34 +288,72 @@ ev_document_get_crop_box (EvDocument *document,
 }
 
 gchar *
-ev_document_get_form_field_text_content (EvDocument *document, int field_id)
+ev_document_get_form_field_text_content (EvDocument *document, int field_id, int *length)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
 	gchar* retval;
 	LOG("ev_document_get_form_field_text_content");
 	if (iface->get_text_field_content == NULL)
 		return NULL;
-	retval = iface->get_text_field_content(document, field_id);
+	retval = iface->get_text_field_content(document, field_id, length);
 	return retval;
 }
 
 void 
-ev_document_set_form_field_text_content (EvDocument *document, int field_id, gchar* content)
+ev_document_set_form_field_text_content (EvDocument *document, int field_id, gchar* content, int length)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
 	LOG("ev_document_set_form_field_text_content");
 	if (iface->set_text_field_content == NULL)
 		return;
-	iface->set_text_field_content(document, field_id, content);
+	iface->set_text_field_content(document, field_id, content, length);
+}
+
+gchar *
+ev_document_get_form_field_choice_content (EvDocument *document, int field_id, int index)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
+	LOG("ev_document_get_form_field_choice_content");
+	if (iface->get_choice_field_content == NULL)
+	  	return NULL;
+	return iface->get_choice_field_content(document, field_id, index);
 }
 
 void
-ev_document_set_form_field_button_state (EvDocument *document, int field_id, int index, gboolean state)
+ev_document_set_form_field_choice_content (EvDocument *document, int field_id, int index)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
+	LOG("ev_document_set_form_field_choice_content");
+	if (iface->set_choice_field_content == NULL)
+	  return 0;
+	return iface->set_choice_field_content(document, field_id, index);
+}
+
+int ev_document_get_form_field_choice_count (EvDocument *document, int field_id)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
+	LOG("ev_document_get_form_field_button_state");
+	if (iface->get_choice_field_count == NULL)
+		return 0;
+	return iface->get_choice_field_count(document, field_id);
+}
+
+void
+ev_document_set_form_field_button_state (EvDocument *document, int field_id, gboolean state)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
 	LOG("ev_document_set_form_field_button_state");
 	if (iface->set_button_state == NULL)
 		return;
-	iface->set_button_state(document, field_id, index, state);
+	iface->set_button_state(document, field_id, state);
+}
+
+gboolean ev_document_get_form_field_button_state (EvDocument *document, int field_id)
+{
+  EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE(document);
+  LOG("ev_document_get_form_field_button_state");
+  if (iface->get_button_state == NULL)
+    return FALSE;
+  iface->get_button_state(document, field_id);
 }
 

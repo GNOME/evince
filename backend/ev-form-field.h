@@ -47,9 +47,9 @@ struct _EvFormField
 	gdouble y2;
 	//text field specific
 	gchar *content;
+	int length;
 	//button specific
-	EvFormField *kids;
-	int num_kids;
+	gboolean state;
 };
 
 EvFormField *ev_form_field_new ();
