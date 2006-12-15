@@ -3891,7 +3891,7 @@ activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
 }
 
 static gboolean
-activate_label_cb (EvPageAction *page_action, char *label, EvWindow *window)
+activate_label_cb (EvPageAction *page_action, const gchar *label, EvWindow *window)
 {
 	g_return_val_if_fail (EV_IS_WINDOW (window), FALSE);
 

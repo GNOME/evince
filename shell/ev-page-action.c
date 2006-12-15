@@ -33,6 +33,7 @@
 #include <gtk/gtklabel.h>
 #include <gtk/gtkhbox.h>
 #include <string.h>
+#include <stdlib.h>
 
 struct _EvPageActionPrivate
 {
@@ -113,6 +114,8 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 	EvPageAction *page = EV_PAGE_ACTION (action);
 	EvPageCache *page_cache;
 	const char *text;
+	gchar *page_label;
+	gint page_number;
 	gboolean changed;
 
 	text = gtk_entry_get_text (GTK_ENTRY (entry));
@@ -120,16 +123,30 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 
 	g_signal_emit (action, signals[ACTIVATE_LABEL], 0, text, &changed);
 
-	if (!changed) {
-		/* rest the entry to the current page if we were unable to
-		 * change it */
-		gchar *page_label =
-			ev_page_cache_get_page_label (page_cache,
-						      ev_page_cache_get_current_page (page_cache));
+	if (changed)
+		return;
+	
+	/* Check whether it's a valid page number */
+	page_number = atoi (text) - 1;
+	if (page_number >= 0 &&
+	    page_number < ev_page_cache_get_n_pages (page_cache)) {
+		page_label = ev_page_cache_get_page_label (page_cache, page_number);
 		gtk_entry_set_text (GTK_ENTRY (entry), page_label);
 		gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+
+		g_signal_emit (action, signals[ACTIVATE_LABEL], 0, page_label, &changed);
 		g_free (page_label);
+		
+		return;
 	}
+	
+	/* rest the entry to the current page if we were unable to
+	 * change it */
+	page_label = ev_page_cache_get_page_label (page_cache,
+						   ev_page_cache_get_current_page (page_cache));
+	gtk_entry_set_text (GTK_ENTRY (entry), page_label);
+	gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+	g_free (page_label);
 }
 
 static GtkWidget *
