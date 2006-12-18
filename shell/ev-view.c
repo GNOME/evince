@@ -2376,6 +2376,7 @@ draw_loading_text (EvView       *view,
 		   GdkRectangle *page_area,
 		   GdkRectangle *expose_area)
 {
+	const char *loading_text;
 	PangoLayout *layout;
 	PangoFontDescription *font_desc;
 	PangoRectangle logical_rect;
@@ -2388,7 +2389,7 @@ draw_loading_text (EvView       *view,
 	if (view->presentation)
 		return;
 
-	const char *loading_text = _("Loading...");	
+	loading_text = _("Loading...");	
 
 	ev_document_fc_mutex_lock ();
 	
