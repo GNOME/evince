@@ -1,4 +1,65 @@
 ==============
+Evince   0.7.0
+==============
+
+New Features:
+
+    * History. Preliminary implementation, not finished yet. (Nickolay V. Shmyrev)
+    * Option to open a copy of the document in a new window. (Carlos Garcia Campos)
+    * Multihead systems support. (Carlos Garcia Campos)
+    * Added paper size field to the properties dialog. (Kasper Svendsen, Wouter Bolsterlee)
+    * Added automated UI tests with dogtail (Nickolay V. Shmyrev)
+
+Bug Fixes:
+
+    * Links support in rotated documents. (Radoslav Dorcik)
+    * Side pane disabled when entering and leaving fullscreen mode. (Nickolay V. Shmyrev)
+    * Fixed crash in DVI backend. (Nickolay V. Shmyrev)
+    * Printing settings scale, copies, collate, reverse, odd/even work again (Carlos Garcia Campos)
+    * Added page setup dialog for printing. (Carlos Garcia Campos)
+    * Support for printing to a PDF file. (Carlos Garcia Campos)
+    * Allow blank screen in presentation mode. (Carlos Garcia Campos)
+    * Added "End of presentation" page in presentation mode. (Carlos Garcia Campos)
+    * Screensaver detection in presentation mode. (Wouter Bolsterlee)
+    * "Loading..." text is not shown in presentation mode. (Wouter Bolsterlee)
+
+Security Fixes:
+
+    * Buffer overflow in PS backend. CVE-2006-5864. (Carlos Garcia Campos)
+
+Translations:
+
+    * Djihed Afifi (ar)
+    * Runa Bhattacharjee (bn_IN)
+    * Gil Forcada (ca)
+    * Jakub Friedl (cs)
+    * Mindu Dorji (dz)
+    * Dimitris Glezos (el)
+    * David Lodge (en_GB)
+    * Francisco Javier F. Serrador (es)
+    * Ilkka Tuohela (fi)
+    * Claude Paroz (fr)
+    * Ankit Patel (gu)
+    * Rajesh Ranjan (hi)
+    * Gabor Kelemen (hu)
+    * Satoru SATOH (ja)
+    * Vladimer Sichinava (ka)
+    * Fano Rajaonarisoa (mg)
+    * Kjartan Maraas (nb)
+    * Wouter Bolsterlee (nl)
+    * Leonardo Ferreira Fontenelle (pt_BR)
+    * Leonid Kanter (ru)
+    * Steve Murphy (rw)
+    * Daniel Nylander (sv)
+    * Theppitak Karoonboonyanan (th)
+    * Baris Cicek (tr)
+
+Thanks:
+
+    Claudio Saavedra, Gabriel Felipe Cornejo, Mathias Hasselmann, Michael Monreal, 
+    Julien Rebetez, P. Henrique Silva, Yevgen Muntyan
+
+==============
 Evince   0.6.1
 ==============
 
