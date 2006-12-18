@@ -2086,7 +2086,9 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 					      GTK_WINDOW (ev_window));
 	}
 
+	ev_document_fc_mutex_lock ();
 	gtk_widget_show (ev_window->priv->properties);
+	ev_document_fc_mutex_unlock ();
 }
 					
 static void

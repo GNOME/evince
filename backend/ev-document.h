@@ -97,9 +97,16 @@ struct _EvDocumentIface
 
 GType		ev_document_get_type       (void);
 GQuark		ev_document_error_quark    (void);
-GMutex	       *ev_document_get_doc_mutex  (void);
-void            ev_document_doc_mutex_lock (void);
+
+/* Document mutex */
+GMutex	       *ev_document_get_doc_mutex    (void);
+void            ev_document_doc_mutex_lock   (void);
 void            ev_document_doc_mutex_unlock (void);
+
+/* FontConfig mutex */
+GMutex         *ev_document_fc_doc_mutex    (void);
+void            ev_document_fc_mutex_lock   (void);
+void            ev_document_fc_mutex_unlock (void);
 
 EvDocumentInfo *ev_document_get_info	    (EvDocument     *document);
 gboolean	ev_document_load	    (EvDocument     *document,

@@ -1147,9 +1147,11 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 				 width, height);
 	gdk_pixbuf_fill (pixbuf, 0xffffffff);
 
+	ev_document_fc_mutex_lock ();
 	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
 				       width, height,
 				       scale, rotation, pixbuf);
+	ev_document_fc_mutex_unlock ();
        
 
 	g_object_unref (poppler_page);

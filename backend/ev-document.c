@@ -28,6 +28,7 @@ static void ev_document_class_init (gpointer g_class);
 
 
 GMutex *ev_doc_mutex = NULL;
+GMutex *ev_fc_mutex = NULL;
 
 #define LOG(x) 
 GType
@@ -89,7 +90,26 @@ ev_document_doc_mutex_unlock (void)
 	g_mutex_unlock (ev_document_get_doc_mutex ());
 }
 
+GMutex *
+ev_document_get_fc_mutex (void)
+{
+	if (ev_fc_mutex == NULL) {
+		ev_fc_mutex = g_mutex_new ();
+	}
+	return ev_fc_mutex;
+}
 
+void
+ev_document_fc_mutex_lock (void)
+{
+	g_mutex_lock (ev_document_get_fc_mutex ());
+}
+
+void
+ev_document_fc_mutex_unlock (void)
+{
+	g_mutex_unlock (ev_document_get_fc_mutex ());
+}
 
 gboolean
 ev_document_load (EvDocument  *document,

@@ -316,6 +316,8 @@ ev_job_render_run (EvJobRender *job)
 		g_signal_connect (EV_JOB (job)->document, "render_finished",
 				  G_CALLBACK (render_finished_cb), job);
 	} else {
+		ev_document_fc_mutex_lock ();
+		
 		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document, job->rc);
 		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
 			job->link_mapping =
@@ -337,7 +339,8 @@ ev_job_render_run (EvJobRender *job)
 								   job->rc,
 								   &(job->selection_points));
 		}
-
+		
+		ev_document_fc_mutex_unlock ();
 		EV_JOB (job)->finished = TRUE;
 	}
 
@@ -406,7 +409,9 @@ ev_job_fonts_run (EvJobFonts *job)
 	ev_document_doc_mutex_lock ();
 	
 	fonts = EV_DOCUMENT_FONTS (EV_JOB (job)->document);
+	ev_document_fc_mutex_lock ();
 	job->scan_completed = !ev_document_fonts_scan (fonts, 20);
+	ev_document_fc_mutex_unlock ();
 	
 	EV_JOB (job)->finished = TRUE;
 
