@@ -32,7 +32,7 @@
 #define GNOME_PRINT_UNSTABLE_API
 #include <libgnomeprint/gnome-print-job.h>
 
-#include "ev-ps-exporter.h"
+#include "ev-file-exporter.h"
 #include "ev-print-job.h"
 #include "ev-page-cache.h"
 
@@ -260,8 +260,9 @@ idle_print_handler (EvPrintJob *job)
 {
 	if (!job->printing) {
 		ev_document_doc_mutex_lock ();
-		ev_ps_exporter_begin (
-                        EV_PS_EXPORTER (job->document),
+		ev_file_exporter_begin (
+                        EV_FILE_EXPORTER (job->document),
+			EV_FILE_FORMAT_PS,
                         job->temp_file, 
 			MIN (job->first_page, job->last_page),
 			MAX (job->first_page, job->last_page),
@@ -281,7 +282,7 @@ idle_print_handler (EvPrintJob *job)
 		rc = ev_render_context_new (0, job->next_page, 1.0);
 
 		ev_document_doc_mutex_lock ();
-		ev_ps_exporter_do_page (EV_PS_EXPORTER (job->document), rc);
+		ev_file_exporter_do_page (EV_FILE_EXPORTER (job->document), rc);
 		ev_document_doc_mutex_unlock ();
 
 		g_object_unref (rc);
@@ -306,7 +307,7 @@ idle_print_handler (EvPrintJob *job)
 		return TRUE;
 	} else { /* no more pages or copies */
 		ev_document_doc_mutex_lock ();
-		ev_ps_exporter_end (EV_PS_EXPORTER (job->document));
+		ev_file_exporter_end (EV_FILE_EXPORTER (job->document));
 		ev_document_doc_mutex_unlock ();
 
 		close (job->fd);
@@ -340,7 +341,7 @@ ev_print_job_print (EvPrintJob *job, GtkWindow *parent)
 
 	g_return_if_fail (EV_IS_PRINT_JOB (job));
 	g_return_if_fail (job->document != NULL);
-	g_return_if_fail (EV_IS_PS_EXPORTER (job->document));
+	g_return_if_fail (EV_IS_FILE_EXPORTER (job->document));
 #if 0
 	g_printerr ("Printing...\n");
 #endif
