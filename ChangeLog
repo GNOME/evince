@@ -1,3 +1,10 @@
+2006-12-18  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (draw_loading_text):
+
+	Acquire lock document when drawing "Loading..." text so that only one
+	thread will use FontConfig at the same time. Fixes bug #374750.
+
 2006-12-15  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-page-action.[ch]: (activate_cb):

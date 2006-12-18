@@ -2390,6 +2390,8 @@ draw_loading_text (EvView       *view,
 
 	const char *loading_text = _("Loading...");	
 
+	ev_document_doc_mutex_lock ();
+	
 	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
 
 	font_desc = pango_font_description_new ();
@@ -2420,6 +2422,8 @@ draw_loading_text (EvView       *view,
 
 	pango_font_description_free (font_desc);
 	g_object_unref (layout);
+
+	ev_document_doc_mutex_unlock ();
 }
 
 static void
