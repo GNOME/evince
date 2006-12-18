@@ -206,6 +206,11 @@ if test "x$enable_pdf" = "xyes"; then
 	    LIBS="$LIBS $FRONTEND_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
 	    LIBS=$evince_save_LIBS
+
+	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
+	    if test x$enable_cairo_pdf == xyes; then
+	            AC_DEFINE([HAVE_CAIRO_PDF], [1], [defined if cairo-pdf is available])
+            fi
     else
 	    AC_MSG_WARN("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 

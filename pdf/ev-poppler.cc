@@ -25,7 +25,9 @@
 #include <poppler.h>
 #include <poppler-document.h>
 #include <poppler-page.h>
+#ifdef HAVE_CAIRO_PDF
 #include <cairo-pdf.h>
+#endif
 #include <glib/gi18n.h>
 
 #include "ev-poppler.h"
@@ -51,7 +53,9 @@ typedef struct {
 typedef struct {
 	EvFileExporterFormat format;
 	PopplerPSFile *ps_file;
+#ifdef HAVE_CAIRO_PDF
 	cairo_t *pdf_cairo;
+#endif
 } PdfPrintContext;
 
 struct _PdfDocumentClass
@@ -1425,10 +1429,12 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
 
 static const gboolean supported_formats[] = {
 	TRUE, /* EV_FILE_FORMAT_PS */
+#ifdef HAVE_CAIRO_PDF
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	TRUE, /* EV_FILE_FORMAT_PDF */
 #else
 	FALSE, /* EV_FILE_FORMAT_PDF */
+#endif
 #endif
 };
 
@@ -1442,12 +1448,12 @@ pdf_print_context_free (PdfPrintContext *ctx)
 		poppler_ps_file_free (ctx->ps_file);
 		ctx->ps_file = NULL;
 	}
-
+#ifdef HAVE_CAIRO_PDF
 	if (ctx->pdf_cairo) {
 		cairo_destroy (ctx->pdf_cairo);
 		ctx->pdf_cairo = NULL;
 	}
-
+#endif
 	g_free (ctx);
 }
 
@@ -1487,11 +1493,13 @@ pdf_document_file_exporter_begin (EvFileExporter      *exporter,
 
 			break;
 	        case EV_FILE_FORMAT_PDF: {
+#ifdef HAVE_CAIRO_PDF
 			cairo_surface_t *surface;
 			
 			surface = cairo_pdf_surface_create (filename, width, height);
 			ctx->pdf_cairo = cairo_create (surface);
 			cairo_surface_destroy (surface);
+#endif
 		}
 			break;
 	        default:
@@ -1518,7 +1526,9 @@ pdf_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *r
 #ifdef HAVE_POPPLER_PAGE_RENDER
 			poppler_page_render (poppler_page, ctx->pdf_cairo);
 #endif
+#ifdef HAVE_CAIRO_PDF
 			cairo_show_page (ctx->pdf_cairo);
+#endif
 			break;
 	        default:
 			g_assert_not_reached ();
