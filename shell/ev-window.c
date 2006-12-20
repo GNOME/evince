@@ -664,10 +664,18 @@ setup_document_from_metadata (EvWindow *window)
 {
 	char *uri = window->priv->uri;
 	GValue page = { 0, };
+	gint n_pages;
 	gint new_page;
 
+	/* View the previously shown page, but make sure to not open a document on
+	 * the last page, since closing it on the last page most likely means the
+	 * user was finished reading the document. In that case, reopening should
+	 * show the first page. */
 	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
-		new_page = CLAMP (g_value_get_int (&page), 0, ev_page_cache_get_n_pages (window->priv->page_cache) - 1);
+		n_pages = ev_page_cache_get_n_pages (window->priv->page_cache);
+		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
+		if (new_page == n_pages - 1)
+			new_page = 0;
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						new_page);
 		g_value_unset (&page);
