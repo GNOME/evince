@@ -31,7 +31,10 @@
 #include <time.h>
 #include <sys/time.h>
 #include <string.h>
+
+#ifdef HAVE__NL_MEASUREMENT_MEASUREMENT
 #include <langinfo.h>
+#endif
 
 typedef enum
 {
@@ -240,17 +243,51 @@ struct regular_paper_size {
 	{  432.0f,  279.0f, 3.0f, 3.0f, "Ledger" }
 };
 
+typedef enum {
+  EV_UNIT_INCH,
+  EV_UNIT_MM
+} EvUnit; 
+
+static EvUnit
+ev_get_default_user_units (void)
+{
+  /* Translate to the default units to use for presenting
+   * lengths to the user. Translate to default:inch if you
+   * want inches, otherwise translate to default:mm.
+   * Do *not* translate it to "predefinito:mm", if it
+   * it isn't default:mm or default:inch it will not work
+   */
+  gchar *e = _("default:mm");
+
+#ifdef HAVE__NL_MEASUREMENT_MEASUREMENT
+  gchar *imperial = NULL;
+
+  imperial = nl_langinfo (_NL_MEASUREMENT_MEASUREMENT);
+  if (imperial && imperial[0] == 2 )
+    return EV_UNIT_INCH;  /* imperial */
+  if (imperial && imperial[0] == 1 )
+    return EV_UNIT_MM;  /* metric */
+#endif
+
+  if (strcmp (e, "default:inch")==0)
+    return EV_UNIT_INCH;
+  else if (strcmp (e, "default:mm"))
+    g_warning ("Whoever translated default:mm did so wrongly.\n");
+  return EV_UNIT_MM;
+}
+
 static char *
 ev_regular_paper_size (const EvDocumentInfo *info)
 {
 	const struct regular_paper_size *size;   
+	EvUnit unit;
 	char *exact_size = NULL;
-	char *imperial = NULL;
 	char *str = NULL;
 	int i;
-	
-        imperial = nl_langinfo(_NL_MEASUREMENT_MEASUREMENT);
-        if ( imperial && imperial[0] == 2 )
+
+	unit = ev_get_default_user_units ();	
+
+	if (unit == EV_UNIT_INCH)
 		/* Imperial measurement (inches) */
 		exact_size = g_strdup_printf( _("%.2f x %.2f in"),
 					      info->paper_width  / 25.4f,

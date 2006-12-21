@@ -189,6 +189,10 @@ dnl ================== portability checks ======================================
 dnl for backtrace()
 AC_CHECK_HEADERS([execinfo.h])
 
+AC_CHECK_DECL([_NL_MEASUREMENT_MEASUREMENT],[
+  AC_DEFINE([HAVE__NL_MEASUREMENT_MEASUREMENT],[1],[Define if _NL_MEASUREMENT_MEASUREMENT is available])
+  ],[],[#include <langinfo.h>])
+
 dnl ================== pdf checks ===================================================
 AC_ARG_ENABLE(pdf,
               [AC_HELP_STRING([--enable-pdf], [Compile with pdf support])],enable_pdf="$enableval",enable_pdf=yes)
