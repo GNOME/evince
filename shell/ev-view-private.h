@@ -125,6 +125,10 @@ struct _EvView {
 	/* Links */
 	GtkWidget *link_tooltip;
 	EvLink *hovered_link;
+
+	/* Goto Popup */
+	GtkWidget *goto_window;
+	GtkWidget *goto_entry;
 };
 
 struct _EvViewClass {

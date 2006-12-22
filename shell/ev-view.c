@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <gtk/gtkalignment.h>
@@ -2176,6 +2177,199 @@ ev_view_button_release_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+/* Goto Window */
+/* Cut and paste from gtkwindow.c */
+static void
+send_focus_change (GtkWidget *widget,
+		   gboolean   in)
+{
+	GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
+
+	g_object_ref (widget);
+
+	if (in)
+		GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
+	else
+		GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
+
+	fevent->focus_change.type = GDK_FOCUS_CHANGE;
+	fevent->focus_change.window = g_object_ref (widget->window);
+	fevent->focus_change.in = in;
+
+	gtk_widget_event (widget, fevent);
+
+	g_object_notify (G_OBJECT (widget), "has-focus");
+
+	g_object_unref (widget);
+	gdk_event_free (fevent);
+}
+
+static void
+ev_view_goto_window_hide (EvView *view)
+{
+	/* send focus-in event */
+	send_focus_change (view->goto_entry, FALSE);
+	gtk_widget_hide (view->goto_window);
+	gtk_entry_set_text (GTK_ENTRY (view->goto_entry), "");
+}
+
+static gboolean
+ev_view_goto_window_delete_event (GtkWidget   *widget,
+				  GdkEventAny *event,
+				  EvView      *view)
+{
+	ev_view_goto_window_hide (view);
+
+	return TRUE;
+}
+
+static gboolean
+key_is_numeric (guint keyval)
+{
+	return ((keyval >= GDK_0 && keyval <= GDK_9) ||
+		(keyval >= GDK_KP_0 && keyval <= GDK_KP_9));
+}
+
+static gboolean
+ev_view_goto_window_key_press_event (GtkWidget   *widget,
+				     GdkEventKey *event,
+				     EvView      *view)
+{
+	switch (event->keyval) {
+	        case GDK_Escape:
+	        case GDK_Tab:
+	        case GDK_KP_Tab:
+	        case GDK_ISO_Left_Tab:
+			ev_view_goto_window_hide (view);
+			return TRUE;
+	        case GDK_Return:
+	        case GDK_KP_Enter:
+	        case GDK_ISO_Enter:
+			return FALSE;
+	        default:
+			if (!key_is_numeric (event->keyval))
+				return TRUE;
+	}
+
+	return FALSE;
+}
+
+static gboolean
+ev_view_goto_window_button_press_event (GtkWidget      *widget,
+					GdkEventButton *event,
+					EvView         *view)
+{
+	ev_view_goto_window_hide (view);
+
+	return TRUE;
+}
+
+static void
+ev_view_goto_entry_activate (GtkEntry *entry,
+			     EvView   *view)
+{
+	const gchar *text;
+	gint         page;
+
+	text = gtk_entry_get_text (entry);
+	page = atoi (text) - 1;
+	
+	ev_view_goto_window_hide (view);
+
+	if (page >= 0 &&
+	    page < ev_page_cache_get_n_pages (view->page_cache))
+		ev_page_cache_set_current_page (view->page_cache, page);
+}
+
+static void
+ev_view_goto_window_create (EvView *view)
+{
+	GtkWidget *frame, *vbox, *toplevel;
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	
+	if (view->goto_window) {
+		if (GTK_WINDOW (toplevel)->group)
+			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
+						     GTK_WINDOW (view->goto_window));
+		else if (GTK_WINDOW (view->goto_window)->group)
+			gtk_window_group_remove_window (GTK_WINDOW (view->goto_window)->group,
+							GTK_WINDOW (view->goto_window));
+		return;
+	}
+
+	view->goto_window = gtk_window_new (GTK_WINDOW_POPUP);
+
+	if (GTK_WINDOW (toplevel)->group)
+		gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
+					     GTK_WINDOW (view->goto_window));
+	
+	gtk_window_set_modal (GTK_WINDOW (view->goto_window), TRUE);
+
+	g_signal_connect (view->goto_window, "delete_event",
+			  G_CALLBACK (ev_view_goto_window_delete_event),
+			  view);
+	g_signal_connect (view->goto_window, "key_press_event",
+			  G_CALLBACK (ev_view_goto_window_key_press_event),
+			  view);
+	g_signal_connect (view->goto_window, "button_press_event",
+			  G_CALLBACK (ev_view_goto_window_button_press_event),
+			  view);
+
+	frame = gtk_frame_new (NULL);
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+	gtk_container_add (GTK_CONTAINER (view->goto_window), frame);
+	gtk_widget_show (frame);
+
+	vbox = gtk_vbox_new (FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 3);
+	gtk_container_add (GTK_CONTAINER (frame), vbox);
+	gtk_widget_show (vbox);
+
+	view->goto_entry = gtk_entry_new ();
+	g_signal_connect (view->goto_entry, "activate",
+			  G_CALLBACK (ev_view_goto_entry_activate),
+			  view);
+	gtk_container_add (GTK_CONTAINER (vbox), view->goto_entry);
+	gtk_widget_show (view->goto_entry);
+	gtk_widget_realize (view->goto_entry);
+}
+
+static void
+ev_view_goto_entry_grab_focus (EvView *view)
+{
+	GtkWidgetClass *entry_parent_class;
+	
+	entry_parent_class = g_type_class_peek_parent (GTK_ENTRY_GET_CLASS (view->goto_entry));
+	(entry_parent_class->grab_focus) (view->goto_entry);
+
+	send_focus_change (view->goto_entry, TRUE);
+}
+
+static void
+ev_view_goto_window_send_key_event (EvView   *view,
+				    GdkEvent *event)
+{
+	GdkEventKey *new_event;
+	GdkScreen   *screen;
+
+	/* Move goto window off screen */
+	screen = gtk_widget_get_screen (GTK_WIDGET (view));
+	gtk_window_move (GTK_WINDOW (view->goto_window),
+			 gdk_screen_get_width (screen) + 1,
+			 gdk_screen_get_height (screen) + 1);
+	gtk_widget_show (view->goto_window);
+
+	new_event = (GdkEventKey *) gdk_event_copy (event);
+	g_object_unref (new_event->window);
+	new_event->window = g_object_ref (view->goto_window->window);
+	gtk_widget_realize (view->goto_window);
+
+	gtk_widget_event (view->goto_window, (GdkEvent *)new_event);
+	gdk_event_free ((GdkEvent *)new_event);
+	gtk_widget_hide (view->goto_window);
+}
+
 static gboolean
 ev_view_key_press_event (GtkWidget   *widget,
 			 GdkEventKey *event)
@@ -2210,8 +2404,23 @@ ev_view_key_press_event (GtkWidget   *widget,
 			}
 	}
 
-	if (current == view->presentation_state)
+	if (current == view->presentation_state) {
+		if (ev_page_cache_get_n_pages (view->page_cache) > 1 &&
+		    key_is_numeric (event->keyval)) {
+			gint x, y;
+			
+			ev_view_goto_window_create (view);
+			ev_view_goto_window_send_key_event (view, (GdkEvent *)event);
+			gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+			gtk_window_move (GTK_WINDOW (view->goto_window), x, y);
+			gtk_widget_show (view->goto_window);
+			ev_view_goto_entry_grab_focus (view);
+			
+			return TRUE;
+		}
+		
 		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+	}
 
 	switch (view->presentation_state) {
 	        case EV_PRESENTATION_NORMAL:
@@ -2246,6 +2455,9 @@ static gint
 ev_view_focus_out (GtkWidget     *widget,
 		     GdkEventFocus *event)
 {
+	if (EV_VIEW (widget)->goto_window)
+		ev_view_goto_window_hide (EV_VIEW (widget));
+	
 	if (EV_VIEW (widget)->pixbuf_cache)
 		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
 	gtk_widget_queue_draw (widget);
@@ -2573,6 +2785,12 @@ ev_view_destroy (GtkObject *object)
 	if (view->link_tooltip) {
 		gtk_widget_destroy (view->link_tooltip);
 		view->link_tooltip = NULL;
+	}
+
+	if (view->goto_window) {
+		gtk_widget_destroy (view->goto_window);
+		view->goto_window = NULL;
+		view->goto_entry = NULL;
 	}
 
 	if (view->selection_scroll_id) {

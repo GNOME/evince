@@ -1,3 +1,17 @@
+2006-12-22  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (send_focus_change), (ev_view_goto_window_hide),
+	(ev_view_goto_window_delete_event), (key_is_numeric),
+	(ev_view_goto_window_key_press_event),
+	(ev_view_goto_window_button_press_event),
+	(ev_view_goto_entry_activate), (ev_view_goto_window_create),
+	(ev_view_goto_entry_grab_focus), (ev_view_goto_window_send_key_event),
+	(ev_view_key_press_event), (ev_view_focus_out), (ev_view_destroy):
+
+	Allow jumping to another page by typing a page number in presentation
+	mode. It uses a popup window with an entry. Fixes bug #353625.
+
 2006-12-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
