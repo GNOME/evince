@@ -4148,14 +4148,7 @@ launch_action (EvWindow *window, EvLinkAction *action)
 static void
 launch_external_uri (EvWindow *window, EvLinkAction *action)
 {
-	const char *uri;
-	char *escaped;
-
-	uri = ev_link_action_get_uri (action);
-	escaped = gnome_vfs_escape_host_and_path_string (uri);
-
-	gnome_vfs_url_show (escaped);
-	g_free (escaped);
+	gnome_vfs_url_show (ev_link_action_get_uri (action));
 }
 
 static void
