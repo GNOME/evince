@@ -105,8 +105,12 @@ struct _EvView {
 	gboolean dual_page;
 	gboolean fullscreen;
 	gboolean presentation;
-	EvPresentationState presentation_state;
 	EvSizingMode sizing_mode;
+
+	/* Presentation */
+	EvPresentationState presentation_state;
+	EvSizingMode sizing_mode_saved;
+	double scale_saved;
 
 	/* Common for button press handling */
 	int pressed_button;

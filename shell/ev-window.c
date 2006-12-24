@@ -2570,8 +2570,6 @@ ev_window_run_presentation (EvWindow *window)
 	ev_view_set_presentation (EV_VIEW (window->priv->view), TRUE);
 	ev_window_update_presentation_action (window);
 
-	ev_view_set_sizing_mode (EV_VIEW (window->priv->view), EV_SIZING_BEST_FIT);
-
 	gtk_widget_grab_focus (window->priv->view);
 	gtk_window_fullscreen (GTK_WINDOW (window));
 

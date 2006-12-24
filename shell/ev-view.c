@@ -3409,6 +3409,16 @@ ev_view_set_presentation (EvView   *view,
 	
 	view->presentation = presentation;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	
+	if (presentation) {
+		view->sizing_mode_saved = view->sizing_mode;
+		view->scale_saved = view->scale;
+		ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
+	} else {
+		ev_view_set_sizing_mode (view, view->sizing_mode_saved);
+		ev_view_set_zoom (view, view->scale_saved, FALSE);
+	}
+	
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	if (GTK_WIDGET_REALIZED (view)) {
