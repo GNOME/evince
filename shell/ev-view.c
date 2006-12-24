@@ -2284,7 +2284,7 @@ ev_view_goto_entry_activate (GtkEntry *entry,
 static void
 ev_view_goto_window_create (EvView *view)
 {
-	GtkWidget *frame, *vbox, *toplevel;
+	GtkWidget *frame, *hbox, *toplevel, *label;
 
 	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
 	
@@ -2321,16 +2321,21 @@ ev_view_goto_window_create (EvView *view)
 	gtk_container_add (GTK_CONTAINER (view->goto_window), frame);
 	gtk_widget_show (frame);
 
-	vbox = gtk_vbox_new (FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 3);
-	gtk_container_add (GTK_CONTAINER (frame), vbox);
-	gtk_widget_show (vbox);
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox), 3);
+	gtk_container_add (GTK_CONTAINER (frame), hbox);
+	gtk_widget_show (hbox);
+
+	label = gtk_label_new(_("Jump to page:"));
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 3);
+	gtk_widget_show (label);
+	gtk_widget_realize (label);
 
 	view->goto_entry = gtk_entry_new ();
 	g_signal_connect (view->goto_entry, "activate",
 			  G_CALLBACK (ev_view_goto_entry_activate),
 			  view);
-	gtk_container_add (GTK_CONTAINER (vbox), view->goto_entry);
+	gtk_box_pack_start_defaults (GTK_BOX (hbox), view->goto_entry);
 	gtk_widget_show (view->goto_entry);
 	gtk_widget_realize (view->goto_entry);
 }
