@@ -1,5 +1,12 @@
 2006-12-24  Wouter Bolsterlee  <wbolster@cvs.gnome.org>
 
+	* shell/ev-window.c: (ev_window_run_presentation):
+
+	Always use "best fit" zoom in presentation mode.
+	Fixes bug #389195.
+
+2006-12-24  Wouter Bolsterlee  <wbolster@cvs.gnome.org>
+
 	* shell/ev-view.c: (ev_view_goto_window_create):
 
 	Show "Jump to page" label in the page jumping popup in
