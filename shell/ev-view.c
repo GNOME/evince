@@ -1254,13 +1254,15 @@ static void
 goto_dest (EvView *view, EvLinkDest *dest)
 {
 	EvLinkDestType type;
-	int page, n_pages;
+	int page, n_pages, current_page;
 
 	page = ev_link_dest_get_page (dest);
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	if (page < 0 || page >= n_pages)
 		return;
+
+	current_page = view->current_page;
 	
 	type = ev_link_dest_get_dest_type (dest);
 
@@ -1289,6 +1291,10 @@ goto_dest (EvView *view, EvLinkDest *dest)
 	        default:
 			g_assert_not_reached ();
 	}
+
+	if (current_page != view->current_page)
+		ev_page_cache_set_current_page (view->page_cache,
+						view->current_page);
 }
 
 void
