@@ -86,7 +86,9 @@ ev_document_links_find_link_dest (EvDocumentLinks *document_links,
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 	EvLinkDest *retval;
 
+	ev_document_doc_mutex_lock ();
 	retval = iface->find_link_dest (document_links, link_name);
+	ev_document_doc_mutex_unlock ();
 
 	return retval;
 }
