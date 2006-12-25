@@ -3,7 +3,7 @@
 # This test opens the interface and just clicks around a bit.
 
 import os
-os.environ['LANG']='en_US.UTF-8'
+os.environ['LANG']='C'
 
 from dogtail.procedural import *
 

@@ -3,7 +3,7 @@
 # This test opens a password encrypted file and tries to unlock it.
 
 import os
-os.environ['LANG']='en_US.UTF-8'
+os.environ['LANG']='C'
 
 from dogtail.procedural import *
 
