@@ -43,6 +43,8 @@ libevbackend_la_SOURCES=			\
 	ev-document-find.c			\
 	ev-document-find.h			\
 	ev-document-info.h			\
+	ev-document-transition.h		\
+	ev-document-transition.c		\
 	ev-file-exporter.c			\
 	ev-file-exporter.h			\
 	ev-render-context.h			\

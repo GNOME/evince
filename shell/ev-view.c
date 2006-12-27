@@ -36,6 +36,7 @@
 #include "ev-selection.h"
 #include "ev-document-links.h"
 #include "ev-document-find.h"
+#include "ev-document-transition.h"
 #include "ev-document-misc.h"
 #include "ev-debug.h"
 #include "ev-job-queue.h"
@@ -311,6 +312,10 @@ static void       ev_view_primary_get_cb                     (GtkClipboard      
 static void       ev_view_primary_clear_cb                   (GtkClipboard       *clipboard,
 							      gpointer            data);
 static void       ev_view_update_primary_selection           (EvView             *ev_view);
+
+/*** Presentation ***/
+static void       ev_view_presentation_transition_start      (EvView             *ev_view);
+static void       ev_view_presentation_transition_stop       (EvView             *ev_view);
 
 
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_WIDGET)
@@ -2814,6 +2819,8 @@ ev_view_destroy (GtkObject *object)
 	    view->selection_update_id = 0;
 	}
 
+	ev_view_presentation_transition_stop (view);
+
 	ev_view_set_scroll_adjustments (view, NULL, NULL);
 
 	GTK_OBJECT_CLASS (ev_view_parent_class)->destroy (object);
@@ -3163,6 +3170,8 @@ page_changed_cb (EvPageCache *page_cache,
 	if (view->current_page != new_page) {
 		view->current_page = new_page;
 		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+		if (view->presentation)
+			ev_view_presentation_transition_start (view);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -3427,6 +3436,11 @@ ev_view_set_presentation (EvView   *view,
 	
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 
+	if (presentation)
+		ev_view_presentation_transition_start (view);
+	else
+		ev_view_presentation_transition_stop (view);
+
 	if (GTK_WIDGET_REALIZED (view)) {
 		if (view->presentation)
 			gdk_window_set_background (GTK_WIDGET(view)->window,
@@ -3445,6 +3459,40 @@ ev_view_get_presentation (EvView *view)
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
 	return view->presentation;
+}
+
+static gboolean
+transition_next_page (EvView *view)
+{
+	ev_view_next_page (view);
+
+	return FALSE;
+}
+
+static void
+ev_view_presentation_transition_stop (EvView *view)
+{
+	if (view->trans_timeout_id > 0)
+		g_source_remove (view->trans_timeout_id);
+	view->trans_timeout_id = 0;
+}
+
+static void
+ev_view_presentation_transition_start (EvView *view)
+{
+	gdouble duration;
+	
+	if (!EV_IS_DOCUMENT_TRANSITION (view->document))
+		return;
+
+	ev_view_presentation_transition_stop (view);
+
+	duration = ev_document_transition_get_page_duration (EV_DOCUMENT_TRANSITION (view->document),
+							     view->current_page);
+	if (duration > 0)
+		view->trans_timeout_id = g_timeout_add (duration * 1000,
+							(GSourceFunc) transition_next_page,
+							view);
 }
 
 void
@@ -4556,6 +4604,7 @@ ev_view_next_page (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
+	ev_view_presentation_transition_stop (view);
 	ev_view_reset_presentation_state (view);
 	
 	page = ev_page_cache_get_current_page (view->page_cache);

@@ -111,6 +111,7 @@ struct _EvView {
 	EvPresentationState presentation_state;
 	EvSizingMode sizing_mode_saved;
 	double scale_saved;
+	guint  trans_timeout_id;
 
 	/* Common for button press handling */
 	int pressed_button;

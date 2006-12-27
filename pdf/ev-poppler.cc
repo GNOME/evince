@@ -38,6 +38,7 @@
 #include "ev-document-fonts.h"
 #include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-transition.h"
 #include "ev-selection.h"
 #include "ev-attachment.h"
 
@@ -86,6 +87,7 @@ static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface   
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
 static void pdf_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
 static void pdf_selection_iface_init                    (EvSelectionIface          *iface);
+static void pdf_document_page_transition_iface_init     (EvDocumentTransitionIface *iface);
 static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
 							 gint                       page,
 							 gint                       size,
@@ -119,6 +121,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_file_exporter_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
 							pdf_selection_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
+							pdf_document_page_transition_iface_init);
 			 });
 
 
@@ -1635,6 +1639,36 @@ pdf_selection_iface_init (EvSelectionIface *iface)
         iface->render_selection = pdf_selection_render_selection;
         iface->get_selection_region = pdf_selection_get_selection_region;
         iface->get_selection_map = pdf_selection_get_selection_map;
+}
+
+/* Page Transitions */
+static gdouble
+pdf_document_get_page_duration (EvDocumentTransition *trans,
+				gint                  page)
+{
+#ifdef HAVE_POPPLER_PAGE_GET_DURATION	
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	gdouble      duration = -1;
+
+	pdf_document = PDF_DOCUMENT (trans);
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	if (!poppler_page)
+		return -1;
+
+	duration = poppler_page_get_duration (poppler_page);
+	g_object_unref (poppler_page);
+
+	return duration;
+#else
+	return -1;
+#endif /* HAVE_POPPLER_PAGE_GET_DURATION */
+}
+
+static void
+pdf_document_page_transition_iface_init (EvDocumentTransitionIface *iface)
+{
+	iface->get_page_duration = pdf_document_get_page_duration;
 }
 
 PdfDocument *
