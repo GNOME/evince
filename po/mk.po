@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.mk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-25 18:14+0100\n"
-"PO-Revision-Date: 2006-12-25 23:20+0100\n"
+"POT-Creation-Date: 2006-12-31 10:15+0100\n"
+"PO-Revision-Date: 2006-12-31 17:40+0100\n"
 "Last-Translator: Jovan Naumovski <jovan@lugola.net>\n"
 "Language-Team: Macedonian <ossm-members@hedona.on.net.mk>\n"
 "MIME-Version: 1.0\n"
@@ -137,6 +137,10 @@ msgstr "Отстрани ја избраната лента со алатки"
 #: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:439
 msgid "Separator"
 msgstr "Разделувач"
+
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+msgid "Running in presentation mode"
+msgstr "Извршувам во режим на презентација"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3980
@@ -279,60 +283,60 @@ msgid "DVI document has incorrect format"
 msgstr "DVI документот е во неправилен формат"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:620
+#: ../pdf/ev-poppler.cc:624
 msgid "Yes"
 msgstr "Да"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:623
+#: ../pdf/ev-poppler.cc:627
 msgid "No"
 msgstr "Не"
 
-#: ../pdf/ev-poppler.cc:723
+#: ../pdf/ev-poppler.cc:727
 msgid "Type 1"
 msgstr "Тип 1"
 
-#: ../pdf/ev-poppler.cc:725
+#: ../pdf/ev-poppler.cc:729
 msgid "Type 1C"
 msgstr "Тип 1Ц"
 
-#: ../pdf/ev-poppler.cc:727
+#: ../pdf/ev-poppler.cc:731
 msgid "Type 3"
 msgstr "Тип 3"
 
-#: ../pdf/ev-poppler.cc:729
+#: ../pdf/ev-poppler.cc:733
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../pdf/ev-poppler.cc:731
+#: ../pdf/ev-poppler.cc:735
 msgid "Type 1 (CID)"
 msgstr "Тип 1 (CID)"
 
-#: ../pdf/ev-poppler.cc:733
+#: ../pdf/ev-poppler.cc:737
 msgid "Type 1C (CID)"
 msgstr "Тип 1Ц (CID)"
 
-#: ../pdf/ev-poppler.cc:735
+#: ../pdf/ev-poppler.cc:739
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../pdf/ev-poppler.cc:737
+#: ../pdf/ev-poppler.cc:741
 msgid "Unknown font type"
 msgstr "Непознат тип на фонт"
 
-#: ../pdf/ev-poppler.cc:763
+#: ../pdf/ev-poppler.cc:767
 msgid "No name"
 msgstr "Нема име"
 
-#: ../pdf/ev-poppler.cc:771
+#: ../pdf/ev-poppler.cc:775
 msgid "Embedded subset"
 msgstr "Вградено поставување"
 
-#: ../pdf/ev-poppler.cc:773
+#: ../pdf/ev-poppler.cc:777
 msgid "Embedded"
 msgstr "Вградено"
 
-#: ../pdf/ev-poppler.cc:775
+#: ../pdf/ev-poppler.cc:779
 msgid "Not embedded"
 msgstr "Надворешно"
 
@@ -598,6 +602,11 @@ msgstr "Г_олеми и мали букви"
 msgid "Toggle case sensitive search"
 msgstr "Пушти пребарување со разликување на мали-големи букви"
 
+#: ../shell/ev-history.c:172
+#, c-format
+msgid "Page: %s"
+msgstr "Страница: %s"
+
 #: ../shell/ev-page-action.c:77
 #, c-format
 msgid "(%d of %d)"
@@ -669,7 +678,7 @@ msgstr "Собирам информации за фонтови... %3d%%"
 msgid "Attachments"
 msgstr "Приврзоци"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2615
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2620
 msgid "Loading..."
 msgstr "Вчитувам..."
 
@@ -705,62 +714,62 @@ msgstr "Лизгачки поглед за надолу"
 msgid "Document View"
 msgstr "Преглед на документ"
 
-#: ../shell/ev-view.c:1392
+#: ../shell/ev-view.c:1397
 msgid "Go to first page"
 msgstr "Оди на првата страница"
 
-#: ../shell/ev-view.c:1394
+#: ../shell/ev-view.c:1399
 msgid "Go to previous page"
 msgstr "Оди на претходната страница"
 
-#: ../shell/ev-view.c:1396
+#: ../shell/ev-view.c:1401
 msgid "Go to next page"
 msgstr "Оди на следната страница"
 
-#: ../shell/ev-view.c:1398
+#: ../shell/ev-view.c:1403
 msgid "Go to last page"
 msgstr "Оди на последната страница"
 
-#: ../shell/ev-view.c:1400
+#: ../shell/ev-view.c:1405
 msgid "Go to page"
 msgstr "Оди на страна"
 
-#: ../shell/ev-view.c:1402
+#: ../shell/ev-view.c:1407
 msgid "Find"
 msgstr "Најди"
 
-#: ../shell/ev-view.c:1429
+#: ../shell/ev-view.c:1434
 #, c-format
 msgid "Go to page %s"
 msgstr "Оди на страна %s"
 
-#: ../shell/ev-view.c:1434
+#: ../shell/ev-view.c:1439
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Оди до %s во датотеката “%s”"
 
-#: ../shell/ev-view.c:1437
+#: ../shell/ev-view.c:1442
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Оди на страна “%s”"
 
-#: ../shell/ev-view.c:1446
+#: ../shell/ev-view.c:1451
 #, c-format
 msgid "Launch %s"
 msgstr "Пушти %s"
 
-#: ../shell/ev-view.c:1803
+#: ../shell/ev-view.c:1808
 msgid "End of presentation. Press Escape to exit."
 msgstr "Крај на презентацијата. Притиснете Escape за излез."
 
-#: ../shell/ev-view.c:2335
+#: ../shell/ev-view.c:2340
 msgid "Jump to page:"
 msgstr "Оди оди до страница:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3844
+#: ../shell/ev-view.c:3892
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -768,7 +777,7 @@ msgstr[0] "%d пронајден на оваа страна"
 msgstr[1] "%d пронајдени на оваа страна"
 msgstr[2] "%d пронајдени на оваа страна"
 
-#: ../shell/ev-view.c:3853
+#: ../shell/ev-view.c:3901
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% останати за пребарување"
