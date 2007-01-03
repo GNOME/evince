@@ -1,4 +1,4 @@
-# translation of evince.gnome-2-16.ar.po to Arabic
+# translation of evince.HEAD.ar.po to Arabic
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
@@ -6,11 +6,11 @@
 # Khaled Hosny <khaledhosny@eglug.org>, 2006.
 msgid ""
 msgstr ""
-"Project-Id-Version: evince.gnome-2-16.ar\n"
+"Project-Id-Version: evince.HEAD.ar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-27 16:30+0000\n"
-"PO-Revision-Date: 2006-11-24 11:03+0100\n"
-"Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
+"POT-Creation-Date: 2007-01-03 21:29+0000\n"
+"PO-Revision-Date: 2006-12-29 08:52+0200\n"
+"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <support@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "ملف معطوب"
 #: ../comics/comics-document.c:184
 #, c-format
 msgid "No images found in archive %s"
-msgstr "لا توجد صور في الأرشيف %s"
+msgstr "لا توجد صور في المحفوظة %s"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
 #, c-format
@@ -137,6 +137,11 @@ msgstr "احذف شريط الأدوات المحدد"
 #: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:439
 msgid "Separator"
 msgstr "فاصل"
+
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+#, fuzzy
+msgid "Running in presentation mode"
+msgstr "شغّل جلاء في نمط العرض التقديمي"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3980
@@ -193,9 +198,8 @@ msgid "View multipage documents"
 msgstr "اعرض مستندات متعددة"
 
 #: ../data/evince-password.glade.h:1
-#, fuzzy
 msgid "Password Entry"
-msgstr "_كلمة السر:"
+msgstr "إدخال كلمة السر"
 
 #: ../data/evince-password.glade.h:2
 msgid "Remember password for this session"
@@ -242,9 +246,8 @@ msgid "<b>Optimized:</b>"
 msgstr "<b>محسّن:</b>"
 
 #: ../data/evince-properties.glade.h:9
-#, fuzzy
 msgid "<b>Paper Size:</b>"
-msgstr "<b>محسّن:</b>"
+msgstr "<b>حجم الورق:</b>"
 
 #: ../data/evince-properties.glade.h:10
 msgid "<b>Producer:</b>"
@@ -279,101 +282,98 @@ msgid "DVI document has incorrect format"
 msgstr "هيئة مستند الـ DVI غير صحيحة"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:620
+#: ../pdf/ev-poppler.cc:624
 msgid "Yes"
 msgstr "نعم"
 
 #. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:623
+#: ../pdf/ev-poppler.cc:627
 msgid "No"
 msgstr "لا"
 
-#: ../pdf/ev-poppler.cc:723
+#: ../pdf/ev-poppler.cc:727
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../pdf/ev-poppler.cc:725
+#: ../pdf/ev-poppler.cc:729
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../pdf/ev-poppler.cc:727
+#: ../pdf/ev-poppler.cc:731
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../pdf/ev-poppler.cc:729
+#: ../pdf/ev-poppler.cc:733
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../pdf/ev-poppler.cc:731
+#: ../pdf/ev-poppler.cc:735
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../pdf/ev-poppler.cc:733
+#: ../pdf/ev-poppler.cc:737
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../pdf/ev-poppler.cc:735
+#: ../pdf/ev-poppler.cc:739
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../pdf/ev-poppler.cc:737
+#: ../pdf/ev-poppler.cc:741
 msgid "Unknown font type"
 msgstr "نوع الخط غير معروف"
 
-#: ../pdf/ev-poppler.cc:763
+#: ../pdf/ev-poppler.cc:767
 msgid "No name"
 msgstr "لا يوجد اسم"
 
-#: ../pdf/ev-poppler.cc:771
+#: ../pdf/ev-poppler.cc:775
 msgid "Embedded subset"
 msgstr "مجموعة ثانوية مدمجة"
 
-#: ../pdf/ev-poppler.cc:773
+#: ../pdf/ev-poppler.cc:777
 msgid "Embedded"
 msgstr "مدمج"
 
-#: ../pdf/ev-poppler.cc:775
+#: ../pdf/ev-poppler.cc:779
 msgid "Not embedded"
 msgstr "غير مدمج"
 
 #: ../impress/zip.c:50
 msgid "No error"
-msgstr ""
+msgstr "لا خطأ"
 
 #: ../impress/zip.c:53
 msgid "Not enough memory"
-msgstr ""
+msgstr "الذاكرة غير كافية"
 
 #: ../impress/zip.c:56
 msgid "Cannot find zip signature"
-msgstr ""
+msgstr "لا يمكن العثور على توقيع zip"
 
 #: ../impress/zip.c:59
 msgid "Invalid zip file"
-msgstr ""
+msgstr "ملف zip غير سليم"
 
 #: ../impress/zip.c:62
-#, fuzzy
 msgid "Multi file zips are not supported"
-msgstr "توليد PDF غير مدعوم"
+msgstr "لا يُدعم العديد من الملفات في محفوظة zip واحدة"
 
 #: ../impress/zip.c:65
-#, fuzzy
 msgid "Cannot open the file"
-msgstr "تعذر فتح الملف \"%s\". \n"
+msgstr "لا يمكن فتح الملف"
 
 #: ../impress/zip.c:68
 msgid "Cannot read data from file"
-msgstr ""
+msgstr "فشلت قراءة البيانات من الملف"
 
 #: ../impress/zip.c:71
 msgid "Cannot find file in the zip archive"
-msgstr ""
+msgstr "لا يوجد ملف في محفوظة zip"
 
 #: ../impress/zip.c:74
-#, fuzzy
 msgid "Unknown error"
-msgstr "نوع MIME غير معروف"
+msgstr "خطأ مجهول"
 
 #: ../properties/ev-properties-main.c:107
 msgid "Document"
@@ -391,33 +391,33 @@ msgstr "لاشيء"
 #.
 #: ../properties/ev-properties-view.c:260
 msgid "default:mm"
-msgstr ""
+msgstr "default:mm"
 
 #. Imperial measurement (inches)
 #: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%.2f x %.2f in"
-msgstr ""
+msgstr "%.2f x %.2f بوصة"
 
 #. Metric measurement (millimeters)
 #: ../properties/ev-properties-view.c:297
 #, c-format
 msgid "%.0f x %.0f mm"
-msgstr ""
+msgstr "%.0f x %.0f مم"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:308
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr ""
+msgstr "%s، طولي (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:315
 #, c-format
 msgid "%s, Landscape (%s)"
-msgstr ""
+msgstr "%s، عرضيّ (%s)"
 
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
@@ -600,6 +600,11 @@ msgstr "ح_ساس لحالة الأحرف"
 msgid "Toggle case sensitive search"
 msgstr "بدّل البحث الحسّاس لحالة الأحرف"
 
+#: ../shell/ev-history.c:172
+#, fuzzy, c-format
+msgid "Page: %s"
+msgstr "صفحات"
+
 #: ../shell/ev-page-action.c:77
 #, c-format
 msgid "(%d of %d)"
@@ -668,7 +673,7 @@ msgstr "جاري جلب معلومات الخط... %3d%%"
 msgid "Attachments"
 msgstr "مرفقات"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2615
+#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2620
 msgid "Loading..."
 msgstr "تحميل..."
 
@@ -704,63 +709,62 @@ msgstr "لُف العرض لأسفل"
 msgid "Document View"
 msgstr "عرض المستند"
 
-#: ../shell/ev-view.c:1392
+#: ../shell/ev-view.c:1397
 msgid "Go to first page"
 msgstr "اذهب إلى الصفحة الأولى"
 
-#: ../shell/ev-view.c:1394
+#: ../shell/ev-view.c:1399
 msgid "Go to previous page"
 msgstr "اذهب إلى الصفحة السابقة"
 
-#: ../shell/ev-view.c:1396
+#: ../shell/ev-view.c:1401
 msgid "Go to next page"
 msgstr "اذهب إلى الصفحة التالية"
 
-#: ../shell/ev-view.c:1398
+#: ../shell/ev-view.c:1403
 msgid "Go to last page"
 msgstr "اذهب إلى الصفحة الأخيرة"
 
-#: ../shell/ev-view.c:1400
+#: ../shell/ev-view.c:1405
 msgid "Go to page"
 msgstr "اذهب إلى الصفحة"
 
-#: ../shell/ev-view.c:1402
+#: ../shell/ev-view.c:1407
 msgid "Find"
 msgstr "جِد"
 
-#: ../shell/ev-view.c:1429
+#: ../shell/ev-view.c:1434
 #, c-format
 msgid "Go to page %s"
 msgstr "اذهب إلى الصفحة %s"
 
-#: ../shell/ev-view.c:1434
+#: ../shell/ev-view.c:1439
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "اذهب إلى %s في الملف %s"
 
-#: ../shell/ev-view.c:1437
+#: ../shell/ev-view.c:1442
 #, c-format
 msgid "Go to file “%s”"
 msgstr "اذهب إلى الملف \"%s\""
 
-#: ../shell/ev-view.c:1446
+#: ../shell/ev-view.c:1451
 #, c-format
 msgid "Launch %s"
 msgstr "أطلِق %s"
 
-#: ../shell/ev-view.c:1803
+#: ../shell/ev-view.c:1808
 msgid "End of presentation. Press Escape to exit."
-msgstr ""
+msgstr "نهاية العرض. اضغط Escape لتخرج."
 
-#: ../shell/ev-view.c:2335
-#, fuzzy
+#: ../shell/ev-view.c:2340
 msgid "Jump to page:"
-msgstr "اذهب إلى الصفحة"
+msgstr "اقفز إلى الصفحة:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3844
+#: ../shell/ev-view.c:3892
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -769,7 +773,7 @@ msgstr[1] "%d موجودتان على هذه الصفحة"
 msgstr[2] "%d موجودة على هذه الصفحة"
 msgstr[3] "%d موجودة على هذه الصفحة"
 
-#: ../shell/ev-view.c:3853
+#: ../shell/ev-view.c:3901
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% متبقية للبحث"
@@ -783,14 +787,13 @@ msgid "Open Document"
 msgstr "افتح مستند"
 
 #: ../shell/ev-window.c:1300
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't create symlink “%s”: %s"
-msgstr "تعذر حفظ المرفق “%s”: %s"
+msgstr "تعذر إنشاء الرابط الرمزي “%s”: %s"
 
 #: ../shell/ev-window.c:1325
-#, fuzzy
 msgid "Cannot open a copy."
-msgstr "تعذر فتح الملف \"%s\". \n"
+msgstr "لا يمكن فتح نسخة."
 
 #: ../shell/ev-window.c:1599
 #, c-format
@@ -840,12 +843,12 @@ msgid "Toolbar Editor"
 msgstr "محرر شريط الأدوات"
 
 #: ../shell/ev-window.c:3156
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
-"عارض مستندات PostScript و PDF.\n"
+"عارض المستندات.\n"
 "باستخدام poppler %s (%s)"
 
 #: ../shell/ev-window.c:3184
@@ -885,9 +888,8 @@ msgid "Evince"
 msgstr "جلاء"
 
 #: ../shell/ev-window.c:3219
-#, fuzzy
 msgid "© 1996-2007 The Evince authors"
-msgstr "© 1996-2005 مؤلفي برنامج جلاء"
+msgstr "© 1996-2007 مؤلفي برنامج جلاء"
 
 #: ../shell/ev-window.c:3225
 msgid "translator-credits"
@@ -925,14 +927,12 @@ msgid "Open an existing document"
 msgstr "افتح مستند موجود"
 
 #: ../shell/ev-window.c:3695
-#, fuzzy
 msgid "Open a _Copy"
-msgstr "احفظ نسخة"
+msgstr "افتح _نسخة"
 
 #: ../shell/ev-window.c:3696
-#, fuzzy
 msgid "Open a copy of the current document in a new window"
-msgstr "احفظ نسخة من المستند الحالي"
+msgstr "افتح نسخة من المستند الحالي في نافذة جديدة"
 
 #: ../shell/ev-window.c:3698 ../shell/ev-window.c:3863
 msgid "_Save a Copy..."
@@ -943,13 +943,12 @@ msgid "Save a copy of the current document"
 msgstr "احفظ نسخة من المستند الحالي"
 
 #: ../shell/ev-window.c:3701
-#, fuzzy
 msgid "Print Set_up..."
-msgstr "طباعة..."
+msgstr "إ_عداد الطباعة..."
 
 #: ../shell/ev-window.c:3702
 msgid "Setup the page settings for printing"
-msgstr ""
+msgstr "ضبط إعدادات طباعة الصفحة"
 
 #: ../shell/ev-window.c:3704
 msgid "_Print..."
@@ -1133,7 +1132,7 @@ msgstr "ا_ذهب إلى"
 
 #: ../shell/ev-window.c:3853
 msgid "Open in New _Window"
-msgstr ""
+msgstr "افتح فى نافذة _جديدة"
 
 #: ../shell/ev-window.c:3855
 msgid "_Copy Link Address"
@@ -1157,15 +1156,15 @@ msgstr "عدّل مستوى التكبير"
 
 #: ../shell/ev-window.c:3945
 msgid "Navigation"
-msgstr ""
+msgstr "إبحار"
 
 #: ../shell/ev-window.c:3947
 msgid "Back"
-msgstr ""
+msgstr "إلى الخلف"
 
 #: ../shell/ev-window.c:3949
 msgid "Move across visited pages"
-msgstr ""
+msgstr "انتقل عبر الصفحات المُزارة"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:3963
