@@ -4375,6 +4375,8 @@ clear_selection (EvView *view)
 	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
 	view->selection_info.selections = NULL;
 	view->selection_info.in_selection = FALSE;
+	if (view->pixbuf_cache)
+		ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, NULL);
 	g_object_notify (G_OBJECT (view), "has-selection");
 }
 

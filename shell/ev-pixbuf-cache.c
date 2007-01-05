@@ -887,6 +887,7 @@ static void
 clear_job_selection (CacheJobInfo *job_info)
 {
 	job_info->points_set = FALSE;
+	job_info->selection_points.x1 = -1;
 
 	if (job_info->selection) {
 		g_object_unref (job_info->selection);
