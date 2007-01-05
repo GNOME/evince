@@ -1,13 +1,13 @@
 # Vietnamese translation for Evince.
-# Copyright © 2006 Gnome i18n Project for Vietnamese.
-# Clytie Siddall <clytie@riverland.net.au>, 2005-2006.
+# Copyright © 2007 Gnome i18n Project for Vietnamese.
+# Clytie Siddall <clytie@riverland.net.au>, 2005-2007.
 # 
 msgid ""
 ""
 msgstr "Project-Id-Version: evince Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-13 06:55+0200\n"
-"PO-Revision-Date: 2006-08-13 16:56+0930\n"
+"POT-Creation-Date: 2007-01-02 02:08+0000\n"
+"PO-Revision-Date: 2007-01-05 15:45+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -32,48 +32,49 @@ msgstr "Không thể mở đồ đính kèm « %s »: %s"
 msgid "Couldn't open attachment “%s”"
 msgstr "Không thể mở đồ đính kèm « %s »"
 
-#: ../backend/ev-document-factory.c:265
+#: ../backend/ev-document-factory.c:275
+#: ../backend/ev-document-factory.c:339
 msgid "Unknown MIME Type"
 msgstr "Kiểu MIME không rõ"
 
-#: ../backend/ev-document-factory.c:276
+#: ../backend/ev-document-factory.c:286
 #, c-format
 msgid "Unhandled MIME type: “%s”"
 msgstr "Kiểu MIME không được quản lý: « %s »"
 
-#: ../backend/ev-document-factory.c:342
+#: ../backend/ev-document-factory.c:380
 msgid "All Documents"
 msgstr "Mọi tài liệu"
 
-#: ../backend/ev-document-factory.c:350
+#: ../backend/ev-document-factory.c:388
 msgid "PostScript Documents"
 msgstr "Tài liệu Postscript"
 
-#: ../backend/ev-document-factory.c:359
+#: ../backend/ev-document-factory.c:398
 msgid "PDF Documents"
 msgstr "Tài liệu PDF"
 
-#: ../backend/ev-document-factory.c:368
+#: ../backend/ev-document-factory.c:408
 msgid "Images"
 msgstr "Ảnh"
 
-#: ../backend/ev-document-factory.c:378
+#: ../backend/ev-document-factory.c:418
 msgid "DVI Documents"
 msgstr "Tài liệu DVI"
 
-#: ../backend/ev-document-factory.c:388
+#: ../backend/ev-document-factory.c:428
 msgid "Djvu Documents"
 msgstr "Tài liệu Djvu"
 
-#: ../backend/ev-document-factory.c:398
+#: ../backend/ev-document-factory.c:438
 msgid "Comic Books"
 msgstr "Sổ tranh chuyện vui"
 
-#: ../backend/ev-document-factory.c:408
+#: ../backend/ev-document-factory.c:448
 msgid "Impress Slides"
 msgstr "Ảnh chiều Impress"
 
-#: ../backend/ev-document-factory.c:416
+#: ../backend/ev-document-factory.c:456
 msgid "All Files"
 msgstr "Mọi tập tin"
 
@@ -92,6 +93,7 @@ msgid "Open “%s”"
 msgstr "Mở « %s »"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
+#: ../shell/ev-navigation-action.c:123
 msgid "Empty"
 msgstr "Rỗng"
 
@@ -135,9 +137,13 @@ msgstr "Xoá bỏ thanh công cụ đã chọn"
 msgid "Separator"
 msgstr "Bộ phân cách"
 
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+msgid "Running in presentation mode"
+msgstr "Đang chạy trong chế độ trình diễn"
+
 #.translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:3622
+#: ../shell/ev-window.c:3980
 msgid "Best Fit"
 msgstr "Vừa nhất"
 
@@ -182,7 +188,8 @@ msgid "400%"
 msgstr "400%"
 
 #: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window-title.c:126
+#: ../shell/ev-window.c:3160
+#: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "Bộ xem tài liệu"
 
@@ -191,14 +198,18 @@ msgid "View multipage documents"
 msgstr "Xem tài liệu đa trang"
 
 #: ../data/evince-password.glade.h:1
+msgid "Password Entry"
+msgstr "Nhập mật khẩu"
+
+#: ../data/evince-password.glade.h:2
 msgid "Remember password for this session"
 msgstr "Nhớ mật khẩu trong phiên chạy này"
 
-#: ../data/evince-password.glade.h:2
+#: ../data/evince-password.glade.h:3
 msgid "Save password in keyring"
 msgstr "Lưu mật khẩu vào vòng khóa"
 
-#: ../data/evince-password.glade.h:3
+#: ../data/evince-password.glade.h:4
 msgid "_Password:"
 msgstr "_Mật khẩu :"
 
@@ -235,18 +246,22 @@ msgid "<b>Optimized:</b>"
 msgstr "<b>Tối ưu :</b>"
 
 #: ../data/evince-properties.glade.h:9
+msgid "<b>Paper Size:</b>"
+msgstr "<b>Cỡ giấy:</b>"
+
+#: ../data/evince-properties.glade.h:10
 msgid "<b>Producer:</b>"
 msgstr "<b>Nhà sản xuất:</b>"
 
-#: ../data/evince-properties.glade.h:10
+#: ../data/evince-properties.glade.h:11
 msgid "<b>Security:</b>"
 msgstr "<b>Bảo mật:</b>"
 
-#: ../data/evince-properties.glade.h:11
+#: ../data/evince-properties.glade.h:12
 msgid "<b>Subject:</b>"
 msgstr "<b>Chủ đề:</b>"
 
-#: ../data/evince-properties.glade.h:12
+#: ../data/evince-properties.glade.h:13
 msgid "<b>Title:</b>"
 msgstr "<b>Tựa:</b>"
 
@@ -262,75 +277,147 @@ msgstr "Bãi bỏ những sự hạn chế của tài liệu, như sự hạn ch
 msgid "File not available"
 msgstr "Tập tin không sẵn sàng"
 
-#: ../dvi/dvi-document.c:104
+#: ../dvi/dvi-document.c:106
 msgid "DVI document has incorrect format"
 msgstr "Tài liệu DVI có khuôn dạng không đúng"
 
 #.translators: this is the document security state
-#: ../pdf/ev-poppler.cc:591
+#: ../pdf/ev-poppler.cc:624
 msgid "Yes"
 msgstr "Có"
 
 #.translators: this is the document security state
-#: ../pdf/ev-poppler.cc:594
+#: ../pdf/ev-poppler.cc:627
 msgid "No"
 msgstr "Không"
 
-#: ../pdf/ev-poppler.cc:694
+#: ../pdf/ev-poppler.cc:727
 msgid "Type 1"
 msgstr "Kiểu 1"
 
-#: ../pdf/ev-poppler.cc:696
+#: ../pdf/ev-poppler.cc:729
 msgid "Type 1C"
 msgstr "Kiểu 1C"
 
-#: ../pdf/ev-poppler.cc:698
+#: ../pdf/ev-poppler.cc:731
 msgid "Type 3"
 msgstr "Kiểu 3"
 
-#: ../pdf/ev-poppler.cc:700
+#: ../pdf/ev-poppler.cc:733
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../pdf/ev-poppler.cc:702
+#: ../pdf/ev-poppler.cc:735
 msgid "Type 1 (CID)"
 msgstr "Kiểu 1 (CID)"
 
-#: ../pdf/ev-poppler.cc:704
+#: ../pdf/ev-poppler.cc:737
 msgid "Type 1C (CID)"
 msgstr "Kiểu 1C (CID)"
 
-#: ../pdf/ev-poppler.cc:706
+#: ../pdf/ev-poppler.cc:739
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../pdf/ev-poppler.cc:708
+#: ../pdf/ev-poppler.cc:741
 msgid "Unknown font type"
 msgstr "Kiểu phông chữ không rõ"
 
-#: ../pdf/ev-poppler.cc:734
+#: ../pdf/ev-poppler.cc:767
 msgid "No name"
 msgstr "Không tên"
 
-#: ../pdf/ev-poppler.cc:742
+#: ../pdf/ev-poppler.cc:775
 msgid "Embedded subset"
 msgstr "Tập con nhúng"
 
-#: ../pdf/ev-poppler.cc:744
+#: ../pdf/ev-poppler.cc:777
 msgid "Embedded"
 msgstr "Nhúng"
 
-#: ../pdf/ev-poppler.cc:746
+#: ../pdf/ev-poppler.cc:779
 msgid "Not embedded"
 msgstr "Không nhúng"
+
+#: ../impress/zip.c:50
+msgid "No error"
+msgstr "Không lỗi"
+
+#: ../impress/zip.c:53
+msgid "Not enough memory"
+msgstr "Không đủ bộ nhớ"
+
+#: ../impress/zip.c:56
+msgid "Cannot find zip signature"
+msgstr "Không tìm thấy chữ ký zip"
+
+#: ../impress/zip.c:59
+msgid "Invalid zip file"
+msgstr "Tập tin zip không hợp lệ"
+
+#: ../impress/zip.c:62
+msgid "Multi file zips are not supported"
+msgstr "Không hỗ trợ kho nén zip đa tập tin"
+
+#: ../impress/zip.c:65
+msgid "Cannot open the file"
+msgstr "Không thể mở tập tin"
+
+#: ../impress/zip.c:68
+msgid "Cannot read data from file"
+msgstr "Không thể đọc dữ liệu từ tập tin"
+
+#: ../impress/zip.c:71
+msgid "Cannot find file in the zip archive"
+msgstr "Không tìm thấy tập tin trong kho nén zip"
+
+#: ../impress/zip.c:74
+msgid "Unknown error"
+msgstr "Gặp lỗi không rõ"
 
 #: ../properties/ev-properties-main.c:107
 msgid "Document"
 msgstr "Tài liệu"
 
-#: ../properties/ev-properties-view.c:173
+#: ../properties/ev-properties-view.c:179
 msgid "None"
 msgstr "Không có"
+
+#.Translate to the default units to use for presenting
+#.* lengths to the user. Translate to default:inch if you
+#.* want inches, otherwise translate to default:mm.
+#.* Do *not* translate it to "predefinito:mm", if it
+#.* it isn't default:mm or default:inch it will not work
+#.
+#: ../properties/ev-properties-view.c:260
+msgid "default:mm"
+msgstr "default:mm"
+
+#.Imperial measurement (inches)
+#: ../properties/ev-properties-view.c:292
+#, c-format
+msgid "%.2f x %.2f in"
+msgstr "%.2f x %.2f insơ"
+
+#.Metric measurement (millimeters)
+#: ../properties/ev-properties-view.c:297
+#, c-format
+msgid "%.0f x %.0f mm"
+msgstr "%.0f x %.0f mm"
+
+#.Note to translators: first placeholder is the paper name (eg.
+#.* A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:308
+#, c-format
+msgid "%s, Portrait (%s)"
+msgstr "%s, Dọc (%s)"
+
+#.Note to translators: first placeholder is the paper name (eg.
+#.* A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:315
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr "%s, Ngang (%s)"
 
 #: ../ps/gsdefaults.c:30
 msgid "BBox"
@@ -408,48 +495,48 @@ msgstr "10×14"
 msgid "No document loaded."
 msgstr "Chưa tải tài liệu."
 
-#: ../ps/ps-document.c:590
+#: ../ps/ps-document.c:576
 msgid "Broken pipe."
 msgstr "Ống dẫn bị gãy."
 
-#: ../ps/ps-document.c:774
+#: ../ps/ps-document.c:766
 msgid "Interpreter failed."
 msgstr "Lỗi giải thích."
 
-#: ../ps/ps-document.c:900
+#: ../ps/ps-document.c:892
 #, c-format
 msgid "Error while decompressing file “%s”:\n"
 msgstr "Gặp lỗi khi giải nén tập tin « %s »:\n"
 
-#: ../ps/ps-document.c:960
+#: ../ps/ps-document.c:952
 #, c-format
 msgid "Cannot open file “%s”.\n"
 msgstr "Không thể mở tập tin « %s ».\n"
 
-#: ../ps/ps-document.c:965
+#: ../ps/ps-document.c:957
 msgid "File is not readable."
 msgstr "Tập tin không có khả năng đọc."
 
-#: ../ps/ps-document.c:985
+#: ../ps/ps-document.c:977
 msgid "Document loaded."
 msgstr "Tài liệu đã tải."
 
-#: ../ps/ps-document.c:1082
+#: ../ps/ps-document.c:1083
 #, c-format
 msgid ""
 "Failed to load document “%s”. Ghostscript interpreter was not found in path"
 msgstr "Lỗi tải tài liệu « %s » vì không tìm thấy bộ giải thích Ghostscript nằm trên đường dẫn."
 
-#: ../ps/ps-document.c:1094
+#: ../ps/ps-document.c:1095
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "Lỗi tải tài liệu « %s »"
 
-#: ../ps/ps-document.c:1267
+#: ../ps/ps-document.c:1271
 msgid "Encapsulated PostScript"
 msgstr "PostScript đã bao bọc"
 
-#: ../ps/ps-document.c:1268
+#: ../ps/ps-document.c:1272
 msgid "PostScript"
 msgstr "PostScript"
 
@@ -513,12 +600,17 @@ msgstr "Phân biệt ho_a/thường"
 msgid "Toggle case sensitive search"
 msgstr "Bật/tắt tìm kiếm phân biệt hoa/thường"
 
-#: ../shell/ev-page-action.c:168
+#: ../shell/ev-history.c:172
+#, c-format
+msgid "Page: %s"
+msgstr "Trang: %s"
+
+#: ../shell/ev-page-action.c:77
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d trên %d)"
 
-#: ../shell/ev-page-action.c:170
+#: ../shell/ev-page-action.c:79
 #, c-format
 msgid "of %d"
 msgstr "trên %d"
@@ -568,21 +660,21 @@ msgstr "Chung"
 msgid "Fonts"
 msgstr "Phông chữ"
 
-#: ../shell/ev-properties-fonts.c:123
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "Phông chữ"
 
-#: ../shell/ev-properties-fonts.c:134
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Đang tập hợp thông tin về phông chữ... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:615
+#: ../shell/ev-sidebar-attachments.c:663
 msgid "Attachments"
 msgstr "Đính kèm"
 
 #: ../shell/ev-sidebar-links.c:254
-#: ../shell/ev-view.c:2230
+#: ../shell/ev-view.c:2620
 msgid "Loading..."
 msgstr "Đang tải..."
 
@@ -594,7 +686,7 @@ msgstr "In..."
 msgid "Index"
 msgstr "Chỉ mục"
 
-#: ../shell/ev-sidebar-thumbnails.c:659
+#: ../shell/ev-sidebar-thumbnails.c:678
 msgid "Thumbnails"
 msgstr "Hình thu nhỏ"
 
@@ -618,441 +710,499 @@ msgstr "Cuộn ô xem xuống"
 msgid "Document View"
 msgstr "Ô xem tài liệu"
 
-#: ../shell/ev-view.c:1337
+#: ../shell/ev-view.c:1397
 msgid "Go to first page"
 msgstr "Về trang đầu"
 
-#: ../shell/ev-view.c:1339
+#: ../shell/ev-view.c:1399
 msgid "Go to previous page"
 msgstr "Về trang lùi"
 
-#: ../shell/ev-view.c:1341
+#: ../shell/ev-view.c:1401
 msgid "Go to next page"
 msgstr "Tới trang kế"
 
-#: ../shell/ev-view.c:1343
+#: ../shell/ev-view.c:1403
 msgid "Go to last page"
 msgstr "Tới trang cuối"
 
-#: ../shell/ev-view.c:1345
+#: ../shell/ev-view.c:1405
 msgid "Go to page"
 msgstr "Tới trang"
 
-#: ../shell/ev-view.c:1347
+#: ../shell/ev-view.c:1407
 msgid "Find"
 msgstr "Tìm"
 
-#: ../shell/ev-view.c:1374
+#: ../shell/ev-view.c:1434
 #, c-format
 msgid "Go to page %s"
 msgstr "Tới trang %s"
 
-#: ../shell/ev-view.c:1379
+#: ../shell/ev-view.c:1439
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Tới %s trên tập tin « %s »"
 
-#: ../shell/ev-view.c:1382
+#: ../shell/ev-view.c:1442
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Tới tập tin « %s »"
 
-#: ../shell/ev-view.c:1391
+#: ../shell/ev-view.c:1451
 #, c-format
 msgid "Launch %s"
 msgstr "Khởi chạy %s"
 
+#: ../shell/ev-view.c:1808
+msgid "End of presentation. Press Escape to exit."
+msgstr "Kết thúc trình diễn. Bấm phím Esc để thoát."
+
+#: ../shell/ev-view.c:2340
+msgid "Jump to page:"
+msgstr "Tới trang:"
+
 #.TRANS: Sometimes this could be better translated as
 #."%d hit(s) on this page".  Therefore this string
 #.contains plural cases.
-#: ../shell/ev-view.c:3435
+#: ../shell/ev-view.c:3892
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "Tìm kiếm %d lần trên trang này"
 
-#: ../shell/ev-view.c:3444
+#: ../shell/ev-view.c:3901
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% còn lại cần tìm kiếm"
 
-#: ../shell/ev-window.c:1011
+#: ../shell/ev-window.c:1151
 msgid "Unable to open document"
 msgstr "Không thể mở tài liệu"
 
-#: ../shell/ev-window.c:1100
+#: ../shell/ev-window.c:1245
 msgid "Open Document"
 msgstr "Mở tài liệu"
 
-#: ../shell/ev-window.c:1308
+#: ../shell/ev-window.c:1300
+#, c-format
+msgid "Couldn't create symlink “%s”: %s"
+msgstr "Không thể tạo liên kết tượng trưng « %s »: %s"
+
+#: ../shell/ev-window.c:1325
+msgid "Cannot open a copy."
+msgstr "Không thể mở bản sao."
+
+#: ../shell/ev-window.c:1599
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Không thể lưu tập tin này là « %s »."
 
-#: ../shell/ev-window.c:1327
-#: ../shell/ev-window.c:3976
+#: ../shell/ev-window.c:1618
+#: ../shell/ev-window.c:4354
 msgid "Save a Copy"
 msgstr "Lưu một bản sao"
 
-#: ../shell/ev-window.c:1380
+#: ../shell/ev-window.c:1699
 msgid "Failed to print document"
 msgstr "Lỗi in tài liệu"
 
-#: ../shell/ev-window.c:1494
-#: ../shell/ev-window.c:1669
+#: ../shell/ev-window.c:1800
+#: ../shell/ev-window.c:1985
 msgid "Printing is not supported on this printer."
 msgstr "Không hỗ trợ khả năng in trên máy in này."
 
-#: ../shell/ev-window.c:1604
-#: ../shell/ev-window.c:1720
+#: ../shell/ev-window.c:1910
+#: ../shell/ev-window.c:2036
 msgid "Print"
 msgstr "In"
 
-#: ../shell/ev-window.c:1659
+#: ../shell/ev-window.c:1975
 msgid "Generating PDF is not supported"
 msgstr "Không hỗ trợ khả năng tạo ra tài liệu dạng thức PDF"
 
-#: ../shell/ev-window.c:1671
+#: ../shell/ev-window.c:1987
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
 "requires a PostScript printer driver."
-msgstr "Bạn đã thử in vào máy in bằng trình điều khiển « %s ». Trình này cần thiết trình điều khiển máy in kiểu PostScript."
+msgstr "Bạn đã thử in vào máy in bằng trình điều khiển « %s ». Trình này cần thiết "
+"trình điều khiển máy in kiểu PostScript."
 
-#: ../shell/ev-window.c:1729
+#: ../shell/ev-window.c:2045
 msgid "Pages"
 msgstr "Trang"
 
 #.Toolbar-only
-#: ../shell/ev-window.c:2089
-#: ../shell/ev-window.c:3423
+#: ../shell/ev-window.c:2412
+#: ../shell/ev-window.c:3768
 msgid "Leave Fullscreen"
 msgstr "Rời toàn màn hình"
 
-#: ../shell/ev-window.c:2469
+#: ../shell/ev-window.c:2781
 msgid "Toolbar Editor"
 msgstr "Bộ sửa thanh công cụ"
 
-#: ../shell/ev-window.c:2840
+#: ../shell/ev-window.c:3156
 #, c-format
 msgid ""
-"PostScript and PDF File Viewer.\n"
+"Document Viewer.\n"
 "Using poppler %s (%s)"
-msgstr "Bộ xem tập tin PostScript và PDF.\n"
+msgstr "Bộ xem tài liệu.\n"
 "Dùng poppler %s (%s)"
 
-#: ../shell/ev-window.c:2864
+#: ../shell/ev-window.c:3184
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
-msgstr "Chương trình này là phần mềm tự do; bạn có thể phát hành lại nó và/hoặc sửa đổi nó với điều kiện của Giấy phép Công cộng GNU như được xuất bản bởi Tổ chức Phần mềm Tự do; hoặc phiên bản 2 của Giấy phép này, hoặc (tùy chọn) bất kỳ phiên bản sau nào.\n"
+msgstr "Chương trình này là phần mềm tự do; bạn có thể phát hành lại nó và/hoặc sửa "
+"đổi nó với điều kiện của Giấy phép Công cộng GNU như được xuất bản bởi Tổ "
+"chức Phần mềm Tự do; hoặc phiên bản 2 của Giấy phép này, hoặc (tùy chọn) bất "
+"kỳ phiên bản sau nào.\n"
 
-#: ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:3188
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
-msgstr "Chương trình này là phần mềm tự do; bạn có thể phát hành lại nó và/hoặc sửa đổi nó với điều kiện của Giấy phép Công cộng GNU như được xuất bản bởi Tổ chức Phần mềm Tự do; hoặc phiên bản 2 của Giấy phép này, hoặc (tùy chọn) bất kỳ phiên bản sau nào.\n"
+msgstr "Chương trình này là phần mềm tự do; bạn có thể phát hành lại nó và/hoặc sửa "
+"đổi nó với điều kiện của Giấy phép Công cộng GNU như được xuất bản bởi Tổ "
+"chức Phần mềm Tự do; hoặc phiên bản 2 của Giấy phép này, hoặc (tùy chọn) bất "
+"kỳ phiên bản sau nào.\n"
 
-#: ../shell/ev-window.c:2872
+#: ../shell/ev-window.c:3192
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr "Bạn đã nhận một bản sao của Giấy phép Công cộng GNU cùng với chương trình này; nếu không, hãy viết thư cho Tổ chức Phần mềm Tự do,\n"
+msgstr "Bạn đã nhận một bản sao của Giấy phép Công cộng GNU cùng với chương trình "
+"này; nếu không, hãy viết thư cho Tổ chức Phần mềm Tự do,\n"
 "Free Software Foundation, Inc.,\n"
 " 51 Franklin Street, Fifth Floor,\n"
 "Boston, MA  02110-1301, USA\n"
 
-#: ../shell/ev-window.c:2896
-#: ../shell/main.c:308
+#: ../shell/ev-window.c:3216
+#: ../shell/main.c:340
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2899
-msgid "© 1996-2005 The Evince authors"
-msgstr "© năm 1996-2005 Những Tác Giả Evince"
+#: ../shell/ev-window.c:3219
+msgid "© 1996-2007 The Evince authors"
+msgstr "© năm 1996-2007 Những Tác Giả Evince"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:3225
 msgid "translator-credits"
 msgstr "Nhóm Việt hóa Gnome <gnomevi-list@lists.sourceforge.net>"
 
-#: ../shell/ev-window.c:3350
+#: ../shell/ev-window.c:3685
 msgid "_File"
 msgstr "_Tập tin"
 
-#: ../shell/ev-window.c:3351
+#: ../shell/ev-window.c:3686
 msgid "_Edit"
 msgstr "_Sửa"
 
-#: ../shell/ev-window.c:3352
+#: ../shell/ev-window.c:3687
 msgid "_View"
 msgstr "_Xem"
 
-#: ../shell/ev-window.c:3353
+#: ../shell/ev-window.c:3688
 msgid "_Go"
 msgstr "Tớ_i"
 
-#: ../shell/ev-window.c:3354
+#: ../shell/ev-window.c:3689
 msgid "_Help"
 msgstr "Trợ _giúp"
 
 #.File menu
-#: ../shell/ev-window.c:3357
-#: ../shell/ev-window.c:3514
+#: ../shell/ev-window.c:3692
+#: ../shell/ev-window.c:3861
 msgid "_Open..."
 msgstr "_Mở..."
 
-#: ../shell/ev-window.c:3358
+#: ../shell/ev-window.c:3693
 msgid "Open an existing document"
 msgstr "Mở một tài liệu đã có"
 
-#: ../shell/ev-window.c:3360
-#: ../shell/ev-window.c:3516
+#: ../shell/ev-window.c:3695
+msgid "Open a _Copy"
+msgstr "Mở _bản sao"
+
+#: ../shell/ev-window.c:3696
+msgid "Open a copy of the current document in a new window"
+msgstr "Mở một bản sao của tài liệu hiện thời trong cửa sổ mới"
+
+#: ../shell/ev-window.c:3698
+#: ../shell/ev-window.c:3863
 msgid "_Save a Copy..."
 msgstr "Lưu một bản _sao..."
 
-#: ../shell/ev-window.c:3361
+#: ../shell/ev-window.c:3699
 msgid "Save a copy of the current document"
 msgstr "Lưu một bản sao của tài liệu hiện có"
 
-#: ../shell/ev-window.c:3363
+#: ../shell/ev-window.c:3701
+msgid "Print Set_up..."
+msgstr "Thiết lậ_p in..."
+
+#: ../shell/ev-window.c:3702
+msgid "Setup the page settings for printing"
+msgstr "Thiết lập trang để in"
+
+#: ../shell/ev-window.c:3704
 msgid "_Print..."
 msgstr "_In..."
 
-#: ../shell/ev-window.c:3364
+#: ../shell/ev-window.c:3705
 msgid "Print this document"
 msgstr "In tài liệu này"
 
-#: ../shell/ev-window.c:3366
+#: ../shell/ev-window.c:3707
 msgid "P_roperties"
 msgstr "Tài _sản"
 
-#: ../shell/ev-window.c:3374
+#: ../shell/ev-window.c:3716
+#: ../shell/ev-window.c:3718
 msgid "Select _All"
 msgstr "Chọn tất _cả"
 
-#: ../shell/ev-window.c:3376
+#: ../shell/ev-window.c:3721
 msgid "_Find..."
 msgstr "_Tìm..."
 
-#: ../shell/ev-window.c:3377
+#: ../shell/ev-window.c:3722
 msgid "Find a word or phrase in the document"
 msgstr "Tìm một đoạn chữ trong tài liệu"
 
-#: ../shell/ev-window.c:3379
+#: ../shell/ev-window.c:3724
 msgid "Find Ne_xt"
 msgstr "Tìm _kế"
 
-#: ../shell/ev-window.c:3381
+#: ../shell/ev-window.c:3726
 msgid "Find Pre_vious"
 msgstr "Tìm _lùi"
 
-#: ../shell/ev-window.c:3383
+#: ../shell/ev-window.c:3728
 msgid "T_oolbar"
 msgstr "Thanh _công cụ"
 
-#: ../shell/ev-window.c:3385
+#: ../shell/ev-window.c:3730
 msgid "Rotate _Left"
 msgstr "Xoay t_rái"
 
-#: ../shell/ev-window.c:3387
+#: ../shell/ev-window.c:3732
 msgid "Rotate _Right"
 msgstr "Xoay _phải"
 
-#: ../shell/ev-window.c:3392
+#: ../shell/ev-window.c:3737
 msgid "Enlarge the document"
 msgstr "Phóng to tài liệu"
 
-#: ../shell/ev-window.c:3395
+#: ../shell/ev-window.c:3740
 msgid "Shrink the document"
 msgstr "Thu nhỏ tài liệu"
 
-#: ../shell/ev-window.c:3397
+#: ../shell/ev-window.c:3742
 msgid "_Reload"
 msgstr "Tải _lại"
 
-#: ../shell/ev-window.c:3398
+#: ../shell/ev-window.c:3743
 msgid "Reload the document"
 msgstr "Tải lại tài liệu"
 
 #.Go menu
-#: ../shell/ev-window.c:3402
+#: ../shell/ev-window.c:3747
 msgid "_Previous Page"
 msgstr "Trang _lùi"
 
-#: ../shell/ev-window.c:3403
+#: ../shell/ev-window.c:3748
 msgid "Go to the previous page"
 msgstr "Trở về trang trước"
 
-#: ../shell/ev-window.c:3405
+#: ../shell/ev-window.c:3750
 msgid "_Next Page"
 msgstr "Trang _kế"
 
-#: ../shell/ev-window.c:3406
+#: ../shell/ev-window.c:3751
 msgid "Go to the next page"
 msgstr "Đi tới trang kế tiếp."
 
-#: ../shell/ev-window.c:3408
+#: ../shell/ev-window.c:3753
 msgid "_First Page"
 msgstr "Trang đầ_u"
 
-#: ../shell/ev-window.c:3409
+#: ../shell/ev-window.c:3754
 msgid "Go to the first page"
 msgstr "Trở về trang thứ nhất"
 
-#: ../shell/ev-window.c:3411
+#: ../shell/ev-window.c:3756
 msgid "_Last Page"
 msgstr "Trang cuố_i"
 
-#: ../shell/ev-window.c:3412
+#: ../shell/ev-window.c:3757
 msgid "Go to the last page"
 msgstr "Đi tới trang cuối cùng"
 
 #.Help menu
-#: ../shell/ev-window.c:3416
+#: ../shell/ev-window.c:3761
 msgid "_Contents"
 msgstr "Mụ_c lục"
 
-#: ../shell/ev-window.c:3419
+#: ../shell/ev-window.c:3764
 msgid "_About"
 msgstr "_Giới thiệu"
 
-#: ../shell/ev-window.c:3424
+#: ../shell/ev-window.c:3769
 msgid "Leave fullscreen mode"
 msgstr "Rời chế độ toàn màn hình"
 
 #.View Menu
-#: ../shell/ev-window.c:3475
+#: ../shell/ev-window.c:3820
 msgid "_Toolbar"
 msgstr "_Thanh công cụ"
 
-#: ../shell/ev-window.c:3476
+#: ../shell/ev-window.c:3821
 msgid "Show or hide the toolbar"
 msgstr "Hiện/ẩn thanh công cụ"
 
-#: ../shell/ev-window.c:3478
+#: ../shell/ev-window.c:3823
 msgid "Side _Pane"
 msgstr "Khung _lề"
 
-#: ../shell/ev-window.c:3479
+#: ../shell/ev-window.c:3824
 msgid "Show or hide the side pane"
 msgstr "Hiện/ẩn khung lề"
 
-#: ../shell/ev-window.c:3481
+#: ../shell/ev-window.c:3826
 msgid "_Continuous"
 msgstr "Liên tụ_c"
 
-#: ../shell/ev-window.c:3482
+#: ../shell/ev-window.c:3827
 msgid "Show the entire document"
 msgstr "Hiển thị toàn bộ tài liệu"
 
-#: ../shell/ev-window.c:3484
+#: ../shell/ev-window.c:3829
 msgid "_Dual"
 msgstr "Đô_i"
 
-#: ../shell/ev-window.c:3485
+#: ../shell/ev-window.c:3830
 msgid "Show two pages at once"
 msgstr "Hiển thị hai trang đồng thời"
 
-#: ../shell/ev-window.c:3487
+#: ../shell/ev-window.c:3832
 msgid "_Fullscreen"
 msgstr "T_oàn màn hình"
 
-#: ../shell/ev-window.c:3488
+#: ../shell/ev-window.c:3833
 msgid "Expand the window to fill the screen"
 msgstr "Mở rộng cửa sổ để chiếm màn hình"
 
-#: ../shell/ev-window.c:3490
+#: ../shell/ev-window.c:3835
 msgid "_Presentation"
 msgstr "Trình _diễn"
 
-#: ../shell/ev-window.c:3491
+#: ../shell/ev-window.c:3836
 msgid "Run document as a presentation"
 msgstr "Chạy tài liệu như là trình diễn"
 
-#: ../shell/ev-window.c:3493
+#: ../shell/ev-window.c:3838
 msgid "_Best Fit"
 msgstr "_Vừa nhất"
 
-#: ../shell/ev-window.c:3494
+#: ../shell/ev-window.c:3839
 msgid "Make the current document fill the window"
 msgstr "Làm cho tài liệu hiện thời chiếm cửa sổ"
 
-#: ../shell/ev-window.c:3496
+#: ../shell/ev-window.c:3841
 msgid "Fit Page _Width"
 msgstr "Vừa độ _rộng trang"
 
-#: ../shell/ev-window.c:3497
+#: ../shell/ev-window.c:3842
 msgid "Make the current document fill the window width"
 msgstr "Làm cho tài liệu hiện thời chiếm độ rộng của cửa sổ"
 
 #.Links
-#: ../shell/ev-window.c:3504
+#: ../shell/ev-window.c:3849
 msgid "_Open Link"
 msgstr "_Mở liên kết"
 
-#: ../shell/ev-window.c:3506
+#: ../shell/ev-window.c:3851
 msgid "_Go To"
 msgstr "_Tới"
 
-#: ../shell/ev-window.c:3508
+#: ../shell/ev-window.c:3853
+msgid "Open in New _Window"
+msgstr "Mở trong cửa _sổ mới"
+
+#: ../shell/ev-window.c:3855
 msgid "_Copy Link Address"
 msgstr "_Chép địa chỉ liên kết"
 
-#: ../shell/ev-window.c:3571
+#: ../shell/ev-window.c:3920
 msgid "Page"
 msgstr "Trang"
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3921
 msgid "Select Page"
 msgstr "Chọn trang"
 
-#: ../shell/ev-window.c:3584
+#: ../shell/ev-window.c:3933
 msgid "Zoom"
 msgstr "Thu/phóng"
 
-#: ../shell/ev-window.c:3586
+#: ../shell/ev-window.c:3935
 msgid "Adjust the zoom level"
 msgstr "Chỉnh cấp thu/phóng"
 
+#: ../shell/ev-window.c:3945
+msgid "Navigation"
+msgstr "Duyệt qua"
+
+#: ../shell/ev-window.c:3947
+msgid "Back"
+msgstr "Lùi"
+
+#: ../shell/ev-window.c:3949
+msgid "Move across visited pages"
+msgstr "Duyệt qua các trang đã thăm"
+
 #.translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:3963
 msgid "Previous"
 msgstr "Lùi"
 
 #.translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3608
+#: ../shell/ev-window.c:3968
 msgid "Next"
 msgstr "Kế"
 
 #.translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3612
+#: ../shell/ev-window.c:3972
 msgid "Zoom In"
 msgstr "To"
 
 #.translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3617
+#: ../shell/ev-window.c:3976
 msgid "Zoom Out"
 msgstr "Nhỏ"
 
 #.translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3627
+#: ../shell/ev-window.c:3984
 msgid "Fit Width"
 msgstr "Vừa rộng"
 
-#: ../shell/ev-window.c:3905
+#: ../shell/ev-window.c:4283
 msgid "Unable to open attachment"
 msgstr "Không thể mở đồ đính kèm"
 
-#: ../shell/ev-window.c:3952
+#: ../shell/ev-window.c:4330
 msgid "The attachment could not be saved."
 msgstr "Không thể lưu đồ đính kèm."
 
-#: ../shell/ev-window-title.c:140
+#: ../shell/ev-window-title.c:141
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s — cần thiết mật khẩu"
@@ -1077,15 +1227,15 @@ msgstr "Chạy trình Evince trong chế độ trình diễn"
 msgid "Run evince as a previewer"
 msgstr "Chạy trình Evince như là bộ xem thử"
 
-#: ../shell/main.c:58
+#: ../shell/main.c:59
 msgid "[FILE...]"
 msgstr "[TẬP TIN...]"
 
-#: ../shell/main.c:293
+#: ../shell/main.c:325
 msgid "GNOME Document Viewer"
 msgstr "Bộ Xem Tài Liệu GNOME"
 
-#: ../shell/main.c:334
+#: ../shell/main.c:367
 msgid "Evince Document Viewer"
 msgstr "Bộ Xem Tài Liệu Evince"
 
@@ -1107,4 +1257,5 @@ msgstr "Lệnh hình thu nhỏ cho tài liệu PDF"
 msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
-msgstr "Lệnh hợp lệ cộng với đối số cho bộ tạo hình thu nhỏ tài liệu PDF. Xem tài liệu hướng dẫn Nautilus về hình thu nhỏ để tìm thông tin thêm."
+msgstr "Lệnh hợp lệ cộng với đối số cho bộ tạo hình thu nhỏ tài liệu PDF. Xem tài "
+"liệu hướng dẫn Nautilus về hình thu nhỏ để tìm thông tin thêm."
