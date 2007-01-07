@@ -1,5 +1,35 @@
 2007-01-07  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* data/evince-ui.xml:
+	* pdf/ev-poppler.cc: (pdf_document_images_get_images),
+	(pdf_document_document_images_iface_init):
+	* backend/Makefile.am:
+	* backend/ev-document-images.[ch]:
+	* backend/ev-image.[ch]:
+	* lib/ev-file-helpers.[ch]: (ev_tmp_filename):
+	* shell/ev-jobs.[ch]: (ev_job_render_new), (ev_job_render_run),
+	(ev_job_xfer_run):
+	* shell/ev-pixbuf-cache.[ch]: (dispose_cache_job_info),
+	(move_one_job), (copy_job_to_job_info), (add_job_if_needed),
+	(ev_pixbuf_cache_get_image_mapping):
+	* shell/ev-window.c: (view_menu_link_popup), (view_menu_image_popup),
+	(view_menu_popup_cb), (ev_window_dispose),
+	(image_save_dialog_response_cb), (ev_view_popup_cmd_save_image_as),
+	(ev_view_popup_cmd_copy_image):
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_get_image_at_location),
+	(ev_view_do_popup_menu), (ev_view_popup_menu),
+	(ev_view_button_press_event), (ev_view_drag_data_get),
+	(ev_view_drag_motion), (ev_view_drag_data_received),
+	(ev_view_motion_notify_event), (ev_view_button_release_event),
+	(ev_view_finalize), (ev_view_class_init):
+
+	Add image handling support. Fixes bugs #310008 and #325047. Images
+	selection is not supported yet. 
+
+2007-01-07  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (drag_data_received_cb), (ev_window_init):
 	* shell/ev-view.c: (ev_view_drag_data_received), (ev_view_class_init),
 	(ev_view_init):

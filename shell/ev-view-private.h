@@ -24,6 +24,7 @@
 #include "ev-view.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
+#include "ev-image.h"
 
 /* Information for middle clicking and moving around the doc */
 typedef struct {
@@ -40,6 +41,13 @@ typedef struct {
 	gboolean in_selection;
 	GList *selections;
 } SelectionInfo;
+
+/* Information for handling images DND */
+typedef struct {
+	gboolean in_drag;
+	GdkPoint start;
+	EvImage *image;
+} ImageDNDInfo;
 
 typedef enum {
 	SCROLL_TO_KEEP_POSITION,
@@ -126,6 +134,9 @@ struct _EvView {
 
 	EvViewSelectionMode selection_mode;
 	SelectionInfo selection_info;
+
+	/* Image DND */
+	ImageDNDInfo image_dnd_info;
 
 	/* Links */
 	GtkWidget *link_tooltip;

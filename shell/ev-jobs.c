@@ -2,6 +2,7 @@
 #include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
+#include "ev-document-images.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
@@ -260,6 +261,7 @@ ev_job_render_new (EvDocument      *document,
 		   GdkColor        *text,
 		   GdkColor        *base,
 		   gboolean         include_links,
+		   gboolean         include_images,
 		   gboolean         include_text,
 		   gboolean         include_selection)
 {
@@ -278,6 +280,7 @@ ev_job_render_new (EvDocument      *document,
 	job->text = *text;
 	job->base = *base;
 	job->include_links = include_links;
+	job->include_images = include_images;
 	job->include_text = include_text;
 	job->include_selection = include_selection;
 
@@ -323,6 +326,10 @@ ev_job_render_run (EvJobRender *job)
 			job->link_mapping =
 				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
 							     job->rc->page);
+		if (job->include_images && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
+			job->image_mapping =
+				ev_document_images_get_images (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
+							       job->rc->page);
 		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
 			job->text_mapping =
 				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document),
@@ -507,7 +514,7 @@ ev_job_xfer_run (EvJobXfer *job)
 		/* We'd like to keep extension of source uri since
 		 * it helps to resolve some mime types, say cbz */
 		
-		tmp_name = ev_tmp_filename ();
+		tmp_name = ev_tmp_filename (NULL);
 		base_name = gnome_vfs_uri_extract_short_name (source_uri);
 		job->local_uri = g_strconcat ("file:", tmp_name, "-", base_name, NULL);
 		g_free (base_name);

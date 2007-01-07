@@ -125,6 +125,7 @@ struct _EvJobRender
 
 	GList *link_mapping;
 	GdkRegion *text_mapping;
+	GList *image_mapping;
 
 	GdkPixbuf *selection;
 	GdkRegion *selection_region;
@@ -135,6 +136,7 @@ struct _EvJobRender
 	gint include_links : 1;
 	gint include_text : 1;
 	gint include_selection : 1;
+	gint include_images : 1;
 };
 
 struct _EvJobRenderClass
@@ -224,6 +226,7 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 					   GdkColor        *text,
 					   GdkColor        *base,
 					   gboolean         include_links,
+					   gboolean         include_images,
 					   gboolean         include_text,
 					   gboolean         include_selection);
 void            ev_job_render_run         (EvJobRender     *thumbnail);

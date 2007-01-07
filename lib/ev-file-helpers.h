@@ -33,7 +33,7 @@ void         ev_file_helpers_init     (void);
 
 void         ev_file_helpers_shutdown (void);
 
-gchar*       ev_tmp_filename          (void);
+gchar*       ev_tmp_filename          (const char *prefix);
 
 gboolean     ev_xfer_uri_simple       (const char *from,
 				       const char *to,

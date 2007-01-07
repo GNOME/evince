@@ -35,12 +35,14 @@
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-document-links.h"
+#include "ev-document-images.h"
 #include "ev-document-fonts.h"
 #include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-transition.h"
 #include "ev-selection.h"
 #include "ev-attachment.h"
+#include "ev-image.h"
 
 typedef struct {
 	PdfDocument *document;
@@ -83,6 +85,7 @@ static void pdf_document_document_iface_init            (EvDocumentIface        
 static void pdf_document_security_iface_init            (EvDocumentSecurityIface   *iface);
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
+static void pdf_document_document_images_iface_init     (EvDocumentImagesIface     *iface);
 static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface      *iface);
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
 static void pdf_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
@@ -113,6 +116,8 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
 							pdf_document_document_links_iface_init);
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
+							pdf_document_document_images_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
 							pdf_document_document_fonts_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
@@ -1121,6 +1126,50 @@ pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 	iface->get_links_model = pdf_document_links_get_links_model;
 	iface->get_links = pdf_document_links_get_links;
 	iface->find_link_dest = pdf_document_links_find_link_dest;
+}
+
+static GList *
+pdf_document_images_get_images (EvDocumentImages *document_images,
+				gint              page)
+{
+	GList *retval = NULL;
+#ifdef HAVE_POPPLER_PAGE_GET_IMAGE_MAPPING
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	GList *mapping_list;
+	GList *list;
+
+	pdf_document = PDF_DOCUMENT (document_images);
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	mapping_list = poppler_page_get_image_mapping (poppler_page);
+
+	for (list = mapping_list; list; list = list->next) {
+		PopplerImageMapping *image_mapping;
+		EvImageMapping *ev_image_mapping;
+
+		image_mapping = (PopplerImageMapping *)list->data;
+
+		ev_image_mapping = g_new (EvImageMapping, 1);
+		
+		ev_image_mapping->image = ev_image_new_from_pixbuf (image_mapping->image);
+		ev_image_mapping->x1 = image_mapping->area.x1;
+		ev_image_mapping->x2 = image_mapping->area.x2;
+		ev_image_mapping->y1 = image_mapping->area.y1;
+		ev_image_mapping->y2 = image_mapping->area.y2;
+
+		retval = g_list_prepend (retval, ev_image_mapping);
+	}
+
+	poppler_page_free_image_mapping (mapping_list);
+	g_object_unref (poppler_page);
+#endif /* HAVE_POPPLER_PAGE_GET_IMAGE_MAPPING */
+	return retval;
+}
+
+static void
+pdf_document_document_images_iface_init (EvDocumentImagesIface *iface)
+{
+	iface->get_images = pdf_document_images_get_images;
 }
 
 static GdkPixbuf *

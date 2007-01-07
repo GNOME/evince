@@ -28,6 +28,8 @@ libevbackend_la_SOURCES=			\
 	ev-link-action.h			\
 	ev-link-dest.c				\
 	ev-link-dest.h				\
+	ev-image.c				\
+	ev-image.h				\
 	ev-document.c				\
 	ev-document.h				\
 	ev-document-factory.c			\
@@ -38,6 +40,8 @@ libevbackend_la_SOURCES=			\
 	ev-document-fonts.h			\
 	ev-document-links.c			\
 	ev-document-links.h			\
+	ev-document-images.c			\
+	ev-document-images.h			\
 	ev-document-security.c			\
 	ev-document-security.h			\
 	ev-document-find.c			\

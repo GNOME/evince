@@ -212,6 +212,7 @@ if test "x$enable_pdf" = "xyes"; then
 	    LIBS="$LIBS $FRONTEND_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
 	    AC_CHECK_FUNCS(poppler_page_get_duration)
+	    AC_CHECK_FUNCS(poppler_page_get_image_mapping)
 	    LIBS=$evince_save_LIBS
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)

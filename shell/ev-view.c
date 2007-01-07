@@ -35,6 +35,7 @@
 #include "ev-utils.h"
 #include "ev-selection.h"
 #include "ev-document-links.h"
+#include "ev-document-images.h"
 #include "ev-document-find.h"
 #include "ev-document-transition.h"
 #include "ev-document-misc.h"
@@ -70,6 +71,12 @@ enum {
 	SIGNAL_EXTERNAL_LINK,
 	SIGNAL_POPUP_MENU,
 	N_SIGNALS,
+};
+
+enum {
+	TARGET_DND_URI,
+	TARGET_DND_TEXT,
+	TARGET_DND_IMAGE
 };
 
 enum {
@@ -1113,6 +1120,9 @@ ev_view_get_link_at_location (EvView  *view,
 	gint x_offset = 0, y_offset = 0;
 	gint x_new = 0, y_new = 0;
 	GList *link_mapping;
+
+	if (!EV_IS_DOCUMENT_LINKS (view->document))
+		return NULL;
 	
 	x += view->scroll_x;
 	y += view->scroll_y;
@@ -1508,6 +1518,40 @@ handle_link_over_xy (EvView *view, gint x, gint y)
 	return;
 }
 
+/*** Images ***/
+static EvImage *
+ev_view_get_image_at_location (EvView  *view,
+			       gdouble  x,
+			       gdouble  y)
+{
+	gint page = -1;
+	gint x_offset = 0, y_offset = 0;
+	gint x_new = 0, y_new = 0;
+	GList *image_mapping;
+
+	if (!EV_IS_DOCUMENT_IMAGES (view->document))
+		return NULL;
+
+	x += view->scroll_x;
+	y += view->scroll_y;
+
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+
+	if (page == -1)
+		return NULL;
+
+	if (get_doc_point_from_offset (view, page, x_offset,
+				       y_offset, &x_new, &y_new) == FALSE)
+		return NULL;
+
+	image_mapping = ev_pixbuf_cache_get_image_mapping (view->pixbuf_cache, page);
+
+	if (image_mapping)
+		return ev_image_mapping_find (image_mapping, x_new, y_new);
+	else
+		return NULL;
+}
+
 /*** GtkWidget implementation ***/
 
 static void
@@ -1900,16 +1944,37 @@ ev_view_expose_event (GtkWidget      *widget,
 }
 
 static gboolean
+ev_view_do_popup_menu (EvView *view,
+		       gdouble x,
+		       gdouble y)
+{
+	EvLink  *link;
+	EvImage *image;
+
+	image = ev_view_get_image_at_location (view, x, y);
+	if (image) {
+		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, image);
+		return TRUE;
+	}
+
+	link = ev_view_get_link_at_location (view, x, y);
+	if (link) {
+		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
+		return TRUE;
+	}
+
+	g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, NULL);
+
+	return TRUE;
+}
+
+static gboolean
 ev_view_popup_menu (GtkWidget *widget)
 {
-    gint x, y;
-    EvLink *link;
-    EvView *view = EV_VIEW (widget);
-    
-    gtk_widget_get_pointer (widget, &x, &y);
-    link = ev_view_get_link_at_location (view, x, y);
-    g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
-    return TRUE;
+	gint x, y;
+	
+	gtk_widget_get_pointer (widget, &x, &y);
+	return ev_view_do_popup_menu (EV_VIEW (widget), x, y);
 }
 
 static gboolean
@@ -1917,7 +1982,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
-	EvLink *link;
 	
 	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
 		gtk_widget_grab_focus (widget);
@@ -1927,7 +1991,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 	view->selection_info.in_drag = FALSE;
 	
 	switch (event->button) {
-	        case 1:
+	        case 1: {
+			EvImage *image;
+
 			if (view->selection_info.selections) {
 				if (location_in_selected_text (view,
 							       event->x + view->scroll_x,
@@ -1938,11 +2004,19 @@ ev_view_button_press_event (GtkWidget      *widget,
 				}
 				
 				gtk_widget_queue_draw (widget);
+			} else if ((image = ev_view_get_image_at_location (view, event->x, event->y))) {
+				if (view->image_dnd_info.image)
+					g_object_unref (view->image_dnd_info.image);
+				view->image_dnd_info.image = g_object_ref (image);
+				view->image_dnd_info.in_drag = TRUE;
+
+				view->image_dnd_info.start.x = event->x + view->scroll_x;
+				view->image_dnd_info.start.y = event->y + view->scroll_y;
 			}
 
 			view->selection_info.start.x = event->x + view->scroll_x;
 			view->selection_info.start.y = event->y + view->scroll_y;
-			
+		}			
 			return TRUE;
 		case 2:
 			/* use root coordinates as reference point because
@@ -1956,9 +2030,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 			return TRUE;
 		case 3:
-			link = ev_view_get_link_at_location (view, event->x, event->y);
-			g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
-			return TRUE;
+			return ev_view_do_popup_menu (view, event->x, event->y);
 	}
 	
 	return FALSE;
@@ -1974,18 +2046,62 @@ ev_view_drag_data_get (GtkWidget        *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
-	if (view->selection_info.selections &&
-	    ev_document_can_get_text (view->document)) {
-		gchar *text;
+	switch (info) {
+	        case TARGET_DND_TEXT:
+			if (view->selection_info.selections &&
+			    ev_document_can_get_text (view->document)) {
+				gchar *text;
 
-		text = get_selected_text (view);
+				text = get_selected_text (view);
+				
+				gtk_selection_data_set_text (selection_data,
+							     text,
+							     strlen (text));
+				
+				g_free (text);
+			}
+			break;
+	        case TARGET_DND_IMAGE:
+			if (view->image_dnd_info.image) {
+				GdkPixbuf *pixbuf;
 
-		gtk_selection_data_set_text (selection_data, text, strlen (text));
+				pixbuf = ev_image_get_pixbuf (view->image_dnd_info.image);
+				gtk_selection_data_set_pixbuf (selection_data, pixbuf);
+			}
+			break;
+	        case TARGET_DND_URI:
+			if (view->image_dnd_info.image) {
+				const gchar *tmp_uri;
+				gchar      **uris;
 
-		g_free (text);
+				tmp_uri = ev_image_save_tmp (view->image_dnd_info.image);
+
+				uris = g_new0 (gchar *, 2);
+				uris[0] = (gchar *)tmp_uri;
+				
+				gtk_selection_data_set_uris (selection_data, uris);
+
+				/* g_free instead of g_strfreev since tmp_uri is const */ 
+				g_free (uris);
+			}
 	}
 }
 
+static gboolean
+ev_view_drag_motion (GtkWidget      *widget,
+		     GdkDragContext *context,
+		     gint            x,
+		     gint            y,
+		     guint           time)
+{
+	if (gtk_drag_get_source_widget (context) == widget)
+		gdk_drag_status (context, 0, time);
+	else
+		gdk_drag_status (context, context->suggested_action, time);
+	
+	return TRUE;
+}
+		     
 static void
 ev_view_drag_data_received (GtkWidget          *widget,
 			    GdkDragContext     *context,
@@ -2086,16 +2202,35 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 					      view->selection_info.start.x,
 					      view->selection_info.start.y,
 					      x, y)) {
-			GdkDragContext *context;
 			GtkTargetList *target_list = gtk_target_list_new (NULL, 0);
 
-			gtk_target_list_add_text_targets (target_list, 0);
+			gtk_target_list_add_text_targets (target_list, TARGET_DND_TEXT);
 
-			context = gtk_drag_begin (widget, target_list,
-						  GDK_ACTION_COPY,
-						  1, (GdkEvent *)event);
+			gtk_drag_begin (widget, target_list,
+					GDK_ACTION_COPY,
+					1, (GdkEvent *)event);
 
 			view->selection_info.in_drag = FALSE;
+
+			gtk_target_list_unref (target_list);
+
+			return TRUE;
+		}
+	} else if (view->image_dnd_info.in_drag) {
+		if (gtk_drag_check_threshold (widget,
+					      view->selection_info.start.x,
+					      view->selection_info.start.y,
+					      x, y)) {
+			GtkTargetList *target_list = gtk_target_list_new (NULL, 0);
+
+			gtk_target_list_add_uri_targets (target_list, TARGET_DND_URI);
+			gtk_target_list_add_image_targets (target_list, TARGET_DND_IMAGE, TRUE);
+
+			gtk_drag_begin (widget, target_list,
+					GDK_ACTION_COPY,
+					1, (GdkEvent *)event);
+
+			view->image_dnd_info.in_drag = FALSE;
 
 			gtk_target_list_unref (target_list);
 
@@ -2191,6 +2326,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->pressed_button = -1;
 	view->drag_info.in_drag = FALSE;
+	view->image_dnd_info.in_drag = FALSE;
 
 	if (view->selection_scroll_id) {
 	    g_source_remove (view->selection_scroll_id);
@@ -2818,6 +2954,10 @@ ev_view_finalize (GObject *object)
 
 	clear_selection (view);
 
+	if (view->image_dnd_info.image)
+		g_object_unref (view->image_dnd_info.image);
+	view->image_dnd_info.image = NULL;
+
 	G_OBJECT_CLASS (ev_view_parent_class)->finalize (object);
 }
 
@@ -3003,6 +3143,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
 	widget_class->style_set = ev_view_style_set;
 	widget_class->drag_data_get = ev_view_drag_data_get;
+	widget_class->drag_motion = ev_view_drag_motion;
 	widget_class->drag_data_received = ev_view_drag_data_received;
 	widget_class->popup_menu = ev_view_popup_menu;
 	gtk_object_class->destroy = ev_view_destroy;

@@ -2,6 +2,8 @@
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
 #include "ev-selection.h"
+#include "ev-document-images.h"
+#include "ev-image.h"
 
 typedef struct _CacheJobInfo
 {
@@ -11,6 +13,7 @@ typedef struct _CacheJobInfo
 	/* Data we get from rendering */
 	GdkPixbuf *pixbuf;
 	GList *link_mapping;
+	GList *image_mapping;
 	GdkRegion *text_mapping;
 	
 	/* Selection data. 
@@ -151,6 +154,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 	if (job_info->link_mapping) {
 		ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = NULL;
+	}
+	if (job_info->image_mapping) {
+		ev_image_mapping_free (job_info->image_mapping);
+		job_info->image_mapping = NULL;
 	}
 	if (job_info->text_mapping) {
 		gdk_region_destroy (job_info->text_mapping);
@@ -312,6 +319,7 @@ move_one_job (CacheJobInfo  *job_info,
 	job_info->job = NULL;
 	job_info->pixbuf = NULL;
 	job_info->link_mapping = NULL;
+	job_info->image_mapping = NULL;
 
 	if (new_priority != priority && target_page->job) {
 		ev_job_queue_update_job (target_page->job, new_priority);
@@ -415,15 +423,19 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		job_info->link_mapping = job_render->link_mapping;
 	}
 
+	if (job_render->include_images) {
+		if (job_info->image_mapping)
+			ev_image_mapping_free (job_info->image_mapping);
+		job_info->image_mapping = job_render->image_mapping;
+	}
+
 	if (job_render->include_text) {
 		if (job_info->text_mapping)
 			gdk_region_destroy (job_info->text_mapping);
 		job_info->text_mapping = job_render->text_mapping;
 	}
-	
 
 	if (job_render->include_selection) {
-
 		if (job_info->selection) {
 			g_object_unref (G_OBJECT (job_info->selection));
 			job_info->selection = NULL;
@@ -447,10 +459,9 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		g_object_unref (G_OBJECT (job_info->job));
 		job_info->job = NULL;
 	}
-
 }
 
-static CacheJobInfo*
+static CacheJobInfo *
 find_job_cache (EvPixbufCache *pixbuf_cache,
 		int            page)
 {
@@ -528,6 +539,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	gboolean include_links = FALSE;
 	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
+	gboolean include_images = FALSE;
 	int width, height;
 	GdkColor *text, *base;
 
@@ -554,6 +566,8 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	/* Figure out what else we need for this job */
 	if (job_info->link_mapping == NULL)
 		include_links = TRUE;
+	if (job_info->image_mapping == NULL)
+		include_images = TRUE;
 	if (job_info->text_mapping == NULL)
 		include_text = TRUE;
 	if (new_selection_pixbuf_needed (pixbuf_cache, job_info, page, scale)) {
@@ -570,6 +584,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 					   &(job_info->target_points),
 					   text, base,
 					   include_links,
+					   include_images,
 					   include_text,
 					   include_selection);
 	ev_job_queue_add_job (job_info->job, priority);
@@ -690,6 +705,28 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 	return job_info->link_mapping;
 }
 
+GList *
+ev_pixbuf_cache_get_image_mapping (EvPixbufCache *pixbuf_cache,
+				   gint           page)
+{
+	CacheJobInfo *job_info;
+
+	if (!EV_IS_DOCUMENT_IMAGES (pixbuf_cache->document))
+		return NULL;
+	
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* We don't need to wait for the idle to handle the callback */
+	if (job_info->job &&
+	    EV_JOB (job_info->job)->finished) {
+		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+	}
+
+	return job_info->image_mapping;
+}
+
 static gboolean
 new_selection_pixbuf_needed (EvPixbufCache *pixbuf_cache,
 			     CacheJobInfo  *job_info,
@@ -729,8 +766,8 @@ clear_selection_if_needed (EvPixbufCache *pixbuf_cache,
 }
 
 GdkRegion *
-ev_pixbuf_cache_get_text_mapping      (EvPixbufCache *pixbuf_cache,
-				       gint           page)
+ev_pixbuf_cache_get_text_mapping (EvPixbufCache *pixbuf_cache,
+				  gint           page)
 {
 	CacheJobInfo *job_info;
 

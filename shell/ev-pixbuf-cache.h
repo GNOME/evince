@@ -48,7 +48,7 @@ typedef struct {
 typedef struct _EvPixbufCache       EvPixbufCache;
 typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
-GType          ev_pixbuf_cache_get_type         (void) G_GNUC_CONST;
+GType          ev_pixbuf_cache_get_type             (void) G_GNUC_CONST;
 EvPixbufCache *ev_pixbuf_cache_new                  (GtkWidget     *view,
 						     EvDocument    *document);
 void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
@@ -60,6 +60,8 @@ void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache
 GdkPixbuf     *ev_pixbuf_cache_get_pixbuf           (EvPixbufCache *pixbuf_cache,
 						     gint           page);
 GList         *ev_pixbuf_cache_get_link_mapping     (EvPixbufCache *pixbuf_cache,
+						     gint           page);
+GList         *ev_pixbuf_cache_get_image_mapping    (EvPixbufCache *pixbuf_cache,
 						     gint           page);
 GdkRegion     *ev_pixbuf_cache_get_text_mapping     (EvPixbufCache *pixbuf_cache,
 						     gint           page);

@@ -113,7 +113,7 @@ ev_file_helpers_shutdown (void)
 }
 
 gchar * 
-ev_tmp_filename (void)
+ev_tmp_filename (const gchar *prefix)
 {
 	gchar *basename;
 	gchar *filename = NULL;
@@ -122,7 +122,9 @@ ev_tmp_filename (void)
 		if (filename != NULL)
 			g_free (filename);
 			
-		basename = g_strdup_printf ("document-%d", count ++);
+		basename = g_strdup_printf ("%s-%d",
+					    prefix ? prefix : "document",
+					    count ++);
 		
 		filename = g_build_filename (ev_tmp_dir (),
 					     basename, NULL);

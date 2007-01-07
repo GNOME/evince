@@ -70,6 +70,7 @@
 #include "ev-utils.h"
 #include "ev-debug.h"
 #include "ev-history.h"
+#include "ev-image.h"
 
 #ifdef WITH_GNOME_PRINT
 #include "ev-print-job.h"
@@ -151,9 +152,10 @@ struct _EvWindowPrivate {
 	GtkWidget *fullscreen_popup;
 	guint      fullscreen_timeout_id;
 
-	/* Popup link */
+	/* Popup view */
 	GtkWidget *view_popup;
 	EvLink    *link;
+	EvImage   *image;
 
 	/* Popup attachment */
 	GtkWidget    *attachment_popup;
@@ -241,6 +243,10 @@ static void     ev_view_popup_cmd_open_link             (GtkAction        *actio
 static void     ev_view_popup_cmd_open_link_new_window  (GtkAction        *action,
 							 EvWindow         *window);
 static void     ev_view_popup_cmd_copy_link_address     (GtkAction        *action,
+							 EvWindow         *window);
+static void     ev_view_popup_cmd_save_image_as         (GtkAction        *action,
+							 EvWindow         *window);
+static void     ev_view_popup_cmd_copy_image            (GtkAction        *action,
 							 EvWindow         *window);
 static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
 							 EvWindow *window);
@@ -3290,18 +3296,13 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 	}
 }
 
-static gboolean
-view_menu_popup_cb (EvView   *view,
-		    EvLink   *link,
-		    EvWindow *ev_window)
+static void
+view_menu_link_popup (EvWindow *ev_window,
+		      EvLink   *link)
 {
-	GtkWidget *popup;
 	gboolean   show_external = FALSE;
 	gboolean   show_internal = FALSE;
 	GtkAction *action;
-
-	if (ev_view_get_presentation (EV_VIEW (ev_window->priv->view)))
-		return FALSE;
 	
 	if (ev_window->priv->link)
 		g_object_unref (ev_window->priv->link);
@@ -3311,26 +3312,23 @@ view_menu_popup_cb (EvView   *view,
 	else	
 		ev_window->priv->link = NULL;
 
-	popup = ev_window->priv->view_popup;
-
 	if (ev_window->priv->link) {
 		EvLinkAction *ev_action;
 
 		ev_action = ev_link_get_action (link);
-		if (!ev_action)
-			return FALSE;
-		
-		switch (ev_link_action_get_action_type (ev_action)) {
-		        case EV_LINK_ACTION_TYPE_GOTO_DEST:
-		        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
-				show_internal = TRUE;
-				break;
-		        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
-		        case EV_LINK_ACTION_TYPE_LAUNCH:
-				show_external = TRUE;
-				break;
-		        default:
-				break;
+		if (ev_action) {
+			switch (ev_link_action_get_action_type (ev_action)) {
+		                case EV_LINK_ACTION_TYPE_GOTO_DEST:
+		                case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+					show_internal = TRUE;
+					break;
+		                case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+		                case EV_LINK_ACTION_TYPE_LAUNCH:
+					show_external = TRUE;
+					break;
+		                default:
+					break;
+			}
 		}
 	}
 	
@@ -3349,9 +3347,49 @@ view_menu_popup_cb (EvView   *view,
 	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
 					      "OpenLinkNewWindow");
 	gtk_action_set_visible (action, show_internal);
+}
 
-	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
-			NULL, NULL,
+static void
+view_menu_image_popup (EvWindow  *ev_window,
+		       EvImage   *image)
+{
+	GtkAction *action;
+	gboolean   show_image = FALSE;
+	
+	if (ev_window->priv->image)
+		g_object_unref (ev_window->priv->image);
+	
+	if (image)
+		ev_window->priv->image = g_object_ref (image);
+	else	
+		ev_window->priv->image = NULL;
+
+	show_image = (ev_window->priv->image != NULL);
+	
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
+					      "SaveImageAs");
+	gtk_action_set_visible (action, show_image);
+
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
+					      "CopyImage");
+	gtk_action_set_visible (action, show_image);
+}
+
+static gboolean
+view_menu_popup_cb (EvView   *view,
+		    GObject  *object,
+		    EvWindow *ev_window)
+{
+	if (ev_view_get_presentation (EV_VIEW (ev_window->priv->view)))
+		return FALSE;
+
+	view_menu_link_popup (ev_window,
+			      EV_IS_LINK (object) ? EV_LINK (object) : NULL);
+	view_menu_image_popup (ev_window,
+			       EV_IS_IMAGE (object) ? EV_IMAGE (object) : NULL);
+	
+	gtk_menu_popup (GTK_MENU (ev_window->priv->view_popup),
+			NULL, NULL, NULL, NULL,
 			3, gtk_get_current_event_time ());
 	return TRUE;
 }
@@ -3617,6 +3655,11 @@ ev_window_dispose (GObject *object)
 		priv->link = NULL;
 	}
 
+	if (priv->image) {
+		g_object_unref (priv->image);
+		priv->image = NULL;
+	}
+
 	if (priv->attach_list) {
 		g_list_foreach (priv->attach_list,
 				(GFunc) g_object_unref,
@@ -3848,8 +3891,11 @@ static const GtkActionEntry view_popup_entries [] = {
 	{ "OpenLinkNewWindow", NULL, N_("Open in New _Window"), NULL,
 	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link_new_window) },
 	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
-	  NULL,
-	  G_CALLBACK (ev_view_popup_cmd_copy_link_address) },
+	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_link_address) },
+	{ "SaveImageAs", NULL, N_("_Save Image As..."), NULL,
+	  NULL, G_CALLBACK (ev_view_popup_cmd_save_image_as) },
+	{ "CopyImage", NULL, N_("Copy _Image"), NULL,
+	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_image) },
 };
 
 static const GtkActionEntry attachment_popup_entries [] = {
@@ -4229,6 +4275,86 @@ ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 }
 
 static void
+image_save_dialog_response_cb (GtkWidget *fc,
+			       gint       response_id,
+			       EvWindow  *ev_window)
+{
+	gchar  *uri;
+	gchar  *filename;
+	GError *error = NULL;
+	
+	if (response_id != GTK_RESPONSE_OK) {
+		gtk_widget_destroy (fc);
+		return;
+	}
+
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+	filename = g_filename_from_uri (uri, NULL, NULL);
+	g_free (uri);
+	
+	/* FIXME: allow saving in other image formats than png */
+	gdk_pixbuf_save (ev_image_get_pixbuf (ev_window->priv->image),
+			 filename, "png", &error, NULL);
+	
+	if (error) {
+		ev_window_error_dialog (GTK_WINDOW (fc),
+					_("The image could not be saved."),
+					error);
+		g_error_free (error);
+	}
+
+	g_free (filename);
+
+	gtk_widget_destroy (fc);
+}
+
+static void
+ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
+{
+	GtkWidget     *fc;
+	GtkFileFilter *filter;
+
+	if (!window->priv->image)
+		return;
+
+	fc = gtk_file_chooser_dialog_new (_("Save Image"),
+					  GTK_WINDOW (window),
+					  GTK_FILE_CHOOSER_ACTION_SAVE,
+					  GTK_STOCK_CANCEL,
+					  GTK_RESPONSE_CANCEL,
+					  GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					  NULL);
+
+	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
+
+	filter = gtk_file_filter_new ();
+	gtk_file_filter_set_name (filter, _("Images"));
+	gtk_file_filter_add_pixbuf_formats (filter);
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), filter);
+
+	g_signal_connect (fc, "response",
+			  G_CALLBACK (image_save_dialog_response_cb),
+			  window);
+
+	gtk_widget_show (fc);
+}
+
+static void
+ev_view_popup_cmd_copy_image (GtkAction *action, EvWindow *window)
+{
+	GtkClipboard *clipboard;
+
+	if (!window->priv->image)
+		return;
+	
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
+					      GDK_SELECTION_CLIPBOARD);
+	gtk_clipboard_set_image (clipboard,
+				 ev_image_get_pixbuf (window->priv->image));
+}
+
+static void
 ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 {
 	GList *l;
@@ -4317,7 +4443,7 @@ ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
 		attachment = (EvAttachment *) window->priv->attach_list->data;
 	
 	fc = gtk_file_chooser_dialog_new (
-		_("Save a Copy"),
+		_("Save Attachment"),
 		GTK_WINDOW (window),
 		attachment ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 		GTK_STOCK_CANCEL,
