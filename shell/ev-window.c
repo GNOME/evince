@@ -188,11 +188,6 @@ struct _EvWindowPrivate {
 #endif
 };
 
-static const GtkTargetEntry ev_drop_types[] = {
-	{ "text/uri-list", 0, 0 }
-};
-
-
 #define EV_WINDOW_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_WINDOW, EvWindowPrivate))
 
@@ -3865,35 +3860,6 @@ static const GtkActionEntry attachment_popup_entries [] = {
 };
 
 static void
-drag_data_received_cb (GtkWidget *widget, GdkDragContext *context,
-		       gint x, gint y, GtkSelectionData *selection_data,
-		       guint info, guint time, gpointer gdata)
-{
-	GList  *uri_list = NULL;
-	GSList *uris = NULL;
-	gchar  *uri;
-
-	uri_list = gnome_vfs_uri_list_parse ((gchar *) selection_data->data);
-
-	if (uri_list) {
-		while (uri_list) {
-			uri = gnome_vfs_uri_to_string (uri_list->data, GNOME_VFS_URI_HIDE_NONE);
-			uris = g_slist_append (uris, (gpointer) uri);
-			
-			uri_list = g_list_next (uri_list);
-		}
-
-		gnome_vfs_uri_list_free (uri_list);
-		
-		ev_application_open_uri_list (EV_APP, uris,
-					      gtk_widget_get_screen (widget),
-					      0);
-		
-		g_slist_free (uris);
-	}
-}
-
-static void
 activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
 {
 	ev_view_handle_link (EV_VIEW (window->priv->view), link);
@@ -4669,19 +4635,7 @@ ev_window_init (EvWindow *ev_window)
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
 
-	/* Drag and Drop */
-	gtk_drag_dest_unset (GTK_WIDGET (ev_window->priv->view));
-	gtk_drag_dest_set (GTK_WIDGET (ev_window->priv->view),
-			   GTK_DEST_DEFAULT_ALL,
-			   ev_drop_types,
-			   sizeof (ev_drop_types) / sizeof (ev_drop_types[0]),
-			   GDK_ACTION_COPY);
-	g_signal_connect_swapped (G_OBJECT (ev_window->priv->view), "drag-data-received",
-				  G_CALLBACK (drag_data_received_cb),
-				  ev_window);
-
 	/* Set it user interface params */
-
 	ev_window_setup_recent (ev_window);
 
 	setup_chrome_from_metadata (ev_window);
