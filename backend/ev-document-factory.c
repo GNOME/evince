@@ -25,8 +25,9 @@
 #include "ev-document-factory.h"
 
 /* The various document type backends: */
+#ifdef ENABLE_PDF
 #include "ev-poppler.h"
-
+#endif
 #ifdef ENABLE_PS
 #include "ps-document.h"
 #endif
