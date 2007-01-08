@@ -409,7 +409,15 @@ AC_SUBST(EVINCE_MIME_TYPES)
 
 AC_CONFIG_FILES([
 backend/Makefile
-comics/Makefile
+backend/comics/Makefile
+backend/djvu/Makefile
+backend/dvi/Makefile
+backend/dvi/mdvi-lib/Makefile
+backend/impress/Makefile
+backend/pdf/Makefile
+backend/pixbuf/Makefile
+backend/ps/Makefile
+backend/tiff/Makefile
 cut-n-paste/Makefile
 cut-n-paste/recent-files/Makefile
 cut-n-paste/toolbar-editor/Makefile
@@ -423,22 +431,14 @@ data/icons/48x48/Makefile
 data/icons/Makefile
 data/icons/scalable/Makefile
 data/Makefile
-djvu/Makefile
-dvi/Makefile
-dvi/mdvi-lib/Makefile
 help/Makefile
-impress/Makefile
-lib/Makefile
+libdocument/Makefile
 Makefile
-pdf/Makefile
-pixbuf/Makefile
 po/Makefile.in
 properties/Makefile
-ps/Makefile
 shell/Makefile
 test/Makefile
 thumbnailer/Makefile
-tiff/Makefile
 ])
 
 AC_OUTPUT

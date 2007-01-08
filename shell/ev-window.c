@@ -68,7 +68,6 @@
 #include "ev-metadata-manager.h"
 #include "ev-file-helpers.h"
 #include "ev-utils.h"
-#include "ev-debug.h"
 #include "ev-history.h"
 #include "ev-image.h"
 

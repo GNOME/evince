@@ -1,7 +1,6 @@
 INCLUDES = \
 	-I$(top_srcdir)						\
-	-I$(top_srcdir)/backend					\
-	-I$(top_srcdir)/lib					\
+	-I$(top_srcdir)/libdocument				\
 	$(BACKEND_CFLAGS)					\
 	$(WARN_CFLAGS)
 

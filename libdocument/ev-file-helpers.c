@@ -28,7 +28,7 @@
 #include <string.h>
 #include <glib.h>
 #include <glib/gstdio.h>
-#include <libgnome/gnome-init.h>
+#include <errno.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-ops.h>

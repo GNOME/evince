@@ -24,7 +24,6 @@
 
 #include "ephy-zoom-control.h"
 #include "ephy-zoom.h"
-#include "ev-debug.h"
 
 #include <gtk/gtk.h>
 #include <gtk/gtkcombobox.h>

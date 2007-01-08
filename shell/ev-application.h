@@ -23,6 +23,10 @@
 #ifndef EV_APPLICATION_H
 #define EV_APPLICATION_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <glib/gerror.h>
 #include <glib-object.h>
 

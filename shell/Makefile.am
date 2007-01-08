@@ -1,11 +1,10 @@
 INCLUDES=						\
 	-DDATADIR=\"$(pkgdatadir)\"			\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
-	-I$(top_srcdir)/lib				\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
-	-I$(top_srcdir)/backend				\
+	-I$(top_srcdir)/libdocument			\
 	-I$(top_srcdir)/properties			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
@@ -81,6 +80,8 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
+	ev-tooltip.c			\
+	ev-tooltip.h			\
 	main.c
 
 
@@ -96,7 +97,7 @@ evince_LDADD=								\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
 	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/lib/libev.la					\
+	$(top_builddir)/libdocument/libevbackend.la			\
 	$(SHELL_LIBS)							\
 	$(GNOME_PRINT_LIBS)
 

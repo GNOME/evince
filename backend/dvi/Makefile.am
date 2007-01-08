@@ -1,9 +1,8 @@
 SUBDIRS = mdvi-lib
 
 INCLUDES = \
-	-I$(top_srcdir)						\
-	-I$(top_srcdir)/backend				\
-	-I$(top_srcdir)/lib					\
+	-I$(top_srcdir)					\
+	-I$(top_srcdir)/libdocument			\
 	-I$(srcdir)/mdvi-lib				\
 	$(LIB_CFLAGS)
 

@@ -2,8 +2,7 @@
 
 INCLUDES=					\
 	-DDATADIR=\"$(pkgdatadir)\"		\
-	-I$(top_srcdir)/lib			\
-	-I$(top_srcdir)/backend			\
+	-I$(top_srcdir)/libdocument		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(FRONTEND_CFLAGS)			\
@@ -16,7 +15,7 @@ evince_thumbnailer_SOURCES=	\
 	evince-thumbnailer.c
 
 evince_thumbnailer_LDADD=		\
-	$(top_builddir)/lib/libev.la	\
+	$(top_builddir)/libdocument/libevbackend.la	\
 	$(FRONTEND_LIBS)		\
 	$(DJVU_LIBS)
 

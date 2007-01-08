@@ -39,7 +39,6 @@
 #include "ev-document-find.h"
 #include "ev-document-transition.h"
 #include "ev-document-misc.h"
-#include "ev-debug.h"
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
@@ -2946,8 +2945,6 @@ static void
 ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
-
-	LOG ("Finalize");
 
 	g_free (view->status);
 	g_free (view->find_status);

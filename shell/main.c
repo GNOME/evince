@@ -38,7 +38,6 @@
 #endif
 
 #include "ev-stock-icons.h"
-#include "ev-debug.h"
 #include "ev-job-queue.h"
 #include "ev-file-helpers.h"
 
@@ -367,7 +366,6 @@ main (int argc, char *argv[])
 	g_set_application_name (_("Evince Document Viewer"));
 
 	ev_file_helpers_init ();
-	ev_debug_init ();
 	ev_stock_icons_init ();
 	gtk_window_set_default_icon_name ("evince");
 

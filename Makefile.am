@@ -1,52 +1,16 @@
-SUBDIRS = cut-n-paste po help data test
-
-# Backends
-
-if ENABLE_PDF
-SUBDIRS += pdf
-endif
-
-if ENABLE_PS 
-SUBDIRS += ps
-endif
-
-if ENABLE_PIXBUF
-SUBDIRS += pixbuf    
-endif
-
-if ENABLE_DJVU
-SUBDIRS += djvu
-endif
-
-if ENABLE_TIFF
-SUBDIRS += tiff
-endif
-
-if ENABLE_DVI
-SUBDIRS += dvi
-endif
-
-if ENABLE_COMICS
-     SUBDIRS += comics
-endif
-
-if ENABLE_IMPRESS
-     SUBDIRS += impress
-endif
-
-SUBDIRS += backend
-
-# Library
-
-SUBDIRS += lib
-
-# Properties (library and application)
-
-SUBDIRS += properties
+SUBDIRS = \
+	cut-n-paste \
+	po \
+	help \
+	data \
+	test \
+	backend \
+	libdocument \
+	properties \
+	shell \
+	thumbnailer
 
 # Applications 
-
-SUBDIRS += shell thumbnailer
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 

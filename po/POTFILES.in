@@ -1,9 +1,14 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
 [encoding: UTF-8]
-backend/ev-attachment.c
-backend/ev-document-factory.c
-comics/comics-document.c
+backend/comics/comics-document.c
+backend/dvi/dvi-document.c
+backend/pdf/ev-poppler.c
+backend/impress/zip.c
+backend/ps/gsdefaults.c
+backend/ps/ps-document.c
+libdocument/ev-attachment.c
+libdocument/ev-document-factory.c
 cut-n-paste/recent-files/egg-recent-view-uimanager.c
 cut-n-paste/toolbar-editor/egg-editable-toolbar.c
 cut-n-paste/toolbar-editor/egg-toolbar-editor.c
@@ -13,13 +18,8 @@ data/evince.desktop.in.in
 data/evince-password.glade
 data/evince-properties.glade
 data/evince.schemas.in
-dvi/dvi-document.c
-pdf/ev-poppler.cc
-impress/zip.c
 properties/ev-properties-main.c
 properties/ev-properties-view.c
-ps/gsdefaults.c
-ps/ps-document.c
 shell/eggfindbar.c
 shell/ev-application.c
 shell/ev-history.c

@@ -44,7 +44,6 @@
 #include <math.h>
 
 #include "ps-document.h"
-#include "ev-debug.h"
 #include "gsdefaults.h"
 #include "ev-file-exporter.h"
 #include "ev-async-renderer.h"
@@ -216,11 +215,9 @@ push_pixbuf (PSDocument *gs)
 
 	cmap = gdk_window_get_colormap (gs->pstarget);
 	gdk_drawable_get_size (gs->bpixmap, &width, &height);
-	LOG ("Get from drawable\n");
 	pixbuf =  gdk_pixbuf_get_from_drawable (NULL, gs->bpixmap, cmap,
 				      	        0, 0, 0, 0,
 					        width, height);
-	LOG ("Get from drawable done\n");
 	g_signal_emit_by_name (gs, "render_finished", pixbuf);
 	g_object_unref (pixbuf);
 }
@@ -228,8 +225,6 @@ push_pixbuf (PSDocument *gs)
 static void
 interpreter_failed (PSDocument *gs, char *msg)
 {
-	LOG ("Interpreter failed %s", msg);
-
 	push_pixbuf (gs);
 
 	stop_interpreter (gs);
@@ -246,11 +241,9 @@ ps_document_widget_event (GtkWidget *widget, GdkEvent *event, gpointer data)
 	gs->message_window = event->client.data.l[0];
 
 	if (event->client.message_type == gs_class->page_atom) {
-		LOG ("GS rendered the document");
 		gs->busy = FALSE;
 
 		push_pixbuf (gs);
-		LOG ("Pixbuf pushed");
 	}
 
 	return TRUE;
@@ -329,7 +322,6 @@ setup_pixmap (PSDocument *gs, int page, double scale, int rotation)
 	}
 
 	if (!gs->bpixmap) {
-		LOG ("Create pixmap");
 
 		fill = gdk_gc_new (gs->pstarget);
 		colormap = gdk_drawable_get_colormap (gs->pstarget);
@@ -438,8 +430,6 @@ setup_page (PSDocument *gs, int page, double scale, int rotation)
 	char scaled_dpi[G_ASCII_DTOSTR_BUF_SIZE];	
 	int urx, ury, llx, lly;
 
-	LOG ("Setup the page");
-
 	get_page_box (gs, page, &urx, &ury, &llx, &lly);
 	g_ascii_dtostr (scaled_dpi, G_ASCII_DTOSTR_BUF_SIZE, 72.0 * scale);
 
@@ -447,7 +437,6 @@ setup_page (PSDocument *gs, int page, double scale, int rotation)
 			       0L, rotation, llx, lly, urx, ury,
 			       scaled_dpi, scaled_dpi,
 			       0, 0, 0, 0);
-	LOG ("GS property %s", buf);
 
 	gdk_property_change (gs->pstarget, gs_class->gs_atom, gs_class->string_atom,
 			     8, GDK_PROP_MODE_REPLACE, (guchar *)buf, strlen(buf));
@@ -532,8 +521,6 @@ input(gpointer data, gint source, GdkInputCondition condition)
 	void (*oldsig) (int);
 	oldsig = signal(SIGPIPE, catchPipe);
 
-	LOG ("Input");
-
 	do {
 		if (gs->buffer_bytes_left == 0) {
 			/* Get a new section if required */
@@ -613,8 +600,6 @@ start_interpreter (PSDocument *gs)
 	char **gv_env_vars = NULL;
 	int argc = 0, i;
 
-	LOG ("Start the interpreter");
-
 	if(!gs->gs_filename)
 		return 0;
 
@@ -670,7 +655,6 @@ start_interpreter (PSDocument *gs)
                            	  gdk_x11_drawable_get_xid (gs->pstarget),
 				  gdk_x11_drawable_get_xid (gs->bpixmap),
 				  gdk_display_get_name (gdk_drawable_get_display (gs->pstarget)));
-	LOG ("Launching ghostview with env %s", gv_env);
 
 	gs->interpreter_pid = fork ();
 	switch (gs->interpreter_pid) {
@@ -758,7 +742,6 @@ stop_interpreter(PSDocument * gs)
 {
 	if (gs->interpreter_pid > 0) {
 		int status = 0;
-		LOG ("Stop the interpreter");
 		kill (gs->interpreter_pid, SIGTERM);
 		while ((wait(&status) == -1) && (errno == EINTR));
 		gs->interpreter_pid = -1;
@@ -923,8 +906,6 @@ document_load (PSDocument *gs, const gchar *fname)
 {
 	g_return_val_if_fail (PS_IS_DOCUMENT(gs), FALSE);
 
-	LOG ("Load the document");
-
 	if (fname == NULL) {
 		gs->gs_status = "";
 		return FALSE;
@@ -987,8 +968,6 @@ ps_document_next_page (PSDocument *gs)
 	GdkDisplay *display;
 	Display    *dpy;
 
-	LOG ("Make ghostscript render next page");
-
 	g_return_val_if_fail (PS_IS_DOCUMENT(gs), FALSE);
 	g_return_val_if_fail (gs->interpreter_pid != 0, FALSE);
 	g_return_val_if_fail (gs->busy != TRUE, FALSE);
@@ -1026,7 +1005,6 @@ render_page (PSDocument *gs, int page)
 	}
 
 	if (gs->structured_doc && gs->doc) {
-		LOG ("It's a structured document, let's send one page to gs");
 
 		if (is_interpreter_ready (gs)) {
 			ps_document_next_page (gs);
@@ -1048,8 +1026,6 @@ render_page (PSDocument *gs, int page)
 		 * the last page of the file was displayed. In that
 		 * case, ggv restarts GS again and the first page is displayed.
 		 */
-
-		LOG ("It's an unstructured document, gs will just read the file");
 
 		if (!is_interpreter_ready (gs)) {
 			ps_document_enable_interpreter(gs);

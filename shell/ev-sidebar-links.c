@@ -33,7 +33,6 @@
 #include "ev-job-queue.h"
 #include "ev-document-links.h"
 #include "ev-window.h"
-#include "ev-gui.h"
 
 struct _EvSidebarLinksPrivate {
 	GtkWidget *tree_view;
