@@ -180,7 +180,6 @@ load_files (const char **files,
 }
 
 #ifdef ENABLE_DBUS
-
 static gboolean
 load_files_remote (const char **files,
 		   GHashTable  *args)
@@ -189,9 +188,6 @@ load_files_remote (const char **files,
 	GError *error = NULL;
 	DBusGConnection *connection;
 	gboolean result = FALSE;
-#if DBUS_VERSION < 35
-	DBusGPendingCall *call;
-#endif
 	DBusGProxy *remote_object;
 	GdkDisplay *display;
 	guint32 timestamp;
@@ -212,31 +208,6 @@ load_files_remote (const char **files,
                                                    "/org/gnome/evince/Evince",
                                                    "org.gnome.evince.Application");
 	if (!files) {
-#if DBUS_VERSION <= 33
-		call = dbus_g_proxy_begin_call (remote_object, "OpenWindow",
-						DBUS_TYPE_UINT32, &timestamp,
-						DBUS_TYPE_INVALID);
-
-		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
-			g_warning (error->message);
-			g_clear_error (&error);
-			g_object_unref (remote_object);
-			dbus_g_connection_unref (connection);
-			return FALSE;
-		}
-#elif DBUS_VERSION == 34
-		call = dbus_g_proxy_begin_call (remote_object, "OpenWindow",
-						G_TYPE_UINT, timestamp,
-						G_TYPE_INVALID);
-
-		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
-			g_warning (error->message);
-			g_clear_error (&error);
-			g_object_unref (remote_object);
-			dbus_g_connection_unref (connection);
-			return FALSE;
-		}
-#else
 		if (!dbus_g_proxy_call (remote_object, "OpenWindow", &error,
 					dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
 					G_TYPE_UINT, timestamp,
@@ -248,7 +219,7 @@ load_files_remote (const char **files,
 			dbus_g_connection_unref (connection);
 			return FALSE;
 		}
-#endif
+
 		g_object_unref (remote_object);
 		dbus_g_connection_unref (connection);
 		
@@ -261,33 +232,7 @@ load_files_remote (const char **files,
 
 		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
 		page_label = ev_page_label ? ev_page_label : "";
-#if DBUS_VERSION <= 33
-		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
-						DBUS_TYPE_STRING, &uri,
-						DBUS_TYPE_STRING, &page_label,
-						DBUS_TYPE_UINT32, &timestamp,
-						DBUS_TYPE_INVALID);
 
-		if (!dbus_g_proxy_end_call (remote_object, call, &error, DBUS_TYPE_INVALID)) {
-			g_warning (error->message);
-			g_clear_error (&error);
-			g_free (uri);
-			continue;
-		}
-#elif DBUS_VERSION == 34
-		call = dbus_g_proxy_begin_call (remote_object, "OpenURI",
-						G_TYPE_STRING, uri,
-						G_TYPE_STRING, page_label,
-						G_TYPE_UINT, timestamp,
-						G_TYPE_INVALID);
-
-		if (!dbus_g_proxy_end_call (remote_object, call, &error, G_TYPE_INVALID)) {
-			g_warning (error->message);
-			g_clear_error (&error);
-			g_free (uri);
-			continue;
-		}
-#else
 		if (!dbus_g_proxy_call (remote_object, "OpenURI", &error,
 					G_TYPE_STRING, uri,
 					dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
@@ -299,7 +244,7 @@ load_files_remote (const char **files,
 			g_free (uri);
 			continue;
 		}
-#endif
+
 		g_free (uri);
 		result = TRUE;
         }

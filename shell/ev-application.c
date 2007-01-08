@@ -75,7 +75,6 @@ ev_application_register_service (EvApplication *application)
 						  DBUS_PATH_DBUS,
 						  DBUS_INTERFACE_DBUS);
 
-#if DBUS_VERSION >= 60	
 	if (!org_freedesktop_DBus_request_name (driver_proxy,
                                         	APPLICATION_SERVICE_NAME,
 						DBUS_NAME_FLAG_DO_NOT_QUEUE,
@@ -83,14 +82,6 @@ ev_application_register_service (EvApplication *application)
 		g_warning ("Service registration failed.");
 		g_clear_error (&err);
 	}
-#else
-	if (!org_freedesktop_DBus_request_name (driver_proxy,
-						APPLICATION_SERVICE_NAME,
-						0, &request_name_result, &err)) {
-		g_warning ("Service registration failed.");
-		g_clear_error (&err);
-	}
-#endif	
 
 	g_object_unref (driver_proxy);
 	
@@ -98,14 +89,8 @@ ev_application_register_service (EvApplication *application)
 		return FALSE;
 	}
 
-#if DBUS_VERSION == 33
-	dbus_g_object_class_install_info (G_OBJECT_GET_CLASS (application),
-					  &dbus_glib_ev_application_object_info);
-#else
 	dbus_g_object_type_install_info (EV_TYPE_APPLICATION,
 					 &dbus_glib_ev_application_object_info);
-#endif
-
 	dbus_g_connection_register_g_object (connection,
 					     "/org/gnome/evince/Evince",
                                              G_OBJECT (application));

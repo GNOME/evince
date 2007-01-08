@@ -40,7 +40,7 @@ dnl Check dependencies
 # SHELL_CFLAGS     for shell implementation.
 # SHELL_LIBS
 
-DBUS_GLIB_REQUIRED=0.33
+DBUS_GLIB_REQUIRED=0.71
 GTK_REQUIRED=2.8.15
 KEYRING_REQUIRED=0.4.0
 
@@ -129,9 +129,6 @@ if test "x$enable_dbus" = "xyes" ; then
         fi                                            
 
         AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
-
-	DBUS_VERSION=`$PKG_CONFIG --modversion dbus-glib-1 | sed 's/0\.\([[0-9]]*\)\.\{0,1\}\([[0-9]]*\)/\1/'`
-	AC_DEFINE_UNQUOTED(DBUS_VERSION, $DBUS_VERSION, [DBUS version.])
 fi
 
 SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
