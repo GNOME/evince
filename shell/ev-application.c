@@ -366,7 +366,9 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	   we can restore window size without flickering */	
 	ev_window_open_uri (new_window, uri, dest, mode, unlink_temp_file);
 
+	ev_document_fc_mutex_lock ();
 	gtk_widget_show (GTK_WIDGET (new_window));
+	ev_document_fc_mutex_unlock ();
 
 	gtk_window_present_with_time (GTK_WINDOW (new_window),
 				      timestamp);

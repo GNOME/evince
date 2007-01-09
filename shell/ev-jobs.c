@@ -499,9 +499,11 @@ ev_job_xfer_run (EvJobXfer *job)
 	   because, e.g., a password is required - if so, just reload rather than
 	   creating a new instance */
 	if (EV_JOB (job)->document) {
+		ev_document_fc_mutex_lock ();
 		ev_document_load (EV_JOB (job)->document,
 				  job->local_uri ? job->local_uri : job->uri,
 				  &job->error);
+		ev_document_fc_mutex_unlock ();
 		EV_JOB (job)->finished = TRUE;
 		return;
 	}
