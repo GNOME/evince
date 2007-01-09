@@ -1710,15 +1710,33 @@ ev_window_print_send (EvWindow    *window,
 		      const gchar *filename)
 {
 	GtkPrintJob *job;
+	GtkPrintSettings *settings;
 	GError      *error = NULL;
 	
 	if (window->priv->gtk_print_job)
 		g_object_unref (window->priv->gtk_print_job);
+
+	/* Some printers take into account some print settings,
+	 * and others don't. However we have exported the document
+	 * to a ps or pdf file according to such print settings. So,
+	 * we want to send the exported file to printer with those
+	 * settings set to default values. 
+	 */
+	settings = gtk_print_settings_copy (window->priv->print_settings);
+	gtk_print_settings_set_n_copies (settings, 1);
+	gtk_print_settings_set_page_ranges (settings, NULL, 0);
+	gtk_print_settings_set_page_set (settings, GTK_PAGE_SET_ALL);
+	gtk_print_settings_set_print_pages (settings, GTK_PRINT_PAGES_ALL);
+	gtk_print_settings_set_scale (settings, 1.0);
+	gtk_print_settings_set_collate (settings, FALSE);
+	gtk_print_settings_set_reverse (settings, FALSE);
 	
 	job = gtk_print_job_new ("evince-print",
 				 window->priv->printer,
-				 window->priv->print_settings,
+				 settings,
 				 window->priv->print_page_setup);
+
+	g_object_unref (settings);
 	
 	window->priv->gtk_print_job = job;
 

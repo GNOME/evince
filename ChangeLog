@@ -1,5 +1,13 @@
 2007-01-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_print_send):
+
+	Send print job to printer with some settings set to default values,
+	since we have already exported to a file according to such settings
+	and they could be taken twice by some printers. 
+
+2007-01-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-jobs.c: (ev_job_xfer_run):
 	* shell/ev-application.c: (ev_application_open_uri_at_dest):
 
