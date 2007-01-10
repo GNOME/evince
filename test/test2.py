@@ -4,10 +4,11 @@
 
 import os
 os.environ['LANG']='C'
+srcdir = os.environ['srcdir']
 
 from dogtail.procedural import *
 
-run('evince', arguments=' ./test-encrypt.pdf',)
+run('evince', arguments=' '+srcdir+'/test-encrypt.pdf')
 
 # Try an incorrect password first
 focus.dialog('Enter password')
