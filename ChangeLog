@@ -1,3 +1,13 @@
+2007-01-11  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view-private.h:
+	* shell/ev-window.c: (ev_window_screen_changed), (ev_window_init):
+	* shell/ev-view.[ch]: (ev_view_class_init), (ev_view_set_zoom),
+	(ev_view_set_screen_dpi), (ev_view_can_zoom_in),
+	(ev_view_can_zoom_out):
+
+	Use max and min scale values in the view iby taking dpi into account. 
+
 2007-01-10  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:

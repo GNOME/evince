@@ -3252,20 +3252,20 @@ ev_view_class_init (EvViewClass *class)
 					 PROP_ZOOM,
 					 g_param_spec_double ("zoom",
 							      "Zoom factor",
-							       "Zoom factor",
-							       MIN_SCALE,
-							       MAX_SCALE,
-							       1.0,
-							       G_PARAM_READWRITE));
+							      "Zoom factor",
+							      0,
+							      G_MAXDOUBLE,
+							      1.0,
+							      G_PARAM_READWRITE));
 	g_object_class_install_property (object_class,
 					 PROP_ROTATION,
 					 g_param_spec_double ("rotation",
 							      "Rotation",
-							       "Rotation",
-							       0,
-							       360,
-							       0,
-							       G_PARAM_READWRITE));
+							      "Rotation",
+							      0,
+							      360,
+							      0,
+							      G_PARAM_READWRITE));
 	g_object_class_install_property (object_class,
 					 PROP_HAS_SELECTION,
 					 g_param_spec_boolean ("has-selection",
@@ -3493,7 +3493,7 @@ ev_view_set_zoom (EvView   *view,
 	else
 		scale = factor;
 
-	scale = CLAMP (scale, MIN_SCALE, MAX_SCALE);
+	scale = CLAMP (scale, view->min_scale, view->max_scale);
 
 	if (ABS (view->scale - scale) < EPSILON)
 		return;
@@ -3510,6 +3510,18 @@ double
 ev_view_get_zoom (EvView *view)
 {
 	return view->scale;
+}
+
+void
+ev_view_set_screen_dpi (EvView  *view,
+			gdouble  dpi)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+	g_return_if_fail (dpi > 0);
+
+	view->dpi = dpi;
+	view->min_scale = MIN_SCALE * dpi / 72.0;
+	view->max_scale = MAX_SCALE * dpi / 72.0;
 }
 
 gboolean
@@ -3704,13 +3716,13 @@ ev_view_get_sizing_mode (EvView *view)
 gboolean
 ev_view_can_zoom_in (EvView *view)
 {
-	return view->scale * ZOOM_IN_FACTOR <= MAX_SCALE;
+	return view->scale * ZOOM_IN_FACTOR <= view->max_scale;
 }
 
 gboolean
 ev_view_can_zoom_out (EvView *view)
 {
-	return view->scale * ZOOM_OUT_FACTOR >= MIN_SCALE;
+	return view->scale * ZOOM_OUT_FACTOR >= view->min_scale;
 }
 
 void

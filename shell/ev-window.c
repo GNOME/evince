@@ -2717,6 +2717,9 @@ ev_window_screen_changed (GtkWidget *widget,
 				  window);
 #endif
 	
+	ev_view_set_screen_dpi (EV_VIEW (window->priv->view),
+				ev_window_get_screen_dpi (window));
+	
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
 	}
@@ -4663,6 +4666,8 @@ ev_window_init (EvWindow *ev_window)
 			ev_window->priv->scrolled_window);
 
 	ev_window->priv->view = ev_view_new ();
+	ev_view_set_screen_dpi (EV_VIEW (ev_window->priv->view),
+				ev_window_get_screen_dpi (ev_window));
 	ev_window->priv->password_view = ev_password_view_new ();
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",

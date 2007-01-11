@@ -104,9 +104,12 @@ struct _EvView {
 	gint end_page;
 	gint current_page;
 
-	int rotation;
-	double scale;
-	int spacing;
+	gint rotation;
+	gdouble scale;
+	gint spacing;
+	gdouble dpi;
+	gdouble max_scale;
+	gdouble min_scale;
 
 	gboolean loading;
 	gboolean continuous;
