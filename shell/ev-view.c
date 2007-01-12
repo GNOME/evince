@@ -122,9 +122,6 @@ static void       view_update_range_and_current_page         (EvView            
 static void       set_scroll_adjustment                      (EvView             *view,
 							      GtkOrientation      orientation,
 							      GtkAdjustment      *adjustment);
-static void       ev_view_set_scroll_adjustments             (EvView             *view,
-							      GtkAdjustment      *hadjustment,
-							      GtkAdjustment      *vadjustment);
 static void       add_scroll_binding_keypad                  (GtkBindingSet      *binding_set,
 							      guint               keyval,
 							      GdkModifierType modifiers,
@@ -1707,6 +1704,8 @@ ev_view_size_allocate (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
+	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
+	
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 	    view->sizing_mode == EV_SIZING_BEST_FIT) {
 
@@ -1723,8 +1722,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 	view->pending_resize = FALSE;
-
-	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
 }
 
 static void
