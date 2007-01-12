@@ -419,7 +419,7 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	loading_model = create_loading_model ();
 	priv->tree_view = gtk_tree_view_new_with_model (loading_model);
 	g_object_unref (loading_model);
-
+	
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
@@ -548,12 +548,10 @@ update_page_callback_foreach (GtkTreeModel *model,
 		current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
 			 
 		if (dest_page == current_page) {
-			GtkTreeSelection *selection;
-
-			selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
 			gtk_tree_view_expand_to_path (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
 						      path);
-			gtk_tree_selection_select_path (selection, path);
+			gtk_tree_view_set_cursor (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
+						  path, NULL, FALSE);
 			
 			return TRUE;
 		}
