@@ -1585,23 +1585,59 @@ file_save_dialog_response_cb (GtkWidget *fc,
 	gboolean success;
 
 	if (response_id == GTK_RESPONSE_OK) {
-		gchar *uri;
-		GError *err = NULL;
+		gint    fd;
+		gchar  *filename;
+		gchar  *tmp_filename;
+		GError *error = NULL;
 
-		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+		tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
+		
+		fd = g_mkstemp (tmp_filename);
+		if (fd == -1) {
+			gchar  *display_name;
+			gint    save_errno = errno;
+			
+			display_name = g_filename_display_name (tmp_filename);
+			g_set_error (&error,
+				     G_FILE_ERROR,
+				     g_file_error_from_errno (save_errno),
+				     _("Failed to create file “%s”: %s"),
+				     display_name, g_strerror (save_errno));
+			g_free (display_name);
+		} else {
+			gchar *uri;
 
-		ev_document_doc_mutex_lock ();
-		success = ev_document_save (ev_window->priv->document, uri, &err);
-		ev_document_doc_mutex_unlock ();
+			uri = g_filename_to_uri (tmp_filename, NULL, NULL);
+			
+			ev_document_doc_mutex_lock ();
+			success = ev_document_save (ev_window->priv->document,
+						    uri,
+						    &error);
+			ev_document_doc_mutex_unlock ();
 
-		if (err) {
-			gchar *msg;
-			msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
-			ev_window_error_dialog (GTK_WINDOW (fc), msg, err);
-			g_free (msg);
+			g_free (uri);
+			close (fd);
 		}
 
-		g_free (uri);
+		if (!error) {
+			if (g_rename (tmp_filename, filename) == -1) {
+				g_unlink (tmp_filename);
+			}
+		} else {
+			gchar *msg;
+			gchar *uri;
+
+			uri = g_filename_to_uri (filename, NULL, NULL);
+			msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
+			ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
+			g_free (msg);
+			g_free (uri);
+			g_error_free (error);
+		}
+		
+		g_free (tmp_filename);
+		g_free (filename);
 	}
 
 	gtk_widget_destroy (fc);
@@ -4317,7 +4353,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 			 filename, "png", &error, NULL);
 	
 	if (error) {
-		ev_window_error_dialog (GTK_WINDOW (fc),
+		ev_window_error_dialog (GTK_WINDOW (ev_window),
 					_("The image could not be saved."),
 					error);
 		g_error_free (error);
@@ -4438,7 +4474,7 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 		g_free (filename);
 		
 		if (error) {
-			ev_window_error_dialog (GTK_WINDOW (fc),
+			ev_window_error_dialog (GTK_WINDOW (ev_window),
 						_("The attachment could not be saved."),
 						error);
 			g_error_free (error);
