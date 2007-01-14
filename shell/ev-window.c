@@ -1518,7 +1518,8 @@ ev_window_setup_recent (EvWindow *ev_window)
 
 		info = (GtkRecentInfo *) l->data;
 
-		if (!gtk_recent_info_has_application (info, evince))
+		if (!gtk_recent_info_has_application (info, evince) ||
+		    (gtk_recent_info_is_local (info) && !gtk_recent_info_exists (info)))
 			continue;
 
 		action_name = g_strdup_printf ("RecentFile%u", i++);
@@ -1595,8 +1596,8 @@ file_save_dialog_response_cb (GtkWidget *fc,
 		
 		fd = g_mkstemp (tmp_filename);
 		if (fd == -1) {
-			gchar  *display_name;
-			gint    save_errno = errno;
+			gchar *display_name;
+			gint   save_errno = errno;
 			
 			display_name = g_filename_display_name (tmp_filename);
 			g_set_error (&error,
