@@ -27,7 +27,6 @@
 #include <gtk/gtkselection.h>
 #include <gtk/gtkclipboard.h>
 #include <gdk/gdkkeysyms.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 
 #include "ev-marshal.h"
 #include "ev-view.h"
