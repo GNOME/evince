@@ -587,7 +587,8 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 			if(ent->encoding && !STREQ(ent->encoding, enc->name)) {
 				warning(
 	_("%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"),
-					file, lineno);
+					file, lineno, ent->encfile,
+					ent->encoding, enc->name);
 			} else if(!ent->encoding)
 				ent->encoding = mdvi_strdup(enc->name);
 		}
