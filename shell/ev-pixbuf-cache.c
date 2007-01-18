@@ -701,7 +701,7 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
 	}
-	
+
 	return job_info->link_mapping;
 }
 

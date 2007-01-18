@@ -1902,9 +1902,7 @@ ev_view_expose_event (GtkWidget      *widget,
 		        default:
 				break;
 		}
-	}
-	
-	if (view->loading) {
+	} else if (view->loading) {
 		GdkRectangle area = {0};
 		
 		area.width = widget->allocation.width;
@@ -2859,10 +2857,12 @@ draw_one_page (EvView          *view,
 	real_page_area.height -= (border->top + border->bottom);
 	*page_ready = TRUE;
 
-	ev_document_misc_paint_one_page (GTK_WIDGET(view)->window,
-					 GTK_WIDGET (view),
-					 page_area, border, 
-					 page == current_page);
+	if (!view->presentation) {
+		ev_document_misc_paint_one_page (GTK_WIDGET(view)->window,
+						 GTK_WIDGET (view),
+						 page_area, border, 
+						 page == current_page);
+	}
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
 		GdkPixbuf *selection_pixbuf = NULL;
