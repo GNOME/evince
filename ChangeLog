@@ -1,3 +1,24 @@
+2007-01-19  Luca Ferretti  <elle.uca@libero.it>
+
+	* data/icons/*/apps/evince.*:
+
+	Move Evince icons under new apps directory.
+
+	* data/icons/*/actions/*:
+
+	Add new custom themeable Evince icons: view-page-continuous, 
+	view-page-facing, zoom-fit-width, zoom-fit-page. From Andreas
+	Nilsson, at 16 and 22 pixels (plus 24 for compatibility).
+
+	* configure.ac:
+
+	Add new directories to AC_CONFIG_FILES.
+
+	* shell/ev-stock-icons.c:
+	* shell/ev-stock-icons.h:
+
+	Use new custom themeable icons.
+
 2007-01-18  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_expose_event), (draw_one_page):

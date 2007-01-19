@@ -29,11 +29,11 @@
 G_BEGIN_DECLS
 
 /* Evince stock icons */
-#define EV_STOCK_ZOOM_PAGE              "stock_zoom-page" 
-#define EV_STOCK_ZOOM_WIDTH             "stock_zoom-page-width" 
-#define EV_STOCK_LEAVE_FULLSCREEN       "stock_leave-fullscreen"
-#define EV_STOCK_VIEW_DUAL       	"stock_view-dual-page"
-#define EV_STOCK_VIEW_CONTINUOUS        "stock_view-continuous"
+#define EV_STOCK_ZOOM_PAGE              "zoom-fit-page" 
+#define EV_STOCK_ZOOM_WIDTH             "zoom-fit-width" 
+#define EV_STOCK_LEAVE_FULLSCREEN       "view-restore"
+#define EV_STOCK_VIEW_DUAL       	"view-page-facing"
+#define EV_STOCK_VIEW_CONTINUOUS        "view-page-continuous"
 #define EV_STOCK_ROTATE_LEFT            "object-rotate-left"
 #define EV_STOCK_ROTATE_RIGHT           "object-rotate-right"
 

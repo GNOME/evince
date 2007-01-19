@@ -34,13 +34,13 @@ typedef struct {
 	char *icon;
 } EvStockIcon;
 
-/* Evince stock icons from gnome-icon-theme */
+/* Evince stock icons */
 static const EvStockIcon stock_icons [] = {
-	{ EV_STOCK_ZOOM_PAGE,        "stock_zoom-page" },
-	{ EV_STOCK_ZOOM_WIDTH,       "stock_zoom-page-width" },
-	{ EV_STOCK_LEAVE_FULLSCREEN, "stock_leave-fullscreen" },
-	{ EV_STOCK_VIEW_DUAL,        "stock_preview-two-pages" },
-	{ EV_STOCK_VIEW_CONTINUOUS,  "stock_new-master-document" },
+	{ EV_STOCK_ZOOM_PAGE,        "zoom-fit-page" },
+	{ EV_STOCK_ZOOM_WIDTH,       "zoom-fit-width" },
+	{ EV_STOCK_LEAVE_FULLSCREEN, "view-restore" },
+	{ EV_STOCK_VIEW_DUAL,        "view-page-facing" },
+	{ EV_STOCK_VIEW_CONTINUOUS,  "view-page-continuous" },
 	{ EV_STOCK_ROTATE_LEFT,      "object-rotate-left"},
 	{ EV_STOCK_ROTATE_RIGHT,     "object-rotate-right"},
 };
@@ -73,4 +73,12 @@ ev_stock_icons_init (void)
 	gtk_icon_source_free (source);
 
 	g_object_unref (G_OBJECT (factory));
+
+        /* GtkIconTheme will then look in Evince custom hicolor dir
+         * for icons as well as the standard search paths
+         */
+        /* FIXME: multi-head! */
+        gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+                                           DATADIR G_DIR_SEPARATOR_S "icons");
+
 }
