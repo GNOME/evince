@@ -21,8 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
-
 #include "ev-stock-icons.h"
 
 #include <gtk/gtkiconfactory.h>
@@ -44,7 +42,6 @@ static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ROTATE_LEFT,      "object-rotate-left"},
 	{ EV_STOCK_ROTATE_RIGHT,     "object-rotate-right"},
 };
-
 
 void
 ev_stock_icons_init (void)
@@ -73,12 +70,4 @@ ev_stock_icons_init (void)
 	gtk_icon_source_free (source);
 
 	g_object_unref (G_OBJECT (factory));
-
-        /* GtkIconTheme will then look in Evince custom hicolor dir
-         * for icons as well as the standard search paths
-         */
-        /* FIXME: multi-head! */
-        gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-                                           DATADIR G_DIR_SEPARATOR_S "icons");
-
 }

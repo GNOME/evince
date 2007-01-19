@@ -345,9 +345,35 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 gboolean        unlink_temp_file,
 				 guint           timestamp)
 {
-	EvWindow *new_window;
+	EvWindow     *new_window;
+	GtkIconTheme *icon_theme;
 
 	g_return_if_fail (uri != NULL);
+
+	icon_theme = gtk_icon_theme_get_for_screen (screen);
+	if (icon_theme) {
+		gchar **path = NULL;
+		gint    n_paths;
+		gint    i;
+		gchar  *ev_icons_path;
+
+		/* GtkIconTheme will then look in Evince custom hicolor dir
+		 * for icons as well as the standard search paths
+		 */
+		ev_icons_path = g_build_filename (DATADIR, "icons", NULL);
+		gtk_icon_theme_get_search_path (icon_theme, &path, &n_paths);
+		for (i = n_paths - 1; i >= 0; i--) {
+			if (g_ascii_strcasecmp (ev_icons_path, path[i]) == 0)
+				break;
+		}
+
+		if (i < 0)
+			gtk_icon_theme_append_search_path (icon_theme,
+							   ev_icons_path);
+
+		g_free (ev_icons_path);
+		g_strfreev (path);
+	}	
 
 	new_window = ev_application_get_uri_window (application, uri);
 	
