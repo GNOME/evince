@@ -117,6 +117,7 @@ struct _EvView {
 	gboolean fullscreen;
 	gboolean presentation;
 	EvSizingMode sizing_mode;
+	cairo_surface_t *loading_text;
 
 	/* Presentation */
 	EvPresentationState presentation_state;

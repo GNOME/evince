@@ -2771,55 +2771,69 @@ draw_loading_text (EvView       *view,
 		   GdkRectangle *page_area,
 		   GdkRectangle *expose_area)
 {
-	const char *loading_text;
-	PangoLayout *layout;
-	PangoFontDescription *font_desc;
-	PangoRectangle logical_rect;
-	double real_scale;
-	int target_width;
-
+	cairo_t *cr;
+	gint     width, height;
+	
 	/* Don't annoy users with loading messages during presentations.
 	 * FIXME: Temporary "workaround" for
 	 * http://bugzilla.gnome.org/show_bug.cgi?id=320352 */
 	if (view->presentation)
 		return;
 
-	loading_text = _("Loading...");	
+	if (!view->loading_text) {
+		const gchar *loading_text;
+		PangoLayout *layout;
+		PangoFontDescription *font_desc;
+		PangoRectangle logical_rect;
+		gdouble real_scale;
+		gint target_width;
+		
+		loading_text = _("Loading...");	
 
-	ev_document_fc_mutex_lock ();
+		ev_document_fc_mutex_lock ();
+		
+		layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
+		
+		font_desc = pango_font_description_new ();
+		
+		/* We set the font to be 10 points, get the size, and scale appropriately */
+		pango_font_description_set_size (font_desc, 10 * PANGO_SCALE);
+		pango_layout_set_font_description (layout, font_desc);
+		pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+		
+		/* Make sure we fit the middle of the page */
+		target_width = MAX (page_area->width / 2, 1);
+		real_scale = ((double)target_width / (double) logical_rect.width) * (PANGO_SCALE * 10);
+		pango_font_description_set_size (font_desc, (int)real_scale);
+		pango_layout_set_font_description (layout, font_desc);
+		pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+
+		view->loading_text = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+								 logical_rect.width,
+								 logical_rect.height);
+		cr = cairo_create (view->loading_text);
+		cairo_set_source_rgb (cr,
+				      155 / (double)255,
+				      155 / (double)255,
+				      155 / (double)255);
+		pango_cairo_show_layout (cr, layout);
+		cairo_destroy (cr);
+
+		pango_font_description_free (font_desc);
+		g_object_unref (layout);
+
+		ev_document_fc_mutex_unlock ();
+	}
+
+	width = cairo_image_surface_get_width (view->loading_text) / 2;
+	height = (page_area->height - cairo_image_surface_get_height (view->loading_text)) / 2;
 	
-	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
-
-	font_desc = pango_font_description_new ();
-
-
-	/* We set the font to be 10 points, get the size, and scale appropriately */
-	pango_font_description_set_size (font_desc, 10 * PANGO_SCALE);
-	pango_layout_set_font_description (layout, font_desc);
-	pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-
-	/* Make sure we fit the middle of the page */
-	target_width = MAX (page_area->width / 2, 1);
-	real_scale = ((double)target_width / (double) logical_rect.width) * (PANGO_SCALE * 10);
-	pango_font_description_set_size (font_desc, (int)real_scale);
-	pango_layout_set_font_description (layout, font_desc);
-	pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-
-	gtk_paint_layout (GTK_WIDGET (view)->style,
-			  GTK_WIDGET (view)->window,
-			  GTK_WIDGET_STATE (view),
-			  FALSE,
-			  page_area,
-			  GTK_WIDGET (view),
-			  NULL,
-			  page_area->x + (target_width/2),
-			  page_area->y + (page_area->height - logical_rect.height) / 2,
-			  layout);
-
-	pango_font_description_free (font_desc);
-	g_object_unref (layout);
-
-	ev_document_fc_mutex_unlock ();
+	cr = gdk_cairo_create (GTK_WIDGET (view)->window);
+	cairo_set_source_surface (cr, view->loading_text,
+				  page_area->x + width,
+				  page_area->y + height);
+	cairo_paint (cr);
+	cairo_destroy (cr);
 }
 
 static void
@@ -2988,6 +3002,11 @@ ev_view_destroy (GtkObject *object)
 	if (view->selection_update_id) {
 	    g_source_remove (view->selection_update_id);
 	    view->selection_update_id = 0;
+	}
+
+	if (view->loading_text) {
+		cairo_surface_destroy (view->loading_text);
+		view->loading_text = NULL;
 	}
 
 	ev_view_presentation_transition_stop (view);
@@ -3494,6 +3513,11 @@ ev_view_set_zoom (EvView   *view,
 	if (ABS (view->scale - scale) < EPSILON)
 		return;
 
+	if (view->loading_text) {
+		cairo_surface_destroy (view->loading_text);
+		view->loading_text = NULL;
+	}
+	
 	view->scale = scale;
 	view->pending_resize = TRUE;
 
