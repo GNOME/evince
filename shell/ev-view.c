@@ -1907,7 +1907,7 @@ ev_view_expose_event (GtkWidget      *widget,
 		
 		area.width = widget->allocation.width;
 		area.height = widget->allocation.height;
-		
+
 		draw_loading_text (view,
 				   &area,
 				   &(event->area));

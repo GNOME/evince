@@ -357,6 +357,7 @@ imp_render_get_from_drawable (ImpressDocument *impress_document)
 					 0, 0,
 					 0, 0,
 					 PAGE_WIDTH, PAGE_HEIGHT);
+
   g_cond_broadcast (impress_document->cond);
   return FALSE;
 }
@@ -376,10 +377,12 @@ impress_document_render_pixbuf (EvDocument  *document,
   g_mutex_lock (impress_document->mutex);
   impress_document->cond = g_cond_new ();
 
+  ev_document_fc_mutex_unlock ();
   g_idle_add ((GSourceFunc) imp_render_get_from_drawable, impress_document);
-
   g_cond_wait (impress_document->cond, impress_document->mutex);
   g_cond_free (impress_document->cond);
+  ev_document_fc_mutex_lock ();
+
   g_mutex_unlock (impress_document->mutex);
 
   scaled_pixbuf = gdk_pixbuf_scale_simple (impress_document->pixbuf,
