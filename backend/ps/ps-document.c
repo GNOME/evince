@@ -731,6 +731,10 @@ start_interpreter (PSDocument *gs)
 				gdk_input_add (std_out[0], GDK_INPUT_READ, output, gs);
 			gs->interpreter_error_id =
 				gdk_input_add (std_err[0], GDK_INPUT_READ, output, gs);
+
+			g_free (gv_env);
+			g_free (gs_args);
+			g_free (alpha_args);
 			break;
 	}
 
