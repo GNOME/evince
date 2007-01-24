@@ -534,7 +534,9 @@ ev_job_xfer_run (EvJobXfer *job)
 	}
 	gnome_vfs_uri_unref (source_uri);
 
+	ev_document_fc_mutex_lock ();
 	EV_JOB(job)->document = ev_document_factory_get_document (job->local_uri ? job->local_uri : job->uri, &job->error);
+	ev_document_fc_mutex_unlock ();
 	EV_JOB (job)->finished = TRUE;
 
 	return;
