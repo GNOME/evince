@@ -89,6 +89,7 @@
 #include <gtk/gtk.h>
 #include <gnome.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+#include <libgnomevfs/gnome-vfs-async-ops.h>
 #include <gconf/gconf-client.h>
 
 #include <string.h>
@@ -175,7 +176,7 @@ struct _EvWindowPrivate {
 	EggRecentViewUIManager *recent_view;
 #endif
 
-	EvJob *xfer_job;
+	EvJob *load_job;
 #ifdef WITH_GNOME_PRINT
 	GnomePrintJob *print_job;
 #endif
@@ -214,7 +215,7 @@ static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_si
 							 EvWindow         *ev_window);
 static void     ev_window_set_page_mode                 (EvWindow         *window,
 							 EvWindowPageMode  page_mode);
-static void	ev_window_xfer_job_cb  			(EvJobXfer        *job,
+static void	ev_window_load_job_cb  			(EvJobLoad        *job,
 							 gpointer          data);
 #ifdef WITH_GTK_PRINT
 static void     ev_window_print_job_cb                  (EvJobPrint       *job,
@@ -594,7 +595,7 @@ ev_window_is_empty (const EvWindow *ev_window)
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
 
 	return (ev_window->priv->document == NULL) && 
-		(ev_window->priv->xfer_job == NULL);
+		(ev_window->priv->load_job == NULL);
 }
 
 static void
@@ -956,7 +957,7 @@ password_dialog_response (GtkWidget *password_dialog,
 		password = ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog));
 		if (password) {
 			ev_document_doc_mutex_lock ();
-			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->xfer_job->document),
+			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->load_job->document),
 							   password);
 			ev_document_doc_mutex_unlock ();
 		}
@@ -965,7 +966,7 @@ password_dialog_response (GtkWidget *password_dialog,
 		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
 
 		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-		ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
+		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 		
 		gtk_widget_destroy (password_dialog);
 			
@@ -976,14 +977,14 @@ password_dialog_response (GtkWidget *password_dialog,
 	gtk_widget_destroy (password_dialog);
 }
 
-/* Called either by ev_window_xfer_job_cb or by the "unlock" callback on the
+/* Called either by ev_window_load_job_cb or by the "unlock" callback on the
  * password_view page.  It assumes that ev_window->priv->password_* has been set
  * correctly.  These are cleared by password_dialog_response() */
 
 static void
 ev_window_popup_password_dialog (EvWindow *ev_window)
 {
-	g_assert (ev_window->priv->xfer_job);
+	g_assert (ev_window->priv->load_job);
 
 	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
 
@@ -1008,16 +1009,16 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 }
 
 static void
-ev_window_clear_xfer_job (EvWindow *ev_window)
+ev_window_clear_load_job (EvWindow *ev_window)
 {
-    if (ev_window->priv->xfer_job != NULL) {
+    if (ev_window->priv->load_job != NULL) {
 
-	if (!ev_window->priv->xfer_job->finished)
-	        ev_job_queue_remove_job (ev_window->priv->xfer_job);
+	if (!ev_window->priv->load_job->finished)
+	        ev_job_queue_remove_job (ev_window->priv->load_job);
 
-	g_signal_handlers_disconnect_by_func (ev_window->priv->xfer_job, ev_window_xfer_job_cb, ev_window);
-    	g_object_unref (ev_window->priv->xfer_job);
-	ev_window->priv->xfer_job = NULL;
+	g_signal_handlers_disconnect_by_func (ev_window->priv->load_job, ev_window_load_job_cb, ev_window);
+    	g_object_unref (ev_window->priv->load_job);
+	ev_window->priv->load_job = NULL;
     }
 }
 
@@ -1075,7 +1076,7 @@ ev_window_clear_temp_file (EvWindow *ev_window)
  * function should _not_ necessarily expect those to exist after being
  * called. */
 static void
-ev_window_xfer_job_cb  (EvJobXfer *job,
+ev_window_load_job_cb  (EvJobLoad *job,
 			gpointer data)
 {
 	EvWindow *ev_window = EV_WINDOW (data);
@@ -1087,16 +1088,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 
 	/* Success! */
 	if (job->error == NULL) {
-
-		if (ev_window->priv->uri)
-			g_free (ev_window->priv->uri);
-		ev_window->priv->uri = g_strdup (job->uri);
-
-		if (ev_window->priv->local_uri)
-			g_free (ev_window->priv->local_uri);
-		ev_window->priv->local_uri = 
-		    job->local_uri ? g_strdup (job->local_uri) : NULL;
-		
 		if (ev_window->priv->document)
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
@@ -1125,7 +1116,7 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 				break;
 		}
 
-		ev_window_clear_xfer_job (ev_window);		
+		ev_window_clear_load_job (ev_window);		
 		return;
 	}
 
@@ -1133,8 +1124,6 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 	    job->error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
 		gchar *base_name, *file_name;
 
-		g_free (ev_window->priv->uri);
-		ev_window->priv->uri = g_strdup (job->uri);
 		setup_view_from_metadata (ev_window);
 
 		file_name = gnome_vfs_format_uri_for_display (job->uri);
@@ -1150,7 +1139,7 @@ ev_window_xfer_job_cb  (EvJobXfer *job,
 		ev_window_error_dialog (GTK_WINDOW (ev_window), 
 				        _("Unable to open document"),
 					job->error);
-		ev_window_clear_xfer_job (ev_window);
+		ev_window_clear_load_job (ev_window);
 	}	
 
 	return;
@@ -1186,6 +1175,29 @@ ev_window_close_dialogs (EvWindow *ev_window)
 	ev_window->priv->properties = NULL;
 }
 
+static gint
+xfer_update_progress_callback (GnomeVFSAsyncHandle      *handle,
+			       GnomeVFSXferProgressInfo *info,
+			       EvWindow                 *ev_window)
+{
+	switch (info->status) {
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
+			if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
+				ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+			}
+
+			return 1;
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_VFSERROR:
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_OVERWRITE:
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_DUPLICATE:
+			return 1;
+	        default:
+			g_assert_not_reached ();
+	}
+
+	return 0;
+}
+
 void
 ev_window_open_uri (EvWindow       *ev_window,
 		    const char     *uri,
@@ -1193,19 +1205,68 @@ ev_window_open_uri (EvWindow       *ev_window,
 		    EvWindowRunMode mode,
 		    gboolean        unlink_temp_file)
 {
+	GnomeVFSURI *source_uri;
+	GnomeVFSURI *target_uri;
+	
 	ev_window_close_dialogs (ev_window);
-	ev_window_clear_xfer_job (ev_window);
+	ev_window_clear_load_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 
 	ev_window->priv->unlink_temp_file = unlink_temp_file;
+
+	if (ev_window->priv->uri)
+		g_free (ev_window->priv->uri);
+	ev_window->priv->uri = g_strdup (uri);
 	
-	ev_window->priv->xfer_job = ev_job_xfer_new (uri, dest, mode);
-	g_signal_connect (ev_window->priv->xfer_job,
+	ev_window->priv->load_job = ev_job_load_new (uri, dest, mode);
+	g_signal_connect (ev_window->priv->load_job,
 			  "finished",
-			  G_CALLBACK (ev_window_xfer_job_cb),
+			  G_CALLBACK (ev_window_load_job_cb),
 			  ev_window);
-	ev_job_queue_add_job (ev_window->priv->xfer_job, EV_JOB_PRIORITY_HIGH);
+
+	source_uri = gnome_vfs_uri_new (uri);
+	if (!gnome_vfs_uri_is_local (source_uri) && !ev_window->priv->local_uri) {
+		GnomeVFSAsyncHandle *handle;
+		GList               *slist = NULL;
+		GList               *tlist = NULL;
+		char                *tmp_name;
+		char                *base_name;
+
+		/* We'd like to keep extension of source uri since
+		 * it helps to resolve some mime types, say cbz */
+
+		tmp_name = ev_tmp_filename (NULL);
+		base_name = gnome_vfs_uri_extract_short_name (source_uri);
+		ev_window->priv->local_uri = g_strconcat ("file:", tmp_name, "-", base_name, NULL);
+		ev_job_load_set_uri (EV_JOB_LOAD (ev_window->priv->load_job),
+				     ev_window->priv->local_uri);
+		g_free (base_name);
+		g_free (tmp_name);
+		
+		target_uri = gnome_vfs_uri_new (ev_window->priv->local_uri);
+		
+		slist = g_list_prepend (slist, source_uri);
+		tlist = g_list_prepend (tlist, target_uri);
+		gnome_vfs_async_xfer (&handle, slist, tlist,
+				      GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+				      GNOME_VFS_XFER_ERROR_MODE_ABORT,
+				      GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+				      GNOME_VFS_PRIORITY_DEFAULT,
+				      (GnomeVFSAsyncXferProgressCallback)xfer_update_progress_callback,
+				      ev_window,
+				      NULL, NULL); 
+		
+		g_list_free (slist);
+		g_list_free (tlist);
+		gnome_vfs_uri_unref (target_uri);
+		gnome_vfs_uri_unref (source_uri);
+		
+		return;
+	}
+
+	gnome_vfs_uri_unref (source_uri);
+	ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 }
 
 void
@@ -3673,8 +3734,8 @@ ev_window_dispose (GObject *object)
 		priv->password_view = NULL;
 	}
 
-	if (priv->xfer_job) {
-		ev_window_clear_xfer_job (window);
+	if (priv->load_job) {
+		ev_window_clear_load_job (window);
 	}
 	
 	if (priv->local_uri) {

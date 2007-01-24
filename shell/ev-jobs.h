@@ -41,8 +41,8 @@ typedef struct _EvJobLinksClass EvJobLinksClass;
 typedef struct _EvJobFonts EvJobFonts;
 typedef struct _EvJobFontsClass EvJobFontsClass;
 
-typedef struct _EvJobXfer EvJobXfer;
-typedef struct _EvJobXferClass EvJobXferClass;
+typedef struct _EvJobLoad EvJobLoad;
+typedef struct _EvJobLoadClass EvJobLoadClass;
 
 typedef struct _EvJobPrint EvJobPrint;
 typedef struct _EvJobPrintClass EvJobPrintClass;
@@ -72,10 +72,10 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_FONTS_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FONTS, EvJobFontsClass))
 #define EV_IS_JOB_FONTS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FONTS))
 
-#define EV_TYPE_JOB_XFER		     (ev_job_xfer_get_type())
-#define EV_JOB_XFER(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_XFER, EvJobXfer))
-#define EV_JOB_XFER_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_XFER, EvJobXferClass))
-#define EV_IS_JOB_XFER(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_XFER))
+#define EV_TYPE_JOB_LOAD		     (ev_job_load_get_type())
+#define EV_JOB_LOAD(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD, EvJobLoad))
+#define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
+#define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
 
 #define EV_TYPE_JOB_PRINT                     (ev_job_print_get_type())
 #define EV_JOB_PRINT(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
@@ -170,17 +170,17 @@ struct _EvJobFontsClass
         EvJobClass parent_class;
 };
 
-struct _EvJobXfer
+struct _EvJobLoad
 {
 	EvJob parent;
+	
 	EvLinkDest *dest;
 	EvWindowRunMode mode;
 	GError *error;
-	char *uri;
-	char *local_uri;
+	gchar *uri;
 };
 
-struct _EvJobXferClass
+struct _EvJobLoadClass
 {
 	EvJobClass parent_class;
 };
@@ -244,12 +244,14 @@ GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
 void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
-/* EvJobXfer */
-GType 		ev_job_xfer_get_type 	  (void) G_GNUC_CONST;
-EvJob 	       *ev_job_xfer_new 	  (const gchar 	   *uri,
+/* EvJobLoad */
+GType 		ev_job_load_get_type 	  (void) G_GNUC_CONST;
+EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri,
 					   EvLinkDest      *dest,
 					   EvWindowRunMode  mode);
-void		ev_job_xfer_run 	  (EvJobXfer 	   *xfer);
+void            ev_job_load_set_uri       (EvJobLoad       *load,
+					   const gchar     *uri);
+void		ev_job_load_run 	  (EvJobLoad 	   *load);
 
 /* EvJobPrint */
 GType           ev_job_print_get_type     (void) G_GNUC_CONST;

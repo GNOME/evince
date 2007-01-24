@@ -12,7 +12,7 @@ static GQueue *render_queue_high = NULL;
 static GQueue *render_queue_low = NULL;
 static GQueue *thumbnail_queue_high = NULL;
 static GQueue *thumbnail_queue_low = NULL;
-static GQueue *xfer_queue = NULL;
+static GQueue *load_queue = NULL;
 static GQueue *fonts_queue = NULL;
 static GQueue *print_queue = NULL;
 
@@ -96,8 +96,8 @@ handle_job (EvJob *job)
 		ev_job_thumbnail_run (EV_JOB_THUMBNAIL (job));
 	else if (EV_IS_JOB_LINKS (job))
 		ev_job_links_run (EV_JOB_LINKS (job));
-	else if (EV_IS_JOB_XFER (job))
-		ev_job_xfer_run (EV_JOB_XFER (job));
+	else if (EV_IS_JOB_LOAD (job))
+		ev_job_load_run (EV_JOB_LOAD (job));
 	else if (EV_IS_JOB_RENDER (job))
 		ev_job_render_run (EV_JOB_RENDER (job));
 	else if (EV_IS_JOB_FONTS (job))
@@ -135,7 +135,7 @@ search_for_jobs_unlocked (void)
 	if (job)
 		return job;
 
-	job = (EvJob *) g_queue_pop_head (xfer_queue);
+	job = (EvJob *) g_queue_pop_head (load_queue);
 	if (job)
 		return job;
 
@@ -160,7 +160,7 @@ no_jobs_available_unlocked (void)
 	return g_queue_is_empty (render_queue_high)
 		&& g_queue_is_empty (render_queue_low)
 		&& g_queue_is_empty (links_queue)
-		&& g_queue_is_empty (xfer_queue)
+		&& g_queue_is_empty (load_queue)
 		&& g_queue_is_empty (thumbnail_queue_high)
 		&& g_queue_is_empty (thumbnail_queue_low)
 		&& g_queue_is_empty (fonts_queue)
@@ -220,7 +220,7 @@ ev_job_queue_init (void)
 	ev_queue_mutex = g_mutex_new ();
 
 	links_queue = g_queue_new ();
-	xfer_queue = g_queue_new ();
+	load_queue = g_queue_new ();
 	render_queue_high = g_queue_new ();
 	render_queue_low = g_queue_new ();
 	async_render_queue_high = g_queue_new ();
@@ -256,9 +256,9 @@ find_queue (EvJob         *job,
 				return thumbnail_queue_high;
 			else
 				return thumbnail_queue_low;
-		} else if (EV_IS_JOB_XFER (job)) {
-			/* the priority doesn't effect xfer */
-			return xfer_queue;
+		} else if (EV_IS_JOB_LOAD (job)) {
+			/* the priority doesn't effect load */
+			return load_queue;
 		} else if (EV_IS_JOB_LINKS (job)) {
 			/* the priority doesn't effect links */
 			return links_queue;
@@ -403,8 +403,8 @@ ev_job_queue_remove_job (EvJob *job)
 			retval = retval || remove_job_from_queue_locked (render_queue_low, job);
 		} else if (EV_IS_JOB_LINKS (job)) {
 			retval = remove_job_from_queue_locked (links_queue, job);
-		} else if (EV_IS_JOB_XFER (job)) {
-			retval = remove_job_from_queue_locked (xfer_queue, job);
+		} else if (EV_IS_JOB_LOAD (job)) {
+			retval = remove_job_from_queue_locked (load_queue, job);
 		} else if (EV_IS_JOB_FONTS (job)) {
 			retval = remove_job_from_queue_locked (fonts_queue, job);
 		} else if (EV_IS_JOB_PRINT (job)) {

@@ -300,7 +300,6 @@ main (int argc, char *argv[])
 	}
 #endif
 	
-	gdk_threads_init ();
 	gnome_authentication_manager_init ();
 
 	if (enable_metadata) {
