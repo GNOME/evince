@@ -100,6 +100,7 @@ ev_page_cache_finalize (GObject *object)
 	g_free (page_cache->size_cache);
 	g_free (page_cache->height_to_page);
 	g_free (page_cache->dual_height_to_page);
+	g_strfreev (page_cache->page_labels);
 
 	ev_document_info_free (page_cache->page_info);
 }
