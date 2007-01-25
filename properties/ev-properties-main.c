@@ -103,6 +103,9 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 		g_error_free (error);
 		goto end;
 	}
+	
+	if (!document)
+		goto end;
 
 	label = gtk_label_new (_("Document"));
 	page = ev_properties_view_new ();

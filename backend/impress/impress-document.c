@@ -19,7 +19,9 @@
  */
 
 #include <gtk/gtk.h>
+#include <glib/gi18n.h>
 #include <string.h>
+
 #include "imposter.h"
 #include "impress-document.h"
 #include "ev-document-thumbnails.h"
@@ -286,8 +288,10 @@ impress_document_load (EvDocument  *document,
   filename = g_filename_from_uri (uri, NULL, error);
   if (!filename)
     {
-      //FIXME
-      //g_error_set ();
+      g_set_error (error,
+	           EV_DOCUMENT_ERROR,
+		   EV_DOCUMENT_ERROR_INVALID,
+		   _("Remote files aren't supported"));
       return FALSE;
     }
 
@@ -295,7 +299,10 @@ impress_document_load (EvDocument  *document,
 
   if (!imp)
     {
-      //FIXME translate the err, set error
+      g_set_error (error,
+	           EV_DOCUMENT_ERROR,
+		   EV_DOCUMENT_ERROR_INVALID,
+		   _("Invalid document"));
       g_free (filename);
       return FALSE;
     }
@@ -400,13 +407,23 @@ impress_document_finalize (GObject *object)
 {
   ImpressDocument *impress_document = IMPRESS_DOCUMENT (object);
 
-  g_mutex_free (impress_document->mutex);
+  if (impress_document->mutex)
+    g_mutex_free (impress_document->mutex);
 
-  imp_close (impress_document->imp);
-  imp_delete_context (impress_document->ctx);
-  g_free (impress_document->pango_ctx);
-  g_object_unref (G_OBJECT (impress_document->pixmap));
-  g_object_unref (impress_document->gc);
+  if (impress_document->imp)
+    imp_close (impress_document->imp);
+
+  if (impress_document->ctx)
+    imp_delete_context (impress_document->ctx);
+
+  if (impress_document->pango_ctx)
+    g_object_unref (impress_document->pango_ctx);
+
+  if (impress_document->pixmap)
+    g_object_unref (G_OBJECT (impress_document->pixmap));
+
+  if (impress_document->gc)
+    g_object_unref (impress_document->gc);
 
   G_OBJECT_CLASS (impress_document_parent_class)->finalize (object);
 }
@@ -516,7 +533,7 @@ impress_document_init (ImpressDocument *impress_document)
   impress_document->pixmap = gdk_pixmap_new (window,
 					     PAGE_WIDTH, PAGE_HEIGHT, -1);
   impress_document->gc = gdk_gc_new (impress_document->pixmap);
-  impress_document->pango_ctx = gdk_pango_context_get ();
+  impress_document->pango_ctx = gdk_pango_context_get_for_screen (gdk_screen_get_default ());
 }
 
 /*
