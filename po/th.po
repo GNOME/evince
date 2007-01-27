@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-16 10:39+0700\n"
-"PO-Revision-Date: 2007-01-16 11:36+0700\n"
+"POT-Creation-Date: 2007-01-27 08:40+0700\n"
+"PO-Revision-Date: 2007-01-27 08:48+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n@opentle.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,403 +33,6 @@ msgstr "ไมมีแฟ้มนี้อยู่"
 #: ../backend/dvi/dvi-document.c:106
 msgid "DVI document has incorrect format"
 msgstr "เอกสาร DVI มีรูปแบบไม่ถูกต้อง"
-
-#. this is EOF
-#: ../backend/dvi/mdvi-lib/dviread.c:208
-msgid "unexpected EOF\n"
-msgstr "พบ EOF กลางคัน\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:429
-#, c-format
-msgid "could not load font `%s'\n"
-msgstr "ไม่สามารถอ่านแบบอักษร `%s'\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:483
-#, c-format
-msgid "could not reload `%s'\n"
-msgstr "ไม่สามารถเรียก `%s' ใหม่\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:710
-#, c-format
-msgid "%s: unsupported DVI format (version %u)\n"
-msgstr "%s: ไม่สนับสนุนฟอร์แมต DVI (รุ่น %u)\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:870
-msgid "no pages selected\n"
-msgstr "ไม่ได้เลือกหน้าใดไว้\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:903
-#, c-format
-msgid "%s: File corrupted, or not a DVI file\n"
-msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ DVI\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:984
-#, c-format
-msgid "%s: vf macro had errors\n"
-msgstr "%s: vf macro ผิดพลาด\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:987
-#, c-format
-msgid "%s: stack not empty after vf macro\n"
-msgstr "%s: สแต็กมีข้อมูลค้างหลังจบ vf macro\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1012
-#, c-format
-msgid "%s: could not reopen file (%s)\n"
-msgstr "%s: ไม่สามารถเปิดแฟ้ม (%s) ใหม่ได้\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1029
-#, c-format
-msgid "%s: page %d out of range\n"
-msgstr "%s: หน้า %d ออกนอกช่วง\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1036
-#, c-format
-msgid "%s: bad offset at page %d\n"
-msgstr "%s: ออฟเซ็ตไม่ถูกต้องที่หน้า %d\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1099
-msgid "stack not empty at end of page\n"
-msgstr "สแต็กมีข้อมูลค้างหลังจบหน้า\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1286
-msgid "no default font set yet\n"
-msgstr "ไม่ได้ตั้งแบบอักษรปริยายไว้\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1296
-#, c-format
-msgid "requested character %d does not exist in `%s'\n"
-msgstr "ตัวอักษร %d ที่ต้องการ ไม่ปรากฏใน `%s'\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1369
-msgid "enlarging stack\n"
-msgstr "กำลังขยายขนาดสแต็ก\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1387
-msgid "stack underflow\n"
-msgstr "สแต็กไม่มีข้อมูลให้อ่าน\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1501
-#: ../backend/dvi/mdvi-lib/dviread.c:1523
-#, c-format
-msgid "font %d is not defined\n"
-msgstr "ไม่ได้กำหนดแบบอักษร %d\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1563
-#, c-format
-msgid "font %d is not defined in postamble\n"
-msgstr "ไม่ได้กำหนดฟอนต์ %d ใน postamble\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1575
-#, c-format
-msgid "unexpected opcode %d\n"
-msgstr "opcode %d ผิดตำแหน่ง\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1581
-#, c-format
-msgid "undefined opcode %d\n"
-msgstr "opcode %d ไม่รู้จัก\n"
-
-#: ../backend/dvi/mdvi-lib/font.c:471
-#, c-format
-msgid "%s: no fonts defined\n"
-msgstr "%s: ไม่ได้กำหนดแบบอักษรไว้\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:589
-#, c-format
-msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
-msgstr "%s: %d: [%s] รหัสอักขระ `%s' ที่ร้องขอ ไม่ตรงกับเวกเตอร์ `%s'\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:750
-#, c-format
-msgid "%s: could not load fontmap\n"
-msgstr "%s: ไม่สามารถอ่าน fontmap\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:764
-#, c-format
-msgid "%s: could not set as default encoding\n"
-msgstr "%s: ไม่สามารถตั้งเป็นรหัสอักขระปริยาย\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:843
-#, c-format
-msgid "encoding vector `%s' is in use\n"
-msgstr "เวกเตอร์รหัสอักขระ `%s' กำลังใช้งานอยู่\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:112
-#, c-format
-msgid "GF: invalid opcode %d in character %d\n"
-msgstr "GF: opcode %d ไม่ถูกต้องในอักขระ %d\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:210
-#, c-format
-msgid "(gf) Character %d: invalid opcode %d\n"
-msgstr "(gf) อักขระ %d: opcode %d ไม่ถูกต้อง\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:226
-#, c-format
-msgid "(gf) character %d has an incorrect bounding box\n"
-msgstr "(gf) อักขระ %d มีกรอบวาดไม่ถูกต้อง\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:289
-#, c-format
-msgid "%s: bad checksum (expected %u, found %u)\n"
-msgstr "%s: checksum ผิดพลาด (ต้องการ %u แต่พบ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:325
-#, c-format
-msgid "%s: junk in postamble\n"
-msgstr "%s: มีขยะใน postamble\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:362
-#, c-format
-msgid "%s: File corrupted, or not a GF file\n"
-msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ GF\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:211
-#, c-format
-msgid "invalid page specification `%s'\n"
-msgstr "ข้อกำหนดหน้า `%s' ผิดพลาด\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:231
-msgid "garbage after DVI page specification ignored\n"
-msgstr "จะละเลยขยะหลังข้อกำหนดหน้าของ DVI\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:259
-msgid "more than 10 counters in page specification\n"
-msgstr "more than 10 counters in page specification\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:261
-msgid "garbage after TeX page specification ignored\n"
-msgstr "จะละเลยขยะหลังข้อกำหนดหน้าของ TeX\n"
-
-#: ../backend/dvi/mdvi-lib/paper.c:103 ../backend/dvi/mdvi-lib/paper.c:110
-msgid "custom"
-msgstr "กำหนดเอง"
-
-#: ../backend/dvi/mdvi-lib/pk.c:309
-msgid "Bad PK file: More bits than required\n"
-msgstr "แฟ้ม PK ผิดพลาด: มีจำนวนบิตมากกว่าที่ต้องการ\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:362
-#, c-format
-msgid "%s: checksum mismatch (expected %u, got %u)\n"
-msgstr "%s: checksum ไม่ตรง (ต้องการ %u แต่ได้ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:419
-#, c-format
-msgid "%s: unexpected preamble\n"
-msgstr "%s: พบ postamble ที่ไม่ต้องการ\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:502
-#, c-format
-msgid "%s: unexpected end of file (no postamble)\n"
-msgstr "%s: แฟ้มจบกลางคัน (ไม่มี postamble)\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:508
-msgid "invalid PK file! (junk in postamble)\n"
-msgstr "แฟ้ม PK ผิดพลาด! (มีขยะใน postamble)\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:525
-#, c-format
-msgid "%s: File corrupted, or not a PK file\n"
-msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ PK\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:150
-#, c-format
-msgid "%s: malformed value for key `%s'\n"
-msgstr "%s: รูปแบบผิดพลาดในคีย์ `%s'\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:161
-#, c-format
-msgid "%s: unknown key `%s' ignored\n"
-msgstr "%s: จะละเลยคีย์ `%s' ซึ่งไม่รู้จัก\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:166
-#, c-format
-msgid "%s: no argument for key `%s', using defaults\n"
-msgstr "%s: ไม่มีอาร์กิวเมนต์สำหรับคีย์ `%s' จะใช้ค่าปริยาย\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:170
-#, c-format
-msgid "%s: argument `%s' ignored for key `%s'\n"
-msgstr "%s: จะละเลยอาร์กิวเมนต์ `%s' สำหรับคีย์ `%s'\n"
-
-#: ../backend/dvi/mdvi-lib/special.c:242
-#, c-format
-msgid "%s: tried to pop top level layer\n"
-msgstr "%s: พยายามจะ pop เลเยอร์บนสุด\n"
-
-#: ../backend/dvi/mdvi-lib/t1.c:186
-msgid "(t1) failed to reset device resolution\n"
-msgstr "(t1) ไม่สามารถตั้งค่าความละเอียดของอุปกรณ์ใหม่ได้\n"
-
-#: ../backend/dvi/mdvi-lib/t1.c:214
-#, c-format
-msgid "%s: could not encode font\n"
-msgstr "%s: ไม่สามารถลงรหัสอักขระแบบอักษร\n"
-
-#: ../backend/dvi/mdvi-lib/t1.c:452
-#, c-format
-msgid "(t1) unsupported bitmap pad size %d\n"
-msgstr "(t1) ไม่สนับสนุนขนาดเติมเต็มบิตแมป %d\n"
-
-#: ../backend/dvi/mdvi-lib/tfm.c:177
-#, c-format
-msgid "%s: Checksum mismatch (got %u, expected %u)\n"
-msgstr "%s: checksum ไม่ตรง (ได้ %u แต่ต้องการ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:90
-#, c-format
-msgid "%s: Error reading AFM data\n"
-msgstr "%s: เกิดข้อผิดพลาดขณะอ่านแฟ้ม AFM\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:180
-#, c-format
-msgid "Warning: TFM file `%s' has suspicious size\n"
-msgstr "คำเตือน: แฟ้ม TFM `%s' มีขนาดผิดปกติ\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:230 ../backend/dvi/mdvi-lib/tfmfile.c:511
-#, c-format
-msgid "%s: font coding scheme truncated to 40 bytes\n"
-msgstr "%s: แนวการลงรหัสแบบอักษรจะถูกตัดทอนลงเหลือ 40 ไบต์\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:290 ../backend/dvi/mdvi-lib/tfmfile.c:589
-#, c-format
-msgid "%s: File corrupted, or not a TFM file\n"
-msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ TFM\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:150
-#, c-format
-msgid "(tt) %s: could not load face: %s\n"
-msgstr "(tt) %s: ไม่สามารถอ่าน face: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:158
-#, c-format
-msgid "(tt) %s: could not create face: %s\n"
-msgstr "(tt) %s: ไม่สามารถสร้าง face: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:167
-#, c-format
-msgid "(tt) %s: could not create glyph: %s\n"
-msgstr "(tt) %s: ไม่สามารถสร้าง glyph %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:200
-#, c-format
-msgid "(tt) %s: no acceptable map found, using #0\n"
-msgstr "(tt) %s: ไม่พบ map ที่ใช้ได้ จะใช้ #0\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:213
-#, c-format
-msgid "(tt) %s: could not set resolution: %s\n"
-msgstr "(tt) %s: ไม่สามารถกำหนดความละเอียด: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:220
-#, c-format
-msgid "(tt) %s: could not set point size: %s\n"
-msgstr "(tt) %s: ไม่สามารถกำหนดขนาดพอยนต์: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:239
-#, c-format
-msgid "(tt) %s: could not load PS name table\n"
-msgstr "(tt) %s: ไม่สามารถอ่านตารางชื่อ PS\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:264
-#, c-format
-msgid "%s: no encoding vector found, expect bad output\n"
-msgstr "%s: ไม่พบเวกเตอร์รหัสอักขระ อาจได้ผลลัพธ์ผิดพลาด\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:324
-#, c-format
-msgid "(tt) %s: no font metric data\n"
-msgstr "(tt) %s: ไม่พบข้อมูลการกำหนดขนาดต่างๆ ในแบบอักษร\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:148
-msgid "Crashing"
-msgstr "พัง"
-
-#: ../backend/dvi/mdvi-lib/util.c:158
-#, c-format
-msgid "%s: Error: "
-msgstr "%s: ผิดพลาด: "
-
-#: ../backend/dvi/mdvi-lib/util.c:165
-msgid "Error"
-msgstr "ผิดพลาด"
-
-#: ../backend/dvi/mdvi-lib/util.c:174
-#, c-format
-msgid "%s: Warning: "
-msgstr "%s: คำเตือน: "
-
-#: ../backend/dvi/mdvi-lib/util.c:181
-msgid "Warning"
-msgstr "คำเตือน"
-
-#: ../backend/dvi/mdvi-lib/util.c:190
-#, c-format
-msgid "%s: Fatal: "
-msgstr "%s: ผิดพลาดร้ายแรง: "
-
-#: ../backend/dvi/mdvi-lib/util.c:197
-msgid "Fatal"
-msgstr "ผิดพลาดร้ายแรง"
-
-#: ../backend/dvi/mdvi-lib/util.c:211
-#, c-format
-msgid "out of memory allocating %u bytes\n"
-msgstr "หน่วยความจำไม่พอสำหรับการจองเนื้อที่ %u ไบต์\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:221
-msgid "attempted to reallocate with zero size\n"
-msgstr "พยายามเปลี่ยนเนื้อที่จองด้วยขนาดศูนย์\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:224
-#, c-format
-msgid "failed to reallocate %u bytes\n"
-msgstr "ไม่สามารถเปลี่ยนเนื้อที่จองเป็น %u ไบต์\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:233
-msgid "attempted to callocate 0 members\n"
-msgstr "พยายามจะจองสมาชิก 0 รายการ\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:235
-#, c-format
-msgid "attempted to callocate %u members with size 0\n"
-msgstr "พยายามจะจองเนื้อที่สะอาด (calloc) ให้กับสมาชิก %u รายการ ด้วยขนาด 0\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:239
-#, c-format
-msgid "failed to allocate %ux%u bytes\n"
-msgstr "ไม่สามารถจองเนื้อที่ %ux%u ไบต์\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:247
-msgid "attempted to free NULL pointer\n"
-msgstr "พยายามจะคืนเนื้อที่ด้วยพอยน์เตอร์ NULL\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:81
-#, c-format
-msgid "%s: Checksum mismatch (expected %u, got %u)\n"
-msgstr "%s: checksum ไม่ตรง (ต้องการ %u แต่ได้ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:129
-#, c-format
-msgid "(vf) %s: could not load font `%s'\n"
-msgstr "(vf) %s: ไม่สามารถอ่านแบบอักษร `%s'\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:179
-#, c-format
-msgid "(vf) %s: character %d redefined\n"
-msgstr "(vf) %s: อักขระ %d ถูกกำหนดซ้ำ\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:202
-#, c-format
-msgid "(vf) %s: no postamble\n"
-msgstr "(vf) %s: ไม่มี postamble\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:228
-#, c-format
-msgid "%s: File corrupted, or not a VF file.\n"
-msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ VF\n"
 
 #. translators: this is the document security state
 #: ../backend/pdf/ev-poppler.cc:629
@@ -605,47 +208,55 @@ msgstr "เอกสารไม่ถูกอ่าน"
 msgid "Broken pipe."
 msgstr "ไปป์พัง"
 
-#: ../backend/ps/ps-document.c:749
+#: ../backend/ps/ps-document.c:753
 msgid "Interpreter failed."
 msgstr "ตัวตีความล้มเหลว"
 
-#: ../backend/ps/ps-document.c:875
+#: ../backend/ps/ps-document.c:879
 #, c-format
 msgid "Error while decompressing file “%s”:\n"
 msgstr "เกิดข้อผิดพลาดขณะขยายการบีบอัดแฟ้ม “%s”:\n"
 
-#: ../backend/ps/ps-document.c:933
+#: ../backend/ps/ps-document.c:937
 #, c-format
 msgid "Cannot open file “%s”.\n"
 msgstr "ไม่สามารถเปิดแฟ้ม “%s”\n"
 
-#: ../backend/ps/ps-document.c:938
+#: ../backend/ps/ps-document.c:942
 msgid "File is not readable."
 msgstr "แฟ้มไม่สามารถอ่านได้"
 
-#: ../backend/ps/ps-document.c:958
+#: ../backend/ps/ps-document.c:962
 msgid "Document loaded."
 msgstr "อ่านเรียกเอกสารเรียบร้อย"
 
-#: ../backend/ps/ps-document.c:1059
+#: ../backend/ps/ps-document.c:1063
 #, c-format
 msgid ""
 "Failed to load document “%s”. Ghostscript interpreter was not found in path"
 msgstr ""
 "ไม่สามารถเปิดเอกสาร “%s” ได้ เนื่องจากไม่พบโปรแกรมแปลคำสั่ง Ghostscript ในพาธโปรแกรม"
 
-#: ../backend/ps/ps-document.c:1071
+#: ../backend/ps/ps-document.c:1075
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "ไม่สามารถเปิดเอกสาร “%s” ได้"
 
-#: ../backend/ps/ps-document.c:1247
+#: ../backend/ps/ps-document.c:1251
 msgid "Encapsulated PostScript"
 msgstr "โพสต์สคริปต์เข้าแคปซูล"
 
-#: ../backend/ps/ps-document.c:1248
+#: ../backend/ps/ps-document.c:1252
 msgid "PostScript"
 msgstr "โพสต์สคริปต์"
+
+#: ../backend/impress/impress-document.c:294
+msgid "Remote files aren't supported"
+msgstr "ไม่สนับสนุนแฟ้มในเครือข่าย"
+
+#: ../backend/impress/impress-document.c:305
+msgid "Invalid document"
+msgstr "เอกสารใช้การไม่ได้"
 
 #: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:316
 #, c-format
@@ -684,7 +295,7 @@ msgstr "เอกสาร PostScript"
 msgid "PDF Documents"
 msgstr "เอกสาร PDF"
 
-#: ../libdocument/ev-document-factory.c:409 ../shell/ev-window.c:4389
+#: ../libdocument/ev-document-factory.c:409 ../shell/ev-window.c:4450
 msgid "Images"
 msgstr "รูปภาพ"
 
@@ -763,7 +374,7 @@ msgid "Running in presentation mode"
 msgstr "กำลังทำงานในแบบนำเสนอ"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4049
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4110
 msgid "Best Fit"
 msgstr "พอดีหน้า"
 
@@ -807,7 +418,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3218
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3279
 #: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "โปรแกรมดูเอกสาร"
@@ -892,7 +503,7 @@ msgstr "ละเลยข้อห้ามของเอกสาร"
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "ละเลยข้อห้ามของเอกสาร เช่น การห้ามทำสำเนาหรือห้ามจัดพิมพ์"
 
-#: ../properties/ev-properties-main.c:107
+#: ../properties/ev-properties-main.c:110
 msgid "Document"
 msgstr "เอกสาร"
 
@@ -1069,7 +680,7 @@ msgstr "กำลังอ่านข้อมูลแบบอักษร...
 msgid "Attachments"
 msgstr "แฟ้มแนบ"
 
-#: ../shell/ev-sidebar-links.c:253 ../shell/ev-view.c:2790
+#: ../shell/ev-sidebar-links.c:253 ../shell/ev-view.c:2791
 msgid "Loading..."
 msgstr "กำลังอ่าน..."
 
@@ -1105,120 +716,120 @@ msgstr "เลื่อนหน้ากระดาษลง"
 msgid "Document View"
 msgstr "ช่องมองเอกสาร"
 
-#: ../shell/ev-view.c:1408
+#: ../shell/ev-view.c:1407
 msgid "Go to first page"
 msgstr "ไปยังหน้าแรก"
 
-#: ../shell/ev-view.c:1410
+#: ../shell/ev-view.c:1409
 msgid "Go to previous page"
 msgstr "ไปยังหน้าก่อนหน้านี้"
 
-#: ../shell/ev-view.c:1412
+#: ../shell/ev-view.c:1411
 msgid "Go to next page"
 msgstr "ไปยังหน้าถัดไป"
 
-#: ../shell/ev-view.c:1414
+#: ../shell/ev-view.c:1413
 msgid "Go to last page"
 msgstr "ไปยังหน้าสุดท้าย"
 
-#: ../shell/ev-view.c:1416
+#: ../shell/ev-view.c:1415
 msgid "Go to page"
 msgstr "ไปยังหน้าที่กำหนด"
 
-#: ../shell/ev-view.c:1418
+#: ../shell/ev-view.c:1417
 msgid "Find"
 msgstr "หา"
 
-#: ../shell/ev-view.c:1445
+#: ../shell/ev-view.c:1444
 #, c-format
 msgid "Go to page %s"
 msgstr "ไปยังหน้า %s"
 
-#: ../shell/ev-view.c:1450
+#: ../shell/ev-view.c:1449
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "ไปยัง %s ในแฟ้ม “%s”"
 
-#: ../shell/ev-view.c:1453
+#: ../shell/ev-view.c:1452
 #, c-format
 msgid "Go to file “%s”"
 msgstr "ไปยังแฟ้ม “%s”"
 
-#: ../shell/ev-view.c:1462
+#: ../shell/ev-view.c:1461
 #, c-format
 msgid "Launch %s"
 msgstr "เรียก %s"
 
-#: ../shell/ev-view.c:1852
+#: ../shell/ev-view.c:1851
 msgid "End of presentation. Press Escape to exit."
 msgstr "จบงานนำเสนอ กรุณากด Escape เพื่อปิด"
 
-#: ../shell/ev-view.c:2510
+#: ../shell/ev-view.c:2507
 msgid "Jump to page:"
 msgstr "ไปที่หน้า:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:4084
+#: ../shell/ev-view.c:4107
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "พบ %d แห่งในหน้านี้"
 
-#: ../shell/ev-view.c:4093
+#: ../shell/ev-view.c:4116
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "ยังเหลืออีก %3d%% ในการค้นหา"
 
-#: ../shell/ev-window.c:1151
+#: ../shell/ev-window.c:1140
 msgid "Unable to open document"
 msgstr "ไม่สามารถเปิดเอกสารได้"
 
-#: ../shell/ev-window.c:1245
+#: ../shell/ev-window.c:1306
 msgid "Open Document"
 msgstr "เปิดเอกสาร"
 
-#: ../shell/ev-window.c:1300
+#: ../shell/ev-window.c:1361
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "ไม่สามารถสร้างลิงก์สัญลักษณ์ “%s”: %s"
 
-#: ../shell/ev-window.c:1325
+#: ../shell/ev-window.c:1386
 msgid "Cannot open a copy."
 msgstr "ไม่สามารถเปิดสำเนา"
 
-#: ../shell/ev-window.c:1606
+#: ../shell/ev-window.c:1667
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "ไม่สามารถสร้างแฟ้ม “%s”: %s"
 
-#: ../shell/ev-window.c:1633
+#: ../shell/ev-window.c:1694
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ไม่สามารถบันทึกแฟ้มนี้เป็น “%s” ได้"
 
-#: ../shell/ev-window.c:1655
+#: ../shell/ev-window.c:1716
 msgid "Save a Copy"
 msgstr "บันทึกสำเนา"
 
-#: ../shell/ev-window.c:1736
+#: ../shell/ev-window.c:1797
 msgid "Failed to print document"
 msgstr "ไม่สามารถพิมพ์เอกสารได้"
 
-#: ../shell/ev-window.c:1855 ../shell/ev-window.c:2040
+#: ../shell/ev-window.c:1916 ../shell/ev-window.c:2101
 msgid "Printing is not supported on this printer."
 msgstr "ไม่สนับสนุนการพิมพ์สำหรับเครื่องพิมพ์นี้"
 
-#: ../shell/ev-window.c:1965 ../shell/ev-window.c:2091
+#: ../shell/ev-window.c:2026 ../shell/ev-window.c:2152
 msgid "Print"
 msgstr "พิมพ์"
 
-#: ../shell/ev-window.c:2030
+#: ../shell/ev-window.c:2091
 msgid "Generating PDF is not supported"
 msgstr "ไม่สนับสนุนการสร้าง PDF"
 
-#: ../shell/ev-window.c:2042
+#: ../shell/ev-window.c:2103
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
@@ -1227,20 +838,20 @@ msgstr ""
 "คุณได้พยายามพิมพ์โดยเครื่องพิมพ์ที่ใช้ไดรเวอร์ “%s” โปรแกรมนี้ต้องการไดรเวอร์เครื่องพิมพ์แบบ "
 "PostScript"
 
-#: ../shell/ev-window.c:2100
+#: ../shell/ev-window.c:2161
 msgid "Pages"
 msgstr "หน้า"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:2467 ../shell/ev-window.c:3863
+#: ../shell/ev-window.c:2528 ../shell/ev-window.c:3924
 msgid "Leave Fullscreen"
 msgstr "เลิกแสดงเต็มจอ"
 
-#: ../shell/ev-window.c:2839
+#: ../shell/ev-window.c:2900
 msgid "Toolbar Editor"
 msgstr "แก้ไขแถบเครื่องมือ"
 
-#: ../shell/ev-window.c:3214
+#: ../shell/ev-window.c:3275
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -1249,7 +860,7 @@ msgstr ""
 "โปรแกรมดูเอกสาร\n"
 "อาศัย poppler %s (%s)"
 
-#: ../shell/ev-window.c:3242
+#: ../shell/ev-window.c:3303
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1260,7 +871,7 @@ msgstr ""
 "GNU General Public License ที่เผยแพร่โดยมูลนิธิซอฟต์แวร์เสรี ไม่ว่าจะเป็นสัญญาอนุญาตรุ่นที่ 2 "
 "หรือรุ่นถัดมา (ตามแต่คุณจะเลือก)\n"
 
-#: ../shell/ev-window.c:3246
+#: ../shell/ev-window.c:3307
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1272,7 +883,7 @@ msgstr ""
 "_ความเหมาะสมสำหรับวัตถุประสงค์เฉพาะกิจใดๆ_ กรุณาอ่าน GNU General Public License "
 "เพื่อดูรายละเอียดเพิ่มเติม\n"
 
-#: ../shell/ev-window.c:3250
+#: ../shell/ev-window.c:3311
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -1282,339 +893,339 @@ msgstr ""
 "กรุณาติดต่อไปที่ Free Software Foundation, Inc., 59 Temple Place, Suite 330, "
 "Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:3274 ../shell/main.c:284
+#: ../shell/ev-window.c:3335 ../shell/main.c:284
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3277
+#: ../shell/ev-window.c:3338
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 ผู้จัดทำ Evince"
 
-#: ../shell/ev-window.c:3283
+#: ../shell/ev-window.c:3344
 msgid "translator-credits"
 msgstr ""
 "Isriya Paireepairit <markpeak@gmail.com>\n"
 "Theppitak Karoonboonyanan <thep@linux.thai.net>"
 
-#: ../shell/ev-window.c:3780
+#: ../shell/ev-window.c:3841
 msgid "_File"
 msgstr "แ_ฟ้ม"
 
-#: ../shell/ev-window.c:3781
+#: ../shell/ev-window.c:3842
 msgid "_Edit"
 msgstr "แ_ก้ไข"
 
-#: ../shell/ev-window.c:3782
+#: ../shell/ev-window.c:3843
 msgid "_View"
 msgstr "_มุมมอง"
 
-#: ../shell/ev-window.c:3783
+#: ../shell/ev-window.c:3844
 msgid "_Go"
 msgstr "_ไป"
 
-#: ../shell/ev-window.c:3784
+#: ../shell/ev-window.c:3845
 msgid "_Help"
 msgstr "_วิธีใช้"
 
 #. File menu
-#: ../shell/ev-window.c:3787 ../shell/ev-window.c:3959
+#: ../shell/ev-window.c:3848 ../shell/ev-window.c:4020
 msgid "_Open..."
 msgstr "_เปิด..."
 
-#: ../shell/ev-window.c:3788
+#: ../shell/ev-window.c:3849
 msgid "Open an existing document"
 msgstr "เปิดเอกสาร"
 
-#: ../shell/ev-window.c:3790
+#: ../shell/ev-window.c:3851
 msgid "Open a _Copy"
 msgstr "เปิด_สำเนา"
 
-#: ../shell/ev-window.c:3791
+#: ../shell/ev-window.c:3852
 msgid "Open a copy of the current document in a new window"
 msgstr "เปิดสำเนาของเอกสารปัจจุบันในหน้าต่างใหม่"
 
-#: ../shell/ev-window.c:3793 ../shell/ev-window.c:3961
+#: ../shell/ev-window.c:3854 ../shell/ev-window.c:4022
 msgid "_Save a Copy..."
 msgstr "_บันทึกสำเนา..."
 
-#: ../shell/ev-window.c:3794
+#: ../shell/ev-window.c:3855
 msgid "Save a copy of the current document"
 msgstr "บันทึกสำเนาของเอกสารปัจจุบัน"
 
-#: ../shell/ev-window.c:3796
+#: ../shell/ev-window.c:3857
 msgid "Print Set_up..."
 msgstr "ตั้ง_ค่างานพิมพ์..."
 
-#: ../shell/ev-window.c:3797
+#: ../shell/ev-window.c:3858
 msgid "Setup the page settings for printing"
 msgstr "ตั้งค่าหน้ากระดาษสำหรับการพิมพ์"
 
-#: ../shell/ev-window.c:3799
+#: ../shell/ev-window.c:3860
 msgid "_Print..."
 msgstr "_พิมพ์..."
 
-#: ../shell/ev-window.c:3800
+#: ../shell/ev-window.c:3861
 msgid "Print this document"
 msgstr "พิมพ์เอกสารนี้"
 
-#: ../shell/ev-window.c:3802
+#: ../shell/ev-window.c:3863
 msgid "P_roperties"
 msgstr "คุณ_สมบัติ"
 
-#: ../shell/ev-window.c:3811 ../shell/ev-window.c:3813
+#: ../shell/ev-window.c:3872 ../shell/ev-window.c:3874
 msgid "Select _All"
 msgstr "เลือกทั้ง_หมด"
 
-#: ../shell/ev-window.c:3816
+#: ../shell/ev-window.c:3877
 msgid "_Find..."
 msgstr "_หา..."
 
-#: ../shell/ev-window.c:3817
+#: ../shell/ev-window.c:3878
 msgid "Find a word or phrase in the document"
 msgstr "ค้นหาคำหรือวลีในเอกสาร"
 
-#: ../shell/ev-window.c:3819
+#: ../shell/ev-window.c:3880
 msgid "Find Ne_xt"
 msgstr "ค้นหา_ต่อไป"
 
-#: ../shell/ev-window.c:3821
+#: ../shell/ev-window.c:3882
 msgid "Find Pre_vious"
 msgstr "หา_ก่อนหน้า"
 
-#: ../shell/ev-window.c:3823
+#: ../shell/ev-window.c:3884
 msgid "T_oolbar"
 msgstr "แถบเ_ครื่องมือ"
 
-#: ../shell/ev-window.c:3825
+#: ../shell/ev-window.c:3886
 msgid "Rotate _Left"
 msgstr "หมุน_ซ้าย"
 
-#: ../shell/ev-window.c:3827
+#: ../shell/ev-window.c:3888
 msgid "Rotate _Right"
 msgstr "หมุน_ขวา"
 
-#: ../shell/ev-window.c:3832
+#: ../shell/ev-window.c:3893
 msgid "Enlarge the document"
 msgstr "ขยายเอกสาร"
 
-#: ../shell/ev-window.c:3835
+#: ../shell/ev-window.c:3896
 msgid "Shrink the document"
 msgstr "ย่อเอกสาร"
 
-#: ../shell/ev-window.c:3837
+#: ../shell/ev-window.c:3898
 msgid "_Reload"
 msgstr "_อ่านใหม่"
 
-#: ../shell/ev-window.c:3838
+#: ../shell/ev-window.c:3899
 msgid "Reload the document"
 msgstr "อ่านเอกสารใหม่"
 
 #. Go menu
-#: ../shell/ev-window.c:3842
+#: ../shell/ev-window.c:3903
 msgid "_Previous Page"
 msgstr "หน้า_ก่อน"
 
-#: ../shell/ev-window.c:3843
+#: ../shell/ev-window.c:3904
 msgid "Go to the previous page"
 msgstr "ไปยังหน้าก่อนหน้านี้"
 
-#: ../shell/ev-window.c:3845
+#: ../shell/ev-window.c:3906
 msgid "_Next Page"
 msgstr "หน้าถั_ดไป"
 
-#: ../shell/ev-window.c:3846
+#: ../shell/ev-window.c:3907
 msgid "Go to the next page"
 msgstr "ไปยังหน้าถัดไป"
 
-#: ../shell/ev-window.c:3848
+#: ../shell/ev-window.c:3909
 msgid "_First Page"
 msgstr "หน้าแ_รก"
 
-#: ../shell/ev-window.c:3849
+#: ../shell/ev-window.c:3910
 msgid "Go to the first page"
 msgstr "ไปยังหน้าแรก"
 
-#: ../shell/ev-window.c:3851
+#: ../shell/ev-window.c:3912
 msgid "_Last Page"
 msgstr "หน้าสุด_ท้าย"
 
-#: ../shell/ev-window.c:3852
+#: ../shell/ev-window.c:3913
 msgid "Go to the last page"
 msgstr "ไปยังหน้าสุดท้าย"
 
 #. Help menu
-#: ../shell/ev-window.c:3856
+#: ../shell/ev-window.c:3917
 msgid "_Contents"
 msgstr "เ_นื้อหา"
 
-#: ../shell/ev-window.c:3859
+#: ../shell/ev-window.c:3920
 msgid "_About"
 msgstr "เ_กี่ยวกับ"
 
-#: ../shell/ev-window.c:3864
+#: ../shell/ev-window.c:3925
 msgid "Leave fullscreen mode"
 msgstr "ออกจากการแสดงผลเต็มจอ"
 
 #. View Menu
-#: ../shell/ev-window.c:3915
+#: ../shell/ev-window.c:3976
 msgid "_Toolbar"
 msgstr "แถบเ_ครื่องมือ"
 
-#: ../shell/ev-window.c:3916
+#: ../shell/ev-window.c:3977
 msgid "Show or hide the toolbar"
 msgstr "แสดงหรือซ่อนแถบเครื่องมือ"
 
-#: ../shell/ev-window.c:3918
+#: ../shell/ev-window.c:3979
 msgid "Side _Pane"
 msgstr "แถบ_ข้าง"
 
-#: ../shell/ev-window.c:3919
+#: ../shell/ev-window.c:3980
 msgid "Show or hide the side pane"
 msgstr "แสดงหรือซ่อนแถบข้าง"
 
-#: ../shell/ev-window.c:3921
+#: ../shell/ev-window.c:3982
 msgid "_Continuous"
 msgstr "แสดง_หน้าต่อกัน"
 
-#: ../shell/ev-window.c:3922
+#: ../shell/ev-window.c:3983
 msgid "Show the entire document"
 msgstr "แสดงทั้งเอกสาร"
 
-#: ../shell/ev-window.c:3924
+#: ../shell/ev-window.c:3985
 msgid "_Dual"
 msgstr "_หน้าคู่"
 
-#: ../shell/ev-window.c:3925
+#: ../shell/ev-window.c:3986
 msgid "Show two pages at once"
 msgstr "แสดงครั้งละสองหน้า"
 
-#: ../shell/ev-window.c:3927
+#: ../shell/ev-window.c:3988
 msgid "_Fullscreen"
 msgstr "เต็_มจอ"
 
-#: ../shell/ev-window.c:3928
+#: ../shell/ev-window.c:3989
 msgid "Expand the window to fill the screen"
 msgstr "ขยายขนาดหน้าต่างให้เต็มหน้าจอ"
 
-#: ../shell/ev-window.c:3930
+#: ../shell/ev-window.c:3991
 msgid "_Presentation"
 msgstr "นำเ_สนอ"
 
-#: ../shell/ev-window.c:3931
+#: ../shell/ev-window.c:3992
 msgid "Run document as a presentation"
 msgstr "แสดงเอกสารแบบนำเสนอ"
 
-#: ../shell/ev-window.c:3933
+#: ../shell/ev-window.c:3994
 msgid "_Best Fit"
 msgstr "_พอดีหน้า"
 
-#: ../shell/ev-window.c:3934
+#: ../shell/ev-window.c:3995
 msgid "Make the current document fill the window"
 msgstr "แสดงเอกสารทั้งหน้าให้พอดีกับหน้าต่าง"
 
-#: ../shell/ev-window.c:3936
+#: ../shell/ev-window.c:3997
 msgid "Fit Page _Width"
 msgstr "เ_ท่าความกว้าง"
 
-#: ../shell/ev-window.c:3937
+#: ../shell/ev-window.c:3998
 msgid "Make the current document fill the window width"
 msgstr "แสดงความกว้างเอกสารให้พอดีกับความกว้างหน้าต่าง"
 
 #. Links
-#: ../shell/ev-window.c:3944
+#: ../shell/ev-window.c:4005
 msgid "_Open Link"
 msgstr "_เปิดลิงก์"
 
-#: ../shell/ev-window.c:3946
+#: ../shell/ev-window.c:4007
 msgid "_Go To"
 msgstr "_ไป"
 
-#: ../shell/ev-window.c:3948
+#: ../shell/ev-window.c:4009
 msgid "Open in New _Window"
 msgstr "เปิดในหน้า_ต่างใหม่"
 
-#: ../shell/ev-window.c:3950
+#: ../shell/ev-window.c:4011
 msgid "_Copy Link Address"
 msgstr "_คัดลอกที่อยู่ลิงก์"
 
-#: ../shell/ev-window.c:3952
+#: ../shell/ev-window.c:4013
 msgid "_Save Image As..."
 msgstr "_บันทึกภาพเป็น..."
 
-#: ../shell/ev-window.c:3954
+#: ../shell/ev-window.c:4015
 msgid "Copy _Image"
 msgstr "คัดลอก_ภาพ"
 
-#: ../shell/ev-window.c:3989
+#: ../shell/ev-window.c:4050
 msgid "Page"
 msgstr "หน้า"
 
-#: ../shell/ev-window.c:3990
+#: ../shell/ev-window.c:4051
 msgid "Select Page"
 msgstr "เลือกหน้า"
 
-#: ../shell/ev-window.c:4002
+#: ../shell/ev-window.c:4063
 msgid "Zoom"
 msgstr "ย่อ-ขยาย"
 
-#: ../shell/ev-window.c:4004
+#: ../shell/ev-window.c:4065
 msgid "Adjust the zoom level"
 msgstr "ปรับอัตราส่วนย่อ-ขยาย"
 
-#: ../shell/ev-window.c:4014
+#: ../shell/ev-window.c:4075
 msgid "Navigation"
 msgstr "เส้นทางการอ่าน"
 
-#: ../shell/ev-window.c:4016
+#: ../shell/ev-window.c:4077
 msgid "Back"
 msgstr "ย้อนกลับ"
 
-#: ../shell/ev-window.c:4018
+#: ../shell/ev-window.c:4079
 msgid "Move across visited pages"
 msgstr "เปลี่ยนไปมาในหน้าที่อ่านมาแล้ว"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4032
+#: ../shell/ev-window.c:4093
 msgid "Previous"
 msgstr "ถอย"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4037
+#: ../shell/ev-window.c:4098
 msgid "Next"
 msgstr "เดินหน้า"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4041
+#: ../shell/ev-window.c:4102
 msgid "Zoom In"
 msgstr "ขยาย"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4045
+#: ../shell/ev-window.c:4106
 msgid "Zoom Out"
 msgstr "ย่อ"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4053
+#: ../shell/ev-window.c:4114
 msgid "Fit Width"
 msgstr "เท่าความกว้าง"
 
-#: ../shell/ev-window.c:4358
+#: ../shell/ev-window.c:4419
 msgid "The image could not be saved."
 msgstr "ไม่สามารถบันทึกภาพ"
 
-#: ../shell/ev-window.c:4377
+#: ../shell/ev-window.c:4438
 msgid "Save Image"
 msgstr "บันทึกภาพ"
 
-#: ../shell/ev-window.c:4432
+#: ../shell/ev-window.c:4493
 msgid "Unable to open attachment"
 msgstr "ไม่สามารถเปิดแฟ้มแนบ"
 
-#: ../shell/ev-window.c:4479
+#: ../shell/ev-window.c:4540
 msgid "The attachment could not be saved."
 msgstr "ไม่สามารถบันทึกแฟ้มแนบ"
 
-#: ../shell/ev-window.c:4503
+#: ../shell/ev-window.c:4564
 msgid "Save Attachment"
 msgstr "บันทึกแฟ้มแนบ"
 
@@ -1651,7 +1262,7 @@ msgstr "[FILE...]"
 msgid "GNOME Document Viewer"
 msgstr "โปรแกรมดูเอกสารของ GNOME"
 
-#: ../shell/main.c:311
+#: ../shell/main.c:310
 msgid "Evince Document Viewer"
 msgstr "Evince: โปรแกรมดูเอกสาร"
 
@@ -1676,6 +1287,255 @@ msgid ""
 msgstr ""
 "คำสั่งพร้อมอาร์กิวเมนต์สำหรับการแสดงภาพย่อของเอกสาร PDF "
 "อ่านข้อมูลเพิ่มเติมได้จากเอกสารตัวแสดงภาพย่อของ Nautilus"
+
+#~ msgid "unexpected EOF\n"
+#~ msgstr "พบ EOF กลางคัน\n"
+
+#~ msgid "could not load font `%s'\n"
+#~ msgstr "ไม่สามารถอ่านแบบอักษร `%s'\n"
+
+#~ msgid "could not reload `%s'\n"
+#~ msgstr "ไม่สามารถเรียก `%s' ใหม่\n"
+
+#~ msgid "%s: unsupported DVI format (version %u)\n"
+#~ msgstr "%s: ไม่สนับสนุนฟอร์แมต DVI (รุ่น %u)\n"
+
+#~ msgid "no pages selected\n"
+#~ msgstr "ไม่ได้เลือกหน้าใดไว้\n"
+
+#~ msgid "%s: File corrupted, or not a DVI file\n"
+#~ msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ DVI\n"
+
+#~ msgid "%s: vf macro had errors\n"
+#~ msgstr "%s: vf macro ผิดพลาด\n"
+
+#~ msgid "%s: stack not empty after vf macro\n"
+#~ msgstr "%s: สแต็กมีข้อมูลค้างหลังจบ vf macro\n"
+
+#~ msgid "%s: could not reopen file (%s)\n"
+#~ msgstr "%s: ไม่สามารถเปิดแฟ้ม (%s) ใหม่ได้\n"
+
+#~ msgid "%s: page %d out of range\n"
+#~ msgstr "%s: หน้า %d ออกนอกช่วง\n"
+
+#~ msgid "%s: bad offset at page %d\n"
+#~ msgstr "%s: ออฟเซ็ตไม่ถูกต้องที่หน้า %d\n"
+
+#~ msgid "stack not empty at end of page\n"
+#~ msgstr "สแต็กมีข้อมูลค้างหลังจบหน้า\n"
+
+#~ msgid "no default font set yet\n"
+#~ msgstr "ไม่ได้ตั้งแบบอักษรปริยายไว้\n"
+
+#~ msgid "requested character %d does not exist in `%s'\n"
+#~ msgstr "ตัวอักษร %d ที่ต้องการ ไม่ปรากฏใน `%s'\n"
+
+#~ msgid "enlarging stack\n"
+#~ msgstr "กำลังขยายขนาดสแต็ก\n"
+
+#~ msgid "stack underflow\n"
+#~ msgstr "สแต็กไม่มีข้อมูลให้อ่าน\n"
+
+#~ msgid "font %d is not defined\n"
+#~ msgstr "ไม่ได้กำหนดแบบอักษร %d\n"
+
+#~ msgid "font %d is not defined in postamble\n"
+#~ msgstr "ไม่ได้กำหนดฟอนต์ %d ใน postamble\n"
+
+#~ msgid "unexpected opcode %d\n"
+#~ msgstr "opcode %d ผิดตำแหน่ง\n"
+
+#~ msgid "undefined opcode %d\n"
+#~ msgstr "opcode %d ไม่รู้จัก\n"
+
+#~ msgid "%s: no fonts defined\n"
+#~ msgstr "%s: ไม่ได้กำหนดแบบอักษรไว้\n"
+
+#~ msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+#~ msgstr "%s: %d: [%s] รหัสอักขระ `%s' ที่ร้องขอ ไม่ตรงกับเวกเตอร์ `%s'\n"
+
+#~ msgid "%s: could not load fontmap\n"
+#~ msgstr "%s: ไม่สามารถอ่าน fontmap\n"
+
+#~ msgid "%s: could not set as default encoding\n"
+#~ msgstr "%s: ไม่สามารถตั้งเป็นรหัสอักขระปริยาย\n"
+
+#~ msgid "encoding vector `%s' is in use\n"
+#~ msgstr "เวกเตอร์รหัสอักขระ `%s' กำลังใช้งานอยู่\n"
+
+#~ msgid "GF: invalid opcode %d in character %d\n"
+#~ msgstr "GF: opcode %d ไม่ถูกต้องในอักขระ %d\n"
+
+#~ msgid "(gf) Character %d: invalid opcode %d\n"
+#~ msgstr "(gf) อักขระ %d: opcode %d ไม่ถูกต้อง\n"
+
+#~ msgid "(gf) character %d has an incorrect bounding box\n"
+#~ msgstr "(gf) อักขระ %d มีกรอบวาดไม่ถูกต้อง\n"
+
+#~ msgid "%s: bad checksum (expected %u, found %u)\n"
+#~ msgstr "%s: checksum ผิดพลาด (ต้องการ %u แต่พบ %u)\n"
+
+#~ msgid "%s: junk in postamble\n"
+#~ msgstr "%s: มีขยะใน postamble\n"
+
+#~ msgid "%s: File corrupted, or not a GF file\n"
+#~ msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ GF\n"
+
+#~ msgid "invalid page specification `%s'\n"
+#~ msgstr "ข้อกำหนดหน้า `%s' ผิดพลาด\n"
+
+#~ msgid "garbage after DVI page specification ignored\n"
+#~ msgstr "จะละเลยขยะหลังข้อกำหนดหน้าของ DVI\n"
+
+#~ msgid "more than 10 counters in page specification\n"
+#~ msgstr "more than 10 counters in page specification\n"
+
+#~ msgid "garbage after TeX page specification ignored\n"
+#~ msgstr "จะละเลยขยะหลังข้อกำหนดหน้าของ TeX\n"
+
+#~ msgid "custom"
+#~ msgstr "กำหนดเอง"
+
+#~ msgid "Bad PK file: More bits than required\n"
+#~ msgstr "แฟ้ม PK ผิดพลาด: มีจำนวนบิตมากกว่าที่ต้องการ\n"
+
+#~ msgid "%s: checksum mismatch (expected %u, got %u)\n"
+#~ msgstr "%s: checksum ไม่ตรง (ต้องการ %u แต่ได้ %u)\n"
+
+#~ msgid "%s: unexpected preamble\n"
+#~ msgstr "%s: พบ postamble ที่ไม่ต้องการ\n"
+
+#~ msgid "%s: unexpected end of file (no postamble)\n"
+#~ msgstr "%s: แฟ้มจบกลางคัน (ไม่มี postamble)\n"
+
+#~ msgid "invalid PK file! (junk in postamble)\n"
+#~ msgstr "แฟ้ม PK ผิดพลาด! (มีขยะใน postamble)\n"
+
+#~ msgid "%s: File corrupted, or not a PK file\n"
+#~ msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ PK\n"
+
+#~ msgid "%s: malformed value for key `%s'\n"
+#~ msgstr "%s: รูปแบบผิดพลาดในคีย์ `%s'\n"
+
+#~ msgid "%s: unknown key `%s' ignored\n"
+#~ msgstr "%s: จะละเลยคีย์ `%s' ซึ่งไม่รู้จัก\n"
+
+#~ msgid "%s: no argument for key `%s', using defaults\n"
+#~ msgstr "%s: ไม่มีอาร์กิวเมนต์สำหรับคีย์ `%s' จะใช้ค่าปริยาย\n"
+
+#~ msgid "%s: argument `%s' ignored for key `%s'\n"
+#~ msgstr "%s: จะละเลยอาร์กิวเมนต์ `%s' สำหรับคีย์ `%s'\n"
+
+#~ msgid "%s: tried to pop top level layer\n"
+#~ msgstr "%s: พยายามจะ pop เลเยอร์บนสุด\n"
+
+#~ msgid "(t1) failed to reset device resolution\n"
+#~ msgstr "(t1) ไม่สามารถตั้งค่าความละเอียดของอุปกรณ์ใหม่ได้\n"
+
+#~ msgid "%s: could not encode font\n"
+#~ msgstr "%s: ไม่สามารถลงรหัสอักขระแบบอักษร\n"
+
+#~ msgid "(t1) unsupported bitmap pad size %d\n"
+#~ msgstr "(t1) ไม่สนับสนุนขนาดเติมเต็มบิตแมป %d\n"
+
+#~ msgid "%s: Checksum mismatch (got %u, expected %u)\n"
+#~ msgstr "%s: checksum ไม่ตรง (ได้ %u แต่ต้องการ %u)\n"
+
+#~ msgid "%s: Error reading AFM data\n"
+#~ msgstr "%s: เกิดข้อผิดพลาดขณะอ่านแฟ้ม AFM\n"
+
+#~ msgid "Warning: TFM file `%s' has suspicious size\n"
+#~ msgstr "คำเตือน: แฟ้ม TFM `%s' มีขนาดผิดปกติ\n"
+
+#~ msgid "%s: font coding scheme truncated to 40 bytes\n"
+#~ msgstr "%s: แนวการลงรหัสแบบอักษรจะถูกตัดทอนลงเหลือ 40 ไบต์\n"
+
+#~ msgid "%s: File corrupted, or not a TFM file\n"
+#~ msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ TFM\n"
+
+#~ msgid "(tt) %s: could not load face: %s\n"
+#~ msgstr "(tt) %s: ไม่สามารถอ่าน face: %s\n"
+
+#~ msgid "(tt) %s: could not create face: %s\n"
+#~ msgstr "(tt) %s: ไม่สามารถสร้าง face: %s\n"
+
+#~ msgid "(tt) %s: could not create glyph: %s\n"
+#~ msgstr "(tt) %s: ไม่สามารถสร้าง glyph %s\n"
+
+#~ msgid "(tt) %s: no acceptable map found, using #0\n"
+#~ msgstr "(tt) %s: ไม่พบ map ที่ใช้ได้ จะใช้ #0\n"
+
+#~ msgid "(tt) %s: could not set resolution: %s\n"
+#~ msgstr "(tt) %s: ไม่สามารถกำหนดความละเอียด: %s\n"
+
+#~ msgid "(tt) %s: could not set point size: %s\n"
+#~ msgstr "(tt) %s: ไม่สามารถกำหนดขนาดพอยนต์: %s\n"
+
+#~ msgid "(tt) %s: could not load PS name table\n"
+#~ msgstr "(tt) %s: ไม่สามารถอ่านตารางชื่อ PS\n"
+
+#~ msgid "%s: no encoding vector found, expect bad output\n"
+#~ msgstr "%s: ไม่พบเวกเตอร์รหัสอักขระ อาจได้ผลลัพธ์ผิดพลาด\n"
+
+#~ msgid "(tt) %s: no font metric data\n"
+#~ msgstr "(tt) %s: ไม่พบข้อมูลการกำหนดขนาดต่างๆ ในแบบอักษร\n"
+
+#~ msgid "Crashing"
+#~ msgstr "พัง"
+
+#~ msgid "%s: Error: "
+#~ msgstr "%s: ผิดพลาด: "
+
+#~ msgid "Error"
+#~ msgstr "ผิดพลาด"
+
+#~ msgid "%s: Warning: "
+#~ msgstr "%s: คำเตือน: "
+
+#~ msgid "Warning"
+#~ msgstr "คำเตือน"
+
+#~ msgid "%s: Fatal: "
+#~ msgstr "%s: ผิดพลาดร้ายแรง: "
+
+#~ msgid "Fatal"
+#~ msgstr "ผิดพลาดร้ายแรง"
+
+#~ msgid "out of memory allocating %u bytes\n"
+#~ msgstr "หน่วยความจำไม่พอสำหรับการจองเนื้อที่ %u ไบต์\n"
+
+#~ msgid "attempted to reallocate with zero size\n"
+#~ msgstr "พยายามเปลี่ยนเนื้อที่จองด้วยขนาดศูนย์\n"
+
+#~ msgid "failed to reallocate %u bytes\n"
+#~ msgstr "ไม่สามารถเปลี่ยนเนื้อที่จองเป็น %u ไบต์\n"
+
+#~ msgid "attempted to callocate 0 members\n"
+#~ msgstr "พยายามจะจองสมาชิก 0 รายการ\n"
+
+#~ msgid "attempted to callocate %u members with size 0\n"
+#~ msgstr "พยายามจะจองเนื้อที่สะอาด (calloc) ให้กับสมาชิก %u รายการ ด้วยขนาด 0\n"
+
+#~ msgid "failed to allocate %ux%u bytes\n"
+#~ msgstr "ไม่สามารถจองเนื้อที่ %ux%u ไบต์\n"
+
+#~ msgid "attempted to free NULL pointer\n"
+#~ msgstr "พยายามจะคืนเนื้อที่ด้วยพอยน์เตอร์ NULL\n"
+
+#~ msgid "%s: Checksum mismatch (expected %u, got %u)\n"
+#~ msgstr "%s: checksum ไม่ตรง (ต้องการ %u แต่ได้ %u)\n"
+
+#~ msgid "(vf) %s: could not load font `%s'\n"
+#~ msgstr "(vf) %s: ไม่สามารถอ่านแบบอักษร `%s'\n"
+
+#~ msgid "(vf) %s: character %d redefined\n"
+#~ msgstr "(vf) %s: อักขระ %d ถูกกำหนดซ้ำ\n"
+
+#~ msgid "(vf) %s: no postamble\n"
+#~ msgstr "(vf) %s: ไม่มี postamble\n"
+
+#~ msgid "%s: File corrupted, or not a VF file.\n"
+#~ msgstr "%s: แฟ้มมีปัญหา หรือไม่ใช่แฟ้มแบบ VF\n"
 
 #~ msgid "_Previous"
 #~ msgstr "_ย้อนกลับ"
