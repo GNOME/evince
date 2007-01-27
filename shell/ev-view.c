@@ -4642,6 +4642,7 @@ get_selected_text (EvView *ev_view)
 {
 	GString *text;
 	GList *l;
+	gchar *normalized_text;
 
 	text = g_string_new (NULL);
 
@@ -4660,7 +4661,9 @@ get_selected_text (EvView *ev_view)
 
 	ev_document_doc_mutex_unlock ();
 
-	return g_string_free (text, FALSE);
+	normalized_text = g_utf8_normalize (text->str, text->len, G_NORMALIZE_NFKC);
+	g_string_free (text, TRUE);
+	return normalized_text;
 }
 
 void
