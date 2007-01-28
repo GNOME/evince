@@ -1,5 +1,16 @@
 2007-01-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-marshal.list:
+	* shell/ev-page-action.c: (activate_cb),
+	(ev_page_action_class_init):
+	* shell/ev-page-action.h:
+	* shell/ev-page-cache.c: (ev_page_cache_set_page_label):
+	* shell/ev-window.c:
+	
+	Remove activate_link signal, not required.
+
+2007-01-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-navigation-action.c: (build_menu):
 	
 	Reorder menu items and build menu with fixed length.

@@ -353,8 +353,7 @@ ev_page_cache_set_page_label (EvPageCache *page_cache,
 		/* convert from a page label to a page offset */
 		page --;
 		if (page >= 0 &&
-		    page < page_cache->n_pages &&
-		    page_cache->page_labels[page] == NULL) {
+		    page < page_cache->n_pages) {
 			ev_page_cache_set_current_page (page_cache, page);
 			return TRUE;
 		}

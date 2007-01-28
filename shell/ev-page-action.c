@@ -48,7 +48,6 @@ static void ev_page_action_class_init (EvPageActionClass *class);
 enum
 {
 	ACTIVATE_LINK,
-	ACTIVATE_LABEL,
 	N_SIGNALS
 };
 
@@ -115,30 +114,22 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 	EvPageCache *page_cache;
 	const char *text;
 	gchar *page_label;
-	gint page_number;
-	gboolean changed;
+	
+	EvLinkDest *link_dest;
+	EvLinkAction *link_action;
+	EvLink *link;
 
 	text = gtk_entry_get_text (GTK_ENTRY (entry));
 	page_cache = page->priv->page_cache;
 
-	g_signal_emit (action, signals[ACTIVATE_LABEL], 0, text, &changed);
-
-	if (changed)
-		return;
 	
-	/* Check whether it's a valid page number */
-	page_number = atoi (text) - 1;
-	if (page_number >= 0 &&
-	    page_number < ev_page_cache_get_n_pages (page_cache)) {
-		page_label = ev_page_cache_get_page_label (page_cache, page_number);
-		gtk_entry_set_text (GTK_ENTRY (entry), page_label);
-		gtk_editable_set_position (GTK_EDITABLE (entry), -1);
+	link_dest = ev_link_dest_new_page_label (text);
+	link_action = ev_link_action_new_dest (link_dest);
+	link = ev_link_new (text, link_action);
 
-		g_signal_emit (action, signals[ACTIVATE_LABEL], 0, page_label, &changed);
-		g_free (page_label);
-		
-		return;
-	}
+	g_signal_emit (action, signals[ACTIVATE_LINK], 0, link);
+
+	g_object_unref (link);
 	
 	/* rest the entry to the current page if we were unable to
 	 * change it */
@@ -382,14 +373,6 @@ ev_page_action_class_init (EvPageActionClass *class)
 					       g_cclosure_marshal_VOID__OBJECT,
 					       G_TYPE_NONE, 1,
 					       G_TYPE_OBJECT);
-	signals[ACTIVATE_LABEL] = g_signal_new ("activate_label",
-					        G_OBJECT_CLASS_TYPE (object_class),
-					        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-					        G_STRUCT_OFFSET (EvPageActionClass, activate_label),
-					        NULL, NULL,
-					        ev_marshal_BOOLEAN__STRING,
-					        G_TYPE_BOOLEAN, 1,
-					        G_TYPE_STRING);
 
 	g_object_class_install_property (object_class,
 					 PROP_PAGE_CACHE,

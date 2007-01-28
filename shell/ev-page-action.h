@@ -52,8 +52,6 @@ struct _EvPageActionClass
 
 	void     (* activate_link) (EvPageAction *page_action,
 			            EvLink       *link);
-	gboolean (*activate_label) (EvPageAction *page_action,
-				    const gchar  *label);
 };
 
 GType ev_page_action_get_type     (void);
