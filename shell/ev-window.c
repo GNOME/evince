@@ -665,7 +665,7 @@ ev_window_find_chapter (GtkTreeModel *tree_model,
     if (!page_string)
 	    return FALSE;
 	    
-    if (!strncmp (page_string + strlen ("<i>"), task->page_label, strlen (task->page_label))) {
+    if (!strcmp (page_string, task->page_label)) {
 	    gtk_tree_model_get (tree_model, iter,
 		    		EV_DOCUMENT_LINKS_COLUMN_MARKUP, &task->chapter, 
 				-1);

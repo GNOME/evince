@@ -437,8 +437,9 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
-					     "markup", EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL,
+					     "text", EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL,
 					     NULL);
+	g_object_set (G_OBJECT (renderer), "style", PANGO_STYLE_ITALIC, NULL);
 
 	g_signal_connect (GTK_TREE_VIEW (priv->tree_view),
 			  "button_press_event",
@@ -467,8 +468,6 @@ fill_page_labels (GtkTreeModel *tree_model,
 	EvLink *link;
 	gint page;
 	gchar *page_label;
-	gchar *page_string;
-
 
 	gtk_tree_model_get (tree_model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
@@ -484,14 +483,11 @@ fill_page_labels (GtkTreeModel *tree_model,
 	
 	page_label = ev_page_cache_get_page_label (sidebar_links->priv->page_cache,
 						   page);
-	page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
-		
 	gtk_tree_store_set (GTK_TREE_STORE (tree_model), iter,
-			    EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, page_string, 
-			      -1);
+			    EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, page_label, 
+			    -1);
 
 	g_free (page_label);
-	g_free (page_string);
 
 	g_object_unref (link);
 	return FALSE;
