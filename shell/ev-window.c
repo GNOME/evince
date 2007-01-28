@@ -680,10 +680,9 @@ ev_window_find_chapter (GtkTreeModel *tree_model,
 static void
 ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 {
-	const gchar *page_label = NULL;
+	gchar *page_label = NULL;
 	gchar *link_title;
 	FindTask find_task;
-
 	EvLink *real_link;
 	EvLinkAction *action;
 	EvLinkDest *dest;
@@ -692,7 +691,7 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 		action = g_object_ref (ev_link_get_action (link));
 		dest = ev_link_action_get_dest (action);
 		page = ev_link_dest_get_page (dest);
-		page_label = ev_view_page_label_from_dest (window->priv->view, dest);
+		page_label = ev_view_page_label_from_dest (EV_VIEW (window->priv->view), dest);
 	} else {
 		dest = ev_link_dest_new_page (page);
 		action = ev_link_action_new_dest (dest);
@@ -712,7 +711,6 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 		g_object_get (G_OBJECT (window->priv->sidebar_links), "model", &model, NULL);
 		
 		if (model) {
-		
 			gtk_tree_model_foreach (model,
 						ev_window_find_chapter,
 						&find_task);
@@ -729,7 +727,8 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	real_link = ev_link_new (link_title, action);
 	
 	ev_history_add_link (window->priv->history, real_link);
-	
+
+	g_free (find_task.chapter);
 	g_free (link_title);
 	g_free (page_label);
 	g_object_unref (real_link);

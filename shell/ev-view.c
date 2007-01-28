@@ -1348,7 +1348,6 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	if (!action)
 		return;
 
-	
 	type = ev_link_action_get_action_type (action);
 
 	switch (type) {
