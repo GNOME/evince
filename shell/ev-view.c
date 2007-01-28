@@ -1370,8 +1370,8 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	}
 }
 
-static gchar *
-page_label_from_dest (EvView *view, EvLinkDest *dest)
+gchar *
+ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest)
 {
 	EvLinkDestType type;
 	gchar *msg = NULL;
@@ -1394,6 +1394,10 @@ page_label_from_dest (EvView *view, EvLinkDest *dest)
 		}
 			
 			break;
+	        case EV_LINK_DEST_TYPE_PAGE_LABEL: {
+	    		msg = g_strdup (ev_link_dest_get_page_label (dest));
+	        }
+	    		break;
 	        default: 
 			msg = ev_page_cache_get_page_label (view->page_cache,
 							    ev_link_dest_get_page (dest));
@@ -1443,8 +1447,8 @@ tip_from_link (EvView *view, EvLink *link)
 
 	switch (type) {
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST:
-			page_label = page_label_from_dest (view,
-							   ev_link_action_get_dest (action));
+			page_label = ev_view_page_label_from_dest (view,
+								   ev_link_action_get_dest (action));
 			msg = g_strdup_printf (_("Go to page %s"), page_label);
 			g_free (page_label);
 			break;

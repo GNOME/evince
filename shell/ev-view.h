@@ -143,6 +143,7 @@ void	       ev_view_handle_link        (EvView         *view,
 					   EvLink         *link);
 gboolean       ev_view_next_page	  (EvView         *view);
 gboolean       ev_view_previous_page	  (EvView         *view);
+gchar*         ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest);
 
 G_END_DECLS
 
