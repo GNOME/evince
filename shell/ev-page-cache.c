@@ -340,8 +340,8 @@ void
 ev_page_cache_set_current_page_history (EvPageCache *page_cache,
 					int          page)
 {
-	if (page != page_cache->current_page)
-		g_signal_emit (page_cache, signals [HISTORY_CHANGED], 0, page);
+	if (abs (page - page_cache->current_page) > 1)
+		g_signal_emit (page_cache, signals [HISTORY_CHANGED], 0, page_cache->current_page);
 		
 	ev_page_cache_set_current_page (page_cache, page);
 }

@@ -1347,6 +1347,8 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	action = ev_link_get_action (link);
 	if (!action)
 		return;
+
+	g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link);
 	
 	type = ev_link_action_get_action_type (action);
 
@@ -1365,7 +1367,6 @@ ev_view_handle_link (EvView *view, EvLink *link)
 			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, action);
 			break;
 	}
-	g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link);
 }
 
 static gchar *

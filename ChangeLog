@@ -1,5 +1,15 @@
 2007-01-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-navigation-action.c: (new_history_menu_item):
+	* shell/ev-page-cache.c: (ev_page_cache_set_current_page_history):
+	* shell/ev-view.c: (ev_view_handle_link):
+	* shell/ev-window.c:
+	
+	Store link before jump, not the destination. For me it 
+	seems like more natural history behavior.
+
+2007-01-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-navigation-action.c: (activate_menu_item_cb),
 	(ev_navigation_action_class_init):
 	* shell/ev-navigation-action.h:

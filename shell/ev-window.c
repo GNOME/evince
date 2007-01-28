@@ -4340,7 +4340,10 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 static void
 view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
 {
-	ev_history_add_link (window->priv->history, link);
+	int current_page = ev_page_cache_get_current_page (window->priv->page_cache);
+	ev_history_add_page (window->priv->history, 
+			     current_page,
+			     ev_page_cache_get_page_label (window->priv->page_cache, current_page));
 }
 
 static void
