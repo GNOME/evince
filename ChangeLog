@@ -1,5 +1,11 @@
 2007-01-28  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-sidebar-links.c: (ev_sidebar_links_map):
+
+	Do not update links treeview if it doesn't have a model assigned yet. 
+
+2007-01-28  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-sidebar-links.c: (ev_sidebar_links_map),
 	(ev_sidebar_links_class_init), (update_page_callback):
 

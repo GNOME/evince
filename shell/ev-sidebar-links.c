@@ -178,7 +178,7 @@ ev_sidebar_links_map (GtkWidget *widget)
 
 	GTK_WIDGET_CLASS (ev_sidebar_links_parent_class)->map (widget);
 
-	if (links->priv->page_cache) {
+	if (links->priv->model) {
 		update_page_callback (links->priv->page_cache,
 				      ev_page_cache_get_current_page (links->priv->page_cache),
 				      links);
