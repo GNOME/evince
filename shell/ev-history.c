@@ -20,18 +20,13 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include "ev-history.h"
 
 struct _EvHistoryPrivate
 {
 	GList *links;
-	int current_index;
-};
-
-enum {
-	PROP_0,
-	PROP_INDEX
 };
 
 static void ev_history_init       (EvHistory *history);
@@ -47,7 +42,6 @@ ev_history_init (EvHistory *history)
 	history->priv = EV_HISTORY_GET_PRIVATE (history);
 
 	history->priv->links = NULL;
-	history->priv->current_index = -1;
 }
 
 static void
@@ -68,102 +62,42 @@ ev_history_finalize (GObject *object)
 }
 
 static void
-ev_history_get_property (GObject *object, guint prop_id, GValue *value,
-		         GParamSpec *param_spec)
-{
-	EvHistory *self;
-
-	self = EV_HISTORY (object);
-
-	switch (prop_id) {
-	case PROP_INDEX:
-		g_value_set_int (value, self->priv->current_index);
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
-						   prop_id,
-						   param_spec);
-		break;
-	}
-}
-
-static void
-ev_history_set_property (GObject *object, guint prop_id, const GValue *value,
-		         GParamSpec *param_spec)
-{
-	EvHistory *self;
-	
-	self = EV_HISTORY (object);
-	
-	switch (prop_id) {
-	case PROP_INDEX:
-		ev_history_set_current_index (self, g_value_get_int (value));
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
-						   prop_id,
-						   param_spec);
-		break;
-	}
-}
-
-static void
 ev_history_class_init (EvHistoryClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
 	object_class->finalize = ev_history_finalize;
-	object_class->set_property = ev_history_set_property;
-	object_class->get_property = ev_history_get_property;
-
-	g_object_class_install_property (object_class,
-					 PROP_INDEX,
-					 g_param_spec_int ("index",
-							   "Current Index",
-							   "The current index",
-							    -1,
-							    G_MAXINT,
-							    0,
-							    G_PARAM_READWRITE));
 
 	g_type_class_add_private (object_class, sizeof (EvHistoryPrivate));
 }
 
+#define HISTORY_LENGTH   7
+
 void
 ev_history_add_link (EvHistory *history, EvLink *link)
 {
-	int length;
+	GList *l;
 
 	g_return_if_fail (EV_IS_HISTORY (history));
 	g_return_if_fail (EV_IS_LINK (link));
 
+	for (l = history->priv->links; l; l = l->next) {
+		if (!strcmp (ev_link_get_title (EV_LINK (l->data)), ev_link_get_title (link))) {
+			g_object_unref (G_OBJECT (l->data));
+			history->priv->links = g_list_delete_link (history->priv->links, l);
+			break;
+		}
+	}
 
 	g_object_ref (link);
 	history->priv->links = g_list_append (history->priv->links,
 					      link);
-
-	length = g_list_length (history->priv->links);
-	history->priv->current_index = length - 1;
-}
-
-void
-ev_history_add_page (EvHistory *history, int page, const gchar *label)
-{
-	EvLink *link;
-	EvLinkDest *dest;
-	EvLinkAction *action;
-	gchar *title;
-
-	g_return_if_fail (EV_IS_HISTORY (history));
-	
-	title = g_strdup_printf (_("Page: %s"), label);
-
-	dest = ev_link_dest_new_page (page);
-	action = ev_link_action_new_dest (dest);
-	link = ev_link_new (title, action);
-	g_free (title);
-
-	ev_history_add_link (history, link);
+					      
+	if (g_list_length (history->priv->links) > HISTORY_LENGTH) {
+		g_object_unref (G_OBJECT (history->priv->links->data));
+		history->priv->links = g_list_delete_link (history->priv->links, 
+							   history->priv->links);
+	}
 }
 
 EvLink *
@@ -186,26 +120,9 @@ ev_history_get_n_links (EvHistory *history)
 	return g_list_length (history->priv->links);
 }
 
-int
-ev_history_get_current_index (EvHistory *history)
-{
-	g_return_val_if_fail (EV_IS_HISTORY (history), -1);
-
-	return history->priv->current_index;
-}
-
-void
-ev_history_set_current_index (EvHistory *history, int index)
-{
-	g_return_if_fail (EV_IS_HISTORY (history));
-
-	history->priv->current_index = index;
-
-	g_object_notify (G_OBJECT (history), "index");
-}
-
 EvHistory *
 ev_history_new (void)
 {
 	return EV_HISTORY (g_object_new (EV_TYPE_HISTORY, NULL));
 }
+

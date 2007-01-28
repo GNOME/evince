@@ -54,15 +54,9 @@ GType		ev_history_get_type		(void);
 EvHistory      *ev_history_new			(void);
 void		ev_history_add_link		(EvHistory  *history,
 						 EvLink     *linkk);
-void		ev_history_add_page		(EvHistory  *history,
-						 int         page,
-						 const gchar *label);
 EvLink	       *ev_history_get_link_nth		(EvHistory  *history,
 					 	 int         index);
 int		ev_history_get_n_links		(EvHistory  *history);
-int		ev_history_get_current_index	(EvHistory  *history);
-void		ev_history_set_current_index	(EvHistory  *history,
-						 int         index);
 
 G_END_DECLS
 

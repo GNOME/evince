@@ -643,13 +643,112 @@ page_changed_cb (EvPageCache *page_cache,
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
 }
+
+typedef struct _FindTask {
+    gchar *page_label;
+    gchar *chapter;
+} FindTask;
+
+static gboolean
+ev_window_find_chapter (GtkTreeModel *tree_model,
+		        GtkTreePath  *path,
+		        GtkTreeIter  *iter,
+		        gpointer      data)
+{
+    FindTask *task = (FindTask *)data;
+    gchar *page_string;
+    
+    gtk_tree_model_get (tree_model, iter,
+			EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, &page_string, 
+			-1);
+			
+    if (!page_string)
+	    return FALSE;
+	    
+    if (!strncmp (page_string + strlen ("<i>"), task->page_label, strlen (task->page_label))) {
+	    gtk_tree_model_get (tree_model, iter,
+		    		EV_DOCUMENT_LINKS_COLUMN_MARKUP, &task->chapter, 
+				-1);
+	    g_free (page_string);
+	    return TRUE;
+    }
+    
+    g_free (page_string);
+    return FALSE;
+}
+
+static void
+ev_window_add_history (EvWindow *window, gint page, EvLink *link)
+{
+	gchar *page_label;
+	gchar *link_title;
+	FindTask find_task;
+
+	EvLink *real_link;
+	EvLinkAction *action;
+	EvLinkDest *dest;
+	
+	if (link) {
+		action = g_object_ref (ev_link_get_action (link));
+		dest = ev_link_action_get_dest (action);
+		page = ev_link_dest_get_page (dest);
+	} else {
+		dest = ev_link_dest_new_page (page);
+		action = ev_link_action_new_dest (dest);
+	}
+
+	if (page < 0)
+		return;
+	
+	page_label = ev_page_cache_get_page_label (window->priv->page_cache, page);
+	
+	find_task.page_label = page_label;
+	find_task.chapter = NULL;
+	
+	if (EV_IS_DOCUMENT_LINKS (window->priv->document)) {
+		GtkTreeModel *model;
+	
+		g_object_get (G_OBJECT (window->priv->sidebar_links), "model", &model, NULL);
+		
+		gtk_tree_model_foreach (model,
+					ev_window_find_chapter,
+					&find_task);
+	
+		g_object_unref (model);
+	}
+
+	if (find_task.chapter)
+		link_title = g_strdup_printf (_("Page %s - %s"), page_label, find_task.chapter);
+	else
+		link_title = g_strdup_printf (_("Page %s"), page_label);
+	
+	real_link = ev_link_new (link_title, action);
+	
+	ev_history_add_link (window->priv->history, real_link);
+	
+	g_free (link_title);
+	g_object_unref (real_link);
+}
+
+static void
+view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
+{
+	int current_page = ev_page_cache_get_current_page (window->priv->page_cache);
+	
+	ev_window_add_history (window, 0, link);
+	ev_window_add_history (window, current_page, NULL);
+}
+
 static void
 history_changed_cb (EvPageCache *page_cache,
 		    gint         page,
-		    EvWindow 	*ev_window)
+		    EvWindow 	*window)
 {
-	ev_history_add_page (ev_window->priv->history, page, 
-			     ev_page_cache_get_page_label (ev_window->priv->page_cache, page));
+	int current_page = ev_page_cache_get_current_page (window->priv->page_cache);
+
+	ev_window_add_history (window, page, NULL);
+	ev_window_add_history (window, current_page, NULL);
+
 	return;
 }
 
@@ -4045,11 +4144,7 @@ static void
 navigation_action_activate_link_cb (EvNavigationAction *action, EvLink *link, EvWindow *window)
 {
 	
-	g_signal_handlers_block_by_func
-		(window->priv->view, G_CALLBACK (view_handle_link_cb), window);
 	ev_view_handle_link (EV_VIEW (window->priv->view), link);
-	g_signal_handlers_unblock_by_func
-		(window->priv->view, G_CALLBACK (view_handle_link_cb), window);
 	gtk_widget_grab_focus (window->priv->view);
 }
 
@@ -4335,15 +4430,6 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 		           "(http://bugzilla.gnome.org) with a testcase.",
 			   name);
 	}
-}
-
-static void
-view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
-{
-	int current_page = ev_page_cache_get_current_page (window->priv->page_cache);
-	ev_history_add_page (window->priv->history, 
-			     current_page,
-			     ev_page_cache_get_page_label (window->priv->page_cache, current_page));
 }
 
 static void

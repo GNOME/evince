@@ -43,6 +43,7 @@ EvLink	     *ev_link_new	 (const gchar  *title,
 
 const gchar  *ev_link_get_title  (EvLink       *self);
 EvLinkAction *ev_link_get_action (EvLink       *self);
+gint	      ev_link_get_page   (EvLink *link);
 
 /* Link Mapping stuff */
 typedef struct _EvLinkMapping	  EvLinkMapping;

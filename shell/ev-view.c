@@ -1348,7 +1348,6 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	if (!action)
 		return;
 
-	g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link);
 	
 	type = ev_link_action_get_action_type (action);
 
@@ -1356,6 +1355,8 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST: {
 			EvLinkDest *dest;
 			
+			g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link);
+		
 			dest = ev_link_action_get_dest (action);
 			ev_view_goto_dest (view, dest);
 		}

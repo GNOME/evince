@@ -1,3 +1,28 @@
+2007-01-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* NOTES:
+	* backend/djvu/djvu-links.c: (djvu_links_get_links_model):
+	* backend/pdf/ev-poppler.cc:
+	* libdocument/ev-document-links.h:
+	* libdocument/ev-link.c: (ev_link_get_page):
+	* libdocument/ev-link.h:
+	* shell/ev-history.c: (ev_history_init), (ev_history_class_init),
+	(ev_history_add_link):
+	* shell/ev-history.h:
+	* shell/ev-navigation-action.c: (activate_menu_item_cb),
+	(new_history_menu_item), (build_menu):
+	* shell/ev-page-cache.c: (ev_page_cache_set_current_page_history):
+	* shell/ev-sidebar-links.c: (create_loading_model),
+	(print_section_cb), (ev_sidebar_links_construct),
+	(fill_page_labels), (update_page_callback_foreach),
+	(update_page_callback), (job_finished_callback):
+	* shell/ev-view.c: (ev_view_handle_link):
+	* shell/ev-window.c: (ev_window_find_chapter),
+	(ev_window_add_history), (view_handle_link_cb),
+	(history_changed_cb):
+	
+	Implements another history variant
+
 2007-01-28  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (view_external_link_cb):

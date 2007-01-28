@@ -72,7 +72,6 @@ activate_menu_item_cb (GtkWidget *widget, EvNavigationAction *action)
 	g_return_if_fail (EV_IS_HISTORY (action->priv->history));
 
 	index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (widget), "index"));
-	ev_history_set_current_index (action->priv->history, index);
 	
 	if (action->priv->history) {
 		EvLink *link;
@@ -94,6 +93,7 @@ new_history_menu_item (EvNavigationAction *action,
 
 	title = ev_link_get_title (link);
 	item = gtk_image_menu_item_new_with_label (title);
+	gtk_label_set_use_markup (GTK_LABEL (gtk_bin_get_child (GTK_BIN (item))), TRUE);
 	g_object_set_data (G_OBJECT (item), "index",
 			   GINT_TO_POINTER (index));
 
@@ -139,8 +139,8 @@ build_menu (EvNavigationAction *action)
 		return GTK_WIDGET (menu);
 	}
 
-	start = MAX (ev_history_get_current_index (action->priv->history) - 5, 0);
-	end = MIN (ev_history_get_n_links (history), start + 7);
+	start = 0;
+	end = ev_history_get_n_links (history);
 
 	for (i = start; i < end; i++) {
 		link = ev_history_get_link_nth (history, i);

@@ -383,7 +383,8 @@ djvu_links_get_links_model (EvDocumentLinks *document_links)
 		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,
 							     G_TYPE_STRING,
 							     G_TYPE_OBJECT,
-							     G_TYPE_BOOLEAN);
+							     G_TYPE_BOOLEAN,
+							     G_TYPE_STRING);
 		build_tree (djvu_document, model, NULL, outline);
 
 		ddjvu_miniexp_release (djvu_document->d_document, outline);
