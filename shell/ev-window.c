@@ -263,6 +263,9 @@ static gboolean fullscreen_motion_notify_cb 		(GtkWidget *widget,
 static gboolean fullscreen_leave_notify_cb 		(GtkWidget *widget,
 							 GdkEventCrossing *event,
 							 gpointer user_data);
+static void	view_handle_link_cb 			(EvView *view, 
+							 EvLink *link, 
+							 EvWindow *window);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -635,18 +638,19 @@ page_changed_cb (EvPageCache *page_cache,
 		 gint         page,
 		 EvWindow    *ev_window)
 {
-	gchar *label;
-	
 	ev_window_update_actions (ev_window);
 	
-	if (ev_window->priv->history) {
-		label = ev_page_cache_get_page_label (ev_window->priv->page_cache, page);
-		ev_history_add_page (ev_window->priv->history, page, label);
-		g_free (label);
-	}
-
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
+}
+static void
+history_changed_cb (EvPageCache *page_cache,
+		    gint         page,
+		    EvWindow 	*ev_window)
+{
+	ev_history_add_page (ev_window->priv->history, page, 
+			     ev_page_cache_get_page_label (ev_window->priv->page_cache, page));
+	return;
 }
 
 static void
@@ -903,6 +907,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	document = ev_window->priv->document;
 	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
 	g_signal_connect (ev_window->priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), ev_window);
+	g_signal_connect (ev_window->priv->page_cache, "history-changed", G_CALLBACK (history_changed_cb), ev_window);
 
 	if (EV_IS_DOCUMENT_FIND (document)) {
 		g_signal_connect_object (G_OBJECT (document),
@@ -930,7 +935,6 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_window->priv->history = ev_history_new ();
 	action = gtk_action_group_get_action (ev_window->priv->action_group, NAVIGATION_ACTION);
         ev_navigation_action_set_history (EV_NAVIGATION_ACTION (action), ev_window->priv->history);
-        ev_navigation_action_set_window (EV_NAVIGATION_ACTION (action), ev_window);
 	
 	if (ev_window->priv->properties) {
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
@@ -1099,8 +1103,15 @@ ev_window_load_job_cb  (EvJobLoad *job,
 
 		ev_window_setup_document (ev_window);
 
-		if (job->dest)
-			ev_window_goto_dest (ev_window, job->dest);
+		if (job->dest) {
+			EvLink *link;
+			EvLinkAction *link_action;
+	
+			link_action = ev_link_action_new_dest (g_object_ref (job->dest));
+			link = ev_link_new (NULL, link_action);
+			ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
+		    	g_object_unref (link);
+		}
 
 		switch (job->mode) {
 		        case EV_WINDOW_MODE_FULLSCREEN:
@@ -1267,12 +1278,6 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	gnome_vfs_uri_unref (source_uri);
 	ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
-}
-
-void
-ev_window_goto_dest (EvWindow *ev_window, EvLinkDest *dest)
-{
-	ev_view_goto_dest (EV_VIEW (ev_window->priv->view), dest);
 }
 
 static void
@@ -4024,9 +4029,27 @@ static const GtkActionEntry attachment_popup_entries [] = {
 };
 
 static void
+sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, EvWindow *window)
+{
+	ev_view_handle_link (EV_VIEW (window->priv->view), link);
+}
+
+static void
 activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
 {
 	ev_view_handle_link (EV_VIEW (window->priv->view), link);
+	gtk_widget_grab_focus (window->priv->view);
+}
+
+static void
+navigation_action_activate_link_cb (EvNavigationAction *action, EvLink *link, EvWindow *window)
+{
+	
+	g_signal_handlers_block_by_func
+		(window->priv->view, G_CALLBACK (view_handle_link_cb), window);
+	ev_view_handle_link (EV_VIEW (window->priv->view), link);
+	g_signal_handlers_unblock_by_func
+		(window->priv->view, G_CALLBACK (view_handle_link_cb), window);
 	gtk_widget_grab_focus (window->priv->view);
 }
 
@@ -4066,6 +4089,8 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "stock_id", GTK_STOCK_GO_DOWN,
 			       "tooltip", _("Move across visited pages"),
 			       NULL);
+	g_signal_connect (action, "activate_link",
+			  G_CALLBACK (navigation_action_activate_link_cb), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }
@@ -4224,12 +4249,6 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 }
 
 static void
-sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, EvWindow *window)
-{
-	ev_view_handle_link (EV_VIEW (window->priv->view), link);
-}
-
-static void
 launch_action (EvWindow *window, EvLinkAction *action)
 {
 	const char *filename = ev_link_action_get_filename (action);
@@ -4316,6 +4335,12 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 		           "(http://bugzilla.gnome.org) with a testcase.",
 			   name);
 	}
+}
+
+static void
+view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
+{
+	ev_history_add_link (window->priv->history, link);
 }
 
 static void
@@ -4768,6 +4793,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "external-link",
 			         G_CALLBACK (view_external_link_cb),
 			         ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "handle-link",
+			         G_CALLBACK (view_handle_link_cb),
+			         ev_window, 0);
+
 	g_signal_connect_object (ev_window->priv->view,
 			         "popup",
 				 G_CALLBACK (view_menu_popup_cb),

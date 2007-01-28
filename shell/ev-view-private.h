@@ -161,6 +161,8 @@ struct _EvViewClass {
 					   EvScrollType   scroll,
 					   gboolean        horizontal);
 	void    (*zoom_invalid)		  (EvView         *view);
+	void    (*handle_link)		  (EvView         *view,
+					   EvLink         *link);
 	void    (*external_link)	  (EvView         *view,
 					   EvLinkAction   *action);
 	void    (*popup_menu)		  (EvView         *view,

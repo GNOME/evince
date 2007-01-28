@@ -24,7 +24,7 @@
 #include <gtk/gtkaction.h>
 
 #include "ev-history.h"
-#include "ev-window.h"
+#include "ev-link.h"
 
 G_BEGIN_DECLS
 
@@ -50,13 +50,14 @@ struct _EvNavigationAction
 struct _EvNavigationActionClass
 {
 	GtkActionClass parent_class;
+
+	void (* activate_link) (EvNavigationAction *action,
+			        EvLink             *link);
 };
 
 GType	ev_navigation_action_get_type		(void);
 void	ev_navigation_action_set_history	(EvNavigationAction *action,
 						 EvHistory	    *history);
-void	ev_navigation_action_set_window		(EvNavigationAction *action,
-						 EvWindow	    *window);
 
 G_END_DECLS
 

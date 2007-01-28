@@ -141,8 +141,6 @@ void	       ev_view_scroll             (EvView         *view,
 					   gboolean        horizontal);
 void	       ev_view_handle_link        (EvView         *view,
 					   EvLink         *link);
-void           ev_view_goto_dest          (EvView         *view,
-					   EvLinkDest     *dest);
 gboolean       ev_view_next_page	  (EvView         *view);
 gboolean       ev_view_previous_page	  (EvView         *view);
 

@@ -433,7 +433,7 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 	page = gtk_tree_path_get_indices (path)[0];
 	gtk_tree_path_free (path);
 
-	ev_page_cache_set_current_page (priv->page_cache, page);
+	ev_page_cache_set_current_page_history (priv->page_cache, page);
 }
 
 static void
@@ -458,7 +458,7 @@ ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 	gtk_tree_path_free (path);
 	g_list_free (selected);
 
-	ev_page_cache_set_current_page (priv->page_cache, page);
+	ev_page_cache_set_current_page_history (priv->page_cache, page);
 }
 
 static void
@@ -563,7 +563,17 @@ page_changed_cb (EvPageCache         *page_cache,
 		gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
 		gtk_tree_view_scroll_to_cell (tree_view, path, NULL, FALSE, 0.0, 0.0);
 	} else if (sidebar->priv->icon_view) {
+
+		g_signal_handlers_block_by_func
+			(sidebar->priv->icon_view,
+			 G_CALLBACK (ev_sidebar_icon_selection_changed), sidebar);
+
 		gtk_icon_view_select_path (GTK_ICON_VIEW (sidebar->priv->icon_view), path);
+
+		g_signal_handlers_unblock_by_func
+			(sidebar->priv->icon_view,
+			 G_CALLBACK (ev_sidebar_icon_selection_changed), sidebar);
+
 		gtk_icon_view_set_cursor (GTK_ICON_VIEW (sidebar->priv->icon_view), path, NULL, FALSE);
 	}
 

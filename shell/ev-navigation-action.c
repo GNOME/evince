@@ -22,7 +22,6 @@
 
 #include "ev-navigation-action.h"
 #include "ev-navigation-action-widget.h"
-#include "ev-window.h"
 
 #include <gtk/gtklabel.h>
 #include <gtk/gtkimage.h>
@@ -33,9 +32,16 @@
 #include <gtk/gtkmenutoolbutton.h>
 #include <glib/gi18n.h>
 
+enum
+{
+	WIDGET_ACTIVATE_LINK,
+	WIDGET_N_SIGNALS
+};
+
+static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
+
 struct _EvNavigationActionPrivate
 {
-	EvWindow *window;
 	EvHistory *history;
 };
 
@@ -58,13 +64,6 @@ ev_navigation_action_set_history (EvNavigationAction *action,
 				   (gpointer *) &action->priv->history);
 }
 
-void
-ev_navigation_action_set_window (EvNavigationAction *action,
-				 EvWindow	    *window)
-{
-	action->priv->window = window;
-}
-
 static void
 activate_menu_item_cb (GtkWidget *widget, EvNavigationAction *action)
 {
@@ -75,16 +74,12 @@ activate_menu_item_cb (GtkWidget *widget, EvNavigationAction *action)
 	index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (widget), "index"));
 	ev_history_set_current_index (action->priv->history, index);
 	
-	if (action->priv->window) {
+	if (action->priv->history) {
 		EvLink *link;
-		EvLinkAction *link_action;
-		EvLinkDest *dest;
 
 		link = ev_history_get_link_nth (action->priv->history, index);
-		link_action = ev_link_get_action (link);
-		dest = ev_link_action_get_dest (link_action);
 		
-		ev_window_goto_dest (action->priv->window, dest);
+		g_signal_emit (action, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
 	}
 }
 
@@ -222,6 +217,15 @@ ev_navigation_action_class_init (EvNavigationActionClass *class)
 	action_class->toolbar_item_type = GTK_TYPE_TOOL_ITEM;
 	action_class->create_tool_item = create_tool_item;
 	action_class->connect_proxy = connect_proxy;
+
+	widget_signals[WIDGET_ACTIVATE_LINK] = g_signal_new ("activate_link",
+					       G_OBJECT_CLASS_TYPE (object_class),
+					       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+					       G_STRUCT_OFFSET (EvNavigationActionClass, activate_link),
+					       NULL, NULL,
+					       g_cclosure_marshal_VOID__OBJECT,
+					       G_TYPE_NONE, 1,
+					       G_TYPE_OBJECT);
 
 	g_type_class_add_private (object_class, sizeof (EvNavigationActionPrivate));
 }

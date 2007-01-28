@@ -45,11 +45,13 @@ struct _EvPageCacheClass
 	GObjectClass parent_class;
 
 	void (* page_changed) (EvPageCache *page_cache, gint page);
+	void (* history_changed) (EvPageCache *page_cache, gint page);
 };
 
 enum
 {
 	PAGE_CHANGED,
+	HISTORY_CHANGED,
 	N_SIGNALS,
 };
 
@@ -82,6 +84,16 @@ ev_page_cache_class_init (EvPageCacheClass *class)
 			      EV_TYPE_PAGE_CACHE,
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (EvPageCacheClass, page_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__INT,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_INT);
+
+	signals [HISTORY_CHANGED] =
+		g_signal_new ("history-changed",
+			      EV_TYPE_PAGE_CACHE,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvPageCacheClass, history_changed),
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__INT,
 			      G_TYPE_NONE, 1,
@@ -322,6 +334,16 @@ ev_page_cache_set_current_page (EvPageCache *page_cache,
 
 	page_cache->current_page = page;
 	g_signal_emit (page_cache, signals[PAGE_CHANGED], 0, page);
+}
+
+void
+ev_page_cache_set_current_page_history (EvPageCache *page_cache,
+					int          page)
+{
+	if (page != page_cache->current_page)
+		g_signal_emit (page_cache, signals [HISTORY_CHANGED], 0, page);
+		
+	ev_page_cache_set_current_page (page_cache, page);
 }
 
 gboolean

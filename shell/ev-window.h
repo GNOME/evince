@@ -78,8 +78,6 @@ void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   EvLinkDest     *dest,
 					   EvWindowRunMode mode,
 					   gboolean        unlink_temp_file);
-void            ev_window_goto_dest       (EvWindow       *ev_window,
-					   EvLinkDest     *dest);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);
 #ifdef WITH_PRINT
 void		ev_window_print_range     (EvWindow       *ev_window,

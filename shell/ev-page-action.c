@@ -118,6 +118,7 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 	EvLinkDest *link_dest;
 	EvLinkAction *link_action;
 	EvLink *link;
+	gchar *link_text;
 
 	text = gtk_entry_get_text (GTK_ENTRY (entry));
 	page_cache = page->priv->page_cache;
@@ -125,11 +126,13 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 	
 	link_dest = ev_link_dest_new_page_label (text);
 	link_action = ev_link_action_new_dest (link_dest);
-	link = ev_link_new (text, link_action);
+	link_text = g_strdup_printf ("Page: %s", text);
+	link = ev_link_new (link_text, link_action);
 
 	g_signal_emit (action, signals[ACTIVATE_LINK], 0, link);
 
 	g_object_unref (link);
+	g_free (link_text);
 	
 	/* rest the entry to the current page if we were unable to
 	 * change it */

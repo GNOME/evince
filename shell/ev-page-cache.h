@@ -66,6 +66,8 @@ gboolean       ev_page_cache_get_dual_even_left  (EvPageCache *page_cache);
 gint           ev_page_cache_get_current_page    (EvPageCache *page_cache);
 void           ev_page_cache_set_current_page    (EvPageCache *page_cache,
 						  int          page);
+void           ev_page_cache_set_current_page_history  (EvPageCache *page_cache,
+							int          page);
 gboolean       ev_page_cache_set_page_label      (EvPageCache *page_cache,
 						  const char  *page_label);
 

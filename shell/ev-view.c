@@ -66,6 +66,7 @@ enum {
 enum {
 	SIGNAL_BINDING_ACTIVATED,
 	SIGNAL_ZOOM_INVALID,
+	SIGNAL_HANDLE_LINK,
 	SIGNAL_EXTERNAL_LINK,
 	SIGNAL_POPUP_MENU,
 	N_SIGNALS,
@@ -1312,7 +1313,7 @@ goto_dest (EvView *view, EvLinkDest *dest)
 						view->current_page);
 }
 
-void
+static void
 ev_view_goto_dest (EvView *view, EvLinkDest *dest)
 {
 	EvLinkDestType type;
@@ -1364,6 +1365,7 @@ ev_view_handle_link (EvView *view, EvLink *link)
 			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, action);
 			break;
 	}
+	g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link);
 }
 
 static gchar *
@@ -3191,6 +3193,14 @@ ev_view_class_init (EvViewClass *class)
 		         NULL, NULL,
 		         ev_marshal_VOID__VOID,
 		         G_TYPE_NONE, 0, G_TYPE_NONE);
+	signals[SIGNAL_HANDLE_LINK] = g_signal_new ("handle-link",
+	  	         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, handle_link),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__OBJECT,
+		         G_TYPE_NONE, 1,
+			 G_TYPE_OBJECT);
 	signals[SIGNAL_EXTERNAL_LINK] = g_signal_new ("external-link",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
