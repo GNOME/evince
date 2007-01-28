@@ -645,7 +645,7 @@ page_changed_cb (EvPageCache *page_cache,
 }
 
 typedef struct _FindTask {
-    gchar *page_label;
+    const gchar *page_label;
     gchar *chapter;
 } FindTask;
 
@@ -680,7 +680,7 @@ ev_window_find_chapter (GtkTreeModel *tree_model,
 static void
 ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 {
-	gchar *page_label;
+	const gchar *page_label;
 	gchar *link_title;
 	FindTask find_task;
 
@@ -700,7 +700,11 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	if (page < 0)
 		return;
 	
-	page_label = ev_page_cache_get_page_label (window->priv->page_cache, page);
+	
+	if (ev_link_dest_get_page_label (dest))
+		page_label = ev_link_dest_get_page_label (dest);
+	else 
+		page_label = ev_page_cache_get_page_label (window->priv->page_cache, page);
 	
 	find_task.page_label = page_label;
 	find_task.chapter = NULL;
