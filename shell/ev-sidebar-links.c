@@ -166,20 +166,39 @@ ev_sidebar_links_dispose (GObject *object)
 		sidebar->priv->page_cache = NULL;
 	}
 
-
 	G_OBJECT_CLASS (ev_sidebar_links_parent_class)->dispose (object);
+}
+
+static void
+ev_sidebar_links_map (GtkWidget *widget)
+{
+	EvSidebarLinks *links;
+
+	links = EV_SIDEBAR_LINKS (widget);
+
+	GTK_WIDGET_CLASS (ev_sidebar_links_parent_class)->map (widget);
+
+	if (links->priv->page_cache) {
+		update_page_callback (links->priv->page_cache,
+				      ev_page_cache_get_current_page (links->priv->page_cache),
+				      links);
+	}
 }
 
 static void
 ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 {
-	GObjectClass *g_object_class;
+	GObjectClass   *g_object_class;
+	GtkWidgetClass *widget_class;
 
 	g_object_class = G_OBJECT_CLASS (ev_sidebar_links_class);
+	widget_class = GTK_WIDGET_CLASS (ev_sidebar_links_class);
 
 	g_object_class->set_property = ev_sidebar_links_set_property;
 	g_object_class->get_property = ev_sidebar_links_get_property;
 	g_object_class->dispose = ev_sidebar_links_dispose;
+
+	widget_class->map = ev_sidebar_links_map;
 
 	signals[LINK_ACTIVATED] = g_signal_new ("link-activated",
 			 G_TYPE_FROM_CLASS (g_object_class),
@@ -210,8 +229,6 @@ selection_changed_callback (GtkTreeSelection   *selection,
 	EvDocument *document;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-
-	g_return_if_fail (EV_IS_SIDEBAR_LINKS (ev_sidebar_links));
 
 	document = EV_DOCUMENT (ev_sidebar_links->priv->document);
 	g_return_if_fail (ev_sidebar_links->priv->document != NULL);
@@ -569,6 +586,10 @@ update_page_callback (EvPageCache    *page_cache,
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 
+	/* Widget is not currently visible */
+	if (!GTK_WIDGET_MAPPED (sidebar_links))
+		return;
+	
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -578,13 +599,11 @@ update_page_callback (EvPageCache    *page_cache,
 				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 				    -1);
 		if (link) {
-			gint current_page;
 			gint dest_page;
 
 			dest_page = get_page_from_link (link);
 			g_object_unref (link);
 			
-			current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
 			if (dest_page == current_page)
 				return;
 		}
@@ -602,24 +621,21 @@ update_page_callback (EvPageCache    *page_cache,
 				update_page_callback_foreach,
 				sidebar_links);
 	
-
 	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_unblock (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 }
 
 static void 
-row_activated_callback 			(GtkTreeView *treeview,
-                                         GtkTreePath *arg1,
-                                         GtkTreeViewColumn *arg2,
-                                         gpointer user_data)
+row_activated_callback (GtkTreeView       *treeview,
+			GtkTreePath       *arg1,
+			GtkTreeViewColumn *arg2,
+			gpointer           user_data)
 {	
 	if (gtk_tree_view_row_expanded (GTK_TREE_VIEW (treeview), arg1)) {
-		    gtk_tree_view_collapse_row (GTK_TREE_VIEW (treeview), arg1);
+		gtk_tree_view_collapse_row (GTK_TREE_VIEW (treeview), arg1);
 	} else {
-		    gtk_tree_view_expand_row (GTK_TREE_VIEW (treeview), arg1, FALSE);
+		gtk_tree_view_expand_row (GTK_TREE_VIEW (treeview), arg1, FALSE);
 	}
-	
-        return;
 }
 
 static void
@@ -635,7 +651,7 @@ expand_open_links (GtkTreeView *tree_view, GtkTreeModel *model, GtkTreeIter *par
 					    -1);
 			if (expand) {
 				GtkTreePath *path;
-
+				
 				path = gtk_tree_model_get_path (model, &iter);
 				gtk_tree_view_expand_row (tree_view, path, FALSE);
 				gtk_tree_path_free (path);

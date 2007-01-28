@@ -396,6 +396,7 @@ ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 	}
 
 }
+
 void
 ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
 			       int                  rotation)
