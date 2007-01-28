@@ -144,13 +144,13 @@ build_menu (EvNavigationAction *action)
 		return GTK_WIDGET (menu);
 	}
 
-	start = 0;
-	end = ev_history_get_n_links (history);
+	start = MAX (ev_history_get_current_index (action->priv->history) - 5, 0);
+	end = MIN (ev_history_get_n_links (history), start + 7);
 
 	for (i = start; i < end; i++) {
 		link = ev_history_get_link_nth (history, i);
 		item = new_history_menu_item (action, link, i);
-		gtk_menu_shell_append (menu, item);
+		gtk_menu_shell_prepend (menu, item);
 	}
 
 	return GTK_WIDGET (menu);
