@@ -93,6 +93,10 @@ new_history_menu_item (EvNavigationAction *action,
 	const char *title;
 
 	title = ev_link_get_title (link);
+	
+	if (!title)
+		title = _("External link");
+
 	item = gtk_image_menu_item_new_with_label (title);
 	g_object_set_data (G_OBJECT (item), "index",
 			   GINT_TO_POINTER (index));
