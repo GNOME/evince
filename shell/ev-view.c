@@ -2314,7 +2314,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
 
-	if (view->document && view->pressed_button == 1) {
+	if (view->document && view->pressed_button != 3) {
 		link = ev_view_get_link_at_location (view, event->x, event->y);
 	} else {
 		link = NULL;
@@ -2343,7 +2343,23 @@ ev_view_button_release_event (GtkWidget      *widget,
 		
 		view->selection_info.in_drag = FALSE;
 	} else if (link) {
-		ev_view_handle_link (view, link);
+		if (event->button == 2) {
+			EvLinkAction    *action;
+			EvLinkActionType type;
+
+			action = ev_link_get_action (link);
+			if (!action)
+				return FALSE;
+
+			type = ev_link_action_get_action_type (action);
+			if (type == EV_LINK_ACTION_TYPE_GOTO_DEST) {
+				g_signal_emit (view,
+					       signals[SIGNAL_EXTERNAL_LINK],
+					       0, action);
+			}
+		} else {
+			ev_view_handle_link (view, link);
+		}
 	} else if (view->presentation) {
 		switch (event->button) {
 		        case 1:

@@ -4350,6 +4350,16 @@ static void
 view_external_link_cb (EvView *view, EvLinkAction *action, EvWindow *window)
 {
 	switch (ev_link_action_get_action_type (action)) {
+	        case EV_LINK_ACTION_TYPE_GOTO_DEST: {
+			EvLinkDest *dest;
+			
+			dest = ev_link_action_get_dest (action);
+			if (!dest)
+				return;
+
+			ev_window_cmd_file_open_copy_at_dest (window, dest);
+		}
+			break;
 	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
 			launch_external_uri (window, action);
 			break;
