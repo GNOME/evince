@@ -26,6 +26,8 @@ GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
 GNOME_DEBUG_CHECK
 
+GTK_DOC_CHECK(1.0)
+
 GETTEXT_PACKAGE=evince
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
@@ -40,7 +42,7 @@ dnl Check dependencies
 # SHELL_CFLAGS     for shell implementation.
 # SHELL_LIBS
 
-DBUS_GLIB_REQUIRED=0.71
+DBUS_GLIB_REQUIRED=0.70
 GTK_REQUIRED=2.8.15
 KEYRING_REQUIRED=0.4.0
 
@@ -437,6 +439,8 @@ data/icons/48x48/apps/Makefile
 data/icons/scalable/Makefile
 data/icons/scalable/apps/Makefile
 help/Makefile
+help/reference/Makefile
+help/reference/version.xml
 libdocument/Makefile
 Makefile
 po/Makefile.in
@@ -453,6 +457,7 @@ Configure summary:
 	Print Support......:  $enable_print
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
+	Gtk-Doc Support....:  $enable_gtk_doc
 
 	PDF Backend........:  $enable_pdf
 	PostScript Backend.:  $enable_ps

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+    <!ENTITY ev-attachment   			  SYSTEM "xml/ev-attachment.xml">
+    <!ENTITY ev-page-cache   			  SYSTEM "xml/ev-attachment.xml">
+    <!ENTITY ev-window   			  SYSTEM "xml/ev-window.xml">
+    <!ENTITY ev-view	   			  SYSTEM "xml/ev-view.xml">
+    <!ENTITY tree_index                           SYSTEM "xml/tree_index.sgml">
+    ]>
+<book id="index">
+  <bookinfo>
+    <title>Evince Programmer's Reference Manual</title>
+  </bookinfo>
+  
+  <part id="libdocument">
+    <para>
+	Provides support for writing Evince backends. For example 
+	EvAttachment is used to represent document attachments.
+    </para>
+    &ev-attachment;
+  </part>
+  
+  <part id="shell">
+  
+      <para>
+
+	Evince internals are rather simple. There are an application
+	singleton that maintains list of windows and provides common
+	services, each window shows loaded document, it has menus
+	sidebar, toolbar and main view.
+	
+      </para>
+
+	&ev-window; - Main window class
+	&ev-view; - View for document
+	&ev-page-cache; - Document page cache
+  </part>
+
+  <index/>
+
+</book>
