@@ -1,14 +1,14 @@
 SUBDIRS = \
 	cut-n-paste \
-	po \
-	help \
 	data \
-	test \
 	backend \
 	libdocument \
 	properties \
 	shell \
-	thumbnailer
+	thumbnailer \
+	po \
+	help \
+	test
 
 # Applications 
 
