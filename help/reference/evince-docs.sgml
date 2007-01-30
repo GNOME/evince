@@ -1,41 +1,159 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
                "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
-    <!ENTITY ev-attachment   			  SYSTEM "xml/ev-attachment.xml">
-    <!ENTITY ev-page-cache   			  SYSTEM "xml/ev-page-cache.xml">
-    <!ENTITY ev-window   			  SYSTEM "xml/ev-window.xml">
-    <!ENTITY ev-view	   			  SYSTEM "xml/ev-view.xml">
-    <!ENTITY tree_index                           SYSTEM "xml/tree_index.sgml">
+   <!ENTITY ev-application-service		SYSTEM  "xml/ev-application-service.xml">
+   <!ENTITY ev-application			SYSTEM  "xml/ev-application.xml">
+   <!ENTITY ev-async-renderer			SYSTEM  "xml/ev-async-renderer.xml">
+   <!ENTITY ev-attachment			SYSTEM  "xml/ev-attachment.xml">
+   <!ENTITY ev-document-factory			SYSTEM  "xml/ev-document-factory.xml">
+   <!ENTITY ev-document-find			SYSTEM  "xml/ev-document-find.xml">
+   <!ENTITY ev-document-fonts			SYSTEM  "xml/ev-document-fonts.xml">
+   <!ENTITY ev-document-images			SYSTEM  "xml/ev-document-images.xml">
+   <!ENTITY ev-document-info			SYSTEM  "xml/ev-document-info.xml">
+   <!ENTITY ev-document-links			SYSTEM  "xml/ev-document-links.xml">
+   <!ENTITY ev-document-misc			SYSTEM  "xml/ev-document-misc.xml">
+   <!ENTITY ev-document-security		SYSTEM  "xml/ev-document-security.xml">
+   <!ENTITY ev-document-thumbnails		SYSTEM  "xml/ev-document-thumbnails.xml">
+   <!ENTITY ev-document-transition		SYSTEM  "xml/ev-document-transition.xml">
+   <!ENTITY ev-document				SYSTEM  "xml/ev-document.xml">
+   <!ENTITY ev-file-exporter			SYSTEM  "xml/ev-file-exporter.xml">
+   <!ENTITY ev-file-helpers			SYSTEM  "xml/ev-file-helpers.xml">
+   <!ENTITY ev-history				SYSTEM  "xml/ev-history.xml">
+   <!ENTITY ev-image				SYSTEM  "xml/ev-image.xml">
+   <!ENTITY ev-job-queue			SYSTEM  "xml/ev-job-queue.xml">
+   <!ENTITY ev-jobs				SYSTEM  "xml/ev-jobs.xml">
+   <!ENTITY ev-link-action			SYSTEM  "xml/ev-link-action.xml">
+   <!ENTITY ev-link-dest			SYSTEM  "xml/ev-link-dest.xml">
+   <!ENTITY ev-link				SYSTEM  "xml/ev-link.xml">
+   <!ENTITY ev-marshal				SYSTEM  "xml/ev-marshal.xml">
+   <!ENTITY ev-metadata-manager			SYSTEM  "xml/ev-metadata-manager.xml">
+   <!ENTITY ev-navigation-action-widget		SYSTEM  "xml/ev-navigation-action-widget.xml">
+   <!ENTITY ev-navigation-action		SYSTEM  "xml/ev-navigation-action.xml">
+   <!ENTITY ev-page-action-widget		SYSTEM  "xml/ev-page-action-widget.xml">
+   <!ENTITY ev-page-action			SYSTEM  "xml/ev-page-action.xml">
+   <!ENTITY ev-page-cache			SYSTEM  "xml/ev-page-cache.xml">
+   <!ENTITY ev-password-view			SYSTEM  "xml/ev-password-view.xml">
+   <!ENTITY ev-password				SYSTEM  "xml/ev-password.xml">
+   <!ENTITY ev-pixbuf-cache			SYSTEM  "xml/ev-pixbuf-cache.xml">
+   <!ENTITY ev-print-job			SYSTEM  "xml/ev-print-job.xml">
+   <!ENTITY ev-properties-dialog		SYSTEM  "xml/ev-properties-dialog.xml">
+   <!ENTITY ev-properties-fonts			SYSTEM  "xml/ev-properties-fonts.xml">
+   <!ENTITY ev-render-context			SYSTEM  "xml/ev-render-context.xml">
+   <!ENTITY ev-selection			SYSTEM  "xml/ev-selection.xml">
+   <!ENTITY ev-sidebar-attachments		SYSTEM  "xml/ev-sidebar-attachments.xml">
+   <!ENTITY ev-sidebar-links			SYSTEM  "xml/ev-sidebar-links.xml">
+   <!ENTITY ev-sidebar-page			SYSTEM  "xml/ev-sidebar-page.xml">
+   <!ENTITY ev-sidebar-thumbnails		SYSTEM  "xml/ev-sidebar-thumbnails.xml">
+   <!ENTITY ev-sidebar				SYSTEM  "xml/ev-sidebar.xml">
+   <!ENTITY ev-stock-icons			SYSTEM  "xml/ev-stock-icons.xml">
+   <!ENTITY ev-tooltip				SYSTEM  "xml/ev-tooltip.xml">
+   <!ENTITY ev-utils				SYSTEM  "xml/ev-utils.xml">
+   <!ENTITY ev-view-accessible			SYSTEM  "xml/ev-view-accessible.xml">
+   <!ENTITY ev-view				SYSTEM  "xml/ev-view.xml">
+   <!ENTITY ev-window-title			SYSTEM  "xml/ev-window-title.xml">
+   <!ENTITY ev-window				SYSTEM  "xml/ev-window.xml">
     ]>
 <book id="index">
   <bookinfo>
     <title>Evince Programmer's Reference Manual</title>
   </bookinfo>
   
-  <part id="libdocument">
-    <para>
+  <part>
+   <title>
+    <phrase>Document interfaces</phrase>
+   </title>
+   <partintro>
+     <para>
 	Provides support for writing Evince backends. For example 
 	EvAttachment is used to represent document attachments.
+	The core have objects that represent various document 
+	interfaces.
     </para>
-    &ev-attachment;
-  </part>
-  
-  <part id="shell">
-  
+    </partintro>
+    &ev-document-factory;
+    &ev-document;
+    &ev-document-find;
+    &ev-document-fonts;
+    &ev-document-images;
+    &ev-document-info;
+    &ev-document-links;
+    &ev-document-misc;
+    &ev-document-security; 
+    &ev-document-thumbnails;
+    &ev-document-transition;
+   </part>
+   <part>
+     <title>
+      <phrase>Document data</phrase>
+     </title>
+     <partintro>
+      <para>
+	Helper objects related to document like attachments, links and images.
+      </para>
+     </partintro>
+     &ev-attachment;
+     &ev-link;
+     &ev-link-action;
+     &ev-link-dest;
+     &ev-image;
+     &ev-render-context;
+     &ev-selection;
+    </part>
+    <part>
+     <title>
+      <phrase>Helper functions</phrase>
+     </title>
+     <partintro>
+      <para>
+	Helper functions common for backend implementation
+      </para>
+     </partintro>
+	&ev-async-renderer;
+	&ev-file-exporter;
+	&ev-file-helpers;
+    </part>
+    <part>
+      <title>
+       <phrase>Evince Frontend</phrase>
+      </title>
+     <partintro>
       <para>
 
 	Evince internals are rather simple. There are an application
 	singleton that maintains list of windows and provides common
 	services, each window shows loaded document, it has menus
 	sidebar, toolbar and main view.
-	
       </para>
-
-	&ev-window; - Main window class
-	&ev-view; - View for document
-	&ev-page-cache; - Document page cache
-  </part>
-
+     </partintro>
+	&ev-history;
+	&ev-job-queue;
+	&ev-jobs;
+	&ev-metadata-manager;
+	&ev-navigation-action;
+	&ev-navigation-action-widget;
+	&ev-page-action;
+	&ev-page-action-widget;
+	&ev-page-cache;
+	&ev-password-view;
+	&ev-password;
+	&ev-pixbuf-cache;
+	&ev-print-job;
+	&ev-properties-dialog;
+	&ev-properties-fonts;
+	&ev-sidebar-attachments;
+	&ev-sidebar-links;
+	&ev-sidebar-page;
+	&ev-sidebar-thumbnails;
+	&ev-sidebar;
+	&ev-stock-icons;
+	&ev-tooltip;
+	&ev-utils;
+	&ev-view-accessible;
+	&ev-view;
+	&ev-window-title;
+	&ev-window;
+    </part>
+    
   <index/>
 
 </book>

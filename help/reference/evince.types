@@ -1,14 +1,39 @@
-#include "ev-window.h"
-#include "ev-document.h"
-#include "ev-attachment.h"
-#include "ev-page-cache.h"
 #include "ev-application.h"
+#include "ev-async-renderer.h"
+#include "ev-attachment.h"
+#include "ev-document-find.h"
+#include "ev-document.h"
+#include "ev-document-links.h"
+#include "ev-navigation-action.h"
+#include "ev-navigation-action-widget.h"
+#include "ev-page-action.h"
+#include "ev-page-action-widget.h"
+#include "ev-page-cache.h"
 #include "ev-view.h"
 #include "ev-view-private.h"
+#include "ev-window.h"
 
-ev_window_get_type
-ev_document_get_type
-ev_attachment_get_type
-ev_page_cache_get_type
 ev_application_get_type
+ev_async_renderer_get_type
+ev_attachment_get_type
+ev_document_find_get_type
+ev_document_get_type
+ev_document_links_get_type
+ev_job_fonts_get_type
+ev_job_links_get_type
+ev_job_load_get_type
+ev_job_print_get_type
+ev_job_render_get_type
+ev_job_thumbnail_get_type
+ev_link_action_get_type
+ev_link_dest_get_type
+ev_navigation_action_get_type
+ev_navigation_action_widget_get_type
+ev_navigation_action_widget_get_type
+ev_page_action_get_type
+ev_page_action_widget_get_type
+ev_page_action_widget_get_type
+ev_page_cache_get_type
+ev_view_accessible_factory_get_type
 ev_view_get_type
+ev_window_get_type
