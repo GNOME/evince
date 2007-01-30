@@ -1,5 +1,13 @@
 2007-01-30  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* shell/ev-navigation-action.c: (connect_proxy),
+	(create_menu_item), (ev_navigation_action_class_init):
+	
+	Correctly show menu and fix crash when navigaton 
+	action is out of toolbar visible area.
+
+2007-01-30  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* data/Makefile.am:
 	* data/evince.1:
 	

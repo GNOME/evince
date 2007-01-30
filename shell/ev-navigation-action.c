@@ -166,12 +166,14 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
 	GtkWidget *menu;
 
-	/* set dummy menu so the arrow gets sensitive */
-	menu = gtk_menu_new ();
-	ev_navigation_action_widget_set_menu (EV_NAVIGATION_ACTION_WIDGET (proxy), menu);
+	if (EV_IS_NAVIGATION_ACTION (proxy)) {
+		/* set dummy menu so the arrow gets sensitive */
+		menu = gtk_menu_new ();
+		ev_navigation_action_widget_set_menu (EV_NAVIGATION_ACTION_WIDGET (proxy), menu);
 
-	g_signal_connect (proxy, "show-menu",
-			  G_CALLBACK (menu_activated_cb), action);
+		g_signal_connect (proxy, "show-menu",
+				  G_CALLBACK (menu_activated_cb), action);
+	}
 
 	GTK_ACTION_CLASS (ev_navigation_action_parent_class)->connect_proxy (action, proxy);
 }
@@ -185,6 +187,23 @@ create_tool_item (GtkAction *action)
 	gtk_widget_show (GTK_WIDGET (proxy));
 
 	return GTK_WIDGET (proxy);
+}
+
+static GtkWidget *
+create_menu_item (GtkAction *action)
+{
+	GtkWidget *menu;
+	GtkWidget *menu_item;
+
+	menu = build_menu (EV_NAVIGATION_ACTION (action));
+
+        menu_item = GTK_ACTION_CLASS (ev_navigation_action_parent_class)->create_menu_item (action);
+
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), menu);
+
+	gtk_widget_show (menu_item);
+	
+	return menu_item;
 }
 
 static void
@@ -217,6 +236,7 @@ ev_navigation_action_class_init (EvNavigationActionClass *class)
 	action_class->toolbar_item_type = GTK_TYPE_TOOL_ITEM;
 	action_class->create_tool_item = create_tool_item;
 	action_class->connect_proxy = connect_proxy;
+	action_class->create_menu_item = create_menu_item;
 
 	widget_signals[WIDGET_ACTIVATE_LINK] = g_signal_new ("activate_link",
 					       G_OBJECT_CLASS_TYPE (object_class),
