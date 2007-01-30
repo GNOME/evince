@@ -5,6 +5,12 @@ install-data-local: install-schemas update-icon-cache
 uninstall-local: uninstall-schemas
 
 #
+# man file
+#
+
+man_MANS=evince.1
+
+#
 # UI descriptions
 #
 
@@ -98,6 +104,7 @@ EXTRA_DIST =				\
 	$(ui_DATA)			\
 	$(DESKTOP_IN_FILES)		\
 	$(schema_in_files)		\
+	$(man_MANS)			\
 	$(NULL)				
 
 #

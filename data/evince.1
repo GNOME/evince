@@ -1,0 +1,41 @@
+.TH EVINCE 1 "30 Jan 2007"
+.SH NAME
+\fBevince\fP \- GNOME document viewer
+
+The Evince Document Viewer application for GNOME desktop environment
+
+.SH SYNTAX
+.B evince
+.RI [--help]
+.RI [--usage]
+.RI [--page-label=<label>]
+.RI [--quit]
+.RI [filename(s)...]
+.SH DESCRIPTION
+.B evince
+
+Evince is a document viewer capable of displaying multiple and single
+page document formats like PDF and Postscript.  For more general
+information about Evince please visit our website at
+http://www.gnome.org/projects/evince/
+
+.LP
+.SH OPTIONS
+
+.TP
+\fB\-\-help\fR
+Prints the command line options.
+.TP
+\fB\-\-page\-label=label\fR
+You can pass page label or page number here, this page will be selected in
+document if exists.
+.TP
+\fBfilename(s)...\fR
+Specifies the file to open when Evince starts - if this is not
+specified, Evince will open a blank window. Multiple files can be loaded
+if they are separated by spaces.  Evince also supports handling of
+remote files.  For example, you can pass the location on web or or load
+a file from a FTP server, like "ftp://adobe.com/sample.pdf".
+
+.SH BUGS
+If you find a bug, please report it at http://bugzilla.gnome.org/enter_bug.cgi?product=evince.
