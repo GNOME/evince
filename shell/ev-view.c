@@ -3781,6 +3781,9 @@ ev_view_zoom_in (EvView *view)
 {
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
+	if (view->presentation)
+		return;
+	
 	view->pending_scroll = SCROLL_TO_CENTER;
 	ev_view_set_zoom (view, ZOOM_IN_FACTOR, TRUE);
 }
@@ -3790,6 +3793,9 @@ ev_view_zoom_out (EvView *view)
 {
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
+	if (view->presentation)
+		return;
+	
 	view->pending_scroll = SCROLL_TO_CENTER;
 	ev_view_set_zoom (view, ZOOM_OUT_FACTOR, TRUE);
 }
