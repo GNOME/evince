@@ -401,6 +401,7 @@ ev_window_update_actions (EvWindow *ev_window)
 	EvView *view = EV_VIEW (ev_window->priv->view);
 	int n_pages = 0, page = -1;
 	gboolean has_pages = FALSE;
+	gboolean presentation_mode;
 
 	if (ev_window->priv->document && ev_window->priv->page_cache) {
 		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
@@ -408,16 +409,31 @@ ev_window_update_actions (EvWindow *ev_window)
 		has_pages = n_pages > 0;
 	}
 
-	ev_window_set_action_sensitive (ev_window, "EditCopy", has_pages && ev_view_get_has_selection (view));
+	ev_window_set_action_sensitive (ev_window, "EditCopy",
+					has_pages &&
+					ev_view_get_has_selection (view));
 	ev_window_set_action_sensitive (ev_window, "EditFindNext",
-			      ev_view_can_find_next (view));
+					ev_view_can_find_next (view));
 	ev_window_set_action_sensitive (ev_window, "EditFindPrevious",
-			      ev_view_can_find_previous (view));
+					ev_view_can_find_previous (view));
 
+	presentation_mode = ev_view_get_presentation (view);
+	
 	ev_window_set_action_sensitive (ev_window, "ViewZoomIn",
-			      has_pages && ev_view_can_zoom_in (view));
+					has_pages &&
+					ev_view_can_zoom_in (view) &&
+					!presentation_mode);
 	ev_window_set_action_sensitive (ev_window, "ViewZoomOut",
-			      has_pages && ev_view_can_zoom_out (view));
+					has_pages &&
+					ev_view_can_zoom_out (view) &&
+					!presentation_mode);
+	
+	ev_window_set_action_sensitive (ev_window, "Plus", !presentation_mode);
+	ev_window_set_action_sensitive (ev_window, "Minus", !presentation_mode);
+	ev_window_set_action_sensitive (ev_window, "KpPlus", !presentation_mode);
+	ev_window_set_action_sensitive (ev_window, "KpMinus", !presentation_mode);
+	ev_window_set_action_sensitive (ev_window, "CtrlKpPlus", !presentation_mode);
+	ev_window_set_action_sensitive (ev_window, "CtrlKpMinus", !presentation_mode);
 
         /* Go menu */
 	if (has_pages) {
@@ -454,7 +470,7 @@ static void
 ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 {
 	gboolean can_find;
-	
+
 	can_find = window->priv->document && 
 	    EV_IS_DOCUMENT_FIND (window->priv->document);
 
