@@ -2004,7 +2004,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 				}
 				
 				gtk_widget_queue_draw (widget);
-			} else if ((image = ev_view_get_image_at_location (view, event->x, event->y))) {
+			} else if (!location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y) &&
+				   (image = ev_view_get_image_at_location (view, event->x, event->y))) {
 				if (view->image_dnd_info.image)
 					g_object_unref (view->image_dnd_info.image);
 				view->image_dnd_info.image = g_object_ref (image);
