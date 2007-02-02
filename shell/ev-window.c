@@ -918,7 +918,6 @@ setup_size_from_metadata (EvWindow *window)
 	    	g_value_unset (&width_ratio);
 		g_value_unset (&height_ratio);
 	}
-
 }
 
 static void
@@ -1348,6 +1347,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 	if (ev_window->priv->uri)
 		g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
+
+	setup_size_from_metadata (ev_window);
 	
 	ev_window->priv->load_job = ev_job_load_new (uri, dest, mode);
 	g_signal_connect (ev_window->priv->load_job,
@@ -4351,12 +4352,15 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 			ev_page_cache_get_max_height (window->priv->page_cache, 
 						      0, 1.0,
 						      &document_height);			
+			ev_metadata_manager_set_double (uri, "window_width_ratio", 
+							(double)width / document_width);
+			ev_metadata_manager_set_double (uri, "window_height_ratio", 
+							(double)height / document_height);
+			
 			ev_metadata_manager_set_int (uri, "window_x", x);
 			ev_metadata_manager_set_int (uri, "window_y", y);
-			ev_metadata_manager_set_double (uri, "window_width_ratio", 
-							(double)width/document_width);
-			ev_metadata_manager_set_double (uri, "window_height_ratio", 
-							(double)height/document_height);
+			ev_metadata_manager_set_int (uri, "window_width", width);
+			ev_metadata_manager_set_int (uri, "window_height", height);
 		}
 	}
 

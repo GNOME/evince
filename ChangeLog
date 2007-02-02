@@ -1,5 +1,12 @@
 2007-02-02  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_open_uri),
+	(window_configure_event_cb):
+
+	Setup window size and position before showing it. Fixes bug #401711.
+
+2007-02-02  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/ps/Makefile.am:
 	* backend/ps/ps-document.[ch]: (ps_section_free), (ps_document_init),
 	(ps_document_dispose), (ps_document_class_init),
