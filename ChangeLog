@@ -1,3 +1,19 @@
+2007-02-02  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/ps/Makefile.am:
+	* backend/ps/ps-document.[ch]: (ps_section_free), (ps_document_init),
+	(ps_document_dispose), (ps_document_class_init),
+	(ps_interpreter_input), (ps_interpreter_output),
+	(ps_interpreter_error), (setup_interpreter_env),
+	(ps_interpreter_start), (ps_interpreter_stop),
+	(ps_interpreter_failed), (ps_interpreter_is_ready),
+	(check_filecompressed), (document_load), (ps_document_load),
+	(ps_document_get_n_pages), (setup_page), (setup_pixmap),
+	(ps_document_widget_event), (send_ps), (ps_document_next_page),
+	(render_page):
+
+	Rework ps-document. Code cleanups, remove deprecated code. 
+
 2007-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_button_press_event):

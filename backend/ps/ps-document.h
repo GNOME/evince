@@ -24,71 +24,20 @@
 #ifndef __PS_DOCUMENT_H__
 #define __PS_DOCUMENT_H__
 
-#include <sys/types.h>
-#include <gtk/gtkwidget.h>
-
 #include "ev-document.h"
-#include "ps.h"
-#include "gstypes.h"
 
 G_BEGIN_DECLS
 
-#define PS_TYPE_DOCUMENT         (ps_document_get_type())
-#define PS_DOCUMENT(obj)         GTK_CHECK_CAST (obj, ps_document_get_type (), PSDocument)
-#define PS_DOCUMENT_CLASS(klass) GTK_CHECK_CLASS_CAST (klass, ps_document_get_type (), PSDocumentClass)
-#define PS_IS_DOCUMENT(obj)      GTK_CHECK_TYPE (obj, ps_document_get_type())
+#define PS_TYPE_DOCUMENT           (ps_document_get_type())
+#define PS_DOCUMENT(obj)           GTK_CHECK_CAST (obj, PS_TYPE_DOCUMENT, PSDocument)
+#define PS_DOCUMENT_CLASS(klass)   GTK_CHECK_CLASS_CAST (klass, PS_TYPE_DOCUMENT, PSDocumentClass)
+#define PS_IS_DOCUMENT(obj)        GTK_CHECK_TYPE (obj, PS_TYPE_DOCUMENT)
+#define PS_DOCUMENT_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS((obj), PS_TYPE_DOCUMENT, PSDocumentClass))
 
-typedef struct _PSDocument PSDocument;
+typedef struct _PSDocument      PSDocument;
 typedef struct _PSDocumentClass PSDocumentClass;
 
-struct _PSDocument {
-  GObject object;
-
-  GtkWidget *target_window;
-  GdkWindow *pstarget;
-  GdkPixmap *bpixmap;
-  long message_window;          /* Used by ghostview to receive messages from app */
-
-  pid_t interpreter_pid;        /* PID of interpreter, -1 if none  */
-  int interpreter_input;        /* stdin of interpreter            */
-  int interpreter_output;       /* stdout of interpreter           */
-  int interpreter_err;          /* stderr of interpreter           */
-  guint interpreter_input_id;
-  guint interpreter_output_id;
-  guint interpreter_error_id;
-
-  gboolean busy;                /* Is gs busy drawing? */
-  gboolean structured_doc;
-
-  struct record_list *ps_input;
-  gchar *input_buffer_ptr;
-  guint bytes_left;
-  guint buffer_bytes_left;
-
-  FILE *gs_psfile;              /* the currently loaded FILE */
-  gchar *gs_filename;           /* the currently loaded filename */
-  gchar *gs_filename_unc;       /* Uncompressed file */
-  gchar *input_buffer;
-  gboolean send_filename_to_gs; /* True if gs should read from file directly */
-  gboolean reading_from_pipe;   /* True if ggv is reading input from pipe */
-  struct document *doc;
-  
-  int *ps_export_pagelist;
-  char *ps_export_filename;
-
-  const gchar *gs_status;       /* PSDocument status */
-};
-
-struct _PSDocumentClass {
-  GObjectClass parent_class;
-
-  GdkAtom gs_atom;
-  GdkAtom next_atom;
-  GdkAtom page_atom;
-  GdkAtom string_atom;
-};
-
-GType ps_document_get_type(void);
+GType ps_document_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

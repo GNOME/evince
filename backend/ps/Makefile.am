@@ -2,9 +2,8 @@ INCLUDES = \
 	-I$(top_srcdir)						\
 	-I$(top_srcdir)/libdocument				\
 	$(BACKEND_CFLAGS)					\
-	$(WARN_CFLAGS)
-
-#	$(DISABLE_DEPRECATED)
+	$(WARN_CFLAGS)						\
+	$(DISABLE_DEPRECATED)
 
 noinst_LTLIBRARIES = libpsdocument.la
 
