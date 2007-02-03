@@ -421,6 +421,16 @@ ps_interpreter_error (GIOChannel   *io,
 	return TRUE;
 }
 
+static void
+ps_interpreter_finished (GPid        pid,
+			 gint        status,
+			 PSDocument *gs)
+{
+	g_spawn_close_pid (gs->interpreter_pid);
+	gs->interpreter_pid = -1;
+	ps_interpreter_failed (gs, NULL);
+}
+
 #define NUM_ARGS    100
 #define NUM_GS_ARGS (NUM_ARGS - 20)
 #define NUM_ALPHA_ARGS 10
@@ -485,12 +495,16 @@ ps_interpreter_start (PSDocument *gs)
 	envp = g_strsplit (gv_env, ";", 2);
 	g_free (gv_env);
 
-	if (g_spawn_async_with_pipes (dir, argv, NULL, 0,
+	if (g_spawn_async_with_pipes (dir, argv, NULL, G_SPAWN_DO_NOT_REAP_CHILD,
 				      (GSpawnChildSetupFunc)setup_interpreter_env, envp,
 				      &(gs->interpreter_pid),
 				      &pin, &pout, &perr,
 				      &error)) {
 		GIOFlags flags;
+
+		g_child_watch_add (gs->interpreter_pid,
+				   (GChildWatchFunc)ps_interpreter_finished, 
+				   gs);
 
 		gs->interpreter_input = g_io_channel_unix_new (pin);
 		g_io_channel_set_encoding (gs->interpreter_input, NULL, NULL);
@@ -585,8 +599,7 @@ ps_interpreter_stop (PSDocument *gs)
 static void
 ps_interpreter_failed (PSDocument *gs, const char *msg)
 {
-	if (msg)
-		g_warning (msg);
+	g_warning (msg ? msg : _("Interpreter failed."));
 	
 	push_pixbuf (gs);
 	ps_interpreter_stop (gs);
