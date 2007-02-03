@@ -1502,8 +1502,12 @@ ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 	gchar *symlink_uri;
 	gchar *old_filename;
 	gchar *new_filename;
+	gchar *uri_unc;
 
-	old_filename = g_filename_from_uri (window->priv->uri, NULL, NULL);
+	uri_unc = g_object_get_data (G_OBJECT (window->priv->document),
+				     "uri-uncompressed");
+	old_filename = g_filename_from_uri (uri_unc ? uri_unc : window->priv->uri,
+					    NULL, NULL);
 	new_filename = ev_window_create_tmp_symlink (old_filename, &error);
 
 	if (error) {
@@ -3133,14 +3137,10 @@ ev_window_cmd_go_backward (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
-	char *uri;
-
-	g_return_if_fail (EV_IS_WINDOW (ev_window));
+	gchar *uri;
 
 	uri = g_strdup (ev_window->priv->uri);
-
 	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE);
-
 	g_free (uri);
 }
 

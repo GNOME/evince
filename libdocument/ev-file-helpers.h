@@ -25,6 +25,12 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+	EV_COMPRESSION_NONE,
+	EV_COMPRESSION_BZIP2,
+	EV_COMPRESSION_GZIP
+} EvCompressionType;
+
 const gchar *ev_dot_dir               (void);
 
 const gchar *ev_tmp_dir               (void);
@@ -33,11 +39,15 @@ void         ev_file_helpers_init     (void);
 
 void         ev_file_helpers_shutdown (void);
 
-gchar*       ev_tmp_filename          (const char *prefix);
+gchar       *ev_tmp_filename          (const char        *prefix);
 
-gboolean     ev_xfer_uri_simple       (const char *from,
-				       const char *to,
-				       GError     **error);
+gboolean     ev_xfer_uri_simple       (const char        *from,
+				       const char        *to,
+				       GError           **error);
+gchar       *ev_file_uncompress       (const gchar       *uri,
+				       EvCompressionType  type,
+				       GError           **error);
+
 
 G_END_DECLS
 

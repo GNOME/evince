@@ -1,5 +1,19 @@
 2007-02-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* backend/ps/ps-document.c: (ps_document_init), (ps_document_dispose),
+	(ps_interpreter_start), (document_load), (save_document),
+	(save_page_list):
+	* libdocument/ev-file-helpers.[ch]: (ev_file_uncompress):
+	* libdocument/ev-document-factory.c:
+	(ev_document_factory_get_from_mime), (get_document_from_uri),
+	(free_uncompressed_uri), (ev_document_factory_get_document):
+	* shell/ev-window.c: (ev_window_cmd_file_open_copy_at_dest):
+
+	Support for PDF, PS and EPS compressed files. Fixes bug #307087. 
+
+2007-02-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-document.h:
 
 	Fix typo in function name. 

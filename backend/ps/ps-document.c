@@ -33,7 +33,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#include <unistd.h>
 #include <errno.h>
 
 #include "ps-document.h"
@@ -44,11 +43,6 @@
 #include "ev-async-renderer.h"
 
 #define MAX_BUFSIZE 1024
-
-#define PS_DOCUMENT_IS_COMPRESSED(gs) (PS_DOCUMENT(gs)->gs_filename_unc != NULL)
-#define PS_DOCUMENT_GET_PS_FILE(gs)   (PS_DOCUMENT_IS_COMPRESSED(gs) ? \
-                                       PS_DOCUMENT(gs)->gs_filename_unc : \
-                                       PS_DOCUMENT(gs)->gs_filename)
 
 /* structure to describe section of file to send to ghostscript */
 typedef struct {
@@ -85,7 +79,6 @@ struct _PSDocument {
 
 	FILE *gs_psfile;              /* the currently loaded FILE */
 	gchar *gs_filename;           /* the currently loaded filename */
-	gchar *gs_filename_unc;       /* Uncompressed file */
 	gchar *input_buffer;
 	gboolean send_filename_to_gs; /* True if gs should read from file directly */
 	struct document *doc;
@@ -148,8 +141,7 @@ ps_document_init (PSDocument *gs)
 	gs->interpreter_pid = -1;
 
 	gs->busy = FALSE;
-	gs->gs_filename = 0;
-	gs->gs_filename_unc = 0;
+	gs->gs_filename = NULL;
 
 	gs->structured_doc = FALSE;
 	gs->send_filename_to_gs = FALSE;
@@ -193,12 +185,6 @@ ps_document_dispose (GObject *object)
 	if (gs->doc) {
 		psfree (gs->doc);
 		gs->doc = NULL;
-	}
-
-	if (gs->gs_filename_unc) {
-		g_unlink(gs->gs_filename_unc);
-		g_free(gs->gs_filename_unc);
-		gs->gs_filename_unc = NULL;
 	}
 
 	if (gs->bpixmap) {
@@ -479,7 +465,7 @@ ps_interpreter_start (PSDocument *gs)
 	argv[argc++] = "-dSAFER";
 
 	if (gs->send_filename_to_gs) {
-		argv[argc++] = PS_DOCUMENT_GET_PS_FILE (gs);
+		argv[argc++] = gs->gs_filename;
 		argv[argc++] = "-c";
 		argv[argc++] = "quit";
 	} else {
@@ -614,96 +600,9 @@ ps_interpreter_is_ready (PSDocument *gs)
 }
 
 /* EvDocumentIface */
-/*
- * Decompress gs->gs_filename if necessary
- * Set gs->filename_unc to the name of the uncompressed file or NULL.
- * Error reporting via signal 'interpreter_message'
- * Return name of input file to use or NULL on error..
- */
-static const gchar *
-check_filecompressed (PSDocument * gs)
-{
-	FILE *file;
-	gchar buf[1024];
-	gchar *filename, *filename_unc, *filename_err, *cmdline;
-	const gchar *cmd;
-	int fd;
-
-	cmd = NULL;
-
-	if ((file = fopen(gs->gs_filename, "r")) &&
-	    (fread (buf, sizeof(gchar), 3, file) == 3)) {
-		if ((buf[0] == '\037') && ((buf[1] == '\235') || (buf[1] == '\213'))) {
-			/* file is gzipped or compressed */
-			cmd = gtk_gs_defaults_get_ungzip_cmd ();
-		} else if (strncmp (buf, "BZh", 3) == 0) {
-			/* file is compressed with bzip2 */
-			cmd = gtk_gs_defaults_get_unbzip2_cmd ();
-		}
-	}
-
-	if (NULL != file)
-		fclose(file);
-
-	if (!cmd)
-		return gs->gs_filename;
-
-	/* do the decompression */
-	filename = g_shell_quote (gs->gs_filename);
-	filename_unc = g_strconcat (g_get_tmp_dir (), "/evinceXXXXXX", NULL);
-	if ((fd = g_mkstemp (filename_unc)) < 0) {
-		g_free (filename_unc);
-		g_free (filename);
-		return NULL;
-	}
-	close (fd);
-
-	filename_err = g_strconcat (g_get_tmp_dir (), "/evinceXXXXXX", NULL);
-	if ((fd = g_mkstemp (filename_err)) < 0) {
-		g_free (filename_err);
-		g_free (filename_unc);
-		g_free (filename);
-		return NULL;
-	}
-	close (fd);
-
-	cmdline = g_strdup_printf ("%s %s >%s 2>%s", cmd,
-                                   filename, filename_unc, filename_err);
-
-	if (system (cmdline) == 0 &&
-	    g_file_test (filename_unc, G_FILE_TEST_IS_REGULAR)) {
-			/* sucessfully uncompressed file */
-			gs->gs_filename_unc = filename_unc;
-	} else {
-		gchar *filename_dsp;
-		gchar *msg;
-		
-		/* report error */
-		filename_dsp = g_filename_display_name (gs->gs_filename);
-		msg = g_strdup_printf (_("Error while decompressing file “%s”:\n"),
-				       filename_dsp);
-		g_free (filename_dsp);
-		
-		ps_interpreter_failed (gs, msg);
-		g_free (msg);
-		g_unlink (filename_unc);
-		g_free (filename_unc);
-		filename_unc = NULL;
-	}
-
-	g_unlink (filename_err);
-	g_free (filename_err);
-	g_free (cmdline);
-	g_free (filename);
-
-	return filename_unc;
-}
-
 static gboolean
 document_load (PSDocument *gs, const gchar *fname)
 {
-	const gchar *filename;
-	
 	if (fname == NULL) {
 		gs->gs_status = "";
 		return FALSE;
@@ -733,15 +632,13 @@ document_load (PSDocument *gs, const gchar *fname)
 		return FALSE;
 	}
 
-	filename = check_filecompressed (gs);
-	
-	if (!filename || (gs->gs_psfile = fopen (filename, "r")) == NULL) {
+	if (!gs->gs_filename || (gs->gs_psfile = fopen (gs->gs_filename, "r")) == NULL) {
 		ps_interpreter_failed (gs, NULL);
 		return FALSE;
 	}
 	
 	/* we grab the vital statistics!!! */
-	gs->doc = psscan (gs->gs_psfile, TRUE, filename);
+	gs->doc = psscan (gs->gs_psfile, TRUE, gs->gs_filename);
 	
 	if ((!gs->doc->epsf && gs->doc->numpages > 0) ||
 	    (gs->doc->epsf && gs->doc->numpages > 1)) {
@@ -809,11 +706,11 @@ save_document (PSDocument *document, const char *filename)
 	FILE *f, *src_file;
 	gchar *buf;
 
-	src_file = fopen (PS_DOCUMENT_GET_PS_FILE(document), "r");
+	src_file = fopen (document->gs_filename, "r");
 	if (src_file) {
 		struct stat stat_rec;
 
-		if (stat (PS_DOCUMENT_GET_PS_FILE(document), &stat_rec) == 0) {
+		if (stat (document->gs_filename, &stat_rec) == 0) {
 			pscopy (src_file, sink, 0, stat_rec.st_size - 1);
 		}
 
@@ -848,7 +745,7 @@ save_page_list (PSDocument *document, int *page_list, const char *filename)
 	FILE *f;
 	gchar *buf;
 
-	pscopydoc (sink, PS_DOCUMENT_GET_PS_FILE(document), 
+	pscopydoc (sink, document->gs_filename, 
 		   document->doc, page_list);
 	
 	buf = gtk_gs_doc_sink_get_buffer (sink);

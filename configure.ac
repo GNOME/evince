@@ -381,10 +381,10 @@ dnl ================== End of impress book checks ==============================
 dnl =================== Mime types list ====================================================
 
 if test "x$enable_pdf" = "xyes" ; then
-	EVINCE_MIME_TYPES="application/pdf"
+	EVINCE_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf"
 fi
 if test "x$enable_ps" = "xyes" ; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/postscript;application/x-gzpostscript"
+	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/postscript;application/x-gzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps"
 fi
 if test "x$enable_dvi" = "xyes"; then
 	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-dvi"

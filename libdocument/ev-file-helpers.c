@@ -167,3 +167,100 @@ ev_xfer_uri_simple (const char *from,
 	return (result == GNOME_VFS_OK);
 
 }
+
+/* Compressed files support */
+#define BZIPCOMMAND "bzip2"
+#define GZIPCOMMAND "gzip"
+#define N_ARGS      5
+#define BUFFER_SIZE 1024
+
+gchar *
+ev_file_uncompress (const gchar       *uri,
+		    EvCompressionType  type,
+		    GError           **error)
+{
+	gchar *argv[N_ARGS];
+	gchar *uri_unc = NULL;
+	gchar *filename, *filename_unc;
+	gchar *cmd;
+	gint   fd, pout;
+
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	if (type == EV_COMPRESSION_NONE)
+		return NULL;
+
+	cmd = g_find_program_in_path ((type == EV_COMPRESSION_BZIP2) ? BZIPCOMMAND : GZIPCOMMAND);
+	if (!cmd)
+		return NULL;
+
+
+	filename = g_filename_from_uri (uri, NULL, NULL);
+	if (!filename) {
+		g_free (cmd);
+		return NULL;
+	}
+	
+	filename_unc = g_build_filename (ev_tmp_dir (), "evinceXXXXXX", NULL);
+	fd = g_mkstemp (filename_unc);
+	if (fd < 0) {
+		g_free (cmd);
+		g_free (filename);
+		g_free (filename_unc);
+		return NULL;
+	}
+	
+	argv[0] = cmd;
+	argv[1] = "-cd";
+	argv[2] = filename;
+	argv[3] = filename_unc;
+	argv[4] = NULL;
+
+	if (g_spawn_async_with_pipes (NULL, argv, NULL,
+				      G_SPAWN_STDERR_TO_DEV_NULL,
+				      NULL, NULL, NULL,
+				      NULL, &pout, NULL, error)) {
+		GIOChannel *in, *out;
+		gchar buf[BUFFER_SIZE];
+		GIOStatus read_st, write_st;
+		gsize bytes_read, bytes_written;
+
+		in = g_io_channel_unix_new (pout);
+		g_io_channel_set_encoding (in, NULL, NULL);
+		out = g_io_channel_unix_new (fd);
+		g_io_channel_set_encoding (out, NULL, NULL);
+
+		do {
+			read_st = g_io_channel_read_chars (in, buf,
+							   BUFFER_SIZE,
+							   &bytes_read,
+							   error);
+			if (read_st == G_IO_STATUS_NORMAL) {
+				write_st = g_io_channel_write_chars (out, buf,
+								     bytes_read,
+								     &bytes_written,
+								     error);
+				if (write_st == G_IO_STATUS_ERROR)
+					break;
+			} else if (read_st == G_IO_STATUS_ERROR) {
+				break;
+			}
+		} while (bytes_read > 0);
+		
+		g_io_channel_unref (in);
+		g_io_channel_unref (out);
+	}
+
+	close (fd);
+
+	if (*error == NULL) {
+		uri_unc = g_filename_to_uri (filename_unc,
+					     NULL, NULL);
+	}
+
+	g_free (cmd);
+	g_free (filename);
+	g_free (filename_unc);
+
+	return uri_unc;
+}

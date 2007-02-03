@@ -51,16 +51,19 @@
 #endif
 
 #include <string.h>
+#include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomevfs/gnome-vfs-file-info.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <gtk/gtkfilechooserdialog.h>
 
+#include "ev-file-helpers.h"
+
 typedef struct _EvDocumentType EvDocumentType;
-struct _EvDocumentType
-{
+struct _EvDocumentType {
 	const char *mime_type;
+	EvCompressionType compression;
 	EvBackend backend;
 	GType (*document_type_factory_callback)();
 };
@@ -68,41 +71,46 @@ struct _EvDocumentType
 const EvDocumentType document_types[] = {
 #ifdef ENABLE_PDF
 	/* PDF: */
-	{"application/pdf",            EV_BACKEND_PDF,  pdf_document_get_type},
+	{"application/pdf",            EV_COMPRESSION_NONE,  EV_BACKEND_PDF,  pdf_document_get_type},
+	{"application/x-bzpdf",        EV_COMPRESSION_BZIP2, EV_BACKEND_PDF,  pdf_document_get_type},
+	{"application/x-gzpdf",        EV_COMPRESSION_GZIP,  EV_BACKEND_PDF,  pdf_document_get_type},
 #endif
 
 #ifdef ENABLE_PS
 	/* Postscript: */
-	{"application/postscript",     EV_BACKEND_PS,   ps_document_get_type},
-	{"application/x-gzpostscript", EV_BACKEND_PS,   ps_document_get_type},
-	{"image/x-eps",                EV_BACKEND_PS,   ps_document_get_type},
+	{"application/postscript",     EV_COMPRESSION_NONE,  EV_BACKEND_PS,   ps_document_get_type},
+	{"application/x-bzpostscript", EV_COMPRESSION_BZIP2, EV_BACKEND_PS,   ps_document_get_type},
+	{"application/x-gzpostscript", EV_COMPRESSION_GZIP,  EV_BACKEND_PS,   ps_document_get_type},
+	{"image/x-eps",                EV_COMPRESSION_NONE,  EV_BACKEND_PS,   ps_document_get_type},
+	{"image/x-bzeps",              EV_COMPRESSION_BZIP2, EV_BACKEND_PS,   ps_document_get_type},
+	{"image/x-gzeps",              EV_COMPRESSION_GZIP,  EV_BACKEND_PS,   ps_document_get_type},
 #endif
 
 #ifdef ENABLE_TIFF
 	/* Tiff: */
-	{"image/tiff",                 EV_BACKEND_TIFF, tiff_document_get_type},
+	{"image/tiff",                 EV_COMPRESSION_NONE, EV_BACKEND_TIFF, tiff_document_get_type},
 #endif
 
 #ifdef ENABLE_DJVU
 	/* djvu: */
-	{"image/vnd.djvu",             EV_BACKEND_DJVU, djvu_document_get_type},
+	{"image/vnd.djvu",             EV_COMPRESSION_NONE, EV_BACKEND_DJVU, djvu_document_get_type},
 #endif		
 
 #ifdef ENABLE_DVI
 	/* dvi: */
-	{"application/x-dvi",          EV_BACKEND_DVI,  dvi_document_get_type},
+	{"application/x-dvi",          EV_COMPRESSION_NONE, EV_BACKEND_DVI,  dvi_document_get_type},
 #endif
 
 #ifdef ENABLE_COMICS
 	/* cbr/cbz: */
-	{"application/x-cbr",           EV_BACKEND_COMICS,  comics_document_get_type},
-	{"application/x-cbz",           EV_BACKEND_COMICS,  comics_document_get_type},
+	{"application/x-cbr",          EV_COMPRESSION_NONE, EV_BACKEND_COMICS,  comics_document_get_type},
+	{"application/x-cbz",          EV_COMPRESSION_NONE, EV_BACKEND_COMICS,  comics_document_get_type},
 #endif
 
 #ifdef ENABLE_IMPRESS
 	/* Impress slides: */
-	{"application/vnd.sun.xml.impress", EV_BACKEND_IMPRESS, impress_document_get_type},
-	{"application/vnd.oasis.opendocument.presentation", EV_BACKEND_IMPRESS, impress_document_get_type},
+	{"application/vnd.sun.xml.impress", EV_COMPRESSION_NONE, EV_BACKEND_IMPRESS, impress_document_get_type},
+	{"application/vnd.oasis.opendocument.presentation", EV_COMPRESSION_NONE, EV_BACKEND_IMPRESS, impress_document_get_type},
 #endif
 
 };
@@ -160,19 +168,21 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 }
 #endif
 
-static EvDocument*
-ev_document_factory_get_from_mime (const char *mime_type)
+static EvDocument *
+ev_document_factory_get_from_mime (const gchar       *mime_type,
+				   EvCompressionType *compression)
 {
 	int i;
 	GType type = G_TYPE_INVALID;
 	EvDocument *document = NULL;
-	
-	g_return_val_if_fail (mime_type, G_TYPE_INVALID);
 
+	*compression = EV_COMPRESSION_NONE;
+	
 	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
 		if (strcmp (mime_type, document_types[i].mime_type) == 0) {
 			g_assert (document_types[i].document_type_factory_callback != NULL);
-			type = document_types[i].document_type_factory_callback();
+			type = document_types[i].document_type_factory_callback ();
+			*compression = document_types[i].compression;
 			break;
 		}
 	}
@@ -181,6 +191,7 @@ ev_document_factory_get_from_mime (const char *mime_type)
 		type = pixbuf_document_get_type ();
 	}
 #endif
+
 	if (type != G_TYPE_INVALID) {
 		document = g_object_new (type, NULL);
 	} 
@@ -248,12 +259,16 @@ ev_document_factory_get_all_mime_types (void)
 }
 
 static EvDocument *
-get_document_from_uri (const char *uri, gboolean slow, GError **error)
+get_document_from_uri (const char        *uri,
+		       gboolean           slow,
+		       EvCompressionType *compression,
+		       GError           **error)
 {
 	EvDocument *document = NULL;
-
         GnomeVFSFileInfo *info;
         GnomeVFSResult result;
+
+	*compression = EV_COMPRESSION_NONE;
 
         info = gnome_vfs_file_info_new ();
         result = gnome_vfs_get_file_info (uri, info,
@@ -278,7 +293,7 @@ get_document_from_uri (const char *uri, gboolean slow, GError **error)
 		return NULL;
 	}
 
-	document = ev_document_factory_get_from_mime (info->mime_type);
+	document = ev_document_factory_get_from_mime (info->mime_type, compression);
 		
 	if (document == NULL) {
 		g_set_error (error,
@@ -287,11 +302,28 @@ get_document_from_uri (const char *uri, gboolean slow, GError **error)
 			     _("Unhandled MIME type: “%s”"), info->mime_type);
 		gnome_vfs_file_info_unref (info);
 		return NULL;
-	}			
+	}
 
         gnome_vfs_file_info_unref (info);
 	
         return document;
+}
+
+static void
+free_uncompressed_uri (gchar *uri_unc)
+{
+	gchar *filename;
+
+	if (!uri_unc)
+		return;
+
+	filename = g_filename_from_uri (uri_unc, NULL, NULL);
+	if (!filename)
+		return;
+
+	g_unlink (filename);
+	g_free (filename);
+	g_free (uri_unc);
 }
 
 EvDocument *
@@ -299,11 +331,27 @@ ev_document_factory_get_document (const char *uri, GError **error)
 {
 	EvDocument *document;
 	int result;
+	EvCompressionType compression;
+	gchar *uri_unc = NULL;
 
-	document = get_document_from_uri (uri, FALSE, error);
-
+	document = get_document_from_uri (uri, FALSE, &compression, error);
 	if (*error == NULL) {
-		result = ev_document_load (document, uri, error);
+		uri_unc = ev_file_uncompress (uri, compression, error);
+		if (uri_unc) {
+			g_object_set_data_full (G_OBJECT (document),
+						"uri-uncompressed",
+						uri_unc,
+						(GDestroyNotify) free_uncompressed_uri);
+		}
+
+		if (*error != NULL) {
+			/* Error uncompressing file */
+			if (document)
+				g_object_unref (document);
+			return NULL;
+		}
+
+		result = ev_document_load (document, uri_unc ? uri_unc : uri, error);
 
 		if (result == FALSE || *error) {
 			if (*error &&
@@ -324,13 +372,30 @@ ev_document_factory_get_document (const char *uri, GError **error)
 		g_error_free (*error);
 	*error = NULL;
 
-	document = get_document_from_uri (uri, TRUE, error);
+	uri_unc = NULL;
+
+	document = get_document_from_uri (uri, TRUE, &compression, error);
 
 	if (*error != NULL) {
 		return NULL;
 	}
 
-	result = ev_document_load (document, uri, error);
+	uri_unc = ev_file_uncompress (uri, compression, error);
+	if (uri_unc) {
+		g_object_set_data_full (G_OBJECT (document),
+					"uri-uncompressed",
+					uri_unc,
+					(GDestroyNotify) free_uncompressed_uri);
+	}
+
+	if (*error != NULL) {
+		/* Error uncompressing file */
+		if (document)
+			g_object_unref (document);
+		return NULL;
+	}
+	
+	result = ev_document_load (document, uri_unc ? uri_unc : uri, error);
 
 	if (result == FALSE) {
 		if (*error == NULL) {
