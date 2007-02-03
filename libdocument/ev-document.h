@@ -104,7 +104,7 @@ void            ev_document_doc_mutex_lock   (void);
 void            ev_document_doc_mutex_unlock (void);
 
 /* FontConfig mutex */
-GMutex         *ev_document_fc_doc_mutex    (void);
+GMutex         *ev_document_get_fc_mutex    (void);
 void            ev_document_fc_mutex_lock   (void);
 void            ev_document_fc_mutex_unlock (void);
 
