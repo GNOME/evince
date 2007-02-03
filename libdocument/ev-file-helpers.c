@@ -33,6 +33,7 @@
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-xfer.h>
+#include <libgnome/gnome-init.h>
 
 #include "ev-file-helpers.h"
 
