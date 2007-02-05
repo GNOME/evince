@@ -108,6 +108,39 @@ get_djvu_link_action (const DjvuDocument *djvu_document, const gchar *link_name,
 	return ev_action;
 }
 
+static gchar *
+str_to_utf8 (const gchar *text)
+{
+	static const gchar *encodings_to_try[2];
+	static gint n_encodings_to_try = 0;
+	gchar *utf8_text = NULL;
+	gint i;
+
+	if (n_encodings_to_try == 0) {
+		const gchar *charset;
+		gboolean charset_is_utf8;
+
+		charset_is_utf8 = g_get_charset (&charset);
+		if (!charset_is_utf8) {
+			encodings_to_try[n_encodings_to_try++] = charset;
+		}
+
+		if (g_ascii_strcasecmp (charset, "ISO-8859-1") != 0) {
+			encodings_to_try[n_encodings_to_try++] = "ISO-8859-1";
+		}
+	}
+
+	for (i = 0; i < n_encodings_to_try; i++) {
+		utf8_text = g_convert (text, -1, "UTF-8",
+				       encodings_to_try[i],
+				       NULL, NULL, NULL);
+		if (utf8_text)
+			break;
+	}
+
+	return utf8_text;
+}
+
 /**
  * Builds the index GtkTreeModel from DjVu s-expr
  *
@@ -141,7 +174,16 @@ build_tree (const DjvuDocument *djvu_document,
 		if (!string_from_miniexp (miniexp_car (iter), &title)) goto unknown_entry;
 		if (!string_from_miniexp (miniexp_cadr (iter), &link_dest)) goto unknown_entry;
 
-		title_markup = g_markup_escape_text (title, -1);
+		if (!g_utf8_validate (title, -1, NULL)) {
+			gchar *utf8_title;
+
+			utf8_title = str_to_utf8 (title);
+			title_markup = g_markup_escape_text (utf8_title, -1);
+			g_free (utf8_title);
+		} else {
+			title_markup = g_markup_escape_text (title, -1);
+		}
+
 		ev_action = get_djvu_link_action (djvu_document, link_dest, -1);
 		
 		if (g_str_has_suffix (link_dest, ".djvu")) {

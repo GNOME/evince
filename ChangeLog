@@ -1,5 +1,12 @@
 2007-02-05  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/djvu/djvu-links.c: (str_to_utf8), (build_tree):
+
+	Make sure g_markup_escape_text receives a valid utf-8 string. Fixes
+	bug #373715.
+
+2007-02-05  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/ps/ps.c: (psscan):
 
 	Fix memory leak. 
