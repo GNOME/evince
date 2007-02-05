@@ -264,7 +264,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
 
   rewind(file);
 
-  fd =  ps_io_init(file);
+  fd = ps_io_init(file);
   if (!readline(fd, &line, &position, &line_len)) {
     fprintf(stderr, "Warning: empty file.\n");
     ps_io_exit(fd);
@@ -280,6 +280,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
           && (line[0] != '%')) ;
     if(line[0] != '%') {
       g_print("psscan error: input files seems to be a PJL file.\n");
+      ps_io_exit(fd);
       return (NULL);
     }
   }
@@ -326,6 +327,7 @@ psscan(FILE * file, int respect_eof, const gchar * fname)
     doc = g_new0(struct document, 1);
     doc->default_page_orientation = GTK_GS_ORIENTATION_NONE;
     doc->orientation = GTK_GS_ORIENTATION_NONE;
+    ps_io_exit(fd);
     return (doc);
   }
 
@@ -1137,6 +1139,7 @@ newpage:
     }
   }
 #endif
+  ps_io_exit(fd);
   return doc;
 }
 
