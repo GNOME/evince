@@ -166,7 +166,7 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
 	GtkWidget *menu;
 
-	if (EV_IS_NAVIGATION_ACTION (proxy)) {
+	if (GTK_IS_TOOL_ITEM (proxy)) {
 		/* set dummy menu so the arrow gets sensitive */
 		menu = gtk_menu_new ();
 		ev_navigation_action_widget_set_menu (EV_NAVIGATION_ACTION_WIDGET (proxy), menu);
