@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-26 03:14+0000\n"
-"PO-Revision-Date: 2007-01-26 08:20+0200\n"
+"POT-Creation-Date: 2007-01-28 20:59+0000\n"
+"PO-Revision-Date: 2007-02-01 23:19+0200\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -301,7 +301,7 @@ msgstr "PostScript dokumendid"
 msgid "PDF Documents"
 msgstr "PDF-dokumendid"
 
-#: ../libdocument/ev-document-factory.c:409 ../shell/ev-window.c:4450
+#: ../libdocument/ev-document-factory.c:409 ../shell/ev-window.c:4566
 msgid "Images"
 msgstr "Pildid"
 
@@ -331,7 +331,7 @@ msgid "Open “%s”"
 msgstr "„%s” avamine"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
-#: ../shell/ev-navigation-action.c:123
+#: ../shell/ev-navigation-action.c:118
 msgid "Empty"
 msgstr "Tühi"
 
@@ -380,7 +380,7 @@ msgid "Running in presentation mode"
 msgstr "Evince käivitamine esitlusžiimis"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4110
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4222
 msgid "Best Fit"
 msgstr "Parim sobitus"
 
@@ -424,7 +424,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3279
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3387
 #: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "Dokumendivaatur"
@@ -614,17 +614,12 @@ msgstr "_Tõstutundlik"
 msgid "Toggle case sensitive search"
 msgstr "Tõstutundliku otsingu sisse- ja väljalülitamine"
 
-#: ../shell/ev-history.c:172
-#, c-format
-msgid "Page: %s"
-msgstr "Lehekülg: %s"
-
-#: ../shell/ev-page-action.c:77
+#: ../shell/ev-page-action.c:76
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d %d-st)"
 
-#: ../shell/ev-page-action.c:79
+#: ../shell/ev-page-action.c:78
 #, c-format
 msgid "of %d"
 msgstr "%d-st"
@@ -687,19 +682,19 @@ msgstr "Kogun infot kasutatud kirjatüüpide kohta... %3d%%"
 msgid "Attachments"
 msgstr "Manused"
 
-#: ../shell/ev-sidebar-links.c:253 ../shell/ev-view.c:2791
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:2811
 msgid "Loading..."
 msgstr "Laadimine..."
 
-#: ../shell/ev-sidebar-links.c:350
+#: ../shell/ev-sidebar-links.c:342
 msgid "Print..."
 msgstr "Printimine..."
 
-#: ../shell/ev-sidebar-links.c:733
+#: ../shell/ev-sidebar-links.c:714
 msgid "Index"
 msgstr "Sisukord"
 
-#: ../shell/ev-sidebar-thumbnails.c:678
+#: ../shell/ev-sidebar-thumbnails.c:689
 msgid "Thumbnails"
 msgstr "Pisipildid"
 
@@ -723,121 +718,131 @@ msgstr "Vaate allakerimine"
 msgid "Document View"
 msgstr "Dokumendivaade"
 
-#: ../shell/ev-view.c:1407
+#: ../shell/ev-view.c:1411
 msgid "Go to first page"
 msgstr "Esimesele leheküljele liikumine"
 
-#: ../shell/ev-view.c:1409
+#: ../shell/ev-view.c:1413
 msgid "Go to previous page"
 msgstr "Eelmisele leheküljele liikumine"
 
-#: ../shell/ev-view.c:1411
+#: ../shell/ev-view.c:1415
 msgid "Go to next page"
 msgstr "Järgmisele leheküljele liikumine"
 
-#: ../shell/ev-view.c:1413
+#: ../shell/ev-view.c:1417
 msgid "Go to last page"
 msgstr "Viimasele leheküljele liikumine"
 
-#: ../shell/ev-view.c:1415
+#: ../shell/ev-view.c:1419
 msgid "Go to page"
 msgstr "Liikumine leheküljele"
 
-#: ../shell/ev-view.c:1417
+#: ../shell/ev-view.c:1421
 msgid "Find"
 msgstr "Otsing"
 
-#: ../shell/ev-view.c:1444
+#: ../shell/ev-view.c:1448
 #, c-format
 msgid "Go to page %s"
 msgstr "Liikumine leheküljele %s"
 
-#: ../shell/ev-view.c:1449
+#: ../shell/ev-view.c:1453
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Liikumine asukohta %s failis „%s”"
 
-#: ../shell/ev-view.c:1452
+#: ../shell/ev-view.c:1456
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Liikumine failile „%s”"
 
-#: ../shell/ev-view.c:1461
+#: ../shell/ev-view.c:1465
 #, c-format
 msgid "Launch %s"
 msgstr "Käivita %s"
 
-#: ../shell/ev-view.c:1851
+#: ../shell/ev-view.c:1855
 msgid "End of presentation. Press Escape to exit."
 msgstr "Esitluse lõpp. Väljumiseks vajuta Escape-i."
 
-#: ../shell/ev-view.c:2507
+#: ../shell/ev-view.c:2527
 msgid "Jump to page:"
 msgstr "Hüppa leheküljele:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:4107
+#: ../shell/ev-view.c:4135
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d vastus sel leheküljel"
 msgstr[1] "%d vastust sel leheküljel"
 
-#: ../shell/ev-view.c:4116
+#: ../shell/ev-view.c:4144
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% otsingu lõpuni"
 
-#: ../shell/ev-window.c:1140
+#: ../shell/ev-window.c:725
+#, c-format
+msgid "Page %s - %s"
+msgstr "Lehekülg %s - %s"
+
+#: ../shell/ev-window.c:727
+#, c-format
+msgid "Page %s"
+msgstr "Lehekülg %s"
+
+#: ../shell/ev-window.c:1254
 msgid "Unable to open document"
 msgstr "Dokumenti ei ole võimalik avada"
 
-#: ../shell/ev-window.c:1306
+#: ../shell/ev-window.c:1414
 msgid "Open Document"
 msgstr "Dokumendi avamine"
 
-#: ../shell/ev-window.c:1361
+#: ../shell/ev-window.c:1469
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "Sümbolviita „%s” pole võimalik salvestada: %s"
 
-#: ../shell/ev-window.c:1386
+#: ../shell/ev-window.c:1494
 msgid "Cannot open a copy."
 msgstr "Koopiat pole võimalik avada."
 
-#: ../shell/ev-window.c:1667
+#: ../shell/ev-window.c:1775
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "Faili „%s” pole võimalik luua: %s"
 
-#: ../shell/ev-window.c:1694
+#: ../shell/ev-window.c:1802
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Faili ei ole võimalik „%s”-na salvestada."
 
-#: ../shell/ev-window.c:1716
+#: ../shell/ev-window.c:1824
 msgid "Save a Copy"
 msgstr "Salvesta koopia"
 
-#: ../shell/ev-window.c:1797
+#: ../shell/ev-window.c:1905
 msgid "Failed to print document"
 msgstr "Tõrge dokumendi printimisel"
 
-#: ../shell/ev-window.c:1916 ../shell/ev-window.c:2101
+#: ../shell/ev-window.c:2024 ../shell/ev-window.c:2209
 msgid "Printing is not supported on this printer."
 msgstr "Selle printeriga ei ole printimine toetatud."
 
-#: ../shell/ev-window.c:2026 ../shell/ev-window.c:2152
+#: ../shell/ev-window.c:2134 ../shell/ev-window.c:2260
 msgid "Print"
 msgstr "Prindi"
 
-#: ../shell/ev-window.c:2091
+#: ../shell/ev-window.c:2199
 msgid "Generating PDF is not supported"
 msgstr "PDF-i genereerimine pole toetatud"
 
-#: ../shell/ev-window.c:2103
+#: ../shell/ev-window.c:2211
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
@@ -846,20 +851,20 @@ msgstr ""
 "Sa proovisid printida „%s” draiveri abil. See programm vajab PostScripti "
 "printeridraiverit."
 
-#: ../shell/ev-window.c:2161
+#: ../shell/ev-window.c:2269
 msgid "Pages"
 msgstr "Lehekülgi"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:2528 ../shell/ev-window.c:3924
+#: ../shell/ev-window.c:2636 ../shell/ev-window.c:4032
 msgid "Leave Fullscreen"
 msgstr "Välju täisekraanvaatest"
 
-#: ../shell/ev-window.c:2900
+#: ../shell/ev-window.c:3008
 msgid "Toolbar Editor"
 msgstr "Tööriistariba redaktor"
 
-#: ../shell/ev-window.c:3275
+#: ../shell/ev-window.c:3383
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -868,7 +873,7 @@ msgstr ""
 "Dokumendivaatur.\n"
 "Kasutusel poppler %s (%s)"
 
-#: ../shell/ev-window.c:3303
+#: ../shell/ev-window.c:3411
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -880,7 +885,7 @@ msgstr ""
 "poolt avaldatud; kas Litsentsi versioon number 2 või (vastavalt Teie "
 "valikule) ükskõik milline hilisem versioon.\n"
 
-#: ../shell/ev-window.c:3307
+#: ../shell/ev-window.c:3415
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -892,7 +897,7 @@ msgstr ""
 "TEATUD KINDLAKS EESMÄRGIKS. Üksikasjade suhtes vaata GNU Üldist Avalikku "
 "Litsentsi.\n"
 
-#: ../shell/ev-window.c:3311
+#: ../shell/ev-window.c:3419
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -902,340 +907,340 @@ msgstr ""
 "kui ei, siis võtke ühendust Free Software Foundation'iga, 59 Temple Place, "
 "Suite 330, Boston, MA 02111-1307 USA\n"
 
-#: ../shell/ev-window.c:3335 ../shell/main.c:284
+#: ../shell/ev-window.c:3443 ../shell/main.c:284
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3338
+#: ../shell/ev-window.c:3446
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Evince'i autorid"
 
-#: ../shell/ev-window.c:3344
+#: ../shell/ev-window.c:3452
 msgid "translator-credits"
 msgstr ""
 "Sven Sapelson <sven.sapelson@gmail.com>, 2005.\n"
 "Ivar Smolin <okul@linux.ee>, 2005-2007.\n"
 "Priit Laes <amd@store20.com>, 2005-2007."
 
-#: ../shell/ev-window.c:3841
+#: ../shell/ev-window.c:3949
 msgid "_File"
 msgstr "_Fail"
 
-#: ../shell/ev-window.c:3842
+#: ../shell/ev-window.c:3950
 msgid "_Edit"
 msgstr "_Redaktor"
 
-#: ../shell/ev-window.c:3843
+#: ../shell/ev-window.c:3951
 msgid "_View"
 msgstr "_Vaade"
 
-#: ../shell/ev-window.c:3844
+#: ../shell/ev-window.c:3952
 msgid "_Go"
 msgstr "Liikumi_ne"
 
-#: ../shell/ev-window.c:3845
+#: ../shell/ev-window.c:3953
 msgid "_Help"
 msgstr "_Abi"
 
 #. File menu
-#: ../shell/ev-window.c:3848 ../shell/ev-window.c:4020
+#: ../shell/ev-window.c:3956 ../shell/ev-window.c:4128
 msgid "_Open..."
 msgstr "_Ava..."
 
-#: ../shell/ev-window.c:3849
+#: ../shell/ev-window.c:3957
 msgid "Open an existing document"
 msgstr "Olemasoleva dokumendi avamine"
 
-#: ../shell/ev-window.c:3851
+#: ../shell/ev-window.c:3959
 msgid "Open a _Copy"
 msgstr "Ava _koopia"
 
-#: ../shell/ev-window.c:3852
+#: ../shell/ev-window.c:3960
 msgid "Open a copy of the current document in a new window"
 msgstr "Käesolevast dokumendist koopia avamine uuest aknas"
 
-#: ../shell/ev-window.c:3854 ../shell/ev-window.c:4022
+#: ../shell/ev-window.c:3962 ../shell/ev-window.c:4130
 msgid "_Save a Copy..."
 msgstr "Salvesta _koopia..."
 
-#: ../shell/ev-window.c:3855
+#: ../shell/ev-window.c:3963
 msgid "Save a copy of the current document"
 msgstr "Käesolevast dokumendist koopia salvestamine"
 
-#: ../shell/ev-window.c:3857
+#: ../shell/ev-window.c:3965
 msgid "Print Set_up..."
 msgstr "Printimise _seadistamine..."
 
-#: ../shell/ev-window.c:3858
+#: ../shell/ev-window.c:3966
 msgid "Setup the page settings for printing"
 msgstr "Printimise jaoks lehesätete seadistamine"
 
-#: ../shell/ev-window.c:3860
+#: ../shell/ev-window.c:3968
 msgid "_Print..."
 msgstr "_Prindi..."
 
-#: ../shell/ev-window.c:3861
+#: ../shell/ev-window.c:3969
 msgid "Print this document"
 msgstr "Selle dokumendi printimine"
 
-#: ../shell/ev-window.c:3863
+#: ../shell/ev-window.c:3971
 msgid "P_roperties"
 msgstr "_Omadused"
 
-#: ../shell/ev-window.c:3872 ../shell/ev-window.c:3874
+#: ../shell/ev-window.c:3980 ../shell/ev-window.c:3982
 msgid "Select _All"
 msgstr "Vali _kõik"
 
-#: ../shell/ev-window.c:3877
+#: ../shell/ev-window.c:3985
 msgid "_Find..."
 msgstr "_Leia..."
 
-#: ../shell/ev-window.c:3878
+#: ../shell/ev-window.c:3986
 msgid "Find a word or phrase in the document"
 msgstr "Dokumendist sõna või fraasi leidmine"
 
-#: ../shell/ev-window.c:3880
+#: ../shell/ev-window.c:3988
 msgid "Find Ne_xt"
 msgstr "Leia _järgmine"
 
-#: ../shell/ev-window.c:3882
+#: ../shell/ev-window.c:3990
 msgid "Find Pre_vious"
 msgstr "Leia _eelmine"
 
-#: ../shell/ev-window.c:3884
+#: ../shell/ev-window.c:3992
 msgid "T_oolbar"
 msgstr "_Tööriistariba"
 
-#: ../shell/ev-window.c:3886
+#: ../shell/ev-window.c:3994
 msgid "Rotate _Left"
 msgstr "Pööra _vasakule"
 
-#: ../shell/ev-window.c:3888
+#: ../shell/ev-window.c:3996
 msgid "Rotate _Right"
 msgstr "Pöörab _paremale"
 
-#: ../shell/ev-window.c:3893
+#: ../shell/ev-window.c:4001
 msgid "Enlarge the document"
 msgstr "Dokumendi suurendamine"
 
-#: ../shell/ev-window.c:3896
+#: ../shell/ev-window.c:4004
 msgid "Shrink the document"
 msgstr "Dokumendi kahandamine"
 
-#: ../shell/ev-window.c:3898
+#: ../shell/ev-window.c:4006
 msgid "_Reload"
 msgstr "_Laadi uuesti"
 
-#: ../shell/ev-window.c:3899
+#: ../shell/ev-window.c:4007
 msgid "Reload the document"
 msgstr "Dokumendi uuestilaadimine"
 
 #. Go menu
-#: ../shell/ev-window.c:3903
+#: ../shell/ev-window.c:4011
 msgid "_Previous Page"
 msgstr "_Eelmine lehekülg"
 
-#: ../shell/ev-window.c:3904
+#: ../shell/ev-window.c:4012
 msgid "Go to the previous page"
 msgstr "Eelmisele leheküljele liikumine"
 
-#: ../shell/ev-window.c:3906
+#: ../shell/ev-window.c:4014
 msgid "_Next Page"
 msgstr "_Järgmine lehekülg"
 
-#: ../shell/ev-window.c:3907
+#: ../shell/ev-window.c:4015
 msgid "Go to the next page"
 msgstr "Järgmisele leheküljele liikumine"
 
-#: ../shell/ev-window.c:3909
+#: ../shell/ev-window.c:4017
 msgid "_First Page"
 msgstr "_Esimene lehekülg"
 
-#: ../shell/ev-window.c:3910
+#: ../shell/ev-window.c:4018
 msgid "Go to the first page"
 msgstr "Esimesele leheküljele liikumine"
 
-#: ../shell/ev-window.c:3912
+#: ../shell/ev-window.c:4020
 msgid "_Last Page"
 msgstr "_Viimane lehekülg"
 
-#: ../shell/ev-window.c:3913
+#: ../shell/ev-window.c:4021
 msgid "Go to the last page"
 msgstr "Viimasele leheküljele liikumine"
 
 #. Help menu
-#: ../shell/ev-window.c:3917
+#: ../shell/ev-window.c:4025
 msgid "_Contents"
 msgstr "_Sisu"
 
-#: ../shell/ev-window.c:3920
+#: ../shell/ev-window.c:4028
 msgid "_About"
 msgstr "_Evince'ist lähemalt"
 
-#: ../shell/ev-window.c:3925
+#: ../shell/ev-window.c:4033
 msgid "Leave fullscreen mode"
 msgstr "Täisekraanvaate lõpetamine"
 
 #. View Menu
-#: ../shell/ev-window.c:3976
+#: ../shell/ev-window.c:4084
 msgid "_Toolbar"
 msgstr "_Tööriistariba"
 
-#: ../shell/ev-window.c:3977
+#: ../shell/ev-window.c:4085
 msgid "Show or hide the toolbar"
 msgstr "Tööriistariba näitamine või peitmine"
 
-#: ../shell/ev-window.c:3979
+#: ../shell/ev-window.c:4087
 msgid "Side _Pane"
 msgstr "Külg_paan"
 
-#: ../shell/ev-window.c:3980
+#: ../shell/ev-window.c:4088
 msgid "Show or hide the side pane"
 msgstr "Külgpaani näitamine või peitmine"
 
-#: ../shell/ev-window.c:3982
+#: ../shell/ev-window.c:4090
 msgid "_Continuous"
 msgstr "Jät_kuv"
 
-#: ../shell/ev-window.c:3983
+#: ../shell/ev-window.c:4091
 msgid "Show the entire document"
 msgstr "Kogu dokumendi näitamine"
 
-#: ../shell/ev-window.c:3985
+#: ../shell/ev-window.c:4093
 msgid "_Dual"
 msgstr "_Paaris"
 
-#: ../shell/ev-window.c:3986
+#: ../shell/ev-window.c:4094
 msgid "Show two pages at once"
 msgstr "Kahe lehekülje näitamine korraga"
 
-#: ../shell/ev-window.c:3988
+#: ../shell/ev-window.c:4096
 msgid "_Fullscreen"
 msgstr "_Täisekraan"
 
-#: ../shell/ev-window.c:3989
+#: ../shell/ev-window.c:4097
 msgid "Expand the window to fill the screen"
 msgstr "Akna suurendamine kogu ekraani suuruseks"
 
-#: ../shell/ev-window.c:3991
+#: ../shell/ev-window.c:4099
 msgid "_Presentation"
 msgstr "_Esitlus"
 
-#: ../shell/ev-window.c:3992
+#: ../shell/ev-window.c:4100
 msgid "Run document as a presentation"
 msgstr "Dokumenti näitamine esitlusena"
 
-#: ../shell/ev-window.c:3994
+#: ../shell/ev-window.c:4102
 msgid "_Best Fit"
 msgstr "_Parim sobivus"
 
-#: ../shell/ev-window.c:3995
+#: ../shell/ev-window.c:4103
 msgid "Make the current document fill the window"
 msgstr "Dokumendi sobitamine akna suurusega"
 
-#: ../shell/ev-window.c:3997
+#: ../shell/ev-window.c:4105
 msgid "Fit Page _Width"
 msgstr "Sobita _lehekülje laius"
 
-#: ../shell/ev-window.c:3998
+#: ../shell/ev-window.c:4106
 msgid "Make the current document fill the window width"
 msgstr "Dokumendi sobitamine akna laiusega"
 
 #. Links
-#: ../shell/ev-window.c:4005
+#: ../shell/ev-window.c:4113
 msgid "_Open Link"
 msgstr "_Ava viit"
 
-#: ../shell/ev-window.c:4007
+#: ../shell/ev-window.c:4115
 msgid "_Go To"
 msgstr "_Liigu"
 
-#: ../shell/ev-window.c:4009
+#: ../shell/ev-window.c:4117
 msgid "Open in New _Window"
 msgstr "Ava _uues aknas"
 
-#: ../shell/ev-window.c:4011
+#: ../shell/ev-window.c:4119
 msgid "_Copy Link Address"
 msgstr "_Kopeeri viida aadress"
 
-#: ../shell/ev-window.c:4013
+#: ../shell/ev-window.c:4121
 msgid "_Save Image As..."
 msgstr "Salvesta _pilt kui..."
 
-#: ../shell/ev-window.c:4015
+#: ../shell/ev-window.c:4123
 msgid "Copy _Image"
 msgstr "_Kopeeri pilt"
 
-#: ../shell/ev-window.c:4050
+#: ../shell/ev-window.c:4162
 msgid "Page"
 msgstr "Lehekülg"
 
-#: ../shell/ev-window.c:4051
+#: ../shell/ev-window.c:4163
 msgid "Select Page"
 msgstr "Lehekülje valimine"
 
-#: ../shell/ev-window.c:4063
+#: ../shell/ev-window.c:4173
 msgid "Zoom"
 msgstr "Suurendus"
 
-#: ../shell/ev-window.c:4065
+#: ../shell/ev-window.c:4175
 msgid "Adjust the zoom level"
 msgstr "Muuda suurendusastet"
 
-#: ../shell/ev-window.c:4075
+#: ../shell/ev-window.c:4185
 msgid "Navigation"
 msgstr "Ringiliikumine"
 
-#: ../shell/ev-window.c:4077
+#: ../shell/ev-window.c:4187
 msgid "Back"
 msgstr "Tagasi"
 
-#: ../shell/ev-window.c:4079
+#: ../shell/ev-window.c:4189
 msgid "Move across visited pages"
 msgstr "Üle kõigi külastatud lehtede liikumine"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4093
+#: ../shell/ev-window.c:4205
 msgid "Previous"
 msgstr "Eelmine"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4098
+#: ../shell/ev-window.c:4210
 msgid "Next"
 msgstr "Järgmine"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4102
+#: ../shell/ev-window.c:4214
 msgid "Zoom In"
 msgstr "Suurendamine"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4106
+#: ../shell/ev-window.c:4218
 msgid "Zoom Out"
 msgstr "Vähendamine"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4114
+#: ../shell/ev-window.c:4226
 msgid "Fit Width"
 msgstr "Laiuse sobitamine"
 
-#: ../shell/ev-window.c:4419
+#: ../shell/ev-window.c:4535
 msgid "The image could not be saved."
 msgstr "Pilti pole võimalik salvestada."
 
-#: ../shell/ev-window.c:4438
+#: ../shell/ev-window.c:4554
 msgid "Save Image"
 msgstr "Pildi salvestamine"
 
-#: ../shell/ev-window.c:4493
+#: ../shell/ev-window.c:4609
 msgid "Unable to open attachment"
 msgstr "Manust pole võimalik avada"
 
-#: ../shell/ev-window.c:4540
+#: ../shell/ev-window.c:4656
 msgid "The attachment could not be saved."
 msgstr "Manust pole võimalik salvestada."
 
-#: ../shell/ev-window.c:4564
+#: ../shell/ev-window.c:4680
 msgid "Save Attachment"
 msgstr "Manuste salvestamine"
 
