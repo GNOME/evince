@@ -108,13 +108,37 @@ ev_page_cache_finalize (GObject *object)
 
 	page_cache = EV_PAGE_CACHE (object);
 
-	g_free (page_cache->title);
-	g_free (page_cache->size_cache);
-	g_free (page_cache->height_to_page);
-	g_free (page_cache->dual_height_to_page);
-	g_strfreev (page_cache->page_labels);
+	if (page_cache->title) {
+		g_free (page_cache->title);
+		page_cache->title = NULL;
+	}
 
-	ev_document_info_free (page_cache->page_info);
+	if (page_cache->size_cache) {
+		g_free (page_cache->size_cache);
+		page_cache->size_cache = NULL;
+	}
+
+	if (page_cache->height_to_page) {
+		g_free (page_cache->height_to_page);
+		page_cache->height_to_page = NULL;
+	}
+
+	if (page_cache->dual_height_to_page) {
+		g_free (page_cache->dual_height_to_page);
+		page_cache->dual_height_to_page = NULL;
+	}
+
+	if (page_cache->page_labels) {
+		g_strfreev (page_cache->page_labels);
+		page_cache->page_labels = NULL;
+	}
+
+	if (page_cache->page_info) {
+		ev_document_info_free (page_cache->page_info);
+		page_cache->page_info = NULL;
+	}
+
+	G_OBJECT_CLASS (ev_page_cache_parent_class)->finalize (object);
 }
 
 static void
