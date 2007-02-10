@@ -28,8 +28,8 @@
 
 #include <libdjvu/ddjvuapi.h>
 #include <libdjvu/miniexp.h>
-#include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf-core.h>
+#include <glib/gi18n.h>
 #include <glib/gunicode.h>
 #include <string.h>
 
@@ -67,10 +67,13 @@ djvu_handle_events (DjvuDocument *djvu_document, int wait)
 {
 	ddjvu_context_t *ctx = djvu_document->d_context;
 	const ddjvu_message_t *msg;
+	
 	if (!ctx)
 		return;
+
 	if (wait)
 		msg = ddjvu_message_wait (ctx);
+
 	while ((msg = ddjvu_message_peek (ctx))) {
 		switch (msg->m_any.tag) {
 			case DDJVU_ERROR:
@@ -80,6 +83,7 @@ djvu_handle_events (DjvuDocument *djvu_document, int wait)
 					g_warning ("DjvuLibre error: %s:%d", 
 						   msg->m_error.filename,
 						   msg->m_error.lineno);
+				break;
 			default:
 				break;
 		}
@@ -95,6 +99,7 @@ djvu_document_load (EvDocument  *document,
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
 	ddjvu_document_t *doc;
 	gchar *filename;
+	gboolean missing_files = FALSE;
 
 	/* FIXME: We could actually load uris  */
 	filename = g_filename_from_uri (uri, NULL, error);
@@ -103,7 +108,10 @@ djvu_document_load (EvDocument  *document,
 	
 	doc = ddjvu_document_create_by_filename (djvu_document->d_context, filename, TRUE);
 
-	if (!doc) return FALSE;
+	if (!doc) {
+		g_free (filename);
+		return FALSE;
+	}
 
 	if (djvu_document->d_document)
 	    ddjvu_document_release (djvu_document->d_document);
@@ -111,9 +119,50 @@ djvu_document_load (EvDocument  *document,
 	djvu_document->d_document = doc;
 
 	while (!ddjvu_document_decoding_done (djvu_document->d_document)) 
-		djvu_handle_events(djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE);
 	g_free (djvu_document->uri);
 	djvu_document->uri = g_strdup (uri);
+
+	if (ddjvu_document_get_type (djvu_document->d_document) == DDJVU_DOCTYPE_INDIRECT) {
+		gint n_files;
+		gint i;
+		gchar *base;
+
+		base = g_path_get_dirname (filename);
+
+		n_files = ddjvu_document_get_filenum (djvu_document->d_document);
+		for (i = 0; i < n_files; i++) {
+			struct ddjvu_fileinfo_s fileinfo;
+			gchar *file;
+			
+			ddjvu_document_get_fileinfo (djvu_document->d_document,
+						     i, &fileinfo);
+
+			if (fileinfo.type != 'P')
+				continue;
+
+			file = g_build_filename (base, fileinfo.id, NULL);
+			if (!g_file_test (file, G_FILE_TEST_EXISTS)) {
+				missing_files = TRUE;
+				g_free (file);
+				
+				break;
+			}
+			g_free (file);
+		}
+		g_free (base);
+	}
+	g_free (filename);
+
+	if (missing_files) {
+		g_set_error (error,
+			     G_FILE_ERROR,
+			     G_FILE_ERROR_EXIST,
+			     _("The document is composed by several files. "
+			       "One or more of such files cannot be accessed."));
+
+		return FALSE;
+	}
 
 	return TRUE;
 }
@@ -150,7 +199,7 @@ djvu_document_get_page_size (EvDocument   *document,
 	ddjvu_status_t r;
 	
 	g_return_if_fail (djvu_document->d_document);
-	
+
 	while ((r = ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info)) < DDJVU_JOB_OK)
 		djvu_handle_events(djvu_document, TRUE);
 
