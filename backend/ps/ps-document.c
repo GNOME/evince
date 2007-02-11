@@ -85,8 +85,6 @@ struct _PSDocument {
 
 	gint  *ps_export_pagelist;
 	gchar *ps_export_filename;
-
-	const gchar *gs_status;       /* PSDocument status */
 };
 
 struct _PSDocumentClass {
@@ -160,8 +158,6 @@ ps_document_init (PSDocument *gs)
 	gs->input_buffer_ptr = NULL;
 	gs->bytes_left = 0;
 	gs->buffer_bytes_left = 0;
-
-	gs->gs_status = _("No document loaded.");
 
 	gs->ps_export_pagelist = NULL;
 	gs->ps_export_filename = NULL;
@@ -537,10 +533,6 @@ ps_interpreter_stop (PSDocument *gs)
 		while ((wait (&status) == -1) && (errno == EINTR));
 		g_spawn_close_pid (gs->interpreter_pid);
 		gs->interpreter_pid = -1;
-		
-		if (status == 1) {
-			gs->gs_status = _("Interpreter failed.");
-		}
 	}
 
 	if (gs->interpreter_input) {
@@ -601,13 +593,8 @@ ps_interpreter_is_ready (PSDocument *gs)
 
 /* EvDocumentIface */
 static gboolean
-document_load (PSDocument *gs, const gchar *fname)
+document_load (PSDocument *gs, const gchar *fname, GError **error)
 {
-	if (fname == NULL) {
-		gs->gs_status = "";
-		return FALSE;
-	}
-
 	/* prepare this document */
 	gs->structured_doc = FALSE;
 	gs->send_filename_to_gs = TRUE;
@@ -619,34 +606,45 @@ document_load (PSDocument *gs, const gchar *fname)
 	 */
 	if (!g_file_test (fname, G_FILE_TEST_IS_REGULAR)) {
 		gchar *filename_dsp;
-		gchar *msg;
-		
+
 		filename_dsp = g_filename_display_name (fname);
-		msg = g_strdup_printf (_("Cannot open file “%s”.\n"), filename_dsp);
+		g_set_error (error,
+			     G_FILE_ERROR,
+			     G_FILE_ERROR_NOENT,
+			     _("Cannot open file “%s”.\n"), /* FIXME: remove \n after freeze */
+			     filename_dsp);
 		g_free (filename_dsp);
 		
-		ps_interpreter_failed (gs, msg);
-		g_free (msg);
-		gs->gs_status = _("File is not readable.");
-		
+		ps_interpreter_failed (gs, NULL);
 		return FALSE;
 	}
 
 	if (!gs->gs_filename || (gs->gs_psfile = fopen (gs->gs_filename, "r")) == NULL) {
+		gchar *filename_dsp;
+
+		filename_dsp = g_filename_display_name (fname);
+		g_set_error (error,
+			     G_FILE_ERROR,
+			     G_FILE_ERROR_NOENT,
+			     _("Cannot open file “%s”.\n"), /* FIXME: remove \n after freeze */
+			     filename_dsp);
+		g_free (filename_dsp);
+		
 		ps_interpreter_failed (gs, NULL);
 		return FALSE;
 	}
 	
 	/* we grab the vital statistics!!! */
 	gs->doc = psscan (gs->gs_psfile, TRUE, gs->gs_filename);
+	if (!gs->doc)
+		return FALSE;
+	
 	
 	if ((!gs->doc->epsf && gs->doc->numpages > 0) ||
 	    (gs->doc->epsf && gs->doc->numpages > 1)) {
 		gs->structured_doc = TRUE;
 		gs->send_filename_to_gs = FALSE;
 	}
-
-	gs->gs_status = _("Document loaded.");
 
 	return TRUE;
 }
@@ -666,26 +664,27 @@ ps_document_load (EvDocument  *document,
 
 	gs_path = g_find_program_in_path ("gs");
 	if (!gs_path) {
-        	    gchar *filename_dsp;
-		    
-	    	    filename_dsp = g_filename_display_name (filename);
-		    g_set_error (error,
-				 G_FILE_ERROR,
-				 G_FILE_ERROR_NOENT,
-				 _("Failed to load document “%s”. Ghostscript interpreter was not found in path"),
-				 filename);
-		    g_free (filename_dsp);
-		    g_free (filename);
-
-		    return FALSE;
-	}
-
-	result = document_load (PS_DOCUMENT (document), filename);
-	if (!result) {
 		gchar *filename_dsp;
 		
 		filename_dsp = g_filename_display_name (filename);
-		g_set_error (error, G_FILE_ERROR,
+		g_set_error (error,
+			     G_FILE_ERROR,
+			     G_FILE_ERROR_NOENT,
+			     _("Failed to load document “%s”. Ghostscript interpreter was not found in path"),
+			     filename);
+		g_free (filename_dsp);
+		g_free (filename);
+		
+		return FALSE;
+	}
+
+	result = document_load (PS_DOCUMENT (document), filename, error);
+	if (!result && !(*error)) {
+		gchar *filename_dsp;
+		
+		filename_dsp = g_filename_display_name (filename);
+		g_set_error (error,
+			     G_FILE_ERROR,
 			     G_FILE_ERROR_FAILED,
 			     _("Failed to load document “%s”"),
 			     filename_dsp);
