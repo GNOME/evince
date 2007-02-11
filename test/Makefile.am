@@ -1,5 +1,5 @@
 
-dist_check_SCRIPTS = test1.py test2.py test3.py
+dist_check_SCRIPTS = test1.py test2.py test3.py test4.py
 
 TESTS = $(dist_check_SCRIPTS)
 

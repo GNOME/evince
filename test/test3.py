@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# This test opens a password encrypted file and tries to unlock it.
+# This test opens a file with wrong extenstion.
 
 import os
 os.environ['LANG']='C'
