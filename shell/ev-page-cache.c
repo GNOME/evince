@@ -129,7 +129,13 @@ ev_page_cache_finalize (GObject *object)
 	}
 
 	if (page_cache->page_labels) {
-		g_strfreev (page_cache->page_labels);
+		gint i;
+
+		for (i = 0; i < page_cache->n_pages; i++) {
+			if (page_cache->page_labels[i])
+				g_free (page_cache->page_labels[i]);
+		}
+		g_free (page_cache->page_labels);
 		page_cache->page_labels = NULL;
 	}
 
