@@ -177,6 +177,7 @@ struct _EvWindowPrivate {
 #endif
 
 	EvJob *load_job;
+	EvJob *thumbnail_job;
 #ifdef WITH_GNOME_PRINT
 	GnomePrintJob *print_job;
 #endif
@@ -217,6 +218,8 @@ static void     ev_window_set_page_mode                 (EvWindow         *windo
 							 EvWindowPageMode  page_mode);
 static void	ev_window_load_job_cb  			(EvJobLoad        *job,
 							 gpointer          data);
+static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
+							 EvWindow         *ev_window);
 #ifdef WITH_GTK_PRINT
 static void     ev_window_print_job_cb                  (EvJobPrint       *job,
 							 EvWindow         *window);
@@ -661,8 +664,8 @@ page_changed_cb (EvPageCache *page_cache,
 }
 
 typedef struct _FindTask {
-    const gchar *page_label;
-    gchar *chapter;
+	const gchar *page_label;
+	gchar *chapter;
 } FindTask;
 
 static gboolean
@@ -671,26 +674,26 @@ ev_window_find_chapter (GtkTreeModel *tree_model,
 		        GtkTreeIter  *iter,
 		        gpointer      data)
 {
-    FindTask *task = (FindTask *)data;
-    gchar *page_string;
-    
-    gtk_tree_model_get (tree_model, iter,
-			EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, &page_string, 
-			-1);
-			
-    if (!page_string)
-	    return FALSE;
-	    
-    if (!strcmp (page_string, task->page_label)) {
-	    gtk_tree_model_get (tree_model, iter,
-		    		EV_DOCUMENT_LINKS_COLUMN_MARKUP, &task->chapter, 
-				-1);
-	    g_free (page_string);
-	    return TRUE;
-    }
-    
-    g_free (page_string);
-    return FALSE;
+	FindTask *task = (FindTask *)data;
+	gchar *page_string;
+	
+	gtk_tree_model_get (tree_model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, &page_string, 
+			    -1);
+	
+	if (!page_string)
+		return FALSE;
+	
+	if (!strcmp (page_string, task->page_label)) {
+		gtk_tree_model_get (tree_model, iter,
+				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, &task->chapter, 
+				    -1);
+		g_free (page_string);
+		return TRUE;
+	}
+	
+	g_free (page_string);
+	return FALSE;
 }
 
 static void
@@ -1014,6 +1017,32 @@ setup_view_from_metadata (EvWindow *window)
 }
 
 static void
+ev_window_clear_thumbnail_job (EvWindow *ev_window)
+{
+	if (ev_window->priv->thumbnail_job != NULL) {
+		ev_job_queue_remove_job (ev_window->priv->thumbnail_job);
+
+		g_signal_handlers_disconnect_by_func (ev_window->priv->thumbnail_job,
+						      ev_window_set_icon_from_thumbnail,
+						      ev_window);
+		g_object_unref (ev_window->priv->thumbnail_job);
+		ev_window->priv->thumbnail_job = NULL;
+	}
+}
+
+static void
+ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
+				   EvWindow       *ev_window)
+{
+	if (job->thumbnail) {
+		gtk_window_set_icon (GTK_WINDOW (ev_window),
+				     job->thumbnail);
+	}
+
+	ev_window_clear_thumbnail_job (ev_window);
+}
+
+static void
 ev_window_setup_document (EvWindow *ev_window)
 {
 	const EvDocumentInfo *info;
@@ -1032,6 +1061,15 @@ ev_window_setup_document (EvWindow *ev_window)
 				         "find_changed",
 				         G_CALLBACK (find_changed_cb),	
 				         ev_window, 0);
+	}
+
+	if (EV_IS_DOCUMENT_THUMBNAILS (document)) {
+		ev_window_clear_thumbnail_job (ev_window);
+		ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, 0, 0, 100);
+		g_signal_connect (ev_window->priv->thumbnail_job, "finished",
+				  G_CALLBACK (ev_window_set_icon_from_thumbnail),
+				  ev_window);
+		ev_job_queue_add_job (EV_JOB (ev_window->priv->thumbnail_job), EV_JOB_PRIORITY_LOW);
 	}
 
 	ev_sidebar_set_document (sidebar, document);
@@ -3862,9 +3900,14 @@ ev_window_dispose (GObject *object)
 	if (priv->load_job) {
 		ev_window_clear_load_job (window);
 	}
+
+	if (priv->thumbnail_job) {
+		ev_window_clear_thumbnail_job (window);
+	}
 	
 	if (priv->local_uri) {
 		ev_window_clear_local_uri (window);
+		priv->local_uri = NULL;
 	}
 	
 	ev_window_close_dialogs (window);
