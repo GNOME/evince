@@ -1,5 +1,14 @@
 2007-02-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/ps/gstypes.h:
+	* backend/ps/ps-document.c: (ps_document_get_page_rotation),
+	(ps_document_get_page_size), (ps_async_renderer_render_pixbuf),
+	(ps_document_thumbnails_get_thumbnail):
+
+	Handle PostScript page orientation. Fixes bug #318568.
+
+2007-02-13  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/ps/Makefile.am:
 	* backend/ps/ps-document.[ch]: (ps_document_init), (ps_document_dispose),
 	(document_load), (ps_document_load), (save_document),

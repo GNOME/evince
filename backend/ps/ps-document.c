@@ -356,6 +356,29 @@ ps_document_get_n_pages (EvDocument *document)
 	return ps->structured_doc ? ps->doc->numpages : 1;
 }
 
+static gint
+ps_document_get_page_rotation (PSDocument *ps_document,
+			       int         page)
+{
+	gint rotation = GTK_GS_ORIENTATION_NONE;
+
+	g_assert (ps_document->doc != NULL);
+	
+	if (ps_document->structured_doc) {
+		if (ps_document->doc->pages[page].orientation != GTK_GS_ORIENTATION_NONE)
+			rotation = ps_document->doc->pages[page].orientation;
+		else
+			rotation = ps_document->doc->default_page_orientation;
+	}
+
+	if (rotation == GTK_GS_ORIENTATION_NONE)
+		rotation = ps_document->doc->orientation;
+
+	if (rotation == GTK_GS_ORIENTATION_NONE)
+		rotation = GTK_GS_ORIENTATION_PORTRAIT;
+
+	return rotation;
+}
 
 static void
 ps_document_get_page_size (EvDocument *document,
@@ -365,15 +388,30 @@ ps_document_get_page_size (EvDocument *document,
 {
 	PSDocument *ps_document = PS_DOCUMENT (document);
 	int urx, ury, llx, lly;
+	gdouble pwidth, pheight;
+	gdouble page_width, page_height;
+	gint rotate;
 
 	psgetpagebox (ps_document->doc, page, &urx, &ury, &llx, &lly);
 
+	pwidth = (urx - llx) + 0.5;
+	pheight = (ury - lly) + 0.5;
+
+	rotate = ps_document_get_page_rotation (ps_document, page);
+	if (rotate == 90 || rotate == 270) {
+		page_height = pwidth;
+		page_width = pheight;
+	} else {
+		page_width = pwidth;
+		page_height = pheight;
+	}
+	
 	if (width) {
-		*width = (urx - llx) + 0.5;
+		*width = page_width;
 	}
 
 	if (height) {
-		*height = (ury - lly) + 0.5;
+		*height = page_height;
 	}
 }
 
@@ -441,6 +479,8 @@ ps_async_renderer_render_pixbuf (EvAsyncRenderer *renderer,
 
 	g_return_if_fail (PS_IS_INTERPRETER (ps_document->gs));
 
+	rotation = (rotation + ps_document_get_page_rotation (ps_document, page)) % 360;
+
 	ps_interpreter_render_page (ps_document->gs, page, scale, rotation);
 }
 
@@ -506,6 +546,8 @@ ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 	ps_document_get_page_size (EV_DOCUMENT (ps_document), page,
 				   &page_width, &page_height);
 	scale = size / page_width;
+
+	rotation = (rotation + ps_document_get_page_rotation (ps_document, page)) % 360;
 	
 	if (!ps_document->thumbs_rc) {
 		ps_document->thumbs_rc = ev_render_context_new (rotation, page, scale);
