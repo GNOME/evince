@@ -1873,3 +1873,90 @@ static char *readline (fd, lineP, positionP, line_lenP)
 
    return(FD_BUF+FD_LINE_BEGIN);
 }
+
+#define DEFAULT_PAGE_SIZE 1
+
+void
+psgetpagebox (const struct document *doc, int page, int *urx, int *ury, int *llx, int *lly)
+{
+   gint new_llx = 0;
+   gint new_lly = 0;
+   gint new_urx = 0;
+   gint new_ury = 0;
+   GtkGSPaperSize *papersizes = gtk_gs_defaults_get_paper_sizes ();
+   int new_pagesize = -1;
+
+   if (new_pagesize == -1) {
+      new_pagesize = DEFAULT_PAGE_SIZE;
+      if (doc) {
+         /* If we have a document:
+	  * We use -- the page size (if specified)	
+	  * or the doc. size (if specified)	
+	  * or the page bbox (if specified)	
+	  * or the bounding box	
+	  */
+         if ((page >= 0) && (doc->numpages > page) &&
+	     (doc->pages) && (doc->pages[page].size)) {
+	    new_pagesize = doc->pages[page].size - doc->size;
+	 } else if (doc->default_page_size != NULL) {
+	    new_pagesize = doc->default_page_size - doc->size;
+	 } else if ((page >= 0) &&
+		    (doc->numpages > page) &&
+		    (doc->pages) &&
+		    (doc->pages[page].boundingbox[URX] >
+		     doc->pages[page].boundingbox[LLX]) &&
+		    (doc->pages[page].boundingbox[URY] >
+		     doc->pages[page].boundingbox[LLY])) {
+	    new_pagesize = -1;
+	 } else if ((doc->boundingbox[URX] > doc->boundingbox[LLX]) &&
+		    (doc->boundingbox[URY] > doc->boundingbox[LLY])) {
+	    new_pagesize = -1;
+	 }
+      }
+   }
+
+   /* Compute bounding box */
+   if (doc && (doc->epsf || new_pagesize == -1)) {    /* epsf or bbox */
+      if ((page >= 0) &&
+	  (doc->pages) &&
+	  (doc->pages[page].boundingbox[URX] >
+	   doc->pages[page].boundingbox[LLX]) &&
+	  (doc->pages[page].boundingbox[URY] >
+	   doc->pages[page].boundingbox[LLY])) {
+         /* use page bbox */
+	 new_llx = doc->pages[page].boundingbox[LLX];
+	 new_lly = doc->pages[page].boundingbox[LLY];
+	 new_urx = doc->pages[page].boundingbox[URX];
+	 new_ury = doc->pages[page].boundingbox[URY];
+      } else if ((doc->boundingbox[URX] > doc->boundingbox[LLX]) &&
+		 (doc->boundingbox[URY] > doc->boundingbox[LLY])) {
+	 /* use doc bbox */
+	 new_llx = doc->boundingbox[LLX];
+	 new_lly = doc->boundingbox[LLY];
+	 new_urx = doc->boundingbox[URX];
+	 new_ury = doc->boundingbox[URY];
+      }
+   } else {
+      if (new_pagesize < 0)
+         new_pagesize = DEFAULT_PAGE_SIZE;
+      new_llx = new_lly = 0;
+      if (doc && doc->size &&
+	  (new_pagesize < doc->numsizes)) {
+	      new_urx = doc->size[new_pagesize].width;
+        new_ury = doc->size[new_pagesize].height;
+      } else {
+	new_urx = papersizes[new_pagesize].width;
+	new_ury = papersizes[new_pagesize].height;
+      }
+   }
+
+   if (new_urx <= new_llx)
+      new_urx = papersizes[12].width;
+   if (new_ury <= new_lly)
+      new_ury = papersizes[12].height;
+
+   *urx = new_urx;
+   *ury = new_ury;
+   *llx = new_llx;
+   *lly = new_lly;
+}

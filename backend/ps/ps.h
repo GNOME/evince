@@ -102,6 +102,9 @@ char *pscopyuntil(FILE * from, GtkGSDocSink * to, long begin, long end,
 void pscopydoc(GtkGSDocSink * dest_file, char *src_filename,
                struct document *d, int *pagelist);
 
+/* Get the page box */
+void psgetpagebox (const struct document *doc, int page, int *urx, int *ury, int *llx, int *lly);
+
 G_END_DECLS
 
 #endif /* __GGV_PS_H__ */

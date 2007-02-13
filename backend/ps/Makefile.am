@@ -15,6 +15,8 @@ libpsdocument_la_SOURCES = 	\
 	ps.h			\
 	ps-document.c		\
 	ps-document.h		\
+	ps-interpreter.c	\
+	ps-interpreter.h	\
 	gsdefaults.c		\
 	gsdefaults.h
 

@@ -1,3 +1,20 @@
+2007-02-13  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/ps/Makefile.am:
+	* backend/ps/ps-document.[ch]: (ps_document_init), (ps_document_dispose),
+	(document_load), (ps_document_load), (save_document),
+	(save_page_list), (ps_document_get_n_pages),
+	(ps_document_get_page_size), (ps_document_get_info),
+	(ps_interpreter_page_rendered), (ps_async_renderer_render_pixbuf),
+	(ps_interpreter_thumbnail_rendered), (ps_document_render_thumbnail),
+	(ps_document_thumbnails_get_thumbnail),
+	(ps_document_thumbnails_get_dimensions),
+	(ps_document_document_thumbnails_iface_init):
+	* backend/ps/ps.[ch]: (psgetpagebox):
+	* backend/ps/ps-interpreter.[ch]:
+
+	Add support for thumbnails in ps backend. Fixes bug #164755. 
+
 2007-02-13  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
