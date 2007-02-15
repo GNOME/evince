@@ -1157,7 +1157,7 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 		gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->password_dialog), GTK_WINDOW (ev_window));
 
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
-					   (gpointer *) &(ev_window->priv->password_dialog));
+					   (gpointer) &(ev_window->priv->password_dialog));
 		g_signal_connect (ev_window->priv->password_dialog,
 				  "response",
 				  G_CALLBACK (password_dialog_response),
@@ -2372,7 +2372,7 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
 					           ev_window->priv->document);
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->properties),
-					   (gpointer *) &(ev_window->priv->properties));
+					   (gpointer) &(ev_window->priv->properties));
 		gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->properties),
 					      GTK_WINDOW (ev_window));
 	}

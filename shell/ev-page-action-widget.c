@@ -60,14 +60,14 @@ ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
 {
 	if (action_widget->page_cache != NULL) {
 		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
-					      (gpointer *)&action_widget->page_cache);
+					      (gpointer)&action_widget->page_cache);
 		action_widget->page_cache = NULL;
 	}
 
 	if (page_cache != NULL) {
 		action_widget->page_cache = page_cache;
 		g_object_add_weak_pointer (G_OBJECT (page_cache),
-					   (gpointer *)&action_widget->page_cache);
+					   (gpointer)&action_widget->page_cache);
 	}
 }
 

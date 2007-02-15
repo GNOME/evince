@@ -61,7 +61,7 @@ ev_navigation_action_set_history (EvNavigationAction *action,
 	action->priv->history = history;
 
 	g_object_add_weak_pointer (G_OBJECT (action->priv->history),
-				   (gpointer *) &action->priv->history);
+				   (gpointer) &action->priv->history);
 }
 
 static void
@@ -219,7 +219,7 @@ ev_navigation_action_finalize (GObject *object)
 
 	if (action->priv->history) {
 		g_object_add_weak_pointer (G_OBJECT (action->priv->history),
-					   (gpointer *) &action->priv->history);
+					   (gpointer) &action->priv->history);
 	}
 
 	G_OBJECT_CLASS (ev_navigation_action_parent_class)->finalize (object);
