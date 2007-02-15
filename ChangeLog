@@ -1,5 +1,12 @@
 2007-02-15  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-view.c: (ev_view_button_press_event),
+	(ev_view_key_press_event):
+
+	Fix critical warnings when there is no document loaded. 
+
+2007-02-15  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-page-action-widget.c:
 	* shell/ev-navigation-action.c:
 	* shell/ev-window.c:

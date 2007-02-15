@@ -1982,6 +1982,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
+
+	if (!view->document)
+		return FALSE;
 	
 	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
 		gtk_widget_grab_focus (widget);
@@ -2584,6 +2587,9 @@ ev_view_key_press_event (GtkWidget   *widget,
 	EvView *view = EV_VIEW (widget);
 	EvPresentationState current;
 
+	if (!view->document)
+		return FALSE;
+	
 	if (!view->presentation ||
 	    view->presentation_state == EV_PRESENTATION_END)
 		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
