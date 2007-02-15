@@ -22,8 +22,6 @@
 #include "ev-document.h"
 
 #include <glib.h>
-#include <libdjvu/ddjvuapi.h>
-#include <libdjvu/miniexp.h>
 
 typedef struct _DjvuText DjvuText;
 

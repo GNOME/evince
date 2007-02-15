@@ -26,8 +26,6 @@
 #include "ev-document-find.h"
 #include "ev-document-links.h"
 
-#include <libdjvu/ddjvuapi.h>
-#include <libdjvu/miniexp.h>
 #include <gdk-pixbuf/gdk-pixbuf-core.h>
 #include <glib/gi18n.h>
 #include <glib/gunicode.h>

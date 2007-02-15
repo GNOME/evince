@@ -24,7 +24,6 @@
 #include <string.h>
 #include <glib.h>
 
-#include <libdjvu/ddjvuapi.h>
 
 typedef struct _DjvuTextPage DjvuTextPage;
 typedef struct _DjvuTextLink DjvuTextLink;

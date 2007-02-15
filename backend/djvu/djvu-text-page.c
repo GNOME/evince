@@ -17,9 +17,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+#include <glib.h>
+#include <libdjvu/miniexp.h>
 #include "djvu-text-page.h"
 
-#include <libdjvu/miniexp.h>
 
 /**
  * djvu_text_page_selection_process:

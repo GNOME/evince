@@ -18,15 +18,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+#include <glib.h>
+#include <libdjvu/miniexp.h>
 #include "djvu-document.h"
 #include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-document-links.h"
 
-#include <libdjvu/ddjvuapi.h>
-#include <libdjvu/miniexp.h>
-#include <glib.h>
-#include <string.h>
 
 static gboolean number_from_miniexp(miniexp_t sexp, int *number)
 {

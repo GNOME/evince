@@ -1,5 +1,17 @@
 2007-02-15  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/djvu/djvu-text.h:
+	* backend/djvu/djvu-document.c:
+	* backend/djvu/djvu-text-page.c:
+	* backend/djvu/djvu-links.c:
+	* backend/djvu/djvu-text-page.h:
+	* backend/djvu/djvu-text.c:
+	
+	Fix build on Mac. Fixes bug #392186. Patch by
+	<ephraim_owns@hotmail.com>
+
+2007-02-15  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_do_page):
 
 	Restore cairo context before rendering every page when printing a PDF

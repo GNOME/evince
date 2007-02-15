@@ -17,6 +17,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+#include <glib.h>
+#include <libdjvu/miniexp.h>
+
 #include "djvu-document-private.h"
 #include "djvu-document.h"
 #include "djvu-text.h"
@@ -24,8 +28,7 @@
 #include "ev-document-find.h"
 #include "ev-document.h"
 
-#include <string.h>
-#include <glib.h>
+
 
 struct _DjvuText {
 	DjvuDocument *document;
