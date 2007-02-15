@@ -1577,11 +1577,15 @@ pdf_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *r
 			poppler_page_render_to_ps (poppler_page, ctx->ps_file);
 			break;
 	        case EV_FILE_FORMAT_PDF:
+#ifdef HAVE_CAIRO_PDF
+			cairo_save (ctx->pdf_cairo);
+#endif
 #ifdef HAVE_POPPLER_PAGE_RENDER
 			poppler_page_render (poppler_page, ctx->pdf_cairo);
 #endif
 #ifdef HAVE_CAIRO_PDF
 			cairo_show_page (ctx->pdf_cairo);
+			cairo_restore (ctx->pdf_cairo);
 #endif
 			break;
 	        default:
