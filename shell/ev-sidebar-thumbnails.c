@@ -220,6 +220,20 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 	gtk_tree_path_free (path);
 }
 
+static gdouble
+get_scale_for_page (EvSidebarThumbnails *sidebar_thumbnails,
+		    gint                 page)
+{
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
+	gint width, height;
+
+	ev_page_cache_get_size (priv->page_cache,
+				page, priv->rotation,
+				1.0, &width, &height);
+	
+	return (gdouble)THUMBNAIL_WIDTH / (gdouble)width;
+}
+
 static void
 add_range (EvSidebarThumbnails *sidebar_thumbnails,
 	   gint                 start_page,
@@ -237,7 +251,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 	for (result = gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
 	     result && page <= end_page;
 	     result = gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->list_store), &iter), page ++) {
-		EvJobThumbnail *job;
+		EvJob *job;
 		gboolean thumbnail_set;
 
 		gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store), &iter,
@@ -246,9 +260,14 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 				    -1);
 
 		if (job == NULL && !thumbnail_set) {
-			/* FIXME: Need rotation */
-			job = (EvJobThumbnail *)ev_job_thumbnail_new (priv->document, page, priv->rotation, THUMBNAIL_WIDTH);
+			EvRenderContext *rc;
+
+			rc = ev_render_context_new (priv->rotation, page,
+						    get_scale_for_page (sidebar_thumbnails, page));
+			job = ev_job_thumbnail_new (priv->document, rc);
 			ev_job_queue_add_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
+			g_object_unref (rc);
+			
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
 						(GDestroyNotify) gtk_tree_iter_free);
@@ -258,6 +277,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 			gtk_list_store_set (priv->list_store, &iter,
 					    COLUMN_JOB, job,
 					    -1);
+			
 			/* The queue and the list own a ref to the job now */
 			g_object_unref (job);
 		} else if (job) {
@@ -383,18 +403,33 @@ ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 		g_object_unref (sidebar_thumbnails->priv->loading_icon);
 
 	if (sidebar_thumbnails->priv->document) {
+		EvRenderContext *rc;
+
+		rc = ev_render_context_new (sidebar_thumbnails->priv->rotation, 0,
+					    get_scale_for_page (sidebar_thumbnails, 0));
+
 		/* We get the dimensions of the first doc so that we can make a blank
 		 * icon.  */
 		ev_document_doc_mutex_lock ();
 		ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (sidebar_thumbnails->priv->document),
-						       0, THUMBNAIL_WIDTH, &width, &height);
+						       rc, &width, &height);
 		ev_document_doc_mutex_unlock ();
+		
+		g_object_unref (rc);
+		
 		sidebar_thumbnails->priv->loading_icon =
-			ev_document_misc_get_thumbnail_frame (width, height, sidebar_thumbnails->priv->rotation, NULL);
+			ev_document_misc_get_thumbnail_frame (width, height, NULL);
 	} else {
 		sidebar_thumbnails->priv->loading_icon = NULL;
 	}
 
+}
+
+static gboolean
+refresh (EvSidebarThumbnails *sidebar_thumbnails)
+{
+	adjustment_changed_cb (sidebar_thumbnails);
+	return FALSE;
 }
 
 void
@@ -413,7 +448,7 @@ ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
 	/* Trigger a redraw */
 	sidebar_thumbnails->priv->start_page = 0;
 	sidebar_thumbnails->priv->end_page = 0;
-	adjustment_changed_cb (sidebar_thumbnails);
+	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
 }
 
 static void

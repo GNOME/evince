@@ -409,52 +409,19 @@ get_supported_image_extensions()
 	return extensions;
 }
 
-static void 
-comics_document_thumbnails_get_geometry (EvDocumentThumbnails *document,
-					 gint                  page,
-					 gint                  suggested_width,
-					 gint                 *width,
-					 gint                 *height,
-					 gdouble              *scale_factor)
-{
-	gdouble orig_width, orig_height, scale;
-
-	comics_document_get_page_size (EV_DOCUMENT (document), page,
-				       &orig_width, &orig_height);
-	scale = suggested_width / orig_width;
-
-	if (width)
-		*width = suggested_width;
-	if (height)
-		*height = orig_height * scale;
-	if (scale_factor)
-		*scale_factor = scale;
-}
-
 static GdkPixbuf *
 comics_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
-					gint 		      page,
-					gint	              rotation,
-					gint                  size,
-					gboolean              border)
+					  EvRenderContext      *rc,
+					  gboolean              border)
 {
-	GdkPixbuf *thumbnail, *framed;
-	gint thumb_width, thumb_height;
-	gdouble scale;
-        EvRenderContext *rc;
+	GdkPixbuf *thumbnail;
 
-	comics_document_thumbnails_get_geometry (document, page, size,
-						 &thumb_width, &thumb_height,
-						 &scale);
-
-	rc = ev_render_context_new (rotation, page, scale);
-	thumbnail = comics_document_render_pixbuf (EV_DOCUMENT (document),
-						   rc);
-	g_object_unref (G_OBJECT (rc));
+	thumbnail = comics_document_render_pixbuf (EV_DOCUMENT (document), rc);
 
 	if (border) {
 	      GdkPixbuf *tmp_pixbuf = thumbnail;
-	      thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
+	      
+	      thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
 	      g_object_unref (tmp_pixbuf);
 	}
 
@@ -463,14 +430,22 @@ comics_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 
 static void
 comics_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					   gint                  page,
-					   gint                  suggested_width,
-					   gint                  *width,
-					   gint                  *height)
+					   EvRenderContext      *rc,
+					   gint                 *width,
+					   gint                 *height)
 {
-	comics_document_thumbnails_get_geometry (document, page,
-						 suggested_width,
-						 width, height, NULL);
+	gdouble page_width, page_height;
+	
+	comics_document_get_page_size (EV_DOCUMENT (document), rc->page,
+				       &page_width, &page_height);
+
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		*width = (gint) (page_height * rc->scale);
+		*height = (gint) (page_width * rc->scale);
+	} else {
+		*width = (gint) (page_width * rc->scale);
+		*height = (gint) (page_height * rc->scale);
+	}
 }
 
 static void

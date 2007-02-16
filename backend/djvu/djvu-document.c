@@ -326,61 +326,65 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 
 static void
 djvu_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					   gint                  page,
-					   gint                  suggested_width,
-					   gint                  *width,
-					   gint                  *height)
+					 EvRenderContext      *rc, 
+					 gint                 *width,
+					 gint                 *height)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document); 
-	gdouble p_width, p_height;
-	gdouble page_ratio;
+	gdouble page_width, page_height;
 	
-	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), page, &p_width, &p_height);
+	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), rc->page,
+				     &page_width, &page_height);
 
-	page_ratio = p_height / p_width;
-	*width = suggested_width;
-	*height = (gint) (suggested_width * page_ratio);
-	
-	return;
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		*width = (gint) (page_height * rc->scale);
+		*height = (gint) (page_width * rc->scale);
+	} else {
+		*width = (gint) (page_width * rc->scale);
+		*height = (gint) (page_height * rc->scale);
+	}
 }
 
 static GdkPixbuf *
-djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-					  gint 			 page,
-				  	  gint	                 rotation,
-					  gint			 width,
-					  gboolean 		 border)
+djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
+					EvRenderContext      *rc,
+					gboolean 	      border)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
 	GdkPixbuf *pixbuf, *rotated_pixbuf;
+	gdouble page_width, page_height;
 	gint thumb_width, thumb_height;
-
 	guchar *pixels;
 	
 	g_return_val_if_fail (djvu_document->d_document, NULL);
+
+	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), rc->page,
+				     &page_width, &page_height);
 	
-	djvu_document_thumbnails_get_dimensions (document, page, width, &thumb_width, &thumb_height);
-	
+	thumb_width = (gint) (page_width * rc->scale);
+	thumb_height = (gint) (page_height * rc->scale);
+
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 thumb_width, thumb_height);
 	gdk_pixbuf_fill (pixbuf, 0xffffffff);
 	pixels = gdk_pixbuf_get_pixels (pixbuf);
 	
-	while (ddjvu_thumbnail_status (djvu_document->d_document, page, 1) < DDJVU_JOB_OK)
+	while (ddjvu_thumbnail_status (djvu_document->d_document, rc->page, 1) < DDJVU_JOB_OK)
 		djvu_handle_events(djvu_document, TRUE);
 		    
-	ddjvu_thumbnail_render (djvu_document->d_document, page, 
+	ddjvu_thumbnail_render (djvu_document->d_document, rc->page, 
 				&thumb_width, &thumb_height,
 				djvu_document->d_format,
 				gdk_pixbuf_get_rowstride (pixbuf), 
 				(gchar *)pixels);
 
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
 	g_object_unref (pixbuf);
 
         if (border) {
 	      GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
-	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
+	      
+	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
 	      g_object_unref (tmp_pixbuf);
 	}
 	

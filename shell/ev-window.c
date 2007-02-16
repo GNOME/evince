@@ -1053,8 +1053,10 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	document = ev_window->priv->document;
 	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
-	g_signal_connect (ev_window->priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), ev_window);
-	g_signal_connect (ev_window->priv->page_cache, "history-changed", G_CALLBACK (history_changed_cb), ev_window);
+	g_signal_connect (ev_window->priv->page_cache, "page-changed",
+			  G_CALLBACK (page_changed_cb), ev_window);
+	g_signal_connect (ev_window->priv->page_cache, "history-changed",
+			  G_CALLBACK (history_changed_cb), ev_window);
 
 	if (EV_IS_DOCUMENT_FIND (document)) {
 		g_signal_connect_object (G_OBJECT (document),
@@ -1064,12 +1066,24 @@ ev_window_setup_document (EvWindow *ev_window)
 	}
 
 	if (EV_IS_DOCUMENT_THUMBNAILS (document)) {
+		EvRenderContext *rc;
+		gint page_width, page_height;
+		gdouble scale;
+
 		ev_window_clear_thumbnail_job (ev_window);
-		ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, 0, 0, 100);
+		
+		ev_page_cache_get_size (ev_window->priv->page_cache,
+					1, 0, 1.0,
+					&page_width, &page_height);
+		scale = (gdouble)128 / (gdouble)page_width;
+		
+		rc = ev_render_context_new (0, 0, scale);
+		ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, rc);
 		g_signal_connect (ev_window->priv->thumbnail_job, "finished",
 				  G_CALLBACK (ev_window_set_icon_from_thumbnail),
 				  ev_window);
 		ev_job_queue_add_job (EV_JOB (ev_window->priv->thumbnail_job), EV_JOB_PRIORITY_LOW);
+		g_object_unref (rc);
 	}
 
 	ev_sidebar_set_document (sidebar, document);

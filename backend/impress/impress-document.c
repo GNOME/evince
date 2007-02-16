@@ -467,27 +467,19 @@ impress_document_document_iface_init (EvDocumentIface *iface)
 
 static GdkPixbuf *
 impress_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
-					gint 		      page,
-					gint                  rotation,
-					gint                  size,
-					gboolean              border)
+					   EvRenderContext      *rc, 
+					   gboolean              border)
 {
   GdkPixbuf *pixbuf = NULL;
   gdouble w, h;
-  EvRenderContext *rc;
 
-  impress_document_get_page_size (EV_DOCUMENT (document),
-			       page,
-			       &w, &h);
-
-  rc = ev_render_context_new (rotation, page, size/w);
   pixbuf = impress_document_render_pixbuf (EV_DOCUMENT (document), rc);
-  g_object_unref (G_OBJECT (rc));
 
   if (border)
     {
       GdkPixbuf *tmp_pixbuf = pixbuf;
-      pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
+      
+      pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
       g_object_unref (tmp_pixbuf);
     }
 
@@ -496,21 +488,26 @@ impress_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 
 static void
 impress_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					 gint                  page,
-					 gint                  suggested_width,
-					 gint                 *width,
-					 gint                 *height)
+					    EvRenderContext      *rc,
+					    gint                 *width,
+					    gint                 *height)
 {
-  gdouble page_ratio;
-  gdouble w, h;
+  gdouble page_width, page_height;
 
   impress_document_get_page_size (EV_DOCUMENT (document),
-			       page,
-			       &w, &h);
-  g_return_if_fail (w > 0);
-  page_ratio = h/w;
-  *width = suggested_width;
-  *height = (gint) (suggested_width * page_ratio);
+				  rc->page,
+				  &page_width, &page_height);
+  
+  if (rc->rotation == 90 || rc->rotation == 270)
+    {
+      *width = (gint) (page_height * rc->scale);
+      *height = (gint) (page_width * rc->scale);
+    }
+  else
+    {
+      *width = (gint) (page_width * rc->scale);
+      *height = (gint) (page_height * rc->scale);
+    }
 }
 
 static void

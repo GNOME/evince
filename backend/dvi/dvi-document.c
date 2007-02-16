@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
-
 #include "dvi-document.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
@@ -267,27 +265,27 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 
 static void
 dvi_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					gint                  page,
-					gint                  suggested_width,
+					EvRenderContext      *rc, 
 					gint                  *width,
 					gint                  *height)
 {	
-	DviDocument *dvi_document = DVI_DOCUMENT (document); 
-	gdouble page_ratio;
-	
-	page_ratio = dvi_document->base_height / dvi_document->base_width;
-	*width = suggested_width;
-	*height = (gint) (suggested_width * page_ratio);
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
+	gdouble page_width = dvi_document->base_width;
+	gdouble page_height = dvi_document->base_height;
 
-	return;
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		*width = (gint) (page_height * rc->scale);
+		*height = (gint) (page_width * rc->scale);
+	} else {
+		*width = (gint) (page_width * rc->scale);
+		*height = (gint) (page_height * rc->scale);
+	}
 }
 
 static GdkPixbuf *
-dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-				       gint 			 page,
-				       gint 		         rotation,
-				       gint			 width,
-				       gboolean 		 border)
+dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
+				       EvRenderContext      *rc,   
+				       gboolean 	     border)
 {
 	DviDocument *dvi_document = DVI_DOCUMENT (document);
 	GdkPixbuf *pixbuf;
@@ -296,11 +294,12 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 	gint thumb_width, thumb_height;
 	gint proposed_width, proposed_height;
 	
-	dvi_document_thumbnails_get_dimensions (document, page, width, &thumb_width, &thumb_height);
-
+	thumb_width = (gint) (dvi_document->base_width * rc->scale);
+	thumb_height = (gint) (dvi_document->base_height * rc->scale);
+	
 	g_mutex_lock (dvi_context_mutex);
 
-	mdvi_setpage(dvi_document->context,  page);
+	mdvi_setpage (dvi_document->context, rc->page);
 
 	mdvi_set_shrink (dvi_document->context, 
 			  (int)dvi_document->base_width * dvi_document->params->hshrink / thumb_width,
@@ -325,12 +324,13 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 
 	g_mutex_unlock (dvi_context_mutex);
 	
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
 	g_object_unref (pixbuf);
 	
         if (border) {
 	      GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
-	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, 0, tmp_pixbuf);
+	      
+	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
 	      g_object_unref (tmp_pixbuf);
 	}
 

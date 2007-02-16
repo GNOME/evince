@@ -34,6 +34,8 @@ static gboolean
 evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 {
 	EvDocument *document = NULL;
+	EvRenderContext *rc;
+	double width, height;
 	GError *error = NULL;
 	GdkPixbuf *pixbuf;
 
@@ -58,8 +60,13 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 		return FALSE;
 	}
 
+	ev_document_get_page_size (document, 0, &width, &height);
+	rc = ev_render_context_new (0, 0, THUMBNAIL_SIZE / width);
+
 	pixbuf = ev_document_thumbnails_get_thumbnail
-			(EV_DOCUMENT_THUMBNAILS (document), 0, 0, size, FALSE);
+			(EV_DOCUMENT_THUMBNAILS (document), rc, FALSE);
+	
+	g_object_unref (rc);
 	
 	if (pixbuf != NULL) {
 		const char *overlaid_icon_name = NULL;
@@ -86,15 +93,15 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 						      1, 1,
 						      GDK_INTERP_NEAREST, 100);
 				
-				gdk_pixbuf_unref  (overlaid_pixbuf);
+				g_object_unref  (overlaid_pixbuf);
 			}
 		}
 		if (gdk_pixbuf_save (pixbuf, thumbnail, "png", NULL, NULL)) {
-			gdk_pixbuf_unref  (pixbuf);
+			g_object_unref  (pixbuf);
 			g_object_unref (document);
 			return TRUE;
 		} else {
-			gdk_pixbuf_unref  (pixbuf);
+			g_object_unref  (pixbuf);
 			g_object_unref (document);
 		}
 	}

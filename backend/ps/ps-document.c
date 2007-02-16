@@ -516,15 +516,11 @@ ps_document_render_thumbnail (PSDocument *ps_document)
 
 static GdkPixbuf *
 ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
-				      gint                  page,
-				      gint                  rotation,
-				      gint                  size,
+				      EvRenderContext      *rc, 
 				      gboolean              border)
 {
 	PSDocument *ps_document;
 	GdkPixbuf  *pixbuf = NULL;
-	gdouble     page_width, page_height;
-	gdouble     scale;
 
 	ps_document = PS_DOCUMENT (document_thumbnails);
 	
@@ -543,19 +539,9 @@ ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 		ps_document->thumbs_mutex = g_mutex_new ();
 	ps_document->thumbs_cond = g_cond_new ();
 
-	ps_document_get_page_size (EV_DOCUMENT (ps_document), page,
-				   &page_width, &page_height);
-	scale = size / page_width;
-
-	rotation = (rotation + ps_document_get_page_rotation (ps_document, page)) % 360;
-	
-	if (!ps_document->thumbs_rc) {
-		ps_document->thumbs_rc = ev_render_context_new (rotation, page, scale);
-	} else {
-		ev_render_context_set_page (ps_document->thumbs_rc, page);
-		ev_render_context_set_scale (ps_document->thumbs_rc, scale);
-		ev_render_context_set_rotation (ps_document->thumbs_rc, rotation);
-	}
+	if (ps_document->thumbs_rc)
+		g_object_unref (ps_document->thumbs_rc);
+	ps_document->thumbs_rc = g_object_ref (rc);
 
 	ev_document_doc_mutex_unlock ();
 	g_mutex_lock (ps_document->thumbs_mutex);
@@ -572,7 +558,7 @@ ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 	if (border) {
 		GdkPixbuf *border_pixbuf;
 		
-		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
+		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
 		g_object_unref (pixbuf);
 		pixbuf = border_pixbuf;
 	}
@@ -582,8 +568,7 @@ ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 
 static void
 ps_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails,
-				       gint                  page,
-				       gint                  size,
+				       EvRenderContext      *rc, 
 				       gint                 *width,
 				       gint                 *height)
 {
@@ -593,10 +578,16 @@ ps_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails
 	ps_document = PS_DOCUMENT (document_thumbnails);
 	
 	ps_document_get_page_size (EV_DOCUMENT (ps_document),
-				   page,
+				   rc->page,
 				   &page_width, &page_height);
-	*width = size;
-	*height = (int) (size * page_height / page_width);
+	
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		*width = (gint) (page_height * rc->scale);
+		*height = (gint) (page_width * rc->scale);
+	} else {
+		*width = (gint) (page_width * rc->scale);
+		*height = (gint) (page_height * rc->scale);
+	}
 }
 
 static void

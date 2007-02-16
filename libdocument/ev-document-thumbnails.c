@@ -18,8 +18,6 @@
  *
  */
 
-#include "config.h"
-
 #include "ev-document-thumbnails.h"
 
 GType
@@ -45,35 +43,34 @@ ev_document_thumbnails_get_type (void)
 }
 
 GdkPixbuf *
-ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-				      gint 		      page,
-				      int	              rotation,
-				      gint		      size,
-				      gboolean                border)
+ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
+				      EvRenderContext      *rc,
+				      gboolean              border)
 {
 	EvDocumentThumbnailsIface *iface;
 
 	g_return_val_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document), NULL);
+	g_return_val_if_fail (EV_IS_RENDER_CONTEXT (rc), NULL);
 
 	iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
 
-	return iface->get_thumbnail (document, page, rotation, size, border);
+	return iface->get_thumbnail (document, rc, border);
 }
 
 void
 ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-				       gint                  page,
-				       gint                  suggested_width,
+				       EvRenderContext      *rc,
 				       gint                 *width,
 				       gint                 *height)
 {
 	EvDocumentThumbnailsIface *iface;
 
 	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
+	g_return_if_fail (EV_IS_RENDER_CONTEXT (rc));
 	g_return_if_fail (width != NULL);
 	g_return_if_fail (height != NULL);
 
 	iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
-	iface->get_dimensions (document, page, suggested_width, width, height);
+	iface->get_dimensions (document, rc, width, height);
 }
 

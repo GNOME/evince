@@ -12,7 +12,6 @@
 GdkPixbuf *
 ev_document_misc_get_thumbnail_frame (int        width,
 				      int        height,
-				      int        rotation,
 				      GdkPixbuf *source_pixbuf)
 {
 	GdkPixbuf *retval;
@@ -21,9 +20,6 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	int i;
 	int width_r, height_r;
 
-	rotation = rotation % 360;
-
-
 	if (source_pixbuf)
 		g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
 
@@ -31,15 +27,8 @@ ev_document_misc_get_thumbnail_frame (int        width,
 		width_r = gdk_pixbuf_get_width (source_pixbuf);
 		height_r = gdk_pixbuf_get_height (source_pixbuf);
 	} else {
-		if (rotation == 0 || rotation == 180) {
-			width_r = width;
-			height_r = height;
-		} else if (rotation == 90 || rotation == 270) {
-			width_r = height;
-			height_r = width;
-		} else {
-			g_assert_not_reached ();
-		}
+		width_r = width;
+		height_r = height;
 	}
 
 	/* make sure no one is passing us garbage */

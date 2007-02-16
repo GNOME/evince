@@ -167,6 +167,11 @@ ev_job_thumbnail_dispose (GObject *object)
 		job->thumbnail = NULL;
 	}
 
+	if (job->rc) {
+		g_object_unref (job->rc);
+		job->rc = NULL;
+	}
+
 	(* G_OBJECT_CLASS (ev_job_thumbnail_parent_class)->dispose) (object);
 }
 
@@ -354,19 +359,15 @@ ev_job_render_run (EvJobRender *job)
 }
 
 EvJob *
-ev_job_thumbnail_new (EvDocument   *document,
-		      gint          page,
-		      int           rotation,
-		      gint          requested_width)
+ev_job_thumbnail_new (EvDocument      *document,
+		      EvRenderContext *rc)
 {
 	EvJobThumbnail *job;
 
 	job = g_object_new (EV_TYPE_JOB_THUMBNAIL, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
-	job->page = page;
-	job->rotation = rotation;
-	job->requested_width = requested_width;
+	job->rc = g_object_ref (rc);
 
 	return EV_JOB (job);
 }
@@ -380,10 +381,7 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 
 	job->thumbnail =
 		ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (EV_JOB (job)->document),
-						      job->page,
-						      job->rotation,
-						      job->requested_width,
-						      TRUE);
+						      job->rc, TRUE);
 	EV_JOB (job)->finished = TRUE;
 
 	ev_document_doc_mutex_unlock ();

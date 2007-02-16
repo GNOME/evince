@@ -148,9 +148,7 @@ struct _EvJobThumbnail
 {
 	EvJob parent;
 
-	gint page;
-	gint rotation;
-	gint requested_width;
+	EvRenderContext *rc;
 	GdkPixbuf *thumbnail;
 };
 
@@ -233,11 +231,9 @@ void            ev_job_render_run         (EvJobRender     *thumbnail);
 
 /* EvJobThumbnail */
 GType           ev_job_thumbnail_get_type (void) G_GNUC_CONST;
-EvJob          *ev_job_thumbnail_new      (EvDocument     *document,
-					   gint            page,
-					   int             rotation,
-					   gint            requested_width);
-void            ev_job_thumbnail_run      (EvJobThumbnail *thumbnail);
+EvJob          *ev_job_thumbnail_new      (EvDocument      *document,
+					   EvRenderContext *rc);
+void            ev_job_thumbnail_run      (EvJobThumbnail  *thumbnail);
 
 /* EvJobFonts */
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;

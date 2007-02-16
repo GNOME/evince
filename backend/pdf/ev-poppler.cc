@@ -92,8 +92,7 @@ static void pdf_document_file_exporter_iface_init       (EvFileExporterIface    
 static void pdf_selection_iface_init                    (EvSelectionIface          *iface);
 static void pdf_document_page_transition_iface_init     (EvDocumentTransitionIface *iface);
 static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
-							 gint                       page,
-							 gint                       size,
+							 EvRenderContext           *rc,
 							 gint                      *width,
 							 gint                      *height);
 static int  pdf_document_get_n_pages			(EvDocument                *document);
@@ -1174,32 +1173,15 @@ pdf_document_document_images_iface_init (EvDocumentImagesIface *iface)
 }
 
 static GdkPixbuf *
-make_thumbnail_for_size (PdfDocument   *pdf_document,
-			 gint           page,
-			 int            rotation,
-			 gint           size)
+make_thumbnail_for_page (PdfDocument     *pdf_document,
+			 PopplerPage     *poppler_page, 
+			 EvRenderContext *rc)
 {
-	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf;
 	int width, height;
-	double scale;
-	gdouble unscaled_width, unscaled_height;
 
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	g_return_val_if_fail (poppler_page != NULL, NULL);
-
-	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document), page,
-						size, &width, &height);
-	poppler_page_get_size (poppler_page, &unscaled_width, &unscaled_height);
-	scale = width / unscaled_width;
-
-	/* rotate */
-	if (rotation == 90 || rotation == 270) {
-		int temp;
-		temp = width;
-		width = height;
-		height = temp;
-	}
+	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document),
+						rc, &width, &height);
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 width, height);
@@ -1208,20 +1190,15 @@ make_thumbnail_for_size (PdfDocument   *pdf_document,
 	ev_document_fc_mutex_lock ();
 	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
 				       width, height,
-				       scale, rotation, pixbuf);
+				       rc->scale, rc->rotation, pixbuf);
 	ev_document_fc_mutex_unlock ();
-       
-
-	g_object_unref (poppler_page);
 
 	return pixbuf;
 }
 
 static GdkPixbuf *
 pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
-	 			       gint 		     page,
-				       gint                  rotation,
- 				       gint                  size,
+				       EvRenderContext      *rc, 
 				       gboolean              border)
 {
 	PdfDocument *pdf_document;
@@ -1231,18 +1208,17 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
 
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
-	
-	if (pixbuf == NULL) {
+	if (!pixbuf) {
 		/* There is no provided thumbnail.  We need to make one. */
-		pixbuf = make_thumbnail_for_size (pdf_document, page, rotation, size);
+		pixbuf = make_thumbnail_for_page (pdf_document, poppler_page, rc);
 	}
 
         if (border) {		
-		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, rotation, pixbuf);
+		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
 		g_object_unref (pixbuf);
 		pixbuf = border_pixbuf;
 	}		
@@ -1254,8 +1230,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 
 static void
 pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails,
-					gint                  page,
-					gint                  size,
+					EvRenderContext      *rc,
 					gint                 *width,
 					gint                 *height)
 {
@@ -1264,10 +1239,8 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	gint has_thumb;
 	
 	pdf_document = PDF_DOCUMENT (document_thumbnails);
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
 
-	g_return_if_fail (width != NULL);
-	g_return_if_fail (height != NULL);
 	g_return_if_fail (poppler_page != NULL);
 
 	has_thumb = poppler_page_get_thumbnail_size (poppler_page, width, height);
@@ -1276,9 +1249,19 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 		double page_width, page_height;
 
 		poppler_page_get_size (poppler_page, &page_width, &page_height);
-		*width = size;
-		*height = (int) (size * page_height / page_width);
+
+		*width = (gint) (page_width * rc->scale);
+		*height = (gint) (page_height * rc->scale);
 	}
+
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		gint  temp;
+
+		temp = *width;
+		*width = *height;
+		*height = temp;
+	}
+	
 	g_object_unref (poppler_page);
 }
 

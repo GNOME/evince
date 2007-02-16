@@ -168,25 +168,22 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 }
 
 static GdkPixbuf *
-pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
-					  gint 			  page,
-					  gint 			  rotation,
-					  gint			  size,
-					  gboolean                border)
+pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
+					  EvRenderContext      *rc,
+					  gboolean              border)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 	GdkPixbuf *pixbuf, *rotated_pixbuf;
-	gdouble scale_factor;
-	gint height;
+	gint width, height;
 	
-	scale_factor = (gdouble)size / gdk_pixbuf_get_width (pixbuf_document->pixbuf);
-
-	height = gdk_pixbuf_get_height (pixbuf_document->pixbuf) * scale_factor;
+	width = (gint) (gdk_pixbuf_get_width (pixbuf_document->pixbuf) * rc->scale);
+	height = (gint) (gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale);
 	
-	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf, size, height,
+	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
+					  width, height,
 					  GDK_INTERP_BILINEAR);
 
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rotation);
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
         g_object_unref (pixbuf);
 
         return rotated_pixbuf;
@@ -194,18 +191,21 @@ pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails   *document,
 
 static void
 pixbuf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					   gint                  page,
-					   gint                  suggested_width,
-					   gint                  *width,
-					   gint                  *height)
+					   EvRenderContext      *rc, 
+					   gint                 *width,
+					   gint                 *height)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-	gdouble page_ratio;
+	gint p_width = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
+	gint p_height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
 
-	page_ratio = ((double)gdk_pixbuf_get_height (pixbuf_document->pixbuf)) /
-		     gdk_pixbuf_get_width (pixbuf_document->pixbuf);
-	*width = suggested_width;
-	*height = (gint) (suggested_width * page_ratio);
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		*width = (gint) (p_height * rc->scale);
+		*height = (gint) (p_width * rc->scale);
+	} else {
+		*width = (gint) (p_width * rc->scale);
+		*height = (gint) (p_height * rc->scale);
+	}
 }
 
 static void
