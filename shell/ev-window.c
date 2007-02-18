@@ -1073,7 +1073,7 @@ ev_window_setup_document (EvWindow *ev_window)
 		ev_window_clear_thumbnail_job (ev_window);
 		
 		ev_page_cache_get_size (ev_window->priv->page_cache,
-					1, 0, 1.0,
+					0, 0, 1.0,
 					&page_width, &page_height);
 		scale = (gdouble)128 / (gdouble)page_width;
 		
