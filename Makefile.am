@@ -14,7 +14,7 @@ SUBDIRS = \
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 
-EXTRA_DIST = $(intltool_extra) gnome-doc-utils.make
+EXTRA_DIST = $(intltool_extra) gnome-doc-utils.make MAINTAINERS
 
 DISTCLEANFILES = 		\
 	gnome-doc-utils.make	\
