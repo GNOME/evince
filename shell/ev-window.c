@@ -431,13 +431,6 @@ ev_window_update_actions (EvWindow *ev_window)
 					ev_view_can_zoom_out (view) &&
 					!presentation_mode);
 	
-	ev_window_set_action_sensitive (ev_window, "Plus", !presentation_mode);
-	ev_window_set_action_sensitive (ev_window, "Minus", !presentation_mode);
-	ev_window_set_action_sensitive (ev_window, "KpPlus", !presentation_mode);
-	ev_window_set_action_sensitive (ev_window, "KpMinus", !presentation_mode);
-	ev_window_set_action_sensitive (ev_window, "CtrlKpPlus", !presentation_mode);
-	ev_window_set_action_sensitive (ev_window, "CtrlKpMinus", !presentation_mode);
-
         /* Go menu */
 	if (has_pages) {
 		ev_window_set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
@@ -3756,8 +3749,6 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	gboolean case_sensitive;
 	gboolean visible;
 	const char *search_string;
-
-	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	/* Either the string or case sensitivity could have changed,
 	 * we connect this callback to both. We also connect it
