@@ -1,88 +1,307 @@
 # Danish translation of evince.
-# Copyright (C) 2005, 06 Free Software Foundation, Inc.
+# Copyright (C) 2005-07 Free Software Foundation, Inc.
+# This file is distributed under the same licence as the evince package.
 # Ole Laursen <olau@hardworking.dk>, 2005, 06.
+# Peter Bach <bach.peter@gmail.com>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-10 22:32+0200\n"
-"PO-Revision-Date: 2006-09-10 22:31+0200\n"
-"Last-Translator: Ole Laursen <olau@hardworking.dk> \n"
-"Language-Team: Danish <dansk@klid.dk>\n"
+"POT-Creation-Date: 2007-02-14 11:19+0000\n"
+"PO-Revision-Date: 2007-02-21 22:16+0200\n"
+"Last-Translator: Peter Bach <bach.peter@gmail.com>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../backend/ev-attachment.c:302 ../backend/ev-attachment.c:315
+#: ../backend/comics/comics-document.c:148
+msgid "File corrupted."
+msgstr "Fil ødelagt."
+
+#: ../backend/comics/comics-document.c:184
+#, c-format
+msgid "No images found in archive %s"
+msgstr "Ingen billeder fundet i arkivet %s"
+
+#: ../backend/djvu/djvu-document.c:161
+msgid "The document is composed by several files. One or more of such files cannot be accessed."
+msgstr "Dokumentet er sammensat af adskillige filer. En eller flere af sådanne filer kan ikke tilgås."
+
+#: ../backend/dvi/dvi-document.c:91
+msgid "File not available"
+msgstr "Filen er ikke tilgængelig"
+
+#: ../backend/dvi/dvi-document.c:106
+msgid "DVI document has incorrect format"
+msgstr "DVI-dokument har ugyldigt format"
+
+#. translators: this is the document security state
+#: ../backend/pdf/ev-poppler.cc:629
+msgid "Yes"
+msgstr "Ja"
+
+#. translators: this is the document security state
+#: ../backend/pdf/ev-poppler.cc:632
+msgid "No"
+msgstr "Nej"
+
+#: ../backend/pdf/ev-poppler.cc:732
+msgid "Type 1"
+msgstr "Type 1"
+
+#: ../backend/pdf/ev-poppler.cc:734
+msgid "Type 1C"
+msgstr "Type 1C"
+
+#: ../backend/pdf/ev-poppler.cc:736
+msgid "Type 3"
+msgstr "Type 3"
+
+#: ../backend/pdf/ev-poppler.cc:738
+msgid "TrueType"
+msgstr "TrueType"
+
+#: ../backend/pdf/ev-poppler.cc:740
+msgid "Type 1 (CID)"
+msgstr "Type 1 (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:742
+msgid "Type 1C (CID)"
+msgstr "Type 1C (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:744
+msgid "TrueType (CID)"
+msgstr "TrueType (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:746
+msgid "Unknown font type"
+msgstr "Ukendt skrifttype"
+
+#: ../backend/pdf/ev-poppler.cc:772
+msgid "No name"
+msgstr "Intet navn"
+
+#: ../backend/pdf/ev-poppler.cc:780
+msgid "Embedded subset"
+msgstr "Indlejret delmængde"
+
+#: ../backend/pdf/ev-poppler.cc:782
+msgid "Embedded"
+msgstr "Indlejret"
+
+#: ../backend/pdf/ev-poppler.cc:784
+msgid "Not embedded"
+msgstr "Ikke indlejret"
+
+#: ../backend/impress/zip.c:50
+msgid "No error"
+msgstr "Ingen fejl"
+
+#: ../backend/impress/zip.c:53
+msgid "Not enough memory"
+msgstr "Ikke tilstrækkelig hukommelse"
+
+#: ../backend/impress/zip.c:56
+msgid "Cannot find zip signature"
+msgstr "Kan ikke finde zip-signatur"
+
+#: ../backend/impress/zip.c:59
+msgid "Invalid zip file"
+msgstr "Ugyldig zip-fil"
+
+#: ../backend/impress/zip.c:62
+msgid "Multi file zips are not supported"
+msgstr "Flerfils-zip er ikke understøttet"
+
+#: ../backend/impress/zip.c:65
+msgid "Cannot open the file"
+msgstr "Kan ikke åbne filen"
+
+#: ../backend/impress/zip.c:68
+msgid "Cannot read data from file"
+msgstr "Kan ikke læse data fra fil"
+
+#: ../backend/impress/zip.c:71
+msgid "Cannot find file in the zip archive"
+msgstr "Kan ikke finde fil i zip-arkivet"
+
+#: ../backend/impress/zip.c:74
+msgid "Unknown error"
+msgstr "Ukendt fejl"
+
+#: ../backend/ps/gsdefaults.c:30
+msgid "BBox"
+msgstr "BBox"
+
+#: ../backend/ps/gsdefaults.c:31
+msgid "Letter"
+msgstr "Letter"
+
+#: ../backend/ps/gsdefaults.c:32
+msgid "Tabloid"
+msgstr "Tabloid"
+
+#: ../backend/ps/gsdefaults.c:33
+msgid "Ledger"
+msgstr "Ledger"
+
+#: ../backend/ps/gsdefaults.c:34
+msgid "Legal"
+msgstr "Legal"
+
+#: ../backend/ps/gsdefaults.c:35
+msgid "Statement"
+msgstr "Statement"
+
+#: ../backend/ps/gsdefaults.c:36
+msgid "Executive"
+msgstr "Executive"
+
+#: ../backend/ps/gsdefaults.c:37
+msgid "A0"
+msgstr "A0"
+
+#: ../backend/ps/gsdefaults.c:38
+msgid "A1"
+msgstr "A1"
+
+#: ../backend/ps/gsdefaults.c:39
+msgid "A2"
+msgstr "A2"
+
+#: ../backend/ps/gsdefaults.c:40
+msgid "A3"
+msgstr "A3"
+
+#: ../backend/ps/gsdefaults.c:41
+msgid "A4"
+msgstr "A4"
+
+#: ../backend/ps/gsdefaults.c:42
+msgid "A5"
+msgstr "A5"
+
+#: ../backend/ps/gsdefaults.c:43
+msgid "B4"
+msgstr "B4"
+
+#: ../backend/ps/gsdefaults.c:44
+msgid "B5"
+msgstr "B5"
+
+#: ../backend/ps/gsdefaults.c:45
+msgid "Folio"
+msgstr "Folio"
+
+#: ../backend/ps/gsdefaults.c:46
+msgid "Quarto"
+msgstr "Quarto"
+
+#: ../backend/ps/gsdefaults.c:47
+msgid "10x14"
+msgstr "10×14"
+
+#: ../backend/ps/ps-document.c:172
+#: ../backend/ps/ps-document.c:186
+#, c-format
+msgid "Cannot open file “%s”.\n"
+msgstr "Kan ikke åbne filen “%s”.\n"
+
+#: ../backend/ps/ps-document.c:233
+#, c-format
+msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
+msgstr "Kunne ikke indlæse dokumentet “%s”. Ghostscript-fortolkeren blev ikke fundet i søgestien"
+
+#: ../backend/ps/ps-document.c:250
+#, c-format
+msgid "Failed to load document “%s”"
+msgstr "Kunne ikke indlæse dokumentet “%s”"
+
+#: ../backend/ps/ps-document.c:439
+msgid "Encapsulated PostScript"
+msgstr "Indkapslet PostScript"
+
+#: ../backend/ps/ps-document.c:440
+msgid "PostScript"
+msgstr "PostScript"
+
+#: ../backend/ps/ps-interpreter.c:541
+msgid "Interpreter failed."
+msgstr "Fortolker fejlede."
+
+#: ../backend/impress/impress-document.c:294
+msgid "Remote files aren't supported"
+msgstr "Fjern-filer er ikke understøttet"
+
+#: ../backend/impress/impress-document.c:305
+msgid "Invalid document"
+msgstr "Ugyldig dokument"
+
+#: ../libdocument/ev-attachment.c:303
+#: ../libdocument/ev-attachment.c:316
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Kunne ikke gemme bilaget “%s”: %s"
 
-#: ../backend/ev-attachment.c:347
+#: ../libdocument/ev-attachment.c:348
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Kunne ikke åbne bilaget “%s”: %s"
 
-#: ../backend/ev-attachment.c:380
+#: ../libdocument/ev-attachment.c:381
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Kunne ikke åbne bilaget “%s”"
 
-#: ../backend/ev-document-factory.c:265 ../backend/ev-document-factory.c:331
+#: ../libdocument/ev-document-factory.c:291
+#: ../libdocument/ev-document-factory.c:405
 msgid "Unknown MIME Type"
 msgstr "Ukendt MIME-type"
 
-#: ../backend/ev-document-factory.c:276
+#: ../libdocument/ev-document-factory.c:302
 #, c-format
 msgid "Unhandled MIME type: “%s”"
 msgstr "Ikke-håndteret MIME-type: “%s”"
 
-#: ../backend/ev-document-factory.c:372
+#: ../libdocument/ev-document-factory.c:446
 msgid "All Documents"
 msgstr "Alle dokumenter"
 
-#: ../backend/ev-document-factory.c:380
+#: ../libdocument/ev-document-factory.c:454
 msgid "PostScript Documents"
 msgstr "Postscript-dokumenter"
 
-#: ../backend/ev-document-factory.c:389
+#: ../libdocument/ev-document-factory.c:464
 msgid "PDF Documents"
 msgstr "PDF-dokumenter"
 
-#: ../backend/ev-document-factory.c:398
+#: ../libdocument/ev-document-factory.c:474
+#: ../shell/ev-window.c:4629
 msgid "Images"
 msgstr "Billeder"
 
-#: ../backend/ev-document-factory.c:408
+#: ../libdocument/ev-document-factory.c:484
 msgid "DVI Documents"
 msgstr "DVI-dokumenter"
 
-#: ../backend/ev-document-factory.c:418
+#: ../libdocument/ev-document-factory.c:494
 msgid "Djvu Documents"
 msgstr "Djvu-dokumenter"
 
-#: ../backend/ev-document-factory.c:428
+#: ../libdocument/ev-document-factory.c:504
 msgid "Comic Books"
 msgstr "Tegneserier"
 
-#: ../backend/ev-document-factory.c:438
+#: ../libdocument/ev-document-factory.c:514
 msgid "Impress Slides"
 msgstr "Impress-slides"
 
-#: ../backend/ev-document-factory.c:446
+#: ../libdocument/ev-document-factory.c:522
 msgid "All Files"
 msgstr "Alle filer"
-
-#: ../comics/comics-document.c:148
-msgid "File corrupted."
-msgstr "Fil ødelagt."
-
-#: ../comics/comics-document.c:184
-#, c-format
-msgid "No images found in archive %s"
-msgstr "Ingen billeder fundet i arkivet %s"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
 #, c-format
@@ -90,6 +309,7 @@ msgid "Open “%s”"
 msgstr "Åbn “%s”"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
+#: ../shell/ev-navigation-action.c:118
 msgid "Empty"
 msgstr "Tom"
 
@@ -133,8 +353,13 @@ msgstr "Fjern den valgte værktøjslinje"
 msgid "Separator"
 msgstr "Adskiller"
 
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+msgid "Running in presentation mode"
+msgstr "Kører i præsentationstilstand"
+
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3622
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
+#: ../shell/ev-window.c:4282
 msgid "Best Fit"
 msgstr "Zoom vindue"
 
@@ -178,7 +403,9 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:126
+#: ../data/evince.desktop.in.in.h:1
+#: ../shell/ev-window.c:3442
+#: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "Dokumentfremviser"
 
@@ -187,14 +414,18 @@ msgid "View multipage documents"
 msgstr "Vis dokumenter med flere sider"
 
 #: ../data/evince-password.glade.h:1
+msgid "Password Entry"
+msgstr "Adgangskode indtastning"
+
+#: ../data/evince-password.glade.h:2
 msgid "Remember password for this session"
 msgstr "Husk adgangskode i denne session"
 
-#: ../data/evince-password.glade.h:2
+#: ../data/evince-password.glade.h:3
 msgid "Save password in keyring"
 msgstr "Gem adgangskode i nøglering"
 
-#: ../data/evince-password.glade.h:3
+#: ../data/evince-password.glade.h:4
 msgid "_Password:"
 msgstr "_Adgangskode:"
 
@@ -231,18 +462,22 @@ msgid "<b>Optimized:</b>"
 msgstr "<b>Optimeret:</b>"
 
 #: ../data/evince-properties.glade.h:9
+msgid "<b>Paper Size:</b>"
+msgstr "<b>Papirstørrelse:</b>"
+
+#: ../data/evince-properties.glade.h:10
 msgid "<b>Producer:</b>"
 msgstr "<b>Producent:</b>"
 
-#: ../data/evince-properties.glade.h:10
+#: ../data/evince-properties.glade.h:11
 msgid "<b>Security:</b>"
 msgstr "<b>Sikkerhed:</b>"
 
-#: ../data/evince-properties.glade.h:11
+#: ../data/evince-properties.glade.h:12
 msgid "<b>Subject:</b>"
 msgstr "<b>Emne:</b>"
 
-#: ../data/evince-properties.glade.h:12
+#: ../data/evince-properties.glade.h:13
 msgid "<b>Title:</b>"
 msgstr "<b>Titel:</b>"
 
@@ -252,206 +487,51 @@ msgstr "Ignorér dokumentbegrænsninger"
 
 #: ../data/evince.schemas.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr ""
-"Ignorér dokumentbegrænsninger såsom begrænsninger på at kopiere eller "
-"udskrive."
+msgstr "Ignorér dokumentbegrænsninger såsom begrænsninger på at kopiere eller udskrive."
 
-#: ../dvi/dvi-document.c:91
-msgid "File not available"
-msgstr "Filen er ikke tilgængelig"
-
-#: ../dvi/dvi-document.c:104
-msgid "DVI document has incorrect format"
-msgstr "DVI-dokument har ugyldigt format"
-
-#. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:593
-msgid "Yes"
-msgstr "Ja"
-
-#. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:596
-msgid "No"
-msgstr "Nej"
-
-#: ../pdf/ev-poppler.cc:696
-msgid "Type 1"
-msgstr "Type 1"
-
-#: ../pdf/ev-poppler.cc:698
-msgid "Type 1C"
-msgstr "Type 1C"
-
-#: ../pdf/ev-poppler.cc:700
-msgid "Type 3"
-msgstr "Type 3"
-
-#: ../pdf/ev-poppler.cc:702
-msgid "TrueType"
-msgstr "TrueType"
-
-#: ../pdf/ev-poppler.cc:704
-msgid "Type 1 (CID)"
-msgstr "Type 1 (CID)"
-
-#: ../pdf/ev-poppler.cc:706
-msgid "Type 1C (CID)"
-msgstr "Type 1C (CID)"
-
-#: ../pdf/ev-poppler.cc:708
-msgid "TrueType (CID)"
-msgstr "TrueType (CID)"
-
-#: ../pdf/ev-poppler.cc:710
-msgid "Unknown font type"
-msgstr "Ukendt skrifttype"
-
-#: ../pdf/ev-poppler.cc:736
-msgid "No name"
-msgstr "Intet navn"
-
-#: ../pdf/ev-poppler.cc:744
-msgid "Embedded subset"
-msgstr "Indlejret delmængde"
-
-#: ../pdf/ev-poppler.cc:746
-msgid "Embedded"
-msgstr "Indlejret"
-
-#: ../pdf/ev-poppler.cc:748
-msgid "Not embedded"
-msgstr "Ikke indlejret"
-
-#: ../properties/ev-properties-main.c:107
+#: ../properties/ev-properties-main.c:110
 msgid "Document"
 msgstr "Dokument"
 
-#: ../properties/ev-properties-view.c:173
+#: ../properties/ev-properties-view.c:179
 msgid "None"
 msgstr "Ingen"
 
-#: ../ps/gsdefaults.c:30
-msgid "BBox"
-msgstr "BBox"
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: ../properties/ev-properties-view.c:260
+msgid "default:mm"
+msgstr "default:mm"
 
-#: ../ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "Letter"
-
-#: ../ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr "Tabloid"
-
-#: ../ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr "Ledger"
-
-#: ../ps/gsdefaults.c:34
-msgid "Legal"
-msgstr "Legal"
-
-#: ../ps/gsdefaults.c:35
-msgid "Statement"
-msgstr "Statement"
-
-#: ../ps/gsdefaults.c:36
-msgid "Executive"
-msgstr "Executive"
-
-#: ../ps/gsdefaults.c:37
-msgid "A0"
-msgstr "A0"
-
-#: ../ps/gsdefaults.c:38
-msgid "A1"
-msgstr "A1"
-
-#: ../ps/gsdefaults.c:39
-msgid "A2"
-msgstr "A2"
-
-#: ../ps/gsdefaults.c:40
-msgid "A3"
-msgstr "A3"
-
-#: ../ps/gsdefaults.c:41
-msgid "A4"
-msgstr "A4"
-
-#: ../ps/gsdefaults.c:42
-msgid "A5"
-msgstr "A5"
-
-#: ../ps/gsdefaults.c:43
-msgid "B4"
-msgstr "B4"
-
-#: ../ps/gsdefaults.c:44
-msgid "B5"
-msgstr "B5"
-
-#: ../ps/gsdefaults.c:45
-msgid "Folio"
-msgstr "Folio"
-
-#: ../ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr "Quarto"
-
-#: ../ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "10×14"
-
-#: ../ps/ps-document.c:136
-msgid "No document loaded."
-msgstr "Intet dokument indlæst."
-
-#: ../ps/ps-document.c:590
-msgid "Broken pipe."
-msgstr "Brudt dataledning."
-
-#: ../ps/ps-document.c:774
-msgid "Interpreter failed."
-msgstr "Fortolker fejlede."
-
-#: ../ps/ps-document.c:900
+#. Imperial measurement (inches)
+#: ../properties/ev-properties-view.c:292
 #, c-format
-msgid "Error while decompressing file “%s”:\n"
-msgstr "Fejl ved udpakning af filen “%s”:\n"
+msgid "%.2f x %.2f in"
+msgstr "%.2f x %.2f in"
 
-#: ../ps/ps-document.c:960
+#. Metric measurement (millimeters)
+#: ../properties/ev-properties-view.c:297
 #, c-format
-msgid "Cannot open file “%s”.\n"
-msgstr "Kan ikke åbne filen “%s”.\n"
+msgid "%.0f x %.0f mm"
+msgstr "%.0f x %.0f mm"
 
-#: ../ps/ps-document.c:965
-msgid "File is not readable."
-msgstr "Filen kan ikke læses."
-
-#: ../ps/ps-document.c:985
-msgid "Document loaded."
-msgstr "Dokument indlæst."
-
-#: ../ps/ps-document.c:1082
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:308
 #, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr ""
-"Kunne ikke indlæse dokumentet “%s”. Ghostscript-fortolkeren blev ikke fundet "
-"i søgestien"
+msgid "%s, Portrait (%s)"
+msgstr "%s, Portræt (%s)"
 
-#: ../ps/ps-document.c:1094
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:315
 #, c-format
-msgid "Failed to load document “%s”"
-msgstr "Kunne ikke indlæse dokumentet “%s”"
-
-#: ../ps/ps-document.c:1267
-msgid "Encapsulated PostScript"
-msgstr "Indkapslet PostScript"
-
-#: ../ps/ps-document.c:1268
-msgid "PostScript"
-msgstr "PostScript"
+msgid "%s, Landscape (%s)"
+msgstr "%s, Landskab (%s)"
 
 #: ../shell/eggfindbar.c:157
 msgid "Search string"
@@ -513,12 +593,12 @@ msgstr "_Skeln mellem store/små bogstaver"
 msgid "Toggle case sensitive search"
 msgstr "Skift mellem versalfølsom søgning"
 
-#: ../shell/ev-page-action.c:168
+#: ../shell/ev-page-action.c:76
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d af %d)"
 
-#: ../shell/ev-page-action.c:170
+#: ../shell/ev-page-action.c:78
 #, c-format
 msgid "of %d"
 msgstr "af %d"
@@ -529,8 +609,7 @@ msgstr "Adgangskode påkrævet"
 
 #: ../shell/ev-password.c:84
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
+msgid "The document “%s” is locked and requires a password before it can be opened."
 msgstr "Dokumentet “%s” er låst og kræver en adgangskode før det kan læses."
 
 #: ../shell/ev-password.c:149
@@ -547,12 +626,8 @@ msgid "Incorrect password"
 msgstr "Forkert adgangskode"
 
 #: ../shell/ev-password-view.c:111
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
-msgstr ""
-"Dette dokument er låst og kan kun læses ved at indtaste den korrekte "
-"adgangskode."
+msgid "This document is locked and can only be read by entering the correct password."
+msgstr "Dette dokument er låst og kan kun læses ved at indtaste den korrekte adgangskode."
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
@@ -570,32 +645,33 @@ msgstr "Generelt"
 msgid "Fonts"
 msgstr "Skrifttyper"
 
-#: ../shell/ev-properties-fonts.c:123
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "Skrifttype"
 
-#: ../shell/ev-properties-fonts.c:134
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Indsamler oplysninger om skrifttype... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:662
+#: ../shell/ev-sidebar-attachments.c:663
 msgid "Attachments"
 msgstr "Bilag"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2230
+#: ../shell/ev-sidebar-links.c:266
+#: ../shell/ev-view.c:2815
 msgid "Loading..."
 msgstr "Indlæser..."
 
-#: ../shell/ev-sidebar-links.c:351
+#: ../shell/ev-sidebar-links.c:342
 msgid "Print..."
 msgstr "Udskriv..."
 
-#: ../shell/ev-sidebar-links.c:736
+#: ../shell/ev-sidebar-links.c:714
 msgid "Index"
 msgstr "Indeks"
 
-#: ../shell/ev-sidebar-thumbnails.c:678
+#: ../shell/ev-sidebar-thumbnails.c:689
 msgid "Thumbnails"
 msgstr "Miniaturer"
 
@@ -619,470 +695,537 @@ msgstr "Rul visning ned"
 msgid "Document View"
 msgstr "Dokumentvisning"
 
-#: ../shell/ev-view.c:1337
+#: ../shell/ev-view.c:1414
 msgid "Go to first page"
 msgstr "Gå til første side"
 
-#: ../shell/ev-view.c:1339
+#: ../shell/ev-view.c:1416
 msgid "Go to previous page"
 msgstr "Gå til foregående side"
 
-#: ../shell/ev-view.c:1341
+#: ../shell/ev-view.c:1418
 msgid "Go to next page"
 msgstr "Gå til næste side"
 
-#: ../shell/ev-view.c:1343
+#: ../shell/ev-view.c:1420
 msgid "Go to last page"
 msgstr "Gå til sidste side"
 
-#: ../shell/ev-view.c:1345
+#: ../shell/ev-view.c:1422
 msgid "Go to page"
 msgstr "Gå til side"
 
-#: ../shell/ev-view.c:1347
+#: ../shell/ev-view.c:1424
 msgid "Find"
 msgstr "Find"
 
-#: ../shell/ev-view.c:1374
+#: ../shell/ev-view.c:1451
 #, c-format
 msgid "Go to page %s"
 msgstr "Gå til side %s"
 
-#: ../shell/ev-view.c:1379
+#: ../shell/ev-view.c:1456
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Gå til %s i filen “%s”"
 
-#: ../shell/ev-view.c:1382
+#: ../shell/ev-view.c:1459
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Gå til filen “%s”"
 
-#: ../shell/ev-view.c:1391
+#: ../shell/ev-view.c:1468
 #, c-format
 msgid "Launch %s"
 msgstr "Start %s"
 
+#: ../shell/ev-view.c:1858
+msgid "End of presentation. Press Escape to exit."
+msgstr "Slut på preæsentation. Tryk escape for at afslutte."
+
+#: ../shell/ev-view.c:2531
+msgid "Jump to page:"
+msgstr "Gå til side:"
+
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:3435
+#: ../shell/ev-view.c:4145
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d fundet på denne side"
 msgstr[1] "%d fundet på denne side"
 
-#: ../shell/ev-view.c:3444
+#: ../shell/ev-view.c:4154
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% tilbage at søge"
 
-#: ../shell/ev-window.c:1011
+#: ../shell/ev-window.c:742
+#, c-format
+msgid "Page %s - %s"
+msgstr "Side %s - %s"
+
+#: ../shell/ev-window.c:744
+#, c-format
+msgid "Page %s"
+msgstr "Side %s"
+
+#: ../shell/ev-window.c:1307
 msgid "Unable to open document"
 msgstr "Kan ikke åbne dokument"
 
-#: ../shell/ev-window.c:1100
+#: ../shell/ev-window.c:1469
 msgid "Open Document"
 msgstr "Åbn dokument"
 
-#: ../shell/ev-window.c:1308
+#: ../shell/ev-window.c:1524
+#, c-format
+msgid "Couldn't create symlink “%s”: %s"
+msgstr "Kunne ikke oprette symlink “%s”: %s"
+
+#: ../shell/ev-window.c:1553
+msgid "Cannot open a copy."
+msgstr "Kan ikke åbne en kopi."
+
+#: ../shell/ev-window.c:1834
+#, c-format
+msgid "Failed to create file “%s”: %s"
+msgstr "Kunne ikke oprette fil “%s”: %s"
+
+#: ../shell/ev-window.c:1861
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Filen kunne ikke gemmes som “%s”."
 
-#: ../shell/ev-window.c:1327 ../shell/ev-window.c:3978
+#: ../shell/ev-window.c:1883
 msgid "Save a Copy"
 msgstr "Gem en kopi"
 
-#: ../shell/ev-window.c:1380
+#: ../shell/ev-window.c:1964
 msgid "Failed to print document"
 msgstr "Kunne ikke udskrive dokument"
 
-#: ../shell/ev-window.c:1494 ../shell/ev-window.c:1669
+#: ../shell/ev-window.c:2083
+#: ../shell/ev-window.c:2268
 msgid "Printing is not supported on this printer."
 msgstr "Udskrivning understøttes ikke for denne printer."
 
-#: ../shell/ev-window.c:1604 ../shell/ev-window.c:1720
+#: ../shell/ev-window.c:2193
+#: ../shell/ev-window.c:2319
 msgid "Print"
 msgstr "Udskriv"
 
-#: ../shell/ev-window.c:1659
+#: ../shell/ev-window.c:2258
 msgid "Generating PDF is not supported"
 msgstr "Generering af PDF er ikke understøttet"
 
-#: ../shell/ev-window.c:1671
+#: ../shell/ev-window.c:2270
 #, c-format
-msgid ""
-"You were trying to print to a printer using the “%s” driver. This program "
-"requires a PostScript printer driver."
-msgstr ""
-"Du forsøgte at udskrive til en printer med driveren “%s”. Dette program "
-"kræver en Postscript-printerdriver."
+msgid "You were trying to print to a printer using the “%s” driver. This program requires a PostScript printer driver."
+msgstr "Du forsøgte at udskrive til en printer med driveren “%s”. Dette program kræver en Postscript-printerdriver."
 
-#: ../shell/ev-window.c:1729
+#: ../shell/ev-window.c:2328
 msgid "Pages"
 msgstr "Sider"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:2089 ../shell/ev-window.c:3423
+#: ../shell/ev-window.c:2695
+#: ../shell/ev-window.c:4092
 msgid "Leave Fullscreen"
 msgstr "Forlad fuldskærm"
 
-#: ../shell/ev-window.c:2469
+#: ../shell/ev-window.c:3067
 msgid "Toolbar Editor"
 msgstr "Redigér værktøjslinje"
 
-#: ../shell/ev-window.c:2840
+#: ../shell/ev-window.c:3438
 #, c-format
 msgid ""
-"PostScript and PDF File Viewer.\n"
+"Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
-"Fremviser til Postscript- og PDF-filer.\n"
+"Dokument-fremviser.\n"
 "Benytter poppler %s (%s)"
 
-#: ../shell/ev-window.c:2864
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Evince er frit programmel. Du kan redistribuere og/eller ændre programmet "
-"under betingelserne givet i GNU General Public License som udgives af Free "
-"Software Foundation; enten version 2 af licensen, eller (hvis du ønsker det) "
-"enhver senere version.\n"
+#: ../shell/ev-window.c:3466
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgstr "Evince er frit programmel. Du kan redistribuere og/eller ændre programmet under betingelserne givet i GNU General Public License som udgives af Free Software Foundation; enten version 2 af licensen, eller (hvis du ønsker det) enhver senere version.\n"
 
-#: ../shell/ev-window.c:2868
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Gossip distribueres i håb om at programmet er nyttigt, men uden NOGEN "
-"GARANTI, ikke engang underforstået garanti om at det er SALGBART eller "
-"PASSER TIL ET BESTEMT FORMÅL. Se GNU General Public License for detaljer.\n"
+#: ../shell/ev-window.c:3470
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgstr "Gossip distribueres i håb om at programmet er nyttigt, men uden NOGEN GARANTI, ikke engang underforstået garanti om at det er SALGBART eller PASSER TIL ET BESTEMT FORMÅL. Se GNU General Public License for detaljer.\n"
 
-#: ../shell/ev-window.c:2872
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
-"Du burde have modtaget en kopi af GNU General Public License sammen med "
-"Gossip. Hvis du ikke har det, kan du skrive til Free Software Foundation, "
-"Inc. 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.\n"
+#: ../shell/ev-window.c:3474
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr "Du burde have modtaget en kopi af GNU General Public License sammen med Gossip. Hvis du ikke har det, kan du skrive til Free Software Foundation, Inc. 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.\n"
 
-#: ../shell/ev-window.c:2896 ../shell/main.c:308
+#: ../shell/ev-window.c:3498
+#: ../shell/main.c:284
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:2899
-msgid "© 1996-2005 The Evince authors"
-msgstr "© 1996-2005 Evince-forfatterne"
+#: ../shell/ev-window.c:3501
+msgid "© 1996-2007 The Evince authors"
+msgstr "© 1996-2007 Evince-forfatterne"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:3507
 msgid "translator-credits"
 msgstr ""
 "Ole Laursen\n"
+"Peter Bach\n"
 "\n"
 "Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
 "Mere info: http://www.dansk-gruppen.dk"
 
-#: ../shell/ev-window.c:3350
+#: ../shell/ev-window.c:4009
 msgid "_File"
 msgstr "_Fil"
 
-#: ../shell/ev-window.c:3351
+#: ../shell/ev-window.c:4010
 msgid "_Edit"
 msgstr "_Redigér"
 
-#: ../shell/ev-window.c:3352
+#: ../shell/ev-window.c:4011
 msgid "_View"
 msgstr "_Vis"
 
-#: ../shell/ev-window.c:3353
+#: ../shell/ev-window.c:4012
 msgid "_Go"
 msgstr "_Navigering"
 
-#: ../shell/ev-window.c:3354
+#: ../shell/ev-window.c:4013
 msgid "_Help"
 msgstr "_Hjælp"
 
 #. File menu
-#: ../shell/ev-window.c:3357 ../shell/ev-window.c:3514
+#: ../shell/ev-window.c:4016
+#: ../shell/ev-window.c:4188
 msgid "_Open..."
 msgstr "_Åbn..."
 
-#: ../shell/ev-window.c:3358
+#: ../shell/ev-window.c:4017
 msgid "Open an existing document"
 msgstr "Åbn et eksisterende dokument"
 
-#: ../shell/ev-window.c:3360 ../shell/ev-window.c:3516
+#: ../shell/ev-window.c:4019
+msgid "Open a _Copy"
+msgstr "Åben en _kopi"
+
+#: ../shell/ev-window.c:4020
+msgid "Open a copy of the current document in a new window"
+msgstr "Åben en kopi af det aktuelle dokument i et nyt vindue"
+
+#: ../shell/ev-window.c:4022
+#: ../shell/ev-window.c:4190
 msgid "_Save a Copy..."
 msgstr "_Gem en kopi..."
 
-#: ../shell/ev-window.c:3361
+#: ../shell/ev-window.c:4023
 msgid "Save a copy of the current document"
 msgstr "Gem en kopi af det aktuelle dokument"
 
-#: ../shell/ev-window.c:3363
+#: ../shell/ev-window.c:4025
+msgid "Print Set_up..."
+msgstr "Udskriftsopsætning..."
+
+#: ../shell/ev-window.c:4026
+msgid "Setup the page settings for printing"
+msgstr "Opsæt sideindstillingerne for udskrivning"
+
+#: ../shell/ev-window.c:4028
 msgid "_Print..."
 msgstr "_Udskriv..."
 
-#: ../shell/ev-window.c:3364
+#: ../shell/ev-window.c:4029
 msgid "Print this document"
 msgstr "Udskriv dette dokument"
 
-#: ../shell/ev-window.c:3366
+#: ../shell/ev-window.c:4031
 msgid "P_roperties"
 msgstr "_Egenskaber"
 
-#: ../shell/ev-window.c:3374
+#: ../shell/ev-window.c:4040
+#: ../shell/ev-window.c:4042
 msgid "Select _All"
 msgstr "Markér _alt"
 
-#: ../shell/ev-window.c:3376
+#: ../shell/ev-window.c:4045
 msgid "_Find..."
 msgstr "_Find..."
 
-#: ../shell/ev-window.c:3377
+#: ../shell/ev-window.c:4046
 msgid "Find a word or phrase in the document"
 msgstr "Søg efter noget tekst i dokumentet"
 
-#: ../shell/ev-window.c:3379
+#: ../shell/ev-window.c:4048
 msgid "Find Ne_xt"
 msgstr "Find _næste"
 
-#: ../shell/ev-window.c:3381
+#: ../shell/ev-window.c:4050
 msgid "Find Pre_vious"
 msgstr "Find _forrige"
 
-#: ../shell/ev-window.c:3383
+#: ../shell/ev-window.c:4052
 msgid "T_oolbar"
 msgstr "_Værktøjslinje"
 
-#: ../shell/ev-window.c:3385
+#: ../shell/ev-window.c:4054
 msgid "Rotate _Left"
 msgstr "Rotér _venstre"
 
-#: ../shell/ev-window.c:3387
+#: ../shell/ev-window.c:4056
 msgid "Rotate _Right"
 msgstr "Rotér _højre"
 
-#: ../shell/ev-window.c:3392
+#: ../shell/ev-window.c:4061
 msgid "Enlarge the document"
 msgstr "Forstør dokumentet"
 
-#: ../shell/ev-window.c:3395
+#: ../shell/ev-window.c:4064
 msgid "Shrink the document"
 msgstr "Formindsk dokumentet"
 
-#: ../shell/ev-window.c:3397
+#: ../shell/ev-window.c:4066
 msgid "_Reload"
 msgstr "_Genindlæs"
 
-#: ../shell/ev-window.c:3398
+#: ../shell/ev-window.c:4067
 msgid "Reload the document"
 msgstr "Genindlæs dokumentet"
 
 #. Go menu
-#: ../shell/ev-window.c:3402
+#: ../shell/ev-window.c:4071
 msgid "_Previous Page"
 msgstr "_Foregående side"
 
-#: ../shell/ev-window.c:3403
+#: ../shell/ev-window.c:4072
 msgid "Go to the previous page"
 msgstr "Gå til den foregående side"
 
-#: ../shell/ev-window.c:3405
+#: ../shell/ev-window.c:4074
 msgid "_Next Page"
 msgstr "_Næste side"
 
-#: ../shell/ev-window.c:3406
+#: ../shell/ev-window.c:4075
 msgid "Go to the next page"
 msgstr "Gå til den næste side"
 
-#: ../shell/ev-window.c:3408
+#: ../shell/ev-window.c:4077
 msgid "_First Page"
 msgstr "_Første side"
 
-#: ../shell/ev-window.c:3409
+#: ../shell/ev-window.c:4078
 msgid "Go to the first page"
 msgstr "Gå til den første side"
 
-#: ../shell/ev-window.c:3411
+#: ../shell/ev-window.c:4080
 msgid "_Last Page"
 msgstr "_Sidste side"
 
-#: ../shell/ev-window.c:3412
+#: ../shell/ev-window.c:4081
 msgid "Go to the last page"
 msgstr "Gå til den sidste side"
 
 #. Help menu
-#: ../shell/ev-window.c:3416
+#: ../shell/ev-window.c:4085
 msgid "_Contents"
 msgstr "_Indhold"
 
-#: ../shell/ev-window.c:3419
+#: ../shell/ev-window.c:4088
 msgid "_About"
 msgstr "_Om"
 
-#: ../shell/ev-window.c:3424
+#: ../shell/ev-window.c:4093
 msgid "Leave fullscreen mode"
 msgstr "Forlad fuldskærmstilstand"
 
 #. View Menu
-#: ../shell/ev-window.c:3475
+#: ../shell/ev-window.c:4144
 msgid "_Toolbar"
 msgstr "_Værktøjslinje"
 
-#: ../shell/ev-window.c:3476
+#: ../shell/ev-window.c:4145
 msgid "Show or hide the toolbar"
 msgstr "Vis eller skjul værktøjslinjen"
 
-#: ../shell/ev-window.c:3478
+#: ../shell/ev-window.c:4147
 msgid "Side _Pane"
 msgstr "Side_panel"
 
-#: ../shell/ev-window.c:3479
+#: ../shell/ev-window.c:4148
 msgid "Show or hide the side pane"
 msgstr "Vis eller skjul sidepanelet"
 
-#: ../shell/ev-window.c:3481
+#: ../shell/ev-window.c:4150
 msgid "_Continuous"
 msgstr "_Fortløbende"
 
-#: ../shell/ev-window.c:3482
+#: ../shell/ev-window.c:4151
 msgid "Show the entire document"
 msgstr "Vis hele dokumentet"
 
-#: ../shell/ev-window.c:3484
+#: ../shell/ev-window.c:4153
 msgid "_Dual"
 msgstr "_Dobbelt"
 
-#: ../shell/ev-window.c:3485
+#: ../shell/ev-window.c:4154
 msgid "Show two pages at once"
 msgstr "Vis to sider samtidigt"
 
-#: ../shell/ev-window.c:3487
+#: ../shell/ev-window.c:4156
 msgid "_Fullscreen"
 msgstr "_Fuldskærm"
 
-#: ../shell/ev-window.c:3488
+#: ../shell/ev-window.c:4157
 msgid "Expand the window to fill the screen"
 msgstr "Udvid vinduet så det fylder hele skærmen"
 
-#: ../shell/ev-window.c:3490
+#: ../shell/ev-window.c:4159
 msgid "_Presentation"
 msgstr "_Præsentation"
 
-#: ../shell/ev-window.c:3491
+#: ../shell/ev-window.c:4160
 msgid "Run document as a presentation"
 msgstr "Vis dokumentet som en præsentation"
 
-#: ../shell/ev-window.c:3493
+#: ../shell/ev-window.c:4162
 msgid "_Best Fit"
 msgstr "Zoom _vindue"
 
-#: ../shell/ev-window.c:3494
+#: ../shell/ev-window.c:4163
 msgid "Make the current document fill the window"
 msgstr "Lad det aktuelle dokument udfylde vinduet"
 
-#: ../shell/ev-window.c:3496
+#: ../shell/ev-window.c:4165
 msgid "Fit Page _Width"
 msgstr "Zoom vindues_bredde"
 
-#: ../shell/ev-window.c:3497
+#: ../shell/ev-window.c:4166
 msgid "Make the current document fill the window width"
 msgstr "Lad det aktuelle dokument udfylde vinduesbredden"
 
 #. Links
-#: ../shell/ev-window.c:3504
+#: ../shell/ev-window.c:4173
 msgid "_Open Link"
 msgstr "_Åbn henvisning"
 
-#: ../shell/ev-window.c:3506
+#: ../shell/ev-window.c:4175
 msgid "_Go To"
 msgstr "_Gå til"
 
-#: ../shell/ev-window.c:3508
+#: ../shell/ev-window.c:4177
+msgid "Open in New _Window"
+msgstr "Åben i ny _vindue"
+
+#: ../shell/ev-window.c:4179
 msgid "_Copy Link Address"
 msgstr "_Kopiér adresse"
 
-#: ../shell/ev-window.c:3571
+#: ../shell/ev-window.c:4181
+msgid "_Save Image As..."
+msgstr "_Gem billede som..."
+
+#: ../shell/ev-window.c:4183
+msgid "Copy _Image"
+msgstr "Kopiér _billede"
+
+#: ../shell/ev-window.c:4222
 msgid "Page"
 msgstr "Side"
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:4223
 msgid "Select Page"
 msgstr "Vælg side"
 
-#: ../shell/ev-window.c:3584
+#: ../shell/ev-window.c:4233
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../shell/ev-window.c:3586
+#: ../shell/ev-window.c:4235
 msgid "Adjust the zoom level"
 msgstr "Justér zoomniveauet"
 
+#: ../shell/ev-window.c:4245
+msgid "Navigation"
+msgstr "Navigation"
+
+#: ../shell/ev-window.c:4247
+msgid "Back"
+msgstr "Tilbage"
+
+#: ../shell/ev-window.c:4249
+msgid "Move across visited pages"
+msgstr "Flyt henover besøgte sider"
+
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:4265
 msgid "Previous"
 msgstr "Foregående"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3608
+#: ../shell/ev-window.c:4270
 msgid "Next"
 msgstr "Næste"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3612
+#: ../shell/ev-window.c:4274
 msgid "Zoom In"
 msgstr "Zoom ind"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3617
+#: ../shell/ev-window.c:4278
 msgid "Zoom Out"
 msgstr "Zoom ud"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3627
+#: ../shell/ev-window.c:4286
 msgid "Fit Width"
 msgstr "Tilpas bredde"
 
-#: ../shell/ev-window.c:3907
+#: ../shell/ev-window.c:4598
+msgid "The image could not be saved."
+msgstr "Billedet kunne ikke gemmes."
+
+#: ../shell/ev-window.c:4617
+msgid "Save Image"
+msgstr "Gem billede"
+
+#: ../shell/ev-window.c:4672
 msgid "Unable to open attachment"
 msgstr "Kan ikke åbne bilag"
 
-#: ../shell/ev-window.c:3954
+#: ../shell/ev-window.c:4719
 msgid "The attachment could not be saved."
 msgstr "Kunne ikke gemme bilaget."
 
-#: ../shell/ev-window-title.c:140
+#: ../shell/ev-window.c:4743
+msgid "Save Attachment"
+msgstr "Gem bilag"
+
+#: ../shell/ev-window-title.c:141
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - adgangskode påkrævet"
 
-#: ../shell/main.c:54
+#: ../shell/main.c:53
 msgid "The page of the document to display."
 msgstr "Den side af dokumentet som skal vises."
 
-#: ../shell/main.c:54
+#: ../shell/main.c:53
 msgid "PAGE"
 msgstr "SIDE"
 
-#: ../shell/main.c:55
+#: ../shell/main.c:54
 msgid "Run evince in fullscreen mode"
 msgstr "Start evince i fuldskærmstilstand"
 
-#: ../shell/main.c:56
+#: ../shell/main.c:55
 msgid "Run evince in presentation mode"
 msgstr "Start evince i præsentationstilstand"
 
-#: ../shell/main.c:57
+#: ../shell/main.c:56
 msgid "Run evince as a previewer"
 msgstr "Start evince som forhåndsvisning"
 
@@ -1090,18 +1233,16 @@ msgstr "Start evince som forhåndsvisning"
 msgid "[FILE...]"
 msgstr "[FIL...]"
 
-#: ../shell/main.c:293
+#: ../shell/main.c:269
 msgid "GNOME Document Viewer"
 msgstr "Gnome Dokumentfremviser"
 
-#: ../shell/main.c:335
+#: ../shell/main.c:310
 msgid "Evince Document Viewer"
 msgstr "Evince - dokumentfremviser"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid ""
-"Boolean options available, true enables thumbnailing and false disables the "
-"creation of new thumbnails"
+msgid "Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails"
 msgstr "Hvis sand aktiveres generering af miniaturer."
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
@@ -1113,190 +1254,135 @@ msgid "Thumbnail command for PDF Documents"
 msgstr "Miniature-kommando til PDF-dokumenter"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid ""
-"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
-"thumbnailer documentation for more information."
-msgstr ""
-"Gyldig kommando plus parametre til miniaturegenerering af PDF-dokumenter. Se "
-"dokumentationen for Nautilus' miniaturegenerering for flere oplysninger."
+msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
+msgstr "Gyldig kommando plus parametre til miniaturegenerering af PDF-dokumenter. Se dokumentationen for Nautilus' miniaturegenerering for flere oplysninger."
 
+#~ msgid "No document loaded."
+#~ msgstr "Intet dokument indlæst."
+#~ msgid "Broken pipe."
+#~ msgstr "Brudt dataledning."
+#~ msgid "Error while decompressing file “%s”:\n"
+#~ msgstr "Fejl ved udpakning af filen “%s”:\n"
+#~ msgid "File is not readable."
+#~ msgstr "Filen kan ikke læses."
+#~ msgid "Document loaded."
+#~ msgstr "Dokument indlæst."
 #~ msgid "_Previous"
 #~ msgstr "_Foregående"
-
 #~ msgid "_Next"
 #~ msgstr "_Næste"
-
 #~ msgid "The \"Find\" feature will not work with this document"
 #~ msgstr "Søgefunktionen virker ikke for dette dokument"
-
 #~ msgid "Searching for text is only supported for PDF documents."
 #~ msgstr "Søgning efter tekst er kun understøttet for PDF-dokumenter."
-
 #~ msgid "Not found"
 #~ msgstr "Ikke fundet"
-
 #~ msgid "*"
 #~ msgstr "*"
-
 #~ msgid "<span size=\"smaller\"> </span>"
 #~ msgstr "<span size=\"smaller\"> </span>"
-
 #~ msgid "Show sidebar by default"
 #~ msgstr "Vis sidepanel som standard"
-
 #~ msgid "Show sidebar by default."
 #~ msgstr "Vis sidepanel som standard."
-
 #~ msgid "Show statusbar by default"
 #~ msgstr "Vis statuslinje som standard"
-
 #~ msgid "Show statusbar by default."
 #~ msgstr "Vis statuslinje som standard."
-
 #~ msgid "Show toolbar by default"
 #~ msgstr "Vis værktøjslinje som standard"
-
 #~ msgid "Show toolbar by default."
 #~ msgstr "Vis værktøjslinje som standard."
-
 #~ msgid "Sidebar size by default"
 #~ msgstr "Forvalgt størrelse af sidepanel"
-
 #~ msgid "Sidebar size by default."
 #~ msgstr "Forvalgt størrelse af sidepanel."
-
 #~ msgid "Error while converting pdf file %s:\n"
 #~ msgstr "Fejl ved konvertering af PDF-filen %s:\n"
-
 #~ msgid "File is not a valid PostScript document."
 #~ msgstr "Filen er ikke et gyldigt Postscript-dokument."
-
 #~ msgid "Error while scanning file %s\n"
 #~ msgstr "Fejl ved gennemsøgning af filen %s\n"
-
 #~ msgid "The file is not a PostScript document."
 #~ msgstr "Filen er ikke et Postscript-dokument."
-
 #~ msgid "Unable to find glade file"
 #~ msgstr "Kunne ikke finde Glade-fil"
-
 #~ msgid ""
 #~ "The glade file, %s, cannot be found.  Please check that your installation "
 #~ "is complete."
 #~ msgstr ""
 #~ "Gladefilen \"%s\" blev ikke fundet. Kontrollér at din installation er "
 #~ "korrekt."
-
 #~ msgid "Document Viewer - Password Required"
 #~ msgstr "Dokumentfremviser - adgangskode påkrævet"
-
 #~ msgid "Many..."
 #~ msgstr "Mange..."
-
 #~ msgid "Not so many..."
 #~ msgstr "Ikke så mange..."
-
 #~ msgid "Close this window"
 #~ msgstr "Luk dette vindue"
-
 #~ msgid "Copy text from the document"
 #~ msgstr "Kopiér tekst fra dokumentet"
-
 #~ msgid "Select the entire page"
 #~ msgstr "Markér hele siden"
-
 #~ msgid "Reset the zoom level to the default value"
 #~ msgstr "Nulstil zoomniveauet til standardværdien"
-
 #~ msgid "Display help for the viewer application"
 #~ msgstr "Vis hjælpen for fremvisningsprogrammet"
-
 #~ msgid "Display credits for the document viewer creators"
 #~ msgstr "Vis bidragyderne til dokumentfremviseren"
-
 #~ msgid "_Statusbar"
 #~ msgstr "_Statuslinje"
-
 #~ msgid "Show or hide the statusbar"
 #~ msgstr "Vis eller skjul statuslinjen"
-
 #~ msgid "Single"
 #~ msgstr "Enkelt"
-
 #~ msgid "Show the document one page at a time"
 #~ msgstr "Vis dokumentet en side af gangen"
-
 #~ msgid "Multi"
 #~ msgstr "Flere"
-
 #~ msgid "Exit Fullscreen"
 #~ msgstr "Afslut fuldskærm"
-
 #~ msgid "Open a file"
 #~ msgstr "Åbn en fil"
-
 #~ msgid "_Print"
 #~ msgstr "_Udskriv"
-
 #~ msgid "_Close"
 #~ msgstr "_Luk"
-
 #~ msgid "_Copy"
 #~ msgstr "_Kopiér"
-
 #~ msgid "_Normal Size"
 #~ msgstr "_Normal størrelse"
-
 #~ msgid "Zoom to the normal size"
 #~ msgstr "Zoom til den normal størrelse"
-
 #~ msgid "Zoom to fit the document to the current window"
 #~ msgstr "Zoom så dokumentet passer i vinduet"
-
 #~ msgid "Zoom to fit the width of the current window "
 #~ msgstr "Zoom så dokumentet passer til bredden af vinduet"
-
 #~ msgid "_Page Up"
 #~ msgstr "_Side op"
-
 #~ msgid "_Page Down"
 #~ msgstr "_Side ned"
-
 #~ msgid "Up"
 #~ msgstr "Op"
-
 #~ msgid "Down"
 #~ msgstr "Ned"
-
 #~ msgid "Found on page %d"
 #~ msgstr "Fundet på %d"
-
 #~ msgid "_Back"
 #~ msgstr "_Tilbage"
-
 #~ msgid "Go to the page viewed before this one"
 #~ msgstr "Gå til den side som blev vist før denne"
-
 #~ msgid "Fo_rward"
 #~ msgstr "_Fremad"
-
-#~ msgid "Back"
-#~ msgstr "Tilbage"
-
 #~ msgid "Go back"
 #~ msgstr "Gå tilbage"
-
 #~ msgid "Back history"
 #~ msgstr "Tilbagehistorik"
-
 #~ msgid "Forward"
 #~ msgstr "Fremad"
-
 #~ msgid "Go forward"
 #~ msgstr "Gå fremad"
-
 #~ msgid "Forward history"
 #~ msgstr "Fremadhistorik"
 
-#~ msgid "Page %d"
-#~ msgstr "Side %d"
