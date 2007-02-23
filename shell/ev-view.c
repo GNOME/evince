@@ -2450,6 +2450,8 @@ ev_view_goto_window_key_press_event (GtkWidget   *widget,
 	        case GDK_Return:
 	        case GDK_KP_Enter:
 	        case GDK_ISO_Enter:
+	        case GDK_BackSpace:
+	        case GDK_Delete:
 			return FALSE;
 	        default:
 			if (!key_is_numeric (event->keyval))
