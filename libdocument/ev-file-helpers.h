@@ -47,6 +47,9 @@ gboolean     ev_xfer_uri_simple       (const char        *from,
 gchar       *ev_file_uncompress       (const gchar       *uri,
 				       EvCompressionType  type,
 				       GError           **error);
+gchar       *ev_file_compress         (const gchar       *uri,
+				       EvCompressionType  type,
+				       GError           **error);
 
 
 G_END_DECLS

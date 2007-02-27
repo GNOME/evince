@@ -172,21 +172,20 @@ ev_xfer_uri_simple (const char *from,
 /* Compressed files support */
 #define BZIPCOMMAND "bzip2"
 #define GZIPCOMMAND "gzip"
-#define N_ARGS      5
+#define N_ARGS      4
 #define BUFFER_SIZE 1024
 
-gchar *
-ev_file_uncompress (const gchar       *uri,
-		    EvCompressionType  type,
-		    GError           **error)
+static gchar *
+compression_run (const gchar       *uri,
+		 EvCompressionType  type,
+		 gboolean           compress, 
+		 GError           **error)
 {
 	gchar *argv[N_ARGS];
-	gchar *uri_unc = NULL;
-	gchar *filename, *filename_unc;
+	gchar *uri_dst = NULL;
+	gchar *filename, *filename_dst;
 	gchar *cmd;
 	gint   fd, pout;
-
-	g_return_val_if_fail (uri != NULL, NULL);
 
 	if (type == EV_COMPRESSION_NONE)
 		return NULL;
@@ -195,27 +194,25 @@ ev_file_uncompress (const gchar       *uri,
 	if (!cmd)
 		return NULL;
 
-
 	filename = g_filename_from_uri (uri, NULL, NULL);
 	if (!filename) {
 		g_free (cmd);
 		return NULL;
 	}
 	
-	filename_unc = g_build_filename (ev_tmp_dir (), "evinceXXXXXX", NULL);
-	fd = g_mkstemp (filename_unc);
+	filename_dst = g_build_filename (ev_tmp_dir (), "evinceXXXXXX", NULL);
+	fd = g_mkstemp (filename_dst);
 	if (fd < 0) {
 		g_free (cmd);
 		g_free (filename);
-		g_free (filename_unc);
+		g_free (filename_dst);
 		return NULL;
 	}
-	
+
 	argv[0] = cmd;
-	argv[1] = "-cd";
+	argv[1] = compress ? "-c" : "-cd";
 	argv[2] = filename;
-	argv[3] = filename_unc;
-	argv[4] = NULL;
+	argv[3] = NULL;
 
 	if (g_spawn_async_with_pipes (NULL, argv, NULL,
 				      G_SPAWN_STDERR_TO_DEV_NULL,
@@ -247,7 +244,7 @@ ev_file_uncompress (const gchar       *uri,
 				break;
 			}
 		} while (bytes_read > 0);
-		
+
 		g_io_channel_unref (in);
 		g_io_channel_unref (out);
 	}
@@ -255,13 +252,32 @@ ev_file_uncompress (const gchar       *uri,
 	close (fd);
 
 	if (*error == NULL) {
-		uri_unc = g_filename_to_uri (filename_unc,
-					     NULL, NULL);
+		uri_dst = g_filename_to_uri (filename_dst, NULL, NULL);
 	}
 
 	g_free (cmd);
 	g_free (filename);
-	g_free (filename_unc);
+	g_free (filename_dst);
 
-	return uri_unc;
+	return uri_dst;
+}
+
+gchar *
+ev_file_uncompress (const gchar       *uri,
+		    EvCompressionType  type,
+		    GError           **error)
+{
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	return compression_run (uri, type, FALSE, error);
+}
+
+gchar *
+ev_file_compress (const gchar       *uri,
+		  EvCompressionType  type,
+		  GError           **error)
+{
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	return compression_run (uri, type, TRUE, error);
 }

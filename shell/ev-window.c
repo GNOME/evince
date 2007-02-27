@@ -1543,11 +1543,11 @@ ev_window_create_tmp_symlink (const gchar *filename, GError **error)
 static void
 ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 {
-	GError *error = NULL;
-	gchar *symlink_uri;
-	gchar *old_filename;
-	gchar *new_filename;
-	gchar *uri_unc;
+	GError      *error = NULL;
+	gchar       *symlink_uri;
+	gchar       *old_filename;
+	gchar       *new_filename;
+	const gchar *uri_unc;
 
 	uri_unc = g_object_get_data (G_OBJECT (window->priv->document),
 				     "uri-uncompressed");
@@ -1696,13 +1696,11 @@ ev_window_get_recent_file_label (gint index, const gchar *filename)
 	p = filename;
 	end = filename + length;
  
-	while (p != end)
-	{
+	while (p != end) {
 		const gchar *next;
 		next = g_utf8_next_char (p);
  
-		switch (*p)
-		{
+		switch (*p) {
 			case '_':
 				g_string_append (str, "__");
 				break;
@@ -1818,63 +1816,100 @@ file_save_dialog_response_cb (GtkWidget *fc,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
-	gboolean success;
+	const gchar *uri_unc;
+	gint         fd;
+	gchar       *filename;
+	gchar       *tmp_filename;
+	GError      *error = NULL;
 
-	if (response_id == GTK_RESPONSE_OK) {
-		gint    fd;
-		gchar  *filename;
-		gchar  *tmp_filename;
-		GError *error = NULL;
-
-		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
-		tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
-		
-		fd = g_mkstemp (tmp_filename);
-		if (fd == -1) {
-			gchar *display_name;
-			gint   save_errno = errno;
-			
-			display_name = g_filename_display_name (tmp_filename);
-			g_set_error (&error,
-				     G_FILE_ERROR,
-				     g_file_error_from_errno (save_errno),
-				     _("Failed to create file “%s”: %s"),
-				     display_name, g_strerror (save_errno));
-			g_free (display_name);
-		} else {
-			gchar *uri;
-
-			uri = g_filename_to_uri (tmp_filename, NULL, NULL);
-			
-			ev_document_doc_mutex_lock ();
-			success = ev_document_save (ev_window->priv->document,
-						    uri,
-						    &error);
-			ev_document_doc_mutex_unlock ();
-
-			g_free (uri);
-			close (fd);
-		}
-
-		if (!error) {
-			if (g_rename (tmp_filename, filename) == -1) {
-				g_unlink (tmp_filename);
-			}
-		} else {
-			gchar *msg;
-			gchar *uri;
-
-			uri = g_filename_to_uri (filename, NULL, NULL);
-			msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
-			ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
-			g_free (msg);
-			g_free (uri);
-			g_error_free (error);
-		}
-		
-		g_free (tmp_filename);
-		g_free (filename);
+	if (response_id != GTK_RESPONSE_OK) {
+		gtk_widget_destroy (fc);
+		return;
 	}
+	
+
+	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
+	
+	fd = g_mkstemp (tmp_filename);
+	if (fd == -1) {
+		gchar *display_name;
+		gint   save_errno = errno;
+		
+		display_name = g_filename_display_name (tmp_filename);
+		g_set_error (&error,
+			     G_FILE_ERROR,
+			     g_file_error_from_errno (save_errno),
+			     _("Failed to create file “%s”: %s"),
+			     display_name, g_strerror (save_errno));
+		g_free (display_name);
+	} else {
+		gchar *uri;
+		
+		uri = g_filename_to_uri (tmp_filename, NULL, NULL);
+		
+		ev_document_doc_mutex_lock ();
+		ev_document_save (ev_window->priv->document, uri, &error);
+		ev_document_doc_mutex_unlock ();
+		
+		g_free (uri);
+		close (fd);
+	}
+
+	if (!error) {
+		uri_unc = g_object_get_data (G_OBJECT (ev_window->priv->document),
+					     "uri-uncompressed");
+		if (uri_unc) {
+			EvCompressionType ctype;
+			gchar            *uri_comp;
+			gchar            *uri;
+			const gchar      *ext;
+
+			ctype = EV_COMPRESSION_NONE;
+			
+			ext = g_strrstr (ev_window->priv->uri, ".gz");
+			if (ext && g_ascii_strcasecmp (ext, ".gz") == 0)
+				ctype = EV_COMPRESSION_GZIP;
+			
+			ext = g_strrstr (ev_window->priv->uri, ".bz2");
+			if (ext && g_ascii_strcasecmp (ext, ".bz2") == 0)
+				ctype = EV_COMPRESSION_BZIP2;
+			
+			uri = g_filename_to_uri (tmp_filename, NULL, NULL);
+			uri_comp = ev_file_compress (uri, ctype, &error);
+			g_free (uri);
+			g_unlink (tmp_filename);
+			g_free (tmp_filename);
+
+			if (!uri_comp || error) {
+				tmp_filename = NULL;
+			} else {
+				tmp_filename = g_filename_from_uri (uri_comp,
+								    NULL, NULL);
+			}
+			
+			g_free (uri_comp);
+		}
+	}
+
+	if (tmp_filename && g_rename (tmp_filename, filename) == -1) {
+		g_unlink (tmp_filename);
+	}
+	
+	if (error) {
+		gchar *msg;
+		gchar *uri;
+		
+		uri = g_filename_to_uri (filename, NULL, NULL);
+		msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
+		ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
+		g_free (msg);
+		g_free (uri);
+		g_error_free (error);
+	}
+	
+	g_free (tmp_filename);
+	g_free (filename);
 
 	gtk_widget_destroy (fc);
 }
