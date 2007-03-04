@@ -1,23 +1,25 @@
+# translation of lt.po to Lithuanian
 # Lithuanian translation of Evince.
 # Copyright (C) 2005-2006 The GNOME Foundation.
 # This file is distributed under the same license as the Evince package.
+#
+#
 # Žygimantas Beručka <zygis@gnome.org>, 2005-2006.
 # Justina Klingaitė <justina.klingaite@gmail.com>, 2005.
-# 
-# 
+# Gintautas Miliauskas <gintas@akl.lt>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: Evince HEAD\n"
+"Project-Id-Version: lt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-27 15:47+0200\n"
-"PO-Revision-Date: 2006-08-16 18:30+0300\n"
-"Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
-"Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
+"POT-Creation-Date: 2007-03-04 17:55+0200\n"
+"PO-Revision-Date: 2007-03-04 18:03+0200\n"
+"Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
+"Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%"
-"100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../backend/comics/comics-document.c:148
 msgid "File corrupted."
@@ -32,7 +34,7 @@ msgstr "Archyve %s nereasta jokių paveikslėlių"
 msgid ""
 "The document is composed by several files. One or more of such files cannot "
 "be accessed."
-msgstr ""
+msgstr "Dokumentas sudarytas iš kelių failų. Vienas ar keli iš šių failų negali būti atverti."
 
 #: ../backend/dvi/dvi-document.c:89
 msgid "File not available"
@@ -102,42 +104,39 @@ msgstr "Neįmontuotas"
 
 #: ../backend/impress/zip.c:50
 msgid "No error"
-msgstr ""
+msgstr "Nėra klaidos"
 
 #: ../backend/impress/zip.c:53
 msgid "Not enough memory"
-msgstr ""
+msgstr "Trūksta atminties"
 
 #: ../backend/impress/zip.c:56
 msgid "Cannot find zip signature"
-msgstr ""
+msgstr "Nerastas zip parašas"
 
 #: ../backend/impress/zip.c:59
 msgid "Invalid zip file"
-msgstr ""
+msgstr "Netaisyklingas zip failas"
 
 #: ../backend/impress/zip.c:62
-#, fuzzy
 msgid "Multi file zips are not supported"
-msgstr "PDF generavimas nepalaikomas"
+msgstr "Kelių failų zip archyvai nepalaikomi"
 
 #: ../backend/impress/zip.c:65
-#, fuzzy
 msgid "Cannot open the file"
-msgstr "Nepavyko atverti failo „%s“.\n"
+msgstr "Nepavyko atverti failo"
 
 #: ../backend/impress/zip.c:68
 msgid "Cannot read data from file"
-msgstr ""
+msgstr "Nepavyko perskaityti duomenų iš failo"
 
 #: ../backend/impress/zip.c:71
 msgid "Cannot find file in the zip archive"
-msgstr ""
+msgstr "Nepavyko rasti failo zip archyve"
 
 #: ../backend/impress/zip.c:74
-#, fuzzy
 msgid "Unknown error"
-msgstr "Nežinomas MIME tipas"
+msgstr "Nežinoma klaida"
 
 #: ../backend/ps/gsdefaults.c:30
 msgid "BBox"
@@ -218,10 +217,8 @@ msgstr "Nepavyko atverti failo „%s“.\n"
 
 #: ../backend/ps/ps-document.c:233
 #, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr ""
-"Nepavyko įkelti dokumento „%s“. Kelyje nerastas Ghostscript interpretatorius"
+msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
+msgstr "Nepavyko įkelti dokumento „%s“. Kelyje nerastas Ghostscript interpretatorius"
 
 #: ../backend/ps/ps-document.c:250
 #, c-format
@@ -241,14 +238,12 @@ msgid "Interpreter failed."
 msgstr "Interpretatoriaus klaida."
 
 #: ../backend/impress/impress-document.c:294
-#, fuzzy
 msgid "Remote files aren't supported"
-msgstr "PDF generavimas nepalaikomas"
+msgstr "Nutolę failai nepalaikomi"
 
 #: ../backend/impress/impress-document.c:305
-#, fuzzy
 msgid "Invalid document"
-msgstr "Atspaudinti šį dokumentą"
+msgstr "Netaisyklingas dokumentas"
 
 #: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:316
 #, c-format
@@ -362,9 +357,8 @@ msgid "Separator"
 msgstr "Skirtukas"
 
 #: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
-#, fuzzy
 msgid "Running in presentation mode"
-msgstr "Paleisti evince pateikčių režimu"
+msgstr "Pateikčių veiksena"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4287
@@ -421,9 +415,8 @@ msgid "View multipage documents"
 msgstr "Peržiūrėti kelių puslapių dokumentams"
 
 #: ../data/evince-password.glade.h:1
-#, fuzzy
 msgid "Password Entry"
-msgstr "_Slaptažodis:"
+msgstr "Slaptažodis"
 
 #: ../data/evince-password.glade.h:2
 msgid "Remember password for this session"
@@ -470,9 +463,8 @@ msgid "<b>Optimized:</b>"
 msgstr "<b>Optimizuota:</b>"
 
 #: ../data/evince-properties.glade.h:9
-#, fuzzy
 msgid "<b>Paper Size:</b>"
-msgstr "<b>Optimizuota:</b>"
+msgstr "<b>Lapo dydis:</b>"
 
 #: ../data/evince-properties.glade.h:10
 msgid "<b>Producer:</b>"
@@ -516,33 +508,33 @@ msgstr "Nėra"
 #.
 #: ../properties/ev-properties-view.c:260
 msgid "default:mm"
-msgstr ""
+msgstr "default:mm"
 
 #. Imperial measurement (inches)
 #: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%.2f x %.2f in"
-msgstr ""
+msgstr "%.2f x %.2f in"
 
 #. Metric measurement (millimeters)
 #: ../properties/ev-properties-view.c:297
 #, c-format
 msgid "%.0f x %.0f mm"
-msgstr ""
+msgstr "%.0f x %.0f mm"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:308
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr ""
+msgstr "%s, portretas (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:315
 #, c-format
 msgid "%s, Landscape (%s)"
-msgstr ""
+msgstr "%s, peizažas (%s)"
 
 #: ../shell/eggfindbar.c:157
 msgid "Search string"
@@ -620,10 +612,8 @@ msgstr "Reikalingas slaptažodis"
 
 #: ../shell/ev-password.c:84
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
-msgstr ""
-"Dokumentas „%s“ yra užrakintas, norint jį atverti reikalingas slaptažodis."
+msgid "The document “%s” is locked and requires a password before it can be opened."
+msgstr "Dokumentas „%s“ yra užrakintas, norint jį atverti reikalingas slaptažodis."
 
 #: ../shell/ev-password.c:149
 msgid "Enter password"
@@ -757,12 +747,11 @@ msgstr "Paleisti %s"
 
 #: ../shell/ev-view.c:1858
 msgid "End of presentation. Press Escape to exit."
-msgstr ""
+msgstr "Pateikties pabaiga. Spauskite „Escape“."
 
 #: ../shell/ev-view.c:2536
-#, fuzzy
 msgid "Jump to page:"
-msgstr "Eiti į puslapį"
+msgstr "Eiti į puslapį:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -783,12 +772,12 @@ msgstr "liko ieškoti %3d%%"
 #: ../shell/ev-window.c:735
 #, c-format
 msgid "Page %s - %s"
-msgstr ""
+msgstr "Puslapis %s - %s"
 
 #: ../shell/ev-window.c:737
-#, fuzzy, c-format
+#, c-format
 msgid "Page %s"
-msgstr "Puslapiai"
+msgstr "Puslapis %s"
 
 #: ../shell/ev-window.c:1314
 msgid "Unable to open document"
@@ -799,19 +788,18 @@ msgid "Open Document"
 msgstr "Atverti dokumentą"
 
 #: ../shell/ev-window.c:1531
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't create symlink “%s”: %s"
-msgstr "Nepavyko išsaugoti priedo „%s“: %s"
+msgstr "Nepavyko sukurti simbolinės nuorodos „%s“: %s"
 
 #: ../shell/ev-window.c:1560
-#, fuzzy
 msgid "Cannot open a copy."
-msgstr "Nepavyko atverti failo „%s“.\n"
+msgstr "Nepavyko atverti kopijos."
 
 #: ../shell/ev-window.c:1841
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create file “%s”: %s"
-msgstr "Nepavyko atverti dokumento „%s“"
+msgstr "Nepavyko atverti failo „%s“: %s"
 
 #: ../shell/ev-window.c:1868
 #, c-format
@@ -854,19 +842,19 @@ msgstr "Puslapiai"
 #. Toolbar-only
 #: ../shell/ev-window.c:2702 ../shell/ev-window.c:4097
 msgid "Leave Fullscreen"
-msgstr "Palikti viso ekrano režimą"
+msgstr "Palikti viso ekrano veikseną"
 
 #: ../shell/ev-window.c:3074
 msgid "Toolbar Editor"
 msgstr "Įrankinės redaktorius"
 
 #: ../shell/ev-window.c:3445
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
-"PostScript ir PDF failų peržiūros programa.\n"
+"Dokumentų peržiūros programa.\n"
 "Naudojama poppler biblioteka %s (%s)"
 
 #: ../shell/ev-window.c:3473
@@ -908,9 +896,8 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:3508
-#, fuzzy
 msgid "© 1996-2007 The Evince authors"
-msgstr "© 1996-2005 Evince autoriai"
+msgstr "© 1996-2007 Evince autoriai"
 
 #: ../shell/ev-window.c:3514
 msgid "translator-credits"
@@ -948,14 +935,12 @@ msgid "Open an existing document"
 msgstr "Atverti egzistuojantį dokumentą"
 
 #: ../shell/ev-window.c:4024
-#, fuzzy
 msgid "Open a _Copy"
-msgstr "Išsaugoti kopiją"
+msgstr "Atverti _kopiją"
 
 #: ../shell/ev-window.c:4025
-#, fuzzy
 msgid "Open a copy of the current document in a new window"
-msgstr "Išsaugoti šio dokumento kopiją"
+msgstr "Atverti šio dokumento kopiją naujame lange"
 
 #: ../shell/ev-window.c:4027 ../shell/ev-window.c:4195
 msgid "_Save a Copy..."
@@ -966,13 +951,12 @@ msgid "Save a copy of the current document"
 msgstr "Išsaugoti šio dokumento kopiją"
 
 #: ../shell/ev-window.c:4030
-#, fuzzy
 msgid "Print Set_up..."
-msgstr "Spausdinti..."
+msgstr "Spausdinimo _nustatymai..."
 
 #: ../shell/ev-window.c:4031
 msgid "Setup the page settings for printing"
-msgstr ""
+msgstr "Nustatyti puslapio parinktis spausdinimui"
 
 #: ../shell/ev-window.c:4033
 msgid "_Print..."
@@ -1078,7 +1062,7 @@ msgstr "_Apie"
 
 #: ../shell/ev-window.c:4098
 msgid "Leave fullscreen mode"
-msgstr "Palikti viso ekrano režimą"
+msgstr "Palikti viso ekrano veikseną"
 
 #. View Menu
 #: ../shell/ev-window.c:4149
@@ -1156,20 +1140,19 @@ msgstr "_Eiti į"
 
 #: ../shell/ev-window.c:4182
 msgid "Open in New _Window"
-msgstr ""
+msgstr "Atverti _naujame lange"
 
 #: ../shell/ev-window.c:4184
 msgid "_Copy Link Address"
 msgstr "_Kopijuoti nuorodos adresą"
 
 #: ../shell/ev-window.c:4186
-#, fuzzy
 msgid "_Save Image As..."
-msgstr "Iš_saugoti kopiją..."
+msgstr "Įrašyti _paveikslėlį kaip..."
 
 #: ../shell/ev-window.c:4188
 msgid "Copy _Image"
-msgstr ""
+msgstr "Kopijuoti _paveikslėlį"
 
 #: ../shell/ev-window.c:4227
 msgid "Page"
@@ -1189,15 +1172,15 @@ msgstr "Nustatyti vaizdo mastelį"
 
 #: ../shell/ev-window.c:4250
 msgid "Navigation"
-msgstr ""
+msgstr "Navigacija"
 
 #: ../shell/ev-window.c:4252
 msgid "Back"
-msgstr ""
+msgstr "Atgal"
 
 #: ../shell/ev-window.c:4254
 msgid "Move across visited pages"
-msgstr ""
+msgstr "Eiti per aplankytus puslapius"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:4270
@@ -1225,14 +1208,12 @@ msgid "Fit Width"
 msgstr "Tinka plotis"
 
 #: ../shell/ev-window.c:4603
-#, fuzzy
 msgid "The image could not be saved."
-msgstr "Priedo išsaugoti nepavyko."
+msgstr "Paveikslėlio įrašyti nepavyko."
 
 #: ../shell/ev-window.c:4622
-#, fuzzy
 msgid "Save Image"
-msgstr "Paveikslėliai"
+msgstr "Įrašyti paveikslėlį"
 
 #: ../shell/ev-window.c:4677
 msgid "Unable to open attachment"
@@ -1243,9 +1224,8 @@ msgid "The attachment could not be saved."
 msgstr "Priedo išsaugoti nepavyko."
 
 #: ../shell/ev-window.c:4748
-#, fuzzy
 msgid "Save Attachment"
-msgstr "Priedai"
+msgstr "Įrašyti priedą"
 
 #: ../shell/ev-window-title.c:141
 #, c-format
@@ -1262,11 +1242,11 @@ msgstr "PUSLAPIS"
 
 #: ../shell/main.c:54
 msgid "Run evince in fullscreen mode"
-msgstr "Paleisti evince viso ekrano režimu"
+msgstr "Paleisti evince viso ekrano veiksena"
 
 #: ../shell/main.c:55
 msgid "Run evince in presentation mode"
-msgstr "Paleisti evince pateikčių režimu"
+msgstr "Paleisti evince pateikčių veiksena"
 
 #: ../shell/main.c:56
 msgid "Run evince as a previewer"
@@ -1308,35 +1288,3 @@ msgstr ""
 "Tinkama PDF dokumentų miniatiūrų kūrimo komanda su argumentais. Žiūrėkite "
 "Nautiliaus miniatiūrų generatoriaus dokumentaciją."
 
-#~ msgid "No document loaded."
-#~ msgstr "Nėra įkeltų dokumentų."
-
-#~ msgid "Broken pipe."
-#~ msgstr "Sugadintas konvejeris."
-
-#~ msgid "Error while decompressing file “%s”:\n"
-#~ msgstr "Išskleidžiant failą „%s“ įvyko klaida:\n"
-
-#~ msgid "File is not readable."
-#~ msgstr "Failas neperskaitomas."
-
-#~ msgid "Document loaded."
-#~ msgstr "Dokumentas įkeltas."
-
-#~ msgid "_Previous"
-#~ msgstr "_Ankstesnis"
-
-#~ msgid "_Next"
-#~ msgstr "_Sekantis"
-
-#~ msgid "Not found"
-#~ msgstr "Nerasta"
-
-#~ msgid "The \"Find\" feature will not work with this document"
-#~ msgstr "Šiame dokumente funkcija „Rasti“ neveiks"
-
-#~ msgid "Searching for text is only supported for PDF documents."
-#~ msgstr "Teksto paieška galima tik PDF dokumentuose."
-
-#~ msgid "*"
-#~ msgstr "*"
