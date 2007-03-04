@@ -9,33 +9,370 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.gnome-2-12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-10-27 12:23+0200\n"
-"PO-Revision-Date: 2005-09-11 10:37+0200\n"
+"POT-Creation-Date: 2007-03-04 19:43+0100\n"
+"PO-Revision-Date: 2007-03-04 19:48+0100\n"
 "Last-Translator: Erdal Ronahi <erdal.ronahi@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Rosetta-Version: 0.1\n"
-"Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.10.2\n"
+"X-Rosetta-Export-Date: 2007-02-28 23:18+0000\n"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:534
-msgid "_Remove Toolbar"
-msgstr "Darika amûran jê _bibe"
+#: ../backend/comics/comics-document.c:148
+msgid "File corrupted."
+msgstr "Pel xera bûye."
 
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:555
-msgid "Separator"
+#: ../backend/comics/comics-document.c:184
+#, c-format
+msgid "No images found in archive %s"
+msgstr "Di arşîva %s de wêne nehate dîtin"
+
+#: ../backend/djvu/djvu-document.c:159
+msgid "The document is composed by several files. One or more of such files cannot be accessed."
 msgstr ""
+
+#: ../backend/dvi/dvi-document.c:89
+msgid "File not available"
+msgstr "Pel ne gihişbar e"
+
+#: ../backend/dvi/dvi-document.c:104
+msgid "DVI document has incorrect format"
+msgstr "Belgeya DVI xwediyê celebê nederbasdar e"
+
+#. translators: this is the document security state
+#: ../backend/pdf/ev-poppler.cc:628
+msgid "Yes"
+msgstr "Erê"
+
+#. translators: this is the document security state
+#: ../backend/pdf/ev-poppler.cc:631
+msgid "No"
+msgstr "Na"
+
+#: ../backend/pdf/ev-poppler.cc:731
+msgid "Type 1"
+msgstr "Cureyê 1"
+
+#: ../backend/pdf/ev-poppler.cc:733
+msgid "Type 1C"
+msgstr "Cureyê 1C"
+
+#: ../backend/pdf/ev-poppler.cc:735
+msgid "Type 3"
+msgstr "Cureyê 3"
+
+#: ../backend/pdf/ev-poppler.cc:737
+msgid "TrueType"
+msgstr "TrueType"
+
+#: ../backend/pdf/ev-poppler.cc:739
+msgid "Type 1 (CID)"
+msgstr "Cureyê 1 (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:741
+msgid "Type 1C (CID)"
+msgstr "Cureyê 1C (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:743
+msgid "TrueType (CID)"
+msgstr "TrueType (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:745
+msgid "Unknown font type"
+msgstr "Cureyê tîpan yê nenas"
+
+#: ../backend/pdf/ev-poppler.cc:771
+msgid "No name"
+msgstr "Bênav"
+
+#: ../backend/pdf/ev-poppler.cc:779
+msgid "Embedded subset"
+msgstr "Koma jêr ya veşartî"
+
+#: ../backend/pdf/ev-poppler.cc:781
+msgid "Embedded"
+msgstr "Veşartî"
+
+#: ../backend/pdf/ev-poppler.cc:783
+msgid "Not embedded"
+msgstr "Neveşartî"
+
+#: ../backend/impress/zip.c:50
+msgid "No error"
+msgstr ""
+
+#: ../backend/impress/zip.c:53
+msgid "Not enough memory"
+msgstr ""
+
+#: ../backend/impress/zip.c:56
+msgid "Cannot find zip signature"
+msgstr ""
+
+#: ../backend/impress/zip.c:59
+msgid "Invalid zip file"
+msgstr "Pelê zip ê nederbasdar"
+
+#: ../backend/impress/zip.c:62
+#, fuzzy
+msgid "Multi file zips are not supported"
+msgstr "Pêkhatina PDF nayê destekkirin"
+
+#: ../backend/impress/zip.c:65
+msgid "Cannot open the file"
+msgstr "Vekirina pelî serneket"
+
+#: ../backend/impress/zip.c:68
+msgid "Cannot read data from file"
+msgstr ""
+
+#: ../backend/impress/zip.c:71
+msgid "Cannot find file in the zip archive"
+msgstr ""
+
+#: ../backend/impress/zip.c:74
+msgid "Unknown error"
+msgstr "Çewtiya nenas"
+
+#: ../backend/ps/gsdefaults.c:30
+msgid "BBox"
+msgstr "BBox"
+
+#: ../backend/ps/gsdefaults.c:31
+msgid "Letter"
+msgstr "Name"
+
+#: ../backend/ps/gsdefaults.c:32
+msgid "Tabloid"
+msgstr "Tabloid"
+
+#: ../backend/ps/gsdefaults.c:33
+msgid "Ledger"
+msgstr "Ledger"
+
+#: ../backend/ps/gsdefaults.c:34
+msgid "Legal"
+msgstr "Legal"
+
+#: ../backend/ps/gsdefaults.c:35
+msgid "Statement"
+msgstr "Statement"
+
+#: ../backend/ps/gsdefaults.c:36
+msgid "Executive"
+msgstr "Rayedar"
+
+#: ../backend/ps/gsdefaults.c:37
+msgid "A0"
+msgstr "A0"
+
+#: ../backend/ps/gsdefaults.c:38
+msgid "A1"
+msgstr "A1"
+
+#: ../backend/ps/gsdefaults.c:39
+msgid "A2"
+msgstr "A2"
+
+#: ../backend/ps/gsdefaults.c:40
+msgid "A3"
+msgstr "A3"
+
+#: ../backend/ps/gsdefaults.c:41
+msgid "A4"
+msgstr "A4"
+
+#: ../backend/ps/gsdefaults.c:42
+msgid "A5"
+msgstr "A5"
+
+#: ../backend/ps/gsdefaults.c:43
+msgid "B4"
+msgstr "B4"
+
+#: ../backend/ps/gsdefaults.c:44
+msgid "B5"
+msgstr "B5"
+
+#: ../backend/ps/gsdefaults.c:45
+msgid "Folio"
+msgstr "Folio"
+
+#: ../backend/ps/gsdefaults.c:46
+msgid "Quarto"
+msgstr "Quarto"
+
+#: ../backend/ps/gsdefaults.c:47
+msgid "10x14"
+msgstr "10x14"
+
+#: ../backend/ps/ps-document.c:172
+#: ../backend/ps/ps-document.c:186
+#, c-format
+msgid "Cannot open file “%s”.\n"
+msgstr "Pelê \"%s\" nayê vekirin.\n"
+
+#: ../backend/ps/ps-document.c:233
+#, c-format
+msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
+msgstr "Dema belgeya \"%s\" dihate barkirin bi ser neket. Xebatkerê Ghostskrîpt di hundirê \"path\"ê de nehate dîtin."
+
+#: ../backend/ps/ps-document.c:250
+#, c-format
+msgid "Failed to load document “%s”"
+msgstr "Barkirina belgeya \"%s\" bi ser neket"
+
+#: ../backend/ps/ps-document.c:439
+msgid "Encapsulated PostScript"
+msgstr "Encapsulated PostScript"
+
+#: ../backend/ps/ps-document.c:440
+msgid "PostScript"
+msgstr "PostScript"
+
+#: ../backend/ps/ps-interpreter.c:541
+msgid "Interpreter failed."
+msgstr "Şîroveker bi ser neket."
+
+#: ../backend/impress/impress-document.c:294
+#, fuzzy
+msgid "Remote files aren't supported"
+msgstr "Pêkhatina PDF nayê destekkirin"
+
+#: ../backend/impress/impress-document.c:305
+msgid "Invalid document"
+msgstr "Belgeya nederbasdar"
+
+#: ../libdocument/ev-attachment.c:303
+#: ../libdocument/ev-attachment.c:316
+#, c-format
+msgid "Couldn't save attachment “%s”: %s"
+msgstr "Pêveka \"%s\" nehate tomarkirin: %s"
+
+#: ../libdocument/ev-attachment.c:348
+#, c-format
+msgid "Couldn't open attachment “%s”: %s"
+msgstr "Pêveka \"%s\" venebû: %s"
+
+#: ../libdocument/ev-attachment.c:381
+#, c-format
+msgid "Couldn't open attachment “%s”"
+msgstr "Pêveka \"%s\" venebû"
+
+#: ../libdocument/ev-document-factory.c:291
+#: ../libdocument/ev-document-factory.c:405
+msgid "Unknown MIME Type"
+msgstr "Cureyê MIME yê Nenas"
+
+#: ../libdocument/ev-document-factory.c:302
+#, c-format
+msgid "Unhandled MIME type: “%s”"
+msgstr "Cureyê MIME ya nehate xebitandin: \"%s\""
+
+#: ../libdocument/ev-document-factory.c:446
+msgid "All Documents"
+msgstr "Hemû Belge"
+
+#: ../libdocument/ev-document-factory.c:454
+msgid "PostScript Documents"
+msgstr "Belgeyên PostScript"
+
+#: ../libdocument/ev-document-factory.c:464
+msgid "PDF Documents"
+msgstr "Belgeyên PDF"
+
+#: ../libdocument/ev-document-factory.c:474
+#: ../shell/ev-window.c:4669
+msgid "Images"
+msgstr "Wêne"
+
+#: ../libdocument/ev-document-factory.c:484
+msgid "DVI Documents"
+msgstr "Belgeyên DVI"
+
+#: ../libdocument/ev-document-factory.c:494
+msgid "Djvu Documents"
+msgstr "Belgeyên Djvu"
+
+#: ../libdocument/ev-document-factory.c:504
+msgid "Comic Books"
+msgstr "Pirtûkên Qerfî"
+
+#: ../libdocument/ev-document-factory.c:514
+msgid "Impress Slides"
+msgstr "Pêşanên Impressê"
+
+#: ../libdocument/ev-document-factory.c:522
+msgid "All Files"
+msgstr "Hemû Pel"
+
+#: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
+#, c-format
+msgid "Open “%s”"
+msgstr "\"%s\" Veke"
+
+#: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
+#: ../shell/ev-navigation-action.c:118
+msgid "Empty"
+msgstr "Vala"
+
+#. Translaters: This string is for a toggle to display a toolbar.
+#. * The name of the toolbar is automatically computed from the widgets
+#. * on the toolbar, and is placed at the %s. Note the _ before the %s
+#. * which is used to add mnemonics. We know that this is likely to
+#. * produce duplicates, but don't worry about it. If your language
+#. * normally has a mnemonic at the start, please use the _. If not,
+#. * please remove.
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:902
+#, c-format
+msgid "Show “_%s”"
+msgstr "\"_%s\" nîşan bide"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1362
+msgid "_Move on Toolbar"
+msgstr "Li Ser Darikê Amûran Bikşîne"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1363
+msgid "Move the selected item on the toolbar"
+msgstr "Hêmana hilbijartî li ser darikê amûran bibe"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1364
+msgid "_Remove from Toolbar"
+msgstr "Ji Darikê Amûran _Rake"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1365
+msgid "Remove the selected item from the toolbar"
+msgstr "Hêmana hatiye hilbijartin ji darikê amûran rake"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1366
+msgid "_Delete Toolbar"
+msgstr "Darikê Amûran _Jê Bibe"
+
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1367
+msgid "Remove the selected toolbar"
+msgstr "Darikê amûran yê hilbijartî rake"
+
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:439
+msgid "Separator"
+msgstr "Veqetîner"
+
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+#, fuzzy
+msgid "Running in presentation mode"
+msgstr "Evince di moda pêşkêşiyê de bixebitîne"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3145
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
+#: ../shell/ev-window.c:4322
 msgid "Best Fit"
-msgstr ""
+msgstr "Yek Rûpel"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:49
 msgid "Fit Page Width"
-msgstr ""
+msgstr "Firehiya Rûpelê"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:51
 msgid "50%"
@@ -73,19 +410,30 @@ msgstr "%300"
 msgid "400%"
 msgstr "%400"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:608
+#: ../data/evince.desktop.in.in.h:1
+#: ../shell/ev-window.c:3484
+#: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
-msgstr ""
+msgstr "Nîşanderê Belgeyan"
 
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multipage documents"
-msgstr ""
+msgstr "Belgeyên pir-rûpelî nîşan bide"
 
 #: ../data/evince-password.glade.h:1
-msgid "*"
-msgstr "*"
+#, fuzzy
+msgid "Password Entry"
+msgstr "Şî_fre:"
 
 #: ../data/evince-password.glade.h:2
+msgid "Remember password for this session"
+msgstr "Bo vê danişînê şîfreyê bibîr bîne"
+
+#: ../data/evince-password.glade.h:3
+msgid "Save password in keyring"
+msgstr "Şîfreyê li miftedankê de tomar bike"
+
+#: ../data/evince-password.glade.h:4
 msgid "_Password:"
 msgstr "Şî_fre:"
 
@@ -95,23 +443,23 @@ msgstr "<b>Nivîskar:</b>"
 
 #: ../data/evince-properties.glade.h:2
 msgid "<b>Created:</b>"
-msgstr ""
+msgstr "<b>Dîroka afirandinê:</b>"
 
 #: ../data/evince-properties.glade.h:3
 msgid "<b>Creator:</b>"
-msgstr ""
+msgstr "<b>Afirandêr:</b>"
 
 #: ../data/evince-properties.glade.h:4
 msgid "<b>Format:</b>"
-msgstr ""
+msgstr "<b>Format:</b>"
 
 #: ../data/evince-properties.glade.h:5
 msgid "<b>Keywords:</b>"
-msgstr ""
+msgstr "<b>Peyvên Mîna Mifteyan:</b>"
 
 #: ../data/evince-properties.glade.h:6
 msgid "<b>Modified:</b>"
-msgstr ""
+msgstr "<b>Hatiye guheandin:</b>"
 
 #: ../data/evince-properties.glade.h:7
 msgid "<b>Number of Pages:</b>"
@@ -119,905 +467,821 @@ msgstr "<b>Hejmara Rûpelan:</b>"
 
 #: ../data/evince-properties.glade.h:8
 msgid "<b>Optimized:</b>"
-msgstr ""
+msgstr "<b>Herî tekûz:</b>"
 
 #: ../data/evince-properties.glade.h:9
-msgid "<b>Producer:</b>"
-msgstr ""
+msgid "<b>Paper Size:</b>"
+msgstr "<b>Mezinahiya Kaxizê:</b>"
 
 #: ../data/evince-properties.glade.h:10
+msgid "<b>Producer:</b>"
+msgstr "<b>Hilberîner:</b>"
+
+#: ../data/evince-properties.glade.h:11
 msgid "<b>Security:</b>"
 msgstr "<b>Ewlekarî:</b>"
 
-#: ../data/evince-properties.glade.h:11
+#: ../data/evince-properties.glade.h:12
 msgid "<b>Subject:</b>"
 msgstr "<b>Mijar:</b>"
 
-#: ../data/evince-properties.glade.h:12
+#: ../data/evince-properties.glade.h:13
 msgid "<b>Title:</b>"
 msgstr "<b>Sernivîs:</b>"
 
 #: ../data/evince.schemas.in.h:1
-msgid "Default sidebar size"
-msgstr ""
+msgid "Override document restrictions"
+msgstr "Zorê bide sînorkirinên Belgeyan"
 
 #: ../data/evince.schemas.in.h:2
-msgid "Show sidebar by default"
-msgstr ""
+msgid "Override document restrictions, like restriction to copy or to print."
+msgstr "Sînorkirinên belgeyê yên wekî jibergirtin û nivîsînê diguherîne."
 
-#: ../data/evince.schemas.in.h:3
-msgid "Show statusbar by default"
-msgstr ""
-
-#: ../data/evince.schemas.in.h:4
-msgid "Show toolbar by default"
-msgstr ""
-
-#: ../data/evince.schemas.in.h:5
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. The "
-"default size sets the sidebar's width in pixels based from the side of the "
-"window. Any integer will be accepted. The sidebar will never shrink smaller "
-"than the size of the text required to display Thumbnails or Index. Large "
-"values will cause the sidebar to take up as much of the page display area as "
-"possible relative to the window's size."
-msgstr ""
-
-#: ../data/evince.schemas.in.h:6
-msgid ""
-"Sidebar is the side item that contains the Index and Thumbnail lists. Two "
-"boolean options, true makes sidebar visible by default while false makes "
-"sidebar not visible by default"
-msgstr ""
-
-#: ../data/evince.schemas.in.h:7
-msgid ""
-"Statusbar is the standard bottom bar that display additional information "
-"about links and other actions. Two boolean options, true makes the statusbar "
-"visible by default while false makes sidebar not visible by default."
-msgstr ""
-
-#: ../data/evince.schemas.in.h:8
-msgid ""
-"Toolbar is the top bar that contains navigation and zoom controls. Two "
-"boolean options, true makes toolbar visible by default while false makes "
-"toolbar not visible by default."
-msgstr ""
-
-#: ../dvi/dvi-document.c:89
-msgid "File not available"
-msgstr ""
-
-#: ../dvi/dvi-document.c:102
-msgid "DVI document has incorrect format"
-msgstr ""
-
-#. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:511
-msgid "Yes"
-msgstr "Erê"
-
-#. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:514
-msgid "No"
-msgstr "Na"
-
-#: ../pdf/ev-poppler.cc:614
-msgid "Type 1"
-msgstr "Cureyê 1"
-
-#: ../pdf/ev-poppler.cc:616
-msgid "Type 1C"
-msgstr "Cureyê 1C"
-
-#: ../pdf/ev-poppler.cc:618
-msgid "Type 3"
-msgstr "Cureyê 3"
-
-#: ../pdf/ev-poppler.cc:620
-msgid "TrueType"
-msgstr "TrueType"
-
-#: ../pdf/ev-poppler.cc:622
-msgid "Type 1 (CID)"
-msgstr "Cureyê 1 (CID)"
-
-#: ../pdf/ev-poppler.cc:624
-msgid "Type 1C (CID)"
-msgstr "Cureyê 1C (CID)"
-
-#: ../pdf/ev-poppler.cc:626
-msgid "TrueType (CID)"
-msgstr "TrueType (CID)"
-
-#: ../pdf/ev-poppler.cc:628
-msgid "Unknown font type"
-msgstr "Cureyê tîpan yê nenas"
-
-#: ../pdf/ev-poppler.cc:654
-msgid "No name"
-msgstr "Bênav"
-
-#: ../pdf/ev-poppler.cc:662
-msgid "Embedded subset"
-msgstr ""
-
-#: ../pdf/ev-poppler.cc:664
-msgid "Embedded"
-msgstr ""
-
-#: ../pdf/ev-poppler.cc:666
-msgid "Not embedded"
-msgstr ""
-
-#: ../properties/ev-properties-main.c:114
+#: ../properties/ev-properties-main.c:110
 msgid "Document"
-msgstr "Pelge"
+msgstr "Belge"
 
-#: ../properties/ev-properties-view.c:173
+#: ../properties/ev-properties-view.c:179
 msgid "None"
 msgstr "Tune"
 
-#: ../ps/gsdefaults.c:30
-msgid "BBox"
-msgstr ""
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: ../properties/ev-properties-view.c:260
+msgid "default:mm"
+msgstr "pêşdanasînî:mm"
 
-#: ../ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "Name"
-
-#: ../ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr ""
-
-#: ../ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr ""
-
-#: ../ps/gsdefaults.c:34
-msgid "Legal"
-msgstr "Legal"
-
-#: ../ps/gsdefaults.c:35
-msgid "Statement"
-msgstr ""
-
-#: ../ps/gsdefaults.c:36
-msgid "Executive"
-msgstr ""
-
-#: ../ps/gsdefaults.c:37
-msgid "A0"
-msgstr "A0"
-
-#: ../ps/gsdefaults.c:38
-msgid "A1"
-msgstr "A1"
-
-#: ../ps/gsdefaults.c:39
-msgid "A2"
-msgstr "A2"
-
-#: ../ps/gsdefaults.c:40
-msgid "A3"
-msgstr "A3"
-
-#: ../ps/gsdefaults.c:41
-msgid "A4"
-msgstr "A4"
-
-#: ../ps/gsdefaults.c:42
-msgid "A5"
-msgstr "A5"
-
-#: ../ps/gsdefaults.c:43
-msgid "B4"
-msgstr "B4"
-
-#: ../ps/gsdefaults.c:44
-msgid "B5"
-msgstr "B5"
-
-#: ../ps/gsdefaults.c:45
-msgid "Folio"
-msgstr "Folio"
-
-#: ../ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr "Quarto"
-
-#: ../ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "10x14"
-
-#: ../ps/ps-document.c:136
-msgid "No document loaded."
-msgstr "Tu pelge nebarkirî."
-
-#: ../ps/ps-document.c:584
-msgid "Broken pipe."
-msgstr ""
-
-#: ../ps/ps-document.c:766
-msgid "Interpreter failed."
-msgstr ""
-
-#: ../ps/ps-document.c:892
+#. Imperial measurement (inches)
+#: ../properties/ev-properties-view.c:292
 #, c-format
-msgid "Error while decompressing file %s:\n"
-msgstr ""
+msgid "%.2f x %.2f in"
+msgstr "%.2f x %.2f inç"
 
-#: ../ps/ps-document.c:952
+#. Metric measurement (millimeters)
+#: ../properties/ev-properties-view.c:297
 #, c-format
-msgid "Cannot open file %s.\n"
-msgstr ""
+msgid "%.0f x %.0f mm"
+msgstr "%.0f x %.0f mm"
 
-#: ../ps/ps-document.c:957
-msgid "File is not readable."
-msgstr ""
-
-#: ../ps/ps-document.c:977
-msgid "Document loaded."
-msgstr "Pelge barkirî."
-
-#: ../ps/ps-document.c:1074
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:308
 #, c-format
-msgid "Failed to load document '%s'"
+msgid "%s, Portrait (%s)"
 msgstr ""
 
-#: ../ps/ps-document.c:1216
-msgid "Encapsulated PostScript"
-msgstr "Encapsulated PostScript"
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:315
+#, c-format
+msgid "%s, Landscape (%s)"
+msgstr ""
 
-#: ../ps/ps-document.c:1217
-msgid "PostScript"
-msgstr "PostScript"
-
-#: ../shell/eggfindbar.c:148
+#: ../shell/eggfindbar.c:157
 msgid "Search string"
-msgstr ""
+msgstr "Rêzika Lêgerînê"
 
-#: ../shell/eggfindbar.c:149
+#: ../shell/eggfindbar.c:158
 msgid "The name of the string to be found"
-msgstr ""
+msgstr "Navê rêzika ku divê were dîtin"
 
-#: ../shell/eggfindbar.c:162
+#: ../shell/eggfindbar.c:171
 msgid "Case sensitive"
-msgstr ""
+msgstr "Ji tîpên biçûk/MEZIN re bihîstyar"
 
-#: ../shell/eggfindbar.c:163
+#: ../shell/eggfindbar.c:172
 msgid "TRUE for a case sensitive search"
 msgstr ""
 
-#: ../shell/eggfindbar.c:170
+#: ../shell/eggfindbar.c:179
 msgid "Highlight color"
-msgstr ""
+msgstr "Rengê Biriqandinê"
 
-#: ../shell/eggfindbar.c:171
+#: ../shell/eggfindbar.c:180
 msgid "Color of highlight for all matches"
-msgstr ""
+msgstr "Ji bo hemû hevalbendiyan rengê nîşankirinê"
 
-#: ../shell/eggfindbar.c:177
+#: ../shell/eggfindbar.c:186
 msgid "Current color"
 msgstr "Rengê heyî"
 
-#: ../shell/eggfindbar.c:178
+#: ../shell/eggfindbar.c:187
 msgid "Color of highlight for the current match"
-msgstr ""
+msgstr "Ji bo hevalbendiya derbasdar  rengê nîşankirinê"
 
-#: ../shell/eggfindbar.c:301
-msgid "F_ind:"
-msgstr "_Bibîne:"
+#: ../shell/eggfindbar.c:320
+msgid "Find:"
+msgstr "Bibîne:"
 
-#: ../shell/eggfindbar.c:307
-msgid "_Previous"
-msgstr "_Ya berê"
+#: ../shell/eggfindbar.c:329
+msgid "Find Previous"
+msgstr "Ya Berî Wê Bibîne"
 
-#: ../shell/eggfindbar.c:311
-msgid "_Next"
-msgstr "Ya _pêş"
+#: ../shell/eggfindbar.c:332
+msgid "Find previous occurrence of the search string"
+msgstr "Cihê berê yê rêzika lêgerînê hate dîtin bibîne"
 
-#: ../shell/eggfindbar.c:325
+#: ../shell/eggfindbar.c:337
+msgid "Find Next"
+msgstr "Ya Dû re Bibîne"
+
+#: ../shell/eggfindbar.c:340
+msgid "Find next occurrence of the search string"
+msgstr "Cihê dûre yê rêzika lêgerînê lê hatiye dîtin bibîne"
+
+#: ../shell/eggfindbar.c:348
 msgid "C_ase Sensitive"
+msgstr "Rewşa_histiyar"
+
+#: ../shell/eggfindbar.c:351
+msgid "Toggle case sensitive search"
 msgstr ""
 
-#: ../shell/ev-document-types.c:60
-msgid "Unknown MIME Type"
-msgstr ""
-
-#: ../shell/ev-document-types.c:71
-#, c-format
-msgid "Unhandled MIME type: '%s'"
-msgstr ""
-
-#: ../shell/ev-document-types.c:133
-msgid "All Documents"
-msgstr "Hemû Pelge"
-
-#: ../shell/ev-document-types.c:141
-msgid "PostScript Documents"
-msgstr "Pelgeyên PostScript"
-
-#: ../shell/ev-document-types.c:149
-msgid "PDF Documents"
-msgstr "Pelgeyên PDF"
-
-#: ../shell/ev-document-types.c:158
-msgid "Images"
-msgstr "Wêne"
-
-#: ../shell/ev-document-types.c:167
-msgid "DVI Documents"
-msgstr "Pelgeyên DVI"
-
-#: ../shell/ev-document-types.c:177
-msgid "Djvu Documents"
-msgstr "Pelgeyên Djvu"
-
-#: ../shell/ev-document-types.c:185
-msgid "All Files"
-msgstr "Hemû Pelge"
-
-#: ../shell/ev-page-action.c:168
+#: ../shell/ev-page-action.c:76
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d ji %d)"
 
-#: ../shell/ev-page-action.c:170
+#: ../shell/ev-page-action.c:78
 #, c-format
 msgid "of %d"
 msgstr "ji %d"
 
-#: ../shell/ev-password.c:88
-msgid "Unable to find glade file"
-msgstr ""
-
-#: ../shell/ev-password.c:90
-#, c-format
-msgid ""
-"The glade file, %s, cannot be found.  Please check that your installation is "
-"complete."
-msgstr ""
-
-#: ../shell/ev-password.c:104
+#: ../shell/ev-password.c:83
 msgid "Password required"
 msgstr "Şîfre pêwîste e"
 
-#: ../shell/ev-password.c:105
+#: ../shell/ev-password.c:84
 #, c-format
-msgid ""
-"The document <i>%s</i> is locked and requires a password before it can be "
-"opened."
-msgstr ""
+msgid "The document “%s” is locked and requires a password before it can be opened."
+msgstr "Belgeya \"%s\" quflekirî ye û ji bo were vekirin şîfre pêwist e."
 
-#: ../shell/ev-password.c:142
+#: ../shell/ev-password.c:149
+msgid "Enter password"
+msgstr "Şîfreyê binivîse"
+
+#: ../shell/ev-password.c:252
+#, c-format
+msgid "Password for document %s"
+msgstr "Ji bo belgeya %s şîfre"
+
+#: ../shell/ev-password.c:334
 msgid "Incorrect password"
-msgstr ""
+msgstr "Şîfreya Nederbasdar"
 
 #: ../shell/ev-password-view.c:111
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
-msgstr ""
+msgid "This document is locked and can only be read by entering the correct password."
+msgstr "Ev belge quflekirî ye û heke şîfreya rasteqîn were nivîsîn encax dikare were xwendin."
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
-msgstr ""
+msgstr "_Qufleya Belgeyê Rake"
 
 #: ../shell/ev-properties-dialog.c:61
 msgid "Properties"
-msgstr "Taybetî"
+msgstr "Taybetmendî"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:94
 msgid "General"
 msgstr "Giştî"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:104
 msgid "Fonts"
 msgstr "Cureyên nivîsê"
 
-#: ../shell/ev-properties-fonts.c:123
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "Cureyê nivîsê"
 
-#: ../shell/ev-properties-fonts.c:134
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
-msgstr ""
+msgstr "Agahiya curetîpan têne stendin... %3d%%"
 
-#: ../shell/ev-sidebar-links.c:242
+#: ../shell/ev-sidebar-attachments.c:663
+msgid "Attachments"
+msgstr "Pêvek"
+
+#: ../shell/ev-sidebar-links.c:266
+#: ../shell/ev-view.c:2823
 msgid "Loading..."
-msgstr "Bar dike..."
+msgstr "Tê bar kirin..."
 
-#: ../shell/ev-sidebar-links.c:304
+#: ../shell/ev-sidebar-links.c:342
 msgid "Print..."
-msgstr "Cap..."
+msgstr "Çap..."
 
-#: ../shell/ev-sidebar-links.c:657
+#: ../shell/ev-sidebar-links.c:714
 msgid "Index"
-msgstr ""
+msgstr "Pêrist"
 
-#: ../shell/ev-sidebar-thumbnails.c:669
+#: ../shell/ev-sidebar-thumbnails.c:724
 msgid "Thumbnails"
+msgstr "Wêneyên biçûk"
+
+#: ../shell/ev-view-accessible.c:42
+msgid "Scroll Up"
+msgstr "Bişemitîne Jor"
+
+#: ../shell/ev-view-accessible.c:43
+msgid "Scroll Down"
+msgstr "Bişemitîne Jêr"
+
+#: ../shell/ev-view-accessible.c:49
+msgid "Scroll View Up"
 msgstr ""
 
-#: ../shell/ev-view.c:1094
+#: ../shell/ev-view-accessible.c:50
+msgid "Scroll View Down"
+msgstr ""
+
+#: ../shell/ev-view-accessible.c:536
+msgid "Document View"
+msgstr "Dîtina Belgeyê"
+
+#: ../shell/ev-view.c:1414
+msgid "Go to first page"
+msgstr "Biçe rûpelê pêşîn"
+
+#: ../shell/ev-view.c:1416
+msgid "Go to previous page"
+msgstr "Biçe rûpelê berê"
+
+#: ../shell/ev-view.c:1418
+msgid "Go to next page"
+msgstr "Biçe rûpelê dû re"
+
+#: ../shell/ev-view.c:1420
+msgid "Go to last page"
+msgstr "Biçe rûpelê dawîn"
+
+#: ../shell/ev-view.c:1422
+msgid "Go to page"
+msgstr "Biçe rûpel"
+
+#: ../shell/ev-view.c:1424
+msgid "Find"
+msgstr "Bibîne"
+
+#: ../shell/ev-view.c:1451
 #, c-format
 msgid "Go to page %s"
+msgstr "Biçe rûpelê %s"
+
+#: ../shell/ev-view.c:1456
+#, c-format
+msgid "Go to %s on file “%s”"
+msgstr "Here %s di pelê “%s”"
+
+#: ../shell/ev-view.c:1459
+#, c-format
+msgid "Go to file “%s”"
+msgstr "Biçe pelê \"%s\""
+
+#: ../shell/ev-view.c:1468
+#, c-format
+msgid "Launch %s"
+msgstr "%s bide destpêkirin"
+
+#: ../shell/ev-view.c:1858
+msgid "End of presentation. Press Escape to exit."
 msgstr ""
+
+#: ../shell/ev-view.c:2536
+msgid "Jump to page:"
+msgstr "Biçe rûpel:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:2750
+#: ../shell/ev-view.c:4153
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d di vê rûpelê de hatiye dîtin"
+msgstr[1] "%d di vê rûpelê de hatine dîtin"
 
-#: ../shell/ev-view.c:2760
-msgid "Not found"
-msgstr "Nehat dîtin"
-
-#: ../shell/ev-view.c:2762
+#: ../shell/ev-view.c:4162
 #, c-format
 msgid "%3d%% remaining to search"
-msgstr ""
+msgstr "%3d%% lêgerînê bibîr dixe"
 
-#: ../shell/ev-window.c:555
+#: ../shell/ev-window.c:735
+#, c-format
+msgid "Page %s - %s"
+msgstr "Rûpela %s - %s"
+
+#: ../shell/ev-window.c:737
+#, c-format
+msgid "Page %s"
+msgstr "Rûpela %s"
+
+#: ../shell/ev-window.c:1314
 msgid "Unable to open document"
-msgstr ""
+msgstr "Belge nehate vekirin"
 
-#: ../shell/ev-window.c:602
-msgid "Document Viewer - Password Required"
-msgstr ""
-
-#: ../shell/ev-window.c:604
-#, c-format
-msgid "%s - Password Required"
-msgstr ""
-
-#: ../shell/ev-window.c:739 ../shell/ev-window.c:1067
-msgid "Loading document. Please wait"
-msgstr ""
-
-#: ../shell/ev-window.c:1078
+#: ../shell/ev-window.c:1476
 msgid "Open Document"
-msgstr "Pelgeyê Veke"
+msgstr "Belgeyê Veke"
 
-#: ../shell/ev-window.c:1218
+#: ../shell/ev-window.c:1531
+#, fuzzy, c-format
+msgid "Couldn't create symlink “%s”: %s"
+msgstr "Pêveka \"%s\" nehate tomarkirin: %s"
+
+#: ../shell/ev-window.c:1560
+msgid "Cannot open a copy."
+msgstr "Vekirina pelekî serneket."
+
+#: ../shell/ev-window.c:1843
+#, fuzzy, c-format
+msgid "Failed to create file “%s”: %s"
+msgstr "Barkirina belgeya \"%s\" bi ser neket"
+
+#: ../shell/ev-window.c:1904
 #, c-format
-msgid "The file could not be saved as \"%s\"."
-msgstr ""
+msgid "The file could not be saved as “%s”."
+msgstr "Pel wekî \"%s\" nehate tomarkirin."
 
-#: ../shell/ev-window.c:1243
+#: ../shell/ev-window.c:1925
 msgid "Save a Copy"
-msgstr "Kopyekê tomar bike"
+msgstr "Kopiyekê Tomar bike"
 
-#: ../shell/ev-window.c:1424
+#: ../shell/ev-window.c:2006
+msgid "Failed to print document"
+msgstr "Dema belge dihate çapkirin bi ser neket"
+
+#: ../shell/ev-window.c:2125
+#: ../shell/ev-window.c:2310
+msgid "Printing is not supported on this printer."
+msgstr "Çapkirina di vê çaperê de nayê destekkirin."
+
+#: ../shell/ev-window.c:2235
+#: ../shell/ev-window.c:2361
 msgid "Print"
 msgstr "Çap"
 
-#: ../shell/ev-window.c:1428
+#: ../shell/ev-window.c:2300
+msgid "Generating PDF is not supported"
+msgstr "Pêkhatina PDF nayê destekkirin"
+
+#: ../shell/ev-window.c:2312
+#, c-format
+msgid "You were trying to print to a printer using the “%s” driver. This program requires a PostScript printer driver."
+msgstr "Tu dixwazî ajokerê \"%s\" bikar bîne û ji çaperê deranekê bistîne. Ev bername pêdiviya wê ji ajokera PostSkrîpt heye"
+
+#: ../shell/ev-window.c:2370
 msgid "Pages"
 msgstr "Rûpel"
 
-#: ../shell/ev-window.c:1456
-msgid "Generating PDF is not supported"
-msgstr ""
-
-#: ../shell/ev-window.c:1467
-msgid "Printing is not supported on this printer."
-msgstr ""
-
-#: ../shell/ev-window.c:1470
-#, c-format
-msgid ""
-"You were trying to print to a printer using the \"%s\" driver. This program "
-"requires a PostScript printer driver."
-msgstr ""
-
-#: ../shell/ev-window.c:1542
-msgid "The \"Find\" feature will not work with this document"
-msgstr ""
-
-#: ../shell/ev-window.c:1544
-msgid "Searching for text is only supported for PDF documents."
-msgstr ""
-
 #. Toolbar-only
-#: ../shell/ev-window.c:1779 ../shell/ev-window.c:2953
+#: ../shell/ev-window.c:2737
+#: ../shell/ev-window.c:4132
 msgid "Leave Fullscreen"
-msgstr ""
+msgstr "Ji Dîmender Tije Derkeve"
 
-#: ../shell/ev-window.c:2086
-msgid "Toolbar editor"
-msgstr ""
+#: ../shell/ev-window.c:3109
+msgid "Toolbar Editor"
+msgstr "Sererastkerê Darikê Amûran"
 
-#: ../shell/ev-window.c:2455
-#, c-format
+#: ../shell/ev-window.c:3480
+#, fuzzy, c-format
 msgid ""
-"PostScript and PDF File Viewer.\n"
+"Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
+"Nîşanderkê Pelên PostSkrîpt û PDF\n"
+"Popplerên têne bikaranîn %s (%s)"
 
-#: ../shell/ev-window.c:2478
-msgid ""
-"Evince is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
+#: ../shell/ev-window.c:3508
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
 msgstr ""
 
-#: ../shell/ev-window.c:2482
-msgid ""
-"Evince is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
+#: ../shell/ev-window.c:3512
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 msgstr ""
 
-#: ../shell/ev-window.c:2486
-msgid ""
-"You should have received a copy of the GNU General Public License\n"
-"along with Evince; if not, write to the Free Software Foundation, Inc.,\n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+#: ../shell/ev-window.c:3516
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 
-#: ../shell/ev-window.c:2510 ../shell/main.c:259
+#: ../shell/ev-window.c:3540
+#: ../shell/main.c:284
 msgid "Evince"
-msgstr ""
+msgstr "Evince"
 
-#: ../shell/ev-window.c:2513
-msgid "© 1996-2005 The Evince authors"
-msgstr ""
+#: ../shell/ev-window.c:3543
+msgid "© 1996-2007 The Evince authors"
+msgstr "© 1996-2007 Nivîskarên Evince"
 
-#: ../shell/ev-window.c:2519
+#: ../shell/ev-window.c:3549
 msgid "translator-credits"
-msgstr ""
+msgstr "Erdal Ronahi <erdal.ronahi@gmail.com>"
 
-#: ../shell/ev-window.c:2872
+#: ../shell/ev-window.c:4049
 msgid "_File"
-msgstr "_Dosya"
+msgstr "_Pel"
 
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:4050
 msgid "_Edit"
 msgstr "_Biguherîne"
 
-#: ../shell/ev-window.c:2874
+#: ../shell/ev-window.c:4051
 msgid "_View"
 msgstr "_Dîtin"
 
-#: ../shell/ev-window.c:2875
+#: ../shell/ev-window.c:4052
 msgid "_Go"
 msgstr "_Here"
 
-#: ../shell/ev-window.c:2876
+#: ../shell/ev-window.c:4053
 msgid "_Help"
 msgstr "_Alîkarî"
 
 #. File menu
-#: ../shell/ev-window.c:2879
+#: ../shell/ev-window.c:4056
+#: ../shell/ev-window.c:4228
 msgid "_Open..."
 msgstr "_Veke..."
 
-#: ../shell/ev-window.c:2880
+#: ../shell/ev-window.c:4057
 msgid "Open an existing document"
-msgstr "Pelgeyeke heyî veke"
+msgstr "Belgeyeke heyî veke"
 
-#: ../shell/ev-window.c:2882
+#: ../shell/ev-window.c:4059
+msgid "Open a _Copy"
+msgstr "_Kopiyekê Veke"
+
+#: ../shell/ev-window.c:4060
+#, fuzzy
+msgid "Open a copy of the current document in a new window"
+msgstr "Belgeya derbasdar bila paceyê tije bike"
+
+#: ../shell/ev-window.c:4062
+#: ../shell/ev-window.c:4230
 msgid "_Save a Copy..."
+msgstr "Kopiyekê _Tomar Bike..."
+
+#: ../shell/ev-window.c:4063
+msgid "Save a copy of the current document"
 msgstr ""
 
-#: ../shell/ev-window.c:2883
-msgid "Save the current document with a new filename"
+#: ../shell/ev-window.c:4065
+msgid "Print Set_up..."
+msgstr "_Veavakirina Çapê..."
+
+#: ../shell/ev-window.c:4066
+msgid "Setup the page settings for printing"
 msgstr ""
 
-#: ../shell/ev-window.c:2885
+#: ../shell/ev-window.c:4068
 msgid "_Print..."
 msgstr "_Çap..."
 
-#: ../shell/ev-window.c:2886
+#: ../shell/ev-window.c:4069
 msgid "Print this document"
-msgstr ""
+msgstr "Vê belgeyê çap bike"
 
-#: ../shell/ev-window.c:2888
+#: ../shell/ev-window.c:4071
 msgid "P_roperties"
-msgstr ""
+msgstr "Ta_ybetmentî"
 
-#: ../shell/ev-window.c:2889
-msgid "View the properties of this document"
-msgstr ""
-
-#: ../shell/ev-window.c:2892
-msgid "Close this window"
-msgstr ""
-
-#: ../shell/ev-window.c:2897
-msgid "Copy text from the document"
-msgstr ""
-
-#: ../shell/ev-window.c:2899
+#: ../shell/ev-window.c:4080
+#: ../shell/ev-window.c:4082
 msgid "Select _All"
 msgstr "Hemûyî _Hilbijêre"
 
-#: ../shell/ev-window.c:2900
-msgid "Select the entire page"
-msgstr ""
+#: ../shell/ev-window.c:4085
+msgid "_Find..."
+msgstr "_Bibîne..."
 
-#: ../shell/ev-window.c:2903 ../shell/ev-window.c:2961
+#: ../shell/ev-window.c:4086
 msgid "Find a word or phrase in the document"
-msgstr ""
+msgstr "Di hundirê dokumanê de li pey an jî biwêjan bigere"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:4088
 msgid "Find Ne_xt"
-msgstr ""
+msgstr "Ya _piştr e bibîne"
 
-#: ../shell/ev-window.c:2906
-msgid "Find next occurrence of the word or phrase"
-msgstr ""
+#: ../shell/ev-window.c:4090
+msgid "Find Pre_vious"
+msgstr "Ya _berê bibîne"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:4092
 msgid "T_oolbar"
-msgstr ""
+msgstr "_Darika amûran"
 
-#: ../shell/ev-window.c:2909
-msgid "Customize the toolbar"
-msgstr ""
-
-#: ../shell/ev-window.c:2911
+#: ../shell/ev-window.c:4094
 msgid "Rotate _Left"
-msgstr ""
+msgstr "Bizivirîne _Çepê"
 
-#: ../shell/ev-window.c:2912
-msgid "Rotate the document to the left"
-msgstr ""
-
-#: ../shell/ev-window.c:2914
+#: ../shell/ev-window.c:4096
 msgid "Rotate _Right"
-msgstr ""
+msgstr "Bizivirîne _Rastê"
 
-#: ../shell/ev-window.c:2915
-msgid "Rotate the document to the right"
-msgstr ""
-
-#: ../shell/ev-window.c:2920 ../shell/ev-window.c:2982
-#: ../shell/ev-window.c:2985 ../shell/ev-window.c:3000
+#: ../shell/ev-window.c:4101
 msgid "Enlarge the document"
-msgstr ""
+msgstr "Belgeyê fireh bike"
 
-#: ../shell/ev-window.c:2923 ../shell/ev-window.c:2988
-#: ../shell/ev-window.c:3003
+#: ../shell/ev-window.c:4104
 msgid "Shrink the document"
-msgstr ""
+msgstr "Belgeyê teng bike"
 
-#: ../shell/ev-window.c:2925
+#: ../shell/ev-window.c:4106
 msgid "_Reload"
-msgstr ""
+msgstr "_Nû Bike"
 
-#: ../shell/ev-window.c:2926
+#: ../shell/ev-window.c:4107
 msgid "Reload the document"
-msgstr ""
+msgstr "Belgeyê ji nû ve bar bike"
 
 #. Go menu
-#: ../shell/ev-window.c:2930
+#: ../shell/ev-window.c:4111
 msgid "_Previous Page"
-msgstr ""
+msgstr "Rûpelê _Berê"
 
-#: ../shell/ev-window.c:2931
+#: ../shell/ev-window.c:4112
 msgid "Go to the previous page"
-msgstr ""
+msgstr "Biçe rûpelê berê"
 
-#: ../shell/ev-window.c:2933
+#: ../shell/ev-window.c:4114
 msgid "_Next Page"
-msgstr ""
+msgstr "Rûpelê _Dû re"
 
-#: ../shell/ev-window.c:2934
+#: ../shell/ev-window.c:4115
 msgid "Go to the next page"
-msgstr ""
+msgstr "Biçe rûpelê pişt re"
 
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:4117
 msgid "_First Page"
-msgstr ""
+msgstr "Rûpelê  _Pêşîn"
 
-#: ../shell/ev-window.c:2937
+#: ../shell/ev-window.c:4118
 msgid "Go to the first page"
-msgstr ""
+msgstr "Biçe rûpelê pêşîn"
 
-#: ../shell/ev-window.c:2939
+#: ../shell/ev-window.c:4120
 msgid "_Last Page"
-msgstr ""
+msgstr "Rûpelê _Dawîn"
 
-#: ../shell/ev-window.c:2940
+#: ../shell/ev-window.c:4121
 msgid "Go to the last page"
-msgstr ""
+msgstr "Here rûpela dawî"
 
 #. Help menu
-#: ../shell/ev-window.c:2944
+#: ../shell/ev-window.c:4125
 msgid "_Contents"
 msgstr "_Naverok"
 
-#: ../shell/ev-window.c:2945
-msgid "Display help for the viewer application"
-msgstr ""
-
-#: ../shell/ev-window.c:2948
+#: ../shell/ev-window.c:4128
 msgid "_About"
 msgstr "_Der barê"
 
-#: ../shell/ev-window.c:2949
-msgid "Display credits for the document viewer creators"
-msgstr ""
-
-#: ../shell/ev-window.c:2954
+#: ../shell/ev-window.c:4133
 msgid "Leave fullscreen mode"
-msgstr ""
-
-#: ../shell/ev-window.c:2964 ../shell/ev-window.c:2970
-#: ../shell/ev-window.c:2979
-msgid "Scroll one page forward"
-msgstr ""
-
-#: ../shell/ev-window.c:2967 ../shell/ev-window.c:2973
-#: ../shell/ev-window.c:2976
-msgid "Scroll one page backward"
-msgstr ""
-
-#: ../shell/ev-window.c:2991
-msgid "Focus the page selector"
-msgstr ""
-
-#: ../shell/ev-window.c:2994
-msgid "Go ten pages backward"
-msgstr ""
-
-#: ../shell/ev-window.c:2997
-msgid "Go ten pages forward"
-msgstr ""
+msgstr "Moda dîmender tije biterikîne"
 
 #. View Menu
-#: ../shell/ev-window.c:3010
+#: ../shell/ev-window.c:4184
 msgid "_Toolbar"
-msgstr ""
+msgstr "_Darikê Amûran"
 
-#: ../shell/ev-window.c:3011
+#: ../shell/ev-window.c:4185
 msgid "Show or hide the toolbar"
 msgstr "Darika amûran nîşan bide an veşêre"
 
-#: ../shell/ev-window.c:3013
-msgid "_Statusbar"
-msgstr ""
-
-#: ../shell/ev-window.c:3014
-msgid "Show or hide the statusbar"
-msgstr ""
-
-#: ../shell/ev-window.c:3016
+#: ../shell/ev-window.c:4187
 msgid "Side _Pane"
-msgstr ""
+msgstr "_Panela Kêlekê"
 
-#: ../shell/ev-window.c:3017
+#: ../shell/ev-window.c:4188
 msgid "Show or hide the side pane"
-msgstr ""
+msgstr "Panela kêlekê nîşan bide yan jî veşêre"
 
-#: ../shell/ev-window.c:3019
+#: ../shell/ev-window.c:4190
 msgid "_Continuous"
-msgstr ""
+msgstr "_Li dû hev"
 
-#: ../shell/ev-window.c:3020
+#: ../shell/ev-window.c:4191
 msgid "Show the entire document"
-msgstr ""
+msgstr "Tevî belgeyê nîşan bide"
 
-#: ../shell/ev-window.c:3022
+#: ../shell/ev-window.c:4193
 msgid "_Dual"
-msgstr ""
+msgstr "_Cot"
 
-#: ../shell/ev-window.c:3023
+#: ../shell/ev-window.c:4194
 msgid "Show two pages at once"
-msgstr ""
+msgstr "Bi carekê re du rûpelan nîşan bide"
 
-#: ../shell/ev-window.c:3025
+#: ../shell/ev-window.c:4196
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_Dîmender tijî"
 
-#: ../shell/ev-window.c:3026
+#: ../shell/ev-window.c:4197
 msgid "Expand the window to fill the screen"
-msgstr ""
+msgstr "Bi qasî dîmenderê tije dike paceyê fireh bike"
 
-#: ../shell/ev-window.c:3028
+#: ../shell/ev-window.c:4199
 msgid "_Presentation"
-msgstr ""
+msgstr "_Pêşkeşî"
 
-#: ../shell/ev-window.c:3029
+#: ../shell/ev-window.c:4200
 msgid "Run document as a presentation"
-msgstr ""
+msgstr "Belgeyê wekî pêşkeşî bide xebitandin"
 
-#: ../shell/ev-window.c:3031
+#: ../shell/ev-window.c:4202
 msgid "_Best Fit"
-msgstr ""
+msgstr "_Yek Rûpel"
 
-#: ../shell/ev-window.c:3032
+#: ../shell/ev-window.c:4203
 msgid "Make the current document fill the window"
-msgstr ""
+msgstr "Belgeya derbasdar bila paceyê tije bike"
 
-#: ../shell/ev-window.c:3034
+#: ../shell/ev-window.c:4205
 msgid "Fit Page _Width"
-msgstr ""
+msgstr "_Firehiya Rûpelê"
 
-#: ../shell/ev-window.c:3035
+#: ../shell/ev-window.c:4206
 msgid "Make the current document fill the window width"
 msgstr ""
 
-#: ../shell/ev-window.c:3094
+#. Links
+#: ../shell/ev-window.c:4213
+msgid "_Open Link"
+msgstr "Girêdanê veke"
+
+#: ../shell/ev-window.c:4215
+msgid "_Go To"
+msgstr "_Biçe"
+
+#: ../shell/ev-window.c:4217
+msgid "Open in New _Window"
+msgstr "Di _Paceya Nû de veke"
+
+#: ../shell/ev-window.c:4219
+msgid "_Copy Link Address"
+msgstr "Navnîşana Girêdanê _Ji Ber Bigire"
+
+#: ../shell/ev-window.c:4221
+msgid "_Save Image As..."
+msgstr "Wêneyî Cuda _Tomar Bike..."
+
+#: ../shell/ev-window.c:4223
+msgid "Copy _Image"
+msgstr ""
+
+#: ../shell/ev-window.c:4262
 msgid "Page"
 msgstr "Rûpel"
 
-#: ../shell/ev-window.c:3095
+#: ../shell/ev-window.c:4263
 msgid "Select Page"
-msgstr ""
+msgstr "Rûpel Hilbijêre"
 
-#: ../shell/ev-window.c:3107
+#: ../shell/ev-window.c:4273
 msgid "Zoom"
 msgstr "Mezinahî"
 
-#: ../shell/ev-window.c:3109
+#: ../shell/ev-window.c:4275
 msgid "Adjust the zoom level"
+msgstr "Asta nêzîkbûnê mîheng bike"
+
+#: ../shell/ev-window.c:4285
+msgid "Navigation"
+msgstr ""
+
+#: ../shell/ev-window.c:4287
+msgid "Back"
+msgstr "Paşve"
+
+#: ../shell/ev-window.c:4289
+msgid "Move across visited pages"
 msgstr ""
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3125
+#: ../shell/ev-window.c:4305
 msgid "Previous"
-msgstr ""
+msgstr "Paş"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3131
+#: ../shell/ev-window.c:4310
 msgid "Next"
-msgstr ""
+msgstr "Pêş"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3135
+#: ../shell/ev-window.c:4314
 msgid "Zoom In"
-msgstr ""
+msgstr "Nêzîk bike"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3140
+#: ../shell/ev-window.c:4318
 msgid "Zoom Out"
-msgstr ""
+msgstr "Dûr bibe"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3150
+#: ../shell/ev-window.c:4326
 msgid "Fit Width"
 msgstr ""
 
-#: ../shell/main.c:50
+#: ../shell/ev-window.c:4638
+#, fuzzy
+msgid "The image could not be saved."
+msgstr "Pêvek nehate tomarkirin"
+
+#: ../shell/ev-window.c:4657
+msgid "Save Image"
+msgstr "Wêneyî tomar bike"
+
+#: ../shell/ev-window.c:4712
+msgid "Unable to open attachment"
+msgstr "Pêvek nehate vekirin"
+
+#: ../shell/ev-window.c:4759
+msgid "The attachment could not be saved."
+msgstr "Pêvek nehate tomarkirin"
+
+#: ../shell/ev-window.c:4783
+msgid "Save Attachment"
+msgstr "Pêvekê Tomar bike"
+
+#: ../shell/ev-window-title.c:141
+#, c-format
+msgid "%s - Password Required"
+msgstr "%s - Şîfre Pêwist e"
+
+#: ../shell/main.c:53
 msgid "The page of the document to display."
-msgstr ""
+msgstr "Rûpelê belgeya ku wê were nîşandan."
 
-#: ../shell/main.c:50
+#: ../shell/main.c:53
 msgid "PAGE"
-msgstr ""
+msgstr "RÛPEL"
 
-#: ../shell/main.c:286
+#: ../shell/main.c:54
+msgid "Run evince in fullscreen mode"
+msgstr "Evince di moda dîmender tije de bixebitîne"
+
+#: ../shell/main.c:55
+msgid "Run evince in presentation mode"
+msgstr "Evince di moda pêşkêşiyê de bixebitîne"
+
+#: ../shell/main.c:56
+msgid "Run evince as a previewer"
+msgstr "Evince wekî pêşdîtinê bixebitîne"
+
+#: ../shell/main.c:58
+msgid "[FILE...]"
+msgstr "[PEL...]"
+
+#: ../shell/main.c:269
+msgid "GNOME Document Viewer"
+msgstr "Nîşanderê Belgeyan yê GNOME"
+
+#: ../shell/main.c:310
 msgid "Evince Document Viewer"
-msgstr ""
+msgstr "Nîşanderê Belgeyên Evince"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid ""
-"Boolean options available, true enables thumbnailing and false disables the "
-"creation of new thumbnails"
+msgid "Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails"
 msgstr ""
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
-msgstr ""
+msgstr "Çalakiya wêneyên biçûk yên Pelên PDF"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
 msgid "Thumbnail command for PDF Documents"
-msgstr ""
+msgstr "Ji bo belgehên PDF fermana wêneyên biçûk"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid ""
-"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
-"thumbnailer documentation for more information."
-msgstr ""
+msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
+msgstr "Ji bo wênekerê biçûk yê Pelê PDF parametreyên zêdek yên fermanên derbasdar. Ji bo agahiyên berfireh li belgeya wênekerên biçûk yên nautilusê binihêre."
+
+#~ msgid "No document loaded."
+#~ msgstr "Tu belge nebarkirî."
+#~ msgid "Broken pipe."
+#~ msgstr "Lûleya şikestî."
+#~ msgid "Error while decompressing file “%s”:\n"
+#~ msgstr "Dema tengkirina pelê \"%s\" dihate vekirin çewtî derket:\n"
+#~ msgid "File is not readable."
+#~ msgstr "Pel nayê xwedin."
+#~ msgid "Document loaded."
+#~ msgstr "Belge hatiye barkirin."
+#~ msgid "_Remove Toolbar"
+#~ msgstr "Darika amûran jê _bibe"
+#~ msgid "*"
+#~ msgstr "*"
+#~ msgid "F_ind:"
+#~ msgstr "_Bibîne:"
+#~ msgid "_Previous"
+#~ msgstr "_Ya berê"
+#~ msgid "_Next"
+#~ msgstr "Ya _pêş"
+#~ msgid "Not found"
+#~ msgstr "Nehat dîtin"
+
