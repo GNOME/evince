@@ -1,3 +1,10 @@
+2007-03-10  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-sidebar-thumbnails.c: (adjustment_changed_cb):
+
+	Do not render thumbnails when sidebar thumbnail page is not visible
+	at startup. Fixes bug #416447. 
+
 2007-03-07  Christian Kirbach  <Christian.Kirbach@googlemail.com>
 
 	* data/evince.desktop.in.in:

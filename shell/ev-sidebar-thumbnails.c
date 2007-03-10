@@ -354,14 +354,11 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 		return;
 	}
 
-	if (path == NULL)
-		path = gtk_tree_path_new_first ();
-	if (path2 == NULL)
-		path2 = gtk_tree_path_new_from_indices (priv->n_pages,
-							-1);
-	update_visible_range (sidebar_thumbnails,
-			      gtk_tree_path_get_indices (path)[0],
-			      gtk_tree_path_get_indices (path2)[0]);
+	if (path && path2) {
+		update_visible_range (sidebar_thumbnails,
+				      gtk_tree_path_get_indices (path)[0],
+				      gtk_tree_path_get_indices (path2)[0]);
+	}
 
 	gtk_tree_path_free (path);
 	gtk_tree_path_free (path2);
