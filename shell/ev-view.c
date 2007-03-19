@@ -4743,8 +4743,10 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 	}
 
 	text = get_selected_text (ev_view);
-	gtk_selection_data_set_text (selection_data, text, -1);
-	g_free (text);
+	if (text) {
+		gtk_selection_data_set_text (selection_data, text, -1);
+		g_free (text);
+	}
 }
 
 static void
