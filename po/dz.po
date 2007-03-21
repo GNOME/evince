@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.dz\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-14 01:04+0000\n"
-"PO-Revision-Date: 2007-01-30 00:24+0530\n"
-"Last-Translator: dorji tashi <dorjee_doss@hotmail.com>\n"
+"POT-Creation-Date: 2007-02-14 11:19+0000\n"
+"PO-Revision-Date: 2007-03-20 11:25+0530\n"
+"Last-Translator: sonam pelden <sonaa_peldn@yahoo.com>\n"
 "Language-Team: DZONGKHA <pgeyleg@dit.gov.bt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +24,10 @@ msgstr "ཡིག་སྣོད་ངན་ཅན་ལུ་གྱུར་ན
 msgid "No images found in archive %s"
 msgstr "ཡིག་མཛོད་%sནང་གཟུགས་བརྙན་མ་མཐོང་།"
 
+#: ../backend/djvu/djvu-document.c:161
+msgid "The document is composed by several files. One or more of such files cannot be accessed."
+msgstr "ཡིག་ཆ་འདི་ཡིག་སྣོད་ལེ་ཤ་ཅིག་གིས་བརྩམ་ནུག།  གཅིག་ཡང་ན་ལེ་ཤ་ཡོད་པའི་ཡིག་སྣོད་ཚུ་འཛུལ་སྤྱོད་འབད་མི་ཚུགས།"
+
 #: ../backend/dvi/dvi-document.c:91
 msgid "File not available"
 msgstr "ཡིག་སྣོད་འཐོབ་མི་ཚུགས་པས།"
@@ -31,406 +35,6 @@ msgstr "ཡིག་སྣོད་འཐོབ་མི་ཚུགས་པས
 #: ../backend/dvi/dvi-document.c:106
 msgid "DVI document has incorrect format"
 msgstr "ཌིི་ཝི་ཨའི་ཡིག་ཆ་དེ་ལུ་ བདེན་མེད་རྩ་སྒྲིག་འདུག"
-
-#. this is EOF
-#: ../backend/dvi/mdvi-lib/dviread.c:208
-msgid "unexpected EOF\n"
-msgstr "རེ་འདུན་མེད་པའི་ ཨི་ཨོ་ཨེཕ\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:429
-#, c-format
-msgid "could not load font `%s'\n"
-msgstr "ཡིག་གཟུགས་`%s' མངོན་གསལ་འབད་མ་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:483
-#, c-format
-msgid "could not reload `%s'\n"
-msgstr "`%s' ལོག་མངོན་གསལ་འབད་མ་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:710
-#, c-format
-msgid "%s: unsupported DVI format (version %u)\n"
-msgstr "%s:རྒྱབ་སྐྱོར་མེད་པའི་ ཌི་ཝི་ཨའི་ རྩ་སྒྲིག་(ཐོན་རིམ་ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:870
-msgid "no pages selected\n"
-msgstr "ཤོག་ལེབ་སེལ་འཐུ་འབད་འབདཝ་མིན་འདུག\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:903
-#, c-format
-msgid "%s: File corrupted, or not a DVI file\n"
-msgstr "%s:ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་ ཡང་ན་ ཌི་ཝི་ཨའི་ཡིག་སྣོད་མེན་མི་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:984
-#, c-format
-msgid "%s: vf macro had errors\n"
-msgstr "%s: ཝི་ཨེཕ་ མེཀརོ་ལུ་འཛོལ་བ་བྱུང་ཡོདཔ་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:987
-#, c-format
-msgid "%s: stack not empty after vf macro\n"
-msgstr "%s: ཝི་ཨེཕ་མེཀརོ་གི་ཤུལ་ལས་ བརྩེགས་ཕུང་སྣོངམ་མིན་འདུག་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1012
-#, c-format
-msgid "%s: could not reopen file (%s)\n"
-msgstr "%s: ཡིག་སྣོད་(%s)ལོག་ཁ་ཕྱེ་མི་ཚུགས་པས་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1029
-#, c-format
-msgid "%s: page %d out of range\n"
-msgstr "%s: ཤོག་ལེབ་%d ཁྱབ་ཚད་ལས་འགལ་སོང་ནུག\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1036
-#, c-format
-msgid "%s: bad offset at page %d\n"
-msgstr "%s: ཤོག་ལེབ་%d པར་ལེན་བྱང་ཉེས་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1099
-msgid "stack not empty at end of page\n"
-msgstr "ཤོགལེབ་དེ་གི་མཇུག་ལུ་ བརྩེགས་ཕུང་སྟོངམ་མིན་འདུག\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1286
-msgid "no default font set yet\n"
-msgstr "སྔོན་སྒྲིག་ཡིག་གཟུགས་གཞི་སྒྲིག་ ད་ལྟོ་ཡང་མེད་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1296
-#, c-format
-msgid "requested character %d does not exist in `%s'\n"
-msgstr "ཞུ་བ་འབད་ཡོད་པའི་ཡིག་འབྲུ་%d དེ་`%s'ནང་ལུ་མིན་འདུག\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1369
-msgid "enlarging stack\n"
-msgstr "བརྩེགས་ཕུང་ཆེར་བསྐྱེད་འབད་དོ་་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1387
-msgid "stack underflow\n"
-msgstr "བརྩེགས་ཕུང་ འོག་རྒྱུན་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1501
-#: ../backend/dvi/mdvi-lib/dviread.c:1523
-#, c-format
-msgid "font %d is not defined\n"
-msgstr "ཡིག་གཟུགས་%d འདི་ངེས་འཛིན་མ་འབད་བས་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1563
-#, c-format
-msgid "font %d is not defined in postamble\n"
-msgstr "ཡིག་གཟུགས་%d འདི་ པོསི་ཊེམ་བལི་ ནང་ལུ་ངེས་འཛིན་མ་འབད་བས་\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1575
-#, c-format
-msgid "unexpected opcode %d\n"
-msgstr "རེ་མདུན་མེད་པའི་ ཨོཔ་ཀོཊི་ %d\n"
-
-#: ../backend/dvi/mdvi-lib/dviread.c:1581
-#, c-format
-msgid "undefined opcode %d\n"
-msgstr "ངེས་ཛའིན་མ་འབད་བའི་ཨོཔ་ཀོཌི་%d\n"
-
-#: ../backend/dvi/mdvi-lib/font.c:471
-#, c-format
-msgid "%s: no fonts defined\n"
-msgstr "%s:ཡིག་གཟུགས་ཅིག་ཡང་ངེས་འཛིན་མ་འབད་བས་\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:589
-#, c-format
-msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
-msgstr "%s: %d:[%s] ཞུ་བ་འབད་ཡོད་པའི་ཨིན་ཀོ་ཌིང་`%s' དེ་མཉམ་ཐིག་`%s' དང་གཅིག་ཁར་མཐུན་སྒྲིག་མིན་འདུག\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:750
-#, c-format
-msgid "%s: could not load fontmap\n"
-msgstr "%s:དེ་གིས་ཡིག་གཟུགས་ས་ཁྲ་མངོན་གསལ་འབད་མི་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:764
-#, c-format
-msgid "%s: could not set as default encoding\n"
-msgstr "%s:དེ་ སྔོན་སྒྲིག་ཨེན་ཀོ་ཌིང་སྦེ་གཞི་སྒྲིག་འབད་མི་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/fontmap.c:843
-#, c-format
-msgid "encoding vector `%s' is in use\n"
-msgstr "ཨེན་ཀོ་ཌིང་མཉམ་ཐིག་`%s' འདི་ལག་ལེན་འཐབ་པའི་སྒང་ཡོད་\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:112
-#, c-format
-msgid "GF: invalid opcode %d in character %d\n"
-msgstr "GF: ཡིག་འབྲུ་%d ནང་ལུ་ ནུས་མེད་ཨོཔ་ཀོཌི་%d ཡོདཔ་ཨིན་\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:210
-#, c-format
-msgid "(gf) Character %d: invalid opcode %d\n"
-msgstr "(gf) ཡིག་འབྲུ་ %d: ནུས་མེད་ཨོཔ་ཀོཌི་ %d\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:226
-#, c-format
-msgid "(gf) character %d has an incorrect bounding box\n"
-msgstr "(gf)ཡིག་འབྲུ་%d དེ་ལུ་ བདེན་མེད་བོན་ཌིང་སྒྲོམ་ཅིག་འདུག\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:289
-#, c-format
-msgid "%s: bad checksum (expected %u, found %u)\n"
-msgstr "%s: ཅེག་སམ་བྱང་ཉེས་(རེ་མདུན་མེད་མི་%u, འཐོབ་ཡོད་མི་%u)\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:325
-#, c-format
-msgid "%s: junk in postamble\n"
-msgstr "%s:པོསི་ཊེམ་བལི་ནང་ལུ་ཡོད་མི་ མཁོ་མེད་\n"
-
-#: ../backend/dvi/mdvi-lib/gf.c:362
-#, c-format
-msgid "%s: File corrupted, or not a GF file\n"
-msgstr "%s: ཡིག་སྣོད་ངན་ཅན་ ཡང་ན་ ཇི་ཨེཕ་ཡིག་སྣོད་མེན་པས་\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:211
-#, c-format
-msgid "invalid page specification `%s'\n"
-msgstr "ནུས་མེད་ཤོག་ལེབ་གསལ་བཀོད་`%s'\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:231
-msgid "garbage after DVI page specification ignored\n"
-msgstr "ཌི་ཝི་ཨའི་ ཤོག་ལེབ་གསལ་བཀོད་ཀྱི་ཤུལ་ལས་ ཕྱགས་སྙིགས་སྣང་མེད་སྦེ་བཞག་ནུག\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:259
-msgid "more than 10 counters in page specification\n"
-msgstr "ཤོག་ལེབ་གསལ་བཀོད་ནང་གི་ གདོང་ལན་༡༠་ལས་ལྷག་པའི་\n"
-
-#: ../backend/dvi/mdvi-lib/pagesel.c:261
-msgid "garbage after TeX page specification ignored\n"
-msgstr "ཊེཀསི་ ཤོག་ལེབ་གསལ་བཀོད་ཀྱི་ཤུལ་ལས་ ཕྱགས་སྙིགས་སྣང་མེད་སྦེ་བཞག་ནུག\n"
-
-#: ../backend/dvi/mdvi-lib/paper.c:103
-#: ../backend/dvi/mdvi-lib/paper.c:110
-msgid "custom"
-msgstr "སྲོལ་སྒྲིག་"
-
-#: ../backend/dvi/mdvi-lib/pk.c:309
-msgid "Bad PK file: More bits than required\n"
-msgstr "པི་ཀེ་ཡིག་སྣོད་བྱང་ཉེས་\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:362
-#, c-format
-msgid "%s: checksum mismatch (expected %u, got %u)\n"
-msgstr "%s: ཅེག་སམ་མ་མཐུནམ(རེ་འདུད་ཡོདཔ་%u ཐོབ་ཡོདཔ་%u)\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:419
-#, c-format
-msgid "%s: unexpected preamble\n"
-msgstr "%s:རེ་མདུན་མེད་པའི་ པིརི་ཨེམ་པཱལ་\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:502
-#, c-format
-msgid "%s: unexpected end of file (no postamble)\n"
-msgstr "%s: རེ་མདུན་མེད་པའི་ཡིག་སྣོད་ཀྱི་མཇུག་(པོསི་ཨེམ་བཱལ་མེད་)\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:508
-msgid "invalid PK file! (junk in postamble)\n"
-msgstr "ནུས་མེད་ཀྱི་ པི་ཀེ་ཡིངག་སྣོད་ཡ!(པོསི་ཨེམ་བཱལ་ནང་གི་མཁོ་མེད་)\n"
-
-#: ../backend/dvi/mdvi-lib/pk.c:525
-#, c-format
-msgid "%s: File corrupted, or not a PK file\n"
-msgstr "%s:ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་ཨིནམ་དང་ ཡང་ན་ པི་ཀེ་ཡིག་སྣོད་ཅིག་མེན་\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:150
-#, c-format
-msgid "%s: malformed value for key `%s'\n"
-msgstr "%s: ལྡེ་མིག་`%s' གི་དོན་ལུ་ བཟོ་ཉེས་གྱུར་བའི་གནས་གོང་\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:161
-#, c-format
-msgid "%s: unknown key `%s' ignored\n"
-msgstr "%s:མ་ཤེས་པའི་ལྡེ་མིག་`%s' སྣང་མེད་བཞག་ཡོད་\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:166
-#, c-format
-msgid "%s: no argument for key `%s', using defaults\n"
-msgstr "%s:ལྡེ་མིག་`%s' གི་དོན་ལུ་སྒྲུབ་རྟགས་མིན་མ་བཀོད། སྔོན་སྒྲིག་ལག་ལེན་འཐབ་དོ་\n"
-
-#: ../backend/dvi/mdvi-lib/sp-epsf.c:170
-#, c-format
-msgid "%s: argument `%s' ignored for key `%s'\n"
-msgstr "%s:ལྡེ་མིག་`%s'གི་དོན་ལུ་ སྒྲུབ་རྟགས་ `%s' སྣང་མེད་བཞག་ཡོདཔ་\n"
-
-#: ../backend/dvi/mdvi-lib/special.c:242
-#, c-format
-msgid "%s: tried to pop top level layer\n"
-msgstr "%s:སྤྱི་ཏོག་གི་གནས་རིམ་གུ་ཡོད་མི་བང་རིམ་ པོཔ་འབད་ནི་ལུ་འབད་བརྩོལ་བསྐྱེད་ཅི་\n"
-
-#: ../backend/dvi/mdvi-lib/t1.c:186
-msgid "(t1) failed to reset device resolution\n"
-msgstr "(t1)ཐབས་འཕྲུལ་ཧུམ་ཆ་བསྐྱར་སྒྲིག་འབད་ནི་ལུ་ འཐུས་ཤོར་བྱུང་ནུག\n"
-
-#: ../backend/dvi/mdvi-lib/t1.c:214
-#, c-format
-msgid "%s: could not encode font\n"
-msgstr "%s: ཡིག་གཟུགས་ ཨེན་ཀོདིའབད་མ་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/t1.c:452
-#, c-format
-msgid "(t1) unsupported bitmap pad size %d\n"
-msgstr "(t1) རྒྱབ་སྐྱོར་མེད་པའི་ བིཊི་མེཔ་ པེཌི་གི་ཚད་%d\n"
-
-#: ../backend/dvi/mdvi-lib/tfm.c:177
-#, c-format
-msgid "%s: Checksum mismatch (got %u, expected %u)\n"
-msgstr "%s:ཅེག་སམ་ མ་མཐུནམ་(ཐོབ་ཡོད་མི་%u, རེ་མདུན་ཡོད་མི་ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:90
-#, c-format
-msgid "%s: Error reading AFM data\n"
-msgstr "%s: ཨེ་ཨེཕ་ཨེམ་གནད་སྡུད་ལྷག་ནི་ལུ་འཛོལ་བ་བྱུང་ནུག་\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:180
-#, c-format
-msgid "Warning: TFM file `%s' has suspicious size\n"
-msgstr "ཉེན་བརྡ་:ཊི་ཨེཕ་ཨེམ་ ཡིག་སྣོད་ `%s' ལུ་དོགས་པ་ཅན་གྱི་ཚད་ཡོདཔ་ཨིན་\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:230
-#: ../backend/dvi/mdvi-lib/tfmfile.c:511
-#, c-format
-msgid "%s: font coding scheme truncated to 40 bytes\n"
-msgstr "%s: ཡིག་གཟུགས་ཀོ་ཌིང་འཆར་ལས་དེ་ བཱའིཊི་༤༠་ལུ་མར་ཕབ་འབད་ནུག་\n"
-
-#: ../backend/dvi/mdvi-lib/tfmfile.c:290
-#: ../backend/dvi/mdvi-lib/tfmfile.c:589
-#, c-format
-msgid "%s: File corrupted, or not a TFM file\n"
-msgstr "%s: ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་དང་ ཡང་ན་ ཊི་ཨེཕ་ཨེམ་ཡིག་སྣོད་ཅིག་མེན་པས་\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:150
-#, c-format
-msgid "(tt) %s: could not load face: %s\n"
-msgstr "(tt) %s: བཀོད་རྣམ་མངོན་གསལ་འབད་མ་ཚུགས་: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:158
-#, c-format
-msgid "(tt) %s: could not create face: %s\n"
-msgstr "(tt) %s:བཀོད་རྣམ་གསར་བསྐྲུན་འབད་མ་ཚུགས:%s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:167
-#, c-format
-msgid "(tt) %s: could not create glyph: %s\n"
-msgstr "(tt) %s: གིལིབ་གསར་བསྐྲུན་འབད་མ་ཚུགས་: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:200
-#, c-format
-msgid "(tt) %s: no acceptable map found, using #0\n"
-msgstr "(tt) %s: དང་ལེན་འབད་བཏུབ་པའི་ ས་ཁྲ་མ་འཐོབ་།#0 ལག་ལེན་འཐབ་དོ་\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:213
-#, c-format
-msgid "(tt) %s: could not set resolution: %s\n"
-msgstr "(tt) %s: ཧུམ་ཆ་གཞི་སྒྲིག་འབད་མ་ཚུགས་: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:220
-#, c-format
-msgid "(tt) %s: could not set point size: %s\n"
-msgstr "(tt) %s: ས་ཚིགས་ཀྱི་ཚད་གཞི་སྒྲིག་འབད་མ་ཚུགས་: %s\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:239
-#, c-format
-msgid "(tt) %s: could not load PS name table\n"
-msgstr "(tt) %s: པི་ཨེསི་མིང་གི་ཐིག་ཁྲམ་ མངོན་གསལ་འབད་མ་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:264
-#, c-format
-msgid "%s: no encoding vector found, expect bad output\n"
-msgstr "%s:ཨེན་ཀོ་ཌིང་མཉམ་ཐིག་ཅིག་ཡང་མ་ཐོབ། ཨའུཊི་པུཊི་ བྱང་ཉེས་ཅིག་རེ་འདོད་བསྐྱེད་སྡོད་\n"
-
-#: ../backend/dvi/mdvi-lib/tt.c:324
-#, c-format
-msgid "(tt) %s: no font metric data\n"
-msgstr "(tt) %s: ཡིག་གཟུགས་མེ་ཊིཀ་གནད་སྡུད་མེད་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:148
-msgid "Crashing"
-msgstr "བརྡབ་འཁྲུག་འབད་དོ་"
-
-#: ../backend/dvi/mdvi-lib/util.c:158
-#, c-format
-msgid "%s: Error: "
-msgstr "%s:འཛོལ་བ་:"
-
-#: ../backend/dvi/mdvi-lib/util.c:165
-msgid "Error"
-msgstr "འཛོལ་བ་"
-
-#: ../backend/dvi/mdvi-lib/util.c:174
-#, c-format
-msgid "%s: Warning: "
-msgstr "%s: ཉེན་བརྡ་: "
-
-#: ../backend/dvi/mdvi-lib/util.c:181
-msgid "Warning"
-msgstr "ཉེན་བརྡ་"
-
-#: ../backend/dvi/mdvi-lib/util.c:190
-#, c-format
-msgid "%s: Fatal: "
-msgstr "%s:འཚུབ་ཆེན་: "
-
-#: ../backend/dvi/mdvi-lib/util.c:197
-msgid "Fatal"
-msgstr "འཚུབ་ཆེན་"
-
-#: ../backend/dvi/mdvi-lib/util.c:211
-#, c-format
-msgid "out of memory allocating %u bytes\n"
-msgstr "%u བཱའིཊིསི་ སྤྲོད་ནི་ལུ་ དྲན་ཚད་ཀྱི་ལངས་མ་ཚུགས་པས་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:221
-msgid "attempted to reallocate with zero size\n"
-msgstr "ཀླད་ཀོར་གྱི་ཚད་ནང་ལུ་ ལོག་སྤྲོད་ནིའི་དཔའ་བཅམ་ནུག་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:224
-#, c-format
-msgid "failed to reallocate %u bytes\n"
-msgstr "%u བཱའིཊིསི་ སྤྲོད་ནི་ལུ་ འཐུས་ཤོར་བྱུང་ནུག་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:233
-msgid "attempted to callocate 0 members\n"
-msgstr "འཐུས་མི་ ༠ འབད་མི་ཚུ་ ཀ་ལོ་ཀེདི་འབད་ནིའི་དཔའ་བཅམ་ཅི་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:235
-#, c-format
-msgid "attempted to callocate %u members with size 0\n"
-msgstr "%u འཐུས་མི་ ཚད་༠་གྱི་ཐོག་ལས་ ཀ་ལོ་ཀེཌི་འབད་ནི་འི་ བཅམ་ཅི་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:239
-#, c-format
-msgid "failed to allocate %ux%u bytes\n"
-msgstr "%ux%u བཱའིཊིསི་ སྤྲོད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ནུག་\n"
-
-#: ../backend/dvi/mdvi-lib/util.c:247
-msgid "attempted to free NULL pointer\n"
-msgstr "ནཱལ་ དཔག་བྱད་དེ་ དལཝ་བཞག་ནིའི་དོན་ལུ་དཔའ་བཅམ་བཅམ་ཨིན་\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:81
-#, c-format
-msgid "%s: Checksum mismatch (expected %u, got %u)\n"
-msgstr "%s:ཅེག་སམ་ མ་མཐུནམ་ (དེ་མདུན་བསྐྱེད་ཡོདཔ་ %u, ཐོབ་ཡོདཔ་ %u)\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:129
-#, c-format
-msgid "(vf) %s: could not load font `%s'\n"
-msgstr "(vf) %s: ཡིག་གཟུགས་`%s' མངོན་གསལ་འབད་མ་ཚུགས་\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:179
-#, c-format
-msgid "(vf) %s: character %d redefined\n"
-msgstr "(vf) %s: ཡིག་འབྲུ་ %d ལོག་ངེས་འཛིན་འབད་ནུག་\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:202
-#, c-format
-msgid "(vf) %s: no postamble\n"
-msgstr "(vf) %s: པོསཊི་ཨེམ་བཱལ་མིན་འདུག་\n"
-
-#: ../backend/dvi/mdvi-lib/vf.c:228
-#, c-format
-msgid "%s: File corrupted, or not a VF file.\n"
-msgstr "%s: ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་ཨིནམ་དང་ ཡང་ན་ ཝི་ཨེཕ་ཡིག་སྣོད་མེན་\n"
 
 #. translators: this is the document security state
 #: ../backend/pdf/ev-poppler.cc:629
@@ -598,53 +202,41 @@ msgstr "ཀོ་འར་ཊོ།"
 msgid "10x14"
 msgstr "༡༠x༡༤།"
 
-#: ../backend/ps/ps-document.c:135
-msgid "No document loaded."
-msgstr "ཡིག་ཆ་ག་ནི་ཡང་ མངོན་གསལ་མ་འབད་བས།"
-
-#: ../backend/ps/ps-document.c:563
-msgid "Broken pipe."
-msgstr "རྒྱུན་ཆད་པའི་རྒྱུད་དུང་།"
-
-#: ../backend/ps/ps-document.c:749
-msgid "Interpreter failed."
-msgstr "དོ་རོ་ཁ་སྒྱིར་མི་མ་བཏུབ།"
-
-#: ../backend/ps/ps-document.c:875
-#, c-format
-msgid "Error while decompressing file “%s”:\n"
-msgstr "ཡིག་སྣོད་“%s”:ཨེབ་བཙུགས་བཤོལ་བའི་སྐབས་འཛོལ་བ་བྱུང་ཡི།\n"
-
-#: ../backend/ps/ps-document.c:933
+#: ../backend/ps/ps-document.c:172
+#: ../backend/ps/ps-document.c:186
 #, c-format
 msgid "Cannot open file “%s”.\n"
 msgstr "ཡིག་སྣོད་ “%s”ཁ་ཕྱེ་མ་ཚུགས།\n"
 
-#: ../backend/ps/ps-document.c:938
-msgid "File is not readable."
-msgstr "ཡིག་སྣོད་ལྷག་མི་བཏུབ་པས།"
-
-#: ../backend/ps/ps-document.c:958
-msgid "Document loaded."
-msgstr "ཡིག་ཆ་མངོན་གསལ་འབད་ཡི།"
-
-#: ../backend/ps/ps-document.c:1059
+#: ../backend/ps/ps-document.c:233
 #, c-format
 msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
 msgstr "ཡིག་ཆ་“%s”མངོན་གསལ་འབད་མ་ཚུགས། འགྲུལ་ལམ་ནང་ལུ་ གྲིབ་ཡིག་ཁ་སྒྱུར་མི་འཚོལ་མ་ཐོབ།"
 
-#: ../backend/ps/ps-document.c:1071
+#: ../backend/ps/ps-document.c:250
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "ཡིག་ཆ་“%s”མངོན་གསལ་འབད་མ་ཚུགས།"
 
-#: ../backend/ps/ps-document.c:1247
+#: ../backend/ps/ps-document.c:439
 msgid "Encapsulated PostScript"
 msgstr "བསྡུས་ཡོད་པའི་ པོསིཊི་སི་ཀོརིཔཊི།"
 
-#: ../backend/ps/ps-document.c:1248
+#: ../backend/ps/ps-document.c:440
 msgid "PostScript"
 msgstr "པོསིཊི་སི་ཀོརིཔཊི།"
+
+#: ../backend/ps/ps-interpreter.c:541
+msgid "Interpreter failed."
+msgstr "དོ་རོ་ཁ་སྒྱིར་མི་མ་བཏུབ།"
+
+#: ../backend/impress/impress-document.c:294
+msgid "Remote files aren't supported"
+msgstr "ཐག་རིང་གི་ཡིག་སྣོད་ཚུ་ལུ་རྒྱབ་སྐྱོར་མ་འབད་བས་"
+
+#: ../backend/impress/impress-document.c:305
+msgid "Invalid document"
+msgstr "ནུས་ཅན་མེད་པའི་ཡིག་ཆ་"
 
 #: ../libdocument/ev-attachment.c:303
 #: ../libdocument/ev-attachment.c:316
@@ -662,50 +254,50 @@ msgstr "མཉམ་སྦྲགས་“%s”: %sཁ་ཕྱེ་མ་ཚུ
 msgid "Couldn't open attachment “%s”"
 msgstr "མཉམ་སྦྲགས་ “%s”ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: ../libdocument/ev-document-factory.c:276
-#: ../libdocument/ev-document-factory.c:340
+#: ../libdocument/ev-document-factory.c:291
+#: ../libdocument/ev-document-factory.c:405
 msgid "Unknown MIME Type"
 msgstr "མ་ཤེས་པའི་ མ་ཡིམ་དབྱེ་བ།"
 
-#: ../libdocument/ev-document-factory.c:287
+#: ../libdocument/ev-document-factory.c:302
 #, c-format
 msgid "Unhandled MIME type: “%s”"
 msgstr "ལེགས་སྐྱོང་མ་འཐབ་པའི་ མ་ཡིམ་དབྱེ་བ་:“%s”།"
 
-#: ../libdocument/ev-document-factory.c:381
+#: ../libdocument/ev-document-factory.c:446
 msgid "All Documents"
 msgstr "ཡིག་ཆ་ཆ་མཉམ།"
 
-#: ../libdocument/ev-document-factory.c:389
+#: ../libdocument/ev-document-factory.c:454
 msgid "PostScript Documents"
 msgstr "པོསཊི་སི་ཀིརིཔཊི་ཡིག་ཆ་ཚུ།"
 
-#: ../libdocument/ev-document-factory.c:399
+#: ../libdocument/ev-document-factory.c:464
 msgid "PDF Documents"
 msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ།"
 
-#: ../libdocument/ev-document-factory.c:409
-#: ../shell/ev-window.c:4388
+#: ../libdocument/ev-document-factory.c:474
+#: ../shell/ev-window.c:4629
 msgid "Images"
 msgstr "གཟུགས་བརྙན་ཚུ།"
 
-#: ../libdocument/ev-document-factory.c:419
+#: ../libdocument/ev-document-factory.c:484
 msgid "DVI Documents"
 msgstr "ཌི་ཝི་ཨའི་ཡིག་ཆ་ཚུ།"
 
-#: ../libdocument/ev-document-factory.c:429
+#: ../libdocument/ev-document-factory.c:494
 msgid "Djvu Documents"
 msgstr "ཌིཇི་བུ་ཡིག་ཆ།"
 
-#: ../libdocument/ev-document-factory.c:439
+#: ../libdocument/ev-document-factory.c:504
 msgid "Comic Books"
 msgstr "པར་སྲུང་ཀི་དེབ།"
 
-#: ../libdocument/ev-document-factory.c:449
+#: ../libdocument/ev-document-factory.c:514
 msgid "Impress Slides"
 msgstr "ཨིམ་པེརེསི་ བཤུད་བརྙན།"
 
-#: ../libdocument/ev-document-factory.c:457
+#: ../libdocument/ev-document-factory.c:522
 msgid "All Files"
 msgstr "ཡིག་སྣོད་ཆ་མཉམ།"
 
@@ -715,7 +307,7 @@ msgid "Open “%s”"
 msgstr "“%s”ཁ་ཕྱེ།"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
-#: ../shell/ev-navigation-action.c:123
+#: ../shell/ev-navigation-action.c:118
 msgid "Empty"
 msgstr "སྟོངམ།"
 
@@ -765,7 +357,7 @@ msgstr "གསལ་སྟོན་ཐབས་ལམ་ནང་ལུ་ ག�
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:4048
+#: ../shell/ev-window.c:4282
 msgid "Best Fit"
 msgstr "ལེགས་སྒྲིག"
 
@@ -810,7 +402,7 @@ msgid "400%"
 msgstr "%༤༠༠"
 
 #: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window.c:3217
+#: ../shell/ev-window.c:3442
 #: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "ཡིག་ཆ་མཐོང་བྱེད།"
@@ -895,7 +487,7 @@ msgstr "ཡིག་ཆའི་དཀག་དམ་ཟུར་ཁར་བཞ
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "ཡིག་ཆའི་དཀག་དམ་ དཔེར་ན་འདྲ་བཤུས་བརྐྱབ་ནི་དང་ དཔར་བསྐྲུན་འབད་ནིའི་དཀག་དམ་ཚུ་ ཟུར་ཁར་བཞག"
 
-#: ../properties/ev-properties-main.c:107
+#: ../properties/ev-properties-main.c:110
 msgid "Document"
 msgstr "ཡིག་ཆ།"
 
@@ -999,17 +591,12 @@ msgstr "གནད་དོན་ཉེན་ཅན།(_a)"
 msgid "Toggle case sensitive search"
 msgstr "ཡི་གུ་ཆེ་ཆུང་གི་གདོན་ཉེན་འཚོལ་ཞིབ་ སོར་སྟོན་འབད།"
 
-#: ../shell/ev-history.c:172
-#, c-format
-msgid "Page: %s"
-msgstr "ཤོག་ལེབ:%s"
-
-#: ../shell/ev-page-action.c:77
+#: ../shell/ev-page-action.c:76
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d གི་ %d)"
 
-#: ../shell/ev-page-action.c:79
+#: ../shell/ev-page-action.c:78
 #, c-format
 msgid "of %d"
 msgstr "%d གི།"
@@ -1069,20 +656,20 @@ msgstr "ཡིག་གཟུགས་བརྡ་དོན་...%3d%%བསྡ�
 msgid "Attachments"
 msgstr "མཉམ་སྦྲགས།"
 
-#: ../shell/ev-sidebar-links.c:253
-#: ../shell/ev-view.c:2790
+#: ../shell/ev-sidebar-links.c:266
+#: ../shell/ev-view.c:2815
 msgid "Loading..."
 msgstr "མངོན་གསལ་འབད་དོ་..."
 
-#: ../shell/ev-sidebar-links.c:350
+#: ../shell/ev-sidebar-links.c:342
 msgid "Print..."
 msgstr "དཔར་བསྐྲུན་..."
 
-#: ../shell/ev-sidebar-links.c:733
+#: ../shell/ev-sidebar-links.c:714
 msgid "Index"
 msgstr "ཟུར་ཐོ།"
 
-#: ../shell/ev-sidebar-thumbnails.c:678
+#: ../shell/ev-sidebar-thumbnails.c:689
 msgid "Thumbnails"
 msgstr "མཐེ་གཟེར།"
 
@@ -1106,142 +693,152 @@ msgstr "མཐོང་སྣང་མར་སྒྲིལ།"
 msgid "Document View"
 msgstr "ཡིག་ཆའི་མཐོང་སྣང་།"
 
-#: ../shell/ev-view.c:1408
+#: ../shell/ev-view.c:1414
 msgid "Go to first page"
 msgstr "ཤོག་ལེབ་དང་པ་ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1410
+#: ../shell/ev-view.c:1416
 msgid "Go to previous page"
 msgstr "ཤོག་ལེབ་ཧེ་མམ་ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1412
+#: ../shell/ev-view.c:1418
 msgid "Go to next page"
 msgstr "ཤོག་ལེབ་ཤུལ་མམ་ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1414
+#: ../shell/ev-view.c:1420
 msgid "Go to last page"
 msgstr "ཤོག་ལེབ་མཐའ་མཇུག་ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1416
+#: ../shell/ev-view.c:1422
 msgid "Go to page"
 msgstr "ཤོག་ལེབ་ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1418
+#: ../shell/ev-view.c:1424
 msgid "Find"
 msgstr "འཚོལ།"
 
-#: ../shell/ev-view.c:1445
+#: ../shell/ev-view.c:1451
 #, c-format
 msgid "Go to page %s"
 msgstr "ཤོག་ལེབ་%sལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1450
+#: ../shell/ev-view.c:1456
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "%sནང་ཡིག་སྣོད་ “%s”ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1453
+#: ../shell/ev-view.c:1459
 #, c-format
 msgid "Go to file “%s”"
 msgstr "ཡིག་སྣོད་“%s”ལུ་འགྱོ།"
 
-#: ../shell/ev-view.c:1462
+#: ../shell/ev-view.c:1468
 #, c-format
 msgid "Launch %s"
 msgstr "%sགསར་བཙུགས་འབད།"
 
-#: ../shell/ev-view.c:1852
+#: ../shell/ev-view.c:1858
 msgid "End of presentation. Press Escape to exit."
 msgstr "གསལ་སྟོན་འབད་ནིའི་མཇུག། ཕྱིར་འཐོན་འབད་ནའི་དོན་ལུ་ ཐར་ལུ་ཨེབ།"
 
-#: ../shell/ev-view.c:2510
+#: ../shell/ev-view.c:2531
 msgid "Jump to page:"
 msgstr "ཤོག་ལེབ་ལུ་འགྱོ:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:4084
+#: ../shell/ev-view.c:4145
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d ཤོག་ལེབ་འདི་གེ་ཐོབ་ཅི།"
 msgstr[1] "%d ཤོག་ལེབ་འདི་གེ་ཐོབ་ཅི།"
 
-#: ../shell/ev-view.c:4093
+#: ../shell/ev-view.c:4154
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "འཚོལ་ཞིབ་འབད་ནི་ %3d%% ལྷག་ལུས་ཡོད།"
 
-#: ../shell/ev-window.c:1151
+#: ../shell/ev-window.c:742
+#, c-format
+msgid "Page %s - %s"
+msgstr "ཤོག་ལེབ་ %s - %s"
+
+#: ../shell/ev-window.c:744
+#, c-format
+msgid "Page %s"
+msgstr "ཤོག་ལེབ་%s"
+
+#: ../shell/ev-window.c:1307
 msgid "Unable to open document"
 msgstr "ཡིག་ཆ་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:1245
+#: ../shell/ev-window.c:1469
 msgid "Open Document"
 msgstr "ཡིག་ཆ་ཁ་ཕྱེ།"
 
-#: ../shell/ev-window.c:1300
+#: ../shell/ev-window.c:1524
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "སིམ་ལིངཀི་ “%s”: %s གསར་སྐྲུན་འབད་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:1325
+#: ../shell/ev-window.c:1553
 msgid "Cannot open a copy."
 msgstr "འདྲ་དཔར་ཅིག་ཁ་ཕྱེ་མི་ཚུགས།"
 
-#: ../shell/ev-window.c:1605
+#: ../shell/ev-window.c:1834
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "ཡིག་སྣོད་“%s”: %s གསར་བསྐྲུན་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ནུག"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1861
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ཡིག་སྣོད་དེ་“%s”སྦེ་བསྲུང་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:1654
+#: ../shell/ev-window.c:1883
 msgid "Save a Copy"
 msgstr "འདྲ་ཅིག་སྲུངས།"
 
-#: ../shell/ev-window.c:1735
+#: ../shell/ev-window.c:1964
 msgid "Failed to print document"
 msgstr "ཡིག་ཆ་དཔར་བསྐྲུན་འབད་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:1854
-#: ../shell/ev-window.c:2039
+#: ../shell/ev-window.c:2083
+#: ../shell/ev-window.c:2268
 msgid "Printing is not supported on this printer."
 msgstr "དཔར་འཕྲུལ་འདི་གུ་ དཔར་བསྐྲུན་ལུ་ རྒྱབ་སྐྱོར་མིན་འདུག"
 
-#: ../shell/ev-window.c:1964
-#: ../shell/ev-window.c:2090
+#: ../shell/ev-window.c:2193
+#: ../shell/ev-window.c:2319
 msgid "Print"
 msgstr "དཔར་བསྐྲུན།"
 
-#: ../shell/ev-window.c:2029
+#: ../shell/ev-window.c:2258
 msgid "Generating PDF is not supported"
 msgstr "པི་ཌི་ཨེཕ་བཟོ་བཏོན་འབད་ནི་ལུ་ རྒྱབ་སྐྱོར་མིན་འདུག"
 
-#: ../shell/ev-window.c:2041
+#: ../shell/ev-window.c:2270
 #, c-format
 msgid "You were trying to print to a printer using the “%s” driver. This program requires a PostScript printer driver."
 msgstr "ཁྱོད་ཀྱིས་འདྲེན་བྱེད་“%s”ལག་ལེན་འཐབ་ཐོག་ལས་ དཔར་བསྐྲུན་འབད་ནིའི་རྩིས་རྐྱབ་དོ། ལས་རིམ་འདི་ལུ་ པོསིཊི་སི་ཀིརིཔཊི་ དཔར་འཕྲུལ་འདྲེན་བྱེད་ཅིག་དགོ"
 
-#: ../shell/ev-window.c:2099
+#: ../shell/ev-window.c:2328
 msgid "Pages"
 msgstr "ཤོག་གྲངས།"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:2466
-#: ../shell/ev-window.c:3862
+#: ../shell/ev-window.c:2695
+#: ../shell/ev-window.c:4092
 msgid "Leave Fullscreen"
 msgstr "གསལ་གཞང་གངམ་བཞག"
 
-#: ../shell/ev-window.c:2838
+#: ../shell/ev-window.c:3067
 msgid "Toolbar Editor"
 msgstr "ལག་ཆས་ཕྲ་རིང་ཞུན་དགཔ།"
 
-#: ../shell/ev-window.c:3213
+#: ../shell/ev-window.c:3438
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -1250,353 +847,353 @@ msgstr ""
 "ཡིག་ཆ་མཐོང་བྱེད།\n"
 "པོཔ་ལར་%s (%s) དེ་ལག་ལེན་འཐབ་དོ།"
 
-#: ../shell/ev-window.c:3241
+#: ../shell/ev-window.c:3466
 msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
 msgstr "ཨི་བིནསི་དེ་ སྟོང་མ་ཐོབ་པའི་མཉེན་ཆས་ཅིག་ཨིནམ་ལས་ ཕིརི་སོཕཊི་ཝེར་གཞི་ཚོགས་ཀྱིས་ དཔེ་བསྐྲུན་འབད་མི་ ཇི་ཨེན་ཡུ་ཡོངས་ཁྱབ་མི་མང་ཆོག་ཐམ་གྱི་ཁ་ཚིག་དང་འཁྲིལ་ཏེ་ ཁྱོད་ཀྱིས་ཆོག་ཐམ་ཐོན་རིམ་༢ ཡང་ན་ (ཁྱོད་རའི་གདམ་ཁ་བཞིན) ཤུལ་ལས་ཀྱི་ཐོན་རིམ་གང་རུང་ བསྐྱར་འགྲེམ་འབད་བའམ་ ལེགས་བཅོས་འབད་ཆོག\n"
 
-#: ../shell/ev-window.c:3245
+#: ../shell/ev-window.c:3470
 msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 msgstr "ཨི་བིནསི་དེ་ ཕན་ཐོགས་པའི་རེ་བ་གིས་ འགྲེམ་སྤེལ་འབད་ཡོད། དེ་འབདཝ་ད་ ཉེན་ལེན་ག་ནི་ཡང་མེད་པའི་ནང་ལས་ ཐ་ན་སྐྱེལ་འདྲེན་དང་ དམིགས་བསལ་དགོས་དོན་ཅིག་གི་དོན་ལུ་ ཚུད་སྒྲིག་ཡོད་མེད་ཀྱི་ཉེན་ལེན་ཙམ་ཡང་མེད། ཁ་གསལ་གྱི་དོན་ལུ་ ཇི་ཨེན་ཡུ་ མི་མང་ཆོག་ཐམ་ལུ་གཟིགས་གནང་།\n"
 
-#: ../shell/ev-window.c:3249
+#: ../shell/ev-window.c:3474
 msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr "ཁྱོད་ཀྱིས་ཨི་བིནསི་དང་གཅིག་ཁར་ ཇི་ཨེན་ཡུ་ ཡོངས་ཁྱབ་མི་མང་ཆོག་ཐམ་གྱི་འདྲ་ཅིག་ཐོབ་ཐོབ་འོང་། གལ་སྲིད་མ་ཐོབ་པ་ཅིན་ Free Software Foundation, Inc.,59 Temple Place, Suite 330, Boston, MA  02111-1307  USA ལུ་ཡི་གུ་སྐྱེལ་གནང་།\n"
 
-#: ../shell/ev-window.c:3273
+#: ../shell/ev-window.c:3498
 #: ../shell/main.c:284
 msgid "Evince"
 msgstr "ཨི་བིནསི།"
 
-#: ../shell/ev-window.c:3276
+#: ../shell/ev-window.c:3501
 msgid "© 1996-2007 The Evince authors"
 msgstr "© ༡༩༩༦-༢༠༠༧ བརྡ་མཚོན་ནིའི་རྩོམ་པ་པོ་"
 
-#: ../shell/ev-window.c:3282
+#: ../shell/ev-window.c:3507
 msgid "translator-credits"
 msgstr "\"ཨའི་ཌི་ཨར་སི་གི་མ་དངུལ་རྒྱབ་སྐྱོར་ཐོག་ལས་ བརྡ་དོན་འཕྲུལ་རིག་ལས་ཁུངས་ནང་ སྐད་བསྒྱུར་འབད་ཡི། ཁ་གསལ་གྱི་དོན་ལུ་ འབྲེལ་བ་འཐབ་ས་: <pema_geyleg@druknet.bt>/<pgeyleg@dit.gov.bt>\"།"
 
-#: ../shell/ev-window.c:3779
+#: ../shell/ev-window.c:4009
 msgid "_File"
 msgstr "ཡིག་སྣོད།(_F)"
 
-#: ../shell/ev-window.c:3780
+#: ../shell/ev-window.c:4010
 msgid "_Edit"
 msgstr "ཞུན་དག(_E)"
 
-#: ../shell/ev-window.c:3781
+#: ../shell/ev-window.c:4011
 msgid "_View"
 msgstr "མཐོང་སྣང་།(_V)"
 
-#: ../shell/ev-window.c:3782
+#: ../shell/ev-window.c:4012
 msgid "_Go"
 msgstr "འགྱོ།(_G)"
 
-#: ../shell/ev-window.c:3783
+#: ../shell/ev-window.c:4013
 msgid "_Help"
 msgstr "གྲོགས་རམ།(_H)"
 
 #. File menu
-#: ../shell/ev-window.c:3786
-#: ../shell/ev-window.c:3958
+#: ../shell/ev-window.c:4016
+#: ../shell/ev-window.c:4188
 msgid "_Open..."
 msgstr "ཁ་ཕྱེ་...(_O)"
 
-#: ../shell/ev-window.c:3787
+#: ../shell/ev-window.c:4017
 msgid "Open an existing document"
 msgstr "གནས་བཞིན་པའི་ཡིག་ཆ་ཅིག་ཁ་ཕྱེ།"
 
-#: ../shell/ev-window.c:3789
+#: ../shell/ev-window.c:4019
 msgid "Open a _Copy"
 msgstr "འདྲ་དཔར་ཅིག་ཁ་ཕྱེ་(_C)"
 
-#: ../shell/ev-window.c:3790
+#: ../shell/ev-window.c:4020
 msgid "Open a copy of the current document in a new window"
 msgstr "ད་ལྟོའི་ཡིག་ཆ་དེ་གི་འདྲ་དཔར་ཅིག་ སྒོ་སྒྲིག་གསར་པའི་ནང་ལུ་ཁ་ཕྱེ་"
 
-#: ../shell/ev-window.c:3792
-#: ../shell/ev-window.c:3960
+#: ../shell/ev-window.c:4022
+#: ../shell/ev-window.c:4190
 msgid "_Save a Copy..."
 msgstr "འདྲ་བཤུས་ཅིག་སྲུངས་...(_S)"
 
-#: ../shell/ev-window.c:3793
+#: ../shell/ev-window.c:4023
 msgid "Save a copy of the current document"
 msgstr "ད་ལྟོའི་ཡིག་ཆ་འདི་གི་འདྲ་ཅིག་སྲུངས།"
 
-#: ../shell/ev-window.c:3795
+#: ../shell/ev-window.c:4025
 msgid "Print Set_up..."
 msgstr "སྒྲིག་སྟངས་དཔར་བསྐྲུན་འབད་་་(u)"
 
-#: ../shell/ev-window.c:3796
+#: ../shell/ev-window.c:4026
 msgid "Setup the page settings for printing"
 msgstr "དཔར་བསྐྲུན་འབད་ནིའི་དོན་ལུ་ ཤོག་ལེབ་སྒྲིག་སྟངས་དེ་གཞི་སྒྲིག་འབད་"
 
-#: ../shell/ev-window.c:3798
+#: ../shell/ev-window.c:4028
 msgid "_Print..."
 msgstr "དཔར་བསྐྲུན་...(_P)"
 
-#: ../shell/ev-window.c:3799
+#: ../shell/ev-window.c:4029
 msgid "Print this document"
 msgstr "ཡིག་ཆ་འདི་དཔར་བསྐྲུན་འབད།"
 
-#: ../shell/ev-window.c:3801
+#: ../shell/ev-window.c:4031
 msgid "P_roperties"
 msgstr "རྒྱུ་དངོས་ཚུ།(_r)"
 
-#: ../shell/ev-window.c:3810
-#: ../shell/ev-window.c:3812
+#: ../shell/ev-window.c:4040
+#: ../shell/ev-window.c:4042
 msgid "Select _All"
 msgstr "ཆ་མཉམ་སེལ་འཐུ་འབད།(_A)"
 
-#: ../shell/ev-window.c:3815
+#: ../shell/ev-window.c:4045
 msgid "_Find..."
 msgstr "འཚོལ་...(_F)"
 
-#: ../shell/ev-window.c:3816
+#: ../shell/ev-window.c:4046
 msgid "Find a word or phrase in the document"
 msgstr "ཡིག་ཆའི་ནང་ མིང་ཚིག་ཅིག་ ཡང་ན་ ཚིག་ཚན་ཅིག་འཚོལ།"
 
-#: ../shell/ev-window.c:3818
+#: ../shell/ev-window.c:4048
 msgid "Find Ne_xt"
 msgstr "ཤུལ་མམ་འཚོལ།(_x)"
 
-#: ../shell/ev-window.c:3820
+#: ../shell/ev-window.c:4050
 msgid "Find Pre_vious"
 msgstr "ཧེ་མམ་འཚོལ།(_v)"
 
-#: ../shell/ev-window.c:3822
+#: ../shell/ev-window.c:4052
 msgid "T_oolbar"
 msgstr "ལག་ཆས་ཕྲ་རིང་།(_o)"
 
-#: ../shell/ev-window.c:3824
+#: ../shell/ev-window.c:4054
 msgid "Rotate _Left"
 msgstr "གཡོན་ལུ་བསྒྱིར།(_L)"
 
-#: ../shell/ev-window.c:3826
+#: ../shell/ev-window.c:4056
 msgid "Rotate _Right"
 msgstr "གཡས་ལུ་བསྒྱིར།(_R)"
 
-#: ../shell/ev-window.c:3831
+#: ../shell/ev-window.c:4061
 msgid "Enlarge the document"
 msgstr "ཡིག་ཆ་ཆེར་བསྐྱེད།"
 
-#: ../shell/ev-window.c:3834
+#: ../shell/ev-window.c:4064
 msgid "Shrink the document"
 msgstr "ཡིག་ཆ་སྐུམས།"
 
-#: ../shell/ev-window.c:3836
+#: ../shell/ev-window.c:4066
 msgid "_Reload"
 msgstr "སླར་མངོན་གསལ་འབད།(_R)"
 
-#: ../shell/ev-window.c:3837
+#: ../shell/ev-window.c:4067
 msgid "Reload the document"
 msgstr "ཡིག་ཆ་སླར་མངོན་གསལ་འབད།"
 
 #. Go menu
-#: ../shell/ev-window.c:3841
+#: ../shell/ev-window.c:4071
 msgid "_Previous Page"
 msgstr "ཤོག་ལེབ་ཧེ་མམ།(_P)"
 
-#: ../shell/ev-window.c:3842
+#: ../shell/ev-window.c:4072
 msgid "Go to the previous page"
 msgstr "ཤོག་ལེབ་ཧེ་མམ་ལུ་འགྱོ།"
 
-#: ../shell/ev-window.c:3844
+#: ../shell/ev-window.c:4074
 msgid "_Next Page"
 msgstr "ཤོག་ལེབ་ཤུལ་མམ།(_N)"
 
-#: ../shell/ev-window.c:3845
+#: ../shell/ev-window.c:4075
 msgid "Go to the next page"
 msgstr "ཤོག་ལེབ་ཤུལ་མམ་ལུ་འགྱོ།"
 
-#: ../shell/ev-window.c:3847
+#: ../shell/ev-window.c:4077
 msgid "_First Page"
 msgstr "ཤོག་ལེབ་དང་པ།(_F)"
 
-#: ../shell/ev-window.c:3848
+#: ../shell/ev-window.c:4078
 msgid "Go to the first page"
 msgstr "ཤོག་ལེབ་དང་པ་ལུ་འགྱོ།"
 
-#: ../shell/ev-window.c:3850
+#: ../shell/ev-window.c:4080
 msgid "_Last Page"
 msgstr "མཐའ་མཇུག་ཤོག་ལེབ།(_L)"
 
-#: ../shell/ev-window.c:3851
+#: ../shell/ev-window.c:4081
 msgid "Go to the last page"
 msgstr "མཐའ་མཇུག་ཤོག་ལེབ་ལུ་འགྱོ།"
 
 #. Help menu
-#: ../shell/ev-window.c:3855
+#: ../shell/ev-window.c:4085
 msgid "_Contents"
 msgstr "ནང་དོན་ཚུ།(_C)"
 
-#: ../shell/ev-window.c:3858
+#: ../shell/ev-window.c:4088
 msgid "_About"
 msgstr "སྐོར་ལས།(_A)"
 
-#: ../shell/ev-window.c:3863
+#: ../shell/ev-window.c:4093
 msgid "Leave fullscreen mode"
 msgstr "གསལ་གཞི་གངམ་གི་ཐབས་ལམ་བཞག"
 
 #. View Menu
-#: ../shell/ev-window.c:3914
+#: ../shell/ev-window.c:4144
 msgid "_Toolbar"
 msgstr "ལག་ཆས་ཕྲ་རིང་།(_T)"
 
-#: ../shell/ev-window.c:3915
+#: ../shell/ev-window.c:4145
 msgid "Show or hide the toolbar"
 msgstr "ལག་ཆས་ཕྲ་རིང་སྟོན་ ཡང་ན་ སྦ་བཞག"
 
-#: ../shell/ev-window.c:3917
+#: ../shell/ev-window.c:4147
 msgid "Side _Pane"
 msgstr "ཟུར་ཁའི་པེན།"
 
-#: ../shell/ev-window.c:3918
+#: ../shell/ev-window.c:4148
 msgid "Show or hide the side pane"
 msgstr "ཟུར་ཁའི་པེན་སྟོན་ ཡང་ན་ སྦ་བཞག"
 
-#: ../shell/ev-window.c:3920
+#: ../shell/ev-window.c:4150
 msgid "_Continuous"
 msgstr "འཕྲོ་མཐུད་ཅན།(_C)"
 
-#: ../shell/ev-window.c:3921
+#: ../shell/ev-window.c:4151
 msgid "Show the entire document"
 msgstr "ཡིག་ཆ་ཧྲིལ་བུ་སྟོན།"
 
-#: ../shell/ev-window.c:3923
+#: ../shell/ev-window.c:4153
 msgid "_Dual"
 msgstr "ྒགཉིས་ལྡན།(_D)"
 
-#: ../shell/ev-window.c:3924
+#: ../shell/ev-window.c:4154
 msgid "Show two pages at once"
 msgstr "ཤོག་ལེབ་གཉིས་སྟབས་གཅིག་ཁར་སྟོན།"
 
-#: ../shell/ev-window.c:3926
+#: ../shell/ev-window.c:4156
 msgid "_Fullscreen"
 msgstr "གསལ་གཞི་གངམ།(_F)"
 
-#: ../shell/ev-window.c:3927
+#: ../shell/ev-window.c:4157
 msgid "Expand the window to fill the screen"
 msgstr "གསལ་གཞི་གང་ནིའི་དོན་ལུ་ སྒོ་སྒྲིག་རྒྱ་འཕར།"
 
-#: ../shell/ev-window.c:3929
+#: ../shell/ev-window.c:4159
 msgid "_Presentation"
 msgstr "གསལ་སྟོན།(_P)"
 
-#: ../shell/ev-window.c:3930
+#: ../shell/ev-window.c:4160
 msgid "Run document as a presentation"
 msgstr "ཡིག་ཆ་གསལ་སྟོན་བཟུམ་ཅིག་སྦེ་གཡོག་བཀོལ།"
 
-#: ../shell/ev-window.c:3932
+#: ../shell/ev-window.c:4162
 msgid "_Best Fit"
 msgstr "ལེགས་སྒྲིག(_B)"
 
-#: ../shell/ev-window.c:3933
+#: ../shell/ev-window.c:4163
 msgid "Make the current document fill the window"
 msgstr "ད་ལྟོའང་ཡིག་ཆ་དེ་གིས་ སྒོ་སྒྲིག་བཀང་།"
 
-#: ../shell/ev-window.c:3935
+#: ../shell/ev-window.c:4165
 msgid "Fit Page _Width"
 msgstr "ཤོག་ལེབ་ཀྱི་རྒྱ་ཚད་སྒྲིག(_W)"
 
-#: ../shell/ev-window.c:3936
+#: ../shell/ev-window.c:4166
 msgid "Make the current document fill the window width"
 msgstr "ད་ལྟོའི་ཡིག་ཆ་དེ་གིས་ སྒོ་སྒྲིག་གི་རྒྱ་ཚད་བཀང་།"
 
 #. Links
-#: ../shell/ev-window.c:3943
+#: ../shell/ev-window.c:4173
 msgid "_Open Link"
 msgstr "འབྲེལ་ལམ་ཁ་ཕྱེ།(_O)"
 
-#: ../shell/ev-window.c:3945
+#: ../shell/ev-window.c:4175
 msgid "_Go To"
 msgstr "ལུ་འགྱོ།(_G)"
 
-#: ../shell/ev-window.c:3947
+#: ../shell/ev-window.c:4177
 msgid "Open in New _Window"
 msgstr "སྒོ་སྒྲིག་གསརཔ་ནང་ལུ་ ཁ་ཕྱེ་(_W)"
 
-#: ../shell/ev-window.c:3949
+#: ../shell/ev-window.c:4179
 msgid "_Copy Link Address"
 msgstr "འབྲེལ་ལམ་ཁ་བྱང་འདྲ་བཤུས་རྐྱབས།(_C)"
 
-#: ../shell/ev-window.c:3951
+#: ../shell/ev-window.c:4181
 msgid "_Save Image As..."
 msgstr "གཟུགས་བརྙན་དེ་སྦེ་སྲུངས་་་(_S)"
 
-#: ../shell/ev-window.c:3953
+#: ../shell/ev-window.c:4183
 msgid "Copy _Image"
 msgstr "གཟུགས་བརྙན་འདྲ་བཤུས་རྐྱབས་(_I)"
 
-#: ../shell/ev-window.c:3988
+#: ../shell/ev-window.c:4222
 msgid "Page"
 msgstr "ཤོག་ལེབ།"
 
-#: ../shell/ev-window.c:3989
+#: ../shell/ev-window.c:4223
 msgid "Select Page"
 msgstr "ཤོག་ལེབ་སེལ་འཐུ་འབད།"
 
-#: ../shell/ev-window.c:4001
+#: ../shell/ev-window.c:4233
 msgid "Zoom"
 msgstr "རྒྱས་ཟུམ།"
 
-#: ../shell/ev-window.c:4003
+#: ../shell/ev-window.c:4235
 msgid "Adjust the zoom level"
 msgstr "རྒྱས་ཟུམ་གནས་རིམ་བདེ་སྒྲིག་འབད།"
 
-#: ../shell/ev-window.c:4013
+#: ../shell/ev-window.c:4245
 msgid "Navigation"
 msgstr "འགྲུལ་བསྐྱོདཔ་"
 
-#: ../shell/ev-window.c:4015
+#: ../shell/ev-window.c:4247
 msgid "Back"
 msgstr "རྒྱབ་ཁར་"
 
-#: ../shell/ev-window.c:4017
+#: ../shell/ev-window.c:4249
 msgid "Move across visited pages"
 msgstr "བལྟ་སྐོར་ཡོད་པའི་ཤོག་ལེབ་ཚུ་བསྒྱུད་དེ་ སྤོ་བཤུད་འབད་"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4031
+#: ../shell/ev-window.c:4265
 msgid "Previous"
 msgstr "ཧེ་མམ།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4036
+#: ../shell/ev-window.c:4270
 msgid "Next"
 msgstr "ཤུལ་མམ།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4040
+#: ../shell/ev-window.c:4274
 msgid "Zoom In"
 msgstr "ཕྱིར་རྒྱས།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4044
+#: ../shell/ev-window.c:4278
 msgid "Zoom Out"
 msgstr "ནང་ན་ཟུམ།"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4052
+#: ../shell/ev-window.c:4286
 msgid "Fit Width"
 msgstr "རྒྱ་ཚད་སྒྲིགས།"
 
-#: ../shell/ev-window.c:4357
+#: ../shell/ev-window.c:4598
 msgid "The image could not be saved."
 msgstr "གཟུགས་བརྙན་དེ་སྲུང་བཞག་འབད་མི་ཚུགས།"
 
-#: ../shell/ev-window.c:4376
+#: ../shell/ev-window.c:4617
 msgid "Save Image"
 msgstr "གཟུགས་བརྙན་སྲུངས་"
 
-#: ../shell/ev-window.c:4431
+#: ../shell/ev-window.c:4672
 msgid "Unable to open attachment"
 msgstr "མཉམ་སྦྲགས་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:4478
+#: ../shell/ev-window.c:4719
 msgid "The attachment could not be saved."
 msgstr "མཉམ་སྦྲགས་དེ་ བསྲུང་མ་ཚུགས།"
 
-#: ../shell/ev-window.c:4502
+#: ../shell/ev-window.c:4743
 msgid "Save Attachment"
 msgstr "མཉམ་སྦྲགས་སྲུངས་"
 
@@ -1633,7 +1230,7 @@ msgstr "[ཡིག་སྣོད་...]"
 msgid "GNOME Document Viewer"
 msgstr "ཇི་ནོམ་ཡིག་ཆ་མཐོང་བྱེད།"
 
-#: ../shell/main.c:311
+#: ../shell/main.c:310
 msgid "Evince Document Viewer"
 msgstr "ཨི་བིནསི་ཡིག་ཆ་མཐོང་བྱེད།"
 
@@ -1653,6 +1250,184 @@ msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ཚུ་གི་དོ
 msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
 msgstr "པི་ཌི་ཨེཕ་ཡིག་ཆ་ལུ་མཐེ་གཟེར་བརྡབས་མིའི་ ནུས་ཅན་བརྡ་བཀོད་དང་སྒྲུབ་རྟགས་ཚུ། བརྡ་དོན་ཧེང་བཀལ་གྱི་དོན་ལུ་ ནའུ་ཊི་ལཱསི་མཐེ་གཟེར་བརྡབས་མིའི་ཡིག་ཆ་ལུ་བལྟ།"
 
+#~ msgid "unexpected EOF\n"
+#~ msgstr "རེ་འདུན་མེད་པའི་ ཨི་ཨོ་ཨེཕ\n"
+#~ msgid "could not load font `%s'\n"
+#~ msgstr "ཡིག་གཟུགས་`%s' མངོན་གསལ་འབད་མ་ཚུགས་\n"
+#~ msgid "could not reload `%s'\n"
+#~ msgstr "`%s' ལོག་མངོན་གསལ་འབད་མ་ཚུགས་\n"
+#~ msgid "%s: unsupported DVI format (version %u)\n"
+#~ msgstr "%s:རྒྱབ་སྐྱོར་མེད་པའི་ ཌི་ཝི་ཨའི་ རྩ་སྒྲིག་(ཐོན་རིམ་ %u)\n"
+#~ msgid "no pages selected\n"
+#~ msgstr "ཤོག་ལེབ་སེལ་འཐུ་འབད་འབདཝ་མིན་འདུག\n"
+#~ msgid "%s: File corrupted, or not a DVI file\n"
+#~ msgstr "%s:ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་ ཡང་ན་ ཌི་ཝི་ཨའི་ཡིག་སྣོད་མེན་མི་\n"
+#~ msgid "%s: vf macro had errors\n"
+#~ msgstr "%s: ཝི་ཨེཕ་ མེཀརོ་ལུ་འཛོལ་བ་བྱུང་ཡོདཔ་\n"
+#~ msgid "%s: stack not empty after vf macro\n"
+#~ msgstr "%s: ཝི་ཨེཕ་མེཀརོ་གི་ཤུལ་ལས་ བརྩེགས་ཕུང་སྣོངམ་མིན་འདུག་\n"
+#~ msgid "%s: could not reopen file (%s)\n"
+#~ msgstr "%s: ཡིག་སྣོད་(%s)ལོག་ཁ་ཕྱེ་མི་ཚུགས་པས་\n"
+#~ msgid "%s: page %d out of range\n"
+#~ msgstr "%s: ཤོག་ལེབ་%d ཁྱབ་ཚད་ལས་འགལ་སོང་ནུག\n"
+#~ msgid "%s: bad offset at page %d\n"
+#~ msgstr "%s: ཤོག་ལེབ་%d པར་ལེན་བྱང་ཉེས་\n"
+#~ msgid "stack not empty at end of page\n"
+#~ msgstr "ཤོགལེབ་དེ་གི་མཇུག་ལུ་ བརྩེགས་ཕུང་སྟོངམ་མིན་འདུག\n"
+#~ msgid "no default font set yet\n"
+#~ msgstr "སྔོན་སྒྲིག་ཡིག་གཟུགས་གཞི་སྒྲིག་ ད་ལྟོ་ཡང་མེད་\n"
+#~ msgid "requested character %d does not exist in `%s'\n"
+#~ msgstr "ཞུ་བ་འབད་ཡོད་པའི་ཡིག་འབྲུ་%d དེ་`%s'ནང་ལུ་མིན་འདུག\n"
+#~ msgid "enlarging stack\n"
+#~ msgstr "བརྩེགས་ཕུང་ཆེར་བསྐྱེད་འབད་དོ་་\n"
+#~ msgid "stack underflow\n"
+#~ msgstr "བརྩེགས་ཕུང་ འོག་རྒྱུན་\n"
+#~ msgid "font %d is not defined\n"
+#~ msgstr "ཡིག་གཟུགས་%d འདི་ངེས་འཛིན་མ་འབད་བས་\n"
+#~ msgid "font %d is not defined in postamble\n"
+#~ msgstr "ཡིག་གཟུགས་%d འདི་ པོསི་ཊེམ་བལི་ ནང་ལུ་ངེས་འཛིན་མ་འབད་བས་\n"
+#~ msgid "unexpected opcode %d\n"
+#~ msgstr "རེ་མདུན་མེད་པའི་ ཨོཔ་ཀོཊི་ %d\n"
+#~ msgid "undefined opcode %d\n"
+#~ msgstr "ངེས་ཛའིན་མ་འབད་བའི་ཨོཔ་ཀོཌི་%d\n"
+#~ msgid "%s: no fonts defined\n"
+#~ msgstr "%s:ཡིག་གཟུགས་ཅིག་ཡང་ངེས་འཛིན་མ་འབད་བས་\n"
+#~ msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+#~ msgstr ""
+#~ "%s: %d:[%s] ཞུ་བ་འབད་ཡོད་པའི་ཨིན་ཀོ་ཌིང་`%s' དེ་མཉམ་ཐིག་`%s' དང་གཅིག་ཁར་མཐུན་སྒྲིག་མིན་"
+#~ "འདུག\n"
+#~ msgid "%s: could not load fontmap\n"
+#~ msgstr "%s:དེ་གིས་ཡིག་གཟུགས་ས་ཁྲ་མངོན་གསལ་འབད་མི་ཚུགས་\n"
+#~ msgid "%s: could not set as default encoding\n"
+#~ msgstr "%s:དེ་ སྔོན་སྒྲིག་ཨེན་ཀོ་ཌིང་སྦེ་གཞི་སྒྲིག་འབད་མི་ཚུགས་\n"
+#~ msgid "encoding vector `%s' is in use\n"
+#~ msgstr "ཨེན་ཀོ་ཌིང་མཉམ་ཐིག་`%s' འདི་ལག་ལེན་འཐབ་པའི་སྒང་ཡོད་\n"
+#~ msgid "GF: invalid opcode %d in character %d\n"
+#~ msgstr "GF: ཡིག་འབྲུ་%d ནང་ལུ་ ནུས་མེད་ཨོཔ་ཀོཌི་%d ཡོདཔ་ཨིན་\n"
+#~ msgid "(gf) Character %d: invalid opcode %d\n"
+#~ msgstr "(gf) ཡིག་འབྲུ་ %d: ནུས་མེད་ཨོཔ་ཀོཌི་ %d\n"
+#~ msgid "(gf) character %d has an incorrect bounding box\n"
+#~ msgstr "(gf)ཡིག་འབྲུ་%d དེ་ལུ་ བདེན་མེད་བོན་ཌིང་སྒྲོམ་ཅིག་འདུག\n"
+#~ msgid "%s: bad checksum (expected %u, found %u)\n"
+#~ msgstr "%s: ཅེག་སམ་བྱང་ཉེས་(རེ་མདུན་མེད་མི་%u, འཐོབ་ཡོད་མི་%u)\n"
+#~ msgid "%s: junk in postamble\n"
+#~ msgstr "%s:པོསི་ཊེམ་བལི་ནང་ལུ་ཡོད་མི་ མཁོ་མེད་\n"
+#~ msgid "%s: File corrupted, or not a GF file\n"
+#~ msgstr "%s: ཡིག་སྣོད་ངན་ཅན་ ཡང་ན་ ཇི་ཨེཕ་ཡིག་སྣོད་མེན་པས་\n"
+#~ msgid "invalid page specification `%s'\n"
+#~ msgstr "ནུས་མེད་ཤོག་ལེབ་གསལ་བཀོད་`%s'\n"
+#~ msgid "garbage after DVI page specification ignored\n"
+#~ msgstr "ཌི་ཝི་ཨའི་ ཤོག་ལེབ་གསལ་བཀོད་ཀྱི་ཤུལ་ལས་ ཕྱགས་སྙིགས་སྣང་མེད་སྦེ་བཞག་ནུག\n"
+#~ msgid "more than 10 counters in page specification\n"
+#~ msgstr "ཤོག་ལེབ་གསལ་བཀོད་ནང་གི་ གདོང་ལན་༡༠་ལས་ལྷག་པའི་\n"
+#~ msgid "garbage after TeX page specification ignored\n"
+#~ msgstr "ཊེཀསི་ ཤོག་ལེབ་གསལ་བཀོད་ཀྱི་ཤུལ་ལས་ ཕྱགས་སྙིགས་སྣང་མེད་སྦེ་བཞག་ནུག\n"
+#~ msgid "custom"
+#~ msgstr "སྲོལ་སྒྲིག་"
+#~ msgid "Bad PK file: More bits than required\n"
+#~ msgstr "པི་ཀེ་ཡིག་སྣོད་བྱང་ཉེས་\n"
+#~ msgid "%s: checksum mismatch (expected %u, got %u)\n"
+#~ msgstr "%s: ཅེག་སམ་མ་མཐུནམ(རེ་འདུད་ཡོདཔ་%u ཐོབ་ཡོདཔ་%u)\n"
+#~ msgid "%s: unexpected preamble\n"
+#~ msgstr "%s:རེ་མདུན་མེད་པའི་ པིརི་ཨེམ་པཱལ་\n"
+#~ msgid "%s: unexpected end of file (no postamble)\n"
+#~ msgstr "%s: རེ་མདུན་མེད་པའི་ཡིག་སྣོད་ཀྱི་མཇུག་(པོསི་ཨེམ་བཱལ་མེད་)\n"
+#~ msgid "invalid PK file! (junk in postamble)\n"
+#~ msgstr "ནུས་མེད་ཀྱི་ པི་ཀེ་ཡིངག་སྣོད་ཡ!(པོསི་ཨེམ་བཱལ་ནང་གི་མཁོ་མེད་)\n"
+#~ msgid "%s: File corrupted, or not a PK file\n"
+#~ msgstr "%s:ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་ཨིནམ་དང་ ཡང་ན་ པི་ཀེ་ཡིག་སྣོད་ཅིག་མེན་\n"
+#~ msgid "%s: malformed value for key `%s'\n"
+#~ msgstr "%s: ལྡེ་མིག་`%s' གི་དོན་ལུ་ བཟོ་ཉེས་གྱུར་བའི་གནས་གོང་\n"
+#~ msgid "%s: unknown key `%s' ignored\n"
+#~ msgstr "%s:མ་ཤེས་པའི་ལྡེ་མིག་`%s' སྣང་མེད་བཞག་ཡོད་\n"
+#~ msgid "%s: no argument for key `%s', using defaults\n"
+#~ msgstr "%s:ལྡེ་མིག་`%s' གི་དོན་ལུ་སྒྲུབ་རྟགས་མིན་མ་བཀོད། སྔོན་སྒྲིག་ལག་ལེན་འཐབ་དོ་\n"
+#~ msgid "%s: argument `%s' ignored for key `%s'\n"
+#~ msgstr "%s:ལྡེ་མིག་`%s'གི་དོན་ལུ་ སྒྲུབ་རྟགས་ `%s' སྣང་མེད་བཞག་ཡོདཔ་\n"
+#~ msgid "%s: tried to pop top level layer\n"
+#~ msgstr "%s:སྤྱི་ཏོག་གི་གནས་རིམ་གུ་ཡོད་མི་བང་རིམ་ པོཔ་འབད་ནི་ལུ་འབད་བརྩོལ་བསྐྱེད་ཅི་\n"
+#~ msgid "(t1) failed to reset device resolution\n"
+#~ msgstr "(t1)ཐབས་འཕྲུལ་ཧུམ་ཆ་བསྐྱར་སྒྲིག་འབད་ནི་ལུ་ འཐུས་ཤོར་བྱུང་ནུག\n"
+#~ msgid "%s: could not encode font\n"
+#~ msgstr "%s: ཡིག་གཟུགས་ ཨེན་ཀོདིའབད་མ་ཚུགས་\n"
+#~ msgid "(t1) unsupported bitmap pad size %d\n"
+#~ msgstr "(t1) རྒྱབ་སྐྱོར་མེད་པའི་ བིཊི་མེཔ་ པེཌི་གི་ཚད་%d\n"
+#~ msgid "%s: Checksum mismatch (got %u, expected %u)\n"
+#~ msgstr "%s:ཅེག་སམ་ མ་མཐུནམ་(ཐོབ་ཡོད་མི་%u, རེ་མདུན་ཡོད་མི་ %u)\n"
+#~ msgid "%s: Error reading AFM data\n"
+#~ msgstr "%s: ཨེ་ཨེཕ་ཨེམ་གནད་སྡུད་ལྷག་ནི་ལུ་འཛོལ་བ་བྱུང་ནུག་\n"
+#~ msgid "Warning: TFM file `%s' has suspicious size\n"
+#~ msgstr "ཉེན་བརྡ་:ཊི་ཨེཕ་ཨེམ་ ཡིག་སྣོད་ `%s' ལུ་དོགས་པ་ཅན་གྱི་ཚད་ཡོདཔ་ཨིན་\n"
+#~ msgid "%s: font coding scheme truncated to 40 bytes\n"
+#~ msgstr "%s: ཡིག་གཟུགས་ཀོ་ཌིང་འཆར་ལས་དེ་ བཱའིཊི་༤༠་ལུ་མར་ཕབ་འབད་ནུག་\n"
+#~ msgid "%s: File corrupted, or not a TFM file\n"
+#~ msgstr "%s: ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་དང་ ཡང་ན་ ཊི་ཨེཕ་ཨེམ་ཡིག་སྣོད་ཅིག་མེན་པས་\n"
+#~ msgid "(tt) %s: could not load face: %s\n"
+#~ msgstr "(tt) %s: བཀོད་རྣམ་མངོན་གསལ་འབད་མ་ཚུགས་: %s\n"
+#~ msgid "(tt) %s: could not create face: %s\n"
+#~ msgstr "(tt) %s:བཀོད་རྣམ་གསར་བསྐྲུན་འབད་མ་ཚུགས:%s\n"
+#~ msgid "(tt) %s: could not create glyph: %s\n"
+#~ msgstr "(tt) %s: གིལིབ་གསར་བསྐྲུན་འབད་མ་ཚུགས་: %s\n"
+#~ msgid "(tt) %s: no acceptable map found, using #0\n"
+#~ msgstr "(tt) %s: དང་ལེན་འབད་བཏུབ་པའི་ ས་ཁྲ་མ་འཐོབ་།#0 ལག་ལེན་འཐབ་དོ་\n"
+#~ msgid "(tt) %s: could not set resolution: %s\n"
+#~ msgstr "(tt) %s: ཧུམ་ཆ་གཞི་སྒྲིག་འབད་མ་ཚུགས་: %s\n"
+#~ msgid "(tt) %s: could not set point size: %s\n"
+#~ msgstr "(tt) %s: ས་ཚིགས་ཀྱི་ཚད་གཞི་སྒྲིག་འབད་མ་ཚུགས་: %s\n"
+#~ msgid "(tt) %s: could not load PS name table\n"
+#~ msgstr "(tt) %s: པི་ཨེསི་མིང་གི་ཐིག་ཁྲམ་ མངོན་གསལ་འབད་མ་ཚུགས་\n"
+#~ msgid "%s: no encoding vector found, expect bad output\n"
+#~ msgstr "%s:ཨེན་ཀོ་ཌིང་མཉམ་ཐིག་ཅིག་ཡང་མ་ཐོབ། ཨའུཊི་པུཊི་ བྱང་ཉེས་ཅིག་རེ་འདོད་བསྐྱེད་སྡོད་\n"
+#~ msgid "(tt) %s: no font metric data\n"
+#~ msgstr "(tt) %s: ཡིག་གཟུགས་མེ་ཊིཀ་གནད་སྡུད་མེད་\n"
+#~ msgid "Crashing"
+#~ msgstr "བརྡབ་འཁྲུག་འབད་དོ་"
+#~ msgid "%s: Error: "
+#~ msgstr "%s:འཛོལ་བ་:"
+#~ msgid "Error"
+#~ msgstr "འཛོལ་བ་"
+#~ msgid "%s: Warning: "
+#~ msgstr "%s: ཉེན་བརྡ་: "
+#~ msgid "Warning"
+#~ msgstr "ཉེན་བརྡ་"
+#~ msgid "%s: Fatal: "
+#~ msgstr "%s:འཚུབ་ཆེན་: "
+#~ msgid "Fatal"
+#~ msgstr "འཚུབ་ཆེན་"
+#~ msgid "out of memory allocating %u bytes\n"
+#~ msgstr "%u བཱའིཊིསི་ སྤྲོད་ནི་ལུ་ དྲན་ཚད་ཀྱི་ལངས་མ་ཚུགས་པས་\n"
+#~ msgid "attempted to reallocate with zero size\n"
+#~ msgstr "ཀླད་ཀོར་གྱི་ཚད་ནང་ལུ་ ལོག་སྤྲོད་ནིའི་དཔའ་བཅམ་ནུག་\n"
+#~ msgid "failed to reallocate %u bytes\n"
+#~ msgstr "%u བཱའིཊིསི་ སྤྲོད་ནི་ལུ་ འཐུས་ཤོར་བྱུང་ནུག་\n"
+#~ msgid "attempted to callocate 0 members\n"
+#~ msgstr "འཐུས་མི་ ༠ འབད་མི་ཚུ་ ཀ་ལོ་ཀེདི་འབད་ནིའི་དཔའ་བཅམ་ཅི་\n"
+#~ msgid "attempted to callocate %u members with size 0\n"
+#~ msgstr "%u འཐུས་མི་ ཚད་༠་གྱི་ཐོག་ལས་ ཀ་ལོ་ཀེཌི་འབད་ནི་འི་ བཅམ་ཅི་\n"
+#~ msgid "failed to allocate %ux%u bytes\n"
+#~ msgstr "%ux%u བཱའིཊིསི་ སྤྲོད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ནུག་\n"
+#~ msgid "attempted to free NULL pointer\n"
+#~ msgstr "ནཱལ་ དཔག་བྱད་དེ་ དལཝ་བཞག་ནིའི་དོན་ལུ་དཔའ་བཅམ་བཅམ་ཨིན་\n"
+#~ msgid "%s: Checksum mismatch (expected %u, got %u)\n"
+#~ msgstr "%s:ཅེག་སམ་ མ་མཐུནམ་ (དེ་མདུན་བསྐྱེད་ཡོདཔ་ %u, ཐོབ་ཡོདཔ་ %u)\n"
+#~ msgid "(vf) %s: could not load font `%s'\n"
+#~ msgstr "(vf) %s: ཡིག་གཟུགས་`%s' མངོན་གསལ་འབད་མ་ཚུགས་\n"
+#~ msgid "(vf) %s: character %d redefined\n"
+#~ msgstr "(vf) %s: ཡིག་འབྲུ་ %d ལོག་ངེས་འཛིན་འབད་ནུག་\n"
+#~ msgid "(vf) %s: no postamble\n"
+#~ msgstr "(vf) %s: པོསཊི་ཨེམ་བཱལ་མིན་འདུག་\n"
+#~ msgid "%s: File corrupted, or not a VF file.\n"
+#~ msgstr "%s: ཡིག་སྣོད་ངན་ཅན་བཟོ་ཡོདཔ་ཨིནམ་དང་ ཡང་ན་ ཝི་ཨེཕ་ཡིག་སྣོད་མེན་\n"
+#~ msgid "No document loaded."
+#~ msgstr "ཡིག་ཆ་ག་ནི་ཡང་ མངོན་གསལ་མ་འབད་བས།"
+#~ msgid "Broken pipe."
+#~ msgstr "རྒྱུན་ཆད་པའི་རྒྱུད་དུང་།"
+#~ msgid "Error while decompressing file “%s”:\n"
+#~ msgstr "ཡིག་སྣོད་“%s”:ཨེབ་བཙུགས་བཤོལ་བའི་སྐབས་འཛོལ་བ་བྱུང་ཡི།\n"
+#~ msgid "File is not readable."
+#~ msgstr "ཡིག་སྣོད་ལྷག་མི་བཏུབ་པས།"
+#~ msgid "Document loaded."
+#~ msgstr "ཡིག་ཆ་མངོན་གསལ་འབད་ཡི།"
 #~ msgid "_Previous"
 #~ msgstr "ཧེ་མམ།(_P)"
 #~ msgid "_Next"
