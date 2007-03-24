@@ -1259,8 +1259,11 @@ ev_window_load_job_cb  (EvJobLoad *job,
 			g_object_unref (ev_window->priv->document);
 		ev_window->priv->document = g_object_ref (document);
 
-		if (!ev_window->priv->unlink_temp_file) {
+		if (job->mode != EV_WINDOW_MODE_PREVIEW) {
 			setup_view_from_metadata (ev_window);
+		}
+
+		if (!ev_window->priv->unlink_temp_file) {
 			ev_window_add_recent (ev_window, ev_window->priv->uri);
 		}
 
