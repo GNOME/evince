@@ -94,6 +94,8 @@
 
 #include <string.h>
 
+#include "xdg-user-dir-lookup.c"
+
 typedef enum {
 	PAGE_MODE_DOCUMENT,
 	PAGE_MODE_PASSWORD
@@ -1494,6 +1496,13 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
 					  window->priv->uri);
 	}
+	else {
+		char *folder;
+		folder = xdg_user_dir_lookup ("DOCUMENTS");
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
+						     folder);
+		free (folder);
+	}
 	
 	g_signal_connect (chooser, "response",
 			  G_CALLBACK (file_open_dialog_response_cb),
@@ -1923,6 +1932,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 	gchar *base_name;
 	gchar *file_name;
+	gchar *folder;
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -1937,10 +1947,13 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER (fc), TRUE);	
 	file_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
 	base_name = g_path_get_basename (file_name);
+        folder = xdg_user_dir_lookup ("DOCUMENTS");
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
+        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc), folder);
 	g_free (file_name);
 	g_free (base_name);
-
+        free (folder);
+        
 	g_signal_connect (fc, "response",
 			  G_CALLBACK (file_save_dialog_response_cb),
 			  ev_window);

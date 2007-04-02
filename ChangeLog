@@ -1,3 +1,12 @@
+2007-04-02  Matthias Clasen  <mclasen@redhat.com>
+
+	* shell/ev-window.c (file_open_dialog_response_cb): Use
+	the xdg-user-dirs DOCUMENTS folder as default folder when
+	opening a file chooser.  (#424858)
+
+	* shell/xdg-user-dir-lookup.c: Copy-and-pasted file from
+	xdg-user-dirs.
+
 2007-03-24  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_load_job_cb):
