@@ -82,7 +82,8 @@ evince_SOURCES=				\
 	ev-stock-icons.h		\
 	ev-tooltip.c			\
 	ev-tooltip.h			\
-	main.c
+	main.c				\
+	xdg-user-dir-lookup.c
 
 
 if WITH_GNOME_PRINT

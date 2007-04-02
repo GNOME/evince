@@ -30,7 +30,7 @@
 #include <string.h>
 
 
-static char *
+char *
 xdg_user_dir_lookup (const char *type)
 {
   FILE *file;
@@ -149,17 +149,3 @@ xdg_user_dir_lookup (const char *type)
     return strdup (home_dir);
 }
 
-#ifdef STANDALONE
-int
-main (int argc, char *argv[])
-{
-  if (argc != 2)
-    {
-      fprintf (stderr, "Usage %s <dir-type>\n", argv[0]);
-      exit (1);
-    }
-  
-  printf ("%s\n", xdg_user_dir_lookup (argv[1]));
-  return 0;
-}
-#endif

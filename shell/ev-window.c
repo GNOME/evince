@@ -94,7 +94,7 @@
 
 #include <string.h>
 
-#include "xdg-user-dir-lookup.c"
+char *xdg_user_dir_lookup (char *type);
 
 typedef enum {
 	PAGE_MODE_DOCUMENT,

@@ -1,5 +1,13 @@
 2007-04-02  Matthias Clasen  <mclasen@redhat.com>
 
+	Fixup the previous commit:
+
+	* shell/Makefile.am (SOURCES): Add xdg-user-dir-lookup.c
+	* shell/xdg-user-dir-lookup.c: Make the function non-static
+	* shell/ev-window.c: Don't include xdg-user-dir-lookup.c
+
+2007-04-02  Matthias Clasen  <mclasen@redhat.com>
+
 	* shell/ev-window.c (file_open_dialog_response_cb): Use
 	the xdg-user-dirs DOCUMENTS folder as default folder when
 	opening a file chooser.  (#424858)
