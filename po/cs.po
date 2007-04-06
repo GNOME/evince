@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-03 18:56+0200\n"
-"PO-Revision-Date: 2007-04-03 18:56+0200\n"
+"POT-Creation-Date: 2007-04-06 15:00+0200\n"
+"PO-Revision-Date: 2007-04-06 15:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,8 @@ msgid ""
 "The document is composed by several files. One or more of such files cannot "
 "be accessed."
 msgstr ""
+"Dokument sestává z několika souborů. Jeden nebo více těchto souborů je "
+"nepřístupných."
 
 #: ../backend/dvi/dvi-document.c:89
 msgid "File not available"
@@ -244,9 +246,8 @@ msgid "Remote files aren't supported"
 msgstr "Nejsou podporované vícesouborové zipy"
 
 #: ../backend/impress/impress-document.c:305
-#, fuzzy
 msgid "Invalid document"
-msgstr "Vytisknout tento dokument"
+msgstr "Neplatný dokument"
 
 #: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:316
 #, c-format
@@ -467,9 +468,8 @@ msgid "<b>Optimized:</b>"
 msgstr "<b>Optimalizováno:</b>"
 
 #: ../data/evince-properties.glade.h:9
-#, fuzzy
 msgid "<b>Paper Size:</b>"
-msgstr "<b>Optimalizováno:</b>"
+msgstr "<b>Velikost papíru:</b>"
 
 #: ../data/evince-properties.glade.h:10
 msgid "<b>Producer:</b>"
@@ -512,26 +512,26 @@ msgstr "Žádný"
 #.
 #: ../properties/ev-properties-view.c:260
 msgid "default:mm"
-msgstr ""
+msgstr "default:mm"
 
 #. Imperial measurement (inches)
 #: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%.2f x %.2f in"
-msgstr ""
+msgstr "%.2f x %.2f in"
 
 #. Metric measurement (millimeters)
 #: ../properties/ev-properties-view.c:297
 #, c-format
 msgid "%.0f x %.0f mm"
-msgstr ""
+msgstr "%.0f x %.0f mm"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:308
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr ""
+msgstr "%s, na výšku (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -776,7 +776,7 @@ msgstr "Zbývá prohledat %3d%%"
 #: ../shell/ev-window.c:737
 #, c-format
 msgid "Page %s - %s"
-msgstr ""
+msgstr "Strana %s - %s"
 
 #: ../shell/ev-window.c:739
 #, c-format
@@ -801,9 +801,9 @@ msgid "Cannot open a copy."
 msgstr "Nelze otevřít kopii."
 
 #: ../shell/ev-window.c:1855
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create file “%s”: %s"
-msgstr "Načítání dokumentu '%s' selhalo"
+msgstr "Selhalo vytváření souboru \"%s\" : %s"
 
 #: ../shell/ev-window.c:1916
 #, c-format
@@ -900,9 +900,8 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:3559
-#, fuzzy
 msgid "© 1996-2007 The Evince authors"
-msgstr "© 1996-2005 Autoři Evince"
+msgstr "© 1996-2007 Autoři Evince"
 
 #: ../shell/ev-window.c:3565
 msgid "translator-credits"
