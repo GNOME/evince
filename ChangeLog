@@ -1,3 +1,11 @@
+2007-04-07  Ricardo Markiewicz  <rmarkie@fi.uba.ar>
+
+	* backend/dvi/dvi-document.c: (dvi_document_class_init), (hsb2rgb),
+	(dvi_document_do_color_special):
+	* backend/dvi/mdvi-lib/special.c: (register_builtin_specials):
+
+	Implement font color specials in the DVI backend. Fixes bug #303651.
+
 2007-04-02  Matthias Clasen  <mclasen@redhat.com>
 
 	Fixup the previous commit:

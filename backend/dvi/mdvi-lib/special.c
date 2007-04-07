@@ -65,6 +65,7 @@ static void register_builtin_specials(void)
 	int	i;
 
 	ASSERT(registered_builtins == 0);	
+	registered_builtins = 1;
 	for(i = 0; i < NSPECIALS; i++)
 		mdvi_register_special(
 			builtins[i].label,
@@ -72,7 +73,6 @@ static void register_builtin_specials(void)
 			builtins[i].regex,
 			builtins[i].handler,
 			1 /* replace if exists */);
-	registered_builtins = 1;
 }
 
 static DviSpecial *find_special_prefix(const char *prefix)

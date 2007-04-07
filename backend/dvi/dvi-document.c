@@ -58,6 +58,7 @@ struct _DviDocument
 
 typedef struct _DviDocumentClass DviDocumentClass;
 
+static void dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *arg);
 static void dvi_document_document_iface_init (EvDocumentIface *iface);
 static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void dvi_document_get_page_size 			(EvDocument   *document,
@@ -206,11 +207,10 @@ dvi_document_finalize (GObject *object)
 	DviDocument *dvi_document = DVI_DOCUMENT(object);
 	
 	g_mutex_lock (dvi_context_mutex);
-	if (dvi_document->context)
-	    {
+	if (dvi_document->context) {
 		mdvi_pixbuf_device_free (&dvi_document->context->device);
 		mdvi_destroy_context (dvi_document->context);
-	    }
+	}
 	g_mutex_unlock (dvi_context_mutex);
 
 	if (dvi_document->params)
@@ -230,6 +230,7 @@ dvi_document_class_init (DviDocumentClass *klass)
 	gobject_class->finalize = dvi_document_finalize;
 
 	mdvi_init_kpathsea("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
+	mdvi_register_special ("Color", "color", NULL, dvi_document_do_color_special, 1);
 	mdvi_register_fonts ();
 
 	dvi_context_mutex = g_mutex_new ();
@@ -344,6 +345,112 @@ dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 	iface->get_dimensions = dvi_document_thumbnails_get_dimensions;
 }
 
+#define RGB2ULONG(r,g,b) ((0xFF<<24)|(r<<16)|(g<<8)|(b))
+
+static gboolean
+hsb2rgb (float h, float s, float v, char *red, char *green, char *blue)
+{
+        float i, f, p, q, t, r, g, b;
+
+        if (h == 360)
+                h = 0;
+        else if ((h > 360) || (h < 0))
+                return FALSE;
+
+        s /= 100;
+        v /= 100;
+        h /= 60;
+        i = floor (h);
+        f = h - i;
+        p = v * (1 - s);
+        q = v * (1 - (s * f));
+        t = v * (1 - (s * (1 - f)));
+
+	if (i == 0) {
+		r = v;
+		g = t;
+		b = p;
+	} else if (i == 1) {
+		r = q;
+		g = v;
+		b = p;
+	} else if (i == 2) {
+		r = p;
+		g = v;
+		b = t;
+	} else if (i == 3) {
+		r = p;
+		g = q;
+		b = v;
+	} else if (i == 4) {
+		r = t;
+		g = p;
+		b = v;
+	} else if (i == 5) {
+		r = v;
+		g = p;
+		b = q;
+	}
+
+        (*red) = (char)floor(r * 255);
+        (*green) = (char)floor(g * 255);
+        (*blue) = (char)floor(b * 255);
+	
+        return TRUE;
+}
+
+static void
+dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *arg)
+{
+        char *op, *color;
+
+        if (strncmp (arg, "pop", 3) == 0) {
+                mdvi_pop_color (dvi);
+        } else if (strncmp (arg, "push", 4) == 0) {
+                /* Find color source : Named, CMYK or RGB */
+                const char *tmp = arg+4;
+                while (isspace (*tmp)) tmp++;
+
+                if (!strncmp ("rgb", tmp, 3)) {
+                        float r, g, b;
+                        unsigned char red, green, blue;
+                        sscanf (tmp+4, "%f %f %f", &r, &g, &b);
+                        red = 255*r;
+                        green = 255*g;
+                        blue = 255*b;
+                        mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
+                } else if (!strncmp ("hsb", tmp, 4)) {
+                        float h, s, b;
+                        char red, green, blue;
+                        sscanf (tmp+4, "%f %f %f", &h, &s, &b);
+
+                        if (hsb2rgb (h, s, b, &red, &green, &blue))
+                                mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
+                } else if (!strncmp ("cmyk", tmp, 4)) {
+                        double r, g, b, c, m, y, k;
+                        
+                        sscanf (tmp+5, "%f %f %f %f", &c, &m, &y, &k);
+
+                        r = 1.0 - c - k;
+                        if (r < 0.0)
+                                r = 0.0;
+                        g = 1.0 - m - k;
+                        if (g < 0.0)
+                                g = 0.0;
+                        b = 1.0 - y - k;
+                        if (b < 0.0)
+                                b = 0.0;
+                        mdvi_push_color (dvi, RGB2ULONG ((char)(r*255+0.5), (char)(r*255+0.5),
+                                                         (char)(b*255+0.5)), 0xFFFFFFFF);
+                } else {
+                        GdkColor color;
+                        if (gdk_color_parse (tmp, &color))
+                                mdvi_push_color (dvi, RGB2ULONG (color.red*255/65535,
+                                                                 color.green*255/65535,
+                                                                 color.blue*255/65535), 0xFFFFFFFF);
+                }
+        }
+}
 
 static void
 dvi_document_init_params (DviDocument *dvi_document)
