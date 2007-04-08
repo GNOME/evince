@@ -150,6 +150,28 @@ tiff_document_get_n_pages (EvDocument  *document)
 }
 
 static void
+tiff_document_get_resolution (TiffDocument *tiff_document,
+			      gfloat       *x_res,
+			      gfloat       *y_res)
+{
+	gfloat x = 72.0, y = 72.0;
+	gushort unit;
+	
+	if (TIFFGetField (tiff_document->tiff, TIFFTAG_XRESOLUTION, &x) &&
+	    TIFFGetField (tiff_document->tiff, TIFFTAG_YRESOLUTION, &y)) {
+		if (TIFFGetFieldDefaulted (tiff_document->tiff, TIFFTAG_RESOLUTIONUNIT, &unit)) {
+			if (unit == RESUNIT_CENTIMETER) {
+				x *= 2.54;
+				y *= 2.54;
+			}
+		}
+	}
+
+	*x_res = x;
+	*y_res = y;
+}
+
+static void
 tiff_document_get_page_size (EvDocument   *document,
 			     int           page,
 			     double       *width,
@@ -170,8 +192,7 @@ tiff_document_get_page_size (EvDocument   *document,
 	
 	TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &w);
 	TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &h);
-	TIFFGetField (tiff_document->tiff, TIFFTAG_XRESOLUTION, &x_res);
-	TIFFGetField (tiff_document->tiff, TIFFTAG_YRESOLUTION, &y_res);
+	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
 	h = h * (x_res / y_res);
 	
 	*width = w;
@@ -212,22 +233,14 @@ tiff_document_render_pixbuf (EvDocument      *document,
 		return NULL;
 	}
 
-	if (!TIFFGetField (tiff_document->tiff, TIFFTAG_XRESOLUTION, &x_res)) {
-		pop_handlers ();
-		return NULL;
-	}
-
-	if (! TIFFGetField (tiff_document->tiff, TIFFTAG_YRESOLUTION, &y_res)) {
-		pop_handlers ();
-		return NULL;
-	}
-
+	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
+	
 	pop_handlers ();
   
 	/* Sanity check the doc */
 	if (width <= 0 || height <= 0)
 		return NULL;                
-        
+
 	rowstride = width * 4;
 	if (rowstride / 4 != width)
 		/* overflow */
@@ -247,12 +260,14 @@ tiff_document_render_pixbuf (EvDocument      *document,
 					   (GdkPixbufDestroyNotify) g_free, NULL);
 	
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
-	TIFFReadRGBAImageOriented (tiff_document->tiff, width, height, (uint32 *)gdk_pixbuf_get_pixels (pixbuf), ORIENTATION_TOPLEFT, 1);
+	TIFFReadRGBAImageOriented (tiff_document->tiff, width, height,
+				   (uint32 *)gdk_pixbuf_get_pixels (pixbuf),
+				   ORIENTATION_TOPLEFT, 1);
 	pop_handlers ();
 	
 	scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
 						 width * rc->scale,
-						 height * rc->scale * (x_res/y_res),
+						 height * rc->scale * (x_res / y_res),
 						 GDK_INTERP_BILINEAR);
 	g_object_unref (pixbuf);
 	
