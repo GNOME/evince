@@ -24,48 +24,54 @@
 
 #include <ev-document.h>
 #include <ev-document-thumbnails.h>
+#include <ev-async-renderer.h>
 #include <ev-document-factory.h>
 
+#include <stdlib.h>
 #include <string.h>
 
 #define THUMBNAIL_SIZE 128
 
-static gboolean
-evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
+struct AsyncData {
+	EvDocument  *document;
+	const gchar *output;
+	gint         size;
+	gboolean     success;
+};
+
+static EvDocument *
+evince_thumbnailer_get_document (const gchar *uri)
 {
 	EvDocument *document = NULL;
-	EvRenderContext *rc;
-	double width, height;
-	GError *error = NULL;
-	GdkPixbuf *pixbuf;
+	GError     *error = NULL;
 
 	document = ev_document_factory_get_document  (uri, &error);
-
 	if (error) {
 		if (error->domain == EV_DOCUMENT_ERROR &&
-	    	    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+		    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
 			/* FIXME: Create a thumb for cryp docs */
 			g_error_free (error);
-			return FALSE;
+			return NULL;
 		}
 		g_error_free (error);
-		return FALSE;
+		return NULL;
 	}
 	
-	if (document == NULL) {
-		return FALSE;
-	}
+	return document;
+}
 
-	if (!EV_IS_DOCUMENT_THUMBNAILS (document)) {
-		return FALSE;
-	}
+static gboolean
+evince_thumbnail_pngenc_get (EvDocument *document, const char *thumbnail, int size)
+{
+	EvRenderContext *rc;
+	double width, height;
+	GdkPixbuf *pixbuf;
 
 	ev_document_get_page_size (document, 0, &width, &height);
-	rc = ev_render_context_new (0, 0, THUMBNAIL_SIZE / width);
 
-	pixbuf = ev_document_thumbnails_get_thumbnail
-			(EV_DOCUMENT_THUMBNAILS (document), rc, FALSE);
-	
+	rc = ev_render_context_new (0, 0, size / width);
+	pixbuf = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (document),
+						       rc, FALSE);
 	g_object_unref (rc);
 	
 	if (pixbuf != NULL) {
@@ -96,25 +102,40 @@ evince_thumbnail_pngenc_get (const char *uri, const char *thumbnail, int size)
 				g_object_unref  (overlaid_pixbuf);
 			}
 		}
+		
 		if (gdk_pixbuf_save (pixbuf, thumbnail, "png", NULL, NULL)) {
 			g_object_unref  (pixbuf);
-			g_object_unref (document);
 			return TRUE;
-		} else {
-			g_object_unref  (pixbuf);
-			g_object_unref (document);
 		}
+
+		g_object_unref  (pixbuf);
 	}
+	
 	return FALSE;
+}
+
+static gpointer
+evince_thumbnail_pngenc_get_async (struct AsyncData *data)
+{
+	ev_document_doc_mutex_lock ();
+	data->success = evince_thumbnail_pngenc_get (data->document,
+						     data->output,
+						     data->size);
+	ev_document_doc_mutex_unlock ();
+	
+	g_idle_add ((GSourceFunc)gtk_main_quit, NULL);
+	
+	return NULL;
 }
 
 int
 main (int argc, char *argv[])
 {
-	int res;
-	char *input, *output;
-	int size;
-	char *uri;
+	EvDocument *document;
+	const char *input;
+	const char *output;
+	int         size;
+	char       *uri;
 
 	if (argc <= 2 || argc > 5 || strcmp (argv[1], "-h") == 0 ||
 	    strcmp (argv[1], "--help") == 0) {
@@ -122,12 +143,10 @@ main (int argc, char *argv[])
 		return -1;
 	}
 
-	res = gnome_vfs_init ();
-
 	if (!strcmp (argv[1], "-s")) {
 		input = argv[3];
 		output = argv[4];
-		size = g_strtod (argv[2], NULL);
+		size = atoi (argv[2]);
 	} else {
 		input = argv[1];
 		output = argv[2];
@@ -139,13 +158,48 @@ main (int argc, char *argv[])
 		return -1;
 	}
 
-	uri = gnome_vfs_make_uri_from_shell_arg (input);
+	if (!g_thread_supported ())
+		g_thread_init (NULL);
+	
+	gnome_vfs_init ();
 
-	if (evince_thumbnail_pngenc_get (uri, output, size)) {
-		g_free (uri);
-		return 0;
-	} else {
-		g_free (uri);
+	uri = gnome_vfs_make_uri_from_shell_arg (input);
+	document = evince_thumbnailer_get_document (uri);
+	g_free (uri);
+
+	if (!document)
+		return -2;
+
+	if (!EV_IS_DOCUMENT_THUMBNAILS (document)) {
+		g_object_unref (document);
+		return FALSE;
+	}
+
+	if (EV_IS_ASYNC_RENDERER (document)) {
+		struct AsyncData data;
+
+		gtk_init (&argc, &argv);
+		
+		data.document = document;
+		data.output = output;
+		data.size = size;
+
+		g_thread_create ((GThreadFunc) evince_thumbnail_pngenc_get_async,
+				 &data, FALSE, NULL);
+		
+		gtk_main ();
+
+		g_object_unref (document);
+
+		return data.success ? 0 : -2;
+	}
+
+	if (!evince_thumbnail_pngenc_get (document, output, size)) {
+		g_object_unref (document);
 		return -2;
 	}
+
+	g_object_unref (document);
+
+	return 0;
 }

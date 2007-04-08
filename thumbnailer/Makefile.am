@@ -35,9 +35,18 @@ schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \
 	evince-thumbnailer-djvu.schemas.in \
 	evince-thumbnailer-comics.schemas.in \
+	evince-thumbnailer-ps.schemas.in \
 	evince-thumbnailer.schemas.in
 
-schema_DATA = evince-thumbnailer.schemas
+schema_DATA = 
+
+if ENABLE_PDF
+schema_DATA += evince-thumbnailer.schemas
+endif
+
+if ENABLE_PS
+schema_DATA += evince-thumbnailer-ps.schemas
+endif
 
 if ENABLE_DJVU
 schema_DATA += evince-thumbnailer-djvu.schemas

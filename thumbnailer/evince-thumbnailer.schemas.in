@@ -26,5 +26,55 @@
             </locale>
         </schema>
 
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-bzpdf/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-bzpdf/enable</applyto>
+            <owner>evince</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short>Enable thumbnailing of PDF Documents</short>
+                <long>Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails</long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-bzpdf/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-bzpdf/command</applyto>
+            <owner>evince</owner>
+            <type>string</type>
+            <default>evince-thumbnailer -s %s %u %o</default>
+            <locale name="C">
+                <short>Thumbnail command for PDF Documents</short>
+                <long>Valid command plus arguments for the PDF Document thumbnailer.  See nautilus thumbnailer documentation for more information.</long>
+            </locale>
+        </schema>
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-gzpdf/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-gzpdf/enable</applyto>
+            <owner>evince</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short>Enable thumbnailing of PDF Documents</short>
+                <long>Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails</long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-gzpdf/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-gzpdf/command</applyto>
+            <owner>evince</owner>
+            <type>string</type>
+            <default>evince-thumbnailer -s %s %u %o</default>
+            <locale name="C">
+                <short>Thumbnail command for PDF Documents</short>
+                <long>Valid command plus arguments for the PDF Document thumbnailer.  See nautilus thumbnailer documentation for more information.</long>
+            </locale>
+        </schema>
+
     </schemalist>
 </gconfschemafile>

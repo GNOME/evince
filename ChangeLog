@@ -1,3 +1,14 @@
+2007-03-08  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* thumbnailer/Makefile.am:
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+	* thumbnailer/evince-thumbnailer.schemas.in:
+	* thumbnailer/evince-thumbnailer-ps.schemas.in:
+
+	Add support for ps, eps and compressed documents thumbnails. Do not
+	ignore size parameter. 
+
 2007-04-07  Ricardo Markiewicz  <rmarkie@fi.uba.ar>
 
 	* backend/dvi/dvi-document.c: (dvi_document_class_init), (hsb2rgb),
