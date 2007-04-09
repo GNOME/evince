@@ -900,8 +900,14 @@ setup_size_from_metadata (EvWindow *window)
         if (window->priv->page_cache &&
     	    ev_metadata_manager_get (uri, "window_width_ratio", &width_ratio, FALSE) &&
 	    ev_metadata_manager_get (uri, "window_height_ratio", &height_ratio, FALSE)) {
+		
 		gint document_width;
 		gint document_height;
+		
+		GdkScreen *screen;
+		
+		gint request_width;
+		gint request_height;
 
 		ev_page_cache_get_max_width (window->priv->page_cache, 
 					     0, 1.0,
@@ -910,9 +916,19 @@ setup_size_from_metadata (EvWindow *window)
 					     0, 1.0,
 					     &document_height);			
 		
+		request_width = g_value_get_double (&width_ratio) * document_width;
+		request_height = g_value_get_double (&height_ratio) * document_height;
+		
+		screen = gtk_window_get_screen (GTK_WINDOW (window));
+		
+		if (screen) {
+			request_width = MIN (request_width, gdk_screen_get_width (screen));
+			request_height = MIN (request_width, gdk_screen_get_height (screen));
+		}
+			        
 		gtk_window_resize (GTK_WINDOW (window),
-				   g_value_get_double (&width_ratio) * document_width,
-				   g_value_get_double (&height_ratio) * document_height);
+				   request_width,
+				   request_height);
 	    	g_value_unset (&width_ratio);
 		g_value_unset (&height_ratio);
 	}
