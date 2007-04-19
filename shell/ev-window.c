@@ -4516,10 +4516,45 @@ launch_action (EvWindow *window, EvLinkAction *action)
 	   allowing to launch executables is a good idea though. -- marco */
 }
 
+static gboolean
+uri_is_valid (const gchar *uri)
+{
+	gchar *p = (gchar *) uri;
+	
+	if (!p || !g_ascii_isalpha (*p))
+		return FALSE;
+	
+	p++;
+	while (g_ascii_isalnum (*p))
+		p++;
+
+	return (g_ascii_strncasecmp (p, "://", strlen ("://")) == 0);
+}
+
 static void
 launch_external_uri (EvWindow *window, EvLinkAction *action)
 {
-	gnome_vfs_url_show (ev_link_action_get_uri (action));
+	const gchar *uri = ev_link_action_get_uri (action);
+	
+	if (!uri_is_valid (uri)) {
+		GtkWidget *dialog;
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 _("Unable to open external link"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+							  _("Invalid URI: “%s”"), uri);
+		g_signal_connect (dialog, "response",
+				  G_CALLBACK (gtk_widget_destroy),
+				  NULL);
+		gtk_widget_show (dialog);
+
+		return;
+	}
+	
+	gnome_vfs_url_show (uri);
 }
 
 static void

@@ -1,5 +1,11 @@
 2007-04-19  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (uri_is_valid), (launch_external_uri):
+
+	Check whether uri is valid before launching it. Fixes bug #427664.
+
+2007-04-19  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c:
 
 	Change key accelerator for Open a Copy menu entry which is in conflict
