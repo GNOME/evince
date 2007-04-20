@@ -606,6 +606,16 @@ update_sizing_buttons (EvWindow *window)
 	}
 }
 
+/**
+ * ev_window_is_empty:
+ * @ev_window: The instance of the #EvWindow.
+ *
+ * It does look if there is any document loaded or if there is any job to load
+ * a document.
+ *
+ * Returns: %TRUE if there isn't any document loaded or any any documente to be
+ *          loaded, %FALSE in other case.
+ */
 gboolean
 ev_window_is_empty (const EvWindow *ev_window)
 {
@@ -1340,12 +1350,27 @@ ev_window_load_job_cb  (EvJobLoad *job,
 	return;
 }
 
+/**
+ * ev_window_get_uri:
+ * @ev_window: The instance of the #EvWindow.
+ *
+ * It returns the uri of the document showed in the #EvWindow.
+ *
+ * Returns: the uri of the document showed in the #EvWindow.
+ */
 const char *
 ev_window_get_uri (EvWindow *ev_window)
 {
 	return ev_window->priv->uri;
 }
 
+/**
+ * ev_window_close_dialogs:
+ * @ev_window: The window where dialogs will be closed.
+ *
+ * It looks for password, print and properties dialogs and closes them and
+ * frees them from memory. If there is any print job it does free it too.
+ */
 static void
 ev_window_close_dialogs (EvWindow *ev_window)
 {
@@ -5187,6 +5212,13 @@ ev_window_init (EvWindow *ev_window)
 	ev_window_setup_action_sensitivity (ev_window);
 }
 
+/**
+ * ev_window_new:
+ *
+ * Creates a #GtkWidget that represents the window.
+ *
+ * Returns: the #GtkWidget that represents the window.
+ */
 GtkWidget *
 ev_window_new (void)
 {

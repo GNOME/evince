@@ -43,6 +43,11 @@ static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ROTATE_RIGHT,     "object-rotate-right"},
 };
 
+/**
+ * ev_stock_icons_init:
+ *
+ * Creates a new icon factory, adding the base stock icons to it.
+ */
 void
 ev_stock_icons_init (void)
 {

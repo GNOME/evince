@@ -52,6 +52,14 @@ add_job_to_async_queue (GQueue *queue, EvJob *job)
 	g_queue_push_tail (queue, job);
 }
 
+/**
+ * add_job_to_queue_locked:
+ * @queue: a #GQueue where the #EvJob will be added.
+ * @job: an #EvJob to be added to the specified #GQueue.
+ *
+ * Add the #EvJob to the specified #GQueue and woke up the ev_render_thread who
+ * is waiting for render_cond.
+ */
 static void
 add_job_to_queue_locked (GQueue *queue,
 			 EvJob  *job)
@@ -61,6 +69,14 @@ add_job_to_queue_locked (GQueue *queue,
 	g_cond_broadcast (render_cond);
 }
 
+/**
+ * notify_finished:
+ * @job: the object that signal will be reseted.
+ *
+ * It does emit the job finished signal and returns %FALSE.
+ *
+ * Returns: %FALSE.
+ */
 static gboolean
 notify_finished (GObject *job)
 {
@@ -69,6 +85,13 @@ notify_finished (GObject *job)
 	return FALSE;
 }
 
+/**
+ * job_finished_cb:
+ * @job: the #EvJob that has been handled.
+ *
+ * It does finish the job last work and look if there is any more job to be
+ * handled.
+ */
 static void
 job_finished_cb (EvJob *job)
 {
@@ -77,6 +100,14 @@ job_finished_cb (EvJob *job)
 	ev_job_queue_run_next ();
 }
 
+/**
+ * handle_job:
+ * @job: the #EvJob to be handled.
+ *
+ * First, it does check if the job is async and then it does attend it if
+ * possible giving a failed assertion otherwise. If the job isn't async it does
+ * attend it and notify that the job has been finished.
+ */
 static void
 handle_job (EvJob *job)
 {
@@ -114,6 +145,24 @@ handle_job (EvJob *job)
 	}
 }
 
+/**
+ * search_for_jobs_unlocked:
+ *
+ * Check if there is any job at the synchronized queues and return any existing
+ * job in them taking in account the next priority:
+ *
+ *  render_queue_high       >
+ *  thumbnail_queue_high    >
+ *  render_queue_low        >
+ *  links_queue             >
+ *  load_queue              >
+ *  thumbnail_queue_low     >
+ *  fonts_queue             >
+ *  print_queue             >
+ *
+ * Returns: an available #EvJob in the queues taking in account stablished queue
+ *          priorities.
+ */
 static EvJob *
 search_for_jobs_unlocked (void)
 {
@@ -154,6 +203,15 @@ search_for_jobs_unlocked (void)
 	return NULL;
 }
 
+/**
+ * no_jobs_available_unlocked:
+ *
+ * Looks if there is any job at render, links, load, thumbnail. fonts and print
+ * queues.
+ *
+ * Returns: %TRUE if the render, links, load, thumbnail, fonts and print queues
+ *          are empty, %FALSE in other case.
+ */
 static gboolean
 no_jobs_available_unlocked (void)
 {
@@ -168,6 +226,16 @@ no_jobs_available_unlocked (void)
 }
 
 /* the thread mainloop function */
+/**
+ * ev_render_thread:
+ * @data: data passed to the thread.
+ *
+ * The thread mainloop function. It does wait for any available job in synced
+ * queues to handle it.
+ *
+ * Returns: the return value of the thread, which will be returned by
+ *          g_thread_join().
+ */
 static gpointer
 ev_render_thread (gpointer data)
 {
@@ -192,6 +260,12 @@ ev_render_thread (gpointer data)
 
 }
 
+/**
+ * ev_job_queue_run_next:
+ *
+ * It does look for any job on the render high priority queue first and after
+ * in the render low priority one, and then it does handle it.
+ */
 static void
 ev_job_queue_run_next (void)
 {
@@ -211,6 +285,12 @@ ev_job_queue_run_next (void)
 }
 
 /* Public Functions */
+/**
+ * ev_job_queue_init:
+ *
+ * Creates a new cond, new mutex, a thread for evince job handling and inits
+ * every queue.
+ */
 void
 ev_job_queue_init (void)
 {

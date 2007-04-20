@@ -66,6 +66,24 @@ value_free (GValue *value)
 	g_free (value);
 }
 
+/**
+ * arguments_parse:
+ *
+ * Parses the arguments and creates a #GHashTable with this data.
+ *
+ *  key                 ->  value
+ *
+ *  dislay              ->  display at the default screen.
+ *  screen              ->  screen number.
+ *  page-label          ->  only if the page label argument has been passed,
+ *                          the page of the document to display.
+ *  mode                ->  only if the view mode is one of the availables,
+ *                          the view mode.
+ *  unlink-temp-file    ->  only if the view mode is preview mode and
+ *                          unlink-temp-file has been passed, unlink-temp-file.
+ *
+ * Returns: a pointer into #GHashTable with data from the arguments.
+ */
 static GHashTable *
 arguments_parse (void)
 {

@@ -101,6 +101,13 @@ ev_application_register_service (EvApplication *application)
 }
 #endif /* ENABLE_DBUS */
 
+/**
+ * ev_application_get_instance:
+ *
+ * Checks for #EvApplication instance, if it doesn't exist it does create it.
+ *
+ * Returns: an instance of the #EvApplication data.
+ */
 EvApplication *
 ev_application_get_instance (void)
 {
@@ -161,6 +168,15 @@ init_session (EvApplication *application)
 			  G_CALLBACK (removed_from_session), application);
 }
 
+/**
+ * ev_display_open_if_needed:
+ * @name: the name of the display to be open if it's needed.
+ *
+ * Search among all the open displays if any of them have the same name as the
+ * passed name. If the display isn't found it tries the open it.
+ *
+ * Returns: a #GdkDisplay of the display with the passed name.
+ */
 static GdkDisplay *
 ev_display_open_if_needed (const gchar *name)
 {
@@ -184,6 +200,17 @@ ev_display_open_if_needed (const gchar *name)
 	return display != NULL ? display : gdk_display_open (name);
 }
 
+/**
+ * get_screen_from_args:
+ * @args: a #GHashTable with data passed to the application.
+ *
+ * Looks for the screen in the display available in the hash table passed to the
+ * application. If the display isn't opened, it's opened and the #GdkScreen
+ * assigned to the screen in that display returned.
+ *
+ * Returns: the #GdkScreen assigned to the screen on the display indicated by
+ *          the data on the #GHashTable.
+ */
 static GdkScreen *
 get_screen_from_args (GHashTable *args)
 {
@@ -212,6 +239,16 @@ get_screen_from_args (GHashTable *args)
 	return screen;
 }
 
+/**
+ * get_window_run_mode_from_args:
+ * @args: a #GHashTable with data passed to the application.
+ *
+ * It does look if the mode option has been passed from command line, using it
+ * as the window run mode, otherwise the run mode will be the normal mode.
+ *
+ * Returns: The window run mode passed from command line or
+ *          EV_WINDOW_MODE_NORMAL in other case.
+ */
 static EvWindowRunMode
 get_window_run_mode_from_args (GHashTable *args)
 {
@@ -228,6 +265,16 @@ get_window_run_mode_from_args (GHashTable *args)
 	return mode;
 }
 
+/**
+ * get_destination_from_args:
+ * @args: a #GHashTable with data passed to the application.
+ *
+ * It does look for the page-label argument parsed from the command line and
+ * if it does exist, it returns an #EvLinkDest.
+ *
+ * Returns: An #EvLinkDest to page-label if it has been passed from the command
+ *          line, NULL in other case.
+ */
 static EvLinkDest *
 get_destination_from_args (GHashTable *args)
 {
@@ -247,6 +294,16 @@ get_destination_from_args (GHashTable *args)
 	return dest;
 }
 
+/**
+ * get_unlink_temp_file_from_args:
+ * @args: a #GHashTable with data passed to the application.
+ *
+ * It does look if the unlink-temp-file option has been passed from the command
+ * line returning it's boolean representation, otherwise it does return %FALSE.
+ *
+ * Returns: the boolean representation of the unlink-temp-file value or %FALSE
+ *          in other case.
+ */
 static gboolean
 get_unlink_temp_file_from_args (GHashTable *args)
 {
@@ -263,6 +320,19 @@ get_unlink_temp_file_from_args (GHashTable *args)
 	return unlink_temp_file;
 }
 
+/**
+ * ev_application_open_window:
+ * @application: The instance of the application.
+ * @args: A #GHashTable with the arguments data.
+ * @timestamp: Current time value.
+ * @error: The #GError facility.
+ * 
+ * Creates a new window and if the args are available, it's not NULL, it gets
+ * the screen from them and assigns the just created window to it. At last it
+ * does show it.
+ *
+ * Returns: %TRUE.
+ */
 gboolean
 ev_application_open_window (EvApplication  *application,
 			    GHashTable     *args,
@@ -287,6 +357,16 @@ ev_application_open_window (EvApplication  *application,
 	return TRUE;
 }
 
+/**
+ * ev_application_get_empty_window:
+ * @application: The instance of the application.
+ * @screen: The screen where the empty window will be search.
+ *
+ * It does look if there is any empty window in the indicated screen.
+ *
+ * Returns: The first empty #EvWindow in the passed #GdkScreen or NULL in other
+ *          case.
+ */
 static EvWindow *
 ev_application_get_empty_window (EvApplication *application,
 				 GdkScreen     *screen)
@@ -310,6 +390,18 @@ ev_application_get_empty_window (EvApplication *application,
 	return empty_window;
 }
 
+/**
+ * ev_application_get_uri_window:
+ * @application: The instance of the application.
+ * @uri: The uri to be opened.
+ *
+ * It looks in the list of the windows for the one with the document represented
+ * by the passed uri on it. If the window is empty or the document isn't present
+ * on any window, it will return NULL.
+ *
+ * Returns: The #EvWindow where the document represented by the passed uri is
+ *          shown, NULL in other case.
+ */
 static EvWindow *
 ev_application_get_uri_window (EvApplication *application, const char *uri)
 {
@@ -336,6 +428,16 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 	return uri_window;
 }
 
+/**
+ * ev_application_open_uri_at_dest:
+ * @application: The instance of the application.
+ * @uri: The uri to be opened.
+ * @screen: Thee screen where the link will be shown.
+ * @dest: The #EvLinkDest of the document.
+ * @mode: The run mode of the window.
+ * @unlink_temp_file: The unlink_temp_file option value.
+ * @timestamp: Current time value.
+ */
 void
 ev_application_open_uri_at_dest (EvApplication  *application,
 				 const char     *uri,
@@ -400,6 +502,14 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				      timestamp);
 }
 
+/**
+ * ev_application_open_uri:
+ * @application: The instance of the application.
+ * @uri: The uri to be opened
+ * @args: A #GHashTable with the arguments data.
+ * @timestamp: Current time value.
+ * @error: The #GError facility.
+ */
 gboolean
 ev_application_open_uri (EvApplication  *application,
 			 const char     *uri,
@@ -516,6 +626,14 @@ ev_application_init (EvApplication *ev_application)
 #endif /* HAVE_GTK_RECENT */
 }
 
+/**
+ * ev_application_get_windows:
+ * @application: The instance of the application.
+ *
+ * It creates a list of the top level windows.
+ *
+ * Returns: A #GList of the top level windows.
+ */
 GList *
 ev_application_get_windows (EvApplication *application)
 {

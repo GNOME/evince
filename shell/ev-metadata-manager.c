@@ -72,6 +72,12 @@ static gboolean ev_metadata_manager_save (gpointer data);
 
 static EvMetadataManager *ev_metadata_manager = NULL;
 
+/**
+ * item_free:
+ * @data: a pointer to a #Item data
+ *
+ * It does free the values on the #GHashTable where data points.
+ */
 static void
 item_free (gpointer data)
 {
@@ -87,6 +93,16 @@ item_free (gpointer data)
 	g_free (item);
 }
 
+/**
+ * ev_metadata_manager_init:
+ *
+ * Creates an EvMetadataManager with default values.
+ *
+ *  values_loaded   ->  %FALSE.
+ *  modified        ->  %FALSE.
+ *  timeout_id      ->  the id of the event source.
+ *  items           ->  a new full empty #GHashTable.
+ */
 void
 ev_metadata_manager_init (void)
 {
@@ -380,7 +396,7 @@ ev_metadata_manager_set_last (const gchar *key,
 }
 				 
 /**
- * ev_metadata_manager_set:
+ * ev_metadata_manager_get:
  * @uri: Uri to set data for, if @NULL, we return default value
  * @key: Key to set uri
  * @value: GValue struct filled up with value
