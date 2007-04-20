@@ -20,14 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ev-application.h"
 #include "ev-utils.h"
 #include "ev-file-helpers.h"
 #include "ev-document-factory.h"
+#include "totem-scrsaver.h"
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -43,6 +40,26 @@
 #include "ev-application-service.h"
 #include <dbus/dbus-glib-bindings.h>
 #endif
+
+struct _EvApplication {
+	GObject base_instance;
+
+	gchar *toolbars_file;
+
+	EggToolbarsModel *toolbars_model;
+
+#ifndef HAVE_GTK_RECENT
+	EggRecentModel  *recent_model;
+#endif
+
+	TotemScrsaver *scr_saver;
+
+	gchar *last_chooser_uri;
+};
+
+struct _EvApplicationClass {
+	GObjectClass base_class;
+};
 
 G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 
@@ -560,10 +577,8 @@ ev_application_shutdown (EvApplication *application)
 {
 	if (application->toolbars_model) {
 		g_object_unref (application->toolbars_model);
-		g_object_unref (application->preview_toolbars_model);
 		g_free (application->toolbars_file);
 		application->toolbars_model = NULL;
-		application->preview_toolbars_model = NULL;
 		application->toolbars_file = NULL;
 	}
 
@@ -607,14 +622,6 @@ ev_application_init (EvApplication *ev_application)
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE); 
 
-	ev_application->preview_toolbars_model = egg_toolbars_model_new ();
-
-	egg_toolbars_model_load_toolbars (ev_application->preview_toolbars_model,
-					  DATADIR"/evince-preview-toolbar.xml");
-
-	egg_toolbars_model_set_flags (ev_application->preview_toolbars_model, 0,
-				      EGG_TB_MODEL_NOT_REMOVABLE); 
-
 #ifndef HAVE_GTK_RECENT
 	ev_application->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
 	/* FIXME we should add a mime type filter but current eggrecent
@@ -653,44 +660,49 @@ ev_application_get_windows (EvApplication *application)
 	return windows;
 }
 
-EggToolbarsModel *ev_application_get_toolbars_model (EvApplication *application,
-						     gboolean preview)
+EggToolbarsModel *
+ev_application_get_toolbars_model (EvApplication *application)
 {
-	return preview ? 
-	    application->preview_toolbars_model : application->toolbars_model;
+	return application->toolbars_model;
 }
 
 #ifndef HAVE_GTK_RECENT
-EggRecentModel *ev_application_get_recent_model (EvApplication *application)
+EggRecentModel *
+ev_application_get_recent_model (EvApplication *application)
 {
 	return application->recent_model;
 }
 #endif
 
-void ev_application_save_toolbars_model (EvApplication *application)
+void
+ev_application_save_toolbars_model (EvApplication *application)
 {
         egg_toolbars_model_save_toolbars (application->toolbars_model,
 			 	          application->toolbars_file, "1.0");
 }
 
-void ev_application_set_chooser_uri (EvApplication *application, const gchar *uri)
+void
+ev_application_set_chooser_uri (EvApplication *application, const gchar *uri)
 {
 	g_free (application->last_chooser_uri);
 	application->last_chooser_uri = g_strdup (uri);
 }
 
-const gchar* ev_application_get_chooser_uri (EvApplication *application)
+const gchar *
+ev_application_get_chooser_uri (EvApplication *application)
 {
 	return application->last_chooser_uri;
 }
 
-void ev_application_screensaver_enable  (EvApplication   *application)
+void
+ev_application_screensaver_enable  (EvApplication *application)
 {
 	if (application->scr_saver)
 		totem_scrsaver_enable (application->scr_saver);	
 }
 
-void ev_application_screensaver_disable (EvApplication   *application)
+void
+ev_application_screensaver_disable (EvApplication *application)
 {
 	if (application->scr_saver)
 		totem_scrsaver_disable (application->scr_saver);	

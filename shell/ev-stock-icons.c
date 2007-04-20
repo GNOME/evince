@@ -36,11 +36,11 @@ typedef struct {
 static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ZOOM_PAGE,        "zoom-fit-page" },
 	{ EV_STOCK_ZOOM_WIDTH,       "zoom-fit-width" },
-	{ EV_STOCK_LEAVE_FULLSCREEN, "view-restore" },
 	{ EV_STOCK_VIEW_DUAL,        "view-page-facing" },
 	{ EV_STOCK_VIEW_CONTINUOUS,  "view-page-continuous" },
 	{ EV_STOCK_ROTATE_LEFT,      "object-rotate-left"},
 	{ EV_STOCK_ROTATE_RIGHT,     "object-rotate-right"},
+	{ EV_STOCK_RUN_PRESENTATION, "x-office-presentation"},
 };
 
 /**

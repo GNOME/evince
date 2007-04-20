@@ -118,7 +118,6 @@ struct _EvWindowPrivate {
 
 	GtkWidget *main_box;
 	GtkWidget *menubar;
-	GtkWidget *toolbar_dock;
 	GtkWidget *toolbar;
 	GtkWidget *hpaned;
 	GtkWidget *sidebar;
@@ -129,7 +128,6 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
 	GtkWidget *sidebar_attachments;
-	GtkWidget *preview_toolbar;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -151,8 +149,12 @@ struct _EvWindowPrivate {
 
 	/* Fullscreen mode */
 	GtkWidget *fullscreen_toolbar;
-	GtkWidget *fullscreen_popup;
-	guint      fullscreen_timeout_id;
+
+	/* Presentation mode */
+	guint      presentation_timeout_id;
+
+	/* Preview mode */
+	GtkWidget *preview_toolbar;
 
 	/* Popup view */
 	GtkWidget *view_popup;
@@ -204,7 +206,7 @@ struct _EvWindowPrivate {
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 
-#define FULLSCREEN_TIMEOUT 5 * 1000
+#define PRESENTATION_TIMEOUT 5 * 1000
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
@@ -212,7 +214,6 @@ struct _EvWindowPrivate {
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 
 static void	ev_window_update_actions	 	(EvWindow *ev_window);
-static void     ev_window_update_fullscreen_popup       (EvWindow         *window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
@@ -261,13 +262,6 @@ static void	ev_window_cmd_view_best_fit 		(GtkAction 	  *action,
 							 EvWindow 	  *ev_window);
 static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action, 
 							 EvWindow 	  *ev_window);
-static void	fullscreen_set_timeout 			(EvWindow *window);
-static gboolean fullscreen_motion_notify_cb 		(GtkWidget *widget,
-							 GdkEventMotion *event,
-				     			 gpointer user_data);
-static gboolean fullscreen_leave_notify_cb 		(GtkWidget *widget,
-							 GdkEventCrossing *event,
-							 gpointer user_data);
 static void	view_handle_link_cb 			(EvView *view, 
 							 EvLink *link, 
 							 EvWindow *window);
@@ -524,17 +518,18 @@ update_chrome_visibility (EvWindow *window)
 	preview_toolbar = (priv->chrome& EV_CHROME_PREVIEW_TOOLBAR);
 
 	set_widget_visibility (priv->menubar, menubar);	
-	set_widget_visibility (priv->toolbar_dock, toolbar);
+	set_widget_visibility (priv->toolbar, toolbar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->sidebar, sidebar);
-	set_widget_visibility (priv->preview_toolbar, preview_toolbar);
+	
+	if (priv->preview_toolbar)
+		set_widget_visibility (priv->preview_toolbar, preview_toolbar);
 
 	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
 	gtk_widget_set_sensitive (priv->menubar, menubar);
 
-	if (priv->fullscreen_popup != NULL) {
+	if (priv->fullscreen_toolbar != NULL) {
 		set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
-		set_widget_visibility (priv->fullscreen_popup, fullscreen_toolbar);
 	}
 }
 
@@ -2614,60 +2609,6 @@ ev_window_cmd_edit_copy (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_update_fullscreen_popup (EvWindow *window)
-{
-	GtkWidget *popup = window->priv->fullscreen_popup;
-	int popup_width, popup_height;
-	GdkScreen *screen;
-	GdkRectangle screen_rect;
-	gboolean toolbar;
-
-	g_return_if_fail (popup != NULL);
-
-	if (GTK_WIDGET (window)->window == NULL)
-		return;
-
-	toolbar = (window->priv->chrome & EV_CHROME_FULLSCREEN_TOOLBAR) != 0 || 
-		  (window->priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0;
-	popup_width = popup->requisition.width;
-	popup_height = popup->requisition.height;
-
-	screen = gtk_widget_get_screen (GTK_WIDGET (window));
-	gdk_screen_get_monitor_geometry (screen,
-			gdk_screen_get_monitor_at_window
-                        (screen,
-                         GTK_WIDGET (window)->window),
-                         &screen_rect);
-	if (toolbar) {
-		gtk_widget_set_size_request (popup,
-					     screen_rect.width,
-					     -1);
-		gtk_window_move (GTK_WINDOW (popup),
-				 screen_rect.x,
-				 screen_rect.y);
-
-	} else {
-		if (gtk_widget_get_direction (popup) == GTK_TEXT_DIR_RTL)
-		{
-			gtk_window_move (GTK_WINDOW (popup),
-					 screen_rect.x,
-					 screen_rect.y);
-		} else {
-			gtk_window_move (GTK_WINDOW (popup),
-					 screen_rect.x + screen_rect.width - popup_width,
-					 screen_rect.y);
-		}
-	}
-}
-
-static void
-screen_size_changed_cb (GdkScreen *screen,
-			EvWindow *window)
-{
-	ev_window_update_fullscreen_popup (window);
-}
-
-static void
 ev_window_sidebar_position_change_cb (GObject *object, GParamSpec *pspec,
 				      EvWindow *ev_window)
 {
@@ -2675,168 +2616,6 @@ ev_window_sidebar_position_change_cb (GObject *object, GParamSpec *pspec,
 		ev_metadata_manager_set_int (ev_window->priv->uri, "sidebar_size",
 					     gtk_paned_get_position (GTK_PANED (object)));
 }
-
-static void
-destroy_fullscreen_popup (EvWindow *window)
-{
-	if (window->priv->fullscreen_popup != NULL)
-	{
-		gtk_widget_destroy (window->priv->fullscreen_popup);
-		window->priv->fullscreen_popup = NULL;
-	}
-}
-
-static void
-exit_fullscreen_button_clicked_cb (GtkWidget *button, EvWindow *window)
-{
-	GtkAction *action;
-
-	action = gtk_action_group_get_action (window->priv->action_group, "ViewFullscreen");
-	g_return_if_fail (action != NULL);
-
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), FALSE);
-}
-
-static void
-fullscreen_popup_size_request_cb (GtkWidget *popup, GtkRequisition *req, EvWindow *window)
-{
-	ev_window_update_fullscreen_popup (window);
-}
-
-static gboolean
-fullscreen_timeout_cb (EvWindow *window)
-{
-	EvView *view = EV_VIEW (window->priv->view);
-
-	if (!view ||
-	    (!ev_view_get_fullscreen (EV_VIEW (view)) &&
-	     !ev_view_get_presentation (EV_VIEW (view))))
-		return FALSE;
-
-	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
-	ev_view_hide_cursor (EV_VIEW (window->priv->view));
-	window->priv->fullscreen_timeout_id = 0;
-
-	return FALSE;
-}
-
-static void
-fullscreen_set_timeout (EvWindow *window)
-{
-	if (window->priv->fullscreen_timeout_id != 0) {
-		g_source_remove (window->priv->fullscreen_timeout_id);
-	}
-	
-	window->priv->fullscreen_timeout_id = 
-	    g_timeout_add (FULLSCREEN_TIMEOUT, (GSourceFunc)fullscreen_timeout_cb, window);
-
-	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, TRUE);
-	update_chrome_visibility (window);
-	ev_view_show_cursor (EV_VIEW (window->priv->view));
-}
-
-static void
-fullscreen_clear_timeout (EvWindow *window)
-{
-	if (window->priv->fullscreen_timeout_id != 0) {
-		g_source_remove (window->priv->fullscreen_timeout_id);
-	}
-	
-	window->priv->fullscreen_timeout_id = 0;
-	update_chrome_visibility (window);
-	ev_view_show_cursor (EV_VIEW (window->priv->view));
-}
-
-
-static gboolean
-fullscreen_motion_notify_cb (GtkWidget *widget,
-			     GdkEventMotion *event,
-			     gpointer user_data)
-{
-	EvWindow *window = EV_WINDOW (user_data);
-
-	fullscreen_set_timeout (window);
-
-	return FALSE;
-}
-
-static gboolean
-fullscreen_leave_notify_cb (GtkWidget *widget,
-			    GdkEventCrossing *event,
-			    gpointer user_data)
-{
-	EvWindow *window = EV_WINDOW (user_data);
-
-	fullscreen_clear_timeout (window);
-
-	return FALSE;
-}
-
-static GtkWidget *
-ev_window_get_exit_fullscreen_button (EvWindow *window)
-{
-	GtkWidget *button, *icon, *label, *hbox;
-
-	button = gtk_button_new ();
-	g_signal_connect (button, "clicked",
-			  G_CALLBACK (exit_fullscreen_button_clicked_cb),
-			  window);
-	gtk_widget_show (button);
-
-	hbox = gtk_hbox_new (FALSE, 2);
-	gtk_widget_show (hbox);
-	gtk_container_add (GTK_CONTAINER (button), hbox);
-
-	icon = gtk_image_new_from_stock (EV_STOCK_LEAVE_FULLSCREEN, GTK_ICON_SIZE_BUTTON);
-	gtk_widget_show (icon);
-	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
-
-	label = gtk_label_new (_("Leave Fullscreen"));
-	gtk_widget_show (label);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-	return button;
-}
-
-static GtkWidget *
-ev_window_create_fullscreen_popup (EvWindow *window)
-{
-	GtkWidget *popup;
-	GtkWidget *hbox;
-	GtkWidget *button;
-	GdkScreen *screen;
-
-	window->priv->fullscreen_toolbar = egg_editable_toolbar_new_with_model
-			(window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP, FALSE), NULL);
-
-	popup = gtk_window_new (GTK_WINDOW_POPUP);
-	hbox = gtk_hbox_new (FALSE, 0);
-	button = ev_window_get_exit_fullscreen_button (window);
-
-	gtk_container_add (GTK_CONTAINER (popup), hbox);
-	gtk_box_pack_start (GTK_BOX (hbox), window->priv->fullscreen_toolbar,
-			    TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-
-	gtk_widget_show (button);
-	gtk_widget_show (hbox);
-
-	gtk_window_set_resizable (GTK_WINDOW (popup), FALSE);
-
-	screen = gtk_widget_get_screen (GTK_WIDGET (window));
-	g_signal_connect_object (screen, "size-changed",
-			         G_CALLBACK (screen_size_changed_cb),
-				 window, 0);
-	g_signal_connect_object (popup, "size_request",
-			         G_CALLBACK (fullscreen_popup_size_request_cb),
-				 window, 0);
-
-	gtk_window_set_screen (GTK_WINDOW (popup),
-			       gtk_widget_get_screen (GTK_WIDGET (window)));
-
-	return popup;
-}
-
 
 static void
 ev_window_update_fullscreen_action (EvWindow *window)
@@ -2853,11 +2632,41 @@ ev_window_update_fullscreen_action (EvWindow *window)
 }
 
 static void
+fullscreen_toolbar_setup_item_properties (GtkUIManager *ui_manager)
+{
+	GtkWidget *item;
+
+	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/GoPreviousPage");
+	g_object_set (item, "is-important", FALSE, NULL);
+
+	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/GoNextPage");
+	g_object_set (item, "is-important", FALSE, NULL);
+
+	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/StartPresentation");
+	g_object_set (item, "is-important", TRUE, NULL);
+	
+	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/LeaveFullscreen");
+	g_object_set (item, "is-important", TRUE, NULL);
+}
+
+static void
 ev_window_run_fullscreen (EvWindow *window)
 {
-	if (window->priv->fullscreen_popup == NULL)
-		window->priv->fullscreen_popup
-			= ev_window_create_fullscreen_popup (window);
+	if (!window->priv->fullscreen_toolbar) {
+		window->priv->fullscreen_toolbar =
+			gtk_ui_manager_get_widget (window->priv->ui_manager,
+						   "/FullscreenToolbar");
+
+		gtk_toolbar_set_style (GTK_TOOLBAR (window->priv->fullscreen_toolbar),
+				       GTK_TOOLBAR_BOTH_HORIZ);
+		fullscreen_toolbar_setup_item_properties (window->priv->ui_manager);
+
+		gtk_box_pack_start (GTK_BOX (window->priv->main_box),
+				    window->priv->fullscreen_toolbar,
+				    FALSE, FALSE, 0);
+		gtk_box_reorder_child (GTK_BOX (window->priv->main_box),
+				       window->priv->fullscreen_toolbar, 1);
+	}
 
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
 		      "shadow-type", GTK_SHADOW_NONE,
@@ -2865,20 +2674,12 @@ ev_window_run_fullscreen (EvWindow *window)
 
 	ev_view_set_fullscreen (EV_VIEW (window->priv->view), TRUE);
 	ev_window_update_fullscreen_action (window);
+
+	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, TRUE);
+	update_chrome_visibility (window);
 	
 	gtk_window_fullscreen (GTK_WINDOW (window));
 	gtk_widget_grab_focus (window->priv->view);
-	ev_window_update_fullscreen_popup (window);
-
-	g_signal_connect (window->priv->view,
-			  "motion-notify-event",
-			  G_CALLBACK (fullscreen_motion_notify_cb),
-			  window);
-	g_signal_connect (window->priv->view,
-			  "leave-notify-event",
-			  G_CALLBACK (fullscreen_leave_notify_cb),
-			  window);
-	fullscreen_set_timeout (window);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", TRUE);
@@ -2900,13 +2701,8 @@ ev_window_stop_fullscreen (EvWindow *window)
 	ev_window_update_fullscreen_action (window);
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 
-	g_signal_handlers_disconnect_by_func (window->priv->view,
-					      (gpointer) fullscreen_motion_notify_cb,
-					      window);
-	g_signal_handlers_disconnect_by_func (window->priv->view,
-					      (gpointer) fullscreen_leave_notify_cb,
-					      window);
-	fullscreen_clear_timeout (window);
+	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
+	update_chrome_visibility (window);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
@@ -2926,6 +2722,69 @@ ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 	} else {
 		ev_window_stop_fullscreen (window);
 	}
+}
+
+static gboolean
+presentation_timeout_cb (EvWindow *window)
+{
+	EvView *view = EV_VIEW (window->priv->view);
+
+	if (!view || !ev_view_get_presentation (EV_VIEW (view)))
+		return FALSE;
+
+	ev_view_hide_cursor (EV_VIEW (window->priv->view));
+	window->priv->presentation_timeout_id = 0;
+
+	return FALSE;
+}
+
+static void
+presentation_set_timeout (EvWindow *window)
+{
+	if (window->priv->presentation_timeout_id > 0) {
+		g_source_remove (window->priv->presentation_timeout_id);
+	}
+	
+	window->priv->presentation_timeout_id = 
+	    g_timeout_add (PRESENTATION_TIMEOUT, (GSourceFunc)presentation_timeout_cb, window);
+
+	ev_view_show_cursor (EV_VIEW (window->priv->view));
+}
+
+static void
+presentation_clear_timeout (EvWindow *window)
+{
+	if (window->priv->presentation_timeout_id > 0) {
+		g_source_remove (window->priv->presentation_timeout_id);
+	}
+	
+	window->priv->presentation_timeout_id = 0;
+
+	ev_view_show_cursor (EV_VIEW (window->priv->view));
+}
+
+static gboolean
+presentation_motion_notify_cb (GtkWidget *widget,
+			       GdkEventMotion *event,
+			       gpointer user_data)
+{
+	EvWindow *window = EV_WINDOW (user_data);
+
+	presentation_set_timeout (window);
+
+	return FALSE;
+}
+
+static gboolean
+presentation_leave_notify_cb (GtkWidget *widget,
+			      GdkEventCrossing *event,
+			      gpointer user_data)
+{
+	EvWindow *window = EV_WINDOW (user_data);
+
+	presentation_clear_timeout (window);
+
+	return FALSE;
 }
 
 static void
@@ -2952,18 +2811,20 @@ ev_window_run_presentation (EvWindow *window)
 	ev_view_set_presentation (EV_VIEW (window->priv->view), TRUE);
 	ev_window_update_presentation_action (window);
 
+	update_chrome_visibility (window);
+	
 	gtk_widget_grab_focus (window->priv->view);
 	gtk_window_fullscreen (GTK_WINDOW (window));
 
 	g_signal_connect (window->priv->view,
 			  "motion-notify-event",
-			  G_CALLBACK (fullscreen_motion_notify_cb),
+			  G_CALLBACK (presentation_motion_notify_cb),
 			  window);
 	g_signal_connect (window->priv->view,
 			  "leave-notify-event",
-			  G_CALLBACK (fullscreen_leave_notify_cb),
+			  G_CALLBACK (presentation_leave_notify_cb),
 			  window);
-	fullscreen_set_timeout (window);
+	presentation_set_timeout (window);
 
 	ev_application_screensaver_disable (EV_APP);
 	
@@ -2985,13 +2846,15 @@ ev_window_stop_presentation (EvWindow *window)
 	ev_window_update_presentation_action (window);
 	gtk_window_unfullscreen (GTK_WINDOW (window));
 
+	update_chrome_visibility (window);
+
 	g_signal_handlers_disconnect_by_func (window->priv->view,
-					      (gpointer) fullscreen_motion_notify_cb,
+					      (gpointer) presentation_motion_notify_cb,
 					      window);
 	g_signal_handlers_disconnect_by_func (window->priv->view,
-					      (gpointer) fullscreen_leave_notify_cb,
+					      (gpointer) presentation_leave_notify_cb,
 					      window);
-	fullscreen_clear_timeout (window);
+	presentation_clear_timeout (window);
 
 	ev_application_screensaver_enable (EV_APP);
 
@@ -3018,6 +2881,18 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 static void
 ev_window_run_preview (EvWindow *window)
 {
+	if (!window->priv->preview_toolbar) {
+		window->priv->preview_toolbar =
+			gtk_ui_manager_get_widget (window->priv->ui_manager,
+						   "/PreviewToolbar");
+
+		gtk_box_pack_start (GTK_BOX (window->priv->main_box),
+				    window->priv->preview_toolbar,
+				    FALSE, FALSE, 0);
+		gtk_box_reorder_child (GTK_BOX (window->priv->main_box),
+				       window->priv->preview_toolbar, 1);
+	}
+	
 	ev_view_set_continuous (EV_VIEW (window->priv->view), FALSE); 
 	
 	update_chrome_flag (window, EV_CHROME_TOOLBAR, FALSE);
@@ -3027,32 +2902,6 @@ ev_window_run_preview (EvWindow *window)
 	update_chrome_flag (window, EV_CHROME_PREVIEW_TOOLBAR, TRUE);
 
 	update_chrome_visibility (window);
-}
-
-static gboolean
-ev_window_focus_in_event (GtkWidget *widget, GdkEventFocus *event)
-{
-	EvWindow *window = EV_WINDOW (widget);
-	EvWindowPrivate *priv = window->priv;
-
-	if (ev_view_get_fullscreen (EV_VIEW (priv->view)))
-		fullscreen_set_timeout (window);
-
-	return GTK_WIDGET_CLASS (ev_window_parent_class)->focus_in_event (widget, event);
-}
-
-static gboolean
-ev_window_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
-{
-	EvWindow *window = EV_WINDOW (widget);
-	EvWindowPrivate *priv = window->priv;
-
-	if (ev_view_get_fullscreen (EV_VIEW (priv->view))) {
-		fullscreen_set_timeout (window);
-		gtk_widget_hide (priv->fullscreen_popup);
-	}
-
-	return GTK_WIDGET_CLASS (ev_window_parent_class)->focus_out_event (widget, event);
 }
 
 static void
@@ -3086,18 +2935,6 @@ ev_window_screen_changed (GtkWidget *widget,
 	
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
-	}
-
-	if (priv->fullscreen_popup != NULL) {
-		g_signal_handlers_disconnect_by_func
-			(old_screen, G_CALLBACK (screen_size_changed_cb), window);
-
-		g_signal_connect_object (screen, "size-changed",
-					 G_CALLBACK (screen_size_changed_cb),
-					 window, 0);
-		gtk_window_set_screen (GTK_WINDOW (priv->fullscreen_popup), screen);
-
-		ev_window_update_fullscreen_popup (window);
 	}
 }
 
@@ -3176,7 +3013,7 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
 	  
 	editor = egg_toolbar_editor_new (ev_window->priv->ui_manager,
-					 ev_application_get_toolbars_model (EV_APP, FALSE));
+					 ev_application_get_toolbars_model (EV_APP));
 	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
 	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
              
@@ -3299,7 +3136,14 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_leave_fullscreen (GtkAction *action, EvWindow *window)
 {
-	gtk_window_unfullscreen (GTK_WINDOW (window));
+	ev_window_stop_fullscreen (window);
+}
+
+static void
+ev_window_cmd_start_presentation (GtkAction *action, EvWindow *window)
+{
+	ev_window_stop_fullscreen (window);
+	ev_window_run_presentation (window);
 }
 
 static void
@@ -4076,11 +3920,10 @@ ev_window_dispose (GObject *object)
 		priv->history = NULL;
 	}
 
-	if (priv->fullscreen_timeout_id) {
-		g_source_remove (priv->fullscreen_timeout_id);
-		priv->fullscreen_timeout_id = 0;
+	if (priv->presentation_timeout_id > 0) {
+		g_source_remove (priv->presentation_timeout_id);
+		priv->presentation_timeout_id = 0;
 	}
-	destroy_fullscreen_popup (window);
 
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
@@ -4094,8 +3937,6 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	g_object_class->dispose = ev_window_dispose;
 	g_object_class->finalize = ev_window_finalize;
 
-	widget_class->focus_in_event = ev_window_focus_in_event;
-	widget_class->focus_out_event = ev_window_focus_out_event;
 	widget_class->screen_changed = ev_window_screen_changed;
 
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
@@ -4186,9 +4027,12 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_help_about) },
 
 	/* Toolbar-only */
-	{ "LeaveFullscreen", EV_STOCK_LEAVE_FULLSCREEN, N_("Leave Fullscreen"), NULL,
+	{ "LeaveFullscreen", GTK_STOCK_LEAVE_FULLSCREEN, N_("Leave Fullscreen"), NULL,
 	  N_("Leave fullscreen mode"),
 	  G_CALLBACK (ev_window_cmd_leave_fullscreen) },
+	{ "StartPresentation", EV_STOCK_RUN_PRESENTATION, N_("Start Presentation"), NULL,
+	  N_("Start a presentation"),
+	  G_CALLBACK (ev_window_cmd_start_presentation) },
 
 	/* Accellerators */
 	{ "Escape", NULL, "", "Escape", "",
@@ -4900,14 +4744,12 @@ ev_window_init (EvWindow *ev_window)
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
-	GtkWidget *sidebar_widget, *toolbar_dock;
+	GtkWidget *sidebar_widget;
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
 	g_signal_connect (ev_window, "window_state_event",
 			  G_CALLBACK (window_state_event_cb), NULL);
-	g_signal_connect (ev_window, "notify",
-			  G_CALLBACK (fullscreen_timeout_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
 
@@ -4982,33 +4824,20 @@ ev_window_init (EvWindow *ev_window)
 			    ev_window->priv->menubar,
 			    FALSE, FALSE, 0);
 
-	/* This sucks, but there is no way to have a draw=no, expand=true separator
-	 * in a GtkUIManager-built toolbar. So, just add another toolbar.
-	 * See gtk+ bug 166489.
-	 */
-	toolbar_dock = ev_window->priv->toolbar_dock = gtk_hbox_new (FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), toolbar_dock,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (toolbar_dock);
 
 	ev_window->priv->toolbar = GTK_WIDGET 
 	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
 			 "ui-manager", ev_window->priv->ui_manager,
 			 "popup-path", "/ToolbarPopup",
-			 "model", ev_application_get_toolbars_model (EV_APP, FALSE),
+			 "model", ev_application_get_toolbars_model (EV_APP),
 			 NULL));
 
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");
-	gtk_box_pack_start (GTK_BOX (toolbar_dock), ev_window->priv->toolbar,
-			    TRUE, TRUE, 0);
-	gtk_widget_show (ev_window->priv->toolbar);
-
-	/* Preview toolbar */
-	ev_window->priv->preview_toolbar = egg_editable_toolbar_new_with_model
-				(ev_window->priv->ui_manager, ev_application_get_toolbars_model (EV_APP, TRUE), NULL);
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box), ev_window->priv->preview_toolbar,
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
+			    ev_window->priv->toolbar,
 			    FALSE, FALSE, 0);
+	gtk_widget_show (ev_window->priv->toolbar);
 
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_hpaned_new ();

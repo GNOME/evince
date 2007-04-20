@@ -31,11 +31,11 @@ G_BEGIN_DECLS
 /* Evince stock icons */
 #define EV_STOCK_ZOOM_PAGE              "zoom-fit-page" 
 #define EV_STOCK_ZOOM_WIDTH             "zoom-fit-width" 
-#define EV_STOCK_LEAVE_FULLSCREEN       "view-restore"
 #define EV_STOCK_VIEW_DUAL       	"view-page-facing"
 #define EV_STOCK_VIEW_CONTINUOUS        "view-page-continuous"
 #define EV_STOCK_ROTATE_LEFT            "object-rotate-left"
 #define EV_STOCK_ROTATE_RIGHT           "object-rotate-right"
+#define EV_STOCK_RUN_PRESENTATION       "x-office-presentation"
 
 void ev_stock_icons_init (void);
 

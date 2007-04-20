@@ -1,3 +1,22 @@
+2007-04-20  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* data/Makefile.am:
+	* data/evince-ui.xml:
+	* shell/ev-stock-icons.[ch]:
+	* shell/ev-application.[ch]: (ev_application_shutdown),
+	(ev_application_init), (ev_application_get_toolbars_model):
+	* shell/ev-window.c: (update_chrome_visibility),
+	(fullscreen_toolbar_setup_item_properties),
+	(ev_window_run_fullscreen), (ev_window_stop_fullscreen),
+	(ev_window_run_presentation), (ev_window_stop_presentation),
+	(ev_window_run_preview), (ev_window_screen_changed),
+	(ev_window_cmd_leave_fullscreen), (ev_window_cmd_start_presentation),
+	(ev_window_dispose), (ev_window_init):
+
+	Make fullscreen toolbar always visible. Do not use egg toolbars for
+	fullscreen and preview modes since such toolbars are not editables.
+	Fixes bugs #300278, #338910 and #316188.  
+
 2007-04-20  Iñigo Martínez  <inigomartinez@gmail.com>
 
 	* shell/ev-application.c:

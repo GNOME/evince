@@ -36,7 +36,6 @@
 #ifndef HAVE_GTK_RECENT
 #include "egg-recent-model.h"
 #endif
-#include "totem-scrsaver.h"
 
 G_BEGIN_DECLS
 
@@ -52,28 +51,7 @@ typedef struct _EvApplicationClass EvApplicationClass;
 
 #define EV_APP					(ev_application_get_instance ())
 
-struct _EvApplication {
-	GObject base_instance;
-	
-	gchar *toolbars_file;
-	
-	EggToolbarsModel *toolbars_model;
-	EggToolbarsModel *preview_toolbars_model;
-	
-#ifndef HAVE_GTK_RECENT
-	EggRecentModel  *recent_model;
-#endif
-
-	TotemScrsaver *scr_saver;
-	
-	gchar *last_chooser_uri;
-};
-
-struct _EvApplicationClass {
-	GObjectClass base_class;
-};
-
-GType	          ev_application_get_type	     (void);
+GType	          ev_application_get_type	     (void) G_GNUC_CONST;
 EvApplication    *ev_application_get_instance        (void);
 gboolean          ev_application_register_service    (EvApplication   *application);
 void	          ev_application_shutdown	     (EvApplication   *application);
@@ -101,8 +79,7 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
     						      guint32          timestamp);
 GList		 *ev_application_get_windows	     (EvApplication   *application);
 
-EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application, 
-						      gboolean preview);
+EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
 void              ev_application_save_toolbars_model (EvApplication   *application);
 #ifndef HAVE_GTK_RECENT
 EggRecentModel   *ev_application_get_recent_model    (EvApplication   *application);
