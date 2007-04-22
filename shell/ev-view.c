@@ -3471,6 +3471,9 @@ setup_caches (EvView *view)
 	g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
+	page_changed_cb (view->page_cache,
+			 ev_page_cache_get_current_page (view->page_cache),
+			 view);
 }
 
 static void
