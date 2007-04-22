@@ -2699,10 +2699,9 @@ ev_window_stop_fullscreen (EvWindow *window)
 
 	ev_view_set_fullscreen (view, FALSE);
 	ev_window_update_fullscreen_action (window);
-	gtk_window_unfullscreen (GTK_WINDOW (window));
-
 	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
 	update_chrome_visibility (window);
+	gtk_window_unfullscreen (GTK_WINDOW (window));
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_boolean (window->priv->uri, "fullscreen", FALSE);
@@ -2844,9 +2843,8 @@ ev_window_stop_presentation (EvWindow *window)
 
 	ev_view_set_presentation (EV_VIEW (window->priv->view), FALSE);
 	ev_window_update_presentation_action (window);
-	gtk_window_unfullscreen (GTK_WINDOW (window));
-
 	update_chrome_visibility (window);
+	gtk_window_unfullscreen (GTK_WINDOW (window));
 
 	g_signal_handlers_disconnect_by_func (window->priv->view,
 					      (gpointer) presentation_motion_notify_cb,
