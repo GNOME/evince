@@ -676,6 +676,9 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 	g_signal_connect (priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
 	sidebar_thumbnails->priv->start_page = 0;
 	sidebar_thumbnails->priv->end_page = 0;
+	page_changed_cb (priv->page_cache,
+			 ev_page_cache_get_current_page (priv->page_cache),
+			 sidebar_thumbnails);
 	adjustment_changed_cb (sidebar_thumbnails);
 }
 

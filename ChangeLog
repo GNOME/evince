@@ -1,3 +1,12 @@
+2007-04-22  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_setup_document),
+	(ev_window_set_document), (ev_window_load_job_cb):
+	* shell/ev-view.c: (setup_caches):
+	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_set_document):
+
+	Start rendering pages before any other jobs. 
+
 2007-04-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:

@@ -844,7 +844,7 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 		} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
 		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
 		}
 		g_value_unset (&sidebar_page);
 	} else if (document && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
@@ -1053,22 +1053,14 @@ ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
 	ev_window_clear_thumbnail_job (ev_window);
 }
 
-static void
+static gboolean
 ev_window_setup_document (EvWindow *ev_window)
 {
 	const EvDocumentInfo *info;
-	EvDocument *document;
-	EvView *view = EV_VIEW (ev_window->priv->view);
+	EvDocument *document = ev_window->priv->document;
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
 	GtkAction *action;
-
-	document = ev_window->priv->document;
-	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
-	g_signal_connect (ev_window->priv->page_cache, "page-changed",
-			  G_CALLBACK (page_changed_cb), ev_window);
-	g_signal_connect (ev_window->priv->page_cache, "history-changed",
-			  G_CALLBACK (history_changed_cb), ev_window);
-
+	
 	if (EV_IS_DOCUMENT_FIND (document)) {
 		g_signal_connect_object (G_OBJECT (document),
 				         "find_changed",
@@ -1097,15 +1089,11 @@ ev_window_setup_document (EvWindow *ev_window)
 		g_object_unref (rc);
 	}
 
-	ev_sidebar_set_document (sidebar, document);
-
-	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
-		ev_view_set_document (view, document);
-	}
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
-
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
+
+	ev_sidebar_set_document (sidebar, document);
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
@@ -1122,12 +1110,36 @@ ev_window_setup_document (EvWindow *ev_window)
 					           ev_window->priv->document);
 	}
 	
-	setup_size_from_metadata (ev_window);
-	setup_document_from_metadata (ev_window);
-	setup_sidebar_from_metadata (ev_window, document);
-
 	info = ev_page_cache_get_info (ev_window->priv->page_cache);
 	update_document_mode (ev_window, info->mode);
+
+	return FALSE;
+}
+
+static void
+ev_window_set_document (EvWindow *ev_window, EvDocument *document)
+{
+	EvView *view = EV_VIEW (ev_window->priv->view);
+
+	if (ev_window->priv->document)
+		g_object_unref (ev_window->priv->document);
+	ev_window->priv->document = g_object_ref (document);
+	
+	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
+	g_signal_connect (ev_window->priv->page_cache, "page-changed",
+			  G_CALLBACK (page_changed_cb), ev_window);
+	g_signal_connect (ev_window->priv->page_cache, "history-changed",
+			  G_CALLBACK (history_changed_cb), ev_window);
+
+	setup_size_from_metadata (ev_window);
+	setup_sidebar_from_metadata (ev_window, document);
+	setup_document_from_metadata (ev_window);
+
+	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
+		ev_view_set_document (view, document);
+	}
+
+	g_idle_add ((GSourceFunc)ev_window_setup_document, ev_window);
 }
 
 static void
@@ -1273,10 +1285,8 @@ ev_window_load_job_cb  (EvJobLoad *job,
 
 	/* Success! */
 	if (job->error == NULL) {
-		if (ev_window->priv->document)
-			g_object_unref (ev_window->priv->document);
-		ev_window->priv->document = g_object_ref (document);
-
+		ev_window_set_document (ev_window, document);
+		
 		if (job->mode != EV_WINDOW_MODE_PREVIEW) {
 			setup_view_from_metadata (ev_window);
 		}
@@ -1284,8 +1294,6 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		if (!ev_window->priv->unlink_temp_file) {
 			ev_window_add_recent (ev_window, ev_window->priv->uri);
 		}
-
-		ev_window_setup_document (ev_window);
 
 		if (job->dest) {
 			EvLink *link;
