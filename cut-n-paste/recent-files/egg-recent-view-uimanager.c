@@ -522,6 +522,8 @@ egg_recent_view_uimanager_finalize (GObject *object)
 		g_object_unref (view->client);
 		view->client = NULL;
 	}
+
+	G_OBJECT_CLASS (egg_recent_view_uimanager_parent_class)->finalize (object);
 }
 
 static void

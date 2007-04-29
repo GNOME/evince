@@ -96,6 +96,8 @@ ev_properties_view_dispose (GObject *object)
 		g_object_unref (properties->xml);
 		properties->xml = NULL;
 	}
+
+	G_OBJECT_CLASS (ev_properties_view_parent_class)->dispose (object);
 }
 
 static void

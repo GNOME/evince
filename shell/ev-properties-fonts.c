@@ -73,6 +73,8 @@ ev_properties_fonts_dispose (GObject *object)
 		g_object_unref (properties->fonts_job);		
 		properties->fonts_job = NULL;
 	}
+
+	G_OBJECT_CLASS (ev_properties_fonts_parent_class)->dispose (object);
 }
 
 static void

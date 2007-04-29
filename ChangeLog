@@ -1,3 +1,17 @@
+2007-04-29  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* cut-n-paste/recent-files/egg-recent-view-uimanager.c:
+	(egg_recent_view_uimanager_finalize):
+	* properties/ev-properties-view.c: (ev_properties_view_dispose):
+	* shell/ev-page-action-widget.c: (ev_page_action_widget_finalize):
+	* shell/ev-pixbuf-cache.c: (ev_pixbuf_cache_finalize),
+	(ev_pixbuf_cache_dispose):
+	* shell/ev-properties-fonts.c: (ev_properties_fonts_dispose):
+	* shell/ev-tooltip.c: (ev_tooltip_dispose):
+	
+	Add missing chain to parent class methods. Fixes
+	bug #433128.
+
 2007-04-22  Brian Pepple  <bpepple@fedoraproject.org>
 
 	* data/Makefile.am (update-icon-cache): Updates

@@ -77,6 +77,8 @@ ev_page_action_widget_finalize (GObject *object)
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
 
 	ev_page_action_widget_set_page_cache (action_widget, NULL);
+
+	G_OBJECT_CLASS (ev_page_action_widget_parent_class)->finalize (object);
 }
 
 static void

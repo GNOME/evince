@@ -66,6 +66,8 @@ ev_tooltip_dispose (GObject *object)
 		g_source_remove (tooltip->priv->timer_tag);
 		tooltip->priv->timer_tag = 0;
 	}
+
+	G_OBJECT_CLASS (ev_tooltip_parent_class)->dispose (object);
 }
 
 static void

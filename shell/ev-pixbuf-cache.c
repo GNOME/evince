@@ -131,6 +131,8 @@ ev_pixbuf_cache_finalize (GObject *object)
 	g_free (pixbuf_cache->prev_job);
 	g_free (pixbuf_cache->job_list);
 	g_free (pixbuf_cache->next_job);
+
+	G_OBJECT_CLASS (ev_pixbuf_cache_parent_class)->finalize (object);
 }
 
 static void
@@ -195,6 +197,8 @@ ev_pixbuf_cache_dispose (GObject *object)
 	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
 		dispose_cache_job_info (pixbuf_cache->job_list + i, pixbuf_cache);
 	}
+
+	G_OBJECT_CLASS (ev_pixbuf_cache_parent_class)->dispose (object);
 }
 
 
