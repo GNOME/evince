@@ -1,3 +1,10 @@
+2007-04-30  Eduardo Lima <eduardo.lima@indt.org.br>
+
+	* shell/ev-window.c (ev_window_cmd_recent_file_activate): Use
+	ev_application_open_uri_at_dest instead of ev_application_open_uri
+	preventing new document always being opened in a new window even if there
+	is an empty window.
+
 2007-04-29  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* cut-n-paste/recent-files/egg-recent-view-uimanager.c:
