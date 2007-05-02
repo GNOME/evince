@@ -2,7 +2,7 @@ SUBDIRS = icons
 NULL=
 
 install-data-local: install-schemas update-icon-cache
-uninstall-local: uninstall-schemas
+uninstall-local: uninstall-schemas update-icon-cache
 
 #
 # man file
@@ -90,7 +90,7 @@ update-icon-cache:
 	        echo "Updating Gtk icon cache."; \
 	        $(gtk_update_icon_cache); \
 	else \
-	        echo "*** Icon cache not updated.  After install, run this:"; \
+	        echo "*** Icon cache not updated.  After (un)install, run this:"; \
 	        echo "***   $(gtk_update_icon_cache)"; \
 	        fi
 
