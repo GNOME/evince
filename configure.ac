@@ -169,6 +169,19 @@ if test x$HAVE_NAUTILUS = "xyes"; then
 fi
 AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
 
+
+dnl Check for thumbnailer build
+AC_ARG_ENABLE(thumbnailer,
+        AC_HELP_STRING([--disable-thumbnailer],[disable the GNOME thumbnailer]),
+	[case "${enableval}" in
+	yes) ENABLE_THUMBNAILER=yes ;;
+	no) ENABLE_THUMBNAILER=no ;;
+	*) AC_MSG_ERROR(bad value ${enableval} for --enable-thumbnailer) ;;
+	esac],
+	[ENABLE_THUMBNAILER=yes]) dnl Default value
+AM_CONDITIONAL(ENABLE_THUMBNAILER, test x$ENABLE_THUMBNAILER = "xyes")
+
+
 dnl Check for GtkRecent
 PKG_CHECK_MODULES(GTK_RECENT, gtk+-2.0 >= 2.10.0, 
 		  [HAVE_GTK_RECENT=yes], [HAVE_GTK_RECENT=no])
@@ -458,6 +471,7 @@ Configure summary:
 	Print Support......:  $enable_print
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
+	Thumbnailer........:  $ENABLE_THUMBNAILER
 	Gtk-Doc Support....:  $enable_gtk_doc
 
 	PDF Backend........:  $enable_pdf

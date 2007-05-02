@@ -5,10 +5,13 @@ SUBDIRS = \
 	libdocument \
 	properties \
 	shell \
-	thumbnailer \
 	po \
 	help \
 	test
+
+if ENABLE_THUMBNAILER
+SUBDIRS += thumbnailer
+endif
 
 # Applications 
 
