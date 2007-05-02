@@ -92,7 +92,10 @@
 #include <libgnomevfs/gnome-vfs-async-ops.h>
 #include <gconf/gconf-client.h>
 
+#include <errno.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 char *xdg_user_dir_lookup (char *type);
 
@@ -3131,7 +3134,7 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
 	GError *error = NULL;
 
-        g_return_if_fail (EV_IS_WINDOW (ev_window));
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	gnome_help_display ("evince.xml", NULL, &error);
 

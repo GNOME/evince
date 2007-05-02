@@ -297,11 +297,11 @@ main (int argc, char *argv[])
 #endif
 
 	program = gnome_program_init (PACKAGE, VERSION,
-                                      LIBGNOMEUI_MODULE, argc, argv,
-                                      GNOME_PARAM_GOPTION_CONTEXT, context,
-                                      GNOME_PARAM_HUMAN_READABLE_NAME, _("Evince"),
+				      LIBGNOMEUI_MODULE, argc, argv,
+				      GNOME_PARAM_GOPTION_CONTEXT, context,
+				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Evince"),
 				      GNOME_PARAM_APP_DATADIR, GNOMEDATADIR,
-                                      NULL);
+				      NULL);
 
 	args = arguments_parse ();
 
