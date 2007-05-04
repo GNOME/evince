@@ -33,13 +33,17 @@
 #include <gtk/gtkstock.h>
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkmain.h>
+
+#if WITH_GNOME
 #include <libgnomeui/gnome-client.h>
-#include <string.h>
+#endif
 
 #ifdef ENABLE_DBUS
 #include "ev-application-service.h"
 #include <dbus/dbus-glib-bindings.h>
 #endif
+
+#include <string.h>
 
 struct _EvApplication {
 	GObject base_instance;
@@ -137,6 +141,7 @@ ev_application_get_instance (void)
 	return instance;
 }
 
+#if WITH_GNOME
 static void
 removed_from_session (GnomeClient *client, EvApplication *application)
 {
@@ -184,6 +189,7 @@ init_session (EvApplication *application)
 	g_signal_connect (client, "die",
 			  G_CALLBACK (removed_from_session), application);
 }
+#endif
 
 /**
  * ev_display_open_if_needed:
@@ -603,7 +609,9 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
+#if WITH_GNOME
 	init_session (ev_application);
+#endif
 
 	ev_application->toolbars_model = egg_toolbars_model_new ();
 

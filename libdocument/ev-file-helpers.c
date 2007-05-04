@@ -33,7 +33,10 @@
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <libgnomevfs/gnome-vfs-xfer.h>
+
+#if WITH_GNOME
 #include <libgnome/gnome-init.h>
+#endif
 
 #include "ev-file-helpers.h"
 
@@ -63,9 +66,15 @@ ev_dot_dir (void)
 	if (dot_dir == NULL) {
 		gboolean exists;
 
+#if WITH_GNOME
 		dot_dir = g_build_filename (gnome_user_dir_get (),
 					    "evince",
 					    NULL);
+#else
+		dot_dir = g_build_filename (g_get_user_config_dir (),
+					    "evince",
+					    NULL);
+#endif
 
 		exists = ensure_dir_exists (dot_dir);
 		if (!exists)

@@ -1,5 +1,24 @@
 2007-05-04  Ross Burton  <ross@openedhand.com>
 
+	* configure.ac:
+	Add --without-libgnome, check for libgnome and libgnomeui
+	separately, and add them to the symbols as required.
+
+	* libdocument/ev-file-helpers.c:
+	When building without libgnome, use g_get_user_config_dir instead
+	of gnome_user_dir_get.
+
+	* shell/ev-application.c:
+	When building without libgnome, don't use session management.
+
+	* shell/main.c:
+	When building without libgnome, don't use GnomeProgram or
+	initialise the authentication manager.
+
+	This fixes #328842.
+
+2007-05-04  Ross Burton  <ross@openedhand.com>
+
 	* shell/ev-window.c:
 	Don't use libgnome to open help, instead call Yelp directly.
 

@@ -27,10 +27,15 @@
 #include <gtk/gtkmain.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if WITH_GNOME
 #include <libgnome/gnome-program.h>
 #include <libgnomeui/gnome-ui-init.h>
 #include <libgnomeui/gnome-app-helper.h>
 #include <libgnomeui/gnome-authentication-manager.h>
+#endif
+
+#include <libgnomevfs/gnome-vfs-init.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
 #ifdef ENABLE_DBUS
@@ -282,7 +287,11 @@ main (int argc, char *argv[])
 	gboolean enable_metadata = FALSE;
 	GOptionContext *context;
 	GHashTable *args;
+#if WITH_GNOME
 	GnomeProgram *program;
+#else
+	GError *error = NULL;
+#endif
 
 	context = g_option_context_new (_("GNOME Document Viewer"));
 
@@ -296,12 +305,24 @@ main (int argc, char *argv[])
 	g_option_context_add_main_entries (context, goption_options, NULL);
 #endif
 
+#if WITH_GNOME
 	program = gnome_program_init (PACKAGE, VERSION,
 				      LIBGNOMEUI_MODULE, argc, argv,
 				      GNOME_PARAM_GOPTION_CONTEXT, context,
 				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Evince"),
 				      GNOME_PARAM_APP_DATADIR, GNOMEDATADIR,
 				      NULL);
+#else
+	g_option_context_add_group (context, gtk_get_option_group (TRUE));
+	if (!g_option_context_parse (context, &argc, &argv, &error)) {
+		g_warning ("Cannot parse arguments: %s", error->message);
+		g_error_free (error);
+		return 1;
+	}
+	g_option_context_free (context);
+	
+	gnome_vfs_init ();
+#endif
 
 	args = arguments_parse ();
 
@@ -309,16 +330,19 @@ main (int argc, char *argv[])
 	if (!ev_application_register_service (EV_APP)) {
 		if (load_files_remote (file_arguments, args)) {
 			g_hash_table_destroy (args);
+#if WITH_GNOME
 			g_object_unref (program);
-			
+#endif
 			return 0;
 		}
 	} else {
 		enable_metadata = TRUE;
 	}
 #endif
-	
+
+#if WITH_GNOME	
 	gnome_authentication_manager_init ();
+#endif
 
 	if (enable_metadata) {
 		ev_metadata_manager_init ();
@@ -336,13 +360,19 @@ main (int argc, char *argv[])
 
 	gtk_main ();
 
+#if WITH_GNOME
 	gnome_accelerators_sync ();
+#endif
+
 	ev_file_helpers_shutdown ();
 
 	if (enable_metadata) {
 		ev_metadata_manager_shutdown ();
 	}
- 	g_object_unref (program);
 
+#if WITH_GNOME
+ 	g_object_unref (program);
+#endif
+	
 	return 0;
 }
