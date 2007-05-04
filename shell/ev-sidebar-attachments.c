@@ -29,7 +29,6 @@
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
 #include <string.h>
-#include <libgnomeui/gnome-icon-lookup.h>
 
 #include "ev-file-helpers.h"
 #include "ev-sidebar-attachments.h"
@@ -99,20 +98,28 @@ static GdkPixbuf *
 icon_theme_get_pixbuf_from_mime_type (GtkIconTheme *icon_theme,
 				      const gchar  *mime_type)
 {
-	GdkPixbuf *pixbuf = NULL;
-	gchar     *icon;
+	const char *separator;
+	GString *icon_name;
+	GdkPixbuf *pixbuf;
 
-	icon = gnome_icon_lookup (icon_theme,
-				  NULL, NULL,
-				  NULL, NULL,
-				  mime_type,
-				  GNOME_ICON_LOOKUP_FLAGS_NONE,
-				  NULL);
+	separator = strchr (mime_type, '/');
+	if (!separator)
+		return NULL; /* maybe we should return a GError with "invalid MIME-type" */
 
-	pixbuf = gtk_icon_theme_load_icon (icon_theme,
-					   icon, 48, 0, NULL);
-	g_free (icon);
-
+	icon_name = g_string_new ("gnome-mime-");
+	g_string_append_len (icon_name, mime_type, separator - mime_type);
+	g_string_append_c (icon_name, '-');
+	g_string_append (icon_name, separator + 1);
+	pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name->str, 48, 0, NULL);
+	g_string_free (icon_name, TRUE);
+	if (pixbuf)
+		return pixbuf;
+	
+	icon_name = g_string_new ("gnome-mime-");
+	g_string_append_len (icon_name, mime_type, separator - mime_type);
+	pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name->str, 48, 0, NULL);
+	g_string_free (icon_name, TRUE);
+	
 	return pixbuf;
 }
 
