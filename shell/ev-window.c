@@ -87,7 +87,6 @@
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gnome.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-async-ops.h>
 #include <gconf/gconf-client.h>
@@ -3133,15 +3132,45 @@ static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
 	GError *error = NULL;
+	char *command;
+	const char *lang;
+	char *uri = NULL;
 
-	g_return_if_fail (EV_IS_WINDOW (ev_window));
+	int i;
 
-	gnome_help_display ("evince.xml", NULL, &error);
+	const char * const * langs = g_get_language_names ();
 
-	if(error != NULL) {
+	for (i = 0; langs[i]; i++) {
+		lang = langs[i];
+		if (strchr (lang, '.')) {
+			continue;
+		}
+
+		uri = g_build_filename(GNOMEDATADIR,
+				       "/gnome/help/" PACKAGE,
+				       lang,
+				       "/evince.xml",
+				       NULL);
+					
+		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
+			break;
+		}
+	}
+
+	if (uri == NULL) {
+		g_warning ("Cannot find help");
+		return;
+	}
+	
+	command = g_strconcat ("gnome-help ghelp://", uri,  NULL);
+	g_free (uri);
+	
+	g_spawn_command_line_async (command, &error);
+	if (error != NULL) {
 		g_warning (error->message);
 		g_error_free (error);
 	}
+	g_free (command);
 }
 
 static void

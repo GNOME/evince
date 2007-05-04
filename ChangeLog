@@ -1,5 +1,10 @@
 2007-05-04  Ross Burton  <ross@openedhand.com>
 
+	* shell/ev-window.c:
+	Don't use libgnome to open help, instead call Yelp directly.
+
+2007-05-04  Ross Burton  <ross@openedhand.com>
+
 	* shell/ev-sidebar-attachments.c:
 	Don't use libgnome to lookup icons for MIME types, instead copy
 	code from GTK+ to do it manually.
