@@ -443,11 +443,6 @@ if test "x$enable_impress" = "xyes"; then
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
-evince_save_LIBS=$LIBS
-LIBS="$LIBS $FRONTEND_LIBS"
-AC_CHECK_FUNCS(gtk_paper_size_get_paper_sizes)
-LIBS=$evince_save_LIBS
-
 AC_CONFIG_FILES([
 backend/Makefile
 backend/comics/Makefile

@@ -27,6 +27,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <gtk/gtkversion.h>
 #include <glade/glade.h>
 #include <time.h>
 #include <sys/time.h>
@@ -193,7 +194,7 @@ set_property (GladeXML *xml, Property property, const char *text)
 	g_free (valid_text);
 }
 
-#if HAVE_GTK_PAPER_SIZE_GET_PAPER_SIZES
+#if GTK_CHECK_VERSION (2, 11, 0)
 static GtkUnit
 get_default_user_units (void)
 {
@@ -296,7 +297,7 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 	
 	return exact_size;
 }
-#else
+#else /* ! GTK 2.11.0 */
 /*
  * All values are in mm. 
  * Source: http://en.wikipedia.org/wiki/Paper_size
@@ -430,7 +431,7 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 	} else
 		return exact_size;
 }
-#endif /* HAVE_GTK_PAPER_SIZE_GET_PAPER_SIZES */
+#endif /* GTK 2.11.0 */
 
 void
 ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo *info)
