@@ -30,6 +30,10 @@
 #include <glib/gerror.h>
 #include <glib-object.h>
 
+#ifdef WITH_GTK_PRINT
+#include <gtk/gtkprintsettings.h>
+#endif
+
 #include "ev-window.h"
 
 #include "egg-toolbars-model.h"
@@ -89,6 +93,12 @@ void 		  ev_application_set_chooser_uri     (EvApplication   *application,
 const gchar	 *ev_application_get_chooser_uri     (EvApplication   *application);
 void		  ev_application_screensaver_enable  (EvApplication   *application);
 void		  ev_application_screensaver_disable (EvApplication   *application);
+#ifdef WITH_GTK_PRINT
+GtkPrintSettings *ev_application_get_print_settings  (EvApplication   *application);
+void              ev_application_set_print_settings  (EvApplication   *application,
+						      GtkPrintSettings *settings);
+#endif
+
 G_END_DECLS
 
 #endif /* !EV_APPLICATION_H */

@@ -59,6 +59,13 @@ struct _EvApplication {
 	TotemScrsaver *scr_saver;
 
 	gchar *last_chooser_uri;
+
+#ifdef WITH_GTK_PRINT
+	GtkPrintSettings *print_settings;
+#if GTK_CHECK_VERSION (2, 11, 0)
+	gchar            *print_settings_file;
+#endif
+#endif
 };
 
 struct _EvApplicationClass {
@@ -594,6 +601,35 @@ ev_application_shutdown (EvApplication *application)
 		application->recent_model = NULL;
 	}
 #endif
+
+#ifdef WITH_GTK_PRINT
+#if GTK_CHECK_VERSION (2, 11, 0)
+	if (application->print_settings_file) {
+		if (application->print_settings) {
+			GError *error = NULL;
+			
+			gtk_print_settings_to_file (application->print_settings,
+						    application->print_settings_file,
+						    &error);
+			if (error) {
+				g_warning (error->message);
+				g_error_free (error);
+			}
+
+			g_object_unref (application->print_settings);
+			application->print_settings = NULL;
+		}
+
+		g_free (application->print_settings_file);
+		application->print_settings_file = NULL;
+	}
+#else /* ! GTK 2.11.0 */
+	if (application->print_settings) {
+		g_object_unref (application->print_settings);
+		application->print_settings = NULL;
+	}
+#endif /* GTK 2.11.0 */
+#endif /* WITH_GTK_PRINT */
 	
 	g_free (application->last_chooser_uri);
 	g_object_unref (application);
@@ -703,7 +739,7 @@ ev_application_get_chooser_uri (EvApplication *application)
 }
 
 void
-ev_application_screensaver_enable  (EvApplication *application)
+ev_application_screensaver_enable (EvApplication *application)
 {
 	if (application->scr_saver)
 		totem_scrsaver_enable (application->scr_saver);	
@@ -715,3 +751,52 @@ ev_application_screensaver_disable (EvApplication *application)
 	if (application->scr_saver)
 		totem_scrsaver_disable (application->scr_saver);	
 }
+
+#ifdef WITH_GTK_PRINT
+GtkPrintSettings *
+ev_application_get_print_settings (EvApplication *application)
+{
+	if (application->print_settings)
+		return application->print_settings;
+	
+#if GTK_CHECK_VERSION (2, 11, 0)
+	if (!application->print_settings_file) {
+		application->print_settings_file =
+			g_build_filename (ev_dot_dir (), "print-settings", NULL);
+	}
+
+	if (g_file_test (application->print_settings_file, G_FILE_TEST_IS_REGULAR)) {
+		GError *error = NULL;
+		
+		application->print_settings =
+			gtk_print_settings_new_from_file (application->print_settings_file, &error);
+		
+		if (error) {
+			g_warning (error->message);
+			g_error_free (error);
+		} else {
+			return application->print_settings;
+		}
+	}
+#endif /* GTK 2.11.0 */
+	
+	application->print_settings = gtk_print_settings_new ();
+
+	return application->print_settings;
+}
+
+void
+ev_application_set_print_settings (EvApplication    *application,
+				   GtkPrintSettings *settings)
+{
+	g_return_if_fail (GTK_IS_PRINT_SETTINGS (settings));
+	
+	if (settings == application->print_settings)
+		return;
+
+	if (application->print_settings)
+		g_object_unref (application->print_settings);
+	
+	application->print_settings = g_object_ref (settings);
+}
+#endif /* WITH_GTK_PRINT */

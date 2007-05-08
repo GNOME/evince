@@ -2073,6 +2073,10 @@ ev_window_print_finished (GtkPrintJob *print_job,
 
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
+	} else {
+		/* If printed successfully, save print settings */
+		ev_application_set_print_settings (EV_APP,
+						   window->priv->print_settings);
 	}
 }
 
@@ -2280,8 +2284,10 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 	current_page = ev_page_cache_get_current_page (page_cache);
 	document_last_page = ev_page_cache_get_n_pages (page_cache);
 
-	if (!ev_window->priv->print_settings)
-		ev_window->priv->print_settings = gtk_print_settings_new ();
+	if (!ev_window->priv->print_settings) {
+		ev_window->priv->print_settings = g_object_ref (
+			ev_application_get_print_settings (EV_APP));
+	}
 
 	if (first_page != 1 || last_page != document_last_page) {
 		GtkPageRange range;
