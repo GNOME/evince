@@ -45,6 +45,8 @@
 
 #include <string.h>
 
+static void ev_application_add_icon_path_for_screen (GdkScreen *screen);
+
 struct _EvApplication {
 	GObject base_instance;
 
@@ -379,6 +381,7 @@ ev_application_open_window (EvApplication  *application,
 	if (screen) {
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
+	ev_application_add_icon_path_for_screen (screen);
 	
 	gtk_widget_show (new_window);
 	
@@ -458,29 +461,10 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 	return uri_window;
 }
 
-/**
- * ev_application_open_uri_at_dest:
- * @application: The instance of the application.
- * @uri: The uri to be opened.
- * @screen: Thee screen where the link will be shown.
- * @dest: The #EvLinkDest of the document.
- * @mode: The run mode of the window.
- * @unlink_temp_file: The unlink_temp_file option value.
- * @timestamp: Current time value.
- */
-void
-ev_application_open_uri_at_dest (EvApplication  *application,
-				 const char     *uri,
-				 GdkScreen      *screen,
-				 EvLinkDest     *dest,
-				 EvWindowRunMode mode,
-				 gboolean        unlink_temp_file,
-				 guint           timestamp)
+static void
+ev_application_add_icon_path_for_screen (GdkScreen *screen)
 {
-	EvWindow     *new_window;
 	GtkIconTheme *icon_theme;
-
-	g_return_if_fail (uri != NULL);
 
 	icon_theme = gtk_icon_theme_get_for_screen (screen);
 	if (icon_theme) {
@@ -506,6 +490,32 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 		g_free (ev_icons_path);
 		g_strfreev (path);
 	}	
+}
+
+/**
+ * ev_application_open_uri_at_dest:
+ * @application: The instance of the application.
+ * @uri: The uri to be opened.
+ * @screen: Thee screen where the link will be shown.
+ * @dest: The #EvLinkDest of the document.
+ * @mode: The run mode of the window.
+ * @unlink_temp_file: The unlink_temp_file option value.
+ * @timestamp: Current time value.
+ */
+void
+ev_application_open_uri_at_dest (EvApplication  *application,
+				 const char     *uri,
+				 GdkScreen      *screen,
+				 EvLinkDest     *dest,
+				 EvWindowRunMode mode,
+				 gboolean        unlink_temp_file,
+				 guint           timestamp)
+{
+	EvWindow     *new_window;
+
+	g_return_if_fail (uri != NULL);
+	
+	ev_application_add_icon_path_for_screen (screen);
 
 	new_window = ev_application_get_uri_window (application, uri);
 	

@@ -134,11 +134,11 @@ build_menu (EvNavigationAction *action)
 	EvHistory *history = action->priv->history;
 	int start, end, i;
 
-	menu = GTK_MENU_SHELL (gtk_menu_new ());
-
-	if (history == NULL) {
-		return GTK_WIDGET (menu);
+	if (history == NULL || ev_history_get_n_links (history) <= 0) {
+		return NULL;
 	}
+
+	menu = GTK_MENU_SHELL (gtk_menu_new ());
 
 	start = 0;
 	end = ev_history_get_n_links (history);

@@ -157,10 +157,10 @@ static void
 popup_menu_under_arrow (EvNavigationActionWidget *button,
                         GdkEventButton    *event)
 {
+	g_signal_emit (button, signals[SHOW_MENU], 0);
+
 	if (!button->menu)
 		return;
-
-	g_signal_emit (button, signals[SHOW_MENU], 0);
 
 	gtk_menu_popup (button->menu, NULL, NULL, 
     	    		(GtkMenuPositionFunc) menu_position_func,
