@@ -72,7 +72,7 @@ comics_regex_quote (const char *s)
 {
     char *ret, *d;
 
-    d = ret = g_malloc (strlen (s) * 2 + 3);
+    d = ret = g_malloc (strlen (s) * 4 + 3);
     
     *d++ = '\'';
 
@@ -85,7 +85,9 @@ comics_regex_quote (const char *s)
 	case '*':
 	case '\\':
 	case '\'':
+	    *d++ = '\'';
 	    *d++ = '\\';
+	    *d++ = '\'';
 	    break;
 	}
 	*d = *s;
@@ -461,6 +463,7 @@ extract_argv (EvDocument *document, gint page)
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	char **argv;
 	char *command_line, *quoted_archive, *quoted_filename;
+	GError *err = NULL;
 
 	quoted_archive = g_shell_quote (comics_document->archive);
 	if (comics_document->regex_arg) {
@@ -475,8 +478,14 @@ extract_argv (EvDocument *document, gint page)
 					comics_document->extract_command,
 					quoted_archive,
 					quoted_filename);
-	g_shell_parse_argv (command_line, NULL, &argv, NULL);
 
+	g_shell_parse_argv (command_line, NULL, &argv, &err);
+	
+	if (err) {
+		g_warning ("Error %s", err->message);
+		return NULL;
+	}
+	
 	g_free (command_line);
 	g_free (quoted_archive);
 	g_free (quoted_filename);
