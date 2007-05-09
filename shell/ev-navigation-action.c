@@ -54,6 +54,17 @@ G_DEFINE_TYPE (EvNavigationAction, ev_navigation_action, GTK_TYPE_ACTION)
 
 #define EV_NAVIGATION_ACTION_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_NAVIGATION_ACTION, EvNavigationActionPrivate))
 
+static void
+ev_navigation_action_history_changed (EvHistory *history,
+				      gpointer data)
+{
+	EvNavigationAction *action = EV_NAVIGATION_ACTION (data);
+	
+	gtk_action_set_sensitive (action, ev_history_get_n_links (history) > 0);
+	
+	return;
+}
+
 void
 ev_navigation_action_set_history (EvNavigationAction *action,
 				  EvHistory	     *history)
@@ -62,6 +73,10 @@ ev_navigation_action_set_history (EvNavigationAction *action,
 
 	g_object_add_weak_pointer (G_OBJECT (action->priv->history),
 				   (gpointer) &action->priv->history);
+	
+	g_signal_connect_object (history, "changed",
+				 ev_navigation_action_history_changed,
+				 action, 0);
 }
 
 static void
@@ -111,18 +126,6 @@ new_history_menu_item (EvNavigationAction *action,
 }
 
 static GtkWidget *
-new_empty_history_menu_item (EvNavigationAction *action)
-{
-	GtkWidget *item;
-	
-	item = gtk_image_menu_item_new_with_label (_("Empty"));
-	gtk_widget_set_sensitive (item, FALSE);
-	gtk_widget_show (item);
-	
-	return item;
-}
-
-static GtkWidget *
 build_menu (EvNavigationAction *action)
 {
 	GtkMenuShell *menu;
@@ -133,9 +136,7 @@ build_menu (EvNavigationAction *action)
 
 	menu = GTK_MENU_SHELL (gtk_menu_new ());
 
-	if (history == NULL || ev_history_get_n_links (history) <= 0) {
-		item = new_empty_history_menu_item (action);
-		gtk_menu_shell_append (menu, item);		
+	if (history == NULL) {
 		return GTK_WIDGET (menu);
 	}
 
@@ -218,8 +219,9 @@ ev_navigation_action_finalize (GObject *object)
 	EvNavigationAction *action = EV_NAVIGATION_ACTION (object);
 
 	if (action->priv->history) {
-		g_object_add_weak_pointer (G_OBJECT (action->priv->history),
-					   (gpointer) &action->priv->history);
+		g_object_remove_weak_pointer (G_OBJECT (action->priv->history),
+				  	     (gpointer) &action->priv->history);
+		action->priv->history = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_navigation_action_parent_class)->finalize (object);

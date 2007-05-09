@@ -48,6 +48,8 @@ struct _EvHistory
 struct _EvHistoryClass
 {
 	GObjectClass parent_class;
+	
+	void (*changed) (EvHistory *history);
 };
 
 GType		ev_history_get_type		(void);

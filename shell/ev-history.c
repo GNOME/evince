@@ -24,6 +24,15 @@
 
 #include "ev-history.h"
 
+
+enum
+{
+	HISTORY_CHANGED,
+	N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = {0, };
+
 struct _EvHistoryPrivate
 {
 	GList *links;
@@ -68,6 +77,15 @@ ev_history_class_init (EvHistoryClass *class)
 
 	object_class->finalize = ev_history_finalize;
 
+	signals[HISTORY_CHANGED] = 
+		    g_signal_new ("changed",
+		 	          G_OBJECT_CLASS_TYPE (object_class),
+				  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+				  G_STRUCT_OFFSET (EvHistoryClass, changed),
+				  NULL, NULL,
+				  g_cclosure_marshal_VOID__VOID,
+				  G_TYPE_NONE, 0);
+
 	g_type_class_add_private (object_class, sizeof (EvHistoryPrivate));
 }
 
@@ -98,6 +116,8 @@ ev_history_add_link (EvHistory *history, EvLink *link)
 		history->priv->links = g_list_delete_link (history->priv->links, 
 							   history->priv->links);
 	}
+	
+	g_signal_emit (G_OBJECT (history), signals[HISTORY_CHANGED], 0);
 }
 
 EvLink *

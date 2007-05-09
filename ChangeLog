@@ -1,3 +1,17 @@
+2007-05-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-history.c: (ev_history_class_init),
+	(ev_history_add_link):
+	* shell/ev-history.h:
+	* shell/ev-navigation-action.c:
+	(ev_navigation_action_history_changed),
+	(ev_navigation_action_set_history), (build_menu),
+	(ev_navigation_action_finalize):
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity):
+	
+	Make navigation action unsensitive instead of showing
+	menu with unsensitive word.
+
 2007-05-08  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-application.[ch]: (ev_application_shutdown),
