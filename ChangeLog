@@ -1,3 +1,13 @@
+2007-05-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-navigation-action-widget.c:
+	(ev_navigation_action_widget_init),
+	(ev_navigation_action_widget_class_init),
+	(ev_navigation_action_widget_button_press_event):
+	
+	Connect to button-press event on correct widget. Fixes
+	bug #431988
+
 2007-05-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-application.c: (ev_application_open_window),
@@ -11,14 +21,6 @@
 
 2007-05-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
-	* shell/ev-application.c: (ev_application_open_window),
-	(ev_application_add_icon_path_for_screen),
-	(ev_application_open_uri_at_dest):
-	* shell/ev-navigation-action-widget.c: (popup_menu_under_arrow):
-	* shell/ev-navigation-action.c: (build_menu):
-
-2007-05-09  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
-
 	* shell/ev-history.c: (ev_history_class_init),
 	(ev_history_add_link):
 	* shell/ev-history.h:
@@ -29,7 +31,7 @@
 	* shell/ev-window.c: (ev_window_setup_action_sensitivity):
 	
 	Make navigation action unsensitive instead of showing
-	menu with unsensitive word.
+	menu with unsensitive word. Fixes bug #417392.
 
 2007-05-08  Carlos Garcia Campos  <carlosgc@gnome.org>
 

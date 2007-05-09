@@ -27,7 +27,8 @@ static void  ev_navigation_action_widget_init       (EvNavigationActionWidget   
 static void  ev_navigation_action_widget_class_init (EvNavigationActionWidgetClass *action_widget);
 static void ev_navigation_action_widget_toggled (GtkToggleToolButton *toggle);
 static gboolean ev_navigation_action_widget_button_press_event (GtkWidget *widget,
-        	        	        		     GdkEventButton    *event);
+        	        	        		        GdkEventButton    *event, 
+        	        	        		        gpointer data);
 
 G_DEFINE_TYPE (EvNavigationActionWidget, ev_navigation_action_widget, GTK_TYPE_TOGGLE_TOOL_BUTTON)
 
@@ -42,18 +43,26 @@ static gint signals[LAST_SIGNAL];
 static void
 ev_navigation_action_widget_init (EvNavigationActionWidget *action_widget)
 {
+	GtkWidget *toggle_button;
+	
+	/* It's rather dirty hack but we need a child to connect to
+	 * button press event
+	 */
+		
+	toggle_button = gtk_bin_get_child (GTK_BIN (action_widget));
+	
+	g_signal_connect (toggle_button, "button-press-event", 
+			  ev_navigation_action_widget_button_press_event,
+		          action_widget);
 	return;
 }
 
 static void
 ev_navigation_action_widget_class_init (EvNavigationActionWidgetClass *klass)
 {
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 	GtkToggleToolButtonClass *toggle_tool_button_class = GTK_TOGGLE_TOOL_BUTTON_CLASS (klass);
 
-	widget_class->button_press_event = ev_navigation_action_widget_button_press_event;
 	toggle_tool_button_class->toggled = ev_navigation_action_widget_toggled;
-
 
 	signals[SHOW_MENU] =
 	          g_signal_new ("show-menu",
@@ -187,9 +196,11 @@ ev_navigation_action_widget_toggled (GtkToggleToolButton *toggle)
 
 static gboolean
 ev_navigation_action_widget_button_press_event (GtkWidget *widget,
-                	            		GdkEventButton    *event)
+                	            		GdkEventButton    *event,
+                	            		gpointer data)
 {
-	EvNavigationActionWidget *button = EV_NAVIGATION_ACTION_WIDGET (widget);
+	EvNavigationActionWidget *button = EV_NAVIGATION_ACTION_WIDGET (data);
+
 	if (event->button == 1) {
 	         popup_menu_under_arrow (button, event);
 	    	 gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (button), TRUE);
