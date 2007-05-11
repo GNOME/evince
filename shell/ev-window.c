@@ -157,6 +157,7 @@ struct _EvWindowPrivate {
 
 	/* Preview mode */
 	GtkWidget *preview_toolbar;
+	gchar     *print_settings_file;
 
 	/* Popup view */
 	GtkWidget *view_popup;
@@ -392,6 +393,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
 	ev_window_set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
 	ev_window_set_action_sensitive (ev_window, NAVIGATION_ACTION,  FALSE);
+	ev_window_set_action_sensitive (ev_window, "PreviewPrint", has_pages && ok_to_print);
 
         ev_window_update_actions (ev_window);
 }
@@ -1243,6 +1245,16 @@ ev_window_clear_local_uri (EvWindow *ev_window)
 }
 
 static void
+ev_window_clear_print_settings_file (EvWindow *ev_window)
+{
+	if (ev_window->priv->print_settings_file) {
+		g_unlink (ev_window->priv->print_settings_file);
+		g_free (ev_window->priv->print_settings_file);
+		ev_window->priv->print_settings_file = NULL;
+	}
+}
+
+static void
 ev_window_clear_temp_file (EvWindow *ev_window)
 {
 	GnomeVFSURI *uri;
@@ -1428,7 +1440,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 		    const char     *uri,
 		    EvLinkDest     *dest,
 		    EvWindowRunMode mode,
-		    gboolean        unlink_temp_file)
+		    gboolean        unlink_temp_file,
+		    const gchar    *print_settings)
 {
 	GnomeVFSURI *source_uri;
 	GnomeVFSURI *target_uri;
@@ -1436,9 +1449,15 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_load_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
+	ev_window_clear_print_settings_file (ev_window);
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 
 	ev_window->priv->unlink_temp_file = unlink_temp_file;
+
+	if (mode == EV_WINDOW_MODE_PREVIEW) {
+		ev_window->priv->print_settings_file = print_settings ? 
+			g_strdup (print_settings) : NULL;
+	}
 
 	if (ev_window->priv->uri)
 		g_free (ev_window->priv->uri);
@@ -1636,6 +1655,7 @@ ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 					 dest,
 					 0,
 					 TRUE,
+					 NULL,
 					 GDK_CURRENT_TIME);
 	g_free (symlink_uri);
 }
@@ -1670,7 +1690,7 @@ ev_window_cmd_recent_file_activate (GtkAction     *action,
 	
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0, FALSE,
+					 NULL, 0, FALSE, NULL, 
 					 GDK_CURRENT_TIME);
 }
 #else
@@ -1688,7 +1708,7 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (ev_window)),
-					 NULL, 0, FALSE,
+					 NULL, 0, FALSE, NULL,
 					 GDK_CURRENT_TIME);
 	
 	g_free (uri);
@@ -2897,6 +2917,8 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 static void
 ev_window_run_preview (EvWindow *window)
 {
+	GtkAction *action;
+	
 	if (!window->priv->preview_toolbar) {
 		window->priv->preview_toolbar =
 			gtk_ui_manager_get_widget (window->priv->ui_manager,
@@ -2916,6 +2938,14 @@ ev_window_run_preview (EvWindow *window)
 	update_chrome_flag (window, EV_CHROME_SIDEBAR, FALSE);
 
 	update_chrome_flag (window, EV_CHROME_PREVIEW_TOOLBAR, TRUE);
+	
+	action = gtk_action_group_get_action (window->priv->action_group,
+					      "PreviewPrint");
+#if GTK_CHECK_VERSION (2, 11, 0)
+	gtk_action_set_visible (action, TRUE);
+#else
+	gtk_action_set_visible (action, FALSE);
+#endif
 
 	update_chrome_visibility (window);
 }
@@ -3130,7 +3160,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 	gchar *uri;
 
 	uri = g_strdup (ev_window->priv->uri);
-	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE);
+	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE, NULL);
 	g_free (uri);
 }
 
@@ -3190,6 +3220,124 @@ ev_window_cmd_start_presentation (GtkAction *action, EvWindow *window)
 {
 	ev_window_stop_fullscreen (window);
 	ev_window_run_presentation (window);
+}
+
+#ifdef WITH_GTK_PRINT
+static gboolean
+lookup_printer_from_name (GtkPrinter *printer,
+			  EvWindow   *window)
+{
+	const gchar *printer_name;
+
+	printer_name = gtk_print_settings_get_printer (window->priv->print_settings);
+	
+	if ((printer_name
+	     && g_ascii_strcasecmp (printer_name, gtk_printer_get_name (printer)) == 0) ||
+	    (!printer_name && gtk_printer_is_default (printer))) {
+		if (window->priv->printer)
+			g_object_unref (window->priv->printer);
+		window->priv->printer = g_object_ref (printer);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static void
+ev_window_preview_print_finished (GtkPrintJob *print_job,
+				  EvWindow    *window,
+				  GError      *error)
+{
+	if (error) {
+		GtkWidget *dialog;
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+						 GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_OK,
+						 _("Failed to print document"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+							  error->message);
+
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+	}
+
+	g_object_unref (print_job);
+	gtk_widget_destroy (GTK_WIDGET (window));
+}
+#endif /* WITH_GTK_PRINT */
+
+static void
+ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
+{
+#ifdef WITH_GTK_PRINT
+	GtkPrintSettings *print_settings = NULL;
+	GtkPageSetup     *page_setup;
+	GtkPrintJob      *job;
+	gchar            *filename;
+	GError           *error = NULL;
+#if GTK_CHECK_VERSION (2, 11, 0)
+	const gchar      *print_settings_file = window->priv->print_settings_file;
+
+	if (print_settings_file) {
+		if (g_file_test (print_settings_file, G_FILE_TEST_IS_REGULAR)) {
+			GError *error = NULL;
+
+			print_settings = gtk_print_settings_new_from_file (print_settings_file,
+									   &error);
+			
+			if (error) {
+				g_warning (error->message);
+				g_error_free (error);
+				print_settings = NULL;
+			}
+		}
+	}
+#endif /* GTK 2.11.0 */
+	
+	if (!print_settings)
+		print_settings = gtk_print_settings_new ();
+
+	if (window->priv->print_settings)
+		g_object_unref (window->priv->print_settings);
+	window->priv->print_settings = print_settings;
+
+	gtk_enumerate_printers ((GtkPrinterFunc) lookup_printer_from_name,
+				window, NULL, TRUE);
+	g_assert (GTK_IS_PRINTER (window->priv->printer));
+	
+	page_setup = gtk_page_setup_new ();
+
+	job = gtk_print_job_new ("evince-print",
+				 window->priv->printer,
+				 window->priv->print_settings,
+				 page_setup);
+
+	g_object_unref (window->priv->print_settings);
+	window->priv->print_settings = NULL;
+	g_object_unref (window->priv->printer);
+	window->priv->printer = NULL;
+	g_object_unref (page_setup);
+
+	filename = g_filename_from_uri (window->priv->local_uri ?
+					window->priv->local_uri : window->priv->uri,
+					NULL, NULL);
+
+	if (gtk_print_job_set_source_file (job, filename, &error)) {
+		gtk_print_job_send (job,
+				    (GtkPrintJobCompleteFunc)ev_window_preview_print_finished,
+				    window, NULL);
+	} else {
+		g_warning (error->message);
+		g_error_free (error);
+	}
+
+	g_free (filename);
+
+	gtk_widget_hide (GTK_WIDGET (window));
+#endif /* WITH_GTK_PRINT */
 }
 
 static void
@@ -3966,6 +4114,11 @@ ev_window_dispose (GObject *object)
 		priv->history = NULL;
 	}
 
+	if (priv->print_settings_file) {
+		ev_window_clear_print_settings_file (window);
+		priv->print_settings_file = NULL;
+	}
+
 	if (priv->presentation_timeout_id > 0) {
 		g_source_remove (priv->presentation_timeout_id);
 		priv->presentation_timeout_id = 0;
@@ -4079,6 +4232,9 @@ static const GtkActionEntry entries[] = {
 	{ "StartPresentation", EV_STOCK_RUN_PRESENTATION, N_("Start Presentation"), NULL,
 	  N_("Start a presentation"),
 	  G_CALLBACK (ev_window_cmd_start_presentation) },
+	{ "PreviewPrint", GTK_STOCK_PRINT, N_("Print"), NULL,
+	  N_("Print this document"),
+	  G_CALLBACK (ev_window_cmd_preview_print) },
 
 	/* Accellerators */
 	{ "Escape", NULL, "", "Escape", "",
@@ -4489,6 +4645,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 					 ev_link_action_get_dest (action),
 					 0,
 					 FALSE,
+					 NULL,
 					 GDK_CURRENT_TIME);
 
 	g_free (uri);

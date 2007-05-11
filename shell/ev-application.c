@@ -352,6 +352,22 @@ get_unlink_temp_file_from_args (GHashTable *args)
 	return unlink_temp_file;
 }
 
+static const gchar *
+get_print_settings_from_args (GHashTable *args)
+{
+	const gchar *print_settings = NULL;
+	GValue      *value = NULL;
+
+	g_assert (args != NULL);
+
+	value = g_hash_table_lookup (args, "print-settings");
+	if (value) {
+		print_settings = g_value_get_string (value);
+	}
+
+	return print_settings;
+}
+
 /**
  * ev_application_open_window:
  * @application: The instance of the application.
@@ -509,9 +525,10 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 EvLinkDest     *dest,
 				 EvWindowRunMode mode,
 				 gboolean        unlink_temp_file,
+				 const gchar    *print_settings, 
 				 guint           timestamp)
 {
-	EvWindow     *new_window;
+	EvWindow *new_window;
 
 	g_return_if_fail (uri != NULL);
 	
@@ -532,7 +549,8 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
-	ev_window_open_uri (new_window, uri, dest, mode, unlink_temp_file);
+	ev_window_open_uri (new_window, uri, dest, mode,
+			    unlink_temp_file, print_settings);
 
 	ev_document_fc_mutex_lock ();
 	gtk_widget_show (GTK_WIDGET (new_window));
@@ -560,6 +578,7 @@ ev_application_open_uri (EvApplication  *application,
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 	gboolean         unlink_temp_file = FALSE;
+	const gchar     *print_settings;
 	GdkScreen       *screen = NULL;
 
 	if (args) {
@@ -568,11 +587,12 @@ ev_application_open_uri (EvApplication  *application,
 		mode = get_window_run_mode_from_args (args);
 		unlink_temp_file = (mode == EV_WINDOW_MODE_PREVIEW &&
 				    get_unlink_temp_file_from_args (args));
+		print_settings = get_print_settings_from_args (args);
 	}
 	
 	ev_application_open_uri_at_dest (application, uri, screen,
-					 dest, mode, unlink_temp_file, 
-					 timestamp);
+					 dest, mode, unlink_temp_file,
+					 print_settings, timestamp);
 
 	if (dest)
 		g_object_unref (dest);
@@ -590,8 +610,8 @@ ev_application_open_uri_list (EvApplication *application,
 
 	for (l = uri_list; l != NULL; l = l->next) {
 		ev_application_open_uri_at_dest (application, (char *)l->data,
-						 screen, NULL, 0, FALSE, 
-						 timestamp);
+						 screen, NULL, 0, FALSE,
+						 NULL, timestamp);
 	}
 }
 
