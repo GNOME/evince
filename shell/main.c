@@ -307,6 +307,7 @@ main (int argc, char *argv[])
 #if WITH_GNOME
 	GnomeProgram *program;
 #else
+	char *accel_filename;
 	GError *error = NULL;
 #endif
 
@@ -339,6 +340,9 @@ main (int argc, char *argv[])
 	g_option_context_free (context);
 	
 	gnome_vfs_init ();
+
+	accel_filename = g_build_filename (ev_dot_dir (), "accels", NULL);
+	gtk_accel_map_load (accel_filename);
 #endif
 
 	args = arguments_parse ();
@@ -379,6 +383,9 @@ main (int argc, char *argv[])
 
 #if WITH_GNOME
 	gnome_accelerators_sync ();
+#else
+	gtk_accel_map_save (accel_filename);
+	g_free (accel_filename);
 #endif
 
 	ev_file_helpers_shutdown ();
