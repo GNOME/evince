@@ -3168,6 +3168,7 @@ static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
 	GError *error = NULL;
+	GdkScreen *screen;
 	char *command;
 	const char *lang;
 	char *uri = NULL;
@@ -3201,7 +3202,8 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 	command = g_strconcat ("gnome-help ghelp://", uri,  NULL);
 	g_free (uri);
 	
-	g_spawn_command_line_async (command, &error);
+	screen = gtk_widget_get_screen (GTK_WIDGET (ev_window));
+	gdk_spawn_command_line_on_screen (screen, command, &error);
 	if (error != NULL) {
 		g_warning (error->message);
 		g_error_free (error);
