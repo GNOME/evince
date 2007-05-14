@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([Evince],[0.9.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
+AC_INIT([Evince],[0.9.0],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
 AM_INIT_AUTOMAKE([1.9 dist-bzip2 no-dist-gzip])
 
 AM_CONFIG_HEADER(config.h)
