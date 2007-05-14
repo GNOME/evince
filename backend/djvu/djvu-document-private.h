@@ -36,6 +36,10 @@ struct _DjvuDocument {
 	gchar            *uri;
 
 	DjvuText         *search;
+        
+        /* PS exporter */
+        gchar		 *ps_filename;
+        GString 	 *opts;
 };
 
 int  djvu_document_get_n_pages (EvDocument   *document);

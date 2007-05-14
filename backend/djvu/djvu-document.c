@@ -22,6 +22,7 @@
 #include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-document-thumbnails.h"
+#include "ev-file-exporter.h"
 #include "ev-document-misc.h"
 #include "ev-document-find.h"
 #include "ev-document-links.h"
@@ -47,6 +48,7 @@ typedef struct _DjvuDocumentClass DjvuDocumentClass;
 
 static void djvu_document_document_iface_init (EvDocumentIface *iface);
 static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void djvu_document_file_exporter_iface_init (EvFileExporterIface *iface);
 static void djvu_document_find_iface_init (EvDocumentFindIface *iface);
 static void djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface);
 
@@ -54,7 +56,8 @@ G_DEFINE_TYPE_WITH_CODE
     (DjvuDocument, djvu_document, G_TYPE_OBJECT, 
     {
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT, djvu_document_document_iface_init);    
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init)
+      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init);
+      G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
      });
@@ -256,7 +259,13 @@ djvu_document_finalize (GObject *object)
 
 	if (djvu_document->d_document)
 	    ddjvu_document_release (djvu_document->d_document);
+	    
+	if (djvu_document->opts)
+	    g_string_free (djvu_document->opts, TRUE);
 
+	if (djvu_document->ps_filename)
+	    g_free (djvu_document->ps_filename);
+	    
 	ddjvu_context_release (djvu_document->d_context);
 	ddjvu_format_release (djvu_document->d_format);
 	g_free (djvu_document->uri);
@@ -398,12 +407,83 @@ djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 	iface->get_dimensions = djvu_document_thumbnails_get_dimensions;
 }
 
+/* EvFileExporterIface */
+static gboolean
+djvu_document_file_exporter_format_supported (EvFileExporter      *exporter,
+					      EvFileExporterFormat format)
+{
+        return (format == EV_FILE_FORMAT_PS); // only exporting to PS is implemented.
+}
+
+static void
+djvu_document_file_exporter_begin (EvFileExporter      *exporter,
+                                 EvFileExporterFormat format,
+				 const char          *filename, /* for storing the temp ps file */
+                                 int                  first_page,
+                                 int                  last_page,
+                                 double               width,
+                                 double               height,
+                                 gboolean             duplex)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
+	
+	if (djvu_document->ps_filename)
+		g_free (djvu_document->ps_filename);	
+	djvu_document->ps_filename = g_strdup(filename);
+
+	g_string_assign(djvu_document->opts, "-page=");
+}
+
+static void
+djvu_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
+	
+	g_string_append_printf(djvu_document->opts, "%d,", (rc->page) + 1); 
+}
+
+static void
+djvu_document_file_exporter_end (EvFileExporter *exporter)
+{
+	int d_optc = 1; 
+	const char *d_optv[d_optc];
+
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
+
+	FILE *fn = fopen(djvu_document->ps_filename, "w");
+	if (fn == NULL) {
+		g_warning(_("Cannot open file “%s”."), djvu_document->ps_filename);
+		return;
+	}
+	
+	d_optv[0] = djvu_document->opts->str; 
+
+	ddjvu_job_t * job = ddjvu_document_print(djvu_document->d_document, fn, d_optc, d_optv);
+	while (!ddjvu_job_done(job) ) {	
+		djvu_handle_events (djvu_document, TRUE);
+	}
+
+	fclose(fn); 
+}
+
+static void
+djvu_document_file_exporter_iface_init (EvFileExporterIface *iface)
+{
+        iface->format_supported = djvu_document_file_exporter_format_supported;
+        iface->begin = djvu_document_file_exporter_begin;
+        iface->do_page = djvu_document_file_exporter_do_page;
+        iface->end = djvu_document_file_exporter_end;
+}
+
 static void
 djvu_document_init (DjvuDocument *djvu_document)
 {
 	djvu_document->d_context = ddjvu_context_create ("Evince");
 	djvu_document->d_format = ddjvu_format_create (DDJVU_FORMAT_RGB24, 0, 0);
 	ddjvu_format_set_row_order (djvu_document->d_format,1);
+
+	djvu_document->ps_filename = NULL;
+	djvu_document->opts = g_string_new ("");
 	
 	djvu_document->d_document = NULL;
 }
