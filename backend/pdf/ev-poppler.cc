@@ -190,6 +190,8 @@ pdf_document_dispose (GObject *object)
 	if (pdf_document->fonts_iter) {
 		poppler_fonts_iter_free (pdf_document->fonts_iter);
 	}
+
+	G_OBJECT_CLASS (pdf_document_parent_class)->dispose (object);
 }
 
 static void
