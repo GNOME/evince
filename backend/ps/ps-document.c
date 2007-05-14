@@ -169,7 +169,7 @@ document_load (PSDocument *ps_document, const gchar *fname, GError **error)
 		g_set_error (error,
 			     G_FILE_ERROR,
 			     G_FILE_ERROR_NOENT,
-			     _("Cannot open file “%s”.\n"), /* FIXME: remove \n after freeze */
+			     _("Cannot open file “%s”."),
 			     filename_dsp);
 		g_free (filename_dsp);
 		
@@ -183,7 +183,7 @@ document_load (PSDocument *ps_document, const gchar *fname, GError **error)
 		g_set_error (error,
 			     G_FILE_ERROR,
 			     G_FILE_ERROR_NOENT,
-			     _("Cannot open file “%s”.\n"), /* FIXME: remove \n after freeze */
+			     _("Cannot open file “%s”."),
 			     filename_dsp);
 		g_free (filename_dsp);
 		
