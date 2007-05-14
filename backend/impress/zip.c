@@ -9,6 +9,8 @@
 #include <zlib.h>
 #define _(x) x
 
+typedef unsigned long ulong;
+
 enum {
 	ZIP_OK = 0,
 	ZIP_NOMEM,
