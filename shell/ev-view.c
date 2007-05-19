@@ -1517,7 +1517,6 @@ handle_link_over_xy (EvView *view, gint x, gint y)
 		    view->cursor == EV_VIEW_CURSOR_IBEAM)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
-	return;
 }
 
 /*** Images ***/
@@ -3406,10 +3405,17 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvView      *view)
 {
 	if (view->current_page != new_page) {
+		gint x, y;
+		
 		view->current_page = new_page;
 		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
 		if (view->presentation)
 			ev_view_presentation_transition_start (view);
+
+		gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+		handle_link_over_xy (view, x, y);
+		
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -3421,10 +3427,12 @@ page_changed_cb (EvPageCache *page_cache,
 	}
 }
 
-static void on_adjustment_value_changed (GtkAdjustment  *adjustment,
-				         EvView *view)
+static void
+on_adjustment_value_changed (GtkAdjustment *adjustment,
+			     EvView        *view)
 {
 	int dx = 0, dy = 0;
+	gint x, y;
 
 	if (! GTK_WIDGET_REALIZED (view))
 		return;
@@ -3443,13 +3451,14 @@ static void on_adjustment_value_changed (GtkAdjustment  *adjustment,
 		view->scroll_y = 0;
 	}
 
-
 	if (view->pending_resize)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	else
 		gdk_window_scroll (GTK_WIDGET (view)->window, dx, dy);
 
-
+	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+	handle_link_over_xy (view, x, y);
+	
 	if (view->document)
 		view_update_range_and_current_page (view);
 }
