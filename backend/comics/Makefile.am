@@ -1,7 +1,7 @@
 INCLUDES =                      \
 	-I$(top_srcdir)		\
 	-I$(top_srcdir)/libdocument \
-	$(LIB_CFLAGS)
+	$(BACKEND_CFLAGS)
 
 noinst_LTLIBRARIES = libcomicsdocument.la
 
