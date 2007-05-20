@@ -5063,6 +5063,17 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Stub sidebar, for now */
 
+	sidebar_widget = ev_sidebar_thumbnails_new ();
+	ev_window->priv->sidebar_thumbs = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "notify::main-widget",
+			  G_CALLBACK (sidebar_page_main_widget_update_cb),
+			  ev_window);
+	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     sidebar_widget);
+
 	sidebar_widget = ev_sidebar_links_new ();
 	ev_window->priv->sidebar_links = sidebar_widget;
 	g_signal_connect (sidebar_widget,
@@ -5084,17 +5095,6 @@ ev_window_init (EvWindow *ev_window)
 				 "popup",
 				 G_CALLBACK (attachment_bar_menu_popup_cb),
 				 ev_window, 0);
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
-
-	sidebar_widget = ev_sidebar_thumbnails_new ();
-	ev_window->priv->sidebar_thumbs = sidebar_widget;
-	g_signal_connect (sidebar_widget,
-			  "notify::main-widget",
-			  G_CALLBACK (sidebar_page_main_widget_update_cb),
-			  ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);

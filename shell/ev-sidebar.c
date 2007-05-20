@@ -451,7 +451,8 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	gtk_widget_show (menu_item);
 	gtk_menu_shell_append (GTK_MENU_SHELL (ev_sidebar->priv->menu),
 			       menu_item);
-	   
+
+	/* Insert and move to end */
 	gtk_list_store_insert_with_values (GTK_LIST_STORE (ev_sidebar->priv->page_model),
 					   &iter, 0,
 					   PAGE_COLUMN_TITLE, title,
@@ -459,7 +460,10 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 					   PAGE_COLUMN_MAIN_WIDGET, main_widget,
 					   PAGE_COLUMN_NOTEBOOK_INDEX, index,
 					   -1);
-	   
+	gtk_list_store_move_before(GTK_LIST_STORE(ev_sidebar->priv->page_model),
+					   &iter, NULL);
+
+
 	/* Set the first item added as active */
 	gtk_tree_model_get_iter_first (ev_sidebar->priv->page_model, &iter);
 	gtk_tree_model_get (ev_sidebar->priv->page_model,
