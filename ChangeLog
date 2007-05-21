@@ -1,3 +1,10 @@
+2007-05-21  Eduardo Lima <eduardo.lima@indt.org.br>
+
+	* libdocument/ev-file-helpers.c: (ensure_dir_exists):
+
+	Using g_mkdir_with_parents() instead of g_mkdir() to really ensure the
+	directory exists.
+
 2007-05-20  Wouter Bolsterlee  <wbolster@svn.gnome.org>
 
 	* shell/ev-sidebar.c: (ev_sidebar_add_page):

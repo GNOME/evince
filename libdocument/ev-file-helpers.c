@@ -50,7 +50,7 @@ ensure_dir_exists (const char *dir)
 	if (g_file_test (dir, G_FILE_TEST_IS_DIR))
 		return TRUE;
 	
-	if (g_mkdir (dir, 488) == 0)
+	if (g_mkdir_with_parents (dir, 488) == 0)
 		return TRUE;
 
 	if (errno == EEXIST)
