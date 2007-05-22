@@ -1623,13 +1623,22 @@ pdf_selection_render_selection (EvSelection      *selection,
 					   TRUE, 8,
 					   width, height);
 	}
-	
+
+#ifdef HAVE_POPPLER_PAGE_RENDER_SELECTION_TO_PIXBUF
+	poppler_page_render_selection_to_pixbuf (POPPLER_PAGE (rc->data),
+						 rc->scale, rc->rotation, *pixbuf,
+						 (PopplerRectangle *)points,
+						 (PopplerRectangle *)old_points,
+						 text,
+						 base);
+#else
 	poppler_page_render_selection (POPPLER_PAGE (rc->data),
 				       rc->scale, rc->rotation, *pixbuf,
 				       (PopplerRectangle *)points,
 				       (PopplerRectangle *)old_points,
 				       text,
 				       base);
+#endif /* HAVE_POPPLER_PAGE_RENDER_SELECTION_TO_PIXBUF */
 }
 
 
