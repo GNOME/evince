@@ -97,7 +97,7 @@ ev_attachment_finalize (GObject *object)
 	}
 
 	if (attachment->priv->tmp_uri) {
-		g_unlink (attachment->priv->tmp_uri);
+		ev_tmp_filename_unlink (attachment->priv->tmp_uri);
 		g_free (attachment->priv->tmp_uri);
 		attachment->priv->tmp_uri = NULL;
 	}

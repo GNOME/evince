@@ -40,10 +40,13 @@ void         ev_file_helpers_init     (void);
 void         ev_file_helpers_shutdown (void);
 
 gchar       *ev_tmp_filename          (const char        *prefix);
+void         ev_tmp_filename_unlink   (const gchar       *filename);
+void         ev_tmp_uri_unlink        (const gchar       *uri);
 
 gboolean     ev_xfer_uri_simple       (const char        *from,
 				       const char        *to,
 				       GError           **error);
+
 gchar       *ev_file_uncompress       (const gchar       *uri,
 				       EvCompressionType  type,
 				       GError           **error);

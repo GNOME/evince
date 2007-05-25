@@ -89,6 +89,7 @@
 #include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #include <libgnomevfs/gnome-vfs-async-ops.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 #include <gconf/gconf-client.h>
 
 #include <errno.h>
@@ -1231,14 +1232,8 @@ ev_window_clear_load_job (EvWindow *ev_window)
 static void
 ev_window_clear_local_uri (EvWindow *ev_window)
 {
-    char *filename;
-    
     if (ev_window->priv->local_uri) {
-	    filename = g_filename_from_uri (ev_window->priv->local_uri, NULL, NULL);
-	    if (filename != NULL) {
-		    g_unlink (filename);
-		    g_free (filename);
-	    }
+	    ev_tmp_uri_unlink (ev_window->priv->local_uri);
 	    g_free (ev_window->priv->local_uri);
 	    ev_window->priv->local_uri = NULL;
     }
@@ -1413,9 +1408,9 @@ ev_window_close_dialogs (EvWindow *ev_window)
 }
 
 static gint
-xfer_update_progress_callback (GnomeVFSAsyncHandle      *handle,
-			       GnomeVFSXferProgressInfo *info,
-			       EvWindow                 *ev_window)
+open_xfer_update_progress_callback (GnomeVFSAsyncHandle      *handle,
+				    GnomeVFSXferProgressInfo *info,
+				    EvWindow                 *ev_window)
 {
 	switch (info->status) {
 	        case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
@@ -1499,7 +1494,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 				      GNOME_VFS_XFER_ERROR_MODE_ABORT,
 				      GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
 				      GNOME_VFS_PRIORITY_DEFAULT,
-				      (GnomeVFSAsyncXferProgressCallback)xfer_update_progress_callback,
+				      (GnomeVFSAsyncXferProgressCallback)
+				      open_xfer_update_progress_callback,
 				      ev_window,
 				      NULL, NULL); 
 		
@@ -1560,9 +1556,9 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 	} else if (window->priv->uri != NULL) {
 		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
 					  window->priv->uri);
-	}
-	else {
+	} else {
 		char *folder;
+		
 		folder = xdg_user_dir_lookup ("DOCUMENTS");
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
 						     folder);
@@ -1891,28 +1887,107 @@ ev_window_setup_recent (EvWindow *ev_window)
 #endif /* HAVE_GTK_RECENT */
 }
 
+static gint
+save_xfer_update_progress_callback (GnomeVFSAsyncHandle      *handle,
+				    GnomeVFSXferProgressInfo *info,
+				    GnomeVFSURI              *tmp_uri)
+{
+	switch (info->status) {
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
+			if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED) {
+				gchar *uri;
+
+				uri = gnome_vfs_uri_to_string (tmp_uri, 0);
+				ev_tmp_uri_unlink (uri);
+				g_free (uri);
+				gnome_vfs_uri_unref (tmp_uri);
+			}
+			return 1;
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_VFSERROR:
+			if (info->vfs_status != GNOME_VFS_OK) {
+				GtkWidget *dialog;
+				gchar     *uri;
+
+				dialog = gtk_message_dialog_new (NULL,
+								 GTK_DIALOG_DESTROY_WITH_PARENT,
+								 GTK_MESSAGE_ERROR,
+								 GTK_BUTTONS_CLOSE,
+								 _("The file could not be saved as “%s”."),
+								 info->target_name);
+				gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+									  gnome_vfs_result_to_string (info->vfs_status));
+
+				g_signal_connect (dialog, "response",
+						  G_CALLBACK (gtk_widget_destroy),
+						  NULL);
+				gtk_widget_show (dialog);
+
+				uri = gnome_vfs_uri_to_string (tmp_uri, 0);
+				ev_tmp_uri_unlink (uri);
+				g_free (uri);
+				gnome_vfs_uri_unref (tmp_uri);
+			}
+			return 1;
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_OVERWRITE:
+	        case GNOME_VFS_XFER_PROGRESS_STATUS_DUPLICATE:
+			return 1;
+	        default:
+			g_assert_not_reached ();
+	}
+
+	return 0;
+}
+
+static void
+ev_window_save_remote (EvWindow    *ev_window,
+		       GnomeVFSURI *src,
+		       GnomeVFSURI *dst)
+{
+	GnomeVFSAsyncHandle *handle;
+	GList               *slist = NULL;
+	GList               *tlist = NULL;
+	
+	slist = g_list_prepend (slist, src);
+	tlist = g_list_prepend (tlist, dst);
+	gnome_vfs_async_xfer (&handle, slist, tlist,
+			      GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
+			      GNOME_VFS_XFER_ERROR_MODE_ABORT,
+			      GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
+			      GNOME_VFS_PRIORITY_DEFAULT,
+			      (GnomeVFSAsyncXferProgressCallback)
+			      save_xfer_update_progress_callback,
+			      gnome_vfs_uri_ref (src),
+			      NULL, NULL);
+	g_list_free (slist);
+	g_list_free (tlist);
+}
+
 static void
 file_save_dialog_response_cb (GtkWidget *fc,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
-	const gchar *uri_unc;
-	gint         fd;
-	gchar       *filename;
-	gchar       *tmp_filename;
-	GError      *error = NULL;
+	gchar  *uri;
+	gchar  *local_uri;
+	gint    fd;
+	gchar  *filename;
+	gchar  *tmp_filename;
+	GError *error = NULL;
 
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
 		return;
 	}
-	
 
-	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+
+	filename = ev_tmp_filename ("saveacopy");
 	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
+	g_free (filename);
 	
 	fd = g_mkstemp (tmp_filename);
 	if (fd == -1) {
+		gchar *msg;
 		gchar *display_name;
 		gint   save_errno = errno;
 		
@@ -1923,74 +1998,95 @@ file_save_dialog_response_cb (GtkWidget *fc,
 			     _("Failed to create file “%s”: %s"),
 			     display_name, g_strerror (save_errno));
 		g_free (display_name);
-	} else {
-		gchar *uri;
-		
-		uri = g_filename_to_uri (tmp_filename, NULL, NULL);
-		
-		ev_document_doc_mutex_lock ();
-		ev_document_save (ev_window->priv->document, uri, &error);
-		ev_document_doc_mutex_unlock ();
-		
+
+		msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
+		ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
+
+		g_free (tmp_filename);
 		g_free (uri);
-		close (fd);
+		g_free (msg);
+		g_error_free (error);
+		gtk_widget_destroy (fc);
+		
+		return;
 	}
 
-	if (!error) {
-		uri_unc = g_object_get_data (G_OBJECT (ev_window->priv->document),
-					     "uri-uncompressed");
-		if (uri_unc) {
-			EvCompressionType ctype;
-			gchar            *uri_comp;
-			gchar            *uri;
-			const gchar      *ext;
+	/* Save document to temp filename */
+	local_uri = g_filename_to_uri (tmp_filename, NULL, NULL);
+	
+	ev_document_doc_mutex_lock ();
+	ev_document_save (ev_window->priv->document, local_uri, &error);
+	ev_document_doc_mutex_unlock ();
+	
+	close (fd);
 
-			ctype = EV_COMPRESSION_NONE;
-			
+	if (!error) {
+		/* If original document was compressed,
+		 * compress it again before saving
+		 */
+		if (g_object_get_data (G_OBJECT (ev_window->priv->document),
+				       "uri-uncompressed")) {
+			EvCompressionType ctype = EV_COMPRESSION_NONE;
+			const gchar      *ext;
+			gchar            *uri_comp;
+
 			ext = g_strrstr (ev_window->priv->uri, ".gz");
 			if (ext && g_ascii_strcasecmp (ext, ".gz") == 0)
 				ctype = EV_COMPRESSION_GZIP;
-			
+
 			ext = g_strrstr (ev_window->priv->uri, ".bz2");
 			if (ext && g_ascii_strcasecmp (ext, ".bz2") == 0)
 				ctype = EV_COMPRESSION_BZIP2;
 			
-			uri = g_filename_to_uri (tmp_filename, NULL, NULL);
-			uri_comp = ev_file_compress (uri, ctype, &error);
-			g_free (uri);
-			g_unlink (tmp_filename);
-			g_free (tmp_filename);
-
-			if (!uri_comp || error) {
-				tmp_filename = NULL;
-			} else {
-				tmp_filename = g_filename_from_uri (uri_comp,
-								    NULL, NULL);
-			}
+			uri_comp = ev_file_compress (local_uri, ctype, &error);
+			g_free (local_uri);
+			ev_tmp_filename_unlink (tmp_filename);
 			
-			g_free (uri_comp);
+			if (!uri_comp || error) {
+				local_uri = NULL;
+			} else {
+				local_uri = uri_comp;
+			}
 		}
 	}
 
-	if (tmp_filename && g_rename (tmp_filename, filename) == -1) {
-		g_unlink (tmp_filename);
-	}
-	
+	g_free (tmp_filename);
+
 	if (error) {
 		gchar *msg;
-		gchar *uri;
-		
-		uri = g_filename_to_uri (filename, NULL, NULL);
+
 		msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
 		ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
-		g_free (msg);
 		g_free (uri);
+		g_free (msg);
 		g_error_free (error);
-	}
-	
-	g_free (tmp_filename);
-	g_free (filename);
+		g_free (local_uri);
+		gtk_widget_destroy (fc);
 
+		return;
+	}
+
+	if (local_uri) {
+		GnomeVFSURI *target_uri;
+
+		target_uri = gnome_vfs_uri_new (uri);
+		if (gnome_vfs_uri_is_local (target_uri)) {
+			/* If target uri is local, just rename local_uri */
+			if (gnome_vfs_move (local_uri, uri, TRUE) != GNOME_VFS_OK)
+				ev_tmp_uri_unlink (local_uri);
+		} else {
+			GnomeVFSURI *source_uri;
+
+			source_uri = gnome_vfs_uri_new (local_uri);
+			ev_window_save_remote (ev_window, source_uri, target_uri);
+			gnome_vfs_uri_unref (source_uri);
+		}
+
+		gnome_vfs_uri_unref (target_uri);
+		g_free (local_uri);
+	}
+
+	g_free (uri);
 	gtk_widget_destroy (fc);
 }
 
@@ -2012,7 +2108,8 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	ev_document_factory_add_filters (fc, ev_window->priv->document);
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
-	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER (fc), TRUE);	
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);	
 	file_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
 	base_name = g_path_get_basename (file_name);
         folder = xdg_user_dir_lookup ("DOCUMENTS");
@@ -4757,9 +4854,11 @@ image_save_dialog_response_cb (GtkWidget *fc,
 			       gint       response_id,
 			       EvWindow  *ev_window)
 {
-	gchar  *uri;
-	gchar  *filename;
-	GError *error = NULL;
+	GnomeVFSURI *target_uri;
+	gchar       *uri;
+	gchar       *filename;
+	gboolean     is_local;
+	GError      *error = NULL;
 	
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
@@ -4767,7 +4866,15 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	}
 
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
-	filename = g_filename_from_uri (uri, NULL, NULL);
+	target_uri = gnome_vfs_uri_new (uri);
+	is_local = gnome_vfs_uri_is_local (target_uri);
+	
+	if (is_local) {
+		filename = g_filename_from_uri (uri, NULL, NULL);
+	} else {
+		filename = ev_tmp_filename ("saveimage");
+	}
+	
 	g_free (uri);
 	
 	/* FIXME: allow saving in other image formats than png */
@@ -4779,10 +4886,26 @@ image_save_dialog_response_cb (GtkWidget *fc,
 					_("The image could not be saved."),
 					error);
 		g_error_free (error);
+		g_free (filename);
+		gnome_vfs_uri_unref (target_uri);
+		gtk_widget_destroy (fc);
+
+		return;
 	}
 
-	g_free (filename);
+	if (!is_local) {
+		GnomeVFSURI *source_uri;
+		gchar       *local_uri;
 
+		local_uri = g_filename_to_uri (filename, NULL, NULL);
+		source_uri = gnome_vfs_uri_new (local_uri);
+		g_free (local_uri);
+		ev_window_save_remote (ev_window, source_uri, target_uri);
+		gnome_vfs_uri_unref (source_uri);
+	}
+	
+	g_free (filename);
+	gnome_vfs_uri_unref (target_uri);
 	gtk_widget_destroy (fc);
 }
 
@@ -4804,6 +4927,7 @@ ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
 
 	filter = gtk_file_filter_new ();
@@ -4862,10 +4986,12 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 				    gint       response_id,
 				    EvWindow  *ev_window)
 {
+	GnomeVFSURI          *target_uri;
 	gchar                *uri;
 	GList                *l;
 	GtkFileChooserAction  fc_action;
 	gboolean              is_dir;
+	gboolean              is_local;
 	
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
@@ -4873,9 +4999,10 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 	}
 
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
-	
+	target_uri = gnome_vfs_uri_new (uri);
 	g_object_get (G_OBJECT (fc), "action", &fc_action, NULL);
 	is_dir = (fc_action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	is_local = gnome_vfs_uri_is_local (target_uri);
 	
 	for (l = ev_window->priv->attach_list; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
@@ -4884,26 +5011,57 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 		
 		attachment = (EvAttachment *) l->data;
 
-		if (is_dir) {
-			filename = g_strjoin ("/", uri,
-					      ev_attachment_get_name (attachment),
-					      NULL);
+		if (is_local) {
+			if (is_dir) {
+				filename = g_strjoin ("/", uri,
+						      ev_attachment_get_name (attachment),
+						      NULL);
+			} else {
+				filename = g_strdup (uri);
+			}
 		} else {
-			filename = g_strdup (uri);
+			filename = ev_tmp_filename ("saveattachment");
 		}
-		
+
 		ev_attachment_save (attachment, filename, &error);
-		g_free (filename);
 		
 		if (error) {
 			ev_window_error_dialog (GTK_WINDOW (ev_window),
 						_("The attachment could not be saved."),
 						error);
 			g_error_free (error);
+			g_free (filename);
+
+			continue;
 		}
+
+		if (!is_local) {
+			GnomeVFSURI *src_uri;
+			GnomeVFSURI *dest_uri;
+			gchar       *local_uri;
+
+			if (is_dir) {
+				const gchar *name = ev_attachment_get_name (attachment);
+
+				dest_uri = gnome_vfs_uri_append_file_name (target_uri,
+									   name);
+			} else {
+				dest_uri = gnome_vfs_uri_ref (target_uri);
+			}
+			
+			local_uri = g_filename_to_uri (filename, NULL, NULL);
+			src_uri = gnome_vfs_uri_new (local_uri);
+			g_free (local_uri);
+			ev_window_save_remote (ev_window, src_uri, dest_uri);
+			gnome_vfs_uri_unref (src_uri);
+			gnome_vfs_uri_unref (dest_uri);
+		}
+
+		g_free (filename);
 	}
 
 	g_free (uri);
+	gnome_vfs_uri_unref (target_uri);
 
 	gtk_widget_destroy (fc);
 }
@@ -4931,6 +5089,7 @@ ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
+	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 
 	if (attachment)
 		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc),

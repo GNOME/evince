@@ -578,7 +578,7 @@ ev_application_open_uri (EvApplication  *application,
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 	gboolean         unlink_temp_file = FALSE;
-	const gchar     *print_settings;
+	const gchar     *print_settings = NULL;
 	GdkScreen       *screen = NULL;
 
 	if (args) {

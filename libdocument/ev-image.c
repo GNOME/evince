@@ -42,7 +42,7 @@ ev_image_finalize (GObject *object)
 	}
 
 	if (image->priv->tmp_uri) {
-		g_unlink (image->priv->tmp_uri);
+		ev_tmp_filename_unlink (image->priv->tmp_uri);
 		g_free (image->priv->tmp_uri);
 		image->priv->tmp_uri = NULL;
 	}

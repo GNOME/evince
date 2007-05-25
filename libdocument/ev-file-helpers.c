@@ -145,6 +145,43 @@ ev_tmp_filename (const gchar *prefix)
 	return filename;
 }
 
+/* Remove a local temp file created by evince */
+void
+ev_tmp_filename_unlink (const gchar *filename)
+{
+	const gchar *tempdir;
+	
+	if (!filename)
+		return;
+
+	tempdir = g_get_tmp_dir ();
+	if (g_ascii_strncasecmp (filename, tempdir, strlen (tempdir)) == 0) {
+		g_unlink (filename);
+	}
+}
+
+void
+ev_tmp_uri_unlink (const gchar *uri)
+{
+	GnomeVFSURI *vfs_uri;
+	gchar       *filename;
+	
+	if (!uri)
+		return;
+	
+	vfs_uri = gnome_vfs_uri_new (uri);
+	if (!gnome_vfs_uri_is_local (vfs_uri)) {
+		g_warning ("Attempting to delete non local uri: %s\n", uri);
+		gnome_vfs_uri_unref (vfs_uri);
+		return;
+	}
+	gnome_vfs_uri_unref (vfs_uri);
+
+	filename = g_filename_from_uri (uri, NULL, NULL);
+	ev_tmp_filename_unlink (filename);
+	g_free (filename);
+}
+
 gboolean
 ev_xfer_uri_simple (const char *from,
 		    const char *to,

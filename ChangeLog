@@ -1,3 +1,25 @@
+2007-05-25  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-image.c: (ev_image_finalize):
+	* libdocument/ev-document-factory.c: (free_uncompressed_uri):
+	* libdocument/ev-attachment.c: (ev_attachment_finalize):
+	* libdocument/ev-file-helpers.[ch]: (ev_tmp_filename_unlink),
+	(ev_tmp_uri_unlink):
+
+	Add functions to delete temporary files created by evince in a safe
+	way.
+
+	* shell/ev-window.c: (ev_window_clear_local_uri),
+	(open_xfer_update_progress_callback),
+	(save_xfer_update_progress_callback), (ev_window_save_remote),
+	(file_save_dialog_response_cb), (ev_window_cmd_save_as),
+	(image_save_dialog_response_cb), (ev_view_popup_cmd_save_image_as),
+	(attachment_save_dialog_response_cb),
+	(ev_attachment_popup_cmd_save_attachment_as):
+
+	Allow saving a copy of a document, image or attachment to a remote
+	location. Fixes bug #440754. 
+
 2007-05-22  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:

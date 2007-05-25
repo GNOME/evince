@@ -312,17 +312,10 @@ get_document_from_uri (const char        *uri,
 static void
 free_uncompressed_uri (gchar *uri_unc)
 {
-	gchar *filename;
-
 	if (!uri_unc)
 		return;
 
-	filename = g_filename_from_uri (uri_unc, NULL, NULL);
-	if (!filename)
-		return;
-
-	g_unlink (filename);
-	g_free (filename);
+	ev_tmp_uri_unlink (uri_unc);
 	g_free (uri_unc);
 }
 
