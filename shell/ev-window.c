@@ -711,6 +711,9 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	EvLinkAction *action;
 	EvLinkDest *dest;
 	
+	if (window->priv->history == NULL)
+		return;
+	
 	if (link) {
 		action = g_object_ref (ev_link_get_action (link));
 		dest = ev_link_action_get_dest (action);
