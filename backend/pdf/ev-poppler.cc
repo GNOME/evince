@@ -1135,7 +1135,6 @@ pdf_document_images_get_images (EvDocumentImages *document_images,
 				gint              page)
 {
 	GList *retval = NULL;
-#ifdef HAVE_POPPLER_PAGE_GET_IMAGE_MAPPING
 	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
 	GList *mapping_list;
@@ -1164,7 +1163,7 @@ pdf_document_images_get_images (EvDocumentImages *document_images,
 
 	poppler_page_free_image_mapping (mapping_list);
 	g_object_unref (poppler_page);
-#endif /* HAVE_POPPLER_PAGE_GET_IMAGE_MAPPING */
+
 	return retval;
 }
 
@@ -1624,21 +1623,13 @@ pdf_selection_render_selection (EvSelection      *selection,
 					   width, height);
 	}
 
-#ifdef HAVE_POPPLER_PAGE_RENDER_SELECTION_TO_PIXBUF
 	poppler_page_render_selection_to_pixbuf (POPPLER_PAGE (rc->data),
 						 rc->scale, rc->rotation, *pixbuf,
 						 (PopplerRectangle *)points,
 						 (PopplerRectangle *)old_points,
+						 POPPLER_SELECTION_NORMAL, /* SelectionStyle */
 						 text,
 						 base);
-#else
-	poppler_page_render_selection (POPPLER_PAGE (rc->data),
-				       rc->scale, rc->rotation, *pixbuf,
-				       (PopplerRectangle *)points,
-				       (PopplerRectangle *)old_points,
-				       text,
-				       base);
-#endif /* HAVE_POPPLER_PAGE_RENDER_SELECTION_TO_PIXBUF */
 }
 
 
@@ -1694,7 +1685,6 @@ static gdouble
 pdf_document_get_page_duration (EvDocumentTransition *trans,
 				gint                  page)
 {
-#ifdef HAVE_POPPLER_PAGE_GET_DURATION	
 	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
 	gdouble      duration = -1;
@@ -1708,9 +1698,6 @@ pdf_document_get_page_duration (EvDocumentTransition *trans,
 	g_object_unref (poppler_page);
 
 	return duration;
-#else
-	return -1;
-#endif /* HAVE_POPPLER_PAGE_GET_DURATION */
 }
 
 static void

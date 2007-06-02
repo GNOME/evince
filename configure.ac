@@ -235,7 +235,7 @@ AC_ARG_ENABLE(pdf,
               [AC_HELP_STRING([--enable-pdf], [Compile with pdf support])],enable_pdf="$enableval",enable_pdf=yes)
 
 if test "x$enable_pdf" = "xyes"; then
-    POPPLER_REQUIRED=0.5.4
+    POPPLER_REQUIRED=0.5.9
     PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED,enable_pdf=yes,enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
@@ -247,9 +247,6 @@ if test "x$enable_pdf" = "xyes"; then
 	    evince_save_LIBS=$LIBS
 	    LIBS="$LIBS $FRONTEND_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
-	    AC_CHECK_FUNCS(poppler_page_get_duration)
-	    AC_CHECK_FUNCS(poppler_page_get_image_mapping)
-	    AC_CHECK_FUNCS(poppler_page_render_selection_to_pixbuf)
 	    LIBS=$evince_save_LIBS
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
