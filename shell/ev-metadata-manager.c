@@ -682,17 +682,6 @@ ev_metadata_manager_save (gpointer data)
 	return FALSE;
 }
 
-void ev_metadata_arm_timeout(void)
-{
-	if (ev_metadata_manager->timeout_id)
-		return;
-	ev_metadata_manager->timeout_id = 
-		g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE,
-				    2000, /* 2 sec */
-				    (GSourceFunc)ev_metadata_manager_save,
-				    NULL,
-				    NULL);
-}
 void
 ev_metadata_manager_set_int (const gchar *uri, const gchar *key, int value)
 {
