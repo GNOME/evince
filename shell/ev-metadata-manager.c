@@ -94,6 +94,24 @@ item_free (gpointer data)
 }
 
 /**
+ * ev_metadata_arm_timeout
+ *
+ * Setup a timeout for saving the metadata to disk.
+ */
+static void
+ev_metadata_arm_timeout(void)
+{
+	if (ev_metadata_manager->timeout_id)
+		return;
+	ev_metadata_manager->timeout_id = 
+		g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE,
+				    2000, /* 2 sec */
+				    (GSourceFunc)ev_metadata_manager_save,
+				    NULL,
+				    NULL);
+}
+
+/**
  * ev_metadata_manager_init:
  *
  * Creates an EvMetadataManager with default values.
@@ -116,13 +134,6 @@ ev_metadata_manager_init (void)
 				       g_str_equal, 
 				       g_free,
 				       item_free);
-
-	ev_metadata_manager->timeout_id = 
-		g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE,
-				    2000, /* 2 sec */
-				    (GSourceFunc)ev_metadata_manager_save,
-				    NULL,
-				    NULL);
 }
 
 /* This function must be called before exiting ev */
@@ -132,7 +143,8 @@ ev_metadata_manager_shutdown (void)
 	if (ev_metadata_manager == NULL)
 		return;
 
-	g_source_remove (ev_metadata_manager->timeout_id);
+	if (ev_metadata_manager->timeout_id)
+		g_source_remove (ev_metadata_manager->timeout_id);
 
 	ev_metadata_manager_save (NULL);
 
@@ -392,6 +404,7 @@ ev_metadata_manager_set_last (const gchar *key,
 
 	item->atime = time (NULL);
 	ev_metadata_manager->modified = TRUE;
+	ev_metadata_arm_timeout ();
 	return;
 }
 				 
@@ -527,6 +540,7 @@ ev_metadata_manager_set (const gchar  *uri,
 	item->atime = time (NULL);
 
 	ev_metadata_manager->modified = TRUE;
+	ev_metadata_arm_timeout ();
 }
 
 static void
@@ -647,8 +661,10 @@ ev_metadata_manager_save (gpointer data)
 	xmlNodePtr root;
 	gchar *file_name;
 
+	ev_metadata_manager->timeout_id = 0;
+
 	if (!ev_metadata_manager->modified)
-		return TRUE;
+		return FALSE;
 
 	resize_items ();
 		
@@ -674,9 +690,20 @@ ev_metadata_manager_save (gpointer data)
 
 	ev_metadata_manager->modified = FALSE;
 
-	return TRUE;
+	return FALSE;
 }
 
+void ev_metadata_arm_timeout(void)
+{
+	if (ev_metadata_manager->timeout_id)
+		return;
+	ev_metadata_manager->timeout_id = 
+		g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE,
+				    2000, /* 2 sec */
+				    (GSourceFunc)ev_metadata_manager_save,
+				    NULL,
+				    NULL);
+}
 void
 ev_metadata_manager_set_int (const gchar *uri, const gchar *key, int value)
 {
