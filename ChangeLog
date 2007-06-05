@@ -1,5 +1,12 @@
 2007-06-05  Bastien Nocera  <hadess@hadess.net>
 
+	* shell/ev-metadata-manager.c: (ev_metadata_manager_init),
+	(ev_metadata_manager_shutdown), (ev_metadata_manager_set_last),
+	(ev_metadata_manager_set), (ev_metadata_manager_save):
+	Simplify the timeout, no need for modified anymore
+
+2007-06-05  Bastien Nocera  <hadess@hadess.net>
+
 	* shell/ev-metadata-manager.c: (ev_metadata_arm_timeout),
 	(ev_metadata_manager_init), (ev_metadata_manager_shutdown),
 	(ev_metadata_manager_set_last), (ev_metadata_manager_set),

@@ -59,9 +59,6 @@ struct _EvMetadataManager
 	gboolean	 values_loaded; /* It is true if the file 
 					   has been read */
 
-	gboolean	 modified;	/* It is true if the file 
-					   has top be written */
-
 	guint 		 timeout_id;
 
 	GHashTable	*items;
@@ -117,7 +114,6 @@ ev_metadata_arm_timeout(void)
  * Creates an EvMetadataManager with default values.
  *
  *  values_loaded   ->  %FALSE.
- *  modified        ->  %FALSE.
  *  timeout_id      ->  the id of the event source.
  *  items           ->  a new full empty #GHashTable.
  */
@@ -127,7 +123,6 @@ ev_metadata_manager_init (void)
 	ev_metadata_manager = g_new0 (EvMetadataManager, 1);
 
 	ev_metadata_manager->values_loaded = FALSE;
-	ev_metadata_manager->modified = FALSE;
 
 	ev_metadata_manager->items = 
 		g_hash_table_new_full (g_str_hash, 
@@ -143,10 +138,11 @@ ev_metadata_manager_shutdown (void)
 	if (ev_metadata_manager == NULL)
 		return;
 
-	if (ev_metadata_manager->timeout_id)
+	if (ev_metadata_manager->timeout_id) {
 		g_source_remove (ev_metadata_manager->timeout_id);
-
-	ev_metadata_manager_save (NULL);
+		ev_metadata_manager->timeout_id = 0;
+		ev_metadata_manager_save (NULL);
+	}
 
 	if (ev_metadata_manager->items != NULL)
 		g_hash_table_destroy (ev_metadata_manager->items);
@@ -403,7 +399,6 @@ ev_metadata_manager_set_last (const gchar *key,
 	}
 
 	item->atime = time (NULL);
-	ev_metadata_manager->modified = TRUE;
 	ev_metadata_arm_timeout ();
 	return;
 }
@@ -539,7 +534,6 @@ ev_metadata_manager_set (const gchar  *uri,
 
 	item->atime = time (NULL);
 
-	ev_metadata_manager->modified = TRUE;
 	ev_metadata_arm_timeout ();
 }
 
@@ -663,9 +657,6 @@ ev_metadata_manager_save (gpointer data)
 
 	ev_metadata_manager->timeout_id = 0;
 
-	if (!ev_metadata_manager->modified)
-		return FALSE;
-
 	resize_items ();
 		
 	xmlIndentTreeOutput = TRUE;
@@ -687,8 +678,6 @@ ev_metadata_manager_save (gpointer data)
 	g_free (file_name);
 	
 	xmlFreeDoc (doc); 
-
-	ev_metadata_manager->modified = FALSE;
 
 	return FALSE;
 }
