@@ -7,6 +7,7 @@ iconsdir = $(themedir)/$(size)/$(context)
 icons_DATA = \
 	view-page-continuous.png	\
 	view-page-facing.png		\
+	zoom.png                \
 	zoom-fit-page.png		\
 	zoom-fit-width.png
 

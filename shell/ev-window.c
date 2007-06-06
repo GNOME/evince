@@ -4476,7 +4476,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 	action = g_object_new (EPHY_TYPE_ZOOM_ACTION,
 			       "name", ZOOM_CONTROL_ACTION,
 			       "label", _("Zoom"),
-			       "stock_id", GTK_STOCK_ZOOM_IN,
+			       "stock_id", EV_STOCK_ZOOM,
 			       "tooltip", _("Adjust the zoom level"),
 			       "zoom", 1.0,
 			       NULL);
