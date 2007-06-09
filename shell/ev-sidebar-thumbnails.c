@@ -393,26 +393,21 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 static void
 ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 {
-	gint width = THUMBNAIL_WIDTH;
-	gint height = THUMBNAIL_WIDTH;
-
 	if (sidebar_thumbnails->priv->loading_icon)
 		g_object_unref (sidebar_thumbnails->priv->loading_icon);
 
 	if (sidebar_thumbnails->priv->document) {
-		EvRenderContext *rc;
+		gint width = THUMBNAIL_WIDTH;
+		gint height;
+		gint page_width, page_height;
 
-		rc = ev_render_context_new (sidebar_thumbnails->priv->rotation, 0,
-					    get_scale_for_page (sidebar_thumbnails, 0));
-
-		/* We get the dimensions of the first doc so that we can make a blank
+		/* We get the dimensions of the first page so that we can make a blank
 		 * icon.  */
-		ev_document_doc_mutex_lock ();
-		ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (sidebar_thumbnails->priv->document),
-						       rc, &width, &height);
-		ev_document_doc_mutex_unlock ();
-		
-		g_object_unref (rc);
+		ev_page_cache_get_size (sidebar_thumbnails->priv->page_cache, 0,
+					sidebar_thumbnails->priv->rotation,
+					1.0, &page_width, &page_height);
+
+		height = (gint) (page_height * ((gdouble)width / page_width));
 		
 		sidebar_thumbnails->priv->loading_icon =
 			ev_document_misc_get_thumbnail_frame (width, height, NULL);

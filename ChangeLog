@@ -1,5 +1,13 @@
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_set_loading_icon):
+
+	Remove a mutex in the main thread that blocks the UI in heavy
+	documents.
+	
+2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-pixbuf-cache.c (copy_job_to_job_info):
 
 	Set points_set to TRUE so that selections don't disappear
