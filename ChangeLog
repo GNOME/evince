@@ -1,3 +1,10 @@
+2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-pixbuf-cache.c (copy_job_to_job_info):
+
+	Set points_set to TRUE so that selections don't disappear after a
+	zoom change.
+	
 2007-06-07  Michael Monreal  <infernux@web.de>
 
 	* data/icons/16x16/actions/Makefile.am:

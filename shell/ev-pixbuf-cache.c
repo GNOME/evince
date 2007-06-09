@@ -453,6 +453,7 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		job_info->selection_region = gdk_region_copy (job_render->selection_region);
 		job_info->selection = g_object_ref (job_render->selection);
 		g_assert (job_info->selection_points.x1 >= 0);
+		job_info->points_set = TRUE;
 	}
 
 	if (job_info->job) {
