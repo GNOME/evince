@@ -120,12 +120,10 @@ ev_window_title_update (EvWindowTitle *window_title)
 
 	if (title && window_title->uri) {
 		ev_window_title_sanitize_extension (window_title, &title);
-	} else {
-		if (window_title->uri) {
-			title = get_filename_from_uri (window_title->uri);
-		} else {
-			title = g_strdup (_("Document Viewer"));
-		}
+	} else if (window_title->uri) {
+		title = get_filename_from_uri (window_title->uri);
+	} else if (!title) {
+		title = g_strdup (_("Document Viewer"));
 	}
 
 	for (p = title; *p; ++p) {
