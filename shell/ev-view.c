@@ -2856,7 +2856,7 @@ draw_loading_text (EvView       *view,
 		ev_document_fc_mutex_unlock ();
 	}
 
-	width = cairo_image_surface_get_width (view->loading_text) / 2;
+	width = (page_area->width - cairo_image_surface_get_width (view->loading_text)) / 2;
 	height = (page_area->height - cairo_image_surface_get_height (view->loading_text)) / 2;
 	
 	cr = gdk_cairo_create (GTK_WIDGET (view)->window);
