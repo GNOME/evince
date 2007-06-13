@@ -216,13 +216,14 @@ djvu_document_render (EvDocument      *document,
 		      EvRenderContext *rc)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-	cairo_surface_t *surface, *rotated_surface;
+	cairo_surface_t *surface;
 	gchar *pixels;
 	gint   rowstride;
     	ddjvu_rect_t rrect;
 	ddjvu_rect_t prect;
 	ddjvu_page_t *d_page;
-	double page_width, page_height;
+	ddjvu_page_rotation_t rotation;
+	double page_width, page_height, tmp;
 	static const cairo_user_data_key_t key;
 
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page);
@@ -232,6 +233,29 @@ djvu_document_render (EvDocument      *document,
 
 	page_width = ddjvu_page_get_width (d_page) * rc->scale * SCALE_FACTOR + 0.5;
 	page_height = ddjvu_page_get_height (d_page) * rc->scale * SCALE_FACTOR + 0.5;
+	
+	switch (rc->rotation) {
+	        case 90:
+			rotation = DDJVU_ROTATE_90;
+			tmp = page_height;
+			page_height = page_width;
+			page_width = tmp;
+			
+			break;
+	        case 180:
+			rotation = DDJVU_ROTATE_180;
+			
+			break;
+	        case 270:
+			rotation = DDJVU_ROTATE_270;
+			tmp = page_height;
+			page_height = page_width;
+			page_width = tmp;
+			
+			break;
+	        default:
+			rotation = DDJVU_ROTATE_0;
+	}
 
 	rowstride = page_width * 4;
 	pixels = (gchar *) g_malloc (page_height * rowstride);
@@ -248,6 +272,8 @@ djvu_document_render (EvDocument      *document,
 	prect.h = page_height;
 	rrect = prect;
 
+	ddjvu_page_set_rotation (d_page, rotation);
+	
 	ddjvu_page_render (d_page, DDJVU_RENDER_COLOR,
 			   &prect,
 			   &rrect,
@@ -255,13 +281,7 @@ djvu_document_render (EvDocument      *document,
 			   rowstride,
 			   pixels);
 
-	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
-								     page_width,
-								     page_height,
-								     rc->rotation);
-	cairo_surface_destroy (surface);
-
-	return rotated_surface;
+	return surface;
 }
 
 static void
