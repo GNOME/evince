@@ -45,7 +45,7 @@ struct _EvSelectionIface
 
 	void        (* render_selection)     (EvSelection      *selection,
 					      EvRenderContext  *rc,
-					      GdkPixbuf       **pixbuf,
+					      cairo_surface_t **surface,
 					      EvRectangle      *points,
 					      EvRectangle      *old_points,
 					      GdkColor        *text,
@@ -60,7 +60,7 @@ struct _EvSelectionIface
 GType      ev_selection_get_type             (void);
 void       ev_selection_render_selection     (EvSelection      *selection,
 					      EvRenderContext  *rc,
-					      GdkPixbuf       **pixbuf,
+					      cairo_surface_t **surface,
 					      EvRectangle      *points,
 					      EvRectangle      *old_points,
 					      GdkColor         *text,

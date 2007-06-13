@@ -203,7 +203,7 @@ djvu_document_get_page_size (EvDocument   *document,
 
 	while ((r = ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info)) < DDJVU_JOB_OK)
 		djvu_handle_events(djvu_document, TRUE);
-
+	
 	if (r >= DDJVU_JOB_FAILED)
 		djvu_handle_events(djvu_document, TRUE);
 
@@ -211,45 +211,57 @@ djvu_document_get_page_size (EvDocument   *document,
         *height = info.height * SCALE_FACTOR;
 }
 
-static GdkPixbuf *
-djvu_document_render_pixbuf (EvDocument  *document, 
-			     EvRenderContext *rc)
+static cairo_surface_t *
+djvu_document_render (EvDocument      *document, 
+		      EvRenderContext *rc)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-	GdkPixbuf *pixbuf;
-	GdkPixbuf *rotated_pixbuf;
-	
+	cairo_surface_t *surface, *rotated_surface;
+	gchar *pixels;
+	gint   rowstride;
     	ddjvu_rect_t rrect;
 	ddjvu_rect_t prect;
 	ddjvu_page_t *d_page;
-	
 	double page_width, page_height;
+	static const cairo_user_data_key_t key;
 
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page);
 	
 	while (!ddjvu_page_decoding_done (d_page))
 		djvu_handle_events(djvu_document, TRUE);
-	
-	page_width = ddjvu_page_get_width (d_page) * rc->scale * SCALE_FACTOR;
-	page_height = ddjvu_page_get_height (d_page) * rc->scale * SCALE_FACTOR;
 
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, page_width, page_height);
+	page_width = ddjvu_page_get_width (d_page) * rc->scale * SCALE_FACTOR + 0.5;
+	page_height = ddjvu_page_get_height (d_page) * rc->scale * SCALE_FACTOR + 0.5;
 
-	prect.x = 0; prect.y = 0;
-	prect.w = page_width; prect.h = page_height;
+	rowstride = page_width * 4;
+	pixels = (gchar *) g_malloc (page_height * rowstride);
+	surface = cairo_image_surface_create_for_data (pixels,
+						       CAIRO_FORMAT_ARGB32,
+						       page_width,
+						       page_height,
+						       rowstride);
+	cairo_surface_set_user_data (surface, &key,
+				     pixels, (cairo_destroy_func_t)g_free);
+	prect.x = 0;
+	prect.y = 0;
+	prect.w = page_width;
+	prect.h = page_height;
 	rrect = prect;
 
-	ddjvu_page_render(d_page, DDJVU_RENDER_COLOR,
-                          &prect,
-                          &rrect,
-                          djvu_document->d_format,
-                	  gdk_pixbuf_get_rowstride (pixbuf),
-                          (gchar *)gdk_pixbuf_get_pixels (pixbuf));
-	
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
-	g_object_unref (pixbuf);
-	
-	return rotated_pixbuf;
+	ddjvu_page_render (d_page, DDJVU_RENDER_COLOR,
+			   &prect,
+			   &rrect,
+			   djvu_document->d_format,
+			   rowstride,
+			   pixels);
+
+	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
+								     page_width,
+								     page_height,
+								     rc->rotation);
+	cairo_surface_destroy (surface);
+
+	return rotated_surface;
 }
 
 static void
@@ -268,6 +280,7 @@ djvu_document_finalize (GObject *object)
 	    
 	ddjvu_context_release (djvu_document->d_context);
 	ddjvu_format_release (djvu_document->d_format);
+	ddjvu_format_release (djvu_document->thumbs_format);
 	g_free (djvu_document->uri);
 	
 	G_OBJECT_CLASS (djvu_document_parent_class)->finalize (object);
@@ -329,7 +342,7 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_text = djvu_document_get_text;
 	iface->get_n_pages = djvu_document_get_n_pages;
 	iface->get_page_size = djvu_document_get_page_size;
-	iface->render_pixbuf = djvu_document_render_pixbuf;
+	iface->render = djvu_document_render;
 	iface->get_info = djvu_document_get_info;
 }
 
@@ -383,7 +396,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 		    
 	ddjvu_thumbnail_render (djvu_document->d_document, rc->page, 
 				&thumb_width, &thumb_height,
-				djvu_document->d_format,
+				djvu_document->thumbs_format,
 				gdk_pixbuf_get_rowstride (pixbuf), 
 				(gchar *)pixels);
 
@@ -417,13 +430,13 @@ djvu_document_file_exporter_format_supported (EvFileExporter      *exporter,
 
 static void
 djvu_document_file_exporter_begin (EvFileExporter      *exporter,
-                                 EvFileExporterFormat format,
-				 const char          *filename, /* for storing the temp ps file */
-                                 int                  first_page,
-                                 int                  last_page,
-                                 double               width,
-                                 double               height,
-                                 gboolean             duplex)
+				   EvFileExporterFormat format,
+				   const char          *filename, /* for storing the temp ps file */
+				   int                  first_page,
+				   int                  last_page,
+				   double               width,
+				   double               height,
+				   gboolean             duplex)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 	
@@ -435,7 +448,8 @@ djvu_document_file_exporter_begin (EvFileExporter      *exporter,
 }
 
 static void
-djvu_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+djvu_document_file_exporter_do_page (EvFileExporter  *exporter,
+				     EvRenderContext *rc)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 	
@@ -478,9 +492,14 @@ djvu_document_file_exporter_iface_init (EvFileExporterIface *iface)
 static void
 djvu_document_init (DjvuDocument *djvu_document)
 {
+	guint masks[4] = { 0xff0000, 0xff00, 0xff, 0xff000000 };
+	
 	djvu_document->d_context = ddjvu_context_create ("Evince");
-	djvu_document->d_format = ddjvu_format_create (DDJVU_FORMAT_RGB24, 0, 0);
-	ddjvu_format_set_row_order (djvu_document->d_format,1);
+	djvu_document->d_format = ddjvu_format_create (DDJVU_FORMAT_RGBMASK32, 4, masks);
+	ddjvu_format_set_row_order (djvu_document->d_format, 1);
+
+	djvu_document->thumbs_format = ddjvu_format_create (DDJVU_FORMAT_RGB24, 0, 0);
+	ddjvu_format_set_row_order (djvu_document->thumbs_format, 1);
 
 	djvu_document->ps_filename = NULL;
 	djvu_document->opts = g_string_new ("");

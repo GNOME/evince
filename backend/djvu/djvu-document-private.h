@@ -32,6 +32,7 @@ struct _DjvuDocument {
 	ddjvu_context_t  *d_context;
 	ddjvu_document_t *d_document;
 	ddjvu_format_t   *d_format;
+	ddjvu_format_t   *thumbs_format;
 
 	gchar            *uri;
 

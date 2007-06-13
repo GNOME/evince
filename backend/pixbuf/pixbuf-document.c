@@ -101,22 +101,27 @@ pixbuf_document_get_page_size (EvDocument   *document,
 	*height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
 }
 
-static GdkPixbuf*
-pixbuf_document_render_pixbuf (EvDocument      *document,
-			       EvRenderContext *rc)
+static cairo_surface_t *
+pixbuf_document_render (EvDocument      *document,
+			EvRenderContext *rc)
 {
 	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
 	GdkPixbuf *scaled_pixbuf, *rotated_pixbuf;
+	cairo_surface_t *surface;
 
-	scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
-					         gdk_pixbuf_get_width (pixbuf_document->pixbuf) * rc->scale,
-					         gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale,
-					         GDK_INTERP_BILINEAR);
-
+	scaled_pixbuf = gdk_pixbuf_scale_simple (
+		pixbuf_document->pixbuf,
+		(gdk_pixbuf_get_width (pixbuf_document->pixbuf) * rc->scale) + 0.5,
+		(gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale) + 0.5,
+		GDK_INTERP_BILINEAR);
+	
         rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf, 360 - rc->rotation);
         g_object_unref (scaled_pixbuf);
 
-	return rotated_pixbuf;
+	surface = ev_document_misc_surface_from_pixbuf (rotated_pixbuf);
+	g_object_unref (rotated_pixbuf);
+
+	return surface;
 }
 
 static void
@@ -163,7 +168,7 @@ pixbuf_document_document_iface_init (EvDocumentIface *iface)
 	iface->can_get_text = pixbuf_document_can_get_text;
 	iface->get_n_pages = pixbuf_document_get_n_pages;
 	iface->get_page_size = pixbuf_document_get_page_size;
-	iface->render_pixbuf = pixbuf_document_render_pixbuf;
+	iface->render = pixbuf_document_render;
 	iface->get_info = pixbuf_document_get_info;
 }
 

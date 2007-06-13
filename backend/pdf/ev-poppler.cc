@@ -426,12 +426,12 @@ pdf_document_get_attachments (EvDocument *document)
 	return g_list_reverse (retval);
 }
 
-static GdkPixbuf *
-pdf_document_render_pixbuf (EvDocument   *document,
-			    EvRenderContext *rc)
+static cairo_surface_t *
+pdf_document_render (EvDocument      *document,
+		     EvRenderContext *rc)
 {
 	PdfDocument *pdf_document;
-	GdkPixbuf *pixbuf;
+	cairo_surface_t *surface;
 	double width_points, height_points;
 	gint width, height;
 
@@ -448,7 +448,37 @@ pdf_document_render_pixbuf (EvDocument   *document,
 		width = (int) ((width_points * rc->scale) + 0.5);
 		height = (int) ((height_points * rc->scale) + 0.5);
 	}
-
+	
+#ifdef HAVE_POPPLER_PAGE_RENDER
+	cairo_t *cr;
+	
+	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+					      width, height);
+	memset (cairo_image_surface_get_data (surface), 0xff,
+		cairo_image_surface_get_height (surface) *
+		cairo_image_surface_get_stride (surface));
+	
+	cr = cairo_create (surface);
+	switch (rc->rotation) {
+	        case 90:
+			cairo_translate (cr, width, 0);
+			break;
+	        case 180:
+			cairo_translate (cr, width, height);
+			break;
+	        case 270:
+			cairo_translate (cr, 0, height);
+			break;
+	        default:
+			cairo_translate (cr, 0, 0);
+	}
+	cairo_scale (cr, rc->scale, rc->scale);
+	cairo_rotate (cr, rc->rotation * G_PI / 180.0);
+	poppler_page_render (POPPLER_PAGE (rc->data), cr);
+	cairo_destroy (cr);
+#else /* HAVE_POPPLER_PAGE_RENDER */
+	GdkPixbuf *pixbuf;
+	
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
 				 FALSE, 8,
 				 width, height);
@@ -459,9 +489,11 @@ pdf_document_render_pixbuf (EvDocument   *document,
 				       rc->scale,
 				       rc->rotation,
 				       pixbuf);
-	
-	
-	return pixbuf;
+	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
+	g_object_unref (pixbuf);
+#endif /* HAVE_POPPLER_PAGE_RENDER */
+
+	return surface;
 }
 
 /* EvDocumentSecurity */
@@ -671,7 +703,7 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_label = pdf_document_get_page_label;
 	iface->has_attachments = pdf_document_has_attachments;
 	iface->get_attachments = pdf_document_get_attachments;
-	iface->render_pixbuf = pdf_document_render_pixbuf;
+	iface->render = pdf_document_render;
 	iface->get_text = pdf_document_get_text;
 	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
@@ -1600,11 +1632,11 @@ pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
 static void
 pdf_selection_render_selection (EvSelection      *selection,
 				EvRenderContext  *rc,
-				GdkPixbuf       **pixbuf,
+				cairo_surface_t **surface,
 				EvRectangle      *points,
 				EvRectangle      *old_points,
-				GdkColor        *text,
-				GdkColor        *base)
+				GdkColor         *text,
+				GdkColor         *base)
 {
 	PdfDocument *pdf_document;
 	double width_points, height_points;
@@ -1613,23 +1645,54 @@ pdf_selection_render_selection (EvSelection      *selection,
 	pdf_document = PDF_DOCUMENT (selection);
 	set_rc_data (pdf_document, rc);
 
-	poppler_page_get_size (POPPLER_PAGE (rc->data), &width_points, &height_points);
+	poppler_page_get_size (POPPLER_PAGE (rc->data),
+			       &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
 	height = (int) ((height_points * rc->scale) + 0.5);
 
-	if (*pixbuf == NULL) {
-		* pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
-					   TRUE, 8,
-					   width, height);
+
+#ifdef HAVE_POPPLER_PAGE_RENDER
+	cairo_t *cr;
+
+	if (*surface == NULL) {
+		*surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+						       width, height);
+		
 	}
 
+	cr = cairo_create (*surface);
+	cairo_scale (cr, rc->scale, rc->scale);
+	cairo_surface_set_device_offset (*surface, 0, 0);
+	memset (cairo_image_surface_get_data (*surface), 0x00,
+		cairo_image_surface_get_height (*surface) *
+		cairo_image_surface_get_stride (*surface));
+	poppler_page_render_selection (POPPLER_PAGE (rc->data),
+				       cr,
+				       (PopplerRectangle *)points,
+				       (PopplerRectangle *)old_points,
+				       POPPLER_SELECTION_NORMAL, /* SelectionStyle */
+				       text,
+				       base);
+	cairo_destroy (cr);
+#else /* HAVE_POPPLER_PAGE_RENDER */
+	GdkPixbuf *pixbuf;
+	
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
+				 TRUE, 8,
+				 width, height);
+
 	poppler_page_render_selection_to_pixbuf (POPPLER_PAGE (rc->data),
-						 rc->scale, rc->rotation, *pixbuf,
+						 rc->scale, rc->rotation, pixbuf,
 						 (PopplerRectangle *)points,
 						 (PopplerRectangle *)old_points,
 						 POPPLER_SELECTION_NORMAL, /* SelectionStyle */
 						 text,
 						 base);
+	if (*surface)
+		cairo_surface_destroy (*surface);
+	*surface = ev_document_misc_surface_from_pixbuf (pixbuf);
+	g_object_unref (pixbuf);
+#endif /* HAVE_POPPLER_PAGE_RENDER */
 }
 
 
@@ -1645,8 +1708,9 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 
 	set_rc_data (pdf_document, rc);
 
-	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data, rc->scale, (PopplerRectangle *) points);
-
+	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data,
+						    rc->scale,
+						    (PopplerRectangle *) points);
 	return retval;
 }
 

@@ -25,6 +25,7 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtkstyle.h>
+#include <cairo.h>
 
 G_BEGIN_DECLS
 
@@ -40,6 +41,11 @@ void       ev_document_misc_paint_one_page       (GdkDrawable  *drawable,
 						  GdkRectangle *area,
 						  GtkBorder    *border,
 						  gboolean      highlight);
+cairo_surface_t *ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf);
+cairo_surface_t *ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
+							    gint             dest_width,
+							    gint             dest_height,
+							    gint             dest_rotation);
 
 G_END_DECLS
 

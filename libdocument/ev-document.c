@@ -230,17 +230,17 @@ ev_document_get_attachments (EvDocument *document)
 	return retval;
 }
 
-GdkPixbuf *
-ev_document_render_pixbuf (EvDocument      *document,
-			   EvRenderContext *rc)
+cairo_surface_t *
+ev_document_render (EvDocument      *document,
+		    EvRenderContext *rc)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	GdkPixbuf *retval;
+	cairo_surface_t *retval;
 
 	LOG ("ev_document_render_pixbuf");
-	g_assert (iface->render_pixbuf);
+	g_assert (iface->render);
 
-	retval = iface->render_pixbuf (document, rc);
+	retval = iface->render (document, rc);
 
 	return retval;
 }

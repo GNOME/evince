@@ -201,9 +201,9 @@ tiff_document_get_page_size (EvDocument   *document,
 	pop_handlers ();
 }
 
-static GdkPixbuf *
-tiff_document_render_pixbuf (EvDocument      *document,
-			     EvRenderContext *rc)
+static cairo_surface_t *
+tiff_document_render (EvDocument      *document,
+		      EvRenderContext *rc)
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 	int width, height;
@@ -213,6 +213,9 @@ tiff_document_render_pixbuf (EvDocument      *document,
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *scaled_pixbuf;
 	GdkPixbuf *rotated_pixbuf;
+	cairo_surface_t *surface;
+	cairo_surface_t *rotated_surface;
+	static const cairo_user_data_key_t key;
 	
 	g_return_val_if_fail (TIFF_IS_DOCUMENT (document), NULL);
 	g_return_val_if_fail (tiff_document->tiff != NULL, NULL);
@@ -255,16 +258,88 @@ tiff_document_render_pixbuf (EvDocument      *document,
 	if (!pixels)
 		return NULL;
 	
+	surface = cairo_image_surface_create_for_data (pixels,
+						       CAIRO_FORMAT_ARGB32,
+						       width, height,
+						       rowstride);
+	cairo_surface_set_user_data (surface, &key,
+				     pixels, (cairo_destroy_func_t)g_free);
+
+	TIFFReadRGBAImageOriented (tiff_document->tiff,
+				   width, height,
+				   (uint32 *)pixels,
+				   ORIENTATION_TOPLEFT, 1);
+	pop_handlers ();
+
+	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
+								     (width * rc->scale) + 0.5,
+								     (height * rc->scale * (x_res / y_res)) + 0.5,
+								     rc->rotation);
+	cairo_surface_destroy (surface);
+	
+	return rotated_surface;
+}
+
+static GdkPixbuf *
+tiff_document_render_pixbuf (EvDocument      *document,
+			     EvRenderContext *rc)
+{
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+	int width, height;
+	float x_res, y_res;
+	gint rowstride, bytes;
+	guchar *pixels = NULL;
+	GdkPixbuf *pixbuf;
+	GdkPixbuf *scaled_pixbuf;
+	GdkPixbuf *rotated_pixbuf;
+	
+	push_handlers ();
+	if (TIFFSetDirectory (tiff_document->tiff, rc->page) != 1) {
+		pop_handlers ();
+		return NULL;
+	}
+
+	if (!TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &width)) {
+		pop_handlers ();
+		return NULL;
+	}
+
+	if (! TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &height)) {
+		pop_handlers ();
+		return NULL;
+	}
+
+	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
+	
+	pop_handlers ();
+  
+	/* Sanity check the doc */
+	if (width <= 0 || height <= 0)
+		return NULL;                
+
+	rowstride = width * 4;
+	if (rowstride / 4 != width)
+		/* overflow */
+		return NULL;                
+        
+	bytes = height * rowstride;
+	if (bytes / rowstride != height)
+		/* overflow */
+		return NULL;                
+	
+	pixels = g_try_malloc (bytes);
+	if (!pixels)
+		return NULL;
+	
 	pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8, 
 					   width, height, rowstride,
 					   (GdkPixbufDestroyNotify) g_free, NULL);
-	
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width, height);
-	TIFFReadRGBAImageOriented (tiff_document->tiff, width, height,
-				   (uint32 *)gdk_pixbuf_get_pixels (pixbuf),
+	TIFFReadRGBAImageOriented (tiff_document->tiff,
+				   width, height,
+				   (uint32 *)pixels,
 				   ORIENTATION_TOPLEFT, 1);
 	pop_handlers ();
-	
+
 	scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
 						 width * rc->scale,
 						 height * rc->scale * (x_res / y_res),
@@ -323,7 +398,7 @@ tiff_document_document_iface_init (EvDocumentIface *iface)
 	iface->can_get_text = tiff_document_can_get_text;
 	iface->get_n_pages = tiff_document_get_n_pages;
 	iface->get_page_size = tiff_document_get_page_size;
-	iface->render_pixbuf = tiff_document_render_pixbuf;
+	iface->render = tiff_document_render;
 	iface->get_info = tiff_document_get_info;
 }
 

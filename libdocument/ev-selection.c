@@ -59,7 +59,7 @@ ev_selection_base_init (gpointer g_class)
 void
 ev_selection_render_selection (EvSelection      *selection,
 			       EvRenderContext  *rc,
-			       GdkPixbuf       **pixbuf,
+			       cairo_surface_t **surface,
 			       EvRectangle      *points,
 			       EvRectangle      *old_points,
 			       GdkColor        *text,
@@ -68,7 +68,7 @@ ev_selection_render_selection (EvSelection      *selection,
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
 	iface->render_selection (selection, rc,
-				 pixbuf,
+				 surface,
 				 points, old_points,
 				 text, base);
 }

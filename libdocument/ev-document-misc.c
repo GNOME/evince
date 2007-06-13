@@ -1,3 +1,21 @@
+/*
+ *  Copyright (c) 2007 Carlos Garcia Campos <carlosgc@gnome.org>
+ *  Copyright (C) 2000-2003 Marco Pesenti Gritti
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 
 #include "ev-document-misc.h"
 #include <string.h>
@@ -8,7 +26,6 @@
  * NULL, then it will fill the return pixbuf with the contents of
  * source_pixbuf.
  */
-
 GdkPixbuf *
 ev_document_misc_get_thumbnail_frame (int        width,
 				      int        height,
@@ -128,3 +145,77 @@ ev_document_misc_paint_one_page (GdkDrawable  *drawable,
 			    border->right - border->left);
 
 }
+
+cairo_surface_t *
+ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
+{
+	cairo_surface_t *surface;
+	cairo_t         *cr;
+	
+	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+					      gdk_pixbuf_get_width (pixbuf),
+					      gdk_pixbuf_get_height (pixbuf));
+	cr = cairo_create (surface);
+	gdk_cairo_set_source_pixbuf (cr, pixbuf, 0, 0);
+	cairo_paint (cr);
+	cairo_destroy (cr);
+	
+	return surface;
+}
+
+cairo_surface_t *
+ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
+					   gint             dest_width,
+					   gint             dest_height,
+					   gint             dest_rotation)
+{
+	cairo_surface_t *new_surface;
+	cairo_t         *cr;
+	gint             width, height;
+	gint             new_width = dest_width;
+	gint             new_height = dest_height;
+
+	width = cairo_image_surface_get_width (surface);
+	height = cairo_image_surface_get_height (surface);
+	
+	if (dest_width == width &&
+	    dest_height == height &&
+	    dest_rotation == 0) {
+		return cairo_surface_reference (surface);
+	}
+
+	if (dest_rotation == 90 || dest_rotation == 270) {
+		new_width = dest_height;
+		new_height = dest_width;
+	}
+
+	new_surface = cairo_surface_create_similar (surface,
+						    CAIRO_CONTENT_COLOR_ALPHA,
+						    new_width, new_height);
+
+	cr = cairo_create (new_surface);
+	switch (dest_rotation) {
+	        case 90:
+			cairo_translate (cr, new_width, 0);
+			break;
+	        case 180:
+			cairo_translate (cr, new_width, new_height);
+			break;
+	        case 270:
+			cairo_translate (cr, 0, new_height);
+			break;
+	        default:
+			cairo_translate (cr, 0, 0);
+	}
+	cairo_pattern_set_filter (cairo_get_source (cr), CAIRO_FILTER_BILINEAR);
+	cairo_scale (cr,
+		     (gdouble)dest_width / width,
+		     (gdouble)dest_height / height);
+	cairo_rotate (cr, dest_rotation * G_PI / 180.0);
+	cairo_set_source_surface (cr, surface, 0, 0);
+	cairo_paint (cr);
+	cairo_destroy (cr);
+
+	return new_surface;
+}
+	

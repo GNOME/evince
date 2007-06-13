@@ -57,7 +57,7 @@ void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache
 						     gint	    rotation,
 						     gfloat         scale,
 						     GList          *selection_list);
-GdkPixbuf     *ev_pixbuf_cache_get_pixbuf           (EvPixbufCache *pixbuf_cache,
+cairo_surface_t *ev_pixbuf_cache_get_surface        (EvPixbufCache *pixbuf_cache,
 						     gint           page);
 GList         *ev_pixbuf_cache_get_link_mapping     (EvPixbufCache *pixbuf_cache,
 						     gint           page);
@@ -69,10 +69,10 @@ void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache
 void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
 
 /* Selection */
-GdkPixbuf     *ev_pixbuf_cache_get_selection_pixbuf (EvPixbufCache *pixbuf_cache,
-						     gint           page,
-						     gfloat         scale,
-						     GdkRegion     **region);
+cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache *pixbuf_cache,
+							gint           page,
+							gfloat         scale,
+							GdkRegion     **region);
 void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
 						     GList         *selection_list);
 GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);

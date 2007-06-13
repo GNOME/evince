@@ -152,15 +152,14 @@ dvi_document_get_page_size (EvDocument   *document,
 	return;
 }
 
-static GdkPixbuf *
-dvi_document_render_pixbuf (EvDocument  *document,
-			    EvRenderContext *rc)
+static cairo_surface_t *
+dvi_document_render (EvDocument      *document,
+		     EvRenderContext *rc)
 {
 	GdkPixbuf *pixbuf;
-	GdkPixbuf *rotated_pixbuf;
-
+	cairo_surface_t *surface;
+	cairo_surface_t *rotated_surface;
 	DviDocument *dvi_document = DVI_DOCUMENT(document);
-
 	gint required_width, required_height;
 	gint proposed_width, proposed_height;
 	gint xmargin = 0, ymargin = 0;
@@ -177,8 +176,8 @@ dvi_document_render_pixbuf (EvDocument  *document,
 			 (int)((dvi_document->params->hshrink - 1) / rc->scale) + 1,
 			 (int)((dvi_document->params->vshrink - 1) / rc->scale) + 1);
 
-	required_width = dvi_document->base_width * rc->scale;
-	required_height = dvi_document->base_height * rc->scale;
+	required_width = dvi_document->base_width * rc->scale + 0.5;
+	required_height = dvi_document->base_height * rc->scale + 0.5;
 	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
 	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
 	
@@ -195,10 +194,17 @@ dvi_document_render_pixbuf (EvDocument  *document,
 
 	g_mutex_unlock (dvi_context_mutex);
 
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
+	/* FIXME: we should write a mdvi device based on cairo */
+	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
 	g_object_unref (pixbuf);
 
-	return rotated_pixbuf;
+	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
+								     required_width,
+								     required_height,
+								     rc->rotation);
+	cairo_surface_destroy (surface);
+
+	return rotated_surface;
 }
 
 static void
@@ -260,7 +266,7 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 	iface->can_get_text = dvi_document_can_get_text;
 	iface->get_n_pages = dvi_document_get_n_pages;
 	iface->get_page_size = dvi_document_get_page_size;
-	iface->render_pixbuf = dvi_document_render_pixbuf;
+	iface->render = dvi_document_render;
 	iface->get_info = dvi_document_get_info;
 }
 

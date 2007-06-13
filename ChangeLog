@@ -1,3 +1,44 @@
+2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/dvi/dvi-document.c: (dvi_document_render),
+	(dvi_document_render_pixbuf), (dvi_document_document_iface_init):
+	* backend/impress/impress-document.c:
+	(imp_render_get_from_drawable), (impress_document_render_pixbuf),
+	(impress_document_render), (impress_document_document_iface_init),
+	(impress_document_thumbnails_get_thumbnail):
+	* backend/djvu/djvu-document-private.h:
+	* backend/djvu/djvu-document.c: (djvu_document_render),
+	(djvu_document_finalize), (djvu_document_document_iface_init),
+	(djvu_document_thumbnails_get_thumbnail), (djvu_document_init):
+	* backend/tiff/tiff-document.c: (tiff_document_render),
+	(tiff_document_render_pixbuf),
+	(tiff_document_document_iface_init):
+	* backend/pdf/ev-poppler.cc: (pdf_document_render),
+	(pdf_document_render_pixbuf), (pdf_document_document_iface_init),
+	(pdf_selection_render_selection):
+	* backend/comics/comics-document.c:
+	(comics_document_render_pixbuf), (comics_document_render),
+	(comics_document_document_iface_init):
+	* backend/pixbuf/pixbuf-document.c: (pixbuf_document_render),
+	(pixbuf_document_document_iface_init):
+	* libdocument/ev-document-misc.[ch]:
+	(ev_document_misc_surface_from_pixbuf),
+	(ev_document_misc_surface_rotate_and_scale):
+	* libdocument/ev-document.[ch]: (ev_document_render):
+	* libdocument/ev-selection.[ch]: (ev_selection_render_selection):
+	* shell/ev-pixbuf-cache.[ch]: (dispose_cache_job_info),
+	(move_one_job), (copy_job_to_job_info), (add_job_if_needed),
+	(ev_pixbuf_cache_get_surface), (new_selection_surface_needed),
+	(clear_selection_if_needed), (ev_pixbuf_cache_style_changed),
+	(ev_pixbuf_cache_get_selection_surface), (clear_job_selection):
+	* shell/ev-jobs.[ch]: (ev_job_render_dispose),
+	(render_finished_cb), (ev_job_render_run):
+	* shell/ev-view.c: (draw_loading_text), (draw_one_page),
+	(merge_selection_region):
+
+	Use cairo image surfaces instead of GDK pixbufs for drawing pages
+	and selections.
+	
 2007-06-12  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window-title.c: (ev_window_title_update):

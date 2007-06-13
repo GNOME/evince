@@ -355,8 +355,10 @@ imp_render_get_from_drawable (ImpressDocument *impress_document)
 
   g_return_val_if_fail (page != NULL, FALSE);
 
+  ev_document_doc_mutex_lock ();
   imp_context_set_page (impress_document->ctx, page);
   imp_render (impress_document->ctx, impress_document);
+  ev_document_doc_mutex_unlock ();
 
   impress_document->pixbuf = gdk_pixbuf_get_from_drawable (NULL,
 					 GDK_DRAWABLE (impress_document->pixmap),
@@ -370,36 +372,56 @@ imp_render_get_from_drawable (ImpressDocument *impress_document)
 }
 
 static GdkPixbuf *
-impress_document_render_pixbuf (EvDocument  *document,
+impress_document_render_pixbuf (EvDocument      *document,
 				EvRenderContext *rc)
 {
   ImpressDocument *impress_document = IMPRESS_DOCUMENT (document);
-  GdkPixbuf *scaled_pixbuf;
+  GdkPixbuf       *pixbuf;
 
-  g_return_val_if_fail (IMPRESS_IS_DOCUMENT (document), 0);
-  g_return_val_if_fail (impress_document->imp != NULL, 0);
-
+  g_return_val_if_fail (IMPRESS_IS_DOCUMENT (document), NULL);
+  g_return_val_if_fail (impress_document->imp != NULL, NULL);
+  
   impress_document->pagenum = rc->page;
 
   g_mutex_lock (impress_document->mutex);
   impress_document->cond = g_cond_new ();
 
   ev_document_fc_mutex_unlock ();
+  ev_document_doc_mutex_unlock ();
   g_idle_add ((GSourceFunc) imp_render_get_from_drawable, impress_document);
   g_cond_wait (impress_document->cond, impress_document->mutex);
   g_cond_free (impress_document->cond);
+  ev_document_doc_mutex_lock ();
   ev_document_fc_mutex_lock ();
-
+  
   g_mutex_unlock (impress_document->mutex);
 
-  scaled_pixbuf = gdk_pixbuf_scale_simple (impress_document->pixbuf,
-      					   PAGE_WIDTH * rc->scale,
-					   PAGE_HEIGHT * rc->scale,
-					   GDK_INTERP_BILINEAR);
-  gdk_pixbuf_unref (impress_document->pixbuf);
+  pixbuf = impress_document->pixbuf;
   impress_document->pixbuf = NULL;
 
-  return scaled_pixbuf;
+  return pixbuf;
+}
+
+static cairo_surface_t *
+impress_document_render (EvDocument      *document,
+			 EvRenderContext *rc)
+{
+  GdkPixbuf *pixbuf;
+  cairo_surface_t *surface, *scaled_surface;
+
+  pixbuf = impress_document_render_pixbuf (document, rc);
+  
+  /* FIXME: impress backend should be ported to cairo */
+  surface = ev_document_misc_surface_from_pixbuf (pixbuf);
+  g_object_unref (pixbuf);
+
+  scaled_surface = ev_document_misc_surface_rotate_and_scale (surface,
+							      (PAGE_WIDTH * rc->scale) + 0.5,
+							      (PAGE_HEIGHT * rc->scale) + 0.5,
+							      rc->rotation);
+  cairo_surface_destroy (surface);
+
+  return scaled_surface;
 }
 
 static void
@@ -461,7 +483,7 @@ impress_document_document_iface_init (EvDocumentIface *iface)
   iface->can_get_text = impress_document_can_get_text;
   iface->get_n_pages = impress_document_get_n_pages;
   iface->get_page_size = impress_document_get_page_size;
-  iface->render_pixbuf = impress_document_render_pixbuf;
+  iface->render = impress_document_render;
   iface->get_info = impress_document_get_info;
 }
 
@@ -470,20 +492,26 @@ impress_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 					   EvRenderContext      *rc, 
 					   gboolean              border)
 {
-  GdkPixbuf *pixbuf = NULL;
+  GdkPixbuf *pixbuf;
+  GdkPixbuf *scaled_pixbuf;
   gdouble w, h;
 
   pixbuf = impress_document_render_pixbuf (EV_DOCUMENT (document), rc);
+  scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
+					   (PAGE_WIDTH * rc->scale),
+					   (PAGE_HEIGHT * rc->scale),
+					   GDK_INTERP_BILINEAR);
+  g_object_unref (pixbuf);
 
   if (border)
     {
-      GdkPixbuf *tmp_pixbuf = pixbuf;
+      GdkPixbuf *tmp_pixbuf = scaled_pixbuf;
       
-      pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
+      scaled_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
       g_object_unref (tmp_pixbuf);
     }
 
-  return pixbuf;
+  return scaled_pixbuf;
 }
 
 static void

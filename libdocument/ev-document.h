@@ -25,6 +25,7 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <gdk/gdk.h>
+#include <cairo.h>
 
 #include "ev-link.h"
 #include "ev-document-info.h"
@@ -32,14 +33,14 @@
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_DOCUMENT	    (ev_document_get_type ())
-#define EV_DOCUMENT(o)		    (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT, EvDocument))
-#define EV_DOCUMENT_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentIface))
-#define EV_IS_DOCUMENT(o)	    (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT))
-#define EV_IS_DOCUMENT_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
+#define EV_TYPE_DOCUMENT            (ev_document_get_type ())
+#define EV_DOCUMENT(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT, EvDocument))
+#define EV_DOCUMENT_IFACE(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentIface))
+#define EV_IS_DOCUMENT(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT))
+#define EV_IS_DOCUMENT_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
 #define EV_DOCUMENT_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT, EvDocumentIface))
 
-typedef struct _EvDocument	  EvDocument;
+typedef struct _EvDocument        EvDocument;
 typedef struct _EvDocumentIface   EvDocumentIface;
 typedef struct _EvPageCache       EvPageCache;
 typedef struct _EvPageCacheClass  EvPageCacheClass;
@@ -50,91 +51,91 @@ typedef struct _EvPageCacheClass  EvPageCacheClass;
 
 typedef enum
 {
-	EV_DOCUMENT_ERROR_INVALID,
-	EV_DOCUMENT_ERROR_ENCRYPTED
+        EV_DOCUMENT_ERROR_INVALID,
+        EV_DOCUMENT_ERROR_ENCRYPTED
 } EvDocumentError;
 
 typedef struct {
-	double x;
-	double y;
+        double x;
+        double y;
 } EvPoint;
 
 typedef struct {
-	double x1;
-	double y1;
-	double x2;
-	double y2;
+        double x1;
+        double y1;
+        double x2;
+        double y2;
 } EvRectangle;
 
 struct _EvDocumentIface
 {
-	GTypeInterface base_iface;
+        GTypeInterface base_iface;
 
-	/* Methods  */
-	gboolean         (* load)	     (EvDocument   *document,
-					      const char   *uri,
-					      GError      **error);
-	gboolean         (* save)	     (EvDocument   *document,
-					      const char   *uri,
-					      GError      **error);
-	int              (* get_n_pages)     (EvDocument   *document);
-	void	         (* get_page_size)   (EvDocument   *document,
-					      int           page,
-					      double       *width,
-					      double       *height);
-	char	       * (* get_page_label)  (EvDocument   *document,
-					      int           page);
-	gboolean         (* can_get_text)    (EvDocument   *document);
-	char	       * (* get_text)	     (EvDocument   *document,
-					      int           page,
-					      EvRectangle  *rect);
-	gboolean         (* has_attachments) (EvDocument   *document);
-	GList          * (* get_attachments) (EvDocument   *document);
-	GdkPixbuf      * (* render_pixbuf)   (EvDocument      *document,
-					      EvRenderContext *rc);
-	EvDocumentInfo * (* get_info)        (EvDocument   *document);
+        /* Methods  */
+        gboolean          (* load)            (EvDocument      *document,
+                                               const char      *uri,
+                                               GError         **error);
+        gboolean          (* save)            (EvDocument      *document,
+                                               const char      *uri,
+                                               GError         **error);
+        int               (* get_n_pages)     (EvDocument      *document);
+        void              (* get_page_size)   (EvDocument      *document,
+                                               int              page,
+                                               double          *width,
+                                               double          *height);
+        char            * (* get_page_label)  (EvDocument      *document,
+                                               int              page);
+        gboolean          (* can_get_text)    (EvDocument      *document);
+        char            * (* get_text)        (EvDocument      *document,
+                                               int              page,
+                                               EvRectangle     *rect);
+        gboolean          (* has_attachments) (EvDocument      *document);
+        GList           * (* get_attachments) (EvDocument      *document);
+        cairo_surface_t * (* render)          (EvDocument      *document,
+                                               EvRenderContext *rc);
+        EvDocumentInfo *  (* get_info)        (EvDocument      *document);
 };
 
-GType		ev_document_get_type       (void);
-GQuark		ev_document_error_quark    (void);
+GType            ev_document_get_type         (void) G_GNUC_CONST;
+GQuark           ev_document_error_quark      (void);
 
 /* Document mutex */
-GMutex	       *ev_document_get_doc_mutex    (void);
-void            ev_document_doc_mutex_lock   (void);
-void            ev_document_doc_mutex_unlock (void);
+GMutex          *ev_document_get_doc_mutex    (void);
+void             ev_document_doc_mutex_lock   (void);
+void             ev_document_doc_mutex_unlock (void);
 
 /* FontConfig mutex */
-GMutex         *ev_document_get_fc_mutex    (void);
-void            ev_document_fc_mutex_lock   (void);
-void            ev_document_fc_mutex_unlock (void);
+GMutex          *ev_document_get_fc_mutex     (void);
+void             ev_document_fc_mutex_lock    (void);
+void             ev_document_fc_mutex_unlock  (void);
 
-EvDocumentInfo *ev_document_get_info	    (EvDocument     *document);
-gboolean	ev_document_load	    (EvDocument     *document,
-					     const char     *uri,
-					     GError        **error);
-gboolean	ev_document_save	    (EvDocument     *document,
-					     const char     *uri,
-					     GError        **error);
-int		ev_document_get_n_pages	    (EvDocument     *document);
-void		ev_document_get_page_size   (EvDocument     *document,
-					     int             page,
-					     double         *width,
-					     double         *height);
-char	       *ev_document_get_page_label  (EvDocument     *document,
-					     int             page);
-gboolean	ev_document_can_get_text    (EvDocument     *document);
-char	       *ev_document_get_text        (EvDocument     *document,
-					     int             page,
-					     EvRectangle    *rect);
-gboolean        ev_document_has_attachments (EvDocument     *document);
-GList          *ev_document_get_attachments (EvDocument     *document);
-GdkPixbuf      *ev_document_render_pixbuf   (EvDocument     *document,
-					     EvRenderContext *rc);
+EvDocumentInfo  *ev_document_get_info         (EvDocument      *document);
+gboolean         ev_document_load             (EvDocument      *document,
+                                               const char      *uri,
+                                               GError         **error);
+gboolean         ev_document_save             (EvDocument      *document,
+                                               const char      *uri,
+                                               GError         **error);
+int              ev_document_get_n_pages      (EvDocument      *document);
+void             ev_document_get_page_size    (EvDocument      *document,
+                                               int              page,
+                                               double          *width,
+                                               double          *height);
+char            *ev_document_get_page_label   (EvDocument      *document,
+                                               int              page);
+gboolean         ev_document_can_get_text     (EvDocument      *document);
+char            *ev_document_get_text         (EvDocument      *document,
+                                               int              page,
+                                               EvRectangle     *rect);
+gboolean         ev_document_has_attachments  (EvDocument      *document);
+GList           *ev_document_get_attachments  (EvDocument      *document);
+cairo_surface_t *ev_document_render           (EvDocument      *document,
+                                               EvRenderContext *rc);
 
-gint            ev_rect_cmp                 (EvRectangle    *a,
-					     EvRectangle    *b);
+gint            ev_rect_cmp                   (EvRectangle    *a,
+                                               EvRectangle    *b);
 
 
 G_END_DECLS
 
-#endif
+#endif /* EV_DOCUMENT_H */

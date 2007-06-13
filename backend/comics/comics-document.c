@@ -268,7 +268,7 @@ get_page_size_area_prepared_cb (GdkPixbufLoader *loader,
 }
 
 static GdkPixbuf *
-comics_document_render_pixbuf (EvDocument  *document,
+comics_document_render_pixbuf (EvDocument      *document,
 			       EvRenderContext *rc)
 {
 	GdkPixbufLoader *loader;
@@ -309,7 +309,22 @@ comics_document_render_pixbuf (EvDocument  *document,
 						   360 - rc->rotation);
 	g_spawn_close_pid (child_pid);
 	g_object_unref (loader);
+
 	return rotated_pixbuf;
+}
+
+static cairo_surface_t *
+comics_document_render (EvDocument      *document,
+			EvRenderContext *rc)
+{
+	GdkPixbuf       *pixbuf;
+	cairo_surface_t *surface;
+
+	pixbuf = comics_document_render_pixbuf (document, rc);
+	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
+	g_object_unref (pixbuf);
+	
+	return surface;
 }
 
 static void
@@ -319,8 +334,8 @@ render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
 				gpointer         data)
 {
 	double *scale = data;
-	int w = width  * (*scale);
-	int h = height * (*scale);
+	int w = (width  * (*scale) + 0.5);
+	int h = (height * (*scale) + 0.5);
 
 	gdk_pixbuf_loader_set_size (loader, w, h);
 }
@@ -371,11 +386,11 @@ comics_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = comics_document_load;
 	iface->save = comics_document_save;
-	iface->can_get_text  = comics_document_can_get_text;
-	iface->get_n_pages   = comics_document_get_n_pages;
+	iface->can_get_text = comics_document_can_get_text;
+	iface->get_n_pages = comics_document_get_n_pages;
 	iface->get_page_size = comics_document_get_page_size;
-	iface->render_pixbuf = comics_document_render_pixbuf;
-	iface->get_info      = comics_document_get_info;
+	iface->render = comics_document_render;
+	iface->get_info = comics_document_get_info;
 }
 
 static void

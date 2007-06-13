@@ -4,6 +4,7 @@
 #include "ev-document-links.h"
 #include "ev-document-images.h"
 #include "ev-document-factory.h"
+#include "ev-document-misc.h"
 #include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
 #include "ev-selection.h"
@@ -120,9 +121,9 @@ ev_job_render_dispose (GObject *object)
 
 	job = EV_JOB_RENDER (object);
 
-	if (job->pixbuf) {
-		g_object_unref (job->pixbuf);
-		job->pixbuf = NULL;
+	if (job->surface) {
+		cairo_surface_destroy (job->surface);
+		job->surface = NULL;
 	}
 
 	if (job->rc) {
@@ -131,7 +132,7 @@ ev_job_render_dispose (GObject *object)
 	}
 
 	if (job->selection) {
-		g_object_unref (job->selection);
+		cairo_surface_destroy (job->selection);
 		job->selection = NULL;
 	}
 
@@ -299,13 +300,16 @@ ev_job_render_new (EvDocument      *document,
 }
 
 static void
-render_finished_cb (EvDocument *document, GdkPixbuf *pixbuf, EvJobRender *job)
+render_finished_cb (EvDocument      *document,
+		    GdkPixbuf       *pixbuf,
+		    EvJobRender     *job)
 {
 	g_signal_handlers_disconnect_by_func (EV_JOB (job)->document,
 					      render_finished_cb, job);
 
+	/* FIXME: ps backend should be ported to cairo */
+	job->surface = ev_document_misc_surface_from_pixbuf (pixbuf);
 	EV_JOB (job)->finished = TRUE;
-	job->pixbuf = g_object_ref (pixbuf);
 	ev_job_finished (EV_JOB (job));
 }
 
@@ -325,7 +329,7 @@ ev_job_render_run (EvJobRender *job)
 	} else {
 		ev_document_fc_mutex_lock ();
 		
-		job->pixbuf = ev_document_render_pixbuf (EV_JOB (job)->document, job->rc);
+		job->surface = ev_document_render (EV_JOB (job)->document, job->rc);
 		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
 			job->link_mapping =
 				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),

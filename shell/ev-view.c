@@ -2003,6 +2003,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 					view->selection_info.in_drag = TRUE;
 				} else {
 					clear_selection (view);
+					
+					view->selection_info.start.x = event->x + view->scroll_x;
+					view->selection_info.start.y = event->y + view->scroll_y;
 				}
 				
 				gtk_widget_queue_draw (widget);
@@ -2015,10 +2018,10 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 				view->image_dnd_info.start.x = event->x + view->scroll_x;
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
+			} else {
+				view->selection_info.start.x = event->x + view->scroll_x;
+				view->selection_info.start.y = event->y + view->scroll_y;
 			}
-
-			view->selection_info.start.x = event->x + view->scroll_x;
-			view->selection_info.start.y = event->y + view->scroll_y;
 		}			
 			return TRUE;
 		case 2:
@@ -2773,8 +2776,6 @@ highlight_find_results (EvView *view, int page)
 	EvDocumentFind *find;
 	int i, results = 0;
 
-	g_return_if_fail (EV_IS_DOCUMENT_FIND (view->document));
-
 	find = EV_DOCUMENT_FIND (view->document);
 
 	results = ev_document_find_get_n_results (find, page);
@@ -2804,7 +2805,7 @@ draw_loading_text (EvView       *view,
 {
 	cairo_t *cr;
 	gint     width, height;
-	
+
 	/* Don't annoy users with loading messages during presentations.
 	 * FIXME: Temporary "workaround" for
 	 * http://bugzilla.gnome.org/show_bug.cgi?id=320352 */
@@ -2812,17 +2813,15 @@ draw_loading_text (EvView       *view,
 		return;
 
 	if (!view->loading_text) {
-		const gchar *loading_text;
+		const gchar *loading_text = _("Loading...");
 		PangoLayout *layout;
 		PangoFontDescription *font_desc;
 		PangoRectangle logical_rect;
-		gdouble real_scale;
 		gint target_width;
-		
-		loading_text = _("Loading...");	
+		gdouble real_scale;
 
 		ev_document_fc_mutex_lock ();
-		
+
 		layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
 		
 		font_desc = pango_font_description_new ();
@@ -2831,8 +2830,7 @@ draw_loading_text (EvView       *view,
 		pango_font_description_set_size (font_desc, 10 * PANGO_SCALE);
 		pango_layout_set_font_description (layout, font_desc);
 		pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
-		
-		/* Make sure we fit the middle of the page */
+
 		target_width = MAX (page_area->width / 2, 1);
 		real_scale = ((double)target_width / (double) logical_rect.width) * (PANGO_SCALE * 10);
 		pango_font_description_set_size (font_desc, (int)real_scale);
@@ -2860,39 +2858,30 @@ draw_loading_text (EvView       *view,
 	height = (page_area->height - cairo_image_surface_get_height (view->loading_text)) / 2;
 	
 	cr = gdk_cairo_create (GTK_WIDGET (view)->window);
-	cairo_set_source_surface (cr, view->loading_text,
-				  page_area->x + width,
-				  page_area->y + height);
+	cairo_translate (cr,
+			 page_area->x + width,
+			 page_area->y + height);
+	cairo_set_source_surface (cr, view->loading_text, 0, 0);
 	cairo_paint (cr);
 	cairo_destroy (cr);
 }
 
 static void
-draw_one_page (EvView          *view,
-	       gint             page,
-	       GdkRectangle    *page_area,
-	       GtkBorder       *border,
-	       GdkRectangle    *expose_area,
-	       gboolean        *page_ready)
+draw_one_page (EvView       *view,
+	       gint          page,
+	       GdkRectangle *page_area,
+	       GtkBorder    *border,
+	       GdkRectangle *expose_area,
+	       gboolean     *page_ready)
 {
-	gint width, height;
-	GdkPixbuf *current_pixbuf;
 	GdkRectangle overlap;
 	GdkRectangle real_page_area;
-	EvViewSelection *selection;
-	gint current_page;
 
 	g_assert (view->document);
 
 	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
 		return;
-	
-	current_page = ev_page_cache_get_current_page (view->page_cache);
-	selection = find_selection_for_page (view, page);
-	ev_page_cache_get_size (view->page_cache,
-				page, view->rotation,
-				view->scale,
-				&width, &height);
+
 	/* Render the document itself */
 	real_page_area = *page_area;
 
@@ -2903,80 +2892,100 @@ draw_one_page (EvView          *view,
 	*page_ready = TRUE;
 
 	if (!view->presentation) {
-		ev_document_misc_paint_one_page (GTK_WIDGET(view)->window,
+		gint current_page;
+
+		current_page = ev_page_cache_get_current_page (view->page_cache);
+		ev_document_misc_paint_one_page (GTK_WIDGET (view)->window,
 						 GTK_WIDGET (view),
 						 page_area, border, 
 						 page == current_page);
 	}
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
-		GdkPixbuf *selection_pixbuf = NULL;
-		GdkPixbuf *scaled_image;
-		GdkPixbuf *scaled_selection;
+		gint             width, height;
+		gint             page_width, page_height;
+		cairo_surface_t *page_surface = NULL;
+		gint             selection_width, selection_height;
+		cairo_surface_t *selection_surface = NULL;
+		cairo_t         *cr = NULL;
 
-		current_pixbuf = ev_pixbuf_cache_get_pixbuf (view->pixbuf_cache, page);
+		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
-		/* Get the selection pixbuf iff we have something to draw */
-		if (current_pixbuf && view->selection_mode == EV_VIEW_SELECTION_TEXT && selection)
-			selection_pixbuf = ev_pixbuf_cache_get_selection_pixbuf (view->pixbuf_cache,
-										 page,
-										 view->scale,
-										 NULL);
-
-		if (current_pixbuf == NULL)
-			scaled_image = NULL;
-		else if (width == gdk_pixbuf_get_width (current_pixbuf) &&
-			 height == gdk_pixbuf_get_height (current_pixbuf))
-			scaled_image = g_object_ref (current_pixbuf);
-		else
-			/* FIXME: We don't want to scale the whole area, just the right
-			 * area of it */
-			scaled_image = gdk_pixbuf_scale_simple (current_pixbuf,
-								width, height,
-								GDK_INTERP_NEAREST);
-
-		if (selection_pixbuf == NULL)
-			scaled_selection = NULL;
-		else if (width == gdk_pixbuf_get_width (selection_pixbuf) &&
-			 height == gdk_pixbuf_get_height (selection_pixbuf))
-			scaled_selection = g_object_ref (selection_pixbuf);
-		else
-			/* FIXME: We don't want to scale the whole area, just the right
-			 * area of it */
-			scaled_selection = gdk_pixbuf_scale_simple (selection_pixbuf,
-								    width, height,
-								    GDK_INTERP_NEAREST);
-
-		if (scaled_image) {
-			gdk_draw_pixbuf (GTK_WIDGET(view)->window,
-					 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
-					 scaled_image,
-					 overlap.x - real_page_area.x,
-					 overlap.y - real_page_area.y,
-					 overlap.x, overlap.y,
-					 overlap.width, overlap.height,
-					 GDK_RGB_DITHER_NORMAL,
-					 0, 0);
-			g_object_unref (scaled_image);
-		} else {
+		if (!page_surface) {
 			draw_loading_text (view,
 					   &real_page_area,
 					   expose_area);
 			*page_ready = FALSE;
+
+			return;
 		}
 
-		if (scaled_selection) {
-			gdk_draw_pixbuf (GTK_WIDGET(view)->window,
-					 GTK_WIDGET (view)->style->fg_gc[GTK_STATE_NORMAL],
-					 scaled_selection,
-					 overlap.x - real_page_area.x,
-					 overlap.y - real_page_area.y,
-					 overlap.x, overlap.y,
-					 overlap.width, overlap.height,
-					 GDK_RGB_DITHER_NORMAL,
-					 0, 0);
-			g_object_unref (scaled_selection);
+		ev_page_cache_get_size (view->page_cache,
+					page, view->rotation,
+					view->scale,
+					&width, &height);
+
+		cr = gdk_cairo_create (GTK_WIDGET (view)->window);
+		
+		cairo_save (cr);
+		
+		page_width = cairo_image_surface_get_width (page_surface);
+		page_height = cairo_image_surface_get_height (page_surface);
+
+		cairo_translate (cr, overlap.x, overlap.y);
+		
+		if (width != page_width || height != page_height) {
+			cairo_pattern_set_filter (cairo_get_source (cr),
+						  CAIRO_FILTER_FAST);
+			cairo_scale (cr,
+				     (gdouble)width / page_width,
+				     (gdouble)height / page_height);
 		}
+
+		cairo_surface_set_device_offset (page_surface,
+						 overlap.x - real_page_area.x,
+						 overlap.y - real_page_area.y);
+
+		cairo_set_source_surface (cr, page_surface, 0, 0);
+		cairo_paint (cr);
+
+		cairo_restore (cr);
+		
+		/* Get the selection pixbuf iff we have something to draw */
+		if (find_selection_for_page (view, page) &&
+		    view->selection_mode == EV_VIEW_SELECTION_TEXT) {
+			selection_surface =
+				ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
+								       page,
+								       view->scale,
+								       NULL);
+		}
+
+		if (!selection_surface) {
+			cairo_destroy (cr);
+			return;
+		}
+
+		selection_width = cairo_image_surface_get_width (selection_surface);
+		selection_height = cairo_image_surface_get_height (selection_surface);
+
+		cairo_translate (cr, overlap.x, overlap.y);
+
+		if (width != selection_width || height != selection_height) {
+			cairo_pattern_set_filter (cairo_get_source (cr),
+						  CAIRO_FILTER_FAST);
+			cairo_scale (cr,
+				     (gdouble)width / selection_width,
+				     (gdouble)height / selection_height);
+		}
+
+		cairo_surface_set_device_offset (selection_surface,
+						 overlap.x - real_page_area.x,
+						 overlap.y - real_page_area.y);
+
+		cairo_set_source_surface (cr, selection_surface, 0, 0);
+		cairo_paint (cr);
+		cairo_destroy (cr);
 	}
 }
 
@@ -3569,7 +3578,7 @@ ev_view_set_zoom (EvView   *view,
 		cairo_surface_destroy (view->loading_text);
 		view->loading_text = NULL;
 	}
-	
+
 	view->scale = scale;
 	view->pending_resize = TRUE;
 
@@ -4453,8 +4462,6 @@ compute_new_selection_text (EvView   *view,
 
 	}
 
-
-
 	/* Now create a list of EvViewSelection's for the affected
 	 * pages.  This could be an empty list, a list of just one
 	 * page or a number of pages.*/
@@ -4561,10 +4568,12 @@ merge_selection_region (EvView *view,
 		 * region too. */
 		if (new_sel) {
 			GdkRegion *tmp_region = NULL;
-			ev_pixbuf_cache_get_selection_pixbuf (view->pixbuf_cache,
-							      cur_page,
-							      view->scale,
-							      &tmp_region);
+
+			ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
+							       cur_page,
+							       view->scale,
+							       &tmp_region);
+
 			if (tmp_region) {
 				new_sel->covered_region = gdk_region_copy (tmp_region);
 			}
@@ -4572,8 +4581,7 @@ merge_selection_region (EvView *view,
 
 		/* Now we figure out what needs redrawing */
 		if (old_sel && new_sel) {
-			if (old_sel->covered_region &&
-			    new_sel->covered_region) {
+			if (old_sel->covered_region && new_sel->covered_region) {
 				/* We only want to redraw the areas that have
 				 * changed, so we xor the old and new regions
 				 * and redraw if it's different */
@@ -4604,6 +4612,12 @@ merge_selection_region (EvView *view,
 		if (region) {
 			GdkRectangle page_area;
 			GtkBorder border;
+
+			/* I don't know why but the region is smaller
+			 * than expected. This hack fixes it, I guess
+			 * 10 pixels more won't hurt
+			 */
+			gdk_region_shrink (region, -5, -5);
 
 			get_page_extents (view, cur_page, &page_area, &border);
 			gdk_region_offset (region,

@@ -121,13 +121,13 @@ struct _EvJobRender
 	EvRenderContext *rc;
 	gint target_width;
 	gint target_height;
-	GdkPixbuf *pixbuf;
+	cairo_surface_t *surface;
 
 	GList *link_mapping;
 	GdkRegion *text_mapping;
 	GList *image_mapping;
 
-	GdkPixbuf *selection;
+	cairo_surface_t *selection;
 	GdkRegion *selection_region;
 	EvRectangle selection_points;
 	GdkColor base;
