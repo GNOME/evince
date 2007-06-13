@@ -256,7 +256,11 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->author);
 	g_free (info->subject);
 	g_free (info->keywords);
+	g_free (info->creator);
+	g_free (info->producer);
+	g_free (info->linearized);
 	g_free (info->security);
+	
 
 	g_free (info);
 }

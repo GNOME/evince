@@ -1,5 +1,11 @@
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* libdocument/ev-document.c: (ev_document_info_free):
+
+	Fix memory leaks.
+	
+2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/dvi/dvi-document.c: (dvi_document_render),
 	(dvi_document_render_pixbuf), (dvi_document_document_iface_init):
 	* backend/impress/impress-document.c:
