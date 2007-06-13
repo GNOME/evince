@@ -1,5 +1,14 @@
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-pixbuf-cache.c: (job_finished_cb),
+	(ev_pixbuf_cache_get_surface), (ev_pixbuf_cache_get_link_mapping),
+	(ev_pixbuf_cache_get_image_mapping),
+	(ev_pixbuf_cache_get_text_mapping):
+
+	Redraw view every time we have a new surface. Fixes bug #443587.
+	
+2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-document.c: (ev_document_info_free):
 
 	Fix memory leaks.

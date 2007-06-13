@@ -233,7 +233,6 @@ job_finished_cb (EvJob         *job,
 	job_info = find_job_cache (pixbuf_cache, job_render->rc->page);
 
 	copy_job_to_job_info (job_render, job_info, pixbuf_cache);
-
 	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
 }
 
@@ -686,6 +685,7 @@ ev_pixbuf_cache_get_surface (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
 	}
 
 	return job_info->surface;
@@ -705,6 +705,7 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
 	}
 
 	return job_info->link_mapping;
@@ -727,6 +728,7 @@ ev_pixbuf_cache_get_image_mapping (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
 	}
 
 	return job_info->image_mapping;
@@ -790,6 +792,7 @@ ev_pixbuf_cache_get_text_mapping (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
 	}
 	
 	return job_info->text_mapping;
