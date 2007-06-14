@@ -2931,7 +2931,10 @@ draw_one_page (EvView       *view,
 		
 		page_width = cairo_image_surface_get_width (page_surface);
 		page_height = cairo_image_surface_get_height (page_surface);
-
+		
+		cairo_rectangle (cr, overlap.x, overlap.y, overlap.width, overlap.height);
+		cairo_clip (cr);
+		
 		cairo_translate (cr, overlap.x, overlap.y);
 		
 		if (width != page_width || height != page_height) {
@@ -2969,6 +2972,9 @@ draw_one_page (EvView       *view,
 		selection_width = cairo_image_surface_get_width (selection_surface);
 		selection_height = cairo_image_surface_get_height (selection_surface);
 
+		cairo_rectangle (cr, overlap.x, overlap.y, overlap.width, overlap.height);
+		cairo_clip (cr);
+		
 		cairo_translate (cr, overlap.x, overlap.y);
 
 		if (width != selection_width || height != selection_height) {
