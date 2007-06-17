@@ -1,16 +1,28 @@
+2007-06-17  Alaska Subedi  <asubedi@gmail.com>
+
+	* backend/dvi/dvi-document.c:
+	(dvi_document_finalize),
+	(dvi_document_file_exporter_format_supported),
+	(dvi_document_file_exporter_begin),
+	(dvi_document_file_exporter_do_page),
+	(dvi_document_file_exporter_end),
+	(dvi_document_file_exporter_iface_init), (dvi_document_init):
+	
+	PDF exporter for dvi documents. Fixes bug #441319.
+
 2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_clear_print_job):
 
 	Clear gtk print job when job has finished. Fixes bug #447612.
-	
+
 2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_print_send),
 	(ev_window_print_dialog_response_cb), (ev_window_print_range):
 
 	Add preview button to print dialog. Fixes bug #445419.
-	
+
 2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/dvi/Makefile.am:
@@ -25,19 +37,19 @@
 	(ev_document_misc_pixbuf_from_surface):
 
 	Port dvi backend to cairo and fix a problem with colors. 
-	
+
 2007-06-14  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (draw_one_page):
 
 	Draw only visible region.
-	
+
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/djvu/djvu-document.c: (djvu_document_render):
 
 	Fix rotation in djvu backend.
-	
+
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.c: (job_finished_cb),
@@ -46,13 +58,13 @@
 	(ev_pixbuf_cache_get_text_mapping):
 
 	Redraw view every time we have a new surface. Fixes bug #443587.
-	
+
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* libdocument/ev-document.c: (ev_document_info_free):
 
 	Fix memory leaks.
-	
+
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/dvi/dvi-document.c: (dvi_document_render),
@@ -93,19 +105,19 @@
 
 	Use cairo image surfaces instead of GDK pixbufs for drawing pages
 	and selections.
-	
+
 2007-06-12  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window-title.c: (ev_window_title_update):
 
 	Fix memory leak.
-	
+
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (draw_loading_text):
 
 	Show loading text centered. Fixes bug #433061
-	
+
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-sidebar-thumbnails.c:
@@ -113,14 +125,14 @@
 
 	Remove a mutex in the main thread that blocks the UI in heavy
 	documents.
-	
+
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.c (copy_job_to_job_info):
 
 	Set points_set to TRUE so that selections don't disappear after a
 	zoom change.
-	
+
 2007-06-07  Michael Monreal  <infernux@web.de>
 
 	* data/icons/16x16/actions/Makefile.am:
