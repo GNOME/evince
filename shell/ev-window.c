@@ -2172,6 +2172,11 @@ ev_window_clear_print_job (EvWindow *window)
 		g_object_unref (window->priv->print_job);
 		window->priv->print_job = NULL;
 	}
+
+	if (window->priv->gtk_print_job) {
+		g_object_unref (window->priv->gtk_print_job);
+		window->priv->gtk_print_job = NULL;
+	}
 }
 
 static void
