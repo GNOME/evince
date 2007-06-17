@@ -192,6 +192,7 @@ struct _EvWindowPrivate {
 
 #ifdef WITH_GTK_PRINT
 	EvJob            *print_job;
+	gboolean          print_preview;
 	GtkPrintJob      *gtk_print_job;
 	GtkPrinter       *printer;
 	GtkPrintSettings *print_settings;
@@ -2204,13 +2205,8 @@ static void
 ev_window_print_send (EvWindow    *window,
 		      const gchar *filename)
 {
-	GtkPrintJob *job;
 	GtkPrintSettings *settings;
-	GError      *error = NULL;
 	
-	if (window->priv->gtk_print_job)
-		g_object_unref (window->priv->gtk_print_job);
-
 	/* Some printers take into account some print settings,
 	 * and others don't. However we have exported the document
 	 * to a ps or pdf file according to such print settings. So,
@@ -2225,25 +2221,54 @@ ev_window_print_send (EvWindow    *window,
 	gtk_print_settings_set_scale (settings, 1.0);
 	gtk_print_settings_set_collate (settings, FALSE);
 	gtk_print_settings_set_reverse (settings, FALSE);
+
+	if (window->priv->print_preview) {
+		gchar *uri;
+		gchar *print_settings_file = NULL;
+
+		ev_application_set_print_settings (EV_APP,
+						   window->priv->print_settings);
+		
+#if GTK_CHECK_VERSION (2, 11, 0)
+		print_settings_file = ev_tmp_filename ("print-settings");
+		gtk_print_settings_to_file (settings, print_settings_file, NULL);
+#endif
+		uri = g_filename_to_uri (filename, NULL, NULL);
+		ev_application_open_uri_at_dest (EV_APP,
+						 uri, 
+						 gtk_window_get_screen (GTK_WINDOW (window)),
+						 NULL,
+						 EV_WINDOW_MODE_PREVIEW,
+						 TRUE,
+						 print_settings_file,
+						 GDK_CURRENT_TIME);
+		g_free (print_settings_file);
+		g_free (uri);
+	} else {
+		GtkPrintJob *job;
+		GError      *error = NULL;
 	
-	job = gtk_print_job_new ("evince-print",
-				 window->priv->printer,
-				 settings,
-				 window->priv->print_page_setup);
+		job = gtk_print_job_new ("evince-print",
+					 window->priv->printer,
+					 settings,
+					 window->priv->print_page_setup);
+
+		if (window->priv->gtk_print_job)
+			g_object_unref (window->priv->gtk_print_job);
+		window->priv->gtk_print_job = job;
+
+		if (gtk_print_job_set_source_file (job, filename, &error)) {
+			gtk_print_job_send (job,
+					    (GtkPrintJobCompleteFunc)ev_window_print_finished,
+					    window, NULL);
+		} else {
+			ev_window_clear_print_job (window);
+			g_warning (error->message);
+			g_error_free (error);
+		}
+	}
 
 	g_object_unref (settings);
-	
-	window->priv->gtk_print_job = job;
-
-	if (gtk_print_job_set_source_file (job, filename, &error)) {
-		gtk_print_job_send (job,
-				    (GtkPrintJobCompleteFunc)ev_window_print_finished,
-				    window, NULL);
-	} else {
-		ev_window_clear_print_job (window);
-		g_warning (error->message);
-		g_error_free (error);
-	}
 }
 
 static void
@@ -2279,12 +2304,14 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	GtkPrintPages  print_pages;
 	const gchar   *file_format;
 	
-	if (response != GTK_RESPONSE_OK) {
+	if (response == GTK_RESPONSE_CANCEL) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		window->priv->print_dialog = NULL;
 
 		return FALSE;
 	}
+
+	window->priv->print_preview = (response == GTK_RESPONSE_APPLY);
 
 	if (window->priv->printer)
 		g_object_unref (window->priv->printer);
@@ -2430,7 +2457,8 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 		GTK_PRINT_CAPABILITY_COLLATE |
 		GTK_PRINT_CAPABILITY_REVERSE |
 		GTK_PRINT_CAPABILITY_SCALE |
-		GTK_PRINT_CAPABILITY_GENERATE_PS;
+		GTK_PRINT_CAPABILITY_GENERATE_PS |
+		GTK_PRINT_CAPABILITY_PREVIEW;
 	
 	if (EV_IS_FILE_EXPORTER (ev_window->priv->document) &&
 	    ev_file_exporter_format_supported (EV_FILE_EXPORTER (ev_window->priv->document),

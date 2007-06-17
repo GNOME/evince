@@ -1,5 +1,12 @@
 2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_print_send),
+	(ev_window_print_dialog_response_cb), (ev_window_print_range):
+
+	Add preview button to print dialog. Fixes bug #445419.
+	
+2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/dvi/Makefile.am:
 	* backend/dvi/pixbuf-device.[ch]: Removed
 	* backend/dvi/cairo-device.[ch]: Added
