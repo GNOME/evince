@@ -1,3 +1,18 @@
+2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/dvi/Makefile.am:
+	* backend/dvi/pixbuf-device.[ch]: Removed
+	* backend/dvi/cairo-device.[ch]: Added
+	* backend/dvi/mdvi-lib/dviread.c: (draw_shrink_rule):
+	* backend/dvi/dvi-document.c: (dvi_document_load),
+	(dvi_document_render), (dvi_document_finalize),
+	(dvi_document_thumbnails_get_thumbnail), (parse_color),
+	(dvi_document_do_color_special):
+	* libdocument/ev-document-misc.[ch]:
+	(ev_document_misc_pixbuf_from_surface):
+
+	Port dvi backend to cairo and fix a problem with colors. 
+	
 2007-06-14  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (draw_one_page):

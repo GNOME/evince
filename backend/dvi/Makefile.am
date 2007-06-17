@@ -11,8 +11,8 @@ noinst_LTLIBRARIES = libgtkdvi.la
 libgtkdvi_la_SOURCES = \
 	dvi-document.c	\
 	dvi-document.h  \
-	pixbuf-device.c \
-	pixbuf-device.h \
+	cairo-device.c	\
+	cairo-device.h	\
 	fonts.c		\
 	fonts.h
 

@@ -23,7 +23,7 @@
 
 #include "mdvi.h"
 #include "fonts.h"
-#include "pixbuf-device.h"
+#include "cairo-device.h"
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
@@ -49,7 +49,6 @@ struct _DviDocument
 	DviParams *params;
 	
 	/* To let document scale we should remember width and height */
-	
 	double base_width;
 	double base_height;
 	
@@ -58,13 +57,15 @@ struct _DviDocument
 
 typedef struct _DviDocumentClass DviDocumentClass;
 
-static void dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *arg);
-static void dvi_document_document_iface_init (EvDocumentIface *iface);
+static void dvi_document_document_iface_init            (EvDocumentIface           *iface);
 static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-static void dvi_document_get_page_size 			(EvDocument   *document,
-					    		 int       page,
-							 double    *width,
-							 double    *height);
+static void dvi_document_get_page_size 			(EvDocument                *document,
+					    		 int                        page,
+							 double                    *width,
+							 double                    *height);
+static void dvi_document_do_color_special               (DviContext                *dvi,
+							 const char                *prefix,
+							 const char                *arg);
 
 G_DEFINE_TYPE_WITH_CODE 
     (DviDocument, dvi_document, G_TYPE_OBJECT, 
@@ -75,49 +76,50 @@ G_DEFINE_TYPE_WITH_CODE
 
 static gboolean
 dvi_document_load (EvDocument  *document,
-		      const char  *uri,
-		      GError     **error)
+		   const char  *uri,
+		   GError     **error)
 {
-    gchar *filename;
-    DviDocument *dvi_document = DVI_DOCUMENT(document);
-    
-    filename = g_filename_from_uri (uri, NULL, error);
-    
-    if (!filename) {
+	gchar *filename;
+	DviDocument *dvi_document = DVI_DOCUMENT(document);
+	
+	filename = g_filename_from_uri (uri, NULL, error);
+	
+	if (!filename) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,
 			     EV_DOCUMENT_ERROR_INVALID,
 			     _("File not available"));
         	return FALSE;
-    }
+	}
 	
-    g_mutex_lock (dvi_context_mutex);
-    if (dvi_document->context)
-	mdvi_destroy_context (dvi_document->context);
-
-    dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
-    g_mutex_unlock (dvi_context_mutex);
-
-    if (!dvi_document->context) {
+	g_mutex_lock (dvi_context_mutex);
+	if (dvi_document->context)
+		mdvi_destroy_context (dvi_document->context);
+	
+	dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
+	g_mutex_unlock (dvi_context_mutex);
+	
+	if (!dvi_document->context) {
     		g_set_error (error,
 			     EV_DOCUMENT_ERROR,
 			     EV_DOCUMENT_ERROR_INVALID,
 			     _("DVI document has incorrect format"));
         	return FALSE;
-    }
-
-    mdvi_pixbuf_device_init (&dvi_document->context->device);
-
-    dvi_document->base_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv 
+	}
+	
+	mdvi_cairo_device_init (&dvi_document->context->device);
+	
+	
+	dvi_document->base_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv 
 		+ 2 * unit2pix(dvi_document->params->dpi, MDVI_HMARGIN) / dvi_document->params->hshrink;
-		
-    dvi_document->base_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv 
+	
+	dvi_document->base_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv 
 	        + 2 * unit2pix(dvi_document->params->vdpi, MDVI_VMARGIN) / dvi_document->params->vshrink;
-
-    g_free (dvi_document->uri);
-    dvi_document->uri = g_strdup (uri);
-
-    return TRUE;
+	
+	g_free (dvi_document->uri);
+	dvi_document->uri = g_strdup (uri);
+	
+	return TRUE;
 }
 
 
@@ -132,31 +134,29 @@ dvi_document_save (EvDocument  *document,
 }
 
 static int
-dvi_document_get_n_pages (EvDocument  *document)
+dvi_document_get_n_pages (EvDocument *document)
 {
-    DviDocument *dvi_document = DVI_DOCUMENT (document);
-    return dvi_document->context->npages;
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
+	
+	return dvi_document->context->npages;
 }
 
 static void
-dvi_document_get_page_size (EvDocument   *document,
-			    int       page,
-			    double    *width,
-			    double    *height)
+dvi_document_get_page_size (EvDocument *document,
+			    int         page,
+			    double     *width,
+			    double     *height)
 {
-	DviDocument * dvi_document = DVI_DOCUMENT (document);	
+	DviDocument *dvi_document = DVI_DOCUMENT (document);	
 
         *width = dvi_document->base_width;
         *height = dvi_document->base_height;;
-				    
-	return;
 }
 
 static cairo_surface_t *
 dvi_document_render (EvDocument      *document,
 		     EvRenderContext *rc)
 {
-	GdkPixbuf *pixbuf;
 	cairo_surface_t *surface;
 	cairo_surface_t *rotated_surface;
 	DviDocument *dvi_document = DVI_DOCUMENT(document);
@@ -170,7 +170,7 @@ dvi_document_render (EvDocument      *document,
 	 */
 	g_mutex_lock (dvi_context_mutex);
 	
-	mdvi_setpage(dvi_document->context,  rc->page);
+	mdvi_setpage (dvi_document->context, rc->page);
 	
 	mdvi_set_shrink (dvi_document->context, 
 			 (int)((dvi_document->params->hshrink - 1) / rc->scale) + 1,
@@ -186,24 +186,19 @@ dvi_document_render (EvDocument      *document,
 	if (required_height >= proposed_height)
 	    ymargin = (required_height - proposed_height) / 2;
 	    
-        mdvi_pixbuf_device_set_margins (&dvi_document->context->device, xmargin, ymargin);
-
-        mdvi_pixbuf_device_render (dvi_document->context);
-	
-	pixbuf = mdvi_pixbuf_device_get_pixbuf (&dvi_document->context->device);
+	mdvi_cairo_device_set_margins (&dvi_document->context->device, xmargin, ymargin);
+	mdvi_cairo_device_set_scale (&dvi_document->context->device, rc->scale);
+	mdvi_cairo_device_render (dvi_document->context);
+	surface = mdvi_cairo_device_get_surface (&dvi_document->context->device);
 
 	g_mutex_unlock (dvi_context_mutex);
 
-	/* FIXME: we should write a mdvi device based on cairo */
-	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-
 	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
 								     required_width,
-								     required_height,
+								     required_height, 
 								     rc->rotation);
 	cairo_surface_destroy (surface);
-
+	
 	return rotated_surface;
 }
 
@@ -214,7 +209,7 @@ dvi_document_finalize (GObject *object)
 	
 	g_mutex_lock (dvi_context_mutex);
 	if (dvi_document->context) {
-		mdvi_pixbuf_device_free (&dvi_document->context->device);
+		mdvi_cairo_device_free (&dvi_document->context->device);
 		mdvi_destroy_context (dvi_document->context);
 	}
 	g_mutex_unlock (dvi_context_mutex);
@@ -235,7 +230,7 @@ dvi_document_class_init (DviDocumentClass *klass)
 
 	gobject_class->finalize = dvi_document_finalize;
 
-	mdvi_init_kpathsea("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
+	mdvi_init_kpathsea ("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
 	mdvi_register_special ("Color", "color", NULL, dvi_document_do_color_special, 1);
 	mdvi_register_fonts ();
 
@@ -296,16 +291,16 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 {
 	DviDocument *dvi_document = DVI_DOCUMENT (document);
 	GdkPixbuf *pixbuf;
-	GdkPixbuf *border_pixbuf;
 	GdkPixbuf *rotated_pixbuf;
+	cairo_surface_t *surface;
 	gint thumb_width, thumb_height;
 	gint proposed_width, proposed_height;
-	
+
 	thumb_width = (gint) (dvi_document->base_width * rc->scale);
 	thumb_height = (gint) (dvi_document->base_height * rc->scale);
-	
-	g_mutex_lock (dvi_context_mutex);
 
+	g_mutex_lock (dvi_context_mutex);
+	
 	mdvi_setpage (dvi_document->context, rc->page);
 
 	mdvi_set_shrink (dvi_document->context, 
@@ -316,29 +311,31 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
 			  
 	if (border) {
-	 	mdvi_pixbuf_device_set_margins	(&dvi_document->context->device, 
-						 MAX (thumb_width - proposed_width, 0) / 2,
-						 MAX (thumb_height - proposed_height, 0) / 2); 	
+	 	mdvi_cairo_device_set_margins (&dvi_document->context->device, 
+					       MAX (thumb_width - proposed_width, 0) / 2,
+					       MAX (thumb_height - proposed_height, 0) / 2); 	
 	} else {
-	 	mdvi_pixbuf_device_set_margins	(&dvi_document->context->device, 
-						 MAX (thumb_width - proposed_width - 2, 0) / 2,
-						 MAX (thumb_height - proposed_height - 2, 0) / 2); 	
+	 	mdvi_cairo_device_set_margins (&dvi_document->context->device, 
+					       MAX (thumb_width - proposed_width - 2, 0) / 2,
+					       MAX (thumb_height - proposed_height - 2, 0) / 2); 	
 	}
-	
 
-        mdvi_pixbuf_device_render (dvi_document->context);
-	pixbuf = mdvi_pixbuf_device_get_pixbuf (&dvi_document->context->device);
-
+	mdvi_cairo_device_set_scale (&dvi_document->context->device, rc->scale);
+        mdvi_cairo_device_render (dvi_document->context);
+	surface = mdvi_cairo_device_get_surface (&dvi_document->context->device);
 	g_mutex_unlock (dvi_context_mutex);
-	
+
+	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
+	cairo_surface_destroy (surface);
+
 	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
 	g_object_unref (pixbuf);
-	
-        if (border) {
-	      GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
-	      
-	      rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
-	      g_object_unref (tmp_pixbuf);
+
+	if (border) {
+		GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
+
+		rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
+		g_object_unref (tmp_pixbuf);
 	}
 
 	return rotated_pixbuf;
@@ -406,54 +403,95 @@ hsb2rgb (float h, float s, float v, char *red, char *green, char *blue)
 }
 
 static void
+parse_color (const gchar *ptr,
+	     gdouble     *color,
+	     gint         n_color)
+{
+	gchar *p = (gchar *)ptr;
+	gint   i;
+
+	for (i = 0; i < n_color; i++) {
+		while (isspace (*p)) p++;
+		color[i] = g_ascii_strtod (p, NULL);
+		while (!isspace (*p) && *p != '\0') p++;
+		if (*p == '\0')
+			break;
+	}
+}
+
+static void
 dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *arg)
 {
-        char *op, *color;
-
         if (strncmp (arg, "pop", 3) == 0) {
                 mdvi_pop_color (dvi);
         } else if (strncmp (arg, "push", 4) == 0) {
-                /* Find color source : Named, CMYK or RGB */
-                const char *tmp = arg+4;
+                /* Find color source: Named, CMYK or RGB */
+                const char *tmp = arg + 4;
+		
                 while (isspace (*tmp)) tmp++;
 
                 if (!strncmp ("rgb", tmp, 3)) {
-                        float r, g, b;
-                        unsigned char red, green, blue;
-                        sscanf (tmp+4, "%f %f %f", &r, &g, &b);
-                        red = 255*r;
-                        green = 255*g;
-                        blue = 255*b;
+			gdouble rgb[3];
+                        guchar red, green, blue;
+
+			parse_color (tmp + 4, rgb, 3);
+			
+                        red = 255 * rgb[0];
+                        green = 255 * rgb[1];
+                        blue = 255 * rgb[2];
+
                         mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
                 } else if (!strncmp ("hsb", tmp, 4)) {
-                        float h, s, b;
-                        char red, green, blue;
-                        sscanf (tmp+4, "%f %f %f", &h, &s, &b);
+                        gdouble hsb[3];
+                        guchar red, green, blue;
 
-                        if (hsb2rgb (h, s, b, &red, &green, &blue))
+			parse_color (tmp + 4, hsb, 3);
+			
+                        if (hsb2rgb (hsb[0], hsb[1], hsb[2], &red, &green, &blue))
                                 mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
                 } else if (!strncmp ("cmyk", tmp, 4)) {
-                        double r, g, b, c, m, y, k;
-                        
-                        sscanf (tmp+5, "%f %f %f %f", &c, &m, &y, &k);
+			gdouble cmyk[4];
+                        double r, g, b;
+			guchar red, green, blue;
+			
+			parse_color (tmp + 5, cmyk, 4);
 
-                        r = 1.0 - c - k;
+                        r = 1.0 - cmyk[0] - cmyk[3];
                         if (r < 0.0)
                                 r = 0.0;
-                        g = 1.0 - m - k;
+                        g = 1.0 - cmyk[1] - cmyk[3];
                         if (g < 0.0)
                                 g = 0.0;
-                        b = 1.0 - y - k;
+                        b = 1.0 - cmyk[2] - cmyk[3];
                         if (b < 0.0)
                                 b = 0.0;
-                        mdvi_push_color (dvi, RGB2ULONG ((char)(r*255+0.5), (char)(r*255+0.5),
-                                                         (char)(b*255+0.5)), 0xFFFFFFFF);
+
+			red = r * 255 + 0.5;
+			green = g * 255 + 0.5;
+			blue = b * 255 + 0.5;
+			
+                        mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
+		} else if (!strncmp ("gray ", tmp, 5)) {
+			gdouble gray;
+			guchar rgb;
+
+			parse_color (tmp + 5, &gray, 1);
+
+			rgb = gray * 255 + 0.5;
+
+			mdvi_push_color (dvi, RGB2ULONG (rgb, rgb, rgb), 0xFFFFFFFF);
                 } else {
                         GdkColor color;
-                        if (gdk_color_parse (tmp, &color))
-                                mdvi_push_color (dvi, RGB2ULONG (color.red*255/65535,
-                                                                 color.green*255/65535,
-                                                                 color.blue*255/65535), 0xFFFFFFFF);
+			
+                        if (gdk_color_parse (tmp, &color)) {
+				guchar red, green, blue;
+
+				red = color.red * 255 / 65535.;
+				green = color.green * 255 / 65535.;
+				blue = color.blue * 255 / 65535.;
+
+                                mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
+			}
                 }
         }
 }

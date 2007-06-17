@@ -163,6 +163,73 @@ ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 	return surface;
 }
 
+GdkPixbuf *
+ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface)
+{
+	GdkPixbuf       *pixbuf;
+	cairo_surface_t *image;
+	cairo_t         *cr;
+	gboolean         has_alpha;
+	gint             width, height;
+	cairo_format_t   surface_format;
+	gint             pixbuf_n_channels;
+	gint             pixbuf_rowstride;
+	guchar          *pixbuf_pixels;
+	gint             x, y;
+
+	width = cairo_image_surface_get_width (surface);
+	height = cairo_image_surface_get_height (surface);
+	
+	surface_format = cairo_image_surface_get_format (surface);
+	has_alpha = (surface_format == CAIRO_FORMAT_ARGB32);
+
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
+				 TRUE, 8,
+				 width, height);
+	pixbuf_n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+	pixbuf_rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+	pixbuf_pixels = gdk_pixbuf_get_pixels (pixbuf);
+
+	image = cairo_image_surface_create_for_data (pixbuf_pixels,
+						     surface_format,
+						     width, height,
+						     pixbuf_rowstride);
+	cr = cairo_create (image);
+	cairo_set_source_surface (cr, surface, 0, 0);
+
+	if (has_alpha)
+		cairo_mask_surface (cr, surface, 0, 0);
+	else
+		cairo_paint (cr);
+
+	cairo_destroy (cr);
+	cairo_surface_destroy (image);
+
+	for (y = 0; y < height; y++) {
+		guchar *p = pixbuf_pixels + y * pixbuf_rowstride;
+
+		for (x = 0; x < width; x++) {
+			guchar tmp;
+			
+#if G_BYTE_ORDER == G_LITTLE_ENDIAN
+			tmp = p[0];
+			p[0] = p[2];
+			p[2] = tmp;
+			p[3] = (has_alpha) ? p[3] : 0xff;
+#else
+			tmp = p[0];
+			p[0] = (has_alpha) ? p[3] : 0xff;
+			p[3] = p[2];
+			p[2] = p[1];
+			p[1] = tmp;
+#endif			
+			p += pixbuf_n_channels;
+		}
+	}
+
+	return pixbuf;
+}
+
 cairo_surface_t *
 ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 					   gint             dest_width,
@@ -207,10 +274,14 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 	        default:
 			cairo_translate (cr, 0, 0);
 	}
-	cairo_pattern_set_filter (cairo_get_source (cr), CAIRO_FILTER_BILINEAR);
-	cairo_scale (cr,
-		     (gdouble)dest_width / width,
-		     (gdouble)dest_height / height);
+	
+	if (dest_width != width || dest_height != height) {
+		cairo_pattern_set_filter (cairo_get_source (cr), CAIRO_FILTER_BILINEAR);
+		cairo_scale (cr,
+			     (gdouble)dest_width / width,
+			     (gdouble)dest_height / height);
+	}
+	
 	cairo_rotate (cr, dest_rotation * G_PI / 180.0);
 	cairo_set_source_surface (cr, surface, 0, 0);
 	cairo_paint (cr);

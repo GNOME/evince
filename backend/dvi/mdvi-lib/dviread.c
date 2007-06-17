@@ -1178,8 +1178,8 @@ static void draw_shrink_rule (DviContext *dvi, int x, int y, Uint w, Uint h, int
 	
 	hs = dvi->params.hshrink;
 	vs = dvi->params.vshrink;
-	fg = dvi->params.fg;
-	bg = dvi->params.bg;
+	fg = dvi->curr_fg;
+	bg = dvi->curr_bg;
 
 	if (MDVI_ENABLED(dvi, MDVI_PARAM_ANTIALIASED)) {
 		npixels = vs * hs + 1;

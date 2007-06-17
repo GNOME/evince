@@ -41,7 +41,9 @@ void       ev_document_misc_paint_one_page       (GdkDrawable  *drawable,
 						  GdkRectangle *area,
 						  GtkBorder    *border,
 						  gboolean      highlight);
+
 cairo_surface_t *ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf);
+GdkPixbuf       *ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface);
 cairo_surface_t *ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 							    gint             dest_width,
 							    gint             dest_height,
