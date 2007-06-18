@@ -1,4 +1,42 @@
 ==============
+Evince   0.9.1
+==============
+
+New Features and UI Improvements:
+
+    * Cairo-based renderer for pages and selections of PDF, DVJU and DVI documents (Carlos Garcia Campos)
+    * PDF exporter for printing DVI documents (Alaska Subedi)
+    * Zoom icon artwork (Michael Monreal)
+    * Patch to avoid frequent process wakeup for metadata handling (Bastien Nocera, Arjan van de Ven)
+    * Bumped poppler requirements to 0.5.9 (Carlos Garcia Campos)
+    * Changed sidebar ordering (Wouter Bolsterlee)
+    * Removed extra locking of a main loop to speed up rendering (Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Print job is released quickly (Carlos Garcia Campos)
+    * Update a cursor and tooltips after scrolling (Carlos Garcia Campos)
+    * More safe mkdir_with_parents (Eduardo Lima)
+    * Safe saving of a document copy to a remote location (Carlos Garcia Campos)
+    * Build fix without libgnome (Marc Brockschmidt)
+    * Selections don't disappear after zoom (Carlos Garcia Campos)
+    * Preview button added to the print dialog (Carlos Garcia Campos)
+
+Translations:
+
+    Daniel Nylander (sv)
+    David Lodge (en_GB)
+    Dr.T.Vasudevan (ta)
+    Espen Stefansen (nb)
+    Gil Forcada (ca)
+    Ignacio Casal Quinteiro (gl)
+    Ivar Smolin (et)
+    Jorge González (es)
+    Sonam Pelden (dz)
+    Theppitak Karoonboonyanan (th)
+    Yuval Tanny (he)
+    
+==============
 Evince   0.9.0
 ==============
 
