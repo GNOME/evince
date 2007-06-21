@@ -4884,6 +4884,13 @@ ev_view_next_page (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
+	if (view->presentation &&
+	    (view->presentation_state == EV_PRESENTATION_BLACK ||
+	     view->presentation_state == EV_PRESENTATION_WHITE)) {
+		ev_view_reset_presentation_state (view);
+		return FALSE;
+	}
+	
 	ev_view_presentation_transition_stop (view);
 	ev_view_reset_presentation_state (view);
 	
@@ -4924,6 +4931,13 @@ ev_view_previous_page (EvView *view)
 	    view->presentation_state == EV_PRESENTATION_END) {
 		ev_view_reset_presentation_state (view);
 		return TRUE;
+	}
+
+	if (view->presentation &&
+	    (view->presentation_state == EV_PRESENTATION_BLACK ||
+	     view->presentation_state == EV_PRESENTATION_WHITE)) {
+		ev_view_reset_presentation_state (view);
+		return FALSE;
 	}
 
 	ev_view_reset_presentation_state (view);
