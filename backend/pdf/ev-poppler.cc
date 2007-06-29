@@ -448,7 +448,7 @@ pdf_document_render (EvDocument      *document,
 		width = (int) ((width_points * rc->scale) + 0.5);
 		height = (int) ((height_points * rc->scale) + 0.5);
 	}
-	
+
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	cairo_t *cr;
 	
@@ -1283,10 +1283,10 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 
 		poppler_page_get_size (poppler_page, &page_width, &page_height);
 
-		*width = (gint) (page_width * rc->scale);
-		*height = (gint) (page_height * rc->scale);
+		*width = (gint) MAX (page_width * rc->scale, 1);
+		*height = (gint) MAX (page_height * rc->scale, 1);
 	}
-
+	
 	if (rc->rotation == 90 || rc->rotation == 270) {
 		gint  temp;
 

@@ -1,3 +1,11 @@
+2007-06-29  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc:
+	(pdf_document_thumbnails_get_dimensions):
+
+	Make sure thumbnails width and height is not <= 0. Fixes a crash
+	with some pdf documents which have really small pages.
+	
 2007-06-22  Gabor Kelemen  <kelemeng@gnome.hu>
 
 	* shell/main.c: (main):
