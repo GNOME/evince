@@ -3616,6 +3616,9 @@ ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 {
+	if (ev_view_get_presentation (EV_VIEW (ev_window->priv->view)))
+		return;
+	
 	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
 			    gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
 }
