@@ -78,7 +78,7 @@ egg_toolbar_editor_get_type (void)
 
   if (G_UNLIKELY (type == 0))
     {
-      const GTypeInfo our_info = {
+      static const GTypeInfo our_info = {
 	sizeof (EggToolbarEditorClass),
 	NULL,			/* base_init */
 	NULL,			/* base_finalize */
@@ -362,11 +362,42 @@ event_box_realize_cb (GtkWidget *widget, GtkImage *icon)
     {
       gchar *stock_id;
       GdkPixbuf *pixbuf;
+
       gtk_image_get_stock (icon, &stock_id, NULL);
       pixbuf = gtk_widget_render_icon (widget, stock_id,
 	                               GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
       gtk_drag_source_set_icon_pixbuf (widget, pixbuf);
       g_object_unref (pixbuf);
+    }
+  else if (type == GTK_IMAGE_ICON_NAME)
+    {
+      const gchar *icon_name;
+      GdkScreen *screen;
+      GtkIconTheme *icon_theme;
+      GtkSettings *settings;
+      gint width, height;
+      GdkPixbuf *pixbuf;
+
+      gtk_image_get_icon_name (icon, &icon_name, NULL);
+      screen = gtk_widget_get_screen (widget);
+      icon_theme = gtk_icon_theme_get_for_screen (screen);
+      settings = gtk_settings_get_for_screen (screen);
+
+      if (!gtk_icon_size_lookup_for_settings (settings,
+                                              GTK_ICON_SIZE_LARGE_TOOLBAR,
+					      &width, &height))
+        {
+	  width = height = 24;
+	}
+
+      pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name,
+                                         MIN (width, height), 0, NULL);
+      if (G_UNLIKELY (!pixbuf))
+        return;
+
+      gtk_drag_source_set_icon_pixbuf (widget, pixbuf);
+      g_object_unref (pixbuf);
+
     }
   else if (type == GTK_IMAGE_PIXBUF)
     {
@@ -427,8 +458,7 @@ editor_create_item_from_name (EggToolbarEditor *editor,
 {
   GtkWidget *item;
   const char *item_name;
-  const char *stock_id;
-  const char *short_label;
+  char *short_label;
   const char *collate_key;
   
   if (strcmp (name, "_separator") == 0)
@@ -437,36 +467,42 @@ editor_create_item_from_name (EggToolbarEditor *editor,
       
       icon = _egg_editable_toolbar_new_separator_image ();
       short_label = _("Separator");
-      item_name = strdup (name);
+      item_name = g_strdup (name);
       collate_key = g_utf8_collate_key (short_label, -1);
       item = editor_create_item (editor, GTK_IMAGE (icon), 
                                  short_label, drag_action);
     }
   else
     {
-      GValue value = { 0, };
       GtkAction *action;
       GtkWidget *icon;
+      char *stock_id, *icon_name = NULL;
       
       action = find_action (editor, name);
       g_return_val_if_fail (action != NULL, NULL);
 
-      g_value_init (&value, G_TYPE_STRING);
-      g_object_get_property (G_OBJECT (action), "stock_id", &value);
-      stock_id = g_value_get_string (&value);
-      icon = gtk_image_new_from_stock (stock_id ? stock_id : GTK_STOCK_DND,
-                                       GTK_ICON_SIZE_LARGE_TOOLBAR);
-      g_value_unset (&value);
-      
-      g_value_init (&value, G_TYPE_STRING);
-      g_object_get_property (G_OBJECT (action), "short_label", &value);
-      short_label = g_value_get_string (&value);
+      g_object_get (action,
+                    "icon-name", &icon_name,
+                    "stock-id", &stock_id,
+		    "short-label", &short_label,
+		    NULL);
 
-      item_name = strdup (name);
+      /* This is a workaround to catch named icons. */
+      if (icon_name)
+        icon = gtk_image_new_from_icon_name (icon_name,
+	                                     GTK_ICON_SIZE_LARGE_TOOLBAR);
+      else
+        icon = gtk_image_new_from_stock (stock_id ? stock_id : GTK_STOCK_DND,
+                                         GTK_ICON_SIZE_LARGE_TOOLBAR);
+
+      item_name = g_strdup (name);
       collate_key = g_utf8_collate_key (short_label, -1);
       item = editor_create_item (editor, GTK_IMAGE (icon),
                                  short_label, drag_action);
-      g_value_unset (&value);
+
+      g_free (short_label);
+      g_free (stock_id);
+      g_free (icon_name);
     }
   
   g_object_set_data_full (G_OBJECT (item), "egg-collate-key",
@@ -602,7 +638,7 @@ setup_editor (EggToolbarEditor *editor)
   editor->priv->scrolled_window = scrolled_window;
   gtk_widget_show (scrolled_window);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_box_pack_start (GTK_BOX (editor), scrolled_window, TRUE, TRUE, 0);
 }
 

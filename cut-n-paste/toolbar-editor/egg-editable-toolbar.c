@@ -44,11 +44,13 @@
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtktoolbutton.h>
 #include <gtk/gtkseparatortoolitem.h>
+#include <gtk/gtkicontheme.h>
 #include <glib/gi18n.h>
 #include <string.h>
 
 static void egg_editable_toolbar_class_init	(EggEditableToolbarClass *klass);
 static void egg_editable_toolbar_init		(EggEditableToolbar *etoolbar);
+static GdkPixbuf * new_separator_pixbuf         (void);
 
 #define MIN_TOOLBAR_HEIGHT 20
 #define EGG_ITEM_NAME      "egg-item-name"
@@ -109,7 +111,7 @@ egg_editable_toolbar_get_type (void)
 
   if (G_UNLIKELY (type == 0))
     {
-      const GTypeInfo our_info = {
+      static const GTypeInfo our_info = {
 	sizeof (EggEditableToolbarClass),
 	NULL,			/* base_init */
 	NULL,			/* base_finalize */
@@ -461,6 +463,7 @@ configure_item_cursor (GtkToolItem *item,
       if (priv->edit_mode > 0)
         {
           GdkCursor *cursor;
+          GdkPixbuf *pixbuf = NULL;
           
           cursor = gdk_cursor_new (GDK_HAND2);
           gdk_window_set_cursor (widget->window, cursor);
@@ -468,6 +471,64 @@ configure_item_cursor (GtkToolItem *item,
 
           gtk_drag_source_set (widget, GDK_BUTTON1_MASK, dest_drag_types,
                                G_N_ELEMENTS (dest_drag_types), GDK_ACTION_MOVE);
+          if (GTK_IS_SEPARATOR_TOOL_ITEM (item))
+            {
+              pixbuf = new_separator_pixbuf ();
+            }
+          else
+            {
+              char *icon_name=NULL;
+              char *stock_id=NULL;
+              GtkAction *action;
+              char *name;
+
+              name = g_object_get_data (G_OBJECT (widget), EGG_ITEM_NAME);
+              action = name ? find_action (etoolbar, name) : NULL;
+
+              if (action)
+                {
+                   g_object_get (action,
+                                 "icon-name", &icon_name,
+                                 "stock-id", &stock_id,
+                                 NULL);
+                }
+              if (icon_name)
+                {
+                  GdkScreen *screen;
+                  GtkIconTheme *icon_theme;
+                  GtkSettings *settings;
+                  gint width, height;
+
+                  screen = gtk_widget_get_screen (widget);
+                  icon_theme = gtk_icon_theme_get_for_screen (screen);
+                  settings = gtk_settings_get_for_screen (screen);
+
+                  if (!gtk_icon_size_lookup_for_settings (settings,
+                                                          GTK_ICON_SIZE_LARGE_TOOLBAR,
+                                                          &width, &height))
+                    {
+                      width = height = 24;
+                    }
+
+                  pixbuf = gtk_icon_theme_load_icon (icon_theme, icon_name,
+                                                     MIN (width, height), 0, NULL);
+                }
+              else if (stock_id)
+                {		 
+                  pixbuf = gtk_widget_render_icon (widget, stock_id,
+	                                           GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
+                }
+              g_free (icon_name);
+              g_free (stock_id);
+            }
+
+          if (G_UNLIKELY (!pixbuf))
+            {
+              return;
+            }
+          gtk_drag_source_set_icon_pixbuf (widget, pixbuf);
+          g_object_unref (pixbuf);
+
         }
       else
         {

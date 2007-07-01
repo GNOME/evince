@@ -75,7 +75,7 @@ egg_toolbars_model_get_type (void)
 
   if (G_UNLIKELY (type == 0))
     {
-      const GTypeInfo our_info = {
+      static const GTypeInfo our_info = {
 	sizeof (EggToolbarsModelClass),
 	NULL,			/* base_init */
 	NULL,			/* base_finalize */
