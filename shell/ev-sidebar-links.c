@@ -593,7 +593,7 @@ row_activated_callback (GtkTreeView       *treeview,
 			GtkTreePath       *arg1,
 			GtkTreeViewColumn *arg2,
 			gpointer           user_data)
-{	
+{
 	if (gtk_tree_view_row_expanded (GTK_TREE_VIEW (treeview), arg1)) {
 		gtk_tree_view_collapse_row (GTK_TREE_VIEW (treeview), arg1);
 	} else {
@@ -648,18 +648,26 @@ job_finished_callback (EvJobLinks     *job,
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-	priv->selection_id = g_signal_connect (selection, "changed",
-					       G_CALLBACK (selection_changed_callback),
-					       sidebar_links);
-	priv->page_changed_id = g_signal_connect (priv->page_cache, "page-changed",
+	
+	if (priv->selection_id <= 0) {
+		priv->selection_id =
+			g_signal_connect (selection, "changed",
+					  G_CALLBACK (selection_changed_callback),
+					  sidebar_links);
+	}
+	priv->page_changed_id =	g_signal_connect (priv->page_cache, "page-changed",
 						  G_CALLBACK (update_page_callback),
 						  sidebar_links);
-	priv->row_activated_id = g_signal_connect (G_OBJECT (priv->tree_view), "row-activated",
-						    G_CALLBACK (row_activated_callback), sidebar_links);
+	if (priv->row_activated_id <= 0) {
+		priv->row_activated_id =
+			g_signal_connect (G_OBJECT (priv->tree_view), "row-activated",
+					  G_CALLBACK (row_activated_callback),
+					  sidebar_links);
+	}
+	
 	update_page_callback (priv->page_cache,
 			      ev_page_cache_get_current_page (priv->page_cache),
 			      sidebar_links);
-
 }
 
 static void
