@@ -200,7 +200,8 @@ AC_ARG_ENABLE(pdf,
 
 if test "x$enable_pdf" = "xyes"; then
     POPPLER_REQUIRED=0.5.4
-    PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED,enable_pdf=yes,enable_pdf=no)
+    POPPLER_MAX_REQUIRED=0.5.9
+    PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED poppler-glib <= $POPPLER_MAX_REQUIRED, enable_pdf=yes,enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
 	    AC_DEFINE([ENABLE_PDF], [1], [Enable pdf support.])
@@ -219,6 +220,9 @@ if test "x$enable_pdf" = "xyes"; then
 	    if test x$enable_cairo_pdf == xyes; then
 	            AC_DEFINE([HAVE_CAIRO_PDF], [1], [defined if cairo-pdf is available])
             fi
+
+	    POPPLER_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/0\.5\.\([[49]]\)/\1/'`
+	    AC_DEFINE_UNQUOTED(POPPLER_VERSION, $POPPLER_VERSION, [Poppler version.])
     else
 	    AC_MSG_WARN("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 
