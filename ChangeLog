@@ -4,28 +4,28 @@
 	* configure.ac:
 
 	Update for release 0.8.2
-	
+
 2007-07-02  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:
 	* backend/pdf/ev-poppler.cc: (pdf_selection_render_selection):
 
 	Fix build with poppler 0.5.9. 
-	
+
 2007-07-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-sidebar-links.c: (job_finished_callback):
 
 	Do not connect selection changed signal more than once. Fixes bug
 	#349433.
-	
+
 2007-06-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_view_sidebar_cb):
 
 	Do not change sidebar chrome flag when pressing F9 key in
 	presentation mode.
-	
+
 2007-06-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc:
@@ -33,20 +33,20 @@
 
 	Make sure thumbnails width and height is not <= 0. Fixes a crash
 	with some pdf documents which have really small pages.
-	
+
 2007-06-21  Cesar Fernandez  <cesar@pk2.org>
 
 	* shell/ev-view.c: (ev_view_next_page), (ev_view_previous_page):
 
 	Do not change current page when returning from black/white mode in
 	presentation. Fixes bug #415032.
-	
+
 2007-06-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_clear_print_job):
 
 	Clear gtk print job when job has finished. Fixes bug #447612.
-	
+
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.c: (job_finished_cb),
@@ -55,25 +55,25 @@
 	(ev_pixbuf_cache_get_text_mapping):
 
 	Redraw view every time we have a new pixbuf. Fixes bug #443587.
-	
+
 2007-06-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* libdocument/ev-document.c: (ev_document_info_free):
 
 	Fix memory leaks.
-	
+
 2007-06-12  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window-title.c: (ev_window_title_update):
 	
 	Fix memory leak.
-	
+
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (draw_loading_text):
 
 	Show loading text centered. Fixes bug #433061
-	
+
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-sidebar-thumbnails.c:
@@ -81,7 +81,7 @@
 
 	Remove a mutex in the main thread that blocks the UI in heavy
 	documents.
-	
+
 2007-06-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.c (copy_job_to_job_info):
@@ -94,7 +94,7 @@
 	* shell/ev-window.c: (ev_window_add_history):
 
 	Check if history is NULL
-	
+
 2007-06-05  Bastien Nocera  <hadess@hadess.net>
 
 	* shell/ev-metadata-manager.c: (ev_metadata_arm_timeout),
