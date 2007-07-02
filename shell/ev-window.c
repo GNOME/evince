@@ -4502,6 +4502,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "name", PAGE_SELECTOR_ACTION,
 			       "label", _("Page"),
 			       "tooltip", _("Select Page"),
+			       "icon_name", "text-x-generic",
 			       "visible_overflown", FALSE,
 			       NULL);
 	g_signal_connect (action, "activate_link",
