@@ -1624,7 +1624,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 					   width, height);
 	}
 
-#if POPPLER_VERSION == 5
+#if POPPLER_VERSION <= 5
 	poppler_page_render_selection (POPPLER_PAGE (rc->data),
 				       rc->scale, rc->rotation, *pixbuf,
 				       (PopplerRectangle *)points,
