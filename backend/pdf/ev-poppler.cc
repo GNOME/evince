@@ -19,6 +19,10 @@
 
 #include "config.h"
 
+#ifdef HAVE_POPPLER_FORM_FIELD_BUTTON_GET_BUTTON_TYPE
+#define HAVE_FORMS
+#endif
+
 #include <math.h>
 #include <string.h>
 #include <gtk/gtk.h>
@@ -40,6 +44,7 @@
 #include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-transition.h"
+#include "ev-document-forms.h"
 #include "ev-selection.h"
 #include "ev-attachment.h"
 #include "ev-image.h"
@@ -86,6 +91,7 @@ static void pdf_document_security_iface_init            (EvDocumentSecurityIface
 static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
 static void pdf_document_document_images_iface_init     (EvDocumentImagesIface     *iface);
+static void pdf_document_document_forms_iface_init      (EvDocumentFormsIface      *iface);
 static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface      *iface);
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
 static void pdf_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
@@ -104,7 +110,6 @@ static EvLink     *ev_link_from_action      (PdfDocument       *pdf_document,
 static void        pdf_document_search_free (PdfDocumentSearch *search);
 static void        pdf_print_context_free   (PdfPrintContext   *ctx);
 
-
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
@@ -117,6 +122,10 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 							pdf_document_document_links_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
 							pdf_document_document_images_iface_init);
+#ifdef HAVE_FORMS
+				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FORMS,
+							pdf_document_document_forms_iface_init);
+#endif /* HAVE_FORMS */
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
 							pdf_document_document_fonts_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
@@ -1775,3 +1784,392 @@ pdf_document_new (void)
 {
 	return PDF_DOCUMENT (g_object_new (PDF_TYPE_DOCUMENT, NULL));
 }
+
+/* Forms */
+static void
+pdf_document_get_crop_box (EvDocument  *document, 
+			   int          page, 
+			   EvRectangle *rect)
+{
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	PopplerRectangle poppler_rect;
+
+	pdf_document = PDF_DOCUMENT (document);
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page_get_crop_box (poppler_page, &poppler_rect);
+	rect->x1 = poppler_rect.x1;
+	rect->x2 = poppler_rect.x2;
+	rect->y1 = poppler_rect.y1;
+	rect->y2 = poppler_rect.y2;
+}
+
+#ifdef HAVE_FORMS
+static EvFormField *
+ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
+{
+	EvFormField *ev_field = NULL;
+	gint         id;
+	gdouble      font_size;
+	gboolean     is_read_only;
+
+	id = poppler_form_field_get_id (poppler_field);
+	font_size = poppler_form_field_get_font_size (poppler_field);
+	is_read_only = poppler_form_field_is_read_only (poppler_field);
+
+	switch (poppler_form_field_get_field_type (poppler_field)) {
+	        case POPPLER_FORM_FIELD_TEXT: {
+			EvFormFieldText    *field_text;
+			EvFormFieldTextType ev_text_type = EV_FORM_FIELD_TEXT_NORMAL;
+
+			switch (poppler_form_field_text_get_text_type (poppler_field)) {
+			        case POPPLER_FORM_TEXT_NORMAL:
+					ev_text_type = EV_FORM_FIELD_TEXT_NORMAL;
+					break;
+			        case POPPLER_FORM_TEXT_MULTILINE:
+					ev_text_type = EV_FORM_FIELD_TEXT_MULTILINE;
+					break;
+			        case POPPLER_FORM_TEXT_PASSWORD:
+					ev_text_type = EV_FORM_FIELD_TEXT_PASSWORD;
+					break;
+			        case POPPLER_FORM_TEXT_FILE_SELECT:
+					ev_text_type = EV_FORM_FIELD_TEXT_FILE_SELECT;
+					break;
+			}
+			
+			ev_field = ev_form_field_text_new (id, ev_text_type);
+			field_text = EV_FORM_FIELD_TEXT (ev_field);
+
+			field_text->do_spell_check = poppler_form_field_text_do_spell_check (poppler_field);
+			field_text->do_scroll = poppler_form_field_text_do_scroll (poppler_field);
+			field_text->is_rich_text = poppler_form_field_text_is_rich_text (poppler_field);
+
+			field_text->text = poppler_form_field_text_get_text (poppler_field);
+
+		}
+			break;
+	        case POPPLER_FORM_FIELD_BUTTON: {
+			EvFormFieldButton    *field_button;
+			EvFormFieldButtonType ev_button_type = EV_FORM_FIELD_BUTTON_PUSH;
+
+			switch (poppler_form_field_button_get_button_type (poppler_field)) {
+			        case POPPLER_FORM_BUTTON_PUSH:
+					ev_button_type = EV_FORM_FIELD_BUTTON_PUSH;
+					break;
+			        case POPPLER_FORM_BUTTON_CHECK:
+					ev_button_type = EV_FORM_FIELD_BUTTON_CHECK;
+					break;
+			        case POPPLER_FORM_BUTTON_RADIO:
+					ev_button_type = EV_FORM_FIELD_BUTTON_RADIO;
+					break;
+			}
+
+			ev_field = ev_form_field_button_new (id, ev_button_type);
+			field_button = EV_FORM_FIELD_BUTTON (ev_field);
+			
+			field_button->state = poppler_form_field_button_get_state (poppler_field);
+		}
+			break;
+	        case POPPLER_FORM_FIELD_CHOICE: {
+			EvFormFieldChoice    *field_choice;
+			EvFormFieldChoiceType ev_choice_type = EV_FORM_FIELD_CHOICE_COMBO;
+
+			switch (poppler_form_field_choice_get_choice_type (poppler_field)) {
+			        case POPPLER_FORM_CHOICE_COMBO:
+					ev_choice_type = EV_FORM_FIELD_CHOICE_COMBO;
+					break;
+			        case EV_FORM_FIELD_CHOICE_LIST:
+					ev_choice_type = EV_FORM_FIELD_CHOICE_LIST;
+					break;
+			}
+
+			ev_field = ev_form_field_choice_new (id, ev_choice_type);
+			field_choice = EV_FORM_FIELD_CHOICE (ev_field);
+
+			field_choice->is_editable = poppler_form_field_choice_is_editable (poppler_field);
+			field_choice->multi_select = poppler_form_field_choice_can_select_multiple (poppler_field);
+			field_choice->do_spell_check = poppler_form_field_choice_do_spell_check (poppler_field);
+			field_choice->commit_on_sel_change = poppler_form_field_choice_commit_on_change (poppler_field);
+
+			/* TODO: we need poppler_form_field_choice_get_selected_items in poppler 
+			field_choice->selected_items = poppler_form_field_choice_get_selected_items (poppler_field);*/
+			if (field_choice->is_editable)
+				field_choice->text = poppler_form_field_choice_get_text (poppler_field);
+		}
+			break;
+	        case POPPLER_FORM_FIELD_SIGNATURE:
+			/* TODO */
+			ev_field = ev_form_field_signature_new (id);
+			break;
+	        case POPPLER_FORM_FIELD_UNKNOWN:
+			break;
+	}
+
+	ev_field->font_size = font_size;
+	ev_field->is_read_only = is_read_only;
+
+	return ev_field;
+}
+
+static GList *
+pdf_document_forms_get_form_fields (EvDocumentForms *document, 
+				    gint             page)
+{
+ 	PdfDocument *pdf_document;
+ 	PopplerPage *poppler_page;
+ 	GList *retval = NULL;
+ 	GList *fields;
+ 	GList *list;
+ 	double height;
+	
+
+ 	pdf_document = PDF_DOCUMENT (document);
+ 	poppler_page = poppler_document_get_page (pdf_document->document, page);
+ 	fields = poppler_page_get_form_field_mapping (poppler_page);
+ 	poppler_page_get_size (poppler_page, NULL, &height);
+
+ 	for (list = fields; list; list = list->next) {
+ 		PopplerFormFieldMapping *mapping;
+ 		EvFormFieldMapping *field_mapping;
+		
+ 		mapping = (PopplerFormFieldMapping *)list->data;
+
+ 		field_mapping = g_new0 (EvFormFieldMapping, 1);
+		field_mapping->x1 = mapping->area.x1;
+		field_mapping->x2 = mapping->area.x2;
+		field_mapping->y1 = height - mapping->area.y2;
+		field_mapping->y2 = height - mapping->area.y1;
+		field_mapping->field = ev_form_field_from_poppler_field (mapping->field);
+		field_mapping->field->page = page;
+		
+		retval = g_list_prepend (retval, field_mapping);
+	}
+	poppler_page_free_form_field_mapping (fields);
+	g_object_unref (poppler_page);
+
+	return g_list_reverse (retval);
+}
+
+static gchar *
+pdf_document_forms_form_field_text_get_text (EvDocumentForms *document,
+					     EvFormField     *field)
+	
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+	gchar *text;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return NULL;
+	
+	text = poppler_form_field_text_get_text (poppler_field);
+	g_object_unref (poppler_field);
+
+	return text;
+}
+
+static void
+pdf_document_forms_form_field_text_set_text (EvDocumentForms *document, 
+					     EvFormField     *field,
+					     const gchar     *text)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return;
+	poppler_form_field_text_set_text (poppler_field, text);
+	g_object_unref (poppler_field);
+}
+
+static void
+pdf_document_forms_form_field_button_set_state (EvDocumentForms *document, 
+						EvFormField     *field,
+						gboolean         state)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return;
+	
+	poppler_form_field_button_set_state (poppler_field, state);
+	g_object_unref (poppler_field);
+}
+
+static gboolean
+pdf_document_forms_form_field_button_get_state (EvDocumentForms *document, 
+						EvFormField     *field)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+	gboolean state;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return FALSE;
+
+	state = poppler_form_field_button_get_state (poppler_field);
+	g_object_unref (poppler_field);
+
+	return state;
+}
+
+static gchar *
+pdf_document_forms_form_field_choice_get_item (EvDocumentForms *document, 
+					       EvFormField     *field,
+					       gint             index)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+	gchar *text;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return NULL;
+
+	text = poppler_form_field_choice_get_item (poppler_field, index);
+	g_object_unref (poppler_field);
+
+	return text;
+}
+
+static int
+pdf_document_forms_form_field_choice_get_n_items (EvDocumentForms *document, 
+						  EvFormField     *field)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+	gint n_items;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return -1;
+	
+	n_items = poppler_form_field_choice_get_n_items (poppler_field);
+	g_object_unref (poppler_field);
+
+	return n_items;
+}
+
+static gboolean
+pdf_document_forms_form_field_choice_is_item_selected (EvDocumentForms *document, 
+						       EvFormField     *field,
+						       gint             index)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+	gboolean selected;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return FALSE;
+
+	selected = poppler_form_field_choice_is_item_selected (poppler_field, index);
+	g_object_unref (poppler_field);
+
+	return selected;
+}
+
+static void
+pdf_document_forms_form_field_choice_select_item (EvDocumentForms *document, 
+						  EvFormField     *field,
+						  gint             index)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return;
+
+	poppler_form_field_choice_select_item (poppler_field, index);
+	g_object_unref (poppler_field);
+}
+
+static void
+pdf_document_forms_form_field_choice_toggle_item (EvDocumentForms *document, 
+						  EvFormField     *field,
+						  gint             index)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return;
+
+	poppler_form_field_choice_toggle_item (poppler_field, index);
+	g_object_unref (poppler_field);
+}
+
+static void
+pdf_document_forms_form_field_choice_unselect_all (EvDocumentForms *document, 
+						   EvFormField     *field)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return;
+	
+	poppler_form_field_choice_unselect_all (poppler_field);
+	g_object_unref (poppler_field);
+}
+
+static void
+pdf_document_forms_form_field_choice_set_text (EvDocumentForms *document,
+					       EvFormField     *field,
+					       const gchar     *text)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return;
+	
+	poppler_form_field_choice_set_text (poppler_field, text);
+	g_object_unref (poppler_field);
+}
+
+static gchar *
+pdf_document_forms_form_field_choice_get_text (EvDocumentForms *document,
+					       EvFormField     *field)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerFormField *poppler_field;
+	gchar *text;
+
+	poppler_field = poppler_document_get_form_field (pdf_document->document, field->id);
+	if (!poppler_field)
+		return NULL;
+
+	text = poppler_form_field_choice_get_text (poppler_field);
+	g_object_unref (poppler_field);
+
+	return text;
+}
+
+static void
+pdf_document_document_forms_iface_init (EvDocumentFormsIface *iface)
+{
+	iface->get_form_fields = pdf_document_forms_get_form_fields;
+	iface->form_field_text_get_text = pdf_document_forms_form_field_text_get_text;
+	iface->form_field_text_set_text = pdf_document_forms_form_field_text_set_text;
+	iface->form_field_button_set_state = pdf_document_forms_form_field_button_set_state;
+	iface->form_field_button_get_state = pdf_document_forms_form_field_button_get_state;
+	iface->form_field_choice_get_item = pdf_document_forms_form_field_choice_get_item;
+	iface->form_field_choice_get_n_items = pdf_document_forms_form_field_choice_get_n_items;
+	iface->form_field_choice_is_item_selected = pdf_document_forms_form_field_choice_is_item_selected;
+	iface->form_field_choice_select_item = pdf_document_forms_form_field_choice_select_item;
+	iface->form_field_choice_toggle_item = pdf_document_forms_form_field_choice_toggle_item;
+	iface->form_field_choice_unselect_all = pdf_document_forms_form_field_choice_unselect_all;
+	iface->form_field_choice_set_text = pdf_document_forms_form_field_choice_set_text;
+	iface->form_field_choice_get_text = pdf_document_forms_form_field_choice_get_text;
+}
+#endif /* HAVE_FORMS */

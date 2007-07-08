@@ -126,6 +126,7 @@ struct _EvJobRender
 	GList *link_mapping;
 	GdkRegion *text_mapping;
 	GList *image_mapping;
+	GList *form_field_mapping;
 
 	cairo_surface_t *selection;
 	GdkRegion *selection_region;
@@ -133,6 +134,7 @@ struct _EvJobRender
 	GdkColor base;
 	GdkColor text; 
 
+	gint include_forms : 1;
 	gint include_links : 1;
 	gint include_text : 1;
 	gint include_selection : 1;
@@ -223,6 +225,7 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 					   EvRectangle     *selection_points,
 					   GdkColor        *text,
 					   GdkColor        *base,
+					   gboolean         include_forms,
 					   gboolean         include_links,
 					   gboolean         include_images,
 					   gboolean         include_text,

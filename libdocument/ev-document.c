@@ -283,3 +283,6 @@ ev_rect_cmp (EvRectangle *a,
 		  (ABS (a->x2 - b->x2) < EPSILON) &&
 		  (ABS (a->y2 - b->y2) < EPSILON));
 }
+
+
+

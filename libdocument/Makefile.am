@@ -48,6 +48,10 @@ libevbackend_la_SOURCES=			\
 	ev-document-info.h			\
 	ev-document-transition.h		\
 	ev-document-transition.c		\
+	ev-document-forms.h			\
+	ev-document-forms.c			\
+	ev-form-field.h 			\
+	ev-form-field.c 			\
 	ev-file-exporter.c			\
 	ev-file-exporter.h			\
 	ev-file-helpers.c			\

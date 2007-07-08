@@ -25,6 +25,7 @@
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
 #include "ev-image.h"
+#include "ev-form-field.h"
 
 /* Information for middle clicking and moving around the doc */
 typedef struct {
@@ -73,7 +74,7 @@ typedef enum {
 } EvPresentationState;
 
 struct _EvView {
-	GtkWidget parent_instance;
+	GtkLayout layout;
 
 	EvDocument *document;
 
@@ -152,11 +153,8 @@ struct _EvView {
 };
 
 struct _EvViewClass {
-	GtkWidgetClass parent_class;
+	GtkLayoutClass parent_class;
 
-	void	(*set_scroll_adjustments) (EvView         *view,
-					   GtkAdjustment  *hadjustment,
-					   GtkAdjustment  *vadjustment);
 	void    (*binding_activated)	  (EvView         *view,
 					   EvScrollType   scroll,
 					   gboolean        horizontal);

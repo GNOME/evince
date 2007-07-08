@@ -3,6 +3,7 @@
 #include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-images.h"
+#include "ev-document-forms.h"
 #include "ev-document-factory.h"
 #include "ev-document-misc.h"
 #include "ev-file-helpers.h"
@@ -265,6 +266,7 @@ ev_job_render_new (EvDocument      *document,
 		   EvRectangle     *selection_points,
 		   GdkColor        *text,
 		   GdkColor        *base,
+		   gboolean 	    include_forms,
 		   gboolean         include_links,
 		   gboolean         include_images,
 		   gboolean         include_text,
@@ -284,6 +286,7 @@ ev_job_render_new (EvDocument      *document,
 	job->target_height = height;
 	job->text = *text;
 	job->base = *base;
+	job->include_forms = include_forms;
 	job->include_links = include_links;
 	job->include_images = include_images;
 	job->include_text = include_text;
@@ -330,6 +333,7 @@ ev_job_render_run (EvJobRender *job)
 		ev_document_fc_mutex_lock ();
 		
 		job->surface = ev_document_render (EV_JOB (job)->document, job->rc);
+
 		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
 			job->link_mapping =
 				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
@@ -338,6 +342,10 @@ ev_job_render_run (EvJobRender *job)
 			job->image_mapping =
 				ev_document_images_get_images (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
 							       job->rc->page);
+		if (job->include_forms && EV_IS_DOCUMENT_FORMS (EV_JOB (job)->document))
+			job->form_field_mapping =
+				ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (EV_JOB(job)->document),
+								   job->rc->page);
 		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
 			job->text_mapping =
 				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document),

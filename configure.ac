@@ -247,6 +247,9 @@ if test "x$enable_pdf" = "xyes"; then
 	    evince_save_LIBS=$LIBS
 	    LIBS="$LIBS $FRONTEND_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
+	    dnl we need latest poppler cvs head, 
+	    dnl this function was the last to be added
+	    AC_CHECK_FUNCS(poppler_form_field_button_get_button_type)
 	    LIBS=$evince_save_LIBS
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)

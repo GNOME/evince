@@ -1,3 +1,54 @@
+2007-07-08  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* backend/pdf/ev-poppler.cc: (pdf_document_get_crop_box),
+	(ev_form_field_from_poppler_field),
+	(pdf_document_forms_get_form_fields),
+	(pdf_document_forms_form_field_text_get_text),
+	(pdf_document_forms_form_field_text_set_text),
+	(pdf_document_forms_form_field_button_set_state),
+	(pdf_document_forms_form_field_button_get_state),
+	(pdf_document_forms_form_field_choice_get_item),
+	(pdf_document_forms_form_field_choice_get_n_items),
+	(pdf_document_forms_form_field_choice_is_item_selected),
+	(pdf_document_forms_form_field_choice_select_item),
+	(pdf_document_forms_form_field_choice_toggle_item),
+	(pdf_document_forms_form_field_choice_unselect_all),
+	(pdf_document_forms_form_field_choice_set_text),
+	(pdf_document_forms_form_field_choice_get_text),
+	(pdf_document_document_forms_iface_init):
+	* libdocument/Makefile.am:
+	* libdocument/ev-form-field.[ch]:
+	* libdocument/ev-document-forms.[ch]:
+	* shell/ev-pixbuf-cache.[ch]: (dispose_cache_job_info),
+	(move_one_job), (copy_job_to_job_info), (add_job_if_needed),
+	(add_job), (ev_pixbuf_cache_reload_page),
+	(ev_pixbuf_cache_get_form_field_mapping):
+	* shell/ev-jobs.[ch]: (ev_job_render_new), (ev_job_render_run):
+	* shell/ev-view-private.h:
+	* shell/ev-view.[ch]: (ev_view_set_scroll_adjustments),
+	(ev_view_handle_cursor_over_xy),
+	(ev_view_get_form_field_at_location),
+	(ev_view_forms_remove_widgets), (ev_view_form_field_destroy),
+	(ev_view_form_field_button_create_widget),
+	(ev_view_form_field_text_save), (ev_view_form_field_text_changed),
+	(ev_view_form_field_text_create_widget),
+	(ev_view_form_field_choice_save),
+	(ev_view_form_field_choice_changed),
+	(ev_view_form_field_choice_create_widget),
+	(ev_view_handle_form_field), (ev_view_size_allocate),
+	(ev_view_realize), (draw_end_presentation_page),
+	(ev_view_button_press_event), (ev_view_remove_all),
+	(ev_view_motion_notify_event), (ev_view_key_press_event),
+	(ev_view_enter_notify_event), (highlight_find_results),
+	(draw_loading_text), (draw_one_page), (ev_view_destroy),
+	(ev_view_class_init), (page_changed_cb),
+	(on_adjustment_value_changed), (ev_view_set_presentation),
+	(merge_selection_region), (ev_view_set_cursor),
+	(ev_view_reset_presentation_state):
+	
+	Merge evince-forms branch.
+	
 2007-07-03  Jaap Haitsma  <jaap@haitsma.org>
 
 	* cut-n-paste/toolbar-editor/update-toolbareditor-from-libegg: removed
@@ -16,7 +67,7 @@
 	Adds a nice icon to page action during toolbar editing.
 	See bug #452872.
 
-2007-07-02  Nickolay V. Shmyrev  <nshmyrev@yandex.ru
+2007-07-02  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* data/evince-toolbar.xml:
 	* shell/ev-window.c:

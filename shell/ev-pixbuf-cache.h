@@ -65,9 +65,14 @@ GList         *ev_pixbuf_cache_get_image_mapping    (EvPixbufCache *pixbuf_cache
 						     gint           page);
 GdkRegion     *ev_pixbuf_cache_get_text_mapping     (EvPixbufCache *pixbuf_cache,
 						     gint           page);
+GList 	      *ev_pixbuf_cache_get_form_field_mapping (EvPixbufCache *pixbuf_cache,
+						       gint 	    page);
 void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache);
 void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
-
+void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache *pixbuf_cache, 
+                    				     gint           page,
+			                             gint           rotation,
+                         			     gfloat         scale);
 /* Selection */
 cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache *pixbuf_cache,
 							gint           page,

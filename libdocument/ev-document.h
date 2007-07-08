@@ -134,8 +134,6 @@ cairo_surface_t *ev_document_render           (EvDocument      *document,
 
 gint            ev_rect_cmp                   (EvRectangle    *a,
                                                EvRectangle    *b);
-
-
 G_END_DECLS
 
 #endif /* EV_DOCUMENT_H */
