@@ -1,17 +1,24 @@
+2007-07-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* NEWS:
+	* configure.ac:
+	
+	Update for release 0.9.2
+
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_form_field_text_save),
 	(ev_view_form_field_choice_save):
 
 	Fix a crash when closing whith a form widget visible.
-	
+
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_form_field_button_create_widget):
 
 	Update also the region of the current selected button when
 	clicking on another button if they are radio buttons.
-	
+
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.[ch]: (ev_pixbuf_cache_class_init),
@@ -28,13 +35,13 @@
 
 	Redraw only form field region instead of the whole page when
 	reloading a page to show changes on the form field.
-	
+
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_form_field_choice_save):
 
 	Fix selection of first item in list form fields.
-	
+
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.c: (add_job), (add_job_if_needed),
@@ -42,7 +49,7 @@
 	(ev_pixbuf_cache_get_form_field_mapping):
 
 	Some refactoring to avoid duplicated code.
-	
+
 2007-07-08  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:
@@ -93,7 +100,7 @@
 	(ev_view_reset_presentation_state):
 	
 	Merge evince-forms branch.
-	
+
 2007-07-03  Jaap Haitsma  <jaap@haitsma.org>
 
 	* cut-n-paste/toolbar-editor/update-toolbareditor-from-libegg: removed
@@ -138,14 +145,14 @@
 
 	Do not connect selection changed signal more than once. Fixes bug
 	#349433.
-	
+
 2007-06-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_view_sidebar_cb):
 
 	Do not change sidebar chrome flag when pressing F9 key in
 	presentation mode.
-	
+
 2007-06-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc:
@@ -153,7 +160,7 @@
 
 	Make sure thumbnails width and height is not <= 0. Fixes a crash
 	with some pdf documents which have really small pages.
-	
+
 2007-06-22  Gabor Kelemen  <kelemeng@gnome.hu>
 
 	* shell/main.c: (main):
