@@ -1637,7 +1637,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 					 EvFormField *field)
 {
 	EvFormFieldButton *field_button = EV_FORM_FIELD_BUTTON (field);
-	GdkRegion         *field_region;
+	GdkRegion         *field_region = NULL;
 	
 	switch (field_button->type) {
 	        case EV_FORM_FIELD_BUTTON_PUSH:
@@ -1711,6 +1711,9 @@ ev_view_form_field_text_save (EvView    *view,
 {
 	EvFormField *field;
 
+	if (!view->document)
+		return;
+	
 	field = g_object_get_data (G_OBJECT (widget), "form-field");
 	
 	if (field->changed) {
@@ -1821,6 +1824,9 @@ ev_view_form_field_choice_save (EvView    *view,
 {
 	EvFormField *field;
 
+	if (!view->document)
+		return;
+	
 	field = g_object_get_data (G_OBJECT (widget), "form-field");
 
 	if (field->changed) {

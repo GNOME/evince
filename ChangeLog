@@ -1,5 +1,12 @@
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-view.c: (ev_view_form_field_text_save),
+	(ev_view_form_field_choice_save):
+
+	Fix a crash when closing whith a form widget visible.
+	
+2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-view.c: (ev_view_form_field_button_create_widget):
 
 	Update also the region of the current selected button when
