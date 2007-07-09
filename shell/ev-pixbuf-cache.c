@@ -545,34 +545,23 @@ get_selection_colors (GtkWidget *widget, GdkColor **text, GdkColor **base)
 }
 
 static void
-add_job_if_needed (EvPixbufCache *pixbuf_cache,
-		   CacheJobInfo  *job_info,
-		   EvPageCache   *page_cache,
-		   gint           page,
-		   gint           rotation,
-		   gfloat         scale,
-		   EvJobPriority  priority)
+add_job (EvPixbufCache *pixbuf_cache,
+	 CacheJobInfo  *job_info,
+	 EvPageCache   *page_cache,
+	 gint           width,
+	 gint           height,
+	 gint           page,
+	 gint           rotation,
+	 gfloat         scale,
+	 EvJobPriority  priority)
 {
-	gboolean include_forms = FALSE;
 	gboolean include_links = FALSE;
 	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
-	gboolean include_images = FALSE;
-	int width, height;
+	gboolean include_images = TRUE;
+	gboolean include_forms = FALSE;
 	GdkColor *text, *base;
-
-	if (job_info->job)
-		return;
-
-	ev_page_cache_get_size (page_cache, page, rotation,
-				scale, &width, &height);
-
-	if (job_info->surface &&
-	    cairo_image_surface_get_width (job_info->surface) == width &&
-	    cairo_image_surface_get_height (job_info->surface) == height)
-		return;
-
-	/* make a new job now */
+	
 	if (job_info->rc == NULL) {
 		job_info->rc = ev_render_context_new (rotation, page, scale);
 	} else {
@@ -612,6 +601,32 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
 }
 
+static void
+add_job_if_needed (EvPixbufCache *pixbuf_cache,
+		   CacheJobInfo  *job_info,
+		   EvPageCache   *page_cache,
+		   gint           page,
+		   gint           rotation,
+		   gfloat         scale,
+		   EvJobPriority  priority)
+{
+	gint width, height;
+
+	if (job_info->job)
+		return;
+
+	ev_page_cache_get_size (page_cache, page, rotation,
+				scale, &width, &height);
+
+	if (job_info->surface &&
+	    cairo_image_surface_get_width (job_info->surface) == width &&
+	    cairo_image_surface_get_height (job_info->surface) == height)
+		return;
+
+	add_job (pixbuf_cache, job_info, page_cache,
+		 width, height, page, rotation, scale,
+		 priority);
+}
 
 static void
 ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
@@ -1119,85 +1134,27 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 	return retval;
 }
 
-static void add_job (EvPixbufCache *pixbuf_cache,
-		     CacheJobInfo  *job_info,
-		     EvPageCache   *page_cache,
-		     gint           page,
-		     gint           rotation,
-		     gfloat         scale,
-		     EvJobPriority  priority,
-		     int            width,
-		     int            height)
-{
-	gboolean include_links = FALSE;
-	gboolean include_text = FALSE;
-	gboolean include_selection = FALSE;
-	gboolean include_images = TRUE;
-	gboolean include_forms = FALSE;
-        GdkColor *text, *base;
-
-
-        if (job_info->rc == NULL) {
-		job_info->rc = ev_render_context_new (rotation, page, scale);
-	} else {
-		ev_render_context_set_rotation (job_info->rc, rotation);
-		ev_render_context_set_page (job_info->rc, page);
-		ev_render_context_set_scale (job_info->rc, scale);
-	}
-
-	/* Figure out what else we need for this job */
-	if (job_info->link_mapping == NULL)
-		include_links = TRUE;
-	if (job_info->image_mapping == NULL)
-		include_images = TRUE;
-	if (job_info->form_field_mapping == NULL)
-		include_forms = TRUE; 
-	if (job_info->text_mapping == NULL)
-		include_text = TRUE;
-	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
-		include_selection = TRUE;
-	}
-
-	gtk_widget_ensure_style (pixbuf_cache->view);
-
-	get_selection_colors (pixbuf_cache->view, &text, &base);
-
-	job_info->job = ev_job_render_new (pixbuf_cache->document,
-					   job_info->rc,
-					   width, height,
-					   &(job_info->target_points),
-					   text, base,
-					   include_forms,
-					   include_links,
-					   include_images,
-					   include_text,
-					   include_selection);
-	ev_job_queue_add_job (job_info->job, priority);
-	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
-
-}
-
 void           
 ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache, 
-                            gint           page,
-                            gint           rotation,
-                            gfloat         scale)
+			     gint           page,
+			     gint           rotation,
+			     gfloat         scale)
 {
 	CacheJobInfo *job_info;
         EvPageCache *page_cache;
-        int width, height;
+        gint width, height;
 
-	if(page < pixbuf_cache->start_page || page > pixbuf_cache->end_page)
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
 		return;
+	
         page_cache = ev_page_cache_get (pixbuf_cache->document);
-	ev_page_cache_get_size (page_cache, page, rotation, scale, &width, &height);
-	job_info = pixbuf_cache->job_list + (page - pixbuf_cache->start_page);
+	ev_page_cache_get_size (page_cache, page, rotation, scale,
+				&width, &height);
 
-        //dispose_cache_job_info (job_info, pixbuf_cache);
-
-        add_job(pixbuf_cache, job_info, page_cache, page, rotation, scale, EV_JOB_PRIORITY_HIGH, width, height);
-        
-
+        add_job (pixbuf_cache, job_info, page_cache,
+		 width, height, page, rotation, scale,
+		 EV_JOB_PRIORITY_HIGH);
 }
 
 GList *
@@ -1207,11 +1164,11 @@ ev_pixbuf_cache_get_form_field_mapping (EvPixbufCache *pixbuf_cache,
 	CacheJobInfo *job_info;
 	
 	job_info = find_job_cache (pixbuf_cache, page);
-	if(job_info == NULL)
+	if (job_info == NULL)
 		return NULL;
 	
-	if(job_info->job &&
-	   EV_JOB(job_info->job)->finished) {
+	if (job_info->job &&
+	   EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER(job_info->job), job_info, pixbuf_cache);
 	}
 	return job_info->form_field_mapping;
