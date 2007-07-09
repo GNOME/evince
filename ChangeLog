@@ -1,5 +1,12 @@
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-view.c: (ev_view_form_field_button_create_widget):
+
+	Update also the region of the current selected button when
+	clicking on another button if they are radio buttons.
+	
+2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-pixbuf-cache.[ch]: (ev_pixbuf_cache_class_init),
 	(dispose_cache_job_info), (job_finished_cb), (move_one_job),
 	(add_job), (add_job_if_needed), (ev_pixbuf_cache_get_surface),
