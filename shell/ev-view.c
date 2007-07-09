@@ -231,6 +231,7 @@ static void       find_changed_cb                            (EvDocument        
 							      int                 page,
 							      EvView             *view);
 static void       job_finished_cb                            (EvPixbufCache      *pixbuf_cache,
+							      GdkRegion          *region,
 							      EvView             *view);
 static void       page_changed_cb                            (EvPageCache        *page_cache,
 							      int                 new_page,
@@ -1598,6 +1599,24 @@ ev_view_get_form_field_at_location (EvView  *view,
 		return NULL;
 }
 
+static GdkRegion *
+ev_view_form_field_get_region (EvView      *view,
+			       EvFormField *field)
+{
+	EvRectangle  field_area;
+	GdkRectangle view_area;
+	GList       *forms_mapping;
+
+	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
+								field->page);
+	ev_form_field_mapping_get_area (forms_mapping, field, &field_area);
+	doc_rect_to_view_rect (view, field->page, &field_area, &view_area);
+	view_area.x -= view->scroll_x;
+	view_area.y -= view->scroll_y;
+
+	return gdk_region_rectangle (&view_area);
+}
+
 static gboolean
 ev_view_forms_remove_widgets (EvView *view)
 {
@@ -1624,16 +1643,21 @@ ev_view_form_field_button_create_widget (EvView      *view,
 			break;
 	        case EV_FORM_FIELD_BUTTON_CHECK:
   	        case EV_FORM_FIELD_BUTTON_RADIO: {
-			gboolean state;
+			gboolean   state;
+			GdkRegion *field_region;
 
+			field_region = ev_view_form_field_get_region (view, field);
+			
 			state = ev_document_forms_form_field_button_get_state (EV_DOCUMENT_FORMS (view->document),
 									       field);
 			ev_document_forms_form_field_button_set_state (EV_DOCUMENT_FORMS (view->document),
 								       field, !state);
 			ev_pixbuf_cache_reload_page (view->pixbuf_cache,
+						     field_region,
 						     field->page,
 						     view->rotation,
 						     view->scale);
+			gdk_region_destroy (field_region);
 		}
 			break;
 	}
@@ -1651,14 +1675,19 @@ ev_view_form_field_text_save (EvView    *view,
 	
 	if (field->changed) {
 		EvFormFieldText *field_text = EV_FORM_FIELD_TEXT (field);
+		GdkRegion       *field_region;
+
+		field_region = ev_view_form_field_get_region (view, field);
 		
 		ev_document_forms_form_field_text_set_text (EV_DOCUMENT_FORMS (view->document),
 							    field, field_text->text);
 		field->changed = FALSE;
 		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
+					     field_region,
 					     field->page,
 					     view->rotation,
 					     view->scale);
+		gdk_region_destroy (field_region);
 	}
 }
 
@@ -1757,6 +1786,9 @@ ev_view_form_field_choice_save (EvView    *view,
 	if (field->changed) {
 		GList             *l;
 		EvFormFieldChoice *field_choice = EV_FORM_FIELD_CHOICE (field);
+		GdkRegion         *field_region;
+
+		field_region = ev_view_form_field_get_region (view, field);
 
 		if (field_choice->is_editable) {
 			ev_document_forms_form_field_choice_set_text (EV_DOCUMENT_FORMS (view->document),
@@ -1771,9 +1803,11 @@ ev_view_form_field_choice_save (EvView    *view,
 		}
 		field->changed = FALSE;
 		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
+					     field_region,
 					     field->page,
 					     view->rotation,
 					     view->scale);
+		gdk_region_destroy (field_region);
 	}
 }
 
@@ -3895,9 +3929,15 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 
 static void
 job_finished_cb (EvPixbufCache *pixbuf_cache,
+		 GdkRegion     *region,
 		 EvView        *view)
 {
-	gtk_widget_queue_draw (GTK_WIDGET (view));
+	if (region) {
+		gdk_window_invalidate_region (view->layout.bin_window,
+					      region, TRUE);
+	} else {
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
 }
 
 static void

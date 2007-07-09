@@ -1,5 +1,22 @@
 2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-pixbuf-cache.[ch]: (ev_pixbuf_cache_class_init),
+	(dispose_cache_job_info), (job_finished_cb), (move_one_job),
+	(add_job), (add_job_if_needed), (ev_pixbuf_cache_get_surface),
+	(ev_pixbuf_cache_get_link_mapping),
+	(ev_pixbuf_cache_get_image_mapping),
+	(ev_pixbuf_cache_get_form_field_mapping),
+	(ev_pixbuf_cache_get_text_mapping), (ev_pixbuf_cache_reload_page):
+	* shell/ev-view.c: (ev_view_form_field_get_region),
+	(ev_view_form_field_button_create_widget),
+	(ev_view_form_field_text_save), (ev_view_form_field_choice_save),
+	(job_finished_cb):
+
+	Redraw only form field region instead of the whole page when
+	reloading a page to show changes on the form field.
+	
+2007-07-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-view.c: (ev_view_form_field_choice_save):
 
 	Fix selection of first item in list form fields.

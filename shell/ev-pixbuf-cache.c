@@ -3,6 +3,7 @@
 #include "ev-page-cache.h"
 #include "ev-selection.h"
 #include "ev-document-images.h"
+#include "ev-document-forms.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
 
@@ -10,6 +11,9 @@ typedef struct _CacheJobInfo
 {
 	EvJob *job;
 	EvRenderContext *rc;
+
+	/* Region of the page that needs to be drawn */
+	GdkRegion *region; 
 
 	/* Data we get from rendering */
 	cairo_surface_t *surface;
@@ -114,13 +118,15 @@ ev_pixbuf_cache_class_init (EvPixbufCacheClass *class)
 	object_class->finalize = ev_pixbuf_cache_finalize;
 	object_class->dispose = ev_pixbuf_cache_dispose;
 
-	signals[JOB_FINISHED] = g_signal_new ("job-finished",
-					    G_OBJECT_CLASS_TYPE (object_class),
-					    G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-					    G_STRUCT_OFFSET (EvPixbufCacheClass, job_finished),
-					    NULL, NULL,
-					    g_cclosure_marshal_VOID__VOID,
-					    G_TYPE_NONE, 0);
+	signals[JOB_FINISHED] =
+		g_signal_new ("job-finished",
+			      G_OBJECT_CLASS_TYPE (object_class),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (EvPixbufCacheClass, job_finished),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
 }
 
 static void
@@ -154,6 +160,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 	if (job_info->surface) {
 		cairo_surface_destroy (job_info->surface);
 		job_info->surface = NULL;
+	}
+	if (job_info->region) {
+		gdk_region_destroy (job_info->region);
+		job_info->region = NULL;
 	}
 	if (job_info->link_mapping) {
 		ev_link_mapping_free (job_info->link_mapping);
@@ -239,7 +249,7 @@ job_finished_cb (EvJob         *job,
 	job_info = find_job_cache (pixbuf_cache, job_render->rc->page);
 
 	copy_job_to_job_info (job_render, job_info, pixbuf_cache);
-	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
+	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 }
 
 /* This checks a job to see if the job would generate the right sized pixbuf
@@ -326,6 +336,7 @@ move_one_job (CacheJobInfo  *job_info,
 
 	*target_page = *job_info;
 	job_info->job = NULL;
+	job_info->region = NULL;
 	job_info->surface = NULL;
 	job_info->link_mapping = NULL;
 	job_info->image_mapping = NULL;
@@ -335,8 +346,6 @@ move_one_job (CacheJobInfo  *job_info,
 		ev_job_queue_update_job (target_page->job, new_priority);
 	}
 }
-
-
 
 static void
 ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
@@ -548,6 +557,7 @@ static void
 add_job (EvPixbufCache *pixbuf_cache,
 	 CacheJobInfo  *job_info,
 	 EvPageCache   *page_cache,
+	 GdkRegion     *region,
 	 gint           width,
 	 gint           height,
 	 gint           page,
@@ -569,6 +579,10 @@ add_job (EvPixbufCache *pixbuf_cache,
 		ev_render_context_set_page (job_info->rc, page);
 		ev_render_context_set_scale (job_info->rc, scale);
 	}
+
+	if (job_info->region)
+		gdk_region_destroy (job_info->region);
+	job_info->region = region ? gdk_region_copy (region) : NULL;
 
 	/* Figure out what else we need for this job */
 	if (job_info->link_mapping == NULL)
@@ -598,7 +612,9 @@ add_job (EvPixbufCache *pixbuf_cache,
 					   include_text,
 					   include_selection);
 	ev_job_queue_add_job (job_info->job, priority);
-	g_signal_connect (job_info->job, "finished", G_CALLBACK (job_finished_cb), pixbuf_cache);
+	g_signal_connect (job_info->job, "finished",
+			  G_CALLBACK (job_finished_cb),
+			  pixbuf_cache);
 }
 
 static void
@@ -623,7 +639,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	    cairo_image_surface_get_height (job_info->surface) == height)
 		return;
 
-	add_job (pixbuf_cache, job_info, page_cache,
+	add_job (pixbuf_cache, job_info, page_cache, NULL,
 		 width, height, page, rotation, scale,
 		 priority);
 }
@@ -717,7 +733,7 @@ ev_pixbuf_cache_get_surface (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
-		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 	}
 
 	return job_info->surface;
@@ -737,7 +753,7 @@ ev_pixbuf_cache_get_link_mapping (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
-		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 	}
 
 	return job_info->link_mapping;
@@ -760,10 +776,33 @@ ev_pixbuf_cache_get_image_mapping (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
-		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 	}
 
 	return job_info->image_mapping;
+}
+
+GList *
+ev_pixbuf_cache_get_form_field_mapping (EvPixbufCache *pixbuf_cache,
+				  	gint 	       page)
+{
+	CacheJobInfo *job_info;
+
+	if (!EV_IS_DOCUMENT_FORMS (pixbuf_cache->document))
+		return NULL;
+	
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* We don't need to wait for the idle to handle the callback */
+	if (job_info->job &&
+	   EV_JOB (job_info->job)->finished) {
+		copy_job_to_job_info (EV_JOB_RENDER(job_info->job), job_info, pixbuf_cache);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
+	}
+	
+	return job_info->form_field_mapping;
 }
 
 static gboolean
@@ -824,7 +863,7 @@ ev_pixbuf_cache_get_text_mapping (EvPixbufCache *pixbuf_cache,
 	if (job_info->job &&
 	    EV_JOB (job_info->job)->finished) {
 		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
-		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0);
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 	}
 	
 	return job_info->text_mapping;
@@ -1135,10 +1174,11 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 }
 
 void           
-ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache, 
+ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
+			     GdkRegion     *region,
 			     gint           page,
 			     gint           rotation,
-			     gfloat         scale)
+			     gdouble        scale)
 {
 	CacheJobInfo *job_info;
         EvPageCache *page_cache;
@@ -1152,25 +1192,9 @@ ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
 	ev_page_cache_get_size (page_cache, page, rotation, scale,
 				&width, &height);
 
-        add_job (pixbuf_cache, job_info, page_cache,
+        add_job (pixbuf_cache, job_info, page_cache, region,
 		 width, height, page, rotation, scale,
 		 EV_JOB_PRIORITY_HIGH);
 }
 
-GList *
-ev_pixbuf_cache_get_form_field_mapping (EvPixbufCache *pixbuf_cache,
-				  	gint 	       page)
-{
-	CacheJobInfo *job_info;
-	
-	job_info = find_job_cache (pixbuf_cache, page);
-	if (job_info == NULL)
-		return NULL;
-	
-	if (job_info->job &&
-	   EV_JOB (job_info->job)->finished) {
-		copy_job_to_job_info (EV_JOB_RENDER(job_info->job), job_info, pixbuf_cache);
-	}
-	return job_info->form_field_mapping;
-}
 
