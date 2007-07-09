@@ -1761,13 +1761,13 @@ ev_view_form_field_choice_save (EvView    *view,
 		if (field_choice->is_editable) {
 			ev_document_forms_form_field_choice_set_text (EV_DOCUMENT_FORMS (view->document),
 								      field, field_choice->text);
-		}
-		
-		ev_document_forms_form_field_choice_unselect_all (EV_DOCUMENT_FORMS (view->document), field);
-		for (l = field_choice->selected_items; l && l->data; l = g_list_next (l)) {
-			ev_document_forms_form_field_choice_select_item (EV_DOCUMENT_FORMS (view->document),
-									 field,
-									 GPOINTER_TO_INT (l->data));
+		} else {
+			ev_document_forms_form_field_choice_unselect_all (EV_DOCUMENT_FORMS (view->document), field);
+			for (l = field_choice->selected_items; l; l = g_list_next (l)) {
+				ev_document_forms_form_field_choice_select_item (EV_DOCUMENT_FORMS (view->document),
+										 field,
+										 GPOINTER_TO_INT (l->data));
+			}
 		}
 		field->changed = FALSE;
 		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
