@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-14 11:19+0000\n"
-"PO-Revision-Date: 2007-02-24 10:18+0100\n"
+"POT-Creation-Date: 2007-06-18 03:15+0100\n"
+"PO-Revision-Date: 2007-07-11 00:42+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <gnome@gnome.hu>\n"
 "MIME-Version: 1.0\n"
@@ -17,120 +17,135 @@ msgstr ""
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../backend/comics/comics-document.c:148
+#: ../backend/comics/comics-document.c:150
 msgid "File corrupted."
 msgstr "A fájl sérült."
 
-#: ../backend/comics/comics-document.c:184
+#: ../backend/comics/comics-document.c:186
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Nem találhatóak képek a(z) %s archívumban"
 
-#: ../backend/djvu/djvu-document.c:161
+#: ../backend/djvu/djvu-document.c:162
 msgid ""
 "The document is composed by several files. One or more of such files cannot "
 "be accessed."
 msgstr "A dokumentum több fájlból áll. Legalább egy ilyen fájl nem érhető el."
 
-#: ../backend/dvi/dvi-document.c:91
+#: ../backend/djvu/djvu-document.c:489 ../backend/ps/ps-document.c:172
+#: ../backend/ps/ps-document.c:186
+#, c-format
+msgid "Cannot open file “%s”."
+msgstr "A(z) \"%s\" fájl nem nyitható meg."
+
+#: ../backend/dvi/dvi-document.c:98
 msgid "File not available"
 msgstr "A fájl nem áll rendelkezésre"
 
-#: ../backend/dvi/dvi-document.c:106
+#: ../backend/dvi/dvi-document.c:113
 msgid "DVI document has incorrect format"
 msgstr "A DVI dokumentum formátuma hibás"
 
+#: ../backend/dvi/dvi-document.c:426
+#, c-format
+msgid "Error: %s"
+msgstr "Hiba: %s"
+
+#: ../backend/dvi/dvi-document.c:428
+msgid "Error: dvipdfm exited with non-zero status."
+msgstr "Hiba: A dvipdfm nem nulla állapottal lépett ki."
+
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:629
+#: ../backend/pdf/ev-poppler.cc:662
 msgid "Yes"
 msgstr "Igen"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:632
+#: ../backend/pdf/ev-poppler.cc:665
 msgid "No"
 msgstr "Nem"
 
-#: ../backend/pdf/ev-poppler.cc:732
+#: ../backend/pdf/ev-poppler.cc:765
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:734
+#: ../backend/pdf/ev-poppler.cc:767
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:736
+#: ../backend/pdf/ev-poppler.cc:769
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:738
+#: ../backend/pdf/ev-poppler.cc:771
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:740
+#: ../backend/pdf/ev-poppler.cc:773
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:742
+#: ../backend/pdf/ev-poppler.cc:775
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:744
+#: ../backend/pdf/ev-poppler.cc:777
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:746
+#: ../backend/pdf/ev-poppler.cc:779
 msgid "Unknown font type"
 msgstr "Ismeretlen betűkészlet-típus"
 
-#: ../backend/pdf/ev-poppler.cc:772
+#: ../backend/pdf/ev-poppler.cc:805
 msgid "No name"
 msgstr "Névtelen"
 
-#: ../backend/pdf/ev-poppler.cc:780
+#: ../backend/pdf/ev-poppler.cc:813
 msgid "Embedded subset"
 msgstr "Beágyazott részhalmaz"
 
-#: ../backend/pdf/ev-poppler.cc:782
+#: ../backend/pdf/ev-poppler.cc:815
 msgid "Embedded"
 msgstr "Beágyazott"
 
-#: ../backend/pdf/ev-poppler.cc:784
+#: ../backend/pdf/ev-poppler.cc:817
 msgid "Not embedded"
 msgstr "Be nem ágyazott"
 
-#: ../backend/impress/zip.c:50
+#: ../backend/impress/zip.c:52
 msgid "No error"
 msgstr "Nincs hiba"
 
-#: ../backend/impress/zip.c:53
+#: ../backend/impress/zip.c:55
 msgid "Not enough memory"
 msgstr "Nincs elég memória"
 
-#: ../backend/impress/zip.c:56
+#: ../backend/impress/zip.c:58
 msgid "Cannot find zip signature"
 msgstr "Nem található a zip aláírás"
 
-#: ../backend/impress/zip.c:59
+#: ../backend/impress/zip.c:61
 msgid "Invalid zip file"
 msgstr "Érvénytelen zip fájl"
 
-#: ../backend/impress/zip.c:62
+#: ../backend/impress/zip.c:64
 msgid "Multi file zips are not supported"
 msgstr "Több zip fájl nem támogatott"
 
-#: ../backend/impress/zip.c:65
+#: ../backend/impress/zip.c:67
 msgid "Cannot open the file"
 msgstr "A fájl nem nyitható meg"
 
-#: ../backend/impress/zip.c:68
+#: ../backend/impress/zip.c:70
 msgid "Cannot read data from file"
 msgstr "Nem lehet adatokat olvasni a fájlból"
 
-#: ../backend/impress/zip.c:71
+#: ../backend/impress/zip.c:73
 msgid "Cannot find file in the zip archive"
 msgstr "Nem található a fájl a zip archívumban"
 
-#: ../backend/impress/zip.c:74
+#: ../backend/impress/zip.c:76
 msgid "Unknown error"
 msgstr "Ismeretlen hiba"
 
@@ -206,11 +221,6 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10x14"
 
-#: ../backend/ps/ps-document.c:172 ../backend/ps/ps-document.c:186
-#, c-format
-msgid "Cannot open file “%s”.\n"
-msgstr "A(z) \"%s\" fájl nem nyitható meg.\n"
-
 #: ../backend/ps/ps-document.c:233
 #, c-format
 msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
@@ -231,7 +241,7 @@ msgstr "Beágyazott Postscript"
 msgid "PostScript"
 msgstr "PostScript"
 
-#: ../backend/ps/ps-interpreter.c:541
+#: ../backend/ps/ps-interpreter.c:543
 msgid "Interpreter failed."
 msgstr "Hiba történt az értelmezőben."
 
@@ -259,7 +269,7 @@ msgid "Couldn't open attachment “%s”"
 msgstr "A(z) \"%s\" melléklet nem nyitható meg"
 
 #: ../libdocument/ev-document-factory.c:291
-#: ../libdocument/ev-document-factory.c:405
+#: ../libdocument/ev-document-factory.c:398
 msgid "Unknown MIME Type"
 msgstr "Ismeretlen MIME típus"
 
@@ -268,39 +278,39 @@ msgstr "Ismeretlen MIME típus"
 msgid "Unhandled MIME type: “%s”"
 msgstr "Nem kezelt MIME-típus: \"%s\""
 
-#: ../libdocument/ev-document-factory.c:446
+#: ../libdocument/ev-document-factory.c:439
 msgid "All Documents"
 msgstr "Minden dokumentum"
 
-#: ../libdocument/ev-document-factory.c:454
+#: ../libdocument/ev-document-factory.c:447
 msgid "PostScript Documents"
 msgstr "PostScript-dokumentumok"
 
-#: ../libdocument/ev-document-factory.c:464
+#: ../libdocument/ev-document-factory.c:457
 msgid "PDF Documents"
 msgstr "PDF-dokumentumok"
 
-#: ../libdocument/ev-document-factory.c:474 ../shell/ev-window.c:4629
+#: ../libdocument/ev-document-factory.c:467 ../shell/ev-window.c:4970
 msgid "Images"
 msgstr "Képek"
 
-#: ../libdocument/ev-document-factory.c:484
+#: ../libdocument/ev-document-factory.c:477
 msgid "DVI Documents"
 msgstr "DVI dokumentumok"
 
-#: ../libdocument/ev-document-factory.c:494
+#: ../libdocument/ev-document-factory.c:487
 msgid "Djvu Documents"
 msgstr "Djvu dokumentumok"
 
-#: ../libdocument/ev-document-factory.c:504
+#: ../libdocument/ev-document-factory.c:497
 msgid "Comic Books"
 msgstr "Képregénykönyvek"
 
-#: ../libdocument/ev-document-factory.c:514
+#: ../libdocument/ev-document-factory.c:507
 msgid "Impress Slides"
 msgstr "Impress fóliák"
 
-#: ../libdocument/ev-document-factory.c:522
+#: ../libdocument/ev-document-factory.c:515
 msgid "All Files"
 msgstr "Minden fájl"
 
@@ -310,7 +320,6 @@ msgid "Open “%s”"
 msgstr "\"%s\" megnyitása"
 
 #: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
-#: ../shell/ev-navigation-action.c:118
 msgid "Empty"
 msgstr "Üres"
 
@@ -359,7 +368,7 @@ msgid "Running in presentation mode"
 msgstr "Bemutató mód"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4282
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4560
 msgid "Best Fit"
 msgstr "Legjobb illeszkedés"
 
@@ -372,39 +381,43 @@ msgid "50%"
 msgstr "50%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:52
-msgid "75%"
-msgstr "75%"
+msgid "70%"
+msgstr "70%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:53
+msgid "85%"
+msgstr "85%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
 msgid "100%"
 msgstr "100%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
 msgid "125%"
 msgstr "125%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
 msgid "150%"
 msgstr "150%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:57
 msgid "175%"
 msgstr "175%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:57
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:58
 msgid "200%"
 msgstr "200%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:58
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
 msgid "300%"
 msgstr "300%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:60
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3442
-#: ../shell/ev-window-title.c:127
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3714
+#: ../shell/ev-window-title.c:126
 msgid "Document Viewer"
 msgstr "Dokumentummegjelenítő"
 
@@ -494,7 +507,7 @@ msgstr ""
 msgid "Document"
 msgstr "Dokumentum"
 
-#: ../properties/ev-properties-view.c:179
+#: ../properties/ev-properties-view.c:182
 msgid "None"
 msgstr "Nincs"
 
@@ -504,35 +517,44 @@ msgstr "Nincs"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:260
+#: ../properties/ev-properties-view.c:207
+#: ../properties/ev-properties-view.c:367
 msgid "default:mm"
 msgstr "default:mm"
 
-#. Imperial measurement (inches)
-#: ../properties/ev-properties-view.c:292
-#, c-format
-msgid "%.2f x %.2f in"
-msgstr "%.2f x %.2f in"
-
 #. Metric measurement (millimeters)
-#: ../properties/ev-properties-view.c:297
+#: ../properties/ev-properties-view.c:249
+#: ../properties/ev-properties-view.c:404
 #, c-format
 msgid "%.0f x %.0f mm"
 msgstr "%.0f x %.0f mm"
 
+#: ../properties/ev-properties-view.c:253
+#, c-format
+msgid "%.2f x %.2f inch"
+msgstr "%.2f x %.2f hüvelyk"
+
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:308
+#: ../properties/ev-properties-view.c:277
+#: ../properties/ev-properties-view.c:415
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, álló (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:315
+#: ../properties/ev-properties-view.c:284
+#: ../properties/ev-properties-view.c:422
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, fekvő (%s)"
+
+#. Imperial measurement (inches)
+#: ../properties/ev-properties-view.c:399
+#, c-format
+msgid "%.2f x %.2f in"
+msgstr "%.2f x %.2f in"
 
 #: ../shell/eggfindbar.c:157
 msgid "Search string"
@@ -650,20 +672,20 @@ msgstr "Általános"
 msgid "Fonts"
 msgstr "Betűkészletek"
 
-#: ../shell/ev-properties-fonts.c:139
+#: ../shell/ev-properties-fonts.c:141
 msgid "Font"
 msgstr "Betűkészlet"
 
-#: ../shell/ev-properties-fonts.c:150
+#: ../shell/ev-properties-fonts.c:152
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Betűkészlet-információk összegyűjtése... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:663
+#: ../shell/ev-sidebar-attachments.c:670
 msgid "Attachments"
 msgstr "Mellékletek"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:2815
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:2816
 msgid "Loading..."
 msgstr "Betöltés..."
 
@@ -675,7 +697,7 @@ msgstr "Nyomtatás..."
 msgid "Index"
 msgstr "Index"
 
-#: ../shell/ev-sidebar-thumbnails.c:689
+#: ../shell/ev-sidebar-thumbnails.c:719
 msgid "Thumbnails"
 msgstr "Bélyegképek"
 
@@ -743,87 +765,89 @@ msgstr "Ugrás a(z) %s fájlra"
 msgid "Launch %s"
 msgstr "%s indítása"
 
-#: ../shell/ev-view.c:1858
+#: ../shell/ev-view.c:1857
 msgid "End of presentation. Press Escape to exit."
 msgstr "Vége a bemutatónak. A kilépéshez nyomja meg az Esc billentyűt."
 
-#: ../shell/ev-view.c:2531
+#: ../shell/ev-view.c:2538
 msgid "Jump to page:"
 msgstr "Ugrás oldalra:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:4145
+#: ../shell/ev-view.c:4180
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d találat ezen az oldalon"
 msgstr[1] "%d találat ezen az oldalon"
 
-#: ../shell/ev-view.c:4154
+#: ../shell/ev-view.c:4189
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% van hátra a keresésből"
 
-#: ../shell/ev-window.c:742
+#: ../shell/ev-window.c:751
 #, c-format
 msgid "Page %s - %s"
 msgstr "Oldal: %s / %s"
 
-#: ../shell/ev-window.c:744
+#: ../shell/ev-window.c:753
 #, c-format
 msgid "Page %s"
 msgstr "Oldal: %s"
 
-#: ../shell/ev-window.c:1307
+#: ../shell/ev-window.c:1361
 msgid "Unable to open document"
 msgstr "A dokumentum nem nyitható meg"
 
-#: ../shell/ev-window.c:1469
+#: ../shell/ev-window.c:1546
 msgid "Open Document"
 msgstr "Dokumentum megnyitása"
 
-#: ../shell/ev-window.c:1524
+#: ../shell/ev-window.c:1608
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "A(z) \"%s\" szimbolikus link nem hozható létre: %s"
 
-#: ../shell/ev-window.c:1553
+#: ../shell/ev-window.c:1637
 msgid "Cannot open a copy."
 msgstr "Nem nyitható meg másolat."
 
-#: ../shell/ev-window.c:1834
-#, c-format
-msgid "Failed to create file “%s”: %s"
-msgstr "A(z) \"%s\" fájl létrehozása meghiúsult: %s"
-
-#: ../shell/ev-window.c:1861
+#: ../shell/ev-window.c:1919 ../shell/ev-window.c:2006
+#: ../shell/ev-window.c:2062
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "A fájl nem menthető \"%s\" néven."
 
-#: ../shell/ev-window.c:1883
+#: ../shell/ev-window.c:2002
+#, c-format
+msgid "Failed to create file “%s”: %s"
+msgstr "A(z) \"%s\" fájl létrehozása meghiúsult: %s"
+
+#: ../shell/ev-window.c:2106
 msgid "Save a Copy"
 msgstr "Másolat mentése"
 
-#: ../shell/ev-window.c:1964
+#: ../shell/ev-window.c:2196 ../shell/ev-window.c:3394
 msgid "Failed to print document"
 msgstr "A dokumentum nyomtatása meghiúsult"
 
-#: ../shell/ev-window.c:2083 ../shell/ev-window.c:2268
+#: ../shell/ev-window.c:2345 ../shell/ev-window.c:2533
 msgid "Printing is not supported on this printer."
 msgstr "A nyomtatás nem támogatott ezen a nyomtatón"
 
-#: ../shell/ev-window.c:2193 ../shell/ev-window.c:2319
+#: ../shell/ev-window.c:2457 ../shell/ev-window.c:2584
+#: ../shell/ev-window.c:4370
 msgid "Print"
 msgstr "Nyomtatás"
 
-#: ../shell/ev-window.c:2258
+#: ../shell/ev-window.c:2523
 msgid "Generating PDF is not supported"
 msgstr "PDF létrehozása nem támogatott"
 
-#: ../shell/ev-window.c:2270
+#: ../shell/ev-window.c:2535
 #, c-format
 msgid ""
 "You were trying to print to a printer using the “%s” driver. This program "
@@ -832,20 +856,15 @@ msgstr ""
 "Egy, a(z) \"%s\" illesztőprogramot használó nyomtatóra próbált nyomtatni. Ez "
 "a program egy PostScript nyomtatóillesztő-programot igényel."
 
-#: ../shell/ev-window.c:2328
+#: ../shell/ev-window.c:2593
 msgid "Pages"
 msgstr "Oldal"
 
-#. Toolbar-only
-#: ../shell/ev-window.c:2695 ../shell/ev-window.c:4092
-msgid "Leave Fullscreen"
-msgstr "Teljes képernyő elhagyása"
-
-#: ../shell/ev-window.c:3067
+#: ../shell/ev-window.c:3182
 msgid "Toolbar Editor"
 msgstr "Eszköztárszerkesztő"
 
-#: ../shell/ev-window.c:3438
+#: ../shell/ev-window.c:3710
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -854,7 +873,7 @@ msgstr ""
 "Dokumentummegjelenítő.\n"
 "poppler %s (%s) használatával"
 
-#: ../shell/ev-window.c:3466
+#: ../shell/ev-window.c:3738
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -865,7 +884,7 @@ msgstr ""
 "Software Foundation által kiadott GNU General Public License második (vagy "
 "bármely későbbi) változatában foglaltak alapján.\n"
 
-#: ../shell/ev-window.c:3470
+#: ../shell/ev-window.c:3742
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -877,7 +896,7 @@ msgstr ""
 "alkalmas-e a KÖZREADÁSRA vagy EGY BIZONYOS FELADAT ELVÉGZÉSÉRE. További "
 "részletekért tanulmányozza a GNU GPL licencet.\n"
 
-#: ../shell/ev-window.c:3474
+#: ../shell/ev-window.c:3746
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -887,374 +906,396 @@ msgstr ""
 "nem kapta meg, írjon a Free Software Foundation Inc.-nek. Levélcímük: 59 "
 "Temple Place - Suite 330, Boston, MA 02111-1307, USA\n"
 
-#: ../shell/ev-window.c:3498 ../shell/main.c:284
+#: ../shell/ev-window.c:3770 ../shell/main.c:330
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3501
+#: ../shell/ev-window.c:3773
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Az Evince szerzői"
 
-#: ../shell/ev-window.c:3507
+#: ../shell/ev-window.c:3779
 msgid "translator-credits"
 msgstr "Kelemen Gábor <kelemeng@gnome.hu>"
 
-#: ../shell/ev-window.c:4009
+#: ../shell/ev-window.c:4281
 msgid "_File"
 msgstr "_Fájl"
 
-#: ../shell/ev-window.c:4010
+#: ../shell/ev-window.c:4282
 msgid "_Edit"
 msgstr "S_zerkesztés"
 
-#: ../shell/ev-window.c:4011
+#: ../shell/ev-window.c:4283
 msgid "_View"
 msgstr "_Nézet"
 
-#: ../shell/ev-window.c:4012
+#: ../shell/ev-window.c:4284
 msgid "_Go"
 msgstr "_Ugrás"
 
-#: ../shell/ev-window.c:4013
+#: ../shell/ev-window.c:4285
 msgid "_Help"
 msgstr "_Súgó"
 
 #. File menu
-#: ../shell/ev-window.c:4016 ../shell/ev-window.c:4188
+#: ../shell/ev-window.c:4288 ../shell/ev-window.c:4466
 msgid "_Open..."
 msgstr "_Megnyitás..."
 
-#: ../shell/ev-window.c:4017
+#: ../shell/ev-window.c:4289
 msgid "Open an existing document"
 msgstr "Létező dokumentum megnyitása"
 
-#: ../shell/ev-window.c:4019
-msgid "Open a _Copy"
-msgstr "Másolat meg_nyitása"
+#: ../shell/ev-window.c:4291
+msgid "Op_en a Copy"
+msgstr "Másolat megn_yitása"
 
-#: ../shell/ev-window.c:4020
+#: ../shell/ev-window.c:4292
 msgid "Open a copy of the current document in a new window"
 msgstr "A jelenlegi dokumentum egy másolatának megnyitása új ablakban"
 
-#: ../shell/ev-window.c:4022 ../shell/ev-window.c:4190
+#: ../shell/ev-window.c:4294 ../shell/ev-window.c:4468
 msgid "_Save a Copy..."
 msgstr "Más_olat mentése..."
 
-#: ../shell/ev-window.c:4023
+#: ../shell/ev-window.c:4295
 msgid "Save a copy of the current document"
 msgstr "A jelenlegi dokumentum egy másolatának mentése"
 
-#: ../shell/ev-window.c:4025
+#: ../shell/ev-window.c:4297
 msgid "Print Set_up..."
-msgstr "Nyom_tatás beállítása..."
+msgstr "_Oldalbeállítás..."
 
-#: ../shell/ev-window.c:4026
+#: ../shell/ev-window.c:4298
 msgid "Setup the page settings for printing"
 msgstr "Az oldalak beállítása nyomtatáshoz"
 
-#: ../shell/ev-window.c:4028
+#: ../shell/ev-window.c:4300
 msgid "_Print..."
 msgstr "_Nyomtatás..."
 
-#: ../shell/ev-window.c:4029
+#: ../shell/ev-window.c:4301 ../shell/ev-window.c:4371
 msgid "Print this document"
 msgstr "A jelenlegi dokumentum nyomtatása"
 
-#: ../shell/ev-window.c:4031
+#: ../shell/ev-window.c:4303
 msgid "P_roperties"
 msgstr "_Tulajdonságok"
 
-#: ../shell/ev-window.c:4040 ../shell/ev-window.c:4042
+#: ../shell/ev-window.c:4312 ../shell/ev-window.c:4314
 msgid "Select _All"
 msgstr "Min_dent kijelöl"
 
-#: ../shell/ev-window.c:4045
+#: ../shell/ev-window.c:4317
 msgid "_Find..."
 msgstr "_Keresés..."
 
-#: ../shell/ev-window.c:4046
+#: ../shell/ev-window.c:4318
 msgid "Find a word or phrase in the document"
 msgstr "Szó vagy kifejezés keresése a dokumentumban"
 
-#: ../shell/ev-window.c:4048
+#: ../shell/ev-window.c:4320
 msgid "Find Ne_xt"
 msgstr "Kö_vetkező találat"
 
-#: ../shell/ev-window.c:4050
+#: ../shell/ev-window.c:4322
 msgid "Find Pre_vious"
 msgstr "Elő_ző találat"
 
-#: ../shell/ev-window.c:4052
+#: ../shell/ev-window.c:4324
 msgid "T_oolbar"
 msgstr "Eszköz_tár"
 
-#: ../shell/ev-window.c:4054
+#: ../shell/ev-window.c:4326
 msgid "Rotate _Left"
 msgstr "Forgatás _balra"
 
-#: ../shell/ev-window.c:4056
+#: ../shell/ev-window.c:4328
 msgid "Rotate _Right"
 msgstr "Forgatás _jobbra"
 
-#: ../shell/ev-window.c:4061
+#: ../shell/ev-window.c:4333
 msgid "Enlarge the document"
 msgstr "A dokumentum megnövelése"
 
-#: ../shell/ev-window.c:4064
+#: ../shell/ev-window.c:4336
 msgid "Shrink the document"
 msgstr "A dokumentum zsugorítása"
 
-#: ../shell/ev-window.c:4066
+#: ../shell/ev-window.c:4338
 msgid "_Reload"
 msgstr "_Frissítés"
 
-#: ../shell/ev-window.c:4067
+#: ../shell/ev-window.c:4339
 msgid "Reload the document"
 msgstr "A dokumentum újratöltése"
 
 #. Go menu
-#: ../shell/ev-window.c:4071
+#: ../shell/ev-window.c:4343
 msgid "_Previous Page"
 msgstr "Elő_ző oldal"
 
-#: ../shell/ev-window.c:4072
+#: ../shell/ev-window.c:4344
 msgid "Go to the previous page"
 msgstr "Ugrás az előző oldalra"
 
-#: ../shell/ev-window.c:4074
+#: ../shell/ev-window.c:4346
 msgid "_Next Page"
 msgstr "_Következő oldal"
 
-#: ../shell/ev-window.c:4075
+#: ../shell/ev-window.c:4347
 msgid "Go to the next page"
 msgstr "Ugrás a következő oldalra"
 
-#: ../shell/ev-window.c:4077
+#: ../shell/ev-window.c:4349
 msgid "_First Page"
 msgstr "_Első oldal"
 
-#: ../shell/ev-window.c:4078
+#: ../shell/ev-window.c:4350
 msgid "Go to the first page"
 msgstr "Ugrás az első oldalra"
 
-#: ../shell/ev-window.c:4080
+#: ../shell/ev-window.c:4352
 msgid "_Last Page"
 msgstr "_Utolsó oldal"
 
-#: ../shell/ev-window.c:4081
+#: ../shell/ev-window.c:4353
 msgid "Go to the last page"
 msgstr "Ugrás az utolsó oldalra"
 
 #. Help menu
-#: ../shell/ev-window.c:4085
+#: ../shell/ev-window.c:4357
 msgid "_Contents"
 msgstr "_Tartalom"
 
-#: ../shell/ev-window.c:4088
+#: ../shell/ev-window.c:4360
 msgid "_About"
 msgstr "_Névjegy"
 
-#: ../shell/ev-window.c:4093
+#. Toolbar-only
+#: ../shell/ev-window.c:4364
+msgid "Leave Fullscreen"
+msgstr "Teljes képernyő elhagyása"
+
+#: ../shell/ev-window.c:4365
 msgid "Leave fullscreen mode"
 msgstr "Teljes képernyő elhagyása"
 
+#: ../shell/ev-window.c:4367
+msgid "Start Presentation"
+msgstr "Bemutató indítása"
+
+#: ../shell/ev-window.c:4368
+msgid "Start a presentation"
+msgstr "Egy bemutató elindítása"
+
 #. View Menu
-#: ../shell/ev-window.c:4144
+#: ../shell/ev-window.c:4422
 msgid "_Toolbar"
 msgstr "_Eszköztár"
 
-#: ../shell/ev-window.c:4145
+#: ../shell/ev-window.c:4423
 msgid "Show or hide the toolbar"
 msgstr "Eszköztár megjelenítése vagy elrejtése"
 
-#: ../shell/ev-window.c:4147
+#: ../shell/ev-window.c:4425
 msgid "Side _Pane"
 msgstr "Oldal_sáv"
 
-#: ../shell/ev-window.c:4148
+#: ../shell/ev-window.c:4426
 msgid "Show or hide the side pane"
 msgstr "Oldalsáv megjelenítése vagy elrejtése"
 
-#: ../shell/ev-window.c:4150
+#: ../shell/ev-window.c:4428
 msgid "_Continuous"
 msgstr "Fol_ytonos"
 
-#: ../shell/ev-window.c:4151
+#: ../shell/ev-window.c:4429
 msgid "Show the entire document"
 msgstr "A teljes dokumentum mutatása"
 
-#: ../shell/ev-window.c:4153
+#: ../shell/ev-window.c:4431
 msgid "_Dual"
 msgstr "_Duális"
 
-#: ../shell/ev-window.c:4154
+#: ../shell/ev-window.c:4432
 msgid "Show two pages at once"
 msgstr "Két oldal mutatása egyszerre"
 
-#: ../shell/ev-window.c:4156
+#: ../shell/ev-window.c:4434
 msgid "_Fullscreen"
 msgstr "_Teljes képernyő"
 
-#: ../shell/ev-window.c:4157
+#: ../shell/ev-window.c:4435
 msgid "Expand the window to fill the screen"
 msgstr "Az ablak megnövelése, hogy kitöltse a képernyőt"
 
-#: ../shell/ev-window.c:4159
+#: ../shell/ev-window.c:4437
 msgid "_Presentation"
 msgstr "_Bemutató"
 
-#: ../shell/ev-window.c:4160
+#: ../shell/ev-window.c:4438
 msgid "Run document as a presentation"
 msgstr "A dokumentum elindítása bemutatóként"
 
-#: ../shell/ev-window.c:4162
+#: ../shell/ev-window.c:4440
 msgid "_Best Fit"
 msgstr "Legjobb _illeszkedés"
 
-#: ../shell/ev-window.c:4163
+#: ../shell/ev-window.c:4441
 msgid "Make the current document fill the window"
 msgstr "A jelenlegi dokumentum töltse ki az ablakot"
 
-#: ../shell/ev-window.c:4165
+#: ../shell/ev-window.c:4443
 msgid "Fit Page _Width"
 msgstr "Igazítás az _oldal szélességéhez"
 
-#: ../shell/ev-window.c:4166
+#: ../shell/ev-window.c:4444
 msgid "Make the current document fill the window width"
 msgstr "A jelenlegi dokumentum töltse ki az ablak szélességét"
 
 #. Links
-#: ../shell/ev-window.c:4173
+#: ../shell/ev-window.c:4451
 msgid "_Open Link"
 msgstr "_Hivatkozás megnyitása"
 
-#: ../shell/ev-window.c:4175
+#: ../shell/ev-window.c:4453
 msgid "_Go To"
 msgstr "_Ugrás"
 
-#: ../shell/ev-window.c:4177
+#: ../shell/ev-window.c:4455
 msgid "Open in New _Window"
 msgstr "Megnyitás új _ablakban"
 
-#: ../shell/ev-window.c:4179
+#: ../shell/ev-window.c:4457
 msgid "_Copy Link Address"
 msgstr "Hivatkozás cí_mének másolása"
 
-#: ../shell/ev-window.c:4181
+#: ../shell/ev-window.c:4459
 msgid "_Save Image As..."
 msgstr "_Kép mentése másként..."
 
-#: ../shell/ev-window.c:4183
+#: ../shell/ev-window.c:4461
 msgid "Copy _Image"
 msgstr "Ké_p másolása"
 
-#: ../shell/ev-window.c:4222
+#: ../shell/ev-window.c:4500
 msgid "Page"
 msgstr "Oldal"
 
-#: ../shell/ev-window.c:4223
+#: ../shell/ev-window.c:4501
 msgid "Select Page"
 msgstr "Oldal kiválasztása"
 
-#: ../shell/ev-window.c:4233
+#: ../shell/ev-window.c:4511
 msgid "Zoom"
 msgstr "Nagyítás"
 
-#: ../shell/ev-window.c:4235
+#: ../shell/ev-window.c:4513
 msgid "Adjust the zoom level"
 msgstr "A nagyítás szintjének beállítása"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4523
 msgid "Navigation"
 msgstr "Navigáció"
 
-#: ../shell/ev-window.c:4247
+#: ../shell/ev-window.c:4525
 msgid "Back"
 msgstr "Vissza"
 
-#: ../shell/ev-window.c:4249
+#: ../shell/ev-window.c:4527
 msgid "Move across visited pages"
 msgstr "Mozgás a megjelenített oldalak között"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4265
+#: ../shell/ev-window.c:4543
 msgid "Previous"
 msgstr "Előző"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4270
+#: ../shell/ev-window.c:4548
 msgid "Next"
 msgstr "Következő"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4274
+#: ../shell/ev-window.c:4552
 msgid "Zoom In"
 msgstr "Nagyítás"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4278
+#: ../shell/ev-window.c:4556
 msgid "Zoom Out"
 msgstr "Kicsinyítés"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4286
+#: ../shell/ev-window.c:4564
 msgid "Fit Width"
 msgstr "Szélesség igazítása"
 
-#: ../shell/ev-window.c:4598
+#: ../shell/ev-window.c:4752
+msgid "Unable to open external link"
+msgstr "A külső hivatkozás nem nyitható meg"
+
+#: ../shell/ev-window.c:4754
+#, c-format
+msgid "Invalid URI: “%s”"
+msgstr "Érvénytelen URI: \"%s\""
+
+#: ../shell/ev-window.c:4922
 msgid "The image could not be saved."
 msgstr "A kép nem menthető."
 
-#: ../shell/ev-window.c:4617
+#: ../shell/ev-window.c:4957
 msgid "Save Image"
 msgstr "Kép mentése"
 
-#: ../shell/ev-window.c:4672
+#: ../shell/ev-window.c:5013
 msgid "Unable to open attachment"
 msgstr "A melléklet nem nyitható meg"
 
-#: ../shell/ev-window.c:4719
+#: ../shell/ev-window.c:5066
 msgid "The attachment could not be saved."
 msgstr "A melléklet nem menthető."
 
-#: ../shell/ev-window.c:4743
+#: ../shell/ev-window.c:5118
 msgid "Save Attachment"
 msgstr "Melléklet mentése"
 
-#: ../shell/ev-window-title.c:141
+#: ../shell/ev-window-title.c:139
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - Jelszó szükséges"
 
-#: ../shell/main.c:53
+#: ../shell/main.c:59
 msgid "The page of the document to display."
 msgstr "A dokumentum megjelenítendő oldala."
 
-#: ../shell/main.c:53
+#: ../shell/main.c:59
 msgid "PAGE"
 msgstr "OLDAL"
 
-#: ../shell/main.c:54
+#: ../shell/main.c:60
 msgid "Run evince in fullscreen mode"
 msgstr "Teljes képernyős mód"
 
-#: ../shell/main.c:55
+#: ../shell/main.c:61
 msgid "Run evince in presentation mode"
 msgstr "Az Evince futtatása bemutató módban"
 
-#: ../shell/main.c:56
+#: ../shell/main.c:62
 msgid "Run evince as a previewer"
 msgstr "Előnézet mód"
 
-#: ../shell/main.c:58
+#: ../shell/main.c:65
 msgid "[FILE...]"
 msgstr "[FÁJL...]"
 
-#: ../shell/main.c:269
+#: ../shell/main.c:314
 msgid "GNOME Document Viewer"
 msgstr "GNOME dokumentummegjelenítő"
 
-#: ../shell/main.c:310
+#: ../shell/main.c:373
 msgid "Evince Document Viewer"
 msgstr "Evince dokumentummegjelenítő"
 
