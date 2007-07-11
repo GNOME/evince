@@ -1,3 +1,11 @@
+2007-07-11  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* cut-n-paste/zoom-control/ephy-zoom-control.c:
+	* shell/eggfindbar.c: (egg_find_bar_init):
+
+	Fix build with gtk+ >= 2.11.5 due to gtktooltips
+	deprecation. Fixes bug #455667
+	
 2007-07-10  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:

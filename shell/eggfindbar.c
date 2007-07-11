@@ -34,6 +34,7 @@ Boston, MA 02111-1307, USA.
 #include <gtk/gtkseparatortoolitem.h>
 #include <gtk/gtkarrow.h>
 #include <gtk/gtktoggletoolbutton.h>
+#include <gtk/gtkversion.h>
 
 #include <string.h>
 
@@ -328,17 +329,27 @@ egg_find_bar_init (EggFindBar *find_bar)
   arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
   priv->previous_button = gtk_tool_button_new (arrow, Q_("Find Previous"));
   gtk_tool_item_set_is_important (priv->previous_button, TRUE);
+#if GTK_CHECK_VERSION (2, 11, 5)
+  gtk_widget_set_tooltip_text (GTK_WIDGET (priv->previous_button),
+			       _("Find previous occurrence of the search string"));
+#else
   gtk_tool_item_set_tooltip (priv->previous_button, GTK_TOOLBAR (find_bar)->tooltips,
 		             _("Find previous occurrence of the search string"),
 		             NULL);
+#endif
 
   /* Next */
   arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
   priv->next_button = gtk_tool_button_new (arrow, Q_("Find Next"));
   gtk_tool_item_set_is_important (priv->next_button, TRUE);
+#if GTK_CHECK_VERSION (2, 11, 5)
+  gtk_widget_set_tooltip_text (GTK_WIDGET (priv->next_button),
+			       _("Find next occurrence of the search string"));
+#else
   gtk_tool_item_set_tooltip (priv->next_button, GTK_TOOLBAR (find_bar)->tooltips,
 		             _("Find next occurrence of the search string"),
 		             NULL);
+#endif
 
   /* Separator*/
   priv->status_separator = gtk_separator_tool_item_new();
@@ -347,9 +358,14 @@ egg_find_bar_init (EggFindBar *find_bar)
   priv->case_button = gtk_toggle_tool_button_new ();
   g_object_set (G_OBJECT (priv->case_button), "label", _("C_ase Sensitive"), NULL);
   gtk_tool_item_set_is_important (priv->case_button, TRUE);
+#if GTK_CHECK_VERSION (2, 11, 5)
+  gtk_widget_set_tooltip_text (GTK_WIDGET (priv->case_button),
+			       _("Toggle case sensitive search"));
+#else  
   gtk_tool_item_set_tooltip (priv->case_button, GTK_TOOLBAR (find_bar)->tooltips,
 		             _("Toggle case sensitive search"),
 		             NULL);
+#endif
   /* Status */
   priv->status_item = gtk_tool_item_new();
   gtk_tool_item_set_expand (priv->status_item, TRUE);

@@ -27,7 +27,9 @@
 
 #include <gtk/gtk.h>
 #include <gtk/gtkcombobox.h>
+#if !GTK_CHECK_VERSION (2, 11, 5)
 #include <gtk/gtktooltips.h>
+#endif
 #include <glib/gi18n.h>
 
 #define EPHY_ZOOM_CONTROL_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EPHY_TYPE_ZOOM_CONTROL, EphyZoomControlPrivate))
@@ -235,6 +237,7 @@ ephy_zoom_control_get_property (GObject *object,
 	}
 }
 
+#if !GTK_CHECK_VERSION (2, 11, 5)
 static void
 set_combo_tooltip (GtkWidget *widget, 
 		   GtkTooltipsData *data)
@@ -286,6 +289,7 @@ ephy_zoom_control_set_tooltip (GtkToolItem *tool_item,
 
 	return TRUE;
 }
+#endif /* !GTK_CHECK_VERSION (2, 11, 5) */
 
 static void
 ephy_zoom_control_class_init (EphyZoomControlClass *klass)
@@ -302,7 +306,9 @@ ephy_zoom_control_class_init (EphyZoomControlClass *klass)
 	object_class->get_property = ephy_zoom_control_get_property;
 	object_class->finalize = ephy_zoom_control_finalize;
 
+#if !GTK_CHECK_VERSION (2, 11, 5)
 	tool_item_class->set_tooltip = ephy_zoom_control_set_tooltip;
+#endif
 
 	g_object_class_install_property (object_class,
 					 PROP_ZOOM,
