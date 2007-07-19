@@ -1841,7 +1841,10 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 			field_text->do_scroll = poppler_form_field_text_do_scroll (poppler_field);
 			field_text->is_rich_text = poppler_form_field_text_is_rich_text (poppler_field);
 			field_text->is_password = poppler_form_field_text_is_password (poppler_field);
-
+			
+#ifdef HAVE_POPPLER_FORM_FIELD_TEXT_GET_MAX_LEN
+			field_text->max_len = poppler_form_field_text_get_max_len (poppler_field);
+#endif
 			field_text->text = poppler_form_field_text_get_text (poppler_field);
 
 		}
