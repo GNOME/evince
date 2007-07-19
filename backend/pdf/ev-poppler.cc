@@ -1829,9 +1829,6 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 			        case POPPLER_FORM_TEXT_MULTILINE:
 					ev_text_type = EV_FORM_FIELD_TEXT_MULTILINE;
 					break;
-			        case POPPLER_FORM_TEXT_PASSWORD:
-					ev_text_type = EV_FORM_FIELD_TEXT_PASSWORD;
-					break;
 			        case POPPLER_FORM_TEXT_FILE_SELECT:
 					ev_text_type = EV_FORM_FIELD_TEXT_FILE_SELECT;
 					break;
@@ -1843,6 +1840,7 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 			field_text->do_spell_check = poppler_form_field_text_do_spell_check (poppler_field);
 			field_text->do_scroll = poppler_form_field_text_do_scroll (poppler_field);
 			field_text->is_rich_text = poppler_form_field_text_is_rich_text (poppler_field);
+			field_text->is_password = poppler_form_field_text_is_password (poppler_field);
 
 			field_text->text = poppler_form_field_text_get_text (poppler_field);
 

@@ -81,7 +81,6 @@ typedef enum
 {
 	EV_FORM_FIELD_TEXT_NORMAL,
 	EV_FORM_FIELD_TEXT_MULTILINE,
-	EV_FORM_FIELD_TEXT_PASSWORD,
 	EV_FORM_FIELD_TEXT_FILE_SELECT
 } EvFormFieldTextType;
 
@@ -125,6 +124,7 @@ struct _EvFormFieldText
 	gboolean do_scroll : 1;
 	gboolean comb : 1;
 	gboolean is_rich_text : 1;
+	gboolean is_password;
 
 	gint   max_len;
 	gchar *text;

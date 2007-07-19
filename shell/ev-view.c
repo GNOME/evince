@@ -1774,12 +1774,10 @@ ev_view_form_field_text_create_widget (EvView      *view,
 	        case EV_FORM_FIELD_TEXT_FILE_SELECT:
 			/* TODO */
 	        case EV_FORM_FIELD_TEXT_NORMAL:
-	        case EV_FORM_FIELD_TEXT_PASSWORD:
 			text = gtk_entry_new ();
 			gtk_entry_set_has_frame (GTK_ENTRY (text), FALSE);
 			gtk_entry_set_max_length (GTK_ENTRY (text), field_text->max_len);
-			gtk_entry_set_visibility (GTK_ENTRY (text),
-						  !(field_text->type == EV_FORM_FIELD_TEXT_PASSWORD));
+			gtk_entry_set_visibility (GTK_ENTRY (text), !field_text->is_password);
 			
 			if (txt) {
 				gtk_entry_set_text (GTK_ENTRY (text), txt);
@@ -1798,7 +1796,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 		
 			text = gtk_text_view_new ();
 			buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text));
-		
+			
 			if (txt) {
 				gtk_text_buffer_set_text (buffer, txt, -1);
 				g_free (txt);
