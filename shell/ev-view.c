@@ -1642,55 +1642,47 @@ ev_view_form_field_button_create_widget (EvView      *view,
 	switch (field_button->type) {
 	        case EV_FORM_FIELD_BUTTON_PUSH:
 			return NULL;
-	        case EV_FORM_FIELD_BUTTON_CHECK: {
-			gboolean state;
-
-			field_region = ev_view_form_field_get_region (view, field);
-			
-			state = ev_document_forms_form_field_button_get_state (EV_DOCUMENT_FORMS (view->document),
-									       field);
-			ev_document_forms_form_field_button_set_state (EV_DOCUMENT_FORMS (view->document),
-								       field, !state);
-		}
-			break;
-			
+	        case EV_FORM_FIELD_BUTTON_CHECK:
   	        case EV_FORM_FIELD_BUTTON_RADIO: {
 			gboolean  state;
 			GList    *forms_mapping, *l;
 
 			state = ev_document_forms_form_field_button_get_state (EV_DOCUMENT_FORMS (view->document),
 									       field);
-			if (state && field_button->state)
+
+			/* FIXME: it actually depends on NoToggleToOff flags */
+			if (field_button->type == EV_FORM_FIELD_BUTTON_RADIO &&
+			    state && field_button->state)
 				return NULL;
 			
 			field_region = ev_view_form_field_get_region (view, field);
 
-			/* For radio buttons we need to update also the region for the
-			 * current selected item
+			/* For radio buttons and checkbox buttons that are in a set
+			 * we need to update also the region for the current selected item
 			 */
 			forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
 										field->page);
 			for (l = forms_mapping; l; l = g_list_next (l)) {
-				EvFormField *radio = ((EvFormFieldMapping *)(l->data))->field;
-				GdkRegion   *radio_region;
+				EvFormField *button = ((EvFormFieldMapping *)(l->data))->field;
+				GdkRegion   *button_region;
 
-				if (radio->id == field->id)
+				if (button->id == field->id)
 					continue;
 
 				/* FIXME: only buttons in the same group should be updated */
-				if (!EV_IS_FORM_FIELD_BUTTON (radio) ||
-				    EV_FORM_FIELD_BUTTON (radio)->type != EV_FORM_FIELD_BUTTON_RADIO ||
-				    EV_FORM_FIELD_BUTTON (radio)->state != TRUE)
+				if (!EV_IS_FORM_FIELD_BUTTON (button) ||
+				    EV_FORM_FIELD_BUTTON (button)->type != field_button->type ||
+				    EV_FORM_FIELD_BUTTON (button)->state != TRUE)
 					continue;
 
-				radio_region = ev_view_form_field_get_region (view, radio);
-				gdk_region_union (field_region, radio_region);
-				gdk_region_destroy (radio_region);
+				button_region = ev_view_form_field_get_region (view, button);
+				gdk_region_union (field_region, button_region);
+				gdk_region_destroy (button_region);
 			}
 			
 			ev_document_forms_form_field_button_set_state (EV_DOCUMENT_FORMS (view->document),
-								       field, TRUE);
-			field_button->state = TRUE;
+								       field, !state);
+			field_button->state = !state;
 		}
 			break;
 	}
