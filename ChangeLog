@@ -1,3 +1,13 @@
+2007-07-24  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_handle_cursor_over_xy),
+	(ev_view_leave_notify_event), (ev_view_finalize),
+	(ev_view_get_property), (ev_view_class_init):
+
+	Use IBEAM cursor for text form fields and NORMAL cursor for read
+	only fields. Remove unused status attribute.
+	
 2007-07-20  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_form_field_button_create_widget):

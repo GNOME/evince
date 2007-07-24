@@ -52,7 +52,6 @@
 
 enum {
 	PROP_0,
-	PROP_STATUS,
 	PROP_FIND_STATUS,
 	PROP_CONTINUOUS,
 	PROP_DUAL_PAGE,
@@ -301,14 +300,11 @@ static void       ev_view_handle_cursor_over_xy              (EvView *view,
 							      gint x,
 							      gint y);
 
-/*** Status messages ***/
-static void       ev_view_set_status                         (EvView             *view,
-							      const char         *message);
+/*** Find ***/
 static void       update_find_status_message                 (EvView             *view,
 							      gboolean            this_page);
 static void       ev_view_set_find_status                    (EvView             *view,
 							      const char         *message);
-/*** Find ***/
 static void       jump_to_find_result                        (EvView             *view);
 static void       jump_to_find_page                          (EvView             *view, 
 							      EvViewFindDirection direction,
@@ -1493,8 +1489,12 @@ tip_from_link (EvView *view, EvLink *link)
 static void
 ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 {
-	EvLink *link;
+	EvLink      *link;
+	EvFormField *field;
 
+	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
+		return;
+	
 	link = ev_view_get_link_at_location (view, x, y);
 
 	if (view->link_tooltip == NULL) {
@@ -1521,10 +1521,17 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
-	} else if (ev_view_get_form_field_at_location (view, x, y)) {
-		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
+	} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
+		if (field->is_read_only) {
+			if (view->cursor == EV_VIEW_CURSOR_LINK ||
+			    view->cursor == EV_VIEW_CURSOR_IBEAM)
+				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+		} else if (EV_IS_FORM_FIELD_TEXT (field)) {
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
+		} else {
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
+		}
 	} else {
-		ev_view_set_status (view, NULL);
 		if (view->cursor == EV_VIEW_CURSOR_LINK ||
 		    view->cursor == EV_VIEW_CURSOR_IBEAM)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
@@ -3248,8 +3255,6 @@ ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 {
 	EvView *view = EV_VIEW (widget);
     
-	ev_view_set_status (view, NULL);
-
 	if (view->cursor == EV_VIEW_CURSOR_LINK ||
 	    view->cursor == EV_VIEW_CURSOR_IBEAM)
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
@@ -3563,7 +3568,6 @@ ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
-	g_free (view->status);
 	g_free (view->find_status);
 
 	clear_selection (view);
@@ -3698,11 +3702,8 @@ ev_view_get_property (GObject *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
-	        case PROP_STATUS:
-			g_value_set_string (value, view->status);
-			break;
 	        case PROP_FIND_STATUS:
-			g_value_set_string (value, view->status);
+			g_value_set_string (value, view->find_status);
 			break;
 	        case PROP_CONTINUOUS:
 			g_value_set_boolean (value, view->continuous);
@@ -3815,13 +3816,6 @@ ev_view_class_init (EvViewClass *class)
 		         G_TYPE_NONE, 1,
 			 G_TYPE_OBJECT);
 
-	g_object_class_install_property (object_class,
-					 PROP_STATUS,
-					 g_param_spec_string ("status",
-							      "Status Message",
-							      "The status message",
-							      NULL,
-							      G_PARAM_READABLE));
 
 	g_object_class_install_property (object_class,
 					 PROP_FIND_STATUS,
@@ -4718,28 +4712,7 @@ ev_view_set_zoom_for_size (EvView *view,
 		ev_view_zoom_for_size_single_page (view, width, height, vsb_width, hsb_height);
 }
 
-/*** Status text messages ***/
-
-const char *
-ev_view_get_status (EvView *view)
-{
-	g_return_val_if_fail (EV_IS_VIEW (view), NULL);
-
-	return view->status;
-}
-
-static void
-ev_view_set_status (EvView *view, const char *message)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	if (message != view->status) {
-		g_free (view->status);
-		view->status = g_strdup (message);
-		g_object_notify (G_OBJECT (view), "status");
-	}
-}
-
+/*** Find ***/
 static void
 update_find_status_message (EvView *view, gboolean this_page)
 {
@@ -4788,8 +4761,6 @@ ev_view_set_find_status (EvView *view, const char *message)
 	view->find_status = g_strdup (message);
 	g_object_notify (G_OBJECT (view), "find-status");
 }
-
-/*** Find ***/
 
 static void
 jump_to_find_result (EvView *view)

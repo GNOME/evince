@@ -78,7 +78,6 @@ struct _EvView {
 
 	EvDocument *document;
 
-	char *status;
 	char *find_status;
 	int find_result;
 	gboolean jump_to_find_result;
