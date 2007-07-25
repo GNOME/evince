@@ -1519,8 +1519,6 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		g_free (msg);
 
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
-		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 	} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 		if (field->is_read_only) {
 			if (view->cursor == EV_VIEW_CURSOR_LINK ||
@@ -1531,6 +1529,8 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		} else {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 		}
+	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 	} else {
 		if (view->cursor == EV_VIEW_CURSOR_LINK ||
 		    view->cursor == EV_VIEW_CURSOR_IBEAM)
