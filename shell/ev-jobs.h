@@ -119,6 +119,7 @@ struct _EvJobRender
 	EvJob parent;
 
 	EvRenderContext *rc;
+	gboolean page_ready;
 	gint target_width;
 	gint target_height;
 	cairo_surface_t *surface;
@@ -144,6 +145,8 @@ struct _EvJobRender
 struct _EvJobRenderClass
 {
 	EvJobClass parent_class;
+
+	void    (* page_ready) (EvJobRender *job);
 };
 
 struct _EvJobThumbnail

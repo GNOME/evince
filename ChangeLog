@@ -1,5 +1,22 @@
 2007-07-26  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-pixbuf-cache.c: (job_page_ready_cb), (job_finished_cb),
+	(copy_job_page_and_selection_to_job_info), (copy_job_to_job_info),
+	(add_job), (ev_pixbuf_cache_get_surface),
+	(ev_pixbuf_cache_get_link_mapping),
+	(ev_pixbuf_cache_get_image_mapping),
+	(ev_pixbuf_cache_get_form_field_mapping),
+	(ev_pixbuf_cache_get_text_mapping):
+	* shell/ev-jobs.[ch]: (ev_job_render_class_init),
+	(notify_page_ready), (ev_job_render_page_ready),
+	(ev_job_render_run):
+
+	Add page_ready signal to notify that page is ready as soon as
+	possible even if other page elements like links, forms, images or
+	text mapping are not ready yet.
+	
+2007-07-26  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/dvi/dvi-document.c: (dvi_document_file_exporter_begin),
 	(dvi_document_file_exporter_do_page),
 	(dvi_document_file_exporter_get_capabilities),

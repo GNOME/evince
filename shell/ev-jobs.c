@@ -32,13 +32,18 @@ static void ev_job_load_class_init 	(EvJobLoadClass	     *class);
 static void ev_job_print_init           (EvJobPrint          *job);
 static void ev_job_print_class_init     (EvJobPrintClass     *class);
 
-enum
-{
+enum {
 	FINISHED,
 	LAST_SIGNAL
 };
 
+enum {
+	PAGE_READY,
+	RENDER_LAST_SIGNAL
+};
+
 static guint job_signals[LAST_SIGNAL] = { 0 };
+static guint job_render_signals[RENDER_LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (EvJob, ev_job, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
@@ -151,6 +156,15 @@ ev_job_render_class_init (EvJobRenderClass *class)
 	GObjectClass *oclass;
 
 	oclass = G_OBJECT_CLASS (class);
+
+	job_render_signals [PAGE_READY] =
+		g_signal_new ("page-ready",
+			      EV_TYPE_JOB_RENDER,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvJobRenderClass, page_ready),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 
 	oclass->dispose = ev_job_render_dispose;
 }
@@ -316,6 +330,21 @@ render_finished_cb (EvDocument      *document,
 	ev_job_finished (EV_JOB (job));
 }
 
+static gboolean
+notify_page_ready (EvJobRender *job)
+{
+	g_signal_emit (job, job_render_signals[PAGE_READY], 0);
+
+	return FALSE;
+}
+
+static void
+ev_job_render_page_ready (EvJobRender *job)
+{
+	job->page_ready = TRUE;
+	g_idle_add ((GSourceFunc)notify_page_ready, job);
+}
+
 void
 ev_job_render_run (EvJobRender *job)
 {
@@ -333,23 +362,6 @@ ev_job_render_run (EvJobRender *job)
 		ev_document_fc_mutex_lock ();
 		
 		job->surface = ev_document_render (EV_JOB (job)->document, job->rc);
-
-		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
-			job->link_mapping =
-				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
-							     job->rc->page);
-		if (job->include_images && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
-			job->image_mapping =
-				ev_document_images_get_images (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
-							       job->rc->page);
-		if (job->include_forms && EV_IS_DOCUMENT_FORMS (EV_JOB (job)->document))
-			job->form_field_mapping =
-				ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (EV_JOB(job)->document),
-								   job->rc->page);
-		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
-			job->text_mapping =
-				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document),
-								job->rc);
 		if (job->include_selection && EV_IS_SELECTION (EV_JOB (job)->document)) {
 			ev_selection_render_selection (EV_SELECTION (EV_JOB (job)->document),
 						       job->rc,
@@ -362,8 +374,27 @@ ev_job_render_run (EvJobRender *job)
 								   job->rc,
 								   &(job->selection_points));
 		}
+
+		ev_job_render_page_ready (job);
 		
 		ev_document_fc_mutex_unlock ();
+		
+		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
+			job->text_mapping =
+				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document),
+								job->rc);
+		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
+			job->link_mapping =
+				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
+							     job->rc->page);
+		if (job->include_forms && EV_IS_DOCUMENT_FORMS (EV_JOB (job)->document))
+			job->form_field_mapping =
+				ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (EV_JOB(job)->document),
+								   job->rc->page);
+		if (job->include_images && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
+			job->image_mapping =
+				ev_document_images_get_images (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
+							       job->rc->page);
 		EV_JOB (job)->finished = TRUE;
 	}
 
