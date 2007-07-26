@@ -30,10 +30,32 @@
 G_BEGIN_DECLS
 
 typedef enum {
-        EV_FILE_FORMAT_PS,
-        EV_FILE_FORMAT_PDF,
-        EV_FILE_FORMAT_UNKNOWN
+	EV_FILE_FORMAT_UNKNOWN,
+	EV_FILE_FORMAT_PS,
+	EV_FILE_FORMAT_PDF
 } EvFileExporterFormat;
+
+typedef enum {
+	EV_FILE_EXPORTER_CAN_PAGE_SET     = 1 << 0,
+	EV_FILE_EXPORTER_CAN_COPIES       = 1 << 1,
+	EV_FILE_EXPORTER_CAN_COLLATE      = 1 << 2,
+	EV_FILE_EXPORTER_CAN_REVERSE      = 1 << 3,
+	EV_FILE_EXPORTER_CAN_SCALE        = 1 << 4,
+	EV_FILE_EXPORTER_CAN_GENERATE_PDF = 1 << 5,
+	EV_FILE_EXPORTER_CAN_GENERATE_PS  = 1 << 6,
+	EV_FILE_EXPORTER_CAN_PREVIEW      = 1 << 7,
+	EV_FILE_EXPORTER_CAN_NUMBER_UP    = 1 << 8
+} EvFileExporterCapabilities;
+
+typedef struct {
+	EvFileExporterFormat format;
+	const gchar         *filename;
+	gint                 first_page;
+	gint                 last_page;
+	gdouble              paper_width;
+	gdouble              paper_height;
+	gboolean             duplex;
+} EvFileExporterContext;
 
 #define EV_TYPE_FILE_EXPORTER            (ev_file_exporter_get_type ())
 #define EV_FILE_EXPORTER(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_FILE_EXPORTER, EvFileExporter))
@@ -42,42 +64,28 @@ typedef enum {
 #define EV_IS_FILE_EXPORTER_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_FILE_EXPORTER))
 #define EV_FILE_EXPORTER_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_FILE_EXPORTER, EvFileExporterIface))
 
-typedef struct _EvFileExporter EvFileExporter;
+typedef struct _EvFileExporter      EvFileExporter;
 typedef struct _EvFileExporterIface EvFileExporterIface;
 
 struct _EvFileExporterIface {
         GTypeInterface base_iface;
 
         /* Methods  */
-        gboolean   (* format_supported) (EvFileExporter      *exporter,
-                                         EvFileExporterFormat format);
-        void       (* begin)            (EvFileExporter      *exporter,
-                                         EvFileExporterFormat format,
-                                         const gchar         *filename,
-                                         gint                 first_page,
-                                         gint                 last_page,
-                                         gdouble              paper_width,
-                                         gdouble              paper_height,
-                                         gboolean             duplex);
-        void       (* do_page)          (EvFileExporter      *exporter,
-                                         EvRenderContext     *rc);
-        void       (* end)              (EvFileExporter      *exporter);
+        void                       (* begin)            (EvFileExporter        *exporter,
+							 EvFileExporterContext *fc);
+        void                       (* do_page)          (EvFileExporter        *exporter,
+							 EvRenderContext       *rc);
+        void                       (* end)              (EvFileExporter        *exporter);
+	EvFileExporterCapabilities (* get_capabilities) (EvFileExporter        *exporter);
 };
 
-GType    ev_file_exporter_get_type         (void) G_GNUC_CONST;
-gboolean ev_file_exporter_format_supported (EvFileExporter      *exporter,
-                                            EvFileExporterFormat format);
-void     ev_file_exporter_begin            (EvFileExporter      *exporter,
-                                            EvFileExporterFormat format, 
-                                            const gchar         *filename,
-                                            gint                 first_page,
-                                            gint                 last_page,
-                                            gdouble              paper_width,
-                                            gdouble              paper_height,
-                                            gboolean             duplex);
-void     ev_file_exporter_do_page          (EvFileExporter      *exporter,
-                                            EvRenderContext     *rc);
-void     ev_file_exporter_end              (EvFileExporter      *exporter);
+GType                      ev_file_exporter_get_type         (void) G_GNUC_CONST;
+void                       ev_file_exporter_begin            (EvFileExporter        *exporter,
+							      EvFileExporterContext *fc);
+void                       ev_file_exporter_do_page          (EvFileExporter        *exporter,
+							      EvRenderContext       *rc);
+void                       ev_file_exporter_end              (EvFileExporter        *exporter);
+EvFileExporterCapabilities ev_file_exporter_get_capabilities (EvFileExporter        *exporter);
 
 G_END_DECLS
 

@@ -598,22 +598,9 @@ ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 }
 
 /* EvFileExporterIface */
-static gboolean
-ps_document_file_exporter_format_supported (EvFileExporter      *exporter,
-					    EvFileExporterFormat format)
-{
-	return (format == EV_FILE_FORMAT_PS);
-}
-
 static void
-ps_document_file_exporter_begin (EvFileExporter      *exporter,
-				 EvFileExporterFormat format,
-				 const char          *filename,
-				 int                  first_page,
-				 int                  last_page,
-				 double               width,
-				 double               height,
-				 gboolean             duplex)
+ps_document_file_exporter_begin (EvFileExporter        *exporter,
+				 EvFileExporterContext *fc)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 
@@ -623,11 +610,12 @@ ps_document_file_exporter_begin (EvFileExporter      *exporter,
 		document->ps_export_pagelist = g_new0 (int, document->doc->numpages);
 	}
 
-	document->ps_export_filename = g_strdup (filename);
+	document->ps_export_filename = g_strdup (fc->filename);
 }
 
 static void
-ps_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+ps_document_file_exporter_do_page (EvFileExporter  *exporter,
+				   EvRenderContext *rc)
 {
 	PSDocument *document = PS_DOCUMENT (exporter);
 	
@@ -653,11 +641,18 @@ ps_document_file_exporter_end (EvFileExporter *exporter)
 	}
 }
 
+static EvFileExporterCapabilities
+ps_document_file_exporter_get_capabilities (EvFileExporter *exporter)
+{
+	return  EV_FILE_EXPORTER_CAN_PAGE_SET |
+		EV_FILE_EXPORTER_CAN_GENERATE_PS;
+}
+
 static void
 ps_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-	iface->format_supported = ps_document_file_exporter_format_supported;
 	iface->begin = ps_document_file_exporter_begin;
 	iface->do_page = ps_document_file_exporter_do_page;
 	iface->end = ps_document_file_exporter_end;
+	iface->get_capabilities = ps_document_file_exporter_get_capabilities;
 }

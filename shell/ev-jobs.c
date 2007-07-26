@@ -643,12 +643,13 @@ ev_job_print_do_page (EvJobPrint *job, gint page)
 void
 ev_job_print_run (EvJobPrint *job)
 {
-	EvDocument *document = EV_JOB (job)->document;
-	gint        fd;
-	gint        last_page;
-	gint        first_page;
-	gint        i;
-	gchar      *filename;
+	EvDocument            *document = EV_JOB (job)->document;
+	EvFileExporterContext  fc;
+	gint                   fd;
+	gint                   last_page;
+	gint                   first_page;
+	gint                   i;
+	gchar                 *filename;
 	
 	g_return_if_fail (EV_IS_JOB_PRINT (job));
 
@@ -671,14 +672,17 @@ ev_job_print_run (EvJobPrint *job)
 	first_page = ev_print_job_get_first_page (job);
 	last_page = ev_print_job_get_last_page (job);
 
+	fc.format = g_ascii_strcasecmp (job->format, "pdf") == 0 ?
+		EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
+	fc.filename = job->temp_file;
+	fc.first_page = MIN (first_page, last_page);
+	fc.last_page = MAX (first_page, last_page);
+	fc.paper_width = job->width;
+	fc.paper_height = job->height;
+	fc.duplex = FALSE;
+
 	ev_document_doc_mutex_lock ();
-	ev_file_exporter_begin (EV_FILE_EXPORTER (document),
-				g_ascii_strcasecmp (job->format, "pdf") == 0 ?
-				EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS,
-				job->temp_file,
-				MIN (first_page, last_page),
-				MAX (first_page, last_page),
-				job->width, job->height, FALSE);
+	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);
 	ev_document_doc_mutex_unlock ();
 
 	for (i = 0; i < job->copies; i++) {

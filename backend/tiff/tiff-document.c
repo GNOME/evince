@@ -450,27 +450,13 @@ tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 }
 
 /* postscript exporter implementation */
-
-static gboolean
-tiff_document_file_exporter_format_supported (EvFileExporter      *exporter,
-					      EvFileExporterFormat format)
-{
-	return (format == EV_FILE_FORMAT_PS);
-}
-
 static void
-tiff_document_file_exporter_begin (EvFileExporter      *exporter,
-				   EvFileExporterFormat format,
-				   const char          *filename,
-				   int                  first_page,
-				   int                  last_page,
-				   double               width,
-				   double               height,
-				   gboolean             duplex)
+tiff_document_file_exporter_begin (EvFileExporter        *exporter,
+				   EvFileExporterContext *fc)
 {
 	TiffDocument *document = TIFF_DOCUMENT (exporter);
 
-	document->ps_export_ctx = tiff2ps_context_new(filename);
+	document->ps_export_ctx = tiff2ps_context_new(fc->filename);
 }
 
 static void
@@ -496,13 +482,23 @@ tiff_document_file_exporter_end (EvFileExporter *exporter)
 	tiff2ps_context_finalize(document->ps_export_ctx);
 }
 
+static EvFileExporterCapabilities
+tiff_document_file_exporter_get_capabilities (EvFileExporter *exporter)
+{
+	return  EV_FILE_EXPORTER_CAN_PAGE_SET |
+		EV_FILE_EXPORTER_CAN_COPIES |
+		EV_FILE_EXPORTER_CAN_COLLATE |
+		EV_FILE_EXPORTER_CAN_REVERSE |
+		EV_FILE_EXPORTER_CAN_GENERATE_PS;
+}
+
 static void
 tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-	iface->format_supported = tiff_document_file_exporter_format_supported;
 	iface->begin = tiff_document_file_exporter_begin;
 	iface->do_page = tiff_document_file_exporter_do_page;
 	iface->end = tiff_document_file_exporter_end;
+	iface->get_capabilities = tiff_document_file_exporter_get_capabilities;
 }
 
 static void

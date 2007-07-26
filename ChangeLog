@@ -1,3 +1,37 @@
+2007-07-26  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/dvi/dvi-document.c: (dvi_document_file_exporter_begin),
+	(dvi_document_file_exporter_do_page),
+	(dvi_document_file_exporter_get_capabilities),
+	(dvi_document_file_exporter_iface_init):
+	* backend/ps/ps-document.c: (ps_document_file_exporter_begin),
+	(ps_document_file_exporter_do_page),
+	(ps_document_file_exporter_get_capabilities),
+	(ps_document_file_exporter_iface_init):
+	* backend/djvu/djvu-document.c:
+	(djvu_document_file_exporter_begin),
+	(djvu_document_file_exporter_end),
+	(djvu_document_file_exporter_get_capabilities),
+	(djvu_document_file_exporter_iface_init):
+	* backend/tiff/tiff-document.c:
+	(tiff_document_file_exporter_begin),
+	(tiff_document_file_exporter_get_capabilities),
+	(tiff_document_document_file_exporter_iface_init):
+	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin),
+	(pdf_document_file_exporter_do_page),
+	(pdf_document_file_exporter_get_capabilities),
+	(pdf_document_file_exporter_iface_init):
+	* libdocument/ev-file-exporter.[ch]: (ev_file_exporter_begin),
+	(ev_file_exporter_get_capabilities):
+	* shell/ev-print-job.c: (ev_print_job_use_print_dialog_settings),
+	(idle_print_handler), (ev_print_job_print):
+	* shell/ev-jobs.c: (ev_job_print_run):
+	* shell/ev-window.c: (ev_window_print_send),
+	(ev_window_print_range):
+
+	Use capabilities to know which options should be offered by the
+	print dialog depending on the document backend.
+	
 2007-07-25  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_handle_cursor_over_xy):

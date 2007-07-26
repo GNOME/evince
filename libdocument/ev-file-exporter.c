@@ -43,39 +43,18 @@ ev_file_exporter_get_type (void)
         return type;
 }
 
-gboolean
-ev_file_exporter_format_supported (EvFileExporter      *exporter,
-				   EvFileExporterFormat format)
-{
-	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
-
-	if (format < EV_FILE_FORMAT_PS ||
-	    format > EV_FILE_FORMAT_PDF)
-		return FALSE;
-
-	return iface->format_supported (exporter, format);
-}
-
 void
-ev_file_exporter_begin (EvFileExporter      *exporter,
-                        EvFileExporterFormat format,
-                        const gchar         *filename,
-                        gint                 first_page,
-                        gint                 last_page,
-                        gdouble              paper_width,
-                        gdouble              paper_height,
-                        gboolean             duplex)
+ev_file_exporter_begin (EvFileExporter        *exporter,
+                        EvFileExporterContext *fc)
 {
         EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
-	g_return_if_fail (ev_file_exporter_format_supported (exporter, format));
-
-        iface->begin (exporter, format, filename, first_page, last_page,
-                      paper_width, paper_height, duplex);
+        iface->begin (exporter, fc);
 }
 
 void
-ev_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+ev_file_exporter_do_page (EvFileExporter  *exporter,
+			  EvRenderContext *rc)
 {
         EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
@@ -88,4 +67,12 @@ ev_file_exporter_end (EvFileExporter *exporter)
         EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
         iface->end (exporter);
+}
+
+EvFileExporterCapabilities
+ev_file_exporter_get_capabilities (EvFileExporter *exporter)
+{
+	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+
+	iface->get_capabilities (exporter);
 }

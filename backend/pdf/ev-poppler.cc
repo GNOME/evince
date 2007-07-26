@@ -1506,17 +1506,6 @@ pdf_document_find_iface_init (EvDocumentFindIface *iface)
         iface->cancel = pdf_document_find_cancel;
 }
 
-static const gboolean supported_formats[] = {
-	TRUE, /* EV_FILE_FORMAT_PS */
-#ifdef HAVE_CAIRO_PDF
-#ifdef HAVE_POPPLER_PAGE_RENDER
-	TRUE, /* EV_FILE_FORMAT_PDF */
-#else
-	FALSE, /* EV_FILE_FORMAT_PDF */
-#endif
-#endif
-};
-
 static void
 pdf_print_context_free (PdfPrintContext *ctx)
 {
@@ -1536,22 +1525,9 @@ pdf_print_context_free (PdfPrintContext *ctx)
 	g_free (ctx);
 }
 
-static gboolean
-pdf_document_file_exporter_format_supported (EvFileExporter      *exporter,
-					     EvFileExporterFormat format)
-{
-	return supported_formats[format];
-}
-
 static void
-pdf_document_file_exporter_begin (EvFileExporter      *exporter,
-				  EvFileExporterFormat format,
-				  const char          *filename,
-				  int                  first_page,
-				  int                  last_page,
-				  double               width,
-				  double               height,
-				  gboolean             duplex)
+pdf_document_file_exporter_begin (EvFileExporter        *exporter,
+				  EvFileExporterContext *fc)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx;
@@ -1560,22 +1536,22 @@ pdf_document_file_exporter_begin (EvFileExporter      *exporter,
 		pdf_print_context_free (pdf_document->print_ctx);
 	pdf_document->print_ctx = g_new0 (PdfPrintContext, 1);
 	ctx = pdf_document->print_ctx;
-	ctx->format = format;
+	ctx->format = fc->format;
 	
-	switch (format) {
+	switch (fc->format) {
 	        case EV_FILE_FORMAT_PS:
 			ctx->ps_file = poppler_ps_file_new (pdf_document->document,
-							    filename, first_page,
-							    last_page - first_page + 1);
-			poppler_ps_file_set_paper_size (ctx->ps_file, width, height);
-			poppler_ps_file_set_duplex (ctx->ps_file, duplex);
+							    fc->filename, fc->first_page,
+							    fc->last_page - fc->first_page + 1);
+			poppler_ps_file_set_paper_size (ctx->ps_file, fc->paper_width, fc->paper_height);
+			poppler_ps_file_set_duplex (ctx->ps_file, fc->duplex);
 
 			break;
 	        case EV_FILE_FORMAT_PDF: {
 #ifdef HAVE_CAIRO_PDF
 			cairo_surface_t *surface;
 			
-			surface = cairo_pdf_surface_create (filename, width, height);
+			surface = cairo_pdf_surface_create (fc->filename, fc->paper_width, fc->paper_height);
 			ctx->pdf_cairo = cairo_create (surface);
 			cairo_surface_destroy (surface);
 #endif
@@ -1587,7 +1563,8 @@ pdf_document_file_exporter_begin (EvFileExporter      *exporter,
 }
 
 static void
-pdf_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
+				    EvRenderContext *rc)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx = pdf_document->print_ctx;
@@ -1629,13 +1606,30 @@ pdf_document_file_exporter_end (EvFileExporter *exporter)
 	pdf_document->print_ctx = NULL;
 }
 
+static EvFileExporterCapabilities
+pdf_document_file_exporter_get_capabilities (EvFileExporter *exporter)
+{
+	return  (EvFileExporterCapabilities) (
+		EV_FILE_EXPORTER_CAN_PAGE_SET |
+		EV_FILE_EXPORTER_CAN_COPIES |
+		EV_FILE_EXPORTER_CAN_COLLATE |
+		EV_FILE_EXPORTER_CAN_REVERSE |
+		EV_FILE_EXPORTER_CAN_SCALE |
+#ifdef HAVE_CAIRO_PDF
+#ifdef HAVE_POPPLER_PAGE_RENDER
+		EV_FILE_EXPORTER_CAN_GENERATE_PDF |
+#endif
+#endif
+		EV_FILE_EXPORTER_CAN_GENERATE_PS);
+}
+
 static void
 pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-	iface->format_supported = pdf_document_file_exporter_format_supported;
         iface->begin = pdf_document_file_exporter_begin;
         iface->do_page = pdf_document_file_exporter_do_page;
         iface->end = pdf_document_file_exporter_end;
+	iface->get_capabilities = pdf_document_file_exporter_get_capabilities;
 }
 
 static void

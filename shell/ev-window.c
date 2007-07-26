@@ -2211,6 +2211,7 @@ ev_window_print_send (EvWindow    *window,
 		      const gchar *filename)
 {
 	GtkPrintSettings *settings;
+	EvFileExporterCapabilities capabilities;
 	
 	/* Some printers take into account some print settings,
 	 * and others don't. However we have exported the document
@@ -2219,14 +2220,21 @@ ev_window_print_send (EvWindow    *window,
 	 * settings set to default values. 
 	 */
 	settings = gtk_print_settings_copy (window->priv->print_settings);
-	gtk_print_settings_set_n_copies (settings, 1);
-	gtk_print_settings_set_page_ranges (settings, NULL, 0);
-	gtk_print_settings_set_page_set (settings, GTK_PAGE_SET_ALL);
-	gtk_print_settings_set_print_pages (settings, GTK_PRINT_PAGES_ALL);
-	gtk_print_settings_set_scale (settings, 1.0);
-	gtk_print_settings_set_collate (settings, FALSE);
-	gtk_print_settings_set_reverse (settings, FALSE);
+	capabilities = ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (window->priv->document));
 
+	gtk_print_settings_set_page_ranges (settings, NULL, 0);
+	gtk_print_settings_set_print_pages (settings, GTK_PRINT_PAGES_ALL);
+	if (capabilities & EV_FILE_EXPORTER_CAN_COPIES)
+		gtk_print_settings_set_n_copies (settings, 1);
+	if (capabilities & EV_FILE_EXPORTER_CAN_PAGE_SET)
+		gtk_print_settings_set_page_set (settings, GTK_PAGE_SET_ALL);
+	if (capabilities & EV_FILE_EXPORTER_CAN_SCALE)
+		gtk_print_settings_set_scale (settings, 1.0);
+	if (capabilities & EV_FILE_EXPORTER_CAN_COLLATE)
+		gtk_print_settings_set_collate (settings, FALSE);
+	if (capabilities & EV_FILE_EXPORTER_CAN_REVERSE)
+		gtk_print_settings_set_reverse (settings, FALSE);
+	
 	if (window->priv->print_preview) {
 		gchar *uri;
 		gchar *print_settings_file = NULL;
@@ -2457,20 +2465,8 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 	dialog = gtk_print_unix_dialog_new (_("Print"), GTK_WINDOW (ev_window));
 	ev_window->priv->print_dialog = dialog;
 	
-	capabilities = GTK_PRINT_CAPABILITY_PAGE_SET |
-		GTK_PRINT_CAPABILITY_COPIES |
-		GTK_PRINT_CAPABILITY_COLLATE |
-		GTK_PRINT_CAPABILITY_REVERSE |
-		GTK_PRINT_CAPABILITY_SCALE |
-		GTK_PRINT_CAPABILITY_GENERATE_PS |
-		GTK_PRINT_CAPABILITY_PREVIEW;
-	
-	if (EV_IS_FILE_EXPORTER (ev_window->priv->document) &&
-	    ev_file_exporter_format_supported (EV_FILE_EXPORTER (ev_window->priv->document),
-					       EV_FILE_FORMAT_PDF)) {
-		capabilities |= GTK_PRINT_CAPABILITY_GENERATE_PDF;
-	}
-	
+	capabilities = GTK_PRINT_CAPABILITY_PREVIEW |
+		ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (ev_window->priv->document));
 	gtk_print_unix_dialog_set_manual_capabilities (GTK_PRINT_UNIX_DIALOG (dialog),
 						       capabilities);
 
@@ -3441,7 +3437,7 @@ ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 
 	gtk_enumerate_printers ((GtkPrinterFunc) lookup_printer_from_name,
 				window, NULL, TRUE);
-	g_assert (GTK_IS_PRINTER (window->priv->printer));
+	g_assert (GTK_IS_PRINTER (window->priv->printer));	
 	
 	page_setup = gtk_page_setup_new ();
 

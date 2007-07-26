@@ -362,28 +362,15 @@ dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 }
 
 /* EvFileExporterIface */
-static gboolean
-dvi_document_file_exporter_format_supported (EvFileExporter      *exporter,
-                                              EvFileExporterFormat format)
-{
-        return (format == EV_FILE_FORMAT_PDF); /* only exporting to PDF is implemented. */
-}
-
 static void
-dvi_document_file_exporter_begin (EvFileExporter      *exporter,
-				   EvFileExporterFormat format,
-				   const char          *filename, /* for storing the temp pdf file */
-				   int                  first_page,
-				   int                  last_page,
-				   double               width,
-				   double               height,
-				   gboolean             duplex)
+dvi_document_file_exporter_begin (EvFileExporter        *exporter,
+				  EvFileExporterContext *fc)
 {
 	DviDocument *dvi_document = DVI_DOCUMENT(exporter);
 	
 	if (dvi_document->exporter_filename)
 		g_free (dvi_document->exporter_filename);	
-	dvi_document->exporter_filename = g_strdup(filename);
+	dvi_document->exporter_filename = g_strdup(fc->filename);
 	
 	if (dvi_document->exporter_opts) {
 		g_string_free (dvi_document->exporter_opts, TRUE);
@@ -392,7 +379,8 @@ dvi_document_file_exporter_begin (EvFileExporter      *exporter,
 }
 
 static void
-dvi_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *rc)
+dvi_document_file_exporter_do_page (EvFileExporter  *exporter,
+				    EvRenderContext *rc)
 {
        DviDocument *dvi_document = DVI_DOCUMENT(exporter);
 
@@ -423,22 +411,32 @@ dvi_document_file_exporter_end (EvFileExporter *exporter)
 	g_free(command_line);
 
 	if (success == FALSE) {
-		g_warning (_("Error: %s"), err->message);
+		g_warning ("Error: %s", err->message);
 	} else if (exit_stat != 0) {
-		g_warning (_("Error: dvipdfm exited with non-zero status."));
+		g_warning ("Error: dvipdfm exited with non-zero status.");
 	}
 
 	if (err)
 		g_error_free(err);
 }
 
+static EvFileExporterCapabilities
+dvi_document_file_exporter_get_capabilities (EvFileExporter *exporter)
+{
+	return  EV_FILE_EXPORTER_CAN_PAGE_SET |
+		EV_FILE_EXPORTER_CAN_COPIES |
+		EV_FILE_EXPORTER_CAN_COLLATE |
+		EV_FILE_EXPORTER_CAN_REVERSE |
+		EV_FILE_EXPORTER_CAN_GENERATE_PDF;
+}
+
 static void
 dvi_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-        iface->format_supported = dvi_document_file_exporter_format_supported;
         iface->begin = dvi_document_file_exporter_begin;
         iface->do_page = dvi_document_file_exporter_do_page;
         iface->end = dvi_document_file_exporter_end;
+	iface->get_capabilities = dvi_document_file_exporter_get_capabilities;
 }
 
 #define RGB2ULONG(r,g,b) ((0xFF<<24)|(r<<16)|(g<<8)|(b))

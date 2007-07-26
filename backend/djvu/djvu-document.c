@@ -441,30 +441,17 @@ djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 }
 
 /* EvFileExporterIface */
-static gboolean
-djvu_document_file_exporter_format_supported (EvFileExporter      *exporter,
-					      EvFileExporterFormat format)
-{
-        return (format == EV_FILE_FORMAT_PS); // only exporting to PS is implemented.
-}
-
 static void
-djvu_document_file_exporter_begin (EvFileExporter      *exporter,
-				   EvFileExporterFormat format,
-				   const char          *filename, /* for storing the temp ps file */
-				   int                  first_page,
-				   int                  last_page,
-				   double               width,
-				   double               height,
-				   gboolean             duplex)
+djvu_document_file_exporter_begin (EvFileExporter        *exporter,
+				   EvFileExporterContext *fc)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 	
 	if (djvu_document->ps_filename)
 		g_free (djvu_document->ps_filename);	
-	djvu_document->ps_filename = g_strdup(filename);
+	djvu_document->ps_filename = g_strdup (fc->filename);
 
-	g_string_assign(djvu_document->opts, "-page=");
+	g_string_assign (djvu_document->opts, "-page=");
 }
 
 static void
@@ -473,7 +460,7 @@ djvu_document_file_exporter_do_page (EvFileExporter  *exporter,
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 	
-	g_string_append_printf(djvu_document->opts, "%d,", (rc->page) + 1); 
+	g_string_append_printf (djvu_document->opts, "%d,", (rc->page) + 1); 
 }
 
 static void
@@ -484,29 +471,39 @@ djvu_document_file_exporter_end (EvFileExporter *exporter)
 
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 
-	FILE *fn = fopen(djvu_document->ps_filename, "w");
+	FILE *fn = fopen (djvu_document->ps_filename, "w");
 	if (fn == NULL) {
-		g_warning(_("Cannot open file “%s”."), djvu_document->ps_filename);
+		g_warning ("Cannot open file “%s”.", djvu_document->ps_filename);
 		return;
 	}
 	
 	d_optv[0] = djvu_document->opts->str; 
 
 	ddjvu_job_t * job = ddjvu_document_print(djvu_document->d_document, fn, d_optc, d_optv);
-	while (!ddjvu_job_done(job) ) {	
+	while (!ddjvu_job_done(job)) {	
 		djvu_handle_events (djvu_document, TRUE);
 	}
 
 	fclose(fn); 
 }
 
+static EvFileExporterCapabilities
+djvu_document_file_exporter_get_capabilities (EvFileExporter *exporter)
+{
+	return  EV_FILE_EXPORTER_CAN_PAGE_SET |
+		EV_FILE_EXPORTER_CAN_COPIES |
+		EV_FILE_EXPORTER_CAN_COLLATE |
+		EV_FILE_EXPORTER_CAN_REVERSE |
+		EV_FILE_EXPORTER_CAN_GENERATE_PS;
+}
+
 static void
 djvu_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
-        iface->format_supported = djvu_document_file_exporter_format_supported;
         iface->begin = djvu_document_file_exporter_begin;
         iface->do_page = djvu_document_file_exporter_do_page;
         iface->end = djvu_document_file_exporter_end;
+	iface->get_capabilities = djvu_document_file_exporter_get_capabilities;
 }
 
 static void
