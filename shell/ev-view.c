@@ -3900,6 +3900,15 @@ ev_view_class_init (EvViewClass *class)
 	add_scroll_binding_keypad (binding_set, GDK_Down,  0, EV_SCROLL_STEP_FORWARD,  FALSE);
 	add_scroll_binding_keypad (binding_set, GDK_Up,    GDK_MOD1_MASK, EV_SCROLL_STEP_DOWN, FALSE);
 	add_scroll_binding_keypad (binding_set, GDK_Down,  GDK_MOD1_MASK, EV_SCROLL_STEP_UP,  FALSE);
+	gtk_binding_entry_add_signal (binding_set, GDK_H, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
+				      EV_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, TRUE);
+	gtk_binding_entry_add_signal (binding_set, GDK_J, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
+				      EV_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, FALSE);
+	gtk_binding_entry_add_signal (binding_set, GDK_K, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
+				      EV_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, FALSE);
+	gtk_binding_entry_add_signal (binding_set, GDK_L, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
+				      EV_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, TRUE);
+	
 }
 
 static void
