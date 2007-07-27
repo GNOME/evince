@@ -376,27 +376,28 @@ ev_gui_menu_position_tree_selection (GtkMenu   *menu,
  * Returns: Number of monitors, -1 if uncertain situation (like multiple screens)
  */
 gint 
-get_num_monitors (GtkWindow * window)
+get_num_monitors (GtkWindow *window)
 {
-	GdkDisplay * display; 
-	GdkScreen * screen;
-	gint num_screen = gdk_display_get_n_screens(display);
+	GdkDisplay *display; 
+	GdkScreen *screen;
+	gint num_screen;
 	
-	display = gdk_display_get_default();
+	display = gdk_display_get_default ();
+	num_screen = gdk_display_get_n_screens (display);
 	
 	if (num_screen != 1)
 		return -1;
 	
 	if (window)
-		screen = gtk_window_get_screen(window);
+		screen = gtk_window_get_screen (window);
 	else
-		screen = gdk_display_get_screen(display, 0);
+		screen = gdk_display_get_screen (display, 0);
 
-	return gdk_screen_get_n_monitors(screen);
+	return gdk_screen_get_n_monitors (screen);
 }
 
 gdouble
-get_screen_dpi (GtkWindow * window)
+get_screen_dpi (GtkWindow *window)
 {
 	GdkScreen *screen;
 	gdouble    xdpi, ydpi;

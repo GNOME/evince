@@ -3519,7 +3519,8 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 	g_signal_handlers_disconnect_by_func (ev_window->priv->view, ev_view_update_view_size, scrolled_window);
 
 	if (sizing_mode != EV_SIZING_FREE)
-	    	ev_view_update_view_size (ev_window->priv->view, GTK_SCROLLED_WINDOW (scrolled_window));
+	    	ev_view_update_view_size (EV_VIEW (ev_window->priv->view),
+					  GTK_SCROLLED_WINDOW (scrolled_window));
 
 	switch (sizing_mode) {
 	        case EV_SIZING_BEST_FIT:
