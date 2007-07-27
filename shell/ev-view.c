@@ -4685,13 +4685,14 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	ev_view_set_zoom (view, scale, FALSE);
 }
 
-void
+static void
 ev_view_set_zoom_for_size (EvView *view,
 			   int     width,
 			   int     height,
 			   int     vsb_width,
 			   int     hsb_height)
 {
+	g_return_if_fail (EV_IS_VIEW (view));
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 			  view->sizing_mode == EV_SIZING_BEST_FIT);
 	g_return_if_fail (width >= 0);
@@ -5563,4 +5564,38 @@ ev_scroll_type_get_type (void)
     etype = g_enum_register_static ("EvScrollType", values);
   }
   return etype;
+}
+
+void
+ev_view_update_view_size (EvView *view, GtkScrolledWindow * scrolled_window)
+{
+	int width, height;
+	GtkRequisition vsb_requisition;
+	GtkRequisition hsb_requisition;
+	int scrollbar_spacing;
+	
+	/* Calculate the width available for the content */ 
+	width  = GTK_WIDGET (scrolled_window)->allocation.width;
+	height = GTK_WIDGET (scrolled_window)->allocation.height;
+
+	if (gtk_scrolled_window_get_shadow_type (scrolled_window) == GTK_SHADOW_IN 
+	    && view) {
+		width -=  2 * GTK_WIDGET(view)->style->xthickness;
+		height -= 2 * GTK_WIDGET(view)->style->ythickness;
+	}
+
+	gtk_widget_size_request (scrolled_window->vscrollbar, &vsb_requisition);
+	gtk_widget_size_request (scrolled_window->hscrollbar, &hsb_requisition);
+	gtk_widget_style_get (GTK_WIDGET (scrolled_window), 
+			      "scrollbar_spacing", 
+			      &scrollbar_spacing, 
+			      NULL);
+	
+	if (EV_IS_VIEW(view)) {
+		ev_view_set_zoom_for_size (EV_VIEW (view),
+					   MAX (1, width),
+					   MAX (1, height),
+					   vsb_requisition.width + scrollbar_spacing,
+					   hsb_requisition.height + scrollbar_spacing);
+	}
 }

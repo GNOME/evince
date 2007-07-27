@@ -369,3 +369,43 @@ ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 	ev_gui_sanitise_popup_position (menu, widget, x, y);
 }
 
+/**
+ * get_num_monitors: Get the number of user monitors.
+ * @window: optional GtkWindow to look at.
+ *
+ * Returns: Number of monitors, -1 if uncertain situation (like multiple screens)
+ */
+gint 
+get_num_monitors (GtkWindow * window)
+{
+	GdkDisplay * display; 
+	GdkScreen * screen;
+	gint num_screen = gdk_display_get_n_screens(display);
+	
+	display = gdk_display_get_default();
+	
+	if (num_screen != 1)
+		return -1;
+	
+	if (window)
+		screen = gtk_window_get_screen(window);
+	else
+		screen = gdk_display_get_screen(display, 0);
+
+	return gdk_screen_get_n_monitors(screen);
+}
+
+gdouble
+get_screen_dpi (GtkWindow * window)
+{
+	GdkScreen *screen;
+	gdouble    xdpi, ydpi;
+
+	screen = gtk_window_get_screen (window);
+
+	xdpi = 25.4 * gdk_screen_get_width (screen) / gdk_screen_get_width_mm (screen);
+	ydpi = 25.4 * gdk_screen_get_height (screen) / gdk_screen_get_height_mm (screen);
+	
+	return (xdpi + ydpi) / 2.0;
+}
+

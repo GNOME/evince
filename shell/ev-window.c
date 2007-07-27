@@ -273,20 +273,6 @@ static void	view_handle_link_cb 			(EvView *view,
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
-static gdouble
-ev_window_get_screen_dpi (EvWindow *ev_window)
-{
-	GdkScreen *screen;
-	gdouble    xdpi, ydpi;
-
-	screen = gtk_window_get_screen (GTK_WINDOW (ev_window));
-
-	xdpi = 25.4 * gdk_screen_get_width (screen) / gdk_screen_get_width_mm (screen);
-	ydpi = 25.4 * gdk_screen_get_height (screen) / gdk_screen_get_height_mm (screen);
-	
-	return (xdpi + ydpi) / 2.0;
-}
-
 static void
 ev_window_set_action_sensitive (EvWindow   *ev_window,
 		    	        const char *name,
@@ -457,7 +443,7 @@ ev_window_update_actions (EvWindow *ev_window)
 						      ZOOM_CONTROL_ACTION);
 
 		real_zoom = ev_view_get_zoom (EV_VIEW (ev_window->priv->view));
-		real_zoom *= 72.0 / ev_window_get_screen_dpi (ev_window);
+		real_zoom *= 72.0 / get_screen_dpi (GTK_WINDOW (ev_window));
 		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
 
 		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), zoom);
@@ -987,7 +973,7 @@ setup_view_from_metadata (EvWindow *window)
 		gdouble zoom_value;
 
 		zoom_value = g_value_get_double (&zoom);
-		zoom_value *= ev_window_get_screen_dpi (window) / 72.0;
+		zoom_value *= get_screen_dpi (GTK_WINDOW (window)) / 72.0;
 		ev_view_set_zoom (view, zoom_value, FALSE);
 		g_value_unset (&zoom);
 	}
@@ -3032,7 +3018,7 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 {
 	gboolean presentation;
 
-        g_return_if_fail (EV_IS_WINDOW (window));
+	g_return_if_fail (EV_IS_WINDOW (window));
 	ev_window_stop_fullscreen (window);
 
 	presentation = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
@@ -3106,7 +3092,7 @@ ev_window_screen_changed (GtkWidget *widget,
 #endif
 	
 	ev_view_set_screen_dpi (EV_VIEW (window->priv->view),
-				ev_window_get_screen_dpi (window));
+				get_screen_dpi (GTK_WINDOW (window)));
 	
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
@@ -3504,38 +3490,6 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 }
 
 static void
-update_view_size (EvView *view, EvWindow *window)
-{
-	int width, height;
-	GtkRequisition vsb_requisition;
-	GtkRequisition hsb_requisition;
-	int scrollbar_spacing;
-
-	/* Calculate the width available for the */
-	width = window->priv->scrolled_window->allocation.width;
-	height = window->priv->scrolled_window->allocation.height;
-
-	if (gtk_scrolled_window_get_shadow_type (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)) == GTK_SHADOW_IN) {
-		width -= 2 * window->priv->view->style->xthickness;
-		height -= 2 * window->priv->view->style->ythickness;
-	}
-
-	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->vscrollbar,
-				 &vsb_requisition);
-	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->priv->scrolled_window)->hscrollbar,
-				 &hsb_requisition);
-	gtk_widget_style_get (window->priv->scrolled_window,
-			      "scrollbar_spacing", &scrollbar_spacing,
-			      NULL);
-
-	ev_view_set_zoom_for_size (EV_VIEW (window->priv->view),
-				   MAX (1, width),
-				   MAX (1, height),
-				   vsb_requisition.width + scrollbar_spacing,
-				   hsb_requisition.height + scrollbar_spacing);
-}
-
-static void
 save_sizing_mode (EvWindow *window)
 {
 	EvSizingMode mode;
@@ -3562,10 +3516,10 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 
 	scrolled_window = ev_window->priv->scrolled_window;
 
-	g_signal_handlers_disconnect_by_func (ev_window->priv->view, update_view_size, ev_window);
+	g_signal_handlers_disconnect_by_func (ev_window->priv->view, ev_view_update_view_size, scrolled_window);
 
 	if (sizing_mode != EV_SIZING_FREE)
-	    	update_view_size (NULL, ev_window);
+	    	ev_view_update_view_size (ev_window->priv->view, GTK_SCROLLED_WINDOW (scrolled_window));
 
 	switch (sizing_mode) {
 	        case EV_SIZING_BEST_FIT:
@@ -3574,8 +3528,8 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
 				      NULL);
 			g_signal_connect (ev_window->priv->view, "zoom_invalid",
-					  G_CALLBACK (update_view_size),
-					  ev_window);
+					  G_CALLBACK (ev_view_update_view_size),
+					  scrolled_window);
 			break;
 	        case EV_SIZING_FIT_WIDTH:
 			g_object_set (G_OBJECT (scrolled_window),
@@ -3583,8 +3537,8 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
 				      NULL);
 			g_signal_connect (ev_window->priv->view, "zoom_invalid",
-					  G_CALLBACK (update_view_size),
-					  ev_window);
+					  G_CALLBACK (ev_view_update_view_size),
+					  scrolled_window);
 			break;
 	        case EV_SIZING_FREE:
 			g_object_set (G_OBJECT (scrolled_window),
@@ -3607,7 +3561,7 @@ ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
 		gdouble zoom;
 
 		zoom = ev_view_get_zoom (view);
-		zoom *= 72.0 / ev_window_get_screen_dpi (ev_window);
+		zoom *= 72.0 / get_screen_dpi (GTK_WINDOW(ev_window));
 		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom", zoom);
 	}
 }
@@ -4075,7 +4029,7 @@ zoom_control_changed_cb (EphyZoomAction *action,
 	
 	if (mode == EV_SIZING_FREE) {
 		ev_view_set_zoom (EV_VIEW (ev_window->priv->view),
-				  zoom * ev_window_get_screen_dpi (ev_window) / 72.0,
+				  zoom * get_screen_dpi (GTK_WINDOW (ev_window)) / 72.0,
 				  FALSE);
 	}
 }
@@ -5305,7 +5259,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->view = ev_view_new ();
 	ev_view_set_screen_dpi (EV_VIEW (ev_window->priv->view),
-				ev_window_get_screen_dpi (ev_window));
+				get_screen_dpi (GTK_WINDOW (ev_window)));
 	ev_window->priv->password_view = ev_password_view_new ();
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",

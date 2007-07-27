@@ -34,11 +34,11 @@ GdkPixbuf*		ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
 
 void			ev_print_region_contents (GdkRegion *region);
 
-void ev_gui_menu_position_tree_selection (GtkMenu   *menu,
-					  gint      *x,
-					  gint      *y,
-					  gboolean  *push_in,
-					  gpointer   user_data);
+void 			ev_gui_menu_position_tree_selection (GtkMenu   *menu,
+							     gint      *x,
+							     gint      *y,
+							     gboolean  *push_in,
+							     gpointer   user_data);
 
 #ifdef WITH_GNOME_PRINT
 GnomePrintConfig* 	load_print_config_from_file (void);
@@ -46,6 +46,9 @@ void       		save_print_config_to_file (GnomePrintConfig *config);
 gboolean		using_postscript_printer (GnomePrintConfig *config);
 gboolean		using_pdf_printer (GnomePrintConfig *config);
 #endif
+gint 			get_num_monitors (GtkWindow * window);
+
+gdouble 		get_screen_dpi (GtkWindow * window);
 
 G_END_DECLS
 

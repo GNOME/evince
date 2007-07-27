@@ -25,6 +25,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtkwindow.h>
+#include <gtk/gtkscrolledwindow.h>
 
 #include "ev-link.h"
 #include "ev-page-cache.h"
@@ -88,4 +89,3 @@ void		ev_window_print_range     (EvWindow       *ev_window,
 G_END_DECLS
 
 #endif /* !EV_WINDOW_H */
-
