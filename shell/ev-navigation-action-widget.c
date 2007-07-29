@@ -52,7 +52,7 @@ ev_navigation_action_widget_init (EvNavigationActionWidget *action_widget)
 	toggle_button = gtk_bin_get_child (GTK_BIN (action_widget));
 	
 	g_signal_connect (toggle_button, "button-press-event", 
-			  ev_navigation_action_widget_button_press_event,
+			  G_CALLBACK (ev_navigation_action_widget_button_press_event),
 		          action_widget);
 	return;
 }

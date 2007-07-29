@@ -60,9 +60,8 @@ ev_navigation_action_history_changed (EvHistory *history,
 {
 	EvNavigationAction *action = EV_NAVIGATION_ACTION (data);
 	
-	gtk_action_set_sensitive (action, ev_history_get_n_links (history) > 0);
-	
-	return;
+	gtk_action_set_sensitive (GTK_ACTION (action),
+				  ev_history_get_n_links (history) > 0);
 }
 
 void
@@ -75,7 +74,7 @@ ev_navigation_action_set_history (EvNavigationAction *action,
 				   (gpointer) &action->priv->history);
 	
 	g_signal_connect_object (history, "changed",
-				 ev_navigation_action_history_changed,
+				 G_CALLBACK (ev_navigation_action_history_changed),
 				 action, 0);
 }
 
