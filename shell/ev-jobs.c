@@ -326,6 +326,8 @@ render_finished_cb (EvDocument      *document,
 
 	/* FIXME: ps backend should be ported to cairo */
 	job->surface = ev_document_misc_surface_from_pixbuf (pixbuf);
+	job->page_ready = TRUE;
+	g_signal_emit (job, job_render_signals[PAGE_READY], 0);
 	EV_JOB (job)->finished = TRUE;
 	ev_job_finished (EV_JOB (job));
 }
@@ -562,6 +564,7 @@ ev_job_print_new (EvDocument    *document,
 		  EvPrintRange  *ranges,
 		  gint           n_ranges,
 		  EvPrintPageSet page_set,
+		  gint           pages_per_sheet,
 		  gint           copies,
 		  gdouble        collate,
 		  gdouble        reverse)
@@ -584,6 +587,8 @@ ev_job_print_new (EvDocument    *document,
 	job->n_ranges = n_ranges;
 
 	job->page_set = page_set;
+
+	job->pages_per_sheet = pages_per_sheet;
 	
 	job->copies = copies;
 	job->collate = collate;
@@ -711,6 +716,7 @@ ev_job_print_run (EvJobPrint *job)
 	fc.paper_width = job->width;
 	fc.paper_height = job->height;
 	fc.duplex = FALSE;
+	fc.pages_per_sheet = job->pages_per_sheet;
 
 	ev_document_doc_mutex_lock ();
 	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);

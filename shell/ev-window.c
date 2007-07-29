@@ -2220,6 +2220,8 @@ ev_window_print_send (EvWindow    *window,
 		gtk_print_settings_set_collate (settings, FALSE);
 	if (capabilities & EV_FILE_EXPORTER_CAN_REVERSE)
 		gtk_print_settings_set_reverse (settings, FALSE);
+	if (capabilities & EV_FILE_EXPORTER_CAN_NUMBER_UP)
+		gtk_print_settings_set_number_up (settings, 1);
 	
 	if (window->priv->print_preview) {
 		gchar *uri;
@@ -2294,6 +2296,7 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	EvPrintPageSet page_set;
 	gint           n_ranges = 0;
 	gint           copies;
+	gint           pages_per_sheet;
 	gboolean       collate;
 	gboolean       reverse;
 	gdouble        scale;
@@ -2385,6 +2388,8 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 		height *= scale;
 	}
 
+	pages_per_sheet = gtk_print_settings_get_number_up (window->priv->print_settings);
+	
 	copies = gtk_print_settings_get_n_copies (window->priv->print_settings);
 	collate = gtk_print_settings_get_collate (window->priv->print_settings);
 	reverse = gtk_print_settings_get_reverse (window->priv->print_settings);
@@ -2394,6 +2399,7 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 						    width, height,
 						    ranges, n_ranges,
 						    page_set,
+						    pages_per_sheet,
 						    copies, collate,
 						    reverse);
 	

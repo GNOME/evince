@@ -55,6 +55,7 @@ typedef struct {
 	gdouble              paper_width;
 	gdouble              paper_height;
 	gboolean             duplex;
+	gint                 pages_per_sheet;
 } EvFileExporterContext;
 
 #define EV_TYPE_FILE_EXPORTER            (ev_file_exporter_get_type ())

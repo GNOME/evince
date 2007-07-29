@@ -32,6 +32,9 @@
 #ifdef HAVE_CAIRO_PDF
 #include <cairo-pdf.h>
 #endif
+#ifdef HAVE_CAIRO_PS
+#include <cairo-ps.h>
+#endif
 #include <glib/gi18n.h>
 
 #include "ev-poppler.h"
@@ -49,6 +52,10 @@
 #include "ev-attachment.h"
 #include "ev-image.h"
 
+#if defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS)
+#define HAVE_CAIRO_PRINT
+#endif
+
 typedef struct {
 	PdfDocument *document;
 	char *text;
@@ -61,8 +68,17 @@ typedef struct {
 typedef struct {
 	EvFileExporterFormat format;
 	PopplerPSFile *ps_file;
-#ifdef HAVE_CAIRO_PDF
-	cairo_t *pdf_cairo;
+
+	/* Pages per sheet */
+	gint pages_per_sheet;
+	gint pages_printed;
+	gint pages_x;
+	gint pages_y;
+	gdouble page_width;
+	gdouble page_height;
+	
+#ifdef HAVE_CAIRO_PRINT
+	cairo_t *cr;
 #endif
 } PdfPrintContext;
 
@@ -1516,10 +1532,10 @@ pdf_print_context_free (PdfPrintContext *ctx)
 		poppler_ps_file_free (ctx->ps_file);
 		ctx->ps_file = NULL;
 	}
-#ifdef HAVE_CAIRO_PDF
-	if (ctx->pdf_cairo) {
-		cairo_destroy (ctx->pdf_cairo);
-		ctx->pdf_cairo = NULL;
+#ifdef HAVE_CAIRO_PRINT
+	if (ctx->cr) {
+		cairo_destroy (ctx->cr);
+		ctx->cr = NULL;
 	}
 #endif
 	g_free (ctx);
@@ -1531,35 +1547,87 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx;
-
+	gdouble width, height;
+	gboolean change_orient = FALSE;
+#ifdef HAVE_CAIRO_PRINT
+	cairo_surface_t *surface = NULL;
+#endif
+	
 	if (pdf_document->print_ctx)
 		pdf_print_context_free (pdf_document->print_ctx);
 	pdf_document->print_ctx = g_new0 (PdfPrintContext, 1);
 	ctx = pdf_document->print_ctx;
 	ctx->format = fc->format;
-	
+	ctx->pages_per_sheet = fc->pages_per_sheet;
+
+	switch (fc->pages_per_sheet) {
+	        default:
+	        case 1:
+			ctx->pages_x = 1;
+			ctx->pages_y = 1;
+			break;
+	        case 2:
+			change_orient = TRUE;
+			ctx->pages_x = 2;
+			ctx->pages_y = 1;
+			break;
+	        case 4:
+			ctx->pages_x = 2;
+			ctx->pages_y = 2;
+			break;
+	        case 6:
+			change_orient = TRUE;
+			ctx->pages_x = 3;
+			ctx->pages_y = 2;
+			break;
+	        case 9:
+			ctx->pages_x = 3;
+			ctx->pages_y = 3;
+			break;
+	        case 16:
+			ctx->pages_x = 4;
+			ctx->pages_y = 4;
+			break;
+	}
+
+	if (change_orient) {
+		width = fc->paper_height;
+		height = fc->paper_width;
+	} else {
+		width = fc->paper_width;
+		height = fc->paper_height;
+	}
+
+	ctx->page_width = width / ctx->pages_x;
+	ctx->page_height = height / ctx->pages_y;
+
+	ctx->pages_printed = 0;
+
 	switch (fc->format) {
 	        case EV_FILE_FORMAT_PS:
+#ifdef HAVE_CAIRO_PS
+			surface = cairo_ps_surface_create (fc->filename, width, height);
+#else
 			ctx->ps_file = poppler_ps_file_new (pdf_document->document,
 							    fc->filename, fc->first_page,
 							    fc->last_page - fc->first_page + 1);
 			poppler_ps_file_set_paper_size (ctx->ps_file, fc->paper_width, fc->paper_height);
 			poppler_ps_file_set_duplex (ctx->ps_file, fc->duplex);
-
+#endif /* HAVE_CAIRO_PS */
 			break;
-	        case EV_FILE_FORMAT_PDF: {
+	        case EV_FILE_FORMAT_PDF:
 #ifdef HAVE_CAIRO_PDF
-			cairo_surface_t *surface;
-			
-			surface = cairo_pdf_surface_create (fc->filename, fc->paper_width, fc->paper_height);
-			ctx->pdf_cairo = cairo_create (surface);
-			cairo_surface_destroy (surface);
+			surface = cairo_pdf_surface_create (fc->filename, width, height);
 #endif
-		}
 			break;
 	        default:
 			g_assert_not_reached ();
 	}
+
+#ifdef HAVE_CAIRO_PRINT
+	ctx->cr = cairo_create (surface);
+	cairo_surface_destroy (surface);
+#endif
 }
 
 static void
@@ -1569,30 +1637,41 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx = pdf_document->print_ctx;
 	PopplerPage *poppler_page;
+#ifdef HAVE_CAIRO_PRINT
+	gdouble page_width, page_height;
+	gint    x, y;
+#endif
 
 	g_return_if_fail (pdf_document->print_ctx != NULL);
 
 	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
+	
+#ifdef HAVE_CAIRO_PRINT
+	x = (ctx->pages_printed % ctx->pages_per_sheet) % ctx->pages_x;
+	y = (ctx->pages_printed % ctx->pages_per_sheet) / ctx->pages_x;
+	poppler_page_get_size (poppler_page, &page_width, &page_height);
+	
+	cairo_save (ctx->cr);
+	cairo_translate (ctx->cr,
+			 x * ctx->page_width,
+			 y * ctx->page_height);
+	cairo_scale (ctx->cr,
+		     ctx->page_width / page_width,
+		     ctx->page_height / page_height);
 
-	switch (ctx->format) {
-	        case EV_FILE_FORMAT_PS:
-			poppler_page_render_to_ps (poppler_page, ctx->ps_file);
-			break;
-	        case EV_FILE_FORMAT_PDF:
-#ifdef HAVE_CAIRO_PDF
-			cairo_save (ctx->pdf_cairo);
-#endif
 #ifdef HAVE_POPPLER_PAGE_RENDER
-			poppler_page_render (poppler_page, ctx->pdf_cairo);
+	poppler_page_render (poppler_page, ctx->cr);
 #endif
-#ifdef HAVE_CAIRO_PDF
-			cairo_show_page (ctx->pdf_cairo);
-			cairo_restore (ctx->pdf_cairo);
-#endif
-			break;
-	        default:
-			g_assert_not_reached ();
+	ctx->pages_printed++;
+			
+	if (ctx->pages_printed % ctx->pages_per_sheet == 0) {
+		cairo_show_page (ctx->cr);
 	}
+	cairo_restore (ctx->cr);
+#else /* HAVE_CAIRO_PRINT */
+	if (ctx->format == EV_FILE_FORMAT_PS)
+		poppler_page_render_to_ps (poppler_page, ctx->ps_file);
+#endif /* HAVE_CAIRO_PRINT */
 	
 	g_object_unref (poppler_page);
 }
@@ -1615,6 +1694,14 @@ pdf_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 		EV_FILE_EXPORTER_CAN_COLLATE |
 		EV_FILE_EXPORTER_CAN_REVERSE |
 		EV_FILE_EXPORTER_CAN_SCALE |
+#ifdef HAVE_CAIRO_PRINT
+#ifdef HAVE_POPPLER_PAGE_RENDER
+#if GTK_CHECK_VERSION (2, 11, 1)
+		EV_FILE_EXPORTER_CAN_NUMBER_UP |
+#endif
+#endif
+#endif
+		
 #ifdef HAVE_CAIRO_PDF
 #ifdef HAVE_POPPLER_PAGE_RENDER
 		EV_FILE_EXPORTER_CAN_GENERATE_PDF |
