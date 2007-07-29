@@ -1,5 +1,13 @@
 2007-07-29  Christian Persch  <chpe@gnome.org>
 
+	* shell/ev-window.c: (ev_window_enumerate_printer_cb),
+	(ev_window_preview_print_finished), (ev_window_do_preview_print),
+	(ev_window_cmd_preview_print):
+	
+	Fixes bug #437681 - blocks while enumerating printers.
+
+2007-07-29  Christian Persch  <chpe@gnome.org>
+
 	* shell/ev-window.c: (ev_window_screen_changed):
 	
 	Don't use deprecated gtk+ function. See bug #460909.

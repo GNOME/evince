@@ -3326,25 +3326,30 @@ ev_window_cmd_start_presentation (GtkAction *action, EvWindow *window)
 }
 
 #ifdef WITH_GTK_PRINT
+static void ev_window_do_preview_print (EvWindow *window);
+
 static gboolean
-lookup_printer_from_name (GtkPrinter *printer,
-			  EvWindow   *window)
+ev_window_enumerate_printer_cb (GtkPrinter *printer,
+				EvWindow   *window)
 {
+	EvWindowPrivate *priv = window->priv;
 	const gchar *printer_name;
 
-	printer_name = gtk_print_settings_get_printer (window->priv->print_settings);
-	
+	printer_name = gtk_print_settings_get_printer (priv->print_settings);
 	if ((printer_name
-	     && g_ascii_strcasecmp (printer_name, gtk_printer_get_name (printer)) == 0) ||
+	     && strcmp (printer_name, gtk_printer_get_name (printer)) == 0) ||
 	    (!printer_name && gtk_printer_is_default (printer))) {
-		if (window->priv->printer)
-			g_object_unref (window->priv->printer);
-		window->priv->printer = g_object_ref (printer);
+		if (priv->printer)
+			g_object_unref (priv->printer);
+		priv->printer = g_object_ref (printer);
 
-		return TRUE;
+		/* Now that we have the printer, we'll start the print */
+		ev_window_do_preview_print (window);
+
+		return TRUE; /* we're done */
 	}
 
-	return FALSE;
+	return FALSE; /* continue the enumeration */
 }
 
 static void
@@ -3370,19 +3375,60 @@ ev_window_preview_print_finished (GtkPrintJob *print_job,
 	g_object_unref (print_job);
 	gtk_widget_destroy (GTK_WIDGET (window));
 }
+
+static void
+ev_window_do_preview_print (EvWindow *window)
+{
+	EvWindowPrivate  *priv = window->priv;
+	GtkPageSetup     *page_setup;
+	GtkPrintJob      *job;
+	gchar            *filename;
+	GError           *error = NULL;
+
+	g_assert (priv->print_settings != NULL);
+	g_assert (priv->printer != NULL);
+
+	page_setup = gtk_page_setup_new ();
+
+	job = gtk_print_job_new ("evince-print",
+				 priv->printer,
+				 priv->print_settings,
+				 page_setup);
+
+	g_object_unref (priv->print_settings);
+	priv->print_settings = NULL;
+	g_object_unref (priv->printer);
+	priv->printer = NULL;
+	g_object_unref (page_setup);
+
+	filename = g_filename_from_uri (priv->local_uri ?
+					priv->local_uri : priv->uri,
+					NULL, NULL);
+
+	if (gtk_print_job_set_source_file (job, filename, &error)) {
+		gtk_print_job_send (job,
+				    (GtkPrintJobCompleteFunc)ev_window_preview_print_finished,
+				    window, NULL);
+	} else {
+		g_warning (error->message);
+		g_error_free (error);
+	}
+
+	g_free (filename);
+
+	gtk_widget_hide (GTK_WIDGET (window));
+}
+
 #endif /* WITH_GTK_PRINT */
 
 static void
 ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 {
 #ifdef WITH_GTK_PRINT
+	EvWindowPrivate *priv = window->priv;
 	GtkPrintSettings *print_settings = NULL;
-	GtkPageSetup     *page_setup;
-	GtkPrintJob      *job;
-	gchar            *filename;
-	GError           *error = NULL;
 #if GTK_CHECK_VERSION (2, 11, 0)
-	const gchar      *print_settings_file = window->priv->print_settings_file;
+	const gchar      *print_settings_file = priv->print_settings_file;
 
 	if (print_settings_file) {
 		if (g_file_test (print_settings_file, G_FILE_TEST_IS_REGULAR)) {
@@ -3403,43 +3449,12 @@ ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 	if (!print_settings)
 		print_settings = gtk_print_settings_new ();
 
-	if (window->priv->print_settings)
-		g_object_unref (window->priv->print_settings);
-	window->priv->print_settings = print_settings;
+	if (priv->print_settings)
+		g_object_unref (priv->print_settings);
+	priv->print_settings = print_settings;
 
-	gtk_enumerate_printers ((GtkPrinterFunc) lookup_printer_from_name,
-				window, NULL, TRUE);
-	g_assert (GTK_IS_PRINTER (window->priv->printer));	
-	
-	page_setup = gtk_page_setup_new ();
-
-	job = gtk_print_job_new ("evince-print",
-				 window->priv->printer,
-				 window->priv->print_settings,
-				 page_setup);
-
-	g_object_unref (window->priv->print_settings);
-	window->priv->print_settings = NULL;
-	g_object_unref (window->priv->printer);
-	window->priv->printer = NULL;
-	g_object_unref (page_setup);
-
-	filename = g_filename_from_uri (window->priv->local_uri ?
-					window->priv->local_uri : window->priv->uri,
-					NULL, NULL);
-
-	if (gtk_print_job_set_source_file (job, filename, &error)) {
-		gtk_print_job_send (job,
-				    (GtkPrintJobCompleteFunc)ev_window_preview_print_finished,
-				    window, NULL);
-	} else {
-		g_warning (error->message);
-		g_error_free (error);
-	}
-
-	g_free (filename);
-
-	gtk_widget_hide (GTK_WIDGET (window));
+	gtk_enumerate_printers ((GtkPrinterFunc) ev_window_enumerate_printer_cb,
+				window, NULL, FALSE);
 #endif /* WITH_GTK_PRINT */
 }
 
