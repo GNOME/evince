@@ -5163,12 +5163,12 @@ ev_window_init (EvWindow *ev_window)
 	}
 	
 #ifdef HAVE_GTK_RECENT
-#if GTK_CHECK_VERSION (2, 11, 4)
+#if GTK_CHECK_VERSION(2,11,4)
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
 #else
 	/* It's fine to just use the one of the default screen here */
 	ev_window->priv->recent_manager = gtk_recent_manager_get_for_screen (
-		gtk_screen_get_default ());
+		gdk_screen_get_default ());
 #endif
 	ev_window->priv->recent_action_group = NULL;
 	ev_window->priv->recent_ui_id = 0;
