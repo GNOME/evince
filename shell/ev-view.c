@@ -1454,8 +1454,10 @@ tip_from_link (EvView *view, EvLink *link)
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST:
 			page_label = ev_view_page_label_from_dest (view,
 								   ev_link_action_get_dest (action));
-			msg = g_strdup_printf (_("Go to page %s"), page_label);
-			g_free (page_label);
+			if (page_label) {
+    				msg = g_strdup_printf (_("Go to page %s"), page_label);
+				g_free (page_label);
+			}
 			break;
 	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
 			if (title) {
@@ -1465,7 +1467,6 @@ tip_from_link (EvView *view, EvLink *link)
 				msg = g_strdup_printf (_("Go to file “%s”"),
 						       ev_link_action_get_filename (action));
 			}
-			
 			break;
 	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
 			msg = g_strdup (ev_link_action_get_uri (action));
