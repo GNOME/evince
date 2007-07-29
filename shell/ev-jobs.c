@@ -344,7 +344,10 @@ static void
 ev_job_render_page_ready (EvJobRender *job)
 {
 	job->page_ready = TRUE;
-	g_idle_add ((GSourceFunc)notify_page_ready, job);
+	g_idle_add_full (G_PRIORITY_HIGH_IDLE,
+			 (GSourceFunc)notify_page_ready,
+			 g_object_ref (job),
+			 (GDestroyNotify)g_object_unref);
 }
 
 void
