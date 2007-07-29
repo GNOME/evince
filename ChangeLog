@@ -1,5 +1,16 @@
 2007-07-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* cut-n-paste/totem-screensaver/totem-scrsaver.c:
+	(screensaver_disable_x11):
+	* shell/ev-metadata-manager.c: (ev_metadata_arm_timeout):
+	* shell/ev-window.c: (presentation_set_timeout):
+	* shell/ev-view.c: (ev_view_presentation_transition_start):
+
+	Use g_timeout_add_seconds instead of g_timeout_add when
+	available.
+	
+2007-07-29  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_init):
 
 	Set horizontal scrollbar policy to AUTOMATIC instead of

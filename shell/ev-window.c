@@ -211,7 +211,7 @@ struct _EvWindowPrivate {
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 
-#define PRESENTATION_TIMEOUT 5 * 1000
+#define PRESENTATION_TIMEOUT 5
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
@@ -2902,9 +2902,16 @@ presentation_set_timeout (EvWindow *window)
 	if (window->priv->presentation_timeout_id > 0) {
 		g_source_remove (window->priv->presentation_timeout_id);
 	}
-	
+
+#if GLIB_CHECK_VERSION (2, 13, 0)
+	window->priv->presentation_timeout_id =
+		g_timeout_add_seconds (PRESENTATION_TIMEOUT,
+				       (GSourceFunc)presentation_timeout_cb, window);
+#else
 	window->priv->presentation_timeout_id = 
-	    g_timeout_add (PRESENTATION_TIMEOUT, (GSourceFunc)presentation_timeout_cb, window);
+	    g_timeout_add (PRESENTATION_TIMEOUT * 1000,
+			   (GSourceFunc)presentation_timeout_cb, window);
+#endif	
 
 	ev_view_show_cursor (EV_VIEW (window->priv->view));
 }

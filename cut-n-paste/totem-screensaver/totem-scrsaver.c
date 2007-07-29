@@ -294,11 +294,21 @@ screensaver_disable_x11 (TotemScrsaver *scr)
 
 		if (scr->priv->timeout != 0)
 		{
+#if GLIB_CHECK_VERSION (2, 13, 0)
+			g_timeout_add_seconds (scr->priv->timeout / 2,
+					       (GSourceFunc) fake_event, scr);
+#else
 			g_timeout_add (scr->priv->timeout / 2 * 1000,
-					(GSourceFunc) fake_event, scr);
+				       (GSourceFunc) fake_event, scr);
+#endif
 		} else {
-			g_timeout_add (XSCREENSAVER_MIN_TIMEOUT / 2 * 1000,
+#if GLIB_CHECK_VERSION (2, 13, 0)
+			g_timeout_add_seconds (XSCREENSAVER_MIN_TIMEOUT / 2,
 					(GSourceFunc) fake_event, scr);
+#else
+			g_timeout_add (XSCREENSAVER_MIN_TIMEOUT / 2 * 1000,
+				       (GSourceFunc) fake_event, scr);
+#endif
 		}
 
 		return;
