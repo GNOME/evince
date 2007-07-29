@@ -3077,21 +3077,7 @@ ev_window_screen_changed (GtkWidget *widget,
 	if (screen == old_screen)
 		return;
 
-#ifdef HAVE_GTK_RECENT
-	if (old_screen) {
-		g_signal_handlers_disconnect_by_func (
-			gtk_recent_manager_get_for_screen (old_screen),
-			G_CALLBACK (ev_window_setup_recent), window);
-	}
-
-	priv->recent_manager = gtk_recent_manager_get_for_screen (screen);
-	g_signal_connect_swapped (priv->recent_manager,
-				  "changed",
-				  G_CALLBACK (ev_window_setup_recent),
-				  window);
-#endif
-	
-	ev_view_set_screen_dpi (EV_VIEW (window->priv->view),
+	ev_view_set_screen_dpi (EV_VIEW (priv->view),
 				get_screen_dpi (GTK_WINDOW (window)));
 	
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
@@ -5162,8 +5148,13 @@ ev_window_init (EvWindow *ev_window)
 	}
 	
 #ifdef HAVE_GTK_RECENT
+#if GTK_CHECK_VERSION (2, 11, 4)
+	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
+#else
+	/* It's fine to just use the one of the default screen here */
 	ev_window->priv->recent_manager = gtk_recent_manager_get_for_screen (
-		gtk_widget_get_screen (GTK_WIDGET (ev_window)));
+		gtk_screen_get_default ());
+#endif
 	ev_window->priv->recent_action_group = NULL;
 	ev_window->priv->recent_ui_id = 0;
 	g_signal_connect_swapped (ev_window->priv->recent_manager,

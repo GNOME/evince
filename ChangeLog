@@ -1,3 +1,9 @@
+2007-07-29  Christian Persch  <chpe@gnome.org>
+
+	* shell/ev-window.c: (ev_window_screen_changed):
+	
+	Don't use deprecated gtk+ function. See bug #460909.
+
 2007-07-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-utils.c: (get_num_monitors):
@@ -5,7 +11,7 @@
 
 	Do not use display before initializing it. Remove compile
 	warnings.
-	
+
 2007-07-27  Cosimo Cecchi   <anarki@lilik.it>
 
 	* shell/ev-view.c: (ev_view_class_init):
