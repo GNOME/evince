@@ -506,7 +506,7 @@ update_chrome_visibility (EvWindow *window)
 	fullscreen_toolbar = ((priv->chrome & EV_CHROME_FULLSCREEN_TOOLBAR) != 0 || 
 			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && fullscreen;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
-	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !fullscreen_mode;
+	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !presentation;
 	preview_toolbar = (priv->chrome& EV_CHROME_PREVIEW_TOOLBAR);
 
 	set_widget_visibility (priv->menubar, menubar);	
@@ -3806,9 +3806,7 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
 
-	if (!ev_view_get_presentation (view) && 
-	    !ev_view_get_fullscreen (view)) {
-
+	if (!ev_view_get_presentation (view)) {
 		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
 					      GTK_WIDGET_VISIBLE (ev_sidebar));
 

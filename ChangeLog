@@ -1,3 +1,10 @@
+2007-07-30  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (update_chrome_visibility),
+	(ev_window_sidebar_visibility_changed_cb):
+
+	Do not hide sidebar in fullscreen mode. Fixes bug #396535.
+	
 2007-07-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-navigation-action.c:
