@@ -27,7 +27,6 @@
 #include <gdk/gdk.h>
 #include <cairo.h>
 
-#include "ev-link.h"
 #include "ev-document-info.h"
 #include "ev-render-context.h"
 

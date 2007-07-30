@@ -23,7 +23,6 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include "ev-link.h"
 
 G_BEGIN_DECLS
 

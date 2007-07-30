@@ -42,7 +42,9 @@
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
+#if !GTK_CHECK_VERSION (2, 11, 7)
 #include "ev-tooltip.h"
+#endif
 #include "ev-application.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
@@ -1497,7 +1499,8 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		return;
 	
 	link = ev_view_get_link_at_location (view, x, y);
-
+	
+#if !GTK_CHECK_VERSION (2, 11, 7)
 	if (view->link_tooltip == NULL) {
 		view->link_tooltip = ev_tooltip_new (GTK_WIDGET (view));
 	}
@@ -1506,8 +1509,12 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		view->hovered_link = link;
 		ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
 	}
+#endif
 
         if (link) {
+#if GTK_CHECK_VERSION (2, 11, 7)
+		g_object_set (view, "has-tooltip", TRUE, NULL);
+#else
 		char *msg = tip_from_link (view, link);
 
 		if (msg && g_utf8_validate (msg, -1, NULL)) {
@@ -1518,7 +1525,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 			ev_tooltip_activate (tooltip);
 		}
 		g_free (msg);
-
+#endif
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 	} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 		if (field->is_read_only) {
@@ -2527,6 +2534,60 @@ ev_view_popup_menu (GtkWidget *widget)
 	return ev_view_do_popup_menu (EV_VIEW (widget), x, y);
 }
 
+#if GTK_CHECK_VERSION (2, 11, 7)
+static void
+get_link_area (EvView       *view,
+	       gint          x,
+	       gint          y,
+	       EvLink       *link,
+	       GdkRectangle *area)
+{
+	EvRectangle  ev_rect;
+	GList       *link_mapping;
+	gint         page;
+	gint         x_offset = 0, y_offset = 0;
+
+	x += view->scroll_x;
+	y += view->scroll_y;
+	
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+	
+	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
+	ev_link_mapping_get_area (link_mapping, link, &ev_rect);
+
+	doc_rect_to_view_rect (view, page, &ev_rect, area);
+	area->y -= view->scroll_y ;
+}
+
+static gboolean
+ev_view_query_tooltip (GtkWidget         *widget,
+		       gint               x,
+		       gint               y,
+		       gboolean           keyboard_tip,
+		       GtkTooltip        *tooltip)
+{
+	EvView *view = EV_VIEW (widget);
+	EvLink *link;
+	gchar  *text;
+
+	link = ev_view_get_link_at_location (view, x, y);
+	if (!link)
+		return FALSE;
+
+	text = tip_from_link (view, link);
+	if (text && g_utf8_validate (text, -1, NULL)) {
+		GdkRectangle link_area;
+
+		get_link_area (view, x, y, link, &link_area);
+		gtk_tooltip_set_text (tooltip, text);
+		gtk_tooltip_set_tip_area (tooltip, &link_area);
+	}
+	g_free (text);
+
+	return TRUE;
+}
+#endif /* GTK_CHECK_VERSION (2, 11, 7) */
+
 static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
@@ -3260,11 +3321,13 @@ ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 	    view->cursor == EV_VIEW_CURSOR_IBEAM)
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 
+#if !GTK_CHECK_VERSION (2, 11, 7)
 	if (view->link_tooltip) {
 		view->hovered_link = NULL;
 		ev_tooltip_deactivate (EV_TOOLTIP (view->link_tooltip));
 	}
-
+#endif
+	
 	return FALSE;
 }
 
@@ -3595,11 +3658,12 @@ ev_view_destroy (GtkObject *object)
 		view->pixbuf_cache = NULL;
 	}
 
+#if !GTK_CHECK_VERSION (2, 11, 7)
 	if (view->link_tooltip) {
 		gtk_widget_destroy (view->link_tooltip);
 		view->link_tooltip = NULL;
 	}
-
+#endif
 	if (view->goto_window) {
 		gtk_widget_destroy (view->goto_window);
 		view->goto_window = NULL;
@@ -3768,6 +3832,9 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->drag_motion = ev_view_drag_motion;
 	widget_class->drag_data_received = ev_view_drag_data_received;
 	widget_class->popup_menu = ev_view_popup_menu;
+#if GTK_CHECK_VERSION (2, 11, 7)
+	widget_class->query_tooltip = ev_view_query_tooltip;
+#endif
 
 	gtk_object_class->destroy = ev_view_destroy;
 

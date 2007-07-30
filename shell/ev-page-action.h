@@ -24,6 +24,7 @@
 #include <gtk/gtkaction.h>
 #include <gtk/gtktreemodel.h>
 #include <ev-document.h>
+#include "ev-link.h"
 
 G_BEGIN_DECLS
 

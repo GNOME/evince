@@ -142,9 +142,11 @@ struct _EvView {
 	/* Image DND */
 	ImageDNDInfo image_dnd_info;
 
+#if !GTK_CHECK_VERSION (2, 11, 7)
 	/* Links */
 	GtkWidget *link_tooltip;
 	EvLink *hovered_link;
+#endif
 
 	/* Goto Popup */
 	GtkWidget *goto_window;

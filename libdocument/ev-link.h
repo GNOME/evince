@@ -21,6 +21,7 @@
 #define EV_LINK_H
 
 #include <glib-object.h>
+#include "ev-document.h"
 #include "ev-link-action.h"
 
 G_BEGIN_DECLS
@@ -43,7 +44,7 @@ EvLink	     *ev_link_new	 (const gchar  *title,
 
 const gchar  *ev_link_get_title  (EvLink       *self);
 EvLinkAction *ev_link_get_action (EvLink       *self);
-gint	      ev_link_get_page   (EvLink *link);
+gint	      ev_link_get_page   (EvLink       *link);
 
 /* Link Mapping stuff */
 typedef struct _EvLinkMapping	  EvLinkMapping;
@@ -56,10 +57,13 @@ struct _EvLinkMapping
 	gdouble y2;
 };
 
-void    ev_link_mapping_free (GList   *link_mapping);
-EvLink *ev_link_mapping_find (GList   *link_mapping,
-			      gdouble  x,
-			      gdouble  y);
+void    ev_link_mapping_free     (GList       *link_mapping);
+EvLink *ev_link_mapping_find     (GList       *link_mapping,
+				  gdouble      x,
+				  gdouble      y);
+void    ev_link_mapping_get_area (GList       *link_mapping,
+				  EvLink      *link,
+				  EvRectangle *area);
 G_END_DECLS
 
 #endif /* !EV_LINK_H */

@@ -1,5 +1,23 @@
 2007-07-30  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* libdocument/ev-document-info.h:
+	* libdocument/ev-document.h:
+	* shell/ev-page-action.h:
+	* shell/ev-sidebar-links.h:
+
+	Fix a headers problem with ev-link
+	
+	* libdocument/ev-link.[ch]: (ev_link_mapping_get_area):
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_handle_cursor_over_xy),
+	(get_link_area), (ev_view_query_tooltip),
+	(ev_view_leave_notify_event), (ev_view_destroy),
+	(ev_view_class_init):
+
+	Use new gtk tooltips when available instead of ev-tooltip.
+	
+2007-07-30  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (update_chrome_visibility),
 	(ev_window_sidebar_visibility_changed_cb):
 

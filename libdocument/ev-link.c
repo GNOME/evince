@@ -224,6 +224,27 @@ ev_link_mapping_find (GList   *link_mapping,
 	return link;
 }
 
+void
+ev_link_mapping_get_area (GList       *link_mapping,
+			  EvLink      *link,
+			  EvRectangle *area)
+{
+	GList *list;
+
+	for (list = link_mapping; list; list = list->next) {
+		EvLinkMapping *mapping = list->data;
+
+		if (mapping->link == link) {
+			area->x1 = mapping->x1;
+			area->y1 = mapping->y1;
+			area->x2 = mapping->x2;
+			area->y2 = mapping->y2;
+
+			break;
+		}
+	}
+}
+
 gint
 ev_link_get_page (EvLink *link)
 {
