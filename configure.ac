@@ -251,6 +251,7 @@ if test "x$enable_pdf" = "xyes"; then
 	    dnl this function was the last to be added
 	    AC_CHECK_FUNCS(poppler_form_field_button_get_button_type)
 	    AC_CHECK_FUNCS(poppler_form_field_text_get_max_len)
+	    AC_CHECK_FUNCS(poppler_form_field_text_is_password)
 	    LIBS=$evince_save_LIBS
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
