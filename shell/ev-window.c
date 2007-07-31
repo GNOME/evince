@@ -1506,6 +1506,8 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
+	gchar *uri;
+
 	if (response_id == GTK_RESPONSE_OK) {
 		GSList *uris;
 
@@ -1518,8 +1520,10 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 		g_slist_foreach (uris, (GFunc)g_free, NULL);	
 		g_slist_free (uris);
 	}
-	ev_application_set_chooser_uri (EV_APP, 
-			  	        gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (chooser)));
+
+	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (chooser));
+	ev_application_set_chooser_uri (EV_APP, uri);
+	g_free (uri);
 
 	gtk_widget_destroy (chooser);
 }
