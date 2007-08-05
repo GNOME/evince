@@ -219,6 +219,7 @@ static void       highlight_find_results                     (EvView            
 							      int                 page);
 static void       draw_one_page                              (EvView             *view,
 							      gint                page,
+							      cairo_t            *cr,
 							      GdkRectangle       *page_area,
 							      GtkBorder          *border,
 							      GdkRectangle       *expose_area,
@@ -2442,8 +2443,9 @@ static gboolean
 ev_view_expose_event (GtkWidget      *widget,
 		      GdkEventExpose *event)
 {
-	EvView *view = EV_VIEW (widget);
-	int i;
+	EvView  *view = EV_VIEW (widget);
+	cairo_t *cr;
+	gint     i;
 
 	if (view->presentation) {
 		switch (view->presentation_state) {
@@ -2477,6 +2479,8 @@ ev_view_expose_event (GtkWidget      *widget,
 	if (view->document == NULL)
 		return FALSE;
 
+	cr = gdk_cairo_create (view->layout.bin_window);
+	
 	for (i = view->start_page; i <= view->end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
@@ -2488,11 +2492,13 @@ ev_view_expose_event (GtkWidget      *widget,
 		page_area.x -= view->scroll_x;
 		page_area.y -= view->scroll_y;
 
-		draw_one_page (view, i, &page_area, &border, &(event->area), &page_ready);
+		draw_one_page (view, i, cr, &page_area, &border, &(event->area), &page_ready);
 
 		if (page_ready && EV_IS_DOCUMENT_FIND (view->document))
 			highlight_find_results (view, i);
 	}
+
+	cairo_destroy (cr);
 
 	if (GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event)
 		(* GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event) (widget, event);
@@ -3499,6 +3505,7 @@ draw_loading_text (EvView       *view,
 static void
 draw_one_page (EvView       *view,
 	       gint          page,
+	       cairo_t      *cr,
 	       GdkRectangle *page_area,
 	       GtkBorder    *border,
 	       GdkRectangle *expose_area,
@@ -3537,7 +3544,6 @@ draw_one_page (EvView       *view,
 		cairo_surface_t *page_surface = NULL;
 		gint             selection_width, selection_height;
 		cairo_surface_t *selection_surface = NULL;
-		cairo_t         *cr = NULL;
 
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
@@ -3555,16 +3561,10 @@ draw_one_page (EvView       *view,
 					view->scale,
 					&width, &height);
 
-		cr = gdk_cairo_create (view->layout.bin_window);
-		
-		cairo_save (cr);
-		
 		page_width = cairo_image_surface_get_width (page_surface);
 		page_height = cairo_image_surface_get_height (page_surface);
-		
-		cairo_rectangle (cr, overlap.x, overlap.y, overlap.width, overlap.height);
-		cairo_clip (cr);
-		
+
+		cairo_save (cr);
 		cairo_translate (cr, overlap.x, overlap.y);
 		
 		if (width != page_width || height != page_height) {
@@ -3578,10 +3578,8 @@ draw_one_page (EvView       *view,
 		cairo_surface_set_device_offset (page_surface,
 						 overlap.x - real_page_area.x,
 						 overlap.y - real_page_area.y);
-
 		cairo_set_source_surface (cr, page_surface, 0, 0);
 		cairo_paint (cr);
-
 		cairo_restore (cr);
 		
 		/* Get the selection pixbuf iff we have something to draw */
@@ -3595,16 +3593,13 @@ draw_one_page (EvView       *view,
 		}
 
 		if (!selection_surface) {
-			cairo_destroy (cr);
 			return;
 		}
 
 		selection_width = cairo_image_surface_get_width (selection_surface);
 		selection_height = cairo_image_surface_get_height (selection_surface);
 
-		cairo_rectangle (cr, overlap.x, overlap.y, overlap.width, overlap.height);
-		cairo_clip (cr);
-		
+		cairo_save (cr);
 		cairo_translate (cr, overlap.x, overlap.y);
 
 		if (width != selection_width || height != selection_height) {
@@ -3618,10 +3613,9 @@ draw_one_page (EvView       *view,
 		cairo_surface_set_device_offset (selection_surface,
 						 overlap.x - real_page_area.x,
 						 overlap.y - real_page_area.y);
-
 		cairo_set_source_surface (cr, selection_surface, 0, 0);
 		cairo_paint (cr);
-		cairo_destroy (cr);
+		cairo_restore (cr);
 	}
 }
 
