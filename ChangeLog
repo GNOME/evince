@@ -1,5 +1,14 @@
 2007-08-11  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* cut-n-paste/toolbar-editor/egg-toolbar-editor.c:
+	(set_drag_cursor):
+	* cut-n-paste/toolbar-editor/egg-editable-toolbar.c:
+	(configure_item_cursor), (new_pixbuf_from_widget):
+
+	Fix multihead problems in toolbar editor. Fixes bug #382055.
+	
+2007-08-11  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_cmd_file_open),
 	(ev_window_cmd_save_as):
 
