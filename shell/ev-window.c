@@ -97,7 +97,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#if !GLIB_CHECK_VERSION (2, 13, 3)
 char *xdg_user_dir_lookup (char *type);
+#endif
 
 typedef enum {
 	PAGE_MODE_DOCUMENT,
@@ -1551,12 +1553,20 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
 					  window->priv->uri);
 	} else {
+#if GLIB_CHECK_VERSION (2, 13, 3)
+		const gchar *folder;
+
+		folder = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
+						     folder ? folder : g_get_home_dir ());
+#else
 		char *folder;
 		
 		folder = xdg_user_dir_lookup ("DOCUMENTS");
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
 						     folder);
 		free (folder);
+#endif
 	}
 	
 	g_signal_connect (chooser, "response",
@@ -2090,7 +2100,11 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 	gchar *base_name;
 	gchar *file_name;
+#if GLIB_CHECK_VERSION (2, 13, 3)
+	const gchar *folder;
+#else
 	gchar *folder;
+#endif
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -2106,12 +2120,20 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);	
 	file_name = gnome_vfs_format_uri_for_display (ev_window->priv->uri);
 	base_name = g_path_get_basename (file_name);
-        folder = xdg_user_dir_lookup ("DOCUMENTS");
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
+	
+#if GLIB_CHECK_VERSION (2, 13, 3)
+	folder = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					     folder ? folder : g_get_home_dir ());
+#else
+	folder = xdg_user_dir_lookup ("DOCUMENTS");
         gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc), folder);
+	free (folder);
+#endif
+	
 	g_free (file_name);
 	g_free (base_name);
-        free (folder);
         
 	g_signal_connect (fc, "response",
 			  G_CALLBACK (file_save_dialog_response_cb),
