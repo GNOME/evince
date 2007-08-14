@@ -174,10 +174,14 @@ build_height_to_page (EvPageCache *page_cache)
 			}
 			page_cache->height_to_page [i] = i * uniform_height;
 		} else {
-			if (!swap) {
-				page_height = page_cache->size_cache [i].height;
+			if (i < page_cache->n_pages) {
+				if (!swap) {
+					page_height = page_cache->size_cache [i].height;
+				} else {
+					page_height = page_cache->size_cache [i].width;
+				}
 			} else {
-				page_height = page_cache->size_cache [i].width;
+				page_height = 0;
 			}
 			page_cache->height_to_page [i] = saved_height;
 			saved_height += page_height;
@@ -502,6 +506,9 @@ ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
 				  gint 	        *dual_height)
 {
 	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
+	g_return_if_fail (page >= 0);
+	g_return_if_fail (!height || page <= page_cache->n_pages);
+	g_return_if_fail (!dual_height || page <= page_cache->n_pages + 1);
 
 	if (page_cache->rotation != rotation) {
 		page_cache->rotation = rotation;
