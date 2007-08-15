@@ -289,6 +289,9 @@ djvu_document_finalize (GObject *object)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (object);
 
+	if (djvu_document->search)
+	    djvu_text_free (djvu_document->search);
+
 	if (djvu_document->d_document)
 	    ddjvu_document_release (djvu_document->d_document);
 	    
