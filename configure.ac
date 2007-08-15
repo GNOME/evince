@@ -480,7 +480,10 @@ data/icons/24x24/Makefile
 data/icons/24x24/apps/Makefile
 data/icons/24x24/actions/Makefile
 data/icons/48x48/Makefile
+data/icons/32x32/apps/Makefile
+data/icons/32x32/actions/Makefile
 data/icons/48x48/apps/Makefile
+data/icons/48x48/actions/Makefile
 data/icons/scalable/Makefile
 data/icons/scalable/apps/Makefile
 help/Makefile
