@@ -1,3 +1,10 @@
+2007-08-15  Jens Granseuer  <jensgr@gmx.net>
+
+	* backend/pdf/ev-poppler.cc:
+
+	Don't use #ifdef in macro expansion. Some compilers don't
+	like that. Closes bug #467042.
+
 2007-08-15  Justin Blanchard  <justinb04@aim.com>
 
 	* backend/djvu/djvu-document.c: (djvu_document_finalize):
