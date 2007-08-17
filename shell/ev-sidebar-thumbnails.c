@@ -228,7 +228,7 @@ get_scale_for_page (EvSidebarThumbnails *sidebar_thumbnails,
 	gint width, height;
 
 	ev_page_cache_get_size (priv->page_cache,
-				page, priv->rotation,
+				page, 0,
 				1.0, &width, &height);
 	
 	return (gdouble)THUMBNAIL_WIDTH / (gdouble)width;
@@ -407,18 +407,14 @@ ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 		g_object_unref (sidebar_thumbnails->priv->loading_icon);
 
 	if (sidebar_thumbnails->priv->document) {
-		gint width = THUMBNAIL_WIDTH;
-		gint height;
-		gint page_width, page_height;
+		gint width, height;
 
 		/* We get the dimensions of the first page so that we can make a blank
 		 * icon.  */
-		ev_page_cache_get_size (sidebar_thumbnails->priv->page_cache, 0,
-					sidebar_thumbnails->priv->rotation,
-					1.0, &page_width, &page_height);
+		ev_page_cache_get_thumbnail_size (sidebar_thumbnails->priv->page_cache, 0,
+						  sidebar_thumbnails->priv->rotation,
+						  &width, &height);
 
-		height = (gint) (page_height * ((gdouble)width / page_width));
-		
 		sidebar_thumbnails->priv->loading_icon =
 			ev_document_misc_get_thumbnail_frame (width, height, NULL);
 	} else {

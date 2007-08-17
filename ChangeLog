@@ -1,5 +1,16 @@
 2007-08-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-page-cache.c: (ev_page_cache_new),
+	(ev_page_cache_get_thumbnail_size):
+	* shell/ev-sidebar-thumbnails.c: (get_scale_for_page),
+	(ev_sidebar_thumbnails_set_loading_icon):
+
+	Also store in page-cache the dimensions of the thumbnails so that
+	they can be used to create the correct loading icon in the side
+	pane. Fixes bug #466857.
+	
+2007-08-17  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/pdf/ev-poppler.cc:
 	(pdf_document_thumbnails_get_thumbnail):
 
