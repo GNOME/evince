@@ -1293,7 +1293,15 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
 	pixbuf = poppler_page_get_thumbnail (poppler_page);
-	if (!pixbuf) {
+	if (pixbuf) {
+		/* Rotate provided thumbnail if needed */
+		GdkPixbuf *rotated_pixbuf;
+
+		rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf,
+							   (GdkPixbufRotation) (360 - rc->rotation));
+		g_object_unref (pixbuf);
+		pixbuf = rotated_pixbuf;
+	} else {
 		/* There is no provided thumbnail.  We need to make one. */
 		pixbuf = make_thumbnail_for_page (pdf_document, poppler_page, rc);
 	}
