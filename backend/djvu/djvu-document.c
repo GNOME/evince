@@ -260,7 +260,7 @@ djvu_document_render (EvDocument      *document,
 	rowstride = page_width * 4;
 	pixels = (gchar *) g_malloc (page_height * rowstride);
 	surface = cairo_image_surface_create_for_data (pixels,
-						       CAIRO_FORMAT_ARGB32,
+						       CAIRO_FORMAT_RGB24,
 						       page_width,
 						       page_height,
 						       rowstride);

@@ -152,7 +152,7 @@ ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 	cairo_surface_t *surface;
 	cairo_t         *cr;
 	
-	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
 					      gdk_pixbuf_get_width (pixbuf),
 					      gdk_pixbuf_get_height (pixbuf));
 	cr = cairo_create (surface);
@@ -239,6 +239,8 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 	cairo_surface_t *new_surface;
 	cairo_t         *cr;
 	gint             width, height;
+	gboolean         has_alpha;
+	cairo_format_t   surface_format;
 	gint             new_width = dest_width;
 	gint             new_height = dest_height;
 
@@ -256,8 +258,13 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 		new_height = dest_width;
 	}
 
+	surface_format = cairo_image_surface_get_format (surface);
+	has_alpha = (surface_format == CAIRO_FORMAT_ARGB32);
+
 	new_surface = cairo_surface_create_similar (surface,
-						    CAIRO_CONTENT_COLOR_ALPHA,
+						    has_alpha ?
+						    CAIRO_CONTENT_COLOR_ALPHA :
+						    CAIRO_CONTENT_COLOR,
 						    new_width, new_height);
 
 	cr = cairo_create (new_surface);

@@ -259,7 +259,7 @@ tiff_document_render (EvDocument      *document,
 		return NULL;
 	
 	surface = cairo_image_surface_create_for_data (pixels,
-						       CAIRO_FORMAT_ARGB32,
+						       CAIRO_FORMAT_RGB24,
 						       width, height,
 						       rowstride);
 	cairo_surface_set_user_data (surface, &key,

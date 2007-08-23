@@ -500,7 +500,7 @@ pdf_document_render (EvDocument      *document,
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	cairo_t *cr;
 	
-	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
 					      width, height);
 	memset (cairo_image_surface_get_data (surface), 0xff,
 		cairo_image_surface_get_height (surface) *
