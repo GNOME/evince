@@ -239,8 +239,6 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 	cairo_surface_t *new_surface;
 	cairo_t         *cr;
 	gint             width, height;
-	gboolean         has_alpha;
-	cairo_format_t   surface_format;
 	gint             new_width = dest_width;
 	gint             new_height = dest_height;
 
@@ -258,13 +256,8 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 		new_height = dest_width;
 	}
 
-	surface_format = cairo_image_surface_get_format (surface);
-	has_alpha = (surface_format == CAIRO_FORMAT_ARGB32);
-
 	new_surface = cairo_surface_create_similar (surface,
-						    has_alpha ?
-						    CAIRO_CONTENT_COLOR_ALPHA :
-						    CAIRO_CONTENT_COLOR,
+						    cairo_surface_get_content (surface),
 						    new_width, new_height);
 
 	cr = cairo_create (new_surface);
