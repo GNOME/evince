@@ -2246,8 +2246,10 @@ ev_window_print_send (EvWindow    *window,
 		gtk_print_settings_set_collate (settings, FALSE);
 	if (capabilities & EV_FILE_EXPORTER_CAN_REVERSE)
 		gtk_print_settings_set_reverse (settings, FALSE);
-	if (capabilities & EV_FILE_EXPORTER_CAN_NUMBER_UP)
+	if (capabilities & EV_FILE_EXPORTER_CAN_NUMBER_UP) {
 		gtk_print_settings_set_number_up (settings, 1);
+		gtk_print_settings_set_int (settings, "cups-"GTK_PRINT_SETTINGS_NUMBER_UP, 1);
+	}
 	
 	if (window->priv->print_preview) {
 		gchar *uri;
