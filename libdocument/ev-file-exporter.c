@@ -74,5 +74,5 @@ ev_file_exporter_get_capabilities (EvFileExporter *exporter)
 {
 	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
-	iface->get_capabilities (exporter);
+	return iface->get_capabilities (exporter);
 }

@@ -1,5 +1,16 @@
 2007-08-25  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin):
+	* libdocument/ev-file-exporter.[ch]:
+	(ev_file_exporter_get_capabilities):
+	* shell/ev-jobs.[ch]: (ev_job_print_new), (ev_job_print_run):
+	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
+
+	Adjust number of pages per row according to page orientation when
+	printing 2 or 6 pages per sheet.
+	
+2007-08-25  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_print_send):
 
 	Reset also cups setting to 1 when printing multiple pages per

@@ -1579,7 +1579,7 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx;
 	gdouble width, height;
-	gboolean change_orient = FALSE;
+	gboolean landscape, change_orient = FALSE;
 #ifdef HAVE_CAIRO_PRINT
 	cairo_surface_t *surface = NULL;
 #endif
@@ -1591,6 +1591,8 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	ctx->format = fc->format;
 	ctx->pages_per_sheet = fc->pages_per_sheet;
 
+	landscape = (fc->orientation == EV_FILE_EXPORTER_LANDSCAPE);
+	
 	switch (fc->pages_per_sheet) {
 	        default:
 	        case 1:
@@ -1599,8 +1601,9 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			break;
 	        case 2:
 			change_orient = TRUE;
-			ctx->pages_x = 2;
-			ctx->pages_y = 1;
+			landscape = !landscape;
+			ctx->pages_x = 1;
+			ctx->pages_y = 2;
 			break;
 	        case 4:
 			ctx->pages_x = 2;
@@ -1608,8 +1611,9 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			break;
 	        case 6:
 			change_orient = TRUE;
-			ctx->pages_x = 3;
-			ctx->pages_y = 2;
+			landscape = !landscape;
+			ctx->pages_x = 2;
+			ctx->pages_y = 3;
 			break;
 	        case 9:
 			ctx->pages_x = 3;
@@ -1628,7 +1632,15 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 		width = fc->paper_width;
 		height = fc->paper_height;
 	}
+	
+	if (landscape) {
+		gint tmp;
 
+		tmp = ctx->pages_x;
+		ctx->pages_x = ctx->pages_y;
+		ctx->pages_y = tmp;
+	}
+	
 	ctx->page_width = width / ctx->pages_x;
 	ctx->page_height = height / ctx->pages_y;
 

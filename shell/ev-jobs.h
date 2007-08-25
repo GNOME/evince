@@ -23,6 +23,7 @@
 #include <gtk/gtk.h>
 #include "ev-document.h"
 #include "ev-window.h"
+#include "ev-file-exporter.h"
 
 G_BEGIN_DECLS
 
@@ -204,6 +205,7 @@ struct _EvJobPrint
 	gboolean reverse;
 	gdouble width;
 	gdouble height;
+	EvFileExporterOrientation orientation;
 };
 
 struct _EvJobPrintClass
@@ -262,6 +264,7 @@ EvJob          *ev_job_print_new          (EvDocument      *document,
 					   const gchar     *format,
 					   gdouble          width,
 					   gdouble          height,
+					   EvFileExporterOrientation orientation,
 					   EvPrintRange    *ranges,
 					   gint             n_ranges,
 					   EvPrintPageSet   page_set,

@@ -10,8 +10,6 @@
 #include "ev-document-fonts.h"
 #include "ev-selection.h"
 #include "ev-async-renderer.h"
-#include "ev-file-exporter.h"
-#include "ev-window.h"
 
 #include <glib/gstdio.h>
 #include <unistd.h>
@@ -564,6 +562,7 @@ ev_job_print_new (EvDocument    *document,
 		  const gchar   *format,
 		  gdouble        width,
 		  gdouble        height,
+		  EvFileExporterOrientation orientation,
 		  EvPrintRange  *ranges,
 		  gint           n_ranges,
 		  EvPrintPageSet page_set,
@@ -585,6 +584,7 @@ ev_job_print_new (EvDocument    *document,
 
 	job->width = width;
 	job->height = height;
+	job->orientation = orientation;
 
 	job->ranges = ranges;
 	job->n_ranges = n_ranges;
@@ -718,6 +718,7 @@ ev_job_print_run (EvJobPrint *job)
 	fc.last_page = MAX (first_page, last_page);
 	fc.paper_width = job->width;
 	fc.paper_height = job->height;
+	fc.orientation = job->orientation;
 	fc.duplex = FALSE;
 	fc.pages_per_sheet = job->pages_per_sheet;
 

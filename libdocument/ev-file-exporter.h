@@ -47,15 +47,21 @@ typedef enum {
 	EV_FILE_EXPORTER_CAN_NUMBER_UP    = 1 << 8
 } EvFileExporterCapabilities;
 
+typedef enum {
+	EV_FILE_EXPORTER_PORTRAIT,
+	EV_FILE_EXPORTER_LANDSCAPE
+} EvFileExporterOrientation;
+
 typedef struct {
-	EvFileExporterFormat format;
-	const gchar         *filename;
-	gint                 first_page;
-	gint                 last_page;
-	gdouble              paper_width;
-	gdouble              paper_height;
-	gboolean             duplex;
-	gint                 pages_per_sheet;
+	EvFileExporterFormat      format;
+	const gchar              *filename;
+	gint                      first_page;
+	gint                      last_page;
+	gdouble                   paper_width;
+	gdouble                   paper_height;
+	EvFileExporterOrientation orientation;
+	gboolean                  duplex;
+	gint                      pages_per_sheet;
 } EvFileExporterContext;
 
 #define EV_TYPE_FILE_EXPORTER            (ev_file_exporter_get_type ())
