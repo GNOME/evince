@@ -1,3 +1,31 @@
+===============
+Evince   2.19.4
+===============
+
+Bug fixes:
+
+    * Find works when findbar is hidden (Justin Blanchard)
+    * Use directly cairo_surface_get_content (Jeff Muizelaar)
+    * Great speedup by using CAIRO_FORMAT_RGB24 instead of CAIRO_FORMAT_ARGB32 (Jeff Muizelaar)
+    * Fix for embedded thumbnails dimension and rotation (Carlos Garcia Campos)
+    * Avoid ifdefs inside macros (Jens Granseuer)
+    * Memory leak fixes (Justin Blanchard, Hiroyuki Ikezoe)
+    * New icon sizes (Andreas Nilsson)
+    * Invalid read fix (Justin Blanchard)
+    * Fix multihead problems in toolbar editor (Carlos Garcia Campos)
+    * Use the same cairo context for every page in the same expose event (Carlos Garcia Campos)
+
+Translations:
+
+    Adam Weinberger (en_CA)
+    Danishka Navin (si)
+    Duarte Loreto (pt)
+    Hendrik Richter (de)
+    Ihar Hrachyshka (be@latin)
+    Raphael Higino (pt_BR)
+    Stéphane Raimbault (fr)
+    Takeshi Aihana (ja)
+    
 ==============
 Evince   0.9.3
 ==============
