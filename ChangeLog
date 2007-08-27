@@ -1,3 +1,14 @@
+2007-08-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (pdf_print_context_free),
+	(pdf_document_file_exporter_begin),
+	(pdf_document_file_exporter_do_page):
+	* shell/ev-jobs.c: (ev_job_print_run):
+	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
+
+	Create always a portrait cairo surface and rotate when needed for
+	landscape. It fixes printing problems in real printers.
+	
 2007-08-25  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin):

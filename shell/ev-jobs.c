@@ -720,7 +720,7 @@ ev_job_print_run (EvJobPrint *job)
 	fc.paper_height = job->height;
 	fc.orientation = job->orientation;
 	fc.duplex = FALSE;
-	fc.pages_per_sheet = job->pages_per_sheet;
+	fc.pages_per_sheet = MAX (1, job->pages_per_sheet);
 
 	ev_document_doc_mutex_lock ();
 	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);

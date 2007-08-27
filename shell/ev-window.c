@@ -2332,7 +2332,7 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	gdouble        width;
 	gdouble        height;
 	GtkPrintPages  print_pages;
-	EvFileExporterOrientation orientation;
+	EvFileExporterOrientation orientation = EV_FILE_EXPORTER_PORTRAIT;
 	const gchar   *file_format;
 	
 	if (response == GTK_RESPONSE_CANCEL) {
