@@ -2494,7 +2494,7 @@ ev_view_expose_event (GtkWidget      *widget,
 
 		draw_one_page (view, i, cr, &page_area, &border, &(event->area), &page_ready);
 
-		if (page_ready && EV_IS_DOCUMENT_FIND (view->document))
+		if (page_ready && EV_IS_DOCUMENT_FIND (view->document) && view->highlight_find_results)
 			highlight_find_results (view, i);
 	}
 
@@ -3996,6 +3996,7 @@ ev_view_init (EvView *view)
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 	view->jump_to_find_result = TRUE;
+	view->highlight_find_results = FALSE;
 
 	gtk_layout_set_hadjustment (GTK_LAYOUT (view), NULL);
 	gtk_layout_set_vadjustment (GTK_LAYOUT (view), NULL);
@@ -4995,6 +4996,12 @@ void ev_view_search_changed (EvView *view)
 {
 	/* search string has changed, focus on new search result */
 	view->jump_to_find_result = TRUE;
+}
+
+void ev_view_set_highlight_search (EvView *view, gboolean value)
+{
+	view->highlight_find_results = value;
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /*** Selections ***/

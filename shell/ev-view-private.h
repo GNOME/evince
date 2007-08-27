@@ -81,6 +81,7 @@ struct _EvView {
 	char *find_status;
 	int find_result;
 	gboolean jump_to_find_result;
+	gboolean highlight_find_results;
 	
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;

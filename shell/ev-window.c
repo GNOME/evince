@@ -2789,6 +2789,8 @@ ev_window_cmd_edit_find_next (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
+	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	gtk_widget_grab_focus (ev_window->priv->find_bar);
 	ev_view_find_next (EV_VIEW (ev_window->priv->view));
 }
 
@@ -2797,6 +2799,8 @@ ev_window_cmd_edit_find_previous (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
+	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	gtk_widget_grab_focus (ev_window->priv->find_bar);
 	ev_view_find_previous (EV_VIEW (ev_window->priv->view));
 }
 
@@ -4019,24 +4023,18 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 			    EvWindow   *ev_window)
 {
 	gboolean case_sensitive;
-	gboolean visible;
 	const char *search_string;
 
-	/* Either the string or case sensitivity could have changed,
-	 * we connect this callback to both. We also connect it
-	 * to ::visible so when the find bar is hidden, we should
-	 * pretend the search string is NULL/""
-	 */
+	/* Either the string or case sensitivity could have changed. */
 
 	case_sensitive = egg_find_bar_get_case_sensitive (find_bar);
-	visible = GTK_WIDGET_VISIBLE (find_bar);
 	search_string = egg_find_bar_get_search_string (find_bar);
 
 	ev_view_search_changed (EV_VIEW(ev_window->priv->view));
 
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
-		if (visible && search_string && search_string[0]) {
+		if (search_string && search_string[0]) {
 			ev_document_doc_mutex_lock ();
 			ev_document_find_begin (EV_DOCUMENT_FIND (ev_window->priv->document), 
 						ev_page_cache_get_current_page (ev_window->priv->page_cache),
@@ -4053,6 +4051,26 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 						      NULL);
 			gtk_widget_queue_draw (GTK_WIDGET (ev_window->priv->view));
 		}
+	}
+}
+
+static void
+find_bar_visibility_changed_cb (EggFindBar *find_bar,
+			    GParamSpec *param,
+			    EvWindow   *ev_window)
+{
+	gboolean visible;
+
+	visible = GTK_WIDGET_VISIBLE (find_bar);
+
+	if (ev_window->priv->document &&
+	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
+		ev_view_set_highlight_search (EV_VIEW(ev_window->priv->view), visible);
+		ev_view_search_changed (EV_VIEW(ev_window->priv->view));
+		ev_window_update_actions (ev_window);
+
+		if (!visible)
+			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar), NULL);
 	}
 }
 
@@ -5419,7 +5437,7 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 	g_signal_connect (ev_window->priv->find_bar,
 			  "notify::visible",
-			  G_CALLBACK (find_bar_search_changed_cb),
+			  G_CALLBACK (find_bar_visibility_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->find_bar,
 			  "scroll",
