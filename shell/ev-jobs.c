@@ -8,7 +8,6 @@
 #include "ev-document-misc.h"
 #include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
-#include "ev-selection.h"
 #include "ev-async-renderer.h"
 
 #include <glib/gstdio.h>
@@ -276,6 +275,7 @@ ev_job_render_new (EvDocument      *document,
 		   gint             width,
 		   gint             height,
 		   EvRectangle     *selection_points,
+		   EvSelectionStyle selection_style,
 		   GdkColor        *text,
 		   GdkColor        *base,
 		   gboolean 	    include_forms,
@@ -296,6 +296,7 @@ ev_job_render_new (EvDocument      *document,
 	job->rc = g_object_ref (rc);
 	job->target_width = width;
 	job->target_height = height;
+	job->selection_style = selection_style;
 	job->text = *text;
 	job->base = *base;
 	job->include_forms = include_forms;
@@ -371,10 +372,12 @@ ev_job_render_run (EvJobRender *job)
 						       &(job->selection),
 						       &(job->selection_points),
 						       NULL,
+						       job->selection_style,
 						       &(job->text), &(job->base));
 			job->selection_region =
 				ev_selection_get_selection_region (EV_SELECTION (EV_JOB (job)->document),
 								   job->rc,
+								   job->selection_style,
 								   &(job->selection_points));
 		}
 

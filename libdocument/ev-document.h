@@ -84,10 +84,6 @@ struct _EvDocumentIface
                                                double          *height);
         char            * (* get_page_label)  (EvDocument      *document,
                                                int              page);
-        gboolean          (* can_get_text)    (EvDocument      *document);
-        char            * (* get_text)        (EvDocument      *document,
-                                               int              page,
-                                               EvRectangle     *rect);
         gboolean          (* has_attachments) (EvDocument      *document);
         GList           * (* get_attachments) (EvDocument      *document);
         cairo_surface_t * (* render)          (EvDocument      *document,
@@ -122,10 +118,6 @@ void             ev_document_get_page_size    (EvDocument      *document,
                                                double          *height);
 char            *ev_document_get_page_label   (EvDocument      *document,
                                                int              page);
-gboolean         ev_document_can_get_text     (EvDocument      *document);
-char            *ev_document_get_text         (EvDocument      *document,
-                                               int              page,
-                                               EvRectangle     *rect);
 gboolean         ev_document_has_attachments  (EvDocument      *document);
 GList           *ev_document_get_attachments  (EvDocument      *document);
 cairo_surface_t *ev_document_render           (EvDocument      *document,

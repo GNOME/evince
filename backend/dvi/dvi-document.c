@@ -250,12 +250,6 @@ dvi_document_class_init (DviDocumentClass *klass)
 	dvi_context_mutex = g_mutex_new ();
 }
 
-static gboolean
-dvi_document_can_get_text (EvDocument *document)
-{
-	return FALSE;
-}
-
 static EvDocumentInfo *
 dvi_document_get_info (EvDocument *document)
 {
@@ -271,7 +265,6 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = dvi_document_load;
 	iface->save = dvi_document_save;
-	iface->can_get_text = dvi_document_can_get_text;
 	iface->get_n_pages = dvi_document_get_n_pages;
 	iface->get_page_size = dvi_document_get_page_size;
 	iface->render = dvi_document_render;

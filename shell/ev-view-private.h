@@ -26,6 +26,7 @@
 #include "ev-page-cache.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
+#include "ev-selection.h"
 
 /* Information for middle clicking and moving around the doc */
 typedef struct {
@@ -41,6 +42,7 @@ typedef struct {
 	GdkPoint start;
 	gboolean in_selection;
 	GList *selections;
+	EvSelectionStyle style;
 } SelectionInfo;
 
 /* Information for handling images DND */

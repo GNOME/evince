@@ -175,34 +175,12 @@ ev_document_get_page_label(EvDocument    *document,
 	return iface->get_page_label (document, page);
 }
 
-gboolean
-ev_document_can_get_text (EvDocument  *document)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-
-	return iface->can_get_text (document);
-}
-
 EvDocumentInfo *
 ev_document_get_info (EvDocument *document)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
 	return iface->get_info (document);
-}
-
-char *
-ev_document_get_text (EvDocument  *document,
-		      int          page,
-		      EvRectangle *rect)
-{
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	char *retval;
-
-	LOG ("ev_document_get_text");
-	retval = iface->get_text (document, page, rect);
-
-	return retval;
 }
 
 gboolean

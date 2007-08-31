@@ -62,25 +62,45 @@ ev_selection_render_selection (EvSelection      *selection,
 			       cairo_surface_t **surface,
 			       EvRectangle      *points,
 			       EvRectangle      *old_points,
-			       GdkColor        *text,
-			       GdkColor        *base)
+			       EvSelectionStyle  style,
+			       GdkColor         *text,
+			       GdkColor         *base)
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
+	if (!iface->render_selection)
+		return;
+	
 	iface->render_selection (selection, rc,
 				 surface,
 				 points, old_points,
+				 style,
 				 text, base);
+}
+
+gchar *
+ev_selection_get_selected_text (EvSelection      *selection,
+				EvRenderContext  *rc,
+				EvSelectionStyle  style,
+				EvRectangle      *points)
+{
+	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
+
+	return iface->get_selected_text (selection, rc, style, points);
 }
 
 GdkRegion *
 ev_selection_get_selection_region (EvSelection     *selection,
 				   EvRenderContext *rc,
+				   EvSelectionStyle style,
 				   EvRectangle     *points)
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
-	return iface->get_selection_region (selection, rc, points);
+	if (!iface->get_selection_region)
+		return NULL;
+	
+	return iface->get_selection_region (selection, rc, style, points);
 }
 
 GdkRegion *
@@ -89,5 +109,8 @@ ev_selection_get_selection_map (EvSelection     *selection,
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
+	if (!iface->get_selection_map)
+		return NULL;
+	
 	return iface->get_selection_map (selection, rc);
 }

@@ -568,12 +568,6 @@ pdf_document_set_password (EvDocumentSecurity *document_security,
 	document->password = g_strdup (password);
 }
 
-static gboolean
-pdf_document_can_get_text (EvDocument *document)
-{
-	return TRUE;
-}
-
 static EvDocumentInfo *
 pdf_document_get_info (EvDocument *document)
 {
@@ -719,31 +713,6 @@ pdf_document_get_info (EvDocument *document)
 	return info;
 }
 
-static char *
-pdf_document_get_text (EvDocument *document, int page, EvRectangle *rect)
-{
-	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	PopplerPage *poppler_page;
-	PopplerRectangle r;
-	double height;
-	char *text;
-	
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	g_return_val_if_fail (poppler_page != NULL, NULL);
-
-	poppler_page_get_size (poppler_page, NULL, &height);
-	r.x1 = rect->x1;
-	r.y1 = height - rect->y2;
-	r.x2 = rect->x2;
-	r.y2 = height - rect->y1;
-
-	text = poppler_page_get_text (poppler_page, &r);
-
-	g_object_unref (poppler_page);
-
-	return text;
-}
-
 static void
 pdf_document_document_iface_init (EvDocumentIface *iface)
 {
@@ -755,8 +724,6 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->has_attachments = pdf_document_has_attachments;
 	iface->get_attachments = pdf_document_get_attachments;
 	iface->render = pdf_document_render;
-	iface->get_text = pdf_document_get_text;
-	iface->can_get_text = pdf_document_can_get_text;
 	iface->get_info = pdf_document_get_info;
 };
 
@@ -1792,6 +1759,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 				cairo_surface_t **surface,
 				EvRectangle      *points,
 				EvRectangle      *old_points,
+				EvSelectionStyle  style,
 				GdkColor         *text,
 				GdkColor         *base)
 {
@@ -1806,7 +1774,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 			       &width_points, &height_points);
 	width = (int) ((width_points * rc->scale) + 0.5);
 	height = (int) ((height_points * rc->scale) + 0.5);
-
 
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	cairo_t *cr;
@@ -1827,7 +1794,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 				       cr,
 				       (PopplerRectangle *)points,
 				       (PopplerRectangle *)old_points,
-				       POPPLER_SELECTION_NORMAL, /* SelectionStyle */
+				       (PopplerSelectionStyle)style,
 				       text,
 				       base);
 	cairo_destroy (cr);
@@ -1842,7 +1809,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 						 rc->scale, rc->rotation, pixbuf,
 						 (PopplerRectangle *)points,
 						 (PopplerRectangle *)old_points,
-						 POPPLER_SELECTION_NORMAL, /* SelectionStyle */
+						 (PopplerSelectionStyle)style,
 						 text,
 						 base);
 	if (*surface)
@@ -1852,10 +1819,40 @@ pdf_selection_render_selection (EvSelection      *selection,
 #endif /* HAVE_POPPLER_PAGE_RENDER */
 }
 
+static gchar *
+pdf_selection_get_selected_text (EvSelection     *selection,
+				 EvRenderContext *rc,
+				 EvSelectionStyle style,
+				 EvRectangle     *points)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (selection);
+	PopplerPage *poppler_page;
+	PopplerRectangle r;
+	double height;
+	char *retval;
+	
+	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
+	g_return_val_if_fail (poppler_page != NULL, NULL);
+
+	poppler_page_get_size (poppler_page, NULL, &height);
+	r.x1 = points->x1;
+	r.y1 = height - points->y2;
+	r.x2 = points->x2;
+	r.y2 = height - points->y1;
+
+	retval = poppler_page_get_text (poppler_page,
+					(PopplerSelectionStyle)style,
+					&r);
+
+	g_object_unref (poppler_page);
+
+	return retval;
+}
 
 static GdkRegion *
 pdf_selection_get_selection_region (EvSelection     *selection,
 				    EvRenderContext *rc,
+				    EvSelectionStyle style,
 				    EvRectangle     *points)
 {
 	PdfDocument *pdf_document;
@@ -1867,6 +1864,7 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 
 	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data,
 						    rc->scale,
+						    (PopplerSelectionStyle)style,
 						    (PopplerRectangle *) points);
 	return retval;
 }
@@ -1887,7 +1885,9 @@ pdf_selection_get_selection_map (EvSelection     *selection,
 	points.x1 = 0.0;
 	points.y1 = 0.0;
 	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
-	retval = poppler_page_get_selection_region (poppler_page, 1.0, &points);
+	retval = poppler_page_get_selection_region (poppler_page, 1.0,
+						    POPPLER_SELECTION_GLYPH,
+						    &points);
 	g_object_unref (poppler_page);
 
 	return retval;
@@ -1897,6 +1897,7 @@ static void
 pdf_selection_iface_init (EvSelectionIface *iface)
 {
         iface->render_selection = pdf_selection_render_selection;
+	iface->get_selected_text = pdf_selection_get_selected_text;
         iface->get_selection_region = pdf_selection_get_selection_region;
         iface->get_selection_map = pdf_selection_get_selection_map;
 }

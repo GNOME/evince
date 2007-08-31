@@ -367,12 +367,6 @@ comics_document_class_init (ComicsDocumentClass *klass)
 	gobject_class->finalize = comics_document_finalize;
 }
 
-static gboolean
-comics_document_can_get_text (EvDocument *document)
-{
-	return FALSE;
-}
-
 static EvDocumentInfo *
 comics_document_get_info (EvDocument *document)
 {
@@ -386,7 +380,6 @@ comics_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = comics_document_load;
 	iface->save = comics_document_save;
-	iface->can_get_text = comics_document_can_get_text;
 	iface->get_n_pages = comics_document_get_n_pages;
 	iface->get_page_size = comics_document_get_page_size;
 	iface->render = comics_document_render;

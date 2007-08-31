@@ -1,3 +1,42 @@
+2007-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/dvi/dvi-document.c: (dvi_document_document_iface_init):
+	* backend/impress/impress-document.c:
+	(impress_document_document_iface_init):
+	* backend/ps/ps-document.c: (ps_document_document_iface_init):
+	* backend/djvu/djvu-document.c:
+	(djvu_document_document_iface_init),
+	(djvu_selection_get_selected_text), (djvu_selection_iface_init):
+	* backend/tiff/tiff-document.c:
+	(tiff_document_document_iface_init):
+	* backend/pixbuf/pixbuf-document.c:
+	(pixbuf_document_document_iface_init):
+	* backend/comics/comics-document.c:
+	(comics_document_document_iface_init):
+	* backend/pdf/ev-poppler.cc: (pdf_document_document_iface_init),
+	(pdf_selection_render_selection),
+	(pdf_selection_get_selected_text),
+	(pdf_selection_get_selection_region),
+	(pdf_selection_get_selection_map), (pdf_selection_iface_init):
+	* libdocument/ev-selection.[ch]: (ev_selection_get_selected_text),
+	(ev_selection_get_selection_region),
+	(ev_selection_get_selection_map):
+	* libdocument/ev-document.[ch]:
+	* shell/ev-pixbuf-cache.[ch]: (add_job),
+	(ev_pixbuf_cache_get_selection_surface), (update_job_selection):
+	* shell/ev-view-private.h:
+	* shell/ev-jobs.[ch]: (ev_job_render_new), (ev_job_render_new),
+	(ev_job_render_run):
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity):
+	* shell/ev-view.c: (start_selection_for_event),
+	(ev_view_button_press_event), (ev_view_drag_data_get),
+	(ev_view_drag_data_received), (ev_view_button_release_event),
+	(compute_new_selection_text), (compute_selections),
+	(ev_view_select_all), (get_selected_text), (ev_view_copy),
+	(ev_view_primary_get_cb):
+
+	Add support for double and triple click selections.
+	
 2007-08-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:

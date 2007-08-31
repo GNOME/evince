@@ -26,6 +26,7 @@
 
 #include <gtk/gtkwidget.h>
 #include "ev-document.h"
+#include "ev-selection.h"
 #include "ev-job-queue.h"
 
 G_BEGIN_DECLS
@@ -43,6 +44,7 @@ typedef struct {
 	int page;
 	EvRectangle rect;
 	GdkRegion *covered_region;
+	EvSelectionStyle style;
 } EvViewSelection;
 
 typedef struct _EvPixbufCache       EvPixbufCache;

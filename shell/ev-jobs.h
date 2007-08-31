@@ -24,6 +24,7 @@
 #include "ev-document.h"
 #include "ev-window.h"
 #include "ev-file-exporter.h"
+#include "ev-selection.h"
 
 G_BEGIN_DECLS
 
@@ -133,6 +134,7 @@ struct _EvJobRender
 	cairo_surface_t *selection;
 	GdkRegion *selection_region;
 	EvRectangle selection_points;
+	EvSelectionStyle selection_style;
 	GdkColor base;
 	GdkColor text; 
 
@@ -229,6 +231,7 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 					   gint             width,
 					   gint             height,
 					   EvRectangle     *selection_points,
+					   EvSelectionStyle selection_style,
 					   GdkColor        *text,
 					   GdkColor        *base,
 					   gboolean         include_forms,

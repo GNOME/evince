@@ -316,7 +316,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		has_properties = FALSE;
 	}
 
-	if (has_document && ev_document_can_get_text (document)) {
+	if (has_document && EV_IS_SELECTION (document)) {
 		can_get_text = TRUE;
 	}
 	

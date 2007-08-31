@@ -1,7 +1,6 @@
 #include "ev-pixbuf-cache.h"
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
-#include "ev-selection.h"
 #include "ev-document-images.h"
 #include "ev-document-forms.h"
 #include "ev-image.h"
@@ -26,9 +25,10 @@ typedef struct _CacheJobInfo
 	/* Selection data. 
 	 * Selection_points are the coordinates encapsulated in selection.
 	 * target_points is the target selection size. */
-	EvRectangle selection_points;
-	EvRectangle target_points;
-	gboolean    points_set;
+	EvRectangle      selection_points;
+	EvRectangle      target_points;
+	EvSelectionStyle selection_style;
+	gboolean         points_set;
 	
 	cairo_surface_t *selection;
 	GdkRegion *selection_region;
@@ -646,6 +646,7 @@ add_job (EvPixbufCache *pixbuf_cache,
 					   job_info->rc,
 					   width, height,
 					   &(job_info->target_points),
+					   job_info->selection_style,
 					   text, base,
 					   include_forms,
 					   include_links,
@@ -1021,6 +1022,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 		job_info->selection_region =
 			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
 							   job_info->rc,
+							   job_info->selection_style,
 							   &(job_info->target_points));
 
 		gtk_widget_ensure_style (pixbuf_cache->view);
@@ -1031,6 +1033,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 					       job_info->rc, &(job_info->selection),
 					       &(job_info->target_points),
 					       old_points,
+					       job_info->selection_style,
 					       text, base);
 		job_info->selection_points = job_info->target_points;
 		ev_document_doc_mutex_unlock ();
@@ -1046,6 +1049,7 @@ update_job_selection (CacheJobInfo    *job_info,
 {
 	job_info->points_set = TRUE;		
 	job_info->target_points = selection->rect;
+	job_info->selection_style = selection->style;
 }
 
 static void

@@ -26,6 +26,7 @@
 #include "ev-document-misc.h"
 #include "ev-document-find.h"
 #include "ev-document-links.h"
+#include "ev-selection.h"
 
 #include <gdk-pixbuf/gdk-pixbuf-core.h>
 #include <glib/gi18n.h>
@@ -51,6 +52,7 @@ static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIf
 static void djvu_document_file_exporter_iface_init (EvFileExporterIface *iface);
 static void djvu_document_find_iface_init (EvDocumentFindIface *iface);
 static void djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface);
+static void djvu_selection_iface_init (EvSelectionIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE 
     (DjvuDocument, djvu_document, G_TYPE_OBJECT, 
@@ -60,6 +62,7 @@ G_DEFINE_TYPE_WITH_CODE
       G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
+      G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION, djvu_selection_iface_init);
      });
 
 
@@ -317,35 +320,6 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 	gobject_class->finalize = djvu_document_finalize;
 }
 
-static gboolean
-djvu_document_can_get_text (EvDocument *document)
-{
-	return TRUE;
-}
-
-
-static char *
-djvu_document_get_text (EvDocument *document, int page, EvRectangle *rect)
-{
-      	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-      	double width, height;
-      	EvRectangle rectangle;
-      	char* text;
-	     
-     	djvu_document_get_page_size (document, page, &width, &height); 		
-      	rectangle.x1 = rect->x1 / SCALE_FACTOR;
-	rectangle.y1 = (height - rect->y2) / SCALE_FACTOR;
-	rectangle.x2 = rect->x2 / SCALE_FACTOR;
-	rectangle.y2 = (height - rect->y1) / SCALE_FACTOR;
-		
-      	text = djvu_text_copy (djvu_document, page, &rectangle);
-      
-      	if (text == NULL)
-		text = g_strdup ("");
-		
-    	return text;
-}
-
 static EvDocumentInfo *
 djvu_document_get_info (EvDocument *document)
 {
@@ -361,12 +335,42 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = djvu_document_load;
 	iface->save = djvu_document_save;
-	iface->can_get_text = djvu_document_can_get_text;
-	iface->get_text = djvu_document_get_text;
 	iface->get_n_pages = djvu_document_get_n_pages;
 	iface->get_page_size = djvu_document_get_page_size;
 	iface->render = djvu_document_render;
 	iface->get_info = djvu_document_get_info;
+}
+
+static gchar *
+djvu_selection_get_selected_text (EvSelection     *selection,
+				  EvRenderContext *rc,
+				  EvSelectionStyle style,
+				  EvRectangle     *points)
+{
+      	DjvuDocument *djvu_document = DJVU_DOCUMENT (selection);
+      	double width, height;
+      	EvRectangle rectangle;
+      	gchar *text;
+	     
+     	djvu_document_get_page_size (EV_DOCUMENT (djvu_document),
+				     rc->page, &width, &height); 		
+      	rectangle.x1 = points->x1 / SCALE_FACTOR;
+	rectangle.y1 = (height - points->y2) / SCALE_FACTOR;
+	rectangle.x2 = points->x2 / SCALE_FACTOR;
+	rectangle.y2 = (height - points->y1) / SCALE_FACTOR;
+		
+      	text = djvu_text_copy (djvu_document, rc->page, &rectangle);
+      
+      	if (text == NULL)
+		text = g_strdup ("");
+		
+    	return text;
+}
+
+static void
+djvu_selection_iface_init (EvSelectionIface *iface)
+{
+	iface->get_selected_text = djvu_selection_get_selected_text;
 }
 
 static void

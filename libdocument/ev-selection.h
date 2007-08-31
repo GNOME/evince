@@ -36,6 +36,12 @@ G_BEGIN_DECLS
 #define EV_IS_SELECTION_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_SELECTION))
 #define EV_SELECTION_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_SELECTION, EvSelectionIface))
 
+typedef enum {
+	EV_SELECTION_STYLE_GLYPH,
+	EV_SELECTION_STYLE_WORD,
+	EV_SELECTION_STYLE_LINE
+} EvSelectionStyle;
+
 typedef struct _EvSelection	  EvSelection;
 typedef struct _EvSelectionIface   EvSelectionIface;
 
@@ -48,12 +54,18 @@ struct _EvSelectionIface
 					      cairo_surface_t **surface,
 					      EvRectangle      *points,
 					      EvRectangle      *old_points,
-					      GdkColor        *text,
-					      GdkColor        *base);
+					      EvSelectionStyle  style,
+					      GdkColor         *text,
+					      GdkColor         *base);
+	gchar     * (* get_selected_text)    (EvSelection      *selection,
+					      EvRenderContext  *rc,
+					      EvSelectionStyle  style,
+					      EvRectangle      *points);
 	GdkRegion * (* get_selection_map)    (EvSelection      *selection,
 					      EvRenderContext  *rc);
 	GdkRegion * (* get_selection_region) (EvSelection      *selection,
 					      EvRenderContext  *rc,
+					      EvSelectionStyle  style,
 					      EvRectangle      *points);
 };
 
@@ -63,12 +75,18 @@ void       ev_selection_render_selection     (EvSelection      *selection,
 					      cairo_surface_t **surface,
 					      EvRectangle      *points,
 					      EvRectangle      *old_points,
+					      EvSelectionStyle  style,
 					      GdkColor         *text,
 					      GdkColor         *base);
+gchar     *ev_selection_get_selected_text    (EvSelection      *selection,
+					      EvRenderContext  *rc,
+					      EvSelectionStyle  style,
+					      EvRectangle      *points);
 GdkRegion *ev_selection_get_selection_map    (EvSelection      *selection,
 					      EvRenderContext  *rc);
 GdkRegion *ev_selection_get_selection_region (EvSelection      *selection,
 					      EvRenderContext  *rc,
+					      EvSelectionStyle  style,
 					      EvRectangle      *points);
 				  
 G_END_DECLS

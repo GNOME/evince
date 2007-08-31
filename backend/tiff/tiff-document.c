@@ -373,12 +373,6 @@ tiff_document_class_init (TiffDocumentClass *klass)
 	gobject_class->finalize = tiff_document_finalize;
 }
 
-static gboolean
-tiff_document_can_get_text (EvDocument *document)
-{
-	return FALSE;
-}
-
 static EvDocumentInfo *
 tiff_document_get_info (EvDocument *document)
 {
@@ -395,7 +389,6 @@ tiff_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = tiff_document_load;
 	iface->save = tiff_document_save;
-	iface->can_get_text = tiff_document_can_get_text;
 	iface->get_n_pages = tiff_document_get_n_pages;
 	iface->get_page_size = tiff_document_get_page_size;
 	iface->render = tiff_document_render;

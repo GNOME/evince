@@ -415,12 +415,6 @@ ps_document_get_page_size (EvDocument *document,
 	}
 }
 
-static gboolean
-ps_document_can_get_text (EvDocument *document)
-{
-	return FALSE;
-}
-
 static EvDocumentInfo *
 ps_document_get_info (EvDocument *document)
 {
@@ -454,7 +448,6 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 {
 	iface->load = ps_document_load;
 	iface->save = ps_document_save;
-	iface->can_get_text = ps_document_can_get_text;
 	iface->get_n_pages = ps_document_get_n_pages;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->get_info = ps_document_get_info;

@@ -32,7 +32,6 @@
 #include "ev-view.h"
 #include "ev-view-private.h"
 #include "ev-utils.h"
-#include "ev-selection.h"
 #include "ev-document-links.h"
 #include "ev-document-images.h"
 #include "ev-document-find.h"
@@ -315,6 +314,7 @@ static void       jump_to_find_page                          (EvView            
 
 /*** Selection ***/
 static void       compute_selections                         (EvView             *view,
+							      EvSelectionStyle    style,
 							      GdkPoint           *start,
 							      GdkPoint           *stop);
 static void       clear_selection                            (EvView             *view);
@@ -2594,6 +2594,32 @@ ev_view_query_tooltip (GtkWidget         *widget,
 }
 #endif /* GTK_CHECK_VERSION (2, 11, 7) */
 
+static void
+start_selection_for_event (EvView         *view,
+			   GdkEventButton *event)
+{
+	EvSelectionStyle style;
+
+	clear_selection (view);
+	
+	view->selection_info.start.x = event->x + view->scroll_x;
+	view->selection_info.start.y = event->y + view->scroll_y;
+
+	switch (event->type) {
+	        case GDK_2BUTTON_PRESS:
+			style = EV_SELECTION_STYLE_WORD;
+			break;
+	        case GDK_3BUTTON_PRESS:
+			style = EV_SELECTION_STYLE_LINE;
+			break;
+	        default:
+			style = EV_SELECTION_STYLE_GLYPH;
+			break;
+	}
+
+	view->selection_info.style = style;
+}
+
 static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
@@ -2615,18 +2641,17 @@ ev_view_button_press_event (GtkWidget      *widget,
 			EvImage *image;
 			EvFormField *field;
 
-			if (view->selection_info.selections) {
-				if (location_in_selected_text (view,
+			if (EV_IS_SELECTION (view->document) && view->selection_info.selections) {
+				if (event->type == GDK_3BUTTON_PRESS) {
+					start_selection_for_event (view, event);
+				} else if (location_in_selected_text (view,
 							       event->x + view->scroll_x,
 							       event->y + view->scroll_y)) {
 					view->selection_info.in_drag = TRUE;
 				} else {
-					clear_selection (view);
-					
-					view->selection_info.start.x = event->x + view->scroll_x;
-					view->selection_info.start.y = event->y + view->scroll_y;
+					start_selection_for_event (view, event);
 				}
-				
+
 				gtk_widget_queue_draw (widget);
 			} else if (!location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y) &&
 				   (image = ev_view_get_image_at_location (view, event->x, event->y))) {
@@ -2642,8 +2667,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 				ev_view_handle_form_field (view, field, event->x, event->y);
 			} else {
 				ev_view_remove_all (view);
-				view->selection_info.start.x = event->x + view->scroll_x;
-				view->selection_info.start.y = event->y + view->scroll_y;
+				
+				if (EV_IS_SELECTION (view->document))
+					start_selection_for_event (view, event);
 			}
 		}			
 			return TRUE;
@@ -2690,16 +2716,14 @@ ev_view_drag_data_get (GtkWidget        *widget,
 
 	switch (info) {
 	        case TARGET_DND_TEXT:
-			if (view->selection_info.selections &&
-			    ev_document_can_get_text (view->document)) {
+			if (EV_IS_SELECTION (view->document) &&
+			    view->selection_info.selections) {
 				gchar *text;
 
 				text = get_selected_text (view);
-				
 				gtk_selection_data_set_text (selection_data,
 							     text,
 							     strlen (text));
-				
 				g_free (text);
 			}
 			break;
@@ -2780,7 +2804,10 @@ ev_view_drag_data_received (GtkWidget          *widget,
 static gboolean
 selection_update_idle_cb (EvView *view)
 {
-	compute_selections (view, &view->selection_info.start, &view->motion);
+	compute_selections (view,
+			    view->selection_info.style,
+			    &view->selection_info.start,
+			    &view->motion);
 	view->selection_update_id = 0;
 	return FALSE;
 }
@@ -2977,6 +3004,14 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->selection_update_id) {
 	    g_source_remove (view->selection_update_id);
 	    view->selection_update_id = 0;
+	}
+
+	if (!view->selection_info.in_selection &&
+	    view->selection_info.style != EV_SELECTION_STYLE_GLYPH) {
+		compute_selections (view,
+				    view->selection_info.style,
+				    &(view->selection_info.start),
+				    &(view->selection_info.start));
 	}
 
 	if (view->selection_info.selections) {
@@ -5061,9 +5096,10 @@ gdk_rectangle_point_in (GdkRectangle *rectangle,
 }
 
 static GList *
-compute_new_selection_text (EvView   *view,
-			    GdkPoint *start,
-			    GdkPoint *stop)
+compute_new_selection_text (EvView          *view,
+			    EvSelectionStyle style,
+			    GdkPoint        *start,
+			    GdkPoint        *stop)
 {
 	int n_pages, i, first, last;
 	GList *list = NULL;
@@ -5118,6 +5154,7 @@ compute_new_selection_text (EvView   *view,
 
 		selection = g_new0 (EvViewSelection, 1);
 		selection->page = i;
+		selection->style = style;
 		selection->rect.x1 = selection->rect.y1 = 0;
 		selection->rect.x2 = width;
 		selection->rect.y2 = height;
@@ -5275,16 +5312,17 @@ merge_selection_region (EvView *view,
 }
 
 static void
-compute_selections (EvView   *view,
-		    GdkPoint *start,
-		    GdkPoint *stop)
+compute_selections (EvView          *view,
+		    EvSelectionStyle style,
+		    GdkPoint        *start,
+		    GdkPoint        *stop)
 {
 	GList *list;
 
 	if (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE)
 		list = compute_new_selection_rect (view, start, stop);
 	else
-		list = compute_new_selection_text (view, start, stop);
+		list = compute_new_selection_text (view, style, start, stop);
 	merge_selection_region (view, list);
 }
 
@@ -5309,10 +5347,10 @@ clear_selection (EvView *view)
 	g_object_notify (G_OBJECT (view), "has-selection");
 }
 
-
 void
 ev_view_select_all (EvView *view)
 {
+	GList *selections = NULL;
 	int n_pages, i;
 
 	/* Disable selection on rotated pages for the 0.4.0 series */
@@ -5320,7 +5358,7 @@ ev_view_select_all (EvView *view)
 		return;
 
 	clear_selection (view);
-
+	
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 	for (i = 0; i < n_pages; i++) {
 		int width, height;
@@ -5333,15 +5371,15 @@ ev_view_select_all (EvView *view)
 
 		selection = g_new0 (EvViewSelection, 1);
 		selection->page = i;
+		selection->style = EV_SELECTION_STYLE_GLYPH;
 		selection->rect.x1 = selection->rect.y1 = 0;
 		selection->rect.x2 = width;
 		selection->rect.y2 = height;
 
-		view->selection_info.selections = g_list_append (view->selection_info.selections, selection);
+		selections = g_list_append (selections, selection);
 	}
 
-	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, view->selection_info.selections);
-	g_object_notify (G_OBJECT (view), "has-selection");
+	merge_selection_region (view, selections);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
@@ -5352,29 +5390,35 @@ ev_view_get_has_selection (EvView *view)
 }
 
 static char *
-get_selected_text (EvView *ev_view)
+get_selected_text (EvView *view)
 {
 	GString *text;
 	GList *l;
 	gchar *normalized_text;
+	EvRenderContext *rc;
 
 	text = g_string_new (NULL);
+	rc = ev_render_context_new (view->rotation, 1, view->scale);
 
 	ev_document_doc_mutex_lock ();
 
-	for (l = ev_view->selection_info.selections; l != NULL; l = l->next) {
+	for (l = view->selection_info.selections; l != NULL; l = l->next) {
 		EvViewSelection *selection = (EvViewSelection *)l->data;
-		char *tmp;
+		gchar *tmp;
 
-		tmp = ev_document_get_text (ev_view->document,
-					    selection->page,
-					    &selection->rect);
+		ev_render_context_set_page (rc, selection->page);
+		tmp = ev_selection_get_selected_text (EV_SELECTION (view->document),
+						      rc, selection->style,
+						      &(selection->rect));
+
 		g_string_append (text, tmp);
 		g_free (tmp);
 	}
 
 	ev_document_doc_mutex_unlock ();
 
+	g_object_unref (rc);
+	
 	normalized_text = g_utf8_normalize (text->str, text->len, G_NORMALIZE_NFKC);
 	g_string_free (text, TRUE);
 	return normalized_text;
@@ -5386,9 +5430,8 @@ ev_view_copy (EvView *ev_view)
 	GtkClipboard *clipboard;
 	char *text;
 
-	if (!ev_document_can_get_text (ev_view->document)) {
+	if (!EV_IS_SELECTION (ev_view->document))
 		return;
-	}
 
 	text = get_selected_text (ev_view);
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
@@ -5406,9 +5449,8 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 	EvView *ev_view = EV_VIEW (data);
 	char *text;
 
-	if (!ev_document_can_get_text (ev_view->document)) {
+	if (!EV_IS_SELECTION (ev_view->document))
 		return;
-	}
 
 	text = get_selected_text (ev_view);
 	if (text) {

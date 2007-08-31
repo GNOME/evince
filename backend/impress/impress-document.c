@@ -458,12 +458,6 @@ impress_document_class_init (ImpressDocumentClass *klass)
   gobject_class->finalize = impress_document_finalize;
 }
 
-static gboolean
-impress_document_can_get_text (EvDocument *document)
-{
-  return FALSE;
-}
-
 static EvDocumentInfo *
 impress_document_get_info (EvDocument *document)
 {
@@ -480,7 +474,6 @@ impress_document_document_iface_init (EvDocumentIface *iface)
 {
   iface->load = impress_document_load;
   iface->save = impress_document_save;
-  iface->can_get_text = impress_document_can_get_text;
   iface->get_n_pages = impress_document_get_n_pages;
   iface->get_page_size = impress_document_get_page_size;
   iface->render = impress_document_render;
