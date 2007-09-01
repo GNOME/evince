@@ -2332,7 +2332,6 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	gdouble        width;
 	gdouble        height;
 	GtkPrintPages  print_pages;
-	EvFileExporterOrientation orientation = EV_FILE_EXPORTER_PORTRAIT;
 	const gchar   *file_format;
 	
 	if (response == GTK_RESPONSE_CANCEL) {
@@ -2412,17 +2411,6 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	height = gtk_page_setup_get_paper_height (window->priv->print_page_setup,
 						  GTK_UNIT_PIXEL);
 	
-	switch (gtk_page_setup_get_orientation (window->priv->print_page_setup)) {
-	        case GTK_PAGE_ORIENTATION_PORTRAIT:
-	        case GTK_PAGE_ORIENTATION_REVERSE_PORTRAIT:
-			orientation = EV_FILE_EXPORTER_PORTRAIT;
-			break;
-	        case GTK_PAGE_ORIENTATION_LANDSCAPE:
-	        case GTK_PAGE_ORIENTATION_REVERSE_LANDSCAPE:
-			orientation = EV_FILE_EXPORTER_LANDSCAPE;
-			break;
-	}
-
 	if (scale != 1.0) {
 		width *= scale;
 		height *= scale;
@@ -2437,7 +2425,6 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	window->priv->print_job = ev_job_print_new (window->priv->document,
 						    file_format ? file_format : "ps",
 						    width, height,
-						    orientation,
 						    ranges, n_ranges,
 						    page_set,
 						    pages_per_sheet,

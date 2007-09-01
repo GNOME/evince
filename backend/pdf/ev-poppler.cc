@@ -68,15 +68,13 @@ typedef struct {
 typedef struct {
 	EvFileExporterFormat format;
 
-	gboolean landscape;
-	
 	/* Pages per sheet */
 	gint pages_per_sheet;
 	gint pages_printed;
 	gint pages_x;
 	gint pages_y;
-	gdouble page_width;
-	gdouble page_height;
+	gdouble paper_width;
+	gdouble paper_height;
 	
 #ifdef HAVE_CAIRO_PRINT
 	cairo_t *cr;
@@ -1550,7 +1548,6 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx;
 	gdouble width, height;
-	gboolean landscape, change_orient = FALSE;
 #ifdef HAVE_CAIRO_PRINT
 	cairo_surface_t *surface = NULL;
 #endif
@@ -1562,8 +1559,8 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	ctx->format = fc->format;
 	ctx->pages_per_sheet = fc->pages_per_sheet;
 
-	landscape = (fc->orientation == EV_FILE_EXPORTER_LANDSCAPE);
-	change_orient = landscape;
+	ctx->paper_width = fc->paper_width;
+	ctx->paper_height = fc->paper_height;
 	
 	switch (fc->pages_per_sheet) {
 	        default:
@@ -1572,7 +1569,6 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			ctx->pages_y = 1;
 			break;
 	        case 2:
-			landscape = !landscape;
 			ctx->pages_x = 1;
 			ctx->pages_y = 2;
 			break;
@@ -1581,7 +1577,6 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			ctx->pages_y = 2;
 			break;
 	        case 6:
-			landscape = !landscape;
 			ctx->pages_x = 2;
 			ctx->pages_y = 3;
 			break;
@@ -1595,36 +1590,12 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			break;
 	}
 
-	ctx->landscape = landscape;
-
-	if (change_orient) {
-		width = fc->paper_height;
-		height = fc->paper_width;
-	} else {
-		width = fc->paper_width;
-		height = fc->paper_height;
-	}
-
-	if (landscape) {
-		gint tmp;
-
-		tmp = ctx->pages_x;
-		ctx->pages_x = ctx->pages_y;
-		ctx->pages_y = tmp;
-
-		ctx->page_width = height / ctx->pages_x;
-		ctx->page_height = width / ctx->pages_y;
-	} else {
-		ctx->page_width = width / ctx->pages_x;
-		ctx->page_height = height / ctx->pages_y;
-	}
-
 	ctx->pages_printed = 0;
 
 	switch (fc->format) {
 	        case EV_FILE_FORMAT_PS:
 #ifdef HAVE_CAIRO_PS
-			surface = cairo_ps_surface_create (fc->filename, width, height);
+			surface = cairo_ps_surface_create (fc->filename, fc->paper_width, fc->paper_height);
 #else
 			ctx->ps_file = poppler_ps_file_new (pdf_document->document,
 							    fc->filename, fc->first_page,
@@ -1635,7 +1606,7 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			break;
 	        case EV_FILE_FORMAT_PDF:
 #ifdef HAVE_CAIRO_PDF
-			surface = cairo_pdf_surface_create (fc->filename, width, height);
+			surface = cairo_pdf_surface_create (fc->filename, fc->paper_width, fc->paper_height);
 #endif
 			break;
 	        default:
@@ -1644,16 +1615,6 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 
 #ifdef HAVE_CAIRO_PRINT
 	ctx->cr = cairo_create (surface);
-	if (landscape) {
-		cairo_matrix_t matrix;
-		
-		cairo_translate (ctx->cr, width, 0);
-		cairo_matrix_init (&matrix,
-				   0,  1,
-				   -1,  0,
-				   0,  0);
-		cairo_transform (ctx->cr, &matrix);
-	}
 	cairo_surface_destroy (surface);
 #endif
 }
@@ -1666,8 +1627,12 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 	PdfPrintContext *ctx = pdf_document->print_ctx;
 	PopplerPage *poppler_page;
 #ifdef HAVE_CAIRO_PRINT
-	gdouble page_width, page_height;
-	gint    x, y;
+	gdouble  page_width, page_height;
+	gint     x, y;
+	gboolean rotate, landscape;
+	gdouble  width, height;
+	gdouble  pwidth, pheight;
+	gdouble  xscale, yscale;
 #endif
 
 	g_return_if_fail (pdf_document->print_ctx != NULL);
@@ -1678,21 +1643,83 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 	x = (ctx->pages_printed % ctx->pages_per_sheet) % ctx->pages_x;
 	y = (ctx->pages_printed % ctx->pages_per_sheet) / ctx->pages_x;
 	poppler_page_get_size (poppler_page, &page_width, &page_height);
-	
-	cairo_save (ctx->cr);
-	cairo_translate (ctx->cr,
-			 x * ctx->page_width,
-			 y * ctx->page_height);
-	if (ctx->landscape) {
-		cairo_scale (ctx->cr,
-			     ctx->page_height / page_height,
-			     ctx->page_height / page_height);
+
+	if (page_width > page_height && page_width > ctx->paper_width) {
+		rotate = TRUE;
 	} else {
-		cairo_scale (ctx->cr,
-			     ctx->page_width / page_width,
-			     ctx->page_height / page_height);
+		rotate = FALSE;
 	}
 
+	landscape = (ctx->paper_width > ctx->paper_height);
+
+	/* Use always portrait mode and rotate when necessary */
+	if (ctx->paper_width > ctx->paper_height) {
+		width = ctx->paper_height;
+		height = ctx->paper_width;
+		rotate = !rotate;
+
+		cairo_ps_surface_set_size (cairo_get_target (ctx->cr),
+					   width, height);
+	} else {
+		width = ctx->paper_width;
+		height = ctx->paper_height;
+	}
+
+	if (ctx->pages_per_sheet == 2 || ctx->pages_per_sheet == 6) {
+		rotate = !rotate;
+	}	
+
+	if (rotate) {
+		gint tmp1;
+		gdouble tmp2;
+
+		tmp1 = x;
+		x = y;
+		y = tmp1;
+
+		tmp2 = page_width;
+		page_width = page_height;
+		page_height = tmp2;
+
+	}
+
+	pwidth = width / ctx->pages_x;
+	pheight = height / ctx->pages_y;
+
+	if ((page_width > pwidth || page_height > pheight) ||
+	    (page_width < pwidth && page_height < pheight)) {
+		xscale = pwidth / page_width;
+		yscale = pheight / page_height;
+		
+		if (yscale < xscale) {
+			xscale = yscale;
+		} else {
+			yscale = xscale;
+		}
+		
+	} else {	
+		xscale = yscale = 1;
+	}
+
+	/* TODO: center */
+
+	cairo_save (ctx->cr);
+	if (rotate) {
+		cairo_matrix_t matrix;
+		
+		cairo_translate (ctx->cr, width, 0);
+		cairo_matrix_init (&matrix,
+				   0,  1,
+				   -1,  0,
+				   0,  0);
+		cairo_transform (ctx->cr, &matrix);
+	}
+	
+	cairo_translate (ctx->cr,
+			 x * (rotate ? pheight : pwidth),
+			 y * (rotate ? pwidth : pheight));
+	cairo_scale (ctx->cr, xscale, yscale);
+	
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	poppler_page_render (poppler_page, ctx->cr);
 #endif

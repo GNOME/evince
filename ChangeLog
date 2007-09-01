@@ -1,3 +1,14 @@
+2007-09-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin),
+	(pdf_document_file_exporter_do_page):
+	* libdocument/ev-file-exporter.h:
+	* shell/ev-jobs.[ch]: (ev_job_print_new), (ev_job_print_run):
+	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
+
+	Actually fix printing regressions. Remove orientation from
+	EvPrintContext since it's redundant.
+	
 2007-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/dvi/dvi-document.c: (dvi_document_document_iface_init):
