@@ -1,3 +1,14 @@
+2007-09-02  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (pdf_selection_get_selected_text),
+	(pdf_selection_get_selection_region),
+	(pdf_selection_get_selection_map):
+
+	Temporarily disable double and triple selections since it depends on
+	poppler cvs head. It'll be enabled again as soon as poppler 0.6 is
+	released and the update of the external dependency minimal version
+	approved.
+	
 2007-09-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin),

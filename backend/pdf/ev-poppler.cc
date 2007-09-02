@@ -1868,7 +1868,9 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 	r.y2 = height - points->y1;
 
 	retval = poppler_page_get_text (poppler_page,
+#if 0
 					(PopplerSelectionStyle)style,
+#endif
 					&r);
 
 	g_object_unref (poppler_page);
@@ -1891,7 +1893,9 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 
 	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data,
 						    rc->scale,
+#if 0
 						    (PopplerSelectionStyle)style,
+#endif
 						    (PopplerRectangle *) points);
 	return retval;
 }
@@ -1913,7 +1917,9 @@ pdf_selection_get_selection_map (EvSelection     *selection,
 	points.y1 = 0.0;
 	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
 	retval = poppler_page_get_selection_region (poppler_page, 1.0,
+#if 0
 						    POPPLER_SELECTION_GLYPH,
+#endif
 						    &points);
 	g_object_unref (poppler_page);
 
