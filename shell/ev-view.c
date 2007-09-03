@@ -489,7 +489,7 @@ view_update_range_and_current_page (EvView *view)
 				}
 
 				view->end_page = i;
-			} else if (found) {
+			} else if (found && view->current_page <= view->end_page) {
 				break;
 			}
 		}
