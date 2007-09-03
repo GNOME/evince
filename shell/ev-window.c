@@ -704,6 +704,9 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	
 	if (window->priv->history == NULL)
 		return;
+
+	if (!EV_IS_DOCUMENT_LINKS (window->priv->document))
+		return;
 	
 	if (link) {
 		action = g_object_ref (ev_link_get_action (link));
@@ -722,8 +725,7 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	find_task.page_label = page_label;
 	find_task.chapter = NULL;
 	
-	if (EV_IS_DOCUMENT_LINKS (window->priv->document) && 
-	    ev_document_links_has_document_links (EV_DOCUMENT_LINKS (window->priv->document))) {
+	if (ev_document_links_has_document_links (EV_DOCUMENT_LINKS (window->priv->document))) {
 		GtkTreeModel *model;
 	
 		g_object_get (G_OBJECT (window->priv->sidebar_links), "model", &model, NULL);

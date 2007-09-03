@@ -1,5 +1,12 @@
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_add_history):
+
+	Make sure not to use the history with documents not supporting
+	links. Fixes bug #468954.
+	
+2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_load_job_cb):
 
 	Restart the search when reloading a document with the find bar
