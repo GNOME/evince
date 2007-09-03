@@ -1,5 +1,13 @@
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (setup_document_from_metadata),
+	(ev_window_load_job_cb), (ev_window_cmd_view_reload):
+
+	Do not jump to the first page when reloading a document from the
+	last page.
+	
+2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (update_chrome_flag),
 	(setup_sidebar_from_metadata),
 	(ev_window_cmd_focus_page_selector), (ev_window_cmd_edit_find),

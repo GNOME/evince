@@ -176,6 +176,7 @@ struct _EvWindowPrivate {
 	char *local_uri;
 	EvLinkDest *dest;
 	gboolean unlink_temp_file;
+	gboolean in_reload;
 	
 	EvDocument *document;
 	EvHistory *history;
@@ -796,7 +797,7 @@ setup_document_from_metadata (EvWindow *window)
 	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
 		n_pages = ev_page_cache_get_n_pages (window->priv->page_cache);
 		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
-		if (new_page == n_pages - 1)
+		if (!window->priv->in_reload && new_page == n_pages - 1)
 			new_page = 0;
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						new_page);
@@ -1324,7 +1325,8 @@ ev_window_load_job_cb  (EvJobLoad *job,
 				break;
 		}
 
-		ev_window_clear_load_job (ev_window);		
+		ev_window_clear_load_job (ev_window);
+		ev_window->priv->in_reload = FALSE;
 		return;
 	}
 
@@ -1348,6 +1350,7 @@ ev_window_load_job_cb  (EvJobLoad *job,
 				        _("Unable to open document"),
 					job->error);
 		ev_window_clear_load_job (ev_window);
+		ev_window->priv->in_reload = FALSE;
 	}	
 
 	return;
@@ -3308,6 +3311,8 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
 	gchar *uri;
 
+	ev_window->priv->in_reload = TRUE;
+	
 	uri = g_strdup (ev_window->priv->uri);
 	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE, NULL);
 	g_free (uri);
