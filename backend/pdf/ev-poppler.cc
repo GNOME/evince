@@ -19,10 +19,6 @@
 
 #include "config.h"
 
-#ifdef HAVE_POPPLER_FORM_FIELD_BUTTON_GET_BUTTON_TYPE
-#define HAVE_FORMS
-#endif
-
 #include <math.h>
 #include <string.h>
 #include <gtk/gtk.h>
@@ -1871,9 +1867,7 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 	r.y2 = height - points->y1;
 
 	retval = poppler_page_get_text (poppler_page,
-#if 0
 					(PopplerSelectionStyle)style,
-#endif
 					&r);
 
 	g_object_unref (poppler_page);
@@ -1896,9 +1890,7 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 
 	retval = poppler_page_get_selection_region ((PopplerPage *)rc->data,
 						    rc->scale,
-#if 0
 						    (PopplerSelectionStyle)style,
-#endif
 						    (PopplerRectangle *) points);
 	return retval;
 }
@@ -1920,9 +1912,7 @@ pdf_selection_get_selection_map (EvSelection     *selection,
 	points.y1 = 0.0;
 	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
 	retval = poppler_page_get_selection_region (poppler_page, 1.0,
-#if 0
 						    POPPLER_SELECTION_GLYPH,
-#endif
 						    &points);
 	g_object_unref (poppler_page);
 
@@ -1989,7 +1979,6 @@ pdf_document_get_crop_box (EvDocument  *document,
 	rect->y2 = poppler_rect.y2;
 }
 
-#ifdef HAVE_FORMS
 static EvFormField *
 ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 {
@@ -2026,10 +2015,7 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 			field_text->do_scroll = poppler_form_field_text_do_scroll (poppler_field);
 			field_text->is_rich_text = poppler_form_field_text_is_rich_text (poppler_field);
 			field_text->is_password = poppler_form_field_text_is_password (poppler_field);
-			
-#ifdef HAVE_POPPLER_FORM_FIELD_TEXT_GET_MAX_LEN
 			field_text->max_len = poppler_form_field_text_get_max_len (poppler_field);
-#endif
 			field_text->text = poppler_form_field_text_get_text (poppler_field);
 
 		}
@@ -2358,4 +2344,4 @@ pdf_document_document_forms_iface_init (EvDocumentFormsIface *iface)
 	iface->form_field_choice_set_text = pdf_document_forms_form_field_choice_set_text;
 	iface->form_field_choice_get_text = pdf_document_forms_form_field_choice_get_text;
 }
-#endif /* HAVE_FORMS */
+
