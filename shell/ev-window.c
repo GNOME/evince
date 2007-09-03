@@ -2407,9 +2407,9 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	scale = gtk_print_settings_get_scale (window->priv->print_settings) * 0.01;
 	
 	width = gtk_page_setup_get_paper_width (window->priv->print_page_setup,
-						GTK_UNIT_PIXEL);
+						GTK_UNIT_POINTS);
 	height = gtk_page_setup_get_paper_height (window->priv->print_page_setup,
-						  GTK_UNIT_PIXEL);
+						  GTK_UNIT_POINTS);
 	
 	if (scale != 1.0) {
 		width *= scale;

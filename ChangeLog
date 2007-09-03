@@ -1,5 +1,12 @@
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
+
+	Use GTK_UNIT_POINTS instead of GTK_UNIT_PIXEL, since it's not
+	supported by gtk+. Fixes bug #460907.
+	
+2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-view.c: (view_update_range_and_current_page):
 
 	Make sure current-page <= end-page in continuous mode. Fixes bug
