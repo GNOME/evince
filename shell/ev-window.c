@@ -537,8 +537,6 @@ update_chrome_flag (EvWindow *window, EvChrome flag, gboolean active)
 	} else {
 		priv->chrome &= ~flag;
 	}
-
-	update_chrome_visibility (window);
 }
 
 static void
@@ -856,6 +854,7 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 	if (ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility, FALSE)) {
 		update_chrome_flag (window, EV_CHROME_SIDEBAR, g_value_get_boolean (&sidebar_visibility));
 		g_value_unset (&sidebar_visibility);
+		update_chrome_visibility (window);
 	}
 }
 
@@ -2678,6 +2677,7 @@ ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 	
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	ev_window_set_action_sensitive (window, "ViewToolbar", FALSE);
+	update_chrome_visibility (window);
 	
 	action = gtk_action_group_get_action (window->priv->action_group,
 				     	      PAGE_SELECTOR_ACTION);
@@ -2768,6 +2768,7 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 	} 
 
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	update_chrome_visibility (ev_window);
 	gtk_widget_grab_focus (ev_window->priv->find_bar);
 }
 
@@ -2777,6 +2778,7 @@ ev_window_cmd_edit_find_next (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	update_chrome_visibility (ev_window);
 	gtk_widget_grab_focus (ev_window->priv->find_bar);
 	ev_view_find_next (EV_VIEW (ev_window->priv->view));
 }
@@ -2787,6 +2789,7 @@ ev_window_cmd_edit_find_previous (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	update_chrome_visibility (ev_window);
 	gtk_widget_grab_focus (ev_window->priv->find_bar);
 	ev_view_find_previous (EV_VIEW (ev_window->priv->view));
 }
@@ -3511,6 +3514,7 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 	widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
 		update_chrome_flag (window, EV_CHROME_FINDBAR, FALSE);
+		update_chrome_visibility (window);
 		gtk_widget_grab_focus (window->priv->view);
 	} else {
 		gboolean fullscreen;
@@ -3789,6 +3793,7 @@ ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
 	
 	active = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR, active);
+	update_chrome_visibility (ev_window);
 	ev_metadata_manager_set_boolean (NULL, "show_toolbar", active);
 }
 
@@ -3800,6 +3805,7 @@ ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 	    
 	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
 			    gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)));
+	update_chrome_visibility (ev_window);
 }
 
 static void
@@ -4002,6 +4008,7 @@ find_bar_close_cb (EggFindBar *find_bar,
 		   EvWindow   *ev_window)
 {
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, FALSE);
+	update_chrome_visibility (ev_window);
 }
 
 static void
@@ -4620,6 +4627,8 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	ev_window_set_action_sensitive (window, "ViewToolbar", TRUE);
 
 	ev_window_set_view_accels_sensitivity (window, TRUE);
+
+	update_chrome_visibility (window);
 
 	return FALSE;
 }

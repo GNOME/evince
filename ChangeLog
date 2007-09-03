@@ -1,5 +1,19 @@
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (update_chrome_flag),
+	(setup_sidebar_from_metadata),
+	(ev_window_cmd_focus_page_selector), (ev_window_cmd_edit_find),
+	(ev_window_cmd_edit_find_next),
+	(ev_window_cmd_edit_find_previous), (ev_window_cmd_escape),
+	(ev_window_view_toolbar_cb), (ev_window_view_sidebar_cb),
+	(find_bar_close_cb), (view_actions_focus_in_cb):
+
+	Do not update visibility when changing a chrome flag so that it's
+	possible to update several flags and update visibility only once
+	for all of them.
+	
+2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
 
 	Use GTK_UNIT_POINTS instead of GTK_UNIT_PIXEL, since it's not
