@@ -1,3 +1,11 @@
+2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (ev_view_handle_cursor_over_xy),
+	(ev_view_button_release_event), (ev_view_leave_notify_event):
+
+	Use always drag mouse cursor during a drag operation. Fixes bug
+	#470564.
+	
 2007-09-02  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_selection_get_selected_text),

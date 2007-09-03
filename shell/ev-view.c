@@ -1498,6 +1498,12 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 
 	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
+
+	if (view->drag_info.in_drag) {
+		if (view->cursor != EV_VIEW_CURSOR_DRAG)
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
+		return;
+	}
 	
 	link = ev_view_get_link_at_location (view, x, y);
 	
@@ -2981,21 +2987,20 @@ ev_view_button_release_event (GtkWidget      *widget,
 			      GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
-	EvLink *link;
+	EvLink *link = NULL;
+
+	view->drag_info.in_drag = FALSE;
+	view->image_dnd_info.in_drag = FALSE;
 
 	if (view->pressed_button == 2) {
-		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
+		ev_view_handle_cursor_over_xy (view, event->x, event->y);
 	}
 
 	if (view->document && view->pressed_button != 3) {
 		link = ev_view_get_link_at_location (view, event->x, event->y);
-	} else {
-		link = NULL;
 	}
 
 	view->pressed_button = -1;
-	view->drag_info.in_drag = FALSE;
-	view->image_dnd_info.in_drag = FALSE;
 
 	if (view->selection_scroll_id) {
 	    g_source_remove (view->selection_scroll_id);
@@ -3357,9 +3362,8 @@ static gboolean
 ev_view_leave_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 {
 	EvView *view = EV_VIEW (widget);
-    
-	if (view->cursor == EV_VIEW_CURSOR_LINK ||
-	    view->cursor == EV_VIEW_CURSOR_IBEAM)
+
+	if (view->cursor != EV_VIEW_CURSOR_NORMAL)
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 
 #if !GTK_CHECK_VERSION (2, 11, 7)
