@@ -1060,8 +1060,11 @@ build_tree (PdfDocument      *pdf_document,
 				break;
 		}
 		
-		if (!link) {
+		if (!link || strlen (ev_link_get_title (link)) <= 0) {
 			poppler_action_free (action);
+			if (link)
+				g_object_unref (link);
+			
 			continue;
 		}
 
