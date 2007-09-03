@@ -1,5 +1,12 @@
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_load_job_cb):
+
+	Restart the search when reloading a document with the find bar
+	visible. Fixes bug #461962.
+	
+2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (setup_document_from_metadata),
 	(ev_window_load_job_cb), (ev_window_cmd_view_reload):
 

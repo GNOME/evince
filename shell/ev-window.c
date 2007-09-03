@@ -221,7 +221,7 @@ struct _EvWindowPrivate {
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 
-static void	ev_window_update_actions	 	(EvWindow *ev_window);
+static void	ev_window_update_actions	 	(EvWindow         *ev_window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
@@ -263,16 +263,19 @@ static void     ev_view_popup_cmd_save_image_as         (GtkAction        *actio
 static void     ev_view_popup_cmd_copy_image            (GtkAction        *action,
 							 EvWindow         *window);
 static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
-							 EvWindow *window);
-static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, 
-							 EvWindow *window);
+							 EvWindow         *window);
+static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction     *action, 
+							 EvWindow         *window);
 static void	ev_window_cmd_view_best_fit 		(GtkAction 	  *action, 
 							 EvWindow 	  *ev_window);
 static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action, 
 							 EvWindow 	  *ev_window);
-static void	view_handle_link_cb 			(EvView *view, 
-							 EvLink *link, 
-							 EvWindow *window);
+static void	view_handle_link_cb 			(EvView           *view, 
+							 EvLink           *link, 
+							 EvWindow         *window);
+static void     find_bar_search_changed_cb              (EggFindBar       *find_bar,
+							 GParamSpec       *param,
+							 EvWindow         *ev_window);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -1323,6 +1326,17 @@ ev_window_load_job_cb  (EvJobLoad *job,
 				break;
 		        default:
 				break;
+		}
+
+		/* Restart the search after reloading */
+		if (ev_window->priv->in_reload) {
+			GtkWidget *widget;
+			
+			widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
+			if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
+				find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
+							    NULL, ev_window);
+			}
 		}
 
 		ev_window_clear_load_job (ev_window);
