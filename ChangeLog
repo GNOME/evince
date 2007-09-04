@@ -1,3 +1,10 @@
+2007-09-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* NEWS:
+	* configure.ac:
+	
+	Update for release 2.19.92
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:
@@ -8,21 +15,21 @@
 
 	Bump requirements to poppler 0.6 and drop all ifdefs used. Double
 	and triple click selections are enabled again now.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_add_history):
 
 	Make sure not to use the history with documents not supporting
 	links. Fixes bug #468954.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_load_job_cb):
 
 	Restart the search when reloading a document with the find bar
 	visible. Fixes bug #461962.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (setup_document_from_metadata),
@@ -30,7 +37,7 @@
 
 	Do not jump to the first page when reloading a document from the
 	last page.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (update_chrome_flag),
@@ -44,27 +51,27 @@
 	Do not update visibility when changing a chrome flag so that it's
 	possible to update several flags and update visibility only once
 	for all of them.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (ev_window_print_dialog_response_cb):
 
 	Use GTK_UNIT_POINTS instead of GTK_UNIT_PIXEL, since it's not
 	supported by gtk+. Fixes bug #460907.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (view_update_range_and_current_page):
 
 	Make sure current-page <= end-page in continuous mode. Fixes bug
 	#454950.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (build_tree):
 
 	Ignore outline items without a title. Fixes bug #453913.
-	
+
 2007-09-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_handle_cursor_over_xy),
@@ -72,7 +79,7 @@
 
 	Use always drag mouse cursor during a drag operation. Fixes bug
 	#470564.
-	
+
 2007-09-02  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_selection_get_selected_text),
@@ -83,7 +90,7 @@
 	poppler cvs head. It'll be enabled again as soon as poppler 0.6 is
 	released and the update of the external dependency minimal version
 	approved.
-	
+
 2007-09-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin),
@@ -94,7 +101,7 @@
 
 	Actually fix printing regressions. Remove orientation from
 	EvPrintContext since it's redundant.
-	
+
 2007-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/dvi/dvi-document.c: (dvi_document_document_iface_init):
@@ -133,7 +140,7 @@
 	(ev_view_primary_get_cb):
 
 	Add support for double and triple click selections.
-	
+
 2007-08-28  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
