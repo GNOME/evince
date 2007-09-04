@@ -189,6 +189,7 @@ struct _EvWindowPrivate {
 
 	EvJob *load_job;
 	EvJob *thumbnail_job;
+	EvJob *save_job;
 #ifdef WITH_GNOME_PRINT
 	GnomePrintJob *print_job;
 #endif
@@ -235,6 +236,8 @@ static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
 static void     ev_window_print_job_cb                  (EvJobPrint       *job,
 							 EvWindow         *window);
 #endif
+static void     ev_window_save_job_cb                   (EvJobSave        *save,
+							 EvWindow         *window);
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
@@ -1215,25 +1218,25 @@ ev_window_popup_password_dialog (EvWindow *ev_window)
 static void
 ev_window_clear_load_job (EvWindow *ev_window)
 {
-    if (ev_window->priv->load_job != NULL) {
-
-	if (!ev_window->priv->load_job->finished)
-	        ev_job_queue_remove_job (ev_window->priv->load_job);
-
-	g_signal_handlers_disconnect_by_func (ev_window->priv->load_job, ev_window_load_job_cb, ev_window);
-    	g_object_unref (ev_window->priv->load_job);
-	ev_window->priv->load_job = NULL;
-    }
+	if (ev_window->priv->load_job != NULL) {
+		
+		if (!ev_window->priv->load_job->finished)
+			ev_job_queue_remove_job (ev_window->priv->load_job);
+		
+		g_signal_handlers_disconnect_by_func (ev_window->priv->load_job, ev_window_load_job_cb, ev_window);
+		g_object_unref (ev_window->priv->load_job);
+		ev_window->priv->load_job = NULL;
+	}
 }
 
 static void
 ev_window_clear_local_uri (EvWindow *ev_window)
 {
-    if (ev_window->priv->local_uri) {
-	    ev_tmp_uri_unlink (ev_window->priv->local_uri);
-	    g_free (ev_window->priv->local_uri);
-	    ev_window->priv->local_uri = NULL;
-    }
+	if (ev_window->priv->local_uri) {
+		ev_tmp_uri_unlink (ev_window->priv->local_uri);
+		g_free (ev_window->priv->local_uri);
+		ev_window->priv->local_uri = NULL;
+	}
 }
 
 static void
@@ -1985,130 +1988,60 @@ ev_window_save_remote (EvWindow    *ev_window,
 }
 
 static void
+ev_window_clear_save_job (EvWindow *ev_window)
+{
+	if (ev_window->priv->save_job != NULL) {
+		if (!ev_window->priv->save_job->finished)
+			ev_job_queue_remove_job (ev_window->priv->save_job);
+		
+		g_signal_handlers_disconnect_by_func (ev_window->priv->save_job,
+						      ev_window_save_job_cb,
+						      ev_window);
+		g_object_unref (ev_window->priv->save_job);
+		ev_window->priv->save_job = NULL;
+	}
+}
+
+static void
+ev_window_save_job_cb (EvJobSave *job,
+		       EvWindow  *window)
+{
+	if (job->error) {
+		gchar *msg;
+		
+		msg = g_strdup_printf (_("The file could not be saved as “%s”."), job->uri);
+		ev_window_error_dialog (GTK_WINDOW (window), msg, job->error);
+		g_free (msg);
+	}
+
+	ev_window_clear_save_job (window);
+}
+
+static void
 file_save_dialog_response_cb (GtkWidget *fc,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
-	gchar  *uri;
-	gchar  *local_uri;
-	gint    fd;
-	gchar  *filename;
-	gchar  *tmp_filename;
-	GError *error = NULL;
-
+	gchar *uri;
+	
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
 		return;
 	}
-
+	
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
-
-	filename = ev_tmp_filename ("saveacopy");
-	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
-	g_free (filename);
 	
-	fd = g_mkstemp (tmp_filename);
-	if (fd == -1) {
-		gchar *msg;
-		gchar *display_name;
-		gint   save_errno = errno;
-		
-		display_name = g_filename_display_name (tmp_filename);
-		g_set_error (&error,
-			     G_FILE_ERROR,
-			     g_file_error_from_errno (save_errno),
-			     _("Failed to create file “%s”: %s"),
-			     display_name, g_strerror (save_errno));
-		g_free (display_name);
-
-		msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
-		ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
-
-		g_free (tmp_filename);
-		g_free (uri);
-		g_free (msg);
-		g_error_free (error);
-		gtk_widget_destroy (fc);
-		
-		return;
-	}
-
-	/* Save document to temp filename */
-	local_uri = g_filename_to_uri (tmp_filename, NULL, NULL);
-	
-	ev_document_doc_mutex_lock ();
-	ev_document_save (ev_window->priv->document, local_uri, &error);
-	ev_document_doc_mutex_unlock ();
-	
-	close (fd);
-
-	if (!error) {
-		/* If original document was compressed,
-		 * compress it again before saving
-		 */
-		if (g_object_get_data (G_OBJECT (ev_window->priv->document),
-				       "uri-uncompressed")) {
-			EvCompressionType ctype = EV_COMPRESSION_NONE;
-			const gchar      *ext;
-			gchar            *uri_comp;
-
-			ext = g_strrstr (ev_window->priv->uri, ".gz");
-			if (ext && g_ascii_strcasecmp (ext, ".gz") == 0)
-				ctype = EV_COMPRESSION_GZIP;
-
-			ext = g_strrstr (ev_window->priv->uri, ".bz2");
-			if (ext && g_ascii_strcasecmp (ext, ".bz2") == 0)
-				ctype = EV_COMPRESSION_BZIP2;
-			
-			uri_comp = ev_file_compress (local_uri, ctype, &error);
-			g_free (local_uri);
-			ev_tmp_filename_unlink (tmp_filename);
-			
-			if (!uri_comp || error) {
-				local_uri = NULL;
-			} else {
-				local_uri = uri_comp;
-			}
-		}
-	}
-
-	g_free (tmp_filename);
-
-	if (error) {
-		gchar *msg;
-
-		msg = g_strdup_printf (_("The file could not be saved as “%s”."), uri);
-		ev_window_error_dialog (GTK_WINDOW (ev_window), msg, error);
-		g_free (uri);
-		g_free (msg);
-		g_error_free (error);
-		g_free (local_uri);
-		gtk_widget_destroy (fc);
-
-		return;
-	}
-
-	if (local_uri) {
-		GnomeVFSURI *target_uri;
-
-		target_uri = gnome_vfs_uri_new (uri);
-		if (gnome_vfs_uri_is_local (target_uri)) {
-			/* If target uri is local, just rename local_uri */
-			if (gnome_vfs_move (local_uri, uri, TRUE) != GNOME_VFS_OK)
-				ev_tmp_uri_unlink (local_uri);
-		} else {
-			GnomeVFSURI *source_uri;
-
-			source_uri = gnome_vfs_uri_new (local_uri);
-			ev_window_save_remote (ev_window, source_uri, target_uri);
-			gnome_vfs_uri_unref (source_uri);
-		}
-
-		gnome_vfs_uri_unref (target_uri);
-		g_free (local_uri);
-	}
+	ev_window_clear_save_job (ev_window);
+	ev_window->priv->save_job = ev_job_save_new (ev_window->priv->document,
+						     uri, ev_window->priv->uri);
+	g_signal_connect (ev_window->priv->save_job, "finished",
+			  G_CALLBACK (ev_window_save_job_cb),
+			  ev_window);
+	/* The priority doesn't matter for this job */
+	ev_job_queue_add_job (ev_window->priv->save_job, EV_JOB_PRIORITY_LOW);
 
 	g_free (uri);
+
 	gtk_widget_destroy (fc);
 }
 
@@ -4209,6 +4142,10 @@ ev_window_dispose (GObject *object)
 
 	if (priv->load_job) {
 		ev_window_clear_load_job (window);
+	}
+
+	if (priv->save_job) {
+		ev_window_clear_save_job (window);
 	}
 
 	if (priv->thumbnail_job) {

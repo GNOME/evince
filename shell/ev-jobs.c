@@ -11,7 +11,9 @@
 #include "ev-document-fonts.h"
 #include "ev-async-renderer.h"
 
+#include <errno.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n.h>
 #include <unistd.h>
 #include <libgnomevfs/gnome-vfs-uri.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
@@ -27,6 +29,8 @@ static void ev_job_thumbnail_init       (EvJobThumbnail      *job);
 static void ev_job_thumbnail_class_init (EvJobThumbnailClass *class);
 static void ev_job_load_init    	(EvJobLoad	     *job);
 static void ev_job_load_class_init 	(EvJobLoadClass	     *class);
+static void ev_job_save_init            (EvJobSave           *job);
+static void ev_job_save_class_init      (EvJobSaveClass      *class);
 static void ev_job_print_init           (EvJobPrint          *job);
 static void ev_job_print_class_init     (EvJobPrintClass     *class);
 
@@ -49,6 +53,7 @@ G_DEFINE_TYPE (EvJobRender, ev_job_render, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobPrint, ev_job_print, EV_TYPE_JOB)
 
 static void ev_job_init (EvJob *job) { /* Do Nothing */ }
@@ -559,6 +564,143 @@ ev_job_load_run (EvJobLoad *job)
 
 	ev_document_fc_mutex_unlock ();
 	EV_JOB (job)->finished = TRUE;
+}
+
+static void ev_job_save_init (EvJobSave *job) { /* Do Nothing */ }
+
+static void
+ev_job_save_dispose (GObject *object)
+{
+	EvJobSave *job = EV_JOB_SAVE (object);
+
+	if (job->uri) {
+		g_free (job->uri);
+		job->uri = NULL;
+	}
+
+	if (job->document_uri) {
+		g_free (job->document_uri);
+		job->document_uri = NULL;
+	}
+
+	if (job->error) {
+		g_error_free (job->error);
+		job->error = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_save_parent_class)->dispose) (object);
+}
+
+static void
+ev_job_save_class_init (EvJobSaveClass *class)
+{
+	GObjectClass *oclass;
+
+	oclass = G_OBJECT_CLASS (class);
+
+	oclass->dispose = ev_job_save_dispose;
+}
+
+EvJob *
+ev_job_save_new (EvDocument  *document,
+		 const gchar *uri,
+		 const gchar *document_uri)
+{
+	EvJobSave *job;
+
+	job = g_object_new (EV_TYPE_JOB_SAVE, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+	job->uri = g_strdup (uri);
+	job->document_uri = g_strdup (document_uri);
+	job->error = NULL;
+
+	return EV_JOB (job);
+}
+
+void
+ev_job_save_run (EvJobSave *job)
+{
+	gint   fd;
+	gchar *filename;
+	gchar *tmp_filename;
+	gchar *local_uri;
+	
+	filename = ev_tmp_filename ("saveacopy");
+	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
+	g_free (filename);
+
+	fd = g_mkstemp (tmp_filename);
+	if (fd == -1) {
+		gchar *display_name;
+		gint   save_errno = errno;
+
+		display_name = g_filename_display_name (tmp_filename);
+		g_set_error (&(job->error),
+			     G_FILE_ERROR,
+			     g_file_error_from_errno (save_errno),
+			     _("Failed to create file “%s”: %s"),
+			     display_name, g_strerror (save_errno));
+		g_free (display_name);
+		g_free (tmp_filename);
+
+		return;
+	}
+
+	ev_document_doc_mutex_lock ();
+
+	/* Save document to temp filename */
+	local_uri = g_filename_to_uri (tmp_filename, NULL, NULL);
+	ev_document_save (EV_JOB (job)->document, local_uri, &(job->error));
+	close (fd);
+
+	ev_document_doc_mutex_unlock ();
+
+	if (job->error) {
+		g_free (local_uri);
+		return;
+	}
+
+	/* If original document was compressed,
+	 * compress it again before saving
+	 */
+	if (g_object_get_data (G_OBJECT (EV_JOB (job)->document),
+			       "uri-uncompressed")) {
+		EvCompressionType ctype = EV_COMPRESSION_NONE;
+		const gchar      *ext;
+		gchar            *uri_comp;
+		
+		ext = g_strrstr (job->document_uri, ".gz");
+		if (ext && g_ascii_strcasecmp (ext, ".gz") == 0)
+			ctype = EV_COMPRESSION_GZIP;
+		
+		ext = g_strrstr (job->document_uri, ".bz2");
+		if (ext && g_ascii_strcasecmp (ext, ".bz2") == 0)
+			ctype = EV_COMPRESSION_BZIP2;
+
+		uri_comp = ev_file_compress (local_uri, ctype, &(job->error));
+		g_free (local_uri);
+		ev_tmp_filename_unlink (tmp_filename);
+
+		if (!uri_comp || job->error) {
+			local_uri = NULL;
+		} else {
+			local_uri = uri_comp;
+		}
+	}
+
+	g_free (tmp_filename);
+	
+	if (job->error) {
+		g_free (local_uri);
+		return;
+	}
+
+	if (!local_uri)
+		return;
+
+	ev_xfer_uri_simple (local_uri, job->uri, &(job->error));
+	ev_tmp_uri_unlink (local_uri);
 }
 
 EvJob *

@@ -13,6 +13,7 @@ static GQueue *render_queue_low = NULL;
 static GQueue *thumbnail_queue_high = NULL;
 static GQueue *thumbnail_queue_low = NULL;
 static GQueue *load_queue = NULL;
+static GQueue *save_queue = NULL;
 static GQueue *fonts_queue = NULL;
 static GQueue *print_queue = NULL;
 
@@ -129,6 +130,8 @@ handle_job (EvJob *job)
 		ev_job_links_run (EV_JOB_LINKS (job));
 	else if (EV_IS_JOB_LOAD (job))
 		ev_job_load_run (EV_JOB_LOAD (job));
+	else if (EV_IS_JOB_SAVE (job))
+		ev_job_save_run (EV_JOB_SAVE (job));
 	else if (EV_IS_JOB_RENDER (job))
 		ev_job_render_run (EV_JOB_RENDER (job));
 	else if (EV_IS_JOB_FONTS (job))
@@ -188,6 +191,10 @@ search_for_jobs_unlocked (void)
 	if (job)
 		return job;
 
+	job = (EvJob *) g_queue_pop_head (save_queue);
+	if (job)
+		return job;
+
 	job = (EvJob *) g_queue_pop_head (thumbnail_queue_low);
 	if (job)
 		return job;
@@ -219,6 +226,7 @@ no_jobs_available_unlocked (void)
 		&& g_queue_is_empty (render_queue_low)
 		&& g_queue_is_empty (links_queue)
 		&& g_queue_is_empty (load_queue)
+		&& g_queue_is_empty (save_queue)
 		&& g_queue_is_empty (thumbnail_queue_high)
 		&& g_queue_is_empty (thumbnail_queue_low)
 		&& g_queue_is_empty (fonts_queue)
@@ -301,6 +309,7 @@ ev_job_queue_init (void)
 
 	links_queue = g_queue_new ();
 	load_queue = g_queue_new ();
+	save_queue = g_queue_new ();
 	render_queue_high = g_queue_new ();
 	render_queue_low = g_queue_new ();
 	async_render_queue_high = g_queue_new ();
@@ -339,6 +348,9 @@ find_queue (EvJob         *job,
 		} else if (EV_IS_JOB_LOAD (job)) {
 			/* the priority doesn't effect load */
 			return load_queue;
+		} else if (EV_IS_JOB_SAVE (job)) {
+			/* the priority doesn't effect save */
+			return save_queue;
 		} else if (EV_IS_JOB_LINKS (job)) {
 			/* the priority doesn't effect links */
 			return links_queue;
@@ -485,6 +497,8 @@ ev_job_queue_remove_job (EvJob *job)
 			retval = remove_job_from_queue_locked (links_queue, job);
 		} else if (EV_IS_JOB_LOAD (job)) {
 			retval = remove_job_from_queue_locked (load_queue, job);
+		} else if (EV_IS_JOB_SAVE (job)) {
+			retval = remove_job_from_queue_locked (save_queue, job);
 		} else if (EV_IS_JOB_FONTS (job)) {
 			retval = remove_job_from_queue_locked (fonts_queue, job);
 		} else if (EV_IS_JOB_PRINT (job)) {

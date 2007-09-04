@@ -45,6 +45,9 @@ typedef struct _EvJobFontsClass EvJobFontsClass;
 typedef struct _EvJobLoad EvJobLoad;
 typedef struct _EvJobLoadClass EvJobLoadClass;
 
+typedef struct _EvJobSave EvJobSave;
+typedef struct _EvJobSaveClass EvJobSaveClass;
+
 typedef struct _EvJobPrint EvJobPrint;
 typedef struct _EvJobPrintClass EvJobPrintClass;
 
@@ -78,10 +81,15 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
 #define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
 
-#define EV_TYPE_JOB_PRINT                     (ev_job_print_get_type())
-#define EV_JOB_PRINT(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
-#define EV_JOB_PRINT_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
-#define EV_IS_JOB_PRINT(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
+#define EV_TYPE_JOB_SAVE		     (ev_job_save_get_type())
+#define EV_JOB_SAVE(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_SAVE, EvJobSave))
+#define EV_JOB_SAVE_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_SAVE, EvJobSaveClass))
+#define EV_IS_JOB_SAVE(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_SAVE))
+
+#define EV_TYPE_JOB_PRINT                    (ev_job_print_get_type())
+#define EV_JOB_PRINT(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
+#define EV_JOB_PRINT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
+#define EV_IS_JOB_PRINT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
 
 typedef enum {
 	EV_JOB_PRIORITY_LOW,
@@ -190,6 +198,20 @@ struct _EvJobLoadClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobSave
+{
+	EvJob parent;
+
+	GError *error;
+	gchar *uri;
+	gchar *document_uri;
+};
+
+struct _EvJobSaveClass
+{
+	EvJobClass parent_class;
+};
+
 struct _EvJobPrint
 {
 	EvJob parent;
@@ -258,6 +280,13 @@ EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri,
 void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
 void		ev_job_load_run 	  (EvJobLoad 	   *load);
+
+/* EvJobSave */
+GType           ev_job_save_get_type      (void) G_GNUC_CONST;
+EvJob          *ev_job_save_new           (EvDocument      *document,
+					   const gchar     *uri,
+					   const gchar     *document_uri);
+void            ev_job_save_run           (EvJobSave       *save);
 
 /* EvJobPrint */
 GType           ev_job_print_get_type     (void) G_GNUC_CONST;

@@ -1,3 +1,19 @@
+2007-09-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-job-queue.c: (handle_job), (search_for_jobs_unlocked),
+	(no_jobs_available_unlocked), (ev_job_queue_init), (find_queue),
+	(ev_job_queue_remove_job):
+	* shell/ev-jobs.[ch]: (ev_job_save_init), (ev_job_save_dispose),
+	(ev_job_save_class_init), (ev_job_save_new), (ev_job_save_run):
+	* shell/ev-window.c: (ev_window_clear_save_job),
+	(ev_window_save_job_cb), (file_save_dialog_response_cb),
+	(ev_window_dispose):
+
+	Move save a copy task to its own job so that it's carried out in a
+	thread avoiding another lock in the main thread. Use
+	ev_xfer_uri_simple() instead of gnome_vfs_move() so that document
+	can be saved to a pathin another file system. Fixes bug #456891.
+	
 2007-09-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
