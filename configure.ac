@@ -421,28 +421,28 @@ dnl ================== End of impress book checks ==============================
 dnl =================== Mime types list ====================================================
 
 if test "x$enable_pdf" = "xyes" ; then
-	EVINCE_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf"
+	EVINCE_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf;"
 fi
 if test "x$enable_ps" = "xyes" ; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps;"
 fi
 if test "x$enable_dvi" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-dvi"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-dvi;"
 fi
 if test "x$enable_djvu" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/vnd.djvu"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/vnd.djvu;"
 fi
 if test "x$enable_tiff" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/tiff"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/tiff;"
 fi
 if test "x$enable_comics" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/x-cbr;application/x-cbz"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-cbr;application/x-cbz;"
 fi
 if test "x$enable_pixbuf" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;image/*"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/*;"
 fi
 if test "x$enable_impress" = "xyes"; then
-	EVINCE_MIME_TYPES="$EVINCE_MIME_TYPES;application/vnd.sun.xml.impress;application/vnd.oasis.opendocument.presentation"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/vnd.sun.xml.impress;application/vnd.oasis.opendocument.presentation;"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
