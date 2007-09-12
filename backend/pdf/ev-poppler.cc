@@ -123,7 +123,6 @@ static EvLink     *ev_link_from_action      (PdfDocument       *pdf_document,
 static void        pdf_document_search_free (PdfDocumentSearch *search);
 static void        pdf_print_context_free   (PdfPrintContext   *ctx);
 
-#ifdef HAVE_FORMS
 G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
                          {
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
@@ -149,31 +148,6 @@ G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
 							pdf_document_page_transition_iface_init);
 			 });
-#else /* !HAVE_FORMS */
-G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
-                         {
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-							pdf_document_document_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
-							pdf_document_security_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-							pdf_document_document_thumbnails_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
-							pdf_document_document_links_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
-							pdf_document_document_images_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
-							pdf_document_document_fonts_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
-							pdf_document_find_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-							pdf_document_file_exporter_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
-							pdf_selection_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
-							pdf_document_page_transition_iface_init);
-			 });
-#endif /* HAVE_FORMS */
 
 static void
 set_rc_data (PdfDocument     *pdf_document,
