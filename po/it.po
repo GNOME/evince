@@ -1,14 +1,14 @@
 # Italian translations of evince package.
-# Copyright (C) 2005 THE evince'S COPYRIGHT HOLDER
+# Copyright (C) 2005-2007, The Free Software Foundation, Inc
 # This file is distributed under the same license as the Evince package.
 # Francesco Marletta <francesco.marletta@_NOSPAM_tiscali.it>, 2005-2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Evince 0.3.0\n"
+"Project-Id-Version: Evince 2.20.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-17 10:01+0200\n"
-"PO-Revision-Date: 2007-09-17 10:01+0200\n"
+"POT-Creation-Date: 2007-09-20 17:04+0200\n"
+"PO-Revision-Date: 2007-09-20 16:57+0200\n"
 "Last-Translator: Francesco Marletta <francesco.marletta@tiscali.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -972,9 +972,14 @@ msgstr "_Salva una copia..."
 msgid "Save a copy of the current document"
 msgstr "Salva una copia del documento corrente"
 
+# GNOME-2-20
+#  traduzione infedele, ma
+#    * l'originale dovrebbe essere Page Setup per l'HIG (aprirò un bug)
+#    * la voce apre il dialogo "Imposta pagina" delle GTK+
+#    --Luca
 #: ../shell/ev-window.c:4274
 msgid "Print Set_up..."
-msgstr "Impos_ta stampa..."
+msgstr "_Imposta pagina..."
 
 #: ../shell/ev-window.c:4275
 msgid "Setup the page settings for printing"
@@ -1012,13 +1017,18 @@ msgstr "Trova s_uccessivo"
 msgid "Find Pre_vious"
 msgstr "Trova pr_ecedente"
 
+# GNOME-2-20
+# Questo è quello che appare in Modifica
+# cambiato acceleratore per collisione (Seleziona tutto)
 #: ../shell/ev-window.c:4301
 msgid "T_oolbar"
-msgstr "Barra degli _strumenti"
+msgstr "_Barra degli strumenti"
 
+# GNOME-2-20
+# cambiato acceleratore per collision
 #: ../shell/ev-window.c:4303
 msgid "Rotate _Left"
-msgstr "Ruota a _sinistra"
+msgstr "_Ruota a sinistra"
 
 #: ../shell/ev-window.c:4305
 msgid "Rotate _Right"
@@ -1322,7 +1332,7 @@ msgid ""
 "creation of new thumbnails"
 msgstr ""
 "Opzioni booleane disponibili, true abilita la creazione delle miniature e "
-"false disabilita la creazione di nuove miniaure"
+"false disabilita la creazione di nuove miniature"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
