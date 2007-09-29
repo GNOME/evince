@@ -2659,6 +2659,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 				}
 
 				gtk_widget_queue_draw (widget);
+			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
+				ev_view_remove_all (view);
+				ev_view_handle_form_field (view, field, event->x, event->y);
 			} else if (!location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y) &&
 				   (image = ev_view_get_image_at_location (view, event->x, event->y))) {
 				if (view->image_dnd_info.image)
@@ -2668,9 +2671,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 				view->image_dnd_info.start.x = event->x + view->scroll_x;
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
-			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
-				ev_view_remove_all (view);
-				ev_view_handle_form_field (view, field, event->x, event->y);
 			} else {
 				ev_view_remove_all (view);
 				

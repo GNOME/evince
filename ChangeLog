@@ -1,3 +1,12 @@
+2007-09-29  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (ev_view_button_press_event):
+
+	Give priority to form fields over images when deciding whether a
+	button press event is over an image or form field. It allows edit
+	form fields when they are over a background image. Fixes bug
+	#477841.
+	
 2007-09-17  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* NEWS:
