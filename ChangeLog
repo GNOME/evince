@@ -1,5 +1,14 @@
 2007-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_do_page):
+
+	Use poppler_page_render_for_printing() instead of
+	poppler_page_render() if available when exporting to a ps or pdf
+	file. Fixes bug #476627.
+	
+2007-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_run_fullscreen):
 
 	Do not show the toolbar in fullscreen mode if the main toolbar is

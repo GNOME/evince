@@ -1692,10 +1692,15 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 			 x * (rotate ? pheight : pwidth),
 			 y * (rotate ? pwidth : pheight));
 	cairo_scale (ctx->cr, xscale, yscale);
-	
+
+#ifdef HAVE_POPPLER_PAGE_RENDER_FOR_PRINTING
+	poppler_page_render_for_printing (poppler_page, ctx->cr);
+#else
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	poppler_page_render (poppler_page, ctx->cr);
 #endif
+#endif
+
 	ctx->pages_printed++;
 			
 	if (ctx->pages_printed % ctx->pages_per_sheet == 0) {
