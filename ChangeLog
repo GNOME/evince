@@ -1,5 +1,13 @@
 2007-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/pdf/ev-poppler.cc: (ev_form_field_from_poppler_field),
+	(pdf_document_forms_get_form_fields):
+
+	Silently ignore unknown form fields. Fixes bug #482654. Patch by
+	Matthias Drochner.
+	
+2007-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_do_page):
 

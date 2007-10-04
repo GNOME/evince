@@ -2053,7 +2053,7 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 			ev_field = ev_form_field_signature_new (id);
 			break;
 	        case POPPLER_FORM_FIELD_UNKNOWN:
-			break;
+			return NULL;
 	}
 
 	ev_field->font_size = font_size;
@@ -2072,7 +2072,6 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
  	GList *fields;
  	GList *list;
  	double height;
-	
 
  	pdf_document = PDF_DOCUMENT (document);
  	poppler_page = poppler_document_get_page (pdf_document->document, page);
@@ -2082,19 +2081,25 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
  	for (list = fields; list; list = list->next) {
  		PopplerFormFieldMapping *mapping;
  		EvFormFieldMapping *field_mapping;
-		
+		EvFormField *ev_field;
+
  		mapping = (PopplerFormFieldMapping *)list->data;
+
+		ev_field = ev_form_field_from_poppler_field (mapping->field);
+		if (!ev_field)
+			continue;
 
  		field_mapping = g_new0 (EvFormFieldMapping, 1);
 		field_mapping->x1 = mapping->area.x1;
 		field_mapping->x2 = mapping->area.x2;
 		field_mapping->y1 = height - mapping->area.y2;
 		field_mapping->y2 = height - mapping->area.y1;
-		field_mapping->field = ev_form_field_from_poppler_field (mapping->field);
+		field_mapping->field = ev_field;
 		field_mapping->field->page = page;
 		
 		retval = g_list_prepend (retval, field_mapping);
 	}
+	
 	poppler_page_free_form_field_mapping (fields);
 	g_object_unref (poppler_page);
 
