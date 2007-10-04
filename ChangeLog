@@ -1,3 +1,10 @@
+2007-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_run_fullscreen):
+
+	Do not show the toolbar in fullscreen mode if the main toolbar is
+	not visible. Fixes bug #483048.
+	
 2007-09-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_button_press_event):

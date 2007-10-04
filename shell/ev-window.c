@@ -2821,7 +2821,11 @@ ev_window_run_fullscreen (EvWindow *window)
 	ev_view_set_fullscreen (EV_VIEW (window->priv->view), TRUE);
 	ev_window_update_fullscreen_action (window);
 
-	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, TRUE);
+	/* If the user doesn't have the main toolbar he/she won't probably want
+	 * the toolbar in fullscreen mode. See bug #483048
+	 */
+	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR,
+			    (window->priv->chrome & EV_CHROME_TOOLBAR) != 0);
 	update_chrome_visibility (window);
 	
 	gtk_window_fullscreen (GTK_WINDOW (window));
