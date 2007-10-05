@@ -8,4 +8,4 @@ DOC_ENTITIES = legal.xml
 DOC_INCLUDES = 
 DOC_FIGURES = figures/evince_start_window.png
 
-DOC_LINGUAS = bg ca el en_GB es fi fr it ja oc nl ru sr sv uk
+DOC_LINGUAS = bg ca el en_GB es fi fr it ja nl oc pt_BR ru sr sv uk
