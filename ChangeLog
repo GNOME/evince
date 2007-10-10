@@ -1,3 +1,11 @@
+2007-10-10  Martin Schanzenbach  <mschanzenbach@gmail.com>
+
+	* shell/ev-window.c: (ev_window_refresh_window_thumbnail),
+	(ev_window_setup_document), (ev_window_rotation_changed_cb):
+
+	Rotate also the window icon when document is rotated. Fixes bug
+	#474681.
+	
 2007-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (ev_form_field_from_poppler_field),
