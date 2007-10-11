@@ -53,12 +53,30 @@ ev_file_exporter_begin (EvFileExporter        *exporter,
 }
 
 void
+ev_file_exporter_begin_page (EvFileExporter *exporter)
+{
+	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+
+	if (iface->begin_page)
+		iface->begin_page (exporter);
+}
+
+void
 ev_file_exporter_do_page (EvFileExporter  *exporter,
 			  EvRenderContext *rc)
 {
         EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
         iface->do_page (exporter, rc);
+}
+
+void
+ev_file_exporter_end_page (EvFileExporter *exporter)
+{
+	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+	
+	if (iface->end_page)
+		iface->end_page (exporter);
 }
 
 void
