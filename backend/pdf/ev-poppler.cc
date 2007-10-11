@@ -1593,6 +1593,29 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 }
 
 static void
+pdf_document_file_exporter_begin_page (EvFileExporter *exporter)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+	PdfPrintContext *ctx = pdf_document->print_ctx;
+	
+	g_return_if_fail (pdf_document->print_ctx != NULL);
+
+	ctx->pages_printed = 0;
+
+	if (ctx->paper_width > ctx->paper_height) {
+		if (ctx->format == EV_FILE_FORMAT_PS) {
+			cairo_ps_surface_set_size (cairo_get_target (ctx->cr),
+						   ctx->paper_height,
+						   ctx->paper_width);
+		} else if (ctx->format == EV_FILE_FORMAT_PDF) {
+			cairo_pdf_surface_set_size (cairo_get_target (ctx->cr),
+						    ctx->paper_height,
+						    ctx->paper_width);
+		}
+	}
+}
+
+static void
 pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 				    EvRenderContext *rc)
 {
@@ -1630,9 +1653,6 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 		width = ctx->paper_height;
 		height = ctx->paper_width;
 		rotate = !rotate;
-
-		cairo_ps_surface_set_size (cairo_get_target (ctx->cr),
-					   width, height);
 	} else {
 		width = ctx->paper_width;
 		height = ctx->paper_height;
@@ -1653,7 +1673,6 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 		tmp2 = page_width;
 		page_width = page_height;
 		page_height = tmp2;
-
 	}
 
 	pwidth = width / ctx->pages_x;
@@ -1703,9 +1722,6 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 
 	ctx->pages_printed++;
 			
-	if (ctx->pages_printed % ctx->pages_per_sheet == 0) {
-		cairo_show_page (ctx->cr);
-	}
 	cairo_restore (ctx->cr);
 #else /* HAVE_CAIRO_PRINT */
 	if (ctx->format == EV_FILE_FORMAT_PS)
@@ -1713,6 +1729,17 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 #endif /* HAVE_CAIRO_PRINT */
 	
 	g_object_unref (poppler_page);
+}
+
+static void
+pdf_document_file_exporter_end_page (EvFileExporter *exporter)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
+	PdfPrintContext *ctx = pdf_document->print_ctx;
+	
+	g_return_if_fail (pdf_document->print_ctx != NULL);
+
+	cairo_show_page (ctx->cr);
 }
 
 static void
@@ -1753,7 +1780,9 @@ static void
 pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
 {
         iface->begin = pdf_document_file_exporter_begin;
+	iface->begin_page = pdf_document_file_exporter_begin_page;
         iface->do_page = pdf_document_file_exporter_do_page;
+	iface->end_page = pdf_document_file_exporter_end_page;
         iface->end = pdf_document_file_exporter_end;
 	iface->get_capabilities = pdf_document_file_exporter_get_capabilities;
 }

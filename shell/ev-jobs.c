@@ -782,21 +782,6 @@ ev_print_job_get_last_page (EvJobPrint *job)
 }
 
 static gboolean
-ev_print_job_print_page_in_range (EvJobPrint *job,
-				  gint        page)
-{
-	gint i;
-
-	for (i = 0; i < job->n_ranges; i++) {
-		if (page >= job->ranges[i].start &&
-		    page <= job->ranges[i].end)
-			return TRUE;
-	}
-
-	return FALSE;
-}
-
-static gboolean
 ev_print_job_print_page_in_set (EvJobPrint *job,
 				gint        page)
 {
@@ -826,6 +811,9 @@ ev_job_print_get_page_list (EvJobPrint *job,
 		gint rsize;
 		gint start, end;
 
+		if (job->ranges[i].start > max_page)
+			continue;
+		
 		start = job->ranges[i].start + 1;
 		end = job->ranges[i].end <= max_page ? job->ranges[i].end + 1 : max_page + 1;
 		rsize = end - start + 1;
@@ -864,28 +852,18 @@ ev_job_print_get_page_list (EvJobPrint *job,
 	return page_list;
 }
 
-static void
-ev_job_print_do_page (EvJobPrint *job, gint page)
-{
-	EvDocument      *document = EV_JOB (job)->document;
-	EvRenderContext *rc;
-
-	rc = ev_render_context_new (0, page, 1.0);
-	ev_file_exporter_do_page (EV_FILE_EXPORTER (document), rc);
-	g_object_unref (rc);
-}
-
 void
 ev_job_print_run (EvJobPrint *job)
 {
 	EvDocument            *document = EV_JOB (job)->document;
 	EvFileExporterContext  fc;
+	EvRenderContext       *rc;
 	gint                   fd;
 	gint                  *page_list;
 	gint                   n_pages;
 	gint                   last_page;
 	gint                   first_page;
-	gint                   i;
+	gint                   i, j;
 	gchar                 *filename;
 	
 	g_return_if_fail (EV_IS_JOB_PRINT (job));
@@ -926,6 +904,8 @@ ev_job_print_run (EvJobPrint *job)
 	fc.duplex = FALSE;
 	fc.pages_per_sheet = MAX (1, job->pages_per_sheet);
 
+	rc = ev_render_context_new (0, 0, 1.0);
+
 	ev_document_doc_mutex_lock ();
 	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);
 
@@ -933,16 +913,29 @@ ev_job_print_run (EvJobPrint *job)
 		gint page, step;
 		gint n_copies;
 		
-		step = job->reverse ? -1 : 1;
-		page = job->reverse ? n_pages - 1 : 0;
+		step = job->reverse ? -1 * job->pages_per_sheet : job->pages_per_sheet;
+		page = job->reverse ? (n_pages / job->pages_per_sheet) * job->pages_per_sheet  : 0;
 		n_copies = job->collate ? job->copies : 1;
 
 		while ((job->reverse && (page >= 0)) || (!job->reverse && (page < n_pages))) {
-			gint j;
+			gint k;
 
-			for (j = 0; j < n_copies; j++) {
-				ev_job_print_do_page (job, page_list[page]);
+			ev_file_exporter_begin_page (EV_FILE_EXPORTER (document));
+			
+			for (j = 0; j < job->pages_per_sheet; j++) {
+				gint p = page + j;
+				
+				if (p < 0 || p >= n_pages)
+					break;
+
+				ev_render_context_set_page (rc, page_list[p]);
+
+				for (k = 0; k < n_copies; k++) {
+					ev_file_exporter_do_page (EV_FILE_EXPORTER (document), rc);
+				}
 			}
+
+			ev_file_exporter_end_page (EV_FILE_EXPORTER (document));
 
 			page += step;
 		}
@@ -956,6 +949,7 @@ ev_job_print_run (EvJobPrint *job)
 	
 	g_free (page_list);
 	close (fd);
+	g_object_unref (rc);
 	
 	EV_JOB (job)->finished = TRUE;
 }

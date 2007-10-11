@@ -1,3 +1,20 @@
+2007-10-11  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc:
+	(pdf_document_file_exporter_begin_page),
+	(pdf_document_file_exporter_do_page),
+	(pdf_document_file_exporter_end_page),
+	(pdf_document_file_exporter_iface_init):
+	* libdocument/ev-file-exporter.[ch]:
+	(ev_file_exporter_begin_page), (ev_file_exporter_end_page):
+	* shell/ev-jobs.c: (ev_job_print_get_page_list),
+	(ev_job_print_run):
+
+	When printing multiple pages per sheet in reverse option, do not
+	invert the order of the pages in every sheet, but the order of the
+	sheets. Do not print blank pages when page range is invalid. Fixes
+	bugs #484857 and #485521.
+	
 2007-10-10  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-jobs.c: (ev_job_print_get_page_list),

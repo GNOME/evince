@@ -74,8 +74,10 @@ struct _EvFileExporterIface {
         /* Methods  */
         void                       (* begin)            (EvFileExporter        *exporter,
 							 EvFileExporterContext *fc);
+	void                       (* begin_page)       (EvFileExporter        *exporter);
         void                       (* do_page)          (EvFileExporter        *exporter,
 							 EvRenderContext       *rc);
+	void                       (* end_page)         (EvFileExporter        *exporter);
         void                       (* end)              (EvFileExporter        *exporter);
 	EvFileExporterCapabilities (* get_capabilities) (EvFileExporter        *exporter);
 };
@@ -83,8 +85,10 @@ struct _EvFileExporterIface {
 GType                      ev_file_exporter_get_type         (void) G_GNUC_CONST;
 void                       ev_file_exporter_begin            (EvFileExporter        *exporter,
 							      EvFileExporterContext *fc);
+void                       ev_file_exporter_begin_page       (EvFileExporter        *exporter);
 void                       ev_file_exporter_do_page          (EvFileExporter        *exporter,
 							      EvRenderContext       *rc);
+void                       ev_file_exporter_end_page         (EvFileExporter        *exporter);
 void                       ev_file_exporter_end              (EvFileExporter        *exporter);
 EvFileExporterCapabilities ev_file_exporter_get_capabilities (EvFileExporter        *exporter);
 
