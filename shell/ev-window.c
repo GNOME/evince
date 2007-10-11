@@ -2349,7 +2349,17 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 			ranges = g_memdup (page_range, n_ranges * sizeof (GtkPageRange));
 	}
 		break;
-	default:
+	case GTK_PRINT_PAGES_ALL: {
+		gint n_pages;
+
+		n_pages = ev_page_cache_get_n_pages (ev_page_cache_get (window->priv->document));
+		
+		ranges = g_new0 (EvPrintRange, 1);
+
+		ranges->start = 0;
+		ranges->end = n_pages - 1;
+		n_ranges = 1;
+	}
 		break;
 	}
 
