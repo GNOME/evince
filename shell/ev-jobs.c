@@ -812,6 +812,58 @@ ev_print_job_print_page_in_set (EvJobPrint *job,
 	return FALSE;
 }
 
+static gint *
+ev_job_print_get_page_list (EvJobPrint *job,
+			    gint       *n_pages)
+{
+	gint  i, j, page, max_page;
+	gint  pages = 0;
+	gint *page_list;
+
+	max_page = ev_document_get_n_pages (EV_JOB (job)->document) - 1;
+
+	for (i = 0; i < job->n_ranges; i++) {
+		gint rsize;
+		gint start, end;
+
+		start = job->ranges[i].start + 1;
+		end = job->ranges[i].end <= max_page ? job->ranges[i].end + 1 : max_page + 1;
+		rsize = end - start + 1;
+
+		switch (job->page_set) {
+		        case EV_PRINT_PAGE_SET_EVEN:
+				pages += start % 2 == 0 ? (rsize / 2) + (rsize % 2) : (rsize / 2);
+				break;
+		        case EV_PRINT_PAGE_SET_ODD:
+				pages += start % 2 != 0 ? (rsize / 2) + (rsize % 2) : (rsize / 2);
+				break;
+		        default:
+				pages += rsize;
+				break;
+		}
+	}
+
+	*n_pages = pages;
+
+	if (pages == 0)
+		return NULL;
+
+	page_list = g_new (gint, pages);
+
+	page = 0;
+	for (i = 0; i < job->n_ranges; i++) {
+		for (j = job->ranges[i].start; j <= job->ranges[i].end; j++) {
+			if (j > max_page)
+				break;
+		
+			if (ev_print_job_print_page_in_set (job, j + 1))
+				page_list[page++] = j;
+		}
+	}
+
+	return page_list;
+}
+
 static void
 ev_job_print_do_page (EvJobPrint *job, gint page)
 {
@@ -829,6 +881,8 @@ ev_job_print_run (EvJobPrint *job)
 	EvDocument            *document = EV_JOB (job)->document;
 	EvFileExporterContext  fc;
 	gint                   fd;
+	gint                  *page_list;
+	gint                   n_pages;
 	gint                   last_page;
 	gint                   first_page;
 	gint                   i;
@@ -852,6 +906,13 @@ ev_job_print_run (EvJobPrint *job)
 		return;
 	}
 
+	page_list = ev_job_print_get_page_list (job, &n_pages);
+	if (n_pages == 0) {
+		close (fd);
+		EV_JOB (job)->finished = TRUE;
+		return;
+	}
+
 	first_page = ev_print_job_get_first_page (job);
 	last_page = ev_print_job_get_last_page (job);
 
@@ -867,37 +928,20 @@ ev_job_print_run (EvJobPrint *job)
 
 	ev_document_doc_mutex_lock ();
 	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);
-	ev_document_doc_mutex_unlock ();
 
 	for (i = 0; i < job->copies; i++) {
 		gint page, step;
+		gint n_copies;
 		
 		step = job->reverse ? -1 : 1;
-		page = job->reverse ? last_page : first_page;
-		
-		while ((job->reverse && (page >= first_page)) ||
-		       (!job->reverse && (page <= last_page))) {
-			gint n_pages = 1;
+		page = job->reverse ? n_pages - 1 : 0;
+		n_copies = job->collate ? job->copies : 1;
+
+		while ((job->reverse && (page >= 0)) || (!job->reverse && (page < n_pages))) {
 			gint j;
 
-			if (job->n_ranges > 0 &&
-			    !ev_print_job_print_page_in_range (job, page)) {
-				page += step;
-				continue;
-			}
-
-			if (!ev_print_job_print_page_in_set (job, page + 1)) {
-				page += step;
-				continue;
-			}
-
-			if (job->collate)
-				n_pages = job->copies;
-
-			for (j = 0; j < n_pages; j++) {
-				ev_document_doc_mutex_lock ();
-				ev_job_print_do_page (job, page);
-				ev_document_doc_mutex_unlock ();
+			for (j = 0; j < n_copies; j++) {
+				ev_job_print_do_page (job, page_list[page]);
 			}
 
 			page += step;
@@ -907,10 +951,10 @@ ev_job_print_run (EvJobPrint *job)
 			break;
 	}
 
-	ev_document_doc_mutex_lock ();
 	ev_file_exporter_end (EV_FILE_EXPORTER (document));
 	ev_document_doc_mutex_unlock ();
-
+	
+	g_free (page_list);
 	close (fd);
 	
 	EV_JOB (job)->finished = TRUE;
