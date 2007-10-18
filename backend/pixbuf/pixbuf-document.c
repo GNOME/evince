@@ -19,6 +19,7 @@
 
 #include "pixbuf-document.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-misc.h"
 
 struct _PixbufDocumentClass
 {
