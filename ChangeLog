@@ -1,3 +1,11 @@
+2007-10-22  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_begin):
+	* shell/ev-print-job.c: (ev_print_job_class_init):
+
+	Fix a crash when printing with the gnome-print dialog. Fixes bug
+	#488939.
+	
 2007-10-18  Sebastien Bacher  <seb128@ubuntu.com>
 
 	* backend/pixbuf/pixbuf-document.c:

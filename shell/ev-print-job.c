@@ -176,6 +176,7 @@ ev_print_job_class_init (EvPrintJobClass *ev_print_job_class)
 static void
 ev_print_job_init (EvPrintJob *ev_print_job)
 {
+	ev_print_job->fc.pages_per_sheet = 1;
 }
 
 void

@@ -1530,7 +1530,7 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	pdf_document->print_ctx = g_new0 (PdfPrintContext, 1);
 	ctx = pdf_document->print_ctx;
 	ctx->format = fc->format;
-	ctx->pages_per_sheet = fc->pages_per_sheet;
+	ctx->pages_per_sheet = CLAMP (fc->pages_per_sheet, 1, 16);
 
 	ctx->paper_width = fc->paper_width;
 	ctx->paper_height = fc->paper_height;
