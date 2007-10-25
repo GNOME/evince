@@ -4,22 +4,22 @@
 #
 # Matic Žgur <mr.zgur@gmail.com>, 2006.
 # Matjaž Horvat <m@owca.info>, 2006.
-# Matej Urbančič <matej.urban@gmail.com>, 2006 - 2007.
+# Matej Urbančič <mateju@svn.gnome.org>, 2006 - 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-08 11:36+0100\n"
-"PO-Revision-Date: 2007-10-16 17:36+0100\n"
-"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"POT-Creation-Date: 2007-10-25 07:03+0100\n"
+"PO-Revision-Date: 2007-10-25 13:51+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3\n"
-"X-Poedit-Language: Slovenian\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-Language: Slovenian\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: ../backend/comics/comics-document.c:150
@@ -134,6 +134,7 @@ msgid "Cannot find file in the zip archive"
 msgstr "Ni mogoče najti datoteke v arhivu zip"
 
 #: ../backend/impress/zip.c:76
+#: ../shell/ev-window.c:4749
 msgid "Unknown error"
 msgstr "Neznana napaka"
 
@@ -284,7 +285,7 @@ msgid "PDF Documents"
 msgstr "Dokumenti PDF"
 
 #: ../libdocument/ev-document-factory.c:467
-#: ../shell/ev-window.c:4976
+#: ../shell/ev-window.c:4972
 msgid "Images"
 msgstr "Slike"
 
@@ -495,7 +496,7 @@ msgstr "Preglasi omejitve dokumenta"
 
 #: ../data/evince.schemas.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr "Preglasi omejitve dokumenta, kot je omejitev kopiranja ali tiskanja."
+msgstr "Prezri omejitve dokumenta, kot sta omejitev kopiranja ali tiskanja."
 
 #: ../properties/ev-properties-main.c:110
 msgid "Document"
@@ -652,7 +653,7 @@ msgstr "Nepravilno geslo"
 
 #: ../shell/ev-password-view.c:111
 msgid "This document is locked and can only be read by entering the correct password."
-msgstr "Ta dokument je zaklenjen, preberete ga lahko edino tako, da vpišete pravilno geslo."
+msgstr "Dokument je zaklenjen, preberete ga lahko edino tako, da vpišete pravilno geslo."
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
@@ -779,10 +780,10 @@ msgstr "Pojdi na stran:"
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
-msgstr[0] "%d zadetek na tej strani"
-msgstr[1] "%d zadetka na tej strani"
-msgstr[2] "%d zadetki na tej strani"
-msgstr[3] "%d zadetkov na tej strani"
+msgstr[0] "%d zadetkov na tej strani"
+msgstr[1] "%d zadetek na tej strani"
+msgstr[2] "%d zadetka na tej strani"
+msgstr[3] "%d zadetki na tej strani"
 
 #: ../shell/ev-view.c:4860
 #, c-format
@@ -1215,32 +1216,37 @@ msgstr "Pomanjšaj"
 msgid "Fit Width"
 msgstr "Prilagodi širino"
 
-#: ../shell/ev-window.c:4758
-msgid "Unable to open external link"
-msgstr "Ni mogoče odpreti zunanje povezave"
-
-#: ../shell/ev-window.c:4760
+#: ../shell/ev-window.c:4743
 #, c-format
 msgid "Invalid URI: “%s”"
 msgstr "Neveljaven URI: \"%s\""
 
-#: ../shell/ev-window.c:4928
+#: ../shell/ev-window.c:4746
+#, c-format
+msgid "Unsupported URI: “%s”"
+msgstr "Nepodprt URI: \"%s\""
+
+#: ../shell/ev-window.c:4756
+msgid "Unable to open external link"
+msgstr "Ni mogoče odpreti zunanje povezave"
+
+#: ../shell/ev-window.c:4924
 msgid "The image could not be saved."
 msgstr "Slike ni mogoče shraniti."
 
-#: ../shell/ev-window.c:4963
+#: ../shell/ev-window.c:4959
 msgid "Save Image"
 msgstr "Shrani sliko"
 
-#: ../shell/ev-window.c:5019
+#: ../shell/ev-window.c:5015
 msgid "Unable to open attachment"
 msgstr "Ni mogoče odpreti priponke"
 
-#: ../shell/ev-window.c:5072
+#: ../shell/ev-window.c:5068
 msgid "The attachment could not be saved."
 msgstr "Ni mogoče shraniti priponke."
 
-#: ../shell/ev-window.c:5124
+#: ../shell/ev-window.c:5120
 msgid "Save Attachment"
 msgstr "Shrani priponko"
 
