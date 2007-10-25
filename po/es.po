@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-11 11:37+0100\n"
-"PO-Revision-Date: 2007-10-16 13:51+0200\n"
+"POT-Creation-Date: 2007-10-25 07:03+0100\n"
+"PO-Revision-Date: 2007-10-25 20:26+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -137,7 +137,7 @@ msgstr "No se pueden leer los datos del archivo"
 msgid "Cannot find file in the zip archive"
 msgstr "No se puede encontrar el archivo en el archivador zip"
 
-#: ../backend/impress/zip.c:76
+#: ../backend/impress/zip.c:76 ../shell/ev-window.c:4749
 msgid "Unknown error"
 msgstr "Error desconocido"
 
@@ -287,7 +287,7 @@ msgstr "Documentos PostScript"
 msgid "PDF Documents"
 msgstr "Documentos PDF"
 
-#: ../libdocument/ev-document-factory.c:467 ../shell/ev-window.c:4976
+#: ../libdocument/ev-document-factory.c:467 ../shell/ev-window.c:4972
 msgid "Images"
 msgstr "Imágenes"
 
@@ -1235,32 +1235,37 @@ msgstr "Reducir"
 msgid "Fit Width"
 msgstr "Ajustar anchura"
 
-#: ../shell/ev-window.c:4758
+#: ../shell/ev-window.c:4743
+#, c-format
+msgid "Invalid URI: “%s”"
+msgstr "URI no válido: «%s»"
+
+#: ../shell/ev-window.c:4746
+#, c-format
+msgid "Unsupported URI: “%s”"
+msgstr "URI no soportado: «%s»"
+
+#: ../shell/ev-window.c:4756
 msgid "Unable to open external link"
 msgstr "No se pudo abrir el enlace externo"
 
-#: ../shell/ev-window.c:4760
-#, c-format
-msgid "Invalid URI: “%s”"
-msgstr "URI no válida: «%s»"
-
-#: ../shell/ev-window.c:4928
+#: ../shell/ev-window.c:4924
 msgid "The image could not be saved."
 msgstr "La imagen no se pudo guardar."
 
-#: ../shell/ev-window.c:4963
+#: ../shell/ev-window.c:4959
 msgid "Save Image"
 msgstr "Guardar imagen"
 
-#: ../shell/ev-window.c:5019
+#: ../shell/ev-window.c:5015
 msgid "Unable to open attachment"
 msgstr "No se pudo abrir el adjunto"
 
-#: ../shell/ev-window.c:5072
+#: ../shell/ev-window.c:5068
 msgid "The attachment could not be saved."
 msgstr "El adjunto no se pudo guardar."
 
-#: ../shell/ev-window.c:5124
+#: ../shell/ev-window.c:5120
 msgid "Save Attachment"
 msgstr "Guardar adjuntos"
 
