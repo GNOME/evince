@@ -313,13 +313,11 @@ dnl ================== end of tiff checks ======================================
 dnl ================== djvu checks ===================================================
 
 AC_ARG_ENABLE(djvu,
-            [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu="$enableval",enable_djvu=no)
+            [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu="$enableval",enable_djvu=yes)
 
 if test "x$enable_djvu" = "xyes"; then
-
-DJVULIBRE_REQUIRED=3.5.17
-
-PKG_CHECK_MODULES(DJVU, ddjvuapi >= $DJVULIBRE_REQUIRED, enable_djvu=yes, enable_djvu=no)
+    DJVULIBRE_REQUIRED=3.5.17
+    PKG_CHECK_MODULES(DJVU, ddjvuapi >= $DJVULIBRE_REQUIRED, enable_djvu=yes, enable_djvu=no)
 
     if test "x$enable_djvu" = "xyes"; then
         AC_DEFINE([ENABLE_DJVU], [1], [Enable djvu viewer support.])
@@ -339,7 +337,7 @@ dnl ================== End of djvu checks ======================================
 dnl ================== dvi checks ===================================================
 
 AC_ARG_ENABLE(dvi,
-            [AC_HELP_STRING([--enable-dvi], [Compile with support of dvi viewer])],enable_dvi="$enableval",enable_dvi=no)
+            [AC_HELP_STRING([--enable-dvi], [Compile with support of dvi viewer])],enable_dvi="$enableval",enable_dvi=yes)
 
 AC_ARG_ENABLE(t1lib,
             [AC_HELP_STRING([--enable-t1lib], [Compile with support of t1lib for type1 fonts in dvi])],enable_type1_fonts="$enableval",enable_type1_fonts=no)
@@ -391,7 +389,7 @@ dnl ================== End of pixbuf checks ====================================
 dnl ================== comic book checks ===================================================
  
 AC_ARG_ENABLE(comics,
- 	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics="$enableval",enable_comics=no)
+ 	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics="$enableval",enable_comics=yes)
 if test "x$enable_comics" = "xyes"; then
 	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
 fi 
