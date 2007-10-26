@@ -48,7 +48,7 @@
 #include "ev-attachment.h"
 #include "ev-image.h"
 
-#if defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS)
+#if (defined (HAVE_POPPLER_PAGE_RENDER) || defined (HAVE_POPPLER_PAGE_RENDER_FOR_PRINTING)) && (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
 #define HAVE_CAIRO_PRINT
 #endif
 
@@ -1520,8 +1520,8 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
 	PdfPrintContext *ctx;
-	gdouble width, height;
 #ifdef HAVE_CAIRO_PRINT
+	gdouble width, height;
 	cairo_surface_t *surface = NULL;
 #endif
 	
@@ -1530,6 +1530,8 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	pdf_document->print_ctx = g_new0 (PdfPrintContext, 1);
 	ctx = pdf_document->print_ctx;
 	ctx->format = fc->format;
+	
+#ifdef HAVE_CAIRO_PRINT
 	ctx->pages_per_sheet = CLAMP (fc->pages_per_sheet, 1, 16);
 
 	ctx->paper_width = fc->paper_width;
@@ -1564,18 +1566,12 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 	}
 
 	ctx->pages_printed = 0;
-
+	
 	switch (fc->format) {
 	        case EV_FILE_FORMAT_PS:
 #ifdef HAVE_CAIRO_PS
 			surface = cairo_ps_surface_create (fc->filename, fc->paper_width, fc->paper_height);
-#else
-			ctx->ps_file = poppler_ps_file_new (pdf_document->document,
-							    fc->filename, fc->first_page,
-							    fc->last_page - fc->first_page + 1);
-			poppler_ps_file_set_paper_size (ctx->ps_file, fc->paper_width, fc->paper_height);
-			poppler_ps_file_set_duplex (ctx->ps_file, fc->duplex);
-#endif /* HAVE_CAIRO_PS */
+#endif
 			break;
 	        case EV_FILE_FORMAT_PDF:
 #ifdef HAVE_CAIRO_PDF
@@ -1586,10 +1582,18 @@ pdf_document_file_exporter_begin (EvFileExporter        *exporter,
 			g_assert_not_reached ();
 	}
 
-#ifdef HAVE_CAIRO_PRINT
 	ctx->cr = cairo_create (surface);
 	cairo_surface_destroy (surface);
-#endif
+
+#else /* HAVE_CAIRO_PRINT */
+	if (ctx->format == EV_FILE_FORMAT_PS) {
+		ctx->ps_file = poppler_ps_file_new (pdf_document->document,
+						    fc->filename, fc->first_page,
+						    fc->last_page - fc->first_page + 1);
+		poppler_ps_file_set_paper_size (ctx->ps_file, fc->paper_width, fc->paper_height);
+		poppler_ps_file_set_duplex (ctx->ps_file, fc->duplex);
+	}
+#endif /* HAVE_CAIRO_PRINT */
 }
 
 static void
@@ -1601,7 +1605,8 @@ pdf_document_file_exporter_begin_page (EvFileExporter *exporter)
 	g_return_if_fail (pdf_document->print_ctx != NULL);
 
 	ctx->pages_printed = 0;
-
+	
+#ifdef HAVE_CAIRO_PRINT
 	if (ctx->paper_width > ctx->paper_height) {
 		if (ctx->format == EV_FILE_FORMAT_PS) {
 			cairo_ps_surface_set_size (cairo_get_target (ctx->cr),
@@ -1613,6 +1618,7 @@ pdf_document_file_exporter_begin_page (EvFileExporter *exporter)
 						    ctx->paper_width);
 		}
 	}
+#endif /* HAVE_CAIRO_PRINT */
 }
 
 static void
@@ -1739,7 +1745,9 @@ pdf_document_file_exporter_end_page (EvFileExporter *exporter)
 	
 	g_return_if_fail (pdf_document->print_ctx != NULL);
 
+#ifdef HAVE_CAIRO_PRINT
 	cairo_show_page (ctx->cr);
+#endif
 }
 
 static void
