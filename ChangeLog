@@ -1,3 +1,17 @@
+2007-10-26  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* cut-n-paste/Makefile.am:
+	* cut-n-paste/recent-files/*: Removed
+	* help/reference/Makefile.am:
+	* shell/Makefile.am:
+	* shell/ev-application.[ch]: (ev_application_shutdown),
+	(ev_application_init):
+	* shell/ev-window.c: (ev_window_add_recent),
+	(ev_window_setup_recent), (ev_window_dispose), (ev_window_init):
+
+	Bump requirements to gtk+ 2.10.0 and remove egg-recent code. 
+	
 2007-10-25  Pascal Terjan  <pterjan@linuxfr.org>
 
 	* shell/ev-window.c: (launch_external_uri):

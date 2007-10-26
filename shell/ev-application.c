@@ -54,10 +54,6 @@ struct _EvApplication {
 
 	EggToolbarsModel *toolbars_model;
 
-#ifndef HAVE_GTK_RECENT
-	EggRecentModel  *recent_model;
-#endif
-
 	TotemScrsaver *scr_saver;
 
 	gchar *last_chooser_uri;
@@ -625,13 +621,6 @@ ev_application_shutdown (EvApplication *application)
 		application->toolbars_file = NULL;
 	}
 
-#ifndef HAVE_GTK_RECENT
-	if (application->recent_model) {
-		g_object_unref (application->recent_model);
-		application->recent_model = NULL;
-	}
-#endif
-
 #ifdef WITH_GTK_PRINT
 #if GTK_CHECK_VERSION (2, 11, 0)
 	if (application->print_settings_file) {
@@ -695,16 +684,6 @@ ev_application_init (EvApplication *ev_application)
 
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE); 
-
-#ifndef HAVE_GTK_RECENT
-	ev_application->recent_model = egg_recent_model_new (EGG_RECENT_MODEL_SORT_MRU);
-	/* FIXME we should add a mime type filter but current eggrecent
-           has only a varargs style api which does not work well when
-	   the list of mime types is dynamic */
-	egg_recent_model_set_limit (ev_application->recent_model, 5);	
-	egg_recent_model_set_filter_groups (ev_application->recent_model,
-    	    	    			    "Evince", NULL);
-#endif /* HAVE_GTK_RECENT */
 }
 
 /**
@@ -739,14 +718,6 @@ ev_application_get_toolbars_model (EvApplication *application)
 {
 	return application->toolbars_model;
 }
-
-#ifndef HAVE_GTK_RECENT
-EggRecentModel *
-ev_application_get_recent_model (EvApplication *application)
-{
-	return application->recent_model;
-}
-#endif
 
 void
 ev_application_save_toolbars_model (EvApplication *application)

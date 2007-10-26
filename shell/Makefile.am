@@ -14,12 +14,6 @@ INCLUDES=						\
 	$(GNOME_PRINT_CFLAGS)				\
 	$(GTK_PRINT_CFLAGS)
 
-if HAVE_GTK_RECENT
-INCLUDES +=
-else
-INCLUDES += -I$(top_srcdir)/cut-n-paste/recent-files/
-endif
-
 bin_PROGRAMS=evince
 
 evince_SOURCES=				\
@@ -101,12 +95,6 @@ evince_LDADD=								\
 	$(top_builddir)/libdocument/libevbackend.la			\
 	$(SHELL_LIBS)							\
 	$(GNOME_PRINT_LIBS)
-
-if HAVE_GTK_RECENT
-evince_LDADD +=
-else
-evince_LDADD += $(top_builddir)/cut-n-paste/recent-files/librecent.la
-endif
 
 if ENABLE_DJVU
 evince_LDADD +=	$(DJVU_LIBS)

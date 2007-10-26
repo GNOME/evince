@@ -43,7 +43,7 @@ dnl Check dependencies
 # SHELL_LIBS
 
 DBUS_GLIB_REQUIRED=0.70
-GTK_REQUIRED=2.8.15
+GTK_REQUIRED=2.10.0
 KEYRING_REQUIRED=0.4.0
 
 LIBGNOMEUI_REQUIRED=2.14.0
@@ -203,15 +203,6 @@ AC_ARG_ENABLE(thumbnailer,
 	esac],
 	[ENABLE_THUMBNAILER=yes]) dnl Default value
 AM_CONDITIONAL(ENABLE_THUMBNAILER, test x$ENABLE_THUMBNAILER = "xyes")
-
-
-dnl Check for GtkRecent
-PKG_CHECK_MODULES(GTK_RECENT, gtk+-2.0 >= 2.10.0, 
-		  [HAVE_GTK_RECENT=yes], [HAVE_GTK_RECENT=no])
-if test x$HAVE_GTK_RECENT = xyes; then
-   AC_DEFINE([HAVE_GTK_RECENT], [1], [defined if GtkRecent is available])
-fi
-AM_CONDITIONAL(HAVE_GTK_RECENT, test x$HAVE_GTK_RECENT = "xyes")
 
 dnl GConf configuration
 AM_GCONF_SOURCE_2
@@ -459,7 +450,6 @@ backend/pixbuf/Makefile
 backend/ps/Makefile
 backend/tiff/Makefile
 cut-n-paste/Makefile
-cut-n-paste/recent-files/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/totem-screensaver/Makefile

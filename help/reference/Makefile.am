@@ -76,7 +76,6 @@ INCLUDES= \
 	-I$(top_srcdir)/shell \
 	-DDATADIR=\"$(pkgdatadir)\"			\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
-	-I$(top_srcdir)/cut-n-paste/recent-files/   \
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
@@ -99,12 +98,6 @@ GTKDOC_LIBS= \
 	$(SHELL_LIBS)							\
 	$(GNOME_PRINT_LIBS)						\
 	$(filter-out ../../shell/main.o,$(wildcard ../../shell/*.o))
-
-if HAVE_GTK_RECENT
-GTKDOC_LIBS +=
-else
-GTKDOC_LIBS += $(top_builddir)/cut-n-paste/recent-files/librecent.la
-endif
 
 if ENABLE_DJVU
 GTKDOC_LIBS +=	$(DJVU_LIBS)
