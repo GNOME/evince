@@ -3309,6 +3309,8 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
 			break;
 		}
+		g_free (uri);
+		uri = NULL;
 	}
 
 	if (uri == NULL) {
