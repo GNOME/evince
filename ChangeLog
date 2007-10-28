@@ -1,3 +1,11 @@
+2007-10-29  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_open_uri),
+	(ev_window_cmd_view_reload):
+
+	Do not jump to the first page when reloading by running evince
+	from the command line. Fixes bug #490847.
+	
 2007-10-27  Hiroyuki Ikezoe  <poincare@ikezoe.net>
 
 	* shell/ev-window.c: (ev_window_cmd_help_contents):

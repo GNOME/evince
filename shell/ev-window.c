@@ -1452,6 +1452,11 @@ ev_window_open_uri (EvWindow       *ev_window,
 {
 	GnomeVFSURI *source_uri;
 	GnomeVFSURI *target_uri;
+
+	if (ev_window->priv->uri &&
+	    g_ascii_strcasecmp (ev_window->priv->uri, uri) == 0) {
+		ev_window->priv->in_reload = TRUE;
+	}
 	
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_load_job (ev_window);
@@ -3224,8 +3229,6 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
 	gchar *uri;
 
-	ev_window->priv->in_reload = TRUE;
-	
 	uri = g_strdup (ev_window->priv->uri);
 	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE, NULL);
 	g_free (uri);
