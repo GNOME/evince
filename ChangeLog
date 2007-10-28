@@ -1,5 +1,18 @@
 2007-10-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* data/evince-toolbar.xml:
+	* shell/Makefile.am:
+	* shell/ev-application.c: (ev_application_init):
+	* shell/ev-open-recent-action.[ch]:
+	* shell/ev-window.c:
+	(ev_window_open_recent_action_item_activated),
+	(register_custom_actions):
+
+	Add an expander to the open toolbar item which pops up a dropdown
+	menu with the recently used documents. Fixes bug #487215.
+	
+2007-10-29  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_open_uri),
 	(ev_window_cmd_view_reload):
 

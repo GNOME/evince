@@ -32,6 +32,7 @@
 #include "ev-window-title.h"
 #include "ev-navigation-action.h"
 #include "ev-page-action.h"
+#include "ev-open-recent-action.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-attachments.h"
@@ -1701,8 +1702,8 @@ ev_window_cmd_file_open_copy (GtkAction *action, EvWindow *window)
 }
 
 static void
-ev_window_cmd_recent_file_activate (GtkAction     *action,
-				    EvWindow      *window)
+ev_window_cmd_recent_file_activate (GtkAction *action,
+				    EvWindow  *window)
 {
 	GtkRecentInfo *info;
 	const gchar   *uri;
@@ -1712,6 +1713,17 @@ ev_window_cmd_recent_file_activate (GtkAction     *action,
 	
 	uri = gtk_recent_info_get_uri (info);
 	
+	ev_application_open_uri_at_dest (EV_APP, uri,
+					 gtk_window_get_screen (GTK_WINDOW (window)),
+					 NULL, 0, FALSE, NULL, 
+					 GDK_CURRENT_TIME);
+}
+
+static void
+ev_window_open_recent_action_item_activated (EvOpenRecentAction *action,
+					     const gchar        *uri,
+					     EvWindow           *window)
+{
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
 					 NULL, 0, FALSE, NULL, 
@@ -4467,6 +4479,20 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			  G_CALLBACK (navigation_action_activate_link_cb), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
+
+	action = g_object_new (EV_TYPE_OPEN_RECENT_ACTION,
+			       "name", "FileOpenRecent",
+			       "label", _("_Open..."),
+			       "tooltip", _("Open an existing document"),
+			       "stock_id", GTK_STOCK_OPEN,
+			       NULL);
+	g_signal_connect (action, "activate",
+			  G_CALLBACK (ev_window_cmd_file_open), window);
+	g_signal_connect (action, "item_activated",
+			  G_CALLBACK (ev_window_open_recent_action_item_activated),
+			  window);
+	gtk_action_group_add_action (group, action);
+	g_object_unref (action);
 }
 
 static void
@@ -5154,14 +5180,13 @@ ev_window_init (EvWindow *ev_window)
 				  "changed",
 				  G_CALLBACK (ev_window_setup_recent),
 				  ev_window);
-	
+
 	ev_window->priv->menubar =
 		 gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
 					    "/MainMenu");
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
 			    ev_window->priv->menubar,
 			    FALSE, FALSE, 0);
-
 
 	ev_window->priv->toolbar = GTK_WIDGET 
 	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,

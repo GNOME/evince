@@ -664,6 +664,8 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
+	gint i;
+	
 #if WITH_GNOME
 	init_session (ev_application);
 #endif
@@ -682,8 +684,24 @@ ev_application_init (EvApplication *ev_application)
 						  DATADIR"/evince-toolbar.xml");
 	}
 
+	/* Open item doesn't exist anymore,
+	 * convert it to OpenRecent for compatibility
+	 */
+	for (i = 0; i < egg_toolbars_model_n_items (ev_application->toolbars_model, 0); i++) {
+		const gchar *item;
+		
+		item = egg_toolbars_model_item_nth (ev_application->toolbars_model, 0, i);
+		if (g_ascii_strcasecmp (item, "FileOpen") == 0) {
+			egg_toolbars_model_remove_item (ev_application->toolbars_model, 0, i);
+			egg_toolbars_model_add_item (ev_application->toolbars_model, 0, i,
+						     "FileOpenRecent");
+			ev_application_save_toolbars_model (ev_application);
+			break;
+		}
+	}
+
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
-				      EGG_TB_MODEL_NOT_REMOVABLE); 
+				      EGG_TB_MODEL_NOT_REMOVABLE);
 }
 
 /**
