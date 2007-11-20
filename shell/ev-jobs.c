@@ -735,7 +735,7 @@ ev_job_print_new (EvDocument    *document,
 
 	job->page_set = page_set;
 
-	job->pages_per_sheet = pages_per_sheet;
+	job->pages_per_sheet = CLAMP (pages_per_sheet, 1, 16);
 	
 	job->copies = copies;
 	job->collate = collate;

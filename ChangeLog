@@ -1,3 +1,9 @@
+2007-11-20  Darren Kenny  <darren.kenny@sun.com>
+
+	* shell/ev-jobs.c: (ev_job_print_new):
+
+	Fix endless loop when pages_per_sheet is 0. Fixes bug #498248.
+	
 2007-10-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* data/evince-toolbar.xml:
