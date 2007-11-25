@@ -499,6 +499,11 @@ ev_job_load_dispose (GObject *object)
 		job->dest = NULL;
 	}
 
+	if (job->search_string) {
+		g_free (job->search_string);
+		job->search_string = NULL;
+	}
+
 	(* G_OBJECT_CLASS (ev_job_load_parent_class)->dispose) (object);
 }
 
@@ -514,7 +519,10 @@ ev_job_load_class_init (EvJobLoadClass *class)
 
 
 EvJob *
-ev_job_load_new (const gchar *uri, EvLinkDest *dest, EvWindowRunMode mode)
+ev_job_load_new (const gchar    *uri,
+		 EvLinkDest     *dest,
+		 EvWindowRunMode mode,
+		 const gchar    *search_string)
 {
 	EvJobLoad *job;
 
@@ -525,6 +533,8 @@ ev_job_load_new (const gchar *uri, EvLinkDest *dest, EvWindowRunMode mode)
 		job->dest = g_object_ref (dest);
 
 	job->mode = mode;
+	if (search_string)
+		job->search_string = g_strdup (search_string);
 
 	return EV_JOB (job);
 }

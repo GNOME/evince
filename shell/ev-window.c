@@ -265,6 +265,8 @@ static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action,
 static void	view_handle_link_cb 			(EvView           *view, 
 							 EvLink           *link, 
 							 EvWindow         *window);
+static void     ev_window_cmd_edit_find                 (GtkAction        *action,
+							 EvWindow         *ev_window);
 static void     find_bar_search_changed_cb              (EggFindBar       *find_bar,
 							 GParamSpec       *param,
 							 EvWindow         *ev_window);
@@ -1342,6 +1344,10 @@ ev_window_load_job_cb  (EvJobLoad *job,
 				find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
 							    NULL, ev_window);
 			}
+		} else if (job->search_string && EV_IS_DOCUMENT_FIND (document)) {
+			ev_window_cmd_edit_find (NULL, ev_window);
+			egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
+							job->search_string);
 		}
 
 		ev_window_clear_load_job (ev_window);
@@ -1448,6 +1454,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		    const char     *uri,
 		    EvLinkDest     *dest,
 		    EvWindowRunMode mode,
+		    const gchar    *search_string, 
 		    gboolean        unlink_temp_file,
 		    const gchar    *print_settings)
 {
@@ -1478,7 +1485,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	setup_size_from_metadata (ev_window);
 	
-	ev_window->priv->load_job = ev_job_load_new (uri, dest, mode);
+	ev_window->priv->load_job = ev_job_load_new (uri, dest, mode, search_string);
 	g_signal_connect (ev_window->priv->load_job,
 			  "finished",
 			  G_CALLBACK (ev_window_load_job_cb),
@@ -1680,6 +1687,7 @@ ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 					 gtk_window_get_screen (GTK_WINDOW (window)),
 					 dest,
 					 0,
+					 NULL, 
 					 TRUE,
 					 NULL,
 					 GDK_CURRENT_TIME);
@@ -1715,7 +1723,7 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 	
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0, FALSE, NULL, 
+					 NULL, 0, NULL, FALSE, NULL, 
 					 GDK_CURRENT_TIME);
 }
 
@@ -1726,7 +1734,7 @@ ev_window_open_recent_action_item_activated (EvOpenRecentAction *action,
 {
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0, FALSE, NULL, 
+					 NULL, 0, NULL, FALSE, NULL, 
 					 GDK_CURRENT_TIME);
 }
 
@@ -2186,6 +2194,7 @@ ev_window_print_send (EvWindow    *window,
 						 gtk_window_get_screen (GTK_WINDOW (window)),
 						 NULL,
 						 EV_WINDOW_MODE_PREVIEW,
+						 NULL, 
 						 TRUE,
 						 print_settings_file,
 						 GDK_CURRENT_TIME);
@@ -3242,7 +3251,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 	gchar *uri;
 
 	uri = g_strdup (ev_window->priv->uri);
-	ev_window_open_uri (ev_window, uri, NULL, 0, FALSE, NULL);
+	ev_window_open_uri (ev_window, uri, NULL, 0, NULL, FALSE, NULL);
 	g_free (uri);
 }
 
@@ -4740,6 +4749,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 					 gtk_window_get_screen (GTK_WINDOW (window)),
 					 ev_link_action_get_dest (action),
 					 0,
+					 NULL, 
 					 FALSE,
 					 NULL,
 					 GDK_CURRENT_TIME);

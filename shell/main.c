@@ -47,6 +47,7 @@
 #include "ev-file-helpers.h"
 
 static gchar   *ev_page_label;
+static gchar   *ev_find_string;
 static gboolean preview_mode = FALSE;
 static gboolean fullscren_mode = FALSE;
 static gboolean presentation_mode = FALSE;
@@ -60,6 +61,7 @@ static const GOptionEntry goption_options[] =
 	{ "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscren_mode, N_("Run evince in fullscreen mode"), NULL },
 	{ "presentation", 's', 0, G_OPTION_ARG_NONE, &presentation_mode, N_("Run evince in presentation mode"), NULL },
 	{ "preview", 'w', 0, G_OPTION_ARG_NONE, &preview_mode, N_("Run evince as a previewer"), NULL },
+	{ "find", 'l', 0, G_OPTION_ARG_STRING, &ev_find_string, N_("The word or phrase to find in the document"), N_("STRING")},
 	{ "unlink-tempfile", 'u', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &unlink_temp_file, NULL, NULL },
 	{ "print-settings", 't', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, &print_settings, NULL, NULL },
 	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, N_("[FILE...]") },
@@ -131,6 +133,17 @@ arguments_parse (void)
 		g_hash_table_insert (args, g_strdup ("page-label"), value);
 
 		g_free (ev_page_label);
+		ev_page_label = NULL;
+	}
+
+	if (ev_find_string) {
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_STRING);
+		g_value_set_string (value, ev_find_string);
+
+		g_hash_table_insert (args, g_strdup ("find-string"), value);
+
+		g_free (ev_find_string);
 		ev_page_label = NULL;
 	}
 

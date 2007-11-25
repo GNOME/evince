@@ -78,9 +78,11 @@ void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   const char     *uri,
 					   EvLinkDest     *dest,
 					   EvWindowRunMode mode,
+					   const gchar    *search_string,
 					   gboolean        unlink_temp_file,
 					   const gchar    *print_settings);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);
+
 #ifdef WITH_PRINT
 void		ev_window_print_range     (EvWindow       *ev_window,
 					   int             first_page,

@@ -189,6 +189,7 @@ struct _EvJobLoad
 	
 	EvLinkDest *dest;
 	EvWindowRunMode mode;
+	gchar *search_string;
 	GError *error;
 	gchar *uri;
 };
@@ -276,7 +277,8 @@ void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 GType 		ev_job_load_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri,
 					   EvLinkDest      *dest,
-					   EvWindowRunMode  mode);
+					   EvWindowRunMode  mode,
+					   const gchar     *search_string);
 void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
 void		ev_job_load_run 	  (EvJobLoad 	   *load);
