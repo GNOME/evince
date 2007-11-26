@@ -210,6 +210,7 @@ tiff_document_render (EvDocument      *document,
 	float x_res, y_res;
 	gint rowstride, bytes;
 	guchar *pixels = NULL;
+	guchar *p;
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *scaled_pixbuf;
 	GdkPixbuf *rotated_pixbuf;
@@ -270,6 +271,23 @@ tiff_document_render (EvDocument      *document,
 				   (uint32 *)pixels,
 				   ORIENTATION_TOPLEFT, 1);
 	pop_handlers ();
+
+	/* Convert the format returned by libtiff to
+	* what cairo expects
+	*/
+	p = pixels;
+	while (p < pixels + bytes) {
+		uint32 pixel = *(uint32 *)p;
+		int r = TIFFGetR(pixel);
+		int g = TIFFGetG(pixel);
+		int b = TIFFGetB(pixel);
+		int a = TIFFGetA(pixel);
+		
+		*p++ = b;
+		*p++ = g;
+		*p++ = r;
+		*p++ = a;
+	}
 
 	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
 								     (width * rc->scale) + 0.5,
