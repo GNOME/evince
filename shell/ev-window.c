@@ -211,6 +211,19 @@ struct _EvWindowPrivate {
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 
+#ifdef WITH_GTK_PRINT
+static const gchar *document_print_settings[] = {
+	GTK_PRINT_SETTINGS_N_COPIES,
+	GTK_PRINT_SETTINGS_COLLATE,
+	GTK_PRINT_SETTINGS_REVERSE,
+	GTK_PRINT_SETTINGS_NUMBER_UP,
+	GTK_PRINT_SETTINGS_SCALE,
+	GTK_PRINT_SETTINGS_PRINT_PAGES,
+	GTK_PRINT_SETTINGS_PAGE_RANGES,
+	GTK_PRINT_SETTINGS_PAGE_SET
+};
+#endif /* WITH_GTK_PRINT */
+
 static void	ev_window_update_actions	 	(EvWindow         *ev_window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
@@ -2118,6 +2131,40 @@ ev_window_clear_print_job (EvWindow *window)
 }
 
 static void
+ev_window_load_print_settings_from_metadata (EvWindow *window)
+{
+	gchar *uri = window->priv->uri;
+	gint   i;
+	
+	/* Load print setting that are specific to the document */
+	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
+		GValue   value = { 0, };
+		gboolean success;
+
+		success = ev_metadata_manager_get (uri, document_print_settings[i], &value, TRUE);
+		gtk_print_settings_set (window->priv->print_settings,
+					document_print_settings[i],
+					success ? g_value_get_string (&value) : NULL);
+	}
+}
+
+static void
+ev_window_save_print_settings (EvWindow *window)
+{
+	gchar *uri = window->priv->uri;
+	gint   i;
+	
+	/* Save print settings that are specific to the document */
+	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
+		const gchar *value;
+
+		value = gtk_print_settings_get (window->priv->print_settings,
+						document_print_settings[i]);
+		ev_metadata_manager_set_string (uri, document_print_settings[i], value);
+	}
+}
+
+static void
 ev_window_print_finished (GtkPrintJob *print_job,
 			  EvWindow    *window,
 			  GError      *error)
@@ -2141,6 +2188,7 @@ ev_window_print_finished (GtkPrintJob *print_job,
 		/* If printed successfully, save print settings */
 		ev_application_set_print_settings (EV_APP,
 						   window->priv->print_settings);
+		ev_window_save_print_settings (window);
 	}
 }
 
@@ -2402,8 +2450,9 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 	document_last_page = ev_page_cache_get_n_pages (page_cache);
 
 	if (!ev_window->priv->print_settings) {
-		ev_window->priv->print_settings = g_object_ref (
+		ev_window->priv->print_settings = gtk_print_settings_copy (
 			ev_application_get_print_settings (EV_APP));
+		ev_window_load_print_settings_from_metadata (ev_window);
 	}
 
 	if (first_page != 1 || last_page != document_last_page) {
