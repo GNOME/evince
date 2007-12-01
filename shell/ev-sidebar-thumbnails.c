@@ -304,10 +304,10 @@ update_visible_range (EvSidebarThumbnails *sidebar_thumbnails,
 		return;
 
 	/* Clear the areas we no longer display */
-	if (old_start_page < start_page)
+	if (old_start_page >= 0 && old_start_page < start_page)
 		clear_range (sidebar_thumbnails, old_start_page, MIN (start_page - 1, old_end_page));
-
-	if (old_end_page > end_page)
+	
+	if (old_end_page > 0 && old_end_page > end_page)
 		clear_range (sidebar_thumbnails, MAX (end_page + 1, old_start_page), old_end_page);
 
 	add_range (sidebar_thumbnails, start_page, end_page);
@@ -444,8 +444,8 @@ ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
 
 	/* Trigger a redraw */
-	sidebar_thumbnails->priv->start_page = 0;
-	sidebar_thumbnails->priv->end_page = 0;
+	sidebar_thumbnails->priv->start_page = -1;
+	sidebar_thumbnails->priv->end_page = -1;
 	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
 }
 
@@ -679,8 +679,8 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 
 	/* Connect to the signal and trigger a fake callback */
 	g_signal_connect (priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
-	sidebar_thumbnails->priv->start_page = 0;
-	sidebar_thumbnails->priv->end_page = 0;
+	sidebar_thumbnails->priv->start_page = -1;
+	sidebar_thumbnails->priv->end_page = -1;
 	page_changed_cb (priv->page_cache,
 			 ev_page_cache_get_current_page (priv->page_cache),
 			 sidebar_thumbnails);
@@ -693,40 +693,39 @@ ev_sidebar_thumbnails_clear_job (GtkTreeModel *model,
 			         GtkTreeIter *iter, 											                                              
 				 gpointer data)
 {
-    EvJob *job;
-    
-    gtk_tree_model_get (model, iter, COLUMN_JOB, &job, -1);
-    
-    if (job != NULL) {
-        ev_job_queue_remove_job (job);
-	g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, data);
-    	g_object_unref (job);
-    }
-
-    return FALSE;    
+	EvJob *job;
+	
+	gtk_tree_model_get (model, iter, COLUMN_JOB, &job, -1);
+	
+	if (job != NULL) {
+		ev_job_queue_remove_job (job);
+		g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, data);
+		g_object_unref (job);
+	}
+	
+	return FALSE;    
 }
 
 static void 
 ev_sidebar_thumbnails_clear_model (EvSidebarThumbnails *sidebar_thumbnails)
 {
-    EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-    
-    gtk_tree_model_foreach (GTK_TREE_MODEL (priv->list_store), ev_sidebar_thumbnails_clear_job, sidebar_thumbnails);
-    gtk_list_store_clear (priv->list_store);
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
+	
+	gtk_tree_model_foreach (GTK_TREE_MODEL (priv->list_store), ev_sidebar_thumbnails_clear_job, sidebar_thumbnails);
+	gtk_list_store_clear (priv->list_store);
 }
 
 static gboolean
 ev_sidebar_thumbnails_support_document (EvSidebarPage   *sidebar_page,
 				        EvDocument *document)
 {
-	return (EV_IS_DOCUMENT_THUMBNAILS (document) &&
-		    (ev_document_get_n_pages (document) > 1));
+	return (EV_IS_DOCUMENT_THUMBNAILS (document));
 }
 
 static const gchar*
 ev_sidebar_thumbnails_get_label (EvSidebarPage *sidebar_page)
 {
-    return _("Thumbnails");
+	return _("Thumbnails");
 }
 
 static void
