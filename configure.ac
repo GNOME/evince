@@ -448,6 +448,7 @@ backend/pixbuf/Makefile
 backend/ps/Makefile
 backend/tiff/Makefile
 cut-n-paste/Makefile
+cut-n-paste/gedit-message-area/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/totem-screensaver/Makefile

@@ -4,6 +4,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
+	-I$(top_srcdir)/cut-n-paste/gedit-message-area/	\
 	-I$(top_srcdir)/libdocument			\
 	-I$(top_srcdir)/properties			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
@@ -29,6 +30,8 @@ evince_SOURCES=				\
 	ev-history.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
+	ev-message-area.c		\
+	ev-message-area.h		\
 	ev-metadata-manager.c		\
 	ev-metadata-manager.h		\
 	ev-navigation-action.c		\
@@ -89,13 +92,14 @@ evince_SOURCES+=			\
 endif
 
 
-evince_LDADD=								\
-	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
-	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
+evince_LDADD=									\
+	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la			\
+	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la		\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
-	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/libdocument/libevbackend.la			\
-	$(SHELL_LIBS)							\
+	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
+	$(top_builddir)/properties/libevproperties.la				\
+	$(top_builddir)/libdocument/libevbackend.la				\
+	$(SHELL_LIBS)								\
 	$(GNOME_PRINT_LIBS)
 
 if ENABLE_DJVU

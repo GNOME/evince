@@ -1,5 +1,23 @@
 2007-12-02  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* cut-n-paste/gedit-message-area/Makefile.am:
+	* cut-n-paste/gedit-message-area/gedit-message-area.[ch]:
+	* shell/Makefile.am:
+	* shell/ev-message-area.[ch]:
+	* shell/ev-window.c: (ev_window_set_message_area),
+	(ev_window_error_message_response_cb), (ev_window_error_message),
+	(ev_window_load_job_cb), (ev_window_cmd_file_open_copy_at_dest),
+	(ev_window_save_job_cb), (image_save_dialog_response_cb),
+	(ev_attachment_popup_cmd_open_attachment),
+	(attachment_save_dialog_response_cb), (ev_window_set_document),
+	(ev_window_init):
+
+	Use a message area instead of a popup dialog for error
+	notifications. Fixes bug #337495.
+	
+2007-12-02  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (fullscreen_toolbar_remove_shadow),
 	(ev_window_run_fullscreen):
 

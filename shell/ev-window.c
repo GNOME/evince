@@ -91,6 +91,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "ev-message-area.h"
+
 #if !GLIB_CHECK_VERSION (2, 13, 3)
 char *xdg_user_dir_lookup (char *type);
 #endif
@@ -119,10 +121,12 @@ struct _EvWindowPrivate {
 	GtkWidget *menubar;
 	GtkWidget *toolbar;
 	GtkWidget *hpaned;
+	GtkWidget *view_box;
 	GtkWidget *sidebar;
 	GtkWidget *find_bar;
 	GtkWidget *scrolled_window;
 	GtkWidget *view;
+	GtkWidget *message_area;
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
@@ -624,29 +628,55 @@ ev_window_is_empty (const EvWindow *ev_window)
 }
 
 static void
-ev_window_error_dialog_response_cb (GtkWidget *dialog,
-			           gint       response_id,
-			           EvWindow  *ev_window)
+ev_window_set_message_area (EvWindow  *window,
+			    GtkWidget *area)
 {
-	gtk_widget_destroy (dialog);
+	if (window->priv->message_area == area)
+		return;
+
+	if (window->priv->message_area)
+		gtk_widget_destroy (window->priv->message_area);
+	window->priv->message_area = area;
+
+	if (!area)
+		return;
+
+	gtk_box_pack_start (GTK_BOX (window->priv->view_box),
+			    window->priv->message_area,
+			    FALSE, FALSE, 0);
+	gtk_box_reorder_child (GTK_BOX (window->priv->view_box),
+			       window->priv->message_area, 0);
+	g_object_add_weak_pointer (G_OBJECT (window->priv->message_area),
+				   (gpointer) &(window->priv->message_area));
 }
 
 static void
-ev_window_error_dialog (GtkWindow *window, const gchar *msg, GError *error)
+ev_window_error_message_response_cb (EvMessageArea *area,
+				     gint           response_id,
+				     EvWindow      *window)
 {
-	GtkWidget *dialog;
+	ev_window_set_message_area (window, NULL);
+}
 
-	dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR,
-					 GTK_BUTTONS_CLOSE,
-					 msg);
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  "%s", error->message);
-	g_signal_connect (dialog, "response",
-			  G_CALLBACK (ev_window_error_dialog_response_cb),
-			   window);
-	gtk_widget_show (dialog);
+static void
+ev_window_error_message (GtkWindow *window, const gchar *msg, GError *error)
+{
+	GtkWidget *area;
+
+	if (EV_WINDOW (window)->priv->message_area)
+		return;
+
+	area = ev_message_area_new (GTK_MESSAGE_ERROR,
+				    msg,
+				    GTK_STOCK_CLOSE,
+				    GTK_RESPONSE_CANCEL,
+				    NULL);
+	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (area), error->message);
+	g_signal_connect (area, "response",
+			  G_CALLBACK (ev_window_error_message_response_cb),
+			  window);
+	gtk_widget_show (area);
+	ev_window_set_message_area (EV_WINDOW (window), area);
 }
 
 static void
@@ -1149,6 +1179,8 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	if (ev_window->priv->document)
 		g_object_unref (ev_window->priv->document);
 	ev_window->priv->document = g_object_ref (document);
+
+	ev_window_set_message_area (ev_window, NULL);
 	
 	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
 	g_signal_connect (ev_window->priv->page_cache, "page-changed",
@@ -1384,9 +1416,9 @@ ev_window_load_job_cb  (EvJobLoad *job,
 		
 		ev_window_popup_password_dialog (ev_window);
 	} else {
-		ev_window_error_dialog (GTK_WINDOW (ev_window), 
-				        _("Unable to open document"),
-					job->error);
+		ev_window_error_message (GTK_WINDOW (ev_window), 
+					 _("Unable to open document"),
+					 job->error);
 		ev_window_clear_load_job (ev_window);
 		ev_window->priv->in_reload = FALSE;
 	}	
@@ -1679,9 +1711,9 @@ ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 	new_filename = ev_window_create_tmp_symlink (old_filename, &error);
 
 	if (error) {
-		ev_window_error_dialog (GTK_WINDOW (window),
-					_("Cannot open a copy."),
-					error);
+		ev_window_error_message (GTK_WINDOW (window),
+					 _("Cannot open a copy."),
+					 error);
 
 		g_error_free (error);
 		g_free (old_filename);
@@ -1998,7 +2030,7 @@ ev_window_save_job_cb (EvJobSave *job,
 		gchar *msg;
 		
 		msg = g_strdup_printf (_("The file could not be saved as “%s”."), job->uri);
-		ev_window_error_dialog (GTK_WINDOW (window), msg, job->error);
+		ev_window_error_message (GTK_WINDOW (window), msg, job->error);
 		g_free (msg);
 	}
 
@@ -4960,9 +4992,9 @@ image_save_dialog_response_cb (GtkWidget *fc,
 			 filename, "png", &error, NULL);
 	
 	if (error) {
-		ev_window_error_dialog (GTK_WINDOW (ev_window),
-					_("The image could not be saved."),
-					error);
+		ev_window_error_message (GTK_WINDOW (ev_window),
+					 _("The image could not be saved."),
+					 error);
 		g_error_free (error);
 		g_free (filename);
 		gnome_vfs_uri_unref (target_uri);
@@ -5051,9 +5083,9 @@ ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 		ev_attachment_open (attachment, &error);
 
 		if (error) {
-			ev_window_error_dialog (GTK_WINDOW (window),
-						_("Unable to open attachment"),
-						error);
+			ev_window_error_message (GTK_WINDOW (window),
+						 _("Unable to open attachment"),
+						 error);
 			g_error_free (error);
 		}
 	}
@@ -5104,9 +5136,9 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 		ev_attachment_save (attachment, filename, &error);
 		
 		if (error) {
-			ev_window_error_dialog (GTK_WINDOW (ev_window),
-						_("The attachment could not be saved."),
-						error);
+			ev_window_error_message (GTK_WINDOW (ev_window),
+						 _("The attachment could not be saved."),
+						 error);
 			g_error_free (error);
 			g_free (filename);
 
@@ -5338,14 +5370,19 @@ ev_window_init (EvWindow *ev_window)
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
 
+	ev_window->priv->view_box = gtk_vbox_new (FALSE, 0);
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 					  "shadow-type", GTK_SHADOW_IN,
 					  NULL));
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->view_box),
+			    ev_window->priv->scrolled_window,
+			    TRUE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->scrolled_window);
 
 	gtk_paned_add2 (GTK_PANED (ev_window->priv->hpaned),
-			ev_window->priv->scrolled_window);
+			ev_window->priv->view_box);
+	gtk_widget_show (ev_window->priv->view_box);
 
 	ev_window->priv->view = ev_view_new ();
 	ev_view_set_screen_dpi (EV_VIEW (ev_window->priv->view),
