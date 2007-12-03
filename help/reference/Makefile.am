@@ -93,6 +93,7 @@ GTKDOC_LIBS= \
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
+	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/libdocument/libevbackend.la			\
 	$(SHELL_LIBS)							\
