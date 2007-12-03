@@ -1,4 +1,84 @@
 ===============
+Evince  2.21.1
+===============
+
+New Features and UI Improvements:
+
+    * Use message area for notification about errors
+    * Some print settings for documents are stored in metadata
+    * Added command line option for search
+    * Expander with a recent documents is added to toolbar
+    * Egg-recent code dropped
+    * Djvu, dvi and comics are enabled by defaul
+    * Support for links with URI's like mailto
+
+Bug fixes:
+
+    * Removed the shadow of the fullscreen toolbar
+    * A lot of bug fixes from a stable branch
+
+Thanks:
+ 
+    To Carlos Garcia Campos who did the all the amazing work above :)
+
+Translations:
+
+    Changwoo Ryu (ko)
+    Daniel Nylander (sv)
+    Djihed Afifi (ar)
+    Jorge Gonzalez (es)
+    Francesco Marletta (it)
+    Gabor Kelemen (hu)
+    Gintautas Miliauskas (lt)
+    Ignacio Casal Quinteiro (gl)
+    Ihar Hrachyshka (be@latin)
+    Ilkka Tuohela (fi)
+    Ivar Smolin (et)
+    Jorge González (es)
+    Kjartan Maraas (nb)
+    Matej Urbančič (sl)
+    Peter Bach (da)
+    Yannig Marchegay (Kokoyaya) (oc)
+
+===============
+Evince  2.20.2
+===============
+
+Bug fixes:
+
+    * Tiff documents were rendered with wrong colors (Matthias Clasen)
+    * Fix endless loop when zero pages per sheet is selected (Darren Kenny)
+    * Do not jump to the first page when reloading from command line (Carlos Garcia Campos)
+    * Memory leak fix (Hiroyuki Ikezoe)
+    * Fix printing with poppler splash backend (Carlos Garcia Campos)
+    * Fix a crash when printing with the gnome-print dialog (Carlos Garcia Campos)
+    * Warning fix (Sebastien Bacher)
+
+Translations:
+
+    Matej Urbančič (sl)
+    Youssef Chahibi (ar)
+
+===============
+Evince  2.20.1
+===============
+
+Bug fixes:
+
+    * Printing multiple pages per sheet fixes (Carlos Garcia Campos)
+    * Respect ranges order during print (Carlos Garcia Campos)
+    * Silently ignore unknown form fields (Matthias Drochner)
+    * Do not show the toolbar in fullscreen mode if the main toolbar is not visible (Carlos Garcia Campos)
+    * Give priority to form fields over images (Carlos Garcia Campos)
+    
+Translations:
+
+    Changwoo Ryu (ko)
+    Francesco Marletta (it)
+    Ilkka Tuohela (fi)
+    Peter Bach (da)
+
+===============
 Evince  2.20.0
 ===============
 
