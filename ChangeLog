@@ -1,3 +1,12 @@
+2007-12-08  Christian Persch  <chpe@gnome.org>
+
+	* shell/ev-metadata-manager.c: (item_free),
+	(ev_metadata_manager_init), (ev_metadata_manager_shutdown),
+	(value_free), (parse_value), (parseItem),
+	(ev_metadata_manager_set_last), (ev_metadata_manager_set),
+	(save_values): Use GSlice to allocate small amounts of memory. Bug
+	#475972.
+
 2007-12-05  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_handle_cursor_over_xy):

@@ -78,16 +78,12 @@ static EvMetadataManager *ev_metadata_manager = NULL;
 static void
 item_free (gpointer data)
 {
-	Item *item;
-	
-	g_return_if_fail (data != NULL);
-
-	item = (Item *)data;
+	Item *item = (Item *) data;
 
 	if (item->values != NULL)
 		g_hash_table_destroy (item->values);
 
-	g_free (item);
+	g_slice_free (Item, item);
 }
 
 /**
@@ -129,7 +125,7 @@ ev_metadata_arm_timeout(void)
 void
 ev_metadata_manager_init (void)
 {
-	ev_metadata_manager = g_new0 (EvMetadataManager, 1);
+	ev_metadata_manager = g_slice_new0 (EvMetadataManager);
 
 	ev_metadata_manager->values_loaded = FALSE;
 
@@ -156,7 +152,7 @@ ev_metadata_manager_shutdown (void)
 	if (ev_metadata_manager->items != NULL)
 		g_hash_table_destroy (ev_metadata_manager->items);
 
-	g_free (ev_metadata_manager);
+	g_slice_free (EvMetadataManager, ev_metadata_manager);
 	ev_metadata_manager = NULL;
 }
 
@@ -166,7 +162,7 @@ value_free (gpointer data)
 	GValue *value = (GValue *)data;
 
 	g_value_unset (value);
-	g_free (value);
+	g_slice_free (GValue, value);
 }
 
 static GValue *
@@ -176,7 +172,7 @@ parse_value (xmlChar *value, xmlChar *type)
 	GValue *ret;
 
 	ret_type = g_type_from_name ((char *)type);
-	ret = g_new0 (GValue, 1);
+	ret = g_slice_new0 (GValue);
 	g_value_init (ret, ret_type);
 
 	switch (ret_type) {
@@ -219,7 +215,7 @@ parseItem (xmlDocPtr doc, xmlNodePtr cur)
 		return;
 	}
 
-	item = g_new0 (Item, 1);
+	item = g_slice_new0 (Item);
 
 	item->atime = g_ascii_strtoull((char*)atime, NULL, 0);
 	
@@ -380,7 +376,7 @@ ev_metadata_manager_set_last (const gchar *key,
 
 	if (item == NULL)
 	{
-		item = g_new0 (Item, 1);
+		item = g_slice_new0 (Item);
 
 		g_hash_table_insert (ev_metadata_manager->items,
 				     g_strdup (LAST_URI),
@@ -395,7 +391,7 @@ ev_metadata_manager_set_last (const gchar *key,
 	if (value != NULL) {
 		GValue *new;
 
-		new = g_new0 (GValue, 1);
+		new = g_slice_new0 (GValue);
 	        g_value_init (new, G_VALUE_TYPE (value));
 	        g_value_copy (value, new);
 
@@ -513,7 +509,7 @@ ev_metadata_manager_set (const gchar  *uri,
 
 	if (item == NULL)
 	{
-		item = g_new0 (Item, 1);
+		item = g_slice_new0 (Item);
 
 		g_hash_table_insert (ev_metadata_manager->items,
 				     g_strdup (uri),
@@ -528,7 +524,7 @@ ev_metadata_manager_set (const gchar  *uri,
 	if (value != NULL) {
 		GValue *new;
 
-		new = g_new0 (GValue, 1);
+		new = g_slice_new0 (GValue);
 	        g_value_init (new, G_VALUE_TYPE (value));
 	        g_value_copy (value, new);
 
@@ -566,7 +562,7 @@ save_values (const gchar *key, GValue *value, xmlNodePtr parent)
 
 	switch (G_VALUE_TYPE (value)) {
 		case G_TYPE_STRING:
-			string_value = g_strdup (g_value_get_string (value));
+			string_value = g_value_dup_string (value);
                         break;
                 case G_TYPE_INT:
 			string_value = g_strdup_printf ("%d", g_value_get_int (value));
@@ -575,7 +571,7 @@ save_values (const gchar *key, GValue *value, xmlNodePtr parent)
             		{
             			gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
             			g_ascii_dtostr (buf, G_ASCII_DTOSTR_BUF_SIZE, g_value_get_double (value));
-				string_value = g_strdup_printf ("%s", buf);
+				string_value = g_strdup (buf);
 			}
             	        break;
                 case G_TYPE_BOOLEAN:
