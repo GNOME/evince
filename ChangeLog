@@ -1,3 +1,17 @@
+2007-12-10  Christian Persch  <chpe@gnome.org>
+
+	* shell/ev-view-accessible.c: (ev_view_accessible_finalize),
+	(ev_view_accessible_class_init),
+	(ev_view_accessible_idle_do_action),
+	(ev_view_accessible_action_do_action),
+	(ev_view_accessible_action_get_description),
+	(ev_view_accessible_action_set_description),
+	(ev_view_accessible_action_iface_init), (ev_view_accessible_new),
+	(ev_view_accessible_factory_init),
+	(ev_view_accessible_factory_get_accessible_type):
+	* shell/ev-view-accessible.h: A bit of cleanup: use gobject instance
+	private data, and G_DEFINE_TYPE. Bug #502843.
+
 2007-12-08  Christian Persch  <chpe@gnome.org>
 
 	* shell/ev-metadata-manager.c: (item_free),

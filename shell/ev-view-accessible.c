@@ -27,8 +27,6 @@
 #define EV_VIEW_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessible))
 #define EV_IS_VIEW_ACCESSIBLE(obj)   (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW_ACCESSIBLE))
 
-static gulong accessible_private_data_quark;
-
 static GType ev_view_accessible_get_type (void);
 
 enum {
@@ -58,29 +56,29 @@ typedef struct {
 	EvScrollType idle_scroll;	 
 } EvViewAccessiblePriv;
 
-static EvViewAccessiblePriv *
-ev_view_accessible_get_priv (AtkObject *accessible)
-{
-	return g_object_get_qdata (G_OBJECT (accessible),
-    	                           accessible_private_data_quark);
-}
+typedef GtkAccessibleClass EvViewAccessibleClass;
+
+#define EV_VIEW_ACCESSIBLE_GET_PRIVATE(inst) (G_TYPE_INSTANCE_GET_PRIVATE ((inst), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessiblePriv))
 
 static void
-ev_view_accessible_free_priv (EvViewAccessiblePriv *priv) 
+ev_view_accessible_finalize (GObject *object)
 {
+	EvViewAccessiblePriv *priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (object);
 	int i;
 	
 	if (priv->action_idle_handler)
 		g_source_remove (priv->action_idle_handler);
 	for (i = 0; i < LAST_ACTION; i++)	
-		if (priv->action_descriptions [i] != NULL)
-			g_free (priv->action_descriptions [i]);
+		g_free (priv->action_descriptions [i]);
 }
 
-static void ev_view_accessible_class_init (GtkAccessibleClass * klass)
+static void ev_view_accessible_class_init (EvViewAccessibleClass *klass)
 {
-	accessible_private_data_quark = g_quark_from_static_string ("ev-view-accessible-private-data");
-	return;
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  object_class->finalize = ev_view_accessible_finalize;
+
+  g_type_class_add_private (klass, sizeof (EvViewAccessiblePriv));
 }
 
 static gchar*
@@ -368,7 +366,7 @@ static void ev_view_accessible_text_iface_init (AtkTextIface * iface)
 static gboolean
 ev_view_accessible_idle_do_action (gpointer data)
 {
-	EvViewAccessiblePriv* priv = ev_view_accessible_get_priv (ATK_OBJECT (data));
+	EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (data);
 	
 	ev_view_scroll (EV_VIEW (GTK_ACCESSIBLE (data)->widget), 
 			priv->idle_scroll,
@@ -381,7 +379,7 @@ static gboolean
 ev_view_accessible_action_do_action (AtkAction *action,
                                      gint       i)
 {
-	EvViewAccessiblePriv* priv = ev_view_accessible_get_priv (ATK_OBJECT (action));
+	EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (action);
 	
 	if (GTK_ACCESSIBLE (action)->widget == NULL)
 		return FALSE;
@@ -412,9 +410,9 @@ ev_view_accessible_action_get_n_actions (AtkAction *action)
 
 static const gchar *
 ev_view_accessible_action_get_description (AtkAction *action,
-                                                      gint       i)
+                                           gint       i)
 {
-  EvViewAccessiblePriv* priv = ev_view_accessible_get_priv (ATK_OBJECT (action));
+  EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (action);
 
   if (i < 0 || i >= LAST_ACTION) 
     return NULL;
@@ -427,7 +425,7 @@ ev_view_accessible_action_get_description (AtkAction *action,
 
 static const gchar *
 ev_view_accessible_action_get_name (AtkAction *action,
-                                               gint       i)
+                                    gint       i)
 {
   if (i < 0 || i >= LAST_ACTION) 
     return NULL;
@@ -437,18 +435,18 @@ ev_view_accessible_action_get_name (AtkAction *action,
 
 static gboolean
 ev_view_accessible_action_set_description (AtkAction   *action,
-                                                      gint         i,
-                                                      const gchar *description)
+                                           gint         i,
+                                           const gchar *description)
 {
-  EvViewAccessiblePriv* priv = ev_view_accessible_get_priv (ATK_OBJECT (action));
+  EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (action);
+  gchar *old_description;
 
   if (i < 0 || i >= LAST_ACTION) 
     return FALSE;
 
-  if (priv->action_descriptions[i])
-    g_free (priv->action_descriptions[i]);
-
+  old_description = priv->action_descriptions[i];
   priv->action_descriptions[i] = g_strdup (description);
+  g_free (old_description);
 
   return TRUE;
 }
@@ -460,7 +458,6 @@ static void ev_view_accessible_action_iface_init (AtkActionIface * iface)
 	iface->get_description = ev_view_accessible_action_get_description;
 	iface->get_name = ev_view_accessible_action_get_name;
 	iface->set_description = ev_view_accessible_action_set_description;
-	return;
 }
 
 GType ev_view_accessible_get_type (void)
@@ -526,7 +523,6 @@ GType ev_view_accessible_get_type (void)
 static AtkObject *ev_view_accessible_new(GObject * obj)
 {
 	AtkObject *accessible;
-	EvViewAccessiblePriv *priv;
 	
 	g_return_val_if_fail(EV_IS_VIEW (obj), NULL);
 
@@ -536,16 +532,17 @@ static AtkObject *ev_view_accessible_new(GObject * obj)
 	atk_object_set_name (ATK_OBJECT (accessible), _("Document View"));
 	atk_object_set_role (ATK_OBJECT (accessible), ATK_ROLE_UNKNOWN);
 
-        priv = g_new0 (EvViewAccessiblePriv, 1);
-        g_object_set_qdata_full (G_OBJECT (accessible),
-                            accessible_private_data_quark,
-                            priv,
-			    (GDestroyNotify) ev_view_accessible_free_priv);
-
 	return accessible;
 }
 
-GType ev_view_accessible_factory_get_accessible_type(void)
+typedef AtkObjectFactory      EvViewAccessibleFactory;
+typedef AtkObjectFactoryClass EvViewAccessibleFactoryClass;
+
+static void ev_view_accessible_factory_init (EvViewAccessibleFactory *factory)
+{
+}
+
+static GType ev_view_accessible_factory_get_accessible_type(void)
 {
 	return ev_view_accessible_get_type();
 }
@@ -562,29 +559,4 @@ static void ev_view_accessible_factory_class_init (AtkObjectFactoryClass * klass
 	    ev_view_accessible_factory_get_accessible_type;
 }
 
-GType ev_view_accessible_factory_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		const GTypeInfo tinfo = {
-			sizeof(AtkObjectFactoryClass),
-			NULL,	/* base_init */
-			NULL,	/* base_finalize */
-			(GClassInitFunc) ev_view_accessible_factory_class_init,
-			NULL,	/* class_finalize */
-			NULL,	/* class_data */
-			sizeof(AtkObjectFactory),
-			0,	/* n_preallocs */
-			NULL, NULL
-		};
-
-		type = g_type_register_static (ATK_TYPE_OBJECT_FACTORY,
-					       "EvViewAccessibleFactory", &tinfo,
-					       0);
-	}
-	return type;
-}
-
-
-
+G_DEFINE_TYPE (EvViewAccessibleFactory, ev_view_accessible_factory, ATK_TYPE_OBJECT_FACTORY)
