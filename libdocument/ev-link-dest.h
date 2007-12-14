@@ -55,11 +55,14 @@ GType           ev_link_dest_get_type       (void) G_GNUC_CONST;
 
 EvLinkDestType  ev_link_dest_get_dest_type  (EvLinkDest  *self);
 gint            ev_link_dest_get_page       (EvLinkDest  *self);
-gdouble         ev_link_dest_get_top        (EvLinkDest  *self);
-gdouble         ev_link_dest_get_left       (EvLinkDest  *self);
+gdouble         ev_link_dest_get_top        (EvLinkDest  *self,
+					     gboolean    *change_top);
+gdouble         ev_link_dest_get_left       (EvLinkDest  *self,
+					     gboolean    *change_left);
 gdouble         ev_link_dest_get_bottom     (EvLinkDest  *self);
 gdouble         ev_link_dest_get_right      (EvLinkDest  *self);
-gdouble         ev_link_dest_get_zoom       (EvLinkDest  *self);
+gdouble         ev_link_dest_get_zoom       (EvLinkDest  *self,
+					     gboolean    *change_zoom);
 const gchar    *ev_link_dest_get_named_dest (EvLinkDest  *self);
 const gchar    *ev_link_dest_get_page_label (EvLinkDest  *self);
 
@@ -67,12 +70,17 @@ EvLinkDest     *ev_link_dest_new_page       (gint         page);
 EvLinkDest     *ev_link_dest_new_xyz        (gint         page,
 					     gdouble      left,
 					     gdouble      top,
-					     gdouble      zoom);
+					     gdouble      zoom,
+					     gboolean     change_left,
+					     gboolean     change_top,
+					     gboolean     change_zoom);
 EvLinkDest     *ev_link_dest_new_fit        (gint         page);
 EvLinkDest     *ev_link_dest_new_fith       (gint         page,
-					     gdouble      top);
+					     gdouble      top,
+					     gboolean     change_top);
 EvLinkDest     *ev_link_dest_new_fitv       (gint         page,
-					     gdouble      left);
+					     gdouble      left,
+					     gboolean     change_left);
 EvLinkDest     *ev_link_dest_new_fitr       (gint         page,
 					     gdouble      left,
 					     gdouble      bottom,

@@ -29,9 +29,16 @@ enum {
 	PROP_BOTTOM,
 	PROP_RIGHT,
 	PROP_ZOOM,
+	PROP_CHANGE,
 	PROP_NAMED,
 	PROP_PAGE_LABEL
 };
+
+typedef enum {
+	EV_DEST_CHANGE_TOP    = 1 << 0,
+	EV_DEST_CHANGE_LEFT   = 1 << 1,
+	EV_DEST_CHANGE_ZOOM   = 1 << 2
+} EvDestChange;
 
 struct _EvLinkDest {
 	GObject base_instance;
@@ -51,6 +58,7 @@ struct _EvLinkDestPrivate {
 	double         bottom;
 	double         right;
 	double         zoom;
+	EvDestChange   change;
 	gchar         *named;
 	gchar	      *page_label;
 };
@@ -102,17 +110,25 @@ ev_link_dest_get_page (EvLinkDest *self)
 }
 
 gdouble
-ev_link_dest_get_top (EvLinkDest *self)
+ev_link_dest_get_top (EvLinkDest *self,
+		      gboolean   *change_top)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
 
+	if (change_top)
+		*change_top = (self->priv->change & EV_DEST_CHANGE_TOP);
+	
 	return self->priv->top;
 }
 
 gdouble
-ev_link_dest_get_left (EvLinkDest *self)
+ev_link_dest_get_left (EvLinkDest *self,
+		       gboolean   *change_left)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+
+	if (change_left)
+		*change_left = (self->priv->change & EV_DEST_CHANGE_LEFT);
 
 	return self->priv->left;
 }
@@ -134,9 +150,13 @@ ev_link_dest_get_right (EvLinkDest *self)
 }
 
 gdouble
-ev_link_dest_get_zoom (EvLinkDest *self)
+ev_link_dest_get_zoom (EvLinkDest *self,
+		       gboolean   *change_zoom)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+
+	if (change_zoom)
+		*change_zoom = (self->priv->change & EV_DEST_CHANGE_ZOOM);
 
 	return self->priv->zoom;
 }
@@ -189,6 +209,9 @@ ev_link_dest_get_property (GObject    *object,
 	        case PROP_ZOOM:
 			g_value_set_double (value, self->priv->zoom);
 			break;
+	        case PROP_CHANGE:
+			g_value_set_uint (value, self->priv->change);
+			break;
 	        case PROP_NAMED:
 			g_value_set_string (value, self->priv->named);
 			break;
@@ -232,6 +255,9 @@ ev_link_dest_set_property (GObject      *object,
 			break;
 	        case PROP_ZOOM:
 			self->priv->zoom = g_value_get_double (value);
+			break;
+	        case PROP_CHANGE:
+			self->priv->change = g_value_get_uint (value);
 			break;
 	        case PROP_NAMED:
 			self->priv->named = g_value_dup_string (value);
@@ -359,6 +385,16 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (g_object_class,
+					 PROP_CHANGE,
+					 g_param_spec_uint ("change",
+							    "Change",
+							    "Wether top, left, and zoom should be changed",
+							    0,
+							    G_MAXUINT,
+							    0,
+							    G_PARAM_READWRITE |
+							    G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
 					 PROP_NAMED,
 					 g_param_spec_string ("named",
 							      "Named destination",
@@ -386,17 +422,30 @@ ev_link_dest_new_page (gint page)
 }
 
 EvLinkDest *
-ev_link_dest_new_xyz (gint    page,
-		      gdouble left,
-		      gdouble top,
-		      gdouble zoom)
+ev_link_dest_new_xyz (gint     page,
+		      gdouble  left,
+		      gdouble  top,
+		      gdouble  zoom,
+		      gboolean change_left,
+		      gboolean change_top,
+		      gboolean change_zoom)
 {
+	EvDestChange change = 0;
+
+	if (change_left)
+		change |= EV_DEST_CHANGE_LEFT;
+	if (change_top)
+		change |= EV_DEST_CHANGE_TOP;
+	if (change_zoom)
+		change |= EV_DEST_CHANGE_ZOOM;
+	
 	return EV_LINK_DEST (g_object_new (EV_TYPE_LINK_DEST,
 					   "page", page,
 					   "type", EV_LINK_DEST_TYPE_XYZ,
 					   "left", left,
 					   "top", top,
 					   "zoom", zoom,
+					   "change", change,
 					   NULL));
 }
 
@@ -410,24 +459,38 @@ ev_link_dest_new_fit (gint page)
 }
 
 EvLinkDest *
-ev_link_dest_new_fith (gint    page,
-		       gdouble top)
+ev_link_dest_new_fith (gint     page,
+		       gdouble  top,
+		       gboolean change_top)
 {
+	EvDestChange change = 0;
+
+	if (change_top)
+		change |= EV_DEST_CHANGE_TOP;
+	
 	return EV_LINK_DEST (g_object_new (EV_TYPE_LINK_DEST,
 					   "page", page,
 					   "type", EV_LINK_DEST_TYPE_FITH,
 					   "top", top,
+					   "change", change,
 					   NULL));
 }
 
 EvLinkDest *
-ev_link_dest_new_fitv (gint    page,
-		       gdouble left)
+ev_link_dest_new_fitv (gint     page,
+		       gdouble  left,
+		       gboolean change_left)
 {
+	EvDestChange change = 0;
+
+	if (change_left)
+		change |= EV_DEST_CHANGE_LEFT;
+
 	return EV_LINK_DEST (g_object_new (EV_TYPE_LINK_DEST,
 					   "page", page,
 					   "type", EV_LINK_DEST_TYPE_FITV,
 					   "left", left,
+					   "change", change,
 					   NULL));
 }
 
@@ -438,6 +501,8 @@ ev_link_dest_new_fitr (gint    page,
 		       gdouble right,
 		       gdouble top)
 {
+	EvDestChange change = EV_DEST_CHANGE_TOP | EV_DEST_CHANGE_LEFT;
+	
 	return EV_LINK_DEST (g_object_new (EV_TYPE_LINK_DEST,
 					   "page", page,
 					   "type", EV_LINK_DEST_TYPE_FITR,
@@ -445,6 +510,7 @@ ev_link_dest_new_fitr (gint    page,
 					   "bottom", bottom,
 					   "right", right,
 					   "top", top,
+					   "change", change,
 					   NULL));
 }
 

@@ -1154,21 +1154,26 @@ static void
 goto_fitr_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	double zoom;
+	gdouble zoom, left, top;
+	gboolean change_left, change_top;
 
-	zoom = zoom_for_size_best_fit (ev_link_dest_get_right (dest) - ev_link_dest_get_left (dest),
-				       ev_link_dest_get_bottom (dest) - ev_link_dest_get_top (dest),
+	left = ev_link_dest_get_left (dest, &change_left);
+	top = ev_link_dest_get_top (dest, &change_top);
+
+	zoom = zoom_for_size_best_fit (ev_link_dest_get_right (dest) - left,
+				       ev_link_dest_get_bottom (dest) - top,
 				       ev_view_get_width (view),
 				       ev_view_get_height (view), 0, 0);
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
 
-	doc_point.x = ev_link_dest_get_left (dest);
-	doc_point.y = ev_link_dest_get_top (dest);
+	doc_point.x = change_left ? left : 0;
+	doc_point.y = change_top ? top : 0;
 	
 	view->current_page = ev_link_dest_get_page (dest);
-	view->pending_point = doc_point;
+	if (change_left || change_top)
+		view->pending_point = doc_point;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1179,12 +1184,14 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	int doc_width, doc_height, page;
-	double zoom;
+	double zoom, left;
+	gboolean change_left;
 
 	page = ev_link_dest_get_page (dest);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
-	doc_point.x = ev_link_dest_get_left (dest);
+	left = ev_link_dest_get_left (dest, &change_left);
+	doc_point.x = change_left ? left : 0;
 	doc_point.y = 0;
 
 	zoom = zoom_for_size_fit_height (doc_width - doc_point.x , doc_height,
@@ -1195,7 +1202,8 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 	ev_view_set_zoom (view, zoom, FALSE);
 
 	view->current_page = page;
-	view->pending_point = doc_point;
+	if (change_left)
+		view->pending_point = doc_point;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1206,15 +1214,18 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	int doc_width, doc_height, page;
-	double zoom;
+	gdouble zoom, top;
+	gboolean change_top;
 
 	page = ev_link_dest_get_page (dest);
 	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
 
-	doc_point.x = 0;
-	doc_point.y = ev_link_dest_get_top (dest);
+	top = ev_link_dest_get_top (dest, &change_top);
 
-	zoom = zoom_for_size_fit_width (doc_width, ev_link_dest_get_top (dest),
+	doc_point.x = 0;
+	doc_point.y = change_top ? top : 0;
+
+	zoom = zoom_for_size_fit_width (doc_width, top,
 					ev_view_get_width (view),
 				        ev_view_get_height (view), 0);
 
@@ -1222,7 +1233,8 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 	ev_view_set_zoom (view, zoom, FALSE);
 
 	view->current_page = page;
-	view->pending_point = doc_point;
+	if (change_top)
+		view->pending_point = doc_point;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -1255,21 +1267,26 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
 	gint page;
-	double zoom;
+	gdouble zoom, left, top;
+	gboolean change_zoom, change_left, change_top; 
 
-	zoom = ev_link_dest_get_zoom (dest);
+	zoom = ev_link_dest_get_zoom (dest, &change_zoom);
 	page = ev_link_dest_get_page (dest);
 
-	if (zoom > 1) {
+	if (change_zoom && zoom > 1) {
 		ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 		ev_view_set_zoom (view, zoom, FALSE);
 	}
 
-	doc_point.x = ev_link_dest_get_left (dest);
-	doc_point.y = ev_link_dest_get_top (dest);
+	left = ev_link_dest_get_left (dest, &change_left);
+	top = ev_link_dest_get_top (dest, &change_top);
+
+	doc_point.x = change_left ? left : 0;
+	doc_point.y = change_top ? top : 0;
 
 	view->current_page = page;
-	view->pending_point = doc_point;
+	if (change_left || change_top)
+		view->pending_point = doc_point;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
 	gtk_widget_queue_resize (GTK_WIDGET (view));

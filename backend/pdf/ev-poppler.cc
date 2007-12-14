@@ -859,7 +859,10 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 			ev_dest = ev_link_dest_new_xyz (dest->page_num - 1,
 							dest->left,
 							height - dest->top,
-							dest->zoom);
+							dest->zoom,
+							dest->change_left,
+							dest->change_top,
+							dest->change_zoom);
 			g_object_unref (poppler_page);
 		}
 			break;
@@ -874,13 +877,15 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 								  MAX (0, dest->page_num - 1));
 			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_fith (dest->page_num - 1,
-							 height - dest->top);
+							 height - dest->top,
+							 dest->change_top);
 			g_object_unref (poppler_page);
 		}
 			break;
 	        case POPPLER_DEST_FITV:
 			ev_dest = ev_link_dest_new_fitv (dest->page_num - 1,
-							 dest->left);
+							 dest->left,
+							 dest->change_left);
 			break;
 	        case POPPLER_DEST_FITR: {
 			PopplerPage *poppler_page;

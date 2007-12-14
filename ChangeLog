@@ -1,3 +1,18 @@
+2007-12-14  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (ev_link_dest_from_dest):
+	* libdocument/ev-link-dest.[ch]: (ev_link_dest_get_top),
+	(ev_link_dest_get_left), (ev_link_dest_get_zoom),
+	(ev_link_dest_get_property), (ev_link_dest_set_property),
+	(ev_link_dest_class_init), (ev_link_dest_new_xyz),
+	(ev_link_dest_new_fith), (ev_link_dest_new_fitv),
+	(ev_link_dest_new_fitr):
+	* shell/ev-view.c: (goto_fitr_dest), (goto_fitv_dest),
+	(goto_fith_dest), (goto_xyz_dest):
+
+	Do not change left, top and zoom values when they are null in PDF
+	destinations. Fixes bug #460658.
+	
 2007-12-10  Christian Persch  <chpe@gnome.org>
 
 	* shell/ev-view-accessible.c: (ev_view_accessible_finalize),
