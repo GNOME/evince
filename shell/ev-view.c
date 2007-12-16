@@ -4276,7 +4276,9 @@ ev_view_set_zoom (EvView   *view,
 	else
 		scale = factor;
 
-	scale = CLAMP (scale, view->min_scale, view->max_scale);
+	scale = CLAMP (scale,
+		       view->sizing_mode == EV_SIZING_FREE ? view->min_scale : 0,
+		       view->max_scale);
 
 	if (ABS (view->scale - scale) < EPSILON)
 		return;
