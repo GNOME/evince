@@ -106,7 +106,7 @@ comics_document_load (EvDocument *document,
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	GSList *supported_extensions;
-	gchar *list_files_command = NULL, *stdout, *quoted_file, *mime_type;
+	gchar *list_files_command = NULL, *std_out, *quoted_file, *mime_type;
 	gchar **cbr_files;
 	gboolean success;
 	int i, retval;
@@ -137,7 +137,7 @@ comics_document_load (EvDocument *document,
 
 	/* Get list of files in archive */
 	success = g_spawn_command_line_sync (list_files_command,
-					     &stdout, NULL, &retval, error);
+					     &std_out, NULL, &retval, error);
 	g_free (list_files_command);
 
 	if (!success) {
@@ -152,7 +152,7 @@ comics_document_load (EvDocument *document,
 		return FALSE;
 	}
 
-	cbr_files = g_strsplit (stdout, "\n", 0);
+	cbr_files = g_strsplit (std_out, "\n", 0);
 	supported_extensions = get_supported_image_extensions ();
 	for (i = 0; cbr_files[i] != NULL; i++) {
 		gchar *suffix = g_strrstr (cbr_files[i], ".");
@@ -173,7 +173,7 @@ comics_document_load (EvDocument *document,
 		g_free (suffix);
 	}
 
-	g_free (stdout);
+	g_free (std_out);
 	g_free (mime_type);
 	g_strfreev (cbr_files);
 	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
