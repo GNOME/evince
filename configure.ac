@@ -258,35 +258,47 @@ fi
 AM_CONDITIONAL(ENABLE_PDF, test x$enable_pdf = xyes)
 dnl ================== end of pdf checks ============================================
 
-dnl ================== ggv checks ===================================================
+dnl libspectre (used by ps and dvi backends)
+PKG_CHECK_MODULES(SPECTRE, libspectre,have_spectre=yes,have_spectre=no)
+AM_CONDITIONAL(HAVE_SPECTRE, test x$have_spectre = xyes)
+if test "x$have_spectre" = "xyes"; then
+   AC_DEFINE([HAVE_SPECTRE], [1], [Have libpectre])
+fi
+
+dnl ================== ps checks ====================================================
 AC_ARG_ENABLE(ps,
   	[AC_HELP_STRING([--disable-ps], [Compile without PostScript backend])],enable_ps=$enableval,enable_ps="yes")
 
+ps_backend=""
 if test x$enable_ps = xyes; then
- 	AC_DEFINE([ENABLE_PS], [1], [Enable support for PostScript files.])
-fi 
+   AC_DEFINE([ENABLE_PS], [1], [Enable support for PostScript files.])
 
+   if test "x$have_spectre" = "xyes"; then
+      FRONTEND_LIBS="$FRONTEND_LIBS $SPECTRE_LIBS"
+      SHELL_LIBS="$SHELL_LIBS $SPECTRE_LIBS"
+      SHELL_CFLAGS="$SHELL_CFLAGS $SPECTRE_CFLAGS"
+      ps_backend="(libspectre)"
+   else
+      dnl check for GS version
+      AC_MSG_CHECKING(for Ghostscript version...)
+      GS_VERSION=`gs --version | head -n 1 | sed 's/\([[0-9]]*\)\.\([[0-9]]*\).*/\1/'`
+      AC_MSG_RESULT(found $GS_VERSION)
+      if test "$GS_VERSION" -lt "7"; then
+      	 AC_MSG_WARN([PS support is disabled since libspectre or Ghostscript (version >= 7) are needed])
+	 enable_ps=no
+      else
+         AC_ARG_WITH(gs-aa-params,
+                     [AC_HELP_STRING([--with-gs-aa-params], [Define antialiasing params for ghostscript])],AA_PARAMS=$withval,
+		     AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS -dGraphicsAlphaBits=4 -dTextAlphaBits=4 -dDOINTERPOLATE"
+		     )
+         AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghostscript.])
+         AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
+	 ps_backend="(gs)"
+      fi
+   fi
+fi
 AM_CONDITIONAL(ENABLE_PS, test x$enable_ps = xyes)
-
-if test x$enable_ps = xyes; then
-
-dnl check for GS version
-AC_MSG_CHECKING(for Ghostscript version...)
-GS_VERSION=`gs --version | head -n 1 | sed 's/\([[0-9]]*\)\.\([[0-9]]*\).*/\1/'`
-AC_MSG_RESULT(found $GS_VERSION)
-if test "$GS_VERSION" -lt "7"; then
-	AC_MSG_ERROR([You need Ghostscript version >= 7 in order to run evince])
-fi
-
-AC_ARG_WITH(gs-aa-params,
-            [AC_HELP_STRING([--with-gs-aa-params], [Define antialiasing params for ghostscript])],AA_PARAMS=$withval,
-	    AA_PARMS="-sDEVICE=x11alpha -dNOPLATFONTS -dGraphicsAlphaBits=4 -dTextAlphaBits=4 -dDOINTERPOLATE"
-	    )
-AC_DEFINE_UNQUOTED(ALPHA_PARAMS, "$AA_PARMS", [Anti-aliasing parameters for Ghostscript.])
-AC_MSG_RESULT(Antialiasing parameters for Ghostscript: $AA_PARMS)
-
-fi
-dnl ======================== End of ggv checks =================================
+dnl ======================== End of ps checks ===================================
 
 dnl ================== tiff checks ===================================================
 AC_ARG_ENABLE(tiff,
@@ -495,7 +507,7 @@ Configure summary:
 	Gtk-Doc Support....:  $enable_gtk_doc
 
 	PDF Backend........:  $enable_pdf
-	PostScript Backend.:  $enable_ps
+	PostScript Backend.:  $enable_ps $ps_backend
 	TIFF Backend.......:  $enable_tiff
 	DJVU Backend.......:  $enable_djvu
 	DVI Backend........:  $enable_dvi
