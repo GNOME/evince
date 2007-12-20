@@ -102,6 +102,10 @@ typedef void (*DviPutPixel)	__PROTO((void *image, int x, int y, Ulong color));
 typedef void (*DviDevDestroy)   __PROTO((void *data));
 typedef void (*DviRefresh)      __PROTO((DviContext *dvi, void *device_data));
 typedef void (*DviSetColor)	__PROTO((void *device_data, Ulong, Ulong));
+typedef void (*DviPSDraw)       __PROTO((DviContext *context,
+					 const char *filename, 
+					 int x, int y,
+					 Uint width, Uint height));
 
 struct _DviDevice {
 	DviGlyphDraw	draw_glyph;
@@ -113,6 +117,7 @@ struct _DviDevice {
 	DviDevDestroy	dev_destroy;
 	DviRefresh	refresh;
 	DviSetColor	set_color;
+	DviPSDraw       draw_ps;
 	void *		device_data;
 };
 

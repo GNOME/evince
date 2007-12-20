@@ -210,6 +210,8 @@ extern char *mdvi_strncpy __PROTO((char *, const char *, size_t));
 extern char *mdvi_strdup __PROTO((const char *));
 extern char *mdvi_strndup __PROTO((const char *, size_t));
 extern void *mdvi_memdup __PROTO((const void *, size_t));
+extern char *mdvi_build_path_from_cwd __PROTO((const char *));
+extern char *mdvi_strrstr __PROTO((const char *, const char *));
 
 /* macros to make memory allocation nicer */
 #define xalloc(t)	(t *)mdvi_malloc(sizeof(t))

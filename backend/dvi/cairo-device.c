@@ -16,7 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include <gdk/gdkcolor.h>
+#ifdef HAVE_SPECTRE
+#include <libspectre/spectre.h>
+#endif
+
 #include "cairo-device.h"
 
 typedef struct {
@@ -116,6 +122,73 @@ dvi_cairo_draw_rule (DviContext *dvi,
 	cairo_restore (cairo_device->cr);
 }
 
+#ifdef HAVE_SPECTRE
+static void
+dvi_cairo_draw_ps (DviContext *dvi,
+		   const char *filename,
+		   int         x,
+		   int         y,
+		   Uint        width,
+		   Uint        height)
+{
+	DviCairoDevice       *cairo_device;
+	unsigned char        *data = NULL;
+	int                   row_length;
+	SpectreDocument      *psdoc;
+	SpectrePage          *page;
+	SpectreRenderContext *rc;
+	SpectreStatus         status;
+	cairo_surface_t      *image;
+
+	cairo_device = (DviCairoDevice *) dvi->device.device_data;
+
+	psdoc = spectre_document_new ();
+	spectre_document_load (psdoc, filename);
+	if (spectre_document_status (psdoc)) {
+		spectre_document_free (psdoc);
+		return;
+	}
+	
+	page = spectre_document_get_page (psdoc, 0);
+	if (!page) {
+		spectre_document_free (psdoc);
+		return;
+	}
+
+	rc = spectre_render_context_new ();
+	spectre_render_context_set_page_size (rc, width, height);
+	spectre_page_render (page, rc, &data, &row_length);
+	status = spectre_page_status (page);
+	spectre_render_context_free (rc);
+
+	spectre_page_free (page);
+	spectre_document_free (psdoc);
+
+	if (status) {
+		free (data);
+		return;
+	}
+
+	image = cairo_image_surface_create_for_data ((unsigned char *)data,
+						     CAIRO_FORMAT_RGB24,
+						     width, height,
+						     row_length);
+
+	cairo_save (cairo_device->cr);
+
+	cairo_translate (cairo_device->cr,
+			 x + cairo_device->xmargin,
+			 y + cairo_device->ymargin);
+	cairo_set_source_surface (cairo_device->cr, image, 0, 0); 
+	cairo_paint (cairo_device->cr);
+
+	cairo_restore (cairo_device->cr);
+
+	cairo_surface_destroy (image);
+	free (data);
+}
+#endif /* HAVE_SPECTRE */
+
 static int
 dvi_cairo_alloc_colors (void  *device_data,
 			Ulong *pixels,
@@ -208,6 +281,11 @@ mdvi_cairo_device_init (DviDevice *device)
 	device->free_image = dvi_cairo_free_image;
 	device->put_pixel = dvi_cairo_put_pixel;
 	device->set_color = dvi_cairo_set_color;
+#ifdef HAVE_SPECTRE
+	device->draw_ps = dvi_cairo_draw_ps;
+#else
+	device->draw_ps = NULL;
+#endif
 	device->refresh = NULL;
 }
 

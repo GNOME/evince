@@ -1,5 +1,19 @@
 2007-12-20  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/dvi/Makefile.am:
+	* backend/dvi/cairo-device.c: (dvi_cairo_draw_ps),
+	(mdvi_cairo_device_init):
+	* backend/dvi/mdvi-lib/common.h:
+	* backend/dvi/mdvi-lib/mdvi.h:
+	* backend/dvi/mdvi-lib/sp-epsf.c: (epsf_special):
+	* backend/dvi/mdvi-lib/util.c: (mdvi_strrstr),
+	(mdvi_build_path_from_cwd):
+
+	Add ps specials support in dvi backend when libspectre is
+	present. Fixes bug #386005.
+	
+2007-12-20  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* backend/ps/Makefile.am:
 	* backend/ps/ev-spectre.[ch]:

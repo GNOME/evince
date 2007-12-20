@@ -20,6 +20,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "mdvi.h"
 #include "private.h"
@@ -235,23 +237,74 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 {
 	char	*file;
 	char	*special;
+	char    *psfile;
+	char    *tmp;
 	EpsfBox	box = {0, 0, 0, 0};
 	int	x, y;
 	int	w, h;
 	double	xf, vf;
+	struct stat buf;
 	
 	file = parse_epsf_special(&box, &special, prefix, arg);
-	if(file != NULL)
-		mdvi_free(special);
-	/* 
-	 * draw the bounding box. Notice that it is in PostScript units,
-	 * so we have to convert it into pixels
-	 */
+	if (file != NULL)
+		mdvi_free (special);
+
 	xf = dvi->params.dpi * dvi->params.mag / (72.0 * dvi->params.hshrink);
 	vf = dvi->params.vdpi * dvi->params.mag / (72.0 * dvi->params.vshrink);
-	x = FROUND(box.ox * xf);
-	y = FROUND(box.oy * vf);
 	w = FROUND(box.bw * xf);
 	h = FROUND(box.bh * vf);
-	dvi->device.draw_rule(dvi, dvi->pos.hh + x, dvi->pos.vv + y - h + 1, w, h, 0);
+	x = FROUND(box.ox * xf) + dvi->pos.hh;
+	y = FROUND(box.oy * vf) + dvi->pos.vv - h + 1;
+
+	if (!file || !dvi->device.draw_ps) {
+		dvi->device.draw_rule (dvi, x, y, w, h, 0);
+		return;
+	}
+
+	if (file[0] == '/') { /* Absolute path */
+		if (stat (file, &buf) == 0)
+			dvi->device.draw_ps (dvi, file, x, y, w, h);
+		else
+			dvi->device.draw_rule (dvi, x, y, w, h, 0);
+		return;
+	}
+
+	tmp = mdvi_strrstr (dvi->filename, "/");
+	if (tmp) { /* Document directory */
+		int path_len = strlen (dvi->filename) - strlen (tmp + 1);
+		int file_len = strlen (file);
+		
+		psfile = mdvi_malloc (path_len + file_len + 1);
+		psfile[0] = '\0';
+		strncat (psfile, dvi->filename, path_len);
+		strncat (psfile, file, file_len);
+
+		if (stat (psfile, &buf) == 0) {
+			dvi->device.draw_ps (dvi, psfile, x, y, w, h);
+			mdvi_free (psfile);
+
+			return;
+		}
+
+		mdvi_free (psfile);
+	}
+			
+	psfile = mdvi_build_path_from_cwd (file);
+	if (stat (psfile, &buf) == 0) { /* Current working dir */
+		dvi->device.draw_ps (dvi, psfile, x, y, w, h);
+		mdvi_free (psfile);
+
+		return;
+	}
+
+	mdvi_free (psfile);
+	
+	psfile = kpse_find_pict (file);
+	if (psfile) { /* kpse */
+		dvi->device.draw_ps (dvi, psfile, x, y, w, h);
+	} else {
+		dvi->device.draw_rule(dvi, x, y, w, h, 0);
+	}
+
+	free (psfile);
 }

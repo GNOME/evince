@@ -4,7 +4,8 @@ INCLUDES = \
 	-I$(top_srcdir)					\
 	-I$(top_srcdir)/libdocument			\
 	-I$(srcdir)/mdvi-lib				\
-	$(LIB_CFLAGS)
+	$(LIB_CFLAGS)					\
+	$(SPECTRE_CFLAGS)
 
 noinst_LTLIBRARIES = libgtkdvi.la
     

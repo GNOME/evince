@@ -288,6 +288,60 @@ void	*mdvi_memdup(const void *data, size_t length)
 	return ptr;
 }
 
+char   *mdvi_strrstr (const char *haystack, const char *needle)
+{
+	size_t i;
+	size_t needle_len;
+	size_t haystack_len;
+	const char *p;
+
+	needle_len = strlen (needle);
+	haystack_len = strlen (haystack);
+
+	if (needle_len == 0)
+		return NULL;
+
+	if (haystack_len < needle_len)
+		return (char *)haystack;
+
+	p = haystack + haystack_len - needle_len;
+	while (p >= haystack) {
+		for (i = 0; i < needle_len; i++)
+			if (p[i] != needle[i])
+				goto next;
+
+		return (char *)p;
+
+	next:
+		p--;
+	}
+
+	return NULL;
+}
+
+char   *mdvi_build_path_from_cwd (const char *path)
+{
+	char  *ptr;
+	char  *buf = NULL;
+	size_t buf_size = 512;
+
+	while (1) {
+		buf = mdvi_realloc (buf, buf_size);
+		if ((ptr = getcwd (buf, buf_size)) == NULL && errno == ERANGE) {
+			buf_size *= 2;
+		} else {
+			buf = ptr;
+			break;
+		}
+	}
+
+	buf = mdvi_realloc (buf, strlen (buf) + strlen (path) + 2);
+	strcat (buf, "/");
+	strncat (buf, path, strlen (path));
+	
+	return buf;
+}
+
 double	unit2pix_factor(const char *spec)
 {
 	double	val;
