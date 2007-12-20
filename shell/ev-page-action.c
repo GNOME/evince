@@ -143,6 +143,21 @@ activate_cb (GtkWidget *entry, GtkAction *action)
 	g_free (page_label);
 }
 
+static gboolean page_scroll_cb(GtkWidget *widget, GdkEventScroll *event, EvPageAction* action)
+{
+	gint pageno;
+
+	pageno = ev_page_cache_get_current_page (action->priv->page_cache);
+	if ((event->direction == GDK_SCROLL_DOWN) && 
+	    (pageno < ev_page_cache_get_n_pages(action->priv->page_cache) - 1))
+		pageno++;
+	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
+		pageno--;
+	ev_page_cache_set_current_page (action->priv->page_cache, pageno);
+	
+	return TRUE;
+}
+
 static GtkWidget *
 create_tool_item (GtkAction *action)
 {
@@ -157,6 +172,8 @@ create_tool_item (GtkAction *action)
 	gtk_box_set_spacing (GTK_BOX (hbox), 6);
 
 	proxy->entry = gtk_entry_new ();
+	g_signal_connect(proxy->entry, "scroll-event",G_CALLBACK(page_scroll_cb),action);
+	gtk_widget_add_events(GTK_WIDGET(proxy->entry),GDK_BUTTON_MOTION_MASK);
 	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 5);
 	gtk_box_pack_start (GTK_BOX (hbox), proxy->entry, FALSE, FALSE, 0);
 	gtk_widget_show (proxy->entry);
