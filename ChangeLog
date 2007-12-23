@@ -1,3 +1,11 @@
+2007-12-23  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-pixbuf-cache.c: (check_job_size_and_unref):
+
+	Disconnect also page-ready signal when removing a job because the
+	page size has changed. Thanks to kripken
+	<kripkensteiner@gmail.com>.
+	
 2007-12-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-page-action.c: (page_scroll_cb), (create_tool_item):
@@ -24,6 +32,7 @@
 	* configure.ac:
 	* backend/ps/Makefile.am:
 	* backend/ps/ev-spectre.[ch]:
+	
 	Use libspectre, if available, for the ps backend. Fixes bugs
 	#317106, #499787, #501235, #421879, #445797, #443859 and #486547.
 

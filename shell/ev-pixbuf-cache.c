@@ -307,6 +307,9 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 		return;
 
 	g_signal_handlers_disconnect_by_func (job_info->job,
+					      G_CALLBACK (job_page_ready_cb),
+					      pixbuf_cache);
+	g_signal_handlers_disconnect_by_func (job_info->job,
 					      G_CALLBACK (job_finished_cb),
 					      pixbuf_cache);
 	ev_job_queue_remove_job (job_info->job);
