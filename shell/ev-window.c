@@ -393,6 +393,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewBestFit", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewAutoscroll", has_pages);
 
 	/* Toolbar-specific actions: */
 	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
@@ -3359,6 +3360,12 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
+{
+	ev_view_autoscroll (EV_VIEW (ev_window->priv->view));
+}
+
+static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
 	GError *error = NULL;
@@ -4398,6 +4405,9 @@ static const GtkActionEntry entries[] = {
         { "ViewReload", GTK_STOCK_REFRESH, N_("_Reload"), "<control>R",
           N_("Reload the document"),
           G_CALLBACK (ev_window_cmd_view_reload) },
+
+	{ "ViewAutoscroll", GTK_STOCK_MEDIA_PLAY, N_("Auto_scroll"), NULL, NULL,
+	  G_CALLBACK (ev_window_cmd_view_autoscroll) },
 
         /* Go menu */
         { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "<control>Page_Up",

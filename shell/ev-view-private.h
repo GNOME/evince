@@ -36,6 +36,14 @@ typedef struct {
 	gdouble vadj;
 } DragInfo;
 
+/* Autoscrolling */
+typedef struct {
+	gboolean autoscrolling;
+	guint last_y;
+	guint start_y;
+	guint timeout_id;	
+} AutoScrollInfo;
+
 /* Information for handling selection */
 typedef struct {
 	gboolean in_drag;
@@ -65,7 +73,8 @@ typedef enum {
 	EV_VIEW_CURSOR_LINK,
 	EV_VIEW_CURSOR_WAIT,
 	EV_VIEW_CURSOR_HIDDEN,
-	EV_VIEW_CURSOR_DRAG
+	EV_VIEW_CURSOR_DRAG,
+	EV_VIEW_CURSOR_AUTOSCROLL,
 } EvViewCursor;
 
 typedef enum {
@@ -133,6 +142,9 @@ struct _EvView {
 
 	/* Information for middle clicking and dragging around. */
 	DragInfo drag_info;
+	
+	/* Autoscrolling */
+	AutoScrollInfo scroll_info;
 
 	/* Selection */
 	GdkPoint motion;

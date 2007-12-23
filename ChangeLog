@@ -1,3 +1,20 @@
+2007-12-23  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* data/evince-toolbar.xml:
+	* data/evince-ui.xml:
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_handle_cursor_over_xy),
+	(ev_view_button_press_event), (ev_view_motion_notify_event),
+	(ev_view_button_release_event), (ev_view_init),
+	(ev_view_autoscroll_cb), (ev_view_autoscroll),
+	(ev_view_set_cursor):
+	* shell/ev-view.h:
+	* shell/ev-window.c: (ev_window_setup_action_sensitivity),
+	(ev_window_cmd_view_autoscroll):
+	
+	Autoscroll feature with the context menu. Fixes bug 
+	#323670. Thanks to David Turner <cillian64@googlemail.com>.
+
 2007-12-23  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-pixbuf-cache.c: (check_job_size_and_unref):
@@ -5,7 +22,7 @@
 	Disconnect also page-ready signal when removing a job because the
 	page size has changed. Thanks to kripken
 	<kripkensteiner@gmail.com>.
-	
+
 2007-12-21  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-page-action.c: (page_scroll_cb), (create_tool_item):

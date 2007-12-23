@@ -1521,6 +1521,12 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
 		return;
 	}
+
+	if (view->scroll_info.autoscrolling) {
+		if (view->cursor != EV_VIEW_CURSOR_AUTOSCROLL)
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_AUTOSCROLL);
+		return;
+	}
 	
 	link = ev_view_get_link_at_location (view, x, y);
 	
@@ -2663,6 +2669,12 @@ ev_view_button_press_event (GtkWidget      *widget,
 	
 	switch (event->button) {
 	        case 1: {
+
+			if (view->scroll_info.autoscrolling == TRUE) {
+				view->scroll_info.autoscrolling = FALSE;
+				return TRUE;
+			}
+
 			EvImage *image;
 			EvFormField *field;
 
@@ -2701,6 +2713,10 @@ ev_view_button_press_event (GtkWidget      *widget,
 		case 2:
 			/* use root coordinates as reference point because
 			 * scrolling changes window relative coordinates */
+			if (view->scroll_info.autoscrolling == TRUE) {
+				view->scroll_info.autoscrolling = FALSE;
+				return TRUE;
+			}
 			view->drag_info.start.x = event->x_root;
 			view->drag_info.start.y = event->y_root;
 			view->drag_info.hadj = gtk_adjustment_get_value (view->hadjustment);
@@ -2710,6 +2726,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 			return TRUE;
 		case 3:
+			if (!view->scroll_info.autoscrolling)
+				view->scroll_info.start_y = event->y;
 			return ev_view_do_popup_menu (view, event->x, event->y);
 	}
 	
@@ -2883,12 +2901,17 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 	if (!view->document)
 		return FALSE;
+	
 		
         if (event->is_hint || event->window != view->layout.bin_window) {
 	    gtk_widget_get_pointer (widget, &x, &y);
         } else {
 	    x = event->x;
 	    y = event->y;
+	}
+
+	if (view->scroll_info.autoscrolling) {
+		view->scroll_info.last_y = y;
 	}
 
 	if (view->selection_info.in_drag) {
@@ -3024,6 +3047,10 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->selection_scroll_id) {
 	    g_source_remove (view->selection_scroll_id);
 	    view->selection_scroll_id = 0;
+	}
+	if (view->scroll_info.timeout_id) {
+	    g_source_remove (view->scroll_info.timeout_id);
+	    view->scroll_info.timeout_id = 0;
 	}
 	if (view->selection_update_id) {
 	    g_source_remove (view->selection_update_id);
@@ -4042,6 +4069,7 @@ ev_view_init (EvView *view)
 	view->pressed_button = -1;
 	view->cursor = EV_VIEW_CURSOR_NORMAL;
 	view->drag_info.in_drag = FALSE;
+	view->scroll_info.autoscrolling = FALSE;
 	view->selection_info.selections = NULL;
 	view->selection_info.in_selection = FALSE;
 	view->selection_info.in_drag = FALSE;
@@ -4220,6 +4248,45 @@ ev_view_set_loading (EvView 	  *view,
 {
 	view->loading = loading;
 	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static gboolean ev_view_autoscroll_cb (EvView *view)
+{
+	gdouble speed, value;
+
+	/* If the user stops autoscrolling, autoscrolling will be
+	 * set to false but the timeout will continue; stop the timeout: */
+	if (!view->scroll_info.autoscrolling) {
+		view->scroll_info.timeout_id = 0;
+		return FALSE;
+	}
+	
+	if (view->scroll_info.last_y > view->scroll_info.start_y && 
+		(view->scroll_info.last_y < view->scroll_info.start_y))
+		return TRUE; 
+
+	/* Replace 100 with your speed of choice: The lower the faster.
+	 * Replace 3 with another speed of choice: The higher, the faster it accelerated
+	 * 	based on the distance of the starting point from the mouse
+	 * (All also effected by the timeout interval of this callback) */
+
+	if (view->scroll_info.start_y > view->scroll_info.last_y)
+		speed = -pow ((((gdouble)view->scroll_info.start_y - view->scroll_info.last_y) / 100), 3);
+	else
+		speed = pow ((((gdouble)view->scroll_info.last_y - view->scroll_info.start_y) / 100), 3);
+	
+	value = gtk_adjustment_get_value (view->vadjustment);
+	value = CLAMP (value + speed, 0, view->vadjustment->upper - view->vadjustment->page_size);
+	gtk_adjustment_set_value (view->vadjustment, value);
+	
+	return TRUE;
+
+}
+
+void ev_view_autoscroll(EvView *view)
+{
+	view->scroll_info.autoscrolling = TRUE;
+	view->scroll_info.timeout_id = g_timeout_add (20, (GSourceFunc)(ev_view_autoscroll_cb), view);
 }
 
 void
@@ -5562,6 +5629,9 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
                         break;
 		case EV_VIEW_CURSOR_DRAG:
 			cursor = gdk_cursor_new_for_display (display, GDK_FLEUR);
+			break;
+		case EV_VIEW_CURSOR_AUTOSCROLL:
+			cursor = gdk_cursor_new_for_display (display, GDK_DOUBLE_ARROW);
 			break;
 	}
 

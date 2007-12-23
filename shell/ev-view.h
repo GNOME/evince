@@ -73,7 +73,6 @@ void		ev_view_set_document	  (EvView         *view,
 			   		   EvDocument     *document);
 void 		ev_view_set_loading       (EvView 	  *view,
 				           gboolean        loading);
-
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);
 void		ev_view_select_all	  (EvView         *view);
@@ -144,6 +143,8 @@ gboolean       ev_view_previous_page	  (EvView         *view);
 gchar*         ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest);
 
 void           ev_view_update_view_size (EvView *view, GtkScrolledWindow *scrolled_window);
+
+void	       ev_view_autoscroll	  (EvView *view);
 
 G_END_DECLS
 
