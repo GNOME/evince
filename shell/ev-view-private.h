@@ -28,12 +28,18 @@
 #include "ev-form-field.h"
 #include "ev-selection.h"
 
+#define DRAG_HISTORY 10
+
 /* Information for middle clicking and moving around the doc */
 typedef struct {
         gboolean in_drag;
 	GdkPoint start;
 	gdouble hadj;
 	gdouble vadj;
+	guint drag_timeout_id;
+	guint release_timeout_id;
+	GdkPoint buffer[DRAG_HISTORY];
+	GdkPoint momentum;
 } DragInfo;
 
 /* Autoscrolling */

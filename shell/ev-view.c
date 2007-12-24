@@ -2893,6 +2893,66 @@ selection_scroll_timeout_cb (EvView *view)
 }
 
 static gboolean
+ev_view_drag_update_momentum (EvView *view)
+{
+	int i;
+	if (!view->drag_info.in_drag)
+		return FALSE;
+	
+	for (i = DRAG_HISTORY - 1; i > 0; i--) {
+		view->drag_info.buffer[i].x = view->drag_info.buffer[i-1].x;
+		view->drag_info.buffer[i].y = view->drag_info.buffer[i-1].y;
+	}
+
+	/* Momentum is a moving average of 10ms granularity over
+	 * the last 100ms with each 10ms stored in buffer. 
+	 */
+	
+	view->drag_info.momentum.x = (view->drag_info.buffer[DRAG_HISTORY - 1].x - view->drag_info.buffer[0].x);
+	view->drag_info.momentum.y = (view->drag_info.buffer[DRAG_HISTORY - 1].y - view->drag_info.buffer[0].y);
+
+	return TRUE;
+}
+
+static gboolean
+ev_view_scroll_drag_release (EvView *view)
+{
+	gdouble dhadj_value, dvadj_value;
+	gdouble oldhadjustment, oldvadjustment;
+
+	view->drag_info.momentum.x /= 1.2;
+	view->drag_info.momentum.y /= 1.2; /* Alter these constants to change "friction" */
+
+	dhadj_value = view->hadjustment->page_size *
+		      (gdouble)view->drag_info.momentum.x / GTK_WIDGET (view)->allocation.width;
+	dvadj_value = view->vadjustment->page_size *
+		      (gdouble)view->drag_info.momentum.y / GTK_WIDGET (view)->allocation.height;
+
+	oldhadjustment = gtk_adjustment_get_value (view->hadjustment);
+	oldvadjustment = gtk_adjustment_get_value (view->vadjustment);
+
+	if (((oldhadjustment + dhadj_value) > (view->hadjustment->upper - view->hadjustment->page_size)) ||
+	   ((oldhadjustment + dhadj_value) < 0))
+		view->drag_info.momentum.x *= -0.5; /* 0.5 rather than 1 means the edges absorb some momentum */
+	if (((oldvadjustment + dvadj_value) > (view->vadjustment->upper - view->vadjustment->page_size)) ||
+	   ((oldvadjustment + dvadj_value) < 0))
+		view->drag_info.momentum.y *= -0.5;
+
+	gtk_adjustment_set_value (view->hadjustment,
+				MIN (oldhadjustment + dhadj_value,
+				view->hadjustment->upper - view->hadjustment->page_size));
+	gtk_adjustment_set_value (view->vadjustment,
+				MIN (oldvadjustment + dvadj_value,
+				view->vadjustment->upper - view->vadjustment->page_size));
+
+	if (((view->drag_info.momentum.x < 1) && (view->drag_info.momentum.x > -1)) &&
+	   ((view->drag_info.momentum.y < 1) && (view->drag_info.momentum.y > -1)))
+		return FALSE;
+	else
+		return TRUE;
+}
+
+static gboolean
 ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
 {
@@ -2983,6 +3043,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	} else if (view->pressed_button == 2) {
 		if (!view->drag_info.in_drag) {
 			gboolean start;
+			int i;
 
 			start = gtk_drag_check_threshold (widget,
 							  view->drag_info.start.x,
@@ -2990,11 +3051,24 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 							  event->x_root,
 							  event->y_root);
 			view->drag_info.in_drag = start;
+			view->drag_info.drag_timeout_id = g_timeout_add (10,
+				(GSourceFunc)ev_view_drag_update_momentum, view);
+			/* Set 100 to choose how long it takes to build up momentum */
+			/* Clear out previous momentum info: */
+			for (i = 0; i < DRAG_HISTORY; i++) {
+				view->drag_info.buffer[i].x = event->x;
+				view->drag_info.buffer[i].y = event->y;
+			}
+			view->drag_info.momentum.x = 0;
+			view->drag_info.momentum.y = 0;
 		}
 
 		if (view->drag_info.in_drag) {
 			int dx, dy;
 			gdouble dhadj_value, dvadj_value;
+
+			view->drag_info.buffer[0].x = event->x;
+			view->drag_info.buffer[0].y = event->y;
 
 			dx = event->x_root - view->drag_info.start.x;
 			dy = event->y_root - view->drag_info.start.y;
@@ -3033,6 +3107,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->drag_info.in_drag = FALSE;
 	view->image_dnd_info.in_drag = FALSE;
+	
+	view->drag_info.release_timeout_id = g_timeout_add (20,
+			(GSourceFunc)ev_view_scroll_drag_release, view);
 
 	if (view->pressed_button == 2) {
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
@@ -3047,10 +3124,6 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->selection_scroll_id) {
 	    g_source_remove (view->selection_scroll_id);
 	    view->selection_scroll_id = 0;
-	}
-	if (view->scroll_info.timeout_id) {
-	    g_source_remove (view->scroll_info.timeout_id);
-	    view->scroll_info.timeout_id = 0;
 	}
 	if (view->selection_update_id) {
 	    g_source_remove (view->selection_update_id);
@@ -3762,6 +3835,21 @@ ev_view_destroy (GtkObject *object)
 	if (view->loading_text) {
 		cairo_surface_destroy (view->loading_text);
 		view->loading_text = NULL;
+	}
+
+	if (view->scroll_info.timeout_id) {
+	    g_source_remove (view->scroll_info.timeout_id);
+	    view->scroll_info.timeout_id = 0;
+	}
+
+	if (view->drag_info.drag_timeout_id) {
+		g_source_remove (view->drag_info.drag_timeout_id);
+		view->drag_info.drag_timeout_id = 0;
+	}
+
+	if (view->drag_info.release_timeout_id) {
+		g_source_remove (view->drag_info.release_timeout_id);
+		view->drag_info.release_timeout_id = 0;
 	}
 
 	ev_view_presentation_transition_stop (view);

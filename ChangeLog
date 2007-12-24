@@ -1,3 +1,13 @@
+2007-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.c: (ev_view_drag_update_momentum),
+	(ev_view_scroll_drag_release), (ev_view_motion_notify_event),
+	(ev_view_button_release_event), (ev_view_destroy):
+	
+	Kinetic scrolling implemented as requested in
+	bug #461271. Thanks to David Turner <cillian64@googlemail.com>.
+
 2007-12-23  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* data/evince-toolbar.xml:
