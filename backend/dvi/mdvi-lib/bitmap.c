@@ -18,6 +18,7 @@
 
 /* Bitmap manipulation routines */
 
+#include <config.h>
 #include <stdlib.h>
 
 #include "mdvi.h"

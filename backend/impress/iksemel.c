@@ -33,6 +33,7 @@
 ** modify it under the terms of GNU Lesser General Public License.
 */
 
+#include <config.h>
 #include <errno.h>
 
 #include "common.h"

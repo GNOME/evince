@@ -47,6 +47,7 @@
  * fonts are configured.
  */
 
+#include <config.h>
 #include "mdvi.h"
 
 #define HAVE_PROTOTYPES 1

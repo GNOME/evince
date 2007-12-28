@@ -4,6 +4,7 @@
 ** modify it under the terms of GNU General Public License.
 */
 
+#include <config.h>
 #include "common.h"
 #include "internal.h"
 

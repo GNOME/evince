@@ -32,6 +32,7 @@
  *
  */
 
+#include <config.h>
 #include <stdio.h>
 #include <stdlib.h>			/* for atof */
 #include <math.h>

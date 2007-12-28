@@ -1,3 +1,4 @@
+#include <config.h>
 #include "ev-job-queue.h"
 
 /* Like glib calling convention, all functions with _locked in their name assume

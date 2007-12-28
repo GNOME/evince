@@ -22,6 +22,7 @@
  * We use T1lib only as a rasterizer, not to draw glyphs.
  */
 
+#include <config.h>
 #include "mdvi.h"
 
 #ifdef WITH_TYPE1_FONTS

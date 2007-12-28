@@ -58,6 +58,7 @@ eggtypebuiltins.c: stamp-eggtypebuiltins.c
 	@true
 stamp-eggtypebuiltins.c: $(EGGHEADERS)
 	( cd $(srcdir) && $(GLIB_MKENUMS) \
+		--fhead "#include <config.h>\n\n" \
 		--fhead "#include \"eggtypebuiltins.h\"\n\n" \
 		--fprod "\n/* enumerations from \"@filename@\" */" \
 		--fprod "\n#include \"@filename@\"" \

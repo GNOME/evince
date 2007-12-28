@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include <config.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>

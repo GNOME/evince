@@ -28,6 +28,7 @@
  *    - Made bitmap code much more efficient and compact.
  */
 
+#include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

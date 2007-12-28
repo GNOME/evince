@@ -17,6 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <string.h>
 #include <gtk/gtktreeselection.h>
 #include <gtk/gtksignal.h>

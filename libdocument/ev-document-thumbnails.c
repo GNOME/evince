@@ -18,6 +18,7 @@
  *
  */
 
+#include <config.h>
 #include "ev-document-thumbnails.h"
 
 GType

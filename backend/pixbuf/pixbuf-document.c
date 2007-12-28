@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+#include <config.h>
 #include "pixbuf-document.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"

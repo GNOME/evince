@@ -19,6 +19,7 @@
 
 /* functions to read GF fonts */
 
+#include <config.h>
 #include <string.h>
 #include "common.h"
 #include "mdvi.h"

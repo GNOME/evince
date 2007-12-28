@@ -1,3 +1,4 @@
+#include <config.h>
 #include "ev-pixbuf-cache.h"
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"

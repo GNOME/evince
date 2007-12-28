@@ -44,6 +44,7 @@
 
 /* end of patch */
 
+#include <config.h>
 #include <stdlib.h>
 #include <stdio.h>
 #ifndef SEEK_SET

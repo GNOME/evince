@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+#include <config.h>
 #include "djvu-document.h"
 #include "djvu-text.h"
 #include "djvu-links.h"

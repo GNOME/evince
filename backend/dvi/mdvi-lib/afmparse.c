@@ -56,6 +56,7 @@
  *    - changed (width == 250) to (width = 250) in initializeArray
  */
 
+#include <config.h>
 #include "sysdeps.h"
 
 #ifdef WITH_AFM_FILES
