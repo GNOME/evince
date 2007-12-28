@@ -26,6 +26,7 @@
 #include <ev-document-thumbnails.h>
 #include <ev-async-renderer.h>
 #include <ev-document-factory.h>
+#include <ev-backends-manager.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -163,16 +164,21 @@ main (int argc, char *argv[])
 	
 	gnome_vfs_init ();
 
+	ev_backends_manager_init ();
+
 	uri = gnome_vfs_make_uri_from_shell_arg (input);
 	document = evince_thumbnailer_get_document (uri);
 	g_free (uri);
 
-	if (!document)
+	if (!document) {
+		ev_backends_manager_shutdown ();
 		return -2;
+	}
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document)) {
 		g_object_unref (document);
-		return FALSE;
+		ev_backends_manager_shutdown ();
+		return -2;
 	}
 
 	if (EV_IS_ASYNC_RENDERER (document)) {
@@ -190,16 +196,19 @@ main (int argc, char *argv[])
 		gtk_main ();
 
 		g_object_unref (document);
+		ev_backends_manager_shutdown ();
 
 		return data.success ? 0 : -2;
 	}
 
 	if (!evince_thumbnail_pngenc_get (document, output, size)) {
 		g_object_unref (document);
+		ev_backends_manager_shutdown ();
 		return -2;
 	}
 
 	g_object_unref (document);
+	ev_backends_manager_shutdown ();
 
 	return 0;
 }

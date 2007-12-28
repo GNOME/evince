@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include "djvu-document.h"
 #include "djvu-text.h"
 #include "djvu-links.h"
@@ -27,6 +29,7 @@
 #include "ev-document-find.h"
 #include "ev-document-links.h"
 #include "ev-selection.h"
+#include "ev-file-helpers.h"
 
 #include <gdk-pixbuf/gdk-pixbuf-core.h>
 #include <glib/gi18n.h>
@@ -54,10 +57,8 @@ static void djvu_document_find_iface_init (EvDocumentFindIface *iface);
 static void djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface);
 static void djvu_selection_iface_init (EvSelectionIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE 
-    (DjvuDocument, djvu_document, G_TYPE_OBJECT, 
+EV_BACKEND_REGISTER_WITH_CODE (DjvuDocument, djvu_document,
     {
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT, djvu_document_document_iface_init);    
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
@@ -262,7 +263,7 @@ djvu_document_render (EvDocument      *document,
 
 	rowstride = page_width * 4;
 	pixels = (gchar *) g_malloc (page_height * rowstride);
-	surface = cairo_image_surface_create_for_data (pixels,
+	surface = cairo_image_surface_create_for_data ((guchar *)pixels,
 						       CAIRO_FORMAT_RGB24,
 						       page_width,
 						       page_height,

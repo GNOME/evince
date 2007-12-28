@@ -20,8 +20,11 @@
 /* FIXME: Should probably buffer calls to libtiff with TIFFSetWarningHandler
  */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include "tiffio.h"
 #include "tiff2ps.h"
@@ -29,6 +32,7 @@
 #include "ev-document-misc.h"
 #include "ev-document-thumbnails.h"
 #include "ev-file-exporter.h"
+#include "ev-file-helpers.h"
 
 struct _TiffDocumentClass
 {
@@ -52,9 +56,8 @@ static void tiff_document_document_iface_init (EvDocumentIface *iface);
 static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (TiffDocument, tiff_document, G_TYPE_OBJECT,
-                         { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-						  tiff_document_document_iface_init);
+EV_BACKEND_REGISTER_WITH_CODE (TiffDocument, tiff_document,
+			 {
 			   G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 						  tiff_document_document_thumbnails_iface_init);
 			   G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,

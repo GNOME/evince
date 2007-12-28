@@ -1,10 +1,15 @@
-INCLUDES =							\
-	-I$(top_srcdir)						\
-	-I$(top_srcdir)/libdocument				\
-	$(SHELL_CFLAGS)						\
-	-DDATADIR=\""$(datadir)"\"
+backenddir = $(libdir)/evince/backends
 
-noinst_LTLIBRARIES = libimpressdocument.la
+INCLUDES =					\
+	-I$(top_srcdir)				\
+	-I$(top_srcdir)/libdocument		\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DDATADIR=\""$(datadir)"\"		\
+	$(BACKEND_CFLAGS)			\
+	$(WARN_CFLAGS)				\
+	$(DISABLE_DEPRECATED)
+
+backend_LTLIBRARIES = libimpressdocument.la
 
 libimpressdocument_la_SOURCES =	\
 	$(IMPOSTER_SOURCE_FILES)	\
@@ -36,3 +41,17 @@ IMPOSTER_RENDER_SOURCE_FILES =		\
 IMPOSTER_RENDER_INCLUDE_FILES =		\
 	render.h
 
+libimpressdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
+libimpressdocument_la_LIBADD =				\
+	$(top_builddir)/libdocument/libevbackend.la     \
+	$(BACKEND_LIBS)
+
+backend_in_files = impressdocument.evince-backend.in
+
+%.evince-backend: %.evince-backend.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*po) ; $(INTLTOOL_MERGE) $(top_srcdir)/po $< $@ -d -u -c $(top_builddir)/po/.intltool-merge-cache
+
+backend_DATA = $(backend_in_files:.evince-backend.in=.evince-backend)
+
+EXTRA_DIST = $(backend_DATA)
+
+CLEANFILES = $(backend_DATA)

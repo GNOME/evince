@@ -30,8 +30,8 @@ G_BEGIN_DECLS
 
 typedef struct _TiffDocument TiffDocument;
 
-TiffDocument *tiff_document_new      (void);
-GType         tiff_document_get_type (void) G_GNUC_CONST;
+GType                 tiff_document_get_type  (void) G_GNUC_CONST;
+G_MODULE_EXPORT GType register_evince_backend (GTypeModule *module);
      
 G_END_DECLS
 

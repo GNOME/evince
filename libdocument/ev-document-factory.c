@@ -22,34 +22,6 @@
 #include "config.h"
 #endif
 
-#include "ev-document-factory.h"
-
-/* The various document type backends: */
-#ifdef ENABLE_PDF
-#include "ev-poppler.h"
-#endif
-#ifdef ENABLE_PS
-#include "ps-document.h"
-#endif
-#ifdef ENABLE_TIFF
-#include "tiff-document.h"
-#endif
-#ifdef ENABLE_DVI
-#include "dvi-document.h"
-#endif
-#ifdef ENABLE_PIXBUF
-#include "pixbuf-document.h"
-#endif
-#ifdef ENABLE_DJVU
-#include "djvu-document.h"
-#endif
-#ifdef ENABLE_COMICS
-#include "comics-document.h"
-#endif
-#ifdef ENABLE_IMPRESS
-#include "impress-document.h"
-#endif
-
 #include <string.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
@@ -58,87 +30,27 @@
 #include <libgnomevfs/gnome-vfs-ops.h>
 #include <gtk/gtkfilechooserdialog.h>
 
+#include "ev-backends-manager.h"
+#include "ev-document-factory.h"
 #include "ev-file-helpers.h"
 
-typedef struct _EvDocumentType EvDocumentType;
-struct _EvDocumentType {
-	const char *mime_type;
-	EvCompressionType compression;
-	EvBackend backend;
-	GType (*document_type_factory_callback)();
-};
-
-const EvDocumentType document_types[] = {
-#ifdef ENABLE_PDF
-	/* PDF: */
-	{"application/pdf",            EV_COMPRESSION_NONE,  EV_BACKEND_PDF,  pdf_document_get_type},
-	{"application/x-bzpdf",        EV_COMPRESSION_BZIP2, EV_BACKEND_PDF,  pdf_document_get_type},
-	{"application/x-gzpdf",        EV_COMPRESSION_GZIP,  EV_BACKEND_PDF,  pdf_document_get_type},
-#endif
-
-#ifdef ENABLE_PS
-	/* Postscript: */
-	{"application/postscript",     EV_COMPRESSION_NONE,  EV_BACKEND_PS,   ps_document_get_type},
-	{"application/x-bzpostscript", EV_COMPRESSION_BZIP2, EV_BACKEND_PS,   ps_document_get_type},
-	{"application/x-gzpostscript", EV_COMPRESSION_GZIP,  EV_BACKEND_PS,   ps_document_get_type},
-	{"image/x-eps",                EV_COMPRESSION_NONE,  EV_BACKEND_PS,   ps_document_get_type},
-	{"image/x-bzeps",              EV_COMPRESSION_BZIP2, EV_BACKEND_PS,   ps_document_get_type},
-	{"image/x-gzeps",              EV_COMPRESSION_GZIP,  EV_BACKEND_PS,   ps_document_get_type},
-#endif
-
-#ifdef ENABLE_TIFF
-	/* Tiff: */
-	{"image/tiff",                 EV_COMPRESSION_NONE, EV_BACKEND_TIFF, tiff_document_get_type},
-#endif
-
-#ifdef ENABLE_DJVU
-	/* djvu: */
-	{"image/vnd.djvu",             EV_COMPRESSION_NONE, EV_BACKEND_DJVU, djvu_document_get_type},
-#endif		
-
-#ifdef ENABLE_DVI
-	/* dvi: */
-	{"application/x-dvi",          EV_COMPRESSION_NONE, EV_BACKEND_DVI,  dvi_document_get_type},
-#endif
-
-#ifdef ENABLE_COMICS
-	/* cbr/cbz: */
-	{"application/x-cbr",          EV_COMPRESSION_NONE, EV_BACKEND_COMICS,  comics_document_get_type},
-	{"application/x-cbz",          EV_COMPRESSION_NONE, EV_BACKEND_COMICS,  comics_document_get_type},
-#endif
-
-#ifdef ENABLE_IMPRESS
-	/* Impress slides: */
-	{"application/vnd.sun.xml.impress", EV_COMPRESSION_NONE, EV_BACKEND_IMPRESS, impress_document_get_type},
-	{"application/vnd.oasis.opendocument.presentation", EV_COMPRESSION_NONE, EV_BACKEND_IMPRESS, impress_document_get_type},
-#endif
-
-};
-
 #ifdef ENABLE_PIXBUF
-
 static GList*
 gdk_pixbuf_mime_type_list ()
 {
 	GSList *formats, *list;
-	GList *result;
+	GList *result = NULL;
 
 	formats = gdk_pixbuf_get_formats ();
-	result = NULL;
-
 	for (list = formats; list != NULL; list = list->next) {
 		GdkPixbufFormat *format = list->data;
-		int i;
-		gchar **mime_types;
+		gchar          **mime_types;
 
 		if (gdk_pixbuf_format_is_disabled (format))
 			continue;
 
 		mime_types = gdk_pixbuf_format_get_mime_types (format);
-
-		for (i = 0; mime_types[i] != NULL; i++) {
-			result = g_list_append (result, mime_types[i]);
-		}
+		result = g_list_prepend (result, mime_types); 
 	}
 	g_slist_free (formats);
 
@@ -152,110 +64,45 @@ mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
 	GList *mime_types;
 	GList *list;
 	gboolean retval = FALSE;
-	
+
 	mime_types = gdk_pixbuf_mime_type_list ();
 	for (list = mime_types; list; list = list->next) {
-		if (strcmp ((char *)list->data, mime_type) == 0) {
-			retval = TRUE;
-			break;
+		gchar      **mtypes = (gchar **)list->data;
+		const gchar *mtype;
+		gint         i = 0;
+
+		while ((mtype = mtypes[i++])) {
+			if (strcmp (mtype, mime_type) == 0) {
+				retval = TRUE;
+				break;
+			}
 		}
 	}
-	
-	g_list_foreach (mime_types, (GFunc)g_free, NULL);
+
+	g_list_foreach (mime_types, (GFunc)g_strfreev, NULL);
 	g_list_free (mime_types);
 
 	return retval;
 }
-#endif
+#endif /* ENABLE_PIXBUF */
 
-static EvDocument *
-ev_document_factory_get_from_mime (const gchar       *mime_type,
-				   EvCompressionType *compression)
+static EvCompressionType
+get_compression_from_mime_type (const gchar *mime_type)
 {
-	int i;
-	GType type = G_TYPE_INVALID;
-	EvDocument *document = NULL;
+	gchar type[3];
+	gchar *p;
 
-	*compression = EV_COMPRESSION_NONE;
-	
-	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
-		if (strcmp (mime_type, document_types[i].mime_type) == 0) {
-			g_assert (document_types[i].document_type_factory_callback != NULL);
-			type = document_types[i].document_type_factory_callback ();
-			*compression = document_types[i].compression;
-			break;
-		}
-	}
-#ifdef ENABLE_PIXBUF
-	if (type == G_TYPE_INVALID && mime_type_supported_by_gdk_pixbuf (mime_type)) {
-		type = pixbuf_document_get_type ();
-	}
-#endif
+	if (!(p = g_strrstr (mime_type, "/")))
+		return EV_COMPRESSION_NONE;
 
-	if (type != G_TYPE_INVALID) {
-		document = g_object_new (type, NULL);
-	} 
-
-	return document;
-}
-
-EvBackend
-ev_document_factory_get_backend (EvDocument *document)
-{
-	int i;
-
-	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
-		GType type = document_types[i].document_type_factory_callback ();
-		if (type == G_TYPE_FROM_INSTANCE (document)) {
-			return  document_types[i].backend;
-		}
+	if (sscanf (++p, "x-%2s%*s", type) == 1) {
+		if (g_ascii_strcasecmp (type, "gz") == 0)
+			return EV_COMPRESSION_GZIP;
+		else if (g_ascii_strcasecmp (type, "bz") == 0)
+			return EV_COMPRESSION_BZIP2;
 	}
 
-#ifdef ENABLE_PIXBUF
-	if (G_TYPE_FROM_INSTANCE (document) == pixbuf_document_get_type ())
-	        return EV_BACKEND_PIXBUF;
-#endif
-	g_assert_not_reached ();
-	
-	return 0;
-}
-
-static GList *
-ev_document_factory_get_mime_types (EvBackend backend)
-{
-	GList *types = NULL;
-	int i;
-	
-#ifdef ENABLE_PIXBUF
-	if (backend == EV_BACKEND_PIXBUF) {
-		return gdk_pixbuf_mime_type_list ();
-	}
-#endif
-	
-	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
-		if (document_types[i].backend == backend) {
-			types = g_list_append (types, g_strdup (document_types[i].mime_type));
-		}
-	}
-
-	return types;
-}
-
-static GList *
-ev_document_factory_get_all_mime_types (void)
-{
-	GList *types = NULL;
-	int i;
-	
-	for (i = 0; i < G_N_ELEMENTS (document_types); i++) {
-		types = g_list_append (types, g_strdup (document_types[i].mime_type));
-	}
-	
-#ifdef ENABLE_PIXBUF
-	types = g_list_concat (types, gdk_pixbuf_mime_type_list ());
-#endif
-
-	return types;
+	return EV_COMPRESSION_NONE;
 }
 
 static EvDocument *
@@ -293,8 +140,15 @@ get_document_from_uri (const char        *uri,
 		return NULL;
 	}
 
-	document = ev_document_factory_get_from_mime (info->mime_type, compression);
-		
+#ifdef ENABLE_PIXBUF
+	if (mime_type_supported_by_gdk_pixbuf (info->mime_type)) {
+		document = ev_backends_manager_get_document ("image/*");
+	} else
+		document = ev_backends_manager_get_document (info->mime_type);
+#else
+	document = ev_backends_manager_get_document (info->mime_type);
+#endif /* ENABLE_PIXBUF */
+
 	if (document == NULL) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
@@ -303,6 +157,8 @@ get_document_from_uri (const char        *uri,
 		gnome_vfs_file_info_unref (info);
 		return NULL;
 	}
+
+	*compression = get_compression_from_mime_type (info->mime_type);
 
         gnome_vfs_file_info_unref (info);
 	
@@ -410,106 +266,76 @@ ev_document_factory_get_document (const char *uri, GError **error)
 }
 
 static void
-file_filter_add_mime_list_and_free (GtkFileFilter *filter, GList *mime_types)
+file_filter_add_mime_types (EvTypeInfo *info, GtkFileFilter *filter)
 {
-	GList *l;
+	const gchar *mime_type;
+	gint         i = 0;
 
-	for (l = mime_types; l != NULL; l = l->next) {
-		gtk_file_filter_add_mime_type (filter, l->data);
+#ifdef ENABLE_PIXBUF
+	if (g_ascii_strcasecmp (info->mime_types[0], "image/*") == 0) {
+		GList *pixbuf_types, *l;
+
+		pixbuf_types = gdk_pixbuf_mime_type_list ();
+		for (l = pixbuf_types; l; l = g_list_next (l)) {
+			gchar **mime_types = (gchar **)l->data;
+			gint    j = 0;
+			
+			while ((mime_type = mime_types[j++]))
+				gtk_file_filter_add_mime_type (filter, mime_type);
+			
+			g_strfreev (mime_types);
+		}
+		g_list_free (pixbuf_types);
+
+		return;
 	}
-
-	g_list_foreach (mime_types, (GFunc)g_free, NULL);
-	g_list_free (mime_types);
+#endif /* ENABLE_PIXBUF */
+	
+	while ((mime_type = info->mime_types[i++]))
+		gtk_file_filter_add_mime_type (filter, mime_type);
 }
 
 void 
 ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 {
-	EvBackend backend = 0;
-	GList *mime_types;
+	GList         *all_types;
 	GtkFileFilter *filter;
 	GtkFileFilter *default_filter;
 	GtkFileFilter *document_filter;
 
-	if (document != NULL) {
-		backend = ev_document_factory_get_backend (document);
-	}
-
+	all_types = ev_backends_manager_get_all_types_info ();
+	
 	default_filter = document_filter = filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Documents"));
-	mime_types = ev_document_factory_get_all_mime_types ();
-	file_filter_add_mime_list_and_free (filter, mime_types);
+	g_list_foreach (all_types, (GFunc)file_filter_add_mime_types, filter);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 
-#ifdef ENABLE_PS
-	if (document == NULL || backend == EV_BACKEND_PS) {
-		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("PostScript Documents"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_PS);
-		file_filter_add_mime_list_and_free (filter, mime_types);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
-	}
-#endif
+	if (document) {
+		EvTypeInfo *info;
 
-#ifdef ENABLE_PDF
-	if (document == NULL || backend == EV_BACKEND_PDF) {
+		info = ev_backends_manager_get_document_type_info (document);
 		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("PDF Documents"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_PDF);
-		file_filter_add_mime_list_and_free (filter, mime_types);
+		gtk_file_filter_set_name (filter, info->desc);
+		file_filter_add_mime_types (info, filter);
+		g_free (info);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
-	}
-#endif
+	} else {
+		GList *l;
 
-#ifdef ENABLE_PIXBUF
-	if (document == NULL || backend == EV_BACKEND_PIXBUF) {
-		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("Images"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_PIXBUF);
-		file_filter_add_mime_list_and_free (filter, mime_types);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
-	}
-#endif
+		for (l = all_types; l; l = g_list_next (l)){
+			EvTypeInfo *info;
 
-#ifdef ENABLE_DVI
-	if (document == NULL || backend == EV_BACKEND_DVI) {
-		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("DVI Documents"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_DVI);
-		file_filter_add_mime_list_and_free (filter, mime_types);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
-	}
-#endif
+			info = (EvTypeInfo *)l->data;
 
-#ifdef ENABLE_DJVU
-	if (document == NULL || backend == EV_BACKEND_DJVU) {
-		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("Djvu Documents"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_DJVU);
-		file_filter_add_mime_list_and_free (filter, mime_types);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+			default_filter = filter = gtk_file_filter_new ();
+			gtk_file_filter_set_name (filter, info->desc);
+			file_filter_add_mime_types (info, filter);
+			gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+		}
 	}
-#endif	
 
-#ifdef ENABLE_COMICS
-	if (document == NULL || backend == EV_BACKEND_COMICS) {
-		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("Comic Books"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_COMICS);
-		file_filter_add_mime_list_and_free (filter, mime_types);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
-	}
-#endif	
-
-#ifdef ENABLE_IMPRESS
-	if (document == NULL || backend == EV_BACKEND_IMPRESS) {
-		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, _("Impress Slides"));
-		mime_types = ev_document_factory_get_mime_types (EV_BACKEND_IMPRESS);
-		file_filter_add_mime_list_and_free (filter, mime_types);
-		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
-	}
-#endif	
+	g_list_foreach (all_types, (GFunc)g_free, NULL);
+	g_list_free (all_types);
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Files"));

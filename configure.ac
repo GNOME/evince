@@ -4,6 +4,9 @@ AC_PREREQ(2.57)
 AC_INIT([Evince],[2.21.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
 AM_INIT_AUTOMAKE([1.9 dist-bzip2 no-dist-gzip])
 
+EV_API_VERSION=2.20
+AC_SUBST(EV_API_VERSION)
+
 AM_CONFIG_HEADER(config.h)
 
 AM_MAINTAINER_MODE
@@ -35,7 +38,7 @@ AM_GLIB_GNU_GETTEXT
 
 dnl Check dependencies
 
-# LIB_CFLAGS       for helpers and generic widgets. (lib, cut-and-paste)
+# LIB_CFLAGS       for helpers and generic widgets. (libdocument, cut-and-paste)
 # BACKEND_CFLAGS   for backend implementations.
 # FRONTEND_CFLAGS  for frontend implementations. (properties, thumbnailer)
 # FRONTEND_LIBS
@@ -54,10 +57,13 @@ LIBXML_REQUIRED=2.5.0
 
 GTK_PRINT_REQUIRED=2.10.0
 
-PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED)
-PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED gnome-vfs-2.0)
+PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED gnome-vfs-2.0)
+PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libglade-2.0 gnome-vfs-2.0)
 PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 gnome-keyring-1 >= $KEYRING_REQUIRED)
+
+BACKEND_LIBTOOL_FLAGS="-module -avoid-version"
+AC_SUBST(BACKEND_LIBTOOL_FLAGS)
 
 AC_ARG_WITH(libgnome,
         AC_HELP_STRING([--without-libgnome],[disable the use of libgnome]),
@@ -152,8 +158,7 @@ LIB_LIBS="$LIB_LIBS $GNOME_LIBS"
 AC_SUBST(LIB_CFLAGS)
 AC_SUBST(LIB_LIBS)
 
-BACKEND_CFLAGS="$BACKEND_CFLAGS $GNOME_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
-BACKEND_LIBS="$BACKEND_LIBS $GNOME_LIBS"
+BACKEND_CFLAGS="$BACKEND_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
@@ -231,12 +236,11 @@ if test "x$enable_pdf" = "xyes"; then
 
     if test "x$enable_pdf" = "xyes"; then
 	    AC_DEFINE([ENABLE_PDF], [1], [Enable pdf support.])
-	    FRONTEND_LIBS="$FRONTEND_LIBS $POPPLER_LIBS"
 	    SHELL_LIBS="$SHELL_LIBS $POPPLER_LIBS"
 	    SHELL_CFLAGS="$SHELL_CFLAGS $POPPLER_CFLAGS"
 
 	    evince_save_LIBS=$LIBS
-	    LIBS="$LIBS $FRONTEND_LIBS"
+	    LIBS="$LIBS $POPPLER_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
 	    AC_CHECK_FUNCS(poppler_page_render_for_printing)
 	    LIBS=$evince_save_LIBS
@@ -274,9 +278,6 @@ if test x$enable_ps = xyes; then
    AC_DEFINE([ENABLE_PS], [1], [Enable support for PostScript files.])
 
    if test "x$have_spectre" = "xyes"; then
-      FRONTEND_LIBS="$FRONTEND_LIBS $SPECTRE_LIBS"
-      SHELL_LIBS="$SHELL_LIBS $SPECTRE_LIBS"
-      SHELL_CFLAGS="$SHELL_CFLAGS $SPECTRE_CFLAGS"
       ps_backend="(libspectre)"
    else
       dnl check for GS version
@@ -312,8 +313,6 @@ if test "x$enable_tiff" = "xyes"; then
     fi
     if test "x$enable_tiff" = "xyes"; then
 	    AC_DEFINE([ENABLE_TIFF], [1], [Enable multipage tiff support.])
-	    FRONTEND_LIBS="$FRONTEND_LIBS -ltiff"
-	    SHELL_LIBS="$SHELL_LIBS -ltiff"
     else
 	    AC_MSG_WARN("Tiff support is disabled since tiff library version 3.6 or newer not found")
     fi 

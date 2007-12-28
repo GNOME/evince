@@ -1,12 +1,32 @@
-INCLUDES =							\
-	-I$(top_srcdir)						\
-	-I$(top_srcdir)/libdocument				\
-	$(BACKEND_CFLAGS)
+backenddir = $(libdir)/evince/backends
 
-noinst_LTLIBRARIES = libtiffdocument.la
+INCLUDES =					\
+	-I$(top_srcdir)				\
+	-I$(top_srcdir)/libdocument		\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	$(BACKEND_CFLAGS)			\
+	$(WARN_CFLAGS)				\
+	$(DISABLE_DEPRECATED)
+
+backend_LTLIBRARIES = libtiffdocument.la
 
 libtiffdocument_la_SOURCES =	\
 	tiff-document.c		\
 	tiff-document.h		\
 	tiff2ps.c		\
 	tiff2ps.h
+
+libtiffdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
+libtiffdocument_la_LIBADD = 				\
+	$(top_builddir)/libdocument/libevbackend.la	\
+	-ltiff
+
+backend_in_files = tiffdocument.evince-backend.in
+
+%.evince-backend: %.evince-backend.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*po) ; $(INTLTOOL_MERGE) $(top_srcdir)/po $< $@ -d -u -c $(top_builddir)/po/.intltool-merge-cache
+
+backend_DATA = $(backend_in_files:.evince-backend.in=.evince-backend)
+
+EXTRA_DIST = $(backend_DATA)
+
+CLEANFILES = $(backend_DATA)

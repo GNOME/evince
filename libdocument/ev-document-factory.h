@@ -26,19 +26,7 @@
 
 G_BEGIN_DECLS
 
-typedef enum {
-	EV_BACKEND_PDF,
-	EV_BACKEND_PS,
-	EV_BACKEND_TIFF,
-	EV_BACKEND_PIXBUF,
-	EV_BACKEND_DJVU,
-	EV_BACKEND_DVI,
-	EV_BACKEND_COMICS,
-	EV_BACKEND_IMPRESS
-} EvBackend;
-
 EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
-EvBackend   ev_document_factory_get_backend  (EvDocument *document);
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 
 G_END_DECLS

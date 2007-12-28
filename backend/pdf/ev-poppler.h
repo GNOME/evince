@@ -30,8 +30,9 @@ G_BEGIN_DECLS
 typedef struct _PdfDocument PdfDocument;
 typedef struct _PdfDocumentClass PdfDocumentClass;
 
-PdfDocument *pdf_document_new       (void);
-GType        pdf_document_get_type  (void) G_GNUC_CONST;
+GType                 pdf_document_get_type   (void) G_GNUC_CONST;
+
+G_MODULE_EXPORT GType register_evince_backend (GTypeModule *module);
 
 
 G_END_DECLS

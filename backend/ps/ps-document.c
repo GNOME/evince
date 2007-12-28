@@ -74,10 +74,8 @@ static void     ps_interpreter_page_rendered               (PSInterpreter       
 							    GdkPixbuf                 *pixbuf,
 							    PSDocument                *ps_document);
 
-G_DEFINE_TYPE_WITH_CODE (PSDocument, ps_document, G_TYPE_OBJECT,
+EV_BACKEND_REGISTER_WITH_CODE (PSDocument, ps_document,
                          {
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-							ps_document_document_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 							ps_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,

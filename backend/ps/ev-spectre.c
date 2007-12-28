@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include <glib/gi18n.h>
 #include <stdlib.h>
 #include <libspectre/spectre.h>
@@ -42,10 +44,8 @@ static void ps_document_document_iface_init            (EvDocumentIface         
 static void ps_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
 static void ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (PSDocument, ps_document, G_TYPE_OBJECT,
+EV_BACKEND_REGISTER_WITH_CODE (PSDocument, ps_document,
                          {
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-							ps_document_document_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 							ps_document_document_thumbnails_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,

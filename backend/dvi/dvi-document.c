@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include "dvi-document.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
@@ -26,7 +28,6 @@
 #include "fonts.h"
 #include "cairo-device.h"
 
-#include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
 GMutex *dvi_context_mutex = NULL;
@@ -73,10 +74,8 @@ static void dvi_document_do_color_special               (DviContext             
 							 const char                *prefix,
 							 const char                *arg);
 
-G_DEFINE_TYPE_WITH_CODE 
-    (DviDocument, dvi_document, G_TYPE_OBJECT, 
-    {
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT, dvi_document_document_iface_init);    
+EV_BACKEND_REGISTER_WITH_CODE (DviDocument, dvi_document,
+     {
       G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, dvi_document_document_thumbnails_iface_init);
       G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, dvi_document_file_exporter_iface_init);
      });

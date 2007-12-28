@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>
@@ -58,9 +60,8 @@ typedef struct _ImpressDocumentClass ImpressDocumentClass;
 static void impress_document_document_iface_init (EvDocumentIface *iface);
 static void impress_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (ImpressDocument, impress_document, G_TYPE_OBJECT,
-                         { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-						  impress_document_document_iface_init);
+EV_BACKEND_REGISTER_WITH_CODE (ImpressDocument, impress_document,
+		         {
 			   G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 						  impress_document_document_thumbnails_iface_init);
 			 });

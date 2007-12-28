@@ -1,8 +1,8 @@
 SUBDIRS = \
 	cut-n-paste \
 	data \
-	backend \
 	libdocument \
+	backend \
 	properties \
 	shell \
 	po \

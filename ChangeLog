@@ -1,3 +1,51 @@
+2007-12-28  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* Makefile.am:
+	* po/POTFILES.in:
+	* backend/comics/Makefile.am:
+	* backend/comics/comics-document.[ch]:
+	* backend/comics/comicsdocument.evince-backend.in:
+	* backend/djvu/Makefile.am:
+	* backend/djvu/djvu-document.[ch]:
+	* backend/djvu/djvudocument.evince-backend.in:
+	* backend/dvi/Makefile.am:
+	* backend/dvi/dvi-document.[c]:
+	* backend/dvi/dvidocument.evince-backend.in:
+	* backend/impress/Makefile.am:
+	* backend/impress/impress-document.[ch]:
+	* backend/impress/impressdocument.evince-backend.in:
+	* backend/pdf/Makefile.am:
+	* backend/pdf/ev-poppler.cc:
+	* backend/pdf/ev-poppler.h:
+	* backend/pdf/pdfdocument.evince-backend.in:
+	* backend/pixbuf/Makefile.am:
+	* backend/pixbuf/pixbuf-document.[ch]:
+	* backend/pixbuf/pixbufdocument.evince-backend.in:
+	* backend/ps/Makefile.am:
+	* backend/ps/ev-spectre.[ch]:
+	* backend/ps/ps-document.[ch]:
+	* backend/ps/psdocument.evince-backend.in:
+	* backend/tiff/Makefile.am:
+	* backend/tiff/tiff-document.[ch]:
+	* backend/tiff/tiffdocument.evince-backend.in:
+	* libdocument/Makefile.am:
+	* libdocument/ev-backends-manager.[ch]:
+	* libdocument/ev-module.[ch]:
+	* libdocument/ev-document.h:
+	* libdocument/ev-document-factory.[ch]:
+	(gdk_pixbuf_mime_type_list), (mime_type_supported_by_gdk_pixbuf),
+	(get_compression_from_mime_type), (get_document_from_uri),
+	(ev_document_factory_get_document), (file_filter_add_mime_types),
+	(ev_document_factory_add_filters):
+	* shell/Makefile.am:
+	* shell/ev-window-title.c: (get_filename_from_uri):
+	* shell/main.c: (main):
+	* thumbnailer/Makefile.am:
+	* thumbnailer/evince-thumbnailer.c: (main):
+
+	Plugin system for backends. Fixes bug #351348.
+	
 2007-12-25  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-view-private.h:

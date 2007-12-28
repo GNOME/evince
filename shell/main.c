@@ -45,6 +45,7 @@
 #include "ev-stock-icons.h"
 #include "ev-job-queue.h"
 #include "ev-file-helpers.h"
+#include "ev-backends-manager.h"
 
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;
@@ -379,6 +380,8 @@ main (int argc, char *argv[])
 	gnome_authentication_manager_init ();
 #endif
 
+	ev_backends_manager_init ();
+	
 	if (enable_metadata) {
 		ev_metadata_manager_init ();
 	}
@@ -407,6 +410,8 @@ main (int argc, char *argv[])
 	if (enable_metadata) {
 		ev_metadata_manager_shutdown ();
 	}
+
+	ev_backends_manager_shutdown ();
 
 #if WITH_GNOME
  	g_object_unref (program);

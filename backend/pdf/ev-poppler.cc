@@ -123,10 +123,8 @@ static EvLink     *ev_link_from_action      (PdfDocument       *pdf_document,
 static void        pdf_document_search_free (PdfDocumentSearch *search);
 static void        pdf_print_context_free   (PdfPrintContext   *ctx);
 
-G_DEFINE_TYPE_WITH_CODE (PdfDocument, pdf_document, G_TYPE_OBJECT,
-                         {
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-							pdf_document_document_iface_init);
+EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
+			 {
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
 							pdf_document_security_iface_init);
 				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
@@ -1973,12 +1971,6 @@ static void
 pdf_document_page_transition_iface_init (EvDocumentTransitionIface *iface)
 {
 	iface->get_page_duration = pdf_document_get_page_duration;
-}
-
-PdfDocument *
-pdf_document_new (void)
-{
-	return PDF_DOCUMENT (g_object_new (PDF_TYPE_DOCUMENT, NULL));
 }
 
 /* Forms */

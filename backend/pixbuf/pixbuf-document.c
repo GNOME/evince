@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include "pixbuf-document.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
@@ -40,12 +42,11 @@ typedef struct _PixbufDocumentClass PixbufDocumentClass;
 static void pixbuf_document_document_iface_init (EvDocumentIface *iface);
 static void pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (PixbufDocument, pixbuf_document, G_TYPE_OBJECT,
-                         { G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-						  pixbuf_document_document_iface_init);
+EV_BACKEND_REGISTER_WITH_CODE (PixbufDocument, pixbuf_document,
+                   {
 			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 						pixbuf_document_document_thumbnails_iface_init)				   
-				   });
+		   });
 
 static gboolean
 pixbuf_document_load (EvDocument  *document,

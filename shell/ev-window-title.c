@@ -18,15 +18,19 @@
  */
 
 #include "ev-window-title.h"
-#include "ev-document-factory.h"
+#include "ev-backends-manager.h"
 
 #include <glib/gi18n.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 
+/* Known backends (for bad extensions fix) */
+#define EV_BACKEND_PS  "psdocument"
+#define EV_BACKEND_PDF "pdfdocument"
+
 typedef struct
 {
-	EvBackend backend;
-	const char *ext;
+	const gchar *backend;
+	const gchar *ext;
 } BadExtensionEntry;
 
 struct _EvWindowTitle
@@ -74,12 +78,13 @@ get_filename_from_uri (const char *uri)
    Let's show the filename in this case */
 static void
 ev_window_title_sanitize_extension (EvWindowTitle *window_title, char **title) {
-	EvBackend backend;
+	const gchar *backend;
 	int i;
 
-	backend = ev_document_factory_get_backend (window_title->document);
+	backend = ev_backends_manager_get_document_module_name (window_title->document);
+
 	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
-		if (bad_extensions[i].backend == backend &&
+		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 && 
 		    g_str_has_suffix (*title, bad_extensions[i].ext)) {
 			char *new_title;
 			char *filename = get_filename_from_uri (window_title->uri);

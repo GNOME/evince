@@ -123,8 +123,74 @@ GList           *ev_document_get_attachments  (EvDocument      *document);
 cairo_surface_t *ev_document_render           (EvDocument      *document,
                                                EvRenderContext *rc);
 
-gint            ev_rect_cmp                   (EvRectangle    *a,
-                                               EvRectangle    *b);
+gint            ev_rect_cmp                   (EvRectangle     *a,
+                                               EvRectangle     *b);
+
+/*
+ * Utility macro used to register backends
+ *
+ * use: EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, CODE)
+ */
+#define EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, CODE)	        \
+										\
+static GType g_define_type_id = 0;						\
+										\
+GType										\
+backend_name##_get_type (void)							\
+{										\
+	return g_define_type_id;						\
+}										\
+										\
+static void     backend_name##_init              (BackendName        *self);	\
+static void     backend_name##_class_init        (BackendName##Class *klass);	\
+static gpointer backend_name##_parent_class = NULL;				\
+static void     backend_name##_class_intern_init (gpointer klass)		\
+{										\
+	backend_name##_parent_class = g_type_class_peek_parent (klass);		\
+	backend_name##_class_init ((BackendName##Class *) klass);		\
+}										\
+										\
+G_MODULE_EXPORT GType								\
+register_evince_backend (GTypeModule *module)					\
+{										\
+	static const GTypeInfo our_info = {  				        \
+		sizeof (BackendName##Class),					\
+		NULL, /* base_init */						\
+		NULL, /* base_finalize */					\
+		(GClassInitFunc) backend_name##_class_intern_init,		\
+		NULL,								\
+		NULL, /* class_data */						\
+		sizeof (BackendName),						\
+		0, /* n_preallocs */						\
+		(GInstanceInitFunc) backend_name##_init				\
+	};									\
+										\
+	/* Initialise the i18n stuff */						\
+	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);			\
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");			\
+                                                                                \
+	g_define_type_id = g_type_module_register_type (module,		        \
+					    G_TYPE_OBJECT,			\
+					    #BackendName,			\
+					    &our_info,				\
+					   (GTypeFlags)0);	                \
+	                                                                        \
+	G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,                                \
+                               backend_name##_document_iface_init);             \
+										\
+	CODE									\
+										\
+	return g_define_type_id;						\
+}
+
+/*
+ * Utility macro used to register backend
+ *
+ * use: EV_BACKEND_REGISTER(BackendName, backend_name)
+ */
+#define EV_BACKEND_REGISTER(BackendName, backend_name)			\
+	EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, ;)
+
 G_END_DECLS
 
 #endif /* EV_DOCUMENT_H */

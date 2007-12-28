@@ -102,18 +102,6 @@ evince_LDADD=									\
 	$(SHELL_LIBS)								\
 	$(GNOME_PRINT_LIBS)
 
-if ENABLE_DJVU
-evince_LDADD +=	$(DJVU_LIBS)
-endif
-
-if ENABLE_DVI
-evince_LDADD +=	-lkpathsea
-endif
-
-if WITH_TYPE1_FONTS
-evince_LDADD += -lt1
-endif
-
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 
 if ENABLE_DBUS

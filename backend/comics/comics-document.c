@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
+
 #include <unistd.h>
 #include <string.h>
 #include <glib/gi18n.h>
@@ -25,6 +27,7 @@
 #include "comics-document.h"
 #include "ev-document-misc.h"
 #include "ev-document-thumbnails.h"
+#include "ev-file-helpers.h"
 
 struct _ComicsDocumentClass
 {
@@ -58,11 +61,8 @@ static char**     extract_argv                   (EvDocument *document,
 						  gint page);
 
 
-G_DEFINE_TYPE_WITH_CODE (
-	ComicsDocument, comics_document, G_TYPE_OBJECT,
+EV_BACKEND_REGISTER_WITH_CODE (ComicsDocument, comics_document,
 	{
-		G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,
-				       comics_document_document_iface_init);
 		G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 				       comics_document_document_thumbnails_iface_init);
 	} );
