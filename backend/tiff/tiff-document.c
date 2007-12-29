@@ -215,9 +215,6 @@ tiff_document_render (EvDocument      *document,
 	gint rowstride, bytes;
 	guchar *pixels = NULL;
 	guchar *p;
-	GdkPixbuf *pixbuf;
-	GdkPixbuf *scaled_pixbuf;
-	GdkPixbuf *rotated_pixbuf;
 	cairo_surface_t *surface;
 	cairo_surface_t *rotated_surface;
 	static const cairo_user_data_key_t key;

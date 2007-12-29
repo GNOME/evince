@@ -29,6 +29,7 @@ DjvuText    *djvu_text_new          (DjvuDocument *djvu_document,
 			             int           start_page,
 			             gboolean      case_sensitive, 
 			             const char   *text);
+void         djvu_text_free         (DjvuText     *djvu_text);
 const char  *djvu_text_get_text     (DjvuText     *djvu_text);
 int          djvu_text_n_results    (DjvuText     *djvu_text, 
 				     int           page);

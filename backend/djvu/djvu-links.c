@@ -64,7 +64,6 @@ static EvLinkDest *
 get_djvu_link_dest (const DjvuDocument *djvu_document, const gchar *link_name, int base_page)
 {
 	guint64 page_num = 0;
-	gchar *end_ptr;
 
 	/* #pagenum, #+pageoffset, #-pageoffset */
 	if (g_str_has_prefix (link_name, "#")) {
@@ -229,7 +228,6 @@ get_djvu_hyperlink_area (ddjvu_pageinfo_t   *page_info,
 			 EvLinkMapping      *ev_link_mapping)
 {
 	miniexp_t iter;
-        ddjvu_pageinfo_t info;
 
 	iter = sexp;
 	
@@ -402,7 +400,7 @@ djvu_links_find_link_dest (EvDocumentLinks  *document_links,
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (document_links);
 	EvLinkDest *ev_dest = NULL;
 	
-	ev_dest = get_djvu_link_dest (DJVU_DOCUMENT (document_links), link_name, -1);
+	ev_dest = get_djvu_link_dest (djvu_document, link_name, -1);
 
 	if (!ev_dest) {
 		g_warning ("DjvuLibre error: unknown link destination %s", link_name);
