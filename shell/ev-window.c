@@ -93,6 +93,8 @@
 
 #include "ev-message-area.h"
 
+#include "eggfileformatchooser.h"
+
 #if !GLIB_CHECK_VERSION (2, 13, 3)
 char *xdg_user_dir_lookup (char *type);
 #endif
@@ -4974,32 +4976,43 @@ image_save_dialog_response_cb (GtkWidget *fc,
 			       gint       response_id,
 			       EvWindow  *ev_window)
 {
+	GtkWidget   *format_chooser;
 	GnomeVFSURI *target_uri;
 	gchar       *uri;
+	gchar       *uri_extension;
 	gchar       *filename;
+	gchar       *file_format;
 	gboolean     is_local;
 	GError      *error = NULL;
+	guint        format;
 	
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
 		return;
 	}
 
+	format_chooser = gtk_file_chooser_get_extra_widget (GTK_FILE_CHOOSER (fc));
+	
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
-	target_uri = gnome_vfs_uri_new (uri);
+	format = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (format_chooser), uri);
+	uri_extension = egg_file_format_chooser_append_extension (EGG_FILE_FORMAT_CHOOSER (format_chooser),
+								  uri, format);
+	file_format = (char *)egg_file_format_chooser_get_format_data (EGG_FILE_FORMAT_CHOOSER (format_chooser),
+								       format);
+	target_uri = gnome_vfs_uri_new (uri_extension);
 	is_local = gnome_vfs_uri_is_local (target_uri);
 	
 	if (is_local) {
-		filename = g_filename_from_uri (uri, NULL, NULL);
+		filename = g_filename_from_uri (uri_extension, NULL, NULL);
 	} else {
 		filename = ev_tmp_filename ("saveimage");
 	}
 	
 	g_free (uri);
+	g_free (uri_extension);
 	
-	/* FIXME: allow saving in other image formats than png */
 	gdk_pixbuf_save (ev_image_get_pixbuf (ev_window->priv->image),
-			 filename, "png", &error, NULL);
+			 filename, file_format, &error, NULL);
 	
 	if (error) {
 		ev_window_error_message (GTK_WINDOW (ev_window),
@@ -5032,7 +5045,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 static void
 ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 {
-	GtkWidget     *fc;
+	GtkWidget     *fc, *format_chooser;
 	GtkFileFilter *filter;
 
 	if (!window->priv->image)
@@ -5049,11 +5062,12 @@ ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
-
-	filter = gtk_file_filter_new ();
-	gtk_file_filter_set_name (filter, _("Images"));
-	gtk_file_filter_add_pixbuf_formats (filter);
-	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (fc), filter);
+	
+	format_chooser = egg_file_format_chooser_new ();
+	egg_file_format_chooser_add_pixbuf_formats (EGG_FILE_FORMAT_CHOOSER (format_chooser),
+						    0, NULL);
+	
+	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (fc), format_chooser);
 
 	g_signal_connect (fc, "response",
 			  G_CALLBACK (image_save_dialog_response_cb),

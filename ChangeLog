@@ -1,3 +1,17 @@
+2007-12-30  Carl-Anton Ingmarsson  <c-a.ingmarsson@oktv.se>
+
+	* configure.ac:
+	* cut-n-paste/Makefile.am:
+	* cut-n-paste/fileformatchooser/Makefile.am:
+	* cut-n-paste/fileformatchooser/egg-macros.h:
+	* cut-n-paste/fileformatchooser/eggfileformatchooser.[ch]:
+	* shell/Makefile.am:
+	* shell/ev-window.c: (image_save_dialog_response_cb),
+	(ev_view_popup_cmd_save_image_as):
+
+	Allow exporting images in any format supported by
+	GdkPixbuf. Fixes bug #500209.
+	
 2007-12-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pixbuf/pixbuf-document.c:

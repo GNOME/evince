@@ -463,6 +463,7 @@ cut-n-paste/gedit-message-area/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/totem-screensaver/Makefile
+cut-n-paste/fileformatchooser/Makefile
 data/evince.desktop.in
 data/Makefile
 data/icons/Makefile
