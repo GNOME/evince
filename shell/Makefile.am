@@ -80,6 +80,8 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
+	ev-timeline.c			\
+	ev-timeline.h			\
 	ev-tooltip.c			\
 	ev-tooltip.h			\
 	main.c				\
