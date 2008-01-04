@@ -45,6 +45,7 @@
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
 #include "ev-selection.h"
+#include "ev-transition-effect.h"
 #include "ev-attachment.h"
 #include "ev-image.h"
 
@@ -1967,10 +1968,49 @@ pdf_document_get_page_duration (EvDocumentTransition *trans,
 	return duration;
 }
 
+static EvTransitionEffect *
+pdf_document_get_effect (EvDocumentTransition *trans,
+			 gint                  page)
+{
+	PdfDocument            *pdf_document;
+	PopplerPage            *poppler_page;
+	PopplerPageTransition  *page_transition;
+	EvTransitionEffect     *effect;
+
+	pdf_document = PDF_DOCUMENT (trans);
+	poppler_page = poppler_document_get_page (pdf_document->document, page);
+
+	if (!poppler_page)
+		return NULL;
+
+	page_transition = poppler_page_get_transition (poppler_page);
+
+	if (!page_transition) {
+		g_object_unref (poppler_page);
+		return NULL;
+	}
+
+	/* enums in PopplerPageTransition match the EvTransitionEffect ones */
+	effect = ev_transition_effect_new ((EvTransitionEffectType) page_transition->type,
+					   "alignment", page_transition->alignment,
+					   "direction", page_transition->direction,
+					   "duration", page_transition->duration,
+					   "angle", page_transition->angle,
+					   "scale", page_transition->scale,
+					   "rectangular", page_transition->rectangular,
+					   NULL);
+
+	poppler_page_transition_free (page_transition);
+	g_object_unref (poppler_page);
+
+	return effect;
+}
+
 static void
 pdf_document_page_transition_iface_init (EvDocumentTransitionIface *iface)
 {
 	iface->get_page_duration = pdf_document_get_page_duration;
+	iface->get_effect = pdf_document_get_effect;
 }
 
 /* Forms */

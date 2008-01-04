@@ -1,5 +1,10 @@
 2008-01-04  Carlos Garnacho  <carlosg@gnome.org>
 
+	* backend/pdf/ev-poppler.cc (pdf_document_get_effect): Added
+	implementation to get_effect() in EvDocumentTransitionIface.
+
+2008-01-04  Carlos Garnacho  <carlosg@gnome.org>
+
 	* libdocument/ev-transition-effect.[ch]: New files, define a page
 	transition effect, at the moment it maps PopplerPageTransition to a
 	GObject.
