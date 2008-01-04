@@ -439,6 +439,36 @@ ev_transition_animation_dissolve (cairo_t               *cr,
 	paint_surface (cr, priv->origin_surface, 0, 0, 1 - progress, page_area);
 }
 
+static void
+ev_transition_animation_push (cairo_t               *cr,
+			      EvTransitionAnimation *animation,
+			      EvTransitionEffect    *effect,
+			      gdouble                progress,
+			      GdkRectangle           page_area)
+{
+	EvTransitionAnimationPriv *priv;
+	gint width, height;
+	gint angle;
+
+	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	width = page_area.width;
+	height = page_area.height;
+
+	g_object_get (effect,
+		      "angle", &angle,
+		      NULL);
+
+	if (angle == 0) {
+		/* left to right */
+		paint_surface (cr, priv->origin_surface, - (width * progress), 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, width * (1 - progress), 0, 0, page_area);
+	} else {
+		/* top to bottom */
+		paint_surface (cr, priv->origin_surface, 0, - (height * progress), 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, height * (1 - progress), 0, page_area);
+	}
+}
+
 void
 ev_transition_animation_paint (EvTransitionAnimation *animation,
 			       cairo_t               *cr,
@@ -479,6 +509,9 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 		break;
 	case EV_TRANSITION_EFFECT_DISSOLVE:
 		ev_transition_animation_dissolve (cr, animation, priv->effect, progress, page_area);
+		break;
+	case EV_TRANSITION_EFFECT_PUSH:
+		ev_transition_animation_push (cr, animation, priv->effect, progress, page_area);
 		break;
 	default: {
 		GEnumValue *enum_value;
