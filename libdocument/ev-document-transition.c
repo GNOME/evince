@@ -53,4 +53,18 @@ ev_document_transition_get_page_duration (EvDocumentTransition *document_trans,
 	return -1;
 }
 
+EvTransitionEffect *
+ev_document_transition_get_effect (EvDocumentTransition *document_trans,
+				   gint                  page)
+{
+	EvDocumentTransitionIface *iface = EV_DOCUMENT_TRANSITION_GET_IFACE (document_trans);
+	EvTransitionEffect *effect = NULL;
 
+	if (iface->get_effect)
+		effect = iface->get_effect (document_trans, page);
+
+	if (!effect)
+		return ev_transition_effect_new (EV_TRANSITION_EFFECT_REPLACE, NULL);
+
+	return effect;
+}

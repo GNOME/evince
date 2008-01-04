@@ -24,6 +24,7 @@
 #include <glib-object.h>
 
 #include "ev-document.h"
+#include "ev-transition-effect.h"
 
 G_BEGIN_DECLS
 
@@ -42,14 +43,17 @@ struct _EvDocumentTransitionIface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	gdouble       (* get_page_duration)  (EvDocumentTransition *document_trans,
-					      gint                  page);
-	/* TODO: Support page transition effects (page 562 PDF Reference 1.6) */
+	gdouble              (* get_page_duration) (EvDocumentTransition *document_trans,
+						    gint                  page);
+	EvTransitionEffect * (* get_effect)        (EvDocumentTransition *document_trans,
+						    gint                  page);
 };
 
-GType   ev_document_transition_get_type          (void) G_GNUC_CONST;
-gdouble ev_document_transition_get_page_duration (EvDocumentTransition *document_trans,
-						  gint                  page);
+GType                ev_document_transition_get_type          (void) G_GNUC_CONST;
+gdouble              ev_document_transition_get_page_duration (EvDocumentTransition *document_trans,
+							       gint                  page);
+EvTransitionEffect * ev_document_transition_get_effect        (EvDocumentTransition *document_trans,
+							       gint                  page);
 
 G_END_DECLS
 

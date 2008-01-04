@@ -1,0 +1,285 @@
+/* ev-transition-effect.c
+ *  this file is part of evince, a gnome document viewer
+ *
+ * Copyright (C) 2007 Carlos Garnacho <carlos@imendio.com>
+ *
+ * Evince is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Evince is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#include "ev-transition-effect.h"
+
+#define EV_TRANSITION_EFFECT_GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_TRANSITION_EFFECT, EvTransitionEffectPrivate))
+
+typedef struct EvTransitionEffectPrivate EvTransitionEffectPrivate;
+
+struct EvTransitionEffectPrivate {
+	EvTransitionEffectType type;
+	EvTransitionEffectAlignment alignment;
+	EvTransitionEffectDirection direction;
+
+	gint duration;
+	gint angle;
+	gdouble scale;
+
+	guint rectangular : 1;
+};
+
+enum {
+	PROP_0,
+	PROP_TYPE,
+	PROP_ALIGNMENT,
+	PROP_DIRECTION,
+	PROP_DURATION,
+	PROP_ANGLE,
+	PROP_SCALE,
+	PROP_RECTANGULAR
+};
+
+G_DEFINE_TYPE (EvTransitionEffect, ev_transition_effect, G_TYPE_OBJECT)
+
+
+GType
+ev_transition_effect_type_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		const GEnumValue values[] = {
+			{ EV_TRANSITION_EFFECT_REPLACE, "EV_TRANSITION_EFFECT_REPLACE", "replace" },
+			{ EV_TRANSITION_EFFECT_SPLIT, "EV_TRANSITION_EFFECT_SPLIT", "split" },
+			{ EV_TRANSITION_EFFECT_BLINDS, "EV_TRANSITION_EFFECT_BLINDS", "blinds" },
+			{ EV_TRANSITION_EFFECT_BOX, "EV_TRANSITION_EFFECT_BOX", "box" },
+			{ EV_TRANSITION_EFFECT_WIPE, "EV_TRANSITION_EFFECT_WIPE", "wipe" },
+			{ EV_TRANSITION_EFFECT_DISSOLVE, "EV_TRANSITION_EFFECT_DISSOLVE", "dissolve" },
+			{ EV_TRANSITION_EFFECT_GLITTER, "EV_TRANSITION_EFFECT_GLITTER", "glitter" },
+			{ EV_TRANSITION_EFFECT_FLY, "EV_TRANSITION_EFFECT_FLY", "fly" },
+			{ EV_TRANSITION_EFFECT_PUSH, "EV_TRANSITION_EFFECT_PUSH", "push" },
+			{ EV_TRANSITION_EFFECT_COVER, "EV_TRANSITION_EFFECT_COVER", "cover" },
+			{ EV_TRANSITION_EFFECT_UNCOVER, "EV_TRANSITION_EFFECT_UNCOVER", "uncover" },
+			{ EV_TRANSITION_EFFECT_FADE, "EV_TRANSITION_EFFECT_FADE", "fade" },
+			{ 0, NULL, NULL }
+		};
+
+		type = g_enum_register_static ("EvTransitionEffectType", values);
+	}
+
+	return type;
+}
+
+GType
+ev_transition_effect_alignment_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		const GEnumValue values[] = {
+			{ EV_TRANSITION_ALIGNMENT_HORIZONTAL, "EV_TRANSITION_ALIGNMENT_HORIZONTAL", "horizontal" },
+			{ EV_TRANSITION_ALIGNMENT_VERTICAL, "EV_TRANSITION_ALIGNMENT_VERTICAL", "vertical" },
+			{ 0, NULL, NULL }
+		};
+
+		type = g_enum_register_static ("EvTransitionEffectAlignment", values);
+	}
+
+	return type;
+}
+
+GType
+ev_transition_effect_direction_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		const GEnumValue values[] = {
+			{ EV_TRANSITION_DIRECTION_INWARD, "EV_TRANSITION_DIRECTION_INWARD", "inward" },
+			{ EV_TRANSITION_DIRECTION_OUTWARD, "EV_TRANSITION_DIRECTION_OUTWARD", "outward" },
+			{ 0, NULL, NULL }
+		};
+
+		type = g_enum_register_static ("EvTransitionEffectDirection", values);
+	}
+
+	return type;
+}
+
+static void
+ev_transition_effect_set_property (GObject	*object,
+				   guint	 prop_id,
+				   const GValue *value,
+				   GParamSpec	*pspec)
+{
+	EvTransitionEffectPrivate *priv;
+
+	priv = EV_TRANSITION_EFFECT_GET_PRIV (object);
+
+	switch (prop_id) {
+	case PROP_TYPE:
+		priv->type = g_value_get_enum (value);
+		break;
+	case PROP_ALIGNMENT:
+		priv->alignment = g_value_get_enum (value);
+		break;
+	case PROP_DIRECTION:
+		priv->direction = g_value_get_enum (value);
+		break;
+	case PROP_DURATION:
+		priv->duration = g_value_get_int (value);
+		break;
+	case PROP_ANGLE:
+		priv->angle = g_value_get_int (value);
+		break;
+	case PROP_SCALE:
+		priv->scale = g_value_get_double (value);
+		break;
+	case PROP_RECTANGULAR:
+		priv->rectangular = g_value_get_boolean (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
+ev_transition_effect_get_property (GObject    *object,
+				   guint       prop_id,
+				   GValue     *value,
+				   GParamSpec *pspec)
+{
+	EvTransitionEffectPrivate *priv;
+
+	priv = EV_TRANSITION_EFFECT_GET_PRIV (object);
+
+	switch (prop_id) {
+	case PROP_TYPE:
+		g_value_set_enum (value, priv->type);
+		break;
+	case PROP_ALIGNMENT:
+		g_value_set_enum (value, priv->alignment);
+		break;
+	case PROP_DIRECTION:
+		g_value_set_enum (value, priv->direction);
+		break;
+	case PROP_DURATION:
+		g_value_set_int (value, priv->duration);
+		break;
+	case PROP_ANGLE:
+		g_value_set_int (value, priv->angle);
+		break;
+	case PROP_SCALE:
+		g_value_set_double (value, priv->scale);
+		break;
+	case PROP_RECTANGULAR:
+		g_value_set_enum (value, priv->rectangular);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
+ev_transition_effect_init (EvTransitionEffect *effect)
+{
+	EvTransitionEffectPrivate *priv;
+
+	priv = EV_TRANSITION_EFFECT_GET_PRIV (effect);
+
+	priv->scale = 1.;
+}
+
+static void
+ev_transition_effect_class_init (EvTransitionEffectClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	object_class->set_property = ev_transition_effect_set_property;
+	object_class->get_property = ev_transition_effect_get_property;
+
+	g_object_class_install_property (object_class,
+					 PROP_TYPE,
+					 g_param_spec_enum ("type",
+							    "Effect type",
+							    "Page transition effect type",
+							    EV_TYPE_TRANSITION_EFFECT_TYPE,
+							    EV_TRANSITION_EFFECT_REPLACE,
+							    G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_ALIGNMENT,
+					 g_param_spec_enum ("alignment",
+							    "Effect alignment",
+							    "Alignment for the effect",
+							    EV_TYPE_TRANSITION_EFFECT_ALIGNMENT,
+							    EV_TRANSITION_ALIGNMENT_HORIZONTAL,
+							    G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_DIRECTION,
+					 g_param_spec_enum ("direction",
+							    "Effect direction",
+							    "Direction for the effect",
+							    EV_TYPE_TRANSITION_EFFECT_DIRECTION,
+							    EV_TRANSITION_DIRECTION_INWARD,
+							    G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_DURATION,
+					 g_param_spec_int ("duration",
+							   "Effect duration",
+							   "Effect duration in seconds",
+							   0, G_MAXINT, 0,
+							   G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_ANGLE,
+					 g_param_spec_int ("angle",
+							   "Effect angle",
+							   "Effect angle in degrees, counted "
+							   "counterclockwise from left to right",
+							   0, 360, 0,
+							   G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_SCALE,
+					 g_param_spec_double ("scale",
+							      "Effect scale",
+							      "Scale at which the effect is applied",
+							      0., 1., 1.,
+							      G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_RECTANGULAR,
+					 g_param_spec_boolean ("rectangular",
+							       "Rectangular area",
+							       "Whether the covered area is rectangular",
+							       FALSE,
+							       G_PARAM_READWRITE));
+
+	g_type_class_add_private (klass, sizeof (EvTransitionEffectPrivate));
+}
+
+EvTransitionEffect *
+ev_transition_effect_new (EvTransitionEffectType  type,
+			  const gchar		 *first_property_name,
+			  ...)
+{
+	GObject *object;
+	va_list	 args;
+
+	object = g_object_new (EV_TYPE_TRANSITION_EFFECT,
+			       "type", type,
+			       NULL);
+
+	va_start (args, first_property_name);
+	g_object_set_valist (object, first_property_name, args);
+	va_end (args);
+
+	return EV_TRANSITION_EFFECT (object);
+}

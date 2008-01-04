@@ -1,3 +1,14 @@
+2008-01-04  Carlos Garnacho  <carlosg@gnome.org>
+
+	* libdocument/ev-transition-effect.[ch]: New files, define a page
+	transition effect, at the moment it maps PopplerPageTransition to a
+	GObject.
+	* libdocument/Makefile.am: Added these files to build.
+	* libdocument/ev-document-transition.[ch]
+	(ev_document_transition_get_effect): New method, gets the
+	EvTransitionEffect returned by the interface implementation, with
+	fallback to the "replace" effect.
+
 2007-12-30  Carl-Anton Ingmarsson  <c-a.ingmarsson@oktv.se>
 
 	* configure.ac:

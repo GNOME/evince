@@ -39,7 +39,8 @@ INST_H_FILES = 					\
 	ev-link-dest.h				\
 	ev-link.h				\
 	ev-render-context.h			\
-	ev-selection.h
+	ev-selection.h				\
+	ev-transition-effect.h
 
 headerdir = $(prefix)/include/evince-@EV_API_VERSION@/evince
 header_DATA = $(INST_H_FILES)
@@ -69,6 +70,7 @@ libevbackend_la_SOURCES=			\
 	ev-module.c				\
 	ev-render-context.c			\
 	ev-selection.c				\
+	ev-transition-effect.c			\
 	ev-document-misc.c			\
 	$(NOINST_H_FILES)			\
 	$(INST_H_FILES)
