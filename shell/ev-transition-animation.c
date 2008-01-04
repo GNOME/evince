@@ -282,6 +282,50 @@ ev_transition_animation_split (cairo_t               *cr,
 	}
 }
 
+static void
+ev_transition_animation_blinds (cairo_t               *cr,
+				EvTransitionAnimation *animation,
+				EvTransitionEffect    *effect,
+				gdouble                progress,
+				GdkRectangle           page_area)
+{
+	EvTransitionAnimationPriv *priv;
+	EvTransitionEffectAlignment alignment;
+	gint width, height, i;
+
+	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	width = page_area.width;
+	height = page_area.height;
+
+	g_object_get (effect,
+		      "alignment", &alignment,
+		      NULL);
+
+	paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+
+	for (i = 0; i < N_BLINDS; i++) {
+		cairo_save (cr);
+
+		if (alignment == EV_TRANSITION_ALIGNMENT_HORIZONTAL) {
+			cairo_rectangle (cr,
+					 0,
+					 height / N_BLINDS * i,
+					 width,
+					 height / N_BLINDS * progress);
+		} else {
+			cairo_rectangle (cr,
+					 width / N_BLINDS * i,
+					 0,
+					 width / N_BLINDS * progress,
+					 height);
+		}
+
+		cairo_clip (cr);
+		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		cairo_restore (cr);
+	}
+}
+
 void
 ev_transition_animation_paint (EvTransitionAnimation *animation,
 			       cairo_t               *cr,
@@ -310,6 +354,9 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 		break;
 	case EV_TRANSITION_EFFECT_SPLIT:
 		ev_transition_animation_split (cr, animation, priv->effect, progress, page_area);
+		break;
+	case EV_TRANSITION_EFFECT_BLINDS:
+		ev_transition_animation_blinds (cr, animation, priv->effect, progress, page_area);
 		break;
 	default: {
 		GEnumValue *enum_value;
