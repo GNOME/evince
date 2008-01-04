@@ -84,6 +84,8 @@ evince_SOURCES=				\
 	ev-timeline.h			\
 	ev-tooltip.c			\
 	ev-tooltip.h			\
+	ev-transition-animation.c	\
+	ev-transition-animation.h	\
 	main.c				\
 	xdg-user-dir-lookup.c
 
