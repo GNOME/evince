@@ -424,6 +424,21 @@ ev_transition_animation_wipe (cairo_t               *cr,
 	paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
 }
 
+static void
+ev_transition_animation_dissolve (cairo_t               *cr,
+				  EvTransitionAnimation *animation,
+				  EvTransitionEffect    *effect,
+				  gdouble                progress,
+				  GdkRectangle           page_area)
+{
+	EvTransitionAnimationPriv *priv;
+
+	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+
+	paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->origin_surface, 0, 0, 1 - progress, page_area);
+}
+
 void
 ev_transition_animation_paint (EvTransitionAnimation *animation,
 			       cairo_t               *cr,
@@ -461,6 +476,9 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 		break;
 	case EV_TRANSITION_EFFECT_WIPE:
 		ev_transition_animation_wipe (cr, animation, priv->effect, progress, page_area);
+		break;
+	case EV_TRANSITION_EFFECT_DISSOLVE:
+		ev_transition_animation_dissolve (cr, animation, priv->effect, progress, page_area);
 		break;
 	default: {
 		GEnumValue *enum_value;
