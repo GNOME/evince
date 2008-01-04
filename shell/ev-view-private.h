@@ -27,6 +27,7 @@
 #include "ev-image.h"
 #include "ev-form-field.h"
 #include "ev-selection.h"
+#include "ev-transition-animation.h"
 
 #define DRAG_HISTORY 10
 
@@ -172,6 +173,8 @@ struct _EvView {
 	/* Goto Popup */
 	GtkWidget *goto_window;
 	GtkWidget *goto_entry;
+
+	EvTransitionAnimation *animation;
 };
 
 struct _EvViewClass {

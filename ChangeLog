@@ -1,5 +1,23 @@
 2008-01-04  Carlos Garnacho  <carlosg@gnome.org>
 
+	* shell/ev-view-private.h: Add a EvTransitionAnimation to the struct.
+	* shell/ev-view.c (ev_view_expose_event) (ev_view_change_page)
+	(ev_view_transition_animation_start) 
+	(ev_view_transition_animation_finish) (ev_transition_animation_frame)
+	(job_finished_cb) (page_changed_cb) (ev_view_set_presentation)
+	(ev_view_next_page) (ev_view_previous_page):
+	
+	Use EvTransitionAnimation to drive page changes in the presentation
+	mode, the animation will wait to start until both the origin and 
+	destination page surfaces are available. Fixes #458460.
+
+        (draw_loading_text):
+
+	Remove workaround for bug #320352, it's now fixed properly.
+
+
+2008-01-04  Carlos Garnacho  <carlosg@gnome.org>
+
 	* shell/ev-transition-animation.[ch]: Added, EvTransitionAnimation
 	will contain the implementations for page transition animations, at
 	the moment it just has the "replace" effect.

@@ -42,6 +42,7 @@
 #include "ev-job-queue.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
+#include "ev-transition-animation.h"
 #if !GTK_CHECK_VERSION (2, 11, 7)
 #include "ev-tooltip.h"
 #endif
@@ -2479,6 +2480,24 @@ ev_view_expose_event (GtkWidget      *widget,
 	cairo_t *cr;
 	gint     i;
 
+	if (view->animation) {
+		GdkRectangle page_area;
+		GtkBorder    border;
+
+		if (get_page_extents (view, view->current_page, &page_area, &border)) {
+			cr = gdk_cairo_create (view->layout.bin_window);
+
+			/* normalize to x=0, y=0 */
+			cairo_translate (cr, page_area.x, page_area.y);
+			page_area.x = page_area.y = 0;
+
+			ev_transition_animation_paint (view->animation, cr, page_area);
+			cairo_destroy (cr);
+		}
+
+		return TRUE;
+	}
+
 	if (view->presentation) {
 		switch (view->presentation_state) {
 		        case EV_PRESENTATION_END: {
@@ -3601,12 +3620,6 @@ draw_loading_text (EvView       *view,
 	cairo_t *cr;
 	gint     width, height;
 
-	/* Don't annoy users with loading messages during presentations.
-	 * FIXME: Temporary "workaround" for
-	 * http://bugzilla.gnome.org/show_bug.cgi?id=320352 */
-	if (view->presentation)
-		return;
-
 	if (!view->loading_text) {
 		const gchar *loading_text = _("Loading...");
 		PangoLayout *layout;
@@ -3725,7 +3738,7 @@ draw_one_page (EvView       *view,
 
 		cairo_save (cr);
 		cairo_translate (cr, overlap.x, overlap.y);
-		
+
 		if (width != page_width || height != page_height) {
 			cairo_pattern_set_filter (cairo_get_source (cr),
 						  CAIRO_FILTER_FAST);
@@ -4205,10 +4218,75 @@ find_changed_cb (EvDocument *document, int page, EvView *view)
 }
 
 static void
+ev_view_change_page (EvView *view,
+		     gint    new_page)
+{
+	gint x, y;
+
+	view->current_page = new_page;
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	if (view->presentation)
+		ev_view_presentation_transition_start (view);
+
+	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+	ev_view_handle_cursor_over_xy (view, x, y);
+
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+static void
+ev_view_transition_animation_finish (EvTransitionAnimation *animation,
+				     EvView                *view)
+{
+	g_object_unref (view->animation);
+	view->animation = NULL;
+	ev_view_change_page (view, view->current_page);
+}
+
+static void
+ev_view_transition_animation_frame (EvTransitionAnimation *animation,
+				    gdouble                progress,
+				    EvView                *view)
+{
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static void
+ev_view_presentation_animation_start (EvView *view,
+                                      int     new_page)
+{
+	EvTransitionEffect *effect = NULL;
+	cairo_surface_t *surface;
+
+        if (EV_IS_DOCUMENT_TRANSITION (view->document))
+		effect = ev_document_transition_get_effect (EV_DOCUMENT_TRANSITION (view->document),
+							    view->current_page);
+	if (!effect)
+		return;
+
+	surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, view->current_page);
+	view->animation = ev_transition_animation_new (effect);
+	ev_transition_animation_set_origin_surface (view->animation, surface);
+		
+	g_signal_connect (view->animation, "frame",
+			  G_CALLBACK (ev_view_transition_animation_frame), view);
+	g_signal_connect (view->animation, "finished",
+			  G_CALLBACK (ev_view_transition_animation_finish), view);
+}
+
+static void
 job_finished_cb (EvPixbufCache *pixbuf_cache,
 		 GdkRegion     *region,
 		 EvView        *view)
 {
+	if (view->animation) {
+		cairo_surface_t *surface;
+
+		surface = ev_pixbuf_cache_get_surface (pixbuf_cache, view->current_page);
+		ev_transition_animation_set_dest_surface (view->animation, surface);
+	}
+
 	if (region) {
 		gdk_window_invalidate_region (view->layout.bin_window,
 					      region, TRUE);
@@ -4223,18 +4301,10 @@ page_changed_cb (EvPageCache *page_cache,
 		 EvView      *view)
 {
 	if (view->current_page != new_page) {
-		gint x, y;
-		
-		view->current_page = new_page;
-		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
-
 		if (view->presentation)
-			ev_view_presentation_transition_start (view);
-		
-		gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
-		ev_view_handle_cursor_over_xy (view, x, y);
-		
-		gtk_widget_queue_resize (GTK_WIDGET (view));
+			ev_view_presentation_animation_start (view, new_page);
+
+		ev_view_change_page (view, new_page);
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -4579,8 +4649,14 @@ ev_view_set_presentation (EvView   *view,
 
 	if (presentation)
 		ev_view_presentation_transition_start (view);
-	else
+	else {
 		ev_view_presentation_transition_stop (view);
+
+		if (view->animation) {
+			/* stop any running animation */
+			ev_view_transition_animation_finish (view->animation, view);
+		}
+	}
 
 	if (GTK_WIDGET_REALIZED (view)) {
 		if (view->presentation)
@@ -5771,7 +5847,12 @@ ev_view_next_page (EvView *view)
 	     view->presentation_state == EV_PRESENTATION_WHITE)) {
 		ev_view_reset_presentation_state (view);
 		return FALSE; 
-	}	
+	}
+
+	if (view->animation) {
+		ev_view_transition_animation_finish (view->animation, view);
+		return TRUE;
+	}
 
 	ev_view_presentation_transition_stop (view);
 	ev_view_reset_presentation_state (view);
@@ -5821,6 +5902,11 @@ ev_view_previous_page (EvView *view)
 		ev_view_reset_presentation_state (view);
 		return FALSE; 
 	}	
+
+        if (view->animation) {
+		ev_view_transition_animation_finish (view->animation, view);
+		return TRUE;
+        }
 
 	ev_view_reset_presentation_state (view);
 
