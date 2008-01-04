@@ -217,6 +217,71 @@ paint_surface (cairo_t         *cr,
 	cairo_restore (cr);
 }
 
+/* animations */
+static void
+ev_transition_animation_split (cairo_t               *cr,
+			       EvTransitionAnimation *animation,
+			       EvTransitionEffect    *effect,
+			       gdouble                progress,
+			       GdkRectangle           page_area)
+{
+	EvTransitionAnimationPriv *priv;
+	EvTransitionEffectAlignment alignment;
+	EvTransitionEffectDirection direction;
+	gint width, height;
+
+	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	width = page_area.width;
+	height = page_area.height;
+
+	g_object_get (effect,
+		      "alignment", &alignment,
+		      "direction", &direction,
+		      NULL);
+
+	if (direction == EV_TRANSITION_DIRECTION_INWARD) {
+		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+
+		if (alignment == EV_TRANSITION_ALIGNMENT_HORIZONTAL) {
+			cairo_rectangle (cr,
+					 0,
+					 height * progress / 2,
+					 width,
+					 height * (1 - progress));
+		} else {
+			cairo_rectangle (cr,
+					 width * progress / 2,
+					 0,
+					 width * (1 - progress),
+					 height);
+		}
+
+		cairo_clip (cr);
+
+		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+	} else {
+		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+
+		if (alignment == EV_TRANSITION_ALIGNMENT_HORIZONTAL) {
+			cairo_rectangle (cr,
+					 0,
+					 (height / 2) - (height * progress / 2),
+					 width,
+					 height * progress);
+		} else {
+			cairo_rectangle (cr,
+					 (width / 2) - (width * progress / 2),
+					 0,
+					 width * progress,
+					 height);
+		}
+
+		cairo_clip (cr);
+
+		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+	}
+}
+
 void
 ev_transition_animation_paint (EvTransitionAnimation *animation,
 			       cairo_t               *cr,
@@ -242,6 +307,9 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 	case EV_TRANSITION_EFFECT_REPLACE:
 		/* just paint the destination slide */
 		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		break;
+	case EV_TRANSITION_EFFECT_SPLIT:
+		ev_transition_animation_split (cr, animation, priv->effect, progress, page_area);
 		break;
 	default: {
 		GEnumValue *enum_value;
