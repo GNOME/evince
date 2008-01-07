@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-03 21:43+0100\n"
-"PO-Revision-Date: 2008-01-03 21:44+0100\n"
+"POT-Creation-Date: 2008-01-07 01:42+0100\n"
+"PO-Revision-Date: 2008-01-07 01:43+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmal <i18n-nb@lster.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -47,60 +47,60 @@ msgid "DVI document has incorrect format"
 msgstr "DVI-dokumentet har feil format"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:673
+#: ../backend/pdf/ev-poppler.cc:674
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:676
+#: ../backend/pdf/ev-poppler.cc:677
 msgid "No"
 msgstr "Nei"
 
-#: ../backend/pdf/ev-poppler.cc:749
+#: ../backend/pdf/ev-poppler.cc:750
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:751
+#: ../backend/pdf/ev-poppler.cc:752
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:753
+#: ../backend/pdf/ev-poppler.cc:754
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:755
+#: ../backend/pdf/ev-poppler.cc:756
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:757
+#: ../backend/pdf/ev-poppler.cc:758
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:759
+#: ../backend/pdf/ev-poppler.cc:760
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:761
+#: ../backend/pdf/ev-poppler.cc:762
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:763
+#: ../backend/pdf/ev-poppler.cc:764
 msgid "Unknown font type"
 msgstr "Ukjent skrifttype"
 
-#: ../backend/pdf/ev-poppler.cc:789
+#: ../backend/pdf/ev-poppler.cc:790
 msgid "No name"
 msgstr "Uten navn"
 
-#: ../backend/pdf/ev-poppler.cc:797
+#: ../backend/pdf/ev-poppler.cc:798
 msgid "Embedded subset"
 msgstr "Innebygd subsett"
 
-#: ../backend/pdf/ev-poppler.cc:799
+#: ../backend/pdf/ev-poppler.cc:800
 msgid "Embedded"
 msgstr "Innebygd"
 
-#: ../backend/pdf/ev-poppler.cc:801
+#: ../backend/pdf/ev-poppler.cc:802
 msgid "Not embedded"
 msgstr "Ikke innebygd"
 
@@ -149,6 +149,16 @@ msgstr "Kan ikke finne filen i zip-arkivet"
 #: ../backend/impress/zip.c:77 ../shell/ev-window.c:4832
 msgid "Unknown error"
 msgstr "Ukjent feil"
+
+#: ../backend/ps/ev-spectre.c:113 ../backend/ps/ps-document.c:248
+#, c-format
+msgid "Failed to load document “%s”"
+msgstr "Kunne ikke åpne dokument «%s»"
+
+#: ../backend/ps/ev-spectre.c:146
+#, c-format
+msgid "Failed to save document “%s”"
+msgstr "Kunne ikke lagre dokument «%s»"
 
 #: ../backend/ps/gsdefaults.c:30
 msgid "BBox"
@@ -234,11 +244,6 @@ msgid ""
 msgstr ""
 "Klarte ikke å laste dokument «%s». Ghostscript-tolker ble ikke funnet i stien"
 
-#: ../backend/ps/ps-document.c:248
-#, c-format
-msgid "Failed to load document “%s”"
-msgstr "Kunne ikke åpne dokument «%s»"
-
 #: ../backend/ps/ps-document.c:431
 msgid "Encapsulated PostScript"
 msgstr "Innkapslet PostScript"
@@ -282,8 +287,42 @@ msgid "All Documents"
 msgstr "Alle dokumenter"
 
 #: ../libdocument/ev-document-factory.c:341
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:374
 msgid "All Files"
 msgstr "Alle filer"
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:235
+#, c-format
+msgid "File _Format: %s"
+msgstr "_Filformat: %s"
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:375
+msgid "All Supported Files"
+msgstr "Alle støttede filer"
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:384
+msgid "By Extension"
+msgstr "Etter utvidelse"
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:399
+msgid "File Format"
+msgstr "Filformat"
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:417
+msgid "Extension(s)"
+msgstr "Utvidelse(r)"
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:645
+#, c-format
+msgid ""
+"The program was not able to find out the file format you want to use for `%"
+"s'. Please make sure to use a known extension for that file or manually "
+"choose a file format from the list below."
+msgstr ""
+
+#: ../cut-n-paste/fileformatchooser/eggfileformatchooser.c:652
+msgid "File format not recognized"
+msgstr "Filformat ikke gjenkjent"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -657,7 +696,7 @@ msgstr "Samler informasjon om skrifter... %3d%%"
 msgid "Attachments"
 msgstr "Vedlegg"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3611
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3624
 msgid "Loading..."
 msgstr "Laster..."
 
@@ -693,69 +732,69 @@ msgstr "Rull visning ned"
 msgid "Document View"
 msgstr "Dokumentvisning"
 
-#: ../shell/ev-view.c:1441
+#: ../shell/ev-view.c:1442
 msgid "Go to first page"
 msgstr "Gå til første side"
 
-#: ../shell/ev-view.c:1443
+#: ../shell/ev-view.c:1444
 msgid "Go to previous page"
 msgstr "Gå til forrige side"
 
-#: ../shell/ev-view.c:1445
+#: ../shell/ev-view.c:1446
 msgid "Go to next page"
 msgstr "Gå til neste side"
 
-#: ../shell/ev-view.c:1447
+#: ../shell/ev-view.c:1448
 msgid "Go to last page"
 msgstr "Gå til siste side"
 
-#: ../shell/ev-view.c:1449
+#: ../shell/ev-view.c:1450
 msgid "Go to page"
 msgstr "Gå til side"
 
-#: ../shell/ev-view.c:1451
+#: ../shell/ev-view.c:1452
 msgid "Find"
 msgstr "Søk"
 
-#: ../shell/ev-view.c:1479
+#: ../shell/ev-view.c:1480
 #, c-format
 msgid "Go to page %s"
 msgstr "Gå til side %s"
 
-#: ../shell/ev-view.c:1485
+#: ../shell/ev-view.c:1486
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Gå til %s i fil «%s»"
 
-#: ../shell/ev-view.c:1488
+#: ../shell/ev-view.c:1489
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Gå til fil «%s»"
 
-#: ../shell/ev-view.c:1496
+#: ../shell/ev-view.c:1497
 #, c-format
 msgid "Launch %s"
 msgstr "Start %s"
 
-#: ../shell/ev-view.c:2445
+#: ../shell/ev-view.c:2446
 msgid "End of presentation. Press Escape to exit."
 msgstr "Slutt på presentasjonen. Trykk Escape for å avslutte."
 
-#: ../shell/ev-view.c:3334
+#: ../shell/ev-view.c:3353
 msgid "Jump to page:"
 msgstr "Gå til side:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:5028
+#: ../shell/ev-view.c:5104
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d funnet på denne siden"
 msgstr[1] "%d funnet på denne siden"
 
-#: ../shell/ev-view.c:5037
+#: ../shell/ev-view.c:5113
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% igjen å søke i"
