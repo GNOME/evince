@@ -90,6 +90,7 @@ INCLUDES= \
 	$(GTK_PRINT_CFLAGS)
 
 GTKDOC_LIBS= \
+	$(top_builddir)/cut-n-paste/fileformatchooser/libfileformatchooser.la	\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
