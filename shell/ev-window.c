@@ -1827,12 +1827,15 @@ ev_window_get_recent_file_label (gint index, const gchar *filename)
 	gint length;
 	const gchar *p;
 	const gchar *end;
- 
+	gboolean is_rtl;
+	
+	is_rtl = (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL);
+
 	g_return_val_if_fail (filename != NULL, NULL);
 	
 	length = strlen (filename);
 	str = g_string_sized_new (length + 10);
-	g_string_printf (str, "_%d.  ", index);
+	g_string_printf (str, "%s_%d.  ", is_rtl ? "\xE2\x80\x8F" : "", index);
 
 	p = filename;
 	end = filename + length;
