@@ -21,7 +21,7 @@ endif
 
 nautilus_LTLIBRARIES = $(EVINCE_PROPERTIES_PAGE)
 
-nautilusdir = $(libdir)/nautilus/extensions-2.0/
+nautilusdir=$(NAUTILUS_EXTENSION_DIR)
 libevince_properties_page_la_CFLAGS = -I$(top_srcdir)
 libevince_properties_page_la_SOURCES = 	\
 	ev-properties-main.c

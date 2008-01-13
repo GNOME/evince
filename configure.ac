@@ -188,6 +188,8 @@ AC_ARG_ENABLE(nautilus,
 if test x$ENABLE_NAUTILUS = "xyes" ; then
 	PKG_CHECK_MODULES(NAUTILUS, gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension,
 			[HAVE_NAUTILUS=yes], [HAVE_NAUTILUS=no])
+	NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
+	AC_SUBST(NAUTILUS_EXTENSION_DIR)
 fi
 
 AC_SUBST(NAUTILUS_CFLAGS)
