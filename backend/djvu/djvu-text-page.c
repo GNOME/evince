@@ -123,8 +123,6 @@ djvu_text_page_limits (DjvuTextPage *page,
 			  miniexp_t     p, 
 			  EvRectangle  *rect)
 {
-	char *token_text;
-	
 	g_return_if_fail (miniexp_consp (p) && 
 			  miniexp_symbolp (miniexp_car (p)));
 

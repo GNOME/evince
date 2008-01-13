@@ -1,5 +1,12 @@
 2008-01-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/djvu/djvu-text-page.c: (djvu_text_page_limits):
+	* shell/ev-window.c: (image_save_dialog_response_cb):
+
+	Fix compile warnings due to unused variables.
+	
+2008-01-13  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* backend/dvi/cairo-device.c: (dvi_cairo_draw_ps):
 	* backend/ps/ev-spectre.c: (ps_document_render):

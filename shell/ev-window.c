@@ -5045,8 +5045,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 static void
 ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 {
-	GtkWidget     *fc, *format_chooser;
-	GtkFileFilter *filter;
+	GtkWidget *fc, *format_chooser;
 
 	if (!window->priv->image)
 		return;
