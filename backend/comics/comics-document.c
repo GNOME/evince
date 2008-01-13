@@ -85,6 +85,8 @@ comics_regex_quote (const char *s)
 	case ']':
 	case '*':
 	case '\\':
+	    *d++ = '\\';
+	    break;
 	case '\'':
 	    *d++ = '\'';
 	    *d++ = '\\';

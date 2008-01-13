@@ -1,3 +1,10 @@
+2008-01-13  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/comics/comics-document.c: (comics_regex_quote):
+	
+	Don't overquote special chars except of '. See bug 
+	502500. Thanks to Tom Parker.
+
 2008-01-13  Wouter Bolsterlee  <wbolster@svn.gnome.org>
 
 	* MAINTAINERS:
