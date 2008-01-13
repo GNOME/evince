@@ -289,7 +289,9 @@ ps_document_render (EvDocument      *document,
 	rotation = (rc->rotation + get_page_rotation (ps_page)) % 360;
 
 	src = spectre_render_context_new ();
-	spectre_render_context_set_page_size (src, width, height);
+	spectre_render_context_set_scale (src,
+					  (gdouble)width / width_points,
+					  (gdouble)height / height_points);
 	spectre_render_context_set_rotation (src, rotation);
 	spectre_page_render (ps_page, src, &data, &stride);
 	spectre_render_context_free (src);

@@ -261,9 +261,10 @@ fi
 
 AM_CONDITIONAL(ENABLE_PDF, test x$enable_pdf = xyes)
 dnl ================== end of pdf checks ============================================
+SPECTRE_REQUIRED=0.2.0
 
 dnl libspectre (used by ps and dvi backends)
-PKG_CHECK_MODULES(SPECTRE, libspectre,have_spectre=yes,have_spectre=no)
+PKG_CHECK_MODULES(SPECTRE, libspectre >= $SPECTRE_REQUIRED,have_spectre=yes,have_spectre=no)
 AM_CONDITIONAL(HAVE_SPECTRE, test x$have_spectre = xyes)
 if test "x$have_spectre" = "xyes"; then
    AC_DEFINE([HAVE_SPECTRE], [1], [Have libpectre])
@@ -285,7 +286,7 @@ if test x$enable_ps = xyes; then
       GS_VERSION=`gs --version | head -n 1 | sed 's/\([[0-9]]*\)\.\([[0-9]]*\).*/\1/'`
       AC_MSG_RESULT(found $GS_VERSION)
       if test "$GS_VERSION" -lt "7"; then
-      	 AC_MSG_WARN([PS support is disabled since libspectre or Ghostscript (version >= 7) are needed])
+      	 AC_MSG_WARN([PS support is disabled since libspectre (version >= $SPECTRE_REQUIRED) or Ghostscript (version >= 7) are needed])
 	 enable_ps=no
       else
          AC_ARG_WITH(gs-aa-params,

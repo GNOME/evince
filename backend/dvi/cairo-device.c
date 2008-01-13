@@ -135,8 +135,8 @@ dvi_cairo_draw_ps (DviContext *dvi,
 	unsigned char        *data = NULL;
 	int                   row_length;
 	SpectreDocument      *psdoc;
-	SpectrePage          *page;
 	SpectreRenderContext *rc;
+	int                   w, h;
 	SpectreStatus         status;
 	cairo_surface_t      *image;
 
@@ -148,24 +148,24 @@ dvi_cairo_draw_ps (DviContext *dvi,
 		spectre_document_free (psdoc);
 		return;
 	}
-	
-	page = spectre_document_get_page (psdoc, 0);
-	if (!page) {
-		spectre_document_free (psdoc);
-		return;
-	}
+
+	spectre_document_get_page_size (psdoc, &w, &h);
 
 	rc = spectre_render_context_new ();
-	spectre_render_context_set_page_size (rc, width, height);
-	spectre_page_render (page, rc, &data, &row_length);
-	status = spectre_page_status (page);
-	spectre_render_context_free (rc);
+	spectre_render_context_set_scale (rc,
+					  (double)width / w,
+					  (double)height / h);
+	spectre_document_render_full (psdoc, rc, &data, &row_length);	
+	status = spectre_document_status (psdoc);
 
-	spectre_page_free (page);
+	spectre_render_context_free (rc);
 	spectre_document_free (psdoc);
 
 	if (status) {
+		g_warning ("Error rendering PS document %s: %s\n",
+			   filename, spectre_status_to_string (status));
 		free (data);
+		
 		return;
 	}
 
