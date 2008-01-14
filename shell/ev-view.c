@@ -2385,15 +2385,16 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	}
 
 	view->jump_to_find_result = FALSE;
+
 	/* Shift+Wheel scrolls the in the perpendicular direction */
 	if (state & GDK_SHIFT_MASK) {
 		if (event->direction == GDK_SCROLL_UP)
 			event->direction = GDK_SCROLL_LEFT;
-		if (event->direction == GDK_SCROLL_LEFT)
+		else if (event->direction == GDK_SCROLL_LEFT)
 			event->direction = GDK_SCROLL_UP;
-		if (event->direction == GDK_SCROLL_DOWN)
+		else if (event->direction == GDK_SCROLL_DOWN)
 			event->direction = GDK_SCROLL_RIGHT;
-		if (event->direction == GDK_SCROLL_RIGHT)
+		else if (event->direction == GDK_SCROLL_RIGHT)
 			event->direction = GDK_SCROLL_DOWN;
 
 		event->state &= ~GDK_SHIFT_MASK;
