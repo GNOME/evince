@@ -50,6 +50,9 @@ gint 			get_num_monitors (GtkWindow * window);
 
 gdouble 		get_screen_dpi (GtkWindow * window);
 
+void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
+GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (gchar *uri);
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */

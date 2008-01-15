@@ -1,5 +1,23 @@
 2008-01-15  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
+	* configure.ac:
+	* cut-n-paste/Makefile.am:
+	* cut-n-paste/fileformatchooser/Makefile.am:
+	* cut-n-paste/fileformatchooser/egg-macros.h:
+	* cut-n-paste/fileformatchooser/eggfileformatchooser.c:
+	* cut-n-paste/fileformatchooser/eggfileformatchooser.h:
+	* shell/Makefile.am:
+	* shell/ev-utils.c:
+	(file_chooser_dialog_add_writable_pixbuf_formats),
+	(get_gdk_pixbuf_format_by_extension):
+	* shell/ev-utils.h:
+	* shell/ev-window.c: (ev_window_error_message),
+	(image_save_dialog_response_cb), (ev_view_popup_cmd_save_image_as):
+	
+	Simplify image format selection on save.
+
+2008-01-15  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
 	* shell/ev-view.c: (ev_view_scroll_event):
 	
 	Repair gorizontal scrolling with shift. Fixes

@@ -64,6 +64,7 @@
 #include "ev-utils.h"
 #include "ev-history.h"
 #include "ev-image.h"
+#include "ev-message-area.h"
 
 #ifdef WITH_GNOME_PRINT
 #include "ev-print-job.h"
@@ -90,10 +91,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-#include "ev-message-area.h"
-
-#include "eggfileformatchooser.h"
 
 #if !GLIB_CHECK_VERSION (2, 13, 3)
 char *xdg_user_dir_lookup (char *type);
@@ -674,7 +671,8 @@ ev_window_error_message (GtkWindow *window, const gchar *msg, GError *error)
 				    GTK_STOCK_CLOSE,
 				    GTK_RESPONSE_CANCEL,
 				    NULL);
-	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (area), error->message);
+	if (error)
+		ev_message_area_set_secondary_text (EV_MESSAGE_AREA (area), error->message);
 	g_signal_connect (area, "response",
 			  G_CALLBACK (ev_window_error_message_response_cb),
 			  window);
@@ -4974,34 +4972,52 @@ ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 	gtk_clipboard_set_text (clipboard, uri, -1);
 }
 
+
 static void
 image_save_dialog_response_cb (GtkWidget *fc,
 			       gint       response_id,
 			       EvWindow  *ev_window)
 {
-	GtkWidget   *format_chooser;
-	GnomeVFSURI *target_uri;
-	gchar       *uri;
-	gchar       *uri_extension;
-	gchar       *filename;
-	gchar       *file_format;
-	gboolean     is_local;
-	GError      *error = NULL;
-	guint        format;
+	GnomeVFSURI  *target_uri;
+	gboolean      is_local;
+	GError       *error = NULL;
+
+	gchar        *uri;
+	gchar        *uri_extension;
+	gchar 	     **extensions;
+	gchar        *filename;
+	gchar        *file_format;
+	GdkPixbufFormat* format;
+	GtkFileFilter *filter;
 	
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
 		return;
 	}
 
-	format_chooser = gtk_file_chooser_get_extra_widget (GTK_FILE_CHOOSER (fc));
-	
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
-	format = egg_file_format_chooser_get_format (EGG_FILE_FORMAT_CHOOSER (format_chooser), uri);
-	uri_extension = egg_file_format_chooser_append_extension (EGG_FILE_FORMAT_CHOOSER (format_chooser),
-								  uri, format);
-	file_format = (char *)egg_file_format_chooser_get_format_data (EGG_FILE_FORMAT_CHOOSER (format_chooser),
-								       format);
+	filter = gtk_file_chooser_get_filter (GTK_FILE_CHOOSER (fc));
+	format = g_object_get_data (G_OBJECT (filter), "pixbuf-format");
+	
+	if (format == NULL) {
+		format = get_gdk_pixbuf_format_by_extension (uri);
+	}
+
+	if (format == NULL) {
+		ev_window_error_message (GTK_WINDOW (ev_window),
+					 _("Couldn't find appropriate format to save image"),
+					 NULL);
+		g_free (uri);
+		gtk_widget_destroy (fc);
+
+		return;
+	}
+
+	extensions = gdk_pixbuf_format_get_extensions (format);
+	uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
+	g_strfreev(extensions);
+	file_format = gdk_pixbuf_format_get_name (format);
+	
 	target_uri = gnome_vfs_uri_new (uri_extension);
 	is_local = gnome_vfs_uri_is_local (target_uri);
 	
@@ -5048,7 +5064,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 static void
 ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 {
-	GtkWidget *fc, *format_chooser;
+	GtkWidget *fc;
 
 	if (!window->priv->image)
 		return;
@@ -5065,12 +5081,8 @@ ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
 	
-	format_chooser = egg_file_format_chooser_new ();
-	egg_file_format_chooser_add_pixbuf_formats (EGG_FILE_FORMAT_CHOOSER (format_chooser),
-						    0, NULL);
+	file_chooser_dialog_add_writable_pixbuf_formats	(GTK_FILE_CHOOSER (fc));
 	
-	gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (fc), format_chooser);
-
 	g_signal_connect (fc, "response",
 			  G_CALLBACK (image_save_dialog_response_cb),
 			  window);
