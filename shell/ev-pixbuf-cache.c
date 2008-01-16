@@ -611,7 +611,7 @@ add_job (EvPixbufCache *pixbuf_cache,
 	gboolean include_links = FALSE;
 	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
-	gboolean include_images = TRUE;
+	gboolean include_images = FALSE;
 	gboolean include_forms = FALSE;
 	GdkColor *text, *base;
 
