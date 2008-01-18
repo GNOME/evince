@@ -60,10 +60,25 @@ GTK_PRINT_REQUIRED=2.10.0
 PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED gnome-vfs-2.0)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libglade-2.0 gnome-vfs-2.0)
-PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0 gnome-keyring-1 >= $KEYRING_REQUIRED)
+PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gnome-vfs-2.0 libglade-2.0 gconf-2.0)
 
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
+
+AC_ARG_WITH(keyring,
+        AC_HELP_STRING([--without-keyring],[disable the use of gnome-keyring]),
+	[case "${withval}" in
+	yes) WITH_KEYRING=yes ;;
+	no) WITH_KEYRING=no ;;
+	*) AC_MSG_ERROR(bad value ${withval} for --with-keyring) ;;
+	esac],
+	[WITH_KEYRING=yes]) dnl Default value
+AM_CONDITIONAL(WITH_KEYRING, test x$WITH_KEYRING = "xyes")
+
+if test x$WITH_KEYRING = "xyes"; then
+        PKG_CHECK_MODULES(KEYRING, gnome-keyring-1 >= $KEYRING_REQUIRED)
+        AC_DEFINE([WITH_KEYRING],[1],[Define if KEYRING support is enabled])
+fi
 
 AC_ARG_WITH(libgnome,
         AC_HELP_STRING([--without-libgnome],[disable the use of libgnome]),
@@ -162,8 +177,8 @@ BACKEND_CFLAGS="$BACKEND_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $GNOMEUI_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
-SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $GNOMEUI_LIBS -lz"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $GNOMEUI_CFLAGS $KEYRING_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE"
+SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $GNOMEUI_LIBS $KEYRING_LIBS -lz"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
@@ -503,6 +518,7 @@ echo "
 Configure summary:
 	GNOME Support......:  $WITH_GNOME
 	Print Support......:  $enable_print
+	Keyring Support....:  $WITH_KEYRING
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
 	Thumbnailer........:  $ENABLE_THUMBNAILER

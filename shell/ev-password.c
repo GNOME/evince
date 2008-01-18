@@ -24,8 +24,13 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <gnome-keyring.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
+
+#ifdef WITH_KEYRING
+#include <gnome-keyring.h>
+#else
+#define gnome_keyring_is_available()	FALSE
+#endif
 
 #include "ev-password.h"
 
@@ -173,7 +178,7 @@ ev_password_dialog_init (EvPasswordDialog *dialog)
 	g_signal_connect (dialog->priv->entry, "activate", G_CALLBACK (ev_password_dialog_entry_activated_cb), dialog);
 
 	ev_password_set_bad_password_label (dialog, " ");
-	
+
 	if (!gnome_keyring_is_available ()) {
 		gtk_widget_hide (dialog->priv->check_default);
 		gtk_widget_hide (dialog->priv->check_session);
@@ -219,6 +224,7 @@ ev_password_dialog_entry_activated_cb (GtkEntry *entry,
 	gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 }
 
+#ifdef WITH_KEYRING
 static void
 ev_password_item_created_callback (GnomeKeyringResult result,
 				   guint32            val,
@@ -226,11 +232,13 @@ ev_password_item_created_callback (GnomeKeyringResult result,
 {
 	/* Nothing yet */
 	return;
-}				   
+}
+#endif
 
 void
 ev_password_dialog_save_password (EvPasswordDialog *dialog)
 {
+#ifdef WITH_KEYRING
 	GnomeKeyringAttributeList *attributes;
 	GnomeKeyringAttribute attribute;
 	gchar *name;
@@ -274,10 +282,12 @@ ev_password_dialog_save_password (EvPasswordDialog *dialog)
 	gnome_keyring_attribute_list_free (attributes);
 	g_free (name);
 	g_free (unescaped_uri);
-	
+
+#endif /* WITH_KEYRING */
 	return;
 }
 
+#ifdef WITH_KEYRING
 static void 
 ev_password_keyring_found_cb (GnomeKeyringResult result,
 			      GList             *list,
@@ -293,10 +303,12 @@ ev_password_keyring_found_cb (GnomeKeyringResult result,
 	found = list->data;
 	gtk_entry_set_text (GTK_ENTRY (dialog->priv->entry), found->secret);
 }			  
+#endif /* WITH_KEYRING */
 
 static void
 ev_password_search_in_keyring (EvPasswordDialog *dialog, const gchar *uri)
 {
+#ifdef WITH_KEYRING
 	GnomeKeyringAttributeList *attributes;
 	GnomeKeyringAttribute attribute;
 	
@@ -318,6 +330,7 @@ ev_password_search_in_keyring (EvPasswordDialog *dialog, const gchar *uri)
 				   g_object_ref (dialog),
 				   g_object_unref);
 	gnome_keyring_attribute_list_free (attributes);
+#endif /* WITH_KEYRING */
 	return;
 }
 
