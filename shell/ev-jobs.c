@@ -406,8 +406,8 @@ ev_job_render_run (EvJobRender *job)
 								   job->rc->page);
 		if (job->include_images && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
 			job->image_mapping =
-				ev_document_images_get_images (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
-							       job->rc->page);
+				ev_document_images_get_image_mapping (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
+								      job->rc->page);
 		EV_JOB (job)->finished = TRUE;
 	}
 

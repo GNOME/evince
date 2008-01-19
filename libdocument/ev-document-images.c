@@ -42,15 +42,19 @@ ev_document_images_get_type (void)
 }
 
 GList *
-ev_document_images_get_images (EvDocumentImages *document_images,
-			       gint              page)
+ev_document_images_get_image_mapping (EvDocumentImages *document_images,
+				      gint              page)
 {
 	EvDocumentImagesIface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
-	GList *retval;
 
-	retval = iface->get_images (document_images, page);
-
-	return retval;
+	return iface->get_image_mapping (document_images, page);
 }
 
+GdkPixbuf *
+ev_document_images_get_image (EvDocumentImages *document_images,
+			      EvImage          *image)
+{
+	EvDocumentImagesIface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
 
+	return iface->get_image (document_images, image);
+}

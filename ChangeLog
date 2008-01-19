@@ -1,3 +1,23 @@
+2008-01-19  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* backend/pdf/ev-poppler.cc:
+	(pdf_document_images_get_image_mapping),
+	(pdf_document_images_get_image),
+	(pdf_document_document_images_iface_init):
+	* libdocument/ev-document-images.[ch]:
+	(ev_document_images_get_image_mapping),
+	(ev_document_images_get_image):
+	* libdocument/ev-image.[ch]: (ev_image_new), (ev_image_get_page),
+	(ev_image_get_id), (ev_image_save_tmp):
+	* shell/ev-jobs.c: (ev_job_render_run):
+	* shell/ev-view.c: (ev_view_drag_data_get):
+	* shell/ev-window.c: (image_save_dialog_response_cb),
+	(ev_view_popup_cmd_copy_image):
+
+	Do not render images when rendering the page but on demand. It
+	reduces the memory comsumption.
+	
 2008-01-18  Marcelo Lira  <setanta@gmail.com>
 
 	* configure.a:

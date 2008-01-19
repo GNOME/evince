@@ -46,6 +46,7 @@
 #include "ev-document-links.h"
 #include "ev-document-fonts.h"
 #include "ev-document-find.h"
+#include "ev-document-images.h"
 #include "ev-document-security.h"
 #include "ev-document-factory.h"
 #include "ev-job-queue.h"
@@ -4978,17 +4979,17 @@ image_save_dialog_response_cb (GtkWidget *fc,
 			       gint       response_id,
 			       EvWindow  *ev_window)
 {
-	GnomeVFSURI  *target_uri;
-	gboolean      is_local;
-	GError       *error = NULL;
-
-	gchar        *uri;
-	gchar        *uri_extension;
-	gchar 	     **extensions;
-	gchar        *filename;
-	gchar        *file_format;
-	GdkPixbufFormat* format;
-	GtkFileFilter *filter;
+	GnomeVFSURI     *target_uri;
+	gboolean         is_local;
+	GError          *error = NULL;
+	GdkPixbuf       *pixbuf;
+	gchar           *uri;
+	gchar           *uri_extension;
+	gchar 	       **extensions;
+	gchar           *filename;
+	gchar           *file_format;
+	GdkPixbufFormat *format;
+	GtkFileFilter   *filter;
 	
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
@@ -5029,9 +5030,14 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	
 	g_free (uri);
 	g_free (uri_extension);
+
+	ev_document_doc_mutex_lock ();
+	pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (ev_window->priv->document),
+					       ev_window->priv->image);
+	ev_document_doc_mutex_unlock ();
 	
-	gdk_pixbuf_save (ev_image_get_pixbuf (ev_window->priv->image),
-			 filename, file_format, &error, NULL);
+	gdk_pixbuf_save (pixbuf, filename, file_format, &error, NULL);
+	g_object_unref (pixbuf);
 	
 	if (error) {
 		ev_window_error_message (GTK_WINDOW (ev_window),
@@ -5094,14 +5100,20 @@ static void
 ev_view_popup_cmd_copy_image (GtkAction *action, EvWindow *window)
 {
 	GtkClipboard *clipboard;
+	GdkPixbuf    *pixbuf;
 
 	if (!window->priv->image)
 		return;
 	
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
 					      GDK_SELECTION_CLIPBOARD);
-	gtk_clipboard_set_image (clipboard,
-				 ev_image_get_pixbuf (window->priv->image));
+	ev_document_doc_mutex_lock ();
+	pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (window->priv->document),
+					       window->priv->image);
+	ev_document_doc_mutex_unlock ();
+	
+	gtk_clipboard_set_image (clipboard, pixbuf);
+	g_object_unref (pixbuf);
 }
 
 static void

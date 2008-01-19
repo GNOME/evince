@@ -19,10 +19,13 @@
 
 #include <config.h>
 #include <glib/gstdio.h>
+#include "ev-document-misc.h"
 #include "ev-file-helpers.h"
 #include "ev-image.h"
 
 struct _EvImagePrivate {
+	gint       page;
+	gint       id;
 	GdkPixbuf *pixbuf;
 	gchar     *tmp_uri;
 };
@@ -70,6 +73,19 @@ ev_image_init (EvImage *image)
 }
 
 EvImage *
+ev_image_new (gint page,
+	      gint img_id)
+{
+	EvImage *image;
+
+	image = EV_IMAGE (g_object_new (EV_TYPE_IMAGE, NULL));
+	image->priv->page = page;
+	image->priv->id = img_id;
+
+	return image;
+}
+
+EvImage *
 ev_image_new_from_pixbuf (GdkPixbuf *pixbuf)
 {
 	EvImage *image;
@@ -82,6 +98,22 @@ ev_image_new_from_pixbuf (GdkPixbuf *pixbuf)
 	return image;
 }
 
+gint
+ev_image_get_page (EvImage *image)
+{
+	g_return_val_if_fail (EV_IS_IMAGE (image), -1);
+
+	return image->priv->page;
+}
+
+gint
+ev_image_get_id (EvImage *image)
+{
+	g_return_val_if_fail (EV_IS_IMAGE (image), -1);
+
+	return image->priv->id;
+}
+
 GdkPixbuf *
 ev_image_get_pixbuf (EvImage *image)
 {
@@ -92,19 +124,20 @@ ev_image_get_pixbuf (EvImage *image)
 }
 
 const gchar *
-ev_image_save_tmp (EvImage *image)
+ev_image_save_tmp (EvImage   *image,
+		   GdkPixbuf *pixbuf)
 {
 	GError *error = NULL;
 	
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
-	g_return_val_if_fail (GDK_IS_PIXBUF (image->priv->pixbuf), NULL);
+	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
 
 	if (image->priv->tmp_uri)
 		return image->priv->tmp_uri;
 
 	image->priv->tmp_uri = ev_tmp_filename ("image");
-	gdk_pixbuf_save (image->priv->pixbuf,
-			 image->priv->tmp_uri, "png", &error,
+	gdk_pixbuf_save (pixbuf, image->priv->tmp_uri,
+			 "png", &error,
 			 "compression", "3", NULL);
 	if (!error)
 		return image->priv->tmp_uri;

@@ -46,12 +46,17 @@ struct _EvImageClass {
 	GObjectClass base_class;
 };
 
-GType        ev_image_get_type        (void) G_GNUC_CONST;
-EvImage     *ev_image_new_from_pixbuf (GdkPixbuf *pixbuf);
+GType        ev_image_get_type         (void) G_GNUC_CONST;
+EvImage     *ev_image_new              (gint             page,
+					gint             img_id);
+EvImage     *ev_image_new_from_pixbuf  (GdkPixbuf       *pixbuf);
 
-GdkPixbuf   *ev_image_get_pixbuf      (EvImage   *image);
-const gchar *ev_image_save_tmp        (EvImage   *image);
-const gchar *ev_image_get_tmp_uri     (EvImage   *image);
+gint         ev_image_get_id           (EvImage         *image);
+gint         ev_image_get_page         (EvImage         *image);
+GdkPixbuf   *ev_image_get_pixbuf       (EvImage         *image);
+const gchar *ev_image_save_tmp         (EvImage         *image,
+					GdkPixbuf       *pixbuf);
+const gchar *ev_image_get_tmp_uri      (EvImage         *image);
 
 
 /* Image Mapping stuff */

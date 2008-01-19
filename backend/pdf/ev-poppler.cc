@@ -1156,8 +1156,8 @@ pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 }
 
 static GList *
-pdf_document_images_get_images (EvDocumentImages *document_images,
-				gint              page)
+pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
+				       gint              page)
 {
 	GList *retval = NULL;
 	PdfDocument *pdf_document;
@@ -1176,8 +1176,11 @@ pdf_document_images_get_images (EvDocumentImages *document_images,
 		image_mapping = (PopplerImageMapping *)list->data;
 
 		ev_image_mapping = g_new (EvImageMapping, 1);
-		
+#ifdef HAVE_POPPLER_PAGE_GET_IMAGE
+		ev_image_mapping->image = ev_image_new (page, image_mapping->image_id);
+#else
 		ev_image_mapping->image = ev_image_new_from_pixbuf (image_mapping->image);
+#endif
 		ev_image_mapping->x1 = image_mapping->area.x1;
 		ev_image_mapping->x2 = image_mapping->area.x2;
 		ev_image_mapping->y1 = image_mapping->area.y1;
@@ -1192,10 +1195,39 @@ pdf_document_images_get_images (EvDocumentImages *document_images,
 	return retval;
 }
 
+GdkPixbuf *
+pdf_document_images_get_image (EvDocumentImages *document_images,
+			       EvImage          *image)
+{
+#ifdef HAVE_POPPLER_PAGE_GET_IMAGE
+	PdfDocument     *pdf_document;
+	PopplerPage     *poppler_page;
+	cairo_surface_t *surface;
+	GdkPixbuf       *retval = NULL;
+
+	pdf_document = PDF_DOCUMENT (document_images);
+	poppler_page = poppler_document_get_page (pdf_document->document,
+						  ev_image_get_page (image));
+
+	surface = poppler_page_get_image (poppler_page, ev_image_get_id (image));
+	if (surface) {
+		retval = ev_document_misc_pixbuf_from_surface (surface);
+		cairo_surface_destroy (surface);
+	}
+
+	g_object_unref (poppler_page);
+
+	return retval;
+#else
+	return GDK_PIXBUF (g_object_ref (ev_image_get_pixbuf (image)));
+#endif /* HAVE_POPPLER_PAGE_GET_IMAGE */
+}
+
 static void
 pdf_document_document_images_iface_init (EvDocumentImagesIface *iface)
 {
-	iface->get_images = pdf_document_images_get_images;
+	iface->get_image_mapping = pdf_document_images_get_image_mapping;
+	iface->get_image = pdf_document_images_get_image;
 }
 
 static GdkPixbuf *

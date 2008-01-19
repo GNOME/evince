@@ -2795,16 +2795,28 @@ ev_view_drag_data_get (GtkWidget        *widget,
 			if (view->image_dnd_info.image) {
 				GdkPixbuf *pixbuf;
 
-				pixbuf = ev_image_get_pixbuf (view->image_dnd_info.image);
+				ev_document_doc_mutex_lock ();
+				pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document),
+								       view->image_dnd_info.image);
+				ev_document_doc_mutex_unlock ();
+				
 				gtk_selection_data_set_pixbuf (selection_data, pixbuf);
+				g_object_unref (pixbuf);
 			}
 			break;
 	        case TARGET_DND_URI:
 			if (view->image_dnd_info.image) {
+				GdkPixbuf   *pixbuf;
 				const gchar *tmp_uri;
 				gchar      **uris;
 
-				tmp_uri = ev_image_save_tmp (view->image_dnd_info.image);
+				ev_document_doc_mutex_lock ();
+				pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document),
+								       view->image_dnd_info.image);
+				ev_document_doc_mutex_unlock ();
+				
+				tmp_uri = ev_image_save_tmp (view->image_dnd_info.image, pixbuf);
+				g_object_unref (pixbuf);
 
 				uris = g_new0 (gchar *, 2);
 				uris[0] = (gchar *)tmp_uri;
