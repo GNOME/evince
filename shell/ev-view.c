@@ -1575,7 +1575,8 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	} else {
 		if (view->cursor == EV_VIEW_CURSOR_LINK ||
 		    view->cursor == EV_VIEW_CURSOR_IBEAM ||
-		    view->cursor == EV_VIEW_CURSOR_DRAG)
+		    view->cursor == EV_VIEW_CURSOR_DRAG ||
+		    view->cursor == EV_VIEW_CURSOR_AUTOSCROLL)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
 }
@@ -2687,15 +2688,12 @@ ev_view_button_press_event (GtkWidget      *widget,
 	
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
+
+	if (view->scroll_info.autoscrolling)
+		return TRUE;
 	
 	switch (event->button) {
 	        case 1: {
-
-			if (view->scroll_info.autoscrolling == TRUE) {
-				view->scroll_info.autoscrolling = FALSE;
-				return TRUE;
-			}
-
 			EvImage *image;
 			EvFormField *field;
 
@@ -2734,10 +2732,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 		case 2:
 			/* use root coordinates as reference point because
 			 * scrolling changes window relative coordinates */
-			if (view->scroll_info.autoscrolling == TRUE) {
-				view->scroll_info.autoscrolling = FALSE;
-				return TRUE;
-			}
 			view->drag_info.start.x = event->x_root;
 			view->drag_info.start.y = event->y_root;
 			view->drag_info.hadj = gtk_adjustment_get_value (view->hadjustment);
@@ -2747,8 +2741,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 			return TRUE;
 		case 3:
-			if (!view->scroll_info.autoscrolling)
-				view->scroll_info.start_y = event->y;
+			view->scroll_info.start_y = event->y;
 			return ev_view_do_popup_menu (view, event->x, event->y);
 	}
 	
@@ -3005,6 +2998,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 	if (view->scroll_info.autoscrolling) {
 		view->scroll_info.last_y = y;
+		return TRUE;
 	}
 
 	if (view->selection_info.in_drag) {
@@ -3140,6 +3134,18 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->drag_info.in_drag = FALSE;
 	view->image_dnd_info.in_drag = FALSE;
+
+	if (view->scroll_info.autoscrolling) {
+		view->scroll_info.autoscrolling = FALSE;
+		if (view->scroll_info.timeout_id) {
+			g_source_remove (view->scroll_info.timeout_id);
+			view->scroll_info.timeout_id = 0;
+		}
+		ev_view_handle_cursor_over_xy (view, event->x, event->y);
+		view->pressed_button = -1;
+
+		return TRUE;
+	} 
 	
 	view->drag_info.release_timeout_id = g_timeout_add (20,
 			(GSourceFunc)ev_view_scroll_drag_release, view);
@@ -4422,7 +4428,8 @@ ev_view_set_loading (EvView 	  *view,
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
-static gboolean ev_view_autoscroll_cb (EvView *view)
+static gboolean
+ev_view_autoscroll_cb (EvView *view)
 {
 	gdouble speed, value;
 
@@ -4455,7 +4462,8 @@ static gboolean ev_view_autoscroll_cb (EvView *view)
 
 }
 
-void ev_view_autoscroll(EvView *view)
+void
+ev_view_autoscroll (EvView *view)
 {
 	view->scroll_info.autoscrolling = TRUE;
 	view->scroll_info.timeout_id = g_timeout_add (20, (GSourceFunc)(ev_view_autoscroll_cb), view);
