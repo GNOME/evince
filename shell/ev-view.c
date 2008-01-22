@@ -3132,7 +3132,6 @@ ev_view_button_release_event (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 	EvLink *link = NULL;
 
-	view->drag_info.in_drag = FALSE;
 	view->image_dnd_info.in_drag = FALSE;
 
 	if (view->scroll_info.autoscrolling) {
@@ -3146,16 +3145,21 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 		return TRUE;
 	} 
+
+	if (view->drag_info.in_drag) {
+		view->drag_info.release_timeout_id =
+			g_timeout_add (20,
+				       (GSourceFunc)ev_view_scroll_drag_release, view);
+	}
+
+	if (view->document && !view->drag_info.in_drag && view->pressed_button != 3) {
+		link = ev_view_get_link_at_location (view, event->x, event->y);
+	}
 	
-	view->drag_info.release_timeout_id = g_timeout_add (20,
-			(GSourceFunc)ev_view_scroll_drag_release, view);
+	view->drag_info.in_drag = FALSE;
 
 	if (view->pressed_button == 2) {
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
-	}
-
-	if (view->document && view->pressed_button != 3) {
-		link = ev_view_get_link_at_location (view, event->x, event->y);
 	}
 
 	view->pressed_button = -1;
