@@ -137,6 +137,8 @@ ev_backends_manager_load (void)
 		ev_backends_list = g_list_prepend (ev_backends_list, info);
 	}
 
+	g_dir_close (dir);
+
 	return TRUE;
 }
 
