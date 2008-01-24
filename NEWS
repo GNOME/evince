@@ -6,6 +6,12 @@ IMPORTANT NOTICE: These release notes were updated by Wouter Bolsterlee on
 20080124. This NEWS file should be updated again before a release (including
 the version number right above this message)!
 
+Important notice for distributors:
+
+    * This release overrides document permissions by default. See
+      http://bugzilla.gnome.org/show_bug.cgi?id=382700 for more information
+      about this.
+
 New features and UI improvements:
 
     * Scroll pages in page entry with mouse wheel (#324122, David Turner)
@@ -13,6 +19,7 @@ New features and UI improvements:
     * New plugin system for backends (#351348, Carlos Garcia Campos)
     * Allow saving images (#500209, Carl-Anton Ingmarsson, Nickolay V. Shmyrev)
     * Add support for page transitions (Carlos Garnacho)
+    * Override document restrictions by default (#382700, Wouter Bolsterlee)
 
 Bug fixes:
 
@@ -22,7 +29,7 @@ Bug fixes:
       Carlos Garcia Campos)
     * Use libspectre, if available, for the ps backend. (#317106, #499787,
       #501235, #421879, #445797, #443859, #486547, #386005, #507705, Carlos Garcia Campos)
-	* Put RTL marker in recent file list (#509076, Djihed Afifi)
+    * Put RTL marker in recent file list (#509076, Djihed Afifi)
     * Put Nautilus extension in right place (#505359, Matthias Clasen, Brian
       Pepple, Damien Carbery, Wouter Bolsterlee)
     * Avoid filename quoting issues (#502500, Tom Parker)

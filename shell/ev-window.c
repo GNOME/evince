@@ -311,7 +311,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	gboolean ok_to_print = TRUE;
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
-	gboolean override_restrictions = FALSE;
+	gboolean override_restrictions = TRUE;
 	gboolean can_get_text = FALSE;
 	gboolean has_pages = FALSE;
 	gboolean can_find = FALSE;
