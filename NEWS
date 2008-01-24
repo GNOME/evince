@@ -1,4 +1,69 @@
 ===============
+Evince  2.21.90
+===============
+
+IMPORTANT NOTICE: These release notes were updated by Wouter Bolsterlee on
+20080124. This NEWS file should be updated again before a release (including
+the version number right above this message)!
+
+New features and UI improvements:
+
+    * Scroll pages in page entry with mouse wheel (#324122, David Turner)
+    * Kinetic autoscroll feature in context menu (#323670, #461271, David Turner)
+    * New plugin system for backends (#351348, Carlos Garcia Campos)
+    * Allow saving images (#500209, Carl-Anton Ingmarsson, Nickolay V. Shmyrev)
+    * Add support for page transitions (Carlos Garnacho)
+
+Bug fixes:
+
+    * Reset cursor correctly (#501603, #509958, Carlos Garcia Campos)
+    * Use GSlice to allocate memory (#475972, Christian Persch)
+    * Do not limit minimum zoom factor in best fit/fit width mode (#503805,
+      Carlos Garcia Campos)
+    * Use libspectre, if available, for the ps backend. (#317106, #499787,
+      #501235, #421879, #445797, #443859, #486547, #386005, #507705, Carlos Garcia Campos)
+	* Put RTL marker in recent file list (#509076, Djihed Afifi)
+    * Put Nautilus extension in right place (#505359, Matthias Clasen, Brian
+      Pepple, Damien Carbery, Wouter Bolsterlee)
+    * Avoid filename quoting issues (#502500, Tom Parker)
+    * Repair horizontal scrolling with shift (#483412, Nickolay V. Shmyrev)
+    * Gnome Keyring is now an optional dependency (#509676, Marcelo Lira)
+    * Reduce memory consumption by rendering images on demand (Carlos Garcia Campos)
+    * Other bugs fixed: #502843, #460658, #504721
+
+Thanks:
+
+    * Carlos Garcia Campos
+    * Christian Persch
+    * Yaakov Selkowitz
+    * David Turner
+    * Carl-Anton Ingmarsson
+    * Carlos Garnacho
+    * Djihed Afifi
+    * Nickolay V. Shmyrev
+    * Wouter Bolsterlee
+    * Marcelo Lira
+
+Translation updates:
+
+    * Djihed Afifi (ar)
+    * Ihar Hrachyshka (be@latin)
+    * Gil Forcada (ca)
+    * Jorge Gonzalez (es)
+    * Priit Laes (et)
+    * Inaki Larranaga Murgoitio (eu)
+    * Stéphane Raimbault (fr)
+    * Seán de Búrca (ga)
+    * Ignacio Casal Quinteiro (gl)
+    * Kjartan Maraas (nb)
+    * Wouter Bolsterlee (nl)
+    * Thierry Randrianiriana (mg)
+    * Yannig Marchegay (oc)
+    * Leonardo Ferreira Fontenelle, Hugo Doria, Rodrigo Flores (pt_BR)
+    * Daniel Nylander (sv)
+    * Clytie Siddall (vi)
+
+===============
 Evince  2.21.1
 ===============
 
