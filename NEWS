@@ -17,8 +17,8 @@ New features and UI improvements:
     * Scroll pages in page entry with mouse wheel (#324122, David Turner)
     * Kinetic autoscroll feature in context menu (#323670, #461271, David Turner)
     * New plugin system for backends (#351348, Carlos Garcia Campos)
-	* Allow saving images in formats other than PNG (#500209, Carl-Anton
-	  Ingmarsson, Nickolay V. Shmyrev)
+    * Allow saving images in formats other than PNG (#500209, Carl-Anton
+      Ingmarsson, Nickolay V. Shmyrev)
     * Add support for page transitions (#458460, Carlos Garnacho)
     * Override document restrictions by default (#382700, Wouter Bolsterlee)
     * Use up/down arrows instead of left/right (#170081, Wouter Bolsterlee)
@@ -927,30 +927,30 @@ Evince   0.3.2
 
 New Features:
 
-	* Multi page tiff support
-	* Document properties
-	* Document rotation
-	* Gnome vfs support
+    * Multi page tiff support
+    * Document properties
+    * Document rotation
+    * Gnome vfs support
 
 Interface Improvements:
 
-	* Faster dvi rendering
-	* More compact layout for documents with different page formats
-	* Stock icons for all toolbar editor items
-	* Multiple selection in the open dialog
-	* Loading progress feedback
-	* Multiple column thumbnails
-	* Expand links when specified by the document
-	* Several new handy keybindings
-	* Ellipsize recent items labels
+    * Faster dvi rendering
+    * More compact layout for documents with different page formats
+    * Stock icons for all toolbar editor items
+    * Multiple selection in the open dialog
+    * Loading progress feedback
+    * Multiple column thumbnails
+    * Expand links when specified by the document
+    * Several new handy keybindings
+    * Ellipsize recent items labels
 
 Bug Fixes:
 
-	* Fix rendering of several postscript documents
-	* Fix reloading of postcript documents
-	* Fix a lot of memory leaks
-	* Fix compilation on gcc 4
-	* Several minor fixes
+    * Fix rendering of several postscript documents
+    * Fix reloading of postcript documents
+    * Fix a lot of memory leaks
+    * Fix compilation on gcc 4
+    * Several minor fixes
 
 ==============
 Evince   0.3.1
@@ -958,25 +958,25 @@ Evince   0.3.1
 
 New Features:
 
-	* Toolbar editor
-	* Middle button scrolling
-	* Support for printing page ranges
-	* Support for printing chapters (from the index)
+    * Toolbar editor
+    * Middle button scrolling
+    * Support for printing page ranges
+    * Support for printing chapters (from the index)
 
 Interface Improvements:
 
-	* Move best fit items in the toolbar control at the top
-	* In the sidebar make drop down menu as large as the button
-	* Several keybindings improvements
-	* Faster scrolling
-	* Only render the visible thumbnails (less memory usage)
-	* Get rid of confusing Normal size menu
+    * Move best fit items in the toolbar control at the top
+    * In the sidebar make drop down menu as large as the button
+    * Several keybindings improvements
+    * Faster scrolling
+    * Only render the visible thumbnails (less memory usage)
+    * Get rid of confusing Normal size menu
 
 Bug Fixes:
 
-	* Better mime detection
-	* Several minor fixes
-	* Fix printing on LPD printers
+    * Better mime detection
+    * Several minor fixes
+    * Fix printing on LPD printers
 
 ==============
 Evince   0.3.0
@@ -984,23 +984,23 @@ Evince   0.3.0
 
 New Features:
 
-	* Continous mode
-	* Dual page mode
-	* Control + Scroll does zooming
-	* Shift + Scroll scrolls horizontally
-	* Zoom control in the toolbar
+    * Continous mode
+    * Dual page mode
+    * Control + Scroll does zooming
+    * Shift + Scroll scrolls horizontally
+    * Zoom control in the toolbar
 
 Interface Improvements:
 
-	* If all page labels are numeric show only
-	  the page total
+    * If all page labels are numeric show only
+      the page total
 
 Bug Fixes:
 
-	* Fix size of dvi thumbnails
-	* Fix crash on exit
-	* Make thumbnailer schemas translatable
-	* Fix build problems with t1lib
+    * Fix size of dvi thumbnails
+    * Fix crash on exit
+    * Make thumbnailer schemas translatable
+    * Fix build problems with t1lib
 
 ==============
 Evince   0.2.1
@@ -1008,49 +1008,49 @@ Evince   0.2.1
 
 New Features:
 
-	* new backend to support DJVU files.
-	* new backend to support DVI.
-	* Initial implementation of doc metadata.  No UI for this yet,
-	  though we respect docs requesting UI changes.
-	* support application/x-gzpostscript
-	* consolidate mime handling code so thumbnailer and main page
+    * new backend to support DJVU files.
+    * new backend to support DVI.
+    * Initial implementation of doc metadata.  No UI for this yet,
+      though we respect docs requesting UI changes.
+    * support application/x-gzpostscript
+    * consolidate mime handling code so thumbnailer and main page
           can use them.  Thumbnail all types we support.
-	* Respect document orientation 
-	* Implement print and save a copy for the ps backend.
-	* Badass completion of the document in the entry.  Only works
-	  with GTK+ >= 2.7.1
-	* User docs
+    * Respect document orientation 
+    * Implement print and save a copy for the ps backend.
+    * Badass completion of the document in the entry.  Only works
+      with GTK+ >= 2.7.1
+    * User docs
 
 Bug Fixes:
 
-	* Faster Zooming
-	* Clean up Schemas
-	* README added.
-	* Small rework of sidebar code. Now sidebar pages should implement
-	  EvSidebarPage interface.
-	* lots of small bug fixes
-	* Actually fix the "FIXME: update priority" comment.
-	* Update egg-recent from libegg. This should fix long startup
+    * Faster Zooming
+    * Clean up Schemas
+    * README added.
+    * Small rework of sidebar code. Now sidebar pages should implement
+      EvSidebarPage interface.
+    * lots of small bug fixes
+    * Actually fix the "FIXME: update priority" comment.
+    * Update egg-recent from libegg. This should fix long startup
           problem.
 
 Interface Improvements:
 
-	* Shift + Space scrolls up.
-	* Removed fullscreen toolbar hard-coded style
-	* Fix normal size zoom. Make zoom in/zoom out unsensitive when
-	  they are behyond the limits.
-	* Doesn't show resize grip when maximized
-	* don't draw border in fullscreen
-	* Doesn't show thumbnails if document has 1 page. Make sidebar
-	  menu entries sensitive only if if they have sense. 
-	* Work around the Escape conflict (find bar and unfullscreen)
-	* Save accelerators on exit.
-	* Add Edit->Find Next
+    * Shift + Space scrolls up.
+    * Removed fullscreen toolbar hard-coded style
+    * Fix normal size zoom. Make zoom in/zoom out unsensitive when
+      they are behyond the limits.
+    * Doesn't show resize grip when maximized
+    * don't draw border in fullscreen
+    * Doesn't show thumbnails if document has 1 page. Make sidebar
+      menu entries sensitive only if if they have sense. 
+    * Work around the Escape conflict (find bar and unfullscreen)
+    * Save accelerators on exit.
+    * Add Edit->Find Next
 
 Translations:
 
-	* Make all toolbar items translatable
-	* ru (Nickolay Shmyrev)
+    * Make all toolbar items translatable
+    * ru (Nickolay Shmyrev)
 
 ==============
 Evince   0.2.0
@@ -1058,22 +1058,22 @@ Evince   0.2.0
 
 Code changes
 
-	* Use poppler glib api
+    * Use poppler glib api
 
 Interface improvements
 
-	* Rewrite most of the backend code to use threads and make
-	  the interface more responsive
+    * Rewrite most of the backend code to use threads and make
+      the interface more responsive
 
 New features
 
-	* Use page labels as page numbers (Jonathan)
+    * Use page labels as page numbers (Jonathan)
 
 ==============
 Evince   0.1.9
 ==============
 
-	* Fix a crash in the nautilus thumbnailer (Fernando Herrera)
+    * Fix a crash in the nautilus thumbnailer (Fernando Herrera)
 
 ==============
 Evince   0.1.8
@@ -1081,7 +1081,7 @@ Evince   0.1.8
 
 BugFixes
 
-	* Fix crash when opening pdf documents with only 1 page
+    * Fix crash when opening pdf documents with only 1 page
 
 ==============
 Evince   0.1.7
@@ -1089,13 +1089,13 @@ Evince   0.1.7
 
 New features
 
-	* Nautilus thumbnailer for pdf (Fernando Herrera)
+    * Nautilus thumbnailer for pdf (Fernando Herrera)
 
 BugFixes
 
-	* Make code C89 compliant (Jens Granseuer)
-	* Fix some issues in the nautilus thumbnailer (Marco)
-	* Do not read ps defaults from ggv prefs! (Marco)
+    * Make code C89 compliant (Jens Granseuer)
+    * Fix some issues in the nautilus thumbnailer (Marco)
+    * Do not read ps defaults from ggv prefs! (Marco)
 
 ==============
 Evince   0.1.6
@@ -1103,18 +1103,18 @@ Evince   0.1.6
 
 Code changes
 
-	* Use poppler instead of our own xpdf fork (Kristian Høgsberg)
+    * Use poppler instead of our own xpdf fork (Kristian Høgsberg)
 
 Interface improvements
 
-	* Use an entry for the page control instead of
-	  spin buttons (Marco)
-	* Expand the sidebar selection widget (Carlos)
+    * Use an entry for the page control instead of
+      spin buttons (Marco)
+    * Expand the sidebar selection widget (Carlos)
 
 Bug fixes
 
-	* Fix crash in links loading (Jonathan)
-	* Fix crashes when reloading document (Marco)	
+    * Fix crash in links loading (Jonathan)
+    * Fix crashes when reloading document (Marco)   
 
 ==============
 Evince   0.1.5
@@ -1122,42 +1122,42 @@ Evince   0.1.5
 
 New features
 
-	* Reload menu (Kai Willadsen)
+    * Reload menu (Kai Willadsen)
 
 Interface improvements
-	
-	* Support for DnD of files (Carlos Garcia Campos)
-	* Set the "Previous" and "Next" toolbar
-	  buttons as important (Vincent Noel)
-	* Make the "best fit" and "fit width"
-	  values act as toggle buttons (Jonathan)
-	* Autohide the fullscreen button (Kristian Høgsberg)
-	* Added ellipsis to Print item (Bryan)
-	* Change the fullscreen toolbar to always be in
+    
+    * Support for DnD of files (Carlos Garcia Campos)
+    * Set the "Previous" and "Next" toolbar
+      buttons as important (Vincent Noel)
+    * Make the "best fit" and "fit width"
+      values act as toggle buttons (Jonathan)
+    * Autohide the fullscreen button (Kristian Høgsberg)
+    * Added ellipsis to Print item (Bryan)
+    * Change the fullscreen toolbar to always be in
           the popup window (Jonathan)
-	* Improved sidebar widget (Carlos Garcia Campos)
-	* Minimal size for the sidebar (Marco)
-	* Hide the sidebar if the type doesn't
-	  support thumbnailing and indexing (Jonathan)
-	* Remember the sidebar size (Carlos Garcia Campos)
+    * Improved sidebar widget (Carlos Garcia Campos)
+    * Minimal size for the sidebar (Marco)
+    * Hide the sidebar if the type doesn't
+      support thumbnailing and indexing (Jonathan)
+    * Remember the sidebar size (Carlos Garcia Campos)
 
 Bug fixes
 
-	* Fix compilation on non-gcc platforms (Marco)
-	* Fix thumbnails generation (Crispin Flowerday)
-	* Fix best fit size allocation (Martin)
-	* Replace newlines in the title by spaces (Martin)
-	* Get rid of the black flash when resizing the window (Jonathan)
-	* Sync selection with zoom levels (Marco)
-	* Fix clipboard operations (Marco)
-	* Fix a crash when the ps document cannot be opened (Marco)
-	* Fix postcript page selection (Marco)
-	* Fix page sizing to be idempotent (Marco)
-	* Fix page sizing toggle buttons (Marco)
-	* Fix freezing on document with unrecognized links (Marco)
-	* Check ghostscript minimal version (Marco)
-	* Fix rendering of landscape documents (Marco)
-	* Unescape filenames for display (Marco)
+    * Fix compilation on non-gcc platforms (Marco)
+    * Fix thumbnails generation (Crispin Flowerday)
+    * Fix best fit size allocation (Martin)
+    * Replace newlines in the title by spaces (Martin)
+    * Get rid of the black flash when resizing the window (Jonathan)
+    * Sync selection with zoom levels (Marco)
+    * Fix clipboard operations (Marco)
+    * Fix a crash when the ps document cannot be opened (Marco)
+    * Fix postcript page selection (Marco)
+    * Fix page sizing to be idempotent (Marco)
+    * Fix page sizing toggle buttons (Marco)
+    * Fix freezing on document with unrecognized links (Marco)
+    * Check ghostscript minimal version (Marco)
+    * Fix rendering of landscape documents (Marco)
+    * Unescape filenames for display (Marco)
 
 ==============
 Evince   0.1.4
@@ -1165,21 +1165,21 @@ Evince   0.1.4
 
 Code changes
 
-	* Add debugging/logging helpers (Marco)
-	* Add warnings about unimplemented/unknown link
+    * Add debugging/logging helpers (Marco)
+    * Add warnings about unimplemented/unknown link
           types (Marco)
 
 Interface improvements
 
-	* Epiphany like fullscreen mode (Christian Persch)
-	* Save chromes state between sessions (Christian Persch)
-	* Improve toolbar layout and icons (Luca Ferretti)
+    * Epiphany like fullscreen mode (Christian Persch)
+    * Save chromes state between sessions (Christian Persch)
+    * Improve toolbar layout and icons (Luca Ferretti)
 
 Bug fixes
 
-	* Really fix postscript rendering (Marco)
-	* Do not leak gs processes on exit (Marco)
-	* Fix a buffer overflow fix (Marco)
+    * Really fix postscript rendering (Marco)
+    * Do not leak gs processes on exit (Marco)
+    * Fix a buffer overflow fix (Marco)
 
 ==============
 Evince   0.1.3
@@ -1187,21 +1187,21 @@ Evince   0.1.3
 
 Code changes
 
-	* Beginnings of continuous viewing (Jonathan)
+    * Beginnings of continuous viewing (Jonathan)
 
 New features
 
-	* Support eps (Marco)
-	* Support gzipped ps (Marco)
+    * Support eps (Marco)
+    * Support gzipped ps (Marco)
 
 Bug fixes
 
-	* Fix a crash with the postscript view (Marco)
-	* Fix image view (Jeff Muizelaar)
-	* Fix a warning when opening documents without
-	  thumbnails (Martin)
-	* Fix crashes when searched word is not found (Marco)
-	* Fix a crash when changing page with keys (Marco)
+    * Fix a crash with the postscript view (Marco)
+    * Fix image view (Jeff Muizelaar)
+    * Fix a warning when opening documents without
+      thumbnails (Martin)
+    * Fix crashes when searched word is not found (Marco)
+    * Fix a crash when changing page with keys (Marco)
 
 ==============
 Evince   0.1.2
@@ -1209,19 +1209,19 @@ Evince   0.1.2
 
 New features
 
-	* Make search really work (Marco)
+    * Make search really work (Marco)
 
 Interface improvements
 
-	* Show password state in the view (Jonathan)
-	* add GTK_SHADOW_IN to the scrolled window (Martin)
-	* make sure the selected thumbnail stays visible (Martin)
-	* Remove history buttons from the toolbar (Marco)
+    * Show password state in the view (Jonathan)
+    * add GTK_SHADOW_IN to the scrolled window (Martin)
+    * make sure the selected thumbnail stays visible (Martin)
+    * Remove history buttons from the toolbar (Marco)
 
 Bug fixes
 
-	* Fix CID fonts with freetype 2.1.9 (Marco)
-	* Fix inverted up/down buttons (Marco)
+    * Fix CID fonts with freetype 2.1.9 (Marco)
+    * Fix inverted up/down buttons (Marco)
 
 ==============
 Evince   0.1.1
@@ -1229,48 +1229,48 @@ Evince   0.1.1
 
 New features
 
-	* Actually print PDF files
-	* Navigation history
-	* Support Links
-	* Support encrypted PDFs
-	* A desktop file
+    * Actually print PDF files
+    * Navigation history
+    * Support Links
+    * Support encrypted PDFs
+    * A desktop file
 
 Interface improvements
 
-	* Rename Bookmarks sidebar to Index
-	* Use filename as title if the file doesn't have a title (Jeff
+    * Rename Bookmarks sidebar to Index
+    * Use filename as title if the file doesn't have a title (Jeff
           Muizelaar) or if the title is empty
-	* Make navigation with thumbnails possible (Anders Carlsson)
-	* (De)Sensitize actions as necessary (Dave Malcolm)
-	* Show a wait cursor while the page is rendering
-	* Center the page; draw a page border
-	* Undo selection on page change
-	* Shorter toolbar item labels
-	* Make selection work in any direction
+    * Make navigation with thumbnails possible (Anders Carlsson)
+    * (De)Sensitize actions as necessary (Dave Malcolm)
+    * Show a wait cursor while the page is rendering
+    * Center the page; draw a page border
+    * Undo selection on page change
+    * Shorter toolbar item labels
+    * Make selection work in any direction
 
 Code changes
 
-	* Render PDFs directly as packed RGB
-	* Update egg-recent code (not used yet)
-	* Update to latest Xpdf patchlevel
+    * Render PDFs directly as packed RGB
+    * Update egg-recent code (not used yet)
+    * Update to latest Xpdf patchlevel
 
 Bug fixes
 
-	* PostScript backend fixes
-	* Pixbuf backend fixes (Jeff Muizelaar)
-	* Set page spin button limits correctly (Anders Carlsson)
-	* Fix problem when base fonts are installed as pcf files.
-	* Keep search selection highlighting correct even when
-	  zooming/changing window size (Stephane LOEUILLET)
+    * PostScript backend fixes
+    * Pixbuf backend fixes (Jeff Muizelaar)
+    * Set page spin button limits correctly (Anders Carlsson)
+    * Fix problem when base fonts are installed as pcf files.
+    * Keep search selection highlighting correct even when
+      zooming/changing window size (Stephane LOEUILLET)
 
 Translation updates
 
-	* cs (Miloslav Trmac)
-	* de (Frank Arnold)
-	* en_CA (Adam Weinberger)
-	* es (Antonio Ognio)
-	* nb (Kjartan Maraas)
-	* nl (Tino Meinen)
+    * cs (Miloslav Trmac)
+    * de (Frank Arnold)
+    * en_CA (Adam Weinberger)
+    * es (Antonio Ognio)
+    * nb (Kjartan Maraas)
+    * nl (Tino Meinen)
 
 evince 0.1.0
 ------------
