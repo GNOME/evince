@@ -4414,16 +4414,16 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_view_autoscroll) },
 
         /* Go menu */
-        { "GoPreviousPage", GTK_STOCK_GO_BACK, N_("_Previous Page"), "<control>Page_Up",
+        { "GoPreviousPage", GTK_STOCK_GO_UP, N_("_Previous Page"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_window_cmd_go_previous_page) },
-        { "GoNextPage", GTK_STOCK_GO_FORWARD, N_("_Next Page"), "<control>Page_Down",
+        { "GoNextPage", GTK_STOCK_GO_DOWN, N_("_Next Page"), "<control>Page_Down",
           N_("Go to the next page"),
           G_CALLBACK (ev_window_cmd_go_next_page) },
-        { "GoFirstPage", GTK_STOCK_GOTO_FIRST, N_("_First Page"), "<control>Home",
+        { "GoFirstPage", GTK_STOCK_GOTO_TOP, N_("_First Page"), "<control>Home",
           N_("Go to the first page"),
           G_CALLBACK (ev_window_cmd_go_first_page) },
-        { "GoLastPage", GTK_STOCK_GOTO_LAST, N_("_Last Page"), "<control>End",
+        { "GoLastPage", GTK_STOCK_GOTO_BOTTOM, N_("_Last Page"), "<control>End",
           N_("Go to the last page"),
           G_CALLBACK (ev_window_cmd_go_last_page) },
 
