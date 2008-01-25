@@ -1,3 +1,32 @@
+2008-01-25  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* backend/comics/comics-document.c: (comics_document_load):
+	* libdocument/ev-attachment.[ch]: (ev_attachment_finalize),
+	(ev_attachment_set_property), (ev_attachment_init),
+	(ev_attachment_save), (ev_attachment_launch_app),
+	(ev_attachment_open):
+	* libdocument/ev-document-factory.c: (get_document_from_uri):
+	* libdocument/ev-file-helpers.[ch]: (ev_tmp_file_get),
+	(ev_tmp_file_unlink), (ev_tmp_uri_unlink), (ev_xfer_uri_simple),:
+	* shell/ev-jobs.c:
+	* shell/ev-password.c: (ev_password_dialog_set_property),
+	(ev_password_dialog_save_password):
+	* shell/ev-sidebar-attachments.c:
+	(ev_sidebar_attachments_drag_data_get):
+	* shell/ev-window-title.c: (get_filename_from_uri):
+	* shell/ev-window.c: (ev_window_clear_temp_file),
+	(ev_window_load_job_cb), (window_open_file_copy_ready_cb),
+	(ev_window_open_uri), (window_save_file_copy_ready_cb),
+	(ev_window_save_remote), (ev_window_cmd_save_as), (launch_action),
+	(launch_external_uri), (image_save_dialog_response_cb),
+	(attachment_save_dialog_response_cb):
+	* shell/main.c: (load_files), (load_files_remote), (main):
+	* thumbnailer/evince-thumbnailer.c: (main):
+
+	Port to gio and drop gnome-vfs dependency. Fixes bug
+	#510401. Based on patch by Cosimo Cecchi.
+	
 2008-01-24  Wouter Bolsterlee  <wbolster@svn.gnome.org>
 
 	* NEWS:

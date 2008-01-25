@@ -20,9 +20,6 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnomevfs/gnome-vfs-mime-handlers.h>
-#include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include "ev-file-helpers.h"
 #include "ev-attachment.h"
 
@@ -46,8 +43,8 @@ struct _EvAttachmentPrivate {
 	gchar                   *data;
 	gchar                   *mime_type;
 
-	GnomeVFSMimeApplication *app;
-	gchar                   *tmp_uri;
+	GAppInfo                *app;
+	GFile                   *tmp_file;
 };
 
 #define EV_ATTACHMENT_GET_PRIVATE(object) \
@@ -93,14 +90,14 @@ ev_attachment_finalize (GObject *object)
 	}
 
 	if (attachment->priv->app) {
-		gnome_vfs_mime_application_free (attachment->priv->app);
+		g_object_unref (attachment->priv->app);
 		attachment->priv->app = NULL;
 	}
 
-	if (attachment->priv->tmp_uri) {
-		ev_tmp_filename_unlink (attachment->priv->tmp_uri);
-		g_free (attachment->priv->tmp_uri);
-		attachment->priv->tmp_uri = NULL;
+	if (attachment->priv->tmp_file) {
+		ev_tmp_file_unlink (attachment->priv->tmp_file);
+		g_object_unref (attachment->priv->tmp_file);
+		attachment->priv->tmp_file = NULL;
 	}
 
 	(* G_OBJECT_CLASS (ev_attachment_parent_class)->finalize) (object);
@@ -132,9 +129,10 @@ ev_attachment_set_property (GObject      *object,
 		break;
 	case PROP_DATA:
 		attachment->priv->data = g_value_get_pointer (value);
-		attachment->priv->mime_type =
-			g_strdup (gnome_vfs_get_mime_type_for_data (attachment->priv->data,
-								    attachment->priv->size));
+		attachment->priv->mime_type = g_content_type_guess (attachment->priv->name,
+								    (guchar *) attachment->priv->data,
+								    attachment->priv->size,
+								    NULL);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -217,7 +215,7 @@ ev_attachment_init (EvAttachment *attachment)
 	attachment->priv->data = NULL;
 	attachment->priv->mime_type = NULL;
 
-	attachment->priv->tmp_uri = NULL;
+	attachment->priv->tmp_file = NULL;
 }
 
 EvAttachment *
@@ -284,78 +282,92 @@ ev_attachment_get_mime_type (EvAttachment *attachment)
 
 gboolean
 ev_attachment_save (EvAttachment *attachment,
-		    const gchar  *uri,
+		    GFile        *file,
 		    GError      **error)
 {
-	GnomeVFSHandle  *handle = NULL;
-	GnomeVFSFileSize written;
-	GnomeVFSResult   result;
-	
-	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
-	g_return_val_if_fail (uri != NULL, FALSE);
+	GFileOutputStream *output_stream;
+	GError *ioerror = NULL;
+	gssize  written_bytes;
 
-	result = gnome_vfs_create (&handle, uri,
-				   GNOME_VFS_OPEN_WRITE,
-				   FALSE, 0644);
-	if (result != GNOME_VFS_OK) {
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
+	g_return_val_if_fail (G_IS_FILE (file), FALSE);
+
+	output_stream = g_file_create (file, 0, NULL, &ioerror);
+	if (output_stream == NULL) {
+		char *uri;
+		
+		uri = g_file_get_uri (file);
 		g_set_error (error,
 			     EV_ATTACHMENT_ERROR, 
-			     (gint) result,
+			     ioerror->code,
 			     _("Couldn't save attachment “%s”: %s"),
 			     uri, 
-			     gnome_vfs_result_to_string (result));
+			     ioerror->message);
+
+		g_error_free (ioerror);
+		g_free (uri);
 		
 		return FALSE;
 	}
-
-	result = gnome_vfs_write (handle, attachment->priv->data,
-				  attachment->priv->size, &written);
-	if (result != GNOME_VFS_OK || written < attachment->priv->size){
+	
+	written_bytes = g_output_stream_write (G_OUTPUT_STREAM (output_stream),
+					       attachment->priv->data,
+					       attachment->priv->size,
+					       NULL, &ioerror);
+	if (written_bytes == -1) {
+		char *uri;
+		
+		uri = g_file_get_uri (file);
 		g_set_error (error,
 			     EV_ATTACHMENT_ERROR,
-			     (gint) result,
+			     ioerror->code,
 			     _("Couldn't save attachment “%s”: %s"),
 			     uri,
-			     gnome_vfs_result_to_string (result));
+			     ioerror->message);
 		
-		gnome_vfs_close (handle);
+		g_output_stream_close (G_OUTPUT_STREAM (output_stream), NULL, NULL);
+		g_error_free (ioerror);
+		g_free (uri);
 
 		return FALSE;
 	}
 
-	gnome_vfs_close (handle);
+	g_output_stream_close (G_OUTPUT_STREAM (output_stream), NULL, NULL);
 
 	return TRUE;
+	
 }
 
 static gboolean
 ev_attachment_launch_app (EvAttachment *attachment,
 			  GError      **error)
 {
-	GnomeVFSResult result;
-	GList         *uris = NULL;
+	gboolean result;
+	GList   *files = NULL;
+	GError  *ioerror = NULL;
 
-	g_assert (attachment->priv->tmp_uri != NULL);
-	g_assert (attachment->priv->app != NULL);
+	g_assert (G_IS_FILE (attachment->priv->tmp_file));
+	g_assert (G_IS_APP_INFO (attachment->priv->app));
 
-	uris = g_list_prepend (uris, attachment->priv->tmp_uri);
-	result = gnome_vfs_mime_application_launch (attachment->priv->app,
-						    uris);
+	files = g_list_prepend (files, attachment->priv->tmp_file);
+	result = g_app_info_launch (attachment->priv->app, files,
+				    NULL, &ioerror);
 
-	if (result != GNOME_VFS_OK) {
+	if (!result) {
 		g_set_error (error,
 			     EV_ATTACHMENT_ERROR,
 			     (gint) result,
 			     _("Couldn't open attachment “%s”: %s"),
 			     attachment->priv->name,
-			     gnome_vfs_result_to_string (result));
+			     ioerror->message);
 
-		g_list_free (uris);
+		g_list_free (files);
+		g_error_free (ioerror);
 		
 		return FALSE;
 	}
 
-	g_list_free (uris);
+	g_list_free (files);
 	
 	return TRUE;
 }
@@ -364,15 +376,14 @@ gboolean
 ev_attachment_open (EvAttachment *attachment,
 		    GError      **error)
 {
-
-	gboolean                 retval = FALSE;
-	GnomeVFSMimeApplication *default_app = NULL;
+	GAppInfo *app_info;
+	gboolean  retval = FALSE;
 
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
 	
 	if (!attachment->priv->app) {
-		default_app = gnome_vfs_mime_get_default_application (attachment->priv->mime_type);
-		attachment->priv->app = default_app;
+		app_info = g_app_info_get_default_for_type (attachment->priv->mime_type, TRUE);
+		attachment->priv->app = app_info;
 	}
 
 	if (!attachment->priv->app) {
@@ -385,26 +396,28 @@ ev_attachment_open (EvAttachment *attachment,
 		return FALSE;
 	}
 
-	if (attachment->priv->tmp_uri &&
-	    g_file_test (attachment->priv->tmp_uri, G_FILE_TEST_EXISTS)) {
+	if (attachment->priv->tmp_file &&
+	    g_file_query_exists (attachment->priv->tmp_file, NULL)) {
 		retval = ev_attachment_launch_app (attachment, error);
 	} else {
-		gchar *uri, *filename;
+		GFile *tmpdir;
+		GFile *file;
 		
-		filename = g_build_filename (ev_tmp_dir (), attachment->priv->name, NULL);
-		uri = g_filename_to_uri (filename, NULL, NULL);
+		tmpdir = g_file_new_for_path (ev_tmp_dir ());
+		file = g_file_get_child (tmpdir, attachment->priv->name);
 
-		if (ev_attachment_save (attachment, uri, error)) {
-			if (attachment->priv->tmp_uri)
-				g_free (attachment->priv->tmp_uri);
-			attachment->priv->tmp_uri = g_strdup (filename);
+		if (ev_attachment_save (attachment, file, error)) {
+			if (attachment->priv->tmp_file)
+				g_object_unref (attachment->priv->tmp_file);
+			attachment->priv->tmp_file = g_object_ref (file);
 
 			retval = ev_attachment_launch_app (attachment, error);
 		}
 
-		g_free (filename);
-		g_free (uri);
+		g_object_unref (file);
+		g_object_unref (tmpdir);
 	}
 
 	return retval;
 }
+

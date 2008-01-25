@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <gio/gio.h>
 
 #include "comics-document.h"
 #include "ev-document-misc.h"
@@ -109,7 +109,10 @@ comics_document_load (EvDocument *document,
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	GSList *supported_extensions;
-	gchar *list_files_command = NULL, *std_out, *quoted_file, *mime_type;
+	GFile *file;
+	GFileInfo *file_info;
+	gchar *list_files_command = NULL, *std_out, *quoted_file;
+	const gchar *mime_type = NULL;
 	gchar **cbr_files;
 	gboolean success;
 	int i, retval;
@@ -118,7 +121,14 @@ comics_document_load (EvDocument *document,
 	g_return_val_if_fail (comics_document->archive != NULL, FALSE);
 
 	quoted_file = g_shell_quote (comics_document->archive);
-	mime_type = gnome_vfs_get_mime_type (uri);
+	file = g_file_new_for_uri (uri);
+	file_info = g_file_query_info (file,
+				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+				       0, NULL, NULL);
+	if (file_info != NULL) {
+		mime_type = g_file_info_get_content_type (file_info);
+	}
+	g_object_unref (file);
 
 	/* FIXME, use proper cbr/cbz mime types once they're
 	 * included in shared-mime-info */
@@ -136,6 +146,7 @@ comics_document_load (EvDocument *document,
 		comics_document->regex_arg = TRUE;
 	}
 
+	g_object_unref (file_info);
 	g_free (quoted_file);
 
 	/* Get list of files in archive */
@@ -144,14 +155,12 @@ comics_document_load (EvDocument *document,
 	g_free (list_files_command);
 
 	if (!success) {
-		g_free (mime_type);
 		return FALSE;
 	} else if (retval != 0) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,
 			     EV_DOCUMENT_ERROR_INVALID,
 			     _("File corrupted."));
-		g_free (mime_type);
 		return FALSE;
 	}
 
@@ -177,7 +186,6 @@ comics_document_load (EvDocument *document,
 	}
 
 	g_free (std_out);
-	g_free (mime_type);
 	g_strfreev (cbr_files);
 	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
 	g_slist_free (supported_extensions);

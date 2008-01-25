@@ -18,10 +18,11 @@
  *  $Id$
  */
 
-#ifndef EPHY_FILE_HELPERS_H
-#define EPHY_FILE_HELPERS_H
+#ifndef EV_FILE_HELPERS_H
+#define EV_FILE_HELPERS_H
 
 #include <glib.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -39,8 +40,10 @@ void         ev_file_helpers_init     (void);
 
 void         ev_file_helpers_shutdown (void);
 
+GFile       *ev_tmp_file_get          (const gchar       *prefix);
 gchar       *ev_tmp_filename          (const char        *prefix);
 void         ev_tmp_filename_unlink   (const gchar       *filename);
+void         ev_tmp_file_unlink       (GFile             *file);
 void         ev_tmp_uri_unlink        (const gchar       *uri);
 
 gboolean     ev_xfer_uri_simple       (const char        *from,
@@ -57,4 +60,4 @@ gchar       *ev_file_compress         (const gchar       *uri,
 
 G_END_DECLS
 
-#endif /* EPHY_FILE_HELPERS_H */
+#endif /* EV_FILE_HELPERS_H */

@@ -17,17 +17,14 @@
 */
 
 #include <config.h>
-#include <libgnomevfs/gnome-vfs-mime-utils.h>
-#include <libgnomevfs/gnome-vfs-uri.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-init.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
 
 #include <ev-document.h>
 #include <ev-document-thumbnails.h>
 #include <ev-async-renderer.h>
 #include <ev-document-factory.h>
 #include <ev-backends-manager.h>
+
+#include <gio/gio.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -138,6 +135,7 @@ main (int argc, char *argv[])
 	const char *output;
 	int         size;
 	char       *uri;
+	GFile      *file;
 
 	if (argc <= 2 || argc > 5 || strcmp (argv[1], "-h") == 0 ||
 	    strcmp (argv[1], "--help") == 0) {
@@ -162,13 +160,14 @@ main (int argc, char *argv[])
 
 	if (!g_thread_supported ())
 		g_thread_init (NULL);
-	
-	gnome_vfs_init ();
 
 	ev_backends_manager_init ();
 
-	uri = gnome_vfs_make_uri_from_shell_arg (input);
+	file = g_file_new_for_commandline_arg (input);
+	uri = g_file_get_uri (file);
 	document = evince_thumbnailer_get_document (uri);
+
+	g_object_unref (file);
 	g_free (uri);
 
 	if (!document) {

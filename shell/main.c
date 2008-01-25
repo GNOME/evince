@@ -35,9 +35,6 @@
 #include <libgnomeui/gnome-authentication-manager.h>
 #endif
 
-#include <libgnomevfs/gnome-vfs-init.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-
 #ifdef ENABLE_DBUS
 #include <dbus/dbus-glib-bindings.h>
 #endif
@@ -203,10 +200,13 @@ load_files (const char **files,
 		char   *uri;
 		char   *label;
 		GValue *old = NULL;
+		GFile  *file;
 
-		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
+		file = g_file_new_for_commandline_arg (files[i]);
+		uri = g_file_get_uri (file);
+		g_object_unref (file);
 		
-		label = strchr (uri, GNOME_VFS_URI_MAGIC_CHR);
+		label = strchr (uri, '#');
 
 		if (label) {
 			GValue *new;
@@ -282,9 +282,13 @@ load_files_remote (const char **files,
 
 	for (i = 0; files[i]; i++) {
 		const char *page_label;
+		GFile *file;
 		char *uri;
 
-		uri = gnome_vfs_make_uri_from_shell_arg (files[i]);
+		file = g_file_new_for_commandline_arg (files[i]);
+		uri = g_file_get_uri (file);
+		g_object_unref (file);
+
 		page_label = ev_page_label ? ev_page_label : "";
 
 		if (!dbus_g_proxy_call (remote_object, "OpenURI", &error,
@@ -353,8 +357,6 @@ main (int argc, char *argv[])
 		return 1;
 	}
 	g_option_context_free (context);
-	
-	gnome_vfs_init ();
 
 	accel_filename = g_build_filename (ev_dot_dir (), "accels", NULL);
 	gtk_accel_map_load (accel_filename);

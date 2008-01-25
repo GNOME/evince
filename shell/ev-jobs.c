@@ -16,9 +16,6 @@
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <unistd.h>
-#include <libgnomevfs/gnome-vfs-uri.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
 
 static void ev_job_init                 (EvJob               *job);
 static void ev_job_class_init           (EvJobClass          *class);

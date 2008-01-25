@@ -23,11 +23,9 @@
 #endif
 
 #include <string.h>
+#include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-mime-utils.h>
-#include <libgnomevfs/gnome-vfs-file-info.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
 #include <gtk/gtkfilechooserdialog.h>
 
 #include "ev-backends-manager.h"
@@ -112,55 +110,57 @@ get_document_from_uri (const char        *uri,
 		       GError           **error)
 {
 	EvDocument *document = NULL;
-        GnomeVFSFileInfo *info;
-        GnomeVFSResult result;
+	GFile *file;
+	GFileInfo *file_info;
+	const gchar *mime_type;
 
 	*compression = EV_COMPRESSION_NONE;
 
-        info = gnome_vfs_file_info_new ();
-        result = gnome_vfs_get_file_info (uri, info,
-	    			          GNOME_VFS_FILE_INFO_GET_MIME_TYPE |
-		                          GNOME_VFS_FILE_INFO_FOLLOW_LINKS | 
-					  (slow ? GNOME_VFS_FILE_INFO_FORCE_SLOW_MIME_TYPE : 0));
-        if (result != GNOME_VFS_OK) {
+	file = g_file_new_for_uri (uri);
+	file_info = g_file_query_info (file,
+				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+				       0, NULL, NULL);
+	g_object_unref (file);
+
+	if (file_info == NULL) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,
 			     0,
-			     gnome_vfs_result_to_string (result));			
-		gnome_vfs_file_info_unref (info);
+			     _("Failed to get info for document"));			
 		return NULL;
-        } 
-	
-	if (info->mime_type == NULL) {
+	}
+	mime_type = g_file_info_get_content_type (file_info);
+
+	if (mime_type == NULL) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
     			     0,
 			     _("Unknown MIME Type"));
-		gnome_vfs_file_info_unref (info);
+		g_object_unref (file_info);
 		return NULL;
 	}
 
 #ifdef ENABLE_PIXBUF
-	if (mime_type_supported_by_gdk_pixbuf (info->mime_type)) {
+	if (mime_type_supported_by_gdk_pixbuf (mime_type))
 		document = ev_backends_manager_get_document ("image/*");
-	} else
-		document = ev_backends_manager_get_document (info->mime_type);
+	else
+		document = ev_backends_manager_get_document (mime_type);
 #else
-	document = ev_backends_manager_get_document (info->mime_type);
+	document = ev_backends_manager_get_document (mime_type);
 #endif /* ENABLE_PIXBUF */
 
 	if (document == NULL) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
 			     0,
-			     _("Unhandled MIME type: “%s”"), info->mime_type);
-		gnome_vfs_file_info_unref (info);
+			     _("Unhandled MIME type: “%s”"), mime_type);
+		g_object_unref (file_info);
 		return NULL;
 	}
 
-	*compression = get_compression_from_mime_type (info->mime_type);
+	*compression = get_compression_from_mime_type (mime_type);
 
-        gnome_vfs_file_info_unref (info);
+        g_object_unref (file_info);
 	
         return document;
 }

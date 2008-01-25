@@ -21,6 +21,7 @@
 #define __EV_ATTACHMENT_H__
 
 #include <glib-object.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -62,7 +63,7 @@ GTime        ev_attachment_get_modification_date (EvAttachment *attachment);
 GTime        ev_attachment_get_creation_date     (EvAttachment *attachment);
 const gchar *ev_attachment_get_mime_type         (EvAttachment *attachment);
 gboolean     ev_attachment_save                  (EvAttachment *attachment,
-						  const gchar  *uri,
+						  GFile        *file,
 						  GError      **error);
 gboolean     ev_attachment_open                  (EvAttachment *attachment,
 						  GError      **error);

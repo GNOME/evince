@@ -29,10 +29,6 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <errno.h>
-#include <libgnomevfs/gnome-vfs-uri.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnomevfs/gnome-vfs-ops.h>
-#include <libgnomevfs/gnome-vfs-xfer.h>
 
 #if WITH_GNOME
 #include <libgnome/gnome-init.h>
@@ -122,6 +118,20 @@ ev_file_helpers_shutdown (void)
 	tmp_dir = NULL;
 }
 
+GFile *
+ev_tmp_file_get (const gchar *prefix)
+{
+	gchar *path;
+	GFile *file;
+
+	path = ev_tmp_filename (prefix);
+	file = g_file_new_for_path (path);
+	
+	g_free (path);
+	
+	return file;
+}
+
 gchar * 
 ev_tmp_filename (const gchar *prefix)
 {
@@ -161,25 +171,40 @@ ev_tmp_filename_unlink (const gchar *filename)
 }
 
 void
+ev_tmp_file_unlink (GFile *file)
+{
+	gboolean res;
+
+	if (!file)
+		return;
+	
+	res = g_file_delete (file, NULL, NULL);
+	if (!res) {
+		char *uri;
+		
+		uri = g_file_get_uri (file);
+		g_warning ("Unable to delete temp file %s\n", uri);
+		g_free (uri);
+	}
+}
+
+void
 ev_tmp_uri_unlink (const gchar *uri)
 {
-	GnomeVFSURI *vfs_uri;
-	gchar       *filename;
+	GFile *file;
 	
 	if (!uri)
 		return;
 	
-	vfs_uri = gnome_vfs_uri_new (uri);
-	if (!gnome_vfs_uri_is_local (vfs_uri)) {
-		g_warning ("Attempting to delete non local uri: %s\n", uri);
-		gnome_vfs_uri_unref (vfs_uri);
+	file = g_file_new_for_uri (uri);
+	if (!g_file_is_native (file)) {
+		g_warning ("Attempting to delete non native uri: %s\n", uri);
+		g_object_unref (file);
 		return;
 	}
-	gnome_vfs_uri_unref (vfs_uri);
-
-	filename = g_filename_from_uri (uri, NULL, NULL);
-	ev_tmp_filename_unlink (filename);
-	g_free (filename);
+	
+	ev_tmp_file_unlink (file);
+	g_object_unref (file);
 }
 
 gboolean
@@ -187,31 +212,28 @@ ev_xfer_uri_simple (const char *from,
 		    const char *to,
 		    GError     **error)
 {
-	GnomeVFSResult result;
-	GnomeVFSURI *source_uri;
-	GnomeVFSURI *target_uri;
+	GFile *source_file;
+	GFile *target_file;
+	GError *ioerror;
+	gboolean result;
 	
 	if (!from)
 		return FALSE;
 	
-	source_uri = gnome_vfs_uri_new (from);
-	target_uri = gnome_vfs_uri_new (to);
+	source_file = g_file_new_for_uri (from);
+	target_file = g_file_new_for_uri (to);
+	
+	result = g_file_copy (source_file, target_file,
+			      G_FILE_COPY_OVERWRITE,
+			      NULL, NULL, NULL, &ioerror);
 
-	result = gnome_vfs_xfer_uri (source_uri, target_uri, 
-				     GNOME_VFS_XFER_DEFAULT | GNOME_VFS_XFER_FOLLOW_LINKS,
-				     GNOME_VFS_XFER_ERROR_MODE_ABORT,
-				     GNOME_VFS_XFER_OVERWRITE_MODE_REPLACE,
-				     NULL,
-				     NULL);
-	gnome_vfs_uri_unref (target_uri);
-	gnome_vfs_uri_unref (source_uri);
+	g_object_unref (target_file);
+	g_object_unref (source_file);
     
-	if (result != GNOME_VFS_OK)
-		g_set_error (error,
-			     G_FILE_ERROR,
-			     G_FILE_ERROR_FAILED,
-			     gnome_vfs_result_to_string (result));
-	return (result == GNOME_VFS_OK);
+	if (!result) {
+		g_propagate_error (error, ioerror);
+	}
+	return result;
 
 }
 

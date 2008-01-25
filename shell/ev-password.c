@@ -22,9 +22,9 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 
 #ifdef WITH_KEYRING
 #include <gnome-keyring.h>
@@ -75,15 +75,15 @@ ev_password_dialog_set_property (GObject      *object,
 	char *format;
 	char *markup;
 	char *base_name;
-	char *file_name;
+	GFile *file;
 
-	switch (prop_id)
-	{
+	switch (prop_id) {
 	case PROP_URI:
 		dialog->priv->uri = g_strdup (g_value_get_string (value));
+		
+		file = g_file_new_for_uri (dialog->priv->uri);
 
-		file_name = gnome_vfs_format_uri_for_display (dialog->priv->uri);
-		base_name = g_path_get_basename (file_name);
+		base_name = g_file_get_basename (file);
 		format = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
 					  _("Password required"),
 					  _("The document “%s” is locked and requires a password before it can be opened."));
@@ -92,9 +92,9 @@ ev_password_dialog_set_property (GObject      *object,
 		gtk_label_set_markup (GTK_LABEL (dialog->priv->label), markup);
 
 		g_free (base_name);
-		g_free (file_name);
 		g_free (format);
 		g_free (markup);
+		g_object_unref (file);
 
 		ev_password_search_in_keyring (dialog, dialog->priv->uri);
 		break;
@@ -256,7 +256,7 @@ ev_password_dialog_save_password (EvPasswordDialog *dialog)
 	attribute.value.string = g_strdup (dialog->priv->uri);
 	g_array_append_val (attributes, attribute);
 	
-	unescaped_uri = gnome_vfs_unescape_string_for_display (dialog->priv->uri);
+	unescaped_uri = g_uri_unescape_string (dialog->priv->uri, NULL);
 	name = g_strdup_printf (_("Password for document %s"), unescaped_uri);	
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->priv->check_default))) {

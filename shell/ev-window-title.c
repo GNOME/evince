@@ -21,8 +21,8 @@
 #include "ev-window-title.h"
 #include "ev-backends-manager.h"
 
+#include <gio/gio.h>
 #include <glib/gi18n.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
 
 /* Known backends (for bad extensions fix) */
 #define EV_BACKEND_PS  "psdocument"
@@ -65,12 +65,12 @@ ev_window_title_new (EvWindow *window)
 static char *
 get_filename_from_uri (const char *uri)
 {
+	GFile *file;
 	char *filename;
-	char *display_name;
-
-	display_name = gnome_vfs_format_uri_for_display (uri);
-	filename = g_path_get_basename (display_name);
-	g_free (display_name);
+	
+	file = g_file_new_for_uri (uri);
+	filename = g_file_get_basename (file);
+	g_object_unref (file);
 
 	return filename;
 }
