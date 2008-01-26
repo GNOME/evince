@@ -144,7 +144,8 @@ gchar*         ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest);
 
 void           ev_view_update_view_size (EvView *view, GtkScrolledWindow *scrolled_window);
 
-void	       ev_view_autoscroll	  (EvView *view);
+void	       ev_view_autoscroll_start   (EvView *view);
+void           ev_view_autoscroll_stop    (EvView *view);
 
 G_END_DECLS
 

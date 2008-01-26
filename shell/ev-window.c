@@ -3302,7 +3302,7 @@ ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 {
-	ev_view_autoscroll (EV_VIEW (ev_window->priv->view));
+	ev_view_autoscroll_start (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -3505,6 +3505,8 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 {
 	GtkWidget *widget;
 
+	ev_view_autoscroll_stop (window->priv->view);
+	
 	widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
 		update_chrome_flag (window, EV_CHROME_FINDBAR, FALSE);

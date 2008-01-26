@@ -3135,12 +3135,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 	view->image_dnd_info.in_drag = FALSE;
 
 	if (view->scroll_info.autoscrolling) {
-		view->scroll_info.autoscrolling = FALSE;
-		if (view->scroll_info.timeout_id) {
-			g_source_remove (view->scroll_info.timeout_id);
-			view->scroll_info.timeout_id = 0;
-		}
-		ev_view_handle_cursor_over_xy (view, event->x, event->y);
+		ev_view_autoscroll_stop (view);
 		view->pressed_button = -1;
 
 		return TRUE;
@@ -4467,10 +4462,42 @@ ev_view_autoscroll_cb (EvView *view)
 }
 
 void
-ev_view_autoscroll (EvView *view)
+ev_view_autoscroll_start (EvView *view)
 {
+	gint x, y;
+	
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	if (view->scroll_info.autoscrolling)
+		return;
+	
 	view->scroll_info.autoscrolling = TRUE;
-	view->scroll_info.timeout_id = g_timeout_add (20, (GSourceFunc)(ev_view_autoscroll_cb), view);
+	view->scroll_info.timeout_id =
+		g_timeout_add (20, (GSourceFunc)ev_view_autoscroll_cb,
+			       view);
+	
+	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+	ev_view_handle_cursor_over_xy (view, x, y);
+}
+
+void
+ev_view_autoscroll_stop (EvView *view)
+{
+	gint x, y;
+	
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	if (!view->scroll_info.autoscrolling)
+		return;
+
+	view->scroll_info.autoscrolling = FALSE;
+	if (view->scroll_info.timeout_id) {
+		g_source_remove (view->scroll_info.timeout_id);
+		view->scroll_info.timeout_id = 0;
+	}
+
+	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+	ev_view_handle_cursor_over_xy (view, x, y);
 }
 
 void
