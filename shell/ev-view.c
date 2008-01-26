@@ -4759,17 +4759,10 @@ ev_view_presentation_transition_start (EvView *view)
 	duration = ev_document_transition_get_page_duration (EV_DOCUMENT_TRANSITION (view->document),
 							     view->current_page);
 	if (duration > 0) {
-#if GLIB_CHECK_VERSION (2, 13, 0)
 		view->trans_timeout_id =
 			g_timeout_add_seconds (duration,
 					       (GSourceFunc) transition_next_page,
 					       view);
-#else
-		view->trans_timeout_id =
-			g_timeout_add (duration * 1000,
-				       (GSourceFunc) transition_next_page,
-				       view);
-#endif
 	}
 }
 

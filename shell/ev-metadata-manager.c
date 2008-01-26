@@ -96,21 +96,13 @@ ev_metadata_arm_timeout(void)
 {
 	if (ev_metadata_manager->timeout_id)
 		return;
-#if GLIB_CHECK_VERSION (2, 13, 5)
+
 	ev_metadata_manager->timeout_id =
 		g_timeout_add_seconds_full (G_PRIORITY_DEFAULT_IDLE,
 					    2,
 					    (GSourceFunc)ev_metadata_manager_save,
 					    NULL,
 					    NULL);
-#else
-	ev_metadata_manager->timeout_id = 
-		g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE,
-				    2000, /* 2 sec */
-				    (GSourceFunc)ev_metadata_manager_save,
-				    NULL,
-				    NULL);
-#endif
 }
 
 /**

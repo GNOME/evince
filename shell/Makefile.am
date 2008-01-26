@@ -85,9 +85,7 @@ evince_SOURCES=				\
 	ev-tooltip.h			\
 	ev-transition-animation.c	\
 	ev-transition-animation.h	\
-	main.c				\
-	xdg-user-dir-lookup.c
-
+	main.c
 
 if WITH_GNOME_PRINT
 evince_SOURCES+=			\

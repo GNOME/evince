@@ -91,10 +91,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#if !GLIB_CHECK_VERSION (2, 13, 3)
-char *xdg_user_dir_lookup (char *type);
-#endif
-
 typedef enum {
 	PAGE_MODE_DOCUMENT,
 	PAGE_MODE_PASSWORD
@@ -1595,20 +1591,11 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 		gtk_file_chooser_set_uri (GTK_FILE_CHOOSER (chooser),
 					  window->priv->uri);
 	} else {
-#if GLIB_CHECK_VERSION (2, 13, 3)
 		const gchar *folder;
 
 		folder = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
 						     folder ? folder : g_get_home_dir ());
-#else
-		char *folder;
-		
-		folder = xdg_user_dir_lookup ("DOCUMENTS");
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser),
-						     folder);
-		free (folder);
-#endif
 	}
 	
 	g_signal_connect (chooser, "response",
@@ -2012,11 +1999,7 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 	gchar *base_name;
 	GFile *file;
-#if GLIB_CHECK_VERSION (2, 13, 3)
 	const gchar *folder;
-#else
-	gchar *folder;
-#endif
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -2034,15 +2017,9 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	base_name = g_file_get_basename (file);
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
 	
-#if GLIB_CHECK_VERSION (2, 13, 3)
 	folder = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
 					     folder ? folder : g_get_home_dir ());
-#else
-	folder = xdg_user_dir_lookup ("DOCUMENTS");
-        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc), folder);
-	free (folder);
-#endif
 	
 	g_object_unref (file);
 	g_free (base_name);
@@ -2924,15 +2901,9 @@ presentation_set_timeout (EvWindow *window)
 		g_source_remove (window->priv->presentation_timeout_id);
 	}
 
-#if GLIB_CHECK_VERSION (2, 13, 0)
 	window->priv->presentation_timeout_id =
 		g_timeout_add_seconds (PRESENTATION_TIMEOUT,
 				       (GSourceFunc)presentation_timeout_cb, window);
-#else
-	window->priv->presentation_timeout_id = 
-	    g_timeout_add (PRESENTATION_TIMEOUT * 1000,
-			   (GSourceFunc)presentation_timeout_cb, window);
-#endif	
 
 	ev_view_show_cursor (EV_VIEW (window->priv->view));
 }
