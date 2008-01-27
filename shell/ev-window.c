@@ -3476,7 +3476,7 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 {
 	GtkWidget *widget;
 
-	ev_view_autoscroll_stop (window->priv->view);
+	ev_view_autoscroll_stop (EV_VIEW (window->priv->view));
 	
 	widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
