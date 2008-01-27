@@ -363,7 +363,7 @@ dvi_document_file_exporter_begin (EvFileExporter        *exporter,
 	
 	if (dvi_document->exporter_filename)
 		g_free (dvi_document->exporter_filename);	
-	dvi_document->exporter_filename = g_strdup(fc->filename);
+	dvi_document->exporter_filename = g_strdup (fc->filename);
 	
 	if (dvi_document->exporter_opts) {
 		g_string_free (dvi_document->exporter_opts, TRUE);
@@ -377,7 +377,7 @@ dvi_document_file_exporter_do_page (EvFileExporter  *exporter,
 {
        DviDocument *dvi_document = DVI_DOCUMENT(exporter);
 
-       g_string_append_printf(dvi_document->exporter_opts, "%d,", (rc->page)+1);
+       g_string_append_printf (dvi_document->exporter_opts, "%d,", (rc->page) + 1);
 }
 
 static void
@@ -390,7 +390,7 @@ dvi_document_file_exporter_end (EvFileExporter *exporter)
 	
 	DviDocument *dvi_document = DVI_DOCUMENT(exporter);
 	
-	command_line = g_strdup_printf ("dvipdfm %s -o %s %s", /* dvipdfm -s 1,2,.., -o exporter_filename dvi_filename */
+	command_line = g_strdup_printf ("dvipdfm %s -o %s \"%s\"", /* dvipdfm -s 1,2,.., -o exporter_filename dvi_filename */
 					dvi_document->exporter_opts->str,
 					dvi_document->exporter_filename,
 					dvi_document->context->filename);
@@ -401,7 +401,7 @@ dvi_document_file_exporter_end (EvFileExporter *exporter)
 					     &exit_stat,
 					     &err);
 
-	g_free(command_line);
+	g_free (command_line);
 
 	if (success == FALSE) {
 		g_warning ("Error: %s", err->message);
@@ -410,7 +410,7 @@ dvi_document_file_exporter_end (EvFileExporter *exporter)
 	}
 
 	if (err)
-		g_error_free(err);
+		g_error_free (err);
 }
 
 static EvFileExporterCapabilities
