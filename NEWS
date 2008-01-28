@@ -2,10 +2,6 @@
 Evince  2.21.90
 ===============
 
-IMPORTANT NOTICE: These release notes were updated by Wouter Bolsterlee on
-20080124. This NEWS file should be updated again before a release (including
-the version number right above this message)!
-
 Important notice for distributors:
 
     * This release overrides document permissions by default. See
@@ -14,6 +10,7 @@ Important notice for distributors:
 
 New features and UI improvements:
 
+    * Port to gio and drop gnome-vfs dependency. (#510401, Cosimo Cecchi, Carlos Garcia Campos)
     * Scroll pages in page entry with mouse wheel (#324122, David Turner)
     * Kinetic autoscroll feature in context menu (#323670, #461271, David Turner)
     * New plugin system for backends (#351348, Carlos Garcia Campos)
@@ -38,7 +35,8 @@ Bug fixes:
     * Repair horizontal scrolling with shift (#483412, Nickolay V. Shmyrev)
     * Gnome Keyring is now an optional dependency (#509676, Marcelo Lira)
     * Reduce memory consumption by rendering images on demand (Carlos Garcia Campos)
-    * Other bugs fixed: #502843, #460658, #504721
+    * Fix printing in dvi backend when filename contains white spaces. (#502839, Carlos Garcia Campos)
+    * Other bugs fixed: #502843, #460658, #504721, #511635
 
 Thanks:
 
