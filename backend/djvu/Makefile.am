@@ -35,7 +35,7 @@ backend_in_files = djvudocument.evince-backend.in
 
 backend_DATA = $(backend_in_files:.evince-backend.in=.evince-backend)
 
-EXTRA_DIST = $(backend_DATA)
+EXTRA_DIST = $(backend_in_files)
 
 CLEANFILES = $(backend_DATA)
 
