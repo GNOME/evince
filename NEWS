@@ -7,12 +7,16 @@ Important notice for distributors:
     * This release overrides document permissions by default. See
       http://bugzilla.gnome.org/show_bug.cgi?id=382700 for more information
       about this.
+    * Ghostscript interface for PostScript documents is now deprecated.
+      Please use libspectre (http://libspectre.freedesktop.org/)
+      instead.
 
 New features and UI improvements:
 
     * Port to gio and drop gnome-vfs dependency. (#510401, Cosimo Cecchi, Carlos Garcia Campos)
     * Scroll pages in page entry with mouse wheel (#324122, David Turner)
-    * Kinetic autoscroll feature in context menu (#323670, #461271, David Turner)
+    * Automatic scrolling in context menu (#323670, David Turner)
+    * Kinetic scrolling (#461271, David Turner)
     * New plugin system for backends (#351348, Carlos Garcia Campos)
     * Allow saving images in formats other than PNG (#500209, Carl-Anton
       Ingmarsson, Nickolay V. Shmyrev)
