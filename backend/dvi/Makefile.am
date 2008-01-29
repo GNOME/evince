@@ -20,6 +20,7 @@ libdvidocument_la_SOURCES = 	\
 	fonts.c			\
 	fonts.h
 
+libdvidocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libdvidocument_la_LIBADD = 				\
 	mdvi-lib/libmdvi.la				\
 	-lkpathsea					\
