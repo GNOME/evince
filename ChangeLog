@@ -1,5 +1,12 @@
 2008-01-29   Matthias Clasen  <mclasen@redhat.com>
 
+	* properties/ev-properties-main.c: (nautilus_module_initialize):
+	
+	Initialize backends in properties tab. Fixes bug
+	#512720.
+
+2008-01-29   Matthias Clasen  <mclasen@redhat.com>
+
 	* properties/Makefile.am: No need to link with 
 	libraries. Fixes bug #512719.
 

@@ -133,6 +133,8 @@ nautilus_module_initialize (GTypeModule *module)
 	/* set up translation catalog */
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+
+	ev_backends_manager_init ();
 }
 
 void
