@@ -32,16 +32,4 @@ libevince_properties_page_la_LIBADD = 		\
 	$(FRONTEND_LIBS)			\
 	$(NAUTILUS_LIBS)
 
-if ENABLE_DJVU
-libevince_properties_page_la_LIBADD += 	$(DJVU_LIBS)
-endif
-
-if ENABLE_DVI
-libevince_properties_page_la_LIBADD += 	-lkpathsea
-endif
-
-if WITH_TYPE1_FONTS
-libevince_properties_page_la_LIBADD += -lt1
-endif
-
 libevince_properties_page_la_LDFLAGS = -module -avoid-version -no-undefined
