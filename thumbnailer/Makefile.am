@@ -16,8 +16,7 @@ evince_thumbnailer_SOURCES=	\
 
 evince_thumbnailer_LDADD=		\
 	$(top_builddir)/libdocument/libevbackend.la	\
-	$(FRONTEND_LIBS)		\
-	$(DJVU_LIBS)
+	$(FRONTEND_LIBS)
 
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \
