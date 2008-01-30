@@ -1,3 +1,12 @@
+2008-01-30  Cosimo Cecchi  <cosimoc@svn.gnome.org>
+
+	* libdocument/ev-document-factory.c:
+	(throw_unknown_mime_type_error), (throw_failed_to_get_info_error),
+	(get_document_from_uri):
+
+	Use g_content_type_guess () to get mimetype for files.
+	Bug #510401.
+
 2008-01-30  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* thumbnailer/Makefile.am:

@@ -103,6 +103,24 @@ get_compression_from_mime_type (const gchar *mime_type)
 	return EV_COMPRESSION_NONE;
 }
 
+static void
+throw_unknown_mime_type_error (GError **error)
+{
+	g_set_error (error,
+		     EV_DOCUMENT_ERROR,	
+		     0,
+		     _("Unknown MIME Type"));
+}
+
+static void
+throw_failed_to_get_info_error (GError **error)
+{
+	g_set_error (error,
+		     EV_DOCUMENT_ERROR,
+		     0,
+		     _("Failed to get info for document"));
+}
+
 static EvDocument *
 get_document_from_uri (const char        *uri,
 		       gboolean           slow,
@@ -112,7 +130,8 @@ get_document_from_uri (const char        *uri,
 	EvDocument *document = NULL;
 	GFile *file;
 	GFileInfo *file_info;
-	const gchar *mime_type;
+	const char *mime_type;
+	char *content_type = NULL;
 
 	*compression = EV_COMPRESSION_NONE;
 
@@ -120,22 +139,16 @@ get_document_from_uri (const char        *uri,
 	file_info = g_file_query_info (file,
 				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
 				       0, NULL, NULL);
-	g_object_unref (file);
 
 	if (file_info == NULL) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     0,
-			     _("Failed to get info for document"));			
+		throw_failed_to_get_info_error (error);	
 		return NULL;
 	}
+
 	mime_type = g_file_info_get_content_type (file_info);
 
 	if (mime_type == NULL) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,	
-    			     0,
-			     _("Unknown MIME Type"));
+		throw_unknown_mime_type_error (error);
 		g_object_unref (file_info);
 		return NULL;
 	}
@@ -150,17 +163,55 @@ get_document_from_uri (const char        *uri,
 #endif /* ENABLE_PIXBUF */
 
 	if (document == NULL) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,	
-			     0,
-			     _("Unhandled MIME type: “%s”"), mime_type);
-		g_object_unref (file_info);
-		return NULL;
+		/* try to sniff mime type from the content */
+		guchar *buffer;
+		gssize size_read;
+		GFileInputStream *input_stream;
+		
+		input_stream = g_file_read (file, NULL, NULL);
+		buffer = g_malloc (1024);
+		size_read = g_input_stream_read (G_INPUT_STREAM (input_stream),
+						 buffer,
+						 1024,
+						 NULL, NULL);
+		g_input_stream_close (G_INPUT_STREAM (input_stream),
+				      NULL, NULL);
+		g_object_unref (file);
+		if (size_read == -1) {
+			throw_failed_to_get_info_error (error);
+			g_object_unref (file_info);
+			return NULL;
+		} else  {
+			content_type = g_content_type_guess (NULL, /* no filename */
+							     buffer, 1024,
+							     NULL);
+			g_free (buffer);
+			if (content_type == NULL) {
+				throw_unknown_mime_type_error (error);
+				g_object_unref (file_info);
+				return NULL;
+			} else {
+				document = ev_backends_manager_get_document (content_type);
+				if (document == NULL) {
+					g_set_error (error,
+						     EV_DOCUMENT_ERROR,	
+						     0,
+						     _("Unhandled MIME type: “%s”"), content_type);
+					g_object_unref (file_info);
+					g_free (content_type);
+					return NULL;
+				}
+				mime_type = content_type;
+			}
+		}
+	} else {
+		g_object_unref (file);
 	}
 
 	*compression = get_compression_from_mime_type (mime_type);
 
         g_object_unref (file_info);
+	g_free (content_type);
 	
         return document;
 }
