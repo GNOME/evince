@@ -66,6 +66,12 @@ PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_RE
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
 
+dnl ===== Check special functions
+evince_save_LIBS=$LIBS
+LIBS="$LIBS $BACKEND_LIBS"
+AC_CHECK_FUNCS(cairo_format_stride_for_width)
+LIBS=$evince_save_LIBS
+
 AC_ARG_WITH(keyring,
         AC_HELP_STRING([--without-keyring],[disable the use of gnome-keyring]),
 	[case "${withval}" in

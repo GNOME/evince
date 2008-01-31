@@ -261,8 +261,11 @@ djvu_document_render (EvDocument      *document,
 	        default:
 			rotation = DDJVU_ROTATE_0;
 	}
-
+#ifdef HAVE_CAIRO_FORMAT_STRIDE_FOR_WIDTH
+	rowstride = cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, page_width);
+#else
 	rowstride = page_width * 4;
+#endif
 	pixels = (gchar *) g_malloc (page_height * rowstride);
 	surface = cairo_image_surface_create_for_data ((guchar *)pixels,
 						       CAIRO_FORMAT_RGB24,

@@ -246,11 +246,15 @@ tiff_document_render (EvDocument      *document,
 	if (width <= 0 || height <= 0)
 		return NULL;                
 
+#ifdef HAVE_CAIRO_FORMAT_STRIDE_FOR_WIDTH
+	rowstride = cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, width);
+#else
 	rowstride = width * 4;
 	if (rowstride / 4 != width)
 		/* overflow */
 		return NULL;                
-        
+#endif
+	
 	bytes = height * rowstride;
 	if (bytes / rowstride != height)
 		/* overflow */
