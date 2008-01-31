@@ -1,3 +1,11 @@
+2008-01-31  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-document-factory.c: (get_mime_type_from_uri),
+	(get_mime_type_from_data), (get_document_from_uri):
+
+	Use g_content_type_guess() only when slow is true in
+	get_document_from_uri(). Fix several memory leaks.
+	
 2008-01-30  Cosimo Cecchi  <cosimoc@svn.gnome.org>
 
 	* libdocument/ev-document-factory.c:
