@@ -28,6 +28,7 @@
  */
 
 #include "ev-properties-view.h"
+#include "ev-backends-manager.h"
 #include "ev-document-factory.h"
 
 #include <config.h>
