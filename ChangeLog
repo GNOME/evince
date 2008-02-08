@@ -1,3 +1,9 @@
+2008-02-08  Matthias Clasen  <mclasen@redhat.com>
+
+	* thumbnailer/evince-thumbnailer.c: (main):
+
+	Initialize glib type system before using it. Fixes bug #513934.
+	
 2008-02-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* properties/ev-properties-main.c:
