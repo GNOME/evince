@@ -59,11 +59,9 @@ struct _EvApplication {
 
 	gchar *last_chooser_uri;
 
-#ifdef WITH_GTK_PRINT
 	GtkPrintSettings *print_settings;
 #if GTK_CHECK_VERSION (2, 11, 0)
 	gchar            *print_settings_file;
-#endif
 #endif
 };
 
@@ -638,7 +636,6 @@ ev_application_shutdown (EvApplication *application)
 		application->toolbars_file = NULL;
 	}
 
-#ifdef WITH_GTK_PRINT
 #if GTK_CHECK_VERSION (2, 11, 0)
 	if (application->print_settings_file) {
 		if (application->print_settings) {
@@ -665,7 +662,6 @@ ev_application_shutdown (EvApplication *application)
 		application->print_settings = NULL;
 	}
 #endif /* GTK 2.11.0 */
-#endif /* WITH_GTK_PRINT */
 	
 	g_free (application->last_chooser_uri);
 	g_object_unref (application);
@@ -788,7 +784,6 @@ ev_application_screensaver_disable (EvApplication *application)
 		totem_scrsaver_disable (application->scr_saver);	
 }
 
-#ifdef WITH_GTK_PRINT
 GtkPrintSettings *
 ev_application_get_print_settings (EvApplication *application)
 {
@@ -835,4 +830,4 @@ ev_application_set_print_settings (EvApplication    *application,
 	
 	application->print_settings = g_object_ref (settings);
 }
-#endif /* WITH_GTK_PRINT */
+

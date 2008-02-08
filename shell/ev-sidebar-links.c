@@ -323,10 +323,7 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 	
 		window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
 		if (EV_IS_WINDOW (window)) {
-#ifdef WITH_PRINT
-			ev_window_print_range (EV_WINDOW (window),
-					       first_page, last_page);
-#endif
+			ev_window_print_range (EV_WINDOW (window), first_page, last_page);
 		}
 	}
 }

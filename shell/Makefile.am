@@ -11,9 +11,7 @@ INCLUDES=						\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	$(SHELL_CFLAGS)					\
 	$(WARN_CFLAGS)					\
-	$(DISABLE_DEPRECATED)				\
-	$(GNOME_PRINT_CFLAGS)				\
-	$(GTK_PRINT_CFLAGS)
+	$(DISABLE_DEPRECATED)
 
 bin_PROGRAMS=evince
 
@@ -87,13 +85,6 @@ evince_SOURCES=				\
 	ev-transition-animation.h	\
 	main.c
 
-if WITH_GNOME_PRINT
-evince_SOURCES+=			\
-	ev-print-job.c			\
-	ev-print-job.h
-endif
-
-
 evince_LDADD=									\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la			\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la		\
@@ -101,8 +92,7 @@ evince_LDADD=									\
 	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
 	$(top_builddir)/properties/libevproperties.la				\
 	$(top_builddir)/libdocument/libevbackend.la				\
-	$(SHELL_LIBS)								\
-	$(GNOME_PRINT_LIBS)
+	$(SHELL_LIBS)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 

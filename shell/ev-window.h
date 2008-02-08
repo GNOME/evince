@@ -82,12 +82,10 @@ void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   gboolean        unlink_temp_file,
 					   const gchar    *print_settings);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);
-
-#ifdef WITH_PRINT
 void		ev_window_print_range     (EvWindow       *ev_window,
 					   int             first_page,
 					   int		   last_page);
-#endif
+
 G_END_DECLS
 
 #endif /* !EV_WINDOW_H */

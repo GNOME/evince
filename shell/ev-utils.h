@@ -23,9 +23,6 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
-#ifdef WITH_GNOME_PRINT
-#include <libgnomeprintui/gnome-print-dialog.h>
-#endif
 
 G_BEGIN_DECLS
 
@@ -40,12 +37,6 @@ void 			ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 							     gboolean  *push_in,
 							     gpointer   user_data);
 
-#ifdef WITH_GNOME_PRINT
-GnomePrintConfig* 	load_print_config_from_file (void);
-void       		save_print_config_to_file (GnomePrintConfig *config);
-gboolean		using_postscript_printer (GnomePrintConfig *config);
-gboolean		using_pdf_printer (GnomePrintConfig *config);
-#endif
 gint 			get_num_monitors (GtkWindow * window);
 
 gdouble 		get_screen_dpi (GtkWindow * window);

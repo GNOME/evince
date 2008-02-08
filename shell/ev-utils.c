@@ -27,8 +27,6 @@
 #include <math.h>
 #include <glib/gi18n.h>
 
-#define PRINT_CONFIG_FILENAME	"ev-print-config.xml"
-
 typedef struct
 {
   int size;
@@ -212,98 +210,6 @@ ev_print_region_contents (GdkRegion *region)
 	}
 	g_free (rectangles);
 }
-
-#ifdef WITH_GNOME_PRINT
-gboolean
-using_pdf_printer (GnomePrintConfig *config)
-{
-	const guchar *driver;
-
-	driver = gnome_print_config_get (
-		config, (const guchar *)"Settings.Engine.Backend.Driver");
-
-	if (driver) {
-		if (!strcmp ((const gchar *)driver, "gnome-print-pdf"))
-			return TRUE;
-		else
-			return FALSE;
-	}
-
-	return FALSE;
-}
-
-gboolean
-using_postscript_printer (GnomePrintConfig *config)
-{
-	const guchar *driver;
-	const guchar *transport;
-
-	driver = gnome_print_config_get (
-		config, (const guchar *)"Settings.Engine.Backend.Driver");
-
-	transport = gnome_print_config_get (
-		config, (const guchar *)"Settings.Transport.Backend");
-
-	if (driver) {
-		if (!strcmp ((const gchar *)driver, "gnome-print-ps"))
-			return TRUE;
-		else
-			return FALSE;
-	} else 	if (transport) { /* these transports default to PostScript */
-		if (!strcmp ((const gchar *)transport, "CUPS"))
-			return TRUE;
-		else if (!strcmp ((const gchar *)transport, "LPD"))
-			return TRUE;
-		else if (!strcmp ((const gchar *)transport, "PAPI"))
-			return TRUE;
-	}
-
-	return FALSE;
-}
-
-GnomePrintConfig *
-load_print_config_from_file (void)
-{
-	GnomePrintConfig *print_config = NULL;
-	char *file_name, *contents = NULL;
-
-	file_name = g_build_filename (ev_dot_dir (), PRINT_CONFIG_FILENAME,
-				      NULL);
-
-	if (g_file_get_contents (file_name, &contents, NULL, NULL)) {
-		print_config = gnome_print_config_from_string (contents, 0);
-		g_free (contents);
-	}
-
-	if (print_config == NULL) {
-		print_config = gnome_print_config_default ();
-	}
-
-	g_free (file_name);
-
-	return print_config;
-}
-
-void
-save_print_config_to_file (GnomePrintConfig *config)
-{
-	char *file_name, *str;
-
-	g_return_if_fail (config != NULL);
-
-	str = gnome_print_config_to_string (config, 0);
-	if (str == NULL) return;
-
-	file_name = g_build_filename (ev_dot_dir (),
-				      PRINT_CONFIG_FILENAME,
-				      NULL);
-
-	g_file_set_contents (file_name, str, -1, NULL);
-
-	g_free (file_name);
-	g_free (str);
-}
-#endif /* WITH_GNOME_PRINT */
 
 static void
 ev_gui_sanitise_popup_position (GtkMenu *menu,
