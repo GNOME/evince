@@ -489,7 +489,6 @@ impress_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 {
   GdkPixbuf *pixbuf;
   GdkPixbuf *scaled_pixbuf;
-  gdouble w, h;
 
   pixbuf = impress_document_render_pixbuf (EV_DOCUMENT (document), rc);
   scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,

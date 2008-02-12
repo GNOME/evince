@@ -1,3 +1,10 @@
+2008-02-12  Wouter Bolsterlee  <wbolster@svn.gnome.org>
+
+	* backend/impress/impress-document.c:
+	(impress_document_thumbnails_get_thumbnail):
+
+	Remove unused variable to avoid a compiler warning.
+
 2008-02-12  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:
@@ -70,14 +77,14 @@
 	* backend/dvi/Makefile.am: Install only dvi
 	module. Fixes bug #512718.
 
-2008-01-29   Matthias Clasen  <mclasen@redhat.com>
+2008-01-29  Matthias Clasen  <mclasen@redhat.com>
 
 	* properties/ev-properties-main.c: (nautilus_module_initialize):
 	
 	Initialize backends in properties tab. Fixes bug
 	#512720.
 
-2008-01-29   Matthias Clasen  <mclasen@redhat.com>
+2008-01-29  Matthias Clasen  <mclasen@redhat.com>
 
 	* properties/Makefile.am: No need to link with 
 	libraries. Fixes bug #512719.
@@ -307,7 +314,7 @@
 	#505359. Thanks to Matthias Clasen, Brian Pepple and
 	Damien Carbery.
 
-2008-01-13   Djihed Afifi  <djihed@gmail.com>
+2008-01-13  Djihed Afifi  <djihed@gmail.com>
 
 	* shell/ev-window.c: (ev_window_get_recent_file_label):
 	
@@ -386,7 +393,7 @@
 	mode, the animation will wait to start until both the origin and 
 	destination page surfaces are available. Fixes #458460.
 
-        (draw_loading_text):
+	(draw_loading_text):
 
 	Remove workaround for bug #320352, it's now fixed properly.
 
@@ -1306,7 +1313,7 @@
 	Do not use display before initializing it. Remove compile
 	warnings.
 
-2007-07-27  Cosimo Cecchi   <anarki@lilik.it>
+2007-07-27  Cosimo Cecchi  <anarki@lilik.it>
 
 	* shell/ev-view.c: (ev_view_class_init):
 	
@@ -4779,7 +4786,7 @@
 	* shell/ev-attachment-bar.[ch]:
 	* shell/ev-window.c:
 
- 	Add support for PDF attachments. Fixes bug #325143
+	Add support for PDF attachments. Fixes bug #325143
 
 2006-04-03  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
@@ -8410,10 +8417,10 @@ Wed Jun  8 01:04:22 2005  Jonathan Blandford  <jrb@redhat.com>
 	of page_cache clients to new location of code.
 
 2005-06-08  Carlos Garcia Campos <carlosgc@gnome.org>
-  
+
 	* shell/ev-application.c, shell/ev-window.[ch]: Allow multiple
- 	selection in open dialog. It also remembers the last visited directory 
- 	in the current session.
+	selection in open dialog. It also remembers the last visited directory 
+	in the current session.
 
 2005-06-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
