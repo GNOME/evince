@@ -46,7 +46,11 @@ ev_image_finalize (GObject *object)
 	}
 
 	if (image->priv->tmp_uri) {
-		ev_tmp_filename_unlink (image->priv->tmp_uri);
+		gchar *filename;
+
+		filename = g_filename_from_uri (image->priv->tmp_uri, NULL, NULL);
+		ev_tmp_filename_unlink (filename);
+		g_free (filename);
 		g_free (image->priv->tmp_uri);
 		image->priv->tmp_uri = NULL;
 	}
@@ -128,6 +132,7 @@ ev_image_save_tmp (EvImage   *image,
 		   GdkPixbuf *pixbuf)
 {
 	GError *error = NULL;
+	gchar  *filename;
 	
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
 	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
@@ -135,18 +140,21 @@ ev_image_save_tmp (EvImage   *image,
 	if (image->priv->tmp_uri)
 		return image->priv->tmp_uri;
 
-	image->priv->tmp_uri = ev_tmp_filename ("image");
-	gdk_pixbuf_save (pixbuf, image->priv->tmp_uri,
+	filename = ev_tmp_filename ("image");
+	gdk_pixbuf_save (pixbuf, filename,
 			 "png", &error,
 			 "compression", "3", NULL);
-	if (!error)
+	if (!error) {
+		image->priv->tmp_uri = g_filename_to_uri (filename, NULL, NULL);
+		g_free (filename);
+		
 		return image->priv->tmp_uri;
+	}
 
 	/* Erro saving image */
 	g_warning (error->message);
 	g_error_free (error);
-	g_free (image->priv->tmp_uri);
-	image->priv->tmp_uri = NULL;
+	g_free (filename);
 
 	return NULL;
 }

@@ -1,5 +1,13 @@
 2008-02-16  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* libdocument/ev-image.c: (ev_image_finalize),
+	(ev_image_save_tmp):
+
+	Return a real uri instead of a filename when saving an
+	image. Fixes images drag an drop from evince to nautilus. 
+	
+2008-02-16  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/pdf/ev-poppler.cc:
 	(pdf_document_images_get_image_mapping):
 
