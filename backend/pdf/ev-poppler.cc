@@ -1192,7 +1192,7 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 	poppler_page_free_image_mapping (mapping_list);
 	g_object_unref (poppler_page);
 
-	return retval;
+	return g_list_reverse (retval);
 }
 
 GdkPixbuf *
