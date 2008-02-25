@@ -1277,7 +1277,7 @@ ev_window_clear_temp_file (EvWindow *ev_window)
 	file = g_file_new_for_uri (ev_window->priv->uri);
 	tempdir = g_file_new_for_path (g_get_tmp_dir ());
 
-	if (g_file_contains_file (tempdir, file)) {
+	if (g_file_has_prefix (file, tempdir)) {
 		g_file_delete (file, NULL, NULL);
 	}
 
