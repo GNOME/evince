@@ -1,3 +1,10 @@
+2008-02-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (ev_view_form_field_choice_changed):
+
+	Fix a crash when a choice form field doesn't have any item
+	selected. Fixes bug #518831
+	
 2008-02-25  Alexander Larsson  <alexl@redhat.com>
 
 	* shell/ev-window.c (ev_window_clear_temp_file):

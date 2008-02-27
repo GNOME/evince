@@ -1907,7 +1907,8 @@ ev_view_form_field_choice_changed (GtkWidget   *widget,
 		gint item;
 		
 		item = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
-		if (GPOINTER_TO_INT (field_choice->selected_items->data) != item) {
+		if (!field_choice->selected_items ||
+		    GPOINTER_TO_INT (field_choice->selected_items->data) != item) {
 			g_list_free (field_choice->selected_items);
 			field_choice->selected_items = NULL;
 			field_choice->selected_items = g_list_prepend (field_choice->selected_items,
