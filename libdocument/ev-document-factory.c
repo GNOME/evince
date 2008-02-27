@@ -106,9 +106,9 @@ get_compression_from_mime_type (const gchar *mime_type)
 static gchar *
 get_mime_type_from_uri (const gchar *uri)
 {
-	GFile       *file;
-	GFileInfo   *file_info;
-	const gchar *mime_type;
+	GFile     *file;
+	GFileInfo *file_info;
+	gchar     *mime_type;
 
 	file = g_file_new_for_uri (uri);
 	file_info = g_file_query_info (file,
@@ -119,10 +119,10 @@ get_mime_type_from_uri (const gchar *uri)
 	if (file_info == NULL)
 		return NULL;
 
-	mime_type = g_file_info_get_content_type (file_info);
+	mime_type = g_strdup (g_file_info_get_content_type (file_info));
 	g_object_unref (file_info);
 
-	return g_strdup (mime_type);
+	return mime_type;
 }
 
 static gchar *
@@ -169,7 +169,7 @@ get_document_from_uri (const char        *uri,
 	mime_type = slow ?
 		get_mime_type_from_data (uri) :
 		get_mime_type_from_uri (uri);
-	
+
 	if (mime_type == NULL) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
