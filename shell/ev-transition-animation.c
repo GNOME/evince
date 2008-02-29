@@ -668,3 +668,15 @@ ev_transition_animation_set_dest_surface (EvTransitionAnimation *animation,
 	if (priv->origin_surface && priv->dest_surface)
 		ev_timeline_start (EV_TIMELINE (animation));
 }
+
+gboolean
+ev_transition_animation_ready (EvTransitionAnimation *animation)
+{
+	EvTransitionAnimationPriv *priv;
+
+	g_return_val_if_fail (EV_IS_TRANSITION_ANIMATION (animation), FALSE);
+
+	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+
+	return (priv->origin_surface && priv->dest_surface);
+}

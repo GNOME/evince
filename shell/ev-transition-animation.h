@@ -60,6 +60,8 @@ gint                    ev_transition_animation_get_page_to        (EvTransition
 void                    ev_transition_animation_paint              (EvTransitionAnimation *animation,
 								    cairo_t               *cr,
 								    GdkRectangle           page_area);
+gboolean                ev_transition_animation_ready              (EvTransitionAnimation *animation);
+
 
 G_END_DECLS
 

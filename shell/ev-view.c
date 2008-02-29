@@ -2483,7 +2483,7 @@ ev_view_expose_event (GtkWidget      *widget,
 	cairo_t *cr;
 	gint     i;
 
-	if (view->animation) {
+	if (view->animation && ev_transition_animation_ready (view->animation)) {
 		GdkRectangle page_area;
 		GtkBorder    border;
 
@@ -3739,9 +3739,12 @@ draw_one_page (EvView       *view,
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
 		if (!page_surface) {
-			draw_loading_text (view,
-					   &real_page_area,
-					   expose_area);
+			if (!view->presentation) {
+				draw_loading_text (view,
+						   &real_page_area,
+						   expose_area);
+			}
+
 			*page_ready = FALSE;
 
 			return;
