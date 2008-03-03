@@ -30,6 +30,7 @@ typedef struct _EvBackendInfo EvBackendInfo;
 struct _EvBackendInfo {
 	gchar       *module_name;
 	GTypeModule *module;
+	gboolean     resident;
 
 	GType        type_id;
 
@@ -78,6 +79,9 @@ ev_backends_manager_load_backend (const gchar *file)
 		return NULL;
 	}
 
+	info->resident = g_key_file_get_boolean (backend_file, EV_BACKENDS_GROUP,
+						 "Resident", NULL);
+	
 	info->type_desc = g_key_file_get_locale_string (backend_file, EV_BACKENDS_GROUP,
 							"TypeDescription", NULL, NULL);
 	if (!info->type_desc) {
@@ -194,7 +198,7 @@ ev_backends_manager_get_document (const gchar *mime_type)
 		gchar *path;
 		
 		path = g_module_build_path (EV_BACKENDSDIR, info->module_name);
-		info->module = G_TYPE_MODULE (ev_module_new (path));
+		info->module = G_TYPE_MODULE (ev_module_new (path, info->resident));
 		g_free (path);
 	}
 	

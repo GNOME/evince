@@ -56,7 +56,8 @@ typedef struct _EvModule EvModule;
 
 GType        ev_module_get_type        (void) G_GNUC_CONST;
 
-EvModule    *ev_module_new             (const gchar *path);
+EvModule    *ev_module_new             (const gchar *path,
+					gboolean     resident);
 
 const gchar *ev_module_get_path        (EvModule    *module);
 

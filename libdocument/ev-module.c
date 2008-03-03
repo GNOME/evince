@@ -54,6 +54,7 @@ struct _EvModule {
         GTypeModule parent_instance;
 
         GModule *library;
+	gboolean resident;
 
         gchar *path;
         GType type;
@@ -105,6 +106,9 @@ ev_module_load (GTypeModule *gmodule)
 		
                 return FALSE;
         }
+
+	if (module->resident)
+		g_module_make_resident (module->library);
 
         return TRUE;
 }
@@ -175,7 +179,8 @@ ev_module_class_init (EvModuleClass *class)
 }
 
 EvModule *
-ev_module_new (const gchar *path)
+ev_module_new (const gchar *path,
+	       gboolean     resident)
 {
         EvModule *result;
 
@@ -185,6 +190,7 @@ ev_module_new (const gchar *path)
 
         g_type_module_set_name (G_TYPE_MODULE (result), path);
         result->path = g_strdup (path);
+	result->resident = resident;
 
         return result;
 }

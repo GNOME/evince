@@ -1,5 +1,17 @@
 2008-03-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/pdf/pdfdocument.evince-backend.in:
+	* libdocument/ev-backends-manager.c:
+	(ev_backends_manager_load_backend),
+	(ev_backends_manager_get_document):
+	* libdocument/ev-module.[ch]: (ev_module_load), (ev_module_new):
+
+	Allow making backend modules resident. This is needed only for
+	some backends like pdf to avoid registering glib types more than
+	once.
+	
+2008-03-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/comics/comics-document.c:
 	* backend/djvu/djvu-document.c:
 	* backend/impress/impress-document.c:
