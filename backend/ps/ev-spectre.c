@@ -47,10 +47,10 @@ static void ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsIfac
 
 EV_BACKEND_REGISTER_WITH_CODE (PSDocument, ps_document,
                          {
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-							ps_document_document_thumbnails_iface_init);
-				 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-							ps_document_file_exporter_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+								 ps_document_document_thumbnails_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+								 ps_document_file_exporter_iface_init);
 			 });
 
 /* PSDocument */

@@ -90,7 +90,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	char *uri = NULL;
 	GtkWidget *page, *label;
 	NautilusPropertyPage *property_page;
-	
+
 	/* only add properties page if a single file is selected */
 	if (files == NULL || files->next != NULL)
 		goto end;
@@ -141,6 +141,7 @@ nautilus_module_initialize (GTypeModule *module)
 void
 nautilus_module_shutdown (void)
 {
+	ev_backends_manager_shutdown ();
 }
 
 void

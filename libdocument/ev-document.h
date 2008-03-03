@@ -126,6 +126,24 @@ cairo_surface_t *ev_document_render           (EvDocument      *document,
 gint            ev_rect_cmp                   (EvRectangle     *a,
                                                EvRectangle     *b);
 
+/* convenience macro to ease interface addition in the CODE
+ * section of EV_BACKEND_REGISTER_WITH_CODE (this macro relies on
+ * the g_define_type_id present within EV_BACKEND_REGISTER_WITH_CODE()).
+ * usage example:
+ * EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
+ *                          EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+ *                                                 pdf_document_document_thumbnails_iface_init));
+ */
+#define EV_BACKEND_IMPLEMENT_INTERFACE(TYPE_IFACE, iface_init) {                \
+	const GInterfaceInfo g_implement_interface_info = {                     \
+		(GInterfaceInitFunc) iface_init, NULL, NULL                     \
+	};                                                                      \
+	g_type_module_add_interface (module,                                    \
+				     g_define_type_id,                          \
+				     TYPE_IFACE,                                \
+				     &g_implement_interface_info);              \
+}
+
 /*
  * Utility macro used to register backends
  *
@@ -174,8 +192,8 @@ register_evince_backend (GTypeModule *module)					\
 					    #BackendName,			\
 					    &our_info,				\
 					   (GTypeFlags)0);	                \
-	                                                                        \
-	G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,                                \
+							                        \
+	EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,                       \
                                backend_name##_document_iface_init);             \
 										\
 	CODE									\

@@ -63,8 +63,8 @@ static void impress_document_document_thumbnails_iface_init (EvDocumentThumbnail
 
 EV_BACKEND_REGISTER_WITH_CODE (ImpressDocument, impress_document,
 		         {
-			   G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-						  impress_document_document_thumbnails_iface_init);
+			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+							   impress_document_document_thumbnails_iface_init);
 			 });
 
 /* Renderer */

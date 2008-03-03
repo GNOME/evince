@@ -59,10 +59,10 @@ static void tiff_document_document_file_exporter_iface_init (EvFileExporterIface
 
 EV_BACKEND_REGISTER_WITH_CODE (TiffDocument, tiff_document,
 			 {
-			   G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-						  tiff_document_document_thumbnails_iface_init);
-			   G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-						  tiff_document_document_file_exporter_iface_init);
+			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+							   tiff_document_document_thumbnails_iface_init);
+			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+							   tiff_document_document_file_exporter_iface_init);
 			 });
 
 static TIFFErrorHandler orig_error_handler = NULL;

@@ -64,8 +64,8 @@ static char**     extract_argv                   (EvDocument *document,
 
 EV_BACKEND_REGISTER_WITH_CODE (ComicsDocument, comics_document,
 	{
-		G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-				       comics_document_document_thumbnails_iface_init);
+		EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
+						comics_document_document_thumbnails_iface_init);
 	} );
 
 static char *

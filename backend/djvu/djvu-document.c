@@ -60,11 +60,11 @@ static void djvu_selection_iface_init (EvSelectionIface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (DjvuDocument, djvu_document,
     {
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init);
-      G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
-      G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION, djvu_selection_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, djvu_document_document_thumbnails_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION, djvu_selection_iface_init);
      });
 
 
