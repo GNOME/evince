@@ -2220,7 +2220,8 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 	GtkPrintPages  print_pages;
 	const gchar   *file_format;
 	
-	if (response == GTK_RESPONSE_CANCEL) {
+	if (response != GTK_RESPONSE_ACCEPT &&
+	    response != GTK_RESPONSE_APPLY) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		window->priv->print_dialog = NULL;
 
