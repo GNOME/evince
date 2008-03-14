@@ -1902,10 +1902,10 @@ pdf_selection_render_selection (EvSelection      *selection,
 	cairo_t *cr;
 	
 #if POPPLER_MAJOR_VERSION <= 6 || (POPPLER_MAJOR_VERSION == 7 && POPPLER_MINOR_VERSION < 2)
-	GdkColor **text_color, **base_color;
+	GdkColor text_color, base_color;
 
-	*text_color = text;
-	*base_color = base;
+	text_color = *text;
+	base_color = *base;
 #else
 	PopplerColor text_color, base_color;
 	
