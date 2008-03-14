@@ -152,8 +152,9 @@ ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 {
 	cairo_surface_t *surface;
 	cairo_t         *cr;
-	
-	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
+
+	surface = cairo_image_surface_create (gdk_pixbuf_get_has_alpha (pixbuf) ?
+					      CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24,
 					      gdk_pixbuf_get_width (pixbuf),
 					      gdk_pixbuf_get_height (pixbuf));
 	cr = cairo_create (surface);
