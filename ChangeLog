@@ -1,3 +1,11 @@
+2008-03-18  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-jobs.c: (ev_job_print_run):
+
+	Invert collate action in order to work as expected, fix reverse
+	printing so that it doesn't start with a blank page and fix number
+	of copies. Patch by Eugen Dedu. Fixes bug #365332.
+	
 2008-03-14  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_selection_render_selection):

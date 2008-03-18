@@ -922,33 +922,32 @@ ev_job_print_run (EvJobPrint *job)
 		gint n_copies;
 		
 		step = job->reverse ? -1 * job->pages_per_sheet : job->pages_per_sheet;
-		page = job->reverse ? (n_pages / job->pages_per_sheet) * job->pages_per_sheet  : 0;
-		n_copies = job->collate ? job->copies : 1;
+		page = job->reverse ? ((n_pages - 1) / job->pages_per_sheet) * job->pages_per_sheet : 0;
+		n_copies = job->collate ? 1 : job->copies;
 
 		while ((job->reverse && (page >= 0)) || (!job->reverse && (page < n_pages))) {
 			gint k;
 
-			ev_file_exporter_begin_page (EV_FILE_EXPORTER (document));
-			
-			for (j = 0; j < job->pages_per_sheet; j++) {
-				gint p = page + j;
+			for (k = 0; k < n_copies; k++) {
+				ev_file_exporter_begin_page (EV_FILE_EXPORTER (document));
 				
-				if (p < 0 || p >= n_pages)
-					break;
+				for (j = 0; j < job->pages_per_sheet; j++) {
+					gint p = page + j;
 
-				ev_render_context_set_page (rc, page_list[p]);
-
-				for (k = 0; k < n_copies; k++) {
+					if (p < 0 || p >= n_pages)
+						break;
+					
+					ev_render_context_set_page (rc, page_list[p]);
 					ev_file_exporter_do_page (EV_FILE_EXPORTER (document), rc);
 				}
-			}
 
-			ev_file_exporter_end_page (EV_FILE_EXPORTER (document));
+				ev_file_exporter_end_page (EV_FILE_EXPORTER (document));
+			}
 
 			page += step;
 		}
 
-		if (job->collate)
+		if (!job->collate)
 			break;
 	}
 
