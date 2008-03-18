@@ -1,5 +1,13 @@
 2008-03-18  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-view.[ch]: (ev_view_find_cancel):
+	* shell/ev-window.c: (find_bar_close_cb):
+
+	Cancel the find operation when the find bar is closed. Fixes bug
+	#508845.
+	
+2008-03-18  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/ps/psdocument.evince-backend.in:
 
 	Make ps backend module resident. Fixes bug #520607.

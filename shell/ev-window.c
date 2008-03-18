@@ -3810,6 +3810,7 @@ static void
 find_bar_close_cb (EggFindBar *find_bar,
 		   EvWindow   *ev_window)
 {
+	ev_view_find_cancel (EV_VIEW (ev_window->priv->view));
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, FALSE);
 	update_chrome_visibility (ev_window);
 }

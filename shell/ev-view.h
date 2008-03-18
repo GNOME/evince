@@ -124,6 +124,8 @@ void            ev_view_find_previous        (EvView         *view);
 void            ev_view_search_changed       (EvView         *view);
 void     	ev_view_set_highlight_search (EvView         *view,
 					      gboolean        value);
+void            ev_view_find_cancel          (EvView         *view);
+
 /* Status */
 const char     *ev_view_get_status        (EvView         *view);
 const char     *ev_view_get_find_status   (EvView         *view);

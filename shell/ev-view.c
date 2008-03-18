@@ -5333,16 +5333,28 @@ ev_view_find_previous (EvView *view)
 	}
 }
 
-void ev_view_search_changed (EvView *view)
+void
+ev_view_search_changed (EvView *view)
 {
 	/* search string has changed, focus on new search result */
 	view->jump_to_find_result = TRUE;
 }
 
-void ev_view_set_highlight_search (EvView *view, gboolean value)
+void
+ev_view_set_highlight_search (EvView *view, gboolean value)
 {
 	view->highlight_find_results = value;
 	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+void
+ev_view_find_cancel (EvView *view)
+{
+	if (EV_IS_DOCUMENT_FIND (view->document)) {
+		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+
+		ev_document_find_cancel (find);
+	}
 }
 
 /*** Selections ***/
