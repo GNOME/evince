@@ -4754,7 +4754,6 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	GError          *error = NULL;
 	GdkPixbuf       *pixbuf;
 	gchar           *uri;
-	gchar           *uri_extension;
 	gchar 	       **extensions;
 	gchar           *filename;
 	gchar           *file_format;
@@ -4785,27 +4784,31 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	}
 
 	extensions = gdk_pixbuf_format_get_extensions (format);
-	uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
+	if (strcmp (extensions[0], uri + strlen (uri) - strlen (extensions[0])) != 0) {
+		gchar *uri_extension;
+		
+		uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
+		target_file = g_file_new_for_uri (uri_extension);
+		g_free (uri_extension);
+	} else {
+		target_file = g_file_new_for_uri (uri);
+	}
 	g_strfreev(extensions);
-	file_format = gdk_pixbuf_format_get_name (format);
+	g_free (uri);
 	
-	target_file = g_file_new_for_uri (uri_extension);
 	is_native = g_file_is_native (target_file);
-	
 	if (is_native) {
 		filename = g_file_get_path (target_file);
 	} else {
 		filename = ev_tmp_filename ("saveimage");
 	}
-	
-	g_free (uri);
-	g_free (uri_extension);
 
 	ev_document_doc_mutex_lock ();
 	pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (ev_window->priv->document),
 					       ev_window->priv->image);
 	ev_document_doc_mutex_unlock ();
-	
+
+	file_format = gdk_pixbuf_format_get_name (format);
 	gdk_pixbuf_save (pixbuf, filename, file_format, &error, NULL);
 	g_free (file_format);
 	g_object_unref (pixbuf);
