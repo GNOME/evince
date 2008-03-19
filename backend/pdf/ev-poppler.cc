@@ -939,7 +939,7 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 	}
 
 	if (unimplemented_dest) {
-		g_warning ("Unimplemented named action: %s, please post a "
+		g_warning ("Unimplemented destination: %s, please post a "
 		           "bug report in Evince bugzilla "
 		           "(http://bugzilla.gnome.org) with a testcase.",
 			   unimplemented_dest);
@@ -994,8 +994,9 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	}
 	
 	if (unimplemented_action) {
-		g_warning ("Unimplemented action: %s, please post a bug report with a testcase.",
-			   unimplemented_action);
+		g_warning ("Unimplemented action: %s, please post a bug report "
+			   "in Evince bugzilla (http://bugzilla.gnome.org) "
+			   "with a testcase.", unimplemented_action);
 	}
 	
 	link = ev_link_new (action->any.title, ev_action);
