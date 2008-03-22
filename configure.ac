@@ -104,24 +104,30 @@ GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
 AC_SUBST(GLIB_GENMARSHAL)
 
 dnl ========= Check for DBUS
-PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED],
+AC_ARG_ENABLE(dbus,
+ 	[AC_HELP_STRING([--enable-dbus], [Compile with support for dbus])],
+	enable_dbus="$enableval",enable_dbus=yes)
+if test "x$enable_dbus" != "xno"; then
+   	PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED],
 	[enable_dbus=yes],[enable_dbus=no])
+
+	if test "x$enable_dbus" = "xno"; then
+	   AC_MSG_WARN([DBUS support is disabled since dbus $DBUS_GLIB_REQUIRED or higher was not found])
+	fi	   
+
+	if test "x$enable_dbus" = "xyes" ; then
+           	AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
+
+        	if test x$DBUS_BINDING_TOOL = "xno" ; then
+        	   	AC_MSG_ERROR([dbus-binding-tool executable not found in your path - should be installed with dbus glib bindings])
+        	fi                                            
+
+        	AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
+	fi
+fi
+
 AC_SUBST([DBUS_CFLAGS])
 AC_SUBST([DBUS_LIBS])
-
-if test "x$enable_dbus" = "xno"; then
-	AC_MSG_WARN([DBUS support is disabled since dbus $DBUS_GLIB_REQUIRED or higher was not found])
-fi
-
-if test "x$enable_dbus" = "xyes" ; then
-        AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
-
-        if test x$DBUS_BINDING_TOOL = "xno" ; then
-        	AC_MSG_ERROR([dbus-binding-tool executable not found in your path - should be installed with dbus glib bindings])
-        fi                                            
-
-        AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
-fi
 
 LIB_CFLAGS="$LIB_CFLAGS $GNOME_CFLAGS"
 LIB_LIBS="$LIB_LIBS $GNOME_LIBS"
