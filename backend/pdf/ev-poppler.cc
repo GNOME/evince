@@ -1713,7 +1713,7 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 #ifdef HAVE_CAIRO_PRINT
 	gdouble  page_width, page_height;
 	gint     x, y;
-	gboolean rotate, landscape;
+	gboolean rotate;
 	gdouble  width, height;
 	gdouble  pwidth, pheight;
 	gdouble  xscale, yscale;
@@ -1733,8 +1733,6 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 	} else {
 		rotate = FALSE;
 	}
-
-	landscape = (ctx->paper_width > ctx->paper_height);
 
 	/* Use always portrait mode and rotate when necessary */
 	if (ctx->paper_width > ctx->paper_height) {
@@ -1787,7 +1785,7 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 	if (rotate) {
 		cairo_matrix_t matrix;
 		
-		cairo_translate (ctx->cr, width, 0);
+		cairo_translate (ctx->cr, (2 * y + 1) * pwidth, 0);
 		cairo_matrix_init (&matrix,
 				   0,  1,
 				   -1,  0,
