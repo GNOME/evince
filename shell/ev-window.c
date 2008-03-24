@@ -4784,7 +4784,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	}
 
 	extensions = gdk_pixbuf_format_get_extensions (format);
-	if (strcmp (extensions[0], uri + strlen (uri) - strlen (extensions[0])) != 0) {
+	if (g_str_has_suffix(uri, extensions[0])) {
 		gchar *uri_extension;
 		
 		uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
