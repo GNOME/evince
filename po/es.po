@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-10 16:11+0000\n"
-"PO-Revision-Date: 2008-02-29 15:57+0100\n"
+"POT-Creation-Date: 2008-02-29 15:34+0000\n"
+"PO-Revision-Date: 2008-03-29 12:24+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,7 @@ msgstr ""
 "\n"
 
 #: ../backend/comics/comics-document.c:163
+#, c-format
 msgid "File corrupted."
 msgstr "Archivo corrupto."
 
@@ -36,6 +37,7 @@ msgid "Comic Books"
 msgstr "Libros de cómics"
 
 #: ../backend/djvu/djvu-document.c:167
+#, c-format
 msgid ""
 "The document is composed by several files. One or more of such files cannot "
 "be accessed."
@@ -48,10 +50,12 @@ msgid "Djvu Documents"
 msgstr "Documentos Djvu"
 
 #: ../backend/dvi/dvi-document.c:98
+#, c-format
 msgid "File not available"
 msgstr "Archivo no disponible"
 
 #: ../backend/dvi/dvi-document.c:113
+#, c-format
 msgid "DVI document has incorrect format"
 msgstr "El documento DVI tiene un formato incorrecto"
 
@@ -122,10 +126,12 @@ msgid "PDF Documents"
 msgstr "Documentos PDF"
 
 #: ../backend/impress/impress-document.c:296
+#, c-format
 msgid "Remote files aren't supported"
 msgstr "Los archivos remotos no están soportados"
 
 #: ../backend/impress/impress-document.c:307
+#, c-format
 msgid "Invalid document"
 msgstr "Documento no válido"
 
@@ -299,6 +305,7 @@ msgstr "No se pudo abrir el adjunto «%s»"
 
 #: ../libdocument/ev-document-factory.c:177
 #: ../libdocument/ev-document-factory.c:295
+#, c-format
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
@@ -410,6 +417,7 @@ msgstr "400%"
 
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3517
 #: ../shell/ev-window-title.c:132
+#, c-format
 msgid "Document Viewer"
 msgstr "Visor de documentos"
 
@@ -688,7 +696,7 @@ msgstr "Obteniendo información tipográfica… %3d%%"
 msgid "Attachments"
 msgstr "Adjuntos"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3642
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3643
 msgid "Loading..."
 msgstr "Cargando…"
 
@@ -768,25 +776,25 @@ msgstr "Ir al archivo «%s»"
 msgid "Launch %s"
 msgstr "Lanzar %s"
 
-#: ../shell/ev-view.c:2448
+#: ../shell/ev-view.c:2449
 msgid "End of presentation. Press Escape to exit."
 msgstr "Fin de la presentación. Pulse Escape para salir."
 
-#: ../shell/ev-view.c:3371
+#: ../shell/ev-view.c:3372
 msgid "Jump to page:"
 msgstr "Saltar a la página:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:5149
+#: ../shell/ev-view.c:5153
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d encontrado en esta página"
 msgstr[1] "%d encontrados en esta página"
 
-#: ../shell/ev-view.c:5158
+#: ../shell/ev-view.c:5162
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante para buscar"
@@ -1055,7 +1063,7 @@ msgstr "Ir a la última página"
 #. Help menu
 #: ../shell/ev-window.c:4171
 msgid "_Contents"
-msgstr "_Contenido"
+msgstr "_Índice"
 
 #: ../shell/ev-window.c:4174
 msgid "_About"
