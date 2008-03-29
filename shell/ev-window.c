@@ -4577,29 +4577,11 @@ static void
 launch_external_uri (EvWindow *window, EvLinkAction *action)
 {
 	const gchar *uri = ev_link_action_get_uri (action);
-	const char *content_type;
-	GFile *file;
-	GFileInfo *file_info;
-	GAppInfo *app;
-	GList *file_list = NULL;
 	GError *error = NULL;
+	gboolean ret;
 	
-	file = g_file_new_for_uri (uri);
-	file_info = g_file_query_info (file,
-				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-				       0, NULL, NULL);
-	if (file_info == NULL) {
-		g_object_unref (file);
-		return;
-	}
-	
-	content_type = g_file_info_get_content_type (file_info);
-	app = g_app_info_get_default_for_type (content_type, TRUE);
-	g_object_unref (file_info);
-	
-	file_list = g_list_append (file_list, file);
-	
-	if (!g_app_info_launch (app, file_list, NULL, &error)) {
+	ret = g_app_info_launch_default_for_uri (uri, NULL, &error);
+  	if (ret == FALSE) {
 		GtkWidget *dialog;
 	
 		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
@@ -4613,11 +4595,8 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 				  G_CALLBACK (gtk_widget_destroy),
 				  NULL);
 		gtk_widget_show (dialog);
+		g_error_free(error);
 	}
-
-	g_object_unref (app);
-	g_object_unref (file);
-	g_list_free (file_list);
 }
 
 static void

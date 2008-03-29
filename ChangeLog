@@ -1,3 +1,10 @@
+2008-03-30  Emil Soleyman  <emil@nishra.com>
+
+	* shell/ev-window.c: (launch_external_uri):
+	
+	Reuse g_app_info_launch_default_for_uri to
+	save some code and fix bug #525009.
+
 2008-03-24  Wouter Bolsterlee  <wbolster@svn.gnome.org>
 
 	* shell/ev-window.c (image_save_dialog_response_cb):
@@ -10,7 +17,7 @@
 
 	Add a configure option to enable/diable DBus. Patch by Rémi
 	Cardona. Fixes bug 521797.
-	
+
 2008-03-22  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (pdf_document_file_exporter_do_page):
