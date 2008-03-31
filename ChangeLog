@@ -1,3 +1,10 @@
+2008-03-31  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-page-action.c: (ev_page_action_grab_focus):
+
+	Only grab the focus for the current visible proxy widget. Fixes
+	bug #521224.
+	
 2008-03-30  Emil Soleyman  <emil@nishra.com>
 
 	* shell/ev-window.c: (launch_external_uri):

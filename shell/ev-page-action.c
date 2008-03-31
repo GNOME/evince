@@ -361,7 +361,9 @@ ev_page_action_grab_focus (EvPageAction *page_action)
 		EvPageActionWidget *proxy;
 
 		proxy = EV_PAGE_ACTION_WIDGET (proxies->data);
-		gtk_widget_grab_focus (proxy->entry);
+		
+		if (GTK_WIDGET_MAPPED (GTK_WIDGET (proxy)))
+			gtk_widget_grab_focus (proxy->entry);
 	}
 }
 
