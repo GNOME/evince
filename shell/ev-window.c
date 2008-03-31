@@ -1429,9 +1429,62 @@ window_open_file_copy_ready_cb (GFile        *source,
 				GAsyncResult *async_result,
 				EvWindow     *ev_window)
 {
-	g_file_copy_finish (source, async_result, NULL);
-	ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+	GError *error = NULL;
+	
+	g_file_copy_finish (source, async_result, &error);
+	if (!error) {
+		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		g_object_unref (source);
+		
+		return;
+	}
+
+	if (error->domain == G_IO_ERROR &&
+	    error->code == G_IO_ERROR_NOT_MOUNTED) {
+		/* TODO: try to mount */
+	}
+
+	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
+	ev_window->priv->in_reload = FALSE;
+	ev_window_error_message (GTK_WINDOW (ev_window),
+				 _("Unable to open document"),
+				 error);
+	g_free (ev_window->priv->local_uri);
+	ev_window->priv->local_uri = NULL;
+	
+	g_error_free (error);
 	g_object_unref (source);
+}
+
+static void
+ev_window_load_file_remote (EvWindow  *ev_window,
+			    GFile     *source_file)
+{
+	GFile *target_file;
+	
+	if (!ev_window->priv->local_uri) {
+		gchar *tmp_name;
+		gchar *base_name;
+
+		/* We'd like to keep extension of source uri since
+		 * it helps to resolve some mime types, say cbz */
+		tmp_name = ev_tmp_filename (NULL);
+		base_name = g_file_get_basename (source_file);
+		ev_window->priv->local_uri = g_strconcat ("file:", tmp_name, "-",
+							  base_name, NULL);
+		ev_job_load_set_uri (EV_JOB_LOAD (ev_window->priv->load_job),
+				     ev_window->priv->local_uri);
+		g_free (base_name);
+		g_free (tmp_name);
+	}
+	
+	target_file = g_file_new_for_uri (ev_window->priv->local_uri);
+	g_file_copy_async (source_file, target_file,
+			   0, G_PRIORITY_DEFAULT, NULL,
+			   NULL, NULL, /* no progress callback */
+			   (GAsyncReadyCallback) window_open_file_copy_ready_cb,
+			   ev_window);
+	g_object_unref (target_file);
 }
 
 void
@@ -1444,7 +1497,6 @@ ev_window_open_uri (EvWindow       *ev_window,
 		    const gchar    *print_settings)
 {
 	GFile *source_file;
-	GFile *target_file;
 
 	if (ev_window->priv->uri &&
 	    g_ascii_strcasecmp (ev_window->priv->uri, uri) == 0) {
@@ -1478,33 +1530,11 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	source_file = g_file_new_for_uri (uri);
 	if (!g_file_is_native (source_file) && !ev_window->priv->local_uri) {
-		char *tmp_name;
-		char *base_name;
-
-		/* We'd like to keep extension of source uri since
-		 * it helps to resolve some mime types, say cbz */
-
-		tmp_name = ev_tmp_filename (NULL);
-		base_name = g_file_get_basename (source_file);
-		ev_window->priv->local_uri = g_strconcat ("file:", tmp_name, "-", base_name, NULL);
-		ev_job_load_set_uri (EV_JOB_LOAD (ev_window->priv->load_job),
-				     ev_window->priv->local_uri);
-		g_free (base_name);
-		g_free (tmp_name);
-		
-		target_file = g_file_new_for_uri (ev_window->priv->local_uri);
-
-		g_file_copy_async (source_file, target_file,
-				   0, G_PRIORITY_DEFAULT, NULL,
-				   NULL, NULL, /* no progress callback */
-				   (GAsyncReadyCallback) window_open_file_copy_ready_cb,
-				   ev_window);
-		g_object_unref (target_file);
-		return;
+		ev_window_load_file_remote (ev_window, source_file);
+	} else {
+		g_object_unref (source_file);
+		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 	}
-
-	g_object_unref (source_file);
-	ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 }
 
 static void
