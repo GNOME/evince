@@ -351,6 +351,11 @@ ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 	GdkPixbuf       *pixbuf = NULL;
 
 	surface = ps_document_render (EV_DOCUMENT (ps), rc);
+	if (!surface) {
+		g_warning ("Error rendering thumbnail");
+		return NULL;
+	}
+		
 	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
 	cairo_surface_destroy (surface);
 
