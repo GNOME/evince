@@ -1,3 +1,18 @@
+2008-04-02  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_cmd_continuous),
+	(ev_window_cmd_dual), (ev_window_cmd_view_best_fit),
+	(ev_window_cmd_view_page_width), (ev_window_run_fullscreen),
+	(ev_window_stop_fullscreen), (ev_window_cmd_view_fullscreen),
+	(ev_window_run_presentation), (ev_window_stop_presentation),
+	(ev_window_cmd_view_presentation),
+	(ev_window_cmd_leave_fullscreen),
+	(ev_window_cmd_start_presentation), (ev_window_cmd_escape):
+
+	Do not unfullscreen and fullscreen again the window when changing
+	from fullscreen to presentation mode and vice versa. Fixes bug
+	#524112.
+	
 2008-04-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/ps/ev-spectre.c: (ps_document_thumbnails_get_thumbnail):
