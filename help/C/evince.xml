@@ -3,8 +3,8 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
   <!ENTITY legal SYSTEM "legal.xml">
   <!ENTITY appversion "0.2">
-  <!ENTITY manrevision "1.0">
-  <!ENTITY date "April 2005">
+  <!ENTITY manrevision "1.1">
+  <!ENTITY date "April 2008">
   <!ENTITY app "<application>Evince Document Viewer</application>">
   <!ENTITY appname "Evince Document Viewer">
 ]>
@@ -84,6 +84,15 @@
     </authorgroup>
 
     <revhistory>
+      <revision> 
+        <revnumber>&appname; Manual V1.1</revnumber> 
+	<date>2008-04-05</date>
+        <revdescription>
+          <para role="author">Niels Giesen</para>
+          <para role="author">Claude Paroz</para>
+          <para role="publisher">GNOME Documentation Project</para>
+        </revdescription>
+      </revision> 
       <revision> 
         <revnumber>&appname; Manual V1.0</revnumber> 
 	<date>2005-04-06</date>
@@ -619,6 +628,144 @@
       </para> 
     </sect2> 
 
+  </sect1>
+
+  <!-- ================ Shortcuts ================================ -->
+  <sect1 id="evince-shortcuts"> 
+    <title>Shortcuts</title> 
+    <para>Below is a list of all shortcuts present in &app;:</para>
+    <informaltable frame="all">
+      <tgroup cols="2" colsep="1" rowsep="1">
+        <colspec colname="COLSPEC0" colwidth="50*"/>
+        <colspec colname="COLSPEC1" colwidth="50*"/>
+        <thead>
+          <row valign="top">
+            <entry colname="COLSPEC0">
+            <para>Shortcut</para></entry>
+            <entry colname="COLSPEC1" align="left"> 
+            <para>Action</para></entry>
+          </row>
+        </thead>
+        <tbody>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo></para></entry>
+            <entry><para>Open an existing document</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>S</keycap></keycombo></para></entry>
+            <entry><para>Save a copy of the current document</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>P</keycap></keycombo></para></entry>
+            <entry><para>Print document</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo></para></entry>
+            <entry><para>Close window</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo></para></entry>
+            <entry><para>Copy selection</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>A</keycap></keycombo></para></entry>
+            <entry><para>Select All</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+              <para><keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo></para>
+              <para><keycap>/</keycap> (slash)</para>
+            </entry>
+            <entry><para>Find a word or phrase in the document</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>G</keycap></keycombo></para></entry>
+            <entry><para>Find next</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+              <para><keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (plus sign)</para>
+              <para><keycap>+</keycap></para>
+              <para><keycap>=</keycap></para>
+            </entry>
+            <entry><para>Zoom in</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+              <para><keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (minus sign)</para>
+              <para><keycap>-</keycap></para>
+            </entry>
+            <entry><para>Zoom out</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo></para></entry>
+            <entry><para>Reload the document</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+            <para><keycap>Page Up</keycap></para></entry>
+            <entry><para>Go to the previous page</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>Page Down</keycap></para></entry>
+            <entry><para>Go to the next page</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+              <para><keycap>Space</keycap></para>
+              <para><keycombo><keycap>Shift</keycap><keycap>Backspace</keycap></keycombo></para>
+              <para><keycap>Return</keycap></para>
+            </entry>
+            <entry><para>Scroll forward</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+              <para><keycombo><keycap>Shift</keycap><keycap>Space</keycap></keycombo></para>
+              <para><keycap>Backspace</keycap></para>
+              <para><keycombo><keycap>Shift</keycap><keycap>Return</keycap></keycombo></para>
+            </entry>
+            <entry><para>Scroll backward</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry>
+            <para><keycombo><keycap>Shift</keycap><keycap>Page Up</keycap></keycombo></para></entry>
+            <entry><para>Go a bunch of pages up</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Shift</keycap><keycap>Page Down</keycap></keycombo></para></entry>
+            <entry><para>Go a bunch of pages down</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>Home</keycap></para></entry>
+            <entry><para>Go to the first page</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>End</keycap></para></entry>
+            <entry><para>Go to the last page</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycombo><keycap>Ctrl</keycap><keycap>L</keycap></keycombo></para></entry>
+            <entry><para>Go to page by number or label</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>F1</keycap></para></entry>
+            <entry><para>Help</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>F5</keycap></para></entry>
+            <entry><para>Run document as presentation</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>F9</keycap></para></entry>
+            <entry><para>Show or hide the side pane</para></entry>
+          </row>
+          <row valign="middle">               
+            <entry><para><keycap>F11</keycap></para></entry>
+            <entry><para>Toggle fullscreen mode</para></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
   </sect1>
 
 </article>

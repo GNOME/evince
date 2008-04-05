@@ -4,14 +4,14 @@
 # documentation package.
 #
 # Jonathan Ernst <jonathan@ernstfamily.ch>, 2006-2007.
-# Claude Paroz <paroz@email.ch>, 2006.
+# Claude Paroz <claude@2xlibre.net>, 2006-2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-doc\n"
-"POT-Creation-Date: 2007-02-28 20:57+0100\n"
-"PO-Revision-Date: 2007-02-28 20:57+0100\n"
-"Last-Translator: Jonathan Ernst <jonathan@ernstfamily.ch>\n"
+"POT-Creation-Date: 2008-04-05 20:55+0200\n"
+"PO-Revision-Date: 2008-04-05 20:47+0200\n"
+"Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: ../C/evince.xml:146(None)
+#: ../C/evince.xml:155(None)
 msgid ""
 "@@image: 'figures/evince_start_window.png'; "
 "md5=7f4da5e33bcac35738a268d93d497d47"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "2005"
 msgstr "2005"
 
-#: ../C/evince.xml:34(holder) ../C/evince.xml:91(para)
+#: ../C/evince.xml:34(holder) ../C/evince.xml:100(para)
 msgid "Nickolay V. Shmyrev"
 msgstr "Nickolay V. Shmyrev"
 
@@ -57,7 +57,7 @@ msgid "Sun Microsystems"
 msgstr "Sun Microsystems"
 
 #: ../C/evince.xml:49(publishername) ../C/evince.xml:67(orgname)
-#: ../C/evince.xml:92(para)
+#: ../C/evince.xml:93(para) ../C/evince.xml:101(para)
 msgid "GNOME Documentation Project"
 msgstr "Projet de documentation GNOME"
 
@@ -187,22 +187,38 @@ msgid "nshmyrev@yandex.ru"
 msgstr "nshmyrev@yandex.ru"
 
 #: ../C/evince.xml:88(revnumber)
+msgid "Evince Document Viewer Manual V1.1"
+msgstr "Manuel du visionneur de documents Evince v1.1"
+
+#: ../C/evince.xml:89(date)
+msgid "2008-04-05"
+msgstr "05/04/2008"
+
+#: ../C/evince.xml:91(para)
+msgid "Niels Giesen"
+msgstr "Niels Giesen"
+
+#: ../C/evince.xml:92(para)
+msgid "Claude Paroz"
+msgstr "Claude Paroz"
+
+#: ../C/evince.xml:97(revnumber)
 msgid "Evince Document Viewer Manual V1.0"
 msgstr "Manuel du visionneur de documents Evince V1.0"
 
-#: ../C/evince.xml:89(date)
+#: ../C/evince.xml:98(date)
 msgid "2005-04-06"
-msgstr "06.04.2005"
+msgstr "06/04/2005"
 
-#: ../C/evince.xml:97(releaseinfo)
+#: ../C/evince.xml:106(releaseinfo)
 msgid "This manual describes version 0.2 of Evince Document Viewer"
 msgstr "Ce manuel documente la version 0.2 du visionneur de documents Evince"
 
-#: ../C/evince.xml:100(title)
+#: ../C/evince.xml:109(title)
 msgid "Feedback"
 msgstr "Votre avis"
 
-#: ../C/evince.xml:101(para)
+#: ../C/evince.xml:110(para)
 msgid ""
 "To report a bug or make a suggestion regarding the Evince Document Viewer "
 "application or this manual, follow the directions in the <ulink url=\"ghelp:"
@@ -213,19 +229,19 @@ msgstr ""
 "<ulink url=\"ghelp:gnome-feedback\" type=\"help\">page de réactions sur "
 "GNOME</ulink>."
 
-#: ../C/evince.xml:108(primary)
+#: ../C/evince.xml:117(primary)
 msgid "Evince Document Viewer"
 msgstr "Visionneur de documents Evince"
 
-#: ../C/evince.xml:111(primary)
+#: ../C/evince.xml:120(primary)
 msgid "evince"
 msgstr "evince"
 
-#: ../C/evince.xml:119(title)
+#: ../C/evince.xml:128(title)
 msgid "Introduction"
 msgstr "Introduction"
 
-#: ../C/evince.xml:120(para)
+#: ../C/evince.xml:129(para)
 msgid ""
 "The <application>Evince Document Viewer</application> application enables "
 "you to view documents of various formats like Portable Document Format (PDF) "
@@ -239,15 +255,15 @@ msgstr ""
 "respecte les standards de Freedesktop.org et de GNOME pour se fondre dans "
 "votre environnement de bureau."
 
-#: ../C/evince.xml:127(title)
+#: ../C/evince.xml:136(title)
 msgid "Getting Started"
 msgstr "Premiers pas"
 
-#: ../C/evince.xml:130(title)
+#: ../C/evince.xml:139(title)
 msgid "To Start Evince Document Viewer"
 msgstr "Démarrage du visionneur de documents Evince"
 
-#: ../C/evince.xml:131(para)
+#: ../C/evince.xml:140(para)
 msgid ""
 "<application>Evince Document Viewer</application> starts when you open a "
 "document such as a PDF or PostScript file."
@@ -256,7 +272,7 @@ msgstr ""
 "l'ouverture d'un document dans un format pris en charge comme le PDF ou le "
 "PostScript."
 
-#: ../C/evince.xml:132(para)
+#: ../C/evince.xml:141(para)
 msgid ""
 "Alternatively, you can start <application>Evince Document Viewer</"
 "application> from the command line, with the command: <command>evince</"
@@ -266,11 +282,11 @@ msgstr ""
 "Evince</application> depuis la ligne de commande avec la commande : "
 "<command>evince</command>."
 
-#: ../C/evince.xml:137(title)
+#: ../C/evince.xml:146(title)
 msgid "When You Start Evince Document Viewer"
 msgstr "Au démarrage du visionneur de documents Evince"
 
-#: ../C/evince.xml:138(para)
+#: ../C/evince.xml:147(para)
 msgid ""
 "When you start <application>Evince Document Viewer</application>, the "
 "following window is displayed."
@@ -278,11 +294,11 @@ msgstr ""
 "Lorsque vous démarrez le <application>visionneur de documents Evince</"
 "application>, la fenêtre suivante est affichée."
 
-#: ../C/evince.xml:142(title)
+#: ../C/evince.xml:151(title)
 msgid "Evince Document Viewer Window"
 msgstr "Fenêtre du visionneur de document Evince"
 
-#: ../C/evince.xml:149(phrase)
+#: ../C/evince.xml:158(phrase)
 msgid ""
 "Shows Evince Document Viewer main window. Contains titlebar, menubar, "
 "toolbar and display area. Menubar contains File, Edit, View, Go and Help "
@@ -293,7 +309,7 @@ msgstr ""
 "zone d'affichage. La barre de menus comprend les menus Fichier, Édition, "
 "Affichage, Aller à et Aide."
 
-#: ../C/evince.xml:155(para)
+#: ../C/evince.xml:164(para)
 msgid ""
 "The <application>Evince Document Viewer</application> window contains the "
 "following elements:"
@@ -301,11 +317,11 @@ msgstr ""
 "La fenêtre du <application>visionneur de documents Evince</application> "
 "contient les éléments suivants :"
 
-#: ../C/evince.xml:159(term) ../C/evince.xml:207(para)
+#: ../C/evince.xml:168(term) ../C/evince.xml:216(para)
 msgid "Menubar"
 msgstr "Barre de menus"
 
-#: ../C/evince.xml:161(para)
+#: ../C/evince.xml:170(para)
 msgid ""
 "The menus on the menubar contain all of the commands that you need to work "
 "with documents in <application>Evince Document Viewer</application>."
@@ -314,11 +330,11 @@ msgstr ""
 "pour travailler avec les documents dans le <application>visionneur de "
 "documents Evince</application>."
 
-#: ../C/evince.xml:165(term)
+#: ../C/evince.xml:174(term)
 msgid "Toolbar"
 msgstr "Barre d'outils"
 
-#: ../C/evince.xml:167(para)
+#: ../C/evince.xml:176(para)
 msgid ""
 "The toolbar contains a subset of the commands that you can access from the "
 "menubar."
@@ -326,27 +342,27 @@ msgstr ""
 "La barre d'outils contient un sous-ensemble des commandes accessibles depuis "
 "la barre de menus."
 
-#: ../C/evince.xml:171(term)
+#: ../C/evince.xml:180(term)
 msgid "Display area"
 msgstr "Zone d'affichage"
 
-#: ../C/evince.xml:173(para)
+#: ../C/evince.xml:182(para)
 msgid "The display area displays the document."
 msgstr "La zone dans laquelle le document est affiché."
 
-#: ../C/evince.xml:187(para)
+#: ../C/evince.xml:196(para)
 msgid "UI Component"
 msgstr "Composant de l'interface utilisateur"
 
-#: ../C/evince.xml:189(para)
+#: ../C/evince.xml:198(para) ../C/evince.xml:646(para)
 msgid "Action"
 msgstr "Action"
 
-#: ../C/evince.xml:194(para)
+#: ../C/evince.xml:203(para)
 msgid "Window"
 msgstr "Fenêtre"
 
-#: ../C/evince.xml:198(para)
+#: ../C/evince.xml:207(para)
 msgid ""
 "Drag a file into the <application>Evince Document Viewer</application> "
 "window from another application such as a file manager."
@@ -355,11 +371,11 @@ msgstr ""
 "Evince</application> à partir d'une autre application comme le gestionnaire "
 "de fichiers."
 
-#: ../C/evince.xml:201(para)
+#: ../C/evince.xml:210(para)
 msgid "Double-click on the file name in the file manager"
 msgstr "Double-cliquez sur le nom du fichier dans le gestionnaire de fichiers."
 
-#: ../C/evince.xml:208(para) ../C/evince.xml:235(para)
+#: ../C/evince.xml:217(para) ../C/evince.xml:244(para)
 msgid ""
 "Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></"
 "menuchoice>."
@@ -367,16 +383,16 @@ msgstr ""
 "Choisissez <menuchoice><guimenu>Fichier</guimenu><guimenuitem>Ouvrir</"
 "guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:212(para)
+#: ../C/evince.xml:221(para)
 msgid "Shortcut keys"
 msgstr "Raccourcis clavier"
 
-#: ../C/evince.xml:213(para)
+#: ../C/evince.xml:222(para)
 msgid "Press <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
 msgstr ""
 "Appuyez sur <keycombo><keycap>CTRL</keycap><keycap>O</keycap></keycombo>."
 
-#: ../C/evince.xml:178(para)
+#: ../C/evince.xml:187(para)
 msgid ""
 "In <application>Evince Document Viewer</application>, you can perform the "
 "same action in several ways. For example, you can open a document in the "
@@ -392,23 +408,23 @@ msgstr ""
 "\"COLSPEC0\" colwidth=\"50*\"/><colspec colname=\"COLSPEC1\" colwidth=\"50*"
 "\"/><placeholder-1/><placeholder-2/></tgroup></informaltable>"
 
-#: ../C/evince.xml:219(para)
+#: ../C/evince.xml:228(para)
 msgid "This manual documents functionality from the menubar."
 msgstr "Ce manuel privilégie les opérations à partir de la barre de menus."
 
-#: ../C/evince.xml:227(title)
+#: ../C/evince.xml:236(title)
 msgid "Usage"
 msgstr "Utilisation"
 
-#: ../C/evince.xml:231(title)
+#: ../C/evince.xml:240(title)
 msgid "To Open A Document"
 msgstr "Ouverture d'un document"
 
-#: ../C/evince.xml:232(para)
+#: ../C/evince.xml:241(para)
 msgid "To open a document, perform the following steps:"
 msgstr "Pour ouvrir un document, effectuez les opérations suivantes :"
 
-#: ../C/evince.xml:239(para)
+#: ../C/evince.xml:248(para)
 msgid ""
 "In the <guilabel>Open Document</guilabel> dialog, select the file you want "
 "to open."
@@ -416,7 +432,7 @@ msgstr ""
 "Dans la boîte de dialogue <guilabel>Ouvrir un document</guilabel>, "
 "sélectionnez le fichier que vous désirez ouvrir."
 
-#: ../C/evince.xml:244(para)
+#: ../C/evince.xml:253(para)
 msgid ""
 "Click <guibutton>Open</guibutton>. <application>Evince Document Viewer</"
 "application> displays the name of the document in the titlebar of the window."
@@ -425,7 +441,7 @@ msgstr ""
 "documents Evince</application> affiche le nom du document dans la barre de "
 "titre de la fenêtre."
 
-#: ../C/evince.xml:249(para)
+#: ../C/evince.xml:258(para)
 msgid ""
 "To open another document, choose <menuchoice><guimenu>File</"
 "guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. "
@@ -437,7 +453,7 @@ msgstr ""
 "menuchoice>. Le <application>visionneur de documents Evince</application> "
 "ouvre chaque fichier dans une nouvelle fenêtre."
 
-#: ../C/evince.xml:252(para)
+#: ../C/evince.xml:261(para)
 msgid ""
 "If you try to open a document with format that <application>Evince Document "
 "Viewer</application> does not recognize, the application displays an error "
@@ -447,16 +463,16 @@ msgstr ""
 "<application>visionneur de documents Evince</application>, l'application "
 "affichera un message d'erreur."
 
-#: ../C/evince.xml:258(title)
+#: ../C/evince.xml:267(title)
 msgid "To Navigate Through a Document"
 msgstr "Navigation à l'intérieur d'un document"
 
-#: ../C/evince.xml:259(para)
+#: ../C/evince.xml:268(para)
 msgid "You can navigate through a file as follows:"
 msgstr ""
 "Vous pouvez naviguer à l'intérieur d'un document de la façon suivante :"
 
-#: ../C/evince.xml:262(para)
+#: ../C/evince.xml:271(para)
 msgid ""
 "To view the next page, choose <menuchoice><guimenu>Go</"
 "guimenu><guimenuitem>Next Page</guimenuitem></menuchoice>."
@@ -464,7 +480,7 @@ msgstr ""
 "Pour afficher la page suivante, choisissez <menuchoice><guimenu>Aller à</"
 "guimenu><guimenuitem>Page suivante</guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:266(para)
+#: ../C/evince.xml:275(para)
 msgid ""
 "To view the previous page, choose <menuchoice><guimenu>Go</"
 "guimenu><guimenuitem>Previous Page</guimenuitem></menuchoice>."
@@ -472,7 +488,7 @@ msgstr ""
 "Pour afficher la page précédente, choisissez <menuchoice><guimenu>Aller à</"
 "guimenu><guimenuitem>Page précédente</guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:270(para)
+#: ../C/evince.xml:279(para)
 msgid ""
 "To view the first page in the document, choose <menuchoice><guimenu>Go</"
 "guimenu><guimenuitem>First Page</guimenuitem></menuchoice>."
@@ -481,7 +497,7 @@ msgstr ""
 "<menuchoice><guimenu>Aller à</guimenu><guimenuitem>Première page</"
 "guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:274(para)
+#: ../C/evince.xml:283(para)
 msgid ""
 "To view the last page in the document, choose <menuchoice><guimenu>Go</"
 "guimenu><guimenuitem>Last Page</guimenuitem></menuchoice>."
@@ -490,7 +506,7 @@ msgstr ""
 "<menuchoice><guimenu>Aller à</guimenu><guimenuitem>Dernière page</"
 "guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:278(para)
+#: ../C/evince.xml:287(para)
 msgid ""
 "To view a particular page, enter the page number or page label in the text "
 "box on the toolbar, then press <keycap>Return</keycap>."
@@ -498,11 +514,11 @@ msgstr ""
 "Pour afficher une page précise, tapez le numéro ou le nom de la page dans la "
 "zone de texte de la barre d'outils, puis appuyez sur <keycap>Entrée</keycap>."
 
-#: ../C/evince.xml:285(title)
+#: ../C/evince.xml:294(title)
 msgid "To Scroll a Page"
 msgstr "Défilement d'une page"
 
-#: ../C/evince.xml:286(para)
+#: ../C/evince.xml:295(para)
 msgid ""
 "To display the page contents that are not currently displayed in the display "
 "area, use the following methods:"
@@ -510,11 +526,11 @@ msgstr ""
 "Pour afficher du contenu qui n'est pas visible dans la zone d'affichage, "
 "utilisez les méthodes suivantes :"
 
-#: ../C/evince.xml:289(para)
+#: ../C/evince.xml:298(para)
 msgid "Use the arrow keys or space key on the keyboard."
 msgstr "Utilisez les touches fléchées ou la barre d'espacement du clavier."
 
-#: ../C/evince.xml:292(para)
+#: ../C/evince.xml:301(para)
 msgid ""
 "Drag the display area by clicking with the middle mouse button somewhere in "
 "the document and then moving the mouse. For example, to scroll down the "
@@ -525,15 +541,15 @@ msgstr ""
 "défiler la page vers le bas, glissez la zone d'affichage vers le haut de la "
 "fenêtre."
 
-#: ../C/evince.xml:295(para)
+#: ../C/evince.xml:304(para)
 msgid "Use the scrollbars on the window."
 msgstr "Utilisez les barres de défilement de la fenêtre."
 
-#: ../C/evince.xml:302(title)
+#: ../C/evince.xml:311(title)
 msgid "To Change the Page Size"
 msgstr "Changement de la taille de la page"
 
-#: ../C/evince.xml:303(para)
+#: ../C/evince.xml:312(para)
 msgid ""
 "You can use the following methods to resize a page in the "
 "<application>Evince Document Viewer</application> display area:"
@@ -542,7 +558,7 @@ msgstr ""
 "zone d'affichage du <application>visionneur de documents Evince</"
 "application> :"
 
-#: ../C/evince.xml:308(para)
+#: ../C/evince.xml:317(para)
 msgid ""
 "To increase the page size, choose <menuchoice><guimenu>View</"
 "guimenu><guimenuitem>Zoom In</guimenuitem></menuchoice>."
@@ -551,7 +567,7 @@ msgstr ""
 "<menuchoice><guimenu>Affichage</guimenu><guimenuitem>Zoom avant</"
 "guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:313(para)
+#: ../C/evince.xml:322(para)
 msgid ""
 "To decrease the page size, choose <menuchoice><guimenu>View</"
 "guimenu><guimenuitem>Zoom Out</guimenuitem></menuchoice>."
@@ -560,7 +576,7 @@ msgstr ""
 "<menuchoice><guimenu>Affichage</guimenu><guimenuitem>Zoom arrière</"
 "guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:318(para)
+#: ../C/evince.xml:327(para)
 msgid ""
 "To resize a page to have the same width as the <application>Evince Document "
 "Viewer</application> display area, choose <menuchoice><guimenu>View</"
@@ -571,7 +587,7 @@ msgstr ""
 "<menuchoice><guimenu>Affichage</guimenu><guimenuitem>Ajuster à la largeur de "
 "la page</guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:323(para)
+#: ../C/evince.xml:332(para)
 msgid ""
 "To resize a page to fit within the <application>Evince Document Viewer</"
 "application> display area, choose <menuchoice><guimenu>View</"
@@ -582,7 +598,7 @@ msgstr ""
 "<menuchoice><guimenu>Affichage</guimenu><guimenuitem>Taille idéale</"
 "guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:328(para)
+#: ../C/evince.xml:337(para)
 msgid ""
 "To resize the <application>Evince Document Viewer</application> window to "
 "have the same width and height as the screen, choose "
@@ -597,17 +613,17 @@ msgstr ""
 "guimenuitem></menuchoice>. Pour revenir au mode d'affichage précédent, "
 "cliquez sur le bouton <guibutton>Quitter le mode plein écran</guibutton>."
 
-#: ../C/evince.xml:336(title)
+#: ../C/evince.xml:345(title)
 msgid "To View Pages or Document Structure"
 msgstr "Affichage des vignettes ou de la structure du document"
 
-#: ../C/evince.xml:337(para)
+#: ../C/evince.xml:346(para)
 msgid "To view bookmarks or pages, perform the following steps:"
 msgstr ""
 "Pour afficher les signets ou les vignettes de pages, procédez de la façon "
 "suivante :"
 
-#: ../C/evince.xml:341(para)
+#: ../C/evince.xml:350(para)
 msgid ""
 "Choose <menuchoice><guimenu>View</guimenu><guimenuitem>Sidebar</"
 "guimenuitem></menuchoice> or press <keycap>F9</keycap>."
@@ -616,7 +632,7 @@ msgstr ""
 "latéral</guimenuitem></menuchoice> ou appuyez sur la touche <keycap>F9</"
 "keycap>."
 
-#: ../C/evince.xml:346(para)
+#: ../C/evince.xml:355(para)
 msgid ""
 "Use the drop-down list in the side-pane header to select whether to display "
 "document structure or pages in the side pane."
@@ -625,7 +641,7 @@ msgstr ""
 "d'afficher les vignettes ou la structure du document (index) dans le panneau "
 "latéral."
 
-#: ../C/evince.xml:351(para)
+#: ../C/evince.xml:360(para)
 msgid ""
 "Use the side-pane scrollbars to display the required item or page in the "
 "side pane."
@@ -633,7 +649,7 @@ msgstr ""
 "Utilisez la barre de défilement du panneau latéral pour afficher l'élément "
 "ou la page souhaitée dans le panneau latéral."
 
-#: ../C/evince.xml:356(para)
+#: ../C/evince.xml:365(para)
 msgid ""
 "Click on an entry to navigate to that location in the document. Click on a "
 "page to navigate to that page in the document."
@@ -641,11 +657,11 @@ msgstr ""
 "Cliquez sur un signet ou sur une vignette pour afficher l'emplacement "
 "correspondant du document dans la zone d'affichage."
 
-#: ../C/evince.xml:362(title)
+#: ../C/evince.xml:371(title)
 msgid "To View the Properties of a Document"
 msgstr "Affichage des propriétés d'un document"
 
-#: ../C/evince.xml:363(para)
+#: ../C/evince.xml:372(para)
 msgid ""
 "To view the properties of a document, choose <menuchoice><guimenu>File</"
 "guimenu><guimenuitem>Properties</guimenuitem></menuchoice>."
@@ -654,18 +670,18 @@ msgstr ""
 "<menuchoice><guimenu>Fichier</guimenu><guimenuitem>Propriétés</guimenuitem></"
 "menuchoice>."
 
-#: ../C/evince.xml:369(para)
+#: ../C/evince.xml:378(para)
 msgid ""
 "The <guilabel>Properties</guilabel> dialog displays all information available"
 msgstr ""
 "La boîte de dialogue <guilabel>Propriétés</guilabel> affiche toutes les "
 "informations disponibles."
 
-#: ../C/evince.xml:375(title)
+#: ../C/evince.xml:384(title)
 msgid "To Print a Document"
 msgstr "Impression d'un document"
 
-#: ../C/evince.xml:376(para)
+#: ../C/evince.xml:385(para)
 msgid ""
 "To print a Document, choose <menuchoice><guimenu>File</"
 "guimenu><guimenuitem>Print</guimenuitem></menuchoice>."
@@ -673,7 +689,7 @@ msgstr ""
 "Pour imprimer un document, choisissez <menuchoice><guimenu>Fichier</"
 "guimenu><guimenuitem>Imprimer...</guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:380(para)
+#: ../C/evince.xml:389(para)
 msgid ""
 "If you cannot choose the <guimenuitem>Print</guimenuitem> menu item, the "
 "author of the document has disabled the print option for this document. To "
@@ -687,50 +703,50 @@ msgstr ""
 "maître à l'ouverture du document. Voir <xref linkend=\"evince-password\"/> "
 "pour plus d'informations au sujet des fichiers protégés par mot de passe."
 
-#: ../C/evince.xml:384(para)
+#: ../C/evince.xml:393(para)
 msgid ""
 "The <guilabel>Print</guilabel> dialog has the following tabbed sections:"
 msgstr ""
 "La boîte de dialogue <guilabel>Imprimer</guilabel> possède les onglets "
 "suivants :"
 
-#: ../C/evince.xml:390(link) ../C/evince.xml:406(title)
+#: ../C/evince.xml:399(link) ../C/evince.xml:415(title)
 msgid "Job"
 msgstr "Travail"
 
-#: ../C/evince.xml:395(link) ../C/evince.xml:428(title)
-#: ../C/evince.xml:430(guilabel)
+#: ../C/evince.xml:404(link) ../C/evince.xml:437(title)
+#: ../C/evince.xml:439(guilabel)
 msgid "Printer"
 msgstr "Imprimante"
 
-#: ../C/evince.xml:400(link) ../C/evince.xml:522(title)
+#: ../C/evince.xml:409(link) ../C/evince.xml:531(title)
 msgid "Paper"
 msgstr "Papier"
 
-#: ../C/evince.xml:408(guilabel)
+#: ../C/evince.xml:417(guilabel)
 msgid "Print range"
 msgstr "Intervalle d'impression"
 
-#: ../C/evince.xml:410(para)
+#: ../C/evince.xml:419(para)
 msgid ""
 "Select one of the following options to determine how many pages to print:"
 msgstr ""
 "Sélectionnez une des options suivantes pour déterminer le nombre de pages à "
 "imprimer :"
 
-#: ../C/evince.xml:413(guilabel)
+#: ../C/evince.xml:422(guilabel)
 msgid "All"
 msgstr "Tout"
 
-#: ../C/evince.xml:414(para)
+#: ../C/evince.xml:423(para)
 msgid "Select this option to print all of the pages in the document."
 msgstr "Sélectionnez cette option pour imprimer toutes les pages du document."
 
-#: ../C/evince.xml:417(guilabel)
+#: ../C/evince.xml:426(guilabel)
 msgid "Pages From"
 msgstr "Pages de"
 
-#: ../C/evince.xml:418(para)
+#: ../C/evince.xml:427(para)
 msgid ""
 "Select this option to print the selected range of pages in the document. Use "
 "the spin boxes to specify the first page and last page of the range."
@@ -739,14 +755,14 @@ msgstr ""
 "Utilisez les zones de sélection numérique pour définir la première et la "
 "dernière page de l'intervalle."
 
-#: ../C/evince.xml:432(para)
+#: ../C/evince.xml:441(para)
 msgid ""
 "Use this drop-down list to select the printer to which you want to print the "
 "document."
 msgstr ""
 "Sélectionnez dans la liste l'imprimante à utiliser pour imprimer le document."
 
-#: ../C/evince.xml:434(para)
+#: ../C/evince.xml:443(para)
 msgid ""
 "The <guilabel>Create a PDF document</guilabel> option is not supported in "
 "this version of <application>Evince Document Viewer</application>."
@@ -755,16 +771,16 @@ msgstr ""
 "n'est pas prise en charge dans cette version du <application>visionneur de "
 "documents Evince</application>."
 
-#: ../C/evince.xml:440(guilabel)
+#: ../C/evince.xml:449(guilabel)
 msgid "Settings"
 msgstr "Réglages"
 
-#: ../C/evince.xml:442(para)
+#: ../C/evince.xml:451(para)
 msgid "Use this drop-down list to select the printer settings."
 msgstr ""
 "Cette liste déroulante permet de sélectionner les paramètres d'impression."
 
-#: ../C/evince.xml:444(para)
+#: ../C/evince.xml:453(para)
 msgid ""
 "To configure the printer, click <guibutton>Configure</guibutton>. For "
 "example, you can enable or disable duplex printing, or schedule delayed "
@@ -775,26 +791,26 @@ msgstr ""
 "spécifier l'heure d'une impression différée, pour autant que ces fonctions "
 "soient prises en charge par l'imprimante."
 
-#: ../C/evince.xml:448(guilabel)
+#: ../C/evince.xml:457(guilabel)
 msgid "Location"
 msgstr "Emplacement"
 
-#: ../C/evince.xml:450(para)
+#: ../C/evince.xml:459(para)
 msgid ""
 "Use this drop-down list to select one of the following print destinations:"
 msgstr ""
 "Cette liste déroulante permet de sélectionner une des destinations "
 "d'impression suivantes :"
 
-#: ../C/evince.xml:455(guilabel)
+#: ../C/evince.xml:464(guilabel)
 msgid "CUPS"
 msgstr "CUPS"
 
-#: ../C/evince.xml:457(para)
+#: ../C/evince.xml:466(para)
 msgid "Print the document to a CUPS printer."
 msgstr "Imprime le document en utilisant une imprimante CUPS."
 
-#: ../C/evince.xml:461(para)
+#: ../C/evince.xml:470(para)
 msgid ""
 "If the selected printer is a CUPS printer, <guilabel>CUPS</guilabel> is the "
 "only entry in this drop-down list."
@@ -802,23 +818,23 @@ msgstr ""
 "Si l'imprimante sélectionnée est une imprimante CUPS, <guilabel>CUPS</"
 "guilabel> sera le seul contenu de la liste déroulante."
 
-#: ../C/evince.xml:468(guilabel)
+#: ../C/evince.xml:477(guilabel)
 msgid "lpr"
 msgstr "lpr"
 
-#: ../C/evince.xml:470(para)
+#: ../C/evince.xml:479(para)
 msgid "Print the document to a printer."
 msgstr "Imprime le document à l'aide d'une imprimante de manière classique."
 
-#: ../C/evince.xml:476(guilabel)
+#: ../C/evince.xml:485(guilabel)
 msgid "File"
 msgstr "Fichier"
 
-#: ../C/evince.xml:478(para)
+#: ../C/evince.xml:487(para)
 msgid "Print the document to a PostScript file."
 msgstr "Imprime le document dans un fichier PostScript."
 
-#: ../C/evince.xml:481(para)
+#: ../C/evince.xml:490(para)
 msgid ""
 "Click <guibutton>Save As</guibutton> to display a dialog where you specify "
 "the name and location of the PostScript file."
@@ -827,15 +843,15 @@ msgstr ""
 "de dialogue permettant de spécifier le nom et l'emplacement du fichier "
 "PostScript."
 
-#: ../C/evince.xml:487(guilabel)
+#: ../C/evince.xml:496(guilabel)
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: ../C/evince.xml:489(para)
+#: ../C/evince.xml:498(para)
 msgid "Use the specified command to print the document."
 msgstr "Utilise la commande spécifiée pour imprimer le document."
 
-#: ../C/evince.xml:492(para)
+#: ../C/evince.xml:501(para)
 msgid ""
 "Type the name of the command in the text box. Include all command-line "
 "arguments."
@@ -843,12 +859,12 @@ msgstr ""
 "Entrez le nom de la commande dans le champ texte adjacent, sans oublier tous "
 "les arguments de la ligne de commande."
 
-#: ../C/evince.xml:500(guilabel)
+#: ../C/evince.xml:509(guilabel)
 msgid "State"
 msgstr "État"
 
-#: ../C/evince.xml:502(para) ../C/evince.xml:508(para)
-#: ../C/evince.xml:514(para)
+#: ../C/evince.xml:511(para) ../C/evince.xml:517(para)
+#: ../C/evince.xml:523(para)
 msgid ""
 "This functionality is not supported in this version of <application>Evince "
 "Document Viewer</application>."
@@ -856,19 +872,19 @@ msgstr ""
 "Cette fonctionnalité n'est pas prise en charge dans cette version du "
 "<application>visionneur de documents Evince</application>."
 
-#: ../C/evince.xml:506(guilabel)
+#: ../C/evince.xml:515(guilabel)
 msgid "Type"
 msgstr "Type"
 
-#: ../C/evince.xml:512(guilabel)
+#: ../C/evince.xml:521(guilabel)
 msgid "Comment"
 msgstr "Commentaire"
 
-#: ../C/evince.xml:524(guilabel)
+#: ../C/evince.xml:533(guilabel)
 msgid "Paper size"
 msgstr "Taille du papier"
 
-#: ../C/evince.xml:526(para)
+#: ../C/evince.xml:535(para)
 msgid ""
 "Use this drop-down list to select the size of the paper to which you want to "
 "print the document."
@@ -876,11 +892,11 @@ msgstr ""
 "Cette liste déroulante permet de sélectionner le format de papier à utiliser "
 "pour imprimer le document."
 
-#: ../C/evince.xml:529(guilabel)
+#: ../C/evince.xml:538(guilabel)
 msgid "Width"
 msgstr "Largeur"
 
-#: ../C/evince.xml:531(para)
+#: ../C/evince.xml:540(para)
 msgid ""
 "Use this spin box to specify the width of the paper. Use the adjacent drop-"
 "down list to change the measurement unit."
@@ -889,21 +905,21 @@ msgstr ""
 "papier. La liste déroulante adjacente vous offre la possibilité de modifier "
 "l'unité de mesure utilisée."
 
-#: ../C/evince.xml:534(guilabel)
+#: ../C/evince.xml:543(guilabel)
 msgid "Height"
 msgstr "Hauteur"
 
-#: ../C/evince.xml:536(para)
+#: ../C/evince.xml:545(para)
 msgid "Use this spin box to specify the height of the paper."
 msgstr ""
 "Cette zone de sélection numérique vous permet de spécifier la hauteur du "
 "papier."
 
-#: ../C/evince.xml:539(guilabel)
+#: ../C/evince.xml:548(guilabel)
 msgid "Feed orientation"
 msgstr "Orientation du défilement"
 
-#: ../C/evince.xml:541(para)
+#: ../C/evince.xml:550(para)
 msgid ""
 "Use this drop-down list to select the orientation of the paper in the "
 "printer."
@@ -911,20 +927,20 @@ msgstr ""
 "Cette liste déroulante permet de sélectionner l'orientation du papier dans "
 "l'imprimante."
 
-#: ../C/evince.xml:544(guilabel)
+#: ../C/evince.xml:553(guilabel)
 msgid "Page orientation"
 msgstr "Orientation de la page"
 
-#: ../C/evince.xml:546(para)
+#: ../C/evince.xml:555(para)
 msgid "Use this drop-down list to select the page orientation."
 msgstr ""
 "Cette liste déroulante vous permet de sélectionner l'orientation du papier."
 
-#: ../C/evince.xml:549(guilabel)
+#: ../C/evince.xml:558(guilabel)
 msgid "Layout"
 msgstr "Agencement"
 
-#: ../C/evince.xml:551(para)
+#: ../C/evince.xml:560(para)
 msgid ""
 "Use this drop-down list to select the page layout. A preview of each layout "
 "that you select is displayed in the <guilabel>Preview</guilabel> area."
@@ -933,23 +949,23 @@ msgstr ""
 "la mise en page sélectionnée s'affiche dans la zone <guilabel>Aperçu</"
 "guilabel>."
 
-#: ../C/evince.xml:554(guilabel)
+#: ../C/evince.xml:563(guilabel)
 msgid "Paper Tray"
 msgstr "Chargeur de papier"
 
-#: ../C/evince.xml:556(para)
+#: ../C/evince.xml:565(para)
 msgid "Use this drop-down list to select the paper tray."
 msgstr "Cette liste déroulante permet de choisir le chargeur de papier."
 
-#: ../C/evince.xml:566(title)
+#: ../C/evince.xml:575(title)
 msgid "To Copy a Document"
 msgstr "Copie d'un document"
 
-#: ../C/evince.xml:567(para)
+#: ../C/evince.xml:576(para)
 msgid "To copy a file, perform the following steps:"
 msgstr "Pour copier un fichier, procédez de la manière suivante :"
 
-#: ../C/evince.xml:571(para)
+#: ../C/evince.xml:580(para)
 msgid ""
 "Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Save a Copy</"
 "guimenuitem></menuchoice>."
@@ -957,7 +973,7 @@ msgstr ""
 "Choisissez <menuchoice><guimenu>Fichier</guimenu><guimenuitem>Enregistrer "
 "une copie...</guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:576(para)
+#: ../C/evince.xml:585(para)
 msgid ""
 "Type the new filename in the <guilabel>Filename</guilabel> text box in the "
 "<guilabel>Save a Copy</guilabel> dialog."
@@ -965,7 +981,7 @@ msgstr ""
 "Saisissez le nouveau nom de fichier dans la zone de texte <guilabel>Nom</"
 "guilabel> de la boîte de dialogue <guilabel>Enregistrer une copie</guilabel>."
 
-#: ../C/evince.xml:579(para)
+#: ../C/evince.xml:588(para)
 msgid ""
 "If necessary, specify the location of the copied document. By default, "
 "copies are saved in your home directory."
@@ -973,26 +989,26 @@ msgstr ""
 "Si nécessaire, spécifiez l'emplacement du document copié. Par défaut, les "
 "copies sont enregistrées dans votre dossier personnel."
 
-#: ../C/evince.xml:584(para)
+#: ../C/evince.xml:593(para)
 msgid "Click <guibutton>Save</guibutton>."
 msgstr "Cliquez sur <guibutton>Enregistrer</guibutton>."
 
-#: ../C/evince.xml:593(title)
+#: ../C/evince.xml:602(title)
 msgid "To Work With Password-Protected Documents"
 msgstr "Travailler avec des documents protégés par mot de passe"
 
-#: ../C/evince.xml:594(para)
+#: ../C/evince.xml:603(para)
 msgid "An author can use the following password levels to protect a document:"
 msgstr ""
 "Un auteur peut utiliser les niveaux de protection suivants pour protéger un "
 "document :"
 
-#: ../C/evince.xml:599(para)
+#: ../C/evince.xml:608(para)
 msgid "User password that allows others only to read the document."
 msgstr ""
 "Mot de passe utilisateur donnant uniquement le droit de lire le document."
 
-#: ../C/evince.xml:603(para)
+#: ../C/evince.xml:612(para)
 msgid ""
 "Master password that allows others to perform additional actions, such as "
 "print the document."
@@ -1000,7 +1016,7 @@ msgstr ""
 "Mot de passe maître donnant le droit d'effectuer des opérations "
 "supplémentaires, comme imprimer le document."
 
-#: ../C/evince.xml:607(para)
+#: ../C/evince.xml:616(para)
 msgid ""
 "When you try to open a password-protected document, <application>Evince "
 "Document Viewer</application> displays a security dialog. Type either the "
@@ -1015,11 +1031,11 @@ msgstr ""
 "guilabel> de cette boîte de dialogue, puis cliquez sur <guibutton>Ouvrir "
 "document</guibutton>."
 
-#: ../C/evince.xml:614(title)
+#: ../C/evince.xml:623(title)
 msgid "To Close a Document"
 msgstr "Fermeture d'un document"
 
-#: ../C/evince.xml:615(para)
+#: ../C/evince.xml:624(para)
 msgid ""
 "To close a document, choose <menuchoice><guimenu>File</"
 "guimenu><guimenuitem>Close</guimenuitem></menuchoice>."
@@ -1027,7 +1043,7 @@ msgstr ""
 "Pour fermer un document, choisissez <menuchoice><guimenu>Fichier</"
 "guimenu><guimenuitem>Fermer</guimenuitem></menuchoice>."
 
-#: ../C/evince.xml:617(para)
+#: ../C/evince.xml:626(para)
 msgid ""
 "If the window is the last <application>Evince Document Viewer</application> "
 "window open, the application exits."
@@ -1035,9 +1051,247 @@ msgstr ""
 "Si c'est la dernière fenêtre du <application>visionneur de documents Evince</"
 "application>, l'application se ferme."
 
+#: ../C/evince.xml:635(title)
+msgid "Shortcuts"
+msgstr "Raccourcis clavier"
+
+#: ../C/evince.xml:636(para)
+msgid ""
+"Below is a list of all shortcuts present in <application>Evince Document "
+"Viewer</application>:"
+msgstr ""
+"Vous trouverez ci-dessous une liste de tous les raccourcis clavier présents "
+"dans le <application>visionneur de documents Evince</application> :"
+
+#: ../C/evince.xml:644(para)
+msgid "Shortcut"
+msgstr "Raccourci clavier"
+
+#: ../C/evince.xml:651(keycap) ../C/evince.xml:655(keycap)
+#: ../C/evince.xml:659(keycap) ../C/evince.xml:663(keycap)
+#: ../C/evince.xml:667(keycap) ../C/evince.xml:671(keycap)
+#: ../C/evince.xml:676(keycap) ../C/evince.xml:682(keycap)
+#: ../C/evince.xml:701(keycap) ../C/evince.xml:747(keycap)
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: ../C/evince.xml:651(keycap)
+msgid "O"
+msgstr "O"
+
+#: ../C/evince.xml:652(para)
+msgid "Open an existing document"
+msgstr "Ouvre un document existant"
+
+#: ../C/evince.xml:655(keycap)
+msgid "S"
+msgstr "S"
+
+#: ../C/evince.xml:656(para)
+msgid "Save a copy of the current document"
+msgstr "Enregistre une copie du document actuel"
+
+#: ../C/evince.xml:659(keycap)
+msgid "P"
+msgstr "P"
+
+#: ../C/evince.xml:660(para)
+msgid "Print document"
+msgstr "Imprime le document"
+
+#: ../C/evince.xml:663(keycap)
+msgid "W"
+msgstr "W"
+
+#: ../C/evince.xml:664(para)
+msgid "Close window"
+msgstr "Ferme la fenêtre"
+
+#: ../C/evince.xml:667(keycap)
+msgid "C"
+msgstr "C"
+
+#: ../C/evince.xml:668(para)
+msgid "Copy selection"
+msgstr "Copie la sélection"
+
+#: ../C/evince.xml:671(keycap)
+msgid "A"
+msgstr "A"
+
+#: ../C/evince.xml:672(para)
+msgid "Select All"
+msgstr "Sélectionne tout"
+
+#: ../C/evince.xml:676(keycap)
+msgid "F"
+msgstr "F"
+
+#: ../C/evince.xml:677(para)
+msgid "<keycap>/</keycap> (slash)"
+msgstr "<keycap>/</keycap> (barre oblique)"
+
+#: ../C/evince.xml:679(para)
+msgid "Find a word or phrase in the document"
+msgstr "Recherche un mot ou une phrase dans le document"
+
+#: ../C/evince.xml:682(keycap)
+msgid "G"
+msgstr "G"
+
+#: ../C/evince.xml:683(para)
+msgid "Find next"
+msgstr "Recherche l'occurrence suivante"
+
+#: ../C/evince.xml:687(para)
+msgid ""
+"<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (plus sign)"
+msgstr ""
+"<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (signe plus)"
+
+#: ../C/evince.xml:688(keycap)
+msgid "+"
+msgstr "+"
+
+#: ../C/evince.xml:689(keycap)
+msgid "="
+msgstr "="
+
+#: ../C/evince.xml:691(para)
+msgid "Zoom in"
+msgstr "Effectue un zoom avant"
+
+#: ../C/evince.xml:695(para)
+msgid ""
+"<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (minus sign)"
+msgstr ""
+"<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (signe moins)"
+
+#: ../C/evince.xml:696(keycap)
+msgid "-"
+msgstr "_"
+
+#: ../C/evince.xml:698(para)
+msgid "Zoom out"
+msgstr "Effectue un zoom arrière"
+
+#: ../C/evince.xml:701(keycap)
+msgid "R"
+msgstr "R"
+
+#: ../C/evince.xml:702(para)
+msgid "Reload the document"
+msgstr "Recharge le document"
+
+#: ../C/evince.xml:706(keycap) ../C/evince.xml:731(keycap)
+msgid "Page Up"
+msgstr "Page haut"
+
+#: ../C/evince.xml:707(para)
+msgid "Go to the previous page"
+msgstr "Retourne à la page précédente"
+
+#: ../C/evince.xml:710(keycap) ../C/evince.xml:735(keycap)
+msgid "Page Down"
+msgstr "Pages bas"
+
+#: ../C/evince.xml:711(para)
+msgid "Go to the next page"
+msgstr "Va à la page suivante"
+
+#: ../C/evince.xml:715(keycap) ../C/evince.xml:723(keycap)
+msgid "Space"
+msgstr "Espace"
+
+#: ../C/evince.xml:716(keycap) ../C/evince.xml:723(keycap)
+#: ../C/evince.xml:725(keycap) ../C/evince.xml:731(keycap)
+#: ../C/evince.xml:735(keycap)
+msgid "Shift"
+msgstr "Maj"
+
+#: ../C/evince.xml:716(keycap) ../C/evince.xml:724(keycap)
+msgid "Backspace"
+msgstr "Retour arrière"
+
+#: ../C/evince.xml:717(keycap) ../C/evince.xml:725(keycap)
+msgid "Return"
+msgstr "Entrée"
+
+#: ../C/evince.xml:719(para)
+msgid "Scroll forward"
+msgstr "Défile vers le bas"
+
+#: ../C/evince.xml:727(para)
+msgid "Scroll backward"
+msgstr "Défile vers le haut"
+
+#: ../C/evince.xml:732(para)
+msgid "Go a bunch of pages up"
+msgstr "Recule de quelques pages"
+
+#: ../C/evince.xml:736(para)
+msgid "Go a bunch of pages down"
+msgstr "Avance de quelques pages"
+
+#: ../C/evince.xml:739(keycap)
+msgid "Home"
+msgstr "Origine"
+
+#: ../C/evince.xml:740(para)
+msgid "Go to the first page"
+msgstr "Va à la première page"
+
+#: ../C/evince.xml:743(keycap)
+msgid "End"
+msgstr "Fin"
+
+#: ../C/evince.xml:744(para)
+msgid "Go to the last page"
+msgstr "Va à la dernière page"
+
+#: ../C/evince.xml:747(keycap)
+msgid "L"
+msgstr "L"
+
+#: ../C/evince.xml:748(para)
+msgid "Go to page by number or label"
+msgstr "Va à la page selon son numéro ou son étiquette"
+
+#: ../C/evince.xml:751(keycap)
+msgid "F1"
+msgstr "F1"
+
+#: ../C/evince.xml:752(para)
+msgid "Help"
+msgstr "Aide"
+
+#: ../C/evince.xml:755(keycap)
+msgid "F5"
+msgstr "F5"
+
+#: ../C/evince.xml:756(para)
+msgid "Run document as presentation"
+msgstr "Lance le document en mode présentation"
+
+#: ../C/evince.xml:759(keycap)
+msgid "F9"
+msgstr "F9"
+
+#: ../C/evince.xml:760(para)
+msgid "Show or hide the side pane"
+msgstr "Affiche ou masque le panneau latéral"
+
+#: ../C/evince.xml:763(keycap)
+msgid "F11"
+msgstr "F11"
+
+#: ../C/evince.xml:764(para)
+msgid "Toggle fullscreen mode"
+msgstr "Active ou quitte le mode plein écran"
+
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
 #: ../C/evince.xml:0(None)
 msgid "translator-credits"
 msgstr ""
 "Jonathan Ernst <jonathan@ernstfamily.ch>, 2006, 2007.\n"
-"Claude Paroz <paroz@email.ch>, 2006."
+"Claude Paroz <claude@2xlibre.net>, 2006-2008."
