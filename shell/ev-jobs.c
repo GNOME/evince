@@ -819,6 +819,11 @@ ev_job_print_get_page_list (EvJobPrint *job,
 		gint rsize;
 		gint start, end;
 
+		if (job->ranges[i].start == -1)
+			job->ranges[i].start = 0;
+		if (job->ranges[i].end == -1)
+			job->ranges[i].end = max_page;
+
 		if (job->ranges[i].start > max_page)
 			continue;
 		
