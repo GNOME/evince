@@ -1,4 +1,30 @@
 ===============
+Evince  2.22.1
+===============
+
+Bug fixes:
+
+    * Add compressed dvi to the list of supported mime types
+      (#307087, Ed Catmur)
+    * Fix a crash when printing a range that doesn't specify the start
+      or end page (#524288, Carlos Garcia Campos)
+    * Fix a crash when thumbnail failed to render in PS backend
+      (#525015, Carlos Garcia Campos)
+    * Open default application when launching an external uri
+      (#525009, Emil Soleyman)
+    * Add a configure option to enable/diable DBus (#521797, Rémi Cardona)
+    * Fix printing in documents with rotated pages (#512648, Eugen Dedu)
+    * Do not append file extension twice when saving an image
+      (#523069, Carlos Garcia Campos, Wouter Bolsterlee)
+    * Cancel find operation when the find bar is closed
+      (#508845, Carlos Garcia Campos)
+    * Several printing fixes: collate, reverse and copies were broken
+      (#365332, Eugen Dedu)
+    * Fix selection rendering when poppler is compiled with splash
+      backend (Carlos Garcia Campos).
+    * Other bugs fixed: #521224, #524112
+
+===============
 Evince  2.22.0
 ===============
 
