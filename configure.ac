@@ -417,7 +417,7 @@ if test "x$enable_ps" = "xyes" ; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps;"
 fi
 if test "x$enable_dvi" = "xyes"; then
-	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-dvi;"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-dvi;application/x-bzdvi;application/x-gzdvi;"
 fi
 if test "x$enable_djvu" = "xyes"; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/vnd.djvu;"
