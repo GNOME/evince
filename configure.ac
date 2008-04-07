@@ -224,8 +224,8 @@ if test "x$enable_pdf" = "xyes"; then
 	    AC_CHECK_FUNCS(poppler_page_get_image)
 	    LIBS=$evince_save_LIBS
 
-	    POPPLER_MAJOR_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/0\.\([[0-9]]*\)\(\.\([[0-9]]*\)\)\?/\1/'`
-	    POPPLER_MINOR_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/0\.\([[0-9]]*\)\(\.\([[0-9]]*\)\)\?/\3/'`
+	    POPPLER_MAJOR_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\2 /'`
+	    POPPLER_MINOR_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\3 /'`
 	    if test -z "$POPPLER_MINOR_VERSION"; then
 	      POPPLER_MINOR_VERSION=0
 	    fi
@@ -234,12 +234,12 @@ if test "x$enable_pdf" = "xyes"; then
 	    AC_DEFINE_UNQUOTED([POPPLER_MINOR_VERSION], $POPPLER_MINOR_VERSION, [Poppler minor version number])
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
-	    if test x$enable_cairo_pdf == xyes; then
+	    if test x$enable_cairo_pdf = xyes; then
 	            AC_DEFINE([HAVE_CAIRO_PDF], [1], [defined if cairo-pdf is available])
             fi
 
 	    PKG_CHECK_MODULES(CAIRO_PS, cairo-ps, enable_cairo_ps=yes, enable_cairo_ps=no)
-	    if test x$enable_cairo_ps == xyes; then
+	    if test x$enable_cairo_ps = xyes; then
 	            AC_DEFINE([HAVE_CAIRO_PS], [1], [defined if cairo-ps is available])
             fi
     else
