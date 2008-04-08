@@ -224,11 +224,12 @@ if test "x$enable_pdf" = "xyes"; then
 	    AC_CHECK_FUNCS(poppler_page_get_image)
 	    LIBS=$evince_save_LIBS
 
-	    POPPLER_MAJOR_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\2 /'`
-	    POPPLER_MINOR_VERSION=`$PKG_CONFIG --modversion poppler-glib | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\3 /'`
-	    if test -z "$POPPLER_MINOR_VERSION"; then
-	      POPPLER_MINOR_VERSION=0
+	    poppler_version=`$PKG_CONFIG --modversion poppler-glib`
+	    if test x$poppler_version = x0.6; then
+	       	    poppler_version=0.6.0
 	    fi
+	    POPPLER_MAJOR_VERSION=`echo $poppler_version | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\2 /'`
+	    POPPLER_MINOR_VERSION=`echo $poppler_version | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\3 /'`
 
 	    AC_DEFINE_UNQUOTED([POPPLER_MAJOR_VERSION], $POPPLER_MAJOR_VERSION, [Poppler major version number])
 	    AC_DEFINE_UNQUOTED([POPPLER_MINOR_VERSION], $POPPLER_MINOR_VERSION, [Poppler minor version number])
