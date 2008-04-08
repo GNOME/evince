@@ -169,16 +169,16 @@ build_tree (const DjvuDocument *djvu_document,
 		/* The (bookmarks) cons */
 		iter = miniexp_cdr (iter);
 	} else if ( miniexp_length (iter) >= 2 ) {
+		gchar *utf8_title = NULL;
+		
 		/* An entry */
 		if (!string_from_miniexp (miniexp_car (iter), &title)) goto unknown_entry;
 		if (!string_from_miniexp (miniexp_cadr (iter), &link_dest)) goto unknown_entry;
 
+		
 		if (!g_utf8_validate (title, -1, NULL)) {
-			gchar *utf8_title;
-
 			utf8_title = str_to_utf8 (title);
 			title_markup = g_markup_escape_text (utf8_title, -1);
-			g_free (utf8_title);
 		} else {
 			title_markup = g_markup_escape_text (title, -1);
 		}
@@ -188,7 +188,7 @@ build_tree (const DjvuDocument *djvu_document,
 		if (g_str_has_suffix (link_dest, ".djvu")) {
 			/* FIXME: component file identifiers */
 		} else if (ev_action) {
-			ev_link = ev_link_new (title, ev_action);
+			ev_link = ev_link_new (utf8_title ? utf8_title : title, ev_action);
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 			gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
 					    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title_markup,
@@ -205,7 +205,7 @@ build_tree (const DjvuDocument *djvu_document,
 		}
 
 		g_free (title_markup);
-		
+		g_free (utf8_title);
 		iter = miniexp_cddr (iter);
 		parent = &tree_iter;
 	} else {
