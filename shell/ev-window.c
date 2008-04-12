@@ -4285,6 +4285,8 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_zoom_in) },
         { "CtrlKpMinus", GTK_STOCK_ZOOM_OUT, NULL, "<control>KP_Subtract", NULL,
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
+	{ "CtrlInsert", GTK_STOCK_COPY, NULL, "<control>Insert", NULL,
+	  G_CALLBACK (ev_window_cmd_edit_copy) },
 };
 
 /* Toggle items */
