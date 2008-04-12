@@ -49,16 +49,8 @@
 #include "ev-attachment.h"
 #include "ev-image.h"
 
-#if (defined (HAVE_POPPLER_PAGE_RENDER) || defined (HAVE_POPPLER_PAGE_RENDER_FOR_PRINTING)) && (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
+#if (defined (HAVE_POPPLER_PAGE_RENDER)) && (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
 #define HAVE_CAIRO_PRINT
-#endif
-
-#if POPPLER_MAJOR_VERSION <= 6 || (POPPLER_MAJOR_VERSION == 7 && POPPLER_MINOR_VERSION < 2)
-#define POPPLER_HAS_GDK
-#else
-#ifdef POPPLER_WITH_GDK
-#define POPPLER_HAS_GDK
-#endif
 #endif
 
 typedef struct {
@@ -960,6 +952,8 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	const char   *unimplemented_action = NULL;
 
 	switch (action->type) {
+	        case POPPLER_ACTION_NONE:
+			break;
 	        case POPPLER_ACTION_GOTO_DEST: {
 			EvLinkDest *dest;
 			
@@ -1197,11 +1191,8 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 		image_mapping = (PopplerImageMapping *)list->data;
 
 		ev_image_mapping = g_new (EvImageMapping, 1);
-#ifdef HAVE_POPPLER_PAGE_GET_IMAGE
+		
 		ev_image_mapping->image = ev_image_new (page, image_mapping->image_id);
-#elif POPPLER_HAS_CAIRO
-		ev_image_mapping->image = ev_image_new_from_pixbuf (image_mapping->image);
-#endif
 		ev_image_mapping->x1 = image_mapping->area.x1;
 		ev_image_mapping->x2 = image_mapping->area.x2;
 		ev_image_mapping->y1 = image_mapping->area.y1;
@@ -1261,7 +1252,7 @@ make_thumbnail_for_page (PdfDocument     *pdf_document,
 
 	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document),
 						rc, &width, &height);
-#ifdef POPPLER_HAS_GDK
+#ifdef POPPLER_WITH_GDK
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 width, height);
 	gdk_pixbuf_fill (pixbuf, 0xffffffff);
@@ -1280,7 +1271,7 @@ make_thumbnail_for_page (PdfDocument     *pdf_document,
 	
 	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
 	cairo_surface_destroy (surface);
-#endif /* POPPLER_HAS_GDK */
+#endif /* POPPLER_WITH_GDK */
 
 	return pixbuf;
 }
@@ -1300,10 +1291,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	poppler_page = poppler_document_get_page (pdf_document->document, rc->page);
 	g_return_val_if_fail (poppler_page != NULL, NULL);
 
-#if POPPLER_MAJOR_VERSION <= 6 || (POPPLER_MAJOR_VERSION == 7 && POPPLER_MINOR_VERSION < 2)
-	pixbuf = poppler_page_get_thumbnail (poppler_page);
-#else
-#ifdef POPPLER_HAS_GDK
+#ifdef POPPLER_WITH_GDK
 	pixbuf = poppler_page_get_thumbnail_pixbuf (poppler_page);
 #else
 	cairo_surface_t *surface;
@@ -1313,8 +1301,8 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		pixbuf = ev_document_misc_pixbuf_from_surface (surface);
 		cairo_surface_destroy (surface);
 	}
-#endif
-#endif
+#endif /* POPPLER_WITH_GDK */
+
 		
 	if (pixbuf) {
 		/* Rotate provided thumbnail if needed */
@@ -1798,13 +1786,7 @@ pdf_document_file_exporter_do_page (EvFileExporter  *exporter,
 			 y * (rotate ? pwidth : pheight));
 	cairo_scale (ctx->cr, xscale, yscale);
 
-#ifdef HAVE_POPPLER_PAGE_RENDER_FOR_PRINTING
 	poppler_page_render_for_printing (poppler_page, ctx->cr);
-#else
-#ifdef HAVE_POPPLER_PAGE_RENDER
-	poppler_page_render (poppler_page, ctx->cr);
-#endif
-#endif
 
 	ctx->pages_printed++;
 			
@@ -1899,13 +1881,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	cairo_t *cr;
-	
-#if POPPLER_MAJOR_VERSION <= 6 || (POPPLER_MAJOR_VERSION == 7 && POPPLER_MINOR_VERSION < 2)
-	GdkColor text_color, base_color;
-
-	text_color = *text;
-	base_color = *base;
-#else
 	PopplerColor text_color, base_color;
 	
 	text_color.red = text->red;
@@ -1915,7 +1890,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 	base_color.red = base->red;
 	base_color.green = base->green;
 	base_color.blue = base->blue;
-#endif
 
 	if (*surface == NULL) {
 		*surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
@@ -2022,18 +1996,11 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 {
 	PdfDocument *pdf_document;
 	GdkRegion   *retval;
+	GList *region;
 
 	pdf_document = PDF_DOCUMENT (selection);
 
 	set_rc_data (pdf_document, rc);
-	
-#if POPPLER_MAJOR_VERSION <= 6 || (POPPLER_MAJOR_VERSION == 7 && POPPLER_MINOR_VERSION < 2)
-	retval = poppler_page_get_selection_region (POPPLER_PAGE (rc->data),
-						    rc->scale,
-						    (PopplerSelectionStyle)style,
-						    (PopplerRectangle *) points);
-#else
-	GList *region;
 	
 	region = poppler_page_get_selection_region (POPPLER_PAGE (rc->data),
 						    rc->scale,
@@ -2041,7 +2008,6 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 						    (PopplerRectangle *) points);
 	retval = create_gdk_region_from_poppler_region (region);
 	g_list_free (region);
-#endif
 	
 	return retval;
 }
@@ -2064,17 +2030,11 @@ pdf_selection_get_selection_map (EvSelection     *selection,
 	points.y1 = 0.0;
 	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
 	
-#if POPPLER_MAJOR_VERSION <= 6 || (POPPLER_MAJOR_VERSION == 7 && POPPLER_MINOR_VERSION < 2)
-	retval = poppler_page_get_selection_region (poppler_page, 1.0,
-						    POPPLER_SELECTION_GLYPH,
-						    &points);
-#else
 	region = poppler_page_get_selection_region (poppler_page, 1.0,
 						    POPPLER_SELECTION_GLYPH,
 						    &points);
 	retval = create_gdk_region_from_poppler_region (region);
 	g_list_free (region);
-#endif
 	g_object_unref (poppler_page);
 
 	return retval;

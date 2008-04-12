@@ -209,7 +209,7 @@ AC_ARG_ENABLE(pdf,
               [AC_HELP_STRING([--enable-pdf], [Compile with pdf support])],enable_pdf="$enableval",enable_pdf=yes)
 
 if test "x$enable_pdf" = "xyes"; then
-    POPPLER_REQUIRED=0.6
+    POPPLER_REQUIRED=0.8.0
     PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED,enable_pdf=yes,enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
@@ -220,19 +220,7 @@ if test "x$enable_pdf" = "xyes"; then
 	    evince_save_LIBS=$LIBS
 	    LIBS="$LIBS $POPPLER_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
-	    AC_CHECK_FUNCS(poppler_page_render_for_printing)
-	    AC_CHECK_FUNCS(poppler_page_get_image)
 	    LIBS=$evince_save_LIBS
-
-	    poppler_version=`$PKG_CONFIG --modversion poppler-glib`
-	    if test x$poppler_version = x0.6; then
-	       	    poppler_version=0.6.0
-	    fi
-	    POPPLER_MAJOR_VERSION=`echo $poppler_version | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\2 /'`
-	    POPPLER_MINOR_VERSION=`echo $poppler_version | sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\).*/\3 /'`
-
-	    AC_DEFINE_UNQUOTED([POPPLER_MAJOR_VERSION], $POPPLER_MAJOR_VERSION, [Poppler major version number])
-	    AC_DEFINE_UNQUOTED([POPPLER_MINOR_VERSION], $POPPLER_MINOR_VERSION, [Poppler minor version number])
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
 	    if test x$enable_cairo_pdf = xyes; then
