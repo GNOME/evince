@@ -437,25 +437,16 @@ static int t1_load_font(DviParams *params, DviFont *font)
 
 static inline BITMAP *t1_glyph_bitmap(GLYPH *glyph)
 {
-	BITMAP	*bm;
-	int	w, h;
+	int	w, h, pad;
 	
 	w = GLYPH_WIDTH(glyph);
 	h = GLYPH_HEIGHT(glyph);
 
 	if(!w || !h)
 		return MDVI_GLYPH_EMPTY;
-	switch(glyph->bpp << 3) {
-		case 8: 
-			bm = bitmap_convert_lsb8((unsigned char *)glyph->bits, w, h);
-			break;
-		default:
-			warning(_("(t1) unsupported bitmap pad size %d\n"),
-				glyph->bpp);
-			bm = MDVI_GLYPH_EMPTY;
-			break;
-	}
-	return bm;
+
+	pad = T1_GetBitmapPad();
+	return bitmap_convert_lsb8((unsigned char *)glyph->bits, w, h, ROUND(w, pad) * (pad >> 3));
 }
 
 static void t1_font_shrink_glyph(DviContext *dvi, DviFont *font, DviFontChar *ch, DviGlyph *dest)

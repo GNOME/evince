@@ -382,7 +382,7 @@ static int tt_get_bitmap(DviParams *params, DviFont *font,
 	
 	TT_Translate_Outline(&outline, -bbox.xMin, -bbox.yMin);
 	TT_Get_Outline_Bitmap(tt_handle, &outline, &raster);
-	glyph->data = bitmap_convert_msb8(raster.bitmap, w, h);
+	glyph->data = bitmap_convert_msb8(raster.bitmap, w, h, ROUND(w, 8));
 	TT_Done_Outline(&outline);
 	mdvi_free(raster.bitmap);
 	

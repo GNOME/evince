@@ -136,8 +136,8 @@ extern void bitmap_rotate_clockwise __PROTO((BITMAP *));
 extern void bitmap_rotate_counter_clockwise __PROTO((BITMAP *));
 extern void bitmap_flip_rotate_clockwise __PROTO((BITMAP *));
 extern void bitmap_flip_rotate_counter_clockwise __PROTO((BITMAP *));
-extern BITMAP *bitmap_convert_lsb8 __PROTO((Uchar *, int, int));
-extern BITMAP *bitmap_convert_msb8 __PROTO((Uchar *, int, int));
+extern BITMAP *bitmap_convert_lsb8 __PROTO((Uchar *, int, int, int));
+extern BITMAP *bitmap_convert_msb8 __PROTO((Uchar *, int, int, int));
 
 #include <stdio.h>
 extern void	bitmap_print __PROTO((FILE *, BITMAP *));

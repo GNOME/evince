@@ -125,7 +125,7 @@ static Uchar bit_swap[] = {
  * hopelessly slow.
  */
 
-BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h)
+BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h, int stride)
 {
 	BITMAP	*bm;
 	int	i;
@@ -147,12 +147,13 @@ BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h)
 	for(i = 0; i < h; i++) {
 #ifdef WORD_LITTLE_ENDIAN
 		memcpy(unit, curr, bytes);
-		curr += bytes;
+		curr += stride;
 #else
 		int	j;
 		
 		for(j = 0; j < bytes; curr++, j++)
 			unit[j] = bit_swap[*curr];
+		cur += stride - bytes;
 #endif
 		memzero(unit + bytes, bm->stride - bytes);
 		unit  += bm->stride;
@@ -162,7 +163,7 @@ BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h)
 	return bm;
 }
 
-BITMAP	*bitmap_convert_msb8(Uchar *data, int w, int h)
+BITMAP	*bitmap_convert_msb8(Uchar *data, int w, int h, int stride)
 {
 	BITMAP	*bm;
 	Uchar	*unit;
@@ -180,9 +181,10 @@ BITMAP	*bitmap_convert_msb8(Uchar *data, int w, int h)
 		
 		for(j = 0; j < bytes; curr++, j++)
 			unit[j] = bit_swap[*curr];
+		curr += stride - bytes;
 #else
 		memcpy(unit, curr, bytes);
-		curr += bytes;
+		curr += stride;
 #endif
 		memzero(unit + bytes, bm->stride - bytes);
 		unit += bm->stride;
