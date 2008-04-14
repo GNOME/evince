@@ -128,14 +128,14 @@ ev_job_render_dispose (GObject *object)
 
 	job = EV_JOB_RENDER (object);
 
+	if (job->ev_page) {
+		g_object_unref (job->ev_page);
+		job->ev_page = NULL;
+	}
+	
 	if (job->surface) {
 		cairo_surface_destroy (job->surface);
 		job->surface = NULL;
-	}
-
-	if (job->rc) {
-		g_object_unref (job->rc);
-		job->rc = NULL;
 	}
 
 	if (job->selection) {
@@ -267,51 +267,47 @@ ev_job_links_run (EvJobLinks *job)
 	ev_document_doc_mutex_unlock ();
 }
 
-
 EvJob *
-ev_job_render_new (EvDocument      *document,
-		   EvRenderContext *rc,
-		   gint             width,
-		   gint             height,
-		   EvRectangle     *selection_points,
-		   EvSelectionStyle selection_style,
-		   GdkColor        *text,
-		   GdkColor        *base,
-		   gboolean 	    include_forms,
-		   gboolean         include_links,
-		   gboolean         include_images,
-		   gboolean         include_text,
-		   gboolean         include_selection)
+ev_job_render_new (EvDocument   *document,
+		   gint          page,
+		   gint          rotation,
+		   gdouble       scale, 
+		   gint          width,
+		   gint          height,
+		   EvRenderFlags flags)
 {
 	EvJobRender *job;
-
-	g_return_val_if_fail (EV_IS_RENDER_CONTEXT (rc), NULL);
-	if (include_selection)
-		g_return_val_if_fail (selection_points != NULL, NULL);
 
 	job = g_object_new (EV_TYPE_JOB_RENDER, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
-	job->rc = g_object_ref (rc);
+	job->page = page;
+	job->rotation = rotation;
+	job->scale = scale;
 	job->target_width = width;
 	job->target_height = height;
-	job->selection_style = selection_style;
-	job->text = *text;
-	job->base = *base;
-	job->include_forms = include_forms;
-	job->include_links = include_links;
-	job->include_images = include_images;
-	job->include_text = include_text;
-	job->include_selection = include_selection;
-
-	if (include_selection)
-		job->selection_points = *selection_points;
+	job->flags = flags;
 
 	if (EV_IS_ASYNC_RENDERER (document)) {	
 		EV_JOB (job)->async = TRUE;
 	}
 
 	return EV_JOB (job);
+}
+
+void
+ev_job_render_set_selection_info (EvJobRender     *job,
+				  EvRectangle     *selection_points,
+				  EvSelectionStyle selection_style,
+				  GdkColor        *text,
+				  GdkColor        *base)
+{
+	job->flags |= EV_RENDER_INCLUDE_SELECTION;
+	
+	job->selection_points = *selection_points;
+	job->selection_style = selection_style;
+	job->text = *text;
+	job->base = *base;
 }
 
 static void
@@ -322,7 +318,6 @@ render_finished_cb (EvDocument      *document,
 	g_signal_handlers_disconnect_by_func (EV_JOB (job)->document,
 					      render_finished_cb, job);
 
-	/* FIXME: ps backend should be ported to cairo */
 	job->surface = ev_document_misc_surface_from_pixbuf (pixbuf);
 	job->page_ready = TRUE;
 	g_signal_emit (job, job_render_signals[PAGE_READY], 0);
@@ -357,17 +352,23 @@ ev_job_render_run (EvJobRender *job)
 
 	if (EV_JOB (job)->async) {
 		EvAsyncRenderer *renderer = EV_ASYNC_RENDERER (EV_JOB (job)->document);
-		ev_async_renderer_render_pixbuf (renderer, job->rc->page->index, job->rc->scale,
-						 job->rc->rotation);
+		ev_async_renderer_render_pixbuf (renderer, job->page, job->scale,
+						 job->rotation);
 		g_signal_connect (EV_JOB (job)->document, "render_finished",
 				  G_CALLBACK (render_finished_cb), job);
 	} else {
-		ev_document_fc_mutex_lock ();
+		EvRenderContext *rc;
 		
-		job->surface = ev_document_render (EV_JOB (job)->document, job->rc);
-		if (job->include_selection && EV_IS_SELECTION (EV_JOB (job)->document)) {
+		ev_document_fc_mutex_lock ();
+
+		job->ev_page = ev_document_get_page (EV_JOB (job)->document, job->page);
+
+		rc = ev_render_context_new (job->ev_page, job->rotation, job->scale);
+		
+		job->surface = ev_document_render (EV_JOB (job)->document, rc);
+		if ((job->flags & EV_RENDER_INCLUDE_SELECTION) && EV_IS_SELECTION (EV_JOB (job)->document)) {
 			ev_selection_render_selection (EV_SELECTION (EV_JOB (job)->document),
-						       job->rc,
+						       rc,
 						       &(job->selection),
 						       &(job->selection_points),
 						       NULL,
@@ -375,7 +376,7 @@ ev_job_render_run (EvJobRender *job)
 						       &(job->text), &(job->base));
 			job->selection_region =
 				ev_selection_get_selection_region (EV_SELECTION (EV_JOB (job)->document),
-								   job->rc,
+								   rc,
 								   job->selection_style,
 								   &(job->selection_points));
 		}
@@ -384,22 +385,22 @@ ev_job_render_run (EvJobRender *job)
 		
 		ev_document_fc_mutex_unlock ();
 		
-		if (job->include_text && EV_IS_SELECTION (EV_JOB (job)->document))
+		if ((job->flags & EV_RENDER_INCLUDE_TEXT) && EV_IS_SELECTION (EV_JOB (job)->document))
 			job->text_mapping =
-				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document),
-								job->rc);
-		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
+				ev_selection_get_selection_map (EV_SELECTION (EV_JOB (job)->document), rc);
+		if ((job->flags & EV_RENDER_INCLUDE_LINKS) && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
 			job->link_mapping =
-				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
-							     job->rc->page->index);
-		if (job->include_forms && EV_IS_DOCUMENT_FORMS (EV_JOB (job)->document))
+				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document), job->page);
+		if ((job->flags & EV_RENDER_INCLUDE_FORMS) && EV_IS_DOCUMENT_FORMS (EV_JOB (job)->document))
 			job->form_field_mapping =
 				ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (EV_JOB (job)->document),
-								   job->rc->page);
-		if (job->include_images && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
+								   job->ev_page);
+		if ((job->flags & EV_RENDER_INCLUDE_IMAGES) && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
 			job->image_mapping =
 				ev_document_images_get_image_mapping (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
-								      job->rc->page->index);
+								      job->page);
+		g_object_unref (rc);
+		
 		EV_JOB (job)->finished = TRUE;
 	}
 

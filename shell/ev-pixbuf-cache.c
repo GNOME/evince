@@ -250,13 +250,13 @@ job_page_ready_cb (EvJob         *job,
 	EvJobRender *job_render = EV_JOB_RENDER (job);
 
 	/* If the job is outside of our interest, we silently discard it */
-	if ((job_render->rc->page->index < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
-	    (job_render->rc->page->index > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
+	if ((job_render->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
+	    (job_render->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
 		g_object_unref (job);
 		return;
 	}
 
-	job_info = find_job_cache (pixbuf_cache, job_render->rc->page->index);
+	job_info = find_job_cache (pixbuf_cache, job_render->page);
 
 	copy_job_page_and_selection_to_job_info (job_render, job_info, pixbuf_cache);
 	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
@@ -270,13 +270,13 @@ job_finished_cb (EvJob         *job,
 	EvJobRender *job_render = EV_JOB_RENDER (job);
 
 	/* If the job is outside of our interest, we silently discard it */
-	if ((job_render->rc->page->index < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
-	    (job_render->rc->page->index > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
+	if ((job_render->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
+	    (job_render->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
 		g_object_unref (job);
 		return;
 	}
 
-	job_info = find_job_cache (pixbuf_cache, job_render->rc->page->index);
+	job_info = find_job_cache (pixbuf_cache, job_render->page);
 	copy_job_to_job_info (job_render, job_info, pixbuf_cache);
 }
 
@@ -298,8 +298,8 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 		return;
 
 	ev_page_cache_get_size (page_cache,
-				EV_JOB_RENDER (job_info->job)->rc->page->index,
-				EV_JOB_RENDER (job_info->job)->rc->rotation,
+				EV_JOB_RENDER (job_info->job)->page,
+				EV_JOB_RENDER (job_info->job)->rotation,
 				scale,
 				&width, &height);
 				
@@ -454,18 +454,23 @@ copy_job_page_and_selection_to_job_info (EvJobRender   *job_render,
 					 CacheJobInfo  *job_info,
 					 EvPixbufCache *pixbuf_cache)
 {
+	if (job_info->rc == NULL) {
+		job_info->rc = ev_render_context_new (job_render->ev_page,
+						      job_render->rotation,
+						      job_render->scale);
+	} else {
+		ev_render_context_set_page (job_info->rc, job_render->ev_page);
+		ev_render_context_set_rotation (job_info->rc, job_render->rotation);
+		ev_render_context_set_scale (job_info->rc, job_render->scale);
+	}
+	
 	if (job_info->surface) {
 		cairo_surface_destroy (job_info->surface);
 	}
 	job_info->surface = cairo_surface_reference (job_render->surface);
 
-	if (job_info->rc) {
-		g_object_unref (G_OBJECT (job_info->rc));
-	}
-	job_info->rc = g_object_ref (job_render->rc);
-
 	job_info->points_set = FALSE;
-	if (job_render->include_selection) {
+	if (job_render->flags & EV_RENDER_INCLUDE_SELECTION) {
 		if (job_info->selection) {
 			cairo_surface_destroy (job_info->selection);
 			job_info->selection = NULL;
@@ -496,25 +501,25 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		      CacheJobInfo  *job_info,
 		      EvPixbufCache *pixbuf_cache)
 {
-	if (job_render->include_links) {
+	if (job_render->flags & EV_RENDER_INCLUDE_LINKS) {
 		if (job_info->link_mapping)
 			ev_link_mapping_free (job_info->link_mapping);
 		job_info->link_mapping = job_render->link_mapping;
 	}
 
-	if (job_render->include_images) {
+	if (job_render->flags & EV_RENDER_INCLUDE_IMAGES) {
 		if (job_info->image_mapping)
 			ev_image_mapping_free (job_info->image_mapping);
 		job_info->image_mapping = job_render->image_mapping;
 	}
 
-	if (job_render->include_forms) {
+	if (job_render->flags & EV_RENDER_INCLUDE_FORMS) {
 		if (job_info->form_field_mapping)
 			ev_form_field_mapping_free (job_info->form_field_mapping);
 		job_info->form_field_mapping = job_render->form_field_mapping;
 	}
 
-	if (job_render->include_text) {
+	if (job_render->flags & EV_RENDER_INCLUDE_TEXT) {
 		if (job_info->text_mapping)
 			gdk_region_destroy (job_info->text_mapping);
 		job_info->text_mapping = job_render->text_mapping;
@@ -608,63 +613,40 @@ add_job (EvPixbufCache *pixbuf_cache,
 	 gfloat         scale,
 	 EvJobPriority  priority)
 {
-	EvPage  *ev_page;
-	gboolean include_links = FALSE;
-	gboolean include_text = FALSE;
-	gboolean include_selection = FALSE;
-	gboolean include_images = FALSE;
-	gboolean include_forms = FALSE;
-	GdkColor *text, *base;
+	EvRenderFlags flags = 0;
 
 	job_info->page_ready = FALSE;
 	
-	/* FIXME: we shouldn't lock here */
-	ev_document_doc_mutex_lock ();
-	ev_page = ev_document_get_page (pixbuf_cache->document, page);
-	ev_document_doc_mutex_unlock ();
-	
-	if (job_info->rc == NULL) {
-		job_info->rc = ev_render_context_new (ev_page, rotation, scale);
-	} else {
-		ev_render_context_set_page (job_info->rc, ev_page);
-		ev_render_context_set_rotation (job_info->rc, rotation);
-		ev_render_context_set_scale (job_info->rc, scale);
-	}
-
-	g_object_unref (ev_page);
-
 	if (job_info->region)
 		gdk_region_destroy (job_info->region);
 	job_info->region = region ? gdk_region_copy (region) : NULL;
 
 	/* Figure out what else we need for this job */
 	if (job_info->link_mapping == NULL)
-		include_links = TRUE;
+		flags |= EV_RENDER_INCLUDE_LINKS;
 	if (job_info->image_mapping == NULL)
-		include_images = TRUE;
+		flags |= EV_RENDER_INCLUDE_IMAGES;
 	if (job_info->form_field_mapping == NULL)
-		include_forms = TRUE;
+		flags |= EV_RENDER_INCLUDE_FORMS;
 	if (job_info->text_mapping == NULL)
-		include_text = TRUE;
-	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
-		include_selection = TRUE;
-	}
-
-	gtk_widget_ensure_style (pixbuf_cache->view);
-
-	get_selection_colors (pixbuf_cache->view, &text, &base);
+		flags |= EV_RENDER_INCLUDE_TEXT;
 
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
-					   job_info->rc,
+					   page, rotation, scale,
 					   width, height,
-					   &(job_info->target_points),
-					   job_info->selection_style,
-					   text, base,
-					   include_forms,
-					   include_links,
-					   include_images,
-					   include_text,
-					   include_selection);
+					   flags);
+	
+	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
+		GdkColor *text, *base;
+
+		gtk_widget_ensure_style (pixbuf_cache->view);
+		get_selection_colors (pixbuf_cache->view, &text, &base);
+		ev_job_render_set_selection_info (EV_JOB_RENDER (job_info->job), 
+						  &(job_info->target_points),
+						  job_info->selection_style,
+						  text, base);
+	}
+
 	ev_job_queue_add_job (job_info->job, priority);
 	g_signal_connect (G_OBJECT (job_info->job), "page-ready",
 			  G_CALLBACK (job_page_ready_cb),
@@ -864,9 +846,9 @@ ev_pixbuf_cache_get_form_field_mapping (EvPixbufCache *pixbuf_cache,
 
 static gboolean
 new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
-			     CacheJobInfo  *job_info,
-			     gint           page,
-			     gfloat         scale)
+			      CacheJobInfo  *job_info,
+			      gint           page,
+			      gfloat         scale)
 {
 	EvPageCache *page_cache;
 
@@ -1003,7 +985,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
-	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
+	if (job_info->job && (EV_JOB_RENDER (job_info->job)->flags & EV_RENDER_INCLUDE_SELECTION))
 		return job_info->selection;
 
 	/* Now, lets see if we need to resize the image.  If we do, we clear the

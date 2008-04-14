@@ -123,11 +123,25 @@ struct _EvJobLinksClass
 	EvJobClass parent_class;
 };
 
+typedef enum {
+	EV_RENDER_INCLUDE_NONE      = 0,
+	EV_RENDER_INCLUDE_LINKS     = 1 << 0,
+	EV_RENDER_INCLUDE_TEXT      = 1 << 1,
+	EV_RENDER_INCLUDE_SELECTION = 1 << 2,
+	EV_RENDER_INCLUDE_IMAGES    = 1 << 3,
+	EV_RENDER_INCLUDE_FORMS     = 1 << 4,
+	EV_RENDER_INCLUDE_ALL       = (1 << 5) - 1
+} EvRenderFlags;
+
 struct _EvJobRender
 {
 	EvJob parent;
 
-	EvRenderContext *rc;
+	gint page;
+	gint rotation;
+	gdouble scale;
+
+	EvPage *ev_page;
 	gboolean page_ready;
 	gint target_width;
 	gint target_height;
@@ -145,11 +159,7 @@ struct _EvJobRender
 	GdkColor base;
 	GdkColor text; 
 
-	gint include_forms : 1;
-	gint include_links : 1;
-	gint include_text : 1;
-	gint include_selection : 1;
-	gint include_images : 1;
+	EvRenderFlags flags;
 };
 
 struct _EvJobRenderClass
@@ -251,18 +261,17 @@ void            ev_job_links_run          (EvJobLinks     *thumbnail);
 /* EvJobRender */
 GType           ev_job_render_get_type    (void) G_GNUC_CONST;
 EvJob          *ev_job_render_new         (EvDocument      *document,
-					   EvRenderContext *rc,
+					   gint             page,
+					   gint             rotation,
+					   gdouble          scale,
 					   gint             width,
 					   gint             height,
+					   EvRenderFlags    flags);
+void     ev_job_render_set_selection_info (EvJobRender     *job,
 					   EvRectangle     *selection_points,
 					   EvSelectionStyle selection_style,
 					   GdkColor        *text,
-					   GdkColor        *base,
-					   gboolean         include_forms,
-					   gboolean         include_links,
-					   gboolean         include_images,
-					   gboolean         include_text,
-					   gboolean         include_selection);
+					   GdkColor        *base);
 void            ev_job_render_run         (EvJobRender     *thumbnail);
 
 /* EvJobThumbnail */
