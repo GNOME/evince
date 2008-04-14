@@ -1,3 +1,83 @@
+2008-04-14  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/Makefile.am:
+	* libdocument/ev-page.[ch]:
+	* libdocument/ev-render-context.[ch]: (ev_render_context_dispose),
+	(ev_render_context_new), (ev_render_context_set_page):
+	* libdocument/ev-form-field.[ch]: (ev_form_field_init),
+	(ev_form_field_finalize), (ev_form_field_class_init):
+	* libdocument/ev-document-forms.[ch]:
+	(ev_document_forms_get_form_fields):
+	* libdocument/ev-document.[ch]: (ev_document_get_page),
+	(ev_document_get_page_size), (ev_document_get_page_label):
+	* shell/ev-jobs.[ch]: (ev_job_thumbnail_dispose),
+	(ev_job_render_run), (ev_job_thumbnail_new),
+	(ev_job_thumbnail_run), (ev_job_print_run):
+	* shell/ev-page-cache.c: (ev_page_cache_new):
+	* shell/ev-pixbuf-cache.c: (job_page_ready_cb), (job_finished_cb),
+	(check_job_size_and_unref), (add_job):
+	* shell/ev-sidebar-thumbnails.c: (add_range):
+	* shell/ev-view.c: (ev_view_form_field_get_region),
+	(ev_view_form_field_button_create_widget),
+	(ev_view_form_field_text_save), (ev_view_form_field_choice_save),
+	(ev_view_handle_form_field), (ev_view_size_allocate),
+	(get_selected_text):
+	* shell/ev-window.c: (ev_window_refresh_window_thumbnail):
+	* backend/pdf/ev-poppler.cc: (pdf_document_get_page_size),
+	(pdf_document_get_page), (pdf_document_get_page_label),
+	(pdf_document_render), (pdf_document_get_info),
+	(pdf_document_document_iface_init),
+	(pdf_document_thumbnails_get_thumbnail),
+	(pdf_document_thumbnails_get_dimensions),
+	(pdf_document_file_exporter_do_page),
+	(pdf_selection_render_selection),
+	(pdf_selection_get_selected_text),
+	(pdf_selection_get_selection_region),
+	(pdf_selection_get_selection_map),
+	(pdf_document_forms_get_form_fields),
+	(pdf_document_forms_form_field_text_get_text),
+	(pdf_document_forms_form_field_text_set_text),
+	(pdf_document_forms_form_field_button_set_state),
+	(pdf_document_forms_form_field_button_get_state),
+	(pdf_document_forms_form_field_choice_get_item),
+	(pdf_document_forms_form_field_choice_get_n_items),
+	(pdf_document_forms_form_field_choice_is_item_selected),
+	(pdf_document_forms_form_field_choice_select_item),
+	(pdf_document_forms_form_field_choice_toggle_item),
+	(pdf_document_forms_form_field_choice_unselect_all),
+	(pdf_document_forms_form_field_choice_set_text),
+	(pdf_document_forms_form_field_choice_get_text):
+	* backend/ps/ev-spectre.c: (ps_document_get_page),
+	(ps_document_get_page_size), (ps_document_get_page_label),
+	(ps_document_render), (ps_document_document_iface_init),
+	(ps_document_file_exporter_do_page):
+	* backend/tiff/tiff-document.c: (tiff_document_get_page_size),
+	(tiff_document_render), (tiff_document_render_pixbuf),
+	(tiff_document_file_exporter_do_page):
+	* backend/pixbuf/pixbuf-document.c:
+	(pixbuf_document_get_page_size):
+	* backend/comics/comics-document.c:
+	(comics_document_get_page_size), (comics_document_render_pixbuf):
+	* backend/djvu/djvu-document.c: (djvu_document_get_page_size),
+	(djvu_document_render), (djvu_selection_get_selected_text),
+	(djvu_document_thumbnails_get_thumbnail),
+	(djvu_document_file_exporter_do_page),
+	(djvu_document_find_get_result):
+	* backend/dvi/dvi-document.c: (dvi_document_get_page_size),
+	(dvi_document_render), (dvi_document_thumbnails_get_dimensions),
+	(dvi_document_thumbnails_get_thumbnail),
+	(dvi_document_file_exporter_do_page):
+	* backend/impress/impress-document.c:
+	(impress_document_get_page_size),
+	(impress_document_render_pixbuf):
+	* thumbnailer/evince-thumbnailer.c: (evince_thumbnail_pngenc_get):
+
+	Add EvPage so that we can hold a reference to the backend
+	page. Form fields keep now a reference to the poppler page
+	improving performance since we don't have to create/destroy the
+	poppler field for every form operation. This will be needed for
+	annotations too.
+	
 2008-04-12  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* data/evince-ui.xml:

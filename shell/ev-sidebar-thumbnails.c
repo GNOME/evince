@@ -260,13 +260,10 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 				    -1);
 
 		if (job == NULL && !thumbnail_set) {
-			EvRenderContext *rc;
-
-			rc = ev_render_context_new (priv->rotation, page,
+			job = ev_job_thumbnail_new (priv->document,
+						    page, priv->rotation,
 						    get_scale_for_page (sidebar_thumbnails, page));
-			job = ev_job_thumbnail_new (priv->document, rc);
 			ev_job_queue_add_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
-			g_object_unref (rc);
 			
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),

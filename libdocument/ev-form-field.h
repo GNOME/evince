@@ -105,7 +105,7 @@ struct _EvFormField
 	gboolean is_read_only;
 	gdouble  font_size;
 
-	gint     page;
+	EvPage  *page;
 	gboolean changed;
 };
 

@@ -1658,9 +1658,9 @@ ev_view_form_field_get_region (EvView      *view,
 	GList       *forms_mapping;
 
 	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
-								field->page);
+								field->page->index);
 	ev_form_field_mapping_get_area (forms_mapping, field, &field_area);
-	doc_rect_to_view_rect (view, field->page, &field_area, &view_area);
+	doc_rect_to_view_rect (view, field->page->index, &field_area, &view_area);
 	view_area.x -= view->scroll_x;
 	view_area.y -= view->scroll_y;
 
@@ -1711,7 +1711,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 			 * we need to update also the region for the current selected item
 			 */
 			forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
-										field->page);
+										field->page->index);
 			for (l = forms_mapping; l; l = g_list_next (l)) {
 				EvFormField *button = ((EvFormFieldMapping *)(l->data))->field;
 				GdkRegion   *button_region;
@@ -1739,7 +1739,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 
 	ev_pixbuf_cache_reload_page (view->pixbuf_cache,
 				     field_region,
-				     field->page,
+				     field->page->index,
 				     view->rotation,
 				     view->scale);
 	gdk_region_destroy (field_region);
@@ -1769,7 +1769,7 @@ ev_view_form_field_text_save (EvView    *view,
 		field->changed = FALSE;
 		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
 					     field_region,
-					     field->page,
+					     field->page->index,
 					     view->rotation,
 					     view->scale);
 		gdk_region_destroy (field_region);
@@ -1890,7 +1890,7 @@ ev_view_form_field_choice_save (EvView    *view,
 		field->changed = FALSE;
 		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
 					     field_region,
-					     field->page,
+					     field->page->index,
 					     view->rotation,
 					     view->scale);
 		gdk_region_destroy (field_region);
@@ -2107,10 +2107,10 @@ ev_view_handle_form_field (EvView      *view,
 				g_object_ref (field),
 				(GDestroyNotify)g_object_unref);
 
-	form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, field->page);
+	form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, field->page->index);
 	ev_form_field_mapping_get_area (form_field_mapping, field, &field_area);
 	
-	doc_rect_to_view_rect (view, field->page, &field_area, &view_area);
+	doc_rect_to_view_rect (view, field->page->index, &field_area, &view_area);
 	view_area.x -= view->scroll_x;
 	view_area.y -= view->scroll_y;
 
@@ -2310,10 +2310,10 @@ ev_view_size_allocate (GtkWidget      *widget,
 			continue;
 
 		form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
-									     field->page);
+									     field->page->index);
 		ev_form_field_mapping_get_area (form_field_mapping, field, &field_area);
 
-		doc_rect_to_view_rect (view, field->page, &field_area, &view_area);
+		doc_rect_to_view_rect (view, field->page->index, &field_area, &view_area);
 		view_area.x -= view->scroll_x;
 		view_area.y -= view->scroll_y;
 
@@ -5716,15 +5716,19 @@ get_selected_text (EvView *view)
 	EvRenderContext *rc;
 
 	text = g_string_new (NULL);
-	rc = ev_render_context_new (view->rotation, 1, view->scale);
+	rc = ev_render_context_new (NULL, view->rotation, view->scale);
 
 	ev_document_doc_mutex_lock ();
 
 	for (l = view->selection_info.selections; l != NULL; l = l->next) {
 		EvViewSelection *selection = (EvViewSelection *)l->data;
+		EvPage *page;
 		gchar *tmp;
 
-		ev_render_context_set_page (rc, selection->page);
+		page = ev_document_get_page (view->document, selection->page);
+		ev_render_context_set_page (rc, page);
+		g_object_unref (page);
+		
 		tmp = ev_selection_get_selected_text (EV_SELECTION (view->document),
 						      rc, selection->style,
 						      &(selection->rect));
@@ -5733,9 +5737,9 @@ get_selected_text (EvView *view)
 		g_free (tmp);
 	}
 
-	ev_document_doc_mutex_unlock ();
-
 	g_object_unref (rc);
+	
+	ev_document_doc_mutex_unlock ();
 	
 	normalized_text = g_utf8_normalize (text->str, text->len, G_NORMALIZE_NFKC);
 	g_string_free (text, TRUE);

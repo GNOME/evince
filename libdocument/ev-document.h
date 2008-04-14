@@ -28,6 +28,7 @@
 #include <cairo.h>
 
 #include "ev-document-info.h"
+#include "ev-page.h"
 #include "ev-render-context.h"
 
 G_BEGIN_DECLS
@@ -78,12 +79,14 @@ struct _EvDocumentIface
                                                const char      *uri,
                                                GError         **error);
         int               (* get_n_pages)     (EvDocument      *document);
+	EvPage          * (* get_page)        (EvDocument      *document,
+					       gint             index);
         void              (* get_page_size)   (EvDocument      *document,
-                                               int              page,
+                                               EvPage          *page,
                                                double          *width,
                                                double          *height);
         char            * (* get_page_label)  (EvDocument      *document,
-                                               int              page);
+                                               EvPage          *page);
         gboolean          (* has_attachments) (EvDocument      *document);
         GList           * (* get_attachments) (EvDocument      *document);
         cairo_surface_t * (* render)          (EvDocument      *document,
@@ -112,12 +115,14 @@ gboolean         ev_document_save             (EvDocument      *document,
                                                const char      *uri,
                                                GError         **error);
 int              ev_document_get_n_pages      (EvDocument      *document);
+EvPage          *ev_document_get_page         (EvDocument      *document,
+					       gint             index);
 void             ev_document_get_page_size    (EvDocument      *document,
-                                               int              page,
+                                               EvPage          *page,
                                                double          *width,
                                                double          *height);
 char            *ev_document_get_page_label   (EvDocument      *document,
-                                               int              page);
+                                               EvPage          *page);
 gboolean         ev_document_has_attachments  (EvDocument      *document);
 GList           *ev_document_get_attachments  (EvDocument      *document);
 cairo_surface_t *ev_document_render           (EvDocument      *document,

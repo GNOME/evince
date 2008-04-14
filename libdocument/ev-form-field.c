@@ -42,14 +42,28 @@ G_DEFINE_TYPE (EvFormFieldSignature, ev_form_field_signature, EV_TYPE_FORM_FIELD
 static void
 ev_form_field_init (EvFormField *field)
 {
-	field->page = -1;
+	field->page = NULL;
 	field->changed = FALSE;
 	field->is_read_only = FALSE;
 }
 
 static void
+ev_form_field_finalize (GObject *object)
+{
+	EvFormField *field = EV_FORM_FIELD (object);
+
+	g_object_unref (field->page);
+	field->page = NULL;
+
+	(* G_OBJECT_CLASS (ev_form_field_parent_class)->finalize) (object);
+}
+
+static void
 ev_form_field_class_init (EvFormFieldClass *klass)
 {
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	object_class->finalize = ev_form_field_finalize;
 }
 
 static void

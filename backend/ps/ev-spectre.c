@@ -164,6 +164,22 @@ ps_document_get_n_pages (EvDocument *document)
 	return spectre_document_get_n_pages (ps->doc);
 }
 
+static EvPage *
+ps_document_get_page (EvDocument *document,
+		      gint        index)
+{
+	PSDocument  *ps = PS_DOCUMENT (document);
+	SpectrePage *ps_page;
+	EvPage      *page;
+
+	ps_page = spectre_document_get_page (ps->doc, index);
+	page = ev_page_new (index);
+	page->backend_page = (EvBackendPage)ps_page;
+	page->backend_destroy_func = (EvBackendPageDestroyFunc)spectre_page_free;
+
+	return page;
+}
+
 static gint
 get_page_rotation (SpectrePage *page)
 {
@@ -184,17 +200,17 @@ get_page_rotation (SpectrePage *page)
 
 static void
 ps_document_get_page_size (EvDocument *document,
-			   int         page,
+			   EvPage     *page,
 			   double     *width,
 			   double     *height)
 {
-	PSDocument  *ps = PS_DOCUMENT (document);
 	SpectrePage *ps_page;
 	gdouble      page_width, page_height;
 	gint         pwidth, pheight;
 	gint         rotate;
 
-	ps_page = spectre_document_get_page (ps->doc, page);
+	ps_page = (SpectrePage *)page->backend_page;
+
 	spectre_page_get_size (ps_page, &pwidth, &pheight);
 
 	rotate = get_page_rotation (ps_page);
@@ -206,8 +222,6 @@ ps_document_get_page_size (EvDocument *document,
 		page_height = pheight;
 	}
 
-	spectre_page_free (ps_page);
-	
 	if (width) {
 		*width = page_width;
 	}
@@ -219,17 +233,9 @@ ps_document_get_page_size (EvDocument *document,
 
 static char *
 ps_document_get_page_label (EvDocument *document,
-			    int         page)
+			    EvPage     *page)
 {
-	PSDocument  *ps = PS_DOCUMENT (document);
-	SpectrePage *ps_page;
-	gchar       *label;
-
-	ps_page = spectre_document_get_page (ps->doc, page);
-	label = g_strdup (spectre_page_get_label (ps_page));
-	spectre_page_free (ps_page);
-	
-	return label;
+	return g_strdup (spectre_page_get_label ((SpectrePage *)page->backend_page));
 }
 
 static EvDocumentInfo *
@@ -268,7 +274,6 @@ static cairo_surface_t *
 ps_document_render (EvDocument      *document,
 		    EvRenderContext *rc)
 {
-	PSDocument           *ps = PS_DOCUMENT (document);
 	SpectrePage          *ps_page;
 	SpectreRenderContext *src;
 	gint                  width_points;
@@ -281,7 +286,8 @@ ps_document_render (EvDocument      *document,
 	cairo_surface_t      *surface;
 	static const cairo_user_data_key_t key;
 
-	ps_page = spectre_document_get_page (ps->doc, rc->page);
+	ps_page = (SpectrePage *)rc->page->backend_page;
+	
 	spectre_page_get_size (ps_page, &width_points, &height_points);
 
 	width = (gint) ((width_points * rc->scale) + 0.5);
@@ -297,19 +303,15 @@ ps_document_render (EvDocument      *document,
 	spectre_render_context_free (src);
 
 	if (!data) {
-		spectre_page_free (ps_page);
 		return NULL;
 	}
 
 	if (spectre_page_status (ps_page)) {
 		g_warning (spectre_status_to_string (spectre_page_status (ps_page)));
 		g_free (data);
-		spectre_page_free (ps_page);
 		
 		return NULL;
 	}
-
-	spectre_page_free (ps_page);
 
 	if (rotation == 90 || rotation == 270) {
 		swidth = height;
@@ -334,6 +336,7 @@ ps_document_document_iface_init (EvDocumentIface *iface)
 	iface->load = ps_document_load;
 	iface->save = ps_document_save;
 	iface->get_n_pages = ps_document_get_n_pages;
+	iface->get_page = ps_document_get_page;
 	iface->get_page_size = ps_document_get_page_size;
 	iface->get_page_label = ps_document_get_page_label;
 	iface->get_info = ps_document_get_info;
@@ -433,7 +436,7 @@ ps_document_file_exporter_do_page (EvFileExporter  *exporter,
 {
 	PSDocument *ps = PS_DOCUMENT (exporter);
 
-	spectre_exporter_do_page (ps->exporter, rc->page);
+	spectre_exporter_do_page (ps->exporter, rc->page->index);
 }
 
 static void

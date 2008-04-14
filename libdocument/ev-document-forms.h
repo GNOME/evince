@@ -44,7 +44,7 @@ struct _EvDocumentFormsIface
 
 	/* Methods  */
 	GList   *(* get_form_fields)                    (EvDocumentForms   *document_forms,
-							 gint               page);
+							 EvPage            *page);
 	gchar   *(* form_field_text_get_text)           (EvDocumentForms   *document_forms,
 							 EvFormField       *field);
 	void     (* form_field_text_set_text)           (EvDocumentForms   *document_forms,
@@ -80,7 +80,7 @@ struct _EvDocumentFormsIface
 
 GType    ev_document_forms_get_type                            (void) G_GNUC_CONST;
 GList   *ev_document_forms_get_form_fields                     (EvDocumentForms   *document_forms,
-								gint               page);
+								EvPage            *page);
 
 gchar 	*ev_document_forms_form_field_text_get_text            (EvDocumentForms   *document_forms, 
 								EvFormField       *field);

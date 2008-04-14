@@ -334,9 +334,9 @@ impress_document_get_n_pages (EvDocument  *document)
 
 static void
 impress_document_get_page_size (EvDocument   *document,
-			     int           page,
-			     double       *width,
-			     double       *height)
+				EvPage       *page,
+				double       *width,
+				double       *height)
 {
   ImpressDocument *impress_document = IMPRESS_DOCUMENT (document);
 
@@ -383,7 +383,7 @@ impress_document_render_pixbuf (EvDocument      *document,
   g_return_val_if_fail (IMPRESS_IS_DOCUMENT (document), NULL);
   g_return_val_if_fail (impress_document->imp != NULL, NULL);
   
-  impress_document->pagenum = rc->page;
+  impress_document->pagenum = rc->page->index;
 
   g_mutex_lock (impress_document->mutex);
   impress_document->cond = g_cond_new ();

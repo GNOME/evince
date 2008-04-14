@@ -35,9 +35,9 @@ ev_render_context_dispose (GObject *object)
 
 	rc = (EvRenderContext *) object;
 
-	if (rc->destroy) {
-		(*rc->destroy) (rc->data);
-		rc->destroy = NULL;
+	if (rc->page) {
+		g_object_unref (rc->page);
+		rc->page = NULL;
 	}
 
 	(* G_OBJECT_CLASS (ev_render_context_parent_class)->dispose) (object);
@@ -53,18 +53,17 @@ ev_render_context_class_init (EvRenderContextClass *class)
 	oclass->dispose = ev_render_context_dispose;
 }
 
-
 EvRenderContext *
-ev_render_context_new (int           rotation,
-		       gint          page,
-		       gdouble       scale)
+ev_render_context_new (EvPage *page,
+		       gint    rotation,
+		       gdouble scale)
 {
 	EvRenderContext *rc;
 
 	rc = (EvRenderContext *) g_object_new (EV_TYPE_RENDER_CONTEXT, NULL);
 
+	rc->page = page ? g_object_ref (page) : NULL;
 	rc->rotation = rotation;
-	rc->page = page;
 	rc->scale = scale;
 
 	return rc;
@@ -72,11 +71,14 @@ ev_render_context_new (int           rotation,
 
 void
 ev_render_context_set_page (EvRenderContext *rc,
-			    gint             page)
+			    EvPage          *page)
 {
 	g_return_if_fail (rc != NULL);
+	g_return_if_fail (EV_IS_PAGE (page));
 
-	rc->page = page;
+	if (rc->page)
+		g_object_unref (rc->page);
+	rc->page = g_object_ref (page);
 }
 
 void

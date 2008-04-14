@@ -43,7 +43,7 @@ ev_document_forms_get_type (void)
 
 GList *
 ev_document_forms_get_form_fields (EvDocumentForms *document_forms,
-				   gint             page)
+				   EvPage          *page)
 {
 	EvDocumentFormsIface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
 

@@ -176,10 +176,10 @@ tiff_document_get_resolution (TiffDocument *tiff_document,
 }
 
 static void
-tiff_document_get_page_size (EvDocument   *document,
-			     int           page,
-			     double       *width,
-			     double       *height)
+tiff_document_get_page_size (EvDocument *document,
+			     EvPage     *page,
+			     double     *width,
+			     double     *height)
 {
 	guint32 w, h;
 	gfloat x_res, y_res;
@@ -189,7 +189,7 @@ tiff_document_get_page_size (EvDocument   *document,
 	g_return_if_fail (tiff_document->tiff != NULL);
 	
 	push_handlers ();
-	if (TIFFSetDirectory (tiff_document->tiff, page) != 1) {
+	if (TIFFSetDirectory (tiff_document->tiff, page->index) != 1) {
 		pop_handlers ();
 		return;
 	}
@@ -223,7 +223,7 @@ tiff_document_render (EvDocument      *document,
 	g_return_val_if_fail (tiff_document->tiff != NULL, NULL);
   
 	push_handlers ();
-	if (TIFFSetDirectory (tiff_document->tiff, rc->page) != 1) {
+	if (TIFFSetDirectory (tiff_document->tiff, rc->page->index) != 1) {
 		pop_handlers ();
 		return NULL;
 	}
@@ -317,7 +317,7 @@ tiff_document_render_pixbuf (EvDocument      *document,
 	GdkPixbuf *rotated_pixbuf;
 	
 	push_handlers ();
-	if (TIFFSetDirectory (tiff_document->tiff, rc->page) != 1) {
+	if (TIFFSetDirectory (tiff_document->tiff, rc->page->index) != 1) {
 		pop_handlers ();
 		return NULL;
 	}
@@ -482,7 +482,7 @@ tiff_document_file_exporter_do_page (EvFileExporter *exporter, EvRenderContext *
 
 	if (document->ps_export_ctx == NULL)
 		return;
-	if (TIFFSetDirectory (document->tiff, rc->page) != 1)
+	if (TIFFSetDirectory (document->tiff, rc->page->index) != 1)
 		return;
 	tiff2ps_process_page (document->ps_export_ctx, document->tiff,
 			      0, 0, 0, 0, 0);

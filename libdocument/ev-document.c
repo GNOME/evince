@@ -150,11 +150,26 @@ ev_document_get_n_pages (EvDocument  *document)
 	return retval;
 }
 
+EvPage *
+ev_document_get_page (EvDocument *document,
+		      gint        index)
+{
+	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	EvPage *retval;
+
+	if (iface->get_page)
+		retval = iface->get_page (document, index);
+	else
+		retval = ev_page_new (index);
+
+	return retval;
+}
+
 void
-ev_document_get_page_size   (EvDocument   *document,
-			     int           page,
-			     double       *width,
-			     double       *height)
+ev_document_get_page_size (EvDocument *document,
+			   EvPage     *page,
+			   double     *width,
+			   double     *height)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
@@ -163,8 +178,8 @@ ev_document_get_page_size   (EvDocument   *document,
 }
 
 char *
-ev_document_get_page_label(EvDocument    *document,
-			   int             page)
+ev_document_get_page_label (EvDocument *document,
+			    EvPage     *page)
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
@@ -239,7 +254,6 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->linearized);
 	g_free (info->security);
 	
-
 	g_free (info);
 }
 

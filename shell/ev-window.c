@@ -1072,8 +1072,6 @@ ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
 static void
 ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 {
-	
-	EvRenderContext *rc;
 	gint page_width, page_height;
 	gdouble scale;
 	EvDocument *document = ev_window->priv->document;
@@ -1089,14 +1087,11 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 				&page_width, &page_height);
 	scale = (gdouble)128 / (gdouble)page_width;
 	
-	rc = ev_render_context_new (rotation, 0, scale);
-	
-	ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, rc);
+	ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, 0, rotation, scale);
 	g_signal_connect (ev_window->priv->thumbnail_job, "finished",
 			  G_CALLBACK (ev_window_set_icon_from_thumbnail),
 			  ev_window);
 	ev_job_queue_add_job (EV_JOB (ev_window->priv->thumbnail_job), EV_JOB_PRIORITY_LOW);
-	g_object_unref (rc);
 }
 
 static gboolean

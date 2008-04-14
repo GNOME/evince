@@ -221,7 +221,7 @@ comics_document_get_n_pages (EvDocument *document)
 
 static void
 comics_document_get_page_size (EvDocument *document,
-			       int         page,
+			       EvPage     *page,
 			       double     *width,
 			       double     *height)
 {
@@ -232,7 +232,7 @@ comics_document_get_page_size (EvDocument *document,
 	gint outpipe = -1;
 	GPid child_pid = -1;
 
-	argv = extract_argv (document, page);
+	argv = extract_argv (document, page->index);
 	success = g_spawn_async_with_pipes (NULL, argv, NULL,
 					    G_SPAWN_SEARCH_PATH | G_SPAWN_STDERR_TO_DEV_NULL,
 					    NULL, NULL,
@@ -290,7 +290,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 	gint outpipe = -1;
 	GPid child_pid = -1;
 
-	argv = extract_argv (document, rc->page);
+	argv = extract_argv (document, rc->page->index);
 	success = g_spawn_async_with_pipes (NULL, argv, NULL,
 					    G_SPAWN_SEARCH_PATH
 					    | G_SPAWN_STDERR_TO_DEV_NULL,

@@ -195,17 +195,14 @@ djvu_document_get_n_pages (EvDocument  *document)
 }
 
 static void
-djvu_document_get_page_size (EvDocument   *document,
-			     int           page,
-			     double       *width,
-			     double       *height)
+document_get_page_size (DjvuDocument *djvu_document,
+			gint          page,
+			double       *width,
+			double       *height)
 {
-	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-        ddjvu_pageinfo_t info;
+	ddjvu_pageinfo_t info;
 	ddjvu_status_t r;
 	
-	g_return_if_fail (djvu_document->d_document);
-
 	while ((r = ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info)) < DDJVU_JOB_OK)
 		djvu_handle_events(djvu_document, TRUE);
 	
@@ -214,6 +211,20 @@ djvu_document_get_page_size (EvDocument   *document,
 
         *width = info.width * SCALE_FACTOR; 
         *height = info.height * SCALE_FACTOR;
+}
+
+static void
+djvu_document_get_page_size (EvDocument   *document,
+			     EvPage       *page,
+			     double       *width,
+			     double       *height)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+
+	g_return_if_fail (djvu_document->d_document);
+
+	document_get_page_size (djvu_document, page->index,
+				width, height);
 }
 
 static cairo_surface_t *
@@ -231,7 +242,7 @@ djvu_document_render (EvDocument      *document,
 	double page_width, page_height, tmp;
 	static const cairo_user_data_key_t key;
 
-	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page);
+	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page->index);
 	
 	while (!ddjvu_page_decoding_done (d_page))
 		djvu_handle_events(djvu_document, TRUE);
@@ -364,7 +375,7 @@ djvu_selection_get_selected_text (EvSelection     *selection,
 	rectangle.x2 = points->x2 / SCALE_FACTOR;
 	rectangle.y2 = (height - points->y1) / SCALE_FACTOR;
 		
-      	text = djvu_text_copy (djvu_document, rc->page, &rectangle);
+      	text = djvu_text_copy (djvu_document, rc->page->index, &rectangle);
       
       	if (text == NULL)
 		text = g_strdup ("");
@@ -423,10 +434,10 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 	gdk_pixbuf_fill (pixbuf, 0xffffffff);
 	pixels = gdk_pixbuf_get_pixels (pixbuf);
 	
-	while (ddjvu_thumbnail_status (djvu_document->d_document, rc->page, 1) < DDJVU_JOB_OK)
+	while (ddjvu_thumbnail_status (djvu_document->d_document, rc->page->index, 1) < DDJVU_JOB_OK)
 		djvu_handle_events(djvu_document, TRUE);
 		    
-	ddjvu_thumbnail_render (djvu_document->d_document, rc->page, 
+	ddjvu_thumbnail_render (djvu_document->d_document, rc->page->index, 
 				&thumb_width, &thumb_height,
 				djvu_document->thumbs_format,
 				gdk_pixbuf_get_rowstride (pixbuf), 
@@ -472,7 +483,7 @@ djvu_document_file_exporter_do_page (EvFileExporter  *exporter,
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 	
-	g_string_append_printf (djvu_document->opts, "%d,", (rc->page) + 1); 
+	g_string_append_printf (djvu_document->opts, "%d,", (rc->page->index) + 1); 
 }
 
 static void
@@ -587,8 +598,7 @@ djvu_document_find_get_result (EvDocumentFind *document_find,
 	if (r == NULL)
 		return FALSE;
 
-	djvu_document_get_page_size (EV_DOCUMENT (djvu_document), 
-		page, &width, &height);
+	document_get_page_size (djvu_document, page, &width, &height);
 	rectangle->x1 = r->x1 * SCALE_FACTOR;
 	rectangle->y1 = height - r->y2 * SCALE_FACTOR;
 	rectangle->x2 = r->x2 * SCALE_FACTOR;

@@ -22,14 +22,16 @@
 
 #include <glib-object.h>
 
+#include "ev-page.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvRenderContext EvRenderContext;
 typedef struct _EvRenderContextClass EvRenderContextClass;
 
 #define EV_TYPE_RENDER_CONTEXT		(ev_render_context_get_type())
-#define EV_RENDER_CONTEXT(context)	((EvRenderContext *) (context))
-#define EV_RENDER_CONTEXT_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_RENDER_CONTEXT, EvRenderContext))
+#define EV_RENDER_CONTEXT(context)	(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_RENDER_CONTEXT, EvRenderContext)
+#define EV_RENDER_CONTEXT_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_RENDER_CONTEXT, EvRenderContextClass))
 #define EV_IS_RENDER_CONTEXT(object)	(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_RENDER_CONTEXT))
 
 struct _EvRenderContextClass
@@ -40,23 +42,21 @@ struct _EvRenderContextClass
 struct _EvRenderContext
 {
 	GObject parent;
-	int rotation;
-	gint page;
+	
+	EvPage *page;
+	gint    rotation;
 	gdouble scale;
-
-	gpointer data;
-	GDestroyNotify destroy;
 };
 
 
 GType            ev_render_context_get_type        (void) G_GNUC_CONST;
-EvRenderContext *ev_render_context_new             (int              rotation,
-						    gint             page,
+EvRenderContext *ev_render_context_new             (EvPage          *page,
+						    gint             rotation,
 						    gdouble          scale);
 void             ev_render_context_set_page        (EvRenderContext *rc,
-						    gint             page);
+						    EvPage          *page);
 void             ev_render_context_set_rotation    (EvRenderContext *rc,
-						    int              rotation);
+						    gint             rotation);
 void             ev_render_context_set_scale       (EvRenderContext *rc,
 						    gdouble          scale);
 

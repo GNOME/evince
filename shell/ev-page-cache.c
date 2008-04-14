@@ -2,6 +2,7 @@
 #include "ev-page-cache.h"
 #include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
+#include "ev-page.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -289,19 +290,22 @@ ev_page_cache_new (EvDocument *document)
 	has_thumbs = EV_IS_DOCUMENT_THUMBNAILS (document);
 	
 	for (i = 0; i < page_cache->n_pages; i++) {
-		double page_width = 0;
-		double page_height = 0;
-		gint   thumb_width = 0;
-		gint   thumb_height = 0;
+		EvPage *page;
+		double  page_width = 0;
+		double  page_height = 0;
+		gint    thumb_width = 0;
+		gint    thumb_height = 0;
 
-		ev_document_get_page_size (document, i, &page_width, &page_height);
+		page = ev_document_get_page (document, i);
+		
+		ev_document_get_page_size (document, page, &page_width, &page_height);
 
-	    	page_cache->page_labels[i] = ev_document_get_page_label (document, i);
+	    	page_cache->page_labels[i] = ev_document_get_page_label (document, page);
 		
 		if (page_cache->page_labels[i] != NULL) {
 		
-			page_cache->max_label_chars = MAX(page_cache->max_label_chars, 
-							    g_utf8_strlen (page_cache->page_labels[i], 256));
+			page_cache->max_label_chars = MAX (page_cache->max_label_chars, 
+							   g_utf8_strlen (page_cache->page_labels[i], 256));
 			if (!page_cache->has_labels) {
 				gchar *expected_label;
 			
@@ -347,13 +351,15 @@ ev_page_cache_new (EvDocument *document)
 			info->height = page_height;
 		}
 
-		if (!has_thumbs)
+		if (!has_thumbs) {
+			g_object_unref (page);
 			continue;
+		}
 
 		if (!rc) {
-			rc = ev_render_context_new (0, i, (gdouble)THUMBNAIL_WIDTH / page_width);
+			rc = ev_render_context_new (page, 0, (gdouble)THUMBNAIL_WIDTH / page_width);
 		} else {
-			ev_render_context_set_page (rc, i);
+			ev_render_context_set_page (rc, page);
 			ev_render_context_set_scale (rc, (gdouble)THUMBNAIL_WIDTH / page_width);
 		}
 
@@ -393,6 +399,8 @@ ev_page_cache_new (EvDocument *document)
 			thumb_info->width = thumb_width;
 			thumb_info->height = thumb_height;
 		}
+
+		g_object_unref (page);
 	}
 
 	if (rc) {

@@ -67,10 +67,6 @@ typedef struct _DviDocumentClass DviDocumentClass;
 static void dvi_document_document_iface_init            (EvDocumentIface           *iface);
 static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void dvi_document_file_exporter_iface_init	(EvFileExporterIface 	   *iface);
-static void dvi_document_get_page_size 			(EvDocument                *document,
-					    		 int                        page,
-							 double                    *width,
-							 double                    *height);
 static void dvi_document_do_color_special               (DviContext                *dvi,
 							 const char                *prefix,
 							 const char                *arg);
@@ -150,7 +146,7 @@ dvi_document_get_n_pages (EvDocument *document)
 
 static void
 dvi_document_get_page_size (EvDocument *document,
-			    int         page,
+			    EvPage     *page,
 			    double     *width,
 			    double     *height)
 {
@@ -177,7 +173,7 @@ dvi_document_render (EvDocument      *document,
 	 */
 	g_mutex_lock (dvi_context_mutex);
 	
-	mdvi_setpage (dvi_document->context, rc->page);
+	mdvi_setpage (dvi_document->context, rc->page->index);
 	
 	mdvi_set_shrink (dvi_document->context, 
 			 (int)((dvi_document->params->hshrink - 1) / rc->scale) + 1,
@@ -274,8 +270,8 @@ dvi_document_document_iface_init (EvDocumentIface *iface)
 static void
 dvi_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 					EvRenderContext      *rc, 
-					gint                  *width,
-					gint                  *height)
+					gint                 *width,
+					gint                 *height)
 {	
 	DviDocument *dvi_document = DVI_DOCUMENT (document);
 	gdouble page_width = dvi_document->base_width;
@@ -307,7 +303,7 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 
 	g_mutex_lock (dvi_context_mutex);
 	
-	mdvi_setpage (dvi_document->context, rc->page);
+	mdvi_setpage (dvi_document->context, rc->page->index);
 
 	mdvi_set_shrink (dvi_document->context, 
 			  (int)dvi_document->base_width * dvi_document->params->hshrink / thumb_width,
@@ -377,7 +373,7 @@ dvi_document_file_exporter_do_page (EvFileExporter  *exporter,
 {
        DviDocument *dvi_document = DVI_DOCUMENT(exporter);
 
-       g_string_append_printf (dvi_document->exporter_opts, "%d,", (rc->page) + 1);
+       g_string_append_printf (dvi_document->exporter_opts, "%d,", (rc->page->index) + 1);
 }
 
 static void

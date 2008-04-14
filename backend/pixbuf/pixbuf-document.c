@@ -95,7 +95,7 @@ pixbuf_document_get_n_pages (EvDocument  *document)
 
 static void
 pixbuf_document_get_page_size (EvDocument   *document,
-			       int           page,
+			       EvPage       *page,
 			       double       *width,
 			       double       *height)
 {

@@ -250,13 +250,13 @@ job_page_ready_cb (EvJob         *job,
 	EvJobRender *job_render = EV_JOB_RENDER (job);
 
 	/* If the job is outside of our interest, we silently discard it */
-	if ((job_render->rc->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
-	    (job_render->rc->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
+	if ((job_render->rc->page->index < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
+	    (job_render->rc->page->index > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
 		g_object_unref (job);
 		return;
 	}
 
-	job_info = find_job_cache (pixbuf_cache, job_render->rc->page);
+	job_info = find_job_cache (pixbuf_cache, job_render->rc->page->index);
 
 	copy_job_page_and_selection_to_job_info (job_render, job_info, pixbuf_cache);
 	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
@@ -270,13 +270,13 @@ job_finished_cb (EvJob         *job,
 	EvJobRender *job_render = EV_JOB_RENDER (job);
 
 	/* If the job is outside of our interest, we silently discard it */
-	if ((job_render->rc->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
-	    (job_render->rc->page > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
+	if ((job_render->rc->page->index < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
+	    (job_render->rc->page->index > (pixbuf_cache->end_page + pixbuf_cache->preload_cache_size))) {
 		g_object_unref (job);
 		return;
 	}
 
-	job_info = find_job_cache (pixbuf_cache, job_render->rc->page);
+	job_info = find_job_cache (pixbuf_cache, job_render->rc->page->index);
 	copy_job_to_job_info (job_render, job_info, pixbuf_cache);
 }
 
@@ -298,7 +298,7 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 		return;
 
 	ev_page_cache_get_size (page_cache,
-				EV_JOB_RENDER (job_info->job)->rc->page,
+				EV_JOB_RENDER (job_info->job)->rc->page->index,
 				EV_JOB_RENDER (job_info->job)->rc->rotation,
 				scale,
 				&width, &height);
@@ -608,6 +608,7 @@ add_job (EvPixbufCache *pixbuf_cache,
 	 gfloat         scale,
 	 EvJobPriority  priority)
 {
+	EvPage  *ev_page;
 	gboolean include_links = FALSE;
 	gboolean include_text = FALSE;
 	gboolean include_selection = FALSE;
@@ -617,13 +618,20 @@ add_job (EvPixbufCache *pixbuf_cache,
 
 	job_info->page_ready = FALSE;
 	
+	/* FIXME: we shouldn't lock here */
+	ev_document_doc_mutex_lock ();
+	ev_page = ev_document_get_page (pixbuf_cache->document, page);
+	ev_document_doc_mutex_unlock ();
+	
 	if (job_info->rc == NULL) {
-		job_info->rc = ev_render_context_new (rotation, page, scale);
+		job_info->rc = ev_render_context_new (ev_page, rotation, scale);
 	} else {
+		ev_render_context_set_page (job_info->rc, ev_page);
 		ev_render_context_set_rotation (job_info->rc, rotation);
-		ev_render_context_set_page (job_info->rc, page);
 		ev_render_context_set_scale (job_info->rc, scale);
 	}
+
+	g_object_unref (ev_page);
 
 	if (job_info->region)
 		gdk_region_destroy (job_info->region);

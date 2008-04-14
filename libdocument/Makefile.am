@@ -38,6 +38,7 @@ INST_H_FILES = 					\
 	ev-link-action.h			\
 	ev-link-dest.h				\
 	ev-link.h				\
+	ev-page.h				\
 	ev-render-context.h			\
 	ev-selection.h				\
 	ev-transition-effect.h
@@ -68,6 +69,7 @@ libevbackend_la_SOURCES=			\
 	ev-file-exporter.c			\
 	ev-file-helpers.c			\
 	ev-module.c				\
+	ev-page.c				\
 	ev-render-context.c			\
 	ev-selection.c				\
 	ev-transition-effect.c			\

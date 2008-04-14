@@ -184,11 +184,6 @@ ev_job_thumbnail_dispose (GObject *object)
 		job->thumbnail = NULL;
 	}
 
-	if (job->rc) {
-		g_object_unref (job->rc);
-		job->rc = NULL;
-	}
-
 	(* G_OBJECT_CLASS (ev_job_thumbnail_parent_class)->dispose) (object);
 }
 
@@ -362,7 +357,7 @@ ev_job_render_run (EvJobRender *job)
 
 	if (EV_JOB (job)->async) {
 		EvAsyncRenderer *renderer = EV_ASYNC_RENDERER (EV_JOB (job)->document);
-		ev_async_renderer_render_pixbuf (renderer, job->rc->page, job->rc->scale,
+		ev_async_renderer_render_pixbuf (renderer, job->rc->page->index, job->rc->scale,
 						 job->rc->rotation);
 		g_signal_connect (EV_JOB (job)->document, "render_finished",
 				  G_CALLBACK (render_finished_cb), job);
@@ -396,15 +391,15 @@ ev_job_render_run (EvJobRender *job)
 		if (job->include_links && EV_IS_DOCUMENT_LINKS (EV_JOB (job)->document))
 			job->link_mapping =
 				ev_document_links_get_links (EV_DOCUMENT_LINKS (EV_JOB (job)->document),
-							     job->rc->page);
+							     job->rc->page->index);
 		if (job->include_forms && EV_IS_DOCUMENT_FORMS (EV_JOB (job)->document))
 			job->form_field_mapping =
-				ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (EV_JOB(job)->document),
+				ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (EV_JOB (job)->document),
 								   job->rc->page);
 		if (job->include_images && EV_IS_DOCUMENT_IMAGES (EV_JOB (job)->document))
 			job->image_mapping =
 				ev_document_images_get_image_mapping (EV_DOCUMENT_IMAGES (EV_JOB (job)->document),
-								      job->rc->page);
+								      job->rc->page->index);
 		EV_JOB (job)->finished = TRUE;
 	}
 
@@ -412,15 +407,19 @@ ev_job_render_run (EvJobRender *job)
 }
 
 EvJob *
-ev_job_thumbnail_new (EvDocument      *document,
-		      EvRenderContext *rc)
+ev_job_thumbnail_new (EvDocument *document,
+		      gint        page,
+		      gint        rotation,
+		      gdouble     scale)
 {
 	EvJobThumbnail *job;
 
 	job = g_object_new (EV_TYPE_JOB_THUMBNAIL, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
-	job->rc = g_object_ref (rc);
+	job->page = page;
+	job->rotation = rotation;
+	job->scale = scale;
 
 	return EV_JOB (job);
 }
@@ -428,16 +427,24 @@ ev_job_thumbnail_new (EvDocument      *document,
 void
 ev_job_thumbnail_run (EvJobThumbnail *job)
 {
+	EvRenderContext *rc;
+	EvPage          *page;
+	
 	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
 
 	ev_document_doc_mutex_lock ();
 
+	page = ev_document_get_page (EV_JOB (job)->document, job->page);
+	rc = ev_render_context_new (page, job->rotation, job->scale);
+	g_object_unref (page);
+
 	job->thumbnail =
 		ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (EV_JOB (job)->document),
-						      job->rc, TRUE);
-	EV_JOB (job)->finished = TRUE;
-
+						      rc, TRUE);
+	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
+	
+	EV_JOB (job)->finished = TRUE;
 }
 
 static void ev_job_fonts_init (EvJobFonts *job) { /* Do Nothing */ }
@@ -917,7 +924,7 @@ ev_job_print_run (EvJobPrint *job)
 	fc.duplex = FALSE;
 	fc.pages_per_sheet = MAX (1, job->pages_per_sheet);
 
-	rc = ev_render_context_new (0, 0, 1.0);
+	rc = ev_render_context_new (NULL, 0, 1.0);
 
 	ev_document_doc_mutex_lock ();
 	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);
@@ -937,12 +944,17 @@ ev_job_print_run (EvJobPrint *job)
 				ev_file_exporter_begin_page (EV_FILE_EXPORTER (document));
 				
 				for (j = 0; j < job->pages_per_sheet; j++) {
+					EvPage *ev_page;
+					
 					gint p = page + j;
 
 					if (p < 0 || p >= n_pages)
 						break;
+
+					ev_page = ev_document_get_page (document, page_list[p]);
+					ev_render_context_set_page (rc, ev_page);
+					g_object_unref (ev_page);
 					
-					ev_render_context_set_page (rc, page_list[p]);
 					ev_file_exporter_do_page (EV_FILE_EXPORTER (document), rc);
 				}
 
