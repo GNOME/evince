@@ -1,3 +1,14 @@
+2008-04-16  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* cut-n-paste/evmountoperation/ev-mount-operation.[ch]:
+	* shell/Makefile.am:
+	* shell/ev-window.c: (ev_window_load_remote_failed),
+	(mount_volume_ready_cb), (window_open_file_copy_ready_cb):
+
+	Add GtkMountOperation (renamed to avoid conflicts) to be able to
+	open documents in remote locations that are not mounted.
+	
 2008-04-14  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/dvi/mdvi-lib/bitmap.[ch]: (bitmap_convert_lsb8),

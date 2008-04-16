@@ -66,6 +66,7 @@
 #include "ev-history.h"
 #include "ev-image.h"
 #include "ev-message-area.h"
+#include "ev-mount-operation.h"
 
 #include <gtk/gtkprintunixdialog.h>
 
@@ -268,6 +269,8 @@ static void     find_bar_search_changed_cb              (EggFindBar       *find_
 							 GParamSpec       *param,
 							 EvWindow         *ev_window);
 static void     ev_window_do_preview_print              (EvWindow         *window);
+static void     ev_window_load_file_remote              (EvWindow         *ev_window,
+							 GFile            *source_file);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -1422,6 +1425,39 @@ ev_window_close_dialogs (EvWindow *ev_window)
 }
 
 static void
+ev_window_load_remote_failed (EvWindow *ev_window,
+			      GError   *error)
+{
+	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
+	ev_window->priv->in_reload = FALSE;
+	ev_window_error_message (GTK_WINDOW (ev_window),
+				 _("Unable to open document"),
+				 error);
+	g_free (ev_window->priv->local_uri);
+	ev_window->priv->local_uri = NULL;
+}
+
+static void
+mount_volume_ready_cb (GFile        *source,
+		       GAsyncResult *async_result,
+		       EvWindow     *ev_window)
+{
+	GError *error = NULL;
+
+	g_file_mount_enclosing_volume_finish (source, async_result, &error);
+
+	if (error) {
+		ev_window_load_remote_failed (ev_window, error);
+		g_object_unref (source);
+		g_error_free (error);
+	} else {
+		/* Volume successfully mounted,
+		   try opening the file again */
+		ev_window_load_file_remote (ev_window, source);
+	}
+}
+
+static void
 window_open_file_copy_ready_cb (GFile        *source,
 				GAsyncResult *async_result,
 				EvWindow     *ev_window)
@@ -1438,19 +1474,21 @@ window_open_file_copy_ready_cb (GFile        *source,
 
 	if (error->domain == G_IO_ERROR &&
 	    error->code == G_IO_ERROR_NOT_MOUNTED) {
-		/* TODO: try to mount */
-	}
+		GMountOperation *operation;
 
-	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
-	ev_window->priv->in_reload = FALSE;
-	ev_window_error_message (GTK_WINDOW (ev_window),
-				 _("Unable to open document"),
-				 error);
-	g_free (ev_window->priv->local_uri);
-	ev_window->priv->local_uri = NULL;
+		operation = ev_mount_operation_new (GTK_WINDOW (ev_window));
+		g_file_mount_enclosing_volume (source,
+					       G_MOUNT_MOUNT_NONE,
+					       operation, NULL,
+					       (GAsyncReadyCallback)mount_volume_ready_cb,
+					       ev_window);
+		g_object_unref (operation);
+	} else {
+		ev_window_load_remote_failed (ev_window, error);
+		g_object_unref (source);
+	}
 	
 	g_error_free (error);
-	g_object_unref (source);
 }
 
 static void
