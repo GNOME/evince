@@ -252,7 +252,7 @@ AC_ARG_ENABLE(ps,
   	[AC_HELP_STRING([--disable-ps], [Compile without PostScript backend])],enable_ps=$enableval,enable_ps="yes")
 
 if test "x$enable_ps" = "xyes"; then
-   if test "x$have_spectre = xyes"; then
+   if test "x$have_spectre" = "xyes"; then
       AC_DEFINE([ENABLE_PS], [1], [Enable support for PostScript files.])
    else
       enable_ps="no"
