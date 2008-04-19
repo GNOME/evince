@@ -180,13 +180,11 @@ get_document_from_uri (const char        *uri,
 		return NULL;
 	}
 
-#ifdef ENABLE_PIXBUF
-	if (mime_type_supported_by_gdk_pixbuf (mime_type))
-		document = ev_backends_manager_get_document ("image/*");
-	else
-		document = ev_backends_manager_get_document (mime_type);
-#else
 	document = ev_backends_manager_get_document (mime_type);
+	
+#ifdef ENABLE_PIXBUF
+	if (!document && mime_type_supported_by_gdk_pixbuf (mime_type))
+		document = ev_backends_manager_get_document ("image/*");
 #endif /* ENABLE_PIXBUF */
 
 	if (document == NULL) {
