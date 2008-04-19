@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-10 13:27+0000\n"
+"POT-Creation-Date: 2008-04-19 09:32+0000\n"
 "PO-Revision-Date: 2005-08-28 20:29+0300\n"
 "Last-Translator: Yuval Tanny <>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -26,6 +26,7 @@ msgstr ""
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../backend/comics/comics-document.c:163
+#, c-format
 msgid "File corrupted."
 msgstr "File corrupted."
 
@@ -39,6 +40,7 @@ msgid "Comic Books"
 msgstr "ספרי קומיקס"
 
 #: ../backend/djvu/djvu-document.c:167
+#, c-format
 msgid ""
 "The document is composed by several files. One or more of such files cannot "
 "be accessed."
@@ -50,11 +52,13 @@ msgstr ""
 msgid "Djvu Documents"
 msgstr "מסמכי Djvu"
 
-#: ../backend/dvi/dvi-document.c:98
+#: ../backend/dvi/dvi-document.c:94
+#, c-format
 msgid "File not available"
 msgstr "File not available"
 
-#: ../backend/dvi/dvi-document.c:113
+#: ../backend/dvi/dvi-document.c:109
+#, c-format
 msgid "DVI document has incorrect format"
 msgstr "DVI document has incorrect format"
 
@@ -63,60 +67,60 @@ msgid "DVI Documents"
 msgstr "מסמכי DVI"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:674
+#: ../backend/pdf/ev-poppler.cc:685
 msgid "Yes"
 msgstr "כן"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:677
+#: ../backend/pdf/ev-poppler.cc:688
 msgid "No"
 msgstr "לא"
 
-#: ../backend/pdf/ev-poppler.cc:750
+#: ../backend/pdf/ev-poppler.cc:762
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:752
+#: ../backend/pdf/ev-poppler.cc:764
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:754
+#: ../backend/pdf/ev-poppler.cc:766
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:756
+#: ../backend/pdf/ev-poppler.cc:768
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:758
+#: ../backend/pdf/ev-poppler.cc:770
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:760
+#: ../backend/pdf/ev-poppler.cc:772
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:762
+#: ../backend/pdf/ev-poppler.cc:774
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:764
+#: ../backend/pdf/ev-poppler.cc:776
 msgid "Unknown font type"
 msgstr "סוג גופן לא ידוע"
 
-#: ../backend/pdf/ev-poppler.cc:790
+#: ../backend/pdf/ev-poppler.cc:802
 msgid "No name"
 msgstr "ללא שם"
 
-#: ../backend/pdf/ev-poppler.cc:798
+#: ../backend/pdf/ev-poppler.cc:810
 msgid "Embedded subset"
 msgstr "תת-קבוצה משוכנת"
 
-#: ../backend/pdf/ev-poppler.cc:800
+#: ../backend/pdf/ev-poppler.cc:812
 msgid "Embedded"
 msgstr "משוכן"
 
-#: ../backend/pdf/ev-poppler.cc:802
+#: ../backend/pdf/ev-poppler.cc:814
 msgid "Not embedded"
 msgstr "לא משוכן"
 
@@ -125,10 +129,12 @@ msgid "PDF Documents"
 msgstr "מסמכי PDF"
 
 #: ../backend/impress/impress-document.c:296
+#, c-format
 msgid "Remote files aren't supported"
 msgstr "קבצים מרוחקים לא נתמכים"
 
 #: ../backend/impress/impress-document.c:307
+#, c-format
 msgid "Invalid document"
 msgstr "מסמך לא תקין"
 
@@ -175,7 +181,7 @@ msgstr "לא נמצא קובץ בארכיון ה-zip"
 msgid "Unknown error"
 msgstr "שגיאה לא ידועה"
 
-#: ../backend/ps/ev-spectre.c:113 ../backend/ps/ps-document.c:248
+#: ../backend/ps/ev-spectre.c:113
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "לא ניתן לטעון את המסמך “%s”"
@@ -184,101 +190,6 @@ msgstr "לא ניתן לטעון את המסמך “%s”"
 #, c-format
 msgid "Failed to save document “%s”"
 msgstr "נכשל בשמירת המסמך “%s”"
-
-#: ../backend/ps/gsdefaults.c:30
-msgid "BBox"
-msgstr "BBox"
-
-#: ../backend/ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "מכתב"
-
-#: ../backend/ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr "טבלאית"
-
-#: ../backend/ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr "כרטסת"
-
-#: ../backend/ps/gsdefaults.c:34
-msgid "Legal"
-msgstr "חוקי"
-
-#: ../backend/ps/gsdefaults.c:35
-msgid "Statement"
-msgstr "הצהרה"
-
-#: ../backend/ps/gsdefaults.c:36
-msgid "Executive"
-msgstr "מוציא לפועל"
-
-#: ../backend/ps/gsdefaults.c:37
-msgid "A0"
-msgstr "A0"
-
-#: ../backend/ps/gsdefaults.c:38
-msgid "A1"
-msgstr "A1"
-
-#: ../backend/ps/gsdefaults.c:39
-msgid "A2"
-msgstr "A2"
-
-#: ../backend/ps/gsdefaults.c:40
-msgid "A3"
-msgstr "A3"
-
-#: ../backend/ps/gsdefaults.c:41
-msgid "A4"
-msgstr "A4"
-
-#: ../backend/ps/gsdefaults.c:42
-msgid "A5"
-msgstr "A5"
-
-#: ../backend/ps/gsdefaults.c:43
-msgid "B4"
-msgstr "B4"
-
-#: ../backend/ps/gsdefaults.c:44
-msgid "B5"
-msgstr "B5"
-
-#: ../backend/ps/gsdefaults.c:45
-msgid "Folio"
-msgstr "Folio"
-
-#: ../backend/ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr "Quarto"
-
-#: ../backend/ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "10x14"
-
-#: ../backend/ps/ps-document.c:170 ../backend/ps/ps-document.c:184
-#, c-format
-msgid "Cannot open file “%s”."
-msgstr "לא ניתן לפתוח את הקובץ “%s”."
-
-#: ../backend/ps/ps-document.c:231
-#, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr "נכשל בטעינת המסמך “%s”. מפענך Ghostscript לא נמצא בנתיב"
-
-#: ../backend/ps/ps-document.c:431
-msgid "Encapsulated PostScript"
-msgstr "PostScript כמוס"
-
-#: ../backend/ps/ps-document.c:432
-msgid "PostScript"
-msgstr "PostScript"
-
-#: ../backend/ps/ps-interpreter.c:543
-msgid "Interpreter failed."
-msgstr "מפענח נכשל."
 
 #: ../backend/ps/psdocument.evince-backend.in.h:1
 msgid "PostScript Documents"
@@ -301,6 +212,7 @@ msgstr "לא ניתן לפתוח את הצרופה “%s”"
 
 #: ../libdocument/ev-document-factory.c:177
 #: ../libdocument/ev-document-factory.c:295
+#, c-format
 msgid "Unknown MIME Type"
 msgstr "סוג MIME לא ידוע"
 
@@ -316,6 +228,43 @@ msgstr "כל המסמכים"
 #: ../libdocument/ev-document-factory.c:382
 msgid "All Files"
 msgstr "כל הקבצים"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:439
+msgid "Co_nnect"
+msgstr "הת_חבר"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:483
+msgid "Connect _anonymously"
+msgstr "התחבר כ_אנונימי"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:492
+msgid "Connect as u_ser:"
+msgstr "התחבר כ_משתמש:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:529
+msgid "_Username:"
+msgstr "_שם משתמש:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
+msgid "_Domain:"
+msgstr "_מתחם:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
+#: ../data/evince-password.glade.h:4
+msgid "_Password:"
+msgstr "_סיסמה:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:553
+msgid "_Forget password immediately"
+msgstr "_שכח את הסיסמה"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
+msgid "_Remember password until you logout"
+msgstr "זכור את הסיסמה _עד להתנתקות"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
+msgid "_Remember forever"
+msgstr "_זכור לעד"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -362,7 +311,7 @@ msgid "Running in presentation mode"
 msgstr "רץ במצב מצגת"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4390
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4482
 msgid "Best Fit"
 msgstr "ההתאמה הטובה ביותר"
 
@@ -410,8 +359,9 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3517
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3606
 #: ../shell/ev-window-title.c:132
+#, c-format
 msgid "Document Viewer"
 msgstr "מציג מסמכים"
 
@@ -430,10 +380,6 @@ msgstr "זכור את הסיסמה בהפעלה זאת"
 #: ../data/evince-password.glade.h:3
 msgid "Save password in keyring"
 msgstr "שמור את הסיסמה בטבעת המפתחות"
-
-#: ../data/evince-password.glade.h:4
-msgid "_Password:"
-msgstr "_סיסמה:"
 
 #: ../data/evince-properties.glade.h:1
 msgid "<b>Author:</b>"
@@ -608,7 +554,7 @@ msgstr "_תלוי רישיות"
 msgid "Toggle case sensitive search"
 msgstr "בחר בחיפוש תלוי רישיות"
 
-#: ../shell/ev-jobs.c:650
+#: ../shell/ev-jobs.c:658
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "נכשל ביצירת קובץ “%s”: %s"
@@ -685,7 +631,7 @@ msgstr "אוסף מידע אודות גופנים... %3d%%"
 msgid "Attachments"
 msgstr "צרופות"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3642
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3643
 msgid "Loading..."
 msgstr "טוען..."
 
@@ -697,7 +643,7 @@ msgstr "הדפס..."
 msgid "Index"
 msgstr "מפתח"
 
-#: ../shell/ev-sidebar-thumbnails.c:728
+#: ../shell/ev-sidebar-thumbnails.c:725
 msgid "Thumbnails"
 msgstr "תמונות ממוזערות"
 
@@ -765,82 +711,82 @@ msgstr "לך לקובץ “%s”"
 msgid "Launch %s"
 msgstr "שגר את %s"
 
-#: ../shell/ev-view.c:2448
+#: ../shell/ev-view.c:2449
 msgid "End of presentation. Press Escape to exit."
 msgstr "סוף המצגת. לחץ Escape ליציאה."
 
-#: ../shell/ev-view.c:3371
+#: ../shell/ev-view.c:3372
 msgid "Jump to page:"
 msgstr "קפוץ לעמוד:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:5149
+#: ../shell/ev-view.c:5153
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "‏1 נמצא בעמוד זה"
 msgstr[1] "‏%d נמצאו בעמוד זה"
 
-#: ../shell/ev-view.c:5158
+#: ../shell/ev-view.c:5162
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "‏%3d%% נשארו לחיפוש"
 
-#: ../shell/ev-window.c:750
+#: ../shell/ev-window.c:755
 #, c-format
 msgid "Page %s - %s"
 msgstr "עמוד %s - %s"
 
-#: ../shell/ev-window.c:752
+#: ../shell/ev-window.c:757
 #, c-format
 msgid "Page %s"
 msgstr "עמוד %s"
 
-#: ../shell/ev-window.c:1381
+#: ../shell/ev-window.c:1381 ../shell/ev-window.c:1434
 msgid "Unable to open document"
 msgstr "לא ניתן לפתוח את המסמך"
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1607
 msgid "Open Document"
 msgstr "פתח מסמך"
 
-#: ../shell/ev-window.c:1603
+#: ../shell/ev-window.c:1668
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "לא ניתן ליצור קישור סימבולי “%s”: %s"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1697
 msgid "Cannot open a copy."
 msgstr "לא ניתן לפתוח עותק"
 
-#: ../shell/ev-window.c:1876 ../shell/ev-window.c:1926
+#: ../shell/ev-window.c:1941 ../shell/ev-window.c:1991
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "לא ניתן לשמור את הקובץ כ- “%s”"
 
-#: ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:2036
 msgid "Save a Copy"
 msgstr "שמור העתק"
 
-#: ../shell/ev-window.c:2092 ../shell/ev-window.c:3218
+#: ../shell/ev-window.c:2157 ../shell/ev-window.c:3307
 msgid "Failed to print document"
 msgstr "נכשל בהדפסת המסמך"
 
-#: ../shell/ev-window.c:2256
+#: ../shell/ev-window.c:2322
 msgid "Printing is not supported on this printer."
 msgstr "הדפסה לא נתמכת במדפסת זו"
 
-#: ../shell/ev-window.c:2382 ../shell/ev-window.c:4184
+#: ../shell/ev-window.c:2448 ../shell/ev-window.c:4274
 msgid "Print"
 msgstr "הדפס"
 
-#: ../shell/ev-window.c:2996
+#: ../shell/ev-window.c:3086
 msgid "Toolbar Editor"
 msgstr "עורך סרגל הכלים"
 
-#: ../shell/ev-window.c:3513
+#: ../shell/ev-window.c:3602
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -849,7 +795,7 @@ msgstr ""
 "מציג מסמכים.\n"
 "בעזרת ‎poppler %s )%s)"
 
-#: ../shell/ev-window.c:3541
+#: ../shell/ev-window.c:3630
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -861,7 +807,7 @@ msgstr ""
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
 
-#: ../shell/ev-window.c:3545
+#: ../shell/ev-window.c:3634
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -873,7 +819,7 @@ msgstr ""
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3638
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -883,15 +829,15 @@ msgstr ""
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:3573 ../shell/main.c:349
+#: ../shell/ev-window.c:3662 ../shell/main.c:349
 msgid "Evince"
 msgstr "‏Evince"
 
-#: ../shell/ev-window.c:3576
+#: ../shell/ev-window.c:3665
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 The Evince authors"
 
-#: ../shell/ev-window.c:3582
+#: ../shell/ev-window.c:3671
 msgid "translator-credits"
 msgstr ""
 "יובל טנאי\n"
@@ -900,352 +846,352 @@ msgstr ""
 "פרוייקט תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
-#: ../shell/ev-window.c:4096
+#: ../shell/ev-window.c:4186
 msgid "_File"
 msgstr "_קובץ"
 
-#: ../shell/ev-window.c:4097
+#: ../shell/ev-window.c:4187
 msgid "_Edit"
 msgstr "_עריכה"
 
-#: ../shell/ev-window.c:4098
+#: ../shell/ev-window.c:4188
 msgid "_View"
 msgstr "_תצוגה"
 
-#: ../shell/ev-window.c:4099
+#: ../shell/ev-window.c:4189
 msgid "_Go"
 msgstr "_מעבר"
 
-#: ../shell/ev-window.c:4100
+#: ../shell/ev-window.c:4190
 msgid "_Help"
 msgstr "_עזרה"
 
 #. File menu
-#: ../shell/ev-window.c:4103 ../shell/ev-window.c:4280
-#: ../shell/ev-window.c:4352
+#: ../shell/ev-window.c:4193 ../shell/ev-window.c:4372
+#: ../shell/ev-window.c:4444
 msgid "_Open..."
 msgstr "_פתח..."
 
-#: ../shell/ev-window.c:4104 ../shell/ev-window.c:4353
+#: ../shell/ev-window.c:4194 ../shell/ev-window.c:4445
 msgid "Open an existing document"
 msgstr "פתיחת מסמך קיים"
 
-#: ../shell/ev-window.c:4106
+#: ../shell/ev-window.c:4196
 msgid "Op_en a Copy"
 msgstr "_פתח העתק"
 
-#: ../shell/ev-window.c:4107
+#: ../shell/ev-window.c:4197
 msgid "Open a copy of the current document in a new window"
 msgstr "פתח העתק של המסמך הנוכחי בחלון חדש"
 
-#: ../shell/ev-window.c:4109 ../shell/ev-window.c:4282
+#: ../shell/ev-window.c:4199 ../shell/ev-window.c:4374
 msgid "_Save a Copy..."
 msgstr "ש_מור העתק..."
 
-#: ../shell/ev-window.c:4110
+#: ../shell/ev-window.c:4200
 msgid "Save a copy of the current document"
 msgstr "שמור עותק של המסמך הנוכחי"
 
-#: ../shell/ev-window.c:4112
+#: ../shell/ev-window.c:4202
 msgid "Print Set_up..."
 msgstr "ה_גדרות הדפסה..."
 
-#: ../shell/ev-window.c:4113
+#: ../shell/ev-window.c:4203
 msgid "Setup the page settings for printing"
 msgstr "הגדרות העמוד להדפסה"
 
-#: ../shell/ev-window.c:4115
+#: ../shell/ev-window.c:4205
 msgid "_Print..."
 msgstr "_הדפס..."
 
-#: ../shell/ev-window.c:4116 ../shell/ev-window.c:4185
+#: ../shell/ev-window.c:4206 ../shell/ev-window.c:4275
 msgid "Print this document"
 msgstr "הדפס מסמך זה"
 
-#: ../shell/ev-window.c:4118
+#: ../shell/ev-window.c:4208
 msgid "P_roperties"
 msgstr "_מאפיינים"
 
-#: ../shell/ev-window.c:4126
+#: ../shell/ev-window.c:4216
 msgid "Select _All"
 msgstr "_בחר הכל"
 
-#: ../shell/ev-window.c:4128
+#: ../shell/ev-window.c:4218
 msgid "_Find..."
 msgstr "_חפש..."
 
-#: ../shell/ev-window.c:4129
+#: ../shell/ev-window.c:4219
 msgid "Find a word or phrase in the document"
 msgstr "חפש מילה או משפט במסמך"
 
-#: ../shell/ev-window.c:4131
+#: ../shell/ev-window.c:4221
 msgid "Find Ne_xt"
 msgstr "חפש את _הבא"
 
-#: ../shell/ev-window.c:4133
+#: ../shell/ev-window.c:4223
 msgid "Find Pre_vious"
 msgstr "חפש את ה_קודם"
 
-#: ../shell/ev-window.c:4135
+#: ../shell/ev-window.c:4225
 msgid "T_oolbar"
 msgstr "_סרגל כלים"
 
-#: ../shell/ev-window.c:4137
+#: ../shell/ev-window.c:4227
 msgid "Rotate _Left"
 msgstr "סובב _שמאלה"
 
-#: ../shell/ev-window.c:4139
+#: ../shell/ev-window.c:4229
 msgid "Rotate _Right"
 msgstr "סובב _ימינה"
 
-#: ../shell/ev-window.c:4144
+#: ../shell/ev-window.c:4234
 msgid "Enlarge the document"
 msgstr "הגדל את המסמך"
 
-#: ../shell/ev-window.c:4147
+#: ../shell/ev-window.c:4237
 msgid "Shrink the document"
 msgstr "הקטן את המסמך"
 
-#: ../shell/ev-window.c:4149
+#: ../shell/ev-window.c:4239
 msgid "_Reload"
 msgstr "_טען מחדש"
 
-#: ../shell/ev-window.c:4150
+#: ../shell/ev-window.c:4240
 msgid "Reload the document"
 msgstr "טען מחדש את המסמך"
 
-#: ../shell/ev-window.c:4153
+#: ../shell/ev-window.c:4243
 msgid "Auto_scroll"
 msgstr "_גלילה אוטומטית"
 
 #. Go menu
-#: ../shell/ev-window.c:4157
+#: ../shell/ev-window.c:4247
 msgid "_Previous Page"
 msgstr "עמוד _קודם"
 
-#: ../shell/ev-window.c:4158
+#: ../shell/ev-window.c:4248
 msgid "Go to the previous page"
 msgstr "לך לעמוד הקודם"
 
-#: ../shell/ev-window.c:4160
+#: ../shell/ev-window.c:4250
 msgid "_Next Page"
 msgstr "עמוד ה_בא"
 
-#: ../shell/ev-window.c:4161
+#: ../shell/ev-window.c:4251
 msgid "Go to the next page"
 msgstr "לך לעמוד הבא"
 
-#: ../shell/ev-window.c:4163
+#: ../shell/ev-window.c:4253
 msgid "_First Page"
 msgstr "עמוד _ראשון"
 
-#: ../shell/ev-window.c:4164
+#: ../shell/ev-window.c:4254
 msgid "Go to the first page"
 msgstr "לך לעמוד הראשון"
 
-#: ../shell/ev-window.c:4166
+#: ../shell/ev-window.c:4256
 msgid "_Last Page"
 msgstr "עמוד _אחרון"
 
-#: ../shell/ev-window.c:4167
+#: ../shell/ev-window.c:4257
 msgid "Go to the last page"
 msgstr "לך לעמוד האחרון"
 
 #. Help menu
-#: ../shell/ev-window.c:4171
+#: ../shell/ev-window.c:4261
 msgid "_Contents"
 msgstr "_תוכן עניינים"
 
-#: ../shell/ev-window.c:4174
+#: ../shell/ev-window.c:4264
 msgid "_About"
 msgstr "_אודות"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:4178
+#: ../shell/ev-window.c:4268
 msgid "Leave Fullscreen"
 msgstr "צא ממסך מלא"
 
-#: ../shell/ev-window.c:4179
+#: ../shell/ev-window.c:4269
 msgid "Leave fullscreen mode"
 msgstr "צא ממצב מסך מלא"
 
-#: ../shell/ev-window.c:4181
+#: ../shell/ev-window.c:4271
 msgid "Start Presentation"
 msgstr "_התחל מצגת"
 
-#: ../shell/ev-window.c:4182
+#: ../shell/ev-window.c:4272
 msgid "Start a presentation"
 msgstr "התחל מצגת"
 
 #. View Menu
-#: ../shell/ev-window.c:4236
+#: ../shell/ev-window.c:4328
 msgid "_Toolbar"
 msgstr "סרגל _כלים"
 
-#: ../shell/ev-window.c:4237
+#: ../shell/ev-window.c:4329
 msgid "Show or hide the toolbar"
 msgstr "הצג או הסתר את סרגל הכלים"
 
-#: ../shell/ev-window.c:4239
+#: ../shell/ev-window.c:4331
 msgid "Side _Pane"
 msgstr "סרגל _צד"
 
-#: ../shell/ev-window.c:4240
+#: ../shell/ev-window.c:4332
 msgid "Show or hide the side pane"
 msgstr "הצג או הסתר את סרגל הצד"
 
-#: ../shell/ev-window.c:4242
+#: ../shell/ev-window.c:4334
 msgid "_Continuous"
 msgstr "_רציף"
 
-#: ../shell/ev-window.c:4243
+#: ../shell/ev-window.c:4335
 msgid "Show the entire document"
 msgstr "הצג את כל המסמך"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4337
 msgid "_Dual"
 msgstr "_כפול"
 
-#: ../shell/ev-window.c:4246
+#: ../shell/ev-window.c:4338
 msgid "Show two pages at once"
 msgstr "הצג שני דפים ביחד"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4340
 msgid "_Fullscreen"
 msgstr "_מסך מלא"
 
-#: ../shell/ev-window.c:4249
+#: ../shell/ev-window.c:4341
 msgid "Expand the window to fill the screen"
 msgstr "הרחב את החלון לכל המסך"
 
-#: ../shell/ev-window.c:4251
+#: ../shell/ev-window.c:4343
 msgid "Pre_sentation"
 msgstr "_מצגת"
 
-#: ../shell/ev-window.c:4252
+#: ../shell/ev-window.c:4344
 msgid "Run document as a presentation"
 msgstr "הרץ את המסמך כמצגת"
 
-#: ../shell/ev-window.c:4254
+#: ../shell/ev-window.c:4346
 msgid "_Best Fit"
 msgstr "_ההתאמה הטובה ביותר"
 
-#: ../shell/ev-window.c:4255
+#: ../shell/ev-window.c:4347
 msgid "Make the current document fill the window"
 msgstr "עשה שהמסמך הנוכחי ימלא את החלון"
 
-#: ../shell/ev-window.c:4257
+#: ../shell/ev-window.c:4349
 msgid "Fit Page _Width"
 msgstr "התאם ל_רוחב עמוד"
 
-#: ../shell/ev-window.c:4258
+#: ../shell/ev-window.c:4350
 msgid "Make the current document fill the window width"
 msgstr "עשה שהמסמך הנוכחי ימלא את רוחב העמוד"
 
 #. Links
-#: ../shell/ev-window.c:4265
+#: ../shell/ev-window.c:4357
 msgid "_Open Link"
 msgstr "פתח _קישור"
 
-#: ../shell/ev-window.c:4267
+#: ../shell/ev-window.c:4359
 msgid "_Go To"
 msgstr "_מעבר"
 
-#: ../shell/ev-window.c:4269
+#: ../shell/ev-window.c:4361
 msgid "Open in New _Window"
 msgstr "פתח ב_חלון חדש"
 
-#: ../shell/ev-window.c:4271
+#: ../shell/ev-window.c:4363
 msgid "_Copy Link Address"
 msgstr "העתק _מיקום קישור"
 
-#: ../shell/ev-window.c:4273
+#: ../shell/ev-window.c:4365
 msgid "_Save Image As..."
 msgstr "שמור _תמונה בשם..."
 
-#: ../shell/ev-window.c:4275
+#: ../shell/ev-window.c:4367
 msgid "Copy _Image"
 msgstr "העתק ת_מונה"
 
-#: ../shell/ev-window.c:4314
+#: ../shell/ev-window.c:4406
 msgid "Page"
 msgstr "עמוד"
 
-#: ../shell/ev-window.c:4315
+#: ../shell/ev-window.c:4407
 msgid "Select Page"
 msgstr "בחר עמוד"
 
-#: ../shell/ev-window.c:4326
+#: ../shell/ev-window.c:4418
 msgid "Zoom"
 msgstr "תקריב"
 
-#: ../shell/ev-window.c:4328
+#: ../shell/ev-window.c:4420
 msgid "Adjust the zoom level"
 msgstr "שנה את רמת התקריב"
 
-#: ../shell/ev-window.c:4338
+#: ../shell/ev-window.c:4430
 msgid "Navigation"
 msgstr "ניווט"
 
-#: ../shell/ev-window.c:4340
+#: ../shell/ev-window.c:4432
 msgid "Back"
 msgstr "חזור"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:4343
+#: ../shell/ev-window.c:4435
 msgid "Move across visited pages"
 msgstr "עבור בין הדפים שבוקרו"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4373
+#: ../shell/ev-window.c:4465
 msgid "Previous"
 msgstr "הקודם"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4378
+#: ../shell/ev-window.c:4470
 msgid "Next"
 msgstr "הבא"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4382
+#: ../shell/ev-window.c:4474
 msgid "Zoom In"
 msgstr "התקרב"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4386
+#: ../shell/ev-window.c:4478
 msgid "Zoom Out"
 msgstr "התרחק"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4394
+#: ../shell/ev-window.c:4486
 msgid "Fit Width"
 msgstr "התאם לרוחב"
 
-#: ../shell/ev-window.c:4607
+#: ../shell/ev-window.c:4681
 msgid "Unable to open external link"
 msgstr "לא ניתן לפתוח קישור חיצוני"
 
-#: ../shell/ev-window.c:4777
+#: ../shell/ev-window.c:4847
 msgid "Couldn't find appropriate format to save image"
 msgstr "לא נימצאה התצורה המתאימה לשמירת התמונה"
 
-#: ../shell/ev-window.c:4813
+#: ../shell/ev-window.c:4887
 msgid "The image could not be saved."
 msgstr "לא ניתן לשמור את התמונה."
 
-#: ../shell/ev-window.c:4845
+#: ../shell/ev-window.c:4919
 msgid "Save Image"
 msgstr "שמור תמונה"
 
-#: ../shell/ev-window.c:4904
+#: ../shell/ev-window.c:4978
 msgid "Unable to open attachment"
 msgstr "לא ניתן לפתוח את הצרופה"
 
-#: ../shell/ev-window.c:4956
+#: ../shell/ev-window.c:5030
 msgid "The attachment could not be saved."
 msgstr "לא ניתן לשמור את הצרופה."
 
-#: ../shell/ev-window.c:5001
+#: ../shell/ev-window.c:5075
 msgid "Save Attachment"
 msgstr "שמור צרופה"
 
@@ -1321,6 +1267,77 @@ msgid ""
 msgstr ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
+
+#~ msgid "BBox"
+#~ msgstr "BBox"
+
+#~ msgid "Letter"
+#~ msgstr "מכתב"
+
+#~ msgid "Tabloid"
+#~ msgstr "טבלאית"
+
+#~ msgid "Ledger"
+#~ msgstr "כרטסת"
+
+#~ msgid "Legal"
+#~ msgstr "חוקי"
+
+#~ msgid "Statement"
+#~ msgstr "הצהרה"
+
+#~ msgid "Executive"
+#~ msgstr "מוציא לפועל"
+
+#~ msgid "A0"
+#~ msgstr "A0"
+
+#~ msgid "A1"
+#~ msgstr "A1"
+
+#~ msgid "A2"
+#~ msgstr "A2"
+
+#~ msgid "A3"
+#~ msgstr "A3"
+
+#~ msgid "A4"
+#~ msgstr "A4"
+
+#~ msgid "A5"
+#~ msgstr "A5"
+
+#~ msgid "B4"
+#~ msgstr "B4"
+
+#~ msgid "B5"
+#~ msgstr "B5"
+
+#~ msgid "Folio"
+#~ msgstr "Folio"
+
+#~ msgid "Quarto"
+#~ msgstr "Quarto"
+
+#~ msgid "10x14"
+#~ msgstr "10x14"
+
+#~ msgid "Cannot open file “%s”."
+#~ msgstr "לא ניתן לפתוח את הקובץ “%s”."
+
+#~ msgid ""
+#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
+#~ "path"
+#~ msgstr "נכשל בטעינת המסמך “%s”. מפענך Ghostscript לא נמצא בנתיב"
+
+#~ msgid "Encapsulated PostScript"
+#~ msgstr "PostScript כמוס"
+
+#~ msgid "PostScript"
+#~ msgstr "PostScript"
+
+#~ msgid "Interpreter failed."
+#~ msgstr "מפענח נכשל."
 
 #~ msgid "Images"
 #~ msgstr "תמונות"
