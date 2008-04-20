@@ -4797,19 +4797,14 @@ ev_view_popup_cmd_open_link_new_window (GtkAction *action, EvWindow *window)
 static void
 ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 {
-	GtkClipboard *clipboard;
 	EvLinkAction *ev_action;
-	const gchar *uri;
 
 	ev_action = ev_link_get_action (window->priv->link);
 	if (!ev_action)
 		return;
 
-	uri = ev_link_action_get_uri (ev_action);
-
-	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
-					      GDK_SELECTION_CLIPBOARD);
-	gtk_clipboard_set_text (clipboard, uri, -1);
+	ev_view_copy_link_address (EV_VIEW (window->priv->view),
+				   ev_action);
 }
 
 

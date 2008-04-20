@@ -75,6 +75,8 @@ void 		ev_view_set_loading       (EvView 	  *view,
 				           gboolean        loading);
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);
+void            ev_view_copy_link_address (EvView         *view,
+					   EvLinkAction   *action);
 void		ev_view_select_all	  (EvView         *view);
 gboolean        ev_view_get_has_selection (EvView         *view);
 

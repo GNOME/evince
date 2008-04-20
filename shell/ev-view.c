@@ -320,6 +320,7 @@ static void       compute_selections                         (EvView            
 							      GdkPoint           *start,
 							      GdkPoint           *stop);
 static void       clear_selection                            (EvView             *view);
+static void       clear_link_selected                        (EvView             *view);
 static void       selection_free                             (EvViewSelection    *selection);
 static char*      get_selected_text                          (EvView             *ev_view);
 static void       ev_view_primary_get_cb                     (GtkClipboard       *clipboard,
@@ -3178,6 +3179,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 	}
 
 	if (view->selection_info.selections) {
+		clear_link_selected (view);
 		ev_view_update_primary_selection (view);
 		
 		if (view->selection_info.in_drag) {
@@ -3823,6 +3825,7 @@ ev_view_finalize (GObject *object)
 	g_free (view->find_status);
 
 	clear_selection (view);
+	clear_link_selected (view);
 
 	if (view->image_dnd_info.image)
 		g_object_unref (view->image_dnd_info.image);
@@ -5746,19 +5749,27 @@ get_selected_text (EvView *view)
 	return normalized_text;
 }
 
+static void
+ev_view_clipboard_copy (EvView      *view,
+			const gchar *text)
+{
+	GtkClipboard *clipboard;
+
+	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (view),
+					      GDK_SELECTION_CLIPBOARD);
+	gtk_clipboard_set_text (clipboard, text, -1);
+}
+
 void
 ev_view_copy (EvView *ev_view)
 {
-	GtkClipboard *clipboard;
 	char *text;
 
 	if (!EV_IS_SELECTION (ev_view->document))
 		return;
 
 	text = get_selected_text (ev_view);
-	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
-					      GDK_SELECTION_CLIPBOARD);
-	gtk_clipboard_set_text (clipboard, text, -1);
+	ev_view_clipboard_copy (ev_view, text);
 	g_free (text);
 }
 
@@ -5769,15 +5780,20 @@ ev_view_primary_get_cb (GtkClipboard     *clipboard,
 			gpointer          data)
 {
 	EvView *ev_view = EV_VIEW (data);
-	char *text;
 
-	if (!EV_IS_SELECTION (ev_view->document))
-		return;
-
-	text = get_selected_text (ev_view);
-	if (text) {
-		gtk_selection_data_set_text (selection_data, text, -1);
-		g_free (text);
+	if (ev_view->link_selected) {
+		gtk_selection_data_set_text (selection_data,
+					     ev_link_action_get_uri (ev_view->link_selected),
+					     -1);
+	} else if (EV_IS_SELECTION (ev_view->document) &&
+		   ev_view->selection_info.selections) {
+		gchar *text;
+		
+		text = get_selected_text (ev_view);
+		if (text) {
+			gtk_selection_data_set_text (selection_data, text, -1);
+			g_free (text);
+		}
 	}
 }
 
@@ -5788,6 +5804,7 @@ ev_view_primary_clear_cb (GtkClipboard *clipboard,
 	EvView *view = EV_VIEW (data);
 
 	clear_selection (view);
+	clear_link_selected (view);
 }
 
 static void
@@ -5798,7 +5815,7 @@ ev_view_update_primary_selection (EvView *ev_view)
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (ev_view),
                                               GDK_SELECTION_PRIMARY);
 
-	if (ev_view->selection_info.selections) {
+	if (ev_view->selection_info.selections || ev_view->link_selected) {
 		if (!gtk_clipboard_set_with_owner (clipboard,
 						   clipboard_targets,
 						   G_N_ELEMENTS (clipboard_targets),
@@ -5810,6 +5827,27 @@ ev_view_update_primary_selection (EvView *ev_view)
 		if (gtk_clipboard_get_owner (clipboard) == G_OBJECT (ev_view))
 			gtk_clipboard_clear (clipboard);
 	}
+}
+
+static void
+clear_link_selected (EvView *view)
+{
+	if (view->link_selected) {
+		g_object_unref (view->link_selected);
+		view->link_selected = NULL;
+	}
+}
+
+void
+ev_view_copy_link_address (EvView       *view,
+			   EvLinkAction *action)
+{
+	clear_link_selected (view);
+	
+	ev_view_clipboard_copy (view, ev_link_action_get_uri (action));
+	
+	view->link_selected = g_object_ref (action);
+	ev_view_update_primary_selection (view);
 }
 
 /*** Cursor operations ***/

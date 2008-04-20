@@ -161,6 +161,9 @@ struct _EvView {
 	EvViewSelectionMode selection_mode;
 	SelectionInfo selection_info;
 
+	/* Copy link address selection */
+	EvLinkAction *link_selected;
+
 	/* Image DND */
 	ImageDNDInfo image_dnd_info;
 
