@@ -104,7 +104,7 @@ get_compression_from_mime_type (const gchar *mime_type)
 }
 
 static gchar *
-get_mime_type_from_uri (const gchar *uri)
+get_mime_type_from_uri (const gchar *uri, GError **error)
 {
 	GFile     *file;
 	GFileInfo *file_info;
@@ -113,7 +113,7 @@ get_mime_type_from_uri (const gchar *uri)
 	file = g_file_new_for_uri (uri);
 	file_info = g_file_query_info (file,
 				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-				       0, NULL, NULL);
+				       0, NULL, error);
 	g_object_unref (file);
 
 	if (file_info == NULL)
@@ -126,7 +126,7 @@ get_mime_type_from_uri (const gchar *uri)
 }
 
 static gchar *
-get_mime_type_from_data (const gchar *uri)
+get_mime_type_from_data (const gchar *uri, GError **error)
 {
 	GFile            *file;
 	GFileInputStream *input_stream;
@@ -135,7 +135,7 @@ get_mime_type_from_data (const gchar *uri)
 
 	file = g_file_new_for_uri (uri);
 	
-	input_stream = g_file_read (file, NULL, NULL);
+	input_stream = g_file_read (file, NULL, error);
 	if (!input_stream) {
 		g_object_unref (file);
 		return NULL;
@@ -167,14 +167,10 @@ get_document_from_uri (const char        *uri,
 	*compression = EV_COMPRESSION_NONE;
 
 	mime_type = slow ?
-		get_mime_type_from_data (uri) :
-		get_mime_type_from_uri (uri);
+		get_mime_type_from_data (uri, error) :
+		get_mime_type_from_uri (uri, error);
 
 	if (mime_type == NULL) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,	
-    			     0,
-			     _("Unknown MIME Type"));
 		g_free (mime_type);
 		
 		return NULL;
@@ -191,9 +187,11 @@ get_document_from_uri (const char        *uri,
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
 			     0,
-			     _("Unhandled MIME type: “%s”"), mime_type);
+			     _("File type %s (%s) is not supported"),
+			     g_content_type_get_description (mime_type),
+			     mime_type);
 		g_free (mime_type);
-		
+
 		return NULL;
 	}
 
