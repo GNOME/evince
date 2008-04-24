@@ -1,8 +1,15 @@
+2008-04-24  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-document-factory.c: (get_document_from_uri):
+
+	Fix memory leak.
+	
 2008-04-24   Jean Baptiste Lallement  <jeanbaptiste.lallement@gmail.com>
 
 	* libdocument/ev-document-factory.c (get_mime_type_from_uri),
 	(get_mime_type_from_data), (get_document_from_uri),
 	(ev_document_factory_get_document):
+	
 	Improved error message about file opening failture.
 	Bug #529129.
 
