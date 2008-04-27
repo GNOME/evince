@@ -21,6 +21,7 @@
 
 #include "ev-application.h"
 #include "ev-metadata-manager.h"
+#include "ev-debug.h"
 
 #include <glib/gi18n.h>
 #include <gdk/gdkx.h>
@@ -378,6 +379,8 @@ main (int argc, char *argv[])
 	}
 #endif
 
+	ev_debug_init ();
+	
 #if WITH_GNOME	
 	gnome_authentication_manager_init ();
 #endif

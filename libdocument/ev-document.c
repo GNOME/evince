@@ -30,7 +30,6 @@ static void ev_document_class_init (gpointer g_class);
 GMutex *ev_doc_mutex = NULL;
 GMutex *ev_fc_mutex = NULL;
 
-#define LOG(x) 
 GType
 ev_document_get_type (void)
 {
@@ -118,7 +117,7 @@ ev_document_load (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gboolean retval;
-	LOG ("ev_document_load");
+
 	retval = iface->load (document, uri, error);
 
 	return retval;
@@ -132,7 +131,6 @@ ev_document_save (EvDocument  *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gboolean retval;
 
-	LOG ("ev_document_save");
 	retval = iface->save (document, uri, error);
 
 	return retval;
@@ -144,7 +142,6 @@ ev_document_get_n_pages (EvDocument  *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gint retval;
 
-	LOG ("ev_document_get_n_pages");
 	retval = iface->get_n_pages (document);
 
 	return retval;
@@ -173,7 +170,6 @@ ev_document_get_page_size (EvDocument *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
-	LOG ("ev_document_get_page_size");
 	iface->get_page_size (document, page, width, height);
 }
 
@@ -183,7 +179,6 @@ ev_document_get_page_label (EvDocument *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 
-	LOG ("ev_document_get_page_label");
 	if (iface->get_page_label == NULL)
 		return NULL;
 
@@ -215,7 +210,6 @@ ev_document_get_attachments (EvDocument *document)
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	GList *retval;
 
-	LOG ("ev_document_get_attachments");
 	if (iface->get_attachments == NULL)
 		return NULL;
 	retval = iface->get_attachments (document);
@@ -230,7 +224,6 @@ ev_document_render (EvDocument      *document,
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	cairo_surface_t *retval;
 
-	LOG ("ev_document_render_pixbuf");
 	g_assert (iface->render);
 
 	retval = iface->render (document, rc);

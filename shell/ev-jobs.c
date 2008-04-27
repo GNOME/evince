@@ -11,6 +11,7 @@
 #include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
 #include "ev-async-renderer.h"
+#include "ev-debug.h"
 
 #include <errno.h>
 #include <glib/gstdio.h>
@@ -98,6 +99,8 @@ ev_job_links_dispose (GObject *object)
 {
 	EvJobLinks *job;
 
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	job = EV_JOB_LINKS (object);
 
 	if (job->model) {
@@ -128,6 +131,8 @@ ev_job_render_dispose (GObject *object)
 
 	job = EV_JOB_RENDER (object);
 
+	ev_debug_message (DEBUG_JOBS, "page: %d", job->ev_page->index);
+	
 	if (job->ev_page) {
 		g_object_unref (job->ev_page);
 		job->ev_page = NULL;
@@ -179,6 +184,8 @@ ev_job_thumbnail_dispose (GObject *object)
 
 	job = EV_JOB_THUMBNAIL (object);
 
+	ev_debug_message (DEBUG_JOBS, "%d", job->page);
+	
 	if (job->thumbnail) {
 		g_object_unref (job->thumbnail);
 		job->thumbnail = NULL;
@@ -206,6 +213,8 @@ ev_job_print_dispose (GObject *object)
 
 	job = EV_JOB_PRINT (object);
 
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	if (job->temp_file) {
 		g_unlink (job->temp_file);
 		g_free (job->temp_file);
@@ -240,6 +249,8 @@ ev_job_print_class_init (EvJobPrintClass *class)
 void
 ev_job_finished (EvJob *job)
 {
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	g_return_if_fail (EV_IS_JOB (job));
 
 	g_signal_emit (job, job_signals[FINISHED], 0);
@@ -250,6 +261,8 @@ ev_job_links_new (EvDocument *document)
 {
 	EvJob *job;
 
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	job = g_object_new (EV_TYPE_JOB_LINKS, NULL);
 	job->document = g_object_ref (document);
 
@@ -259,6 +272,8 @@ ev_job_links_new (EvDocument *document)
 void
 ev_job_links_run (EvJobLinks *job)
 {
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	g_return_if_fail (EV_IS_JOB_LINKS (job));
 
 	ev_document_doc_mutex_lock ();
@@ -278,6 +293,8 @@ ev_job_render_new (EvDocument   *document,
 {
 	EvJobRender *job;
 
+	ev_debug_message (DEBUG_JOBS, "page: %d", page);
+	
 	job = g_object_new (EV_TYPE_JOB_RENDER, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
@@ -328,6 +345,8 @@ render_finished_cb (EvDocument      *document,
 static gboolean
 notify_page_ready (EvJobRender *job)
 {
+	ev_debug_message (DEBUG_JOBS, "%d", job->ev_page->index);
+	
 	g_signal_emit (job, job_render_signals[PAGE_READY], 0);
 
 	return FALSE;
@@ -336,6 +355,8 @@ notify_page_ready (EvJobRender *job)
 static void
 ev_job_render_page_ready (EvJobRender *job)
 {
+	ev_debug_message (DEBUG_JOBS, "%d", job->ev_page->index);
+	
 	job->page_ready = TRUE;
 	g_idle_add_full (G_PRIORITY_HIGH_IDLE,
 			 (GSourceFunc)notify_page_ready,
@@ -348,6 +369,8 @@ ev_job_render_run (EvJobRender *job)
 {
 	g_return_if_fail (EV_IS_JOB_RENDER (job));
 
+	ev_debug_message (DEBUG_JOBS, "page: %d", job->page);
+	
 	ev_document_doc_mutex_lock ();
 
 	if (EV_JOB (job)->async) {
@@ -415,6 +438,8 @@ ev_job_thumbnail_new (EvDocument *document,
 {
 	EvJobThumbnail *job;
 
+	ev_debug_message (DEBUG_JOBS, "%d", page);
+	
 	job = g_object_new (EV_TYPE_JOB_THUMBNAIL, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
@@ -430,6 +455,8 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 {
 	EvRenderContext *rc;
 	EvPage          *page;
+
+	ev_debug_message (DEBUG_JOBS, "%d", job->page);
 	
 	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
 
@@ -457,6 +484,8 @@ ev_job_fonts_new (EvDocument *document)
 {
 	EvJobFonts *job;
 
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	job = g_object_new (EV_TYPE_JOB_FONTS, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
@@ -469,6 +498,8 @@ ev_job_fonts_run (EvJobFonts *job)
 {
 	EvDocumentFonts *fonts;
 
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	g_return_if_fail (EV_IS_JOB_FONTS (job));
 
 	ev_document_doc_mutex_lock ();
@@ -490,6 +521,8 @@ ev_job_load_dispose (GObject *object)
 {
 	EvJobLoad *job = EV_JOB_LOAD (object);
 
+	ev_debug_message (DEBUG_JOBS, "%s", job->uri);
+	
 	if (job->uri) {
 		g_free (job->uri);
 		job->uri = NULL;
@@ -532,6 +565,8 @@ ev_job_load_new (const gchar    *uri,
 {
 	EvJobLoad *job;
 
+	ev_debug_message (DEBUG_JOBS, "%s", uri);
+	
 	job = g_object_new (EV_TYPE_JOB_LOAD, NULL);
 
 	job->uri = g_strdup (uri);
@@ -548,6 +583,8 @@ ev_job_load_new (const gchar    *uri,
 void
 ev_job_load_set_uri (EvJobLoad *job, const gchar *uri)
 {
+	ev_debug_message (DEBUG_JOBS, "%s", uri);
+	
 	if (job->uri)
 		g_free (job->uri);
 	job->uri = g_strdup (uri);
@@ -557,6 +594,8 @@ void
 ev_job_load_run (EvJobLoad *job)
 {
 	g_return_if_fail (EV_IS_JOB_LOAD (job));
+
+	ev_debug_message (DEBUG_JOBS, "%s", job->uri);
 	
 	if (job->error) {
 	        g_error_free (job->error);
@@ -589,6 +628,8 @@ ev_job_save_dispose (GObject *object)
 {
 	EvJobSave *job = EV_JOB_SAVE (object);
 
+	ev_debug_message (DEBUG_JOBS, "%s", job->uri);
+	
 	if (job->uri) {
 		g_free (job->uri);
 		job->uri = NULL;
@@ -624,6 +665,8 @@ ev_job_save_new (EvDocument  *document,
 {
 	EvJobSave *job;
 
+	ev_debug_message (DEBUG_JOBS, "uri: %s, document_uri: %s", uri, document_uri);
+
 	job = g_object_new (EV_TYPE_JOB_SAVE, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
@@ -641,6 +684,8 @@ ev_job_save_run (EvJobSave *job)
 	gchar *filename;
 	gchar *tmp_filename;
 	gchar *local_uri;
+
+	ev_debug_message (DEBUG_JOBS, "uri: %s, document_uri: %s", job->uri, job->document_uri);
 	
 	filename = ev_tmp_filename ("saveacopy");
 	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
@@ -733,6 +778,12 @@ ev_job_print_new (EvDocument    *document,
 		  gdouble        reverse)
 {
 	EvJobPrint *job;
+
+	ev_debug_message (DEBUG_JOBS, "format: %s, width: %f, height:%f,"
+			  "n_ranges: %d, pages_per_sheet: %d, copies: %d,"
+			  "collate: %s, reverse: %s",
+			  format, width, height, n_ranges, pages_per_sheet, copies,
+			  collate ? "True" : "False", reverse  ? "True" : "False");
 
 	job = g_object_new (EV_TYPE_JOB_PRINT, NULL);
 
@@ -889,6 +940,8 @@ ev_job_print_run (EvJobPrint *job)
 	
 	g_return_if_fail (EV_IS_JOB_PRINT (job));
 
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
 	if (job->temp_file)
 		g_free (job->temp_file);
 	job->temp_file = NULL;
