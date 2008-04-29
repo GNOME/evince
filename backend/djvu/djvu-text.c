@@ -62,7 +62,7 @@ djvu_text_idle_callback (void *data)
 		ddjvu_document_get_pagetext (djvu_document->d_document,
 					     djvu_text->search_page,
 					     "char")) == miniexp_dummy)
-		djvu_handle_events (djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE, NULL);
 
 	if (page_text != miniexp_nil) {
 		DjvuTextPage *page = djvu_text_page_new (page_text);
@@ -168,7 +168,7 @@ djvu_text_copy (DjvuDocument *djvu_document,
 	while ((page_text =
 		ddjvu_document_get_pagetext (djvu_document->d_document,
 					     page, "char")) == miniexp_dummy)
-		djvu_handle_events (djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE, NULL);
 
 	if (page_text != miniexp_nil) {
 		DjvuTextPage *page = djvu_text_page_new (page_text);

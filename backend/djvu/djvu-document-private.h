@@ -45,6 +45,7 @@ struct _DjvuDocument {
 
 int  djvu_document_get_n_pages (EvDocument   *document);
 void djvu_handle_events        (DjvuDocument *djvu_document, 
-			        int           wait);
+			        int           wait,
+				GError      **error);
 
 #endif /* __DJVU_DOCUMENT_INTERNAL_H__ */

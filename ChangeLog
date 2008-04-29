@@ -1,3 +1,17 @@
+2008-04-29  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/djvu/djvu-document-private.h:
+	* backend/djvu/djvu-links.c:
+	* backend/djvu/djvu-text.c:
+	* backend/djvu/djvu-document.c: (djvu_handle_events),
+	(djvu_wait_for_message), (djvu_document_load),
+	(document_get_page_size), (djvu_document_render),
+	(djvu_document_thumbnails_get_thumbnail),
+	(djvu_document_file_exporter_end):
+
+	Make sure load job doesn't finish successfully when the document
+	is not successfully decoded by libdjvu. Fixes bug #530202.
+	
 2008-04-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:

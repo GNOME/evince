@@ -344,7 +344,7 @@ djvu_links_has_document_links (EvDocumentLinks *document_links)
 	miniexp_t outline;
 
 	while ((outline = ddjvu_document_get_outline (djvu_document->d_document)) == miniexp_dummy)
-		djvu_handle_events (djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE, NULL);
 
 	if (outline) {
 		ddjvu_miniexp_release (djvu_document->d_document, outline);
@@ -367,10 +367,10 @@ djvu_links_get_links (EvDocumentLinks *document_links,
         ddjvu_pageinfo_t page_info;
 
 	while ((page_annotations = ddjvu_document_get_pageanno (djvu_document->d_document, page)) == miniexp_dummy)
-		djvu_handle_events (djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE, NULL);
 
 	while (ddjvu_document_get_pageinfo (djvu_document->d_document, page, &page_info) < DDJVU_JOB_OK)
-		djvu_handle_events(djvu_document, TRUE);
+		djvu_handle_events(djvu_document, TRUE, NULL);
 
 	if (page_annotations) {
 		hyperlinks = ddjvu_anno_get_hyperlinks (page_annotations);
@@ -417,7 +417,7 @@ djvu_links_get_links_model (EvDocumentLinks *document_links)
 	miniexp_t outline = miniexp_nil;
 
 	while ((outline = ddjvu_document_get_outline (djvu_document->d_document)) == miniexp_dummy)
-		djvu_handle_events (djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE, NULL);
 
 	if (outline) {
 		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS,

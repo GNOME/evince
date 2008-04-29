@@ -68,8 +68,51 @@ EV_BACKEND_REGISTER_WITH_CODE (DjvuDocument, djvu_document,
      });
 
 
-void 
-djvu_handle_events (DjvuDocument *djvu_document, int wait)
+#define EV_DJVU_ERROR ev_djvu_error_quark ()
+
+static GQuark
+ev_djvu_error_quark (void)
+{
+	static GQuark q = 0;
+	if (q == 0)
+		q = g_quark_from_static_string ("ev-djvu-quark");
+	
+	return q;
+}
+
+static void
+handle_message (const ddjvu_message_t *msg, GError **error)
+{
+	switch (msg->m_any.tag) {
+	        case DDJVU_ERROR: {
+			gchar *error_str;
+			
+			if (msg->m_error.filename) {
+				error_str = g_strdup_printf ("DjvuLibre error: %s:%d",
+							     msg->m_error.filename,
+							     msg->m_error.lineno);
+			} else {
+				error_str = g_strdup_printf ("DjvuLibre error: %s",
+							     msg->m_error.message);
+			}
+			
+			if (error) {
+				g_set_error (error, EV_DJVU_ERROR, 0, error_str);
+			} else {
+				g_warning (error_str);
+			}
+				
+			g_free (error_str);
+			return;
+			}						     
+			break;
+	        default:
+			break;
+	}
+}
+
+void
+djvu_handle_events (DjvuDocument *djvu_document, int wait, GError **error)
 {
 	ddjvu_context_t *ctx = djvu_document->d_context;
 	const ddjvu_message_t *msg;
@@ -78,23 +121,31 @@ djvu_handle_events (DjvuDocument *djvu_document, int wait)
 		return;
 
 	if (wait)
-		msg = ddjvu_message_wait (ctx);
+		ddjvu_message_wait (ctx);
 
 	while ((msg = ddjvu_message_peek (ctx))) {
-		switch (msg->m_any.tag) {
-			case DDJVU_ERROR:
-				g_warning ("DjvuLibre error: %s", 
-					   msg->m_error.message);
-				if (msg->m_error.filename)
-					g_warning ("DjvuLibre error: %s:%d", 
-						   msg->m_error.filename,
-						   msg->m_error.lineno);
-				break;
-			default:
-				break;
-		}
+		handle_message (msg, error);
 		ddjvu_message_pop (ctx);
+		if (error && *error)
+			return;
 	}
+}
+
+static void
+djvu_wait_for_message (DjvuDocument *djvu_document, ddjvu_message_tag_t message, GError **error)
+{
+	ddjvu_context_t *ctx = djvu_document->d_context;
+	const ddjvu_message_t *msg;
+
+	ddjvu_message_wait (ctx);
+	while ((msg = ddjvu_message_peek (ctx)) && (msg->m_any.tag != message)) {
+		handle_message (msg, error);
+		ddjvu_message_pop (ctx);
+		if (error && *error)
+			return;
+	}
+	if (msg && msg->m_any.tag == message)
+		ddjvu_message_pop (ctx);
 }
 
 static gboolean
@@ -106,6 +157,7 @@ djvu_document_load (EvDocument  *document,
 	ddjvu_document_t *doc;
 	gchar *filename;
 	gboolean missing_files = FALSE;
+	GError *djvu_error = NULL;
 
 	/* FIXME: We could actually load uris  */
 	filename = g_filename_from_uri (uri, NULL, error);
@@ -124,8 +176,36 @@ djvu_document_load (EvDocument  *document,
 
 	djvu_document->d_document = doc;
 
-	while (!ddjvu_document_decoding_done (djvu_document->d_document)) 
-		djvu_handle_events (djvu_document, TRUE);
+	djvu_wait_for_message (djvu_document, DDJVU_DOCINFO, &djvu_error);
+	if (djvu_error) {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     djvu_error->message);
+		g_error_free (djvu_error);
+		g_free (filename);
+		ddjvu_document_release (djvu_document->d_document);
+		djvu_document->d_document = NULL;
+
+		return FALSE;
+	}
+
+	if (ddjvu_document_decoding_error (djvu_document->d_document))
+		djvu_handle_events (djvu_document, TRUE, &djvu_error);
+
+	if (djvu_error) {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     djvu_error->message);
+		g_error_free (djvu_error);
+		g_free (filename);
+		ddjvu_document_release (djvu_document->d_document);
+		djvu_document->d_document = NULL;
+		
+		return FALSE;
+	}
+	
 	g_free (djvu_document->uri);
 	djvu_document->uri = g_strdup (uri);
 
@@ -204,10 +284,10 @@ document_get_page_size (DjvuDocument *djvu_document,
 	ddjvu_status_t r;
 	
 	while ((r = ddjvu_document_get_pageinfo(djvu_document->d_document, page, &info)) < DDJVU_JOB_OK)
-		djvu_handle_events(djvu_document, TRUE);
+		djvu_handle_events(djvu_document, TRUE, NULL);
 	
 	if (r >= DDJVU_JOB_FAILED)
-		djvu_handle_events(djvu_document, TRUE);
+		djvu_handle_events(djvu_document, TRUE, NULL);
 
         *width = info.width * SCALE_FACTOR; 
         *height = info.height * SCALE_FACTOR;
@@ -245,7 +325,7 @@ djvu_document_render (EvDocument      *document,
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page->index);
 	
 	while (!ddjvu_page_decoding_done (d_page))
-		djvu_handle_events(djvu_document, TRUE);
+		djvu_handle_events(djvu_document, TRUE, NULL);
 
 	page_width = ddjvu_page_get_width (d_page) * rc->scale * SCALE_FACTOR + 0.5;
 	page_height = ddjvu_page_get_height (d_page) * rc->scale * SCALE_FACTOR + 0.5;
@@ -435,7 +515,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 	pixels = gdk_pixbuf_get_pixels (pixbuf);
 	
 	while (ddjvu_thumbnail_status (djvu_document->d_document, rc->page->index, 1) < DDJVU_JOB_OK)
-		djvu_handle_events(djvu_document, TRUE);
+		djvu_handle_events(djvu_document, TRUE, NULL);
 		    
 	ddjvu_thumbnail_render (djvu_document->d_document, rc->page->index, 
 				&thumb_width, &thumb_height,
@@ -504,7 +584,7 @@ djvu_document_file_exporter_end (EvFileExporter *exporter)
 
 	ddjvu_job_t * job = ddjvu_document_print(djvu_document->d_document, fn, d_optc, d_optv);
 	while (!ddjvu_job_done(job)) {	
-		djvu_handle_events (djvu_document, TRUE);
+		djvu_handle_events (djvu_document, TRUE, NULL);
 	}
 
 	fclose(fn); 
