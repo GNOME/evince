@@ -1,3 +1,10 @@
+2008-05-01  Hans Petter Jansson  <hpj@novell.com>
+
+	* backend/impress/iksemel.c (sax_core): Fix a free() that should
+	be an iks_free(). Fix an array overflow in the XML parser that
+	would occur whenever the number of attributes in a tag was greater
+	than 0 and divisible by 6. Fixes GNOME bug #530852.
+
 2008-04-19  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* libdocument/ev-document-factory.c: (get_document_from_uri):
