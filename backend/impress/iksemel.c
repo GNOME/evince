@@ -761,11 +761,11 @@ sax_core (iksparser *prs, char *buf, int len)
 					if (prs->attcur >= (prs->attmax * 2)) {
 						void *tmp;
 						prs->attmax += 12;
-						tmp = iks_malloc (sizeof(char *) * 2 * prs->attmax);
+						tmp = iks_malloc (sizeof(char *) * (2 * prs->attmax + 1));
 						if (!tmp) return IKS_NOMEM;
-						memset (tmp, 0, sizeof(char *) * 2 * prs->attmax);
+						memset (tmp, 0, sizeof(char *) * (2 * prs->attmax + 1));
 						memcpy (tmp, prs->atts, sizeof(char *) * prs->attcur);
-						free (prs->atts);
+						iks_free (prs->atts);
 						prs->atts = tmp;
 					}
 				}
