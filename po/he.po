@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-19 09:32+0000\n"
+"POT-Creation-Date: 2008-04-24 02:16+0000\n"
 "PO-Revision-Date: 2005-08-28 20:29+0300\n"
 "Last-Translator: Yuval Tanny <>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -210,22 +210,22 @@ msgstr "לא ניתן לפתוח את הצרופה “%s”: %s"
 msgid "Couldn't open attachment “%s”"
 msgstr "לא ניתן לפתוח את הצרופה “%s”"
 
-#: ../libdocument/ev-document-factory.c:177
-#: ../libdocument/ev-document-factory.c:295
+#: ../libdocument/ev-document-factory.c:190
+#, c-format
+msgid "File type %s (%s) is not supported"
+msgstr ""
+"סוג הקובץ %s ‏(%s) אינו נתמך"
+
+#: ../libdocument/ev-document-factory.c:291
 #, c-format
 msgid "Unknown MIME Type"
 msgstr "סוג MIME לא ידוע"
 
-#: ../libdocument/ev-document-factory.c:196
-#, c-format
-msgid "Unhandled MIME type: “%s”"
-msgstr "סוג MIME לא ידוע: “%s”"
-
-#: ../libdocument/ev-document-factory.c:350
+#: ../libdocument/ev-document-factory.c:346
 msgid "All Documents"
 msgstr "כל המסמכים"
 
-#: ../libdocument/ev-document-factory.c:382
+#: ../libdocument/ev-document-factory.c:378
 msgid "All Files"
 msgstr "כל הקבצים"
 
@@ -631,7 +631,7 @@ msgstr "אוסף מידע אודות גופנים... %3d%%"
 msgid "Attachments"
 msgstr "צרופות"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3643
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3645
 msgid "Loading..."
 msgstr "טוען..."
 
@@ -667,69 +667,69 @@ msgstr "גלול תצוגה למטה"
 msgid "Document View"
 msgstr "תצוכת מסמך"
 
-#: ../shell/ev-view.c:1442
+#: ../shell/ev-view.c:1443
 msgid "Go to first page"
 msgstr "לך לעמוד הראשון"
 
-#: ../shell/ev-view.c:1444
+#: ../shell/ev-view.c:1445
 msgid "Go to previous page"
 msgstr "לך לעמוד הקודם"
 
-#: ../shell/ev-view.c:1446
+#: ../shell/ev-view.c:1447
 msgid "Go to next page"
 msgstr "לך לעמוד הבא"
 
-#: ../shell/ev-view.c:1448
+#: ../shell/ev-view.c:1449
 msgid "Go to last page"
 msgstr "לך לעמוד האחרון"
 
-#: ../shell/ev-view.c:1450
+#: ../shell/ev-view.c:1451
 msgid "Go to page"
 msgstr "לך לעמוד"
 
-#: ../shell/ev-view.c:1452
+#: ../shell/ev-view.c:1453
 msgid "Find"
 msgstr "חפש"
 
-#: ../shell/ev-view.c:1480
+#: ../shell/ev-view.c:1481
 #, c-format
 msgid "Go to page %s"
 msgstr "לך לעמוד %s"
 
-#: ../shell/ev-view.c:1486
+#: ../shell/ev-view.c:1487
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "לך ל-%s בקובץ “%s”"
 
-#: ../shell/ev-view.c:1489
+#: ../shell/ev-view.c:1490
 #, c-format
 msgid "Go to file “%s”"
 msgstr "לך לקובץ “%s”"
 
-#: ../shell/ev-view.c:1497
+#: ../shell/ev-view.c:1498
 #, c-format
 msgid "Launch %s"
 msgstr "שגר את %s"
 
-#: ../shell/ev-view.c:2449
+#: ../shell/ev-view.c:2450
 msgid "End of presentation. Press Escape to exit."
 msgstr "סוף המצגת. לחץ Escape ליציאה."
 
-#: ../shell/ev-view.c:3372
+#: ../shell/ev-view.c:3374
 msgid "Jump to page:"
 msgstr "קפוץ לעמוד:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:5153
+#: ../shell/ev-view.c:5156
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "‏1 נמצא בעמוד זה"
 msgstr[1] "‏%d נמצאו בעמוד זה"
 
-#: ../shell/ev-view.c:5162
+#: ../shell/ev-view.c:5165
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "‏%3d%% נשארו לחיפוש"
@@ -1171,27 +1171,27 @@ msgstr "התאם לרוחב"
 msgid "Unable to open external link"
 msgstr "לא ניתן לפתוח קישור חיצוני"
 
-#: ../shell/ev-window.c:4847
+#: ../shell/ev-window.c:4842
 msgid "Couldn't find appropriate format to save image"
 msgstr "לא נימצאה התצורה המתאימה לשמירת התמונה"
 
-#: ../shell/ev-window.c:4887
+#: ../shell/ev-window.c:4882
 msgid "The image could not be saved."
 msgstr "לא ניתן לשמור את התמונה."
 
-#: ../shell/ev-window.c:4919
+#: ../shell/ev-window.c:4914
 msgid "Save Image"
 msgstr "שמור תמונה"
 
-#: ../shell/ev-window.c:4978
+#: ../shell/ev-window.c:4973
 msgid "Unable to open attachment"
 msgstr "לא ניתן לפתוח את הצרופה"
 
-#: ../shell/ev-window.c:5030
+#: ../shell/ev-window.c:5025
 msgid "The attachment could not be saved."
 msgstr "לא ניתן לשמור את הצרופה."
 
-#: ../shell/ev-window.c:5075
+#: ../shell/ev-window.c:5070
 msgid "Save Attachment"
 msgstr "שמור צרופה"
 
@@ -1267,6 +1267,9 @@ msgid ""
 msgstr ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
+
+#~ msgid "Unhandled MIME type: “%s”"
+#~ msgstr "סוג MIME לא ידוע: “%s”"
 
 #~ msgid "BBox"
 #~ msgstr "BBox"
