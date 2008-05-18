@@ -216,10 +216,12 @@ get_default_user_units (void)
 		return GTK_UNIT_MM;  /* metric */
 #endif
 
+	if (strcmp (e, "default:mm") == 0)
+		return GTK_UNIT_MM;
 	if (strcmp (e, "default:inch") == 0)
 		return GTK_UNIT_INCH;
-	else if (strcmp (e, "default:mm") == 0)
-		g_warning ("Whoever translated default:mm did so wrongly.\n");
+	
+	g_warning ("Whoever translated default:mm did so wrongly.\n");
 				
 	return GTK_UNIT_MM;
 }
