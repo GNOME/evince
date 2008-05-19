@@ -14,7 +14,7 @@ libevbackend_la_LIBADD = $(LIB_LIBS)
 NOINST_H_FILES =				\
 	ev-backend-marshalers.h			\
 	ev-backends-manager.h			\
-	ev_debug.h				\
+	ev-debug.h				\
 	ev-document-factory.h			\
 	ev-module.h
 
