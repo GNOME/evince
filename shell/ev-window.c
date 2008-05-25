@@ -2228,7 +2228,7 @@ ev_window_print_send (EvWindow    *window,
 		GtkPrintJob *job;
 		GError      *error = NULL;
 	
-		job = gtk_print_job_new ("evince-print",
+		job = gtk_print_job_new (gtk_window_get_title (GTK_WINDOW (window)),
 					 window->priv->printer,
 					 settings,
 					 window->priv->print_page_setup);
@@ -3330,7 +3330,7 @@ ev_window_do_preview_print (EvWindow *window)
 
 	page_setup = gtk_page_setup_new ();
 
-	job = gtk_print_job_new ("evince-print",
+	job = gtk_print_job_new (gtk_window_get_title (GTK_WINDOW (window)),
 				 priv->printer,
 				 priv->print_settings,
 				 page_setup);

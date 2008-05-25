@@ -1,3 +1,11 @@
+2008-05-25  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_print_send),
+	(ev_window_do_preview_print):
+
+	Use the window title as print job name instead of just
+	"evince-print". Fixes bug #534493.
+	
 2008-05-19  Frederic Peters  <fpeters@0d.be>
 
 	* libdocument/Makefile.am: fixed typo in ev-debug.h filename.
