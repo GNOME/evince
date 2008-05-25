@@ -4193,7 +4193,7 @@ static const GtkActionEntry entries[] = {
 	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open..."), "<control>O",
 	  N_("Open an existing document"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
-	{ "FileOpenCopy", NULL, N_("Op_en a Copy"), NULL,
+	{ "FileOpenCopy", NULL, N_("Op_en a Copy"), "<control>N",
 	  N_("Open a copy of the current document in a new window"),
 	  G_CALLBACK (ev_window_cmd_file_open_copy) },
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), "<control>S",
