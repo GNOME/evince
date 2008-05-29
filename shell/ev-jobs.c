@@ -131,9 +131,8 @@ ev_job_render_dispose (GObject *object)
 
 	job = EV_JOB_RENDER (object);
 
-	ev_debug_message (DEBUG_JOBS, "page: %d", job->ev_page->index);
-	
 	if (job->ev_page) {
+		ev_debug_message (DEBUG_JOBS, "page: %d", job->ev_page->index);
 		g_object_unref (job->ev_page);
 		job->ev_page = NULL;
 	}
