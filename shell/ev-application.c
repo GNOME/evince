@@ -645,7 +645,7 @@ ev_application_shutdown (EvApplication *application)
 						    application->print_settings_file,
 						    &error);
 			if (error) {
-				g_warning (error->message);
+				g_warning ("%s", error->message);
 				g_error_free (error);
 			}
 
@@ -803,7 +803,7 @@ ev_application_get_print_settings (EvApplication *application)
 			gtk_print_settings_new_from_file (application->print_settings_file, &error);
 		
 		if (error) {
-			g_warning (error->message);
+			g_warning ("%s", error->message);
 			g_error_free (error);
 		} else {
 			return application->print_settings;

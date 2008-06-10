@@ -1941,7 +1941,7 @@ window_save_file_copy_ready_cb (GFile        *src,
 					 _("The file could not be saved as “%s”."),
 					 name);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  error->message);
+						  "%s", error->message);
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (gtk_widget_destroy),
 			  NULL);
@@ -2156,7 +2156,7 @@ ev_window_print_finished (GtkPrintJob *print_job,
 						 GTK_BUTTONS_OK,
 						 _("Failed to print document"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  error->message);
+							  "%s", error->message);
 
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
@@ -2243,7 +2243,7 @@ ev_window_print_send (EvWindow    *window,
 					    window, NULL);
 		} else {
 			ev_window_clear_print_job (window);
-			g_warning (error->message);
+			g_warning ("%s", error->message);
 			g_error_free (error);
 		}
 	}
@@ -2256,7 +2256,7 @@ ev_window_print_job_cb (EvJobPrint *job,
 			EvWindow   *window)
 {
 	if (job->error) {
-		g_warning (job->error->message);
+		g_warning ("%s", job->error->message);
 		ev_window_clear_print_job (window);
 		return;
 	}
@@ -3250,7 +3250,7 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 	screen = gtk_widget_get_screen (GTK_WIDGET (ev_window));
 	gdk_spawn_command_line_on_screen (screen, command, &error);
 	if (error != NULL) {
-		g_warning (error->message);
+		g_warning ("%s", error->message);
 		g_error_free (error);
 	}
 	g_free (command);
@@ -3306,7 +3306,7 @@ ev_window_preview_print_finished (GtkPrintJob *print_job,
 						 GTK_BUTTONS_OK,
 						 _("Failed to print document"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  error->message);
+							  "%s", error->message);
 
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
@@ -3350,7 +3350,7 @@ ev_window_do_preview_print (EvWindow *window)
 				    (GtkPrintJobCompleteFunc)ev_window_preview_print_finished,
 				    window, NULL);
 	} else {
-		g_warning (error->message);
+		g_warning ("%s", error->message);
 		g_error_free (error);
 	}
 
@@ -3375,7 +3375,7 @@ ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 									   &error);
 			
 			if (error) {
-				g_warning (error->message);
+				g_warning ("%s", error->message);
 				g_error_free (error);
 				print_settings = NULL;
 			}

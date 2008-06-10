@@ -118,7 +118,7 @@ ev_backends_manager_load (void)
 
 	dir = g_dir_open (EV_BACKENDSDIR, 0, &error);
 	if (!dir) {
-		g_warning (error->message);
+		g_warning ("%s", error->message);
 		g_error_free (error);
 
 		return FALSE;

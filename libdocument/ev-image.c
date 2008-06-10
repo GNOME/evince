@@ -152,7 +152,7 @@ ev_image_save_tmp (EvImage   *image,
 	}
 
 	/* Erro saving image */
-	g_warning (error->message);
+	g_warning ("%s", error->message);
 	g_error_free (error);
 	g_free (filename);
 

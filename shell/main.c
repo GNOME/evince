@@ -252,7 +252,7 @@ load_files_remote (const char **files,
 	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
 
 	if (connection == NULL) {
-		g_warning (error->message);
+		g_warning ("%s", error->message);
 		g_error_free (error);	
 
 		return FALSE;
@@ -268,7 +268,7 @@ load_files_remote (const char **files,
 					G_TYPE_UINT, timestamp,
 					G_TYPE_INVALID,
 					G_TYPE_INVALID)) {
-			g_warning (error->message);
+			g_warning ("%s", error->message);
 			g_clear_error (&error);
 			g_object_unref (remote_object);
 			dbus_g_connection_unref (connection);
@@ -298,7 +298,7 @@ load_files_remote (const char **files,
 					G_TYPE_UINT, timestamp,
 					G_TYPE_INVALID,
 					G_TYPE_INVALID)) {
-			g_warning (error->message);
+			g_warning ("%s", error->message);
 			g_clear_error (&error);
 			g_free (uri);
 			continue;

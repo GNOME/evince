@@ -295,7 +295,7 @@ ev_sidebar_attachments_button_press (EvSidebarAttachments *ev_attachbar,
 				ev_attachment_open (attachment, &error);
 				
 				if (error) {
-					g_warning (error->message);
+					g_warning ("%s", error->message);
 					g_error_free (error);
 				}
 				
@@ -434,7 +434,7 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 		}
 	
 		if (error) {
-			g_warning (error->message);
+			g_warning ("%s", error->message);
 			g_error_free (error);
 		}
 
