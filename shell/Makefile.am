@@ -25,6 +25,8 @@ evince_SOURCES=				\
 	ev-job-queue.c			\
 	ev-jobs.h			\
 	ev-jobs.c			\
+	ev-file-monitor.h		\
+	ev-file-monitor.c		\
 	ev-history.c			\
 	ev-history.h			\
 	ev-marshal.c			\

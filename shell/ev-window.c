@@ -67,6 +67,7 @@
 #include "ev-image.h"
 #include "ev-message-area.h"
 #include "ev-mount-operation.h"
+#include "ev-file-monitor.h"
 
 #include <gtk/gtkprintunixdialog.h>
 
@@ -159,6 +160,7 @@ struct _EvWindowPrivate {
 	EvLinkDest *dest;
 	gboolean unlink_temp_file;
 	gboolean in_reload;
+	EvFileMonitor *monitor;
 	
 	EvDocument *document;
 	EvHistory *history;
@@ -167,6 +169,7 @@ struct _EvWindowPrivate {
 	EvWindowTitle *title;
 
 	EvJob            *load_job;
+	EvJob            *reload_job;
 	EvJob            *thumbnail_job;
 	EvJob            *save_job;
 	EvJob            *print_job;
@@ -217,6 +220,9 @@ static void     ev_window_set_page_mode                 (EvWindow         *windo
 							 EvWindowPageMode  page_mode);
 static void	ev_window_load_job_cb  			(EvJobLoad        *job,
 							 gpointer          data);
+static void     ev_window_reload_document               (EvWindow         *window);
+static void     ev_window_reload_job_cb                 (EvJobLoad        *job,
+							 EvWindow         *window);
 static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
 							 EvWindow         *ev_window);
 static void     ev_window_print_job_cb                  (EvJobPrint       *job,
@@ -1170,6 +1176,13 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 }
 
 static void
+ev_window_document_changed (EvWindow *ev_window,
+			    gpointer  user_data)
+{
+	ev_window_reload_document (ev_window);
+}
+
+static void
 password_dialog_response (GtkWidget *password_dialog,
 			  gint       response_id,
 			  EvWindow  *ev_window)
@@ -1247,6 +1260,20 @@ ev_window_clear_load_job (EvWindow *ev_window)
 }
 
 static void
+ev_window_clear_reload_job (EvWindow *ev_window)
+{
+	if (ev_window->priv->reload_job != NULL) {
+		
+		if (!ev_window->priv->reload_job->finished)
+			ev_job_queue_remove_job (ev_window->priv->reload_job);
+		
+		g_signal_handlers_disconnect_by_func (ev_window->priv->reload_job, ev_window_reload_job_cb, ev_window);
+		g_object_unref (ev_window->priv->reload_job);
+		ev_window->priv->reload_job = NULL;
+	}
+}
+
+static void
 ev_window_clear_local_uri (EvWindow *ev_window)
 {
 	if (ev_window->priv->local_uri) {
@@ -1301,7 +1328,7 @@ ev_window_load_job_cb  (EvJobLoad *job,
 	EvDocument *document = EV_JOB (job)->document;
 
 	g_assert (job->uri);
-	
+
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 
 	/* Success! */
@@ -1340,23 +1367,19 @@ ev_window_load_job_cb  (EvJobLoad *job,
 				break;
 		}
 
-		/* Restart the search after reloading */
-		if (ev_window->priv->in_reload) {
-			GtkWidget *widget;
-			
-			widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
-			if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
-				find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
-							    NULL, ev_window);
-			}
-		} else if (job->search_string && EV_IS_DOCUMENT_FIND (document)) {
+		if (job->search_string && EV_IS_DOCUMENT_FIND (document)) {
 			ev_window_cmd_edit_find (NULL, ev_window);
 			egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
 							job->search_string);
 		}
 
+		/* Create a monitor for the document */
+		ev_window->priv->monitor = ev_file_monitor_new (job->uri);
+		g_signal_connect_swapped (G_OBJECT (ev_window->priv->monitor), "changed",
+					  G_CALLBACK (ev_window_document_changed),
+					  ev_window);
+		
 		ev_window_clear_load_job (ev_window);
-		ev_window->priv->in_reload = FALSE;
 		return;
 	}
 
@@ -1381,10 +1404,32 @@ ev_window_load_job_cb  (EvJobLoad *job,
 					 _("Unable to open document"),
 					 job->error);
 		ev_window_clear_load_job (ev_window);
-		ev_window->priv->in_reload = FALSE;
 	}	
+}
 
-	return;
+static void
+ev_window_reload_job_cb (EvJobLoad *job,
+			 EvWindow  *ev_window)
+{
+	GtkWidget *widget;
+	
+	if (job->error) {
+		ev_window_clear_reload_job (ev_window);
+		ev_window->priv->in_reload = FALSE;
+		return;
+	}
+
+	ev_window_set_document (ev_window, EV_JOB (job)->document);
+
+	/* Restart the search after reloading */
+	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
+	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
+		find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
+					    NULL, ev_window);
+	}
+
+	ev_window_clear_reload_job (ev_window);
+	ev_window->priv->in_reload = FALSE;
 }
 
 /**
@@ -1533,9 +1578,17 @@ ev_window_open_uri (EvWindow       *ev_window,
 {
 	GFile *source_file;
 
+	ev_window->priv->in_reload = FALSE;
+	
 	if (ev_window->priv->uri &&
 	    g_ascii_strcasecmp (ev_window->priv->uri, uri) == 0) {
-		ev_window->priv->in_reload = TRUE;
+		ev_window_reload_document (ev_window);
+		return;
+	}
+
+	if (ev_window->priv->monitor) {
+		g_object_unref (ev_window->priv->monitor);
+		ev_window->priv->monitor = NULL;
 	}
 	
 	ev_window_close_dialogs (ev_window);
@@ -1570,6 +1623,22 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_object_unref (source_file);
 		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
 	}
+}
+
+static void
+ev_window_reload_document (EvWindow *ev_window)
+{
+	const gchar *uri;
+
+	ev_window_clear_reload_job (ev_window);
+	ev_window->priv->in_reload = TRUE;
+	
+	uri = ev_window->priv->local_uri ? ev_window->priv->local_uri : ev_window->priv->uri;
+	ev_window->priv->reload_job = ev_job_load_new (uri, NULL, 0, NULL);
+	g_signal_connect (ev_window->priv->reload_job, "finished",
+			  G_CALLBACK (ev_window_reload_job_cb),
+			  ev_window);
+	ev_job_queue_add_job (ev_window->priv->reload_job, EV_JOB_PRIORITY_LOW);
 }
 
 static void
@@ -3194,11 +3263,7 @@ ev_window_cmd_go_backward (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
-	gchar *uri;
-
-	uri = g_strdup (ev_window->priv->uri);
-	ev_window_open_uri (ev_window, uri, NULL, 0, NULL, FALSE, NULL);
-	g_free (uri);
+	ev_window_reload_document (ev_window);
 }
 
 static void
@@ -4012,6 +4077,11 @@ ev_window_dispose (GObject *object)
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = window->priv;
 
+	if (priv->monitor) {
+		g_object_unref (priv->monitor);
+		priv->monitor = NULL;
+	}
+	
 	if (priv->title) {
 		ev_window_title_free (priv->title);
 		priv->title = NULL;
@@ -4073,6 +4143,10 @@ ev_window_dispose (GObject *object)
 
 	if (priv->load_job) {
 		ev_window_clear_load_job (window);
+	}
+
+	if (priv->reload_job) {
+		ev_window_clear_reload_job (window);
 	}
 
 	if (priv->save_job) {

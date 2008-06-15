@@ -1,3 +1,16 @@
+2008-06-15  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/Makefile.am:
+	* shell/ev-file-monitor.[ch]:
+	* shell/ev-window.c: (ev_window_document_changed),
+	(ev_window_clear_reload_job), (ev_window_load_job_cb),
+	(ev_window_reload_job_cb), (ev_window_open_uri),
+	(ev_window_reload_document), (ev_window_cmd_view_reload),
+	(ev_window_dispose):
+
+	Automaticly reload the document when the file has changed on
+	disk. Bug #304249.
+	
 2008-06-10  Cosimo Cecchi  <cosimoc@gnome.org>
 
 	* libdocument/ev-backends-manager.c: (ev_backends_manager_load):
