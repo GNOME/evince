@@ -631,9 +631,9 @@ ev_window_set_message_area (EvWindow  *window,
 }
 
 static void
-ev_window_error_message_response_cb (EvMessageArea *area,
-				     gint           response_id,
-				     EvWindow      *window)
+ev_window_message_area_response_cb (EvMessageArea *area,
+				    gint           response_id,
+				    EvWindow      *window)
 {
 	ev_window_set_message_area (window, NULL);
 }
@@ -654,7 +654,28 @@ ev_window_error_message (GtkWindow *window, const gchar *msg, GError *error)
 	if (error)
 		ev_message_area_set_secondary_text (EV_MESSAGE_AREA (area), error->message);
 	g_signal_connect (area, "response",
-			  G_CALLBACK (ev_window_error_message_response_cb),
+			  G_CALLBACK (ev_window_message_area_response_cb),
+			  window);
+	gtk_widget_show (area);
+	ev_window_set_message_area (EV_WINDOW (window), area);
+}
+
+static void
+ev_window_warning_message (GtkWindow *window, const gchar *msg)
+{
+	GtkWidget *area;
+
+	if (EV_WINDOW (window)->priv->message_area)
+		return;
+
+	area = ev_message_area_new (GTK_MESSAGE_WARNING,
+				    msg,
+				    GTK_STOCK_CLOSE,
+				    GTK_RESPONSE_CANCEL,
+				    NULL);
+	
+	g_signal_connect (area, "response",
+			  G_CALLBACK (ev_window_message_area_response_cb),
 			  window);
 	gtk_widget_show (area);
 	ev_window_set_message_area (EV_WINDOW (window), area);
@@ -1085,7 +1106,8 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 	gdouble scale;
 	EvDocument *document = ev_window->priv->document;
 	
-	if (!EV_IS_DOCUMENT_THUMBNAILS (document)) {
+	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
+	    ev_page_cache_get_n_pages (ev_window->priv->page_cache) <= 0) {
 		return;
 	}
 	
@@ -1170,6 +1192,9 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 
 	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
 		ev_view_set_document (view, document);
+	} else {
+		ev_window_warning_message (GTK_WINDOW (ev_window),
+					   _("The document contains no pages"));
 	}
 
 	g_idle_add ((GSourceFunc)ev_window_setup_document, ev_window);

@@ -403,7 +403,8 @@ ev_sidebar_thumbnails_set_loading_icon (EvSidebarThumbnails *sidebar_thumbnails)
 	if (sidebar_thumbnails->priv->loading_icon)
 		g_object_unref (sidebar_thumbnails->priv->loading_icon);
 
-	if (sidebar_thumbnails->priv->document) {
+	if (sidebar_thumbnails->priv->document &&
+	    sidebar_thumbnails->priv->n_pages > 0) {
 		gint width, height;
 
 		/* We get the dimensions of the first page so that we can make a blank
@@ -434,7 +435,8 @@ ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
 	sidebar_thumbnails->priv->rotation = rotation;
 	ev_sidebar_thumbnails_set_loading_icon (sidebar_thumbnails);
 
-	if (sidebar_thumbnails->priv->document == NULL)
+	if (sidebar_thumbnails->priv->document == NULL ||
+	    sidebar_thumbnails->priv->n_pages <= 0)
 		return;
 
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);

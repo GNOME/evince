@@ -1,3 +1,16 @@
+2008-06-16  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (pdf_document_get_info):
+	* shell/ev-sidebar-thumbnails.c:
+	(ev_sidebar_thumbnails_set_loading_icon),
+	(ev_sidebar_thumbnails_refresh):
+	* shell/ev-window.c: (ev_window_error_message),
+	(ev_window_warning_message), (ev_window_refresh_window_thumbnail),
+	(ev_window_set_document):
+
+	Do not crash opening documents with no pages and show a warning
+	message in the message area. Fixes bugs #537574 and #171588.
+	
 2008-06-15  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/Makefile.am:

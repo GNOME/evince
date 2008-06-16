@@ -590,15 +590,20 @@ pdf_document_get_info (EvDocument *document)
 		      "linearized", &(info->linearized),
 		      NULL);
 
-	page = ev_document_get_page (document, 0);
-	ev_document_get_page_size (document, page,
-				   &(info->paper_width),
-				   &(info->paper_height));
-	g_object_unref (page);
+	info->n_pages = ev_document_get_n_pages (document);
 
-	// Convert to mm.
-	info->paper_width = info->paper_width / 72.0f * 25.4f;
-	info->paper_height = info->paper_height / 72.0f * 25.4f;
+	if (info->n_pages > 0) {
+		page = ev_document_get_page (document, 0);
+		ev_document_get_page_size (document, page,
+					   &(info->paper_width),
+					   &(info->paper_height));
+		g_object_unref (page);
+		
+
+		// Convert to mm.
+		info->paper_width = info->paper_width / 72.0f * 25.4f;
+		info->paper_height = info->paper_height / 72.0f * 25.4f;
+	}
 
 	switch (layout) {
 		case POPPLER_PAGE_LAYOUT_SINGLE_PAGE:
@@ -677,8 +682,6 @@ pdf_document_get_info (EvDocument *document)
 	if (permissions & POPPLER_PERMISSIONS_OK_TO_ADD_NOTES) {
 		info->permissions |= EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES;
 	}
-
-	info->n_pages = ev_document_get_n_pages (document);
 
 	if (ev_document_security_has_document_security (EV_DOCUMENT_SECURITY (document))) {
 		/* translators: this is the document security state */
