@@ -1,4 +1,44 @@
 ================
+Evince  2.23.4
+================
+
+New Features and UI Improvements:
+
+    * A warning message is shown in the message area when the document
+      has no pages (#171588, Carlos Garcia Campos)
+    * Automaticly reload the document when the file has changed on
+      disk (#304249, Carlos Garcia Campos)
+    * Added Ctrl-Insert keybinding for copying text and Ctrl+N for
+      opening a copy (#526523, #532239, Carlos Garcia Campos)
+    * Save as action has been added as a toolbar button too. (Abhishek Mukherjee)
+    * Primary selection is also updated when copying a link address
+      (#520855, Carlos Garcia Campos)
+    * Added GtkMountOperation, copied from gtk+. (Carlos Garcia Campos)
+    * GS code has been removed, libspectre is now required to build the
+      PostScript backend. (Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Fixed a crash when opening documents with no pages
+      (#537574, Carlos Garcia Campos)
+    * Fixed a crash when running in debug mode (Daniel M. German)
+    * Fixed a crash in impress backend (#530852, Hans Petter Jansson)
+    * Improved error handling in djvu backend (#530202, Carlos Garcia Campos)
+    * Do not use the pixbuf backend for rendering tiff documents when
+      the tiff backend is available (#520290, Carlos Garcia Campos)
+    * Fixed T1 font rendering in dvi backend (#536883, Mattias Nissler)
+    * Other bugs fixed: #533323, #533897, #533896, #534493, #537535
+
+Thanks:
+
+    Matthias Drochner, Frederic Peters, Cosimo Cecchi
+
+Translation updates:
+
+    * Djihed Afifi (ar)	
+
+    
+================
 Evince  2.22.1.1
 ================
 
