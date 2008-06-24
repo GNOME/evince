@@ -1,3 +1,25 @@
+2008-06-24  Bastien Nocera  <hadess@hadess.net>
+
+	* shell/Makefile.am:
+	* shell/ev-application.c (ev_application_init),
+	(ev_application_get_media_keys):
+	* shell/ev-application.h:
+	* shell/ev-marshal.list:
+	* shell/ev-media-player-keys.c (ev_media_player_keys_class_init),
+	(proxy_destroy), (on_media_player_key_pressed),
+	(ev_media_player_keys_init), (ev_media_player_keys_focused),
+	(ev_media_player_keys_finalize), (ev_media_player_keys_new):
+	* shell/ev-media-player-keys.h:
+	* shell/ev-window.c (ev_window_go_previous_page),
+	(ev_window_go_next_page), (ev_window_go_first_page),
+	(ev_window_go_last_page), (ev_window_start_presentation),
+	(ev_window_dispose), (view_actions_focus_in_cb):
+	* shell/ev-window.h: When building with D-Bus support, listen
+	for multimedia key events from gnome-settings-daemon. This allows
+	to go to the next/previous/first/last pages using, respectively,
+	Next/Previous/Rewing/Fast Forward. The Play button is used to start
+	a presentation. Fixes bug #539971.
+
 2008-06-19  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* configure.ac:

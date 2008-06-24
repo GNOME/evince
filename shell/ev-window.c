@@ -68,6 +68,9 @@
 #include "ev-message-area.h"
 #include "ev-mount-operation.h"
 #include "ev-file-monitor.h"
+#ifdef ENABLE_DBUS
+#include "ev-media-player-keys.h"
+#endif /* ENABLE_DBUS */
 
 #include <gtk/gtkprintunixdialog.h>
 
@@ -3231,6 +3234,12 @@ ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 	ev_view_previous_page (EV_VIEW (ev_window->priv->view));
 }
 
+void
+ev_window_go_previous_page (EvWindow *ev_window)
+{
+	ev_window_cmd_go_previous_page (NULL, ev_window);
+}
+
 static void
 ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
@@ -3239,12 +3248,24 @@ ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 	ev_view_next_page (EV_VIEW (ev_window->priv->view));
 }
 
+void
+ev_window_go_next_page (EvWindow *ev_window)
+{
+	ev_window_cmd_go_next_page (NULL, ev_window);
+}
+
 static void
 ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	ev_page_cache_set_current_page (ev_window->priv->page_cache, 0);
+}
+
+void
+ev_window_go_first_page (EvWindow *ev_window)
+{
+	ev_window_cmd_go_first_page (NULL, ev_window);
 }
 
 static void
@@ -3256,6 +3277,12 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 
 	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
 	ev_page_cache_set_current_page (ev_window->priv->page_cache, n_pages - 1);
+}
+
+void
+ev_window_go_last_page (EvWindow *ev_window)
+{
+	ev_window_cmd_go_last_page (NULL, ev_window);
 }
 
 static void
@@ -3356,6 +3383,12 @@ static void
 ev_window_cmd_start_presentation (GtkAction *action, EvWindow *window)
 {
 	ev_window_run_presentation (window);
+}
+
+void
+ev_window_start_presentation (EvWindow *ev_window)
+{
+	ev_window_run_presentation (ev_window);
 }
 
 static gboolean
@@ -4101,6 +4134,15 @@ ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = window->priv;
+#ifdef ENABLE_DBUS
+	GObject *keys;
+
+	keys = ev_application_get_media_keys (EV_APP);
+	if (keys) {
+		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys), NULL);
+		g_object_unref (keys);
+	}
+#endif /* ENABLE_DBUS */
 
 	if (priv->monitor) {
 		g_object_unref (priv->monitor);
@@ -4624,6 +4666,16 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 static gboolean
 view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
+#ifdef ENABLE_DBUS
+	GObject *keys;
+
+	keys = ev_application_get_media_keys (EV_APP);
+	if (keys) {
+		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys), window);
+		g_object_unref (keys);
+	}
+#endif /* ENABLE_DBUS */
+
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
 	ev_window_set_action_sensitive (window, "ViewToolbar", TRUE);
 

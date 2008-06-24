@@ -86,6 +86,13 @@ void		ev_window_print_range     (EvWindow       *ev_window,
 					   int             first_page,
 					   int		   last_page);
 
+void		ev_window_go_last_page	  (EvWindow       *ev_window);
+void		ev_window_go_first_page	  (EvWindow       *ev_window);
+void		ev_window_go_next_page	  (EvWindow       *ev_window);
+void		ev_window_go_previous_page(EvWindow       *ev_window);
+void		ev_window_start_presentation
+					  (EvWindow       *ev_window);
+
 G_END_DECLS
 
 #endif /* !EV_WINDOW_H */

@@ -16,6 +16,13 @@ INCLUDES=						\
 
 bin_PROGRAMS=evince
 
+EV_MEDIA_PLAYER_KEYS_SOURCES = ev-media-player-keys.c ev-media-player-keys.h
+if ENABLE_DBUS
+DBUS_SOURCES = $(EV_MEDIA_PLAYER_KEYS_SOURCES)
+else
+DBUS_SOURCES = $(null)
+endif
+
 evince_SOURCES=				\
 	eggfindbar.c			\
 	eggfindbar.h			\
@@ -31,6 +38,7 @@ evince_SOURCES=				\
 	ev-history.h			\
 	ev-marshal.c			\
 	ev-marshal.h			\
+	$(DBUS_SOURCES)			\
 	ev-message-area.c		\
 	ev-message-area.h		\
 	ev-metadata-manager.c		\
@@ -105,7 +113,8 @@ BUILT_SOURCES += ev-application-service.h
 endif
 
 EXTRA_DIST = ev-marshal.list		\
-	ev-application-service.xml
+	ev-application-service.xml	\
+	$(EV_MEDIA_PLAYER_KEYS_SOURCES)
 
 
 ev-marshal.h: $(srcdir)/ev-marshal.list

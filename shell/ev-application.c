@@ -25,6 +25,9 @@
 #include "ev-utils.h"
 #include "ev-file-helpers.h"
 #include "ev-document-factory.h"
+#ifdef ENABLE_DBUS
+#include "ev-media-player-keys.h"
+#endif /* ENABLE_DBUS */
 #include "totem-scrsaver.h"
 
 #include <glib.h>
@@ -58,6 +61,10 @@ struct _EvApplication {
 	TotemScrsaver *scr_saver;
 
 	gchar *last_chooser_uri;
+
+#ifdef ENABLE_DBUS
+	EvMediaPlayerKeys *keys;
+#endif /* ENABLE_DBUS */
 
 	GtkPrintSettings *print_settings;
 #if GTK_CHECK_VERSION (2, 11, 0)
@@ -715,6 +722,10 @@ ev_application_init (EvApplication *ev_application)
 
 	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
 				      EGG_TB_MODEL_NOT_REMOVABLE);
+
+#ifdef ENABLE_DBUS
+	ev_application->keys = ev_media_player_keys_new ();
+#endif /* ENABLE_DBUS */
 }
 
 /**
@@ -742,6 +753,26 @@ ev_application_get_windows (EvApplication *application)
 	g_list_free (toplevels);
 
 	return windows;
+}
+
+/**
+ * ev_application_get_media_keys:
+ * @application: The instance of the application.
+ *
+ * It gives you access to the media player keys handler object.
+ *
+ * Returns: A #EvMediaPlayerKeys.
+ */
+GObject
+*ev_application_get_media_keys (EvApplication *application)
+{
+#ifdef ENABLE_DBUS
+	if (!application->keys)
+		return NULL;
+	return g_object_ref (G_OBJECT (application->keys));
+#else
+	return NULL;
+#endif /* ENABLE_DBUS */
 }
 
 EggToolbarsModel *

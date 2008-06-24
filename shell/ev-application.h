@@ -78,6 +78,7 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
 						      GdkScreen       *screen,
     						      guint32          timestamp);
 GList		 *ev_application_get_windows	     (EvApplication   *application);
+GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
 void              ev_application_save_toolbars_model (EvApplication   *application);
