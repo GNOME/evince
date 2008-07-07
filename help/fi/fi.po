@@ -1,13 +1,14 @@
 # Finnish translation of Evince manual.
 #
-# Copyright © Tommi Vainikainen, 2006
+# Copyright © Tommi Vainikainen, 2006.
 # Copyright © Flammie Pirinen, 2006. (merged from gucharmap translation)
+# Copyright © Timo Jyrinki, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince 0.5.2\n"
-"POT-Creation-Date: 2007-03-05 20:07+0300\n"
-"PO-Revision-Date: 2007-03-05 20:11+0300\n"
+"POT-Creation-Date: 2008-04-06 03:16+0100\n"
+"PO-Revision-Date: 2008-07-07 17:41+0300\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
@@ -99,8 +100,8 @@ msgstr ""
 "MISSÄÄN OLOSUHTEISSA TAI MINKÄÄN OIKEUSLAITOKSEN ALAISUUDESSA, NIIN "
 "OIKEUSLOUKKAUKSISSA (MUKAAN LUKIEN HUOLIMATTOMUUS), SOPIMUS TAI MUUTOIN, "
 "ASIAKIRJAN TAI SEN MUOKATUN VERSION TEKIJÄ, ALKUPERÄINEN KIRJOITTAJA, KUKAAN "
-"AVUSTAJAISTA, KUKAAN LEVITTÄJÄ TAIKKA KUKAAN TARJOAJA EI OLE VASTUUSSA "
-"KENELLEKKÄÄN SUORASTA, EPÄSUORASTA, ERITYISESTÄ, TAPATURMAISESTA TAI "
+"AVUSTAJISTA, KUKAAN LEVITTÄJÄ TAIKKA KUKAAN TARJOAJA EI OLE VASTUUSSA "
+"KENELLEKÄÄN SUORASTA, EPÄSUORASTA, ERITYISESTÄ, TAPATURMAISESTA TAI "
 "VÄLILLISESTÄ VAHINGOSTA SISÄLTÄEN RAJOITUKSETTA VAHINGOT LIIKEARVON "
 "MENETYKSESTÄ, TYÖN KESKEYTYMISESTÄ, TIETOKONEVIRHEESTÄ TAI -HÄIRIÖSTÄ TAIKKA "
 "MISTÄÄN MUUSTA VAHINGOSTA TAI MENETYKSESTÄ, JOKA ILMENEE TAI LIITTYY "
@@ -980,8 +981,261 @@ msgstr ""
 #: C/evince.xml:0(None)
 msgid "translator-credits"
 msgstr ""
+"Timo Jyrinki <timo.jyrinki@iki.fi>, 2008\n"
 "Tommi Vainikainen <thv@iki.fi>, 2006\n"
 "Flammie Pirinen <flammie@iki.fi>, 2006"
+
+#: C/evince.xml:88(revnumber)
+msgid "Evince Document Viewer Manual V1.1"
+msgstr "Evince-asiakirjakatselimen käyttöohje v1.1"
+
+#: C/evince.xml:89(date)
+msgid "2008-04-05"
+msgstr "2008-04-05"
+
+#: C/evince.xml:91(para)
+msgid "Niels Giesen"
+msgstr "Niels Giesen"
+
+#: C/evince.xml:92(para)
+msgid "Claude Paroz"
+msgstr "Claude Paroz"
+
+#: C/evince.xml:635(title)
+msgid "Shortcuts"
+msgstr "Pikanäppäimet"
+
+#: C/evince.xml:636(para)
+msgid ""
+"Below is a list of all shortcuts present in <application>Evince Document "
+"Viewer</application>:"
+msgstr ""
+"<application>Evince-asiakirjakatselimessa</application> käytettävissä "
+"olevat pikanäppäimet on lueteltu alla:"
+
+#: C/evince.xml:644(para)
+msgid "Shortcut"
+msgstr "Pikanäppäin"
+
+#: C/evince.xml:651(keycap) C/evince.xml:655(keycap) C/evince.xml:659(keycap)
+#: C/evince.xml:663(keycap) C/evince.xml:667(keycap) C/evince.xml:671(keycap)
+#: C/evince.xml:676(keycap) C/evince.xml:682(keycap) C/evince.xml:701(keycap)
+#: C/evince.xml:747(keycap)
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: C/evince.xml:651(keycap)
+msgid "O"
+msgstr "O"
+
+#: C/evince.xml:652(para)
+msgid "Open an existing document"
+msgstr "Asiakirjan avaaminen"
+
+#: C/evince.xml:655(keycap)
+msgid "S"
+msgstr "S"
+
+#: C/evince.xml:656(para)
+msgid "Save a copy of the current document"
+msgstr "Asiakirjan kopiointi"
+
+#: C/evince.xml:659(keycap)
+msgid "P"
+msgstr "P"
+
+#: C/evince.xml:660(para)
+msgid "Print document"
+msgstr "Asiakirjan tulostaminen"
+
+#: C/evince.xml:663(keycap)
+msgid "W"
+msgstr "W"
+
+#: C/evince.xml:664(para)
+msgid "Close window"
+msgstr "Ikkunan sulkeminen"
+
+#: C/evince.xml:667(keycap)
+msgid "C"
+msgstr "C"
+
+#: C/evince.xml:668(para)
+msgid "Copy selection"
+msgstr "Kopioi valinta"
+
+#: C/evince.xml:671(keycap)
+msgid "A"
+msgstr "A"
+
+#: C/evince.xml:672(para)
+msgid "Select All"
+msgstr "Valitse kaikki"
+
+#: C/evince.xml:676(keycap)
+msgid "F"
+msgstr "F"
+
+#: C/evince.xml:677(para)
+msgid "<keycap>/</keycap> (slash)"
+msgstr "<keycap>/</keycap> (kauttaviiva)"
+
+#: C/evince.xml:679(para)
+msgid "Find a word or phrase in the document"
+msgstr "Etsi sanaa tai lausetta asiakirjasta"
+
+#: C/evince.xml:682(keycap)
+msgid "G"
+msgstr "G"
+
+#: C/evince.xml:683(para)
+msgid "Find next"
+msgstr "Etsi seuraava"
+
+#: C/evince.xml:687(para)
+msgid ""
+"<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (plus sign)"
+msgstr ""
+"<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (plus-merkki)"
+
+#: C/evince.xml:688(keycap)
+msgid "+"
+msgstr "+"
+
+#: C/evince.xml:689(keycap)
+msgid "="
+msgstr "="
+
+#: C/evince.xml:691(para)
+msgid "Zoom in"
+msgstr "Lähennä"
+
+#: C/evince.xml:695(para)
+msgid ""
+"<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (minus sign)"
+msgstr ""
+"<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (miinus-merkki)"
+
+#: C/evince.xml:696(keycap)
+msgid "-"
+msgstr "-"
+
+#: C/evince.xml:698(para)
+msgid "Zoom out"
+msgstr "Loitonna"
+
+#: C/evince.xml:701(keycap)
+msgid "R"
+msgstr "R"
+
+#: C/evince.xml:702(para)
+msgid "Reload the document"
+msgstr "Lataa asiakirja uudelleen"
+
+#: C/evince.xml:706(keycap) C/evince.xml:731(keycap)
+msgid "Page Up"
+msgstr "Page Up"
+
+#: C/evince.xml:707(para)
+msgid "Go to the previous page"
+msgstr "Mene edelliselle sivulle"
+
+#: C/evince.xml:710(keycap) C/evince.xml:735(keycap)
+msgid "Page Down"
+msgstr "Page Down"
+
+#: C/evince.xml:711(para)
+msgid "Go to the next page"
+msgstr "Mene seuraavalle sivulle"
+
+#: C/evince.xml:715(keycap) C/evince.xml:723(keycap)
+msgid "Space"
+msgstr "Välilyönti"
+
+#: C/evince.xml:716(keycap) C/evince.xml:723(keycap) C/evince.xml:725(keycap)
+#: C/evince.xml:731(keycap) C/evince.xml:735(keycap)
+msgid "Shift"
+msgstr "Vaihto"
+
+#: C/evince.xml:716(keycap) C/evince.xml:724(keycap)
+msgid "Backspace"
+msgstr "Askelpalautin"
+
+#: C/evince.xml:717(keycap) C/evince.xml:725(keycap)
+msgid "Return"
+msgstr "Rivinvaihto"
+
+#: C/evince.xml:719(para)
+msgid "Scroll forward"
+msgstr "Vieritä eteenpäin"
+
+#: C/evince.xml:727(para)
+msgid "Scroll backward"
+msgstr "Vieritä taaksepäin"
+
+#: C/evince.xml:732(para)
+msgid "Go a bunch of pages up"
+msgstr "Mene muutama sivu taaksepäin"
+
+#: C/evince.xml:736(para)
+msgid "Go a bunch of pages down"
+msgstr "Mene muutama sivu eteenpäin"
+
+#: C/evince.xml:739(keycap)
+msgid "Home"
+msgstr "Home"
+
+#: C/evince.xml:740(para)
+msgid "Go to the first page"
+msgstr "Mene ensimmäiselle sivulle"
+
+#: C/evince.xml:743(keycap)
+msgid "End"
+msgstr "End"
+
+#: C/evince.xml:744(para)
+msgid "Go to the last page"
+msgstr "Mene viimeiselle sivulle"
+
+#: C/evince.xml:747(keycap)
+msgid "L"
+msgstr "L"
+
+#: C/evince.xml:748(para)
+msgid "Go to page by number or label"
+msgstr "Mene tietylle sivulle numeron tai tai nimen mukaan"
+
+#: C/evince.xml:751(keycap)
+msgid "F1"
+msgstr "F1"
+
+#: C/evince.xml:752(para)
+msgid "Help"
+msgstr "Ohje"
+
+#: C/evince.xml:755(keycap)
+msgid "F5"
+msgstr "F5"
+
+#: C/evince.xml:756(para)
+msgid "Run document as presentation"
+msgstr "Näytä asiakirja esityksenä"
+
+#: C/evince.xml:759(keycap)
+msgid "F9"
+msgstr "F9"
+
+#: C/evince.xml:760(para)
+msgid "Show or hide the side pane"
+msgstr "Näytä tai piilota sivupaneeli"
+
+#: C/evince.xml:763(keycap)
+msgid "F11"
+msgstr "F11"
+
+#: C/evince.xml:764(para)
+msgid "Toggle fullscreen mode"
+msgstr "Kokoruututila"
 
 #~ msgid "Evince Document Viewer"
 #~ msgstr "Evince-asiakirjakatselin"
