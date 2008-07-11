@@ -144,6 +144,12 @@ comics_document_load (EvDocument *document,
 		list_files_command = 
 			g_strdup_printf ("zipinfo -1 -- %s", quoted_file);
 		comics_document->regex_arg = TRUE;
+	} else if (!strcmp (mime_type, "application/x-cb7")) {
+		comics_document->extract_command =
+			g_strdup ("7zr x -so");
+		list_files_command = 
+			g_strdup_printf ("7zr l -- %s", quoted_file);
+		comics_document->regex_arg = TRUE;
 	}
 
 	g_object_unref (file_info);
