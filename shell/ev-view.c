@@ -3440,6 +3440,8 @@ ev_view_key_press_event (GtkWidget   *widget,
 	switch (event->keyval) {
 	        case GDK_b:
 	        case GDK_B:
+	        case GDK_period:
+	        case GDK_KP_Decimal:
 			view->presentation_state =
 				(view->presentation_state == EV_PRESENTATION_BLACK) ?
 				EV_PRESENTATION_NORMAL : EV_PRESENTATION_BLACK;
