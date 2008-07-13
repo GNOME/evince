@@ -220,10 +220,10 @@ ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface)
 			p[3] = (has_alpha) ? p[3] : 0xff;
 #else
 			tmp = p[0];
-			p[0] = (has_alpha) ? p[3] : 0xff;
-			p[3] = p[2];
-			p[2] = p[1];
-			p[1] = tmp;
+			p[0] = p[1];
+			p[1] = p[2];
+			p[2] = p[3];
+			p[3] = (has_alpha) ? tmp : 0xff;
 #endif			
 			p += pixbuf_n_channels;
 		}
