@@ -1,3 +1,12 @@
+2008-07-15   Darren Kenny  <darren.kenny@sun.com>
+
+	* libdocument/ev-transition-effect.c
+	(ev_transition_effect_type_get_type),
+	(ev_transition_effect_alignment_get_type),
+	(ev_transition_effect_direction_get_type):
+	
+	Fixes bug #542924. Makes enums static to fix Solaris build.
+
 2008-07-13  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-view.c: (ev_view_key_press_event):

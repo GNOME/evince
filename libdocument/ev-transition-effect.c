@@ -56,7 +56,7 @@ ev_transition_effect_type_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		const GEnumValue values[] = {
+		static const GEnumValue values[] = {
 			{ EV_TRANSITION_EFFECT_REPLACE, "EV_TRANSITION_EFFECT_REPLACE", "replace" },
 			{ EV_TRANSITION_EFFECT_SPLIT, "EV_TRANSITION_EFFECT_SPLIT", "split" },
 			{ EV_TRANSITION_EFFECT_BLINDS, "EV_TRANSITION_EFFECT_BLINDS", "blinds" },
@@ -84,7 +84,7 @@ ev_transition_effect_alignment_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		const GEnumValue values[] = {
+		static const GEnumValue values[] = {
 			{ EV_TRANSITION_ALIGNMENT_HORIZONTAL, "EV_TRANSITION_ALIGNMENT_HORIZONTAL", "horizontal" },
 			{ EV_TRANSITION_ALIGNMENT_VERTICAL, "EV_TRANSITION_ALIGNMENT_VERTICAL", "vertical" },
 			{ 0, NULL, NULL }
@@ -102,7 +102,7 @@ ev_transition_effect_direction_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		const GEnumValue values[] = {
+		static const GEnumValue values[] = {
 			{ EV_TRANSITION_DIRECTION_INWARD, "EV_TRANSITION_DIRECTION_INWARD", "inward" },
 			{ EV_TRANSITION_DIRECTION_OUTWARD, "EV_TRANSITION_DIRECTION_OUTWARD", "outward" },
 			{ 0, NULL, NULL }
