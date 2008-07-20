@@ -1,3 +1,12 @@
+2008-07-20  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-document-factory.c: (get_mime_type_from_data),
+	(get_document_from_uri):
+
+	Make sure we always return a valid error struct when
+	get_document_from_uri fails. Fixes nautilus crash, see bug
+	#542548.
+	
 2008-07-15   Darren Kenny  <darren.kenny@sun.com>
 
 	* libdocument/ev-transition-effect.c

@@ -143,7 +143,7 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 
 	size_read = g_input_stream_read (G_INPUT_STREAM (input_stream),
 					 buffer, 1024, NULL, NULL);
-	g_input_stream_close (G_INPUT_STREAM (input_stream), NULL, NULL);
+	g_input_stream_close (G_INPUT_STREAM (input_stream), NULL, error);
 
 	g_object_unref (file);
 
@@ -172,6 +172,13 @@ get_document_from_uri (const char        *uri,
 
 	if (mime_type == NULL) {
 		g_free (mime_type);
+
+		if (*error == NULL) {
+			g_set_error (error,
+				     EV_DOCUMENT_ERROR,
+				     0,
+				     _("Unknown MIME Type"));
+		}
 		
 		return NULL;
 	}
