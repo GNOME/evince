@@ -1,5 +1,13 @@
 2008-07-20  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_state_event),
+	(ev_window_class_init):
+
+	Intercept window manager's fullscreen request in order to run/stop
+	fullscreen mode. Fixes bug #493541.
+	
+2008-07-20  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (find_bar_visibility_changed_cb):
 
 	Restart the job search when the find bar is opened for the second

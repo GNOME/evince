@@ -3118,6 +3118,35 @@ ev_window_screen_changed (GtkWidget *widget,
 	}
 }
 
+static gboolean
+ev_window_state_event (GtkWidget           *widget,
+		       GdkEventWindowState *event)
+{
+	EvWindow *window = EV_WINDOW (widget);
+	EvView   *view = EV_VIEW (window->priv->view);
+
+	if (GTK_WIDGET_CLASS (ev_window_parent_class)->window_state_event) {
+		GTK_WIDGET_CLASS (ev_window_parent_class)->window_state_event (widget, event);
+	}
+
+	if ((event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN) == 0)
+		return FALSE;
+
+	if (event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN) {
+		if (ev_view_get_fullscreen (view) || ev_view_get_presentation (view))
+			return FALSE;
+		
+		ev_window_run_fullscreen (window);
+	} else {
+		if (ev_view_get_fullscreen (view))
+			ev_window_stop_fullscreen (window, FALSE);
+		else if (ev_view_get_presentation (view))
+			ev_window_stop_presentation (window, FALSE);
+	}
+
+	return FALSE;
+}
+
 static void
 ev_window_set_page_mode (EvWindow         *window,
 			 EvWindowPageMode  page_mode)
@@ -4320,6 +4349,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	g_object_class->finalize = ev_window_finalize;
 
 	widget_class->screen_changed = ev_window_screen_changed;
+	widget_class->window_state_event = ev_window_state_event;
 
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
 }
