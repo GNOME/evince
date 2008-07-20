@@ -1,5 +1,12 @@
 2008-07-20  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (find_bar_visibility_changed_cb):
+
+	Restart the job search when the find bar is opened for the second
+	time. Fixes bug #531956.
+	
+2008-07-20  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-document-factory.c: (get_mime_type_from_data),
 	(get_document_from_uri):
 

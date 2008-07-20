@@ -4074,11 +4074,13 @@ find_bar_visibility_changed_cb (EggFindBar *find_bar,
 
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
-		ev_view_set_highlight_search (EV_VIEW(ev_window->priv->view), visible);
-		ev_view_search_changed (EV_VIEW(ev_window->priv->view));
+		ev_view_set_highlight_search (EV_VIEW (ev_window->priv->view), visible);
+		ev_view_search_changed (EV_VIEW (ev_window->priv->view));
 		ev_window_update_actions (ev_window);
 
-		if (!visible)
+		if (visible)
+			find_bar_search_changed_cb (find_bar, NULL, ev_window);
+		else
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar), NULL);
 	}
 }
