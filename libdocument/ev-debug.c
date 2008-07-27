@@ -65,11 +65,10 @@ profile_init ()
 	if (g_getenv ("EV_PROFILE") != NULL) {
 		/* enable all profiling */
 		ev_profile = ~EV_NO_PROFILE;
-		return;
-	}	
-
-	if (g_getenv ("EV_PROFILE_JOBS") != NULL)
-		ev_profile |= EV_PROFILE_JOBS;
+	} else {
+		if (g_getenv ("EV_PROFILE_JOBS") != NULL)
+			ev_profile |= EV_PROFILE_JOBS;
+	}
 
 	if (ev_profile) {
 		timers = g_hash_table_new_full (g_str_hash,
