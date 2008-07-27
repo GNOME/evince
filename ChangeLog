@@ -1,3 +1,16 @@
+2008-07-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-debug.[ch]: (ev_profiler_start),
+	(ev_profiler_stop):
+	* shell/ev-jobs.c: (ev_job_finished), (ev_job_links_run),
+	(notify_page_ready), (ev_job_render_run), (ev_job_thumbnail_run),
+	(ev_job_fonts_run), (ev_job_load_run), (ev_job_save_run),
+	(ev_job_print_run):
+	* shell/main.c: (main):
+
+	Add a profile mode available when debug is enabled. Add profilers
+	in ev-jobs.
+	
 2008-07-23  Götz Waschk <waschk@mandriva.org>
 
 	* configure.ac: Correctly build desktop file. Fixes

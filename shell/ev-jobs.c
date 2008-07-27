@@ -248,10 +248,11 @@ ev_job_print_class_init (EvJobPrintClass *class)
 void
 ev_job_finished (EvJob *job)
 {
-	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_debug_message (DEBUG_JOBS, EV_GET_TYPE_NAME (job));
+	ev_profiler_stop (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	g_return_if_fail (EV_IS_JOB (job));
-
+	
 	g_signal_emit (job, job_signals[FINISHED], 0);
 }
 
@@ -272,6 +273,7 @@ void
 ev_job_links_run (EvJobLinks *job)
 {
 	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	g_return_if_fail (EV_IS_JOB_LINKS (job));
 
@@ -345,6 +347,7 @@ static gboolean
 notify_page_ready (EvJobRender *job)
 {
 	ev_debug_message (DEBUG_JOBS, "%d", job->ev_page->index);
+	ev_profiler_stop (EV_PROFILE_JOBS, "Rendering page %d", job->ev_page->index);
 	
 	g_signal_emit (job, job_render_signals[PAGE_READY], 0);
 
@@ -369,6 +372,7 @@ ev_job_render_run (EvJobRender *job)
 	g_return_if_fail (EV_IS_JOB_RENDER (job));
 
 	ev_debug_message (DEBUG_JOBS, "page: %d", job->page);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	ev_document_doc_mutex_lock ();
 
@@ -380,6 +384,8 @@ ev_job_render_run (EvJobRender *job)
 				  G_CALLBACK (render_finished_cb), job);
 	} else {
 		EvRenderContext *rc;
+
+		ev_profiler_start (EV_PROFILE_JOBS, "Rendering page %d", job->page);
 		
 		ev_document_fc_mutex_lock ();
 
@@ -456,6 +462,7 @@ ev_job_thumbnail_run (EvJobThumbnail *job)
 	EvPage          *page;
 
 	ev_debug_message (DEBUG_JOBS, "%d", job->page);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	g_return_if_fail (EV_IS_JOB_THUMBNAIL (job));
 
@@ -498,6 +505,7 @@ ev_job_fonts_run (EvJobFonts *job)
 	EvDocumentFonts *fonts;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	g_return_if_fail (EV_IS_JOB_FONTS (job));
 
@@ -595,6 +603,7 @@ ev_job_load_run (EvJobLoad *job)
 	g_return_if_fail (EV_IS_JOB_LOAD (job));
 
 	ev_debug_message (DEBUG_JOBS, "%s", job->uri);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	if (job->error) {
 	        g_error_free (job->error);
@@ -685,6 +694,7 @@ ev_job_save_run (EvJobSave *job)
 	gchar *local_uri;
 
 	ev_debug_message (DEBUG_JOBS, "uri: %s, document_uri: %s", job->uri, job->document_uri);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	filename = ev_tmp_filename ("saveacopy");
 	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
@@ -940,6 +950,7 @@ ev_job_print_run (EvJobPrint *job)
 	g_return_if_fail (EV_IS_JOB_PRINT (job));
 
 	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
 	
 	if (job->temp_file)
 		g_free (job->temp_file);

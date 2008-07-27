@@ -35,12 +35,29 @@
 #ifndef __EV_DEBUG_H__
 #define __EV_DEBUG_H__
 
-#include <glib.h>
+#include <glib-object.h>
+
+#define EV_GET_TYPE_NAME(instance) g_type_name_from_instance ((gpointer)instance)
 
 #ifndef EV_ENABLE_DEBUG
+
 #define ev_debug_init()
-#define ev_debug_message(...)
-#else
+#define ev_debug_shutdown()
+#if defined(G_HAVE_GNUC_VARARGS)
+#define ev_debug_message(section, format, args...) G_STMT_START { } G_STMT_END
+#define ev_profiler_start(format, args...) G_STMT_START { } G_STMT_END
+#define ev_profiler_stop(format, args...) G_STMT_START { } G_STMT_END
+#elif defined(G_HAVE_ISO_VARARGS)
+#define ev_debug_message(...) G_STMT_START { } G_STMT_END
+#define ev_profiler_start(...) G_STMT_START { } G_STMT_END
+#define ev_profiler_stop(...) G_STMT_START { } G_STMT_END
+#else /* no varargs macros */
+static void ev_debug_message(EvDebugSection section, const gchar *file, gint line, const gchar *function, const gchar *format, ...) {}
+static void ev_profiler_start(EvProfileSection section,	const gchar *format, ...) {}
+static void ev_profiler_stop(EvProfileSection section, const gchar *format, ...) {}
+#endif
+
+#else /* ENABLE_DEBUG */
 
 G_BEGIN_DECLS
 
@@ -54,17 +71,30 @@ typedef enum {
 	EV_DEBUG_JOBS        = 1 << 0
 } EvDebugSection;
 
+#define DEBUG_JOBS      EV_DEBUG_JOBS,    __FILE__, __LINE__, G_STRFUNC
 
-#define	DEBUG_JOBS	EV_DEBUG_JOBS,    __FILE__, __LINE__, G_STRFUNC
+/*
+ * Set an environmental var of the same name to turn on
+ * profiling. Setting EV_PROFILE will turn on all
+ * sections.
+ */
+typedef enum {
+	EV_NO_PROFILE   = 0,
+	EV_PROFILE_JOBS = 1 << 0
+} EvProfileSection;
 
-void ev_debug_init (void);
+void ev_debug_init     (void);
+void ev_debug_shutdown (void);
 
-void ev_debug_message (EvDebugSection  section,
-		       const gchar    *file,
-		       gint            line,
-		       const gchar    *function,
-		       const gchar    *format, ...) G_GNUC_PRINTF(5, 6);
-
+void ev_debug_message  (EvDebugSection   section,
+			const gchar     *file,
+			gint             line,
+			const gchar     *function,
+			const gchar     *format, ...) G_GNUC_PRINTF(5, 6);
+void ev_profiler_start (EvProfileSection section,
+			const gchar     *format, ...) G_GNUC_PRINTF(2, 3);
+void ev_profiler_stop  (EvProfileSection section,
+			const gchar     *format, ...) G_GNUC_PRINTF(2, 3);
 
 G_END_DECLS
 

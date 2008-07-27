@@ -418,6 +418,8 @@ main (int argc, char *argv[])
 
 	ev_backends_manager_shutdown ();
 
+	ev_debug_shutdown ();
+
 #if WITH_GNOME
  	g_object_unref (program);
 #endif
