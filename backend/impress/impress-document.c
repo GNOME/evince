@@ -20,15 +20,16 @@
 
 #include "config.h"
 
-#include <config.h>
-#include <gtk/gtk.h>
-#include <glib/gi18n.h>
 #include <string.h>
+
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #include "imposter.h"
 #include "impress-document.h"
-#include "ev-document-thumbnails.h"
+
 #include "ev-document-misc.h"
+#include "ev-document-thumbnails.h"
 
 struct _ImpressDocumentClass
 {

@@ -27,16 +27,19 @@
  *
  */
 
+#include <config.h>
+
+#include <string.h>
+
+#include <glib/gi18n-lib.h>
+#include <gtk/gtk.h>
+
+#include <libnautilus-extension/nautilus-extension-types.h>
+#include <libnautilus-extension/nautilus-property-page-provider.h>
+
 #include "ev-properties-view.h"
 #include "ev-backends-manager.h"
 #include "ev-document-factory.h"
-
-#include <config.h>
-#include <string.h>
-#include <glib/gi18n-lib.h>
-#include <gtk/gtklabel.h>
-#include <libnautilus-extension/nautilus-extension-types.h>
-#include <libnautilus-extension/nautilus-property-page-provider.h>
 
 static GType epp_type = 0;
 static void property_page_provider_iface_init

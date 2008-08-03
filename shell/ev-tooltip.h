@@ -24,7 +24,7 @@
 #ifndef __EV_TOOLTIP_H__
 #define __EV_TOOLTIP_H__
 
-#include <gtk/gtkwindow.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

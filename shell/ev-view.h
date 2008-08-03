@@ -20,9 +20,7 @@
 #ifndef __EV_VIEW_H__
 #define __EV_VIEW_H__
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtklayout.h>
-#include <gtk/gtkscrolledwindow.h>
+#include <gtk/gtk.h>
 
 #include "ev-document.h"
 #include "ev-link.h"

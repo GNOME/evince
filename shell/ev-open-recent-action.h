@@ -20,8 +20,7 @@
 #ifndef EV_OPEN_RECENT_ACTION_H
 #define EV_OPEN_RECENT_ACTION_H
 
-#include <gtk/gtkaction.h>
-#include <gtk/gtkmenutoolbutton.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -18,24 +18,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
-#include "ev-properties-view.h"
-#include "ev-document-fonts.h"
-
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
-#include <gtk/gtkversion.h>
-#include <glade/glade.h>
-#include <time.h>
-#include <sys/time.h>
 #include <string.h>
+#include <sys/time.h>
+#include <time.h>
 
 #ifdef HAVE__NL_MEASUREMENT_MEASUREMENT
 #include <langinfo.h>
 #endif
+
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <glade/glade.h>
+
+#include "ev-properties-view.h"
+#include "ev-document-fonts.h"
 
 typedef enum
 {

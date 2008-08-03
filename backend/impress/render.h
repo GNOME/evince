@@ -9,7 +9,7 @@
 #ifndef OO_RENDER_H
 #define OO_RENDER_H
 
-#include <gtk/gtkdrawingarea.h>
+#include <gtk/gtk.h>
 
 #define OO_TYPE_RENDER (oo_render_get_type())
 #define OO_RENDER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), OO_TYPE_RENDER , OORender))

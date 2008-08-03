@@ -23,32 +23,33 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "ev-marshal.h"
-#include "ev-view.h"
-#include "ev-view-private.h"
-#include "ev-utils.h"
-#include "ev-document-links.h"
-#include "ev-document-images.h"
+#include "ev-application.h"
 #include "ev-document-find.h"
-#include "ev-document-transition.h"
 #include "ev-document-forms.h"
+#include "ev-document-images.h"
+#include "ev-document-links.h"
 #include "ev-document-misc.h"
+#include "ev-document-transition.h"
+#include "ev-marshal.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-transition-animation.h"
+#include "ev-utils.h"
+#include "ev-view.h"
+#include "ev-view-private.h"
+
 #if !GTK_CHECK_VERSION (2, 11, 7)
 #include "ev-tooltip.h"
 #endif
-#include "ev-application.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
 #define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
-
 
 enum {
 	PROP_0,

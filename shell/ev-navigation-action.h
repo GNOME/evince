@@ -21,7 +21,7 @@
 #ifndef EV_NAVIGATION_ACTION_H
 #define EV_NAVIGATION_ACTION_H
 
-#include <gtk/gtkaction.h>
+#include <gtk/gtk.h>
 
 #include "ev-history.h"
 #include "ev-link.h"

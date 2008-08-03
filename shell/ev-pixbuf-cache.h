@@ -24,7 +24,8 @@
 #ifndef __EV_PIXBUF_CACHE_H__
 #define __EV_PIXBUF_CACHE_H__
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
+
 #include "ev-document.h"
 #include "ev-selection.h"
 

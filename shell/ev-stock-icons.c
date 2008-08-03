@@ -22,10 +22,11 @@
  */
 
 #include <config.h>
-#include "ev-stock-icons.h"
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+
+#include "ev-stock-icons.h"
 
 typedef struct {
 	char *stock_id;

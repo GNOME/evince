@@ -20,7 +20,8 @@
 #ifndef __EV_PAGE_CACHE_H__
 #define __EV_PAGE_CACHE_H__
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
+
 #include "ev-document.h"
 
 G_BEGIN_DECLS

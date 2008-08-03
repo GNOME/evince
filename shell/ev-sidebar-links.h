@@ -24,7 +24,8 @@
 #ifndef __EV_SIDEBAR_LINKS_H__
 #define __EV_SIDEBAR_LINKS_H__
 
-#include <gtk/gtkvbox.h>
+#include <gtk/gtk.h>
+
 #include "ev-document.h"
 #include "ev-link.h"
 #include "ev-utils.h"

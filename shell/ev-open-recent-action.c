@@ -24,6 +24,7 @@
 
 #include "ev-open-recent-action.h"
 
+
 enum {
 	ITEM_ACTIVATED,
 	N_SIGNALS

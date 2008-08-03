@@ -26,6 +26,7 @@
 #include "ev-navigation-action.h"
 #include "ev-navigation-action-widget.h"
 
+
 enum
 {
 	WIDGET_ACTIVATE_LINK,

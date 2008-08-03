@@ -21,8 +21,8 @@
 #ifndef EV_PAGE_ACTION_H
 #define EV_PAGE_ACTION_H
 
-#include <gtk/gtkaction.h>
-#include <gtk/gtktreemodel.h>
+#include <gtk/gtk.h>
+
 #include <ev-document.h>
 #include "ev-link.h"
 

@@ -22,6 +22,7 @@
 #define EV_DOCUMENT_FACTORY_H
 
 #include <gtk/gtk.h>
+
 #include "ev-document.h"
 
 G_BEGIN_DECLS

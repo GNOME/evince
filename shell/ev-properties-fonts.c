@@ -26,10 +26,10 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-#include "ev-properties-fonts.h"
 #include "ev-document-fonts.h"
-#include "ev-jobs.h"
 #include "ev-job-scheduler.h"
+#include "ev-jobs.h"
+#include "ev-properties-fonts.h"
 
 struct _EvPropertiesFonts {
 	GtkVBox base_instance;

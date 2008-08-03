@@ -22,6 +22,8 @@
 
 #include <config.h>
 
+#include <string.h>
+
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -30,21 +32,21 @@
 #include <libgnomeui/gnome-client.h>
 #endif
 
+#include "totem-scrsaver.h"
+
 #include "ev-application.h"
-#include "ev-utils.h"
-#include "ev-file-helpers.h"
 #include "ev-document-factory.h"
+#include "ev-file-helpers.h"
+#include "ev-utils.h"
+
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
-#include "totem-scrsaver.h"
 
 #ifdef ENABLE_DBUS
-#include "ev-application-service.h"
 #include <dbus/dbus-glib-bindings.h>
+#include "ev-application-service.h"
 #endif
-
-#include <string.h>
 
 static void ev_application_add_icon_path_for_screen (GdkScreen *screen);
 

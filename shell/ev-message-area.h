@@ -24,7 +24,7 @@
 #ifndef EV_MESSAGE_AREA_H
 #define EV_MESSAGE_AREA_H
 
-#include <gtk/gtkmessagedialog.h>
+#include <gtk/gtk.h>
 
 #include "gedit-message-area.h"
 

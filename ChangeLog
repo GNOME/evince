@@ -1,5 +1,53 @@
 2008-08-03  Wouter Bolsterlee  <wbolster@svn.gnome.org>
 
+	* backend/impress/impress-document.c:
+	* backend/impress/render.h:
+	* libdocument/ev-document-factory.c:
+	* libdocument/ev-document-factory.h:
+	* libdocument/ev-document-links.h:
+	* libdocument/ev-document-misc.c:
+	* libdocument/ev-document-misc.h:
+	* properties/ev-properties-main.c:
+	* properties/ev-properties-view.c:
+	* properties/ev-properties-view.h:
+	* shell/eggfindbar.c:
+	* shell/eggfindbar.h:
+	* shell/ev-application.c:
+	* shell/ev-application.h:
+	* shell/ev-jobs.h:
+	* shell/ev-message-area.h:
+	* shell/ev-navigation-action.c:
+	* shell/ev-navigation-action.h:
+	* shell/ev-open-recent-action.c:
+	* shell/ev-open-recent-action.h:
+	* shell/ev-page-action-widget.c:
+	* shell/ev-page-action.c:
+	* shell/ev-page-action.h:
+	* shell/ev-page-cache.h:
+	* shell/ev-password-view.h:
+	* shell/ev-password.h:
+	* shell/ev-pixbuf-cache.h:
+	* shell/ev-properties-fonts.c:
+	* shell/ev-sidebar-attachments.c:
+	* shell/ev-sidebar-links.c:
+	* shell/ev-sidebar-links.h:
+	* shell/ev-sidebar-thumbnails.c:
+	* shell/ev-sidebar-thumbnails.h:
+	* shell/ev-sidebar.c:
+	* shell/ev-sidebar.h:
+	* shell/ev-stock-icons.c:
+	* shell/ev-tooltip.h:
+	* shell/ev-view.c:
+	* shell/ev-view.h:
+	* shell/ev-window.c:
+	* shell/ev-window.h:
+	* shell/main.c:
+
+	More #include cleanups. Again: reordering, single gtk.h
+	includes and other stuff.
+
+2008-08-03  Wouter Bolsterlee  <wbolster@svn.gnome.org>
+
 	* shell/eggfindbar.c:
 	* shell/ev-application.c:
 	* shell/ev-message-area.c:

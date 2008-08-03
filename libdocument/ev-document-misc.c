@@ -18,9 +18,12 @@
  */
 
 #include <config.h>
-#include "ev-document-misc.h"
+
 #include <string.h>
+
 #include <gtk/gtk.h>
+
+#include "ev-document-misc.h"
 
 /* Returns a new GdkPixbuf that is suitable for placing in the thumbnail view.
  * It is four pixels wider and taller than the source.  If source_pixbuf is not

@@ -21,12 +21,12 @@
 #ifndef __EV_JOBS_H__
 #define __EV_JOBS_H__
 
-#include <gtk/gtk.h>
 #include <gio/gio.h>
+#include <gtk/gtk.h>
 
 #include "ev-document.h"
-#include "ev-window.h"
 #include "ev-selection.h"
+#include "ev-window.h"
 
 G_BEGIN_DECLS
 

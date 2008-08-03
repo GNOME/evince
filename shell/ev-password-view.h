@@ -20,7 +20,8 @@
 #ifndef __EV_PASSWORD_VIEW_H__
 #define __EV_PASSWORD_VIEW_H__
 
-#include <gtk/gtkviewport.h>
+#include <gtk/gtk.h>
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_PASSWORD_VIEW            (ev_password_view_get_type ())

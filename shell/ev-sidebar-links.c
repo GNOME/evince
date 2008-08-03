@@ -25,13 +25,14 @@
 #endif
 
 #include <string.h>
+
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "ev-sidebar-page.h"
-#include "ev-sidebar-links.h"
-#include "ev-job-scheduler.h"
 #include "ev-document-links.h"
+#include "ev-job-scheduler.h"
+#include "ev-sidebar-links.h"
+#include "ev-sidebar-page.h"
 #include "ev-window.h"
 
 struct _EvSidebarLinksPrivate {

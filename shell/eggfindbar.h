@@ -19,7 +19,7 @@ Boston, MA 02111-1307, USA.
 #ifndef __EGG_FIND_BAR_H__
 #define __EGG_FIND_BAR_H__
 
-#include <gtk/gtktoolbar.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

@@ -27,16 +27,17 @@
 #endif
 
 #include <string.h>
+
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "ev-document-misc.h"
+#include "ev-document-thumbnails.h"
+#include "ev-job-scheduler.h"
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"
-#include "ev-document-thumbnails.h"
-#include "ev-document-misc.h"
-#include "ev-job-scheduler.h"
-#include "ev-window.h"
 #include "ev-utils.h"
+#include "ev-window.h"
 
 #define THUMBNAIL_WIDTH 100
 

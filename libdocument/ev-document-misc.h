@@ -22,13 +22,12 @@
 #ifndef EV_DOCUMENT_MISC_H
 #define EV_DOCUMENT_MISC_H
 
+#include <cairo.h>
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtkstyle.h>
-#include <cairo.h>
 
 G_BEGIN_DECLS
-
 
 GdkPixbuf *ev_document_misc_get_thumbnail_frame  (int           width,
 						  int           height,

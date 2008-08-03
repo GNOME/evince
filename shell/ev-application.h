@@ -27,13 +27,12 @@
 #include "config.h"
 #endif
 
-#include <glib/gerror.h>
-#include <glib-object.h>
-#include <gtk/gtkprintsettings.h>
-
-#include "ev-window.h"
+#include <glib.h>
+#include <gtk/gtk.h>
 
 #include "egg-toolbars-model.h"
+
+#include "ev-window.h"
 
 G_BEGIN_DECLS
 

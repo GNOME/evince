@@ -33,7 +33,6 @@
 
 G_BEGIN_DECLS
 
-
 #define EV_TYPE_DOCUMENT_LINKS		  (ev_document_links_get_type ())
 #define EV_DOCUMENT_LINKS(o)		  (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinks))
 #define EV_DOCUMENT_LINKS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksIface))

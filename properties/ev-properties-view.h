@@ -21,9 +21,9 @@
 #ifndef __EV_PROPERTIES_VIEW_H__
 #define __EV_PROPERTIES_VIEW_H__
 
-#include "ev-document-info.h"
+#include <gtk/gtk.h>
 
-#include <gtk/gtkwidget.h>
+#include "ev-document-info.h"
 
 G_BEGIN_DECLS
 
