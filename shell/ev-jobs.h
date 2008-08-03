@@ -1,5 +1,6 @@
 /* this file is part of evince, a gnome document viewer
  *
+ *  Copyright (C) 2008 Carlos Garcia Campos <carlosgc@gnome.org>
  *  Copyright (C) 2005 Red Hat, Inc
  *
  * Evince is free software; you can redistribute it and/or modify it
@@ -55,6 +56,7 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
 #define EV_JOB_CLASS(klass)	             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
 #define EV_IS_JOB(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB))
+#define EV_JOB_GET_CLASS(object)             (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_JOB, EvJobClass))
 
 #define EV_TYPE_JOB_LINKS		     (ev_job_links_get_type())
 #define EV_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LINKS, EvJobLinks))
@@ -92,23 +94,38 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_IS_JOB_PRINT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
 
 typedef enum {
-	EV_JOB_PRIORITY_LOW,
-	EV_JOB_PRIORITY_HIGH,
-} EvJobPriority;
+	EV_JOB_RUN_THREAD,
+	EV_JOB_RUN_MAIN_LOOP
+} EvJobRunMode;
 
 struct _EvJob
 {
 	GObject parent;
+	
 	EvDocument *document;
-	gboolean finished;
-	gboolean async;
+
+	EvJobRunMode run_mode;
+
+	guint cancelled : 1;
+	guint finished : 1;
+	guint failed : 1;
+	
+	GError *error;
+	GCancellable *cancellable;
+
+	guint idle_finished_id;
+	guint idle_cancelled_id;
 };
 
 struct _EvJobClass
 {
 	GObjectClass parent_class;
 
-	void    (* finished) (EvJob *job);
+	gboolean (*run)         (EvJob *job);
+	
+	/* Signals */
+	void     (* cancelled)  (EvJob *job);
+	void     (* finished)   (EvJob *job);
 };
 
 struct _EvJobLinks
@@ -194,6 +211,9 @@ struct _EvJobFonts
 struct _EvJobFontsClass
 {
         EvJobClass parent_class;
+
+	/* Signals */
+	void (* updated)  (EvJobFonts *job);
 };
 
 struct _EvJobLoad
@@ -203,7 +223,6 @@ struct _EvJobLoad
 	EvLinkDest *dest;
 	EvWindowRunMode mode;
 	gchar *search_string;
-	GError *error;
 	gchar *uri;
 };
 
@@ -216,7 +235,6 @@ struct _EvJobSave
 {
 	EvJob parent;
 
-	GError *error;
 	gchar *uri;
 	gchar *document_uri;
 };
@@ -230,7 +248,6 @@ struct _EvJobPrint
 {
 	EvJob parent;
 
-	GError *error;
 	const gchar *format;
 	gchar  *temp_file;
 	EvPrintRange *ranges;
@@ -251,12 +268,26 @@ struct _EvJobPrintClass
 
 /* Base job class */
 GType           ev_job_get_type           (void) G_GNUC_CONST;
-void            ev_job_finished           (EvJob          *job);
+gboolean        ev_job_run                (EvJob          *job);
+void            ev_job_cancel             (EvJob          *job);
+void            ev_job_failed             (EvJob          *job,
+					   GQuark          domain,
+					   gint            code,
+					   const gchar    *format,
+					   ...);
+void            ev_job_failed_from_error  (EvJob          *job,
+					   GError         *error);
+void            ev_job_succeeded          (EvJob          *job);
+gboolean        ev_job_is_cancelled       (EvJob          *job);
+gboolean        ev_job_is_finished        (EvJob          *job);
+gboolean        ev_job_is_failed          (EvJob          *job);
+EvJobRunMode    ev_job_get_run_mode       (EvJob          *job);
+void            ev_job_set_run_mode       (EvJob          *job,
+					   EvJobRunMode    run_mode);
 
 /* EvJobLinks */
 GType           ev_job_links_get_type     (void) G_GNUC_CONST;
 EvJob          *ev_job_links_new          (EvDocument     *document);
-void            ev_job_links_run          (EvJobLinks     *thumbnail);
 
 /* EvJobRender */
 GType           ev_job_render_get_type    (void) G_GNUC_CONST;
@@ -272,20 +303,15 @@ void     ev_job_render_set_selection_info (EvJobRender     *job,
 					   EvSelectionStyle selection_style,
 					   GdkColor        *text,
 					   GdkColor        *base);
-void            ev_job_render_run         (EvJobRender     *thumbnail);
-
 /* EvJobThumbnail */
 GType           ev_job_thumbnail_get_type (void) G_GNUC_CONST;
 EvJob          *ev_job_thumbnail_new      (EvDocument      *document,
 					   gint             page,
 					   gint             rotation,
 					   gdouble          scale);
-void            ev_job_thumbnail_run      (EvJobThumbnail  *thumbnail);
-
 /* EvJobFonts */
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
-void		ev_job_fonts_run 	  (EvJobFonts 	   *fonts);
 
 /* EvJobLoad */
 GType 		ev_job_load_get_type 	  (void) G_GNUC_CONST;
@@ -295,14 +321,12 @@ EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri,
 					   const gchar     *search_string);
 void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
-void		ev_job_load_run 	  (EvJobLoad 	   *load);
 
 /* EvJobSave */
 GType           ev_job_save_get_type      (void) G_GNUC_CONST;
 EvJob          *ev_job_save_new           (EvDocument      *document,
 					   const gchar     *uri,
 					   const gchar     *document_uri);
-void            ev_job_save_run           (EvJobSave       *save);
 
 /* EvJobPrint */
 GType           ev_job_print_get_type     (void) G_GNUC_CONST;
@@ -317,7 +341,6 @@ EvJob          *ev_job_print_new          (EvDocument      *document,
 					   gint             copies,
 					   gdouble          collate,
 					   gdouble          reverse);
-void            ev_job_print_run          (EvJobPrint      *print);
 
 G_END_DECLS
 

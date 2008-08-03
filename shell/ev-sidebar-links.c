@@ -30,7 +30,7 @@
 
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-links.h"
-#include "ev-job-queue.h"
+#include "ev-job-scheduler.h"
 #include "ev-document-links.h"
 #include "ev-window.h"
 
@@ -145,7 +145,7 @@ ev_sidebar_links_dispose (GObject *object)
 	if (sidebar->priv->job) {
 		g_signal_handlers_disconnect_by_func (sidebar->priv->job,
 						      job_finished_callback, sidebar);
-		ev_job_queue_remove_job (sidebar->priv->job);						      
+		ev_job_cancel (sidebar->priv->job);						      
 		g_object_unref (sidebar->priv->job);
 		sidebar->priv->job = NULL;
 	}
@@ -702,7 +702,7 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 			  G_CALLBACK (job_finished_callback),
 			  sidebar_links);
 	/* The priority doesn't matter for this job */
-	ev_job_queue_add_job (priv->job, EV_JOB_PRIORITY_LOW);
+	ev_job_scheduler_push_job (priv->job, EV_JOB_PRIORITY_NONE);
 }
 
 static gboolean

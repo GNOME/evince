@@ -1,6 +1,7 @@
-/* this file is part of evince, a gnome document viewer
+/* ev-job-scheduler.h
+ *  this file is part of evince, a gnome document viewer
  *
- *  Copyright (C) 2005 Red Hat, Inc
+ * Copyright (C) 2008 Carlos Garcia Campos <carlosgc@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -17,23 +18,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __EV_JOB_QUEUE_H__
-#define __EV_JOB_QUEUE_H__
+#ifndef EV_JOB_SCHEDULER_H
+#define EV_JOB_SCHEDULER_H
 
-#include <gtk/gtk.h>
+#include <glib.h>
 #include "ev-jobs.h"
 
 G_BEGIN_DECLS
 
+typedef enum {
+	EV_JOB_PRIORITY_URGENT, /* Rendering current page range */
+	EV_JOB_PRIORITY_HIGH,   /* Rendering current thumbnail range */
+	EV_JOB_PRIORITY_LOW,    /* Rendering pages not in current range */
+	EV_JOB_PRIORITY_NONE,   /* Any other job: load, save, print, ... */
+	EV_JOB_N_PRIORITIES
+} EvJobPriority;
 
-void     ev_job_queue_init       (void);
-
-void     ev_job_queue_add_job    (EvJob         *job,
-				  EvJobPriority  priority);
-gboolean ev_job_queue_update_job (EvJob         *job,
-				  EvJobPriority  new_priority);
-gboolean ev_job_queue_remove_job (EvJob         *job);
+void ev_job_scheduler_push_job   (EvJob        *job,
+				  EvJobPriority priority);
+void ev_job_scheduler_update_job (EvJob        *job,
+				  EvJobPriority priority);
 
 G_END_DECLS
 
-#endif /* __EV_JOB_QUEUE_H__ */
+#endif /* EV_JOB_SCHEDULER_H */

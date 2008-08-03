@@ -1,6 +1,5 @@
 #include <config.h>
 #include "ev-page-cache.h"
-#include "ev-job-queue.h"
 #include "ev-document-thumbnails.h"
 #include "ev-page.h"
 #include <stdlib.h>

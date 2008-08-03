@@ -34,7 +34,7 @@
 #include "ev-sidebar-thumbnails.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
-#include "ev-job-queue.h"
+#include "ev-job-scheduler.h"
 #include "ev-window.h"
 #include "ev-utils.h"
 
@@ -207,7 +207,7 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 
 		if (job) {
 			g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, sidebar_thumbnails);
-			ev_job_queue_remove_job (EV_JOB (job));
+			ev_job_cancel (EV_JOB (job));
 			g_object_unref (job);
 		}
 
@@ -263,7 +263,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 			job = ev_job_thumbnail_new (priv->document,
 						    page, priv->rotation,
 						    get_scale_for_page (sidebar_thumbnails, page));
-			ev_job_queue_add_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
+			ev_job_scheduler_push_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
 			
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
@@ -688,8 +688,8 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 
 static gboolean
 ev_sidebar_thumbnails_clear_job (GtkTreeModel *model,                                             
-			         GtkTreePath *path, 					                                                 
-			         GtkTreeIter *iter, 											                                              
+			         GtkTreePath *path,
+			         GtkTreeIter *iter,
 				 gpointer data)
 {
 	EvJob *job;
@@ -697,7 +697,7 @@ ev_sidebar_thumbnails_clear_job (GtkTreeModel *model,
 	gtk_tree_model_get (model, iter, COLUMN_JOB, &job, -1);
 	
 	if (job != NULL) {
-		ev_job_queue_remove_job (job);
+		ev_job_cancel (job);
 		g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, data);
 		g_object_unref (job);
 	}

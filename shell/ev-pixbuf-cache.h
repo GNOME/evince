@@ -27,7 +27,6 @@
 #include <gtk/gtkwidget.h>
 #include "ev-document.h"
 #include "ev-selection.h"
-#include "ev-job-queue.h"
 
 G_BEGIN_DECLS
 

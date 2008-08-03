@@ -89,6 +89,12 @@ ev_document_doc_mutex_unlock (void)
 	g_mutex_unlock (ev_document_get_doc_mutex ());
 }
 
+gboolean
+ev_document_doc_mutex_trylock (void)
+{
+	return g_mutex_trylock (ev_document_get_doc_mutex ());
+}
+
 GMutex *
 ev_document_get_fc_mutex (void)
 {
@@ -108,6 +114,12 @@ void
 ev_document_fc_mutex_unlock (void)
 {
 	g_mutex_unlock (ev_document_get_fc_mutex ());
+}
+
+gboolean
+ev_document_fc_mutex_trylock (void)
+{
+	return g_mutex_trylock (ev_document_get_fc_mutex ());
 }
 
 gboolean

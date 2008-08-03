@@ -1,6 +1,6 @@
 #include <config.h>
 #include "ev-pixbuf-cache.h"
-#include "ev-job-queue.h"
+#include "ev-job-scheduler.h"
 #include "ev-page-cache.h"
 #include "ev-document-images.h"
 #include "ev-document-forms.h"
@@ -163,8 +163,8 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		g_signal_handlers_disconnect_by_func (job_info->job,
 						      G_CALLBACK (job_finished_cb),
 						      data);
-		ev_job_queue_remove_job (job_info->job);
-		g_object_unref (G_OBJECT (job_info->job));
+		ev_job_cancel (job_info->job);
+		g_object_unref (job_info->job);
 		job_info->job = NULL;
 	}
 	if (job_info->surface) {
@@ -313,7 +313,7 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 	g_signal_handlers_disconnect_by_func (job_info->job,
 					      G_CALLBACK (job_finished_cb),
 					      pixbuf_cache);
-	ev_job_queue_remove_job (job_info->job);
+	ev_job_cancel (job_info->job);
 	g_object_unref (job_info->job);
 	job_info->job = NULL;
 }
@@ -330,11 +330,11 @@ move_one_job (CacheJobInfo  *job_info,
 	      CacheJobInfo  *new_next_job,
 	      int            start_page,
 	      int            end_page,
-	      EvJobPriority  priority)
+	      gint           priority)
 {
 	CacheJobInfo *target_page = NULL;
 	int page_offset;
-	EvJobPriority new_priority;
+	gint new_priority;
 
 	if (page < (start_page - pixbuf_cache->preload_cache_size) ||
 	    page > (end_page + pixbuf_cache->preload_cache_size)) {
@@ -361,7 +361,7 @@ move_one_job (CacheJobInfo  *job_info,
 		page_offset = page - start_page;
 		g_assert (page_offset >= 0 &&
 			  page_offset <= ((end_page - start_page) + 1));
-		new_priority = EV_JOB_PRIORITY_HIGH;
+		new_priority = EV_JOB_PRIORITY_URGENT;
 		target_page = new_job_list + page_offset;
 	}
 
@@ -374,7 +374,7 @@ move_one_job (CacheJobInfo  *job_info,
 	job_info->form_field_mapping = NULL;
 
 	if (new_priority != priority && target_page->job) {
-		ev_job_queue_update_job (target_page->job, new_priority);
+		ev_job_scheduler_update_job (target_page->job, new_priority);
 	}
 }
 
@@ -421,7 +421,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 		move_one_job (pixbuf_cache->job_list + i,
 			      pixbuf_cache, page,
 			      new_job_list, new_prev_job, new_next_job,
-			      start_page, end_page, EV_JOB_PRIORITY_HIGH);
+			      start_page, end_page, EV_JOB_PRIORITY_URGENT);
 		page ++;
 	}
 
@@ -529,8 +529,8 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		g_signal_handlers_disconnect_by_func (job_info->job,
 						      G_CALLBACK (job_finished_cb),
 						      pixbuf_cache);
-		ev_job_queue_remove_job (job_info->job);
-		g_object_unref (G_OBJECT (job_info->job));
+		ev_job_cancel (job_info->job);
+		g_object_unref (job_info->job);
 		job_info->job = NULL;
 	}
 }
@@ -647,13 +647,13 @@ add_job (EvPixbufCache *pixbuf_cache,
 						  text, base);
 	}
 
-	ev_job_queue_add_job (job_info->job, priority);
 	g_signal_connect (G_OBJECT (job_info->job), "page-ready",
 			  G_CALLBACK (job_page_ready_cb),
 			  pixbuf_cache);
 	g_signal_connect (G_OBJECT (job_info->job), "finished",
 			  G_CALLBACK (job_finished_cb),
 			  pixbuf_cache);
+	ev_job_scheduler_push_job (job_info->job, priority);
 }
 
 static void
@@ -701,7 +701,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 
 		add_job_if_needed (pixbuf_cache, job_info,
 				   page_cache, page, rotation, scale,
-				   EV_JOB_PRIORITY_HIGH);
+				   EV_JOB_PRIORITY_URGENT);
 	}
 
 	for (i = FIRST_VISABLE_PREV(pixbuf_cache); i < pixbuf_cache->preload_cache_size; i++) {
@@ -1235,7 +1235,7 @@ ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
 
         add_job (pixbuf_cache, job_info, page_cache, region,
 		 width, height, page, rotation, scale,
-		 EV_JOB_PRIORITY_HIGH);
+		 EV_JOB_PRIORITY_URGENT);
 }
 
 

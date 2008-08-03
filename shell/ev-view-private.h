@@ -24,6 +24,7 @@
 #include "ev-view.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
+#include "ev-jobs.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
 #include "ev-selection.h"

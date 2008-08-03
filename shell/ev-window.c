@@ -49,7 +49,7 @@
 #include "ev-document-images.h"
 #include "ev-document-security.h"
 #include "ev-document-factory.h"
-#include "ev-job-queue.h"
+#include "ev-job-scheduler.h"
 #include "ev-jobs.h"
 #include "ev-sidebar-page.h"
 #include "eggfindbar.h"
@@ -221,16 +221,16 @@ static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_si
 							 EvWindow         *ev_window);
 static void     ev_window_set_page_mode                 (EvWindow         *window,
 							 EvWindowPageMode  page_mode);
-static void	ev_window_load_job_cb  			(EvJobLoad        *job,
+static void	ev_window_load_job_cb  			(EvJob            *job,
 							 gpointer          data);
 static void     ev_window_reload_document               (EvWindow         *window);
-static void     ev_window_reload_job_cb                 (EvJobLoad        *job,
+static void     ev_window_reload_job_cb                 (EvJob            *job,
 							 EvWindow         *window);
 static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
 							 EvWindow         *ev_window);
-static void     ev_window_print_job_cb                  (EvJobPrint       *job,
+static void     ev_window_print_job_cb                  (EvJob            *job,
 							 EvWindow         *window);
-static void     ev_window_save_job_cb                   (EvJobSave        *save,
+static void     ev_window_save_job_cb                   (EvJob            *save,
 							 EvWindow         *window);
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
 							 GParamSpec       *pspec,
@@ -1080,8 +1080,9 @@ static void
 ev_window_clear_thumbnail_job (EvWindow *ev_window)
 {
 	if (ev_window->priv->thumbnail_job != NULL) {
-		ev_job_queue_remove_job (ev_window->priv->thumbnail_job);
-
+		if (!ev_job_is_finished (ev_window->priv->thumbnail_job))
+			ev_job_cancel (ev_window->priv->thumbnail_job);
+		
 		g_signal_handlers_disconnect_by_func (ev_window->priv->thumbnail_job,
 						      ev_window_set_icon_from_thumbnail,
 						      ev_window);
@@ -1125,7 +1126,7 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 	g_signal_connect (ev_window->priv->thumbnail_job, "finished",
 			  G_CALLBACK (ev_window_set_icon_from_thumbnail),
 			  ev_window);
-	ev_job_queue_add_job (EV_JOB (ev_window->priv->thumbnail_job), EV_JOB_PRIORITY_LOW);
+	ev_job_scheduler_push_job (ev_window->priv->thumbnail_job, EV_JOB_PRIORITY_NONE);
 }
 
 static gboolean
@@ -1231,7 +1232,7 @@ password_dialog_response (GtkWidget *password_dialog,
 		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
 
 		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
 		
 		gtk_widget_destroy (password_dialog);
 			
@@ -1277,9 +1278,8 @@ static void
 ev_window_clear_load_job (EvWindow *ev_window)
 {
 	if (ev_window->priv->load_job != NULL) {
-		
-		if (!ev_window->priv->load_job->finished)
-			ev_job_queue_remove_job (ev_window->priv->load_job);
+		if (!ev_job_is_finished (ev_window->priv->load_job))
+			ev_job_cancel (ev_window->priv->load_job);
 		
 		g_signal_handlers_disconnect_by_func (ev_window->priv->load_job, ev_window_load_job_cb, ev_window);
 		g_object_unref (ev_window->priv->load_job);
@@ -1291,9 +1291,8 @@ static void
 ev_window_clear_reload_job (EvWindow *ev_window)
 {
 	if (ev_window->priv->reload_job != NULL) {
-		
-		if (!ev_window->priv->reload_job->finished)
-			ev_job_queue_remove_job (ev_window->priv->reload_job);
+		if (!ev_job_is_finished (ev_window->priv->reload_job))
+			ev_job_cancel (ev_window->priv->reload_job);
 		
 		g_signal_handlers_disconnect_by_func (ev_window->priv->reload_job, ev_window_reload_job_cb, ev_window);
 		g_object_unref (ev_window->priv->reload_job);
@@ -1349,21 +1348,22 @@ ev_window_clear_temp_file (EvWindow *ev_window)
  * function should _not_ necessarily expect those to exist after being
  * called. */
 static void
-ev_window_load_job_cb  (EvJobLoad *job,
+ev_window_load_job_cb  (EvJob *job,
 			gpointer data)
 {
 	EvWindow *ev_window = EV_WINDOW (data);
 	EvDocument *document = EV_JOB (job)->document;
+	EvJobLoad *job_load = EV_JOB_LOAD (job);
 
-	g_assert (job->uri);
+	g_assert (job_load->uri);
 
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 
 	/* Success! */
-	if (job->error == NULL) {
+	if (!ev_job_is_failed (job)) {
 		ev_window_set_document (ev_window, document);
 		
-		if (job->mode != EV_WINDOW_MODE_PREVIEW) {
+		if (job_load->mode != EV_WINDOW_MODE_PREVIEW) {
 			setup_view_from_metadata (ev_window);
 		}
 
@@ -1371,17 +1371,17 @@ ev_window_load_job_cb  (EvJobLoad *job,
 			ev_window_add_recent (ev_window, ev_window->priv->uri);
 		}
 
-		if (job->dest) {
+		if (job_load->dest) {
 			EvLink *link;
 			EvLinkAction *link_action;
 	
-			link_action = ev_link_action_new_dest (g_object_ref (job->dest));
+			link_action = ev_link_action_new_dest (g_object_ref (job_load->dest));
 			link = ev_link_new (NULL, link_action);
 			ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
 		    	g_object_unref (link);
 		}
 
-		switch (job->mode) {
+		switch (job_load->mode) {
 		        case EV_WINDOW_MODE_FULLSCREEN:
 				ev_window_run_fullscreen (ev_window);
 				break;
@@ -1395,14 +1395,23 @@ ev_window_load_job_cb  (EvJobLoad *job,
 				break;
 		}
 
-		if (job->search_string && EV_IS_DOCUMENT_FIND (document)) {
+		/* Restart the search after reloading */
+		if (ev_window->priv->in_reload) {
+			GtkWidget *widget;
+			
+			widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
+			if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
+				find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
+							    NULL, ev_window);
+			}
+		} else if (job_load->search_string && EV_IS_DOCUMENT_FIND (document)) {
 			ev_window_cmd_edit_find (NULL, ev_window);
 			egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
-							job->search_string);
+							job_load->search_string);
 		}
 
 		/* Create a monitor for the document */
-		ev_window->priv->monitor = ev_file_monitor_new (job->uri);
+		ev_window->priv->monitor = ev_file_monitor_new (job_load->uri);
 		g_signal_connect_swapped (G_OBJECT (ev_window->priv->monitor), "changed",
 					  G_CALLBACK (ev_window_document_changed),
 					  ev_window);
@@ -1418,7 +1427,7 @@ ev_window_load_job_cb  (EvJobLoad *job,
 
 		setup_view_from_metadata (ev_window);
 
-		file = g_file_new_for_uri (job->uri);
+		file = g_file_new_for_uri (job_load->uri);
 		base_name = g_file_get_basename (file);
 		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
 						base_name);
@@ -1436,18 +1445,18 @@ ev_window_load_job_cb  (EvJobLoad *job,
 }
 
 static void
-ev_window_reload_job_cb (EvJobLoad *job,
-			 EvWindow  *ev_window)
+ev_window_reload_job_cb (EvJob    *job,
+			 EvWindow *ev_window)
 {
 	GtkWidget *widget;
-	
-	if (job->error) {
+
+	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
 		ev_window->priv->in_reload = FALSE;
 		return;
 	}
 
-	ev_window_set_document (ev_window, EV_JOB (job)->document);
+	ev_window_set_document (ev_window, job->document);
 
 	/* Restart the search after reloading */
 	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
@@ -1539,7 +1548,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 	
 	g_file_copy_finish (source, async_result, &error);
 	if (!error) {
-		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
 		g_object_unref (source);
 		
 		return;
@@ -1649,7 +1658,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		ev_window_load_file_remote (ev_window, source_file);
 	} else {
 		g_object_unref (source_file);
-		ev_job_queue_add_job (ev_window->priv->load_job, EV_JOB_PRIORITY_HIGH);
+		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
 	}
 }
 
@@ -1666,7 +1675,7 @@ ev_window_reload_document (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->reload_job, "finished",
 			  G_CALLBACK (ev_window_reload_job_cb),
 			  ev_window);
-	ev_job_queue_add_job (ev_window->priv->reload_job, EV_JOB_PRIORITY_LOW);
+	ev_job_scheduler_push_job (ev_window->priv->reload_job, EV_JOB_PRIORITY_NONE);
 }
 
 static void
@@ -2067,8 +2076,8 @@ static void
 ev_window_clear_save_job (EvWindow *ev_window)
 {
 	if (ev_window->priv->save_job != NULL) {
-		if (!ev_window->priv->save_job->finished)
-			ev_job_queue_remove_job (ev_window->priv->save_job);
+		if (!ev_job_is_finished (ev_window->priv->save_job))
+			ev_job_cancel (ev_window->priv->save_job);
 		
 		g_signal_handlers_disconnect_by_func (ev_window->priv->save_job,
 						      ev_window_save_job_cb,
@@ -2079,13 +2088,14 @@ ev_window_clear_save_job (EvWindow *ev_window)
 }
 
 static void
-ev_window_save_job_cb (EvJobSave *job,
+ev_window_save_job_cb (EvJob     *job,
 		       EvWindow  *window)
 {
-	if (job->error) {
+	if (ev_job_is_failed (job)) {
 		gchar *msg;
 		
-		msg = g_strdup_printf (_("The file could not be saved as “%s”."), job->uri);
+		msg = g_strdup_printf (_("The file could not be saved as “%s”."),
+				       EV_JOB_SAVE (job)->uri);
 		ev_window_error_message (GTK_WINDOW (window), msg, job->error);
 		g_free (msg);
 	}
@@ -2114,10 +2124,9 @@ file_save_dialog_response_cb (GtkWidget *fc,
 			  G_CALLBACK (ev_window_save_job_cb),
 			  ev_window);
 	/* The priority doesn't matter for this job */
-	ev_job_queue_add_job (ev_window->priv->save_job, EV_JOB_PRIORITY_LOW);
+	ev_job_scheduler_push_job (ev_window->priv->save_job, EV_JOB_PRIORITY_NONE);
 
 	g_free (uri);
-
 	gtk_widget_destroy (fc);
 }
 
@@ -2187,8 +2196,8 @@ static void
 ev_window_clear_print_job (EvWindow *window)
 {
 	if (window->priv->print_job) {
-		if (!window->priv->print_job->finished)
-			ev_job_queue_remove_job (window->priv->print_job);
+		if (!ev_job_is_finished (window->priv->print_job))
+			ev_job_cancel (window->priv->print_job);
 
 		g_signal_handlers_disconnect_by_func (window->priv->print_job,
 						      ev_window_print_job_cb,
@@ -2349,18 +2358,18 @@ ev_window_print_send (EvWindow    *window,
 }
 
 static void
-ev_window_print_job_cb (EvJobPrint *job,
-			EvWindow   *window)
+ev_window_print_job_cb (EvJob    *job,
+			EvWindow *window)
 {
-	if (job->error) {
+	if (ev_job_is_failed (job)) {
 		g_warning ("%s", job->error->message);
 		ev_window_clear_print_job (window);
 		return;
 	}
 
-	g_assert (job->temp_file != NULL);
+	g_assert (EV_JOB_PRINT (job)->temp_file != NULL);
 
-	ev_window_print_send (window, job->temp_file);
+	ev_window_print_send (window, EV_JOB_PRINT (job)->temp_file);
 }
 
 static gboolean
@@ -2494,7 +2503,7 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 			  G_CALLBACK (ev_window_print_job_cb),
 			  window);
 	/* The priority doesn't matter for this job */
-	ev_job_queue_add_job (window->priv->print_job, EV_JOB_PRIORITY_LOW);
+	ev_job_scheduler_push_job (window->priv->print_job, EV_JOB_PRIORITY_NONE);
 	
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 	window->priv->print_dialog = NULL;

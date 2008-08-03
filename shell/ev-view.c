@@ -39,7 +39,6 @@
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
 #include "ev-document-misc.h"
-#include "ev-job-queue.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-transition-animation.h"

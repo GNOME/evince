@@ -25,7 +25,7 @@
 #include "ev-properties-fonts.h"
 #include "ev-document-fonts.h"
 #include "ev-jobs.h"
-#include "ev-job-queue.h"
+#include "ev-job-scheduler.h"
 
 #include <glib/gi18n.h>
 #include <gtk/gtktreeview.h>
@@ -63,12 +63,10 @@ ev_properties_fonts_dispose (GObject *object)
 	}
 	
 	if (properties->fonts_job) {
-
-		g_signal_handlers_disconnect_by_func
-				(properties->fonts_job, 
-				 job_fonts_finished_cb, 
-				 properties);
-		ev_job_queue_remove_job (properties->fonts_job);
+		g_signal_handlers_disconnect_by_func (properties->fonts_job, 
+						      job_fonts_finished_cb, 
+						      properties);
+		ev_job_cancel (properties->fonts_job);
 
 		g_object_unref (properties->fonts_job);		
 		properties->fonts_job = NULL;
@@ -161,29 +159,23 @@ update_progress_label (GtkWidget *label, double progress)
 
 static void
 job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties)
-{	
-	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS (job->document);
-	double progress;
-	
-	progress = ev_document_fonts_get_progress (document_fonts);
+{
+	g_signal_handlers_disconnect_by_func (job, job_fonts_finished_cb, properties);
+	g_object_unref (properties->fonts_job);
+	properties->fonts_job = NULL;
+}
+
+static void
+job_fonts_updated_cb (EvJobFonts *job, gdouble progress, EvPropertiesFonts *properties)
+{
+	GtkTreeModel *model;
+	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS (properties->document);
+
 	update_progress_label (properties->fonts_progress_label, progress);
 
-	if (EV_JOB_FONTS (job)->scan_completed) {
-		g_signal_handlers_disconnect_by_func
-				(job, job_fonts_finished_cb, properties);
-		g_object_unref (properties->fonts_job);
-		properties->fonts_job = NULL;
-	} else {
-		GtkTreeModel *model;
-
-		model = gtk_tree_view_get_model
-				(GTK_TREE_VIEW (properties->fonts_treeview));
-		ev_document_doc_mutex_lock ();
-		ev_document_fonts_fill_model (document_fonts, model);
-		ev_document_doc_mutex_unlock ();
-
-		ev_job_queue_add_job (job, EV_JOB_PRIORITY_LOW);
-	}
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (properties->fonts_treeview));
+	/* Documen lock is already held by the jop */
+	ev_document_fonts_fill_model (document_fonts, model);
 }
 
 void
@@ -200,10 +192,13 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 	gtk_tree_view_set_model (tree_view, GTK_TREE_MODEL (list_store));
 
 	properties->fonts_job = ev_job_fonts_new (properties->document);
+	g_signal_connect (properties->fonts_job, "updated",
+			  G_CALLBACK (job_fonts_updated_cb),
+			  properties);
 	g_signal_connect (properties->fonts_job, "finished",
 			  G_CALLBACK (job_fonts_finished_cb),
 			  properties);
-	ev_job_queue_add_job (properties->fonts_job, EV_JOB_PRIORITY_LOW);
+	ev_job_scheduler_push_job (properties->fonts_job, EV_JOB_PRIORITY_NONE);
 }
 
 GtkWidget *

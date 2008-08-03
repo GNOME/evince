@@ -41,7 +41,6 @@
 #endif
 
 #include "ev-stock-icons.h"
-#include "ev-job-queue.h"
 #include "ev-file-helpers.h"
 #include "ev-backends-manager.h"
 
@@ -391,7 +390,6 @@ main (int argc, char *argv[])
 		ev_metadata_manager_init ();
 	}
 
-	ev_job_queue_init ();
 	g_set_application_name (_("Evince Document Viewer"));
 
 	ev_file_helpers_init ();

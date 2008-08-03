@@ -28,8 +28,8 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
-	ev-job-queue.h			\
-	ev-job-queue.c			\
+	ev-job-scheduler.h		\
+	ev-job-scheduler.c		\
 	ev-jobs.h			\
 	ev-jobs.c			\
 	ev-file-monitor.h		\
