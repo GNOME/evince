@@ -22,6 +22,8 @@
 #define __EV_JOBS_H__
 
 #include <gtk/gtk.h>
+#include <gio/gio.h>
+
 #include "ev-document.h"
 #include "ev-window.h"
 #include "ev-selection.h"
