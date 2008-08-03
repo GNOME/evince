@@ -22,10 +22,11 @@
 #include "config.h"
 #endif
 
-#include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include "ev-password-view.h"
+#include <gtk/gtk.h>
+
 #include "ev-marshal.h"
+#include "ev-password-view.h"
 
 enum {
 	UNLOCK,

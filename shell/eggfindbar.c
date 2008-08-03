@@ -21,20 +21,8 @@ Boston, MA 02111-1307, USA.
 #include "eggfindbar.h"
 
 #include <glib/gi18n.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtkcheckbutton.h>
-#include <gtk/gtkvseparator.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtklabel.h>
+#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtkbindings.h>
-#include <gtk/gtkalignment.h>
-#include <gtk/gtktoolbutton.h>
-#include <gtk/gtkseparatortoolitem.h>
-#include <gtk/gtkarrow.h>
-#include <gtk/gtktoggletoolbutton.h>
-#include <gtk/gtkversion.h>
 
 #include <string.h>
 

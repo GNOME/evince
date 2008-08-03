@@ -22,8 +22,9 @@
 #include "config.h"
 #endif
 
-#include "ev-sidebar-page.h"
 #include <gtk/gtk.h>
+
+#include "ev-sidebar-page.h"
 
 static void ev_sidebar_page_iface_init (gpointer iface);
 

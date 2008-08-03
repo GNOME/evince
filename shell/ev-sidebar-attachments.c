@@ -25,10 +25,10 @@
 #include "config.h"
 #endif
 
+#include <string.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
-#include <string.h>
 
 #include "ev-file-helpers.h"
 #include "ev-sidebar-attachments.h"

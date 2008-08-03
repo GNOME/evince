@@ -27,8 +27,8 @@
 #endif
 
 #include <string.h>
-#include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"

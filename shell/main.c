@@ -19,15 +19,11 @@
 
 #include "config.h"
 
-#include "ev-application.h"
-#include "ev-metadata-manager.h"
-#include "ev-debug.h"
-
-#include <glib/gi18n.h>
-#include <gdk/gdkx.h>
-#include <gtk/gtkmain.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 #if WITH_GNOME
 #include <libgnome/gnome-program.h>
@@ -40,9 +36,12 @@
 #include <dbus/dbus-glib-bindings.h>
 #endif
 
-#include "ev-stock-icons.h"
-#include "ev-file-helpers.h"
+#include "ev-application.h"
 #include "ev-backends-manager.h"
+#include "ev-debug.h"
+#include "ev-file-helpers.h"
+#include "ev-metadata-manager.h"
+#include "ev-stock-icons.h"
 
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;

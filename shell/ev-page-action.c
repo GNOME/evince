@@ -18,7 +18,14 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
+#include <string.h>
+#include <stdlib.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #include "ev-page-action.h"
 #include "ev-page-cache.h"
@@ -26,14 +33,6 @@
 #include "ev-document-links.h"
 #include "ev-page-action-widget.h"
 #include "ev-marshal.h"
-
-#include <glib/gi18n.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtktoolitem.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkhbox.h>
-#include <string.h>
-#include <stdlib.h>
 
 struct _EvPageActionPrivate
 {

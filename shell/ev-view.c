@@ -18,15 +18,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
+
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <gtk/gtkalignment.h>
 #include <glib/gi18n.h>
-#include <gtk/gtkbindings.h>
-#include <gtk/gtkselection.h>
-#include <gtk/gtkclipboard.h>
+#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "ev-marshal.h"

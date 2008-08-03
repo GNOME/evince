@@ -20,17 +20,11 @@
 
 #include "config.h"
 
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+
 #include "ev-navigation-action.h"
 #include "ev-navigation-action-widget.h"
-
-#include <gtk/gtklabel.h>
-#include <gtk/gtkimage.h>
-#include <gtk/gtkmenuitem.h>
-#include <gtk/gtkimagemenuitem.h>
-#include <gtk/gtkmenushell.h>
-#include <gtk/gtkmenu.h>
-#include <gtk/gtkmenutoolbutton.h>
-#include <glib/gi18n.h>
 
 enum
 {

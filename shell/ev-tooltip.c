@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include "ev-tooltip.h"
+#include <gtk/gtk.h>
 
-#include <gtk/gtklabel.h>
+#include "ev-tooltip.h"
 
 #define DEFAULT_DELAY 500
 #define STICKY_DELAY 500

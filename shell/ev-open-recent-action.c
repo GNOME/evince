@@ -18,8 +18,9 @@
  */
 
 #include <config.h>
-#include <gtk/gtk.h>
+
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 #include "ev-open-recent-action.h"
 

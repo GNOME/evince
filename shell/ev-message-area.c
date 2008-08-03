@@ -22,12 +22,8 @@
  */
 
 #include <config.h>
-#include <gtk/gtkaccessible.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkimage.h>
-#include <gtk/gtkstock.h>
+
+#include <gtk/gtk.h>
 
 #include "ev-message-area.h"
 

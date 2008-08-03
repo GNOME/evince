@@ -20,19 +20,16 @@
 
 #include "config.h"
 
+#include <string.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+
 #include "ev-page-action.h"
 #include "ev-page-cache.h"
 #include "ev-window.h"
 #include "ev-document-links.h"
 #include "ev-page-action-widget.h"
 #include "ev-marshal.h"
-
-#include <glib/gi18n.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtktoolitem.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkhbox.h>
-#include <string.h>
 
 /* Widget we pass back */
 static void  ev_page_action_widget_init       (EvPageActionWidget      *action_widget);

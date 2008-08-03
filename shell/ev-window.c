@@ -28,6 +28,18 @@
 #include "config.h"
 #endif
 
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <glib/gstdio.h>
+#include <glib/gi18n.h>
+#include <gio/gio.h>
+#include <gtk/gtk.h>
+#include <gtk/gtkprintunixdialog.h>
+#include <gconf/gconf-client.h>
+
 #include "ev-window.h"
 #include "ev-window-title.h"
 #include "ev-navigation-action.h"
@@ -68,26 +80,14 @@
 #include "ev-message-area.h"
 #include "ev-mount-operation.h"
 #include "ev-file-monitor.h"
+
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
-#include <gtk/gtkprintunixdialog.h>
-
 #ifdef ENABLE_PDF
 #include <poppler.h>
 #endif
-
-#include <glib/gstdio.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
-#include <gio/gio.h>
-#include <gconf/gconf-client.h>
-
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 typedef enum {
 	PAGE_MODE_DOCUMENT,

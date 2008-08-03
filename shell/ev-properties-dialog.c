@@ -22,18 +22,14 @@
 #include "config.h"
 #endif
 
-#include "ev-properties-view.h"
-#include "ev-properties-fonts.h"
-#include "ev-properties-dialog.h"
-#include "ev-page-cache.h"
-#include "ev-document-fonts.h"
-
 #include <glib/gi18n.h>
-#include <gtk/gtkdialog.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtknotebook.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtkbox.h>
+#include <gtk/gtk.h>
+
+#include "ev-document-fonts.h"
+#include "ev-page-cache.h"
+#include "ev-properties-dialog.h"
+#include "ev-properties-fonts.h"
+#include "ev-properties-view.h"
 
 struct _EvPropertiesDialog {
 	GtkDialog base_instance;

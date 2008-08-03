@@ -24,9 +24,8 @@
 #include <config.h>
 #include "ev-stock-icons.h"
 
-#include <gtk/gtkiconfactory.h>
-#include <gtk/gtkstock.h>
-#include <gdk/gdkpixbuf.h>
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
 
 typedef struct {
 	char *stock_id;

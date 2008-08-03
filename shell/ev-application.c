@@ -21,6 +21,15 @@
  */
 
 #include <config.h>
+
+#include <glib.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+
+#if WITH_GNOME
+#include <libgnomeui/gnome-client.h>
+#endif
+
 #include "ev-application.h"
 #include "ev-utils.h"
 #include "ev-file-helpers.h"
@@ -29,18 +38,6 @@
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 #include "totem-scrsaver.h"
-
-#include <glib.h>
-#include <glib/gi18n.h>
-#include <glib-object.h>
-#include <gtk/gtkfilechooserdialog.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkmain.h>
-
-#if WITH_GNOME
-#include <libgnomeui/gnome-client.h>
-#endif
 
 #ifdef ENABLE_DBUS
 #include "ev-application-service.h"

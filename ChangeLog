@@ -1,3 +1,28 @@
+2008-08-03  Wouter Bolsterlee  <wbolster@svn.gnome.org>
+
+	* shell/eggfindbar.c:
+	* shell/ev-application.c:
+	* shell/ev-message-area.c:
+	* shell/ev-navigation-action.c:
+	* shell/ev-open-recent-action.c:
+	* shell/ev-page-action-widget.c:
+	* shell/ev-page-action.c:
+	* shell/ev-password-view.c:
+	* shell/ev-properties-dialog.c:
+	* shell/ev-properties-fonts.c:
+	* shell/ev-sidebar-attachments.c:
+	* shell/ev-sidebar-page.c:
+	* shell/ev-sidebar-thumbnails.c:
+	* shell/ev-stock-icons.c:
+	* shell/ev-tooltip.c:
+	* shell/ev-view.c:
+	* shell/ev-window.c:
+	* shell/main.c:
+
+	Cleanup many #include statements: reorder so that a
+	generic-to-specific order is used, use single gtk.h
+	includes, and some other cleanups.
+
 2008-08-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-jobs.h:
