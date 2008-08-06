@@ -47,11 +47,11 @@ struct _EvPasswordDialogClass
   GtkDialogClass parent_class;
 };
 
-GType     ev_password_dialog_get_type               (void) G_GNUC_CONST;
+GType       ev_password_dialog_get_type      (void) G_GNUC_CONST;
 
-char      *ev_password_dialog_get_password  (EvPasswordDialog *dialog);
-void       ev_password_dialog_set_bad_pass  (EvPasswordDialog *dialog);
-void	   ev_password_dialog_save_password (EvPasswordDialog *dialog);
+const char *ev_password_dialog_get_password  (EvPasswordDialog *dialog);
+void        ev_password_dialog_set_bad_pass  (EvPasswordDialog *dialog);
+void	    ev_password_dialog_save_password (EvPasswordDialog *dialog);
 
 G_END_DECLS
 

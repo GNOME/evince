@@ -55,7 +55,6 @@
 #include "ev-document-fonts.h"
 #include "ev-document-images.h"
 #include "ev-document-links.h"
-#include "ev-document-security.h"
 #include "ev-document-thumbnails.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
@@ -1219,18 +1218,9 @@ password_dialog_response (GtkWidget *password_dialog,
 			  gint       response_id,
 			  EvWindow  *ev_window)
 {
-	char *password;
-	
 	if (response_id == GTK_RESPONSE_OK) {
-
-		password = ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog));
-		if (password) {
-			ev_document_doc_mutex_lock ();
-			ev_document_security_set_password (EV_DOCUMENT_SECURITY (ev_window->priv->load_job->document),
-							   password);
-			ev_document_doc_mutex_unlock ();
-		}
-		g_free (password);
+		ev_job_load_set_password (EV_JOB_LOAD (ev_window->priv->load_job),
+					  ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog)));
 
 		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
 
@@ -1351,8 +1341,8 @@ ev_window_clear_temp_file (EvWindow *ev_window)
  * function should _not_ necessarily expect those to exist after being
  * called. */
 static void
-ev_window_load_job_cb  (EvJob *job,
-			gpointer data)
+ev_window_load_job_cb (EvJob *job,
+		       gpointer data)
 {
 	EvWindow *ev_window = EV_WINDOW (data);
 	EvDocument *document = EV_JOB (job)->document;
@@ -1398,16 +1388,7 @@ ev_window_load_job_cb  (EvJob *job,
 				break;
 		}
 
-		/* Restart the search after reloading */
-		if (ev_window->priv->in_reload) {
-			GtkWidget *widget;
-			
-			widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
-			if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
-				find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
-							    NULL, ev_window);
-			}
-		} else if (job_load->search_string && EV_IS_DOCUMENT_FIND (document)) {
+		if (job_load->search_string && EV_IS_DOCUMENT_FIND (document)) {
 			ev_window_cmd_edit_find (NULL, ev_window);
 			egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
 							job_load->search_string);
@@ -1458,7 +1439,7 @@ ev_window_reload_job_cb (EvJob    *job,
 		ev_window->priv->in_reload = FALSE;
 		return;
 	}
-
+	
 	ev_window_set_document (ev_window, job->document);
 
 	/* Restart the search after reloading */
@@ -1467,7 +1448,7 @@ ev_window_reload_job_cb (EvJob    *job,
 		find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
 					    NULL, ev_window);
 	}
-
+	
 	ev_window_clear_reload_job (ev_window);
 	ev_window->priv->in_reload = FALSE;
 }
@@ -4271,7 +4252,7 @@ ev_window_dispose (GObject *object)
 		ev_window_clear_local_uri (window);
 		priv->local_uri = NULL;
 	}
-	
+
 	ev_window_close_dialogs (window);
 	ev_window_clear_print_job (window);
 

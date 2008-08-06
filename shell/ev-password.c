@@ -334,10 +334,10 @@ ev_password_search_in_keyring (EvPasswordDialog *dialog, const gchar *uri)
 	return;
 }
 
-char *
+const char *
 ev_password_dialog_get_password (EvPasswordDialog *dialog)
 {
-	return g_strdup (gtk_entry_get_text (GTK_ENTRY (dialog->priv->entry)));
+	return gtk_entry_get_text (GTK_ENTRY (dialog->priv->entry));
 }
 
 void

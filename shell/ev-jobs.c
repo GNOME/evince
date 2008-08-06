@@ -30,7 +30,7 @@
 #include "ev-document-misc.h"
 #include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
-#include "ev-async-renderer.h"
+#include "ev-document-security.h"
 #include "ev-debug.h"
 
 #include <errno.h>
@@ -716,6 +716,11 @@ ev_job_load_dispose (GObject *object)
 		job->uri = NULL;
 	}
 
+	if (job->password) {
+		g_free (job->password);
+		job->password = NULL;
+	}
+
 	if (job->dest) {
 		g_object_unref (job->dest);
 		job->dest = NULL;
@@ -740,11 +745,19 @@ ev_job_load_run (EvJob *job)
 	
 	ev_document_fc_mutex_lock ();
 
-	/* TODO: reuse the job!!! */
 	/* This job may already have a document even if the job didn't complete
 	   because, e.g., a password is required - if so, just reload rather than
 	   creating a new instance */
 	if (job->document) {
+		if (job_load->password) {
+			ev_document_security_set_password (EV_DOCUMENT_SECURITY (job->document),
+							   job_load->password);
+		}
+		
+		job->failed = FALSE;
+		job->finished = FALSE;
+		g_clear_error (&job->error);
+		
 		ev_document_load (job->document,
 				  job_load->uri,
 				  &error);
@@ -803,6 +816,16 @@ ev_job_load_set_uri (EvJobLoad *job, const gchar *uri)
 	if (job->uri)
 		g_free (job->uri);
 	job->uri = g_strdup (uri);
+}
+
+void
+ev_job_load_set_password (EvJobLoad *job, const gchar *password)
+{
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	if (job->password)
+		g_free (job->password);
+	job->password = password ? g_strdup (password) : NULL;
 }
 
 /* EvJobSave */

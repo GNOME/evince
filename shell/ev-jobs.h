@@ -226,6 +226,7 @@ struct _EvJobLoad
 	EvWindowRunMode mode;
 	gchar *search_string;
 	gchar *uri;
+	gchar *password;
 };
 
 struct _EvJobLoadClass
@@ -323,6 +324,8 @@ EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri,
 					   const gchar     *search_string);
 void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
+void            ev_job_load_set_password  (EvJobLoad       *job,
+					   const gchar     *password);
 
 /* EvJobSave */
 GType           ev_job_save_get_type      (void) G_GNUC_CONST;
