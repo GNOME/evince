@@ -578,13 +578,23 @@ ev_mount_operation_ask_password (GMountOperation   *mount_op,
                     G_CALLBACK (pw_dialog_got_response), operation);
 
   if (can_anonymous)
-    gtk_widget_set_sensitive (priv->entry_container, FALSE);
+    {
+      /* The anonymous option will be active by default,
+       * ensure the toggled signal is emitted for it.
+       */
+      gtk_toggle_button_toggled (GTK_TOGGLE_BUTTON (priv->anonymous_toggle));
+    }
   else if (! pw_dialog_input_is_valid (operation))
     gtk_dialog_set_response_sensitive (dialog, GTK_RESPONSE_OK, FALSE);
 
   g_object_notify (G_OBJECT (operation), "is-showing");
 
-  if (priv->parent_window == NULL && priv->screen)
+  if (priv->parent_window)
+    {
+      gtk_window_set_transient_for (window, priv->parent_window);
+      gtk_window_set_modal (window, TRUE);
+    }
+  else if (priv->screen)
     gtk_window_set_screen (GTK_WINDOW (dialog), priv->screen);
 
   gtk_widget_show_all (GTK_WIDGET (dialog));
