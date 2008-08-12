@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince trunk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-24 10:01+0900\n"
-"PO-Revision-Date: 2008-02-24 09:59+0900\n"
+"POT-Creation-Date: 2008-08-12 23:50+0900\n"
+"PO-Revision-Date: 2008-08-12 23:49+0900\n"
 "Last-Translator: Takeshi AIHANA <takeshi.aihana@gmail.com>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../backend/comics/comics-document.c:163
+#: ../backend/comics/comics-document.c:169
 #, c-format
 msgid "File corrupted."
 msgstr "ファイルが壊れています"
 
-#: ../backend/comics/comics-document.c:197
+#: ../backend/comics/comics-document.c:203
 #, c-format
 msgid "No images found in archive %s"
 msgstr "アーカイブ %s の中に画像はありません"
@@ -31,7 +31,7 @@ msgstr "アーカイブ %s の中に画像はありません"
 msgid "Comic Books"
 msgstr "漫画本"
 
-#: ../backend/djvu/djvu-document.c:167
+#: ../backend/djvu/djvu-document.c:247
 #, c-format
 msgid ""
 "The document is composed by several files. One or more of such files cannot "
@@ -44,12 +44,12 @@ msgstr ""
 msgid "Djvu Documents"
 msgstr "Djvu ドキュメント"
 
-#: ../backend/dvi/dvi-document.c:98
+#: ../backend/dvi/dvi-document.c:94
 #, c-format
 msgid "File not available"
 msgstr "ファイルは利用不可です"
 
-#: ../backend/dvi/dvi-document.c:113
+#: ../backend/dvi/dvi-document.c:109
 #, c-format
 msgid "DVI document has incorrect format"
 msgstr "DVI ドキュメントの書式が壊れています"
@@ -59,60 +59,60 @@ msgid "DVI Documents"
 msgstr "DVI ドキュメント"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:674
+#: ../backend/pdf/ev-poppler.cc:688
 msgid "Yes"
 msgstr "はい"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:677
+#: ../backend/pdf/ev-poppler.cc:691
 msgid "No"
 msgstr "いいえ"
 
-#: ../backend/pdf/ev-poppler.cc:750
+#: ../backend/pdf/ev-poppler.cc:765
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:752
+#: ../backend/pdf/ev-poppler.cc:767
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:754
+#: ../backend/pdf/ev-poppler.cc:769
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:756
+#: ../backend/pdf/ev-poppler.cc:771
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:758
+#: ../backend/pdf/ev-poppler.cc:773
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:760
+#: ../backend/pdf/ev-poppler.cc:775
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:762
+#: ../backend/pdf/ev-poppler.cc:777
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:764
+#: ../backend/pdf/ev-poppler.cc:779
 msgid "Unknown font type"
 msgstr "フォントの種類は不明"
 
-#: ../backend/pdf/ev-poppler.cc:790
+#: ../backend/pdf/ev-poppler.cc:805
 msgid "No name"
 msgstr "名前無し"
 
-#: ../backend/pdf/ev-poppler.cc:798
+#: ../backend/pdf/ev-poppler.cc:813
 msgid "Embedded subset"
 msgstr "埋め込みのサブセット"
 
-#: ../backend/pdf/ev-poppler.cc:800
+#: ../backend/pdf/ev-poppler.cc:815
 msgid "Embedded"
 msgstr "埋め込み"
 
-#: ../backend/pdf/ev-poppler.cc:802
+#: ../backend/pdf/ev-poppler.cc:817
 msgid "Not embedded"
 msgstr "埋め込みではない"
 
@@ -120,12 +120,12 @@ msgstr "埋め込みではない"
 msgid "PDF Documents"
 msgstr "PDF ドキュメント"
 
-#: ../backend/impress/impress-document.c:296
+#: ../backend/impress/impress-document.c:297
 #, c-format
 msgid "Remote files aren't supported"
 msgstr "リモートにあるファイルはサポートしていません"
 
-#: ../backend/impress/impress-document.c:307
+#: ../backend/impress/impress-document.c:308
 #, c-format
 msgid "Invalid document"
 msgstr "不正なドキュメントです"
@@ -173,7 +173,7 @@ msgstr "ZIP の中にファイルがありません"
 msgid "Unknown error"
 msgstr "原因不明のエラー"
 
-#: ../backend/ps/ev-spectre.c:113 ../backend/ps/ps-document.c:248
+#: ../backend/ps/ev-spectre.c:113
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "\"%s\" というドキュメントを読み込めませんでした"
@@ -182,105 +182,6 @@ msgstr "\"%s\" というドキュメントを読み込めませんでした"
 #, c-format
 msgid "Failed to save document “%s”"
 msgstr "\"%s\" というドキュメントを保存できませんでした"
-
-#: ../backend/ps/gsdefaults.c:30
-msgid "BBox"
-msgstr "BBox"
-
-#: ../backend/ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "レター"
-
-#: ../backend/ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr "タブロイド"
-
-#: ../backend/ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr "台帳"
-
-#: ../backend/ps/gsdefaults.c:34
-msgid "Legal"
-msgstr "リーガル"
-
-#: ../backend/ps/gsdefaults.c:35
-msgid "Statement"
-msgstr "ステートメント"
-
-#: ../backend/ps/gsdefaults.c:36
-msgid "Executive"
-msgstr "エグゼクティブ"
-
-#: ../backend/ps/gsdefaults.c:37
-msgid "A0"
-msgstr "A0"
-
-#: ../backend/ps/gsdefaults.c:38
-msgid "A1"
-msgstr "A1"
-
-#: ../backend/ps/gsdefaults.c:39
-msgid "A2"
-msgstr "A2"
-
-#: ../backend/ps/gsdefaults.c:40
-msgid "A3"
-msgstr "A3"
-
-#: ../backend/ps/gsdefaults.c:41
-msgid "A4"
-msgstr "A4"
-
-#: ../backend/ps/gsdefaults.c:42
-msgid "A5"
-msgstr "A5"
-
-#: ../backend/ps/gsdefaults.c:43
-msgid "B4"
-msgstr "B4"
-
-#: ../backend/ps/gsdefaults.c:44
-msgid "B5"
-msgstr "B5"
-
-# 二つ折|ページ番号
-#: ../backend/ps/gsdefaults.c:45
-msgid "Folio"
-msgstr "二つ折り"
-
-#: ../backend/ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr "四つ折り"
-
-#: ../backend/ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "10x14"
-
-#: ../backend/ps/ps-document.c:170 ../backend/ps/ps-document.c:184
-#, c-format
-msgid "Cannot open file “%s”."
-msgstr "\"%s\" というファイルを開けません"
-
-#: ../backend/ps/ps-document.c:231
-#, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr ""
-"ドキュメント \"%s\" の読み込みに失敗しました。Ghostscript インタプリタが見つ"
-"かりませんでした"
-
-#: ../backend/ps/ps-document.c:431
-msgid "Encapsulated PostScript"
-msgstr "カプセル化した PostScript"
-
-#: ../backend/ps/ps-document.c:432
-msgid "PostScript"
-msgstr "PostScript"
-
-# 呼出した gs が ps/pdf の解釈に失敗?
-#: ../backend/ps/ps-interpreter.c:543
-msgid "Interpreter failed."
-msgstr "解釈に失敗しました。"
 
 #: ../backend/ps/psdocument.evince-backend.in.h:1
 msgid "PostScript Documents"
@@ -301,24 +202,61 @@ msgstr "添付ファイル \"%s\" を開けませんでした: %s"
 msgid "Couldn't open attachment “%s”"
 msgstr "添付ファイル \"%s\" を開けませんでした"
 
-#: ../libdocument/ev-document-factory.c:177
-#: ../libdocument/ev-document-factory.c:295
+#: ../libdocument/ev-document-factory.c:181
+#: ../libdocument/ev-document-factory.c:302
 #, c-format
 msgid "Unknown MIME Type"
 msgstr "MIME 型が不明です"
 
-#: ../libdocument/ev-document-factory.c:196
+#: ../libdocument/ev-document-factory.c:201
 #, c-format
-msgid "Unhandled MIME type: “%s”"
-msgstr "サポートしていない MIME 型です: \"%s\""
+msgid "File type %s (%s) is not supported"
+msgstr "%s (%s) という種類のファイルはサポートしていません"
 
-#: ../libdocument/ev-document-factory.c:350
+#: ../libdocument/ev-document-factory.c:357
 msgid "All Documents"
 msgstr "全てのドキュメント"
 
-#: ../libdocument/ev-document-factory.c:382
+#: ../libdocument/ev-document-factory.c:389
 msgid "All Files"
 msgstr "全てのファイル"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:439
+msgid "Co_nnect"
+msgstr "接続(_N)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:483
+msgid "Connect _anonymously"
+msgstr "匿名で接続(_A)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:492
+msgid "Connect as u_ser:"
+msgstr "ユーザを指定する(_S):"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:529
+msgid "_Username:"
+msgstr "ユーザ名(_U):"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
+msgid "_Domain:"
+msgstr "ドメイン(_D):"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
+#: ../data/evince-password.glade.h:4
+msgid "_Password:"
+msgstr "パスワード(_P):"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:553
+msgid "_Forget password immediately"
+msgstr "今すぐパスワードを破棄する(_F)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
+msgid "_Remember password until you logout"
+msgstr "ログアウトするまでパスワードを記憶する(_R)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
+msgid "_Remember forever"
+msgstr "パスワードを記憶する(_R)"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -365,7 +303,7 @@ msgid "Running in presentation mode"
 msgstr "プレゼンテーション・モードで起動中です"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4390
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4648
 msgid "Best Fit"
 msgstr "全体に合わせる"
 
@@ -413,7 +351,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3517
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3751
 #: ../shell/ev-window-title.c:132
 #, c-format
 msgid "Document Viewer"
@@ -434,10 +372,6 @@ msgstr "このセッションのパスワードを記憶する"
 #: ../data/evince-password.glade.h:3
 msgid "Save password in keyring"
 msgstr "キーリングにパスワードを保存する"
-
-#: ../data/evince-password.glade.h:4
-msgid "_Password:"
-msgstr "パスワード(_P):"
 
 #: ../data/evince-properties.glade.h:1
 msgid "<b>Author:</b>"
@@ -499,11 +433,11 @@ msgstr "ドキュメントの制限を上書きします"
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "コピーや印刷を制限するようなドキュメントの制限を上書きします"
 
-#: ../properties/ev-properties-main.c:111
+#: ../properties/ev-properties-main.c:114
 msgid "Document"
 msgstr "ドキュメント"
 
-#: ../properties/ev-properties-view.c:182
+#: ../properties/ev-properties-view.c:180
 msgid "None"
 msgstr "なし"
 
@@ -513,7 +447,7 @@ msgstr "なし"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:207
+#: ../properties/ev-properties-view.c:205
 #: ../properties/ev-properties-view.c:367
 msgid "default:mm"
 msgstr "default:mm"
@@ -552,72 +486,72 @@ msgstr "%s の横置き (%s)"
 msgid "%.2f x %.2f in"
 msgstr "%.2f x %.2f インチ"
 
-#: ../shell/eggfindbar.c:158
+#: ../shell/eggfindbar.c:146
 msgid "Search string"
 msgstr "検索する文字列"
 
-#: ../shell/eggfindbar.c:159
+#: ../shell/eggfindbar.c:147
 msgid "The name of the string to be found"
 msgstr "検索する文字列です"
 
-#: ../shell/eggfindbar.c:172
+#: ../shell/eggfindbar.c:160
 msgid "Case sensitive"
 msgstr "大小文字を区別"
 
-#: ../shell/eggfindbar.c:173
+#: ../shell/eggfindbar.c:161
 msgid "TRUE for a case sensitive search"
 msgstr "TRUE にすると大小文字を区別して検索します"
 
-#: ../shell/eggfindbar.c:180
+#: ../shell/eggfindbar.c:168
 msgid "Highlight color"
 msgstr "強調色"
 
-#: ../shell/eggfindbar.c:181
+#: ../shell/eggfindbar.c:169
 msgid "Color of highlight for all matches"
 msgstr "一致するもの全てを強調する色です"
 
-#: ../shell/eggfindbar.c:187
+#: ../shell/eggfindbar.c:175
 msgid "Current color"
 msgstr "現在の色"
 
-#: ../shell/eggfindbar.c:188
+#: ../shell/eggfindbar.c:176
 msgid "Color of highlight for the current match"
 msgstr "現在一致しているものを強調する色です"
 
-#: ../shell/eggfindbar.c:321
+#: ../shell/eggfindbar.c:309
 msgid "Find:"
 msgstr "検索:"
 
-#: ../shell/eggfindbar.c:330
+#: ../shell/eggfindbar.c:318
 msgid "Find Previous"
 msgstr "前方検索"
 
-#: ../shell/eggfindbar.c:334 ../shell/eggfindbar.c:337
+#: ../shell/eggfindbar.c:322 ../shell/eggfindbar.c:325
 msgid "Find previous occurrence of the search string"
 msgstr "ドキュメントの先頭に向かって検索します"
 
-#: ../shell/eggfindbar.c:343
+#: ../shell/eggfindbar.c:331
 msgid "Find Next"
 msgstr "後方検索"
 
-#: ../shell/eggfindbar.c:347 ../shell/eggfindbar.c:350
+#: ../shell/eggfindbar.c:335 ../shell/eggfindbar.c:338
 msgid "Find next occurrence of the search string"
 msgstr "ドキュメントの最後に向かって検索します"
 
-#: ../shell/eggfindbar.c:359
+#: ../shell/eggfindbar.c:347
 msgid "C_ase Sensitive"
 msgstr "大小文字を区別する(_A)"
 
-#: ../shell/eggfindbar.c:363 ../shell/eggfindbar.c:366
+#: ../shell/eggfindbar.c:351 ../shell/eggfindbar.c:354
 msgid "Toggle case sensitive search"
 msgstr "大小文字を区別して検索します"
 
-#: ../shell/ev-jobs.c:650
+#: ../shell/ev-jobs.c:884
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "\"%s\" というファイルの生成に失敗しました: %s"
 
-#: ../shell/ev-open-recent-action.c:71
+#: ../shell/ev-open-recent-action.c:73
 msgid "Open a recently used document"
 msgstr "最近開いたドキュメントを再び開きます"
 
@@ -655,7 +589,7 @@ msgstr "ドキュメント '%s' を読み込めませんでした"
 msgid "Incorrect password"
 msgstr "パスワードが間違っています"
 
-#: ../shell/ev-password-view.c:111
+#: ../shell/ev-password-view.c:112
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
@@ -663,44 +597,44 @@ msgstr ""
 "このドキュメントはロックされているので、妥当なパスワードを入力することによっ"
 "てのみ読み込みが可能です。"
 
-#: ../shell/ev-password-view.c:120
+#: ../shell/ev-password-view.c:121
 msgid "_Unlock Document"
 msgstr "鍵を解除する(_U)"
 
-#: ../shell/ev-properties-dialog.c:61
+#: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
 msgstr "プロパティ"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:90
 msgid "General"
 msgstr "全般"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:100
 msgid "Fonts"
 msgstr "フォント"
 
-#: ../shell/ev-properties-fonts.c:141
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "フォント"
 
-#: ../shell/ev-properties-fonts.c:152
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "フォント情報の収集中... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:675
+#: ../shell/ev-sidebar-attachments.c:676
 msgid "Attachments"
 msgstr "添付ファイル"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3642
+#: ../shell/ev-sidebar-links.c:267 ../shell/ev-view.c:3645
 msgid "Loading..."
 msgstr "読み込み中です..."
 
-#: ../shell/ev-sidebar-links.c:339
+#: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
 msgstr "印刷..."
 
-#: ../shell/ev-sidebar-links.c:719
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "目次"
 
@@ -732,46 +666,46 @@ msgstr "表示を下にスクロールします"
 msgid "Document View"
 msgstr "ドキュメント・ビューア"
 
-#: ../shell/ev-view.c:1442
+#: ../shell/ev-view.c:1441
 msgid "Go to first page"
 msgstr "先頭ページへジャンプします"
 
-#: ../shell/ev-view.c:1444
+#: ../shell/ev-view.c:1443
 msgid "Go to previous page"
 msgstr "前のページへジャンプします"
 
-#: ../shell/ev-view.c:1446
+#: ../shell/ev-view.c:1445
 msgid "Go to next page"
 msgstr "次のページへジャンプします"
 
-#: ../shell/ev-view.c:1448
+#: ../shell/ev-view.c:1447
 msgid "Go to last page"
 msgstr "最後のページへジャンプします"
 
-#: ../shell/ev-view.c:1450
+#: ../shell/ev-view.c:1449
 msgid "Go to page"
 msgstr "ページへジャンプします"
 
-#: ../shell/ev-view.c:1452
+#: ../shell/ev-view.c:1451
 msgid "Find"
 msgstr "検索"
 
-#: ../shell/ev-view.c:1480
+#: ../shell/ev-view.c:1479
 #, c-format
 msgid "Go to page %s"
 msgstr "%s ページへジャンプします"
 
-#: ../shell/ev-view.c:1486
+#: ../shell/ev-view.c:1485
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "ファイル \"%2$s\" の %1$s へジャンプします"
 
-#: ../shell/ev-view.c:1489
+#: ../shell/ev-view.c:1488
 #, c-format
 msgid "Go to file “%s”"
 msgstr "ファイル \"%s\" へ移動します"
 
-#: ../shell/ev-view.c:1497
+#: ../shell/ev-view.c:1496
 #, c-format
 msgid "Launch %s"
 msgstr "%s の起動"
@@ -780,87 +714,91 @@ msgstr "%s の起動"
 msgid "End of presentation. Press Escape to exit."
 msgstr "プレゼンテーションの最後です。[ESC] キーで終了します。"
 
-#: ../shell/ev-view.c:3371
+#: ../shell/ev-view.c:3372
 msgid "Jump to page:"
 msgstr "移動先のページ:"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-view.c:5149
+#: ../shell/ev-view.c:5156
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "このページで %d個見つかりました"
 msgstr[1] "このページで %d個見つかりました"
 
-#: ../shell/ev-view.c:5158
+#: ../shell/ev-view.c:5165
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "検索残り %3d%%"
 
-#: ../shell/ev-window.c:750
+#: ../shell/ev-window.c:787
 #, c-format
 msgid "Page %s - %s"
 msgstr "%s - %s ページ"
 
-#: ../shell/ev-window.c:752
+#: ../shell/ev-window.c:789
 #, c-format
 msgid "Page %s"
 msgstr "%s ページ"
 
-#: ../shell/ev-window.c:1381
+#: ../shell/ev-window.c:1203
+msgid "The document contains no pages"
+msgstr "ドキュメントにはページがありません"
+
+#: ../shell/ev-window.c:1425 ../shell/ev-window.c:1500
 msgid "Unable to open document"
 msgstr "ドキュメントを開けません"
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1697
 msgid "Open Document"
 msgstr "ドキュメントを開く"
 
-#: ../shell/ev-window.c:1603
+#: ../shell/ev-window.c:1758
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "\"%s\" のシンボリック・リンクを生成できませんでした: %s"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1787
 msgid "Cannot open a copy."
 msgstr "コピーをを開けません"
 
-#: ../shell/ev-window.c:1876 ../shell/ev-window.c:1926
+#: ../shell/ev-window.c:2031 ../shell/ev-window.c:2081
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ファイルを \"%s\" として保存できませんでした。"
 
-#: ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:2126
 msgid "Save a Copy"
 msgstr "別名で保存"
 
-#: ../shell/ev-window.c:2092 ../shell/ev-window.c:3218
+#: ../shell/ev-window.c:2247 ../shell/ev-window.c:3452
 msgid "Failed to print document"
 msgstr "ドキュメントの印刷に失敗しました"
 
-#: ../shell/ev-window.c:2256
+#: ../shell/ev-window.c:2412
 msgid "Printing is not supported on this printer."
 msgstr "このプリンタでは印刷はサポートされていません。"
 
-#: ../shell/ev-window.c:2382 ../shell/ev-window.c:4184
+#: ../shell/ev-window.c:2538 ../shell/ev-window.c:4440
 msgid "Print"
 msgstr "印刷"
 
-#: ../shell/ev-window.c:2996
+#: ../shell/ev-window.c:3205
 msgid "Toolbar Editor"
 msgstr "ツールバーの編集"
 
-#: ../shell/ev-window.c:3513
+#: ../shell/ev-window.c:3747
 #, c-format
 msgid ""
 "Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
 "ドキュメント・ビューアです。\n"
-"poppler ライブラリの %s (%s) 対応"
+"poppler ライブラリの v%s (%s) 対応"
 
-#: ../shell/ev-window.c:3541
+#: ../shell/ev-window.c:3775
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -871,7 +809,7 @@ msgstr ""
 "衆利用許諾契約書の第二版、あるいはそれ以降の版が定める条項の下で本プログラム"
 "を再頒布または変更することができます。\n"
 
-#: ../shell/ev-window.c:3545
+#: ../shell/ev-window.c:3779
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -882,7 +820,7 @@ msgstr ""
 "です。商用利用または特定の目的における適合性の保証はありません。詳細は GNU 一"
 "般公衆利用許諾契約書をご覧下さい。\n"
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3783
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -892,367 +830,367 @@ msgstr ""
 "はずです。そうでない場合は、Free Software Foundation, Inc., 59 Temple Place "
 "- Suite 330, Boston, MA 02111-1307, USA まで連絡して下さい。\n"
 
-#: ../shell/ev-window.c:3573 ../shell/main.c:349
+#: ../shell/ev-window.c:3807 ../shell/main.c:349
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3576
+#: ../shell/ev-window.c:3810
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Evince 開発者"
 
-#: ../shell/ev-window.c:3582
+#: ../shell/ev-window.c:3816
 msgid "translator-credits"
 msgstr ""
 "相花 毅 <takeshi.aihana@gmail.com>\n"
 "佐藤 暁 <ss@gnome.gr.jp>\n"
 "日本GNOMEユーザー会 http://www.gnome.gr.jp"
 
-#: ../shell/ev-window.c:4096
+#: ../shell/ev-window.c:4352
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: ../shell/ev-window.c:4097
+#: ../shell/ev-window.c:4353
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: ../shell/ev-window.c:4098
+#: ../shell/ev-window.c:4354
 msgid "_View"
 msgstr "表示(_V)"
 
-#: ../shell/ev-window.c:4099
+#: ../shell/ev-window.c:4355
 msgid "_Go"
 msgstr "移動(_G)"
 
-#: ../shell/ev-window.c:4100
+#: ../shell/ev-window.c:4356
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
 #. File menu
-#: ../shell/ev-window.c:4103 ../shell/ev-window.c:4280
-#: ../shell/ev-window.c:4352
+#: ../shell/ev-window.c:4359 ../shell/ev-window.c:4538
+#: ../shell/ev-window.c:4610
 msgid "_Open..."
 msgstr "開く(_O)..."
 
-#: ../shell/ev-window.c:4104 ../shell/ev-window.c:4353
+#: ../shell/ev-window.c:4360 ../shell/ev-window.c:4611
 msgid "Open an existing document"
 msgstr "既存のドキュメントを開きます"
 
-#: ../shell/ev-window.c:4106
+#: ../shell/ev-window.c:4362
 msgid "Op_en a Copy"
 msgstr "コピーを開く(_E)"
 
-#: ../shell/ev-window.c:4107
+#: ../shell/ev-window.c:4363
 msgid "Open a copy of the current document in a new window"
 msgstr "このドキュメントのコピーを新しいウィンドウで開きます"
 
-#: ../shell/ev-window.c:4109 ../shell/ev-window.c:4282
+#: ../shell/ev-window.c:4365 ../shell/ev-window.c:4540
 msgid "_Save a Copy..."
 msgstr "別名で保存(_S)..."
 
-#: ../shell/ev-window.c:4110
+#: ../shell/ev-window.c:4366
 msgid "Save a copy of the current document"
 msgstr "このドキュメントのコピーを保存します"
 
-#: ../shell/ev-window.c:4112
+#: ../shell/ev-window.c:4368
 msgid "Print Set_up..."
 msgstr "印刷設定(_U)..."
 
-#: ../shell/ev-window.c:4113
+#: ../shell/ev-window.c:4369
 msgid "Setup the page settings for printing"
 msgstr "印刷用にページを設定します"
 
-#: ../shell/ev-window.c:4115
+#: ../shell/ev-window.c:4371
 msgid "_Print..."
 msgstr "印刷(_P)..."
 
-#: ../shell/ev-window.c:4116 ../shell/ev-window.c:4185
+#: ../shell/ev-window.c:4372 ../shell/ev-window.c:4441
 msgid "Print this document"
 msgstr "このドキュメントを印刷します"
 
-#: ../shell/ev-window.c:4118
+#: ../shell/ev-window.c:4374
 msgid "P_roperties"
 msgstr "プロパティ(_R)"
 
-#: ../shell/ev-window.c:4126
+#: ../shell/ev-window.c:4382
 msgid "Select _All"
 msgstr "全て選択(_A)"
 
-#: ../shell/ev-window.c:4128
+#: ../shell/ev-window.c:4384
 msgid "_Find..."
 msgstr "検索(_F)..."
 
-#: ../shell/ev-window.c:4129
+#: ../shell/ev-window.c:4385
 msgid "Find a word or phrase in the document"
 msgstr "このドキュメントの中にある単語や語句を検索します"
 
-#: ../shell/ev-window.c:4131
+#: ../shell/ev-window.c:4387
 msgid "Find Ne_xt"
 msgstr "次を検索(_X)"
 
-#: ../shell/ev-window.c:4133
+#: ../shell/ev-window.c:4389
 msgid "Find Pre_vious"
 msgstr "前を検索(_V)"
 
-#: ../shell/ev-window.c:4135
+#: ../shell/ev-window.c:4391
 msgid "T_oolbar"
 msgstr "ツールバー(_O)"
 
-#: ../shell/ev-window.c:4137
+#: ../shell/ev-window.c:4393
 msgid "Rotate _Left"
 msgstr "左へ回転(_L)"
 
-#: ../shell/ev-window.c:4139
+#: ../shell/ev-window.c:4395
 msgid "Rotate _Right"
 msgstr "右へ回転(_R)"
 
-#: ../shell/ev-window.c:4144
+#: ../shell/ev-window.c:4400
 msgid "Enlarge the document"
 msgstr "このドキュメントを拡大します"
 
-#: ../shell/ev-window.c:4147
+#: ../shell/ev-window.c:4403
 msgid "Shrink the document"
 msgstr "このドキュメントを縮小します"
 
-#: ../shell/ev-window.c:4149
+#: ../shell/ev-window.c:4405
 msgid "_Reload"
 msgstr "再読込み(_R)"
 
-#: ../shell/ev-window.c:4150
+#: ../shell/ev-window.c:4406
 msgid "Reload the document"
 msgstr "ドキュメントを再度読み込みます"
 
-#: ../shell/ev-window.c:4153
+#: ../shell/ev-window.c:4409
 msgid "Auto_scroll"
 msgstr "自動スクロール(_S)"
 
 #. Go menu
-#: ../shell/ev-window.c:4157
+#: ../shell/ev-window.c:4413
 msgid "_Previous Page"
 msgstr "前のページ(_P)"
 
-#: ../shell/ev-window.c:4158
+#: ../shell/ev-window.c:4414
 msgid "Go to the previous page"
 msgstr "前のページに移動します"
 
-#: ../shell/ev-window.c:4160
+#: ../shell/ev-window.c:4416
 msgid "_Next Page"
 msgstr "次のページ(_N)"
 
-#: ../shell/ev-window.c:4161
+#: ../shell/ev-window.c:4417
 msgid "Go to the next page"
 msgstr "次のページに移動します"
 
-#: ../shell/ev-window.c:4163
+#: ../shell/ev-window.c:4419
 msgid "_First Page"
 msgstr "先頭のページ(_F)"
 
-#: ../shell/ev-window.c:4164
+#: ../shell/ev-window.c:4420
 msgid "Go to the first page"
 msgstr "先頭のページに移動します"
 
-#: ../shell/ev-window.c:4166
+#: ../shell/ev-window.c:4422
 msgid "_Last Page"
 msgstr "最後のページ(_L)"
 
-#: ../shell/ev-window.c:4167
+#: ../shell/ev-window.c:4423
 msgid "Go to the last page"
 msgstr "最後のページに移動します"
 
 #. Help menu
-#: ../shell/ev-window.c:4171
+#: ../shell/ev-window.c:4427
 msgid "_Contents"
 msgstr "目次(_C)"
 
-#: ../shell/ev-window.c:4174
+#: ../shell/ev-window.c:4430
 msgid "_About"
 msgstr "情報(_A)"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:4178
+#: ../shell/ev-window.c:4434
 msgid "Leave Fullscreen"
 msgstr "フルスクリーンの解除"
 
-#: ../shell/ev-window.c:4179
+#: ../shell/ev-window.c:4435
 msgid "Leave fullscreen mode"
 msgstr "フルスクリーン・モードを解除します"
 
-#: ../shell/ev-window.c:4181
+#: ../shell/ev-window.c:4437
 msgid "Start Presentation"
 msgstr "プレゼンテーション表示"
 
-#: ../shell/ev-window.c:4182
+#: ../shell/ev-window.c:4438
 msgid "Start a presentation"
 msgstr "プレゼンテーション表示を開始します"
 
 #. View Menu
-#: ../shell/ev-window.c:4236
+#: ../shell/ev-window.c:4494
 msgid "_Toolbar"
 msgstr "ツールバー(_T)"
 
-#: ../shell/ev-window.c:4237
+#: ../shell/ev-window.c:4495
 msgid "Show or hide the toolbar"
 msgstr "ツールバーの表示を ON/OFF します"
 
-#: ../shell/ev-window.c:4239
+#: ../shell/ev-window.c:4497
 msgid "Side _Pane"
 msgstr "サイド・ペイン(_P)"
 
-#: ../shell/ev-window.c:4240
+#: ../shell/ev-window.c:4498
 msgid "Show or hide the side pane"
 msgstr "サイド・ペインの表示を ON/OFF します"
 
-#: ../shell/ev-window.c:4242
+#: ../shell/ev-window.c:4500
 msgid "_Continuous"
 msgstr "連続(_C)"
 
-#: ../shell/ev-window.c:4243
+#: ../shell/ev-window.c:4501
 msgid "Show the entire document"
 msgstr "ドキュメント全体を表示します"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4503
 msgid "_Dual"
 msgstr "二重化(_D)"
 
-#: ../shell/ev-window.c:4246
+#: ../shell/ev-window.c:4504
 msgid "Show two pages at once"
 msgstr "一度に２ページ表示します"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4506
 msgid "_Fullscreen"
 msgstr "フルスクリーン表示(_F)"
 
-#: ../shell/ev-window.c:4249
+#: ../shell/ev-window.c:4507
 msgid "Expand the window to fill the screen"
 msgstr "画面全体を覆うようにウィンドウを拡大します"
 
-#: ../shell/ev-window.c:4251
+#: ../shell/ev-window.c:4509
 msgid "Pre_sentation"
 msgstr "プレゼンテーション表示(_S)"
 
-#: ../shell/ev-window.c:4252
+#: ../shell/ev-window.c:4510
 msgid "Run document as a presentation"
 msgstr "ドキュメントをプレゼンテーションとして表示します"
 
-#: ../shell/ev-window.c:4254
+#: ../shell/ev-window.c:4512
 msgid "_Best Fit"
 msgstr "全体に合わせる(_B)"
 
-#: ../shell/ev-window.c:4255
+#: ../shell/ev-window.c:4513
 msgid "Make the current document fill the window"
 msgstr "このドキュメント全体がウィンドウに収まるように表示します"
 
-#: ../shell/ev-window.c:4257
+#: ../shell/ev-window.c:4515
 msgid "Fit Page _Width"
 msgstr "幅に合わせる(_W)"
 
-#: ../shell/ev-window.c:4258
+#: ../shell/ev-window.c:4516
 msgid "Make the current document fill the window width"
 msgstr "このドキュメントの幅をウィンドウの幅に合わせます"
 
 #. Links
-#: ../shell/ev-window.c:4265
+#: ../shell/ev-window.c:4523
 msgid "_Open Link"
 msgstr "リンクを開く(_O)"
 
-#: ../shell/ev-window.c:4267
+#: ../shell/ev-window.c:4525
 msgid "_Go To"
 msgstr "移動(_G)"
 
-#: ../shell/ev-window.c:4269
+#: ../shell/ev-window.c:4527
 msgid "Open in New _Window"
 msgstr "新しいウィンドウで開く(_W)"
 
-#: ../shell/ev-window.c:4271
+#: ../shell/ev-window.c:4529
 msgid "_Copy Link Address"
 msgstr "リンクアドレスをコピー(_C)"
 
-#: ../shell/ev-window.c:4273
+#: ../shell/ev-window.c:4531
 msgid "_Save Image As..."
 msgstr "別名で保存(_S)..."
 
-#: ../shell/ev-window.c:4275
+#: ../shell/ev-window.c:4533
 msgid "Copy _Image"
 msgstr "画像のコピー(_C)"
 
-#: ../shell/ev-window.c:4314
+#: ../shell/ev-window.c:4572
 msgid "Page"
 msgstr "ページ"
 
-#: ../shell/ev-window.c:4315
+#: ../shell/ev-window.c:4573
 msgid "Select Page"
 msgstr "直接ページを指定します"
 
-#: ../shell/ev-window.c:4326
+#: ../shell/ev-window.c:4584
 msgid "Zoom"
 msgstr "ズーム"
 
-#: ../shell/ev-window.c:4328
+#: ../shell/ev-window.c:4586
 msgid "Adjust the zoom level"
 msgstr "ズーム・レベルを調節します"
 
-#: ../shell/ev-window.c:4338
+#: ../shell/ev-window.c:4596
 msgid "Navigation"
 msgstr "ナビゲーション"
 
-#: ../shell/ev-window.c:4340
+#: ../shell/ev-window.c:4598
 msgid "Back"
 msgstr "戻る"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:4343
+#: ../shell/ev-window.c:4601
 msgid "Move across visited pages"
 msgstr "表示したページへ移動します"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4373
+#: ../shell/ev-window.c:4631
 msgid "Previous"
 msgstr "前へ"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4378
+#: ../shell/ev-window.c:4636
 msgid "Next"
 msgstr "次へ"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4382
+#: ../shell/ev-window.c:4640
 msgid "Zoom In"
 msgstr "拡大"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4386
+#: ../shell/ev-window.c:4644
 msgid "Zoom Out"
 msgstr "縮小"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4394
+#: ../shell/ev-window.c:4652
 msgid "Fit Width"
 msgstr "幅に合わせる"
 
-#: ../shell/ev-window.c:4607
+#: ../shell/ev-window.c:4857
 msgid "Unable to open external link"
 msgstr "外部へのリンクを開けません"
 
-#: ../shell/ev-window.c:4777
+#: ../shell/ev-window.c:5018
 msgid "Couldn't find appropriate format to save image"
 msgstr "画像を保存するのに必要な書式が見つかりませんでした"
 
-#: ../shell/ev-window.c:4813
+#: ../shell/ev-window.c:5058
 msgid "The image could not be saved."
 msgstr "画像を保存できませんでした"
 
-#: ../shell/ev-window.c:4845
+#: ../shell/ev-window.c:5090
 msgid "Save Image"
 msgstr "画像の保存"
 
-#: ../shell/ev-window.c:4904
+#: ../shell/ev-window.c:5149
 msgid "Unable to open attachment"
 msgstr "添付ファイルを開けません"
 
-#: ../shell/ev-window.c:4956
+#: ../shell/ev-window.c:5201
 msgid "The attachment could not be saved."
 msgstr "添付ファイルを保存できませんでした"
 
-#: ../shell/ev-window.c:5001
+#: ../shell/ev-window.c:5246
 msgid "Save Attachment"
 msgstr "添付ファイルの保存"
 
@@ -1301,7 +1239,7 @@ msgstr "[ファイル...]"
 msgid "GNOME Document Viewer"
 msgstr "GNOME ドキュメント・ビューア"
 
-#: ../shell/main.c:392
+#: ../shell/main.c:393
 msgid "Evince Document Viewer"
 msgstr "Evince ドキュメント・ビューア"
 
