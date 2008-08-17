@@ -326,18 +326,21 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	/* Widget is not currently visible */
 	if (!GTK_WIDGET_MAPPED (sidebar_thumbnails))
 		return;
+
+	if (priv->vadjustment->page_size == 0)
+		return;
 	
 	if (priv->tree_view) {
 		if (! GTK_WIDGET_REALIZED (priv->tree_view))
 			return;
 
 #if GTK_CHECK_VERSION (2, 11, 3)
-		gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
-								   0, (int) priv->vadjustment->value,
-								   NULL, &wy1);
-		gtk_tree_view_convert_widget_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
-								   0, (int) (priv->vadjustment->value + priv->vadjustment->page_size),
-								   NULL, &wy2);
+		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
+								 0, (int) priv->vadjustment->value,
+								 NULL, &wy1);
+		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
+								 0, (int) (priv->vadjustment->value + priv->vadjustment->page_size),
+								 NULL, &wy2);
 #else
 		gtk_tree_view_tree_to_widget_coords (GTK_TREE_VIEW (priv->tree_view),
 						     0, (int) priv->vadjustment->value,
@@ -346,7 +349,7 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 						     0, (int) (priv->vadjustment->value + priv->vadjustment->page_size),
 						     NULL, &wy2);
 #endif /* GTK_CHECK_VERSION (2, 11, 3) */
-		
+
 		gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (priv->tree_view),
 					       1, wy1 + 1, &path,
 					       NULL, NULL, NULL);
