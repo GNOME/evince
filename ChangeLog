@@ -1,5 +1,12 @@
 2008-08-19  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/tiff/tiff-document.c: (tiff_document_get_page_label),
+	(tiff_document_document_iface_init):
+
+	Implement document_get_page_label in tiff backend.
+	
+2008-08-19  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/tiff/tiff-document.c: (tiff_document_render):
 
 	Handle document orientation in tiff backend. Fixes bug #548444.

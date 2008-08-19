@@ -401,6 +401,21 @@ tiff_document_class_init (TiffDocumentClass *klass)
 	gobject_class->finalize = tiff_document_finalize;
 }
 
+static gchar *
+tiff_document_get_page_label (EvDocument *document,
+			      EvPage     *page)
+{
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+	static gchar *label;
+	
+	if (TIFFGetField (tiff_document->tiff, TIFFTAG_PAGENAME, &label) &&
+	    g_utf8_validate (label, -1, NULL)) {
+		return g_strdup (label);
+	}
+	
+	return NULL;
+}
+
 static EvDocumentInfo *
 tiff_document_get_info (EvDocument *document)
 {
@@ -420,6 +435,7 @@ tiff_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_n_pages = tiff_document_get_n_pages;
 	iface->get_page_size = tiff_document_get_page_size;
 	iface->render = tiff_document_render;
+	iface->get_page_label = tiff_document_get_page_label;
 	iface->get_info = tiff_document_get_info;
 }
 
