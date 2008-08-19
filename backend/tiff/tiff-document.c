@@ -215,6 +215,7 @@ tiff_document_render (EvDocument      *document,
 	gint rowstride, bytes;
 	guchar *pixels = NULL;
 	guchar *p;
+	int orientation;
 	cairo_surface_t *surface;
 	cairo_surface_t *rotated_surface;
 	static const cairo_user_data_key_t key;
@@ -236,6 +237,10 @@ tiff_document_render (EvDocument      *document,
 	if (! TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &height)) {
 		pop_handlers ();
 		return NULL;
+	}
+
+	if (! TIFFGetField (tiff_document->tiff, TIFFTAG_ORIENTATION, &orientation)) {
+		orientation = ORIENTATION_TOPLEFT;
 	}
 
 	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
@@ -274,7 +279,7 @@ tiff_document_render (EvDocument      *document,
 	TIFFReadRGBAImageOriented (tiff_document->tiff,
 				   width, height,
 				   (uint32 *)pixels,
-				   ORIENTATION_TOPLEFT, 1);
+				   orientation, 1);
 	pop_handlers ();
 
 	/* Convert the format returned by libtiff to
