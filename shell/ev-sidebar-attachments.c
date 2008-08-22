@@ -31,6 +31,8 @@
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
 
+#include "ev-jobs.h"
+#include "ev-job-scheduler.h"
 #include "ev-file-helpers.h"
 #include "ev-sidebar-attachments.h"
 #include "ev-sidebar-page.h"
@@ -613,32 +615,12 @@ ev_sidebar_attachments_new (void)
 }
 
 static void
-ev_sidebar_attachments_set_document (EvSidebarPage   *page,
-				     EvDocument      *document)
+job_finished_callback (EvJobAttachments     *job,
+		       EvSidebarAttachments *ev_attachbar)
 {
-	EvSidebarAttachments *ev_attachbar = EV_SIDEBAR_ATTACHMENTS (page);
-	GList *attachments = NULL;
 	GList *l;
 	
-	if (!ev_document_has_attachments (document))
-		return;
-
-	if (!ev_attachbar->priv->icon_theme) {
-		GdkScreen *screen;
-
-		screen = gtk_widget_get_screen (GTK_WIDGET (ev_attachbar));
-		ev_attachbar->priv->icon_theme = gtk_icon_theme_get_for_screen (screen);
-		g_signal_connect_swapped (G_OBJECT (ev_attachbar->priv->icon_theme),
-					  "changed",
-					  G_CALLBACK (ev_sidebar_attachments_update_icons),
-					  (gpointer) ev_attachbar);
-	}
-		
-	attachments = ev_document_get_attachments (document);
-
-	gtk_list_store_clear (ev_attachbar->priv->model);
-					   
-	for (l = attachments; l && l->data; l = g_list_next (l)) {
+	for (l = job->attachments; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
 		GtkTreeIter   iter;
 		GdkPixbuf    *pixbuf = NULL;
@@ -656,11 +638,43 @@ ev_sidebar_attachments_set_document (EvSidebarPage   *page,
 				    COLUMN_ICON, pixbuf,
 				    COLUMN_ATTACHMENT, attachment, 
 				    -1);
-
-		g_object_unref (attachment);
 	}
 
-	g_list_free (attachments);
+	g_object_unref (job);
+}
+
+static void
+ev_sidebar_attachments_set_document (EvSidebarPage   *page,
+				     EvDocument      *document)
+{
+	EvSidebarAttachments *ev_attachbar = EV_SIDEBAR_ATTACHMENTS (page);
+	EvJob *job;
+	
+	if (!ev_document_has_attachments (document))
+		return;
+
+	if (!ev_attachbar->priv->icon_theme) {
+		GdkScreen *screen;
+
+		screen = gtk_widget_get_screen (GTK_WIDGET (ev_attachbar));
+		ev_attachbar->priv->icon_theme = gtk_icon_theme_get_for_screen (screen);
+		g_signal_connect_swapped (G_OBJECT (ev_attachbar->priv->icon_theme),
+					  "changed",
+					  G_CALLBACK (ev_sidebar_attachments_update_icons),
+					  (gpointer) ev_attachbar);
+	}
+		
+	gtk_list_store_clear (ev_attachbar->priv->model);
+
+	job = ev_job_attachments_new (document);
+	g_signal_connect (job, "finished",
+			  G_CALLBACK (job_finished_callback),
+			  ev_attachbar);
+	g_signal_connect (job, "cancelled",
+			  G_CALLBACK (g_object_unref),
+			  NULL);
+	/* The priority doesn't matter for this job */
+	ev_job_scheduler_push_job (job, EV_JOB_PRIORITY_NONE);
 }
 
 static gboolean

@@ -38,20 +38,22 @@
 #include <glib/gi18n.h>
 #include <unistd.h>
 
-static void ev_job_init                 (EvJob               *job);
-static void ev_job_class_init           (EvJobClass          *class);
-static void ev_job_links_init           (EvJobLinks          *job);
-static void ev_job_links_class_init     (EvJobLinksClass     *class);
-static void ev_job_render_init          (EvJobRender         *job);
-static void ev_job_render_class_init    (EvJobRenderClass    *class);
-static void ev_job_thumbnail_init       (EvJobThumbnail      *job);
-static void ev_job_thumbnail_class_init (EvJobThumbnailClass *class);
-static void ev_job_load_init    	(EvJobLoad	     *job);
-static void ev_job_load_class_init 	(EvJobLoadClass	     *class);
-static void ev_job_save_init            (EvJobSave           *job);
-static void ev_job_save_class_init      (EvJobSaveClass      *class);
-static void ev_job_print_init           (EvJobPrint          *job);
-static void ev_job_print_class_init     (EvJobPrintClass     *class);
+static void ev_job_init                   (EvJob                 *job);
+static void ev_job_class_init             (EvJobClass            *class);
+static void ev_job_links_init             (EvJobLinks            *job);
+static void ev_job_links_class_init       (EvJobLinksClass       *class);
+static void ev_job_attachments_init       (EvJobAttachments      *job);
+static void ev_job_attachments_class_init (EvJobAttachmentsClass *class);
+static void ev_job_render_init            (EvJobRender           *job);
+static void ev_job_render_class_init      (EvJobRenderClass      *class);
+static void ev_job_thumbnail_init         (EvJobThumbnail        *job);
+static void ev_job_thumbnail_class_init   (EvJobThumbnailClass   *class);
+static void ev_job_load_init    	  (EvJobLoad	         *job);
+static void ev_job_load_class_init 	  (EvJobLoadClass	 *class);
+static void ev_job_save_init              (EvJobSave             *job);
+static void ev_job_save_class_init        (EvJobSaveClass        *class);
+static void ev_job_print_init             (EvJobPrint            *job);
+static void ev_job_print_class_init       (EvJobPrintClass       *class);
 
 enum {
 	CANCELLED,
@@ -75,6 +77,7 @@ static guint job_fonts_signals[FONTS_LAST_SIGNAL] = { 0 };
 
 G_DEFINE_ABSTRACT_TYPE (EvJob, ev_job, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobAttachments, ev_job_attachments, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobRender, ev_job_render, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
@@ -343,6 +346,71 @@ ev_job_links_new (EvDocument *document)
 	ev_debug_message (DEBUG_JOBS, NULL);
 
 	job = g_object_new (EV_TYPE_JOB_LINKS, NULL);
+	job->document = g_object_ref (document);
+	
+	return job;
+}
+
+/* EvJobAttachments */
+static void
+ev_job_attachments_init (EvJobAttachments *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_attachments_dispose (GObject *object)
+{
+	EvJobAttachments *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
+	job = EV_JOB_ATTACHMENTS (object);
+
+	if (job->attachments) {
+		g_list_foreach (job->attachments, (GFunc)g_object_unref, NULL);
+		g_list_free (job->attachments);
+		job->attachments = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_attachments_parent_class)->dispose) (object);
+}
+
+static gboolean
+ev_job_attachments_run (EvJob *job)
+{
+	EvJobAttachments *job_attachments = EV_JOB_ATTACHMENTS (job);
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	
+	ev_document_doc_mutex_lock ();
+	job_attachments->attachments = ev_document_get_attachments (job->document);
+	ev_document_doc_mutex_unlock ();
+	
+	ev_job_succeeded (job);
+	
+	return FALSE;
+}
+
+static void
+ev_job_attachments_class_init (EvJobAttachmentsClass *class)
+{
+	GObjectClass *oclass = G_OBJECT_CLASS (class);
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+	oclass->dispose = ev_job_attachments_dispose;
+	job_class->run = ev_job_attachments_run;
+}
+
+EvJob *
+ev_job_attachments_new (EvDocument *document)
+{
+	EvJob *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	job = g_object_new (EV_TYPE_JOB_ATTACHMENTS, NULL);
 	job->document = g_object_ref (document);
 	
 	return job;

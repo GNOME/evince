@@ -42,6 +42,9 @@ typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
 typedef struct _EvJobLinks EvJobLinks;
 typedef struct _EvJobLinksClass EvJobLinksClass;
 
+typedef struct _EvJobAttachments EvJobAttachments;
+typedef struct _EvJobAttachmentsClass EvJobAttachmentsClass;
+
 typedef struct _EvJobFonts EvJobFonts;
 typedef struct _EvJobFontsClass EvJobFontsClass;
 
@@ -64,6 +67,11 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LINKS, EvJobLinks))
 #define EV_JOB_LINKS_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LINKS, EvJobLinksClass))
 #define EV_IS_JOB_LINKS(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LINKS))
+
+#define EV_TYPE_JOB_ATTACHMENTS		     (ev_job_attachments_get_type())
+#define EV_JOB_ATTACHMENTS(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_ATTACHMENTS, EvJobAttachments))
+#define EV_JOB_ATTACHMENTS_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_ATTACHMENTS, EvJobAttachmentsClass))
+#define EV_IS_JOB_ATTACHMENTS(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_ATTACHMENTS))
 
 #define EV_TYPE_JOB_RENDER		     (ev_job_render_get_type())
 #define EV_JOB_RENDER(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_RENDER, EvJobRender))
@@ -138,6 +146,18 @@ struct _EvJobLinks
 };
 
 struct _EvJobLinksClass
+{
+	EvJobClass parent_class;
+};
+
+struct _EvJobAttachments
+{
+	EvJob parent;
+
+	GList *attachments;
+};
+
+struct _EvJobAttachmentsClass
 {
 	EvJobClass parent_class;
 };
@@ -291,6 +311,10 @@ void            ev_job_set_run_mode       (EvJob          *job,
 /* EvJobLinks */
 GType           ev_job_links_get_type     (void) G_GNUC_CONST;
 EvJob          *ev_job_links_new          (EvDocument     *document);
+
+/* EvJobAttachments */
+GType           ev_job_attachments_get_type (void) G_GNUC_CONST;
+EvJob          *ev_job_attachments_new      (EvDocument     *document);
 
 /* EvJobRender */
 GType           ev_job_render_get_type    (void) G_GNUC_CONST;
