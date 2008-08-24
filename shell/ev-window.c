@@ -166,6 +166,7 @@ struct _EvWindowPrivate {
 	gboolean unlink_temp_file;
 	gboolean in_reload;
 	EvFileMonitor *monitor;
+	guint setup_document_idle;
 	
 	EvDocument *document;
 	EvHistory *history;
@@ -1138,6 +1139,8 @@ ev_window_setup_document (EvWindow *ev_window)
 	EvDocument *document = ev_window->priv->document;
 	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
 	GtkAction *action;
+
+	ev_window->priv->setup_document_idle = 0;
 	
 	if (EV_IS_DOCUMENT_FIND (document)) {
 		g_signal_connect_object (G_OBJECT (document),
@@ -1203,7 +1206,9 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 					   _("The document contains no pages"));
 	}
 
-	g_idle_add ((GSourceFunc)ev_window_setup_document, ev_window);
+	if (ev_window->priv->setup_document_idle > 0)
+		g_source_remove (ev_window->priv->setup_document_idle);
+	ev_window->priv->setup_document_idle = g_idle_add ((GSourceFunc)ev_window_setup_document, ev_window);
 }
 
 static void
@@ -4168,6 +4173,11 @@ ev_window_dispose (GObject *object)
 	}
 #endif /* ENABLE_DBUS */
 
+	if (priv->setup_document_idle > 0) {
+		g_source_remove (priv->setup_document_idle);
+		priv->setup_document_idle = 0;
+	}
+	
 	if (priv->monitor) {
 		g_object_unref (priv->monitor);
 		priv->monitor = NULL;
