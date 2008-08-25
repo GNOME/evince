@@ -1338,7 +1338,7 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 
 	has_thumb = poppler_page_get_thumbnail_size (poppler_page, width, height);
 
-	if (!has_thumb) {
+	if (!has_thumb || *width <= 0 || *height <= 0) {
 		double page_width, page_height;
 
 		poppler_page_get_size (poppler_page, &page_width, &page_height);
