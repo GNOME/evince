@@ -30,7 +30,6 @@
 #include <libgnome/gnome-program.h>
 #include <libgnomeui/gnome-ui-init.h>
 #include <libgnomeui/gnome-app-helper.h>
-#include <libgnomeui/gnome-authentication-manager.h>
 #endif
 
 #ifdef ENABLE_DBUS
@@ -379,11 +378,6 @@ main (int argc, char *argv[])
 #endif
 
 	ev_debug_init ();
-	
-#if WITH_GNOME	
-	gnome_authentication_manager_init ();
-#endif
-
 	ev_backends_manager_init ();
 	
 	if (enable_metadata) {
