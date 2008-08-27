@@ -3374,7 +3374,7 @@ ev_view_goto_window_create (EvView *view)
 	g_signal_connect (view->goto_entry, "activate",
 			  G_CALLBACK (ev_view_goto_entry_activate),
 			  view);
-	gtk_box_pack_start_defaults (GTK_BOX (hbox), view->goto_entry);
+	gtk_box_pack_start (GTK_BOX (hbox), view->goto_entry, TRUE, TRUE, 0);
 	gtk_widget_show (view->goto_entry);
 	gtk_widget_realize (view->goto_entry);
 }

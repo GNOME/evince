@@ -1,5 +1,12 @@
 2008-08-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-view.c: (ev_view_goto_window_create):
+
+	Use gtk_box_pack_start instead of gtk_box_pack_start_defaults
+	since it's now deprecated.
+	
+2008-08-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/djvu/Makefile.am:
 	* backend/djvu/djvu-document-private.h:
 	* backend/djvu/djvu-document.c: (djvu_document_find_find_text),
