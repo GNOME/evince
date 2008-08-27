@@ -57,6 +57,9 @@ typedef struct _EvJobSaveClass EvJobSaveClass;
 typedef struct _EvJobPrint EvJobPrint;
 typedef struct _EvJobPrintClass EvJobPrintClass;
 
+typedef struct _EvJobFind EvJobFind;
+typedef struct _EvJobFindClass EvJobFindClass;
+
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
 #define EV_JOB_CLASS(klass)	             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
@@ -102,6 +105,11 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_PRINT(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
 #define EV_JOB_PRINT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
 #define EV_IS_JOB_PRINT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
+
+#define EV_TYPE_JOB_FIND                    (ev_job_find_get_type())
+#define EV_JOB_FIND(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FIND, EvJobFind))
+#define EV_JOB_FIND_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FIND, EvJobFindClass))
+#define EV_IS_JOB_FIND(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FIND))
 
 typedef enum {
 	EV_JOB_RUN_THREAD,
@@ -235,7 +243,8 @@ struct _EvJobFontsClass
         EvJobClass parent_class;
 
 	/* Signals */
-	void (* updated)  (EvJobFonts *job);
+	void (* updated)  (EvJobFonts *job,
+			   gdouble     progress);
 };
 
 struct _EvJobLoad
@@ -287,6 +296,28 @@ struct _EvJobPrint
 struct _EvJobPrintClass
 {
 	EvJobClass parent_class;
+};
+
+struct _EvJobFind
+{
+	EvJob parent;
+
+	gint start_page;
+	gint current_page;
+	gint n_pages;
+	GList **pages;
+	gchar *text;
+	gboolean case_sensitive;
+	gboolean has_results;
+};
+
+struct _EvJobFindClass
+{
+	EvJobClass parent_class;
+
+	/* Signals */
+	void (* updated)  (EvJobFind *job,
+			   gint       page);
 };
 
 /* Base job class */
@@ -370,6 +401,18 @@ EvJob          *ev_job_print_new          (EvDocument      *document,
 					   gint             copies,
 					   gdouble          collate,
 					   gdouble          reverse);
+/* EvJobFind */
+GType           ev_job_find_get_type      (void) G_GNUC_CONST;
+EvJob          *ev_job_find_new           (EvDocument      *document,
+					   gint             start_page,
+					   gint             n_pages,
+					   const gchar     *text,
+					   gboolean         case_sensitive);
+gint            ev_job_find_get_n_results (EvJobFind       *job,
+					   gint             pages);
+gdouble         ev_job_find_get_progress  (EvJobFind       *job);
+gboolean        ev_job_find_has_results   (EvJobFind       *job);
+GList         **ev_job_find_get_results   (EvJobFind       *job);
 
 G_END_DECLS
 

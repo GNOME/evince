@@ -117,18 +117,15 @@ void            ev_view_set_rotation      (EvView         *view,
 int             ev_view_get_rotation      (EvView         *view);
 
 /* Find */
-gboolean        ev_view_can_find_next        (EvView         *view);
-void            ev_view_find_next            (EvView         *view);
-gboolean        ev_view_can_find_previous    (EvView         *view);
-void            ev_view_find_previous        (EvView         *view);
-void            ev_view_search_changed       (EvView         *view);
-void     	ev_view_set_highlight_search (EvView         *view,
-					      gboolean        value);
-void            ev_view_find_cancel          (EvView         *view);
-
-/* Status */
-const char     *ev_view_get_status        (EvView         *view);
-const char     *ev_view_get_find_status   (EvView         *view);
+void            ev_view_find_next                 (EvView         *view);
+void            ev_view_find_previous             (EvView         *view);
+void            ev_view_find_search_changed       (EvView         *view);
+void     	ev_view_find_set_highlight_search (EvView         *view,
+						   gboolean        value);
+void            ev_view_find_changed              (EvView         *view,
+						   GList         **results,
+						   gint            page);
+void            ev_view_find_cancel               (EvView         *view);
 
 /* Cursor */
 void           ev_view_hide_cursor        (EvView         *view);

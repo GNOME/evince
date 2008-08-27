@@ -31,6 +31,7 @@
 #include "ev-file-helpers.h"
 #include "ev-document-fonts.h"
 #include "ev-document-security.h"
+#include "ev-document-find.h"
 #include "ev-debug.h"
 
 #include <errno.h>
@@ -54,6 +55,8 @@ static void ev_job_save_init              (EvJobSave             *job);
 static void ev_job_save_class_init        (EvJobSaveClass        *class);
 static void ev_job_print_init             (EvJobPrint            *job);
 static void ev_job_print_class_init       (EvJobPrintClass       *class);
+static void ev_job_find_init              (EvJobFind             *job);
+static void ev_job_find_class_init        (EvJobFindClass        *class);
 
 enum {
 	CANCELLED,
@@ -67,13 +70,19 @@ enum {
 };
 
 enum {
-	UPDATED,
+	FONTS_UPDATED,
 	FONTS_LAST_SIGNAL
+};
+
+enum {
+	FIND_UPDATED,
+	FIND_LAST_SIGNAL
 };
 
 static guint job_signals[LAST_SIGNAL] = { 0 };
 static guint job_render_signals[RENDER_LAST_SIGNAL] = { 0 };
 static guint job_fonts_signals[FONTS_LAST_SIGNAL] = { 0 };
+static guint job_find_signals[FIND_LAST_SIGNAL] = { 0 };
 
 G_DEFINE_ABSTRACT_TYPE (EvJob, ev_job, G_TYPE_OBJECT)
 G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
@@ -84,6 +93,7 @@ G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobPrint, ev_job_print, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobFind, ev_job_find, EV_TYPE_JOB)
 
 /* EvJob */
 static void
@@ -721,7 +731,7 @@ ev_job_fonts_run (EvJob *job)
 #endif
 
 	job_fonts->scan_completed = !ev_document_fonts_scan (fonts, 20);
-	g_signal_emit (job_fonts, job_fonts_signals[UPDATED], 0,
+	g_signal_emit (job_fonts, job_fonts_signals[FONTS_UPDATED], 0,
 		       ev_document_fonts_get_progress (fonts));
 
 	ev_document_fc_mutex_unlock ();
@@ -740,7 +750,7 @@ ev_job_fonts_class_init (EvJobFontsClass *class)
 	
 	job_class->run = ev_job_fonts_run;
 	
-	job_fonts_signals[UPDATED] =
+	job_fonts_signals[FONTS_UPDATED] =
 		g_signal_new ("updated",
 			      EV_TYPE_JOB_FONTS,
 			      G_SIGNAL_RUN_LAST,
@@ -1364,5 +1374,165 @@ ev_job_print_new (EvDocument    *document,
 	job->reverse = reverse;
 	
 	return EV_JOB (job);
+}
+
+/* EvJobFind */
+static void
+ev_job_find_init (EvJobFind *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_MAIN_LOOP;
+}
+
+static void
+ev_job_find_dispose (GObject *object)
+{
+	EvJobFind *job = EV_JOB_FIND (object);
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	if (job->text) {
+		g_free (job->text);
+		job->text = NULL;
+	}
+
+	if (job->pages) {
+		gint i;
+
+		for (i = 0; i < job->n_pages; i++) {
+			g_list_foreach (job->pages[i], (GFunc)g_free, NULL);
+			g_list_free (job->pages[i]);
+		}
+
+		g_free (job->pages);
+		job->pages = NULL;
+	}
+	
+	(* G_OBJECT_CLASS (ev_job_find_parent_class)->dispose) (object);
+}
+
+static gboolean
+ev_job_find_run (EvJob *job)
+{
+	EvJobFind      *job_find = EV_JOB_FIND (job);
+	EvDocumentFind *find = EV_DOCUMENT_FIND (job->document);
+	EvPage         *ev_page;
+	GList          *matches;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
+	/* Do not block the main loop */
+	if (!ev_document_doc_mutex_trylock ())
+		return TRUE;
+	
+#ifdef EV_ENABLE_DEBUG
+	/* We use the #ifdef in this case because of the if */
+	if (job_find->current_page == job_find->start_page)
+		ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+#endif
+
+	ev_page = ev_document_get_page (job->document, job_find->current_page);
+	matches = ev_document_find_find_text (find, ev_page, job_find->text,
+					      job_find->case_sensitive);
+	g_object_unref (ev_page);
+	
+	ev_document_doc_mutex_unlock ();
+
+	if (!job_find->has_results)
+		job_find->has_results = (matches != NULL);
+
+	job_find->pages[job_find->current_page] = matches;
+	g_signal_emit (job_find, job_find_signals[FIND_UPDATED], 0, job_find->current_page);
+		       
+	job_find->current_page = (job_find->current_page + 1) % job_find->n_pages;
+	if (job_find->current_page == job_find->start_page) {
+		ev_job_succeeded (job);
+
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+static void
+ev_job_find_class_init (EvJobFindClass *class)
+{
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	
+	job_class->run = ev_job_find_run;
+	gobject_class->dispose = ev_job_find_dispose;
+	
+	job_find_signals[FIND_UPDATED] =
+		g_signal_new ("updated",
+			      EV_TYPE_JOB_FIND,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvJobFindClass, updated),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__INT,
+			      G_TYPE_NONE,
+			      1, G_TYPE_INT);
+}
+
+EvJob *
+ev_job_find_new (EvDocument  *document,
+		 gint         start_page,
+		 gint         n_pages,
+		 const gchar *text,
+		 gboolean     case_sensitive)
+{
+	EvJobFind *job;
+	
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
+	job = g_object_new (EV_TYPE_JOB_FIND, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+	job->start_page = start_page;
+	job->current_page = start_page;
+	job->n_pages = n_pages;
+	job->pages = g_new0 (GList *, n_pages);
+	job->text = g_strdup (text);
+	job->case_sensitive = case_sensitive;
+	job->has_results = FALSE;
+
+	return EV_JOB (job);
+}
+
+gint
+ev_job_find_get_n_results (EvJobFind *job,
+			   gint       page)
+{
+	return g_list_length (job->pages[page]);
+}
+
+gdouble
+ev_job_find_get_progress (EvJobFind *job)
+{
+	gint pages_done;
+
+	if (ev_job_is_finished (EV_JOB (job)))
+		return 1.0;
+	
+	if (job->current_page > job->start_page) {
+		pages_done = job->current_page - job->start_page + 1;
+	} else if (job->current_page == job->start_page) {
+		pages_done = job->n_pages;
+	} else {
+		pages_done = job->n_pages - job->start_page + job->current_page;
+	}
+
+	return pages_done / (gdouble) job->n_pages;
+}
+
+gboolean
+ev_job_find_has_results (EvJobFind *job)
+{
+	return job->has_results;
+}
+
+GList **
+ev_job_find_get_results (EvJobFind *job)
+{
+	return job->pages;
 }
 

@@ -1364,195 +1364,42 @@ pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
 }
 
 
-static gboolean
-pdf_document_search_idle_callback (void *data)
+static GList *
+pdf_document_find_find_text (EvDocumentFind *document_find,
+			     EvPage         *page,
+			     const gchar    *text,
+			     gboolean        case_sensitive)
 {
-        PdfDocumentSearch *search = (PdfDocumentSearch*) data;
-        PdfDocument *pdf_document = search->document;
-        int n_pages;
-	GList *matches;
-	PopplerPage *page;
-
-	page = poppler_document_get_page (search->document->document,
-					  search->search_page);
-
-	ev_document_doc_mutex_lock ();
-	matches = poppler_page_find_text (page, search->text);
-	ev_document_doc_mutex_unlock ();
-
-	g_object_unref (page);
-
-	search->pages[search->search_page] = matches;
-	ev_document_find_changed (EV_DOCUMENT_FIND (pdf_document),
-				  search->search_page);
-
-        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (search->document));
-        search->search_page += 1;
-        if (search->search_page == n_pages) {
-                /* wrap around */
-                search->search_page = 0;
-        }
-
-        if (search->search_page != search->start_page) {
-	        return TRUE;
-	}
-
-        /* We're done. */
-        search->idle = 0; /* will return FALSE to remove */
-        return FALSE;
-}
-
-
-static PdfDocumentSearch *
-pdf_document_search_new (PdfDocument *pdf_document,
-			 int          start_page,
-			 const char  *text)
-{
-	PdfDocumentSearch *search;
-	int n_pages;
-	int i;
-
-	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
-
-        search = g_new0 (PdfDocumentSearch, 1);
-
-	search->text = g_strdup (text);
-        search->pages = g_new0 (GList *, n_pages);
-        search->document = pdf_document;
-
-        /* We add at low priority so the progress bar repaints */
-        search->idle = g_idle_add_full (G_PRIORITY_LOW,
-                                        pdf_document_search_idle_callback,
-                                        search,
-                                        NULL);
-
-        search->start_page = start_page;
-        search->search_page = start_page;
-
-	return search;
-}
-
-static void
-pdf_document_find_begin (EvDocumentFind   *document,
-			 int               page,
-                         const char       *search_string,
-                         gboolean          case_sensitive)
-{
-        PdfDocument *pdf_document = PDF_DOCUMENT (document);
-
-        /* FIXME handle case_sensitive (right now XPDF
-         * code is always case insensitive for ASCII
-         * and case sensitive for all other languaages)
-         */
-
-	if (pdf_document->search &&
-	    strcmp (search_string, pdf_document->search->text) == 0)
-                return;
-
-        if (pdf_document->search)
-                pdf_document_search_free (pdf_document->search);
-
-        pdf_document->search = pdf_document_search_new (pdf_document,
-							page,
-							search_string);
-}
-
-static int
-pdf_document_find_get_n_results (EvDocumentFind *document_find, int page)
-{
-	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
-
-	if (search) {
-		return g_list_length (search->pages[page]);
-	} else {
-		return 0;
-	}
-}
-
-static gboolean
-pdf_document_find_get_result (EvDocumentFind *document_find,
-			      int             page,
-			      int             n_result,
-			      EvRectangle    *rectangle)
-{
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_find);
-	PdfDocumentSearch *search = pdf_document->search;
+	GList *matches, *l;
 	PopplerPage *poppler_page;
-	PopplerRectangle *r;
-	double height;
+	gdouble height;
+	
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+	g_return_val_if_fail (text != NULL, NULL);
 
-	if (search == NULL)
-		return FALSE;
+	poppler_page = POPPLER_PAGE (page->backend_page);
+	
+	matches = poppler_page_find_text (poppler_page, text);
+	if (!matches)
+		return NULL;
 
-	r = (PopplerRectangle *) g_list_nth_data (search->pages[page],
-						  n_result);
-	if (r == NULL)
-		return FALSE;
-
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
 	poppler_page_get_size (poppler_page, NULL, &height);
-	rectangle->x1 = r->x1;
-	rectangle->y1 = height - r->y2;
-	rectangle->x2 = r->x2;
-	rectangle->y2 = height - r->y1;
-	g_object_unref (poppler_page);
-		
-	return TRUE;
-}
+	for (l = matches; l && l->data; l = g_list_next (l)) {
+		PopplerRectangle *rect = (PopplerRectangle *)l->data;
+		gdouble           tmp;
 
-static int
-pdf_document_find_page_has_results (EvDocumentFind *document_find,
-				    int             page)
-{
-	PdfDocumentSearch *search = PDF_DOCUMENT (document_find)->search;
-
-	return search && search->pages[page] != NULL;
-}
-
-static double
-pdf_document_find_get_progress (EvDocumentFind *document_find)
-{
-	PdfDocumentSearch *search;
-	int n_pages, pages_done;
-
-	search = PDF_DOCUMENT (document_find)->search;
-
-	if (search == NULL) {
-		return 0;
+		tmp = rect->y1;
+		rect->y1 = height - rect->y2;
+		rect->y2 = height - tmp;
 	}
-
-	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (document_find));
-	if (search->search_page > search->start_page) {
-		pages_done = search->search_page - search->start_page + 1;
-	} else if (search->search_page == search->start_page) {
-		pages_done = n_pages;
-	} else {
-		pages_done = n_pages - search->start_page + search->search_page;
-	}
-
-	return pages_done / (double) n_pages;
-}
-
-static void
-pdf_document_find_cancel (EvDocumentFind *document)
-{
-        PdfDocument *pdf_document = PDF_DOCUMENT (document);
-
-	if (pdf_document->search) {
-		pdf_document_search_free (pdf_document->search);
-		pdf_document->search = NULL;
-	}
+	
+	return matches;
 }
 
 static void
 pdf_document_find_iface_init (EvDocumentFindIface *iface)
 {
-        iface->begin = pdf_document_find_begin;
-	iface->get_n_results = pdf_document_find_get_n_results;
-	iface->get_result = pdf_document_find_get_result;
-	iface->page_has_results = pdf_document_find_page_has_results;
-	iface->get_progress = pdf_document_find_get_progress;
-        iface->cancel = pdf_document_find_cancel;
+        iface->find_text = pdf_document_find_find_text;
 }
 
 static void

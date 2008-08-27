@@ -22,7 +22,6 @@
 #define __DJVU_DOCUMENT_INTERNAL_H__
 
 #include "djvu-document.h"
-#include "djvu-text.h"
 
 #include <libdjvu/ddjvuapi.h>
 
@@ -36,8 +35,6 @@ struct _DjvuDocument {
 
 	gchar            *uri;
 
-	DjvuText         *search;
-        
         /* PS exporter */
         gchar		 *ps_filename;
         GString 	 *opts;

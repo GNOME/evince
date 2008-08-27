@@ -371,7 +371,7 @@ djvu_text_page_append_text (DjvuTextPage *page,
  */
 void 
 djvu_text_page_search (DjvuTextPage *page, 
-		       char         *text)
+		       const char   *text)
 {
 	char *haystack = page->text;
 	int search_len;

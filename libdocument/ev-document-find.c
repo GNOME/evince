@@ -21,9 +21,6 @@
 #include "config.h"
 
 #include "ev-document-find.h"
-#include "ev-backend-marshalers.h"
-
-static void ev_document_find_base_init (gpointer g_class);
 
 GType
 ev_document_find_get_type (void)
@@ -35,7 +32,7 @@ ev_document_find_get_type (void)
 		const GTypeInfo our_info =
 		{
 			sizeof (EvDocumentFindIface),
-			ev_document_find_base_init,
+			NULL,
 			NULL,
 		};
 
@@ -47,80 +44,14 @@ ev_document_find_get_type (void)
 	return type;
 }
 
-static void
-ev_document_find_base_init (gpointer g_class)
-{
-	static gboolean initialized = FALSE;
-
-	if (!initialized) {
-		g_signal_new ("find_changed",
-			      EV_TYPE_DOCUMENT_FIND,
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvDocumentFindIface, find_changed),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__INT,
-			      G_TYPE_NONE, 1,
-			      G_TYPE_INT);
-
-		initialized = TRUE;
-	}
-}
-
-void
-ev_document_find_begin (EvDocumentFind   *document_find,
-			int               page,
-                        const char       *search_string,
-                        gboolean          case_sensitive)
+GList *
+ev_document_find_find_text (EvDocumentFind *document_find,
+			    EvPage         *page,
+			    const gchar    *text,
+			    gboolean        case_sensitive)
 {
 	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-
-        g_return_if_fail (search_string != NULL);
-        
-	iface->begin (document_find, page, search_string, case_sensitive);
+	
+	return iface->find_text (document_find, page, text, case_sensitive);
 }
 
-void
-ev_document_find_cancel (EvDocumentFind   *document_find)
-{
-	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	iface->cancel (document_find);
-}
-
-int
-ev_document_find_page_has_results (EvDocumentFind *document_find,
-				   int             page)
-{
-	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	return iface->page_has_results (document_find, page);
-}
-
-int
-ev_document_find_get_n_results (EvDocumentFind *document_find,
-				int             page)
-{
-	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	return iface->get_n_results (document_find, page);
-}
-
-gboolean
-ev_document_find_get_result (EvDocumentFind *document_find,
-			     int             page,
-			     int             n_result,
-			     EvRectangle    *rectangle)
-{
-	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	return iface->get_result (document_find, page, n_result, rectangle);
-}
-
-double
-ev_document_find_get_progress (EvDocumentFind *document_find)
-{
-	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	return iface->get_progress (document_find);
-}
-
-void
-ev_document_find_changed (EvDocumentFind  *document_find, int page)
-{
-	g_signal_emit_by_name (document_find, "find_changed", page);
-}

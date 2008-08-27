@@ -21,7 +21,7 @@
 
 #include <config.h>
 #include "djvu-document.h"
-#include "djvu-text.h"
+#include "djvu-text-page.h"
 #include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-document-thumbnails.h"
@@ -388,9 +388,6 @@ djvu_document_finalize (GObject *object)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (object);
 
-	if (djvu_document->search)
-	    djvu_text_free (djvu_document->search);
-
 	if (djvu_document->d_document)
 	    ddjvu_document_release (djvu_document->d_document);
 	    
@@ -435,6 +432,30 @@ djvu_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page_size = djvu_document_get_page_size;
 	iface->render = djvu_document_render;
 	iface->get_info = djvu_document_get_info;
+}
+
+static gchar *
+djvu_text_copy (DjvuDocument *djvu_document,
+		gint           page,
+		EvRectangle  *rectangle)
+{
+	miniexp_t page_text;
+	gchar    *text = NULL;
+
+	while ((page_text =
+		ddjvu_document_get_pagetext (djvu_document->d_document,
+					     page, "char")) == miniexp_dummy)
+		djvu_handle_events (djvu_document, TRUE, NULL);
+
+	if (page_text != miniexp_nil) {
+		DjvuTextPage *page = djvu_text_page_new (page_text);
+		
+		text = djvu_text_page_copy (page, rectangle);
+		djvu_text_page_free (page);
+		ddjvu_miniexp_release (djvu_document->d_document, page_text);
+	}
+
+	return text;
 }
 
 static gchar *
@@ -627,107 +648,62 @@ djvu_document_init (DjvuDocument *djvu_document)
 	djvu_document->d_document = NULL;
 }
 
-static void
-djvu_document_find_begin (EvDocumentFind   *document,
-			  int               page,
-                          const char       *search_string,
-                          gboolean          case_sensitive)
+static GList *
+djvu_document_find_find_text (EvDocumentFind   *document,
+			      EvPage           *page,
+			      const char       *text,
+			      gboolean          case_sensitive)
 {
         DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	miniexp_t page_text;
+	gdouble width, height;
+	GList *matches = NULL, *l;
 
-	if (djvu_document->search && 
-	    strcmp (search_string, djvu_text_get_text (djvu_document->search)) == 0)
-                return;
+	g_return_val_if_fail (text != NULL, NULL);
 
-        if (djvu_document->search)
-                djvu_text_free (djvu_document->search);
+	while ((page_text = ddjvu_document_get_pagetext (djvu_document->d_document,
+							 page->index,
+							 "char")) == miniexp_dummy)
+		djvu_handle_events (djvu_document, TRUE, NULL);
 
-        djvu_document->search = djvu_text_new (djvu_document,
-							  page,
-							  case_sensitive,
-							  search_string);
-}
-
-static int
-djvu_document_find_get_n_results (EvDocumentFind *document_find, int page)
-{
-	DjvuText *search = DJVU_DOCUMENT (document_find)->search;
-
-	if (search) {
-		return djvu_text_n_results (search, page);
-	} else {
-		return 0;
-	}
-}
-
-static gboolean
-djvu_document_find_get_result (EvDocumentFind *document_find,
-			       int             page,
-			       int             n_result,
-			       EvRectangle    *rectangle)
-{
-	DjvuDocument *djvu_document = DJVU_DOCUMENT (document_find);
-	DjvuText *search = djvu_document->search;
-	EvRectangle *r;
-	double width, height;
-
-	if (search == NULL)
-		return FALSE;
-
-	r = djvu_text_get_result (search, page, n_result);
-	if (r == NULL)
-		return FALSE;
-
-	document_get_page_size (djvu_document, page, &width, &height);
-	rectangle->x1 = r->x1 * SCALE_FACTOR;
-	rectangle->y1 = height - r->y2 * SCALE_FACTOR;
-	rectangle->x2 = r->x2 * SCALE_FACTOR;
-	rectangle->y2 = height - r->y1 * SCALE_FACTOR;
+	if (page_text != miniexp_nil) {
+		DjvuTextPage *tpage = djvu_text_page_new (page_text);
 		
-	return TRUE;
-}
+		djvu_text_page_prepare_search (tpage, case_sensitive);
+		if (tpage->links->len > 0) {
+			djvu_text_page_search (tpage, text);
+			matches = tpage->results;
+		}
+		djvu_text_page_free (tpage);
+		ddjvu_miniexp_release (djvu_document->d_document, page_text);
+	}
 
-static int
-djvu_document_find_page_has_results (EvDocumentFind *document_find,
-				    int             page)
-{
-	DjvuText *search = DJVU_DOCUMENT (document_find)->search;
+	if (!matches)
+		return NULL;
 
-	return search && djvu_text_has_results (search, page);
-}
+	document_get_page_size (djvu_document, page->index, &width, &height);
+	for (l = matches; l && l->data; l = g_list_next (l)) {
+		EvRectangle *r = (EvRectangle *)l->data;
+		gdouble      tmp;
 
-static double
-djvu_document_find_get_progress (EvDocumentFind *document_find)
-{
-	DjvuText *search = DJVU_DOCUMENT (document_find)->search;
+		tmp = r->y1;
+		
+		r->x1 *= SCALE_FACTOR;
+		r->x2 *= SCALE_FACTOR;
+
+		tmp = r->y1;
+		r->y1 = height - r->y2 * SCALE_FACTOR;
+		r->y2 = height - tmp * SCALE_FACTOR;
+	}
 	
-	if (search == NULL) {
-		return 0;
-	}
 
-	return djvu_text_get_progress (search);
-}
-
-static void
-djvu_document_find_cancel (EvDocumentFind *document)
-{
-        DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
-
-	if (djvu_document->search) {
-		djvu_text_free (djvu_document->search);
-		djvu_document->search = NULL;
-	}
+	return matches;
 }
 
 static void
 djvu_document_find_iface_init (EvDocumentFindIface *iface)
 {
-        iface->begin = djvu_document_find_begin;
-	iface->get_n_results = djvu_document_find_get_n_results;
-	iface->get_result = djvu_document_find_get_result;
-	iface->page_has_results = djvu_document_find_page_has_results;
-	iface->get_progress = djvu_document_find_get_progress;
-        iface->cancel = djvu_document_find_cancel;
+        iface->find_text = djvu_document_find_find_text;
 }
 
 static GList *

@@ -18,8 +18,6 @@ libdjvudocument_la_SOURCES = 	\
 	djvu-document-private.h \
 	djvu-links.c		\
 	djvu-links.h		\
-	djvu-text.c		\
-	djvu-text.h		\
 	djvu-text-page.c 	\
 	djvu-text-page.h
 

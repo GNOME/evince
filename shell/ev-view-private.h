@@ -97,8 +97,9 @@ struct _EvView {
 
 	EvDocument *document;
 
-	char *find_status;
-	int find_result;
+	/* Find */
+	GList **find_pages;
+	gint find_result;
 	gboolean jump_to_find_result;
 	gboolean highlight_find_results;
 	

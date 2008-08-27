@@ -1,3 +1,39 @@
+2008-08-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/djvu/Makefile.am:
+	* backend/djvu/djvu-document-private.h:
+	* backend/djvu/djvu-document.c: (djvu_document_find_find_text),
+	(djvu_document_find_iface_init):
+	* backend/djvu/djvu-text-page.[ch]:
+	* backend/djvu/djvu-text.[ch]: Removed
+	* backend/pdf/ev-poppler.cc: (pdf_document_find_find_text),
+	(pdf_document_find_iface_init):
+	* libdocument/ev-document-find.[ch]: (ev_document_find_find_text):
+	* shell/ev-jobs.[ch]: (ev_job_find_init), (ev_job_find_dispose),
+	(ev_job_find_run), (ev_job_find_class_init), (ev_job_find_new),
+	(ev_job_find_get_n_results), (ev_job_find_get_progress),
+	(ev_job_find_has_results), (ev_job_find_get_results):
+	* shell/ev-view-private.h:
+	* shell/ev-view.[ch]: (ev_view_expose_event),
+	(highlight_find_results), (ev_view_finalize),
+	(ev_view_get_property), (ev_view_class_init), (page_changed_cb),
+	(ev_view_set_document), (ev_view_find_get_n_results),
+	(ev_view_find_get_result), (jump_to_find_result),
+	(jump_to_find_page), (ev_view_find_changed), (ev_view_find_next),
+	(ev_view_find_previous), (ev_view_find_search_changed),
+	(ev_view_find_set_highlight_search), (ev_view_find_cancel):
+	* shell/ev-window.c: (ev_window_update_actions),
+	(page_changed_cb), (ev_window_setup_document),
+	(ev_window_update_find_status_message),
+	(ev_window_find_job_finished_cb), (ev_window_find_job_updated_cb),
+	(ev_window_clear_find_job), (find_bar_close_cb),
+	(find_bar_search_changed_cb), (find_bar_visibility_changed_cb),
+	(ev_window_dispose), (ev_window_init):
+
+	Rework find interface. The find logic has been moved from backends
+	to the shell avoiding a lot of duplicated code in the backends and
+	making easier to implement the find interface in the backends.
+	
 2008-08-25  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc:

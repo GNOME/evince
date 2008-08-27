@@ -29,7 +29,6 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "ev-application.h"
-#include "ev-document-find.h"
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-links.h"
@@ -53,7 +52,6 @@
 
 enum {
 	PROP_0,
-	PROP_FIND_STATUS,
 	PROP_CONTINUOUS,
 	PROP_DUAL_PAGE,
 	PROP_FULLSCREEN,
@@ -228,9 +226,6 @@ static void	  draw_loading_text 			     (EvView             *view,
 							      GdkRectangle       *expose_area);
 
 /*** Callbacks ***/
-static void       find_changed_cb                            (EvDocument         *document,
-							      int                 page,
-							      EvView             *view);
 static void       job_finished_cb                            (EvPixbufCache      *pixbuf_cache,
 							      GdkRegion          *region,
 							      EvView             *view);
@@ -303,10 +298,11 @@ static void       ev_view_handle_cursor_over_xy              (EvView *view,
 							      gint y);
 
 /*** Find ***/
-static void       update_find_status_message                 (EvView             *view,
-							      gboolean            this_page);
-static void       ev_view_set_find_status                    (EvView             *view,
-							      const char         *message);
+static gint         ev_view_find_get_n_results               (EvView             *view,
+							      gint                page);
+static EvRectangle *ev_view_find_get_result                  (EvView             *view,
+							      gint                page,
+							      gint                result);
 static void       jump_to_find_result                        (EvView             *view);
 static void       jump_to_find_page                          (EvView             *view, 
 							      EvViewFindDirection direction,
@@ -2547,7 +2543,7 @@ ev_view_expose_event (GtkWidget      *widget,
 
 		draw_one_page (view, i, cr, &page_area, &border, &(event->area), &page_ready);
 
-		if (page_ready && EV_IS_DOCUMENT_FIND (view->document) && view->highlight_find_results)
+		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, i);
 	}
 
@@ -3608,15 +3604,12 @@ draw_rubberband (GtkWidget *widget, GdkWindow *window,
 static void
 highlight_find_results (EvView *view, int page)
 {
-	EvDocumentFind *find;
-	int i, results = 0;
+	gint i, n_results = 0;
 
-	find = EV_DOCUMENT_FIND (view->document);
+	n_results = ev_view_find_get_n_results (view, page);
 
-	results = ev_document_find_get_n_results (find, page);
-
-	for (i = 0; i < results; i++) {
-		EvRectangle rectangle;
+	for (i = 0; i < n_results; i++) {
+		EvRectangle *rectangle;
 		GdkRectangle view_rectangle;
 		guchar alpha;
 
@@ -3626,8 +3619,8 @@ highlight_find_results (EvView *view, int page)
 			alpha = 0x20;
 		}
 
-		ev_document_find_get_result (find, page, i, &rectangle);
-		doc_rect_to_view_rect (view, page, &rectangle, &view_rectangle);
+		rectangle = ev_view_find_get_result (view, page, i);
+		doc_rect_to_view_rect (view, page, rectangle, &view_rectangle);
 		draw_rubberband (GTK_WIDGET (view), view->layout.bin_window,
 				 &view_rectangle, alpha);
         }
@@ -3822,8 +3815,6 @@ ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
-	g_free (view->find_status);
-
 	clear_selection (view);
 	clear_link_selected (view);
 
@@ -3973,9 +3964,6 @@ ev_view_get_property (GObject *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
-	        case PROP_FIND_STATUS:
-			g_value_set_string (value, view->find_status);
-			break;
 	        case PROP_CONTINUOUS:
 			g_value_set_boolean (value, view->continuous);
 			break;
@@ -4090,14 +4078,6 @@ ev_view_class_init (EvViewClass *class)
 		         G_TYPE_NONE, 1,
 			 G_TYPE_OBJECT);
 
-
-	g_object_class_install_property (object_class,
-					 PROP_FIND_STATUS,
-					 g_param_spec_string ("find-status",
-							      "Find Status Message",
-							      "The find status message",
-							      NULL,
-							      G_PARAM_READABLE));
 
 	g_object_class_install_property (object_class,
 					 PROP_CONTINUOUS,
@@ -4224,25 +4204,6 @@ ev_view_init (EvView *view)
 /*** Callbacks ***/
 
 static void
-find_changed_cb (EvDocument *document, int page, EvView *view)
-{
-	double percent;
-	int n_pages;
-
-	percent = ev_document_find_get_progress
-		        (EV_DOCUMENT_FIND (view->document)); 
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
-	
-	if (view->jump_to_find_result == TRUE) {
-		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
-		jump_to_find_result (view);
-	}
-	update_find_status_message (view, percent * n_pages >= n_pages - 1 );
-	if (view->current_page == page)
-		gtk_widget_queue_draw (GTK_WIDGET (view));
-}
-
-static void
 ev_view_change_page (EvView *view,
 		     gint    new_page)
 {
@@ -4334,10 +4295,7 @@ page_changed_cb (EvPageCache *page_cache,
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 
-	if (EV_IS_DOCUMENT_FIND (view->document)) {
-		view->find_result = 0;
-		update_find_status_message (view, TRUE);
-	}
+	view->find_result = 0;
 }
 
 static void
@@ -4519,12 +4477,8 @@ ev_view_set_document (EvView     *view,
 		clear_caches (view);
 
 		if (view->document) {
-                        g_signal_handlers_disconnect_by_func (view->document,
-                                                              find_changed_cb,
-                                                              view);
 			g_object_unref (view->document);
 			view->page_cache = NULL;
-
                 }
 
 		view->document = document;
@@ -4532,13 +4486,6 @@ ev_view_set_document (EvView     *view,
 
 		if (view->document) {
 			g_object_ref (view->document);
-			if (EV_IS_DOCUMENT_FIND (view->document)) {
-				g_signal_connect (view->document,
-						  "find_changed",
-						  G_CALLBACK (find_changed_cb),
-						  view);
-			}
-
 			setup_caches (view);
                 }
 
@@ -5139,71 +5086,32 @@ ev_view_set_zoom_for_size (EvView *view,
 }
 
 /*** Find ***/
-static void
-update_find_status_message (EvView *view, gboolean this_page)
+static gint
+ev_view_find_get_n_results (EvView *view, gint page)
 {
-	char *message;
-
-	if (this_page) {
-		int results;
-
-		results = ev_document_find_get_n_results
-				(EV_DOCUMENT_FIND (view->document),
-				 view->current_page);
-		/* TRANS: Sometimes this could be better translated as
-		   "%d hit(s) on this page".  Therefore this string
-		   contains plural cases. */
-		message = g_strdup_printf (ngettext ("%d found on this page",
-						     "%d found on this page",
-						     results),
-					   results);
-	} else {
-		double percent;
-
-		percent = ev_document_find_get_progress
-				(EV_DOCUMENT_FIND (view->document));
-		message = g_strdup_printf (_("%3d%% remaining to search"),
-					   (int) ((1.0 - percent) * 100));
-		
-	}
-	ev_view_set_find_status (view, message);
-	g_free (message);
+	return view->find_pages ? g_list_length (view->find_pages[page]) : 0;
 }
 
-const char *
-ev_view_get_find_status (EvView *view)
+static EvRectangle *
+ev_view_find_get_result (EvView *view, gint page, gint result)
 {
-	g_return_val_if_fail (EV_IS_VIEW (view), NULL);
-
-	return view->find_status;
-}
-
-static void
-ev_view_set_find_status (EvView *view, const char *message)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	g_free (view->find_status);
-	view->find_status = g_strdup (message);
-	g_object_notify (G_OBJECT (view), "find-status");
+	return view->find_pages ? (EvRectangle *) g_list_nth_data (view->find_pages[page], result) : NULL;
 }
 
 static void
 jump_to_find_result (EvView *view)
 {
-	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
-	EvRectangle rect;
-	GdkRectangle view_rect;
-	int n_results;
-	int page = view->current_page;
+	gint n_results;
+	gint page = view->current_page;
 
-	n_results = ev_document_find_get_n_results (find, page);
+	n_results = ev_view_find_get_n_results (view, page);
 
-	if (n_results > 0  && view->find_result < n_results) {
-		ev_document_find_get_result
-			(find, page, view->find_result, &rect);
+	if (n_results > 0 && view->find_result < n_results) {
+		EvRectangle *rect;
+		GdkRectangle view_rect;
 
-		doc_rect_to_view_rect (view, page, &rect, &view_rect);
+		rect = ev_view_find_get_result (view, page, view->find_result);
+		doc_rect_to_view_rect (view, page, rect, &view_rect);
 		ensure_rectangle_is_visible (view, &view_rect);
 	}
 }
@@ -5226,7 +5134,6 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 	n_pages = ev_page_cache_get_n_pages (view->page_cache);
 
 	for (i = 0; i < n_pages; i++) {
-		int has_results;
 		int page;
 		
 		if (direction == EV_VIEW_FIND_NEXT)
@@ -5237,53 +5144,39 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 		
 		if (page >= n_pages) {
 			page = page - n_pages;
-		}
-		if (page < 0) 
+		} else if (page < 0) 
 			page = page + n_pages;
-		
-		has_results = ev_document_find_page_has_results
-				(EV_DOCUMENT_FIND (view->document), page);
-		if (has_results == -1) {
-			break;
-		} else if (has_results == 1) {
+
+		if (ev_view_find_get_n_results (view, page) > 0) {
 			ev_page_cache_set_current_page (view->page_cache, page);
 			break;
 		}
 	}
 }
 
-gboolean
-ev_view_can_find_next (EvView *view)
+void
+ev_view_find_changed (EvView *view, GList **results, gint page)
 {
-	if (EV_IS_DOCUMENT_FIND (view->document)) {
-		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
-		int i, n_pages;
-
-		n_pages = ev_page_cache_get_n_pages (view->page_cache);
-		for (i = 0; i < n_pages; i++) {
-			if (ev_document_find_get_n_results (find, i) > 0) {
-				return TRUE;
-			}
-		}
+	view->find_pages = results;
+	
+	if (view->jump_to_find_result == TRUE) {
+		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+		jump_to_find_result (view);
 	}
 
-	return FALSE;
+	if (view->current_page == page)
+		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void
 ev_view_find_next (EvView *view)
 {
-	int n_results, n_pages;
-	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
+	gint n_results;
 
-	n_results = ev_document_find_get_n_results (find, view->current_page);
-
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
-
+	n_results = ev_view_find_get_n_results (view, view->current_page);
 	view->find_result++;
 
 	if (view->find_result >= n_results) {
-
 		view->find_result = 0;
 		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 1);
 		jump_to_find_result (view);
@@ -5293,42 +5186,14 @@ ev_view_find_next (EvView *view)
 	}
 }
 
-gboolean
-ev_view_can_find_previous (EvView *view)
-{
-	if (EV_IS_DOCUMENT_FIND (view->document)) {
-		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
-		int i, n_pages;
-
-		n_pages = ev_page_cache_get_n_pages (view->page_cache);
-		for (i = n_pages - 1; i >= 0; i--) {
-			if (ev_document_find_get_n_results (find, i) > 0) {
-				return TRUE;
-			}
-		}
-	}
-
-	return FALSE;
-}
 void
 ev_view_find_previous (EvView *view)
 {
-	int n_results, n_pages;
-	EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
-	EvPageCache *page_cache;
-
-	page_cache = ev_page_cache_get (view->document);
-
-	n_results = ev_document_find_get_n_results (find, view->current_page);
-
-	n_pages = ev_page_cache_get_n_pages (page_cache);
-
 	view->find_result--;
 
 	if (view->find_result < 0) {
-
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, -1);
-		view->find_result = ev_document_find_get_n_results (find, view->current_page) - 1;
+		view->find_result = ev_view_find_get_n_results (view, view->current_page) - 1;
 		jump_to_find_result (view);
 	} else {
 		jump_to_find_result (view);
@@ -5337,14 +5202,15 @@ ev_view_find_previous (EvView *view)
 }
 
 void
-ev_view_search_changed (EvView *view)
+ev_view_find_search_changed (EvView *view)
 {
 	/* search string has changed, focus on new search result */
 	view->jump_to_find_result = TRUE;
+	view->find_pages = NULL;
 }
 
 void
-ev_view_set_highlight_search (EvView *view, gboolean value)
+ev_view_find_set_highlight_search (EvView *view, gboolean value)
 {
 	view->highlight_find_results = value;
 	gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -5353,11 +5219,7 @@ ev_view_set_highlight_search (EvView *view, gboolean value)
 void
 ev_view_find_cancel (EvView *view)
 {
-	if (EV_IS_DOCUMENT_FIND (view->document)) {
-		EvDocumentFind *find = EV_DOCUMENT_FIND (view->document);
-
-		ev_document_find_cancel (find);
-	}
+	view->find_pages = NULL;
 }
 
 /*** Selections ***/

@@ -24,9 +24,8 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <gdk/gdk.h>
 
-#include "ev-document.h"	/* For EvRectangle */
+#include "ev-document.h"
 
 G_BEGIN_DECLS
 
@@ -37,62 +36,26 @@ G_BEGIN_DECLS
 #define EV_IS_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_FIND))
 #define EV_DOCUMENT_FIND_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FIND, EvDocumentFindIface))
 
-typedef struct _EvDocumentFind	EvDocumentFind;
-typedef struct _EvDocumentFindIface	EvDocumentFindIface;
+typedef struct _EvDocumentFind	    EvDocumentFind;
+typedef struct _EvDocumentFindIface EvDocumentFindIface;
 
 struct _EvDocumentFindIface
 {
 	GTypeInterface base_iface;
 
         /* Methods */
-        
-        void     (* begin)	      (EvDocumentFind *document_find,
-				       int             page,
-                                       const char     *search_string,
-                                       gboolean        case_sensitive);
-        void     (* cancel)	      (EvDocumentFind *document_find);
-	int      (* page_has_results) (EvDocumentFind *document_find,
-				       int             page);
-	int      (* get_n_results)    (EvDocumentFind *document_find,
-				       int             page);
-	gboolean (* get_result)	      (EvDocumentFind *document_find,
-				       int             page,
-				       int             n_result,
-				       EvRectangle    *rectangle); 
-	double	 (* get_progress)     (EvDocumentFind *document_find);
-
-        /* Signals */
-
-        void     (* find_changed)     (EvDocumentFind *document_find,
-				       int             page);
+	GList 	*(* find_text)     (EvDocumentFind *document_find,
+				    EvPage         *page,
+				    const gchar    *text,
+				    gboolean        case_sensitive);
 };
 
-GType     ev_document_find_get_type         (void);
-void      ev_document_find_begin	    (EvDocumentFind *document_find,
-					     int             page,
-					     const char     *search_string,
-					     gboolean        case_sensitive);
-void      ev_document_find_cancel	    (EvDocumentFind *document_find);
-int       ev_document_find_page_has_results (EvDocumentFind *document_find,
-					     int             page);
-int       ev_document_find_get_n_results    (EvDocumentFind *document_find,
-					     int             page);
-gboolean  ev_document_find_get_result	    (EvDocumentFind *document_find,
-					     int             page,
-					     int             n_result,
-					     EvRectangle    *rectangle); 
-double	  ev_document_find_get_progress     (EvDocumentFind *document_find);
-void      ev_document_find_changed          (EvDocumentFind *document_find,
-					     int             page);
-
-/* How this interface works:
- *
- * begin() begins a new search, canceling any previous search.
- * 
- * cancel() cancels a search if any, otherwise does nothing.
- * 
- */
+GType  ev_document_find_get_type  (void) G_GNUC_CONST;
+GList *ev_document_find_find_text (EvDocumentFind *document_find,
+				   EvPage         *page,
+				   const gchar    *text,
+				   gboolean        case_sensitive);
 
 G_END_DECLS
 
-#endif
+#endif /* EV_DOCUMENT_FIND_H */
