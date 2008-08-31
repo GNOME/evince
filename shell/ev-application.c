@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 #include "totem-scrsaver.h"
 #include "eggsmclient.h"
@@ -449,11 +450,15 @@ ev_application_open_window (EvApplication  *application,
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 	ev_application_add_icon_path_for_screen (screen);
-	
+
 	gtk_widget_show (new_window);
 	
-	gtk_window_present_with_time (GTK_WINDOW (new_window),
-				      timestamp);
+	if (timestamp <= 0)
+		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
+	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
+	
+	gtk_window_present (GTK_WINDOW (new_window));
+
 	return TRUE;
 }
 
@@ -533,7 +538,7 @@ ev_application_add_icon_path_for_screen (GdkScreen *screen)
 {
 	GtkIconTheme *icon_theme;
 
-	icon_theme = gtk_icon_theme_get_for_screen (screen);
+	icon_theme = screen ? gtk_icon_theme_get_for_screen (screen) : gtk_icon_theme_get_default ();
 	if (icon_theme) {
 		gchar **path = NULL;
 		gint    n_paths;
@@ -608,8 +613,11 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	gtk_widget_show (GTK_WIDGET (new_window));
 	ev_document_fc_mutex_unlock ();
 
-	gtk_window_present_with_time (GTK_WINDOW (new_window),
-				      timestamp);
+	if (timestamp <= 0)
+		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
+	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
+	
+	gtk_window_present (GTK_WINDOW (new_window));
 }
 
 /**
