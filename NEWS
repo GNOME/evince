@@ -1,4 +1,48 @@
 ================
+Evince  2.23.91
+================
+
+New Features and UI Improvements:
+
+    * Use EggSMClient from libegg instead of gnome-client and remove
+      libgnome and libgnomeui dependencies (Carlos Garcia Campos)
+    * Implement document_get_page_label in tiff backend (Carlos Garcia
+      Campos)
+      
+Bug fixes:
+
+    * Start up in the right workspace when resuming a previous session
+      (Carlos Garcia Campos)
+    * Fix metacity warnings shown in ~/.xsession-errors (Carlos
+      Garcia Campos)
+    * Fix a crash due to an idle function called with an already
+      destroyed object (#549163, Carlos Garcia Campos)
+    * Fix problems when opening or saving attachments (#548653, Carlos
+      Garcia Campos)
+    * Handle document orientation in tiff backend (#548444, Carlos
+      Garcia Campos)
+    * Fix a crash when adjustment page size is 0 (#547440, Carlos
+      Garcia Campos)
+    * Other bugs fixed: #548462
+
+Translation updates:
+
+    * Runa Bhattacharjee (bn_IN)
+    * Gil Forcada (ca)
+    * Mario Blättermann (de)
+    * Dawa pemo (dz)
+    * Jorge González (es)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Ilkka Tuohela (fi)
+    * Takeshi AIHANA (ja)
+    * Shankar Prasad (kn)
+    * Gintautas Miliauskas (lt)
+    * Arangel Angov (mk)
+    * Manoj Kumar Giri (or)
+    * Vladimir Melo (pt_BR)
+    * Chao-Hsiung Liao (zh_HK)
+    
+================
 Evince  2.23.6
 ================
 
