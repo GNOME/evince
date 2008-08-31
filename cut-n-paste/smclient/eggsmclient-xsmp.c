@@ -252,6 +252,7 @@ sm_client_xsmp_set_initial_properties (gpointer user_data)
 			 err->message);
 	      g_error_free (err);
 	    }
+	  g_free (cmdline);
 	}
     }
 
