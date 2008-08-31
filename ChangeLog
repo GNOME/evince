@@ -1,5 +1,13 @@
 2008-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-application.c: (ev_application_open_window),
+	(ev_application_open_uri_at_dest):
+
+	Make sure evince starts up in the right workspace when resuming a
+	previous session.
+	
+2008-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-application.[ch]: (ev_application_open_window),
 	(ev_application_add_icon_path_for_screen),
 	(ev_application_open_uri_at_dest):

@@ -451,7 +451,8 @@ ev_application_open_window (EvApplication  *application,
 	}
 	ev_application_add_icon_path_for_screen (screen);
 
-	gtk_widget_show (new_window);
+	if (!GTK_WIDGET_REALIZED (new_window))
+		gtk_widget_realize (new_window);
 	
 	if (timestamp <= 0)
 		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
@@ -609,15 +610,16 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	ev_window_open_uri (new_window, uri, dest, mode, search_string, 
 			    unlink_temp_file, print_settings);
 
-	ev_document_fc_mutex_lock ();
-	gtk_widget_show (GTK_WIDGET (new_window));
-	ev_document_fc_mutex_unlock ();
+	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (new_window)))
+		gtk_widget_realize (GTK_WIDGET (new_window));
 
 	if (timestamp <= 0)
 		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
 	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
-	
+
+	ev_document_fc_mutex_lock ();
 	gtk_window_present (GTK_WINDOW (new_window));
+	ev_document_fc_mutex_unlock ();
 }
 
 /**
