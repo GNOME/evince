@@ -26,12 +26,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
-#if WITH_GNOME
-#include <libgnome/gnome-program.h>
-#include <libgnomeui/gnome-ui-init.h>
-#include <libgnomeui/gnome-app-helper.h>
-#endif
-
 #ifdef ENABLE_DBUS
 #include <dbus/dbus-glib-bindings.h>
 #endif
@@ -42,6 +36,7 @@
 #include "ev-file-helpers.h"
 #include "ev-metadata-manager.h"
 #include "ev-stock-icons.h"
+#include "eggsmclient.h"
 
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;
@@ -318,48 +313,41 @@ load_files_remote (const char **files,
 int
 main (int argc, char *argv[])
 {
-	gboolean enable_metadata = FALSE;
 	GOptionContext *context;
 	GHashTable *args;
-#if WITH_GNOME
-	GnomeProgram *program;
-#else
-	char *accel_filename;
+	gboolean enable_metadata = FALSE;
 	GError *error = NULL;
-#endif
+
+	/* Init glib threads asap */
+	if (!g_thread_supported ())
+		g_thread_init (NULL);
 
 	context = g_option_context_new (_("GNOME Document Viewer"));
 
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
-	bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);
-	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-	textdomain(GETTEXT_PACKAGE);
+	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);
 #else
 	g_option_context_add_main_entries (context, goption_options, NULL);
-#endif
-
-#if WITH_GNOME
-	program = gnome_program_init (PACKAGE, VERSION,
-				      LIBGNOMEUI_MODULE, argc, argv,
-				      GNOME_PARAM_GOPTION_CONTEXT, context,
-				      GNOME_PARAM_HUMAN_READABLE_NAME, _("Evince"),
-				      GNOME_PARAM_APP_DATADIR, GNOMEDATADIR,
-				      NULL);
-#else
+#endif /* ENABLE_NLS */
+	
+	g_option_context_add_group (context, egg_sm_client_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
+
+	gtk_init (&argc, &argv);
+
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
 		g_warning ("Cannot parse arguments: %s", error->message);
 		g_error_free (error);
+		g_option_context_free (context);
+		
 		return 1;
 	}
 	g_option_context_free (context);
-
-	accel_filename = g_build_filename (ev_dot_dir (), "accels", NULL);
-	gtk_accel_map_load (accel_filename);
-#endif
 
 	args = arguments_parse ();
 
@@ -367,15 +355,13 @@ main (int argc, char *argv[])
 	if (!ev_application_register_service (EV_APP)) {
 		if (load_files_remote (file_arguments, args)) {
 			g_hash_table_destroy (args);
-#if WITH_GNOME
-			g_object_unref (program);
-#endif
+
 			return 0;
 		}
 	} else {
 		enable_metadata = TRUE;
 	}
-#endif
+#endif /* ENABLE_DBUS */
 
 	ev_debug_init ();
 	ev_backends_manager_init ();
@@ -384,23 +370,15 @@ main (int argc, char *argv[])
 		ev_metadata_manager_init ();
 	}
 
-	g_set_application_name (_("Evince Document Viewer"));
-
 	ev_file_helpers_init ();
 	ev_stock_icons_init ();
 	gtk_window_set_default_icon_name ("evince");
 
-	load_files (file_arguments, args);
+	if (!ev_application_load_session (EV_APP))
+		load_files (file_arguments, args);
 	g_hash_table_destroy (args);
 
 	gtk_main ();
-
-#if WITH_GNOME
-	gnome_accelerators_sync ();
-#else
-	gtk_accel_map_save (accel_filename);
-	g_free (accel_filename);
-#endif
 
 	ev_file_helpers_shutdown ();
 
@@ -412,9 +390,5 @@ main (int argc, char *argv[])
 
 	ev_debug_shutdown ();
 
-#if WITH_GNOME
- 	g_object_unref (program);
-#endif
-	
 	return 0;
 }

@@ -49,8 +49,6 @@ GTK_REQUIRED=2.10.0
 GLIB_REQUIRED=2.15.6
 KEYRING_REQUIRED=0.4.0
 
-LIBGNOMEUI_REQUIRED=2.14.0
-LIBGNOME_REQUIRED=2.14.0
 GNOME_ICON_THEME_REQUIRED=2.17.1
 LIBXML_REQUIRED=2.5.0
 
@@ -58,6 +56,10 @@ PKG_CHECK_MODULES(LIB, gtk+-2.0 >= $GTK_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED 
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED libglade-2.0 gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0 libglade-2.0 gconf-2.0)
+
+PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0)
+AC_SUBST(SMCLIENT_CFLAGS)
+AC_SUBST(SMCLIENT_LIBS)
 
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
@@ -81,22 +83,6 @@ AM_CONDITIONAL(WITH_KEYRING, test x$WITH_KEYRING = "xyes")
 if test x$WITH_KEYRING = "xyes"; then
         PKG_CHECK_MODULES(KEYRING, gnome-keyring-1 >= $KEYRING_REQUIRED)
         AC_DEFINE([WITH_KEYRING],[1],[Define if KEYRING support is enabled])
-fi
-
-AC_ARG_WITH(libgnome,
-        AC_HELP_STRING([--without-libgnome],[disable the use of libgnome]),
-	[case "${withval}" in
-	yes) WITH_GNOME=yes ;;
-	no) WITH_GNOME=no ;;
-	*) AC_MSG_ERROR(bad value ${withval} for --with-libgnome) ;;
-	esac],
-	[WITH_GNOME=yes]) dnl Default value
-AM_CONDITIONAL(WITH_GNOME, test x$WITH_GNOME = "xyes")
-
-if test x$WITH_GNOME = "xyes"; then
-        PKG_CHECK_MODULES(GNOME, libgnome-2.0 >= $LIBGNOME_REQUIRED)
-        PKG_CHECK_MODULES(GNOMEUI, libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
-        AC_DEFINE([WITH_GNOME],[1],[Define if GNOME support is enabled])
 fi
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
@@ -142,8 +128,8 @@ if test "x$enable_debug" = "xyes"; then
 fi
 
 
-LIB_CFLAGS="$LIB_CFLAGS $GNOME_CFLAGS $DEBUG_FLAGS"
-LIB_LIBS="$LIB_LIBS $GNOME_LIBS"
+LIB_CFLAGS="$LIB_CFLAGS $DEBUG_FLAGS"
+LIB_LIBS="$LIB_LIBS"
 AC_SUBST(LIB_CFLAGS)
 AC_SUBST(LIB_LIBS)
 
@@ -151,13 +137,13 @@ BACKEND_CFLAGS="$BACKEND_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $GNOMEUI_CFLAGS $KEYRING_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $GNOMEUI_LIBS $KEYRING_LIBS -lz"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $KEYRING_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $KEYRING_LIBS -lz"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
-FRONTEND_CFLAGS="$FRONTEND_CORE_CFLAGS $GNOME_CFLAGS $DEBUG_FLAGS"
-FRONTEND_LIBS="$FRONTEND_CORE_LIBS $GNOME_LIBS -lz"
+FRONTEND_CFLAGS="$FRONTEND_CORE_CFLAGS $DEBUG_FLAGS"
+FRONTEND_LIBS="$FRONTEND_CORE_LIBS -lz"
 AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
 
@@ -432,6 +418,7 @@ backend/tiff/Makefile
 cut-n-paste/Makefile
 cut-n-paste/evmountoperation/Makefile
 cut-n-paste/gedit-message-area/Makefile
+cut-n-paste/smclient/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/totem-screensaver/Makefile
@@ -470,7 +457,6 @@ AC_OUTPUT
 
 echo "
 Configure summary:
-	GNOME Support......:  $WITH_GNOME
 	Keyring Support....:  $WITH_KEYRING
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS

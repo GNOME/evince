@@ -62,15 +62,10 @@ ev_dot_dir (void)
 	if (dot_dir == NULL) {
 		gboolean exists;
 
-#if WITH_GNOME
-		dot_dir = g_build_filename (gnome_user_dir_get (),
+		dot_dir = g_build_filename (g_get_home_dir (),
+					    ".gnome2",
 					    "evince",
 					    NULL);
-#else
-		dot_dir = g_build_filename (g_get_user_config_dir (),
-					    "evince",
-					    NULL);
-#endif
 
 		exists = ensure_dir_exists (dot_dir);
 		if (!exists)

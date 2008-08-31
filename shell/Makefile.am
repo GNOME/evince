@@ -6,6 +6,7 @@ INCLUDES=						\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
 	-I$(top_srcdir)/cut-n-paste/gedit-message-area/	\
 	-I$(top_srcdir)/cut-n-paste/evmountoperation/	\
+	-I$(top_srcdir)/cut-n-paste/smclient/		\
 	-I$(top_srcdir)/libdocument			\
 	-I$(top_srcdir)/properties			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
@@ -102,6 +103,7 @@ evince_LDADD=									\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
 	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
 	$(top_builddir)/cut-n-paste/evmountoperation/libevmountoperation.la	\
+	$(top_builddir)/cut-n-paste/smclient/libsmclient.la			\
 	$(top_builddir)/properties/libevproperties.la				\
 	$(top_builddir)/libdocument/libevbackend.la				\
 	$(SHELL_LIBS)

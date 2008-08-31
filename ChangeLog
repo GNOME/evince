@@ -1,3 +1,26 @@
+2008-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* cut-n-paste/Makefile.am:
+	* cut-n-paste/smclient/Makefile.am:
+	* cut-n-paste/smclient/eggdesktopfile.[ch]:
+	* cut-n-paste/smclient/eggsmclient-private.h:
+	* cut-n-paste/smclient/eggsmclient-xsmp.c:
+	* cut-n-paste/smclient/eggsmclient.[ch]:
+
+	EggSMClient copied from libegg
+
+	* libdocument/ev-file-helpers.c: (ev_dot_dir):
+	* shell/Makefile.am:
+	* shell/ev-application.[ch]: (ev_application_load_session),
+	(smclient_save_state_cb), (smclient_quit_cb),
+	(ev_application_init_session), (ev_application_shutdown),
+	(ev_application_init):
+	* shell/main.c: (main):
+
+	Use EggSMClient instead of gnome-client and remove libgnome and
+	libgnomeui dependencies.
+	
 2008-08-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/main.c: (main):

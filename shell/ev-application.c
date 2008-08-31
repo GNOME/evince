@@ -28,11 +28,9 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#if WITH_GNOME
-#include <libgnomeui/gnome-client.h>
-#endif
-
 #include "totem-scrsaver.h"
+#include "eggsmclient.h"
+#include "eggdesktopfile.h"
 
 #include "ev-application.h"
 #include "ev-document-factory.h"
@@ -53,11 +51,15 @@ static void ev_application_add_icon_path_for_screen (GdkScreen *screen);
 struct _EvApplication {
 	GObject base_instance;
 
+	gchar *accel_map_file;
+	
 	gchar *toolbars_file;
 
 	EggToolbarsModel *toolbars_model;
 
 	TotemScrsaver *scr_saver;
+
+	EggSMClient *smclient;
 
 	gchar *last_chooser_uri;
 
@@ -151,55 +153,91 @@ ev_application_get_instance (void)
 	return instance;
 }
 
-#if WITH_GNOME
-static void
-removed_from_session (GnomeClient *client, EvApplication *application)
+/* Session */
+gboolean
+ev_application_load_session (EvApplication *application)
 {
-	ev_application_shutdown (application);
-}
-
-static gint
-save_session (GnomeClient *client, gint phase, GnomeSaveStyle save_style, gint shutdown,
-	      GnomeInteractStyle interact_style, gint fast, EvApplication *application)
-{
-	GList *windows, *l;
-	char **restart_argv;
-	int argc = 0, k;
-
-	windows = ev_application_get_windows (application);
-	restart_argv = g_new (char *, g_list_length (windows) + 1);
-	restart_argv[argc++] = g_strdup ("evince");
-
-	for (l = windows; l != NULL; l = l->next) {
-		EvWindow *window = EV_WINDOW (l->data);
-		restart_argv[argc++] = g_strdup (ev_window_get_uri (window));
-	}
-
-	gnome_client_set_restart_command (client, argc, restart_argv);
-
-	for (k = 0; k < argc; k++) {
-		g_free (restart_argv[k]);
-	}
-
-	g_list_free (windows);
-	g_free (restart_argv);
+	GKeyFile *state_file;
+	gchar   **uri_list;
 	
+	if (!egg_sm_client_is_resumed (application->smclient))
+		return FALSE;
+
+	state_file = egg_sm_client_get_state_file (application->smclient);
+	if (!state_file)
+		return FALSE;
+
+	uri_list = g_key_file_get_string_list (state_file,
+					       "Evince",
+					       "documents",
+					       NULL, NULL);
+	if (uri_list) {
+		gint i;
+
+		for (i = 0; uri_list[i]; i++) {
+			if (g_ascii_strcasecmp (uri_list[i], "empty-window") == 0)
+				ev_application_open_window (application, NULL, GDK_CURRENT_TIME, NULL);
+			else
+				ev_application_open_uri (application, uri_list[i], NULL, GDK_CURRENT_TIME, NULL);
+		}
+		g_strfreev (uri_list);
+	}
+	g_key_file_free (state_file);
+
 	return TRUE;
 }
 
 static void
-init_session (EvApplication *application)
+smclient_save_state_cb (EggSMClient   *client,
+			GKeyFile      *state_file,
+			EvApplication *application)
 {
-	GnomeClient *client;
+	GList *windows, *l;
+	gint i;
+	const gchar **uri_list;
+	const gchar *empty = "empty-window";
 
-	client = gnome_master_client ();
+	windows = ev_application_get_windows (application);
+	if (!windows)
+		return;
 
-	g_signal_connect (client, "save_yourself",
-			  G_CALLBACK (save_session), application);	
-	g_signal_connect (client, "die",
-			  G_CALLBACK (removed_from_session), application);
+	uri_list = g_new (const gchar *, g_list_length (windows));
+	for (l = windows, i = 0; l != NULL; l = g_list_next (l), i++) {
+		EvWindow *window = EV_WINDOW (l->data);
+
+		if (ev_window_is_empty (window))
+			uri_list[i] = empty;
+		else
+			uri_list[i] = ev_window_get_uri (window);
+	}
+	g_key_file_set_string_list (state_file,
+				    "Evince",
+				    "documents", 
+				    (const char **)uri_list,
+				    i);
+	g_free (uri_list);
 }
-#endif
+
+static void
+smclient_quit_cb (EggSMClient   *client,
+		  EvApplication *application)
+{
+	ev_application_shutdown (application);
+}
+
+static void
+ev_application_init_session (EvApplication *application)
+{
+	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
+	
+	application->smclient = egg_sm_client_get ();
+	g_signal_connect (application->smclient, "save_state",
+			  G_CALLBACK (smclient_save_state_cb),
+			  application);
+	g_signal_connect (application->smclient, "quit",
+			  G_CALLBACK (smclient_quit_cb),
+			  application);
+}
 
 /**
  * ev_display_open_if_needed:
@@ -635,6 +673,12 @@ ev_application_open_uri_list (EvApplication *application,
 void
 ev_application_shutdown (EvApplication *application)
 {
+	if (application->accel_map_file) {
+		gtk_accel_map_save (application->accel_map_file);
+		g_free (application->accel_map_file);
+		application->accel_map_file = NULL;
+	}
+	
 	if (application->toolbars_model) {
 		g_object_unref (application->toolbars_model);
 		g_free (application->toolbars_file);
@@ -684,11 +728,20 @@ static void
 ev_application_init (EvApplication *ev_application)
 {
 	gint i;
+	const gchar *home_dir;
 	
-#if WITH_GNOME
-	init_session (ev_application);
-#endif
+	ev_application_init_session (ev_application);
 
+	home_dir = g_get_home_dir ();
+	if (home_dir) {
+		ev_application->accel_map_file = g_build_filename (home_dir,
+								   ".gnome2",
+								   "accels"
+								   "evince",
+								   NULL);
+		gtk_accel_map_load (ev_application->accel_map_file);
+	}
+	
 	ev_application->toolbars_model = egg_toolbars_model_new ();
 
 	ev_application->toolbars_file = g_build_filename

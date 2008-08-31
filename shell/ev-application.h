@@ -53,7 +53,7 @@ EvApplication    *ev_application_get_instance        (void);
 gboolean          ev_application_register_service    (EvApplication   *application);
 void	          ev_application_shutdown	     (EvApplication   *application);
 
-
+gboolean          ev_application_load_session        (EvApplication   *application);
 gboolean          ev_application_open_window         (EvApplication   *application,
 						      GHashTable      *args,
 						      guint32          timestamp,
