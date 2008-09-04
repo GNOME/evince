@@ -722,6 +722,13 @@ ev_application_shutdown (EvApplication *application)
 		application->print_settings = NULL;
 	}
 #endif /* GTK 2.11.0 */
+
+#ifdef ENABLE_DBUS
+	if (application->keys) {
+		g_object_unref (application->keys);
+		application->keys = NULL;
+	}
+#endif /* ENABLE_DBUS */
 	
 	g_free (application->last_chooser_uri);
 	g_object_unref (application);
@@ -825,13 +832,11 @@ ev_application_get_windows (EvApplication *application)
  *
  * Returns: A #EvMediaPlayerKeys.
  */
-GObject
-*ev_application_get_media_keys (EvApplication *application)
+GObject *
+ev_application_get_media_keys (EvApplication *application)
 {
 #ifdef ENABLE_DBUS
-	if (!application->keys)
-		return NULL;
-	return g_object_ref (G_OBJECT (application->keys));
+	return G_OBJECT (application->keys);
 #else
 	return NULL;
 #endif /* ENABLE_DBUS */

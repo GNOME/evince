@@ -22,7 +22,7 @@
 #ifndef EV_MEDIA_PLAYER_KEYS_H
 #define EV_MEDIA_PLAYER_KEYS_H
 
-#include "ev-window.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -37,12 +37,11 @@ typedef struct _EvMediaPlayerKeys EvMediaPlayerKeys;
 typedef struct _EvMediaPlayerKeysClass EvMediaPlayerKeysClass;
 
 
-GType	ev_media_player_keys_get_type		(void) G_GNUC_CONST;
+GType	           ev_media_player_keys_get_type  (void) G_GNUC_CONST;
 
-EvMediaPlayerKeys * ev_media_player_keys_new	(void);
+EvMediaPlayerKeys *ev_media_player_keys_new	  (void);
 
-void ev_media_player_keys_focused		(EvMediaPlayerKeys *keys,
-						 EvWindow *window);
+void               ev_media_player_keys_focused	  (EvMediaPlayerKeys *keys);
 
 G_END_DECLS
 

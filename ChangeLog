@@ -1,3 +1,17 @@
+2008-09-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-application.c: (ev_application_get_media_keys):
+	* shell/ev-media-player-keys.[ch]:
+	(ev_media_player_keys_class_init), (on_media_player_key_pressed),
+	(ev_media_player_keys_grab_keys),
+	(ev_media_player_keys_release_keys), (ev_media_player_keys_init),
+	(ev_media_player_keys_focused), (ev_media_player_keys_finalize):
+	* shell/ev-window.[ch]: (ev_window_dispose),
+	(view_actions_focus_in_cb), (ev_window_media_player_key_pressed),
+	(ev_window_init):
+
+	Clean up the media player keys stuff.
+	
 2008-08-31  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* NEWS:

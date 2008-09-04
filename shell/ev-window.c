@@ -285,6 +285,9 @@ static void     find_bar_search_changed_cb              (EggFindBar       *find_
 static void     ev_window_do_preview_print              (EvWindow         *window);
 static void     ev_window_load_file_remote              (EvWindow         *ev_window,
 							 GFile            *source_file);
+static void     ev_window_media_player_key_pressed      (EvWindow         *window,
+							 const gchar      *key,
+							 gpointer          user_data);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -3256,12 +3259,6 @@ ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 	ev_view_previous_page (EV_VIEW (ev_window->priv->view));
 }
 
-void
-ev_window_go_previous_page (EvWindow *ev_window)
-{
-	ev_window_cmd_go_previous_page (NULL, ev_window);
-}
-
 static void
 ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 {
@@ -3270,24 +3267,12 @@ ev_window_cmd_go_next_page (GtkAction *action, EvWindow *ev_window)
 	ev_view_next_page (EV_VIEW (ev_window->priv->view));
 }
 
-void
-ev_window_go_next_page (EvWindow *ev_window)
-{
-	ev_window_cmd_go_next_page (NULL, ev_window);
-}
-
 static void
 ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	ev_page_cache_set_current_page (ev_window->priv->page_cache, 0);
-}
-
-void
-ev_window_go_first_page (EvWindow *ev_window)
-{
-	ev_window_cmd_go_first_page (NULL, ev_window);
 }
 
 static void
@@ -3299,12 +3284,6 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 
 	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
 	ev_page_cache_set_current_page (ev_window->priv->page_cache, n_pages - 1);
-}
-
-void
-ev_window_go_last_page (EvWindow *ev_window)
-{
-	ev_window_cmd_go_last_page (NULL, ev_window);
 }
 
 static void
@@ -3405,12 +3384,6 @@ static void
 ev_window_cmd_start_presentation (GtkAction *action, EvWindow *window)
 {
 	ev_window_run_presentation (window);
-}
-
-void
-ev_window_start_presentation (EvWindow *ev_window)
-{
-	ev_window_run_presentation (ev_window);
 }
 
 static gboolean
@@ -4220,16 +4193,14 @@ ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = window->priv;
-#ifdef ENABLE_DBUS
-	GObject *keys;
+	GObject *mpkeys = ev_application_get_media_keys (EV_APP);
 
-	keys = ev_application_get_media_keys (EV_APP);
-	if (keys) {
-		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys), NULL);
-		g_object_unref (keys);
+	if (mpkeys) {
+		g_signal_handlers_disconnect_by_func (mpkeys,
+						      ev_window_media_player_key_pressed,
+						      window);
 	}
-#endif /* ENABLE_DBUS */
-
+	
 	if (priv->setup_document_idle > 0) {
 		g_source_remove (priv->setup_document_idle);
 		priv->setup_document_idle = 0;
@@ -4766,10 +4737,7 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	GObject *keys;
 
 	keys = ev_application_get_media_keys (EV_APP);
-	if (keys) {
-		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys), window);
-		g_object_unref (keys);
-	}
+	ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys));
 #endif /* ENABLE_DBUS */
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
@@ -5338,12 +5306,42 @@ ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
 }
 
 static void
+ev_window_media_player_key_pressed (EvWindow    *window,
+				    const gchar *key,
+				    gpointer     user_data)
+{
+	if (!gtk_window_is_active (GTK_WINDOW (window))) 
+		return;
+	
+	/* Note how Previous/Next only go to the
+	 * next/previous page despite their icon telling you
+	 * they should go to the beginning/end.
+	 *
+	 * There's very few keyboards with FFW/RWD though,
+	 * so we stick the most useful keybinding on the most
+	 * often seen keys
+	 */
+	if (strcmp (key, "Play") == 0) {
+		ev_window_run_presentation (window);
+	} else if (strcmp (key, "Previous") == 0) {
+		ev_window_cmd_go_previous_page (NULL, window);
+	} else if (strcmp (key, "Next") == 0) {
+		ev_window_cmd_go_next_page (NULL, window);
+	} else if (strcmp (key, "FastForward") == 0) {
+		ev_window_cmd_go_last_page (NULL, window);
+	} else if (strcmp (key, "Rewind") == 0) {
+		ev_window_cmd_go_first_page (NULL, window);
+	}
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
+	GObject *mpkeys;
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -5624,6 +5622,14 @@ ev_window_init (EvWindow *ev_window)
 								       "/AttachmentPopup");
 	ev_window->priv->attach_list = NULL;
 
+	/* Media player keys */
+	mpkeys = ev_application_get_media_keys (EV_APP);
+	if (mpkeys) {
+		g_signal_connect_swapped (mpkeys, "key_pressed",
+					  G_CALLBACK (ev_window_media_player_key_pressed),
+					  ev_window);
+	}
+	
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
 

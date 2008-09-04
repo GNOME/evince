@@ -22,9 +22,6 @@
 #include "config.h"
 
 #include <glib.h>
-#include <glib-object.h>
-#include <glib/gi18n-lib.h>
-#include <gmodule.h>
 #include <dbus/dbus-glib.h>
 #include <string.h>
 
@@ -32,62 +29,79 @@
 
 #include "ev-marshal.h"
 
+enum {
+	KEY_PRESSED,
+	LAST_SIGNAL
+};
+
 struct _EvMediaPlayerKeys
 {
 	GObject        parent;
-	DBusGProxy    *media_player_keys_proxy;
-	EvWindow      *window;
+	
+	DBusGProxy    *proxy;
 };
 
 struct _EvMediaPlayerKeysClass
 {
 	GObjectClass parent_class;
+
+	/* Signals */
+	void (* key_pressed) (EvMediaPlayerKeys *keys,
+			      const gchar       *key);
 };
+
+static guint signals[LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE (EvMediaPlayerKeys, ev_media_player_keys, G_TYPE_OBJECT)
 
-static void ev_media_player_keys_init		(EvMediaPlayerKeys *keys);
-static void ev_media_player_keys_finalize	(GObject *object);
+static void ev_media_player_keys_finalize (GObject *object);
 
 static void
 ev_media_player_keys_class_init (EvMediaPlayerKeysClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	signals[KEY_PRESSED] =
+		g_signal_new ("key_pressed",
+			      EV_TYPE_MEDIA_PLAYER_KEYS,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvMediaPlayerKeysClass, key_pressed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__STRING,
+			      G_TYPE_NONE,
+			      1, G_TYPE_STRING);
+	
 	object_class->finalize = ev_media_player_keys_finalize;
 }
 
 static void
-proxy_destroy (DBusGProxy *proxy,
-	       EvMediaPlayerKeys* keys)
+on_media_player_key_pressed (DBusGProxy        *proxy,
+			     const gchar       *application,
+			     const gchar       *key,
+			     EvMediaPlayerKeys *keys)
 {
-	keys->media_player_keys_proxy = NULL;
+	if (strcmp ("Evince", application) == 0) {
+		g_signal_emit (keys, signals[KEY_PRESSED], 0, key);
+	}
 }
 
 static void
-on_media_player_key_pressed (DBusGProxy *proxy, const gchar *application, const gchar *key, EvMediaPlayerKeys *keys)
+ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 {
-	if (strcmp ("Evince", application) == 0 && keys->window != NULL) {
-		/* Note how Previous/Next only go to the
-		 * next/previous page despite their icon telling you
-		 * they should go to the beginning/end.
-		 *
-		 * There's very few keyboards with FFW/RWD though,
-		 * so we stick the most useful keybinding on the most
-		 * often seen keys
-		 */
-		if (strcmp ("Play", key) == 0) {
-			ev_window_start_presentation (keys->window);
-		} else if (strcmp ("Previous", key) == 0) {
-			ev_window_go_previous_page (keys->window);
-		} else if (strcmp ("Next", key) == 0) {
-			ev_window_go_next_page (keys->window);
-		} else if (strcmp ("FastForward", key) == 0) {
-			ev_window_go_last_page (keys->window);
-		} else if (strcmp ("Rewind", key) == 0) {
-			ev_window_go_first_page (keys->window);
-		}
-	}
+	dbus_g_proxy_call (keys->proxy,
+			   "GrabMediaPlayerKeys", NULL,
+			   G_TYPE_STRING, "Evince",
+			   G_TYPE_UINT, 0,
+			   G_TYPE_INVALID, G_TYPE_INVALID);
+}
+
+static void
+ev_media_player_keys_release_keys (EvMediaPlayerKeys *keys)
+{
+	dbus_g_proxy_call (keys->proxy,
+			   "ReleaseMediaPlayerKeys", NULL,
+			   G_TYPE_STRING, "Evince",
+			   G_TYPE_INVALID, G_TYPE_INVALID);
 }
 
 static void
@@ -104,17 +118,17 @@ ev_media_player_keys_init (EvMediaPlayerKeys *keys)
 
 	/* Try the gnome-settings-daemon version,
 	 * then the gnome-control-center version of things */
-	keys->media_player_keys_proxy = dbus_g_proxy_new_for_name_owner (connection,
-								       "org.gnome.SettingsDaemon",
-								       "/org/gnome/SettingsDaemon/MediaKeys",
-								       "org.gnome.SettingsDaemon.MediaKeys",
-								       NULL);
-	if (keys->media_player_keys_proxy == NULL) {
-		keys->media_player_keys_proxy = dbus_g_proxy_new_for_name_owner (connection,
-									       "org.gnome.SettingsDaemon",
-									       "/org/gnome/SettingsDaemon",
-									       "org.gnome.SettingsDaemon",
-									       &err);
+	keys->proxy = dbus_g_proxy_new_for_name_owner (connection,
+						       "org.gnome.SettingsDaemon",
+						       "/org/gnome/SettingsDaemon/MediaKeys",
+						       "org.gnome.SettingsDaemon.MediaKeys",
+						       NULL);
+	if (keys->proxy == NULL) {
+		keys->proxy = dbus_g_proxy_new_for_name_owner (connection,
+							       "org.gnome.SettingsDaemon",
+							       "/org/gnome/SettingsDaemon",
+							       "org.gnome.SettingsDaemon",
+							       &err);
 	}
 
 	dbus_g_connection_unref (connection);
@@ -122,44 +136,36 @@ ev_media_player_keys_init (EvMediaPlayerKeys *keys)
 		g_warning ("Failed to create dbus proxy for org.gnome.SettingsDaemon: %s",
 			   err->message);
 		g_error_free (err);
+		
+		if (keys->proxy) {
+			g_object_unref (keys->proxy);
+			keys->proxy = NULL;
+		}
+		
 		return;
-	} else {
-		g_signal_connect_object (keys->media_player_keys_proxy,
-					 "destroy",
-					 G_CALLBACK (proxy_destroy),
-					 keys, 0);
 	}
 
-	dbus_g_proxy_call (keys->media_player_keys_proxy,
-			   "GrabMediaPlayerKeys", NULL,
-			   G_TYPE_STRING, "Evince", G_TYPE_UINT, 0, G_TYPE_INVALID,
-			   G_TYPE_INVALID);
+	g_object_add_weak_pointer (G_OBJECT (keys->proxy),
+				   (gpointer) &(keys->proxy));
+
+	ev_media_player_keys_grab_keys (keys);
 
 	dbus_g_object_register_marshaller (ev_marshal_VOID__STRING_STRING,
 					   G_TYPE_NONE, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INVALID);
-	dbus_g_proxy_add_signal (keys->media_player_keys_proxy, "MediaPlayerKeyPressed",
+	dbus_g_proxy_add_signal (keys->proxy, "MediaPlayerKeyPressed",
 				 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INVALID);
 
-	dbus_g_proxy_connect_signal (keys->media_player_keys_proxy, "MediaPlayerKeyPressed",
+	dbus_g_proxy_connect_signal (keys->proxy, "MediaPlayerKeyPressed",
 				     G_CALLBACK (on_media_player_key_pressed), keys, NULL);
 }
 
 void
-ev_media_player_keys_focused (EvMediaPlayerKeys *keys, EvWindow *window)
+ev_media_player_keys_focused (EvMediaPlayerKeys *keys)
 {
-	if (keys->media_player_keys_proxy != NULL) {
-		if (keys->window != NULL) {
-			g_object_unref (keys->window);
-			keys->window = NULL;
-		}
-		if (window != NULL) {
-			dbus_g_proxy_call (keys->media_player_keys_proxy,
-					   "GrabMediaPlayerKeys", NULL,
-					   G_TYPE_STRING, "Evince", G_TYPE_UINT, 0, G_TYPE_INVALID,
-					   G_TYPE_INVALID);
-			keys->window = g_object_ref (window);
-		}
-	}
+	if (!keys->proxy)
+		return;
+	
+	ev_media_player_keys_grab_keys (keys);
 }
 
 static void
@@ -167,17 +173,10 @@ ev_media_player_keys_finalize (GObject *object)
 {
 	EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
 
-	if (keys->media_player_keys_proxy != NULL) {
-		dbus_g_proxy_call (keys->media_player_keys_proxy,
-				   "ReleaseMediaPlayerKeys", NULL,
-				   G_TYPE_STRING, "Ev", G_TYPE_INVALID, G_TYPE_INVALID);
-		g_object_unref (keys->media_player_keys_proxy);
-		keys->media_player_keys_proxy = NULL;
-	}
-
-	if (keys->window != NULL) {
-		g_object_unref (keys->window);
-		keys->window = NULL;
+	if (keys->proxy) {
+		ev_media_player_keys_release_keys (keys);
+		g_object_unref (keys->proxy);
+		keys->proxy = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_media_player_keys_parent_class)->finalize (object);
