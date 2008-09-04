@@ -1,5 +1,12 @@
 2008-09-04  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-media-player-keys.c: (ev_media_player_keys_grab_keys):
+
+	Grab the mediakeys with a low priority. Fixes bug #547164. Patch
+	by Eric Piel.
+	
+2008-09-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-application.c: (ev_application_get_media_keys):
 	* shell/ev-media-player-keys.[ch]:
 	(ev_media_player_keys_class_init), (on_media_player_key_pressed),

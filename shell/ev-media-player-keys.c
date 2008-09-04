@@ -88,10 +88,15 @@ on_media_player_key_pressed (DBusGProxy        *proxy,
 static void
 ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 {
+	/*
+	 * The uint as second argument is time. We give a very low value so that
+	 * if a media player is there it gets higher priority on the keys (0 is
+	 * a special value having maximum priority).
+	 */
 	dbus_g_proxy_call (keys->proxy,
 			   "GrabMediaPlayerKeys", NULL,
 			   G_TYPE_STRING, "Evince",
-			   G_TYPE_UINT, 0,
+			   G_TYPE_UINT, 1,
 			   G_TYPE_INVALID, G_TYPE_INVALID);
 }
 
