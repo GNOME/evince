@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-04 17:25+0700\n"
-"PO-Revision-Date: 2008-07-04 17:33+0700\n"
+"POT-Creation-Date: 2008-09-04 22:15+0700\n"
+"PO-Revision-Date: 2008-09-04 22:24+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../backend/comics/comics-document.c:163
+#: ../backend/comics/comics-document.c:169
 #, c-format
 msgid "File corrupted."
 msgstr "แฟ้มเสียหาย"
 
-#: ../backend/comics/comics-document.c:197
+#: ../backend/comics/comics-document.c:203
 #, c-format
 msgid "No images found in archive %s"
 msgstr "ไม่พบรูปภาพในแฟ้มจัดเก็บ %s"
@@ -118,12 +118,12 @@ msgstr "ไม่ได้ฝังตัว"
 msgid "PDF Documents"
 msgstr "เอกสาร PDF"
 
-#: ../backend/impress/impress-document.c:296
+#: ../backend/impress/impress-document.c:297
 #, c-format
 msgid "Remote files aren't supported"
 msgstr "ไม่สนับสนุนแฟ้มในเครือข่าย"
 
-#: ../backend/impress/impress-document.c:307
+#: ../backend/impress/impress-document.c:308
 #, c-format
 msgid "Invalid document"
 msgstr "เอกสารใช้การไม่ได้"
@@ -200,21 +200,22 @@ msgstr "ไม่สามารถเปิดแฟ้มแนบ “%s”: %
 msgid "Couldn't open attachment “%s”"
 msgstr "ไม่สามารถเปิดแฟ้มแนบ “%s”"
 
-#: ../libdocument/ev-document-factory.c:193
-#, c-format
-msgid "File type %s (%s) is not supported"
-msgstr "ไม่รองรับแฟ้มชนิด %s (%s)"
-
-#: ../libdocument/ev-document-factory.c:294
+#: ../libdocument/ev-document-factory.c:181
+#: ../libdocument/ev-document-factory.c:302
 #, c-format
 msgid "Unknown MIME Type"
 msgstr "ชนิด MIME ไม่รู้จัก"
 
-#: ../libdocument/ev-document-factory.c:349
+#: ../libdocument/ev-document-factory.c:201
+#, c-format
+msgid "File type %s (%s) is not supported"
+msgstr "ไม่รองรับแฟ้มชนิด %s (%s)"
+
+#: ../libdocument/ev-document-factory.c:357
 msgid "All Documents"
 msgstr "เอกสารทั้งหมด"
 
-#: ../libdocument/ev-document-factory.c:381
+#: ../libdocument/ev-document-factory.c:389
 msgid "All Files"
 msgstr "แฟ้มทั้งหมด"
 
@@ -254,6 +255,69 @@ msgstr "_จำรหัสผ่านไว้ใช้จนกว่าจ�
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
 msgid "_Remember forever"
 msgstr "จำรหัสผ่านไว้ต_ลอดไป"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:139
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "แฟ้มนี้ไม่ใช่แฟ้ม .desktop ที่ใช้ได้"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:161
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "ไม่รู้จักแฟ้มเดสก์ท็อปรุ่น '%s'"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:872
+#, c-format
+msgid "Starting %s"
+msgstr "กำลังเริ่ม %s"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1006
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "โปรแกรมไม่รับเอกสารในบรรทัดคำสั่ง"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1074
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "ไม่รู้จักตัวเลือกของการเรียกโปรแกรม: %d"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1276
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "ไม่สามารถส่ง URI ของเอกสารไปยังรายการเดสก์ท็อปที่มี 'Type=Link'"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1295
+#, c-format
+msgid "Not a launchable item"
+msgstr "ไม่ใช่รายการที่เรียกทำงานได้"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:185
+msgid "Disable connection to session manager"
+msgstr "ปิดใช้การเชื่อมต่อไปยังโปรแกรมจัดการวาระ"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:188
+msgid "Specify file containing saved configuration"
+msgstr "ระบุแฟ้มที่บันทึกค่าตั้งไว้"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:188
+msgid "FILE"
+msgstr "FILE"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:191
+msgid "Specify session management ID"
+msgstr "ระบุหมายเลขการจัดการวาระ"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:191
+msgid "ID"
+msgstr "ID"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:227
+msgid "Session Management Options"
+msgstr "ตัวเลือกเกี่ยวกับการจัดการวาระ"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:228
+msgid "Show Session Management options"
+msgstr "แสดงตัวเลือกเกี่ยวกับการจัดการวาระ"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -300,7 +364,7 @@ msgid "Running in presentation mode"
 msgstr "กำลังทำงานในแบบนำเสนอ"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4623
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4690
 msgid "Best Fit"
 msgstr "พอดีหน้า"
 
@@ -348,7 +412,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3729
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3724
 #: ../shell/ev-window-title.c:132
 #, c-format
 msgid "Document Viewer"
@@ -430,11 +494,11 @@ msgstr "ละเลยข้อห้ามของเอกสาร"
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "ละเลยข้อห้ามของเอกสาร เช่น การห้ามทำสำเนาหรือห้ามจัดพิมพ์"
 
-#: ../properties/ev-properties-main.c:111
+#: ../properties/ev-properties-main.c:114
 msgid "Document"
 msgstr "เอกสาร"
 
-#: ../properties/ev-properties-view.c:182
+#: ../properties/ev-properties-view.c:180
 msgid "None"
 msgstr "ไม่มี"
 
@@ -444,111 +508,111 @@ msgstr "ไม่มี"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:207
-#: ../properties/ev-properties-view.c:369
+#: ../properties/ev-properties-view.c:205
+#: ../properties/ev-properties-view.c:367
 msgid "default:mm"
 msgstr "default:mm"
 
 #. Metric measurement (millimeters)
-#: ../properties/ev-properties-view.c:251
-#: ../properties/ev-properties-view.c:406
+#: ../properties/ev-properties-view.c:249
+#: ../properties/ev-properties-view.c:404
 #, c-format
 msgid "%.0f x %.0f mm"
 msgstr "%.0f x %.0f มม."
 
-#: ../properties/ev-properties-view.c:255
+#: ../properties/ev-properties-view.c:253
 #, c-format
 msgid "%.2f x %.2f inch"
 msgstr "%.2f x %.2f นิ้ว"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:279
-#: ../properties/ev-properties-view.c:417
+#: ../properties/ev-properties-view.c:277
+#: ../properties/ev-properties-view.c:415
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, แนวตั้ง (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:286
-#: ../properties/ev-properties-view.c:424
+#: ../properties/ev-properties-view.c:284
+#: ../properties/ev-properties-view.c:422
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, แนวนอน (%s)"
 
 #. Imperial measurement (inches)
-#: ../properties/ev-properties-view.c:401
+#: ../properties/ev-properties-view.c:399
 #, c-format
 msgid "%.2f x %.2f in"
 msgstr "%.2f x %.2f นิ้ว"
 
-#: ../shell/eggfindbar.c:158
+#: ../shell/eggfindbar.c:146
 msgid "Search string"
 msgstr "ข้อความที่ค้นหา"
 
-#: ../shell/eggfindbar.c:159
+#: ../shell/eggfindbar.c:147
 msgid "The name of the string to be found"
 msgstr "ชื่อของข้อความที่จะหา"
 
-#: ../shell/eggfindbar.c:172
+#: ../shell/eggfindbar.c:160
 msgid "Case sensitive"
 msgstr "ตัวพิมพ์ใหญ่-เล็กตรงกัน"
 
-#: ../shell/eggfindbar.c:173
+#: ../shell/eggfindbar.c:161
 msgid "TRUE for a case sensitive search"
 msgstr "เลือกจริง สำหรับการค้นหาโดยตัวพิมพ์ใหญ่-เล็กตรงกัน"
 
-#: ../shell/eggfindbar.c:180
+#: ../shell/eggfindbar.c:168
 msgid "Highlight color"
 msgstr "สีในการเน้นคำ"
 
-#: ../shell/eggfindbar.c:181
+#: ../shell/eggfindbar.c:169
 msgid "Color of highlight for all matches"
 msgstr "สีที่ใช้เน้นคำที่เจอทั้งหมด"
 
-#: ../shell/eggfindbar.c:187
+#: ../shell/eggfindbar.c:175
 msgid "Current color"
 msgstr "สีปัจจุบัน"
 
-#: ../shell/eggfindbar.c:188
+#: ../shell/eggfindbar.c:176
 msgid "Color of highlight for the current match"
 msgstr "สีที่ใช้เน้นคำที่เจอและกำลังเลือก"
 
-#: ../shell/eggfindbar.c:321
+#: ../shell/eggfindbar.c:309
 msgid "Find:"
 msgstr "หา:"
 
-#: ../shell/eggfindbar.c:330
+#: ../shell/eggfindbar.c:318
 msgid "Find Previous"
 msgstr "หาก่อนหน้า"
 
-#: ../shell/eggfindbar.c:334 ../shell/eggfindbar.c:337
+#: ../shell/eggfindbar.c:322 ../shell/eggfindbar.c:325
 msgid "Find previous occurrence of the search string"
 msgstr "หาข้อความเดิมถอยหลัง"
 
-#: ../shell/eggfindbar.c:343
+#: ../shell/eggfindbar.c:331
 msgid "Find Next"
 msgstr "หาต่อ"
 
-#: ../shell/eggfindbar.c:347 ../shell/eggfindbar.c:350
+#: ../shell/eggfindbar.c:335 ../shell/eggfindbar.c:338
 msgid "Find next occurrence of the search string"
 msgstr "หาข้อความเดิมต่อไป"
 
-#: ../shell/eggfindbar.c:359
+#: ../shell/eggfindbar.c:347
 msgid "C_ase Sensitive"
 msgstr "ตัวพิมพ์ใหญ่-เ_ล็กตรงกัน"
 
-#: ../shell/eggfindbar.c:363 ../shell/eggfindbar.c:366
+#: ../shell/eggfindbar.c:351 ../shell/eggfindbar.c:354
 msgid "Toggle case sensitive search"
 msgstr "สลับการค้นหาโดยตัวพิมพ์ใหญ่-เล็กตรงกัน"
 
-#: ../shell/ev-jobs.c:702
+#: ../shell/ev-jobs.c:962
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "ไม่สามารถสร้างแฟ้ม “%s”: %s"
 
-#: ../shell/ev-open-recent-action.c:71
+#: ../shell/ev-open-recent-action.c:73
 msgid "Open a recently used document"
 msgstr "เปิดเอกสารล่าสุด"
 
@@ -585,54 +649,54 @@ msgstr "รหัสผ่านสำหรับเอกสาร %s"
 msgid "Incorrect password"
 msgstr "รหัสผ่านไม่ถูกต้อง"
 
-#: ../shell/ev-password-view.c:111
+#: ../shell/ev-password-view.c:112
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr "เอกสารนี้ถูกล็อก และจะอ่านได้เมื่อใส่รหัสผ่านที่ถูกต้อง"
 
-#: ../shell/ev-password-view.c:120
+#: ../shell/ev-password-view.c:121
 msgid "_Unlock Document"
 msgstr "_เลิกล็อคเอกสาร"
 
-#: ../shell/ev-properties-dialog.c:61
+#: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
 msgstr "คุณสมบัติ"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:90
 msgid "General"
 msgstr "ทั่วไป"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:100
 msgid "Fonts"
 msgstr "แบบอักษร"
 
-#: ../shell/ev-properties-fonts.c:141
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "แบบอักษร"
 
-#: ../shell/ev-properties-fonts.c:152
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "กำลังอ่านข้อมูลแบบอักษร... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:675
+#: ../shell/ev-sidebar-attachments.c:690
 msgid "Attachments"
 msgstr "แฟ้มแนบ"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3645
+#: ../shell/ev-sidebar-links.c:267 ../shell/ev-view.c:3638
 msgid "Loading..."
 msgstr "กำลังอ่าน..."
 
-#: ../shell/ev-sidebar-links.c:339
+#: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
 msgstr "พิมพ์..."
 
-#: ../shell/ev-sidebar-links.c:719
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "ดัชนี"
 
-#: ../shell/ev-sidebar-thumbnails.c:727
+#: ../shell/ev-sidebar-thumbnails.c:731
 msgid "Thumbnails"
 msgstr "ภาพย่อ"
 
@@ -656,129 +720,115 @@ msgstr "เลื่อนหน้ากระดาษลง"
 msgid "Document View"
 msgstr "ช่องมองเอกสาร"
 
-#: ../shell/ev-view.c:1443
+#: ../shell/ev-view.c:1437
 msgid "Go to first page"
 msgstr "ไปยังหน้าแรก"
 
-#: ../shell/ev-view.c:1445
+#: ../shell/ev-view.c:1439
 msgid "Go to previous page"
 msgstr "ไปยังหน้าก่อนหน้านี้"
 
-#: ../shell/ev-view.c:1447
+#: ../shell/ev-view.c:1441
 msgid "Go to next page"
 msgstr "ไปยังหน้าถัดไป"
 
-#: ../shell/ev-view.c:1449
+#: ../shell/ev-view.c:1443
 msgid "Go to last page"
 msgstr "ไปยังหน้าสุดท้าย"
 
-#: ../shell/ev-view.c:1451
+#: ../shell/ev-view.c:1445
 msgid "Go to page"
 msgstr "ไปยังหน้าที่กำหนด"
 
-#: ../shell/ev-view.c:1453
+#: ../shell/ev-view.c:1447
 msgid "Find"
 msgstr "หา"
 
-#: ../shell/ev-view.c:1481
+#: ../shell/ev-view.c:1475
 #, c-format
 msgid "Go to page %s"
 msgstr "ไปยังหน้า %s"
 
-#: ../shell/ev-view.c:1487
+#: ../shell/ev-view.c:1481
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "ไปยัง %s ในแฟ้ม “%s”"
 
-#: ../shell/ev-view.c:1490
+#: ../shell/ev-view.c:1484
 #, c-format
 msgid "Go to file “%s”"
 msgstr "ไปยังแฟ้ม “%s”"
 
-#: ../shell/ev-view.c:1498
+#: ../shell/ev-view.c:1492
 #, c-format
 msgid "Launch %s"
 msgstr "เรียก %s"
 
-#: ../shell/ev-view.c:2450
+#: ../shell/ev-view.c:2444
 msgid "End of presentation. Press Escape to exit."
 msgstr "จบงานนำเสนอ กรุณากด Escape เพื่อปิด"
 
-#: ../shell/ev-view.c:3374
+#: ../shell/ev-view.c:3368
 msgid "Jump to page:"
 msgstr "ไปที่หน้า:"
 
-#. TRANS: Sometimes this could be better translated as
-#. "%d hit(s) on this page".  Therefore this string
-#. contains plural cases.
-#: ../shell/ev-view.c:5156
-#, c-format
-msgid "%d found on this page"
-msgid_plural "%d found on this page"
-msgstr[0] "พบ %d แห่งในหน้านี้"
-
-#: ../shell/ev-view.c:5165
-#, c-format
-msgid "%3d%% remaining to search"
-msgstr "ยังเหลืออีก %3d%% ในการค้นหา"
-
-#: ../shell/ev-window.c:785
+#: ../shell/ev-window.c:793
 #, c-format
 msgid "Page %s - %s"
 msgstr "หน้า %s - %s"
 
-#: ../shell/ev-window.c:787
+#: ../shell/ev-window.c:795
 #, c-format
 msgid "Page %s"
 msgstr "หน้า %s"
 
-#: ../shell/ev-window.c:1200
+#: ../shell/ev-window.c:1204
 msgid "The document contains no pages"
 msgstr "เอกสารไม่มีเนื้อหาสักหน้า"
 
-#: ../shell/ev-window.c:1432 ../shell/ev-window.c:1507
+#: ../shell/ev-window.c:1428 ../shell/ev-window.c:1503
 msgid "Unable to open document"
 msgstr "ไม่สามารถเปิดเอกสารได้"
 
-#: ../shell/ev-window.c:1704
+#: ../shell/ev-window.c:1700
 msgid "Open Document"
 msgstr "เปิดเอกสาร"
 
-#: ../shell/ev-window.c:1765
+#: ../shell/ev-window.c:1761
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "ไม่สามารถสร้างลิงก์สัญลักษณ์ “%s”: %s"
 
-#: ../shell/ev-window.c:1794
+#: ../shell/ev-window.c:1790
 msgid "Cannot open a copy."
 msgstr "ไม่สามารถเปิดสำเนา"
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2088
+#: ../shell/ev-window.c:2034 ../shell/ev-window.c:2084
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ไม่สามารถบันทึกแฟ้มนี้เป็น “%s” ได้"
 
-#: ../shell/ev-window.c:2133
+#: ../shell/ev-window.c:2129
 msgid "Save a Copy"
 msgstr "บันทึกสำเนา"
 
-#: ../shell/ev-window.c:2254 ../shell/ev-window.c:3430
+#: ../shell/ev-window.c:2250 ../shell/ev-window.c:3425
 msgid "Failed to print document"
 msgstr "ไม่สามารถพิมพ์เอกสารได้"
 
-#: ../shell/ev-window.c:2419
+#: ../shell/ev-window.c:2415
 msgid "Printing is not supported on this printer."
 msgstr "ไม่สนับสนุนการพิมพ์สำหรับเครื่องพิมพ์นี้"
 
-#: ../shell/ev-window.c:2545 ../shell/ev-window.c:4415
+#: ../shell/ev-window.c:2541 ../shell/ev-window.c:4482
 msgid "Print"
 msgstr "พิมพ์"
 
-#: ../shell/ev-window.c:3183
+#: ../shell/ev-window.c:3208
 msgid "Toolbar Editor"
 msgstr "แก้ไขแถบเครื่องมือ"
 
-#: ../shell/ev-window.c:3725
+#: ../shell/ev-window.c:3720
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -787,7 +837,7 @@ msgstr ""
 "โปรแกรมดูเอกสาร\n"
 "อาศัย poppler %s (%s)"
 
-#: ../shell/ev-window.c:3753
+#: ../shell/ev-window.c:3748
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -798,7 +848,7 @@ msgstr ""
 "GNU General Public License ที่เผยแพร่โดยมูลนิธิซอฟต์แวร์เสรี ไม่ว่าจะเป็นสัญญาอนุญาตรุ่นที่ 2 "
 "หรือรุ่นถัดมา (ตามแต่คุณจะเลือก)\n"
 
-#: ../shell/ev-window.c:3757
+#: ../shell/ev-window.c:3752
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -810,7 +860,7 @@ msgstr ""
 "_ความเหมาะสมสำหรับวัตถุประสงค์เฉพาะกิจใดๆ_ กรุณาอ่าน GNU General Public License "
 "เพื่อดูรายละเอียดเพิ่มเติม\n"
 
-#: ../shell/ev-window.c:3761
+#: ../shell/ev-window.c:3756
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -820,366 +870,380 @@ msgstr ""
 "กรุณาติดต่อไปที่ Free Software Foundation, Inc., 59 Temple Place, Suite 330, "
 "Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:3785 ../shell/main.c:350
+#: ../shell/ev-window.c:3780
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3788
+#: ../shell/ev-window.c:3783
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 ผู้จัดทำ Evince"
 
-#: ../shell/ev-window.c:3794
+#: ../shell/ev-window.c:3789
 msgid "translator-credits"
 msgstr ""
 "Isriya Paireepairit <markpeak@gmail.com>\n"
 "Theppitak Karoonboonyanan <thep@linux.thai.net>"
 
-#: ../shell/ev-window.c:4327
+#. TRANS: Sometimes this could be better translated as
+#. "%d hit(s) on this page".  Therefore this string
+#. contains plural cases.
+#: ../shell/ev-window.c:4005
+#, c-format
+msgid "%d found on this page"
+msgid_plural "%d found on this page"
+msgstr[0] "พบ %d แห่งในหน้านี้"
+
+#: ../shell/ev-window.c:4013
+#, c-format
+msgid "%3d%% remaining to search"
+msgstr "ยังเหลืออีก %3d%% ในการค้นหา"
+
+#: ../shell/ev-window.c:4394
 msgid "_File"
 msgstr "แ_ฟ้ม"
 
-#: ../shell/ev-window.c:4328
+#: ../shell/ev-window.c:4395
 msgid "_Edit"
 msgstr "แ_ก้ไข"
 
-#: ../shell/ev-window.c:4329
+#: ../shell/ev-window.c:4396
 msgid "_View"
 msgstr "_มุมมอง"
 
-#: ../shell/ev-window.c:4330
+#: ../shell/ev-window.c:4397
 msgid "_Go"
 msgstr "_ไป"
 
-#: ../shell/ev-window.c:4331
+#: ../shell/ev-window.c:4398
 msgid "_Help"
 msgstr "_วิธีใช้"
 
 #. File menu
-#: ../shell/ev-window.c:4334 ../shell/ev-window.c:4513
-#: ../shell/ev-window.c:4585
+#: ../shell/ev-window.c:4401 ../shell/ev-window.c:4580
+#: ../shell/ev-window.c:4652
 msgid "_Open..."
 msgstr "_เปิด..."
 
-#: ../shell/ev-window.c:4335 ../shell/ev-window.c:4586
+#: ../shell/ev-window.c:4402 ../shell/ev-window.c:4653
 msgid "Open an existing document"
 msgstr "เปิดเอกสาร"
 
-#: ../shell/ev-window.c:4337
+#: ../shell/ev-window.c:4404
 msgid "Op_en a Copy"
 msgstr "เปิด_สำเนา"
 
-#: ../shell/ev-window.c:4338
+#: ../shell/ev-window.c:4405
 msgid "Open a copy of the current document in a new window"
 msgstr "เปิดสำเนาของเอกสารปัจจุบันในหน้าต่างใหม่"
 
-#: ../shell/ev-window.c:4340 ../shell/ev-window.c:4515
+#: ../shell/ev-window.c:4407 ../shell/ev-window.c:4582
 msgid "_Save a Copy..."
 msgstr "_บันทึกสำเนา..."
 
-#: ../shell/ev-window.c:4341
+#: ../shell/ev-window.c:4408
 msgid "Save a copy of the current document"
 msgstr "บันทึกสำเนาของเอกสารปัจจุบัน"
 
-#: ../shell/ev-window.c:4343
+#: ../shell/ev-window.c:4410
 msgid "Print Set_up..."
 msgstr "ตั้ง_ค่างานพิมพ์..."
 
-#: ../shell/ev-window.c:4344
+#: ../shell/ev-window.c:4411
 msgid "Setup the page settings for printing"
 msgstr "ตั้งค่าหน้ากระดาษสำหรับการพิมพ์"
 
-#: ../shell/ev-window.c:4346
+#: ../shell/ev-window.c:4413
 msgid "_Print..."
 msgstr "_พิมพ์..."
 
-#: ../shell/ev-window.c:4347 ../shell/ev-window.c:4416
+#: ../shell/ev-window.c:4414 ../shell/ev-window.c:4483
 msgid "Print this document"
 msgstr "พิมพ์เอกสารนี้"
 
-#: ../shell/ev-window.c:4349
+#: ../shell/ev-window.c:4416
 msgid "P_roperties"
 msgstr "คุณ_สมบัติ"
 
-#: ../shell/ev-window.c:4357
+#: ../shell/ev-window.c:4424
 msgid "Select _All"
 msgstr "เลือกทั้ง_หมด"
 
-#: ../shell/ev-window.c:4359
+#: ../shell/ev-window.c:4426
 msgid "_Find..."
 msgstr "_หา..."
 
-#: ../shell/ev-window.c:4360
+#: ../shell/ev-window.c:4427
 msgid "Find a word or phrase in the document"
 msgstr "ค้นหาคำหรือวลีในเอกสาร"
 
-#: ../shell/ev-window.c:4362
+#: ../shell/ev-window.c:4429
 msgid "Find Ne_xt"
 msgstr "ค้นหา_ต่อไป"
 
-#: ../shell/ev-window.c:4364
+#: ../shell/ev-window.c:4431
 msgid "Find Pre_vious"
 msgstr "หา_ก่อนหน้า"
 
-#: ../shell/ev-window.c:4366
+#: ../shell/ev-window.c:4433
 msgid "T_oolbar"
 msgstr "แถบเ_ครื่องมือ"
 
-#: ../shell/ev-window.c:4368
+#: ../shell/ev-window.c:4435
 msgid "Rotate _Left"
 msgstr "หมุน_ซ้าย"
 
-#: ../shell/ev-window.c:4370
+#: ../shell/ev-window.c:4437
 msgid "Rotate _Right"
 msgstr "หมุน_ขวา"
 
-#: ../shell/ev-window.c:4375
+#: ../shell/ev-window.c:4442
 msgid "Enlarge the document"
 msgstr "ขยายเอกสาร"
 
-#: ../shell/ev-window.c:4378
+#: ../shell/ev-window.c:4445
 msgid "Shrink the document"
 msgstr "ย่อเอกสาร"
 
-#: ../shell/ev-window.c:4380
+#: ../shell/ev-window.c:4447
 msgid "_Reload"
 msgstr "_อ่านใหม่"
 
-#: ../shell/ev-window.c:4381
+#: ../shell/ev-window.c:4448
 msgid "Reload the document"
 msgstr "อ่านเอกสารใหม่"
 
-#: ../shell/ev-window.c:4384
+#: ../shell/ev-window.c:4451
 msgid "Auto_scroll"
 msgstr "เ_ลื่อนจออัตโนมัติ"
 
 #. Go menu
-#: ../shell/ev-window.c:4388
+#: ../shell/ev-window.c:4455
 msgid "_Previous Page"
 msgstr "หน้า_ก่อน"
 
-#: ../shell/ev-window.c:4389
+#: ../shell/ev-window.c:4456
 msgid "Go to the previous page"
 msgstr "ไปหน้าก่อน"
 
-#: ../shell/ev-window.c:4391
+#: ../shell/ev-window.c:4458
 msgid "_Next Page"
 msgstr "หน้าถั_ดไป"
 
-#: ../shell/ev-window.c:4392
+#: ../shell/ev-window.c:4459
 msgid "Go to the next page"
 msgstr "ไปหน้าถัดไป"
 
-#: ../shell/ev-window.c:4394
+#: ../shell/ev-window.c:4461
 msgid "_First Page"
 msgstr "หน้าแ_รก"
 
-#: ../shell/ev-window.c:4395
+#: ../shell/ev-window.c:4462
 msgid "Go to the first page"
 msgstr "ไปยังหน้าแรก"
 
-#: ../shell/ev-window.c:4397
+#: ../shell/ev-window.c:4464
 msgid "_Last Page"
 msgstr "หน้าสุด_ท้าย"
 
-#: ../shell/ev-window.c:4398
+#: ../shell/ev-window.c:4465
 msgid "Go to the last page"
 msgstr "ไปยังหน้าสุดท้าย"
 
 #. Help menu
-#: ../shell/ev-window.c:4402
+#: ../shell/ev-window.c:4469
 msgid "_Contents"
 msgstr "เ_นื้อหา"
 
-#: ../shell/ev-window.c:4405
+#: ../shell/ev-window.c:4472
 msgid "_About"
 msgstr "เ_กี่ยวกับ"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:4409
+#: ../shell/ev-window.c:4476
 msgid "Leave Fullscreen"
 msgstr "เลิกแสดงเต็มจอ"
 
-#: ../shell/ev-window.c:4410
+#: ../shell/ev-window.c:4477
 msgid "Leave fullscreen mode"
 msgstr "ออกจากการแสดงผลเต็มจอ"
 
-#: ../shell/ev-window.c:4412
+#: ../shell/ev-window.c:4479
 msgid "Start Presentation"
 msgstr "เริ่มนำเสนอ"
 
-#: ../shell/ev-window.c:4413
+#: ../shell/ev-window.c:4480
 msgid "Start a presentation"
 msgstr "เริ่มนำเสนอเอกสาร"
 
 #. View Menu
-#: ../shell/ev-window.c:4469
+#: ../shell/ev-window.c:4536
 msgid "_Toolbar"
 msgstr "แถบเ_ครื่องมือ"
 
-#: ../shell/ev-window.c:4470
+#: ../shell/ev-window.c:4537
 msgid "Show or hide the toolbar"
 msgstr "แสดงหรือซ่อนแถบเครื่องมือ"
 
-#: ../shell/ev-window.c:4472
+#: ../shell/ev-window.c:4539
 msgid "Side _Pane"
 msgstr "แถบ_ข้าง"
 
-#: ../shell/ev-window.c:4473
+#: ../shell/ev-window.c:4540
 msgid "Show or hide the side pane"
 msgstr "แสดงหรือซ่อนแถบข้าง"
 
-#: ../shell/ev-window.c:4475
+#: ../shell/ev-window.c:4542
 msgid "_Continuous"
 msgstr "แสดง_หน้าต่อกัน"
 
-#: ../shell/ev-window.c:4476
+#: ../shell/ev-window.c:4543
 msgid "Show the entire document"
 msgstr "แสดงทั้งเอกสาร"
 
-#: ../shell/ev-window.c:4478
+#: ../shell/ev-window.c:4545
 msgid "_Dual"
 msgstr "_หน้าคู่"
 
-#: ../shell/ev-window.c:4479
+#: ../shell/ev-window.c:4546
 msgid "Show two pages at once"
 msgstr "แสดงครั้งละสองหน้า"
 
-#: ../shell/ev-window.c:4481
+#: ../shell/ev-window.c:4548
 msgid "_Fullscreen"
 msgstr "เต็_มจอ"
 
-#: ../shell/ev-window.c:4482
+#: ../shell/ev-window.c:4549
 msgid "Expand the window to fill the screen"
 msgstr "ขยายขนาดหน้าต่างให้เต็มหน้าจอ"
 
-#: ../shell/ev-window.c:4484
+#: ../shell/ev-window.c:4551
 msgid "Pre_sentation"
 msgstr "นำเ_สนอ"
 
-#: ../shell/ev-window.c:4485
+#: ../shell/ev-window.c:4552
 msgid "Run document as a presentation"
 msgstr "แสดงเอกสารแบบนำเสนอ"
 
-#: ../shell/ev-window.c:4487
+#: ../shell/ev-window.c:4554
 msgid "_Best Fit"
 msgstr "_พอดีหน้า"
 
-#: ../shell/ev-window.c:4488
+#: ../shell/ev-window.c:4555
 msgid "Make the current document fill the window"
 msgstr "แสดงเอกสารทั้งหน้าให้พอดีกับหน้าต่าง"
 
-#: ../shell/ev-window.c:4490
+#: ../shell/ev-window.c:4557
 msgid "Fit Page _Width"
 msgstr "เ_ท่าความกว้าง"
 
-#: ../shell/ev-window.c:4491
+#: ../shell/ev-window.c:4558
 msgid "Make the current document fill the window width"
 msgstr "แสดงความกว้างเอกสารให้พอดีกับความกว้างหน้าต่าง"
 
 #. Links
-#: ../shell/ev-window.c:4498
+#: ../shell/ev-window.c:4565
 msgid "_Open Link"
 msgstr "_เปิดลิงก์"
 
-#: ../shell/ev-window.c:4500
+#: ../shell/ev-window.c:4567
 msgid "_Go To"
 msgstr "_ไป"
 
-#: ../shell/ev-window.c:4502
+#: ../shell/ev-window.c:4569
 msgid "Open in New _Window"
 msgstr "เปิดในหน้า_ต่างใหม่"
 
-#: ../shell/ev-window.c:4504
+#: ../shell/ev-window.c:4571
 msgid "_Copy Link Address"
 msgstr "_คัดลอกที่อยู่ลิงก์"
 
-#: ../shell/ev-window.c:4506
+#: ../shell/ev-window.c:4573
 msgid "_Save Image As..."
 msgstr "_บันทึกภาพเป็น..."
 
-#: ../shell/ev-window.c:4508
+#: ../shell/ev-window.c:4575
 msgid "Copy _Image"
 msgstr "คัดลอก_ภาพ"
 
-#: ../shell/ev-window.c:4547
+#: ../shell/ev-window.c:4614
 msgid "Page"
 msgstr "หน้า"
 
-#: ../shell/ev-window.c:4548
+#: ../shell/ev-window.c:4615
 msgid "Select Page"
 msgstr "เลือกหน้า"
 
-#: ../shell/ev-window.c:4559
+#: ../shell/ev-window.c:4626
 msgid "Zoom"
 msgstr "ย่อ-ขยาย"
 
-#: ../shell/ev-window.c:4561
+#: ../shell/ev-window.c:4628
 msgid "Adjust the zoom level"
 msgstr "ปรับอัตราส่วนย่อ-ขยาย"
 
-#: ../shell/ev-window.c:4571
+#: ../shell/ev-window.c:4638
 msgid "Navigation"
 msgstr "เส้นทางการอ่าน"
 
-#: ../shell/ev-window.c:4573
+#: ../shell/ev-window.c:4640
 msgid "Back"
 msgstr "ย้อนกลับ"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:4576
+#: ../shell/ev-window.c:4643
 msgid "Move across visited pages"
 msgstr "เปลี่ยนไปมาในหน้าที่อ่านมาแล้ว"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4606
+#: ../shell/ev-window.c:4673
 msgid "Previous"
 msgstr "ถอย"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4611
+#: ../shell/ev-window.c:4678
 msgid "Next"
 msgstr "เดินหน้า"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4615
+#: ../shell/ev-window.c:4682
 msgid "Zoom In"
 msgstr "ขยาย"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4619
+#: ../shell/ev-window.c:4686
 msgid "Zoom Out"
 msgstr "ย่อ"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4627
+#: ../shell/ev-window.c:4694
 msgid "Fit Width"
 msgstr "เท่าความกว้าง"
 
-#: ../shell/ev-window.c:4832
+#: ../shell/ev-window.c:4896
 msgid "Unable to open external link"
 msgstr "ไม่สามารถเปิดลิงก์ภายนอก"
 
-#: ../shell/ev-window.c:4993
+#: ../shell/ev-window.c:5057
 msgid "Couldn't find appropriate format to save image"
 msgstr "หารูปแบบที่เหมาะสมสำหรับบันทึกรูปภาพไม่ได้"
 
-#: ../shell/ev-window.c:5033
+#: ../shell/ev-window.c:5097
 msgid "The image could not be saved."
 msgstr "ไม่สามารถบันทึกภาพ"
 
-#: ../shell/ev-window.c:5065
+#: ../shell/ev-window.c:5129
 msgid "Save Image"
 msgstr "บันทึกภาพ"
 
-#: ../shell/ev-window.c:5124
+#: ../shell/ev-window.c:5188
 msgid "Unable to open attachment"
 msgstr "ไม่สามารถเปิดแฟ้มแนบ"
 
-#: ../shell/ev-window.c:5176
+#: ../shell/ev-window.c:5240
 msgid "The attachment could not be saved."
 msgstr "ไม่สามารถบันทึกแฟ้มแนบ"
 
-#: ../shell/ev-window.c:5221
+#: ../shell/ev-window.c:5285
 msgid "Save Attachment"
 msgstr "บันทึกแฟ้มแนบ"
 
@@ -1192,45 +1256,41 @@ msgstr "%s - ต้องการรหัสผ่าน"
 msgid "By extension"
 msgstr "ตามนามสกุล"
 
-#: ../shell/main.c:59
+#: ../shell/main.c:52
 msgid "The page of the document to display."
 msgstr "หน้าเอกสารที่จะแสดง"
 
-#: ../shell/main.c:59
+#: ../shell/main.c:52
 msgid "PAGE"
 msgstr "PAGE"
 
-#: ../shell/main.c:60
+#: ../shell/main.c:53
 msgid "Run evince in fullscreen mode"
 msgstr "เรียก evince ในแบบเต็มจอ"
 
-#: ../shell/main.c:61
+#: ../shell/main.c:54
 msgid "Run evince in presentation mode"
 msgstr "เรียก evince ในแบบนำเสนอ"
 
-#: ../shell/main.c:62
+#: ../shell/main.c:55
 msgid "Run evince as a previewer"
 msgstr "เรียก evince สำหรับแสดงตัวอย่างเอกสาร"
 
-#: ../shell/main.c:63
+#: ../shell/main.c:56
 msgid "The word or phrase to find in the document"
 msgstr "คำหรือวลีที่จะค้นหาในเอกสาร"
 
-#: ../shell/main.c:63
+#: ../shell/main.c:56
 msgid "STRING"
 msgstr "STRING"
 
-#: ../shell/main.c:66
+#: ../shell/main.c:59
 msgid "[FILE...]"
 msgstr "[FILE...]"
 
-#: ../shell/main.c:333
+#: ../shell/main.c:325
 msgid "GNOME Document Viewer"
 msgstr "โปรแกรมดูเอกสารของ GNOME"
-
-#: ../shell/main.c:395
-msgid "Evince Document Viewer"
-msgstr "Evince: โปรแกรมดูเอกสาร"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid ""
@@ -1253,6 +1313,9 @@ msgid ""
 msgstr ""
 "คำสั่งพร้อมอาร์กิวเมนต์สำหรับการแสดงภาพย่อของเอกสาร PDF "
 "อ่านข้อมูลเพิ่มเติมได้จากเอกสารตัวแสดงภาพย่อของ Nautilus"
+
+#~ msgid "Evince Document Viewer"
+#~ msgstr "Evince: โปรแกรมดูเอกสาร"
 
 #~ msgid "BBox"
 #~ msgstr "BBox"
