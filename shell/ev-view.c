@@ -3038,15 +3038,20 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		}
 	}
 	
-	/* For the Evince 0.4.x release, we limit selection to un-rotated
-	 * documents only.
-	 */
-	if (view->pressed_button == 1 && view->rotation == 0) {
+	switch (view->pressed_button) {
+	case 1:
+		/* For the Evince 0.4.x release, we limit selection to un-rotated
+		 * documents only.
+		 */
+		if (view->rotation != 0)
+			return FALSE;
 
 		/* Schedule timeout to scroll during selection and additionally 
 		 * scroll once to allow arbitrary speed. */
 		if (!view->selection_scroll_id)
-		    view->selection_scroll_id = g_timeout_add (SCROLL_TIME, (GSourceFunc)selection_scroll_timeout_cb, view);
+		    view->selection_scroll_id = g_timeout_add (SCROLL_TIME,
+							       (GSourceFunc)selection_scroll_timeout_cb,
+							       view);
 		else 
 		    selection_scroll_timeout_cb (view);
 
@@ -3063,7 +3068,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
 
 		return TRUE;
-	} else if (view->pressed_button == 2) {
+	case 2:
 		if (!view->drag_info.in_drag) {
 			gboolean start;
 			int i;
@@ -3113,10 +3118,11 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			return TRUE;
 		}
-	} else if (view->pressed_button <= 0) {
+
+		break;
+	default:
 		ev_view_handle_cursor_over_xy (view, x, y);
-		return TRUE;
-	}
+	} 
 
 	return FALSE;
 }
