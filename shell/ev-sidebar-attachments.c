@@ -295,7 +295,10 @@ ev_sidebar_attachments_button_press (EvSidebarAttachments *ev_attachbar,
 				if (!attachment)
 					return FALSE;
 				
-				ev_attachment_open (attachment, &error);
+				ev_attachment_open (attachment,
+						    gtk_widget_get_screen (GTK_WIDGET (ev_attachbar)),
+						    event->time,
+						    &error);
 				
 				if (error) {
 					g_warning ("%s", error->message);

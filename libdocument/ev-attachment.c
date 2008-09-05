@@ -20,6 +20,7 @@
 #include <config.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
+#include <gtk/gtk.h>
 #include "ev-file-helpers.h"
 #include "ev-attachment.h"
 
@@ -340,18 +341,30 @@ ev_attachment_save (EvAttachment *attachment,
 
 static gboolean
 ev_attachment_launch_app (EvAttachment *attachment,
+			  GdkScreen    *screen,
+			  guint32       timestamp,
 			  GError      **error)
 {
-	gboolean result;
-	GList   *files = NULL;
-	GError  *ioerror = NULL;
+	gboolean           result;
+	GList             *files = NULL;
+	GAppLaunchContext *context = NULL;
+	GError            *ioerror = NULL;
 
 	g_assert (G_IS_FILE (attachment->priv->tmp_file));
 	g_assert (G_IS_APP_INFO (attachment->priv->app));
 
 	files = g_list_prepend (files, attachment->priv->tmp_file);
+	
+#if GTK_CHECK_VERSION (2, 14, 0)
+	context = G_APP_LAUNCH_CONTEXT (gdk_app_launch_context_new ());
+	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context), screen);
+	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context), timestamp);
+#endif
 	result = g_app_info_launch (attachment->priv->app, files,
-				    NULL, &ioerror);
+				    context, &ioerror);
+	
+	if (context)
+		g_object_unref (context);
 
 	if (!result) {
 		g_set_error (error,
@@ -374,6 +387,8 @@ ev_attachment_launch_app (EvAttachment *attachment,
 
 gboolean
 ev_attachment_open (EvAttachment *attachment,
+		    GdkScreen    *screen,
+		    guint32       timestamp,
 		    GError      **error)
 {
 	GAppInfo *app_info;
@@ -398,7 +413,8 @@ ev_attachment_open (EvAttachment *attachment,
 
 	if (attachment->priv->tmp_file &&
 	    g_file_query_exists (attachment->priv->tmp_file, NULL)) {
-		retval = ev_attachment_launch_app (attachment, error);
+		retval = ev_attachment_launch_app (attachment, screen,
+						   timestamp, error);
 	} else {
 		GFile *tmpdir;
 		GFile *file;
@@ -411,7 +427,8 @@ ev_attachment_open (EvAttachment *attachment,
 				g_object_unref (attachment->priv->tmp_file);
 			attachment->priv->tmp_file = g_object_ref (file);
 
-			retval = ev_attachment_launch_app (attachment, error);
+			retval = ev_attachment_launch_app (attachment, screen,
+							   timestamp, error);
 		}
 
 		g_object_unref (file);

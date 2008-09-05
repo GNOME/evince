@@ -5170,10 +5170,13 @@ ev_view_popup_cmd_copy_image (GtkAction *action, EvWindow *window)
 static void
 ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 {
-	GList *l;
+	GList     *l;
+	GdkScreen *screen;
 	
 	if (!window->priv->attach_list)
 		return;
+
+	screen = gtk_window_get_screen (GTK_WINDOW (window));
 
 	for (l = window->priv->attach_list; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
@@ -5181,7 +5184,7 @@ ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 		
 		attachment = (EvAttachment *) l->data;
 		
-		ev_attachment_open (attachment, &error);
+		ev_attachment_open (attachment, screen, GDK_CURRENT_TIME, &error);
 
 		if (error) {
 			ev_window_error_message (GTK_WINDOW (window),

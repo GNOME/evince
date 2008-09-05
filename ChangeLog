@@ -1,3 +1,13 @@
+2008-09-05  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-attachment.[ch]: (ev_attachment_launch_app),
+	(ev_attachment_open):
+	* shell/ev-sidebar-attachments.c:
+	(ev_sidebar_attachments_button_press):
+	* shell/ev-window.c: (ev_attachment_popup_cmd_open_attachment):
+
+	Use GdkAppLaunchContext when available to open attachments.
+	
 2008-09-04  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-media-player-keys.c: (ev_media_player_keys_grab_keys):
