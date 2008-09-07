@@ -1214,7 +1214,6 @@ GdkPixbuf *
 pdf_document_images_get_image (EvDocumentImages *document_images,
 			       EvImage          *image)
 {
-#ifdef HAVE_POPPLER_PAGE_GET_IMAGE
 	PdfDocument     *pdf_document;
 	PopplerPage     *poppler_page;
 	cairo_surface_t *surface;
@@ -1233,9 +1232,6 @@ pdf_document_images_get_image (EvDocumentImages *document_images,
 	g_object_unref (poppler_page);
 
 	return retval;
-#else
-	return GDK_PIXBUF (g_object_ref (ev_image_get_pixbuf (image)));
-#endif /* HAVE_POPPLER_PAGE_GET_IMAGE */
 }
 
 static void
