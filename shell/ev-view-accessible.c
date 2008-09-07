@@ -54,7 +54,7 @@ typedef struct {
 	/* Action */
 	gchar *action_descriptions[LAST_ACTION];
 	guint action_idle_handler;  
-	EvScrollType idle_scroll;	 
+	GtkScrollType idle_scroll;	 
 } EvViewAccessiblePriv;
 
 typedef GtkAccessibleClass EvViewAccessibleClass;
@@ -390,10 +390,10 @@ ev_view_accessible_action_do_action (AtkAction *action,
 	
 	switch (i) {
 		case ACTION_SCROLL_UP:
-			priv->idle_scroll = EV_SCROLL_PAGE_BACKWARD;
+			priv->idle_scroll = GTK_SCROLL_PAGE_BACKWARD;
 			break;
 		case ACTION_SCROLL_DOWN:
-			priv->idle_scroll = EV_SCROLL_PAGE_FORWARD;
+			priv->idle_scroll = GTK_SCROLL_PAGE_FORWARD;
 			break;
 		default:
 			return FALSE;

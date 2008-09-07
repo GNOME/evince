@@ -2624,13 +2624,13 @@ ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 static void
 ev_window_cmd_scroll_forward (GtkAction *action, EvWindow *window)
 {
-	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_FORWARD, FALSE);
+	ev_view_scroll (EV_VIEW (window->priv->view), GTK_SCROLL_PAGE_FORWARD, FALSE);
 }
 
 static void
 ev_window_cmd_scroll_backward (GtkAction *action, EvWindow *window)
 {
-	ev_view_scroll (EV_VIEW (window->priv->view), EV_SCROLL_PAGE_BACKWARD, FALSE);
+	ev_view_scroll (EV_VIEW (window->priv->view), GTK_SCROLL_PAGE_BACKWARD, FALSE);
 }
 
 static void
@@ -4143,7 +4143,9 @@ find_bar_visibility_changed_cb (EggFindBar *find_bar,
 }
 
 static void
-find_bar_scroll(EggFindBar *find_bar, GtkScrollType scroll, EvWindow* ev_window)
+find_bar_scroll (EggFindBar   *find_bar,
+		 GtkScrollType scroll,
+		 EvWindow     *ev_window)
 {
 	ev_view_scroll (EV_VIEW (ev_window->priv->view), scroll, FALSE);
 }

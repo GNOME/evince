@@ -1,3 +1,15 @@
+2008-09-07  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view-private.h:
+	* shell/ev-view.[ch]: (add_scroll_binding_keypad),
+	(ev_view_scroll), (ev_view_class_init):
+	* shell/ev-view-accessible.c:
+	(ev_view_accessible_action_do_action):
+	* shell/ev-window.c: (ev_window_cmd_scroll_forward),
+	(ev_window_cmd_scroll_backward):
+
+	Use GtkScrollType instead of EvScrollType.
+	
 2008-09-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-page-cache.c (ev_page_cache_set_page_label):

@@ -186,7 +186,7 @@ struct _EvViewClass {
 	GtkLayoutClass parent_class;
 
 	void    (*binding_activated)	  (EvView         *view,
-					   EvScrollType   scroll,
+					   GtkScrollType   scroll,
 					   gboolean        horizontal);
 	void    (*zoom_invalid)		  (EvView         *view);
 	void    (*handle_link)		  (EvView         *view,

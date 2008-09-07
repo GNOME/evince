@@ -35,9 +35,6 @@ G_BEGIN_DECLS
 #define EV_TYPE_SIZING_MODE     (ev_sizing_mode_get_type())
 #define EV_SIZING_MODE_CLASS    (g_type_class_peek (EV_TYPE_SIZING_MODE))
 
-#define EV_TYPE_SCROLL_TYPE     (ev_scroll_type_get_type())
-#define EV_SCROLL_TYPE_CLASS    (g_type_class_peek (EV_TYPE_SCROLL_TYPE))
-
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
@@ -53,18 +50,8 @@ typedef enum {
 	EV_VIEW_SELECTION_RECTANGLE,
 } EvViewSelectionMode;
 
-typedef enum {
-	EV_SCROLL_PAGE_FORWARD,
-	EV_SCROLL_PAGE_BACKWARD,
-	EV_SCROLL_STEP_BACKWARD,
-	EV_SCROLL_STEP_FORWARD,
-	EV_SCROLL_STEP_DOWN,
-	EV_SCROLL_STEP_UP,
-} EvScrollType;
-
 GType		ev_view_get_type	  (void) G_GNUC_CONST;
 GType           ev_sizing_mode_get_type   (void) G_GNUC_CONST;
-GType           ev_scroll_type_get_type   (void) G_GNUC_CONST;
 
 GtkWidget*	ev_view_new		  (void);
 void		ev_view_set_document	  (EvView         *view,
@@ -133,7 +120,7 @@ void           ev_view_show_cursor        (EvView         *view);
 
 /* Navigation */
 void	       ev_view_scroll             (EvView         *view,
-	                                   EvScrollType    scroll,
+	                                   GtkScrollType   scroll,
 					   gboolean        horizontal);
 void	       ev_view_handle_link        (EvView         *view,
 					   EvLink         *link);
@@ -141,7 +128,8 @@ gboolean       ev_view_next_page	  (EvView         *view);
 gboolean       ev_view_previous_page	  (EvView         *view);
 gchar*         ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest);
 
-void           ev_view_update_view_size (EvView *view, GtkScrolledWindow *scrolled_window);
+void           ev_view_update_view_size   (EvView            *view,
+					   GtkScrolledWindow *scrolled_window);
 
 void	       ev_view_autoscroll_start   (EvView *view);
 void           ev_view_autoscroll_stop    (EvView *view);

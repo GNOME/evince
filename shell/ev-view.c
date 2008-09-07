@@ -124,7 +124,7 @@ static void       set_scroll_adjustment                      (EvView            
 static void       add_scroll_binding_keypad                  (GtkBindingSet      *binding_set,
 							      guint               keyval,
 							      GdkModifierType modifiers,
-							      EvScrollType       scroll,
+							      GtkScrollType       scroll,
 							      gboolean            horizontal);
 static void       ensure_rectangle_is_visible                (EvView             *view,
 							      GdkRectangle       *rect);
@@ -574,25 +574,25 @@ static void
 add_scroll_binding_keypad (GtkBindingSet  *binding_set,
     			   guint           keyval,
     			   GdkModifierType modifiers,
-    			   EvScrollType    scroll,
+    			   GtkScrollType   scroll,
 			   gboolean        horizontal)
 {
   guint keypad_keyval = keyval - GDK_Left + GDK_KP_Left;
 
   gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
                                 "binding_activated", 2,
-                                EV_TYPE_SCROLL_TYPE, scroll,
+                                GTK_TYPE_SCROLL_TYPE, scroll,
 				G_TYPE_BOOLEAN, horizontal);
   gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers,
                                 "binding_activated", 2,
-                                EV_TYPE_SCROLL_TYPE, scroll,
+                                GTK_TYPE_SCROLL_TYPE, scroll,
 				G_TYPE_BOOLEAN, horizontal);
 }
 
 void
 ev_view_scroll (EvView        *view,
-	        EvScrollType   scroll,
-		gboolean horizontal)
+	        GtkScrollType  scroll,
+		gboolean       horizontal)
 {
 	GtkAdjustment *adjustment;
 	double value, increment;
@@ -603,12 +603,12 @@ ev_view_scroll (EvView        *view,
 
 	if (view->presentation || view->sizing_mode == EV_SIZING_BEST_FIT) {
 		switch (scroll) {
-			case EV_SCROLL_PAGE_BACKWARD:
-			case EV_SCROLL_STEP_BACKWARD:
+			case GTK_SCROLL_PAGE_BACKWARD:
+			case GTK_SCROLL_STEP_BACKWARD:
 				ev_view_previous_page (view);
 				break;
-			case EV_SCROLL_PAGE_FORWARD:
-			case EV_SCROLL_STEP_FORWARD:
+			case GTK_SCROLL_PAGE_FORWARD:
+			case GTK_SCROLL_STEP_FORWARD:
 				ev_view_next_page (view);
 				break;
 			default:
@@ -629,7 +629,7 @@ ev_view_scroll (EvView        *view,
 		last_page = TRUE;
 
 	switch (scroll) {
-		case EV_SCROLL_PAGE_BACKWARD:
+		case GTK_SCROLL_PAGE_BACKWARD:
 			/* Do not jump backwards if at the first page */
 			if (value == (adjustment->lower) && first_page) {
 				/* Do nothing */
@@ -642,7 +642,7 @@ ev_view_scroll (EvView        *view,
 				value = MAX (value - increment, adjustment->lower);
 			}
 			break;
-		case EV_SCROLL_PAGE_FORWARD:
+		case GTK_SCROLL_PAGE_FORWARD:
 			/* Do not jump forward if at the last page */
 			if (value == (adjustment->upper - adjustment->page_size) && last_page) {
 				/* Do nothing */
@@ -655,16 +655,16 @@ ev_view_scroll (EvView        *view,
 				value = MIN (value + increment, adjustment->upper - adjustment->page_size);
 			}
 			break;
-	        case EV_SCROLL_STEP_BACKWARD:
+	        case GTK_SCROLL_STEP_BACKWARD:
 			value -= adjustment->step_increment;
 			break;
-	        case EV_SCROLL_STEP_FORWARD:
+	        case GTK_SCROLL_STEP_FORWARD:
 			value += adjustment->step_increment;
 			break;
-        	case EV_SCROLL_STEP_DOWN:
+        	case GTK_SCROLL_STEP_DOWN:
 			value -= adjustment->step_increment / 10;
 			break;
-        	case EV_SCROLL_STEP_UP:
+        	case GTK_SCROLL_STEP_UP:
 			value += adjustment->step_increment / 10;
 			break;
         	default:
@@ -4152,22 +4152,22 @@ ev_view_class_init (EvViewClass *class)
 
 	binding_set = gtk_binding_set_by_class (class);
 
-	add_scroll_binding_keypad (binding_set, GDK_Left,  0, EV_SCROLL_STEP_BACKWARD, TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Right, 0, EV_SCROLL_STEP_FORWARD,  TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Left,  GDK_MOD1_MASK, EV_SCROLL_STEP_DOWN, TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Right, GDK_MOD1_MASK, EV_SCROLL_STEP_UP,  TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Up,    0, EV_SCROLL_STEP_BACKWARD, FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Down,  0, EV_SCROLL_STEP_FORWARD,  FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Up,    GDK_MOD1_MASK, EV_SCROLL_STEP_DOWN, FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Down,  GDK_MOD1_MASK, EV_SCROLL_STEP_UP,  FALSE);
-	gtk_binding_entry_add_signal (binding_set, GDK_H, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
-				      EV_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, TRUE);
-	gtk_binding_entry_add_signal (binding_set, GDK_J, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
-				      EV_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, FALSE);
-	gtk_binding_entry_add_signal (binding_set, GDK_K, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
-				      EV_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, FALSE);
-	gtk_binding_entry_add_signal (binding_set, GDK_L, 0, "binding_activated", 2, EV_TYPE_SCROLL_TYPE,
-				      EV_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, TRUE);
+	add_scroll_binding_keypad (binding_set, GDK_Left,  0, GTK_SCROLL_STEP_BACKWARD, TRUE);
+	add_scroll_binding_keypad (binding_set, GDK_Right, 0, GTK_SCROLL_STEP_FORWARD,  TRUE);
+	add_scroll_binding_keypad (binding_set, GDK_Left,  GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, TRUE);
+	add_scroll_binding_keypad (binding_set, GDK_Right, GDK_MOD1_MASK, GTK_SCROLL_STEP_UP,  TRUE);
+	add_scroll_binding_keypad (binding_set, GDK_Up,    0, GTK_SCROLL_STEP_BACKWARD, FALSE);
+	add_scroll_binding_keypad (binding_set, GDK_Down,  0, GTK_SCROLL_STEP_FORWARD,  FALSE);
+	add_scroll_binding_keypad (binding_set, GDK_Up,    GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, FALSE);
+	add_scroll_binding_keypad (binding_set, GDK_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP,  FALSE);
+	gtk_binding_entry_add_signal (binding_set, GDK_H, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, TRUE);
+	gtk_binding_entry_add_signal (binding_set, GDK_J, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, FALSE);
+	gtk_binding_entry_add_signal (binding_set, GDK_K, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, FALSE);
+	gtk_binding_entry_add_signal (binding_set, GDK_L, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, TRUE);
 	
 }
 
@@ -5913,25 +5913,6 @@ ev_sizing_mode_get_type (void)
       { 0, NULL, NULL }
     };
     etype = g_enum_register_static ("EvSizingMode", values);
-  }
-  return etype;
-}
-
-GType
-ev_scroll_type_get_type (void)
-{
-  static GType etype = 0;
-  if (etype == 0) {
-    static const GEnumValue values[] = {
-      { EV_SCROLL_PAGE_FORWARD, "EV_SCROLL_PAGE_FORWARD", "scroll-page-forward" },
-      { EV_SCROLL_PAGE_BACKWARD, "EV_SCROLL_PAGE_BACKWARD", "scroll-page-backward" },
-      { EV_SCROLL_STEP_FORWARD, "EV_SCROLL_STEP_FORWARD", "scroll-step-forward" },
-      { EV_SCROLL_STEP_FORWARD, "EV_SCROLL_STEP_FORWARD", "scroll-step-forward" },
-      { EV_SCROLL_STEP_UP, "EV_SCROLL_STEP_UP", "scroll-step-up" },
-      { EV_SCROLL_STEP_DOWN, "EV_SCROLL_STEP_DOWN", "scroll-step-down" },
-      { 0, NULL, NULL }
-    };
-    etype = g_enum_register_static ("EvScrollType", values);
   }
   return etype;
 }
