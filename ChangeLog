@@ -1,5 +1,12 @@
 2008-09-07  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/eggfindbar.c: (egg_find_bar_class_init):
+
+	Allow page scrolling with PageUp/PageDown keys when find bar is
+	active. Fixes bug #529833.
+	
+2008-09-07  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-view-private.h:
 	* shell/ev-view.[ch]: (add_scroll_binding_keypad),
 	(ev_view_scroll), (ev_view_class_init):

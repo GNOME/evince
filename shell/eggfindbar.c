@@ -187,10 +187,21 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   gtk_binding_entry_add_signal (binding_set, GDK_Up, 0,
                                 "scroll", 1,
                                 GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD);
-
   gtk_binding_entry_add_signal (binding_set, GDK_Down, 0,
                                 "scroll", 1,
                                 GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD);
+  gtk_binding_entry_add_signal (binding_set, GDK_Page_Up, 0,
+				"scroll", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Page_Up, 0,
+				"scroll", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
+  gtk_binding_entry_add_signal (binding_set, GDK_Page_Down, 0,
+				"scroll", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
+  gtk_binding_entry_add_signal (binding_set, GDK_KP_Page_Down, 0,
+				"scroll", 1,
+				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
 }
 
 static void
