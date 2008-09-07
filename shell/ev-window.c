@@ -5063,7 +5063,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	}
 
 	extensions = gdk_pixbuf_format_get_extensions (format);
-	if (g_str_has_suffix(uri, extensions[0])) {
+	if (!g_str_has_suffix (uri, extensions[0])) {
 		gchar *uri_extension;
 		
 		uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
@@ -5072,7 +5072,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	} else {
 		target_file = g_file_new_for_uri (uri);
 	}
-	g_strfreev(extensions);
+	g_strfreev (extensions);
 	g_free (uri);
 	
 	is_native = g_file_is_native (target_file);
