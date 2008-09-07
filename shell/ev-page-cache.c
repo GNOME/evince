@@ -482,6 +482,15 @@ ev_page_cache_set_page_label (EvPageCache *page_cache,
 		}
 	}
 
+	/* Second, look for a match with case insensitively */
+	for (i = 0; i < page_cache->n_pages; i++) {
+		if (page_cache->page_labels[i] != NULL &&
+		    ! strcasecmp (page_label, page_cache->page_labels[i])) {
+			ev_page_cache_set_current_page (page_cache, i);
+			return TRUE;
+		}
+	}
+
 	/* Next, parse the label, and see if the number fits */
 	value = strtol (page_label, &endptr, 10);
 	if (endptr[0] == '\0') {

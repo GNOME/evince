@@ -163,6 +163,7 @@ create_tool_item (GtkAction *action)
 {
 	EvPageActionWidget *proxy;
 	GtkWidget *hbox;
+        AtkObject *obj;
 
 	proxy = g_object_new (ev_page_action_widget_get_type (), NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (proxy), 6); 
@@ -172,6 +173,9 @@ create_tool_item (GtkAction *action)
 	gtk_box_set_spacing (GTK_BOX (hbox), 6);
 
 	proxy->entry = gtk_entry_new ();
+	obj = gtk_widget_get_accessible (proxy->entry);
+        atk_object_set_name (obj, "page-label-entry");
+	         
 	g_signal_connect(proxy->entry, "scroll-event",G_CALLBACK(page_scroll_cb),action);
 	gtk_widget_add_events(GTK_WIDGET(proxy->entry),GDK_BUTTON_MOTION_MASK);
 	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 5);

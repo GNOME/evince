@@ -8,12 +8,16 @@ srcdir = os.environ['srcdir']
 
 from dogtail.procedural import *
 
-run('evince', arguments=' '+srcdir+'/test-links.pdf')
+run('evince', arguments=' '+srcdir+'/test-page-labels.pdf')
 
-# Reload document a few times
-for i in range(1,6):
-	click('View', roleName='menu')
-	click('Reload', roleName='menu item')
+focus.widget('page-label-entry')
+focus.widget.text = "iii"
+activate()
+
+if focus.widget.text != "III":
+	click('File', roleName='menu')
+	click('Close', roleName='menu item')
+	exit (1)
 
 # Close evince
 click('File', roleName='menu')

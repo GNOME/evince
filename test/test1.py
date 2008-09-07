@@ -24,7 +24,7 @@ click('Close', roleName='push button')
 # About dialog
 click('Help', roleName='menu')
 click('About', roleName='menu item')
-focus.dialog('About Evince')
+focus.dialog('About Document Viewer')
 click('Credits', roleName='push button')
 focus.dialog('Credits')
 click('Close', roleName='push button')

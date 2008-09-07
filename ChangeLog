@@ -1,3 +1,18 @@
+2008-09-07  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-page-cache.c (ev_page_cache_set_page_label):
+	
+	Patch for case unsensitive page label match by Michael Lee.
+	See bug #550136.
+	
+	* shell/ev-page-action.c (create_tool_item):	
+	* test/Makefile.am:
+	* test/test1.py:
+	* test/test4.py:
+	* test/test5.py:
+	
+	Added test for the above and updated other tests.
+
 2008-09-07  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (image_save_dialog_response_cb):
