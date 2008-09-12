@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-28 19:41+0300\n"
-"PO-Revision-Date: 2008-08-28 19:44+0300\n"
+"POT-Creation-Date: 2008-09-13 00:47+0300\n"
+"PO-Revision-Date: 2008-09-13 00:47+0300\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
 "MIME-Version: 1.0\n"
@@ -192,17 +192,17 @@ msgstr "Nepavyko įrašyti dokumento „%s“"
 msgid "PostScript Documents"
 msgstr "PostScript dokumentai"
 
-#: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:324
+#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Nepavyko išsaugoti priedo „%s“: %s"
 
-#: ../libdocument/ev-attachment.c:360
+#: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Nepavyko atverti priedo „%s“: %s"
 
-#: ../libdocument/ev-attachment.c:393
+#: ../libdocument/ev-attachment.c:408
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Nepavyko atverti priedo „%s“"
@@ -263,6 +263,69 @@ msgstr "_Atsiminti slaptažodį šiai sesijai"
 msgid "_Remember forever"
 msgstr "Prisiminti _visam laikui"
 
+#: ../cut-n-paste/smclient/eggdesktopfile.c:139
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Šis failas nėra taisyklingas .desktop failas"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:161
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Neatpažinta darbastalio failo versija „%s“"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:872
+#, c-format
+msgid "Starting %s"
+msgstr "Paleidžiama %s"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1006
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Programa nepriima dokumentų komandinėje eilutėje"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1074
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Neatpažintas paleidimo parametras: %d"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1276
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "Negalima perduoti dokumentų URI „Type=Link“ darbastalio elementui"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1295
+#, c-format
+msgid "Not a launchable item"
+msgstr "Nepaleidžiamas elementas"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:185
+msgid "Disable connection to session manager"
+msgstr "Atjungti nuo sesijos valdyklės"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:188
+msgid "Specify file containing saved configuration"
+msgstr "Nurodyti failą su įrašytais nustatymais"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:188
+msgid "FILE"
+msgstr "FAILAS"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:191
+msgid "Specify session management ID"
+msgstr "Nurodykite sesijos valdymo ID"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:191
+msgid "ID"
+msgstr "ID"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:227
+msgid "Session Management Options"
+msgstr "Sesijos valdymo nustatymai"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:228
+msgid "Show Session Management options"
+msgstr "Rodyti sesijos valdymo nustatymus"
+
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
 #. * on the toolbar, and is placed at the %s. Note the _ before the %s
@@ -308,7 +371,7 @@ msgid "Running in presentation mode"
 msgstr "Pateikčių veiksena"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4719
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4692
 msgid "Best Fit"
 msgstr "Geriausiai tinkantis"
 
@@ -356,7 +419,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3751
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3724
 #: ../shell/ev-window-title.c:132
 #, c-format
 msgid "Document Viewer"
@@ -525,31 +588,31 @@ msgstr "Esama spalva"
 msgid "Color of highlight for the current match"
 msgstr "Esamo atitikmens paryškinimo spalva"
 
-#: ../shell/eggfindbar.c:309
+#: ../shell/eggfindbar.c:320
 msgid "Find:"
 msgstr "Rasti:"
 
-#: ../shell/eggfindbar.c:318
+#: ../shell/eggfindbar.c:329
 msgid "Find Previous"
 msgstr "Rasti ankstesnį"
 
-#: ../shell/eggfindbar.c:322 ../shell/eggfindbar.c:325
+#: ../shell/eggfindbar.c:333 ../shell/eggfindbar.c:336
 msgid "Find previous occurrence of the search string"
 msgstr "Rasti ankstesnį ieškomo užrašo pasikartojimą"
 
-#: ../shell/eggfindbar.c:331
+#: ../shell/eggfindbar.c:342
 msgid "Find Next"
 msgstr "Rasti kitą"
 
-#: ../shell/eggfindbar.c:335 ../shell/eggfindbar.c:338
+#: ../shell/eggfindbar.c:346 ../shell/eggfindbar.c:349
 msgid "Find next occurrence of the search string"
 msgstr "Rasti kitą ieškomo užrašo pasikartojimą"
 
-#: ../shell/eggfindbar.c:347
+#: ../shell/eggfindbar.c:358
 msgid "C_ase Sensitive"
 msgstr "S_kirti raidžių dydį"
 
-#: ../shell/eggfindbar.c:351 ../shell/eggfindbar.c:354
+#: ../shell/eggfindbar.c:362 ../shell/eggfindbar.c:365
 msgid "Toggle case sensitive search"
 msgstr "Įjungti/išjungti raidžių registrui jautrią paiešką"
 
@@ -629,11 +692,11 @@ msgstr "Šriftas"
 msgid "Gathering font information... %3d%%"
 msgstr "Renkama šriftų informacija... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:690
+#: ../shell/ev-sidebar-attachments.c:693
 msgid "Attachments"
 msgstr "Priedai"
 
-#: ../shell/ev-sidebar-links.c:267 ../shell/ev-view.c:3638
+#: ../shell/ev-sidebar-links.c:267 ../shell/ev-view.c:3644
 msgid "Loading..."
 msgstr "Įkeliama..."
 
@@ -717,67 +780,67 @@ msgstr "Paleisti %s"
 msgid "End of presentation. Press Escape to exit."
 msgstr "Pateikties pabaiga. Spauskite „Escape“."
 
-#: ../shell/ev-view.c:3368
+#: ../shell/ev-view.c:3374
 msgid "Jump to page:"
 msgstr "Eiti į puslapį:"
 
-#: ../shell/ev-window.c:790
+#: ../shell/ev-window.c:793
 #, c-format
 msgid "Page %s - %s"
 msgstr "Puslapis %s - %s"
 
-#: ../shell/ev-window.c:792
+#: ../shell/ev-window.c:795
 #, c-format
 msgid "Page %s"
 msgstr "Puslapis %s"
 
-#: ../shell/ev-window.c:1201
+#: ../shell/ev-window.c:1204
 msgid "The document contains no pages"
 msgstr "Šiame dokumente nėra nė vieno puslapio"
 
-#: ../shell/ev-window.c:1425 ../shell/ev-window.c:1500
+#: ../shell/ev-window.c:1428 ../shell/ev-window.c:1503
 msgid "Unable to open document"
 msgstr "Nepavyko atverti dokumento"
 
-#: ../shell/ev-window.c:1697
+#: ../shell/ev-window.c:1700
 msgid "Open Document"
 msgstr "Atverti dokumentą"
 
-#: ../shell/ev-window.c:1758
+#: ../shell/ev-window.c:1761
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "Nepavyko sukurti simbolinės nuorodos „%s“: %s"
 
-#: ../shell/ev-window.c:1787
+#: ../shell/ev-window.c:1790
 msgid "Cannot open a copy."
 msgstr "Nepavyko atverti kopijos."
 
-#: ../shell/ev-window.c:2031 ../shell/ev-window.c:2081
+#: ../shell/ev-window.c:2034 ../shell/ev-window.c:2084
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Failo išsaugoti kaip „%s“ nepavyko."
 
-#: ../shell/ev-window.c:2126
+#: ../shell/ev-window.c:2129
 msgid "Save a Copy"
 msgstr "Išsaugoti kopiją"
 
-#: ../shell/ev-window.c:2247 ../shell/ev-window.c:3452
+#: ../shell/ev-window.c:2250 ../shell/ev-window.c:3425
 msgid "Failed to print document"
 msgstr "Nepavyko atspausdinti dokumento"
 
-#: ../shell/ev-window.c:2412
+#: ../shell/ev-window.c:2415
 msgid "Printing is not supported on this printer."
 msgstr "Spaudinimas šiuo spausdintuvu nepalaikomas."
 
-#: ../shell/ev-window.c:2538 ../shell/ev-window.c:4511
+#: ../shell/ev-window.c:2541 ../shell/ev-window.c:4484
 msgid "Print"
 msgstr "Spausdinti"
 
-#: ../shell/ev-window.c:3205
+#: ../shell/ev-window.c:3208
 msgid "Toolbar Editor"
 msgstr "Įrankinės redaktorius"
 
-#: ../shell/ev-window.c:3747
+#: ../shell/ev-window.c:3720
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -786,7 +849,7 @@ msgstr ""
 "Dokumentų peržiūros programa.\n"
 "Naudojama poppler biblioteka %s (%s)"
 
-#: ../shell/ev-window.c:3775
+#: ../shell/ev-window.c:3748
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -798,7 +861,7 @@ msgstr ""
 "Laisvosios programinės įrangos fondo; 2-osios arba (Jūsų pasirinkimu) bet "
 "kurios vėlesnės licencijos versijos sąlygomis.\n"
 
-#: ../shell/ev-window.c:3779
+#: ../shell/ev-window.c:3752
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -810,7 +873,7 @@ msgstr ""
 "garantijų. Dėl išsamesnės informacijos žiūrėkite GNU bendrąją viešąją "
 "licenciją.\n"
 
-#: ../shell/ev-window.c:3783
+#: ../shell/ev-window.c:3756
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -820,15 +883,15 @@ msgstr ""
 "Evince; jeigu negavote, rašykite Laisvosios programinės įrangos fondui, 59 "
 "Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:3807 ../shell/main.c:348
+#: ../shell/ev-window.c:3780
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3810
+#: ../shell/ev-window.c:3783
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Evince autoriai"
 
-#: ../shell/ev-window.c:3816
+#: ../shell/ev-window.c:3789
 msgid "translator-credits"
 msgstr ""
 "Žygimantas Beručka  <zygis@gnome.org>,\n"
@@ -837,7 +900,7 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:4032
+#: ../shell/ev-window.c:4005
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -845,357 +908,357 @@ msgstr[0] "šiame puslapyje rastas %d"
 msgstr[1] "šiame puslapyje rasti %d"
 msgstr[2] "šiame puslapyje rasta %d"
 
-#: ../shell/ev-window.c:4040
+#: ../shell/ev-window.c:4013
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "liko ieškoti %3d%%"
 
-#: ../shell/ev-window.c:4423
+#: ../shell/ev-window.c:4396
 msgid "_File"
 msgstr "_Failas"
 
-#: ../shell/ev-window.c:4424
+#: ../shell/ev-window.c:4397
 msgid "_Edit"
 msgstr "_Keisti"
 
-#: ../shell/ev-window.c:4425
+#: ../shell/ev-window.c:4398
 msgid "_View"
 msgstr "_Rodymas"
 
-#: ../shell/ev-window.c:4426
+#: ../shell/ev-window.c:4399
 msgid "_Go"
 msgstr "_Eiti"
 
-#: ../shell/ev-window.c:4427
+#: ../shell/ev-window.c:4400
 msgid "_Help"
 msgstr "_Žinynas"
 
 #. File menu
-#: ../shell/ev-window.c:4430 ../shell/ev-window.c:4609
-#: ../shell/ev-window.c:4681
+#: ../shell/ev-window.c:4403 ../shell/ev-window.c:4582
+#: ../shell/ev-window.c:4654
 msgid "_Open..."
 msgstr "_Atverti..."
 
-#: ../shell/ev-window.c:4431 ../shell/ev-window.c:4682
+#: ../shell/ev-window.c:4404 ../shell/ev-window.c:4655
 msgid "Open an existing document"
 msgstr "Atverti egzistuojantį dokumentą"
 
-#: ../shell/ev-window.c:4433
+#: ../shell/ev-window.c:4406
 msgid "Op_en a Copy"
 msgstr "Atverti _kopiją"
 
-#: ../shell/ev-window.c:4434
+#: ../shell/ev-window.c:4407
 msgid "Open a copy of the current document in a new window"
 msgstr "Atverti šio dokumento kopiją naujame lange"
 
-#: ../shell/ev-window.c:4436 ../shell/ev-window.c:4611
+#: ../shell/ev-window.c:4409 ../shell/ev-window.c:4584
 msgid "_Save a Copy..."
 msgstr "Iš_saugoti kopiją..."
 
-#: ../shell/ev-window.c:4437
+#: ../shell/ev-window.c:4410
 msgid "Save a copy of the current document"
 msgstr "Išsaugoti šio dokumento kopiją"
 
-#: ../shell/ev-window.c:4439
+#: ../shell/ev-window.c:4412
 msgid "Print Set_up..."
 msgstr "Spausdinimo _nustatymai..."
 
-#: ../shell/ev-window.c:4440
+#: ../shell/ev-window.c:4413
 msgid "Setup the page settings for printing"
 msgstr "Nustatyti puslapio parinktis spausdinimui"
 
-#: ../shell/ev-window.c:4442
+#: ../shell/ev-window.c:4415
 msgid "_Print..."
 msgstr "S_pausdinti..."
 
-#: ../shell/ev-window.c:4443 ../shell/ev-window.c:4512
+#: ../shell/ev-window.c:4416 ../shell/ev-window.c:4485
 msgid "Print this document"
 msgstr "Atspaudinti šį dokumentą"
 
-#: ../shell/ev-window.c:4445
+#: ../shell/ev-window.c:4418
 msgid "P_roperties"
 msgstr "S_avybės"
 
-#: ../shell/ev-window.c:4453
+#: ../shell/ev-window.c:4426
 msgid "Select _All"
 msgstr "Pasirinkti _viską"
 
-#: ../shell/ev-window.c:4455
+#: ../shell/ev-window.c:4428
 msgid "_Find..."
 msgstr "_Rasti..."
 
-#: ../shell/ev-window.c:4456
+#: ../shell/ev-window.c:4429
 msgid "Find a word or phrase in the document"
 msgstr "Rasti dokumente žodį ar frazę"
 
-#: ../shell/ev-window.c:4458
+#: ../shell/ev-window.c:4431
 msgid "Find Ne_xt"
 msgstr "Rasti se_kantį"
 
-#: ../shell/ev-window.c:4460
+#: ../shell/ev-window.c:4433
 msgid "Find Pre_vious"
 msgstr "Rasti a_nkstesnį"
 
-#: ../shell/ev-window.c:4462
+#: ../shell/ev-window.c:4435
 msgid "T_oolbar"
 msgstr "Įr_ankinė"
 
-#: ../shell/ev-window.c:4464
+#: ../shell/ev-window.c:4437
 msgid "Rotate _Left"
 msgstr "Pasukti _kairėn"
 
-#: ../shell/ev-window.c:4466
+#: ../shell/ev-window.c:4439
 msgid "Rotate _Right"
 msgstr "Pasukti _dešinėn"
 
-#: ../shell/ev-window.c:4471
+#: ../shell/ev-window.c:4444
 msgid "Enlarge the document"
 msgstr "Išdidinti dokumentą"
 
-#: ../shell/ev-window.c:4474
+#: ../shell/ev-window.c:4447
 msgid "Shrink the document"
 msgstr "Sutraukti dokumentą"
 
-#: ../shell/ev-window.c:4476
+#: ../shell/ev-window.c:4449
 msgid "_Reload"
 msgstr "_Perkrauti"
 
-#: ../shell/ev-window.c:4477
+#: ../shell/ev-window.c:4450
 msgid "Reload the document"
 msgstr "Perkrauti dokumentą"
 
-#: ../shell/ev-window.c:4480
+#: ../shell/ev-window.c:4453
 msgid "Auto_scroll"
 msgstr "Automatinis _slinkimas"
 
 #. Go menu
-#: ../shell/ev-window.c:4484
+#: ../shell/ev-window.c:4457
 msgid "_Previous Page"
 msgstr "_Ankstesnis puslapis"
 
-#: ../shell/ev-window.c:4485
+#: ../shell/ev-window.c:4458
 msgid "Go to the previous page"
 msgstr "Eiti į ankstesnįjį puslapį"
 
-#: ../shell/ev-window.c:4487
+#: ../shell/ev-window.c:4460
 msgid "_Next Page"
 msgstr "_Kitas puslapis"
 
-#: ../shell/ev-window.c:4488
+#: ../shell/ev-window.c:4461
 msgid "Go to the next page"
 msgstr "Eiti į kitą puslapį"
 
-#: ../shell/ev-window.c:4490
+#: ../shell/ev-window.c:4463
 msgid "_First Page"
 msgstr "_Pirmas puslapis"
 
-#: ../shell/ev-window.c:4491
+#: ../shell/ev-window.c:4464
 msgid "Go to the first page"
 msgstr "Eiti į pirmą puslapį"
 
-#: ../shell/ev-window.c:4493
+#: ../shell/ev-window.c:4466
 msgid "_Last Page"
 msgstr "_Paskutinis puslapis"
 
-#: ../shell/ev-window.c:4494
+#: ../shell/ev-window.c:4467
 msgid "Go to the last page"
 msgstr "Eiti į paskutinį puslapį"
 
 #. Help menu
-#: ../shell/ev-window.c:4498
+#: ../shell/ev-window.c:4471
 msgid "_Contents"
 msgstr "_Turinys"
 
-#: ../shell/ev-window.c:4501
+#: ../shell/ev-window.c:4474
 msgid "_About"
 msgstr "_Apie"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:4505
+#: ../shell/ev-window.c:4478
 msgid "Leave Fullscreen"
 msgstr "Palikti viso ekrano veikseną"
 
-#: ../shell/ev-window.c:4506
+#: ../shell/ev-window.c:4479
 msgid "Leave fullscreen mode"
 msgstr "Palikti viso ekrano veikseną"
 
-#: ../shell/ev-window.c:4508
+#: ../shell/ev-window.c:4481
 msgid "Start Presentation"
 msgstr "Pradėti prezentaciją"
 
-#: ../shell/ev-window.c:4509
+#: ../shell/ev-window.c:4482
 msgid "Start a presentation"
 msgstr "Paleisti dokumentą kaip prezentaciją"
 
 #. View Menu
-#: ../shell/ev-window.c:4565
+#: ../shell/ev-window.c:4538
 msgid "_Toolbar"
 msgstr "Į_rankinė"
 
-#: ../shell/ev-window.c:4566
+#: ../shell/ev-window.c:4539
 msgid "Show or hide the toolbar"
 msgstr "Rodyti arba slėpti įrankinę"
 
-#: ../shell/ev-window.c:4568
+#: ../shell/ev-window.c:4541
 msgid "Side _Pane"
 msgstr "Šoninis _skydelis"
 
-#: ../shell/ev-window.c:4569
+#: ../shell/ev-window.c:4542
 msgid "Show or hide the side pane"
 msgstr "Rodyti arba slėpti šoninį skydelį"
 
-#: ../shell/ev-window.c:4571
+#: ../shell/ev-window.c:4544
 msgid "_Continuous"
 msgstr "_Vientisas"
 
-#: ../shell/ev-window.c:4572
+#: ../shell/ev-window.c:4545
 msgid "Show the entire document"
 msgstr "Rodyti visą dokumentą"
 
-#: ../shell/ev-window.c:4574
+#: ../shell/ev-window.c:4547
 msgid "_Dual"
 msgstr "_Dvigubas"
 
-#: ../shell/ev-window.c:4575
+#: ../shell/ev-window.c:4548
 msgid "Show two pages at once"
 msgstr "Rodyti du puslapius iš karto"
 
-#: ../shell/ev-window.c:4577
+#: ../shell/ev-window.c:4550
 msgid "_Fullscreen"
 msgstr "_Visame ekrane"
 
-#: ../shell/ev-window.c:4578
+#: ../shell/ev-window.c:4551
 msgid "Expand the window to fill the screen"
 msgstr "Išplėsti langą per visą ekraną"
 
-#: ../shell/ev-window.c:4580
+#: ../shell/ev-window.c:4553
 msgid "Pre_sentation"
 msgstr "_Prezentacija"
 
-#: ../shell/ev-window.c:4581
+#: ../shell/ev-window.c:4554
 msgid "Run document as a presentation"
 msgstr "Paleisti dokumentą kaip prezentaciją"
 
-#: ../shell/ev-window.c:4583
+#: ../shell/ev-window.c:4556
 msgid "_Best Fit"
 msgstr "_Geriausiai tinkantis"
 
-#: ../shell/ev-window.c:4584
+#: ../shell/ev-window.c:4557
 msgid "Make the current document fill the window"
 msgstr "Dokumentas užpildo visą langą"
 
-#: ../shell/ev-window.c:4586
+#: ../shell/ev-window.c:4559
 msgid "Fit Page _Width"
 msgstr "Tinkantis prie puslapio pl_očio"
 
-#: ../shell/ev-window.c:4587
+#: ../shell/ev-window.c:4560
 msgid "Make the current document fill the window width"
 msgstr "Dokumentas užpildo lango plotį"
 
 #. Links
-#: ../shell/ev-window.c:4594
+#: ../shell/ev-window.c:4567
 msgid "_Open Link"
 msgstr "_Atverti nuorodą"
 
-#: ../shell/ev-window.c:4596
+#: ../shell/ev-window.c:4569
 msgid "_Go To"
 msgstr "_Eiti į"
 
-#: ../shell/ev-window.c:4598
+#: ../shell/ev-window.c:4571
 msgid "Open in New _Window"
 msgstr "Atverti _naujame lange"
 
-#: ../shell/ev-window.c:4600
+#: ../shell/ev-window.c:4573
 msgid "_Copy Link Address"
 msgstr "_Kopijuoti nuorodos adresą"
 
-#: ../shell/ev-window.c:4602
+#: ../shell/ev-window.c:4575
 msgid "_Save Image As..."
 msgstr "Įrašyti _paveikslėlį kaip..."
 
-#: ../shell/ev-window.c:4604
+#: ../shell/ev-window.c:4577
 msgid "Copy _Image"
 msgstr "Kopijuoti _paveikslėlį"
 
-#: ../shell/ev-window.c:4643
+#: ../shell/ev-window.c:4616
 msgid "Page"
 msgstr "Puslapis"
 
-#: ../shell/ev-window.c:4644
+#: ../shell/ev-window.c:4617
 msgid "Select Page"
 msgstr "Pasirinkite puslapį"
 
-#: ../shell/ev-window.c:4655
+#: ../shell/ev-window.c:4628
 msgid "Zoom"
 msgstr "Mastelis"
 
-#: ../shell/ev-window.c:4657
+#: ../shell/ev-window.c:4630
 msgid "Adjust the zoom level"
 msgstr "Nustatyti vaizdo mastelį"
 
-#: ../shell/ev-window.c:4667
+#: ../shell/ev-window.c:4640
 msgid "Navigation"
 msgstr "Navigacija"
 
-#: ../shell/ev-window.c:4669
+#: ../shell/ev-window.c:4642
 msgid "Back"
 msgstr "Atgal"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:4672
+#: ../shell/ev-window.c:4645
 msgid "Move across visited pages"
 msgstr "Eiti per aplankytus puslapius"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4702
+#: ../shell/ev-window.c:4675
 msgid "Previous"
 msgstr "Ankstesnis"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4707
+#: ../shell/ev-window.c:4680
 msgid "Next"
 msgstr "Kitas"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4711
+#: ../shell/ev-window.c:4684
 msgid "Zoom In"
 msgstr "Pritraukti"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4715
+#: ../shell/ev-window.c:4688
 msgid "Zoom Out"
 msgstr "Atitraukti"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4723
+#: ../shell/ev-window.c:4696
 msgid "Fit Width"
 msgstr "Tinka plotis"
 
-#: ../shell/ev-window.c:4928
+#: ../shell/ev-window.c:4898
 msgid "Unable to open external link"
 msgstr "Nepavyko atverti išorinės nuorodos"
 
-#: ../shell/ev-window.c:5089
+#: ../shell/ev-window.c:5059
 msgid "Couldn't find appropriate format to save image"
 msgstr "Nepavyko rasti tinkamo formato paveikslėliui įrašyti"
 
-#: ../shell/ev-window.c:5129
+#: ../shell/ev-window.c:5099
 msgid "The image could not be saved."
 msgstr "Paveikslėlio įrašyti nepavyko."
 
-#: ../shell/ev-window.c:5161
+#: ../shell/ev-window.c:5131
 msgid "Save Image"
 msgstr "Įrašyti paveikslėlį"
 
-#: ../shell/ev-window.c:5220
+#: ../shell/ev-window.c:5193
 msgid "Unable to open attachment"
 msgstr "Nepavyko atverti priedo"
 
-#: ../shell/ev-window.c:5272
+#: ../shell/ev-window.c:5245
 msgid "The attachment could not be saved."
 msgstr "Priedo išsaugoti nepavyko."
 
-#: ../shell/ev-window.c:5317
+#: ../shell/ev-window.c:5290
 msgid "Save Attachment"
 msgstr "Įrašyti priedą"
 
@@ -1208,45 +1271,41 @@ msgstr "%s - Reikalingas slaptažodis"
 msgid "By extension"
 msgstr "Pagal priesagą"
 
-#: ../shell/main.c:57
+#: ../shell/main.c:52
 msgid "The page of the document to display."
 msgstr "Rodytinas dokumento puslapis."
 
-#: ../shell/main.c:57
+#: ../shell/main.c:52
 msgid "PAGE"
 msgstr "PUSLAPIS"
 
-#: ../shell/main.c:58
+#: ../shell/main.c:53
 msgid "Run evince in fullscreen mode"
 msgstr "Paleisti evince viso ekrano veiksena"
 
-#: ../shell/main.c:59
+#: ../shell/main.c:54
 msgid "Run evince in presentation mode"
 msgstr "Paleisti evince pateikčių veiksena"
 
-#: ../shell/main.c:60
+#: ../shell/main.c:55
 msgid "Run evince as a previewer"
 msgstr "Paleisti evince kaip peržiūros programą"
 
-#: ../shell/main.c:61
+#: ../shell/main.c:56
 msgid "The word or phrase to find in the document"
 msgstr "Žodis ar frazė, kurios ieškoti dokumente"
 
-#: ../shell/main.c:61
+#: ../shell/main.c:56
 msgid "STRING"
 msgstr "SEKA"
 
-#: ../shell/main.c:64
+#: ../shell/main.c:59
 msgid "[FILE...]"
 msgstr "[FAILAS...]"
 
-#: ../shell/main.c:331
+#: ../shell/main.c:325
 msgid "GNOME Document Viewer"
 msgstr "GNOME dokumentų peržiūros programa"
-
-#: ../shell/main.c:387
-msgid "Evince Document Viewer"
-msgstr "Dokumentų peržiūros programa Evince"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid ""
@@ -1271,6 +1330,9 @@ msgid ""
 msgstr ""
 "Tinkama PDF dokumentų miniatiūrų kūrimo komanda su argumentais. Žiūrėkite "
 "Nautiliaus miniatiūrų generatoriaus dokumentaciją."
+
+#~ msgid "Evince Document Viewer"
+#~ msgstr "Dokumentų peržiūros programa Evince"
 
 #~ msgid "BBox"
 #~ msgstr "BBox"
