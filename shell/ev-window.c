@@ -4899,20 +4899,10 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 	}
 	
   	if (ret == FALSE) {
-		GtkWidget *dialog;
-	
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 _("Unable to open external link"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  error->message, uri);
-		g_signal_connect (dialog, "response",
-				  G_CALLBACK (gtk_widget_destroy),
-				  NULL);
-		gtk_widget_show (dialog);
-		g_error_free(error);
+		ev_window_error_message (GTK_WINDOW (window),
+					 _("Unable to open external link"),
+					 error);
+		g_error_free (error);
 	}
 }
 
