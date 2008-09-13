@@ -4884,8 +4884,17 @@ static void
 launch_external_uri (EvWindow *window, EvLinkAction *action)
 {
 	const gchar *uri = ev_link_action_get_uri (action);
+	GAppLaunchContext *context = NULL;
 	GError *error = NULL;
 	gboolean ret;
+
+#if GTK_CHECK_VERSION (2, 14, 0)
+	context = G_APP_LAUNCH_CONTEXT (gdk_app_launch_context_new ());
+	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context),
+					   gtk_window_get_screen (GTK_WINDOW (window)));
+	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context),
+					      GDK_CURRENT_TIME);
+#endif
 
 	if (!g_strstr_len (uri, strlen (uri), "://")) {
 		gchar *http;
