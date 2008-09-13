@@ -4886,8 +4886,18 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 	const gchar *uri = ev_link_action_get_uri (action);
 	GError *error = NULL;
 	gboolean ret;
+
+	if (!g_strstr_len (uri, strlen (uri), "://")) {
+		gchar *http;
+		
+		/* Not a valid uri, assuming it's http */
+		http = g_strdup_printf ("http://%s", uri);
+		ret = g_app_info_launch_default_for_uri (http, NULL, &error);
+		g_free (http);
+	} else {
+		ret = g_app_info_launch_default_for_uri (uri, NULL, &error);
+	}
 	
-	ret = g_app_info_launch_default_for_uri (uri, NULL, &error);
   	if (ret == FALSE) {
 		GtkWidget *dialog;
 	
