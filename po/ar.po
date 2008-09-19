@@ -4,14 +4,15 @@
 #
 # Yousef Raffah <yousef@raffah.com>, 2006.
 # Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007, 2008.
+# Usama Akkad <uak@aya.sy>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-14 11:08+0100\n"
-"PO-Revision-Date: 2008-07-28 19:32+0300\n"
-"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
-"Language-Team: Arabic <doc@arabeyes.org>\n"
+"POT-Creation-Date: 2008-09-19 01:23+0100\n"
+"PO-Revision-Date: 2008-09-18 08:23+0300\n"
+"Last-Translator: Usama Akkad <uak@aya.sy>\n"
+"Language-Team: Arabic\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -212,7 +213,7 @@ msgstr "نوع MIME غير معروف"
 #: ../libdocument/ev-document-factory.c:201
 #, fuzzy, c-format
 msgid "File type %s (%s) is not supported"
-msgstr "لا يُدعم العديد من الملفات في أرشيف zip واحدة"
+msgstr "نوع الملف %s (%s) غير مدعوم"
 
 #: ../libdocument/ev-document-factory.c:357
 msgid "All Documents"
@@ -224,23 +225,23 @@ msgstr "كل الملفات"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:439
 msgid "Co_nnect"
-msgstr ""
+msgstr "ات_صل"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:483
 msgid "Connect _anonymously"
-msgstr ""
+msgstr "اتصل _مجهول الاسم"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:492
 msgid "Connect as u_ser:"
-msgstr ""
+msgstr "اتصل كالمست_خدم:"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:529
 msgid "_Username:"
-msgstr ""
+msgstr "اسم المستخد_م:"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
 msgid "_Domain:"
-msgstr ""
+msgstr "الم_جال:"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
 #: ../data/evince-password.glade.h:4
@@ -249,80 +250,78 @@ msgstr "_كلمة السر:"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:553
 msgid "_Forget password immediately"
-msgstr ""
+msgstr "ا_نْس كلمة السر فورا"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
-#, fuzzy
 msgid "_Remember password until you logout"
-msgstr "تذكّر كلمة السر لهذه الجلسة"
+msgstr "ت_ذكر كلمة السر حتى خروجي"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
 msgid "_Remember forever"
-msgstr ""
+msgstr "ت_ذكر للأبد"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:139
 #, c-format
 msgid "File is not a valid .desktop file"
-msgstr ""
+msgstr "الملف ليس ملف .desktop صالح"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:161
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr ""
+msgstr "اصدارة غير معروفة لملف disktop '%s'"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:872
 #, c-format
 msgid "Starting %s"
-msgstr ""
+msgstr "بدء %s"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1006
 #, c-format
 msgid "Application does not accept documents on command line"
-msgstr ""
+msgstr "التطبيق لا يقبل مستندات في سطر الأوامر"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1074
 #, c-format
 msgid "Unrecognized launch option: %d"
-msgstr ""
+msgstr "خيار hطلاق غير معروف: %d"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1276
-#, c-format
+#, fuzzy, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
+msgstr "لا يمكن تمرير عناوين المستندات إلى مُدخل 'النوع=الرابط' في desktop"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1295
 #, c-format
 msgid "Not a launchable item"
-msgstr ""
+msgstr "عنصر لا يُطلق"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:185
 msgid "Disable connection to session manager"
-msgstr ""
+msgstr "عطل الاتصال بمدير الجلسة"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:188
 msgid "Specify file containing saved configuration"
-msgstr ""
+msgstr "حدد ملفا يحوي التشكيل المحفوظ"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:188
-#, fuzzy
 msgid "FILE"
-msgstr "[ملف...]"
+msgstr "ملف"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:191
 msgid "Specify session management ID"
-msgstr ""
+msgstr "حدد معرف إدارة الجلسة"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:191
 msgid "ID"
-msgstr ""
+msgstr "مُعرف"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:227
 msgid "Session Management Options"
-msgstr ""
+msgstr "خيارات إدارة الجلسة"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:228
 msgid "Show Session Management options"
-msgstr ""
+msgstr "اعرض خيارات إدارة الجلسة"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -789,7 +788,7 @@ msgstr "صفحة %s"
 
 #: ../shell/ev-window.c:1204
 msgid "The document contains no pages"
-msgstr ""
+msgstr "لا يحوي المستند أية صفحات"
 
 #: ../shell/ev-window.c:1428 ../shell/ev-window.c:1503
 msgid "Unable to open document"
@@ -1325,6 +1324,3 @@ msgid ""
 msgstr ""
 "أمر صالِح بالإضافة إلى متغيرات لمصغّر الصور الخاص بمستندات PDF. راجع توثيق "
 "مصغّر الصور لنوتلس للمزيد من المعلومات"
-
-#~ msgid "Evince Document Viewer"
-#~ msgstr "جلاء، عارِض المستندات"
