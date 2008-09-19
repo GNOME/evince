@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-19 03:15+0000\n"
-"PO-Revision-Date: 2008-09-19 11:47+0100\n"
-"Last-Translator: Mario Blättermann <mario.blaettermann@t-online.de>\n"
+"POT-Creation-Date: 2008-09-19 13:16+0200\n"
+"PO-Revision-Date: 2008-09-19 13:18+0200\n"
+"Last-Translator: Hendrik Richter <hendrikr@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -273,12 +273,12 @@ msgstr "Datei ist keine gültige *.desktop-Datei"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:161
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr "Version der Desktop-Datei '%s' wurde nicht erkannt"
+msgstr "Version der Desktop-Datei »%s« wurde nicht erkannt"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:872
 #, c-format
 msgid "Starting %s"
-msgstr "Starten von %s"
+msgstr "%s wird gestartet"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1006
 #, c-format
@@ -293,7 +293,7 @@ msgstr "Nicht erkannte Startoption: %d"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1276
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "URI konnte auf Desktop-Datei 'Type=Link' nicht angewendet werden"
+msgstr "URIs können nicht an »Type=Link«-Desktop-Dateien weitergegeben werden"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1295
 #, c-format
@@ -326,7 +326,7 @@ msgstr "Optionen der Sitzungsverwaltung"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:228
 msgid "Show Session Management options"
-msgstr "Zeige Optionen der Sitzungsverwaltung"
+msgstr "Optionen der Sitzungsverwaltung anzeigen"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -666,7 +666,8 @@ msgstr "Falsches Passwort"
 
 #: ../shell/ev-password-view.c:112
 msgid ""
-"This document is locked and can only be read by entering the correct password."
+"This document is locked and can only be read by entering the correct "
+"password."
 msgstr ""
 "Dieses Dokument ist gesperrt und kann nur nach Eingabe des korrekten "
 "Passworts gelesen werden."
@@ -869,8 +870,9 @@ msgstr ""
 #: ../shell/ev-window.c:3752
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR "
-"A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+"details.\n"
 msgstr ""
 "Die Veröffentlichung von Evince erfolgt in der Hoffnung, dass es Ihnen von "
 "Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite "
@@ -880,8 +882,8 @@ msgstr ""
 #: ../shell/ev-window.c:3756
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, "
-"Suite 330, Boston, MA  02111-1307  USA\n"
+"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 "Sie sollten ein Exemplar der GNU General Public License zusammen mit Evince "
 "erhalten haben. Falls nicht, schreiben Sie an die Free Software Foundation, "
@@ -1403,7 +1405,8 @@ msgstr ""
 #~ msgstr "Datei »%s« konnte nicht geöffnet werden."
 
 #~ msgid ""
-#~ "Failed to load document “%s”. Ghostscript interpreter was not found in path"
+#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
+#~ "path"
 #~ msgstr ""
 #~ "Laden des Dokuments »%s« ist gescheitert. Der Ghostscript-Interpreter "
 #~ "konnte nicht in $PATH gefunden werden."
@@ -1437,7 +1440,8 @@ msgstr ""
 #~ "requires a PostScript printer driver."
 #~ msgstr ""
 #~ "Sie haben versucht, auf einem Drucker zu drucken, der den Treiber »%s« "
-#~ "verwendet. Diese Anwendung benötigt jedoch einen PostScript-Druckertreiber."
+#~ "verwendet. Diese Anwendung benötigt jedoch einen PostScript-"
+#~ "Druckertreiber."
 
 #~ msgid "Pages"
 #~ msgstr "Seiten"
@@ -1495,11 +1499,11 @@ msgstr ""
 
 #~ msgid ""
 #~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
-#~ "default size sets the sidebar's width in pixels based from the side of the "
-#~ "window. Any integer will be accepted. The sidebar will never shrink "
-#~ "smaller than the size of the text required to display Thumbnails or Index. "
-#~ "Large values will cause the sidebar to take up as much of the page display "
-#~ "area as possible relative to the window's size."
+#~ "default size sets the sidebar's width in pixels based from the side of "
+#~ "the window. Any integer will be accepted. The sidebar will never shrink "
+#~ "smaller than the size of the text required to display Thumbnails or "
+#~ "Index. Large values will cause the sidebar to take up as much of the page "
+#~ "display area as possible relative to the window's size."
 #~ msgstr ""
 #~ "Die Seitenleiste enthält den Index und die Liste der Vorschaubilder. Die "
 #~ "Vorgabegröße legt die Breite der Seitenleiste in Pixel ausgehend vom "
@@ -1535,8 +1539,8 @@ msgstr ""
 #~ "toolbar not visible by default."
 #~ msgstr ""
 #~ "Die Werkzeugleiste am oberen Fensterrand enthält Navigations- und "
-#~ "Vergrößerungseöemente. Es gibt zwei Wahrheitswerte, durch wahr (true) wird "
-#~ "die Werkzeugleiste standardmäßig angezeigt, bei unwahr (false) "
+#~ "Vergrößerungseöemente. Es gibt zwei Wahrheitswerte, durch wahr (true) "
+#~ "wird die Werkzeugleiste standardmäßig angezeigt, bei unwahr (false) "
 #~ "standardmäßig verborgen."
 
 #~ msgid "Unable to find glade file"
