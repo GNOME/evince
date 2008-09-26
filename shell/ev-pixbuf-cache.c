@@ -501,6 +501,12 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		      CacheJobInfo  *job_info,
 		      EvPixbufCache *pixbuf_cache)
 {
+	if (!job_info->page_ready) {
+		copy_job_page_and_selection_to_job_info (job_render,
+							 job_info,
+							 pixbuf_cache);
+	}
+	
 	if (job_render->flags & EV_RENDER_INCLUDE_LINKS) {
 		if (job_info->link_mapping)
 			ev_link_mapping_free (job_info->link_mapping);
