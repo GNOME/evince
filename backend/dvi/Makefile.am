@@ -7,8 +7,10 @@ INCLUDES = 					\
 	-I$(top_srcdir)/libdocument		\
 	-I$(srcdir)/mdvi-lib			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	$(WARN_CFLAGS)				\
 	$(BACKEND_CFLAGS)			\
-	$(SPECTRE_CFLAGS)
+	$(SPECTRE_CFLAGS)			\
+	$(DISABLE_DEPRECATED)
 
 backend_LTLIBRARIES = libdvidocument.la
 

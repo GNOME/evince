@@ -19,17 +19,19 @@
 
 #include "config.h"
 
-#include <config.h>
 #include "dvi-document.h"
 #include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
 #include "ev-file-exporter.h"
+#include "ev-file-helpers.h"
 
 #include "mdvi.h"
 #include "fonts.h"
+#include "color.h"
 #include "cairo-device.h"
 
 #include <glib/gi18n.h>
+#include <ctype.h>
 
 GMutex *dvi_context_mutex = NULL;
 

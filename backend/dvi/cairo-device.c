@@ -18,6 +18,7 @@
 
 #include <config.h>
 
+#include <stdlib.h>
 #include <gdk/gdkcolor.h>
 #ifdef HAVE_SPECTRE
 #include <libspectre/spectre.h>
@@ -244,7 +245,6 @@ dvi_cairo_free_image (void *ptr)
 static void
 dvi_cairo_put_pixel (void *image, int x, int y, Ulong color)
 {
-	cairo_t         *cr;
 	cairo_surface_t *surface;
 	gint             rowstride;
 	guchar          *p;
@@ -319,7 +319,7 @@ mdvi_cairo_device_render (DviContext* dvi)
 	gint             page_width;
 	gint             page_height;
 	cairo_surface_t *surface;
-	gchar           *pixels;
+	guchar          *pixels;
 	gint             rowstride;
 	static const cairo_user_data_key_t key;
 
@@ -332,7 +332,7 @@ mdvi_cairo_device_render (DviContext* dvi)
 	page_height = dvi->dvi_page_h * dvi->params.vconv + 2 * cairo_device->ymargin;
 
 	rowstride = page_width * 4;
-	pixels = (gchar *) g_malloc (page_height * rowstride);
+	pixels = (guchar *) g_malloc (page_height * rowstride);
 	memset (pixels, 0xff, page_height * rowstride);
 
 	surface = cairo_image_surface_create_for_data (pixels,
