@@ -73,8 +73,8 @@ static void dvi_document_do_color_special               (DviContext             
 
 EV_BACKEND_REGISTER_WITH_CODE (DviDocument, dvi_document,
      {
-      G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, dvi_document_document_thumbnails_iface_init);
-      G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, dvi_document_file_exporter_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, dvi_document_document_thumbnails_iface_init);
+      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, dvi_document_file_exporter_iface_init);
      });
 
 static gboolean
@@ -98,7 +98,7 @@ dvi_document_load (EvDocument  *document,
 	g_mutex_lock (dvi_context_mutex);
 	if (dvi_document->context)
 		mdvi_destroy_context (dvi_document->context);
-	
+
 	dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
 	g_mutex_unlock (dvi_context_mutex);
 	
