@@ -101,6 +101,7 @@ dvi_document_load (EvDocument  *document,
 
 	dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
 	g_mutex_unlock (dvi_context_mutex);
+	g_free (filename);
 	
 	if (!dvi_document->context) {
     		g_set_error (error,
