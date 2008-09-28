@@ -136,11 +136,11 @@ extern char	*read_alloc_bcpl __PROTO((FILE *, size_t, size_t *));
 
 /* miscellaneous */
 
-extern void message __PROTO((const char *, ...));
-extern void crash __PROTO((const char *, ...));
-extern void fatal __PROTO((const char *, ...));
-extern void error __PROTO((const char *, ...));
-extern void warning __PROTO((const char *, ...));
+extern void mdvi_message __PROTO((const char *, ...));
+extern void mdvi_crash __PROTO((const char *, ...));
+extern void mdvi_fatal __PROTO((const char *, ...));
+extern void mdvi_error __PROTO((const char *, ...));
+extern void mdvi_warning __PROTO((const char *, ...));
 extern int  unit2pix __PROTO((int, const char *));
 extern double unit2pix_factor __PROTO((const char *));
 
@@ -182,12 +182,12 @@ extern Uint32 _mdvi_debug_mask;
 extern void __debug __PROTO((int, const char *, ...));
 #define DEBUG(x)	__debug x
 #define ASSERT(x) do { \
-	if(!(x)) crash("%s:%d: Assertion %s failed\n", \
+	if(!(x)) mdvi_crash("%s:%d: Assertion %s failed\n", \
 		__FILE__, __LINE__, #x); \
 	} while(0)
 #define ASSERT_VALUE(x,y) do { \
 	if((x) != (y)) \
-		crash("%s:%d: Assertion failed (%d = %s != %s)\n", \
+		mdvi_crash("%s:%d: Assertion failed (%d = %s != %s)\n", \
 		__FILE__, __LINE__, (x), #x, #x); \
 	} while(0)
 #else

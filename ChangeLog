@@ -1,5 +1,26 @@
 2008-09-28  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/dvi/mdvi-lib/common.h:
+	* backend/dvi/mdvi-lib/dviread.c:
+	* backend/dvi/mdvi-lib/font.c:
+	* backend/dvi/mdvi-lib/fontmap.c:
+	* backend/dvi/mdvi-lib/fontsrch.c:
+	* backend/dvi/mdvi-lib/gf.c:
+	* backend/dvi/mdvi-lib/pagesel.c:
+	* backend/dvi/mdvi-lib/pk.c:
+	* backend/dvi/mdvi-lib/sp-epsf.c:
+	* backend/dvi/mdvi-lib/special.c:
+	* backend/dvi/mdvi-lib/tfm.c:
+	* backend/dvi/mdvi-lib/tfmfile.c:
+	* backend/dvi/mdvi-lib/util.c:
+	* backend/dvi/mdvi-lib/vf.c:
+
+	Rename error as mdvi_error to avoid symbol conflicts with the libc
+	error. Rename also message, crash, fatal and warning for
+	consistency. Fixes bug #553369.
+	
+2008-09-28  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/dvi/dvi-document.c: (dvi_document_load):
 
 	Fix memory leak.

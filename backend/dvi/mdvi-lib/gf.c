@@ -110,8 +110,8 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 		min_m = max_m - min_m;
 		min_n = max_n - min_n;
 	} else {
-		error(_("GF: invalid opcode %d in character %d\n"),
-			op, ch->code);
+		mdvi_error(_("GF: invalid opcode %d in character %d\n"),
+			   op, ch->code);
 		return -1;
 	}
 
@@ -208,8 +208,8 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 				DEBUG((DBG_BITMAPS, "(gf) no_op\n"));
 				break;
 			default:
-				error(_("(gf) Character %d: invalid opcode %d\n"),
-					ch->code, op);
+				mdvi_error(_("(gf) Character %d: invalid opcode %d\n"),
+					   ch->code, op);
 				goto error;
 		}
 		/* chech that we're still inside the bitmap */
@@ -224,8 +224,8 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 	return 0;
 
 toobig:
-	error(_("(gf) character %d has an incorrect bounding box\n"),
-		ch->code);
+	mdvi_error(_("(gf) character %d has an incorrect bounding box\n"),
+		   ch->code);
 error:
 	bitmap_destroy(map);
 	ch->glyph.data = NULL;
@@ -287,8 +287,8 @@ static int gf_load_font(DviParams *unused, DviFont *font)
 	/* the checksum */
 	word = fuget4(p);
 	if(word && font->checksum && font->checksum != word) {
-		warning(_("%s: bad checksum (expected %u, found %u)\n"),
-			font->fontname, font->checksum, word);
+		mdvi_warning(_("%s: bad checksum (expected %u, found %u)\n"),
+			     font->fontname, font->checksum, word);
 	} else if(!font->checksum)
 		font->checksum = word;
 	/* skip pixels per point ratio */
@@ -323,7 +323,7 @@ static int gf_load_font(DviParams *unused, DviFont *font)
 			           /* dy assumed 0 */
 			break;
 		default:
-			error(_("%s: junk in postamble\n"), font->fontname);
+			mdvi_error(_("%s: junk in postamble\n"), font->fontname);
 			goto error;
 		}
 		ch->code = cc;
@@ -360,7 +360,7 @@ static int gf_load_font(DviParams *unused, DviFont *font)
 	return 0;
 
 badgf:
-	error(_("%s: File corrupted, or not a GF file\n"), font->fontname);
+	mdvi_error(_("%s: File corrupted, or not a GF file\n"), font->fontname);
 error:
 	if(font->chars) {
 		mdvi_free(font->chars);

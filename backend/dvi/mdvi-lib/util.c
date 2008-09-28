@@ -115,7 +115,7 @@ void	__debug(int mask, const char *format, ...)
 }
 #endif
 
-void	message(const char *format, ...)
+void	mdvi_message(const char *format, ...)
 {
 	va_list	ap;
 	
@@ -132,7 +132,7 @@ void	message(const char *format, ...)
 	va_end(ap);
 }
 
-void	crash(const char *format, ...)
+void	mdvi_crash(const char *format, ...)
 {
 	va_list ap;
 	
@@ -151,7 +151,7 @@ void	crash(const char *format, ...)
 	abort();
 }
 
-void	error(const char *format, ...)
+void	mdvi_error(const char *format, ...)
 {
 	va_list	ap;
 	
@@ -167,7 +167,7 @@ void	error(const char *format, ...)
 	va_end(ap);
 }
 
-void	warning(const char *format, ...)
+void	mdvi_warning(const char *format, ...)
 {
 	va_list	ap;
 	
@@ -183,7 +183,7 @@ void	warning(const char *format, ...)
 	va_end(ap);
 }
 
-void	fatal(const char *format, ...)
+void	mdvi_fatal(const char *format, ...)
 {
 	va_list	ap;
 	
@@ -209,8 +209,8 @@ void	*mdvi_malloc(size_t nelems)
 	void	*ptr = malloc(nelems);
 	
 	if(ptr == NULL)
-		fatal(_("out of memory allocating %u bytes\n"),
-			(unsigned)nelems);
+		mdvi_fatal(_("out of memory allocating %u bytes\n"),
+			   (unsigned)nelems);
 	return ptr;
 }
 
@@ -219,10 +219,10 @@ void	*mdvi_realloc(void *data, size_t newsize)
 	void	*ptr;
 	
 	if(newsize == 0)
-		crash(_("attempted to reallocate with zero size\n"));
+		mdvi_crash(_("attempted to reallocate with zero size\n"));
 	ptr = realloc(data, newsize);
 	if(ptr == NULL)
-		fatal(_("failed to reallocate %u bytes\n"), (unsigned)newsize);
+		mdvi_fatal(_("failed to reallocate %u bytes\n"), (unsigned)newsize);
 	return ptr;	
 }
 
@@ -231,21 +231,21 @@ void	*mdvi_calloc(size_t nmemb, size_t size)
 	void	*ptr;
 	
 	if(nmemb == 0)
-		crash(_("attempted to callocate 0 members\n"));
+		mdvi_crash(_("attempted to callocate 0 members\n"));
 	if(size == 0)
-		crash(_("attempted to callocate %u members with size 0\n"),
+		mdvi_crash(_("attempted to callocate %u members with size 0\n"),
 			(unsigned)nmemb);
 	ptr = calloc(nmemb, size);
 	if(ptr == 0)
-		fatal(_("failed to allocate %ux%u bytes\n"),
-			(unsigned)nmemb, (unsigned)size);
+		mdvi_fatal(_("failed to allocate %ux%u bytes\n"),
+			   (unsigned)nmemb, (unsigned)size);
 	return ptr;
 }
 
 void	mdvi_free(void *ptr)
 {
 	if(ptr == NULL)
-		crash(_("attempted to free NULL pointer\n"));
+		mdvi_crash(_("attempted to free NULL pointer\n"));
 	free(ptr);
 }
 

@@ -88,7 +88,7 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 	fclose(in);
 
 	if(status != ok) {
-		error(_("%s: Error reading AFM data\n"), filename);
+		mdvi_error(_("%s: Error reading AFM data\n"), filename);
 		return -1;
 	}
 	
@@ -178,8 +178,8 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	/* allocate a word-aligned buffer to hold the file */
 	size = 4 * ROUND(st.st_size, 4);
 	if(size != st.st_size)
-		warning(_("Warning: TFM file `%s' has suspicious size\n"), 
-			filename);
+		mdvi_warning(_("Warning: TFM file `%s' has suspicious size\n"), 
+			     filename);
 	tfm = (Uchar *)mdvi_malloc(size);
 	if(fread(tfm, st.st_size, 1, in) != 1)
 		goto error;
@@ -228,8 +228,8 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 		/* get the coding scheme */
 		i = n = msget1(ptr);
 		if(n < 0 || n > 39) {
-			warning(_("%s: font coding scheme truncated to 40 bytes\n"),
-				filename);
+			mdvi_warning(_("%s: font coding scheme truncated to 40 bytes\n"),
+				     filename);
 			n = 39;
 		}
 		memcpy(info->coding, ptr, n);
@@ -288,7 +288,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	return 0;
 
 bad_tfm:
-	error(_("%s: File corrupted, or not a TFM file\n"), filename);
+	mdvi_error(_("%s: File corrupted, or not a TFM file\n"), filename);
 error:
 	if(tfm) mdvi_free(tfm);
 	if(in)  fclose(in);
@@ -509,8 +509,8 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		/* get the coding scheme */
 		i = n = fsget1(in);
 		if(n < 0 || n > 39) {
-			warning(_("%s: font coding scheme truncated to 40 bytes\n"),
-				filename);
+			mdvi_warning(_("%s: font coding scheme truncated to 40 bytes\n"),
+				     filename);
 			n = 39;
 		}
 		fread(info->coding, 39, 1, in);
@@ -587,7 +587,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	return 0;
 
 bad_tfm:
-	error(_("%s: File corrupted, or not a TFM file\n"), filename);
+	mdvi_error(_("%s: File corrupted, or not a TFM file\n"), filename);
 	fclose(in);
 	return -1;	
 }

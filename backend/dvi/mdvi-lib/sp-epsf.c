@@ -149,7 +149,7 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 				while(*p && *p != '"')
 					p++;
 				if(*p != '"')
-					warning(
+					mdvi_warning(
 					_("%s: malformed value for key `%s'\n"),
 						filename, keyname);
 			} else
@@ -161,17 +161,17 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 			if(STRCEQ(keys[i].name, keyname))
 				break;
 		if(i == NKEYS) {
-			warning(_("%s: unknown key `%s' ignored\n"),
-				filename, keyname);
+			mdvi_warning(_("%s: unknown key `%s' ignored\n"),
+				     filename, keyname);
 			continue;
 		}
 		if(keys[i].has_arg && val == NULL) {
-			warning(_("%s: no argument for key `%s', using defaults\n"),
-				filename, keyname);
+			mdvi_warning(_("%s: no argument for key `%s', using defaults\n"),
+				     filename, keyname);
 			val = keys[i].value;
 		} else if(!keys[i].has_arg && val) {
-			warning(_("%s: argument `%s' ignored for key `%s'\n"),
-				filename, val, keyname);
+			mdvi_warning(_("%s: argument `%s' ignored for key `%s'\n"),
+				     filename, val, keyname);
 			val = NULL;
 		}
 		if(val)

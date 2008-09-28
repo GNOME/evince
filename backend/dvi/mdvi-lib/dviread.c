@@ -238,7 +238,7 @@ static int get_bytes(DviContext *dvi, size_t n)
 		newlen = fread(dvi->buffer.data + dvi->buffer.length,
 			1, dvi->buffer.size - dvi->buffer.length, dvi->in);
 		if(newlen == -1) {
-			error("%s: %s\n", dvi->filename, strerror(errno));
+			mdvi_error("%s: %s\n", dvi->filename, strerror(errno));
 			return -1;
 		}
 		dvi->buffer.length += newlen;
@@ -427,7 +427,7 @@ static DviFontRef *define_font(DviContext *dvi, int op)
 		hdpi, vdpi));
 	ref = font_reference(&dvi->params, arg, name, checksum, hdpi, vdpi, scale);
 	if(ref == NULL) {
-		error(_("could not load font `%s'\n"), name);
+		mdvi_error(_("could not load font `%s'\n"), name);
 		mdvi_free(name);
 		return NULL;
 	}
@@ -481,7 +481,7 @@ int	mdvi_reload(DviContext *dvi, DviParams *np)
 	/* load it again */
 	newdvi = mdvi_init_context(pars, dvi->pagesel, dvi->filename);
 	if(newdvi == NULL) {
-		warning(_("could not reload `%s'\n"), dvi->filename);
+		mdvi_warning(_("could not reload `%s'\n"), dvi->filename);
 		return -1;
 	}
 
@@ -708,8 +708,8 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	if(fuget1(p) != DVI_PRE)
 		goto bad_dvi;
 	if((arg = fuget1(p)) != DVI_ID) {
-		error(_("%s: unsupported DVI format (version %u)\n"),
-			file, arg);
+		mdvi_error(_("%s: unsupported DVI format (version %u)\n"),
+			   file, arg);
 		goto error; /* jump to the end of this routine, 
 			     * where we handle errors */
 	}
@@ -868,7 +868,7 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	}
 	pagecount++;
 	if(pagecount >= dvi->npages) {
-		error(_("no pages selected\n"));
+		mdvi_error(_("no pages selected\n"));
 		goto error;
 	}
 	if(pagecount) {
@@ -901,7 +901,7 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 	return dvi;
 
 bad_dvi:
-	error(_("%s: File corrupted, or not a DVI file\n"), file);
+	mdvi_error(_("%s: File corrupted, or not a DVI file\n"), file);
 error:
 	/* if we came from the font definitions, this will be non-trivial */
 	dreset(dvi);
@@ -1010,9 +1010,9 @@ again:
 		/* try reopening the file */
 		dvi->in = fopen(dvi->filename, "r");
 		if(dvi->in == NULL) {
-			warning(_("%s: could not reopen file (%s)\n"),
-				dvi->filename,
-				strerror(errno));
+			mdvi_warning(_("%s: could not reopen file (%s)\n"),
+				     dvi->filename,
+				     strerror(errno));
 			return -1;
 		}
 		DEBUG((DBG_FILES, "reopen(%s) -> Ok\n", dvi->filename));
@@ -1027,15 +1027,15 @@ again:
 	}
 	
 	if(pageno < 0 || pageno > dvi->npages-1) {
-		error(_("%s: page %d out of range\n"),
-			dvi->filename, pageno);
+		mdvi_error(_("%s: page %d out of range\n"),
+			   dvi->filename, pageno);
 		return -1;
 	}
 	
 	fseek(dvi->in, (long)dvi->pagemap[pageno][0], SEEK_SET);
 	if((op = fuget1(dvi->in)) != DVI_BOP) {
-		error(_("%s: bad offset at page %d\n"),
-			dvi->filename, pageno+1);
+		mdvi_error(_("%s: bad offset at page %d\n"),
+			   dvi->filename, pageno+1);
 		return -1;
 	}
 	

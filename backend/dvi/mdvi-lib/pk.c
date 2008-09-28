@@ -307,7 +307,7 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 		paint = !paint;
 	}
 	if(row != h || inrow != w) {
-		error(_("Bad PK file: More bits than required\n"));
+		mdvi_error(_("Bad PK file: More bits than required\n"));
 		bitmap_destroy(bm);
 		return NULL;
 	}
@@ -360,8 +360,8 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 	/* get the checksum */
 	checksum = fuget4(p);
 	if(checksum && font->checksum && font->checksum != checksum) {
-		warning(_("%s: checksum mismatch (expected %u, got %u)\n"),
-			font->fontname, font->checksum, checksum);
+		mdvi_warning(_("%s: checksum mismatch (expected %u, got %u)\n"),
+			     font->fontname, font->checksum, checksum);
 	} else if(!font->checksum)
 		font->checksum = checksum;
 	/* skip pixel per point ratios */
@@ -417,7 +417,7 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 			case PK_NOOP:
 				break;
 			case PK_PRE:
-				error(_("%s: unexpected preamble\n"), font->fontname);
+				mdvi_error(_("%s: unexpected preamble\n"), font->fontname);
 				goto error;
 			}
 		} else {
@@ -500,13 +500,13 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 		}
 	}
 	if(flag_byte != PK_POST) {
-		error(_("%s: unexpected end of file (no postamble)\n"),
-			font->fontname);
+		mdvi_error(_("%s: unexpected end of file (no postamble)\n"),
+			   font->fontname);
 		goto error;
 	}
 	while((flag_byte = fuget1(p)) != EOF) {
 		if(flag_byte != PK_NOOP) {
-			error(_("invalid PK file! (junk in postamble)\n"));
+			mdvi_error(_("invalid PK file! (junk in postamble)\n"));
 			goto error;
 		}
 	}
@@ -523,7 +523,7 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 	return 0;
 
 badpk:
-	error(_("%s: File corrupted, or not a PK file\n"), font->fontname);
+	mdvi_error(_("%s: File corrupted, or not a PK file\n"), font->fontname);
 error:
 	mdvi_free(font->chars);
 	font->chars = NULL;

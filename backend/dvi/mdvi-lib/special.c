@@ -240,8 +240,8 @@ void	sp_layer(DviContext *dvi, const char *prefix, const char *arg)
 		if(dvi->curr_layer)
 			dvi->curr_layer--;
 		else
-			warning(_("%s: tried to pop top level layer\n"),
-				dvi->filename);
+			mdvi_warning(_("%s: tried to pop top level layer\n"),
+				     dvi->filename);
 	} else if(STREQ("reset", arg))
 		dvi->curr_layer = 0;
 	DEBUG((DBG_SPECIAL, "Layer level: %d\n", dvi->curr_layer));

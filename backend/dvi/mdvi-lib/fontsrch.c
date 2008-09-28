@@ -255,8 +255,8 @@ again:
 	}
 
 	if(kid < MAX_CLASS - 1 && !STREQ(name, _mdvi_fallback_font)) {
-		warning("font `%s' at %dx%d not found, trying `%s' instead\n",
-			name, hdpi, vdpi, _mdvi_fallback_font);
+		mdvi_warning("font `%s' at %dx%d not found, trying `%s' instead\n",
+			     name, hdpi, vdpi, _mdvi_fallback_font);
 		name = _mdvi_fallback_font;
 		kid = 0;
 		goto again;
@@ -275,8 +275,8 @@ again:
 		}
 		ptr = last->next;
 	} else {
-		warning("font `%s' not found, trying metric files instead\n",
-			name);
+		mdvi_warning("font `%s' not found, trying metric files instead\n",
+			     name);
 		ptr = (DviFontClass *)font_classes[MAX_CLASS-1].head;
 	}
 
@@ -303,8 +303,8 @@ metrics:
 		return filename;
 	}
 	if(!STREQ(name, _mdvi_fallback_font)) {
-		warning("metric file for `%s' not found, trying `%s' instead\n",
-			name, _mdvi_fallback_font);
+		mdvi_warning("metric file for `%s' not found, trying `%s' instead\n",
+			     name, _mdvi_fallback_font);
 		name = _mdvi_fallback_font;
 		ptr = (DviFontClass *)font_classes[MAX_CLASS-1].head;
 		goto metrics;

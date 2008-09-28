@@ -469,7 +469,7 @@ void	font_finish_definitions(DviContext *dvi)
 	font_free_unused(&dvi->device);
 
 	if(dvi->fonts == NULL) {
-		warning(_("%s: no fonts defined\n"), dvi->filename);
+		mdvi_warning(_("%s: no fonts defined\n"), dvi->filename);
 		return;
 	}
 	map = xnalloc(DviFontRef *, dvi->nfonts);

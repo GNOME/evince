@@ -175,9 +175,9 @@ static int tfm_load_font(DviParams *params, DviFont *font)
 		return -1;
 			
 	if(tfm->checksum && font->checksum && tfm->checksum != font->checksum) {
-		warning(_("%s: Checksum mismatch (got %u, expected %u)\n"),
-			font->fontname, (unsigned)tfm->checksum, 
-			(unsigned)font->checksum);
+		mdvi_warning(_("%s: Checksum mismatch (got %u, expected %u)\n"),
+			     font->fontname, (unsigned)tfm->checksum, 
+			     (unsigned)font->checksum);
 	}
 	font->checksum = tfm->checksum;
 	font->design = tfm->design;

@@ -79,8 +79,8 @@ static int vf_load_font(DviParams *params, DviFont *font)
 	fseek(p, (long)mlen, SEEK_CUR);
 	checksum = fuget4(p);
 	if(checksum && font->checksum && checksum != font->checksum) {
-		warning(_("%s: Checksum mismatch (expected %u, got %u)\n"),
-			font->fontname, font->checksum, checksum);
+		mdvi_warning(_("%s: Checksum mismatch (expected %u, got %u)\n"),
+			     font->fontname, font->checksum, checksum);
 	} else if(!font->checksum)
 		font->checksum = checksum;
 	font->design = fuget4(p);
@@ -127,8 +127,8 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		/* get the font */
 		ref = font_reference(params, id, name, checksum, hdpi, vdpi, scale);
 		if(ref == NULL) {
-			error(_("(vf) %s: could not load font `%s'\n"), 
-				font->fontname, name);
+			mdvi_error(_("(vf) %s: could not load font `%s'\n"), 
+				   font->fontname, name);
 			goto error;
 		}
 		mdvi_free(name);
@@ -177,8 +177,8 @@ static int vf_load_font(DviParams *params, DviFont *font)
 			nchars = cc + 16;
 		}
 		if(font->chars[cc].offset) {
-			error(_("(vf) %s: character %d redefined\n"),
-				font->fontname, cc);
+			mdvi_error(_("(vf) %s: character %d redefined\n"),
+				   font->fontname, cc);
 			goto error;
 		}
 				
@@ -200,7 +200,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		op = fuget1(p);
 	}
 	if(op != 248) {
-		error(_("(vf) %s: no postamble\n"), font->fontname);
+		mdvi_error(_("(vf) %s: no postamble\n"), font->fontname);
 		goto error;
 	}
 
@@ -226,7 +226,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 	return 0;
 	
 badvf:
-	error(_("%s: File corrupted, or not a VF file.\n"), font->fontname);
+	mdvi_error(_("%s: File corrupted, or not a VF file.\n"), font->fontname);
 error:
 	if(font->chars)
 		mdvi_free(font->chars);

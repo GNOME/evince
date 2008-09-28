@@ -586,7 +586,7 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 		}
 		if(ent->encfile && enc){ 		
 			if(ent->encoding && !STREQ(ent->encoding, enc->name)) {
-				warning(
+				mdvi_warning(
 	_("%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"),
 					file, lineno, ent->encfile,
 					ent->encoding, enc->name);
@@ -749,7 +749,7 @@ static int	mdvi_init_fontmaps(void)
 			DEBUG((DBG_FMAP, "%s: loading fontmap\n", arg));
 			ent = mdvi_load_fontmap(arg);
 			if(ent == NULL)
-				warning(_("%s: could not load fontmap\n"), arg);
+				mdvi_warning(_("%s: could not load fontmap\n"), arg);
 			else {
 				DEBUG((DBG_FMAP, 
 					"%s: installing fontmap\n", arg));
@@ -763,8 +763,8 @@ static int	mdvi_init_fontmaps(void)
 		} else if(STRNEQ(line, "default-encoding", 16)) {
 			arg = getstring(line + 16, " \t", &line); *line = 0;
 			if(mdvi_set_default_encoding(arg) < 0)
-				warning(_("%s: could not set as default encoding\n"),
-					arg);
+				mdvi_warning(_("%s: could not set as default encoding\n"),
+					     arg);
 		} else if(STRNEQ(line, "psfontpath", 10)) {
 			arg = getstring(line + 11, " \t", &line); *line = 0;
 			if(!psinitialized)
@@ -782,8 +782,8 @@ static int	mdvi_init_fontmaps(void)
 		} else if(STRNEQ(line, "psfontmap", 9)) {
 			arg = getstring(line + 9, " \t", &line); *line = 0;
 			if(mdvi_ps_read_fontmap(arg) < 0)
-				warning("%s: %s: could not read PS fontmap\n",
-					config, arg);
+				mdvi_warning("%s: %s: could not read PS fontmap\n",
+					     config, arg);
 		}
 	}
 	fclose(in);
@@ -842,8 +842,8 @@ void	mdvi_flush_encodings(void)
 	for(; (enc = (DviEncoding *)encodings.head); ) {
 		encodings.head = LIST(enc->next);
 		if((enc != tex_text_encoding && enc->links) || enc->links > 1) {
-			warning(_("encoding vector `%s' is in use\n"),
-				enc->name);
+			mdvi_warning(_("encoding vector `%s' is in use\n"),
+				     enc->name);
 		}
 		destroy_encoding(enc);
 	}

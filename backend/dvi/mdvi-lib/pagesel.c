@@ -209,7 +209,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 		range = mdvi_parse_range(format, NULL, &count, &ptr);
 		if(ptr == format) {
 			if(range) mdvi_free(range);
-			error(_("invalid page specification `%s'\n"), format);
+			mdvi_error(_("invalid page specification `%s'\n"), format);
 			return NULL;
 		}
 	} else
@@ -229,7 +229,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 	
 	if(*ptr != '.') {
 		if(*ptr)
-			warning(_("garbage after DVI page specification ignored\n"));
+			mdvi_warning(_("garbage after DVI page specification ignored\n"));
 		return spec;
 	}
 	
@@ -257,9 +257,9 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 	}
 	
 	if(i > 10)
-		warning(_("more than 10 counters in page specification\n"));
+		mdvi_warning(_("more than 10 counters in page specification\n"));
 	else if(*ptr)
-		warning(_("garbage after TeX page specification ignored\n"));
+		mdvi_warning(_("garbage after TeX page specification ignored\n"));
 	
 	return spec;	
 }
