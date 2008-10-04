@@ -4836,6 +4836,7 @@ launch_action (EvWindow *window, EvLinkAction *action)
 	GAppInfo *app_info;
 	GFile *file;
 	GList file_list = {NULL};
+	GAppLaunchContext *context = NULL;
 	GError *error = NULL;
 
 	if (filename == NULL)
@@ -4863,11 +4864,16 @@ launch_action (EvWindow *window, EvLinkAction *action)
 
 		return;
 	}
+
+#if GTK_CHECK_VERSION (2, 14, 0)
+	context = G_APP_LAUNCH_CONTEXT (gdk_app_launch_context_new ());
+	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context),
+					   gtk_window_get_screen (GTK_WINDOW (window)));
+	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context), GDK_CURRENT_TIME);
+#endif
 	
 	file_list.data = file;
-
-	/* FIXME: should we use a GAppLaunchContext? */
-	if (!g_app_info_launch (app_info, &file_list, NULL, &error)) {
+	if (!g_app_info_launch (app_info, &file_list, context, &error)) {
 		/* FIXME: use ev_window_error_message */
 		g_warning ("%s", error->message);
 		g_error_free (error);
