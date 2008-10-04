@@ -1,3 +1,10 @@
+2008-10-04  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (launch_action):
+
+	Fix launching external applications for launch actions which seems
+	to be broken since the gio port. Fixes bug #554500.
+	
 2008-09-28  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/dvi/Makefile.am:

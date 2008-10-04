@@ -4833,12 +4833,11 @@ static void
 launch_action (EvWindow *window, EvLinkAction *action)
 {
 	const char *filename = ev_link_action_get_filename (action);
-	const char *content_type;
 	GAppInfo *app_info;
-	GFileInfo *file_info;
 	GFile *file;
-	GList *file_list = NULL;
-	
+	GList file_list = {NULL};
+	GError *error = NULL;
+
 	if (filename == NULL)
 		return;
 
@@ -4846,34 +4845,35 @@ launch_action (EvWindow *window, EvLinkAction *action)
 		file = g_file_new_for_path (filename);
 	} else {
 		GFile *base_file;
+		gchar *dir;
+
+		dir = g_path_get_dirname (window->priv->uri);
+		base_file = g_file_new_for_uri (dir);
+		g_free (dir);
 		
-		base_file = g_file_new_for_uri (window->priv->uri);
-		file = g_file_resolve_relative_path (base_file,
-						     filename);
-		
+		file = g_file_resolve_relative_path (base_file, filename);
 		g_object_unref (base_file);
 	}
-	
-	file_info = g_file_query_info (file,
-				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-				       0, NULL, NULL);
-	if (file_info == NULL) {
+
+	app_info = g_file_query_default_handler (file, NULL, &error);
+	if (!app_info) {
+		/* FIXME: use ev_window_error_message */
+		g_warning ("%s", error->message);
 		g_object_unref (file);
+
 		return;
 	}
 	
-	content_type = g_file_info_get_content_type (file_info);
-	app_info = g_app_info_get_default_for_type (content_type, TRUE);
-	
-	file_list = g_list_append (file_list, file);
+	file_list.data = file;
 
 	/* FIXME: should we use a GAppLaunchContext? */
-	g_app_info_launch (app_info, file_list,
-			   NULL, NULL);
+	if (!g_app_info_launch (app_info, &file_list, NULL, &error)) {
+		/* FIXME: use ev_window_error_message */
+		g_warning ("%s", error->message);
+		g_error_free (error);
+	}
 	
-	g_list_free (file_list);
 	g_object_unref (app_info);
-	g_object_unref (file_info);
 	g_object_unref (file);
 
 	/* According to the PDF spec filename can be an executable. I'm not sure
