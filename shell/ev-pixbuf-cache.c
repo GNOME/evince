@@ -502,6 +502,7 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		      EvPixbufCache *pixbuf_cache)
 {
 	if (!job_info->page_ready) {
+		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 		copy_job_page_and_selection_to_job_info (job_render,
 							 job_info,
 							 pixbuf_cache);
