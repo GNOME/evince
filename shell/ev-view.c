@@ -5390,6 +5390,7 @@ merge_selection_region (EvView *view,
 	/* Update the selection */
 	old_list = ev_pixbuf_cache_get_selection_list (view->pixbuf_cache);
 	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
+	g_list_free (view->selection_info.selections);
 	view->selection_info.selections = new_list;
 	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, new_list);
 	g_object_notify (G_OBJECT (view), "has-selection");
@@ -5498,6 +5499,7 @@ merge_selection_region (EvView *view,
 
 	/* Free the old list, now that we're done with it. */
 	g_list_foreach (old_list, (GFunc) selection_free, NULL);
+	g_list_free (old_list);
 }
 
 static void
@@ -5529,6 +5531,7 @@ static void
 clear_selection (EvView *view)
 {
 	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
+	g_list_free (view->selection_info.selections);
 	view->selection_info.selections = NULL;
 	view->selection_info.in_selection = FALSE;
 	if (view->pixbuf_cache)
