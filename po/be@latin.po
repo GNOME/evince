@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-16 23:58+0200\n"
+"POT-Creation-Date: 2008-10-11 12:08+0300\n"
 "PO-Revision-Date: 2008-02-17 00:00+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <http://be-latin.open-tran.eu>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: ../backend/comics/comics-document.c:163
+#: ../backend/comics/comics-document.c:169
 msgid "File corrupted."
 msgstr "Fajł sapsavany."
 
-#: ../backend/comics/comics-document.c:197
+#: ../backend/comics/comics-document.c:203
 #, c-format
 msgid "No images found in archive %s"
 msgstr "U archivie %s nia znojdziena vyjavaŭ"
@@ -30,7 +30,7 @@ msgstr "U archivie %s nia znojdziena vyjavaŭ"
 msgid "Comic Books"
 msgstr "Knihi komiksaŭ"
 
-#: ../backend/djvu/djvu-document.c:167
+#: ../backend/djvu/djvu-document.c:247
 msgid ""
 "The document is composed by several files. One or more of such files cannot "
 "be accessed."
@@ -41,11 +41,11 @@ msgstr ""
 msgid "Djvu Documents"
 msgstr "Dakumenty Djvu"
 
-#: ../backend/dvi/dvi-document.c:98
+#: ../backend/dvi/dvi-document.c:96
 msgid "File not available"
 msgstr "Fajł niedastupny"
 
-#: ../backend/dvi/dvi-document.c:113
+#: ../backend/dvi/dvi-document.c:112
 msgid "DVI document has incorrect format"
 msgstr "Dakument DVI maje niapravilny farmat"
 
@@ -54,60 +54,60 @@ msgid "DVI Documents"
 msgstr "Dakumenty DVI"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:674
+#: ../backend/pdf/ev-poppler.cc:688
 msgid "Yes"
 msgstr "Tak"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:677
+#: ../backend/pdf/ev-poppler.cc:691
 msgid "No"
 msgstr "Nie"
 
-#: ../backend/pdf/ev-poppler.cc:750
+#: ../backend/pdf/ev-poppler.cc:765
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:752
+#: ../backend/pdf/ev-poppler.cc:767
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:754
+#: ../backend/pdf/ev-poppler.cc:769
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:756
+#: ../backend/pdf/ev-poppler.cc:771
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:758
+#: ../backend/pdf/ev-poppler.cc:773
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:760
+#: ../backend/pdf/ev-poppler.cc:775
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:762
+#: ../backend/pdf/ev-poppler.cc:777
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:764
+#: ../backend/pdf/ev-poppler.cc:779
 msgid "Unknown font type"
 msgstr "Nieviadomy typ šryftu"
 
-#: ../backend/pdf/ev-poppler.cc:790
+#: ../backend/pdf/ev-poppler.cc:805
 msgid "No name"
 msgstr "Biaz nazvy"
 
-#: ../backend/pdf/ev-poppler.cc:798
+#: ../backend/pdf/ev-poppler.cc:813
 msgid "Embedded subset"
 msgstr "Ubudavanaje padmnostva"
 
-#: ../backend/pdf/ev-poppler.cc:800
+#: ../backend/pdf/ev-poppler.cc:815
 msgid "Embedded"
 msgstr "Ubudavana"
 
-#: ../backend/pdf/ev-poppler.cc:802
+#: ../backend/pdf/ev-poppler.cc:817
 msgid "Not embedded"
 msgstr "Nie ŭbudavana"
 
@@ -115,11 +115,11 @@ msgstr "Nie ŭbudavana"
 msgid "PDF Documents"
 msgstr "Dakumenty PDF"
 
-#: ../backend/impress/impress-document.c:296
+#: ../backend/impress/impress-document.c:297
 msgid "Remote files aren't supported"
 msgstr "Addalenyja fajły nie padtrymvajucca"
 
-#: ../backend/impress/impress-document.c:307
+#: ../backend/impress/impress-document.c:308
 msgid "Invalid document"
 msgstr "Niapravilny dakument"
 
@@ -166,7 +166,7 @@ msgstr "Niemahčyma znajści fajł u zip-archivie"
 msgid "Unknown error"
 msgstr "Nieviadomaja pamyłka"
 
-#: ../backend/ps/ev-spectre.c:113 ../backend/ps/ps-document.c:248
+#: ../backend/ps/ev-spectre.c:113
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr "Padčas adčynieńnia dakumentu “%s” adbyłasia pamyłka"
@@ -176,139 +176,139 @@ msgstr "Padčas adčynieńnia dakumentu “%s” adbyłasia pamyłka"
 msgid "Failed to save document “%s”"
 msgstr "Nie ŭdałosia zapisać dakument “%s”"
 
-#: ../backend/ps/gsdefaults.c:30
-msgid "BBox"
-msgstr "BBox"
-
-#: ../backend/ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "List"
-
-#: ../backend/ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr "Tabloid"
-
-#: ../backend/ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr "Rehistracyjny žurnał"
-
-#: ../backend/ps/gsdefaults.c:34
-msgid "Legal"
-msgstr "Lehalny"
-
-#: ../backend/ps/gsdefaults.c:35
-msgid "Statement"
-msgstr "Zajava"
-
-#: ../backend/ps/gsdefaults.c:36
-msgid "Executive"
-msgstr "Administracyjny"
-
-#: ../backend/ps/gsdefaults.c:37
-msgid "A0"
-msgstr "A0"
-
-#: ../backend/ps/gsdefaults.c:38
-msgid "A1"
-msgstr "A1"
-
-#: ../backend/ps/gsdefaults.c:39
-msgid "A2"
-msgstr "A2"
-
-#: ../backend/ps/gsdefaults.c:40
-msgid "A3"
-msgstr "A3"
-
-#: ../backend/ps/gsdefaults.c:41
-msgid "A4"
-msgstr "A4"
-
-#: ../backend/ps/gsdefaults.c:42
-msgid "A5"
-msgstr "A5"
-
-#: ../backend/ps/gsdefaults.c:43
-msgid "B4"
-msgstr "B4"
-
-#: ../backend/ps/gsdefaults.c:44
-msgid "B5"
-msgstr "B5"
-
-#: ../backend/ps/gsdefaults.c:45
-msgid "Folio"
-msgstr "Folio"
-
-#: ../backend/ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr "Quarto"
-
-#: ../backend/ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "10x14"
-
-#: ../backend/ps/ps-document.c:170 ../backend/ps/ps-document.c:184
-#, c-format
-msgid "Cannot open file “%s”."
-msgstr "Niemahčyma adčynić fajł “%s”."
-
-#: ../backend/ps/ps-document.c:231
-#, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr ""
-"Padčas adčynieńnia dakumentu “%s” adbyłasia pamyłka. Interpretatar "
-"Ghostscript nia znojdzieny pa ściežkach pošuku"
-
-#: ../backend/ps/ps-document.c:431
-msgid "Encapsulated PostScript"
-msgstr "Unutrany PostScript"
-
-#: ../backend/ps/ps-document.c:432
-msgid "PostScript"
-msgstr "PostScript"
-
-#: ../backend/ps/ps-interpreter.c:543
-msgid "Interpreter failed."
-msgstr "Pamyłka interpretatara."
-
 #: ../backend/ps/psdocument.evince-backend.in.h:1
 msgid "PostScript Documents"
 msgstr "Dakumenty PostScript"
 
-#: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:324
+#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Niemahčyma zapisać dałučeńnie “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:360
+#: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Niemahčyma było adčynić dałučeńnie “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:393
+#: ../libdocument/ev-attachment.c:408
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Niemahčyma było adčynić dałučeńnie “%s”"
 
-#: ../libdocument/ev-document-factory.c:177
-#: ../libdocument/ev-document-factory.c:295
+#: ../libdocument/ev-document-factory.c:181
+#: ../libdocument/ev-document-factory.c:302
 msgid "Unknown MIME Type"
 msgstr "Nieviadomy typ MIME"
 
-#: ../libdocument/ev-document-factory.c:196
+#: ../libdocument/ev-document-factory.c:201
 #, c-format
-msgid "Unhandled MIME type: “%s”"
-msgstr "Nieapracavany typ MIME: “%s”"
+msgid "File type %s (%s) is not supported"
+msgstr "Typ fajłaŭ %s (%s) nie absłuhoŭvajecca"
 
-#: ../libdocument/ev-document-factory.c:350
+#: ../libdocument/ev-document-factory.c:357
 msgid "All Documents"
 msgstr "Usie dakumenty"
 
-#: ../libdocument/ev-document-factory.c:382
+#: ../libdocument/ev-document-factory.c:389
 msgid "All Files"
 msgstr "Usie fajły"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:439
+msgid "Co_nnect"
+msgstr "_Spałučy"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:483
+msgid "Connect _anonymously"
+msgstr "Spałučy _ananimna"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:492
+msgid "Connect as u_ser:"
+msgstr "Spałučy _karystalnika:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:529
+msgid "_Username:"
+msgstr "_Karystalnik:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
+msgid "_Domain:"
+msgstr "_Damen:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
+#: ../data/evince-password.glade.h:4
+msgid "_Password:"
+msgstr "_Parol:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:553
+msgid "_Forget password immediately"
+msgstr "_Adrazu zabudźsia pra parol"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
+msgid "_Remember password until you logout"
+msgstr "_Zapaminaj parol dla sesii"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
+msgid "_Remember forever"
+msgstr "_Zapaminaj nazaŭždy"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:139
+msgid "File is not a valid .desktop file"
+msgstr "Fajł nia jość sapraŭdnym fajłam stała (.desktop)"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:161
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Nieviadomaja versija fajła stała „%s”"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:872
+#, c-format
+msgid "Starting %s"
+msgstr "Uklučeńnie %s"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1006
+msgid "Application does not accept documents on command line"
+msgstr "Aplikacyja nie pryjmaje dakumentaŭ z zahadnaha radka"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1074
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Nieviadomaja opcyja ŭklučeńnia: %d"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1276
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr ""
+"Nie ŭdałosia pieradać adrasoŭ dakumentaŭ dla fajła stała z typam „Link”"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1295
+msgid "Not a launchable item"
+msgstr "Niemahčyma ŭklučać"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:185
+msgid "Disable connection to session manager"
+msgstr "Vyklučy spałučeńnie z kiraŭnikom sesijaŭ"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:188
+msgid "Specify file containing saved configuration"
+msgstr "Vyznačy fajł z zachavanymi naładami"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:188
+msgid "FILE"
+msgstr "FAJŁ"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:191
+msgid "Specify session management ID"
+msgstr "Vyznačy identyfikatar sesii"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:191
+msgid "ID"
+msgstr "ID"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:227
+msgid "Session Management Options"
+msgstr "Opcyi kiravańnia sesijaj"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:228
+msgid "Show Session Management options"
+msgstr "Pakažy opcyi kiravańnia sesijaj"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -355,7 +355,7 @@ msgid "Running in presentation mode"
 msgstr "Pracuje ŭ režymie prezentacyi"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4390
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4692
 msgid "Best Fit"
 msgstr "Najlepiej dapasuj"
 
@@ -403,7 +403,7 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3517
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3724
 #: ../shell/ev-window-title.c:132
 msgid "Document Viewer"
 msgstr "Ahladalnik dakumentaŭ"
@@ -423,10 +423,6 @@ msgstr "Zapomni parol dla hetaj sesii"
 #: ../data/evince-password.glade.h:3
 msgid "Save password in keyring"
 msgstr "Zachoŭvaj parol u klučnika"
-
-#: ../data/evince-password.glade.h:4
-msgid "_Password:"
-msgstr "_Parol:"
 
 #: ../data/evince-properties.glade.h:1
 msgid "<b>Author:</b>"
@@ -490,11 +486,11 @@ msgstr ""
 "Nie zvažaj na abmiežavańni dakumentu, napr., na abmiežavańni mahčymaści "
 "kapijavańnia albo druku."
 
-#: ../properties/ev-properties-main.c:111
+#: ../properties/ev-properties-main.c:114
 msgid "Document"
 msgstr "Dakument"
 
-#: ../properties/ev-properties-view.c:182
+#: ../properties/ev-properties-view.c:180
 msgid "None"
 msgstr "Niama"
 
@@ -504,7 +500,7 @@ msgstr "Niama"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:207
+#: ../properties/ev-properties-view.c:205
 #: ../properties/ev-properties-view.c:367
 msgid "default:mm"
 msgstr "default:mm"
@@ -543,72 +539,72 @@ msgstr "%s, haryzantalny (%s)"
 msgid "%.2f x %.2f in"
 msgstr "%.2f x %.2f calaŭ"
 
-#: ../shell/eggfindbar.c:158
+#: ../shell/eggfindbar.c:146
 msgid "Search string"
 msgstr "Radok pošuku"
 
-#: ../shell/eggfindbar.c:159
+#: ../shell/eggfindbar.c:147
 msgid "The name of the string to be found"
 msgstr "Nazva šukanaha radka"
 
-#: ../shell/eggfindbar.c:172
+#: ../shell/eggfindbar.c:160
 msgid "Case sensitive"
 msgstr "Z ulikam rehistru"
 
-#: ../shell/eggfindbar.c:173
+#: ../shell/eggfindbar.c:161
 msgid "TRUE for a case sensitive search"
 msgstr "PRAŬDA dla pošuku z ulikam rehistru"
 
-#: ../shell/eggfindbar.c:180
+#: ../shell/eggfindbar.c:168
 msgid "Highlight color"
 msgstr "Koler padśviatleńnia"
 
-#: ../shell/eggfindbar.c:181
+#: ../shell/eggfindbar.c:169
 msgid "Color of highlight for all matches"
 msgstr "Koler padśviatleńnia dla ŭsich supadzieńniaŭ"
 
-#: ../shell/eggfindbar.c:187
+#: ../shell/eggfindbar.c:175
 msgid "Current color"
 msgstr "Dziejny koler"
 
-#: ../shell/eggfindbar.c:188
+#: ../shell/eggfindbar.c:176
 msgid "Color of highlight for the current match"
 msgstr "Koler padścietki dla dziejnaha supadzieńnia"
 
-#: ../shell/eggfindbar.c:321
+#: ../shell/eggfindbar.c:320
 msgid "Find:"
 msgstr "Šukaj:"
 
-#: ../shell/eggfindbar.c:330
+#: ../shell/eggfindbar.c:329
 msgid "Find Previous"
 msgstr "Znajdzi raniej"
 
-#: ../shell/eggfindbar.c:334 ../shell/eggfindbar.c:337
+#: ../shell/eggfindbar.c:333 ../shell/eggfindbar.c:336
 msgid "Find previous occurrence of the search string"
 msgstr "Znajdzi papiaredniaje supadzieńnie z šukanym radkom"
 
-#: ../shell/eggfindbar.c:343
+#: ../shell/eggfindbar.c:342
 msgid "Find Next"
 msgstr "Znajdzi paźniej"
 
-#: ../shell/eggfindbar.c:347 ../shell/eggfindbar.c:350
+#: ../shell/eggfindbar.c:346 ../shell/eggfindbar.c:349
 msgid "Find next occurrence of the search string"
 msgstr "Znajdzi nastupnaje supadzieńnie z šukanym radkom"
 
-#: ../shell/eggfindbar.c:359
+#: ../shell/eggfindbar.c:358
 msgid "C_ase Sensitive"
 msgstr "_Z ulikam rehistru"
 
-#: ../shell/eggfindbar.c:363 ../shell/eggfindbar.c:366
+#: ../shell/eggfindbar.c:362 ../shell/eggfindbar.c:365
 msgid "Toggle case sensitive search"
 msgstr "Pieraklučy režym uliku rehistru"
 
-#: ../shell/ev-jobs.c:650
+#: ../shell/ev-jobs.c:962
 #, c-format
 msgid "Failed to create file “%s”: %s"
 msgstr "Pamyłka stvareńnia fajłu “%s”: %s"
 
-#: ../shell/ev-open-recent-action.c:71
+#: ../shell/ev-open-recent-action.c:73
 msgid "Open a recently used document"
 msgstr "Adčyni niadaŭni dakument"
 
@@ -645,55 +641,55 @@ msgstr "Parol dla dakumentu %s"
 msgid "Incorrect password"
 msgstr "Niapravilny parol"
 
-#: ../shell/ev-password-view.c:111
+#: ../shell/ev-password-view.c:112
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
 "Hety dakument začynieny, i jaho možna pračytać, tolki ŭvioŭšy pravilny parol."
 
-#: ../shell/ev-password-view.c:120
+#: ../shell/ev-password-view.c:121
 msgid "_Unlock Document"
 msgstr "_Adčyni dakument"
 
-#: ../shell/ev-properties-dialog.c:61
+#: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
 msgstr "Ułaścivaści"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:90
 msgid "General"
 msgstr "Ahulnaje"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:100
 msgid "Fonts"
 msgstr "Šryfty"
 
-#: ../shell/ev-properties-fonts.c:141
+#: ../shell/ev-properties-fonts.c:139
 msgid "Font"
 msgstr "Šryft"
 
-#: ../shell/ev-properties-fonts.c:152
+#: ../shell/ev-properties-fonts.c:150
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Źbirajucca źviestki ab šryftach... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:675
+#: ../shell/ev-sidebar-attachments.c:693
 msgid "Attachments"
 msgstr "Dałučeńni"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:3642
+#: ../shell/ev-sidebar-links.c:267 ../shell/ev-view.c:3644
 msgid "Loading..."
 msgstr "Zahruzka..."
 
-#: ../shell/ev-sidebar-links.c:339
+#: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
 msgstr "Druk..."
 
-#: ../shell/ev-sidebar-links.c:719
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "Indeks"
 
-#: ../shell/ev-sidebar-thumbnails.c:728
+#: ../shell/ev-sidebar-thumbnails.c:731
 msgid "Thumbnails"
 msgstr "Minijatury"
 
@@ -717,127 +713,115 @@ msgstr "Prakruci abšar ahladu nižej"
 msgid "Document View"
 msgstr "Ahlad dakumentu"
 
-#: ../shell/ev-view.c:1442
+#: ../shell/ev-view.c:1437
 msgid "Go to first page"
 msgstr "Idzi da pieršaj staronki"
 
-#: ../shell/ev-view.c:1444
+#: ../shell/ev-view.c:1439
 msgid "Go to previous page"
 msgstr "Idzi da papiaredniaj staronki"
 
-#: ../shell/ev-view.c:1446
+#: ../shell/ev-view.c:1441
 msgid "Go to next page"
 msgstr "Idzi da nastupnaj staronki"
 
-#: ../shell/ev-view.c:1448
+#: ../shell/ev-view.c:1443
 msgid "Go to last page"
 msgstr "Idzi da apošniaj staronki"
 
-#: ../shell/ev-view.c:1450
+#: ../shell/ev-view.c:1445
 msgid "Go to page"
 msgstr "Idzi da staronki"
 
-#: ../shell/ev-view.c:1452
+#: ../shell/ev-view.c:1447
 msgid "Find"
 msgstr "Šukaj"
 
-#: ../shell/ev-view.c:1480
+#: ../shell/ev-view.c:1475
 #, c-format
 msgid "Go to page %s"
 msgstr "Idzi da staronki %s"
 
-#: ../shell/ev-view.c:1486
+#: ../shell/ev-view.c:1481
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Idzi da %s z fajłu “%s”"
 
-#: ../shell/ev-view.c:1489
+#: ../shell/ev-view.c:1484
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Idzi da fajłu “%s”"
 
-#: ../shell/ev-view.c:1497
+#: ../shell/ev-view.c:1492
 #, c-format
 msgid "Launch %s"
 msgstr "Startuj %s"
 
-#: ../shell/ev-view.c:2448
+#: ../shell/ev-view.c:2444
 msgid "End of presentation. Press Escape to exit."
 msgstr "Kaniec prezentacyi. Naciśni Escape, kab vyjści."
 
-#: ../shell/ev-view.c:3371
+#: ../shell/ev-view.c:3374
 msgid "Jump to page:"
 msgstr "Skoč da staronki:"
 
-#. TRANS: Sometimes this could be better translated as
-#. "%d hit(s) on this page".  Therefore this string
-#. contains plural cases.
-#: ../shell/ev-view.c:5149
-#, c-format
-msgid "%d found on this page"
-msgid_plural "%d found on this page"
-msgstr[0] "%d znojdziena na hetaj staroncy"
-msgstr[1] "%d znojdzienyja na hetaj staroncy"
-msgstr[2] "%d znojdzienyja na hetaj staroncy"
-
-#: ../shell/ev-view.c:5158
-#, c-format
-msgid "%3d%% remaining to search"
-msgstr "zastałosia %3d%%, kab šukać"
-
-#: ../shell/ev-window.c:750
+#: ../shell/ev-window.c:793
 #, c-format
 msgid "Page %s - %s"
 msgstr "Staronka %s - %s"
 
-#: ../shell/ev-window.c:752
+#: ../shell/ev-window.c:795
 #, c-format
 msgid "Page %s"
 msgstr "Staronka %s"
 
-#: ../shell/ev-window.c:1381
+#: ../shell/ev-window.c:1204
+msgid "The document contains no pages"
+msgstr "U dakumencie niama staronak"
+
+#: ../shell/ev-window.c:1428 ../shell/ev-window.c:1503
 msgid "Unable to open document"
 msgstr "Niemahčyma adčynić dakument"
 
-#: ../shell/ev-window.c:1542
+#: ../shell/ev-window.c:1700
 msgid "Open Document"
 msgstr "Adčyni dakument"
 
-#: ../shell/ev-window.c:1603
+#: ../shell/ev-window.c:1761
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "Niemahčyma stvaryć symbaličnuju spasyłku “%s”: %s"
 
-#: ../shell/ev-window.c:1632
+#: ../shell/ev-window.c:1790
 msgid "Cannot open a copy."
 msgstr "Niemahčyma adčynić kopiju."
 
-#: ../shell/ev-window.c:1876 ../shell/ev-window.c:1926
+#: ../shell/ev-window.c:2034 ../shell/ev-window.c:2084
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Niemahčyma zapisać fajł jak “%s”."
 
-#: ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:2129
 msgid "Save a Copy"
 msgstr "Zapišy kopiju"
 
-#: ../shell/ev-window.c:2092 ../shell/ev-window.c:3218
+#: ../shell/ev-window.c:2250 ../shell/ev-window.c:3425
 msgid "Failed to print document"
 msgstr "Pamyłka druku dakumentu"
 
-#: ../shell/ev-window.c:2256
+#: ../shell/ev-window.c:2415
 msgid "Printing is not supported on this printer."
 msgstr "Hetaja drukarka nie padtrymvaje druku."
 
-#: ../shell/ev-window.c:2382 ../shell/ev-window.c:4184
+#: ../shell/ev-window.c:2541 ../shell/ev-window.c:4484
 msgid "Print"
 msgstr "Drukuj"
 
-#: ../shell/ev-window.c:2996
+#: ../shell/ev-window.c:3208
 msgid "Toolbar Editor"
 msgstr "Redaktar panelaŭ pryładździa"
 
-#: ../shell/ev-window.c:3513
+#: ../shell/ev-window.c:3720
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -846,7 +830,7 @@ msgstr ""
 "Ahladalnik dakumentaŭ.\n"
 "Užyvaje poppler %s (%s)"
 
-#: ../shell/ev-window.c:3541
+#: ../shell/ev-window.c:3748
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -858,7 +842,7 @@ msgstr ""
 "apublikavanaj Fondam Volnaha Prahramnaha Zabieśpiačeńnia (Free Software "
 "Foundation); versii 2 albo (pa tvaim vybary) luboj paźniejšaj.\n"
 
-#: ../shell/ev-window.c:3545
+#: ../shell/ev-window.c:3752
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -870,7 +854,7 @@ msgstr ""
 "CHOĆ BY DLA JAKICH METAŬ. Hladzi Ahulnuju Publičnuju Licenziju GNU (GPL) dla "
 "padrabiaznaściaŭ.\n"
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3756
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
@@ -880,364 +864,380 @@ msgstr ""
 "Evincam; kali nie, napišy pra heta (pa-anhielsku) na adras: Free Software "
 "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:3573 ../shell/main.c:349
+#: ../shell/ev-window.c:3780
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:3576
+#: ../shell/ev-window.c:3783
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Aŭtary Evinca"
 
-#: ../shell/ev-window.c:3582
+#: ../shell/ev-window.c:3789
 msgid "translator-credits"
 msgstr "Ihar Hračyška <ihar.hrachyshka@gmail.com>"
 
-#: ../shell/ev-window.c:4096
+#. TRANS: Sometimes this could be better translated as
+#. "%d hit(s) on this page".  Therefore this string
+#. contains plural cases.
+#: ../shell/ev-window.c:4005
+#, c-format
+msgid "%d found on this page"
+msgid_plural "%d found on this page"
+msgstr[0] "%d znojdziena na hetaj staroncy"
+msgstr[1] "%d znojdzienyja na hetaj staroncy"
+msgstr[2] "%d znojdzienyja na hetaj staroncy"
+
+#: ../shell/ev-window.c:4013
+#, c-format
+msgid "%3d%% remaining to search"
+msgstr "zastałosia %3d%%, kab šukać"
+
+#: ../shell/ev-window.c:4396
 msgid "_File"
 msgstr "_Fajł"
 
-#: ../shell/ev-window.c:4097
+#: ../shell/ev-window.c:4397
 msgid "_Edit"
 msgstr "_Redahuj"
 
-#: ../shell/ev-window.c:4098
+#: ../shell/ev-window.c:4398
 msgid "_View"
 msgstr "_Vyhlad"
 
-#: ../shell/ev-window.c:4099
+#: ../shell/ev-window.c:4399
 msgid "_Go"
 msgstr "_Idzi"
 
-#: ../shell/ev-window.c:4100
+#: ../shell/ev-window.c:4400
 msgid "_Help"
 msgstr "_Dapamoha"
 
 #. File menu
-#: ../shell/ev-window.c:4103 ../shell/ev-window.c:4280
-#: ../shell/ev-window.c:4352
+#: ../shell/ev-window.c:4403 ../shell/ev-window.c:4582
+#: ../shell/ev-window.c:4654
 msgid "_Open..."
 msgstr "_Adčyni..."
 
-#: ../shell/ev-window.c:4104 ../shell/ev-window.c:4353
+#: ../shell/ev-window.c:4404 ../shell/ev-window.c:4655
 msgid "Open an existing document"
 msgstr "Adčyni isny dakument"
 
-#: ../shell/ev-window.c:4106
+#: ../shell/ev-window.c:4406
 msgid "Op_en a Copy"
 msgstr "A_dčyni kopiju"
 
-#: ../shell/ev-window.c:4107
+#: ../shell/ev-window.c:4407
 msgid "Open a copy of the current document in a new window"
 msgstr "Adčyni kopiju dziejnaha dakumentu ŭ novym aknie"
 
-#: ../shell/ev-window.c:4109 ../shell/ev-window.c:4282
+#: ../shell/ev-window.c:4409 ../shell/ev-window.c:4584
 msgid "_Save a Copy..."
 msgstr "_Zapišy kopiju..."
 
-#: ../shell/ev-window.c:4110
+#: ../shell/ev-window.c:4410
 msgid "Save a copy of the current document"
 msgstr "Zapišy kopiju dziejnaha dakumentu"
 
-#: ../shell/ev-window.c:4112
+#: ../shell/ev-window.c:4412
 msgid "Print Set_up..."
 msgstr "_Nałady druku..."
 
-#: ../shell/ev-window.c:4113
+#: ../shell/ev-window.c:4413
 msgid "Setup the page settings for printing"
 msgstr "Naładź arkuš dziela druku"
 
-#: ../shell/ev-window.c:4115
+#: ../shell/ev-window.c:4415
 msgid "_Print..."
 msgstr "_Nadrukuj..."
 
-#: ../shell/ev-window.c:4116 ../shell/ev-window.c:4185
+#: ../shell/ev-window.c:4416 ../shell/ev-window.c:4485
 msgid "Print this document"
 msgstr "Nadrukuj hety dakument"
 
-#: ../shell/ev-window.c:4118
+#: ../shell/ev-window.c:4418
 msgid "P_roperties"
 msgstr "_Ułaścivaści"
 
-#: ../shell/ev-window.c:4126
+#: ../shell/ev-window.c:4426
 msgid "Select _All"
 msgstr "A_biary ŭsio"
 
-#: ../shell/ev-window.c:4128
+#: ../shell/ev-window.c:4428
 msgid "_Find..."
 msgstr "Š_ukaj..."
 
-#: ../shell/ev-window.c:4129
+#: ../shell/ev-window.c:4429
 msgid "Find a word or phrase in the document"
 msgstr "Šukaj słova albo vyraz u dakumencie"
 
-#: ../shell/ev-window.c:4131
+#: ../shell/ev-window.c:4431
 msgid "Find Ne_xt"
 msgstr "Šukaj _dalej"
 
-#: ../shell/ev-window.c:4133
+#: ../shell/ev-window.c:4433
 msgid "Find Pre_vious"
 msgstr "Šukaj _raniej"
 
-#: ../shell/ev-window.c:4135
+#: ../shell/ev-window.c:4435
 msgid "T_oolbar"
 msgstr "_Panel pryładździa"
 
-#: ../shell/ev-window.c:4137
+#: ../shell/ev-window.c:4437
 msgid "Rotate _Left"
 msgstr "Paviarni ŭ_leva"
 
-#: ../shell/ev-window.c:4139
+#: ../shell/ev-window.c:4439
 msgid "Rotate _Right"
 msgstr "Paviarni ŭ_prava"
 
-#: ../shell/ev-window.c:4144
+#: ../shell/ev-window.c:4444
 msgid "Enlarge the document"
 msgstr "Pavialič dakument"
 
-#: ../shell/ev-window.c:4147
+#: ../shell/ev-window.c:4447
 msgid "Shrink the document"
 msgstr "Pamienš dakument"
 
-#: ../shell/ev-window.c:4149
+#: ../shell/ev-window.c:4449
 msgid "_Reload"
 msgstr "_Pieračytaj"
 
-#: ../shell/ev-window.c:4150
+#: ../shell/ev-window.c:4450
 msgid "Reload the document"
 msgstr "Pieračytaj dakument"
 
-#: ../shell/ev-window.c:4153
+#: ../shell/ev-window.c:4453
 msgid "Auto_scroll"
 msgstr "_Aŭtamatyčna prakručvaj"
 
 #. Go menu
-#: ../shell/ev-window.c:4157
+#: ../shell/ev-window.c:4457
 msgid "_Previous Page"
 msgstr "_Papiaredniaja staronka"
 
-#: ../shell/ev-window.c:4158
+#: ../shell/ev-window.c:4458
 msgid "Go to the previous page"
 msgstr "Idzi da papiaredniaj staronki"
 
-#: ../shell/ev-window.c:4160
+#: ../shell/ev-window.c:4460
 msgid "_Next Page"
 msgstr "_Nastupnaja staronka"
 
-#: ../shell/ev-window.c:4161
+#: ../shell/ev-window.c:4461
 msgid "Go to the next page"
 msgstr "Idzi da nastupnaj staronki"
 
-#: ../shell/ev-window.c:4163
+#: ../shell/ev-window.c:4463
 msgid "_First Page"
 msgstr "_Pieršaja staronka"
 
-#: ../shell/ev-window.c:4164
+#: ../shell/ev-window.c:4464
 msgid "Go to the first page"
 msgstr "Idzi da pieršaj staronki"
 
-#: ../shell/ev-window.c:4166
+#: ../shell/ev-window.c:4466
 msgid "_Last Page"
 msgstr "_Apošniaja staronka"
 
-#: ../shell/ev-window.c:4167
+#: ../shell/ev-window.c:4467
 msgid "Go to the last page"
 msgstr "Idzi da apošniaj staronki"
 
 #. Help menu
-#: ../shell/ev-window.c:4171
+#: ../shell/ev-window.c:4471
 msgid "_Contents"
 msgstr "_Źmieściva"
 
-#: ../shell/ev-window.c:4174
+#: ../shell/ev-window.c:4474
 msgid "_About"
 msgstr "_Ab prahramie"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:4178
+#: ../shell/ev-window.c:4478
 msgid "Leave Fullscreen"
 msgstr "Pakiń poŭny ekran"
 
-#: ../shell/ev-window.c:4179
+#: ../shell/ev-window.c:4479
 msgid "Leave fullscreen mode"
 msgstr "Pakiń poŭnaekranny režym"
 
-#: ../shell/ev-window.c:4181
+#: ../shell/ev-window.c:4481
 msgid "Start Presentation"
 msgstr "Pačni prezentacyju"
 
-#: ../shell/ev-window.c:4182
+#: ../shell/ev-window.c:4482
 msgid "Start a presentation"
 msgstr "Pačni prezentacyju"
 
 #. View Menu
-#: ../shell/ev-window.c:4236
+#: ../shell/ev-window.c:4538
 msgid "_Toolbar"
 msgstr "_Panel pryładździa"
 
-#: ../shell/ev-window.c:4237
+#: ../shell/ev-window.c:4539
 msgid "Show or hide the toolbar"
 msgstr "Pakažy albo schavaj panel pryładździa"
 
-#: ../shell/ev-window.c:4239
+#: ../shell/ev-window.c:4541
 msgid "Side _Pane"
 msgstr "_Bakavaja panel"
 
-#: ../shell/ev-window.c:4240
+#: ../shell/ev-window.c:4542
 msgid "Show or hide the side pane"
 msgstr "Pakažy albo schavaj bakavuju panel"
 
-#: ../shell/ev-window.c:4242
+#: ../shell/ev-window.c:4544
 msgid "_Continuous"
 msgstr "_Bieśpierapynny"
 
-#: ../shell/ev-window.c:4243
+#: ../shell/ev-window.c:4545
 msgid "Show the entire document"
 msgstr "Pakazvaj uvieś dakument"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4547
 msgid "_Dual"
 msgstr "_Zdvojeny"
 
-#: ../shell/ev-window.c:4246
+#: ../shell/ev-window.c:4548
 msgid "Show two pages at once"
 msgstr "Pakazvaj adrazu dźvie staronki"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4550
 msgid "_Fullscreen"
 msgstr "_Poŭny ekran"
 
-#: ../shell/ev-window.c:4249
+#: ../shell/ev-window.c:4551
 msgid "Expand the window to fill the screen"
 msgstr "Razharni vakno, kab zapoŭnić ekran"
 
-#: ../shell/ev-window.c:4251
+#: ../shell/ev-window.c:4553
 msgid "Pre_sentation"
 msgstr "Pre_zentacyja"
 
-#: ../shell/ev-window.c:4252
+#: ../shell/ev-window.c:4554
 msgid "Run document as a presentation"
 msgstr "Pakažy dakument jak prezentacyju"
 
-#: ../shell/ev-window.c:4254
+#: ../shell/ev-window.c:4556
 msgid "_Best Fit"
 msgstr "_Najlepiej dapasuj"
 
-#: ../shell/ev-window.c:4255
+#: ../shell/ev-window.c:4557
 msgid "Make the current document fill the window"
 msgstr "Zapoŭni vakno dziejnym dakumentam"
 
-#: ../shell/ev-window.c:4257
+#: ../shell/ev-window.c:4559
 msgid "Fit Page _Width"
 msgstr "_Dapasuj da šyryni staronki"
 
-#: ../shell/ev-window.c:4258
+#: ../shell/ev-window.c:4560
 msgid "Make the current document fill the window width"
 msgstr "Zapoŭni šyryniu vakna dziejnym dakumentam"
 
 #. Links
-#: ../shell/ev-window.c:4265
+#: ../shell/ev-window.c:4567
 msgid "_Open Link"
 msgstr "_Adčyni spasyłku"
 
-#: ../shell/ev-window.c:4267
+#: ../shell/ev-window.c:4569
 msgid "_Go To"
 msgstr "_Idzi da"
 
-#: ../shell/ev-window.c:4269
+#: ../shell/ev-window.c:4571
 msgid "Open in New _Window"
 msgstr "Adčyni ŭ novym _aknie"
 
-#: ../shell/ev-window.c:4271
+#: ../shell/ev-window.c:4573
 msgid "_Copy Link Address"
 msgstr "_Skapijuj adras spasyłki"
 
-#: ../shell/ev-window.c:4273
+#: ../shell/ev-window.c:4575
 msgid "_Save Image As..."
 msgstr "_Zapišy vyjavu jak..."
 
-#: ../shell/ev-window.c:4275
+#: ../shell/ev-window.c:4577
 msgid "Copy _Image"
 msgstr "Skapijuj _vyjavu"
 
-#: ../shell/ev-window.c:4314
+#: ../shell/ev-window.c:4616
 msgid "Page"
 msgstr "Staronka"
 
-#: ../shell/ev-window.c:4315
+#: ../shell/ev-window.c:4617
 msgid "Select Page"
 msgstr "Abiary staronku"
 
-#: ../shell/ev-window.c:4326
+#: ../shell/ev-window.c:4628
 msgid "Zoom"
 msgstr "Pavieličeńnie"
 
-#: ../shell/ev-window.c:4328
+#: ../shell/ev-window.c:4630
 msgid "Adjust the zoom level"
 msgstr "Nastaŭ uzrovień pavieličeńnia"
 
-#: ../shell/ev-window.c:4338
+#: ../shell/ev-window.c:4640
 msgid "Navigation"
 msgstr "Navihacyja"
 
-#: ../shell/ev-window.c:4340
+#: ../shell/ev-window.c:4642
 msgid "Back"
 msgstr "Nazad"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:4343
+#: ../shell/ev-window.c:4645
 msgid "Move across visited pages"
 msgstr "Pierachodź pa naviedanych staronkach"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4373
+#: ../shell/ev-window.c:4675
 msgid "Previous"
 msgstr "Nazad"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4378
+#: ../shell/ev-window.c:4680
 msgid "Next"
 msgstr "Napierad"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4382
+#: ../shell/ev-window.c:4684
 msgid "Zoom In"
 msgstr "Pavialič"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4386
+#: ../shell/ev-window.c:4688
 msgid "Zoom Out"
 msgstr "Pamienš"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4394
+#: ../shell/ev-window.c:4696
 msgid "Fit Width"
 msgstr "Da šyryni"
 
-#: ../shell/ev-window.c:4607
+#: ../shell/ev-window.c:4918
 msgid "Unable to open external link"
 msgstr "Niemahčyma adčynić vonkavuju spasyłku"
 
-#: ../shell/ev-window.c:4777
+#: ../shell/ev-window.c:5074
 msgid "Couldn't find appropriate format to save image"
 msgstr "Niemahčyma znajści prydatnaha farmatu dla zapisu vyjavy"
 
-#: ../shell/ev-window.c:4813
+#: ../shell/ev-window.c:5114
 msgid "The image could not be saved."
 msgstr "Niemahčyma zapisać vyjavu."
 
-#: ../shell/ev-window.c:4845
+#: ../shell/ev-window.c:5146
 msgid "Save Image"
 msgstr "Zapišy vyjavu"
 
-#: ../shell/ev-window.c:4904
+#: ../shell/ev-window.c:5208
 msgid "Unable to open attachment"
 msgstr "Niemahčyma adčynić dałučeńnie"
 
-#: ../shell/ev-window.c:4956
+#: ../shell/ev-window.c:5260
 msgid "The attachment could not be saved."
 msgstr "Niemahčyma zapisać dałučeńnie."
 
-#: ../shell/ev-window.c:5001
+#: ../shell/ev-window.c:5305
 msgid "Save Attachment"
 msgstr "Zapišy dałučeńnie"
 
@@ -1250,45 +1250,41 @@ msgstr "%s - Patrebny parol"
 msgid "By extension"
 msgstr "Pavodle pašyreńnia"
 
-#: ../shell/main.c:58
+#: ../shell/main.c:52
 msgid "The page of the document to display."
 msgstr "Staronka dakumentu, kab pakazać."
 
-#: ../shell/main.c:58
+#: ../shell/main.c:52
 msgid "PAGE"
 msgstr "STARONKA"
 
-#: ../shell/main.c:59
+#: ../shell/main.c:53
 msgid "Run evince in fullscreen mode"
 msgstr "Startuj Evinca ŭ poŭnaekrannym režymie"
 
-#: ../shell/main.c:60
+#: ../shell/main.c:54
 msgid "Run evince in presentation mode"
 msgstr "Startuj Evinca ŭ režymie prezentacyi"
 
-#: ../shell/main.c:61
+#: ../shell/main.c:55
 msgid "Run evince as a previewer"
 msgstr "Startuj Evinca jak pieradahladalnika"
 
-#: ../shell/main.c:62
+#: ../shell/main.c:56
 msgid "The word or phrase to find in the document"
 msgstr "Słova ci vyraz, kab šukać u dakumencie"
 
-#: ../shell/main.c:62
+#: ../shell/main.c:56
 msgid "STRING"
 msgstr "RADOK"
 
-#: ../shell/main.c:65
+#: ../shell/main.c:59
 msgid "[FILE...]"
 msgstr "[FAJŁ...]"
 
-#: ../shell/main.c:332
+#: ../shell/main.c:325
 msgid "GNOME Document Viewer"
 msgstr "Ahladalnik dakumentaŭ dla GNOME"
-
-#: ../shell/main.c:392
-msgid "Evince Document Viewer"
-msgstr "Ahladalnik dakumentaŭ Evince"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid ""
@@ -1314,6 +1310,85 @@ msgstr ""
 "Pravilny zahad i arhumenty dla stvareńnia minijaturaŭ dla dakumentaŭ PDF. "
 "Hladzi dakumentacyju na stvareńnie minijaturaŭ dla Nautilusa dziela "
 "padrabiaznaściaŭ."
+
+#~ msgid "BBox"
+#~ msgstr "BBox"
+
+#~ msgid "Letter"
+#~ msgstr "List"
+
+#~ msgid "Tabloid"
+#~ msgstr "Tabloid"
+
+#~ msgid "Ledger"
+#~ msgstr "Rehistracyjny žurnał"
+
+#~ msgid "Legal"
+#~ msgstr "Lehalny"
+
+#~ msgid "Statement"
+#~ msgstr "Zajava"
+
+#~ msgid "Executive"
+#~ msgstr "Administracyjny"
+
+#~ msgid "A0"
+#~ msgstr "A0"
+
+#~ msgid "A1"
+#~ msgstr "A1"
+
+#~ msgid "A2"
+#~ msgstr "A2"
+
+#~ msgid "A3"
+#~ msgstr "A3"
+
+#~ msgid "A4"
+#~ msgstr "A4"
+
+#~ msgid "A5"
+#~ msgstr "A5"
+
+#~ msgid "B4"
+#~ msgstr "B4"
+
+#~ msgid "B5"
+#~ msgstr "B5"
+
+#~ msgid "Folio"
+#~ msgstr "Folio"
+
+#~ msgid "Quarto"
+#~ msgstr "Quarto"
+
+#~ msgid "10x14"
+#~ msgstr "10x14"
+
+#~ msgid "Cannot open file “%s”."
+#~ msgstr "Niemahčyma adčynić fajł “%s”."
+
+#~ msgid ""
+#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
+#~ "path"
+#~ msgstr ""
+#~ "Padčas adčynieńnia dakumentu “%s” adbyłasia pamyłka. Interpretatar "
+#~ "Ghostscript nia znojdzieny pa ściežkach pošuku"
+
+#~ msgid "Encapsulated PostScript"
+#~ msgstr "Unutrany PostScript"
+
+#~ msgid "PostScript"
+#~ msgstr "PostScript"
+
+#~ msgid "Interpreter failed."
+#~ msgstr "Pamyłka interpretatara."
+
+#~ msgid "Unhandled MIME type: “%s”"
+#~ msgstr "Nieapracavany typ MIME: “%s”"
+
+#~ msgid "Evince Document Viewer"
+#~ msgstr "Ahladalnik dakumentaŭ Evince"
 
 #~ msgid "Generating PDF is not supported"
 #~ msgstr "Stvareńnie PDF nie padtrymvajecca"
