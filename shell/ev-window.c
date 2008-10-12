@@ -4902,7 +4902,8 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 					      GDK_CURRENT_TIME);
 #endif
 
-	if (!g_strstr_len (uri, strlen (uri), "://")) {
+	if (!g_strstr_len (uri, strlen (uri), "://") &&
+	    !g_str_has_prefix (uri, "mailto:")) {
 		gchar *http;
 		
 		/* Not a valid uri, assuming it's http */
