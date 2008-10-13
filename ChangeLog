@@ -1,3 +1,10 @@
+2008-10-14  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* shell/ev-window-title.c (ev_window_title_sanitize_title):
+
+	Removes bad prefixes from window title. Patch by 
+	Robin Sonefors <ozamosi@blinkenlights.se> fixes bug #534684.
+	
 2008-10-12  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (launch_external_uri):

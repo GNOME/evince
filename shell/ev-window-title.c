@@ -21,6 +21,7 @@
 #include "ev-window-title.h"
 #include "ev-backends-manager.h"
 
+#include <string.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 
@@ -31,8 +32,8 @@
 typedef struct
 {
 	const gchar *backend;
-	const gchar *ext;
-} BadExtensionEntry;
+	const gchar *text;
+} BadTitleEntry;
 
 struct _EvWindowTitle
 {
@@ -42,12 +43,17 @@ struct _EvWindowTitle
 	char *uri;
 };
 
-static const BadExtensionEntry bad_extensions[] = {
+static const BadTitleEntry bad_extensions[] = {
 	{ EV_BACKEND_PS, ".dvi" },
 	{ EV_BACKEND_PDF, ".doc" },
 	{ EV_BACKEND_PDF, ".dvi" },
 	{ EV_BACKEND_PDF, ".indd" },
 	{ EV_BACKEND_PDF, ".rtf" }
+};
+
+static const BadTitleEntry bad_prefixes[] = {
+	{ EV_BACKEND_PDF, "Microsoft Word - " },
+	{ EV_BACKEND_PDF, "Microsoft PowerPoint - " }
 };
 
 EvWindowTitle *
@@ -78,7 +84,7 @@ get_filename_from_uri (const char *uri)
 /* Some docs report titles with confusing extensions (ex. .doc for pdf).
    Let's show the filename in this case */
 static void
-ev_window_title_sanitize_extension (EvWindowTitle *window_title, char **title) {
+ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 	const gchar *backend;
 	int i;
 
@@ -86,7 +92,7 @@ ev_window_title_sanitize_extension (EvWindowTitle *window_title, char **title) {
 
 	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
 		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 && 
-		    g_str_has_suffix (*title, bad_extensions[i].ext)) {
+		    g_str_has_suffix (*title, bad_extensions[i].text)) {
 			char *new_title;
 			char *filename = get_filename_from_uri (window_title->uri);
 
@@ -95,6 +101,17 @@ ev_window_title_sanitize_extension (EvWindowTitle *window_title, char **title) {
 			*title = new_title;
 
 			g_free (filename);
+		}
+	}
+	for (i = 0; i < G_N_ELEMENTS (bad_prefixes); i++) {
+		if (g_ascii_strcasecmp (bad_prefixes[i].backend, backend) == 0 &&
+		    g_str_has_prefix (*title, bad_prefixes[i].text)) {
+			char *new_title;
+			int len = strlen(bad_prefixes[i].text);
+			
+			new_title = g_strdup_printf ("%s", (*title) + len);
+			g_free (*title);
+			*title = new_title;
 		}
 	}
 }
@@ -125,7 +142,7 @@ ev_window_title_update (EvWindowTitle *window_title)
 	}
 
 	if (title && window_title->uri) {
-		ev_window_title_sanitize_extension (window_title, &title);
+		ev_window_title_sanitize_title (window_title, &title);
 	} else if (window_title->uri) {
 		title = get_filename_from_uri (window_title->uri);
 	} else if (!title) {
