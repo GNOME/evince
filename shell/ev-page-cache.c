@@ -134,6 +134,11 @@ ev_page_cache_finalize (GObject *object)
 		page_cache->size_cache = NULL;
 	}
 
+	if (page_cache->thumbs_size_cache) {
+		g_free (page_cache->thumbs_size_cache);
+		page_cache->thumbs_size_cache = NULL;
+	}
+
 	if (page_cache->height_to_page) {
 		g_free (page_cache->height_to_page);
 		page_cache->height_to_page = NULL;
