@@ -1,5 +1,12 @@
 2008-10-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_cmd_view_presentation):
+
+	Disable toggle function of F5 when in presentation mode. Patch by
+	Dave Neary. Fixes bug #556162.
+	
+2008-10-17  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-sidebar-thumbnails.c: (ev_sidebar_thumbnails_dispose),
 	(ev_sidebar_thumbnails_get_loading_icon), (clear_range),
 	(ev_sidebar_thumbnails_fill_model),
