@@ -4211,14 +4211,15 @@ ev_view_init (EvView *view)
 
 static void
 ev_view_change_page (EvView *view,
-		     gint    new_page)
+		     gint    new_page,
+		     gboolean start_transition)
 {
 	gint x, y;
 
 	view->current_page = new_page;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
-	if (view->presentation)
+	if (view->presentation && start_transition)
 		ev_view_presentation_transition_start (view);
 
 	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
@@ -4233,7 +4234,24 @@ ev_view_transition_animation_finish (EvTransitionAnimation *animation,
 {
 	g_object_unref (view->animation);
 	view->animation = NULL;
-	ev_view_change_page (view, view->current_page);
+	ev_view_change_page (view, view->current_page, TRUE);
+}
+
+/**
+ * ev_view_transition_animation_cancel:
+ * @animation: Animation to finish
+ * @view: An EvView
+ *
+ * Does almost the same as cancel, but without scheduling the transition.
+ */
+
+static void
+ev_view_transition_animation_cancel (EvTransitionAnimation *animation,
+				     EvView                *view)
+{
+	g_object_unref (view->animation);
+	view->animation = NULL;
+	ev_view_change_page (view, view->current_page, FALSE);
 }
 
 static void
@@ -4296,7 +4314,7 @@ page_changed_cb (EvPageCache *page_cache,
 		if (view->presentation)
 			ev_view_presentation_animation_start (view, new_page);
 
-		ev_view_change_page (view, new_page);
+		ev_view_change_page (view, new_page, TRUE);
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -4666,7 +4684,7 @@ ev_view_set_presentation (EvView   *view,
 
 		if (view->animation) {
 			/* stop any running animation */
-			ev_view_transition_animation_finish (view->animation, view);
+			ev_view_transition_animation_cancel (view->animation, view);
 		}
 	}
 
@@ -5824,8 +5842,7 @@ ev_view_next_page (EvView *view)
 	}
 
 	if (view->animation) {
-		ev_view_transition_animation_finish (view->animation, view);
-		return TRUE;
+		ev_view_transition_animation_cancel (view->animation, view);
 	}
 
 	ev_view_presentation_transition_stop (view);
@@ -5878,8 +5895,7 @@ ev_view_previous_page (EvView *view)
 	}	
 
         if (view->animation) {
-		ev_view_transition_animation_finish (view->animation, view);
-		return TRUE;
+		ev_view_transition_animation_cancel (view->animation, view);
         }
 
 	ev_view_reset_presentation_state (view);
