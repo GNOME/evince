@@ -37,7 +37,7 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <gtk/gtkprintunixdialog.h>
+#include <gtk/gtkunixprint.h>
 #include <gconf/gconf-client.h>
 
 #include "egg-editable-toolbar.h"

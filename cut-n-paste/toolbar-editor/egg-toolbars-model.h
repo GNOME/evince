@@ -23,7 +23,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <gdk/gdktypes.h>
+#include <gdk/gdk.h>
 
 G_BEGIN_DECLS
 

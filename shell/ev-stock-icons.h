@@ -24,7 +24,7 @@
 #ifndef __EV_STOCK_ICONS_H__
 #define __EV_STOCK_ICONS_H__
 
-#include <glib/gmacros.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 

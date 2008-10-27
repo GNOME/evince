@@ -26,10 +26,6 @@
 #include "ephy-zoom.h"
 
 #include <gtk/gtk.h>
-#include <gtk/gtkcombobox.h>
-#if !GTK_CHECK_VERSION (2, 11, 5)
-#include <gtk/gtktooltips.h>
-#endif
 #include <glib/gi18n.h>
 
 #define EPHY_ZOOM_CONTROL_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EPHY_TYPE_ZOOM_CONTROL, EphyZoomControlPrivate))
@@ -177,8 +173,7 @@ ephy_zoom_control_init (EphyZoomControl *control)
 					      NULL, NULL);
 
 	gtk_combo_box_set_focus_on_click (p->combo, FALSE);
-	g_object_ref (p->combo);
-	gtk_object_sink (GTK_OBJECT (p->combo));
+	g_object_ref_sink (G_OBJECT (p->combo));
 	gtk_widget_show (GTK_WIDGET (p->combo));
 
 	i = ephy_zoom_get_zoom_level_index (p->zoom);

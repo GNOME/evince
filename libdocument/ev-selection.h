@@ -23,7 +23,6 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <gdk/gdkpixbuf.h>
 #include <gdk/gdk.h>
 #include "ev-document.h"
 

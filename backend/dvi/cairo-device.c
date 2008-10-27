@@ -19,7 +19,7 @@
 #include <config.h>
 
 #include <stdlib.h>
-#include <gdk/gdkcolor.h>
+#include <gdk/gdk.h>
 #ifdef HAVE_SPECTRE
 #include <libspectre/spectre.h>
 #endif

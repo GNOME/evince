@@ -31,7 +31,7 @@
 #ifndef __GEDIT_MESSAGE_AREA_H__
 #define __GEDIT_MESSAGE_AREA_H__
 
-#include <gtk/gtkdialog.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

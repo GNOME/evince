@@ -29,8 +29,7 @@
 
 #include <glib.h>
 #include <gio/gio.h>
-#include <gdk/gdkscreen.h>
-#include <gtk/gtkwindow.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

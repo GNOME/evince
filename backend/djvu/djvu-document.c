@@ -32,9 +32,9 @@
 #include "ev-selection.h"
 #include "ev-file-helpers.h"
 
-#include <gdk-pixbuf/gdk-pixbuf-core.h>
+#include <glib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <glib/gi18n.h>
-#include <glib/gunicode.h>
 #include <string.h>
 
 #define SCALE_FACTOR 0.2

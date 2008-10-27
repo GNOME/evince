@@ -27,7 +27,7 @@
 #include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
-#include <gtk/gtkfilechooserdialog.h>
+#include <gtk/gtk.h>
 
 #include "ev-backends-manager.h"
 #include "ev-document-factory.h"
