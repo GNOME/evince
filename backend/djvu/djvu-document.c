@@ -97,9 +97,9 @@ handle_message (const ddjvu_message_t *msg, GError **error)
 			}
 			
 			if (error) {
-				g_set_error (error, EV_DJVU_ERROR, 0, error_str);
+				g_set_error_literal (error, EV_DJVU_ERROR, 0, error_str);
 			} else {
-				g_warning (error_str);
+				g_warning ("%s", error_str);
 			}
 				
 			g_free (error_str);
@@ -178,10 +178,10 @@ djvu_document_load (EvDocument  *document,
 
 	djvu_wait_for_message (djvu_document, DDJVU_DOCINFO, &djvu_error);
 	if (djvu_error) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     djvu_error->message);
+		g_set_error_literal (error,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     djvu_error->message);
 		g_error_free (djvu_error);
 		g_free (filename);
 		ddjvu_document_release (djvu_document->d_document);
@@ -194,10 +194,10 @@ djvu_document_load (EvDocument  *document,
 		djvu_handle_events (djvu_document, TRUE, &djvu_error);
 
 	if (djvu_error) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     djvu_error->message);
+		g_set_error_literal (error,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     djvu_error->message);
 		g_error_free (djvu_error);
 		g_free (filename);
 		ddjvu_document_release (djvu_document->d_document);

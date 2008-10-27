@@ -239,7 +239,7 @@ ev_job_failed (EvJob       *job,
 	message = g_strdup_vprintf (format, args);
 	va_end (args);
 	
-	job->error = g_error_new (domain, code, message);
+	job->error = g_error_new_literal (domain, code, message);
 	g_free (message);
 	
 	ev_job_emit_finished (job);                                                                                                               
