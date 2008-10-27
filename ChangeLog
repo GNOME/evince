@@ -1,5 +1,37 @@
 2008-10-27 Christian Persch <chpe@gnome.org>
 
+        * backend/djvu/djvu-document.c
+        * backend/dvi/cairo-device.c
+        * cut-n-paste/evmountoperation/ev-mount-operation.h
+        * cut-n-paste/gedit-message-area/gedit-message-area.h
+        * cut-n-paste/toolbar-editor/egg-editable-toolbar.c
+        * cut-n-paste/toolbar-editor/egg-editable-toolbar.h
+        * cut-n-paste/toolbar-editor/egg-toolbar-editor.c
+        * cut-n-paste/toolbar-editor/egg-toolbar-editor.h
+        * cut-n-paste/toolbar-editor/egg-toolbars-model.c
+        * cut-n-paste/toolbar-editor/egg-toolbars-model.h
+        * cut-n-paste/toolbar-editor/eggtreemultidnd.c
+        * cut-n-paste/toolbar-editor/eggtreemultidnd.h
+        * cut-n-paste/zoom-control/ephy-zoom-action.c
+        * cut-n-paste/zoom-control/ephy-zoom-action.h
+        * cut-n-paste/zoom-control/ephy-zoom-control.c
+        * cut-n-paste/zoom-control/ephy-zoom-control.h
+        * libdocument/ev-async-renderer.h
+        * libdocument/ev-document-factory.c
+        * libdocument/ev-document-misc.h
+        * libdocument/ev-image.h
+        * libdocument/ev-selection.h
+        * shell/ev-properties-fonts.h
+        * shell/ev-stock-icons.h
+        * shell/ev-window.c: Only include glib.h, gdk/gdk.h and gtk/gtk.h
+        directly. Bug #558064.
+
+2008-10-27 Christian Persch <chpe@gnome.org>
+
+	* cut-and-paste/smclient/*: Update from libegg.
+
+2008-10-27 Christian Persch <chpe@gnome.org>
+
 	* backend/djvu/djvu-document.c
 	* backend/ps/ev-spectre.c
 	* shell/ev-jobs.c: Use printf safely. Bug #558066.
