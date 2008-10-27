@@ -307,7 +307,7 @@ ps_document_render (EvDocument      *document,
 	}
 
 	if (spectre_page_status (ps_page)) {
-		g_warning (spectre_status_to_string (spectre_page_status (ps_page)));
+		g_warning ("%s", spectre_status_to_string (spectre_page_status (ps_page)));
 		g_free (data);
 		
 		return NULL;
