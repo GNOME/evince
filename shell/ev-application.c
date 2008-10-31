@@ -69,9 +69,7 @@ struct _EvApplication {
 #endif /* ENABLE_DBUS */
 
 	GtkPrintSettings *print_settings;
-#if GTK_CHECK_VERSION (2, 11, 0)
 	gchar            *print_settings_file;
-#endif
 };
 
 struct _EvApplicationClass {
@@ -696,7 +694,6 @@ ev_application_shutdown (EvApplication *application)
 		application->toolbars_file = NULL;
 	}
 
-#if GTK_CHECK_VERSION (2, 11, 0)
 	if (application->print_settings_file) {
 		if (application->print_settings) {
 			GError *error = NULL;
@@ -716,12 +713,6 @@ ev_application_shutdown (EvApplication *application)
 		g_free (application->print_settings_file);
 		application->print_settings_file = NULL;
 	}
-#else /* ! GTK 2.11.0 */
-	if (application->print_settings) {
-		g_object_unref (application->print_settings);
-		application->print_settings = NULL;
-	}
-#endif /* GTK 2.11.0 */
 
 #ifdef ENABLE_DBUS
 	if (application->keys) {
@@ -888,7 +879,6 @@ ev_application_get_print_settings (EvApplication *application)
 	if (application->print_settings)
 		return application->print_settings;
 	
-#if GTK_CHECK_VERSION (2, 11, 0)
 	if (!application->print_settings_file) {
 		application->print_settings_file =
 			g_build_filename (ev_dot_dir (), "print-settings", NULL);
@@ -907,7 +897,6 @@ ev_application_get_print_settings (EvApplication *application)
 			return application->print_settings;
 		}
 	}
-#endif /* GTK 2.11.0 */
 	
 	application->print_settings = gtk_print_settings_new ();
 

@@ -1664,9 +1664,7 @@ pdf_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 		EV_FILE_EXPORTER_CAN_SCALE |
 #ifdef HAVE_CAIRO_PRINT
 #ifdef HAVE_POPPLER_PAGE_RENDER
-#if GTK_CHECK_VERSION (2, 11, 1)
 		EV_FILE_EXPORTER_CAN_NUMBER_UP |
-#endif
 #endif
 #endif
 		

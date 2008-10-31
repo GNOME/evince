@@ -2301,10 +2301,9 @@ ev_window_print_send (EvWindow    *window,
 		ev_application_set_print_settings (EV_APP,
 						   window->priv->print_settings);
 		
-#if GTK_CHECK_VERSION (2, 11, 0)
 		print_settings_file = ev_tmp_filename ("print-settings");
 		gtk_print_settings_to_file (settings, print_settings_file, NULL);
-#endif
+
 		uri = g_filename_to_uri (filename, NULL, NULL);
 		ev_application_open_uri_at_dest (EV_APP,
 						 uri, 
@@ -3083,11 +3082,7 @@ ev_window_run_preview (EvWindow *window)
 	
 	action = gtk_action_group_get_action (window->priv->action_group,
 					      "PreviewPrint");
-#if GTK_CHECK_VERSION (2, 11, 0)
 	gtk_action_set_visible (action, TRUE);
-#else
-	gtk_action_set_visible (action, FALSE);
-#endif
 
 	update_chrome_visibility (window);
 }
@@ -3480,7 +3475,6 @@ ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
 	GtkPrintSettings *print_settings = NULL;
-#if GTK_CHECK_VERSION (2, 11, 0)
 	const gchar      *print_settings_file = priv->print_settings_file;
 
 	if (print_settings_file) {
@@ -3497,7 +3491,6 @@ ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 			}
 		}
 	}
-#endif /* GTK 2.11.0 */
 	
 	if (!print_settings)
 		print_settings = gtk_print_settings_new ();
@@ -5422,13 +5415,7 @@ ev_window_init (EvWindow *ev_window)
 		g_error_free (error);
 	}
 	
-#if GTK_CHECK_VERSION(2,11,4)
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
-#else
-	/* It's fine to just use the one of the default screen here */
-	ev_window->priv->recent_manager = gtk_recent_manager_get_for_screen (
-		gdk_screen_get_default ());
-#endif
 	ev_window->priv->recent_action_group = NULL;
 	ev_window->priv->recent_ui_id = 0;
 	g_signal_connect_swapped (ev_window->priv->recent_manager,
