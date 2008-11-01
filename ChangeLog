@@ -1,5 +1,14 @@
 2008-11-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (window_save_file_copy_ready_cb),
+	(ev_window_print_finished), (ev_window_print_dialog_response_cb),
+	(ev_window_preview_print_finished), (launch_action):
+
+	Do not use popup dialogs to show error messages anymore, use the
+	message area instead.
+	
+2008-11-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_error_message),
 	(ev_window_warning_message), (ev_window_set_document),
 	(ev_window_load_job_cb), (ev_window_load_remote_failed),

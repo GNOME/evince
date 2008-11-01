@@ -2032,7 +2032,6 @@ window_save_file_copy_ready_cb (GFile        *src,
 				GFile        *dst)
 {
 	EvWindow  *window;
-	GtkWidget *dialog;
 	gchar     *name;
 	GError    *error = NULL;
 
@@ -2041,22 +2040,12 @@ window_save_file_copy_ready_cb (GFile        *src,
 		return;
 	}
 
-	window = g_object_get_data (G_OBJECT (dst), "ev-window");
+	window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
 	name = g_file_get_basename (dst);
-	dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR,
-					 GTK_BUTTONS_CLOSE,
-					 _("The file could not be saved as “%s”."),
-					 name);
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  "%s", error->message);
-	g_signal_connect (dialog, "response",
-			  G_CALLBACK (gtk_widget_destroy),
-			  NULL);
-	gtk_widget_show (dialog);
+	ev_window_error_message (window, error,
+				 _("The file could not be saved as “%s”."),
+				 name);
 	ev_tmp_file_unlink (src);
-
 	g_free (name);
 	g_error_free (error);
 }
@@ -2254,18 +2243,8 @@ ev_window_print_finished (GtkPrintJob *print_job,
 	ev_window_clear_print_job (window);
 	
 	if (error) {
-		GtkWidget *dialog;
-		
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-						 GTK_DIALOG_MODAL,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_OK,
-						 _("Failed to print document"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  "%s", error->message);
-
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
+		ev_window_error_message (window, error,
+					 "%s", _("Failed to print document"));
 	} else {
 		/* If printed successfully, save print settings */
 		ev_application_set_print_settings (EV_APP,
@@ -2418,17 +2397,8 @@ ev_window_print_dialog_response_cb (GtkDialog *dialog,
 					      GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
 	
 	if (!gtk_printer_accepts_ps (window->priv->printer)) {
-		GtkWidget *msgdialog;
-
-		msgdialog = gtk_message_dialog_new (GTK_WINDOW (dialog),
-						    GTK_DIALOG_MODAL,
-						    GTK_MESSAGE_ERROR,
-						    GTK_BUTTONS_OK,
-						    _("Printing is not supported on this printer."));
-		
-		gtk_dialog_run (GTK_DIALOG (msgdialog));
-		gtk_widget_destroy (msgdialog);
-
+		ev_window_error_message (window, NULL, "%s",
+					 _("Printing is not supported on this printer."));
 		return FALSE;
 	}
 
@@ -3440,18 +3410,8 @@ ev_window_preview_print_finished (GtkPrintJob *print_job,
 				  GError      *error)
 {
 	if (error) {
-		GtkWidget *dialog;
-
-		dialog = gtk_message_dialog_new (GTK_WINDOW (window),
-						 GTK_DIALOG_MODAL,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_OK,
-						 _("Failed to print document"));
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  "%s", error->message);
-
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
+		ev_window_error_message (window, error,
+					 "%s", _("Failed to print document"));
 	}
 
 	g_object_unref (print_job);
@@ -4880,9 +4840,11 @@ launch_action (EvWindow *window, EvLinkAction *action)
 
 	app_info = g_file_query_default_handler (file, NULL, &error);
 	if (!app_info) {
-		/* FIXME: use ev_window_error_message */
-		g_warning ("%s", error->message);
+		ev_window_error_message (window, error,
+					 "%s",
+					 _("Unable to launch external application."));
 		g_object_unref (file);
+		g_error_free (error);
 
 		return;
 	}
@@ -4896,8 +4858,9 @@ launch_action (EvWindow *window, EvLinkAction *action)
 	
 	file_list.data = file;
 	if (!g_app_info_launch (app_info, &file_list, context, &error)) {
-		/* FIXME: use ev_window_error_message */
-		g_warning ("%s", error->message);
+		ev_window_error_message (window, error,
+					 "%s",
+					 _("Unable to launch external application."));
 		g_error_free (error);
 	}
 	
