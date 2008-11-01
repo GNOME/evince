@@ -3318,6 +3318,24 @@ ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 	ev_view_autoscroll_start (EV_VIEW (ev_window->priv->view));
 }
 
+#if GTK_CHECK_VERSION (2, 14, 0)
+static void
+ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
+{
+	GError  *error = NULL;
+
+	gtk_show_uri (gtk_window_get_screen (GTK_WINDOW (ev_window)),
+		      "ghelp:evince",
+		      GDK_CURRENT_TIME,
+		      &error);
+	if (error) {
+		ev_window_error_message (GTK_WINDOW (ev_window),
+					 _("There was an error displaying help"),
+					 error);
+		g_error_free (error);
+	}
+}
+#else /* !GTK_CHECK_VERSION (2, 14, 0) */
 static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
@@ -3366,6 +3384,7 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 	}
 	g_free (command);
 }
+#endif /* GTK_CHECK_VERSION (2, 14, 0) */
 
 static void
 ev_window_cmd_leave_fullscreen (GtkAction *action, EvWindow *window)
