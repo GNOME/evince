@@ -654,18 +654,29 @@ ev_window_message_area_response_cb (EvMessageArea *area,
 }
 
 static void
-ev_window_error_message (EvWindow *window, const gchar *msg, GError *error)
+ev_window_error_message (EvWindow    *window,
+			 GError      *error,
+			 const gchar *format,
+			 ...)
 {
 	GtkWidget *area;
+	va_list    args;
+	gchar     *msg = NULL;
 
 	if (window->priv->message_area)
 		return;
 
+	va_start (args, format);
+	msg = g_strdup_vprintf (format, args);
+	va_end (args);
+	
 	area = ev_message_area_new (GTK_MESSAGE_ERROR,
 				    msg,
 				    GTK_STOCK_CLOSE,
 				    GTK_RESPONSE_CANCEL,
 				    NULL);
+	g_free (msg);
+	
 	if (error)
 		ev_message_area_set_secondary_text (EV_MESSAGE_AREA (area), error->message);
 	g_signal_connect (area, "response",
@@ -676,18 +687,27 @@ ev_window_error_message (EvWindow *window, const gchar *msg, GError *error)
 }
 
 static void
-ev_window_warning_message (EvWindow *window, const gchar *msg)
+ev_window_warning_message (EvWindow    *window,
+			   const gchar *format,
+			   ...)
 {
 	GtkWidget *area;
+	va_list    args;
+	gchar     *msg = NULL;
 
 	if (window->priv->message_area)
 		return;
+
+	va_start (args, format);
+	msg = g_strdup_vprintf (format, args);
+	va_end (args);
 
 	area = ev_message_area_new (GTK_MESSAGE_WARNING,
 				    msg,
 				    GTK_STOCK_CLOSE,
 				    GTK_RESPONSE_CANCEL,
 				    NULL);
+	g_free (msg);
 	
 	g_signal_connect (area, "response",
 			  G_CALLBACK (ev_window_message_area_response_cb),
@@ -1200,7 +1220,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
 		ev_view_set_document (view, document);
 	} else {
-		ev_window_warning_message (ev_window,
+		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains no pages"));
 	}
 
@@ -1424,9 +1444,8 @@ ev_window_load_job_cb (EvJob *job,
 		
 		ev_window_popup_password_dialog (ev_window);
 	} else {
-		ev_window_error_message (ev_window, 
-					 _("Unable to open document"),
-					 job->error);
+		ev_window_error_message (ev_window, job->error, 
+					 "%s", _("Unable to open document"));
 		ev_window_clear_load_job (ev_window);
 	}	
 }
@@ -1499,9 +1518,8 @@ ev_window_load_remote_failed (EvWindow *ev_window,
 {
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 	ev_window->priv->in_reload = FALSE;
-	ev_window_error_message (ev_window,
-				 _("Unable to open document"),
-				 error);
+	ev_window_error_message (ev_window, error, 
+				 "%s", _("Unable to open document"));
 	g_free (ev_window->priv->local_uri);
 	ev_window->priv->local_uri = NULL;
 }
@@ -1786,10 +1804,8 @@ ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 	new_filename = ev_window_create_tmp_symlink (old_filename, &error);
 
 	if (error) {
-		ev_window_error_message (window,
-					 _("Cannot open a copy."),
-					 error);
-
+		ev_window_error_message (window, error, 
+					 "%s", _("Cannot open a copy."));
 		g_error_free (error);
 		g_free (old_filename);
 		g_free (new_filename);
@@ -2079,12 +2095,9 @@ ev_window_save_job_cb (EvJob     *job,
 		       EvWindow  *window)
 {
 	if (ev_job_is_failed (job)) {
-		gchar *msg;
-		
-		msg = g_strdup_printf (_("The file could not be saved as “%s”."),
-				       EV_JOB_SAVE (job)->uri);
-		ev_window_error_message (window, msg, job->error);
-		g_free (msg);
+		ev_window_error_message (window, job->error,
+					 _("The file could not be saved as “%s”."),
+					 EV_JOB_SAVE (job)->uri);
 	}
 
 	ev_window_clear_save_job (window);
@@ -3329,9 +3342,8 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 		      GDK_CURRENT_TIME,
 		      &error);
 	if (error) {
-		ev_window_error_message (ev_window,
-					 _("There was an error displaying help"),
-					 error);
+		ev_window_error_message (ev_window, error, 
+					 "%s", _("There was an error displaying help"));
 		g_error_free (error);
 	}
 }
@@ -4925,9 +4937,8 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 	}
 	
   	if (ret == FALSE) {
-		ev_window_error_message (window,
-					 _("Unable to open external link"),
-					 error);
+		ev_window_error_message (window, error, 
+					 "%s", _("Unable to open external link"));
 		g_error_free (error);
 	}
 }
@@ -5081,9 +5092,9 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	}
 
 	if (format == NULL) {
-		ev_window_error_message (ev_window,
-					 _("Couldn't find appropriate format to save image"),
-					 NULL);
+		ev_window_error_message (ev_window, NULL, 
+					 "%s",
+					 _("Couldn't find appropriate format to save image"));
 		g_free (uri);
 		gtk_widget_destroy (fc);
 
@@ -5121,9 +5132,8 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	g_object_unref (pixbuf);
 	
 	if (error) {
-		ev_window_error_message (ev_window,
-					 _("The image could not be saved."),
-					 error);
+		ev_window_error_message (ev_window, error, 
+					 "%s", _("The image could not be saved."));
 		g_error_free (error);
 		g_free (filename);
 		g_object_unref (target_file);
@@ -5215,9 +5225,8 @@ ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 		ev_attachment_open (attachment, screen, GDK_CURRENT_TIME, &error);
 
 		if (error) {
-			ev_window_error_message (window,
-						 _("Unable to open attachment"),
-						 error);
+			ev_window_error_message (window, error, 
+						 "%s", _("Unable to open attachment"));
 			g_error_free (error);
 		}
 	}
@@ -5267,9 +5276,8 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 		ev_attachment_save (attachment, save_to, &error);
 		
 		if (error) {
-			ev_window_error_message (ev_window,
-						 _("The attachment could not be saved."),
-						 error);
+			ev_window_error_message (ev_window, error, 
+						 "%s", _("The attachment could not be saved."));
 			g_error_free (error);
 			g_object_unref (save_to);
 

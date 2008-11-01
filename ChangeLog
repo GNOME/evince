@@ -5,6 +5,20 @@
 	(ev_window_load_job_cb), (ev_window_load_remote_failed),
 	(ev_window_cmd_file_open_copy_at_dest), (ev_window_save_job_cb),
 	(ev_window_cmd_help_contents), (launch_external_uri),
+	(image_save_dialog_response_cb), (image_save_dialog_response_cb),
+	(ev_attachment_popup_cmd_open_attachment),
+	(attachment_save_dialog_response_cb):
+
+	Use a message format (with printf()-style) in
+	ev_window_error_message and ev_window_warning_message.
+
+2008-11-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-window.c: (ev_window_error_message),
+	(ev_window_warning_message), (ev_window_set_document),
+	(ev_window_load_job_cb), (ev_window_load_remote_failed),
+	(ev_window_cmd_file_open_copy_at_dest), (ev_window_save_job_cb),
+	(ev_window_cmd_help_contents), (launch_external_uri),
 	(image_save_dialog_response_cb),
 	(ev_attachment_popup_cmd_open_attachment),
 	(attachment_save_dialog_response_cb):
