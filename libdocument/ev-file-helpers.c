@@ -209,7 +209,7 @@ ev_xfer_uri_simple (const char *from,
 {
 	GFile *source_file;
 	GFile *target_file;
-	GError *ioerror;
+	GError *ioerror = NULL;
 	gboolean result;
 	
 	if (!from)
