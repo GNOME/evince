@@ -37,6 +37,7 @@
 #include "ev-metadata-manager.h"
 #include "ev-stock-icons.h"
 #include "eggsmclient.h"
+#include "eggdesktopfile.h"
 
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;
@@ -372,7 +373,8 @@ main (int argc, char *argv[])
 
 	ev_file_helpers_init ();
 	ev_stock_icons_init ();
-	gtk_window_set_default_icon_name ("evince");
+	
+	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
 
 	if (!ev_application_load_session (EV_APP))
 		load_files (file_arguments, args);

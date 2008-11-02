@@ -31,7 +31,6 @@
 
 #include "totem-scrsaver.h"
 #include "eggsmclient.h"
-#include "eggdesktopfile.h"
 
 #include "ev-application.h"
 #include "ev-document-factory.h"
@@ -227,8 +226,6 @@ smclient_quit_cb (EggSMClient   *client,
 static void
 ev_application_init_session (EvApplication *application)
 {
-	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
-	
 	application->smclient = egg_sm_client_get ();
 	g_signal_connect (application->smclient, "save_state",
 			  G_CALLBACK (smclient_save_state_cb),
