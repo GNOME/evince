@@ -154,7 +154,7 @@ create_menu_item (GtkAction *action)
 		else 
 		{
 			menu_item = gtk_radio_menu_item_new_with_label (group, 
-									zoom_levels[i].name);
+									_(zoom_levels[i].name));
 			group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
 
                         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item),
