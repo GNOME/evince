@@ -148,7 +148,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 		info->fontname));
 	status = TT_Open_Face(tt_handle, font->filename, &info->face);
 	if(status) {
-		warning(_("(tt) %s: could not load face: %s\n"),
+		mdvi_warning(_("(tt) %s: could not load face: %s\n"),
 			info->fontname, TT_ErrToString18(status));
 		return -1;
 	}
@@ -156,7 +156,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	/* create a new instance of this face */
 	status = TT_New_Instance(info->face, &info->instance);
 	if(status) {
-		warning(_("(tt) %s: could not create face: %s\n"), 
+		mdvi_warning(_("(tt) %s: could not create face: %s\n"), 
 			info->fontname, TT_ErrToString18(status));
 		TT_Close_Face(info->face);
 		return -1;
@@ -165,7 +165,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	/* create a glyph */
 	status = TT_New_Glyph(info->face, &info->glyph);
 	if(status) {
-		warning(_("(tt) %s: could not create glyph: %s\n"), 
+		mdvi_warning(_("(tt) %s: could not create glyph: %s\n"), 
 			info->fontname, TT_ErrToString18(status));
 		goto tt_error;
 	}
@@ -198,7 +198,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 		}
 	}
 	if(map_found < 0) {
-		warning(_("(tt) %s: no acceptable map found, using #0\n"),
+		mdvi_warning(_("(tt) %s: no acceptable map found, using #0\n"),
 			info->fontname);
 		map_found = 0;
 	}
@@ -237,7 +237,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 		
 		status = TT_Load_PS_Names(info->face, &post);
 		if(status) {
-			warning(_("(tt) %s: could not load PS name table\n"),
+			mdvi_warning(_("(tt) %s: could not load PS name table\n"),
 				info->fontname);
 			mdvi_release_encoding(info->encoding, 0);
 			info->encoding = NULL;
@@ -249,7 +249,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 		info->fmftype, info->fmfname);
 
 	if(info->tfminfo == NULL) {
-		warning("(tt) %s: no metrics data, font ignored\n",
+		mdvi_warning("(tt) %s: no metrics data, font ignored\n",
 			info->fontname);
 		goto tt_error;
 	}
@@ -262,7 +262,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	if(info->encoding)
 		tt_encode_font(font, info);
 	else {
-		warning(_("%s: no encoding vector found, expect bad output\n"),
+		mdvi_warning(_("%s: no encoding vector found, expect bad output\n"),
 			info->fontname);
 		/* this is better than nothing */
 		for(i = font->loc; i <= font->hic; i++)
@@ -322,7 +322,7 @@ static int tt_load_font(DviParams *params, DviFont *font)
 	}
 	
 	if(info->fmfname == NULL)
-		warning(_("(tt) %s: no font metric data\n"), font->fontname);
+		mdvi_warning(_("(tt) %s: no font metric data\n"), font->fontname);
 	
 	listh_append(&ttfonts, LIST(info));
 	font->private = info;

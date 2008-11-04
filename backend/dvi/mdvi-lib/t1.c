@@ -184,7 +184,7 @@ static void t1_reset_resolution(int xdpi, int ydpi)
 		T1_DeleteAllSizes(i);
 	/* reset device resolutions */
 	if(T1_SetDeviceResolutions((float)xdpi, (float)ydpi) < 0)
-		warning(_("(t1) failed to reset device resolution\n"));
+		mdvi_warning(_("(t1) failed to reset device resolution\n"));
 	else
 		DEBUG((DBG_TYPE1, 
 			"(t1) reset successful, new resolution is (%d, %d)\n",
@@ -212,7 +212,7 @@ static void t1_transform_font(T1Info *info)
 			info->fontname, info->encoding->name));
 		T1_DeleteAllSizes(info->t1id);
 		if(T1_ReencodeFont(info->t1id, info->encoding->vector) < 0)
-			warning(_("%s: could not encode font\n"), info->fontname);
+			mdvi_warning(_("%s: could not encode font\n"), info->fontname);
 	}
 	if(info->mapinfo.slant) {
 		DEBUG((DBG_TYPE1, "(t1) %s: slanting by %.3f\n", 

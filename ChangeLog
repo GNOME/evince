@@ -1,3 +1,19 @@
+2008-11-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/dvi/mdvi-lib/t1.c (t1_reset_resolution),
+	(t1_transform_font):
+	* backend/dvi/mdvi-lib/tt.c (tt_really_load_font), (tt_load_font):
+ 	
+	More renames of warning to mdvi_warning in follow up to the
+	fix of the bug #553369. Fix for the bug #559257 by
+	Tuxce <tuxce.net@gmail.com>.
+
+2008-11-04  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/dvi/mdvi-lib/t1.c (t1_reset_resolution),
+	(t1_transform_font):
+	* backend/dvi/mdvi-lib/tt.c (tt_really_load_font), (tt_load_font):
+
 2008-11-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* libdocument/ev-file-helpers.c: (ev_xfer_uri_simple):
