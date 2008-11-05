@@ -37,7 +37,11 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
+#if GTK_CHECK_VERSION (2, 14, 0)
 #include <gtk/gtkunixprint.h>
+#else
+#include <gtk/gtkprintunixdialog.h>
+#endif
 #include <gconf/gconf-client.h>
 
 #include "egg-editable-toolbar.h"
