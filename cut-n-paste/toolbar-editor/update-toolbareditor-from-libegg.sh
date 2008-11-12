@@ -11,11 +11,9 @@ SVN_URI=http://svn.gnome.org/svn/libegg/trunk/libegg/toolbareditor
 FILES="egg-editable-toolbar.c \
        egg-toolbars-model.c \
        egg-toolbar-editor.c \
-       eggtreemultidnd.c \
        egg-editable-toolbar.h \
        egg-toolbars-model.h \
        egg-toolbar-editor.h \
-       eggtreemultidnd.h \
        eggmarshalers.list" 
 
 
