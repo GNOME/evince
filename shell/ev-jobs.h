@@ -60,6 +60,9 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 typedef struct _EvJobFind EvJobFind;
 typedef struct _EvJobFindClass EvJobFindClass;
 
+typedef struct _EvJobLayers EvJobLayers;
+typedef struct _EvJobLayersClass EvJobLayersClass;
+
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
 #define EV_JOB_CLASS(klass)	             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB, EvJobClass))
@@ -106,10 +109,15 @@ typedef struct _EvJobFindClass EvJobFindClass;
 #define EV_JOB_PRINT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
 #define EV_IS_JOB_PRINT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
 
-#define EV_TYPE_JOB_FIND                    (ev_job_find_get_type())
-#define EV_JOB_FIND(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FIND, EvJobFind))
-#define EV_JOB_FIND_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FIND, EvJobFindClass))
-#define EV_IS_JOB_FIND(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FIND))
+#define EV_TYPE_JOB_FIND                     (ev_job_find_get_type())
+#define EV_JOB_FIND(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FIND, EvJobFind))
+#define EV_JOB_FIND_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FIND, EvJobFindClass))
+#define EV_IS_JOB_FIND(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_FIND))
+
+#define EV_TYPE_JOB_LAYERS                   (ev_job_layers_get_type())
+#define EV_JOB_LAYERS(object)                (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LAYERS, EvJobLayers))
+#define EV_JOB_LAYERS_CLASS(klass)           (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LAYERS, EvJobLayersClass))
+#define EV_IS_JOB_LAYERS(object)             (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LAYERS))
 
 typedef enum {
 	EV_JOB_RUN_THREAD,
@@ -320,6 +328,18 @@ struct _EvJobFindClass
 			   gint       page);
 };
 
+struct _EvJobLayers
+{
+	EvJob parent;
+
+	GtkTreeModel *model;
+};
+
+struct _EvJobLayersClass
+{
+	EvJobClass parent_class;
+};
+
 /* Base job class */
 GType           ev_job_get_type           (void) G_GNUC_CONST;
 gboolean        ev_job_run                (EvJob          *job);
@@ -413,6 +433,10 @@ gint            ev_job_find_get_n_results (EvJobFind       *job,
 gdouble         ev_job_find_get_progress  (EvJobFind       *job);
 gboolean        ev_job_find_has_results   (EvJobFind       *job);
 GList         **ev_job_find_get_results   (EvJobFind       *job);
+
+/* EvJobLayers */
+GType           ev_job_layers_get_type    (void) G_GNUC_CONST;
+EvJob          *ev_job_layers_new         (EvDocument     *document);
 
 G_END_DECLS
 

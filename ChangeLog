@@ -1,5 +1,21 @@
 2008-11-15  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/Makefile.am:
+	* shell/ev-jobs.[ch]: (ev_job_layers_init),
+	(ev_job_layers_dispose), (ev_job_layers_run),
+	(ev_job_layers_class_init), (ev_job_layers_new):
+	* shell/ev-sidebar-layers.[ch]:
+	* shell/ev-view.[ch]: (ev_view_form_field_button_create_widget),
+	(ev_view_form_field_text_save), (ev_view_form_field_choice_save),
+	(ev_view_reload_page), (ev_view_reload):
+	* shell/ev-window.c: (setup_sidebar_from_metadata),
+	(ev_window_sidebar_current_page_changed_cb),
+	(sidebar_layers_visibility_changed), (ev_window_init):
+
+	Add layers support.
+	
+2008-11-15  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* data/icons/22x22/actions/Makefile.am:
 	* data/icons/22x22/actions/eye.png:
 	* shell/ev-stock-icons.[ch]:

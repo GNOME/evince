@@ -220,6 +220,9 @@ static void       draw_one_page                              (EvView            
 static void	  draw_loading_text 			     (EvView             *view,
 							      GdkRectangle       *page_area,
 							      GdkRectangle       *expose_area);
+static void       ev_view_reload_page                        (EvView             *view,
+							      gint                page,
+							      GdkRegion          *region);
 
 /*** Callbacks ***/
 static void       job_finished_cb                            (EvPixbufCache      *pixbuf_cache,
@@ -1703,11 +1706,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 			break;
 	}
 
-	ev_pixbuf_cache_reload_page (view->pixbuf_cache,
-				     field_region,
-				     field->page->index,
-				     view->rotation,
-				     view->scale);
+	ev_view_reload_page (view, field->page->index, field_region);
 	gdk_region_destroy (field_region);
 	
 	return NULL;
@@ -1733,11 +1732,7 @@ ev_view_form_field_text_save (EvView    *view,
 		ev_document_forms_form_field_text_set_text (EV_DOCUMENT_FORMS (view->document),
 							    field, field_text->text);
 		field->changed = FALSE;
-		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
-					     field_region,
-					     field->page->index,
-					     view->rotation,
-					     view->scale);
+		ev_view_reload_page (view, field->page->index, field_region);
 		gdk_region_destroy (field_region);
 	}
 }
@@ -1854,11 +1849,7 @@ ev_view_form_field_choice_save (EvView    *view,
 			}
 		}
 		field->changed = FALSE;
-		ev_pixbuf_cache_reload_page (view->pixbuf_cache,
-					     field_region,
-					     field->page->index,
-					     view->rotation,
-					     view->scale);
+		ev_view_reload_page (view, field->page->index, field_region);
 		gdk_region_destroy (field_region);
 	}
 }
@@ -4471,6 +4462,25 @@ ev_view_set_document (EvView     *view,
 	}
 }
 
+static void
+ev_view_reload_page (EvView    *view,
+		     gint       page,
+		     GdkRegion *region)
+{
+	ev_pixbuf_cache_reload_page (view->pixbuf_cache,
+				     region,
+				     page,
+				     view->rotation,
+				     view->scale);
+}
+
+void
+ev_view_reload (EvView *view)
+{
+	ev_pixbuf_cache_clear (view->pixbuf_cache);
+	view_update_range_and_current_page (view);
+}
+
 /*** Zoom and sizing mode ***/
 
 #define EPSILON 0.0000001
@@ -5871,7 +5881,7 @@ ev_view_previous_page (EvView *view)
 		return FALSE;
 	}
 }
-
+		
 /*** Enum description for usage in signal ***/
 
 GType

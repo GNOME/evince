@@ -32,6 +32,7 @@
 #include "ev-document-fonts.h"
 #include "ev-document-security.h"
 #include "ev-document-find.h"
+#include "ev-document-layers.h"
 #include "ev-debug.h"
 
 #include <errno.h>
@@ -57,6 +58,8 @@ static void ev_job_print_init             (EvJobPrint            *job);
 static void ev_job_print_class_init       (EvJobPrintClass       *class);
 static void ev_job_find_init              (EvJobFind             *job);
 static void ev_job_find_class_init        (EvJobFindClass        *class);
+static void ev_job_layers_init            (EvJobLayers           *job);
+static void ev_job_layers_class_init      (EvJobLayersClass      *class);
 
 enum {
 	CANCELLED,
@@ -94,6 +97,7 @@ G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobPrint, ev_job_print, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFind, ev_job_find, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobLayers, ev_job_layers, EV_TYPE_JOB)
 
 /* EvJob */
 static void
@@ -1536,3 +1540,66 @@ ev_job_find_get_results (EvJobFind *job)
 	return job->pages;
 }
 
+/* EvJobLayers */
+static void
+ev_job_layers_init (EvJobLayers *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_layers_dispose (GObject *object)
+{
+	EvJobLayers *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
+	job = EV_JOB_LAYERS (object);
+
+	if (job->model) {
+		g_object_unref (job->model);
+		job->model = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_layers_parent_class)->dispose) (object);
+}
+
+static gboolean
+ev_job_layers_run (EvJob *job)
+{
+	EvJobLayers *job_layers = EV_JOB_LAYERS (job);
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	
+	ev_document_doc_mutex_lock ();
+	job_layers->model = ev_document_layers_get_layers (EV_DOCUMENT_LAYERS (job->document));
+	ev_document_doc_mutex_unlock ();
+	
+	ev_job_succeeded (job);
+	
+	return FALSE;
+}
+
+static void
+ev_job_layers_class_init (EvJobLayersClass *class)
+{
+	GObjectClass *oclass = G_OBJECT_CLASS (class);
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+	oclass->dispose = ev_job_layers_dispose;
+	job_class->run = ev_job_layers_run;
+}
+
+EvJob *
+ev_job_layers_new (EvDocument *document)
+{
+	EvJob *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	job = g_object_new (EV_TYPE_JOB_LAYERS, NULL);
+	job->document = g_object_ref (document);
+	
+	return job;
+}

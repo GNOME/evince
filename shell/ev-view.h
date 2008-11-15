@@ -58,6 +58,8 @@ void		ev_view_set_document	  (EvView         *view,
 			   		   EvDocument     *document);
 void 		ev_view_set_loading       (EvView 	  *view,
 				           gboolean        loading);
+void            ev_view_reload            (EvView         *view);
+
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);
 void            ev_view_copy_link_address (EvView         *view,

@@ -1,18 +1,19 @@
-INCLUDES=						\
-	-DDATADIR=\"$(pkgdatadir)\"			\
-	-DGNOMEDATADIR=\"$(datadir)\"			\
-	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
-	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
-	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
-	-I$(top_srcdir)/cut-n-paste/gedit-message-area/	\
-	-I$(top_srcdir)/cut-n-paste/evmountoperation/	\
-	-I$(top_srcdir)/cut-n-paste/smclient/		\
-	-I$(top_srcdir)/libdocument			\
-	-I$(top_srcdir)/properties			\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
-	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
-	$(SHELL_CFLAGS)					\
-	$(WARN_CFLAGS)					\
+INCLUDES=							\
+	-DDATADIR=\"$(pkgdatadir)\"				\
+	-DGNOMEDATADIR=\"$(datadir)\"				\
+	-I$(top_srcdir)/cut-n-paste/zoom-control/		\
+	-I$(top_srcdir)/cut-n-paste/toolbar-editor/		\
+	-I$(top_srcdir)/cut-n-paste/totem-screensaver/		\
+	-I$(top_srcdir)/cut-n-paste/gedit-message-area/		\
+	-I$(top_srcdir)/cut-n-paste/gimpcellrenderertoggle/	\
+	-I$(top_srcdir)/cut-n-paste/evmountoperation/		\
+	-I$(top_srcdir)/cut-n-paste/smclient/			\
+	-I$(top_srcdir)/libdocument				\
+	-I$(top_srcdir)/properties				\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
+	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
+	$(SHELL_CFLAGS)						\
+	$(WARN_CFLAGS)						\
 	$(DISABLE_DEPRECATED)
 
 bin_PROGRAMS=evince
@@ -81,6 +82,8 @@ evince_SOURCES=				\
 	ev-sidebar.h			\
 	ev-sidebar-attachments.c	\
 	ev-sidebar-attachments.h	\
+	ev-sidebar-layers.c		\
+	ev-sidebar-layers.h		\
 	ev-sidebar-links.c		\
 	ev-sidebar-links.h		\
 	ev-sidebar-page.c		\
@@ -95,15 +98,16 @@ evince_SOURCES=				\
 	ev-transition-animation.h	\
 	main.c
 
-evince_LDADD=									\
-	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la			\
-	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la		\
-	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
-	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
-	$(top_builddir)/cut-n-paste/evmountoperation/libevmountoperation.la	\
-	$(top_builddir)/cut-n-paste/smclient/libsmclient.la			\
-	$(top_builddir)/properties/libevproperties.la				\
-	$(top_builddir)/libdocument/libevbackend.la				\
+evince_LDADD=										\
+	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la				\
+	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la			\
+	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la		\
+	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la		\
+	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
+	$(top_builddir)/cut-n-paste/evmountoperation/libevmountoperation.la		\
+	$(top_builddir)/cut-n-paste/smclient/libsmclient.la				\
+	$(top_builddir)/properties/libevproperties.la					\
+	$(top_builddir)/libdocument/libevbackend.la					\
 	$(SHELL_LIBS)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c

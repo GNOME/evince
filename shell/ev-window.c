@@ -81,6 +81,7 @@
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"
+#include "ev-sidebar-layers.h"
 #include "ev-stock-icons.h"
 #include "ev-utils.h"
 #include "ev-view.h"
@@ -129,6 +130,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
 	GtkWidget *sidebar_attachments;
+	GtkWidget *sidebar_layers;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -211,6 +213,7 @@ struct _EvWindowPrivate {
 #define LINKS_SIDEBAR_ID "links"
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
+#define LAYERS_SIDEBAR_ID "layers"
 
 static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_N_COPIES,
@@ -906,6 +909,7 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 	GtkWidget *links = window->priv->sidebar_links;
 	GtkWidget *thumbs = window->priv->sidebar_thumbs;
 	GtkWidget *attachments = window->priv->sidebar_attachments;
+	GtkWidget *layers = window->priv->sidebar_layers;
 	GValue sidebar_size = { 0, };
 	GValue sidebar_page = { 0, };
 	GValue sidebar_visibility = { 0, };
@@ -916,19 +920,29 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 		g_value_unset(&sidebar_size);
 	}
 	
-	if (document && ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, FALSE)) {
+	if (document && ev_metadata_manager_get (uri, "sidebar_page", &sidebar_page, TRUE)) {
 		const char *page_id = g_value_get_string (&sidebar_page);
-		
+
 		if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
-		} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
+		} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
-		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
+		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
+		} else if (strcmp (page_id, LAYERS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
 		}
 		g_value_unset (&sidebar_page);
-	} else if (document && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
-		ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
+	} else if (document) {
+		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
+		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
+		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
+		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
+		}
 	}
 
 	if (ev_metadata_manager_get (uri, "sidebar_visibility", &sidebar_visibility, FALSE)) {
@@ -3819,6 +3833,8 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 		id = THUMBNAILS_SIDEBAR_ID;
 	} else if (current_page == ev_window->priv->sidebar_attachments) {
 		id = ATTACHMENTS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_layers) {
+		id = LAYERS_SIDEBAR_ID;
 	} else {
 		g_assert_not_reached();
 	}
@@ -4590,6 +4606,13 @@ navigation_action_activate_link_cb (EvNavigationAction *action, EvLink *link, Ev
 	
 	ev_view_handle_link (EV_VIEW (window->priv->view), link);
 	gtk_widget_grab_focus (window->priv->view);
+}
+
+static void
+sidebar_layers_visibility_changed (EvSidebarLayers *layers,
+				   EvWindow        *window)
+{
+	ev_view_reload (EV_VIEW (window->priv->view));
 }
 
 static void
@@ -5489,6 +5512,16 @@ ev_window_init (EvWindow *ev_window)
 				 "popup",
 				 G_CALLBACK (attachment_bar_menu_popup_cb),
 				 ev_window, 0);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     sidebar_widget);
+
+	sidebar_widget = ev_sidebar_layers_new ();
+	ev_window->priv->sidebar_layers = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "layers_visibility_changed",
+			  G_CALLBACK (sidebar_layers_visibility_changed),
+			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
