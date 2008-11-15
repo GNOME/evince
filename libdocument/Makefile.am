@@ -27,6 +27,7 @@ INST_H_FILES = 					\
 	ev-document.h				\
 	ev-document-images.h			\
 	ev-document-info.h			\
+	ev-document-layers.h			\
 	ev-document-links.h			\
 	ev-document-misc.h			\
 	ev-document-security.h			\
@@ -36,6 +37,7 @@ INST_H_FILES = 					\
 	ev-file-helpers.h			\
 	ev-form-field.h				\
 	ev-image.h				\
+	ev-layer.h				\
 	ev-link-action.h			\
 	ev-link-dest.h				\
 	ev-link.h				\
@@ -52,6 +54,7 @@ libevbackend_la_SOURCES=			\
 	ev-attachment.c				\
 	ev-backends-manager.c			\
 	ev-backend-marshal.c			\
+	ev-layer.c				\
 	ev-link.c				\
 	ev-link-action.c			\
 	ev-link-dest.c				\
@@ -60,6 +63,7 @@ libevbackend_la_SOURCES=			\
 	ev-document-factory.c			\
 	ev-document-thumbnails.c		\
 	ev-document-fonts.c                     \
+	ev-document-layers.c			\
 	ev-document-links.c			\
 	ev-document-images.c			\
 	ev-document-security.c			\
