@@ -1,1 +1,1 @@
-SUBDIRS = zoom-control toolbar-editor totem-screensaver gedit-message-area evmountoperation smclient
+SUBDIRS = zoom-control toolbar-editor totem-screensaver gedit-message-area evmountoperation smclient gimpcellrenderertoggle

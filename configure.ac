@@ -419,6 +419,7 @@ backend/tiff/Makefile
 cut-n-paste/Makefile
 cut-n-paste/evmountoperation/Makefile
 cut-n-paste/gedit-message-area/Makefile
+cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/smclient/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
