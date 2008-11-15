@@ -37,6 +37,7 @@ G_BEGIN_DECLS
 #define EV_STOCK_ROTATE_LEFT            "object-rotate-left"
 #define EV_STOCK_ROTATE_RIGHT           "object-rotate-right"
 #define EV_STOCK_RUN_PRESENTATION       "x-office-presentation"
+#define EV_STOCK_VISIBLE                "eye"
 
 void ev_stock_icons_init (void);
 

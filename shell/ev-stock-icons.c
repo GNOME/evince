@@ -43,6 +43,7 @@ static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ROTATE_LEFT,      "object-rotate-left"},
 	{ EV_STOCK_ROTATE_RIGHT,     "object-rotate-right"},
 	{ EV_STOCK_RUN_PRESENTATION, "x-office-presentation"},
+	{ EV_STOCK_VISIBLE,          "eye"}
 };
 
 /**
