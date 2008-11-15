@@ -216,6 +216,7 @@ if test "x$enable_pdf" = "xyes"; then
 	    evince_save_LIBS=$LIBS
 	    LIBS="$LIBS $POPPLER_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)
+	    AC_CHECK_FUNCS(poppler_layers_iter_new)
 	    LIBS=$evince_save_LIBS
 
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)

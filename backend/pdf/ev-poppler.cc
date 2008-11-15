@@ -44,6 +44,7 @@
 #include "ev-document-thumbnails.h"
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
+#include "ev-document-layers.h"
 #include "ev-selection.h"
 #include "ev-transition-effect.h"
 #include "ev-attachment.h"
@@ -98,6 +99,8 @@ struct _PdfDocument
 
 	PdfDocumentSearch *search;
 	PdfPrintContext *print_ctx;
+
+	GList *layers;
 };
 
 static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
@@ -107,6 +110,7 @@ static void pdf_document_document_links_iface_init      (EvDocumentLinksIface   
 static void pdf_document_document_images_iface_init     (EvDocumentImagesIface     *iface);
 static void pdf_document_document_forms_iface_init      (EvDocumentFormsIface      *iface);
 static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface      *iface);
+static void pdf_document_document_layers_iface_init     (EvDocumentLayersIface     *iface);
 static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
 static void pdf_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
 static void pdf_selection_iface_init                    (EvSelectionIface          *iface);
@@ -138,6 +142,8 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 								 pdf_document_document_forms_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
 								 pdf_document_document_fonts_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
+								 pdf_document_document_layers_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 								 pdf_document_find_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
@@ -194,6 +200,11 @@ pdf_document_dispose (GObject *object)
 
 	if (pdf_document->fonts_iter) {
 		poppler_fonts_iter_free (pdf_document->fonts_iter);
+	}
+
+	if (pdf_document->layers) {
+		g_list_foreach (pdf_document->layers, (GFunc)g_object_unref, NULL);
+		g_list_free (pdf_document->layers);
 	}
 
 	G_OBJECT_CLASS (pdf_document_parent_class)->dispose (object);
@@ -2303,3 +2314,156 @@ pdf_document_document_forms_iface_init (EvDocumentFormsIface *iface)
 	iface->form_field_choice_get_text = pdf_document_forms_form_field_choice_get_text;
 }
 
+/* Layers */
+static gboolean
+pdf_document_layers_has_layers (EvDocumentLayers *document)
+{
+#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerLayersIter *iter;
+
+	iter = poppler_layers_iter_new (pdf_document->document);
+	if (!iter)
+		return FALSE;
+	poppler_layers_iter_free (iter);
+
+	return TRUE;
+#else
+	return FALSE;
+#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
+}
+
+#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
+static void
+build_layers_tree (PdfDocument       *pdf_document,
+		   GtkTreeModel      *model,
+		   GtkTreeIter       *parent,
+		   PopplerLayersIter *iter)
+{
+	do {
+		GtkTreeIter        tree_iter;
+		PopplerLayersIter *child;
+		PopplerLayer      *layer;
+		EvLayer           *ev_layer = NULL;
+		gboolean           visible;
+		gchar             *markup;
+		gint               rb_group = 0;
+
+		layer = poppler_layers_iter_get_layer (iter);
+		if (layer) {
+			markup = g_markup_escape_text (poppler_layer_get_title (layer), -1);
+			visible = poppler_layer_is_visible (layer);
+			rb_group = poppler_layer_get_radio_button_group_id (layer);
+			pdf_document->layers = g_list_append (pdf_document->layers,
+							      g_object_ref (layer));
+			ev_layer = ev_layer_new (g_list_length (pdf_document->layers) - 1,
+						 poppler_layer_is_parent (layer),
+						 rb_group);
+		} else {
+			gchar *title;
+
+			title = poppler_layers_iter_get_title (iter);
+			markup = g_markup_escape_text (title, -1);
+			g_free (title);
+
+			visible = FALSE;
+			layer = NULL;
+		}
+
+		gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
+		gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
+				    EV_DOCUMENT_LAYERS_COLUMN_TITLE, markup,
+				    EV_DOCUMENT_LAYERS_COLUMN_VISIBLE, visible,
+				    EV_DOCUMENT_LAYERS_COLUMN_ENABLED, TRUE, /* FIXME */
+				    EV_DOCUMENT_LAYERS_COLUMN_SHOWTOGGLE, (layer != NULL),
+				    EV_DOCUMENT_LAYERS_COLUMN_RBGROUP, rb_group,
+				    EV_DOCUMENT_LAYERS_COLUMN_LAYER, ev_layer,
+				    -1);
+		if (ev_layer)
+			g_object_unref (ev_layer);
+		g_free (markup);
+
+		child = poppler_layers_iter_get_child (iter);
+		if (child)
+			build_layers_tree (pdf_document, model, &tree_iter, child);
+		poppler_layers_iter_free (child);
+	} while (poppler_layers_iter_next (iter));
+}
+#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
+
+static GtkTreeModel *
+pdf_document_layers_get_layers (EvDocumentLayers *document)
+{
+	GtkTreeModel *model = NULL;
+#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerLayersIter *iter;
+
+	iter = poppler_layers_iter_new (pdf_document->document);
+	if (iter) {
+		model = (GtkTreeModel *) gtk_tree_store_new (EV_DOCUMENT_LAYERS_N_COLUMNS,
+							     G_TYPE_STRING,  /* TITLE */
+							     G_TYPE_OBJECT,  /* LAYER */
+							     G_TYPE_BOOLEAN, /* VISIBLE */
+							     G_TYPE_BOOLEAN, /* ENABLED */
+							     G_TYPE_BOOLEAN, /* SHOWTOGGLE */
+							     G_TYPE_INT);    /* RBGROUP */
+		build_layers_tree (pdf_document, model, NULL, iter);
+		poppler_layers_iter_free (iter);
+	}
+	
+#endif
+	return model;
+}
+
+static void
+pdf_document_layers_show_layer (EvDocumentLayers *document,
+				EvLayer          *layer)
+{
+#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	guint        layer_id = ev_layer_get_id (layer);
+
+	poppler_layer_show (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
+#else
+	return;
+#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
+}
+
+static void
+pdf_document_layers_hide_layer (EvDocumentLayers *document,
+				EvLayer          *layer)
+{
+#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	guint        layer_id = ev_layer_get_id (layer);
+
+	poppler_layer_hide (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
+#else
+	return;
+#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
+}
+
+static gboolean
+pdf_document_layers_layer_is_visible (EvDocumentLayers *document,
+				      EvLayer          *layer)
+{
+#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	guint        layer_id = ev_layer_get_id (layer);
+
+	return poppler_layer_is_visible (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
+#else
+	return FALSE;
+#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
+}
+
+static void
+pdf_document_document_layers_iface_init (EvDocumentLayersIface *iface)
+{
+	iface->has_layers = pdf_document_layers_has_layers;
+	iface->get_layers = pdf_document_layers_get_layers;
+	iface->show_layer = pdf_document_layers_show_layer;
+	iface->hide_layer = pdf_document_layers_hide_layer;
+	iface->layer_is_visible = pdf_document_layers_layer_is_visible;
+}
