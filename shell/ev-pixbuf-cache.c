@@ -94,8 +94,8 @@ static gboolean      new_selection_surface_needed(EvPixbufCache      *pixbuf_cac
 
 
 /* These are used for iterating through the prev and next arrays */
-#define FIRST_VISABLE_PREV(pixbuf_cache) \
-	(MAX (0, pixbuf_cache->preload_cache_size + 1 - pixbuf_cache->start_page))
+#define FIRST_VISIBLE_PREV(pixbuf_cache) \
+	(MAX (0, pixbuf_cache->preload_cache_size - pixbuf_cache->start_page))
 #define VISIBLE_NEXT_LEN(pixbuf_cache, page_cache) \
 	(MIN(pixbuf_cache->preload_cache_size, ev_page_cache_get_n_pages (page_cache) - (1 + pixbuf_cache->end_page)))
 #define PAGE_CACHE_LEN(pixbuf_cache) \
@@ -593,9 +593,6 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 	}
 }
 
-#define FIRST_VISABLE_PREV(pixbuf_cache) \
-	(MAX (0, pixbuf_cache->preload_cache_size + 1 - pixbuf_cache->start_page))
-
 static void
 get_selection_colors (GtkWidget *widget, GdkColor **text, GdkColor **base)
 {
@@ -711,7 +708,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 				   EV_JOB_PRIORITY_URGENT);
 	}
 
-	for (i = FIRST_VISABLE_PREV(pixbuf_cache); i < pixbuf_cache->preload_cache_size; i++) {
+	for (i = FIRST_VISIBLE_PREV(pixbuf_cache); i < pixbuf_cache->preload_cache_size; i++) {
 		job_info = (pixbuf_cache->prev_job + i);
 		page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size + i;
 
