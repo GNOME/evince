@@ -856,7 +856,7 @@ new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
 {
 	EvPageCache *page_cache;
 
-	if (job_info->selection) {
+	if (job_info->selection && job_info->rc) {
 		gint width, height;
 		gint selection_width, selection_height;
 		
@@ -982,8 +982,15 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 	if (!job_info->points_set)
 		return NULL;
 
+	/* Create new render context if needed (selection + fast scrolling) */
+	if (job_info->rc == NULL) {
+		EvPage  *ev_page;
+		ev_page = ev_document_get_page (pixbuf_cache->document, page);
+		job_info->rc = ev_render_context_new (ev_page, 0, scale);
+		g_object_unref (ev_page);
+	}
+
 	/* Update the rc */
-	g_assert (job_info->rc);
 	ev_render_context_set_scale (job_info->rc, scale);
 
 	/* If we have a running job, we just return what we have under the

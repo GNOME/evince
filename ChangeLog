@@ -1,5 +1,12 @@
 2008-11-19  Marek Kašík <mkasik@redhat.com>
 
+	* shell/ev-pixbuf-cache.c (new_selection_surface_needed),
+	(ev_pixbuf_cache_get_selection_surface):
+	
+	Fixes crash on fast scrolling with simultaneous text selection.
+
+2008-11-19  Marek Kašík <mkasik@redhat.com>
+
 	* shell/ev-pixbuf-cache.c (ev_pixbuf_cache_add_jobs_if_needed):
 	* shell/ev-window.c (launch_external_uri):
 	
