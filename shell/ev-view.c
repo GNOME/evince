@@ -5217,7 +5217,7 @@ ev_view_find_previous (EvView *view)
 
 	if (view->find_result < 0) {
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, -1);
-		view->find_result = ev_view_find_get_n_results (view, view->current_page) - 1;
+		view->find_result = MAX (0, ev_view_find_get_n_results (view, view->current_page) - 1);
 		jump_to_find_result (view);
 	} else {
 		jump_to_find_result (view);
