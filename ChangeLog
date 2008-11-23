@@ -1,3 +1,10 @@
+2008-11-23  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (ev_view_find_previous):
+
+	Make sure find_result is never < 0 which causes a crash while
+	searching. Fixes bug #558377.
+	
 2008-11-19  Marek Kašík <mkasik@redhat.com>
 
 	* shell/ev-pixbuf-cache.c (new_selection_surface_needed),
