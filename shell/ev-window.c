@@ -167,6 +167,7 @@ struct _EvWindowPrivate {
 
 	/* Document */
 	char *uri;
+	glong uri_mtime;
 	char *local_uri;
 	EvLinkDest *dest;
 	gboolean unlink_temp_file;
@@ -1436,7 +1437,7 @@ ev_window_load_job_cb (EvJob *job,
 		}
 
 		/* Create a monitor for the document */
-		ev_window->priv->monitor = ev_file_monitor_new (job_load->uri);
+		ev_window->priv->monitor = ev_file_monitor_new (ev_window->priv->uri);
 		g_signal_connect_swapped (G_OBJECT (ev_window->priv->monitor), "changed",
 					  G_CALLBACK (ev_window_document_changed),
 					  ev_window);
@@ -1540,6 +1541,31 @@ ev_window_load_remote_failed (EvWindow *ev_window,
 				 "%s", _("Unable to open document"));
 	g_free (ev_window->priv->local_uri);
 	ev_window->priv->local_uri = NULL;
+	ev_window->priv->uri_mtime = 0;
+}
+
+static void
+set_uri_mtime (GFile        *source,
+	       GAsyncResult *async_result,
+	       EvWindow     *ev_window)
+{
+	GFileInfo *info;
+	GError *error = NULL;
+
+	info = g_file_query_info_finish (source, async_result, &error);
+
+	if (error) {
+		ev_window->priv->uri_mtime = 0;
+		g_error_free (error);
+	} else {
+		GTimeVal mtime;
+		
+		g_file_info_get_modification_time (info, &mtime);
+		ev_window->priv->uri_mtime = mtime.tv_sec;
+		g_object_unref (info);
+	}
+
+	g_object_unref (source);
 }
 
 static void
@@ -1572,8 +1598,12 @@ window_open_file_copy_ready_cb (GFile        *source,
 	g_file_copy_finish (source, async_result, &error);
 	if (!error) {
 		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
-		g_object_unref (source);
-		
+		g_file_query_info_async (source,
+					 G_FILE_ATTRIBUTE_TIME_MODIFIED,
+					 0, G_PRIORITY_DEFAULT,
+					 NULL,
+					 (GAsyncReadyCallback)set_uri_mtime,
+					 ev_window);
 		return;
 	}
 
@@ -1686,12 +1716,9 @@ ev_window_open_uri (EvWindow       *ev_window,
 }
 
 static void
-ev_window_reload_document (EvWindow *ev_window)
+ev_window_reload_local (EvWindow *ev_window)
 {
 	const gchar *uri;
-
-	ev_window_clear_reload_job (ev_window);
-	ev_window->priv->in_reload = TRUE;
 	
 	uri = ev_window->priv->local_uri ? ev_window->priv->local_uri : ev_window->priv->uri;
 	ev_window->priv->reload_job = ev_job_load_new (uri, NULL, 0, NULL);
@@ -1699,6 +1726,84 @@ ev_window_reload_document (EvWindow *ev_window)
 			  G_CALLBACK (ev_window_reload_job_cb),
 			  ev_window);
 	ev_job_scheduler_push_job (ev_window->priv->reload_job, EV_JOB_PRIORITY_NONE);
+}
+
+static void
+reload_remote_copy_ready_cb (GFile        *remote,
+			     GAsyncResult *async_result,
+			     EvWindow     *ev_window)
+{
+	g_file_copy_finish (remote, async_result, NULL);
+	ev_window_reload_local (ev_window);
+	g_object_unref (remote);
+}
+
+static void
+query_remote_uri_mtime_cb (GFile        *remote,
+			   GAsyncResult *async_result,
+			   EvWindow     *ev_window)
+{
+	GFileInfo *info;
+	GTimeVal   mtime;
+	GError    *error = NULL;
+
+	info = g_file_query_info_finish (remote, async_result, &error);
+	if (error) {
+		g_error_free (error);
+		g_object_unref (remote);
+		ev_window_reload_local (ev_window);
+
+		return;
+	}
+	
+	g_file_info_get_modification_time (info, &mtime);
+	if (ev_window->priv->uri_mtime != mtime.tv_sec) {
+		GFile *target_file;
+			
+		/* Remote file has changed */
+		ev_window->priv->uri_mtime = mtime.tv_sec;
+		target_file = g_file_new_for_uri (ev_window->priv->local_uri);
+		g_file_copy_async (remote, target_file,
+				   G_FILE_COPY_OVERWRITE,
+				   G_PRIORITY_DEFAULT, NULL,
+				   NULL, NULL, /* no progress callback */
+				   (GAsyncReadyCallback) reload_remote_copy_ready_cb,
+				   ev_window);
+		g_object_unref (target_file);
+	} else {
+		g_object_unref (remote);
+		ev_window_reload_local (ev_window);
+	}
+	
+	g_object_unref (info);
+}
+
+static void
+ev_window_reload_remote (EvWindow *ev_window)
+{
+	GFile *remote;
+	
+	remote = g_file_new_for_uri (ev_window->priv->uri);
+	/* Reload the remote uri only if it has changed */
+	g_file_query_info_async (remote,
+				 G_FILE_ATTRIBUTE_TIME_MODIFIED,
+				 0, G_PRIORITY_DEFAULT,
+				 NULL,
+				 (GAsyncReadyCallback)query_remote_uri_mtime_cb,
+				 ev_window);
+}
+
+static void
+ev_window_reload_document (EvWindow *ev_window)
+{
+	ev_window_clear_reload_job (ev_window);
+	ev_window->priv->in_reload = TRUE;
+
+	if (ev_window->priv->local_uri) {
+		ev_window_reload_remote (ev_window);
+	} else {
+		ev_window_reload_local (ev_window);
+	}
 }
 
 static void
