@@ -109,10 +109,8 @@ comics_document_load (EvDocument *document,
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	GSList *supported_extensions;
-	GFile *file;
-	GFileInfo *file_info;
 	gchar *list_files_command = NULL, *std_out, *quoted_file;
-	const gchar *mime_type = NULL;
+	gchar *mime_type;
 	gchar **cbr_files;
 	gboolean success;
 	int i, retval;
@@ -121,24 +119,19 @@ comics_document_load (EvDocument *document,
 	g_return_val_if_fail (comics_document->archive != NULL, FALSE);
 
 	quoted_file = g_shell_quote (comics_document->archive);
-	file = g_file_new_for_uri (uri);
-	file_info = g_file_query_info (file,
-				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
-				       0, NULL, NULL);
-	if (file_info != NULL) {
-		mime_type = g_file_info_get_content_type (file_info);
-	}
-	g_object_unref (file);
+	mime_type = ev_file_get_mime_type (uri, FALSE, NULL);
 
 	/* FIXME, use proper cbr/cbz mime types once they're
 	 * included in shared-mime-info */
-	if (!strcmp (mime_type, "application/x-cbr")) {
+	if (!strcmp (mime_type, "application/x-cbr") ||
+	    !strcmp (mime_type, "application/x-rar")) {
 		comics_document->extract_command =
 			g_strdup ("unrar p -c- -ierr");
 		list_files_command =
 			g_strdup_printf ("unrar vb -c- -- %s", quoted_file);
 		comics_document->regex_arg = FALSE;
-	} else if (!strcmp (mime_type, "application/x-cbz")) {
+	} else if (!strcmp (mime_type, "application/x-cbz") ||
+		   !strcmp (mime_type, "application/x-zip")) {
 		comics_document->extract_command =
 			g_strdup ("unzip -p -C");
 		list_files_command = 
@@ -152,7 +145,7 @@ comics_document_load (EvDocument *document,
 		comics_document->regex_arg = TRUE;
 	}
 
-	g_object_unref (file_info);
+	g_free (mime_type);
 	g_free (quoted_file);
 
 	/* Get list of files in archive */
