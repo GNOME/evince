@@ -50,6 +50,10 @@ gboolean     ev_xfer_uri_simple       (const char        *from,
 				       const char        *to,
 				       GError           **error);
 
+gchar       *ev_file_get_mime_type    (const gchar       *uri,
+				       gboolean           fast,
+				       GError           **error);
+
 gchar       *ev_file_uncompress       (const gchar       *uri,
 				       EvCompressionType  type,
 				       GError           **error);

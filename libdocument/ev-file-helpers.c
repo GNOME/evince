@@ -232,6 +232,66 @@ ev_xfer_uri_simple (const char *from,
 
 }
 
+static gchar *
+get_mime_type_from_uri (const gchar *uri, GError **error)
+{
+	GFile     *file;
+	GFileInfo *file_info;
+	gchar     *mime_type;
+
+	file = g_file_new_for_uri (uri);
+	file_info = g_file_query_info (file,
+				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+				       0, NULL, error);
+	g_object_unref (file);
+
+	if (file_info == NULL)
+		return NULL;
+
+	mime_type = g_strdup (g_file_info_get_content_type (file_info));
+	g_object_unref (file_info);
+
+	return mime_type;
+}
+
+static gchar *
+get_mime_type_from_data (const gchar *uri, GError **error)
+{
+	GFile            *file;
+	GFileInputStream *input_stream;
+	gssize            size_read;
+	guchar            buffer[1024];
+
+	file = g_file_new_for_uri (uri);
+	
+	input_stream = g_file_read (file, NULL, error);
+	if (!input_stream) {
+		g_object_unref (file);
+		return NULL;
+	}
+
+	size_read = g_input_stream_read (G_INPUT_STREAM (input_stream),
+					 buffer, 1024, NULL, NULL);
+	g_input_stream_close (G_INPUT_STREAM (input_stream), NULL, error);
+
+	g_object_unref (file);
+
+	if (size_read == -1)
+		return NULL;
+
+	return g_content_type_guess (NULL, /* no filename */
+				     buffer, 1024,
+				     NULL);
+}
+
+gchar *
+ev_file_get_mime_type (const gchar *uri,
+		       gboolean     fast,
+		       GError     **error)
+{
+	return fast ? get_mime_type_from_uri (uri, error) : get_mime_type_from_data (uri, error);
+}
+
 /* Compressed files support */
 #define BZIPCOMMAND "bzip2"
 #define GZIPCOMMAND "gzip"
