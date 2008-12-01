@@ -1,3 +1,30 @@
+2008-12-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* shell/Makefile.am:
+	* shell/ev-keyring.[ch]:
+	* shell/ev-password.[ch]: Removed
+	* shell/ev-password-view.[ch]: (ev_password_view_finalize),
+	(ev_password_view_class_init), (ev_password_view_clicked_cb),
+	(ev_password_view_init), (ev_password_view_set_uri),
+	(ev_password_dialog_got_response),
+	(ev_password_dialog_remember_button_toggled),
+	(ev_password_dialog_entry_changed_cb),
+	(ev_password_dialog_entry_activated_cb),
+	(ev_password_view_ask_password), (ev_password_view_get_password),
+	(ev_password_view_get_password_save_flags),
+	(ev_password_view_new):
+	* shell/ev-window.c: (ev_window_password_view_unlock),
+	(ev_window_load_job_cb), (ev_window_close_dialogs),
+	(ev_window_init):
+
+	Rework the password view. When the password is in the keyring it's
+	used automatically without showing the password dialog and it's  
+	only stored in the keyring when we are sure it's correct. The
+	password dialog has been reworked too, in order to make it
+	more hig compliant and consistent with the GTK+ dialog used in
+	gtkmountoperation. Fixes bug #562496. 
+	
 2008-11-29  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/comics/comics-document.c: (comics_document_load):

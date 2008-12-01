@@ -21,6 +21,7 @@
 #define __EV_PASSWORD_VIEW_H__
 
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -34,6 +35,7 @@ typedef struct _EvPasswordViewPrivate EvPasswordViewPrivate;
 
 struct _EvPasswordView {
 	GtkViewport parent_instance;
+	
 	EvPasswordViewPrivate *priv;
 };
 
@@ -44,11 +46,13 @@ struct _EvPasswordViewClass {
 	void (*unlock) (EvPasswordView	*self);
 };
 
-GType	   ev_password_view_get_type      (void) G_GNUC_CONST;
-GtkWidget *ev_password_view_new           (void);
-void       ev_password_view_set_file_name (EvPasswordView *password_view,
-					   const char     *file_name);
-
+GType	      ev_password_view_get_type                (void) G_GNUC_CONST;
+GtkWidget    *ev_password_view_new                     (GtkWindow      *parent);
+void          ev_password_view_set_uri                 (EvPasswordView *password_view,
+							const char     *uri);
+void          ev_password_view_ask_password            (EvPasswordView *password_view);
+const gchar  *ev_password_view_get_password            (EvPasswordView *password_view);
+GPasswordSave ev_password_view_get_password_save_flags (EvPasswordView *password_view);
 
 G_END_DECLS
 

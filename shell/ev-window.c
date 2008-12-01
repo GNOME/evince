@@ -73,7 +73,6 @@
 #include "ev-navigation-action.h"
 #include "ev-open-recent-action.h"
 #include "ev-page-action.h"
-#include "ev-password.h"
 #include "ev-password-view.h"
 #include "ev-properties-dialog.h"
 #include "ev-sidebar-attachments.h"
@@ -84,6 +83,7 @@
 #include "ev-sidebar-layers.h"
 #include "ev-stock-icons.h"
 #include "ev-utils.h"
+#include "ev-keyring.h"
 #include "ev-view.h"
 #include "ev-window.h"
 #include "ev-window-title.h"
@@ -135,7 +135,6 @@ struct _EvWindowPrivate {
 	/* Dialogs */
 	GtkWidget *properties;
 	GtkWidget *print_dialog;
-	GtkWidget *password_dialog;
 
 	/* UI Builders */
 	GtkActionGroup   *action_group;
@@ -1256,57 +1255,15 @@ ev_window_document_changed (EvWindow *ev_window,
 }
 
 static void
-password_dialog_response (GtkWidget *password_dialog,
-			  gint       response_id,
-			  EvWindow  *ev_window)
+ev_window_password_view_unlock (EvWindow *ev_window)
 {
-	if (response_id == GTK_RESPONSE_OK) {
-		ev_job_load_set_password (EV_JOB_LOAD (ev_window->priv->load_job),
-					  ev_password_dialog_get_password (EV_PASSWORD_DIALOG (password_dialog)));
-
-		ev_password_dialog_save_password (EV_PASSWORD_DIALOG (password_dialog));
-
-		ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
-		
-		gtk_widget_destroy (password_dialog);
-			
-		return;
-	}
-
-	gtk_widget_set_sensitive (ev_window->priv->password_view, TRUE);
-	gtk_widget_destroy (password_dialog);
-}
-
-/* Called either by ev_window_load_job_cb or by the "unlock" callback on the
- * password_view page.  It assumes that ev_window->priv->password_* has been set
- * correctly.  These are cleared by password_dialog_response() */
-
-static void
-ev_window_popup_password_dialog (EvWindow *ev_window)
-{
+	const gchar *password;
+	
 	g_assert (ev_window->priv->load_job);
 
-	gtk_widget_set_sensitive (ev_window->priv->password_view, FALSE);
-
-	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
-	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_PASSWORD);
-
-	if (ev_window->priv->password_dialog == NULL) {
-		ev_window->priv->password_dialog =
- 			g_object_new (EV_TYPE_PASSWORD_DIALOG, "uri", ev_window->priv->uri, NULL);
-		gtk_window_set_transient_for (GTK_WINDOW (ev_window->priv->password_dialog), GTK_WINDOW (ev_window));
-
-		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->password_dialog),
-					   (gpointer) &(ev_window->priv->password_dialog));
-		g_signal_connect (ev_window->priv->password_dialog,
-				  "response",
-				  G_CALLBACK (password_dialog_response),
-				  ev_window);
-		gtk_widget_show (ev_window->priv->password_dialog);
-	} else {
-		ev_password_dialog_set_bad_pass (EV_PASSWORD_DIALOG (ev_window->priv->password_dialog));
-	}
+	password = ev_password_view_get_password (EV_PASSWORD_VIEW (ev_window->priv->password_view));
+	ev_job_load_set_password (EV_JOB_LOAD (ev_window->priv->load_job), password);
+	ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
 }
 
 static void
@@ -1406,6 +1363,18 @@ ev_window_load_job_cb (EvJob *job,
 			ev_window_add_recent (ev_window, ev_window->priv->uri);
 		}
 
+		ev_window_title_set_type (ev_window->priv->title,
+					  EV_WINDOW_TITLE_DOCUMENT);
+		if (job_load->password) {
+			GPasswordSave flags;
+
+			flags = ev_password_view_get_password_save_flags (
+				EV_PASSWORD_VIEW (ev_window->priv->password_view));
+			ev_keyring_save_password (ev_window->priv->uri,
+						  job_load->password,
+						  flags);
+		}
+
 		if (job_load->dest) {
 			EvLink *link;
 			EvLinkAction *link_action;
@@ -1448,20 +1417,40 @@ ev_window_load_job_cb (EvJob *job,
 
 	if (job->error->domain == EV_DOCUMENT_ERROR &&
 	    job->error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
-		GFile *file;
-		gchar *base_name;
-
-		setup_view_from_metadata (ev_window);
-
-		file = g_file_new_for_uri (job_load->uri);
-		base_name = g_file_get_basename (file);
-		ev_password_view_set_file_name (EV_PASSWORD_VIEW (ev_window->priv->password_view),
-						base_name);
-		g_object_unref (file);
-		g_free (base_name);
-		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
+		gchar *password;
 		
-		ev_window_popup_password_dialog (ev_window);
+		setup_view_from_metadata (ev_window);
+		
+		/* First look whether password is in keyring */
+		password = ev_keyring_lookup_password (ev_window->priv->uri);
+		if (password) {
+			if (job_load->password && strcmp (password, job_load->password) == 0) {
+				/* Password in kering is wrong */
+				ev_job_load_set_password (job_load, NULL);
+				/* FIXME: delete password from keyring? */
+			} else {
+				ev_job_load_set_password (job_load, password);
+				ev_job_scheduler_push_job (job, EV_JOB_PRIORITY_NONE);
+				g_free (password);
+				return;
+			}
+
+			g_free (password);
+		}
+
+		/* We need to ask the user for a password */
+		ev_window_title_set_uri (ev_window->priv->title,
+					 ev_window->priv->uri);
+		ev_window_title_set_type (ev_window->priv->title,
+					  EV_WINDOW_TITLE_PASSWORD);
+
+		ev_password_view_set_uri (EV_PASSWORD_VIEW (ev_window->priv->password_view),
+					  job_load->uri);
+
+		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
+
+		ev_job_load_set_password (job_load, NULL);
+		ev_password_view_ask_password (EV_PASSWORD_VIEW (ev_window->priv->password_view));
 	} else {
 		ev_window_error_message (ev_window, job->error, 
 					 "%s", _("Unable to open document"));
@@ -1518,10 +1507,6 @@ ev_window_get_uri (EvWindow *ev_window)
 static void
 ev_window_close_dialogs (EvWindow *ev_window)
 {
-	if (ev_window->priv->password_dialog)
-		gtk_widget_destroy (ev_window->priv->password_dialog);
-	ev_window->priv->password_dialog = NULL;
-	
 	if (ev_window->priv->print_dialog)
 		gtk_widget_destroy (ev_window->priv->print_dialog);
 	ev_window->priv->print_dialog = NULL;
@@ -5650,10 +5635,10 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->view = ev_view_new ();
 	ev_view_set_screen_dpi (EV_VIEW (ev_window->priv->view),
 				get_screen_dpi (GTK_WINDOW (ev_window)));
-	ev_window->priv->password_view = ev_password_view_new ();
+	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",
-				  G_CALLBACK (ev_window_popup_password_dialog),
+				  G_CALLBACK (ev_window_password_view_unlock),
 				  ev_window);
 	g_signal_connect_object (ev_window->priv->view, "focus_in_event",
 			         G_CALLBACK (view_actions_focus_in_cb),

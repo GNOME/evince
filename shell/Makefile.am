@@ -38,6 +38,8 @@ evince_SOURCES=				\
 	ev-file-monitor.c		\
 	ev-history.c			\
 	ev-history.h			\
+	ev-keyring.h			\
+	ev-keyring.c			\
 	ev-marshal.c			\
 	ev-marshal.h			\
 	$(DBUS_SOURCES)			\
@@ -55,8 +57,6 @@ evince_SOURCES=				\
 	ev-page-action-widget.h		\
 	ev-page-cache.h			\
 	ev-page-cache.c			\
-	ev-password.h			\
-	ev-password.c			\
 	ev-password-view.h		\
 	ev-password-view.c		\
 	ev-pixbuf-cache.c		\
