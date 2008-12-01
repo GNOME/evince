@@ -95,6 +95,7 @@ GTKDOC_LIBS= \
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
 	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
 	$(top_builddir)/cut-n-paste/evmountoperation/libevmountoperation.la	\
+	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/libdocument/libevbackend.la			\
