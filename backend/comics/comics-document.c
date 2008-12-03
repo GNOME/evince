@@ -131,7 +131,7 @@ comics_document_load (EvDocument *document,
 			g_strdup_printf ("unrar vb -c- -- %s", quoted_file);
 		comics_document->regex_arg = FALSE;
 	} else if (!strcmp (mime_type, "application/x-cbz") ||
-		   !strcmp (mime_type, "application/x-zip")) {
+		   !strcmp (mime_type, "application/zip")) {
 		comics_document->extract_command =
 			g_strdup ("unzip -p -C");
 		list_files_command = 
