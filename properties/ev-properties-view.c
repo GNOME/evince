@@ -30,13 +30,10 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 
 #include "ev-properties-view.h"
-#include "ev-document-fonts.h"
 
-typedef enum
-{
+typedef enum {
 	TITLE_PROPERTY,
 	SUBJECT_PROPERTY,
 	AUTHOR_PROPERTY,
@@ -52,32 +49,31 @@ typedef enum
 	PAPER_SIZE_PROPERTY
 } Property;
 
-typedef struct
-{
+typedef struct {
 	Property property;
-	const char *label_id;
+	const char *label;
 } PropertyInfo;
 
 static const PropertyInfo properties_info[] = {
-	{ TITLE_PROPERTY, "title" },
-	{ SUBJECT_PROPERTY, "subject" },
-	{ AUTHOR_PROPERTY, "author" },
-	{ KEYWORDS_PROPERTY, "keywords" },
-	{ PRODUCER_PROPERTY, "producer" },
-	{ CREATOR_PROPERTY, "creator" },
-	{ CREATION_DATE_PROPERTY, "created" },
-	{ MOD_DATE_PROPERTY, "modified" },
-	{ N_PAGES_PROPERTY, "pages" },
-	{ LINEARIZED_PROPERTY, "optimized" },
-	{ FORMAT_PROPERTY, "version" },
-	{ SECURITY_PROPERTY, "security" },
-	{ PAPER_SIZE_PROPERTY, "papersize" }
+	{ TITLE_PROPERTY,         N_("Title") },
+	{ SUBJECT_PROPERTY,       N_("Subject") },
+	{ AUTHOR_PROPERTY,        N_("Author") },
+	{ KEYWORDS_PROPERTY,      N_("Keywords") },
+	{ PRODUCER_PROPERTY,      N_("Producer") },
+	{ CREATOR_PROPERTY,       N_("Creator") },
+	{ CREATION_DATE_PROPERTY, N_("Created") },
+	{ MOD_DATE_PROPERTY,      N_("Modified") },
+	{ N_PAGES_PROPERTY,       N_("Number of Pages") },
+	{ LINEARIZED_PROPERTY,    N_("Optimized") },
+	{ FORMAT_PROPERTY,        N_("Format") },
+	{ SECURITY_PROPERTY,      N_("Security") },
+	{ PAPER_SIZE_PROPERTY,    N_("Paper Size") }
 };
 
 struct _EvPropertiesView {
 	GtkVBox base_instance;
 
-	GladeXML *xml;
+	GtkWidget *table;
 };
 
 struct _EvPropertiesViewClass {
@@ -87,24 +83,8 @@ struct _EvPropertiesViewClass {
 G_DEFINE_TYPE (EvPropertiesView, ev_properties_view, GTK_TYPE_VBOX)
 
 static void
-ev_properties_view_dispose (GObject *object)
-{
-	EvPropertiesView *properties = EV_PROPERTIES_VIEW (object);
-
-	if (properties->xml) {
-		g_object_unref (properties->xml);
-		properties->xml = NULL;
-	}
-
-	G_OBJECT_CLASS (ev_properties_view_parent_class)->dispose (object);
-}
-
-static void
 ev_properties_view_class_init (EvPropertiesViewClass *properties_class)
 {
-	GObjectClass *g_object_class = G_OBJECT_CLASS (properties_class);
-
-	g_object_class->dispose = ev_properties_view_dispose;
 }
 
 /* Returns a locale specific date and time representation */
@@ -166,30 +146,49 @@ make_valid_utf8 (const gchar *name)
 }
 
 static void
-set_property (GladeXML *xml, Property property, const char *text)
+set_property (GtkTable    *table,
+	      Property     property,
+	      const gchar *text,
+	      gint        *row)
 {
-	GtkWidget *widget;
-	char *valid_text;
+	GtkWidget *label;
+	gchar     *markup;
+	gchar     *valid_text;
 
-	widget = glade_xml_get_widget (xml, properties_info[property].label_id);
-	g_return_if_fail (GTK_IS_LABEL (widget));
+	label = gtk_label_new (NULL);
+	g_object_set (G_OBJECT (label), "xalign", 0.0, NULL);
+	markup = g_strdup_printf ("<b>%s:</b>", properties_info[property].label);
+	gtk_label_set_markup (GTK_LABEL (label), markup);
+	g_free (markup);
+	
+	gtk_table_attach (table, label, 0, 1, *row, *row + 1,
+			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_widget_show (label);
+
+	label = gtk_label_new (NULL);
+	g_object_set (G_OBJECT (label),
+		      "xalign", 0.0,
+		      "width_chars", 25,
+		      "selectable", TRUE,
+		      "ellipsize", PANGO_ELLIPSIZE_END,
+		      NULL);
+	
 
 	if (text == NULL || text[0] == '\000') {
-		gchar *markup;
-
 		markup = g_markup_printf_escaped ("<i>%s</i>", _("None"));
-		gtk_label_set_markup (GTK_LABEL (widget), markup);
+		gtk_label_set_markup (GTK_LABEL (label), markup);
 		g_free (markup);
-
-		return;
+	} else {
+		valid_text = make_valid_utf8 (text ? text : "");
+		gtk_label_set_text (GTK_LABEL (label), valid_text);
+		g_free (valid_text);
 	}
-	text = text ? text : "";
 
-	valid_text = make_valid_utf8 (text);
+	gtk_table_attach (table, label, 1, 2, *row, *row + 1,
+			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_widget_show (label);
 
-	gtk_label_set_text (GTK_LABEL (widget), valid_text);
-
-	g_free (valid_text);
+	*row += 1;
 }
 
 static GtkUnit
@@ -300,56 +299,57 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 void
 ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo *info)
 {
-	GladeXML *xml = properties->xml;
-	char *text;
+	GtkWidget *table;
+	gchar     *text;
+	gint       row = 0;
 
+	table = properties->table;
+	
 	if (info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
-		set_property (xml, TITLE_PROPERTY, info->title);
+		set_property (GTK_TABLE (table), TITLE_PROPERTY, info->title, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_SUBJECT) {
-		set_property (xml, SUBJECT_PROPERTY, info->subject);
+		set_property (GTK_TABLE (table), SUBJECT_PROPERTY, info->subject, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_AUTHOR) {
-		set_property (xml, AUTHOR_PROPERTY, info->author);
+		set_property (GTK_TABLE (table), AUTHOR_PROPERTY, info->author, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_KEYWORDS) {
-		set_property (xml, KEYWORDS_PROPERTY, info->keywords);
+		set_property (GTK_TABLE (table), KEYWORDS_PROPERTY, info->keywords, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_PRODUCER) {
-		set_property (xml, PRODUCER_PROPERTY, info->producer);
+		set_property (GTK_TABLE (table), PRODUCER_PROPERTY, info->producer, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATOR) {
-		set_property (xml, CREATOR_PROPERTY, info->creator);
+		set_property (GTK_TABLE (table), CREATOR_PROPERTY, info->creator, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATE) {
 		text = ev_properties_view_format_date (info->creation_date);
-		set_property (xml, CREATION_DATE_PROPERTY, text);
+		set_property (GTK_TABLE (table), CREATION_DATE_PROPERTY, text, &row);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATE) {
 		text = ev_properties_view_format_date (info->modified_date);
-		set_property (xml, MOD_DATE_PROPERTY, text);
+		set_property (GTK_TABLE (table), MOD_DATE_PROPERTY, text, &row);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_FORMAT) {
-		text = g_strdup_printf ("%s", info->format);
-		set_property (xml, FORMAT_PROPERTY, text);
-		g_free (text);
+		set_property (GTK_TABLE (table), FORMAT_PROPERTY, info->format, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_N_PAGES) {
 		text = g_strdup_printf ("%d", info->n_pages);
-		set_property (xml, N_PAGES_PROPERTY, text);
+		set_property (GTK_TABLE (table), N_PAGES_PROPERTY, text, &row);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_LINEARIZED) {
-		set_property (xml, LINEARIZED_PROPERTY, info->linearized);
+		set_property (GTK_TABLE (table), LINEARIZED_PROPERTY, info->linearized, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_SECURITY) {
-		set_property (xml, SECURITY_PROPERTY, info->security);
+		set_property (GTK_TABLE (table), SECURITY_PROPERTY, info->security, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_PAPER_SIZE) {
 		text = ev_regular_paper_size (info);
-		set_property (xml, PAPER_SIZE_PROPERTY, text);
+		set_property (GTK_TABLE (table), PAPER_SIZE_PROPERTY, text, &row);
 		g_free (text);
 	}
 }
@@ -357,16 +357,13 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 static void
 ev_properties_view_init (EvPropertiesView *properties)
 {
-	GladeXML *xml;
-
-	/* Create a new GladeXML object from XML file glade_file */
-	xml = glade_xml_new (DATADIR "/evince-properties.glade", "general_page_root", GETTEXT_PACKAGE);
-	properties->xml = xml;
-	g_assert (xml != NULL);
-
-	gtk_box_pack_start (GTK_BOX (properties),
-			    glade_xml_get_widget (xml, "general_page_root"),
+	properties->table = gtk_table_new (13, 2, FALSE);
+	gtk_table_set_col_spacings (GTK_TABLE (properties->table), 12);
+	gtk_table_set_row_spacings (GTK_TABLE (properties->table), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (properties->table), 12);
+	gtk_box_pack_start (GTK_BOX (properties), properties->table, 
 			    TRUE, TRUE, 0);
+	gtk_widget_show (properties->table);
 }
 
 void

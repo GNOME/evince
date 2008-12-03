@@ -1,5 +1,19 @@
 2008-12-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* data/Makefile.am:
+	* data/evince-password.glade: Removed
+	* data/evince-properties.glade: Removed
+	* properties/ev-properties-view.c:
+	(ev_properties_view_class_init), (set_property),
+	(ev_properties_view_set_info), (ev_properties_view_init):
+	* shell/ev-properties-fonts.c: (ev_properties_fonts_dispose),
+	(font_cell_data_func), (ev_properties_fonts_init):
+
+	Remove Glade dependency.
+	
+2008-12-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/comics/comics-document.c: (comics_document_load):
 
 	Fix zip mime-type in comics backend. Patch by Juanjo Marín.

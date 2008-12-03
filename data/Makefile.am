@@ -22,16 +22,6 @@ ui_DATA =				\
 	$(NULL)
 
 #
-# Glade
-#
-
-gladedir = $(pkgdatadir)
-glade_DATA = 				\
-	evince-password.glade		\
-	evince-properties.glade		\
-	$(NULL)
-
-#
 # Desktop file
 #
 
@@ -102,7 +92,6 @@ update-icon-cache:
 #
 
 EXTRA_DIST =				\
-	$(glade_DATA)			\
 	$(ui_DATA)			\
 	$(DESKTOP_IN_FILES)		\
 	$(schema_in_files)		\

@@ -24,7 +24,6 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 
 #include "ev-document-fonts.h"
 #include "ev-job-scheduler.h"
@@ -33,8 +32,6 @@
 
 struct _EvPropertiesFonts {
 	GtkVBox base_instance;
-
-	GladeXML *xml;
 
 	GtkWidget *fonts_treeview;
 	GtkWidget *fonts_progress_label;
@@ -57,11 +54,6 @@ ev_properties_fonts_dispose (GObject *object)
 {
 	EvPropertiesFonts *properties = EV_PROPERTIES_FONTS (object);
 
-	if (properties->xml) {
-		g_object_unref (properties->xml);
-		properties->xml = NULL;
-	}
-	
 	if (properties->fonts_job) {
 		g_signal_handlers_disconnect_by_func (properties->fonts_job, 
 						      job_fonts_finished_cb, 
@@ -91,10 +83,10 @@ font_cell_data_func (GtkTreeViewColumn *col, GtkCellRenderer *renderer,
 	char *details;
 	char *markup;
 
-	gtk_tree_model_get(model, iter,
-			   EV_DOCUMENT_FONTS_COLUMN_NAME, &name,
-			   EV_DOCUMENT_FONTS_COLUMN_DETAILS, &details,
-			   -1);	
+	gtk_tree_model_get (model, iter,
+			    EV_DOCUMENT_FONTS_COLUMN_NAME, &name,
+			    EV_DOCUMENT_FONTS_COLUMN_DETAILS, &details,
+			    -1);	
 
 	if (details) {
 		markup = g_strdup_printf ("<b><big>%s</big></b>\n<small>%s</small>",
@@ -113,33 +105,53 @@ font_cell_data_func (GtkTreeViewColumn *col, GtkCellRenderer *renderer,
 static void
 ev_properties_fonts_init (EvPropertiesFonts *properties)
 {
-	GladeXML *xml;
-	GtkCellRenderer *renderer;
+	GtkWidget         *swindow;
+	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 
-	/* Create a new GladeXML object from XML file glade_file */
-	xml = glade_xml_new (DATADIR "/evince-properties.glade", "fonts_page_root", NULL);
-	properties->xml = xml;
-	g_assert (xml != NULL);
-
-	gtk_box_pack_start (GTK_BOX (properties),
-			    glade_xml_get_widget (xml, "fonts_page_root"),
-			    TRUE, TRUE, 0);
-
-	properties->fonts_treeview = glade_xml_get_widget (xml, "fonts_treeview");
-	properties->fonts_progress_label = glade_xml_get_widget (xml, "font_progress_label");
-
+	gtk_container_set_border_width (GTK_CONTAINER (properties), 12);
+	gtk_box_set_spacing (GTK_BOX (properties), 6);
+	
+	swindow = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
+					GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
+					     GTK_SHADOW_IN);
+	
+	properties->fonts_treeview = gtk_tree_view_new ();
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (properties->fonts_treeview),
+					   FALSE);
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
-	gtk_tree_view_append_column (GTK_TREE_VIEW (properties->fonts_treeview), column);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (properties->fonts_treeview),
+				     column);
 
 	renderer = GTK_CELL_RENDERER (g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
 						    "ypad", 6, NULL));
-	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
-	gtk_tree_view_column_set_title (GTK_TREE_VIEW_COLUMN (column), _("Font"));
+	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column),
+					 renderer, FALSE);
+	gtk_tree_view_column_set_title (GTK_TREE_VIEW_COLUMN (column),
+					_("Font"));
 	gtk_tree_view_column_set_cell_data_func (column, renderer,
 						 font_cell_data_func,
 						 NULL, NULL);
+
+	gtk_container_add (GTK_CONTAINER (swindow), properties->fonts_treeview);
+	gtk_widget_show (properties->fonts_treeview);
+
+	gtk_box_pack_start (GTK_BOX (properties), swindow, 
+			    TRUE, TRUE, 0);
+	gtk_widget_show (swindow);
+
+	properties->fonts_progress_label = gtk_label_new (NULL);
+	g_object_set (G_OBJECT (properties->fonts_progress_label),
+		      "xalign", 0.0,
+		      NULL);
+	gtk_box_pack_start (GTK_BOX (properties),
+			    properties->fonts_progress_label,
+			    FALSE, FALSE, 0);
+	gtk_widget_show (properties->fonts_progress_label);
 }
 
 static void
