@@ -40,7 +40,8 @@ typedef struct _EvPropertiesViewPrivate EvPropertiesViewPrivate;
 
 GType		ev_properties_view_get_type		(void);
 void		ev_properties_view_register_type	(GTypeModule *module);
-GtkWidget      *ev_properties_view_new			(void);
+
+GtkWidget      *ev_properties_view_new			(const gchar          *uri);
 void		ev_properties_view_set_info		(EvPropertiesView     *properties,
 							 const EvDocumentInfo *info);
 

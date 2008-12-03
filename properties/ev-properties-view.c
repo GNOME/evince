@@ -35,6 +35,7 @@
 
 typedef enum {
 	TITLE_PROPERTY,
+	URI_PROPERTY,
 	SUBJECT_PROPERTY,
 	AUTHOR_PROPERTY,
 	KEYWORDS_PROPERTY,
@@ -56,6 +57,7 @@ typedef struct {
 
 static const PropertyInfo properties_info[] = {
 	{ TITLE_PROPERTY,         N_("Title") },
+	{ URI_PROPERTY,           N_("Location") },
 	{ SUBJECT_PROPERTY,       N_("Subject") },
 	{ AUTHOR_PROPERTY,        N_("Author") },
 	{ KEYWORDS_PROPERTY,      N_("Keywords") },
@@ -74,6 +76,7 @@ struct _EvPropertiesView {
 	GtkVBox base_instance;
 
 	GtkWidget *table;
+	gchar     *uri;
 };
 
 struct _EvPropertiesViewClass {
@@ -83,8 +86,24 @@ struct _EvPropertiesViewClass {
 G_DEFINE_TYPE (EvPropertiesView, ev_properties_view, GTK_TYPE_VBOX)
 
 static void
+ev_properties_view_dispose (GObject *object)
+{
+	EvPropertiesView *properties = EV_PROPERTIES_VIEW (object);
+	
+	if (properties->uri) {
+		g_free (properties->uri);
+		properties->uri = NULL;
+	}
+	
+	G_OBJECT_CLASS (ev_properties_view_parent_class)->dispose (object);
+}
+
+static void
 ev_properties_view_class_init (EvPropertiesViewClass *properties_class)
 {
+	GObjectClass *g_object_class = G_OBJECT_CLASS (properties_class);
+
+	g_object_class->dispose = ev_properties_view_dispose;
 }
 
 /* Returns a locale specific date and time representation */
@@ -304,10 +323,11 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 	gint       row = 0;
 
 	table = properties->table;
-	
+
 	if (info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
 		set_property (GTK_TABLE (table), TITLE_PROPERTY, info->title, &row);
 	}
+	set_property (GTK_TABLE (table), URI_PROPERTY, properties->uri, &row);
 	if (info->fields_mask & EV_DOCUMENT_INFO_SUBJECT) {
 		set_property (GTK_TABLE (table), SUBJECT_PROPERTY, info->subject, &row);
 	}
@@ -373,11 +393,12 @@ ev_properties_view_register_type (GTypeModule *module)
 }
 
 GtkWidget *
-ev_properties_view_new (void)
+ev_properties_view_new (const gchar *uri)
 {
 	EvPropertiesView *properties;
 
 	properties = g_object_new (EV_TYPE_PROPERTIES, NULL);
+	properties->uri = g_strdup (uri);
 
 	return GTK_WIDGET (properties);
 }

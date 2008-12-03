@@ -77,6 +77,7 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 
 void
 ev_properties_dialog_set_document (EvPropertiesDialog *properties,
+				   const gchar        *uri,
 			           EvDocument         *document)
 {
 	GtkWidget *label;
@@ -88,7 +89,7 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 
 	if (properties->general_page == NULL) {
 		label = gtk_label_new (_("General"));
-		properties->general_page = ev_properties_view_new ();
+		properties->general_page = ev_properties_view_new (uri);
 		gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
 					  properties->general_page, label);
 		gtk_widget_show (properties->general_page);

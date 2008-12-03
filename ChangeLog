@@ -1,5 +1,18 @@
 2008-12-03  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* properties/ev-properties-main.c: (ev_properties_get_pages):
+	* properties/ev-properties-view.[ch]:
+	(ev_properties_view_dispose), (ev_properties_view_class_init),
+	(ev_properties_view_set_info), (ev_properties_view_new):
+	* shell/ev-properties-dialog.[ch]:
+	(ev_properties_dialog_set_document):
+	* shell/ev-window.c: (ev_window_setup_document),
+	(ev_window_cmd_file_properties):
+
+	Add document URI to properties page. Fixes bug #555376.
+	
+2008-12-03  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* data/Makefile.am:
 	* data/evince-password.glade: Removed

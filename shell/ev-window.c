@@ -1205,6 +1205,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	
 	if (ev_window->priv->properties) {
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
+						   ev_window->priv->uri,
 					           ev_window->priv->document);
 	}
 	
@@ -2677,6 +2678,7 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 	if (ev_window->priv->properties == NULL) {
 		ev_window->priv->properties = ev_properties_dialog_new ();
 		ev_properties_dialog_set_document (EV_PROPERTIES_DIALOG (ev_window->priv->properties),
+						   ev_window->priv->uri,
 					           ev_window->priv->document);
 		g_object_add_weak_pointer (G_OBJECT (ev_window->priv->properties),
 					   (gpointer) &(ev_window->priv->properties));
