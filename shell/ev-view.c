@@ -5101,6 +5101,7 @@ jump_to_find_result (EvView *view)
 		rect = ev_view_find_get_result (view, page, view->find_result);
 		doc_rect_to_view_rect (view, page, rect, &view_rect);
 		ensure_rectangle_is_visible (view, &view_rect);
+		view->jump_to_find_result = FALSE;
 	}
 }
 
