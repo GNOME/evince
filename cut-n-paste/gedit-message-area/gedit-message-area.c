@@ -132,12 +132,12 @@ find_button (GeditMessageArea *message_area,
 static void
 gedit_message_area_close (GeditMessageArea *message_area)
 {
-	if (!find_button (message_area, GTK_RESPONSE_CANCEL))
+	if (!find_button (message_area, GTK_RESPONSE_CLOSE))
 		return;
 
 	/* emit response signal */
 	gedit_message_area_response (GEDIT_MESSAGE_AREA (message_area),
-				     GTK_RESPONSE_CANCEL);
+				     GTK_RESPONSE_CLOSE);
 }
 
 static gboolean
@@ -348,6 +348,12 @@ gedit_message_area_set_contents	(GeditMessageArea *message_area,
 			    TRUE,
 			    TRUE,
 			    0);
+}
+
+GtkWidget *
+gedit_message_area_get_contents (GeditMessageArea *message_area)
+{
+	return message_area->priv->contents;
 }
 
 GtkWidget*

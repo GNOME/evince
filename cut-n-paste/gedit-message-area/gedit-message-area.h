@@ -93,6 +93,7 @@ GtkWidget	*gedit_message_area_new_with_buttons	(const gchar      *first_button_t
 
 void		 gedit_message_area_set_contents	(GeditMessageArea *message_area,
                                              		 GtkWidget        *contents);
+GtkWidget       *gedit_message_area_get_contents        (GeditMessageArea *message_area);
                               		 
 void		 gedit_message_area_add_action_widget	(GeditMessageArea *message_area,
                                          		 GtkWidget        *child,
