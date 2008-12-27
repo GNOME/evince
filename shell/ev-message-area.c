@@ -101,10 +101,13 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 static void
 ev_message_area_init (EvMessageArea *area)
 {
+	GtkWidget *main_box;
 	GtkWidget *hbox, *vbox;
 	
 	area->priv = EV_MESSAGE_AREA_GET_PRIVATE (area);
 
+	main_box = gtk_vbox_new (FALSE, 12);
+	
 	hbox = gtk_hbox_new (FALSE, 12);
 	vbox = gtk_vbox_new (FALSE, 12);
 	
@@ -133,8 +136,11 @@ ev_message_area_init (EvMessageArea *area)
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 	gtk_widget_show (vbox);
 
-	gedit_message_area_set_contents (GEDIT_MESSAGE_AREA (area), hbox);
+	gtk_box_pack_start (GTK_BOX (main_box), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (hbox);
+	
+	gedit_message_area_set_contents (GEDIT_MESSAGE_AREA (area), main_box);
+	gtk_widget_show (main_box);
 }
 
 static void
@@ -278,6 +284,18 @@ ev_message_area_set_image (EvMessageArea *area,
 	area->priv->image = image;
 
 	g_object_notify (G_OBJECT (area), "image");
+}
+
+void
+ev_message_area_set_image_from_stock (EvMessageArea *area,
+				      const gchar   *stock_id)
+{
+	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
+	g_return_if_fail (stock_id != NULL);
+	
+	gtk_image_set_from_stock (GTK_IMAGE (area->priv->image),
+				  stock_id,
+				  GTK_ICON_SIZE_DIALOG);
 }
 
 void

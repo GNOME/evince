@@ -63,6 +63,8 @@ evince_SOURCES=				\
 	ev-pixbuf-cache.h		\
 	ev-print-operation.h		\
 	ev-print-operation.c		\
+	ev-progress-message-area.h	\
+	ev-progress-message-area.c	\
 	ev-properties-dialog.c		\
 	ev-properties-dialog.h		\
 	ev-properties-fonts.c		\

@@ -1,5 +1,15 @@
 2008-12-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/Makefile.am:
+	* shell/ev-progress-message-area.[ch]:
+	* shell/ev-message-area.[ch]: (ev_message_area_init),
+	(ev_message_area_set_image_from_stock):
+
+	Add EvProgressMessageArea derived from EvMessageArea to show
+	progress information in the message area. 
+	
+2008-12-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* cut-n-paste/gedit-message-area/gedit-message-area.[ch]:
 
 	Use GTK_RESPONSE_CLOSE instead of GTK_RESPONSE_CANCEL for the

@@ -52,17 +52,19 @@ struct _EvMessageAreaClass {
 	GeditMessageAreaClass parent_class;
 };
 
-GType      ev_message_area_get_type           (void) G_GNUC_CONST;
-GtkWidget *ev_message_area_new                (GtkMessageType type,
-					       const gchar   *text,
-					       const gchar   *first_button_text,
-					       ...);
-void       ev_message_area_set_image          (EvMessageArea *area,
-					       GtkWidget     *image);
-void       ev_message_area_set_text           (EvMessageArea *area,
-					       const gchar   *str);
-void       ev_message_area_set_secondary_text (EvMessageArea *area,
-					       const gchar   *str);
+GType      ev_message_area_get_type             (void) G_GNUC_CONST;
+GtkWidget *ev_message_area_new                  (GtkMessageType type,
+						 const gchar   *text,
+						 const gchar   *first_button_text,
+						 ...);
+void       ev_message_area_set_image            (EvMessageArea *area,
+						 GtkWidget     *image);
+void       ev_message_area_set_image_from_stock (EvMessageArea *area,
+						 const gchar   *stock_id);
+void       ev_message_area_set_text             (EvMessageArea *area,
+						 const gchar   *str);
+void       ev_message_area_set_secondary_text   (EvMessageArea *area,
+						 const gchar   *str);
 
 G_END_DECLS
 
