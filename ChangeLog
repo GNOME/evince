@@ -1,5 +1,12 @@
 2008-12-24  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (setup_size_from_metadata),
+	(ev_window_load_print_settings_from_metadata):
+
+	Fix memory leaks.
+	
+2008-12-24  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-document.c: (ev_document_get_type):
 
 	Add GObject type as prerequisite to EvDocument interface so that

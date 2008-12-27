@@ -967,6 +967,7 @@ setup_size_from_metadata (EvWindow *window)
 	if (ev_metadata_manager_get (uri, "window_maximized", &maximized, FALSE)) {
 		if (g_value_get_boolean (&maximized)) {
 			gtk_window_maximize (GTK_WINDOW (window));
+			g_value_unset (&maximized);
 			return;
 		} else {
 			gtk_window_unmaximize (GTK_WINDOW (window));
@@ -2325,6 +2326,8 @@ ev_window_load_print_settings_from_metadata (EvWindow *window)
 		gtk_print_settings_set (window->priv->print_settings,
 					document_print_settings[i],
 					success ? g_value_get_string (&value) : NULL);
+		if (success)
+			g_value_unset (&value);
 	}
 }
 
