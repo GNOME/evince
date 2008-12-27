@@ -61,6 +61,8 @@ evince_SOURCES=				\
 	ev-password-view.c		\
 	ev-pixbuf-cache.c		\
 	ev-pixbuf-cache.h		\
+	ev-print-operation.h		\
+	ev-print-operation.c		\
 	ev-properties-dialog.c		\
 	ev-properties-dialog.h		\
 	ev-properties-fonts.c		\

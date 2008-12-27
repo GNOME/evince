@@ -26,6 +26,7 @@
 
 #include "ev-document.h"
 #include "ev-selection.h"
+#include "ev-render-context.h"
 #include "ev-window.h"
 
 G_BEGIN_DECLS
@@ -54,14 +55,14 @@ typedef struct _EvJobLoadClass EvJobLoadClass;
 typedef struct _EvJobSave EvJobSave;
 typedef struct _EvJobSaveClass EvJobSaveClass;
 
-typedef struct _EvJobPrint EvJobPrint;
-typedef struct _EvJobPrintClass EvJobPrintClass;
-
 typedef struct _EvJobFind EvJobFind;
 typedef struct _EvJobFindClass EvJobFindClass;
 
 typedef struct _EvJobLayers EvJobLayers;
 typedef struct _EvJobLayersClass EvJobLayersClass;
+
+typedef struct _EvJobExport EvJobExport;
+typedef struct _EvJobExportClass EvJobExportClass;
 
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
@@ -104,11 +105,6 @@ typedef struct _EvJobLayersClass EvJobLayersClass;
 #define EV_JOB_SAVE_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_SAVE, EvJobSaveClass))
 #define EV_IS_JOB_SAVE(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_SAVE))
 
-#define EV_TYPE_JOB_PRINT                    (ev_job_print_get_type())
-#define EV_JOB_PRINT(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
-#define EV_JOB_PRINT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
-#define EV_IS_JOB_PRINT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
-
 #define EV_TYPE_JOB_FIND                     (ev_job_find_get_type())
 #define EV_JOB_FIND(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_FIND, EvJobFind))
 #define EV_JOB_FIND_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_FIND, EvJobFindClass))
@@ -118,6 +114,11 @@ typedef struct _EvJobLayersClass EvJobLayersClass;
 #define EV_JOB_LAYERS(object)                (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LAYERS, EvJobLayers))
 #define EV_JOB_LAYERS_CLASS(klass)           (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LAYERS, EvJobLayersClass))
 #define EV_IS_JOB_LAYERS(object)             (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LAYERS))
+
+#define EV_TYPE_JOB_EXPORT                    (ev_job_export_get_type())
+#define EV_JOB_EXPORT(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_EXPORT, EvJobExport))
+#define EV_JOB_EXPORT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_EXPORT, EvJobExportClass))
+#define EV_IS_JOB_EXPORT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_EXPORT))
 
 typedef enum {
 	EV_JOB_RUN_THREAD,
@@ -284,28 +285,6 @@ struct _EvJobSaveClass
 	EvJobClass parent_class;
 };
 
-struct _EvJobPrint
-{
-	EvJob parent;
-
-	const gchar *format;
-	gchar  *temp_file;
-	EvPrintRange *ranges;
-	gint n_ranges;
-	EvPrintPageSet page_set;
-	gint copies;
-	gint pages_per_sheet;
-	gboolean collate;
-	gboolean reverse;
-	gdouble width;
-	gdouble height;
-};
-
-struct _EvJobPrintClass
-{
-	EvJobClass parent_class;
-};
-
 struct _EvJobFind
 {
 	EvJob parent;
@@ -336,6 +315,19 @@ struct _EvJobLayers
 };
 
 struct _EvJobLayersClass
+{
+	EvJobClass parent_class;
+};
+
+struct _EvJobExport
+{
+	EvJob parent;
+
+	gint page;
+	EvRenderContext *rc;
+};
+
+struct _EvJobExportClass
 {
 	EvJobClass parent_class;
 };
@@ -407,20 +399,6 @@ GType           ev_job_save_get_type      (void) G_GNUC_CONST;
 EvJob          *ev_job_save_new           (EvDocument      *document,
 					   const gchar     *uri,
 					   const gchar     *document_uri);
-
-/* EvJobPrint */
-GType           ev_job_print_get_type     (void) G_GNUC_CONST;
-EvJob          *ev_job_print_new          (EvDocument      *document,
-					   const gchar     *format,
-					   gdouble          width,
-					   gdouble          height,
-					   EvPrintRange    *ranges,
-					   gint             n_ranges,
-					   EvPrintPageSet   page_set,
-					   gint             pages_per_sheet,
-					   gint             copies,
-					   gdouble          collate,
-					   gdouble          reverse);
 /* EvJobFind */
 GType           ev_job_find_get_type      (void) G_GNUC_CONST;
 EvJob          *ev_job_find_new           (EvDocument      *document,
@@ -437,6 +415,12 @@ GList         **ev_job_find_get_results   (EvJobFind       *job);
 /* EvJobLayers */
 GType           ev_job_layers_get_type    (void) G_GNUC_CONST;
 EvJob          *ev_job_layers_new         (EvDocument     *document);
+
+/* EvJobExport */
+GType           ev_job_export_get_type    (void) G_GNUC_CONST;
+EvJob          *ev_job_export_new         (EvDocument     *document);
+void            ev_job_export_set_page    (EvJobExport    *job,
+					   gint            page);
 
 G_END_DECLS
 

@@ -1,5 +1,21 @@
 2008-12-24  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/Makefile.am:
+	* shell/ev-print-operation.[ch]:
+	* shell/ev-jobs.[ch]: (ev_job_export_init),
+	(ev_job_export_dispose), (ev_job_export_run),
+	(ev_job_export_class_init), (ev_job_export_new),
+	(ev_job_export_set_page):
+	* shell/ev-window.c: (ev_window_print_operation_done),
+	(ev_window_print_range), (ev_window_dispose):
+
+	First step of the printing system rework. EvJobPrint has been
+	replaced by EvJobExport so that every page is scheduled to be
+	exported in a thread instead of scheduling the whole printing
+	process. This way the gui is responsive during printing.
+	
+2008-12-24  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (setup_size_from_metadata),
 	(ev_window_load_print_settings_from_metadata):
 

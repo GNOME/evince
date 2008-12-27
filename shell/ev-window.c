@@ -87,6 +87,7 @@
 #include "ev-view.h"
 #include "ev-window.h"
 #include "ev-window-title.h"
+#include "ev-print-operation.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
@@ -184,12 +185,10 @@ struct _EvWindowPrivate {
 	EvJob            *reload_job;
 	EvJob            *thumbnail_job;
 	EvJob            *save_job;
-	EvJob            *print_job;
 	EvJob            *find_job;
 
 	/* Printing */
 	gboolean          print_preview;
-	GtkPrintJob      *gtk_print_job;
 	GtkPrinter       *printer;
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
@@ -239,8 +238,6 @@ static void     ev_window_reload_job_cb                 (EvJob            *job,
 							 EvWindow         *window);
 static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
 							 EvWindow         *ev_window);
-static void     ev_window_print_job_cb                  (EvJob            *job,
-							 EvWindow         *window);
 static void     ev_window_save_job_cb                   (EvJob            *save,
 							 EvWindow         *window);
 static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
@@ -2292,26 +2289,6 @@ ev_window_cmd_file_print_setup (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_clear_print_job (EvWindow *window)
-{
-	if (window->priv->print_job) {
-		if (!ev_job_is_finished (window->priv->print_job))
-			ev_job_cancel (window->priv->print_job);
-
-		g_signal_handlers_disconnect_by_func (window->priv->print_job,
-						      ev_window_print_job_cb,
-						      window);
-		g_object_unref (window->priv->print_job);
-		window->priv->print_job = NULL;
-	}
-
-	if (window->priv->gtk_print_job) {
-		g_object_unref (window->priv->gtk_print_job);
-		window->priv->gtk_print_job = NULL;
-	}
-}
-
-static void
 ev_window_load_print_settings_from_metadata (EvWindow *window)
 {
 	gchar *uri = window->priv->uri;
@@ -2348,267 +2325,58 @@ ev_window_save_print_settings (EvWindow *window)
 }
 
 static void
-ev_window_print_finished (GtkPrintJob *print_job,
-			  EvWindow    *window,
-			  GError      *error)
+ev_window_print_operation_done (EvPrintOperation       *op,
+				GtkPrintOperationResult result,
+				EvWindow               *ev_window)
 {
-	ev_window_clear_print_job (window);
-	
-	if (error) {
-		ev_window_error_message (window, error,
+	switch (result) {
+	case GTK_PRINT_OPERATION_RESULT_APPLY: {
+		GtkPrintSettings *print_settings;
+
+		if (ev_window->priv->print_settings)
+			g_object_unref (ev_window->priv->print_settings);
+		print_settings = ev_print_operation_get_print_settings (op);
+		
+		ev_application_set_print_settings (EV_APP, print_settings);
+		ev_window->priv->print_settings = g_object_ref (print_settings);
+		ev_window_save_print_settings (ev_window);
+	}
+		break;
+	case GTK_PRINT_OPERATION_RESULT_ERROR: {
+		GError *error = NULL;
+
+		ev_print_operation_get_error (op, &error);
+		ev_window_error_message (ev_window, error,
 					 "%s", _("Failed to print document"));
-	} else {
-		/* If printed successfully, save print settings */
-		ev_application_set_print_settings (EV_APP,
-						   window->priv->print_settings);
-		ev_window_save_print_settings (window);
-	}
-}
-
-static void
-ev_window_print_send (EvWindow    *window,
-		      const gchar *filename)
-{
-	GtkPrintSettings *settings;
-	EvFileExporterCapabilities capabilities;
-	
-	/* Some printers take into account some print settings,
-	 * and others don't. However we have exported the document
-	 * to a ps or pdf file according to such print settings. So,
-	 * we want to send the exported file to printer with those
-	 * settings set to default values. 
-	 */
-	settings = gtk_print_settings_copy (window->priv->print_settings);
-	capabilities = ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (window->priv->document));
-
-	gtk_print_settings_set_page_ranges (settings, NULL, 0);
-	gtk_print_settings_set_print_pages (settings, GTK_PRINT_PAGES_ALL);
-	if (capabilities & EV_FILE_EXPORTER_CAN_COPIES)
-		gtk_print_settings_set_n_copies (settings, 1);
-	if (capabilities & EV_FILE_EXPORTER_CAN_PAGE_SET)
-		gtk_print_settings_set_page_set (settings, GTK_PAGE_SET_ALL);
-	if (capabilities & EV_FILE_EXPORTER_CAN_SCALE)
-		gtk_print_settings_set_scale (settings, 1.0);
-	if (capabilities & EV_FILE_EXPORTER_CAN_COLLATE)
-		gtk_print_settings_set_collate (settings, FALSE);
-	if (capabilities & EV_FILE_EXPORTER_CAN_REVERSE)
-		gtk_print_settings_set_reverse (settings, FALSE);
-	if (capabilities & EV_FILE_EXPORTER_CAN_NUMBER_UP) {
-		gtk_print_settings_set_number_up (settings, 1);
-		gtk_print_settings_set_int (settings, "cups-"GTK_PRINT_SETTINGS_NUMBER_UP, 1);
-	}
-	
-	if (window->priv->print_preview) {
-		gchar *uri;
-		gchar *print_settings_file = NULL;
-
-		ev_application_set_print_settings (EV_APP,
-						   window->priv->print_settings);
-		
-		print_settings_file = ev_tmp_filename ("print-settings");
-		gtk_print_settings_to_file (settings, print_settings_file, NULL);
-
-		uri = g_filename_to_uri (filename, NULL, NULL);
-		ev_application_open_uri_at_dest (EV_APP,
-						 uri, 
-						 gtk_window_get_screen (GTK_WINDOW (window)),
-						 NULL,
-						 EV_WINDOW_MODE_PREVIEW,
-						 NULL, 
-						 TRUE,
-						 print_settings_file,
-						 GDK_CURRENT_TIME);
-		g_free (print_settings_file);
-		g_free (uri);
-	} else {
-		GtkPrintJob *job;
-		GError      *error = NULL;
-	
-		job = gtk_print_job_new (gtk_window_get_title (GTK_WINDOW (window)),
-					 window->priv->printer,
-					 settings,
-					 window->priv->print_page_setup);
-
-		if (window->priv->gtk_print_job)
-			g_object_unref (window->priv->gtk_print_job);
-		window->priv->gtk_print_job = job;
-
-		if (gtk_print_job_set_source_file (job, filename, &error)) {
-			gtk_print_job_send (job,
-					    (GtkPrintJobCompleteFunc)ev_window_print_finished,
-					    window, NULL);
-		} else {
-			ev_window_clear_print_job (window);
-			g_warning ("%s", error->message);
-			g_error_free (error);
-		}
-	}
-
-	g_object_unref (settings);
-}
-
-static void
-ev_window_print_job_cb (EvJob    *job,
-			EvWindow *window)
-{
-	if (ev_job_is_failed (job)) {
-		g_warning ("%s", job->error->message);
-		ev_window_clear_print_job (window);
-		return;
-	}
-
-	g_assert (EV_JOB_PRINT (job)->temp_file != NULL);
-
-	ev_window_print_send (window, EV_JOB_PRINT (job)->temp_file);
-}
-
-static gboolean
-ev_window_print_dialog_response_cb (GtkDialog *dialog,
-				    gint       response,
-				    EvWindow  *window)
-{
-	EvPrintRange  *ranges = NULL;
-	EvPrintPageSet page_set;
-	gint           n_ranges = 0;
-	gint           copies;
-	gint           pages_per_sheet;
-	gboolean       collate;
-	gboolean       reverse;
-	gdouble        scale;
-	gint           current_page;
-	gdouble        width;
-	gdouble        height;
-	GtkPrintPages  print_pages;
-	const gchar   *file_format;
-	
-	if (response != GTK_RESPONSE_OK &&
-	    response != GTK_RESPONSE_APPLY) {
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-		window->priv->print_dialog = NULL;
-
-		return FALSE;
-	}
-
-	window->priv->print_preview = (response == GTK_RESPONSE_APPLY);
-
-	if (window->priv->printer)
-		g_object_unref (window->priv->printer);
-	if (window->priv->print_settings)
-		g_object_unref (window->priv->print_settings);
-	if (window->priv->print_page_setup)
-		g_object_unref (window->priv->print_page_setup);
-	
-	window->priv->printer = g_object_ref (
-		gtk_print_unix_dialog_get_selected_printer (GTK_PRINT_UNIX_DIALOG (dialog)));
-	window->priv->print_settings = g_object_ref (
-		gtk_print_unix_dialog_get_settings (GTK_PRINT_UNIX_DIALOG (dialog)));
-	window->priv->print_page_setup = g_object_ref (
-		gtk_print_unix_dialog_get_page_setup (GTK_PRINT_UNIX_DIALOG (dialog)));
-
-	file_format = gtk_print_settings_get (window->priv->print_settings,
-					      GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
-	
-	if (!gtk_printer_accepts_ps (window->priv->printer)) {
-		ev_window_error_message (window, NULL, "%s",
-					 _("Printing is not supported on this printer."));
-		return FALSE;
-	}
-
-	ev_window_clear_print_job (window);
-	
-	current_page = gtk_print_unix_dialog_get_current_page (GTK_PRINT_UNIX_DIALOG (dialog));
-	print_pages = gtk_print_settings_get_print_pages (window->priv->print_settings);
-	
-	switch (print_pages) {
-	case GTK_PRINT_PAGES_CURRENT:
-		ranges = g_new0 (EvPrintRange, 1);
-		
-		ranges->start = current_page;
-		ranges->end = current_page;
-		n_ranges = 1;
-				
-		break;
-	case GTK_PRINT_PAGES_RANGES: {
-		GtkPageRange *page_range;
-		
-		page_range = gtk_print_settings_get_page_ranges (window->priv->print_settings,
-								 &n_ranges);
-		if (n_ranges > 0)
-			ranges = g_memdup (page_range, n_ranges * sizeof (GtkPageRange));
+		g_error_free (error);
 	}
 		break;
-	case GTK_PRINT_PAGES_ALL: {
-		gint n_pages;
-
-		n_pages = ev_page_cache_get_n_pages (ev_page_cache_get (window->priv->document));
-		
-		ranges = g_new0 (EvPrintRange, 1);
-
-		ranges->start = 0;
-		ranges->end = n_pages - 1;
-		n_ranges = 1;
-	}
+	case GTK_PRINT_OPERATION_RESULT_CANCEL:
+	default:
 		break;
 	}
 
-	page_set = (EvPrintPageSet)gtk_print_settings_get_page_set (window->priv->print_settings);
-
-	scale = gtk_print_settings_get_scale (window->priv->print_settings) * 0.01;
-	
-	width = gtk_page_setup_get_paper_width (window->priv->print_page_setup,
-						GTK_UNIT_POINTS);
-	height = gtk_page_setup_get_paper_height (window->priv->print_page_setup,
-						  GTK_UNIT_POINTS);
-	
-	if (scale != 1.0) {
-		width *= scale;
-		height *= scale;
-	}
-
-	pages_per_sheet = gtk_print_settings_get_number_up (window->priv->print_settings);
-	
-	copies = gtk_print_settings_get_n_copies (window->priv->print_settings);
-	collate = gtk_print_settings_get_collate (window->priv->print_settings);
-	reverse = gtk_print_settings_get_reverse (window->priv->print_settings);
-	
-	window->priv->print_job = ev_job_print_new (window->priv->document,
-						    file_format ? file_format : "ps",
-						    width, height,
-						    ranges, n_ranges,
-						    page_set,
-						    pages_per_sheet,
-						    copies, collate,
-						    reverse);
-	
-	g_signal_connect (window->priv->print_job, "finished",
-			  G_CALLBACK (ev_window_print_job_cb),
-			  window);
-	/* The priority doesn't matter for this job */
-	ev_job_scheduler_push_job (window->priv->print_job, EV_JOB_PRIORITY_NONE);
-	
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-	window->priv->print_dialog = NULL;
-
-	return TRUE;
+	g_object_unref (op);
 }
 
 void
-ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
+ev_window_print_range (EvWindow *ev_window,
+		       gint      first_page,
+		       gint      last_page)
 {
-	GtkWidget           *dialog;
+	EvPrintOperation    *op;
 	EvPageCache         *page_cache;
 	gint                 current_page;
 	gint                 document_last_page;
-	GtkPrintCapabilities capabilities;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
 
-	if (ev_window->priv->print_dialog) {
-		gtk_window_present (GTK_WINDOW (ev_window->priv->print_dialog));
-		return;
-	}
-	
+	op = ev_print_operation_new (ev_window->priv->document);
+	g_signal_connect (G_OBJECT (op), "done",
+			  G_CALLBACK (ev_window_print_operation_done),
+			  (gpointer)ev_window);
+
 	page_cache = ev_page_cache_get (ev_window->priv->document);
 	current_page = ev_page_cache_get_current_page (page_cache);
 	document_last_page = ev_page_cache_get_n_pages (page_cache);
@@ -2632,29 +2400,13 @@ ev_window_print_range (EvWindow *ev_window, int first_page, int last_page)
 						    &range, 1);
 	}
 
-	dialog = gtk_print_unix_dialog_new (_("Print"), GTK_WINDOW (ev_window));
-	ev_window->priv->print_dialog = dialog;
-	
-	capabilities = GTK_PRINT_CAPABILITY_PREVIEW |
-		ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (ev_window->priv->document));
-	gtk_print_unix_dialog_set_manual_capabilities (GTK_PRINT_UNIX_DIALOG (dialog),
-						       capabilities);
-
-	gtk_print_unix_dialog_set_current_page (GTK_PRINT_UNIX_DIALOG (dialog),
-						current_page);
-	
-	gtk_print_unix_dialog_set_settings (GTK_PRINT_UNIX_DIALOG (dialog),
-					    ev_window->priv->print_settings);
-	
+	ev_print_operation_set_job_name (op, gtk_window_get_title (GTK_WINDOW (ev_window)));
+	ev_print_operation_set_current_page (op, current_page);
+	ev_print_operation_set_print_settings (op, ev_window->priv->print_settings);
 	if (ev_window->priv->print_page_setup)
-		gtk_print_unix_dialog_set_page_setup (GTK_PRINT_UNIX_DIALOG (dialog),
-						      ev_window->priv->print_page_setup);
-	
-	g_signal_connect (G_OBJECT (dialog), "response",
-			  G_CALLBACK (ev_window_print_dialog_response_cb),
-			  ev_window);
+		ev_print_operation_set_default_page_setup (op, ev_window->priv->print_page_setup);
 
-	gtk_widget_show (dialog);
+	ev_print_operation_run (op, GTK_WINDOW (ev_window));
 }
 
 static void
@@ -4395,13 +4147,7 @@ ev_window_dispose (GObject *object)
 	}
 
 	ev_window_close_dialogs (window);
-	ev_window_clear_print_job (window);
 
-	if (window->priv->gtk_print_job) {
-		g_object_unref (window->priv->gtk_print_job);
-		window->priv->gtk_print_job = NULL;
-	}
-	
 	if (window->priv->printer) {
 		g_object_unref (window->priv->printer);
 		window->priv->printer = NULL;

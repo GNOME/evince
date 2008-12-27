@@ -54,12 +54,12 @@ static void ev_job_load_init    	  (EvJobLoad	         *job);
 static void ev_job_load_class_init 	  (EvJobLoadClass	 *class);
 static void ev_job_save_init              (EvJobSave             *job);
 static void ev_job_save_class_init        (EvJobSaveClass        *class);
-static void ev_job_print_init             (EvJobPrint            *job);
-static void ev_job_print_class_init       (EvJobPrintClass       *class);
 static void ev_job_find_init              (EvJobFind             *job);
 static void ev_job_find_class_init        (EvJobFindClass        *class);
 static void ev_job_layers_init            (EvJobLayers           *job);
 static void ev_job_layers_class_init      (EvJobLayersClass      *class);
+static void ev_job_export_init            (EvJobExport           *job);
+static void ev_job_export_class_init      (EvJobExportClass      *class);
 
 enum {
 	CANCELLED,
@@ -95,9 +95,9 @@ G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
-G_DEFINE_TYPE (EvJobPrint, ev_job_print, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFind, ev_job_find, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLayers, ev_job_layers, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobExport, ev_job_export, EV_TYPE_JOB)
 
 /* EvJob */
 static void
@@ -1069,317 +1069,6 @@ ev_job_save_new (EvDocument  *document,
 	return EV_JOB (job);
 }
 
-/* EvJobPrint */
-static void
-ev_job_print_init (EvJobPrint *job)
-{
-	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
-}
-
-static void
-ev_job_print_dispose (GObject *object)
-{
-	EvJobPrint *job;
-
-	job = EV_JOB_PRINT (object);
-
-	ev_debug_message (DEBUG_JOBS, NULL);
-	
-	if (job->temp_file) {
-		g_unlink (job->temp_file);
-		g_free (job->temp_file);
-		job->temp_file = NULL;
-	}
-
-	if (job->ranges) {
-		g_free (job->ranges);
-		job->ranges = NULL;
-		job->n_ranges = 0;
-	}
-
-	(* G_OBJECT_CLASS (ev_job_print_parent_class)->dispose) (object);
-}
-
-static gint
-ev_print_job_get_first_page (EvJobPrint *job)
-{
-	gint i;
-	gint first_page = G_MAXINT;
-	
-	if (job->n_ranges == 0)
-		return 0;
-
-	for (i = 0; i < job->n_ranges; i++) {
-		if (job->ranges[i].start < first_page)
-			first_page = job->ranges[i].start;
-	}
-
-	return MAX (0, first_page);
-}
-
-static gint
-ev_print_job_get_last_page (EvJobPrint *job)
-{
-	gint i;
-	gint last_page = G_MININT;
-	gint max_page;
-
-	max_page = ev_document_get_n_pages (EV_JOB (job)->document) - 1;
-
-	if (job->n_ranges == 0)
-		return max_page;
-
-	for (i = 0; i < job->n_ranges; i++) {
-		if (job->ranges[i].end > last_page)
-			last_page = job->ranges[i].end;
-	}
-
-	return MIN (max_page, last_page);
-}
-
-static gboolean
-ev_print_job_print_page_in_set (EvJobPrint *job,
-				gint        page)
-{
-	switch (job->page_set) {
-	        case EV_PRINT_PAGE_SET_EVEN:
-			return page % 2 == 0;
-	        case EV_PRINT_PAGE_SET_ODD:
-			return page % 2 != 0;
-	        case EV_PRINT_PAGE_SET_ALL:
-			return TRUE;
-	}
-
-	return FALSE;
-}
-
-static gint *
-ev_job_print_get_page_list (EvJobPrint *job,
-			    gint       *n_pages)
-{
-	gint  i, j, page, max_page;
-	gint  pages = 0;
-	gint *page_list;
-
-	max_page = ev_document_get_n_pages (EV_JOB (job)->document) - 1;
-
-	for (i = 0; i < job->n_ranges; i++) {
-		gint rsize;
-		gint start, end;
-
-		if (job->ranges[i].start == -1)
-			job->ranges[i].start = 0;
-		if (job->ranges[i].end == -1)
-			job->ranges[i].end = max_page;
-
-		if (job->ranges[i].start > max_page)
-			continue;
-		
-		start = job->ranges[i].start + 1;
-		end = job->ranges[i].end <= max_page ? job->ranges[i].end + 1 : max_page + 1;
-		rsize = end - start + 1;
-
-		switch (job->page_set) {
-		        case EV_PRINT_PAGE_SET_EVEN:
-				pages += start % 2 == 0 ? (rsize / 2) + (rsize % 2) : (rsize / 2);
-				break;
-		        case EV_PRINT_PAGE_SET_ODD:
-				pages += start % 2 != 0 ? (rsize / 2) + (rsize % 2) : (rsize / 2);
-				break;
-		        default:
-				pages += rsize;
-				break;
-		}
-	}
-
-	*n_pages = pages;
-
-	if (pages == 0)
-		return NULL;
-
-	page_list = g_new (gint, pages);
-
-	page = 0;
-	for (i = 0; i < job->n_ranges; i++) {
-		for (j = job->ranges[i].start; j <= job->ranges[i].end; j++) {
-			if (j > max_page)
-				break;
-		
-			if (ev_print_job_print_page_in_set (job, j + 1))
-				page_list[page++] = j;
-		}
-	}
-
-	return page_list;
-}
-
-static gboolean
-ev_job_print_run (EvJob *job)
-{
-	EvDocument            *document = EV_JOB (job)->document;
-	EvJobPrint            *job_print = EV_JOB_PRINT (job);
-	EvFileExporterContext  fc;
-	EvRenderContext       *rc;
-	gint                   fd;
-	gint                  *page_list;
-	gint                   n_pages;
-	gint                   last_page;
-	gint                   first_page;
-	gint                   i, j;
-	gchar                 *filename;
-	GError                *error = NULL;
-	
-	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
-	
-	if (job_print->temp_file)
-		g_free (job_print->temp_file);
-	job_print->temp_file = NULL;
-	
-	filename = g_strdup_printf ("evince_print.%s.XXXXXX", job_print->format);
-	fd = g_file_open_tmp (filename, &job_print->temp_file, &error);
-	g_free (filename);
-	if (fd <= -1) {
-		ev_job_failed_from_error (job, error);
-		g_error_free (error);
-		
-		return FALSE;
-	}
-
-	page_list = ev_job_print_get_page_list (job_print, &n_pages);
-	if (n_pages == 0) {
-		close (fd);
-		/* TODO: error */
-		ev_job_succeeded (job);
-		
-		return FALSE;
-	}
-
-	first_page = ev_print_job_get_first_page (job_print);
-	last_page = ev_print_job_get_last_page (job_print);
-
-	fc.format = g_ascii_strcasecmp (job_print->format, "pdf") == 0 ?
-		EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
-	fc.filename = job_print->temp_file;
-	fc.first_page = MIN (first_page, last_page);
-	fc.last_page = MAX (first_page, last_page);
-	fc.paper_width = job_print->width;
-	fc.paper_height = job_print->height;
-	fc.duplex = FALSE;
-	fc.pages_per_sheet = MAX (1, job_print->pages_per_sheet);
-
-	rc = ev_render_context_new (NULL, 0, 1.0);
-
-	ev_document_doc_mutex_lock ();
-	ev_file_exporter_begin (EV_FILE_EXPORTER (document), &fc);
-
-	for (i = 0; i < job_print->copies; i++) {
-		gint page, step;
-		gint n_copies;
-		
-		step = job_print->reverse ? -1 * job_print->pages_per_sheet : job_print->pages_per_sheet;
-		page = job_print->reverse ? ((n_pages - 1) / job_print->pages_per_sheet) * job_print->pages_per_sheet : 0;
-		n_copies = job_print->collate ? 1 : job_print->copies;
-
-		while ((job_print->reverse && (page >= 0)) || (!job_print->reverse && (page < n_pages))) {
-			gint k;
-
-			for (k = 0; k < n_copies; k++) {
-				ev_file_exporter_begin_page (EV_FILE_EXPORTER (document));
-				
-				for (j = 0; j < job_print->pages_per_sheet; j++) {
-					EvPage *ev_page;
-					
-					gint p = page + j;
-
-					if (p < 0 || p >= n_pages)
-						break;
-
-					ev_page = ev_document_get_page (document, page_list[p]);
-					ev_render_context_set_page (rc, ev_page);
-					g_object_unref (ev_page);
-					
-					ev_file_exporter_do_page (EV_FILE_EXPORTER (document), rc);
-				}
-
-				ev_file_exporter_end_page (EV_FILE_EXPORTER (document));
-			}
-
-			page += step;
-		}
-
-		if (!job_print->collate)
-			break;
-	}
-
-	ev_file_exporter_end (EV_FILE_EXPORTER (document));
-	ev_document_doc_mutex_unlock ();
-	
-	g_free (page_list);
-	close (fd);
-	g_object_unref (rc);
-	
-	ev_job_succeeded (job);
-	
-	return FALSE;
-}
-
-static void
-ev_job_print_class_init (EvJobPrintClass *class)
-{
-	GObjectClass *oclass = G_OBJECT_CLASS (class);
-	EvJobClass   *job_class = EV_JOB_CLASS (class);
-
-	oclass->dispose = ev_job_print_dispose;
-	job_class->run = ev_job_print_run;
-}
-
-EvJob *
-ev_job_print_new (EvDocument    *document,
-		  const gchar   *format,
-		  gdouble        width,
-		  gdouble        height,
-		  EvPrintRange  *ranges,
-		  gint           n_ranges,
-		  EvPrintPageSet page_set,
-		  gint           pages_per_sheet,
-		  gint           copies,
-		  gdouble        collate,
-		  gdouble        reverse)
-{
-	EvJobPrint *job;
-
-	ev_debug_message (DEBUG_JOBS, "format: %s, width: %f, height:%f,"
-			  "n_ranges: %d, pages_per_sheet: %d, copies: %d,"
-			  "collate: %s, reverse: %s",
-			  format, width, height, n_ranges, pages_per_sheet, copies,
-			  collate ? "True" : "False", reverse  ? "True" : "False");
-
-	job = g_object_new (EV_TYPE_JOB_PRINT, NULL);
-
-	EV_JOB (job)->document = g_object_ref (document);
-
-	job->format = format;
-	
-	job->temp_file = NULL;
-
-	job->width = width;
-	job->height = height;
-
-	job->ranges = ranges;
-	job->n_ranges = n_ranges;
-
-	job->page_set = page_set;
-
-	job->pages_per_sheet = CLAMP (pages_per_sheet, 1, 16);
-	
-	job->copies = copies;
-	job->collate = collate;
-	job->reverse = reverse;
-	
-	return EV_JOB (job);
-}
-
 /* EvJobFind */
 static void
 ev_job_find_init (EvJobFind *job)
@@ -1602,4 +1291,93 @@ ev_job_layers_new (EvDocument *document)
 	job->document = g_object_ref (document);
 	
 	return job;
+}
+
+/* EvJobExport */
+static void
+ev_job_export_init (EvJobExport *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+	job->page = -1;
+}
+
+static void
+ev_job_export_dispose (GObject *object)
+{
+	EvJobExport *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	
+	job = EV_JOB_EXPORT (object);
+
+	if (job->rc) {
+		g_object_unref (job->rc);
+		job->rc = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_export_parent_class)->dispose) (object);
+}
+
+static gboolean
+ev_job_export_run (EvJob *job)
+{
+	EvJobExport *job_export = EV_JOB_EXPORT (job);
+	EvPage      *ev_page;
+
+	g_assert (job_export->page != -1);
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	
+	ev_document_doc_mutex_lock ();
+	
+	ev_page = ev_document_get_page (job->document, job_export->page);
+	if (job_export->rc) {
+		job->failed = FALSE;
+		job->finished = FALSE;
+		g_clear_error (&job->error);
+		
+		ev_render_context_set_page (job_export->rc, ev_page);
+	} else {
+		job_export->rc = ev_render_context_new (ev_page, 0, 1.0);
+	}
+	g_object_unref (ev_page);
+	
+	ev_file_exporter_do_page (EV_FILE_EXPORTER (job->document), job_export->rc);
+	
+	ev_document_doc_mutex_unlock ();
+	
+	ev_job_succeeded (job);
+	
+	return FALSE;
+}
+
+static void
+ev_job_export_class_init (EvJobExportClass *class)
+{
+	GObjectClass *oclass = G_OBJECT_CLASS (class);
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+	oclass->dispose = ev_job_export_dispose;
+	job_class->run = ev_job_export_run;
+}
+
+EvJob *
+ev_job_export_new (EvDocument *document)
+{
+	EvJob *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	job = g_object_new (EV_TYPE_JOB_EXPORT, NULL);
+	job->document = g_object_ref (document);
+	
+	return job;
+}
+
+void
+ev_job_export_set_page (EvJobExport *job,
+			gint         page)
+{
+	job->page = page;
 }
