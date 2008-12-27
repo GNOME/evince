@@ -1,6 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /* this file is part of evince, a gnome document viewer
  *
+ *  Copyright (C) 2008 Carlos Garcia Campos
  *  Copyright (C) 2004 Martin Kretzschmar
  *  Copyright (C) 2004 Red Hat, Inc.
  *  Copyright (C) 2000, 2001, 2002, 2003, 2004 Marco Pesenti Gritti
@@ -88,6 +89,7 @@
 #include "ev-window.h"
 #include "ev-window-title.h"
 #include "ev-print-operation.h"
+#include "ev-progress-message-area.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
@@ -188,7 +190,7 @@ struct _EvWindowPrivate {
 	EvJob            *find_job;
 
 	/* Printing */
-	gboolean          print_preview;
+	GQueue           *print_queue;
 	GtkPrinter       *printer;
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
@@ -677,7 +679,7 @@ ev_window_error_message (EvWindow    *window,
 	area = ev_message_area_new (GTK_MESSAGE_ERROR,
 				    msg,
 				    GTK_STOCK_CLOSE,
-				    GTK_RESPONSE_CANCEL,
+				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
 	
@@ -709,7 +711,7 @@ ev_window_warning_message (EvWindow    *window,
 	area = ev_message_area_new (GTK_MESSAGE_WARNING,
 				    msg,
 				    GTK_STOCK_CLOSE,
-				    GTK_RESPONSE_CANCEL,
+				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
 	
@@ -2325,6 +2327,33 @@ ev_window_save_print_settings (EvWindow *window)
 }
 
 static void
+ev_window_print_update_pending_jobs_message (EvWindow *ev_window)
+{
+	gint   n_jobs;
+	gchar *text = NULL;
+	
+	if (!EV_IS_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area) ||
+	    !ev_window->priv->print_queue)
+		return;
+
+	n_jobs = g_queue_get_length (ev_window->priv->print_queue);
+	if (n_jobs == 0) {
+		ev_window_set_message_area (ev_window, NULL);
+		return;
+	}
+	
+	if (n_jobs > 1) {
+		text = g_strdup_printf (ngettext ("%d pending job in queue",
+						  "%d pending jobs in queue",
+						  n_jobs - 1), n_jobs - 1);
+	}
+
+	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (ev_window->priv->message_area),
+					    text);
+	g_free (text);
+}
+
+static void
 ev_window_print_operation_done (EvPrintOperation       *op,
 				GtkPrintOperationResult result,
 				EvWindow               *ev_window)
@@ -2332,22 +2361,42 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 	switch (result) {
 	case GTK_PRINT_OPERATION_RESULT_APPLY: {
 		GtkPrintSettings *print_settings;
-
-		if (ev_window->priv->print_settings)
-			g_object_unref (ev_window->priv->print_settings);
+		
 		print_settings = ev_print_operation_get_print_settings (op);
+		if (ev_window->priv->print_settings != print_settings) {
+			if (ev_window->priv->print_settings)
+				g_object_unref (ev_window->priv->print_settings);
+			ev_window->priv->print_settings = g_object_ref (print_settings);
+		}
 		
 		ev_application_set_print_settings (EV_APP, print_settings);
-		ev_window->priv->print_settings = g_object_ref (print_settings);
 		ev_window_save_print_settings (ev_window);
 	}
+
 		break;
 	case GTK_PRINT_OPERATION_RESULT_ERROR: {
-		GError *error = NULL;
+		GtkWidget *dialog;
+		GError    *error = NULL;
+
 
 		ev_print_operation_get_error (op, &error);
-		ev_window_error_message (ev_window, error,
-					 "%s", _("Failed to print document"));
+		
+		/* The message area is already used by
+		 * the printing progress, so it's better to
+		 * use a popup dialog in this case
+		 */
+		dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 "%s", _("Failed to print document"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+							  "%s", error->message);
+		g_signal_connect (dialog, "response",
+				  G_CALLBACK (gtk_widget_destroy),
+				  NULL);
+		gtk_widget_show (dialog);
+		
 		g_error_free (error);
 	}
 		break;
@@ -2356,7 +2405,82 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 		break;
 	}
 
+	g_queue_remove (ev_window->priv->print_queue, op);
 	g_object_unref (op);
+	ev_window_print_update_pending_jobs_message (ev_window);
+}
+
+static void
+ev_window_print_progress_response_cb (EvProgressMessageArea *area,
+				      gint                   response,
+				      EvWindow              *ev_window)
+{
+	if (response == GTK_RESPONSE_CANCEL) {
+		EvPrintOperation *op;
+
+		op = g_queue_peek_tail (ev_window->priv->print_queue);
+		ev_print_operation_cancel (op);
+	} else {
+		gtk_widget_hide (GTK_WIDGET (area));
+	}
+}
+
+static void
+ev_window_print_operation_status_changed (EvPrintOperation *op,
+					  EvWindow         *ev_window)
+{
+	const gchar *status;
+	gdouble      fraction;
+
+	status = ev_print_operation_get_status (op);
+	fraction = ev_print_operation_get_progress (op);
+	
+	if (!ev_window->priv->message_area) {
+		GtkWidget   *area;
+		const gchar *job_name;
+		gchar       *text;
+
+		job_name = ev_print_operation_get_job_name (op);
+		text = g_strdup_printf (_("Printing job “%s”"), job_name);
+
+		area = ev_progress_message_area_new (GTK_STOCK_PRINT,
+						     text,
+						     GTK_STOCK_CLOSE,
+						     GTK_RESPONSE_CLOSE,
+						     GTK_STOCK_CANCEL,
+						     GTK_RESPONSE_CANCEL,
+						     NULL);
+		ev_window_print_update_pending_jobs_message (ev_window);
+		g_signal_connect (area, "response",
+				  G_CALLBACK (ev_window_print_progress_response_cb),
+				  ev_window);
+		gtk_widget_show (area);
+		ev_window_set_message_area (ev_window, area);
+		g_free (text);
+	}
+
+	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					     status);
+	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					       fraction);
+}
+
+static void
+ev_window_print_operation_begin_print (EvPrintOperation *op,
+				       EvWindow         *ev_window)
+{
+	GtkPrintSettings *print_settings;
+	
+	if (!ev_window->priv->print_queue)
+		ev_window->priv->print_queue = g_queue_new ();
+
+	g_queue_push_head (ev_window->priv->print_queue, op);
+	ev_window_print_update_pending_jobs_message (ev_window);
+	
+	if (ev_window->priv->print_settings)
+		g_object_unref (ev_window->priv->print_settings);
+	print_settings = ev_print_operation_get_print_settings (op);
+	ev_window->priv->print_settings = g_object_ref (print_settings);
 }
 
 void
@@ -2364,15 +2488,24 @@ ev_window_print_range (EvWindow *ev_window,
 		       gint      first_page,
 		       gint      last_page)
 {
-	EvPrintOperation    *op;
-	EvPageCache         *page_cache;
-	gint                 current_page;
-	gint                 document_last_page;
+	EvPrintOperation *op;
+	EvPageCache      *page_cache;
+	gint              current_page;
+	gint              document_last_page;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
 
+	if (!ev_window->priv->print_queue)
+		ev_window->priv->print_queue = g_queue_new ();
+
 	op = ev_print_operation_new (ev_window->priv->document);
+	g_signal_connect (G_OBJECT (op), "begin_print",
+			  G_CALLBACK (ev_window_print_operation_begin_print),
+			  (gpointer)ev_window);
+	g_signal_connect (G_OBJECT (op), "status_changed",
+			  G_CALLBACK (ev_window_print_operation_status_changed),
+			  (gpointer)ev_window);
 	g_signal_connect (G_OBJECT (op), "done",
 			  G_CALLBACK (ev_window_print_operation_done),
 			  (gpointer)ev_window);
@@ -4214,6 +4347,11 @@ ev_window_dispose (GObject *object)
 	if (priv->presentation_timeout_id > 0) {
 		g_source_remove (priv->presentation_timeout_id);
 		priv->presentation_timeout_id = 0;
+	}
+
+	if (priv->print_queue) {
+		g_queue_free (priv->print_queue);
+		priv->print_queue = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);

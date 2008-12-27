@@ -45,6 +45,8 @@ enum {
 
 enum {
 	DONE,
+	BEGIN_PRINT,
+	STATUS_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -54,6 +56,10 @@ struct _EvPrintOperation {
 	GObject parent;
 
 	EvDocument *document;
+
+	/* Progress */
+	gchar      *status;
+	gdouble     progress;
 };
 
 struct _EvPrintOperationClass {
@@ -69,6 +75,7 @@ struct _EvPrintOperationClass {
 	GtkPageSetup     *(* get_default_page_setup) (EvPrintOperation       *op);
 	void              (* set_job_name)           (EvPrintOperation       *op,
 						      const gchar            *job_name);
+	const gchar      *(* get_job_name)           (EvPrintOperation       *op);
 	void              (* run)                    (EvPrintOperation       *op,
 						      GtkWindow              *parent);
 	void              (* cancel)                 (EvPrintOperation       *op);
@@ -78,6 +85,9 @@ struct _EvPrintOperationClass {
 	/* signals */
 	void              (* done)                   (EvPrintOperation       *op,
 						      GtkPrintOperationResult result);
+	void              (* begin_print)            (EvPrintOperation       *op);
+	void              (* status_changed)         (EvPrintOperation       *op);
+						      
 };
 
 G_DEFINE_ABSTRACT_TYPE (EvPrintOperation, ev_print_operation, G_TYPE_OBJECT)
@@ -90,6 +100,11 @@ ev_print_operation_finalize (GObject *object)
 	if (op->document) {
 		g_object_unref (op->document);
 		op->document = NULL;
+	}
+
+	if (op->status) {
+		g_free (op->status);
+		op->status = NULL;
 	}
 
 	(* G_OBJECT_CLASS (ev_print_operation_parent_class)->finalize) (object);
@@ -142,7 +157,22 @@ ev_print_operation_class_init (EvPrintOperationClass *klass)
 			      g_cclosure_marshal_VOID__ENUM,
 			      G_TYPE_NONE, 1,
 			      GTK_TYPE_PRINT_OPERATION_RESULT);
-	
+	signals[BEGIN_PRINT] =
+		g_signal_new ("begin_print",
+			      G_TYPE_FROM_CLASS (g_object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvPrintOperationClass, begin_print),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+	signals[STATUS_CHANGED] =
+		g_signal_new ("status_changed",
+			      G_TYPE_FROM_CLASS (g_object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (EvPrintOperationClass, status_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 }
 
 /* Public methods */
@@ -214,6 +244,16 @@ ev_print_operation_set_job_name (EvPrintOperation *op,
 	class->set_job_name (op, job_name);
 }
 
+const gchar *
+ev_print_operation_get_job_name (EvPrintOperation *op)
+{
+	EvPrintOperationClass *class = EV_PRINT_OPERATION_GET_CLASS (op);
+
+	g_return_val_if_fail (EV_IS_PRINT_OPERATION (op), NULL);
+
+	return class->get_job_name (op);
+}
+
 void
 ev_print_operation_run (EvPrintOperation *op,
 			GtkWindow        *parent)
@@ -246,6 +286,48 @@ ev_print_operation_get_error (EvPrintOperation *op,
 	class->get_error (op, error);
 }
 
+const gchar *
+ev_print_operation_get_status (EvPrintOperation *op)
+{
+	g_return_val_if_fail (EV_IS_PRINT_OPERATION (op), NULL);
+
+	return op->status ? op->status : "";
+}
+
+gdouble
+ev_print_operation_get_progress (EvPrintOperation *op)
+{
+	g_return_val_if_fail (EV_IS_PRINT_OPERATION (op), 0.0);
+
+	return op->progress;
+}
+
+static void
+ev_print_operation_update_status (EvPrintOperation *op,
+				  gint              page,
+				  gint              n_pages,
+				  gdouble           progress)
+{
+	if (op->status && op->progress == progress)
+		return;
+
+	g_free (op->status);
+
+	if (page == -1) {
+		/* Initial state */
+		op->status = g_strdup (_("Preparing to print ..."));
+	} else if (page > n_pages) {
+		op->status = g_strdup (_("Finishing..."));
+	} else {
+		op->status = g_strdup_printf (_("Printing page %d of %d..."),
+					      page, n_pages);
+	}
+
+	op->progress = MIN (1.0, progress);
+
+	g_signal_emit (op, signals[STATUS_CHANGED], 0);
+}
+
 /* Export interface */
 #define EV_TYPE_PRINT_OPERATION_EXPORT         (ev_print_operation_export_get_type())
 #define EV_PRINT_OPERATION_EXPORT(object)      (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PRINT_OPERATION_EXPORT, EvPrintOperationExport))
@@ -257,6 +339,7 @@ typedef struct _EvPrintOperationExportClass EvPrintOperationExportClass;
 
 GType           ev_print_operation_export_get_type (void) G_GNUC_CONST;
 
+static void     ev_print_operation_export_begin    (EvPrintOperationExport *export);
 static gboolean export_print_page                  (EvPrintOperationExport *export);
 
 struct _EvPrintOperationExport {
@@ -284,6 +367,8 @@ struct _EvPrintOperationExport {
 	guint idle_id;
 	
 	/* Context */
+	EvFileExporterContext fc;
+	gint n_pages_to_print;
 	gint uncollated_copies;
 	gint collated_copies;
 	gint uncollated, collated, total;
@@ -300,6 +385,91 @@ struct _EvPrintOperationExportClass {
 };
 
 G_DEFINE_TYPE (EvPrintOperationExport, ev_print_operation_export, EV_TYPE_PRINT_OPERATION)
+
+/* Internal print queue */
+static GHashTable *print_queue = NULL;
+
+static void
+queue_free (GQueue *queue)
+{
+	g_queue_foreach (queue, (GFunc)g_object_unref, NULL);
+	g_queue_free (queue);
+}
+
+static void
+ev_print_queue_init (void)
+{
+	if (G_UNLIKELY (print_queue == NULL)) {
+		print_queue = g_hash_table_new_full (g_direct_hash,
+						     g_direct_equal,
+						     NULL,
+						     (GDestroyNotify)queue_free);
+	}
+}
+
+static void
+remove_document_queue (gpointer data,
+		       GObject *document)
+{
+	if (print_queue)
+		g_hash_table_remove (print_queue, document);
+}
+
+static gboolean
+ev_print_queue_is_empty (EvDocument *document)
+{
+	GQueue *queue;
+
+	queue = g_hash_table_lookup (print_queue, document);
+	return (!queue || g_queue_is_empty (queue));
+}
+
+static void
+ev_print_queue_push (EvPrintOperation *op)
+{
+	GQueue *queue;
+
+	queue = g_hash_table_lookup (print_queue, op->document);
+	if (!queue) {
+		queue = g_queue_new ();
+		g_hash_table_insert (print_queue,
+				     op->document,
+				     queue);
+		g_object_weak_ref (G_OBJECT (op->document),
+				   (GWeakNotify)remove_document_queue,
+				   NULL);
+	}
+
+	g_queue_push_head (queue, g_object_ref (op));
+}
+
+static EvPrintOperation *
+ev_print_queue_pop (EvDocument *document)
+{
+	EvPrintOperation *op;
+	GQueue           *queue;
+
+	queue = g_hash_table_lookup (print_queue, document);
+	if (!queue || g_queue_is_empty (queue))
+		return NULL;
+	
+	op = g_queue_pop_tail (queue);
+	g_object_unref (op);
+
+	return op;
+}
+
+static EvPrintOperation *
+ev_print_queue_peek (EvDocument *document)
+{
+	GQueue *queue;
+
+	queue = g_hash_table_lookup (print_queue, document);
+	if (!queue || g_queue_is_empty (queue))
+		return NULL;
+
+	return g_queue_peek_tail (queue);
+}
 
 static void
 ev_print_operation_export_set_current_page (EvPrintOperation *op,
@@ -368,6 +538,14 @@ ev_print_operation_export_set_job_name (EvPrintOperation *op,
 	export->job_name = g_strdup (job_name);
 }
 
+static const gchar *
+ev_print_operation_export_get_job_name (EvPrintOperation *op)
+{
+	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
+
+	return export->job_name;
+}
+
 static void
 ev_print_operation_export_set_printer (EvPrintOperationExport *export,
 				       GtkPrinter             *printer)
@@ -401,9 +579,12 @@ static void
 clamp_ranges (EvPrintOperationExport *export)
 {
 	gint num_of_correct_ranges = 0;
+	gint n_pages_to_print = 0;
 	gint i;
 
 	for (i = 0; i < export->n_ranges; i++) {
+		gint n_pages;
+		
 		if ((export->ranges[i].start >= 0) &&
 		    (export->ranges[i].start < export->n_pages) &&
 		    (export->ranges[i].end >= 0) &&
@@ -423,44 +604,51 @@ clamp_ranges (EvPrintOperationExport *export)
 			export->ranges[num_of_correct_ranges] = export->ranges[i];
 			num_of_correct_ranges++;
 		}
+		
+		n_pages = export->ranges[i].end - export->ranges[i].start + 1;
+		if (export->page_set == GTK_PAGE_SET_ALL) {
+			n_pages_to_print += n_pages;
+		} else if (n_pages % 2 == 0) {
+			n_pages_to_print += n_pages / 2;
+		} else if (export->page_set == GTK_PAGE_SET_EVEN) {
+			n_pages_to_print += export->ranges[i].start % 2 == 0 ?
+				n_pages / 2 : (n_pages / 2) + 1;
+		} else if (export->page_set == GTK_PAGE_SET_ODD) {
+			n_pages_to_print += export->ranges[i].start % 2 == 0 ?
+				(n_pages / 2) + 1 : n_pages / 2;
+		}
 	}
 
 	export->n_ranges = num_of_correct_ranges;
+	export->n_pages_to_print = n_pages_to_print;
 }
 
-static gint
-get_first_page (EvPrintOperationExport *export)
+static void
+get_first_and_last_page (EvPrintOperationExport *export,
+			 gint                   *first,
+			 gint                   *last)
 {
 	gint i;
 	gint first_page = G_MAXINT;
+	gint last_page = G_MININT;
+	gint max_page = export->n_pages - 1;
 
-	if (export->n_ranges == 0)
-		return 0;
+	if (export->n_ranges == 0) {
+		*first = 0;
+		*last = max_page;
+
+		return;
+	}
 
 	for (i = 0; i < export->n_ranges; i++) {
 		if (export->ranges[i].start < first_page)
 			first_page = export->ranges[i].start;
-	}
-
-	return MAX (0, first_page);
-}
-
-static gint
-get_last_page (EvPrintOperationExport *export)
-{
-	gint i;
-	gint last_page = G_MININT;
-	gint max_page = export->n_pages - 1;
-
-	if (export->n_ranges == 0)
-		return max_page;
-
-	for (i = 0; i < export->n_ranges; i++) {
 		if (export->ranges[i].end > last_page)
 			last_page = export->ranges[i].end;
 	}
 
-	return MIN (max_page, last_page);
+	*first = MAX (0, first_page);
+	*last = MIN (max_page, last_page);
 }
 
 static gboolean
@@ -498,12 +686,28 @@ ev_print_operation_export_clear_temp_file (EvPrintOperationExport *export)
 }
 
 static void
+ev_print_operation_export_run_next (EvPrintOperationExport *export)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (export);
+	EvPrintOperation *next;
+	EvDocument       *document;
+
+	/* First pop the current job */
+	document = op->document;
+	ev_print_queue_pop (document);
+	
+	next = ev_print_queue_peek (document);
+	if (next)
+		ev_print_operation_export_begin (EV_PRINT_OPERATION_EXPORT (next));
+}
+
+static void
 print_job_finished (GtkPrintJob            *print_job,
 		    EvPrintOperationExport *export,
 		    GError                 *error)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
-	
+
 	if (error) {
 		g_set_error_literal (&export->error,
 				     GTK_PRINT_ERROR,
@@ -516,6 +720,8 @@ print_job_finished (GtkPrintJob            *print_job,
 
 	ev_print_operation_export_clear_temp_file (export);
 	g_object_unref (print_job);
+
+	ev_print_operation_export_run_next (export);
 }
 
 static void
@@ -525,6 +731,8 @@ export_print_done (EvPrintOperationExport *export)
 	GtkPrintSettings *settings;
 	EvFileExporterCapabilities capabilities;
 
+	g_assert (export->temp_file != NULL);
+	
 	/* Some printers take into account some print settings,
 	 * and others don't. However we have exported the document
 	 * to a ps or pdf file according to such print settings. So,
@@ -573,6 +781,8 @@ export_print_done (EvPrintOperationExport *export)
 
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_APPLY);
 		/* temp_file will be deleted by the previewer */
+
+		ev_print_operation_export_run_next (export);
 	} else {
 		GtkPrintJob *job;
 		GError      *error = NULL;
@@ -590,6 +800,8 @@ export_print_done (EvPrintOperationExport *export)
 			g_error_free (error);
 			ev_print_operation_export_clear_temp_file (export);
 			g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
+
+			ev_print_operation_export_run_next (export);
 		} else {
 			gtk_print_job_send (job,
 					    (GtkPrintJobCompleteFunc)print_job_finished,
@@ -652,12 +864,27 @@ export_job_cancelled (EvJobExport            *job,
 	ev_print_operation_export_clear_temp_file (export);
 
 	g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_CANCEL);
+	
+	ev_print_operation_export_run_next (export);
+}
+
+static void
+update_progress (EvPrintOperationExport *export)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (export);
+
+	ev_print_operation_update_status (op, export->total,
+					  export->n_pages_to_print,
+					  export->total / (gdouble)export->n_pages_to_print);
 }
 
 static gboolean
 export_print_page (EvPrintOperationExport *export)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
+
+	if (!export->temp_file)
+		return FALSE; /* cancelled */
 	
 	export->total++;
 	export->collated++;
@@ -675,8 +902,10 @@ export_print_page (EvPrintOperationExport *export)
 			close (export->fd);
 			export->fd = -1;
 
-			export_print_done (export);
+			update_progress (export);
 			
+			export_print_done (export);
+
 			return FALSE;
 		}
 	}
@@ -699,37 +928,56 @@ export_print_page (EvPrintOperationExport *export)
 
 	ev_job_export_set_page (EV_JOB_EXPORT (export->job_export), export->page);
 	ev_job_scheduler_push_job (export->job_export, EV_JOB_PRIORITY_NONE);
+
+	update_progress (export);
 	
 	return FALSE;
 }
 
-static gboolean
+static void
+ev_print_operation_export_begin (EvPrintOperationExport *export)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (export);
+	
+	ev_document_doc_mutex_lock ();
+	ev_file_exporter_begin (EV_FILE_EXPORTER (op->document), &export->fc);
+	ev_document_doc_mutex_unlock ();
+
+	export->idle_id = g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
+					   (GSourceFunc)export_print_page,
+					   export,
+					   (GDestroyNotify)export_print_page_idle_finished);	
+}
+
+static void
 ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dialog,
 						    gint                    response,
 						    EvPrintOperationExport *export)
 {
-	GtkPrintPages         print_pages;
-	GtkPrintSettings     *print_settings;
-	GtkPageSetup         *page_setup;
-	GtkPrinter           *printer;
-	gdouble               scale;
-	gdouble               width;
-	gdouble               height;
-	gint                  first_page;
-	gint                  last_page;
-	const gchar          *file_format;
-	gchar                *filename;
-	EvFileExporterContext fc;
-	GError               *error = NULL;
-	EvPrintOperation     *op = EV_PRINT_OPERATION (export);
+	GtkPrintPages     print_pages;
+	GtkPrintSettings *print_settings;
+	GtkPageSetup     *page_setup;
+	GtkPrinter       *printer;
+	gdouble           scale;
+	gdouble           width;
+	gdouble           height;
+	gint              first_page;
+	gint              last_page;
+	const gchar      *file_format;
+	gchar            *filename;
+	GError           *error = NULL;
+	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 	
 	if (response != GTK_RESPONSE_OK &&
 	    response != GTK_RESPONSE_APPLY) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
+		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_CANCEL);
 
-		return FALSE;
+		return;
 	}
 
+	ev_print_operation_update_status (op, -1, -1, 0.0);
+	
 	export->print_preview = (response == GTK_RESPONSE_APPLY);
 	
 	printer = gtk_print_unix_dialog_get_selected_printer (GTK_PRINT_UNIX_DIALOG (dialog));
@@ -742,14 +990,15 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 	ev_print_operation_export_set_default_page_setup (op, page_setup);
 
 	if (!gtk_printer_accepts_ps (export->printer)) {
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		
 		g_set_error (&export->error,
 			     GTK_PRINT_ERROR,
 			     GTK_PRINT_ERROR_GENERAL,
 			     "%s", _("Printing is not supported on this printer."));
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
-		gtk_widget_destroy (GTK_WIDGET (dialog));
 		
-		return FALSE;
+		return;
 	}
 
 	file_format = gtk_print_settings_get (print_settings, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
@@ -758,18 +1007,20 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 	export->fd = g_file_open_tmp (filename, &export->temp_file, &error);
 	g_free (filename);
 	if (export->fd <= -1) {
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+		
 		g_set_error_literal (&export->error,
 				     GTK_PRINT_ERROR,
 				     GTK_PRINT_ERROR_GENERAL,
 				     error->message);
 		g_error_free (error);
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
-		gtk_widget_destroy (GTK_WIDGET (dialog));
 
-		return FALSE;
+		return;
 	}
 
 	export->current_page = gtk_print_unix_dialog_get_current_page (GTK_PRINT_UNIX_DIALOG (dialog));
+	export->page_set = gtk_print_settings_get_page_set (print_settings);
 	print_pages = gtk_print_settings_get_print_pages (print_settings);
 	
 	switch (print_pages) {
@@ -800,8 +1051,6 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		break;
 	}
 	clamp_ranges (export);
-
-	export->page_set = gtk_print_settings_get_page_set (print_settings);
 
 	width = gtk_page_setup_get_paper_width (page_setup, GTK_UNIT_POINTS);
 	height = gtk_page_setup_get_paper_height (page_setup, GTK_UNIT_POINTS);
@@ -837,31 +1086,26 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 	export->page = export->start - export->inc;
 	export->collated = export->collated_copies - 1;
 
-	first_page = get_first_page (export);
-	last_page = get_last_page (export);
+	get_first_and_last_page (export, &first_page, &last_page);
 
-	fc.format = g_ascii_strcasecmp (file_format, "pdf") == 0 ?
+	export->fc.format = g_ascii_strcasecmp (file_format, "pdf") == 0 ?
 		EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
-	fc.filename = export->temp_file;
-	fc.first_page = MIN (first_page, last_page);
-	fc.last_page = MAX (first_page, last_page);
-	fc.paper_width = width;
-	fc.paper_height = height;
-	fc.duplex = FALSE;
-	fc.pages_per_sheet = MAX (1, export->pages_per_sheet);
+	export->fc.filename = export->temp_file;
+	export->fc.first_page = MIN (first_page, last_page);
+	export->fc.last_page = MAX (first_page, last_page);
+	export->fc.paper_width = width;
+	export->fc.paper_height = height;
+	export->fc.duplex = FALSE;
+	export->fc.pages_per_sheet = MAX (1, export->pages_per_sheet);
 
-	ev_document_doc_mutex_lock ();
-	ev_file_exporter_begin (EV_FILE_EXPORTER (op->document), &fc);
-	ev_document_doc_mutex_unlock ();
+	if (ev_print_queue_is_empty (op->document))
+		ev_print_operation_export_begin (export);
 
-	export->idle_id = g_idle_add_full (G_PRIORITY_DEFAULT_IDLE,
-					   (GSourceFunc)export_print_page,
-					   export,
-					   (GDestroyNotify)export_print_page_idle_finished);
+	ev_print_queue_push (op);
+
+	g_signal_emit (op, signals[BEGIN_PRINT], 0);
 	
 	gtk_widget_destroy (GTK_WIDGET (dialog));
-
-	return TRUE;
 }
 
 static void
@@ -871,6 +1115,8 @@ ev_print_operation_export_run (EvPrintOperation *op,
 	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
 	GtkWidget              *dialog;
 	GtkPrintCapabilities    capabilities;
+
+	ev_print_queue_init ();
 
 	export->parent_window = parent;
 	export->error = NULL;
@@ -906,7 +1152,12 @@ ev_print_operation_export_cancel (EvPrintOperation *op)
 	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
 
 	if (export->job_export) {
-		ev_job_cancel (export->job_export);
+		if (!ev_job_is_finished (export->job_export)) {
+			ev_job_cancel (export->job_export);
+		} else {
+			export_job_cancelled (EV_JOB_EXPORT (export->job_export),
+					      export);
+		}
 	}
 }
 
@@ -1024,6 +1275,7 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 	ev_print_op_class->set_default_page_setup = ev_print_operation_export_set_default_page_setup;
 	ev_print_op_class->get_default_page_setup = ev_print_operation_export_get_default_page_setup;
 	ev_print_op_class->set_job_name = ev_print_operation_export_set_job_name;
+	ev_print_op_class->get_job_name = ev_print_operation_export_get_job_name;
 	ev_print_op_class->run = ev_print_operation_export_run;
 	ev_print_op_class->cancel = ev_print_operation_export_cancel;
 	ev_print_op_class->get_error = ev_print_operation_export_get_error;

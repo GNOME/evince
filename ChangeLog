@@ -1,5 +1,31 @@
 2008-12-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-print-operation.[ch]: (ev_print_operation_class_init),
+	(ev_print_operation_get_job_name),
+	(ev_print_operation_get_status),
+	(ev_print_operation_get_progress),
+	(ev_print_operation_update_status),
+	(ev_print_operation_export_get_job_name), (clamp_ranges),
+	(get_first_and_last_page), (ev_print_operation_export_run_next),
+	(print_job_finished), (export_print_done), (export_job_cancelled),
+	(update_progress), (export_print_page),
+	(ev_print_operation_export_begin),
+	(ev_print_operation_export_print_dialog_response_cb),
+	(ev_print_operation_export_run),
+	(ev_print_operation_export_cancel),
+	(ev_print_operation_export_class_init):
+	* shell/ev-window.c:
+	(ev_window_print_update_pending_jobs_message),
+	(ev_window_print_operation_done),
+	(ev_window_print_progress_response_cb),
+	(ev_window_print_operation_status_changed),
+	(ev_window_print_operation_begin_print), (ev_window_print_range),
+	(ev_window_dispose):
+
+	Show progress information when printing. Fixes bug #482770.
+	
+2008-12-27  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/Makefile.am:
 	* shell/ev-progress-message-area.[ch]:
 	* shell/ev-message-area.[ch]: (ev_message_area_init),
