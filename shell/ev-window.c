@@ -194,7 +194,7 @@ struct _EvWindowPrivate {
 	GtkPrinter       *printer;
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
-
+	gboolean          close_after_print;
 };
 
 #define EV_WINDOW_GET_PRIVATE(object) \
@@ -2327,16 +2327,28 @@ ev_window_save_print_settings (EvWindow *window)
 }
 
 static void
-ev_window_print_update_pending_jobs_message (EvWindow *ev_window)
+ev_window_print_cancel (EvWindow *ev_window)
 {
-	gint   n_jobs;
+	EvPrintOperation *op;
+	
+	if (!ev_window->priv->print_queue)
+		return;
+
+	while ((op = g_queue_peek_tail (ev_window->priv->print_queue))) {
+		ev_print_operation_cancel (op);
+	}
+}
+
+static void
+ev_window_print_update_pending_jobs_message (EvWindow *ev_window,
+					     gint      n_jobs)
+{
 	gchar *text = NULL;
 	
 	if (!EV_IS_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area) ||
 	    !ev_window->priv->print_queue)
 		return;
 
-	n_jobs = g_queue_get_length (ev_window->priv->print_queue);
 	if (n_jobs == 0) {
 		ev_window_set_message_area (ev_window, NULL);
 		return;
@@ -2353,11 +2365,21 @@ ev_window_print_update_pending_jobs_message (EvWindow *ev_window)
 	g_free (text);
 }
 
+static gboolean
+destroy_window (GtkWidget *window)
+{
+	gtk_widget_destroy (window);
+	
+	return FALSE;
+}
+
 static void
 ev_window_print_operation_done (EvPrintOperation       *op,
 				GtkPrintOperationResult result,
 				EvWindow               *ev_window)
 {
+	gint n_jobs;
+	
 	switch (result) {
 	case GTK_PRINT_OPERATION_RESULT_APPLY: {
 		GtkPrintSettings *print_settings;
@@ -2407,7 +2429,12 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 
 	g_queue_remove (ev_window->priv->print_queue, op);
 	g_object_unref (op);
-	ev_window_print_update_pending_jobs_message (ev_window);
+	n_jobs = g_queue_get_length (ev_window->priv->print_queue);
+	ev_window_print_update_pending_jobs_message (ev_window, n_jobs);
+
+	if (n_jobs == 0 && ev_window->priv->close_after_print)
+		g_idle_add ((GSourceFunc)destroy_window,
+			    ev_window);
 }
 
 static void
@@ -2450,7 +2477,7 @@ ev_window_print_operation_status_changed (EvPrintOperation *op,
 						     GTK_STOCK_CANCEL,
 						     GTK_RESPONSE_CANCEL,
 						     NULL);
-		ev_window_print_update_pending_jobs_message (ev_window);
+		ev_window_print_update_pending_jobs_message (ev_window, 1);
 		g_signal_connect (area, "response",
 				  G_CALLBACK (ev_window_print_progress_response_cb),
 				  ev_window);
@@ -2475,7 +2502,8 @@ ev_window_print_operation_begin_print (EvPrintOperation *op,
 		ev_window->priv->print_queue = g_queue_new ();
 
 	g_queue_push_head (ev_window->priv->print_queue, op);
-	ev_window_print_update_pending_jobs_message (ev_window);
+	ev_window_print_update_pending_jobs_message (ev_window,
+						     g_queue_get_length (ev_window->priv->print_queue));
 	
 	if (ev_window->priv->print_settings)
 		g_object_unref (ev_window->priv->print_settings);
@@ -2578,13 +2606,97 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->properties);
 	ev_document_fc_mutex_unlock ();
 }
-					
+
+static void
+print_jobs_confirmation_dialog_response (GtkDialog *dialog,
+					 gint       response,
+					 EvWindow  *ev_window)
+{
+	gtk_widget_destroy (GTK_WIDGET (dialog));	
+	
+	switch (response) {
+	case GTK_RESPONSE_YES:
+		if (!ev_window->priv->print_queue ||
+		    g_queue_is_empty (ev_window->priv->print_queue))
+			gtk_widget_destroy (GTK_WIDGET (ev_window));
+		else
+			ev_window->priv->close_after_print = TRUE;
+		break;
+	case GTK_RESPONSE_NO:
+		ev_window->priv->close_after_print = TRUE;
+		if (ev_window->priv->print_queue &&
+		    !g_queue_is_empty (ev_window->priv->print_queue)) {
+			gtk_widget_set_sensitive (GTK_WIDGET (ev_window), FALSE);
+			ev_window_print_cancel (ev_window);
+		} else {
+			gtk_widget_destroy (GTK_WIDGET (ev_window));
+		}
+		break;
+	case GTK_RESPONSE_CANCEL:
+	default:
+		ev_window->priv->close_after_print = FALSE;
+	}
+}
+
 static void
 ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 {
-	g_return_if_fail (EV_IS_WINDOW (ev_window));
+	GtkWidget *dialog;
+	gchar     *text, *markup;
+	gint       n_print_jobs;
 
-	gtk_widget_destroy (GTK_WIDGET (ev_window));
+	n_print_jobs = ev_window->priv->print_queue ?
+		g_queue_get_length (ev_window->priv->print_queue) : 0;
+	
+	if (n_print_jobs == 0) {
+		gtk_widget_destroy (GTK_WIDGET (ev_window));
+		return;
+	}
+
+	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+					 GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_QUESTION,
+					 GTK_BUTTONS_NONE,
+					 NULL);
+	if (n_print_jobs == 1) {
+		EvPrintOperation *op;
+		const gchar      *job_name;
+
+		op = g_queue_peek_tail (ev_window->priv->print_queue);
+		job_name = ev_print_operation_get_job_name (op);
+
+		text = g_strdup_printf (_("Wait until print job “%s” finishes before closing?"),
+					job_name);
+	} else {
+		text = g_strdup_printf (_("There are %d print jobs active. "
+					  "Wait until print finishes before closing?"),
+					n_print_jobs);
+	}
+
+	markup = g_strdup_printf ("<b>%s</b>", text);
+	g_free (text);
+
+	gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog), markup);
+	g_free (markup);
+
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",
+						  _("If you close the window, pending print "
+						    "jobs will not be printed."));
+	
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				_("Cancel _print and Close"),
+				GTK_RESPONSE_NO,
+				GTK_STOCK_CANCEL,
+				GTK_RESPONSE_CANCEL,
+				_("Close after _Printing"),
+				GTK_RESPONSE_YES,
+				NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
+
+	g_signal_connect (dialog, "response",
+			  G_CALLBACK (print_jobs_confirmation_dialog_response),
+			  ev_window);
+	gtk_widget_show (dialog);
 }
 
 static void

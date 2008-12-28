@@ -1,3 +1,18 @@
+2008-12-28  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-print-operation.c: (export_cancel),
+	(export_job_cancelled), (ev_print_operation_export_begin),
+	(ev_print_operation_export_cancel):
+	* shell/ev-window.c: (ev_window_print_cancel),
+	(ev_window_print_update_pending_jobs_message),
+	(ev_window_print_operation_done),
+	(ev_window_print_operation_status_changed),
+	(print_jobs_confirmation_dialog_response),
+	(ev_window_cmd_file_close_window):
+
+	Show a confirmation dialog when there are pending print jobs while
+	closing the main window. Fixes bug #480964.
+	
 2008-12-27  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-print-operation.[ch]: (ev_print_operation_class_init),

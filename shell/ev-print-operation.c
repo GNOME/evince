@@ -341,6 +341,7 @@ GType           ev_print_operation_export_get_type (void) G_GNUC_CONST;
 
 static void     ev_print_operation_export_begin    (EvPrintOperationExport *export);
 static gboolean export_print_page                  (EvPrintOperationExport *export);
+static void     export_cancel                      (EvPrintOperationExport *export);
 
 struct _EvPrintOperationExport {
 	EvPrintOperation parent;
@@ -841,21 +842,29 @@ static void
 export_job_cancelled (EvJobExport            *job,
 		      EvPrintOperationExport *export)
 {
+	export_cancel (export);
+}
+
+static void
+export_cancel (EvPrintOperationExport *export)
+{
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 
 	if (export->idle_id > 0)
 		g_source_remove (export->idle_id);
 	export->idle_id = 0;
 
-	g_signal_handlers_disconnect_by_func (export->job_export,
-					      export_job_finished,
-					      export);
-	g_signal_handlers_disconnect_by_func (export->job_export,
-					      export_job_cancelled,
-					      export);
-	g_object_unref (export->job_export);
-	export->job_export = NULL;
-
+	if (export->job_export) {
+		g_signal_handlers_disconnect_by_func (export->job_export,
+						      export_job_finished,
+						      export);
+		g_signal_handlers_disconnect_by_func (export->job_export,
+						      export_job_cancelled,
+						      export);
+		g_object_unref (export->job_export);
+		export->job_export = NULL;
+	}
+	
 	if (export->fd != -1) {
 		close (export->fd);
 		export->fd = -1;
@@ -864,7 +873,7 @@ export_job_cancelled (EvJobExport            *job,
 	ev_print_operation_export_clear_temp_file (export);
 
 	g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_CANCEL);
-	
+
 	ev_print_operation_export_run_next (export);
 }
 
@@ -938,6 +947,9 @@ static void
 ev_print_operation_export_begin (EvPrintOperationExport *export)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
+
+	if (!export->temp_file)
+		return; /* cancelled */
 	
 	ev_document_doc_mutex_lock ();
 	ev_file_exporter_begin (EV_FILE_EXPORTER (op->document), &export->fc);
@@ -1151,13 +1163,11 @@ ev_print_operation_export_cancel (EvPrintOperation *op)
 {
 	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
 
-	if (export->job_export) {
-		if (!ev_job_is_finished (export->job_export)) {
-			ev_job_cancel (export->job_export);
-		} else {
-			export_job_cancelled (EV_JOB_EXPORT (export->job_export),
-					      export);
-		}
+	if (export->job_export &&
+	    !ev_job_is_finished (export->job_export)) {
+		ev_job_cancel (export->job_export);
+	} else {
+		export_cancel (export);
 	}
 }
 
