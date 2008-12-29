@@ -46,7 +46,8 @@
 #include "ev-application-service.h"
 #endif
 
-static void ev_application_add_icon_path_for_screen (GdkScreen *screen);
+static void ev_application_add_icon_path_for_screen (GdkScreen     *screen);
+static void ev_application_save_print_settings      (EvApplication *application);
 
 struct _EvApplication {
 	GObject base_instance;
@@ -68,7 +69,8 @@ struct _EvApplication {
 #endif /* ENABLE_DBUS */
 
 	GtkPrintSettings *print_settings;
-	gchar            *print_settings_file;
+	GtkPageSetup     *page_setup;
+	GKeyFile         *print_settings_file;
 };
 
 struct _EvApplicationClass {
@@ -78,6 +80,10 @@ struct _EvApplicationClass {
 G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 
 #define APPLICATION_SERVICE_NAME "org.gnome.evince.ApplicationService"
+
+#define EV_PRINT_SETTINGS_FILE "print-settings"
+#define EV_PRINT_SETTINGS_GROUP "Print Settings"
+#define EV_PAGE_SETUP_GROUP "Page Setup"
 
 #ifdef ENABLE_DBUS
 gboolean
@@ -691,24 +697,21 @@ ev_application_shutdown (EvApplication *application)
 		application->toolbars_file = NULL;
 	}
 
+	ev_application_save_print_settings (application);
+	
 	if (application->print_settings_file) {
-		if (application->print_settings) {
-			GError *error = NULL;
-			
-			gtk_print_settings_to_file (application->print_settings,
-						    application->print_settings_file,
-						    &error);
-			if (error) {
-				g_warning ("%s", error->message);
-				g_error_free (error);
-			}
-
-			g_object_unref (application->print_settings);
-			application->print_settings = NULL;
-		}
-
-		g_free (application->print_settings_file);
+		g_key_file_free (application->print_settings_file);
 		application->print_settings_file = NULL;
+	}
+
+	if (application->print_settings) {
+		g_object_unref (application->print_settings);
+		application->print_settings = NULL;
+	}
+
+	if (application->page_setup) {
+		g_object_unref (application->page_setup);
+		application->page_setup = NULL;
 	}
 
 #ifdef ENABLE_DBUS
@@ -870,32 +873,83 @@ ev_application_screensaver_disable (EvApplication *application)
 		totem_scrsaver_disable (application->scr_saver);	
 }
 
-GtkPrintSettings *
-ev_application_get_print_settings (EvApplication *application)
+static GKeyFile *
+ev_application_get_print_settings_file (EvApplication *application)
 {
-	if (application->print_settings)
-		return application->print_settings;
+	gchar *filename;
 	
-	if (!application->print_settings_file) {
-		application->print_settings_file =
-			g_build_filename (ev_dot_dir (), "print-settings", NULL);
-	}
+	if (application->print_settings_file)
+		return application->print_settings_file;
 
-	if (g_file_test (application->print_settings_file, G_FILE_TEST_IS_REGULAR)) {
+	application->print_settings_file = g_key_file_new ();
+	
+	filename = g_build_filename (ev_dot_dir (), EV_PRINT_SETTINGS_FILE, NULL);
+	if (g_file_test (filename, G_FILE_TEST_IS_REGULAR)) {
 		GError *error = NULL;
-		
-		application->print_settings =
-			gtk_print_settings_new_from_file (application->print_settings_file, &error);
-		
+
+		g_key_file_load_from_file (application->print_settings_file,
+					   filename,
+					   G_KEY_FILE_KEEP_COMMENTS |
+					   G_KEY_FILE_KEEP_TRANSLATIONS,
+					   &error);
 		if (error) {
 			g_warning ("%s", error->message);
 			g_error_free (error);
-		} else {
-			return application->print_settings;
 		}
 	}
+	g_free (filename);
+
+	return application->print_settings_file;
+}
+
+static void
+ev_application_save_print_settings (EvApplication *application)
+{
+	GKeyFile *key_file;
+	gchar    *filename;
+	gchar    *data;
+	gssize    data_length;
+	GError   *error = NULL;
+
+	if (!application->print_settings && !application->page_setup)
+		return;
 	
-	application->print_settings = gtk_print_settings_new ();
+	key_file = ev_application_get_print_settings_file (application);
+	if (application->print_settings)
+		gtk_print_settings_to_key_file (application->print_settings,
+						key_file,
+						EV_PRINT_SETTINGS_GROUP);
+	if (application->page_setup)
+		gtk_page_setup_to_key_file (application->page_setup,
+					    key_file,
+					    EV_PAGE_SETUP_GROUP);
+	
+	filename = g_build_filename (ev_dot_dir (), EV_PRINT_SETTINGS_FILE, NULL);
+	data = g_key_file_to_data (key_file, (gsize *)&data_length, NULL);
+	g_file_set_contents (filename, data, data_length, &error);
+	if (error) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+	}
+	g_free (data);
+	g_free (filename);
+}
+
+GtkPrintSettings *
+ev_application_get_print_settings (EvApplication *application)
+{
+	GKeyFile         *key_file;
+	GtkPrintSettings *print_settings;
+	
+	if (application->print_settings)
+		return application->print_settings;
+
+	key_file = ev_application_get_print_settings_file (application);
+	print_settings = g_key_file_has_group (key_file, EV_PRINT_SETTINGS_GROUP) ? 
+		gtk_print_settings_new_from_key_file (key_file, EV_PRINT_SETTINGS_GROUP, NULL) :
+		gtk_print_settings_new ();
+
+	application->print_settings = print_settings ? print_settings : gtk_print_settings_new ();
 
 	return application->print_settings;
 }
@@ -904,14 +958,57 @@ void
 ev_application_set_print_settings (EvApplication    *application,
 				   GtkPrintSettings *settings)
 {
+	GKeyFile *key_file;
+	
 	g_return_if_fail (GTK_IS_PRINT_SETTINGS (settings));
 	
 	if (settings == application->print_settings)
 		return;
 
+	key_file = ev_application_get_print_settings_file (application);
+	
 	if (application->print_settings)
 		g_object_unref (application->print_settings);
 	
 	application->print_settings = g_object_ref (settings);
+	gtk_print_settings_to_key_file (settings, key_file, EV_PRINT_SETTINGS_GROUP);
 }
 
+GtkPageSetup *
+ev_application_get_page_setup (EvApplication *application)
+{
+	GKeyFile     *key_file;
+	GtkPageSetup *page_setup;
+	
+	if (application->page_setup)
+		return application->page_setup;
+
+	key_file = ev_application_get_print_settings_file (application);
+	page_setup = g_key_file_has_group (key_file, EV_PAGE_SETUP_GROUP) ? 
+		gtk_page_setup_new_from_key_file (key_file, EV_PAGE_SETUP_GROUP, NULL) :
+		gtk_page_setup_new ();
+
+	application->page_setup = page_setup ? page_setup : gtk_page_setup_new ();
+
+	return application->page_setup;
+}
+
+void
+ev_application_set_page_setup (EvApplication *application,
+			       GtkPageSetup  *page_setup)
+{
+	GKeyFile *key_file;
+	
+	g_return_if_fail (GTK_IS_PAGE_SETUP (page_setup));
+	
+	if (page_setup == application->page_setup)
+		return;
+
+	key_file = ev_application_get_print_settings_file (application);
+	
+	if (application->page_setup)
+		g_object_unref (application->page_setup);
+	
+	application->page_setup = g_object_ref (page_setup);
+	gtk_page_setup_to_key_file (page_setup, key_file, EV_PAGE_SETUP_GROUP);
+}

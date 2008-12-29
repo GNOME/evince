@@ -224,7 +224,8 @@ static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_SCALE,
 	GTK_PRINT_SETTINGS_PRINT_PAGES,
 	GTK_PRINT_SETTINGS_PAGE_RANGES,
-	GTK_PRINT_SETTINGS_PAGE_SET
+	GTK_PRINT_SETTINGS_PAGE_SET,
+	GTK_PRINT_SETTINGS_OUTPUT_URI
 };
 
 static void	ev_window_update_actions	 	(EvWindow         *ev_window);
@@ -294,6 +295,7 @@ static void     ev_window_load_file_remote              (EvWindow         *ev_wi
 static void     ev_window_media_player_key_pressed      (EvWindow         *window,
 							 const gchar      *key,
 							 gpointer          user_data);
+static void     ev_window_save_print_page_setup         (EvWindow         *window);
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
@@ -2267,30 +2269,6 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_print_page_setup_done_cb (GtkPageSetup *page_setup,
-				    EvWindow     *window)
-{
-	/* Dialog was canceled */
-	if (!page_setup)
-		return;
-
-	if (window->priv->print_page_setup)
-		g_object_unref (window->priv->print_page_setup);
-	window->priv->print_page_setup = g_object_ref (page_setup);
-}
-
-static void
-ev_window_cmd_file_print_setup (GtkAction *action, EvWindow *ev_window)
-{
-	gtk_print_run_page_setup_dialog_async (
-		GTK_WINDOW (ev_window),
-		ev_window->priv->print_page_setup,
-		ev_window->priv->print_settings,
-		(GtkPageSetupDoneFunc) ev_window_print_page_setup_done_cb,
-		ev_window);
-}
-
-static void
 ev_window_load_print_settings_from_metadata (EvWindow *window)
 {
 	gchar *uri = window->priv->uri;
@@ -2324,6 +2302,115 @@ ev_window_save_print_settings (EvWindow *window)
 						document_print_settings[i]);
 		ev_metadata_manager_set_string (uri, document_print_settings[i], value);
 	}
+}
+
+static void
+ev_window_save_print_page_setup (EvWindow *window)
+{
+	gchar        *uri = window->priv->uri;
+	GtkPageSetup *page_setup = window->priv->print_page_setup;
+
+	/* Save page setup options that are specific to the document */
+	ev_metadata_manager_set_int (uri, "page-setup-orientation",
+				     gtk_page_setup_get_orientation (page_setup));
+	ev_metadata_manager_set_double (uri, "page-setup-margin-top",
+					gtk_page_setup_get_top_margin (page_setup, GTK_UNIT_MM));
+	ev_metadata_manager_set_double (uri, "page-setup-margin-bottom",
+					gtk_page_setup_get_bottom_margin (page_setup, GTK_UNIT_MM));
+	ev_metadata_manager_set_double (uri, "page-setup-margin-left",
+					gtk_page_setup_get_left_margin (page_setup, GTK_UNIT_MM));
+	ev_metadata_manager_set_double (uri, "page-setup-margin-right",
+					gtk_page_setup_get_right_margin (page_setup, GTK_UNIT_MM));
+}
+
+static void
+ev_window_load_print_page_setup_from_metadata (EvWindow *window)
+{
+	gchar        *uri = window->priv->uri;
+	GtkPageSetup *page_setup = window->priv->print_page_setup;
+	GtkPaperSize *paper_size;
+	GValue        value = { 0, };
+
+	paper_size = gtk_page_setup_get_paper_size (page_setup);
+	
+	/* Load page setup options that are specific to the document */
+	if (ev_metadata_manager_get (uri, "page-setup-orientation", &value, TRUE)) {
+		gtk_page_setup_set_orientation (page_setup, g_value_get_int (&value));
+		g_value_unset (&value);
+	} else {
+		gtk_page_setup_set_orientation (page_setup, GTK_PAGE_ORIENTATION_PORTRAIT);
+	}
+	
+	if (ev_metadata_manager_get (uri, "page-setup-margin-top", &value, TRUE)) {
+		gtk_page_setup_set_top_margin (page_setup, g_value_get_double (&value), GTK_UNIT_MM);
+		g_value_unset (&value);
+	} else {
+		gtk_page_setup_set_top_margin (page_setup,
+					       gtk_paper_size_get_default_top_margin (paper_size, GTK_UNIT_MM),
+					       GTK_UNIT_MM);
+	}
+
+	if (ev_metadata_manager_get (uri, "page-setup-margin-bottom", &value, TRUE)) {
+		gtk_page_setup_set_bottom_margin (page_setup, g_value_get_double (&value), GTK_UNIT_MM);
+		g_value_unset (&value);
+	} else {
+		gtk_page_setup_set_bottom_margin (page_setup,
+						  gtk_paper_size_get_default_bottom_margin (paper_size, GTK_UNIT_MM),
+						  GTK_UNIT_MM);
+	}
+
+	if (ev_metadata_manager_get (uri, "page-setup-margin-left", &value, TRUE)) {
+		gtk_page_setup_set_left_margin (page_setup, g_value_get_double (&value), GTK_UNIT_MM);
+		g_value_unset (&value);
+	} else {
+		gtk_page_setup_set_left_margin (page_setup,
+						gtk_paper_size_get_default_left_margin (paper_size, GTK_UNIT_MM),
+						GTK_UNIT_MM);
+	}	
+
+	if (ev_metadata_manager_get (uri, "page-setup-margin-right", &value, TRUE)) {
+		gtk_page_setup_set_right_margin (page_setup, g_value_get_double (&value), GTK_UNIT_MM);
+		g_value_unset (&value);
+	} else {
+		gtk_page_setup_set_right_margin (page_setup,
+						 gtk_paper_size_get_default_right_margin (paper_size, GTK_UNIT_MM),
+						 GTK_UNIT_MM);
+	}	
+}
+
+static void
+ev_window_print_page_setup_done_cb (GtkPageSetup *page_setup,
+				    EvWindow     *window)
+{
+	/* Dialog was canceled */
+	if (!page_setup)
+		return;
+
+	if (window->priv->print_page_setup != page_setup) {
+		if (window->priv->print_page_setup)
+			g_object_unref (window->priv->print_page_setup);
+		window->priv->print_page_setup = g_object_ref (page_setup);
+	}
+	
+	ev_application_set_page_setup (EV_APP, page_setup);
+	ev_window_save_print_page_setup (window);
+}
+
+static void
+ev_window_cmd_file_print_setup (GtkAction *action, EvWindow *ev_window)
+{
+	if (!ev_window->priv->print_page_setup) {
+		ev_window->priv->print_page_setup = gtk_page_setup_copy (
+			ev_application_get_page_setup (EV_APP));
+		ev_window_load_print_page_setup_from_metadata (ev_window);
+	}
+	
+	gtk_print_run_page_setup_dialog_async (
+		GTK_WINDOW (ev_window),
+		ev_window->priv->print_page_setup,
+		ev_window->priv->print_settings,
+		(GtkPageSetupDoneFunc) ev_window_print_page_setup_done_cb,
+		ev_window);
 }
 
 static void
@@ -3532,7 +3619,6 @@ static void
 ev_window_do_preview_print (EvWindow *window)
 {
 	EvWindowPrivate  *priv = window->priv;
-	GtkPageSetup     *page_setup;
 	GtkPrintJob      *job;
 	gchar            *filename;
 	GError           *error = NULL;
@@ -3540,18 +3626,17 @@ ev_window_do_preview_print (EvWindow *window)
 	g_assert (priv->print_settings != NULL);
 	g_assert (priv->printer != NULL);
 
-	page_setup = gtk_page_setup_new ();
-
 	job = gtk_print_job_new (gtk_window_get_title (GTK_WINDOW (window)),
 				 priv->printer,
 				 priv->print_settings,
-				 page_setup);
+				 priv->print_page_setup);
 
 	g_object_unref (priv->print_settings);
 	priv->print_settings = NULL;
+	g_object_unref (priv->print_page_setup);
+	priv->print_page_setup = NULL;
 	g_object_unref (priv->printer);
 	priv->printer = NULL;
-	g_object_unref (page_setup);
 
 	filename = g_filename_from_uri (priv->local_uri ?
 					priv->local_uri : priv->uri,
@@ -3574,31 +3659,50 @@ ev_window_do_preview_print (EvWindow *window)
 static void
 ev_window_cmd_preview_print (GtkAction *action, EvWindow *window)
 {
-	EvWindowPrivate *priv = window->priv;
-	GtkPrintSettings *print_settings = NULL;
+	EvWindowPrivate  *priv = window->priv;
+	GtkPrintSettings *print_settings;
+	GtkPageSetup     *page_setup;
 	const gchar      *print_settings_file = priv->print_settings_file;
 
-	if (print_settings_file) {
-		if (g_file_test (print_settings_file, G_FILE_TEST_IS_REGULAR)) {
-			GError *error = NULL;
+	if (print_settings_file && g_file_test (print_settings_file, G_FILE_TEST_IS_REGULAR)) {
+		GKeyFile *key_file;
+		GError   *error = NULL;
 
-			print_settings = gtk_print_settings_new_from_file (print_settings_file,
-									   &error);
+		key_file = g_key_file_new ();
+		g_key_file_load_from_file (key_file,
+					   print_settings_file,
+					   G_KEY_FILE_KEEP_COMMENTS |
+					   G_KEY_FILE_KEEP_TRANSLATIONS,
+					   &error);
+		if (!error) {
+			print_settings =
+				gtk_print_settings_new_from_key_file (key_file,
+								      "Print Settings",
+								      NULL);
+			print_settings = print_settings ? print_settings : gtk_print_settings_new ();
 			
-			if (error) {
-				g_warning ("%s", error->message);
-				g_error_free (error);
-				print_settings = NULL;
-			}
+			page_setup = gtk_page_setup_new_from_key_file (key_file,
+								       "Page Setup",
+								       NULL);
+			page_setup = page_setup ? page_setup : gtk_page_setup_new ();
+		} else {
+			print_settings = gtk_print_settings_new ();
+			page_setup = gtk_page_setup_new ();
+			g_error_free (error);
 		}
+
+		g_key_file_free (key_file);
+	} else {
+		print_settings = gtk_print_settings_new ();
+		page_setup = gtk_page_setup_new ();
 	}
 	
-	if (!print_settings)
-		print_settings = gtk_print_settings_new ();
-
 	if (priv->print_settings)
 		g_object_unref (priv->print_settings);
 	priv->print_settings = print_settings;
+	if (priv->print_page_setup)
+		g_object_unref (priv->print_page_setup);
+	priv->print_page_setup = page_setup;
 
 	gtk_enumerate_printers ((GtkPrinterFunc) ev_window_enumerate_printer_cb,
 				window, NULL, FALSE);
