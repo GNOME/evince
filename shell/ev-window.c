@@ -115,6 +115,12 @@ typedef enum {
 	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
 
+typedef enum {
+	EV_SAVE_DOCUMENT,
+	EV_SAVE_ATTACHMENT,
+	EV_SAVE_IMAGE
+} EvSaveType;
+
 struct _EvWindowPrivate {
 	/* UI */
 	EvChrome chrome;
@@ -134,6 +140,10 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_links;
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
+
+	/* Progress Messages */
+	guint progress_idle;
+	GCancellable *progress_cancellable;
 
 	/* Dialogs */
 	GtkWidget *properties;
@@ -1520,6 +1530,81 @@ ev_window_close_dialogs (EvWindow *ev_window)
 }
 
 static void
+ev_window_clear_progress_idle (EvWindow *ev_window)
+{
+	if (ev_window->priv->progress_idle > 0)
+		g_source_remove (ev_window->priv->progress_idle);
+	ev_window->priv->progress_idle = 0;
+}
+
+static void
+reset_progress_idle (EvWindow *ev_window)
+{
+	ev_window->priv->progress_idle = 0;
+}
+
+static void
+ev_window_show_progress_message (EvWindow   *ev_window,
+				 guint       interval,
+				 GSourceFunc function)
+{
+	if (ev_window->priv->progress_idle > 0)
+		g_source_remove (ev_window->priv->progress_idle);
+	ev_window->priv->progress_idle =
+		g_timeout_add_seconds_full (G_PRIORITY_DEFAULT,
+					    interval, function,
+					    ev_window,
+					    (GDestroyNotify)reset_progress_idle);
+}
+
+static void
+ev_window_reset_progress_cancellable (EvWindow *ev_window)
+{
+	if (ev_window->priv->progress_cancellable)
+		g_cancellable_reset (ev_window->priv->progress_cancellable);
+	else
+		ev_window->priv->progress_cancellable = g_cancellable_new ();
+}
+
+static void
+ev_window_progress_response_cb (EvProgressMessageArea *area,
+				gint                   response,
+				EvWindow              *ev_window)
+{
+	if (response == GTK_RESPONSE_CANCEL)
+		g_cancellable_cancel (ev_window->priv->progress_cancellable);
+	ev_window_set_message_area (ev_window, NULL);
+}
+
+static gboolean 
+show_loading_progress (EvWindow *ev_window)
+{
+	GtkWidget *area;
+	gchar     *text;
+	
+	if (ev_window->priv->message_area)
+		return FALSE;
+	
+	text = g_strdup_printf (_("Loading document from %s"),
+				ev_window->priv->uri);
+	area = ev_progress_message_area_new (GTK_STOCK_OPEN,
+					     text,
+					     GTK_STOCK_CLOSE,
+					     GTK_RESPONSE_CLOSE,
+					     GTK_STOCK_CANCEL,
+					     GTK_RESPONSE_CANCEL,
+					     NULL);
+	g_signal_connect (area, "response",
+			  G_CALLBACK (ev_window_progress_response_cb),
+			  ev_window);
+	gtk_widget_show (area);
+	ev_window_set_message_area (ev_window, area);
+	g_free (text);
+
+	return FALSE;
+}
+
+static void
 ev_window_load_remote_failed (EvWindow *ev_window,
 			      GError   *error)
 {
@@ -1582,6 +1667,8 @@ window_open_file_copy_ready_cb (GFile        *source,
 				EvWindow     *ev_window)
 {
 	GError *error = NULL;
+
+	ev_window_clear_progress_idle (ev_window);
 	
 	g_file_copy_finish (source, async_result, &error);
 	if (!error) {
@@ -1606,6 +1693,16 @@ window_open_file_copy_ready_cb (GFile        *source,
 					       (GAsyncReadyCallback)mount_volume_ready_cb,
 					       ev_window);
 		g_object_unref (operation);
+	} else if (error->domain == G_IO_ERROR &&
+		   error->code == G_IO_ERROR_CANCELLED) {
+		ev_window_clear_load_job (ev_window);
+		ev_window_clear_local_uri (ev_window);
+		ev_window_clear_print_settings_file (ev_window);
+		g_free (ev_window->priv->uri);
+		ev_window->priv->uri = NULL;
+		g_object_unref (source);
+		
+		ev_view_set_loading (EV_VIEW (ev_window->priv->view), FALSE);
 	} else {
 		ev_window_load_remote_failed (ev_window, error);
 		g_object_unref (source);
@@ -1615,8 +1712,31 @@ window_open_file_copy_ready_cb (GFile        *source,
 }
 
 static void
-ev_window_load_file_remote (EvWindow  *ev_window,
-			    GFile     *source_file)
+window_open_file_copy_progress_cb (goffset   n_bytes,
+				   goffset   total_bytes,
+				   EvWindow *ev_window)
+{
+	gchar *status;
+	gdouble fraction;
+	
+	if (!ev_window->priv->message_area)
+		return;
+	
+	fraction = n_bytes / (gdouble)total_bytes;
+	status = g_strdup_printf (_("Downloading document %d%%"),
+				  (gint)(fraction * 100));
+	
+	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					     status);
+	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					       fraction);
+
+	g_free (status);
+}
+
+static void
+ev_window_load_file_remote (EvWindow *ev_window,
+			    GFile    *source_file)
 {
 	GFile *target_file;
 	
@@ -1635,14 +1755,21 @@ ev_window_load_file_remote (EvWindow  *ev_window,
 		g_free (base_name);
 		g_free (tmp_name);
 	}
+
+	ev_window_reset_progress_cancellable (ev_window);
 	
 	target_file = g_file_new_for_uri (ev_window->priv->local_uri);
 	g_file_copy_async (source_file, target_file,
-			   0, G_PRIORITY_DEFAULT, NULL,
-			   NULL, NULL, /* no progress callback */
-			   (GAsyncReadyCallback) window_open_file_copy_ready_cb,
+			   0, G_PRIORITY_DEFAULT,
+			   ev_window->priv->progress_cancellable,
+			   (GFileProgressCallback)window_open_file_copy_progress_cb,
+			   ev_window, 
+			   (GAsyncReadyCallback)window_open_file_copy_ready_cb,
 			   ev_window);
 	g_object_unref (target_file);
+
+	ev_window_show_progress_message (ev_window, 1,
+					 (GSourceFunc)show_loading_progress);
 }
 
 void
@@ -1716,14 +1843,78 @@ ev_window_reload_local (EvWindow *ev_window)
 	ev_job_scheduler_push_job (ev_window->priv->reload_job, EV_JOB_PRIORITY_NONE);
 }
 
+static gboolean 
+show_reloading_progress (EvWindow *ev_window)
+{
+	GtkWidget *area;
+	gchar     *text;
+	
+	if (ev_window->priv->message_area)
+		return FALSE;
+	
+	text = g_strdup_printf (_("Reloading document from %s"),
+				ev_window->priv->uri);
+	area = ev_progress_message_area_new (GTK_STOCK_REFRESH,
+					     text,
+					     GTK_STOCK_CLOSE,
+					     GTK_RESPONSE_CLOSE,
+					     GTK_STOCK_CANCEL,
+					     GTK_RESPONSE_CANCEL,
+					     NULL);
+	g_signal_connect (area, "response",
+			  G_CALLBACK (ev_window_progress_response_cb),
+			  ev_window);
+	gtk_widget_show (area);
+	ev_window_set_message_area (ev_window, area);
+	g_free (text);
+
+	return FALSE;
+}
+
 static void
 reload_remote_copy_ready_cb (GFile        *remote,
 			     GAsyncResult *async_result,
 			     EvWindow     *ev_window)
 {
-	g_file_copy_finish (remote, async_result, NULL);
-	ev_window_reload_local (ev_window);
+	GError *error = NULL;
+	
+	ev_window_clear_progress_idle (ev_window);
+	
+	g_file_copy_finish (remote, async_result, &error);
+	if (error) {
+		if (error->domain != G_IO_ERROR ||
+		    error->code != G_IO_ERROR_CANCELLED)
+			ev_window_error_message (ev_window, error,
+						 "%s", _("Failed to reaload document."));
+		g_error_free (error);
+	} else {
+		ev_window_reload_local (ev_window);
+	}
+		
 	g_object_unref (remote);
+}
+
+static void
+reload_remote_copy_progress_cb (goffset   n_bytes,
+				goffset   total_bytes,
+				EvWindow *ev_window)
+{
+	gchar *status;
+	gdouble fraction;
+	
+	if (!ev_window->priv->message_area)
+		return;
+	
+	fraction = n_bytes / (gdouble)total_bytes;
+	status = g_strdup_printf (_("Downloading document %d%%"),
+				  (gint)(fraction * 100));
+	
+	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					     status);
+	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					       fraction);
+
+	g_free (status);
 }
 
 static void
@@ -1750,14 +1941,21 @@ query_remote_uri_mtime_cb (GFile        *remote,
 			
 		/* Remote file has changed */
 		ev_window->priv->uri_mtime = mtime.tv_sec;
+
+		ev_window_reset_progress_cancellable (ev_window);
+		
 		target_file = g_file_new_for_uri (ev_window->priv->local_uri);
 		g_file_copy_async (remote, target_file,
 				   G_FILE_COPY_OVERWRITE,
-				   G_PRIORITY_DEFAULT, NULL,
-				   NULL, NULL, /* no progress callback */
-				   (GAsyncReadyCallback) reload_remote_copy_ready_cb,
+				   G_PRIORITY_DEFAULT,
+				   ev_window->priv->progress_cancellable,
+				   (GFileProgressCallback)reload_remote_copy_progress_cb,
+				   ev_window, 
+				   (GAsyncReadyCallback)reload_remote_copy_ready_cb,
 				   ev_window);
 		g_object_unref (target_file);
+		ev_window_show_progress_message (ev_window, 1,
+						 (GSourceFunc)show_reloading_progress);
 	} else {
 		g_object_unref (remote);
 		ev_window_reload_local (ev_window);
@@ -2137,42 +2335,150 @@ ev_window_setup_recent (EvWindow *ev_window)
 	g_list_free (items);
 }
 
+static gboolean 
+show_saving_progress (GFile *dst)
+{
+	EvWindow  *ev_window;
+	GtkWidget *area;
+	gchar     *text;
+	gchar     *uri;
+	EvSaveType save_type;
+
+	ev_window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
+	ev_window->priv->progress_idle = 0;
+	
+	if (ev_window->priv->message_area)
+		return FALSE;
+
+	save_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dst), "save-type"));
+	uri = g_file_get_uri (dst);
+	switch (save_type) {
+	case EV_SAVE_DOCUMENT:
+		text = g_strdup_printf (_("Saving document to %s"), uri);
+		break;
+	case EV_SAVE_ATTACHMENT:
+		text = g_strdup_printf (_("Saving attachment to %s"), uri);
+		break;
+	case EV_SAVE_IMAGE:
+		text = g_strdup_printf (_("Saving image to %s"), uri);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+	g_free (uri);
+	area = ev_progress_message_area_new (GTK_STOCK_SAVE,
+					     text,
+					     GTK_STOCK_CLOSE,
+					     GTK_RESPONSE_CLOSE,
+					     GTK_STOCK_CANCEL,
+					     GTK_RESPONSE_CANCEL,
+					     NULL);
+	g_signal_connect (area, "response",
+			  G_CALLBACK (ev_window_progress_response_cb),
+			  ev_window);
+	gtk_widget_show (area);
+	ev_window_set_message_area (ev_window, area);
+	g_free (text);
+
+	return FALSE;
+}
+
 static void
 window_save_file_copy_ready_cb (GFile        *src,
 				GAsyncResult *async_result,
 				GFile        *dst)
 {
-	EvWindow  *window;
-	gchar     *name;
-	GError    *error = NULL;
+	EvWindow *ev_window;
+	GError   *error = NULL;
 
+	ev_window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
+	ev_window_clear_progress_idle (ev_window);
+	
 	if (g_file_copy_finish (src, async_result, &error)) {
 		ev_tmp_file_unlink (src);
 		return;
 	}
 
-	window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
-	name = g_file_get_basename (dst);
-	ev_window_error_message (window, error,
-				 _("The file could not be saved as “%s”."),
-				 name);
+	if (error->domain != G_IO_ERROR ||
+	    error->code != G_IO_ERROR_CANCELLED) {
+		gchar *name;
+		
+		name = g_file_get_basename (dst);
+		ev_window_error_message (ev_window, error,
+					 _("The file could not be saved as “%s”."),
+					 name);
+		g_free (name);
+	}
 	ev_tmp_file_unlink (src);
-	g_free (name);
 	g_error_free (error);
 }
 
 static void
-ev_window_save_remote (EvWindow *ev_window,
-		       GFile    *src,
-		       GFile    *dst)
+window_save_file_copy_progress_cb (goffset n_bytes,
+				   goffset total_bytes,
+				   GFile  *dst)
 {
+	EvWindow  *ev_window;
+	EvSaveType save_type;
+	gchar     *status;
+	gdouble    fraction;
+
+	ev_window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
+	
+	if (!ev_window->priv->message_area)
+		return;
+	
+	fraction = n_bytes / (gdouble)total_bytes;
+	save_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dst), "save-type"));
+
+	switch (save_type) {
+	case EV_SAVE_DOCUMENT:
+		status = g_strdup_printf (_("Uploading document %d%%"),
+					  (gint)(fraction * 100));
+		break;
+	case EV_SAVE_ATTACHMENT:
+		status = g_strdup_printf (_("Uploading attachment %d%%"),
+					  (gint)(fraction * 100));
+		break;
+	case EV_SAVE_IMAGE:
+		status = g_strdup_printf (_("Uploading image %d%%"),
+					  (gint)(fraction * 100));
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+	
+	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					     status);
+	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
+					       fraction);
+
+	g_free (status);
+}
+
+static void
+ev_window_save_remote (EvWindow  *ev_window,
+		       EvSaveType save_type,
+		       GFile     *src,
+		       GFile     *dst)
+{
+	ev_window_reset_progress_cancellable (ev_window);
 	g_object_set_data (G_OBJECT (dst), "ev-window", ev_window);
+	g_object_set_data (G_OBJECT (dst), "save-type", GINT_TO_POINTER (save_type));
 	g_file_copy_async (src, dst,
 			   G_FILE_COPY_OVERWRITE,
-			   G_PRIORITY_DEFAULT, NULL,
-			   NULL, NULL, /* no progress callback */
-			   (GAsyncReadyCallback) window_save_file_copy_ready_cb,
-			   dst);		
+			   G_PRIORITY_DEFAULT,
+			   ev_window->priv->progress_cancellable,
+			   (GFileProgressCallback)window_save_file_copy_progress_cb,
+			   dst,
+			   (GAsyncReadyCallback)window_save_file_copy_ready_cb,
+			   dst);
+	ev_window->priv->progress_idle =
+		g_timeout_add_seconds_full (G_PRIORITY_DEFAULT,
+					    1,
+					    (GSourceFunc)show_saving_progress,
+					    dst,
+					    NULL);
 }
 
 static void
@@ -2216,6 +2522,9 @@ file_save_dialog_response_cb (GtkWidget *fc,
 	}
 	
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
+	/* FIXME: remote copy should be done here rather than in the save job, 
+	 * so that we can track progress and cancel the operation
+	 */
 	
 	ev_window_clear_save_job (ev_window);
 	ev_window->priv->save_job = ev_job_save_new (ev_window->priv->document,
@@ -4495,6 +4804,12 @@ ev_window_dispose (GObject *object)
 		priv->local_uri = NULL;
 	}
 
+	ev_window_clear_progress_idle (window);
+	if (priv->progress_cancellable) {
+		g_object_unref (priv->progress_cancellable);
+		priv->progress_cancellable = NULL;
+	}
+	
 	ev_window_close_dialogs (window);
 
 	if (window->priv->printer) {
@@ -5334,7 +5649,8 @@ image_save_dialog_response_cb (GtkWidget *fc,
 		
 		source_file = g_file_new_for_path (filename);
 		
-		ev_window_save_remote (ev_window, source_file, target_file);
+		ev_window_save_remote (ev_window, EV_SAVE_IMAGE,
+				       source_file, target_file);
 		g_object_unref (source_file);
 	}
 	
@@ -5481,7 +5797,8 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 				dest_file = g_object_ref (target_file);
 			}
 
-			ev_window_save_remote (ev_window, save_to, dest_file);
+			ev_window_save_remote (ev_window, EV_SAVE_ATTACHMENT,
+					       save_to, dest_file);
 
 			g_object_unref (dest_file);
 		}

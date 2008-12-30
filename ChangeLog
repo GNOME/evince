@@ -1,5 +1,22 @@
 2008-12-30  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_clear_progress_idle),
+	(reset_progress_idle), (ev_window_show_progress_message),
+	(ev_window_reset_progress_cancellable),
+	(ev_window_progress_response_cb), (show_loading_progress),
+	(ev_window_load_remote_failed), (window_open_file_copy_ready_cb),
+	(window_open_file_copy_progress_cb), (ev_window_load_file_remote),
+	(show_reloading_progress), (reload_remote_copy_ready_cb),
+	(reload_remote_copy_progress_cb), (query_remote_uri_mtime_cb),
+	(show_saving_progress), (window_save_file_copy_ready_cb),
+	(window_save_file_copy_progress_cb), (ev_window_save_remote),
+	(ev_window_dispose):
+
+	Show progress information when loading/saving remote files. Fixes
+	bug #370958.
+	
+2008-12-30  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-file-helpers.c: (ev_tmp_file_unlink):
 
 	Show better warning message when temp file cannot be deleted.
