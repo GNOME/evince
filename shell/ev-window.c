@@ -5332,7 +5332,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	if (!is_native) {
 		GFile *source_file;
 		
-		source_file = g_file_new_for_uri (filename);
+		source_file = g_file_new_for_path (filename);
 		
 		ev_window_save_remote (ev_window, source_file, target_file);
 		g_object_unref (source_file);
