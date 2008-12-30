@@ -169,17 +169,19 @@ void
 ev_tmp_file_unlink (GFile *file)
 {
 	gboolean res;
+	GError  *error = NULL;
 
 	if (!file)
 		return;
 	
-	res = g_file_delete (file, NULL, NULL);
+	res = g_file_delete (file, NULL, &error);
 	if (!res) {
 		char *uri;
 		
 		uri = g_file_get_uri (file);
-		g_warning ("Unable to delete temp file %s\n", uri);
+		g_warning ("Unable to delete temp file %s: %s\n", uri, error->message);
 		g_free (uri);
+		g_error_free (error);
 	}
 }
 
