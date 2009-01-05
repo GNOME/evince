@@ -1,4 +1,39 @@
 ================
+Evince  2.25.4
+================
+
+New Features and UI Improvements:
+
+    * Show progress information when loading/saving remote files
+      (#370958, Carlos Garcia Campos)
+    * Remember page setup options (#525185, #349102, Carlos Garcia Campos)
+    * Show a confirmation dialog when there are pending print jobs
+      while closing the main window (#480964, Carlos Garcia Campos)
+    * Show progress information when printing (#482770, Carlos Garcia Campos)
+    * Add document URI to properties page (#555376, Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Bump glib requirement to fix build with older versions
+      (Christian Spurk)
+    * Fix mime type handling (Hib Eris)
+    * Fix saving images to remote locations (Carlos Garcia Campos)
+    * Do not try to jump to the location of the find result for every
+      match, but only for the first one. It makes searching really
+      faster. (#564774, Michael Hunold)
+    * Fix zip mime-type in comics backend (Juanjo Marín)
+    * Fix several memory leaks (Carlos Garcia Campos)
+
+Translation updates:
+
+    * Ihar Hrachyshka (be@latin)
+    * Juanje Ojeda Croissier (es)
+    * Yuval Tanny (he)
+    * Kjartan Maraas (nb)
+    * Taylon (pt_BR)
+    * Gan Lu (zh_CN)
+
+================
 Evince  2.25.2
 ================
 
