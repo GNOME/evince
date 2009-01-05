@@ -28,6 +28,7 @@ focus.dialog('About Document Viewer')
 click('Credits', roleName='push button')
 focus.dialog('Credits')
 click('Close', roleName='push button')
+focus.dialog('About Document Viewer')
 click('Close', roleName='push button')
 
 # Close evince
