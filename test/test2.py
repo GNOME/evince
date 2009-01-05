@@ -14,14 +14,14 @@ run('evince', arguments=' '+srcdir+'/test-encrypt.pdf')
 focus.dialog('Enter password')
 focus.widget('Password Entry', roleName='password text')
 type('wrong password')
-click('OK', roleName='push button')
+click('Unlock Document', roleName='push button')
 click('Cancel', roleName='push button')
 
 # Try again with the correct password
 click('Unlock Document', roleName='push button')
 focus.widget('Password Entry', roleName='password text')
 type('Foo')
-click('OK', roleName='push button')
+click('Unlock Document', roleName='push button')
 
 # Close evince
 click('File', roleName='menu')
