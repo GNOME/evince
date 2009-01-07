@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2008-12-30 16:13+0000\n"
-"PO-Revision-Date: 2009-01-01 21:24+0700\n"
+"POT-Creation-Date: 2009-01-01 13:29+0000\n"
+"PO-Revision-Date: 2009-01-07 14:51+0700\n"
 "Last-Translator: 甘露(Gan Lu) <rhythm.gan@gmail.com>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -646,6 +646,29 @@ msgstr "记住密码直到注销(_l)"
 msgid "Remember _forever"
 msgstr "永远记住(_f)"
 
+#. Initial state
+#: ../shell/ev-print-operation.c:318
+msgid "Preparing to print ..."
+msgstr "正在准备打印..."
+
+#: ../shell/ev-print-operation.c:320
+msgid "Finishing..."
+msgstr "完成中..."
+
+#: ../shell/ev-print-operation.c:322
+#, c-format
+msgid "Printing page %d of %d..."
+msgstr "正在打印第 %1$d 页，共 %2$d 页..."
+
+#: ../shell/ev-print-operation.c:1010
+msgid "Printing is not supported on this printer."
+msgstr "此打印机不支持打印。"
+
+#: ../shell/ev-print-operation.c:1136
+#: ../shell/ev-window.c:4996
+msgid "Print"
+msgstr "打印"
+
 #: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
 msgstr "属性"
@@ -1137,10 +1160,6 @@ msgstr "开始演示"
 msgid "Start a presentation"
 msgstr "开始演示"
 
-#: ../shell/ev-window.c:4996
-msgid "Print"
-msgstr "打印"
-
 #. View Menu
 #: ../shell/ev-window.c:5050
 msgid "_Toolbar"
@@ -1391,8 +1410,6 @@ msgstr "生成 PDF 文档缩略图的有效命令及参数。请参看 nautilus 
 #~ msgstr "%.2f x %.2f 英寸"
 #~ msgid "Incorrect password"
 #~ msgstr "密码不正确"
-#~ msgid "Printing is not supported on this printer."
-#~ msgstr "此打印机不支持打印。"
 #~ msgid "BBox"
 #~ msgstr "BBox"
 #~ msgid "Letter"
