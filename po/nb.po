@@ -1,15 +1,15 @@
 # Norwegian translation of evince (bokmål dialect).
 # Copyright (C) 2000-2003, 2005 Free Software Foundation, Inc.
-# Kjartan Maraas <kmaraas@gnome.org>, 2000-2008.
+# Kjartan Maraas <kmaraas@gnome.org>, 2000-2009.
 # Terance Edward Sola <terance@lyse.net>, 2005.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince 0.8.0\n"
+"Project-Id-Version: evince 2.25.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-05 01:37+0100\n"
-"PO-Revision-Date: 2009-01-05 01:38+0100\n"
+"POT-Creation-Date: 2009-01-12 13:55+0100\n"
+"PO-Revision-Date: 2009-01-12 13:59+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmal <i18n-nb@lster.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -656,7 +656,7 @@ msgstr "Husk _for alltid"
 #. Initial state
 #: ../shell/ev-print-operation.c:318
 msgid "Preparing to print ..."
-msgstr ""
+msgstr "Forbereder utskrift..."
 
 #: ../shell/ev-print-operation.c:320
 msgid "Finishing..."
@@ -814,22 +814,21 @@ msgstr "Kan ikke åpne dokument"
 #: ../shell/ev-window.c:1588
 #, c-format
 msgid "Loading document from %s"
-msgstr ""
+msgstr "Laster dokument fra %s"
 
 #: ../shell/ev-window.c:1726 ../shell/ev-window.c:1909
 #, c-format
 msgid "Downloading document %d%%"
-msgstr ""
+msgstr "Laster ned dokument %d%%"
 
 #: ../shell/ev-window.c:1855
-#, fuzzy, c-format
+#, c-format
 msgid "Reloading document from %s"
-msgstr "Les dokumentet på nytt"
+msgstr "Leser dokument fra %s på nytt"
 
 #: ../shell/ev-window.c:1888
-#, fuzzy
 msgid "Failed to reaload document."
-msgstr "Klarte ikke å skrive ut dokumentet"
+msgstr "Klarte ikke å lese dokumentet på nytt."
 
 #: ../shell/ev-window.c:2027
 msgid "Open Document"
@@ -850,9 +849,9 @@ msgid "Saving document to %s"
 msgstr "Lagrer dokumentet til %s"
 
 #: ../shell/ev-window.c:2360
-#, fuzzy, c-format
+#, c-format
 msgid "Saving attachment to %s"
-msgstr "Lagre vedlegg"
+msgstr "Lagrer vedlegg til %s"
 
 #: ../shell/ev-window.c:2363
 #, c-format
@@ -865,19 +864,19 @@ msgid "The file could not be saved as “%s”."
 msgstr "Filen kunne ikke lagres som «%s»."
 
 #: ../shell/ev-window.c:2436
-#, fuzzy, c-format
+#, c-format
 msgid "Uploading document %d%%"
-msgstr "Les dokumentet på nytt"
+msgstr "Laster opp dokument %d%%"
 
 #: ../shell/ev-window.c:2440
-#, fuzzy, c-format
+#, c-format
 msgid "Uploading attachment %d%%"
-msgstr "Kan ikke åpne vedlegg"
+msgstr "Laster opp vedlegg %d%%"
 
 #: ../shell/ev-window.c:2444
 #, c-format
 msgid "Uploading image %d%%"
-msgstr ""
+msgstr "Laster opp bilde %d%%"
 
 #: ../shell/ev-window.c:2551
 msgid "Save a Copy"
@@ -887,8 +886,8 @@ msgstr "Lagre en kopi"
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d utestående jobb i køen"
+msgstr[1] "%d utestående jobber i køen"
 
 #: ../shell/ev-window.c:2810 ../shell/ev-window.c:3920
 msgid "Failed to print document"
@@ -897,30 +896,30 @@ msgstr "Klarte ikke å skrive ut dokumentet"
 #: ../shell/ev-window.c:2867
 #, c-format
 msgid "Printing job “%s”"
-msgstr ""
+msgstr "Skriver ut jobb %s"
 
 #: ../shell/ev-window.c:3064
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
+msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
 
 #: ../shell/ev-window.c:3067
 #, c-format
 msgid ""
 "There are %d print jobs active. Wait until print finishes before closing?"
-msgstr ""
+msgstr "Det er %d aktive utskriftsjobber. Vent med å lukke programmet til disse er fullført?"
 
 #: ../shell/ev-window.c:3079
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
+msgstr "Hvis du lukker vinduet vil utestående utskriftsjobber ikke bli fullført."
 
 #: ../shell/ev-window.c:3083
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "Avbryt _utskrift og lukk"
 
 #: ../shell/ev-window.c:3087
 msgid "Close after _Printing"
-msgstr ""
+msgstr "Lukk etter ut_skrift"
 
 #: ../shell/ev-window.c:3690
 msgid "Toolbar Editor"
