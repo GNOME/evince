@@ -24,9 +24,9 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gdk/gdkx.h>
 
 #ifdef ENABLE_DBUS
+#include <gdk/gdkx.h>
 #include <dbus/dbus-glib-bindings.h>
 #endif
 
