@@ -1885,7 +1885,7 @@ reload_remote_copy_ready_cb (GFile        *remote,
 		if (error->domain != G_IO_ERROR ||
 		    error->code != G_IO_ERROR_CANCELLED)
 			ev_window_error_message (ev_window, error,
-						 "%s", _("Failed to reaload document."));
+						 "%s", _("Failed to reload document."));
 		g_error_free (error);
 	} else {
 		ev_window_reload_local (ev_window);
