@@ -1721,9 +1721,9 @@ window_open_file_copy_progress_cb (goffset   n_bytes,
 	
 	if (!ev_window->priv->message_area)
 		return;
-	
+
 	fraction = n_bytes / (gdouble)total_bytes;
-	status = g_strdup_printf (_("Downloading document %d%%"),
+	status = g_strdup_printf (_("Downloading document (%d%%)"),
 				  (gint)(fraction * 100));
 	
 	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (ev_window->priv->message_area),
