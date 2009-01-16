@@ -455,11 +455,15 @@ ev_application_open_window (EvApplication  *application,
 	if (!GTK_WIDGET_REALIZED (new_window))
 		gtk_widget_realize (new_window);
 	
+#ifdef GDK_WINDOWING_X11
 	if (timestamp <= 0)
 		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
 	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
 	
 	gtk_window_present (GTK_WINDOW (new_window));
+#else
+	gtk_window_present_with_time (GTK_WINDOW (new_window), timestamp);
+#endif /* GDK_WINDOWING_X11 */
 
 	return TRUE;
 }
@@ -614,6 +618,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (new_window)))
 		gtk_widget_realize (GTK_WIDGET (new_window));
 
+#ifdef GDK_WINDOWING_X11
 	if (timestamp <= 0)
 		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
 	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
@@ -621,6 +626,11 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	ev_document_fc_mutex_lock ();
 	gtk_window_present (GTK_WINDOW (new_window));
 	ev_document_fc_mutex_unlock ();
+#else
+	ev_document_fc_mutex_lock ();
+	gtk_window_present_with_time (GTK_WINDOW (new_window), timestamp);
+	ev_document_fc_mutex_unlock ();
+#endif /* GDK_WINDOWING_X11 */
 }
 
 /**
