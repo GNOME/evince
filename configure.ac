@@ -405,6 +405,8 @@ if test "x$enable_impress" = "xyes"; then
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
+AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_r is available on your system]))
+
 AC_CONFIG_FILES([
 backend/Makefile
 backend/comics/Makefile

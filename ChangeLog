@@ -1,5 +1,13 @@
 2009-01-16  Hib Eris  <hib@hiberis.nl>
 
+	* configure.ac:
+	* properties/ev-properties-view.c:
+	(ev_properties_view_format_date):
+
+	Check for localtime_r. See bug #339172.
+	
+2009-01-16  Hib Eris  <hib@hiberis.nl>
+
 	* shell/main.c:
 
 	Include gdkx only for dbus support. See bug #339172.
