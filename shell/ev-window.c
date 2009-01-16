@@ -3084,7 +3084,7 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 				GTK_RESPONSE_NO,
 				GTK_STOCK_CANCEL,
 				GTK_RESPONSE_CANCEL,
-				_("Close after _Printing"),
+				_("Close _after Printing"),
 				GTK_RESPONSE_YES,
 				NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
