@@ -7,13 +7,14 @@
 # Daniel Fernandez <dfdez@ya.com>, 2005.
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008.
-# Juanje Ojeda Croissier <jojeda@emergya.es>, 2008.
+# Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2008-12-30 16:13+0000\n"
-"PO-Revision-Date: 2008-12-31 02:47+0000\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&component=general\n"
+"POT-Creation-Date: 2009-01-16 10:35+0000\n"
+"PO-Revision-Date: 2009-01-17 12:16+0100\n"
 "Last-Translator: Juanje Ojeda Croissier <jojeda@emergya.es>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -500,7 +501,7 @@ msgstr "Seguridad"
 msgid "Paper Size"
 msgstr "Tamaño del papel"
 
-#: ../properties/ev-properties-view.c:197
+#: ../properties/ev-properties-view.c:202
 msgid "None"
 msgstr "Ninguno"
 
@@ -510,30 +511,30 @@ msgstr "Ninguno"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:222
+#: ../properties/ev-properties-view.c:227
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:266
+#: ../properties/ev-properties-view.c:271
 #, c-format
 msgid "%.0f x %.0f mm"
 msgstr "%.0f x %.0f mm"
 
-#: ../properties/ev-properties-view.c:270
+#: ../properties/ev-properties-view.c:275
 #, c-format
 msgid "%.2f x %.2f inch"
 msgstr "%.2f x %.2f pulgadas"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:294
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, vertical (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:301
+#: ../properties/ev-properties-view.c:306
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, apaisado (%s)"
@@ -827,8 +828,9 @@ msgstr "Cargando documento desde %s"
 
 #: ../shell/ev-window.c:1726 ../shell/ev-window.c:1909
 #, c-format
-msgid "Downloading document %d%%"
-msgstr "Descargando documento %d%%"
+#| msgid "Downloading document %d%%"
+msgid "Downloading document (%d%%)"
+msgstr "Descargando documento (%d%%)"
 
 #: ../shell/ev-window.c:1855
 #, c-format
@@ -836,7 +838,8 @@ msgid "Reloading document from %s"
 msgstr "Recargando el documento desde %s"
 
 #: ../shell/ev-window.c:1888
-msgid "Failed to reaload document."
+#| msgid "Failed to reaload document."
+msgid "Failed to reload document."
 msgstr "Falló al recargar el documento."
 
 #: ../shell/ev-window.c:2027
@@ -874,18 +877,21 @@ msgstr "El archivo no se pudo guardar como «%s»."
 
 #: ../shell/ev-window.c:2436
 #, c-format
-msgid "Uploading document %d%%"
-msgstr "Subiendo el documento %d%%"
+#| msgid "Uploading document %d%%"
+msgid "Uploading document (%d%%)"
+msgstr "Subiendo el documento (%d%%)"
 
 #: ../shell/ev-window.c:2440
 #, c-format
-msgid "Uploading attachment %d%%"
-msgstr "Subiendo el adjunto %d%%"
+#| msgid "Uploading attachment %d%%"
+msgid "Uploading attachment (%d%%)"
+msgstr "Subiendo el adjunto (%d%%)"
 
 #: ../shell/ev-window.c:2444
 #, c-format
-msgid "Uploading image %d%%"
-msgstr "Subiendo la imagen %d%%"
+#| msgid "Uploading image %d%%"
+msgid "Uploading image (%d%%)"
+msgstr "Subiendo la imagen (%d%%)"
 
 #: ../shell/ev-window.c:2551
 msgid "Save a Copy"
@@ -931,8 +937,9 @@ msgid "Cancel _print and Close"
 msgstr "Cancelar la _impresión y cerrar"
 
 #: ../shell/ev-window.c:3087
-msgid "Close after _Printing"
-msgstr "Cerrar después de _imprimir"
+#| msgid "Close after _Printing"
+msgid "Close _after Printing"
+msgstr "Cerrar _después de imprimir"
 
 #: ../shell/ev-window.c:3690
 msgid "Toolbar Editor"
@@ -995,7 +1002,7 @@ msgstr "© 1996-2007 Los autores de Evince"
 #: ../shell/ev-window.c:4294
 msgid "translator-credits"
 msgstr ""
-"Jorge González <jorgegonz@svn.gnome.org>, 2007-2008\n"
+"Jorge González <jorgegonz@svn.gnome.org>, 2007-2009\n"
 "Francisco Javier F. Serrador <serrador@gnome.org>, 2005-2006\n"
 "Daniel Fernández <dfdez@ya.com>, 2005\n"
 "Antonio Ognio <gnrfan@gnrfan.org>, 2004-2005"
@@ -1436,4 +1443,3 @@ msgid ""
 msgstr ""
 "Comando válido y argumentos para el miniaturizador de documentos PDF. Vea la "
 "documentación para el miniaturizador de Nautilus para más información."
-
