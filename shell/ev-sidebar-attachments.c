@@ -55,10 +55,6 @@ enum {
 	N_SIGNALS
 };
 
-static const GtkTargetEntry drag_targets[] = {
-	{ "text/uri-list", 0, 0 }
-};
-
 static guint signals[N_SIGNALS];
 
 struct _EvSidebarAttachmentsPrivate {
@@ -398,15 +394,15 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 				      gpointer          user_data)
 {
 	EvSidebarAttachments *ev_attachbar = EV_SIDEBAR_ATTACHMENTS (user_data);
-	GString              *uri_list;
-	gchar                *uris = NULL;
 	GList                *selected = NULL, *l;
+        GPtrArray            *uris;
+        char                **uri_list;
 
 	selected = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (ev_attachbar->priv->icon_view));
 	if (!selected)
 		return;
 
-	uri_list = g_string_new (NULL);
+        uris = g_ptr_array_new ();
 	
 	for (l = selected; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
@@ -434,9 +430,7 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 			gchar *uri;
 
 			uri = g_file_get_uri (file);
-			g_string_append (uri_list, uri);
-			g_string_append_c (uri_list, '\n');
-			g_free (uri);
+                        g_ptr_array_add (uris, uri);
 		}
 	
 		if (error) {
@@ -449,15 +443,10 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 		g_object_unref (attachment);
 	}
 
-	uris = g_string_free (uri_list, FALSE);
-
-	if (uris) {
-		gtk_selection_data_set (data,
-					data->target,
-					8,
-					(guchar *)uris,
-					strlen (uris));
-	}
+        g_ptr_array_add (uris, NULL); /* NULL-terminate */
+        uri_list = (char **) g_ptr_array_free (uris, FALSE);
+        gtk_selection_data_set_uris (data, uri_list);
+        g_strfreev (uri_list);
 
 	g_list_free (selected);
 }
@@ -545,6 +534,12 @@ ev_sidebar_attachments_class_init (EvSidebarAttachmentsClass *ev_attachbar_class
 static void
 ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 {
+#if !GTK_CHECK_VERSION (2, 15, 0)
+        const GtkTargetEntry drag_targets[] = {
+                { "text/uri-list", 0, 0 }
+        };
+#endif
+
 	GtkWidget *swindow;
 	
 	ev_attachbar->priv = EV_SIDEBAR_ATTACHMENTS_GET_PRIVATE (ev_attachbar);
@@ -594,12 +589,21 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 								g_object_unref);
 
 	/* Drag and Drop */
+#if GTK_CHECK_VERSION (2, 15, 0)
+	gtk_icon_view_enable_model_drag_source (
+		GTK_ICON_VIEW (ev_attachbar->priv->icon_view),
+		GDK_BUTTON1_MASK,
+		NULL, 0,
+		GDK_ACTION_COPY);
+        gtk_drag_source_add_uri_targets (ev_attachbar->priv->icon_view);
+#else
 	gtk_icon_view_enable_model_drag_source (
 		GTK_ICON_VIEW (ev_attachbar->priv->icon_view),
 		GDK_BUTTON1_MASK,
 		drag_targets,
 		G_N_ELEMENTS (drag_targets),
 		GDK_ACTION_COPY);
+#endif
 
 	g_signal_connect (G_OBJECT (ev_attachbar->priv->icon_view),
 			  "drag-data-get",

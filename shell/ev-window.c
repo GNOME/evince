@@ -242,10 +242,6 @@ static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_OUTPUT_URI
 };
 
-static const GtkTargetEntry ev_window_drop_targets[] = {
-	{ "text/uri-list", 0, 0 }
-};
-
 static void	ev_window_update_actions	 	(EvWindow         *ev_window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
@@ -6265,9 +6261,9 @@ ev_window_init (EvWindow *ev_window)
 	/* Drag and Drop */
 	gtk_drag_dest_set (GTK_WIDGET (ev_window),
 			   GTK_DEST_DEFAULT_ALL,
-			   ev_window_drop_targets,
-			   G_N_ELEMENTS (ev_window_drop_targets),
+			   NULL, 0,
 			   GDK_ACTION_COPY);
+	gtk_drag_dest_add_uri_targets (GTK_WIDGET (ev_window));
 }
 
 /**

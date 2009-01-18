@@ -72,21 +72,6 @@ enum {
 	TARGET_DND_IMAGE
 };
 
-enum {
-	TARGET_STRING,
-	TARGET_TEXT,
-	TARGET_COMPOUND_TEXT,
-	TARGET_UTF8_STRING,
-	TARGET_TEXT_BUFFER_CONTENTS
-};
-
-static const GtkTargetEntry clipboard_targets[] = {
-	{ "STRING", 0, TARGET_STRING },
-	{ "TEXT",   0, TARGET_TEXT },
-	{ "COMPOUND_TEXT", 0, TARGET_COMPOUND_TEXT },
-	{ "UTF8_STRING", 0, TARGET_UTF8_STRING },
-};
-
 static guint signals[N_SIGNALS];
 
 typedef enum {
@@ -2752,7 +2737,7 @@ ev_view_drag_data_get (GtkWidget        *widget,
 			if (view->image_dnd_info.image) {
 				GdkPixbuf   *pixbuf;
 				const gchar *tmp_uri;
-				gchar      **uris;
+				gchar      **uris[2];
 
 				ev_document_doc_mutex_lock ();
 				pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document),
@@ -2762,13 +2747,9 @@ ev_view_drag_data_get (GtkWidget        *widget,
 				tmp_uri = ev_image_save_tmp (view->image_dnd_info.image, pixbuf);
 				g_object_unref (pixbuf);
 
-				uris = g_new0 (gchar *, 2);
 				uris[0] = (gchar *)tmp_uri;
-				
+                                uris[1] = NULL;
 				gtk_selection_data_set_uris (selection_data, uris);
-
-				/* g_free instead of g_strfreev since tmp_uri is const */ 
-				g_free (uris);
 			}
 	}
 }
@@ -5625,13 +5606,23 @@ ev_view_update_primary_selection (EvView *ev_view)
                                               GDK_SELECTION_PRIMARY);
 
 	if (ev_view->selection_info.selections || ev_view->link_selected) {
+                GtkTargetList *target_list;
+                GtkTargetEntry *targets;
+                int n_targets;
+
+                target_list = gtk_target_list_new (NULL, 0);
+                gtk_target_list_add_text_targets (target_list, 0);
+                targets = gtk_target_table_new_from_list (target_list, &n_targets);
+                gtk_target_list_unref (target_list);
+                
 		if (!gtk_clipboard_set_with_owner (clipboard,
-						   clipboard_targets,
-						   G_N_ELEMENTS (clipboard_targets),
+						   targets, n_targets,
 						   ev_view_primary_get_cb,
 						   ev_view_primary_clear_cb,
 						   G_OBJECT (ev_view)))
 			ev_view_primary_clear_cb (clipboard, ev_view);
+
+                gtk_target_table_free (targets, n_targets);
 	} else {
 		if (gtk_clipboard_get_owner (clipboard) == G_OBJECT (ev_view))
 			gtk_clipboard_clear (clipboard);
