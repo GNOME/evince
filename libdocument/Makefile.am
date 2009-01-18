@@ -12,7 +12,6 @@ libevbackend_la_LDFLAGS = -export-dynamic
 libevbackend_la_LIBADD = $(LIB_LIBS)
 
 NOINST_H_FILES =				\
-	ev-backend-marshalers.h			\
 	ev-backends-manager.h			\
 	ev-debug.h				\
 	ev-document-factory.h			\
@@ -53,7 +52,6 @@ libevbackend_la_SOURCES=			\
 	ev-async-renderer.c			\
 	ev-attachment.c				\
 	ev-backends-manager.c			\
-	ev-backend-marshal.c			\
 	ev-layer.c				\
 	ev-link.c				\
 	ev-link-action.c			\
@@ -83,19 +81,6 @@ libevbackend_la_SOURCES=			\
 	$(NOINST_H_FILES)			\
 	$(INST_H_FILES)
 
-BUILT_SOURCES=				\
-	ev-backend-marshalers.h		\
-	ev-backend-marshalers.c
 
-CLEANFILES = $(BUILT_SOURCES)
 
-ev-backend-marshalers.h: ev-backend-marshalers.list
-	$(GLIB_GENMARSHAL) --prefix=_ev_backend_marshal $(srcdir)/ev-backend-marshalers.list --header > $@
 
-ev-backend-marshalers.c: ev-backend-marshalers.list
-	$(GLIB_GENMARSHAL) --prefix=_ev_backend_marshal $(srcdir)/ev-backend-marshalers.list --body > $@
-
-ev-backend-marshal.c: ev-backend-marshalers.h ev-backend-marshalers.c
-
-EXTRA_DIST= \
-	ev-backend-marshalers.list
