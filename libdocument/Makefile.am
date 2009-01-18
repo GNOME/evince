@@ -87,7 +87,7 @@ BUILT_SOURCES = 			\
 	ev-document-type-builtins.c	\
 	ev-document-type-builtins.h
 
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) stamp-ev-document-type-builtins.h
 
 ev-document-type-builtins.h: stamp-ev-document-type-builtins.h
 	@true

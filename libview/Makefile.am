@@ -48,7 +48,7 @@ BUILT_SOURCES = 			\
 	ev-view-type-builtins.c		\
 	ev-view-type-builtins.h
 
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) stamp-ev-view-type-builtins.h
 
 ev-view-marshal.h: $(srcdir)/ev-view-marshal.list
 	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header > $@
