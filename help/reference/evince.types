@@ -11,6 +11,8 @@
 #include "ev-page-cache.h"
 #include "ev-view.h"
 #include "ev-view-private.h"
+#include "ev-view-type-builtins.h"
+#include "ev-view-accessible.h"
 #include "ev-window.h"
 
 ev_application_get_type
@@ -22,6 +24,7 @@ ev_document_links_get_type
 ev_job_fonts_get_type
 ev_job_links_get_type
 ev_job_load_get_type
+ev_job_priority_get_type
 ev_job_render_get_type
 ev_job_thumbnail_get_type
 ev_link_action_get_type

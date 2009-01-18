@@ -18,7 +18,7 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
 # gtk-doc will search all .c & .h files beneath here for inline comments
 # documenting the functions and macros.
 # e.g. DOC_SOURCE_DIR=../../../gtk
-DOC_SOURCE_DIR=../../shell --source-dir=../../libdocument
+DOC_SOURCE_DIR=../../shell --source-dir=../../libdocument --source-dir=../../libview
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
 SCANGOBJ_OPTIONS=
@@ -80,6 +80,9 @@ INCLUDES= \
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
 	-I$(top_srcdir)/libdocument			\
+	-I$(top_builddir)/libdocument			\
+	-I$(top_srcdir)/libview				\
+	-I$(top_builddir)/libview				\
 	-I$(top_srcdir)/properties			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
@@ -99,6 +102,7 @@ GTKDOC_LIBS= \
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/libdocument/libevbackend.la			\
+	$(top_builddir)/libview/libevview.la				\
 	$(SHELL_LIBS)							\
 	$(GNOME_PRINT_LIBS)						\
 	$(filter-out ../../shell/main.o,$(wildcard ../../shell/*.o))
