@@ -9,7 +9,6 @@ libephyzoom_la_SOURCES = \
 	ephy-zoom.h
 
 libephyzoom_la_CFLAGS = \
-	-I$(top_srcdir)/lib	\
-	$(LIB_CFLAGS)		\
+	$(SHELL_CORE_CFLAGS)	\
 	$(WARNING_CFLAGS)	\
 	$(DISABLE_DEPRECATED)

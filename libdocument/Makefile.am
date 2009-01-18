@@ -2,14 +2,14 @@ INCLUDES=						\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DEV_BACKENDSDIR=\"$(libdir)/evince/backends\"	\
-	$(LIB_CFLAGS)					\
+	$(LIBDOCUMENT_CFLAGS)				\
 	$(WARN_CFLAGS)					\
 	$(DISABLE_DEPRECATED)
 
 lib_LTLIBRARIES = libevbackend.la
 
 libevbackend_la_LDFLAGS = -export-dynamic
-libevbackend_la_LIBADD = $(LIB_LIBS)
+libevbackend_la_LIBADD = $(LIBDOCUMENT_LIBS)
 
 NOINST_H_FILES =				\
 	ev-backends-manager.h			\

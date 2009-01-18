@@ -5,8 +5,7 @@ libgimpcellrenderertoggle_la_sources =	\
 	gimpcellrenderertoggle.c
 
 libgimpcellrenderertoggle_la_CFLAGS =	\
-	-I$(top_srcdir)/lib		\
-	$(LIB_CFLAGS)			\
+	$(SHELL_CORE_CFLAGS)		\
 	$(WARNING_CFLAGS)		\
 	$(DISABLE_DEPRECATED)
 

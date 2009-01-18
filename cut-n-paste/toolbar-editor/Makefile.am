@@ -20,11 +20,10 @@ libtoolbareditor_la_SOURCES = 	\
 	$(EGGHEADERS) 
 
 libtoolbareditor_la_CPPFLAGS = \
-	-I$(top_builddir)/lib/egg		\
 	$(AM_CPPFLAGS)
 
 libtoolbareditor_la_CFLAGS = \
-	$(LIB_CFLAGS)				\
+	$(SHELL_CORE_CFLAGS)			\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)			\
 	-DCURSOR_DIR=\"$(pkgdatadir)\"		\
