@@ -57,8 +57,6 @@ ev-view-marshal.c: $(srcdir)/ev-view-marshal.list
 	echo '#include "ev-view-marshal.h"' > ev-view-marshal.c
 	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --body >> $@
 
-EXTRA_DIST = ev-view-marshal.list
-
 ev-view-type-builtins.h: stamp-ev-view-type-builtins.h
 	@true
 
@@ -75,5 +73,6 @@ ev-view-type-builtins.c: ev-view-type-builtins.c.template ev-job-scheduler.h
 
 EXTRA_DIST = \
 	ev-view-type-builtins.c.template  \
-	ev-view-type-builtins.h.template
+	ev-view-type-builtins.h.template  \
+	ev-view-marshal.list
 
