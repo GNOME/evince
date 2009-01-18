@@ -238,6 +238,10 @@ static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_OUTPUT_URI
 };
 
+static const GtkTargetEntry ev_window_drop_targets[] = {
+	{ "text/uri-list", 0, 0 }
+};
+
 static void	ev_window_update_actions	 	(EvWindow         *ev_window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
@@ -4684,6 +4688,40 @@ zoom_control_changed_cb (EphyZoomAction *action,
 }
 
 static void
+ev_window_drag_data_received (GtkWidget        *widget,
+			      GdkDragContext   *context,
+			      gint              x,
+			      gint              y,
+			      GtkSelectionData *selection_data,
+			      guint             info,
+			      guint             time)
+
+{
+	EvWindow *window = EV_WINDOW (widget);
+	gchar   **uris;
+	gint      i = 0;
+	GSList   *uri_list = NULL;
+
+	uris = gtk_selection_data_get_uris (selection_data);
+	if (!uris) {
+		gtk_drag_finish (context, FALSE, FALSE, time);
+		return;
+	}
+
+	for (i = 0; uris[i]; i++) {
+		uri_list = g_slist_prepend (uri_list, (gpointer) uris[i]);
+	}
+
+	ev_application_open_uri_list (EV_APP, uri_list,
+				      gtk_window_get_screen (GTK_WINDOW (window)),
+				      0);
+	gtk_drag_finish (context, TRUE, FALSE, time);
+
+	g_strfreev (uris);
+	g_slist_free (uri_list);
+}
+
+static void
 ev_window_finalize (GObject *object)
 {
 	GList *windows = ev_application_get_windows (EV_APP);
@@ -4899,6 +4937,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 
 	widget_class->screen_changed = ev_window_screen_changed;
 	widget_class->window_state_event = ev_window_state_event;
+	widget_class->drag_data_received = ev_window_drag_data_received;
 
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
 }
@@ -6194,6 +6233,13 @@ ev_window_init (EvWindow *ev_window)
 
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	ev_window_setup_action_sensitivity (ev_window);
+
+	/* Drag and Drop */
+	gtk_drag_dest_set (GTK_WIDGET (ev_window),
+			   GTK_DEST_DEFAULT_ALL,
+			   ev_window_drop_targets,
+			   G_N_ELEMENTS (ev_window_drop_targets),
+			   GDK_ACTION_COPY);
 }
 
 /**

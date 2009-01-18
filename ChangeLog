@@ -1,3 +1,13 @@
+2009-01-17  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/ev-view.c: (ev_view_drag_data_received),
+	(ev_view_class_init), (ev_view_init):
+	* shell/ev-window.c: (ev_window_drag_data_received),
+	(ev_window_class_init), (ev_window_init):
+
+	Make the whole EvWindow the destination of a drag and drop
+	operation.
+	
 2009-01-16  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (window_open_file_copy_progress_cb):

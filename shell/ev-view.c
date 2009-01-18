@@ -28,7 +28,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "ev-application.h"
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-links.h"
@@ -86,10 +85,6 @@ static const GtkTargetEntry clipboard_targets[] = {
 	{ "TEXT",   0, TARGET_TEXT },
 	{ "COMPOUND_TEXT", 0, TARGET_COMPOUND_TEXT },
 	{ "UTF8_STRING", 0, TARGET_UTF8_STRING },
-};
-
-static const GtkTargetEntry view_drop_targets[] = {
-	{ "text/uri-list", 0, 0 }
 };
 
 static guint signals[N_SIGNALS];
@@ -2793,39 +2788,6 @@ ev_view_drag_motion (GtkWidget      *widget,
 	return TRUE;
 }
 		     
-static void
-ev_view_drag_data_received (GtkWidget          *widget,
-			    GdkDragContext     *context,
-			    gint                x,
-			    gint                y,
-			    GtkSelectionData   *selection_data,
-			    guint               info,
-			    guint               time)
-{
-	gchar  **uris;
-	gint     i = 0;
-	GSList  *uri_list = NULL;
-
-	uris = gtk_selection_data_get_uris (selection_data);
-	if (!uris) {
-		gtk_drag_finish (context, FALSE, FALSE, time);
-		return;
-	}
-
-	for (i = 0; uris[i]; i++) {
-		uri_list = g_slist_prepend (uri_list, (gpointer) uris[i]);
-	}
-	
-	ev_application_open_uri_list (EV_APP, uri_list,
-				      gtk_widget_get_screen (widget),
-				      0);
-	gtk_drag_finish (context, TRUE, FALSE, time);
-	
-	g_strfreev (uris);
-	g_slist_free (uri_list);
-}
-
-
 static gboolean
 selection_update_idle_cb (EvView *view)
 {
@@ -3977,7 +3939,6 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->style_set = ev_view_style_set;
 	widget_class->drag_data_get = ev_view_drag_data_get;
 	widget_class->drag_motion = ev_view_drag_motion;
-	widget_class->drag_data_received = ev_view_drag_data_received;
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
 
@@ -4144,12 +4105,6 @@ ev_view_init (EvView *view)
 
 	gtk_layout_set_hadjustment (GTK_LAYOUT (view), NULL);
 	gtk_layout_set_vadjustment (GTK_LAYOUT (view), NULL);
-
-	gtk_drag_dest_set (GTK_WIDGET (view),
-			   GTK_DEST_DEFAULT_ALL,
-			   view_drop_targets,
-			   G_N_ELEMENTS (view_drop_targets),
-			   GDK_ACTION_COPY);
 }
 
 /*** Callbacks ***/
