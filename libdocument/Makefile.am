@@ -103,3 +103,7 @@ ev-document-type-builtins.c: ev-document-type-builtins.c.template ev-document-in
 	&& (cmp -s xgen-etbc ev-document-type-builtins.c || cp xgen-etbc ev-document-type-builtins.c ) \
 	&& rm -f xgen-etbc
 
+EXTRA_DIST = \
+	ev-document-type-builtins.c.template \
+	ev-document-type-builtins.h.template
+
