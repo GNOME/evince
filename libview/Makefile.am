@@ -73,3 +73,7 @@ ev-view-type-builtins.c: ev-view-type-builtins.c.template ev-job-scheduler.h
 	&& (cmp -s xgen-etbc ev-view-type-builtins.c || cp xgen-etbc ev-view-type-builtins.c ) \
 	&& rm -f xgen-etbc
 
+EXTRA_DIST = \
+	ev-view-type-builtins.c.template  \
+	ev-view-type-builtins.h.template
+
