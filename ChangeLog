@@ -1,3 +1,15 @@
+2009-01-18  Tomeu Vizoso  <tomeu@sugarlabs.org>
+
+	* libdocument/Makefile.am:
+	* libdocument/ev-document-info.h:
+	* libdocument/ev-document-type-builtins.c.template:
+	* libdocument/ev-document-type-builtins.h.template:
+	* libdocument/ev-document.c: (ev_document_info_get_type),
+	(ev_document_info_copy):
+
+	Make EvDocumentInfo and enums definded in ev-document-info.h
+	GTypes. Fixes bug #567789.
+	
 2009-01-18  Michal Vaner <vorner+evince@ucw.cz>
 
 	* shell/main.c (arguments_parse): Fix for a minor code typo.

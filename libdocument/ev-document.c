@@ -243,6 +243,48 @@ ev_document_render (EvDocument      *document,
 	return retval;
 }
 
+/* EvDocumentInfo */
+GType
+ev_document_info_get_type (void)
+{
+	static GType type = 0;
+	if (type == 0)
+		type = g_boxed_type_register_static ("EvDocumentInfo",
+						     (GBoxedCopyFunc)ev_document_info_copy,
+						     (GBoxedFreeFunc)ev_document_info_free);
+	return type;
+}
+
+EvDocumentInfo *
+ev_document_info_copy (EvDocumentInfo *info)
+{
+	EvDocumentInfo *copy;
+	
+	g_return_val_if_fail (info != NULL, NULL);
+
+	copy = g_new0 (EvDocumentInfo, 1);
+	copy->title = info->title ? g_strdup (info->title) : NULL;
+	copy->format = info->format ? g_strdup (info->format) : NULL;
+	copy->author = info->author ? g_strdup (info->author) : NULL;
+	copy->subject = info->subject ? g_strdup (info->subject) : NULL;
+	copy->keywords = info->keywords ? g_strdup (info->keywords) : NULL;
+	copy->security = info->security ? g_strdup (info->security) : NULL;
+	copy->creator = info->creator ? g_strdup (info->creator) : NULL;
+	copy->producer = info->producer ? g_strdup (info->producer) : NULL;
+	copy->linearized = info->linearized ? g_strdup (info->linearized) : NULL;
+	
+	copy->creation_date = info->creation_date;
+	copy->modified_date = info->modified_date;
+	copy->layout = info->layout;
+	copy->mode = info->mode;
+	copy->ui_hints = info->ui_hints;
+	copy->permissions = info->permissions;
+	copy->n_pages = info->n_pages;
+	copy->fields_mask = info->fields_mask;
+
+	return copy;
+}
+
 void
 ev_document_info_free (EvDocumentInfo *info)
 {

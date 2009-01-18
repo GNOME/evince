@@ -15,6 +15,7 @@ NOINST_H_FILES =				\
 	ev-backends-manager.h			\
 	ev-debug.h				\
 	ev-document-factory.h			\
+	ev-document-type-builtins.h		\
 	ev-module.h
 
 INST_H_FILES = 					\
@@ -68,6 +69,7 @@ libevbackend_la_SOURCES=			\
 	ev-document-find.c			\
 	ev-document-transition.c		\
 	ev-document-forms.c			\
+	ev-document-type-builtins.c		\
 	ev-form-field.c 			\
 	ev-debug.c				\
 	ev-file-exporter.c			\
@@ -81,6 +83,23 @@ libevbackend_la_SOURCES=			\
 	$(NOINST_H_FILES)			\
 	$(INST_H_FILES)
 
+BUILT_SOURCES = 			\
+	ev-document-type-builtins.c	\
+	ev-document-type-builtins.h
 
+CLEANFILES = $(BUILT_SOURCES)
 
+ev-document-type-builtins.h: stamp-ev-document-type-builtins.h
+	@true
+
+stamp-ev-document-type-builtins.h: ev-document-type-builtins.h.template ev-document-info.h
+	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
+	&& (cmp -s xgen-etbh ev-document-type-builtins.h || cp xgen-etbh ev-document-type-builtins.h ) \
+	&& rm -f xgen-etbh \
+	&& echo timestamp > $(@F)
+
+ev-document-type-builtins.c: ev-document-type-builtins.c.template ev-document-info.h
+	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
+	&& (cmp -s xgen-etbc ev-document-type-builtins.c || cp xgen-etbc ev-document-type-builtins.c ) \
+	&& rm -f xgen-etbc
 

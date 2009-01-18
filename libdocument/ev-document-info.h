@@ -35,7 +35,7 @@ typedef enum
 	EV_DOCUMENT_LAYOUT_TWO_COLUMN_LEFT,
 	EV_DOCUMENT_LAYOUT_TWO_COLUMN_RIGHT,
 	EV_DOCUMENT_LAYOUT_TWO_PAGE_LEFT,
-	EV_DOCUMENT_LAYOUT_TWO_PAGE_RIGHT,
+	EV_DOCUMENT_LAYOUT_TWO_PAGE_RIGHT
 } EvDocumentLayout;
 
 typedef enum
@@ -56,9 +56,14 @@ typedef enum
 	EV_DOCUMENT_UI_HINT_FIT_WINDOW = 1 << 3,
 	EV_DOCUMENT_UI_HINT_CENTER_WINDOW = 1 << 4,
 	EV_DOCUMENT_UI_HINT_DISPLAY_DOC_TITLE = 1 << 5,
-	EV_DOCUMENT_UI_HINT_DIRECTION_RTL = 1 << 6,
+	EV_DOCUMENT_UI_HINT_DIRECTION_RTL = 1 << 6
 } EvDocumentUIHints;
 
+/* This define is needed because glib-mkenums chokes with multiple lines */
+#define PERMISSIONS_FULL (EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT  \
+			| EV_DOCUMENT_PERMISSIONS_OK_TO_MODIFY \
+			| EV_DOCUMENT_PERMISSIONS_OK_TO_COPY   \
+			| EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES)
 
 typedef enum
 {
@@ -66,10 +71,7 @@ typedef enum
 	EV_DOCUMENT_PERMISSIONS_OK_TO_MODIFY = 1 << 1,
 	EV_DOCUMENT_PERMISSIONS_OK_TO_COPY = 1 << 2,
 	EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES = 1 << 3,
-	EV_DOCUMENT_PERMISSIONS_FULL = (EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT
-					| EV_DOCUMENT_PERMISSIONS_OK_TO_MODIFY
-					| EV_DOCUMENT_PERMISSIONS_OK_TO_COPY
-					| EV_DOCUMENT_PERMISSIONS_OK_TO_ADD_NOTES),
+	EV_DOCUMENT_PERMISSIONS_FULL = PERMISSIONS_FULL
 } EvDocumentPermissions;
 
 typedef enum
@@ -118,7 +120,9 @@ struct _EvDocumentInfo
 	guint fields_mask;
 };
 
-void ev_document_info_free (EvDocumentInfo *info);
+GType           ev_document_info_get_type (void) G_GNUC_CONST;
+EvDocumentInfo *ev_document_info_copy     (EvDocumentInfo *info);
+void            ev_document_info_free     (EvDocumentInfo *info);
 
 G_END_DECLS
 
