@@ -42,7 +42,7 @@
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;
 static gboolean preview_mode = FALSE;
-static gboolean fullscren_mode = FALSE;
+static gboolean fullscreen_mode = FALSE;
 static gboolean presentation_mode = FALSE;
 static gboolean unlink_temp_file = FALSE;
 static gchar   *print_settings;
@@ -51,7 +51,7 @@ static const char **file_arguments = NULL;
 static const GOptionEntry goption_options[] =
 {
 	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page of the document to display."), N_("PAGE")},
-	{ "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscren_mode, N_("Run evince in fullscreen mode"), NULL },
+	{ "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscreen_mode, N_("Run evince in fullscreen mode"), NULL },
 	{ "presentation", 's', 0, G_OPTION_ARG_NONE, &presentation_mode, N_("Run evince in presentation mode"), NULL },
 	{ "preview", 'w', 0, G_OPTION_ARG_NONE, &preview_mode, N_("Run evince as a previewer"), NULL },
 	{ "find", 'l', 0, G_OPTION_ARG_STRING, &ev_find_string, N_("The word or phrase to find in the document"), N_("STRING")},
@@ -140,7 +140,7 @@ arguments_parse (void)
 		ev_page_label = NULL;
 	}
 
-	if (fullscren_mode)
+	if (fullscreen_mode)
 		mode = EV_WINDOW_MODE_FULLSCREEN;
 	else if (presentation_mode)
 		mode = EV_WINDOW_MODE_PRESENTATION;
