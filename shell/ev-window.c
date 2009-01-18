@@ -181,7 +181,6 @@ struct _EvWindowPrivate {
 	char *uri;
 	glong uri_mtime;
 	char *local_uri;
-	EvLinkDest *dest;
 	gboolean unlink_temp_file;
 	gboolean in_reload;
 	EvFileMonitor *monitor;
@@ -192,6 +191,11 @@ struct _EvWindowPrivate {
 	EvPageCache *page_cache;
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
+
+	/* Load params */
+	EvLinkDest       *dest;
+	gchar            *search_string;
+	EvWindowRunMode   window_mode;
 
 	EvJob            *load_job;
 	EvJob            *reload_job;
@@ -1372,7 +1376,7 @@ ev_window_load_job_cb (EvJob *job,
 	if (!ev_job_is_failed (job)) {
 		ev_window_set_document (ev_window, document);
 		
-		if (job_load->mode != EV_WINDOW_MODE_PREVIEW) {
+		if (ev_window->priv->window_mode != EV_WINDOW_MODE_PREVIEW) {
 			setup_view_from_metadata (ev_window);
 		}
 
@@ -1392,17 +1396,23 @@ ev_window_load_job_cb (EvJob *job,
 						  flags);
 		}
 
-		if (job_load->dest) {
+		if (ev_window->priv->dest) {
 			EvLink *link;
 			EvLinkAction *link_action;
 	
-			link_action = ev_link_action_new_dest (g_object_ref (job_load->dest));
+			link_action = ev_link_action_new_dest (ev_window->priv->dest);
 			link = ev_link_new (NULL, link_action);
 			ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
 		    	g_object_unref (link);
+
+			/* Already unrefed by ev_link_action
+			 * FIXME: link action should inc dest ref counting
+			 * or not unref it at all
+			 */
+			ev_window->priv->dest = NULL;
 		}
 
-		switch (job_load->mode) {
+		switch (ev_window->priv->window_mode) {
 		        case EV_WINDOW_MODE_FULLSCREEN:
 				ev_window_run_fullscreen (ev_window);
 				break;
@@ -1416,11 +1426,14 @@ ev_window_load_job_cb (EvJob *job,
 				break;
 		}
 
-		if (job_load->search_string && EV_IS_DOCUMENT_FIND (document)) {
+		if (ev_window->priv->search_string && EV_IS_DOCUMENT_FIND (document)) {
 			ev_window_cmd_edit_find (NULL, ev_window);
 			egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
-							job_load->search_string);
+							ev_window->priv->search_string);
 		}
+
+		g_free (ev_window->priv->search_string);
+		ev_window->priv->search_string = NULL;
 
 		/* Create a monitor for the document */
 		ev_window->priv->monitor = ev_file_monitor_new (ev_window->priv->uri);
@@ -1807,6 +1820,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 
 	ev_window->priv->unlink_temp_file = unlink_temp_file;
+	ev_window->priv->window_mode = mode;
 
 	if (mode == EV_WINDOW_MODE_PREVIEW) {
 		ev_window->priv->print_settings_file = print_settings ? 
@@ -1817,9 +1831,18 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_free (ev_window->priv->uri);
 	ev_window->priv->uri = g_strdup (uri);
 
+	if (ev_window->priv->search_string)
+		g_free (ev_window->priv->search_string);
+	ev_window->priv->search_string = search_string ?
+		g_strdup (search_string) : NULL;
+
+	if (ev_window->priv->dest)
+		g_object_unref (ev_window->priv->dest);
+	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
+
 	setup_size_from_metadata (ev_window);
 	
-	ev_window->priv->load_job = ev_job_load_new (uri, dest, mode, search_string);
+	ev_window->priv->load_job = ev_job_load_new (uri);
 	g_signal_connect (ev_window->priv->load_job,
 			  "finished",
 			  G_CALLBACK (ev_window_load_job_cb),
@@ -1840,7 +1863,7 @@ ev_window_reload_local (EvWindow *ev_window)
 	const gchar *uri;
 	
 	uri = ev_window->priv->local_uri ? ev_window->priv->local_uri : ev_window->priv->uri;
-	ev_window->priv->reload_job = ev_job_load_new (uri, NULL, 0, NULL);
+	ev_window->priv->reload_job = ev_job_load_new (uri);
 	g_signal_connect (ev_window->priv->reload_job, "finished",
 			  G_CALLBACK (ev_window_reload_job_cb),
 			  ev_window);
@@ -4898,6 +4921,11 @@ ev_window_dispose (GObject *object)
 		priv->uri = NULL;
 	}
 
+	if (priv->search_string) {
+		g_free (priv->search_string);
+		priv->search_string = NULL;
+	}
+	
 	if (priv->dest) {
 		g_object_unref (priv->dest);
 		priv->dest = NULL;

@@ -27,7 +27,6 @@
 #include "ev-document.h"
 #include "ev-selection.h"
 #include "ev-render-context.h"
-#include "ev-window.h"
 
 G_BEGIN_DECLS
 
@@ -259,10 +258,7 @@ struct _EvJobFontsClass
 struct _EvJobLoad
 {
 	EvJob parent;
-	
-	EvLinkDest *dest;
-	EvWindowRunMode mode;
-	gchar *search_string;
+
 	gchar *uri;
 	gchar *password;
 };
@@ -385,10 +381,7 @@ EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
 
 /* EvJobLoad */
 GType 		ev_job_load_get_type 	  (void) G_GNUC_CONST;
-EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri,
-					   EvLinkDest      *dest,
-					   EvWindowRunMode  mode,
-					   const gchar     *search_string);
+EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri);
 void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
 void            ev_job_load_set_password  (EvJobLoad       *job,

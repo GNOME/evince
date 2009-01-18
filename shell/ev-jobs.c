@@ -803,16 +803,6 @@ ev_job_load_dispose (GObject *object)
 		job->password = NULL;
 	}
 
-	if (job->dest) {
-		g_object_unref (job->dest);
-		job->dest = NULL;
-	}
-
-	if (job->search_string) {
-		g_free (job->search_string);
-		job->search_string = NULL;
-	}
-
 	(* G_OBJECT_CLASS (ev_job_load_parent_class)->dispose) (object);
 }
 
@@ -871,21 +861,14 @@ ev_job_load_class_init (EvJobLoadClass *class)
 }
 
 EvJob *
-ev_job_load_new (const gchar    *uri,
-		 EvLinkDest     *dest,
-		 EvWindowRunMode mode,
-		 const gchar    *search_string)
+ev_job_load_new (const gchar *uri)
 {
 	EvJobLoad *job;
 
 	ev_debug_message (DEBUG_JOBS, "%s", uri);
 	
 	job = g_object_new (EV_TYPE_JOB_LOAD, NULL);
-
 	job->uri = g_strdup (uri);
-	job->dest = dest ? g_object_ref (dest) : NULL;
-	job->mode = mode;
-	job->search_string = search_string ? g_strdup (search_string) : NULL;
 
 	return EV_JOB (job);
 }
