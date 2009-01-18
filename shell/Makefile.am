@@ -9,6 +9,7 @@ INCLUDES=							\
 	-I$(top_srcdir)/cut-n-paste/evmountoperation/		\
 	-I$(top_srcdir)/cut-n-paste/smclient/			\
 	-I$(top_srcdir)/libdocument				\
+	-I$(top_srcdir)/libview					\
 	-I$(top_srcdir)/properties				\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
@@ -30,10 +31,6 @@ evince_SOURCES=				\
 	eggfindbar.h			\
 	ev-application.c		\
 	ev-application.h		\
-	ev-job-scheduler.h		\
-	ev-job-scheduler.c		\
-	ev-jobs.h			\
-	ev-jobs.c			\
 	ev-file-monitor.h		\
 	ev-file-monitor.c		\
 	ev-history.c			\
@@ -55,12 +52,8 @@ evince_SOURCES=				\
 	ev-page-action.h		\
 	ev-page-action-widget.c		\
 	ev-page-action-widget.h		\
-	ev-page-cache.h			\
-	ev-page-cache.c			\
 	ev-password-view.h		\
 	ev-password-view.c		\
-	ev-pixbuf-cache.c		\
-	ev-pixbuf-cache.h		\
 	ev-print-operation.h		\
 	ev-print-operation.c		\
 	ev-progress-message-area.h	\
@@ -73,11 +66,6 @@ evince_SOURCES=				\
 	ev-open-recent-action.h		\
 	ev-utils.c			\
 	ev-utils.h			\
-	ev-view-accessible.c		\
-	ev-view-accessible.h		\
-	ev-view-private.h		\
-	ev-view.c			\
-	ev-view.h			\
 	ev-window.c			\
 	ev-window.h			\
 	ev-window-title.c		\
@@ -96,10 +84,6 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	ev-stock-icons.c		\
 	ev-stock-icons.h		\
-	ev-timeline.c			\
-	ev-timeline.h			\
-	ev-transition-animation.c	\
-	ev-transition-animation.h	\
 	main.c
 
 evince_LDADD=										\
@@ -112,6 +96,7 @@ evince_LDADD=										\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la				\
 	$(top_builddir)/properties/libevproperties.la					\
 	$(top_builddir)/libdocument/libevbackend.la					\
+	$(top_builddir)/libview/libevview.la						\
 	$(SHELL_LIBS)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c

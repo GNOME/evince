@@ -3,6 +3,7 @@ SUBDIRS = \
 	data \
 	libdocument \
 	backend \
+	libview \
 	properties \
 	shell \
 	po \

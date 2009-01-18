@@ -33,12 +33,12 @@
 #include "ev-document-links.h"
 #include "ev-document-misc.h"
 #include "ev-document-transition.h"
-#include "ev-marshal.h"
 #include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-transition-animation.h"
-#include "ev-utils.h"
+#include "ev-view-marshal.h"
 #include "ev-view.h"
+#include "ev-view-accessible.h"
 #include "ev-view-private.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
@@ -3953,7 +3953,7 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, binding_activated),
 		         NULL, NULL,
-		         ev_marshal_VOID__ENUM_BOOLEAN,
+		         ev_view_marshal_VOID__ENUM_BOOLEAN,
 		         G_TYPE_NONE, 2,
 		         GTK_TYPE_SCROLL_TYPE,
 		         G_TYPE_BOOLEAN);
@@ -3963,7 +3963,7 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, zoom_invalid),
 		         NULL, NULL,
-		         ev_marshal_VOID__VOID,
+		         g_cclosure_marshal_VOID__VOID,
 		         G_TYPE_NONE, 0, G_TYPE_NONE);
 	signals[SIGNAL_HANDLE_LINK] = g_signal_new ("handle-link",
 	  	         G_TYPE_FROM_CLASS (object_class),

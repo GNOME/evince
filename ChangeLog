@@ -1,5 +1,26 @@
 2009-01-18  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* configure.ac:
+	* Makefile.am:
+	* libdocument/Makefile.am:
+	* libview/Makefile.am:
+	* libview/ev-job-scheduler.[ch]:
+	* libview/ev-jobs.[ch]:
+	* libview/ev-page-cache.[ch]:
+	* libview/ev-pixbuf-cache.[ch]:
+	* libview/ev-timeline.[ch]:
+	* libview/ev-transition-animation.[ch]:
+	* libview/ev-view-accessible.[ch]:
+	* libview/ev-view-marshal.list:
+	* libview/ev-view.[ch]:
+	* shell/Makefile.am:
+
+	Move EvView specific code to a libeviview library so that it can
+	be embbeded in other applications. Based on patches by Tomeu
+	Vizoso. Fixes bug #567751.
+	
+2009-01-18  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-jobs.[ch]: (ev_job_load_dispose), (ev_job_load_new):
 	* shell/ev-window.c: (ev_window_load_job_cb),
 	(ev_window_load_job_cb), (ev_window_open_uri),

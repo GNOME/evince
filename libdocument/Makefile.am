@@ -46,7 +46,7 @@ INST_H_FILES = 					\
 	ev-selection.h				\
 	ev-transition-effect.h
 
-headerdir = $(prefix)/include/evince-@EV_API_VERSION@/evince
+headerdir = $(prefix)/include/evince/@EV_API_VERSION@/ev-backend
 header_DATA = $(INST_H_FILES)
 
 libevbackend_la_SOURCES=			\

@@ -4,6 +4,7 @@
 #include "ev-page-cache.h"
 #include "ev-document-images.h"
 #include "ev-document-forms.h"
+#include "ev-document-links.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
 
