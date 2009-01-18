@@ -2737,7 +2737,7 @@ ev_view_drag_data_get (GtkWidget        *widget,
 			if (view->image_dnd_info.image) {
 				GdkPixbuf   *pixbuf;
 				const gchar *tmp_uri;
-				gchar      **uris[2];
+				gchar       *uris[2];
 
 				ev_document_doc_mutex_lock ();
 				pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document),
