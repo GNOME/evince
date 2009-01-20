@@ -28,6 +28,8 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocumentInfo    EvDocumentInfo;
 
+#define EV_TYPE_DOCUMENT_INFO (ev_document_info_get_type())
+
 typedef enum
 {
 	EV_DOCUMENT_LAYOUT_SINGLE_PAGE,
