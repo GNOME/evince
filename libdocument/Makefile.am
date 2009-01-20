@@ -12,15 +12,14 @@ libevbackend_la_LDFLAGS = -export-dynamic
 libevbackend_la_LIBADD = $(LIBDOCUMENT_LIBS)
 
 NOINST_H_FILES =				\
-	ev-backends-manager.h			\
 	ev-debug.h				\
 	ev-document-factory.h			\
-	ev-document-type-builtins.h		\
 	ev-module.h
 
 INST_H_FILES = 					\
 	ev-async-renderer.h			\
 	ev-attachment.h				\
+	ev-backends-manager.h			\
 	ev-document-find.h			\
 	ev-document-fonts.h			\
 	ev-document-forms.h			\
@@ -33,6 +32,7 @@ INST_H_FILES = 					\
 	ev-document-security.h			\
 	ev-document-thumbnails.h		\
 	ev-document-transition.h		\
+	ev-document-type-builtins.h		\
 	ev-file-exporter.h			\
 	ev-file-helpers.h			\
 	ev-form-field.h				\
