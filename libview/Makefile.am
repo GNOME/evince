@@ -11,7 +11,6 @@ libevview_la_LDFLAGS = -export-dynamic
 libevview_la_LIBADD = $(LIBVIEW_LIBS)
 
 NOINST_H_FILES =			\
-	ev-job-scheduler.h		\
 	ev-pixbuf-cache.h		\
 	ev-timeline.h			\
 	ev-transition-animation.h	\
@@ -21,6 +20,7 @@ NOINST_H_FILES =			\
 
 INST_H_FILES = 				\
 	ev-jobs.h			\
+	ev-job-scheduler.h		\
 	ev-page-cache.h			\
 	ev-view.h			\
 	ev-view-type-builtins.h
