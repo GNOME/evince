@@ -1767,10 +1767,10 @@ ev_view_form_field_text_create_widget (EvView      *view,
 				g_free (txt);
 			}
 
-			g_signal_connect (G_OBJECT (text), "changed",
+			g_signal_connect (text, "changed",
 					  G_CALLBACK (ev_view_form_field_text_changed),
 					  field);
-			g_signal_connect_after (G_OBJECT (text), "activate",
+			g_signal_connect_after (text, "activate",
 						G_CALLBACK (ev_view_form_field_destroy),
 						view);
 			break;
@@ -1785,7 +1785,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 				g_free (txt);
 			}
 			
-			g_signal_connect (G_OBJECT (buffer), "changed",
+			g_signal_connect (buffer, "changed",
 					  G_CALLBACK (ev_view_form_field_text_changed),
 					  field);
 		}
@@ -1959,10 +1959,10 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 		gtk_container_add (GTK_CONTAINER (choice), tree_view);
 		gtk_widget_show (tree_view);
 
-		g_signal_connect (G_OBJECT (selection), "changed",
+		g_signal_connect (selection, "changed",
 				  G_CALLBACK (ev_view_form_field_choice_changed),
 				  field);
-		g_signal_connect_after (G_OBJECT (selection), "changed",
+		g_signal_connect_after (selection, "changed",
 					G_CALLBACK (ev_view_form_field_destroy),
 					view);
 	} else if (field_choice->is_editable) { /* ComboBoxEntry */
@@ -1975,10 +1975,10 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 			g_free (text);
 		}
 
-		g_signal_connect (G_OBJECT (choice), "changed",
+		g_signal_connect (choice, "changed",
 				  G_CALLBACK (ev_view_form_field_choice_changed),
 				  field);
-		g_signal_connect_after (G_OBJECT (GTK_BIN (choice)->child), "activate",
+		g_signal_connect_after (GTK_BIN(choice)->child, "activate",
 					G_CALLBACK (ev_view_form_field_destroy),
 					view);
 	} else { /* ComboBoxText */
@@ -1995,10 +1995,10 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 		gtk_combo_box_set_active (GTK_COMBO_BOX (choice), selected_item);
 		gtk_combo_box_popup (GTK_COMBO_BOX (choice));
 		
-		g_signal_connect (G_OBJECT (choice), "changed",
+		g_signal_connect (choice, "changed",
 				  G_CALLBACK (ev_view_form_field_choice_changed),
 				  field);
-		g_signal_connect_after (G_OBJECT (choice), "changed",
+		g_signal_connect_after (choice, "changed",
 					G_CALLBACK (ev_view_form_field_destroy),
 					view);
 	}

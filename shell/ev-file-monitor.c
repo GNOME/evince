@@ -155,7 +155,7 @@ ev_file_monitor_new (const gchar *uri)
 	file = g_file_new_for_uri (uri);
 	ev_monitor->priv->monitor = g_file_monitor_file (file, G_FILE_MONITOR_NONE, NULL, &error);
 	if (ev_monitor->priv->monitor) {
-		g_signal_connect (G_OBJECT (ev_monitor->priv->monitor), "changed",
+		g_signal_connect (ev_monitor->priv->monitor, "changed",
 				  G_CALLBACK (ev_file_monitor_changed_cb), ev_monitor);
 	} else if (error) {
 		g_warning ("%s", error->message);

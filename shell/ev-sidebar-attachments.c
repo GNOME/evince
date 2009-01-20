@@ -567,7 +567,7 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 		      "text-column", COLUMN_NAME,
 		      "pixbuf-column", COLUMN_ICON,
 		      NULL);
-	g_signal_connect_swapped (G_OBJECT (ev_attachbar->priv->icon_view),
+	g_signal_connect_swapped (ev_attachbar->priv->icon_view,
 				  "button-press-event",
 				  G_CALLBACK (ev_sidebar_attachments_button_press),
 				  (gpointer) ev_attachbar);
@@ -605,7 +605,7 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 		GDK_ACTION_COPY);
 #endif
 
-	g_signal_connect (G_OBJECT (ev_attachbar->priv->icon_view),
+	g_signal_connect (ev_attachbar->priv->icon_view,
 			  "drag-data-get",
 			  G_CALLBACK (ev_sidebar_attachments_drag_data_get),
 			  (gpointer) ev_attachbar);	
@@ -665,7 +665,7 @@ ev_sidebar_attachments_set_document (EvSidebarPage   *page,
 
 		screen = gtk_widget_get_screen (GTK_WIDGET (ev_attachbar));
 		ev_attachbar->priv->icon_theme = gtk_icon_theme_get_for_screen (screen);
-		g_signal_connect_swapped (G_OBJECT (ev_attachbar->priv->icon_theme),
+		g_signal_connect_swapped (ev_attachbar->priv->icon_theme,
 					  "changed",
 					  G_CALLBACK (ev_sidebar_attachments_update_icons),
 					  (gpointer) ev_attachbar);

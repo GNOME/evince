@@ -1433,7 +1433,7 @@ ev_window_load_job_cb (EvJob *job,
 
 		/* Create a monitor for the document */
 		ev_window->priv->monitor = ev_file_monitor_new (ev_window->priv->uri);
-		g_signal_connect_swapped (G_OBJECT (ev_window->priv->monitor), "changed",
+		g_signal_connect_swapped (ev_window->priv->monitor, "changed",
 					  G_CALLBACK (ev_window_document_changed),
 					  ev_window);
 		
@@ -2332,7 +2332,7 @@ ev_window_setup_recent (EvWindow *ev_window)
 					gtk_recent_info_ref (info),
 					(GDestroyNotify) gtk_recent_info_unref);
 		
-		g_signal_connect (G_OBJECT (action), "activate",
+		g_signal_connect (action, "activate",
 				  G_CALLBACK (ev_window_cmd_recent_file_activate),
 				  (gpointer) ev_window);
 
@@ -2947,13 +2947,13 @@ ev_window_print_range (EvWindow *ev_window,
 		ev_window->priv->print_queue = g_queue_new ();
 
 	op = ev_print_operation_new (ev_window->priv->document);
-	g_signal_connect (G_OBJECT (op), "begin_print",
+	g_signal_connect (op, "begin_print",
 			  G_CALLBACK (ev_window_print_operation_begin_print),
 			  (gpointer)ev_window);
-	g_signal_connect (G_OBJECT (op), "status_changed",
+	g_signal_connect (op, "status_changed",
 			  G_CALLBACK (ev_window_print_operation_status_changed),
 			  (gpointer)ev_window);
-	g_signal_connect (G_OBJECT (op), "done",
+	g_signal_connect (op, "done",
 			  G_CALLBACK (ev_window_print_operation_done),
 			  (gpointer)ev_window);
 

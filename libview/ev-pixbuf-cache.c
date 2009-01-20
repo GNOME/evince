@@ -652,10 +652,10 @@ add_job (EvPixbufCache *pixbuf_cache,
 						  text, base);
 	}
 
-	g_signal_connect (G_OBJECT (job_info->job), "page-ready",
+	g_signal_connect (job_info->job, "page-ready",
 			  G_CALLBACK (job_page_ready_cb),
 			  pixbuf_cache);
-	g_signal_connect (G_OBJECT (job_info->job), "finished",
+	g_signal_connect (job_info->job, "finished",
 			  G_CALLBACK (job_finished_cb),
 			  pixbuf_cache);
 	ev_job_scheduler_push_job (job_info->job, priority);

@@ -398,7 +398,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 		gtk_widget_show (choice);
 	}
 
-	g_signal_connect (G_OBJECT (dialog), "response",
+	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_password_dialog_got_response),
 			  password_view);
 	

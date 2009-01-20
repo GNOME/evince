@@ -927,10 +927,10 @@ export_print_page (EvPrintOperationExport *export)
 	
 	if (!export->job_export) {
 		export->job_export = ev_job_export_new (op->document);
-		g_signal_connect (G_OBJECT (export->job_export), "finished",
+		g_signal_connect (export->job_export, "finished",
 				  G_CALLBACK (export_job_finished),
 				  (gpointer)export);
-		g_signal_connect (G_OBJECT (export->job_export), "cancelled",
+		g_signal_connect (export->job_export, "cancelled",
 				  G_CALLBACK (export_job_cancelled),
 				  (gpointer)export);
 	}
@@ -1151,7 +1151,7 @@ ev_print_operation_export_run (EvPrintOperation *op,
 		gtk_print_unix_dialog_set_page_setup (GTK_PRINT_UNIX_DIALOG (dialog),
 						      export->page_setup);
 	
-	g_signal_connect (G_OBJECT (dialog), "response",
+	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_print_operation_export_print_dialog_response_cb),
 			  export);
 

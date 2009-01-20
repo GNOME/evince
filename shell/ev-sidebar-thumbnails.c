@@ -593,11 +593,11 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (priv->swindow),
 					     GTK_SHADOW_IN);
 	priv->vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->swindow));
-	g_signal_connect_data (G_OBJECT (priv->vadjustment), "value-changed",
+	g_signal_connect_data (priv->vadjustment, "value-changed",
 			       G_CALLBACK (adjustment_changed_cb),
 			       ev_sidebar_thumbnails, NULL,
 			       G_CONNECT_SWAPPED | G_CONNECT_AFTER);
-	g_signal_connect_swapped (G_OBJECT (priv->swindow), "size-allocate",
+	g_signal_connect_swapped (priv->swindow, "size-allocate",
 				  G_CALLBACK (adjustment_changed_cb),
 				  ev_sidebar_thumbnails);
 	gtk_box_pack_start (GTK_BOX (ev_sidebar_thumbnails), priv->swindow, TRUE, TRUE, 0);

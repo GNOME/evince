@@ -117,7 +117,7 @@ ev_history_add_link (EvHistory *history, EvLink *link)
 							   history->priv->links);
 	}
 	
-	g_signal_emit (G_OBJECT (history), signals[HISTORY_CHANGED], 0);
+	g_signal_emit (history, signals[HISTORY_CHANGED], 0);
 }
 
 EvLink *

@@ -439,11 +439,11 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 					     NULL);
 	g_object_set (G_OBJECT (renderer), "style", PANGO_STYLE_ITALIC, NULL);
 
-	g_signal_connect (GTK_TREE_VIEW (priv->tree_view),
+	g_signal_connect (priv->tree_view,
 			  "button_press_event",
 			  G_CALLBACK (button_press_cb),
 			  ev_sidebar_links);
-	g_signal_connect (GTK_TREE_VIEW (priv->tree_view),
+	g_signal_connect (priv->tree_view,
 			  "popup_menu",
 			  G_CALLBACK (popup_menu_cb),
 			  ev_sidebar_links);
@@ -658,7 +658,7 @@ job_finished_callback (EvJobLinks     *job,
 						  sidebar_links);
 	if (priv->row_activated_id <= 0) {
 		priv->row_activated_id =
-			g_signal_connect (G_OBJECT (priv->tree_view), "row-activated",
+			g_signal_connect (priv->tree_view, "row-activated",
 					  G_CALLBACK (row_activated_callback),
 					  sidebar_links);
 	}
