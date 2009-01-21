@@ -1,4 +1,5 @@
 INCLUDES=						\
+	-DG_LOG_DOMAIN=\"EvDocument\"			\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DEV_BACKENDSDIR=\"$(libdir)/evince/backends\"	\
@@ -8,7 +9,11 @@ INCLUDES=						\
 
 lib_LTLIBRARIES = libevbackend.la
 
-libevbackend_la_LDFLAGS = -export-dynamic
+libevbackend_la_LDFLAGS = \
+	-version-info $(EV_BACKEND_LT_VERSION_INFO)	\
+	-export-symbols-regex "^ev_*"	\
+	$(AM_LDFLAGS)
+
 libevbackend_la_LIBADD = $(LIBDOCUMENT_LIBS)
 
 NOINST_H_FILES =				\

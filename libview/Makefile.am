@@ -1,4 +1,5 @@
 INCLUDES=					\
+	-DG_LOG_DOMAIN=\"EvView\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-I$(top_srcdir)/libdocument		\
 	$(LIBVIEW_CFLAGS)			\
@@ -7,7 +8,11 @@ INCLUDES=					\
 
 lib_LTLIBRARIES = libevview.la
 
-libevview_la_LDFLAGS = -export-dynamic
+libevview_la_LDFLAGS = \
+	-version-info $(EV_VIEW_LT_VERSION_INFO)	\
+	-export-symbols-regex "^ev_*"	\
+	$(AM_LDFLAGS)
+
 libevview_la_LIBADD = $(LIBVIEW_LIBS)
 
 NOINST_H_FILES =			\
@@ -25,7 +30,7 @@ INST_H_FILES = 				\
 	ev-view.h			\
 	ev-view-type-builtins.h
 
-headerdir = $(prefix)/include/evince/@EV_API_VERSION@/ev-view
+headerdir = $(includedir)/evince/$(EV_API_VERSION)/ev-view
 header_DATA = $(INST_H_FILES)
 
 libevview_la_SOURCES = 			\
@@ -51,11 +56,11 @@ BUILT_SOURCES = 			\
 CLEANFILES = $(BUILT_SOURCES) stamp-ev-view-type-builtins.h
 
 ev-view-marshal.h: $(srcdir)/ev-view-marshal.list
-	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header > $@
+	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal > $@
 
 ev-view-marshal.c: $(srcdir)/ev-view-marshal.list
-	echo '#include "ev-view-marshal.h"' > ev-view-marshal.c
-	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --body >> $@
+	echo '#include <config.h>' > ev-view-marshal.c
+	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal --body >> $@
 
 ev-view-type-builtins.h: stamp-ev-view-type-builtins.h
 	@true

@@ -1,4 +1,6 @@
-dnl Process this file with autoconf to produce a configure script.
+# *****************************************************************************
+# Versioning
+# *****************************************************************************
 
 m4_define([ev_major_version],[2])
 m4_define([ev_minor_version],[25])
@@ -8,6 +10,31 @@ m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_e
 
 # The evince API version
 m4_define([ev_api_version], [2.25])
+
+# Libtool versioning. The backend and view libraries have separate versions.
+# Before making a release, the libtool version should be modified.
+# The string is of the form C:R:A.
+# - If interfaces have been changed or added, but binary compatibility has
+#   been preserved, change to C+1:0:A+1
+# - If binary compatibility has been broken (eg removed or changed interfaces)
+#   change to C+1:0:0
+# - If the interface is the same as the previous version, change to C:R+1:A
+
+# Libtool version of the backend library
+m4_define([ev_backend_lt_current],[1])
+m4_define([ev_backend_lt_revision],[0])
+m4_define([ev_backend_lt_age],[0])
+m4_define([ev_backend_lt_version_info],[ev_backend_lt_current:ev_backend_lt_revision:ev_backend_lt_age])
+m4_define([ev_backend_lt_current_minus_age],[m4_eval(ev_backend_lt_current - ev_backend_lt_age)])
+
+# Libtool version of the view library
+m4_define([ev_view_lt_current],[1])
+m4_define([ev_view_lt_revision],[0])
+m4_define([ev_view_lt_age],[0])
+m4_define([ev_view_lt_version_info],[ev_view_lt_current:ev_view_lt_revision:ev_view_lt_age])
+m4_define([ev_view_lt_current_minus_age],[m4_eval(ev_view_lt_current - ev_view_lt_age)])
+
+# *****************************************************************************
 
 AC_PREREQ([2.57])
 AC_INIT([Evince],[ev_version],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
@@ -428,6 +455,11 @@ AC_SUBST([EV_MINOR_VERSION],[ev_minor_version])
 AC_SUBST([EV_MICRO_VERSION],[ev_micro_version])
 
 AC_SUBST([EV_API_VERSION],[ev_api_version])
+
+AC_SUBST([EV_BACKEND_LT_VERSION_INFO],[ev_backend_lt_version_info])
+AC_SUBST([EV_BACKEND_LT_CURRENT_MINUS_AGE],[ev_backend_lt_current_minus_age])
+AC_SUBST([EV_VIEW_LT_VERSION_INFO],[ev_view_lt_version_info])
+AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
 
 # *****************************************************************************
 
