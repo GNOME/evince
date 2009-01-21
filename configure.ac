@@ -54,6 +54,8 @@ DBUS_GLIB_REQUIRED=0.70
 GTK_REQUIRED=2.12.0
 GLIB_REQUIRED=2.18.0
 KEYRING_REQUIRED=2.22.0
+AC_SUBST([GLIB_REQUIRED])
+AC_SUBST([GTK_REQUIRED])
 
 GNOME_ICON_THEME_REQUIRED=2.17.1
 LIBXML_REQUIRED=2.5.0
@@ -480,6 +482,9 @@ shell/Makefile
 test/Makefile
 thumbnailer/Makefile
 ])
+
+AC_CONFIG_FILES(evince-backend-[]ev_api_version[].pc:evince-backend.pc.in)
+AC_CONFIG_FILES(evince-view-[]ev_api_version[].pc:evince-view.pc.in)
 
 AC_OUTPUT
 

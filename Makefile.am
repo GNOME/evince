@@ -14,6 +14,11 @@ if ENABLE_THUMBNAILER
 SUBDIRS += thumbnailer
 endif
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = \
+	evince-backend-$(EV_API_VERSION).pc \
+	evince-view-$(EV_API_VERSION).pc
+
 # Applications 
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
