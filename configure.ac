@@ -1,11 +1,17 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.57)
-AC_INIT([Evince],[2.25.5],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
-AM_INIT_AUTOMAKE([1.9 dist-bzip2 no-dist-gzip])
+m4_define([ev_major_version],[2])
+m4_define([ev_minor_version],[25])
+m4_define([ev_micro_version],[5])
+m4_define([ev_extra_version],[])
+m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
-EV_API_VERSION=2.25
-AC_SUBST(EV_API_VERSION)
+# The evince API version
+m4_define([ev_api_version], [2.25])
+
+AC_PREREQ([2.57])
+AC_INIT([Evince],[ev_version],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
+AM_INIT_AUTOMAKE([1.9 dist-bzip2 no-dist-gzip])
 
 AM_CONFIG_HEADER(config.h)
 
@@ -413,6 +419,16 @@ AC_SUBST(EVINCE_MIME_TYPES)
 
 AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_r is available on your system]))
 
+# Versioning
+
+AC_SUBST([EV_MAJOR_VERSION],[ev_major_version])
+AC_SUBST([EV_MINOR_VERSION],[ev_minor_version])
+AC_SUBST([EV_MICRO_VERSION],[ev_micro_version])
+
+AC_SUBST([EV_API_VERSION],[ev_api_version])
+
+# *****************************************************************************
+
 AC_CONFIG_FILES([
 backend/Makefile
 backend/comics/Makefile
@@ -455,6 +471,7 @@ help/Makefile
 help/reference/Makefile
 help/reference/version.xml
 libdocument/Makefile
+libdocument/ev-version.h
 libview/Makefile
 Makefile
 po/Makefile.in
