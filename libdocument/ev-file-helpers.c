@@ -221,6 +221,9 @@ ev_xfer_uri_simple (const char *from,
 	target_file = g_file_new_for_uri (to);
 	
 	result = g_file_copy (source_file, target_file,
+#if GLIB_CHECK_VERSION(2,19,0)
+			      G_FILE_COPY_TARGET_DEFAULT_PERMS |
+#endif
 			      G_FILE_COPY_OVERWRITE,
 			      NULL, NULL, NULL, &ioerror);
 
