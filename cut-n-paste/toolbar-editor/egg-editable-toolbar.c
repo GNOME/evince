@@ -200,7 +200,7 @@ drag_begin_cb (GtkWidget          *widget,
   
   gtk_widget_hide (widget);
 
-  action = g_object_get_data (G_OBJECT (widget), "gtk-action");
+  action = gtk_widget_get_action (widget);
   if (action == NULL) return;
   
   flags = egg_toolbars_model_get_name_flags (etoolbar->priv->model,
@@ -226,7 +226,7 @@ drag_end_cb (GtkWidget          *widget,
     {
       gtk_widget_show (widget);
 
-      action = g_object_get_data (G_OBJECT (widget), "gtk-action");
+      action = gtk_widget_get_action (widget);
       if (action == NULL) return;
       
       flags = egg_toolbars_model_get_name_flags (etoolbar->priv->model,
@@ -497,8 +497,7 @@ configure_item_cursor (GtkToolItem *item,
 static void
 configure_item_tooltip (GtkToolItem *item)
 {
-  GtkAction *action = g_object_get_data (G_OBJECT (item),
-					 "gtk-action");
+  GtkAction *action = gtk_widget_get_action (GTK_WIDGET (item));
   
   if (action != NULL)
     {
@@ -1808,7 +1807,7 @@ new_pixbuf_from_widget (GtkWidget *widget)
 }
 
 static GdkPixbuf *
-new_separator_pixbuf ()
+new_separator_pixbuf (void)
 {
   GtkWidget *separator;
   GdkPixbuf *pixbuf;
