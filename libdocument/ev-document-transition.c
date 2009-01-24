@@ -21,24 +21,11 @@
 #include <config.h>
 #include "ev-document-transition.h"
 
-GType
-ev_document_transition_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentTransition, ev_document_transition, 0)
+
+static void
+ev_document_transition_class_init (EvDocumentTransitionIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		const GTypeInfo our_info = {
-			sizeof (EvDocumentTransitionIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentTransition",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 gdouble

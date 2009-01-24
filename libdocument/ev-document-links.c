@@ -25,24 +25,11 @@
 
 #include "ev-document-links.h"
 
-GType
-ev_document_links_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentLinks, ev_document_links, 0)
+
+static void
+ev_document_links_class_init (EvDocumentLinksIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		const GTypeInfo our_info = {
-			sizeof (EvDocumentLinksIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentLinks",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 gboolean

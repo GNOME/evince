@@ -25,26 +25,11 @@
 
 #include "ev-document-security.h"
 
-GType
-ev_document_security_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentSecurity, ev_document_security, 0)
+
+static void
+ev_document_security_class_init (EvDocumentSecurityIface *klass)
 {
-	static GType type = 0;
-	
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvDocumentSecurityIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentSecurity",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 gboolean

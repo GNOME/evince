@@ -22,26 +22,13 @@
 
 #include <config.h>
 #include "ev-file-exporter.h"
+#include "ev-document.h"
 
-GType
-ev_file_exporter_get_type (void)
+EV_DEFINE_INTERFACE (EvFileExporter, ev_file_exporter, 0)
+
+static void
+ev_file_exporter_class_init (EvFileExporterIface *klass)
 {
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                const GTypeInfo our_info =
-                {
-                        sizeof (EvFileExporterIface),
-                        NULL,
-                        NULL,
-                };
-
-                type = g_type_register_static (G_TYPE_INTERFACE,
-                                               "EvFileExporter",
-                                               &our_info, (GTypeFlags)0);
-        }
-
-        return type;
 }
 
 void

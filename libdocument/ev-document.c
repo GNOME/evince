@@ -22,36 +22,10 @@
 
 #include "ev-document.h"
 
-static void ev_document_class_init (gpointer g_class);
-
-
 GMutex *ev_doc_mutex = NULL;
 GMutex *ev_fc_mutex = NULL;
 
-GType
-ev_document_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvDocumentIface),
-			NULL,
-			NULL,
-			(GClassInitFunc)ev_document_class_init
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocument",
-					       &our_info, (GTypeFlags)0);
-		
-		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
-	}
-
-	return type;
-}
+EV_DEFINE_INTERFACE (EvDocument, ev_document, G_TYPE_OBJECT)
 
 GQuark
 ev_document_error_quark (void)
@@ -64,7 +38,7 @@ ev_document_error_quark (void)
 }
 
 static void
-ev_document_class_init (gpointer g_class)
+ev_document_class_init (EvDocumentIface *klass)
 {
 }
 

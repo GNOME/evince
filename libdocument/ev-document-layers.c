@@ -21,25 +21,13 @@
 #include "config.h"
 
 #include "ev-document-layers.h"
+#include "ev-document.h"
 
-GType
-ev_document_layers_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentLayers, ev_document_layers, 0)
+
+static void
+ev_document_layers_class_init (EvDocumentLayersIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		const GTypeInfo our_info = {
-			sizeof (EvDocumentLayersIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentLayers",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 gboolean

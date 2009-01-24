@@ -21,8 +21,7 @@
 #include "config.h"
 
 #include "ev-async-renderer.h"
-
-static void ev_async_renderer_class_init (gpointer g_class);
+#include "ev-document.h"
 
 enum
 {
@@ -32,42 +31,26 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-GType
-ev_async_renderer_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvAsyncRendererIface),
-			NULL,
-			NULL,
-			(GClassInitFunc)ev_async_renderer_class_init
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvAsyncRenderer",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
-}
+EV_DEFINE_INTERFACE (EvAsyncRenderer, ev_async_renderer, 0)
 
 static void
-ev_async_renderer_class_init (gpointer g_class)
+ev_async_renderer_class_init (EvAsyncRendererIface *klass)
 {
-	signals[RENDER_FINISHED] =
-		g_signal_new ("render_finished",
-			      EV_TYPE_ASYNC_RENDERER,
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvAsyncRendererIface, render_finished),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__OBJECT,
-			      G_TYPE_NONE,
-			      1,
-			      GDK_TYPE_PIXBUF);
+	static gboolean initialized = FALSE;
+
+	if (!initialized) {
+		signals[RENDER_FINISHED] =
+			g_signal_new ("render_finished",
+				      EV_TYPE_ASYNC_RENDERER,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (EvAsyncRendererIface, render_finished),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__OBJECT,
+				      G_TYPE_NONE,
+				      1,
+				      GDK_TYPE_PIXBUF);
+		initialized = TRUE;
+	}
 }
 
 void

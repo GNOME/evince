@@ -25,26 +25,11 @@
 
 #include "ev-document-fonts.h"
 
-GType
-ev_document_fonts_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentFonts, ev_document_fonts, 0)
+
+static void
+ev_document_fonts_class_init (EvDocumentFontsIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvDocumentFontsIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentFonts",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 double

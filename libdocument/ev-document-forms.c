@@ -21,24 +21,11 @@
 #include <config.h>
 #include "ev-document-forms.h"
 
-GType
-ev_document_forms_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentForms, ev_document_forms, 0)
+
+static void
+ev_document_forms_class_init (EvDocumentFormsIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		const GTypeInfo our_info = {
-			sizeof (EvDocumentFormsIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentForms",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 GList *

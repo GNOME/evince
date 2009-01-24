@@ -234,8 +234,38 @@ type_name##_get_type (void)                                                     
 	}                                                                             \
 	return g_define_type_id__volatile;                                            \
 }
- 
 
+/* A convenience macro for GTypeInterface definitions, which declares
+ * a default vtable initialization function and defines a *_get_type()
+ * function.
+ *
+ * The macro expects the interface initialization function to have the
+ * name <literal>t_n ## _default_init</literal>, and the interface
+ * structure to have the name <literal>TN ## Interface</literal>.
+ */
+#define EV_DEFINE_INTERFACE(TypeName, type_name, TYPE_PREREQ)	                             \
+static void     type_name##_class_init        (TypeName##Iface *klass);                      \
+                                                                                             \
+GType                                                                                        \
+type_name##_get_type (void)                                                                  \
+{                                                                                            \
+        static volatile gsize g_define_type_id__volatile = 0;                                \
+	if (g_once_init_enter (&g_define_type_id__volatile)) {                               \
+		GType g_define_type_id =                                                     \
+		    g_type_register_static_simple (G_TYPE_INTERFACE,                         \
+		                                   g_intern_static_string (#TypeName),       \
+		                                   sizeof (TypeName##Iface),                 \
+		                                   (GClassInitFunc)type_name##_class_init,   \
+		                                   0,                                        \
+		                                   (GInstanceInitFunc)NULL,                  \
+						   (GTypeFlags) 0);                          \
+		if (TYPE_PREREQ)                                                             \
+			g_type_interface_add_prerequisite (g_define_type_id, TYPE_PREREQ);   \
+		g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);           \
+	}                                                                                    \
+	return g_define_type_id__volatile;                                                   \
+}
+		
 G_END_DECLS
 
 #endif /* EV_DOCUMENT_H */

@@ -22,26 +22,11 @@
 
 #include "ev-document-find.h"
 
-GType
-ev_document_find_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentFind, ev_document_find, 0)
+
+static void
+ev_document_find_class_init (EvDocumentFindIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvDocumentFindIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentFind",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 GList *

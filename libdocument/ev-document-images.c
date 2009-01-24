@@ -21,24 +21,11 @@
 #include <config.h>
 #include "ev-document-images.h"
 
-GType
-ev_document_images_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentImages, ev_document_images, 0)
+
+static void
+ev_document_images_class_init (EvDocumentImagesIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		const GTypeInfo our_info = {
-			sizeof (EvDocumentImagesIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentImages",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 GList *

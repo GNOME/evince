@@ -1,5 +1,28 @@
 2009-01-24  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* libdocument/ev-document.h:
+
+	Add EV_DEFINE_INTERFACE macro.
+	
+	* libdocument/ev-async-renderer.c:
+	* libdocument/ev-document-find.c:
+	* libdocument/ev-document-fonts.c:
+	* libdocument/ev-document-forms.c:
+	* libdocument/ev-document-images.c:
+	* libdocument/ev-document-layers.c:
+	* libdocument/ev-document-links.c:
+	* libdocument/ev-document-security.c:
+	* libdocument/ev-document-thumbnails.c:
+	* libdocument/ev-document-transition.c:
+	* libdocument/ev-document.c:
+	* libdocument/ev-file-exporter.c:
+	* libdocument/ev-selection.c:
+
+	Use EV_DEFINE_INTERFACE macro to define interfaces in
+	libdocument. See bug #568228.
+	
+2009-01-24  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-document.[ch]:
 
 	Add EV_DEFINE_BOXED_TYPE macro to define boxed types. See bug

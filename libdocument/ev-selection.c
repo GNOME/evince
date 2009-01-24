@@ -22,39 +22,12 @@
 
 #include "ev-selection.h"
 
-static void ev_selection_base_init (gpointer g_class);
-
-GType
-ev_selection_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvSelectionIface),
-			ev_selection_base_init,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvSelection",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
-}
+EV_DEFINE_INTERFACE (EvSelection, ev_selection, 0)
 
 static void
-ev_selection_base_init (gpointer g_class)
+ev_selection_class_init (EvSelectionIface *klass)
 {
-	static gboolean initialized = FALSE;
-
-	if (!initialized) {
-	}
 }
-
 
 void
 ev_selection_render_selection (EvSelection      *selection,

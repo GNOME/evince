@@ -20,27 +20,13 @@
 
 #include <config.h>
 #include "ev-document-thumbnails.h"
+#include "ev-document.h"
 
-GType
-ev_document_thumbnails_get_type (void)
+EV_DEFINE_INTERFACE (EvDocumentThumbnails, ev_document_thumbnails, 0)
+
+static void
+ev_document_thumbnails_class_init (EvDocumentThumbnailsIface *klass)
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-		{
-			sizeof (EvDocumentThumbnailsIface),
-			NULL,
-			NULL,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvDocumentThumbnails",
-					       &our_info, (GTypeFlags)0);
-	}
-
-	return type;
 }
 
 GdkPixbuf *
