@@ -26,35 +26,11 @@
 
 #include "ev-sidebar-page.h"
 
-static void ev_sidebar_page_iface_init (gpointer iface);
-
-GType
-ev_sidebar_page_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo sidebar_page_info =
-		{
-			sizeof (EvSidebarPageIface),
-			NULL,
-			NULL,
-			(GClassInitFunc)ev_sidebar_page_iface_init,
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE,
-					       "EvSidebarPage",
-					       &sidebar_page_info, (GTypeFlags)0);
-	}
-
-	return type;
-}
-
+EV_DEFINE_INTERFACE (EvSidebarPage, ev_sidebar_page, 0)
 
 gboolean 
-ev_sidebar_page_support_document  (EvSidebarPage    *sidebar_page,
-    		            	   EvDocument *document)
+ev_sidebar_page_support_document (EvSidebarPage *sidebar_page,
+				  EvDocument    *document)
 {
         EvSidebarPageIface *iface;
 
@@ -69,8 +45,8 @@ ev_sidebar_page_support_document  (EvSidebarPage    *sidebar_page,
 }
 
 void 
-ev_sidebar_page_set_document      (EvSidebarPage    *sidebar_page,
-		                   EvDocument *document)
+ev_sidebar_page_set_document (EvSidebarPage *sidebar_page,
+			      EvDocument    *document)
 {
 	EvSidebarPageIface *iface;
 
@@ -79,15 +55,13 @@ ev_sidebar_page_set_document      (EvSidebarPage    *sidebar_page,
 
 	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
 
-	g_return_if_fail (iface->set_document);
+	g_assert (iface->set_document);
 	
 	iface->set_document (sidebar_page, document);
-	
-	return;
 }
 
-const gchar*
-ev_sidebar_page_get_label (EvSidebarPage    *sidebar_page)
+const gchar *
+ev_sidebar_page_get_label (EvSidebarPage *sidebar_page)
 {
 	EvSidebarPageIface *iface;
 
@@ -95,18 +69,24 @@ ev_sidebar_page_get_label (EvSidebarPage    *sidebar_page)
 
 	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
 
-	g_return_val_if_fail (iface->get_label, NULL);
+	g_assert (iface->get_label);
 	
 	return iface->get_label (sidebar_page);
 }
 
 
-static void ev_sidebar_page_iface_init (gpointer         iface)
+static void
+ev_sidebar_page_class_init (EvSidebarPageIface *iface)
 {
-	g_object_interface_install_property (iface,
-					     g_param_spec_object ("main-widget",
-					  		          "Main Widget",
-							          "Main page widget, used to handle focus",
-							          GTK_TYPE_WIDGET,
-							          G_PARAM_READABLE));
+	static gboolean initialized = FALSE;
+ 
+	if (!initialized) {
+		g_object_interface_install_property (iface,
+						     g_param_spec_object ("main-widget",
+									  "Main Widget",
+									  "Main page widget, used to handle focus",
+									  GTK_TYPE_WIDGET,
+									  G_PARAM_READABLE));
+		initialized = TRUE;
+	}
 }
