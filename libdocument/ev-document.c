@@ -244,16 +244,7 @@ ev_document_render (EvDocument      *document,
 }
 
 /* EvDocumentInfo */
-GType
-ev_document_info_get_type (void)
-{
-	static GType type = 0;
-	if (type == 0)
-		type = g_boxed_type_register_static ("EvDocumentInfo",
-						     (GBoxedCopyFunc)ev_document_info_copy,
-						     (GBoxedFreeFunc)ev_document_info_free);
-	return type;
-}
+EV_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev_document_info_free)
 
 EvDocumentInfo *
 ev_document_info_copy (EvDocumentInfo *info)

@@ -1,3 +1,10 @@
+2009-01-24  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libdocument/ev-document.[ch]:
+
+	Add EV_DEFINE_BOXED_TYPE macro to define boxed types. See bug
+	#568228.
+	
 2009-01-24  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* cut-n-paste/toolbar-editor/egg-editable-toolbar.c
@@ -19,7 +26,7 @@
 	respecting umask and any setgid bit on the directory. Uses the new
 	G_FILE_COPY_TARGET_DEFAULT_PERMS flag in glib 2.19.0, if available.
 	Bug #568593.
-
+	
 2009-01-21  Christian Persch  <chpe@gnome.org>
 
 	* configure.ac:
