@@ -77,7 +77,7 @@ libevdocument_la_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"EvDocument\"			\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
-	-DEV_BACKENDSDIR=\"$(libdir)/evince/backends\"	\
+	-DEV_BACKENDSDIR=\"$(backenddir)\"		\
 	-DEVINCE_COMPILATION				\
 	$(AM_CPPFLAGS)
 

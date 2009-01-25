@@ -34,6 +34,9 @@ m4_define([ev_view_lt_age],[0])
 m4_define([ev_view_lt_version_info],[ev_view_lt_current:ev_view_lt_revision:ev_view_lt_age])
 m4_define([ev_view_lt_current_minus_age],[m4_eval(ev_view_lt_current - ev_view_lt_age)])
 
+# Binary version for the document backends
+m4_define([ev_binary_version],[ev_document_lt_current])
+
 # *****************************************************************************
 
 AC_PREREQ([2.57])
@@ -449,6 +452,10 @@ AC_SUBST(EVINCE_MIME_TYPES)
 
 AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_r is available on your system]))
 
+# Backends directory
+
+AC_SUBST([backenddir],"\$(libdir)/evince/ev_binary_version/backends")
+
 # Versioning
 
 AC_SUBST([EV_MAJOR_VERSION],[ev_major_version])
@@ -456,6 +463,7 @@ AC_SUBST([EV_MINOR_VERSION],[ev_minor_version])
 AC_SUBST([EV_MICRO_VERSION],[ev_micro_version])
 
 AC_SUBST([EV_API_VERSION],[ev_api_version])
+AC_SUBST([EV_BINARY_VERSION],[ev_binary_version])
 
 AC_SUBST([EV_DOCUMENT_LT_VERSION_INFO],[ev_document_lt_version_info])
 AC_SUBST([EV_DOCUMENT_LT_CURRENT_MINUS_AGE],[ev_document_lt_current_minus_age])

@@ -1,5 +1,15 @@
 2009-01-25  Christian Persch  <chpe@gnome.org>
 
+        Bug 569082 – use versioned directory for backends
+
+        * configure.ac: Define ev_binary_version and backenddir.
+        * evince-document.pc.in: Add backenddir variable.
+        * libdocument/Makefile.am:
+        * backend/*/Makefile.am: Remove backenddir definition, so it picks
+        up the one from configure.
+
+2009-01-25  Christian Persch  <chpe@gnome.org>
+
         * configure.ac:
         * evince-document.pc.in: Renamed from evince-backend.pc.in.
         * libdocument/Makefile.am: Renamed library to libevdocument.la.

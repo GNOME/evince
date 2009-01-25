@@ -1,7 +1,5 @@
 SUBDIRS = mdvi-lib
 
-backenddir = $(libdir)/evince/backends
-
 INCLUDES = 					\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
