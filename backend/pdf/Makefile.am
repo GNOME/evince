@@ -4,6 +4,7 @@ INCLUDES =					\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"  \
+	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)			\
 	$(POPPLER_CFLAGS)                       \
 	$(WARN_CXXFLAGS)			\
@@ -17,7 +18,7 @@ libpdfdocument_la_SOURCES =			\
 
 libpdfdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libpdfdocument_la_LIBADD =				\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(BACKEND_LIBS)					\
 	$(POPPLER_LIBS)					\
 	$(CAIRO_PDF_LIBS)				\

@@ -5,6 +5,7 @@ INCLUDES =					\
 	-I$(top_srcdir)/libdocument		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DDATADIR=\""$(datadir)"\"		\
+	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)
@@ -43,7 +44,7 @@ IMPOSTER_RENDER_INCLUDE_FILES =		\
 
 libimpressdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libimpressdocument_la_LIBADD =				\
-	$(top_builddir)/libdocument/libevbackend.la     \
+	$(top_builddir)/libdocument/libevdocument.la     \
 	$(BACKEND_LIBS)
 
 backend_in_files = impressdocument.evince-backend.in

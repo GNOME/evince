@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 
-#include "ev-document-info.h"
+#include <evince-document.h>
 
 G_BEGIN_DECLS
 

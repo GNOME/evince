@@ -5,6 +5,7 @@ INCLUDES = \
 	-I$(top_srcdir)/libdocument				\
 	-DGNOMEICONDIR=\""${prefix}/${DATADIRNAME}/pixmaps"\" 	\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
+	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)					\
 	$(DJVU_CFLAGS)						\
 	$(WARN_CFLAGS)						\
@@ -23,7 +24,7 @@ libdjvudocument_la_SOURCES = 	\
 
 libdjvudocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libdjvudocument_la_LIBADD =				\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(BACKEND_LIBS)					\
 	$(DJVU_LIBS)
 

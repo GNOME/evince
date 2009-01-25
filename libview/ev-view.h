@@ -17,22 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-view.h> can be included directly."
+#endif
+
 #ifndef __EV_VIEW_H__
 #define __EV_VIEW_H__
 
 #include <gtk/gtk.h>
 
-#include "ev-document.h"
-#include "ev-link.h"
+#include <evince-document.h>
 
 G_BEGIN_DECLS
 
 #define EV_TYPE_VIEW            (ev_view_get_type ())
 #define EV_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW, EvView))
 #define EV_IS_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW))
-
-#define EV_TYPE_SIZING_MODE     (ev_sizing_mode_get_type())
-#define EV_SIZING_MODE_CLASS    (g_type_class_peek (EV_TYPE_SIZING_MODE))
 
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
@@ -50,7 +50,6 @@ typedef enum {
 } EvViewSelectionMode;
 
 GType		ev_view_get_type	  (void) G_GNUC_CONST;
-GType           ev_sizing_mode_get_type   (void) G_GNUC_CONST;
 
 GtkWidget*	ev_view_new		  (void);
 void		ev_view_set_document	  (EvView         *view,

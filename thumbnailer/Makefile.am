@@ -1,21 +1,26 @@
 @INTLTOOL_SCHEMAS_RULE@
 
-INCLUDES=					\
-	-DDATADIR=\"$(pkgdatadir)\"		\
-	-I$(top_srcdir)/libdocument		\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
-	$(FRONTEND_CFLAGS)			\
-	$(DISABLE_DEPRECATED)			\
-	$(WARN_CFLAGS)
+bin_PROGRAMS = evince-thumbnailer
 
-bin_PROGRAMS=evince-thumbnailer
-
-evince_thumbnailer_SOURCES=	\
+evince_thumbnailer_SOURCES = \
 	evince-thumbnailer.c
 
-evince_thumbnailer_LDADD=		\
-	$(top_builddir)/libdocument/libevbackend.la	\
+evince_thumbnailer_CPPFLAGS = \
+	-DDATADIR=\"$(pkgdatadir)\"		\
+	-I$(top_srcdir)				\
+	-I$(top_builddir)			\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
+	$(AM_CPPFLAGS)
+
+evince_thumbnailer_CFLAGS = \
+	$(FRONTEND_CFLAGS)	\
+	$(DISABLE_DEPRECATED)	\
+	$(WARN_CFLAGS)		\
+	$(AM_CFLAGS)
+
+evince_thumbnailer_LDADD = \
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(FRONTEND_LIBS)
 
 schema_files = \

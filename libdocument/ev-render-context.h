@@ -17,6 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-document.h> can be included directly."
+#endif
+
 #ifndef EV_RENDER_CONTEXT_H
 #define EV_RENDER_CONTEXT_H
 

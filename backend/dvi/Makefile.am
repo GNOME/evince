@@ -7,6 +7,7 @@ INCLUDES = 					\
 	-I$(top_srcdir)/libdocument		\
 	-I$(srcdir)/mdvi-lib			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DEVINCE_COMPILATION			\
 	$(WARN_CFLAGS)				\
 	$(BACKEND_CFLAGS)			\
 	$(SPECTRE_CFLAGS)			\
@@ -26,7 +27,7 @@ libdvidocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libdvidocument_la_LIBADD = 				\
 	mdvi-lib/libmdvi.la				\
 	-lkpathsea					\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(BACKEND_LIBS)					\
 	$(SPECTRE_LIBS)
 

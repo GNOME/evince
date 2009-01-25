@@ -18,7 +18,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include "ev-transition-effect.h"
+
+#include "ev-document-type-builtins.h"
 
 #define EV_TRANSITION_EFFECT_GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_TRANSITION_EFFECT, EvTransitionEffectPrivate))
 
@@ -48,71 +52,6 @@ enum {
 };
 
 G_DEFINE_TYPE (EvTransitionEffect, ev_transition_effect, G_TYPE_OBJECT)
-
-
-GType
-ev_transition_effect_type_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GEnumValue values[] = {
-			{ EV_TRANSITION_EFFECT_REPLACE, "EV_TRANSITION_EFFECT_REPLACE", "replace" },
-			{ EV_TRANSITION_EFFECT_SPLIT, "EV_TRANSITION_EFFECT_SPLIT", "split" },
-			{ EV_TRANSITION_EFFECT_BLINDS, "EV_TRANSITION_EFFECT_BLINDS", "blinds" },
-			{ EV_TRANSITION_EFFECT_BOX, "EV_TRANSITION_EFFECT_BOX", "box" },
-			{ EV_TRANSITION_EFFECT_WIPE, "EV_TRANSITION_EFFECT_WIPE", "wipe" },
-			{ EV_TRANSITION_EFFECT_DISSOLVE, "EV_TRANSITION_EFFECT_DISSOLVE", "dissolve" },
-			{ EV_TRANSITION_EFFECT_GLITTER, "EV_TRANSITION_EFFECT_GLITTER", "glitter" },
-			{ EV_TRANSITION_EFFECT_FLY, "EV_TRANSITION_EFFECT_FLY", "fly" },
-			{ EV_TRANSITION_EFFECT_PUSH, "EV_TRANSITION_EFFECT_PUSH", "push" },
-			{ EV_TRANSITION_EFFECT_COVER, "EV_TRANSITION_EFFECT_COVER", "cover" },
-			{ EV_TRANSITION_EFFECT_UNCOVER, "EV_TRANSITION_EFFECT_UNCOVER", "uncover" },
-			{ EV_TRANSITION_EFFECT_FADE, "EV_TRANSITION_EFFECT_FADE", "fade" },
-			{ 0, NULL, NULL }
-		};
-
-		type = g_enum_register_static ("EvTransitionEffectType", values);
-	}
-
-	return type;
-}
-
-GType
-ev_transition_effect_alignment_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GEnumValue values[] = {
-			{ EV_TRANSITION_ALIGNMENT_HORIZONTAL, "EV_TRANSITION_ALIGNMENT_HORIZONTAL", "horizontal" },
-			{ EV_TRANSITION_ALIGNMENT_VERTICAL, "EV_TRANSITION_ALIGNMENT_VERTICAL", "vertical" },
-			{ 0, NULL, NULL }
-		};
-
-		type = g_enum_register_static ("EvTransitionEffectAlignment", values);
-	}
-
-	return type;
-}
-
-GType
-ev_transition_effect_direction_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GEnumValue values[] = {
-			{ EV_TRANSITION_DIRECTION_INWARD, "EV_TRANSITION_DIRECTION_INWARD", "inward" },
-			{ EV_TRANSITION_DIRECTION_OUTWARD, "EV_TRANSITION_DIRECTION_OUTWARD", "outward" },
-			{ 0, NULL, NULL }
-		};
-
-		type = g_enum_register_static ("EvTransitionEffectDirection", values);
-	}
-
-	return type;
-}
 
 static void
 ev_transition_effect_set_property (GObject	*object,

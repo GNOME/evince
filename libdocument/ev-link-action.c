@@ -20,6 +20,7 @@
 
 #include <config.h>
 #include "ev-link-action.h"
+#include "ev-document-type-builtins.h"
 
 enum {
 	PROP_0,
@@ -54,27 +55,6 @@ G_DEFINE_TYPE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
 
 #define EV_LINK_ACTION_GET_PRIVATE(object) \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_LINK_ACTION, EvLinkActionPrivate))
-
-GType
-ev_link_action_type_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GEnumValue values[] = {
-			{ EV_LINK_ACTION_TYPE_GOTO_DEST, "EV_LINK_ACTION_TYPE_GOTO_DEST", "goto-dest" },
-			{ EV_LINK_ACTION_TYPE_GOTO_REMOTE, "EV_LINK_ACTION_TYPE_GOTO_REMOTE", "goto-remote" },
-			{ EV_LINK_ACTION_TYPE_LAUNCH, "EV_LINK_ACTION_TYPE_LAUNCH", "launch" },
-			{ EV_LINK_ACTION_TYPE_EXTERNAL_URI, "EV_LINK_ACTION_TYPE_EXTERNAL_URI", "external-uri"},
-			{ EV_LINK_ACTION_TYPE_NAMED, "EV_LINK_ACTION_TYPE_NAMED", "named"},
-			{ 0, NULL, NULL }
-		};
-
-		type = g_enum_register_static ("EvLinkActionType", values);
-	}
-
-	return type;
-}
 
 EvLinkActionType
 ev_link_action_get_action_type (EvLinkAction *self)

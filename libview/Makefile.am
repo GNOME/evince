@@ -1,19 +1,4 @@
-INCLUDES=					\
-	-DG_LOG_DOMAIN=\"EvView\"		\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-I$(top_srcdir)/libdocument		\
-	$(LIBVIEW_CFLAGS)			\
-	$(WARN_CFLAGS)				\
-	$(DISABLE_DEPRECATED)
-
 lib_LTLIBRARIES = libevview.la
-
-libevview_la_LDFLAGS = \
-	-version-info $(EV_VIEW_LT_VERSION_INFO)	\
-	-export-symbols-regex "^ev_*"	\
-	$(AM_LDFLAGS)
-
-libevview_la_LIBADD = $(LIBVIEW_LIBS)
 
 NOINST_H_FILES =			\
 	ev-pixbuf-cache.h		\
@@ -30,7 +15,7 @@ INST_H_FILES = 				\
 	ev-view.h			\
 	ev-view-type-builtins.h
 
-headerdir = $(includedir)/evince/$(EV_API_VERSION)/ev-view
+headerdir = $(includedir)/evince/$(EV_API_VERSION)/libview
 header_DATA = $(INST_H_FILES)
 
 libevview_la_SOURCES = 			\
@@ -46,6 +31,28 @@ libevview_la_SOURCES = 			\
 	ev-view-type-builtins.c		\
 	$(NOINST_H_FILES)		\
 	$(INST_H_FILES)
+
+libevview_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"EvView\"		\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DEVINCE_COMPILATION			\
+	-I$(top_srcdir)				\
+	-I$(top_srcdir)/libdocument		\
+	-I$(top_builddir)			\
+	$(AM_CPPFLAGS)
+
+libevview_la_CFLAGS = \
+	$(LIBVIEW_CFLAGS)	\
+	$(WARN_CFLAGS)		\
+	$(DISABLE_DEPRECATED)	\
+	$(AM_CFLAGS)
+
+libevview_la_LDFLAGS = \
+	-version-info $(EV_VIEW_LT_VERSION_INFO)	\
+	-export-symbols-regex "^ev_*"	\
+	$(AM_LDFLAGS)
+
+libevview_la_LIBADD = $(LIBVIEW_LIBS)
 
 BUILT_SOURCES = 			\
 	ev-view-marshal.h		\
@@ -65,13 +72,13 @@ ev-view-marshal.c: $(srcdir)/ev-view-marshal.list
 ev-view-type-builtins.h: stamp-ev-view-type-builtins.h
 	@true
 
-stamp-ev-view-type-builtins.h: ev-view-type-builtins.h.template ev-job-scheduler.h
+stamp-ev-view-type-builtins.h: ev-view-type-builtins.h.template $(INST_H_FILES)
 	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
 	&& (cmp -s xgen-etbh ev-view-type-builtins.h || cp xgen-etbh ev-view-type-builtins.h ) \
 	&& rm -f xgen-etbh \
 	&& echo timestamp > $(@F)
 
-ev-view-type-builtins.c: ev-view-type-builtins.c.template ev-job-scheduler.h
+ev-view-type-builtins.c: ev-view-type-builtins.c.template $(INST_H_FILES)
 	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
 	&& (cmp -s xgen-etbc ev-view-type-builtins.c || cp xgen-etbc ev-view-type-builtins.c ) \
 	&& rm -f xgen-etbc
@@ -80,4 +87,3 @@ EXTRA_DIST = \
 	ev-view-type-builtins.c.template  \
 	ev-view-type-builtins.h.template  \
 	ev-view-marshal.list
-

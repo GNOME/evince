@@ -21,13 +21,16 @@
  * ev-view.c from exploding.
  */
 
+#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-view.h> can be included directly."
+#endif
+
 #ifndef __EV_PIXBUF_CACHE_H__
 #define __EV_PIXBUF_CACHE_H__
 
 #include <gtk/gtk.h>
 
-#include "ev-document.h"
-#include "ev-selection.h"
+#include <evince-document.h>
 
 G_BEGIN_DECLS
 

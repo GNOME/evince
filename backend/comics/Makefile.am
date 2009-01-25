@@ -4,6 +4,7 @@ INCLUDES =                      		\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument 		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)			\
 	$(LIB_CFLAGS)				\
 	$(WARN_CFLAGS)				\
@@ -17,7 +18,7 @@ libcomicsdocument_la_SOURCES = \
 
 libcomicsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libcomicsdocument_la_LIBADD =				\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(BACKEND_LIBS)					\
 	$(LIB_LIBS)
 

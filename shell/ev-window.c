@@ -61,6 +61,7 @@
 #include "ev-document-images.h"
 #include "ev-document-links.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-type-builtins.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
 #include "ev-file-monitor.h"
@@ -86,6 +87,7 @@
 #include "ev-utils.h"
 #include "ev-keyring.h"
 #include "ev-view.h"
+#include "ev-view-type-builtins.h"
 #include "ev-window.h"
 #include "ev-window-title.h"
 #include "ev-print-operation.h"
@@ -1073,7 +1075,7 @@ setup_view_from_metadata (EvWindow *window)
 	/* Sizing mode */
 	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode, FALSE)) {
 		enum_value = g_enum_get_value_by_nick
-			(EV_SIZING_MODE_CLASS, g_value_get_string (&sizing_mode));
+			(g_type_class_peek (EV_TYPE_SIZING_MODE), g_value_get_string (&sizing_mode));
 		g_value_unset (&sizing_mode);
 		ev_view_set_sizing_mode (view, enum_value->value);
 	}
@@ -4082,7 +4084,7 @@ save_sizing_mode (EvWindow *window)
 	GEnumValue *enum_value;
 
 	mode = ev_view_get_sizing_mode (EV_VIEW (window->priv->view));
-	enum_value = g_enum_get_value (EV_SIZING_MODE_CLASS, mode);
+	enum_value = g_enum_get_value (g_type_class_peek (EV_TYPE_SIZING_MODE), mode);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_string (window->priv->uri, "sizing_mode",

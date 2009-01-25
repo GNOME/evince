@@ -19,6 +19,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
+#endif
+
 #ifndef __EV_TIMELINE_H__
 #define __EV_TIMELINE_H__
 

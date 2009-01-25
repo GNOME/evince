@@ -18,6 +18,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-document.h> can be included directly."
+#endif
+
 #ifndef EV_LINK_DEST_H
 #define EV_LINK_DEST_H
 
@@ -36,8 +40,6 @@ typedef struct _EvLinkDestPrivate EvLinkDestPrivate;
 #define EV_IS_LINK_DEST_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_LINK_DEST))
 #define EV_LINK_DEST_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_LINK_DEST, EvLinkDestClass))
 
-#define EV_TYPE_LINK_DEST_TYPE         (ev_link_dest_type_get_type ())
-
 typedef enum {
 	EV_LINK_DEST_TYPE_PAGE,
 	EV_LINK_DEST_TYPE_XYZ,
@@ -50,7 +52,6 @@ typedef enum {
 	EV_LINK_DEST_TYPE_UNKNOWN
 } EvLinkDestType; 
 
-GType           ev_link_dest_type_get_type  (void) G_GNUC_CONST;
 GType           ev_link_dest_get_type       (void) G_GNUC_CONST;
 
 EvLinkDestType  ev_link_dest_get_dest_type  (EvLinkDest  *self);

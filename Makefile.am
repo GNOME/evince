@@ -14,10 +14,19 @@ if ENABLE_THUMBNAILER
 SUBDIRS += thumbnailer
 endif
 
+NULL =
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = \
-	evince-backend-$(EV_API_VERSION).pc \
-	evince-view-$(EV_API_VERSION).pc
+	evince-document-$(EV_API_VERSION).pc \
+	evince-view-$(EV_API_VERSION).pc \
+	$(NULL)
+
+headerdir = $(includedir)/evince/$(EV_API_VERSION)
+header_DATA = \
+	evince-document.h \
+	evince-view.h \
+	$(NULL)
 
 # Applications 
 

@@ -4,6 +4,7 @@ INCLUDES =					\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)
@@ -16,7 +17,7 @@ libpixbufdocument_la_SOURCES =		\
 
 libpixbufdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libpixbufdocument_la_LIBADD =				\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(BACKEND_LIBS)
 
 backend_in_files = pixbufdocument.evince-backend.in

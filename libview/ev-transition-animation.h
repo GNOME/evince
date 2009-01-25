@@ -19,9 +19,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
+#endif
+
 #ifndef __EV_TRANSITION_ANIMATION_H__
 #define __EV_TRANSITION_ANIMATION_H__
 
+#include <evince-document.h>
 #include "ev-timeline.h"
 #include "ev-transition-effect.h"
 

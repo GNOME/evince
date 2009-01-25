@@ -73,6 +73,8 @@ expand_content_files=
 # e.g. INCLUDES=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
 INCLUDES= \
+	-I$(top_srcdir)					\
+	-I$(top_builddir)				\
 	-I$(top_srcdir)/shell \
 	-DDATADIR=\"$(pkgdatadir)\"			\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
@@ -82,10 +84,11 @@ INCLUDES= \
 	-I$(top_srcdir)/libdocument			\
 	-I$(top_builddir)/libdocument			\
 	-I$(top_srcdir)/libview				\
-	-I$(top_builddir)/libview				\
+	-I$(top_builddir)/libview			\
 	-I$(top_srcdir)/properties			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
+	-DEVINCE_COMPILATION				\
 	$(SHELL_CFLAGS)					\
 	$(WARN_CFLAGS)					\
 	$(DISABLE_DEPRECATED)				\
@@ -101,7 +104,7 @@ GTKDOC_LIBS= \
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/libdocument/libevbackend.la			\
+	$(top_builddir)/libdocument/libevdocument.la			\
 	$(top_builddir)/libview/libevview.la				\
 	$(SHELL_LIBS)							\
 	$(GNOME_PRINT_LIBS)						\

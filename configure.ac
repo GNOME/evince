@@ -21,11 +21,11 @@ m4_define([ev_api_version], [2.25])
 # - If the interface is the same as the previous version, change to C:R+1:A
 
 # Libtool version of the backend library
-m4_define([ev_backend_lt_current],[1])
-m4_define([ev_backend_lt_revision],[0])
-m4_define([ev_backend_lt_age],[0])
-m4_define([ev_backend_lt_version_info],[ev_backend_lt_current:ev_backend_lt_revision:ev_backend_lt_age])
-m4_define([ev_backend_lt_current_minus_age],[m4_eval(ev_backend_lt_current - ev_backend_lt_age)])
+m4_define([ev_document_lt_current],[1])
+m4_define([ev_document_lt_revision],[0])
+m4_define([ev_document_lt_age],[0])
+m4_define([ev_document_lt_version_info],[ev_document_lt_current:ev_document_lt_revision:ev_document_lt_age])
+m4_define([ev_document_lt_current_minus_age],[m4_eval(ev_document_lt_current - ev_document_lt_age)])
 
 # Libtool version of the view library
 m4_define([ev_view_lt_current],[1])
@@ -49,6 +49,7 @@ AM_PROG_LIBTOOL
 AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_STDC
+AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_STDC_HEADERS
 IT_PROG_INTLTOOL([0.35.0])
@@ -456,8 +457,8 @@ AC_SUBST([EV_MICRO_VERSION],[ev_micro_version])
 
 AC_SUBST([EV_API_VERSION],[ev_api_version])
 
-AC_SUBST([EV_BACKEND_LT_VERSION_INFO],[ev_backend_lt_version_info])
-AC_SUBST([EV_BACKEND_LT_CURRENT_MINUS_AGE],[ev_backend_lt_current_minus_age])
+AC_SUBST([EV_DOCUMENT_LT_VERSION_INFO],[ev_document_lt_version_info])
+AC_SUBST([EV_DOCUMENT_LT_CURRENT_MINUS_AGE],[ev_document_lt_current_minus_age])
 AC_SUBST([EV_VIEW_LT_VERSION_INFO],[ev_view_lt_version_info])
 AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
 
@@ -515,7 +516,7 @@ test/Makefile
 thumbnailer/Makefile
 ])
 
-AC_CONFIG_FILES(evince-backend-[]ev_api_version[].pc:evince-backend.pc.in)
+AC_CONFIG_FILES(evince-document-[]ev_api_version[].pc:evince-document.pc.in)
 AC_CONFIG_FILES(evince-view-[]ev_api_version[].pc:evince-view.pc.in)
 
 AC_OUTPUT

@@ -1,3 +1,44 @@
+2009-01-25  Christian Persch  <chpe@gnome.org>
+
+        * configure.ac:
+        * evince-document.pc.in: Renamed from evince-backend.pc.in.
+        * libdocument/Makefile.am: Renamed library to libevdocument.la.
+        * libview/Makefile.am:
+        * shell/Makefile.am:
+        * backend/*/Makefile.am: Adapt to changed library name.
+
+        * libdocument/Makefile.am:
+        * libview/Makefile.am: Change the installed headers path to match
+        the directory names in SVN.
+
+        * evince-document.h:
+        * evince-view.h: Add single headers. Bug #568227.
+
+        * libdocument/*.h:
+        * libview/*.h: Add single headers guards.
+
+        * libview/Makefile.am:
+        * libdocument/Makefile.am:
+        * backend/*/Makefile.am:
+        * help/reference/Makefile.am: Define EVINCE_COMPILATION, so we can
+        still include individual headers.
+
+        * properties/Makefile.am:
+        * properties/ev-properties-main.c:
+        * properties/ev-properties-view.h:
+        * thumbnailer/Makefile.am:
+        * thumbnailer/evince-thumbnailer.c: Include only evince-document.h.
+
+        * libdocument/Makefile.am:
+        * libview/Makefile.am: Generate type builtins from all installed headers.
+        * libdocument/ev-link-action.[ch]:
+        * libdocument/ev-link-dest.[ch]:
+        * libdocument/ev-transition-effect.[ch]:
+        * libview/ev-view.[ch]: Remove handcoded type builtins.
+
+        * libdocument/Makefile.am:
+        * evince-document.h: Add ev-document-factory.h to the public headers.
+
 2009-01-24  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-sidebar-page.c:

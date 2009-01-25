@@ -1,7 +1,8 @@
 INCLUDES=					\
 	-DDATADIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-I$(top_srcdir)/libdocument		\
+	-I$(top_srcdir)				\
+	-I$(top_builddir)			\
 	$(FRONTEND_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)			\
 	$(DISABLE_DEPRECATED)			\
@@ -28,7 +29,7 @@ libevince_properties_page_la_SOURCES = 	\
 
 libevince_properties_page_la_LIBADD = 		\
 	libevproperties.la			\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	$(FRONTEND_LIBS)			\
 	$(NAUTILUS_LIBS)
 

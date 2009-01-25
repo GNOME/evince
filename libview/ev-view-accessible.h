@@ -18,6 +18,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
+#endif
+
 #ifndef __EV_VIEW_ACCESSIBLE_H__
 #define __EV_VIEW_ACCESSIBLE_H__
 

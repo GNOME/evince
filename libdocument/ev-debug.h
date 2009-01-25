@@ -32,6 +32,10 @@
 
 /* Modified by Evince Team */
 
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
+#endif
+
 #ifndef __EV_DEBUG_H__
 #define __EV_DEBUG_H__
 

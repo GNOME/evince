@@ -40,6 +40,7 @@
 #include "ev-view.h"
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
+#include "ev-view-type-builtins.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -5830,22 +5831,6 @@ ev_view_previous_page (EvView *view)
 }
 		
 /*** Enum description for usage in signal ***/
-
-GType
-ev_sizing_mode_get_type (void)
-{
-  static GType etype = 0;
-  if (etype == 0) {
-    static const GEnumValue values[] = {
-      { EV_SIZING_FIT_WIDTH, "EV_SIZING_FIT_WIDTH", "fit-width" },
-      { EV_SIZING_BEST_FIT, "EV_SIZING_BEST_FIT", "best-fit" },
-      { EV_SIZING_FREE, "EV_SIZING_FREE", "free" },
-      { 0, NULL, NULL }
-    };
-    etype = g_enum_register_static ("EvSizingMode", values);
-  }
-  return etype;
-}
 
 void
 ev_view_update_view_size (EvView *view, GtkScrolledWindow * scrolled_window)

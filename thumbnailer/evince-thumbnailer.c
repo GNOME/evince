@@ -18,11 +18,7 @@
 
 #include <config.h>
 
-#include <ev-document.h>
-#include <ev-document-thumbnails.h>
-#include <ev-async-renderer.h>
-#include <ev-document-factory.h>
-#include <ev-backends-manager.h>
+#include <evince-document.h>
 
 #include <gio/gio.h>
 

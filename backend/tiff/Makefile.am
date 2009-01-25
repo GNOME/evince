@@ -4,6 +4,7 @@ INCLUDES =					\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
+	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)
@@ -18,7 +19,7 @@ libtiffdocument_la_SOURCES =	\
 
 libtiffdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libtiffdocument_la_LIBADD = 				\
-	$(top_builddir)/libdocument/libevbackend.la	\
+	$(top_builddir)/libdocument/libevdocument.la	\
 	-ltiff
 
 backend_in_files = tiffdocument.evince-backend.in

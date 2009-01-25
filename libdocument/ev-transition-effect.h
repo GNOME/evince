@@ -18,6 +18,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-document.h> can be included directly."
+#endif
+
 #ifndef __EV_TRANSITION_EFFECT_H__
 #define __EV_TRANSITION_EFFECT_H__
 
@@ -26,9 +30,6 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_TRANSITION_EFFECT		  (ev_transition_effect_get_type ())
-#define EV_TYPE_TRANSITION_EFFECT_TYPE		  (ev_transition_effect_type_get_type ())
-#define EV_TYPE_TRANSITION_EFFECT_ALIGNMENT	  (ev_transition_effect_alignment_get_type ())
-#define EV_TYPE_TRANSITION_EFFECT_DIRECTION	  (ev_transition_effect_direction_get_type ())
 #define EV_TRANSITION_EFFECT(obj)		  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_TRANSITION_EFFECT, EvTransitionEffect))
 #define EV_TRANSITION_EFFECT_CLASS(klass)	  (G_TYPE_CHECK_CLASS_CAST ((klass),  EV_TYPE_TRANSITION_EFFECT, EvTransitionEffectClass))
 #define EV_IS_TRANSITION_EFFECT(obj)		  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_TRANSITION_EFFECT))
@@ -76,9 +77,6 @@ struct EvTransitionEffectClass
 
 
 GType                 ev_transition_effect_get_type           (void) G_GNUC_CONST;
-GType                 ev_transition_effect_type_get_type      (void) G_GNUC_CONST;
-GType                 ev_transition_effect_alignment_get_type (void) G_GNUC_CONST;
-GType                 ev_transition_effect_direction_get_type (void) G_GNUC_CONST;
 
 EvTransitionEffect   *ev_transition_effect_new                (EvTransitionEffectType  type,
 							       const gchar            *first_property_name,

@@ -1,6 +1,8 @@
 INCLUDES=							\
 	-DDATADIR=\"$(pkgdatadir)\"				\
 	-DGNOMEDATADIR=\"$(datadir)\"				\
+	-I$(top_srcdir)						\
+	-I$(top_builddir)					\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/		\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/		\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/		\
@@ -9,10 +11,13 @@ INCLUDES=							\
 	-I$(top_srcdir)/cut-n-paste/evmountoperation/		\
 	-I$(top_srcdir)/cut-n-paste/smclient/			\
 	-I$(top_srcdir)/libdocument				\
+	-I$(top_builddir)/libdocument				\
 	-I$(top_srcdir)/libview					\
+	-I$(top_builddir)/libview				\
 	-I$(top_srcdir)/properties				\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
+	-DEVINCE_COMPILATION					\
 	$(SHELL_CFLAGS)						\
 	$(WARN_CFLAGS)						\
 	$(DISABLE_DEPRECATED)
@@ -95,7 +100,7 @@ evince_LDADD=										\
 	$(top_builddir)/cut-n-paste/evmountoperation/libevmountoperation.la		\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la				\
 	$(top_builddir)/properties/libevproperties.la					\
-	$(top_builddir)/libdocument/libevbackend.la					\
+	$(top_builddir)/libdocument/libevdocument.la					\
 	$(top_builddir)/libview/libevview.la						\
 	$(SHELL_LIBS)
 

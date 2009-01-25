@@ -1,30 +1,14 @@
-INCLUDES=						\
-	-DG_LOG_DOMAIN=\"EvDocument\"			\
-	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
-	-DEV_BACKENDSDIR=\"$(libdir)/evince/backends\"	\
-	$(LIBDOCUMENT_CFLAGS)				\
-	$(WARN_CFLAGS)					\
-	$(DISABLE_DEPRECATED)
-
-lib_LTLIBRARIES = libevbackend.la
-
-libevbackend_la_LDFLAGS = \
-	-version-info $(EV_BACKEND_LT_VERSION_INFO)	\
-	-export-symbols-regex "^ev_*"	\
-	$(AM_LDFLAGS)
-
-libevbackend_la_LIBADD = $(LIBDOCUMENT_LIBS)
+lib_LTLIBRARIES = libevdocument.la
 
 NOINST_H_FILES =				\
 	ev-debug.h				\
-	ev-document-factory.h			\
 	ev-module.h
 
 INST_H_FILES = 					\
 	ev-async-renderer.h			\
 	ev-attachment.h				\
 	ev-backends-manager.h			\
+	ev-document-factory.h			\
 	ev-document-find.h			\
 	ev-document-fonts.h			\
 	ev-document-forms.h			\
@@ -52,10 +36,10 @@ INST_H_FILES = 					\
 	ev-transition-effect.h			\
 	ev-version.h
 
-headerdir = $(includedir)/evince/$(EV_API_VERSION)/ev-backend
+headerdir = $(includedir)/evince/$(EV_API_VERSION)/libdocument
 header_DATA = $(INST_H_FILES)
 
-libevbackend_la_SOURCES=			\
+libevdocument_la_SOURCES=			\
 	ev-async-renderer.c			\
 	ev-attachment.c				\
 	ev-backends-manager.c			\
@@ -89,6 +73,27 @@ libevbackend_la_SOURCES=			\
 	$(NOINST_H_FILES)			\
 	$(INST_H_FILES)
 
+libevdocument_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"EvDocument\"			\
+	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
+	-DEV_BACKENDSDIR=\"$(libdir)/evince/backends\"	\
+	-DEVINCE_COMPILATION				\
+	$(AM_CPPFLAGS)
+
+libevdocument_la_CFLAGS = \
+	$(LIBDOCUMENT_CFLAGS)	\
+	$(WARN_CFLAGS)		\
+	$(DISABLE_DEPRECATED)	\
+	$(AM_CFLAGS)
+
+libevdocument_la_LDFLAGS = \
+	-version-info $(EV_DOCUMENT_LT_VERSION_INFO)	\
+	-export-symbols-regex "^ev_*"	\
+	$(AM_LDFLAGS)
+
+libevdocument_la_LIBADD = $(LIBDOCUMENT_LIBS)
+
 BUILT_SOURCES = 			\
 	ev-document-type-builtins.c	\
 	ev-document-type-builtins.h
@@ -98,13 +103,13 @@ CLEANFILES = $(BUILT_SOURCES) stamp-ev-document-type-builtins.h
 ev-document-type-builtins.h: stamp-ev-document-type-builtins.h
 	@true
 
-stamp-ev-document-type-builtins.h: ev-document-type-builtins.h.template ev-document-info.h
+stamp-ev-document-type-builtins.h: ev-document-type-builtins.h.template $(INST_H_FILES)
 	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
 	&& (cmp -s xgen-etbh ev-document-type-builtins.h || cp xgen-etbh ev-document-type-builtins.h ) \
 	&& rm -f xgen-etbh \
 	&& echo timestamp > $(@F)
 
-ev-document-type-builtins.c: ev-document-type-builtins.c.template ev-document-info.h
+ev-document-type-builtins.c: ev-document-type-builtins.c.template $(INST_H_FILES)
 	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
 	&& (cmp -s xgen-etbc ev-document-type-builtins.c || cp xgen-etbc ev-document-type-builtins.c ) \
 	&& rm -f xgen-etbc
@@ -112,4 +117,3 @@ ev-document-type-builtins.c: ev-document-type-builtins.c.template ev-document-in
 EXTRA_DIST = \
 	ev-document-type-builtins.c.template \
 	ev-document-type-builtins.h.template
-

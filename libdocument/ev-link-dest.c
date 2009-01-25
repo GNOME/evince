@@ -19,7 +19,9 @@
  */
 
 #include <config.h>
+
 #include "ev-link-dest.h"
+#include "ev-document-type-builtins.h"
 
 enum {
 	PROP_0,
@@ -68,31 +70,6 @@ G_DEFINE_TYPE (EvLinkDest, ev_link_dest, G_TYPE_OBJECT)
 
 #define EV_LINK_DEST_GET_PRIVATE(object) \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_LINK_DEST, EvLinkDestPrivate))
-
-GType
-ev_link_dest_type_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GEnumValue values[] = {
-			{ EV_LINK_DEST_TYPE_PAGE, "EV_LINK_DEST_TYPE_PAGE", "page" },
-			{ EV_LINK_DEST_TYPE_XYZ, "EV_LINK_DEST_TYPE_XYZ", "xyz" },
-			{ EV_LINK_DEST_TYPE_FIT, "EV_LINK_DEST_TYPE_FIT", "fit" },
-			{ EV_LINK_DEST_TYPE_FITH, "EV_LINK_DEST_TYPE_FITH", "fith" },
-			{ EV_LINK_DEST_TYPE_FITV, "EV_LINK_DEST_TYPE_FITV", "fitv" },
-			{ EV_LINK_DEST_TYPE_FITR, "EV_LINK_DEST_TYPE_FITR", "fitr" },
-			{ EV_LINK_DEST_TYPE_NAMED, "EV_LINK_DEST_TYPE_NAMED", "named" },
-			{ EV_LINK_DEST_TYPE_PAGE_LABEL, "EV_LINK_DEST_TYPE_PAGE_LABEL", "page_label" },
-			{ EV_LINK_DEST_TYPE_UNKNOWN, "EV_LINK_DEST_TYPE_UNKNOWN", "unknown" },
-			{ 0, NULL, NULL }
-		};
-
-		type = g_enum_register_static ("EvLinkDestType", values);
-	}
-
-	return type;
-}
 
 EvLinkDestType
 ev_link_dest_get_dest_type (EvLinkDest *self)
