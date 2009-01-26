@@ -36,43 +36,21 @@
 
 #include "ev-file-helpers.h"
 
-static gchar *dot_dir = NULL;
 static gchar *tmp_dir = NULL;
 static gint   count = 0;
 
-static gboolean
-ensure_dir_exists (const char *dir)
+gboolean
+ev_dir_ensure_exists (const gchar *dir,
+                      int          mode)
 {
-	if (g_file_test (dir, G_FILE_TEST_IS_DIR))
-		return TRUE;
-	
-	if (g_mkdir_with_parents (dir, 488) == 0)
+	if (g_mkdir_with_parents (dir, mode) == 0)
 		return TRUE;
 
 	if (errno == EEXIST)
 		return g_file_test (dir, G_FILE_TEST_IS_DIR);
 	
-	g_warning ("Failed to create directory %s: %s", dir, strerror (errno));
+	g_warning ("Failed to create directory %s: %s", dir, g_strerror (errno));
 	return FALSE;
-}
-
-const gchar *
-ev_dot_dir (void)
-{
-	if (dot_dir == NULL) {
-		gboolean exists;
-
-		dot_dir = g_build_filename (g_get_home_dir (),
-					    ".gnome2",
-					    "evince",
-					    NULL);
-
-		exists = ensure_dir_exists (dot_dir);
-		if (!exists)
-			exit (1);
-	}
-
-	return dot_dir;
 }
 
 const gchar *
@@ -80,15 +58,16 @@ ev_tmp_dir (void)
 {
 	if (tmp_dir == NULL) {
 		gboolean exists;
-		gchar   *dirname;
+		gchar   *dirname, *prgname;
 
-		dirname = g_strdup_printf ("evince-%u", getpid ());
+                prgname = g_get_prgname ();
+		dirname = g_strdup_printf ("%s-%u", prgname ? prgname : "unknown", getpid ());
 		tmp_dir = g_build_filename (g_get_tmp_dir (),
 					    dirname,
 					    NULL);
 		g_free (dirname);
 
-		exists = ensure_dir_exists (tmp_dir);
+		exists = ev_dir_ensure_exists (tmp_dir, 0700);
 		g_assert (exists);
 	}
 
@@ -107,9 +86,6 @@ ev_file_helpers_shutdown (void)
 		g_rmdir (tmp_dir);
 
 	g_free (tmp_dir);
-	g_free (dot_dir);
-
-	dot_dir = NULL;
 	tmp_dir = NULL;
 }
 

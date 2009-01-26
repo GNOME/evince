@@ -37,6 +37,7 @@
 #include <libxml/xmlreader.h>
 
 #include "ev-metadata-manager.h"
+#include "ev-application.h"
 #include "ev-file-helpers.h"
 
 #define METADATA_FILE 	"ev-metadata.xml"
@@ -271,7 +272,7 @@ load_values ()
 	xmlKeepBlanksDefault (0);
 
 	/* FIXME: file locking - Paolo */
-	file_name = g_build_filename (ev_dot_dir (), METADATA_FILE, NULL);
+	file_name = g_build_filename (ev_application_get_dot_dir (EV_APP), METADATA_FILE, NULL);
 	if (!g_file_test (file_name, G_FILE_TEST_EXISTS))
 	{
 		g_free (file_name);
@@ -670,7 +671,7 @@ ev_metadata_manager_save (gpointer data)
 			  (GHFunc)save_item, root);        
 
 	/* FIXME: lock file - Paolo */
-	file_name = g_build_filename (ev_dot_dir (), METADATA_FILE, NULL);
+	file_name = g_build_filename (ev_application_get_dot_dir (EV_APP), METADATA_FILE, NULL);
 	xmlSaveFormatFile (file_name, doc, 1);
 	g_free (file_name);
 	

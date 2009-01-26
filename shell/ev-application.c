@@ -22,6 +22,7 @@
 
 #include <config.h>
 
+#include <stdlib.h>
 #include <string.h>
 
 #include <glib.h>
@@ -52,8 +53,8 @@ static void ev_application_save_print_settings      (EvApplication *application)
 struct _EvApplication {
 	GObject base_instance;
 
+	gchar *dot_dir;
 	gchar *accel_map_file;
-	
 	gchar *toolbars_file;
 
 	EggToolbarsModel *toolbars_model;
@@ -731,7 +732,11 @@ ev_application_shutdown (EvApplication *application)
 	}
 #endif /* ENABLE_DBUS */
 	
+        g_free (application->dot_dir);
+        application->dot_dir = NULL;
 	g_free (application->last_chooser_uri);
+        application->last_chooser_uri = NULL;
+
 	g_object_unref (application);
 	
 	gtk_main_quit ();
@@ -750,6 +755,15 @@ ev_application_init (EvApplication *ev_application)
 	
 	ev_application_init_session (ev_application);
 
+        ev_application->dot_dir = g_build_filename (g_get_home_dir (),
+                                                    ".gnome2",
+                                                    "evince",
+                                                    NULL);
+
+        /* FIXME: why make this fatal? */
+        if (!ev_dir_ensure_exists (ev_application->dot_dir, 0700))
+                exit (1);
+
 	home_dir = g_get_home_dir ();
 	if (home_dir) {
 		ev_application->accel_map_file = g_build_filename (home_dir,
@@ -763,7 +777,7 @@ ev_application_init (EvApplication *ev_application)
 	ev_application->toolbars_model = egg_toolbars_model_new ();
 
 	ev_application->toolbars_file = g_build_filename
-			(ev_dot_dir (), "evince_toolbar.xml", NULL);
+			(ev_application->dot_dir, "evince_toolbar.xml", NULL);
 
 	egg_toolbars_model_load_names (ev_application->toolbars_model,
 				       DATADIR "/evince-toolbar.xml");
@@ -893,7 +907,7 @@ ev_application_get_print_settings_file (EvApplication *application)
 
 	application->print_settings_file = g_key_file_new ();
 	
-	filename = g_build_filename (ev_dot_dir (), EV_PRINT_SETTINGS_FILE, NULL);
+	filename = g_build_filename (ev_application_get_dot_dir (application), EV_PRINT_SETTINGS_FILE, NULL);
 	if (g_file_test (filename, G_FILE_TEST_IS_REGULAR)) {
 		GError *error = NULL;
 
@@ -934,7 +948,7 @@ ev_application_save_print_settings (EvApplication *application)
 					    key_file,
 					    EV_PAGE_SETUP_GROUP);
 	
-	filename = g_build_filename (ev_dot_dir (), EV_PRINT_SETTINGS_FILE, NULL);
+	filename = g_build_filename (ev_application_get_dot_dir (application), EV_PRINT_SETTINGS_FILE, NULL);
 	data = g_key_file_to_data (key_file, (gsize *)&data_length, NULL);
 	g_file_set_contents (filename, data, data_length, &error);
 	if (error) {
@@ -1021,4 +1035,10 @@ ev_application_set_page_setup (EvApplication *application,
 	
 	application->page_setup = g_object_ref (page_setup);
 	gtk_page_setup_to_key_file (page_setup, key_file, EV_PAGE_SETUP_GROUP);
+}
+
+const gchar *
+ev_application_get_dot_dir (EvApplication   *application)
+{
+	return application->dot_dir;
 }

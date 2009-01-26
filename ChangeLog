@@ -1,3 +1,20 @@
+2009-01-26  Christian Persch  <chpe@gnome.org>
+
+	* libdocument/ev-file-helpers.c: (ev_dir_ensure_exists),
+	(ev_tmp_dir), (ev_file_helpers_init), (ev_file_helpers_shutdown):
+	* libdocument/ev-file-helpers.h:
+	* shell/ev-application.c: (ev_application_shutdown),
+	(ev_application_init), (ev_application_screensaver_disable),
+	(ev_application_save_print_settings),
+	(ev_application_set_page_setup):
+	* shell/ev-application.h:
+	* shell/ev-metadata-manager.c: (load_values),
+	(ev_metadata_manager_save): Move ev_dot_dir() from libdocument to
+	shell, since it shouldn't be public API. Bug #569120.
+
+	* libdocument/ev-file-helpers.c: (ev_tmp_filename): Use
+	g_get_prgname() instead of hardcoding "evince" for the tmpdir name.
+
 2009-01-25  Christian Persch  <chpe@gnome.org>
 
         Bug 569082 – use versioned directory for backends
