@@ -323,26 +323,22 @@ main (int argc, char *argv[])
 	if (!g_thread_supported ())
 		g_thread_init (NULL);
 
-	context = g_option_context_new (_("GNOME Document Viewer"));
-
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
+#endif
+
+	context = g_option_context_new (N_("GNOME Document Viewer"));
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);
-#else
-	g_option_context_add_main_entries (context, goption_options, NULL);
-#endif /* ENABLE_NLS */
+	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
 	
 	g_option_context_add_group (context, egg_sm_client_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 
-	gtk_init (&argc, &argv);
-
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
-		g_warning ("Cannot parse arguments: %s", error->message);
+		g_printerr ("Cannot parse arguments: %s", error->message);
 		g_error_free (error);
 		g_option_context_free (context);
 		
