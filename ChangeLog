@@ -1,5 +1,10 @@
 2009-01-26  Christian Persch  <chpe@gnome.org>
 
+	* shell/ev-metadata-manager.c: (ev_metadata_manager_set_string): Don't
+	copy the string twice. Bug #569231.
+
+2009-01-26  Christian Persch  <chpe@gnome.org>
+
 	* libdocument/ev-file-helpers.c: (ev_dir_ensure_exists),
 	(ev_tmp_dir), (ev_file_helpers_init), (ev_file_helpers_shutdown):
 	* libdocument/ev-file-helpers.h:

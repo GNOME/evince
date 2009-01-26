@@ -712,7 +712,7 @@ ev_metadata_manager_set_string (const gchar *uri, const gchar *key, const gchar 
 	GValue val = { 0, };
 
 	g_value_init (&val, G_TYPE_STRING);
-	g_value_set_string (&val, value);
+	g_value_set_static_string (&val, value);
 
 	ev_metadata_manager_set (uri, key, &val);
 
