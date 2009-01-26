@@ -34,7 +34,6 @@
 #include "ev-backends-manager.h"
 #include "ev-debug.h"
 #include "ev-file-helpers.h"
-#include "ev-metadata-manager.h"
 #include "ev-stock-icons.h"
 #include "eggsmclient.h"
 #include "eggdesktopfile.h"
@@ -316,7 +315,6 @@ main (int argc, char *argv[])
 {
 	GOptionContext *context;
 	GHashTable *args;
-	gboolean enable_metadata = FALSE;
 	GError *error = NULL;
 
 	/* Init glib threads asap */
@@ -355,18 +353,12 @@ main (int argc, char *argv[])
 
 			return 0;
 		}
-	} else {
-		enable_metadata = TRUE;
 	}
 #endif /* ENABLE_DBUS */
 
 	ev_debug_init ();
 	ev_backends_manager_init ();
 	
-	if (enable_metadata) {
-		ev_metadata_manager_init ();
-	}
-
 	ev_file_helpers_init ();
 	ev_stock_icons_init ();
 	
@@ -379,10 +371,6 @@ main (int argc, char *argv[])
 	gtk_main ();
 
 	ev_file_helpers_shutdown ();
-
-	if (enable_metadata) {
-		ev_metadata_manager_shutdown ();
-	}
 
 	ev_backends_manager_shutdown ();
 

@@ -36,6 +36,7 @@
 #include "ev-application.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
+#include "ev-metadata-manager.h"
 #include "ev-utils.h"
 
 #ifdef ENABLE_DBUS
@@ -77,6 +78,8 @@ struct _EvApplication {
 struct _EvApplicationClass {
 	GObjectClass base_class;
 };
+
+static EvApplication *instance;
 
 G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 
@@ -134,7 +137,9 @@ ev_application_register_service (EvApplication *application)
                                              G_OBJECT (application));
 	
 	application->scr_saver = totem_scrsaver_new (connection);
-	
+
+        ev_metadata_manager_init ();
+
 	return TRUE;
 }
 #endif /* ENABLE_DBUS */
@@ -149,8 +154,6 @@ ev_application_register_service (EvApplication *application)
 EvApplication *
 ev_application_get_instance (void)
 {
-	static EvApplication *instance;
-
 	if (!instance) {
 		instance = EV_APPLICATION (g_object_new (EV_TYPE_APPLICATION, NULL));
 	}
@@ -732,12 +735,15 @@ ev_application_shutdown (EvApplication *application)
 	}
 #endif /* ENABLE_DBUS */
 	
+        ev_metadata_manager_shutdown ();
+
         g_free (application->dot_dir);
         application->dot_dir = NULL;
 	g_free (application->last_chooser_uri);
         application->last_chooser_uri = NULL;
 
 	g_object_unref (application);
+        instance = NULL;
 	
 	gtk_main_quit ();
 }

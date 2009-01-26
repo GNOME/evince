@@ -1,5 +1,12 @@
 2009-01-26  Christian Persch  <chpe@gnome.org>
 
+	* shell/ev-application.c: (ev_application_register_service),
+	(ev_application_shutdown):
+	* shell/main.c: (main): Move metadata manager initialisation and
+	shutdown into EvApplication. Follow-up from bug #569120.
+
+2009-01-26  Christian Persch  <chpe@gnome.org>
+
 	* shell/ev-metadata-manager.c: (ev_metadata_manager_set_string): Don't
 	copy the string twice. Bug #569231.
 
