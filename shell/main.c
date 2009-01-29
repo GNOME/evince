@@ -47,6 +47,18 @@ static gboolean unlink_temp_file = FALSE;
 static gchar   *print_settings;
 static const char **file_arguments = NULL;
 
+static gboolean
+option_version_cb (const gchar *option_name,
+                   const gchar *value,
+                   gpointer     data,
+                   GError     **error)
+{
+  g_print ("%s %s\n", _("GNOME Document Viewer"), VERSION);
+
+  exit (0);
+  return FALSE;
+}
+
 static const GOptionEntry goption_options[] =
 {
 	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page of the document to display."), N_("PAGE")},
@@ -56,6 +68,7 @@ static const GOptionEntry goption_options[] =
 	{ "find", 'l', 0, G_OPTION_ARG_STRING, &ev_find_string, N_("The word or phrase to find in the document"), N_("STRING")},
 	{ "unlink-tempfile", 'u', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &unlink_temp_file, NULL, NULL },
 	{ "print-settings", 't', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_FILENAME, &print_settings, NULL, NULL },
+	{ "version", 0, G_OPTION_FLAG_NO_ARG | G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_CALLBACK, option_version_cb, NULL, NULL },
 	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, N_("[FILE...]") },
 	{ NULL }
 };
