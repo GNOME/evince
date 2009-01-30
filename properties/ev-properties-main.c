@@ -137,13 +137,13 @@ nautilus_module_initialize (GTypeModule *module)
 	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
-	ev_backends_manager_init ();
+        ev_init ();
 }
 
 void
 nautilus_module_shutdown (void)
 {
-	ev_backends_manager_shutdown ();
+        ev_shutdown ();
 }
 
 void
@@ -156,4 +156,3 @@ nautilus_module_list_types (const GType **types,
 	*types = type_list;
 	*num_types = G_N_ELEMENTS (type_list);
 }
-

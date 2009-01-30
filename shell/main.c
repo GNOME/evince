@@ -33,6 +33,7 @@
 #include "ev-application.h"
 #include "ev-backends-manager.h"
 #include "ev-debug.h"
+#include "ev-init.h"
 #include "ev-file-helpers.h"
 #include "ev-stock-icons.h"
 #include "eggsmclient.h"
@@ -369,10 +370,9 @@ main (int argc, char *argv[])
 	}
 #endif /* ENABLE_DBUS */
 
-	ev_debug_init ();
-	ev_backends_manager_init ();
-	
-	ev_file_helpers_init ();
+        if (!ev_init ())
+                return 1;
+
 	ev_stock_icons_init ();
 	
 	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
@@ -383,11 +383,7 @@ main (int argc, char *argv[])
 
 	gtk_main ();
 
-	ev_file_helpers_shutdown ();
-
-	ev_backends_manager_shutdown ();
-
-	ev_debug_shutdown ();
+	ev_shutdown ();
 
 	return 0;
 }

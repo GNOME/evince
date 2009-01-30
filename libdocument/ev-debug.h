@@ -87,8 +87,8 @@ typedef enum {
 	EV_PROFILE_JOBS = 1 << 0
 } EvProfileSection;
 
-void ev_debug_init     (void);
-void ev_debug_shutdown (void);
+void _ev_debug_init     (void);
+void _ev_debug_shutdown (void);
 
 void ev_debug_message  (EvDebugSection   section,
 			const gchar     *file,

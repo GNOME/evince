@@ -79,14 +79,14 @@ profile_init ()
 }
 
 void
-ev_debug_init ()
+_ev_debug_init ()
 {
 	debug_init ();
 	profile_init ();
 }
 
 void
-ev_debug_shutdown ()
+_ev_debug_shutdown ()
 {
 	if (timers) {
 		g_hash_table_destroy (timers);

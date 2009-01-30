@@ -38,9 +38,9 @@ typedef enum {
 
 const gchar *ev_tmp_dir               (void);
 
-void         ev_file_helpers_init     (void);
+void        _ev_file_helpers_init     (void);
 
-void         ev_file_helpers_shutdown (void);
+void        _ev_file_helpers_shutdown (void);
 
 gboolean     ev_dir_ensure_exists     (const gchar       *dir,
                                        int                mode);

@@ -1,3 +1,25 @@
+2009-01-30  Christian Persch  <chpe@gnome.org>
+
+	* evince-document.h:
+	* libdocument/Makefile.am:
+	A libdocument/ev-init.[ch]: Add single init/shutdown method. Bug
+	#569117.
+
+	* libdocument/ev-backends-manager.c: (_ev_backends_manager_init):
+	* libdocument/ev-backends-manager.h:
+	* libdocument/ev-debug.c: (_ev_debug_init), (_ev_debug_shutdown):
+	* libdocument/ev-debug.h:
+	* libdocument/ev-file-helpers.c: (_ev_file_helpers_init),
+	(_ev_file_helpers_shutdown):
+	* libdocument/ev-file-helpers.h: Make these init/shutdown methods
+	private.
+
+	* properties/ev-properties-main.c: (nautilus_module_initialize),
+	(nautilus_module_shutdown):
+	* shell/main.c: (main):
+	* thumbnailer/evince-thumbnailer.c: (main): Use the new single
+	init/shutdown method.
+
 2009-01-29  Christian Persch  <chpe@gnome.org>
 
 	* shell/main.c: (option_version_cb): Add --version which was lost in

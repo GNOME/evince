@@ -35,8 +35,8 @@ typedef struct _EvTypeInfo {
 	const gchar **mime_types;
 } EvTypeInfo;
 
-gboolean   ev_backends_manager_init                       (void);
-void       ev_backends_manager_shutdown                   (void);
+gboolean    _ev_backends_manager_init                     (void);
+void        _ev_backends_manager_shutdown                 (void);
 
 EvDocument  *ev_backends_manager_get_document             (const gchar *mime_type);
 const gchar *ev_backends_manager_get_document_module_name (EvDocument  *document);

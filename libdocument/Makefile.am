@@ -26,6 +26,7 @@ INST_H_FILES = 					\
 	ev-file-helpers.h			\
 	ev-form-field.h				\
 	ev-image.h				\
+	ev-init.h				\
 	ev-layer.h				\
 	ev-link-action.h			\
 	ev-link-dest.h				\
@@ -48,6 +49,7 @@ libevdocument_la_SOURCES=			\
 	ev-link-action.c			\
 	ev-link-dest.c				\
 	ev-image.c				\
+	ev-init.c				\
 	ev-document.c				\
 	ev-document-factory.c			\
 	ev-document-thumbnails.c		\

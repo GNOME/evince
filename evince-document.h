@@ -42,6 +42,7 @@
 #include <libdocument/ev-file-helpers.h>
 #include <libdocument/ev-form-field.h>
 #include <libdocument/ev-image.h>
+#include <libdocument/ev-init.h>
 #include <libdocument/ev-layer.h>
 #include <libdocument/ev-link-action.h>
 #include <libdocument/ev-link-dest.h>

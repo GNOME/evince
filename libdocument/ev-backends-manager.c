@@ -146,17 +146,29 @@ ev_backends_manager_load (void)
 	return TRUE;
 }
 
+/*
+ * _ev_backends_manager_init:
+ *
+ * Initializes the evince backends manager.
+ *
+ * Returns: %TRUE if there were any backends found; %FALSE otherwise
+ */
 gboolean
-ev_backends_manager_init (void)
+_ev_backends_manager_init (void)
 {
 	if (ev_backends_list)
-		return FALSE;
+		return TRUE;
 
 	return ev_backends_manager_load ();
 }
 
+/*
+ * _ev_backends_manager_shutdown:
+ *
+ * Shuts the evince backends manager down.
+ */
 void
-ev_backends_manager_shutdown (void)
+_ev_backends_manager_shutdown (void)
 {
 	g_list_foreach (ev_backends_list, (GFunc)ev_backend_info_free, NULL);
 	g_list_free (ev_backends_list);

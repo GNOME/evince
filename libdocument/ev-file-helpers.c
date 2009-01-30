@@ -75,12 +75,12 @@ ev_tmp_dir (void)
 }
 
 void
-ev_file_helpers_init (void)
+_ev_file_helpers_init (void)
 {
 }
 
 void
-ev_file_helpers_shutdown (void)
+_ev_file_helpers_shutdown (void)
 {	
 	if (tmp_dir != NULL)	
 		g_rmdir (tmp_dir);

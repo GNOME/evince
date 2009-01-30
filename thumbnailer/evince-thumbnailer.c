@@ -163,7 +163,8 @@ main (int argc, char *argv[])
 	if (!g_thread_supported ())
 		g_thread_init (NULL);
 
-	ev_backends_manager_init ();
+        if (!ev_init ())
+                return -1;
 
 	file = g_file_new_for_commandline_arg (input);
 	uri = g_file_get_uri (file);
@@ -173,13 +174,13 @@ main (int argc, char *argv[])
 	g_free (uri);
 
 	if (!document) {
-		ev_backends_manager_shutdown ();
+		ev_shutdown ();
 		return -2;
 	}
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document)) {
 		g_object_unref (document);
-		ev_backends_manager_shutdown ();
+		ev_shutdown ();
 		return -2;
 	}
 
@@ -198,19 +199,19 @@ main (int argc, char *argv[])
 		gtk_main ();
 
 		g_object_unref (document);
-		ev_backends_manager_shutdown ();
+		ev_shutdown ();
 
 		return data.success ? 0 : -2;
 	}
 
 	if (!evince_thumbnail_pngenc_get (document, output, size)) {
 		g_object_unref (document);
-		ev_backends_manager_shutdown ();
+		ev_shutdown ();
 		return -2;
 	}
 
 	g_object_unref (document);
-	ev_backends_manager_shutdown ();
+        ev_shutdown ();
 
 	return 0;
 }
