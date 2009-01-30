@@ -1,5 +1,11 @@
 2009-01-30  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-backends-manager.c: (ev_backends_manager_load): Make
+	this return TRUE only if any backends were loaded, so the ev_init()
+	function works as documented.
+
+2009-01-30  Christian Persch  <chpe@gnome.org>
+
 	* evince-document.h:
 	* libdocument/Makefile.am:
 	A libdocument/ev-init.[ch]: Add single init/shutdown method. Bug

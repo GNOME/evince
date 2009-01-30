@@ -143,7 +143,7 @@ ev_backends_manager_load (void)
 
 	g_dir_close (dir);
 
-	return TRUE;
+	return ev_backends_list != NULL;
 }
 
 /*
