@@ -45,8 +45,8 @@
 
 #ifndef EV_ENABLE_DEBUG
 
-#define ev_debug_init()
-#define ev_debug_shutdown()
+#define _ev_debug_init()
+#define _ev_debug_shutdown()
 #if defined(G_HAVE_GNUC_VARARGS)
 #define ev_debug_message(section, format, args...) G_STMT_START { } G_STMT_END
 #define ev_profiler_start(format, args...) G_STMT_START { } G_STMT_END
