@@ -883,7 +883,7 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_xyz (dest->page_num - 1,
 							dest->left,
-							height - dest->top,
+							height - MIN (height, dest->top),
 							dest->zoom,
 							dest->change_left,
 							dest->change_top,
@@ -902,7 +902,7 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 								  MAX (0, dest->page_num - 1));
 			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_fith (dest->page_num - 1,
-							 height - dest->top,
+							 height - MIN (height, dest->top),
 							 dest->change_top);
 			g_object_unref (poppler_page);
 		}
@@ -921,9 +921,9 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 			poppler_page_get_size (poppler_page, NULL, &height);
 			ev_dest = ev_link_dest_new_fitr (dest->page_num - 1,
 							 dest->left,
-							 height - dest->bottom,
+							 height - MIN (height, dest->bottom),
 							 dest->right,
-							 height - dest->top);
+							 height - MIN (height, dest->top));
 			g_object_unref (poppler_page);
 		}
 			break;

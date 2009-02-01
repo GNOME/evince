@@ -1,5 +1,12 @@
 2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* backend/pdf/ev-poppler.cc: (ev_link_dest_from_dest):
+
+	Clamp top/bottom values of destinations to make sure they are not
+	bigger than the page height. Fixes bug #569327.
+	
+2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* libdocument/ev-debug.h:
 
 	Fix build when debug mode is disabled.
