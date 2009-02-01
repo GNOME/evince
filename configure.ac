@@ -512,7 +512,12 @@ data/icons/scalable/Makefile
 data/icons/scalable/apps/Makefile
 help/Makefile
 help/reference/Makefile
-help/reference/version.xml
+help/reference/libdocument/Makefile
+help/reference/libdocument/version.xml
+help/reference/libview/Makefile
+help/reference/libview/version.xml
+help/reference/shell/Makefile
+help/reference/shell/version.xml
 libdocument/Makefile
 libdocument/ev-version.h
 libview/Makefile

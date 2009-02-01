@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY version SYSTEM "version.xml">
+]>
+<book id="index">
+  <bookinfo>
+    <title>libevview Reference Manual</title>
+    <releaseinfo>for Evince &version;</releaseinfo>
+  </bookinfo>
+
+  <chapter>
+    <title>Evince View</title>
+    <partintro>
+      <para>
+      </para>
+    </partintro>
+    <xi:include href="xml/ev-jobs.xml"/>
+    <xi:include href="xml/ev-page-cache.xml"/>
+    <xi:include href="xml/ev-view.xml"/>
+    <xi:include href="xml/ev-job-scheduler.xml"/>
+  </chapter>
+</book>

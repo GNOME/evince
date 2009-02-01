@@ -1,3 +1,25 @@
+2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* help/reference/Makefile.am:
+	* help/reference/libdocument/Makefile.am:
+	* help/reference/libdocument/libevdocument-docs.sgml:
+	* help/reference/libdocument/libevdocument.types:
+	* help/reference/libdocument/version.xml.in:
+	* help/reference/libview/Makefile.am:
+	* help/reference/libview/libevview-docs.sgml:
+	* help/reference/libview/libevview.types:
+	* help/reference/libview/version.xml.in:
+	* help/reference/shell/Makefile.am:
+	* help/reference/shell/evince-docs.sgml:
+	* help/reference/shell/evince.types:
+	* help/reference/shell/tmpl/dummy.sgml:
+	* help/reference/shell/version.xml.in:
+
+	Split API documentation into libdocument, libview and
+	shell. Required gtk-doc files has been added, but API docs still
+	need to be completed and improved. Fixes bug #568465.
+	
 2009-02-01  Christian Persch  <chpe@gnome.org>
 
 	* libdocument/ev-document.h: Don't make GTypeInfo static. Bug #570077.

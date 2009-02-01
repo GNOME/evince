@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY version SYSTEM "version.xml">
+]>
+<book id="index">
+  <bookinfo>
+    <title>libevdocument Reference Manual</title>
+    <releaseinfo>for Evince &version;</releaseinfo>
+  </bookinfo>
+
+  <part id="interfaces">
+    <title>Document Interfaces</title>
+    <partintro>
+      <para>
+	Provides support for writing Evince backends. For example
+	EvDocumentAttachments is used to represent document
+	attachments. The core have objects that represent various
+	document interfaces.
+      </para>
+    </partintro>
+    <xi:include href="xml/ev-async-renderer.xml"/>
+    <xi:include href="xml/ev-document-find.xml"/>
+    <xi:include href="xml/ev-document-fonts.xml"/>
+    <xi:include href="xml/ev-document-forms.xml"/>
+    <xi:include href="xml/ev-document-images.xml"/>
+    <xi:include href="xml/ev-document-links.xml"/>
+    <xi:include href="xml/ev-document-security.xml"/>
+    <xi:include href="xml/ev-document-thumbnails.xml"/>
+    <xi:include href="xml/ev-document-transition.xml"/>
+    <xi:include href="xml/ev-file-exporter.xml"/>
+    <xi:include href="xml/ev-document.xml"/>
+    <xi:include href="xml/ev-selection.xml"/>
+    <xi:include href="xml/ev-document-layers.xml"/>
+  </part>
+
+  <part id="data">
+    <title>Document data</title>
+    <partintro>
+      <para>
+	Helper objects related to document like attachments, links and
+	images.
+      </para>
+    </partintro>
+    <xi:include href="xml/ev-attachment.xml"/>
+    <xi:include href="xml/ev-document-info.xml"/>
+    <xi:include href="xml/ev-form-field.xml"/>
+    <xi:include href="xml/ev-image.xml"/>
+    <xi:include href="xml/ev-link-action.xml"/>
+    <xi:include href="xml/ev-link-dest.xml"/>
+    <xi:include href="xml/ev-link.xml"/>
+    <xi:include href="xml/ev-render-context.xml"/>
+    <xi:include href="xml/ev-layer.xml"/>
+    <xi:include href="xml/ev-page.xml"/>
+    <xi:include href="xml/ev-transition-effect.xml"/>
+  </part>
+
+  <part id="helper">
+    <title>Helper functions</title>
+    <partintro>
+      <para>
+	Helper functions common for backend implementation
+      </para>
+    </partintro>
+    <xi:include href="xml/ev-document-factory.xml"/>
+    <xi:include href="xml/ev-document-misc.xml"/>
+    <xi:include href="xml/ev-file-helpers.xml"/>
+    <xi:include href="xml/ev-backends-manager.xml"/>
+    <xi:include href="xml/ev-init.xml"/>
+  </part>
+
+</book>
