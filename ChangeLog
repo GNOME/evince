@@ -1,5 +1,12 @@
 2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* cut-n-paste/zoom-control/ephy-zoom-control.c:
+	(ephy_zoom_control_finalize), (ephy_zoom_control_class_init):
+
+	Remove the old tooltips code and use G_DEFINE_TYPE().
+	
+2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* help/reference/Makefile.am:
 	* help/reference/libdocument/Makefile.am:

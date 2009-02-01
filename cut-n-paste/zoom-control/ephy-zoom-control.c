@@ -28,7 +28,8 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
-#define EPHY_ZOOM_CONTROL_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EPHY_TYPE_ZOOM_CONTROL, EphyZoomControlPrivate))
+#define EPHY_ZOOM_CONTROL_GET_PRIVATE(object)\
+	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EPHY_TYPE_ZOOM_CONTROL, EphyZoomControlPrivate))
 
 struct _EphyZoomControlPrivate
 {
@@ -57,39 +58,7 @@ enum
 
 static guint signals[LAST_SIGNAL];
 
-static GObjectClass *parent_class = NULL;
-
-static void	ephy_zoom_control_class_init	(EphyZoomControlClass *klass);
-static void	ephy_zoom_control_init		(EphyZoomControl *control);
-static void	ephy_zoom_control_finalize	(GObject *o);
-
-GType
-ephy_zoom_control_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0))
-	{
-		const GTypeInfo our_info =
-			{
-				sizeof (EphyZoomControlClass),
-				NULL, /* base_init */
-				NULL, /* base_finalize */
-				(GClassInitFunc) ephy_zoom_control_class_init,
-				NULL,
-				NULL, /* class_data */
-				sizeof (EphyZoomControl),
-				0, /* n_preallocs */
-				(GInstanceInitFunc) ephy_zoom_control_init,
-			};
-
-		type = g_type_register_static (GTK_TYPE_TOOL_ITEM,
-					       "EphyZoomControl",
-					       &our_info, 0);
-	}
-
-	return type;
-}
+G_DEFINE_TYPE (EphyZoomControl, ephy_zoom_control, GTK_TYPE_TOOL_ITEM)
 
 static void
 combo_changed_cb (GtkComboBox *combo, EphyZoomControl *control)
@@ -127,6 +96,16 @@ row_is_separator (GtkTreeModel *model,
 	gboolean is_sep;
 	gtk_tree_model_get (model, iter, COL_IS_SEP, &is_sep, -1);
 	return is_sep;
+}
+
+static void
+ephy_zoom_control_finalize (GObject *o)
+{
+	EphyZoomControl *control = EPHY_ZOOM_CONTROL (o);
+
+	g_object_unref (control->priv->combo);
+
+	G_OBJECT_CLASS (ephy_zoom_control_parent_class)->finalize (o);
 }
 
 static void
@@ -232,67 +211,11 @@ ephy_zoom_control_get_property (GObject *object,
 	}
 }
 
-#if !GTK_CHECK_VERSION (2, 11, 5)
-static void
-set_combo_tooltip (GtkWidget *widget, 
-		   GtkTooltipsData *data)
-{
-	if (GTK_IS_BUTTON (widget))
-	{
-		gtk_tooltips_set_tip (data->tooltips, widget,
-				      data->tip_text, data->tip_private);
-	}
-}
-
-static void
-combo_realized (GtkWidget *combo,
-		GtkWidget *control)
-{
-	GtkTooltipsData *data;
-
-	data = gtk_tooltips_data_get (control);
-	g_return_if_fail (data != NULL);
-
-	gtk_container_forall (GTK_CONTAINER (combo),
-			      (GtkCallback) set_combo_tooltip, data);
-}
-
-static gboolean
-ephy_zoom_control_set_tooltip (GtkToolItem *tool_item,
-			       GtkTooltips *tooltips,
-			       const char *tip_text,
-			       const char *tip_private)
-{
-	EphyZoomControl *control = EPHY_ZOOM_CONTROL (tool_item);
-	GtkWidget *widget = GTK_WIDGET (tool_item);
-
-	/* hack to make tooltips work also on Ctrl-F1 */
-	gtk_tooltips_set_tip (tooltips, widget, tip_text, tip_private);
-
-	g_signal_handlers_disconnect_by_func
-		(control->priv->combo, G_CALLBACK (combo_realized), widget);
-
-	if (GTK_WIDGET_REALIZED (tool_item))
-	{
-		combo_realized (GTK_WIDGET (control->priv->combo), widget);
-	}
-	else
-	{
-		g_signal_connect_after (control->priv->combo, "realize",
-					G_CALLBACK (combo_realized), widget);
-	}
-
-	return TRUE;
-}
-#endif /* !GTK_CHECK_VERSION (2, 11, 5) */
-
 static void
 ephy_zoom_control_class_init (EphyZoomControlClass *klass)
 {
 	GObjectClass *object_class;
 	GtkToolItemClass *tool_item_class;
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class = (GObjectClass *)klass;
 	tool_item_class = (GtkToolItemClass *)klass;
@@ -300,10 +223,6 @@ ephy_zoom_control_class_init (EphyZoomControlClass *klass)
 	object_class->set_property = ephy_zoom_control_set_property;
 	object_class->get_property = ephy_zoom_control_get_property;
 	object_class->finalize = ephy_zoom_control_finalize;
-
-#if !GTK_CHECK_VERSION (2, 11, 5)
-	tool_item_class->set_tooltip = ephy_zoom_control_set_tooltip;
-#endif
 
 	g_object_class_install_property (object_class,
 					 PROP_ZOOM,
@@ -328,16 +247,6 @@ ephy_zoom_control_class_init (EphyZoomControlClass *klass)
 			      G_TYPE_FLOAT);
 
 	g_type_class_add_private (object_class, sizeof (EphyZoomControlPrivate));
-}
-
-static void
-ephy_zoom_control_finalize (GObject *o)
-{
-	EphyZoomControl *control = EPHY_ZOOM_CONTROL (o);
-
-	g_object_unref (control->priv->combo);
-
-	G_OBJECT_CLASS (parent_class)->finalize (o);
 }
 
 void
