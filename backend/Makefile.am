@@ -33,3 +33,6 @@ endif
 if ENABLE_IMPRESS
      SUBDIRS += impress
 endif
+
+EXTRA_DIST = \
+	backend.symbols

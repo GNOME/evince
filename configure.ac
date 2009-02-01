@@ -101,7 +101,7 @@ PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0)
 AC_SUBST(SMCLIENT_CFLAGS)
 AC_SUBST(SMCLIENT_LIBS)
 
-BACKEND_LIBTOOL_FLAGS="-module -avoid-version"
+BACKEND_LIBTOOL_FLAGS="-module -avoid-version -export-symbols \$(top_srcdir)/backend/backend.symbols"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
 
 dnl ===== Check special functions
