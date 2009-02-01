@@ -182,7 +182,7 @@ static void     backend_name##_class_intern_init (gpointer klass)		\
 G_MODULE_EXPORT GType								\
 register_evince_backend (GTypeModule *module)					\
 {										\
-	static const GTypeInfo our_info = {  				        \
+	const GTypeInfo our_info = {  				        \
 		sizeof (BackendName##Class),					\
 		NULL, /* base_init */						\
 		NULL, /* base_finalize */					\
