@@ -1072,7 +1072,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		height *= scale;
 	}
 
-	export->pages_per_sheet = gtk_print_settings_get_number_up (print_settings);
+	export->pages_per_sheet = MAX (1, gtk_print_settings_get_number_up (print_settings));
 	
 	export->copies = gtk_print_settings_get_n_copies (print_settings);
 	export->collate = gtk_print_settings_get_collate (print_settings);
@@ -1108,7 +1108,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 	export->fc.paper_width = width;
 	export->fc.paper_height = height;
 	export->fc.duplex = FALSE;
-	export->fc.pages_per_sheet = MAX (1, export->pages_per_sheet);
+	export->fc.pages_per_sheet = export->pages_per_sheet;
 
 	if (ev_print_queue_is_empty (op->document))
 		ev_print_operation_export_begin (export);

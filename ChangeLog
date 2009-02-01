@@ -1,4 +1,11 @@
 2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+	
+	* shell/ev-print-operation.c:
+	(ev_print_operation_export_print_dialog_response_cb):
+
+	Make sure pages_per_sheet is always >= 1. Fixes bug #569328.
+	
+2009-02-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* backend/pdf/ev-poppler.cc: (ev_link_dest_from_dest):
 
