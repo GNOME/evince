@@ -1,4 +1,41 @@
 ================
+Evince  2.25.90
+================
+
+Bug fixes:
+
+    * Split API documentation into libdocument, libview and shell
+      (#568465, Carlos Garcia Campos)
+    * Fix symbols conflict in impress backend (#569998, Christian Persch)
+    * Add mnemonics to buttons in search bar (#569212, Carlos Garcia
+      Campos)
+    * Fix a crash when printing (#569328, Carlos Garcia Campos)
+    * Fix --version command line option (#562869, Christian Persch)
+    * Use versioned directory for backends (#569082, Christian Persch)
+    * Add EV_DEFINE_BOXED_TYPE and EV_DEFINE_INTERFACE macros
+      (#568228, Carlos Garcia Campos)
+    * Sync EggToolbarEditor with libegg (Nickolay V. Shmyrev)
+    * Respect directory umask and setgid when saving files (#568593,
+      Michael J. Chudobiak)
+    * Add libtool versioning, pkg-config files and single headers for
+      libdocument and libview (#568224, #568220, #568229, #568227,
+      Christian Persch) 
+    * Remove G_OBJECT casts from g_signal_connect calls (#568386, Hiroyuki
+      Ikezoe)
+    * Install several missing header files of libdocument and libview
+      (#567787, #567790, Tomeu Vizoso)
+    * Other bugs fixed: #569120, #569231, #569327, #570077
+
+Translation updates:    
+    
+    * Hendrik Richter (de)
+    * Ivar Smolin (et)
+    * Gabor Kelemen (hu)
+    * Changwoo Ryu (ko)
+    * Kjartan Maraas (nb)
+    * Daniel Nylander (sv)
+
+================
 Evince  2.25.5
 ================
 
