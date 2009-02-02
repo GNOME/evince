@@ -9,7 +9,7 @@ libsmclient_la_SOURCES = 	\
 	eggsmclient-xsmp.c
 
 libsmclient_la_CFLAGS =				\
-	-DG_LOG_DOMAIN=\""EggSMClient"\"	\	
+	-DG_LOG_DOMAIN=\""EggSMClient"\"	\
 	-DEGG_SM_CLIENT_BACKEND_XSMP		\
 	$(SMCLIENT_CFLAGS)			\
 	$(WARNING_CFLAGS)			\
