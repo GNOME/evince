@@ -2,8 +2,11 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
-  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
-  <!ENTITY version SYSTEM "version.xml">
+    <!ENTITY version SYSTEM "version.xml">
+    <!ENTITY ev-jobs SYSTEM "xml/ev-jobs.xml">
+    <!ENTITY ev-page-cache SYSTEM "xml/ev-page-cache.xml">
+    <!ENTITY ev-view SYSTEM "xml/ev-view.xml">
+    <!ENTITY ev-job-scheduler SYSTEM "xml/ev-job-scheduler.xml">
 ]>
 <book id="index">
   <bookinfo>
@@ -17,9 +20,9 @@
       <para>
       </para>
     </partintro>
-    <xi:include href="xml/ev-jobs.xml"/>
-    <xi:include href="xml/ev-page-cache.xml"/>
-    <xi:include href="xml/ev-view.xml"/>
-    <xi:include href="xml/ev-job-scheduler.xml"/>
+    &ev-jobs;
+    &ev-page-cache;
+    &ev-view;
+    &ev-job-scheduler;
   </chapter>
 </book>
