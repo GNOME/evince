@@ -1,5 +1,13 @@
 2009-02-04  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-init.c: (ev_init): Make ev_init() also bind the
+	evince gettext domain, so i18n works in the library.
+
+	* properties/ev-properties-main.c: (nautilus_module_initialize):
+	Remove extra bindtextdomain call.
+
+2009-02-04  Christian Persch  <chpe@gnome.org>
+
 	* backend/comics/comics-document.c:
 	* backend/djvu/djvu-document.c:
 	* backend/dvi/dvi-document.c:

@@ -133,10 +133,6 @@ nautilus_module_initialize (GTypeModule *module)
 	ev_properties_plugin_register_type (module);
 	ev_properties_view_register_type (module);
 
-	/* set up translation catalog */
-	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-
         ev_init ();
 }
 

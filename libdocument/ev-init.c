@@ -20,6 +20,7 @@
 #include <config.h>
 
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 
 #include "ev-init.h"
 #include "ev-backends-manager.h"
@@ -31,7 +32,8 @@ static int ev_init_count;
 /**
  * ev_init:
  *
- * Initializes the evince document library.
+ * Initializes the evince document library, and binds the evince
+ * gettext domain.
  *
  * You must call this before calling any other function in the evince
  * document library.
@@ -45,6 +47,10 @@ ev_init (void)
 
         if (ev_init_count++ > 0)
                 return have_backends;
+
+	/* set up translation catalog */
+	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
         _ev_debug_init ();
         _ev_file_helpers_init ();
