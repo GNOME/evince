@@ -30,7 +30,7 @@
 #include "color.h"
 #include "cairo-device.h"
 
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 #include <ctype.h>
 
 GMutex *dvi_context_mutex = NULL;

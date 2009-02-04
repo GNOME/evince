@@ -19,7 +19,7 @@
  */
 
 #include <config.h>
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"

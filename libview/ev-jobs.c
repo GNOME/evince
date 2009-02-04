@@ -37,7 +37,7 @@
 
 #include <errno.h>
 #include <glib/gstdio.h>
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 #include <unistd.h>
 
 static void ev_job_init                   (EvJob                 *job);

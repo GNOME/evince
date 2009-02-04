@@ -25,7 +25,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <glib.h>
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 
 #include "tiffio.h"
 #include "tiff2ps.h"

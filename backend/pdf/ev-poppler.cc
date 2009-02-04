@@ -31,7 +31,7 @@
 #ifdef HAVE_CAIRO_PS
 #include <cairo-ps.h>
 #endif
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 
 #include "ev-poppler.h"
 #include "ev-file-exporter.h"

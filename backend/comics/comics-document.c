@@ -22,7 +22,7 @@
 #include <config.h>
 #include <unistd.h>
 #include <string.h>
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 #include <gio/gio.h>
 
 #include "comics-document.h"

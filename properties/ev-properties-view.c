@@ -28,7 +28,7 @@
 #include <langinfo.h>
 #endif
 
-#include <glib/gi18n.h>
+#include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
 
 #include "ev-properties-view.h"
