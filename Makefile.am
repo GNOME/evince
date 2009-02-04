@@ -32,11 +32,12 @@ header_DATA = \
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 
-EXTRA_DIST = $(intltool_extra) \
+EXTRA_DIST = \
+	$(intltool_extra) \
+	$(header_DATA) \
+	autogen.sh \
 	gnome-doc-utils.make \
-	MAINTAINERS \
-	evince-document.h \
-	evince-view.h
+	MAINTAINERS
 
 DISTCLEANFILES = 		\
 	gnome-doc-utils.make	\
