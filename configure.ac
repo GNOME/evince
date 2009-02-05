@@ -95,7 +95,7 @@ PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIR
 PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0 gconf-2.0)
+PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0)
 
 PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0)
 AC_SUBST(SMCLIENT_CFLAGS)
@@ -110,6 +110,7 @@ LIBS="$LIBS $BACKEND_LIBS"
 AC_CHECK_FUNCS(cairo_format_stride_for_width)
 LIBS=$evince_save_LIBS
 
+dnl ========= Check for Keyring
 AC_ARG_WITH(keyring,
         AC_HELP_STRING([--without-keyring],[disable the use of gnome-keyring]),
 	[case "${withval}" in
@@ -157,6 +158,22 @@ AC_SUBST([DBUS_LIBS])
 AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
 AM_CONDITIONAL([DBUS_TOOL_NO_PREFIX], [test "x$DBUS_VERSION" = "x33"])
 
+dnl ========= Check for GConf
+AC_ARG_WITH(gconf,
+	AC_HELP_STRING([--without-gconf],[disable the use of gconf]),
+	[case "${withval}" in
+	yes) WITH_GCONF=yes ;;
+	no) WITH_GCONF=no ;;
+	*) AC_MSG_ERROR(bad value ${withval} for --with-gconf) ;;
+	esac],
+	[WITH_GCONF=yes]) dnl Default value
+AM_CONDITIONAL(WITH_GCONF, test x$WITH_GCONF = "xyes")
+
+if test x$WITH_GCONF = "xyes"; then
+   PKG_CHECK_MODULES(GCONF, gconf-2.0)
+   AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
+fi
+
 dnl Debug mode
 AC_ARG_ENABLE([debug],
 	AC_HELP_STRING([--enable-debug],
@@ -182,8 +199,8 @@ BACKEND_CFLAGS="$BACKEND_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $KEYRING_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $KEYRING_LIBS -lz"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $KEYRING_CFLAGS $GCONF_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $KEYRING_LIBS $GCONF_LIBS -lz"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
@@ -536,6 +553,7 @@ AC_OUTPUT
 
 echo "
 Configure summary:
+        GConf Support......:  $WITH_GCONF
 	Keyring Support....:  $WITH_KEYRING
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS

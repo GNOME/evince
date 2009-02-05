@@ -43,7 +43,9 @@
 #else
 #include <gtk/gtkprintunixdialog.h>
 #endif
+#ifdef WITH_GCONF
 #include <gconf/gconf-client.h>
+#endif
 
 #include "egg-editable-toolbar.h"
 #include "egg-toolbar-editor.h"
@@ -340,8 +342,9 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	gboolean can_get_text = FALSE;
 	gboolean has_pages = FALSE;
 	gboolean can_find = FALSE;
-
+#ifdef WITH_GCONF
 	GConfClient *client;
+#endif
 
 	if (document) {
 		has_document = TRUE;
@@ -364,10 +367,12 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		can_find = TRUE;
 	}
 
+#ifdef WITH_GCONF
 	client = gconf_client_get_default ();
 	override_restrictions = gconf_client_get_bool (client, 
 						       GCONF_OVERRIDE_RESTRICTIONS, 
 						       NULL);
+#endif
 	if (!override_restrictions && info && info->fields_mask & EV_DOCUMENT_INFO_PERMISSIONS) {
 		ok_to_print = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT);
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
@@ -376,7 +381,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	if (has_document && !EV_IS_FILE_EXPORTER(document))
 		ok_to_print = FALSE;
 
-	
+#ifdef WITH_GCONF
 	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_SAVE, NULL)) {
 		ok_to_copy = FALSE;
 	}
@@ -386,6 +391,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	}
 
 	g_object_unref (client);
+#endif
 
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
