@@ -1,5 +1,11 @@
 2009-02-05  Hib Eris  <hib@hiberis.nl>
 
+	* shell/ev-application.c:
+
+	Include gdkx.h only with X11. See bug #339172.
+	
+2009-02-05  Hib Eris  <hib@hiberis.nl>
+
 	* backend/pdf/pdfdocument.evince-backend.in:
 
 	Add application/x-ext-pdf mime type for pdf backend. See bug
