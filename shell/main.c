@@ -37,7 +37,9 @@
 #include "ev-file-helpers.h"
 #include "ev-stock-icons.h"
 #include "eggsmclient.h"
+#ifndef G_OS_WIN32
 #include "eggdesktopfile.h"
+#endif
 
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;
@@ -374,8 +376,14 @@ main (int argc, char *argv[])
                 return 1;
 
 	ev_stock_icons_init ();
-	
+
+#ifdef G_OS_WIN32
+	/* Manually set name and icon in win32 */
+	g_set_application_name (_("Evince"));
+	gtk_window_set_default_icon_name ("evince");
+#else
 	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
+#endif /* G_OS_WIN32 */
 
 	if (!ev_application_load_session (EV_APP))
 		load_files (file_arguments, args);

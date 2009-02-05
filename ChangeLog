@@ -1,4 +1,16 @@
-2009-02-05   Hib Eris  <hib@hiberis.nl>
+2009-02-05  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* cut-n-paste/smclient/Makefile.am:
+	* cut-n-paste/smclient/eggdesktopfile.c:
+	* cut-n-paste/smclient/eggsmclient-win32.c:
+	* shell/main.c:
+
+	Make session manager code compile for w32. These changes have been
+	taken from upstream libegg. Based on patch by Hib Eris. See bug
+	#339172.
+	
+2009-02-05  Hib Eris  <hib@hiberis.nl>
 
 	* cut-n-paste/totem-screensaver/totem-scrsaver.c:
 

@@ -72,6 +72,20 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
 AM_GLIB_GNU_GETTEXT
 
+dnl check for win32 platform
+AC_MSG_CHECKING([for Win32 platform])
+case "$host" in
+  *-*-mingw*|*-*-cygwin*)
+    platform_win32=yes
+    AC_CHECK_TOOL(WINDRES, windres)
+    ;;
+  *)
+    platform_win32=no
+    ;;
+esac
+AC_MSG_RESULT([$platform_win32])
+AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
+
 dnl Check dependencies
 
 # LIB_CFLAGS       for helpers and generic widgets. (libdocument, cut-and-paste)
