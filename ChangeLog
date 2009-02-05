@@ -1,3 +1,16 @@
+2009-02-05  Christian Persch  <chpe@gnome.org>
+
+	* backend/comics/comics-document.c: (comics_document_load):
+	* backend/djvu/djvu-document.c: (djvu_document_load):
+	* backend/dvi/dvi-document.c: (dvi_document_load):
+	* backend/impress/impress-document.c: (impress_document_load):
+	* backend/pdf/ev-poppler.cc:
+	* libdocument/ev-document-factory.c: (get_document_from_uri),
+	(ev_document_factory_get_document):
+	* shell/ev-print-operation.c:
+	(ev_print_operation_export_print_dialog_response_cb): Use
+	g_set_error_literal now that we depend on glib 2.18.
+
 2009-02-05  Hib Eris  <hib@hiberis.nl>
 
 	* shell/ev-application.c:

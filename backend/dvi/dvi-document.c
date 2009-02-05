@@ -90,10 +90,10 @@ dvi_document_load (EvDocument  *document,
 	filename = g_filename_from_uri (uri, NULL, error);
 	
 	if (!filename) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     _("File not available"));
+		g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     EV_DOCUMENT_ERROR_INVALID,
+                                     _("File not available"));
         	return FALSE;
 	}
 	
@@ -106,10 +106,10 @@ dvi_document_load (EvDocument  *document,
 	g_free (filename);
 	
 	if (!dvi_document->context) {
-    		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     _("DVI document has incorrect format"));
+    		g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     EV_DOCUMENT_ERROR_INVALID,
+                                     _("DVI document has incorrect format"));
         	return FALSE;
 	}
 	

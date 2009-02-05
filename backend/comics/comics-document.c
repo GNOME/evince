@@ -156,10 +156,10 @@ comics_document_load (EvDocument *document,
 	if (!success) {
 		return FALSE;
 	} else if (retval != 0) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     _("File corrupted."));
+		g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     EV_DOCUMENT_ERROR_INVALID,
+                                     _("File corrupted."));
 		return FALSE;
 	}
 

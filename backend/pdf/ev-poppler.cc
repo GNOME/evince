@@ -239,12 +239,10 @@ convert_error (GError  *poppler_error,
 		else if (poppler_error->code == POPPLER_ERROR_ENCRYPTED)
 			code = EV_DOCUMENT_ERROR_ENCRYPTED;
 			
-
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     code,
-			     poppler_error->message,
-			     NULL);
+		g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     code,
+                                     poppler_error->message);
 	} else {
 		g_propagate_error (error, poppler_error);
 	}

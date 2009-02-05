@@ -1004,10 +1004,10 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 	if (!gtk_printer_accepts_ps (export->printer)) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		
-		g_set_error (&export->error,
-			     GTK_PRINT_ERROR,
-			     GTK_PRINT_ERROR_GENERAL,
-			     "%s", _("Printing is not supported on this printer."));
+		g_set_error_literal (&export->error,
+                                     GTK_PRINT_ERROR,
+                                     GTK_PRINT_ERROR_GENERAL,
+                                     _("Printing is not supported on this printer."));
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
 		
 		return;

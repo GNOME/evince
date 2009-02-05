@@ -291,10 +291,10 @@ impress_document_load (EvDocument  *document,
   filename = g_filename_from_uri (uri, NULL, error);
   if (!filename)
     {
-      g_set_error (error,
-	           EV_DOCUMENT_ERROR,
-		   EV_DOCUMENT_ERROR_INVALID,
-		   _("Remote files aren't supported"));
+      g_set_error_literal (error,
+                           EV_DOCUMENT_ERROR,
+                           EV_DOCUMENT_ERROR_INVALID,
+                           _("Remote files aren't supported"));
       return FALSE;
     }
 
@@ -302,10 +302,10 @@ impress_document_load (EvDocument  *document,
 
   if (!imp)
     {
-      g_set_error (error,
-	           EV_DOCUMENT_ERROR,
-		   EV_DOCUMENT_ERROR_INVALID,
-		   _("Invalid document"));
+      g_set_error_literal (error,
+                           EV_DOCUMENT_ERROR,
+                           EV_DOCUMENT_ERROR_INVALID,
+                           _("Invalid document"));
       g_free (filename);
       return FALSE;
     }

@@ -241,11 +241,11 @@ djvu_document_load (EvDocument  *document,
 	g_free (filename);
 
 	if (missing_files) {
-		g_set_error (error,
-			     G_FILE_ERROR,
-			     G_FILE_ERROR_EXIST,
-			     _("The document is composed by several files. "
-			       "One or more of such files cannot be accessed."));
+		g_set_error_literal (error,
+                                     G_FILE_ERROR,
+                                     G_FILE_ERROR_EXIST,
+                                     _("The document is composed by several files. "
+                                       "One or more of such files cannot be accessed."));
 
 		return FALSE;
 	}

@@ -121,10 +121,10 @@ get_document_from_uri (const char        *uri,
 		g_free (mime_type);
 
 		if (*error == NULL) {
-			g_set_error (error,
-				     EV_DOCUMENT_ERROR,
-				     0,
-				     _("Unknown MIME Type"));
+			g_set_error_literal (error,
+                                             EV_DOCUMENT_ERROR,
+                                             EV_DOCUMENT_ERROR_INVALID,
+                                             _("Unknown MIME Type"));
 		}
 		
 		return NULL;
@@ -143,7 +143,7 @@ get_document_from_uri (const char        *uri,
 		mime_desc = g_content_type_get_description (mime_type);
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
-			     0,
+			     EV_DOCUMENT_ERROR_INVALID,
 			     _("File type %s (%s) is not supported"),
 			     mime_desc, mime_type);
 		g_free (mime_desc);
@@ -242,10 +242,10 @@ ev_document_factory_get_document (const char *uri, GError **error)
 
 	if (result == FALSE) {
 		if (*error == NULL) {
-			g_set_error (error,
-				     EV_DOCUMENT_ERROR,
-				     0,
-				     _("Unknown MIME Type"));
+			g_set_error_literal (error,
+                                             EV_DOCUMENT_ERROR,
+                                             EV_DOCUMENT_ERROR_INVALID,
+                                             _("Unknown MIME Type"));
 		} else if ((*error)->domain == EV_DOCUMENT_ERROR &&
 			   (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
 			return document;
