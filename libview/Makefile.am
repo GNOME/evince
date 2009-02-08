@@ -52,7 +52,9 @@ libevview_la_LDFLAGS = \
 	-export-symbols-regex "^ev_*"	\
 	$(AM_LDFLAGS)
 
-libevview_la_LIBADD = $(LIBVIEW_LIBS)
+libevview_la_LIBADD = \
+	$(top_builddir)/libdocument/libevdocument.la \
+	$(LIBVIEW_LIBS)
 
 BUILT_SOURCES = 			\
 	ev-view-marshal.h		\
