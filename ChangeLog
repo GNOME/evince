@@ -1,5 +1,13 @@
 2009-02-08  Christian Persch  <chpe@gnome.org>
 
+	* configure.ac:
+	* libdocument/Makefile.am:
+	* libview/Makefile.am: Add experimental introspection support.
+	Disabled by default; use --enable-introspection to enable it.
+	Bug #569083.
+
+2009-02-08  Christian Persch  <chpe@gnome.org>
+
 	* libview/Makefile.am: Link libevdocument.la to libevview.la.
 
 2009-02-05  Christian Persch  <chpe@gnome.org>

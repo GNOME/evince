@@ -89,3 +89,50 @@ EXTRA_DIST = \
 	ev-view-type-builtins.c.template  \
 	ev-view-type-builtins.h.template  \
 	ev-view-marshal.list
+
+# GObject Introspection
+
+if ENABLE_INTROSPECTION
+
+EvView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES)
+	PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
+	$(G_IR_SCANNER) -v --namespace EvView \
+	--add-include-path=$(srcdir) \
+	--add-include-path=. \
+	--add-include-path=$(top_srcdir) \
+	--add-include-path=$(top_builddir) \
+	--add-include-path=$(top_builddir)/libdocument \
+	--strip-prefix=Ev \
+	--nsversion=$(EV_API_VERSION) \
+	--include=Gio-2.0 \
+	--include=Gtk-2.0 \
+	--include=EvDocument-$(EV_API_VERSION) \
+	--library=evview \
+	--libtool="$(LIBTOOL)" \
+	--output $@ \
+	--pkg gobject-2.0 \
+	--pkg gio-2.0 \
+	--pkg gtk+-2.0 \
+	--pkg evince-view-$(EV_API_VERSION) \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	-DEVINCE_COMPILATION \
+	$(INST_H_FILES)
+
+girdir = $(GIRDIR)
+gir_DATA = EvView-$(EV_API_VERSION).gir
+
+typelibsdir = $(GIRTYPELIBDIR)
+typelibs_DATA = EvView-$(EV_API_VERSION).typelib
+
+EXTRA_DIST += $(gir_DATA)
+CLEANFILES += $(gir_DATA) $(typelibs_DATA)
+
+%.typelib: %.gir
+	LD_LIBRARY_PATH=$${LD_LIBRARY_PATH:+$$LD_LIBRARY_PATH:}. $(G_IR_COMPILER) \
+	--includedir=$(srcdir) \
+	--includedir=$(top_builddir)/libdocument \
+	$(G_IR_COMPILER_OPTS) \
+	$< -o $@
+
+endif # ENABLE_INTROSPECTION

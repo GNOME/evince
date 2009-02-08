@@ -119,3 +119,46 @@ ev-document-type-builtins.c: ev-document-type-builtins.c.template $(INST_H_FILES
 EXTRA_DIST = \
 	ev-document-type-builtins.c.template \
 	ev-document-type-builtins.h.template
+
+# GObject Introspection
+
+if ENABLE_INTROSPECTION
+
+EvDocument-$(EV_API_VERSION).gir: libevdocument.la Makefile $(INST_H_FILES)
+	PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
+	$(G_IR_SCANNER) -v --namespace EvDocument \
+	--add-include-path=$(srcdir) \
+	--add-include-path=. \
+	--strip-prefix=Ev \
+	--nsversion=$(EV_API_VERSION) \
+	--include=Gio-2.0 \
+	--include=Gtk-2.0 \
+	--library=evdocument \
+	--libtool="$(LIBTOOL)" \
+	--output $@ \
+	--pkg gobject-2.0 \
+	--pkg gio-2.0 \
+	--pkg gtk+-2.0 \
+	--pkg evince-document-$(EV_API_VERSION) \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	-DEVINCE_COMPILATION \
+	$(INST_H_FILES)
+
+girdir = $(GIRDIR)
+gir_DATA = EvDocument-$(EV_API_VERSION).gir
+
+typelibsdir = $(GIRTYPELIBDIR)
+typelibs_DATA = EvDocument-$(EV_API_VERSION).typelib
+
+EXTRA_DIST += $(gir_DATA)
+CLEANFILES += $(gir_DATA) $(typelibs_DATA)
+
+%.typelib: %.gir
+	LD_LIBRARY_PATH=$${LD_LIBRARY_PATH:+$$LD_LIBRARY_PATH:}. $(G_IR_COMPILER) \
+	--includedir=$(srcdir) \
+	--includedir=. \
+	$(G_IR_COMPILER_OPTS) \
+	$< -o $@
+
+endif # ENABLE_INTROSPECTION

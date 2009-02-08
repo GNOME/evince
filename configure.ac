@@ -267,6 +267,41 @@ if test "x$GCONFTOOL" = "xno"; then
 	AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
 fi
 
+# ***
+# GIR
+# ***
+
+AC_MSG_CHECKING([whether GObject introspection is requested])
+AC_ARG_ENABLE([introspection],
+        AS_HELP_STRING([--enable-introspection],[Enable GObject introspection]),
+        [],[enable_introspection=no])
+AC_MSG_RESULT([$enable_introspection])
+
+G_IR_SCANNER=
+G_IR_COMPILER=
+G_IR_GENERATE=
+GIRDIR=
+GIRTYPELIBDIR=
+
+if test "$enable_introspection" = "yes"; then
+  GOBJECT_INTROSPECTION_REQUIRED=0.6
+  PKG_CHECK_MODULES([GOBJECT_INTROSPECTION],[gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_REQUIRED])
+
+  G_IR_SCANNER="$($PKG_CONFIG --variable=g_ir_scanner gobject-introspection-1.0)"
+  G_IR_COMPILER="$($PKG_CONFIG --variable=g_ir_compiler gobject-introspection-1.0)"
+  G_IR_GENERATE="$($PKG_CONFIG --variable=g_ir_generate gobject-introspection-1.0)"
+  GIRDIR="$($PKG_CONFIG --variable=girdir gobject-introspection-1.0)"
+  GIRTYPELIBDIR="$($PKG_CONFIG --variable=typelibdir gobject-introspection-1.0)"
+fi
+
+AC_SUBST([G_IR_SCANNER])
+AC_SUBST([G_IR_COMPILER])
+AC_SUBST([G_IR_GENERATE])
+AC_SUBST([GIRDIR])
+AC_SUBST([GIRTYPELIBDIR])
+
+AM_CONDITIONAL([ENABLE_INTROSPECTION],[test "$enable_introspection" = "yes"])
+
 dnl ================== portability checks ===========================================
 
 dnl for backtrace()
@@ -574,6 +609,7 @@ Configure summary:
 	Thumbnailer........:  $ENABLE_THUMBNAILER
 	Gtk-Doc Support....:  $enable_gtk_doc
 	Debug mode.........:  $enable_debug
+	GObj. Introspection:  $enable_introspection
 
 	PDF Backend........:  $enable_pdf
 	PostScript Backend.:  $enable_ps
