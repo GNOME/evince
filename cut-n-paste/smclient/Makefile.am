@@ -1,9 +1,8 @@
 noinst_LTLIBRARIES = libsmclient.la
 
-if PLATFORM_WIN32
+if OS_WIN32
 platform_sources = eggsmclient-win32.c
 else
-platform_libs = -lSM -lICE
 platform_sources = 		\
 	eggsmclient-xsmp.c	\
 	eggdesktopfile.c	\
@@ -24,9 +23,7 @@ libsmclient_la_CFLAGS =				\
 	$(WARNING_CFLAGS)			\
 	$(DISABLE_DEPRECATED)
 
-libsmclient_la_LIBADD = 	\
-	$(SMCLIENT_LIBS)	\
-	$(platform_libs)
+libsmclient_la_LIBADD = $(SMCLIENT_LIBS)
 
 EXTRA_DIST =			\
 	eggsmclient-win32.c	\

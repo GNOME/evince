@@ -86,6 +86,18 @@ esac
 AC_MSG_RESULT([$platform_win32])
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
 
+AC_MSG_CHECKING([for native Win32])
+case "$host" in
+  *-*-mingw*)
+    os_win32=yes
+    ;;
+  *)
+    os_win32=no
+    ;;
+esac
+AC_MSG_RESULT([$os_win32])
+AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
+
 dnl Check dependencies
 
 # LIB_CFLAGS       for helpers and generic widgets. (libdocument, cut-and-paste)
@@ -111,7 +123,12 @@ PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0)
 
-PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0)
+if test "$os_win32" = no; then
+	PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0 sm >= 1.0.0)
+else
+	PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0)
+fi
+
 AC_SUBST(SMCLIENT_CFLAGS)
 AC_SUBST(SMCLIENT_LIBS)
 
