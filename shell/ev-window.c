@@ -888,29 +888,6 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 }
 
 static void
-setup_document_from_metadata (EvWindow *window)
-{
-	char *uri = window->priv->uri;
-	GValue page = { 0, };
-	gint n_pages;
-	gint new_page;
-
-	/* View the previously shown page, but make sure to not open a document on
-	 * the last page, since closing it on the last page most likely means the
-	 * user was finished reading the document. In that case, reopening should
-	 * show the first page. */
-	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
-		n_pages = ev_page_cache_get_n_pages (window->priv->page_cache);
-		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
-		if (!window->priv->in_reload && new_page == n_pages - 1)
-			new_page = 0;
-		ev_page_cache_set_current_page (window->priv->page_cache,
-						new_page);
-		g_value_unset (&page);
-	}
-}
-
-static void
 setup_chrome_from_metadata (EvWindow *window)
 {
 	EvChrome chrome = EV_CHROME_NORMAL;
@@ -925,17 +902,18 @@ setup_chrome_from_metadata (EvWindow *window)
 }
 
 static void
-setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
+setup_sidebar_from_metadata (EvWindow *window)
 {
-	char *uri = window->priv->uri;
-	GtkWidget *sidebar = window->priv->sidebar;
-	GtkWidget *links = window->priv->sidebar_links;
-	GtkWidget *thumbs = window->priv->sidebar_thumbs;
-	GtkWidget *attachments = window->priv->sidebar_attachments;
-	GtkWidget *layers = window->priv->sidebar_layers;
-	GValue sidebar_size = { 0, };
-	GValue sidebar_page = { 0, };
-	GValue sidebar_visibility = { 0, };
+	gchar      *uri = window->priv->uri;
+	EvDocument *document = window->priv->document;
+	GtkWidget  *sidebar = window->priv->sidebar;
+	GtkWidget  *links = window->priv->sidebar_links;
+	GtkWidget  *thumbs = window->priv->sidebar_thumbs;
+	GtkWidget  *attachments = window->priv->sidebar_attachments;
+	GtkWidget  *layers = window->priv->sidebar_layers;
+	GValue      sidebar_size = { 0, };
+	GValue      sidebar_page = { 0, };
+	GValue      sidebar_visibility = { 0, };
 
 	if (ev_metadata_manager_get (uri, "sidebar_size", &sidebar_size, FALSE)) {
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
@@ -976,13 +954,75 @@ setup_sidebar_from_metadata (EvWindow *window, EvDocument *document)
 }
 
 static void
+setup_document_from_metadata (EvWindow *window)
+{
+	gchar *uri = window->priv->uri;
+	GValue page = { 0, };
+	GValue width = { 0, };
+	GValue height = { 0, };
+	GValue width_ratio = { 0, };
+	GValue height_ratio = { 0, };
+
+	/* View the previously shown page, but make sure to not open a document on
+	 * the last page, since closing it on the last page most likely means the
+	 * user was finished reading the document. In that case, reopening should
+	 * show the first page. */
+	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
+		gint n_pages;
+		gint new_page;
+		
+		n_pages = ev_page_cache_get_n_pages (window->priv->page_cache);
+		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
+		ev_page_cache_set_current_page (window->priv->page_cache,
+						new_page);
+		g_value_unset (&page);
+	}
+
+	setup_sidebar_from_metadata (window);
+
+	if (ev_metadata_manager_get (uri, "window_width", &width, TRUE) &&
+	    ev_metadata_manager_get (uri, "window_height", &height, TRUE))
+		return; /* size was already set in setup_size_from_metadata */
+
+	if (ev_metadata_manager_get (uri, "window_width_ratio", &width_ratio, FALSE) &&
+	    ev_metadata_manager_get (uri, "window_height_ratio", &height_ratio, FALSE)) {
+		gint       document_width;
+		gint       document_height;
+		GdkScreen *screen;
+		gint       request_width;
+		gint       request_height;
+
+		ev_page_cache_get_max_width (window->priv->page_cache, 
+					     0, 1.0,
+					     &document_width);
+		ev_page_cache_get_max_height (window->priv->page_cache, 
+					     0, 1.0,
+					     &document_height);			
+		
+		request_width = g_value_get_double (&width_ratio) * document_width;
+		request_height = g_value_get_double (&height_ratio) * document_height;
+		
+		screen = gtk_window_get_screen (GTK_WINDOW (window));
+		
+		if (screen) {
+			request_width = MIN (request_width, gdk_screen_get_width (screen));
+			request_height = MIN (request_width, gdk_screen_get_height (screen));
+		}
+			        
+		gtk_window_resize (GTK_WINDOW (window),
+				   request_width,
+				   request_height);
+	    	g_value_unset (&width_ratio);
+		g_value_unset (&height_ratio);
+	}
+}
+
+static void
 setup_size_from_metadata (EvWindow *window)
 {
 	char *uri = window->priv->uri;
 	GValue width = { 0, };
 	GValue height = { 0, };
-	GValue width_ratio = { 0, };
-	GValue height_ratio = { 0, };
 	GValue maximized = { 0, };
 	GValue x = { 0, };
 	GValue y = { 0, };
@@ -1013,43 +1053,6 @@ setup_size_from_metadata (EvWindow *window)
 				   g_value_get_int (&height));
 	    	g_value_unset (&width);
 		g_value_unset (&height);
-		return;
-	}
-
-        if (window->priv->page_cache &&
-    	    ev_metadata_manager_get (uri, "window_width_ratio", &width_ratio, FALSE) &&
-	    ev_metadata_manager_get (uri, "window_height_ratio", &height_ratio, FALSE)) {
-		
-		gint document_width;
-		gint document_height;
-		
-		GdkScreen *screen;
-		
-		gint request_width;
-		gint request_height;
-
-		ev_page_cache_get_max_width (window->priv->page_cache, 
-					     0, 1.0,
-					     &document_width);
-		ev_page_cache_get_max_height (window->priv->page_cache, 
-					     0, 1.0,
-					     &document_height);			
-		
-		request_width = g_value_get_double (&width_ratio) * document_width;
-		request_height = g_value_get_double (&height_ratio) * document_height;
-		
-		screen = gtk_window_get_screen (GTK_WINDOW (window));
-		
-		if (screen) {
-			request_width = MIN (request_width, gdk_screen_get_width (screen));
-			request_height = MIN (request_width, gdk_screen_get_height (screen));
-		}
-			        
-		gtk_window_resize (GTK_WINDOW (window),
-				   request_width,
-				   request_height);
-	    	g_value_unset (&width_ratio);
-		g_value_unset (&height_ratio);
 	}
 }
 
@@ -1057,7 +1060,7 @@ static void
 setup_view_from_metadata (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
-	char *uri = window->priv->uri;
+	gchar *uri = window->priv->uri;
 	GEnumValue *enum_value;
 	GValue sizing_mode = { 0, };
 	GValue zoom = { 0, };
@@ -1066,17 +1069,6 @@ setup_view_from_metadata (EvWindow *window)
 	GValue presentation = { 0, };
 	GValue fullscreen = { 0, };
 	GValue rotation = { 0, };
-	GValue maximized = { 0, };
-
-	/* Maximized */
-	if (ev_metadata_manager_get (uri, "window_maximized", &maximized, FALSE)) {
-		if (g_value_get_boolean (&maximized)) {
-			gtk_window_maximize (GTK_WINDOW (window));
-		} else {
-			gtk_window_unmaximize (GTK_WINDOW (window));
-		}
-		g_value_unset (&maximized);
-	}
 
 	/* Sizing mode */
 	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode, FALSE)) {
@@ -1256,10 +1248,6 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	g_signal_connect (ev_window->priv->page_cache, "history-changed",
 			  G_CALLBACK (history_changed_cb), ev_window);
 
-	setup_size_from_metadata (ev_window);
-	setup_sidebar_from_metadata (ev_window, document);
-	setup_document_from_metadata (ev_window);
-
 	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
 		ev_view_set_document (view, document);
 	} else {
@@ -1379,6 +1367,8 @@ ev_window_load_job_cb (EvJob *job,
 	/* Success! */
 	if (!ev_job_is_failed (job)) {
 		ev_window_set_document (ev_window, document);
+
+		setup_document_from_metadata (ev_window);
 		
 		if (ev_window->priv->window_mode != EV_WINDOW_MODE_PREVIEW) {
 			setup_view_from_metadata (ev_window);
@@ -1497,15 +1487,27 @@ ev_window_reload_job_cb (EvJob    *job,
 			 EvWindow *ev_window)
 {
 	GtkWidget *widget;
+	gint       page;
 
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
 		ev_window->priv->in_reload = FALSE;
+		g_object_unref (ev_window->priv->dest);
+		ev_window->priv->dest = NULL;
+		
 		return;
 	}
 	
 	ev_window_set_document (ev_window, job->document);
 
+	/* Restart the current page */
+	page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
+		      0,
+		      ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
+	ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
+	g_object_unref (ev_window->priv->dest);
+	ev_window->priv->dest = NULL;
+	
 	/* Restart the search after reloading */
 	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
@@ -1845,7 +1847,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
 
 	setup_size_from_metadata (ev_window);
-	
+
 	ev_window->priv->load_job = ev_job_load_new (uri);
 	g_signal_connect (ev_window->priv->load_job,
 			  "finished",
@@ -2013,8 +2015,18 @@ ev_window_reload_remote (EvWindow *ev_window)
 static void
 ev_window_reload_document (EvWindow *ev_window)
 {
+	gint page;
+
+	
 	ev_window_clear_reload_job (ev_window);
 	ev_window->priv->in_reload = TRUE;
+
+	page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	
+	if (ev_window->priv->dest)
+		g_object_unref (ev_window->priv->dest);
+	/* FIXME: save the scroll position too (xyz dest) */
+	ev_window->priv->dest = ev_link_dest_new_page (page);
 
 	if (ev_window->priv->local_uri) {
 		ev_window_reload_remote (ev_window);
@@ -6261,7 +6273,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
 
 	setup_view_from_metadata (ev_window);
-	setup_sidebar_from_metadata (ev_window, NULL);
+	setup_sidebar_from_metadata (ev_window);
 
         ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
 	ev_window_setup_action_sensitivity (ev_window);

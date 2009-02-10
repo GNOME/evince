@@ -1,5 +1,17 @@
 2009-02-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (setup_document_from_metadata),
+	(setup_sidebar_from_metadata), (setup_document_from_metadata),
+	(setup_view_from_metadata), (ev_window_set_document),
+	(ev_window_load_job_cb), (ev_window_reload_job_cb),
+	(ev_window_reload_remote), (ev_window_init):
+
+	Do not use metadata when reloading the document, so that the
+	window is not resized when reloading. See bugs #571051 and
+	#304249.
+	
+2009-02-09  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* cut-n-paste/smclient/Makefile.am:
 
