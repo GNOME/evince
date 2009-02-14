@@ -327,6 +327,7 @@ egg_find_bar_init (EggFindBar *find_bar)
   /* Prev */
   arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
   priv->previous_button = gtk_tool_button_new (arrow, Q_("Find Pre_vious"));
+  gtk_tool_button_set_use_underline (GTK_TOOL_BUTTON (priv->previous_button), TRUE);
   gtk_tool_item_set_is_important (priv->previous_button, TRUE);
   gtk_widget_set_tooltip_text (GTK_WIDGET (priv->previous_button),
 			       _("Find previous occurrence of the search string"));
@@ -334,6 +335,7 @@ egg_find_bar_init (EggFindBar *find_bar)
   /* Next */
   arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
   priv->next_button = gtk_tool_button_new (arrow, Q_("Find Ne_xt"));
+  gtk_tool_button_set_use_underline (GTK_TOOL_BUTTON (priv->next_button), TRUE);
   gtk_tool_item_set_is_important (priv->next_button, TRUE);
   gtk_widget_set_tooltip_text (GTK_WIDGET (priv->next_button),
 			       _("Find next occurrence of the search string"));

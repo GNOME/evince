@@ -1,3 +1,10 @@
+2009-02-14  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* shell/eggfindbar.c: (egg_find_bar_init):
+
+	Use gtk_tool_button_set_use_underline() for next/previous buttons
+	so that the underline is used for the mnemonic. Fixes bug #571547.
+	
 2009-02-09  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* shell/ev-window.c: (setup_document_from_metadata),
