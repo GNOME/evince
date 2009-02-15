@@ -104,6 +104,21 @@ get_compression_from_mime_type (const gchar *mime_type)
 	return EV_COMPRESSION_NONE;
 }
 
+
+/*
+ * get_document_from_uri:
+ * @uri: the document URI
+ * @fast: whether to use fast MIME type detection
+ * @compression: return location to store the document's compression type
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Creates a #EvDocument instance for the document at @uri, using either
+ * fast or slow MIME type detection. If a document could be created,
+ * @compression is filled in with the document's compression type.
+ * On error, %NULL is returned and @error filled in.
+ * 
+ * Returns: a new #EvDocument instance, or %NULL on error
+ */
 static EvDocument *
 get_document_from_uri (const char        *uri,
 		       gboolean           fast,
@@ -112,19 +127,22 @@ get_document_from_uri (const char        *uri,
 {
 	EvDocument *document = NULL;
 	gchar      *mime_type = NULL;
+	GError     *err = NULL;
 
 	*compression = EV_COMPRESSION_NONE;
 
-	mime_type = ev_file_get_mime_type (uri, fast, error);
+	mime_type = ev_file_get_mime_type (uri, fast, &err);
 
 	if (mime_type == NULL) {
 		g_free (mime_type);
 
-		if (*error == NULL) {
+		if (err == NULL) {
 			g_set_error_literal (error,
                                              EV_DOCUMENT_ERROR,
                                              EV_DOCUMENT_ERROR_INVALID,
                                              _("Unknown MIME Type"));
+		} else {
+			g_propagate_error (error, err);
 		}
 		
 		return NULL;
