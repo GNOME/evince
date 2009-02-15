@@ -91,13 +91,11 @@ tiff_document_load (EvDocument  *document,
 	gchar *filename;
 	TIFF *tiff;
 	
-	push_handlers ();
 	filename = g_filename_from_uri (uri, NULL, error);
-	if (!filename) {
-		pop_handlers ();
+	if (!filename)
 		return FALSE;
-	}
 	
+	push_handlers ();
 	tiff = TIFFOpen (filename, "r");
 	if (tiff) {
 		guint32 w, h;
@@ -109,6 +107,13 @@ tiff_document_load (EvDocument  *document,
 	
 	if (!tiff) {
 		pop_handlers ();
+
+    		g_set_error_literal (error,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     _("Invalid document"));
+
+		g_free (filename);
 		return FALSE;
 	}
 	
