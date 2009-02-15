@@ -252,11 +252,14 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	size_read = g_input_stream_read (G_INPUT_STREAM (input_stream),
 					 buffer, sizeof (buffer), NULL, error);
 	if (size_read == -1) {
+		g_object_unref (input_stream);
 		g_object_unref (file);
 		return NULL;
 	}
 
 	retval = g_input_stream_close (G_INPUT_STREAM (input_stream), NULL, error);
+
+	g_object_unref (input_stream);
 	g_object_unref (file);
 	if (!retval)
 		return NULL;
