@@ -1,5 +1,10 @@
 2009-02-14  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-document.c: (ev_document_load): Add code to catch
+	backends incorrectly implementing the load vfunc.
+
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
 	* libdocument/ev-document-factory.c:
 	(ev_document_factory_get_document): Use a local GError, and propagate
 	as appropriate, making sure always to fill in @error if returning NULL.

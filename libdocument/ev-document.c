@@ -120,8 +120,23 @@ ev_document_load (EvDocument  *document,
 {
 	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
 	gboolean retval;
+	GError *err = NULL;
 
-	retval = iface->load (document, uri, error);
+	retval = iface->load (document, uri, &err);
+	if (!retval) {
+		if (err) {
+			g_propagate_error (error, err);
+		} else {
+			g_warning ("%s::EvDocumentIface::load returned FALSE but did not fill in @error; fix the backend!\n",
+				   G_OBJECT_TYPE_NAME (document));
+
+			/* So upper layers don't crash */
+			g_set_error_literal (error,
+					     EV_DOCUMENT_ERROR,
+					     EV_DOCUMENT_ERROR_INVALID,
+					     "Internal error in backend");
+		}
+	}
 
 	return retval;
 }
