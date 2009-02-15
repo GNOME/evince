@@ -96,6 +96,17 @@ ev_document_fc_mutex_trylock (void)
 	return g_mutex_trylock (ev_document_get_fc_mutex ());
 }
 
+/**
+ * ev_document_load:
+ * @document: a #EvDocument
+ * @uri: the document's URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Loads @document from @uri.
+ * On failure, @error is filled in.
+ *
+ * Returns: %TRUE on success, or %FALSE on failure.
+ */
 gboolean
 ev_document_load (EvDocument  *document,
 		  const char  *uri,
