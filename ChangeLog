@@ -1,5 +1,10 @@
 2009-02-13  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-file-helpers.c: (get_mime_type_from_data): Propagate
+	all errors upwards.
+
+2009-02-13  Christian Persch  <chpe@gnome.org>
+
 	* libdocument/ev-file-helpers.c: (get_mime_type_from_data): Don't use
 	more bytes from buffer than were read from the file.
 

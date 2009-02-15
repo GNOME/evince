@@ -239,6 +239,7 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	GFileInputStream *input_stream;
 	gssize            size_read;
 	guchar            buffer[1024];
+	gboolean          retval;
 
 	file = g_file_new_for_uri (uri);
 	
@@ -249,12 +250,15 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	}
 
 	size_read = g_input_stream_read (G_INPUT_STREAM (input_stream),
-					 buffer, 1024, NULL, NULL);
-	g_input_stream_close (G_INPUT_STREAM (input_stream), NULL, error);
+					 buffer, sizeof (buffer), NULL, error);
+	if (size_read == -1) {
+		g_object_unref (file);
+		return NULL;
+	}
 
+	retval = g_input_stream_close (G_INPUT_STREAM (input_stream), NULL, error);
 	g_object_unref (file);
-
-	if (size_read == -1)
+	if (!retval)
 		return NULL;
 
 	return g_content_type_guess (NULL, /* no filename */
