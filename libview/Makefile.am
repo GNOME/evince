@@ -33,7 +33,7 @@ libevview_la_SOURCES = 			\
 	$(INST_H_FILES)
 
 libevview_la_CPPFLAGS = \
-	-DG_LOG_DOMAIN=\"EvView\"		\
+	-DG_LOG_DOMAIN=\"EvinceView\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DEVINCE_COMPILATION			\
 	-I$(top_srcdir)				\
@@ -94,9 +94,9 @@ EXTRA_DIST = \
 
 if ENABLE_INTROSPECTION
 
-EvView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES)
+EvinceView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES)
 	PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
-	$(G_IR_SCANNER) -v --namespace EvView \
+	$(G_IR_SCANNER) -v --namespace EvinceView \
 	--add-include-path=$(srcdir) \
 	--add-include-path=. \
 	--add-include-path=$(top_srcdir) \
@@ -120,10 +120,10 @@ EvView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES)
 	$(INST_H_FILES)
 
 girdir = $(GIRDIR)
-gir_DATA = EvView-$(EV_API_VERSION).gir
+gir_DATA = EvinceView-$(EV_API_VERSION).gir
 
 typelibsdir = $(GIRTYPELIBDIR)
-typelibs_DATA = EvView-$(EV_API_VERSION).typelib
+typelibs_DATA = EvinceView-$(EV_API_VERSION).typelib
 
 EXTRA_DIST += $(gir_DATA)
 CLEANFILES += $(gir_DATA) $(typelibs_DATA)
