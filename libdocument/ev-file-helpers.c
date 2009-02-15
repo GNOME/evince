@@ -212,9 +212,9 @@ ev_xfer_uri_simple (const char *from,
 static gchar *
 get_mime_type_from_uri (const gchar *uri, GError **error)
 {
-	GFile     *file;
-	GFileInfo *file_info;
-	gchar     *mime_type;
+	GFile       *file;
+	GFileInfo   *file_info;
+	const gchar *content_type;
 
 	file = g_file_new_for_uri (uri);
 	file_info = g_file_query_info (file,
@@ -225,11 +225,13 @@ get_mime_type_from_uri (const gchar *uri, GError **error)
 	if (file_info == NULL)
 		return NULL;
 
-	mime_type = g_content_type_get_mime_type (
-			g_file_info_get_content_type (file_info));
+	content_type = g_file_info_get_content_type (file_info);
 	g_object_unref (file_info);
 
-	return mime_type;
+	if (!content_type)
+		return NULL;
+
+	return g_content_type_get_mime_type (content_type);
 }
 
 static gchar *
@@ -240,6 +242,7 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	gssize            size_read;
 	guchar            buffer[1024];
 	gboolean          retval;
+	gchar            *content_type, *mime_type;
 
 	file = g_file_new_for_uri (uri);
 	
@@ -264,9 +267,15 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	if (!retval)
 		return NULL;
 
-	return g_content_type_guess (NULL, /* no filename */
-				     buffer, size_read,
-				     NULL);
+	content_type = g_content_type_guess (NULL, /* no filename */
+					     buffer, size_read,
+					     NULL);
+	if (!content_type)
+		return NULL;
+
+	mime_type = g_content_type_get_mime_type (content_type);
+	g_free (content_type);
+	return mime_type;
 }
 
 /**

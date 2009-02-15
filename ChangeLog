@@ -1,5 +1,11 @@
 2009-02-13  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-file-helpers.c: (get_mime_type_from_uri): NULL
+	safety.
+	(get_mime_type_from_data): Return the MIME type, not the content type.
+
+2009-02-13  Christian Persch  <chpe@gnome.org>
+
 	* libdocument/ev-file-helpers.c: (get_mime_type_from_data): Don't leak
 	the input stream.
 
