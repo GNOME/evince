@@ -88,14 +88,8 @@ dvi_document_load (EvDocument  *document,
 	DviDocument *dvi_document = DVI_DOCUMENT(document);
 	
 	filename = g_filename_from_uri (uri, NULL, error);
-	
-	if (!filename) {
-		g_set_error_literal (error,
-                                     EV_DOCUMENT_ERROR,
-                                     EV_DOCUMENT_ERROR_INVALID,
-                                     _("File not available"));
+	if (!filename)
         	return FALSE;
-	}
 	
 	g_mutex_lock (dvi_context_mutex);
 	if (dvi_document->context)
