@@ -228,6 +228,7 @@ static void
 convert_error (GError  *poppler_error,
 	       GError **error)
 {
+	g_return_if_fail (poppler_error != NULL);
 	if (poppler_error == NULL)
 		return;
 
@@ -243,6 +244,8 @@ convert_error (GError  *poppler_error,
                                      EV_DOCUMENT_ERROR,
                                      code,
                                      poppler_error->message);
+
+		g_error_free (poppler_error);
 	} else {
 		g_propagate_error (error, poppler_error);
 	}
