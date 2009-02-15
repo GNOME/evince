@@ -109,7 +109,7 @@ get_compression_from_mime_type (const gchar *mime_type)
  * get_document_from_uri:
  * @uri: the document URI
  * @fast: whether to use fast MIME type detection
- * @compression: return location to store the document's compression type
+ * @compression: a location to store the document's compression type
  * @error: a #GError location to store an error, or %NULL
  *
  * Creates a #EvDocument instance for the document at @uri, using either
@@ -117,7 +117,7 @@ get_compression_from_mime_type (const gchar *mime_type)
  * @compression is filled in with the document's compression type.
  * On error, %NULL is returned and @error filled in.
  * 
- * Returns: a new #EvDocument instance, or %NULL on error
+ * Returns: a new #EvDocument instance, or %NULL on error with @error filled in
  */
 static EvDocument *
 get_document_from_uri (const char        *uri,
