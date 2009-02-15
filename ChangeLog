@@ -1,5 +1,10 @@
 2009-02-14  Christian Persch  <chpe@gnome.org>
 
+	* backend/impress/impress-document.c: (impress_document_load): Don't
+	overwrite an error.
+
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
 	* libdocument/ev-document.c: (ev_document_info_copy): Remove
 	unnecessary NULL check; g_strdup() is NULL-safe.
 

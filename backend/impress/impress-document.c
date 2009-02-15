@@ -290,13 +290,7 @@ impress_document_load (EvDocument  *document,
   /* FIXME: Could we actually load uris ? */
   filename = g_filename_from_uri (uri, NULL, error);
   if (!filename)
-    {
-      g_set_error_literal (error,
-                           EV_DOCUMENT_ERROR,
-                           EV_DOCUMENT_ERROR_INVALID,
-                           _("Remote files aren't supported"));
-      return FALSE;
-    }
+    return FALSE;
 
   imp = imp_open (filename, &err);
 
