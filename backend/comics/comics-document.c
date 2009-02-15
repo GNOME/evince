@@ -114,12 +114,27 @@ comics_document_load (EvDocument *document,
 	gchar **cbr_files;
 	gboolean success;
 	int i, retval;
+	GError *err = NULL;
 
 	comics_document->archive = g_filename_from_uri (uri, NULL, error);
-	g_return_val_if_fail (comics_document->archive != NULL, FALSE);
+	if (!comics_document->archive)
+		return FALSE;
+
+	mime_type = ev_file_get_mime_type (uri, FALSE, &err);
+	if (!mime_type) {
+		if (err) {
+			g_propagate_error (error, err);
+		} else {
+			g_set_error_literal (error,
+					      EV_DOCUMENT_ERROR,
+					      EV_DOCUMENT_ERROR_INVALID,
+					      _("Unknown MIME Type"));
+		}
+
+		return FALSE;
+	}
 
 	quoted_file = g_shell_quote (comics_document->archive);
-	mime_type = ev_file_get_mime_type (uri, FALSE, NULL);
 
 	/* FIXME, use proper cbr/cbz mime types once they're
 	 * included in shared-mime-info */
@@ -143,6 +158,15 @@ comics_document_load (EvDocument *document,
 		list_files_command = 
 			g_strdup_printf ("7zr l -- %s", quoted_file);
 		comics_document->regex_arg = TRUE;
+	} else {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     _("Not a comic book MIME type: %s"),
+			     mime_type);
+		g_free (mime_type);
+		g_free (quoted_file);
+		return FALSE;
 	}
 
 	g_free (mime_type);
@@ -163,7 +187,18 @@ comics_document_load (EvDocument *document,
 		return FALSE;
 	}
 
+	/* FIXME: is this safe against filenames containing \n in the archive ? */
 	cbr_files = g_strsplit (std_out, "\n", 0);
+	g_free (std_out);
+
+	if (!cbr_files) {
+		g_set_error_literal (error,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     _("No files in archive."));
+		return FALSE;
+	}
+
 	supported_extensions = get_supported_image_extensions ();
 	for (i = 0; cbr_files[i] != NULL; i++) {
 		gchar *suffix = g_strrstr (cbr_files[i], ".");
@@ -184,7 +219,6 @@ comics_document_load (EvDocument *document,
 		g_free (suffix);
 	}
 
-	g_free (std_out);
 	g_strfreev (cbr_files);
 	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
 	g_slist_free (supported_extensions);

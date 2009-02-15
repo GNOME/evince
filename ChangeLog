@@ -1,5 +1,10 @@
 2009-02-14  Christian Persch  <chpe@gnome.org>
 
+	* backend/comics/comics-document.c: (comics_document_load): Make sure
+	to always set @error when returning FALSE.
+
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
 	* backend/impress/impress-document.c: (impress_document_load): Plug a
 	mem leak.
 
