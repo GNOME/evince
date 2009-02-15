@@ -1,5 +1,10 @@
 2009-02-14  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-document.c: (ev_document_info_copy): Remove
+	unnecessary NULL check; g_strdup() is NULL-safe.
+
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
 	* libdocument/ev-document-factory.c: (get_document_from_uri): Document
 	that this returns either NULL and fills in error, or non-NULL. Use a
 	local GError so we can reliably check it.

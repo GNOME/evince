@@ -239,15 +239,15 @@ ev_document_info_copy (EvDocumentInfo *info)
 	g_return_val_if_fail (info != NULL, NULL);
 
 	copy = g_new0 (EvDocumentInfo, 1);
-	copy->title = info->title ? g_strdup (info->title) : NULL;
-	copy->format = info->format ? g_strdup (info->format) : NULL;
-	copy->author = info->author ? g_strdup (info->author) : NULL;
-	copy->subject = info->subject ? g_strdup (info->subject) : NULL;
-	copy->keywords = info->keywords ? g_strdup (info->keywords) : NULL;
-	copy->security = info->security ? g_strdup (info->security) : NULL;
-	copy->creator = info->creator ? g_strdup (info->creator) : NULL;
-	copy->producer = info->producer ? g_strdup (info->producer) : NULL;
-	copy->linearized = info->linearized ? g_strdup (info->linearized) : NULL;
+	copy->title = g_strdup (info->title);
+	copy->format = g_strdup (info->format);
+	copy->author = g_strdup (info->author);
+	copy->subject = g_strdup (info->subject);
+	copy->keywords = g_strdup (info->keywords);
+	copy->security = g_strdup (info->security);
+	copy->creator = g_strdup (info->creator);
+	copy->producer = g_strdup (info->producer);
+	copy->linearized = g_strdup (info->linearized);
 	
 	copy->creation_date = info->creation_date;
 	copy->modified_date = info->modified_date;
@@ -298,6 +298,3 @@ ev_rect_cmp (EvRectangle *a,
 		  (ABS (a->x2 - b->x2) < EPSILON) &&
 		  (ABS (a->y2 - b->y2) < EPSILON));
 }
-
-
-
