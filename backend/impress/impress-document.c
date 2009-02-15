@@ -293,6 +293,7 @@ impress_document_load (EvDocument  *document,
     return FALSE;
 
   imp = imp_open (filename, &err);
+  g_free (filename);
 
   if (!imp)
     {
@@ -300,7 +301,6 @@ impress_document_load (EvDocument  *document,
                            EV_DOCUMENT_ERROR,
                            EV_DOCUMENT_ERROR_INVALID,
                            _("Invalid document"));
-      g_free (filename);
       return FALSE;
     }
   impress_document->imp = imp;
