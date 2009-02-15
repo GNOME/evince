@@ -209,84 +209,88 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	int result;
 	EvCompressionType compression;
 	gchar *uri_unc = NULL;
+	GError *err = NULL;
 
-	document = get_document_from_uri (uri, TRUE, &compression, error);
-	if (*error == NULL) {
-		uri_unc = ev_file_uncompress (uri, compression, error);
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	document = get_document_from_uri (uri, TRUE, &compression, &err);
+	g_assert (document != NULL || err != NULL);
+
+	if (document != NULL) {
+		uri_unc = ev_file_uncompress (uri, compression, &err);
 		if (uri_unc) {
 			g_object_set_data_full (G_OBJECT (document),
 						"uri-uncompressed",
 						uri_unc,
 						(GDestroyNotify) free_uncompressed_uri);
-		}
-
-		if (*error != NULL) {
+		} else if (err != NULL) {
 			/* Error uncompressing file */
-			if (document)
-				g_object_unref (document);
+			g_object_unref (document);
+			g_propagate_error (error, err);
 			return NULL;
 		}
 
-		result = ev_document_load (document, uri_unc ? uri_unc : uri, error);
+		result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
 
-		if (result == FALSE || *error) {
-			if (*error &&
-			    (*error)->domain == EV_DOCUMENT_ERROR &&
-			    (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED)
+		if (result == FALSE || err) {
+			if (err &&
+			    g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+				g_error_free (err);
 				return document;
+			    }
+			/* else fall through to slow mime code section below */
 		} else {
 			return document;
 		}
+
+		g_object_unref (document);
+		document = NULL;
 	}
 	
 	/* Try again with slow mime detection */
-	if (document)
-		g_object_unref (document);
-	document = NULL;
-
-	if (*error)
-		g_error_free (*error);
-	*error = NULL;
-
+	g_clear_error (&err);
 	uri_unc = NULL;
 
-	document = get_document_from_uri (uri, FALSE, &compression, error);
-
-	if (*error != NULL) {
+	document = get_document_from_uri (uri, FALSE, &compression, &err);
+	if (document == NULL) {
+		g_assert (err != NULL);
+		g_propagate_error (error, err);
 		return NULL;
 	}
 
-	uri_unc = ev_file_uncompress (uri, compression, error);
+	uri_unc = ev_file_uncompress (uri, compression, &err);
 	if (uri_unc) {
 		g_object_set_data_full (G_OBJECT (document),
 					"uri-uncompressed",
 					uri_unc,
 					(GDestroyNotify) free_uncompressed_uri);
-	}
-
-	if (*error != NULL) {
+	} else if (err != NULL) {
 		/* Error uncompressing file */
-		if (document)
-			g_object_unref (document);
+		g_propagate_error (error, err);
+
+		g_object_unref (document);
 		return NULL;
 	}
 	
-	result = ev_document_load (document, uri_unc ? uri_unc : uri, error);
-
+	result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
 	if (result == FALSE) {
-		if (*error == NULL) {
-			g_set_error_literal (error,
+		if (err == NULL) {
+			/* FIXME: this really should not happen; the backend should
+			 * always return a meaningful error.
+			 */
+			g_set_error_literal (&err,
                                              EV_DOCUMENT_ERROR,
                                              EV_DOCUMENT_ERROR_INVALID,
                                              _("Unknown MIME Type"));
-		} else if ((*error)->domain == EV_DOCUMENT_ERROR &&
-			   (*error)->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+		} else if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+			g_error_free (err);
 			return document;
 		}
 
-		if (document)
-			g_object_unref (document);
+		g_object_unref (document);
 		document = NULL;
+
+		g_propagate_error (error, err);
 	}
 	
 	return document;

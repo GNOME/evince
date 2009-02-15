@@ -1,5 +1,11 @@
 2009-02-14  Christian Persch  <chpe@gnome.org>
 
+	* libdocument/ev-document-factory.c:
+	(ev_document_factory_get_document): Use a local GError, and propagate
+	as appropriate, making sure always to fill in @error if returning NULL.
+
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
 	* shell/ev-window.c: (ev_window_load_job_cb): Use g_error_matches.
 
 2009-02-14  Christian Persch  <chpe@gnome.org>
