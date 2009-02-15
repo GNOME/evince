@@ -138,15 +138,19 @@ get_document_from_uri (const char        *uri,
 #endif /* ENABLE_PIXBUF */
 
 	if (document == NULL) {
-		gchar *mime_desc;
+		gchar *content_type, *mime_desc = NULL;
 
-		mime_desc = g_content_type_get_description (mime_type);
+		content_type = g_content_type_from_mime_type (mime_type);
+		if (content_type)
+			mime_desc = g_content_type_get_description (content_type);
+
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,	
 			     EV_DOCUMENT_ERROR_INVALID,
 			     _("File type %s (%s) is not supported"),
-			     mime_desc, mime_type);
+			     mime_desc ? mime_desc : "-", mime_type);
 		g_free (mime_desc);
+		g_free (content_type);
 		g_free (mime_type);
 
 		return NULL;
