@@ -262,6 +262,18 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 				     NULL);
 }
 
+/**
+ * ev_file_get_mime_type:
+ * @uri: the URI
+ * @fast: whether to use fast MIME type detection
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Note: on unknown MIME types, this may return NULL without @error
+ * being filled in.
+ * 
+ * Returns: a newly allocated string with the MIME type of the file at
+ *   @uri, or %NULL on error or if the MIME type could not be determined
+ */
 gchar *
 ev_file_get_mime_type (const gchar *uri,
 		       gboolean     fast,
