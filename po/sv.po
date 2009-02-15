@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-01 18:27+0100\n"
-"PO-Revision-Date: 2009-02-01 18:35+0100\n"
+"POT-Creation-Date: 2009-02-15 10:31+0100\n"
+"PO-Revision-Date: 2009-02-15 10:32+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../backend/comics/comics-document.c:162
-#, c-format
 msgid "File corrupted."
 msgstr "Filen är skadad."
 
@@ -34,7 +33,6 @@ msgid "Comic Books"
 msgstr "Serietidningar"
 
 #: ../backend/djvu/djvu-document.c:247
-#, c-format
 msgid "The document is composed by several files. One or more of such files cannot be accessed."
 msgstr "Dokumentet innehåller flera filer. En eller flera av dessa filer går inte komma åt."
 
@@ -43,12 +41,10 @@ msgid "Djvu Documents"
 msgstr "Djvu-dokument"
 
 #: ../backend/dvi/dvi-document.c:96
-#, c-format
 msgid "File not available"
 msgstr "Filen är inte tillgänglig"
 
 #: ../backend/dvi/dvi-document.c:112
-#, c-format
 msgid "DVI document has incorrect format"
 msgstr "DVI-dokumentet har felaktigt format"
 
@@ -57,60 +53,60 @@ msgid "DVI Documents"
 msgstr "DVI-dokument"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:699
+#: ../backend/pdf/ev-poppler.cc:697
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:702
+#: ../backend/pdf/ev-poppler.cc:700
 msgid "No"
 msgstr "Nej"
 
-#: ../backend/pdf/ev-poppler.cc:776
+#: ../backend/pdf/ev-poppler.cc:774
 msgid "Type 1"
 msgstr "Typ 1"
 
-#: ../backend/pdf/ev-poppler.cc:778
+#: ../backend/pdf/ev-poppler.cc:776
 msgid "Type 1C"
 msgstr "Typ 1C"
 
-#: ../backend/pdf/ev-poppler.cc:780
+#: ../backend/pdf/ev-poppler.cc:778
 msgid "Type 3"
 msgstr "Typ 3"
 
-#: ../backend/pdf/ev-poppler.cc:782
+#: ../backend/pdf/ev-poppler.cc:780
 msgid "TrueType"
 msgstr "Truetype"
 
-#: ../backend/pdf/ev-poppler.cc:784
+#: ../backend/pdf/ev-poppler.cc:782
 msgid "Type 1 (CID)"
 msgstr "Typ 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:786
+#: ../backend/pdf/ev-poppler.cc:784
 msgid "Type 1C (CID)"
 msgstr "Typ 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:788
+#: ../backend/pdf/ev-poppler.cc:786
 msgid "TrueType (CID)"
 msgstr "Truetype (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:790
+#: ../backend/pdf/ev-poppler.cc:788
 msgid "Unknown font type"
 msgstr "Okänd typsnittstyp"
 
-#: ../backend/pdf/ev-poppler.cc:816
+#: ../backend/pdf/ev-poppler.cc:814
 msgid "No name"
 msgstr "Inget namn"
 
-#: ../backend/pdf/ev-poppler.cc:824
+#: ../backend/pdf/ev-poppler.cc:822
 msgid "Embedded subset"
 msgstr "Inbyggd delmängd"
 
-#: ../backend/pdf/ev-poppler.cc:826
+#: ../backend/pdf/ev-poppler.cc:824
 msgid "Embedded"
 msgstr "Inbyggd"
 
-#: ../backend/pdf/ev-poppler.cc:828
+#: ../backend/pdf/ev-poppler.cc:826
 msgid "Not embedded"
 msgstr "Inte inbyggd"
 
@@ -120,12 +116,10 @@ msgstr "PDF-dokument"
 
 # Hmm, stämmer detta? FIXME
 #: ../backend/impress/impress-document.c:297
-#, c-format
 msgid "Remote files aren't supported"
 msgstr "Fjärrfiler stöds inte"
 
 #: ../backend/impress/impress-document.c:308
-#, c-format
 msgid "Invalid document"
 msgstr "Ogiltigt dokument"
 
@@ -205,7 +199,6 @@ msgstr "Kunde inte öppna bilagan \"%s\""
 
 #: ../libdocument/ev-document-factory.c:127
 #: ../libdocument/ev-document-factory.c:248
-#, c-format
 msgid "Unknown MIME Type"
 msgstr "Okänd MIME-typ"
 
@@ -363,13 +356,13 @@ msgstr "Ta bort markerad verktygsrad"
 msgid "Separator"
 msgstr "Avskiljare"
 
-#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:117
 msgid "Running in presentation mode"
 msgstr "Kör i presentationsläge"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:5276
+#: ../shell/ev-window.c:5294
 msgid "Best Fit"
 msgstr "Bästa anpassning"
 
@@ -418,7 +411,7 @@ msgid "400%"
 msgstr "400%"
 
 #: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window.c:4254
+#: ../shell/ev-window.c:4272
 #: ../shell/ev-window-title.c:149
 #, c-format
 msgid "Document Viewer"
@@ -441,60 +434,60 @@ msgid "Document"
 msgstr "Dokument"
 
 #: ../properties/ev-properties-view.c:59
-msgid "Title"
-msgstr "Titel"
+msgid "Title:"
+msgstr "Titel:"
 
 #: ../properties/ev-properties-view.c:60
-msgid "Location"
-msgstr "Plats"
+msgid "Location:"
+msgstr "Plats:"
 
 #: ../properties/ev-properties-view.c:61
-msgid "Subject"
-msgstr "Ämne"
+msgid "Subject:"
+msgstr "Ämne:"
 
 #: ../properties/ev-properties-view.c:62
-msgid "Author"
-msgstr "Författare"
+msgid "Author:"
+msgstr "Författare:"
 
 #: ../properties/ev-properties-view.c:63
-msgid "Keywords"
-msgstr "Nyckelord"
+msgid "Keywords:"
+msgstr "Nyckelord:"
 
 #: ../properties/ev-properties-view.c:64
-msgid "Producer"
-msgstr "Producent"
+msgid "Producer:"
+msgstr "Producent:"
 
 #: ../properties/ev-properties-view.c:65
-msgid "Creator"
-msgstr "Skapare"
+msgid "Creator:"
+msgstr "Skapare:"
 
 #: ../properties/ev-properties-view.c:66
-msgid "Created"
-msgstr "Skapad"
+msgid "Created:"
+msgstr "Skapad:"
 
 #: ../properties/ev-properties-view.c:67
-msgid "Modified"
-msgstr "Ändrad"
+msgid "Modified:"
+msgstr "Ändrad:"
 
 #: ../properties/ev-properties-view.c:68
-msgid "Number of Pages"
-msgstr "Antal sidor"
+msgid "Number of Pages:"
+msgstr "Antal sidor:"
 
 #: ../properties/ev-properties-view.c:69
-msgid "Optimized"
-msgstr "Optimerad"
+msgid "Optimized:"
+msgstr "Optimerad:"
 
 #: ../properties/ev-properties-view.c:70
-msgid "Format"
-msgstr "Format"
+msgid "Format:"
+msgstr "Format:"
 
 #: ../properties/ev-properties-view.c:71
-msgid "Security"
-msgstr "Säkerhet"
+msgid "Security:"
+msgstr "Säkerhet:"
 
 #: ../properties/ev-properties-view.c:72
-msgid "Paper Size"
-msgstr "Pappersstorlek"
+msgid "Paper Size:"
+msgstr "Pappersstorlek:"
 
 #: ../properties/ev-properties-view.c:202
 msgid "None"
@@ -654,28 +647,28 @@ msgid "Find:"
 msgstr "Sök:"
 
 #: ../shell/eggfindbar.c:329
-#: ../shell/ev-window.c:5010
+#: ../shell/ev-window.c:5028
 msgid "Find Pre_vious"
 msgstr "Sök _föregående"
 
-#: ../shell/eggfindbar.c:332
+#: ../shell/eggfindbar.c:333
 msgid "Find previous occurrence of the search string"
 msgstr "Sök föregående förekomst av söksträngen"
 
-#: ../shell/eggfindbar.c:336
-#: ../shell/ev-window.c:5008
+#: ../shell/eggfindbar.c:337
+#: ../shell/ev-window.c:5026
 msgid "Find Ne_xt"
 msgstr "Sök _nästa"
 
-#: ../shell/eggfindbar.c:339
+#: ../shell/eggfindbar.c:341
 msgid "Find next occurrence of the search string"
 msgstr "Sök nästa förekomst av söksträngen"
 
-#: ../shell/eggfindbar.c:346
+#: ../shell/eggfindbar.c:348
 msgid "C_ase Sensitive"
 msgstr "_Gör skillnad på gemener/VERSALER"
 
-#: ../shell/eggfindbar.c:349
+#: ../shell/eggfindbar.c:351
 msgid "Toggle case sensitive search"
 msgstr "Växla skiftlägeskänslig sökning"
 
@@ -753,7 +746,7 @@ msgid "Printing is not supported on this printer."
 msgstr "Utskrift stöds inte på denna skrivare."
 
 #: ../shell/ev-print-operation.c:1136
-#: ../shell/ev-window.c:5061
+#: ../shell/ev-window.c:5079
 msgid "Print"
 msgstr "Skriv ut"
 
@@ -798,146 +791,146 @@ msgstr "Index"
 msgid "Thumbnails"
 msgstr "Miniatyrbilder"
 
-#: ../shell/ev-window.c:837
+#: ../shell/ev-window.c:843
 #, c-format
 msgid "Page %s - %s"
 msgstr "Sida %s - %s"
 
-#: ../shell/ev-window.c:839
+#: ../shell/ev-window.c:845
 #, c-format
 msgid "Page %s"
 msgstr "Sida %s"
 
-#: ../shell/ev-window.c:1261
+#: ../shell/ev-window.c:1255
 msgid "The document contains no pages"
 msgstr "Dokumentet innehåller inga sidor"
 
-#: ../shell/ev-window.c:1484
-#: ../shell/ev-window.c:1629
+#: ../shell/ev-window.c:1480
+#: ../shell/ev-window.c:1637
 msgid "Unable to open document"
 msgstr "Kan inte öppna dokument"
 
-#: ../shell/ev-window.c:1603
+#: ../shell/ev-window.c:1611
 #, c-format
 msgid "Loading document from %s"
 msgstr "Läser in dokument från %s"
 
-#: ../shell/ev-window.c:1741
-#: ../shell/ev-window.c:1934
+#: ../shell/ev-window.c:1749
+#: ../shell/ev-window.c:1942
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Hämtar dokument (%d %%)"
 
-#: ../shell/ev-window.c:1880
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Läser om dokumentet från %s"
 
-#: ../shell/ev-window.c:1913
+#: ../shell/ev-window.c:1921
 msgid "Failed to reload document."
 msgstr "Misslyckades med att läsa om dokumentet."
 
-#: ../shell/ev-window.c:2052
+#: ../shell/ev-window.c:2070
 msgid "Open Document"
 msgstr "Öppna dokument"
 
-#: ../shell/ev-window.c:2113
+#: ../shell/ev-window.c:2131
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr "Kunde inte skapa symboliska länken \"%s\": %s"
 
-#: ../shell/ev-window.c:2142
+#: ../shell/ev-window.c:2160
 msgid "Cannot open a copy."
 msgstr "Kan inte öppna en kopia."
 
-#: ../shell/ev-window.c:2382
+#: ../shell/ev-window.c:2400
 #, c-format
 msgid "Saving document to %s"
 msgstr "Sparar dokument till %s"
 
-#: ../shell/ev-window.c:2385
+#: ../shell/ev-window.c:2403
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Sparar bilaga till %s"
 
-#: ../shell/ev-window.c:2388
+#: ../shell/ev-window.c:2406
 #, c-format
 msgid "Saving image to %s"
 msgstr "Sparar bild till %s"
 
-#: ../shell/ev-window.c:2433
-#: ../shell/ev-window.c:2530
+#: ../shell/ev-window.c:2451
+#: ../shell/ev-window.c:2548
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Filen kunde inte sparas som \"%s\"."
 
-#: ../shell/ev-window.c:2461
+#: ../shell/ev-window.c:2479
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Skickar upp dokument (%d %%)"
 
-#: ../shell/ev-window.c:2465
+#: ../shell/ev-window.c:2483
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Skickar upp bilaga (%d %%)"
 
-#: ../shell/ev-window.c:2469
+#: ../shell/ev-window.c:2487
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Skickar upp bild (%d %%)"
 
-#: ../shell/ev-window.c:2576
+#: ../shell/ev-window.c:2594
 msgid "Save a Copy"
 msgstr "Spara en kopia"
 
-#: ../shell/ev-window.c:2779
+#: ../shell/ev-window.c:2797
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d väntande jobb i kö"
 msgstr[1] "%d väntande jobb i kö"
 
-#: ../shell/ev-window.c:2835
-#: ../shell/ev-window.c:3945
+#: ../shell/ev-window.c:2853
+#: ../shell/ev-window.c:3963
 msgid "Failed to print document"
 msgstr "Misslyckades med att skriva ut dokument"
 
-#: ../shell/ev-window.c:2892
+#: ../shell/ev-window.c:2910
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Skriver ut jobbet \"%s\""
 
-#: ../shell/ev-window.c:3089
+#: ../shell/ev-window.c:3107
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Vänta med att stänga tills utskriftsjobbet \"%s\" är färdigt?"
 
-#: ../shell/ev-window.c:3092
+#: ../shell/ev-window.c:3110
 #, c-format
 msgid "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr "Det finns %d utskriftsjobb aktiva. Vänta med att stänga tills utskriften är färdig?"
 
-#: ../shell/ev-window.c:3104
+#: ../shell/ev-window.c:3122
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Om du stänger fönstret så kommer väntande utskriftsjobb inte att skrivas ut."
 
-#: ../shell/ev-window.c:3108
+#: ../shell/ev-window.c:3126
 msgid "Cancel _print and Close"
 msgstr "Avbryt _utskrift och stäng"
 
-#: ../shell/ev-window.c:3112
+#: ../shell/ev-window.c:3130
 msgid "Close _after Printing"
 msgstr "Stäng _efter utskrift"
 
-#: ../shell/ev-window.c:3715
+#: ../shell/ev-window.c:3733
 msgid "Toolbar Editor"
 msgstr "Verktygsradsredigerare"
 
-#: ../shell/ev-window.c:3847
+#: ../shell/ev-window.c:3865
 msgid "There was an error displaying help"
 msgstr "Det uppstod ett fel vid visning av hjälp"
 
-#: ../shell/ev-window.c:4250
+#: ../shell/ev-window.c:4268
 #, c-format
 msgid ""
 "Document Viewer.\n"
@@ -946,27 +939,29 @@ msgstr ""
 "Dokumentvisare.\n"
 "Använder poppler %s (%s)"
 
-#: ../shell/ev-window.c:4278
+#: ../shell/ev-window.c:4296
 msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
 msgstr "Evince är fri programvara. Du kan distribuera det och/eller modifiera det under villkoren i GNU General Public License, publicerad av Free Software Foundation, antingen version 2 eller (om du så vill) någon senare version.\n"
 
-#: ../shell/ev-window.c:4282
+#: ../shell/ev-window.c:4300
 msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 msgstr "Evince distribueras i hopp om att det ska vara användbart, men UTAN NÅGON SOM HELST GARANTI, även utan underförstådd garanti om SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT ÄNDAMÅL. Se GNU General Public License för ytterligare information.\n"
 
-#: ../shell/ev-window.c:4286
+#: ../shell/ev-window.c:4304
 msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr "Du bör ha fått en kopia av GNU General Public License tillsammans med Evince. Om inte, skriv till Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA\n"
 
-#: ../shell/ev-window.c:4310
+#. Manually set name and icon in win32
+#: ../shell/ev-window.c:4328
+#: ../shell/main.c:382
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4313
+#: ../shell/ev-window.c:4331
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Författarna av Evince"
 
-#: ../shell/ev-window.c:4319
+#: ../shell/ev-window.c:4337
 msgid "translator-credits"
 msgstr ""
 "Daniel Nylander\n"
@@ -978,366 +973,366 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:4537
+#: ../shell/ev-window.c:4555
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d hittades på denna sida"
 msgstr[1] "%d hittades på denna sida"
 
-#: ../shell/ev-window.c:4545
+#: ../shell/ev-window.c:4563
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% återstår att söka igenom"
 
-#: ../shell/ev-window.c:4973
+#: ../shell/ev-window.c:4991
 msgid "_File"
 msgstr "_Arkiv"
 
-#: ../shell/ev-window.c:4974
+#: ../shell/ev-window.c:4992
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: ../shell/ev-window.c:4975
+#: ../shell/ev-window.c:4993
 msgid "_View"
 msgstr "_Visa"
 
-#: ../shell/ev-window.c:4976
+#: ../shell/ev-window.c:4994
 msgid "_Go"
 msgstr "_Gå"
 
-#: ../shell/ev-window.c:4977
+#: ../shell/ev-window.c:4995
 msgid "_Help"
 msgstr "_Hjälp"
 
 #. File menu
-#: ../shell/ev-window.c:4980
-#: ../shell/ev-window.c:5159
-#: ../shell/ev-window.c:5238
+#: ../shell/ev-window.c:4998
+#: ../shell/ev-window.c:5177
+#: ../shell/ev-window.c:5256
 msgid "_Open..."
 msgstr "_Öppna..."
 
-#: ../shell/ev-window.c:4981
-#: ../shell/ev-window.c:5239
+#: ../shell/ev-window.c:4999
+#: ../shell/ev-window.c:5257
 msgid "Open an existing document"
 msgstr "Öppna ett befintligt dokument"
 
-#: ../shell/ev-window.c:4983
+#: ../shell/ev-window.c:5001
 msgid "Op_en a Copy"
 msgstr "Öppna _en kopia"
 
-#: ../shell/ev-window.c:4984
+#: ../shell/ev-window.c:5002
 msgid "Open a copy of the current document in a new window"
 msgstr "Öppna en kopia av aktuellt dokument i ett nytt fönster"
 
-#: ../shell/ev-window.c:4986
-#: ../shell/ev-window.c:5161
+#: ../shell/ev-window.c:5004
+#: ../shell/ev-window.c:5179
 msgid "_Save a Copy..."
 msgstr "_Spara en kopia..."
 
-#: ../shell/ev-window.c:4987
+#: ../shell/ev-window.c:5005
 msgid "Save a copy of the current document"
 msgstr "Spara en kopia av aktuellt dokument"
 
-#: ../shell/ev-window.c:4989
+#: ../shell/ev-window.c:5007
 msgid "Print Set_up..."
 msgstr "Utskriftsinställnin_gar..."
 
-#: ../shell/ev-window.c:4990
+#: ../shell/ev-window.c:5008
 msgid "Setup the page settings for printing"
 msgstr "Konfigurera sidinställningar för utskrift"
 
-#: ../shell/ev-window.c:4992
+#: ../shell/ev-window.c:5010
 msgid "_Print..."
 msgstr "Skriv _ut..."
 
-#: ../shell/ev-window.c:4993
-#: ../shell/ev-window.c:5062
+#: ../shell/ev-window.c:5011
+#: ../shell/ev-window.c:5080
 msgid "Print this document"
 msgstr "Skriv ut detta dokument"
 
-#: ../shell/ev-window.c:4995
+#: ../shell/ev-window.c:5013
 msgid "P_roperties"
 msgstr "_Egenskaper"
 
-#: ../shell/ev-window.c:5003
+#: ../shell/ev-window.c:5021
 msgid "Select _All"
 msgstr "Markera _allt"
 
-#: ../shell/ev-window.c:5005
+#: ../shell/ev-window.c:5023
 msgid "_Find..."
 msgstr "_Sök..."
 
-#: ../shell/ev-window.c:5006
+#: ../shell/ev-window.c:5024
 msgid "Find a word or phrase in the document"
 msgstr "Sök ett ord eller en fras i dokumentet"
 
-#: ../shell/ev-window.c:5012
+#: ../shell/ev-window.c:5030
 msgid "T_oolbar"
 msgstr "_Verktygsrad"
 
-#: ../shell/ev-window.c:5014
+#: ../shell/ev-window.c:5032
 msgid "Rotate _Left"
 msgstr "Rotera _vänster"
 
-#: ../shell/ev-window.c:5016
+#: ../shell/ev-window.c:5034
 msgid "Rotate _Right"
 msgstr "Rotera _höger"
 
-#: ../shell/ev-window.c:5021
+#: ../shell/ev-window.c:5039
 msgid "Enlarge the document"
 msgstr "Förstora dokumentet"
 
-#: ../shell/ev-window.c:5024
+#: ../shell/ev-window.c:5042
 msgid "Shrink the document"
 msgstr "Krymp dokumentet"
 
-#: ../shell/ev-window.c:5026
+#: ../shell/ev-window.c:5044
 msgid "_Reload"
 msgstr "_Läs om"
 
-#: ../shell/ev-window.c:5027
+#: ../shell/ev-window.c:5045
 msgid "Reload the document"
 msgstr "Läs om dokumentet"
 
-#: ../shell/ev-window.c:5030
+#: ../shell/ev-window.c:5048
 msgid "Auto_scroll"
 msgstr "Auto_rulla"
 
 #. Go menu
-#: ../shell/ev-window.c:5034
+#: ../shell/ev-window.c:5052
 msgid "_Previous Page"
 msgstr "_Föregående sida"
 
-#: ../shell/ev-window.c:5035
+#: ../shell/ev-window.c:5053
 msgid "Go to the previous page"
 msgstr "Gå till föregående sida"
 
-#: ../shell/ev-window.c:5037
+#: ../shell/ev-window.c:5055
 msgid "_Next Page"
 msgstr "_Nästa sida"
 
-#: ../shell/ev-window.c:5038
+#: ../shell/ev-window.c:5056
 msgid "Go to the next page"
 msgstr "Gå till nästa sida"
 
-#: ../shell/ev-window.c:5040
+#: ../shell/ev-window.c:5058
 msgid "_First Page"
 msgstr "_Första sidan"
 
-#: ../shell/ev-window.c:5041
+#: ../shell/ev-window.c:5059
 msgid "Go to the first page"
 msgstr "Gå till första sidan"
 
-#: ../shell/ev-window.c:5043
+#: ../shell/ev-window.c:5061
 msgid "_Last Page"
 msgstr "_Sista sidan"
 
-#: ../shell/ev-window.c:5044
+#: ../shell/ev-window.c:5062
 msgid "Go to the last page"
 msgstr "Gå till sista sidan"
 
 #. Help menu
-#: ../shell/ev-window.c:5048
+#: ../shell/ev-window.c:5066
 msgid "_Contents"
 msgstr "_Innehåll"
 
-#: ../shell/ev-window.c:5051
+#: ../shell/ev-window.c:5069
 msgid "_About"
 msgstr "_Om"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5055
+#: ../shell/ev-window.c:5073
 msgid "Leave Fullscreen"
 msgstr "Lämna helskärmsläget"
 
-#: ../shell/ev-window.c:5056
+#: ../shell/ev-window.c:5074
 msgid "Leave fullscreen mode"
 msgstr "Lämna helskärmsläget"
 
-#: ../shell/ev-window.c:5058
+#: ../shell/ev-window.c:5076
 msgid "Start Presentation"
 msgstr "Starta presentation"
 
-#: ../shell/ev-window.c:5059
+#: ../shell/ev-window.c:5077
 msgid "Start a presentation"
 msgstr "Starta en presentation"
 
 #. View Menu
-#: ../shell/ev-window.c:5115
+#: ../shell/ev-window.c:5133
 msgid "_Toolbar"
 msgstr "_Verktygsrad"
 
-#: ../shell/ev-window.c:5116
+#: ../shell/ev-window.c:5134
 msgid "Show or hide the toolbar"
 msgstr "Visa eller dölj verktygsraden"
 
-#: ../shell/ev-window.c:5118
+#: ../shell/ev-window.c:5136
 msgid "Side _Pane"
 msgstr "Sido_panel"
 
-#: ../shell/ev-window.c:5119
+#: ../shell/ev-window.c:5137
 msgid "Show or hide the side pane"
 msgstr "Visa eller dölj sidopanelen"
 
-#: ../shell/ev-window.c:5121
+#: ../shell/ev-window.c:5139
 msgid "_Continuous"
 msgstr "_Sammanhängande"
 
-#: ../shell/ev-window.c:5122
+#: ../shell/ev-window.c:5140
 msgid "Show the entire document"
 msgstr "Visa hela dokumentet"
 
-#: ../shell/ev-window.c:5124
+#: ../shell/ev-window.c:5142
 msgid "_Dual"
 msgstr "_Dubbel"
 
-#: ../shell/ev-window.c:5125
+#: ../shell/ev-window.c:5143
 msgid "Show two pages at once"
 msgstr "Visa två sidor på en gång"
 
-#: ../shell/ev-window.c:5127
+#: ../shell/ev-window.c:5145
 msgid "_Fullscreen"
 msgstr "_Helskärm"
 
-#: ../shell/ev-window.c:5128
+#: ../shell/ev-window.c:5146
 msgid "Expand the window to fill the screen"
 msgstr "Expandera fönstret så att det fyller skärmen"
 
-#: ../shell/ev-window.c:5130
+#: ../shell/ev-window.c:5148
 msgid "Pre_sentation"
 msgstr "Pre_sentation"
 
-#: ../shell/ev-window.c:5131
+#: ../shell/ev-window.c:5149
 msgid "Run document as a presentation"
 msgstr "Kör dokumentet som en presentation"
 
-#: ../shell/ev-window.c:5133
+#: ../shell/ev-window.c:5151
 msgid "_Best Fit"
 msgstr "_Bästa anpassning"
 
-#: ../shell/ev-window.c:5134
+#: ../shell/ev-window.c:5152
 msgid "Make the current document fill the window"
 msgstr "Gör så att det aktuella dokumentet fyller fönstret"
 
-#: ../shell/ev-window.c:5136
+#: ../shell/ev-window.c:5154
 msgid "Fit Page _Width"
 msgstr "Anpassa till sid_bredd"
 
-#: ../shell/ev-window.c:5137
+#: ../shell/ev-window.c:5155
 msgid "Make the current document fill the window width"
 msgstr "Gör så att det aktuella dokumentet fyller bredden på fönstret"
 
 #. Links
-#: ../shell/ev-window.c:5144
+#: ../shell/ev-window.c:5162
 msgid "_Open Link"
 msgstr "_Öppna länk"
 
-#: ../shell/ev-window.c:5146
+#: ../shell/ev-window.c:5164
 msgid "_Go To"
 msgstr "_Gå till"
 
-#: ../shell/ev-window.c:5148
+#: ../shell/ev-window.c:5166
 msgid "Open in New _Window"
 msgstr "Öppna i nytt _fönster"
 
-#: ../shell/ev-window.c:5150
+#: ../shell/ev-window.c:5168
 msgid "_Copy Link Address"
 msgstr "_Kopiera länkadress"
 
-#: ../shell/ev-window.c:5152
+#: ../shell/ev-window.c:5170
 msgid "_Save Image As..."
 msgstr "_Spara bild som..."
 
-#: ../shell/ev-window.c:5154
+#: ../shell/ev-window.c:5172
 msgid "Copy _Image"
 msgstr "Kopiera _bild"
 
-#: ../shell/ev-window.c:5200
+#: ../shell/ev-window.c:5218
 msgid "Page"
 msgstr "Sida"
 
-#: ../shell/ev-window.c:5201
+#: ../shell/ev-window.c:5219
 msgid "Select Page"
 msgstr "Välj sida"
 
-#: ../shell/ev-window.c:5212
+#: ../shell/ev-window.c:5230
 msgid "Zoom"
 msgstr "Zooma"
 
-#: ../shell/ev-window.c:5214
+#: ../shell/ev-window.c:5232
 msgid "Adjust the zoom level"
 msgstr "Justera zoomnivån"
 
-#: ../shell/ev-window.c:5224
+#: ../shell/ev-window.c:5242
 msgid "Navigation"
 msgstr "Navigering"
 
-#: ../shell/ev-window.c:5226
+#: ../shell/ev-window.c:5244
 msgid "Back"
 msgstr "Bakåt"
 
 # Denna måste testas
 #. translators: this is the history action
-#: ../shell/ev-window.c:5229
+#: ../shell/ev-window.c:5247
 msgid "Move across visited pages"
 msgstr "Flytta mellan besökta sidor"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5259
+#: ../shell/ev-window.c:5277
 msgid "Previous"
 msgstr "Föregående"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5264
+#: ../shell/ev-window.c:5282
 msgid "Next"
 msgstr "Nästa"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5268
+#: ../shell/ev-window.c:5286
 msgid "Zoom In"
 msgstr "Zooma in"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5272
+#: ../shell/ev-window.c:5290
 msgid "Zoom Out"
 msgstr "Zooma ut"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5280
+#: ../shell/ev-window.c:5298
 msgid "Fit Width"
 msgstr "Anpassa till bredd"
 
-#: ../shell/ev-window.c:5447
 #: ../shell/ev-window.c:5465
+#: ../shell/ev-window.c:5483
 msgid "Unable to launch external application."
 msgstr "Kunde inte starta externt program."
 
-#: ../shell/ev-window.c:5508
+#: ../shell/ev-window.c:5526
 msgid "Unable to open external link"
 msgstr "Kunde inte öppna extern länk"
 
-#: ../shell/ev-window.c:5664
+#: ../shell/ev-window.c:5682
 msgid "Couldn't find appropriate format to save image"
 msgstr "Kunde inte hitta lämpligt format att spara bilden i"
 
-#: ../shell/ev-window.c:5703
+#: ../shell/ev-window.c:5721
 msgid "The image could not be saved."
 msgstr "Bilden kunde inte sparas."
 
-#: ../shell/ev-window.c:5735
+#: ../shell/ev-window.c:5753
 msgid "Save Image"
 msgstr "Spara bild"
 
-#: ../shell/ev-window.c:5797
+#: ../shell/ev-window.c:5815
 msgid "Unable to open attachment"
 msgstr "Kunde inte öppna bilagan"
 
-#: ../shell/ev-window.c:5848
+#: ../shell/ev-window.c:5866
 msgid "The attachment could not be saved."
 msgstr "Bilagan kunde inte sparas."
 
-#: ../shell/ev-window.c:5893
+#: ../shell/ev-window.c:5911
 msgid "Save Attachment"
 msgstr "Spara bilaga"
 
@@ -1350,40 +1345,40 @@ msgstr "%s - Lösenord krävs"
 msgid "By extension"
 msgstr "Efter filändelse"
 
-#: ../shell/main.c:57
-#: ../shell/main.c:345
+#: ../shell/main.c:59
+#: ../shell/main.c:347
 msgid "GNOME Document Viewer"
 msgstr "Dokumentvisare för GNOME"
 
-#: ../shell/main.c:65
+#: ../shell/main.c:67
 msgid "The page of the document to display."
 msgstr "Sidan att visa i dokumentet."
 
-#: ../shell/main.c:65
+#: ../shell/main.c:67
 msgid "PAGE"
 msgstr "SIDA"
 
-#: ../shell/main.c:66
+#: ../shell/main.c:68
 msgid "Run evince in fullscreen mode"
 msgstr "Kör evince i helskärmsläge"
 
-#: ../shell/main.c:67
+#: ../shell/main.c:69
 msgid "Run evince in presentation mode"
 msgstr "Kör evince i presentationsläge"
 
-#: ../shell/main.c:68
+#: ../shell/main.c:70
 msgid "Run evince as a previewer"
 msgstr "Kör evince som en förhandsgranskare"
 
-#: ../shell/main.c:69
+#: ../shell/main.c:71
 msgid "The word or phrase to find in the document"
 msgstr "Ordet eller frasen att leta efter i dokumentet"
 
-#: ../shell/main.c:69
+#: ../shell/main.c:71
 msgid "STRING"
 msgstr "STRÄNG"
 
-#: ../shell/main.c:73
+#: ../shell/main.c:75
 msgid "[FILE...]"
 msgstr "[FIL...]"
 
