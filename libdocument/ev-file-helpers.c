@@ -391,6 +391,24 @@ compression_run (const gchar       *uri,
 	return uri_dst;
 }
 
+/**
+ * ev_file_uncompress:
+ * @uri: a file URI
+ * @type: the compression type
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Uncompresses the file at @uri.
+ *
+ * If @type is %EV_COMPRESSION_NONE, it does nothing and returns %NULL.
+ *
+ * Otherwise, it returns the filename of a
+ * temporary file containing the decompressed data from the file at @uri.
+ * On error it returns %NULL and fills in @error.
+ *
+ * It is the caller's responsibility to unlink the temp file after use.
+ *
+ * Returns: a newly allocated string URI, or %NULL on error
+ */
 gchar *
 ev_file_uncompress (const gchar       *uri,
 		    EvCompressionType  type,
@@ -401,6 +419,25 @@ ev_file_uncompress (const gchar       *uri,
 	return compression_run (uri, type, FALSE, error);
 }
 
+/**
+ * ev_file_compress:
+ * @uri: a file URI
+ * @type: the compression type
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Compresses the file at @uri.
+ 
+ * If @type is %EV_COMPRESSION_NONE, it does nothing and returns %NULL.
+ *
+ * Otherwise, it returns the filename of a
+ * temporary file containing the compressed data from the file at @uri.
+ *
+ * On error it returns %NULL and fills in @error.
+ *
+ * It is the caller's responsibility to unlink the temp file after use.
+ *
+ * Returns: a newly allocated string URI, or %NULL on error
+ */
 gchar *
 ev_file_compress (const gchar       *uri,
 		  EvCompressionType  type,
