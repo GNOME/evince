@@ -1,3 +1,9 @@
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
+	* libdocument/ev-file-helpers.c: (compression_run): Make sure to fill
+	in @error on failure. Also, since this is exported in public APIs,
+	cope with the passed-in GError** being NULL.
+
 2009-02-13  Christian Persch  <chpe@gnome.org>
 
 	* libdocument/ev-file-helpers.c: (get_mime_type_from_uri): NULL

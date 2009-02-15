@@ -315,15 +315,22 @@ compression_run (const gchar       *uri,
 	gchar *filename, *filename_dst;
 	gchar *cmd;
 	gint   fd, pout;
+	GError *err = NULL;
 
 	if (type == EV_COMPRESSION_NONE)
 		return NULL;
 
 	cmd = g_find_program_in_path ((type == EV_COMPRESSION_BZIP2) ? BZIPCOMMAND : GZIPCOMMAND);
-	if (!cmd)
+	if (!cmd) {
+		/* FIXME: better error codes! */
+		/* FIXME: i18n later */
+		g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_FAILED,
+			     "Failed to find the \"%s\" command in the search path.",
+			     type == EV_COMPRESSION_BZIP2 ? BZIPCOMMAND : GZIPCOMMAND);
 		return NULL;
+	}
 
-	filename = g_filename_from_uri (uri, NULL, NULL);
+	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename) {
 		g_free (cmd);
 		return NULL;
@@ -332,9 +339,16 @@ compression_run (const gchar       *uri,
 	filename_dst = g_build_filename (ev_tmp_dir (), "evinceXXXXXX", NULL);
 	fd = g_mkstemp (filename_dst);
 	if (fd < 0) {
+		int errsv = errno;
+
 		g_free (cmd);
 		g_free (filename);
 		g_free (filename_dst);
+
+		g_set_error (error, G_IO_ERROR,
+			     g_io_error_from_errno (errsv),
+			     "Error creating a temporary file: %s",
+			     g_strerror (errsv));
 		return NULL;
 	}
 
@@ -346,7 +360,7 @@ compression_run (const gchar       *uri,
 	if (g_spawn_async_with_pipes (NULL, argv, NULL,
 				      G_SPAWN_STDERR_TO_DEV_NULL,
 				      NULL, NULL, NULL,
-				      NULL, &pout, NULL, error)) {
+				      NULL, &pout, NULL, &err)) {
 		GIOChannel *in, *out;
 		gchar buf[BUFFER_SIZE];
 		GIOStatus read_st, write_st;
@@ -380,8 +394,10 @@ compression_run (const gchar       *uri,
 
 	close (fd);
 
-	if (*error == NULL) {
-		uri_dst = g_filename_to_uri (filename_dst, NULL, NULL);
+	if (err) {
+		g_propagate_error (error, err);
+	} else {
+		uri_dst = g_filename_to_uri (filename_dst, NULL, error);
 	}
 
 	g_free (cmd);
