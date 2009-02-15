@@ -30,10 +30,6 @@
 #include <glib/gstdio.h>
 #include <errno.h>
 
-#if WITH_GNOME
-#include <libgnome/gnome-init.h>
-#endif
-
 #include "ev-file-helpers.h"
 
 static gchar *tmp_dir = NULL;

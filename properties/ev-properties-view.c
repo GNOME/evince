@@ -56,20 +56,20 @@ typedef struct {
 } PropertyInfo;
 
 static const PropertyInfo properties_info[] = {
-	{ TITLE_PROPERTY,         N_("Title") },
-	{ URI_PROPERTY,           N_("Location") },
-	{ SUBJECT_PROPERTY,       N_("Subject") },
-	{ AUTHOR_PROPERTY,        N_("Author") },
-	{ KEYWORDS_PROPERTY,      N_("Keywords") },
-	{ PRODUCER_PROPERTY,      N_("Producer") },
-	{ CREATOR_PROPERTY,       N_("Creator") },
-	{ CREATION_DATE_PROPERTY, N_("Created") },
-	{ MOD_DATE_PROPERTY,      N_("Modified") },
-	{ N_PAGES_PROPERTY,       N_("Number of Pages") },
-	{ LINEARIZED_PROPERTY,    N_("Optimized") },
-	{ FORMAT_PROPERTY,        N_("Format") },
-	{ SECURITY_PROPERTY,      N_("Security") },
-	{ PAPER_SIZE_PROPERTY,    N_("Paper Size") }
+	{ TITLE_PROPERTY,         N_("Title:") },
+	{ URI_PROPERTY,           N_("Location:") },
+	{ SUBJECT_PROPERTY,       N_("Subject:") },
+	{ AUTHOR_PROPERTY,        N_("Author:") },
+	{ KEYWORDS_PROPERTY,      N_("Keywords:") },
+	{ PRODUCER_PROPERTY,      N_("Producer:") },
+	{ CREATOR_PROPERTY,       N_("Creator:") },
+	{ CREATION_DATE_PROPERTY, N_("Created:") },
+	{ MOD_DATE_PROPERTY,      N_("Modified:") },
+	{ N_PAGES_PROPERTY,       N_("Number of Pages:") },
+	{ LINEARIZED_PROPERTY,    N_("Optimized:") },
+	{ FORMAT_PROPERTY,        N_("Format:") },
+	{ SECURITY_PROPERTY,      N_("Security:") },
+	{ PAPER_SIZE_PROPERTY,    N_("Paper Size:") }
 };
 
 struct _EvPropertiesView {
@@ -181,7 +181,7 @@ set_property (GtkTable    *table,
 
 	label = gtk_label_new (NULL);
 	g_object_set (G_OBJECT (label), "xalign", 0.0, NULL);
-	markup = g_strdup_printf ("<b>%s:</b>", properties_info[property].label);
+	markup = g_strdup_printf ("<b>%s</b>", properties_info[property].label);
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
 	
