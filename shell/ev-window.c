@@ -1439,8 +1439,7 @@ ev_window_load_job_cb (EvJob *job,
 		return;
 	}
 
-	if (job->error->domain == EV_DOCUMENT_ERROR &&
-	    job->error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
+	if (g_error_matches (job->error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
 		gchar *password;
 		
 		setup_view_from_metadata (ev_window);
