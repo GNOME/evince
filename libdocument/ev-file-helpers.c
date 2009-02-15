@@ -258,7 +258,7 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 		return NULL;
 
 	return g_content_type_guess (NULL, /* no filename */
-				     buffer, 1024,
+				     buffer, size_read,
 				     NULL);
 }
 
