@@ -141,6 +141,16 @@ ev_document_load (EvDocument  *document,
 	return retval;
 }
 
+/**
+ * ev_document_save:
+ * @document:
+ * @uri: the target URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Saves @document to @uri.
+ * 
+ * Returns: %TRUE on success, or %FALSE on error with @error filled in
+ */
 gboolean
 ev_document_save (EvDocument  *document,
 		  const char  *uri,

@@ -176,6 +176,16 @@ ev_tmp_uri_unlink (const gchar *uri)
 	g_object_unref (file);
 }
 
+/**
+ * ev_xfer_uri_simple:
+ * @from: the source URI
+ * @to: the target URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Performs a g_file_copy() from @from to @to.
+ *
+ * Returns: %TRUE on success, or %FALSE on error with @error filled in
+ */
 gboolean
 ev_xfer_uri_simple (const char *from,
 		    const char *to,
@@ -183,12 +193,13 @@ ev_xfer_uri_simple (const char *from,
 {
 	GFile *source_file;
 	GFile *target_file;
-	GError *ioerror = NULL;
 	gboolean result;
 	
 	if (!from)
-		return FALSE;
-	
+		return TRUE;
+
+        g_return_val_if_fail (to != NULL, TRUE);
+
 	source_file = g_file_new_for_uri (from);
 	target_file = g_file_new_for_uri (to);
 	
@@ -197,16 +208,12 @@ ev_xfer_uri_simple (const char *from,
 			      G_FILE_COPY_TARGET_DEFAULT_PERMS |
 #endif
 			      G_FILE_COPY_OVERWRITE,
-			      NULL, NULL, NULL, &ioerror);
+			      NULL, NULL, NULL, error);
 
 	g_object_unref (target_file);
 	g_object_unref (source_file);
     
-	if (!result) {
-		g_propagate_error (error, ioerror);
-	}
 	return result;
-
 }
 
 static gchar *
