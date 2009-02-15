@@ -428,7 +428,7 @@ dvi_document_file_exporter_iface_init (EvFileExporterIface *iface)
 #define RGB2ULONG(r,g,b) ((0xFF<<24)|(r<<16)|(g<<8)|(b))
 
 static gboolean
-hsb2rgb (float h, float s, float v, char *red, char *green, char *blue)
+hsb2rgb (float h, float s, float v, guchar *red, guchar *green, guchar *blue)
 {
         float i, f, p, q, t, r, g, b;
 
@@ -472,9 +472,9 @@ hsb2rgb (float h, float s, float v, char *red, char *green, char *blue)
 		b = q;
 	}
 
-        (*red) = (char)floor(r * 255);
-        (*green) = (char)floor(g * 255);
-        (*blue) = (char)floor(b * 255);
+        *red   = (guchar)floor(r * 255.0);
+        *green = (guchar)floor(g * 255.0);
+        *blue  = (guchar)floor(b * 255.0);
 	
         return TRUE;
 }
