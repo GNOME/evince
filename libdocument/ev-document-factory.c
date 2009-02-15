@@ -191,6 +191,17 @@ free_uncompressed_uri (gchar *uri_unc)
 	g_free (uri_unc);
 }
 
+/**
+ * ev_document_factory_get_document:
+ * @uri: an URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Creates a #EvDocument for the document at @uri; or, if no backend handling
+ * the document's type is found, or an error occurred on opening the document,
+ * returns %NULL and fills in @error.
+ *
+ * Returns: a new #EvDocument, or %NULL.
+ */
 EvDocument *
 ev_document_factory_get_document (const char *uri, GError **error)
 {
@@ -311,13 +322,30 @@ file_filter_add_mime_types (EvTypeInfo *info, GtkFileFilter *filter)
 		gtk_file_filter_add_mime_type (filter, mime_type);
 }
 
-void 
+/**
+ * ev_document_factory_add_filters:
+ * @chooser: a #GtkFileChooser
+ * @document: a #EvDocument, or %NULL
+ *
+ * Adds some file filters to @chooser.
+ 
+ * Always add a "All documents" format.
+ * 
+ * If @document is not %NULL, adds a #GtkFileFilter for @document's MIME type.
+ *
+ * If @document is %NULL, adds a #GtkFileFilter for each document type that evince
+ * can handle.
+ */
+void
 ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 {
 	GList         *all_types;
 	GtkFileFilter *filter;
 	GtkFileFilter *default_filter;
 	GtkFileFilter *document_filter;
+
+        g_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
+        g_return_if_fail (document == NULL || EV_IS_DOCUMENT (document));
 
 	all_types = ev_backends_manager_get_all_types_info ();
 	
