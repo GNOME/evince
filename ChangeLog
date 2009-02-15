@@ -1,5 +1,10 @@
 2009-02-14  Christian Persch  <chpe@gnome.org>
 
+	* backend/djvu/djvu-document.c: (djvu_document_load): Make sure
+	to always set @error when returning FALSE. Fix a typo.
+
+2009-02-14  Christian Persch  <chpe@gnome.org>
+
 	* backend/tiff/tiff-document.c: (tiff_document_load): Make sure
 	to always set @error when returning FALSE.
 
