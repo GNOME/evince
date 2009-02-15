@@ -310,9 +310,13 @@ impress_document_load (EvDocument  *document,
 
 static gboolean
 impress_document_save (EvDocument  *document,
-		      const char  *uri,
-		      GError     **error)
+                       const char  *uri,
+                       GError     **error)
 {
+        g_set_error_literal (error,
+                             EV_DOCUMENT_ERROR,
+                             EV_DOCUMENT_ERROR_INVALID,
+                             "Not supported");
 	return FALSE;
 }
 
