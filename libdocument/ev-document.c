@@ -103,7 +103,13 @@ ev_document_fc_mutex_trylock (void)
  * @error: a #GError location to store an error, or %NULL
  *
  * Loads @document from @uri.
- * On failure, @error is filled in.
+ * 
+ * On failure, %FALSE is returned and @error is filled in.
+ * If the document is encrypted, EV_DEFINE_ERROR_ENCRYPTED is returned.
+ * If the backend cannot load the specific document, EV_DOCUMENT_ERROR_INVALID
+ * is returned. Other errors are possible too, depending on the backend
+ * used to load the document and the URI, e.g. #GIOError, #GFileError, and
+ * #GConvertError.
  *
  * Returns: %TRUE on success, or %FALSE on failure.
  */
