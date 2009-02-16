@@ -222,6 +222,7 @@ get_mime_type_from_uri (const gchar *uri, GError **error)
 	GFile       *file;
 	GFileInfo   *file_info;
 	const gchar *content_type;
+        gchar       *mime_type = NULL;
 
 	file = g_file_new_for_uri (uri);
 	file_info = g_file_query_info (file,
@@ -233,12 +234,12 @@ get_mime_type_from_uri (const gchar *uri, GError **error)
 		return NULL;
 
 	content_type = g_file_info_get_content_type (file_info);
+	if (content_type) {
+                mime_type = g_content_type_get_mime_type (content_type);
+        }
+
 	g_object_unref (file_info);
-
-	if (!content_type)
-		return NULL;
-
-	return g_content_type_get_mime_type (content_type);
+	return mime_type;
 }
 
 static gchar *

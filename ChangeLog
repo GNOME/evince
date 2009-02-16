@@ -1,3 +1,8 @@
+2009-02-16  Christian Persch  <chpe@gnome.org>
+
+	* libdocument/ev-file-helpers.c: (get_mime_type_from_uri): Fix a freed
+	memory read.
+
 2009-02-15  Christian Persch  <chpe@gnome.org>
 
 	* backend/dvi/dvi-document.c: (hsb2rgb): Fix signed/unsigned compiler
