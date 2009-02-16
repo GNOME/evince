@@ -381,7 +381,7 @@ r_draw_gradient (ImpRenderCtx *ctx, void *drw_data, iks *node)
 		else
 			r_draw_gradient_complex (ctx, drw_data, &grad);
 
-//		gdk_gc_unref (ctx->gc);
+//		g_object_unref (ctx->gc);
 //		ctx->gc = gc;
 	}
 }
