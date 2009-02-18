@@ -75,7 +75,7 @@ ev_djvu_error_quark (void)
 {
 	static GQuark q = 0;
 	if (q == 0)
-		q = g_quark_from_static_string ("ev-djvu-quark");
+		q = g_quark_from_string ("ev-djvu-quark");
 	
 	return q;
 }

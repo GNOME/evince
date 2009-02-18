@@ -1,3 +1,8 @@
+2009-02-18  Christian Persch  <chpe@gnome.org>
+
+	* backend/djvu/djvu-document.c: (ev_djvu_error_quark):
+	Don't use g_quark_from_static_string in a loadable module!
+
 2009-02-17  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* configure.ac:
