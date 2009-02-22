@@ -1,3 +1,17 @@
+2009-02-22  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (pdf_document_save),
+	(pdf_document_forms_form_field_text_set_text),
+	(pdf_document_forms_form_field_button_set_state),
+	(pdf_document_forms_form_field_choice_select_item),
+	(pdf_document_forms_form_field_choice_toggle_item),
+	(pdf_document_forms_form_field_choice_unselect_all),
+	(pdf_document_forms_form_field_choice_set_text):
+
+	Use poppler_document_save_a_copy(), which never saves the document
+	modifications, when saving an unmodified document. It makes saving
+	a copy of encrypted PDFs work again. Fixes bug #566791.
+	
 2009-02-18  Christian Persch  <chpe@gnome.org>
 
 	* backend/djvu/djvu-document.c: (ev_djvu_error_quark):

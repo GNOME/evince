@@ -92,6 +92,7 @@ struct _PdfDocument
 
 	PopplerDocument *document;
 	gchar *password;
+	gboolean modified;
 
 	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
@@ -228,7 +229,6 @@ static void
 convert_error (GError  *poppler_error,
 	       GError **error)
 {
-	g_return_if_fail (poppler_error != NULL);
 	if (poppler_error == NULL)
 		return;
 
@@ -258,12 +258,18 @@ pdf_document_save (EvDocument  *document,
 		   const char  *uri,
 		   GError     **error)
 {
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	gboolean retval;
 	GError *poppler_error = NULL;
 
-	retval = poppler_document_save (PDF_DOCUMENT (document)->document,
-					uri,
-					&poppler_error);
+	if (pdf_document->modified) {
+		retval = poppler_document_save (pdf_document->document,
+						uri, &poppler_error);
+	} else {
+		retval = poppler_document_save_a_copy (pdf_document->document,
+						       uri, &poppler_error);
+	}
+						       
 	if (! retval)
 		convert_error (poppler_error, error);
 
@@ -2143,7 +2149,9 @@ pdf_document_forms_form_field_text_set_text (EvDocumentForms *document,
 	poppler_field = POPPLER_FORM_FIELD (g_object_get_data (G_OBJECT (field), "poppler-field"));
 	if (!poppler_field)
 		return;
+	
 	poppler_form_field_text_set_text (poppler_field, text);
+	PDF_DOCUMENT (document)->modified = TRUE;
 }
 
 static void
@@ -2158,6 +2166,7 @@ pdf_document_forms_form_field_button_set_state (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_button_set_state (poppler_field, state);
+	PDF_DOCUMENT (document)->modified = TRUE;
 }
 
 static gboolean
@@ -2238,6 +2247,7 @@ pdf_document_forms_form_field_choice_select_item (EvDocumentForms *document,
 		return;
 
 	poppler_form_field_choice_select_item (poppler_field, index);
+	PDF_DOCUMENT (document)->modified = TRUE;
 }
 
 static void
@@ -2252,6 +2262,7 @@ pdf_document_forms_form_field_choice_toggle_item (EvDocumentForms *document,
 		return;
 
 	poppler_form_field_choice_toggle_item (poppler_field, index);
+	PDF_DOCUMENT (document)->modified = TRUE;
 }
 
 static void
@@ -2265,6 +2276,7 @@ pdf_document_forms_form_field_choice_unselect_all (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_choice_unselect_all (poppler_field);
+	PDF_DOCUMENT (document)->modified = TRUE;
 }
 
 static void
@@ -2279,6 +2291,7 @@ pdf_document_forms_form_field_choice_set_text (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_choice_set_text (poppler_field, text);
+	PDF_DOCUMENT (document)->modified = TRUE;
 }
 
 static gchar *
