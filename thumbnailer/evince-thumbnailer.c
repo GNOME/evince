@@ -27,6 +27,15 @@
 
 #define THUMBNAIL_SIZE 128
 
+static gint size = THUMBNAIL_SIZE;
+static const gchar **file_arguments;
+
+static const GOptionEntry goption_options[] = {
+	{ "size", 's', 0, G_OPTION_ARG_INT, &size, NULL, "SIZE" },
+	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, "<input> <ouput>" },
+	{ NULL }
+};
+
 struct AsyncData {
 	EvDocument  *document;
 	const gchar *output;
@@ -127,36 +136,57 @@ evince_thumbnail_pngenc_get_async (struct AsyncData *data)
 	return NULL;
 }
 
+static void
+print_usage (GOptionContext *context)
+{
+	gchar *help;
+
+	help = g_option_context_get_help (context, TRUE, NULL);
+	g_print ("%s", help);
+	g_free (help);
+}
+
 int
 main (int argc, char *argv[])
 {
-	EvDocument *document;
-	const char *input;
-	const char *output;
-	int         size;
-	char       *uri;
-	GFile      *file;
+	EvDocument     *document;
+	GOptionContext *context;
+	const char     *input;
+	const char     *output;
+	char           *uri;
+	GFile          *file;
+	GError         *error = NULL;
 
-	if (argc <= 2 || argc > 5 || strcmp (argv[1], "-h") == 0 ||
-	    strcmp (argv[1], "--help") == 0) {
-		g_print ("Usage: %s [-s <size>] <input> <output>\n", argv[0]);
+	context = g_option_context_new ("- GNOME Document Thumbnailer");
+	g_option_context_add_main_entries (context, goption_options, NULL);
+
+	if (!g_option_context_parse (context, &argc, &argv, &error)) {
+		g_printerr ("%s\n", error->message);
+		g_error_free (error);
+		print_usage (context);
+		g_option_context_free (context);
+
 		return -1;
 	}
 
-	if (!strcmp (argv[1], "-s")) {
-		input = argv[3];
-		output = argv[4];
-		size = atoi (argv[2]);
-	} else {
-		input = argv[1];
-		output = argv[2];
-		size = THUMBNAIL_SIZE;
+	input = file_arguments ? file_arguments[0] : NULL;
+	output = input ? file_arguments[1] : NULL;
+	if (!input || !output) {
+		print_usage (context);
+		g_option_context_free (context);
+
+		return -1;
 	}
+	
+	g_option_context_free (context);
 
 	if (size < 40) {
 		g_print ("Size cannot be smaller than 40 pixels\n");
 		return -1;
 	}
+
+	input = file_arguments[0];
+	output = file_arguments[1];
 
 	g_type_init ();
 
