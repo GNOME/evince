@@ -180,8 +180,8 @@ main (int argc, char *argv[])
 	
 	g_option_context_free (context);
 
-	if (size < 40) {
-		g_print ("Size cannot be smaller than 40 pixels\n");
+	if (size < 1) {
+		g_print ("Size cannot be smaller than 1 pixel\n");
 		return -1;
 	}
 
