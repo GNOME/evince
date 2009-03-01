@@ -1260,15 +1260,13 @@ pdf_document_document_images_iface_init (EvDocumentImagesIface *iface)
 }
 
 static GdkPixbuf *
-make_thumbnail_for_page (PdfDocument     *pdf_document,
-			 PopplerPage     *poppler_page, 
-			 EvRenderContext *rc)
+make_thumbnail_for_page (PopplerPage     *poppler_page,
+			 EvRenderContext *rc,
+			 gint             width,
+			 gint             height)
 {
 	GdkPixbuf *pixbuf;
-	int width, height;
 
-	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document),
-						rc, &width, &height);
 #ifdef POPPLER_WITH_GDK
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 width, height);
@@ -1302,9 +1300,13 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *border_pixbuf;
+	gint width, height;
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 
+	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document),
+						rc, &width, &height);
+	
 #ifdef POPPLER_WITH_GDK
 	pixbuf = poppler_page_get_thumbnail_pixbuf (poppler_page);
 #else
@@ -1317,17 +1319,26 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	}
 #endif /* POPPLER_WITH_GDK */
 
-	if (pixbuf) {
-		/* Rotate provided thumbnail if needed */
-		GdkPixbuf *rotated_pixbuf;
+	if (pixbuf != NULL) {
+		int thumb_width = (rc->rotation == 90 || rc->rotation == 270) ?
+			gdk_pixbuf_get_height (pixbuf) :
+			gdk_pixbuf_get_width (pixbuf);
 
-		rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf,
-							   (GdkPixbufRotation) (360 - rc->rotation));
-		g_object_unref (pixbuf);
-		pixbuf = rotated_pixbuf;
+		if (thumb_width == width) {
+			GdkPixbuf *rotated_pixbuf;
+
+			rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf,
+								   (GdkPixbufRotation) (360 - rc->rotation));
+			g_object_unref (pixbuf);
+			pixbuf = rotated_pixbuf;
+		} else {
+			/* The provided thumbnail has a different size */
+			g_object_unref (pixbuf);
+			pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
+		}
 	} else {
-		/* There is no provided thumbnail.  We need to make one. */
-		pixbuf = make_thumbnail_for_page (pdf_document, poppler_page, rc);
+		/* There is no provided thumbnail. We need to make one. */
+		pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
 	}
 
         if (border) {		
@@ -1345,21 +1356,13 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 					gint                 *width,
 					gint                 *height)
 {
-	PopplerPage *poppler_page;
-	gint has_thumb;
+	double page_width, page_height;
 	
-	poppler_page = POPPLER_PAGE (rc->page->backend_page);
-
-	has_thumb = poppler_page_get_thumbnail_size (poppler_page, width, height);
-
-	if (!has_thumb || *width <= 0 || *height <= 0) {
-		double page_width, page_height;
-
-		poppler_page_get_size (poppler_page, &page_width, &page_height);
-
-		*width = (gint) MAX (page_width * rc->scale, 1);
-		*height = (gint) MAX (page_height * rc->scale, 1);
-	}
+	poppler_page_get_size (POPPLER_PAGE (rc->page->backend_page),
+			       &page_width, &page_height);
+	
+	*width = (gint) MAX (page_width * rc->scale, 1);
+	*height = (gint) MAX (page_height * rc->scale, 1);
 	
 	if (rc->rotation == 90 || rc->rotation == 270) {
 		gint  temp;

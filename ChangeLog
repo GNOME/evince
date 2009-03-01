@@ -1,3 +1,13 @@
+2009-03-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* backend/pdf/ev-poppler.cc: (make_thumbnail_for_page),
+	(pdf_document_thumbnails_get_thumbnail),
+	(pdf_document_thumbnails_get_dimensions):
+
+	Make our own thumbnail when the provided one doesn't have the size
+	we need. Based on patch and feedback by Christian Spurk. Fixes
+	bugs #323198 and #307357.
+	
 2009-02-27   Christian Spurk  <mail@code.chriki.de>
 
 	* thumbnailer/evince-thumbnailer.c: (main):
