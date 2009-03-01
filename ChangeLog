@@ -1,5 +1,12 @@
 2009-03-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (ev_window_set_document),
+	(ev_window_reload_job_cb):
+
+	Do not lose page position when reloading. Fixes bug #573091.
+	
+2009-03-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* backend/pdf/ev-poppler.cc: (make_thumbnail_for_page),
 	(pdf_document_thumbnails_get_thumbnail),
 	(pdf_document_thumbnails_get_dimensions):

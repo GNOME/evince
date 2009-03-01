@@ -1248,6 +1248,18 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	g_signal_connect (ev_window->priv->page_cache, "history-changed",
 			  G_CALLBACK (history_changed_cb), ev_window);
 
+	if (ev_window->priv->in_reload && ev_window->priv->dest) {
+		gint page;
+
+		/* Restart the current page */
+		page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
+			      0,
+			      ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
+		ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
+		g_object_unref (ev_window->priv->dest);
+		ev_window->priv->dest = NULL;
+	}
+
 	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
 		ev_view_set_document (view, document);
 	} else {
@@ -1486,7 +1498,6 @@ ev_window_reload_job_cb (EvJob    *job,
 			 EvWindow *ev_window)
 {
 	GtkWidget *widget;
-	gint       page;
 
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
@@ -1498,14 +1509,6 @@ ev_window_reload_job_cb (EvJob    *job,
 	}
 	
 	ev_window_set_document (ev_window, job->document);
-
-	/* Restart the current page */
-	page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
-		      0,
-		      ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
-	ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
-	g_object_unref (ev_window->priv->dest);
-	ev_window->priv->dest = NULL;
 	
 	/* Restart the search after reloading */
 	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
