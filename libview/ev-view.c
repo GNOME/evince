@@ -3248,6 +3248,8 @@ ev_view_goto_window_create (EvView *view)
 	}
 
 	view->goto_window = gtk_window_new (GTK_WINDOW_POPUP);
+	gtk_window_set_screen (GTK_WINDOW (view->goto_window),
+			       gtk_widget_get_screen (GTK_WIDGET (view)));
 
 	if (GTK_WINDOW (toplevel)->group)
 		gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,

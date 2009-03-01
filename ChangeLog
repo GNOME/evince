@@ -1,5 +1,12 @@
 2009-03-01  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* libview/ev-view.c: (ev_view_goto_window_create):
+
+	Show the 'jump to page' window in the right GdkScreen. Fixes bug
+	#560541.
+	
+2009-03-01  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_set_document),
 	(ev_window_reload_job_cb):
 
