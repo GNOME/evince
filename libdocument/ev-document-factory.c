@@ -199,6 +199,8 @@ free_uncompressed_uri (gchar *uri_unc)
  * Creates a #EvDocument for the document at @uri; or, if no backend handling
  * the document's type is found, or an error occurred on opening the document,
  * returns %NULL and fills in @error.
+ * If the document is encrypted, it is returned but also @error is set to
+ * %EV_DOCUMENT_ERROR_ENCRYPTED.
  *
  * Returns: a new #EvDocument, or %NULL.
  */
@@ -235,7 +237,7 @@ ev_document_factory_get_document (const char *uri, GError **error)
 		if (result == FALSE || err) {
 			if (err &&
 			    g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
-				g_error_free (err);
+				g_propagate_error (error, err);
 				return document;
 			    }
 			/* else fall through to slow mime code section below */
@@ -283,7 +285,7 @@ ev_document_factory_get_document (const char *uri, GError **error)
                                              EV_DOCUMENT_ERROR_INVALID,
                                              _("Unknown MIME Type"));
 		} else if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
-			g_error_free (err);
+			g_propagate_error (error, err);
 			return document;
 		}
 
