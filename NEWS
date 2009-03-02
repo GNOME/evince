@@ -1,4 +1,46 @@
 ================
+Evince  2.25.92
+================
+
+Bug fixes:
+
+    * Show the 'jump to page' window in the right GdkScreen (#560541,
+      Carlos Garcia Campos)
+    * Make our own thumbnail when the provided one doesn't have the
+      needed size (#323198, #307357, Christian Spurk, Carlos Garcia Campos)
+    * Reduce the restriction on the minimum size of thumbnails from 40
+      to 1 (#323198, Christian Spurk)
+    * Use GOption in thumbnailer (Carlos Garcia Campos)
+    * Fix saving a copy of encrypted PDF documents (#566791, Carlos
+      Garcia Campos)
+    * Don't use g_quark_from_static_string in a loadable module
+      (Christian Persch)
+    * Use g_object_unref() instead of gdk_pixbuf_unref() in impress
+      backend (#571707, Thomas H.P. Andersen)
+
+Translation updates:
+
+    * Ihar Hrachyshka (be@latin)
+    * Alexander Shopov (bg)
+    * Gil Forcada (ca)
+    * Petr Kovar (cs)
+    * Christian Kirbach (de)
+    * David Lodge (en_GB)
+    * Juanje Ojeda Croissier (es)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Ilkka Tuohela (fi)
+    * Claude Paroz (fr)
+    * Sweta Kothari (gu)
+    * Yuval Tanny (he)
+    * Takeshi AIHANA (ja)
+    * Changwoo Ryu (ko)
+    * Kjartan Maraas (nb)
+    * Duarte Loreto (pt)
+    * Daniel Nylander (sv)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince  2.25.91
 ================
 
