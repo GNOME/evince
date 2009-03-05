@@ -112,7 +112,7 @@ ev_properties_view_format_date (GTime utime)
 {
 	time_t time = (time_t) utime;
 	char s[256];
-	const char *fmt_hack = "%c";
+	const char fmt_hack[] = "%c";
 	size_t len;
 #ifdef HAVE_LOCALTIME_R
 	struct tm t;

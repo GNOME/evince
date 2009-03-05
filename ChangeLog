@@ -1,3 +1,11 @@
+2009-03-05  Tobias Mueller  <tobiasmue@svn.gnome.org>
+
+	* properties/ev-properties-view.c:
+	(ev_properties_view_format_date): Make the fixed sized string a 
+	semantically correct const char[] instead of a const char* to fix 
+	a compiler warning if built with -Wformat.
+	** Fixes bug 574168
+
 2009-03-03  Christian Persch  <chpe@gnome.org>
 
 	* libdocument/ev-document-factory.c:
