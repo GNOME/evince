@@ -1,325 +1,338 @@
+# translation of evince.HEAD.te.po to Telugu
 # Telugu translation of evince.
 # Copyright (C) 2007 Swecha Telugu Localisation Team
 # This file is distributed under the same license as the evince package.
-# Bharat Kumar <jonnalagaddabharat@gmail.com>, 2007.
 #
+# Bharat Kumar <jonnalagaddabharat@gmail.com>, 2007.
+# Krishna Babu K <kkrothap@redhat.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-01 22:04+0530\n"
-"PO-Revision-Date: 2007-07-01 22:05+0530\n"
-"Last-Translator: Bharat Kumar <jonnalagaddabharat@gmail.com>\n"
-"Language-Team: Sweche Telugu Localisation Team <localisation@swecha.org>\n"
+"Project-Id-Version: evince.HEAD.te\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
+"POT-Creation-Date: 2009-02-15 13:53+0000\n"
+"PO-Revision-Date: 2009-03-11 13:29+0530\n"
+"Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
+"Language-Team: Telugu <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n\n"
+"X-Generator: KBabel 1.11.4\n"
 
-#: ../backend/comics/comics-document.c:150
+#: ../backend/comics/comics-document.c:131
+#: ../libdocument/ev-document-factory.c:143
+#: ../libdocument/ev-document-factory.c:281
+msgid "Unknown MIME Type"
+msgstr "అపరిచిత MIME రకం"
+
+#: ../backend/comics/comics-document.c:165
+#, c-format
+msgid "Not a comic book MIME type: %s"
+msgstr ""
+
+#: ../backend/comics/comics-document.c:186
 msgid "File corrupted."
 msgstr "చెడిపోయిన దస్త్రం"
 
-#: ../backend/comics/comics-document.c:186
+#: ../backend/comics/comics-document.c:198
+#, fuzzy
+#| msgid "No images found in archive %s"
+msgid "No files in archive."
+msgstr "%s సంగ్రహంలో   ప్రతిమలు కనబడలేదు"
+
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "%s సంగ్రహంలో   ప్రతిమలు కనబడలేదు"
 
-#: ../backend/djvu/djvu-document.c:162
+#: ../backend/comics/comicsdocument.evince-backend.in.h:1
+msgid "Comic Books"
+msgstr "కామిక్ పుస్తకాలు"
+
+#: ../backend/djvu/djvu-document.c:174
+#, fuzzy
+#| msgid "DVI document has incorrect format"
+msgid "DJVU document has incorrect format"
+msgstr "DVI పత్రం సరియైన రూపలావన్యంలో లేదు"
+
+#: ../backend/djvu/djvu-document.c:251
+#, fuzzy
+#| msgid ""
+#| "The document is composed by several files. One or more of such files "
+#| "cannot be accessed."
 msgid ""
-"The document is composed by several files. One or more of such files cannot "
+"The document is composed of several files. One or more of such files cannot "
 "be accessed."
 msgstr "కొన్ని దస్త్రాలచే ఈ పత్రం ఏర్పడినది.  అట్టి ఏర్పడిన ఒకటి లేదా కొన్ని దస్త్రాలకు సాంగత్యం లేదు"
 
-#: ../backend/djvu/djvu-document.c:489 ../backend/ps/ps-document.c:172
-#: ../backend/ps/ps-document.c:186
-#, c-format
-msgid "Cannot open file “%s”."
-msgstr "%s దస్త్రాన్ని తెరవలేము"
+#: ../backend/djvu/djvudocument.evince-backend.in.h:1
+msgid "Djvu Documents"
+msgstr "Djvu పత్రాలు"
 
-#: ../backend/dvi/dvi-document.c:98
-msgid "File not available"
-msgstr "దస్త్రం లభ్యమైలేదు"
-
-#: ../backend/dvi/dvi-document.c:113
+#: ../backend/dvi/dvi-document.c:106
 msgid "DVI document has incorrect format"
 msgstr "DVI పత్రం సరియైన రూపలావన్యంలో లేదు"
 
-#: ../backend/dvi/dvi-document.c:426
-#, c-format
-msgid "Error: %s"
-msgstr "దోషం: %s"
-
-#: ../backend/dvi/dvi-document.c:428
-msgid "Error: dvipdfm exited with non-zero status."
-msgstr "దోషం: "
+#: ../backend/dvi/dvidocument.evince-backend.in.h:1
+msgid "DVI Documents"
+msgstr "DVI పత్రాలు"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:662
+#: ../backend/pdf/ev-poppler.cc:700
 msgid "Yes"
 msgstr "అవును"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:665
+#: ../backend/pdf/ev-poppler.cc:703
 msgid "No"
 msgstr "కాదు"
 
-#: ../backend/pdf/ev-poppler.cc:765
+#: ../backend/pdf/ev-poppler.cc:777
 msgid "Type 1"
 msgstr "రకం 1"
 
-#: ../backend/pdf/ev-poppler.cc:767
+#: ../backend/pdf/ev-poppler.cc:779
 msgid "Type 1C"
 msgstr "రకం 1C"
 
-#: ../backend/pdf/ev-poppler.cc:769
+#: ../backend/pdf/ev-poppler.cc:781
 msgid "Type 3"
 msgstr "రకం ౩"
 
-#: ../backend/pdf/ev-poppler.cc:771
+#: ../backend/pdf/ev-poppler.cc:783
 msgid "TrueType"
 msgstr "నిజమైన రకం"
 
-#: ../backend/pdf/ev-poppler.cc:773
+#: ../backend/pdf/ev-poppler.cc:785
 msgid "Type 1 (CID)"
 msgstr "రకం 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:775
+#: ../backend/pdf/ev-poppler.cc:787
 msgid "Type 1C (CID)"
 msgstr "రకం 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:777
+#: ../backend/pdf/ev-poppler.cc:789
 msgid "TrueType (CID)"
 msgstr "నిజమైన రకం (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:779
+#: ../backend/pdf/ev-poppler.cc:791
 msgid "Unknown font type"
 msgstr "అపరిచిత అక్షరశైలి"
 
-#: ../backend/pdf/ev-poppler.cc:805
+#: ../backend/pdf/ev-poppler.cc:817
 msgid "No name"
 msgstr "పేరు లేదు"
 
-#: ../backend/pdf/ev-poppler.cc:813
+#: ../backend/pdf/ev-poppler.cc:825
 msgid "Embedded subset"
 msgstr ""
 
-#: ../backend/pdf/ev-poppler.cc:815
+#: ../backend/pdf/ev-poppler.cc:827
 msgid "Embedded"
-msgstr ""
+msgstr "ఎంబెడెడ్"
 
-#: ../backend/pdf/ev-poppler.cc:817
+#: ../backend/pdf/ev-poppler.cc:829
 msgid "Not embedded"
 msgstr ""
 
-#: ../backend/impress/zip.c:52
+#: ../backend/pdf/pdfdocument.evince-backend.in.h:1
+msgid "PDF Documents"
+msgstr "PDF పత్రాలు"
+
+#: ../backend/impress/impress-document.c:303
+msgid "Invalid document"
+msgstr "నిస్సారమైన పత్రము"
+
+#.
+#. * vim: sw=2 ts=8 cindent noai bs=2
+#.
+#: ../backend/impress/impressdocument.evince-backend.in.h:1
+msgid "Impress Slides"
+msgstr ""
+
+#: ../backend/impress/zip.c:53
 msgid "No error"
 msgstr "దోషము లేదు"
 
-#: ../backend/impress/zip.c:55
+#: ../backend/impress/zip.c:56
 msgid "Not enough memory"
 msgstr "కావలసినంత జ్ఞాపకశక్తి లేదు"
 
-#: ../backend/impress/zip.c:58
+#: ../backend/impress/zip.c:59
 msgid "Cannot find zip signature"
 msgstr "జిప్ సంతకం కనబడలేదు"
 
-#: ../backend/impress/zip.c:61
+#: ../backend/impress/zip.c:62
 msgid "Invalid zip file"
 msgstr "నిస్సారమైన జిప్ దస్త్రం"
 
-#: ../backend/impress/zip.c:64
+#: ../backend/impress/zip.c:65
 msgid "Multi file zips are not supported"
 msgstr "ఎక్కువ జిప్ దస్త్రాలకు సహకారం లేదు"
 
-#: ../backend/impress/zip.c:67
+#: ../backend/impress/zip.c:68
 msgid "Cannot open the file"
 msgstr "దస్త్రాన్ని తెరవలేము"
 
-#: ../backend/impress/zip.c:70
+#: ../backend/impress/zip.c:71
 msgid "Cannot read data from file"
 msgstr "దస్త్రము నుండి దత్తాంశాన్ని చదువలేము"
 
-#: ../backend/impress/zip.c:73
+#: ../backend/impress/zip.c:74
 msgid "Cannot find file in the zip archive"
 msgstr "జిప్ సంగ్రహంలో దస్త్రం కనబడుటలేదు"
 
-#: ../backend/impress/zip.c:76
+#: ../backend/impress/zip.c:77
 msgid "Unknown error"
 msgstr "అపరిచిత దోషం"
 
-#: ../backend/ps/gsdefaults.c:30
-msgid "BBox"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "అక్షరం"
-
-#: ../backend/ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:34
-msgid "Legal"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:35
-msgid "Statement"
-msgstr "ప్రకటన"
-
-#: ../backend/ps/gsdefaults.c:36
-msgid "Executive"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:37
-msgid "A0"
-msgstr "A0"
-
-#: ../backend/ps/gsdefaults.c:38
-msgid "A1"
-msgstr "A1"
-
-#: ../backend/ps/gsdefaults.c:39
-msgid "A2"
-msgstr "A2"
-
-#: ../backend/ps/gsdefaults.c:40
-msgid "A3"
-msgstr "A3"
-
-#: ../backend/ps/gsdefaults.c:41
-msgid "A4"
-msgstr "A4"
-
-#: ../backend/ps/gsdefaults.c:42
-msgid "A5"
-msgstr "A5"
-
-#: ../backend/ps/gsdefaults.c:43
-msgid "B4"
-msgstr "B4"
-
-#: ../backend/ps/gsdefaults.c:44
-msgid "B5"
-msgstr "B5"
-
-#: ../backend/ps/gsdefaults.c:45
-msgid "Folio"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr ""
-
-#: ../backend/ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "10x14"
-
-#: ../backend/ps/ps-document.c:233
-#, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr ""
-
-#: ../backend/ps/ps-document.c:250
+#: ../backend/ps/ev-spectre.c:113
 #, c-format
 msgid "Failed to load document “%s”"
 msgstr ""
 
-#: ../backend/ps/ps-document.c:439
-msgid "Encapsulated PostScript"
-msgstr "ఇపిఎస్"
+#: ../backend/ps/ev-spectre.c:146
+#, fuzzy, c-format
+#| msgid "Failed to create file “%s”: %s"
+msgid "Failed to save document “%s”"
+msgstr "“%s”దస్త్రము సృష్టించుట విఫలమైనది: %s"
 
-#: ../backend/ps/ps-document.c:440
-msgid "PostScript"
-msgstr ""
+#: ../backend/ps/psdocument.evince-backend.in.h:1
+msgid "PostScript Documents"
+msgstr "పోస్ట్స్ర్కిప్ట్ పత్రాలు"
 
-#: ../backend/ps/ps-interpreter.c:543
-msgid "Interpreter failed."
-msgstr ""
-
-#: ../backend/impress/impress-document.c:294
-msgid "Remote files aren't supported"
-msgstr "సుదూర దస్త్రాలకి సహకారం లేదు"
-
-#: ../backend/impress/impress-document.c:305
-msgid "Invalid document"
-msgstr "నిస్సారమైన పత్రము"
-
-#: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:316
+#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "అనుబంధ పత్రాన్ని దాయలేకపోయింది “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:348
+#: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "అనుబంధ పత్రాన్ని తెరవలేకపోయింది “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:381
+#: ../libdocument/ev-attachment.c:408
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "అనుబంధ పత్రాన్ని తెరవలేకపోయింది “%s”"
 
-#: ../libdocument/ev-document-factory.c:291
-#: ../libdocument/ev-document-factory.c:398
-msgid "Unknown MIME Type"
-msgstr "అపరిచిత MIME రకం"
+#: ../libdocument/ev-document-factory.c:168
+#, fuzzy, c-format
+#| msgid "Multi file zips are not supported"
+msgid "File type %s (%s) is not supported"
+msgstr "ఎక్కువ జిప్ దస్త్రాలకు సహకారం లేదు"
 
-#: ../libdocument/ev-document-factory.c:302
-#, c-format
-msgid "Unhandled MIME type: “%s”"
-msgstr "చేపట్టలేకపోయిన MIME రకం : “%s”"
-
-#: ../libdocument/ev-document-factory.c:439
+#: ../libdocument/ev-document-factory.c:353
 msgid "All Documents"
 msgstr "అన్ని పత్రాలు"
 
-#: ../libdocument/ev-document-factory.c:447
-msgid "PostScript Documents"
-msgstr "పోస్ట్స్ర్కిప్ట్ పత్రాలు"
-
-#: ../libdocument/ev-document-factory.c:457
-msgid "PDF Documents"
-msgstr "PDF పత్రాలు"
-
-#: ../libdocument/ev-document-factory.c:467 ../shell/ev-window.c:4973
-msgid "Images"
-msgstr "ప్రతిరూపాలు"
-
-#: ../libdocument/ev-document-factory.c:477
-msgid "DVI Documents"
-msgstr "DVI పత్రాలు"
-
-#: ../libdocument/ev-document-factory.c:487
-msgid "Djvu Documents"
-msgstr "Djvu పత్రాలు"
-
-#: ../libdocument/ev-document-factory.c:497
-msgid "Comic Books"
-msgstr "కామిక్ పుస్తకాలు"
-
-#: ../libdocument/ev-document-factory.c:507
-msgid "Impress Slides"
-msgstr ""
-
-#: ../libdocument/ev-document-factory.c:515
+#: ../libdocument/ev-document-factory.c:385
 msgid "All Files"
 msgstr "అన్ని దస్త్రాలు"
 
-#: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
-#, c-format
-msgid "Open “%s”"
-msgstr "“%s” ని తెరవుము "
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:439
+msgid "Co_nnect"
+msgstr "అనుసంధానించు (_n)"
 
-#: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
-msgid "Empty"
-msgstr "ఖాళీ"
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:483
+msgid "Connect _anonymously"
+msgstr "పేరులేకుండా అనుసంధానించు (_a)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:492
+msgid "Connect as u_ser:"
+msgstr "వినియోగదారిలా అనుసంధానించు (_s):"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:529
+msgid "_Username:"
+msgstr "_వినియోగదారు నామము:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
+msgid "_Domain:"
+msgstr "అధికార క్షేత్రం (_D):"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
+#: ../shell/ev-password-view.c:332
+msgid "_Password:"
+msgstr "_రహస్యపదము:"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:553
+msgid "_Forget password immediately"
+msgstr "సంకేతపదమును తక్షణమే మరచిపొమ్ము (_F)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
+#, fuzzy
+#| msgid "Remember password for this session"
+msgid "_Remember password until you logout"
+msgstr "మీరు లాగ్అవుట్ అగునంతవరకు సంకేతపదమును గుర్తుంచుకొనుము (_R)"
+
+#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
+msgid "_Remember forever"
+msgstr "ఎప్పటికి గుర్తుంచుకొనుము (_R)"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "ఫైలు చెల్లునటువంచి .desktop ఫైలు కాదు"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "గుర్తించబడని డెస్కుటాపు ఫైలు వర్షన్ '%s'"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:958
+#, c-format
+msgid "Starting %s"
+msgstr "%s ప్రారంభిస్తోంది"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "ఆదేశవరుస నందు అనువర్తనములు పత్రములను ఆంగీకరించవు"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "గుర్తించబడని ప్రారంభ ఐచ్చికము: %d"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "పత్రము URIలను Type=Link' desktop entry కు పంపలేదు."
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1392
+#, c-format
+msgid "Not a launchable item"
+msgstr "దించదగిన అంశము కాదు"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:224
+msgid "Disable connection to session manager"
+msgstr "సెషన్ నిర్వాహికకు అనుసంధానమును అచేతనము చేయుము"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:227
+msgid "Specify file containing saved configuration"
+msgstr "దాచివున్న ఆకృతీకరణను కలిగివున్న ఫైలు తెలుపుము"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:227
+#, fuzzy
+#| msgid "[FILE...]"
+msgid "FILE"
+msgstr "FILE"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:230
+msgid "Specify session management ID"
+msgstr "సెషన్ నిర్వహణా IDను తెలుపుము"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:230
+msgid "ID"
+msgstr "ఐడి"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:244
+msgid "Session management options:"
+msgstr "సెషన్ నిర్వహణా ఐచ్చికములు:"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:245
+msgid "Show session management options"
+msgstr "సెషన్ నిర్వహణా ఐచ్చికములను చూపుము"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -328,45 +341,45 @@ msgstr "ఖాళీ"
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:963
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:918
 #, c-format
 msgid "Show “_%s”"
 msgstr "“%s” ని చూపుము"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1423
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1381
 msgid "_Move on Toolbar"
 msgstr "_పనిముట్ల పట్టా మీద కి కదలించు"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1424
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1382
 msgid "Move the selected item on the toolbar"
 msgstr "ఎంపికచేసుకున్నదానిని పనిముట్ల పట్టా మీద కి కదలించు"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1425
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1383
 msgid "_Remove from Toolbar"
 msgstr "_ పనిముట్ల పట్టా నుండి తొలగించు"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1426
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1384
 msgid "Remove the selected item from the toolbar"
 msgstr "ఎంపికచేసుకున్నదానిని  పనిముట్ల పట్టా నుండి తొలగించు"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1427
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1385
 msgid "_Delete Toolbar"
 msgstr "_పనిముట్ల పట్టా  ని తొలగించు"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1428
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1386
 msgid "Remove the selected toolbar"
 msgstr "ఎంచుకున్న పనిముట్ల పట్టా  ని తీసివేయు "
 
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:469
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:485
 msgid "Separator"
 msgstr "వేరుచేయునది"
 
-#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:117
 msgid "Running in presentation mode"
 msgstr "సమర్పణ సంవిధానంలో  నడుస్తున్నది"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4563
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5294
 msgid "Best Fit"
 msgstr "సరి తగిన"
 
@@ -414,82 +427,15 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3714
-#: ../shell/ev-window-title.c:126
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4272
+#: ../shell/ev-window-title.c:149
+#, c-format
 msgid "Document Viewer"
 msgstr "పత్ర దర్శిని"
 
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multipage documents"
 msgstr "అధికపుట  పత్రాలను దర్శించు"
-
-#: ../data/evince-password.glade.h:1
-msgid "Password Entry"
-msgstr "రహస్యపద  ప్రవేశము"
-
-#: ../data/evince-password.glade.h:2
-msgid "Remember password for this session"
-msgstr "ఈ సమకూర్పుకు రహస్యపదమును గుర్తుంచుకొనుము"
-
-#: ../data/evince-password.glade.h:3
-msgid "Save password in keyring"
-msgstr "కీలకవలయంలో రహస్యపదమును దాయుము"
-
-#: ../data/evince-password.glade.h:4
-msgid "_Password:"
-msgstr "_రహస్యపదము:"
-
-#: ../data/evince-properties.glade.h:1
-msgid "<b>Author:</b>"
-msgstr "<b>మూలకర్త:</b>"
-
-#: ../data/evince-properties.glade.h:2
-msgid "<b>Created:</b>"
-msgstr "<b>సృష్టించబడిన:</b>"
-
-#: ../data/evince-properties.glade.h:3
-msgid "<b>Creator:</b>"
-msgstr "<b>సృష్టికర్త:</b>"
-
-#: ../data/evince-properties.glade.h:4
-msgid "<b>Format:</b>"
-msgstr "<b>రూపలావన్యం:</b>"
-
-#: ../data/evince-properties.glade.h:5
-msgid "<b>Keywords:</b>"
-msgstr "<b>ముఖ్యపదాలు:</b>"
-
-#: ../data/evince-properties.glade.h:6
-msgid "<b>Modified:</b>"
-msgstr "<b>సవరించిన్నది:</b>"
-
-#: ../data/evince-properties.glade.h:7
-msgid "<b>Number of Pages:</b>"
-msgstr "<b>పుటలు సంఖ్య:</b>"
-
-#: ../data/evince-properties.glade.h:8
-msgid "<b>Optimized:</b>"
-msgstr ""
-
-#: ../data/evince-properties.glade.h:9
-msgid "<b>Paper Size:</b>"
-msgstr "<b>కాగిత పరిమాణము:</b>"
-
-#: ../data/evince-properties.glade.h:10
-msgid "<b>Producer:</b>"
-msgstr ""
-
-#: ../data/evince-properties.glade.h:11
-msgid "<b>Security:</b>"
-msgstr "<b>రక్షణ:</b>"
-
-#: ../data/evince-properties.glade.h:12
-msgid "<b>Subject:</b>"
-msgstr "<b>విషయం:</b>"
-
-#: ../data/evince-properties.glade.h:13
-msgid "<b>Title:</b>"
-msgstr "<b>శీర్షిక:</b>"
 
 #: ../data/evince.schemas.in.h:1
 msgid "Override document restrictions"
@@ -499,11 +445,89 @@ msgstr ""
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
 
-#: ../properties/ev-properties-main.c:110
+#: ../properties/ev-properties-main.c:113
 msgid "Document"
 msgstr "పత్రము"
 
-#: ../properties/ev-properties-view.c:182
+#: ../properties/ev-properties-view.c:59
+#, fuzzy
+#| msgid "<b>Title:</b>"
+msgid "Title:"
+msgstr "శీర్షిక:"
+
+#: ../properties/ev-properties-view.c:60
+msgid "Location:"
+msgstr "స్థానము:"
+
+#: ../properties/ev-properties-view.c:61
+#, fuzzy
+#| msgid "<b>Subject:</b>"
+msgid "Subject:"
+msgstr "సంగతి:"
+
+#: ../properties/ev-properties-view.c:62
+#, fuzzy
+#| msgid "<b>Author:</b>"
+msgid "Author:"
+msgstr "మూలకర్త:"
+
+#: ../properties/ev-properties-view.c:63
+#, fuzzy
+#| msgid "<b>Keywords:</b>"
+msgid "Keywords:"
+msgstr "Keywords:"
+
+#: ../properties/ev-properties-view.c:64
+msgid "Producer:"
+msgstr ""
+
+#: ../properties/ev-properties-view.c:65
+#, fuzzy
+#| msgid "<b>Creator:</b>"
+msgid "Creator:"
+msgstr "<b>సృష్టికర్త:</b>"
+
+#: ../properties/ev-properties-view.c:66
+#, fuzzy
+#| msgid "<b>Created:</b>"
+msgid "Created:"
+msgstr "నిర్మించబడినది:"
+
+#: ../properties/ev-properties-view.c:67
+#, fuzzy
+#| msgid "<b>Modified:</b>"
+msgid "Modified:"
+msgstr "మార్చబడినది:"
+
+#: ../properties/ev-properties-view.c:68
+#, fuzzy
+#| msgid "<b>Number of Pages:</b>"
+msgid "Number of Pages:"
+msgstr "పుటల సంఖ్య:"
+
+#: ../properties/ev-properties-view.c:69
+msgid "Optimized:"
+msgstr ""
+
+#: ../properties/ev-properties-view.c:70
+#, fuzzy
+#| msgid "<b>Format:</b>"
+msgid "Format:"
+msgstr "రూపలావణ్యం:"
+
+#: ../properties/ev-properties-view.c:71
+#, fuzzy
+#| msgid "<b>Security:</b>"
+msgid "Security:"
+msgstr "రక్షణ:"
+
+#: ../properties/ev-properties-view.c:72
+#, fuzzy
+#| msgid "<b>Paper Size:</b>"
+msgid "Paper Size:"
+msgstr "<b>కాగిత పరిమాణము:</b>"
+
+#: ../properties/ev-properties-view.c:202
 msgid "None"
 msgstr "Eదికాదు"
 
@@ -513,74 +537,145 @@ msgstr "Eదికాదు"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:207
-#: ../properties/ev-properties-view.c:367
+#: ../properties/ev-properties-view.c:227
 msgid "default:mm"
 msgstr "అప్రమేయం:mm"
 
-#. Metric measurement (millimeters)
-#: ../properties/ev-properties-view.c:249
-#: ../properties/ev-properties-view.c:404
+#: ../properties/ev-properties-view.c:271
 #, c-format
 msgid "%.0f x %.0f mm"
 msgstr ""
 
-#: ../properties/ev-properties-view.c:253
+#: ../properties/ev-properties-view.c:275
 #, c-format
 msgid "%.2f x %.2f inch"
 msgstr ""
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:277
-#: ../properties/ev-properties-view.c:415
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, చిత్రపటం(%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:284
-#: ../properties/ev-properties-view.c:422
+#: ../properties/ev-properties-view.c:306
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, ప్రకృతి దృశ్యం (%s)"
 
-#. Imperial measurement (inches)
-#: ../properties/ev-properties-view.c:399
+#: ../libview/ev-jobs.c:949
 #, c-format
-msgid "%.2f x %.2f in"
-msgstr ""
+msgid "Failed to create file “%s”: %s"
+msgstr "“%s”దస్త్రము సృష్టించుట విఫలమైనది: %s"
 
-#: ../shell/eggfindbar.c:157
+#: ../libview/ev-view-accessible.c:41
+msgid "Scroll Up"
+msgstr "పైకి జరుపు"
+
+#: ../libview/ev-view-accessible.c:42
+msgid "Scroll Down"
+msgstr "కిందకి జరుపు"
+
+#: ../libview/ev-view-accessible.c:48
+msgid "Scroll View Up"
+msgstr "పైన చూడుటకు జరుగు"
+
+#: ../libview/ev-view-accessible.c:49
+msgid "Scroll View Down"
+msgstr "కింద చూడుటకు జరుగు"
+
+#: ../libview/ev-view-accessible.c:533
+msgid "Document View"
+msgstr "పత్ర దర్శనం"
+
+#: ../libview/ev-view.c:1417
+msgid "Go to first page"
+msgstr "మొదటి పుటకు వెళ్లు"
+
+#: ../libview/ev-view.c:1419
+msgid "Go to previous page"
+msgstr "పూర్వపు పుటకు వెళ్లు"
+
+#: ../libview/ev-view.c:1421
+msgid "Go to next page"
+msgstr "తరువాతి పుటకు వెళ్లు"
+
+#: ../libview/ev-view.c:1423
+msgid "Go to last page"
+msgstr "చివరి పుటకు వెళ్లు"
+
+#: ../libview/ev-view.c:1425
+msgid "Go to page"
+msgstr "పుటకు వెళ్లు"
+
+#: ../libview/ev-view.c:1427
+msgid "Find"
+msgstr "కనిపెట్టు"
+
+#: ../libview/ev-view.c:1455
+#, c-format
+msgid "Go to page %s"
+msgstr "%s పుటకు వెళ్లు"
+
+#: ../libview/ev-view.c:1461
+#, c-format
+msgid "Go to %s on file “%s”"
+msgstr "%s దస్త్రముపై %sకి వెళ్లు"
+
+#: ../libview/ev-view.c:1464
+#, c-format
+msgid "Go to file “%s”"
+msgstr "%s దస్త్రముకి వెళ్లు"
+
+#: ../libview/ev-view.c:1472
+#, c-format
+msgid "Launch %s"
+msgstr "%s ని ప్రయోగించు"
+
+#: ../libview/ev-view.c:2387
+msgid "End of presentation. Press Escape to exit."
+msgstr "సమర్పణ ముగిసినది."
+
+#: ../libview/ev-view.c:3278
+msgid "Jump to page:"
+msgstr "పుటకు ఎగురుము"
+
+#: ../libview/ev-view.c:3541 ../shell/ev-sidebar-layers.c:125
+#: ../shell/ev-sidebar-links.c:267
+msgid "Loading..."
+msgstr "లోడవుతున్నది..."
+
+#: ../shell/eggfindbar.c:146
 msgid "Search string"
 msgstr "వెతుకుమాట"
 
-#: ../shell/eggfindbar.c:158
+#: ../shell/eggfindbar.c:147
 msgid "The name of the string to be found"
 msgstr "పదబంధం యొక్క పేరు కనుగొనబడాలి"
 
-#: ../shell/eggfindbar.c:171
+#: ../shell/eggfindbar.c:160
 msgid "Case sensitive"
 msgstr "సందర్భ స్పందన"
 
-#: ../shell/eggfindbar.c:172
+#: ../shell/eggfindbar.c:161
 msgid "TRUE for a case sensitive search"
 msgstr ""
 
-#: ../shell/eggfindbar.c:179
+#: ../shell/eggfindbar.c:168
 msgid "Highlight color"
 msgstr "వర్ణమును ఉద్దేపించు"
 
-#: ../shell/eggfindbar.c:180
+#: ../shell/eggfindbar.c:169
 msgid "Color of highlight for all matches"
 msgstr ""
 
-#: ../shell/eggfindbar.c:186
+#: ../shell/eggfindbar.c:175
 msgid "Current color"
 msgstr "ప్రస్థుత వర్ణము"
 
-#: ../shell/eggfindbar.c:187
+#: ../shell/eggfindbar.c:176
 msgid "Color of highlight for the current match"
 msgstr ""
 
@@ -588,19 +683,19 @@ msgstr ""
 msgid "Find:"
 msgstr "కనుగొనుము"
 
-#: ../shell/eggfindbar.c:329
-msgid "Find Previous"
+#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:5028
+msgid "Find Pre_vious"
 msgstr "పూర్వపుదానిని కనుగొనుము"
 
-#: ../shell/eggfindbar.c:332
+#: ../shell/eggfindbar.c:333
 msgid "Find previous occurrence of the search string"
 msgstr "వెతుకుమాట యొక్క పూర్వసంభవాన్ని కనుగొనుము"
 
-#: ../shell/eggfindbar.c:337
-msgid "Find Next"
-msgstr "తరువాత దానిని కనుగొనుము"
+#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5026
+msgid "Find Ne_xt"
+msgstr "తరువాతదానిని కనుగొనుము"
 
-#: ../shell/eggfindbar.c:340
+#: ../shell/eggfindbar.c:341
 msgid "Find next occurrence of the search string"
 msgstr "వెతుకుమాట యొక్క తదుపరిసంభవాన్ని కనుగొనుము"
 
@@ -612,6 +707,17 @@ msgstr "సందర్భ స్పందన"
 msgid "Toggle case sensitive search"
 msgstr "సందర్భ స్పందనను మార్చి వెతుకు"
 
+#: ../shell/ev-keyring.c:102
+#, c-format
+msgid "Password for document %s"
+msgstr "%s పత్రముకు రహస్యపదము"
+
+#: ../shell/ev-open-recent-action.c:72
+#, fuzzy
+#| msgid "Open an existing document"
+msgid "Open a recently used document"
+msgstr "ఉన్న పత్రాన్ని తెరువుము"
+
 #: ../shell/ev-page-action.c:76
 #, c-format
 msgid "(%d of %d)"
@@ -622,251 +728,255 @@ msgstr "(%d యొక్క %d)"
 msgid "of %d"
 msgstr "%d యొక్క"
 
-#: ../shell/ev-password.c:83
-msgid "Password required"
-msgstr "రహస్యపదము అవసరమైనది"
-
-#: ../shell/ev-password.c:84
-#, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
-msgstr "%s పత్రము మూసివున్నది కావున తెరుచుటకు రహస్యపదం అవసరం"
-
-#: ../shell/ev-password.c:149
-msgid "Enter password"
-msgstr "రహస్యపదాన్ని రాయుము"
-
-#: ../shell/ev-password.c:252
-#, c-format
-msgid "Password for document %s"
-msgstr "%s పత్రముకు రహస్యపదము"
-
-#: ../shell/ev-password.c:334
-msgid "Incorrect password"
-msgstr "రహస్యపదము సరియైనదికాదు"
-
-#: ../shell/ev-password-view.c:111
+#: ../shell/ev-password-view.c:144
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr "ఈ పత్రము మూసివున్నది కావున రహస్యపదం ద్వారానే దీన్ని చదవగలము"
 
-#: ../shell/ev-password-view.c:120
+#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "_పత్రాన్ని విప్పు"
 
-#: ../shell/ev-properties-dialog.c:61
+#: ../shell/ev-password-view.c:261
+msgid "Enter password"
+msgstr "రహస్యపదాన్ని రాయుము"
+
+#: ../shell/ev-password-view.c:301
+msgid "Password required"
+msgstr "రహస్యపదము అవసరమైనది"
+
+#: ../shell/ev-password-view.c:302
+#, c-format
+msgid "The document “%s” is locked and requires a password before it can be opened."
+msgstr "%s పత్రము మూసివున్నది కావున తెరుచుటకు రహస్యపదం అవసరం"
+
+#: ../shell/ev-password-view.c:365
+msgid "Forget password _immediately"
+msgstr "సంకేతపదమును తక్షణమే మర్చిపో (_i)"
+
+#: ../shell/ev-password-view.c:377
+#, fuzzy
+#| msgid "Remember password for this session"
+msgid "Remember password until you _logout"
+msgstr "మీరు లాగ్అవుట్ అయ్యేవరకు సంకేతపదమును గుర్తుంచుకొనుము (_l)"
+
+#: ../shell/ev-password-view.c:389
+msgid "Remember _forever"
+msgstr "ఎప్పటికి గుర్తుంచుకొనుము (_f)"
+
+#. Initial state
+#: ../shell/ev-print-operation.c:318
+msgid "Preparing to print ..."
+msgstr ""
+
+#: ../shell/ev-print-operation.c:320
+#, fuzzy
+#| msgid "_Find..."
+msgid "Finishing..."
+msgstr "ముగింపు..."
+
+#: ../shell/ev-print-operation.c:322
+#, c-format
+msgid "Printing page %d of %d..."
+msgstr ""
+
+#: ../shell/ev-print-operation.c:1010
+msgid "Printing is not supported on this printer."
+msgstr "ఈ ముద్రణా యంత్రానికి ముద్రణ సహకారంలేదు"
+
+#: ../shell/ev-print-operation.c:1136 ../shell/ev-window.c:5079
+msgid "Print"
+msgstr "ముద్రణ"
+
+#: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
 msgstr "లక్షణాలు"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:91
 msgid "General"
 msgstr "సర్వసామన్యమైన"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:101
 msgid "Fonts"
 msgstr "అక్షరశైలిలు"
 
-#: ../shell/ev-properties-fonts.c:141
+#: ../shell/ev-properties-fonts.c:135
 msgid "Font"
 msgstr "అక్షరశైలి"
 
-#: ../shell/ev-properties-fonts.c:152
+#: ../shell/ev-properties-fonts.c:162
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "అక్షరశైలి యొక్క సమాచారం సేకరిస్తున్నది... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:670
+#: ../shell/ev-sidebar-attachments.c:697
 msgid "Attachments"
 msgstr "అనుబంధ పత్రాలు"
 
-#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:2816
-msgid "Loading..."
+#: ../shell/ev-sidebar-layers.c:395
+msgid "Layers"
 msgstr ""
 
-#: ../shell/ev-sidebar-links.c:342
+#: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
 msgstr "ముద్రణ..."
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "సూచి"
 
-#: ../shell/ev-sidebar-thumbnails.c:719
+#: ../shell/ev-sidebar-thumbnails.c:751
 msgid "Thumbnails"
 msgstr "చిరుచిత్రాలు"
 
-#: ../shell/ev-view-accessible.c:42
-msgid "Scroll Up"
-msgstr "పైకి జరుపు"
-
-#: ../shell/ev-view-accessible.c:43
-msgid "Scroll Down"
-msgstr "కిందకి జరుపు"
-
-#: ../shell/ev-view-accessible.c:49
-msgid "Scroll View Up"
-msgstr "పైన చూడుటకు జరుగు"
-
-#: ../shell/ev-view-accessible.c:50
-msgid "Scroll View Down"
-msgstr "కింద చూడుటకు జరుగు"
-
-#: ../shell/ev-view-accessible.c:536
-msgid "Document View"
-msgstr "పత్ర దర్శనం"
-
-#: ../shell/ev-view.c:1414
-msgid "Go to first page"
-msgstr "మొదటి పుటకు వెళ్లు"
-
-#: ../shell/ev-view.c:1416
-msgid "Go to previous page"
-msgstr "పూర్వపు పుటకు వెళ్లు"
-
-#: ../shell/ev-view.c:1418
-msgid "Go to next page"
-msgstr "తరువాతి పుటకు వెళ్లు"
-
-#: ../shell/ev-view.c:1420
-msgid "Go to last page"
-msgstr "చివరి పుటకు వెళ్లు"
-
-#: ../shell/ev-view.c:1422
-msgid "Go to page"
-msgstr "పుటకు వెళ్లు"
-
-#: ../shell/ev-view.c:1424
-msgid "Find"
-msgstr "కనిపెట్టు"
-
-#: ../shell/ev-view.c:1451
-#, c-format
-msgid "Go to page %s"
-msgstr "%s పుటకు వెళ్లు"
-
-#: ../shell/ev-view.c:1456
-#, c-format
-msgid "Go to %s on file “%s”"
-msgstr "%s దస్త్రముపై %sకి వెళ్లు"
-
-#: ../shell/ev-view.c:1459
-#, c-format
-msgid "Go to file “%s”"
-msgstr "%s దస్త్రముకి వెళ్లు"
-
-#: ../shell/ev-view.c:1468
-#, c-format
-msgid "Launch %s"
-msgstr "%s ని ప్రయోగించు"
-
-#: ../shell/ev-view.c:1857
-msgid "End of presentation. Press Escape to exit."
-msgstr "సమర్పణ ముగిసినది."
-
-#: ../shell/ev-view.c:2538
-msgid "Jump to page:"
-msgstr "పుటకు ఎగురుము"
-
-#. TRANS: Sometimes this could be better translated as
-#. "%d hit(s) on this page".  Therefore this string
-#. contains plural cases.
-#: ../shell/ev-view.c:4180
-#, c-format
-msgid "%d found on this page"
-msgid_plural "%d found on this page"
-msgstr[0] "ఈ పుటలో %d కనుగొనబడినది"
-msgstr[1] "ఈ పుటలో %d కనుగొనబడినది"
-
-#: ../shell/ev-view.c:4189
-#, c-format
-msgid "%3d%% remaining to search"
-msgstr "వెతుకుటకు %3d%% మిగిలివున్నది"
-
-#: ../shell/ev-window.c:751
+#: ../shell/ev-window.c:843
 #, c-format
 msgid "Page %s - %s"
 msgstr "%s పుట -%s"
 
-#: ../shell/ev-window.c:753
+#: ../shell/ev-window.c:845
 #, c-format
 msgid "Page %s"
 msgstr "%s పుట"
 
-#: ../shell/ev-window.c:1361
+#: ../shell/ev-window.c:1255
+msgid "The document contains no pages"
+msgstr ""
+
+#: ../shell/ev-window.c:1480 ../shell/ev-window.c:1637
 msgid "Unable to open document"
 msgstr "పత్రాన్ని తెరవలేకపోయింది"
 
-#: ../shell/ev-window.c:1546
+#: ../shell/ev-window.c:1611
+#, c-format
+msgid "Loading document from %s"
+msgstr ""
+
+#: ../shell/ev-window.c:1749 ../shell/ev-window.c:1942
+#, c-format
+msgid "Downloading document (%d%%)"
+msgstr ""
+
+#: ../shell/ev-window.c:1888
+#, c-format
+msgid "Reloading document from %s"
+msgstr ""
+
+#: ../shell/ev-window.c:1921
+#, fuzzy
+#| msgid "Failed to print document"
+msgid "Failed to reload document."
+msgstr "పత్ర ముద్రణ విఫలమైనది"
+
+#: ../shell/ev-window.c:2070
 msgid "Open Document"
 msgstr "పత్రాన్ని తెరువు"
 
-#: ../shell/ev-window.c:1608
+#: ../shell/ev-window.c:2131
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
 msgstr ""
 
-#: ../shell/ev-window.c:1637
+#: ../shell/ev-window.c:2160
 msgid "Cannot open a copy."
 msgstr "నకలు తెరుచుట సాధ్యముకాదు"
 
-#: ../shell/ev-window.c:1919 ../shell/ev-window.c:2006
-#: ../shell/ev-window.c:2062
+#: ../shell/ev-window.c:2400
+#, fuzzy, c-format
+#| msgid "Shrink the document"
+msgid "Saving document to %s"
+msgstr "పత్రాన్ని తగ్గించు"
+
+#: ../shell/ev-window.c:2403
+#, fuzzy, c-format
+#| msgid "Save Attachment"
+msgid "Saving attachment to %s"
+msgstr "అనుబంధ పత్రాన్ని దాయుము"
+
+#: ../shell/ev-window.c:2406
+#, c-format
+msgid "Saving image to %s"
+msgstr ""
+
+#: ../shell/ev-window.c:2451 ../shell/ev-window.c:2548
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ఈ దస్త్రం “%s” గా దాచుట సాధ్యముకాదు"
 
-#: ../shell/ev-window.c:2002
+#: ../shell/ev-window.c:2479
 #, c-format
-msgid "Failed to create file “%s”: %s"
-msgstr "“%s”దస్త్రము సృష్టించుట విఫలమైనది: %s"
+msgid "Uploading document (%d%%)"
+msgstr ""
 
-#: ../shell/ev-window.c:2106
+#: ../shell/ev-window.c:2483
+#, c-format
+msgid "Uploading attachment (%d%%)"
+msgstr ""
+
+#: ../shell/ev-window.c:2487
+#, c-format
+msgid "Uploading image (%d%%)"
+msgstr ""
+
+#: ../shell/ev-window.c:2594
 msgid "Save a Copy"
 msgstr "ఒక నకలును దాయు"
 
-#: ../shell/ev-window.c:2196 ../shell/ev-window.c:3394
+#: ../shell/ev-window.c:2797
+#, c-format
+msgid "%d pending job in queue"
+msgid_plural "%d pending jobs in queue"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../shell/ev-window.c:2853 ../shell/ev-window.c:3963
 msgid "Failed to print document"
 msgstr "పత్ర ముద్రణ విఫలమైనది"
 
-#: ../shell/ev-window.c:2345 ../shell/ev-window.c:2533
-msgid "Printing is not supported on this printer."
-msgstr "ఈ ముద్రణా యంత్రానికి ముద్రణ సహకారంలేదు"
-
-#: ../shell/ev-window.c:2457 ../shell/ev-window.c:2584
-#: ../shell/ev-window.c:4373
-msgid "Print"
-msgstr "ముద్రణ"
-
-#: ../shell/ev-window.c:2523
-msgid "Generating PDF is not supported"
-msgstr "PDF వచ్చు సహకారంలేదు"
-
-#: ../shell/ev-window.c:2535
+#: ../shell/ev-window.c:2910
 #, c-format
-msgid ""
-"You were trying to print to a printer using the “%s” driver. This program "
-"requires a PostScript printer driver."
+msgid "Printing job “%s”"
 msgstr ""
-"“%s” చోదకితో ముద్రణా యంత్రంలో ముద్రణకు మీరు ప్రయత్నిస్తున్నారు. ఈ కార్యక్రమానికి పోస్ట్స్ర్కిప్ట్ ముద్రణా "
-"యంత్రణ చోదకి అవసరం"
 
-#: ../shell/ev-window.c:2593
-msgid "Pages"
-msgstr "పుటలు"
+#: ../shell/ev-window.c:3107
+#, c-format
+msgid "Wait until print job “%s” finishes before closing?"
+msgstr ""
 
-#: ../shell/ev-window.c:3182
+#: ../shell/ev-window.c:3110
+#, c-format
+msgid "There are %d print jobs active. Wait until print finishes before closing?"
+msgstr ""
+
+#: ../shell/ev-window.c:3122
+msgid "If you close the window, pending print jobs will not be printed."
+msgstr ""
+
+#: ../shell/ev-window.c:3126
+msgid "Cancel _print and Close"
+msgstr ""
+
+#: ../shell/ev-window.c:3130
+msgid "Close _after Printing"
+msgstr ""
+
+#: ../shell/ev-window.c:3733
 msgid "Toolbar Editor"
+msgstr "పనిముట్లపట్టా సంపాదకుడు"
+
+#: ../shell/ev-window.c:3865
+msgid "There was an error displaying help"
 msgstr ""
 
-#: ../shell/ev-window.c:3710
+#: ../shell/ev-window.c:4268
 #, c-format
 msgid ""
 "Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
 
-#: ../shell/ev-window.c:3738
+#: ../shell/ev-window.c:4296
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -874,7 +984,7 @@ msgid ""
 "version.\n"
 msgstr ""
 
-#: ../shell/ev-window.c:3742
+#: ../shell/ev-window.c:4300
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -882,405 +992,436 @@ msgid ""
 "details.\n"
 msgstr ""
 
-#: ../shell/ev-window.c:3746
+#: ../shell/ev-window.c:4304
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 
-#: ../shell/ev-window.c:3770 ../shell/main.c:331
+#. Manually set name and icon in win32
+#: ../shell/ev-window.c:4328 ../shell/main.c:382
 msgid "Evince"
 msgstr "ఎవిన్స్"
 
-#: ../shell/ev-window.c:3773
+#: ../shell/ev-window.c:4331
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 ఎవిన్స్ మూలకర్తలు"
 
-#: ../shell/ev-window.c:3779
+#: ../shell/ev-window.c:4337
 msgid "translator-credits"
 msgstr "Bharat Kumar <jonnalagaddabharat@gmail.com>"
 
-#: ../shell/ev-window.c:4284
+#. TRANS: Sometimes this could be better translated as
+#. "%d hit(s) on this page".  Therefore this string
+#. contains plural cases.
+#: ../shell/ev-window.c:4555
+#, c-format
+msgid "%d found on this page"
+msgid_plural "%d found on this page"
+msgstr[0] "ఈ పుటలో %d కనుగొనబడినది"
+msgstr[1] "ఈ పుటలో %d కనుగొనబడినది"
+
+#: ../shell/ev-window.c:4563
+#, c-format
+msgid "%3d%% remaining to search"
+msgstr "వెతుకుటకు %3d%% మిగిలివున్నది"
+
+#: ../shell/ev-window.c:4991
 msgid "_File"
 msgstr "దస్త్రము"
 
-#: ../shell/ev-window.c:4285
+#: ../shell/ev-window.c:4992
 msgid "_Edit"
 msgstr "సరిచేయు"
 
-#: ../shell/ev-window.c:4286
+#: ../shell/ev-window.c:4993
 msgid "_View"
 msgstr "దర్శనం"
 
-#: ../shell/ev-window.c:4287
+#: ../shell/ev-window.c:4994
 msgid "_Go"
 msgstr "వెళ్లు"
 
-#: ../shell/ev-window.c:4288
+#: ../shell/ev-window.c:4995
 msgid "_Help"
 msgstr "సహాయం"
 
 #. File menu
-#: ../shell/ev-window.c:4291 ../shell/ev-window.c:4469
+#: ../shell/ev-window.c:4998 ../shell/ev-window.c:5177
+#: ../shell/ev-window.c:5256
 msgid "_Open..."
 msgstr "తెరచిన"
 
-#: ../shell/ev-window.c:4292
+#: ../shell/ev-window.c:4999 ../shell/ev-window.c:5257
 msgid "Open an existing document"
 msgstr "ఉన్న పత్రాన్ని తెరువుము"
 
-#: ../shell/ev-window.c:4294
+#: ../shell/ev-window.c:5001
 msgid "Op_en a Copy"
 msgstr "ఒక నకలును తెరువుము"
 
-#: ../shell/ev-window.c:4295
+#: ../shell/ev-window.c:5002
 msgid "Open a copy of the current document in a new window"
 msgstr "ప్రస్థుత పత్రము యొక్క నకలును కొత్త గవాక్షములో తెరువుము"
 
-#: ../shell/ev-window.c:4297 ../shell/ev-window.c:4471
+#: ../shell/ev-window.c:5004 ../shell/ev-window.c:5179
 msgid "_Save a Copy..."
 msgstr "నకలును దాయుము"
 
-#: ../shell/ev-window.c:4298
+#: ../shell/ev-window.c:5005
 msgid "Save a copy of the current document"
 msgstr "ప్రస్థుత పత్రము యొక్క నకలును దాయుము"
 
-#: ../shell/ev-window.c:4300
+#: ../shell/ev-window.c:5007
 msgid "Print Set_up..."
 msgstr "అమర్చిపెట్టినదానిని ముద్రించు"
 
-#: ../shell/ev-window.c:4301
+#: ../shell/ev-window.c:5008
 msgid "Setup the page settings for printing"
 msgstr "పుట అమరికలను ముద్రణకోసం అమర్చండి"
 
-#: ../shell/ev-window.c:4303
+#: ../shell/ev-window.c:5010
 msgid "_Print..."
 msgstr "ముద్రణ"
 
-#: ../shell/ev-window.c:4304 ../shell/ev-window.c:4374
+#: ../shell/ev-window.c:5011 ../shell/ev-window.c:5080
 msgid "Print this document"
 msgstr "ఈ పత్రాన్ని ముద్రించు"
 
-#: ../shell/ev-window.c:4306
+#: ../shell/ev-window.c:5013
 msgid "P_roperties"
 msgstr "లక్షణాలు"
 
-#: ../shell/ev-window.c:4315 ../shell/ev-window.c:4317
+#: ../shell/ev-window.c:5021
 msgid "Select _All"
 msgstr "అన్నింటిని ఎంపికచేయు"
 
-#: ../shell/ev-window.c:4320
+#: ../shell/ev-window.c:5023
 msgid "_Find..."
 msgstr "కనిపెట్టు"
 
-#: ../shell/ev-window.c:4321
+#: ../shell/ev-window.c:5024
 msgid "Find a word or phrase in the document"
 msgstr "పత్రములో పదాన్ని కనుగొనుము"
 
-#: ../shell/ev-window.c:4323
-msgid "Find Ne_xt"
-msgstr "తరువాతదానిని కనుగొనుము"
-
-#: ../shell/ev-window.c:4325
-msgid "Find Pre_vious"
-msgstr "పూర్వపుదానిని కనుగొనుము"
-
-#: ../shell/ev-window.c:4327
+#: ../shell/ev-window.c:5030
 msgid "T_oolbar"
 msgstr "పనిముట్ల పట్టా"
 
-#: ../shell/ev-window.c:4329
+#: ../shell/ev-window.c:5032
 msgid "Rotate _Left"
 msgstr "ఎడమవైపు తిప్పు"
 
-#: ../shell/ev-window.c:4331
+#: ../shell/ev-window.c:5034
 msgid "Rotate _Right"
 msgstr "కుడివైపు తిప్పు"
 
-#: ../shell/ev-window.c:4336
+#: ../shell/ev-window.c:5039
 msgid "Enlarge the document"
 msgstr "పత్రాన్ని పెంచు"
 
-#: ../shell/ev-window.c:4339
+#: ../shell/ev-window.c:5042
 msgid "Shrink the document"
 msgstr "పత్రాన్ని తగ్గించు"
 
-#: ../shell/ev-window.c:4341
+#: ../shell/ev-window.c:5044
 msgid "_Reload"
-msgstr ""
+msgstr "తిరిగిలోడుచేయి (_R)"
 
-#: ../shell/ev-window.c:4342
+#: ../shell/ev-window.c:5045
 msgid "Reload the document"
 msgstr ""
 
+#: ../shell/ev-window.c:5048
+msgid "Auto_scroll"
+msgstr ""
+
 #. Go menu
-#: ../shell/ev-window.c:4346
+#: ../shell/ev-window.c:5052
 msgid "_Previous Page"
 msgstr "_పూర్వపు పుట"
 
-#: ../shell/ev-window.c:4347
+#: ../shell/ev-window.c:5053
 msgid "Go to the previous page"
 msgstr "పూర్వపు పుటకు వెళ్లుము"
 
-#: ../shell/ev-window.c:4349
+#: ../shell/ev-window.c:5055
 msgid "_Next Page"
 msgstr "_తరువాతి పుట"
 
-#: ../shell/ev-window.c:4350
+#: ../shell/ev-window.c:5056
 msgid "Go to the next page"
 msgstr "తరువాతి పుటకు వెళ్లుము"
 
-#: ../shell/ev-window.c:4352
+#: ../shell/ev-window.c:5058
 msgid "_First Page"
 msgstr "_మొదటి పుట"
 
-#: ../shell/ev-window.c:4353
+#: ../shell/ev-window.c:5059
 msgid "Go to the first page"
 msgstr "మొదటి పుటకు వెళ్లుము"
 
-#: ../shell/ev-window.c:4355
+#: ../shell/ev-window.c:5061
 msgid "_Last Page"
 msgstr "చివరి పుట"
 
-#: ../shell/ev-window.c:4356
+#: ../shell/ev-window.c:5062
 msgid "Go to the last page"
 msgstr "చివరి పుటకు వెళ్లుము"
 
 #. Help menu
-#: ../shell/ev-window.c:4360
+#: ../shell/ev-window.c:5066
 msgid "_Contents"
 msgstr "_సారాంశములు"
 
-#: ../shell/ev-window.c:4363
+#: ../shell/ev-window.c:5069
 msgid "_About"
 msgstr "_గురించి"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:4367
+#: ../shell/ev-window.c:5073
 msgid "Leave Fullscreen"
 msgstr "నిండుతెరను విడిచిపెట్టు"
 
-#: ../shell/ev-window.c:4368
+#: ../shell/ev-window.c:5074
 msgid "Leave fullscreen mode"
 msgstr "నిండుతెర సంవిధానము విడిచిపెట్టు"
 
-#: ../shell/ev-window.c:4370
+#: ../shell/ev-window.c:5076
 msgid "Start Presentation"
 msgstr "సమర్పణమును మొదలుపెట్టు"
 
-#: ../shell/ev-window.c:4371
+#: ../shell/ev-window.c:5077
 msgid "Start a presentation"
 msgstr "ఒక సమర్పణమును మొదలుపెట్టు"
 
 #. View Menu
-#: ../shell/ev-window.c:4425
+#: ../shell/ev-window.c:5133
 msgid "_Toolbar"
 msgstr "_పనిముట్ల పట్టా"
 
-#: ../shell/ev-window.c:4426
+#: ../shell/ev-window.c:5134
 msgid "Show or hide the toolbar"
 msgstr "పనిముట్ల పట్టాను చూపుము లేదా దాయుము"
 
-#: ../shell/ev-window.c:4428
+#: ../shell/ev-window.c:5136
 msgid "Side _Pane"
-msgstr ""
+msgstr "పక్కన పలక (_P)"
 
-#: ../shell/ev-window.c:4429
+#: ../shell/ev-window.c:5137
 msgid "Show or hide the side pane"
 msgstr ""
 
-#: ../shell/ev-window.c:4431
+#: ../shell/ev-window.c:5139
 msgid "_Continuous"
 msgstr "_ఎడతెగని"
 
-#: ../shell/ev-window.c:4432
+#: ../shell/ev-window.c:5140
 msgid "Show the entire document"
 msgstr "పూర్తి పత్రాన్ని చూపుము"
 
-#: ../shell/ev-window.c:4434
+#: ../shell/ev-window.c:5142
 msgid "_Dual"
 msgstr "_ద్వయము"
 
-#: ../shell/ev-window.c:4435
+#: ../shell/ev-window.c:5143
 msgid "Show two pages at once"
 msgstr "రెండు పుటలను ఒకేసారి చూపుము"
 
-#: ../shell/ev-window.c:4437
+#: ../shell/ev-window.c:5145
 msgid "_Fullscreen"
 msgstr "_నిండుతెర"
 
-#: ../shell/ev-window.c:4438
+#: ../shell/ev-window.c:5146
 msgid "Expand the window to fill the screen"
 msgstr "గవాక్షాన్ని నిండుతెరగా విస్తరించుము"
 
-#: ../shell/ev-window.c:4440
-msgid "_Presentation"
+#: ../shell/ev-window.c:5148
+#, fuzzy
+#| msgid "_Presentation"
+msgid "Pre_sentation"
 msgstr "_సమర్పణం"
 
-#: ../shell/ev-window.c:4441
+#: ../shell/ev-window.c:5149
 msgid "Run document as a presentation"
 msgstr "పత్రాన్ని సమర్పణంగా నడుపుము"
 
-#: ../shell/ev-window.c:4443
+#: ../shell/ev-window.c:5151
 msgid "_Best Fit"
 msgstr "_సరి తగిన"
 
-#: ../shell/ev-window.c:4444
+#: ../shell/ev-window.c:5152
 msgid "Make the current document fill the window"
 msgstr " ప్రస్థుత పత్రాన్ని గవాక్షకు సరిపడు విధంగా తయారుచేయు"
 
-#: ../shell/ev-window.c:4446
+#: ../shell/ev-window.c:5154
 msgid "Fit Page _Width"
 msgstr "పుట_వెడల్పుకు తగిన"
 
-#: ../shell/ev-window.c:4447
+#: ../shell/ev-window.c:5155
 msgid "Make the current document fill the window width"
 msgstr "గవాక్ష వెడల్పుకు సరిపడ పత్రాన్ని తయారుచేయు"
 
 #. Links
-#: ../shell/ev-window.c:4454
+#: ../shell/ev-window.c:5162
 msgid "_Open Link"
 msgstr "జోడికను తెరువుము"
 
-#: ../shell/ev-window.c:4456
+#: ../shell/ev-window.c:5164
 msgid "_Go To"
 msgstr "_"
 
-#: ../shell/ev-window.c:4458
+#: ../shell/ev-window.c:5166
 msgid "Open in New _Window"
 msgstr "కొత్త గవాక్షంలో తెరువుము"
 
-#: ../shell/ev-window.c:4460
+#: ../shell/ev-window.c:5168
 msgid "_Copy Link Address"
 msgstr "జోడిక చిరునామం యొక్క నకలు"
 
-#: ../shell/ev-window.c:4462
+#: ../shell/ev-window.c:5170
 msgid "_Save Image As..."
 msgstr "_ప్రతిరూపాన్ని ఇలా దాయుము"
 
-#: ../shell/ev-window.c:4464
+#: ../shell/ev-window.c:5172
 msgid "Copy _Image"
 msgstr "ప్రతిరూపం యొక్క నకలు"
 
-#: ../shell/ev-window.c:4503
+#: ../shell/ev-window.c:5218
 msgid "Page"
 msgstr "పుట"
 
-#: ../shell/ev-window.c:4504
+#: ../shell/ev-window.c:5219
 msgid "Select Page"
 msgstr "పుటను ఎంచుకొనుము"
 
-#: ../shell/ev-window.c:4514
+#: ../shell/ev-window.c:5230
 msgid "Zoom"
 msgstr "జూమ్"
 
-#: ../shell/ev-window.c:4516
+#: ../shell/ev-window.c:5232
 msgid "Adjust the zoom level"
 msgstr "జూమ్ స్థాయిని సరిచేయు"
 
-#: ../shell/ev-window.c:4526
+#: ../shell/ev-window.c:5242
 msgid "Navigation"
 msgstr "విహరించుట"
 
-#: ../shell/ev-window.c:4528
+#: ../shell/ev-window.c:5244
 msgid "Back"
 msgstr "వెనుకకి"
 
-#: ../shell/ev-window.c:4530
+#. translators: this is the history action
+#: ../shell/ev-window.c:5247
 msgid "Move across visited pages"
 msgstr "సందర్శించిన పుటలవైపు కదులు"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4546
+#: ../shell/ev-window.c:5277
 msgid "Previous"
 msgstr "పూర్వపు"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4551
+#: ../shell/ev-window.c:5282
 msgid "Next"
 msgstr "తరువాత"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4555
+#: ../shell/ev-window.c:5286
 msgid "Zoom In"
 msgstr "జూమ్ లోపలికి"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4559
+#: ../shell/ev-window.c:5290
 msgid "Zoom Out"
 msgstr "జూమ్ వెలుపలకి"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:4567
+#: ../shell/ev-window.c:5298
 msgid "Fit Width"
 msgstr "తగిన వెడెల్పు"
 
-#: ../shell/ev-window.c:4755
+#: ../shell/ev-window.c:5465 ../shell/ev-window.c:5483
+#, fuzzy
+#| msgid "Unable to open external link"
+msgid "Unable to launch external application."
+msgstr "బాహ్యజోడిక తెరువుట విఫలం"
+
+#: ../shell/ev-window.c:5526
 msgid "Unable to open external link"
 msgstr "బాహ్యజోడిక తెరువుట విఫలం"
 
-#: ../shell/ev-window.c:4757
-#, c-format
-msgid "Invalid URI: “%s”"
+#: ../shell/ev-window.c:5682
+msgid "Couldn't find appropriate format to save image"
 msgstr ""
 
-#: ../shell/ev-window.c:4925
+#: ../shell/ev-window.c:5721
 msgid "The image could not be saved."
 msgstr "ప్రతిరూపమును దాయలేకపోయింది"
 
-#: ../shell/ev-window.c:4960
+#: ../shell/ev-window.c:5753
 msgid "Save Image"
 msgstr "ప్రతిరూపమును దాయు"
 
-#: ../shell/ev-window.c:5016
+#: ../shell/ev-window.c:5815
 msgid "Unable to open attachment"
 msgstr "అనుబంధ పత్రాన్ని తెరవలేకపోయింది"
 
-#: ../shell/ev-window.c:5069
+#: ../shell/ev-window.c:5866
 msgid "The attachment could not be saved."
 msgstr "అనుబంధ పత్రాన్ని దాయలేకపోయింది"
 
-#: ../shell/ev-window.c:5121
+#: ../shell/ev-window.c:5911
 msgid "Save Attachment"
 msgstr "అనుబంధ పత్రాన్ని దాయుము"
 
-#: ../shell/ev-window-title.c:139
+#: ../shell/ev-window-title.c:162
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - రహస్యపదం అవసరం"
 
-#: ../shell/main.c:59
-msgid "The page of the document to display."
-msgstr "పత్రం లోని పుటను ప్రదర్శించు"
+#: ../shell/ev-utils.c:330
+msgid "By extension"
+msgstr ""
 
-#: ../shell/main.c:59
-msgid "PAGE"
-msgstr "పుట"
-
-#: ../shell/main.c:60
-msgid "Run evince in fullscreen mode"
-msgstr "పూర్తితెర సంవిధానంలో ఎవిన్స్ ను నడుపుము"
-
-#: ../shell/main.c:61
-msgid "Run evince in presentation mode"
-msgstr "సమర్పణ సంవిధానంలో ఎవిన్స్ ను నడుపుము"
-
-#: ../shell/main.c:62
-msgid "Run evince as a previewer"
-msgstr "ఉపదర్శనిగా ఎవిన్స్ ను నడుపు"
-
-#: ../shell/main.c:65
-msgid "[FILE...]"
-msgstr "[దస్త్రం...]"
-
-#: ../shell/main.c:314
+#: ../shell/main.c:59 ../shell/main.c:347
 msgid "GNOME Document Viewer"
 msgstr "గ్నోమ్ పత్రదర్శని"
 
-#: ../shell/main.c:374
-msgid "Evince Document Viewer"
-msgstr "ఎవిన్స్ పత్రదర్శని"
+#: ../shell/main.c:67
+msgid "The page of the document to display."
+msgstr "పత్రం లోని పుటను ప్రదర్శించు"
+
+#: ../shell/main.c:67
+msgid "PAGE"
+msgstr "పుట"
+
+#: ../shell/main.c:68
+msgid "Run evince in fullscreen mode"
+msgstr "పూర్తితెర సంవిధానంలో ఎవిన్స్ ను నడుపుము"
+
+#: ../shell/main.c:69
+msgid "Run evince in presentation mode"
+msgstr "సమర్పణ సంవిధానంలో ఎవిన్స్ ను నడుపుము"
+
+#: ../shell/main.c:70
+msgid "Run evince as a previewer"
+msgstr "ఉపదర్శనిగా ఎవిన్స్ ను నడుపు"
+
+#: ../shell/main.c:71
+#, fuzzy
+#| msgid "Find a word or phrase in the document"
+msgid "The word or phrase to find in the document"
+msgstr "పత్రములో పదాన్ని కనుగొనుము"
+
+#: ../shell/main.c:71
+msgid "STRING"
+msgstr "పదబంధం"
+
+#: ../shell/main.c:75
+msgid "[FILE...]"
+msgstr "[దస్త్రం...]"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid ""
@@ -1300,5 +1441,5 @@ msgstr "PDF పత్రాలకు చిరుచిత్ర ఆదేశం
 msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
-msgstr ""
-"PDF పత్ర చిరుచిత్రానికి వర్తించదగిన ఆదేశాలు. ఎక్కువ సమాచారం కోసం నాటిలస్ చిరుచిత్ర పత్రాన్ని చూడండి"
+msgstr "PDF పత్ర చిరుచిత్రానికి వర్తించదగిన ఆదేశాలు. ఎక్కువ సమాచారం కోసం నాటిలస్ చిరుచిత్ర పత్రాన్ని చూడండి"
+
