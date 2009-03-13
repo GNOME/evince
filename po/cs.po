@@ -1,1430 +1,1240 @@
-# Czech translation of evince.
-# Copyright (C) 2005, 2006, 2008, 2009 the author(s) of evince.
-# Copyright (C) 2005, 2006 Miloslav Trmac <mitr@volny.cz>.
-# Copyright (C) 2009 Martin Picek <picek.martin@gnome-cesko.cz>.
+# Czech translation of evince
+# Copyright (C) YEAR THE evince COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
-# Miloslav Trmac <mitr@volny.cz>, 2005, 2006.
-# Jakub Friedl <jfriedl@suse.cz>, 2006, 2007.
-# Kamil Páral <ripper42@gmail.com>, 2008.
-# Petr Kovar <pknbe@volny.cz>, 2008, 2009.
-# Adrian Guniš <andygun@seznam.cz>, 2008, 2009.
 # Martin Picek <picek.martin@gnome-cesko.cz>, 2009.
+# Lucas Lommer <llommer@svn.gnome.org>, 2009. (mikroopravy)
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-09 19:30+0100\n"
-"PO-Revision-Date: 2009-03-08 17:04+0100\n"
+"POT-Creation-Date: 2009-03-12 09:40+0000\n"
+"PO-Revision-Date: 2009-03-08 12:16+0100\n"
 "Last-Translator: Martin Picek <picek.martin@gnome-cesko.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Poedit-Language: Czech\n"
-"X-Generator: KBabel 1.11.4\n"
 
-#: ../backend/comics/comics-document.c:131
-#: ../libdocument/ev-document-factory.c:143
-#: ../libdocument/ev-document-factory.c:286
-msgid "Unknown MIME Type"
-msgstr "Neznámý typ MIME"
-
-#: ../backend/comics/comics-document.c:165
-#, c-format
-msgid "Not a comic book MIME type: %s"
-msgstr "Nejedná se o typ MIME pro komiks: %s"
-
-#: ../backend/comics/comics-document.c:186
-msgid "File corrupted."
-msgstr "Soubor je poškozen."
-
-#: ../backend/comics/comics-document.c:198
-msgid "No files in archive."
-msgstr "V archivu nebyly nalezeny žádné soubory."
-
-#: ../backend/comics/comics-document.c:230
-#, c-format
-msgid "No images found in archive %s"
-msgstr "V archivu %s nebyly nalezeny žádné obrázky"
-
-#: ../backend/comics/comicsdocument.evince-backend.in.h:1
-msgid "Comic Books"
-msgstr "Komiksy"
-
-#: ../backend/djvu/djvu-document.c:174
-msgid "DJVU document has incorrect format"
-msgstr "Dokument DJVU nemá správný formát"
-
-#: ../backend/djvu/djvu-document.c:251
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/evince.xml:155(None)
 msgid ""
-"The document is composed of several files. One or more of such files cannot "
-"be accessed."
+"@@image: 'figures/evince_start_window.png'; "
+"md5=7f4da5e33bcac35738a268d93d497d47"
 msgstr ""
-"Dokument se skládá z několika souborů. K jednomu nebo více souborům se "
-"nepodařilo přistoupit."
+"@@image: 'figures/evince_start_window.png'; "
+"md5=7f4da5e33bcac35738a268d93d497d47"
 
-#: ../backend/djvu/djvudocument.evince-backend.in.h:1
-msgid "Djvu Documents"
-msgstr "Dokumenty Djvu"
+#: C/evince.xml:25(title)
+msgid "Evince Document Viewer Manual"
+msgstr "Příručka k prohlížeči dokumentů Evince"
 
-#: ../backend/dvi/dvi-document.c:106
-msgid "DVI document has incorrect format"
-msgstr "Dokument DVI nemá správný formát"
-
-#: ../backend/dvi/dvidocument.evince-backend.in.h:1
-msgid "DVI Documents"
-msgstr "Dokumenty DVI"
-
-#. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:706
-msgid "Yes"
-msgstr "Ano"
-
-#. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:709
-msgid "No"
-msgstr "Ne"
-
-#: ../backend/pdf/ev-poppler.cc:783
-msgid "Type 1"
-msgstr "Typ 1"
-
-#: ../backend/pdf/ev-poppler.cc:785
-msgid "Type 1C"
-msgstr "Typ 1C"
-
-#: ../backend/pdf/ev-poppler.cc:787
-msgid "Type 3"
-msgstr "Typ 3"
-
-#: ../backend/pdf/ev-poppler.cc:789
-msgid "TrueType"
-msgstr "TrueType"
-
-#: ../backend/pdf/ev-poppler.cc:791
-msgid "Type 1 (CID)"
-msgstr "Typ 1 (CID)"
-
-#: ../backend/pdf/ev-poppler.cc:793
-msgid "Type 1C (CID)"
-msgstr "Typ 1C (CID)"
-
-#: ../backend/pdf/ev-poppler.cc:795
-msgid "TrueType (CID)"
-msgstr "TrueType (CID)"
-
-#: ../backend/pdf/ev-poppler.cc:797
-msgid "Unknown font type"
-msgstr "Neznámý řez písma"
-
-#: ../backend/pdf/ev-poppler.cc:823
-msgid "No name"
-msgstr "Žádný název"
-
-#: ../backend/pdf/ev-poppler.cc:831
-msgid "Embedded subset"
-msgstr "Vložená podmnožina"
-
-#: ../backend/pdf/ev-poppler.cc:833
-msgid "Embedded"
-msgstr "Vložené"
-
-#: ../backend/pdf/ev-poppler.cc:835
-msgid "Not embedded"
-msgstr "Nevložené"
-
-#: ../backend/pdf/pdfdocument.evince-backend.in.h:1
-msgid "PDF Documents"
-msgstr "Dokumenty PDF"
-
-#: ../backend/impress/impress-document.c:303
-#: ../backend/tiff/tiff-document.c:114
-msgid "Invalid document"
-msgstr "Neplatný dokument"
-
-#.
-#. * vim: sw=2 ts=8 cindent noai bs=2
-#.
-#: ../backend/impress/impressdocument.evince-backend.in.h:1
-msgid "Impress Slides"
-msgstr "Snímky Impress"
-
-#: ../backend/impress/zip.c:53
-msgid "No error"
-msgstr "Bez chyby"
-
-#: ../backend/impress/zip.c:56
-msgid "Not enough memory"
-msgstr "Nedostatek paměti"
-
-#: ../backend/impress/zip.c:59
-msgid "Cannot find zip signature"
-msgstr "Nepodařilo se najít podpis zip"
-
-#: ../backend/impress/zip.c:62
-msgid "Invalid zip file"
-msgstr "Neplatný soubor zip"
-
-#: ../backend/impress/zip.c:65
-msgid "Multi file zips are not supported"
-msgstr "Vícesouborové zipy nejsou podporovány"
-
-#: ../backend/impress/zip.c:68
-msgid "Cannot open the file"
-msgstr "Nepodařilo se otevřít soubor"
-
-#: ../backend/impress/zip.c:71
-msgid "Cannot read data from file"
-msgstr "Ze souboru se nepodařilo přečíst data"
-
-#: ../backend/impress/zip.c:74
-msgid "Cannot find file in the zip archive"
-msgstr "V archivu zip se nepodařilo najít soubor"
-
-#: ../backend/impress/zip.c:77
-msgid "Unknown error"
-msgstr "Neznámá chyba"
-
-#: ../backend/ps/ev-spectre.c:113
-#, c-format
-msgid "Failed to load document “%s”"
-msgstr "Nepodařilo se načíst dokument „%s“"
-
-#: ../backend/ps/ev-spectre.c:146
-#, c-format
-msgid "Failed to save document “%s”"
-msgstr "Nepodařilo se uložit dokument „%s“"
-
-#: ../backend/ps/psdocument.evince-backend.in.h:1
-msgid "PostScript Documents"
-msgstr "Dokumenty PostScript"
-
-#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
-#, c-format
-msgid "Couldn't save attachment “%s”: %s"
-msgstr "Nepodařilo se uložit přílohu „%s“: %s"
-
-#: ../libdocument/ev-attachment.c:373
-#, c-format
-msgid "Couldn't open attachment “%s”: %s"
-msgstr "Nepodařilo se otevřít přílohu „%s“: %s"
-
-#: ../libdocument/ev-attachment.c:408
-#, c-format
-msgid "Couldn't open attachment “%s”"
-msgstr "Nepodařilo se otevřít přílohu „%s“"
-
-#: ../libdocument/ev-document-factory.c:168
-#, c-format
-msgid "File type %s (%s) is not supported"
-msgstr "Typ souboru %s (%s) není podporován"
-
-#: ../libdocument/ev-document-factory.c:359
-msgid "All Documents"
-msgstr "Všechny dokumenty"
-
-#: ../libdocument/ev-document-factory.c:391
-msgid "All Files"
-msgstr "Všechny soubory"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:439
-msgid "Co_nnect"
-msgstr "_Připojit se"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:483
-msgid "Connect _anonymously"
-msgstr "Připojit se _anonymně"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:492
-msgid "Connect as u_ser:"
-msgstr "Připojit se jako _uživatel:"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:529
-msgid "_Username:"
-msgstr "_Uživatelské jméno:"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
-msgid "_Domain:"
-msgstr "_Doména:"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
-#: ../shell/ev-password-view.c:332
-msgid "_Password:"
-msgstr "_Heslo:"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:553
-msgid "_Forget password immediately"
-msgstr "_Zapomenout heslo okamžitě"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
-msgid "_Remember password until you logout"
-msgstr "_Pamatovat si heslo, dokud se uživatel neodhlásí"
-
-#: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
-msgid "_Remember forever"
-msgstr "Zapamatovat si _napořád"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:165
-#, c-format
-msgid "File is not a valid .desktop file"
-msgstr "Soubor není platným souborem .desktop"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:188
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr "Nerozpoznaný soubor typu .desktop ve verzi „%s“"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:958
-#, c-format
-msgid "Starting %s"
-msgstr "Spouští se %s"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1100
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr "Aplikace nepřijímá dokumenty z příkazové řádky"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1168
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr "Nerozpoznaná volba spouštění: %d"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1373
-#, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Nelze předat URI dokumentu položce .desktop „Type=Link“"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1392
-#, c-format
-msgid "Not a launchable item"
-msgstr "Není spustitelnou položkou"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:224
-msgid "Disable connection to session manager"
-msgstr "Zakázat spojení se správcem sezení"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:227
-msgid "Specify file containing saved configuration"
-msgstr "Zadejte soubor obsahující uložené nastavení"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:227
-msgid "FILE"
-msgstr "SOUBOR"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:230
-msgid "Specify session management ID"
-msgstr "Zadejte ID správce sezení"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:230
-msgid "ID"
-msgstr "ID"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:244
-msgid "Session management options:"
-msgstr "Volby správce sezení:"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:245
-msgid "Show session management options"
-msgstr "Zobrazit volby správce sezení"
-
-#. Translaters: This string is for a toggle to display a toolbar.
-#. * The name of the toolbar is automatically computed from the widgets
-#. * on the toolbar, and is placed at the %s. Note the _ before the %s
-#. * which is used to add mnemonics. We know that this is likely to
-#. * produce duplicates, but don't worry about it. If your language
-#. * normally has a mnemonic at the start, please use the _. If not,
-#. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:918
-#, c-format
-msgid "Show “_%s”"
-msgstr "Zobrazit „_%s“"
-
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1381
-msgid "_Move on Toolbar"
-msgstr "_Přesunout na lištu nástrojů"
-
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1382
-msgid "Move the selected item on the toolbar"
-msgstr "Přesunout vybranou položku na nástrojovou lištu"
-
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1383
-msgid "_Remove from Toolbar"
-msgstr "_Odstranit z nástrojové lišty"
-
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1384
-msgid "Remove the selected item from the toolbar"
-msgstr "Odstranit vybranou položku z nástrojové lišty"
-
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1385
-msgid "_Delete Toolbar"
-msgstr "_Odstranit nástrojovou lištu"
-
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1386
-msgid "Remove the selected toolbar"
-msgstr "Odstranit vybranou nástrojovou lištu"
-
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:485
-msgid "Separator"
-msgstr "Oddělovač"
-
-#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:117
-msgid "Running in presentation mode"
-msgstr "Běží v režimu prezentace"
-
-#. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5296
-msgid "Best Fit"
-msgstr "Přizpůsobit"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:49
-msgid "Fit Page Width"
-msgstr "Přizpůsobit šířce stránky"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:51
-msgid "50%"
-msgstr "50 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:52
-msgid "70%"
-msgstr "70 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:53
-msgid "85%"
-msgstr "85 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
-msgid "100%"
-msgstr "100 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
-msgid "125%"
-msgstr "125 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
-msgid "150%"
-msgstr "150 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:57
-msgid "175%"
-msgstr "175 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:58
-msgid "200%"
-msgstr "200 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
-msgid "300%"
-msgstr "300 %"
-
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:60
-msgid "400%"
-msgstr "400 %"
-
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4274
-#: ../shell/ev-window-title.c:149
-#, c-format
-msgid "Document Viewer"
-msgstr "Prohlížeč dokumentů"
-
-#: ../data/evince.desktop.in.in.h:2
-msgid "View multipage documents"
-msgstr "Zobrazovat dokumenty po více stránkách"
-
-#: ../data/evince.schemas.in.h:1
-msgid "Override document restrictions"
-msgstr "Ignorovat omezení dokumentu"
-
-#: ../data/evince.schemas.in.h:2
-msgid "Override document restrictions, like restriction to copy or to print."
-msgstr "Ignorovat omezení dokumentu, například zákaz kopírování nebo tisku."
-
-#: ../properties/ev-properties-main.c:113
-msgid "Document"
-msgstr "Dokument"
-
-#: ../properties/ev-properties-view.c:59
-msgid "Title:"
-msgstr "Název:"
-
-#: ../properties/ev-properties-view.c:60
-msgid "Location:"
-msgstr "Umístění:"
-
-#: ../properties/ev-properties-view.c:61
-msgid "Subject:"
-msgstr "Předmět:"
-
-#: ../properties/ev-properties-view.c:62
-msgid "Author:"
-msgstr "Autor:"
-
-#: ../properties/ev-properties-view.c:63
-msgid "Keywords:"
-msgstr "Klíčová slova:"
-
-#: ../properties/ev-properties-view.c:64
-msgid "Producer:"
-msgstr "Producent:"
-
-#: ../properties/ev-properties-view.c:65
-msgid "Creator:"
-msgstr "Tvůrce:"
-
-#: ../properties/ev-properties-view.c:66
-msgid "Created:"
-msgstr "Vytvořeno:"
-
-#: ../properties/ev-properties-view.c:67
-msgid "Modified:"
-msgstr "Změněno:"
-
-#: ../properties/ev-properties-view.c:68
-msgid "Number of Pages:"
-msgstr "Počet stránek:"
-
-#: ../properties/ev-properties-view.c:69
-msgid "Optimized:"
-msgstr "Optimalizace:"
-
-#: ../properties/ev-properties-view.c:70
-msgid "Format:"
-msgstr "Formát:"
-
-#: ../properties/ev-properties-view.c:71
-msgid "Security:"
-msgstr "Zabezpečení:"
-
-#: ../properties/ev-properties-view.c:72
-msgid "Paper Size:"
-msgstr "Velikost papíru:"
-
-#: ../properties/ev-properties-view.c:202
-msgid "None"
-msgstr "Žádné"
-
-#. Translate to the default units to use for presenting
-#. * lengths to the user. Translate to default:inch if you
-#. * want inches, otherwise translate to default:mm.
-#. * Do *not* translate it to "predefinito:mm", if it
-#. * it isn't default:mm or default:inch it will not work
-#.
-#: ../properties/ev-properties-view.c:227
-msgid "default:mm"
-msgstr "default:mm"
-
-#: ../properties/ev-properties-view.c:271
-#, c-format
-msgid "%.0f x %.0f mm"
-msgstr "%.0f x %.0f mm"
-
-#: ../properties/ev-properties-view.c:275
-#, c-format
-msgid "%.2f x %.2f inch"
-msgstr "%.2f x %.2f palců"
-
-#. Note to translators: first placeholder is the paper name (eg.
-#. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:299
-#, c-format
-msgid "%s, Portrait (%s)"
-msgstr "%s, na výšku (%s)"
-
-#. Note to translators: first placeholder is the paper name (eg.
-#. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:306
-#, c-format
-msgid "%s, Landscape (%s)"
-msgstr "%s, na šířku (%s)"
-
-#: ../libview/ev-jobs.c:949
-#, c-format
-msgid "Failed to create file “%s”: %s"
-msgstr "Nepodařilo se vytvořit soubor „%s“: %s"
-
-#: ../libview/ev-view-accessible.c:41
-msgid "Scroll Up"
-msgstr "Posunout nahoru"
-
-#: ../libview/ev-view-accessible.c:42
-msgid "Scroll Down"
-msgstr "Posunout dolů"
-
-#: ../libview/ev-view-accessible.c:48
-msgid "Scroll View Up"
-msgstr "Posunout pohled nahoru"
-
-#: ../libview/ev-view-accessible.c:49
-msgid "Scroll View Down"
-msgstr "Posunout pohled dolů"
-
-#: ../libview/ev-view-accessible.c:533
-msgid "Document View"
-msgstr "Pohled na dokument"
-
-#: ../libview/ev-view.c:1417
-msgid "Go to first page"
-msgstr "Přejít na první stránku"
-
-#: ../libview/ev-view.c:1419
-msgid "Go to previous page"
-msgstr "Přejít na předchozí stránku"
-
-#: ../libview/ev-view.c:1421
-msgid "Go to next page"
-msgstr "Přejít na následující stránku"
-
-#: ../libview/ev-view.c:1423
-msgid "Go to last page"
-msgstr "Přejít na poslední stránku"
-
-#: ../libview/ev-view.c:1425
-msgid "Go to page"
-msgstr "Přejít na stránku"
-
-#: ../libview/ev-view.c:1427
-msgid "Find"
-msgstr "Najít"
-
-#: ../libview/ev-view.c:1455
-#, c-format
-msgid "Go to page %s"
-msgstr "Přejít na stránku %s"
-
-#: ../libview/ev-view.c:1461
-#, c-format
-msgid "Go to %s on file “%s”"
-msgstr "Přejít na %s v souboru „%s“"
-
-#: ../libview/ev-view.c:1464
-#, c-format
-msgid "Go to file “%s”"
-msgstr "Přejít na soubor “%s”"
-
-#: ../libview/ev-view.c:1472
-#, c-format
-msgid "Launch %s"
-msgstr "Spustit %s"
-
-#: ../libview/ev-view.c:2387
-msgid "End of presentation. Press Escape to exit."
-msgstr "Konec prezentace. Prezentaci opustíte stisknutím Esc."
-
-#: ../libview/ev-view.c:3280
-msgid "Jump to page:"
-msgstr "Přejít na stránku:"
-
-#: ../libview/ev-view.c:3543 ../shell/ev-sidebar-layers.c:125
-#: ../shell/ev-sidebar-links.c:267
-msgid "Loading..."
-msgstr "Probíhá načítání…"
-
-#: ../shell/eggfindbar.c:146
-msgid "Search string"
-msgstr "Hledaný řetězec"
-
-#: ../shell/eggfindbar.c:147
-msgid "The name of the string to be found"
-msgstr "Název hledaného řetězce"
-
-#: ../shell/eggfindbar.c:160
-msgid "Case sensitive"
-msgstr "Rozlišovat velikost písmen"
-
-#: ../shell/eggfindbar.c:161
-msgid "TRUE for a case sensitive search"
-msgstr "TRUE pro rozlišování velikosti písmen při hledání"
-
-#: ../shell/eggfindbar.c:168
-msgid "Highlight color"
-msgstr "Barva zvýrazňování"
-
-#: ../shell/eggfindbar.c:169
-msgid "Color of highlight for all matches"
-msgstr "Barva zvýrazňování všech výsledků"
-
-#: ../shell/eggfindbar.c:175
-msgid "Current color"
-msgstr "Aktuální barva"
-
-#: ../shell/eggfindbar.c:176
-msgid "Color of highlight for the current match"
-msgstr "Barva zvýrazňování aktuálního výsledku"
-
-#: ../shell/eggfindbar.c:320
-msgid "Find:"
-msgstr "Najít:"
-
-#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:5030
-msgid "Find Pre_vious"
-msgstr "Najít _předchozí"
-
-#: ../shell/eggfindbar.c:333
-msgid "Find previous occurrence of the search string"
-msgstr "Najít předchozí výskyt hledaného řetězce"
-
-#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5028
-msgid "Find Ne_xt"
-msgstr "Najít _následující"
-
-#: ../shell/eggfindbar.c:341
-msgid "Find next occurrence of the search string"
-msgstr "Najít následující výskyt hledaného řetězce"
-
-#: ../shell/eggfindbar.c:348
-msgid "C_ase Sensitive"
-msgstr "_Rozlišovat velikost písmen"
-
-#: ../shell/eggfindbar.c:351
-msgid "Toggle case sensitive search"
-msgstr "Přepnout rozlišování velikosti písmen při hledání"
-
-#: ../shell/ev-keyring.c:102
-#, c-format
-msgid "Password for document %s"
-msgstr "Heslo dokumentu %s"
-
-#: ../shell/ev-open-recent-action.c:72
-msgid "Open a recently used document"
-msgstr "Otevřít nedávno použitý dokument"
-
-#: ../shell/ev-page-action.c:76
-#, c-format
-msgid "(%d of %d)"
-msgstr "(%d z %d)"
-
-#: ../shell/ev-page-action.c:78
-#, c-format
-msgid "of %d"
-msgstr "z %d"
-
-#: ../shell/ev-password-view.c:144
+#: C/evince.xml:27(para)
 msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
+"The Evince Document Viewer application enables you to view documents of "
+"various formats like Portable Document Format (PDF) files and PostScript "
+"files"
 msgstr ""
-"Tento dokument je zaheslován a lze jej číst jen po zadání správného hesla."
+"Aplikace prohlížeč dokumentů Evince umožňuje prohlížení dokumentů v různých "
+"formátech souborů, jako jsou Portable Document Format (PDF) nebo PostScript."
 
-#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
-msgid "_Unlock Document"
-msgstr "_Odemknout dokument"
+#: C/evince.xml:33(year)
+msgid "2005"
+msgstr "2005"
 
-#: ../shell/ev-password-view.c:261
-msgid "Enter password"
-msgstr "Zadejte heslo"
+#: C/evince.xml:34(holder) C/evince.xml:100(para)
+msgid "Nickolay V. Shmyrev"
+msgstr "Nickolay V. Shmyrev"
 
-#: ../shell/ev-password-view.c:301
-msgid "Password required"
-msgstr "Je vyžadováno heslo"
+#: C/evince.xml:37(year)
+msgid "2004"
+msgstr "2004"
 
-#: ../shell/ev-password-view.c:302
-#, c-format
+#: C/evince.xml:38(holder) C/evince.xml:61(orgname)
+msgid "Sun Microsystems"
+msgstr "Sun Microsystems"
+
+#: C/evince.xml:49(publishername) C/evince.xml:67(orgname)
+#: C/evince.xml:93(para) C/evince.xml:101(para)
+msgid "GNOME Documentation Project"
+msgstr "Dokumentační projekt GNOME"
+
+#: C/evince.xml:2(para)
 msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
-msgstr "Dokument „%s“ je zaheslován a pro otevření vyžaduje heslo."
+"Permission is granted to copy, distribute and/or modify this document under "
+"the terms of the GNU Free Documentation License (GFDL), Version 1.1 or any "
+"later version published by the Free Software Foundation with no Invariant "
+"Sections, no Front-Cover Texts, and no Back-Cover Texts. You can find a copy "
+"of the GFDL at this <ulink type=\"help\" url=\"ghelp:fdl\">link</ulink> or "
+"in the file COPYING-DOCS distributed with this manual."
+msgstr ""
+"Je povoleno kopírovat, šířit a/nebo upravovat tento dokument za podmínek GNU "
+"Free Documentation License (GFDL) ve verzi 1.1 nebo v jakékoli další verzi "
+"vydané nadací Free Software Foundation; bez neměnných oddílů, bez textů "
+"předních desek a bez textů zadních desek. Kopii licence GFDL naleznete pod "
+"<ulink type=\"help\" url=\"ghelp:fdl\">tímto odkazem</ulink> nebo v souboru "
+"COPYING-DOCS dodávaném s touto příručkou."
 
-#: ../shell/ev-password-view.c:365
-msgid "Forget password _immediately"
-msgstr "Zapomenout heslo _okamžitě"
-
-#: ../shell/ev-password-view.c:377
-msgid "Remember password until you _logout"
-msgstr "_Pamatovat si heslo, dokud se uživatel neodhlásí"
-
-#: ../shell/ev-password-view.c:389
-msgid "Remember _forever"
-msgstr "Zapamatovat si _napořád"
-
-#. Initial state
-#: ../shell/ev-print-operation.c:318
-msgid "Preparing to print ..."
-msgstr "Připravuje se tisk…"
-
-#: ../shell/ev-print-operation.c:320
-msgid "Finishing..."
-msgstr "Probíhá dokončování…"
-
-#: ../shell/ev-print-operation.c:322
-#, c-format
-msgid "Printing page %d of %d..."
-msgstr "Tiskne se stránka %d z %d…"
-
-#: ../shell/ev-print-operation.c:1010
-msgid "Printing is not supported on this printer."
-msgstr "Tisk není touto tiskárnou podporován."
-
-#: ../shell/ev-print-operation.c:1136 ../shell/ev-window.c:5081
-msgid "Print"
-msgstr "Tisk"
-
-#: ../shell/ev-properties-dialog.c:57
-msgid "Properties"
-msgstr "Vlastnosti"
-
-#: ../shell/ev-properties-dialog.c:91
-msgid "General"
-msgstr "Obecné"
-
-#: ../shell/ev-properties-dialog.c:101
-msgid "Fonts"
-msgstr "Písma"
-
-#: ../shell/ev-properties-fonts.c:135
-msgid "Font"
-msgstr "Písmo"
-
-#: ../shell/ev-properties-fonts.c:162
-#, c-format
-msgid "Gathering font information... %3d%%"
-msgstr "Získávají se informace o písmech… %3d %%"
-
-#: ../shell/ev-sidebar-attachments.c:697
-msgid "Attachments"
-msgstr "Přílohy"
-
-#: ../shell/ev-sidebar-layers.c:395
-msgid "Layers"
-msgstr "Vrstvy"
-
-#: ../shell/ev-sidebar-links.c:340
-msgid "Print..."
-msgstr "Tisk…"
-
-#: ../shell/ev-sidebar-links.c:720
-msgid "Index"
-msgstr "Rejstřík"
-
-#: ../shell/ev-sidebar-thumbnails.c:751
-msgid "Thumbnails"
-msgstr "Náhledy"
-
-#: ../shell/ev-window.c:843
-#, c-format
-msgid "Page %s - %s"
-msgstr "Stránka %s – %s"
-
-#: ../shell/ev-window.c:845
-#, c-format
-msgid "Page %s"
-msgstr "Stránka %s"
-
-#: ../shell/ev-window.c:1267
-msgid "The document contains no pages"
-msgstr "Dokument neobsahuje žádné stránky"
-
-#: ../shell/ev-window.c:1491 ../shell/ev-window.c:1639
-msgid "Unable to open document"
-msgstr "Nepodařilo se otevřít dokument"
-
-#: ../shell/ev-window.c:1613
-#, c-format
-msgid "Loading document from %s"
-msgstr "Načítá se dokument z %s"
-
-#: ../shell/ev-window.c:1751 ../shell/ev-window.c:1944
-#, c-format
-msgid "Downloading document (%d%%)"
-msgstr "Stahuje se dokument (%d %%)"
-
-#: ../shell/ev-window.c:1890
-#, c-format
-msgid "Reloading document from %s"
-msgstr "Obnovuje se dokument z %s"
-
-#: ../shell/ev-window.c:1923
-msgid "Failed to reload document."
-msgstr "Nepodařilo se obnovit dokument"
-
-#: ../shell/ev-window.c:2072
-msgid "Open Document"
-msgstr "Otevřít dokument"
-
-#: ../shell/ev-window.c:2133
-#, c-format
-msgid "Couldn't create symlink “%s”: %s"
-msgstr "Nepodařilo se vytvořit symbolický odkaz „%s“: %s"
-
-#: ../shell/ev-window.c:2162
-msgid "Cannot open a copy."
-msgstr "Nepodařilo se otevřít kopii."
-
-#: ../shell/ev-window.c:2402
-#, c-format
-msgid "Saving document to %s"
-msgstr "Dokument se ukládá do %s"
-
-#: ../shell/ev-window.c:2405
-#, c-format
-msgid "Saving attachment to %s"
-msgstr "Příloha se ukládá do %s"
-
-#: ../shell/ev-window.c:2408
-#, c-format
-msgid "Saving image to %s"
-msgstr "Obrázek se ukládá do %s"
-
-#: ../shell/ev-window.c:2453 ../shell/ev-window.c:2550
-#, c-format
-msgid "The file could not be saved as “%s”."
-msgstr "Soubor nelze uložit jako „%s“."
-
-#: ../shell/ev-window.c:2481
-#, c-format
-msgid "Uploading document (%d%%)"
-msgstr "Nahrává se dokument (%d %%)"
-
-#: ../shell/ev-window.c:2485
-#, c-format
-msgid "Uploading attachment (%d%%)"
-msgstr "Nahrává se příloha (%d %%)"
-
-#: ../shell/ev-window.c:2489
-#, c-format
-msgid "Uploading image (%d%%)"
-msgstr "Nahrává se obrázek (%d %%)"
-
-#: ../shell/ev-window.c:2596
-msgid "Save a Copy"
-msgstr "Uložit kopii"
-
-#: ../shell/ev-window.c:2799
-#, c-format
-msgid "%d pending job in queue"
-msgid_plural "%d pending jobs in queue"
-msgstr[0] "%d nevyřízená úloha ve frontě"
-msgstr[1] "%d nevyřízené úlohy ve frontě"
-msgstr[2] "%d nevyřízených úloh ve frontě"
-
-#: ../shell/ev-window.c:2855 ../shell/ev-window.c:3965
-msgid "Failed to print document"
-msgstr "Nepodařilo se vytisknout dokument"
-
-#: ../shell/ev-window.c:2912
-#, c-format
-msgid "Printing job “%s”"
-msgstr "Tiskne se úloha „%s“"
-
-#: ../shell/ev-window.c:3109
-#, c-format
-msgid "Wait until print job “%s” finishes before closing?"
-msgstr "Odložit uzavření, dokud se nedokončí tisková úloha „%s“?"
-
-#: ../shell/ev-window.c:3112
-#, c-format
+#: C/evince.xml:12(para)
 msgid ""
-"There are %d print jobs active. Wait until print finishes before closing?"
+"This manual is part of a collection of GNOME manuals distributed under the "
+"GFDL. If you want to distribute this manual separately from the collection, "
+"you can do so by adding a copy of the license to the manual, as described in "
+"section 6 of the license."
 msgstr ""
-"%d tiskové úlohy jsou aktivní. Odložit uzavření, dokud se nedokončí tisk?"
+"Tato příručka je součástí sbírky příruček GNOME šířených za podmínek licence "
+"GNU FDL. Pokud chcete tento dokument šířit odděleně od sbírky, musíte "
+"přiložit kopii licence dle popisu v oddílu 6 dané licence."
 
-#: ../shell/ev-window.c:3124
-msgid "If you close the window, pending print jobs will not be printed."
-msgstr "Pokud zavřete okno, nebudou vytištěny nevyřízené tiskové úlohy."
-
-#: ../shell/ev-window.c:3128
-msgid "Cancel _print and Close"
-msgstr "Zrušit _tisk a zavřít"
-
-#: ../shell/ev-window.c:3132
-msgid "Close _after Printing"
-msgstr "Zavřít _po vytištění"
-
-#: ../shell/ev-window.c:3735
-msgid "Toolbar Editor"
-msgstr "Editor nástrojové lišty"
-
-#: ../shell/ev-window.c:3867
-msgid "There was an error displaying help"
-msgstr "Při zobrazování nápovědy se vyskytla chyba"
-
-#: ../shell/ev-window.c:4270
-#, c-format
+#: C/evince.xml:19(para)
 msgid ""
-"Document Viewer.\n"
-"Using poppler %s (%s)"
+"Many of the names used by companies to distinguish their products and "
+"services are claimed as trademarks. Where those names appear in any GNOME "
+"documentation, and the members of the GNOME Documentation Project are made "
+"aware of those trademarks, then the names are in capital letters or initial "
+"capital letters."
 msgstr ""
-"Prohlížeč dokumentů.\n"
-"Je použit poppler %s (%s)"
+"Mnoho užívaných názvů určených k zviditelnění produktů nebo služeb jsou "
+"ochranné známky. Na místech, kde jsou tato jména v dokumentaci užita a "
+"členové Dokumentačního projektu GNOME jsou si vědomi skutečnosti, že se "
+"jedná o ochrannou známku, je takové jméno psáno velkými písmeny celé nebo s "
+"velkým písmenem na začátku."
 
-#: ../shell/ev-window.c:4298
+#: C/evince.xml:35(para)
 msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
+"DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, "
+"EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT "
+"THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS "
+"MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE "
+"RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR "
+"MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR "
+"MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL "
+"WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY "
+"SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN "
+"ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION "
+"OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
 msgstr ""
-"Evince je svobodný software; můžete jej šířit a/nebo modifikovat podle "
-"ustanovení GNU General Public License, vydávané Free Software Foundation; a "
-"to buď verze 2 této licence anebo (podle vlastního uvážení) kterékoliv "
-"pozdější verze.\n"
+"DOKUMENT JE POSKYTOVÁN V PODOBĚ „JAK JE“, BEZ ZÁRUKY JAKÉHOKOLIV DRUHU, "
+"NEPOSKYTUJÍ SE ANI ODVOZENÉ ZÁRUKY, ZÁRUKY, ŽE DOKUMENT, NEBO JEHO UPRAVENÁ "
+"VERZE, JE BEZCHYBNÝ, NEBO ZÁRUKY PRODEJNOSTI, VHODNOSTI PRO URČITÝ ÚČEL, "
+"NEBO NEPORUŠENOSTI. RIZIKO NEKVALITY, NEPŘESNOSTI A ŠPATNÉHO PROVEDENÍ "
+"DOKUMENTU, NEBO JEHO UPRAVENÉ VERZE, NESETE VY. POKUD JE TENTO DOKUMENT NEBO "
+"JEHO UPRAVENÁ VERZE VADNÁ V JAKÉMKOLIV SMYSLU, VY (NIKOLIV PŮVODCE, AUTOR "
+"NEBO JAKÝKOLIV PŘISPĚVATEL) PŘEBÍRÁTE ODPOVĚDNOST ZA JAKÉKOLIV NÁKLADY NA "
+"NUTNÉ ÚPRAVY, OPRAVY ČI SLUŽBY. TOTO PROHLÁŠENÍ O ZÁRUCE PŘEDSTAVUJE "
+"ZÁKLADNÍ SOUČÁST TÉTO LICENCE. BEZ TOHOTO PROHLÁŠENÍ NENÍ PODLE TÉTO DOHODY "
+"POVOLENO UŽÍVÁNÍ ANI ÚPRAVY TOHOTO DOKUMENTU; DÁLE"
 
-#: ../shell/ev-window.c:4302
+#: C/evince.xml:55(para)
 msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
+"UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING "
+"NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL WRITER, ANY "
+"CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION OF THE "
+"DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON "
+"FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF "
+"ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, "
+"WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER DAMAGES "
+"OR LOSSES ARISING OUT OF OR RELATING TO USE OF THE DOCUMENT AND MODIFIED "
+"VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE "
+"POSSIBILITY OF SUCH DAMAGES."
 msgstr ""
-"Evince je rozšiřován v naději, že bude užitečný, avšak BEZ JAKÉKOLIV ZÁRUKY; "
-"neposkytují se ani odvozené záruky PRODEJNOSTI anebo VHODNOSTI PRO URČITÝ "
-"ÚČEL. Další podrobnosti hledejte v GNU General Public License.\n"
 
-#: ../shell/ev-window.c:4306
+#: C/evince.xml:28(para)
 msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED UNDER THE TERMS "
+"OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER UNDERSTANDING THAT: "
+"<placeholder-1/>"
 msgstr ""
-"Kopii GNU General Public License byste měli obdržet spolu s tímto programem; "
-"pokud se tak nestalo, napište o ni Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA 02111-1307  USA.\n"
+"DOKUMENT A JEHO UPRAVENÉ VERZE JSOU ŠÍŘENY V SOULADU SE ZNĚNÍM LICENCE GNU "
+"FREE DOCUMENTATION LICENSE S NÁSLEDUJÍCÍM USTANOVENÍM: <placeholder-1/>"
 
-#. Manually set name and icon in win32
-#: ../shell/ev-window.c:4330 ../shell/main.c:382
-msgid "Evince"
-msgstr "Evince"
+#: C/evince.xml:59(firstname)
+msgid "Sun"
+msgstr "Sun"
 
-#: ../shell/ev-window.c:4333
-msgid "© 1996-2007 The Evince authors"
-msgstr "© 1996–2007 Autoři Evince"
+#: C/evince.xml:60(surname)
+msgid "GNOME Documentation Team"
+msgstr "Dokumentační tým GNOME"
 
-#: ../shell/ev-window.c:4339
-msgid "translator-credits"
+#: C/evince.xml:64(firstname)
+msgid "Nickolay V."
+msgstr "Nickolay V."
+
+#: C/evince.xml:65(surname)
+msgid "Shmyrev"
+msgstr "Shmyrev"
+
+#: C/evince.xml:68(email)
+msgid "nshmyrev@yandex.ru"
+msgstr "nshmyrev@yandex.ru"
+
+#: C/evince.xml:88(revnumber)
+msgid "Evince Document Viewer Manual V1.1"
+msgstr "Příručka k prohlížeči dokumentů Evince V1.1"
+
+#: C/evince.xml:89(date)
+msgid "2008-04-05"
+msgstr "5.4.2008"
+
+#: C/evince.xml:91(para)
+msgid "Niels Giesen"
+msgstr "Niels Giesen"
+
+#: C/evince.xml:92(para)
+msgid "Claude Paroz"
+msgstr "Claude Paroz"
+
+#: C/evince.xml:97(revnumber)
+msgid "Evince Document Viewer Manual V1.0"
+msgstr "Příručka k prohlížeči dokumentů Evince V1.0"
+
+#: C/evince.xml:98(date)
+msgid "2005-04-06"
+msgstr "6.4.2005"
+
+#: C/evince.xml:106(releaseinfo)
+msgid "This manual describes version 0.2 of Evince Document Viewer"
+msgstr "Tato příručka popisuje prohlížeč dokumentů ve verzi 0.2"
+
+#: C/evince.xml:109(title)
+msgid "Feedback"
+msgstr "Ohlasy"
+
+#: C/evince.xml:110(para)
+msgid ""
+"To report a bug or make a suggestion regarding the Evince Document Viewer "
+"application or this manual, follow the directions in the <ulink url=\"ghelp:"
+"gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
 msgstr ""
-"Martin Picek <picek.martin@gnome-cesko.cz>\n"
-"\n"
-"Miloslav Trmač <mitr@volny.cz>\n"
-"Jakub Friedl <jfriedl@suse.cz>\n"
-"Kamil Páral <ripper42@gmail.com>\n"
-"Petr Kovář <pknbe@volny.cz>\n"
-"Adrian Guniš <andygun696@gmail.com>"
+"Pokud chcete oznámit chybu nebo navrhnout vylepšení vztahující se k aplikaci "
+"Evince nebo této příručce, postupujte dle instrukcí na stránce <ulink url="
+"\"ghelp:gnome-feedback\" type=\"help\">Stránka s ohlasy na GNOME</ulink>."
 
-#. TRANS: Sometimes this could be better translated as
-#. "%d hit(s) on this page".  Therefore this string
-#. contains plural cases.
-#: ../shell/ev-window.c:4557
-#, c-format
-msgid "%d found on this page"
-msgid_plural "%d found on this page"
-msgstr[0] "%d výsledek na této stránce"
-msgstr[1] "%d výsledky na této stránce"
-msgstr[2] "%d výsledků na této stránce"
+#: C/evince.xml:117(primary)
+msgid "Evince Document Viewer"
+msgstr "Prohlížeč dokumentů Evince"
 
-#: ../shell/ev-window.c:4565
-#, c-format
-msgid "%3d%% remaining to search"
-msgstr "Zbývá prohledat %3d %%"
+#: C/evince.xml:120(primary)
+msgid "evince"
+msgstr "evince"
 
-#: ../shell/ev-window.c:4993
-msgid "_File"
-msgstr "_Soubor"
+#: C/evince.xml:128(title)
+msgid "Introduction"
+msgstr "Úvod"
 
-#: ../shell/ev-window.c:4994
-msgid "_Edit"
-msgstr "_Upravit"
+#: C/evince.xml:129(para)
+msgid ""
+"The <application>Evince Document Viewer</application> application enables "
+"you to view documents of various formats like Portable Document Format (PDF) "
+"files and PostScript files. <application>Evince Document Viewer</"
+"application> follows Freedesktop.org and GNOME standards to provide "
+"integration with Desktop Environment."
+msgstr ""
+"Aplikace <application>prohlížeč dokumentů Evince</application> umožňuje "
+"prohlížení dokumentů v různých formátech souborů, jako jsou Portable "
+"Document Format (PDF) nebo PostScript. <application>Prohlížeč dokumentů "
+"Evince</application> ctí standardy Freedesktop.org a GNOME, aby zajistil "
+"integraci s pracovním prostředím."
 
-#: ../shell/ev-window.c:4995
-msgid "_View"
-msgstr "_Zobrazit"
+#: C/evince.xml:136(title)
+msgid "Getting Started"
+msgstr "Začínáme"
 
-#: ../shell/ev-window.c:4996
-msgid "_Go"
-msgstr "Pře_jít"
+#: C/evince.xml:139(title)
+msgid "To Start Evince Document Viewer"
+msgstr "Spuštění prohlížeče dokumentů Evince"
 
-#: ../shell/ev-window.c:4997
-msgid "_Help"
-msgstr "_Nápověda"
+#: C/evince.xml:140(para)
+msgid ""
+"<application>Evince Document Viewer</application> starts when you open a "
+"document such as a PDF or PostScript file."
+msgstr ""
+"<application>Prohlížeč dokumentů Evince</application> je spuštěn, otevřete-"
+"li dokument, jakým jsou například soubory typu PDF nebo PostScript."
 
-#. File menu
-#: ../shell/ev-window.c:5000 ../shell/ev-window.c:5179
-#: ../shell/ev-window.c:5258
-msgid "_Open..."
-msgstr "_Otevřít…"
+#: C/evince.xml:141(para)
+msgid ""
+"Alternatively, you can start <application>Evince Document Viewer</"
+"application> from the command line, with the command: <command>evince</"
+"command>."
+msgstr ""
+"<application>Prohlížeč dokumentů Evince</application> můžete spouštět také z "
+"příkazové řádky pomocí příkazu <command>evince</command>."
 
-#: ../shell/ev-window.c:5001 ../shell/ev-window.c:5259
+#: C/evince.xml:146(title)
+msgid "When You Start Evince Document Viewer"
+msgstr "Když spustíte prohlížeč dokumentů Evince…"
+
+#: C/evince.xml:147(para)
+msgid ""
+"When you start <application>Evince Document Viewer</application>, the "
+"following window is displayed."
+msgstr ""
+"Když spustíte <application>prohlížeč dokumentů Evince</application>, zobrazí "
+"se následující okno."
+
+#: C/evince.xml:151(title)
+msgid "Evince Document Viewer Window"
+msgstr "Okno prohlížeče dokumentů Evince"
+
+#: C/evince.xml:158(phrase)
+msgid ""
+"Shows Evince Document Viewer main window. Contains titlebar, menubar, "
+"toolbar and display area. Menubar contains File, Edit, View, Go and Help "
+"menus."
+msgstr ""
+"Zobrazuje hlavní okno prohlížeče dokumentů Evince. Obsahuje záhlaví, "
+"nabídkovou lištu, nástrojovou lištu a oblast zobrazování. Nabídková lišta "
+"obsahuje nabídky Soubor, Upravit, Zobrazit, Přejít a Nápověda."
+
+#: C/evince.xml:164(para)
+msgid ""
+"The <application>Evince Document Viewer</application> window contains the "
+"following elements:"
+msgstr ""
+"Okno <application>prohlížeče dokumentů Evince</application> obsahuje "
+"následující prvky:"
+
+#: C/evince.xml:168(term) C/evince.xml:216(para)
+msgid "Menubar"
+msgstr "Nabídková lišta"
+
+#: C/evince.xml:170(para)
+msgid ""
+"The menus on the menubar contain all of the commands that you need to work "
+"with documents in <application>Evince Document Viewer</application>."
+msgstr ""
+"Nabídky nabídkové lišty obsahují všechny příkazy potřebné k práci s "
+"dokumenty v <application>prohlížeči dokumentů Evince</application>."
+
+#: C/evince.xml:174(term)
+msgid "Toolbar"
+msgstr "Nástrojová lišta"
+
+#: C/evince.xml:176(para)
+msgid ""
+"The toolbar contains a subset of the commands that you can access from the "
+"menubar."
+msgstr "Nástrojová lišta obsahuje vybrané příkazy z nabídkové lišty."
+
+#: C/evince.xml:180(term)
+msgid "Display area"
+msgstr "Oblast zobrazování"
+
+#: C/evince.xml:182(para)
+msgid "The display area displays the document."
+msgstr "V oblasti zobrazování se zobrazují dokumenty."
+
+#: C/evince.xml:196(para)
+msgid "UI Component"
+msgstr "Komponenta uživatelského rozhraní"
+
+#: C/evince.xml:198(para) C/evince.xml:646(para)
+msgid "Action"
+msgstr "Činnost"
+
+#: C/evince.xml:203(para)
+msgid "Window"
+msgstr "Okno"
+
+#: C/evince.xml:207(para)
+msgid ""
+"Drag a file into the <application>Evince Document Viewer</application> "
+"window from another application such as a file manager."
+msgstr ""
+"Přetáhnutí souboru do okna <application>prohlížeče dokumentů Evince</"
+"application> z jiné aplikace, například ze správce souborů."
+
+#: C/evince.xml:210(para)
+msgid "Double-click on the file name in the file manager"
+msgstr "Dvojité kliknutí na název souboru ve správci souborů."
+
+#: C/evince.xml:217(para) C/evince.xml:244(para)
+msgid ""
+"Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></"
+"menuchoice>."
+msgstr ""
+"Vybrání <menuchoice><guimenu>Soubor</guimenu><guimenuitem>Otevřít…</"
+"guimenuitem></menuchoice>."
+
+#: C/evince.xml:221(para)
+msgid "Shortcut keys"
+msgstr "Klávesové zkratky"
+
+#: C/evince.xml:222(para)
+msgid "Press <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
+msgstr ""
+"Stisknutí <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
+
+#: C/evince.xml:187(para)
+msgid ""
+"In <application>Evince Document Viewer</application>, you can perform the "
+"same action in several ways. For example, you can open a document in the "
+"following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" "
+"rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
+"colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
+"tgroup></informaltable>"
+msgstr ""
+"V <application>prohlížeči dokumentů Evince</application> lze jednu činnost "
+"vykonávat několika způsoby. Například otevírat dokumenty je možné těmito "
+"způsoby: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" rowsep="
+"\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec colname="
+"\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></tgroup></"
+"informaltable>"
+
+#: C/evince.xml:228(para)
+msgid "This manual documents functionality from the menubar."
+msgstr "Tato příručka popisuje funkce nabídkové lišty."
+
+#: C/evince.xml:236(title)
+msgid "Usage"
+msgstr "Používání"
+
+#: C/evince.xml:240(title)
+msgid "To Open A Document"
+msgstr "Otevření dokumentu"
+
+#: C/evince.xml:241(para)
+msgid "To open a document, perform the following steps:"
+msgstr "Chcete-li otevřít dokument, proveďte následující kroky:"
+
+#: C/evince.xml:248(para)
+msgid ""
+"In the <guilabel>Open Document</guilabel> dialog, select the file you want "
+"to open."
+msgstr ""
+"V dialogovém okně <guilabel>Otevřít dokument</guilabel> vyberte soubor, jenž "
+"chcete otevřít."
+
+#: C/evince.xml:253(para)
+msgid ""
+"Click <guibutton>Open</guibutton>. <application>Evince Document Viewer</"
+"application> displays the name of the document in the titlebar of the window."
+msgstr ""
+"Klikněte na <guibutton>Otevřít</guibutton>. <application>Prohlížeč dokumentů "
+"Evince</application> v záhlaví okna zobrazí název dokumentu."
+
+#: C/evince.xml:258(para)
+msgid ""
+"To open another document, choose <menuchoice><guimenu>File</"
+"guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. "
+"<application>Evince Document Viewer</application> opens each file in a new "
+"window."
+msgstr ""
+"Chcete-li otevřít další dokument, vyberte znovu <menuchoice><guimenu>Soubor</"
+"guimenu><guimenuitem>Otevřít…</guimenuitem></menuchoice>. "
+"<application>Prohlížeč dokumentů Evince</application> otevírá všechny "
+"soubory v nových oknech."
+
+#: C/evince.xml:261(para)
+msgid ""
+"If you try to open a document with format that <application>Evince Document "
+"Viewer</application> does not recognize, the application displays an error "
+"message."
+msgstr ""
+"Jestliže se pokoušíte otevřít dokument ve formátu, se kterým "
+"<application>prohlížeč dokumentů Evince</application> neumí pracovat, "
+"aplikace zobrazí chybovou zprávu."
+
+#: C/evince.xml:267(title)
+msgid "To Navigate Through a Document"
+msgstr "Pohyb dokumentem"
+
+#: C/evince.xml:268(para)
+msgid "You can navigate through a file as follows:"
+msgstr "Dokumentem se lze pohybovat následujícími způsoby:"
+
+#: C/evince.xml:271(para)
+msgid ""
+"To view the next page, choose <menuchoice><guimenu>Go</"
+"guimenu><guimenuitem>Next Page</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zobrazit následující stránku, vyberte <menuchoice><guimenu>Přejít</"
+"guimenu><guimenuitem>Následující stránka</guimenuitem></menuchoice>."
+
+#: C/evince.xml:275(para)
+msgid ""
+"To view the previous page, choose <menuchoice><guimenu>Go</"
+"guimenu><guimenuitem>Previous Page</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zobrazit předchozí stránku, vyberte <menuchoice><guimenu>Přejít</"
+"guimenu><guimenuitem>Předchozí stránka</guimenuitem></menuchoice>."
+
+#: C/evince.xml:279(para)
+msgid ""
+"To view the first page in the document, choose <menuchoice><guimenu>Go</"
+"guimenu><guimenuitem>First Page</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zobrazit první stránku dokumentu, vyberte "
+"<menuchoice><guimenu>Přejít</guimenu><guimenuitem>První stránka</"
+"guimenuitem></menuchoice>."
+
+#: C/evince.xml:283(para)
+msgid ""
+"To view the last page in the document, choose <menuchoice><guimenu>Go</"
+"guimenu><guimenuitem>Last Page</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zobrazit poslední stránku dokumentu, vyberte "
+"<menuchoice><guimenu>Přejít</guimenu><guimenuitem>Poslední stránka</"
+"guimenuitem></menuchoice>."
+
+#: C/evince.xml:287(para)
+msgid ""
+"To view a particular page, enter the page number or page label in the text "
+"box on the toolbar, then press <keycap>Return</keycap>."
+msgstr ""
+"Chcete-li zobrazit určitou stránku, zadejte její číslo nebo nadpis do "
+"textového políčka v nástrojové liště a stiskněte <keycap>Enter</keycap>"
+
+#: C/evince.xml:294(title)
+msgid "To Scroll a Page"
+msgstr "Posouvání se stránkou"
+
+#: C/evince.xml:295(para)
+msgid ""
+"To display the page contents that are not currently displayed in the display "
+"area, use the following methods:"
+msgstr ""
+"Chcete-li zobrazit obsah stránek, které právě nejsou vidět v oblasti "
+"zobrazování, proveďte jednu z následujících činností:"
+
+#: C/evince.xml:298(para)
+msgid "Use the arrow keys or space key on the keyboard."
+msgstr "Použijte směrové šipky nebo mezerník na klávesnici."
+
+#: C/evince.xml:301(para)
+msgid ""
+"Drag the display area by clicking with the middle mouse button somewhere in "
+"the document and then moving the mouse. For example, to scroll down the "
+"page, drag the display area upwards in the window."
+msgstr ""
+"Posuňte oblast zobrazování kliknutím prostředním tlačítkem myši někam do "
+"dokumentu a jejím tažením. Například, chcete-li se posunout dolů, táhněte "
+"myší směrem nahoru."
+
+#: C/evince.xml:304(para)
+msgid "Use the scrollbars on the window."
+msgstr "Použijte posuvníky okna."
+
+#: C/evince.xml:311(title)
+msgid "To Change the Page Size"
+msgstr "Změna velikosti stránky"
+
+#: C/evince.xml:312(para)
+msgid ""
+"You can use the following methods to resize a page in the "
+"<application>Evince Document Viewer</application> display area:"
+msgstr ""
+"Změnu velikosti stránky v oblasti zobrazování <application>prohlížeče "
+"dokumentů Evince</application> můžete provést následujícími způsoby:"
+
+#: C/evince.xml:317(para)
+msgid ""
+"To increase the page size, choose <menuchoice><guimenu>View</"
+"guimenu><guimenuitem>Zoom In</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zvětšit velikost stránky, vyberte <menuchoice><guimenu>Zobrazit</"
+"guimenu><guimenuitem>Zvětšit</guimenuitem></menuchoice>."
+
+#: C/evince.xml:322(para)
+msgid ""
+"To decrease the page size, choose <menuchoice><guimenu>View</"
+"guimenu><guimenuitem>Zoom Out</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zmenšit velikost stránky, vyberte <menuchoice><guimenu>Zobrazit</"
+"guimenu><guimenuitem>Zmenšit</guimenuitem></menuchoice>."
+
+#: C/evince.xml:327(para)
+msgid ""
+"To resize a page to have the same width as the <application>Evince Document "
+"Viewer</application> display area, choose <menuchoice><guimenu>View</"
+"guimenu><guimenuitem>Fit page width</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li nastavit velikost stránky na stejnou šířku, jako má oblast "
+"zobrazování  <application>prohlížeče dokumentů Evince</application>, "
+"zaškrtněte <menuchoice><guimenu>Zobrazit</guimenu><guimenuitem>Přizpůsobit "
+"šířce stránky</guimenuitem></menuchoice>."
+
+#: C/evince.xml:332(para)
+msgid ""
+"To resize a page to fit within the <application>Evince Document Viewer</"
+"application> display area, choose <menuchoice><guimenu>View</"
+"guimenu><guimenuitem>Best Fit</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li nastavit velikost stránky tak, aby se vešla do oblasti zobrazování "
+"<application>prohlížeče dokumentů Evince</application>, zaškrtněte "
+"<menuchoice><guimenu>Zobrazit</guimenu><guimenuitem>Přizpůsobit</"
+"guimenuitem></menuchoice>."
+
+#: C/evince.xml:337(para)
+msgid ""
+"To resize the <application>Evince Document Viewer</application> window to "
+"have the same width and height as the screen, choose "
+"<menuchoice><guimenu>View</guimenu><guimenuitem>Full Screen</guimenuitem></"
+"menuchoice>. To resize the <application>Evince Document Viewer</application> "
+"window to the original size, click on the <guibutton>Exit Full Screen</"
+"guibutton> button."
+msgstr ""
+"Chcete-li nastavit šířku a výšku okna <application>prohlížeče dokumentů "
+"Evince</application> dle obrazovky, zaškrtněte "
+"<menuchoice><guimenu>Zobrazit</guimenu><guimenuitem>Přes celou obrazovku</"
+"guimenuitem></menuchoice>. Chcete-li nastavit okno <application>prohlížeče "
+"dokumentů Evince</application> na původní velikost, klikněte na tlačítko "
+"<guibutton>Opustit celou obrazovku</guibutton>."
+
+#: C/evince.xml:345(title)
+msgid "To View Pages or Document Structure"
+msgstr "Zobrazení struktury stránky nebo dokumentu"
+
+#: C/evince.xml:346(para)
+msgid "To view bookmarks or pages, perform the following steps:"
+msgstr "Chcete-li zobrazit záložky nebo stránky, proveďte následující kroky:"
+
+#: C/evince.xml:350(para)
+msgid ""
+"Choose <menuchoice><guimenu>View</guimenu><guimenuitem>Sidebar</"
+"guimenuitem></menuchoice> or press <keycap>F9</keycap>."
+msgstr ""
+"Zaškrtněte <menuchoice><guimenu>Zobrazit</guimenu><guimenuitem>Postranní "
+"lišta</guimenuitem></menuchoice>, nebo stiskněte <keycap>F9</keycap>."
+
+#: C/evince.xml:355(para)
+msgid ""
+"Use the drop-down list in the side-pane header to select whether to display "
+"document structure or pages in the side pane."
+msgstr ""
+"Použijte rozbalovací seznam v záhlaví postranní lišty a zvolte, zda se v ní "
+"má zobrazit struktura dokumentu nebo stránky."
+
+#: C/evince.xml:360(para)
+msgid ""
+"Use the side-pane scrollbars to display the required item or page in the "
+"side pane."
+msgstr ""
+"Použijte posuvníky postranní  lišty, aby se v ní zobrazila požadovaná "
+"položka či stránka."
+
+#: C/evince.xml:365(para)
+msgid ""
+"Click on an entry to navigate to that location in the document. Click on a "
+"page to navigate to that page in the document."
+msgstr ""
+"Klikněte na položku a přesunete se na místo v dokumentu. Klikněte na stránku "
+"a v dokumentu se na ni posunete."
+
+#: C/evince.xml:371(title)
+msgid "To View the Properties of a Document"
+msgstr "Zobrazení vlastností dokumentu"
+
+#: C/evince.xml:372(para)
+msgid ""
+"To view the properties of a document, choose <menuchoice><guimenu>File</"
+"guimenu><guimenuitem>Properties</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li zobrazit vlastnosti dokumentu, vyberte "
+"<menuchoice><guimenu>Soubor</guimenu><guimenuitem>Vlastnosti</guimenuitem></"
+"menuchoice>."
+
+#: C/evince.xml:378(para)
+msgid ""
+"The <guilabel>Properties</guilabel> dialog displays all information available"
+msgstr ""
+"Dialogové okno <guilabel>Vlastnosti</guilabel> zobrazuje všechny dostupné "
+"informace."
+
+#: C/evince.xml:384(title)
+msgid "To Print a Document"
+msgstr "Tisk dokumentu"
+
+#: C/evince.xml:385(para)
+msgid ""
+"To print a Document, choose <menuchoice><guimenu>File</"
+"guimenu><guimenuitem>Print</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li dokument vytisknout, vyberte <menuchoice><guimenu>Soubor</"
+"guimenu><guimenuitem>Tisk…</guimenuitem></menuchoice>."
+
+#: C/evince.xml:389(para)
+msgid ""
+"If you cannot choose the <guimenuitem>Print</guimenuitem> menu item, the "
+"author of the document has disabled the print option for this document. To "
+"enable the print option, you must enter the master password when you open "
+"the document. See <xref linkend=\"evince-password\"/> for more information "
+"about password-protected files."
+msgstr ""
+"Jestliže nemůžete v nabídce položku <guimenuitem>Tisk…</guimenuitem> vybrat, "
+"autor dokumentu možnost tisku tohoto dokumentu zakázal. Chcete-li tuto "
+"možnost povolit, musíte při otevírání dokumentu zadat hlavní heslo. Chcete-"
+"li se o heslem chráněných souborech dovědět více, přečtěte si <xref linkend="
+"\"evince-password\"/>."
+
+#: C/evince.xml:393(para)
+msgid ""
+"The <guilabel>Print</guilabel> dialog has the following tabbed sections:"
+msgstr "Dialogové okno <guilabel>Vytisknout</guilabel> má následující sekce:"
+
+#: C/evince.xml:399(link) C/evince.xml:415(title)
+msgid "Job"
+msgstr "Úloha"
+
+#: C/evince.xml:404(link) C/evince.xml:437(title) C/evince.xml:439(guilabel)
+msgid "Printer"
+msgstr "Tiskárna"
+
+#: C/evince.xml:409(link) C/evince.xml:531(title)
+msgid "Paper"
+msgstr "Papír"
+
+#: C/evince.xml:417(guilabel)
+msgid "Print range"
+msgstr "Rozsah tisku"
+
+#: C/evince.xml:419(para)
+msgid ""
+"Select one of the following options to determine how many pages to print:"
+msgstr ""
+"Zvolte jednu z následujících možností, abyste určili, kolik stránek se bude "
+"tisknout:"
+
+#: C/evince.xml:422(guilabel)
+msgid "All"
+msgstr "Vše"
+
+#: C/evince.xml:423(para)
+msgid "Select this option to print all of the pages in the document."
+msgstr "Zvolte tuto možnost, chctete-li vytisknout všechny stránky dokumentu."
+
+#: C/evince.xml:426(guilabel)
+msgid "Pages From"
+msgstr "Stránky od"
+
+#: C/evince.xml:427(para)
+msgid ""
+"Select this option to print the selected range of pages in the document. Use "
+"the spin boxes to specify the first page and last page of the range."
+msgstr ""
+"Zvolte tuto možnost, chcete-li vytisknout vybraný rozsah stránek dokumentu. "
+"Použijte číselníky k zadání první a poslední stránky rozsahu."
+
+#: C/evince.xml:441(para)
+msgid ""
+"Use this drop-down list to select the printer to which you want to print the "
+"document."
+msgstr ""
+"Tento rozbalovací seznam použijte k výběru tiskárny, pomocí níž chcete tisk "
+"dokumentu provést."
+
+#: C/evince.xml:443(para)
+msgid ""
+"The <guilabel>Create a PDF document</guilabel> option is not supported in "
+"this version of <application>Evince Document Viewer</application>."
+msgstr ""
+"Volba <guilabel>Vytvořit dokument PDF</guilabel> není v této verzi "
+"<application>prohlížeče dokumentů Evince</application> podporována."
+
+#: C/evince.xml:449(guilabel)
+msgid "Settings"
+msgstr "Nastavení"
+
+#: C/evince.xml:451(para)
+msgid "Use this drop-down list to select the printer settings."
+msgstr "Tento rozbalovací seznam použijte k nastavení vlastností tiskárny."
+
+#: C/evince.xml:453(para)
+msgid ""
+"To configure the printer, click <guibutton>Configure</guibutton>. For "
+"example, you can enable or disable duplex printing, or schedule delayed "
+"printing, if this functionality is supported by the printer."
+msgstr ""
+"Chcete-li nastavit tiskárnu, klikněte na <guibutton>Nastavit</guibutton>. "
+"Například můžete povolit či zakázat duplexní tisk či plánované odložení "
+"tisku, pokud vaše tiskárna tyto funkce podporuje."
+
+#: C/evince.xml:457(guilabel)
+msgid "Location"
+msgstr "Umístění"
+
+#: C/evince.xml:459(para)
+msgid ""
+"Use this drop-down list to select one of the following print destinations:"
+msgstr ""
+"Tento rozbalovací seznam použijte k volbě jednoho z následujících cílů tisku:"
+
+#: C/evince.xml:464(guilabel)
+msgid "CUPS"
+msgstr "CUPS"
+
+#: C/evince.xml:466(para)
+msgid "Print the document to a CUPS printer."
+msgstr "Tisk dokumentu pomocí tiskárny CUPS."
+
+#: C/evince.xml:470(para)
+msgid ""
+"If the selected printer is a CUPS printer, <guilabel>CUPS</guilabel> is the "
+"only entry in this drop-down list."
+msgstr ""
+"Je-li vybraná tiskárna tiskárnou CUPS, <guilabel>CUPS</guilabel> je jedinou "
+"položkou v rozbalovacím seznamu."
+
+#: C/evince.xml:477(guilabel)
+msgid "lpr"
+msgstr "lpr"
+
+#: C/evince.xml:479(para)
+msgid "Print the document to a printer."
+msgstr "Tisk dokumentu pomocí tiskárny."
+
+#: C/evince.xml:485(guilabel)
+msgid "File"
+msgstr "Soubor"
+
+#: C/evince.xml:487(para)
+msgid "Print the document to a PostScript file."
+msgstr "Tisk dokumentu do souboru PostScript."
+
+#: C/evince.xml:490(para)
+msgid ""
+"Click <guibutton>Save As</guibutton> to display a dialog where you specify "
+"the name and location of the PostScript file."
+msgstr ""
+"Klikněte na <guibutton>Uložit jako</guibutton>, chcete-li zobrazit dialogové "
+"okno, kam lze zadat název a umístění souboru PosctScript."
+
+#: C/evince.xml:496(guilabel)
+msgid "Custom"
+msgstr "Vlastní"
+
+#: C/evince.xml:498(para)
+msgid "Use the specified command to print the document."
+msgstr "Použít zadaný příkaz k tisku dokumentu."
+
+#: C/evince.xml:501(para)
+msgid ""
+"Type the name of the command in the text box. Include all command-line "
+"arguments."
+msgstr ""
+"Do vstupního pole zadejte název příkazu včetně všech jeho argumentů "
+"příkazové řádky."
+
+#: C/evince.xml:509(guilabel)
+msgid "State"
+msgstr "Stav"
+
+#: C/evince.xml:511(para) C/evince.xml:517(para) C/evince.xml:523(para)
+msgid ""
+"This functionality is not supported in this version of <application>Evince "
+"Document Viewer</application>."
+msgstr ""
+"Tato funkce není touto verzí <application>prolížeče dokumentů Evince</"
+"application> podporována."
+
+#: C/evince.xml:515(guilabel)
+msgid "Type"
+msgstr "Typ"
+
+#: C/evince.xml:521(guilabel)
+msgid "Comment"
+msgstr "Komentář"
+
+#: C/evince.xml:533(guilabel)
+msgid "Paper size"
+msgstr "Velikost papíru"
+
+#: C/evince.xml:535(para)
+msgid ""
+"Use this drop-down list to select the size of the paper to which you want to "
+"print the document."
+msgstr ""
+"Tento rozbalovací seznam použijte k volbě velikosti papíru, na který chcete "
+"dokument vytisknout."
+
+#: C/evince.xml:538(guilabel)
+msgid "Width"
+msgstr "Šířka"
+
+#: C/evince.xml:540(para)
+msgid ""
+"Use this spin box to specify the width of the paper. Use the adjacent drop-"
+"down list to change the measurement unit."
+msgstr ""
+"Tento číselník použijte k zadání šířky stránky. Vedlejší rozbalovací seznam "
+"použijte ke změně jednotky."
+
+#: C/evince.xml:543(guilabel)
+msgid "Height"
+msgstr "Výška"
+
+#: C/evince.xml:545(para)
+msgid "Use this spin box to specify the height of the paper."
+msgstr "Tento číselník použijte k zadání výšky papíru."
+
+#: C/evince.xml:548(guilabel)
+msgid "Feed orientation"
+msgstr "Orientace zásobníku"
+
+#: C/evince.xml:550(para)
+msgid ""
+"Use this drop-down list to select the orientation of the paper in the "
+"printer."
+msgstr "Tento rozbalovací seznam použijte k volbě orientace papíru v tiskárně."
+
+#: C/evince.xml:553(guilabel)
+msgid "Page orientation"
+msgstr "Orientace stránky"
+
+#: C/evince.xml:555(para)
+msgid "Use this drop-down list to select the page orientation."
+msgstr "Tento rozbalovací seznam použijte k volbě orientace stránky."
+
+#: C/evince.xml:558(guilabel)
+msgid "Layout"
+msgstr "Rozvržení"
+
+#: C/evince.xml:560(para)
+msgid ""
+"Use this drop-down list to select the page layout. A preview of each layout "
+"that you select is displayed in the <guilabel>Preview</guilabel> area."
+msgstr ""
+"Tento rozbalovací seznam použijte k volbě rozvržení stránky. V oblasti "
+"<guilabel>Náhled</guilabel> se zobrazuje náhled vybraného rozvržení."
+
+#: C/evince.xml:563(guilabel)
+msgid "Paper Tray"
+msgstr "Přihrádka na papír"
+
+#: C/evince.xml:565(para)
+msgid "Use this drop-down list to select the paper tray."
+msgstr "Tento rozbalovací seznam použijte k volbě přihrádky na papír."
+
+#: C/evince.xml:575(title)
+msgid "To Copy a Document"
+msgstr "Kopírování dokumentu"
+
+#: C/evince.xml:576(para)
+msgid "To copy a file, perform the following steps:"
+msgstr "Chcete-li zkopírovat soubor, proveďte následující kroky:"
+
+#: C/evince.xml:580(para)
+msgid ""
+"Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Save a Copy</"
+"guimenuitem></menuchoice>."
+msgstr ""
+"Vyberte <menuchoice><guimenu>Soubor</guimenu><guimenuitem>Uložit kopii…</"
+"guimenuitem></menuchoice>."
+
+#: C/evince.xml:585(para)
+msgid ""
+"Type the new filename in the <guilabel>Filename</guilabel> text box in the "
+"<guilabel>Save a Copy</guilabel> dialog."
+msgstr ""
+"V dialogu <guilabel>Uložit kopii</guilabel> zadejte do vstupního pole "
+"<guilabel>Název souboru</guilabel> nový název souboru."
+
+#: C/evince.xml:588(para)
+msgid ""
+"If necessary, specify the location of the copied document. By default, "
+"copies are saved in your home directory."
+msgstr ""
+"Je-li to potřeba, zadejte umístění zkopírovaného dokumentu. Dle výchozího "
+"nastavení se kopie ukládají do vašeho domovského adresáře."
+
+#: C/evince.xml:593(para)
+msgid "Click <guibutton>Save</guibutton>."
+msgstr "Klikněte na <guibutton>Uložit</guibutton>."
+
+#: C/evince.xml:602(title)
+msgid "To Work With Password-Protected Documents"
+msgstr "Práce s dokumenty chráněnými heslem"
+
+#: C/evince.xml:603(para)
+msgid "An author can use the following password levels to protect a document:"
+msgstr ""
+"Autor dokumentu může k ochraně dokumentu použít následující úrovně "
+"zaheslování:"
+
+#: C/evince.xml:608(para)
+msgid "User password that allows others only to read the document."
+msgstr "Uživatelské heslo umožňující ostatním číst dokument."
+
+#: C/evince.xml:612(para)
+msgid ""
+"Master password that allows others to perform additional actions, such as "
+"print the document."
+msgstr ""
+"Hlavní heslo umožňující ostatním provádět další činnosti, jako je tisk "
+"dokumentu."
+
+#: C/evince.xml:616(para)
+msgid ""
+"When you try to open a password-protected document, <application>Evince "
+"Document Viewer</application> displays a security dialog. Type either the "
+"user password or the master password in the <guilabel>Enter document "
+"password</guilabel> text box, then click <guibutton>Open Document</"
+"guibutton>."
+msgstr ""
+"Když se pokoušíte otevřít heslem chráněný dokument, <application>prohlížeč "
+"dokumentů Evince</application> zobrazuje bezpečnostní dialog. Do vstupního "
+"políčka <guilabel>Zadejte heslo k dokumentu</guilabel> zadejte buď "
+"uživatelské nebo hlavní heslo a pak klikněte na <guibutton>Otevřít dokument</"
+"guibutton>."
+
+#: C/evince.xml:623(title)
+msgid "To Close a Document"
+msgstr "Zavření dokumentu"
+
+#: C/evince.xml:624(para)
+msgid ""
+"To close a document, choose <menuchoice><guimenu>File</"
+"guimenu><guimenuitem>Close</guimenuitem></menuchoice>."
+msgstr ""
+"Chcete-li dokument zavřít, vyberte <menuchoice><guimenu>Soubor</"
+"guimenu><guimenuitem>Zavřít</guimenuitem></menuchoice>."
+
+#: C/evince.xml:626(para)
+msgid ""
+"If the window is the last <application>Evince Document Viewer</application> "
+"window open, the application exits."
+msgstr ""
+"Je-li zavírané okno posledním otevřeným oknem <application>prohlížeče "
+"dokumentů Evince</application>, aplikace bude ukončena."
+
+#: C/evince.xml:635(title)
+msgid "Shortcuts"
+msgstr "Klávesové zkratky"
+
+#: C/evince.xml:636(para)
+msgid ""
+"Below is a list of all shortcuts present in <application>Evince Document "
+"Viewer</application>:"
+msgstr ""
+"Níže je seznam všech klávesových zkratek dostupných v "
+"<application>prohlížeči dokumentů Evince</application>:"
+
+#: C/evince.xml:644(para)
+msgid "Shortcut"
+msgstr "Klávesová zkratka"
+
+#: C/evince.xml:651(keycap) C/evince.xml:655(keycap) C/evince.xml:659(keycap)
+#: C/evince.xml:663(keycap) C/evince.xml:667(keycap) C/evince.xml:671(keycap)
+#: C/evince.xml:676(keycap) C/evince.xml:682(keycap) C/evince.xml:701(keycap)
+#: C/evince.xml:747(keycap)
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: C/evince.xml:651(keycap)
+msgid "O"
+msgstr "O"
+
+#: C/evince.xml:652(para)
 msgid "Open an existing document"
 msgstr "Otevřít existující dokument"
 
-#: ../shell/ev-window.c:5003
-msgid "Op_en a Copy"
-msgstr "Otevřít _kopii"
+#: C/evince.xml:655(keycap)
+msgid "S"
+msgstr "S"
 
-#: ../shell/ev-window.c:5004
-msgid "Open a copy of the current document in a new window"
-msgstr "Otevřít kopii aktuálního dokumentu v novém okně"
-
-#: ../shell/ev-window.c:5006 ../shell/ev-window.c:5181
-msgid "_Save a Copy..."
-msgstr "_Uložit kopii…"
-
-#: ../shell/ev-window.c:5007
+#: C/evince.xml:656(para)
 msgid "Save a copy of the current document"
 msgstr "Uložit kopii aktuálního dokumentu"
 
-#: ../shell/ev-window.c:5009
-msgid "Print Set_up..."
-msgstr "Vlastnosti tisk_u…"
+#: C/evince.xml:659(keycap)
+msgid "P"
+msgstr "P"
 
-#: ../shell/ev-window.c:5010
-msgid "Setup the page settings for printing"
-msgstr "Nastavit stránku pro tisk"
+#: C/evince.xml:660(para)
+msgid "Print document"
+msgstr "Tisknout dokument"
 
-#: ../shell/ev-window.c:5012
-msgid "_Print..."
-msgstr "_Tisk…"
+#: C/evince.xml:663(keycap)
+msgid "W"
+msgstr "W"
 
-#: ../shell/ev-window.c:5013 ../shell/ev-window.c:5082
-msgid "Print this document"
-msgstr "Vytisknout tento dokument"
+#: C/evince.xml:664(para)
+msgid "Close window"
+msgstr "Zavřít okno"
 
-#: ../shell/ev-window.c:5015
-msgid "P_roperties"
-msgstr "_Vlastnosti"
+#: C/evince.xml:667(keycap)
+msgid "C"
+msgstr "C"
 
-#: ../shell/ev-window.c:5023
-msgid "Select _All"
-msgstr "Vy_brat vše"
+#: C/evince.xml:668(para)
+msgid "Copy selection"
+msgstr "Zkopírovat výběr"
 
-#: ../shell/ev-window.c:5025
-msgid "_Find..."
-msgstr "Na_jít…"
+#: C/evince.xml:671(keycap)
+msgid "A"
+msgstr "A"
 
-#: ../shell/ev-window.c:5026
+#: C/evince.xml:672(para)
+msgid "Select All"
+msgstr "Vybrat vše"
+
+#: C/evince.xml:676(keycap)
+msgid "F"
+msgstr "F"
+
+#: C/evince.xml:677(para)
+msgid "<keycap>/</keycap> (slash)"
+msgstr "<keycap>/</keycap> (lomítko)"
+
+#: C/evince.xml:679(para)
 msgid "Find a word or phrase in the document"
-msgstr "Najít v dokumentu slovo nebo frázi"
+msgstr "Najít v dokumentu slovo či frázi"
 
-#: ../shell/ev-window.c:5032
-msgid "T_oolbar"
-msgstr "Nás_trojová lišta"
+#: C/evince.xml:682(keycap)
+msgid "G"
+msgstr "G"
 
-#: ../shell/ev-window.c:5034
-msgid "Rotate _Left"
-msgstr "Otočit do_leva"
+#: C/evince.xml:683(para)
+msgid "Find next"
+msgstr "Najít další"
 
-#: ../shell/ev-window.c:5036
-msgid "Rotate _Right"
-msgstr "Otočit dop_rava"
+#: C/evince.xml:687(para)
+msgid ""
+"<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (plus sign)"
+msgstr ""
+"<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (symbol plus)"
 
-#: ../shell/ev-window.c:5041
-msgid "Enlarge the document"
-msgstr "Zvětšit dokument"
+#: C/evince.xml:688(keycap)
+msgid "+"
+msgstr "+"
 
-#: ../shell/ev-window.c:5044
-msgid "Shrink the document"
-msgstr "Zmenšit dokument"
+#: C/evince.xml:689(keycap)
+msgid "="
+msgstr "="
 
-#: ../shell/ev-window.c:5046
-msgid "_Reload"
-msgstr "_Obnovit"
+#: C/evince.xml:691(para)
+msgid "Zoom in"
+msgstr "Zvětšit"
 
-#: ../shell/ev-window.c:5047
+#: C/evince.xml:695(para)
+msgid ""
+"<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (minus sign)"
+msgstr ""
+"<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (symbol minus)"
+
+#: C/evince.xml:696(keycap)
+msgid "-"
+msgstr "-"
+
+#: C/evince.xml:698(para)
+msgid "Zoom out"
+msgstr "Zmenšit"
+
+#: C/evince.xml:701(keycap)
+msgid "R"
+msgstr "R"
+
+#: C/evince.xml:702(para)
 msgid "Reload the document"
 msgstr "Obnovit dokument"
 
-#: ../shell/ev-window.c:5050
-msgid "Auto_scroll"
-msgstr "Automaticky po_sunovat"
+#: C/evince.xml:706(keycap) C/evince.xml:731(keycap)
+msgid "Page Up"
+msgstr "Page Up"
 
-#. Go menu
-#: ../shell/ev-window.c:5054
-msgid "_Previous Page"
-msgstr "_Předchozí stránka"
-
-#: ../shell/ev-window.c:5055
+#: C/evince.xml:707(para)
 msgid "Go to the previous page"
 msgstr "Přejít na předchozí stránku"
 
-#: ../shell/ev-window.c:5057
-msgid "_Next Page"
-msgstr "_Následující stránka"
+#: C/evince.xml:710(keycap) C/evince.xml:735(keycap)
+msgid "Page Down"
+msgstr "Page Down"
 
-#: ../shell/ev-window.c:5058
+#: C/evince.xml:711(para)
 msgid "Go to the next page"
 msgstr "Přejít na následující stránku"
 
-#: ../shell/ev-window.c:5060
-msgid "_First Page"
-msgstr "P_rvní stránka"
+#: C/evince.xml:715(keycap) C/evince.xml:723(keycap)
+msgid "Space"
+msgstr "Mezerník"
 
-#: ../shell/ev-window.c:5061
+#: C/evince.xml:716(keycap) C/evince.xml:723(keycap) C/evince.xml:725(keycap)
+#: C/evince.xml:731(keycap) C/evince.xml:735(keycap)
+msgid "Shift"
+msgstr "Shift"
+
+#: C/evince.xml:716(keycap) C/evince.xml:724(keycap)
+msgid "Backspace"
+msgstr "Backspace"
+
+#: C/evince.xml:717(keycap) C/evince.xml:725(keycap)
+msgid "Return"
+msgstr "Enter"
+
+#: C/evince.xml:719(para)
+msgid "Scroll forward"
+msgstr "Posunout vpřed"
+
+#: C/evince.xml:727(para)
+msgid "Scroll backward"
+msgstr "Posunout zpět"
+
+#: C/evince.xml:732(para)
+msgid "Go a bunch of pages up"
+msgstr "Přejít o několik stránek nahoru"
+
+#: C/evince.xml:736(para)
+msgid "Go a bunch of pages down"
+msgstr "Přejít o několik stránek dolů"
+
+#: C/evince.xml:739(keycap)
+msgid "Home"
+msgstr "Home"
+
+#: C/evince.xml:740(para)
 msgid "Go to the first page"
 msgstr "Přejít na první stránku"
 
-#: ../shell/ev-window.c:5063
-msgid "_Last Page"
-msgstr "Po_slední stránka"
+#: C/evince.xml:743(keycap)
+msgid "End"
+msgstr "End"
 
-#: ../shell/ev-window.c:5064
+#: C/evince.xml:744(para)
 msgid "Go to the last page"
 msgstr "Přejít na poslední stránku"
 
-#. Help menu
-#: ../shell/ev-window.c:5068
-msgid "_Contents"
-msgstr "_Obsah"
+#: C/evince.xml:747(keycap)
+msgid "L"
+msgstr "L"
 
-#: ../shell/ev-window.c:5071
-msgid "_About"
-msgstr "O _aplikaci"
+#: C/evince.xml:748(para)
+msgid "Go to page by number or label"
+msgstr "Přejít na stránku dle čísla stránky nebo nadpisu"
 
-#. Toolbar-only
-#: ../shell/ev-window.c:5075
-msgid "Leave Fullscreen"
-msgstr "Opustit celou obrazovku"
+#: C/evince.xml:751(keycap)
+msgid "F1"
+msgstr "F1"
 
-#: ../shell/ev-window.c:5076
-msgid "Leave fullscreen mode"
-msgstr "Opustit režim přes celou obrazovku"
+#: C/evince.xml:752(para)
+msgid "Help"
+msgstr "Nápověda"
 
-#: ../shell/ev-window.c:5078
-msgid "Start Presentation"
-msgstr "Spustit prezentaci"
+#: C/evince.xml:755(keycap)
+msgid "F5"
+msgstr "F5"
 
-#: ../shell/ev-window.c:5079
-msgid "Start a presentation"
-msgstr "Spustit prezentaci"
+#: C/evince.xml:756(para)
+msgid "Run document as presentation"
+msgstr "Spustit dokument jako prezentaci"
 
-#. View Menu
-#: ../shell/ev-window.c:5135
-msgid "_Toolbar"
-msgstr "_Nástrojová lišta"
+#: C/evince.xml:759(keycap)
+msgid "F9"
+msgstr "F9"
 
-#: ../shell/ev-window.c:5136
-msgid "Show or hide the toolbar"
-msgstr "Zobrazit nebo skrýt nástrojovou lištu"
-
-#: ../shell/ev-window.c:5138
-msgid "Side _Pane"
-msgstr "_Postranní lišta"
-
-#: ../shell/ev-window.c:5139
+#: C/evince.xml:760(para)
 msgid "Show or hide the side pane"
 msgstr "Zobrazit nebo skrýt postranní lištu"
 
-#: ../shell/ev-window.c:5141
-msgid "_Continuous"
-msgstr "_Souvislé"
+#: C/evince.xml:763(keycap)
+msgid "F11"
+msgstr "F11"
 
-#: ../shell/ev-window.c:5142
-msgid "Show the entire document"
-msgstr "Zobrazovat celý dokument"
+#: C/evince.xml:764(para)
+msgid "Toggle fullscreen mode"
+msgstr "Přepnout režim celé obrazovky"
 
-#: ../shell/ev-window.c:5144
-msgid "_Dual"
-msgstr "_Duální"
-
-#: ../shell/ev-window.c:5145
-msgid "Show two pages at once"
-msgstr "Zobrazovat po dvou stránkách"
-
-#: ../shell/ev-window.c:5147
-msgid "_Fullscreen"
-msgstr "Přes _celou obrazovku"
-
-#: ../shell/ev-window.c:5148
-msgid "Expand the window to fill the screen"
-msgstr "Zvětšit okno, aby vyplnilo obrazovku"
-
-#: ../shell/ev-window.c:5150
-msgid "Pre_sentation"
-msgstr "Pr_ezentace"
-
-#: ../shell/ev-window.c:5151
-msgid "Run document as a presentation"
-msgstr "Spustit dokument jako prezentaci"
-
-#: ../shell/ev-window.c:5153
-msgid "_Best Fit"
-msgstr "Přizpůsob_it"
-
-#: ../shell/ev-window.c:5154
-msgid "Make the current document fill the window"
-msgstr "Nechat aktuální dokument vyplnit okno"
-
-#: ../shell/ev-window.c:5156
-msgid "Fit Page _Width"
-msgstr "Přizpůsobi_t šířce strany"
-
-#: ../shell/ev-window.c:5157
-msgid "Make the current document fill the window width"
-msgstr "Nechat aktuální dokument vyplnit šířku okna"
-
-#. Links
-#: ../shell/ev-window.c:5164
-msgid "_Open Link"
-msgstr "_Otevřít odkaz"
-
-#: ../shell/ev-window.c:5166
-msgid "_Go To"
-msgstr "_Přejít na"
-
-#: ../shell/ev-window.c:5168
-msgid "Open in New _Window"
-msgstr "Otevřít v novém _okně"
-
-#: ../shell/ev-window.c:5170
-msgid "_Copy Link Address"
-msgstr "_Kopírovat adresu odkazu"
-
-#: ../shell/ev-window.c:5172
-msgid "_Save Image As..."
-msgstr "_Uložit obrázek jako…"
-
-#: ../shell/ev-window.c:5174
-msgid "Copy _Image"
-msgstr "Kopí_rovat obrázek"
-
-#: ../shell/ev-window.c:5220
-msgid "Page"
-msgstr "Stránka"
-
-#: ../shell/ev-window.c:5221
-msgid "Select Page"
-msgstr "Zvolit stranu"
-
-#: ../shell/ev-window.c:5232
-msgid "Zoom"
-msgstr "Zvětšení"
-
-#: ../shell/ev-window.c:5234
-msgid "Adjust the zoom level"
-msgstr "Upravit úroveň zvětšení"
-
-#: ../shell/ev-window.c:5244
-msgid "Navigation"
-msgstr "Navigace"
-
-#: ../shell/ev-window.c:5246
-msgid "Back"
-msgstr "Zpět"
-
-#. translators: this is the history action
-#: ../shell/ev-window.c:5249
-msgid "Move across visited pages"
-msgstr "Procházení navštívených stránek"
-
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5279
-msgid "Previous"
-msgstr "Předchozí"
-
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5284
-msgid "Next"
-msgstr "Následující"
-
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5288
-msgid "Zoom In"
-msgstr "Zvětšit"
-
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5292
-msgid "Zoom Out"
-msgstr "Zmenšit"
-
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5300
-msgid "Fit Width"
-msgstr "Přizpůsobit šířce"
-
-#: ../shell/ev-window.c:5467 ../shell/ev-window.c:5485
-msgid "Unable to launch external application."
-msgstr "Nepodařilo se spustit externí aplikaci."
-
-#: ../shell/ev-window.c:5528
-msgid "Unable to open external link"
-msgstr "Nepodařilo se otevřít externí odkaz"
-
-#: ../shell/ev-window.c:5684
-msgid "Couldn't find appropriate format to save image"
-msgstr "Nepodařilo se najít vhodný formát pro uložení obrázku"
-
-#: ../shell/ev-window.c:5723
-msgid "The image could not be saved."
-msgstr "Nepodařilo se uložit obrázek."
-
-#: ../shell/ev-window.c:5755
-msgid "Save Image"
-msgstr "Uložit obrázek"
-
-#: ../shell/ev-window.c:5817
-msgid "Unable to open attachment"
-msgstr "Nepodařilo se otevřít přílohu"
-
-#: ../shell/ev-window.c:5868
-msgid "The attachment could not be saved."
-msgstr "Nepodařilo se uložit přílohu."
-
-#: ../shell/ev-window.c:5913
-msgid "Save Attachment"
-msgstr "Uložit přílohu"
-
-#: ../shell/ev-window-title.c:162
-#, c-format
-msgid "%s - Password Required"
-msgstr "%s – Vyžadováno heslo"
-
-#: ../shell/ev-utils.c:330
-msgid "By extension"
-msgstr "Podle přípony"
-
-#: ../shell/main.c:59 ../shell/main.c:347
-msgid "GNOME Document Viewer"
-msgstr "Prohlížeč dokumentů pro pracovní prostředí GNOME"
-
-#: ../shell/main.c:67
-msgid "The page of the document to display."
-msgstr "Stránka dokumentu, kterou chcete zobrazit."
-
-#: ../shell/main.c:67
-msgid "PAGE"
-msgstr "STRÁNKA"
-
-#: ../shell/main.c:68
-msgid "Run evince in fullscreen mode"
-msgstr "Spustit Evince v celoobrazovkovém režimu"
-
-#: ../shell/main.c:69
-msgid "Run evince in presentation mode"
-msgstr "Spustit Evince v prezentačním režimu"
-
-#: ../shell/main.c:70
-msgid "Run evince as a previewer"
-msgstr "Spustit Evince v náhledovém režimu"
-
-#: ../shell/main.c:71
-msgid "The word or phrase to find in the document"
-msgstr "Hledané slovo nebo fráze v dokumentu"
-
-#: ../shell/main.c:71
-msgid "STRING"
-msgstr "ŘETĚZEC"
-
-#: ../shell/main.c:75
-msgid "[FILE...]"
-msgstr "[SOUBOR…]"
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid ""
-"Boolean options available, true enables thumbnailing and false disables the "
-"creation of new thumbnails"
-msgstr ""
-"Dostupné logické hodnoty; pravdivá hodnota povoluje tvorbu náhledů a "
-"nepravdivá hodnota zakazuje tvorbu nových náhledů."
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
-msgid "Enable thumbnailing of PDF Documents"
-msgstr "Povolit tvorbu náhledů dokumentů PDF"
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
-msgid "Thumbnail command for PDF Documents"
-msgstr "Příkaz náhledů pro dokumenty PDF"
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid ""
-"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
-"thumbnailer documentation for more information."
-msgstr ""
-"Platný příkaz a argumenty pro tvůrce náhledů dokumentu PDF. Chcete-li se "
-"dovědět více informací, podívejte se do dokumentace tvůrce náhledů Nautilu."
+#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
+#: C/evince.xml:0(None)
+msgid "translator-credits"
+msgstr "Martin Picek <picek.martin@gnome-cesko.cz>, 2009"
