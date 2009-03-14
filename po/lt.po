@@ -1,18 +1,18 @@
 # translation of lt.po to Lithuanian
 # Lithuanian translation of Evince.
-# Copyright (C) 2005-2006 The GNOME Foundation.
+# Copyright (C) 2005-2009 The GNOME Foundation.
 # This file is distributed under the same license as the Evince package.
 #
 #
-# Žygimantas Beručka <zygis@gnome.org>, 2005-2006.
+# Žygimantas Beručka <zygis@gnome.org>, 2005-2006, 2009.
 # Justina Klingaitė <justina.klingaite@gmail.com>, 2005.
 # Gintautas Miliauskas <gintas@akl.lt>, 2007, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: lt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-06 10:51+0200\n"
-"PO-Revision-Date: 2009-03-06 10:51+0200\n"
+"POT-Creation-Date: 2009-03-14 21:58+0200\n"
+"PO-Revision-Date: 2009-03-14 22:10+0200\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%"
 "100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: KBabel 1.11.4\n"
 
 #: ../backend/comics/comics-document.c:131
 #: ../libdocument/ev-document-factory.c:143
@@ -244,7 +243,7 @@ msgstr "_Naudotojo vardas:"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:533
 msgid "_Domain:"
-msgstr "_Domenas:"
+msgstr "_Sritis:"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:538
 #: ../shell/ev-password-view.c:332
@@ -257,7 +256,7 @@ msgstr "Iškart _pamiršti slaptažodį"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:561
 msgid "_Remember password until you logout"
-msgstr "_Atsiminti slaptažodį šiai sesijai"
+msgstr "_Atsiminti slaptažodį šiam seansui"
 
 #: ../cut-n-paste/evmountoperation/ev-mount-operation.c:569
 msgid "_Remember forever"
@@ -291,7 +290,7 @@ msgstr "Neatpažintas paleidimo parametras: %d"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Negalima perduoti dokumentų URI „Type=Link“ darbastalio elementui"
+msgstr "Negalima perduoti dokumentų URI „Type=Link“ darbastalio įrašui"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -300,11 +299,11 @@ msgstr "Nepaleidžiamas elementas"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:224
 msgid "Disable connection to session manager"
-msgstr "Atjungti nuo sesijos valdyklės"
+msgstr "Atjungti nuo seanso valdyklės"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:227
 msgid "Specify file containing saved configuration"
-msgstr "Nurodyti failą su įrašytais nustatymais"
+msgstr "Nurodykite failą su įrašytais nustatymais"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:227
 msgid "FILE"
@@ -312,7 +311,7 @@ msgstr "FAILAS"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:230
 msgid "Specify session management ID"
-msgstr "Nurodykite sesijos valdymo ID"
+msgstr "Nurodykite seanso valdymo ID"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:230
 msgid "ID"
@@ -320,11 +319,11 @@ msgstr "ID"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:244
 msgid "Session management options:"
-msgstr "Sesijos valdymo nustatymai:"
+msgstr "Seanso valdymo parinktys:"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:245
 msgid "Show session management options"
-msgstr "Rodyti sesijos valdymo nustatymus"
+msgstr "Rodyti seanso valdymo parinktis"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -528,14 +527,14 @@ msgstr "%.2f x %.2f colių"
 #: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr "%s, portretas (%s)"
+msgstr "%s, stačias (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:306
 #, c-format
 msgid "%s, Landscape (%s)"
-msgstr "%s, peizažas (%s)"
+msgstr "%s, gulsčias (%s)"
 
 #: ../libview/ev-jobs.c:949
 #, c-format
@@ -665,7 +664,7 @@ msgstr "Rasti ankstesnį ieškomo užrašo pasikartojimą"
 
 #: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5028
 msgid "Find Ne_xt"
-msgstr "Rasti se_kantį"
+msgstr "Rasti _kitą"
 
 #: ../shell/eggfindbar.c:341
 msgid "Find next occurrence of the search string"
@@ -677,7 +676,7 @@ msgstr "S_kirti raidžių dydį"
 
 #: ../shell/eggfindbar.c:351
 msgid "Toggle case sensitive search"
-msgstr "Įjungti/išjungti raidžių registrui jautrią paiešką"
+msgstr "Įjungti / išjungti raidžių registrui jautrią paiešką"
 
 #: ../shell/ev-keyring.c:102
 #, c-format
@@ -731,7 +730,7 @@ msgstr "Iškart _pamiršti slaptažodį"
 
 #: ../shell/ev-password-view.c:377
 msgid "Remember password until you _logout"
-msgstr "_Atsiminti slaptažodį iki atsijungimo"
+msgstr "_Atsiminti slaptažodį šiam seansui"
 
 #: ../shell/ev-password-view.c:389
 msgid "Remember _forever"
@@ -753,7 +752,7 @@ msgstr "Spausdinamas %d iš %d puslapių..."
 
 #: ../shell/ev-print-operation.c:1010
 msgid "Printing is not supported on this printer."
-msgstr "Spaudinimas šiuo spausdintuvu nepalaikomas."
+msgstr "Spausdinimas šiuo spausdintuvu nepalaikomas."
 
 #: ../shell/ev-print-operation.c:1136 ../shell/ev-window.c:5081
 msgid "Print"
@@ -798,12 +797,12 @@ msgstr "Rodyklė"
 
 #: ../shell/ev-sidebar-thumbnails.c:751
 msgid "Thumbnails"
-msgstr "Mini vaizdai"
+msgstr "Miniatiūros"
 
 #: ../shell/ev-window.c:843
 #, c-format
 msgid "Page %s - %s"
-msgstr "Puslapis %s - %s"
+msgstr "Puslapis %s – %s"
 
 #: ../shell/ev-window.c:845
 #, c-format
@@ -826,7 +825,7 @@ msgstr "Įkeliamas dokumentas iš %s"
 #: ../shell/ev-window.c:1751 ../shell/ev-window.c:1944
 #, c-format
 msgid "Downloading document (%d%%)"
-msgstr "Parsiunčiamas dokumentas (%d%%)"
+msgstr "Atsiunčiamas dokumentas (%d%%)"
 
 #: ../shell/ev-window.c:1890
 #, c-format
@@ -899,7 +898,7 @@ msgstr[2] "%d neįvykdytų užduočių eilėje"
 
 #: ../shell/ev-window.c:2855 ../shell/ev-window.c:3965
 msgid "Failed to print document"
-msgstr "Nepavyko atspausdinti dokumento"
+msgstr "Nepavyko išspausdinti dokumento"
 
 #: ../shell/ev-window.c:2912
 #, c-format
@@ -921,7 +920,7 @@ msgstr ""
 
 #: ../shell/ev-window.c:3124
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr "Jei užversite langą, spausdinimo užduotys nebus atliktos."
+msgstr "Jei užversite langą, spausdinimo užduotys bus neatliktos."
 
 #: ../shell/ev-window.c:3128
 msgid "Cancel _print and Close"
@@ -929,11 +928,11 @@ msgstr "Nutraukti _spausdinimą ir uždaryti"
 
 #: ../shell/ev-window.c:3132
 msgid "Close _after Printing"
-msgstr "Uždaryti _atspausdinus"
+msgstr "Uždaryti _išspausdinus"
 
 #: ../shell/ev-window.c:3735
 msgid "Toolbar Editor"
-msgstr "Įrankinės redaktorius"
+msgstr "Įrankinės rengyklė"
 
 #: ../shell/ev-window.c:3867
 msgid "There was an error displaying help"
@@ -955,9 +954,9 @@ msgid ""
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
 msgstr ""
-"Evince yra laisva programinė įranga; Jūs galite ją platinti ir/ar "
+"Evince yra laisva programinė įranga; galite ją platinti ir / ar "
 "modifikuoti GNU bendrosios viešosios licencijos sąlygomis, kurios paskelbtos "
-"Laisvosios programinės įrangos fondo; 2-osios arba (Jūsų pasirinkimu) bet "
+"Laisvosios programinės įrangos fondo; 2-osios arba (savo pasirinkimu) bet "
 "kurios vėlesnės licencijos versijos sąlygomis.\n"
 
 #: ../shell/ev-window.c:4302
@@ -968,7 +967,7 @@ msgid ""
 "details.\n"
 msgstr ""
 "Evince yra platinama tikintis, kad ji bus naudinga, bet NETEIKIANT JOKIŲ "
-"GARANTIJŲ; netgi be numanomų PARDAVIMO arba TINKAMUMO TAM TIKRAM TIKSLUI "
+"GARANTIJŲ; netgi be numanomų PARDAVIMO arba TINKAMUMO KONKREČIAM TIKSLUI "
 "garantijų. Dėl išsamesnės informacijos žiūrėkite GNU bendrąją viešąją "
 "licenciją.\n"
 
@@ -978,8 +977,8 @@ msgid ""
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
-"Jūs turėjote gauti GNU bendrosios viešosios licencijos kopiją kartu su "
-"Evince; jeigu negavote, rašykite Laisvosios programinės įrangos fondui, 59 "
+"Turėjote gauti GNU bendrosios viešosios licencijos kopiją kartu su "
+"Evince; jeigu negavote, rašykite The Free Software Foundation, Inc., 59 "
 "Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
 #. Manually set name and icon in win32
@@ -1065,7 +1064,7 @@ msgstr "Spausdinimo _nustatymai..."
 
 #: ../shell/ev-window.c:5010
 msgid "Setup the page settings for printing"
-msgstr "Nustatyti puslapio parinktis spausdinimui"
+msgstr "Nustatyti puslapio parametrus spausdinimui"
 
 #: ../shell/ev-window.c:5012
 msgid "_Print..."
@@ -1073,7 +1072,7 @@ msgstr "S_pausdinti..."
 
 #: ../shell/ev-window.c:5013 ../shell/ev-window.c:5082
 msgid "Print this document"
-msgstr "Atspaudinti šį dokumentą"
+msgstr "Išspaudinti šį dokumentą"
 
 #: ../shell/ev-window.c:5015
 msgid "P_roperties"
@@ -1117,11 +1116,11 @@ msgstr "_Perkrauti"
 
 #: ../shell/ev-window.c:5047
 msgid "Reload the document"
-msgstr "Perkrauti dokumentą"
+msgstr "Įkelti dokumentą iš naujo"
 
 #: ../shell/ev-window.c:5050
 msgid "Auto_scroll"
-msgstr "Automatinis _slinkimas"
+msgstr "Automatinė _slinktis"
 
 #. Go menu
 #: ../shell/ev-window.c:5054
@@ -1168,19 +1167,19 @@ msgstr "_Apie"
 #. Toolbar-only
 #: ../shell/ev-window.c:5075
 msgid "Leave Fullscreen"
-msgstr "Palikti viso ekrano veikseną"
+msgstr "Išjungti viso ekrano veikseną"
 
 #: ../shell/ev-window.c:5076
 msgid "Leave fullscreen mode"
-msgstr "Palikti viso ekrano veikseną"
+msgstr "Išjungti viso ekrano veikseną"
 
 #: ../shell/ev-window.c:5078
 msgid "Start Presentation"
-msgstr "Pradėti prezentaciją"
+msgstr "Pradėti pateiktį"
 
 #: ../shell/ev-window.c:5079
 msgid "Start a presentation"
-msgstr "Paleisti dokumentą kaip prezentaciją"
+msgstr "Rodyti dokumentą kaip pateiktį"
 
 #. View Menu
 #: ../shell/ev-window.c:5135
@@ -1225,7 +1224,7 @@ msgstr "Išplėsti langą per visą ekraną"
 
 #: ../shell/ev-window.c:5150
 msgid "Pre_sentation"
-msgstr "_Prezentacija"
+msgstr "_Pateikti"
 
 #: ../shell/ev-window.c:5151
 msgid "Run document as a presentation"
@@ -1361,11 +1360,11 @@ msgstr "Įrašyti priedą"
 #: ../shell/ev-window-title.c:162
 #, c-format
 msgid "%s - Password Required"
-msgstr "%s - Reikalingas slaptažodis"
+msgstr "%s – Reikalingas slaptažodis"
 
 #: ../shell/ev-utils.c:330
 msgid "By extension"
-msgstr "Pagal priesagą"
+msgstr "Pagal plėtinį"
 
 #: ../shell/main.c:59 ../shell/main.c:347
 msgid "GNOME Document Viewer"
@@ -1381,19 +1380,19 @@ msgstr "PUSLAPIS"
 
 #: ../shell/main.c:68
 msgid "Run evince in fullscreen mode"
-msgstr "Paleisti evince viso ekrano veiksena"
+msgstr "Paleisti Evince viso ekrano veiksenoje"
 
 #: ../shell/main.c:69
 msgid "Run evince in presentation mode"
-msgstr "Paleisti evince pateikčių veiksena"
+msgstr "Paleisti Evince pateikčių veiksenoje"
 
 #: ../shell/main.c:70
 msgid "Run evince as a previewer"
-msgstr "Paleisti evince kaip peržiūros programą"
+msgstr "Paleisti Evince kaip peržiūros programą"
 
 #: ../shell/main.c:71
 msgid "The word or phrase to find in the document"
-msgstr "Žodis ar frazė, kurios ieškoti dokumente"
+msgstr "Žodis ar frazė, ieškotina dokumente"
 
 #: ../shell/main.c:71
 msgid "STRING"
@@ -1408,7 +1407,7 @@ msgid ""
 "Boolean options available, true enables thumbnailing and false disables the "
 "creation of new thumbnails"
 msgstr ""
-"Prieinamos loginės parinktys: teigiama - įjungia miniatiūras, neigiama - "
+"Prieinamos loginės parinktys: teigiama – įjungia miniatiūras, neigiama – "
 "išjungia"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
@@ -1425,110 +1424,4 @@ msgid ""
 "thumbnailer documentation for more information."
 msgstr ""
 "Tinkama PDF dokumentų miniatiūrų kūrimo komanda su argumentais. Žiūrėkite "
-"Nautiliaus miniatiūrų generatoriaus dokumentaciją."
-
-#~ msgid "File not available"
-#~ msgstr "Failas neprieinamas."
-
-#~ msgid "Remote files aren't supported"
-#~ msgstr "Nutolę failai nepalaikomi"
-
-#~ msgid "Password Entry"
-#~ msgstr "Slaptažodis"
-
-#~ msgid "Remember password for this session"
-#~ msgstr "Atsiminti slaptažodį šiai sesijai"
-
-#~ msgid "Save password in keyring"
-#~ msgstr "Išsaugoti slaptažodį raktų žiede"
-
-#~ msgid "%.2f x %.2f in"
-#~ msgstr "%.2f x %.2f in"
-
-#~ msgid "Find Previous"
-#~ msgstr "Rasti ankstesnį"
-
-#~ msgid "Find Next"
-#~ msgstr "Rasti kitą"
-
-#~ msgid "Incorrect password"
-#~ msgstr "Slaptažodis neteisingas"
-
-#~ msgid "Evince Document Viewer"
-#~ msgstr "Dokumentų peržiūros programa Evince"
-
-#~ msgid "BBox"
-#~ msgstr "BBox"
-
-#~ msgid "Letter"
-#~ msgstr "Laiškas"
-
-#~ msgid "Tabloid"
-#~ msgstr "Nedidelio formato laikraštis"
-
-#~ msgid "Ledger"
-#~ msgstr "Sąskaitų knyga"
-
-#~ msgid "Legal"
-#~ msgstr "Juridinis"
-
-#~ msgid "Statement"
-#~ msgstr "Pareiškimas"
-
-#~ msgid "Executive"
-#~ msgstr "Vykdomasis"
-
-#~ msgid "A0"
-#~ msgstr "A0"
-
-#~ msgid "A1"
-#~ msgstr "A1"
-
-#~ msgid "A2"
-#~ msgstr "A2"
-
-#~ msgid "A3"
-#~ msgstr "A3"
-
-#~ msgid "A4"
-#~ msgstr "A4"
-
-#~ msgid "A5"
-#~ msgstr "A5"
-
-#~ msgid "B4"
-#~ msgstr "B4"
-
-#~ msgid "B5"
-#~ msgstr "B5"
-
-#~ msgid "Folio"
-#~ msgstr "Pusiau sulenktas lapas"
-
-#~ msgid "Quarto"
-#~ msgstr "Ketvirtis lapo"
-
-#~ msgid "10x14"
-#~ msgstr "10x14"
-
-#~ msgid "Cannot open file “%s”."
-#~ msgstr "Nepavyko atverti failo „%s“."
-
-#~ msgid ""
-#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
-#~ "path"
-#~ msgstr ""
-#~ "Nepavyko įkelti dokumento „%s“. Kelyje nerastas Ghostscript "
-#~ "interpretatorius"
-
-#~ msgid "Encapsulated PostScript"
-#~ msgstr "Encapsulated PostScript"
-
-#~ msgid "PostScript"
-#~ msgstr "PostScript"
-
-#~ msgid "Interpreter failed."
-#~ msgstr "Interpretatoriaus klaida."
-
-#~ msgid "Unhandled MIME type: “%s”"
-#~ msgstr "Neapdorojamas MIME tipas: „%s“"
+"Nautilus miniatiūrų generatoriaus dokumentaciją."
