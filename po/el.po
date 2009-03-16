@@ -1,24 +1,26 @@
-# translation of el.po to Greek
+# translation of evince.HEAD.po to Greek
 # GNOME evince Greek translation.
-# Copyright (C) 2000, 2001,2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001,2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 #
 # Stylianos Papanastasiou <stelios@dcs.gla.ac.uk>, 2005.
 # Kostas Papadimas <pkst@gnome.org>, 2006.
 # Dimitris Glezos <dimitris@glezos.com>, 2006, 2007.
 # Pierros Papadeas <ppapadeas@gmail.com>, 2008.
+# Fotis Tsamis <ftsamis@gmail.com>, 2009.
 # Initial translation by Stelios
 msgid ""
 msgstr ""
-"Project-Id-Version: el\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 17:51+0200\n"
-"PO-Revision-Date: 2008-09-20 01:38+0200\n"
-"Last-Translator: nikosCharonitakis <nikosx@gmail.com>\n"
-"Language-Team: Greek <team@gnome.gr>\n"
+"Project-Id-Version: evince.HEAD\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
+"POT-Creation-Date: 2009-03-15 15:58+0000\n"
+"PO-Revision-Date: 2009-03-16 15:01+0200\n"
+"Last-Translator: Fotis Tsamis <ftsamis@gmail.com>\n"
+"Language-Team: Greek\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../backend/comics/comics-document.c:131
 #: ../libdocument/ev-document-factory.c:143
@@ -36,9 +38,8 @@ msgid "File corrupted."
 msgstr "Το αρχείο είναι κατεστραμμένο."
 
 #: ../backend/comics/comics-document.c:198
-#, fuzzy
 msgid "No files in archive."
-msgstr "Δεν βρέθηκαν εικόνες στο αρχείο %s"
+msgstr "Δεν βρέθηκαν αρχεία στην αρχειοθήκη."
 
 #: ../backend/comics/comics-document.c:230
 #, c-format
@@ -50,12 +51,10 @@ msgid "Comic Books"
 msgstr "Comic Books"
 
 #: ../backend/djvu/djvu-document.c:174
-#, fuzzy
 msgid "DJVU document has incorrect format"
-msgstr "Το έγγραφο DVI έχει εσφαλμένη μορφή"
+msgstr "Το έγγραφο DJVU έχει εσφαλμένη μορφή"
 
 #: ../backend/djvu/djvu-document.c:251
-#, fuzzy
 msgid ""
 "The document is composed of several files. One or more of such files cannot "
 "be accessed."
@@ -292,8 +291,7 @@ msgstr "Μη αναγνωρίσιμη επιλογή εκκίνησης: %d"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Αδυναμία ορισμού URI εγγράφου σε 'Type=Link' εγγραφή επιφάνειας εργασίας"
+msgstr "Αδυναμία ορισμού URI εγγράφου σε 'Type=Link' εγγραφή επιφάνειας εργασίας"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -321,14 +319,12 @@ msgid "ID"
 msgstr "ID"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:244
-#, fuzzy
 msgid "Session management options:"
-msgstr "Επιλογες Διαχειριστή Συνεδριών"
+msgstr "Επιλογές διαχείρισης συνεδριών"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:245
-#, fuzzy
 msgid "Show session management options"
-msgstr "Εμφάνιση επιλογών Διαχειριστή Συνεδριών"
+msgstr "Εμφάνιση επιλογών διαχείρισης συνεδριών"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -448,73 +444,60 @@ msgid "Document"
 msgstr "Έγγραφo"
 
 #: ../properties/ev-properties-view.c:59
-#, fuzzy
 msgid "Title:"
-msgstr "<b>Τίτλος:</b>"
+msgstr "Τίτλος:"
 
 #: ../properties/ev-properties-view.c:60
 msgid "Location:"
-msgstr ""
+msgstr "Τοποθεσία:"
 
 #: ../properties/ev-properties-view.c:61
-#, fuzzy
 msgid "Subject:"
-msgstr "<b>Θέμα:</b>"
+msgstr "Θέμα:"
 
 #: ../properties/ev-properties-view.c:62
-#, fuzzy
 msgid "Author:"
-msgstr "<b>Συγγραφέας:</b>"
+msgstr "Συγγραφέας:"
 
 #: ../properties/ev-properties-view.c:63
-#, fuzzy
 msgid "Keywords:"
-msgstr "<b>Λέξεις-κλειδί:</b>"
+msgstr "Λέξεις-κλειδί:"
 
 #: ../properties/ev-properties-view.c:64
-#, fuzzy
 msgid "Producer:"
-msgstr "<b>Παραγωγός:</b>"
+msgstr "Παραγωγός:"
 
 #: ../properties/ev-properties-view.c:65
-#, fuzzy
 msgid "Creator:"
-msgstr "<b>Δημιουργός:</b>"
+msgstr "Δημιουργός:"
 
 #: ../properties/ev-properties-view.c:66
-#, fuzzy
 msgid "Created:"
-msgstr "<b>Δημιουργήθηκε:</b>"
+msgstr "Δημιουργήθηκε:"
 
 #: ../properties/ev-properties-view.c:67
-#, fuzzy
 msgid "Modified:"
-msgstr "<b>Τροποποιήθηκε:</b>"
+msgstr "Τροποποιήθηκε:"
 
 #: ../properties/ev-properties-view.c:68
-#, fuzzy
 msgid "Number of Pages:"
-msgstr "<b>Αριθμός Σελίδων:</b>"
+msgstr "Αριθμός Σελίδων:"
 
 #: ../properties/ev-properties-view.c:69
-#, fuzzy
 msgid "Optimized:"
-msgstr "<b>Βελτιώθηκε:</b>"
+msgstr "Βελτιώθηκε:"
 
 #: ../properties/ev-properties-view.c:70
-#, fuzzy
 msgid "Format:"
-msgstr "<b>Μορφή:</b>"
+msgstr "Μορφή:"
 
 #: ../properties/ev-properties-view.c:71
-#, fuzzy
 msgid "Security:"
-msgstr "<b>Ασφάλεια:</b>"
+msgstr "Ασφάλεια:"
 
 #: ../properties/ev-properties-view.c:72
-#, fuzzy
 msgid "Paper Size:"
-msgstr "<b>Μέγεθος χαρτιού:</b>"
+msgstr "Μέγεθος χαρτιού:"
 
 #: ../properties/ev-properties-view.c:202
 msgid "None"
@@ -737,40 +720,34 @@ msgstr "Απαιτείται κωδικός."
 
 #: ../shell/ev-password-view.c:302
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
-msgstr ""
-"Το έγγραφο “%s” είναι κλειδωμένο και απαιτείται κωδικός πριν το άνοιγμα."
+msgid "The document “%s” is locked and requires a password before it can be opened."
+msgstr "Το έγγραφο “%s” είναι κλειδωμένο και απαιτείται κωδικός πριν το άνοιγμα."
 
 #: ../shell/ev-password-view.c:365
-#, fuzzy
 msgid "Forget password _immediately"
 msgstr "_Μη αποθήκευση του κωδικού"
 
 #: ../shell/ev-password-view.c:377
-#, fuzzy
 msgid "Remember password until you _logout"
 msgstr "_Απομνημόνευση κωδικού για αυτήν τη συνεδρία"
 
 #: ../shell/ev-password-view.c:389
-#, fuzzy
 msgid "Remember _forever"
-msgstr "_Μόνιμη αποθήκευση στοιχείων"
+msgstr "Μόνιμη αποθήκευση _στοιχείων"
 
 #. Initial state
 #: ../shell/ev-print-operation.c:318
 msgid "Preparing to print ..."
-msgstr ""
+msgstr "Προετοιμασία για εκτύπωση ..."
 
 #: ../shell/ev-print-operation.c:320
-#, fuzzy
 msgid "Finishing..."
-msgstr "Εύ_ρεση..."
+msgstr "Ολοκλήρωση...."
 
 #: ../shell/ev-print-operation.c:322
 #, c-format
 msgid "Printing page %d of %d..."
-msgstr ""
+msgstr "Εκτύπωση σελίδας %d από %d..."
 
 #: ../shell/ev-print-operation.c:1010
 msgid "Printing is not supported on this printer."
@@ -807,7 +784,7 @@ msgstr "Συνημμένα "
 
 #: ../shell/ev-sidebar-layers.c:395
 msgid "Layers"
-msgstr ""
+msgstr "Στρώματα"
 
 #: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
@@ -842,22 +819,21 @@ msgstr "Αδυναμία ανοίγματος εγγράφου"
 #: ../shell/ev-window.c:1613
 #, c-format
 msgid "Loading document from %s"
-msgstr ""
+msgstr "Φόρτωση εγγράφου από %s"
 
 #: ../shell/ev-window.c:1751 ../shell/ev-window.c:1944
 #, c-format
 msgid "Downloading document (%d%%)"
-msgstr ""
+msgstr "Κατέβασμα εγγράφου (%d%%)"
 
 #: ../shell/ev-window.c:1890
-#, fuzzy, c-format
+#, c-format
 msgid "Reloading document from %s"
-msgstr "Επαναφόρτωση του εγγράφου"
+msgstr "Επαναφόρτωση του εγγράφου από %s"
 
 #: ../shell/ev-window.c:1923
-#, fuzzy
 msgid "Failed to reload document."
-msgstr "Αδυναμία εκτύπωσης εγγράφου"
+msgstr "Αδυναμία επαναφόρτωσης του εγγράφου."
 
 #: ../shell/ev-window.c:2072
 msgid "Open Document"
@@ -873,19 +849,19 @@ msgid "Cannot open a copy."
 msgstr "Αδυναμία ανοίγματος ενός αντίγραφου."
 
 #: ../shell/ev-window.c:2402
-#, fuzzy, c-format
+#, c-format
 msgid "Saving document to %s"
-msgstr "Σμίκρυνση εγγράφου"
+msgstr "Αποθήκευση εγγράφου σε %s"
 
 #: ../shell/ev-window.c:2405
-#, fuzzy, c-format
+#, c-format
 msgid "Saving attachment to %s"
-msgstr "Αποθήκευση συνημμένων"
+msgstr "Αποθήκευση συνημμένου σε %s"
 
 #: ../shell/ev-window.c:2408
 #, c-format
 msgid "Saving image to %s"
-msgstr ""
+msgstr "Αποθήκευση εικόνας σε %s"
 
 #: ../shell/ev-window.c:2453 ../shell/ev-window.c:2550
 #, c-format
@@ -895,17 +871,17 @@ msgstr "Το αρχείο δεν μπορεί να αποθηκευτεί ως �
 #: ../shell/ev-window.c:2481
 #, c-format
 msgid "Uploading document (%d%%)"
-msgstr ""
+msgstr "Ανέβασμα εγγράφου (%d%%)"
 
 #: ../shell/ev-window.c:2485
 #, c-format
 msgid "Uploading attachment (%d%%)"
-msgstr ""
+msgstr "Ανέβασμα συνημμένου (%d%%)"
 
 #: ../shell/ev-window.c:2489
 #, c-format
 msgid "Uploading image (%d%%)"
-msgstr ""
+msgstr "Ανέβασμα εικόνας (%d%%)"
 
 #: ../shell/ev-window.c:2596
 msgid "Save a Copy"
@@ -915,8 +891,8 @@ msgstr "Αποθήκευση αντιγράφου"
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Εκκρεμεί %d εργασία στην σειρά αναμονής"
+msgstr[1] "Εκκρεμούν %d εργασίες στην σειρά αναμονής"
 
 #: ../shell/ev-window.c:2855 ../shell/ev-window.c:3965
 msgid "Failed to print document"
@@ -925,30 +901,29 @@ msgstr "Αδυναμία εκτύπωσης εγγράφου"
 #: ../shell/ev-window.c:2912
 #, c-format
 msgid "Printing job “%s”"
-msgstr ""
+msgstr "Εργασία εκτύπωσης “%s”"
 
 #: ../shell/ev-window.c:3109
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
+msgstr "Αναμονή μέχρι η εργασία εκτύπωσης “%s” να ολοκληρωθεί πριν το κλείσιμο;"
 
 #: ../shell/ev-window.c:3112
 #, c-format
-msgid ""
-"There are %d print jobs active. Wait until print finishes before closing?"
-msgstr ""
+msgid "There are %d print jobs active. Wait until print finishes before closing?"
+msgstr "Υπάρχουν %d ενεργές εργασίες εκτύπωσης. Αναμονή μέχρι η εκτύπωση να τελειώσει πριν το κλείσιμο;"
 
 #: ../shell/ev-window.c:3124
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
+msgstr "Αν κλείσετε το παράθυρο, οι εκκρεμείς εργασίες εκτύπωσης δεν θα εκτυπωθούν."
 
 #: ../shell/ev-window.c:3128
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "Ακύρωση _εκτύπωσης και κλείσιμο"
 
 #: ../shell/ev-window.c:3132
 msgid "Close _after Printing"
-msgstr ""
+msgstr "Κλείσι_μο μετά την εκτύπωση"
 
 #: ../shell/ev-window.c:3735
 msgid "Toolbar Editor"
@@ -956,7 +931,7 @@ msgstr "Επεξεργασία εργαλειοθήκης"
 
 #: ../shell/ev-window.c:3867
 msgid "There was an error displaying help"
-msgstr ""
+msgstr "Παρουσιάστηκε σφάλμα κατά την εμφάνιση της βοήθειας"
 
 #: ../shell/ev-window.c:4270
 #, c-format
@@ -1016,7 +991,8 @@ msgstr "© 1996-2007 Οι συγγραφείς του Evince"
 msgid "translator-credits"
 msgstr ""
 "Stylianos Papanastasiou <stelios@dcs.gla.ac.uk>\n"
-"Δημήτρης Γλέζος <dimitris@glezos.com>"
+"Δημήτρης Γλέζος <dimitris@glezos.com>\n"
+"Φώτης Τσάμης <ftsamis@gmail.com>"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -1265,8 +1241,7 @@ msgstr "Ταίριασμα στο π_λάτος σελίδας"
 
 #: ../shell/ev-window.c:5157
 msgid "Make the current document fill the window width"
-msgstr ""
-"Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το πλάτος του παραθύρου"
+msgstr "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το πλάτος του παραθύρου"
 
 #. Links
 #: ../shell/ev-window.c:5164
@@ -1348,9 +1323,8 @@ msgid "Fit Width"
 msgstr "Ταίριασμα στο πλάτος"
 
 #: ../shell/ev-window.c:5467 ../shell/ev-window.c:5485
-#, fuzzy
 msgid "Unable to launch external application."
-msgstr "Αδυναμία ανοίγματος εξωτερικού συνδέσμου"
+msgstr "Αδυναμία εκκίνησης εξωτερικής εφαρμογής."
 
 #: ../shell/ev-window.c:5528
 msgid "Unable to open external link"
@@ -1450,145 +1424,3 @@ msgstr ""
 "PDF. Δείτε την τεκμηριώση των μικρογραφιών του Ναυτίλου για περισσότερες\n"
 "πληροφορίες."
 
-#~ msgid "File not available"
-#~ msgstr "Το αρχείο δεν είναι διαθέσιμο"
-
-#~ msgid "Remote files aren't supported"
-#~ msgstr "Δεν υποστηρίζονται απομακρυσμένα αρχεία"
-
-#~ msgid "Password Entry"
-#~ msgstr "Είσοδος κωδικού"
-
-#~ msgid "Remember password for this session"
-#~ msgstr "Απομνημόνευση κωδικού για αυτήν τη συνεδρία"
-
-#~ msgid "Save password in keyring"
-#~ msgstr "Αποθήκευση κωδικού στην κλειδοθήκη"
-
-#~ msgid "%.2f x %.2f in"
-#~ msgstr "%.2f x %.2f σε"
-
-#~ msgid "Find Previous"
-#~ msgstr "Εύρεση προηγούμενου"
-
-#~ msgid "Find Next"
-#~ msgstr "Εύρεση επόμενου"
-
-#~ msgid "Incorrect password"
-#~ msgstr "Εσφαλμένος κωδικός"
-
-#~ msgid "BBox"
-#~ msgstr "BBox"
-
-#~ msgid "Letter"
-#~ msgstr "Letter"
-
-#~ msgid "Tabloid"
-#~ msgstr "Tabloid"
-
-#~ msgid "Ledger"
-#~ msgstr "Ledger"
-
-#~ msgid "Legal"
-#~ msgstr "Legal"
-
-#~ msgid "Statement"
-#~ msgstr "Statement"
-
-#~ msgid "Executive"
-#~ msgstr "Executive"
-
-#~ msgid "A0"
-#~ msgstr "Α0"
-
-#~ msgid "A1"
-#~ msgstr "Α1"
-
-#~ msgid "A2"
-#~ msgstr "Α2"
-
-#~ msgid "A3"
-#~ msgstr "Α3"
-
-#~ msgid "A4"
-#~ msgstr "Α4"
-
-#~ msgid "A5"
-#~ msgstr "Α5"
-
-#~ msgid "B4"
-#~ msgstr "Β4"
-
-#~ msgid "B5"
-#~ msgstr "Β5"
-
-#~ msgid "Folio"
-#~ msgstr "Folio"
-
-#~ msgid "Quarto"
-#~ msgstr "Quarto"
-
-#~ msgid "10x14"
-#~ msgstr "10x14"
-
-#~ msgid "Cannot open file “%s”."
-#~ msgstr "Αδυναμία ανοίγματος αρχείου “%s”."
-
-#~ msgid ""
-#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
-#~ "path"
-#~ msgstr ""
-#~ "Αποτυχία φόρτωσης εγγράφου “%s”. Δεν βρέθηκε στη διαδρομή σας ο "
-#~ "Ghostscript interpreter"
-
-#~ msgid "Encapsulated PostScript"
-#~ msgstr "Encapsulated PostScript"
-
-#~ msgid "PostScript"
-#~ msgstr "PostScript"
-
-#~ msgid "Interpreter failed."
-#~ msgstr "Αποτυχία διερμηνέα."
-
-#~ msgid "Unhandled MIME type: “%s”"
-#~ msgstr "Αδυναμία χειρισμού τύπου MIME '%s'"
-
-#~ msgid "Evince Document Viewer"
-#~ msgstr "Προβολή εγγράφων Evince"
-
-#~ msgid "Images"
-#~ msgstr "Εικόνες"
-
-#~ msgid "Open “%s”"
-#~ msgstr "Άνοιγμα “%s”"
-
-#~ msgid "Empty"
-#~ msgstr "Κενό"
-
-#~ msgid "75%"
-#~ msgstr "75%"
-
-#~ msgid "Generating PDF is not supported"
-#~ msgstr "Η δημιουργία αρχείων τύπου PDF δεν υποστηρίζεται"
-
-#~ msgid ""
-#~ "You were trying to print to a printer using the “%s” driver. This program "
-#~ "requires a PostScript printer driver."
-#~ msgstr ""
-#~ "Προσπαθείτε να τυπώσετε σε ένα εκτυπωτή με τη χρήση του οδηγού “%s”. Αυτό "
-#~ "το πρόγραμμα απαιτεί έναν οδηγό εκτυπωτή PostScript."
-
-#~ msgid "Pages"
-#~ msgstr "Σελίδες"
-
-#~ msgid "No document loaded."
-#~ msgstr "Δεν φορτώθηκε έγγραφο."
-
-#~ msgid "Error while decompressing file “%s”:\n"
-#~ msgstr "Σφάλμα κατά την αποσυμπίεση του αρχείου “%s”:\n"
-
-#~ msgid "File is not readable."
-#~ msgstr "Το αρχείο δεν μπορεί να αναγνωστεί."
-
-#~ msgid "Document loaded."
-#~ msgstr "Το έγγραφο φορτώθηκε."
