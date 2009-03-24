@@ -1072,7 +1072,7 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
 			  GError **error)
 {
   EggDesktopFileLaunchOption option;
-  GSList *translated_documents, *docs;
+  GSList *translated_documents = NULL, *docs = NULL;
   char *command, **argv;
   int argc, i, screen_num;
   gboolean success, current_success;
@@ -1440,16 +1440,18 @@ egg_set_desktop_file (const char *desktop_file_path)
       g_error_free (error);
     }
 
-  /* Set localized application name and default window icon */
-  if (egg_desktop_file->name)
-    g_set_application_name (egg_desktop_file->name);
-  if (egg_desktop_file->icon)
-    {
-      if (g_path_is_absolute (egg_desktop_file->icon))
-	gtk_window_set_default_icon_from_file (egg_desktop_file->icon, NULL);
-      else
-	gtk_window_set_default_icon_name (egg_desktop_file->icon);
-    }
+  if (egg_desktop_file) {
+    /* Set localized application name and default window icon */
+    if (egg_desktop_file->name)
+      g_set_application_name (egg_desktop_file->name);
+    if (egg_desktop_file->icon)
+      {
+        if (g_path_is_absolute (egg_desktop_file->icon))
+          gtk_window_set_default_icon_from_file (egg_desktop_file->icon, NULL);
+        else
+          gtk_window_set_default_icon_name (egg_desktop_file->icon);
+      }
+  }
 
   G_UNLOCK (egg_desktop_file);
 }
