@@ -181,7 +181,7 @@ set_property (GtkTable    *table,
 
 	label = gtk_label_new (NULL);
 	g_object_set (G_OBJECT (label), "xalign", 0.0, NULL);
-	markup = g_strdup_printf ("<b>%s</b>", properties_info[property].label);
+	markup = g_strdup_printf ("<b>%s</b>", _(properties_info[property].label));
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
 	
