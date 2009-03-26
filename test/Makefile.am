@@ -4,7 +4,8 @@ dist_check_SCRIPTS = \
 	test2.py \
 	test3.py \
 	test4.py \
-	test5.py
+	test5.py \
+	test6.py
 
 TESTS = $(dist_check_SCRIPTS)
 
