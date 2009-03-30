@@ -2421,19 +2421,21 @@ ev_view_expose_event (GtkWidget      *widget,
 	cairo_t *cr;
 	gint     i;
 
-	if (view->animation && ev_transition_animation_ready (view->animation)) {
-		GdkRectangle page_area;
-		GtkBorder    border;
+	if (view->animation) {
+		if (ev_transition_animation_ready (view->animation)) {
+			GdkRectangle page_area;
+			GtkBorder    border;
 
-		if (get_page_extents (view, view->current_page, &page_area, &border)) {
-			cr = gdk_cairo_create (view->layout.bin_window);
+			if (get_page_extents (view, view->current_page, &page_area, &border)) {
+				cr = gdk_cairo_create (view->layout.bin_window);
 
-			/* normalize to x=0, y=0 */
-			cairo_translate (cr, page_area.x, page_area.y);
-			page_area.x = page_area.y = 0;
+				/* normalize to x=0, y=0 */
+				cairo_translate (cr, page_area.x, page_area.y);
+				page_area.x = page_area.y = 0;
 
-			ev_transition_animation_paint (view->animation, cr, page_area);
-			cairo_destroy (cr);
+				ev_transition_animation_paint (view->animation, cr, page_area);
+				cairo_destroy (cr);
+		    	}
 		}
 
 		return TRUE;

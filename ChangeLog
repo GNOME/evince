@@ -1,3 +1,12 @@
+2009-03-30  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* libview/ev-transition-animation.c:
+	(ev_transition_animation_paint), (ev_transition_animation_ready):
+
+	Animation is ready only when origin surface is ready. This fixes
+	fading animations because otherwise next page is displayed 
+	before animaiton starts.
+
 2009-03-26  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* test/Makefile.am:

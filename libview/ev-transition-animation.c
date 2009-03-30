@@ -556,14 +556,15 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 	g_return_if_fail (EV_IS_TRANSITION_ANIMATION (animation));
 
 	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
-	g_object_get (priv->effect, "type", &type, NULL);
-	progress = ev_timeline_get_progress (EV_TIMELINE (animation));
 
 	if (!priv->dest_surface) {
 		/* animation is still not ready, paint the origin surface */
 		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
 		return;
 	}
+
+	g_object_get (priv->effect, "type", &type, NULL);
+	progress = ev_timeline_get_progress (EV_TIMELINE (animation));
 
 	switch (type) {
 	case EV_TRANSITION_EFFECT_REPLACE:
@@ -678,5 +679,5 @@ ev_transition_animation_ready (EvTransitionAnimation *animation)
 
 	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
 
-	return (priv->origin_surface && priv->dest_surface);
+	return (priv->origin_surface != NULL);
 }
