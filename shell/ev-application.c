@@ -776,7 +776,7 @@ ev_application_init (EvApplication *ev_application)
 	if (home_dir) {
 		ev_application->accel_map_file = g_build_filename (home_dir,
 								   ".gnome2",
-								   "accels"
+								   "accels",
 								   "evince",
 								   NULL);
 		gtk_accel_map_load (ev_application->accel_map_file);
