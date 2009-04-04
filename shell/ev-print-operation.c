@@ -576,12 +576,13 @@ find_range (EvPrintOperationExport *export)
 	}
 }
 
-static void
+static gboolean
 clamp_ranges (EvPrintOperationExport *export)
 {
 	gint num_of_correct_ranges = 0;
 	gint n_pages_to_print = 0;
 	gint i;
+	gboolean null_flag = FALSE;
 
 	for (i = 0; i < export->n_ranges; i++) {
 		gint n_pages;
@@ -612,16 +613,27 @@ clamp_ranges (EvPrintOperationExport *export)
 		} else if (n_pages % 2 == 0) {
 			n_pages_to_print += n_pages / 2;
 		} else if (export->page_set == GTK_PAGE_SET_EVEN) {
-			n_pages_to_print += export->ranges[i].start % 2 == 0 ?
+			if (n_pages==1 && export->ranges[i].start % 2 == 0)
+				null_flag = TRUE;
+			else 
+				n_pages_to_print += export->ranges[i].start % 2 == 0 ?
 				n_pages / 2 : (n_pages / 2) + 1;
 		} else if (export->page_set == GTK_PAGE_SET_ODD) {
-			n_pages_to_print += export->ranges[i].start % 2 == 0 ?
+			if (n_pages==1 && export->ranges[i].start % 2 != 0) 
+				null_flag = TRUE;
+			else 
+				n_pages_to_print += export->ranges[i].start % 2 == 0 ?
 				(n_pages / 2) + 1 : n_pages / 2;
 		}
 	}
 
-	export->n_ranges = num_of_correct_ranges;
-	export->n_pages_to_print = n_pages_to_print;
+	if (null_flag && !n_pages_to_print) {
+		return FALSE;
+	} else {
+		export->n_ranges = num_of_correct_ranges;
+		export->n_pages_to_print = n_pages_to_print;
+		return TRUE;
+	}
 }
 
 static void
@@ -988,8 +1000,6 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		return;
 	}
 
-	ev_print_operation_update_status (op, -1, -1, 0.0);
-	
 	export->print_preview = (response == GTK_RESPONSE_APPLY);
 	
 	printer = gtk_print_unix_dialog_get_selected_printer (GTK_PRINT_UNIX_DIALOG (dialog));
@@ -1062,8 +1072,25 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		
 		break;
 	}
-	clamp_ranges (export);
+	if (!clamp_ranges (export)) {
+		GtkWidget *message_dialog;
 
+		message_dialog = gtk_message_dialog_new (GTK_WINDOW (dialog),
+						 GTK_DIALOG_MODAL,
+						 GTK_MESSAGE_WARNING,
+						 GTK_BUTTONS_CLOSE,
+						 "%s", _("Invalid page selection"));
+		gtk_window_set_title (GTK_WINDOW (message_dialog), _("Warning"));
+		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (message_dialog),
+							  "%s", _("Your print range selection does not include any page"));
+		g_signal_connect (message_dialog, "response",
+				  G_CALLBACK (gtk_widget_destroy),
+				  NULL);
+		gtk_widget_show (message_dialog);
+
+		return;
+	} else	ev_print_operation_update_status (op, -1, -1, 0.0);
+ 
 	width = gtk_page_setup_get_paper_width (page_setup, GTK_UNIT_POINTS);
 	height = gtk_page_setup_get_paper_height (page_setup, GTK_UNIT_POINTS);
 	scale = gtk_print_settings_get_scale (print_settings) * 0.01;
