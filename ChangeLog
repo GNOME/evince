@@ -1,4 +1,15 @@
-2009-04-06  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+2009-04-06  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* libview/ev-view.[ch]: (ev_view_set_zoom),
+	(ev_view_update_view_size):
+	* shell/ev-window.c: (ev_window_set_view_size),
+	(ev_window_sizing_mode_changed_cb), (ev_window_init):
+
+	Move ev_view_update_view_size() from libview to ev-window again
+	and make sure the view is not redrawn when calling
+	ev_view_set_zoom more than once with the same zoom scale.
+	
+2009-04-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-window.c:
 

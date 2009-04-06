@@ -4120,51 +4120,59 @@ save_sizing_mode (EvWindow *window)
 						enum_value->value_nick);
 }
 
+static void
+ev_window_set_view_size (EvWindow *window)
+{
+	gint width, height;
+	GtkRequisition vsb_requisition;
+	GtkRequisition hsb_requisition;
+	gint scrollbar_spacing;
+	GtkWidget *scrolled_window = window->priv->scrolled_window;
+
+	if (!window->priv->view)
+		return;
+
+	/* Calculate the width available for the content */
+	width  = scrolled_window->allocation.width;
+	height = scrolled_window->allocation.height;
+
+	if (gtk_scrolled_window_get_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window)) == GTK_SHADOW_IN) {
+		width -=  2 * window->priv->view->style->xthickness;
+		height -= 2 * window->priv->view->style->ythickness;
+	}
+
+	gtk_widget_size_request (GTK_SCROLLED_WINDOW (scrolled_window)->vscrollbar,
+				 &vsb_requisition);
+	gtk_widget_size_request (GTK_SCROLLED_WINDOW (scrolled_window)->hscrollbar,
+				 &hsb_requisition);
+	gtk_widget_style_get (scrolled_window,
+			      "scrollbar_spacing",
+			      &scrollbar_spacing,
+			      NULL);
+
+	ev_view_set_zoom_for_size (EV_VIEW (window->priv->view),
+				   MAX (1, width),
+				   MAX (1, height),
+				   vsb_requisition.width + scrollbar_spacing,
+				   hsb_requisition.height + scrollbar_spacing);
+}
+
 static void     
 ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 		 		  EvWindow   *ev_window)
 {
-	GtkWidget *scrolled_window;
 	EvSizingMode sizing_mode;
 
 	g_object_get (ev_window->priv->view,
 		      "sizing-mode", &sizing_mode,
 		      NULL);
 
-	scrolled_window = ev_window->priv->scrolled_window;
-
-	g_signal_handlers_disconnect_by_func (ev_window->priv->view, ev_view_update_view_size, scrolled_window);
-
-	if (sizing_mode != EV_SIZING_FREE)
-	    	ev_view_update_view_size (EV_VIEW (ev_window->priv->view),
-					  GTK_SCROLLED_WINDOW (scrolled_window));
-
-	switch (sizing_mode) {
-	        case EV_SIZING_BEST_FIT:
-			g_object_set (G_OBJECT (scrolled_window),
-				      "hscrollbar-policy", GTK_POLICY_NEVER,
-				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-				      NULL);
-			g_signal_connect (ev_window->priv->view, "zoom_invalid",
-					  G_CALLBACK (ev_view_update_view_size),
-					  scrolled_window);
-			break;
-	        case EV_SIZING_FIT_WIDTH:
-			g_object_set (G_OBJECT (scrolled_window),
-				      "hscrollbar-policy", GTK_POLICY_NEVER,
-				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-				      NULL);
-			g_signal_connect (ev_window->priv->view, "zoom_invalid",
-					  G_CALLBACK (ev_view_update_view_size),
-					  scrolled_window);
-			break;
-	        case EV_SIZING_FREE:
-			g_object_set (G_OBJECT (scrolled_window),
-				      "hscrollbar-policy", GTK_POLICY_AUTOMATIC,
-				      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-				      NULL);
-			break;
-	}
+	g_object_set (ev_window->priv->scrolled_window,
+		      "hscrollbar-policy",
+		      sizing_mode == EV_SIZING_FREE ?
+		      GTK_POLICY_AUTOMATIC : GTK_POLICY_NEVER,
+		      "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+		      NULL);
 
 	update_sizing_buttons (ev_window);
 	save_sizing_mode (ev_window);
@@ -4727,7 +4735,7 @@ zoom_control_changed_cb (EphyZoomAction *action,
 	} else {
 		mode = EV_SIZING_FREE;
 	}
-	
+
 	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), mode);
 	
 	if (mode == EV_SIZING_FREE) {
@@ -6178,7 +6186,9 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "handle-link",
 			         G_CALLBACK (view_handle_link_cb),
 			         ev_window, 0);
-
+	g_signal_connect_swapped (ev_window->priv->view, "zoom_invalid",
+				 G_CALLBACK (ev_window_set_view_size),
+				 ev_window);
 	g_signal_connect_object (ev_window->priv->view,
 			         "popup",
 				 G_CALLBACK (view_menu_popup_cb),
