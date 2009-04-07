@@ -173,8 +173,11 @@ TIFF2PSContext* tiff2ps_context_new(const gchar *filename) {
 	ctx = g_new0(TIFF2PSContext, 1);
 	ctx->filename = g_strdup(filename);
 	ctx->fd = g_fopen(ctx->filename, "w");
-	if (ctx->fd == NULL)
+	if (ctx->fd == NULL) {
+		g_free (filename);
+		g_free (ctx);
 		return NULL;
+	}
 	ctx->interpolate = TRUE;     /* interpolate level2 image */
 	ctx->PSavoiddeadzone = TRUE; /* enable avoiding printer deadzone */
 	return ctx;
