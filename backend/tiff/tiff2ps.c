@@ -174,7 +174,7 @@ TIFF2PSContext* tiff2ps_context_new(const gchar *filename) {
 	ctx->filename = g_strdup(filename);
 	ctx->fd = g_fopen(ctx->filename, "w");
 	if (ctx->fd == NULL) {
-		g_free (filename);
+		g_free (ctx->filename);
 		g_free (ctx);
 		return NULL;
 	}
