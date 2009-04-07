@@ -1,3 +1,9 @@
+2009-04-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
+
+	* backend/tiff/tiff2ps.c (tiff2ps_context_new):
+	
+	Fixes memory leak. Bug #578285.
+
 2009-04-01  Christian Persch  <chpe@gnome.org>
 
 	* data/evince.desktop.in.in: Direct bug-buddy bugs to the
