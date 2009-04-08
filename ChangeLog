@@ -1,5 +1,13 @@
 2009-04-08  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/ev-window.c: (window_open_file_copy_ready_cb),
+	(reload_remote_copy_ready_cb), (window_save_file_copy_ready_cb):
+
+	Use g_error_matches() instead of manually check error code and
+	domain.
+	
+2009-04-08  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_clear_temp_symlink),
 	(ev_window_dispose):
 

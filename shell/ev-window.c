@@ -1689,8 +1689,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 		return;
 	}
 
-	if (error->domain == G_IO_ERROR &&
-	    error->code == G_IO_ERROR_NOT_MOUNTED) {
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED)) {
 		GMountOperation *operation;
 
 		operation = ev_mount_operation_new (GTK_WINDOW (ev_window));
@@ -1700,8 +1699,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 					       (GAsyncReadyCallback)mount_volume_ready_cb,
 					       ev_window);
 		g_object_unref (operation);
-	} else if (error->domain == G_IO_ERROR &&
-		   error->code == G_IO_ERROR_CANCELLED) {
+	} else if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
 		ev_window_clear_load_job (ev_window);
 		ev_window_clear_local_uri (ev_window);
 		g_free (ev_window->priv->uri);
@@ -1889,8 +1887,7 @@ reload_remote_copy_ready_cb (GFile        *remote,
 	
 	g_file_copy_finish (remote, async_result, &error);
 	if (error) {
-		if (error->domain != G_IO_ERROR ||
-		    error->code != G_IO_ERROR_CANCELLED)
+		if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 			ev_window_error_message (ev_window, error,
 						 "%s", _("Failed to reload document."));
 		g_error_free (error);
@@ -2412,8 +2409,7 @@ window_save_file_copy_ready_cb (GFile        *src,
 		return;
 	}
 
-	if (error->domain != G_IO_ERROR ||
-	    error->code != G_IO_ERROR_CANCELLED) {
+	if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
 		gchar *name;
 		
 		name = g_file_get_basename (dst);
