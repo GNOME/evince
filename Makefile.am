@@ -15,6 +15,10 @@ if ENABLE_THUMBNAILER
 SUBDIRS += thumbnailer
 endif
 
+if ENABLE_PREVIEWER
+SUBDIRS += previewer
+endif
+
 NULL =
 
 pkgconfigdir = $(libdir)/pkgconfig

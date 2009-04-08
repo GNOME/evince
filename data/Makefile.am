@@ -18,8 +18,11 @@ uidir = $(pkgdatadir)
 ui_DATA =				\
 	evince-ui.xml			\
 	evince-toolbar.xml		\
-	hand-open.png			\
-	$(NULL)
+	hand-open.png
+
+if ENABLE_PREVIEWER
+ui_DATA += evince-previewer-ui.xml
+endif
 
 #
 # Desktop file

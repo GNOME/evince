@@ -121,6 +121,7 @@ PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIR
 PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0)
 
 if test "$os_win32" = no; then
@@ -275,6 +276,28 @@ AC_ARG_ENABLE(thumbnailer,
 	esac],
 	[ENABLE_THUMBNAILER=yes]) dnl Default value
 AM_CONDITIONAL(ENABLE_THUMBNAILER, test x$ENABLE_THUMBNAILER = "xyes")
+
+dnl Check for previewer build
+AC_ARG_ENABLE(previewer,
+	AC_HELP_STRING([--disable-previewer],[disable the GNOME Document Previewer]),
+	[case "${enableval}" in
+	yes) ENABLE_PREVIEWER=yes ;;
+	no) ENABLE_PREVIEWER=no ;;
+	*) AC_MSG_ERROR(bad value ${enableval} for --enable-previewer) ;;
+	esac],
+	[ENABLE_PREVIEWER=yes]) dnl Default value
+if test x$ENABLE_PREVIEWER = "xyes" ; then
+   PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED,
+	             [ENABLE_PREVIEWER=yes],[ENABLE_PREVIEWER=no])
+   if test x$ENABLE_PREVIEWER = "xno" ; then
+      AC_MSG_WARN([Previewer support is disabled since gtk+-unix-print $GTK_REQUIRED or higher was not found])
+   fi
+fi
+AM_CONDITIONAL(ENABLE_PREVIEWER, test x$ENABLE_PREVIEWER = "xyes")
+PREVIEWER_CFLAGS="$PREVIEWER_CFLAGS $DEBUG_FLAGS"
+PREVIEWER_LIBS="$PREVIEWER_LIBS -lz"
+AC_SUBST(PREVIEWER_CFLAGS)
+AC_SUBST(PREVIEWER_LIBS)
 
 dnl GConf configuration
 AM_GCONF_SOURCE_2
@@ -607,6 +630,7 @@ libmisc/Makefile
 libview/Makefile
 Makefile
 po/Makefile.in
+previewer/Makefile
 properties/Makefile
 shell/Makefile
 test/Makefile
@@ -625,6 +649,7 @@ Configure summary:
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
 	Thumbnailer........:  $ENABLE_THUMBNAILER
+	Previewer..........:  $ENABLE_PREVIEWER
 	Gtk-Doc Support....:  $enable_gtk_doc
 	Debug mode.........:  $enable_debug
 	GObj. Introspection:  $enable_introspection
