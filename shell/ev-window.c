@@ -1314,7 +1314,7 @@ ev_window_clear_local_uri (EvWindow *ev_window)
 }
 
 static void
-ev_window_clear_temp_file (EvWindow *ev_window)
+ev_window_clear_temp_symlink (EvWindow *ev_window)
 {
 	GFile *file, *tempdir;
 
@@ -1322,10 +1322,24 @@ ev_window_clear_temp_file (EvWindow *ev_window)
 		return;
 
 	file = g_file_new_for_uri (ev_window->priv->uri);
-	tempdir = g_file_new_for_path (g_get_tmp_dir ());
+	tempdir = g_file_new_for_path (ev_tmp_dir ());
 
 	if (g_file_has_prefix (file, tempdir)) {
-		g_file_delete (file, NULL, NULL);
+		GFileInfo *file_info;
+		GError    *error = NULL;
+
+		file_info = g_file_query_info (file,
+					       G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
+					       G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+					       NULL, &error);
+		if (file_info) {
+			if (g_file_info_get_is_symlink (file_info))
+				g_file_delete (file, NULL, NULL);
+			g_object_unref (file_info);
+		} else {
+			g_warning ("Error deleting temp symlink: %s\n", error->message);
+			g_error_free (error);
+		}
 	}
 
 	g_object_unref (file);
@@ -4741,6 +4755,8 @@ ev_window_dispose (GObject *object)
 	}
 
 	if (priv->uri) {
+		/* Delete the uri if it's a temp symlink (open a copy) */
+		ev_window_clear_temp_symlink (window);
 		g_free (priv->uri);
 		priv->uri = NULL;
 	}
