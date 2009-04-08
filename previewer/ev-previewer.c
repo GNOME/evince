@@ -43,9 +43,6 @@ static void
 ev_previewer_unlink_tempfile (const gchar *filename)
 {
 	GFile *file, *tempdir;
-	
-	if (!unlink_temp_file)
-		return;
 
 	file = g_file_new_for_path (filename);
 	tempdir = g_file_new_for_path (g_get_tmp_dir ());
@@ -158,7 +155,10 @@ main (gint argc, gchar **argv)
 	
 	gtk_main ();
 
-	ev_previewer_unlink_tempfile (filename);
+	if (unlink_temp_file)
+		ev_previewer_unlink_tempfile (filename);
+	if (print_settings)
+		ev_previewer_unlink_tempfile (print_settings);
 
 	ev_shutdown ();
 	ev_stock_icons_shutdown ();
