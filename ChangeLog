@@ -1,3 +1,8 @@
+2009-04-09  Benjamin Berg  <benjamin@sipsolutions.net>
+
+	* backend/dvi/cairo-device.c: (dvi_cairo_put_pixel):
+	Fix output on big endian machines. Fixes bug #578433.
+
 2009-04-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* backend/tiff/tiff2ps.c (tiff2ps_context_new):

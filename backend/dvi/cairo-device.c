@@ -247,16 +247,14 @@ dvi_cairo_put_pixel (void *image, int x, int y, Ulong color)
 {
 	cairo_surface_t *surface;
 	gint             rowstride;
-	guchar          *p;
+	guint32         *p;
 
 	surface = (cairo_surface_t *) image;
 
 	rowstride = cairo_image_surface_get_stride (surface);
-	p = cairo_image_surface_get_data (surface) + y * rowstride + x * 4;
+	p = (guint32*) (cairo_image_surface_get_data (surface) + y * rowstride + x * 4);
 
-	p[2] = (color >> 16) & 0xff;
-	p[1] = (color >> 8) & 0xff;
-	p[0] = (color >> 0) & 0xff;
+	*p = color;
 }
 
 static void
