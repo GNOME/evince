@@ -392,6 +392,7 @@ main (int argc, char *argv[])
 	gtk_main ();
 
 	ev_shutdown ();
+	ev_stock_icons_shutdown ();
 
 	return 0;
 }

@@ -6,12 +6,12 @@
  * Author:
  *   Martin Kretzschmar <Martin.Kretzschmar@inf.tu-dresden.de>
  *
- * GPdf is free software; you can redistribute it and/or modify it
+ * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * GPdf is distributed in the hope that it will be useful, but WITHOUT
+ * Evince is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
  * License for more details.
@@ -39,7 +39,10 @@ G_BEGIN_DECLS
 #define EV_STOCK_RUN_PRESENTATION       "x-office-presentation"
 #define EV_STOCK_VISIBLE                "eye"
 
-void ev_stock_icons_init (void);
+void ev_stock_icons_init                      (void);
+void ev_stock_icons_shutdown                  (void);
+void ev_stock_icons_add_icons_path            (void);
+void ev_stock_icons_add_icons_path_for_screen (GdkScreen *screen);
 
 G_END_DECLS
 

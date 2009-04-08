@@ -1,9 +1,28 @@
+2009-04-08  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* configure.ac:
+	* Makefile.am:
+	* po/POTFILES.in:
+	* shell/Makefile.am:
+	* shell/ev-page-action-widget.[ch]:
+	* shell/ev-page-action.[ch]:
+	* shell/ev-stock-icons.[ch]:
+	* shell/ev-application.c:
+	* shell/main.c:
+	* libmisc/Makefile.am:
+	* libmisc/ev-page-action-widget.[ch]:
+	* libmisc/ev-page-action.[ch]:
+	* libmisc/ev-stock-icons.[ch]:
+
+	Move EvPageAction and EvStockIcons from shell to a new internal
+	library (libevmisc) that will be used by the evince previewer too.
+	
 2009-04-08  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* backend/tiff/tiff2ps.c (tiff2ps_context_new):
 	
 	Fixes memory leak. Bug #578285.
-
+	
 2009-04-06  Carlos Garcia Campos  <carlosgc@gnome.org>
 
 	* libview/ev-view.[ch]: (ev_view_set_zoom),
@@ -14,7 +33,7 @@
 	Move ev_view_update_view_size() from libview to ev-window again
 	and make sure the view is not redrawn when calling
 	ev_view_set_zoom more than once with the same zoom scale.
-	
+
 2009-04-05  Nickolay V. Shmyrev  <nshmyrev@yandex.ru>
 
 	* shell/ev-window.c:

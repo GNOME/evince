@@ -14,6 +14,7 @@ INCLUDES=							\
 	-I$(top_builddir)/libdocument				\
 	-I$(top_srcdir)/libview					\
 	-I$(top_builddir)/libview				\
+	-I$(top_srcdir)/libmisc					\
 	-I$(top_srcdir)/properties				\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
@@ -53,10 +54,6 @@ evince_SOURCES=				\
 	ev-navigation-action.h		\
 	ev-navigation-action-widget.c	\
 	ev-navigation-action-widget.h	\
-	ev-page-action.c		\
-	ev-page-action.h		\
-	ev-page-action-widget.c		\
-	ev-page-action-widget.h		\
 	ev-password-view.h		\
 	ev-password-view.c		\
 	ev-print-operation.h		\
@@ -87,8 +84,6 @@ evince_SOURCES=				\
 	ev-sidebar-page.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
-	ev-stock-icons.c		\
-	ev-stock-icons.h		\
 	main.c
 
 evince_LDADD=										\
@@ -102,6 +97,7 @@ evince_LDADD=										\
 	$(top_builddir)/properties/libevproperties.la					\
 	$(top_builddir)/libdocument/libevdocument.la					\
 	$(top_builddir)/libview/libevview.la						\
+	$(top_builddir)/libmisc/libevmisc.la						\
 	$(SHELL_LIBS)
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c

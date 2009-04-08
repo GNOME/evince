@@ -18,7 +18,7 @@
  *
  */
 
-#include "ev-page-cache.h"
+#include <evince-view.h>
  
 #include <gtk/gtk.h>
 

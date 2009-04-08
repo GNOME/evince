@@ -603,6 +603,7 @@ help/reference/shell/Makefile
 help/reference/shell/version.xml
 libdocument/Makefile
 libdocument/ev-version.h
+libmisc/Makefile
 libview/Makefile
 Makefile
 po/Makefile.in

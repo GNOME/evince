@@ -29,11 +29,7 @@
 #include <gtk/gtk.h>
 
 #include "ev-page-action.h"
-#include "ev-page-cache.h"
-#include "ev-window.h"
-#include "ev-document-links.h"
 #include "ev-page-action-widget.h"
-#include "ev-marshal.h"
 
 struct _EvPageActionPrivate
 {

@@ -4,6 +4,7 @@ SUBDIRS = \
 	libdocument \
 	backend \
 	libview \
+	libmisc \
 	properties \
 	shell \
 	po \

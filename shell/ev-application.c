@@ -40,6 +40,7 @@
 #include "ev-file-helpers.h"
 #include "ev-metadata-manager.h"
 #include "ev-utils.h"
+#include "ev-stock-icons.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
@@ -50,8 +51,7 @@
 #include "ev-application-service.h"
 #endif
 
-static void ev_application_add_icon_path_for_screen (GdkScreen     *screen);
-static void ev_application_save_print_settings      (EvApplication *application);
+static void ev_application_save_print_settings (EvApplication *application);
 
 struct _EvApplication {
 	GObject base_instance;
@@ -454,9 +454,9 @@ ev_application_open_window (EvApplication  *application,
 	}
 	
 	if (screen) {
+		ev_stock_icons_add_icons_path_for_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
-	ev_application_add_icon_path_for_screen (screen);
 
 	if (!GTK_WIDGET_REALIZED (new_window))
 		gtk_widget_realize (new_window);
@@ -545,37 +545,6 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 	return uri_window;
 }
 
-static void
-ev_application_add_icon_path_for_screen (GdkScreen *screen)
-{
-	GtkIconTheme *icon_theme;
-
-	icon_theme = screen ? gtk_icon_theme_get_for_screen (screen) : gtk_icon_theme_get_default ();
-	if (icon_theme) {
-		gchar **path = NULL;
-		gint    n_paths;
-		gint    i;
-		gchar  *ev_icons_path;
-
-		/* GtkIconTheme will then look in Evince custom hicolor dir
-		 * for icons as well as the standard search paths
-		 */
-		ev_icons_path = g_build_filename (DATADIR, "icons", NULL);
-		gtk_icon_theme_get_search_path (icon_theme, &path, &n_paths);
-		for (i = n_paths - 1; i >= 0; i--) {
-			if (g_ascii_strcasecmp (ev_icons_path, path[i]) == 0)
-				break;
-		}
-
-		if (i < 0)
-			gtk_icon_theme_append_search_path (icon_theme,
-							   ev_icons_path);
-
-		g_free (ev_icons_path);
-		g_strfreev (path);
-	}	
-}
-
 /**
  * ev_application_open_uri_at_dest:
  * @application: The instance of the application.
@@ -601,8 +570,6 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	g_return_if_fail (uri != NULL);
 	
-	ev_application_add_icon_path_for_screen (screen);
-
 	new_window = ev_application_get_uri_window (application, uri);
 	
 	if (new_window == NULL) {
@@ -613,8 +580,10 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 		new_window = EV_WINDOW (ev_window_new ());
 	}
 
-	if (screen)
+	if (screen) {
+		ev_stock_icons_add_icons_path_for_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
+	}
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
