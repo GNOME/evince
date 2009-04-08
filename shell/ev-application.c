@@ -386,48 +386,6 @@ get_find_string_from_args (GHashTable *args)
 }
 
 /**
- * get_unlink_temp_file_from_args:
- * @args: a #GHashTable with data passed to the application.
- *
- * It does look if the unlink-temp-file option has been passed from the command
- * line returning it's boolean representation, otherwise it does return %FALSE.
- *
- * Returns: the boolean representation of the unlink-temp-file value or %FALSE
- *          in other case.
- */
-static gboolean
-get_unlink_temp_file_from_args (GHashTable *args)
-{
-	gboolean unlink_temp_file = FALSE;
-	GValue  *value = NULL;
-
-	g_assert (args != NULL);
-
-	value = g_hash_table_lookup (args, "unlink-temp-file");
-	if (value) {
-		unlink_temp_file = g_value_get_boolean (value);
-	}
-	
-	return unlink_temp_file;
-}
-
-static const gchar *
-get_print_settings_from_args (GHashTable *args)
-{
-	const gchar *print_settings = NULL;
-	GValue      *value = NULL;
-
-	g_assert (args != NULL);
-
-	value = g_hash_table_lookup (args, "print-settings");
-	if (value) {
-		print_settings = g_value_get_string (value);
-	}
-
-	return print_settings;
-}
-
-/**
  * ev_application_open_window:
  * @application: The instance of the application.
  * @args: A #GHashTable with the arguments data.
@@ -552,7 +510,6 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
  * @screen: Thee screen where the link will be shown.
  * @dest: The #EvLinkDest of the document.
  * @mode: The run mode of the window.
- * @unlink_temp_file: The unlink_temp_file option value.
  * @timestamp: Current time value.
  */
 void
@@ -562,8 +519,6 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 EvLinkDest     *dest,
 				 EvWindowRunMode mode,
 				 const gchar    *search_string,
-				 gboolean        unlink_temp_file,
-				 const gchar    *print_settings, 
 				 guint           timestamp)
 {
 	EvWindow *new_window;
@@ -587,8 +542,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */	
-	ev_window_open_uri (new_window, uri, dest, mode, search_string, 
-			    unlink_temp_file, print_settings);
+	ev_window_open_uri (new_window, uri, dest, mode, search_string);
 
 	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (new_window)))
 		gtk_widget_realize (GTK_WIDGET (new_window));
@@ -626,8 +580,6 @@ ev_application_open_uri (EvApplication  *application,
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 	const gchar     *search_string = NULL;
-	gboolean         unlink_temp_file = FALSE;
-	const gchar     *print_settings = NULL;
 	GdkScreen       *screen = NULL;
 
 	if (args) {
@@ -635,15 +587,11 @@ ev_application_open_uri (EvApplication  *application,
 		dest = get_destination_from_args (args);
 		mode = get_window_run_mode_from_args (args);
 		search_string = get_find_string_from_args (args);
-		unlink_temp_file = (mode == EV_WINDOW_MODE_PREVIEW &&
-				    get_unlink_temp_file_from_args (args));
-		print_settings = get_print_settings_from_args (args);
 	}
 	
 	ev_application_open_uri_at_dest (application, uri, screen,
 					 dest, mode, search_string,
-					 unlink_temp_file,
-					 print_settings, timestamp);
+					 timestamp);
 
 	if (dest)
 		g_object_unref (dest);
@@ -662,7 +610,7 @@ ev_application_open_uri_list (EvApplication *application,
 	for (l = uri_list; l != NULL; l = l->next) {
 		ev_application_open_uri_at_dest (application, (char *)l->data,
 						 screen, NULL, 0, NULL,
-						 FALSE, NULL, timestamp);
+						 timestamp);
 	}
 }
 

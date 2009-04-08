@@ -69,8 +69,6 @@ void              ev_application_open_uri_at_dest    (EvApplication   *applicati
 						      EvLinkDest      *dest,
 						      EvWindowRunMode  mode,
 						      const gchar     *search_string,
-						      gboolean         unlink_temp_file,
-						      const gchar     *print_settings, 
 						      guint32          timestamp);
 void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,

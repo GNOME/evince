@@ -1,5 +1,25 @@
 2009-04-08  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* data/evince-ui.xml:
+	* shell/ev-application.[ch]: (ev_application_open_uri_at_dest),
+	(ev_application_open_uri), (ev_application_open_uri_list):
+	* shell/ev-print-operation.c: (export_print_done):
+	* shell/ev-window.[ch]: (ev_window_setup_action_sensitivity),
+	(update_chrome_visibility), (ev_window_clear_local_uri),
+	(ev_window_load_job_cb), (window_open_file_copy_ready_cb),
+	(ev_window_open_uri), (ev_window_cmd_file_open_copy_at_dest),
+	(ev_window_cmd_recent_file_activate),
+	(ev_window_open_recent_action_item_activated),
+	(ev_window_dispose), (open_remote_link):
+	* shell/main.c: (launch_previewer), (arguments_parse), (main):
+
+	Remove the preview mode from EvWindow. EvPrintOperation now 
+	launches evince-previewer. The preview mode command line options
+	have not been removed to keep backwards compatibility, launching
+	evince-previewer when evince is run in preview mode.
+	
+2009-04-08  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* configure.ac:
 	* Makefile.am:
 	* data/Makefile.am:

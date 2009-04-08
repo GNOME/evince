@@ -76,6 +76,62 @@ static const GOptionEntry goption_options[] =
 	{ NULL }
 };
 
+static gboolean
+launch_previewer (void)
+{
+	GString *cmd_str;
+	gchar   *cmd;
+	gint     argc;
+	gchar  **argv;
+	gboolean retval = FALSE;
+	GError  *error = NULL;
+
+	/* Rebuild the command line, ignoring options
+	 * not supported by the previewer and taking only
+	 * the first path given
+	 */
+	cmd_str = g_string_new ("evince-previewer");
+		
+	if (print_settings) {
+		gchar *quoted;
+
+		quoted = g_shell_quote (print_settings);
+		g_string_append_printf (cmd_str, " --print-settings %s", quoted);
+		g_free (quoted);
+	}
+
+	if (unlink_temp_file)
+		g_string_append (cmd_str, " --unlink-tempfile");
+
+	if (file_arguments) {
+		gchar *quoted;
+		
+		quoted = g_shell_quote (file_arguments[0]);
+		g_string_append_printf (cmd_str, " %s", quoted);
+		g_free (quoted);
+	}
+
+	cmd = g_string_free (cmd_str, FALSE);
+	g_shell_parse_argv (cmd, &argc, &argv, &error);
+	g_free (cmd);
+	
+	if (!error) {
+		retval = gdk_spawn_on_screen (gdk_screen_get_default (),
+					      NULL, argv, NULL,
+					      G_SPAWN_SEARCH_PATH,
+					      NULL, NULL, NULL,
+					      &error);
+		g_strfreev (argv);
+	}
+
+	if (error) {
+		g_warning ("Error launching previewer: %s\n", error->message);
+		g_error_free (error);
+	}
+
+	return retval;
+}
+
 static void
 value_free (GValue *value)
 {
@@ -96,8 +152,6 @@ value_free (GValue *value)
  *                          the page of the document to display.
  *  mode                ->  only if the view mode is one of the availables,
  *                          the view mode.
- *  unlink-temp-file    ->  only if the view mode is preview mode and
- *                          unlink-temp-file has been passed, unlink-temp-file.
  *
  * Returns: a pointer into #GHashTable with data from the arguments.
  */
@@ -159,8 +213,6 @@ arguments_parse (void)
 		mode = EV_WINDOW_MODE_FULLSCREEN;
 	else if (presentation_mode)
 		mode = EV_WINDOW_MODE_PRESENTATION;
-	else if (preview_mode)
-		mode = EV_WINDOW_MODE_PREVIEW;
 	else
 		return args;
 
@@ -169,28 +221,6 @@ arguments_parse (void)
 	g_value_set_uint (value, mode);
 
 	g_hash_table_insert (args, g_strdup ("mode"), value);
-
-	if (mode == EV_WINDOW_MODE_PREVIEW && unlink_temp_file) {
-		value = g_new0 (GValue, 1);
-		g_value_init (value, G_TYPE_BOOLEAN);
-		g_value_set_boolean (value, unlink_temp_file);
-
-		g_hash_table_insert (args,
-				     g_strdup ("unlink-temp-file"),
-				     value);
-	}
-
-	if (mode == EV_WINDOW_MODE_PREVIEW && print_settings) {
-		value = g_new0 (GValue, 1);
-		g_value_init (value, G_TYPE_STRING);
-		g_value_set_string (value, print_settings);
-
-		g_hash_table_insert (args,
-				     g_strdup ("print-settings"),
-				     value);
-		g_free (print_settings);
-		print_settings = NULL;
-	}
 
 	return args;
 }
@@ -359,6 +389,14 @@ main (int argc, char *argv[])
 		return 1;
 	}
 	g_option_context_free (context);
+
+	if (preview_mode) {
+		gboolean retval;
+		
+		retval = launch_previewer ();
+		
+		return retval ? 0 : 1;
+	}
 
 	args = arguments_parse ();
 

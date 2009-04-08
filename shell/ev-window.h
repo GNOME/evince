@@ -34,8 +34,7 @@ G_BEGIN_DECLS
 typedef enum {
 	EV_WINDOW_MODE_NORMAL,
 	EV_WINDOW_MODE_FULLSCREEN,
-	EV_WINDOW_MODE_PRESENTATION,
-	EV_WINDOW_MODE_PREVIEW
+	EV_WINDOW_MODE_PRESENTATION
 } EvWindowRunMode;
 
 typedef struct {
@@ -77,9 +76,7 @@ void		ev_window_open_uri	  (EvWindow       *ev_window,
 					   const char     *uri,
 					   EvLinkDest     *dest,
 					   EvWindowRunMode mode,
-					   const gchar    *search_string,
-					   gboolean        unlink_temp_file,
-					   const gchar    *print_settings);
+					   const gchar    *search_string);
 gboolean	ev_window_is_empty	  (const EvWindow *ev_window);
 void		ev_window_print_range     (EvWindow       *ev_window,
 					   int             first_page,

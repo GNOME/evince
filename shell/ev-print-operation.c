@@ -743,6 +743,7 @@ export_print_done (EvPrintOperationExport *export)
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 	GtkPrintSettings *settings;
 	EvFileExporterCapabilities capabilities;
+	GError *error = NULL;
 
 	g_assert (export->temp_file != NULL);
 	
@@ -773,49 +774,79 @@ export_print_done (EvPrintOperationExport *export)
 	}
 
 	if (export->print_preview) {
-		gchar *uri;
-		gchar *print_settings_file = NULL;
+		GKeyFile *key_file;
+		gchar    *data = NULL;
+		gsize     data_len;
+		gchar    *print_settings_file = NULL;
 
-		print_settings_file = ev_tmp_filename ("print-settings");
-		gtk_print_settings_to_file (settings, print_settings_file, NULL);
+		key_file = g_key_file_new ();
 
-		uri = g_filename_to_uri (export->temp_file, NULL, NULL);
-		ev_application_open_uri_at_dest (EV_APP,
-						 uri,
-						 gtk_window_get_screen (export->parent_window),
-						 NULL,
-						 EV_WINDOW_MODE_PREVIEW,
-						 NULL,
-						 TRUE,
-						 print_settings_file,
-						 GDK_CURRENT_TIME);
-		g_free (print_settings_file);
-		g_free (uri);
+		gtk_print_settings_to_key_file (settings, key_file, NULL);
+		gtk_page_setup_to_key_file (export->page_setup, key_file, NULL);
+		g_key_file_set_string (key_file, "Print Job", "title", export->job_name);
 
-		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_APPLY);
-		/* temp_file will be deleted by the previewer */
+		data = g_key_file_to_data (key_file, &data_len, &error);
+		if (data) {
+			gint fd;
+			
+			fd = g_file_open_tmp ("print-settingsXXXXXX", &print_settings_file, &error);
+			if (!error)
+				g_file_set_contents (print_settings_file, data, data_len, &error);
+			close (fd);
+			
+			g_free (data);
+		}
 
-		ev_print_operation_export_run_next (export);
+		g_key_file_free (key_file);
+
+		if (!error) {
+			gint    argc;
+			gchar **argv;
+			gchar  *cmd;
+			gchar  *quoted_filename;
+			gchar  *quoted_settings_filename;
+
+			quoted_filename = g_shell_quote (export->temp_file);
+			quoted_settings_filename = g_shell_quote (print_settings_file);
+			cmd = g_strdup_printf ("evince-previewer --unlink-tempfile --print-settings %s %s",
+					       quoted_settings_filename, quoted_filename);
+
+			g_shell_parse_argv (cmd, &argc, &argv, &error);
+
+			g_free (quoted_filename);
+			g_free (quoted_settings_filename);
+			g_free (cmd);
+
+			if (!error) {
+				gdk_spawn_on_screen (gtk_window_get_screen (export->parent_window),
+						     NULL, argv, NULL,
+						     G_SPAWN_SEARCH_PATH,
+						     NULL, NULL, NULL,
+						     &error);
+			}
+
+			g_strfreev (argv);
+		}
+
+		if (error) {
+			if (print_settings_file)
+				g_unlink (print_settings_file);
+			g_free (print_settings_file);
+		} else {
+			g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_APPLY);
+			/* temp_file will be deleted by the previewer */
+
+			ev_print_operation_export_run_next (export);
+		}
 	} else {
 		GtkPrintJob *job;
-		GError      *error = NULL;
 		
 		job = gtk_print_job_new (export->job_name,
 					 export->printer,
 					 settings,
 					 export->page_setup);
 		gtk_print_job_set_source_file (job, export->temp_file, &error);
-		if (error) {
-			g_set_error_literal (&export->error,
-					     GTK_PRINT_ERROR,
-					     GTK_PRINT_ERROR_GENERAL,
-					     error->message);
-			g_error_free (error);
-			ev_print_operation_export_clear_temp_file (export);
-			g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
-
-			ev_print_operation_export_run_next (export);
-		} else {
+		if (!error){
 			gtk_print_job_send (job,
 					    (GtkPrintJobCompleteFunc)print_job_finished,
 					    g_object_ref (export),
@@ -823,6 +854,18 @@ export_print_done (EvPrintOperationExport *export)
 		}
 	}
 	g_object_unref (settings);
+
+	if (error) {
+		g_set_error_literal (&export->error,
+				     GTK_PRINT_ERROR,
+				     GTK_PRINT_ERROR_GENERAL,
+				     error->message);
+		g_error_free (error);
+		ev_print_operation_export_clear_temp_file (export);
+		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
+
+		ev_print_operation_export_run_next (export);
+	}
 }
 
 static void
