@@ -21,12 +21,7 @@
 
 #include "ev-print-operation.h"
 
-#if GTK_CHECK_VERSION (2, 14, 0)
 #include <gtk/gtkunixprint.h>
-#else
-#include <gtk/gtkprintunixdialog.h>
-#endif
-
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <unistd.h>

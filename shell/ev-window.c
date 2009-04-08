@@ -38,11 +38,8 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#if GTK_CHECK_VERSION (2, 14, 0)
 #include <gtk/gtkunixprint.h>
-#else
-#include <gtk/gtkprintunixdialog.h>
-#endif
+
 #ifdef WITH_GCONF
 #include <gconf/gconf-client.h>
 #endif
@@ -73,7 +70,6 @@
 #include "ev-jobs.h"
 #include "ev-message-area.h"
 #include "ev-metadata-manager.h"
-#include "ev-mount-operation.h"
 #include "ev-navigation-action.h"
 #include "ev-open-recent-action.h"
 #include "ev-page-action.h"
@@ -1692,7 +1688,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_MOUNTED)) {
 		GMountOperation *operation;
 
-		operation = ev_mount_operation_new (GTK_WINDOW (ev_window));
+		operation = gtk_mount_operation_new (GTK_WINDOW (ev_window));
 		g_file_mount_enclosing_volume (source,
 					       G_MOUNT_MOUNT_NONE,
 					       operation, NULL,
@@ -3793,7 +3789,6 @@ ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 	ev_view_autoscroll_start (EV_VIEW (ev_window->priv->view));
 }
 
-#if GTK_CHECK_VERSION (2, 14, 0)
 static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
@@ -3809,56 +3804,6 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 		g_error_free (error);
 	}
 }
-#else /* !GTK_CHECK_VERSION (2, 14, 0) */
-static void
-ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
-{
-	GError *error = NULL;
-	GdkScreen *screen;
-	char *command;
-	const char *lang;
-	char *uri = NULL;
-
-	int i;
-
-	const char * const * langs = g_get_language_names ();
-
-	for (i = 0; langs[i]; i++) {
-		lang = langs[i];
-		if (strchr (lang, '.')) {
-			continue;
-		}
-
-		uri = g_build_filename(GNOMEDATADIR,
-				       "/gnome/help/" PACKAGE,
-				       lang,
-				       "/evince.xml",
-				       NULL);
-					
-		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
-			break;
-		}
-		g_free (uri);
-		uri = NULL;
-	}
-
-	if (uri == NULL) {
-		g_warning ("Cannot find help");
-		return;
-	}
-	
-	command = g_strconcat ("gnome-help ghelp://", uri,  NULL);
-	g_free (uri);
-	
-	screen = gtk_widget_get_screen (GTK_WIDGET (ev_window));
-	gdk_spawn_command_line_on_screen (screen, command, &error);
-	if (error != NULL) {
-		g_warning ("%s", error->message);
-		g_error_free (error);
-	}
-	g_free (command);
-}
-#endif /* GTK_CHECK_VERSION (2, 14, 0) */
 
 static void
 ev_window_cmd_leave_fullscreen (GtkAction *action, EvWindow *window)
@@ -5250,7 +5195,7 @@ launch_action (EvWindow *window, EvLinkAction *action)
 	GAppInfo *app_info;
 	GFile *file;
 	GList file_list = {NULL};
-	GAppLaunchContext *context = NULL;
+	GAppLaunchContext *context;
 	GError *error = NULL;
 
 	if (filename == NULL)
@@ -5281,12 +5226,10 @@ launch_action (EvWindow *window, EvLinkAction *action)
 		return;
 	}
 
-#if GTK_CHECK_VERSION (2, 14, 0)
 	context = G_APP_LAUNCH_CONTEXT (gdk_app_launch_context_new ());
 	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context),
 					   gtk_window_get_screen (GTK_WINDOW (window)));
 	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context), GDK_CURRENT_TIME);
-#endif
 	
 	file_list.data = file;
 	if (!g_app_info_launch (app_info, &file_list, context, &error)) {
@@ -5309,17 +5252,13 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 	const gchar *uri = ev_link_action_get_uri (action);
 	GError *error = NULL;
 	gboolean ret;
-#if GTK_CHECK_VERSION (2, 14, 0)
-	GAppLaunchContext *context = NULL;
-#endif
+	GAppLaunchContext *context;
 
-#if GTK_CHECK_VERSION (2, 14, 0)
 	context = G_APP_LAUNCH_CONTEXT (gdk_app_launch_context_new ());
 	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context),
 					   gtk_window_get_screen (GTK_WINDOW (window)));
 	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context),
 					      GDK_CURRENT_TIME);
-#endif
 
 	if (!g_strstr_len (uri, strlen (uri), "://") &&
 	    !g_str_has_prefix (uri, "mailto:")) {

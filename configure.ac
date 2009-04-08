@@ -108,7 +108,7 @@ dnl Check dependencies
 # SHELL_LIBS
 
 DBUS_GLIB_REQUIRED=0.70
-GTK_REQUIRED=2.12.0
+GTK_REQUIRED=2.14.0
 GLIB_REQUIRED=2.18.0
 KEYRING_REQUIRED=2.22.0
 AC_SUBST([GLIB_REQUIRED])
@@ -590,7 +590,6 @@ backend/pixbuf/Makefile
 backend/ps/Makefile
 backend/tiff/Makefile
 cut-n-paste/Makefile
-cut-n-paste/evmountoperation/Makefile
 cut-n-paste/gedit-message-area/Makefile
 cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/smclient/Makefile
