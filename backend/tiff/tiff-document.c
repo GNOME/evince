@@ -260,10 +260,10 @@ tiff_document_render (EvDocument      *document,
 	rowstride = cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, width);
 #else
 	rowstride = width * 4;
-	if (rowstride / 4 != width)
-		/* overflow */
-		return NULL;                
 #endif
+	if (rowstride / 4 != width)
+		/* overflow, or cairo was changed in an unsupported way */
+		return NULL;                
 	
 	bytes = height * rowstride;
 	if (bytes / rowstride != height)
@@ -292,16 +292,15 @@ tiff_document_render (EvDocument      *document,
 	*/
 	p = pixels;
 	while (p < pixels + bytes) {
-		uint32 pixel = *(uint32 *)p;
-		int r = TIFFGetR(pixel);
-		int g = TIFFGetG(pixel);
-		int b = TIFFGetB(pixel);
-		int a = TIFFGetA(pixel);
-		
-		*p++ = b;
-		*p++ = g;
-		*p++ = r;
-		*p++ = a;
+		guint32 *pixel = (guint32*)p;
+		guint8 r = TIFFGetR(*pixel);
+		guint8 g = TIFFGetG(*pixel);
+		guint8 b = TIFFGetB(*pixel);
+		guint8 a = TIFFGetA(*pixel);
+
+		*pixel = (a << 24) | (r << 16) | (g << 8) | b;
+
+		p += 4;
 	}
 
 	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,

@@ -1,3 +1,8 @@
+2009-04-09  Benjamin Berg  <benjamin@sipsolutions.net>
+
+	* backend/tiff/tiff-document.c: (tiff_document_render):
+	Fix tiff pixel conversion on big endian machines. Fixes bug #509920.
+
 2009-04-08  Dan Winship  <danw@gnome.org>
  
 	* cut-n-paste/smclient/eggsmclient-xsmp.c (save_state):
