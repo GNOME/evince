@@ -1,5 +1,10 @@
 2009-04-09  Benjamin Berg  <benjamin@sipsolutions.net>
 
+	* backend/tiff/tiff-document.c: (tiff_document_render):
+	Fix tiff pixel conversion on big endian machines. Fixes bug #509920.
+
+2009-04-09  Benjamin Berg  <benjamin@sipsolutions.net>
+
 	* backend/dvi/cairo-device.c: (dvi_cairo_put_pixel):
 	Fix output on big endian machines. Fixes bug #578433.
 
