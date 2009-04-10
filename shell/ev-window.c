@@ -2069,10 +2069,11 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 static gchar *
 ev_window_create_tmp_symlink (const gchar *filename, GError **error)
 {
-	gchar *tmp_filename = NULL;
-	gchar *name;
-	gint   res;
-	guint  i = 0;
+	gchar  *tmp_filename = NULL;
+	gchar  *name;
+	guint   i = 0;
+	GError *link_error = NULL;
+	GFile  *tmp_file = NULL;
 
 	name = g_path_get_basename (filename);
 	
@@ -2081,29 +2082,32 @@ ev_window_create_tmp_symlink (const gchar *filename, GError **error)
 
 		if (tmp_filename)
 			g_free (tmp_filename);
+		if (tmp_file)
+			g_object_unref (tmp_file);
+		g_clear_error (&link_error);
 
 		basename = g_strdup_printf ("%s-%d", name, i++);
 		tmp_filename = g_build_filename (ev_tmp_dir (),
 						 basename, NULL);
 		
 		g_free (basename);
-	} while ((res = symlink (filename, tmp_filename)) != 0 && errno == EEXIST);
-
-	g_free (name);
+		tmp_file = g_file_new_for_path (tmp_filename);
+	} while (!g_file_make_symbolic_link (tmp_file, filename, NULL, &link_error) &&
+		 g_error_matches (link_error, G_IO_ERROR, G_IO_ERROR_EXISTS));
 	
-	if (res != 0 && errno != EEXIST) {
-		if (error) {
-			*error = g_error_new (G_FILE_ERROR,
-					      g_file_error_from_errno (errno),
-					      _("Couldn't create symlink “%s”: %s"),
-					      tmp_filename, strerror (errno));
-		}
+	g_free (name);
+	g_object_unref (tmp_file);
 
+	if (link_error) {
+		g_propagate_prefixed_error (error, 
+					    link_error,
+					    _("Couldn't create symlink “%s”: "),
+					    tmp_filename);
 		g_free (tmp_filename);
-
+		
 		return NULL;
 	}
-	
+
 	return tmp_filename;
 }
 
