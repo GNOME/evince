@@ -1,3 +1,11 @@
+2009-04-10  Carlos Garcia Campos  <carlosgc@gnome.org>
+
+	* properties/ev-properties-main.c: (ev_properties_get_pages):
+
+	Create and load the document based on the mime-type provided by
+	nautilus instead of using our own documents factory. Fixes bug
+	#533917.
+	
 2009-04-09  Benjamin Berg  <benjamin@sipsolutions.net>
 
 	* backend/tiff/tiff-document.c: (tiff_document_render):

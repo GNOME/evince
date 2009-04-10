@@ -89,7 +89,8 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	EvDocument *document;
 	GList *pages = NULL;
 	NautilusFileInfo *file;
-	char *uri = NULL;
+	gchar *uri = NULL;
+	gchar *mime_type = NULL;
 	GtkWidget *page, *label;
 	NautilusPropertyPage *property_page;
 
@@ -100,16 +101,18 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 
 	/* okay, make the page */
 	uri = nautilus_file_info_get_uri (file);
-	document = ev_document_factory_get_document (uri, &error);
+	mime_type = nautilus_file_info_get_mime_type (file);
+	
+	document = ev_backends_manager_get_document (mime_type);
+	if (!document)
+		goto end;
 
+	ev_document_load (document, uri, &error);
 	if (error) {
 		g_error_free (error);
 		goto end;
 	}
 	
-	if (!document)
-		goto end;
-
 	label = gtk_label_new (_("Document"));
 	page = ev_properties_view_new (uri);
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (page),
@@ -123,6 +126,8 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 
 end:
 	g_free (uri);
+	g_free (mime_type);
+	
 	return pages;
 }
 
