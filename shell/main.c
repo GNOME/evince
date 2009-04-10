@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
@@ -409,7 +410,7 @@ main (int argc, char *argv[])
 		}
 	}
 #endif /* ENABLE_DBUS */
-
+	
         if (!ev_init ())
                 return 1;
 
@@ -426,6 +427,11 @@ main (int argc, char *argv[])
 	if (!ev_application_load_session (EV_APP))
 		load_files (file_arguments, args);
 	g_hash_table_destroy (args);
+
+	/* Change directory so we don't prevent unmounting in case the initial cwd
+	 * is on an external device (see bug #575436)
+	 */
+	g_chdir (g_get_home_dir ());	
 
 	gtk_main ();
 

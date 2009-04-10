@@ -1,5 +1,13 @@
 2009-04-10  Carlos Garcia Campos  <carlosgc@gnome.org>
 
+	* shell/main.c: (main):
+
+	Change process working directory to $HOME so that we don't prevent
+	unmounting in case the initial cwd is on an external device. Fixes
+	bug #575436.
+	
+2009-04-10  Carlos Garcia Campos  <carlosgc@gnome.org>
+
 	* shell/ev-window.c: (ev_window_create_tmp_symlink):
 
 	Use g_file_make_symbolic_link to create symlinks. Patch by Hib
