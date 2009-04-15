@@ -5,10 +5,12 @@
 import os
 os.environ['LANG']='C'
 srcdir = os.environ['srcdir']
+homedir = os.environ["HOME"] + "/";
 
 from dogtail.procedural import *
 
-os.unlink("output.ps")
+if os.path.exists(homedir + "output.ps"):
+    os.unlink(homedir + "output.ps")
 
 run('evince', arguments=' '+srcdir+'/test-page-labels.pdf')
 
@@ -19,10 +21,10 @@ focus.dialog('Print')
 click('Print to File', roleName='table cell', raw=True)
 click('Print', roleName='push button')
 
-statinfo = os.stat ("output.ps")
+statinfo = os.stat (homedir + "output.ps")
 if statinfo.st_size > 100000:
     exit(1)
-os.unlink ("output.ps")
+os.unlink (homedir + "output.ps")
 
 # Close evince
 click('File', roleName='menu')
