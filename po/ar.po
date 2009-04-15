@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Yousef Raffah <yousef@raffah.com>, 2006.
-# Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007, 2008.
+# Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007, 2008, 2009.
 # Usama Akkad <uak@aya.sy>, 2008.
 msgid ""
 msgstr ""
@@ -11,8 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
 "POT-Creation-Date: 2009-03-16 22:32+0000\n"
-"PO-Revision-Date: 2008-09-18 08:23+0300\n"
-"Last-Translator: Usama Akkad <uak@aya.sy>\n"
+"PO-Revision-Date: 2009-04-15 13:17+0200\n"
+"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,16 +30,15 @@ msgstr "نوع MIME غير معروف"
 #: ../backend/comics/comics-document.c:165
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr ""
+msgstr "ليس نوع MIME كتاب قصص مصوّرة: %s"
 
 #: ../backend/comics/comics-document.c:186
 msgid "File corrupted."
 msgstr "الملف معطوب."
 
 #: ../backend/comics/comics-document.c:198
-#, fuzzy
 msgid "No files in archive."
-msgstr "لا توجد صور في الأرشيف %s"
+msgstr "لا ملفات في الأرشيف"
 
 #: ../backend/comics/comics-document.c:230
 #, c-format
@@ -51,12 +50,10 @@ msgid "Comic Books"
 msgstr "كتب فكاهية"
 
 #: ../backend/djvu/djvu-document.c:174
-#, fuzzy
 msgid "DJVU document has incorrect format"
-msgstr "هيئة مستند DVI غير صحيحة"
+msgstr "هيئة مستند DJVU غير صحيحة"
 
 #: ../backend/djvu/djvu-document.c:251
-#, fuzzy
 msgid ""
 "The document is composed of several files. One or more of such files cannot "
 "be accessed."
@@ -202,12 +199,12 @@ msgstr "مستندات PostScript"
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
-msgstr "تعذر حفظ المرفق “%s”: %s"
+msgstr "تعذر حفظ المرفق “%s”:‏ %s"
 
 #: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
-msgstr "تعذر فتح المرفق “%s”: %s"
+msgstr "تعذر فتح المرفق “%s”:‏ %s"
 
 #: ../libdocument/ev-attachment.c:408
 #, c-format
@@ -215,9 +212,9 @@ msgid "Couldn't open attachment “%s”"
 msgstr "تعذر فتح المرفق “%s”"
 
 #: ../libdocument/ev-document-factory.c:168
-#, fuzzy, c-format
+#, c-format
 msgid "File type %s (%s) is not supported"
-msgstr "نوع الملف %s (%s) غير مدعوم"
+msgstr "نوع الملف %s ‏(%s) غير مدعوم"
 
 #: ../libdocument/ev-document-factory.c:359
 msgid "All Documents"
@@ -290,9 +287,9 @@ msgid "Unrecognized launch option: %d"
 msgstr "خيار hطلاق غير معروف: %d"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1373
-#, fuzzy, c-format
+#, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "لا يمكن تمرير عناوين المستندات إلى مُدخل 'النوع=الرابط' في desktop"
+msgstr "لا يمكن تمرير عناوين المستندات إلى مُدخل 'Type=Link' في ملف desktop"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -320,12 +317,10 @@ msgid "ID"
 msgstr "مُعرف"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:244
-#, fuzzy
 msgid "Session management options:"
-msgstr "خيارات إدارة الجلسة"
+msgstr "خيارات إدارة الجلسة:"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:245
-#, fuzzy
 msgid "Show session management options"
 msgstr "اعرض خيارات إدارة الجلسة"
 
@@ -445,73 +440,60 @@ msgid "Document"
 msgstr "مستند"
 
 #: ../properties/ev-properties-view.c:59
-#, fuzzy
 msgid "Title:"
-msgstr "_ملف"
+msgstr "العنوان:"
 
 #: ../properties/ev-properties-view.c:60
 msgid "Location:"
-msgstr ""
+msgstr "المكان:"
 
 #: ../properties/ev-properties-view.c:61
-#, fuzzy
 msgid "Subject:"
-msgstr "<b>الموضوع:</b>"
+msgstr "الموضوع:"
 
 #: ../properties/ev-properties-view.c:62
-#, fuzzy
 msgid "Author:"
-msgstr "<b>المؤلف:</b>"
+msgstr "المؤلف:"
 
 #: ../properties/ev-properties-view.c:63
-#, fuzzy
 msgid "Keywords:"
-msgstr "<b>كلمات مفتاحية:</b>"
+msgstr "كلمات مفتاحية:"
 
 #: ../properties/ev-properties-view.c:64
-#, fuzzy
 msgid "Producer:"
-msgstr "<b>المنتِج:</b>"
+msgstr "المنتِج:"
 
 #: ../properties/ev-properties-view.c:65
-#, fuzzy
 msgid "Creator:"
-msgstr "<b>منشئ الملف:</b>"
+msgstr "المنشئ:"
 
 #: ../properties/ev-properties-view.c:66
-#, fuzzy
 msgid "Created:"
-msgstr "<b>تاريخ الإنشاء:</b>"
+msgstr "تاريخ الإنشاء:"
 
 #: ../properties/ev-properties-view.c:67
-#, fuzzy
 msgid "Modified:"
-msgstr "<b>آخر تعديل:</b>"
+msgstr "آخر تعديل:"
 
 #: ../properties/ev-properties-view.c:68
-#, fuzzy
 msgid "Number of Pages:"
-msgstr "<b>عدد الصفحات:</b>"
+msgstr "عدد الصفحات:"
 
 #: ../properties/ev-properties-view.c:69
-#, fuzzy
 msgid "Optimized:"
-msgstr "<b>محسّن:</b>"
+msgstr "محسّن:"
 
 #: ../properties/ev-properties-view.c:70
-#, fuzzy
 msgid "Format:"
-msgstr "<b>الصيغة:</b>"
+msgstr "الهيئة:"
 
 #: ../properties/ev-properties-view.c:71
-#, fuzzy
 msgid "Security:"
-msgstr "<b>الأمن:</b>"
+msgstr "الأمن:"
 
 #: ../properties/ev-properties-view.c:72
-#, fuzzy
 msgid "Paper Size:"
-msgstr "<b>مقاس الورق:</b>"
+msgstr "مقاس الورق:"
 
 #: ../properties/ev-properties-view.c:202
 msgid "None"
@@ -737,34 +719,30 @@ msgid ""
 msgstr "المستند \"%s\" مقفل و يتطلب كلمة سر ليُفتح"
 
 #: ../shell/ev-password-view.c:365
-#, fuzzy
 msgid "Forget password _immediately"
 msgstr "ا_نْس كلمة السر فورا"
 
 #: ../shell/ev-password-view.c:377
-#, fuzzy
 msgid "Remember password until you _logout"
 msgstr "ت_ذكر كلمة السر حتى خروجي"
 
 #: ../shell/ev-password-view.c:389
-#, fuzzy
 msgid "Remember _forever"
 msgstr "ت_ذكر للأبد"
 
 #. Initial state
 #: ../shell/ev-print-operation.c:318
 msgid "Preparing to print ..."
-msgstr ""
+msgstr "يحضّر للطباعة..."
 
 #: ../shell/ev-print-operation.c:320
-#, fuzzy
 msgid "Finishing..."
-msgstr "ا_بحث..."
+msgstr "يُنهي..."
 
 #: ../shell/ev-print-operation.c:322
 #, c-format
 msgid "Printing page %d of %d..."
-msgstr ""
+msgstr "يطبع الصفحة %Id من %Id..."
 
 #: ../shell/ev-print-operation.c:1010
 msgid "Printing is not supported on this printer."
@@ -801,7 +779,7 @@ msgstr "مرفقات"
 
 #: ../shell/ev-sidebar-layers.c:395
 msgid "Layers"
-msgstr ""
+msgstr "الطبقات"
 
 #: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
@@ -836,22 +814,21 @@ msgstr "تعذر فتح المستند"
 #: ../shell/ev-window.c:1613
 #, c-format
 msgid "Loading document from %s"
-msgstr ""
+msgstr "يحمّل المستند من %s"
 
 #: ../shell/ev-window.c:1751 ../shell/ev-window.c:1944
 #, c-format
 msgid "Downloading document (%d%%)"
-msgstr ""
+msgstr "ينزّل المستند (%d%%)"
 
 #: ../shell/ev-window.c:1890
-#, fuzzy, c-format
+#, c-format
 msgid "Reloading document from %s"
-msgstr "أعد تحميل المستند"
+msgstr "يعيد تحميل المستند %s"
 
 #: ../shell/ev-window.c:1923
-#, fuzzy
 msgid "Failed to reload document."
-msgstr "تعذر طبع المستند"
+msgstr "تعذر إعادة تحميل المستند."
 
 #: ../shell/ev-window.c:2072
 msgid "Open Document"
@@ -860,26 +837,26 @@ msgstr "افتح مستند"
 #: ../shell/ev-window.c:2133
 #, c-format
 msgid "Couldn't create symlink “%s”: %s"
-msgstr "تعذر إنشاء الرابط الرمزي “%s”: %s"
+msgstr "تعذر إنشاء الرابط الرمزي “%s”:‏ %s"
 
 #: ../shell/ev-window.c:2162
 msgid "Cannot open a copy."
 msgstr "لا يمكن فتح نسخة."
 
 #: ../shell/ev-window.c:2402
-#, fuzzy, c-format
+#, c-format
 msgid "Saving document to %s"
-msgstr "صغّر المستند"
+msgstr "يحفظ المستند في %s"
 
 #: ../shell/ev-window.c:2405
-#, fuzzy, c-format
+#, c-format
 msgid "Saving attachment to %s"
-msgstr "احفظ الملف المرفق"
+msgstr "يحفظ المرفق في %s"
 
 #: ../shell/ev-window.c:2408
 #, c-format
 msgid "Saving image to %s"
-msgstr ""
+msgstr "يحفظ الصورة في %s"
 
 #: ../shell/ev-window.c:2453 ../shell/ev-window.c:2550
 #, c-format
@@ -889,17 +866,17 @@ msgstr "تعذر حفظ الملف باسم \"%s\""
 #: ../shell/ev-window.c:2481
 #, c-format
 msgid "Uploading document (%d%%)"
-msgstr ""
+msgstr "يرفع المستند (%d%%)"
 
 #: ../shell/ev-window.c:2485
 #, c-format
 msgid "Uploading attachment (%d%%)"
-msgstr ""
+msgstr "يرفع المرفق (%d%%)"
 
 #: ../shell/ev-window.c:2489
 #, c-format
 msgid "Uploading image (%d%%)"
-msgstr ""
+msgstr "يرفع الصورة (%d%%)"
 
 #: ../shell/ev-window.c:2596
 msgid "Save a Copy"
@@ -909,12 +886,12 @@ msgstr "احفظ نسخة"
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "لا مهام منتظرة في الطابور"
+msgstr[1] "مهمة واحدة تنتظر في الطابور"
+msgstr[2] "مهمتين منتظرتين في الطابور"
+msgstr[3] "%Id مهام منتظرة في الطابور"
+msgstr[4] "%Id مهمة منتظرة في الطابور"
+msgstr[5] "%Id مهمة منتظرة في الطابور"
 
 #: ../shell/ev-window.c:2855 ../shell/ev-window.c:3965
 msgid "Failed to print document"
@@ -923,30 +900,30 @@ msgstr "تعذر طبع المستند"
 #: ../shell/ev-window.c:2912
 #, c-format
 msgid "Printing job “%s”"
-msgstr ""
+msgstr "مهمة الطبع “%s”"
 
 #: ../shell/ev-window.c:3109
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
+msgstr "أأنتظر حتى تنتهي المهمة “%s” قبل الغلق؟"
 
 #: ../shell/ev-window.c:3112
 #, c-format
 msgid ""
 "There are %d print jobs active. Wait until print finishes before closing?"
-msgstr ""
+msgstr "توجد %d مهام طباعة نشطة. أأنتظر حتى تنتهي الطباعة قبل الغلق؟"
 
 #: ../shell/ev-window.c:3124
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
+msgstr "إذا أغلقت النافذة لن تُطبع المهام المنتظرة."
 
 #: ../shell/ev-window.c:3128
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "ألغِ ال_طباعة وأغلق"
 
 #: ../shell/ev-window.c:3132
 msgid "Close _after Printing"
-msgstr ""
+msgstr "أغلق ب_عد الطباعة"
 
 #: ../shell/ev-window.c:3735
 msgid "Toolbar Editor"
@@ -954,7 +931,7 @@ msgstr "محرر شريط الأدوات"
 
 #: ../shell/ev-window.c:3867
 msgid "There was an error displaying help"
-msgstr ""
+msgstr "حدث خطأ أثناء عرض المساعدة"
 
 #: ../shell/ev-window.c:4270
 #, c-format
@@ -1346,9 +1323,8 @@ msgid "Fit Width"
 msgstr "لائم العرض"
 
 #: ../shell/ev-window.c:5467 ../shell/ev-window.c:5485
-#, fuzzy
 msgid "Unable to launch external application."
-msgstr "تعذر فتح وصلة خارجية"
+msgstr "تعذر تشغيل برنامج خارجي."
 
 #: ../shell/ev-window.c:5528
 msgid "Unable to open external link"
@@ -1476,3 +1452,24 @@ msgstr ""
 
 #~ msgid "Incorrect password"
 #~ msgstr "كلمة السر غير صحيحة"
+
+#~ msgid "Delete the temporary file"
+#~ msgstr "احذف الملف المؤقت"
+
+#~ msgid "Print settings file"
+#~ msgstr "اطبع ملف الإعدادات"
+
+#~ msgid "GNOME Document Previewer"
+#~ msgstr "مُعاين مستندات جنوم"
+
+#~ msgid "The selected printer '%s' could not be found"
+#~ msgstr "تعذّر العثور على الطابعة '%s' المختارة"
+
+#~ msgid "Invalid page selection"
+#~ msgstr "اختيار صفحات غير سليم"
+
+#~ msgid "Warning"
+#~ msgstr "تحذير"
+
+#~ msgid "Your print range selection does not include any page"
+#~ msgstr "مدى الطباعة الذي اخترته لا يشمل أي صفحات"
