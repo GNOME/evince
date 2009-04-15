@@ -1,4 +1,34 @@
 ================
+Evince  2.26.1
+================
+
+Bug fixes:
+
+    * Don't prevent unmounting in case the initial cwd is on an
+      external device (#575436, Carlos Garcia Campos)
+    * Create and load the document based on the mime-type provided by
+      nautilus instead of using our own documents factory. (#533917,
+      Carlos Garcia Campos) 
+    * Fix endianess issues in dvi and tiff backends (#578433, #509920,
+      Benjamin Berg)
+    * Fix memory leak in tiff backend (#578285, Nickolay V. Shmyrev)
+    * Fix path where accels file is saved (#577500, Nickolay
+      V. Shmyrev)
+    * Fix fading animations (Nickolay V. Shmyrev)
+    * Translate the categories in the nautilus properties tab
+      (#575085, Christian Persch)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Amitakhya Phukan (as)
+    * Juanje Ojeda Croissier (es)
+    * Ivar Smolin (et)
+    * Горан Ракић (sr)
+    * Baris Cicek (tr)
+    * Deng Xiyue (zh_CN)
+
+================
 Evince  2.26.0
 ================
 
