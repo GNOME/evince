@@ -49,6 +49,7 @@ libevview_la_CFLAGS = \
 
 libevview_la_LDFLAGS = \
 	-version-info $(EV_VIEW_LT_VERSION_INFO)	\
+	-no-undefined	\
 	-export-symbols-regex "^ev_*"	\
 	$(AM_LDFLAGS)
 
