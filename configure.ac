@@ -133,7 +133,7 @@ fi
 AC_SUBST(SMCLIENT_CFLAGS)
 AC_SUBST(SMCLIENT_LIBS)
 
-BACKEND_LIBTOOL_FLAGS="-module -avoid-version -export-symbols \$(top_srcdir)/backend/backend.symbols"
+BACKEND_LIBTOOL_FLAGS="-module -avoid-version -no-undefined -export-symbols \$(top_srcdir)/backend/backend.symbols"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
 
 dnl ===== Check special functions
