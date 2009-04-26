@@ -32,6 +32,8 @@
 
 #include <glib/gi18n-lib.h>
 #include <ctype.h>
+#include <sys/wait.h>
+#include <stdlib.h>
 
 GMutex *dvi_context_mutex = NULL;
 
@@ -398,8 +400,8 @@ dvi_document_file_exporter_end (EvFileExporter *exporter)
 
 	if (success == FALSE) {
 		g_warning ("Error: %s", err->message);
-	} else if (exit_stat != 0) {
-		g_warning ("Error: dvipdfm exited with non-zero status.");
+	} else if (!WIFEXITED(exit_stat) || WEXITSTATUS(exit_stat) != EXIT_SUCCESS){
+		g_warning ("Error: dvipdfm does not end normally or exit with a failure status.");
 	}
 
 	if (err)

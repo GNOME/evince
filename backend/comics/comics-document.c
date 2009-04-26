@@ -24,6 +24,8 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <gio/gio.h>
+#include <sys/wait.h>
+#include <stdlib.h>
 
 #include "comics-document.h"
 #include "ev-document-misc.h"
@@ -179,7 +181,7 @@ comics_document_load (EvDocument *document,
 
 	if (!success) {
 		return FALSE;
-	} else if (retval != 0) {
+	} else if (!WIFEXITED(retval) || WEXITSTATUS(retval) != EXIT_SUCCESS) {
 		g_set_error_literal (error,
                                      EV_DOCUMENT_ERROR,
                                      EV_DOCUMENT_ERROR_INVALID,
