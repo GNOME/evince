@@ -23,9 +23,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
 #include <gio/gio.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "comics-document.h"
 #include "ev-document-misc.h"
@@ -41,11 +43,12 @@ struct _ComicsDocument
 {
 	GObject parent_instance;
 
-	gchar  *archive;
-	GSList *page_names;
-	int     n_pages;
-	char   *extract_command;
-	gboolean regex_arg;
+	gchar    *archive, *dir;
+	GSList   *page_names;
+	gint     n_pages;
+	gchar    *selected_command;
+	gchar    *extract_command, *list_command;
+	gboolean regex_arg, flag_temp, flag_FLOSS;
 };
 
 typedef struct _ComicsDocumentClass ComicsDocumentClass;
@@ -104,6 +107,260 @@ comics_regex_quote (const char *s)
     return ret;
 }
 
+/* This function manages the command for decompressing a comic book */
+static gboolean 
+comics_decompress_temp_dir (const gchar       *command_decompress_tmp,
+				const gchar   *command, 
+				GError        **error)
+{
+	gboolean success;
+	gchar *std_out;
+	GError *err = NULL;
+	gint retval;
+	
+	success = g_spawn_command_line_sync (command_decompress_tmp, &std_out, 
+						NULL, &retval, &err);
+	if (!success) {
+		g_set_error (error,
+			EV_DOCUMENT_ERROR,
+			EV_DOCUMENT_ERROR_INVALID,
+			_("Error launching the %s command for decompressing \
+			the comic book to the temporary directory -- %s."),
+			g_path_get_basename (command),
+			err->message);
+			g_error_free (err);
+	} else if (WIFEXITED (retval)) {
+		if (WEXITSTATUS (retval) == EXIT_SUCCESS) {
+			g_free (std_out);
+			return TRUE;
+		} else {
+			g_set_error (error,
+				EV_DOCUMENT_ERROR,
+				EV_DOCUMENT_ERROR_INVALID,
+				_("The command %s failed at decompressing the \
+				comic book in to temporary directory."), 
+				g_path_get_basename (command));
+			g_warning ("%s output: %s", g_path_get_basename 
+				(command), std_out);
+			g_free (std_out);
+		}
+	} else {
+		g_set_error (error,
+			EV_DOCUMENT_ERROR,
+			EV_DOCUMENT_ERROR_INVALID,
+			_("The command %s does not end normally."), 
+			g_path_get_basename (command));
+		g_free (std_out);
+	}
+	
+	return FALSE;
+}
+
+/* This function shows how to use the choosen command for decompressing a
+ * comic book file. It modifies fields of the ComicsDocument struct with 
+ * this information */
+static gboolean 
+comics_generate_command_lines (ComicsDocument *comics_document, 
+			       GError        **error)
+{
+	gchar *quoted_file;
+	gchar *command_decompress_tmp;
+	
+	quoted_file = g_shell_quote (comics_document->archive);
+	
+	/* RARLabs software	*/
+	if (g_str_has_suffix (comics_document->selected_command, "unrar") &&
+		!comics_document->flag_FLOSS) {
+		comics_document->extract_command =
+			g_strdup_printf ("%s p -c- -ierr", 
+				comics_document->selected_command);
+		comics_document->list_command =
+			g_strdup_printf ("%s vb -c- -- %s", 
+				comics_document->selected_command, quoted_file);
+		comics_document->flag_temp = FALSE;
+		comics_document->regex_arg = FALSE;
+		g_free (quoted_file);
+		return TRUE;
+	}
+	
+	/* Gna! unrar */
+	if (g_str_has_suffix (comics_document->selected_command, "unrar-free") 
+		|| (g_str_has_suffix (comics_document->selected_command, 
+		"unrar") && comics_document->flag_FLOSS)) {
+		
+		comics_document->flag_temp = TRUE;
+		
+		comics_document->dir = g_build_filename (ev_tmp_dir (),
+				g_compute_checksum_for_string (G_CHECKSUM_MD5, 
+				comics_document->archive, -1), NULL);
+						
+		/* unrar-free can't create directories so we do it on its 
+		 * behalf */
+		if (g_mkdir_with_parents (comics_document->dir, 0700) != 0) {
+			g_set_error (error,
+				EV_DOCUMENT_ERROR,
+				EV_DOCUMENT_ERROR_INVALID,
+				_("Failed to create a directory on the \
+				temporary directory."));
+				g_warning ("Failed to create directory %s: %s", 
+				comics_document->dir, g_strerror (errno));
+			g_free (quoted_file);
+			return FALSE;
+		}
+		
+		command_decompress_tmp = g_strdup_printf ( "%s -xf %s %s", 
+					comics_document->selected_command, 
+					quoted_file, 
+					comics_document->dir);
+		
+		if (!comics_decompress_temp_dir (command_decompress_tmp, 
+					     comics_document->selected_command, 
+					     error)){
+			g_free (command_decompress_tmp);
+			g_free (quoted_file);
+			return FALSE;
+		} else {
+			comics_document->list_command = 
+				g_strdup_printf ("%s t %s", 
+					comics_document->selected_command, 
+					quoted_file);
+			comics_document->regex_arg = TRUE;
+			g_free (command_decompress_tmp);
+			g_free (quoted_file);
+			return TRUE;
+		}
+	}
+
+	/* InfoZIP's unzip */
+	if (g_str_has_suffix (comics_document->selected_command,"unzip")) {
+		comics_document->extract_command =
+			g_strdup_printf ("%s -p -C", 
+				comics_document->selected_command);
+		comics_document->list_command = 
+			g_strdup_printf ("%s -Z -1 -- %s", 
+				comics_document->selected_command, 
+				quoted_file);
+		comics_document->flag_temp = FALSE;
+		comics_document->regex_arg = TRUE;
+		g_free (quoted_file);
+		return TRUE;
+	}
+	
+	/* p7zip */
+	if (g_str_has_suffix (comics_document->selected_command,"7zr")) {
+		comics_document->extract_command =
+			g_strdup_printf ("%s x -so", 
+				comics_document->selected_command);
+		comics_document->list_command = 
+			g_strdup_printf ("%s l -- %s", 
+				comics_document->selected_command, 
+				quoted_file);
+		comics_document->flag_temp = FALSE;
+		comics_document->regex_arg = TRUE;
+		g_free (quoted_file);
+		return TRUE;
+	
+	}
+	/* You are not supposed to get here ! */
+	g_set_error_literal (error,
+		EV_DOCUMENT_ERROR,
+		EV_DOCUMENT_ERROR_INVALID,
+		_("Internal error configuring the command for decompressing \
+		the comic book file"));
+	g_free (quoted_file);
+	return FALSE;
+}
+
+/* This function chooses an external command for decompressing a comic 
+ * book based on its mime tipe. */
+static gboolean 
+comics_check_decompress_command	(gchar          *mime_type, 
+				ComicsDocument  *comics_document,
+				GError         **error)
+{
+	gboolean success;
+	gchar *std_out, *std_err;
+	gint retval;
+	GError *err = NULL;
+	
+	/* FIXME, use proper cbr/cbz mime types once they're
+	 * included in shared-mime-info */
+	
+	if (!strcmp (mime_type, "application/x-cbr") ||
+	    !strcmp (mime_type, "application/x-rar")) {
+	        /* The RARLAB provides a no-charge proprietary (freeware) 
+	        * decompress-only client for Linux called unrar. Another 
+		* option is a GPLv2-licensed command-line tool developed by 
+		* the Gna! project. Confusingly enough, the free software RAR 
+		* decoder is also named unrar. For this reason we need to add 
+		* some lines for disambiguation. Sorry for the added the 
+		* complexity but it's life :)
+		* Finally, some distributions, like Debian, rename this free 
+		* option as unrar-free. 
+		* */
+		comics_document->selected_command = 
+				g_find_program_in_path ("unrar");
+		if (comics_document->selected_command) {
+			/* We only use std_err to avoid printing useless error 
+			 * messages on the terminal */
+			success = g_spawn_command_line_sync ( 
+					comics_document->selected_command, 
+					&std_out, &std_err, &retval, &err);
+			if (!success) {
+				g_propagate_error (error, err);
+				g_error_free (err);
+  				return FALSE;
+			/* I don't check retval status because RARLAB unrar 
+			 * doesn't have a way to return 0 without involving an 
+			 * operation with a file*/
+			} else if (WIFEXITED (retval)) {
+				if (g_strrstr (std_out,"freeware") != NULL)
+					/* The RARLAB freeware client */
+					comics_document->flag_FLOSS = FALSE;
+				else
+					/* The Gna! free software client */
+					comics_document->flag_FLOSS = TRUE;
+				g_free (std_out);
+				g_free (std_err);
+				return TRUE;
+			}
+		}
+		/* The Gna! free software client with Debian naming convention */
+		comics_document->selected_command = 
+				g_find_program_in_path ("unrar-free");
+		if (comics_document->selected_command) 
+			return TRUE;
+	} else if (!strcmp (mime_type, "application/x-cbz") ||
+		   !strcmp (mime_type, "application/zip")) {
+		/* InfoZIP's unzip program */
+		comics_document->selected_command = 
+				g_find_program_in_path ("unzip");
+		if (comics_document->selected_command)
+			return TRUE;
+	} else if (!strcmp (mime_type, "application/x-cb7") ||
+		!strcmp (mime_type, "application/x-7z-compressed")) {
+		/* 7zr is a light stand-alone executable that supports only 
+	 	 * 7z/LZMA/BCJ */
+		comics_document->selected_command = 
+				g_find_program_in_path ("7zr");
+		if (comics_document->selected_command)
+			return TRUE;
+	} else {
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     _("Not a comic book MIME type: %s"),
+			     mime_type);
+			     return FALSE;
+	}
+	g_set_error_literal (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     ("I can't find an appropiate command for \
+			      decompressing this type of comic book"));
+	return FALSE;
+}
+
 static gboolean
 comics_document_load (EvDocument *document,
 		      const char *uri,
@@ -111,7 +368,7 @@ comics_document_load (EvDocument *document,
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	GSList *supported_extensions;
-	gchar *list_files_command = NULL, *std_out, *quoted_file;
+	gchar *std_out;
 	gchar *mime_type;
 	gchar **cbr_files;
 	gboolean success;
@@ -135,49 +392,21 @@ comics_document_load (EvDocument *document,
 
 		return FALSE;
 	}
-
-	quoted_file = g_shell_quote (comics_document->archive);
-
-	/* FIXME, use proper cbr/cbz mime types once they're
-	 * included in shared-mime-info */
-	if (!strcmp (mime_type, "application/x-cbr") ||
-	    !strcmp (mime_type, "application/x-rar")) {
-		comics_document->extract_command =
-			g_strdup ("unrar p -c- -ierr");
-		list_files_command =
-			g_strdup_printf ("unrar vb -c- -- %s", quoted_file);
-		comics_document->regex_arg = FALSE;
-	} else if (!strcmp (mime_type, "application/x-cbz") ||
-		   !strcmp (mime_type, "application/zip")) {
-		comics_document->extract_command =
-			g_strdup ("unzip -p -C");
-		list_files_command = 
-			g_strdup_printf ("zipinfo -1 -- %s", quoted_file);
-		comics_document->regex_arg = TRUE;
-	} else if (!strcmp (mime_type, "application/x-cb7")) {
-		comics_document->extract_command =
-			g_strdup ("7zr x -so");
-		list_files_command = 
-			g_strdup_printf ("7zr l -- %s", quoted_file);
-		comics_document->regex_arg = TRUE;
-	} else {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     _("Not a comic book MIME type: %s"),
-			     mime_type);
+	
+	if (!comics_check_decompress_command (mime_type, comics_document, 
+	error)) {	
 		g_free (mime_type);
-		g_free (quoted_file);
+		return FALSE;
+	} else if (!comics_generate_command_lines (comics_document, error)) {
+		   g_free (mime_type);
 		return FALSE;
 	}
 
 	g_free (mime_type);
-	g_free (quoted_file);
 
 	/* Get list of files in archive */
-	success = g_spawn_command_line_sync (list_files_command,
+	success = g_spawn_command_line_sync (comics_document->list_command,
 					     &std_out, NULL, &retval, error);
-	g_free (list_files_command);
 
 	if (!success) {
 		return FALSE;
@@ -266,43 +495,63 @@ comics_document_get_page_size (EvDocument *document,
 	gboolean success, got_size = FALSE;
 	gint outpipe = -1;
 	GPid child_pid = -1;
-
-	argv = extract_argv (document, page->index);
-	success = g_spawn_async_with_pipes (NULL, argv, NULL,
-					    G_SPAWN_SEARCH_PATH | G_SPAWN_STDERR_TO_DEV_NULL,
-					    NULL, NULL,
-					    &child_pid,
-					    NULL, &outpipe, NULL, NULL);
-	g_strfreev (argv);
-	g_return_if_fail (success == TRUE);
-
-	loader = gdk_pixbuf_loader_new ();
-	g_signal_connect (loader, "area-prepared",
-			  G_CALLBACK (get_page_size_area_prepared_cb),
-			  &got_size);
-
-	while (outpipe >= 0) {
-		gssize bytes = read (outpipe, buf, 1024);
+	gssize bytes;
+	GdkPixbuf *pixbuf;
+	gchar *filename;
+	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
+	
+	if (!comics_document->flag_temp) {
 		
-		if (bytes > 0)
-			gdk_pixbuf_loader_write (loader, buf, bytes, NULL);
-		if (bytes <= 0 || got_size) {
-			close (outpipe);
-			outpipe = -1;
-			gdk_pixbuf_loader_close (loader, NULL);
-		}
-	}
+		argv = extract_argv (document, page->index);
+		success = g_spawn_async_with_pipes (NULL, argv, NULL,
+						    G_SPAWN_SEARCH_PATH | 
+						    G_SPAWN_STDERR_TO_DEV_NULL,
+						    NULL, NULL,
+						    &child_pid,
+						    NULL, &outpipe, NULL, NULL);
+		g_strfreev (argv);
+		g_return_if_fail (success == TRUE);
 
-	if (gdk_pixbuf_loader_get_pixbuf (loader)) {
-		GdkPixbuf *pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
+		loader = gdk_pixbuf_loader_new ();
+		g_signal_connect (loader, "area-prepared",
+				  G_CALLBACK (get_page_size_area_prepared_cb),
+				  &got_size);
+
+		while (outpipe >= 0) {
+			bytes = read (outpipe, buf, 1024);
+		
+			if (bytes > 0)
+			gdk_pixbuf_loader_write (loader, buf, bytes, NULL);
+			if (bytes <= 0 || got_size) {
+				close (outpipe);
+				outpipe = -1;
+				gdk_pixbuf_loader_close (loader, NULL);
+			}
+		}
+
+		if (gdk_pixbuf_loader_get_pixbuf (loader)) {
+			pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
+			if (width)
+				*width = gdk_pixbuf_get_width (pixbuf);
+			if (height)
+				*height = gdk_pixbuf_get_height (pixbuf);
+		}
+
+		g_spawn_close_pid (child_pid);
+		g_object_unref (loader);
+	} else {
+		filename = g_build_filename (comics_document->dir, 	
+						(char*) g_slist_nth_data (
+						comics_document->page_names, 
+						page->index),
+						NULL);
+		pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+		g_free (filename);
 		if (width)
 			*width = gdk_pixbuf_get_width (pixbuf);
 		if (height)
 			*height = gdk_pixbuf_get_height (pixbuf);
 	}
-
-	g_spawn_close_pid (child_pid);
-	g_object_unref (loader);
 }
 
 static void
@@ -324,38 +573,64 @@ comics_document_render_pixbuf (EvDocument      *document,
 	gboolean success;
 	gint outpipe = -1;
 	GPid child_pid = -1;
+	gssize bytes;
+	gint width, height;
+	gchar *filename;
+	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
+	
+	if (!comics_document->flag_temp) {
+		argv = extract_argv (document, rc->page->index);
+		success = g_spawn_async_with_pipes (NULL, argv, NULL,
+						    G_SPAWN_SEARCH_PATH | 
+						    G_SPAWN_STDERR_TO_DEV_NULL,
+						    NULL, NULL,
+						    &child_pid,
+						    NULL, &outpipe, NULL, NULL);
+		g_strfreev (argv);
+		g_return_val_if_fail (success == TRUE, NULL);
 
-	argv = extract_argv (document, rc->page->index);
-	success = g_spawn_async_with_pipes (NULL, argv, NULL,
-					    G_SPAWN_SEARCH_PATH
-					    | G_SPAWN_STDERR_TO_DEV_NULL,
-					    NULL, NULL,
-					    &child_pid,
-					    NULL, &outpipe, NULL, NULL);
-	g_strfreev (argv);
-	g_return_val_if_fail (success == TRUE, NULL);
+		loader = gdk_pixbuf_loader_new ();
+		g_signal_connect (loader, "size-prepared",
+				  G_CALLBACK (render_pixbuf_size_prepared_cb), 
+				  &rc->scale);
 
-	loader = gdk_pixbuf_loader_new ();
-	g_signal_connect (loader, "size-prepared",
-			  G_CALLBACK (render_pixbuf_size_prepared_cb), &rc->scale);
+		while (outpipe >= 0) {
+			bytes = read (outpipe, buf, 4096);
 
-	while (outpipe >= 0) {
-		gssize bytes = read (outpipe, buf, 4096);
-
-		if (bytes > 0) {
-			gdk_pixbuf_loader_write (loader, buf, bytes, NULL);
-		} else if (bytes <= 0) {
-			close (outpipe);
-			gdk_pixbuf_loader_close (loader, NULL);
-			outpipe = -1;
+			if (bytes > 0) {
+				gdk_pixbuf_loader_write (loader, buf, bytes, 
+				NULL);
+			} else if (bytes <= 0) {
+				close (outpipe);
+				gdk_pixbuf_loader_close (loader, NULL);
+				outpipe = -1;
+			}
 		}
+
+		rotated_pixbuf = gdk_pixbuf_rotate_simple (
+					gdk_pixbuf_loader_get_pixbuf (loader),
+					360 - rc->rotation);
+		g_spawn_close_pid (child_pid);
+		g_object_unref (loader);
+	} else {
+		filename = g_build_filename (comics_document->dir,
+					(char*) g_slist_nth_data (
+						comics_document->page_names, 
+						rc->page->index ),
+					NULL);
+	   
+		gdk_pixbuf_get_file_info (filename, &width, &height);									
+		
+		rotated_pixbuf = gdk_pixbuf_rotate_simple (
+					gdk_pixbuf_new_from_file_at_size (
+						filename,
+						width  * (rc->scale) + 0.5,
+						height * (rc->scale) + 0.5,
+						NULL),
+					360 - rc->rotation);	
+		g_free (filename);					
+	
 	}
-
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (gdk_pixbuf_loader_get_pixbuf (loader),
-						   360 - rc->rotation);
-	g_spawn_close_pid (child_pid);
-	g_object_unref (loader);
-
 	return rotated_pixbuf;
 }
 
@@ -386,11 +661,47 @@ render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
 	gdk_pixbuf_loader_set_size (loader, w, h);
 }
 
+/**
+ * comics_remove_dir: Removes a directory recursively. 
+ * Returns:
+ *   	0 if it was successfully deleted,
+ * 	-1 if an error occurred 		
+ */
+static int 
+comics_remove_dir (gchar *path_name) 
+{
+	GDir  *content_dir;
+	const gchar *filename;
+	
+	if (g_file_test (path_name, G_FILE_TEST_IS_DIR)) {
+		content_dir = g_dir_open  (path_name, 0, NULL);
+		filename  = g_dir_read_name (content_dir);
+		while (filename) {			
+			comics_remove_dir (g_build_filename (path_name, 
+							filename, 
+							NULL));
+			filename = g_dir_read_name (content_dir);
+		}
+		g_dir_close (content_dir);
+	}
+	/* Note from g_remove() documentation: on Windows, it is in general not 
+	 * possible to remove a file that is open to some process, or mapped 
+	 * into memory.*/
+	return (g_remove (path_name));
+}
+
 static void
 comics_document_finalize (GObject *object)
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (object);
 
+	if (comics_document->flag_temp) {
+		if (comics_remove_dir (comics_document->dir) == -1)
+			g_warning ("There was a error deleting %s", 
+				comics_document->dir);
+		g_free (comics_document->dir);
+	}
+	
 	if (comics_document->archive)
 		g_free (comics_document->archive);
 
@@ -400,8 +711,14 @@ comics_document_finalize (GObject *object)
 		g_slist_free (comics_document->page_names);
 	}
 
+	if (comics_document->selected_command)
+		g_free (comics_document->selected_command);
+		
 	if (comics_document->extract_command)
 		g_free (comics_document->extract_command);
+		
+	if (comics_document->list_command)
+		g_free (comics_document->list_command);
 
 	G_OBJECT_CLASS (comics_document_parent_class)->finalize (object);
 }
