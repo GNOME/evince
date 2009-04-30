@@ -512,7 +512,7 @@ configure_item_tooltip (GtkToolItem *item)
 #if GTK_CHECK_VERSION (2, 16, 0)
   action = gtk_activatable_get_related_action (GTK_ACTIVATABLE (item));
 #else
-  action = gtk_widget_get_action (GTKWIDGET (item));
+  action = gtk_widget_get_action (GTK_WIDGET (item));
 #endif
 
   if (action != NULL)
