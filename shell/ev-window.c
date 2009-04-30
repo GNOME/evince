@@ -436,6 +436,8 @@ ev_window_update_actions (EvWindow *ev_window)
 					has_pages && can_find_in_page);
 	ev_window_set_action_sensitive (ev_window, "EditFindPrevious",
 					has_pages && can_find_in_page);
+        ev_window_set_action_sensitive (ev_window, "F3",
+                                        has_pages && can_find_in_page);
 
 	presentation_mode = ev_view_get_presentation (view);
 	
@@ -4846,6 +4848,8 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_escape) },
         { "Slash", GTK_STOCK_FIND, NULL, "slash", NULL,
           G_CALLBACK (ev_window_cmd_edit_find) },
+        { "F3", NULL, "", "F3", NULL,
+          G_CALLBACK (ev_window_cmd_edit_find_next) },
         { "PageDown", NULL, "", "Page_Down", NULL,
           G_CALLBACK (ev_window_cmd_scroll_forward) },
         { "PageUp", NULL, "", "Page_Up", NULL,
