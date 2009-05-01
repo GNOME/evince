@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2009-04-17 08:19+0000\n"
-"PO-Revision-Date: 2009-04-12 16:16+0200\n"
+"POT-Creation-Date: 2009-04-28 21:08+0000\n"
+"PO-Revision-Date: 2009-05-01 16:20+0200\n"
 "Last-Translator: Juanje Ojeda Croissier <jojeda@emergya.es>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -24,26 +24,62 @@ msgstr ""
 "X-Generator: Gtranslator 1.9.3\n"
 "\n"
 
-#: ../backend/comics/comics-document.c:131
+#: ../backend/comics/comics-document.c:127
+#, c-format
+msgid ""
+"Error launching the %s command for decompressing \t\t\tthe comic book to the "
+"temporary directory -- %s."
+msgstr ""
+"Error al lanzar el comando %s para descomprimir el libro de cómic en el "
+"directorio temporal -- %s."
+
+#: ../backend/comics/comics-document.c:140
+#, c-format
+msgid ""
+"The command %s failed at decompressing the \t\t\t\tcomic book in to "
+"temporary directory."
+msgstr ""
+"El comando %s falló al descomprimir el libro de cómic en el directorio "
+"temporal."
+
+#: ../backend/comics/comics-document.c:151
+#, c-format
+msgid "The command %s does not end normally."
+msgstr "El comando %s no finalizó de forma normal."
+
+#: ../backend/comics/comics-document.c:203
+#, c-format
+msgid "Failed to create a directory on the \t\t\t\ttemporary directory."
+msgstr "Falló al crear un directorio en el directorio temporal."
+
+#: ../backend/comics/comics-document.c:268
+msgid ""
+"Internal error configuring the command for decompressing \t\tthe comic book "
+"file"
+msgstr ""
+"Error interno al configurar el comando para descomprimir el archivo de libro "
+"de cómic"
+
+#: ../backend/comics/comics-document.c:352
+#, c-format
+msgid "Not a comic book MIME type: %s"
+msgstr "No es un tipo MIME de libro de cómic: %s"
+
+#: ../backend/comics/comics-document.c:390
 #: ../libdocument/ev-document-factory.c:143
 #: ../libdocument/ev-document-factory.c:286
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
-#: ../backend/comics/comics-document.c:165
-#, c-format
-msgid "Not a comic book MIME type: %s"
-msgstr "No es un tipo MIME de libro de cómic: %s"
-
-#: ../backend/comics/comics-document.c:186
+#: ../backend/comics/comics-document.c:417
 msgid "File corrupted."
 msgstr "Archivo corrupto."
 
-#: ../backend/comics/comics-document.c:198
+#: ../backend/comics/comics-document.c:429
 msgid "No files in archive."
 msgstr "No se encontraron archivos en el archivador."
 
-#: ../backend/comics/comics-document.c:230
+#: ../backend/comics/comics-document.c:461
 #, c-format
 msgid "No images found in archive %s"
 msgstr "No se encontraron imágenes en el archivador %s"
@@ -68,7 +104,7 @@ msgstr ""
 msgid "Djvu Documents"
 msgstr "Documentos Djvu"
 
-#: ../backend/dvi/dvi-document.c:106
+#: ../backend/dvi/dvi-document.c:108
 msgid "DVI document has incorrect format"
 msgstr "El documento DVI tiene un formato incorrecto"
 
