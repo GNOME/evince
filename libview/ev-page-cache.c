@@ -416,8 +416,6 @@ ev_page_cache_new (EvDocument *document)
 	/* make some sanity check assertions */
 	if (! page_cache->uniform)
 		g_assert (page_cache->size_cache != NULL);
-	if (page_cache->uniform && page_cache->n_pages > 0)
-		g_assert (page_cache->uniform_width > 0 && page_cache->uniform_height > 0);
 
 	ev_document_doc_mutex_unlock ();
 
@@ -425,6 +423,28 @@ ev_page_cache_new (EvDocument *document)
 		ev_page_cache_set_current_page (page_cache, 0);
 
 	return page_cache;
+}
+
+gboolean
+ev_page_cache_check_dimensions (EvPageCache *page_cache)
+{
+	gint document_width, document_height;
+
+	if (page_cache->uniform && page_cache->n_pages > 0)
+		if (page_cache->uniform_width <= 0 || page_cache->uniform_height <= 0)
+			return TRUE;
+
+	ev_page_cache_get_max_width (page_cache,
+    		    	    	     0, 1.0,
+				     &document_width);
+	ev_page_cache_get_max_height (page_cache,
+				      0, 1.0,
+				      &document_height);
+
+	if (document_width <= 0 || document_height <= 0)
+		return TRUE;
+
+	return FALSE;
 }
 
 gint

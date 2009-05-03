@@ -1341,7 +1341,7 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 		pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
 	}
 
-        if (border) {		
+        if (border && pixbuf) {
 		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
 		g_object_unref (pixbuf);
 		pixbuf = border_pixbuf;

@@ -992,10 +992,12 @@ setup_document_from_metadata (EvWindow *window)
 			request_width = MIN (request_width, gdk_screen_get_width (screen));
 			request_height = MIN (request_width, gdk_screen_get_height (screen));
 		}
-			        
-		gtk_window_resize (GTK_WINDOW (window),
-				   request_width,
-				   request_height);
+		
+		if (request_width > 0 && request_height > 0) {
+			gtk_window_resize (GTK_WINDOW (window),
+					   request_width,
+					   request_height);
+		}
 	    	g_value_unset (&width_ratio);
 		g_value_unset (&height_ratio);
 	}
@@ -1157,7 +1159,8 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 	EvDocument *document = ev_window->priv->document;
 	
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
-	    ev_page_cache_get_n_pages (ev_window->priv->page_cache) <= 0) {
+	    ev_page_cache_get_n_pages (ev_window->priv->page_cache) <= 0 ||
+	    ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
 		return;
 	}
 	
@@ -1244,15 +1247,19 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 		ev_window->priv->dest = NULL;
 	}
 
-	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0) {
-		ev_view_set_document (view, document);
-	} else {
+	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) <= 0) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains no pages"));
+	} else if (ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
+		ev_window_warning_message (ev_window, "%s",
+					   _("The document contains only empty pages"));
+	} else {
+		ev_view_set_document (view, document);
 	}
 
 	if (ev_window->priv->setup_document_idle > 0)
 		g_source_remove (ev_window->priv->setup_document_idle);
+
 	ev_window->priv->setup_document_idle = g_idle_add ((GSourceFunc)ev_window_setup_document, ev_window);
 }
 

@@ -662,9 +662,14 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 
-	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
-
 	priv->page_cache = ev_page_cache_get (document);
+
+	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
+	    ev_page_cache_get_n_pages (priv->page_cache) <= 0 ||
+	    ev_page_cache_check_dimensions (priv->page_cache)) {
+		return;
+	}
+
 	priv->document = document;
 	priv->n_pages = ev_page_cache_get_n_pages (priv->page_cache);
 	priv->loading_icons = g_hash_table_new_full (g_str_hash,
