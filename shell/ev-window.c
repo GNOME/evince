@@ -384,7 +384,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
 	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
-	ev_window_set_action_sensitive (ev_window, "FilePrintSetup", has_pages && ok_to_print);
+	ev_window_set_action_sensitive (ev_window, "FilePageSetup", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 
@@ -4770,7 +4770,7 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePrintSetup", NULL, N_("Print Set_up..."), NULL,
+	{ "FilePageSetup", NULL, N_("Page Set_up..."), NULL,
 	  N_("Setup the page settings for printing"),
 	  G_CALLBACK (ev_window_cmd_file_print_setup) },
 	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print..."), "<control>P",
