@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2009-04-04 20:16+0000\n"
-"PO-Revision-Date: 2009-04-12 16:17+0200\n"
+"POT-Creation-Date: 2009-04-26 10:33+0000\n"
+"PO-Revision-Date: 2009-05-03 15:54+0200\n"
 "Last-Translator: Juanje Ojeda Croissier <jojeda@emergya.es>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -24,26 +24,26 @@ msgstr ""
 "X-Generator: Gtranslator 1.9.3\n"
 "\n"
 
-#: ../backend/comics/comics-document.c:131
+#: ../backend/comics/comics-document.c:133
 #: ../libdocument/ev-document-factory.c:143
 #: ../libdocument/ev-document-factory.c:286
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
-#: ../backend/comics/comics-document.c:165
+#: ../backend/comics/comics-document.c:167
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "No es un tipo MIME de libro de cómic: %s"
 
-#: ../backend/comics/comics-document.c:186
+#: ../backend/comics/comics-document.c:188
 msgid "File corrupted."
 msgstr "Archivo corrupto."
 
-#: ../backend/comics/comics-document.c:198
+#: ../backend/comics/comics-document.c:200
 msgid "No files in archive."
 msgstr "No se encontraron archivos en el archivador."
 
-#: ../backend/comics/comics-document.c:230
+#: ../backend/comics/comics-document.c:232
 #, c-format
 msgid "No images found in archive %s"
 msgstr "No se encontraron imágenes en el archivador %s"
@@ -68,7 +68,7 @@ msgstr ""
 msgid "Djvu Documents"
 msgstr "Documentos Djvu"
 
-#: ../backend/dvi/dvi-document.c:106
+#: ../backend/dvi/dvi-document.c:108
 msgid "DVI document has incorrect format"
 msgstr "El documento DVI tiene un formato incorrecto"
 
@@ -441,7 +441,7 @@ msgstr ""
 "Saltarse las restricciones del documento, como restricción para copiar o "
 "imprimir."
 
-#: ../properties/ev-properties-main.c:113
+#: ../properties/ev-properties-main.c:116
 msgid "Document"
 msgstr "Documento"
 
@@ -986,7 +986,7 @@ msgstr ""
 "Temple Place, Suite 330, Boston, MA  02111-1307 EE. UU.\n"
 
 #. Manually set name and icon in win32
-#: ../shell/ev-window.c:4339 ../shell/main.c:382
+#: ../shell/ev-window.c:4339 ../shell/main.c:383
 msgid "Evince"
 msgstr "Evince"
 
@@ -1097,7 +1097,7 @@ msgstr "Busca una palabra o frase en el documento"
 
 #: ../shell/ev-window.c:5041
 msgid "T_oolbar"
-msgstr "_Barra de herramientas"
+msgstr "Barra de _herramientas"
 
 #: ../shell/ev-window.c:5043
 msgid "Rotate _Left"
@@ -1117,7 +1117,7 @@ msgstr "Reduce el documento"
 
 #: ../shell/ev-window.c:5055
 msgid "_Reload"
-msgstr "_Recargar"
+msgstr "Re_cargar"
 
 #: ../shell/ev-window.c:5056
 msgid "Reload the document"
@@ -1138,7 +1138,7 @@ msgstr "Ir a la página anterior"
 
 #: ../shell/ev-window.c:5066
 msgid "_Next Page"
-msgstr "Página _siguiente"
+msgstr "_Siguiente página"
 
 #: ../shell/ev-window.c:5067
 msgid "Go to the next page"
@@ -1146,7 +1146,7 @@ msgstr "Ir a la página siguiente"
 
 #: ../shell/ev-window.c:5069
 msgid "_First Page"
-msgstr "_Primera"
+msgstr "_Primera página"
 
 #: ../shell/ev-window.c:5070
 msgid "Go to the first page"
@@ -1154,7 +1154,7 @@ msgstr "Ir a la primera página"
 
 #: ../shell/ev-window.c:5072
 msgid "_Last Page"
-msgstr "_Última"
+msgstr "Ú_ltima página"
 
 #: ../shell/ev-window.c:5073
 msgid "Go to the last page"
@@ -1189,7 +1189,7 @@ msgstr "Iniciar una presentación"
 #. View Menu
 #: ../shell/ev-window.c:5144
 msgid "_Toolbar"
-msgstr "_Barra de herramientas"
+msgstr "Barra de _herramientas"
 
 #: ../shell/ev-window.c:5145
 msgid "Show or hide the toolbar"
@@ -1197,7 +1197,7 @@ msgstr "Muestra u oculta la barra de herramientas"
 
 #: ../shell/ev-window.c:5147
 msgid "Side _Pane"
-msgstr "_Panel lateral"
+msgstr "Panel _lateral"
 
 #: ../shell/ev-window.c:5148
 msgid "Show or hide the side pane"
@@ -1229,7 +1229,7 @@ msgstr "Expandir la ventana hasta llenar la pantalla"
 
 #: ../shell/ev-window.c:5159
 msgid "Pre_sentation"
-msgstr "Pre_sentación"
+msgstr "_Presentación"
 
 #: ../shell/ev-window.c:5160
 msgid "Run document as a presentation"
@@ -1371,39 +1371,39 @@ msgstr "%s - Se requiere una contraseña"
 msgid "By extension"
 msgstr "Por extensión"
 
-#: ../shell/main.c:59 ../shell/main.c:347
+#: ../shell/main.c:60 ../shell/main.c:348
 msgid "GNOME Document Viewer"
 msgstr "Visor de documentos de Gnome"
 
-#: ../shell/main.c:67
+#: ../shell/main.c:68
 msgid "The page of the document to display."
 msgstr "La página del documento que mostrar."
 
-#: ../shell/main.c:67
+#: ../shell/main.c:68
 msgid "PAGE"
 msgstr "PÁGINA"
 
-#: ../shell/main.c:68
+#: ../shell/main.c:69
 msgid "Run evince in fullscreen mode"
 msgstr "Ejecutar Evince en modo pantalla completa"
 
-#: ../shell/main.c:69
+#: ../shell/main.c:70
 msgid "Run evince in presentation mode"
 msgstr "Ejecutar Evince en modo presentación"
 
-#: ../shell/main.c:70
+#: ../shell/main.c:71
 msgid "Run evince as a previewer"
 msgstr "Ejecutar Evince como un previsualizador"
 
-#: ../shell/main.c:71
+#: ../shell/main.c:72
 msgid "The word or phrase to find in the document"
 msgstr "La palabra o frase que buscar en el documento"
 
-#: ../shell/main.c:71
+#: ../shell/main.c:72
 msgid "STRING"
 msgstr "CADENA"
 
-#: ../shell/main.c:75
+#: ../shell/main.c:76
 msgid "[FILE...]"
 msgstr "[ARCHIVO…]"
 
