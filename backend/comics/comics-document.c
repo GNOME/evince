@@ -114,45 +114,41 @@ comics_decompress_temp_dir (const gchar       *command_decompress_tmp,
 				GError        **error)
 {
 	gboolean success;
-	gchar *std_out;
+	gchar *std_out, *basename;
 	GError *err = NULL;
 	gint retval;
 	
 	success = g_spawn_command_line_sync (command_decompress_tmp, &std_out, 
 						NULL, &retval, &err);
+	basename = g_path_get_basename (command);
 	if (!success) {
 		g_set_error (error,
 			EV_DOCUMENT_ERROR,
 			EV_DOCUMENT_ERROR_INVALID,
-			_("Error launching the %s command for decompressing \
-			the comic book to the temporary directory -- %s."),
-			g_path_get_basename (command),
-			err->message);
+			_("Error launching the command %s for decompressing "
+			  "the comic book to the temporary directory: %s"), basename, err->message);
 			g_error_free (err);
 	} else if (WIFEXITED (retval)) {
 		if (WEXITSTATUS (retval) == EXIT_SUCCESS) {
 			g_free (std_out);
+			g_free (basename);
 			return TRUE;
 		} else {
 			g_set_error (error,
 				EV_DOCUMENT_ERROR,
 				EV_DOCUMENT_ERROR_INVALID,
-				_("The command %s failed at decompressing the \
-				comic book in to temporary directory."), 
-				g_path_get_basename (command));
-			g_warning ("%s output: %s", g_path_get_basename 
-				(command), std_out);
+				_("The command %s failed to decompress the "
+				  "comic book to the temporary directory."), basename);
 			g_free (std_out);
 		}
 	} else {
 		g_set_error (error,
 			EV_DOCUMENT_ERROR,
 			EV_DOCUMENT_ERROR_INVALID,
-			_("The command %s does not end normally."), 
-			g_path_get_basename (command));
+			_("The command %s does not end normally."), basename);
 		g_free (std_out);
 	}
-	
+	g_free (basename);
 	return FALSE;
 }
 
@@ -164,7 +160,7 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 			       GError        **error)
 {
 	gchar *quoted_file;
-	gchar *command_decompress_tmp;
+	gchar *command_decompress_tmp, *checksum;
 	
 	quoted_file = g_shell_quote (comics_document->archive);
 	
@@ -190,20 +186,21 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 		
 		comics_document->flag_temp = TRUE;
 		
-		comics_document->dir = g_build_filename (ev_tmp_dir (),
-				g_compute_checksum_for_string (G_CHECKSUM_MD5, 
-				comics_document->archive, -1), NULL);
-						
+		checksum = g_compute_checksum_for_string (G_CHECKSUM_MD5, 
+				comics_document->archive, -1);
+		comics_document->dir = g_build_filename (ev_tmp_dir (), 
+						checksum, NULL);
+		g_free (checksum);
 		/* unrar-free can't create directories so we do it on its 
 		 * behalf */
 		if (g_mkdir_with_parents (comics_document->dir, 0700) != 0) {
 			g_set_error (error,
 				EV_DOCUMENT_ERROR,
 				EV_DOCUMENT_ERROR_INVALID,
-				_("Failed to create a directory on the \
-				temporary directory."));
-				g_warning ("Failed to create directory %s: %s", 
-				comics_document->dir, g_strerror (errno));
+				_("Failed to create a directory %s in the "
+				  "temporary directory: %s"), 
+				  comics_document->dir, 
+				  g_strerror (errno));
 			g_free (quoted_file);
 			return FALSE;
 		}
@@ -265,8 +262,8 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 	g_set_error_literal (error,
 		EV_DOCUMENT_ERROR,
 		EV_DOCUMENT_ERROR_INVALID,
-		_("Internal error configuring the command for decompressing \
-		the comic book file"));
+		_("Internal error configuring the command for decompressing "
+		  "the comic book file"));
 	g_free (quoted_file);
 	return FALSE;
 }
@@ -356,8 +353,8 @@ comics_check_decompress_command	(gchar          *mime_type,
 	g_set_error_literal (error,
 			     EV_DOCUMENT_ERROR,
 			     EV_DOCUMENT_ERROR_INVALID,
-			     ("I can't find an appropiate command for \
-			      decompressing this type of comic book"));
+			     _("Can't find an appropiate command to "
+			       "decompress this type of comic book"));
 	return FALSE;
 }
 
@@ -414,7 +411,7 @@ comics_document_load (EvDocument *document,
 		g_set_error_literal (error,
                                      EV_DOCUMENT_ERROR,
                                      EV_DOCUMENT_ERROR_INVALID,
-                                     _("File corrupted."));
+                                     _("File corrupted"));
 		return FALSE;
 	}
 
@@ -426,7 +423,7 @@ comics_document_load (EvDocument *document,
 		g_set_error_literal (error,
 				     EV_DOCUMENT_ERROR,
 				     EV_DOCUMENT_ERROR_INVALID,
-				     _("No files in archive."));
+				     _("No files in archive"));
 		return FALSE;
 	}
 
@@ -672,14 +669,16 @@ comics_remove_dir (gchar *path_name)
 {
 	GDir  *content_dir;
 	const gchar *filename;
+	gchar *filename_with_path;
 	
 	if (g_file_test (path_name, G_FILE_TEST_IS_DIR)) {
 		content_dir = g_dir_open  (path_name, 0, NULL);
 		filename  = g_dir_read_name (content_dir);
-		while (filename) {			
-			comics_remove_dir (g_build_filename (path_name, 
-							filename, 
-							NULL));
+		while (filename) {
+			filename_with_path = g_build_filename (path_name, 
+						filename, NULL);
+			comics_remove_dir (filename_with_path);
+			g_free (filename_with_path);
 			filename = g_dir_read_name (content_dir);
 		}
 		g_dir_close (content_dir);
@@ -697,7 +696,7 @@ comics_document_finalize (GObject *object)
 
 	if (comics_document->flag_temp) {
 		if (comics_remove_dir (comics_document->dir) == -1)
-			g_warning ("There was a error deleting %s", 
+			g_warning (_("There was an error deleting %s"),
 				comics_document->dir);
 		g_free (comics_document->dir);
 	}
@@ -853,7 +852,8 @@ extract_argv (EvDocument *document, gint page)
 	g_shell_parse_argv (command_line, NULL, &argv, &err);
 	
 	if (err) {
-		g_warning ("Error %s", err->message);
+		g_warning (_("Error %s"), err->message);
+		g_error_free (err);
 		return NULL;
 	}
 	
