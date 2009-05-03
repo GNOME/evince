@@ -1586,12 +1586,15 @@ show_loading_progress (EvWindow *ev_window)
 {
 	GtkWidget *area;
 	gchar     *text;
+	gchar 	  *display_name;
 	
 	if (ev_window->priv->message_area)
 		return FALSE;
-	
-	text = g_strdup_printf (_("Loading document from %s"),
-				ev_window->priv->uri);
+
+	display_name = escape_uri_for_display (ev_window->priv->uri);
+	text = g_strdup_printf (_("Loading document from “%s”"),
+				display_name);
+
 	area = ev_progress_message_area_new (GTK_STOCK_OPEN,
 					     text,
 					     GTK_STOCK_CLOSE,
@@ -1604,7 +1607,9 @@ show_loading_progress (EvWindow *ev_window)
 			  ev_window);
 	gtk_widget_show (area);
 	ev_window_set_message_area (ev_window, area);
+
 	g_free (text);
+	g_free (display_name);
 
 	return FALSE;
 }

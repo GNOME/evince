@@ -20,6 +20,7 @@
 #include <config.h>
 #include "ev-window-title.h"
 #include "ev-backends-manager.h"
+#include "ev-utils.h"
 
 #include <string.h>
 #include <gio/gio.h>
@@ -71,14 +72,14 @@ ev_window_title_new (EvWindow *window)
 static char *
 get_filename_from_uri (const char *uri)
 {
-	GFile *file;
 	char *filename;
+	char *basename;
 	
-	file = g_file_new_for_uri (uri);
-	filename = g_file_get_basename (file);
-	g_object_unref (file);
+	filename = escape_uri_for_display (uri);
+	basename = g_path_get_basename (filename);
+	g_free(filename);
 
-	return filename;
+	return basename;
 }
 
 /* Some docs report titles with confusing extensions (ex. .doc for pdf).
