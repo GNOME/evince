@@ -4770,7 +4770,7 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePageSetup", NULL, N_("Page Set_up..."), NULL,
+	{ "FilePageSetup", GTK_STOCK_PAGE_SETUP, N_("Page Set_up..."), NULL,
 	  N_("Setup the page settings for printing"),
 	  G_CALLBACK (ev_window_cmd_file_print_setup) },
 	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print..."), "<control>P",
