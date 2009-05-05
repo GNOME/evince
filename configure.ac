@@ -191,22 +191,29 @@ AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
 AM_CONDITIONAL([DBUS_TOOL_NO_PREFIX], [test "x$DBUS_VERSION" = "x33"])
 
 dnl ========= Check for GConf
-AC_ARG_WITH(gconf,
-	AC_HELP_STRING([--without-gconf],[disable the use of gconf]),
-	[case "${withval}" in
-	yes) WITH_GCONF=yes ;;
-	no) WITH_GCONF=no ;;
-	*) AC_MSG_ERROR(bad value ${withval} for --with-gconf) ;;
-	esac],
-	[WITH_GCONF=yes]) dnl Default value
-AM_CONDITIONAL(WITH_GCONF, test x$WITH_GCONF = "xyes")
 
-if test x$WITH_GCONF = "xyes"; then
-   PKG_CHECK_MODULES(GCONF, gconf-2.0)
+AC_MSG_CHECKING([whether GConf support is requested])
+AC_ARG_WITH([gconf],
+  [AS_HELP_STRING([--without-gconf],[disable the use of gconf])],
+  [],[with_gconf=yes])
+AC_MSG_RESULT([$with_gconf])
+
+AM_CONDITIONAL([WITH_GCONF],[test "$with_gconf" = "yes"])
+
+if test "$with_gconf" = "yes"; then
+   PKG_CHECK_MODULES([GCONF],[gconf-2.0])
    AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
 fi
 
+AM_GCONF_SOURCE_2
+
+AC_PATH_PROG([GCONFTOOL], [gconftool-2], [false])
+if test "$with_gconf" = "yes" -a "$GCONFTOOL" = "false"; then
+  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+fi
+
 dnl Debug mode
+
 AC_ARG_ENABLE([debug],
 	AC_HELP_STRING([--enable-debug],
 			[Turn on evince debug mode]),,
@@ -298,14 +305,6 @@ PREVIEWER_CFLAGS="$PREVIEWER_CFLAGS $DEBUG_FLAGS"
 PREVIEWER_LIBS="$PREVIEWER_LIBS -lz"
 AC_SUBST(PREVIEWER_CFLAGS)
 AC_SUBST(PREVIEWER_LIBS)
-
-dnl GConf configuration
-AM_GCONF_SOURCE_2
-
-AC_PATH_PROG([GCONFTOOL], [gconftool-2], [no])
-if test "x$GCONFTOOL" = "xno"; then
-	AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-fi
 
 # ***
 # GIR
@@ -643,7 +642,7 @@ AC_OUTPUT
 
 echo "
 Configure summary:
-        GConf Support......:  $WITH_GCONF
+        GConf Support......:  $with_gconf
 	Keyring Support....:  $WITH_KEYRING
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
