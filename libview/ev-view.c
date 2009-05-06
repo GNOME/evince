@@ -2857,12 +2857,14 @@ ev_view_scroll_drag_release (EvView *view)
 	oldhadjustment = gtk_adjustment_get_value (view->hadjustment);
 	oldvadjustment = gtk_adjustment_get_value (view->vadjustment);
 
-	if (((oldhadjustment + dhadj_value) > (view->hadjustment->upper - view->hadjustment->page_size)) ||
+     /* When we reach the edges, we need either to absorb some momentum and bounce by
+      * multiplying it on -0.5 or stop scrolling by setting momentum to 0. */	
+     if (((oldhadjustment + dhadj_value) > (view->hadjustment->upper - view->hadjustment->page_size)) ||
 	   ((oldhadjustment + dhadj_value) < 0))
-		view->drag_info.momentum.x *= -0.5; /* 0.5 rather than 1 means the edges absorb some momentum */
+		view->drag_info.momentum.x = 0;
 	if (((oldvadjustment + dvadj_value) > (view->vadjustment->upper - view->vadjustment->page_size)) ||
 	   ((oldvadjustment + dvadj_value) < 0))
-		view->drag_info.momentum.y *= -0.5;
+		view->drag_info.momentum.y = 0;
 
 	gtk_adjustment_set_value (view->hadjustment,
 				MIN (oldhadjustment + dhadj_value,
