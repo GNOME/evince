@@ -37,6 +37,8 @@
 #include "ev-pixbuf-cache.h"
 #include "ev-transition-animation.h"
 #include "ev-view-marshal.h"
+#include "ev-document-annotations.h"
+#include "ev-annotation-window.h"
 #include "ev-view.h"
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
@@ -148,6 +150,14 @@ static EvFormField *ev_view_get_form_field_at_location       (EvView            
 							       gdouble            x,
 							       gdouble            y);
 
+/*** Annotations ***/
+static EvAnnotation *ev_view_get_annotation_at_location      (EvView             *view,
+							      gdouble             x,
+							      gdouble             y);
+static void          show_annotation_windows                 (EvView             *view,
+							      gint                page);
+static void          hide_annotation_windows                 (EvView             *view,
+							      gint                page);
 /*** GtkWidget implementation ***/
 static void       ev_view_size_request_continuous_dual_page  (EvView             *view,
 							      GtkRequisition     *requisition);
@@ -427,6 +437,8 @@ view_update_range_and_current_page (EvView *view)
 {
 	gint current_page;
 	gint best_current_page = -1;
+	gint start = view->start_page;
+	gint end = view->end_page;
 	
 	/* Presentation trumps all other modes */
 	if (view->presentation) {
@@ -498,12 +510,24 @@ view_update_range_and_current_page (EvView *view)
 		ev_page_cache_set_current_page (view->page_cache, best_current_page);
 	}
 
-	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
-					view->start_page,
-					view->end_page,
-					view->rotation,
-					view->scale,
-					view->selection_info.selections);
+	if (start != view->start_page || end != view->end_page) {
+		gint i;
+
+		for (i = start; i < view->start_page; i++) {
+			hide_annotation_windows (view, i);
+		}
+
+		for (i = end; i > view->end_page; i--) {
+			hide_annotation_windows (view, i);
+		}
+
+		ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+						view->start_page,
+						view->end_page,
+						view->rotation,
+						view->scale,
+						view->selection_info.selections);
+	}
 }
 
 static void
@@ -1487,8 +1511,9 @@ tip_from_link (EvView *view, EvLink *link)
 static void
 ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 {
-	EvLink      *link;
-	EvFormField *field;
+	EvLink       *link;
+	EvFormField  *field;
+	EvAnnotation *annot = NULL;
 
 	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
@@ -1504,10 +1529,9 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_AUTOSCROLL);
 		return;
 	}
-	
+
 	link = ev_view_get_link_at_location (view, x, y);
         if (link) {
-		g_object_set (view, "has-tooltip", TRUE, NULL);
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 	} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 		if (field->is_read_only) {
@@ -1520,6 +1544,8 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		} else {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 		}
+	} else if ((annot = ev_view_get_annotation_at_location (view, x, y))) {
+		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 	} else {
@@ -1529,6 +1555,9 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		    view->cursor == EV_VIEW_CURSOR_AUTOSCROLL)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
+
+	if (link || annot)
+		g_object_set (view, "has-tooltip", TRUE, NULL);
 }
 
 /*** Images ***/
@@ -2057,6 +2086,359 @@ ev_view_handle_form_field (EvView      *view,
 	gtk_widget_grab_focus (field_widget);
 }
 
+/* Annotations */
+static EvViewWindowChild *
+ev_view_get_window_child (EvView    *view,
+			  GtkWidget *window)
+{
+	GList *children = view->window_children;
+
+	while (children) {
+		EvViewWindowChild *child;
+
+		child = (EvViewWindowChild *)children->data;
+		children = children->next;
+
+		if (child->window == window)
+			return child;
+	}
+
+	return NULL;
+}
+
+static void
+ev_view_window_child_move (EvView            *view,
+			   EvViewWindowChild *child,
+			   gint               x,
+			   gint               y)
+{
+	child->x = x;
+	child->y = y;
+	gtk_window_move (GTK_WINDOW (child->window),
+			 MAX (child->parent_x, x),
+			 MAX (child->parent_y, y));
+}
+
+static void
+ev_view_window_child_move_with_parent (EvView    *view,
+				       GtkWidget *window)
+{
+	EvViewWindowChild *child;
+	gint               root_x, root_y;
+
+	child = ev_view_get_window_child (view, window);
+	gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
+			       &root_x, &root_y);
+	if (root_x != child->parent_x || root_y != child->parent_y) {
+		gint dest_x, dest_y;
+
+		dest_x = child->x + (root_x - child->parent_x);
+		dest_y = child->y + (root_y - child->parent_y);
+		child->parent_x = root_x;
+		child->parent_y = root_y;
+		ev_view_window_child_move (view, child, dest_x, dest_y);
+	}
+
+	if (child->visible && !GTK_WIDGET_VISIBLE (window))
+		gtk_widget_show (window);
+}
+
+static void
+ev_view_window_child_put (EvView    *view,
+			  GtkWidget *window,
+			  guint      page,
+			  gint       x,
+			  gint       y,
+			  gdouble    orig_x,
+			  gdouble    orig_y)
+{
+	EvViewWindowChild *child;
+	gint               root_x, root_y;
+
+	gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
+			       &root_x, &root_y);
+
+	child = g_new0 (EvViewWindowChild, 1);
+	child->window = window;
+	child->page = page;
+	child->orig_x = orig_x;
+	child->orig_y = orig_y;
+	child->parent_x = root_x;
+	child->parent_y = root_y;
+	child->visible = ev_annotation_window_is_open (EV_ANNOTATION_WINDOW (window));
+	ev_view_window_child_move (view, child, x + root_x, y + root_y);
+
+	if (child->visible)
+		gtk_widget_show (window);
+	else
+		gtk_widget_hide (window);
+
+	view->window_children = g_list_append (view->window_children, child);
+}
+
+static EvViewWindowChild *
+ev_view_find_window_child_for_annot (EvView       *view,
+				     guint         page,
+				     EvAnnotation *annot)
+{
+	GList *children = view->window_children;
+
+	while (children) {
+		EvViewWindowChild *child;
+		EvAnnotation      *wannot;
+
+		child = (EvViewWindowChild *)children->data;
+		children = children->next;
+
+		if (child->page != page)
+			continue;
+
+		wannot = ev_annotation_window_get_annotation (EV_ANNOTATION_WINDOW (child->window));
+		if (wannot == annot || strcmp (wannot->name, annot->name) == 0)
+			return child;
+	}
+
+	return NULL;
+}
+
+static void
+ev_view_window_children_free (EvView *view)
+{
+	GList *l;
+
+	if (!view->window_children)
+		return;
+
+	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
+		EvViewWindowChild *child;
+
+		child = (EvViewWindowChild *)l->data;
+		gtk_widget_destroy (GTK_WIDGET (child->window));
+		g_free (child);
+	}
+	g_list_free (view->window_children);
+	view->window_children = NULL;
+	view->window_child_focus = NULL;
+}
+
+static void
+annotation_window_grab_focus (GtkWidget *widget,
+			      EvView    *view)
+{
+	if (view->window_child_focus)
+		ev_annotation_window_ungrab_focus (EV_ANNOTATION_WINDOW (view->window_child_focus->window));
+	view->window_child_focus = ev_view_get_window_child (view, widget);
+}
+
+static void
+annotation_window_closed (EvAnnotationWindow *window,
+			  EvView             *view)
+{
+	EvViewWindowChild *child;
+
+	child = ev_view_get_window_child (view, GTK_WIDGET (window));
+	child->visible = FALSE;
+}
+
+static void
+annotation_window_moved (EvAnnotationWindow *window,
+			 gint                x,
+			 gint                y,
+			 EvView             *view)
+{
+	EvViewWindowChild *child;
+	GdkRectangle       page_area;
+	GtkBorder          border;
+	GdkRectangle       view_rect;
+	EvRectangle        doc_rect;
+	gint               width, height;
+
+	child = ev_view_get_window_child (view, GTK_WIDGET (window));
+	if (child->x == x && child->y == y)
+		return;
+
+	child->moved = TRUE;
+	child->x = x;
+	child->y = y;
+
+	/* Window has been moved by the user,
+	 * we have to set a new origin in doc coords
+	 */
+	gtk_window_get_size (GTK_WINDOW (window), &width, &height);
+	view_rect.x = (x - child->parent_x) + view->scroll_x;
+	view_rect.y = (y - child->parent_y) + view->scroll_y;
+	view_rect.width = width;
+	view_rect.height = height;
+
+	get_page_extents (view, child->page, &page_area, &border);
+	view_rect_to_doc_rect (view, &view_rect, &page_area, &doc_rect);
+	child->orig_x = doc_rect.x1;
+	child->orig_y = doc_rect.y1;
+}
+
+static void
+ev_view_annotation_save (EvView       *view,
+			 EvAnnotation *annot)
+{
+	if (!view->document)
+		return;
+
+	if (!annot->changed)
+		return;
+
+	ev_document_annotations_annotation_set_contents (EV_DOCUMENT_ANNOTATIONS (view->document),
+							 annot, annot->contents);
+	annot->changed = FALSE;
+}
+
+static void
+show_annotation_windows (EvView *view,
+			 gint    page)
+{
+	GList     *annots, *l;
+	GtkWindow *parent;
+
+	parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+
+	annots = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+
+	for (l = annots; l && l->data; l = g_list_next (l)) {
+		EvAnnotationMapping *annotation_mapping;
+		EvAnnotation        *annot;
+		EvViewWindowChild   *child;
+		GtkWidget           *window;
+		EvRectangle         *doc_rect;
+		GdkRectangle         view_rect;
+
+		annotation_mapping = (EvAnnotationMapping *)l->data;
+		annot = annotation_mapping->annotation;
+
+		if (!EV_IS_ANNOTATION_MARKUP (annot))
+			continue;
+
+		window = g_object_get_data (G_OBJECT (annot), "popup");
+		if (window) {
+			ev_view_window_child_move_with_parent (view, window);
+			continue;
+		}
+
+		/* Look if we already have a popup for this annot */
+		child = ev_view_find_window_child_for_annot (view, page, annot);
+		window = child ? child->window : NULL;
+		if (window) {
+			ev_annotation_window_set_annotation (EV_ANNOTATION_WINDOW (window), annot);
+			g_object_set_data (G_OBJECT (annot), "popup", window);
+			ev_view_window_child_move_with_parent (view, window);
+		} else {
+			window = ev_annotation_window_new (annot, parent);
+			g_signal_connect (window, "grab_focus",
+					  G_CALLBACK (annotation_window_grab_focus),
+					  view);
+			g_signal_connect (window, "closed",
+					  G_CALLBACK (annotation_window_closed),
+					  view);
+			g_signal_connect (window, "moved",
+					  G_CALLBACK (annotation_window_moved),
+					  view);
+			g_object_set_data (G_OBJECT (annot), "popup", window);
+
+			doc_rect = (EvRectangle *)ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (window));
+			doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
+			view_rect.x -= view->scroll_x;
+			view_rect.y -= view->scroll_y;
+
+			ev_view_window_child_put (view, window, page,
+						  view_rect.x, view_rect.y,
+						  doc_rect->x1, doc_rect->y1);
+
+			g_object_weak_ref (G_OBJECT (annot),
+					   (GWeakNotify)ev_view_annotation_save,
+					   view);
+		}
+	}
+}
+
+static void
+hide_annotation_windows (EvView *view,
+			 gint    page)
+{
+	GList *annots, *l;
+
+	annots = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+
+	for (l = annots; l && l->data; l = g_list_next (l)) {
+		EvAnnotationMapping *annotation_mapping;
+		EvAnnotation        *annot;
+		GtkWidget           *window;
+
+		annotation_mapping = (EvAnnotationMapping *)l->data;
+		annot = annotation_mapping->annotation;
+
+		if (!EV_IS_ANNOTATION_MARKUP (annot))
+			continue;
+
+		window = g_object_get_data (G_OBJECT (annot), "popup");
+		if (window)
+			gtk_widget_hide (window);
+	}
+}
+
+static EvAnnotation *
+ev_view_get_annotation_at_location (EvView  *view,
+				    gdouble  x,
+				    gdouble  y)
+{
+	gint page = -1;
+	gint x_offset = 0, y_offset = 0;
+	gint x_new = 0, y_new = 0;
+	GList *annotations_mapping;
+
+	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+		return NULL;
+
+	x += view->scroll_x;
+	y += view->scroll_y;
+
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+
+	if (page == -1)
+		return NULL;
+
+	if (get_doc_point_from_offset (view, page, x_offset,
+				       y_offset, &x_new, &y_new) == FALSE)
+		return NULL;
+
+	annotations_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+
+	if (annotations_mapping)
+		return ev_annotation_mapping_find (annotations_mapping, x_new, y_new);
+	else
+		return NULL;
+}
+
+static void
+ev_view_handle_annotation (EvView       *view,
+			   EvAnnotation *annot,
+			   gdouble       x,
+			   gdouble       y)
+{
+	if (EV_IS_ANNOTATION_MARKUP (annot)) {
+		GtkWidget *window;
+
+		window = g_object_get_data (G_OBJECT (annot), "popup");
+		if (window) {
+			EvViewWindowChild *child;
+
+			child = ev_view_get_window_child (view, window);
+			if (!child->visible) {
+				child->visible = TRUE;
+				ev_view_window_child_move (view, child, child->x, child->y);
+				gtk_widget_show (window);
+			}
+		}
+	}
+}
+
 /*** GtkWidget implementation ***/
 
 static void
@@ -2213,6 +2595,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 	GList  *children, *l;
+	gint    root_x, root_y;
 
 	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
 	
@@ -2269,6 +2652,33 @@ ev_view_size_allocate (GtkWidget      *widget,
 		}
 	}
 	g_list_free (children);
+
+	if (view->window_children)
+		gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
+				       &root_x, &root_y);
+
+	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
+		EvViewWindowChild *child;
+		EvRectangle        doc_rect;
+		GdkRectangle       view_rect;
+
+		child = (EvViewWindowChild *)l->data;
+
+		doc_rect = *ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (child->window));
+		if (child->moved) {
+			doc_rect.x1 = child->orig_x;
+			doc_rect.y1 = child->orig_y;
+		}
+		doc_rect_to_view_rect (view, child->page, &doc_rect, &view_rect);
+		view_rect.x -= view->scroll_x;
+		view_rect.y -= view->scroll_y;
+
+		if (view_rect.x != child->orig_x || view_rect.y != child->orig_y) {
+			child->parent_x = root_x;
+			child->parent_y = root_y;
+			ev_view_window_child_move (view, child, view_rect.x + root_x, view_rect.y + root_y);
+		}
+	}
 }
 
 static void
@@ -2488,6 +2898,8 @@ ev_view_expose_event (GtkWidget      *widget,
 
 		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, i);
+		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+			show_annotation_windows (view, i);
 	}
 
 	cairo_destroy (cr);
@@ -2553,19 +2965,55 @@ get_link_area (EvView       *view,
 	ev_link_mapping_get_area (link_mapping, link, &ev_rect);
 
 	doc_rect_to_view_rect (view, page, &ev_rect, area);
-	area->y -= view->scroll_y ;
+	area->y -= view->scroll_y;
+}
+
+static void
+get_annot_area (EvView       *view,
+	       gint          x,
+	       gint          y,
+	       EvAnnotation *annot,
+	       GdkRectangle *area)
+{
+	EvRectangle  ev_rect;
+	GList       *annots_mapping;
+	gint         page;
+	gint         x_offset = 0, y_offset = 0;
+
+	x += view->scroll_x;
+	y += view->scroll_y;
+
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+
+	annots_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+	ev_annotation_mapping_get_area (annots_mapping, annot, &ev_rect);
+
+	doc_rect_to_view_rect (view, page, &ev_rect, area);
+	area->y -= view->scroll_y;
 }
 
 static gboolean
-ev_view_query_tooltip (GtkWidget         *widget,
-		       gint               x,
-		       gint               y,
-		       gboolean           keyboard_tip,
-		       GtkTooltip        *tooltip)
+ev_view_query_tooltip (GtkWidget  *widget,
+		       gint        x,
+		       gint        y,
+		       gboolean    keyboard_tip,
+		       GtkTooltip *tooltip)
 {
-	EvView *view = EV_VIEW (widget);
-	EvLink *link;
-	gchar  *text;
+	EvView       *view = EV_VIEW (widget);
+	EvLink       *link;
+	EvAnnotation *annot;
+	gchar        *text;
+
+	annot = ev_view_get_annotation_at_location (view, x, y);
+	if (annot && annot->contents) {
+		GdkRectangle annot_area;
+
+		get_annot_area (view, x, y, annot, &annot_area);
+		gtk_tooltip_set_text (tooltip, annot->contents);
+		gtk_tooltip_set_tip_area (tooltip, &annot_area);
+
+		return TRUE;
+	}
 
 	link = ev_view_get_link_at_location (view, x, y);
 	if (!link)
@@ -2622,6 +3070,17 @@ ev_view_button_press_event (GtkWidget      *widget,
 	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
 		gtk_widget_grab_focus (widget);
 	}
+
+	if (view->window_child_focus) {
+		EvAnnotationWindow *window;
+		EvAnnotation       *annot;
+
+		window = EV_ANNOTATION_WINDOW (view->window_child_focus->window);
+		annot = ev_annotation_window_get_annotation (window);
+		ev_annotation_window_ungrab_focus (window);
+		ev_view_annotation_save (view, annot);
+		view->window_child_focus = NULL;
+	}
 	
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
@@ -2632,6 +3091,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 	switch (event->button) {
 	        case 1: {
 			EvImage *image;
+			EvAnnotation *annot;
 			EvFormField *field;
 
 			if (EV_IS_SELECTION (view->document) && view->selection_info.selections) {
@@ -2646,6 +3106,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 				}
 
 				gtk_widget_queue_draw (widget);
+			} else if ((annot = ev_view_get_annotation_at_location (view, event->x, event->y))) {
+				ev_view_handle_annotation (view, annot, event->x, event->y);
 			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
 				ev_view_remove_all (view);
 				ev_view_handle_form_field (view, field, event->x, event->y);
@@ -3337,9 +3799,23 @@ ev_view_key_press_event (GtkWidget   *widget,
 
 	if (!view->document)
 		return FALSE;
-	
-	if (!view->presentation ||
-	    view->presentation_state == EV_PRESENTATION_END)
+
+	if (!view->presentation) {
+		/* Forward key events to current focused window child */
+		if (view->window_child_focus) {
+			GdkEventKey *new_event;
+			gboolean     handled;
+
+			new_event = (GdkEventKey *) gdk_event_copy ((GdkEvent *)event);
+			g_object_unref (new_event->window);
+			new_event->window = g_object_ref (view->window_child_focus->window->window);
+			gtk_widget_realize (view->window_child_focus->window);
+			handled = gtk_widget_event (view->window_child_focus->window, (GdkEvent *)new_event);
+			gdk_event_free ((GdkEvent *)new_event);
+
+			return handled;
+		}
+	} else if (view->presentation_state == EV_PRESENTATION_END)
 		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
 
 
@@ -3752,6 +4228,8 @@ ev_view_destroy (GtkObject *object)
 		view->goto_window = NULL;
 		view->goto_entry = NULL;
 	}
+
+	ev_view_window_children_free (view);
 
 	if (view->selection_scroll_id) {
 	    g_source_remove (view->selection_scroll_id);
@@ -4246,6 +4724,14 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 		gtk_layout_move (GTK_LAYOUT (view), child, child_x + dx, child_y + dy);
 	}
 	g_list_free (children);
+
+	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
+		EvViewWindowChild *child;
+
+		child = (EvViewWindowChild *)l->data;
+
+		ev_view_window_child_move (view, child, child->x + dx, child->y + dy);
+	}
 	
 	if (view->pending_resize)
 		gtk_widget_queue_draw (GTK_WIDGET (view));

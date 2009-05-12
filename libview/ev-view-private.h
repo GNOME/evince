@@ -72,6 +72,27 @@ typedef struct {
 	EvImage *image;
 } ImageDNDInfo;
 
+/* Annotation popup windows */
+typedef struct {
+	GtkWidget *window;
+	guint      page;
+
+	/* Current position */
+	gint       x;
+	gint       y;
+
+	/* EvView root position */
+	gint       parent_x;
+	gint       parent_y;
+
+	/* Document coords */
+	gdouble    orig_x;
+	gdouble    orig_y;
+
+	gboolean   visible;
+	gboolean   moved;
+} EvViewWindowChild;
+
 typedef enum {
 	SCROLL_TO_KEEP_POSITION,
 	SCROLL_TO_PAGE_POSITION,
@@ -178,6 +199,10 @@ struct _EvView {
 	GtkWidget *goto_entry;
 
 	EvTransitionAnimation *animation;
+
+	/* Annotations */
+	GList             *window_children;
+	EvViewWindowChild *window_child_focus;
 };
 
 struct _EvViewClass {
