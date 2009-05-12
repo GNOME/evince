@@ -4748,6 +4748,30 @@ ev_window_dispose (GObject *object)
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
 
+static gboolean
+ev_window_key_press_event (GtkWidget   *widget,
+			   GdkEventKey *event)
+{
+	EvWindow *ev_window = EV_WINDOW (widget);
+	gboolean  handled = FALSE;
+
+	/* Propagate the event to the view first
+	 * It's needed to be able to type in
+	 * annot popups windows
+	 */
+	if (ev_window->priv->view) {
+		g_object_ref (ev_window->priv->view);
+		if (GTK_WIDGET_IS_SENSITIVE (ev_window->priv->view))
+			handled = gtk_widget_event (ev_window->priv->view, (GdkEvent*) event);
+		g_object_unref (ev_window->priv->view);
+	}
+
+	if (!handled)
+		handled = GTK_WIDGET_CLASS (ev_window_parent_class)->key_press_event (widget, event);
+
+	return handled;
+}
+
 static void
 ev_window_class_init (EvWindowClass *ev_window_class)
 {
@@ -4757,6 +4781,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	g_object_class->dispose = ev_window_dispose;
 	g_object_class->finalize = ev_window_finalize;
 
+	widget_class->key_press_event = ev_window_key_press_event;
 	widget_class->screen_changed = ev_window_screen_changed;
 	widget_class->window_state_event = ev_window_state_event;
 	widget_class->drag_data_received = ev_window_drag_data_received;
