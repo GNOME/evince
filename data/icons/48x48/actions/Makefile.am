@@ -5,8 +5,11 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
+	close.png			\
 	view-page-continuous.png	\
-	view-page-facing.png
+	view-page-facing.png		\
+	resize-se.png			\
+	resize-sw.png
 
 noinst_DATA = 
 
