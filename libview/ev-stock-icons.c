@@ -132,8 +132,3 @@ ev_stock_icons_shutdown (void)
 	g_free (ev_icons_path);
 }
 
-void
-ev_stock_icons_add_icons_path (void)
-{
-	ev_stock_icons_add_icons_path_for_screen (gdk_screen_get_default ());
-}
