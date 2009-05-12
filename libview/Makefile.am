@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libevview.la
 
 NOINST_H_FILES =			\
+	ev-annotation-window.h		\
 	ev-pixbuf-cache.h		\
 	ev-timeline.h			\
 	ev-transition-animation.h	\
@@ -20,6 +21,7 @@ headerdir = $(includedir)/evince/$(EV_API_VERSION)/libview
 header_DATA = $(INST_H_FILES)
 
 libevview_la_SOURCES = 			\
+	ev-annotation-window.c		\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
 	ev-page-cache.c			\
