@@ -2518,7 +2518,6 @@ pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface)
 static gboolean
 pdf_document_layers_has_layers (EvDocumentLayers *document)
 {
-#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	PopplerLayersIter *iter;
 
@@ -2528,12 +2527,8 @@ pdf_document_layers_has_layers (EvDocumentLayers *document)
 	poppler_layers_iter_free (iter);
 
 	return TRUE;
-#else
-	return FALSE;
-#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
 }
 
-#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
 static void
 build_layers_tree (PdfDocument       *pdf_document,
 		   GtkTreeModel      *model,
@@ -2589,13 +2584,11 @@ build_layers_tree (PdfDocument       *pdf_document,
 		poppler_layers_iter_free (child);
 	} while (poppler_layers_iter_next (iter));
 }
-#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
 
 static GtkTreeModel *
 pdf_document_layers_get_layers (EvDocumentLayers *document)
 {
 	GtkTreeModel *model = NULL;
-#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	PopplerLayersIter *iter;
 
@@ -2611,8 +2604,6 @@ pdf_document_layers_get_layers (EvDocumentLayers *document)
 		build_layers_tree (pdf_document, model, NULL, iter);
 		poppler_layers_iter_free (iter);
 	}
-	
-#endif
 	return model;
 }
 
@@ -2620,42 +2611,30 @@ static void
 pdf_document_layers_show_layer (EvDocumentLayers *document,
 				EvLayer          *layer)
 {
-#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	guint        layer_id = ev_layer_get_id (layer);
 
 	poppler_layer_show (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
-#else
-	return;
-#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
 }
 
 static void
 pdf_document_layers_hide_layer (EvDocumentLayers *document,
 				EvLayer          *layer)
 {
-#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	guint        layer_id = ev_layer_get_id (layer);
 
 	poppler_layer_hide (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
-#else
-	return;
-#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
 }
 
 static gboolean
 pdf_document_layers_layer_is_visible (EvDocumentLayers *document,
 				      EvLayer          *layer)
 {
-#ifdef HAVE_POPPLER_LAYERS_ITER_NEW
 	PdfDocument *pdf_document = PDF_DOCUMENT (document);
 	guint        layer_id = ev_layer_get_id (layer);
 
 	return poppler_layer_is_visible (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
-#else
-	return FALSE;
-#endif /* HAVE_POPPLER_LAYERS_ITER_NEW */
 }
 
 static void
