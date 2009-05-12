@@ -33,6 +33,7 @@
 #include "ev-document-security.h"
 #include "ev-document-find.h"
 #include "ev-document-layers.h"
+#include "ev-document-annotations.h"
 #include "ev-debug.h"
 
 #include <errno.h>
@@ -558,6 +559,10 @@ ev_job_render_run (EvJob *job)
 		job_render->image_mapping =
 			ev_document_images_get_image_mapping (EV_DOCUMENT_IMAGES (job->document),
 							      job_render->page);
+	if ((job_render->flags & EV_RENDER_INCLUDE_ANNOTS) && EV_IS_DOCUMENT_ANNOTATIONS (job->document))
+		job_render->annots_mapping =
+			ev_document_annotations_get_annotations (EV_DOCUMENT_ANNOTATIONS (job->document),
+								 job_render->ev_page);
 	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
 	

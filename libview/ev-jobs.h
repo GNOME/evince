@@ -187,7 +187,8 @@ typedef enum {
 	EV_RENDER_INCLUDE_SELECTION = 1 << 2,
 	EV_RENDER_INCLUDE_IMAGES    = 1 << 3,
 	EV_RENDER_INCLUDE_FORMS     = 1 << 4,
-	EV_RENDER_INCLUDE_ALL       = (1 << 5) - 1
+	EV_RENDER_INCLUDE_ANNOTS    = 1 << 5,
+	EV_RENDER_INCLUDE_ALL       = (1 << 6) - 1
 } EvRenderFlags;
 
 struct _EvJobRender
@@ -208,6 +209,7 @@ struct _EvJobRender
 	GdkRegion *text_mapping;
 	GList *image_mapping;
 	GList *form_field_mapping;
+	GList *annots_mapping;
 
 	cairo_surface_t *selection;
 	GdkRegion *selection_region;

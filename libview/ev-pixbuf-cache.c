@@ -5,8 +5,10 @@
 #include "ev-document-images.h"
 #include "ev-document-forms.h"
 #include "ev-document-links.h"
+#include "ev-document-annotations.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
+#include "ev-annotation.h"
 
 typedef struct _CacheJobInfo
 {
@@ -22,6 +24,7 @@ typedef struct _CacheJobInfo
 	GList *link_mapping;
 	GList *image_mapping;
 	GList *form_field_mapping;
+	GList *annots_mapping;
 	GdkRegion *text_mapping;
 	
 	/* Selection data. 
@@ -187,6 +190,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 	if (job_info->form_field_mapping) {
 		ev_form_field_mapping_free (job_info->form_field_mapping);
 		job_info->form_field_mapping = NULL;
+	}
+	if (job_info->annots_mapping) {
+		ev_annotation_mapping_free (job_info->annots_mapping);
+		job_info->annots_mapping = NULL;
 	}
 	if (job_info->text_mapping) {
 		gdk_region_destroy (job_info->text_mapping);
@@ -373,6 +380,7 @@ move_one_job (CacheJobInfo  *job_info,
 	job_info->link_mapping = NULL;
 	job_info->image_mapping = NULL;
 	job_info->form_field_mapping = NULL;
+	job_info->annots_mapping = NULL;
 
 	if (new_priority != priority && target_page->job) {
 		ev_job_scheduler_update_job (target_page->job, new_priority);
@@ -527,6 +535,12 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		job_info->form_field_mapping = job_render->form_field_mapping;
 	}
 
+	if (job_render->flags & EV_RENDER_INCLUDE_ANNOTS) {
+		if (job_info->annots_mapping)
+			ev_annotation_mapping_free (job_info->annots_mapping);
+		job_info->annots_mapping = job_render->annots_mapping;
+	}
+
 	if (job_render->flags & EV_RENDER_INCLUDE_TEXT) {
 		if (job_info->text_mapping)
 			gdk_region_destroy (job_info->text_mapping);
@@ -633,6 +647,8 @@ add_job (EvPixbufCache *pixbuf_cache,
 		flags |= EV_RENDER_INCLUDE_IMAGES;
 	if (job_info->form_field_mapping == NULL)
 		flags |= EV_RENDER_INCLUDE_FORMS;
+	if (job_info->annots_mapping == NULL)
+		flags |= EV_RENDER_INCLUDE_ANNOTS;
 	if (job_info->text_mapping == NULL)
 		flags |= EV_RENDER_INCLUDE_TEXT;
 
@@ -847,6 +863,28 @@ ev_pixbuf_cache_get_form_field_mapping (EvPixbufCache *pixbuf_cache,
 	}
 	
 	return job_info->form_field_mapping;
+}
+
+GList *
+ev_pixbuf_cache_get_annots_mapping (EvPixbufCache *pixbuf_cache,
+				    gint           page)
+{
+	CacheJobInfo *job_info;
+
+	if (!EV_IS_DOCUMENT_ANNOTATIONS (pixbuf_cache->document))
+		return NULL;
+
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* We don't need to wait for the idle to handle the callback */
+	if (job_info->job &&
+	   EV_JOB (job_info->job)->finished) {
+		copy_job_to_job_info (EV_JOB_RENDER (job_info->job), job_info, pixbuf_cache);
+	}
+
+	return job_info->annots_mapping;
 }
 
 static gboolean
