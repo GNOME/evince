@@ -26,6 +26,7 @@
 #include <libview/ev-page-cache.h>
 #include <libview/ev-view.h>
 #include <libview/ev-view-type-builtins.h>
+#include <libview/ev-stock-icons.h>
 
 #undef __EV_EVINCE_VIEW_H_INSIDE__
 

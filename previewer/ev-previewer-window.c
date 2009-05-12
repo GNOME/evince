@@ -23,7 +23,6 @@
 #include <gtk/gtkunixprint.h>
 #include <glib/gi18n.h>
 #include <evince-view.h>
-#include "ev-stock-icons.h"
 #include "ev-page-action.h"
 
 #include "ev-previewer-window.h"

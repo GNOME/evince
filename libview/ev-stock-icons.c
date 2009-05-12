@@ -24,7 +24,6 @@
 #include <config.h>
 
 #include <gtk/gtk.h>
-#include <gdk/gdk.h>
 
 #include "ev-stock-icons.h"
 
@@ -47,6 +46,36 @@ static const EvStockIcon stock_icons [] = {
 };
 
 static gchar *ev_icons_path;
+
+static void
+ev_stock_icons_add_icons_path_for_screen (GdkScreen *screen)
+{
+	GtkIconTheme *icon_theme;
+
+	g_return_if_fail (ev_icons_path != NULL);
+
+	icon_theme = screen ? gtk_icon_theme_get_for_screen (screen) : gtk_icon_theme_get_default ();
+	if (icon_theme) {
+		gchar **path = NULL;
+		gint    n_paths;
+		gint    i;
+
+		/* GtkIconTheme will then look in Evince custom hicolor dir
+		 * for icons as well as the standard search paths
+		 */
+		gtk_icon_theme_get_search_path (icon_theme, &path, &n_paths);
+		for (i = n_paths - 1; i >= 0; i--) {
+			if (g_ascii_strcasecmp (ev_icons_path, path[i]) == 0)
+				break;
+		}
+
+		if (i < 0)
+			gtk_icon_theme_append_search_path (icon_theme,
+							   ev_icons_path);
+
+		g_strfreev (path);
+	}
+}
 
 /**
  * ev_stock_icons_init:
@@ -83,43 +112,21 @@ ev_stock_icons_init (void)
 
 	g_object_unref (G_OBJECT (factory));
 
-	ev_stock_icons_add_icons_path ();
+	ev_stock_icons_add_icons_path_for_screen (gdk_screen_get_default ());
+}
+
+void
+ev_stock_icons_set_screen (GdkScreen *screen)
+{
+	g_return_if_fail (GDK_IS_SCREEN (screen));
+
+	ev_stock_icons_add_icons_path_for_screen (screen);
 }
 
 void
 ev_stock_icons_shutdown (void)
 {
 	g_free (ev_icons_path);
-}
-
-void
-ev_stock_icons_add_icons_path_for_screen (GdkScreen *screen)
-{
-	GtkIconTheme *icon_theme;
-
-	g_return_if_fail (ev_icons_path != NULL);
-	
-	icon_theme = screen ? gtk_icon_theme_get_for_screen (screen) : gtk_icon_theme_get_default ();
-	if (icon_theme) {
-		gchar **path = NULL;
-		gint    n_paths;
-		gint    i;
-
-		/* GtkIconTheme will then look in Evince custom hicolor dir
-		 * for icons as well as the standard search paths
-		 */
-		gtk_icon_theme_get_search_path (icon_theme, &path, &n_paths);
-		for (i = n_paths - 1; i >= 0; i--) {
-			if (g_ascii_strcasecmp (ev_icons_path, path[i]) == 0)
-				break;
-		}
-
-		if (i < 0)
-			gtk_icon_theme_append_search_path (icon_theme,
-							   ev_icons_path);
-
-		g_strfreev (path);
-	}
 }
 
 void

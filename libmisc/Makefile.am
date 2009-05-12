@@ -4,9 +4,7 @@ libevmisc_la_SOURCES = \
 	ev-page-action.c	\
 	ev-page-action.h	\
 	ev-page-action-widget.c	\
-	ev-page-action-widget.h	\
-	ev-stock-icons.c	\
-	ev-stock-icons.h
+	ev-page-action-widget.h
 
 libevmisc_la_CFLAGS =	\
 	-DDATADIR=\"$(pkgdatadir)\"	\

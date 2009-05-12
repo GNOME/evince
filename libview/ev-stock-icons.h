@@ -21,17 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-view.h> can be included directly."
+#endif
+
 #ifndef __EV_STOCK_ICONS_H__
 #define __EV_STOCK_ICONS_H__
 
-#include <glib.h>
+#include <gdk/gdk.h>
 
 G_BEGIN_DECLS
 
 /* Evince stock icons */
 #define EV_STOCK_ZOOM	                "zoom"
-#define EV_STOCK_ZOOM_PAGE              "zoom-fit-page" 
-#define EV_STOCK_ZOOM_WIDTH             "zoom-fit-width" 
+#define EV_STOCK_ZOOM_PAGE              "zoom-fit-page"
+#define EV_STOCK_ZOOM_WIDTH             "zoom-fit-width"
 #define EV_STOCK_VIEW_DUAL       	"view-page-facing"
 #define EV_STOCK_VIEW_CONTINUOUS        "view-page-continuous"
 #define EV_STOCK_ROTATE_LEFT            "object-rotate-left"
@@ -39,10 +43,9 @@ G_BEGIN_DECLS
 #define EV_STOCK_RUN_PRESENTATION       "x-office-presentation"
 #define EV_STOCK_VISIBLE                "eye"
 
-void ev_stock_icons_init                      (void);
-void ev_stock_icons_shutdown                  (void);
-void ev_stock_icons_add_icons_path            (void);
-void ev_stock_icons_add_icons_path_for_screen (GdkScreen *screen);
+void ev_stock_icons_init       (void);
+void ev_stock_icons_shutdown   (void);
+void ev_stock_icons_set_screen (GdkScreen *screen);
 
 G_END_DECLS
 

@@ -12,6 +12,7 @@ INST_H_FILES = 				\
 	ev-jobs.h			\
 	ev-job-scheduler.h		\
 	ev-page-cache.h			\
+	ev-stock-icons.h		\
 	ev-view.h			\
 	ev-view-type-builtins.h
 
@@ -23,6 +24,7 @@ libevview_la_SOURCES = 			\
 	ev-job-scheduler.c		\
 	ev-page-cache.c			\
 	ev-pixbuf-cache.c		\
+	ev-stock-icons.c		\
 	ev-timeline.c			\
 	ev-transition-animation.c	\
 	ev-view.c			\
@@ -33,6 +35,7 @@ libevview_la_SOURCES = 			\
 	$(INST_H_FILES)
 
 libevview_la_CPPFLAGS = \
+	-DDATADIR=\"$(pkgdatadir)\"		\
 	-DG_LOG_DOMAIN=\"EvinceView\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DEVINCE_COMPILATION			\

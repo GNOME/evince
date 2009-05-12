@@ -412,7 +412,7 @@ ev_application_open_window (EvApplication  *application,
 	}
 	
 	if (screen) {
-		ev_stock_icons_add_icons_path_for_screen (screen);
+		ev_stock_icons_set_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 
@@ -536,7 +536,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	}
 
 	if (screen) {
-		ev_stock_icons_add_icons_path_for_screen (screen);
+		ev_stock_icons_set_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 

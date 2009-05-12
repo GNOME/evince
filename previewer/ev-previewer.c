@@ -24,7 +24,6 @@
 #include <glib/gi18n.h>
 #include <evince-document.h>
 #include <evince-view.h>
-#include "ev-stock-icons.h"
 
 #include "ev-previewer-window.h"
 
