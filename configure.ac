@@ -44,6 +44,7 @@ AC_INIT([Evince],[ev_version],[http://bugzilla.gnome.org/enter_bug.cgi?product=e
 AM_INIT_AUTOMAKE([1.9 dist-bzip2 no-dist-gzip])
 
 AM_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR(m4)
 
 AM_MAINTAINER_MODE
 
@@ -576,6 +577,8 @@ AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
 
 # *****************************************************************************
 
+SHAVE_INIT([.], [enable])
+
 AC_CONFIG_FILES([
 backend/Makefile
 backend/comics/Makefile
@@ -629,6 +632,8 @@ Makefile
 po/Makefile.in
 previewer/Makefile
 properties/Makefile
+shave
+shave-libtool
 shell/Makefile
 test/Makefile
 thumbnailer/Makefile

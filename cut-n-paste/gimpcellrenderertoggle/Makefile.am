@@ -1,3 +1,5 @@
+QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
+
 noinst_LTLIBRARIES = libgimpcellrenderertoggle.la
 
 libgimpcellrenderertoggle_la_sources =	\
@@ -20,12 +22,12 @@ libgimpcellrenderertoggle_la_SOURCES = 			\
 libgimpcellrenderertoggle_la_extra_sources = gimpwidgetsmarshal.list
 
 gimpwidgetsmarshal.h: $(srcdir)/gimpwidgetsmarshal.list
-	$(GLIB_GENMARSHAL) --prefix=_gimp_widgets_marshal $(srcdir)/gimpwidgetsmarshal.list --header >> xgen-wmh \
+	$(QUIET_GEN)$(GLIB_GENMARSHAL) --prefix=_gimp_widgets_marshal $(srcdir)/gimpwidgetsmarshal.list --header >> xgen-wmh \
         && (cmp -s xgen-wmh $(@F) || cp xgen-wmh $(@F)) \
         && rm -f xgen-wmh xgen-wmh~
 
 gimpwidgetsmarshal.c: gimpwidgetsmarshal.h
-	echo "#include \"gimpwidgetsmarshal.h\"" >> xgen-wmc \
+	$(QUIET_GEN)echo "#include \"gimpwidgetsmarshal.h\"" >> xgen-wmc \
         && $(GLIB_GENMARSHAL) --prefix=_gimp_widgets_marshal $(srcdir)/gimpwidgetsmarshal.list --body >> xgen-wmc \
         && cp xgen-wmc $(@F) \
         && rm -f xgen-wmc xgen-wmc~

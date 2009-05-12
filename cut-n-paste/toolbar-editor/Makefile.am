@@ -1,3 +1,5 @@
+QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
+
 EGGSOURCES = \
 	egg-editable-toolbar.c \
 	egg-toolbars-model.c \
@@ -44,19 +46,19 @@ stamp_files = \
 eggmarshalers.h: stamp-eggmarshalers.h
 	@true
 stamp-eggmarshalers.h: eggmarshalers.list
-	$(GLIB_GENMARSHAL) --prefix=_egg_marshal $(srcdir)/eggmarshalers.list --header > eggmarshalers.h \
+	$(QUIET_GEN)$(GLIB_GENMARSHAL) --prefix=_egg_marshal $(srcdir)/eggmarshalers.list --header > eggmarshalers.h \
 	&& echo timestamp > $(@F)
 
 eggmarshalers.c: stamp-eggmarshalers.c
 	@true
 stamp-eggmarshalers.c: eggmarshalers.list
-	$(GLIB_GENMARSHAL) --prefix=_egg_marshal $(srcdir)/eggmarshalers.list --header --body > eggmarshalers.c \
+	$(QUIET_GEN)$(GLIB_GENMARSHAL) --prefix=_egg_marshal $(srcdir)/eggmarshalers.list --header --body > eggmarshalers.c \
 	&& echo timestamp > $(@F)
 
 eggtypebuiltins.c: stamp-eggtypebuiltins.c
 	@true
 stamp-eggtypebuiltins.c: $(EGGHEADERS)
-	( cd $(srcdir) && $(GLIB_MKENUMS) \
+	$(QUIET_GEN)( cd $(srcdir) && $(GLIB_MKENUMS) \
 		--fhead "#include <config.h>\n\n" \
 		--fhead "#include \"eggtypebuiltins.h\"\n\n" \
 		--fprod "\n/* enumerations from \"@filename@\" */" \
@@ -77,7 +79,7 @@ stamp-eggtypebuiltins.c: $(EGGHEADERS)
 eggtypebuiltins.h: stamp-eggtypebuiltins.h
 	@true
 stamp-eggtypebuiltins.h: $(EGGHEADERS)
-	( cd $(srcdir) && $(GLIB_MKENUMS) \
+	$(QUIET_GEN)( cd $(srcdir) && $(GLIB_MKENUMS) \
 		--fhead "#ifndef __EGGTYPEBUILTINS_H__\n" \
 		--fhead "#define __EGGTYPEBUILTINS_H__ 1\n\n" \
 		--fhead "#include <glib-object.h>\n\n" \
