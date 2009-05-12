@@ -45,6 +45,7 @@
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
 #include "ev-document-layers.h"
+#include "ev-document-annotations.h"
 #include "ev-selection.h"
 #include "ev-transition-effect.h"
 #include "ev-attachment.h"
@@ -104,23 +105,24 @@ struct _PdfDocument
 	GList *layers;
 };
 
-static void pdf_document_document_iface_init            (EvDocumentIface           *iface);
-static void pdf_document_security_iface_init            (EvDocumentSecurityIface   *iface);
-static void pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-static void pdf_document_document_links_iface_init      (EvDocumentLinksIface      *iface);
-static void pdf_document_document_images_iface_init     (EvDocumentImagesIface     *iface);
-static void pdf_document_document_forms_iface_init      (EvDocumentFormsIface      *iface);
-static void pdf_document_document_fonts_iface_init      (EvDocumentFontsIface      *iface);
-static void pdf_document_document_layers_iface_init     (EvDocumentLayersIface     *iface);
-static void pdf_document_find_iface_init                (EvDocumentFindIface       *iface);
-static void pdf_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
-static void pdf_selection_iface_init                    (EvSelectionIface          *iface);
-static void pdf_document_page_transition_iface_init     (EvDocumentTransitionIface *iface);
-static void pdf_document_thumbnails_get_dimensions      (EvDocumentThumbnails      *document_thumbnails,
-							 EvRenderContext           *rc,
-							 gint                      *width,
-							 gint                      *height);
-static int  pdf_document_get_n_pages			(EvDocument                *document);
+static void pdf_document_document_iface_init             (EvDocumentIface            *iface);
+static void pdf_document_security_iface_init             (EvDocumentSecurityIface    *iface);
+static void pdf_document_document_thumbnails_iface_init  (EvDocumentThumbnailsIface  *iface);
+static void pdf_document_document_links_iface_init       (EvDocumentLinksIface       *iface);
+static void pdf_document_document_images_iface_init      (EvDocumentImagesIface      *iface);
+static void pdf_document_document_forms_iface_init       (EvDocumentFormsIface       *iface);
+static void pdf_document_document_fonts_iface_init       (EvDocumentFontsIface       *iface);
+static void pdf_document_document_layers_iface_init      (EvDocumentLayersIface      *iface);
+static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface);
+static void pdf_document_find_iface_init                 (EvDocumentFindIface        *iface);
+static void pdf_document_file_exporter_iface_init        (EvFileExporterIface        *iface);
+static void pdf_selection_iface_init                     (EvSelectionIface           *iface);
+static void pdf_document_page_transition_iface_init      (EvDocumentTransitionIface  *iface);
+static void pdf_document_thumbnails_get_dimensions       (EvDocumentThumbnails       *document_thumbnails,
+							  EvRenderContext            *rc,
+							  gint                       *width,
+							  gint                       *height);
+static int  pdf_document_get_n_pages			 (EvDocument                 *document);
 
 static EvLinkDest *ev_link_dest_from_dest   (PdfDocument       *pdf_document,
 					     PopplerDest       *dest);
@@ -145,6 +147,8 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 								 pdf_document_document_fonts_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
 								 pdf_document_document_layers_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
+								 pdf_document_document_annotations_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 								 pdf_document_find_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
@@ -2329,6 +2333,185 @@ pdf_document_document_forms_iface_init (EvDocumentFormsIface *iface)
 	iface->form_field_choice_unselect_all = pdf_document_forms_form_field_choice_unselect_all;
 	iface->form_field_choice_set_text = pdf_document_forms_form_field_choice_set_text;
 	iface->form_field_choice_get_text = pdf_document_forms_form_field_choice_get_text;
+}
+
+/* Annotations */
+static void
+poppler_annot_color_to_gdk_color (PopplerAnnot *poppler_annot,
+				  GdkColor     *color)
+{
+	PopplerColor *poppler_color;
+
+	poppler_color = poppler_annot_get_color (poppler_annot);
+	if (poppler_color) {
+		color->red = poppler_color->red;
+		color->green = poppler_color->green;
+		color->blue = poppler_color->blue;
+
+		g_free (poppler_color);
+	} /* TODO: else use a default color */
+}
+
+static EvAnnotation *
+ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
+			     EvPage       *page)
+{
+	EvAnnotation *ev_annot = NULL;
+	const gchar  *unimplemented_annot = NULL;
+
+	switch (poppler_annot_get_annot_type (poppler_annot)) {
+	        case POPPLER_ANNOT_TEXT:
+			PopplerAnnotText *poppler_text;
+			EvAnnotationText *ev_annot_text;
+
+			poppler_text = POPPLER_ANNOT_TEXT (poppler_annot);
+
+			ev_annot = ev_annotation_text_new (page);
+
+			ev_annot_text = EV_ANNOTATION_TEXT (ev_annot);
+			ev_annot_text->is_open = poppler_annot_text_get_is_open (poppler_text);
+
+			break;
+	        case POPPLER_ANNOT_LINK:
+	        case POPPLER_ANNOT_WIDGET:
+			/* Ignore link and widgets annots since they are already handled */
+			break;
+	        default: {
+			GEnumValue *enum_value;
+
+			enum_value = g_enum_get_value ((GEnumClass *) g_type_class_ref (POPPLER_TYPE_ANNOT_TYPE),
+						       poppler_annot_get_annot_type (poppler_annot));
+			unimplemented_annot = enum_value ? enum_value->value_name : "Unknown annotation";
+		}
+	}
+
+	if (unimplemented_annot) {
+		g_warning ("Unimplemented annotation: %s, please post a "
+		           "bug report in Evince bugzilla "
+		           "(http://bugzilla.gnome.org) with a testcase.",
+			   unimplemented_annot);
+	}
+
+	if (ev_annot) {
+		ev_annot->contents = poppler_annot_get_contents (poppler_annot);
+		ev_annot->name = poppler_annot_get_name (poppler_annot);
+		ev_annot->modified = poppler_annot_get_modified (poppler_annot);
+		poppler_annot_color_to_gdk_color (poppler_annot, &ev_annot->color);
+
+		if (POPPLER_IS_ANNOT_MARKUP (poppler_annot)) {
+			PopplerAnnotMarkup *markup;
+			gchar *label;
+			gdouble opacity;
+			gboolean is_open;
+			PopplerRectangle poppler_rect;
+
+			markup = POPPLER_ANNOT_MARKUP (poppler_annot);
+
+			if (poppler_annot_markup_get_popup_rectangle (markup, &poppler_rect)) {
+				EvRectangle ev_rect;
+				gdouble height;
+
+				poppler_page_get_size (POPPLER_PAGE (page->backend_page),
+						       NULL, &height);
+				ev_rect.x1 = poppler_rect.x1;
+				ev_rect.x2 = poppler_rect.x2;
+				ev_rect.y1 = height - poppler_rect.y2;
+				ev_rect.y2 = height - poppler_rect.y1;
+
+				g_object_set (ev_annot, "rectangle", &ev_rect, NULL);
+			}
+
+			label = poppler_annot_markup_get_label (markup);
+			opacity = poppler_annot_markup_get_opacity (markup);
+			is_open = poppler_annot_markup_get_popup_is_open (markup);
+
+			g_object_set (ev_annot,
+				      "label", label,
+				      "opacity", opacity,
+				      "is_open", is_open,
+				      NULL);
+
+			g_free (label);
+		}
+	}
+
+	return ev_annot;
+}
+
+static GList *
+pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annotations,
+					  EvPage                *page)
+{
+	GList *retval = NULL;
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	GList *annots;
+	GList *list;
+	gdouble height;
+	gint i = 0;
+
+	pdf_document = PDF_DOCUMENT (document_annotations);
+	poppler_page = POPPLER_PAGE (page->backend_page);
+	annots = poppler_page_get_annot_mapping (poppler_page);
+	poppler_page_get_size (poppler_page, NULL, &height);
+
+	for (list = annots; list; list = list->next) {
+		PopplerAnnotMapping *mapping;
+		EvAnnotationMapping *annot_mapping;
+		EvAnnotation        *ev_annot;
+
+		mapping = (PopplerAnnotMapping *)list->data;
+
+		ev_annot = ev_annot_from_poppler_annot (mapping->annot, page);
+		if (!ev_annot)
+			continue;
+
+		i++;
+
+		/* Make sure annot has a unique name */
+		if (!ev_annot->name)
+			ev_annot->name = g_strdup_printf ("annot-%d-%d", page->index, i);
+
+		annot_mapping = g_new0 (EvAnnotationMapping, 1);
+		annot_mapping->x1 = mapping->area.x1;
+		annot_mapping->x2 = mapping->area.x2;
+		annot_mapping->y1 = height - mapping->area.y2;
+		annot_mapping->y2 = height - mapping->area.y1;
+		annot_mapping->annotation = ev_annot;
+
+		g_object_set_data_full (G_OBJECT (ev_annot),
+					"poppler-annot",
+					g_object_ref (mapping->annot),
+					(GDestroyNotify) g_object_unref);
+
+		retval = g_list_prepend (retval, annot_mapping);
+	}
+
+	poppler_page_free_annot_mapping (annots);
+
+	return g_list_reverse (retval);
+}
+
+static void
+pdf_document_annotations_annotation_set_contents (EvDocumentAnnotations *document,
+						  EvAnnotation          *annot,
+						  const gchar           *contents)
+{
+	PopplerAnnot *poppler_annot;
+
+	poppler_annot = POPPLER_ANNOT (g_object_get_data (G_OBJECT (annot), "poppler-annot"));
+	if (!poppler_annot)
+		return;
+
+	poppler_annot_set_contents (poppler_annot, contents);
+	PDF_DOCUMENT (document)->modified = TRUE;
+}
+
+static void
+pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface)
+{
+	iface->get_annotations = pdf_document_annotations_get_annotations;
+	iface->annotation_set_contents = pdf_document_annotations_annotation_set_contents;
 }
 
 /* Layers */
