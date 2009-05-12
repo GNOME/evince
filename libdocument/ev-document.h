@@ -64,12 +64,7 @@ typedef struct {
         double y;
 } EvPoint;
 
-typedef struct {
-        double x1;
-        double y1;
-        double x2;
-        double y2;
-} EvRectangle;
+typedef struct _EvRectangle EvRectangle;
 
 struct _EvDocumentIface
 {
@@ -136,6 +131,20 @@ cairo_surface_t *ev_document_render           (EvDocument      *document,
 
 gint            ev_rect_cmp                   (EvRectangle     *a,
                                                EvRectangle     *b);
+
+#define EV_TYPE_RECTANGLE (ev_rectangle_get_type ())
+struct _EvRectangle
+{
+	gdouble x1;
+	gdouble y1;
+	gdouble x2;
+	gdouble y2;
+};
+
+GType        ev_rectangle_get_type (void) G_GNUC_CONST;
+EvRectangle *ev_rectangle_new      (void);
+EvRectangle *ev_rectangle_copy     (EvRectangle *ev_rect);
+void         ev_rectangle_free     (EvRectangle *ev_rect);
 
 /* convenience macro to ease interface addition in the CODE
  * section of EV_BACKEND_REGISTER_WITH_CODE (this macro relies on
@@ -268,6 +277,25 @@ type_name##_get_type (void)                                                     
 		g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);           \
 	}                                                                                    \
 	return g_define_type_id__volatile;                                                   \
+}
+
+/*
+ * A convenience macro for boxed type implementations, which defines a
+ * type_name_get_type() function registering the boxed type.
+ */
+#define EV_DEFINE_BOXED_TYPE(TypeName, type_name, copy_func, free_func)               \
+GType                                                                                 \
+type_name##_get_type (void)                                                           \
+{                                                                                     \
+        static volatile gsize g_define_type_id__volatile = 0;                         \
+	if (g_once_init_enter (&g_define_type_id__volatile)) {                        \
+	        GType g_define_type_id =                                              \
+		    g_boxed_type_register_static (g_intern_static_string (#TypeName), \
+		                                  (GBoxedCopyFunc) copy_func,         \
+						  (GBoxedFreeFunc) free_func);        \
+		g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);    \
+	}                                                                             \
+	return g_define_type_id__volatile;                                            \
 }
 		
 G_END_DECLS

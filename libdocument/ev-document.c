@@ -311,6 +311,33 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info);
 }
 
+/* EvRectangle */
+EV_DEFINE_BOXED_TYPE (EvRectangle, ev_rectangle, ev_rectangle_copy, ev_rectangle_free)
+
+EvRectangle *
+ev_rectangle_new (void)
+{
+	return g_new0 (EvRectangle, 1);
+}
+
+EvRectangle *
+ev_rectangle_copy (EvRectangle *rectangle)
+{
+	EvRectangle *new_rectangle;
+
+	g_return_val_if_fail (rectangle != NULL, NULL);
+
+	new_rectangle = g_new (EvRectangle, 1);
+	*new_rectangle = *rectangle;
+
+	return new_rectangle;
+}
+
+void
+ev_rectangle_free (EvRectangle *rectangle)
+{
+	g_free (rectangle);
+}
 
 /* Compares two rects.  returns 0 if they're equal */
 #define EPSILON 0.0000001
