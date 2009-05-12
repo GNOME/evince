@@ -3800,7 +3800,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 	if (!view->document)
 		return FALSE;
 
-	if (!view->presentation) {
+	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
 		/* Forward key events to current focused window child */
 		if (view->window_child_focus) {
 			GdkEventKey *new_event;
@@ -3815,7 +3815,12 @@ ev_view_key_press_event (GtkWidget   *widget,
 
 			return handled;
 		}
-	} else if (view->presentation_state == EV_PRESENTATION_END)
+
+		return FALSE;
+	}
+
+	if (!view->presentation ||
+	    view->presentation_state == EV_PRESENTATION_END)
 		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
 
 
