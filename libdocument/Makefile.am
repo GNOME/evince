@@ -5,10 +5,12 @@ NOINST_H_FILES =				\
 	ev-module.h
 
 INST_H_FILES = 					\
+	ev-annotation.h				\
 	ev-async-renderer.h			\
 	ev-attachment.h				\
 	ev-backends-manager.h			\
 	ev-document-factory.h			\
+	ev-document-annotations.h		\
 	ev-document-find.h			\
 	ev-document-fonts.h			\
 	ev-document-forms.h			\
@@ -41,6 +43,7 @@ headerdir = $(includedir)/evince/$(EV_API_VERSION)/libdocument
 header_DATA = $(INST_H_FILES)
 
 libevdocument_la_SOURCES=			\
+	ev-annotation.c				\
 	ev-async-renderer.c			\
 	ev-attachment.c				\
 	ev-backends-manager.c			\
@@ -51,6 +54,7 @@ libevdocument_la_SOURCES=			\
 	ev-image.c				\
 	ev-init.c				\
 	ev-document.c				\
+	ev-document-annotations.c		\
 	ev-document-factory.c			\
 	ev-document-thumbnails.c		\
 	ev-document-fonts.c                     \
