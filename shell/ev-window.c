@@ -4519,10 +4519,17 @@ ev_window_drag_data_received (GtkWidget        *widget,
 			      guint             time)
 
 {
-	EvWindow *window = EV_WINDOW (widget);
-	gchar   **uris;
-	gint      i = 0;
-	GSList   *uri_list = NULL;
+	EvWindow  *window = EV_WINDOW (widget);
+	gchar    **uris;
+	gint       i = 0;
+	GSList    *uri_list = NULL;
+	GtkWidget *source;
+
+	source = gtk_drag_get_source_widget (context);
+	if (source && widget == gtk_widget_get_toplevel (source)) {
+		gtk_drag_finish (context, FALSE, FALSE, time);
+		return;
+	}
 
 	uris = gtk_selection_data_get_uris (selection_data);
 	if (!uris) {
