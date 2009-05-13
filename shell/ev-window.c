@@ -5372,6 +5372,8 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 		ev_window_cmd_edit_find (NULL, window);
 	} else if (g_ascii_strcasecmp (name, "Close") == 0) {
 		ev_window_cmd_file_close_window (NULL, window);
+	} else if (g_ascii_strcasecmp (name, "Print") == 0) {
+		ev_window_cmd_file_print (NULL, window);
 	} else {
 		g_warning ("Unimplemented named action: %s, please post a "
 		           "bug report in Evince bugzilla "
