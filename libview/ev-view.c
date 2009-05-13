@@ -4892,6 +4892,8 @@ ev_view_set_document (EvView     *view,
 			setup_caches (view);
                 }
 
+		view_update_range_and_current_page (view);
+
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 }
