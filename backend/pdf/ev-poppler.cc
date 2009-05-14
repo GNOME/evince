@@ -1236,10 +1236,11 @@ GdkPixbuf *
 pdf_document_images_get_image (EvDocumentImages *document_images,
 			       EvImage          *image)
 {
+	GdkPixbuf       *retval = NULL;
+#ifdef HAVE_POPPLER_PAGE_GET_IMAGE
 	PdfDocument     *pdf_document;
 	PopplerPage     *poppler_page;
 	cairo_surface_t *surface;
-	GdkPixbuf       *retval = NULL;
 
 	pdf_document = PDF_DOCUMENT (document_images);
 	poppler_page = poppler_document_get_page (pdf_document->document,
@@ -1252,7 +1253,7 @@ pdf_document_images_get_image (EvDocumentImages *document_images,
 	}
 
 	g_object_unref (poppler_page);
-
+#endif
 	return retval;
 }
 
