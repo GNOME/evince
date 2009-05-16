@@ -520,14 +520,14 @@ view_update_range_and_current_page (EvView *view)
 		for (i = end; i > view->end_page; i--) {
 			hide_annotation_windows (view, i);
 		}
-
-		ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
-						view->start_page,
-						view->end_page,
-						view->rotation,
-						view->scale,
-						view->selection_info.selections);
 	}
+
+	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
+					view->start_page,
+					view->end_page,
+					view->rotation,
+					view->scale,
+					view->selection_info.selections);
 }
 
 static void
