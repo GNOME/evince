@@ -59,6 +59,8 @@ struct _EvApplication {
 	gchar *dot_dir;
 	gchar *accel_map_file;
 	gchar *toolbars_file;
+	gchar *crashed_file;
+	guint  crashed_idle;
 
 	EggToolbarsModel *toolbars_model;
 
@@ -164,18 +166,142 @@ ev_application_get_instance (void)
 }
 
 /* Session */
+static void
+save_session (EvApplication *application,
+	      GList         *windows_list,
+	      GKeyFile      *state_file)
+{
+	GList *l;
+	gint i;
+	const gchar **uri_list;
+	const gchar *empty = "empty-window";
+
+	uri_list = g_new (const gchar *, g_list_length (windows_list));
+	for (l = windows_list, i = 0; l != NULL; l = g_list_next (l), i++) {
+		EvWindow *window = EV_WINDOW (l->data);
+
+		if (ev_window_is_empty (window))
+			uri_list[i] = empty;
+		else
+			uri_list[i] = ev_window_get_uri (window);
+	}
+	g_key_file_set_string_list (state_file,
+				    "Evince",
+				    "documents",
+				    (const char **)uri_list,
+				    i);
+	g_free (uri_list);
+}
+
+static void
+ev_application_save_session_crashed (EvApplication *application)
+{
+	GList *windows;
+
+	windows = ev_application_get_windows (application);
+	if (windows) {
+		GKeyFile *crashed_file;
+		gchar    *data;
+		gssize    data_length;
+		GError   *error = NULL;
+
+		crashed_file = g_key_file_new ();
+		save_session (application, windows, crashed_file);
+
+		data = g_key_file_to_data (crashed_file, (gsize *)&data_length, NULL);
+		g_file_set_contents (application->crashed_file, data, data_length, &error);
+		if (error) {
+			g_warning ("%s", error->message);
+			g_error_free (error);
+		}
+		g_free (data);
+		g_key_file_free (crashed_file);
+	} else if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
+		GFile *file;
+
+		file = g_file_new_for_path (application->crashed_file);
+		g_file_delete (file, NULL, NULL);
+		g_object_unref (file);
+	}
+}
+
+static gboolean
+save_session_crashed_in_idle_cb (EvApplication *application)
+{
+	ev_application_save_session_crashed (application);
+	application->crashed_idle = 0;
+
+	return FALSE;
+}
+
+static void
+save_session_crashed_in_idle (EvApplication *application)
+{
+	if (application->crashed_idle > 0)
+		g_source_remove (application->crashed_idle);
+	application->crashed_idle =
+		g_idle_add ((GSourceFunc)save_session_crashed_in_idle_cb,
+			    application);
+}
+
+static gboolean
+ev_application_run_crash_recovery_dialog (EvApplication *application)
+{
+	GtkWidget *dialog;
+	gint       response;
+
+	dialog = gtk_message_dialog_new	(NULL,
+					 GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_WARNING,
+					 GTK_BUTTONS_NONE,
+					 _("Recover previous documents?"));
+	gtk_message_dialog_format_secondary_text (
+		GTK_MESSAGE_DIALOG (dialog),
+		_("Evince appears to have exited unexpectedly the last time "
+		  "it was run. You can recover the opened documents."));
+
+	gtk_dialog_add_button (GTK_DIALOG (dialog),
+			       _("_Don't Recover"),
+			       GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (dialog),
+			       _("_Recover"),
+			       GTK_RESPONSE_ACCEPT);
+
+	gtk_window_set_title (GTK_WINDOW (dialog), _("Crash Recovery"));
+	gtk_window_set_icon_name (GTK_WINDOW (dialog), "evince");
+	gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (dialog), FALSE);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+
+	response = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+
+	return response == GTK_RESPONSE_ACCEPT;
+}
+
 gboolean
 ev_application_load_session (EvApplication *application)
 {
 	GKeyFile *state_file;
 	gchar   **uri_list;
-	
-	if (!egg_sm_client_is_resumed (application->smclient))
-		return FALSE;
 
-	state_file = egg_sm_client_get_state_file (application->smclient);
-	if (!state_file)
+	if (egg_sm_client_is_resumed (application->smclient)) {
+		state_file = egg_sm_client_get_state_file (application->smclient);
+		if (!state_file)
+			return FALSE;
+	} else if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
+		if (ev_application_run_crash_recovery_dialog (application)) {
+			state_file = g_key_file_new ();
+			g_key_file_load_from_file (state_file,
+						   application->crashed_file,
+						   G_KEY_FILE_NONE,
+						   NULL);
+		} else {
+			return FALSE;
+		}
+	} else {
 		return FALSE;
+	}
 
 	uri_list = g_key_file_get_string_list (state_file,
 					       "Evince",
@@ -202,30 +328,13 @@ smclient_save_state_cb (EggSMClient   *client,
 			GKeyFile      *state_file,
 			EvApplication *application)
 {
-	GList *windows, *l;
-	gint i;
-	const gchar **uri_list;
-	const gchar *empty = "empty-window";
+	GList *windows;
 
 	windows = ev_application_get_windows (application);
-	if (!windows)
-		return;
-
-	uri_list = g_new (const gchar *, g_list_length (windows));
-	for (l = windows, i = 0; l != NULL; l = g_list_next (l), i++) {
-		EvWindow *window = EV_WINDOW (l->data);
-
-		if (ev_window_is_empty (window))
-			uri_list[i] = empty;
-		else
-			uri_list[i] = ev_window_get_uri (window);
+	if (windows) {
+		save_session (application, windows, state_file);
+		g_list_free (windows);
 	}
-	g_key_file_set_string_list (state_file,
-				    "Evince",
-				    "documents", 
-				    (const char **)uri_list,
-				    i);
-	g_free (uri_list);
 }
 
 static void
@@ -238,6 +347,9 @@ smclient_quit_cb (EggSMClient   *client,
 static void
 ev_application_init_session (EvApplication *application)
 {
+	application->crashed_file = g_build_filename (application->dot_dir,
+						      "evince-crashed", NULL);
+
 	application->smclient = egg_sm_client_get ();
 	g_signal_connect (application->smclient, "save_state",
 			  G_CALLBACK (smclient_save_state_cb),
@@ -416,6 +528,11 @@ ev_application_open_window (EvApplication  *application,
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 
+	ev_application_save_session_crashed (application);
+	g_signal_connect_swapped (new_window, "destroy",
+				  G_CALLBACK (save_session_crashed_in_idle),
+				  application);
+
 	if (!GTK_WIDGET_REALIZED (new_window))
 		gtk_widget_realize (new_window);
 	
@@ -544,6 +661,11 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	   we can restore window size without flickering */	
 	ev_window_open_uri (new_window, uri, dest, mode, search_string);
 
+	ev_application_save_session_crashed (application);
+	g_signal_connect_swapped (new_window, "destroy",
+				  G_CALLBACK (save_session_crashed_in_idle),
+				  application);
+
 	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (new_window)))
 		gtk_widget_realize (GTK_WIDGET (new_window));
 
@@ -617,6 +739,12 @@ ev_application_open_uri_list (EvApplication *application,
 void
 ev_application_shutdown (EvApplication *application)
 {
+	if (application->crashed_file) {
+		ev_application_save_session_crashed (application);
+		g_free (application->crashed_file);
+		application->crashed_file = NULL;
+	}
+
 	if (application->accel_map_file) {
 		gtk_accel_map_save (application->accel_map_file);
 		g_free (application->accel_map_file);
@@ -677,8 +805,6 @@ ev_application_init (EvApplication *ev_application)
 {
 	gint i;
 	const gchar *home_dir;
-	
-	ev_application_init_session (ev_application);
 
         ev_application->dot_dir = g_build_filename (g_get_home_dir (),
                                                     ".gnome2",
@@ -688,6 +814,8 @@ ev_application_init (EvApplication *ev_application)
         /* FIXME: why make this fatal? */
         if (!ev_dir_ensure_exists (ev_application->dot_dir, 0700))
                 exit (1);
+
+	ev_application_init_session (ev_application);
 
 	home_dir = g_get_home_dir ();
 	if (home_dir) {

@@ -226,14 +226,27 @@ arguments_parse (void)
 	return args;
 }
 
+static gint
+find_window_list (EvWindow    *window,
+		  const gchar *uri)
+{
+	return g_ascii_strcasecmp (uri, ev_window_get_uri (window));
+}
+
 static void
 load_files (const char **files,
 	    GHashTable  *args)
 {
-	int i;
+	int    i;
+	GList *windows;
+
+	windows = ev_application_get_windows (EV_APP);
 
 	if (!files) {
-		ev_application_open_window (EV_APP, args, GDK_CURRENT_TIME, NULL);
+		if (!windows)
+			ev_application_open_window (EV_APP, args, GDK_CURRENT_TIME, NULL);
+		else
+			g_list_free (windows);
 		return;
 	}
 
@@ -246,7 +259,12 @@ load_files (const char **files,
 		file = g_file_new_for_commandline_arg (files[i]);
 		uri = g_file_get_uri (file);
 		g_object_unref (file);
-		
+
+		if (g_list_find_custom (windows, uri, (GCompareFunc) find_window_list)) {
+			g_free (uri);
+			continue;
+		}
+
 		label = strchr (uri, '#');
 
 		if (label) {
@@ -272,6 +290,8 @@ load_files (const char **files,
 		
 		g_free (uri);
         }
+
+	g_list_free (windows);
 }
 
 #ifdef ENABLE_DBUS
@@ -424,8 +444,8 @@ main (int argc, char *argv[])
 	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
 #endif /* G_OS_WIN32 */
 
-	if (!ev_application_load_session (EV_APP))
-		load_files (file_arguments, args);
+	ev_application_load_session (EV_APP);
+	load_files (file_arguments, args);
 	g_hash_table_destroy (args);
 
 	/* Change directory so we don't prevent unmounting in case the initial cwd
