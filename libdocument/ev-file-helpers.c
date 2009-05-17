@@ -122,6 +122,12 @@ ev_tmp_filename (const gchar *prefix)
 	return filename;
 }
 
+gchar * 
+ev_tmp_directory (const gchar *prefix) 
+{
+	return ev_tmp_filename (prefix ? prefix : "directory");
+}
+
 /* Remove a local temp file created by evince */
 void
 ev_tmp_filename_unlink (const gchar *filename)

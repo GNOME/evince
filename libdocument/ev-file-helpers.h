@@ -47,6 +47,7 @@ gboolean     ev_dir_ensure_exists     (const gchar       *dir,
 
 GFile       *ev_tmp_file_get          (const gchar       *prefix);
 gchar       *ev_tmp_filename          (const char        *prefix);
+gchar       *ev_tmp_directory         (const char        *prefix);
 void         ev_tmp_filename_unlink   (const gchar       *filename);
 void         ev_tmp_file_unlink       (GFile             *file);
 void         ev_tmp_uri_unlink        (const gchar       *uri);

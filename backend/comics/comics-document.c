@@ -183,7 +183,7 @@ static gboolean
 comics_generate_command_lines (ComicsDocument *comics_document, 
 			       GError         **error)
 {
-	gchar *quoted_file, *checksum;
+	gchar *quoted_file;
 	ComicBookDecompressType type;
 	
 	type = comics_document->command_usage;
@@ -198,19 +198,13 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 					     quoted_file);
 	comics_document->regex_arg = command_usage_def[type].regex_arg;
 	if (command_usage_def[type].decompress_tmp) {
-		checksum = 
-			g_compute_checksum_for_string (G_CHECKSUM_MD5, 
-						       comics_document->archive,
-						       -1);
-		comics_document->dir = g_build_filename (ev_tmp_dir (), 
-							 checksum, NULL);
+		comics_document->dir = ev_tmp_directory (NULL); 
 		comics_document->decompress_tmp = 
 			g_strdup_printf (command_usage_def[type].decompress_tmp, 
 					 comics_document->selected_command, 
 					 quoted_file, 
 					 comics_document->dir);
 		g_free (quoted_file);
-		g_free (checksum);
 		/* unrar-free can't create directories so we do it on its 
 		 * behalf */
 		if (type == GNAUNRAR) {
