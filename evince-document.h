@@ -32,6 +32,7 @@
 #include <libdocument/ev-document-images.h>
 #include <libdocument/ev-document-info.h>
 #include <libdocument/ev-document-layers.h>
+#include <libdocument/ev-document-print.h>
 #include <libdocument/ev-document-links.h>
 #include <libdocument/ev-document-misc.h>
 #include <libdocument/ev-document-security.h>

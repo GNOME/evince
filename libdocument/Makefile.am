@@ -22,6 +22,7 @@ INST_H_FILES = 					\
 	ev-document-layers.h			\
 	ev-document-links.h			\
 	ev-document-misc.h			\
+	ev-document-print.h			\
 	ev-document-security.h			\
 	ev-document-thumbnails.h		\
 	ev-document-transition.h		\
@@ -63,6 +64,7 @@ libevdocument_la_SOURCES=			\
 	ev-document-layers.c			\
 	ev-document-links.c			\
 	ev-document-images.c			\
+	ev-document-print.c			\
 	ev-document-security.c			\
 	ev-document-find.c			\
 	ev-document-transition.c		\
