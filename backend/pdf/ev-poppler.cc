@@ -45,6 +45,7 @@
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
 #include "ev-document-layers.h"
+#include "ev-document-print.h"
 #include "ev-document-annotations.h"
 #include "ev-selection.h"
 #include "ev-transition-effect.h"
@@ -113,6 +114,9 @@ static void pdf_document_document_images_iface_init      (EvDocumentImagesIface 
 static void pdf_document_document_forms_iface_init       (EvDocumentFormsIface       *iface);
 static void pdf_document_document_fonts_iface_init       (EvDocumentFontsIface       *iface);
 static void pdf_document_document_layers_iface_init      (EvDocumentLayersIface      *iface);
+#ifdef HAVE_POPPLER_PAGE_RENDER
+static void pdf_document_document_print_iface_init       (EvDocumentPrintIface       *iface);
+#endif
 static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface);
 static void pdf_document_find_iface_init                 (EvDocumentFindIface        *iface);
 static void pdf_document_file_exporter_iface_init        (EvFileExporterIface        *iface);
@@ -147,6 +151,10 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 								 pdf_document_document_fonts_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
 								 pdf_document_document_layers_iface_init);
+#ifdef HAVE_POPPLER_PAGE_RENDER
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
+								 pdf_document_document_print_iface_init);
+#endif
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
 								 pdf_document_document_annotations_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
@@ -1712,6 +1720,25 @@ pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
         iface->end = pdf_document_file_exporter_end;
 	iface->get_capabilities = pdf_document_file_exporter_get_capabilities;
 }
+
+#ifdef HAVE_POPPLER_PAGE_RENDER
+/* EvDocumentPrint */
+static void
+pdf_document_print_print_page (EvDocumentPrint *document,
+			       EvPage          *page,
+			       cairo_t         *cr)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	poppler_page_render_for_printing (POPPLER_PAGE (page->backend_page), cr);
+}
+
+static void
+pdf_document_document_print_iface_init (EvDocumentPrintIface *iface)
+{
+	iface->print_page = pdf_document_print_print_page;
+}
+#endif /* HAVE_POPPLER_PAGE_RENDER */
 
 static void
 pdf_selection_render_selection (EvSelection      *selection,
