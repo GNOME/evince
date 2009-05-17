@@ -32,6 +32,7 @@
 #include "ev-job-scheduler.h"
 #include "ev-application.h"
 #include "ev-file-helpers.h"
+#include "ev-document-print.h"
 
 enum {
 	PROP_0,
@@ -82,7 +83,6 @@ struct _EvPrintOperationClass {
 						      GtkPrintOperationResult result);
 	void              (* begin_print)            (EvPrintOperation       *op);
 	void              (* status_changed)         (EvPrintOperation       *op);
-						      
 };
 
 G_DEFINE_ABSTRACT_TYPE (EvPrintOperation, ev_print_operation, G_TYPE_OBJECT)
@@ -332,7 +332,7 @@ ev_print_operation_update_status (EvPrintOperation *op,
 typedef struct _EvPrintOperationExport      EvPrintOperationExport;
 typedef struct _EvPrintOperationExportClass EvPrintOperationExportClass;
 
-GType           ev_print_operation_export_get_type (void) G_GNUC_CONST;
+static GType    ev_print_operation_export_get_type (void) G_GNUC_CONST;
 
 static void     ev_print_operation_export_begin    (EvPrintOperationExport *export);
 static gboolean export_print_page                  (EvPrintOperationExport *export);
@@ -710,9 +710,9 @@ ev_print_operation_export_run_next (EvPrintOperationExport *export)
 }
 
 static void
-print_job_finished (GtkPrintJob            *print_job,
-		    EvPrintOperationExport *export,
-		    GError                 *error)
+gtk_print_job_finished (GtkPrintJob            *print_job,
+			EvPrintOperationExport *export,
+			GError                 *error)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 
@@ -843,7 +843,7 @@ export_print_done (EvPrintOperationExport *export)
 		gtk_print_job_set_source_file (job, export->temp_file, &error);
 		if (!error){
 			gtk_print_job_send (job,
-					    (GtkPrintJobCompleteFunc)print_job_finished,
+					    (GtkPrintJobCompleteFunc)gtk_print_job_finished,
 					    g_object_ref (export),
 					    (GDestroyNotify)g_object_unref);
 		}
@@ -1359,12 +1359,283 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 	g_object_class->finalize = ev_print_operation_export_finalize;
 }
 
+#if GTK_CHECK_VERSION (2, 17, 1)
+/* Print to cairo interface */
+#define EV_TYPE_PRINT_OPERATION_PRINT         (ev_print_operation_print_get_type())
+#define EV_PRINT_OPERATION_PRINT(object)      (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PRINT_OPERATION_PRINT, EvPrintOperationPrint))
+#define EV_PRINT_OPERATION_PRINT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_PRINT_OPERATION_PRINT, EvPrintOperationPrintClass))
+#define EV_IS_PRINT_OPERATION_PRINT(object)   (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PRINT_OPERATION_PRINT))
+
+typedef struct _EvPrintOperationPrint      EvPrintOperationPrint;
+typedef struct _EvPrintOperationPrintClass EvPrintOperationPrintClass;
+
+static GType ev_print_operation_print_get_type (void) G_GNUC_CONST;
+
+struct _EvPrintOperationPrint {
+	EvPrintOperation parent;
+
+	GtkPrintOperation *op;
+	EvJob             *job_print;
+	gchar             *job_name;
+};
+
+struct _EvPrintOperationPrintClass {
+	EvPrintOperationClass parent_class;
+};
+
+G_DEFINE_TYPE (EvPrintOperationPrint, ev_print_operation_print, EV_TYPE_PRINT_OPERATION)
+
+static void
+ev_print_operation_print_set_current_page (EvPrintOperation *op,
+					   gint              current_page)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_set_current_page (print->op, current_page);
+}
+
+static void
+ev_print_operation_print_set_print_settings (EvPrintOperation *op,
+					     GtkPrintSettings *print_settings)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_set_print_settings (print->op, print_settings);
+}
+
+static GtkPrintSettings *
+ev_print_operation_print_get_print_settings (EvPrintOperation *op)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	return gtk_print_operation_get_print_settings (print->op);
+}
+
+static void
+ev_print_operation_print_set_default_page_setup (EvPrintOperation *op,
+						 GtkPageSetup     *page_setup)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_set_default_page_setup (print->op, page_setup);
+}
+
+static GtkPageSetup *
+ev_print_operation_print_get_default_page_setup (EvPrintOperation *op)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	return gtk_print_operation_get_default_page_setup (print->op);
+}
+
+static void
+ev_print_operation_print_set_job_name (EvPrintOperation *op,
+				       const gchar      *job_name)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	g_free (print->job_name);
+	print->job_name = g_strdup (job_name);
+
+	gtk_print_operation_set_job_name (print->op, print->job_name);
+}
+
+static const gchar *
+ev_print_operation_print_get_job_name (EvPrintOperation *op)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	if (!print->job_name) {
+		gchar *name;
+
+		g_object_get (print->op, "job_name", &name, NULL);
+		print->job_name = name;
+	}
+
+	return print->job_name;
+}
+
+static void
+ev_print_operation_print_run (EvPrintOperation *op,
+			      GtkWindow        *parent)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_run (print->op,
+				 GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
+				 parent, NULL);
+}
+
+static void
+ev_print_operation_print_cancel (EvPrintOperation *op)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_cancel (print->op);
+}
+
+static void
+ev_print_operation_print_get_error (EvPrintOperation *op,
+				    GError          **error)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_get_error (print->op, error);
+}
+
+static void
+ev_print_operation_print_begin_print (EvPrintOperationPrint *print,
+				      GtkPrintContext       *context)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (print);
+	gint              n_pages;
+
+	n_pages = ev_page_cache_get_n_pages (ev_page_cache_get (op->document));
+	gtk_print_operation_set_n_pages (print->op, n_pages);
+
+	/* FIXME: gtk_print should provide the progress */
+	ev_print_operation_update_status (op, -1, n_pages, 0);
+
+	g_signal_emit (op, signals[BEGIN_PRINT], 0);
+}
+
+static void
+ev_print_operation_print_done (EvPrintOperationPrint  *print,
+			       GtkPrintOperationResult result)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (print);
+
+	/* FIXME: gtk_print should provide the progress */
+	ev_print_operation_update_status (op, 0, 1, 1.0);
+
+	g_signal_emit (op, signals[DONE], 0, result);
+}
+
+static void
+print_job_finished (EvJobPrint            *job,
+		    EvPrintOperationPrint *print)
+{
+	gtk_print_operation_draw_page_finish (print->op);
+	ev_job_print_set_cairo (job, NULL);
+}
+
+static void
+print_job_cancelled (EvJobPrint            *job,
+		     EvPrintOperationPrint *print)
+{
+	gtk_print_operation_cancel (print->op);
+}
+
+static void
+ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
+				    GtkPrintContext       *context,
+				    gint                   page)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (print);
+	cairo_t          *cr;
+
+	gtk_print_operation_set_defer_drawing (print->op);
+
+	if (!print->job_print) {
+		print->job_print = ev_job_print_new (op->document);
+		g_signal_connect (G_OBJECT (print->job_print), "finished",
+				  G_CALLBACK (print_job_finished),
+				  (gpointer)print);
+		g_signal_connect (G_OBJECT (print->job_print), "cancelled",
+				  G_CALLBACK (print_job_cancelled),
+				  (gpointer)print);
+	}
+
+	ev_job_print_set_page (EV_JOB_PRINT (print->job_print), page);
+
+	cr = gtk_print_context_get_cairo_context (context);
+	ev_job_print_set_cairo (EV_JOB_PRINT (print->job_print), cr);
+
+	ev_job_scheduler_push_job (print->job_print, EV_JOB_PRIORITY_NONE);
+}
+
+static void
+ev_print_operation_print_finalize (GObject *object)
+{
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (object);
+
+	if (print->op) {
+		g_object_unref (print->op);
+		print->op = NULL;
+	}
+
+	if (print->job_name) {
+		g_free (print->job_name);
+		print->job_name = NULL;
+	}
+
+	if (print->job_print) {
+		if (!ev_job_is_finished (print->job_print))
+			ev_job_cancel (print->job_print);
+		g_signal_handlers_disconnect_by_func (print->job_print,
+						      print_job_finished,
+						      print);
+		g_signal_handlers_disconnect_by_func (print->job_print,
+						      print_job_cancelled,
+						      print);
+		g_object_unref (print->job_print);
+		print->job_print = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_print_operation_print_parent_class)->finalize) (object);
+}
+
+static void
+ev_print_operation_print_init (EvPrintOperationPrint *print)
+{
+	print->op = gtk_print_operation_new ();
+	g_signal_connect_swapped (print->op, "begin_print",
+				  G_CALLBACK (ev_print_operation_print_begin_print),
+				  print);
+	g_signal_connect_swapped (print->op, "done",
+				  G_CALLBACK (ev_print_operation_print_done),
+				  print);
+	g_signal_connect_swapped (print->op, "draw_page",
+				  G_CALLBACK (ev_print_operation_print_draw_page),
+				  print);
+	gtk_print_operation_set_allow_async (print->op, TRUE);
+}
+
+static void
+ev_print_operation_print_class_init (EvPrintOperationPrintClass *klass)
+{
+	GObjectClass          *g_object_class = G_OBJECT_CLASS (klass);
+	EvPrintOperationClass *ev_print_op_class = EV_PRINT_OPERATION_CLASS (klass);
+
+	ev_print_op_class->set_current_page = ev_print_operation_print_set_current_page;
+	ev_print_op_class->set_print_settings = ev_print_operation_print_set_print_settings;
+	ev_print_op_class->get_print_settings = ev_print_operation_print_get_print_settings;
+	ev_print_op_class->set_default_page_setup = ev_print_operation_print_set_default_page_setup;
+	ev_print_op_class->get_default_page_setup = ev_print_operation_print_get_default_page_setup;
+	ev_print_op_class->set_job_name = ev_print_operation_print_set_job_name;
+	ev_print_op_class->get_job_name = ev_print_operation_print_get_job_name;
+	ev_print_op_class->run = ev_print_operation_print_run;
+	ev_print_op_class->cancel = ev_print_operation_print_cancel;
+	ev_print_op_class->get_error = ev_print_operation_print_get_error;
+
+	g_object_class->finalize = ev_print_operation_print_finalize;
+}
+#endif /* GTK_CHECK_VERSION (2, 17, 1) */
+
 /* Factory method */
 EvPrintOperation *
 ev_print_operation_new (EvDocument *document)
 {
-	/* TODO: EvPrintOperationPrint */
+	EvPrintOperation *op;
 
-	return EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_EXPORT,
-						 "document", document, NULL));
+#if GTK_CHECK_VERSION (2, 17, 1)
+	if (EV_IS_DOCUMENT_PRINT (document))
+		op = EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_PRINT,
+						       "document", document, NULL));
+	else
+#endif
+		op = EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_EXPORT,
+						       "document", document, NULL));
+
+	return op;
 }
