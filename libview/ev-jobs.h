@@ -27,6 +27,7 @@
 
 #include <gio/gio.h>
 #include <gtk/gtk.h>
+#include <cairo.h>
 
 #include <evince-document.h>
 
@@ -64,6 +65,9 @@ typedef struct _EvJobLayersClass EvJobLayersClass;
 
 typedef struct _EvJobExport EvJobExport;
 typedef struct _EvJobExportClass EvJobExportClass;
+
+typedef struct _EvJobPrint EvJobPrint;
+typedef struct _EvJobPrintClass EvJobPrintClass;
 
 #define EV_TYPE_JOB		     	     (ev_job_get_type())
 #define EV_JOB(object)		             (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB, EvJob))
@@ -120,6 +124,11 @@ typedef struct _EvJobExportClass EvJobExportClass;
 #define EV_JOB_EXPORT(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_EXPORT, EvJobExport))
 #define EV_JOB_EXPORT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_EXPORT, EvJobExportClass))
 #define EV_IS_JOB_EXPORT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_EXPORT))
+
+#define EV_TYPE_JOB_PRINT                    (ev_job_print_get_type())
+#define EV_JOB_PRINT(object)                 (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PRINT, EvJobPrint))
+#define EV_JOB_PRINT_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PRINT, EvJobPrintClass))
+#define EV_IS_JOB_PRINT(object)              (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PRINT))
 
 typedef enum {
 	EV_JOB_RUN_THREAD,
@@ -332,6 +341,19 @@ struct _EvJobExportClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobPrint
+{
+	EvJob parent;
+
+	gint page;
+	cairo_t *cr;
+};
+
+struct _EvJobPrintClass
+{
+	EvJobClass parent_class;
+};
+
 /* Base job class */
 GType           ev_job_get_type           (void) G_GNUC_CONST;
 gboolean        ev_job_run                (EvJob          *job);
@@ -418,6 +440,13 @@ GType           ev_job_export_get_type    (void) G_GNUC_CONST;
 EvJob          *ev_job_export_new         (EvDocument     *document);
 void            ev_job_export_set_page    (EvJobExport    *job,
 					   gint            page);
+/* EvJobPrint */
+GType           ev_job_print_get_type    (void) G_GNUC_CONST;
+EvJob          *ev_job_print_new         (EvDocument     *document);
+void            ev_job_print_set_page    (EvJobPrint     *job,
+					  gint            page);
+void            ev_job_print_set_cairo   (EvJobPrint     *job,
+					  cairo_t        *cr);
 
 G_END_DECLS
 

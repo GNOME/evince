@@ -33,6 +33,7 @@
 #include "ev-document-security.h"
 #include "ev-document-find.h"
 #include "ev-document-layers.h"
+#include "ev-document-print.h"
 #include "ev-document-annotations.h"
 #include "ev-debug.h"
 
@@ -61,6 +62,8 @@ static void ev_job_layers_init            (EvJobLayers           *job);
 static void ev_job_layers_class_init      (EvJobLayersClass      *class);
 static void ev_job_export_init            (EvJobExport           *job);
 static void ev_job_export_class_init      (EvJobExportClass      *class);
+static void ev_job_print_init             (EvJobPrint            *job);
+static void ev_job_print_class_init       (EvJobPrintClass       *class);
 
 enum {
 	CANCELLED,
@@ -99,6 +102,7 @@ G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFind, ev_job_find, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLayers, ev_job_layers, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobExport, ev_job_export, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobPrint, ev_job_print, EV_TYPE_JOB)
 
 /* EvJob */
 static void
@@ -1368,4 +1372,112 @@ ev_job_export_set_page (EvJobExport *job,
 			gint         page)
 {
 	job->page = page;
+}
+
+/* EvJobPrint */
+static void
+ev_job_print_init (EvJobPrint *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+	job->page = -1;
+}
+
+static void
+ev_job_print_dispose (GObject *object)
+{
+	EvJobPrint *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	job = EV_JOB_PRINT (object);
+
+	if (job->cr) {
+		cairo_destroy (job->cr);
+		job->cr = NULL;
+	}
+
+	(* G_OBJECT_CLASS (ev_job_print_parent_class)->dispose) (object);
+}
+
+static gboolean
+ev_job_print_run (EvJob *job)
+{
+	EvJobPrint     *job_print = EV_JOB_PRINT (job);
+	EvPage         *ev_page;
+	cairo_status_t  cr_status;
+
+	g_assert (job_print->page != -1);
+	g_assert (job_print->cr != NULL);
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+
+	job->failed = FALSE;
+	job->finished = FALSE;
+	g_clear_error (&job->error);
+
+	ev_document_doc_mutex_lock ();
+
+	ev_page = ev_document_get_page (job->document, job_print->page);
+	ev_document_print_print_page (EV_DOCUMENT_PRINT (job->document),
+				      ev_page, job_print->cr);
+	g_object_unref (ev_page);
+
+	ev_document_doc_mutex_unlock ();
+
+	cr_status = cairo_status (job_print->cr);
+	if (cr_status == CAIRO_STATUS_SUCCESS) {
+		ev_job_succeeded (job);
+	} else {
+		ev_job_failed (job,
+			       GTK_PRINT_ERROR,
+			       GTK_PRINT_ERROR_GENERAL,
+			       _("Failed to print page %d: %s"),
+			       job_print->page,
+			       cairo_status_to_string (cr_status));
+	}
+
+	return FALSE;
+}
+
+static void
+ev_job_print_class_init (EvJobPrintClass *class)
+{
+	GObjectClass *oclass = G_OBJECT_CLASS (class);
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+	oclass->dispose = ev_job_print_dispose;
+	job_class->run = ev_job_print_run;
+}
+
+EvJob *
+ev_job_print_new (EvDocument *document)
+{
+	EvJob *job;
+
+	ev_debug_message (DEBUG_JOBS, NULL);
+
+	job = g_object_new (EV_TYPE_JOB_PRINT, NULL);
+	job->document = g_object_ref (document);
+
+	return job;
+}
+
+void
+ev_job_print_set_page (EvJobPrint *job,
+		       gint        page)
+{
+	job->page = page;
+}
+
+void
+ev_job_print_set_cairo (EvJobPrint *job,
+			cairo_t    *cr)
+{
+	if (job->cr == cr)
+		return;
+
+	if (job->cr)
+		cairo_destroy (job->cr);
+	job->cr = cr ? cairo_reference (cr) : NULL;
 }
