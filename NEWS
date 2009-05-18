@@ -1,4 +1,74 @@
 ================
+Evince  2.27.1
+================
+
+New Features and UI Improvements:
+
+    * Use GtkPrintOperation when printing for the backends that
+      support rendering into a cairo context (#557112, Carlos Garcia Campos)
+    * Recover previous session when running evince after a crash
+      (#578894, Carlos Garcia Campos)
+    * Preliminary annotations support (#315002, Carlos Garcia Campos,
+      Iñigo Martínez)
+    * Rename Print Setup menu entry as Page Setup for consistency with
+      the GTK+ dialog title (#581109, Nickolay V. Shmyrev)
+    * Added F3 as a find-next accelerator key (#579072, Michael J. Chudobiak)
+    * Support the free Gna! unrar tool in comics backend (#552074,
+      Juanjo Marín)
+    * Add evince-previewer as a separate applicaton that implements
+      the printing preview (Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Fix handling of the tmp folder (#582108, Juanjo Marín)
+    * Abort dnd operations originated in the same Evince window
+      (#582077, Carlos Garcia Campos)
+    * Disable bouncing during scrolling (#533534, Martin Pohlack)
+    * Fix build without gconftool-2 (#581441, Christian Persch)
+    * Fix documentation build (#579671, Nickolay V. Shmyrev)
+    * Fix error handling of broken documents (#580886, Nickolay V. Shmyrev)
+    * Fix several memory leaks in comics backend (#552074, Juanjo Marín)
+    * Escape URIs for display (#581064, Nickolay V. Shmyrev)
+    * Resync with libegg to remove deprecated GTK+ symbols (#580556,
+      Javier Jardón)
+    * Correct check for exit status of commands in comics backend
+      (#579656, Juanjo Marín)
+    * Add -no-undefined flag for Cygwin build (#580058, Yaakov Selkowitz)
+    * Use g_file_make_symbolic_link to create symlinks (#339172, Hib Eris)
+    * Delete the temp symlink created when opening a copy (Carlos
+      Garcia Campos)
+    * Don't redraw again when zoom is set more than once to the same
+      scale factor (Carlos Garcia Campos)
+    * Fix print preview of empty selection (#517735, Juanjo Marín)
+    * Don't prevent unmounting in case the initial cwd is on an
+      external device (#575436, Carlos Garcia Campos)
+    * Create and load the document based on the mime-type provided by
+      nautilus instead of using our own documents factory. (#533917,
+      Carlos Garcia Campos)
+    * Fix endianess issues in dvi and tiff backends (#578433, #509920,
+      Benjamin Berg)
+    * Fix memory leak in tiff backend (#578285, Nickolay V. Shmyrev)
+    * Fix path where accels file is saved (#577500, Nickolay
+      V. Shmyrev)
+    * Fix fading animations (Nickolay V. Shmyrev)
+    * Translate the categories in the nautilus properties tab
+      (#575085, Christian Persch)
+    * Other bugs fixed: #539972, #578436, #582543
+
+Translation updates:
+
+    * Jorge Gonzalez (es)
+    * Manoj Kumar Giri (or)
+    * Ivar Smolin (et)
+    * Vladimir Melo (pt_BR)
+    * Matej Urban (sl)
+    * Khaled Hosny (ar)
+    * Miloš Popović (sr)
+    * Funda Wang (zh_CN)
+    * Amitakhya Phukan (as)
+    * Baris Cicek (tr)
+
+================
 Evince  2.26.0
 ================
 
