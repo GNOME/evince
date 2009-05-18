@@ -1110,7 +1110,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		
 		break;
 	}
-	if (!clamp_ranges (export)) {
+	if (export->n_ranges < 1 || !clamp_ranges (export)) {
 		GtkWidget *message_dialog;
 
 		message_dialog = gtk_message_dialog_new (GTK_WINDOW (dialog),
