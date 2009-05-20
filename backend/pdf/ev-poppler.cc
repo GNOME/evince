@@ -52,6 +52,11 @@
 #include "ev-attachment.h"
 #include "ev-image.h"
 
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+
 #if (defined (HAVE_POPPLER_PAGE_RENDER)) && (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
 #define HAVE_CAIRO_PRINT
 #endif
@@ -573,6 +578,94 @@ pdf_document_set_password (EvDocumentSecurity *document_security,
 	document->password = g_strdup (password);
 }
 
+
+/* reference:
+http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf */
+static char *
+pdf_document_get_format_from_metadata (const char *metadata)
+{
+	xmlDocPtr doc;
+	xmlXPathContextPtr xpathCtx;
+	xmlXPathObjectPtr xpathObj;
+	xmlChar *part = NULL;
+	xmlChar *conf = NULL;
+	char *result = NULL;
+	int i;
+
+	doc = xmlParseMemory (metadata, strlen (metadata));
+	if (doc == NULL)
+		return NULL;      /* invalid xml metadata */
+
+	xpathCtx = xmlXPathNewContext (doc);
+	if (xpathCtx == NULL) {
+		xmlFreeDoc (doc);
+		return NULL;      /* invalid xpath context */
+	}
+
+	/* add pdf/a namespaces */
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfaid", BAD_CAST "http://www.aiim.org/pdfa/ns/id/");
+
+	/* reads pdf/a part */
+	/* first syntax: child node */
+	xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaid:part", xpathCtx);
+	if (xpathObj != NULL) {
+		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
+			part = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+
+		xmlXPathFreeObject (xpathObj);
+	}
+	if (part == NULL) {
+		/* second syntax: attribute */
+		xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/@pdfaid:part", xpathCtx);
+		if (xpathObj != NULL) {
+			if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
+				part = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+
+			xmlXPathFreeObject (xpathObj);
+		}
+	}
+
+	/* reads pdf/a conformance */
+	/* first syntax: child node */
+	xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaid:conformance", xpathCtx);
+	if (xpathObj != NULL) {
+		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
+			conf = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+
+		xmlXPathFreeObject (xpathObj);
+	}
+	if (conf == NULL) {
+		/* second syntax: attribute */
+		xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/@pdfaid:conformance", xpathCtx);
+		if (xpathObj != NULL) {
+			if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
+				conf = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+
+			xmlXPathFreeObject (xpathObj);
+		}
+	}
+
+	if (part != NULL && conf != NULL) {
+		/* makes conf lowercase */
+		for (i = 0; conf[i]; i++)
+			conf[i] = g_ascii_tolower (conf[i]);
+
+		/* return buffer */
+		result = g_strdup_printf ("PDF/A - %s%s", part, conf);
+	}
+
+	/* Cleanup */
+	xmlFree (part);
+	xmlFree (conf);
+	xmlXPathFreeContext (xpathCtx);
+	xmlFreeDoc (doc);
+
+	return result;
+}
+
+
 static EvDocumentInfo *
 pdf_document_get_info (EvDocument *document)
 {
@@ -582,6 +675,8 @@ pdf_document_get_info (EvDocument *document)
 	PopplerViewerPreferences view_prefs;
 	PopplerPermissions permissions;
 	EvPage *page;
+	char *metadata;
+	char *fmt;
 
 	info = g_new0 (EvDocumentInfo, 1);
 
@@ -618,7 +713,17 @@ pdf_document_get_info (EvDocument *document)
 		      "creation-date", &(info->creation_date),
 		      "mod-date", &(info->modified_date),
 		      "linearized", &(info->linearized),
+		      "metadata", &metadata,
 		      NULL);
+
+	if (metadata != NULL) {
+		fmt = pdf_document_get_format_from_metadata(metadata);
+		if (fmt != NULL) {
+			g_free (info->format);
+			info->format = fmt;
+		}
+		g_free (metadata);
+	}
 
 	info->n_pages = ev_document_get_n_pages (document);
 
