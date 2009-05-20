@@ -1015,9 +1015,11 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 			g_object_unref (poppler_page);
 		}
 			break;
-	        case POPPLER_DEST_FIT:
+	        case POPPLER_DEST_FITB:
+		case POPPLER_DEST_FIT:
 			ev_dest = ev_link_dest_new_fit (dest->page_num - 1);
 			break;
+		case POPPLER_DEST_FITBH:
 	        case POPPLER_DEST_FITH: {
 			PopplerPage *poppler_page;
 			double height;
@@ -1031,6 +1033,7 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 			g_object_unref (poppler_page);
 		}
 			break;
+		case POPPLER_DEST_FITBV:
 	        case POPPLER_DEST_FITV:
 			ev_dest = ev_link_dest_new_fitv (dest->page_num - 1,
 							 dest->left,
@@ -1050,15 +1053,6 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 							 height - MIN (height, dest->top));
 			g_object_unref (poppler_page);
 		}
-			break;
-	        case POPPLER_DEST_FITB:
-			unimplemented_dest = "POPPLER_DEST_FITB";
-			break;
-	        case POPPLER_DEST_FITBH:
-			unimplemented_dest = "POPPLER_DEST_FITBH";
-			break;
-	        case POPPLER_DEST_FITBV:
-			unimplemented_dest = "POPPLER_DEST_FITBV";
 			break;
 	        case POPPLER_DEST_NAMED:
 			ev_dest = ev_link_dest_new_named (dest->named_dest);
