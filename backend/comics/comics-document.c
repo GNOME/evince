@@ -56,22 +56,29 @@ struct _ComicsDocument
 	gchar    *selected_command;
 	gchar    *extract_command, *list_command, *decompress_tmp;
 	gboolean regex_arg;
+	gint     offset;
 	ComicBookDecompressType command_usage;
 };
 
-struct 
-{
+#define OFFSET_7Z 53
+#define NO_OFFSET 0
+
+/* For perfomance reasons of 7z* we've choosen to decompress on the temporary 
+ * directory instead of decompressing on the stdout */
+
+struct {
 	char *extract, *list, *decompress_tmp; 
 	gboolean regex_arg;
+	gint offset;
 } command_usage_def[] = {
-	{"%s p -c- -ierr", "%s vb -c- -- %s", NULL	    , FALSE},
-	{NULL		 , "%s t %s"	    , "%s -xf %s %s", TRUE },
-	{"%s -p -C"      , "%s -Z -1 -- %s" , NULL	    , TRUE },
-	{"%s x -so"      , "%s l -- %s"     , NULL	    , TRUE }
+	{"%s p -c- -ierr", "%s vb -c- -- %s", NULL	       , FALSE, NO_OFFSET},
+	{NULL		 , "%s t %s"	    , "%s -xf %s %s"   , TRUE , NO_OFFSET},
+	{"%s -p -C"	 , "%s -Z -1 -- %s" , NULL	       , TRUE , NO_OFFSET},
+	{NULL		 , "%s l -- %s"	    , "%s x -y %s -o%s", FALSE, OFFSET_7Z}
 };
 
 
-typedef struct _ComicsDocumentClass ComicsDocumentClass;
+typedef struct    _ComicsDocumentClass ComicsDocumentClass;
 
 static void       comics_document_document_iface_init (EvDocumentIface *iface);
 static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
@@ -197,6 +204,7 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 				             comics_document->selected_command, 
 					     quoted_file);
 	comics_document->regex_arg = command_usage_def[type].regex_arg;
+	comics_document->offset = command_usage_def[type].offset;
 	if (command_usage_def[type].decompress_tmp) {
 		comics_document->dir = ev_tmp_directory (NULL); 
 		comics_document->decompress_tmp = 
@@ -312,10 +320,22 @@ comics_check_decompress_command	(gchar          *mime_type,
 
 	} else if (!strcmp (mime_type, "application/x-cb7") ||
 		   !strcmp (mime_type, "application/x-7z-compressed")) {
-		/* 7zr is a light stand-alone executable that supports only 
-	 	 * 7z/LZMA/BCJ */
+		/* 7zr, 7za and 7z are the commands from the p7zip project able 
+		 * to decompress .7z files */ 
 			comics_document->selected_command = 
 				g_find_program_in_path ("7zr");
+			if (comics_document->selected_command) {
+				comics_document->command_usage = P7ZIP;
+				return TRUE;
+			}
+			comics_document->selected_command = 
+				g_find_program_in_path ("7za");
+			if (comics_document->selected_command) {
+				comics_document->command_usage = P7ZIP;
+				return TRUE;
+			}
+			comics_document->selected_command = 
+				g_find_program_in_path ("7z");
 			if (comics_document->selected_command) {
 				comics_document->command_usage = P7ZIP;
 				return TRUE;
@@ -345,7 +365,7 @@ comics_document_load (EvDocument *document,
 	GSList *supported_extensions;
 	gchar *std_out;
 	gchar *mime_type;
-	gchar **cbr_files;
+	gchar **cb_files, *cb_file;
 	gboolean success;
 	int i, retval;
 	GError *err = NULL;
@@ -394,10 +414,10 @@ comics_document_load (EvDocument *document,
 	}
 
 	/* FIXME: is this safe against filenames containing \n in the archive ? */
-	cbr_files = g_strsplit (std_out, "\n", 0);
+	cb_files = g_strsplit (std_out, "\n", 0);
 	g_free (std_out);
 
-	if (!cbr_files) {
+	if (!cb_files) {
 		g_set_error_literal (error,
 				     EV_DOCUMENT_ERROR,
 				     EV_DOCUMENT_ERROR_INVALID,
@@ -406,26 +426,35 @@ comics_document_load (EvDocument *document,
 	}
 
 	supported_extensions = get_supported_image_extensions ();
-	for (i = 0; cbr_files[i] != NULL; i++) {
-		gchar *suffix = g_strrstr (cbr_files[i], ".");
+	for (i = 0; cb_files[i] != NULL; i++) {
+		if (comics_document->offset != NO_OFFSET) {
+			if (g_utf8_strlen (cb_files[i],-1) > 
+			    comics_document->offset) {
+				cb_file = 
+					g_utf8_offset_to_pointer (cb_files[i], 
+						       comics_document->offset);
+			} else {
+				continue;
+			}
+		} else {
+			cb_file = cb_files[i];
+		}
+		gchar *suffix = g_strrstr (cb_file, ".");
 		if (!suffix)
 			continue;
 		suffix = g_ascii_strdown (suffix + 1, -1);
-
 		if (g_slist_find_custom (supported_extensions, suffix,
 					 (GCompareFunc) strcmp) != NULL) {
 			comics_document->page_names =
 				g_slist_insert_sorted (
 					comics_document->page_names,
-					g_strdup (g_strstrip (cbr_files[i])),
+					g_strdup (g_strstrip (cb_file)),
 					(GCompareFunc) strcmp);
 			comics_document->n_pages++;
 		}
-
 		g_free (suffix);
 	}
-
-	g_strfreev (cbr_files);
+	g_strfreev (cb_files);
 	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
 	g_slist_free (supported_extensions);
 
@@ -437,7 +466,6 @@ comics_document_load (EvDocument *document,
 			     uri);
 		return FALSE;
 	}
-
 	return TRUE;
 }
 
