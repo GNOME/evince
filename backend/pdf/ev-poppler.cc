@@ -1479,9 +1479,9 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 	poppler_page_get_size (POPPLER_PAGE (rc->page->backend_page),
 			       &page_width, &page_height);
 	
-	*width = (gint) MAX (page_width * rc->scale, 1);
-	*height = (gint) MAX (page_height * rc->scale, 1);
-	
+	*width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
+	*height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
+
 	if (rc->rotation == 90 || rc->rotation == 270) {
 		gint  temp;
 
