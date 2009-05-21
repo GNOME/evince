@@ -68,7 +68,8 @@ struct _EvApplication {
 
 	EggSMClient *smclient;
 
-	gchar *last_chooser_uri;
+	gchar *filechooser_open_uri;
+	gchar *filechooser_save_uri;
 
 #ifdef ENABLE_DBUS
 	EvMediaPlayerKeys *keys;
@@ -786,8 +787,10 @@ ev_application_shutdown (EvApplication *application)
 
         g_free (application->dot_dir);
         application->dot_dir = NULL;
-	g_free (application->last_chooser_uri);
-        application->last_chooser_uri = NULL;
+	g_free (application->filechooser_open_uri);
+        application->filechooser_open_uri = NULL;
+	g_free (application->filechooser_save_uri);
+	application->filechooser_save_uri = NULL;
 
 	g_object_unref (application);
         instance = NULL;
@@ -924,16 +927,32 @@ ev_application_save_toolbars_model (EvApplication *application)
 }
 
 void
-ev_application_set_chooser_uri (EvApplication *application, const gchar *uri)
+ev_application_set_filechooser_uri (EvApplication       *application,
+				    GtkFileChooserAction action,
+				    const gchar         *uri)
 {
-	g_free (application->last_chooser_uri);
-	application->last_chooser_uri = g_strdup (uri);
+	if (action == GTK_FILE_CHOOSER_ACTION_OPEN) {
+		g_free (application->filechooser_open_uri);
+		application->filechooser_open_uri = g_strdup (uri);
+	} else if (action == GTK_FILE_CHOOSER_ACTION_SAVE) {
+		g_free (application->filechooser_save_uri);
+		application->filechooser_save_uri = g_strdup (uri);
+	}
 }
 
 const gchar *
-ev_application_get_chooser_uri (EvApplication *application)
+ev_application_get_filechooser_uri (EvApplication       *application,
+				    GtkFileChooserAction action)
 {
-	return application->last_chooser_uri;
+	if (action == GTK_FILE_CHOOSER_ACTION_OPEN) {
+		if (application->filechooser_open_uri)
+			return application->filechooser_open_uri;
+	} else if (action == GTK_FILE_CHOOSER_ACTION_SAVE) {
+		if (application->filechooser_save_uri)
+			return application->filechooser_save_uri;
+	}
+
+	return NULL;
 }
 
 void

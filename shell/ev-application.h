@@ -79,9 +79,11 @@ GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
 void              ev_application_save_toolbars_model (EvApplication   *application);
-void 		  ev_application_set_chooser_uri     (EvApplication   *application, 
+void 		  ev_application_set_filechooser_uri (EvApplication   *application,
+						      GtkFileChooserAction action,
 						      const gchar     *uri);
-const gchar	 *ev_application_get_chooser_uri     (EvApplication   *application);
+const gchar	 *ev_application_get_filechooser_uri (EvApplication   *application,
+						      GtkFileChooserAction action);
 void		  ev_application_screensaver_enable  (EvApplication   *application);
 void		  ev_application_screensaver_disable (EvApplication   *application);
 GtkPrintSettings *ev_application_get_print_settings  (EvApplication   *application);
