@@ -167,43 +167,5 @@ ev_image_get_tmp_uri (EvImage *image)
 	return image->priv->tmp_uri;
 }
 
-/* EvImageMapping */
-static void
-ev_image_mapping_free_foreach (EvImageMapping *mapping)
-{
-	g_object_unref (mapping->image);
-	g_free (mapping);
-}
-
-void
-ev_image_mapping_free (GList *image_mapping)
-{
-	if (!image_mapping)
-		return;
-
-	g_list_foreach (image_mapping, (GFunc) ev_image_mapping_free_foreach, NULL);
-	g_list_free (image_mapping);
-}
-
-EvImage *
-ev_image_mapping_find (GList   *image_mapping,
-		       gdouble  x,
-		       gdouble  y)
-{
-	GList *list;
-
-	for (list = image_mapping; list; list = list->next) {
-		EvImageMapping *mapping = list->data;
-
-		if ((x >= mapping->x1) &&
-		    (y >= mapping->y1) &&
-		    (x <= mapping->x2) &&
-		    (y <= mapping->y2)) {
-			return mapping->image;
-		}
-	}
-
-	return NULL;
-}
 
 

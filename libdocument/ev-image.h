@@ -63,21 +63,6 @@ const gchar *ev_image_save_tmp         (EvImage         *image,
 const gchar *ev_image_get_tmp_uri      (EvImage         *image);
 
 
-/* Image Mapping stuff */
-typedef struct _EvImageMapping EvImageMapping;
-struct _EvImageMapping {
-	EvImage *image;
-	gdouble x1;
-	gdouble y1;
-	gdouble x2;
-	gdouble y2;
-};
-
-void     ev_image_mapping_free (GList   *image_mapping);
-EvImage *ev_image_mapping_find (GList   *image_mapping,
-				gdouble  x,
-				gdouble  y);
-
 G_END_DECLS
 
 #endif /* __EV_IMAGE_H__ */

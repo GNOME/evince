@@ -208,26 +208,6 @@ GType        ev_form_field_signature_get_type (void) G_GNUC_CONST;
 EvFormField *ev_form_field_signature_new      (gint                  id);
 
 
-/* FormField Mapping stuff */
-typedef struct _EvFormFieldMapping EvFormFieldMapping;
-struct _EvFormFieldMapping {
-	EvFormField *field;
-	gdouble x1;
-	gdouble y1;
-	gdouble x2;
-	gdouble y2;
-};
-
-void         ev_form_field_mapping_free       (GList        *field_mapping);
-EvFormField *ev_form_field_mapping_find       (GList        *field_mapping,
-					       gdouble       x,
-					       gdouble       y);
-void         ev_form_field_mapping_get_area   (GList        *field_mapping,
-					       EvFormField  *field,
-					       EvRectangle  *area);
-EvFormField *ev_form_field_mapping_find_by_id (GList        *form_field_mapping,
-					       gint          id);
-
 G_END_DECLS
 
 #endif /* !EV_FORM_FIELD_H */

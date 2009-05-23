@@ -122,26 +122,6 @@ void          ev_annotation_markup_set_is_open   (EvAnnotationMarkup *markup,
 GType         ev_annotation_text_get_type        (void) G_GNUC_CONST;
 EvAnnotation *ev_annotation_text_new             (EvPage             *page);
 
-
-/* Annotation Mapping stuff */
-typedef struct _EvAnnotationMapping   EvAnnotationMapping;
-struct _EvAnnotationMapping
-{
-	        EvAnnotation *annotation;
-	        gdouble       x1;
-	        gdouble       y1;
-	        gdouble       x2;
-	        gdouble       y2;
-};
-
-void          ev_annotation_mapping_free     (GList       *annotation_mapping);
-EvAnnotation *ev_annotation_mapping_find     (GList       *annotation_mapping,
-					      gdouble       x,
-					      gdouble       y);
-void          ev_annotation_mapping_get_area (GList        *annotation_mapping,
-					      EvAnnotation *annotation,
-					      EvRectangle  *area);
-
 G_END_DECLS
 
 #endif /* EV_ANNOTATION_H */
