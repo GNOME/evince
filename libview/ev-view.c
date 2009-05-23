@@ -1117,6 +1117,25 @@ get_doc_point_from_offset (EvView *view,
 	return TRUE;
 }
 
+static gboolean
+get_doc_point_from_location (EvView  *view,
+			     gdouble  x,
+			     gdouble  y,
+			     gint    *page,
+			     gint    *x_new,
+			     gint    *y_new)
+{
+	gint x_offset = 0, y_offset = 0;
+
+	x += view->scroll_x;
+	y += view->scroll_y;
+	find_page_at_location (view, x, y, page, &x_offset, &y_offset);
+	if (*page == -1)
+		return FALSE;
+
+	return get_doc_point_from_offset (view, *page, x_offset, y_offset, x_new, y_new);
+}
+
 /*** Hyperref ***/
 static EvLink *
 ev_view_get_link_at_location (EvView  *view,
@@ -1124,24 +1143,13 @@ ev_view_get_link_at_location (EvView  *view,
 		              gdouble  y)
 {
 	gint page = -1;
-	gint x_offset = 0, y_offset = 0;
 	gint x_new = 0, y_new = 0;
 	GList *link_mapping;
 
 	if (!EV_IS_DOCUMENT_LINKS (view->document))
 		return NULL;
-	
-	x += view->scroll_x;
-	y += view->scroll_y;
 
-	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
-
-	if (page == -1)
-		return NULL;
-
-	
-	if (get_doc_point_from_offset (view, page, x_offset, 
-				       y_offset, &x_new, &y_new) == FALSE)
+	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
 	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
@@ -1568,23 +1576,13 @@ ev_view_get_image_at_location (EvView  *view,
 			       gdouble  y)
 {
 	gint page = -1;
-	gint x_offset = 0, y_offset = 0;
 	gint x_new = 0, y_new = 0;
 	GList *image_mapping;
 
 	if (!EV_IS_DOCUMENT_IMAGES (view->document))
 		return NULL;
 
-	x += view->scroll_x;
-	y += view->scroll_y;
-
-	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
-
-	if (page == -1)
-		return NULL;
-
-	if (get_doc_point_from_offset (view, page, x_offset,
-				       y_offset, &x_new, &y_new) == FALSE)
+	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
 	image_mapping = ev_pixbuf_cache_get_image_mapping (view->pixbuf_cache, page);
@@ -1602,23 +1600,13 @@ ev_view_get_form_field_at_location (EvView  *view,
 				    gdouble  y)
 {
 	gint page = -1;
-	gint x_offset = 0, y_offset = 0;
 	gint x_new = 0, y_new = 0;
 	GList *forms_mapping;
 	
 	if (!EV_IS_DOCUMENT_FORMS (view->document))
 		return NULL;
 
-	x += view->scroll_x;
-	y += view->scroll_y;
-	
-	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
-	
-	if (page == -1)
-		return NULL;
-
-	if (get_doc_point_from_offset (view, page, x_offset,
-				       y_offset, &x_new, &y_new) == FALSE)
+	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
 	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, page);
@@ -2386,23 +2374,13 @@ ev_view_get_annotation_at_location (EvView  *view,
 				    gdouble  y)
 {
 	gint page = -1;
-	gint x_offset = 0, y_offset = 0;
 	gint x_new = 0, y_new = 0;
 	GList *annotations_mapping;
 
 	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 		return NULL;
 
-	x += view->scroll_x;
-	y += view->scroll_y;
-
-	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
-
-	if (page == -1)
-		return NULL;
-
-	if (get_doc_point_from_offset (view, page, x_offset,
-				       y_offset, &x_new, &y_new) == FALSE)
+	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
 	annotations_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
