@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "ev-mapping.h"
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-links.h"
@@ -1146,7 +1147,7 @@ ev_view_get_link_at_location (EvView  *view,
 	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
 
 	if (link_mapping)
-		return ev_link_mapping_find (link_mapping, x_new, y_new);
+		return ev_mapping_list_get_data (link_mapping, x_new, y_new);
 	else
 		return NULL;
 }
@@ -1589,7 +1590,7 @@ ev_view_get_image_at_location (EvView  *view,
 	image_mapping = ev_pixbuf_cache_get_image_mapping (view->pixbuf_cache, page);
 
 	if (image_mapping)
-		return ev_image_mapping_find (image_mapping, x_new, y_new);
+		return ev_mapping_list_get_data (image_mapping, x_new, y_new);
 	else
 		return NULL;
 }
@@ -1623,7 +1624,7 @@ ev_view_get_form_field_at_location (EvView  *view,
 	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, page);
 
 	if (forms_mapping)
-		return ev_form_field_mapping_find (forms_mapping, x_new, y_new);
+		return ev_mapping_list_get_data (forms_mapping, x_new, y_new);
 	else
 		return NULL;
 }
@@ -1632,14 +1633,14 @@ static GdkRegion *
 ev_view_form_field_get_region (EvView      *view,
 			       EvFormField *field)
 {
-	EvRectangle  field_area;
 	GdkRectangle view_area;
 	GList       *forms_mapping;
+	EvMapping   *mapping;
 
 	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
 								field->page->index);
-	ev_form_field_mapping_get_area (forms_mapping, field, &field_area);
-	doc_rect_to_view_rect (view, field->page->index, &field_area, &view_area);
+	mapping = ev_mapping_list_find (forms_mapping, field);
+	doc_rect_to_view_rect (view, field->page->index, &mapping->area, &view_area);
 	view_area.x -= view->scroll_x;
 	view_area.y -= view->scroll_y;
 
@@ -1692,7 +1693,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 			forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
 										field->page->index);
 			for (l = forms_mapping; l; l = g_list_next (l)) {
-				EvFormField *button = ((EvFormFieldMapping *)(l->data))->field;
+				EvFormField *button = ((EvMapping *)(l->data))->data;
 				GdkRegion   *button_region;
 
 				if (button->id == field->id)
@@ -2050,7 +2051,7 @@ ev_view_handle_form_field (EvView      *view,
 {
 	GtkWidget   *field_widget = NULL;
 	GList       *form_field_mapping;
-	EvRectangle  field_area;
+	EvMapping   *mapping;
 	GdkRectangle view_area;
 
 	if (field->is_read_only)
@@ -2075,9 +2076,9 @@ ev_view_handle_form_field (EvView      *view,
 				(GDestroyNotify)g_object_unref);
 
 	form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, field->page->index);
-	ev_form_field_mapping_get_area (form_field_mapping, field, &field_area);
-	
-	doc_rect_to_view_rect (view, field->page->index, &field_area, &view_area);
+	mapping = ev_mapping_list_find (form_field_mapping, field);
+
+	doc_rect_to_view_rect (view, field->page->index, &mapping->area, &view_area);
 	view_area.x -= view->scroll_x;
 	view_area.y -= view->scroll_y;
 
@@ -2303,15 +2304,13 @@ show_annotation_windows (EvView *view,
 	annots = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
 
 	for (l = annots; l && l->data; l = g_list_next (l)) {
-		EvAnnotationMapping *annotation_mapping;
-		EvAnnotation        *annot;
-		EvViewWindowChild   *child;
-		GtkWidget           *window;
-		EvRectangle         *doc_rect;
-		GdkRectangle         view_rect;
+		EvAnnotation      *annot;
+		EvViewWindowChild *child;
+		GtkWidget         *window;
+		EvRectangle       *doc_rect;
+		GdkRectangle       view_rect;
 
-		annotation_mapping = (EvAnnotationMapping *)l->data;
-		annot = annotation_mapping->annotation;
+		annot = ((EvMapping *)(l->data))->data;
 
 		if (!EV_IS_ANNOTATION_MARKUP (annot))
 			continue;
@@ -2367,12 +2366,10 @@ hide_annotation_windows (EvView *view,
 	annots = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
 
 	for (l = annots; l && l->data; l = g_list_next (l)) {
-		EvAnnotationMapping *annotation_mapping;
-		EvAnnotation        *annot;
-		GtkWidget           *window;
+		EvAnnotation *annot;
+		GtkWidget    *window;
 
-		annotation_mapping = (EvAnnotationMapping *)l->data;
-		annot = annotation_mapping->annotation;
+		annot = ((EvMapping *)(l->data))->data;
 
 		if (!EV_IS_ANNOTATION_MARKUP (annot))
 			continue;
@@ -2411,7 +2408,7 @@ ev_view_get_annotation_at_location (EvView  *view,
 	annotations_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
 
 	if (annotations_mapping)
-		return ev_annotation_mapping_find (annotations_mapping, x_new, y_new);
+		return ev_mapping_list_get_data (annotations_mapping, x_new, y_new);
 	else
 		return NULL;
 }
@@ -2617,9 +2614,9 @@ ev_view_size_allocate (GtkWidget      *widget,
 	children = gtk_container_get_children (GTK_CONTAINER (widget));
 	for (l = children; l && l->data; l = g_list_next (l)) {
 		EvFormField   *field;
-		EvRectangle    field_area;
 		GdkRectangle   view_area;
 		GList         *form_field_mapping;
+		EvMapping     *mapping;
 		GtkAllocation  child_allocation;
 		GtkRequisition child_requisition;
 		GtkWidget     *child = (GtkWidget *)l->data;
@@ -2630,9 +2627,9 @@ ev_view_size_allocate (GtkWidget      *widget,
 
 		form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
 									     field->page->index);
-		ev_form_field_mapping_get_area (form_field_mapping, field, &field_area);
+		mapping = ev_mapping_list_find (form_field_mapping, field);
 
-		doc_rect_to_view_rect (view, field->page->index, &field_area, &view_area);
+		doc_rect_to_view_rect (view, field->page->index, &mapping->area, &view_area);
 		view_area.x -= view->scroll_x;
 		view_area.y -= view->scroll_y;
 
@@ -2951,10 +2948,10 @@ get_link_area (EvView       *view,
 	       EvLink       *link,
 	       GdkRectangle *area)
 {
-	EvRectangle  ev_rect;
-	GList       *link_mapping;
-	gint         page;
-	gint         x_offset = 0, y_offset = 0;
+	GList     *link_mapping;
+	EvMapping *mapping;
+	gint       page;
+	gint       x_offset = 0, y_offset = 0;
 
 	x += view->scroll_x;
 	y += view->scroll_y;
@@ -2962,9 +2959,9 @@ get_link_area (EvView       *view,
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 	
 	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
-	ev_link_mapping_get_area (link_mapping, link, &ev_rect);
+	mapping = ev_mapping_list_find (link_mapping, link);
 
-	doc_rect_to_view_rect (view, page, &ev_rect, area);
+	doc_rect_to_view_rect (view, page, &mapping->area, area);
 	area->y -= view->scroll_y;
 }
 
@@ -2975,10 +2972,10 @@ get_annot_area (EvView       *view,
 	       EvAnnotation *annot,
 	       GdkRectangle *area)
 {
-	EvRectangle  ev_rect;
-	GList       *annots_mapping;
-	gint         page;
-	gint         x_offset = 0, y_offset = 0;
+	GList     *annots_mapping;
+	EvMapping *mapping;
+	gint       page;
+	gint       x_offset = 0, y_offset = 0;
 
 	x += view->scroll_x;
 	y += view->scroll_y;
@@ -2986,9 +2983,9 @@ get_annot_area (EvView       *view,
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
 	annots_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
-	ev_annotation_mapping_get_area (annots_mapping, annot, &ev_rect);
+	mapping = ev_mapping_list_find (annots_mapping, annot);
 
-	doc_rect_to_view_rect (view, page, &ev_rect, area);
+	doc_rect_to_view_rect (view, page, &mapping->area, area);
 	area->y -= view->scroll_y;
 }
 

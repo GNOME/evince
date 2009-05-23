@@ -35,6 +35,7 @@
 
 #include "ev-poppler.h"
 #include "ev-file-exporter.h"
+#include "ev-mapping.h"
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-document-links.h"
@@ -1253,17 +1254,17 @@ pdf_document_links_get_links (EvDocumentLinks *document_links,
 
 	for (list = mapping_list; list; list = list->next) {
 		PopplerLinkMapping *link_mapping;
-		EvLinkMapping *ev_link_mapping;
+		EvMapping *ev_link_mapping;
 
 		link_mapping = (PopplerLinkMapping *)list->data;
-		ev_link_mapping = g_new (EvLinkMapping, 1);
-		ev_link_mapping->link = ev_link_from_action (pdf_document,
+		ev_link_mapping = g_new (EvMapping, 1);
+		ev_link_mapping->data = ev_link_from_action (pdf_document,
 							     link_mapping->action);
-		ev_link_mapping->x1 = link_mapping->area.x1;
-		ev_link_mapping->x2 = link_mapping->area.x2;
+		ev_link_mapping->area.x1 = link_mapping->area.x1;
+		ev_link_mapping->area.x2 = link_mapping->area.x2;
 		/* Invert this for X-style coordinates */
-		ev_link_mapping->y1 = height - link_mapping->area.y2;
-		ev_link_mapping->y2 = height - link_mapping->area.y1;
+		ev_link_mapping->area.y1 = height - link_mapping->area.y2;
+		ev_link_mapping->area.y2 = height - link_mapping->area.y1;
 
 		retval = g_list_prepend (retval, ev_link_mapping);
 	}
@@ -1318,17 +1319,17 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 
 	for (list = mapping_list; list; list = list->next) {
 		PopplerImageMapping *image_mapping;
-		EvImageMapping *ev_image_mapping;
+		EvMapping *ev_image_mapping;
 
 		image_mapping = (PopplerImageMapping *)list->data;
 
-		ev_image_mapping = g_new (EvImageMapping, 1);
+		ev_image_mapping = g_new (EvMapping, 1);
 		
-		ev_image_mapping->image = ev_image_new (page, image_mapping->image_id);
-		ev_image_mapping->x1 = image_mapping->area.x1;
-		ev_image_mapping->x2 = image_mapping->area.x2;
-		ev_image_mapping->y1 = image_mapping->area.y1;
-		ev_image_mapping->y2 = image_mapping->area.y2;
+		ev_image_mapping->data = ev_image_new (page, image_mapping->image_id);
+		ev_image_mapping->area.x1 = image_mapping->area.x1;
+		ev_image_mapping->area.y1 = image_mapping->area.y1;
+		ev_image_mapping->area.x2 = image_mapping->area.x2;
+		ev_image_mapping->area.y2 = image_mapping->area.y2;
 
 		retval = g_list_prepend (retval, ev_image_mapping);
 	}
@@ -2226,7 +2227,7 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
 
  	for (list = fields; list; list = list->next) {
  		PopplerFormFieldMapping *mapping;
- 		EvFormFieldMapping *field_mapping;
+ 		EvMapping *field_mapping;
 		EvFormField *ev_field;
 
  		mapping = (PopplerFormFieldMapping *)list->data;
@@ -2235,13 +2236,13 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
 		if (!ev_field)
 			continue;
 
- 		field_mapping = g_new0 (EvFormFieldMapping, 1);
-		field_mapping->x1 = mapping->area.x1;
-		field_mapping->x2 = mapping->area.x2;
-		field_mapping->y1 = height - mapping->area.y2;
-		field_mapping->y2 = height - mapping->area.y1;
-		field_mapping->field = ev_field;
-		field_mapping->field->page = EV_PAGE (g_object_ref (page));
+ 		field_mapping = g_new0 (EvMapping, 1);
+		field_mapping->area.x1 = mapping->area.x1;
+		field_mapping->area.x2 = mapping->area.x2;
+		field_mapping->area.y1 = height - mapping->area.y2;
+		field_mapping->area.y2 = height - mapping->area.y1;
+		field_mapping->data = ev_field;
+		ev_field->page = EV_PAGE (g_object_ref (page));
 
 		g_object_set_data_full (G_OBJECT (ev_field),
 					"poppler-field",
@@ -2584,7 +2585,7 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 
 	for (list = annots; list; list = list->next) {
 		PopplerAnnotMapping *mapping;
-		EvAnnotationMapping *annot_mapping;
+		EvMapping *annot_mapping;
 		EvAnnotation        *ev_annot;
 
 		mapping = (PopplerAnnotMapping *)list->data;
@@ -2599,12 +2600,12 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 		if (!ev_annot->name)
 			ev_annot->name = g_strdup_printf ("annot-%d-%d", page->index, i);
 
-		annot_mapping = g_new0 (EvAnnotationMapping, 1);
-		annot_mapping->x1 = mapping->area.x1;
-		annot_mapping->x2 = mapping->area.x2;
-		annot_mapping->y1 = height - mapping->area.y2;
-		annot_mapping->y2 = height - mapping->area.y1;
-		annot_mapping->annotation = ev_annot;
+		annot_mapping = g_new (EvMapping, 1);
+		annot_mapping->area.x1 = mapping->area.x1;
+		annot_mapping->area.x2 = mapping->area.x2;
+		annot_mapping->area.y1 = height - mapping->area.y2;
+		annot_mapping->area.y2 = height - mapping->area.y1;
+		annot_mapping->data = ev_annot;
 
 		g_object_set_data_full (G_OBJECT (ev_annot),
 					"poppler-annot",

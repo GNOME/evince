@@ -26,7 +26,7 @@
 #include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-document-links.h"
-
+#include "ev-mapping.h"
 
 static gboolean number_from_miniexp(miniexp_t sexp, int *number)
 {
@@ -223,9 +223,9 @@ build_tree (const DjvuDocument *djvu_document,
 }
 
 static gboolean
-get_djvu_hyperlink_area (ddjvu_pageinfo_t   *page_info,
-			 miniexp_t           sexp,
-			 EvLinkMapping      *ev_link_mapping)
+get_djvu_hyperlink_area (ddjvu_pageinfo_t *page_info,
+			 miniexp_t         sexp,
+			 EvMapping        *ev_link_mapping)
 {
 	miniexp_t iter;
 
@@ -245,10 +245,10 @@ get_djvu_hyperlink_area (ddjvu_pageinfo_t   *page_info,
 		iter = miniexp_cdr (iter);
 		if (!number_from_miniexp (miniexp_car (iter), &height)) goto unknown_link;
 
-		ev_link_mapping->x1 = minx;
-		ev_link_mapping->x2 = (minx + width);
-		ev_link_mapping->y1 = (page_info->height - (miny + height));
-		ev_link_mapping->y2 = (page_info->height - miny);
+		ev_link_mapping->area.x1 = minx;
+		ev_link_mapping->area.x2 = (minx + width);
+		ev_link_mapping->area.y1 = (page_info->height - (miny + height));
+		ev_link_mapping->area.y2 = (page_info->height - miny);
 	} else if (miniexp_car (iter) == miniexp_symbol ("poly")
 		   && miniexp_length (iter) >= 5 && miniexp_length (iter) % 2 == 1) {
 		
@@ -271,10 +271,10 @@ get_djvu_hyperlink_area (ddjvu_pageinfo_t   *page_info,
 			maxy = MAX (maxy, y);
 		}
 
-		ev_link_mapping->x1 = minx;
-		ev_link_mapping->x2 = maxx;
-		ev_link_mapping->y1 = (page_info->height - maxy);
-		ev_link_mapping->y2 = (page_info->height - miny);
+		ev_link_mapping->area.x1 = minx;
+		ev_link_mapping->area.x2 = maxx;
+		ev_link_mapping->area.y1 = (page_info->height - maxy);
+		ev_link_mapping->area.y2 = (page_info->height - miny);
 	} else {
 		/* unknown */
 		goto unknown_link;
@@ -287,18 +287,18 @@ get_djvu_hyperlink_area (ddjvu_pageinfo_t   *page_info,
 	return FALSE;
 }
 
-static EvLinkMapping *
+static EvMapping *
 get_djvu_hyperlink_mapping (DjvuDocument     *djvu_document,
 			    int               page,
 			    ddjvu_pageinfo_t *page_info,
 			    miniexp_t         sexp)
 {
-	EvLinkMapping *ev_link_mapping = NULL;
+	EvMapping *ev_link_mapping = NULL;
 	EvLinkAction *ev_action = NULL;
 	miniexp_t iter;
 	const char *url, *url_target, *comment;
 
-	ev_link_mapping = g_new (EvLinkMapping, 1);
+	ev_link_mapping = g_new (EvMapping, 1);
 
 	iter = sexp;
 
@@ -326,7 +326,7 @@ get_djvu_hyperlink_mapping (DjvuDocument     *djvu_document,
 	ev_action = get_djvu_link_action (djvu_document, url, page);
 	if (!ev_action) goto unknown_mapping;
 
-	ev_link_mapping->link = ev_link_new (comment, ev_action);
+	ev_link_mapping->data = ev_link_new (comment, ev_action);
 			
 	return ev_link_mapping;
 
@@ -363,7 +363,7 @@ djvu_links_get_links (EvDocumentLinks *document_links,
 	GList *retval = NULL;
 	miniexp_t page_annotations = miniexp_nil;
 	miniexp_t *hyperlinks = NULL, *iter = NULL;
-	EvLinkMapping *ev_link_mapping;
+	EvMapping *ev_link_mapping;
         ddjvu_pageinfo_t page_info;
 
 	while ((page_annotations = ddjvu_document_get_pageanno (djvu_document->d_document, page)) == miniexp_dummy)
@@ -378,10 +378,10 @@ djvu_links_get_links (EvDocumentLinks *document_links,
 			for (iter = hyperlinks; *iter; ++iter) {
 				ev_link_mapping = get_djvu_hyperlink_mapping (djvu_document, page, &page_info, *iter);
 				if (ev_link_mapping) {
-					ev_link_mapping->x1 *= scale_factor;
-					ev_link_mapping->x2 *= scale_factor;
-					ev_link_mapping->y1 *= scale_factor;
-					ev_link_mapping->y2 *= scale_factor;
+					ev_link_mapping->area.x1 *= scale_factor;
+					ev_link_mapping->area.x2 *= scale_factor;
+					ev_link_mapping->area.y1 *= scale_factor;
+					ev_link_mapping->area.y2 *= scale_factor;
 					retval = g_list_prepend (retval, ev_link_mapping);
 				}
 			}

@@ -2,13 +2,10 @@
 #include "ev-pixbuf-cache.h"
 #include "ev-job-scheduler.h"
 #include "ev-page-cache.h"
-#include "ev-document-images.h"
+#include "ev-mapping.h"
 #include "ev-document-forms.h"
-#include "ev-document-links.h"
+#include "ev-document-images.h"
 #include "ev-document-annotations.h"
-#include "ev-image.h"
-#include "ev-form-field.h"
-#include "ev-annotation.h"
 
 typedef struct _CacheJobInfo
 {
@@ -180,19 +177,19 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		job_info->region = NULL;
 	}
 	if (job_info->link_mapping) {
-		ev_link_mapping_free (job_info->link_mapping);
+		ev_mapping_list_free (job_info->link_mapping, g_object_unref);
 		job_info->link_mapping = NULL;
 	}
 	if (job_info->image_mapping) {
-		ev_image_mapping_free (job_info->image_mapping);
+		ev_mapping_list_free (job_info->image_mapping, g_object_unref);
 		job_info->image_mapping = NULL;
 	}
 	if (job_info->form_field_mapping) {
-		ev_form_field_mapping_free (job_info->form_field_mapping);
+		ev_mapping_list_free (job_info->form_field_mapping, g_object_unref);
 		job_info->form_field_mapping = NULL;
 	}
 	if (job_info->annots_mapping) {
-		ev_annotation_mapping_free (job_info->annots_mapping);
+		ev_mapping_list_free (job_info->annots_mapping, g_object_unref);
 		job_info->annots_mapping = NULL;
 	}
 	if (job_info->text_mapping) {
@@ -519,25 +516,25 @@ copy_job_to_job_info (EvJobRender   *job_render,
 	
 	if (job_render->flags & EV_RENDER_INCLUDE_LINKS) {
 		if (job_info->link_mapping)
-			ev_link_mapping_free (job_info->link_mapping);
+			ev_mapping_list_free (job_info->link_mapping, g_object_unref);
 		job_info->link_mapping = job_render->link_mapping;
 	}
 
 	if (job_render->flags & EV_RENDER_INCLUDE_IMAGES) {
 		if (job_info->image_mapping)
-			ev_image_mapping_free (job_info->image_mapping);
+			ev_mapping_list_free (job_info->image_mapping, g_object_unref);
 		job_info->image_mapping = job_render->image_mapping;
 	}
 
 	if (job_render->flags & EV_RENDER_INCLUDE_FORMS) {
 		if (job_info->form_field_mapping)
-			ev_form_field_mapping_free (job_info->form_field_mapping);
+			ev_mapping_list_free (job_info->form_field_mapping, g_object_unref);
 		job_info->form_field_mapping = job_render->form_field_mapping;
 	}
 
 	if (job_render->flags & EV_RENDER_INCLUDE_ANNOTS) {
 		if (job_info->annots_mapping)
-			ev_annotation_mapping_free (job_info->annots_mapping);
+			ev_mapping_list_free (job_info->annots_mapping, g_object_unref);
 		job_info->annots_mapping = job_render->annots_mapping;
 	}
 
