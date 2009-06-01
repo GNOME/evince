@@ -2314,6 +2314,9 @@ show_annotation_windows (EvView *view,
 		if (!EV_IS_ANNOTATION_MARKUP (annot))
 			continue;
 
+		if (!ev_annotation_markup_has_popup (EV_ANNOTATION_MARKUP (annot)))
+			continue;
+
 		window = g_object_get_data (G_OBJECT (annot), "popup");
 		if (window) {
 			ev_view_window_child_move_with_parent (view, window);
