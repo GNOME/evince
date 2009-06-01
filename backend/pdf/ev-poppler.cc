@@ -2530,13 +2530,13 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			PopplerAnnotMarkup *markup;
 			gchar *label;
 			gdouble opacity;
-			gboolean is_open;
 			PopplerRectangle poppler_rect;
 
 			markup = POPPLER_ANNOT_MARKUP (poppler_annot);
 
 			if (poppler_annot_markup_get_popup_rectangle (markup, &poppler_rect)) {
 				EvRectangle ev_rect;
+				gboolean is_open;
 				gdouble height;
 
 				poppler_page_get_size (POPPLER_PAGE (page->backend_page),
@@ -2546,17 +2546,28 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 				ev_rect.y1 = height - poppler_rect.y2;
 				ev_rect.y2 = height - poppler_rect.y1;
 
-				g_object_set (ev_annot, "rectangle", &ev_rect, NULL);
+				is_open = poppler_annot_markup_get_popup_is_open (markup);
+
+				g_object_set (ev_annot,
+					      "rectangle", &ev_rect,
+					      "is_open", is_open,
+					      "has_popup", TRUE,
+					      NULL);
+			} else {
+				/* FIXME: Use poppler_annot_markup_has_popup() when
+				 * new poppler is released.
+				 */
+				g_object_set (ev_annot,
+					      "has_popup", FALSE,
+					      NULL);
 			}
 
 			label = poppler_annot_markup_get_label (markup);
 			opacity = poppler_annot_markup_get_opacity (markup);
-			is_open = poppler_annot_markup_get_popup_is_open (markup);
 
 			g_object_set (ev_annot,
 				      "label", label,
 				      "opacity", opacity,
-				      "is_open", is_open,
 				      NULL);
 
 			g_free (label);
