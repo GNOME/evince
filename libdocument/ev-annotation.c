@@ -31,6 +31,7 @@ enum {
 	PROP_0,
 	PROP_LABEL,
 	PROP_OPACITY,
+	PROP_HAS_POPUP,
 	PROP_RECTANGLE,
 	PROP_IS_OPEN
 };
@@ -123,6 +124,7 @@ ev_annotation_text_new (EvPage *page)
 typedef struct {
 	gchar   *label;
 	gdouble  opacity;
+	gboolean has_popup;
 	gboolean is_open;
 	EvRectangle *rectangle;
 } EvAnnotationMarkupProps;
@@ -147,6 +149,13 @@ ev_annotation_markup_iface_base_init (EvAnnotationMarkupIface *iface)
 									  G_MAXDOUBLE,
 									  0,
 									  G_PARAM_READWRITE));
+		g_object_interface_install_property (iface,
+						     g_param_spec_boolean ("has_popup",
+									   "Has popup",
+									   "Whether the markup annotation has "
+									   "a popup window associated",
+									   TRUE,
+									   G_PARAM_READWRITE));
 		g_object_interface_install_property (iface,
 						     g_param_spec_boxed ("rectangle",
 									 "Rectangle",
@@ -211,6 +220,9 @@ ev_annotation_markup_set_property (GObject      *object,
 	case PROP_OPACITY:
 		props->opacity = g_value_get_double (value);
 		break;
+	case PROP_HAS_POPUP:
+		props->has_popup = g_value_get_boolean (value);
+		break;
 	case PROP_RECTANGLE:
 		ev_rectangle_free (props->rectangle);
 		props->rectangle = g_value_dup_boxed (value);
@@ -240,6 +252,9 @@ ev_annotation_markup_get_property (GObject    *object,
 	case PROP_OPACITY:
 		g_value_set_double (value, props->opacity);
 		break;
+	case PROP_HAS_POPUP:
+		g_value_set_boolean (value, props->has_popup);
+		break;
 	case PROP_RECTANGLE:
 		g_value_set_boxed (value, props->rectangle);
 		break;
@@ -259,6 +274,7 @@ ev_annotation_markup_class_install_properties (GObjectClass *klass)
 
 	g_object_class_override_property (klass, PROP_LABEL, "label");
 	g_object_class_override_property (klass, PROP_OPACITY, "opacity");
+	g_object_class_override_property (klass, PROP_HAS_POPUP, "has_popup");
 	g_object_class_override_property (klass, PROP_RECTANGLE, "rectangle");
 	g_object_class_override_property (klass, PROP_IS_OPEN, "is_open");
 }
@@ -304,6 +320,18 @@ ev_annotation_markup_set_opacity (EvAnnotationMarkup *markup,
 	g_return_if_fail (EV_IS_ANNOTATION_MARKUP (markup));
 
 	g_object_set (G_OBJECT (markup), "opacity", opacity, NULL);
+}
+
+gboolean
+ev_annotation_markup_has_popup (EvAnnotationMarkup *markup)
+{
+	gboolean retval;
+
+	g_return_val_if_fail (EV_IS_ANNOTATION_MARKUP (markup), FALSE);
+
+	g_object_get (G_OBJECT (markup), "has_popup", &retval, NULL);
+
+	return retval;
 }
 
 void

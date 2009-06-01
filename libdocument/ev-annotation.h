@@ -112,6 +112,7 @@ void          ev_annotation_markup_set_label     (EvAnnotationMarkup *markup,
 gdouble       ev_annotation_markup_get_opacity   (EvAnnotationMarkup *markup);
 void          ev_annotation_markup_set_opacity   (EvAnnotationMarkup *markup,
 						  gdouble             opacity);
+gboolean      ev_annotation_markup_has_popup     (EvAnnotationMarkup *markup);
 void          ev_annotation_markup_get_rectangle (EvAnnotationMarkup *markup,
 						  EvRectangle        *ev_rect);
 gboolean      ev_annotation_markup_get_is_open   (EvAnnotationMarkup *markup);
