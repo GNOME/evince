@@ -1,33 +1,38 @@
 noinst_LTLIBRARIES = libsmclient.la
 
-if OS_WIN32
-platform_sources = eggsmclient-win32.c
-else
-platform_sources = 		\
-	eggsmclient-xsmp.c	\
-	eggdesktopfile.c	\
-	eggdesktopfile.h
-platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
+NULL =
+
+if WITH_SMCLIENT
+libsmclient_la_SOURCES = \
+        eggdesktopfile.c \
+        eggdesktopfile.h \
+        eggsmclient.c \
+        eggsmclient.h \
+        eggsmclient-private.h \
+        $(NULL)
+
+libsmclient_la_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\""EggSMClient"\" \
+	$(DISABLE_DEPRECATED) \
+	$(AM_CPPFLAGS)
+
+libsmclient_la_CFLAGS = \
+	$(SMCLIENT_CFLAGS) \
+	$(WARNING_CFLAGS) \
+	$(AM_CFLAGS)
+
+libsmclient_la_LIBADD = \
+	$(SMCLIENT_LIBS)
+
+if WITH_SMCLIENT_XSMP
+libsmclient_la_SOURCES += eggsmclient-xsmp.c
+libsmclient_la_CPPFLAGS += -DEGG_SM_CLIENT_BACKEND_XSMP
+endif
+if WITH_SMCLIENT_WIN32
+libsmclient_la_SOURCES += eggsmclient-win32.c
+endif
+if WITH_SMCLIENT_QUARTZ
+libsmclient_la_SOURCES += eggsmclient-osx.c
 endif
 
-libsmclient_la_SOURCES = 	\
-	eggsmclient.c		\
-	eggsmclient.h		\
-	eggsmclient-private.h	\
-	$(platform_sources)
-
-libsmclient_la_CFLAGS =				\
-	-DG_LOG_DOMAIN=\""EggSMClient"\"	\
-	$(platform_defines)			\
-	$(SMCLIENT_CFLAGS)			\
-	$(WARNING_CFLAGS)			\
-	$(DISABLE_DEPRECATED)
-
-libsmclient_la_LIBADD = $(SMCLIENT_LIBS)
-
-EXTRA_DIST =			\
-	eggsmclient-win32.c	\
-	eggsmclient-xsmp.c	\
-	eggdesktopfile.c	\
-	eggdesktopfile.h
-
+endif # WITH_SMCLIENT

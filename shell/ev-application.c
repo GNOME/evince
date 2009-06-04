@@ -33,7 +33,10 @@
 #endif
 
 #include "totem-scrsaver.h"
+
+#ifdef WITH_SMCLIENT
 #include "eggsmclient.h"
+#endif
 
 #include "ev-application.h"
 #include "ev-document-factory.h"
@@ -67,7 +70,9 @@ struct _EvApplication {
 
 	TotemScrsaver *scr_saver;
 
+#ifdef WITH_SMCLIENT
 	EggSMClient *smclient;
+#endif
 
 	gchar *filechooser_open_uri;
 	gchar *filechooser_save_uri;
@@ -287,11 +292,14 @@ ev_application_load_session (EvApplication *application)
 	GKeyFile *state_file;
 	gchar   **uri_list;
 
+#ifdef WITH_SMCLIENT
 	if (egg_sm_client_is_resumed (application->smclient)) {
 		state_file = egg_sm_client_get_state_file (application->smclient);
 		if (!state_file)
 			return FALSE;
-	} else if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
+	} else
+#endif /* WITH_SMCLIENT */
+        if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
 		if (ev_application_run_crash_recovery_dialog (application)) {
 			state_file = g_key_file_new ();
 			g_key_file_load_from_file (state_file,
@@ -325,6 +333,8 @@ ev_application_load_session (EvApplication *application)
 	return TRUE;
 }
 
+#ifdef WITH_SMCLIENT
+
 static void
 smclient_save_state_cb (EggSMClient   *client,
 			GKeyFile      *state_file,
@@ -346,12 +356,15 @@ smclient_quit_cb (EggSMClient   *client,
 	ev_application_shutdown (application);
 }
 
+#endif /* WITH_SMCLIENT */
+
 static void
 ev_application_init_session (EvApplication *application)
 {
 	application->crashed_file = g_build_filename (application->dot_dir,
 						      "evince-crashed", NULL);
 
+#ifdef WITH_SMCLIENT
 	application->smclient = egg_sm_client_get ();
 	g_signal_connect (application->smclient, "save_state",
 			  G_CALLBACK (smclient_save_state_cb),
@@ -359,6 +372,7 @@ ev_application_init_session (EvApplication *application)
 	g_signal_connect (application->smclient, "quit",
 			  G_CALLBACK (smclient_quit_cb),
 			  application);
+#endif
 }
 
 /**

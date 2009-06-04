@@ -136,14 +136,41 @@ PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >
 PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0)
 
-if test "$os_win32" = no; then
-	PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0 sm >= 1.0.0)
-else
-	PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0)
+# *********
+# SM client
+# *********
+
+GDK_TARGET="$($PKG_CONFIG --variable target gdk-2.0)"
+
+SMCLIENT_PKGS=
+AC_MSG_CHECKING([which smclient backend to use])
+AC_ARG_WITH([smclient],
+  [AS_HELP_STRING([--with-smclient-backend],[which smclient backend to use (no|xsmp|win32|quartz)])],
+  [],
+  [case "$GDK_TARGET" in
+    x11) case "$with_platform" in
+           gnome) with_smclient=xsmp SMCLIENT_PKGS="sm >= 1.0.0" ;;
+           *) with_smclient=no ;;
+         esac ;;
+    win32|quartz) with_smclient=$GDK_TARGET ;;
+    *) with_smclient=no ;;
+   esac])
+AC_MSG_RESULT([$with_smclient])
+
+if test "$with_smclient" != "no"; then
+  AC_DEFINE([WITH_SMCLIENT],[1],[Define if smclient is enabled])
+
+  PKG_CHECK_MODULES([SMCLIENT],[gtk+-2.0 gthread-2.0 $SMCLIENT_PKGS])
+  AC_SUBST([SMCLIENT_CFLAGS])
+  AC_SUBST([SMCLIENT_LIBS])
 fi
 
-AC_SUBST(SMCLIENT_CFLAGS)
-AC_SUBST(SMCLIENT_LIBS)
+AM_CONDITIONAL([WITH_SMCLIENT],[test "$with_smclient" != "no"])
+AM_CONDITIONAL([WITH_SMCLIENT_XSMP],[test "$with_smclient" = "xsmp"])
+AM_CONDITIONAL([WITH_SMCLIENT_WIN32],[test "$with_smclient" = "win32"])
+AM_CONDITIONAL([WITH_SMCLIENT_QUARTZ],[test "$with_smclient" = "quartz"])
+
+# ***
 
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version -no-undefined -export-symbols \$(top_srcdir)/backend/backend.symbols"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
@@ -697,6 +724,7 @@ Configure summary:
 	GTK+ Unix Print....:  $with_gtk_unix_print
 	Keyring Support....:  $with_keyring
 	DBUS Support.......:  $enable_dbus
+	SM client support..:  $with_smclient
 	Nautilus Plugin....:  $enable_nautilus
 	Thumbnailer........:  $enable_thumbnailer
 	Previewer..........:  $enable_previewer
