@@ -41,12 +41,15 @@ m4_define([ev_binary_version],[ev_document_lt_current])
 
 AC_PREREQ([2.57])
 AC_INIT([Evince],[ev_version],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
-AM_INIT_AUTOMAKE([1.9 dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 
-AM_CONFIG_HEADER(config.h)
-AC_CONFIG_MACRO_DIR(m4)
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 
-AM_MAINTAINER_MODE
+if test -z "$enable_maintainer_mode"; then
+  enable_maintainer_mode=yes
+fi
+AM_MAINTAINER_MODE([enable])
 
 AM_PROG_LIBTOOL
 
