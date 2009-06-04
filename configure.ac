@@ -76,35 +76,42 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
 AM_GLIB_GNU_GETTEXT
 
-dnl check for win32 platform
-AC_MSG_CHECKING([for Win32 platform])
-case "$host" in
-  *-*-mingw*|*-*-cygwin*)
-    platform_win32=yes
-    AC_CHECK_TOOL(WINDRES, windres)
-    ;;
-  *)
-    platform_win32=no
-    ;;
-esac
-AC_MSG_RESULT([$platform_win32])
-AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
+# Check which platform to use
 
-AC_MSG_CHECKING([for native Win32])
-case "$host" in
-  *-*-mingw*)
-    os_win32=yes
-    ;;
-  *)
-    os_win32=no
-    ;;
-esac
-AC_MSG_RESULT([$os_win32])
-AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
+AC_MSG_CHECKING([for which platform to build])
+AC_ARG_WITH([platform],
+  [AS_HELP_STRING([--with-platform=gnome|win32|hildon (default: gnome)])],
+  [case "$withval" in
+    gnome|win32|hildon) ;;
+    *) AC_MSG_ERROR([invalid argument "$withval" for --with-platform]) ;;
+   esac],
+  [case "$host" in
+     *-*-mingw*|*-*-cygwin*) with_platform="win32" ;;
+     *) with_platform=gnome ;;
+   esac])
+
+AC_MSG_RESULT([$with_platform])
+
+if test "$with_platform" = "win32"; then
+  AC_CHECK_TOOL([WINDRES],[windres])
+  AC_MSG_CHECKING([for native Win32])
+  case "$host" in
+    *-*-mingw*)
+      os_win32=yes
+      ;;
+    *)
+      os_win32=no
+      ;;
+  esac
+  AC_MSG_RESULT([$os_win32])
+fi
+
+AM_CONDITIONAL([PLATFORM_WIN32],[test "with_platform" = "win32"])
+AM_CONDITIONAL([OS_WIN32],[test "$os_win32" = "yes"])
 
 dnl Specify required versions of dependencies
 DBUS_GLIB_REQUIRED=0.70
-GTK_REQUIRED=2.14.0
+GTK_REQUIRED=2.12.0
 GLIB_REQUIRED=2.18.0
 KEYRING_REQUIRED=2.22.0
 AC_SUBST([GLIB_REQUIRED])
@@ -147,18 +154,17 @@ LIBS="$LIBS $BACKEND_LIBS"
 AC_CHECK_FUNCS(cairo_format_stride_for_width)
 LIBS=$evince_save_LIBS
 
-dnl ========= Check for gtk+-unix-print
-
-if test "$os_win32" = yes; then
-  with_gtk_unix_print_default=no
-else
-  with_gtk_unix_print_default=yes
-fi
+# ******************
+# GKT+ Unix Printing
+# ******************
 
 AC_MSG_CHECKING([whether gtk+-unix-print support is requested])
 AC_ARG_WITH([gtk-unix-print],
   [AS_HELP_STRING([--without-gtk-unix-print],[disable the use of gtk-unix-print])],
-  [],[with_gtk_unix_print=$with_gtk_unix_print_default])
+  [],[case "$os_win32" in
+        yes) with_gtk_unix_print=no ;;
+        *) with_gtk_unix_print=yes ;;
+      esac])
 AC_MSG_RESULT([$with_gtk_unix_print])
 
 if test "$with_gtk_unix_print" = "yes"; then
@@ -166,25 +172,21 @@ if test "$with_gtk_unix_print" = "yes"; then
    AC_DEFINE([GTKUNIXPRINT_ENABLED], [1], [Define if gtk+-unix-print is enabled.])
 fi
 
-dnl ========= Check for Keyring
-
-if test "$os_win32" = yes; then
-  with_keyring_default=no
-else
-  with_keyring_default=yes
-fi
+# *********************
+# GNOME Keyring support
+# *********************
 
 AC_ARG_WITH(keyring,
-        AC_HELP_STRING([--without-keyring],[disable the use of gnome-keyring]),
-	[case "${withval}" in
-	yes) WITH_KEYRING=yes ;;
-	no) WITH_KEYRING=no ;;
-	*) AC_MSG_ERROR(bad value ${withval} for --with-keyring) ;;
-	esac],
-	[WITH_KEYRING=$with_keyring_default]) dnl Default value
-AM_CONDITIONAL(WITH_KEYRING, test x$WITH_KEYRING = "xyes")
+        [AS_HELP_STRING([--without-keyring],[disable the use of gnome-keyring])],
+        [],
+        [case "$with_platform" in
+           gnome) with_keyring=yes ;;
+           hildon|win32) with_keyring=no ;;
+         esac])
 
-if test x$WITH_KEYRING = "xyes"; then
+AM_CONDITIONAL([WITH_KEYRING],[test "$with_keyring" = "yes"])
+
+if test "$with_keyring" = "yes"; then
         PKG_CHECK_MODULES(KEYRING, gnome-keyring-1 >= $KEYRING_REQUIRED)
         AC_DEFINE([WITH_KEYRING],[1],[Define if KEYRING support is enabled])
 fi
@@ -223,16 +225,14 @@ AM_CONDITIONAL([DBUS_TOOL_NO_PREFIX], [test "x$DBUS_VERSION" = "x33"])
 
 dnl ========= Check for GConf
 
-if test "$os_win32" = yes; then
-  with_gconf_default=no
-else
-  with_gconf_default=yes
-fi
-
 AC_MSG_CHECKING([whether GConf support is requested])
 AC_ARG_WITH([gconf],
   [AS_HELP_STRING([--without-gconf],[disable the use of gconf])],
-  [],[with_gconf=$with_gconf_default])
+  [],
+  [case "$os_win32" in
+     yes) with_gconf=no ;;
+     *) with_gconf=yes ;;
+   esac])
 AC_MSG_RESULT([$with_gconf])
 
 AM_CONDITIONAL([WITH_GCONF],[test "$with_gconf" = "yes"])
@@ -285,17 +285,16 @@ FRONTEND_LIBS="$FRONTEND_CORE_LIBS -lz"
 AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
 
-dnl Check for Nautilus property page build
+# Check for Nautilus property page build
 AC_ARG_ENABLE(nautilus,
-	AC_HELP_STRING([--enable-nautilus],[compile the nautilus plugin]),
-	[case "${enableval}" in
-	yes) ENABLE_NAUTILUS=yes ;;
-	no) ENABLE_NAUTILUS=no ;;
-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-nautilus) ;;
-	esac],
-	[ENABLE_NAUTILUS=yes]) dnl Default value
+	[AS_HELP_STRING([--enable-nautilus],[compile the nautilus plugin])],
+	[],
+	[case "$with_platform" in
+           gnome) enable_nautilus=yes ;;
+           hildon) enable_nautilus=no ;;
+         esac])
 
-if test x$ENABLE_NAUTILUS = "xyes" ; then
+if test x$enable_nautilus = "xyes" ; then
 	PKG_CHECK_MODULES(NAUTILUS, gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension,
 			[HAVE_NAUTILUS=yes], [HAVE_NAUTILUS=no])
 	NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
@@ -312,29 +311,32 @@ AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
 
 dnl Check for thumbnailer build
 AC_ARG_ENABLE(thumbnailer,
-        AC_HELP_STRING([--disable-thumbnailer],[disable the GNOME thumbnailer]),
-	[case "${enableval}" in
-	yes) ENABLE_THUMBNAILER=yes ;;
-	no) ENABLE_THUMBNAILER=no ;;
-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-thumbnailer) ;;
-	esac],
-	[ENABLE_THUMBNAILER=yes]) dnl Default value
-AM_CONDITIONAL(ENABLE_THUMBNAILER, test x$ENABLE_THUMBNAILER = "xyes")
+        [AS_HELP_STRING([--disable-thumbnailer],[disable the GNOME thumbnailer])],
+	[],
+	[case "$with_platform" in
+           gnome) enable_thumbnailer=yes ;;
+           hildon) enable_thumbnailer=no ;;
+         esac])
+
+AM_CONDITIONAL(ENABLE_THUMBNAILER, test x$enable_thumbnailer = "xyes")
 
 dnl Check for previewer build
-AC_ARG_ENABLE(previewer,
-	AC_HELP_STRING([--disable-previewer],[disable the GNOME Document Previewer]),
-	[case "${enableval}" in
-	yes) ENABLE_PREVIEWER=yes ;;
-	no) ENABLE_PREVIEWER=no ;;
-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-previewer) ;;
-	esac],
-	[ENABLE_PREVIEWER=yes]) dnl Default value
-if test x$ENABLE_PREVIEWER = "xyes" ; then
+AC_ARG_ENABLE([previewer],
+	[AS_HELP_STRING([--disable-previewer],[disable the GNOME Document Previewer])],
+	[],
+	[case "$with_platform" in
+           gnome) enable_previewer=yes ;;
+           *) enable_previewer=no ;;
+         esac])
+
+if test "$enable_previewer" = "yes" ; then
    PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED,
-	             [ENABLE_PREVIEWER=yes],[ENABLE_PREVIEWER=no])
+	             [enable_previewer=yes],[enable_previewer=no])
+   if test x$enable_previewer = "xno" ; then
+      AC_MSG_WARN([Previewer support is disabled since gtk+-unix-print $GTK_REQUIRED or higher was not found])
+   fi
 fi
-AM_CONDITIONAL(ENABLE_PREVIEWER, test x$ENABLE_PREVIEWER = "xyes")
+AM_CONDITIONAL([ENABLE_PREVIEWER],[test "$enable_previewer" = "yes"])
 PREVIEWER_CFLAGS="$PREVIEWER_CFLAGS $GTKUNIXPRINT_CFLAGS $DEBUG_FLAGS"
 PREVIEWER_LIBS="$PREVIEWER_LIBS $GTKUNIXPRINT_LIBS -lz"
 AC_SUBST(PREVIEWER_CFLAGS)
@@ -691,11 +693,11 @@ echo "
 Configure summary:
         GConf Support......:  $with_gconf
 	GTK+ Unix Print....:  $with_gtk_unix_print
-	Keyring Support....:  $WITH_KEYRING
+	Keyring Support....:  $with_keyring
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS
-	Thumbnailer........:  $ENABLE_THUMBNAILER
-	Previewer..........:  $ENABLE_PREVIEWER
+	Thumbnailer........:  $enable_thumbnailer
+	Previewer..........:  $enable_previewer
 	Gtk-Doc Support....:  $enable_gtk_doc
 	Debug mode.........:  $enable_debug
 	GObj. Introspection:  $enable_introspection
