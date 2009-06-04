@@ -14,15 +14,10 @@ libevproperties_la_SOURCES=			\
 	ev-properties-view.c			\
 	ev-properties-view.h
 
-if HAVE_NAUTILUS
-EVINCE_PROPERTIES_PAGE = libevince-properties-page.la
-else
-EVINCE_PROPERTIES_PAGE =
-endif
+if ENABLE_NAUTILUS
 
-nautilus_LTLIBRARIES = $(EVINCE_PROPERTIES_PAGE)
+nautilusextension_LTLIBRARIES = libevince-properties-page.la
 
-nautilusdir=$(NAUTILUS_EXTENSION_DIR)
 libevince_properties_page_la_CFLAGS = -I$(top_srcdir)
 libevince_properties_page_la_SOURCES = 	\
 	ev-properties-main.c
@@ -34,3 +29,5 @@ libevince_properties_page_la_LIBADD = 		\
 	$(NAUTILUS_LIBS)
 
 libevince_properties_page_la_LDFLAGS = -module -avoid-version -no-undefined
+
+endif # ENABLE_NAUTILUS

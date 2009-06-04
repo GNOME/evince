@@ -286,56 +286,54 @@ AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
 
 # Check for Nautilus property page build
-AC_ARG_ENABLE(nautilus,
-	[AS_HELP_STRING([--enable-nautilus],[compile the nautilus plugin])],
-	[],
-	[case "$with_platform" in
-           gnome) enable_nautilus=yes ;;
-           hildon) enable_nautilus=no ;;
-         esac])
+AC_ARG_ENABLE([nautilus],
+  [AS_HELP_STRING([--enable-nautilus],[compile the nautilus plugin])],
+  [],
+  [case "$with_platform" in
+     gnome) enable_nautilus=yes ;;
+     *) enable_nautilus=no ;;
+    esac])
 
-if test x$enable_nautilus = "xyes" ; then
-	PKG_CHECK_MODULES(NAUTILUS, gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension,
-			[HAVE_NAUTILUS=yes], [HAVE_NAUTILUS=no])
-	NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
-	AC_SUBST(NAUTILUS_EXTENSION_DIR)
+if test "$enable_nautilus" = "yes" ; then
+  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension])
+  NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
+  AC_SUBST([nautilusextensiondir],[$NAUTILUS_EXTENSION_DIR])
+  AC_SUBST(NAUTILUS_CFLAGS)
+  AC_SUBST(NAUTILUS_LIBS)
+
+  AC_DEFINE([HAVE_NAUTILUS],[1], [defined if you build the nautilus plugin])
 fi
 
-AC_SUBST(NAUTILUS_CFLAGS)
-AC_SUBST(NAUTILUS_LIBS)
-if test x$HAVE_NAUTILUS = "xyes"; then
-	AC_DEFINE(HAVE_NAUTILUS, 1, [defined if you build the nautilus plugin])
-fi
-AM_CONDITIONAL(HAVE_NAUTILUS, test x$HAVE_NAUTILUS = "xyes")
+AM_CONDITIONAL([ENABLE_NAUTILUS],[test "$enable_nautilus" = "yes"])
 
+# Check for thumbnailer build
 
-dnl Check for thumbnailer build
-AC_ARG_ENABLE(thumbnailer,
-        [AS_HELP_STRING([--disable-thumbnailer],[disable the GNOME thumbnailer])],
-	[],
-	[case "$with_platform" in
-           gnome) enable_thumbnailer=yes ;;
-           hildon) enable_thumbnailer=no ;;
-         esac])
+AC_ARG_ENABLE([thumbnailer],
+  [AS_HELP_STRING([--disable-thumbnailer],[disable the GNOME thumbnailer])],
+  [],
+  [case "$with_platform" in
+     gnome) enable_thumbnailer=yes ;;
+     *) enable_thumbnailer=no ;;
+    esac])
 
-AM_CONDITIONAL(ENABLE_THUMBNAILER, test x$enable_thumbnailer = "xyes")
+AM_CONDITIONAL([ENABLE_THUMBNAILER],[test "$enable_thumbnailer" = "yes"])
 
-dnl Check for previewer build
+# ***************
+# Print Previewer
+# ***************
+
 AC_ARG_ENABLE([previewer],
-	[AS_HELP_STRING([--disable-previewer],[disable the GNOME Document Previewer])],
-	[],
-	[case "$with_platform" in
-           gnome) enable_previewer=yes ;;
-           *) enable_previewer=no ;;
-         esac])
+  [AS_HELP_STRING([--disable-previewer],[disable the GNOME Document Previewer])],
+  [],
+  [case "$with_platform" in
+      gnome) enable_previewer=yes ;;
+      *) enable_previewer=no ;;
+    esac])
 
-if test "$enable_previewer" = "yes" ; then
-   PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED,
-	             [enable_previewer=yes],[enable_previewer=no])
-   if test x$enable_previewer = "xno" ; then
-      AC_MSG_WARN([Previewer support is disabled since gtk+-unix-print $GTK_REQUIRED or higher was not found])
-   fi
+if test x$enable_previewer = "xyes" ; then
+  PKG_CHECK_MODULES([PREVIEWER],[gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
 fi
+
 AM_CONDITIONAL([ENABLE_PREVIEWER],[test "$enable_previewer" = "yes"])
 PREVIEWER_CFLAGS="$PREVIEWER_CFLAGS $GTKUNIXPRINT_CFLAGS $DEBUG_FLAGS"
 PREVIEWER_LIBS="$PREVIEWER_LIBS $GTKUNIXPRINT_LIBS -lz"
@@ -695,7 +693,7 @@ Configure summary:
 	GTK+ Unix Print....:  $with_gtk_unix_print
 	Keyring Support....:  $with_keyring
 	DBUS Support.......:  $enable_dbus
-	Nautilus Plugin....:  $HAVE_NAUTILUS
+	Nautilus Plugin....:  $enable_nautilus
 	Thumbnailer........:  $enable_thumbnailer
 	Previewer..........:  $enable_previewer
 	Gtk-Doc Support....:  $enable_gtk_doc
