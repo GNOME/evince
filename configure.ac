@@ -133,8 +133,8 @@ PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIR
 PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0)
+PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0)
 
 if test "$os_win32" = no; then
 	PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0 sm >= 1.0.0)
@@ -147,6 +147,10 @@ AC_SUBST(SMCLIENT_LIBS)
 
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version -no-undefined -export-symbols \$(top_srcdir)/backend/backend.symbols"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
+
+if test "$with_platform" = "gnome"; then
+  PKG_CHECK_EXISTS([gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED])
+fi
 
 dnl ===== Check special functions
 evince_save_LIBS=$LIBS
