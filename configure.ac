@@ -106,6 +106,7 @@ if test "$with_platform" = "win32"; then
   AC_MSG_RESULT([$os_win32])
 fi
 
+AM_CONDITIONAL([PLATFORM_HILDON],[test "$with_platform" = "hildon"])
 AM_CONDITIONAL([PLATFORM_WIN32],[test "with_platform" = "win32"])
 AM_CONDITIONAL([OS_WIN32],[test "$os_win32" = "yes"])
 
@@ -134,7 +135,17 @@ PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLI
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0)
+
+SHELL_PLATFORM_PKGS=
+case "$with_platform" in
+  hildon) AC_DEFINE([PLATFORM_HILDON],[1],[Define if building for the hildon platform])
+          SHELL_PLATFORM_PKGS="hildon-1 hildon-fm-2 libosso"
+          ;;
+  *) SHELL_PLATFORM_PKGS="gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED"
+     ;;
+esac
+
+PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
 
 # *********
 # SM client
@@ -174,10 +185,6 @@ AM_CONDITIONAL([WITH_SMCLIENT_QUARTZ],[test "$with_smclient" = "quartz"])
 
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version -no-undefined -export-symbols \$(top_srcdir)/backend/backend.symbols"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
-
-if test "$with_platform" = "gnome"; then
-  PKG_CHECK_EXISTS([gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED])
-fi
 
 dnl ===== Check special functions
 evince_save_LIBS=$LIBS
@@ -720,6 +727,7 @@ AC_OUTPUT
 
 echo "
 Configure summary:
+        Platform...........:  $with_platform
         GConf Support......:  $with_gconf
 	GTK+ Unix Print....:  $with_gtk_unix_print
 	Keyring Support....:  $with_keyring
