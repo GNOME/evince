@@ -13,3 +13,8 @@ libevmisc_la_CFLAGS =	\
 	$(SHELL_CORE_CFLAGS)    	\
 	$(WARNING_CFLAGS)       	\
 	$(DISABLE_DEPRECATED)
+
+libevmisc_la_LIBADD = \
+	$(top_builddir)/libdocument/libevdocument.la \
+	$(top_builddir)/libview/libevview.la
+
