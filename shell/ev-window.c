@@ -38,7 +38,6 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <gtk/gtkunixprint.h>
 
 #ifdef WITH_GCONF
 #include <gconf/gconf-client.h>
@@ -199,7 +198,6 @@ struct _EvWindowPrivate {
 
 	/* Printing */
 	GQueue           *print_queue;
-	GtkPrinter       *printer;
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
 	gboolean          close_after_print;
@@ -4715,11 +4713,6 @@ ev_window_dispose (GObject *object)
 	}
 	
 	ev_window_close_dialogs (window);
-
-	if (window->priv->printer) {
-		g_object_unref (window->priv->printer);
-		window->priv->printer = NULL;
-	}
 
 	if (window->priv->print_settings) {
 		g_object_unref (window->priv->print_settings);
