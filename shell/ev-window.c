@@ -3006,6 +3006,12 @@ ev_window_print_range (EvWindow *ev_window,
 		ev_window_load_print_settings_from_metadata (ev_window);
 	}
 
+	if (!ev_window->priv->print_page_setup) {
+		ev_window->priv->print_page_setup = gtk_page_setup_copy (
+			ev_application_get_page_setup (EV_APP));
+		ev_window_load_print_page_setup_from_metadata (ev_window);
+	}
+
 	if (first_page != 1 || last_page != document_last_page) {
 		GtkPageRange range;
 
@@ -3022,8 +3028,7 @@ ev_window_print_range (EvWindow *ev_window,
 	ev_print_operation_set_job_name (op, gtk_window_get_title (GTK_WINDOW (ev_window)));
 	ev_print_operation_set_current_page (op, current_page);
 	ev_print_operation_set_print_settings (op, ev_window->priv->print_settings);
-	if (ev_window->priv->print_page_setup)
-		ev_print_operation_set_default_page_setup (op, ev_window->priv->print_page_setup);
+	ev_print_operation_set_default_page_setup (op, ev_window->priv->print_page_setup);
 
 	ev_print_operation_run (op, GTK_WINDOW (ev_window));
 }
