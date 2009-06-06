@@ -232,34 +232,34 @@ fi
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
 
-dnl ========= Check for DBUS
-AC_ARG_ENABLE(dbus,
- 	[AC_HELP_STRING([--enable-dbus], [Compile with support for dbus])],
-	enable_dbus="$enableval",enable_dbus=yes)
-if test "x$enable_dbus" != "xno"; then
-   	PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= $DBUS_GLIB_REQUIRED],
-	[enable_dbus=yes],[enable_dbus=no])
+# ****
+# DBUS
+# ****
 
-	if test "x$enable_dbus" = "xno"; then
-	   AC_MSG_WARN([DBUS support is disabled since dbus $DBUS_GLIB_REQUIRED or higher was not found])
-	fi	   
+AC_ARG_ENABLE([dbus],
+  [AS_HELP_STRING([--enable-dbus], [Compile with support for dbus])],
+  [],
+  [case "$with_platform" in
+      gnome) enable_dbus=yes ;;
+      hildon) enable_dbus=no ;;
+    esac])
 
-	if test "x$enable_dbus" = "xyes" ; then
-           	AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
+if test "$enable_dbus" = "yes"; then
+  PKG_CHECK_MODULES([DBUS],[dbus-glib-1 >= $DBUS_GLIB_REQUIRED],[],
+                    [AC_MSG_ERROR([DBUS not found; use --disable-dbus to disable DBUS support])])
 
-        	if test x$DBUS_BINDING_TOOL = "xno" ; then
-        	   	AC_MSG_ERROR([dbus-binding-tool executable not found in your path - should be installed with dbus glib bindings])
-        	fi                                            
+  AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
+  if test x$DBUS_BINDING_TOOL = "xno" ; then
+          AC_MSG_ERROR([dbus-binding-tool executable not found in your path - should be installed with dbus glib bindings])
+  fi
 
-        	AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
-	fi
+  AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
 fi
 
 AC_SUBST([DBUS_CFLAGS])
 AC_SUBST([DBUS_LIBS])
 
-AM_CONDITIONAL([ENABLE_DBUS], [test "x$enable_dbus" = "xyes"])
-AM_CONDITIONAL([DBUS_TOOL_NO_PREFIX], [test "x$DBUS_VERSION" = "x33"])
+AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])
 
 dnl ========= Check for GConf
 

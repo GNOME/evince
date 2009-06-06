@@ -121,10 +121,5 @@ ev-marshal.c: $(srcdir)/ev-marshal.list
 DISTCLEANFILES= \
 	ev-application-service.h
 
-if DBUS_TOOL_NO_PREFIX
-ev-application-service.h: $(srcdir)/ev-application-service.xml
-	$(QUIET_GEN)dbus-binding-tool --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
-else
 ev-application-service.h: $(srcdir)/ev-application-service.xml
 	$(QUIET_GEN)dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
-endif
