@@ -5,7 +5,7 @@
  *  Copyright (C) 2004 Martin Kretzschmar
  *  Copyright (C) 2004 Red Hat, Inc.
  *  Copyright (C) 2000, 2001, 2002, 2003, 2004 Marco Pesenti Gritti
- *  Copyright (C) 2003, 2004, 2005 Christian Persch
+ *  Copyright © 2003, 2004, 2005, 2009 Christian Persch
  *
  *  Author:
  *    Martin Kretzschmar <martink@gnome.org>
@@ -4145,6 +4145,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"Bryan Clark <clarkbw@gnome.org>",
 		"Carlos Garcia Campos <carlosgc@gnome.org>",
 		"Wouter Bolsterlee <wbolster@gnome.org>",
+                "Christian Persch <chpe" "\100" "gnome.org>",
 		NULL
 	};
 
@@ -4189,7 +4190,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		"name", _("Evince"),
 		"version", VERSION,
 		"copyright",
-		_("\xc2\xa9 1996-2007 The Evince authors"),
+		_("© 1996–2009 The Evince authors"),
 		"license", license_trans,
 		"website", "http://www.gnome.org/projects/evince",
 		"comments", comments,
