@@ -50,6 +50,8 @@ DISTCLEANFILES = 		\
 	intltool-merge 		\
 	intltool-update
 
+ACLOCAL_AMFLAGS = -I m4
+
 DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install --disable-scrollkeeper --enable-gtk-doc --disable-shave
 
 # Ignore scrollkeeper issues for now.  @#*$& scrollkeeper
