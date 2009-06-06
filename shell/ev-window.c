@@ -139,6 +139,10 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
 
+	/* Menubar accels */
+	guint           menubar_accel_keyval;
+	GdkModifierType menubar_accel_modifier;
+
 	/* Progress Messages */
 	guint progress_idle;
 	GCancellable *progress_cancellable;
@@ -542,7 +546,6 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->sidebar, sidebar);
 	
 	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
-	gtk_widget_set_sensitive (priv->menubar, menubar);
 
 	if (priv->fullscreen_toolbar != NULL) {
 		set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
@@ -3617,6 +3620,35 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 }
 
 static void
+ev_window_setup_gtk_settings (EvWindow *window)
+{
+	GtkSettings *settings;
+	GdkScreen   *screen;
+	gchar       *menubar_accel_accel;
+
+	screen = gtk_window_get_screen (GTK_WINDOW (window));
+	settings = gtk_settings_get_for_screen (screen);
+
+	g_object_get (settings,
+		      "gtk-menu-bar-accel", &menubar_accel_accel,
+		      NULL);
+	if (menubar_accel_accel != NULL && menubar_accel_accel[0] != '\0') {
+		gtk_accelerator_parse (menubar_accel_accel,
+				       &window->priv->menubar_accel_keyval,
+				       &window->priv->menubar_accel_modifier);
+		if (window->priv->menubar_accel_keyval == 0) {
+			g_warning ("Failed to parse menu bar accelerator '%s'\n",
+				   menubar_accel_accel);
+		}
+	} else {
+		window->priv->menubar_accel_keyval = 0;
+		window->priv->menubar_accel_modifier = 0;
+	}
+
+	g_free (menubar_accel_accel);
+}
+
+static void
 ev_window_screen_changed (GtkWidget *widget,
 			  GdkScreen *old_screen)
 {
@@ -3628,6 +3660,7 @@ ev_window_screen_changed (GtkWidget *widget,
 	if (screen == old_screen)
 		return;
 
+	ev_window_setup_gtk_settings (window);
 	ev_view_set_screen_dpi (EV_VIEW (priv->view),
 				get_screen_dpi (GTK_WINDOW (window)));
 	
@@ -4790,22 +4823,56 @@ ev_window_dispose (GObject *object)
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
 
+static void
+menubar_deactivate_cb (GtkWidget *menubar,
+		       EvWindow  *window)
+{
+	g_signal_handlers_disconnect_by_func (menubar,
+					      G_CALLBACK (menubar_deactivate_cb),
+					      window);
+
+	gtk_menu_shell_deselect (GTK_MENU_SHELL (menubar));
+
+	update_chrome_visibility (window);
+}
+
 static gboolean
 ev_window_key_press_event (GtkWidget   *widget,
 			   GdkEventKey *event)
 {
-	EvWindow *ev_window = EV_WINDOW (widget);
-	gboolean  handled = FALSE;
+	EvWindow        *ev_window = EV_WINDOW (widget);
+	EvWindowPrivate *priv = ev_window->priv;
+	gboolean         handled = FALSE;
 
 	/* Propagate the event to the view first
 	 * It's needed to be able to type in
 	 * annot popups windows
 	 */
-	if (ev_window->priv->view) {
-		g_object_ref (ev_window->priv->view);
-		if (GTK_WIDGET_IS_SENSITIVE (ev_window->priv->view))
-			handled = gtk_widget_event (ev_window->priv->view, (GdkEvent*) event);
-		g_object_unref (ev_window->priv->view);
+	if (priv->view) {
+		g_object_ref (priv->view);
+		if (GTK_WIDGET_IS_SENSITIVE (priv->view))
+			handled = gtk_widget_event (priv->view, (GdkEvent*) event);
+		g_object_unref (priv->view);
+	}
+
+	if (!handled && !ev_view_get_presentation (EV_VIEW (priv->view))) {
+		guint modifier = event->state & gtk_accelerator_get_default_mod_mask ();
+
+		if (priv->menubar_accel_keyval != 0 &&
+		    event->keyval == priv->menubar_accel_keyval &&
+		    modifier == priv->menubar_accel_modifier) {
+			if (!GTK_WIDGET_VISIBLE (priv->menubar)) {
+				g_signal_connect (priv->menubar, "deactivate",
+						  G_CALLBACK (menubar_deactivate_cb),
+						  ev_window);
+
+				gtk_widget_show (priv->menubar);
+				gtk_menu_shell_select_first (GTK_MENU_SHELL (priv->menubar),
+							     FALSE);
+
+				handled = TRUE;
+			}
+		}
 	}
 
 	if (!handled)
@@ -6109,12 +6176,14 @@ ev_window_init (EvWindow *ev_window)
 					  G_CALLBACK (ev_window_media_player_key_pressed),
 					  ev_window);
 	}
-	
+
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
+
+	ev_window_setup_gtk_settings (ev_window);
 
 	setup_chrome_from_metadata (ev_window);
 	set_chrome_actions (ev_window);
