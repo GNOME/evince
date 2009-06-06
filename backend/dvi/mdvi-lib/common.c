@@ -22,8 +22,6 @@
 
 #include "common.h"
 
-static Int32	scaled_width(Int32 fix, int scale);
-
 long	fsgetn(FILE *p, size_t n)
 {
 	long	v;
@@ -115,24 +113,6 @@ char	*read_alloc_bcpl(FILE *in, size_t maxlen, size_t *size)
 	buffer[i] = '\0';
 	if(size) *size = i;
 	return buffer;
-}
-
-/* stolen from dvips */
-static Int32	scaled_width(Int32 fix, int scale)
-{
-	Int32	al, bl;
-	
-	if(fix < 0)
-		return -scaled_width(-fix, scale);
-	if(scale < 0)
-		return -scaled_width(fix, -scale);
-	al = fix & 32767;
-	bl = scale & 32767;
-	al >>= 15;
-	bl >>= 15;
-	
-	return (((al*bl / 32768) + fix*bl + al*scale) / 32 + 
-		fix * scale / 1024);
 }
 
 /* buffers */
