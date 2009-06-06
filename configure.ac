@@ -617,7 +617,7 @@ AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
 
 # *****************************************************************************
 
-SHAVE_INIT([.], [enable])
+SHAVE_INIT([], [enable])
 
 AC_CONFIG_FILES([
 backend/Makefile
