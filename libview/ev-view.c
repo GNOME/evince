@@ -4161,10 +4161,14 @@ ev_view_presentation_animation_start (EvView *view,
 	if (!effect)
 		return;
 
-	surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, view->current_page);
 	view->animation = ev_transition_animation_new (effect);
+
+	surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, view->current_page);
 	ev_transition_animation_set_origin_surface (view->animation, surface);
-		
+	surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, new_page);
+	if (surface)
+		ev_transition_animation_set_dest_surface (view->animation, surface);
+
 	g_signal_connect (view->animation, "frame",
 			  G_CALLBACK (ev_view_transition_animation_frame), view);
 	g_signal_connect (view->animation, "finished",
