@@ -368,7 +368,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
 	}
 
-	if (has_document && !EV_IS_FILE_EXPORTER(document))
+	if (has_document && !ev_print_operation_exists_for_document(document))
 		ok_to_print = FALSE;
 
 #ifdef WITH_GCONF

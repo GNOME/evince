@@ -1643,6 +1643,15 @@ ev_print_operation_print_class_init (EvPrintOperationPrintClass *klass)
 }
 #endif /* GTK_CHECK_VERSION (2, 17, 1) */
 
+gboolean ev_print_operation_exists_for_document (EvDocument *document)
+{
+#if GTK_CHECK_VERSION (2, 17, 1)
+	return (EV_IS_FILE_EXPORTER(document) || EV_IS_DOCUMENT_PRINT(document));
+#else
+	return EV_IS_FILE_EXPORTER(document);
+#endif
+}
+
 /* Factory method */
 EvPrintOperation *
 ev_print_operation_new (EvDocument *document)

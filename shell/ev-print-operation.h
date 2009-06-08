@@ -38,6 +38,7 @@ typedef struct _EvPrintOperationClass EvPrintOperationClass;
 
 GType             ev_print_operation_get_type               (void) G_GNUC_CONST;
 
+gboolean          ev_print_operation_exists_for_document    (EvDocument       *document);
 EvPrintOperation *ev_print_operation_new                    (EvDocument       *document);
 void              ev_print_operation_set_current_page       (EvPrintOperation *op,
 							     gint              current_page);
