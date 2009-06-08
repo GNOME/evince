@@ -635,6 +635,9 @@ ev_transition_animation_set_origin_surface (EvTransitionAnimation *animation,
 
 	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
 
+	if (priv->origin_surface == origin_surface)
+		return;
+
 	surface = cairo_surface_reference (origin_surface);
 
 	if (priv->origin_surface)
@@ -657,6 +660,9 @@ ev_transition_animation_set_dest_surface (EvTransitionAnimation *animation,
 	g_return_if_fail (EV_IS_TRANSITION_ANIMATION (animation));
 
 	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+
+	if (priv->dest_surface == dest_surface)
+		return;
 
 	surface = cairo_surface_reference (dest_surface);
 
