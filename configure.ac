@@ -164,6 +164,13 @@ if test "$with_gtk_unix_print" = "yes"; then
 fi
 
 dnl ========= Check for Keyring
+
+if test "$os_win32" = yes; then
+  with_keyring_default=no
+else
+  with_keyring_default=yes
+fi
+
 AC_ARG_WITH(keyring,
         AC_HELP_STRING([--without-keyring],[disable the use of gnome-keyring]),
 	[case "${withval}" in
@@ -171,23 +178,13 @@ AC_ARG_WITH(keyring,
 	no) WITH_KEYRING=no ;;
 	*) AC_MSG_ERROR(bad value ${withval} for --with-keyring) ;;
 	esac],
-	[WITH_KEYRING=check]) dnl Default value
+	[WITH_KEYRING=$with_keyring_default]) dnl Default value
+AM_CONDITIONAL(WITH_KEYRING, test x$WITH_KEYRING = "xyes")
 
-if test x$WITH_KEYRING != "xno"; then
-	PKG_CHECK_MODULES(KEYRING, gnome-keyring-1 >= $KEYRING_REQUIRED,
-		WITH_KEYRING=yes,
-		if test "x$WITH_KEYRING" = "xcheck"; then
-			WITH_KEYRING=no
-			AC_MSG_WARN(The use of gnome-keyring is disabled since required library gnome-keyring-1 >= $KEYRING_REQUIRED was not found.)
-		else
-			AC_MSG_FAILURE(Gnome-keyring test failed: $KEYRING_PKG_ERRORS)
-		fi
-	)
-fi
 if test x$WITH_KEYRING = "xyes"; then
+        PKG_CHECK_MODULES(KEYRING, gnome-keyring-1 >= $KEYRING_REQUIRED)
         AC_DEFINE([WITH_KEYRING],[1],[Define if KEYRING support is enabled])
 fi
-AM_CONDITIONAL(WITH_KEYRING, test x$WITH_KEYRING = "xyes")
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
 AC_SUBST(GLIB_GENMARSHAL)
