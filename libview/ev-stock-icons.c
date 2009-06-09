@@ -91,8 +91,15 @@ ev_stock_icons_init (void)
 	GtkIconFactory *factory;
 	GtkIconSource *source;
 	gint i;
+#ifdef G_OS_WIN32
+	gchar *dir;
 
+	dir = g_win32_get_package_installation_directory_of_module (NULL);
+	ev_icons_path = g_build_filename (dir, "share", "evince", "icons", NULL);
+	g_free (dir);
+#else
 	ev_icons_path = g_build_filename (DATADIR, "icons", NULL);
+#endif
 
         factory = gtk_icon_factory_new ();
         gtk_icon_factory_add_default (factory);
