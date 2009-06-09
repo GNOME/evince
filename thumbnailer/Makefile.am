@@ -23,6 +23,10 @@ evince_thumbnailer_LDADD = \
 	$(top_builddir)/libdocument/libevdocument.la	\
 	$(FRONTEND_LIBS)
 
+if PLATFORM_WIN32
+evince_thumbnailer_LDFLAGS = -mwindows
+endif
+
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \
 	evince-thumbnailer-djvu.schemas.in \

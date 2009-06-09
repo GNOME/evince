@@ -22,6 +22,10 @@ evince_previewer_CFLAGS = \
         $(DISABLE_DEPRECATED)			\
 	$(AM_CFLAGS)
 
+if PLATFORM_WIN32
+evince_previewer_LDFLAGS = -mwindows
+endif
+
 evince_previewer_LDADD = \
 	$(top_builddir)/libdocument/libevdocument.la	\
 	$(top_builddir)/libview/libevview.la		\

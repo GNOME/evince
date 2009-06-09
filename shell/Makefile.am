@@ -87,6 +87,10 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	main.c
 
+if PLATFORM_WIN32
+evince_LDFLAGS = -mwindows
+endif
+
 evince_LDADD=										\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la				\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la			\
