@@ -599,6 +599,7 @@ AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_
 # Backends directory
 
 AC_SUBST([backenddir],"\$(libdir)/evince/ev_binary_version/backends")
+AC_SUBST([backend_binary_version],"ev_binary_version")
 
 # Versioning
 

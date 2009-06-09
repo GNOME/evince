@@ -90,6 +90,7 @@ libevdocument_la_CPPFLAGS = \
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DEV_BACKENDSDIR=\"$(backenddir)\"		\
+	-DEV_BACKENDSBINARYVERSION=\"$(backend_binary_version)\"	\
 	-DEVINCE_COMPILATION				\
 	$(AM_CPPFLAGS)
 

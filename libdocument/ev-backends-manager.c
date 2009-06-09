@@ -41,6 +41,28 @@ struct _EvBackendInfo {
 #define EV_BACKENDS_GROUP     "Evince Backend"
 #define EV_BACKENDS_EXTENSION ".evince-backend"
 
+static gchar *backendsdir = NULL;
+
+static const gchar *
+backends_dir (void)
+{
+	if (!backendsdir) {
+#ifdef G_OS_WIN32
+		gchar *dir;
+
+		dir = g_win32_get_package_installation_directory_of_module (NULL);
+		backendsdir = g_build_filename (dir, "lib", "evince",
+						EV_BACKENDSBINARYVERSION,
+						"backends", NULL);
+		g_free (dir);
+#else
+		backendsdir = g_strdup (EV_BACKENDSDIR);
+#endif
+	}
+
+	return backendsdir;
+}
+
 static void
 ev_backend_info_free (EvBackendInfo *info)
 {
@@ -116,7 +138,7 @@ ev_backends_manager_load (void)
 	const gchar *dirent;
 	GError      *error = NULL;
 
-	dir = g_dir_open (EV_BACKENDSDIR, 0, &error);
+	dir = g_dir_open (backends_dir(), 0, &error);
 	if (!dir) {
 		g_warning ("%s", error->message);
 		g_error_free (error);
@@ -131,7 +153,7 @@ ev_backends_manager_load (void)
 		if (!g_str_has_suffix (dirent, EV_BACKENDS_EXTENSION))
 			continue;
 
-		file = g_build_filename (EV_BACKENDSDIR, dirent, NULL);
+		file = g_build_filename (backends_dir(), dirent, NULL);
 		info = ev_backends_manager_load_backend (file);
 		g_free (file);
 
@@ -173,6 +195,8 @@ _ev_backends_manager_shutdown (void)
 	g_list_foreach (ev_backends_list, (GFunc)ev_backend_info_free, NULL);
 	g_list_free (ev_backends_list);
 	ev_backends_list = NULL;
+
+	g_free (backendsdir);
 }
 
 static EvBackendInfo *
@@ -209,7 +233,7 @@ ev_backends_manager_get_document (const gchar *mime_type)
 	if (!info->module) {
 		gchar *path;
 		
-		path = g_module_build_path (EV_BACKENDSDIR, info->module_name);
+		path = g_module_build_path (backends_dir(), info->module_name);
 		info->module = G_TYPE_MODULE (ev_module_new (path, info->resident));
 		g_free (path);
 	}
