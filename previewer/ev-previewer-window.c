@@ -386,6 +386,23 @@ ev_previewer_window_dispose (GObject *object)
 	G_OBJECT_CLASS (ev_previewer_window_parent_class)->dispose (object);
 }
 
+static gchar*
+data_dir (void)
+{
+	gchar *datadir;
+#ifdef G_OS_WIN32
+	gchar *dir;
+
+	dir = g_win32_get_package_installation_directory_of_module (NULL);
+	datadir = g_build_filename (dir, "share", "evince", NULL);
+	g_free (dir);
+#else
+	datadir = g_strdup (DATADIR);
+#endif
+
+       return datadir;
+}
+
 static void
 ev_previewer_window_init (EvPreviewerWindow *window)
 {
@@ -393,6 +410,7 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 	GtkWidget *toolbar;
 	GtkAction *action;
 	GError    *error = NULL;
+	gchar     *datadir, *ui_path;
 
 	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
 	
@@ -424,12 +442,14 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 					    window->action_group, 0);
 	gtk_window_add_accel_group (GTK_WINDOW (window),
 				    gtk_ui_manager_get_accel_group (window->ui_manager));
-	if (!gtk_ui_manager_add_ui_from_file (window->ui_manager,
-					      DATADIR"/evince-previewer-ui.xml",
-					      &error)) {
+	datadir = data_dir ();
+	ui_path = g_build_filename (datadir, "evince-previewer-ui.xml", NULL);
+	if (!gtk_ui_manager_add_ui_from_file (window->ui_manager, ui_path, &error)) {
 		g_warning ("Failed to load ui from evince-previewer-ui.xml: %s", error->message);
 		g_error_free (error);
 	}
+	g_free (ui_path);
+	g_free (datadir);
 
 	vbox = gtk_vbox_new (FALSE, 0);
 
