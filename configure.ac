@@ -223,27 +223,24 @@ AM_CONDITIONAL([DBUS_TOOL_NO_PREFIX], [test "x$DBUS_VERSION" = "x33"])
 
 dnl ========= Check for GConf
 
+if test "$os_win32" = yes; then
+  with_gconf_default=no
+else
+  with_gconf_default=yes
+fi
+
 AC_MSG_CHECKING([whether GConf support is requested])
 AC_ARG_WITH([gconf],
   [AS_HELP_STRING([--without-gconf],[disable the use of gconf])],
-  [],[with_gconf=check])
+  [],[with_gconf=$with_gconf_default])
 AC_MSG_RESULT([$with_gconf])
 
-if test "x$with_gconf" != "xno"; then
-	PKG_CHECK_MODULES([GCONF],[gconf-2.0],
-		with_gconf=yes,
-		if test "x$with_gconf" = "xcheck"; then
-			with_gconf=no
-			AC_MSG_WARN(The use of GConf is disabled since required library gconf-2.0 was not found.)
-		else
-			AC_MSG_FAILURE(GConf test failed: $GCONF_PKG_ERRORS)
-		fi
-	)
-fi
-if test "x$with_gconf" = "xyes"; then
-	AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
-fi
 AM_CONDITIONAL([WITH_GCONF],[test "$with_gconf" = "yes"])
+
+if test "$with_gconf" = "yes"; then
+   PKG_CHECK_MODULES([GCONF],[gconf-2.0])
+   AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
+fi
 
 AM_GCONF_SOURCE_2
 
