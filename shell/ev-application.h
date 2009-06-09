@@ -93,6 +93,7 @@ GtkPageSetup     *ev_application_get_page_setup      (EvApplication   *applicati
 void              ev_application_set_page_setup      (EvApplication   *application,
 						      GtkPageSetup    *page_setup);
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application);
+const gchar      *ev_application_get_data_dir         (EvApplication   *application);
 
 G_END_DECLS
 

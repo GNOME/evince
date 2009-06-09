@@ -57,6 +57,7 @@ struct _EvApplication {
 	GObject base_instance;
 
 	gchar *dot_dir;
+	gchar *data_dir;
 	gchar *accel_map_file;
 	gchar *toolbars_file;
 	gchar *crashed_file;
@@ -787,6 +788,8 @@ ev_application_shutdown (EvApplication *application)
 
         g_free (application->dot_dir);
         application->dot_dir = NULL;
+        g_free (application->data_dir);
+        application->data_dir = NULL;
 	g_free (application->filechooser_open_uri);
         application->filechooser_open_uri = NULL;
 	g_free (application->filechooser_save_uri);
@@ -808,6 +811,7 @@ ev_application_init (EvApplication *ev_application)
 {
 	gint i;
 	const gchar *home_dir;
+	gchar *toolbar_path;
 
         ev_application->dot_dir = g_build_filename (g_get_home_dir (),
                                                     ".gnome2",
@@ -817,6 +821,18 @@ ev_application_init (EvApplication *ev_application)
         /* FIXME: why make this fatal? */
         if (!ev_dir_ensure_exists (ev_application->dot_dir, 0700))
                 exit (1);
+
+#ifdef G_OS_WIN32
+{
+	gchar *dir;
+
+	dir = g_win32_get_package_installation_directory_of_module (NULL);
+	ev_application->data_dir = g_build_filename (dir, "share", "evince", NULL);
+	g_free (dir);
+}
+#else
+	ev_application->data_dir = g_strdup (DATADIR);
+#endif
 
 	ev_application_init_session (ev_application);
 
@@ -835,14 +851,17 @@ ev_application_init (EvApplication *ev_application)
 	ev_application->toolbars_file = g_build_filename
 			(ev_application->dot_dir, "evince_toolbar.xml", NULL);
 
+	toolbar_path = g_build_filename (ev_application->data_dir,
+					 "evince-toolbar.xml", NULL);
 	egg_toolbars_model_load_names (ev_application->toolbars_model,
-				       DATADIR "/evince-toolbar.xml");
+				       toolbar_path);
 
 	if (!egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
 					       ev_application->toolbars_file)) {
 		egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
-						  DATADIR"/evince-toolbar.xml");
+						  toolbar_path);
 	}
+	g_free (toolbar_path);
 
 	/* Open item doesn't exist anymore,
 	 * convert it to OpenRecent for compatibility
@@ -1113,4 +1132,10 @@ const gchar *
 ev_application_get_dot_dir (EvApplication   *application)
 {
 	return application->dot_dir;
+}
+
+const gchar *
+ev_application_get_data_dir (EvApplication   *application)
+{
+	return application->data_dir;
 }

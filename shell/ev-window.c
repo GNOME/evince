@@ -5883,6 +5883,7 @@ ev_window_init (EvWindow *ev_window)
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
 	GObject *mpkeys;
+	gchar *ui_path;
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -5937,12 +5938,15 @@ ev_window_init (EvWindow *ev_window)
 	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
 					    action_group, 0);
 
-	if (!gtk_ui_manager_add_ui_from_file (ev_window->priv->ui_manager,
-					      DATADIR"/evince-ui.xml",
-					      &error)) {
+	ui_path = g_build_filename (ev_application_get_data_dir (EV_APP),
+				    "evince-ui.xml", NULL);
+	if (!gtk_ui_manager_add_ui_from_file (
+		ev_window->priv->ui_manager, ui_path, &error))
+	{
 		g_warning ("building menus failed: %s", error->message);
 		g_error_free (error);
 	}
+	g_free (ui_path);
 	
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
 	ev_window->priv->recent_action_group = NULL;
