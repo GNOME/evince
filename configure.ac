@@ -99,15 +99,7 @@ esac
 AC_MSG_RESULT([$os_win32])
 AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
 
-dnl Check dependencies
-
-# LIB_CFLAGS       for helpers and generic widgets. (libdocument, cut-and-paste)
-# BACKEND_CFLAGS   for backend implementations.
-# FRONTEND_CFLAGS  for frontend implementations. (properties, thumbnailer)
-# FRONTEND_LIBS
-# SHELL_CFLAGS     for shell implementation.
-# SHELL_LIBS
-
+dnl Specify required versions of dependencies
 DBUS_GLIB_REQUIRED=0.70
 GTK_REQUIRED=2.14.0
 GLIB_REQUIRED=2.18.0
@@ -118,12 +110,21 @@ AC_SUBST([GTK_REQUIRED])
 GNOME_ICON_THEME_REQUIRED=2.17.1
 LIBXML_REQUIRED=2.5.0
 
+dnl Check dependencies
+
+# LIB_CFLAGS       for helpers and generic widgets. (libdocument, cut-and-paste)
+# BACKEND_CFLAGS   for backend implementations.
+# FRONTEND_CFLAGS  for frontend implementations. (properties, thumbnailer)
+# FRONTEND_LIBS
+# SHELL_CFLAGS     for shell implementation.
+# SHELL_LIBS
+
 PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0)
+PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(SHELL_CORE, libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED gthread-2.0)
 
 if test "$os_win32" = no; then
 	PKG_CHECK_MODULES(SMCLIENT, gtk+-2.0 gthread-2.0 sm >= 1.0.0)
@@ -142,6 +143,25 @@ evince_save_LIBS=$LIBS
 LIBS="$LIBS $BACKEND_LIBS"
 AC_CHECK_FUNCS(cairo_format_stride_for_width)
 LIBS=$evince_save_LIBS
+
+dnl ========= Check for gtk+-unix-print
+
+if test "$os_win32" = yes; then
+  with_gtk_unix_print_default=no
+else
+  with_gtk_unix_print_default=yes
+fi
+
+AC_MSG_CHECKING([whether gtk+-unix-print support is requested])
+AC_ARG_WITH([gtk-unix-print],
+  [AS_HELP_STRING([--without-gtk-unix-print],[disable the use of gtk-unix-print])],
+  [],[with_gtk_unix_print=$with_gtk_unix_print_default])
+AC_MSG_RESULT([$with_gtk_unix_print])
+
+if test "$with_gtk_unix_print" = "yes"; then
+   PKG_CHECK_MODULES(GTKUNIXPRINT, [gtk+-unix-print-2.0 >= $GTK_REQUIRED])
+   AC_DEFINE([GTKUNIXPRINT_ENABLED], [1], [Define if gtk+-unix-print is enabled.])
+fi
 
 dnl ========= Check for Keyring
 AC_ARG_WITH(keyring,
@@ -258,8 +278,8 @@ BACKEND_CFLAGS="$BACKEND_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $KEYRING_CFLAGS $GCONF_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $KEYRING_LIBS $GCONF_LIBS -lz"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $GTKUNIXPRINT_CFLAGS $DBUS_CFLAGS $KEYRING_CFLAGS $GCONF_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $GTKUNIXPRINT_CFLAGS $DBUS_LIBS $KEYRING_LIBS $GCONF_LIBS -lz"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
@@ -314,15 +334,12 @@ AC_ARG_ENABLE(previewer,
 	esac],
 	[ENABLE_PREVIEWER=yes]) dnl Default value
 if test x$ENABLE_PREVIEWER = "xyes" ; then
-   PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gtk+-unix-print-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED,
+   PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED,
 	             [ENABLE_PREVIEWER=yes],[ENABLE_PREVIEWER=no])
-   if test x$ENABLE_PREVIEWER = "xno" ; then
-      AC_MSG_WARN([Previewer support is disabled since gtk+-unix-print $GTK_REQUIRED or higher was not found])
-   fi
 fi
 AM_CONDITIONAL(ENABLE_PREVIEWER, test x$ENABLE_PREVIEWER = "xyes")
-PREVIEWER_CFLAGS="$PREVIEWER_CFLAGS $DEBUG_FLAGS"
-PREVIEWER_LIBS="$PREVIEWER_LIBS -lz"
+PREVIEWER_CFLAGS="$PREVIEWER_CFLAGS $GTKUNIXPRINT_CFLAGS $DEBUG_FLAGS"
+PREVIEWER_LIBS="$PREVIEWER_LIBS $GTKUNIXPRINT_LIBS -lz"
 AC_SUBST(PREVIEWER_CFLAGS)
 AC_SUBST(PREVIEWER_LIBS)
 
@@ -675,6 +692,7 @@ AC_OUTPUT
 echo "
 Configure summary:
         GConf Support......:  $with_gconf
+	GTK+ Unix Print....:  $with_gtk_unix_print
 	Keyring Support....:  $WITH_KEYRING
 	DBUS Support.......:  $enable_dbus
 	Nautilus Plugin....:  $HAVE_NAUTILUS

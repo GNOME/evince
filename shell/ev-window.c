@@ -2989,6 +2989,11 @@ ev_window_print_range (EvWindow *ev_window,
 		ev_window->priv->print_queue = g_queue_new ();
 
 	op = ev_print_operation_new (ev_window->priv->document);
+	if (!op) {
+		g_warning ("%s", "Printing is not supported for document\n");
+		return;
+	}
+
 	g_signal_connect (op, "begin_print",
 			  G_CALLBACK (ev_window_print_operation_begin_print),
 			  (gpointer)ev_window);

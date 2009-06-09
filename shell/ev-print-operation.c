@@ -21,7 +21,9 @@
 
 #include "ev-print-operation.h"
 
+#if GTKUNIXPRINT_ENABLED
 #include <gtk/gtkunixprint.h>
+#endif
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <unistd.h>
@@ -297,6 +299,7 @@ ev_print_operation_get_progress (EvPrintOperation *op)
 	return op->progress;
 }
 
+#if GTK_CHECK_VERSION (2, 17, 1) | GTKUNIXPRINT_ENABLED
 static void
 ev_print_operation_update_status (EvPrintOperation *op,
 				  gint              page,
@@ -322,6 +325,9 @@ ev_print_operation_update_status (EvPrintOperation *op,
 
 	g_signal_emit (op, signals[STATUS_CHANGED], 0);
 }
+#endif
+
+#if GTKUNIXPRINT_ENABLED
 
 /* Export interface */
 #define EV_TYPE_PRINT_OPERATION_EXPORT         (ev_print_operation_export_get_type())
@@ -1372,6 +1378,8 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 	g_object_class->finalize = ev_print_operation_export_finalize;
 }
 
+#endif /* GTKUNIXPRINT_ENABLED */
+
 #if GTK_CHECK_VERSION (2, 17, 1)
 /* Print to cairo interface */
 #define EV_TYPE_PRINT_OPERATION_PRINT         (ev_print_operation_print_get_type())
@@ -1645,18 +1653,28 @@ ev_print_operation_print_class_init (EvPrintOperationPrintClass *klass)
 
 gboolean ev_print_operation_exists_for_document (EvDocument *document)
 {
+#if GTKUNIXPRINT_ENABLED
 #if GTK_CHECK_VERSION (2, 17, 1)
 	return (EV_IS_FILE_EXPORTER(document) || EV_IS_DOCUMENT_PRINT(document));
 #else
 	return EV_IS_FILE_EXPORTER(document);
 #endif
+#else /* ! GTKUNIXPRINT_ENABLED */
+#if GTK_CHECK_VERSION (2, 17, 1)
+	return EV_IS_DOCUMENT_PRINT(document);
+#else
+	return FALSE;
+#endif
+#endif /* GTKUNIXPRINT_ENABLED */
 }
 
 /* Factory method */
 EvPrintOperation *
 ev_print_operation_new (EvDocument *document)
 {
-	EvPrintOperation *op;
+	EvPrintOperation *op = NULL;
+
+	g_return_val_if_fail (ev_print_operation_exists_for_document (document), NULL);
 
 #if GTK_CHECK_VERSION (2, 17, 1)
 	if (EV_IS_DOCUMENT_PRINT (document))
@@ -1664,8 +1682,9 @@ ev_print_operation_new (EvDocument *document)
 						       "document", document, NULL));
 	else
 #endif
+#if GTKUNIXPRINT_ENABLED
 		op = EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_EXPORT,
 						       "document", document, NULL));
-
+#endif
 	return op;
 }

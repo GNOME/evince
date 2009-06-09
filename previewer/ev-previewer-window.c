@@ -20,7 +20,9 @@
 
 #include <config.h>
 
+#if GTKUNIXPRINT_ENABLED
 #include <gtk/gtkunixprint.h>
+#endif
 #include <glib/gi18n.h>
 #include <evince-view.h>
 #include "ev-page-action.h"
@@ -42,7 +44,9 @@ struct _EvPreviewerWindow {
 	/* Printing */
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
+#if GTKUNIXPRINT_ENABLED
 	GtkPrinter       *printer;
+#endif
 	gchar            *print_job_title;
 	gchar            *source_file;
 };
@@ -103,6 +107,7 @@ ev_previewer_window_set_view_size (EvPreviewerWindow *window)
 				   hsb_requisition.height + scrollbar_spacing);
 }
 
+#if GTKUNIXPRINT_ENABLED
 static void
 ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 				      GError            *error)
@@ -120,6 +125,7 @@ ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 }
+#endif
 
 static void
 ev_previewer_window_previous_page (GtkAction         *action,
@@ -184,6 +190,7 @@ ev_previewer_window_action_page_activated (GtkAction         *action,
 	gtk_widget_grab_focus (GTK_WIDGET (window->view));
 }
 
+#if GTKUNIXPRINT_ENABLED
 static void
 ev_previewer_window_print_finished (GtkPrintJob       *print_job,
 				    EvPreviewerWindow *window,
@@ -273,6 +280,7 @@ ev_previewer_window_print (GtkAction         *action,
 				(GDestroyNotify)ev_previewer_window_enumerate_finished,
 				FALSE);
 }
+#endif
 
 static const GtkActionEntry action_entries[] = {
 	{ "GoPreviousPage", GTK_STOCK_GO_UP, N_("_Previous Page"), "<control>Page_Up",
@@ -287,9 +295,11 @@ static const GtkActionEntry action_entries[] = {
         { "ViewZoomOut", GTK_STOCK_ZOOM_OUT, NULL, "<control>minus",
           N_("Shrink the document"),
           G_CALLBACK (ev_previewer_window_zoom_out) },
+#if GTKUNIXPRINT_ENABLED
 	{ "PreviewPrint", GTK_STOCK_PRINT, N_("Print"), NULL,
 	  N_("Print this document"),
 	  G_CALLBACK (ev_previewer_window_print) }
+#endif
 };
 
 static const GtkToggleActionEntry toggle_action_entries[] = {
@@ -368,10 +378,12 @@ ev_previewer_window_dispose (GObject *object)
 		window->print_page_setup = NULL;
 	}
 
+#if GTKUNIXPRINT_ENABLED
 	if (window->printer) {
 		g_object_unref (window->printer);
 		window->printer = NULL;
 	}
+#endif
 
 	if (window->print_job_title) {
 		g_free (window->print_job_title);
