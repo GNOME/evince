@@ -35,6 +35,9 @@ MKDB_OPTIONS=--sgml-mode --output-format=xml
 # e.g. MKTMPL_OPTIONS=--only-section-tmpl
 MKTMPL_OPTIONS=
 
+# Add the builddir to the HTML path so that version.xml is found
+MKHTML_OPTIONS=--path="$(abs_builddir)"
+
 # Extra options to supply to gtkdoc-fixref. Not normally needed.
 # e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
 FIXXREF_OPTIONS=
