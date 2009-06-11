@@ -108,7 +108,6 @@ fi
 
 AM_CONDITIONAL([PLATFORM_HILDON],[test "$with_platform" = "hildon"])
 AM_CONDITIONAL([PLATFORM_WIN32],[test "with_platform" = "win32"])
-AM_CONDITIONAL([OS_WIN32],[test "$os_win32" = "yes"])
 
 dnl Specify required versions of dependencies
 DBUS_GLIB_REQUIRED=0.70
