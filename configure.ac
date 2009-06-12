@@ -324,7 +324,7 @@ AC_SUBST(FRONTEND_LIBS)
 
 # Check for Nautilus property page build
 AC_ARG_ENABLE([nautilus],
-  [AS_HELP_STRING([--enable-nautilus],[compile the nautilus plugin])],
+  [AS_HELP_STRING([--disable-nautilus],[Build the nautilus extensions])],
   [],
   [case "$with_platform" in
      gnome) enable_nautilus=yes ;;
@@ -332,7 +332,8 @@ AC_ARG_ENABLE([nautilus],
     esac])
 
 if test "$enable_nautilus" = "yes" ; then
-  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension])
+  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-2.0 $MM gthread-2.0 libnautilus-extension],
+                    [],[AC_MSG_ERROR([libnautilus-extension not found; use --disable-nautilus to disable the nautilus extensions])])
   NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
   AC_SUBST([nautilusextensiondir],[$NAUTILUS_EXTENSION_DIR])
   AC_SUBST(NAUTILUS_CFLAGS)
