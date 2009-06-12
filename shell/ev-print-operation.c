@@ -1120,6 +1120,8 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 				export->ranges[i].end = export->n_pages - 1;
 	}
 		break;
+	default:
+		g_warning ("Unsupported print pages setting\n");
 	case GTK_PRINT_PAGES_ALL:
 		export->ranges = &export->one_range;
 
@@ -1129,6 +1131,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		
 		break;
 	}
+
 	if (export->n_ranges < 1 || !clamp_ranges (export)) {
 		GtkWidget *message_dialog;
 
