@@ -442,13 +442,13 @@ main (int argc, char *argv[])
 
 	ev_stock_icons_init ();
 
-#if defined(WITH_SMCLIENT) && !defined(G_OS_WIN32)
+#if defined(WITH_SMCLIENT) && defined(GDK_WINDOWING_X11)
 	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
 #else
 	/* Manually set name and icon */
 	g_set_application_name (_("Document Viewer"));
 	gtk_window_set_default_icon_name ("evince");
-#endif /* WITH_SMCLIENT && !G_OS_WIN32 */
+#endif /* WITH_SMCLIENT && GDK_WINDOWING_X11 */
 
 	ev_application_load_session (EV_APP);
 	load_files (file_arguments, args);
