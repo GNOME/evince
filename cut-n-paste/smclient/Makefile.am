@@ -4,12 +4,10 @@ NULL =
 
 if WITH_SMCLIENT
 libsmclient_la_SOURCES = \
-        eggdesktopfile.c \
-        eggdesktopfile.h \
-        eggsmclient.c \
-        eggsmclient.h \
-        eggsmclient-private.h \
-        $(NULL)
+	eggsmclient.c \
+	eggsmclient.h \
+	eggsmclient-private.h \
+	$(NULL)
 
 libsmclient_la_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\""EggSMClient"\" \
@@ -25,7 +23,11 @@ libsmclient_la_LIBADD = \
 	$(SMCLIENT_LIBS)
 
 if WITH_SMCLIENT_XSMP
-libsmclient_la_SOURCES += eggsmclient-xsmp.c
+libsmclient_la_SOURCES += \
+	eggdesktopfile.c \
+	eggdesktopfile.h \
+	eggsmclient-xsmp.c
+	$(NULL)
 libsmclient_la_CPPFLAGS += -DEGG_SM_CLIENT_BACKEND_XSMP
 endif
 if WITH_SMCLIENT_WIN32
