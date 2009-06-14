@@ -40,7 +40,7 @@
 
 #ifdef WITH_SMCLIENT
 #include "eggsmclient.h"
-#if GDK_WINDOWING_X11
+#ifdef GDK_WINDOWING_X11
 #include "eggdesktopfile.h"
 #endif
 #endif /* WITH_SMCLIENT */
