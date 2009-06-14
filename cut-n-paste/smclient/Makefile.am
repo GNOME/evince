@@ -26,7 +26,7 @@ if WITH_SMCLIENT_XSMP
 libsmclient_la_SOURCES += \
 	eggdesktopfile.c \
 	eggdesktopfile.h \
-	eggsmclient-xsmp.c
+	eggsmclient-xsmp.c \
 	$(NULL)
 libsmclient_la_CPPFLAGS += -DEGG_SM_CLIENT_BACKEND_XSMP
 endif
