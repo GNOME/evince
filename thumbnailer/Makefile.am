@@ -19,13 +19,15 @@ evince_thumbnailer_CFLAGS = \
 	$(WARN_CFLAGS)		\
 	$(AM_CFLAGS)
 
+evince_thumbnailer_LDFLAGS = $(AM_LDFLAGS)
+
+if PLATFORM_WIN32
+evince_thumbnailer_LDFLAGS += -mwindows
+endif
+
 evince_thumbnailer_LDADD = \
 	$(top_builddir)/libdocument/libevdocument.la	\
 	$(FRONTEND_LIBS)
-
-if PLATFORM_WIN32
-evince_thumbnailer_LDFLAGS = -mwindows
-endif
 
 schema_files = \
 	evince-thumbnailer-dvi.schemas.in  \

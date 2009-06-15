@@ -22,8 +22,10 @@ evince_previewer_CFLAGS = \
         $(DISABLE_DEPRECATED)			\
 	$(AM_CFLAGS)
 
+evince_previewer_LDFLAGS = $(AM_LDFLAGS)
+
 if PLATFORM_WIN32
-evince_previewer_LDFLAGS = -mwindows
+evince_previewer_LDFLAGS += -mwindows
 endif
 
 evince_previewer_LDADD = \

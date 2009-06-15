@@ -87,8 +87,10 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	main.c
 
+evince_LDFLAGS = $(AM_LDFLAGS)
+
 if PLATFORM_WIN32
-evince_LDFLAGS = -mwindows
+evince_LDFLAGS += -mwindows
 endif
 
 evince_LDADD=										\
