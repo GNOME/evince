@@ -1,4 +1,47 @@
 ================
+Evince  2.27.3
+================
+
+New Features and UI Improvements:
+
+    * Update the hildon port (Christian Persch)
+    * Complete the win32 port (#339172, Hib Eris)
+    * Allow activate the menubar in fullscreen mode (#504243, Carlos
+      Garcia Campos)
+    * Do not create popup window if the annot doesn't have a popup
+      (Carlos Garcia Campos)
+    * Add tests for printer settings (#583976, Bartek Kostrzewa)
+    * Remember and reuse "Save a Copy..." path (#485195, Carlos Garcia Campos)
+    * Support for cb7 using the p7zip commands in comics backend
+      (#565174, Juanjo Marín)
+    * Parse xml metadata to detect PDF/A documents (#582206, Davide Capodaglio)
+
+Bug fixes:
+
+    * Several build fixes and improvements (Christian Persch)
+    * Fix page transitions in presentation mode (#583652, #581881,
+      Carlos Garcia Campos)
+    * Scale according to paper size before rendering for printing
+      (Carlos Garcia Campos)
+    * Fix multipage even/odd printing issues (#583429, #583388, Bartek
+      Kostrzewa)
+    * Gracefully work with FITB destinations and friends (#583276,
+      Matthias Drochner)
+    * Fix double to int conversion in thumbnails_get_dimensions
+      (#581524, Carlos Garcia Campos)
+    * Ohter bugs fixed: #584617, #585497
+
+Translation updates:
+
+    * Runa Bhattacharjee (bn_IN)
+    * Mario Blättermann (de)
+    * Jorge González (es)
+    * Ivar Smolin (et)
+    * Kjartan Maraas (nb)
+    * Vladimir Melo (pt_BR)
+    * Dr.T.Vaasudevan (ta)
+
+================
 Evince  2.27.1
 ================
 
