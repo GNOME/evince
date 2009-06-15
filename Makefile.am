@@ -52,7 +52,7 @@ DISTCLEANFILES = 		\
 
 ACLOCAL_AMFLAGS = -I m4
 
-DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install --disable-scrollkeeper --enable-gtk-doc --disable-shave
+DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install --disable-scrollkeeper --enable-gtk-doc --disable-shave --disable-nautilus
 
 # Ignore scrollkeeper issues for now.  @#*$& scrollkeeper
 distuninstallcheck_listfiles = find . -type f -print | grep -v scrollkeeper | grep -v /share/gnome/help/ | grep -v \.omf
