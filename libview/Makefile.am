@@ -114,7 +114,7 @@ EvinceView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES)
 	--include=Gdk-2.0 \
 	--include=GdkPixbuf-2.0 \
 	--include=Gtk-2.0 \
-	--include=EvDocument-$(EV_API_VERSION) \
+	--include=EvinceDocument-$(EV_API_VERSION) \
 	--library=evview \
 	--libtool="$(SHAVE_SAVED_LIBTOOL)" \
 	--output $@ \
