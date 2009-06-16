@@ -139,23 +139,23 @@ if ENABLE_INTROSPECTION
 EvinceDocument-$(EV_API_VERSION).gir: libevdocument.la Makefile $(INST_H_FILES)
 	PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
 	$(G_IR_SCANNER) -v --namespace EvinceDocument \
-	--add-include-path=$(srcdir) \
-	--add-include-path=. \
 	--strip-prefix=Ev \
 	--nsversion=$(EV_API_VERSION) \
+	--include=GLib-2.0 \
 	--include=Gio-2.0 \
+	--include=Gdk-2.0 \
+	--include=GdkPixbuf-2.0 \
 	--include=Gtk-2.0 \
 	--library=evdocument \
 	--libtool="$(LIBTOOL)" \
 	--output $@ \
-	--pkg gobject-2.0 \
-	--pkg gio-2.0 \
-	--pkg gtk+-2.0 \
 	--pkg evince-document-$(EV_API_VERSION) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
+	-I$(srcdir) \
+	-I$(builddir) \
 	-DEVINCE_COMPILATION \
-	$(INST_H_FILES)
+	$(filter %.h,$^)
 
 girdir = $(GIRDIR)
 gir_DATA = EvinceDocument-$(EV_API_VERSION).gir
