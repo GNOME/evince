@@ -277,13 +277,13 @@ AM_CONDITIONAL([WITH_GCONF],[test "$with_gconf" = "yes"])
 if test "$with_gconf" = "yes"; then
    PKG_CHECK_MODULES([GCONF],[gconf-2.0])
    AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
-fi
 
-AM_GCONF_SOURCE_2
+   AM_GCONF_SOURCE_2
 
-AC_PATH_PROG([GCONFTOOL], [gconftool-2], [false])
-if test "$with_gconf" = "yes" -a "$GCONFTOOL" = "false"; then
-  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+   AC_PATH_PROG([GCONFTOOL], [gconftool-2], [false])
+   if test "$GCONFTOOL" = "false"; then
+      AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+   fi
 fi
 
 dnl Debug mode
