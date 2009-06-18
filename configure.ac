@@ -284,6 +284,8 @@ if test "$with_gconf" = "yes"; then
    if test "$GCONFTOOL" = "false"; then
       AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
    fi
+else
+   AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL],false)
 fi
 
 dnl Debug mode
