@@ -487,14 +487,17 @@ pdf_page_render (PopplerPage     *page,
 
 #ifdef HAVE_POPPLER_PAGE_RENDER
 	cairo_t *cr;
-	
-	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
+	cairo_pattern_t *pattern;
+
+	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 					      width, height);
-	memset (cairo_image_surface_get_data (surface), 0xff,
-		cairo_image_surface_get_height (surface) *
-		cairo_image_surface_get_stride (surface));
-	
 	cr = cairo_create (surface);
+
+	cairo_save (cr);
+	cairo_set_source_rgba (cr, 1., 1., 1., 0);
+	cairo_paint (cr);
+	cairo_restore (cr);
+
 	switch (rc->rotation) {
 	        case 90:
 			cairo_translate (cr, width, 0);
@@ -511,6 +514,13 @@ pdf_page_render (PopplerPage     *page,
 	cairo_scale (cr, rc->scale, rc->scale);
 	cairo_rotate (cr, rc->rotation * G_PI / 180.0);
 	poppler_page_render (page, cr);
+
+	pattern = cairo_pattern_create_rgb (1., 1., 1.);
+	cairo_set_operator (cr, CAIRO_OPERATOR_DEST_OVER);
+	cairo_set_source (cr, pattern);
+	cairo_paint (cr);
+
+	cairo_pattern_destroy (pattern);
 	cairo_destroy (cr);
 #else /* HAVE_POPPLER_PAGE_RENDER */
 	GdkPixbuf *pixbuf;
