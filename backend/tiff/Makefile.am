@@ -18,6 +18,7 @@ libtiffdocument_la_SOURCES =	\
 libtiffdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libtiffdocument_la_LIBADD = 				\
 	$(top_builddir)/libdocument/libevdocument.la	\
+	$(BACKEND_LIBS)			\
 	-ltiff
 
 backend_in_files = tiffdocument.evince-backend.in
