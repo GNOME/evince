@@ -25,6 +25,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef G_OS_WIN32
+#ifdef DATADIR
+#undef DATADIR
+#endif
+#include <io.h>
+#include <conio.h>
+#define _WIN32_WINNT 0x0500
+#include <windows.h>
+#endif
+
 #define THUMBNAIL_SIZE 128
 
 static gint size = THUMBNAIL_SIZE;
