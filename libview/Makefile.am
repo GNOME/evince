@@ -1,5 +1,3 @@
-QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
-
 lib_LTLIBRARIES = libevview.la
 
 NOINST_H_FILES =			\
@@ -73,23 +71,23 @@ BUILT_SOURCES = 			\
 CLEANFILES = $(BUILT_SOURCES) stamp-ev-view-type-builtins.h
 
 ev-view-marshal.h: $(srcdir)/ev-view-marshal.list
-	$(QUIET_GEN)$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal > $@
+	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal > $@
 
 ev-view-marshal.c: $(srcdir)/ev-view-marshal.list
-	$(QUIET_GEN)echo '#include <config.h>' > ev-view-marshal.c
+	echo '#include <config.h>' > ev-view-marshal.c
 	$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal --body >> $@
 
 ev-view-type-builtins.h: stamp-ev-view-type-builtins.h
 	@true
 
 stamp-ev-view-type-builtins.h: ev-view-type-builtins.h.template $(INST_H_FILES)
-	$(QUIET_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
+	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
 	&& (cmp -s xgen-etbh ev-view-type-builtins.h || cp xgen-etbh ev-view-type-builtins.h ) \
 	&& rm -f xgen-etbh \
 	&& echo timestamp > $(@F)
 
 ev-view-type-builtins.c: ev-view-type-builtins.c.template $(INST_H_FILES)
-	$(QUIET_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
+	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
 	&& (cmp -s xgen-etbc ev-view-type-builtins.c || cp xgen-etbc ev-view-type-builtins.c ) \
 	&& rm -f xgen-etbc
 

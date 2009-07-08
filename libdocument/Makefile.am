@@ -1,5 +1,3 @@
-QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
-
 lib_LTLIBRARIES = libevdocument.la
 
 NOINST_H_FILES =				\
@@ -118,13 +116,13 @@ ev-document-type-builtins.h: stamp-ev-document-type-builtins.h
 	@true
 
 stamp-ev-document-type-builtins.h: ev-document-type-builtins.h.template $(INST_H_FILES)
-	$(QUIET_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
+	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
 	&& (cmp -s xgen-etbh ev-document-type-builtins.h || cp xgen-etbh ev-document-type-builtins.h ) \
 	&& rm -f xgen-etbh \
 	&& echo timestamp > $(@F)
 
 ev-document-type-builtins.c: ev-document-type-builtins.c.template $(INST_H_FILES)
-	$(QUIET_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
+	$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
 	&& (cmp -s xgen-etbc ev-document-type-builtins.c || cp xgen-etbc ev-document-type-builtins.c ) \
 	&& rm -f xgen-etbc
 

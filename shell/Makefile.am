@@ -1,5 +1,3 @@
-QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
-
 INCLUDES=							\
 	-DDATADIR=\"$(pkgdatadir)\"				\
 	-DGNOMEDATADIR=\"$(datadir)\"				\
@@ -118,14 +116,14 @@ EXTRA_DIST = ev-marshal.list		\
 
 
 ev-marshal.h: $(srcdir)/ev-marshal.list
-	$(QUIET_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
+	$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
 
 ev-marshal.c: $(srcdir)/ev-marshal.list
-	$(QUIET_GEN)echo '#include "ev-marshal.h"' > ev-marshal.c
+	echo '#include "ev-marshal.h"' > ev-marshal.c
 	$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
 
 DISTCLEANFILES= \
 	ev-application-service.h
 
 ev-application-service.h: $(srcdir)/ev-application-service.xml
-	$(QUIET_GEN)dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
+	dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml

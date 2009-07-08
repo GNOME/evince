@@ -51,6 +51,8 @@ if test -z "$enable_maintainer_mode"; then
 fi
 AM_MAINTAINER_MODE([enable])
 
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 AM_PROG_LIBTOOL
 
 AC_ISC_POSIX
@@ -660,8 +662,6 @@ AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
 
 # *****************************************************************************
 
-SHAVE_INIT([], [enable])
-
 AC_CONFIG_FILES([
 backend/Makefile
 backend/comics/Makefile
@@ -715,8 +715,6 @@ Makefile
 po/Makefile.in
 previewer/Makefile
 properties/Makefile
-shave
-shave-libtool
 shell/Makefile
 test/Makefile
 thumbnailer/Makefile
