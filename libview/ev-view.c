@@ -3018,26 +3018,28 @@ static void
 start_selection_for_event (EvView         *view,
 			   GdkEventButton *event)
 {
-	EvSelectionStyle style;
-
 	clear_selection (view);
-	
+
 	view->selection_info.start.x = event->x + view->scroll_x;
 	view->selection_info.start.y = event->y + view->scroll_y;
 
 	switch (event->type) {
 	        case GDK_2BUTTON_PRESS:
-			style = EV_SELECTION_STYLE_WORD;
+			view->selection_info.style = EV_SELECTION_STYLE_WORD;
 			break;
 	        case GDK_3BUTTON_PRESS:
-			style = EV_SELECTION_STYLE_LINE;
+			view->selection_info.style = EV_SELECTION_STYLE_LINE;
 			break;
 	        default:
-			style = EV_SELECTION_STYLE_GLYPH;
-			break;
+			view->selection_info.style = EV_SELECTION_STYLE_GLYPH;
+			return;
 	}
 
-	view->selection_info.style = style;
+	/* In case of WORD or LINE, compute selections now */
+	compute_selections (view,
+			    view->selection_info.style,
+			    &(view->selection_info.start),
+			    &(view->selection_info.start));
 }
 
 static gboolean
@@ -3518,14 +3520,6 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->selection_update_id) {
 	    g_source_remove (view->selection_update_id);
 	    view->selection_update_id = 0;
-	}
-
-	if (!view->selection_info.in_selection &&
-	    view->selection_info.style != EV_SELECTION_STYLE_GLYPH) {
-		compute_selections (view,
-				    view->selection_info.style,
-				    &(view->selection_info.start),
-				    &(view->selection_info.start));
 	}
 
 	if (view->selection_info.selections) {
