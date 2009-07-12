@@ -373,7 +373,9 @@ struct _EvPrintOperationExport {
 	gint n_pages_to_print;
 	gint uncollated_copies;
 	gint collated_copies;
-	gint uncollated, collated, total, blank;
+	gint uncollated, collated, total;
+
+	gint sheet, page_count;
 
 	gint range, n_ranges;
 	GtkPageRange *ranges;
@@ -670,10 +672,40 @@ export_print_inc_page (EvPrintOperationExport *export)
 {
 	do {
 		export->page += export->inc;
+
+		/* note: when NOT collating, page_count is increased in export_print_page */
+		if (export->collate) {
+			export->page_count++;
+			export->sheet = 1 + (export->page_count - 1) / export->pages_per_sheet;
+		}
+
 		if (export->page == export->end) {
 			export->range += export->inc;
 			if (export->range == -1 || export->range == export->n_ranges) {
 				export->uncollated++;
+
+				/* when printing multiple collated copies & multiple pages per sheet we want to
+				 * prevent the next copy bleeding into the last sheet of the previous one
+				 * we've reached the last range to be printed now, so this is the time to do it */
+				if (export->pages_per_sheet > 1 && export->collate == 1 &&
+				    (export->page_count - 1) % export->pages_per_sheet != 0) {
+
+					EvPrintOperation *op = EV_PRINT_OPERATION (export);
+					ev_document_doc_mutex_lock ();
+
+					/* keep track of all blanks but only actualise those
+					 * which are in the current odd / even sheet set */
+
+					export->page_count += export->pages_per_sheet - (export->page_count - 1) % export->pages_per_sheet;
+					if (export->page_set == GTK_PAGE_SET_ALL ||
+						(export->page_set == GTK_PAGE_SET_EVEN && export->sheet % 2 == 0) ||
+						(export->page_set == GTK_PAGE_SET_ODD && export->sheet % 2 == 1) ) {
+						ev_file_exporter_end_page (EV_FILE_EXPORTER (op->document));
+					}
+					ev_document_doc_mutex_unlock ();
+					export->sheet = 1 + (export->page_count - 1) / export->pages_per_sheet;
+				}
+
 				if (export->uncollated == export->uncollated_copies)
 					return FALSE;
 
@@ -682,8 +714,12 @@ export_print_inc_page (EvPrintOperationExport *export)
 			find_range (export);
 			export->page = export->start;
 		}
-	} while ((export->page_set == GTK_PAGE_SET_EVEN && (export->page / export->pages_per_sheet) % 2 == 0) ||
-		 (export->page_set == GTK_PAGE_SET_ODD && (export->page  / export->pages_per_sheet) % 2 == 1));
+
+	/* in/decrement the page number until we reach the first page on the next EVEN or ODD sheet
+	 * if we're not collating, we have to make sure that this is done only once! */
+	} while ( export->collate == 1 &&
+		((export->page_set == GTK_PAGE_SET_EVEN && export->sheet % 2 == 1) ||
+		(export->page_set == GTK_PAGE_SET_ODD && export->sheet % 2 == 0)));
 
 	return TRUE;
 }
@@ -881,7 +917,12 @@ export_job_finished (EvJobExport            *job,
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 
-	if (export->pages_per_sheet == 1 || (export->total + export->blank) % export->pages_per_sheet == 0 ) {
+	if (export->pages_per_sheet == 1 ||
+	   ( export->page_count % export->pages_per_sheet == 0 &&
+	   ( export->page_set == GTK_PAGE_SET_ALL ||
+	   ( export->page_set == GTK_PAGE_SET_EVEN && export->sheet % 2 == 0 ) ||
+	   ( export->page_set == GTK_PAGE_SET_ODD && export->sheet % 2 == 1 ) ) ) ) {
+
 		ev_document_doc_mutex_lock ();
 		ev_file_exporter_end_page (EV_FILE_EXPORTER (op->document));
 		ev_document_doc_mutex_unlock ();
@@ -950,27 +991,15 @@ export_print_page (EvPrintOperationExport *export)
 
 	if (!export->temp_file)
 		return FALSE; /* cancelled */
-	
+
 	export->total++;
 	export->collated++;
 
-	/* when printing multiple collated copies & multiple pages per sheet we want to
-	   prevent the next copy bleeding into the last sheet of the previous one
-	   we therefore check whether we've reached the last page in a document
-	   if that is the case and the given sheet is not filled with pages,
-	   we introduce a few blank pages to finish off the sheet
-	   to make sure nothing goes wrong, the final condition ensures that
-	   we're not at the end of a sheet, otherwise we'd introduce a blank sheet! */
-
-	if (export->collate == 1 && export->total > 1 && export->pages_per_sheet > 1 &&
-	    (export->page + 1) % export->n_pages == 0 && (export->total - 1 + export->blank) % export->pages_per_sheet != 0) {
-		ev_document_doc_mutex_lock ();
-		ev_file_exporter_end_page (EV_FILE_EXPORTER (op->document));
-		/* keep track of how many blank pages have been added */
-		export->blank += export->pages_per_sheet - (export->total - 1 + export->blank) % export->pages_per_sheet;
-		ev_document_doc_mutex_unlock ();
+	/* note: when collating, page_count is increased in export_print_inc_page */
+	if (!export->collate) {
+		export->page_count++;
+		export->sheet = 1 + (export->page_count - 1) / export->pages_per_sheet;
 	}
-
 
 	if (export->collated == export->collated_copies) {
 		export->collated = 0;
@@ -988,12 +1017,49 @@ export_print_page (EvPrintOperationExport *export)
 		}
 	}
 
-	if (export->pages_per_sheet == 1 || (export->total + export->blank) % export->pages_per_sheet == 1) {
+	/* we're not collating and we've reached a sheet from the wrong sheet set */
+	if (!export->collate &&
+	    ((export->page_set == GTK_PAGE_SET_EVEN && export->sheet % 2 != 0) ||
+	    (export->page_set == GTK_PAGE_SET_ODD && export->sheet % 2 != 1))) {
+
+		do {
+			export->page_count++;
+			export->collated++;
+			export->sheet = 1 + (export->page_count - 1) / export->pages_per_sheet;
+
+			if (export->collated == export->collated_copies) {
+				export->collated = 0;
+
+				if (!export_print_inc_page (export)) {
+					ev_document_doc_mutex_lock ();
+					ev_file_exporter_end (EV_FILE_EXPORTER (op->document));
+					ev_document_doc_mutex_unlock ();
+
+					close (export->fd);
+					export->fd = -1;
+
+					update_progress (export);
+
+					export_print_done (export);
+					return FALSE;
+				}
+			}
+
+		} while ((export->page_set == GTK_PAGE_SET_EVEN && export->sheet % 2 != 0) ||
+	    		  (export->page_set == GTK_PAGE_SET_ODD && export->sheet % 2 != 1));
+
+	}
+
+	if (export->pages_per_sheet == 1 ||
+	    (export->page_count % export->pages_per_sheet == 1 &&
+	    (export->page_set == GTK_PAGE_SET_ALL ||
+	    (export->page_set == GTK_PAGE_SET_EVEN && export->sheet % 2 == 0) ||
+	    (export->page_set == GTK_PAGE_SET_ODD && export->sheet % 2 == 1)))) {
 		ev_document_doc_mutex_lock ();
 		ev_file_exporter_begin_page (EV_FILE_EXPORTER (op->document));
 		ev_document_doc_mutex_unlock ();
 	}
-	
+
 	if (!export->job_export) {
 		export->job_export = ev_job_export_new (op->document);
 		g_signal_connect (export->job_export, "finished",
@@ -1344,6 +1410,8 @@ ev_print_operation_export_finalize (GObject *object)
 static void
 ev_print_operation_export_init (EvPrintOperationExport *export)
 {
+	/* sheets are counted from 1 to be physical */
+	export->sheet = 1;
 }
 
 static GObject *
