@@ -26,5 +26,58 @@
             </locale>
         </schema>
 
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-gzdvi/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-gzdvi/enable</applyto>
+            <owner>evince</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-gzdvi/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-gzdvi/command</applyto>
+            <owner>evince</owner>
+            <type>string</type>
+            <default>evince-thumbnailer -s %s %u %o</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-bzdvi/enable</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-bzdvi/enable</applyto>
+            <owner>evince</owner>
+            <type>bool</type>
+            <default>true</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
+        <schema>
+            <key>/schemas/desktop/gnome/thumbnailers/application@x-bzdvi/command</key>
+            <applyto>/desktop/gnome/thumbnailers/application@x-bzdvi/command</applyto>
+            <owner>evince</owner>
+            <type>string</type>
+            <default>evince-thumbnailer -s %s %u %o</default>
+            <locale name="C">
+                <short></short>
+                <long></long>
+            </locale>
+        </schema>
+
+
     </schemalist>
 </gconfschemafile>
