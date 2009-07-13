@@ -1,4 +1,32 @@
 ================
+Evince  2.27.4
+================
+
+Bug fixes:
+
+    * Compute selections on button press for word/line selections
+      (#562059, Carlos Garcia Campos)
+    * Fix several even/odd multipage issues (#583429, Bartek Kostrzewa)
+    * Register thumbnailing for gzip/gzip dvi files (#588013, Emilio
+      Pozuelo Monfort)
+    * Get rid of shave with AM_SILENT_RULES automake option (#585355,
+      Javier Jardón)
+    * Make evince output pdf on supported printers (#585442, Johan Brannlund)
+    * Fix build on windows (Fridrich Strba)
+    * Determine data directory on runtime on windows (Fridrich Strba)
+    * Fix build without GConf (Nickolay V. Shmyrev)
+    * Fix several introspection build issues (#585971, Christian Persch)
+
+Translation updates:
+
+    * Giannis Katsampirhs (el)
+    * Jonathan Ernst (fr)
+    * Daniel Nylander (sv)
+    * Maxim Dziumanenko (uk)
+    * Clytie Siddall (vi)
+    * Nguyễn Đình Trung (vi)
+
+================
 Evince  2.27.3
 ================
 
