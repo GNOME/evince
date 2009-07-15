@@ -41,6 +41,7 @@ desktop_DATA = $(DESKTOP_FILES)
 # GConf schema
 #
 
+if WITH_GCONF
 @INTLTOOL_SCHEMAS_RULE@
 
 schema_in_files = evince.schemas.in
@@ -69,6 +70,13 @@ if GCONF_SCHEMAS_INSTALL
 			$(top_builddir)/data/$$p; \
 	done \
 	fi
+endif
+
+else
+
+install-schemas:
+uninstall-schemas:
+
 endif
 
 #

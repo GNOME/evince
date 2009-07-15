@@ -1,4 +1,3 @@
-@INTLTOOL_SCHEMAS_RULE@
 
 bin_PROGRAMS = evince-thumbnailer
 
@@ -36,6 +35,10 @@ schema_files = \
 	evince-thumbnailer-ps.schemas.in \
 	evince-thumbnailer.schemas.in
 
+if WITH_GCONF
+
+@INTLTOOL_SCHEMAS_RULE@
+
 schema_DATA = 
 
 if ENABLE_PDF
@@ -67,6 +70,7 @@ if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(top_builddir)/thumbnailer/$$p >&1 > /dev/null; \
 	done \
 	fi
+endif
 endif
 
 EXTRA_DIST =         	\
