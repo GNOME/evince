@@ -20,12 +20,12 @@ libgimpcellrenderertoggle_la_SOURCES = 			\
 libgimpcellrenderertoggle_la_extra_sources = gimpwidgetsmarshal.list
 
 gimpwidgetsmarshal.h: $(srcdir)/gimpwidgetsmarshal.list
-	$(GLIB_GENMARSHAL) --prefix=_gimp_widgets_marshal $(srcdir)/gimpwidgetsmarshal.list --header >> xgen-wmh \
+	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=_gimp_widgets_marshal $(srcdir)/gimpwidgetsmarshal.list --header >> xgen-wmh \
         && (cmp -s xgen-wmh $(@F) || cp xgen-wmh $(@F)) \
         && rm -f xgen-wmh xgen-wmh~
 
 gimpwidgetsmarshal.c: gimpwidgetsmarshal.h
-	echo "#include \"gimpwidgetsmarshal.h\"" >> xgen-wmc \
+	$(AM_V_GEN)echo "#include \"gimpwidgetsmarshal.h\"" >> xgen-wmc \
         && $(GLIB_GENMARSHAL) --prefix=_gimp_widgets_marshal $(srcdir)/gimpwidgetsmarshal.list --body >> xgen-wmc \
         && cp xgen-wmc $(@F) \
         && rm -f xgen-wmc xgen-wmc~
