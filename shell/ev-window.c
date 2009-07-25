@@ -1216,6 +1216,8 @@ ev_window_setup_document (EvWindow *ev_window)
 	info = ev_page_cache_get_info (ev_window->priv->page_cache);
 	update_document_mode (ev_window, info->mode);
 
+	gtk_widget_grab_focus (ev_window->priv->view);
+
 	return FALSE;
 }
 
