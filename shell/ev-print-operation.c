@@ -1148,7 +1148,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 
 	file_format = gtk_print_settings_get (print_settings, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
 	
-	filename = g_strdup_printf ("evince_print.%s.XXXXXX", file_format);
+	filename = g_strdup_printf ("evince_print.%s.XXXXXX", file_format != NULL ? file_format : "");
 	export->fd = g_file_open_tmp (filename, &export->temp_file, &error);
 	g_free (filename);
 	if (export->fd <= -1) {
