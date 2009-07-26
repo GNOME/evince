@@ -6,14 +6,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince\n"
-"POT-Creation-Date: 2009-03-11 12:18+0000\n"
-"PO-Revision-Date: 2009-03-08 12:16+0100\n"
-"Last-Translator: Martin Picek <picek.martin@gnome-cesko.cz>\n"
+"Project-Id-Version: evince gnome-2-28\n"
+"POT-Creation-Date: 2009-07-15 06:55+0000\n"
+"PO-Revision-Date: 2009-07-17 06:41+0100\n"
+"Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Poedit-Language: Czech\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -114,16 +117,16 @@ msgid ""
 "ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION "
 "OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
 msgstr ""
-"DOKUMENT JE POSKYTOVÁN V PODOBĚ „JAK JE“, BEZ ZÁRUKY JAKÉHOKOLIV DRUHU, "
+"DOKUMENT JE POSKYTOVÁN V PODOBĚ „JAK JE“ BEZ ZÁRUKY V JAKÉKOLIV PODOBĚ, "
 "NEPOSKYTUJÍ SE ANI ODVOZENÉ ZÁRUKY, ZÁRUKY, ŽE DOKUMENT, NEBO JEHO UPRAVENÁ "
-"VERZE, JE BEZCHYBNÝ, NEBO ZÁRUKY PRODEJNOSTI, VHODNOSTI PRO URČITÝ ÚČEL, "
-"NEBO NEPORUŠENOSTI. RIZIKO NEKVALITY, NEPŘESNOSTI A ŠPATNÉHO PROVEDENÍ "
-"DOKUMENTU, NEBO JEHO UPRAVENÉ VERZE, NESETE VY. POKUD JE TENTO DOKUMENT NEBO "
-"JEHO UPRAVENÁ VERZE VADNÁ V JAKÉMKOLIV SMYSLU, VY (NIKOLIV PŮVODCE, AUTOR "
-"NEBO JAKÝKOLIV PŘISPĚVATEL) PŘEBÍRÁTE ODPOVĚDNOST ZA JAKÉKOLIV NÁKLADY NA "
-"NUTNÉ ÚPRAVY, OPRAVY ČI SLUŽBY. TOTO PROHLÁŠENÍ O ZÁRUCE PŘEDSTAVUJE "
-"ZÁKLADNÍ SOUČÁST TÉTO LICENCE. BEZ TOHOTO PROHLÁŠENÍ NENÍ PODLE TÉTO DOHODY "
-"POVOLENO UŽÍVÁNÍ ANI ÚPRAVY TOHOTO DOKUMENTU; DÁLE"
+"VERZE, JE BEZCHYBNÝ NEBO ZÁRUKY PRODEJNOSTI, VHODNOSTI PRO URČITÝ ÚČEL NEBO "
+"NEPORUŠENOSTI. RIZIKO NEKVALITY, NEPŘESNOSTI A ŠPATNÉHO PROVEDENÍ DOKUMENTU, "
+"NEBO JEHO UPRAVENÉ VERZE, LEŽÍ NA VÁS. POKUD KVŮLI TOMUTO DOKUMENTU, NEBO "
+"JEHO UPRAVENÉ VERZI, NASTANE PROBLÉM, VY (NIKOLIV PŮVODNÍ AUTOR NEBO "
+"JAKÝKOLIV PŘISPĚVATEL) PŘEBÍRÁTE JAKÉKOLIV NÁKLADY ZA NUTNÉ ÚPRAVY, OPRAVY "
+"ČI SLUŽBY. TOTO PROHLÁŠENÍ O ZÁRUCE PŘEDSTAVUJE ZÁKLADNÍ SOUČÁST TÉTO "
+"LICENCE. BEZ TOHOTO PROHLÁŠENÍ NENÍ, PODLE TÉTO DOHODY, POVOLENO UŽÍVÁNÍ ANI "
+"ÚPRAVY TOHOTO DOKUMENTU; DÁLE"
 
 #: C/evince.xml:55(para)
 msgid ""
@@ -138,6 +141,16 @@ msgid ""
 "VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE "
 "POSSIBILITY OF SUCH DAMAGES."
 msgstr ""
+"ZA ŽÁDNÝCH OKOLNOSTÍ A ŽÁDNÝCH PRÁVNÍCH PŘEDPOKLADŮ, AŤ SE JEDNÁ O PŘEČIN "
+"(VČETNĚ NEDBALOSTNÍCH), SMLOUVU NEBO JINÉ, NENÍ AUTOR, PŮVODNÍ PISATEL, "
+"KTERÝKOLIV PŘISPĚVATEL NEBO KTERÝKOLIV DISTRIBUTOR TOHOTO DOKUMENTU NEBO "
+"UPRAVENÉ VERZE DOKUMENTU NEBO KTERÝKOLIV DODAVATEL NĚKTERÉ Z TĚCHTO STRAN "
+"ODPOVĚDNÝ NĚJAKÉ OSOBĚ ZA PŘÍMÉ, NEPŘÍMÉ, SPECIÁLNÍ, NAHODILÉ NEBO NÁSLEDNÉ "
+"ŠKODY JAKÉHOKOLIV CHARAKTERU, VČETNĚ, ALE NEJEN, ZA POŠKOZENÍ ZE ZTRÁTY "
+"DOBRÉHO JMÉNA, PŘERUŠENÍ PRÁCE, PORUCHY NEBO NESPRÁVNÉ FUNKCE POČÍTAČE NEBO "
+"JINÉHO A VŠECH DALŠÍCH ŠKOD NEBO ZTRÁT VYVSTÁVAJÍCÍCH Z NEBO VZTAHUJÍCÍCH SE "
+"K POUŽÍVÁNÍ TOHOTO DOKUMENTU NEBO UPRAVENÝCH VERZÍ DOKUMENTU, I KDYŽ BY "
+"TAKOVÁTO STRANA BYLA INFORMOVANÁ O MOŽNOSTI TAKOVÉHOTO POŠKOZENÍ."
 
 #: C/evince.xml:28(para)
 msgid ""
@@ -1016,8 +1029,8 @@ msgstr "Klávesová zkratka"
 
 #: C/evince.xml:651(keycap) C/evince.xml:655(keycap) C/evince.xml:659(keycap)
 #: C/evince.xml:663(keycap) C/evince.xml:667(keycap) C/evince.xml:671(keycap)
-#: C/evince.xml:676(keycap) C/evince.xml:682(keycap) C/evince.xml:701(keycap)
-#: C/evince.xml:747(keycap)
+#: C/evince.xml:676(keycap) C/evince.xml:683(keycap) C/evince.xml:704(keycap)
+#: C/evince.xml:750(keycap)
 msgid "Ctrl"
 msgstr "Ctrl"
 
@@ -1081,156 +1094,160 @@ msgstr "<keycap>/</keycap> (lomítko)"
 msgid "Find a word or phrase in the document"
 msgstr "Najít v dokumentu slovo či frázi"
 
-#: C/evince.xml:682(keycap)
+#: C/evince.xml:683(keycap)
 msgid "G"
 msgstr "G"
 
-#: C/evince.xml:683(para)
+#: C/evince.xml:684(keycap)
+msgid "F3"
+msgstr "F3"
+
+#: C/evince.xml:686(para)
 msgid "Find next"
 msgstr "Najít další"
 
-#: C/evince.xml:687(para)
+#: C/evince.xml:690(para)
 msgid ""
 "<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (plus sign)"
 msgstr ""
 "<keycombo><keycap>Ctrl</keycap><keycap>+</keycap></keycombo> (symbol plus)"
 
-#: C/evince.xml:688(keycap)
+#: C/evince.xml:691(keycap)
 msgid "+"
 msgstr "+"
 
-#: C/evince.xml:689(keycap)
+#: C/evince.xml:692(keycap)
 msgid "="
 msgstr "="
 
-#: C/evince.xml:691(para)
+#: C/evince.xml:694(para)
 msgid "Zoom in"
 msgstr "Zvětšit"
 
-#: C/evince.xml:695(para)
+#: C/evince.xml:698(para)
 msgid ""
 "<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (minus sign)"
 msgstr ""
 "<keycombo><keycap>Ctrl</keycap><keycap>-</keycap></keycombo> (symbol minus)"
 
-#: C/evince.xml:696(keycap)
+#: C/evince.xml:699(keycap)
 msgid "-"
 msgstr "-"
 
-#: C/evince.xml:698(para)
+#: C/evince.xml:701(para)
 msgid "Zoom out"
 msgstr "Zmenšit"
 
-#: C/evince.xml:701(keycap)
+#: C/evince.xml:704(keycap)
 msgid "R"
 msgstr "R"
 
-#: C/evince.xml:702(para)
+#: C/evince.xml:705(para)
 msgid "Reload the document"
 msgstr "Obnovit dokument"
 
-#: C/evince.xml:706(keycap) C/evince.xml:731(keycap)
+#: C/evince.xml:709(keycap) C/evince.xml:734(keycap)
 msgid "Page Up"
 msgstr "Page Up"
 
-#: C/evince.xml:707(para)
+#: C/evince.xml:710(para)
 msgid "Go to the previous page"
 msgstr "Přejít na předchozí stránku"
 
-#: C/evince.xml:710(keycap) C/evince.xml:735(keycap)
+#: C/evince.xml:713(keycap) C/evince.xml:738(keycap)
 msgid "Page Down"
 msgstr "Page Down"
 
-#: C/evince.xml:711(para)
+#: C/evince.xml:714(para)
 msgid "Go to the next page"
 msgstr "Přejít na následující stránku"
 
-#: C/evince.xml:715(keycap) C/evince.xml:723(keycap)
+#: C/evince.xml:718(keycap) C/evince.xml:726(keycap)
 msgid "Space"
 msgstr "Mezerník"
 
-#: C/evince.xml:716(keycap) C/evince.xml:723(keycap) C/evince.xml:725(keycap)
-#: C/evince.xml:731(keycap) C/evince.xml:735(keycap)
+#: C/evince.xml:719(keycap) C/evince.xml:726(keycap) C/evince.xml:728(keycap)
+#: C/evince.xml:734(keycap) C/evince.xml:738(keycap)
 msgid "Shift"
 msgstr "Shift"
 
-#: C/evince.xml:716(keycap) C/evince.xml:724(keycap)
+#: C/evince.xml:719(keycap) C/evince.xml:727(keycap)
 msgid "Backspace"
 msgstr "Backspace"
 
-#: C/evince.xml:717(keycap) C/evince.xml:725(keycap)
+#: C/evince.xml:720(keycap) C/evince.xml:728(keycap)
 msgid "Return"
 msgstr "Enter"
 
-#: C/evince.xml:719(para)
+#: C/evince.xml:722(para)
 msgid "Scroll forward"
 msgstr "Posunout vpřed"
 
-#: C/evince.xml:727(para)
+#: C/evince.xml:730(para)
 msgid "Scroll backward"
 msgstr "Posunout zpět"
 
-#: C/evince.xml:732(para)
+#: C/evince.xml:735(para)
 msgid "Go a bunch of pages up"
 msgstr "Přejít o několik stránek nahoru"
 
-#: C/evince.xml:736(para)
+#: C/evince.xml:739(para)
 msgid "Go a bunch of pages down"
 msgstr "Přejít o několik stránek dolů"
 
-#: C/evince.xml:739(keycap)
+#: C/evince.xml:742(keycap)
 msgid "Home"
 msgstr "Home"
 
-#: C/evince.xml:740(para)
+#: C/evince.xml:743(para)
 msgid "Go to the first page"
 msgstr "Přejít na první stránku"
 
-#: C/evince.xml:743(keycap)
+#: C/evince.xml:746(keycap)
 msgid "End"
 msgstr "End"
 
-#: C/evince.xml:744(para)
+#: C/evince.xml:747(para)
 msgid "Go to the last page"
 msgstr "Přejít na poslední stránku"
 
-#: C/evince.xml:747(keycap)
+#: C/evince.xml:750(keycap)
 msgid "L"
 msgstr "L"
 
-#: C/evince.xml:748(para)
+#: C/evince.xml:751(para)
 msgid "Go to page by number or label"
 msgstr "Přejít na stránku dle čísla stránky nebo nadpisu"
 
-#: C/evince.xml:751(keycap)
+#: C/evince.xml:754(keycap)
 msgid "F1"
 msgstr "F1"
 
-#: C/evince.xml:752(para)
+#: C/evince.xml:755(para)
 msgid "Help"
 msgstr "Nápověda"
 
-#: C/evince.xml:755(keycap)
+#: C/evince.xml:758(keycap)
 msgid "F5"
 msgstr "F5"
 
-#: C/evince.xml:756(para)
+#: C/evince.xml:759(para)
 msgid "Run document as presentation"
 msgstr "Spustit dokument jako prezentaci"
 
-#: C/evince.xml:759(keycap)
+#: C/evince.xml:762(keycap)
 msgid "F9"
 msgstr "F9"
 
-#: C/evince.xml:760(para)
+#: C/evince.xml:763(para)
 msgid "Show or hide the side pane"
 msgstr "Zobrazit nebo skrýt postranní lištu"
 
-#: C/evince.xml:763(keycap)
+#: C/evince.xml:766(keycap)
 msgid "F11"
 msgstr "F11"
 
-#: C/evince.xml:764(para)
+#: C/evince.xml:767(para)
 msgid "Toggle fullscreen mode"
 msgstr "Přepnout režim celé obrazovky"
 
