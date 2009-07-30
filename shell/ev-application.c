@@ -63,8 +63,11 @@ struct _EvApplication {
 	gchar *data_dir;
 	gchar *accel_map_file;
 	gchar *toolbars_file;
+
+#ifdef ENABLE_DBUS
 	gchar *crashed_file;
 	guint  crashed_idle;
+#endif
 
 	EggToolbarsModel *toolbars_model;
 
@@ -200,6 +203,7 @@ save_session (EvApplication *application,
 	g_free (uri_list);
 }
 
+#ifdef ENABLE_DBUS
 static void
 ev_application_save_session_crashed (EvApplication *application)
 {
@@ -285,6 +289,7 @@ ev_application_run_crash_recovery_dialog (EvApplication *application)
 
 	return response == GTK_RESPONSE_ACCEPT;
 }
+#endif /* ENABLE_DBUS */
 
 gboolean
 ev_application_load_session (EvApplication *application)
@@ -299,6 +304,7 @@ ev_application_load_session (EvApplication *application)
 			return FALSE;
 	} else
 #endif /* WITH_SMCLIENT */
+#ifdef ENABLE_DBUS
         if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
 		if (ev_application_run_crash_recovery_dialog (application)) {
 			state_file = g_key_file_new ();
@@ -309,9 +315,9 @@ ev_application_load_session (EvApplication *application)
 		} else {
 			return FALSE;
 		}
-	} else {
+	} else
+#endif /* ENABLE_DBUS */
 		return FALSE;
-	}
 
 	uri_list = g_key_file_get_string_list (state_file,
 					       "Evince",
@@ -361,8 +367,10 @@ smclient_quit_cb (EggSMClient   *client,
 static void
 ev_application_init_session (EvApplication *application)
 {
+#ifdef ENABLE_DBUS
 	application->crashed_file = g_build_filename (application->dot_dir,
 						      "evince-crashed", NULL);
+#endif
 
 #ifdef WITH_SMCLIENT
 	application->smclient = egg_sm_client_get ();
@@ -544,10 +552,12 @@ ev_application_open_window (EvApplication  *application,
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 
+#ifdef ENABLE_DBUS
 	ev_application_save_session_crashed (application);
 	g_signal_connect_swapped (new_window, "destroy",
 				  G_CALLBACK (save_session_crashed_in_idle),
 				  application);
+#endif
 
 	if (!GTK_WIDGET_REALIZED (new_window))
 		gtk_widget_realize (new_window);
@@ -677,10 +687,12 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	   we can restore window size without flickering */	
 	ev_window_open_uri (new_window, uri, dest, mode, search_string);
 
+#ifdef ENABLE_DBUS
 	ev_application_save_session_crashed (application);
 	g_signal_connect_swapped (new_window, "destroy",
 				  G_CALLBACK (save_session_crashed_in_idle),
 				  application);
+#endif
 
 	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (new_window)))
 		gtk_widget_realize (GTK_WIDGET (new_window));
@@ -755,11 +767,13 @@ ev_application_open_uri_list (EvApplication *application,
 void
 ev_application_shutdown (EvApplication *application)
 {
+#ifdef ENABLE_DBUS
 	if (application->crashed_file) {
 		ev_application_save_session_crashed (application);
 		g_free (application->crashed_file);
 		application->crashed_file = NULL;
 	}
+#endif
 
 	if (application->accel_map_file) {
 		gtk_accel_map_save (application->accel_map_file);
