@@ -485,7 +485,7 @@ main (int argc, char *argv[])
 	gtk_window_set_default_icon_name ("evince");
 #endif /* WITH_SMCLIENT && GDK_WINDOWING_X11 */
 
-	ev_application_load_session (EV_APP);
+	ev_application_load_session (EV_APP, file_arguments);
 	load_files (file_arguments, args);
 	g_hash_table_destroy (args);
 

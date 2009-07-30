@@ -256,10 +256,47 @@ save_session_crashed_in_idle (EvApplication *application)
 }
 
 static gboolean
-ev_application_run_crash_recovery_dialog (EvApplication *application)
+ev_application_run_crash_recovery_dialog (EvApplication *application,
+					  const gchar  **files)
 {
 	GtkWidget *dialog;
 	gint       response;
+
+	/* Do not show the recover dialog if the requested file is the
+	 * only one to be recovered
+	 */
+	if (files && g_strv_length ((gchar **)files) == 1) {
+		GKeyFile *state_file;
+		gchar   **uri_list;
+
+		state_file = g_key_file_new ();
+		g_key_file_load_from_file (state_file,
+					   application->crashed_file,
+					   G_KEY_FILE_NONE,
+					   NULL);
+		uri_list = g_key_file_get_string_list (state_file,
+						       "Evince",
+						       "documents",
+						       NULL, NULL);
+		if (uri_list && g_strv_length (uri_list) == 1) {
+			GFile *file;
+			gchar *uri;
+
+			file = g_file_new_for_commandline_arg (files[0]);
+			uri = g_file_get_uri (file);
+			g_object_unref (file);
+			if (g_ascii_strcasecmp (uri, uri_list[0]) == 0) {
+				g_strfreev (uri_list);
+				g_key_file_free (state_file);
+				g_free (uri);
+
+				return FALSE;
+			}
+			g_free (uri);
+			g_strfreev (uri_list);
+		}
+		g_key_file_free (state_file);
+	}
 
 	dialog = gtk_message_dialog_new	(NULL,
 					 GTK_DIALOG_MODAL,
@@ -292,7 +329,8 @@ ev_application_run_crash_recovery_dialog (EvApplication *application)
 #endif /* ENABLE_DBUS */
 
 gboolean
-ev_application_load_session (EvApplication *application)
+ev_application_load_session (EvApplication *application,
+			     const gchar  **files)
 {
 	GKeyFile *state_file;
 	gchar   **uri_list;
@@ -306,7 +344,7 @@ ev_application_load_session (EvApplication *application)
 #endif /* WITH_SMCLIENT */
 #ifdef ENABLE_DBUS
         if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
-		if (ev_application_run_crash_recovery_dialog (application)) {
+		if (ev_application_run_crash_recovery_dialog (application, files)) {
 			state_file = g_key_file_new ();
 			g_key_file_load_from_file (state_file,
 						   application->crashed_file,
