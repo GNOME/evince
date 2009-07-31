@@ -1,4 +1,4 @@
-# Breton translation of gconf-editor
+# Breton translation for Evince
 # Copyright (C) 2006 Free Software Foundation, Inc.
 # This file is distributed under the GNU General Public License Version 2.
 # Jérémy Ar Floc'h <jeremy.lefloch@gmail.com>, 2006
@@ -7,10 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince 2.14\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-14 01:52+0000\n"
-"PO-Revision-Date: 2009-07-14 03:08+0000\n"
-"Last-Translator: Jérémy Le Floc'h <jeremy.lefloch@gmail.com>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
+"POT-Creation-Date: 2009-07-31 05:12+0000\n"
+"PO-Revision-Date: 2009-07-31 08:32+0100\n"
+"Last-Translator: Denis <denisarnuad@yahoo.fr>\n"
 "Language-Team: Breton\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,8 +19,7 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:155
 #, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
+msgid "Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr ""
 
 #: ../backend/comics/comics-document.c:169
@@ -44,8 +43,7 @@ msgid "Not a comic book MIME type: %s"
 msgstr ""
 
 #: ../backend/comics/comics-document.c:354
-msgid ""
-"Can't find an appropiate command to decompress this type of comic book"
+msgid "Can't find an appropiate command to decompress this type of comic book"
 msgstr ""
 
 #: ../backend/comics/comics-document.c:385
@@ -56,7 +54,7 @@ msgstr "Rizh MIME dianav"
 
 #: ../backend/comics/comics-document.c:412
 msgid "File corrupted"
-msgstr ""
+msgstr "Restr kontron"
 
 #: ../backend/comics/comics-document.c:424
 msgid "No files in archive"
@@ -65,7 +63,7 @@ msgstr ""
 #: ../backend/comics/comics-document.c:465
 #, c-format
 msgid "No images found in archive %s"
-msgstr "Skeudenn ebet kavet e-barzh an diell %s"
+msgstr "Skeudenn ebet kavet e-barzh an teul %s"
 
 #: ../backend/comics/comics-document.c:704
 #, c-format
@@ -82,26 +80,26 @@ msgid "Comic Books"
 msgstr "Bannoù-treset"
 
 #: ../backend/djvu/djvu-document.c:174
+#, fuzzy
 msgid "DJVU document has incorrect format"
-msgstr ""
+msgstr "An teul DJVU en deus un mentrezh direizh"
 
 #: ../backend/djvu/djvu-document.c:251
-msgid ""
-"The document is composed of several files. One or more of such files cannot "
-"be accessed."
+msgid "The document is composed of several files. One or more of such files cannot be accessed."
 msgstr ""
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
 msgid "Djvu Documents"
-msgstr "Dielloù Djvu"
+msgstr "Teulioù Djvu"
 
 #: ../backend/dvi/dvi-document.c:108
+#, fuzzy
 msgid "DVI document has incorrect format"
-msgstr "DVI diell en deus ur furmad siek"
+msgstr "An teul DVI en deus un mentrezh direizh"
 
 #: ../backend/dvi/dvidocument.evince-backend.in.h:1
 msgid "DVI Documents"
-msgstr "Dielloù DVI"
+msgstr "Teulieù DVI"
 
 #. translators: this is the document security state
 #: ../backend/pdf/ev-poppler.cc:826
@@ -143,7 +141,7 @@ msgstr "TrueType (CID)"
 
 #: ../backend/pdf/ev-poppler.cc:917
 msgid "Unknown font type"
-msgstr "Rizh nodrezh dianav"
+msgstr "Dianav eo rizh an nodrezh"
 
 #: ../backend/pdf/ev-poppler.cc:943
 msgid "No name"
@@ -159,20 +157,20 @@ msgstr "Enkorfet"
 
 #: ../backend/pdf/ev-poppler.cc:955
 msgid "Not embedded"
-msgstr ""
+msgstr "N'eo ket enkorfet"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
-msgstr "Dielloù PDF"
+msgstr "Teulioù PDF"
 
 #: ../backend/impress/impress-document.c:303
 #: ../backend/tiff/tiff-document.c:114
 msgid "Invalid document"
 msgstr "Didalvoudek eo an teul"
 
-#. 
+#.
 #. * vim: sw=2 ts=8 cindent noai bs=2
-#. 
+#.
 #: ../backend/impress/impressdocument.evince-backend.in.h:1
 msgid "Impress Slides"
 msgstr ""
@@ -225,9 +223,10 @@ msgstr ""
 
 #: ../backend/ps/psdocument.evince-backend.in.h:1
 msgid "PostScript Documents"
-msgstr "Dielloù PostScript"
+msgstr "Teulioù PostScript"
 
-#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
+#: ../libdocument/ev-attachment.c:304
+#: ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr ""
@@ -249,7 +248,7 @@ msgstr "Anskoret eo rizh restr %s (%s)"
 
 #: ../libdocument/ev-document-factory.c:359
 msgid "All Documents"
-msgstr "An holl dielloù"
+msgstr "An holl teulioù"
 
 #: ../libdocument/ev-document-factory.c:391
 msgid "All Files"
@@ -273,7 +272,7 @@ msgstr "O kregiñ gant %s"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1100
 #, c-format
 msgid "Application does not accept documents on command line"
-msgstr ""
+msgstr "An arload ne zedegemer ket an teulioù dre arroudennoù arc'had"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1168
 #, c-format
@@ -298,7 +297,8 @@ msgstr "Lazhañ kennask ouzh ardoer an estez"
 msgid "Specify file containing saved configuration"
 msgstr "Erspizit ar restr gant ar c'hefluniadur enrollet enni"
 
-#: ../cut-n-paste/smclient/eggsmclient.c:228 ../previewer/ev-previewer.c:46
+#: ../cut-n-paste/smclient/eggsmclient.c:228
+#: ../previewer/ev-previewer.c:46
 #: ../previewer/ev-previewer.c:47
 msgid "FILE"
 msgstr "RESTR"
@@ -364,7 +364,8 @@ msgid "Running in presentation mode"
 msgstr ""
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5213
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
+#: ../shell/ev-window.c:5213
 msgid "Best Fit"
 msgstr "Ment peurvat"
 
@@ -413,11 +414,13 @@ msgid "400%"
 msgstr "400%"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4135
-#: ../shell/ev-window-title.c:150 ../shell/main.c:484
+#: ../data/evince.desktop.in.in.h:1
+#: ../shell/ev-window.c:4135
+#: ../shell/ev-window-title.c:150
+#: ../shell/main.c:484
 #, c-format
 msgid "Document Viewer"
-msgstr "Lenner dielloù"
+msgstr "Lenner teulioù"
 
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multipage documents"
@@ -437,13 +440,15 @@ msgstr ""
 
 #: ../previewer/ev-previewer.c:46
 msgid "Print settings file"
-msgstr ""
+msgstr "Restr an arventennoù moullañ"
 
-#: ../previewer/ev-previewer.c:141 ../previewer/ev-previewer.c:175
+#: ../previewer/ev-previewer.c:141
+#: ../previewer/ev-previewer.c:175
 msgid "GNOME Document Previewer"
 msgstr ""
 
-#: ../previewer/ev-previewer-window.c:122 ../shell/ev-window.c:2877
+#: ../previewer/ev-previewer-window.c:122
+#: ../shell/ev-window.c:2877
 msgid "Failed to print document"
 msgstr ""
 
@@ -453,65 +458,79 @@ msgid "The selected printer '%s' could not be found"
 msgstr ""
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:286 ../shell/ev-window.c:4972
+#: ../previewer/ev-previewer-window.c:286
+#: ../shell/ev-window.c:4972
 msgid "_Previous Page"
 msgstr "_Pajenn a-raok"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:4973
+#: ../previewer/ev-previewer-window.c:287
+#: ../shell/ev-window.c:4973
 msgid "Go to the previous page"
 msgstr "Mont da pajenn a-raok"
 
-#: ../previewer/ev-previewer-window.c:289 ../shell/ev-window.c:4975
+#: ../previewer/ev-previewer-window.c:289
+#: ../shell/ev-window.c:4975
 msgid "_Next Page"
 msgstr "_Pajenn war lerc'h"
 
-#: ../previewer/ev-previewer-window.c:290 ../shell/ev-window.c:4976
+#: ../previewer/ev-previewer-window.c:290
+#: ../shell/ev-window.c:4976
 msgid "Go to the next page"
 msgstr "Mont da pajenn war lerc'h"
 
-#: ../previewer/ev-previewer-window.c:293 ../shell/ev-window.c:4959
+#: ../previewer/ev-previewer-window.c:293
+#: ../shell/ev-window.c:4959
 msgid "Enlarge the document"
-msgstr "Brasaat"
+msgstr "Brasaat an teul"
 
-#: ../previewer/ev-previewer-window.c:296 ../shell/ev-window.c:4962
+#: ../previewer/ev-previewer-window.c:296
+#: ../shell/ev-window.c:4962
 msgid "Shrink the document"
-msgstr ""
+msgstr "Bihanaat an teul"
 
-#: ../previewer/ev-previewer-window.c:299 ../shell/ev-print-operation.c:1294
+#: ../previewer/ev-previewer-window.c:299
+#: ../shell/ev-print-operation.c:1294
 msgid "Print"
 msgstr "Moullañ"
 
-#: ../previewer/ev-previewer-window.c:300 ../shell/ev-window.c:4931
+#: ../previewer/ev-previewer-window.c:300
+#: ../shell/ev-window.c:4931
 msgid "Print this document"
-msgstr "Moullañ an diell-mañ"
+msgstr "Moullañ an teul-mañ"
 
-#: ../previewer/ev-previewer-window.c:306 ../shell/ev-window.c:5070
+#: ../previewer/ev-previewer-window.c:306
+#: ../shell/ev-window.c:5070
 msgid "_Best Fit"
 msgstr "_Ment peurvat"
 
-#: ../previewer/ev-previewer-window.c:307 ../shell/ev-window.c:5071
+#: ../previewer/ev-previewer-window.c:307
+#: ../shell/ev-window.c:5071
 msgid "Make the current document fill the window"
 msgstr ""
 
-#: ../previewer/ev-previewer-window.c:309 ../shell/ev-window.c:5073
+#: ../previewer/ev-previewer-window.c:309
+#: ../shell/ev-window.c:5073
 msgid "Fit Page _Width"
-msgstr "Aozañ hervez ledander ar bajenn"
+msgstr ""
 
-#: ../previewer/ev-previewer-window.c:310 ../shell/ev-window.c:5074
+#: ../previewer/ev-previewer-window.c:310
+#: ../shell/ev-window.c:5074
 msgid "Make the current document fill the window width"
 msgstr ""
 
-#: ../previewer/ev-previewer-window.c:441 ../shell/ev-window.c:5137
+#: ../previewer/ev-previewer-window.c:441
+#: ../shell/ev-window.c:5137
 msgid "Page"
 msgstr "Pajenn"
 
-#: ../previewer/ev-previewer-window.c:442 ../shell/ev-window.c:5138
+#: ../previewer/ev-previewer-window.c:442
+#: ../shell/ev-window.c:5138
 msgid "Select Page"
 msgstr "Diuz pajenn"
 
 #: ../properties/ev-properties-main.c:116
 msgid "Document"
-msgstr "Diell"
+msgstr "Teul"
 
 #: ../properties/ev-properties-view.c:59
 msgid "Title:"
@@ -547,7 +566,7 @@ msgstr "Krouet :"
 
 #: ../properties/ev-properties-view.c:67
 msgid "Modified:"
-msgstr ""
+msgstr "Kemmet :"
 
 #: ../properties/ev-properties-view.c:68
 msgid "Number of Pages:"
@@ -571,14 +590,14 @@ msgstr "Ment ar baperenn :"
 
 #: ../properties/ev-properties-view.c:202
 msgid "None"
-msgstr "Ebet"
+msgstr "Tra ebet"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
 #. * want inches, otherwise translate to default:mm.
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
-#. 
+#.
 #: ../properties/ev-properties-view.c:227
 msgid "default:mm"
 msgstr ""
@@ -669,7 +688,7 @@ msgstr ""
 
 #: ../libview/ev-view.c:1476
 msgid "Find"
-msgstr ""
+msgstr "Kavout"
 
 #: ../libview/ev-view.c:1504
 #, c-format
@@ -699,7 +718,8 @@ msgstr ""
 msgid "Jump to page:"
 msgstr ""
 
-#: ../libview/ev-view.c:4002 ../shell/ev-sidebar-layers.c:125
+#: ../libview/ev-view.c:4002
+#: ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:267
 msgid "Loading..."
 msgstr "O kargañ..."
@@ -730,7 +750,7 @@ msgstr ""
 
 #: ../shell/eggfindbar.c:175
 msgid "Current color"
-msgstr ""
+msgstr "Liv bremanel"
 
 #: ../shell/eggfindbar.c:176
 msgid "Color of highlight for the current match"
@@ -740,7 +760,8 @@ msgstr ""
 msgid "Find:"
 msgstr "Kavout :"
 
-#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:4948
+#: ../shell/eggfindbar.c:329
+#: ../shell/ev-window.c:4948
 msgid "Find Pre_vious"
 msgstr "Klask an hini _kent"
 
@@ -748,7 +769,8 @@ msgstr "Klask an hini _kent"
 msgid "Find previous occurrence of the search string"
 msgstr ""
 
-#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:4946
+#: ../shell/eggfindbar.c:337
+#: ../shell/ev-window.c:4946
 msgid "Find Ne_xt"
 msgstr "Klask war lerc'h"
 
@@ -758,52 +780,49 @@ msgstr ""
 
 #: ../shell/eggfindbar.c:348
 msgid "C_ase Sensitive"
-msgstr ""
+msgstr "Doujañs d'ar p_ennlizherenn"
 
 #: ../shell/eggfindbar.c:351
 msgid "Toggle case sensitive search"
 msgstr ""
 
-#: ../shell/ev-application.c:264
+#: ../shell/ev-application.c:305
 msgid "Recover previous documents?"
 msgstr ""
 
-#: ../shell/ev-application.c:267
-msgid ""
-"Evince appears to have exited unexpectedly the last time it was run. You can "
-"recover the opened documents."
+#: ../shell/ev-application.c:308
+msgid "Evince appears to have exited unexpectedly the last time it was run. You can recover the opened documents."
 msgstr ""
 
-#: ../shell/ev-application.c:271
+#: ../shell/ev-application.c:312
 msgid "_Don't Recover"
-msgstr ""
+msgstr "_N'atoriñ ket"
 
-#: ../shell/ev-application.c:274
+#: ../shell/ev-application.c:315
 msgid "_Recover"
-msgstr ""
+msgstr "Ato_riñ"
 
-#: ../shell/ev-application.c:277
+#: ../shell/ev-application.c:318
 msgid "Crash Recovery"
-msgstr ""
+msgstr "Sac'het gant an atoradur"
 
 #: ../shell/ev-keyring.c:102
 #, c-format
 msgid "Password for document %s"
-msgstr "Ger tremen evit diell %s"
+msgstr "Ger-tremen evit an teul %s"
 
 #: ../shell/ev-open-recent-action.c:72
 msgid "Open a recently used document"
 msgstr ""
 
 #: ../shell/ev-password-view.c:144
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
+msgid "This document is locked and can only be read by entering the correct password."
 msgstr ""
 
-#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:153
+#: ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
-msgstr ""
+msgstr "_Dibrennañ an teul"
 
 #: ../shell/ev-password-view.c:261
 msgid "Enter password"
@@ -815,8 +834,7 @@ msgstr "Ger-tremen rekis"
 
 #: ../shell/ev-password-view.c:302
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
+msgid "The document “%s” is locked and requires a password before it can be opened."
 msgstr ""
 
 #: ../shell/ev-password-view.c:332
@@ -838,11 +856,11 @@ msgstr "De_rc'hel soñj da viken"
 #. Initial state
 #: ../shell/ev-print-operation.c:316
 msgid "Preparing to print ..."
-msgstr ""
+msgstr "Prientiñ ar moullañ..."
 
 #: ../shell/ev-print-operation.c:318
 msgid "Finishing..."
-msgstr ""
+msgstr "Oc'h echuiñ..."
 
 #: ../shell/ev-print-operation.c:320
 #, c-format
@@ -855,11 +873,11 @@ msgstr ""
 
 #: ../shell/ev-print-operation.c:1208
 msgid "Invalid page selection"
-msgstr ""
+msgstr "Didalvoudek eo diuzad ar bajenn"
 
 #: ../shell/ev-print-operation.c:1209
 msgid "Warning"
-msgstr ""
+msgstr "Diwall"
 
 #: ../shell/ev-print-operation.c:1211
 msgid "Your print range selection does not include any page"
@@ -906,12 +924,12 @@ msgstr "Index"
 msgid "Thumbnails"
 msgstr "Skeudennigoù"
 
-#: ../shell/ev-window.c:830
+#: ../shell/ev-window.c:828
 #, c-format
 msgid "Page %s - %s"
 msgstr "Pajenn %s-%s"
 
-#: ../shell/ev-window.c:832
+#: ../shell/ev-window.c:830
 #, c-format
 msgid "Page %s"
 msgstr "Pajenn %s"
@@ -924,16 +942,18 @@ msgstr ""
 msgid "The document contains only empty pages"
 msgstr ""
 
-#: ../shell/ev-window.c:1481 ../shell/ev-window.c:1634
+#: ../shell/ev-window.c:1481
+#: ../shell/ev-window.c:1634
 msgid "Unable to open document"
-msgstr "Dic'houest da zigeriñ an diell"
+msgstr "Dic'houest da zigeriñ an teul"
 
 #: ../shell/ev-window.c:1605
 #, c-format
 msgid "Loading document from “%s”"
 msgstr ""
 
-#: ../shell/ev-window.c:1743 ../shell/ev-window.c:1926
+#: ../shell/ev-window.c:1743
+#: ../shell/ev-window.c:1926
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr ""
@@ -949,7 +969,7 @@ msgstr ""
 
 #: ../shell/ev-window.c:2057
 msgid "Open Document"
-msgstr "Digeriñ un diell"
+msgstr "Digeriñ un teul"
 
 #: ../shell/ev-window.c:2136
 #, c-format
@@ -975,15 +995,16 @@ msgstr ""
 msgid "Saving image to %s"
 msgstr ""
 
-#: ../shell/ev-window.c:2449 ../shell/ev-window.c:2546
+#: ../shell/ev-window.c:2449
+#: ../shell/ev-window.c:2546
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr ""
+msgstr "Ar restr n'hall ket bezañ enrollet evel “%s”."
 
 #: ../shell/ev-window.c:2477
 #, c-format
 msgid "Uploading document (%d%%)"
-msgstr ""
+msgstr "O pellgas an teul (%d%%)"
 
 #: ../shell/ev-window.c:2481
 #, c-format
@@ -992,12 +1013,12 @@ msgstr ""
 
 #: ../shell/ev-window.c:2485
 #, c-format
-msgid "Uploading image (%d%%)"
-msgstr ""
+msgid "Uploading image  (%d%%)"
+msgstr "O pellgas ar skeudenn (%d%%)"
 
 #: ../shell/ev-window.c:2607
 msgid "Save a Copy"
-msgstr ""
+msgstr "Enrollañ an eilad"
 
 #: ../shell/ev-window.c:2821
 #, c-format
@@ -1018,8 +1039,7 @@ msgstr ""
 
 #: ../shell/ev-window.c:3144
 #, c-format
-msgid ""
-"There are %d print jobs active. Wait until print finishes before closing?"
+msgid "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr ""
 
 #: ../shell/ev-window.c:3156
@@ -1036,11 +1056,11 @@ msgstr ""
 
 #: ../shell/ev-window.c:3770
 msgid "Toolbar Editor"
-msgstr "Aozer barrenn gostez"
+msgstr "Embanner ar varrenn ostilhoù"
 
 #: ../shell/ev-window.c:3901
 msgid "There was an error displaying help"
-msgstr ""
+msgstr "Bez e oa ur fazi en ur ziskouez ar skoazell"
 
 #: ../shell/ev-window.c:4131
 #, c-format
@@ -1050,27 +1070,16 @@ msgid ""
 msgstr ""
 
 #: ../shell/ev-window.c:4160
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgstr "Ur meziant digor eo Evince ; dasparzhet pe/ha daskemmet e vez dindan termenoù al Lañvaz Foran Hollek GNU evel ma'z eo bet embannet gant Diazezadenn ar Meziantoù Digor ; da lâret eo handelv 2 eus al lañvaz pe (evel ma plij deoc'h) ne vern pe handelv nevesoc'h.\n"
 
 #: ../shell/ev-window.c:4164
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgstr "Dasparzhet eo Evince gant ar spi e vo talvoudus met GANT GWARANT EBET ; hep ar gwarant enpleg a-fet TALVOUDEGEZH KENWERZHEL pe VARREGEZH EVIT UR PAL PERSONEL. Taolit ur sell war Lañvaz Foran Hollek GNU evit gouzout hiroc'h.\n"
 
 #: ../shell/ev-window.c:4168
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr "Moarvat hoc'h eus bet un eilad eus al Lañvaz Foran Hollek GNU gant Evince ; ma n'hoc'h eus ket bet,skrivit da : Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA\n"
 
 #: ../shell/ev-window.c:4192
 msgid "Evince"
@@ -1078,7 +1087,7 @@ msgstr "Evince"
 
 #: ../shell/ev-window.c:4195
 msgid "© 1996–2009 The Evince authors"
-msgstr ""
+msgstr "© 1996–2009 Aozerion Evince"
 
 #: ../shell/ev-window.c:4201
 msgid "translator-credits"
@@ -1125,14 +1134,16 @@ msgid "_Help"
 msgstr "_Skoazell"
 
 #. File menu
-#: ../shell/ev-window.c:4918 ../shell/ev-window.c:5096
+#: ../shell/ev-window.c:4918
+#: ../shell/ev-window.c:5096
 #: ../shell/ev-window.c:5175
 msgid "_Open..."
 msgstr "_Digeriñ..."
 
-#: ../shell/ev-window.c:4919 ../shell/ev-window.c:5176
+#: ../shell/ev-window.c:4919
+#: ../shell/ev-window.c:5176
 msgid "Open an existing document"
-msgstr ""
+msgstr "Digeriñ un teul o vezañ anezhañ"
 
 #: ../shell/ev-window.c:4921
 msgid "Op_en a Copy"
@@ -1142,7 +1153,8 @@ msgstr "Dig_eriñ an eilad"
 msgid "Open a copy of the current document in a new window"
 msgstr ""
 
-#: ../shell/ev-window.c:4924 ../shell/ev-window.c:5098
+#: ../shell/ev-window.c:4924
+#: ../shell/ev-window.c:5098
 msgid "_Save a Copy..."
 msgstr "En_rollañ an eilad..."
 
@@ -1152,7 +1164,7 @@ msgstr ""
 
 #: ../shell/ev-window.c:4927
 msgid "Page Set_up..."
-msgstr ""
+msgstr "Arventenniñ ar bajennad..."
 
 #: ../shell/ev-window.c:4928
 msgid "Setup the page settings for printing"
@@ -1176,7 +1188,7 @@ msgstr "_Kavout..."
 
 #: ../shell/ev-window.c:4944
 msgid "Find a word or phrase in the document"
-msgstr "Klask ur gêr pe ur gomzenn en diell-mañ"
+msgstr "Klask ur gêr pe ur gomzenn en teul-mañ"
 
 #: ../shell/ev-window.c:4950
 msgid "T_oolbar"
@@ -1196,7 +1208,7 @@ msgstr "_Adkargañ"
 
 #: ../shell/ev-window.c:4965
 msgid "Reload the document"
-msgstr "Adkargañ an diell"
+msgstr "Adkargañ an teul"
 
 #: ../shell/ev-window.c:4968
 msgid "Auto_scroll"
@@ -1216,7 +1228,7 @@ msgstr "Pajennad diwe_zhañ"
 
 #: ../shell/ev-window.c:4982
 msgid "Go to the last page"
-msgstr ""
+msgstr "Mont d'ar bajenn diwezhañ"
 
 #. Help menu
 #: ../shell/ev-window.c:4986
@@ -1237,12 +1249,14 @@ msgid "Leave fullscreen mode"
 msgstr ""
 
 #: ../shell/ev-window.c:4996
+#, fuzzy
 msgid "Start Presentation"
-msgstr ""
+msgstr "Kregiñ gant ar kinnigadenn"
 
 #: ../shell/ev-window.c:4997
+#, fuzzy
 msgid "Start a presentation"
-msgstr ""
+msgstr "Kregiñ gant ur kinnigadenn"
 
 #. View Menu
 #: ../shell/ev-window.c:5052
@@ -1267,7 +1281,7 @@ msgstr "_Kenderc'hel"
 
 #: ../shell/ev-window.c:5059
 msgid "Show the entire document"
-msgstr "Diskouez an holl diell"
+msgstr "Diskouez an teul a-bezh"
 
 #: ../shell/ev-window.c:5061
 msgid "_Dual"
@@ -1279,7 +1293,7 @@ msgstr ""
 
 #: ../shell/ev-window.c:5064
 msgid "_Fullscreen"
-msgstr "_Skramm a-bezh"
+msgstr "_Skrammad a-bezh"
 
 #: ../shell/ev-window.c:5065
 msgid "Expand the window to fill the screen"
@@ -1324,7 +1338,7 @@ msgstr "Zoum"
 
 #: ../shell/ev-window.c:5151
 msgid "Adjust the zoom level"
-msgstr ""
+msgstr "Kempenn live ar zoumañ"
 
 #: ../shell/ev-window.c:5161
 msgid "Navigation"
@@ -1332,7 +1346,7 @@ msgstr "Merdeiñ"
 
 #: ../shell/ev-window.c:5163
 msgid "Back"
-msgstr ""
+msgstr "Kein"
 
 #. translators: this is the history action
 #: ../shell/ev-window.c:5166
@@ -1352,19 +1366,20 @@ msgstr "War lerc'h"
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5205
 msgid "Zoom In"
-msgstr ""
+msgstr "Zoum brasaat"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5209
 msgid "Zoom Out"
-msgstr ""
+msgstr "Zoum bihanaat"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5217
 msgid "Fit Width"
 msgstr ""
 
-#: ../shell/ev-window.c:5384 ../shell/ev-window.c:5400
+#: ../shell/ev-window.c:5384
+#: ../shell/ev-window.c:5400
 msgid "Unable to launch external application."
 msgstr ""
 
@@ -1399,15 +1414,16 @@ msgstr ""
 #: ../shell/ev-window-title.c:163
 #, c-format
 msgid "%s - Password Required"
-msgstr "%s·- Ger-tremen·rekis"
+msgstr "%s - Ger-tremen·rekis"
 
 #: ../shell/ev-utils.c:330
 msgid "By extension"
-msgstr ""
+msgstr "Dre an askouezhadenn"
 
-#: ../shell/main.c:73 ../shell/main.c:436
+#: ../shell/main.c:73
+#: ../shell/main.c:436
 msgid "GNOME Document Viewer"
-msgstr "Alberzer dielloù GNOME"
+msgstr "Alberzer teulioù GNOME"
 
 #: ../shell/main.c:81
 msgid "The page of the document to display."
@@ -1419,11 +1435,11 @@ msgstr "PAJENN"
 
 #: ../shell/main.c:82
 msgid "Run evince in fullscreen mode"
-msgstr ""
+msgstr "Loc'h Evince e mod skrammad a-bezh"
 
 #: ../shell/main.c:83
 msgid "Run evince in presentation mode"
-msgstr ""
+msgstr "Loc'h Evince e mod kinngadenn"
 
 #: ../shell/main.c:84
 msgid "Run evince as a previewer"
@@ -1435,16 +1451,14 @@ msgstr ""
 
 #: ../shell/main.c:85
 msgid "STRING"
-msgstr "hedad"
+msgstr "HEDAD"
 
 #: ../shell/main.c:89
 msgid "[FILE...]"
 msgstr "[RESTR...]"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid ""
-"Boolean options available, true enables thumbnailing and false disables the "
-"creation of new thumbnails"
+msgid "Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails"
 msgstr ""
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
@@ -1456,7 +1470,6 @@ msgid "Thumbnail command for PDF Documents"
 msgstr ""
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid ""
-"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
-"thumbnailer documentation for more information."
+msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
 msgstr ""
+
