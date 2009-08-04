@@ -4,97 +4,323 @@
 # Progga <progga@BengaLinux.Org>, 2005-2006.
 # Jamil Ahmed <jamil@bengalinux.org>, 2006
 # Khandakar Mujahidul Islam <suzan@bengalinux.org>, 2006
+# Maruf Ovee <maruf@ankur.org.bd>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Evince (GNOME 2.14)\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-27 14:40+0600\n"
-"PO-Revision-Date: 2006-08-27 14:38+0600\n"
-"Last-Translator: Khandakar Mujahidul Islam <suzan@bengalinux.org>\n"
-"Language-Team: Bangla <gnome-translation@BengaLinux.Org>\n"
+"Project-Id-Version: Evince\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&component=general\n"
+"POT-Creation-Date: 2009-08-03 08:53+0000\n"
+"PO-Revision-Date: 2009-07-22 19:38+0700\n"
+"Last-Translator: Maruf Ovee <maruf@ankur.org.bd>\n"
+"Language-Team: Bengali <ankur-bd-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../backend/ev-attachment.c:302 ../backend/ev-attachment.c:315
+#: ../backend/comics/comics-document.c:155
 #, c-format
-msgid "Couldn't save attachment “%s”: %s"
-msgstr "সংযুক্ত বস্তু “%s” সংরক্ষণ করতে ব্যর্থ: %s"
+msgid ""
+"Error launching the command “%s” in order to decompress the comic book: %s"
+msgstr "কমিক বই ডিকম্প্রেস করার জন্য কমান্ড “%1$s” চালু করতে ত্রুটি হয়েছে: %2$s"
 
-#: ../backend/ev-attachment.c:347
+#: ../backend/comics/comics-document.c:169
 #, c-format
-msgid "Couldn't open attachment “%s”: %s"
-msgstr "সংয়ুক্ত বস্তু “%s” খুলতে ব্যর্থ: %s"
+msgid "The command “%s” failed at decompressing the comic book."
+msgstr "কমান্ড “%s\" কমিক বই ডিকম্প্রেস করতে ব্যর্থ হয়েছে।"
 
-#: ../backend/ev-attachment.c:380
+#: ../backend/comics/comics-document.c:178
 #, c-format
-msgid "Couldn't open attachment “%s”"
-msgstr "সংয়ুক্ত বস্তু “%s” খুলতে ব্যর্থ"
+msgid "The command “%s” did not end normally."
+msgstr "কমান্ড “%s\" স্বাভাবিকভাবে শেষ হয়নি।"
 
-#: ../backend/ev-document-factory.c:265 ../backend/ev-document-factory.c:331
+#: ../backend/comics/comics-document.c:225
+#, c-format
+msgid "Failed to create a temporary directory."
+msgstr "একটি অস্থায়ী ডিরেক্টরী তৈরি করতে ব্যর্থ।"
+
+#: ../backend/comics/comics-document.c:347
+#, c-format
+msgid "Not a comic book MIME type: %s"
+msgstr "একটি MIME ধরণের কমিক বই নয়: %s"
+
+#: ../backend/comics/comics-document.c:354
+msgid "Can't find an appropiate command to decompress this type of comic book"
+msgstr "এ ধরণের কমিক বই ডিকম্প্রেস করার জন্য উপযুক্ত কমান্ড খুঁজে পাওয়া যায়নি"
+
+#: ../backend/comics/comics-document.c:385
+#: ../libdocument/ev-document-factory.c:143
+#: ../libdocument/ev-document-factory.c:286
 msgid "Unknown MIME Type"
-msgstr "মাইম-এর ধরন অজ্ঞাত"
+msgstr "অজানা MIME-এর ধরন"
 
-#: ../backend/ev-document-factory.c:276
-#, c-format
-msgid "Unhandled MIME type: “%s”"
-msgstr "MIME ধরনের ব্যবস্থাপনা করা হয়নি: “%s”"
+#: ../backend/comics/comics-document.c:412
+msgid "File corrupted"
+msgstr "ত্রুটিপূর্ণ ফাইল"
 
-#: ../backend/ev-document-factory.c:372
-msgid "All Documents"
-msgstr "সকল ডকুমেন্ট"
+#: ../backend/comics/comics-document.c:424
+msgid "No files in archive"
+msgstr "%s আর্কাইভে কোনো ফাইল পাওয়া যায় নি"
 
-#: ../backend/ev-document-factory.c:380
-msgid "PostScript Documents"
-msgstr "পোস্টস্ক্রিপ্ট ডকুমেন্ট"
-
-#: ../backend/ev-document-factory.c:389
-msgid "PDF Documents"
-msgstr "পি.ডি.এফ. ডকুমেন্ট"
-
-#: ../backend/ev-document-factory.c:398
-msgid "Images"
-msgstr "ছবি"
-
-#: ../backend/ev-document-factory.c:408
-msgid "DVI Documents"
-msgstr "ডি.ভি.আই. ডকুমেন্ট"
-
-#: ../backend/ev-document-factory.c:418
-msgid "Djvu Documents"
-msgstr "Djvu ডকুমেন্ট"
-
-#: ../backend/ev-document-factory.c:428
-msgid "Comic Books"
-msgstr "কমিক-এর বই"
-
-#: ../backend/ev-document-factory.c:438
-msgid "Impress Slides"
-msgstr "ইমপ্রেস স্লাইড"
-
-#: ../backend/ev-document-factory.c:446
-msgid "All Files"
-msgstr "সকল ফাইল"
-
-#: ../comics/comics-document.c:148
-msgid "File corrupted."
-msgstr "ত্রুটিপূর্ণ ফাইল।"
-
-#: ../comics/comics-document.c:184
+#: ../backend/comics/comics-document.c:465
 #, c-format
 msgid "No images found in archive %s"
 msgstr "%s আর্কাইভে কোন ছবি পাওয়া যায় নি"
 
-#: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:205
+#: ../backend/comics/comics-document.c:704
 #, c-format
-msgid "Open “%s”"
-msgstr "“%s” খোলো"
+msgid "There was an error deleting “%s”."
+msgstr "“%s” মুছে ফেলার সময় একটি ত্রুটি ছিল।"
 
-#: ../cut-n-paste/recent-files/egg-recent-view-uimanager.c:322
-msgid "Empty"
-msgstr "ফাঁকা"
+#: ../backend/comics/comics-document.c:854
+#, c-format
+msgid "Error %s"
+msgstr "ত্রুটি %s"
+
+#: ../backend/comics/comicsdocument.evince-backend.in.h:1
+msgid "Comic Books"
+msgstr "কমিক-এর বই"
+
+#: ../backend/djvu/djvu-document.c:174
+msgid "DJVU document has incorrect format"
+msgstr "DJVU নথির ভুল বিন্যাস আছে"
+
+#: ../backend/djvu/djvu-document.c:251
+msgid ""
+"The document is composed of several files. One or more of such files cannot "
+"be accessed."
+msgstr ""
+"এই নথিটি একাধিক ফাইল দিয়ে গঠিত। এর এক বা একাধিক ফাইলে প্রবেশ করা যাবেনা।"
+
+#: ../backend/djvu/djvudocument.evince-backend.in.h:1
+msgid "Djvu Documents"
+msgstr "Djvu নথি"
+
+#: ../backend/dvi/dvi-document.c:108
+msgid "DVI document has incorrect format"
+msgstr "ত্রুটিপূর্ণ DVI নথি"
+
+#: ../backend/dvi/dvidocument.evince-backend.in.h:1
+msgid "DVI Documents"
+msgstr "DVI নথি"
+
+#. translators: this is the document security state
+#: ../backend/pdf/ev-poppler.cc:826
+msgid "Yes"
+msgstr "হ্যাঁ"
+
+#. translators: this is the document security state
+#: ../backend/pdf/ev-poppler.cc:829
+msgid "No"
+msgstr "না"
+
+#: ../backend/pdf/ev-poppler.cc:903
+msgid "Type 1"
+msgstr "ধরণ ১"
+
+#: ../backend/pdf/ev-poppler.cc:905
+msgid "Type 1C"
+msgstr "ধরণ ১C"
+
+#: ../backend/pdf/ev-poppler.cc:907
+msgid "Type 3"
+msgstr "ধরণ ৩"
+
+#: ../backend/pdf/ev-poppler.cc:909
+msgid "TrueType"
+msgstr "TrueType"
+
+#: ../backend/pdf/ev-poppler.cc:911
+msgid "Type 1 (CID)"
+msgstr "ধরণ ১ (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:913
+msgid "Type 1C (CID)"
+msgstr "ধরণ ১C (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:915
+msgid "TrueType (CID)"
+msgstr "TrueType (CID)"
+
+#: ../backend/pdf/ev-poppler.cc:917
+msgid "Unknown font type"
+msgstr "অজানা ফন্টের ধরন"
+
+#: ../backend/pdf/ev-poppler.cc:943
+msgid "No name"
+msgstr "নামহীন"
+
+#: ../backend/pdf/ev-poppler.cc:951
+msgid "Embedded subset"
+msgstr "সন্নিবেশিত সাবসেট"
+
+#: ../backend/pdf/ev-poppler.cc:953
+msgid "Embedded"
+msgstr "সন্নিবেশিত"
+
+#: ../backend/pdf/ev-poppler.cc:955
+msgid "Not embedded"
+msgstr "সন্নিবেশিত নয়"
+
+#: ../backend/pdf/pdfdocument.evince-backend.in.h:1
+msgid "PDF Documents"
+msgstr "PDF নথি"
+
+#: ../backend/impress/impress-document.c:303
+#: ../backend/tiff/tiff-document.c:114
+msgid "Invalid document"
+msgstr "অকার্যকর নথি"
+
+#.
+#. * vim: sw=2 ts=8 cindent noai bs=2
+#.
+#: ../backend/impress/impressdocument.evince-backend.in.h:1
+msgid "Impress Slides"
+msgstr "ইমপ্রেস স্লাইড"
+
+#: ../backend/impress/zip.c:53
+msgid "No error"
+msgstr "কোনো ত্রুটি নেই"
+
+#: ../backend/impress/zip.c:56
+msgid "Not enough memory"
+msgstr "পর্যাপ্ত মেমরি নেই"
+
+#: ../backend/impress/zip.c:59
+msgid "Cannot find zip signature"
+msgstr "জিপ স্বাক্ষর পাওয়া যায়নি"
+
+#: ../backend/impress/zip.c:62
+msgid "Invalid zip file"
+msgstr "অকার্যকর জিপ ফাইল"
+
+#: ../backend/impress/zip.c:65
+msgid "Multi file zips are not supported"
+msgstr "বহুবিধ ফাইল জিপ সমর্থিত নয়"
+
+#: ../backend/impress/zip.c:68
+msgid "Cannot open the file"
+msgstr "ফাইল খুলতে ব্যর্থ"
+
+#: ../backend/impress/zip.c:71
+msgid "Cannot read data from file"
+msgstr "ফাইল থেকে ডাটা পড়া যায়নি"
+
+#: ../backend/impress/zip.c:74
+msgid "Cannot find file in the zip archive"
+msgstr "জিপ আর্কাইভে ফাইল খুঁজে পাওয়া যায়নি"
+
+#: ../backend/impress/zip.c:77
+msgid "Unknown error"
+msgstr "অজানা ত্রুটি"
+
+#: ../backend/ps/ev-spectre.c:113
+#, c-format
+msgid "Failed to load document “%s”"
+msgstr "“%s” নথি লোড করতে ব্যর্থ"
+
+#: ../backend/ps/ev-spectre.c:146
+#, c-format
+msgid "Failed to save document “%s”"
+msgstr "“%s” নথি সংরক্ষণ করতে ব্যর্থ"
+
+#: ../backend/ps/psdocument.evince-backend.in.h:1
+msgid "PostScript Documents"
+msgstr "PostScript নথি"
+
+#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
+#, c-format
+msgid "Couldn't save attachment “%s”: %s"
+msgstr "সংযুক্তি “%1$s” সংরক্ষণ করতে ব্যর্থ: %2$s"
+
+#: ../libdocument/ev-attachment.c:373
+#, c-format
+msgid "Couldn't open attachment “%s”: %s"
+msgstr "সংযুক্তি “%1$s” খুলতে ব্যর্থ: %2$s"
+
+#: ../libdocument/ev-attachment.c:408
+#, c-format
+msgid "Couldn't open attachment “%s”"
+msgstr "সংযুক্তি “%s” খুলতে ব্যর্থ"
+
+#: ../libdocument/ev-document-factory.c:168
+#, c-format
+msgid "File type %s (%s) is not supported"
+msgstr "ফাইল ধরণ %1$s (%2$s) সমর্থিত নয়"
+
+#: ../libdocument/ev-document-factory.c:359
+msgid "All Documents"
+msgstr "সকল নথি"
+
+#: ../libdocument/ev-document-factory.c:391
+msgid "All Files"
+msgstr "সকল ফাইল"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "ফাইলটি একটি বৈধ .desktop file নয়"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "শনাক্ত করা হয়নি এমন ডেস্কটপ ফাইল সংস্করণ '%s'"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:958
+#, c-format
+msgid "Starting %s"
+msgstr "%s আরম্ভ হচ্ছে"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "অ্যাপ্লিকেশন কমান্ড লাইনে নথি গ্রহণ করেনা"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "শনাক্ত করা হয়নি এমন চালু করার অপশন: %d"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "একটি 'Type=Link' ডেস্কটপ এন্ট্রিতে নথি URI পাঠানো যায়নি"
+
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1392
+#, c-format
+msgid "Not a launchable item"
+msgstr "চালু করা যায় এমন আইটেম নয়"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:225
+msgid "Disable connection to session manager"
+msgstr "সেশন ব্যবস্থাপকের সাথে সংযোগ বিছিন্ন করুন"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:228
+msgid "Specify file containing saved configuration"
+msgstr "সংরক্ষিত কনফিগারেশন ধারণকারী ফাইল সুনির্দিষ্টভাবে উল্লেখ করুন"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:228 ../previewer/ev-previewer.c:46
+#: ../previewer/ev-previewer.c:47
+msgid "FILE"
+msgstr "FILE"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:231
+msgid "Specify session management ID"
+msgstr "সেশন ব্যবস্থাপনা ID সুনির্দিষ্টভাবে উল্লেখ করুন"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:231
+msgid "ID"
+msgstr "ID"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:252
+msgid "Session management options:"
+msgstr "সেশন ব্যবস্থাপনা অপশন:"
+
+#: ../cut-n-paste/smclient/eggsmclient.c:253
+msgid "Show session management options"
+msgstr "সেশন ব্যবস্থাপনা অপশন দেখান"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -103,41 +329,45 @@ msgstr "ফাঁকা"
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:902
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:934
 #, c-format
 msgid "Show “_%s”"
-msgstr "“_%s” প্রদর্শন করো"
+msgstr "“_%s” প্রদর্শন করুন"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1362
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1397
 msgid "_Move on Toolbar"
-msgstr "টুল-বারের মধ্যে স্থান পরিবর্তন করো (_ম)"
+msgstr "টুল-বারের মধ্যে স্থান পরিবর্তন করুন (_M)"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1363
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1398
 msgid "Move the selected item on the toolbar"
 msgstr "টুল-বারের মধ্যে নির্বাচিত বস্তুর স্থান পরিবর্তন করুন"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1364
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1399
 msgid "_Remove from Toolbar"
-msgstr "টুলবার থেকে মুছে ফেলো (_র)"
+msgstr "টুলবার থেকে মুছে ফেলুন (_R)"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1365
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1400
 msgid "Remove the selected item from the toolbar"
-msgstr "টুল-বার থেকে নির্বাচিত বস্তু মুছে ফেলো"
+msgstr "টুল-বার থেকে নির্বাচিত বস্তু মুছে ফেলুন"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1366
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1401
 msgid "_Delete Toolbar"
-msgstr "টুলবার মুছে ফেলো (_ড)"
+msgstr "টুলবার মুছে ফেলুন (_D)"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1367
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1402
 msgid "Remove the selected toolbar"
-msgstr "নির্বাচিত টুলবার মুছে ফেলো"
+msgstr "নির্বাচিত টুলবার মুছে ফেলুন"
 
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:439
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:485
 msgid "Separator"
 msgstr "বিভাজক"
 
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:117
+msgid "Running in presentation mode"
+msgstr "উপস্থাপনা মোডে চলছে"
+
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:3622
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5213
 msgid "Best Fit"
 msgstr "সেরা আকার"
 
@@ -150,992 +380,1242 @@ msgid "50%"
 msgstr "৫০%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:52
-msgid "75%"
-msgstr "৭৫%"
+msgid "70%"
+msgstr "৭০%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:53
+msgid "85%"
+msgstr "৮৫%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
 msgid "100%"
 msgstr "১০০%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:54
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
 msgid "125%"
 msgstr "১২৫%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:55
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
 msgid "150%"
 msgstr "১৫০%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:56
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:57
 msgid "175%"
 msgstr "১৭৫%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:57
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:58
 msgid "200%"
 msgstr "২০০%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:58
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
 msgid "300%"
 msgstr "৩০০%"
 
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:59
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:60
 msgid "400%"
 msgstr "৪০০%"
 
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window-title.c:126
+#. Manually set name and icon
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4135
+#: ../shell/ev-window-title.c:150 ../shell/main.c:484
+#, c-format
 msgid "Document Viewer"
-msgstr "ডকুমেন্ট প্রদর্শক"
+msgstr "নথি প্রদর্শক"
 
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multipage documents"
-msgstr "বহুপৃষ্ঠাব্যাপী ডকুমেন্ট দেখুন"
-
-#: ../data/evince-password.glade.h:1
-msgid "Remember password for this session"
-msgstr "এই সেশনের জন্য পাসওয়ার্ড মনে রাখো"
-
-#: ../data/evince-password.glade.h:2
-msgid "Save password in keyring"
-msgstr "কী-রিং -এ পাসওয়ার্ড সংরক্ষণ করো"
-
-#: ../data/evince-password.glade.h:3
-msgid "_Password:"
-msgstr "পাসওয়ার্ড (_প):"
-
-#: ../data/evince-properties.glade.h:1
-msgid "<b>Author:</b>"
-msgstr "<b>লেখক:</b>"
-
-#: ../data/evince-properties.glade.h:2
-msgid "<b>Created:</b>"
-msgstr "<b>তৈরির তারিখ:</b>"
-
-#: ../data/evince-properties.glade.h:3
-msgid "<b>Creator:</b>"
-msgstr "<b>প্রস্তুতকারক:</b>"
-
-#: ../data/evince-properties.glade.h:4
-msgid "<b>Format:</b>"
-msgstr "<b>কাঠামো:</b>"
-
-#: ../data/evince-properties.glade.h:5
-msgid "<b>Keywords:</b>"
-msgstr "<b>মূলশব্দ:</b>"
-
-# FIXME
-#: ../data/evince-properties.glade.h:6
-msgid "<b>Modified:</b>"
-msgstr "<b>পরিবর্তনের তারিখ:</b>"
-
-#: ../data/evince-properties.glade.h:7
-msgid "<b>Number of Pages:</b>"
-msgstr "<b>পৃষ্ঠা সংখ্যা:</b>"
-
-# FIXME
-#: ../data/evince-properties.glade.h:8
-msgid "<b>Optimized:</b>"
-msgstr "<b>উন্নতকৃত:</b>"
-
-#: ../data/evince-properties.glade.h:9
-msgid "<b>Producer:</b>"
-msgstr "<b>প্রস্তুতকারক:</b>"
-
-#: ../data/evince-properties.glade.h:10
-msgid "<b>Security:</b>"
-msgstr "<b>নিরাপত্তা:</b>"
-
-#: ../data/evince-properties.glade.h:11
-msgid "<b>Subject:</b>"
-msgstr "<b>বিষয়:</b>"
-
-#: ../data/evince-properties.glade.h:12
-msgid "<b>Title:</b>"
-msgstr "<b>শিরোনাম:</b>"
+msgstr "বহুপৃষ্ঠাব্যাপী নথি দেখুন"
 
 #: ../data/evince.schemas.in.h:1
 msgid "Override document restrictions"
-msgstr "ডকুমেন্ট আরোপিত নিষেধাজ্ঞা অগ্রাহ্য করেো"
+msgstr "নথিতে আরোপিত নিষেধাজ্ঞা অগ্রাহ্য করুন"
 
 #: ../data/evince.schemas.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr "ডকুমেন্ট আরোপিত নিষেধাজ্ঞা, যেমন কপি বা মুদ্রণের ওপর, অগ্রাহ্য করেো।"
+msgstr "নথিতে আরোপিত নিষেধাজ্ঞা, যেমন কপি বা মুদ্রণের উপর, অগ্রাহ্য করুন"
 
-#: ../dvi/dvi-document.c:91
-msgid "File not available"
-msgstr "ফাইল পাওয়া যাচ্ছে না"
+#: ../previewer/ev-previewer.c:45
+msgid "Delete the temporary file"
+msgstr "অস্থায়ী ফাইল মুছে ফেলুন"
 
-#: ../dvi/dvi-document.c:104
-msgid "DVI document has incorrect format"
-msgstr "ত্রুটিপূর্ণ ডি.ভি.আই. ডকুমেন্ট"
+#: ../previewer/ev-previewer.c:46
+msgid "Print settings file"
+msgstr "সেটিং ফাইল মুদ্রণ করুন"
 
-#. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:593
-msgid "Yes"
-msgstr "হ্যাঁ"
+#: ../previewer/ev-previewer.c:141 ../previewer/ev-previewer.c:175
+msgid "GNOME Document Previewer"
+msgstr "GNOME নথি প্রদর্শক"
 
-#. translators: this is the document security state
-#: ../pdf/ev-poppler.cc:596
-msgid "No"
-msgstr "না"
+#: ../previewer/ev-previewer-window.c:122 ../shell/ev-window.c:2877
+msgid "Failed to print document"
+msgstr "নথি মুদ্রণ করতে ব্যর্থ"
 
-#: ../pdf/ev-poppler.cc:696
-msgid "Type 1"
-msgstr "টাইপ ওয়ান"
+#: ../previewer/ev-previewer-window.c:242
+#, c-format
+msgid "The selected printer '%s' could not be found"
+msgstr "নির্বাচিত মুদ্রণযন্ত্র '%s' খুঁজে পাওয়া যায়নি"
 
-#: ../pdf/ev-poppler.cc:698
-msgid "Type 1C"
-msgstr "টাইপ ওয়ান-সি"
+#. Go menu
+#: ../previewer/ev-previewer-window.c:286 ../shell/ev-window.c:4972
+msgid "_Previous Page"
+msgstr "পূর্ববর্তী পৃষ্ঠা (_P)"
 
-#: ../pdf/ev-poppler.cc:700
-msgid "Type 3"
-msgstr "টাইপ থ্রি"
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:4973
+msgid "Go to the previous page"
+msgstr "পূর্ববর্তী পৃষ্ঠায় যান"
 
-#: ../pdf/ev-poppler.cc:702
-msgid "TrueType"
-msgstr "ট্রু-টাইপ"
+#: ../previewer/ev-previewer-window.c:289 ../shell/ev-window.c:4975
+msgid "_Next Page"
+msgstr "পরবর্তী পৃষ্ঠা (_N)"
 
-#: ../pdf/ev-poppler.cc:704
-msgid "Type 1 (CID)"
-msgstr "টাইপ ওয়ান (সি.আই.ডি.)"
+#: ../previewer/ev-previewer-window.c:290 ../shell/ev-window.c:4976
+msgid "Go to the next page"
+msgstr "পরবর্তী পৃষ্ঠায় যান"
 
-#: ../pdf/ev-poppler.cc:706
-msgid "Type 1C (CID)"
-msgstr "টাইপ ওয়ান-সি (সি.আই.ডি.)"
+#: ../previewer/ev-previewer-window.c:293 ../shell/ev-window.c:4959
+msgid "Enlarge the document"
+msgstr "নথি বিবর্ধিত করুন"
 
-#: ../pdf/ev-poppler.cc:708
-msgid "TrueType (CID)"
-msgstr "ট্রু-টাইপ (সি.আই.ডি.)"
+#: ../previewer/ev-previewer-window.c:296 ../shell/ev-window.c:4962
+msgid "Shrink the document"
+msgstr "নথি সঙ্কোচন করুন"
 
-#: ../pdf/ev-poppler.cc:710
-msgid "Unknown font type"
-msgstr "ফন্টের ধরন অজ্ঞাত"
+#: ../previewer/ev-previewer-window.c:299 ../shell/ev-print-operation.c:1294
+msgid "Print"
+msgstr "মুদ্রণ"
 
-#: ../pdf/ev-poppler.cc:736
-msgid "No name"
-msgstr "নামহীন"
+#: ../previewer/ev-previewer-window.c:300 ../shell/ev-window.c:4931
+msgid "Print this document"
+msgstr "এই ডকুমেন্টটি মুদ্রণ করুন"
 
-#: ../pdf/ev-poppler.cc:744
-msgid "Embedded subset"
-msgstr "এম্বেডেড সাবসেট"
+#: ../previewer/ev-previewer-window.c:306 ../shell/ev-window.c:5070
+msgid "_Best Fit"
+msgstr "সেরা মাপসইকরণ (_B)"
 
-#: ../pdf/ev-poppler.cc:746
-msgid "Embedded"
-msgstr "এম্বেডেড"
+#: ../previewer/ev-previewer-window.c:307 ../shell/ev-window.c:5071
+msgid "Make the current document fill the window"
+msgstr "বর্তমান ডকুমেন্ট দিয়ে সম্পূর্ণ উইন্ডো দখল করো"
 
-#: ../pdf/ev-poppler.cc:748
-msgid "Not embedded"
-msgstr "এম্বেডেড নয়"
+#: ../previewer/ev-previewer-window.c:309 ../shell/ev-window.c:5073
+msgid "Fit Page _Width"
+msgstr "পৃষ্ঠার প্রস্থের মাপসইকরণ (_W)"
 
-#: ../properties/ev-properties-main.c:107
+#: ../previewer/ev-previewer-window.c:310 ../shell/ev-window.c:5074
+msgid "Make the current document fill the window width"
+msgstr "বর্তমান নথিটি উইন্ডোর সম্পূর্ণ প্রস্থ জুড়ে থাকবে "
+
+#: ../previewer/ev-previewer-window.c:441 ../shell/ev-window.c:5137
+msgid "Page"
+msgstr "পৃষ্ঠা"
+
+#: ../previewer/ev-previewer-window.c:442 ../shell/ev-window.c:5138
+msgid "Select Page"
+msgstr "পৃষ্ঠা নির্বাচন করুন"
+
+#: ../properties/ev-properties-main.c:116
 msgid "Document"
-msgstr "ডকুমেন্ট"
+msgstr "নথি"
 
-#: ../properties/ev-properties-view.c:173
+#: ../properties/ev-properties-view.c:59
+msgid "Title:"
+msgstr "শিরোনাম:"
+
+#: ../properties/ev-properties-view.c:60
+msgid "Location:"
+msgstr "অবস্থান:"
+
+#: ../properties/ev-properties-view.c:61
+msgid "Subject:"
+msgstr "বিষয়:"
+
+#: ../properties/ev-properties-view.c:62
+msgid "Author:"
+msgstr "লেখক:"
+
+#: ../properties/ev-properties-view.c:63
+msgid "Keywords:"
+msgstr "মূলশব্দ:"
+
+#: ../properties/ev-properties-view.c:64
+msgid "Producer:"
+msgstr "প্রস্তুতকারক:"
+
+#: ../properties/ev-properties-view.c:65
+msgid "Creator:"
+msgstr "তৈরিকারক:"
+
+#: ../properties/ev-properties-view.c:66
+msgid "Created:"
+msgstr "তৈরি করা হয়েছে:"
+
+# FIXME
+#: ../properties/ev-properties-view.c:67
+msgid "Modified:"
+msgstr "পরিবর্তিত:"
+
+#: ../properties/ev-properties-view.c:68
+msgid "Number of Pages:"
+msgstr "পৃষ্ঠার সংখ্যা:"
+
+# FIXME
+#: ../properties/ev-properties-view.c:69
+msgid "Optimized:"
+msgstr "সেরা-অনুকূলকৃত:"
+
+#: ../properties/ev-properties-view.c:70
+msgid "Format:"
+msgstr "বিন্যাস:"
+
+#: ../properties/ev-properties-view.c:71
+msgid "Security:"
+msgstr "নিরাপত্তা:"
+
+#: ../properties/ev-properties-view.c:72
+msgid "Paper Size:"
+msgstr "কাগজের আকার:"
+
+#: ../properties/ev-properties-view.c:202
 msgid "None"
 msgstr "একটিও নয়"
 
-#: ../ps/gsdefaults.c:30
-msgid "BBox"
-msgstr "বি-বক্স"
+#. Translate to the default units to use for presenting
+#. * lengths to the user. Translate to default:inch if you
+#. * want inches, otherwise translate to default:mm.
+#. * Do *not* translate it to "predefinito:mm", if it
+#. * it isn't default:mm or default:inch it will not work
+#.
+#: ../properties/ev-properties-view.c:227
+msgid "default:mm"
+msgstr "ডিফল্ট:মিমি"
 
-#: ../ps/gsdefaults.c:31
-msgid "Letter"
-msgstr "লেটার"
-
-#: ../ps/gsdefaults.c:32
-msgid "Tabloid"
-msgstr "ট্যাবলয়েড"
-
-#: ../ps/gsdefaults.c:33
-msgid "Ledger"
-msgstr "লেজার"
-
-#: ../ps/gsdefaults.c:34
-msgid "Legal"
-msgstr "লিগাল"
-
-#: ../ps/gsdefaults.c:35
-msgid "Statement"
-msgstr "স্টেটমেন্ট"
-
-#: ../ps/gsdefaults.c:36
-msgid "Executive"
-msgstr "এক্সিকিউটিভ"
-
-#: ../ps/gsdefaults.c:37
-msgid "A0"
-msgstr "এ০"
-
-#: ../ps/gsdefaults.c:38
-msgid "A1"
-msgstr "এ১"
-
-#: ../ps/gsdefaults.c:39
-msgid "A2"
-msgstr "এ২"
-
-#: ../ps/gsdefaults.c:40
-msgid "A3"
-msgstr "এ৩"
-
-#: ../ps/gsdefaults.c:41
-msgid "A4"
-msgstr "এ৪"
-
-#: ../ps/gsdefaults.c:42
-msgid "A5"
-msgstr "এ৫"
-
-#: ../ps/gsdefaults.c:43
-msgid "B4"
-msgstr "বি৪"
-
-#: ../ps/gsdefaults.c:44
-msgid "B5"
-msgstr "বি৫"
-
-#: ../ps/gsdefaults.c:45
-msgid "Folio"
-msgstr "ফোলিও"
-
-#: ../ps/gsdefaults.c:46
-msgid "Quarto"
-msgstr "কোয়ার্টো"
-
-#: ../ps/gsdefaults.c:47
-msgid "10x14"
-msgstr "১০x১৪"
-
-#: ../ps/ps-document.c:136
-msgid "No document loaded."
-msgstr "কোন ডকুমেন্ট লোড করা হয় নি।"
-
-#: ../ps/ps-document.c:590
-msgid "Broken pipe."
-msgstr "ত্রুটিপূর্ণ পাইপ।"
-
-#: ../ps/ps-document.c:774
-msgid "Interpreter failed."
-msgstr "ইন্টারপ্রেটার ব্যর্থ হয়েছে।"
-
-#: ../ps/ps-document.c:900
+#: ../properties/ev-properties-view.c:271
 #, c-format
-msgid "Error while decompressing file “%s”:\n"
-msgstr "“%s” ফাইল ডিকম্প্রেস করতে ব্যর্থ:\n"
+msgid "%.0f x %.0f mm"
+msgstr "%.0f x %.0f মিমি"
 
-#: ../ps/ps-document.c:960
+#: ../properties/ev-properties-view.c:275
 #, c-format
-msgid "Cannot open file “%s”.\n"
-msgstr "“%s” ফাইল খুলতে ব্যর্থ।\n"
+msgid "%.2f x %.2f inch"
+msgstr "%.2f x %.2f ইঞ্চি"
 
-#: ../ps/ps-document.c:965
-msgid "File is not readable."
-msgstr "পড়ার অযোগ্য ফাইল।"
-
-#: ../ps/ps-document.c:985
-msgid "Document loaded."
-msgstr "ডকুমেন্ট লোড করা হয়েছে।"
-
-#: ../ps/ps-document.c:1082
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:299
 #, c-format
-msgid ""
-"Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr ""
-"“%s” ডকুমেন্ট লোড করতে ব্যর্থ। পাথের মধ্যে Ghostscript ইন্টারপ্রেটার পাওয়া যায়নি"
+msgid "%s, Portrait (%s)"
+msgstr "%1$s, লম্বালম্বি (%2$s)"
 
-#: ../ps/ps-document.c:1094
+#. Note to translators: first placeholder is the paper name (eg.
+#. * A4), second placeholder is the paper size (eg. 297x210 mm)
+#: ../properties/ev-properties-view.c:306
 #, c-format
-msgid "Failed to load document “%s”"
-msgstr "“%s” ডকুমেন্ট লোড করতে ব্যর্থ"
+msgid "%s, Landscape (%s)"
+msgstr "%1$s, আড়াআড়ি (%2$s)"
 
-#: ../ps/ps-document.c:1267
-msgid "Encapsulated PostScript"
-msgstr "এনক্যাপসুলেটেড পোস্টস্ক্রিপ্ট"
+#: ../libmisc/ev-page-action.c:72
+#, c-format
+msgid "(%d of %d)"
+msgstr "(%2$d এর %1$d)"
 
-#: ../ps/ps-document.c:1268
-msgid "PostScript"
-msgstr "পোস্টস্ক্রিপ্ট"
+#: ../libmisc/ev-page-action.c:74
+#, c-format
+msgid "of %d"
+msgstr "%d এর"
 
-#: ../shell/eggfindbar.c:157
+#: ../libview/ev-jobs.c:958
+#, c-format
+msgid "Failed to create file “%s”: %s"
+msgstr "ফাইল “%1$s” তৈরি করতে ব্যর্থ: %2$s"
+
+#: ../libview/ev-jobs.c:1435
+#, c-format
+msgid "Failed to print page %d: %s"
+msgstr "পৃষ্ঠা “%1$d” মুদ্রণ করতে ব্যর্থ: %2$s"
+
+#: ../libview/ev-view-accessible.c:41
+msgid "Scroll Up"
+msgstr "উপরে স্ক্রল করুন"
+
+#: ../libview/ev-view-accessible.c:42
+msgid "Scroll Down"
+msgstr "নিচে স্ক্রল করুন"
+
+# FIXME: দৃশ্য
+#: ../libview/ev-view-accessible.c:48
+msgid "Scroll View Up"
+msgstr "দৃশ্যকে উপরে স্ক্রল করুন"
+
+# FIXME: দৃশ্য
+#: ../libview/ev-view-accessible.c:49
+msgid "Scroll View Down"
+msgstr "দৃশ্যকে নিচে স্ক্রল করুন"
+
+# FIXME: দৃশ্য
+#: ../libview/ev-view-accessible.c:533
+msgid "Document View"
+msgstr "নথি ভিউ"
+
+#: ../libview/ev-view.c:1466
+msgid "Go to first page"
+msgstr "প্রথম পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:1468
+msgid "Go to previous page"
+msgstr "পূর্ববর্তী পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:1470
+msgid "Go to next page"
+msgstr "পরবর্তী পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:1472
+msgid "Go to last page"
+msgstr "শেষ পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:1474
+msgid "Go to page"
+msgstr "পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:1476
+msgid "Find"
+msgstr "খুঁজুন"
+
+#: ../libview/ev-view.c:1504
+#, c-format
+msgid "Go to page %s"
+msgstr "%s পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:1510
+#, c-format
+msgid "Go to %s on file “%s”"
+msgstr "ফাইল %2$s এর, “%1$s” এ যান"
+
+#: ../libview/ev-view.c:1513
+#, c-format
+msgid "Go to file “%s”"
+msgstr "“%s” ফাইলে যান"
+
+#: ../libview/ev-view.c:1521
+#, c-format
+msgid "Launch %s"
+msgstr "%s আরম্ভ করুন"
+
+#: ../libview/ev-view.c:2781
+msgid "End of presentation. Press Escape to exit."
+msgstr "উপস্থাপনার সমাপ্তি। প্রস্থান করার জন্য Escape চাপুন।"
+
+#: ../libview/ev-view.c:3720
+msgid "Jump to page:"
+msgstr "পৃষ্ঠায় যান"
+
+#: ../libview/ev-view.c:4002 ../shell/ev-sidebar-layers.c:125
+#: ../shell/ev-sidebar-links.c:267
+msgid "Loading..."
+msgstr "লোড করা হচ্ছে..."
+
+#: ../shell/eggfindbar.c:146
 msgid "Search string"
-msgstr "অনুসন্ধান পঙ্‌ক্তি"
+msgstr "স্ট্রিং সন্ধান করুন"
 
-#: ../shell/eggfindbar.c:158
+#: ../shell/eggfindbar.c:147
 msgid "The name of the string to be found"
-msgstr "যে পঙ্‌ক্তিটি পাওয়া যাবে, তার নাম"
+msgstr "যে স্ট্রিংটি পাওয়া যাবে, তার নাম"
 
-#: ../shell/eggfindbar.c:171
+#: ../shell/eggfindbar.c:160
 msgid "Case sensitive"
-msgstr "অক্ষরের ছাঁদ গণ্যকারী"
+msgstr "অক্ষরের ছাঁদ সংবেদনশীল"
 
-#: ../shell/eggfindbar.c:172
+#: ../shell/eggfindbar.c:161
 msgid "TRUE for a case sensitive search"
-msgstr "এটির মান সত্য (TRUE) হলে, অনুসন্ধান প্রক্রিয়ায় অক্ষরের ছাঁদ গণ্য করা হবে"
+msgstr "অক্ষরের ছাঁদ সংবেদনশীল সন্ধানের জন্য TRUE"
 
-#: ../shell/eggfindbar.c:179
+#: ../shell/eggfindbar.c:168
 msgid "Highlight color"
-msgstr "চিহ্নিতকরণের রং"
+msgstr "রং হাইলাইট করুন"
 
-#: ../shell/eggfindbar.c:180
+#: ../shell/eggfindbar.c:169
 msgid "Color of highlight for all matches"
-msgstr "সকল মিলের জন্য চিহ্নিতকরণের রং"
+msgstr "সকল মিলের জন্য হাইলাইটের রং"
 
-#: ../shell/eggfindbar.c:186
+#: ../shell/eggfindbar.c:175
 msgid "Current color"
 msgstr "বর্তমান রং"
 
-#: ../shell/eggfindbar.c:187
+#: ../shell/eggfindbar.c:176
 msgid "Color of highlight for the current match"
 msgstr "বর্তমান মিলের জন্য চিহ্নিতকরণের রং"
 
 #: ../shell/eggfindbar.c:320
 msgid "Find:"
-msgstr "খোঁজো:"
+msgstr "খুঁজুন:"
 
-#: ../shell/eggfindbar.c:329
-msgid "Find Previous"
-msgstr "পূর্ববর্তী উপস্থিতি অনুসন্ধান"
+#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:4948
+msgid "Find Pre_vious"
+msgstr "পূর্ববর্তীটি খুঁজুন"
 
-#: ../shell/eggfindbar.c:332
+#: ../shell/eggfindbar.c:333
 msgid "Find previous occurrence of the search string"
-msgstr "অনুসন্ধানের জন্য চিহ্নিত পংক্তির পূর্ববর্তী উপস্থিতি অনুসন্ধান করো"
+msgstr "অনুসন্ধান ষ্ট্রিং এর পূর্ববর্তী উপস্থিতি খুঁজুন"
 
-#: ../shell/eggfindbar.c:337
-msgid "Find Next"
-msgstr "পরবর্তী উপস্থিতি অনুসন্ধান"
+#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:4946
+msgid "Find Ne_xt"
+msgstr "পরবর্তীটি খুঁজুন (_x)"
 
-#: ../shell/eggfindbar.c:340
+#: ../shell/eggfindbar.c:341
 msgid "Find next occurrence of the search string"
 msgstr "অনুসন্ধানের জন্য চিহ্নিত পংক্তির পরবর্তী উপস্থিতি অনুসন্ধান করো"
 
 #: ../shell/eggfindbar.c:348
 msgid "C_ase Sensitive"
-msgstr "অক্ষরের ছাঁদ গণ্যকারী (_ছ)"
+msgstr "অক্ষরের ছাঁদ সংবেদনশীল (_a)"
 
 #: ../shell/eggfindbar.c:351
 msgid "Toggle case sensitive search"
-msgstr "অনুসন্ধানের সময় হরফের ছাঁদ গণ্য করা হবে অথবা হবে না"
+msgstr "অক্ষরের ছাঁদ সংবেদনশীল সন্ধান টগল করুন"
 
-#: ../shell/ev-page-action.c:168
-#, c-format
-msgid "(%d of %d)"
-msgstr "(%2$d এর %1$d)"
+#: ../shell/ev-application.c:305
+msgid "Recover previous documents?"
+msgstr "পূর্ববর্তী নথি কি পুনরুদ্ধার করতে চান?"
 
-#: ../shell/ev-page-action.c:170
-#, c-format
-msgid "of %d"
-msgstr "%d এর"
-
-#: ../shell/ev-password.c:83
-msgid "Password required"
-msgstr "পাসওয়ার্ড প্রয়োজন"
-
-#: ../shell/ev-password.c:84
-#, c-format
+#: ../shell/ev-application.c:308
 msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
+"Evince appears to have exited unexpectedly the last time it was run. You can "
+"recover the opened documents."
 msgstr ""
-"“%s” ডকুমেন্ট বর্তমানে লক করা আছে ও মুক্ত করার জন্য পাসওয়ার্ড উল্লেখ করা আবশ্যক।"
+"শেষবার চলার সময় ইভিন্স অপ্রত্যাশিতভাবে প্রস্থান করেছিল। আপনি খোলা নথি পুনরুদ্ধার "
+"করতে পারবেন।"
 
-#: ../shell/ev-password.c:149
-msgid "Enter password"
-msgstr "পাসওয়ার্ড লিখুন"
+#: ../shell/ev-application.c:312
+msgid "_Don't Recover"
+msgstr "পুনরুদ্ধার করবেন না (_D)"
 
-#: ../shell/ev-password.c:252
+#: ../shell/ev-application.c:315
+msgid "_Recover"
+msgstr "পুনরুদ্ধার করুন (_R)"
+
+#: ../shell/ev-application.c:318
+msgid "Crash Recovery"
+msgstr "ক্র্যাশ পুনরুদ্ধার"
+
+#: ../shell/ev-keyring.c:102
 #, c-format
 msgid "Password for document %s"
-msgstr "%s ডকুমেন্টের পাসওয়ার্ড"
+msgstr "%s নথির পাসওয়ার্ড"
 
-#: ../shell/ev-password.c:334
-msgid "Incorrect password"
-msgstr "ভুল পাসওয়ার্ড"
+#: ../shell/ev-open-recent-action.c:72
+msgid "Open a recently used document"
+msgstr "একটি সাম্প্রতিক ব্যবহৃত নথি খুলুন"
 
-#: ../shell/ev-password-view.c:111
+#: ../shell/ev-password-view.c:144
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
-"এই ডকুমেন্টটি আটকানো রয়েছে এবং শুধুমাত্র সঠিক পাসওয়ার্ড প্রদানের পরই একে পড়া যাবে।"
+"এই নথিটি আটকানো রয়েছে এবং শুধুমাত্র সঠিক পাসওয়ার্ড প্রদানের পরই এটি পড়া যাবে।"
 
-#: ../shell/ev-password-view.c:120
+#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
-msgstr "ডকুমেন্ট মুক্ত করো (_ক)"
+msgstr "নথি মুক্ত করুন (_U)"
 
-#: ../shell/ev-properties-dialog.c:61
+#: ../shell/ev-password-view.c:261
+msgid "Enter password"
+msgstr "পাসওয়ার্ড প্রবেশ করান"
+
+#: ../shell/ev-password-view.c:301
+msgid "Password required"
+msgstr "পাসওয়ার্ড প্রয়োজন"
+
+#: ../shell/ev-password-view.c:302
+#, c-format
+msgid ""
+"The document “%s” is locked and requires a password before it can be opened."
+msgstr "“%s” নথি বর্তমানে আটকানো আছে ও মুক্ত করার জন্য পাসওয়ার্ড উল্লেখ করা আবশ্যক।"
+
+#: ../shell/ev-password-view.c:332
+msgid "_Password:"
+msgstr "পাসওয়ার্ড (_P):"
+
+#: ../shell/ev-password-view.c:365
+msgid "Forget password _immediately"
+msgstr "তাৎক্ষনিকভাবে পাসওয়ার্ড ভুলে যান (_i)"
+
+#: ../shell/ev-password-view.c:377
+msgid "Remember password until you _logout"
+msgstr "লগআউট করা না পর্যন্ত পাসওয়ার্ড মনে রাখুন (_l)"
+
+#: ../shell/ev-password-view.c:389
+msgid "Remember _forever"
+msgstr "সবসময় মনে রাখুন (_f)"
+
+#. Initial state
+#: ../shell/ev-print-operation.c:316
+msgid "Preparing to print ..."
+msgstr "মুদ্রণ করার জন্য তৈরি হচ্ছে ..."
+
+#: ../shell/ev-print-operation.c:318
+msgid "Finishing..."
+msgstr "শেষ করা হচ্ছে..."
+
+#: ../shell/ev-print-operation.c:320
+#, c-format
+msgid "Printing page %d of %d..."
+msgstr "%1$d এর %2$d পৃষ্ঠা মুদ্রণ করা হচ্ছে..."
+
+#: ../shell/ev-print-operation.c:1143
+msgid "Printing is not supported on this printer."
+msgstr "এই প্রিন্টারে মুদ্রণের ব্যবস্থা নেই।"
+
+#: ../shell/ev-print-operation.c:1208
+msgid "Invalid page selection"
+msgstr "অকার্যকর পৃষ্ঠা নির্বাচন"
+
+#: ../shell/ev-print-operation.c:1209
+msgid "Warning"
+msgstr "সতর্কতা"
+
+#: ../shell/ev-print-operation.c:1211
+msgid "Your print range selection does not include any page"
+msgstr "আপনার মুদ্রণ সীমা নির্বাচন কোনো পৃষ্ঠা অন্তর্ভূক্ত করেনা"
+
+#: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
 msgstr "বৈশিষ্ট্য"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:91
 msgid "General"
 msgstr "সাধারণ"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:101
 msgid "Fonts"
 msgstr "ফন্ট"
 
-#: ../shell/ev-properties-fonts.c:123
+#: ../shell/ev-properties-fonts.c:135
 msgid "Font"
 msgstr "ফন্ট"
 
-#: ../shell/ev-properties-fonts.c:134
+#: ../shell/ev-properties-fonts.c:162
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "ফন্ট সংক্রান্ত তথ্য সংগ্রহ করা হচ্ছে... %3d%%"
 
-#: ../shell/ev-sidebar-attachments.c:662
+#: ../shell/ev-sidebar-attachments.c:697
 msgid "Attachments"
-msgstr "সংযুক্ত বস্তু"
+msgstr "সংযুক্তি"
 
-#: ../shell/ev-sidebar-links.c:254 ../shell/ev-view.c:2230
-msgid "Loading..."
-msgstr "লোড করা হচ্ছে..."
+#: ../shell/ev-sidebar-layers.c:395
+msgid "Layers"
+msgstr "স্তর"
 
-#: ../shell/ev-sidebar-links.c:351
+#: ../shell/ev-sidebar-links.c:340
 msgid "Print..."
 msgstr "মুদ্রণ..."
 
-#: ../shell/ev-sidebar-links.c:736
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "সূচিপত্র"
 
-#: ../shell/ev-sidebar-thumbnails.c:678
+#: ../shell/ev-sidebar-thumbnails.c:756
 msgid "Thumbnails"
 msgstr "থাম্বনেইল"
 
-#: ../shell/ev-view-accessible.c:42
-msgid "Scroll Up"
-msgstr "উপরে যাও"
-
-#: ../shell/ev-view-accessible.c:43
-msgid "Scroll Down"
-msgstr "নিচে যাও"
-
-# FIXME: দৃশ্য
-#: ../shell/ev-view-accessible.c:49
-msgid "Scroll View Up"
-msgstr "দৃশ্যকে উপরে নাও"
-
-# FIXME: দৃশ্য
-#: ../shell/ev-view-accessible.c:50
-msgid "Scroll View Down"
-msgstr "দৃশ্যকে নিচে নাও"
-
-# FIXME: দৃশ্য
-#: ../shell/ev-view-accessible.c:536
-msgid "Document View"
-msgstr "ডকুমেন্টের দৃশ্য"
-
-#: ../shell/ev-view.c:1337
-msgid "Go to first page"
-msgstr "প্রথম পৃষ্ঠায় যাও"
-
-#: ../shell/ev-view.c:1339
-msgid "Go to previous page"
-msgstr "পূর্ববর্তী পৃষ্ঠায় যাও"
-
-#: ../shell/ev-view.c:1341
-msgid "Go to next page"
-msgstr "পরবর্তী পৃষ্ঠায় যাও"
-
-#: ../shell/ev-view.c:1343
-msgid "Go to last page"
-msgstr "শেষ পৃষ্ঠায় যাও"
-
-#: ../shell/ev-view.c:1345
-msgid "Go to page"
-msgstr "পৃষ্ঠায় যাও"
-
-#: ../shell/ev-view.c:1347
-msgid "Find"
-msgstr "খোঁজো"
-
-#: ../shell/ev-view.c:1374
+#: ../shell/ev-window.c:828
 #, c-format
-msgid "Go to page %s"
-msgstr "%s নং পৃষ্ঠায় যাও"
+msgid "Page %s - %s"
+msgstr "পৃষ্ঠা %1$s - %2$s"
 
-#: ../shell/ev-view.c:1379
+#: ../shell/ev-window.c:830
 #, c-format
-msgid "Go to %s on file “%s”"
-msgstr "%s এ চলুন, “%s” এর মধ্যে"
+msgid "Page %s"
+msgstr "পৃষ্ঠা %s"
 
-#: ../shell/ev-view.c:1382
-#, c-format
-msgid "Go to file “%s”"
-msgstr "“%s” ফাইলে যাও"
+#: ../shell/ev-window.c:1255
+msgid "The document contains no pages"
+msgstr "নথিটি কোনো পৃষ্ঠা ধারণ করেনা"
 
-#: ../shell/ev-view.c:1391
-#, c-format
-msgid "Launch %s"
-msgstr "%s আরম্ভ করো"
+#: ../shell/ev-window.c:1258
+msgid "The document contains only empty pages"
+msgstr "নথিটি শুধুমাত্র ফাঁকা পৃষ্ঠা ধারণ করে"
 
-#. TRANS: Sometimes this could be better translated as
-#. "%d hit(s) on this page".  Therefore this string
-#. contains plural cases.
-#: ../shell/ev-view.c:3435
-#, c-format
-msgid "%d found on this page"
-msgid_plural "%d found on this page"
-msgstr[0] "এই পৃষ্ঠায় %dটি মিল পাওয়া গিয়েছে"
-msgstr[1] "এই পৃষ্ঠায় %dটি মিল পাওয়া গিয়েছে"
-
-#: ../shell/ev-view.c:3444
-#, c-format
-msgid "%3d%% remaining to search"
-msgstr "%3d%%টি খুঁজতে বাকি আছে"
-
-#: ../shell/ev-window.c:1011
+#: ../shell/ev-window.c:1481 ../shell/ev-window.c:1634
 msgid "Unable to open document"
-msgstr "ডকুমেন্ট খোলা যায় নি"
+msgstr "নথি খোলা যায় নি"
 
-#: ../shell/ev-window.c:1100
+#: ../shell/ev-window.c:1605
+#, c-format
+msgid "Loading document from “%s”"
+msgstr "“%s” থেকে নথি লোড করা হচ্ছে"
+
+#: ../shell/ev-window.c:1743 ../shell/ev-window.c:1926
+#, c-format
+msgid "Downloading document (%d%%)"
+msgstr "নথি ডাউনলোড হচ্ছে (%d%%)"
+
+#: ../shell/ev-window.c:1873
+#, c-format
+msgid "Reloading document from %s"
+msgstr "“%s” থেকে নথি পুনরায় লোড করা হচ্ছে"
+
+#: ../shell/ev-window.c:1905
+msgid "Failed to reload document."
+msgstr "নথি পুনরায় লোড করতে ব্যর্থ"
+
+#: ../shell/ev-window.c:2057
 msgid "Open Document"
-msgstr "ডকুমেন্ট খোলো"
+msgstr "নথি খুলুন"
 
-#: ../shell/ev-window.c:1308
+#: ../shell/ev-window.c:2136
+#, c-format
+msgid "Couldn't create symlink “%s”: "
+msgstr "“%s” symlink তৈরি করা সম্ভব হয়নি:"
+
+#: ../shell/ev-window.c:2163
+msgid "Cannot open a copy."
+msgstr "কোনো অনুলিপি খুলতে পারেনি।"
+
+#: ../shell/ev-window.c:2399
+#, c-format
+msgid "Saving document to %s"
+msgstr "%s এ নথি সংরক্ষণ করা হচ্ছে"
+
+#: ../shell/ev-window.c:2402
+#, c-format
+msgid "Saving attachment to %s"
+msgstr "%s এ সংযুক্তি সংরক্ষণ করা হচ্ছে"
+
+#: ../shell/ev-window.c:2405
+#, c-format
+msgid "Saving image to %s"
+msgstr "%s এ চিত্র সংরক্ষণ করা হচ্ছে"
+
+#: ../shell/ev-window.c:2449 ../shell/ev-window.c:2546
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "“%s”রূপে ফাইল সংরক্ষণ করতে ব্যর্থ।"
 
-#: ../shell/ev-window.c:1327 ../shell/ev-window.c:3976
+#: ../shell/ev-window.c:2477
+#, c-format
+msgid "Uploading document (%d%%)"
+msgstr "নথি আপলোড করা হচ্ছে (%d%%)"
+
+#: ../shell/ev-window.c:2481
+#, c-format
+msgid "Uploading attachment (%d%%)"
+msgstr "সংযুক্তি আপলোড করা হচ্ছে (%d%%)"
+
+#: ../shell/ev-window.c:2485
+#, c-format
+msgid "Uploading image (%d%%)"
+msgstr "চিত্র আপলোড করা হচ্ছে (%d%%)"
+
+#: ../shell/ev-window.c:2607
 msgid "Save a Copy"
-msgstr "একটি প্রতিলিপি সংরক্ষণ করো"
+msgstr "একটি প্রতিলিপি সংরক্ষণ করুন"
 
-#: ../shell/ev-window.c:1380
-msgid "Failed to print document"
-msgstr "ডকুমেন্ট প্রিন্ট করতে ব্যর্থ"
+#: ../shell/ev-window.c:2821
+#, c-format
+msgid "%d pending job in queue"
+msgid_plural "%d pending jobs in queue"
+msgstr[0] "কিউতে %d অপেক্ষমান কাজ"
 
-#: ../shell/ev-window.c:1494 ../shell/ev-window.c:1669
-msgid "Printing is not supported on this printer."
-msgstr "এই প্রিন্টারে মুদ্রণের ব্যবস্থা নেই।"
+#: ../shell/ev-window.c:2934
+#, c-format
+msgid "Printing job “%s”"
+msgstr "“%s” মুদ্রন কাজ"
 
-#: ../shell/ev-window.c:1604 ../shell/ev-window.c:1720
-msgid "Print"
-msgstr "মুদ্রণ"
+#: ../shell/ev-window.c:3141
+#, c-format
+msgid "Wait until print job “%s” finishes before closing?"
+msgstr "বন্ধ করার আগে মুদ্রন কাজ “%s” শেষ না হওয়া পর্যন্ত কি অপেক্ষা করবেন?"
 
-#: ../shell/ev-window.c:1659
-msgid "Generating PDF is not supported"
-msgstr "পিডিএফ তৈরির ব্যবস্থা নেই"
-
-#: ../shell/ev-window.c:1671
+#: ../shell/ev-window.c:3144
 #, c-format
 msgid ""
-"You were trying to print to a printer using the “%s” driver. This program "
-"requires a PostScript printer driver."
+"There are %d print jobs active. Wait until print finishes before closing?"
 msgstr ""
-"“%s” ড্রাইভার সহযোগে আপনি একটি প্রিন্টারে প্রিন্ট করার প্রচেষ্টা করেছেন। এই "
-"\"\"প্রোগ্রামের ক্ষেত্রে পোস্টস্ক্রিপ্ট প্রিন্টার ড্রাইভার আবশ্যক।"
+"এখানে %d মুদ্রন কাজ সক্রিয়, বন্ধ করার আগে মুদ্রন কাজ শেষ না হওয়া পর্যন্ত কি অপেক্ষা "
+"করবেন?"
 
-#: ../shell/ev-window.c:1729
-msgid "Pages"
-msgstr "পৃষ্ঠা"
+#: ../shell/ev-window.c:3156
+msgid "If you close the window, pending print jobs will not be printed."
+msgstr "যদি আপনি উইন্ডো বন্ধ করেন, অপেক্ষমান মুদ্রণ কাজ মুদ্রিত হবেনা।"
 
-#. Toolbar-only
-#: ../shell/ev-window.c:2089 ../shell/ev-window.c:3423
-msgid "Leave Fullscreen"
-msgstr "পূর্ণপর্দা মোড ত্যাগ করো"
+#: ../shell/ev-window.c:3160
+msgid "Cancel _print and Close"
+msgstr "মুদ্রণ বাতিল করে বন্ধ করুন (_p)"
 
-#: ../shell/ev-window.c:2469
+#: ../shell/ev-window.c:3164
+msgid "Close _after Printing"
+msgstr "মুদ্রণের পরে বন্ধ করুন (_a)"
+
+#: ../shell/ev-window.c:3770
 msgid "Toolbar Editor"
 msgstr "টুলবার সম্পাদক"
 
-#: ../shell/ev-window.c:2840
+#: ../shell/ev-window.c:3901
+msgid "There was an error displaying help"
+msgstr "সহায়তা প্রদর্শন করার সময় একটি ত্রুটি ছিল"
+
+#: ../shell/ev-window.c:4131
 #, c-format
 msgid ""
-"PostScript and PDF File Viewer.\n"
+"Document Viewer.\n"
 "Using poppler %s (%s)"
 msgstr ""
-"পোস্টস্ক্রিপ্ট ও পি.ডি.এফ. ফাইল প্রদর্শক।\n"
-"এটি পপলার %s (%s) ব্যবহার করছে"
+"নথি প্রদর্শক।\n"
+"এটি পপলার %1$s (%2$s) ব্যবহার করছে"
 
-#: ../shell/ev-window.c:2864
+#: ../shell/ev-window.c:4160
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
 msgstr ""
-"এভিন্স একটি মুক্ত সফটওয়্যার; ফ্রী সফটওয়্যার ফাউন্ডেশন কর্তৃক প্রকাশিত গনুহ জেনারেল \n"
-"পাবলিক লাইসেন্সের শর্ত মেনে আপনি একে পুনঃবিতরণ এবং/বা পরিবর্তন করতে পারেন; \n"
-"এক্ষেত্রে উল্লিখিত লাইসেন্সের ২য় বা তার পরবর্তী কোন সংস্করণ (আপনার ইচ্ছানুসারে) \n"
+"এভিন্স একটি মুক্ত সফটওয়্যার; মুক্ত সফটওয়্যার ফাউন্ডেশন কর্তৃক প্রকাশিত GNU সাধারণ "
+"পাবলিক লাইসেন্সের শর্ত মেনে আপনি একে পুনঃবিতরণ এবং/অথবা পরিবর্তন করতে পারেন; \n"
+"এক্ষেত্রে উল্লিখিত লাইসেন্সের ২য় বা তার পরবর্তী কোন সংস্করণ (আপনার ইচ্ছানুসারে) "
 "অনুসরণ করতে হবে।\n"
 
-#: ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:4164
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
 msgstr ""
-"এভিন্সকে এই আশায় বিতরণ করা হচ্ছে যে এটি আপনার উপকারে আসবে, তবে এ ব্যাপারে কোন \n"
-"নিশ্চয়তা (Warranty) দেওয়া হচ্ছে না; এক্ষেত্রে এমনকি এর বিক্রয়যোগ্যতা "
-"(MERCHANTABILITY) \n"
-"বা নির্দিষ্ট কোন কাজের উপযোগীতা সম্পর্কেও কোন নিশ্চয়তাও দেওয়া হচ্ছে না। \n"
-"বিস্তারিত জানার জন্য গনিউ জেনারেল পাবলিক লাইসেন্স দেখুন।\n"
+"এভিন্সকে এই আশায় বিতরণ করা হচ্ছে যে এটি আপনার উপকারে আসবে, তবে এ ব্যাপারে কোন "
+"নিশ্চয়তা দেওয়া হচ্ছে না; এক্ষেত্রে এমনকি এর বিক্রয়যোগ্যতা বা নির্দিষ্ট কোন কাজের "
+"উপযোগীতা সম্পর্কেও কোন নিশ্চয়তাও দেওয়া হচ্ছে না। বিস্তারিত জানার জন্য GNU সাধারণ "
+"পাবলিক লাইসেন্স দেখুন।\n"
 
-#: ../shell/ev-window.c:2872
+#: ../shell/ev-window.c:4168
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
 "Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
-"এভিন্স-এর সাথে আপনার গনুহ জেনারেল পাবলিক লাইসেন্সের একটি অনুলিপি \n"
+"এভিন্স-এর সাথে আপনার GNU সাধারণ পাবলিক লাইসেন্সের একটি অনুলিপি \n"
 "পাওয়ার কথা; না পেয়ে থাকলে এই ঠিকানায় লিখুন - Free Software Foundation, Inc., "
 "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
-#: ../shell/ev-window.c:2896 ../shell/main.c:308
+#: ../shell/ev-window.c:4192
 msgid "Evince"
 msgstr "এভিন্স"
 
-#: ../shell/ev-window.c:2899
-msgid "© 1996-2005 The Evince authors"
-msgstr "© ১৯৯৬-২০০৫ এভিন্স-এর লেখকগণ"
+#: ../shell/ev-window.c:4195
+msgid "© 1996–2009 The Evince authors"
+msgstr "© ১৯৯৬-২০০৯ এভিন্স-এর লেখকগণ"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:4201
 msgid "translator-credits"
 msgstr "অঙ্কুর প্রকল্পের পক্ষে, প্রজ্ঞা [ progga@BengaLinux.Org ]"
 
-#: ../shell/ev-window.c:3350
+#. TRANS: Sometimes this could be better translated as
+#. "%d hit(s) on this page".  Therefore this string
+#. contains plural cases.
+#: ../shell/ev-window.c:4419
+#, c-format
+msgid "%d found on this page"
+msgid_plural "%d found on this page"
+msgstr[0] "এই পৃষ্ঠায় %dটি মিল পাওয়া গিয়েছে"
+
+#: ../shell/ev-window.c:4427
+#, c-format
+msgid "%3d%% remaining to search"
+msgstr "%3d%%টি খুঁজতে বাকি আছে"
+
+#: ../shell/ev-window.c:4911
 msgid "_File"
-msgstr "ফাইল (_ফ)"
+msgstr "ফাইল (_F)"
 
-#: ../shell/ev-window.c:3351
+#: ../shell/ev-window.c:4912
 msgid "_Edit"
-msgstr "সম্পাদন (_স)"
+msgstr "সম্পাদনা (_E)"
 
-#: ../shell/ev-window.c:3352
+#: ../shell/ev-window.c:4913
 msgid "_View"
-msgstr "দৃশ্য (_দ)"
+msgstr "দৃশ্য (_V)"
 
-#: ../shell/ev-window.c:3353
+#: ../shell/ev-window.c:4914
 msgid "_Go"
-msgstr "যাও (_য)"
+msgstr "যান (_G)"
 
-#: ../shell/ev-window.c:3354
+#: ../shell/ev-window.c:4915
 msgid "_Help"
-msgstr "সহায়িকা (_স)"
+msgstr "সহায়িকা (_H)"
 
 #. File menu
-#: ../shell/ev-window.c:3357 ../shell/ev-window.c:3514
+#: ../shell/ev-window.c:4918 ../shell/ev-window.c:5096
+#: ../shell/ev-window.c:5175
 msgid "_Open..."
-msgstr "খোলো... (_খ)"
+msgstr "খুলুন... (_O)"
 
-#: ../shell/ev-window.c:3358
+#: ../shell/ev-window.c:4919 ../shell/ev-window.c:5176
 msgid "Open an existing document"
-msgstr "বিদ্যমান কোন ডকুমেন্ট খোলো"
+msgstr "বিদ্যমান কোন নথি খুলুন"
 
-#: ../shell/ev-window.c:3360 ../shell/ev-window.c:3516
+#: ../shell/ev-window.c:4921
+msgid "Op_en a Copy"
+msgstr "একটি অনুলিপি খুলুন (_e)"
+
+#: ../shell/ev-window.c:4922
+msgid "Open a copy of the current document in a new window"
+msgstr "একটি নতুন উইন্ডোতে বর্তমান নথির একটি অনুলিপি খুলুন"
+
+#: ../shell/ev-window.c:4924 ../shell/ev-window.c:5098
 msgid "_Save a Copy..."
-msgstr "প্রতিলিপি সংরক্ষণ করো... (_প)"
+msgstr "অনুলিপি সংরক্ষণ করুন... (_S)"
 
-#: ../shell/ev-window.c:3361
+#: ../shell/ev-window.c:4925
 msgid "Save a copy of the current document"
-msgstr "বর্তমান ডকুমেন্টের একটি কপি সংরক্ষণ করো"
+msgstr "বর্তমান নথির একটি অনুলিপি সংরক্ষণ করুন"
 
-#: ../shell/ev-window.c:3363
+#: ../shell/ev-window.c:4927
+msgid "Page Set_up..."
+msgstr "পৃষ্ঠা সেটআপ...(_u)"
+
+#: ../shell/ev-window.c:4928
+msgid "Setup the page settings for printing"
+msgstr "মুদ্রণের জন্য পৃষ্ঠা সেটিংস সেটআপ করুন"
+
+#: ../shell/ev-window.c:4930
 msgid "_Print..."
-msgstr "মুদ্রণ... (_ম)"
+msgstr "মুদ্রণ... (_P)"
 
-#: ../shell/ev-window.c:3364
-msgid "Print this document"
-msgstr "এই ডকুমেন্টটি ছাপাও"
-
-#: ../shell/ev-window.c:3366
+#: ../shell/ev-window.c:4933
 msgid "P_roperties"
-msgstr "বৈশিষ্ট্য (_ব)"
+msgstr "বৈশিষ্ট্য (_r)"
 
-#: ../shell/ev-window.c:3374
+#: ../shell/ev-window.c:4941
 msgid "Select _All"
-msgstr "সবকিছু নির্বাচন করো (_স)"
+msgstr "সবকিছু নির্বাচন করুন (_A)"
 
-#: ../shell/ev-window.c:3376
+#: ../shell/ev-window.c:4943
 msgid "_Find..."
-msgstr "খোঁজো... (_খ)"
+msgstr "খুঁজুন... (_F)"
 
-#: ../shell/ev-window.c:3377
+#: ../shell/ev-window.c:4944
 msgid "Find a word or phrase in the document"
-msgstr "ডকুমেন্টের মধ্যে কোন একটি শব্দ বা শব্দসমষ্টি খোঁজো"
+msgstr "নথির মধ্যে কোন একটি শব্দ বা শব্দসমষ্টি খুঁজুন"
 
-#: ../shell/ev-window.c:3379
-msgid "Find Ne_xt"
-msgstr "আবার খোঁজো (_আ)"
-
-#: ../shell/ev-window.c:3381
-msgid "Find Pre_vious"
-msgstr "পূর্ববর্তী উপস্থিতি খোঁজো"
-
-#: ../shell/ev-window.c:3383
+#: ../shell/ev-window.c:4950
 msgid "T_oolbar"
-msgstr "টুলবার (_ট)"
+msgstr "টুলবার (_o)"
 
-#: ../shell/ev-window.c:3385
+#: ../shell/ev-window.c:4952
 msgid "Rotate _Left"
-msgstr "বামে ঘোরাও (_ব)"
+msgstr "বামে ঘুরান (_L)"
 
-#: ../shell/ev-window.c:3387
+#: ../shell/ev-window.c:4954
 msgid "Rotate _Right"
-msgstr "ডানে ঘোরাও (_ড)"
+msgstr "ডানে ঘুরান (_R)"
 
-#: ../shell/ev-window.c:3392
-msgid "Enlarge the document"
-msgstr "ডকুমেন্টকে বিবর্ধিত করো"
-
-#: ../shell/ev-window.c:3395
-msgid "Shrink the document"
-msgstr "ডকুমেন্টকে ছোট করো"
-
-#: ../shell/ev-window.c:3397
+#: ../shell/ev-window.c:4964
 msgid "_Reload"
-msgstr "পুনরায় লোড করো (_প)"
+msgstr "পুনরায় লোড করুন (_R)"
 
-#: ../shell/ev-window.c:3398
+#: ../shell/ev-window.c:4965
 msgid "Reload the document"
-msgstr "ডকুমেন্টকে পুনরায় লোড করো"
+msgstr "নথিটি পুনরায় লোড করুন"
 
-#. Go menu
-#: ../shell/ev-window.c:3402
-msgid "_Previous Page"
-msgstr "পূর্ববর্তী পৃষ্ঠা (_প)"
+#: ../shell/ev-window.c:4968
+msgid "Auto_scroll"
+msgstr "স্বয়ংক্রিয়_স্ক্রুল"
 
-#: ../shell/ev-window.c:3403
-msgid "Go to the previous page"
-msgstr "পূর্ববর্তী পৃষ্ঠায় যাও"
-
-#: ../shell/ev-window.c:3405
-msgid "_Next Page"
-msgstr "পরবর্তী পৃষ্ঠা (_র)"
-
-#: ../shell/ev-window.c:3406
-msgid "Go to the next page"
-msgstr "পরবর্তী পৃষ্ঠায় যাও"
-
-#: ../shell/ev-window.c:3408
+#: ../shell/ev-window.c:4978
 msgid "_First Page"
-msgstr "প্রথম পৃষ্ঠা (_থ)"
+msgstr "প্রথম পৃষ্ঠা (_F)"
 
-#: ../shell/ev-window.c:3409
+#: ../shell/ev-window.c:4979
 msgid "Go to the first page"
-msgstr "প্রথম পৃষ্ঠায় যাও"
+msgstr "প্রথম পৃষ্ঠায় যান"
 
-#: ../shell/ev-window.c:3411
+#: ../shell/ev-window.c:4981
 msgid "_Last Page"
-msgstr "শেষ পৃষ্ঠা (_শ)"
+msgstr "শেষ পৃষ্ঠা (_L)"
 
-#: ../shell/ev-window.c:3412
+#: ../shell/ev-window.c:4982
 msgid "Go to the last page"
-msgstr "শেষ পৃষ্ঠায় যাও"
+msgstr "শেষ পৃষ্ঠায় যান"
 
 #. Help menu
-#: ../shell/ev-window.c:3416
+#: ../shell/ev-window.c:4986
 msgid "_Contents"
-msgstr "সূচি (_স)"
+msgstr "সূচি (_C)"
 
-#: ../shell/ev-window.c:3419
+#: ../shell/ev-window.c:4989
 msgid "_About"
-msgstr "পরিচিতি (_প)"
+msgstr "পরিচিতি (_A)"
 
-#: ../shell/ev-window.c:3424
+#. Toolbar-only
+#: ../shell/ev-window.c:4993
+msgid "Leave Fullscreen"
+msgstr "পূর্ণপর্দা ত্যাগ করুন"
+
+#: ../shell/ev-window.c:4994
 msgid "Leave fullscreen mode"
-msgstr "পূর্ণপর্দা মোড ত্যাগ করো"
+msgstr "পূর্ণপর্দা মোড ত্যাগ করুন"
+
+#: ../shell/ev-window.c:4996
+msgid "Start Presentation"
+msgstr "উপস্থাপনা শুরু করুন"
+
+#: ../shell/ev-window.c:4997
+msgid "Start a presentation"
+msgstr "উপস্থাপনা শুরু করুন"
 
 #. View Menu
-#: ../shell/ev-window.c:3475
+#: ../shell/ev-window.c:5052
 msgid "_Toolbar"
-msgstr "টুলবার (_ট)"
+msgstr "টুলবার (_T)"
 
-#: ../shell/ev-window.c:3476
+#: ../shell/ev-window.c:5053
 msgid "Show or hide the toolbar"
-msgstr "টুলবারকে প্রদর্শন করো বা লুকাও"
+msgstr "টুলবারকে প্রদর্শন করুন বা লুকান"
 
-#: ../shell/ev-window.c:3478
+#: ../shell/ev-window.c:5055
 msgid "Side _Pane"
-msgstr "সাইড পেন (_প)"
+msgstr "সাইড পেন (_P)"
 
-#: ../shell/ev-window.c:3479
+#: ../shell/ev-window.c:5056
 msgid "Show or hide the side pane"
-msgstr "সাইড পেনকে প্রদর্শন করো বা লুকাও"
+msgstr "সাইড পেনকে প্রদর্শন করুন বা লুকান"
 
-#: ../shell/ev-window.c:3481
+#: ../shell/ev-window.c:5058
 msgid "_Continuous"
-msgstr "অনবরত (_অ)"
+msgstr "অবিরাম (_C)"
 
-#: ../shell/ev-window.c:3482
+#: ../shell/ev-window.c:5059
 msgid "Show the entire document"
-msgstr "সম্পূর্ণ ডকুমেন্টকে প্রদর্শন করো"
+msgstr "সম্পূর্ণ নথি প্রদর্শন করুন"
 
-#: ../shell/ev-window.c:3484
+#: ../shell/ev-window.c:5061
 msgid "_Dual"
-msgstr "দ্বৈত (_দ)"
+msgstr "দ্বৈত (_D)"
 
-#: ../shell/ev-window.c:3485
+#: ../shell/ev-window.c:5062
 msgid "Show two pages at once"
-msgstr "একত্রে দুই পৃষ্ঠা দেখাও"
+msgstr "একত্রে দুই পৃষ্ঠা দেখান"
 
-#: ../shell/ev-window.c:3487
+#: ../shell/ev-window.c:5064
 msgid "_Fullscreen"
-msgstr "পূর্ণপর্দা (_প)"
+msgstr "পূর্ণপর্দা (_F)"
 
-#: ../shell/ev-window.c:3488
+#: ../shell/ev-window.c:5065
 msgid "Expand the window to fill the screen"
-msgstr "সম্পূর্ণ পর্দা দখল করার জন্য উইন্ডোকে বর্ধিত করো"
+msgstr "সম্পূর্ণ পর্দা দখল করার জন্য উইন্ডোকে বর্ধিত করুন"
 
-#: ../shell/ev-window.c:3490
-msgid "_Presentation"
-msgstr "উপস্থাপনা (_উ)"
+#: ../shell/ev-window.c:5067
+msgid "Pre_sentation"
+msgstr "উপস্থাপনা (_s)"
 
-#: ../shell/ev-window.c:3491
+#: ../shell/ev-window.c:5068
 msgid "Run document as a presentation"
-msgstr "ডকুমেন্টকে উপস্থাপনা হিসেবে চালাও"
-
-#: ../shell/ev-window.c:3493
-msgid "_Best Fit"
-msgstr "সেরা আকৃতি (_স)"
-
-#: ../shell/ev-window.c:3494
-msgid "Make the current document fill the window"
-msgstr "বর্তমান ডকুমেন্ট দিয়ে সম্পূর্ণ উইন্ডো দখল করো"
-
-#: ../shell/ev-window.c:3496
-msgid "Fit Page _Width"
-msgstr "পৃষ্ঠার প্রস্থের আকৃতি (_প)"
-
-#: ../shell/ev-window.c:3497
-msgid "Make the current document fill the window width"
-msgstr "বর্তমান ডকুমেন্ট দিয়ে প্রস্থ বরাবর সম্পূর্ণ উইন্ডো দখল করো"
+msgstr "নথিকে উপস্থাপনা হিসেবে চালান"
 
 #. Links
-#: ../shell/ev-window.c:3504
+#: ../shell/ev-window.c:5081
 msgid "_Open Link"
-msgstr "লিঙ্ক খেোলে (_খ)"
+msgstr "লিঙ্ক খুলুন (_O)"
 
-#: ../shell/ev-window.c:3506
+#: ../shell/ev-window.c:5083
 msgid "_Go To"
-msgstr "এই পৃষ্ঠায় যাও (_য)"
+msgstr "এই পৃষ্ঠায় যান (_G)"
 
-#: ../shell/ev-window.c:3508
+#: ../shell/ev-window.c:5085
+msgid "Open in New _Window"
+msgstr "নতুন উইন্ডোতে খুলুন (_W)"
+
+#: ../shell/ev-window.c:5087
 msgid "_Copy Link Address"
-msgstr "লিঙ্ক-এর ঠিকানা কপি করো (_ক)"
+msgstr "লিঙ্ক-এর ঠিকানা কপি করুন (_C)"
 
-#: ../shell/ev-window.c:3571
-msgid "Page"
-msgstr "পৃষ্ঠা"
+#: ../shell/ev-window.c:5089
+msgid "_Save Image As..."
+msgstr "নতুনভাবে চিত্র সংরক্ষণ করুন... (_S)"
 
-#: ../shell/ev-window.c:3572
-msgid "Select Page"
-msgstr "পৃষ্ঠা নির্বাচন"
+#: ../shell/ev-window.c:5091
+msgid "Copy _Image"
+msgstr "চিত্র অনুলিপি করুন (_I)"
 
-#: ../shell/ev-window.c:3584
+#: ../shell/ev-window.c:5149
 msgid "Zoom"
-msgstr "জুম"
+msgstr "বড় করে দেখা"
 
-#: ../shell/ev-window.c:3586
+#: ../shell/ev-window.c:5151
 msgid "Adjust the zoom level"
-msgstr "জুমমাত্রা নির্ধারণ"
+msgstr "বড় করে দেখার মাত্রা সমন্বয় করুন"
+
+#: ../shell/ev-window.c:5161
+msgid "Navigation"
+msgstr "ন্যাভিগেশন"
+
+#: ../shell/ev-window.c:5163
+msgid "Back"
+msgstr "পিছনে"
+
+#. translators: this is the history action
+#: ../shell/ev-window.c:5166
+msgid "Move across visited pages"
+msgstr "পরিদর্শিত পাতা জুড়ে সরান"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:5196
 msgid "Previous"
 msgstr "পূর্ববর্তী"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3608
+#: ../shell/ev-window.c:5201
 msgid "Next"
 msgstr "পরবর্তী"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3612
+#: ../shell/ev-window.c:5205
 msgid "Zoom In"
-msgstr "বিবর্ধন"
+msgstr "বড় করে দেখা"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3617
+#: ../shell/ev-window.c:5209
 msgid "Zoom Out"
-msgstr "ছোট করো"
+msgstr "ছোট করে দেখা"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:3627
+#: ../shell/ev-window.c:5217
 msgid "Fit Width"
-msgstr "প্রস্থ বরাবর আঁটাও"
+msgstr "প্রস্থ বরাবর মাপসই করুন"
 
-#: ../shell/ev-window.c:3905
+#: ../shell/ev-window.c:5384 ../shell/ev-window.c:5400
+msgid "Unable to launch external application."
+msgstr "বহিঃস্থ অ্যাপ্লিকেশন চালু করতে সক্ষম নয়"
+
+#: ../shell/ev-window.c:5439
+msgid "Unable to open external link"
+msgstr "বহিঃস্থ সংযোগ খুলতে পারেনি"
+
+#: ../shell/ev-window.c:5595
+msgid "Couldn't find appropriate format to save image"
+msgstr "চিত্র সংরক্ষণ করার জন্য যথাযথ বিন্যাস খুঁজে পাওয়া যায়নি"
+
+#: ../shell/ev-window.c:5634
+msgid "The image could not be saved."
+msgstr "চিত্রটি সংরক্ষণ করা যায়নি।"
+
+#: ../shell/ev-window.c:5666
+msgid "Save Image"
+msgstr "চিত্রটি সংরক্ষণ করুন"
+
+#: ../shell/ev-window.c:5733
 msgid "Unable to open attachment"
 msgstr "সংযুক্ত বস্তু খুলতে ব্যর্থ"
 
-#: ../shell/ev-window.c:3952
+#: ../shell/ev-window.c:5784
 msgid "The attachment could not be saved."
 msgstr "সংযুক্ত বস্তু সংরক্ষণ করতে ব্যর্থ।"
 
-#: ../shell/ev-window-title.c:140
+#: ../shell/ev-window.c:5829
+msgid "Save Attachment"
+msgstr "সংযুক্তি সংরক্ষণ করুন"
+
+#: ../shell/ev-window-title.c:163
 #, c-format
 msgid "%s - Password Required"
 msgstr "%s - পাসওয়ার্ড প্রয়োজন"
 
-#: ../shell/main.c:54
+#: ../shell/ev-utils.c:330
+msgid "By extension"
+msgstr "এক্সটেনশন এর মাধ্যমে"
+
+#: ../shell/main.c:73 ../shell/main.c:436
+msgid "GNOME Document Viewer"
+msgstr "GNOME নথি প্রদর্শক"
+
+#: ../shell/main.c:81
 msgid "The page of the document to display."
-msgstr "ডকুমেন্টের যে পৃষ্ঠাকে প্রদর্শন করা হবে।"
+msgstr "নথির যে পৃষ্ঠাকে প্রদর্শন করা হবে।"
 
-#: ../shell/main.c:54
+#: ../shell/main.c:81
 msgid "PAGE"
-msgstr "পৃষ্ঠা"
+msgstr "PAGE"
 
-#: ../shell/main.c:55
+#: ../shell/main.c:82
 msgid "Run evince in fullscreen mode"
-msgstr "পূর্ণপর্দা মোডে এভিন্স চালাও"
+msgstr "পূর্ণপর্দা মোডে এভিন্স চালান"
 
-#: ../shell/main.c:56
+#: ../shell/main.c:83
 msgid "Run evince in presentation mode"
-msgstr "প্রেজেন্টেশন মোডে এভিন্স চালাও"
+msgstr "প্রেজেন্টেশন মোডে এভিন্স চালান"
 
-#: ../shell/main.c:57
+#: ../shell/main.c:84
 msgid "Run evince as a previewer"
 msgstr "পূর্বরূপ প্রদর্শনের মোডে evince চালানো হবে"
 
-#: ../shell/main.c:58
+#: ../shell/main.c:85
+msgid "The word or phrase to find in the document"
+msgstr "নথিরর মধ্যে কোন একটি শব্দ বা শব্দসমষ্টি খুঁজুন"
+
+#: ../shell/main.c:85
+msgid "STRING"
+msgstr "STRING"
+
+#: ../shell/main.c:89
 msgid "[FILE...]"
 msgstr "[FILE...]"
-
-#: ../shell/main.c:293
-msgid "GNOME Document Viewer"
-msgstr "গনোম ডকুমেন্ট প্রদর্শক"
-
-#: ../shell/main.c:335
-msgid "Evince Document Viewer"
-msgstr "এভিন্স ডকুমেন্ট প্রদর্শক"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
 msgid ""
 "Boolean options available, true enables thumbnailing and false disables the "
 "creation of new thumbnails"
 msgstr ""
-"বুলিয়ান অপশন প্রযোগ্য; সত্য (true) হলে থাম্বলেইল দেখা যাবে এবং মিথ্যা (false) হলে "
-"নতুন থাম্বনেইল তৈরি হবে না"
+"বুলিয়ান অপশন বিদ্যমান; সত্য হলে থাম্বলেইল দেখা যাবে এবং মিথ্যা হলে নতুন থাম্বনেইল "
+"তৈরি হবে না"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
-msgstr "পি.ডি.এফ. ডকুমেন্টের থাম্বনেইল তৈরির প্রক্রিয়া সক্রিয় করো"
+msgstr "PDF নথি থাম্বনেইল তৈরির প্রক্রিয়া সক্রিয় করুন"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
 msgid "Thumbnail command for PDF Documents"
-msgstr "পি.ডি.এফ. ডকুমেন্টের থাম্বনেইল তৈরির কমান্ড"
+msgstr "PDF নথির থাম্বনেইল তৈরির কমান্ড"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
 msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
 "thumbnailer documentation for more information."
 msgstr ""
-"পি.ডি.এফ. ডকুমেন্টের থাম্বনেইল তৈরির জন্য সঠিক কমান্ড ও কমান্ড-আর্গুমেন্ট।  এ ব্যাপারে "
-"বিস্তারিত জানার জন্য নটিলাস এর থাম্বনেইল প্রস্তুত প্রক্রিয়ার ডকুমেন্টেশন দেখুন।"
+"PDF নথির থাম্বনেইল তৈরির জন্য সঠিক কমান্ড ও কমান্ড-আর্গুমেন্ট। এ ব্যাপারে বিস্তারিত "
+"জানার জন্য নটিলাস এর থাম্বনেইল প্রস্তুত প্রক্রিয়ার ডকুমেন্টেশন দেখুন।"
+
+#~ msgid "Unhandled MIME type: “%s”"
+#~ msgstr "MIME ধরনের ব্যবস্থাপনা করা হয়নি: “%s”"
+
+#~ msgid "Open “%s”"
+#~ msgstr "“%s” খুলুন"
+
+#~ msgid "Empty"
+#~ msgstr "ফাঁকা"
+
+#~ msgid "75%"
+#~ msgstr "৭৫%"
+
+#~ msgid "Save password in keyring"
+#~ msgstr "কী-রিং -এ পাসওয়ার্ড সংরক্ষণ করুন"
+
+#~ msgid "File not available"
+#~ msgstr "ফাইল পাওয়া যাচ্ছে না"
+
+#~ msgid "BBox"
+#~ msgstr "বি-বক্স"
+
+#~ msgid "Letter"
+#~ msgstr "লেটার"
+
+#~ msgid "Tabloid"
+#~ msgstr "ট্যাবলয়েড"
+
+#~ msgid "Ledger"
+#~ msgstr "লেজার"
+
+#~ msgid "Legal"
+#~ msgstr "লিগাল"
+
+#~ msgid "Statement"
+#~ msgstr "স্টেটমেন্ট"
+
+#~ msgid "Executive"
+#~ msgstr "এক্সিকিউটিভ"
+
+#~ msgid "A0"
+#~ msgstr "A0"
+
+#~ msgid "A1"
+#~ msgstr "A1"
+
+#~ msgid "A2"
+#~ msgstr "A2"
+
+#~ msgid "A3"
+#~ msgstr "A3"
+
+#~ msgid "A4"
+#~ msgstr "A4"
+
+#~ msgid "A5"
+#~ msgstr "A5"
+
+#~ msgid "B4"
+#~ msgstr "B4"
+
+#~ msgid "B5"
+#~ msgstr "B5"
+
+#~ msgid "Folio"
+#~ msgstr "ফোলিও"
+
+#~ msgid "Quarto"
+#~ msgstr "কোয়ার্টো"
+
+#~ msgid "10x14"
+#~ msgstr "১০x১৪"
+
+#~ msgid "No document loaded."
+#~ msgstr "কোন নথি লোড করা হয় নি।"
+
+#~ msgid "Broken pipe."
+#~ msgstr "ত্রুটিপূর্ণ পাইপ।"
+
+#~ msgid "Interpreter failed."
+#~ msgstr "ইন্টারপ্রেটার ব্যর্থ হয়েছে।"
+
+#~ msgid "Error while decompressing file “%s”:\n"
+#~ msgstr "“%s” ফাইল ডিকম্প্রেস করতে ব্যর্থ:\n"
+
+#~ msgid "File is not readable."
+#~ msgstr "পড়ার অযোগ্য ফাইল।"
+
+#~ msgid "Document loaded."
+#~ msgstr "নথি লোড করা হয়েছে।"
+
+#~ msgid ""
+#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
+#~ "path"
+#~ msgstr ""
+#~ "“%s” ডকুমেন্ট লোড করতে ব্যর্থ। পাথের মধ্যে ঘোস্টস্ক্রিপ্ট ইন্টারপ্রেটার পাওয়া যায়নি"
+
+#~ msgid "Encapsulated PostScript"
+#~ msgstr "এনক্যাপসুলেটেড পোস্টস্ক্রিপ্ট"
+
+#~ msgid "PostScript"
+#~ msgstr "পোস্টস্ক্রিপ্ট"
+
+#~ msgid "Find Previous"
+#~ msgstr "পূর্ববর্তীটি খুঁজুন"
+
+#~ msgid "Find Next"
+#~ msgstr "পরবর্তীটি খুঁজুন"
+
+#~ msgid "Incorrect password"
+#~ msgstr "ভুল পাসওয়ার্ড"
+
+#~ msgid ""
+#~ "You were trying to print to a printer using the “%s” driver. This program "
+#~ "requires a PostScript printer driver."
+#~ msgstr ""
+#~ "“%s” ড্রাইভার সহযোগে আপনি একটি মুদ্রণযন্ত্রে মুদ্রন করার প্রচেষ্টা করেছেন। এই "
+#~ "\"\"প্রোগ্রামের ক্ষেত্রে পোস্টস্ক্রিপ্ট প্রিন্টার ড্রাইভার আবশ্যক।"
+
+#~ msgid "Evince Document Viewer"
+#~ msgstr "এভিন্স নথি প্রদর্শক"
 
 #~ msgid "_Previous"
-#~ msgstr "পূর্ববর্তী (_প)"
+#~ msgstr "পূর্ববর্তী (_P)"
 
 #~ msgid "_Next"
-#~ msgstr "পরবর্তী (_র)"
+#~ msgstr "পরবর্তী (_N)"
 
 #~ msgid "The \"Find\" feature will not work with this document"
-#~ msgstr "এই ডকুমেন্টে \"অনুসন্ধান\" প্রক্রিয়া কাজ করবে না"
+#~ msgstr "এই নথিতে \"অনুসন্ধান\" প্রক্রিয়া কাজ করবে না"
 
 #~ msgid "Searching for text is only supported for PDF documents."
-#~ msgstr "টেক্সট অনুসন্ধান শুধুমাত্র পি.ডি.এফ. ডকুমেন্টের ক্ষেত্রেই প্রযোজ্য।"
+#~ msgstr "টেক্সট অনুসন্ধান শুধুমাত্র PDF নথির ক্ষেত্রেই প্রযোজ্য।"
 
 #~ msgid "Not found"
 #~ msgstr "পাওয়া যায় নি"
