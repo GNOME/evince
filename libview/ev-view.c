@@ -2735,7 +2735,9 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 		state &= ~GDK_SHIFT_MASK;
 	}
 
-	if (state == 0 && view->presentation) {
+	if (state == 0 &&
+	    (view->presentation ||
+	     (view->sizing_mode == EV_SIZING_BEST_FIT && !view->continuous))) {
 		switch (event->direction) {
 		        case GDK_SCROLL_DOWN:
 		        case GDK_SCROLL_RIGHT:
