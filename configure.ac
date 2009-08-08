@@ -191,6 +191,7 @@ dnl ===== Check special functions
 evince_save_LIBS=$LIBS
 LIBS="$LIBS $BACKEND_LIBS"
 AC_CHECK_FUNCS(cairo_format_stride_for_width)
+AC_CHECK_FUNCS(gtk_print_operation_get_n_pages_to_print)
 LIBS=$evince_save_LIBS
 
 # ******************

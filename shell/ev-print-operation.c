@@ -1472,6 +1472,8 @@ struct _EvPrintOperationPrint {
 	EvPrintOperation parent;
 
 	GtkPrintOperation *op;
+	gint               n_pages_to_print;
+	gint               total;
 	EvJob             *job_print;
 	gchar             *job_name;
 };
@@ -1589,8 +1591,6 @@ ev_print_operation_print_begin_print (EvPrintOperationPrint *print,
 
 	n_pages = ev_page_cache_get_n_pages (ev_page_cache_get (op->document));
 	gtk_print_operation_set_n_pages (print->op, n_pages);
-
-	/* FIXME: gtk_print should provide the progress */
 	ev_print_operation_update_status (op, -1, n_pages, 0);
 
 	g_signal_emit (op, signals[BEGIN_PRINT], 0);
@@ -1602,17 +1602,36 @@ ev_print_operation_print_done (EvPrintOperationPrint  *print,
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
 
-	/* FIXME: gtk_print should provide the progress */
-	ev_print_operation_update_status (op, 0, 1, 1.0);
+	ev_print_operation_update_status (op, 0, print->n_pages_to_print, 1.0);
 
 	g_signal_emit (op, signals[DONE], 0, result);
+}
+
+static void
+ev_print_operation_print_status_changed (EvPrintOperationPrint *print)
+{
+#ifdef HAVE_GTK_PRINT_OPERATION_GET_N_PAGES_TO_PRINT
+	GtkPrintStatus status;
+
+	status = gtk_print_operation_get_status (print->op);
+	if (status == GTK_PRINT_STATUS_GENERATING_DATA)
+		print->n_pages_to_print = gtk_print_operation_get_n_pages_to_print (print->op);
+#endif
 }
 
 static void
 print_job_finished (EvJobPrint            *job,
 		    EvPrintOperationPrint *print)
 {
+	EvPrintOperation *op = EV_PRINT_OPERATION (print);
+
 	gtk_print_operation_draw_page_finish (print->op);
+#ifdef HAVE_GTK_PRINT_OPERATION_GET_N_PAGES_TO_PRINT
+	print->total++;
+	ev_print_operation_update_status (op, print->total,
+					  print->n_pages_to_print,
+					  print->total / (gdouble)print->n_pages_to_print);
+#endif
 	ev_job_print_set_cairo (job, NULL);
 }
 
@@ -1702,6 +1721,9 @@ ev_print_operation_print_init (EvPrintOperationPrint *print)
 				  print);
 	g_signal_connect_swapped (print->op, "draw_page",
 				  G_CALLBACK (ev_print_operation_print_draw_page),
+				  print);
+	g_signal_connect_swapped (print->op, "status_changed",
+				  G_CALLBACK (ev_print_operation_print_status_changed),
 				  print);
 	gtk_print_operation_set_allow_async (print->op, TRUE);
 }
