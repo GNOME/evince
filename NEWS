@@ -1,4 +1,43 @@
 ================
+Evince  2.27.90
+================
+
+Bug fixes:
+
+    * Let scroll wheel change page when in non-continuous best-fit
+      mode (#562257, Philip Langdale)
+    * Show print progress information when using GtkPrintOperation
+    * Don't show crash recovery dialog when requested file is the only
+      one to be recovered (#578894, Carlos Garcia Campos)
+    * Disable crash recovery when D-BUS is disabled (#578894, Carlos
+      Garcia Campos)
+    * Grab focus on view widget after setting metadata (#589300,
+      Nickolay V. Shmyrev)
+    * Fixes segmentation violation when print file format is empty
+      (#589226, Andreas Liebe)
+    * Use AM_V_GEN to make custom commands silent (#585355, Javier Jardón)
+    * Don't install schema files when building without gconf (Nickolay
+      V. Shmyrev)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Maruf Ovee (bn)
+    * Denis (br)
+    * Gil Forcada (ca)
+    * Carles Ferrando Garcia (ca@valencia)
+    * Marek Černocký (cs)
+    * Mario Blättermann (de)
+    * Seán de Búrca (ga)
+    * Antón Méixome (gl)
+    * Kjartan Maraas (nb)
+    * André Gondim (pt_BR)
+    * Daniel Nylander (sv)
+    * Theppitak Karoonboonyanan (th)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+    
+================
 Evince  2.27.4
 ================
 
