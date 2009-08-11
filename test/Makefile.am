@@ -4,9 +4,7 @@ dist_check_SCRIPTS = \
 	test2.py \
 	test3.py \
 	test4.py \
-	test5.py \
-	test6.py \
-	test7.py
+	test5.py
 
 TESTS = $(dist_check_SCRIPTS)
 
@@ -14,4 +12,6 @@ EXTRA_DIST = \
 	test-encrypt.pdf \
 	test-links.pdf \
 	test-mime.bin \
-	test-page-labels.pdf
+	test-page-labels.pdf \
+	test6.py \
+	test7.py
