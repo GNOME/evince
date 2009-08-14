@@ -5429,6 +5429,7 @@ launch_action (EvWindow *window, EvLinkAction *action)
 	
 	g_object_unref (app_info);
 	g_object_unref (file);
+        /* FIXMEchpe: unref launch context? */
 
 	/* According to the PDF spec filename can be an executable. I'm not sure
 	   allowing to launch executables is a good idea though. -- marco */
@@ -5454,10 +5455,10 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 		
 		/* Not a valid uri, assuming it's http */
 		http = g_strdup_printf ("http://%s", uri);
-		ret = g_app_info_launch_default_for_uri (http, NULL, &error);
+		ret = g_app_info_launch_default_for_uri (http, context, &error);
 		g_free (http);
 	} else {
-		ret = g_app_info_launch_default_for_uri (uri, NULL, &error);
+		ret = g_app_info_launch_default_for_uri (uri, context, &error);
 	}
 	
   	if (ret == FALSE) {
@@ -5465,6 +5466,8 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 					 "%s", _("Unable to open external link"));
 		g_error_free (error);
 	}
+
+        /* FIXMEchpe: unref launch context? */
 }
 
 static void
