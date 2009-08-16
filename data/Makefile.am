@@ -116,5 +116,3 @@ EXTRA_DIST =				\
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
 	$(schema_DATA)
-
-

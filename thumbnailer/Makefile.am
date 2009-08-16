@@ -71,7 +71,8 @@ if GCONF_SCHEMAS_INSTALL
 	done \
 	fi
 endif
-endif
+
+endif # WITH_GCONF
 
 EXTRA_DIST =         	\
 	$(schema_files)  

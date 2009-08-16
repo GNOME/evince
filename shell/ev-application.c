@@ -175,6 +175,8 @@ ev_application_get_instance (void)
 	return instance;
 }
 
+#if defined (WITH_SMCLIENT) || defined (ENABLE_DBUS)
+
 /* Session */
 static void
 save_session (EvApplication *application,
@@ -202,6 +204,8 @@ save_session (EvApplication *application,
 				    i);
 	g_free (uri_list);
 }
+
+#endif /* WITH_SMCLIENT || ENABLE_DBUS */
 
 #ifdef ENABLE_DBUS
 static void
