@@ -61,7 +61,7 @@ AM_PROG_CC_STDC
 AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_STDC_HEADERS
-IT_PROG_INTLTOOL([0.35.0])
+
 AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
 AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
@@ -73,10 +73,16 @@ GNOME_CXX_WARNINGS
 
 GTK_DOC_CHECK(1.0)
 
+IT_PROG_INTLTOOL([0.35.0])
+
 GETTEXT_PACKAGE=evince
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
 AM_GLIB_GNU_GETTEXT
+
+m4_pattern_allow([AM_V_GEN])dnl Make autoconf not complain about the rule below
+EV_INTLTOOL_EVINCE_BACKEND_RULE='%.evince-backend:   %.evince-backend.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; $(AM_V_GEN) LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< [$]@'
+AC_SUBST([EV_INTLTOOL_EVINCE_BACKEND_RULE])
 
 # Check which platform to use
 

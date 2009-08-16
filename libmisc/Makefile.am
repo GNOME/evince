@@ -17,4 +17,3 @@ libevmisc_la_CFLAGS =	\
 libevmisc_la_LIBADD = \
 	$(top_builddir)/libdocument/libevdocument.la \
 	$(top_builddir)/libview/libevview.la
-

@@ -21,11 +21,10 @@ libpsdocument_la_LIBADD = 				\
 	$(SPECTRE_LIBS)
 
 backend_in_files = psdocument.evince-backend.in
-
-%.evince-backend: %.evince-backend.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*po) ; $(INTLTOOL_MERGE) $(top_srcdir)/po $< $@ -d -u -c $(top_builddir)/po/.intltool-merge-cache
-
 backend_DATA = $(backend_in_files:.evince-backend.in=.evince-backend)
 
 EXTRA_DIST = $(backend_in_files)
 
 CLEANFILES = $(backend_DATA)
+
+@EV_INTLTOOL_EVINCE_BACKEND_RULE@
