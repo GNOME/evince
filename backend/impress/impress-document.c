@@ -424,17 +424,6 @@ impress_document_render (EvDocument      *document,
   return scaled_surface;
 }
 
-static EvDocumentInfo *
-impress_document_get_info (EvDocument *document)
-{
-  EvDocumentInfo *info;
-
-  info = g_new0 (EvDocumentInfo, 1);
-  info->fields_mask = 0;
-
-  return info;
-}
-
 static void
 impress_document_finalize (GObject *object)
 {
@@ -474,7 +463,6 @@ impress_document_class_init (ImpressDocumentClass *klass)
   ev_document_class->get_n_pages = impress_document_get_n_pages;
   ev_document_class->get_page_size = impress_document_get_page_size;
   ev_document_class->render = impress_document_render;
-  ev_document_class->get_info = impress_document_get_info;
 }
 
 static GdkPixbuf *

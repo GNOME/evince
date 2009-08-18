@@ -721,14 +721,6 @@ comics_document_finalize (GObject *object)
 	G_OBJECT_CLASS (comics_document_parent_class)->finalize (object);
 }
 
-static EvDocumentInfo *
-comics_document_get_info (EvDocument *document)
-{
-	EvDocumentInfo *info;
-	info = g_new0 (EvDocumentInfo, 1);
-	return info;
-}
-
 static void
 comics_document_class_init (ComicsDocumentClass *klass)
 {
@@ -742,7 +734,6 @@ comics_document_class_init (ComicsDocumentClass *klass)
 	ev_document_class->get_n_pages = comics_document_get_n_pages;
 	ev_document_class->get_page_size = comics_document_get_page_size;
 	ev_document_class->render = comics_document_render;
-	ev_document_class->get_info = comics_document_get_info;
 }
 
 static void

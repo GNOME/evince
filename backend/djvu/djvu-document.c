@@ -386,16 +386,6 @@ djvu_document_render (EvDocument      *document,
 	return surface;
 }
 
-static EvDocumentInfo *
-djvu_document_get_info (EvDocument *document)
-{
-	EvDocumentInfo *info;
-
-	info = g_new0 (EvDocumentInfo, 1);
-
-	return info;
-}
-
 static void
 djvu_document_finalize (GObject *object)
 {
@@ -431,7 +421,6 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 	ev_document_class->get_n_pages = djvu_document_get_n_pages;
 	ev_document_class->get_page_size = djvu_document_get_page_size;
 	ev_document_class->render = djvu_document_render;
-	ev_document_class->get_info = djvu_document_get_info;
 }
 
 static gchar *

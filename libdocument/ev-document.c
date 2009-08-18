@@ -45,6 +45,12 @@ ev_document_impl_get_page (EvDocument *document,
 	return ev_page_new (index);
 }
 
+static EvDocumentInfo *
+ev_document_impl_get_info (EvDocument *document)
+{
+	return g_new0 (EvDocumentInfo, 1);
+}
+
 static void
 ev_document_init (EvDocument *document)
 {
@@ -54,6 +60,7 @@ static void
 ev_document_class_init (EvDocumentClass *klass)
 {
 	klass->get_page = ev_document_impl_get_page;
+	klass->get_info = ev_document_impl_get_info;
 }
 
 GMutex *

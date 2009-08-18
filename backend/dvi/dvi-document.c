@@ -229,16 +229,6 @@ dvi_document_finalize (GObject *object)
 	G_OBJECT_CLASS (dvi_document_parent_class)->finalize (object);
 }
 
-static EvDocumentInfo *
-dvi_document_get_info (EvDocument *document)
-{
-	EvDocumentInfo *info;
-
-	info = g_new0 (EvDocumentInfo, 1);
-
-	return info;
-}
-
 static void
 dvi_document_class_init (DviDocumentClass *klass)
 {
@@ -258,7 +248,6 @@ dvi_document_class_init (DviDocumentClass *klass)
 	ev_document_class->get_n_pages = dvi_document_get_n_pages;
 	ev_document_class->get_page_size = dvi_document_get_page_size;
 	ev_document_class->render = dvi_document_render;
-	ev_document_class->get_info = dvi_document_get_info;
 }
 
 static void
