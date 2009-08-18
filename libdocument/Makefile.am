@@ -11,6 +11,7 @@ INST_H_FILES = 					\
 	ev-backends-manager.h			\
 	ev-document-factory.h			\
 	ev-document-annotations.h		\
+	ev-document-attachments.h		\
 	ev-document-find.h			\
 	ev-document-fonts.h			\
 	ev-document-forms.h			\
@@ -57,6 +58,7 @@ libevdocument_la_SOURCES=			\
 	ev-init.c				\
 	ev-document.c				\
 	ev-document-annotations.c		\
+	ev-document-attachments.c		\
 	ev-document-factory.c			\
 	ev-document-thumbnails.c		\
 	ev-document-fonts.c                     \
