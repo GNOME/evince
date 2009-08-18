@@ -48,6 +48,7 @@
 #include "ev-document-layers.h"
 #include "ev-document-print.h"
 #include "ev-document-annotations.h"
+#include "ev-document-attachments.h"
 #include "ev-selection.h"
 #include "ev-transition-effect.h"
 #include "ev-attachment.h"
@@ -124,6 +125,7 @@ static void pdf_document_document_layers_iface_init      (EvDocumentLayersIface 
 static void pdf_document_document_print_iface_init       (EvDocumentPrintIface       *iface);
 #endif
 static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface);
+static void pdf_document_document_attachments_iface_init (EvDocumentAttachmentsIface *iface);
 static void pdf_document_find_iface_init                 (EvDocumentFindIface        *iface);
 static void pdf_document_file_exporter_iface_init        (EvFileExporterIface        *iface);
 static void pdf_selection_iface_init                     (EvSelectionIface           *iface);
@@ -163,6 +165,8 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 #endif
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
 								 pdf_document_document_annotations_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
+								 pdf_document_document_attachments_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 								 pdf_document_find_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
@@ -359,122 +363,6 @@ pdf_document_get_page_label (EvDocument *document,
 		      "label", &label,
 		      NULL);
 	return label;
-}
-
-static gboolean
-pdf_document_has_attachments (EvDocument *document)
-{
-	PdfDocument *pdf_document;
-
-	pdf_document = PDF_DOCUMENT (document);
-
-	return poppler_document_has_attachments (pdf_document->document);
-}
-
-struct SaveToBufferData {
-	gchar *buffer;
-	gsize len, max;
-};
-
-static gboolean
-attachment_save_to_buffer_callback (const gchar  *buf,
-				    gsize         count,
-				    gpointer      user_data,
-				    GError      **error)
-{
-	struct SaveToBufferData *sdata = (SaveToBufferData *)user_data;
-	gchar *new_buffer;
-	gsize new_max;
-
-	if (sdata->len + count > sdata->max) {
-		new_max = MAX (sdata->max * 2, sdata->len + count);
-		new_buffer = (gchar *)g_realloc (sdata->buffer, new_max);
-
-		sdata->buffer = new_buffer;
-		sdata->max = new_max;
-	}
-	
-	memcpy (sdata->buffer + sdata->len, buf, count);
-	sdata->len += count;
-	
-	return TRUE;
-}
-
-static gboolean
-attachment_save_to_buffer (PopplerAttachment  *attachment,
-			   gchar             **buffer,
-			   gsize              *buffer_size,
-			   GError            **error)
-{
-	static const gint initial_max = 1024;
-	struct SaveToBufferData sdata;
-
-	*buffer = NULL;
-	*buffer_size = 0;
-
-	sdata.buffer = (gchar *) g_malloc (initial_max);
-	sdata.max = initial_max;
-	sdata.len = 0;
-
-	if (! poppler_attachment_save_to_callback (attachment,
-						   attachment_save_to_buffer_callback,
-						   &sdata,
-						   error)) {
-		g_free (sdata.buffer);
-		return FALSE;
-	}
-
-	*buffer = sdata.buffer;
-	*buffer_size = sdata.len;
-	
-	return TRUE;
-}
-
-static GList *
-pdf_document_get_attachments (EvDocument *document)
-{
-	PdfDocument *pdf_document;
-	GList *attachments;
-	GList *list;
-	GList *retval = NULL;
-
-	pdf_document = PDF_DOCUMENT (document);
-
-	if (!pdf_document_has_attachments (document))
-		return NULL;
-
-	attachments = poppler_document_get_attachments (pdf_document->document);
-	
-	for (list = attachments; list; list = list->next) {
-		PopplerAttachment *attachment;
-		EvAttachment *ev_attachment;
-		gchar *data = NULL;
-		gsize size;
-		GError *error = NULL;
-
-		attachment = (PopplerAttachment *) list->data;
-
-		if (attachment_save_to_buffer (attachment, &data, &size, &error)) {
-			ev_attachment = ev_attachment_new (attachment->name,
-							   attachment->description,
-							   attachment->mtime,
-							   attachment->ctime,
-							   size, data);
-			
-			retval = g_list_prepend (retval, ev_attachment);
-		} else {
-			if (error) {
-				g_warning ("%s", error->message);
-				g_error_free (error);
-
-				g_free (data);
-			}
-		}
-
-		g_object_unref (attachment);
-	}
-
-	return g_list_reverse (retval);
 }
 
 static cairo_surface_t *
@@ -841,8 +729,6 @@ pdf_document_document_iface_init (EvDocumentIface *iface)
 	iface->get_page = pdf_document_get_page;
 	iface->get_page_size = pdf_document_get_page_size;
 	iface->get_page_label = pdf_document_get_page_label;
-	iface->has_attachments = pdf_document_has_attachments;
-	iface->get_attachments = pdf_document_get_attachments;
 	iface->render = pdf_document_render;
 	iface->get_info = pdf_document_get_info;
 };
@@ -2653,6 +2539,123 @@ pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface)
 {
 	iface->get_annotations = pdf_document_annotations_get_annotations;
 	iface->annotation_set_contents = pdf_document_annotations_annotation_set_contents;
+}
+
+/* Attachments */
+struct SaveToBufferData {
+	gchar *buffer;
+	gsize len, max;
+};
+
+static gboolean
+attachment_save_to_buffer_callback (const gchar  *buf,
+				    gsize         count,
+				    gpointer      user_data,
+				    GError      **error)
+{
+	struct SaveToBufferData *sdata = (SaveToBufferData *)user_data;
+	gchar *new_buffer;
+	gsize new_max;
+
+	if (sdata->len + count > sdata->max) {
+		new_max = MAX (sdata->max * 2, sdata->len + count);
+		new_buffer = (gchar *)g_realloc (sdata->buffer, new_max);
+
+		sdata->buffer = new_buffer;
+		sdata->max = new_max;
+	}
+
+	memcpy (sdata->buffer + sdata->len, buf, count);
+	sdata->len += count;
+
+	return TRUE;
+}
+
+static gboolean
+attachment_save_to_buffer (PopplerAttachment  *attachment,
+			   gchar             **buffer,
+			   gsize              *buffer_size,
+			   GError            **error)
+{
+	static const gint initial_max = 1024;
+	struct SaveToBufferData sdata;
+
+	*buffer = NULL;
+	*buffer_size = 0;
+
+	sdata.buffer = (gchar *) g_malloc (initial_max);
+	sdata.max = initial_max;
+	sdata.len = 0;
+
+	if (! poppler_attachment_save_to_callback (attachment,
+						   attachment_save_to_buffer_callback,
+						   &sdata,
+						   error)) {
+		g_free (sdata.buffer);
+		return FALSE;
+	}
+
+	*buffer = sdata.buffer;
+	*buffer_size = sdata.len;
+
+	return TRUE;
+}
+
+static GList *
+pdf_document_attachments_get_attachments (EvDocumentAttachments *document)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	GList *attachments;
+	GList *list;
+	GList *retval = NULL;
+
+	attachments = poppler_document_get_attachments (pdf_document->document);
+
+	for (list = attachments; list; list = list->next) {
+		PopplerAttachment *attachment;
+		EvAttachment *ev_attachment;
+		gchar *data = NULL;
+		gsize size;
+		GError *error = NULL;
+
+		attachment = (PopplerAttachment *) list->data;
+
+		if (attachment_save_to_buffer (attachment, &data, &size, &error)) {
+			ev_attachment = ev_attachment_new (attachment->name,
+							   attachment->description,
+							   attachment->mtime,
+							   attachment->ctime,
+							   size, data);
+
+			retval = g_list_prepend (retval, ev_attachment);
+		} else {
+			if (error) {
+				g_warning ("%s", error->message);
+				g_error_free (error);
+
+				g_free (data);
+			}
+		}
+
+		g_object_unref (attachment);
+	}
+
+	return g_list_reverse (retval);
+}
+
+static gboolean
+pdf_document_attachments_has_attachments (EvDocumentAttachments *document)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	return poppler_document_has_attachments (pdf_document->document);
+}
+
+static void
+pdf_document_document_attachments_iface_init (EvDocumentAttachmentsIface *iface)
+{
+	iface->has_attachments = pdf_document_attachments_has_attachments;
+	iface->get_attachments = pdf_document_attachments_get_attachments;
 }
 
 /* Layers */

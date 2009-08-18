@@ -35,6 +35,7 @@
 #include "ev-document-layers.h"
 #include "ev-document-print.h"
 #include "ev-document-annotations.h"
+#include "ev-document-attachments.h"
 #include "ev-debug.h"
 
 #include <errno.h>
@@ -402,13 +403,14 @@ ev_job_attachments_run (EvJob *job)
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
-	
+
 	ev_document_doc_mutex_lock ();
-	job_attachments->attachments = ev_document_get_attachments (job->document);
+	job_attachments->attachments =
+		ev_document_attachments_get_attachments (EV_DOCUMENT_ATTACHMENTS (job->document));
 	ev_document_doc_mutex_unlock ();
-	
+
 	ev_job_succeeded (job);
-	
+
 	return FALSE;
 }
 

@@ -31,6 +31,7 @@
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
 
+#include "ev-document-attachments.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
 #include "ev-file-helpers.h"
@@ -656,9 +657,6 @@ ev_sidebar_attachments_set_document (EvSidebarPage   *page,
 {
 	EvSidebarAttachments *ev_attachbar = EV_SIDEBAR_ATTACHMENTS (page);
 	EvJob *job;
-	
-	if (!ev_document_has_attachments (document))
-		return;
 
 	if (!ev_attachbar->priv->icon_theme) {
 		GdkScreen *screen;
@@ -688,7 +686,8 @@ static gboolean
 ev_sidebar_attachments_support_document (EvSidebarPage   *sidebar_page,
 					 EvDocument      *document)
 {
-	return ev_document_has_attachments (document);
+	return (EV_IS_DOCUMENT_ATTACHMENTS (document) &&
+		ev_document_attachments_has_attachments (document));
 }
 
 static const gchar*
