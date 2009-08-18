@@ -44,12 +44,12 @@ enum {
 
 struct _DviDocumentClass
 {
-	GObjectClass parent_class;
+	EvDocumentClass parent_class;
 };
 
 struct _DviDocument
 {
-	GObject parent_instance;
+	EvDocument parent_instance;
 
 	DviContext *context;
 	DviPageSpec *spec;
@@ -68,7 +68,6 @@ struct _DviDocument
 
 typedef struct _DviDocumentClass DviDocumentClass;
 
-static void dvi_document_document_iface_init            (EvDocumentIface           *iface);
 static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void dvi_document_file_exporter_iface_init	(EvFileExporterIface 	   *iface);
 static void dvi_document_do_color_special               (DviContext                *dvi,
@@ -230,21 +229,6 @@ dvi_document_finalize (GObject *object)
 	G_OBJECT_CLASS (dvi_document_parent_class)->finalize (object);
 }
 
-
-static void
-dvi_document_class_init (DviDocumentClass *klass)
-{
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-
-	gobject_class->finalize = dvi_document_finalize;
-
-	mdvi_init_kpathsea ("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
-	mdvi_register_special ("Color", "color", NULL, dvi_document_do_color_special, 1);
-	mdvi_register_fonts ();
-
-	dvi_context_mutex = g_mutex_new ();
-}
-
 static EvDocumentInfo *
 dvi_document_get_info (EvDocument *document)
 {
@@ -256,14 +240,25 @@ dvi_document_get_info (EvDocument *document)
 }
 
 static void
-dvi_document_document_iface_init (EvDocumentIface *iface)
+dvi_document_class_init (DviDocumentClass *klass)
 {
-	iface->load = dvi_document_load;
-	iface->save = dvi_document_save;
-	iface->get_n_pages = dvi_document_get_n_pages;
-	iface->get_page_size = dvi_document_get_page_size;
-	iface->render = dvi_document_render;
-	iface->get_info = dvi_document_get_info;
+	GObjectClass    *gobject_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
+
+	gobject_class->finalize = dvi_document_finalize;
+
+	mdvi_init_kpathsea ("evince", MDVI_MFMODE, MDVI_FALLBACK_FONT, MDVI_DPI);
+	mdvi_register_special ("Color", "color", NULL, dvi_document_do_color_special, 1);
+	mdvi_register_fonts ();
+
+	dvi_context_mutex = g_mutex_new ();
+
+	ev_document_class->load = dvi_document_load;
+	ev_document_class->save = dvi_document_save;
+	ev_document_class->get_n_pages = dvi_document_get_n_pages;
+	ev_document_class->get_page_size = dvi_document_get_page_size;
+	ev_document_class->render = dvi_document_render;
+	ev_document_class->get_info = dvi_document_get_info;
 }
 
 static void

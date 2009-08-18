@@ -36,10 +36,10 @@
 
 struct _ComicsDocumentClass
 {
-	GObjectClass parent_class;
+	EvDocumentClass parent_class;
 };
- 
-typedef enum 
+
+typedef enum
 {
 	RARLABS,
 	GNAUNRAR,
@@ -49,7 +49,8 @@ typedef enum
 
 struct _ComicsDocument
 {
-	GObject parent_instance;
+	EvDocument parent_instance;
+
 	gchar    *archive, *dir;
 	GSList   *page_names;
 	gint     n_pages;
@@ -80,7 +81,6 @@ struct {
 
 typedef struct    _ComicsDocumentClass ComicsDocumentClass;
 
-static void       comics_document_document_iface_init (EvDocumentIface *iface);
 static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
 static GSList*    get_supported_image_extensions (void);
@@ -721,13 +721,6 @@ comics_document_finalize (GObject *object)
 	G_OBJECT_CLASS (comics_document_parent_class)->finalize (object);
 }
 
-static void
-comics_document_class_init (ComicsDocumentClass *klass)
-{
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-	gobject_class->finalize = comics_document_finalize;
-}
-
 static EvDocumentInfo *
 comics_document_get_info (EvDocument *document)
 {
@@ -737,14 +730,19 @@ comics_document_get_info (EvDocument *document)
 }
 
 static void
-comics_document_document_iface_init (EvDocumentIface *iface)
+comics_document_class_init (ComicsDocumentClass *klass)
 {
-	iface->load = comics_document_load;
-	iface->save = comics_document_save;
-	iface->get_n_pages = comics_document_get_n_pages;
-	iface->get_page_size = comics_document_get_page_size;
-	iface->render = comics_document_render;
-	iface->get_info = comics_document_get_info;
+	GObjectClass    *gobject_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
+
+	gobject_class->finalize = comics_document_finalize;
+
+	ev_document_class->load = comics_document_load;
+	ev_document_class->save = comics_document_save;
+	ev_document_class->get_n_pages = comics_document_get_n_pages;
+	ev_document_class->get_page_size = comics_document_get_page_size;
+	ev_document_class->render = comics_document_render;
+	ev_document_class->get_info = comics_document_get_info;
 }
 
 static void

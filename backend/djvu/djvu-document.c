@@ -46,12 +46,11 @@ enum {
 
 struct _DjvuDocumentClass
 {
-	GObjectClass parent_class;
+	EvDocumentClass parent_class;
 };
 
 typedef struct _DjvuDocumentClass DjvuDocumentClass;
 
-static void djvu_document_document_iface_init (EvDocumentIface *iface);
 static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void djvu_document_file_exporter_iface_init (EvFileExporterIface *iface);
 static void djvu_document_find_iface_init (EvDocumentFindIface *iface);
@@ -387,6 +386,16 @@ djvu_document_render (EvDocument      *document,
 	return surface;
 }
 
+static EvDocumentInfo *
+djvu_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+
+	info = g_new0 (EvDocumentInfo, 1);
+
+	return info;
+}
+
 static void
 djvu_document_finalize (GObject *object)
 {
@@ -412,30 +421,17 @@ djvu_document_finalize (GObject *object)
 static void
 djvu_document_class_init (DjvuDocumentClass *klass)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+	GObjectClass    *gobject_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
 
 	gobject_class->finalize = djvu_document_finalize;
-}
 
-static EvDocumentInfo *
-djvu_document_get_info (EvDocument *document)
-{
-	EvDocumentInfo *info;
-
-	info = g_new0 (EvDocumentInfo, 1);
-
-	return info;
-}
-
-static void
-djvu_document_document_iface_init (EvDocumentIface *iface)
-{
-	iface->load = djvu_document_load;
-	iface->save = djvu_document_save;
-	iface->get_n_pages = djvu_document_get_n_pages;
-	iface->get_page_size = djvu_document_get_page_size;
-	iface->render = djvu_document_render;
-	iface->get_info = djvu_document_get_info;
+	ev_document_class->load = djvu_document_load;
+	ev_document_class->save = djvu_document_save;
+	ev_document_class->get_n_pages = djvu_document_get_n_pages;
+	ev_document_class->get_page_size = djvu_document_get_page_size;
+	ev_document_class->render = djvu_document_render;
+	ev_document_class->get_info = djvu_document_get_info;
 }
 
 static gchar *

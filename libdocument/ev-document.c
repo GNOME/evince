@@ -1,5 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
+ *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2004 Marco Pesenti Gritti
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -25,7 +26,7 @@
 GMutex *ev_doc_mutex = NULL;
 GMutex *ev_fc_mutex = NULL;
 
-EV_DEFINE_INTERFACE (EvDocument, ev_document, G_TYPE_OBJECT)
+G_DEFINE_ABSTRACT_TYPE (EvDocument, ev_document, G_TYPE_OBJECT)
 
 GQuark
 ev_document_error_quark (void)
@@ -37,9 +38,22 @@ ev_document_error_quark (void)
   return q;
 }
 
-static void
-ev_document_class_init (EvDocumentIface *klass)
+static EvPage *
+ev_document_impl_get_page (EvDocument *document,
+			   gint        index)
 {
+	return ev_page_new (index);
+}
+
+static void
+ev_document_init (EvDocument *document)
+{
+}
+
+static void
+ev_document_class_init (EvDocumentClass *klass)
+{
+	klass->get_page = ev_document_impl_get_page;
 }
 
 GMutex *
@@ -118,16 +132,16 @@ ev_document_load (EvDocument  *document,
 		  const char  *uri,
 		  GError     **error)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 	gboolean retval;
 	GError *err = NULL;
 
-	retval = iface->load (document, uri, &err);
+	retval = klass->load (document, uri, &err);
 	if (!retval) {
 		if (err) {
 			g_propagate_error (error, err);
 		} else {
-			g_warning ("%s::EvDocumentIface::load returned FALSE but did not fill in @error; fix the backend!\n",
+			g_warning ("%s::EvDocument::load returned FALSE but did not fill in @error; fix the backend!\n",
 				   G_OBJECT_TYPE_NAME (document));
 
 			/* So upper layers don't crash */
@@ -156,38 +170,26 @@ ev_document_save (EvDocument  *document,
 		  const char  *uri,
 		  GError     **error)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	gboolean retval;
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	retval = iface->save (document, uri, error);
-
-	return retval;
+	return klass->save (document, uri, error);
 }
 
 int
 ev_document_get_n_pages (EvDocument  *document)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	gint retval;
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	retval = iface->get_n_pages (document);
-
-	return retval;
+	return klass->get_n_pages (document);
 }
 
 EvPage *
 ev_document_get_page (EvDocument *document,
 		      gint        index)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	EvPage *retval;
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	if (iface->get_page)
-		retval = iface->get_page (document, index);
-	else
-		retval = ev_page_new (index);
-
-	return retval;
+	return klass->get_page (document, index);
 }
 
 void
@@ -196,43 +198,36 @@ ev_document_get_page_size (EvDocument *document,
 			   double     *width,
 			   double     *height)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	iface->get_page_size (document, page, width, height);
+	klass->get_page_size (document, page, width, height);
 }
 
-char *
+gchar *
 ev_document_get_page_label (EvDocument *document,
 			    EvPage     *page)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	if (iface->get_page_label == NULL)
-		return NULL;
-
-	return iface->get_page_label (document, page);
+	return klass->get_page_label ?
+		klass->get_page_label (document, page) : NULL;
 }
 
 EvDocumentInfo *
 ev_document_get_info (EvDocument *document)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	return iface->get_info (document);
+	return klass->get_info (document);
 }
 
 cairo_surface_t *
 ev_document_render (EvDocument      *document,
 		    EvRenderContext *rc)
 {
-	EvDocumentIface *iface = EV_DOCUMENT_GET_IFACE (document);
-	cairo_surface_t *retval;
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
-	g_assert (iface->render);
-
-	retval = iface->render (document, rc);
-
-	return retval;
+	return klass->render (document, rc);
 }
 
 /* EvDocumentInfo */

@@ -33,12 +33,12 @@
 
 struct _ImpressDocumentClass
 {
-  GObjectClass parent_class;
+  EvDocumentClass parent_class;
 };
 
 struct _ImpressDocument
 {
-  GObject parent_instance;
+  EvDocument parent_instance;
 
   ImpDoc *imp;
   ImpRenderCtx *ctx;
@@ -59,7 +59,6 @@ struct _ImpressDocument
 
 typedef struct _ImpressDocumentClass ImpressDocumentClass;
 
-static void impress_document_document_iface_init (EvDocumentIface *iface);
 static void impress_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (ImpressDocument, impress_document,
@@ -425,6 +424,17 @@ impress_document_render (EvDocument      *document,
   return scaled_surface;
 }
 
+static EvDocumentInfo *
+impress_document_get_info (EvDocument *document)
+{
+  EvDocumentInfo *info;
+
+  info = g_new0 (EvDocumentInfo, 1);
+  info->fields_mask = 0;
+
+  return info;
+}
+
 static void
 impress_document_finalize (GObject *object)
 {
@@ -454,31 +464,17 @@ impress_document_finalize (GObject *object)
 static void
 impress_document_class_init (ImpressDocumentClass *klass)
 {
-  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+  GObjectClass    *gobject_class = G_OBJECT_CLASS (klass);
+  EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
 
   gobject_class->finalize = impress_document_finalize;
-}
 
-static EvDocumentInfo *
-impress_document_get_info (EvDocument *document)
-{
-  EvDocumentInfo *info;
-
-  info = g_new0 (EvDocumentInfo, 1);
-  info->fields_mask = 0;
-
-  return info;
-}
-
-static void
-impress_document_document_iface_init (EvDocumentIface *iface)
-{
-  iface->load = impress_document_load;
-  iface->save = impress_document_save;
-  iface->get_n_pages = impress_document_get_n_pages;
-  iface->get_page_size = impress_document_get_page_size;
-  iface->render = impress_document_render;
-  iface->get_info = impress_document_get_info;
+  ev_document_class->load = impress_document_load;
+  ev_document_class->save = impress_document_save;
+  ev_document_class->get_n_pages = impress_document_get_n_pages;
+  ev_document_class->get_page_size = impress_document_get_page_size;
+  ev_document_class->render = impress_document_render;
+  ev_document_class->get_info = impress_document_get_info;
 }
 
 static GdkPixbuf *

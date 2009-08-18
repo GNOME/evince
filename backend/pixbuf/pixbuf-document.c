@@ -27,12 +27,12 @@
 
 struct _PixbufDocumentClass
 {
-	GObjectClass parent_class;
+	EvDocumentClass parent_class;
 };
 
 struct _PixbufDocument
 {
-	GObject parent_instance;
+	EvDocument parent_instance;
 
 	GdkPixbuf *pixbuf;
 	
@@ -41,7 +41,6 @@ struct _PixbufDocument
 
 typedef struct _PixbufDocumentClass PixbufDocumentClass;
 
-static void pixbuf_document_document_iface_init (EvDocumentIface *iface);
 static void pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (PixbufDocument, pixbuf_document,
@@ -139,14 +138,6 @@ pixbuf_document_finalize (GObject *object)
 	G_OBJECT_CLASS (pixbuf_document_parent_class)->finalize (object);
 }
 
-static void
-pixbuf_document_class_init (PixbufDocumentClass *klass)
-{
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-
-	gobject_class->finalize = pixbuf_document_finalize;
-}
-
 static EvDocumentInfo *
 pixbuf_document_get_info (EvDocument *document)
 {
@@ -159,14 +150,19 @@ pixbuf_document_get_info (EvDocument *document)
 }
 
 static void
-pixbuf_document_document_iface_init (EvDocumentIface *iface)
+pixbuf_document_class_init (PixbufDocumentClass *klass)
 {
-	iface->load = pixbuf_document_load;
-	iface->save = pixbuf_document_save;
-	iface->get_n_pages = pixbuf_document_get_n_pages;
-	iface->get_page_size = pixbuf_document_get_page_size;
-	iface->render = pixbuf_document_render;
-	iface->get_info = pixbuf_document_get_info;
+	GObjectClass    *gobject_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
+
+	gobject_class->finalize = pixbuf_document_finalize;
+
+	ev_document_class->load = pixbuf_document_load;
+	ev_document_class->save = pixbuf_document_save;
+	ev_document_class->get_n_pages = pixbuf_document_get_n_pages;
+	ev_document_class->get_page_size = pixbuf_document_get_page_size;
+	ev_document_class->render = pixbuf_document_render;
+	ev_document_class->get_info = pixbuf_document_get_info;
 }
 
 static GdkPixbuf *

@@ -92,12 +92,12 @@ typedef struct {
 
 struct _PdfDocumentClass
 {
-	GObjectClass parent_class;
+	EvDocumentClass parent_class;
 };
 
 struct _PdfDocument
 {
-	GObject parent_instance;
+	EvDocument parent_instance;
 
 	PopplerDocument *document;
 	gchar *password;
@@ -113,7 +113,6 @@ struct _PdfDocument
 	GList *layers;
 };
 
-static void pdf_document_document_iface_init             (EvDocumentIface            *iface);
 static void pdf_document_security_iface_init             (EvDocumentSecurityIface    *iface);
 static void pdf_document_document_thumbnails_iface_init  (EvDocumentThumbnailsIface  *iface);
 static void pdf_document_document_links_iface_init       (EvDocumentLinksIface       *iface);
@@ -231,14 +230,6 @@ pdf_document_dispose (GObject *object)
 	}
 
 	G_OBJECT_CLASS (pdf_document_parent_class)->dispose (object);
-}
-
-static void
-pdf_document_class_init (PdfDocumentClass *klass)
-{
-	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
-
-	g_object_class->dispose = pdf_document_dispose;
 }
 
 static void
@@ -447,28 +438,6 @@ pdf_document_render (EvDocument      *document,
 	return pdf_page_render (poppler_page,
 				width, height, rc);
 }
-
-/* EvDocumentSecurity */
-
-static gboolean
-pdf_document_has_document_security (EvDocumentSecurity *document_security)
-{
-	/* FIXME: do we really need to have this? */
-	return FALSE;
-}
-
-static void
-pdf_document_set_password (EvDocumentSecurity *document_security,
-			   const char         *password)
-{
-	PdfDocument *document = PDF_DOCUMENT (document_security);
-
-	if (document->password)
-		g_free (document->password);
-
-	document->password = g_strdup (password);
-}
-
 
 /* reference:
 http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf */
@@ -721,17 +690,42 @@ pdf_document_get_info (EvDocument *document)
 }
 
 static void
-pdf_document_document_iface_init (EvDocumentIface *iface)
+pdf_document_class_init (PdfDocumentClass *klass)
 {
-	iface->save = pdf_document_save;
-	iface->load = pdf_document_load;
-	iface->get_n_pages = pdf_document_get_n_pages;
-	iface->get_page = pdf_document_get_page;
-	iface->get_page_size = pdf_document_get_page_size;
-	iface->get_page_label = pdf_document_get_page_label;
-	iface->render = pdf_document_render;
-	iface->get_info = pdf_document_get_info;
-};
+	GObjectClass    *g_object_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
+
+	g_object_class->dispose = pdf_document_dispose;
+
+	ev_document_class->save = pdf_document_save;
+	ev_document_class->load = pdf_document_load;
+	ev_document_class->get_n_pages = pdf_document_get_n_pages;
+	ev_document_class->get_page = pdf_document_get_page;
+	ev_document_class->get_page_size = pdf_document_get_page_size;
+	ev_document_class->get_page_label = pdf_document_get_page_label;
+	ev_document_class->render = pdf_document_render;
+	ev_document_class->get_info = pdf_document_get_info;
+}
+
+/* EvDocumentSecurity */
+static gboolean
+pdf_document_has_document_security (EvDocumentSecurity *document_security)
+{
+	/* FIXME: do we really need to have this? */
+	return FALSE;
+}
+
+static void
+pdf_document_set_password (EvDocumentSecurity *document_security,
+			   const char         *password)
+{
+	PdfDocument *document = PDF_DOCUMENT (document_security);
+
+	if (document->password)
+		g_free (document->password);
+
+	document->password = g_strdup (password);
+}
 
 static void
 pdf_document_security_iface_init (EvDocumentSecurityIface *iface)

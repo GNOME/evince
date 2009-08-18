@@ -26,7 +26,7 @@
 #include <libdjvu/ddjvuapi.h>
 
 struct _DjvuDocument {
-	GObject           parent_instance;
+	EvDocument        parent_instance;
 
 	ddjvu_context_t  *d_context;
 	ddjvu_document_t *d_document;

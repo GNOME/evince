@@ -37,12 +37,12 @@
 
 struct _TiffDocumentClass
 {
-  GObjectClass parent_class;
+  EvDocumentClass parent_class;
 };
 
 struct _TiffDocument
 {
-  GObject parent_instance;
+  EvDocument parent_instance;
 
   TIFF *tiff;
   gint n_pages;
@@ -53,7 +53,6 @@ struct _TiffDocument
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
 
-static void tiff_document_document_iface_init (EvDocumentIface *iface);
 static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 static void tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface);
 
@@ -384,6 +383,32 @@ tiff_document_render_pixbuf (EvDocument      *document,
 	return rotated_pixbuf;
 }
 
+static gchar *
+tiff_document_get_page_label (EvDocument *document,
+			      EvPage     *page)
+{
+	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+	static gchar *label;
+
+	if (TIFFGetField (tiff_document->tiff, TIFFTAG_PAGENAME, &label) &&
+	    g_utf8_validate (label, -1, NULL)) {
+		return g_strdup (label);
+	}
+
+	return NULL;
+}
+
+static EvDocumentInfo *
+tiff_document_get_info (EvDocument *document)
+{
+	EvDocumentInfo *info;
+
+	info = g_new0 (EvDocumentInfo, 1);
+	info->fields_mask = 0;
+
+	return info;
+}
+
 static void
 tiff_document_finalize (GObject *object)
 {
@@ -400,47 +425,18 @@ tiff_document_finalize (GObject *object)
 static void
 tiff_document_class_init (TiffDocumentClass *klass)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+	GObjectClass    *gobject_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
 
 	gobject_class->finalize = tiff_document_finalize;
-}
 
-static gchar *
-tiff_document_get_page_label (EvDocument *document,
-			      EvPage     *page)
-{
-	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
-	static gchar *label;
-	
-	if (TIFFGetField (tiff_document->tiff, TIFFTAG_PAGENAME, &label) &&
-	    g_utf8_validate (label, -1, NULL)) {
-		return g_strdup (label);
-	}
-	
-	return NULL;
-}
-
-static EvDocumentInfo *
-tiff_document_get_info (EvDocument *document)
-{
-	EvDocumentInfo *info;
-
-	info = g_new0 (EvDocumentInfo, 1);
-	info->fields_mask = 0;
-
-	return info;
-}
-
-static void
-tiff_document_document_iface_init (EvDocumentIface *iface)
-{
-	iface->load = tiff_document_load;
-	iface->save = tiff_document_save;
-	iface->get_n_pages = tiff_document_get_n_pages;
-	iface->get_page_size = tiff_document_get_page_size;
-	iface->render = tiff_document_render;
-	iface->get_page_label = tiff_document_get_page_label;
-	iface->get_info = tiff_document_get_info;
+	ev_document_class->load = tiff_document_load;
+	ev_document_class->save = tiff_document_save;
+	ev_document_class->get_n_pages = tiff_document_get_n_pages;
+	ev_document_class->get_page_size = tiff_document_get_page_size;
+	ev_document_class->render = tiff_document_render;
+	ev_document_class->get_page_label = tiff_document_get_page_label;
+	ev_document_class->get_info = tiff_document_get_info;
 }
 
 static GdkPixbuf *

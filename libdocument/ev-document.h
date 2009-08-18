@@ -1,5 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
+ *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2000-2003 Marco Pesenti Gritti
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -39,13 +40,13 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT            (ev_document_get_type ())
 #define EV_DOCUMENT(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT, EvDocument))
-#define EV_DOCUMENT_IFACE(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentIface))
+#define EV_DOCUMENT_CLASS(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentClass))
 #define EV_IS_DOCUMENT(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT))
-#define EV_IS_DOCUMENT_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
-#define EV_DOCUMENT_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT, EvDocumentIface))
+#define EV_IS_DOCUMENT_CLASS(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
+#define EV_DOCUMENT_GET_CLASS(inst) (G_TYPE_INSTANCE_GET_CLASS ((inst), EV_TYPE_DOCUMENT, EvDocumentClass))
 
 typedef struct _EvDocument        EvDocument;
-typedef struct _EvDocumentIface   EvDocumentIface;
+typedef struct _EvDocumentClass   EvDocumentClass;
 typedef struct _EvPageCache       EvPageCache;
 typedef struct _EvPageCacheClass  EvPageCacheClass;
 
@@ -66,29 +67,34 @@ typedef struct {
 
 typedef struct _EvRectangle EvRectangle;
 
-struct _EvDocumentIface
+struct _EvDocument
 {
-        GTypeInterface base_iface;
+	GObject base;
+};
 
-        /* Methods  */
+struct _EvDocumentClass
+{
+        GObjectClass base_class;
+
+        /* Virtual Methods  */
         gboolean          (* load)            (EvDocument      *document,
                                                const char      *uri,
                                                GError         **error);
         gboolean          (* save)            (EvDocument      *document,
                                                const char      *uri,
                                                GError         **error);
-        int               (* get_n_pages)     (EvDocument      *document);
+        gint              (* get_n_pages)     (EvDocument      *document);
 	EvPage          * (* get_page)        (EvDocument      *document,
 					       gint             index);
         void              (* get_page_size)   (EvDocument      *document,
                                                EvPage          *page,
                                                double          *width,
                                                double          *height);
-        char            * (* get_page_label)  (EvDocument      *document,
+        gchar           * (* get_page_label)  (EvDocument      *document,
                                                EvPage          *page);
         cairo_surface_t * (* render)          (EvDocument      *document,
                                                EvRenderContext *rc);
-        EvDocumentInfo *  (* get_info)        (EvDocument      *document);
+        EvDocumentInfo  * (* get_info)        (EvDocument      *document);
 };
 
 GType            ev_document_get_type         (void) G_GNUC_CONST;
@@ -113,14 +119,14 @@ gboolean         ev_document_load             (EvDocument      *document,
 gboolean         ev_document_save             (EvDocument      *document,
                                                const char      *uri,
                                                GError         **error);
-int              ev_document_get_n_pages      (EvDocument      *document);
+gint             ev_document_get_n_pages      (EvDocument      *document);
 EvPage          *ev_document_get_page         (EvDocument      *document,
 					       gint             index);
 void             ev_document_get_page_size    (EvDocument      *document,
                                                EvPage          *page,
                                                double          *width,
                                                double          *height);
-char            *ev_document_get_page_label   (EvDocument      *document,
+gchar           *ev_document_get_page_label   (EvDocument      *document,
                                                EvPage          *page);
 cairo_surface_t *ev_document_render           (EvDocument      *document,
                                                EvRenderContext *rc);
@@ -187,7 +193,7 @@ static void     backend_name##_class_intern_init (gpointer klass)		\
 G_MODULE_EXPORT GType								\
 register_evince_backend (GTypeModule *module)					\
 {										\
-	const GTypeInfo our_info = {  				        \
+	const GTypeInfo our_info = {  				                \
 		sizeof (BackendName##Class),					\
 		NULL, /* base_init */						\
 		NULL, /* base_finalize */					\
@@ -204,14 +210,11 @@ register_evince_backend (GTypeModule *module)					\
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");			\
                                                                                 \
 	g_define_type_id = g_type_module_register_type (module,		        \
-					    G_TYPE_OBJECT,			\
-					    #BackendName,			\
-					    &our_info,				\
-					   (GTypeFlags)0);	                \
+					                EV_TYPE_DOCUMENT,	\
+					                #BackendName,		\
+					                &our_info,		\
+					                (GTypeFlags)0);	        \
 							                        \
-	EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT,                       \
-                               backend_name##_document_iface_init);             \
-										\
 	CODE									\
 										\
 	return g_define_type_id;						\

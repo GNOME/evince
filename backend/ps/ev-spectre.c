@@ -31,17 +31,16 @@
 #include "ev-document-misc.h"
 
 struct _PSDocument {
-	GObject object;
+	EvDocument object;
 
 	SpectreDocument *doc;
 	SpectreExporter *exporter;
 };
 
 struct _PSDocumentClass {
-	GObjectClass parent_class;
+	EvDocumentClass parent_class;
 };
 
-static void ps_document_document_iface_init            (EvDocumentIface           *iface);
 static void ps_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
 static void ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
@@ -75,16 +74,6 @@ ps_document_dispose (GObject *object)
 	}
 
 	G_OBJECT_CLASS (ps_document_parent_class)->dispose (object);
-}
-
-static void
-ps_document_class_init (PSDocumentClass *klass)
-{
-	GObjectClass *object_class;
-
-	object_class = G_OBJECT_CLASS (klass);
-
-	object_class->dispose = ps_document_dispose;
 }
 
 /* EvDocumentIface */
@@ -331,16 +320,21 @@ ps_document_render (EvDocument      *document,
 }
 
 static void
-ps_document_document_iface_init (EvDocumentIface *iface)
+ps_document_class_init (PSDocumentClass *klass)
 {
-	iface->load = ps_document_load;
-	iface->save = ps_document_save;
-	iface->get_n_pages = ps_document_get_n_pages;
-	iface->get_page = ps_document_get_page;
-	iface->get_page_size = ps_document_get_page_size;
-	iface->get_page_label = ps_document_get_page_label;
-	iface->get_info = ps_document_get_info;
-	iface->render = ps_document_render;
+	GObjectClass    *object_class = G_OBJECT_CLASS (klass);
+	EvDocumentClass *ev_document_class = EV_DOCUMENT_CLASS (klass);
+
+	object_class->dispose = ps_document_dispose;
+
+	ev_document_class->load = ps_document_load;
+	ev_document_class->save = ps_document_save;
+	ev_document_class->get_n_pages = ps_document_get_n_pages;
+	ev_document_class->get_page = ps_document_get_page;
+	ev_document_class->get_page_size = ps_document_get_page_size;
+	ev_document_class->get_page_label = ps_document_get_page_label;
+	ev_document_class->get_info = ps_document_get_info;
+	ev_document_class->render = ps_document_render;
 }
 
 /* EvDocumentThumbnailsIface */
