@@ -460,7 +460,7 @@ view_update_range_and_current_page (EvView *view)
 		current_area.y = view->vadjustment->value;
 		current_area.height = view->vadjustment->page_size;
 
-		for (i = 0; i < ev_page_cache_get_n_pages (view->page_cache); i++) {
+		for (i = 0; i < ev_document_get_n_pages (view->document); i++) {
 
 			get_page_extents (view, i, &page_area, &border);
 
@@ -487,7 +487,7 @@ view_update_range_and_current_page (EvView *view)
 	} else if (view->dual_page) {
 		if (view->current_page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) {
 			view->start_page = view->current_page;
-			if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache))
+			if (view->current_page + 1 < ev_document_get_n_pages (view->document))
 				view->end_page = view->start_page + 1;
 			else 
 				view->end_page = view->start_page;
@@ -630,7 +630,7 @@ ev_view_scroll (EvView        *view,
 	/* Assign boolean for first and last page */
 	if (view->current_page == 0)
 		first_page = TRUE;
-	if (view->current_page == ev_page_cache_get_n_pages (view->page_cache) - 1)
+	if (view->current_page == ev_document_get_n_pages (view->document) - 1)
 		last_page = TRUE;
 
 	switch (scroll) {
@@ -818,7 +818,7 @@ get_page_extents (EvView       *view,
 			other_page = (page % 2 == ev_page_cache_get_dual_even_left (view->page_cache)) ? page + 1: page - 1;
 
 			/* First, we get the bounding box of the two pages */
-			if (other_page < ev_page_cache_get_n_pages (view->page_cache)
+			if (other_page < ev_document_get_n_pages (view->document)
 			    && (0 <= other_page)) {
 				ev_page_cache_get_size (view->page_cache,
 							other_page,
@@ -1325,7 +1325,7 @@ goto_dest (EvView *view, EvLinkDest *dest)
 	int page, n_pages, current_page;
 
 	page = ev_link_dest_get_page (dest);
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 
 	if (page < 0 || page >= n_pages)
 		return;
@@ -1438,8 +1438,8 @@ ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest)
 			dest2 = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
 								  named_dest);
 			if (dest2) {
-				msg = ev_page_cache_get_page_label (view->page_cache,
-								    ev_link_dest_get_page (dest2));
+				msg = ev_document_get_page_label (view->document,
+								  ev_link_dest_get_page (dest2));
 				g_object_unref (dest2);
 			}
 		}
@@ -1450,8 +1450,8 @@ ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest)
 	        }
 	    		break;
 	        default: 
-			msg = ev_page_cache_get_page_label (view->page_cache,
-							    ev_link_dest_get_page (dest));
+			msg = ev_document_get_page_label (view->document,
+							  ev_link_dest_get_page (dest));
 	}
 	
 	return msg;
@@ -2442,7 +2442,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 				     view->scale, &max_width);
 	compute_border (view, max_width, max_width, &border);
 
-	n_pages = ev_page_cache_get_n_pages (view->page_cache) + 1;
+	n_pages = ev_document_get_n_pages (view->document) + 1;
 
 	requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
 	get_page_y_offset (view, n_pages, view->scale, &requisition->height);
@@ -2468,7 +2468,7 @@ ev_view_size_request_continuous (EvView         *view,
 
 	ev_page_cache_get_max_width (view->page_cache, view->rotation,
 				     view->scale, &max_width);
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 	compute_border (view, max_width, max_width, &border);
 
 	requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
@@ -2497,7 +2497,7 @@ ev_view_size_request_dual_page (EvView         *view,
 				view->rotation,
 				view->scale,
 				&width, &height);
-	if (view->current_page + 1 < ev_page_cache_get_n_pages (view->page_cache)) {
+	if (view->current_page + 1 < ev_document_get_n_pages (view->document)) {
 		gint width_2, height_2;
 		ev_page_cache_get_size (view->page_cache,
 					view->current_page + 1,
@@ -3667,8 +3667,7 @@ ev_view_goto_entry_activate (GtkEntry *entry,
 	
 	ev_view_goto_window_hide (view);
 
-	if (page >= 0 &&
-	    page < ev_page_cache_get_n_pages (view->page_cache))
+	if (page >= 0 && page < ev_document_get_n_pages (view->document))
 		ev_page_cache_set_current_page (view->page_cache, page);
 }
 
@@ -3827,7 +3826,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 	}
 
 	if (current == view->presentation_state) {
-		if (ev_page_cache_get_n_pages (view->page_cache) > 1 &&
+		if (ev_document_get_n_pages (view->document) > 1 &&
 		    key_is_numeric (event->keyval)) {
 			gint x, y;
 			
@@ -5405,7 +5404,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 				1.0,
 				&doc_width, &doc_height);
 
-	if (other_page < ev_page_cache_get_n_pages (view->page_cache)) {
+	if (other_page < ev_document_get_n_pages (view->document)) {
 		gint width_2, height_2;
 		ev_page_cache_get_size (view->page_cache,
 					other_page,
@@ -5541,7 +5540,7 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 {
 	int n_pages, i;
 
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 
 	for (i = 0; i < n_pages; i++) {
 		int page;
@@ -5653,7 +5652,7 @@ compute_new_selection_rect (EvView       *view,
 	view_rect.width = MAX (start->x, stop->x) - view_rect.x;
 	view_rect.width = MAX (start->y, stop->y) - view_rect.y;
 
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 
 	for (i = 0; i < n_pages; i++) {
 		GdkRectangle page_area;
@@ -5702,7 +5701,7 @@ compute_new_selection_text (EvView          *view,
 
 	g_assert (view->selection_mode == EV_VIEW_SELECTION_TEXT);
 
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 
 	/* First figure out the range of pages the selection
 	 * affects. */
@@ -5955,7 +5954,7 @@ ev_view_select_all (EvView *view)
 
 	clear_selection (view);
 	
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 	for (i = 0; i < n_pages; i++) {
 		int width, height;
 		EvViewSelection *selection;
@@ -6245,7 +6244,7 @@ ev_view_next_page (EvView *view)
 	ev_view_reset_presentation_state (view);
 	
 	page = ev_page_cache_get_current_page (view->page_cache);
-	n_pages = ev_page_cache_get_n_pages (view->page_cache);
+	n_pages = ev_document_get_n_pages (view->document);
 
 	if (view->dual_page && !view->presentation)
 	        page = page + 2; 

@@ -339,11 +339,11 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 
 	if (document) {
 		has_document = TRUE;
-		info = ev_page_cache_get_info (ev_window->priv->page_cache);
+		info = ev_document_get_info (document);
 	}
 
 	if (has_document && ev_window->priv->page_cache) {
-		has_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache) > 0;
+		has_pages = ev_document_get_n_pages (document) > 0;
 	}
 
 	if (!info || info->fields_mask == 0) {
@@ -425,7 +425,7 @@ ev_window_update_actions (EvWindow *ev_window)
 
 	if (ev_window->priv->document && ev_window->priv->page_cache) {
 		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
-		n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+		n_pages = ev_document_get_n_pages (ev_window->priv->document);
 		has_pages = n_pages > 0;
 	}
 
@@ -802,7 +802,7 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	} else {
 		dest = ev_link_dest_new_page (page);
 		action = ev_link_action_new_dest (dest);
-		page_label = ev_page_cache_get_page_label (window->priv->page_cache, page);
+		page_label = ev_document_get_page_label (window->priv->document, page);
 	}
 
 	if (!page_label)
@@ -957,7 +957,7 @@ setup_document_from_metadata (EvWindow *window)
 		gint n_pages;
 		gint new_page;
 		
-		n_pages = ev_page_cache_get_n_pages (window->priv->page_cache);
+		n_pages = ev_document_get_n_pages (window->priv->document);
 		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
 		ev_page_cache_set_current_page (window->priv->page_cache,
 						new_page);
@@ -972,21 +972,17 @@ setup_document_from_metadata (EvWindow *window)
 
 	if (ev_metadata_manager_get (uri, "window_width_ratio", &width_ratio, FALSE) &&
 	    ev_metadata_manager_get (uri, "window_height_ratio", &height_ratio, FALSE)) {
-		gint       document_width;
-		gint       document_height;
+		gdouble    document_width;
+		gdouble    document_height;
 		GdkScreen *screen;
 		gint       request_width;
 		gint       request_height;
 
-		ev_page_cache_get_max_width (window->priv->page_cache, 
-					     0, 1.0,
-					     &document_width);
-		ev_page_cache_get_max_height (window->priv->page_cache, 
-					     0, 1.0,
-					     &document_height);			
-		
-		request_width = g_value_get_double (&width_ratio) * document_width;
-		request_height = g_value_get_double (&height_ratio) * document_height;
+		ev_document_get_max_page_size (window->priv->document,
+					       &document_width, &document_height);
+
+		request_width = (gint)(g_value_get_double (&width_ratio) * document_width + 0.5);
+		request_height = (gint)(g_value_get_double (&height_ratio) * document_height + 0.5);
 		
 		screen = gtk_window_get_screen (GTK_WINDOW (window));
 		
@@ -1156,23 +1152,21 @@ ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
 static void
 ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 {
-	gint page_width, page_height;
+	gdouble page_width;
 	gdouble scale;
 	EvDocument *document = ev_window->priv->document;
-	
+
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
-	    ev_page_cache_get_n_pages (ev_window->priv->page_cache) <= 0 ||
-	    ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
+	    ev_document_get_n_pages (document) <= 0 ||
+	    !ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
 		return;
 	}
-	
+
 	ev_window_clear_thumbnail_job (ev_window);
-	
-	ev_page_cache_get_size (ev_window->priv->page_cache,
-				0, 0, 1.0,
-				&page_width, &page_height);
-	scale = (gdouble)128 / (gdouble)page_width;
-	
+
+	ev_document_get_page_size (document, 0, &page_width, NULL);
+	scale = 128. / page_width;
+
 	ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, 0, rotation, scale);
 	g_signal_connect (ev_window->priv->thumbnail_job, "finished",
 			  G_CALLBACK (ev_window_set_icon_from_thumbnail),
@@ -1214,7 +1208,7 @@ ev_window_setup_document (EvWindow *ev_window)
 					           ev_window->priv->document);
 	}
 	
-	info = ev_page_cache_get_info (ev_window->priv->page_cache);
+	info = ev_document_get_info (document);
 	update_document_mode (ev_window, info->mode);
 
 	gtk_widget_grab_focus (ev_window->priv->view);
@@ -1245,16 +1239,16 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 		/* Restart the current page */
 		page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
 			      0,
-			      ev_page_cache_get_n_pages (ev_window->priv->page_cache) - 1);
+			      ev_document_get_n_pages (ev_window->priv->document) - 1);
 		ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
 		g_object_unref (ev_window->priv->dest);
 		ev_window->priv->dest = NULL;
 	}
 
-	if (ev_page_cache_get_n_pages (ev_window->priv->page_cache) <= 0) {
+	if (ev_document_get_n_pages (ev_window->priv->document) <= 0) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains no pages"));
-	} else if (ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
+	} else if (!ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains only empty pages"));
 	} else {
@@ -3022,7 +3016,7 @@ ev_window_print_range (EvWindow *ev_window,
 
 	page_cache = ev_page_cache_get (ev_window->priv->document);
 	current_page = ev_page_cache_get_current_page (page_cache);
-	document_last_page = ev_page_cache_get_n_pages (page_cache);
+	document_last_page = ev_document_get_n_pages (ev_window->priv->document);
 
 	if (!ev_window->priv->print_settings) {
 		ev_window->priv->print_settings = gtk_print_settings_copy (
@@ -3060,13 +3054,8 @@ ev_window_print_range (EvWindow *ev_window,
 static void
 ev_window_print (EvWindow *window)
 {
-	EvPageCache *page_cache;
-	gint         last_page;
-
-	page_cache = ev_page_cache_get (window->priv->document);
-	last_page = ev_page_cache_get_n_pages (page_cache);
-
-	ev_window_print_range (window, 1, last_page);
+	ev_window_print_range (window, 1,
+			       ev_document_get_n_pages (window->priv->document));
 }
 
 static void
@@ -3854,12 +3843,10 @@ ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 {
-	int n_pages;
-
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
-	ev_page_cache_set_current_page (ev_window->priv->page_cache, n_pages - 1);
+	ev_page_cache_set_current_page (ev_window->priv->page_cache,
+					ev_document_get_n_pages (ev_window->priv->document) - 1);
 }
 
 static void
@@ -3869,7 +3856,7 @@ ev_window_cmd_go_forward (GtkAction *action, EvWindow *ev_window)
 	
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	n_pages = ev_page_cache_get_n_pages (ev_window->priv->page_cache);
+	n_pages = ev_document_get_n_pages (ev_window->priv->document);
 	current_page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
 	
 	if (current_page + 10 < n_pages)
@@ -4530,7 +4517,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 	if (search_string && search_string[0]) {
 		ev_window->priv->find_job = ev_job_find_new (ev_window->priv->document,
 							     ev_page_cache_get_current_page (ev_window->priv->page_cache),
-							     ev_page_cache_get_n_pages (ev_window->priv->page_cache),
+							     ev_document_get_n_pages (ev_window->priv->document),
 							     search_string,
 							     case_sensitive);
 		g_signal_connect (ev_window->priv->find_job, "finished",
@@ -5334,30 +5321,23 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 {
 	char *uri = window->priv->uri;
 	GdkWindowState state;
-	int x, y, width, height, document_width, document_height;
+	gdouble document_width, document_height;
 
 	state = gdk_window_get_state (GTK_WIDGET (window)->window);
 
 	if (!(state & GDK_WINDOW_STATE_FULLSCREEN)) {
-		gtk_window_get_position (GTK_WINDOW (window), &x, &y);
-		gtk_window_get_size (GTK_WINDOW (window), &width, &height);
+		if (!ev_window_is_empty (window) && window->priv->document) {
+			ev_document_get_max_page_size (window->priv->document,
+						       &document_width, &document_height);
+			ev_metadata_manager_set_double (uri, "window_width_ratio",
+							(double)event->width / document_width);
+			ev_metadata_manager_set_double (uri, "window_height_ratio",
+							(double)event->height / document_height);
 
-		if (!ev_window_is_empty (window) && window->priv->page_cache) {
-			ev_page_cache_get_max_width (window->priv->page_cache, 
-						     0, 1.0,
-						     &document_width);
-			ev_page_cache_get_max_height (window->priv->page_cache, 
-						      0, 1.0,
-						      &document_height);			
-			ev_metadata_manager_set_double (uri, "window_width_ratio", 
-							(double)width / document_width);
-			ev_metadata_manager_set_double (uri, "window_height_ratio", 
-							(double)height / document_height);
-			
-			ev_metadata_manager_set_int (uri, "window_x", x);
-			ev_metadata_manager_set_int (uri, "window_y", y);
-			ev_metadata_manager_set_int (uri, "window_width", width);
-			ev_metadata_manager_set_int (uri, "window_height", height);
+			ev_metadata_manager_set_int (uri, "window_x", event->x);
+			ev_metadata_manager_set_int (uri, "window_y", event->y);
+			ev_metadata_manager_set_int (uri, "window_width", event->width);
+			ev_metadata_manager_set_int (uri, "window_height", event->height);
 		}
 	}
 

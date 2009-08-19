@@ -42,9 +42,11 @@ struct _EvPageActionWidget
 {
 	GtkToolItem parent;
 
+	EvDocument *document;
+	EvPageCache *page_cache;
+
 	GtkWidget *entry;
 	GtkWidget *label;
-	EvPageCache *page_cache;
 	guint signal_id;
 	GtkTreeModel *filter_model;
 	GtkTreeModel *model;
@@ -56,14 +58,13 @@ G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_TOOL_ITEM)
 
 static void
 update_pages_label (EvPageActionWidget *action_widget,
-		    gint                page,
-		    EvPageCache        *page_cache)
+		    gint                page)
 {
 	char *label_text;
 	gint n_pages;
 
-	n_pages = page_cache ? ev_page_cache_get_n_pages (page_cache) : 0;
-	if (page_cache && ev_page_cache_has_nonnumeric_page_labels (page_cache)) {
+	n_pages = ev_document_get_n_pages (action_widget->document);
+	if (ev_document_has_text_page_labels (action_widget->document)) {
 		label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
 	} else {
 		label_text = g_strdup_printf (_("of %d"), n_pages);
@@ -77,14 +78,14 @@ page_changed_cb (EvPageCache        *page_cache,
 		 gint                page,
 		 EvPageActionWidget *action_widget)
 {
-	if (page_cache && page >= 0) {
+	if (page >= 0) {
 		gchar *page_label;
 
 		gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry),
-					   CLAMP (ev_page_cache_get_max_label_chars (page_cache),
+					   CLAMP (ev_document_get_max_label_len (action_widget->document),
 						  6, 12));
 
-		page_label = ev_page_cache_get_page_label (page_cache, page);
+		page_label = ev_document_get_page_label (action_widget->document, page);
 		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
 		gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
 		g_free (page_label);
@@ -93,7 +94,7 @@ page_changed_cb (EvPageCache        *page_cache,
 		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
 	}
 
-	update_pages_label (action_widget, page, page_cache);
+	update_pages_label (action_widget, page);
 }
 
 static gboolean
@@ -104,7 +105,7 @@ page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
 
 	pageno = ev_page_cache_get_current_page (page_cache);
 	if ((event->direction == GDK_SCROLL_DOWN) &&
-	    (pageno < ev_page_cache_get_n_pages (page_cache) - 1))
+	    (pageno < ev_document_get_n_pages (action_widget->document) - 1))
 		pageno++;
 	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
 		pageno--;
@@ -139,8 +140,8 @@ activate_cb (EvPageActionWidget *action_widget)
 	/* rest the entry to the current page if we were unable to
 	 * change it */
 	page_cache = action_widget->page_cache;
-	page_label = ev_page_cache_get_page_label (page_cache,
-						   ev_page_cache_get_current_page (page_cache));
+	page_label = ev_document_get_page_label (action_widget->document,
+						 ev_page_cache_get_current_page (page_cache));
 	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
 	gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
 	g_free (page_label);
@@ -159,6 +160,7 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	gtk_widget_add_events (action_widget->entry,
 			       GDK_BUTTON_MOTION_MASK);
 	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry), 5);
+	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
 	g_signal_connect_swapped (action_widget->entry, "scroll-event",
 				  G_CALLBACK (page_scroll_cb),
 				  action_widget);
@@ -186,9 +188,16 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 }
 
 void
-ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
-				      EvPageCache        *page_cache)
+ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
+				    EvDocument         *document)
 {
+	EvPageCache *page_cache = ev_page_cache_get (document);
+
+	g_object_ref (document);
+	if (action_widget->document)
+		g_object_unref (action_widget->document);
+	action_widget->document = document;
+
 	if (action_widget->page_cache != NULL) {
 		if (action_widget->signal_id > 0) {
 			g_signal_handler_disconnect (action_widget->page_cache,
@@ -200,21 +209,16 @@ ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
 		action_widget->page_cache = NULL;
 	}
 
-	if (page_cache != NULL) {
-		action_widget->page_cache = page_cache;
-		g_object_add_weak_pointer (G_OBJECT (page_cache),
-					   (gpointer)&action_widget->page_cache);
-		action_widget->signal_id =
-			g_signal_connect_object (page_cache, "page-changed",
-						 G_CALLBACK (page_changed_cb),
-						 action_widget, 0);
-		page_changed_cb (page_cache,
-				 ev_page_cache_get_current_page (page_cache),
-				 action_widget);
-	} else {
-		action_widget->signal_id = 0;
-		page_changed_cb (NULL, 0, action_widget);
-	}
+	action_widget->page_cache = page_cache;
+	g_object_add_weak_pointer (G_OBJECT (page_cache),
+				   (gpointer)&action_widget->page_cache);
+	action_widget->signal_id =
+		g_signal_connect_object (page_cache, "page-changed",
+					 G_CALLBACK (page_changed_cb),
+					 action_widget, 0);
+	page_changed_cb (page_cache,
+			 ev_page_cache_get_current_page (page_cache),
+			 action_widget);
 }
 
 static void
@@ -231,6 +235,11 @@ ev_page_action_widget_finalize (GObject *object)
 		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
 					      (gpointer)&action_widget->page_cache);
 		action_widget->page_cache = NULL;
+	}
+
+	if (action_widget->document) {
+		g_object_unref (action_widget->document);
+		action_widget->document = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_page_action_widget_parent_class)->finalize (object);

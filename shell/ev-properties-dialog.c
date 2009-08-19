@@ -85,7 +85,7 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 
 	properties->document = document;
 
-	info = ev_page_cache_get_info (ev_page_cache_get (document));
+	info = ev_document_get_info (document);
 
 	if (properties->general_page == NULL) {
 		label = gtk_label_new (_("General"));

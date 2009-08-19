@@ -122,14 +122,11 @@ ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
 	char *title = NULL, *password_title, *p;
-	EvPageCache *page_cache;
 
 	if (window_title->document != NULL) {
-		char *doc_title;
+		gchar *doc_title;
 
-		page_cache = ev_page_cache_get (window_title->document);
-		g_return_if_fail (page_cache != NULL);
-		doc_title = (char *)ev_page_cache_get_title (page_cache);
+		doc_title = g_strdup (ev_document_get_title (window_title->document));
 
 		/* Make sure we get a valid title back */
 		if (doc_title != NULL) {
@@ -139,6 +136,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 			    g_utf8_validate (doc_title, -1, NULL)) {
 				title = g_strdup (doc_title);
 			}
+
+			g_free (doc_title);
 		}
 	}
 

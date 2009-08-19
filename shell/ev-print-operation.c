@@ -1428,7 +1428,7 @@ ev_print_operation_export_constructor (GType                  type,
 										       construct_params);
 	export = EV_PRINT_OPERATION_EXPORT (object);
 	op = EV_PRINT_OPERATION (object);
-	export->n_pages = ev_page_cache_get_n_pages (ev_page_cache_get (op->document));
+	export->n_pages = ev_document_get_n_pages (op->document);
 
 	return object;
 }
@@ -1589,7 +1589,7 @@ ev_print_operation_print_begin_print (EvPrintOperationPrint *print,
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
 	gint              n_pages;
 
-	n_pages = ev_page_cache_get_n_pages (ev_page_cache_get (op->document));
+	n_pages = ev_document_get_n_pages (op->document);
 	gtk_print_operation_set_n_pages (print->op, n_pages);
 	ev_print_operation_update_status (op, -1, n_pages, 0);
 
@@ -1650,7 +1650,7 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
 	cairo_t          *cr;
 	gdouble           cr_width, cr_height;
-	gint              width, height;
+	gdouble           width, height;
 
 	gtk_print_operation_set_defer_drawing (print->op);
 
@@ -1669,10 +1669,9 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	cr = gtk_print_context_get_cairo_context (context);
 	cr_width = gtk_print_context_get_width (context);
 	cr_height = gtk_print_context_get_height (context);
-	ev_page_cache_get_size (ev_page_cache_get (op->document),
-				page, 0, 1.0,
-				&width, &height);
-	cairo_scale (cr, cr_width / (gdouble)width, cr_height / (gdouble)height);
+	ev_document_get_page_size (op->document, page,
+				   &width, &height);
+	cairo_scale (cr, cr_width / width, cr_height / height);
 
 	ev_job_print_set_cairo (EV_JOB_PRINT (print->job_print), cr);
 	ev_job_scheduler_push_job (print->job_print, EV_JOB_PRIORITY_NONE);

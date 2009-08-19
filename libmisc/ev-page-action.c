@@ -33,7 +33,7 @@
 
 struct _EvPageActionPrivate
 {
-	EvPageCache *page_cache;
+	EvDocument *document;
 	GtkTreeModel *model;
 };
 
@@ -55,7 +55,7 @@ G_DEFINE_TYPE (EvPageAction, ev_page_action, GTK_TYPE_ACTION)
 
 enum {
 	PROP_0,
-	PROP_PAGE_CACHE,
+	PROP_DOCUMENT,
 	PROP_MODEL,
 };
 
@@ -70,9 +70,10 @@ create_tool_item (GtkAction *action)
 }
 
 static void
-update_page_cache (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
+update_document (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 {
-	ev_page_action_widget_set_page_cache (proxy, page->priv->page_cache);
+	if (page->priv->document)
+		ev_page_action_widget_set_document (proxy, page->priv->document);
 }
 
 static void
@@ -97,14 +98,12 @@ static void
 connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
 	if (GTK_IS_TOOL_ITEM (proxy)) {
-		g_signal_connect_object (action, "notify::page-cache",
-					 G_CALLBACK (update_page_cache),
+		g_signal_connect_object (action, "notify::document",
+					 G_CALLBACK (update_document),
 					 proxy, 0);
 		g_signal_connect (proxy, "activate_link",
 				  G_CALLBACK (activate_link_cb),
 				  action);
-		update_page_cache (EV_PAGE_ACTION (action), NULL,
-				   EV_PAGE_ACTION_WIDGET (proxy));
 		g_signal_connect_object (action, "notify::model",
 					 G_CALLBACK (update_model),
 					 proxy, 0);
@@ -118,9 +117,9 @@ ev_page_action_dispose (GObject *object)
 {
 	EvPageAction *page = EV_PAGE_ACTION (object);
 
-	if (page->priv->page_cache) {
-		g_object_unref (page->priv->page_cache);
-		page->priv->page_cache = NULL;
+	if (page->priv->document) {
+		g_object_unref (page->priv->document);
+		page->priv->document = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_page_action_parent_class)->dispose (object);
@@ -133,18 +132,18 @@ ev_page_action_set_property (GObject      *object,
 			     GParamSpec   *pspec)
 {
 	EvPageAction *page;
-	EvPageCache *page_cache;
+	EvDocument *document;
 	GtkTreeModel *model;
-  
+
 	page = EV_PAGE_ACTION (object);
 
 	switch (prop_id)
 	{
-	case PROP_PAGE_CACHE:
-		page_cache = page->priv->page_cache;
-		page->priv->page_cache = EV_PAGE_CACHE (g_value_dup_object (value));
-		if (page_cache)
-			g_object_unref (page_cache);
+	case PROP_DOCUMENT:
+		document = page->priv->document;
+		page->priv->document = EV_DOCUMENT (g_value_dup_object (value));
+		if (document)
+			g_object_unref (document);
 		break;
 	case PROP_MODEL:
 		model = page->priv->model;
@@ -165,13 +164,13 @@ ev_page_action_get_property (GObject    *object,
 			     GParamSpec *pspec)
 {
 	EvPageAction *page;
-  
+
 	page = EV_PAGE_ACTION (object);
 
 	switch (prop_id)
 	{
-	case PROP_PAGE_CACHE:
-		g_value_set_object (value, page->priv->page_cache);
+	case PROP_DOCUMENT:
+		g_value_set_object (value, page->priv->document);
 		break;
 	case PROP_MODEL:
 		g_value_set_object (value, page->priv->model);
@@ -185,13 +184,8 @@ ev_page_action_get_property (GObject    *object,
 void
 ev_page_action_set_document (EvPageAction *page, EvDocument *document)
 {
-	EvPageCache *page_cache = NULL;
-
-	if (document)
-		page_cache = ev_page_cache_get (document);
-	
 	g_object_set (page,
-		      "page-cache", page_cache,
+		      "document", document,
 		      "model", NULL,
 		      NULL);
 }
@@ -251,11 +245,11 @@ ev_page_action_class_init (EvPageActionClass *class)
 					       G_TYPE_OBJECT);
 
 	g_object_class_install_property (object_class,
-					 PROP_PAGE_CACHE,
-					 g_param_spec_object ("page-cache",
-							      "Page Cache",
-							      "Current page cache",
-							      EV_TYPE_PAGE_CACHE,
+					 PROP_DOCUMENT,
+					 g_param_spec_object ("document",
+							      "Document",
+							      "Current document",
+							      EV_TYPE_DOCUMENT,
 							      G_PARAM_READWRITE));
 
 	g_object_class_install_property (object_class,

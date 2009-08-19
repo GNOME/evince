@@ -588,13 +588,9 @@ pdf_document_get_info (EvDocument *document)
 	info->n_pages = ev_document_get_n_pages (document);
 
 	if (info->n_pages > 0) {
-		page = ev_document_get_page (document, 0);
-		ev_document_get_page_size (document, page,
+		ev_document_get_page_size (document, 0,
 					   &(info->paper_width),
 					   &(info->paper_height));
-		g_object_unref (page);
-		
-
 		// Convert to mm.
 		info->paper_width = info->paper_width / 72.0f * 25.4f;
 		info->paper_height = info->paper_height / 72.0f * 25.4f;

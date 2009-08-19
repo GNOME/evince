@@ -21,7 +21,44 @@
 
 #include "config.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "ev-document.h"
+
+#define EV_DOCUMENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_DOCUMENT, EvDocumentPrivate))
+
+typedef struct _EvPageSize
+{
+	gdouble width;
+	gdouble height;
+} EvPageSize;
+
+struct _EvDocumentPrivate
+{
+	gint            n_pages;
+
+	gboolean        uniform;
+	gdouble         uniform_width;
+	gdouble         uniform_height;
+
+	gdouble         max_width;
+	gdouble         max_height;
+	gint            max_label;
+
+	gchar         **page_labels;
+	EvPageSize     *page_sizes;
+	EvDocumentInfo *info;
+};
+
+static gint            _ev_document_get_n_pages   (EvDocument  *document);
+static void            _ev_document_get_page_size (EvDocument *document,
+						   EvPage     *page,
+						   double     *width,
+						   double     *height);
+static gchar          *_ev_document_get_page_label (EvDocument *document,
+						    EvPage     *page);
+static EvDocumentInfo *_ev_document_get_info       (EvDocument *document);
 
 GMutex *ev_doc_mutex = NULL;
 GMutex *ev_fc_mutex = NULL;
@@ -52,15 +89,53 @@ ev_document_impl_get_info (EvDocument *document)
 }
 
 static void
+ev_document_finalize (GObject *object)
+{
+	EvDocument *document = EV_DOCUMENT (object);
+
+	if (document->priv->page_sizes) {
+		g_free (document->priv->page_sizes);
+		document->priv->page_sizes = NULL;
+	}
+
+	if (document->priv->page_labels) {
+		gint i;
+
+		for (i = 0; i < document->priv->n_pages; i++) {
+			g_free (document->priv->page_labels[i]);
+		}
+		g_free (document->priv->page_labels);
+		document->priv->page_labels = NULL;
+	}
+
+	if (document->priv->info) {
+		ev_document_info_free (document->priv->info);
+		document->priv->info = NULL;
+	}
+
+	G_OBJECT_CLASS (ev_document_parent_class)->finalize (object);
+}
+
+static void
 ev_document_init (EvDocument *document)
 {
+	document->priv = EV_DOCUMENT_GET_PRIVATE (document);
+
+	/* Assume all pages are the same size until proven otherwise */
+	document->priv->uniform = TRUE;
 }
 
 static void
 ev_document_class_init (EvDocumentClass *klass)
 {
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	g_type_class_add_private (g_object_class, sizeof (EvDocumentPrivate));
+
 	klass->get_page = ev_document_impl_get_page;
 	klass->get_info = ev_document_impl_get_info;
+
+	g_object_class->finalize = ev_document_finalize;
 }
 
 GMutex *
@@ -157,6 +232,81 @@ ev_document_load (EvDocument  *document,
 					     EV_DOCUMENT_ERROR_INVALID,
 					     "Internal error in backend");
 		}
+	} else {
+		gint i;
+		EvDocumentPrivate *priv = document->priv;
+
+		/* Cache some info about the document to avoid
+		 * going to the backends since it requires locks
+		 */
+		priv->n_pages = _ev_document_get_n_pages (document);
+		priv->info = _ev_document_get_info (document);
+
+		for (i = 0; i < priv->n_pages; i++) {
+			EvPage     *page = ev_document_get_page (document, i);
+			gdouble     page_width = 0;
+			gdouble     page_height = 0;
+			EvPageSize *page_size;
+			gchar      *page_label;
+
+			_ev_document_get_page_size (document, page, &page_width, &page_height);
+
+			if (i == 0) {
+				priv->uniform_width = page_width;
+				priv->uniform_height = page_height;
+			} else if (priv->uniform &&
+				   (priv->uniform_width != page_width ||
+				    priv->uniform_height != page_height)) {
+				/* It's a different page size.  Backfill the array. */
+				int j;
+
+				priv->page_sizes = g_new0 (EvPageSize, priv->n_pages);
+
+				for (j = 0; j < i; j++) {
+					page_size = &(priv->page_sizes[j]);
+					page_size->width = priv->uniform_width;
+					page_size->height = priv->uniform_height;
+				}
+				priv->uniform = FALSE;
+			}
+			if (!priv->uniform) {
+				page_size = &(priv->page_sizes[i]);
+
+				page_size->width = page_width;
+				page_size->height = page_height;
+
+				if (page_width > priv->max_width)
+					priv->max_width = page_width;
+
+				if (page_height > priv->max_height)
+					priv->max_height = page_height;
+			}
+
+			page_label = _ev_document_get_page_label (document, page);
+			if (page_label) {
+				if (priv->page_labels) {
+					priv->page_labels[i] = page_label;
+				} else {
+					gchar *numeric_label;
+
+					numeric_label = g_strdup_printf ("%d", i + 1);
+					if (strcmp (numeric_label, page_label) != 0) {
+						priv->page_labels = g_new0 (gchar *, priv->n_pages);
+						priv->page_labels[i] = page_label;
+					}
+					g_free (numeric_label);
+				}
+				priv->max_label = MAX (priv->max_label,
+						       g_utf8_strlen (page_label, 256));
+			}
+
+			g_object_unref (page);
+		}
+
+		if (priv->uniform) {
+			priv->max_width = priv->uniform_width;
+			priv->max_height = priv->uniform_height;
+		}
 	}
 
 	return retval;
@@ -182,14 +332,6 @@ ev_document_save (EvDocument  *document,
 	return klass->save (document, uri, error);
 }
 
-int
-ev_document_get_n_pages (EvDocument  *document)
-{
-	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
-
-	return klass->get_n_pages (document);
-}
-
 EvPage *
 ev_document_get_page (EvDocument *document,
 		      gint        index)
@@ -199,20 +341,50 @@ ev_document_get_page (EvDocument *document,
 	return klass->get_page (document, index);
 }
 
-void
-ev_document_get_page_size (EvDocument *document,
-			   EvPage     *page,
-			   double     *width,
-			   double     *height)
+static gint
+_ev_document_get_n_pages (EvDocument  *document)
+{
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+
+	return klass->get_n_pages (document);
+}
+
+gint
+ev_document_get_n_pages (EvDocument  *document)
+{
+	return document->priv->n_pages;
+}
+
+static void
+_ev_document_get_page_size (EvDocument *document,
+			    EvPage     *page,
+			    double     *width,
+			    double     *height)
 {
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
 	klass->get_page_size (document, page, width, height);
 }
 
-gchar *
-ev_document_get_page_label (EvDocument *document,
-			    EvPage     *page)
+void
+ev_document_get_page_size (EvDocument *document,
+			   gint        page_index,
+			   double     *width,
+			   double     *height)
+{
+	if (width)
+		*width = document->priv->uniform ?
+			document->priv->uniform_width :
+			document->priv->page_sizes[page_index].width;
+	if (height)
+		*height = document->priv->uniform ?
+			document->priv->uniform_height :
+			document->priv->page_sizes[page_index].height;
+}
+
+static gchar *
+_ev_document_get_page_label (EvDocument *document,
+			     EvPage     *page)
 {
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
@@ -220,12 +392,27 @@ ev_document_get_page_label (EvDocument *document,
 		klass->get_page_label (document, page) : NULL;
 }
 
-EvDocumentInfo *
-ev_document_get_info (EvDocument *document)
+gchar *
+ev_document_get_page_label (EvDocument *document,
+			    gint        page_index)
+{
+	return (document->priv->page_labels && document->priv->page_labels[page_index]) ?
+		g_strdup (document->priv->page_labels[page_index]) :
+		g_strdup_printf ("%d", page_index + 1);
+}
+
+static EvDocumentInfo *
+_ev_document_get_info (EvDocument *document)
 {
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
 	return klass->get_info (document);
+}
+
+EvDocumentInfo *
+ev_document_get_info (EvDocument *document)
+{
+	return document->priv->info;
 }
 
 cairo_surface_t *
@@ -235,6 +422,87 @@ ev_document_render (EvDocument      *document,
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
 	return klass->render (document, rc);
+}
+
+const gchar *
+ev_document_get_title (EvDocument *document)
+{
+	return (document->priv->info->fields_mask & EV_DOCUMENT_INFO_TITLE) ?
+		document->priv->info->title : NULL;
+}
+
+gboolean
+ev_document_is_page_size_uniform (EvDocument *document)
+{
+	return document->priv->uniform;
+}
+
+void
+ev_document_get_max_page_size (EvDocument *document,
+			       gdouble    *width,
+			       gdouble    *height)
+{
+	if (width)
+		*width = document->priv->max_width;
+	if (height)
+		*height = document->priv->max_height;
+}
+
+gint
+ev_document_get_max_label_len (EvDocument *document)
+{
+	return document->priv->max_label;
+}
+
+gboolean
+ev_document_has_text_page_labels (EvDocument *document)
+{
+	return document->priv->page_labels != NULL;
+}
+
+gboolean
+ev_document_find_page_by_label (EvDocument  *document,
+				const gchar *page_label,
+				gint        *page_index)
+{
+	gint i, page;
+	glong value;
+	gchar *endptr = NULL;
+	EvDocumentPrivate *priv = document->priv;
+
+        /* First, look for a literal label match */
+	for (i = 0; priv->page_labels && i < priv->n_pages; i ++) {
+		if (priv->page_labels[i] != NULL &&
+		    ! strcmp (page_label, priv->page_labels[i])) {
+			*page_index = i;
+			return TRUE;
+		}
+	}
+
+	/* Second, look for a match with case insensitively */
+	for (i = 0; priv->page_labels && i < priv->n_pages; i++) {
+		if (priv->page_labels[i] != NULL &&
+		    ! strcasecmp (page_label, priv->page_labels[i])) {
+			*page_index = i;
+			return TRUE;
+		}
+	}
+
+	/* Next, parse the label, and see if the number fits */
+	value = strtol (page_label, &endptr, 10);
+	if (endptr[0] == '\0') {
+		/* Page number is an integer */
+		page = MIN (G_MAXINT, value);
+
+		/* convert from a page label to a page offset */
+		page --;
+		if (page >= 0 && page < priv->n_pages) {
+			*page_index = page;
+			return TRUE;
+		}
+	}
+
+	return FALSE;
 }
 
 /* EvDocumentInfo */

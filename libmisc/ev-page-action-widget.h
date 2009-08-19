@@ -41,6 +41,6 @@ GType ev_page_action_widget_get_type      (void) G_GNUC_CONST;
 void ev_page_action_widget_update_model   (EvPageActionWidget *proxy,
 					   GtkTreeModel       *model);
 
-void ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
-					   EvPageCache        *page_cache);
+void ev_page_action_widget_set_document   (EvPageActionWidget *action_widget,
+					   EvDocument         *document);
 void ev_page_action_widget_grab_focus     (EvPageActionWidget *proxy);

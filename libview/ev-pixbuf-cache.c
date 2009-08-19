@@ -97,8 +97,8 @@ static gboolean      new_selection_surface_needed(EvPixbufCache      *pixbuf_cac
 /* These are used for iterating through the prev and next arrays */
 #define FIRST_VISIBLE_PREV(pixbuf_cache) \
 	(MAX (0, pixbuf_cache->preload_cache_size - pixbuf_cache->start_page))
-#define VISIBLE_NEXT_LEN(pixbuf_cache, page_cache) \
-	(MIN(pixbuf_cache->preload_cache_size, ev_page_cache_get_n_pages (page_cache) - (1 + pixbuf_cache->end_page)))
+#define VISIBLE_NEXT_LEN(pixbuf_cache) \
+	(MIN(pixbuf_cache->preload_cache_size, ev_document_get_n_pages (pixbuf_cache->document) - (1 + pixbuf_cache->end_page)))
 #define PAGE_CACHE_LEN(pixbuf_cache) \
 	((pixbuf_cache->end_page - pixbuf_cache->start_page) + 1)
 
@@ -392,14 +392,11 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	CacheJobInfo *new_job_list;
 	CacheJobInfo *new_prev_job;
 	CacheJobInfo *new_next_job;
-	EvPageCache *page_cache;
 	int i, page;
 
 	if (pixbuf_cache->start_page == start_page &&
 	    pixbuf_cache->end_page == end_page)
 		return;
-
-	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	new_job_list = g_new0 (CacheJobInfo, (end_page - start_page) + 1);
 	new_prev_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
@@ -432,7 +429,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		if (page >= ev_page_cache_get_n_pages (page_cache)) {
+		if (page >= ev_document_get_n_pages (pixbuf_cache->document)) {
 			dispose_cache_job_info (pixbuf_cache->next_job + i, pixbuf_cache);
 		} else {
 			move_one_job (pixbuf_cache->next_job + i,
@@ -620,7 +617,6 @@ get_selection_colors (GtkWidget *widget, GdkColor **text, GdkColor **base)
 static void
 add_job (EvPixbufCache *pixbuf_cache,
 	 CacheJobInfo  *job_info,
-	 EvPageCache   *page_cache,
 	 GdkRegion     *region,
 	 gint           width,
 	 gint           height,
@@ -696,7 +692,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	    cairo_image_surface_get_height (job_info->surface) == height)
 		return;
 
-	add_job (pixbuf_cache, job_info, page_cache, NULL,
+	add_job (pixbuf_cache, job_info, NULL,
 		 width, height, page, rotation, scale,
 		 priority);
 }
@@ -731,7 +727,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 				   EV_JOB_PRIORITY_LOW);
 	}
 
-	for (i = 0; i < VISIBLE_NEXT_LEN(pixbuf_cache, page_cache); i++) {
+	for (i = 0; i < VISIBLE_NEXT_LEN(pixbuf_cache); i++) {
 		job_info = (pixbuf_cache->next_job + i);
 		page = pixbuf_cache->end_page + 1 + i;
 
@@ -750,14 +746,10 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 				gfloat          scale,
 				GList          *selection_list)
 {
-	EvPageCache *page_cache;
-
 	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
 
-	page_cache = ev_page_cache_get (pixbuf_cache->document);
-
-	g_return_if_fail (start_page >= 0 && start_page < ev_page_cache_get_n_pages (page_cache));
-	g_return_if_fail (end_page >= 0 && end_page < ev_page_cache_get_n_pages (page_cache));
+	g_return_if_fail (start_page >= 0 && start_page < ev_document_get_n_pages (pixbuf_cache->document));
+	g_return_if_fail (end_page >= 0 && end_page < ev_document_get_n_pages (pixbuf_cache->document));
 	g_return_if_fail (end_page >= start_page);
 
 	/* First, resize the page_range as needed.  We cull old pages
@@ -1113,7 +1105,6 @@ void
 ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 				    GList         *selection_list)
 {
-	EvPageCache *page_cache;
 	EvViewSelection *selection;
 	GList *list = selection_list;
 	int page;
@@ -1123,8 +1114,6 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 
 	if (!EV_IS_SELECTION (pixbuf_cache->document))
 		return;
-
-	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	/* We check each area to see what needs updating, and what needs freeing; */
 	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
@@ -1171,7 +1160,7 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		if (page >= ev_page_cache_get_n_pages (page_cache))
+		if (page >= ev_document_get_n_pages (pixbuf_cache->document))
 			break;
 
 		selection = NULL;
@@ -1198,15 +1187,12 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 GList *
 ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 {
-	EvPageCache *page_cache;
 	EvViewSelection *selection;
 	GList *retval = NULL;
 	int page;
 	int i;
 
 	g_return_val_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache), NULL);
-
-	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	/* We check each area to see what needs updating, and what needs freeing; */
 	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
@@ -1243,7 +1229,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		if (page >= ev_page_cache_get_n_pages (page_cache))
+		if (page >= ev_document_get_n_pages (pixbuf_cache->document))
 			break;
 
 		if (pixbuf_cache->next_job[i].selection_points.x1 != -1) {
@@ -1261,7 +1247,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 	return retval;
 }
 
-void           
+void
 ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
 			     GdkRegion     *region,
 			     gint           page,
@@ -1269,18 +1255,17 @@ ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
 			     gdouble        scale)
 {
 	CacheJobInfo *job_info;
-        EvPageCache *page_cache;
         gint width, height;
 
 	job_info = find_job_cache (pixbuf_cache, page);
 	if (job_info == NULL)
 		return;
-	
-        page_cache = ev_page_cache_get (pixbuf_cache->document);
-	ev_page_cache_get_size (page_cache, page, rotation, scale,
+
+	ev_page_cache_get_size (ev_page_cache_get (pixbuf_cache->document),
+				page, rotation, scale,
 				&width, &height);
 
-        add_job (pixbuf_cache, job_info, page_cache, region,
+        add_job (pixbuf_cache, job_info, region,
 		 width, height, page, rotation, scale,
 		 EV_JOB_PRIORITY_URGENT);
 }

@@ -263,13 +263,11 @@ get_scale_for_page (EvSidebarThumbnails *sidebar_thumbnails,
 		    gint                 page)
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-	gint width, height;
+	gdouble width;
 
-	ev_page_cache_get_size (priv->page_cache,
-				page, 0,
-				1.0, &width, &height);
-	
-	return (gdouble)THUMBNAIL_WIDTH / (gdouble)width;
+	ev_document_get_page_size (priv->document, page, &width, NULL);
+
+	return (gdouble)THUMBNAIL_WIDTH / width;
 }
 
 static void
@@ -417,7 +415,7 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 		GdkPixbuf *loading_icon = NULL;
 		gint       width, height;
 
-		page_label = ev_page_cache_get_page_label (priv->page_cache, i);
+		page_label = ev_document_get_page_label (priv->document, i);
 		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
 		ev_page_cache_get_thumbnail_size (sidebar_thumbnails->priv->page_cache, i,
 						  sidebar_thumbnails->priv->rotation,
@@ -565,9 +563,8 @@ static gboolean
 ev_sidebar_thumbnails_use_icon_view (EvSidebarThumbnails *sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-	if (ev_page_cache_get_n_pages (priv->page_cache) > MAX_ICON_VIEW_PAGE_COUNT)
-		return FALSE;
-	return TRUE;
+
+	return (ev_document_get_n_pages (priv->document) <= MAX_ICON_VIEW_PAGE_COUNT);
 }
 
 static void
@@ -655,8 +652,8 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 }
 
 static void
-ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
-				    EvDocument          *document)
+ev_sidebar_thumbnails_set_document (EvSidebarPage *sidebar_page,
+				    EvDocument    *document)
 {
 	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (sidebar_page);
 
@@ -665,13 +662,13 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage	*sidebar_page,
 	priv->page_cache = ev_page_cache_get (document);
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
-	    ev_page_cache_get_n_pages (priv->page_cache) <= 0 ||
-	    ev_page_cache_check_dimensions (priv->page_cache)) {
+	    ev_document_get_n_pages (document) <= 0 ||
+	    !ev_page_cache_check_dimensions (priv->page_cache)) {
 		return;
 	}
 
 	priv->document = document;
-	priv->n_pages = ev_page_cache_get_n_pages (priv->page_cache);
+	priv->n_pages = ev_document_get_n_pages (document);
 	priv->loading_icons = g_hash_table_new_full (g_str_hash,
 						     g_str_equal,
 						     (GDestroyNotify)g_free,

@@ -316,11 +316,11 @@ print_section_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar)
 				g_object_unref (link);
 			}
 		} else {
-			last_page = ev_page_cache_get_n_pages (sidebar->priv->page_cache);
+			last_page = ev_document_get_n_pages (sidebar->priv->document);
 		}
 
 		if (last_page == -1)
-			last_page = ev_page_cache_get_n_pages (sidebar->priv->page_cache);
+			last_page = ev_document_get_n_pages (sidebar->priv->document);
 	
 		window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
 		if (EV_IS_WINDOW (window)) {
@@ -479,8 +479,8 @@ fill_page_labels (GtkTreeModel *tree_model,
 	if (page < 0) 
 		return FALSE;
 	
-	page_label = ev_page_cache_get_page_label (sidebar_links->priv->page_cache,
-						   page);
+	page_label = ev_document_get_page_label (sidebar_links->priv->document,
+						 page);
 	gtk_tree_store_set (GTK_TREE_STORE (tree_model), iter,
 			    EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, page_label, 
 			    -1);

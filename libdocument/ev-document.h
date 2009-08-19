@@ -47,6 +47,8 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocument        EvDocument;
 typedef struct _EvDocumentClass   EvDocumentClass;
+typedef struct _EvDocumentPrivate EvDocumentPrivate;
+
 typedef struct _EvPageCache       EvPageCache;
 typedef struct _EvPageCacheClass  EvPageCacheClass;
 
@@ -70,6 +72,8 @@ typedef struct _EvRectangle EvRectangle;
 struct _EvDocument
 {
 	GObject base;
+
+	EvDocumentPrivate *priv;
 };
 
 struct _EvDocumentClass
@@ -97,42 +101,52 @@ struct _EvDocumentClass
         EvDocumentInfo  * (* get_info)        (EvDocument      *document);
 };
 
-GType            ev_document_get_type         (void) G_GNUC_CONST;
-GQuark           ev_document_error_quark      (void);
+GType            ev_document_get_type             (void) G_GNUC_CONST;
+GQuark           ev_document_error_quark          (void);
 
 /* Document mutex */
-GMutex          *ev_document_get_doc_mutex    (void);
-void             ev_document_doc_mutex_lock   (void);
-void             ev_document_doc_mutex_unlock (void);
-gboolean         ev_document_doc_mutex_trylock(void);
+GMutex          *ev_document_get_doc_mutex        (void);
+void             ev_document_doc_mutex_lock       (void);
+void             ev_document_doc_mutex_unlock     (void);
+gboolean         ev_document_doc_mutex_trylock    (void);
 
 /* FontConfig mutex */
-GMutex          *ev_document_get_fc_mutex     (void);
-void             ev_document_fc_mutex_lock    (void);
-void             ev_document_fc_mutex_unlock  (void);
-gboolean         ev_document_fc_mutex_trylock (void);
+GMutex          *ev_document_get_fc_mutex         (void);
+void             ev_document_fc_mutex_lock        (void);
+void             ev_document_fc_mutex_unlock      (void);
+gboolean         ev_document_fc_mutex_trylock     (void);
 
-EvDocumentInfo  *ev_document_get_info         (EvDocument      *document);
-gboolean         ev_document_load             (EvDocument      *document,
-                                               const char      *uri,
-                                               GError         **error);
-gboolean         ev_document_save             (EvDocument      *document,
-                                               const char      *uri,
-                                               GError         **error);
-gint             ev_document_get_n_pages      (EvDocument      *document);
-EvPage          *ev_document_get_page         (EvDocument      *document,
-					       gint             index);
-void             ev_document_get_page_size    (EvDocument      *document,
-                                               EvPage          *page,
-                                               double          *width,
-                                               double          *height);
-gchar           *ev_document_get_page_label   (EvDocument      *document,
-                                               EvPage          *page);
-cairo_surface_t *ev_document_render           (EvDocument      *document,
-                                               EvRenderContext *rc);
+EvDocumentInfo  *ev_document_get_info             (EvDocument      *document);
+gboolean         ev_document_load                 (EvDocument      *document,
+						   const char      *uri,
+						   GError         **error);
+gboolean         ev_document_save                 (EvDocument      *document,
+						   const char      *uri,
+						   GError         **error);
+gint             ev_document_get_n_pages          (EvDocument      *document);
+EvPage          *ev_document_get_page             (EvDocument      *document,
+						   gint             index);
+void             ev_document_get_page_size        (EvDocument      *document,
+						   gint             page_index,
+						   double          *width,
+						   double          *height);
+gchar           *ev_document_get_page_label       (EvDocument      *document,
+						   gint             page_index);
+cairo_surface_t *ev_document_render               (EvDocument      *document,
+						   EvRenderContext *rc);
+const gchar     *ev_document_get_title            (EvDocument      *document);
+gboolean         ev_document_is_page_size_uniform (EvDocument      *document);
+void             ev_document_get_max_page_size    (EvDocument      *document,
+						   gdouble         *width,
+						   gdouble         *height);
+gint             ev_document_get_max_label_len    (EvDocument      *document);
+gboolean         ev_document_has_text_page_labels (EvDocument      *document);
+gboolean         ev_document_find_page_by_label   (EvDocument      *document,
+						   const gchar     *page_label,
+						   gint            *page_index);
 
-gint            ev_rect_cmp                   (EvRectangle     *a,
-                                               EvRectangle     *b);
+gint             ev_rect_cmp                      (EvRectangle     *a,
+					           EvRectangle     *b);
 
 #define EV_TYPE_RECTANGLE (ev_rectangle_get_type ())
 struct _EvRectangle

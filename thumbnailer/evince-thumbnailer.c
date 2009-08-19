@@ -84,7 +84,7 @@ evince_thumbnail_pngenc_get (EvDocument *document, const char *thumbnail, int si
 
 	page = ev_document_get_page (document, 0);
 	
-	ev_document_get_page_size (document, page, &width, &height);
+	ev_document_get_page_size (document, 0, &width, &height);
 
 	rc = ev_render_context_new (page, 0, size / width);
 	pixbuf = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (document),
