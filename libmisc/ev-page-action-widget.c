@@ -38,14 +38,151 @@ enum
 	WIDGET_N_SIGNALS
 };
 
+struct _EvPageActionWidget
+{
+	GtkToolItem parent;
+
+	GtkWidget *entry;
+	GtkWidget *label;
+	EvPageCache *page_cache;
+	guint signal_id;
+	GtkTreeModel *filter_model;
+	GtkTreeModel *model;
+};
+
 static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
 
 G_DEFINE_TYPE (EvPageActionWidget, ev_page_action_widget, GTK_TYPE_TOOL_ITEM)
 
 static void
+update_pages_label (EvPageActionWidget *action_widget,
+		    gint                page,
+		    EvPageCache        *page_cache)
+{
+	char *label_text;
+	gint n_pages;
+
+	n_pages = page_cache ? ev_page_cache_get_n_pages (page_cache) : 0;
+	if (page_cache && ev_page_cache_has_nonnumeric_page_labels (page_cache)) {
+		label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
+	} else {
+		label_text = g_strdup_printf (_("of %d"), n_pages);
+	}
+	gtk_label_set_text (GTK_LABEL (action_widget->label), label_text);
+	g_free (label_text);
+}
+
+static void
+page_changed_cb (EvPageCache        *page_cache,
+		 gint                page,
+		 EvPageActionWidget *action_widget)
+{
+	if (page_cache && page >= 0) {
+		gchar *page_label;
+
+		gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry),
+					   CLAMP (ev_page_cache_get_max_label_chars (page_cache),
+						  6, 12));
+
+		page_label = ev_page_cache_get_page_label (page_cache, page);
+		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
+		gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
+		g_free (page_label);
+
+	} else {
+		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
+	}
+
+	update_pages_label (action_widget, page, page_cache);
+}
+
+static gboolean
+page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
+{
+	EvPageCache *page_cache = action_widget->page_cache;
+	gint pageno;
+
+	pageno = ev_page_cache_get_current_page (page_cache);
+	if ((event->direction == GDK_SCROLL_DOWN) &&
+	    (pageno < ev_page_cache_get_n_pages (page_cache) - 1))
+		pageno++;
+	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
+		pageno--;
+	ev_page_cache_set_current_page (page_cache, pageno);
+
+	return TRUE;
+}
+
+static void
+activate_cb (EvPageActionWidget *action_widget)
+{
+	EvPageCache *page_cache;
+	const char *text;
+	gchar *page_label;
+	EvLinkDest *link_dest;
+	EvLinkAction *link_action;
+	EvLink *link;
+	gchar *link_text;
+
+	text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
+
+	link_dest = ev_link_dest_new_page_label (text);
+	link_action = ev_link_action_new_dest (link_dest);
+	link_text = g_strdup_printf ("Page: %s", text);
+	link = ev_link_new (link_text, link_action);
+
+	g_signal_emit (action_widget, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
+
+	g_object_unref (link);
+	g_free (link_text);
+
+	/* rest the entry to the current page if we were unable to
+	 * change it */
+	page_cache = action_widget->page_cache;
+	page_label = ev_page_cache_get_page_label (page_cache,
+						   ev_page_cache_get_current_page (page_cache));
+	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
+	gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
+	g_free (page_label);
+}
+
+static void
 ev_page_action_widget_init (EvPageActionWidget *action_widget)
 {
-	return;
+	GtkWidget *hbox;
+	AtkObject *obj;
+
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_box_set_spacing (GTK_BOX (hbox), 6);
+
+	action_widget->entry = gtk_entry_new ();
+	gtk_widget_add_events (action_widget->entry,
+			       GDK_BUTTON_MOTION_MASK);
+	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry), 5);
+	g_signal_connect_swapped (action_widget->entry, "scroll-event",
+				  G_CALLBACK (page_scroll_cb),
+				  action_widget);
+	g_signal_connect_swapped (action_widget->entry, "activate",
+				  G_CALLBACK (activate_cb),
+				  action_widget);
+
+	obj = gtk_widget_get_accessible (action_widget->entry);
+	atk_object_set_name (obj, "page-label-entry");
+
+	gtk_box_pack_start (GTK_BOX (hbox), action_widget->entry,
+			    FALSE, FALSE, 0);
+	gtk_widget_show (action_widget->entry);
+
+	action_widget->label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (hbox), action_widget->label,
+			    FALSE, FALSE, 0);
+	gtk_widget_show (action_widget->label);
+
+	gtk_container_set_border_width (GTK_CONTAINER (action_widget), 6);
+	gtk_container_add (GTK_CONTAINER (action_widget), hbox);
+	gtk_widget_show (hbox);
+
+	gtk_widget_show (GTK_WIDGET (action_widget));
 }
 
 void
@@ -53,6 +190,11 @@ ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
 				      EvPageCache        *page_cache)
 {
 	if (action_widget->page_cache != NULL) {
+		if (action_widget->signal_id > 0) {
+			g_signal_handler_disconnect (action_widget->page_cache,
+						     action_widget->signal_id);
+			action_widget->signal_id = 0;
+		}
 		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
 					      (gpointer)&action_widget->page_cache);
 		action_widget->page_cache = NULL;
@@ -62,6 +204,16 @@ ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
 		action_widget->page_cache = page_cache;
 		g_object_add_weak_pointer (G_OBJECT (page_cache),
 					   (gpointer)&action_widget->page_cache);
+		action_widget->signal_id =
+			g_signal_connect_object (page_cache, "page-changed",
+						 G_CALLBACK (page_changed_cb),
+						 action_widget, 0);
+		page_changed_cb (page_cache,
+				 ev_page_cache_get_current_page (page_cache),
+				 action_widget);
+	} else {
+		action_widget->signal_id = 0;
+		page_changed_cb (NULL, 0, action_widget);
 	}
 }
 
@@ -70,7 +222,16 @@ ev_page_action_widget_finalize (GObject *object)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
 
-	ev_page_action_widget_set_page_cache (action_widget, NULL);
+	if (action_widget->page_cache != NULL) {
+		if (action_widget->signal_id > 0) {
+			g_signal_handler_disconnect (action_widget->page_cache,
+						     action_widget->signal_id);
+			action_widget->signal_id = 0;
+		}
+		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
+					      (gpointer)&action_widget->page_cache);
+		action_widget->page_cache = NULL;
+	}
 
 	G_OBJECT_CLASS (ev_page_action_widget_parent_class)->finalize (object);
 }
@@ -82,14 +243,15 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *class)
 
 	object_class->finalize = ev_page_action_widget_finalize;
 
-	widget_signals[WIDGET_ACTIVATE_LINK] = g_signal_new ("activate_link",
-					       G_OBJECT_CLASS_TYPE (object_class),
-					       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-					       G_STRUCT_OFFSET (EvPageActionClass, activate_link),
-					       NULL, NULL,
-					       g_cclosure_marshal_VOID__OBJECT,
-					       G_TYPE_NONE, 1,
-					       G_TYPE_OBJECT);
+	widget_signals[WIDGET_ACTIVATE_LINK] =
+		g_signal_new ("activate_link",
+			      G_OBJECT_CLASS_TYPE (object_class),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (EvPageActionClass, activate_link),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__OBJECT,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_OBJECT);
 
 }
 
@@ -264,41 +426,47 @@ void
 ev_page_action_widget_update_model (EvPageActionWidget *proxy, GtkTreeModel *model)
 {
 	GtkTreeModel *filter_model;
+	GtkEntryCompletion *completion;
+	GtkCellRenderer *renderer;
 
-	if (model != NULL) {
-		/* Magik */
-		GtkEntryCompletion *completion;
-		GtkCellRenderer *renderer;
+	if (!model)
+		return;
 
-		proxy->model = model;
-		filter_model = get_filter_model_from_model (model);
+	/* Magik */
+	proxy->model = model;
+	filter_model = get_filter_model_from_model (model);
 
-		completion = gtk_entry_completion_new ();
+	completion = gtk_entry_completion_new ();
+	g_object_set (G_OBJECT (completion),
+		      "popup-set-width", FALSE,
+		      "model", filter_model,
+		      NULL);
 
-		g_object_set (G_OBJECT (completion),
-			      "popup-set-width", FALSE,
-			      "model", filter_model,
+	g_signal_connect (completion, "match-selected", G_CALLBACK (match_selected_cb), proxy);
+	gtk_entry_completion_set_match_func (completion,
+					     (GtkEntryCompletionMatchFunc) match_completion,
+					     proxy, NULL);
+
+	/* Set up the layout */
+	renderer = (GtkCellRenderer *)
+		g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
+			      "ellipsize", PANGO_ELLIPSIZE_END,
+			      "width_chars", 30,
 			      NULL);
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (completion), renderer, TRUE);
+	gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (completion),
+					    renderer,
+					    (GtkCellLayoutDataFunc) display_completion_text,
+					    proxy, NULL);
+	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
 
-		g_signal_connect (completion, "match-selected", G_CALLBACK (match_selected_cb), proxy);
-		gtk_entry_completion_set_match_func (completion,
-						     (GtkEntryCompletionMatchFunc) match_completion,
-						     proxy, NULL);
-
-		/* Set up the layout */
-		renderer = (GtkCellRenderer *)
-			g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
-				      "ellipsize", PANGO_ELLIPSIZE_END,
-				      "width_chars", 30,
-				      NULL);
-		gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (completion), renderer, TRUE);
-		gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (completion),
-						    renderer,
-						    (GtkCellLayoutDataFunc) display_completion_text,
-						    proxy, NULL);
-		gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
-		
-		g_object_unref (completion);
-		g_object_unref (model);
-	}
+	g_object_unref (completion);
+	g_object_unref (model);
 }
+
+void
+ev_page_action_widget_grab_focus (EvPageActionWidget *proxy)
+{
+	gtk_widget_grab_focus (proxy->entry);
+}
+

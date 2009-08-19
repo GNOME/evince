@@ -28,18 +28,6 @@
 typedef struct _EvPageActionWidget EvPageActionWidget;
 typedef struct _EvPageActionWidgetClass EvPageActionWidgetClass;
 
-struct _EvPageActionWidget
-{
-	GtkToolItem parent;
-
-	GtkWidget *entry;
-	GtkWidget *label;
-	EvPageCache *page_cache;
-	guint signal_id;
-	GtkTreeModel *filter_model;
-	GtkTreeModel *model;
-};
-
 struct _EvPageActionWidgetClass
 {
 	GtkToolItemClass parent_class;
@@ -48,11 +36,11 @@ struct _EvPageActionWidgetClass
 			        EvLink             *link);
 };
 
-GType ev_page_action_widget_get_type   (void);
+GType ev_page_action_widget_get_type      (void) G_GNUC_CONST;
 
-void
-ev_page_action_widget_update_model (EvPageActionWidget *proxy, GtkTreeModel *model);
+void ev_page_action_widget_update_model   (EvPageActionWidget *proxy,
+					   GtkTreeModel       *model);
 
-void
-ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
-				      EvPageCache        *page_cache);
+void ev_page_action_widget_set_page_cache (EvPageActionWidget *action_widget,
+					   EvPageCache        *page_cache);
+void ev_page_action_widget_grab_focus     (EvPageActionWidget *proxy);

@@ -59,177 +59,25 @@ enum {
 	PROP_MODEL,
 };
 
-static void
-update_pages_label (EvPageActionWidget *proxy,
-		    gint                page,
-		    EvPageCache        *page_cache)
-{
-	char *label_text;
-	gint n_pages;
-
-	n_pages = page_cache ? ev_page_cache_get_n_pages (page_cache) : 0;
-	if (page_cache && ev_page_cache_has_nonnumeric_page_labels (page_cache)) {
-    	        label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
-	} else {
-    	        label_text = g_strdup_printf (_("of %d"), n_pages);
-	}
-	gtk_label_set_text (GTK_LABEL (proxy->label), label_text);
-	g_free (label_text);
-}
-
-static void
-page_changed_cb (EvPageCache        *page_cache,
-		 gint                page,
-		 EvPageActionWidget *proxy)
-{
-	g_assert (proxy);
-	
-	if (page_cache != NULL && page >= 0) {
-		gchar *page_label;
-
-		gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 
-					   CLAMP (ev_page_cache_get_max_label_chars (page_cache), 
-					   6, 12));	
-		
-		page_label = ev_page_cache_get_page_label (page_cache, page);
-		gtk_entry_set_text (GTK_ENTRY (proxy->entry), page_label);
-		gtk_editable_set_position (GTK_EDITABLE (proxy->entry), -1);
-		g_free (page_label);
-		
-	} else {
-		gtk_entry_set_text (GTK_ENTRY (proxy->entry), "");
-	}
-
-	update_pages_label (proxy, page, page_cache);
-}
-
-static void
-activate_cb (GtkWidget *entry, GtkAction *action)
-{
-	EvPageAction *page = EV_PAGE_ACTION (action);
-	EvPageCache *page_cache;
-	const char *text;
-	gchar *page_label;
-	
-	EvLinkDest *link_dest;
-	EvLinkAction *link_action;
-	EvLink *link;
-	gchar *link_text;
-
-	text = gtk_entry_get_text (GTK_ENTRY (entry));
-	page_cache = page->priv->page_cache;
-
-	
-	link_dest = ev_link_dest_new_page_label (text);
-	link_action = ev_link_action_new_dest (link_dest);
-	link_text = g_strdup_printf ("Page: %s", text);
-	link = ev_link_new (link_text, link_action);
-
-	g_signal_emit (action, signals[ACTIVATE_LINK], 0, link);
-
-	g_object_unref (link);
-	g_free (link_text);
-	
-	/* rest the entry to the current page if we were unable to
-	 * change it */
-	page_label = ev_page_cache_get_page_label (page_cache,
-						   ev_page_cache_get_current_page (page_cache));
-	gtk_entry_set_text (GTK_ENTRY (entry), page_label);
-	gtk_editable_set_position (GTK_EDITABLE (entry), -1);
-	g_free (page_label);
-}
-
-static gboolean page_scroll_cb(GtkWidget *widget, GdkEventScroll *event, EvPageAction* action)
-{
-	gint pageno;
-
-	pageno = ev_page_cache_get_current_page (action->priv->page_cache);
-	if ((event->direction == GDK_SCROLL_DOWN) && 
-	    (pageno < ev_page_cache_get_n_pages(action->priv->page_cache) - 1))
-		pageno++;
-	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
-		pageno--;
-	ev_page_cache_set_current_page (action->priv->page_cache, pageno);
-	
-	return TRUE;
-}
-
 static GtkWidget *
 create_tool_item (GtkAction *action)
 {
-	EvPageActionWidget *proxy;
-	GtkWidget *hbox;
-        AtkObject *obj;
+	GtkWidget *proxy;
 
-	proxy = g_object_new (ev_page_action_widget_get_type (), NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (proxy), 6); 
-	gtk_widget_show (GTK_WIDGET (proxy));
+	proxy = g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL);
 
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_box_set_spacing (GTK_BOX (hbox), 6);
-
-	proxy->entry = gtk_entry_new ();
-	obj = gtk_widget_get_accessible (proxy->entry);
-        atk_object_set_name (obj, "page-label-entry");
-	         
-	g_signal_connect(proxy->entry, "scroll-event",G_CALLBACK(page_scroll_cb),action);
-	gtk_widget_add_events(GTK_WIDGET(proxy->entry),GDK_BUTTON_MOTION_MASK);
-	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), 5);
-	gtk_box_pack_start (GTK_BOX (hbox), proxy->entry, FALSE, FALSE, 0);
-	gtk_widget_show (proxy->entry);
-	g_signal_connect (proxy->entry, "activate",
-			  G_CALLBACK (activate_cb),
-			  action);
-
-	proxy->label = gtk_label_new (NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), proxy->label, FALSE, FALSE, 0);
-	gtk_widget_show (proxy->label);
-
-	gtk_container_add (GTK_CONTAINER (proxy), hbox);
-	gtk_widget_show (hbox);
-
-	return GTK_WIDGET (proxy);
+	return proxy;
 }
 
 static void
 update_page_cache (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 {
-	EvPageCache *page_cache;
-	guint signal_id;
-
-	page_cache = page->priv->page_cache;
-
-	/* clear the old signal */
-	if (proxy->signal_id > 0 && proxy->page_cache)
-		g_signal_handler_disconnect (proxy->page_cache, proxy->signal_id);
-	
-	if (page_cache != NULL) {
-		signal_id = g_signal_connect_object (page_cache,
-					             "page-changed",
-					             G_CALLBACK (page_changed_cb),
-					             proxy, 0);
-		/* Set the initial value */
-		page_changed_cb (page_cache,
-				 ev_page_cache_get_current_page (page_cache),
-				 proxy);
-	} else {
-		/* Or clear the entry */
-		signal_id = 0;
-		page_changed_cb (NULL, 0, proxy);
-	}
-	ev_page_action_widget_set_page_cache (proxy, page_cache);
-	proxy->signal_id = signal_id;
-}
-
-static void
-activate_link_cb (EvPageActionWidget *proxy, EvLink *link, EvPageAction *action)
-{
-	g_signal_emit (action, signals[ACTIVATE_LINK], 0, link);
+	ev_page_action_widget_set_page_cache (proxy, page->priv->page_cache);
 }
 
 static void
 update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
-{	
+{
 	GtkTreeModel *model;
 
 	g_object_get (G_OBJECT (page),
@@ -237,6 +85,12 @@ update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 		      NULL);
 
 	ev_page_action_widget_update_model (proxy, model);
+}
+
+static void
+activate_link_cb (EvPageActionWidget *proxy, EvLink *link, EvPageAction *action)
+{
+	g_signal_emit (action, signals[ACTIVATE_LINK], 0, link);
 }
 
 static void
@@ -361,9 +215,9 @@ ev_page_action_grab_focus (EvPageAction *page_action)
 		EvPageActionWidget *proxy;
 
 		proxy = EV_PAGE_ACTION_WIDGET (proxies->data);
-		
+
 		if (GTK_WIDGET_MAPPED (GTK_WIDGET (proxy)))
-			gtk_widget_grab_focus (proxy->entry);
+			ev_page_action_widget_grab_focus (proxy);
 	}
 }
 
