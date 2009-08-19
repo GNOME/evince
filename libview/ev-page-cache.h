@@ -55,11 +55,6 @@ void           ev_page_cache_get_height_to_page  (EvPageCache   *page_cache,
 						  gfloat         scale,
 						  gint          *height,
 						  gint	        *dual_height);
-void           ev_page_cache_get_thumbnail_size  (EvPageCache   *page_cache,
-						  gint           page,
-						  gint           rotation,
-						  gint          *width,
-						  gint          *height);
 gboolean       ev_page_cache_get_dual_even_left  (EvPageCache *page_cache);
 
 /* Navigation */

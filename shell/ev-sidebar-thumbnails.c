@@ -45,6 +45,18 @@
  * limit its use */
 #define MAX_ICON_VIEW_PAGE_COUNT 1500
 
+typedef struct _EvThumbsSize
+{
+	gint width;
+	gint height;
+} EvThumbsSize;
+
+typedef struct _EvThumbsSizeCache {
+	gboolean uniform;
+	gint uniform_width;
+	gint uniform_height;
+	EvThumbsSize *sizes;
+} EvThumbsSizeCache;
 
 struct _EvSidebarThumbnailsPrivate {
 	GtkWidget *swindow;
@@ -55,6 +67,7 @@ struct _EvSidebarThumbnailsPrivate {
 	GHashTable *loading_icons;
 	EvDocument *document;
 	EvPageCache *page_cache;
+	EvThumbsSizeCache *size_cache;
 
 	gint n_pages, pages_done;
 
@@ -98,6 +111,138 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails,
 #define EV_SIDEBAR_THUMBNAILS_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnailsPrivate));
 
+/* Thumbnails dimensions cache */
+#define EV_THUMBNAILS_SIZE_CACHE_KEY "ev-thumbnails-size-cache"
+
+static EvThumbsSizeCache *
+ev_thumbnails_size_cache_new (EvDocument *document)
+{
+	EvThumbsSizeCache *cache;
+	EvRenderContext *rc;
+	gint i, n_pages;
+	EvThumbsSize *thumb_size;
+
+	cache = g_new0 (EvThumbsSizeCache, 1);
+
+	n_pages = ev_document_get_n_pages (document);
+
+	/* Assume all pages are the same size until proven otherwise */
+	cache->uniform = TRUE;
+
+	for (i = 0; i < n_pages; i++) {
+		EvPage *page;
+		gdouble page_width, page_height;
+		gint    thumb_width = 0;
+		gint    thumb_height = 0;
+
+		page = ev_document_get_page (document, i);
+
+		ev_document_get_page_size (document, i, &page_width, &page_height);
+
+		if (!rc) {
+			rc = ev_render_context_new (page, 0, (gdouble)THUMBNAIL_WIDTH / page_width);
+		} else {
+			ev_render_context_set_page (rc, page);
+			ev_render_context_set_scale (rc, (gdouble)THUMBNAIL_WIDTH / page_width);
+		}
+
+		ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (document),
+						       rc, &thumb_width, &thumb_height);
+
+		if (i == 0) {
+			cache->uniform_width = thumb_width;
+			cache->uniform_height = thumb_height;
+		} else if (cache->uniform &&
+			   (cache->uniform_width != thumb_width ||
+			    cache->uniform_height != thumb_height)) {
+			/* It's a different thumbnail size.  Backfill the array. */
+			int j;
+
+			cache->sizes = g_new0 (EvThumbsSize, n_pages);
+
+			for (j = 0; j < i; j++) {
+				thumb_size = &(cache->sizes[j]);
+				thumb_size->width = cache->uniform_width;
+				thumb_size->height = cache->uniform_height;
+			}
+			cache->uniform = FALSE;
+		}
+
+		if (! cache->uniform) {
+			thumb_size = &(cache->sizes[i]);
+
+			thumb_size->width = thumb_width;
+			thumb_size->height = thumb_height;
+		}
+
+		g_object_unref (page);
+	}
+
+	if (rc) {
+		g_object_unref (rc);
+	}
+
+	return cache;
+}
+
+static void
+ev_thumbnails_size_cache_get_size (EvThumbsSizeCache *cache,
+				   gint               page,
+				   gint               rotation,
+				   gint              *width,
+				   gint              *height)
+{
+	gint w, h;
+
+	if (cache->uniform) {
+		w = cache->uniform_width;
+		h = cache->uniform_height;
+	} else {
+		EvThumbsSize *thumb_size;
+
+		thumb_size = &(cache->sizes[page]);
+
+		w = thumb_size->width;
+		h = thumb_size->height;
+	}
+
+	if (rotation == 0 || rotation == 180) {
+		if (width) *width = w;
+		if (height) *height = h;
+	} else {
+		if (width) *width = h;
+		if (height) *height = w;
+	}
+}
+
+static void
+ev_thumbnails_size_cache_free (EvThumbsSizeCache *cache)
+{
+	if (cache->sizes) {
+		g_free (cache->sizes);
+		cache->sizes = NULL;
+	}
+
+	g_free (cache);
+}
+
+static EvThumbsSizeCache *
+ev_thumbnails_size_cache_get (EvDocument *document)
+{
+	EvThumbsSizeCache *cache;
+
+	cache = g_object_get_data (G_OBJECT (document), EV_THUMBNAILS_SIZE_CACHE_KEY);
+	if (!cache) {
+		cache = ev_thumbnails_size_cache_new (document);
+		g_object_set_data_full (G_OBJECT (document),
+					EV_THUMBNAILS_SIZE_CACHE_KEY,
+					cache,
+					(GDestroyNotify)ev_thumbnails_size_cache_free);
+	}
+
+	return cache;
+}
+
 
 static void
 ev_sidebar_thumbnails_dispose (GObject *object)
@@ -114,7 +259,7 @@ ev_sidebar_thumbnails_dispose (GObject *object)
 		g_object_unref (sidebar_thumbnails->priv->list_store);
 		sidebar_thumbnails->priv->list_store = NULL;
 	}
-	
+
 	G_OBJECT_CLASS (ev_sidebar_thumbnails_parent_class)->dispose (object);
 }
 
@@ -237,7 +382,7 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 			g_object_unref (job);
 		}
 
-		ev_page_cache_get_thumbnail_size (priv->page_cache, start_page,
+		ev_thumbnails_size_cache_get_size (priv->size_cache, start_page,
 						  priv->rotation,
 						  &width, &height);
 		if (!loading_icon || (width != prev_width && height != prev_height)) {
@@ -417,7 +562,7 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 
 		page_label = ev_document_get_page_label (priv->document, i);
 		page_string = g_markup_printf_escaped ("<i>%s</i>", page_label);
-		ev_page_cache_get_thumbnail_size (sidebar_thumbnails->priv->page_cache, i,
+		ev_thumbnails_size_cache_get_size (sidebar_thumbnails->priv->size_cache, i,
 						  sidebar_thumbnails->priv->rotation,
 						  &width, &height);
 		if (!loading_icon || (width != prev_width && height != prev_height)) {
@@ -667,6 +812,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage *sidebar_page,
 		return;
 	}
 
+	priv->size_cache = ev_thumbnails_size_cache_get (document);
 	priv->document = document;
 	priv->n_pages = ev_document_get_n_pages (document);
 	priv->loading_icons = g_hash_table_new_full (g_str_hash,

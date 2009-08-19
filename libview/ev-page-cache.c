@@ -5,14 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define THUMBNAIL_WIDTH 100
-
-typedef struct _EvPageThumbsInfo
-{
-	gint width;
-	gint height;
-} EvPageThumbsInfo;
-
 struct _EvPageCache
 {
 	GObject parent;
@@ -27,14 +19,6 @@ struct _EvPageCache
 	double* dual_height_to_page;
 
 	int rotation;
-
-	/* Thumbnail dimensions */
-	gboolean thumbs_uniform;
-	gint thumbs_uniform_width;
-	gint thumbs_uniform_height;
-	gint thumbs_max_width;
-	gint thumbs_max_height;
-	EvPageThumbsInfo *thumbs_size_cache;
 };
 
 struct _EvPageCacheClass
@@ -103,11 +87,6 @@ ev_page_cache_finalize (GObject *object)
 	EvPageCache *page_cache = EV_PAGE_CACHE (object);
 
 	page_cache->document = NULL;
-
-	if (page_cache->thumbs_size_cache) {
-		g_free (page_cache->thumbs_size_cache);
-		page_cache->thumbs_size_cache = NULL;
-	}
 
 	if (page_cache->height_to_page) {
 		g_free (page_cache->height_to_page);
@@ -216,88 +195,13 @@ static EvPageCache *
 ev_page_cache_new (EvDocument *document)
 {
 	EvPageCache *page_cache;
-	EvPageThumbsInfo *thumb_info;
-	EvRenderContext *rc = NULL;
-	gint i, n_pages;
 
 	page_cache = (EvPageCache *) g_object_new (EV_TYPE_PAGE_CACHE, NULL);
 	page_cache->document = document;
 
-	n_pages = ev_document_get_n_pages (document);
-
 	build_height_to_page (page_cache);
 
-	if (!EV_IS_DOCUMENT_THUMBNAILS (document)) {
-		if (n_pages > 0)
-			ev_page_cache_set_current_page (page_cache, 0);
-		return page_cache;
-	}
-
-	/* Assume all pages are the same size until proven otherwise */
-	page_cache->thumbs_uniform = TRUE;
-
-	for (i = 0; i < n_pages; i++) {
-		EvPage *page;
-		gdouble page_width, page_height;
-		gint    thumb_width = 0;
-		gint    thumb_height = 0;
-
-		page = ev_document_get_page (document, i);
-
-		ev_document_get_page_size (document, i, &page_width, &page_height);
-
-		if (!rc) {
-			rc = ev_render_context_new (page, 0, (gdouble)THUMBNAIL_WIDTH / page_width);
-		} else {
-			ev_render_context_set_page (rc, page);
-			ev_render_context_set_scale (rc, (gdouble)THUMBNAIL_WIDTH / page_width);
-		}
-
-		ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (document),
-						       rc, &thumb_width, &thumb_height);
-
-		if (thumb_width > page_cache->thumbs_max_width) {
-			page_cache->thumbs_max_width = thumb_width;
-		}
-
-		if (thumb_height > page_cache->thumbs_max_height) {
-			page_cache->thumbs_max_height = thumb_height;
-		}
-
-		if (i == 0) {
-			page_cache->thumbs_uniform_width = thumb_width;
-			page_cache->thumbs_uniform_height = thumb_height;
-		} else if (page_cache->thumbs_uniform &&
-			   (page_cache->thumbs_uniform_width != thumb_width ||
-			    page_cache->thumbs_uniform_height != thumb_height)) {
-			/* It's a different thumbnail size.  Backfill the array. */
-			int j;
-
-			page_cache->thumbs_size_cache = g_new0 (EvPageThumbsInfo, n_pages);
-
-			for (j = 0; j < i; j++) {
-				thumb_info = &(page_cache->thumbs_size_cache[j]);
-				thumb_info->width = page_cache->thumbs_uniform_width;
-				thumb_info->height = page_cache->thumbs_uniform_height;
-			}
-			page_cache->thumbs_uniform = FALSE;
-		}
-
-		if (! page_cache->thumbs_uniform) {
-			thumb_info = &(page_cache->thumbs_size_cache[i]);
-
-			thumb_info->width = thumb_width;
-			thumb_info->height = thumb_height;
-		}
-
-		g_object_unref (page);
-	}
-
-	if (rc) {
-		g_object_unref (rc);
-	}
-
-	if (n_pages > 0)
+	if (ev_document_get_n_pages (page_cache->document) > 0)
 		ev_page_cache_set_current_page (page_cache, 0);
 
 	return page_cache;
@@ -442,38 +346,6 @@ ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
 
 	if (dual_height)
 		*dual_height = page_cache->dual_height_to_page[page] * scale;
-}
-
-void
-ev_page_cache_get_thumbnail_size (EvPageCache  *page_cache,
-				  gint          page,
-				  gint          rotation,
-				  gint         *width,
-				  gint         *height)
-{
-	gint w, h;
-
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-
-	if (page_cache->thumbs_uniform) {
-		w = page_cache->thumbs_uniform_width;
-		h = page_cache->thumbs_uniform_height;
-	} else {
-		EvPageThumbsInfo *info;
-
-		info = &(page_cache->thumbs_size_cache [page]);
-		
-		w = info->width;
-		h = info->height;
-	}
-
-	if (rotation == 0 || rotation == 180) {
-		if (width) *width = w;
-		if (height) *height = h;
-	} else {
-		if (width) *width = h;
-		if (height) *height = w;
-	}
 }
 
 gboolean
