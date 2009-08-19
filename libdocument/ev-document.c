@@ -352,6 +352,8 @@ _ev_document_get_n_pages (EvDocument  *document)
 gint
 ev_document_get_n_pages (EvDocument  *document)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), 0);
+
 	return document->priv->n_pages;
 }
 
@@ -372,6 +374,9 @@ ev_document_get_page_size (EvDocument *document,
 			   double     *width,
 			   double     *height)
 {
+	g_return_if_fail (EV_IS_DOCUMENT (document));
+	g_return_if_fail (page_index >= 0 || page_index < document->priv->n_pages);
+
 	if (width)
 		*width = document->priv->uniform ?
 			document->priv->uniform_width :
@@ -396,6 +401,9 @@ gchar *
 ev_document_get_page_label (EvDocument *document,
 			    gint        page_index)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+	g_return_val_if_fail (page_index >= 0 || page_index < document->priv->n_pages, NULL);
+
 	return (document->priv->page_labels && document->priv->page_labels[page_index]) ?
 		g_strdup (document->priv->page_labels[page_index]) :
 		g_strdup_printf ("%d", page_index + 1);
@@ -412,6 +420,8 @@ _ev_document_get_info (EvDocument *document)
 EvDocumentInfo *
 ev_document_get_info (EvDocument *document)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
 	return document->priv->info;
 }
 
@@ -427,6 +437,8 @@ ev_document_render (EvDocument      *document,
 const gchar *
 ev_document_get_title (EvDocument *document)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
 	return (document->priv->info->fields_mask & EV_DOCUMENT_INFO_TITLE) ?
 		document->priv->info->title : NULL;
 }
@@ -434,6 +446,8 @@ ev_document_get_title (EvDocument *document)
 gboolean
 ev_document_is_page_size_uniform (EvDocument *document)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), TRUE);
+
 	return document->priv->uniform;
 }
 
@@ -442,6 +456,8 @@ ev_document_get_max_page_size (EvDocument *document,
 			       gdouble    *width,
 			       gdouble    *height)
 {
+	g_return_if_fail (EV_IS_DOCUMENT (document));
+
 	if (width)
 		*width = document->priv->max_width;
 	if (height)
@@ -451,12 +467,16 @@ ev_document_get_max_page_size (EvDocument *document,
 gint
 ev_document_get_max_label_len (EvDocument *document)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), -1);
+
 	return document->priv->max_label;
 }
 
 gboolean
 ev_document_has_text_page_labels (EvDocument *document)
 {
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
 	return document->priv->page_labels != NULL;
 }
 
@@ -469,6 +489,10 @@ ev_document_find_page_by_label (EvDocument  *document,
 	glong value;
 	gchar *endptr = NULL;
 	EvDocumentPrivate *priv = document->priv;
+
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+	g_return_val_if_fail (page_label != NULL, FALSE);
+	g_return_val_if_fail (page_index != NULL, FALSE);
 
         /* First, look for a literal label match */
 	for (i = 0; priv->page_labels && i < priv->n_pages; i ++) {
