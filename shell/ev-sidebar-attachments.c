@@ -687,7 +687,7 @@ ev_sidebar_attachments_support_document (EvSidebarPage   *sidebar_page,
 					 EvDocument      *document)
 {
 	return (EV_IS_DOCUMENT_ATTACHMENTS (document) &&
-		ev_document_attachments_has_attachments (document));
+		ev_document_attachments_has_attachments (EV_DOCUMENT_ATTACHMENTS (document)));
 }
 
 static const gchar*
