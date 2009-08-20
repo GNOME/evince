@@ -49,8 +49,6 @@ void           ev_page_cache_get_max_height      (EvPageCache   *page_cache,
 						  gint           rotation,
 						  gfloat         scale,
 						  gint          *height);
-gboolean       ev_page_cache_get_dual_even_left  (EvPageCache *page_cache);
-
 /* Navigation */
 gint           ev_page_cache_get_current_page    (EvPageCache *page_cache);
 void           ev_page_cache_set_current_page    (EvPageCache *page_cache,

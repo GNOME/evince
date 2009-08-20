@@ -209,14 +209,6 @@ ev_page_cache_get_max_height (EvPageCache   *page_cache,
 	*height = (rotation == 0 || rotation == 180) ? h * scale : w * scale;
 }
 
-gboolean
-ev_page_cache_get_dual_even_left (EvPageCache *page_cache)
-{
-	g_return_val_if_fail (EV_IS_PAGE_CACHE (page_cache), 0);
-
-	return (ev_document_get_n_pages (page_cache->document) > 2);
-}
-
 #define PAGE_CACHE_STRING "ev-page-cache"
 
 EvPageCache *
