@@ -114,10 +114,9 @@ static void       compute_border                             (EvView            
 							      int                 width,
 							      int                 height,
 							      GtkBorder          *border);
-static void       get_page_y_offset                          (EvView *view,
-							      int page,
-							      double zoom,
-							      int *y_offset);
+static void       get_page_y_offset                          (EvView             *view,
+							      int                 page,
+							      int                *y_offset);
 static gboolean   get_page_extents                           (EvView             *view,
 							      gint                page,
 							      GdkRectangle       *page_area,
@@ -905,14 +904,14 @@ compute_border (EvView *view, int width, int height, GtkBorder *border)
 }
 
 static void
-get_page_y_offset (EvView *view, int page, double zoom, int *y_offset)
+get_page_y_offset (EvView *view, int page, int *y_offset)
 {
 	int max_width, offset;
 	GtkBorder border;
 
 	g_return_if_fail (y_offset != NULL);
 
-	ev_page_cache_get_max_width (view->page_cache, view->rotation, zoom, &max_width);
+	ev_page_cache_get_max_width (view->page_cache, view->rotation, view->scale, &max_width);
 
 	compute_border (view, max_width, max_width, &border);
 
@@ -969,7 +968,7 @@ get_page_extents (EvView       *view,
 			x = x + MAX (0, widget->allocation.width - (width + view->spacing * 2)) / 2;
 		}
 
-		get_page_y_offset (view, page, view->scale, &y);
+		get_page_y_offset (view, page, &y);
 
 		page_area->x = x;
 		page_area->y = y;
@@ -2623,7 +2622,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 	n_pages = ev_document_get_n_pages (view->document) + 1;
 
 	requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
-	get_page_y_offset (view, n_pages, view->scale, &requisition->height);
+	get_page_y_offset (view, n_pages, &requisition->height);
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		requisition->width = 1;
@@ -2650,7 +2649,7 @@ ev_view_size_request_continuous (EvView         *view,
 	compute_border (view, max_width, max_width, &border);
 
 	requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
-	get_page_y_offset (view, n_pages, view->scale, &requisition->height);
+	get_page_y_offset (view, n_pages, &requisition->height);
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		requisition->width = 1;
