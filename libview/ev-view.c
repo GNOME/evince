@@ -323,6 +323,175 @@ static void       ev_view_presentation_transition_stop       (EvView            
 
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_LAYOUT)
 
+/* HeightToPage cache */
+#define EV_HEIGHT_TO_PAGE_CACHE_KEY "ev-height-to-page-cache"
+
+static void
+build_height_to_page (EvHeightToPageCache *cache,
+		      EvDocument          *document,
+		      gint                 rotation)
+{
+	gboolean swap, uniform, dual_even_left;
+	int i;
+	double uniform_height, page_height, next_page_height;
+	double saved_height;
+	gdouble u_width, u_height;
+	gint n_pages;
+
+	swap = (rotation == 90 || rotation == 270);
+
+	uniform = ev_document_is_page_size_uniform (document);
+	n_pages = ev_document_get_n_pages (document);
+	dual_even_left = (n_pages > 2);
+
+	g_free (cache->height_to_page);
+	g_free (cache->dual_height_to_page);
+
+	cache->rotation = rotation;
+	cache->height_to_page = g_new0 (gdouble, n_pages + 1);
+	cache->dual_height_to_page = g_new0 (gdouble, n_pages + 2);
+
+	if (uniform)
+		ev_document_get_page_size (document, 0, &u_width, &u_height);
+
+	saved_height = 0;
+	for (i = 0; i <= n_pages; i++) {
+		if (uniform) {
+			uniform_height = swap ? u_width : u_height;
+			cache->height_to_page[i] = i * uniform_height;
+		} else {
+			if (i < n_pages) {
+				gdouble w, h;
+
+				ev_document_get_page_size (document, i, &w, &h);
+				page_height = swap ? w : h;
+			} else {
+				page_height = 0;
+			}
+			cache->height_to_page[i] = saved_height;
+			saved_height += page_height;
+		}
+	}
+
+	if (dual_even_left && !uniform) {
+		gdouble w, h;
+
+		ev_document_get_page_size (document, 0, &w, &h);
+		saved_height = swap ? w : h;
+	} else {
+		saved_height = 0;
+	}
+
+	for (i = dual_even_left; i < n_pages + 2; i += 2) {
+    		if (uniform) {
+			uniform_height = swap ? u_width : u_height;
+			cache->dual_height_to_page[i] = ((i + dual_even_left) / 2) * uniform_height;
+			if (i + 1 < n_pages + 2)
+				cache->dual_height_to_page[i + 1] = ((i + dual_even_left) / 2) * uniform_height;
+		} else {
+			if (i + 1 < n_pages) {
+				gdouble w, h;
+
+				ev_document_get_page_size (document, i + 1, &w, &h);
+				next_page_height = swap ? w : h;
+			} else {
+				next_page_height = 0;
+			}
+
+			if (i < n_pages) {
+				gdouble w, h;
+
+				ev_document_get_page_size (document, i, &w, &h);
+				page_height = swap ? w : h;
+			} else {
+				page_height = 0;
+			}
+
+			if (i + 1 < n_pages + 2) {
+				cache->dual_height_to_page[i] = saved_height;
+				cache->dual_height_to_page[i + 1] = saved_height;
+				saved_height += MAX(page_height, next_page_height);
+			} else {
+				cache->dual_height_to_page[i] = saved_height;
+			}
+		}
+	}
+}
+
+static void
+ev_height_to_page_cache_get_height (EvHeightToPageCache *cache,
+				    EvDocument          *document,
+				    gint                 page,
+				    gint                 rotation,
+				    gdouble             *height,
+				    gdouble             *dual_height)
+{
+	if (cache->rotation != rotation)
+		build_height_to_page (cache, document, rotation);
+
+	*height = cache->height_to_page[page];
+	*dual_height = cache->dual_height_to_page[page];
+}
+
+static void
+ev_height_to_page_cache_free (EvHeightToPageCache *cache)
+{
+	if (cache->height_to_page) {
+		g_free (cache->height_to_page);
+		cache->height_to_page = NULL;
+	}
+
+	if (cache->dual_height_to_page) {
+		g_free (cache->dual_height_to_page);
+		cache->dual_height_to_page = NULL;
+	}
+	g_free (cache);
+}
+
+static EvHeightToPageCache *
+ev_view_get_height_to_page_cache (EvView *view)
+{
+	EvHeightToPageCache *cache;
+
+	if (!view->document)
+		return NULL;
+
+	cache = g_object_get_data (G_OBJECT (view->document), EV_HEIGHT_TO_PAGE_CACHE_KEY);
+	if (!cache) {
+		cache = g_new0 (EvHeightToPageCache, 1);
+		build_height_to_page (cache, view->document, view->rotation);
+		g_object_set_data_full (G_OBJECT (view->document),
+					EV_HEIGHT_TO_PAGE_CACHE_KEY,
+					cache,
+					(GDestroyNotify)ev_height_to_page_cache_free);
+	}
+
+	return cache;
+}
+
+static void
+ev_view_get_height_to_page (EvView *view,
+			    gint    page,
+			    gint   *height,
+			    gint   *dual_height)
+{
+	gdouble h, dh;
+
+	if (!view->height_to_page_cache)
+		return;
+
+	ev_height_to_page_cache_get_height (view->height_to_page_cache,
+					    view->document,
+					    page,
+					    view->rotation,
+					    &h, &dh);
+	if (height)
+		*height = (gint)(h * view->scale + 0.5);
+
+	if (dual_height)
+		*dual_height = (gint)(dh * view->scale + 0.5);
+}
+
 static void
 scroll_to_current_page (EvView *view, GtkOrientation orientation)
 {
@@ -748,12 +917,10 @@ get_page_y_offset (EvView *view, int page, double zoom, int *y_offset)
 	compute_border (view, max_width, max_width, &border);
 
 	if (view->dual_page) {
-		ev_page_cache_get_height_to_page (view->page_cache, page,
-						  view->rotation, zoom, NULL, &offset);
+		ev_view_get_height_to_page (view, page, NULL, &offset);
 		offset += ((page + ev_page_cache_get_dual_even_left (view->page_cache)) / 2 + 1) * view->spacing + ((page + ev_page_cache_get_dual_even_left (view->page_cache)) / 2 ) * (border.top + border.bottom);
 	} else {
-		ev_page_cache_get_height_to_page (view->page_cache, page,
-						  view->rotation, zoom, &offset, NULL);
+		ev_view_get_height_to_page (view, page, &offset, NULL);
 		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
 	}
 
@@ -4758,6 +4925,7 @@ static void
 setup_caches (EvView *view)
 {
 	view->page_cache = ev_page_cache_get (view->document);
+	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);

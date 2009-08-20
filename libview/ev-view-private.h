@@ -117,6 +117,12 @@ typedef enum {
 	EV_PRESENTATION_END
 } EvPresentationState;
 
+typedef struct _EvHeightToPageCache {
+	gint rotation;
+	gdouble *height_to_page;
+	gdouble *dual_height_to_page;
+} EvHeightToPageCache;
+
 struct _EvView {
 	GtkLayout layout;
 
@@ -130,6 +136,7 @@ struct _EvView {
 	
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
+	EvHeightToPageCache *height_to_page_cache;
 	EvViewCursor cursor;
 	EvJobRender *current_job;
 

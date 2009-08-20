@@ -15,9 +15,6 @@ struct _EvPageCache
 
 	gboolean dual_even_left;
 
-	double* height_to_page;
-	double* dual_height_to_page;
-
 	int rotation;
 };
 
@@ -88,107 +85,7 @@ ev_page_cache_finalize (GObject *object)
 
 	page_cache->document = NULL;
 
-	if (page_cache->height_to_page) {
-		g_free (page_cache->height_to_page);
-		page_cache->height_to_page = NULL;
-	}
-
-	if (page_cache->dual_height_to_page) {
-		g_free (page_cache->dual_height_to_page);
-		page_cache->dual_height_to_page = NULL;
-	}
-
 	G_OBJECT_CLASS (ev_page_cache_parent_class)->finalize (object);
-}
-
-static void
-build_height_to_page (EvPageCache *page_cache)
-{
-	gboolean swap, uniform, dual_even_left;
-	int i;
-	double uniform_height, page_height, next_page_height;
-	double saved_height;
-	gdouble u_width, u_height;
-	gint n_pages;
-
-	swap = (page_cache->rotation == 90 ||
-		page_cache->rotation == 270);
-
-	uniform = ev_document_is_page_size_uniform (page_cache->document);
-	n_pages = ev_document_get_n_pages (page_cache->document);
-	dual_even_left = (n_pages > 2);
-
-	g_free (page_cache->height_to_page);
-	g_free (page_cache->dual_height_to_page);
-
-	page_cache->height_to_page = g_new0 (double, n_pages + 1);
-	page_cache->dual_height_to_page = g_new0 (double, n_pages + 2);
-
-	if (uniform)
-		ev_document_get_page_size (page_cache->document, 0, &u_width, &u_height);
-
-	saved_height = 0;
-	for (i = 0; i <= n_pages; i++) {
-		if (uniform) {
-			uniform_height = swap ? u_width : u_height;
-			page_cache->height_to_page[i] = i * uniform_height;
-		} else {
-			if (i < n_pages) {
-				gdouble w, h;
-
-				ev_document_get_page_size (page_cache->document, i, &w, &h);
-				page_height = swap ? w : h;
-			} else {
-				page_height = 0;
-			}
-			page_cache->height_to_page[i] = saved_height;
-			saved_height += page_height;
-		}
-	}
-
-	if (dual_even_left && !uniform) {
-		gdouble w, h;
-
-		ev_document_get_page_size (page_cache->document, 0, &w, &h);
-		saved_height = swap ? w : h;
-	} else {
-		saved_height = 0;
-	}
-
-	for (i = dual_even_left; i < n_pages + 2; i += 2) {
-    		if (uniform) {
-			uniform_height = swap ? u_width : u_height;
-			page_cache->dual_height_to_page[i] = ((i + dual_even_left) / 2) * uniform_height;
-			if (i + 1 < n_pages + 2)
-				page_cache->dual_height_to_page[i + 1] = ((i + dual_even_left) / 2) * uniform_height;
-		} else {
-			if (i + 1 < n_pages) {
-				gdouble w, h;
-
-				ev_document_get_page_size (page_cache->document, i + 1, &w, &h);
-				next_page_height = swap ? w : h;
-			} else {
-				next_page_height = 0;
-			}
-
-			if (i < n_pages) {
-				gdouble w, h;
-
-				ev_document_get_page_size (page_cache->document, i, &w, &h);
-				page_height = swap ? w : h;
-			} else {
-				page_height = 0;
-			}
-
-			if (i + 1 < n_pages + 2) {
-				page_cache->dual_height_to_page[i] = saved_height;
-				page_cache->dual_height_to_page[i + 1] = saved_height;
-				saved_height += MAX(page_height, next_page_height);
-			} else {
-				page_cache->dual_height_to_page[i] = saved_height;
-			}
-		}
-	}
 }
 
 static EvPageCache *
@@ -198,8 +95,6 @@ ev_page_cache_new (EvDocument *document)
 
 	page_cache = (EvPageCache *) g_object_new (EV_TYPE_PAGE_CACHE, NULL);
 	page_cache->document = document;
-
-	build_height_to_page (page_cache);
 
 	if (ev_document_get_n_pages (page_cache->document) > 0)
 		ev_page_cache_set_current_page (page_cache, 0);
@@ -312,29 +207,6 @@ ev_page_cache_get_max_height (EvPageCache   *page_cache,
 
 	ev_document_get_max_page_size (page_cache->document, &w, &h);
 	*height = (rotation == 0 || rotation == 180) ? h * scale : w * scale;
-}
-
-void
-ev_page_cache_get_height_to_page (EvPageCache   *page_cache,
-				  gint           page,
-				  gint           rotation,
-				  gfloat         scale,
-				  gint          *height,
-				  gint 	        *dual_height)
-{
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-	g_return_if_fail (page >= 0);
-
-	if (page_cache->rotation != rotation) {
-		page_cache->rotation = rotation;
-		build_height_to_page (page_cache);
-	}
-
-	if (height)
-		*height = page_cache->height_to_page[page] * scale;
-
-	if (dual_height)
-		*dual_height = page_cache->dual_height_to_page[page] * scale;
 }
 
 gboolean
