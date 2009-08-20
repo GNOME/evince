@@ -241,22 +241,22 @@ static void       ev_view_class_init                         (EvViewClass       
 static void       ev_view_init                               (EvView             *view);
 
 /*** Zoom and sizing ***/
-static double   zoom_for_size_fit_width	 		     (int doc_width,
-							      int doc_height,
-	    						      int target_width,
-							      int target_height,
-							      int vsb_width);
-static double   zoom_for_size_fit_height		     (int doc_width,
-			  				      int doc_height,
-							      int target_width,
-							      int target_height,
-							      int vsb_height);
-static double	zoom_for_size_best_fit 			     (int doc_width,
-							      int doc_height,
-							      int target_width,
-							      int target_height,
-							      int vsb_width,
-							      int hsb_width);
+static double   zoom_for_size_fit_width	 		     (gdouble doc_width,
+							      gdouble doc_height,
+	    						      int     target_width,
+							      int     target_height,
+							      int     vsb_width);
+static double   zoom_for_size_fit_height		     (gdouble doc_width,
+			  				      gdouble doc_height,
+							      int     target_width,
+							      int     target_height,
+							      int     vsb_height);
+static double	zoom_for_size_best_fit 			     (gdouble doc_width,
+							      gdouble doc_height,
+							      int     target_width,
+							      int     target_height,
+							      int     vsb_width,
+							      int     hsb_width);
 static void	ev_view_zoom_for_size_presentation	     (EvView *view,
 							      int     width,
 					    		      int     height);
@@ -865,6 +865,24 @@ get_page_extents (EvView       *view,
 }
 
 static void
+get_doc_page_size (EvView  *view,
+		   gint     page,
+		   gdouble *width,
+		   gdouble *height)
+{
+	double w, h;
+
+	ev_document_get_page_size (view->document, page, &w, &h);
+	if (view->rotation == 0 || view->rotation == 180) {
+		if (width) *width = w;
+		if (height) *height = h;
+	} else {
+		if (width) *width = h;
+		if (height) *height = w;
+	}
+}
+
+static void
 view_point_to_doc_point (EvView *view,
 			 GdkPoint *view_point,
 			 GdkRectangle *page_area,
@@ -896,12 +914,9 @@ doc_point_to_view_point (EvView       *view,
 	GdkRectangle page_area;
 	GtkBorder border;
 	double x, y, view_x, view_y;
-	int width, height;
+	gdouble width, height;
 
-	ev_page_cache_get_size (view->page_cache, page,
-				view->rotation,
-				1.0,
-				&width, &height);
+	get_doc_page_size (view, page, &width, &height);
 
 	if (view->rotation == 0) {
 		x = doc_point->x;
@@ -939,12 +954,9 @@ doc_rect_to_view_rect (EvView       *view,
 	GdkRectangle page_area;
 	GtkBorder border;
 	double x, y, w, h;
-	int width, height;
+	gdouble width, height;
 
-	ev_page_cache_get_size (view->page_cache, page,
-				view->rotation,
-				1.0,
-				&width, &height);
+	get_doc_page_size (view, page, &width, &height);
 
 	if (view->rotation == 0) {
 		x = doc_rect->x1;
@@ -1084,13 +1096,10 @@ get_doc_point_from_offset (EvView *view,
 			   gint   *x_new, 
 			   gint   *y_new)
 {
-        int width, height;
+        gdouble width, height;
 	double x, y;
 
-        ev_page_cache_get_size (view->page_cache, page,
-                                view->rotation,
-                                1.0,
-                                &width, &height);
+	get_doc_page_size (view, page, &width, &height);
 
 	x_offset = x_offset / view->scale;
 	y_offset = y_offset / view->scale;
@@ -1209,12 +1218,13 @@ static void
 goto_fitv_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	int doc_width, doc_height, page;
+	gdouble doc_width, doc_height;
+	gint page;
 	double zoom, left;
 	gboolean change_left;
 
 	page = ev_link_dest_get_page (dest);
-	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
+	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
 	left = ev_link_dest_get_left (dest, &change_left);
 	doc_point.x = change_left ? left : 0;
@@ -1239,12 +1249,13 @@ static void
 goto_fith_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	int doc_width, doc_height, page;
+	gdouble doc_width, doc_height;
+	gint page;
 	gdouble zoom, top;
 	gboolean change_top;
 
 	page = ev_link_dest_get_page (dest);
-	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
+	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
 	top = ev_link_dest_get_top (dest, &change_top);
 
@@ -1270,11 +1281,11 @@ static void
 goto_fit_dest (EvView *view, EvLinkDest *dest)
 {
 	double zoom;
-	int doc_width, doc_height;
+	gdouble doc_width, doc_height;
 	int page;
 
 	page = ev_link_dest_get_page (dest);
-	ev_page_cache_get_size (view->page_cache, page, 0, 1.0, &doc_width, &doc_height);
+	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
 	zoom = zoom_for_size_best_fit (doc_width, doc_height, ev_view_get_width (view),
 				       ev_view_get_height (view), 0, 0);
@@ -5234,11 +5245,11 @@ ev_view_get_rotation (EvView *view)
 }
 
 static double
-zoom_for_size_fit_width (int doc_width,
-			 int doc_height,
-			 int target_width,
-			 int target_height,
-			 int vsb_width)
+zoom_for_size_fit_width (gdouble doc_width,
+			 gdouble doc_height,
+			 int     target_width,
+			 int     target_height,
+			 int     vsb_width)
 {
 	double scale;
 
@@ -5251,11 +5262,11 @@ zoom_for_size_fit_width (int doc_width,
 }
 
 static double
-zoom_for_size_fit_height (int doc_width,
-			  int doc_height,
-			  int target_width,
-			  int target_height,
-			  int vsb_height)
+zoom_for_size_fit_height (gdouble doc_width,
+			  gdouble doc_height,
+			  int     target_width,
+			  int     target_height,
+			  int     vsb_height)
 {
 	double scale;
 
@@ -5268,12 +5279,12 @@ zoom_for_size_fit_height (int doc_width,
 }
 
 static double
-zoom_for_size_best_fit (int doc_width,
-			int doc_height,
-			int target_width,
-			int target_height,
-			int vsb_width,
-			int hsb_width)
+zoom_for_size_best_fit (gdouble doc_width,
+			gdouble doc_height,
+			int     target_width,
+			int     target_height,
+			int     vsb_width,
+			int     hsb_width)
 {
 	double w_scale;
 	double h_scale;
@@ -5295,15 +5306,10 @@ ev_view_zoom_for_size_presentation (EvView *view,
 				    int     width,
 				    int     height)
 {
-	int doc_width, doc_height;
+	gdouble doc_width, doc_height;
 	gdouble scale;
 
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->rotation,
-				1.0,
-				&doc_width,
-				&doc_height);
+	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
 	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, 0, 0);
 	ev_view_set_zoom (view, scale, FALSE);
 }
@@ -5315,21 +5321,22 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 			   int     vsb_width,
 			   int     hsb_height)
 {
-	int doc_width, doc_height;
+	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
 
-	ev_page_cache_get_max_width (view->page_cache,
-				     view->rotation,
-				     1.0,
-				     &doc_width);
-	ev_page_cache_get_max_height (view->page_cache,
-				      view->rotation,
-				      1.0,
-				      &doc_height);
+	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
+	if (view->rotation == 90 || view->rotation == 270) {
+		gdouble tmp;
+
+		tmp = doc_width;
+		doc_width = doc_height;
+		doc_height = tmp;
+	}
+
 	compute_border (view, doc_width, doc_height, &border);
 
-	doc_width = doc_width * 2;
+	doc_width *= 2;
 	width -= (2 * (border.left + border.right) + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
@@ -5353,18 +5360,19 @@ ev_view_zoom_for_size_continuous (EvView *view,
 				  int     vsb_width,
 				  int     hsb_height)
 {
-	int doc_width, doc_height;
+	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
 
-	ev_page_cache_get_max_width (view->page_cache,
-				     view->rotation,
-				     1.0,
-				     &doc_width);
-	ev_page_cache_get_max_height (view->page_cache,
-				      view->rotation,
-				      1.0,
-				      &doc_height);
+	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
+	if (view->rotation == 90 || view->rotation == 270) {
+		gdouble tmp;
+
+		tmp = doc_width;
+		doc_width = doc_height;
+		doc_height = tmp;
+	}
+
 	compute_border (view, doc_width, doc_height, &border);
 
 	width -= (border.left + border.right + 2 * view->spacing);
@@ -5391,32 +5399,24 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 				 int     hsb_height)
 {
 	GtkBorder border;
-	gint doc_width, doc_height;
+	gdouble doc_width, doc_height;
 	gdouble scale;
 	gint other_page;
 
 	other_page = view->current_page ^ 1;
 
 	/* Find the largest of the two. */
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->rotation,
-				1.0,
-				&doc_width, &doc_height);
-
+	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
 	if (other_page < ev_document_get_n_pages (view->document)) {
-		gint width_2, height_2;
-		ev_page_cache_get_size (view->page_cache,
-					other_page,
-					view->rotation,
-					1.0,
-					&width_2, &height_2);
+		gdouble width_2, height_2;
+
+		get_doc_page_size (view, other_page, &width_2, &height_2);
 		if (width_2 > doc_width)
 			doc_width = width_2;
 		if (height_2 > doc_height)
 			doc_height = height_2;
 	}
-	compute_border (view, doc_width, doc_height, &border);
+	compute_border (view, width, height, &border);
 
 	doc_width = doc_width * 2;
 	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
@@ -5439,16 +5439,12 @@ ev_view_zoom_for_size_single_page (EvView *view,
 				   int     vsb_width,
 				   int     hsb_height)
 {
-	int doc_width, doc_height;
+	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
 
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->rotation,
-				1.0,
-				&doc_width,
-				&doc_height);
+	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
+
 	/* Get an approximate border */
 	compute_border (view, width, height, &border);
 
@@ -5696,7 +5692,7 @@ compute_new_selection_text (EvView          *view,
 	int n_pages, i, first, last;
 	GList *list = NULL;
 	EvViewSelection *selection;
-	gint width, height;
+	gdouble width, height;
 	int start_page, end_page;
 
 	g_assert (view->selection_mode == EV_VIEW_SELECTION_TEXT);
@@ -5740,9 +5736,7 @@ compute_new_selection_text (EvView          *view,
 		GtkBorder border;
 		GdkPoint *point;
 
-		ev_page_cache_get_size (view->page_cache, i,
-					view->rotation,
-					1.0, &width, &height);
+		get_doc_page_size (view, i, &width, &height);
 
 		selection = g_new0 (EvViewSelection, 1);
 		selection->page = i;
@@ -5956,13 +5950,10 @@ ev_view_select_all (EvView *view)
 	
 	n_pages = ev_document_get_n_pages (view->document);
 	for (i = 0; i < n_pages; i++) {
-		int width, height;
+		gdouble width, height;
 		EvViewSelection *selection;
 
-		ev_page_cache_get_size (view->page_cache,
-					i,
-					view->rotation,
-					1.0, &width, &height);
+		get_doc_page_size (view, i, &width, &height);
 
 		selection = g_new0 (EvViewSelection, 1);
 		selection->page = i;
