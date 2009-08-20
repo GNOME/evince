@@ -808,7 +808,7 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage *sidebar_page,
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
 	    ev_document_get_n_pages (document) <= 0 ||
-	    !ev_page_cache_check_dimensions (priv->page_cache)) {
+	    !ev_document_check_dimensions (document)) {
 		return;
 	}
 

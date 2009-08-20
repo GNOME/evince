@@ -1158,7 +1158,7 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
 	    ev_document_get_n_pages (document) <= 0 ||
-	    !ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
+	    !ev_document_check_dimensions (document)) {
 		return;
 	}
 
@@ -1239,16 +1239,16 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 		/* Restart the current page */
 		page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
 			      0,
-			      ev_document_get_n_pages (ev_window->priv->document) - 1);
+			      ev_document_get_n_pages (document) - 1);
 		ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
 		g_object_unref (ev_window->priv->dest);
 		ev_window->priv->dest = NULL;
 	}
 
-	if (ev_document_get_n_pages (ev_window->priv->document) <= 0) {
+	if (ev_document_get_n_pages (document) <= 0) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains no pages"));
-	} else if (!ev_page_cache_check_dimensions (ev_window->priv->page_cache)) {
+	} else if (!ev_document_check_dimensions (document)) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains only empty pages"));
 	} else {

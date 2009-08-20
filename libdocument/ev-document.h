@@ -139,6 +139,7 @@ gboolean         ev_document_is_page_size_uniform (EvDocument      *document);
 void             ev_document_get_max_page_size    (EvDocument      *document,
 						   gdouble         *width,
 						   gdouble         *height);
+gboolean         ev_document_check_dimensions     (EvDocument      *document);
 gint             ev_document_get_max_label_len    (EvDocument      *document);
 gboolean         ev_document_has_text_page_labels (EvDocument      *document);
 gboolean         ev_document_find_page_by_label   (EvDocument      *document,

@@ -207,17 +207,6 @@ ev_page_cache_new (EvDocument *document)
 	return page_cache;
 }
 
-gboolean
-ev_page_cache_check_dimensions (EvPageCache *page_cache)
-{
-	gdouble document_width, document_height;
-
-	ev_document_get_max_page_size (page_cache->document,
-				       &document_width, &document_height);
-
-	return (document_width > 0 && document_height > 0);
-}
-
 gint
 ev_page_cache_get_current_page (EvPageCache *page_cache)
 {

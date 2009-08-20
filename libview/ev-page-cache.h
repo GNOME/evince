@@ -68,8 +68,6 @@ gboolean       ev_page_cache_set_page_label      (EvPageCache *page_cache,
 
 EvPageCache   *ev_page_cache_get		 (EvDocument *document);
 
-gboolean       ev_page_cache_check_dimensions	 (EvPageCache *page_cache);
-
 G_END_DECLS
 
 #endif /* __EV_PAGE_CACHE_H__ */

@@ -464,6 +464,14 @@ ev_document_get_max_page_size (EvDocument *document,
 		*height = document->priv->max_height;
 }
 
+gboolean
+ev_document_check_dimensions (EvDocument *document)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
+	return (document->priv->max_width > 0 && document->priv->max_height > 0);
+}
+
 gint
 ev_document_get_max_label_len (EvDocument *document)
 {
