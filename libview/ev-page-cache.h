@@ -35,12 +35,6 @@ G_BEGIN_DECLS
 
 GType          ev_page_cache_get_type            (void) G_GNUC_CONST;
 
-void           ev_page_cache_get_size            (EvPageCache   *page_cache,
-						  gint           page,
-						  gint           rotation,
-						  gfloat         scale,
-						  gint          *width,
-						  gint          *height);
 /* Navigation */
 gint           ev_page_cache_get_current_page    (EvPageCache *page_cache);
 void           ev_page_cache_set_current_page    (EvPageCache *page_cache,

@@ -227,5 +227,12 @@ struct _EvViewClass {
 					   EvLink         *link);
 };
 
+void _get_page_size_for_scale_and_rotation (EvDocument *document,
+					    gint        page,
+					    gdouble     scale,
+					    gint        rotation,
+					    gint       *page_width,
+					    gint       *page_height);
+
 #endif  /* __EV_VIEW_PRIVATE_H__ */
 

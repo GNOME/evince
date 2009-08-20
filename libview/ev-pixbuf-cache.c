@@ -6,6 +6,7 @@
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-annotations.h"
+#include "ev-view-private.h"
 
 typedef struct _CacheJobInfo
 {
@@ -294,20 +295,18 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 			  EvPageCache  *page_cache,
 			  gfloat        scale)
 {
-	gint width;
-	gint height;
+	gint width, height;
 
 	g_assert (job_info);
 
 	if (job_info->job == NULL)
 		return;
 
-	ev_page_cache_get_size (page_cache,
-				EV_JOB_RENDER (job_info->job)->page,
-				EV_JOB_RENDER (job_info->job)->rotation,
-				scale,
-				&width, &height);
-				
+	_get_page_size_for_scale_and_rotation (job_info->job->document,
+					       EV_JOB_RENDER (job_info->job)->page,
+					       scale,
+					       EV_JOB_RENDER (job_info->job)->rotation,
+					       &width, &height);
 	if (width == EV_JOB_RENDER (job_info->job)->target_width &&
 	    height == EV_JOB_RENDER (job_info->job)->target_height)
 		return;
@@ -684,8 +683,9 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	if (job_info->job)
 		return;
 
-	ev_page_cache_get_size (page_cache, page, rotation,
-				scale, &width, &height);
+	_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
+					       page, scale, rotation,
+					       &width, &height);
 
 	if (job_info->surface &&
 	    cairo_image_surface_get_width (job_info->surface) == width &&
@@ -882,16 +882,13 @@ new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
 			      gint           page,
 			      gfloat         scale)
 {
-	EvPageCache *page_cache;
-
 	if (job_info->selection && job_info->rc) {
 		gint width, height;
 		gint selection_width, selection_height;
-		
-		page_cache = ev_page_cache_get (pixbuf_cache->document);
-		ev_page_cache_get_size (page_cache, page,
-					job_info->rc->rotation,
-					scale, &width, &height);
+
+		_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
+						       page, scale, job_info->rc->rotation,
+						       &width, &height);
 
 		selection_width = cairo_image_surface_get_width (job_info->selection);
 		selection_height = cairo_image_surface_get_height (job_info->selection);
@@ -1261,10 +1258,9 @@ ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
 	if (job_info == NULL)
 		return;
 
-	ev_page_cache_get_size (ev_page_cache_get (pixbuf_cache->document),
-				page, rotation, scale,
-				&width, &height);
-
+	_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
+					       page, scale, rotation,
+					       &width, &height);
         add_job (pixbuf_cache, job_info, region,
 		 width, height, page, rotation, scale,
 		 EV_JOB_PRIORITY_URGENT);

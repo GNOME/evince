@@ -149,32 +149,6 @@ ev_page_cache_set_page_label (EvPageCache *page_cache,
 	return FALSE;
 }
 
-void
-ev_page_cache_get_size (EvPageCache  *page_cache,
-			gint          page,
-			gint          rotation,
-			gfloat        scale,
-			gint         *width,
-			gint         *height)
-{
-	double w, h;
-
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-
-	ev_document_get_page_size (page_cache->document, page, &w, &h);
-
-	w = w * scale + 0.5;
-	h = h * scale + 0.5;
-
-	if (rotation == 0 || rotation == 180) {
-		if (width) *width = (int)w;
-		if (height) *height = (int)h;
-	} else {
-		if (width) *width = (int)h;
-		if (height) *height = (int)w;
-	}
-}
-
 #define PAGE_CACHE_STRING "ev-page-cache"
 
 EvPageCache *

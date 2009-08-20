@@ -904,6 +904,42 @@ compute_border (EvView *view, int width, int height, GtkBorder *border)
 	}
 }
 
+void
+_get_page_size_for_scale_and_rotation (EvDocument *document,
+				       gint        page,
+				       gdouble     scale,
+				       gint        rotation,
+				       gint       *page_width,
+				       gint       *page_height)
+{
+	gdouble w, h;
+	gint    width, height;
+
+	ev_document_get_page_size (document, page, &w, &h);
+
+	width = (gint)(w * scale + 0.5);
+	height = (gint)(h * scale + 0.5);
+
+	if (page_width)
+		*page_width = (rotation == 0 || rotation == 180) ? width : height;
+	if (page_height)
+		*page_height = (rotation == 0 || rotation == 180) ? height : width;
+}
+
+static void
+ev_view_get_page_size (EvView *view,
+		       gint    page,
+		       gint   *page_width,
+		       gint   *page_height)
+{
+	_get_page_size_for_scale_and_rotation (view->document,
+					       page,
+					       view->scale,
+					       view->rotation,
+					       page_width,
+					       page_height);
+}
+
 static void
 ev_view_get_max_page_size (EvView *view,
 			   gint   *max_width,
@@ -959,10 +995,7 @@ get_page_extents (EvView       *view,
 	widget = GTK_WIDGET (view);
 
 	/* Get the size of the page */
-	ev_page_cache_get_size (view->page_cache, page,
-				view->rotation,
-				view->scale,
-				&width, &height);
+	ev_view_get_page_size (view, page, &width, &height);
 	compute_border (view, width, height, border);
 	page_area->width = width + border->left + border->right;
 	page_area->height = height + border->top + border->bottom;
@@ -1005,11 +1038,8 @@ get_page_extents (EvView       *view,
 			/* First, we get the bounding box of the two pages */
 			if (other_page < ev_document_get_n_pages (view->document)
 			    && (0 <= other_page)) {
-				ev_page_cache_get_size (view->page_cache,
-							other_page,
-							view->rotation,
-							view->scale,
-							&width_2, &height_2);
+				ev_view_get_page_size (view, other_page,
+						       &width_2, &height_2);
 				if (width_2 > width)
 					max_width = width_2;
 				if (height_2 > height)
@@ -2691,18 +2721,14 @@ ev_view_size_request_dual_page (EvView         *view,
 	gint width, height;
 
 	/* Find the largest of the two. */
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->rotation,
-				view->scale,
-				&width, &height);
+	ev_view_get_page_size (view,
+			       view->current_page,
+			       &width, &height);
 	if (view->current_page + 1 < ev_document_get_n_pages (view->document)) {
 		gint width_2, height_2;
-		ev_page_cache_get_size (view->page_cache,
-					view->current_page + 1,
-					view->rotation,
-					view->scale,
-					&width_2, &height_2);
+		ev_view_get_page_size (view,
+				       view->current_page + 1,
+				       &width_2, &height_2);
 		if (width_2 > width) {
 			width = width_2;
 			height = height_2;
@@ -2730,11 +2756,7 @@ ev_view_size_request_single_page (EvView         *view,
 	GtkBorder border;
 	gint width, height;
 
-	ev_page_cache_get_size (view->page_cache,
-				view->current_page,
-				view->rotation,
-				view->scale,
-				&width, &height);
+	ev_view_get_page_size (view, view->current_page, &width, &height);
 	compute_border (view, width, height, &border);
 
 	requisition->width = width + border.left + border.right + (2 * view->spacing);
@@ -4309,10 +4331,7 @@ draw_one_page (EvView       *view,
 			return;
 		}
 
-		ev_page_cache_get_size (view->page_cache,
-					page, view->rotation,
-					view->scale,
-					&width, &height);
+		ev_view_get_page_size (view, page, &width, &height);
 
 		page_width = cairo_image_surface_get_width (page_surface);
 		page_height = cairo_image_surface_get_height (page_surface);
