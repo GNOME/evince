@@ -905,6 +905,25 @@ compute_border (EvView *view, int width, int height, GtkBorder *border)
 }
 
 static void
+ev_view_get_max_page_size (EvView *view,
+			   gint   *max_width,
+			   gint   *max_height)
+{
+	double w, h;
+	gint   width, height;
+
+	ev_document_get_max_page_size (view->document, &w, &h);
+
+	width = (gint)(w * view->scale + 0.5);
+	height = (gint)(h * view->scale + 0.5);
+
+	if (max_width)
+		*max_width = (view->rotation == 0 || view->rotation == 180) ? width : height;
+	if (max_height)
+		*max_height = (view->rotation == 0 || view->rotation == 180) ? height : width;
+}
+
+static void
 get_page_y_offset (EvView *view, int page, int *y_offset)
 {
 	int max_width, offset;
@@ -912,8 +931,7 @@ get_page_y_offset (EvView *view, int page, int *y_offset)
 
 	g_return_if_fail (y_offset != NULL);
 
-	ev_page_cache_get_max_width (view->page_cache, view->rotation, view->scale, &max_width);
-
+	ev_view_get_max_page_size (view, &max_width, NULL);
 	compute_border (view, max_width, max_width, &border);
 
 	if (view->dual_page) {
@@ -956,8 +974,7 @@ get_page_extents (EvView       *view,
 		gint max_width;
 		gint x, y;
 
-		ev_page_cache_get_max_width (view->page_cache, view->rotation,
-					     view->scale, &max_width);
+		ev_view_get_max_page_size (view, &max_width, NULL);
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (view->dual_page) {
@@ -2623,8 +2640,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 	gint n_pages;
 	GtkBorder border;
 
-	ev_page_cache_get_max_width (view->page_cache, view->rotation,
-				     view->scale, &max_width);
+	ev_view_get_max_page_size (view, &max_width, NULL);
 	compute_border (view, max_width, max_width, &border);
 
 	n_pages = ev_document_get_n_pages (view->document) + 1;
@@ -2650,9 +2666,7 @@ ev_view_size_request_continuous (EvView         *view,
 	int n_pages;
 	GtkBorder border;
 
-
-	ev_page_cache_get_max_width (view->page_cache, view->rotation,
-				     view->scale, &max_width);
+	ev_view_get_max_page_size (view, &max_width, NULL);
 	n_pages = ev_document_get_n_pages (view->document);
 	compute_border (view, max_width, max_width, &border);
 

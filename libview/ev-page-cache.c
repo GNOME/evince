@@ -175,40 +175,6 @@ ev_page_cache_get_size (EvPageCache  *page_cache,
 	}
 }
 
-void
-ev_page_cache_get_max_width (EvPageCache   *page_cache,
-			     gint	    rotation,
-			     gfloat         scale,
-			     gint          *width)
-{
-	double w, h;
-
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-
-	if (!width)
-		return;
-
-	ev_document_get_max_page_size (page_cache->document, &w, &h);
-	*width = (rotation == 0 || rotation == 180) ? w * scale : h * scale;
-}
-
-void
-ev_page_cache_get_max_height (EvPageCache   *page_cache,
-			      gint           rotation,
-			      gfloat         scale,
-			      gint          *height)
-{
-	double w, h;
-
-	g_return_if_fail (EV_IS_PAGE_CACHE (page_cache));
-
-	if (!height)
-		return;
-
-	ev_document_get_max_page_size (page_cache->document, &w, &h);
-	*height = (rotation == 0 || rotation == 180) ? h * scale : w * scale;
-}
-
 #define PAGE_CACHE_STRING "ev-page-cache"
 
 EvPageCache *
