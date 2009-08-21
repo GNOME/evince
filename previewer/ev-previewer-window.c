@@ -71,42 +71,6 @@ get_screen_dpi (GtkWindow *window)
 	return (xdpi + ydpi) / 2.0;
 }
 
-static void
-ev_previewer_window_set_view_size (EvPreviewerWindow *window)
-{
-	gint width, height;
-	GtkRequisition vsb_requisition;
-	GtkRequisition hsb_requisition;
-	gint scrollbar_spacing;
-
-	if (!window->view)
-		return;
-
-	/* Calculate the width available for the content */
-	width  = window->swindow->allocation.width;
-	height = window->swindow->allocation.height;
-
-	if (gtk_scrolled_window_get_shadow_type (GTK_SCROLLED_WINDOW (window->swindow)) == GTK_SHADOW_IN) {
-		width -=  2 * GTK_WIDGET (window->view)->style->xthickness;
-		height -= 2 * GTK_WIDGET (window->view)->style->ythickness;
-	}
-
-	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->swindow)->vscrollbar,
-				 &vsb_requisition);
-	gtk_widget_size_request (GTK_SCROLLED_WINDOW (window->swindow)->hscrollbar,
-				 &hsb_requisition);
-	gtk_widget_style_get (window->swindow,
-			      "scrollbar_spacing",
-			      &scrollbar_spacing,
-			      NULL);
-
-	ev_view_set_zoom_for_size (window->view,
-				   MAX (1, width),
-				   MAX (1, height),
-				   vsb_requisition.width + scrollbar_spacing,
-				   hsb_requisition.height + scrollbar_spacing);
-}
-
 #if GTKUNIXPRINT_ENABLED
 static void
 ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
@@ -163,7 +127,6 @@ ev_previewer_window_zoom_best_fit (GtkToggleAction   *action,
 {
 	if (gtk_toggle_action_get_active (action)) {
 		ev_view_set_sizing_mode (window->view, EV_SIZING_BEST_FIT);
-		ev_previewer_window_set_view_size (window);
 	} else {
 		ev_view_set_sizing_mode (window->view, EV_SIZING_FREE);
 	}
@@ -175,7 +138,6 @@ ev_previewer_window_zoom_page_width (GtkToggleAction   *action,
 {
 	if (gtk_toggle_action_get_active (action)) {
 		ev_view_set_sizing_mode (window->view, EV_SIZING_FIT_WIDTH);
-		ev_previewer_window_set_view_size (window);
 	} else {
 		ev_view_set_sizing_mode (window->view, EV_SIZING_FREE);
 	}
@@ -478,10 +440,7 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 	g_signal_connect (window->view, "notify::sizing-mode",
 			  G_CALLBACK (view_sizing_mode_changed),
 			  window);
-	g_signal_connect_swapped (window->view, "zoom_invalid",
-				  G_CALLBACK (ev_previewer_window_set_view_size),
-				  window);
-	
+
 	ev_view_set_screen_dpi (window->view, get_screen_dpi (GTK_WINDOW (window)));
 	ev_view_set_continuous (window->view, FALSE);
 	ev_view_set_sizing_mode (window->view, EV_SIZING_FIT_WIDTH);

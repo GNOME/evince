@@ -63,7 +63,6 @@ enum {
 
 enum {
 	SIGNAL_BINDING_ACTIVATED,
-	SIGNAL_ZOOM_INVALID,
 	SIGNAL_HANDLE_LINK,
 	SIGNAL_EXTERNAL_LINK,
 	SIGNAL_POPUP_MENU,
@@ -244,42 +243,33 @@ static void       ev_view_init                               (EvView            
 static double   zoom_for_size_fit_width	 		     (gdouble doc_width,
 							      gdouble doc_height,
 	    						      int     target_width,
-							      int     target_height,
-							      int     vsb_width);
+							      int     target_height);
 static double   zoom_for_size_fit_height		     (gdouble doc_width,
 			  				      gdouble doc_height,
 							      int     target_width,
-							      int     target_height,
-							      int     vsb_height);
+							      int     target_height);
 static double	zoom_for_size_best_fit 			     (gdouble doc_width,
 							      gdouble doc_height,
 							      int     target_width,
-							      int     target_height,
-							      int     vsb_width,
-							      int     hsb_width);
+							      int     target_height);
+static void     ev_view_zoom_for_size                        (EvView *view,
+							      int     width,
+							      int     height);
 static void	ev_view_zoom_for_size_presentation	     (EvView *view,
 							      int     width,
 					    		      int     height);
 static void	ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 							        int     width,
-						     	        int     height,
-							        int     vsb_width,
-							        int     hsb_height);
+						     	        int     height);
 static void	ev_view_zoom_for_size_continuous	       (EvView *view,
 					    		        int     width,
-								int     height,
-				    				int     vsb_width,
-								int     hsb_height);
+								int     height);
 static void 	ev_view_zoom_for_size_dual_page 	       (EvView *view,
 						    		int     width,
-								int     height,
-								int     vsb_width,
-								int     hsb_height);
+								int     height);
 static void	ev_view_zoom_for_size_single_page 	       (EvView *view,
 				    			        int     width,
-					    			int     height,
-								int     vsb_width,
-								int     hsb_height);
+					    			int     height);
 /*** Cursors ***/
 static GdkCursor* ev_view_create_invisible_cursor            (void);
 static void       ev_view_set_cursor                         (EvView             *view,
@@ -1419,7 +1409,7 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 	zoom = zoom_for_size_best_fit (ev_link_dest_get_right (dest) - left,
 				       ev_link_dest_get_bottom (dest) - top,
 				       ev_view_get_width (view),
-				       ev_view_get_height (view), 0, 0);
+				       ev_view_get_height (view));
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
@@ -1453,7 +1443,7 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 
 	zoom = zoom_for_size_fit_height (doc_width - doc_point.x , doc_height,
 					 ev_view_get_width (view),
-				         ev_view_get_height (view), 0);
+				         ev_view_get_height (view));
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
 	ev_view_set_zoom (view, zoom, FALSE);
@@ -1485,7 +1475,7 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 
 	zoom = zoom_for_size_fit_width (doc_width, top,
 					ev_view_get_width (view),
-				        ev_view_get_height (view), 0);
+				        ev_view_get_height (view));
 
 	ev_view_set_sizing_mode (view, EV_SIZING_FIT_WIDTH);
 	ev_view_set_zoom (view, zoom, FALSE);
@@ -1508,8 +1498,9 @@ goto_fit_dest (EvView *view, EvLinkDest *dest)
 	page = ev_link_dest_get_page (dest);
 	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
-	zoom = zoom_for_size_best_fit (doc_width, doc_height, ev_view_get_width (view),
-				       ev_view_get_height (view), 0, 0);
+	zoom = zoom_for_size_best_fit (doc_width, doc_height,
+				       ev_view_get_width (view),
+				       ev_view_get_height (view));
 
 	ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
 	ev_view_set_zoom (view, zoom, FALSE);
@@ -2811,7 +2802,9 @@ ev_view_size_allocate (GtkWidget      *widget,
 	
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 	    view->sizing_mode == EV_SIZING_BEST_FIT) {
-		g_signal_emit (view, signals[SIGNAL_ZOOM_INVALID], 0);
+		ev_view_zoom_for_size (view,
+				       allocation->width,
+				       allocation->height);
 		ev_view_size_request (widget, &widget->requisition);
 	}
 	
@@ -4621,14 +4614,6 @@ ev_view_class_init (EvViewClass *class)
 		         G_TYPE_NONE, 2,
 		         GTK_TYPE_SCROLL_TYPE,
 		         G_TYPE_BOOLEAN);
-
-	signals[SIGNAL_ZOOM_INVALID] = g_signal_new ("zoom-invalid",
-	  	         G_TYPE_FROM_CLASS (object_class),
-		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		         G_STRUCT_OFFSET (EvViewClass, zoom_invalid),
-		         NULL, NULL,
-		         g_cclosure_marshal_VOID__VOID,
-		         G_TYPE_NONE, 0, G_TYPE_NONE);
 	signals[SIGNAL_HANDLE_LINK] = g_signal_new ("handle-link",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
@@ -5456,15 +5441,14 @@ static double
 zoom_for_size_fit_width (gdouble doc_width,
 			 gdouble doc_height,
 			 int     target_width,
-			 int     target_height,
-			 int     vsb_width)
+			 int     target_height)
 {
 	double scale;
 
 	scale = (double)target_width / doc_width;
 
 	if (doc_height * scale > target_height)
-		scale = (double) (target_width - vsb_width) / doc_width;
+		scale = (double)target_width / doc_width;
 
 	return scale;
 }
@@ -5473,15 +5457,14 @@ static double
 zoom_for_size_fit_height (gdouble doc_width,
 			  gdouble doc_height,
 			  int     target_width,
-			  int     target_height,
-			  int     vsb_height)
+			  int     target_height)
 {
 	double scale;
 
 	scale = (double)target_height / doc_height;
 
 	if (doc_width * scale > target_width)
-		scale = (double) (target_height - vsb_height) / doc_height;
+		scale = (double)target_height / doc_height;
 
 	return scale;
 }
@@ -5490,9 +5473,7 @@ static double
 zoom_for_size_best_fit (gdouble doc_width,
 			gdouble doc_height,
 			int     target_width,
-			int     target_height,
-			int     vsb_width,
-			int     hsb_width)
+			int     target_height)
 {
 	double w_scale;
 	double h_scale;
@@ -5501,9 +5482,9 @@ zoom_for_size_best_fit (gdouble doc_width,
 	h_scale = (double)target_height / doc_height;
 
 	if (doc_height * w_scale > target_height)
-		w_scale = (double) (target_width - vsb_width) / doc_width;
+		w_scale = (double)target_width / doc_width;
 	if (doc_width * h_scale > target_width)
-		h_scale = (double) (target_height - hsb_width) / doc_height;
+		h_scale = (double)target_height / doc_height;
 
 	return MIN (w_scale, h_scale);
 }
@@ -5518,16 +5499,14 @@ ev_view_zoom_for_size_presentation (EvView *view,
 	gdouble scale;
 
 	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
-	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, 0, 0);
+	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	ev_view_set_zoom (view, scale, FALSE);
 }
 
 static void
 ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
-			   int     width,
-			   int     height,
-			   int     vsb_width,
-			   int     hsb_height)
+						int     width,
+						int     height)
 {
 	gdouble doc_width, doc_height;
 	GtkBorder border;
@@ -5548,13 +5527,10 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	width -= (2 * (border.left + border.right) + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
-	/* FIXME: We really need to calculate the overall height here, not the
-	 * page height.  We assume there's always a vertical scrollbar for
-	 * now.  We need to fix this. */
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width - vsb_width, height, 0);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width - vsb_width, height, 0, hsb_height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
 
@@ -5564,9 +5540,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 static void
 ev_view_zoom_for_size_continuous (EvView *view,
 				  int     width,
-				  int     height,
-				  int     vsb_width,
-				  int     hsb_height)
+				  int     height)
 {
 	gdouble doc_width, doc_height;
 	GtkBorder border;
@@ -5586,13 +5560,10 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	width -= (border.left + border.right + 2 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
-	/* FIXME: We really need to calculate the overall height here, not the
-	 * page height.  We assume there's always a vertical scrollbar for
-	 * now.  We need to fix this. */
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width - vsb_width, height, 0);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width - vsb_width, height, 0, hsb_height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
 
@@ -5602,9 +5573,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 static void
 ev_view_zoom_for_size_dual_page (EvView *view,
 				 int     width,
-				 int     height,
-				 int     vsb_width,
-				 int     hsb_height)
+				 int     height)
 {
 	GtkBorder border;
 	gdouble doc_width, doc_height;
@@ -5631,9 +5600,9 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
 
@@ -5643,9 +5612,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 static void
 ev_view_zoom_for_size_single_page (EvView *view,
 				   int     width,
-				   int     height,
-				   int     vsb_width,
-				   int     hsb_height)
+				   int     height)
 {
 	gdouble doc_width, doc_height;
 	GtkBorder border;
@@ -5660,21 +5627,19 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height, vsb_width);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height, vsb_width, hsb_height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
 
 	ev_view_set_zoom (view, scale, FALSE);
 }
 
-void
-ev_view_set_zoom_for_size (EvView *view,
-			   int     width,
-			   int     height,
-			   int     vsb_width,
-			   int     hsb_height)
+static void
+ev_view_zoom_for_size (EvView *view,
+		       int     width,
+		       int     height)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
@@ -5688,13 +5653,13 @@ ev_view_set_zoom_for_size (EvView *view,
 	if (view->presentation)
 		ev_view_zoom_for_size_presentation (view, width, height);
 	else if (view->continuous && view->dual_page)
-		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height, vsb_width, hsb_height);
+		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height);
 	else if (view->continuous)
-		ev_view_zoom_for_size_continuous (view, width, height, vsb_width, hsb_height);
+		ev_view_zoom_for_size_continuous (view, width, height);
 	else if (view->dual_page)
-		ev_view_zoom_for_size_dual_page (view, width, height, vsb_width, hsb_height);
+		ev_view_zoom_for_size_dual_page (view, width, height);
 	else
-		ev_view_zoom_for_size_single_page (view, width, height, vsb_width, hsb_height);
+		ev_view_zoom_for_size_single_page (view, width, height);
 }
 
 /*** Find ***/

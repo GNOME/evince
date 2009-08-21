@@ -218,7 +218,6 @@ struct _EvViewClass {
 	void    (*binding_activated)	  (EvView         *view,
 					   GtkScrollType   scroll,
 					   gboolean        horizontal);
-	void    (*zoom_invalid)		  (EvView         *view);
 	void    (*handle_link)		  (EvView         *view,
 					   EvLink         *link);
 	void    (*external_link)	  (EvView         *view,

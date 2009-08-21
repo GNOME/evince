@@ -3965,43 +3965,6 @@ save_sizing_mode (EvWindow *window)
 						enum_value->value_nick);
 }
 
-static void
-ev_window_set_view_size (EvWindow *window)
-{
-	gint width, height;
-	GtkRequisition vsb_requisition;
-	GtkRequisition hsb_requisition;
-	gint scrollbar_spacing;
-	GtkWidget *scrolled_window = window->priv->scrolled_window;
-
-	if (!window->priv->view)
-		return;
-
-	/* Calculate the width available for the content */
-	width  = scrolled_window->allocation.width;
-	height = scrolled_window->allocation.height;
-
-	if (gtk_scrolled_window_get_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window)) == GTK_SHADOW_IN) {
-		width -=  2 * window->priv->view->style->xthickness;
-		height -= 2 * window->priv->view->style->ythickness;
-	}
-
-	gtk_widget_size_request (GTK_SCROLLED_WINDOW (scrolled_window)->vscrollbar,
-				 &vsb_requisition);
-	gtk_widget_size_request (GTK_SCROLLED_WINDOW (scrolled_window)->hscrollbar,
-				 &hsb_requisition);
-	gtk_widget_style_get (scrolled_window,
-			      "scrollbar_spacing",
-			      &scrollbar_spacing,
-			      NULL);
-
-	ev_view_set_zoom_for_size (EV_VIEW (window->priv->view),
-				   MAX (1, width),
-				   MAX (1, height),
-				   vsb_requisition.width + scrollbar_spacing,
-				   hsb_requisition.height + scrollbar_spacing);
-}
-
 static void     
 ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 		 		  EvWindow   *ev_window)
@@ -6087,9 +6050,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "handle-link",
 			         G_CALLBACK (view_handle_link_cb),
 			         ev_window, 0);
-	g_signal_connect_swapped (ev_window->priv->view, "zoom_invalid",
-				 G_CALLBACK (ev_window_set_view_size),
-				 ev_window);
 	g_signal_connect_object (ev_window->priv->view,
 			         "popup",
 				 G_CALLBACK (view_menu_popup_cb),
