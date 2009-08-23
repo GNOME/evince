@@ -36,6 +36,8 @@ typedef struct _EvPageSize
 
 struct _EvDocumentPrivate
 {
+	gchar          *uri;
+
 	gint            n_pages;
 
 	gboolean        uniform;
@@ -92,6 +94,11 @@ static void
 ev_document_finalize (GObject *object)
 {
 	EvDocument *document = EV_DOCUMENT (object);
+
+	if (document->priv->uri) {
+		g_free (document->priv->uri);
+		document->priv->uri = NULL;
+	}
 
 	if (document->priv->page_sizes) {
 		g_free (document->priv->page_sizes);
@@ -239,6 +246,7 @@ ev_document_load (EvDocument  *document,
 		/* Cache some info about the document to avoid
 		 * going to the backends since it requires locks
 		 */
+		priv->uri = g_strdup (uri);
 		priv->n_pages = _ev_document_get_n_pages (document);
 		priv->info = _ev_document_get_info (document);
 
@@ -432,6 +440,14 @@ ev_document_render (EvDocument      *document,
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
 	return klass->render (document, rc);
+}
+
+const gchar *
+ev_document_get_uri (EvDocument *document)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
+	return document->priv->uri;
 }
 
 const gchar *

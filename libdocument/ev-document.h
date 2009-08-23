@@ -134,6 +134,7 @@ gchar           *ev_document_get_page_label       (EvDocument      *document,
 						   gint             page_index);
 cairo_surface_t *ev_document_render               (EvDocument      *document,
 						   EvRenderContext *rc);
+const gchar     *ev_document_get_uri              (EvDocument      *document);
 const gchar     *ev_document_get_title            (EvDocument      *document);
 gboolean         ev_document_is_page_size_uniform (EvDocument      *document);
 void             ev_document_get_max_page_size    (EvDocument      *document,
