@@ -32,6 +32,7 @@
 struct _EvPreviewerWindow {
 	GtkWindow         base_instance;
 
+	EvDocumentModel  *model;
 	EvDocument       *document;
 
 	GtkActionGroup   *action_group;
@@ -54,6 +55,14 @@ struct _EvPreviewerWindow {
 struct _EvPreviewerWindowClass {
 	GtkWindowClass base_class;
 };
+
+enum {
+	PROP_0,
+	PROP_MODEL
+};
+
+#define MIN_SCALE 0.05409
+#define MAX_SCALE 4.0
 
 G_DEFINE_TYPE (EvPreviewerWindow, ev_previewer_window, GTK_TYPE_WINDOW)
 
@@ -109,7 +118,7 @@ static void
 ev_previewer_window_zoom_in (GtkAction         *action,
 			     EvPreviewerWindow *window)
 {
-	ev_view_set_sizing_mode (window->view, EV_SIZING_FREE);
+	ev_document_model_set_sizing_mode (window->model, EV_SIZING_FREE);
 	ev_view_zoom_in (window->view);
 }
 
@@ -117,7 +126,7 @@ static void
 ev_previewer_window_zoom_out (GtkAction         *action,
 			      EvPreviewerWindow *window)
 {
-	ev_view_set_sizing_mode (window->view, EV_SIZING_FREE);
+	ev_document_model_set_sizing_mode (window->model, EV_SIZING_FREE);
 	ev_view_zoom_out (window->view);
 }
 
@@ -125,22 +134,18 @@ static void
 ev_previewer_window_zoom_best_fit (GtkToggleAction   *action,
 				   EvPreviewerWindow *window)
 {
-	if (gtk_toggle_action_get_active (action)) {
-		ev_view_set_sizing_mode (window->view, EV_SIZING_BEST_FIT);
-	} else {
-		ev_view_set_sizing_mode (window->view, EV_SIZING_FREE);
-	}
+	ev_document_model_set_sizing_mode (window->model,
+					   gtk_toggle_action_get_active (action) ?
+					   EV_SIZING_BEST_FIT : EV_SIZING_FREE);
 }
 
 static void
 ev_previewer_window_zoom_page_width (GtkToggleAction   *action,
 				     EvPreviewerWindow *window)
 {
-	if (gtk_toggle_action_get_active (action)) {
-		ev_view_set_sizing_mode (window->view, EV_SIZING_FIT_WIDTH);
-	} else {
-		ev_view_set_sizing_mode (window->view, EV_SIZING_FREE);
-	}
+	ev_document_model_set_sizing_mode (window->model,
+					   gtk_toggle_action_get_active (action) ?
+					   EV_SIZING_FIT_WIDTH : EV_SIZING_FREE);
 }
 
 static void
@@ -273,21 +278,13 @@ static const GtkToggleActionEntry toggle_action_entries[] = {
 	  G_CALLBACK (ev_previewer_window_zoom_page_width) }
 };
 
-/* EvView callbacks */
 static void
-view_sizing_mode_changed (EvView            *view,
+view_sizing_mode_changed (EvDocumentModel   *model,
 			  GParamSpec        *pspec,
 			  EvPreviewerWindow *window)
 {
-	EvSizingMode sizing_mode;
+	EvSizingMode sizing_mode = ev_document_model_get_sizing_mode (model);
 	GtkAction   *action;
-
-	if (!window->view)
-		return;
-
-	g_object_get (window->view,
-		      "sizing_mode", &sizing_mode,
-		      NULL);
 
 	action = gtk_action_group_get_action (window->action_group, "ViewBestFit");
 	g_signal_handlers_block_by_func (action,
@@ -311,9 +308,30 @@ view_sizing_mode_changed (EvView            *view,
 }
 
 static void
+ev_previewer_window_set_document (EvPreviewerWindow *window,
+				  GParamSpec        *pspec,
+				  EvDocumentModel   *model)
+{
+	EvDocument *document = ev_document_model_get_document (model);
+
+	window->document = g_object_ref (document);
+
+	g_signal_connect (model, "notify::sizing-mode",
+			  G_CALLBACK (view_sizing_mode_changed),
+			  window);
+	ev_view_set_loading (window->view, FALSE);
+	gtk_action_group_set_sensitive (window->action_group, TRUE);
+}
+
+static void
 ev_previewer_window_dispose (GObject *object)
 {
 	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
+
+	if (window->model) {
+		g_object_unref (window->model);
+		window->model = NULL;
+	}
 
 	if (window->document) {
 		g_object_unref (window->document);
@@ -380,14 +398,55 @@ data_dir (void)
 static void
 ev_previewer_window_init (EvPreviewerWindow *window)
 {
-	GtkWidget *vbox;
-	GtkWidget *toolbar;
-	GtkAction *action;
-	GError    *error = NULL;
-	gchar     *datadir, *ui_path;
-
 	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
-	
+}
+
+static void
+ev_previewer_window_set_property (GObject      *object,
+				  guint         prop_id,
+				  const GValue *value,
+				  GParamSpec   *pspec)
+{
+	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
+
+	switch (prop_id) {
+	case PROP_MODEL:
+		window->model = g_value_dup_object (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static GObject *
+ev_previewer_window_constructor (GType                  type,
+				 guint                  n_construct_properties,
+				 GObjectConstructParam *construct_params)
+{
+	GObject           *object;
+	EvPreviewerWindow *window;
+	GtkWidget         *vbox;
+	GtkWidget         *toolbar;
+	GtkAction         *action;
+	GError            *error = NULL;
+	gchar             *datadir, *ui_path;
+	gdouble            dpi;
+
+	g_print ("DBG: constructor\n");
+
+	object = G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructor (type,
+										 n_construct_properties,
+										 construct_params);
+	window = EV_PREVIEWER_WINDOW (object);
+
+	dpi = get_screen_dpi (GTK_WINDOW (window));
+	ev_document_model_set_min_scale (window->model, MIN_SCALE * dpi / 72.0);
+	ev_document_model_set_max_scale (window->model, MAX_SCALE * dpi / 72.0);
+	ev_document_model_set_sizing_mode (window->model, EV_SIZING_FIT_WIDTH);
+	g_signal_connect_swapped (window->model, "notify::document",
+				  G_CALLBACK (ev_previewer_window_set_document),
+				  window);
+
 	window->action_group = gtk_action_group_new ("PreviewerActions");
 	gtk_action_group_set_translation_domain (window->action_group, NULL);
 	gtk_action_group_add_actions (window->action_group, action_entries,
@@ -405,6 +464,7 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 			       "icon_name", "text-x-generic",
 			       "visible_overflown", FALSE,
 			       NULL);
+	ev_page_action_set_model (EV_PAGE_ACTION (action), window->model);
 	g_signal_connect (action, "activate_link",
 			  G_CALLBACK (ev_previewer_window_action_page_activated),
 			  window);
@@ -425,75 +485,61 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 	g_free (ui_path);
 	g_free (datadir);
 
+	view_sizing_mode_changed (window->model, NULL, window);
+
 	vbox = gtk_vbox_new (FALSE, 0);
 
 	toolbar = gtk_ui_manager_get_widget (window->ui_manager, "/PreviewToolbar");
 	gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 	gtk_widget_show (toolbar);
-		
+
 	window->swindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (window->swindow),
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	
-	window->view = EV_VIEW (ev_view_new ());
-	g_signal_connect (window->view, "notify::sizing-mode",
-			  G_CALLBACK (view_sizing_mode_changed),
-			  window);
 
-	ev_view_set_screen_dpi (window->view, get_screen_dpi (GTK_WINDOW (window)));
+	window->view = EV_VIEW (ev_view_new ());
+	ev_view_set_model (window->view, window->model);
 	ev_view_set_continuous (window->view, FALSE);
-	ev_view_set_sizing_mode (window->view, EV_SIZING_FIT_WIDTH);
 	ev_view_set_loading (window->view, TRUE);
-	view_sizing_mode_changed (window->view, NULL, window);
 
 	gtk_container_add (GTK_CONTAINER (window->swindow), GTK_WIDGET (window->view));
 	gtk_widget_show (GTK_WIDGET (window->view));
 
 	gtk_box_pack_start (GTK_BOX (vbox), window->swindow, TRUE, TRUE, 0);
 	gtk_widget_show (window->swindow);
-	
+
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_widget_show (vbox);
+
+	return object;
 }
+
 
 static void
 ev_previewer_window_class_init (EvPreviewerWindowClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
+	gobject_class->constructor = ev_previewer_window_constructor;
+	gobject_class->set_property = ev_previewer_window_set_property;
 	gobject_class->dispose = ev_previewer_window_dispose;
+
+	g_object_class_install_property (gobject_class,
+					 PROP_MODEL,
+					 g_param_spec_object ("model",
+							      "Model",
+							      "The document model",
+							      EV_TYPE_DOCUMENT_MODEL,
+							      G_PARAM_WRITABLE |
+							      G_PARAM_CONSTRUCT_ONLY));
 }
 
 /* Public methods */
 GtkWidget *
-ev_previewer_window_new (void)
+ev_previewer_window_new (EvDocumentModel *model)
 {
-	return GTK_WIDGET (g_object_new (EV_TYPE_PREVIEWER_WINDOW, NULL));
-}
-
-void
-ev_previewer_window_set_document (EvPreviewerWindow *window,
-				  EvDocument        *document)
-{
-	GtkAction *action;
-	
-	g_return_if_fail (EV_IS_PREVIEWER_WINDOW (window));
-	g_return_if_fail (EV_IS_DOCUMENT (document));
-	
-	if (window->document)
-		return;
-
-	action = gtk_action_group_get_action (window->action_group, "PageSelector");
-	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
-	gtk_action_group_set_sensitive (window->action_group, TRUE);
-	
-	window->document = g_object_ref (document);
-	ev_view_set_document (window->view, document);
-	ev_view_set_zoom (window->view,
-			  get_screen_dpi (GTK_WINDOW (window)) / 72.0,
-			  FALSE);
-	ev_view_set_loading (window->view, FALSE);
+	return GTK_WIDGET (g_object_new (EV_TYPE_PREVIEWER_WINDOW, "model", model, NULL));
 }
 
 void

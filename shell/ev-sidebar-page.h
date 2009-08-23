@@ -25,6 +25,7 @@
 #include <glib.h>
 
 #include "ev-document.h"
+#include "ev-document-model.h"
 
 G_BEGIN_DECLS
 
@@ -45,16 +46,16 @@ struct _EvSidebarPageIface
 	/* Methods  */
 	gboolean    (* support_document)  (EvSidebarPage   *sidebar_page,
 				           EvDocument *document);
-	void 	    (* set_document)	  (EvSidebarPage   *sidebar_page,
-					   EvDocument *document);
-	const gchar*(* get_label)         (EvSidebarPage  *sidebar_page);	
+	void 	    (* set_model)	  (EvSidebarPage   *sidebar_page,
+					   EvDocumentModel *model);
+	const gchar*(* get_label)         (EvSidebarPage  *sidebar_page);
 };
 
-GType         ev_sidebar_page_get_type          (void);
+GType         ev_sidebar_page_get_type          (void) G_GNUC_CONST;
 gboolean      ev_sidebar_page_support_document  (EvSidebarPage    *sidebar_page,
 	 			                 EvDocument *document);
-void          ev_sidebar_page_set_document      (EvSidebarPage    *sidebar_page,
-				                 EvDocument *document);
+void          ev_sidebar_page_set_model         (EvSidebarPage    *sidebar_page,
+				                 EvDocumentModel *model);
 const gchar*  ev_sidebar_page_get_label         (EvSidebarPage *page);
 
 

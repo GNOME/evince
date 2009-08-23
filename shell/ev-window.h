@@ -27,7 +27,6 @@
 #include <gtk/gtk.h>
 
 #include "ev-link.h"
-#include "ev-page-cache.h"
 
 G_BEGIN_DECLS
 

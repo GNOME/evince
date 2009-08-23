@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include <evince-document.h>
+#include <evince-view.h>
 
 G_BEGIN_DECLS
 
@@ -38,10 +39,8 @@ typedef struct _EvPreviewerWindow      EvPreviewerWindow;
 typedef struct _EvPreviewerWindowClass EvPreviewerWindowClass;
 
 GType      ev_previewer_window_get_type           (void) G_GNUC_CONST;
-GtkWidget *ev_previewer_window_new                (void);
+GtkWidget *ev_previewer_window_new                (EvDocumentModel   *model);
 
-void       ev_previewer_window_set_document       (EvPreviewerWindow *window,
-						   EvDocument        *document);
 void       ev_previewer_window_set_print_settings (EvPreviewerWindow *window,
 						   const gchar       *print_settings);
 void       ev_previewer_window_set_source_file    (EvPreviewerWindow *window,

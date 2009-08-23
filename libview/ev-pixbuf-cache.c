@@ -1,7 +1,6 @@
 #include <config.h>
 #include "ev-pixbuf-cache.h"
 #include "ev-job-scheduler.h"
-#include "ev-page-cache.h"
 #include "ev-mapping.h"
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
@@ -291,9 +290,8 @@ job_finished_cb (EvJob         *job,
  */
 static void
 check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
-			  CacheJobInfo *job_info,
-			  EvPageCache  *page_cache,
-			  gfloat        scale)
+			  CacheJobInfo  *job_info,
+			  gfloat         scale)
 {
 	gint width, height;
 
@@ -586,18 +584,15 @@ static void
 ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 				 gfloat         scale)
 {
-	EvPageCache *page_cache;
 	int i;
 
-	page_cache = ev_page_cache_get (pixbuf_cache->document);
-
 	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
-		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->job_list + i, page_cache, scale);
+		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->job_list + i, scale);
 	}
 
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->prev_job + i, page_cache, scale);
-		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->next_job + i, page_cache, scale);
+		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->prev_job + i, scale);
+		check_job_size_and_unref (pixbuf_cache, pixbuf_cache->next_job + i, scale);
 	}
 }
 
@@ -672,7 +667,6 @@ add_job (EvPixbufCache *pixbuf_cache,
 static void
 add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		   CacheJobInfo  *job_info,
-		   EvPageCache   *page_cache,
 		   gint           page,
 		   gint           rotation,
 		   gfloat         scale,
@@ -702,19 +696,16 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 				    gint           rotation,
 				    gfloat         scale)
 {
-	EvPageCache *page_cache;
 	CacheJobInfo *job_info;
 	int page;
 	int i;
-
-	page_cache = ev_page_cache_get (pixbuf_cache->document);
 
 	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
 		job_info = (pixbuf_cache->job_list + i);
 		page = pixbuf_cache->start_page + i;
 
 		add_job_if_needed (pixbuf_cache, job_info,
-				   page_cache, page, rotation, scale,
+				   page, rotation, scale,
 				   EV_JOB_PRIORITY_URGENT);
 	}
 
@@ -723,7 +714,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 		page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size + i;
 
 		add_job_if_needed (pixbuf_cache, job_info,
-				   page_cache, page, rotation, scale,
+				   page, rotation, scale,
 				   EV_JOB_PRIORITY_LOW);
 	}
 
@@ -732,7 +723,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 		page = pixbuf_cache->end_page + 1 + i;
 
 		add_job_if_needed (pixbuf_cache, job_info,
-				   page_cache, page, rotation, scale,
+				   page, rotation, scale,
 				   EV_JOB_PRIORITY_LOW);
 	}
 

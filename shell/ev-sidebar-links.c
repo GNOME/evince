@@ -46,7 +46,7 @@ struct _EvSidebarLinksPrivate {
 	EvJob *job;
 	GtkTreeModel *model;
 	EvDocument *document;
-	EvPageCache *page_cache;
+	EvDocumentModel *doc_model;
 };
 
 enum {
@@ -60,18 +60,20 @@ enum {
 	N_SIGNALS
 };
 
-static void update_page_callback 			(EvPageCache       *page_cache,
-							 gint               current_page,
-						         EvSidebarLinks    *sidebar_links);
+static void update_page_callback 			(EvSidebarLinks    *sidebar_links,
+							 gint               old_page,
+							 gint               current_page);
 static void row_activated_callback 			(GtkTreeView *treeview,
 		                                         GtkTreePath *arg1,
 	                                                 GtkTreeViewColumn *arg2,
 		                                         gpointer user_data);
+static void ev_sidebar_links_set_links_model            (EvSidebarLinks *links,
+							 GtkTreeModel   *model);
 static void job_finished_callback 			(EvJobLinks     *job,
 				    		         EvSidebarLinks *sidebar_links);
+static void ev_sidebar_links_set_current_page           (EvSidebarLinks *sidebar_links,
+							 gint            current_page);
 static void ev_sidebar_links_page_iface_init 		(EvSidebarPageIface *iface);
-static void ev_sidebar_links_set_document      	 	(EvSidebarPage  *sidebar_page,
-		    			        	 EvDocument     *document);
 static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
 						         EvDocument     *document);
 static const gchar* ev_sidebar_links_get_label 		(EvSidebarPage *sidebar_page);
@@ -95,18 +97,12 @@ ev_sidebar_links_set_property (GObject      *object,
 			       const GValue *value,
 			       GParamSpec   *pspec)
 {
-	EvSidebarLinks *ev_sidebar_links;
-	GtkTreeModel *model;
-  
-	ev_sidebar_links = EV_SIDEBAR_LINKS (object);
+	EvSidebarLinks *ev_sidebar_links = EV_SIDEBAR_LINKS (object);
 
 	switch (prop_id)
 	{
 	case PROP_MODEL:
-		model = ev_sidebar_links->priv->model;
-		ev_sidebar_links->priv->model = GTK_TREE_MODEL (g_value_dup_object (value));
-		if (model)
-			g_object_unref (model);
+		ev_sidebar_links_set_links_model (ev_sidebar_links, g_value_get_object (value));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -159,7 +155,7 @@ ev_sidebar_links_dispose (GObject *object)
 	if (sidebar->priv->document) {
 		g_object_unref (sidebar->priv->document);
 		sidebar->priv->document = NULL;
-		sidebar->priv->page_cache = NULL;
+		sidebar->priv->doc_model = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_sidebar_links_parent_class)->dispose (object);
@@ -175,9 +171,8 @@ ev_sidebar_links_map (GtkWidget *widget)
 	GTK_WIDGET_CLASS (ev_sidebar_links_parent_class)->map (widget);
 
 	if (links->priv->model) {
-		update_page_callback (links->priv->page_cache,
-				      ev_page_cache_get_current_page (links->priv->page_cache),
-				      links);
+		ev_sidebar_links_set_current_page (links,
+						   ev_document_model_get_page (links->priv->doc_model));
 	}
 }
 
@@ -239,10 +234,10 @@ selection_changed_callback (GtkTreeSelection   *selection,
 		if (link == NULL)
 			return;
 
-		g_signal_handler_block (ev_sidebar_links->priv->page_cache,
+		g_signal_handler_block (ev_sidebar_links->priv->doc_model,
 					ev_sidebar_links->priv->page_changed_id);
 		g_signal_emit (ev_sidebar_links, signals[LINK_ACTIVATED], 0, link);
-		g_signal_handler_unblock (ev_sidebar_links->priv->page_cache,
+		g_signal_handler_unblock (ev_sidebar_links->priv->doc_model,
 					  ev_sidebar_links->priv->page_changed_id);
 
 		g_object_unref (link);
@@ -523,7 +518,7 @@ update_page_callback_foreach (GtkTreeModel *model,
 		dest_page = ev_link_get_page (link);
 		g_object_unref (link);
 		
-		current_page = ev_page_cache_get_current_page (sidebar_links->priv->page_cache);
+		current_page = ev_document_model_get_page (sidebar_links->priv->doc_model);
 			 
 		if (dest_page == current_page) {
 			gtk_tree_view_expand_to_path (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
@@ -539,9 +534,8 @@ update_page_callback_foreach (GtkTreeModel *model,
 }
 
 static void
-update_page_callback (EvPageCache    *page_cache,
-		      gint            current_page,
-		      EvSidebarLinks *sidebar_links)
+ev_sidebar_links_set_current_page (EvSidebarLinks *sidebar_links,
+				   gint            current_page)
 {
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -586,6 +580,14 @@ update_page_callback (EvPageCache    *page_cache,
 	g_signal_handler_unblock (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 }
 
+static void
+update_page_callback (EvSidebarLinks *sidebar_links,
+		      gint            old_page,
+		      gint            new_page)
+{
+	ev_sidebar_links_set_current_page (sidebar_links, new_page);
+}
+
 static void 
 row_activated_callback (GtkTreeView       *treeview,
 			GtkTreePath       *arg1,
@@ -622,19 +624,32 @@ expand_open_links (GtkTreeView *tree_view, GtkTreeModel *model, GtkTreeIter *par
 		} while (gtk_tree_model_iter_next (model, &iter));
 	}
 }
-	
+
+static void
+ev_sidebar_links_set_links_model (EvSidebarLinks *sidebar_links,
+				  GtkTreeModel   *model)
+{
+	EvSidebarLinksPrivate *priv = sidebar_links->priv;
+
+	if (priv->model == model)
+		return;
+
+	if (priv->model)
+		g_object_unref (priv->model);
+	priv->model = g_object_ref (model);
+
+	g_object_notify (G_OBJECT (sidebar_links), "model");
+}
+
 static void
 job_finished_callback (EvJobLinks     *job,
 		       EvSidebarLinks *sidebar_links)
 {
-	EvSidebarLinksPrivate *priv;
+	EvSidebarLinksPrivate *priv = sidebar_links->priv;
 	GtkTreeSelection *selection;
 
-	priv = sidebar_links->priv;
-	
-	priv->model = job->model;
-	g_object_notify (G_OBJECT (sidebar_links), "model");
-	
+	ev_sidebar_links_set_links_model (sidebar_links, job->model);
+
 	gtk_tree_model_foreach (priv->model, (GtkTreeModelForeachFunc)fill_page_labels, sidebar_links);
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
@@ -653,34 +668,34 @@ job_finished_callback (EvJobLinks     *job,
 					  G_CALLBACK (selection_changed_callback),
 					  sidebar_links);
 	}
-	priv->page_changed_id =	g_signal_connect (priv->page_cache, "page-changed",
-						  G_CALLBACK (update_page_callback),
-						  sidebar_links);
+	priv->page_changed_id =
+		g_signal_connect_swapped (priv->doc_model, "page-changed",
+					  G_CALLBACK (update_page_callback),
+					  sidebar_links);
 	if (priv->row_activated_id <= 0) {
 		priv->row_activated_id =
 			g_signal_connect (priv->tree_view, "row-activated",
 					  G_CALLBACK (row_activated_callback),
 					  sidebar_links);
 	}
-	
-	update_page_callback (priv->page_cache,
-			      ev_page_cache_get_current_page (priv->page_cache),
-			      sidebar_links);
+
+	ev_sidebar_links_set_current_page (sidebar_links,
+					   ev_document_model_get_page (priv->doc_model));
 }
 
 static void
-ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
-			       EvDocument     *document)
+ev_sidebar_links_document_changed_cb (EvDocumentModel *model,
+				      GParamSpec      *pspec,
+				      EvSidebarLinks  *sidebar_links)
 {
-	EvSidebarLinks *sidebar_links;
-	EvSidebarLinksPrivate *priv;
+	EvDocument *document = ev_document_model_get_document (model);
+	EvSidebarLinksPrivate *priv = sidebar_links->priv;
 
-	g_return_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page));
-	g_return_if_fail (EV_IS_DOCUMENT (document));
-	
-	sidebar_links = EV_SIDEBAR_LINKS (sidebar_page);
+	if (!EV_IS_DOCUMENT_LINKS (document))
+		return;
 
-	priv = sidebar_links->priv;
+	if (!ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document)))
+		return;
 
 	if (priv->document) {
 		gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), NULL);
@@ -688,7 +703,6 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 	}
 
 	priv->document = g_object_ref (document);
-	priv->page_cache = ev_page_cache_get (document);
 
 	if (priv->job) {
 		g_signal_handlers_disconnect_by_func (priv->job,
@@ -704,6 +718,22 @@ ev_sidebar_links_set_document (EvSidebarPage  *sidebar_page,
 			  sidebar_links);
 	/* The priority doesn't matter for this job */
 	ev_job_scheduler_push_job (priv->job, EV_JOB_PRIORITY_NONE);
+}
+
+static void
+ev_sidebar_links_set_model (EvSidebarPage   *sidebar_page,
+			    EvDocumentModel *model)
+{
+	EvSidebarLinks *sidebar_links = EV_SIDEBAR_LINKS (sidebar_page);
+	EvSidebarLinksPrivate *priv = sidebar_links->priv;
+
+	if (priv->doc_model == model)
+		return;
+
+	priv->doc_model = model;
+	g_signal_connect (model, "notify::document",
+			  G_CALLBACK (ev_sidebar_links_document_changed_cb),
+			  sidebar_page);
 }
 
 static gboolean
@@ -724,7 +754,7 @@ static void
 ev_sidebar_links_page_iface_init (EvSidebarPageIface *iface)
 {
 	iface->support_document = ev_sidebar_links_support_document;
-	iface->set_document = ev_sidebar_links_set_document;
+	iface->set_model = ev_sidebar_links_set_model;
 	iface->get_label = ev_sidebar_links_get_label;
 }
 

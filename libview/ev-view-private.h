@@ -26,8 +26,8 @@
 #define __EV_VIEW_PRIVATE_H__
 
 #include "ev-view.h"
+#include "ev-document-model.h"
 #include "ev-pixbuf-cache.h"
-#include "ev-page-cache.h"
 #include "ev-jobs.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
@@ -133,7 +133,8 @@ struct _EvView {
 	gint find_result;
 	gboolean jump_to_find_result;
 	gboolean highlight_find_results;
-	
+
+	EvDocumentModel *model;
 	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
 	EvHeightToPageCache *height_to_page_cache;
@@ -161,8 +162,6 @@ struct _EvView {
 	gdouble scale;
 	gint spacing;
 	gdouble dpi;
-	gdouble max_scale;
-	gdouble min_scale;
 
 	gboolean loading;
 	gboolean continuous;

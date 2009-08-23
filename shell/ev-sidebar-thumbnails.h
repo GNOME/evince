@@ -26,8 +26,6 @@
 
 #include <gtk/gtk.h>
 
-#include "ev-document.h"
-
 G_BEGIN_DECLS
 
 typedef struct _EvSidebarThumbnails EvSidebarThumbnails;
@@ -37,7 +35,7 @@ typedef struct _EvSidebarThumbnailsPrivate EvSidebarThumbnailsPrivate;
 #define EV_TYPE_SIDEBAR_THUMBNAILS		(ev_sidebar_thumbnails_get_type())
 #define EV_SIDEBAR_THUMBNAILS(object)		(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnails))
 #define EV_SIDEBAR_THUMBNAILS_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnailsClass))
-#define EV_IS_SIDEBAR_THUMBNAILS(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_SIDEBAR_THUMBNAILS))
+#define EV_IS_SIDEBAR_THUMBNAILS(object)	(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_SIDEBAR_THUMBNAILS))
 #define EV_IS_SIDEBAR_THUMBNAILS_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_SIDEBAR_THUMBNAILS))
 #define EV_SIDEBAR_THUMBNAILS_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnailsClass))
 
@@ -51,10 +49,8 @@ struct _EvSidebarThumbnailsClass {
 	GtkVBoxClass base_class;
 };
 
-GType      ev_sidebar_thumbnails_get_type     (void);
+GType      ev_sidebar_thumbnails_get_type     (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_thumbnails_new          (void);
-void       ev_sidebar_thumbnails_refresh      (EvSidebarThumbnails *sidebar_thumbnails,
-					       int                  rotation);
 
 G_END_DECLS
 

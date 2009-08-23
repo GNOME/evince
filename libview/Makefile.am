@@ -10,9 +10,9 @@ NOINST_H_FILES =			\
 	ev-view-private.h
 
 INST_H_FILES = 				\
+	ev-document-model.h		\
 	ev-jobs.h			\
 	ev-job-scheduler.h		\
-	ev-page-cache.h			\
 	ev-stock-icons.h		\
 	ev-view.h			\
 	ev-view-type-builtins.h
@@ -22,9 +22,9 @@ header_DATA = $(INST_H_FILES)
 
 libevview_la_SOURCES = 			\
 	ev-annotation-window.c		\
+	ev-document-model.c		\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
-	ev-page-cache.c			\
 	ev-pixbuf-cache.c		\
 	ev-stock-icons.c		\
 	ev-timeline.c			\

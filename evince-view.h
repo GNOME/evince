@@ -23,7 +23,7 @@
 
 #include <libview/ev-job-scheduler.h>
 #include <libview/ev-jobs.h>
-#include <libview/ev-page-cache.h>
+#include <libview/ev-document-model.h>
 #include <libview/ev-view.h>
 #include <libview/ev-view-type-builtins.h>
 #include <libview/ev-stock-icons.h>

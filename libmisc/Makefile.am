@@ -10,6 +10,7 @@ libevmisc_la_CFLAGS =	\
 	-DDATADIR=\"$(pkgdatadir)\"	\
 	-I$(top_srcdir)			\
 	-I$(top_srcdir)/libdocument	\
+	-I$(top_srcdir)/libview		\
 	$(SHELL_CORE_CFLAGS)    	\
 	$(WARNING_CFLAGS)       	\
 	$(DISABLE_DEPRECATED)

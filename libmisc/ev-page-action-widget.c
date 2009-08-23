@@ -43,7 +43,7 @@ struct _EvPageActionWidget
 	GtkToolItem parent;
 
 	EvDocument *document;
-	EvPageCache *page_cache;
+	EvDocumentModel *doc_model;
 
 	GtkWidget *entry;
 	GtkWidget *label;
@@ -74,9 +74,8 @@ update_pages_label (EvPageActionWidget *action_widget,
 }
 
 static void
-page_changed_cb (EvPageCache        *page_cache,
-		 gint                page,
-		 EvPageActionWidget *action_widget)
+ev_page_action_widget_set_current_page (EvPageActionWidget *action_widget,
+					gint                page)
 {
 	if (page >= 0) {
 		gchar *page_label;
@@ -97,19 +96,28 @@ page_changed_cb (EvPageCache        *page_cache,
 	update_pages_label (action_widget, page);
 }
 
+static void
+page_changed_cb (EvDocumentModel    *model,
+		 gint                old_page,
+		 gint                new_page,
+		 EvPageActionWidget *action_widget)
+{
+	ev_page_action_widget_set_current_page (action_widget, new_page);
+}
+
 static gboolean
 page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
 {
-	EvPageCache *page_cache = action_widget->page_cache;
+	EvDocumentModel *model = action_widget->doc_model;
 	gint pageno;
 
-	pageno = ev_page_cache_get_current_page (page_cache);
+	pageno = ev_document_model_get_page (model);
 	if ((event->direction == GDK_SCROLL_DOWN) &&
 	    (pageno < ev_document_get_n_pages (action_widget->document) - 1))
 		pageno++;
 	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
 		pageno--;
-	ev_page_cache_set_current_page (page_cache, pageno);
+	ev_document_model_set_page (model, pageno);
 
 	return TRUE;
 }
@@ -117,7 +125,7 @@ page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
 static void
 activate_cb (EvPageActionWidget *action_widget)
 {
-	EvPageCache *page_cache;
+	EvDocumentModel *model;
 	const char *text;
 	gchar *page_label;
 	EvLinkDest *link_dest;
@@ -139,9 +147,9 @@ activate_cb (EvPageActionWidget *action_widget)
 
 	/* rest the entry to the current page if we were unable to
 	 * change it */
-	page_cache = action_widget->page_cache;
+	model = action_widget->doc_model;
 	page_label = ev_document_get_page_label (action_widget->document,
-						 ev_page_cache_get_current_page (page_cache));
+						 ev_document_model_get_page (model));
 	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
 	gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
 	g_free (page_label);
@@ -187,38 +195,48 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	gtk_widget_show (GTK_WIDGET (action_widget));
 }
 
-void
-ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
-				    EvDocument         *document)
+static void
+ev_page_action_widget_document_changed_cb (EvDocumentModel    *model,
+					   GParamSpec         *pspec,
+					   EvPageActionWidget *action_widget)
 {
-	EvPageCache *page_cache = ev_page_cache_get (document);
+	EvDocument *document = ev_document_model_get_document (model);
 
 	g_object_ref (document);
 	if (action_widget->document)
 		g_object_unref (action_widget->document);
 	action_widget->document = document;
 
-	if (action_widget->page_cache != NULL) {
-		if (action_widget->signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->page_cache,
-						     action_widget->signal_id);
-			action_widget->signal_id = 0;
-		}
-		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
-					      (gpointer)&action_widget->page_cache);
-		action_widget->page_cache = NULL;
+	if (action_widget->signal_id > 0) {
+		g_signal_handler_disconnect (action_widget->doc_model,
+					     action_widget->signal_id);
+		action_widget->signal_id = 0;
 	}
-
-	action_widget->page_cache = page_cache;
-	g_object_add_weak_pointer (G_OBJECT (page_cache),
-				   (gpointer)&action_widget->page_cache);
 	action_widget->signal_id =
-		g_signal_connect_object (page_cache, "page-changed",
+		g_signal_connect_object (action_widget->doc_model,
+					 "page-changed",
 					 G_CALLBACK (page_changed_cb),
 					 action_widget, 0);
-	page_changed_cb (page_cache,
-			 ev_page_cache_get_current_page (page_cache),
-			 action_widget);
+
+	ev_page_action_widget_set_current_page (action_widget,
+						ev_document_model_get_page (model));
+}
+
+void
+ev_page_action_widget_set_model (EvPageActionWidget *action_widget,
+				 EvDocumentModel    *model)
+{
+	if (action_widget->doc_model) {
+		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
+					      (gpointer)&action_widget->doc_model);
+	}
+	action_widget->doc_model = model;
+	g_object_add_weak_pointer (G_OBJECT (model),
+				   (gpointer)&action_widget->doc_model);
+
+	g_signal_connect (model, "notify::document",
+			  G_CALLBACK (ev_page_action_widget_document_changed_cb),
+			  action_widget);
 }
 
 static void
@@ -226,15 +244,15 @@ ev_page_action_widget_finalize (GObject *object)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
 
-	if (action_widget->page_cache != NULL) {
+	if (action_widget->doc_model != NULL) {
 		if (action_widget->signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->page_cache,
+			g_signal_handler_disconnect (action_widget->doc_model,
 						     action_widget->signal_id);
 			action_widget->signal_id = 0;
 		}
-		g_object_remove_weak_pointer (G_OBJECT (action_widget->page_cache),
-					      (gpointer)&action_widget->page_cache);
-		action_widget->page_cache = NULL;
+		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
+					      (gpointer)&action_widget->doc_model);
+		action_widget->doc_model = NULL;
 	}
 
 	if (action_widget->document) {
@@ -432,7 +450,7 @@ get_filter_model_from_model (GtkTreeModel *model)
 
 
 void
-ev_page_action_widget_update_model (EvPageActionWidget *proxy, GtkTreeModel *model)
+ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeModel *model)
 {
 	GtkTreeModel *filter_model;
 	GtkEntryCompletion *completion;
@@ -470,7 +488,6 @@ ev_page_action_widget_update_model (EvPageActionWidget *proxy, GtkTreeModel *mod
 	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
 
 	g_object_unref (completion);
-	g_object_unref (model);
 }
 
 void

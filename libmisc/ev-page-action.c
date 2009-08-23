@@ -33,7 +33,7 @@
 
 struct _EvPageActionPrivate
 {
-	EvDocument *document;
+	EvDocumentModel *doc_model;
 	GtkTreeModel *model;
 };
 
@@ -55,8 +55,7 @@ G_DEFINE_TYPE (EvPageAction, ev_page_action, GTK_TYPE_ACTION)
 
 enum {
 	PROP_0,
-	PROP_DOCUMENT,
-	PROP_MODEL,
+	PROP_MODEL
 };
 
 static GtkWidget *
@@ -70,22 +69,9 @@ create_tool_item (GtkAction *action)
 }
 
 static void
-update_document (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
-{
-	if (page->priv->document)
-		ev_page_action_widget_set_document (proxy, page->priv->document);
-}
-
-static void
 update_model (EvPageAction *page, GParamSpec *pspec, EvPageActionWidget *proxy)
 {
-	GtkTreeModel *model;
-
-	g_object_get (G_OBJECT (page),
-		      "model", &model,
-		      NULL);
-
-	ev_page_action_widget_update_model (proxy, model);
+	ev_page_action_widget_update_links_model (proxy, page->priv->model);
 }
 
 static void
@@ -97,10 +83,11 @@ activate_link_cb (EvPageActionWidget *proxy, EvLink *link, EvPageAction *action)
 static void
 connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
+	EvPageAction *page = EV_PAGE_ACTION (action);
+
 	if (GTK_IS_TOOL_ITEM (proxy)) {
-		g_signal_connect_object (action, "notify::document",
-					 G_CALLBACK (update_document),
-					 proxy, 0);
+		ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (proxy),
+						 page->priv->doc_model);
 		g_signal_connect (proxy, "activate_link",
 				  G_CALLBACK (activate_link_cb),
 				  action);
@@ -117,10 +104,12 @@ ev_page_action_dispose (GObject *object)
 {
 	EvPageAction *page = EV_PAGE_ACTION (object);
 
-	if (page->priv->document) {
-		g_object_unref (page->priv->document);
-		page->priv->document = NULL;
+	if (page->priv->model) {
+		g_object_unref (page->priv->model);
+		page->priv->model = NULL;
 	}
+
+	page->priv->doc_model = NULL;
 
 	G_OBJECT_CLASS (ev_page_action_parent_class)->dispose (object);
 }
@@ -131,25 +120,13 @@ ev_page_action_set_property (GObject      *object,
 			     const GValue *value,
 			     GParamSpec   *pspec)
 {
-	EvPageAction *page;
-	EvDocument *document;
+	EvPageAction *page = EV_PAGE_ACTION (object);
 	GtkTreeModel *model;
-
-	page = EV_PAGE_ACTION (object);
 
 	switch (prop_id)
 	{
-	case PROP_DOCUMENT:
-		document = page->priv->document;
-		page->priv->document = EV_DOCUMENT (g_value_dup_object (value));
-		if (document)
-			g_object_unref (document);
-		break;
 	case PROP_MODEL:
-		model = page->priv->model;
-		page->priv->model = GTK_TREE_MODEL (g_value_dup_object (value));
-		if (model)
-			g_object_unref (model);
+		ev_page_action_set_links_model (page, g_value_get_object (value));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -163,15 +140,10 @@ ev_page_action_get_property (GObject    *object,
 			     GValue     *value,
 			     GParamSpec *pspec)
 {
-	EvPageAction *page;
-
-	page = EV_PAGE_ACTION (object);
+	EvPageAction *page = EV_PAGE_ACTION (object);
 
 	switch (prop_id)
 	{
-	case PROP_DOCUMENT:
-		g_value_set_object (value, page->priv->document);
-		break;
 	case PROP_MODEL:
 		g_value_set_object (value, page->priv->model);
 		break;
@@ -182,21 +154,33 @@ ev_page_action_get_property (GObject    *object,
 }
 
 void
-ev_page_action_set_document (EvPageAction *page, EvDocument *document)
+ev_page_action_set_model (EvPageAction    *page,
+			  EvDocumentModel *model)
 {
-	g_object_set (page,
-		      "document", document,
-		      "model", NULL,
-		      NULL);
+	g_return_if_fail (EV_IS_PAGE_ACTION (page));
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (page->priv->doc_model == model)
+		return;
+
+	page->priv->doc_model = model;
 }
 
 void
-ev_page_action_set_model (EvPageAction *page_action,
-			  GtkTreeModel *model)
+ev_page_action_set_links_model (EvPageAction *page,
+				GtkTreeModel *links_model)
 {
-	g_object_set (page_action,
-		      "model", model,
-		      NULL);
+	g_return_if_fail (EV_IS_PAGE_ACTION (page));
+	g_return_if_fail (GTK_IS_TREE_MODEL (links_model));
+
+	if (page->priv->model == links_model)
+		return;
+
+	if (page->priv->model)
+		g_object_unref (page->priv->model);
+	page->priv->model = g_object_ref (links_model);
+
+	g_object_notify (G_OBJECT (page), "model");
 }
 
 void
@@ -245,18 +229,10 @@ ev_page_action_class_init (EvPageActionClass *class)
 					       G_TYPE_OBJECT);
 
 	g_object_class_install_property (object_class,
-					 PROP_DOCUMENT,
-					 g_param_spec_object ("document",
-							      "Document",
-							      "Current document",
-							      EV_TYPE_DOCUMENT,
-							      G_PARAM_READWRITE));
-
-	g_object_class_install_property (object_class,
 					 PROP_MODEL,
 					 g_param_spec_object ("model",
 							      "Model",
-							      "Current Model",
+							      "Current Links Model",
 							      GTK_TYPE_TREE_MODEL,
 							      G_PARAM_READWRITE));
 

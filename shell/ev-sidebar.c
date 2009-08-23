@@ -53,7 +53,8 @@ struct _EvSidebarPrivate {
 	GtkWidget *menu;
 	GtkWidget *hbox;
 	GtkWidget *label;
-	   
+
+	EvDocumentModel *model;
 	GtkTreeModel *page_model;
 };
 
@@ -439,7 +440,9 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
 	g_return_if_fail (EV_IS_SIDEBAR_PAGE (main_widget));
 	g_return_if_fail (GTK_IS_WIDGET (main_widget));
-	
+
+	ev_sidebar_page_set_model (EV_SIDEBAR_PAGE (main_widget),
+				   ev_sidebar->priv->model);
 	title = ev_sidebar_page_get_label (EV_SIDEBAR_PAGE (main_widget));
 	   
 	index = gtk_notebook_append_page (GTK_NOTEBOOK (ev_sidebar->priv->notebook),
@@ -480,22 +483,17 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	g_free (label_title);
 }
 
-void
-ev_sidebar_set_document (EvSidebar   *sidebar,
-			 EvDocument  *document)
+static void
+ev_sidebar_document_changed_cb (EvDocumentModel *model,
+				GParamSpec      *pspec,
+				EvSidebar       *sidebar)
 {
-	EvSidebarPrivate *priv;
+	EvSidebarPrivate *priv = sidebar->priv;
+	EvDocument *document = ev_document_model_get_document (model);
 	GtkTreeIter iter;
 	gboolean valid;
-	gboolean has_pages;
-	   
-	g_return_if_fail (EV_IS_SIDEBAR (sidebar));
-	g_return_if_fail (EV_IS_DOCUMENT (document));
-	   
-	priv = sidebar->priv;
-	
-	has_pages = FALSE;
-	
+	gboolean has_pages = FALSE;
+
 	for (valid = gtk_tree_model_get_iter_first (priv->page_model, &iter);
 	     valid;
 	     valid = gtk_tree_model_iter_next (priv->page_model, &iter)) {
@@ -506,18 +504,16 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 				    PAGE_COLUMN_MAIN_WIDGET, &widget,
 				    PAGE_COLUMN_MENU_ITEM, &menu_widget,
 				    -1);
-			 
 
 		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (widget),	document)) {
-				ev_sidebar_page_set_document (EV_SIDEBAR_PAGE (widget), document);
-				has_pages = TRUE;
+			has_pages = TRUE;
 		} else {
-				gtk_widget_set_sensitive (menu_widget, FALSE);
+			gtk_widget_set_sensitive (menu_widget, FALSE);
 		}
 		g_object_unref (widget);
 		g_object_unref (menu_widget);
 	}
-	
+
 	if (!has_pages) {
 		gtk_widget_hide (GTK_WIDGET (sidebar));
 	} else {
@@ -526,3 +522,18 @@ ev_sidebar_set_document (EvSidebar   *sidebar,
 	}
 }
 
+void
+ev_sidebar_set_model (EvSidebar       *sidebar,
+		      EvDocumentModel *model)
+{
+	g_return_if_fail (EV_IS_SIDEBAR (sidebar));
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (model == sidebar->priv->model)
+		return;
+
+	sidebar->priv->model = model;
+	g_signal_connect (model, "notify::document",
+			  G_CALLBACK (ev_sidebar_document_changed_cb),
+			  sidebar);
+}

@@ -26,7 +26,6 @@
 #include <gtk/gtk.h>
 
 #include "ev-document-fonts.h"
-#include "ev-page-cache.h"
 #include "ev-properties-dialog.h"
 #include "ev-properties-fonts.h"
 #include "ev-properties-view.h"

@@ -39,25 +39,25 @@ ev_sidebar_page_support_document (EvSidebarPage *sidebar_page,
 
 	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
 
-        g_return_val_if_fail (iface->set_document, FALSE);
+        g_return_val_if_fail (iface->support_document, FALSE);
 	
         return iface->support_document (sidebar_page, document);    
 }
 
-void 
-ev_sidebar_page_set_document (EvSidebarPage *sidebar_page,
-			      EvDocument    *document)
+void
+ev_sidebar_page_set_model (EvSidebarPage   *sidebar_page,
+			   EvDocumentModel *model)
 {
 	EvSidebarPageIface *iface;
 
         g_return_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page));
-	g_return_if_fail (EV_IS_DOCUMENT (document));
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
 
 	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
 
-	g_assert (iface->set_document);
-	
-	iface->set_document (sidebar_page, document);
+	g_assert (iface->set_model);
+
+	iface->set_model (sidebar_page, model);
 }
 
 const gchar *

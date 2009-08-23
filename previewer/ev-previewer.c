@@ -65,8 +65,8 @@ ev_previewer_unlink_tempfile (const gchar *filename)
 }
 
 static void
-ev_previewer_load_job_finished (EvJob             *job,
-				EvPreviewerWindow *window)
+ev_previewer_load_job_finished (EvJob           *job,
+				EvDocumentModel *model)
 {
 	if (ev_job_is_failed (job)) {
 		g_warning ("%s", job->error->message);
@@ -74,14 +74,13 @@ ev_previewer_load_job_finished (EvJob             *job,
 
 		return;
 	}
-
-	ev_previewer_window_set_document (window, job->document);
+	ev_document_model_set_document (model, job->document);
 	g_object_unref (job);
 }
 
 static void
-ev_previewer_load_document (const gchar       *filename,
-			    EvPreviewerWindow *window)
+ev_previewer_load_document (const gchar     *filename,
+			    EvDocumentModel *model)
 {
 	EvJob *job;
 	gchar *uri;
@@ -90,7 +89,7 @@ ev_previewer_load_document (const gchar       *filename,
 	job = ev_job_load_new (uri);
 	g_signal_connect (job, "finished",
 			  G_CALLBACK (ev_previewer_load_job_finished),
-			  window);
+			  model);
 	ev_job_scheduler_push_job (job, EV_JOB_PRIORITY_NONE);
 	g_free (uri);
 }
@@ -98,10 +97,11 @@ ev_previewer_load_document (const gchar       *filename,
 gint
 main (gint argc, gchar **argv)
 {
-	GtkWidget      *window;
-	GOptionContext *context;
-	const gchar    *filename;
-	GError         *error = NULL;
+	GtkWidget       *window;
+	GOptionContext  *context;
+	const gchar     *filename;
+	EvDocumentModel *model;
+	GError          *error = NULL;
 
 #ifdef G_OS_WIN32
     if (fileno (stdout) != -1 &&
@@ -175,7 +175,8 @@ main (gint argc, gchar **argv)
 	g_set_application_name (_("GNOME Document Previewer"));
 	gtk_window_set_default_icon_name ("evince");
 
-	window = ev_previewer_window_new ();
+	model = ev_document_model_new ();
+	window = ev_previewer_window_new (model);
 	ev_previewer_window_set_source_file (EV_PREVIEWER_WINDOW (window), filename);
 	ev_previewer_window_set_print_settings (EV_PREVIEWER_WINDOW (window), print_settings);
 	g_signal_connect (window, "delete-event",
@@ -184,7 +185,7 @@ main (gint argc, gchar **argv)
 			  G_CALLBACK (gtk_main_quit), NULL);
 	gtk_widget_show (window);
 
-	ev_previewer_load_document (filename, EV_PREVIEWER_WINDOW (window));
+	ev_previewer_load_document (filename, model);
 	
 	gtk_main ();
 
@@ -195,6 +196,7 @@ main (gint argc, gchar **argv)
 
 	ev_shutdown ();
 	ev_stock_icons_shutdown ();
+	g_object_unref (model);
 	
 	return 0;
 }

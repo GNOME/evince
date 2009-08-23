@@ -34,7 +34,6 @@
 #include "ev-document-links.h"
 #include "ev-document-misc.h"
 #include "ev-document-transition.h"
-#include "ev-page-cache.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-transition-animation.h"
 #include "ev-view-marshal.h"
@@ -84,9 +83,6 @@ typedef enum {
 
 #define ZOOM_IN_FACTOR  1.2
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
-
-#define MIN_SCALE 0.05409
-#define MAX_SCALE 4.0
 
 #define SCROLL_TIME 150
 
@@ -219,8 +215,9 @@ static void       ev_view_reload_page                        (EvView            
 static void       job_finished_cb                            (EvPixbufCache      *pixbuf_cache,
 							      GdkRegion          *region,
 							      EvView             *view);
-static void       page_changed_cb                            (EvPageCache        *page_cache,
-							      int                 new_page,
+static void       ev_view_page_changed_cb                    (EvDocumentModel    *model,
+							      gint                old_page,
+							      gint                new_page,
 							      EvView             *view);
 static void       on_adjustment_value_changed                (GtkAdjustment      *adjustment,
 							      EvView             *view);
@@ -663,11 +660,11 @@ view_update_range_and_current_page (EvView *view)
 	}
 
 	best_current_page = MAX (best_current_page, view->start_page);
-	current_page = ev_page_cache_get_current_page (view->page_cache);
+	current_page = ev_document_model_get_page (view->model);
 
 	if ((current_page != best_current_page) && (view->pending_scroll == SCROLL_TO_KEEP_POSITION)) {
 		view->current_page = best_current_page;
-		ev_page_cache_set_current_page (view->page_cache, best_current_page);
+		ev_document_model_set_page (view->model, best_current_page);
 	}
 
 	if (start != view->start_page || end != view->end_page) {
@@ -1218,7 +1215,7 @@ find_page_at_location (EvView  *view,
 	g_assert (x_offset);
 	g_assert (y_offset);
 
-	for (i = view->start_page; i <= view->end_page; i++) {
+	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
 
@@ -1411,8 +1408,8 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 				       ev_view_get_width (view),
 				       ev_view_get_height (view));
 
-	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
-	ev_view_set_zoom (view, zoom, FALSE);
+	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+	ev_document_model_set_scale (view->model, zoom);
 
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = change_top ? top : 0;
@@ -1445,8 +1442,8 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 					 ev_view_get_width (view),
 				         ev_view_get_height (view));
 
-	ev_view_set_sizing_mode (view, EV_SIZING_FREE);
-	ev_view_set_zoom (view, zoom, FALSE);
+	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+	ev_document_model_set_scale (view->model, zoom);
 
 	view->current_page = page;
 	if (change_left)
@@ -1477,8 +1474,8 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 					ev_view_get_width (view),
 				        ev_view_get_height (view));
 
-	ev_view_set_sizing_mode (view, EV_SIZING_FIT_WIDTH);
-	ev_view_set_zoom (view, zoom, FALSE);
+	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_WIDTH);
+	ev_document_model_set_scale (view->model, zoom);
 
 	view->current_page = page;
 	if (change_top)
@@ -1502,8 +1499,8 @@ goto_fit_dest (EvView *view, EvLinkDest *dest)
 				       ev_view_get_width (view),
 				       ev_view_get_height (view));
 
-	ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
-	ev_view_set_zoom (view, zoom, FALSE);
+	ev_document_model_set_sizing_mode (view->model, EV_SIZING_BEST_FIT);
+	ev_document_model_set_scale (view->model, zoom);
 
 	view->current_page = page;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
@@ -1523,8 +1520,8 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 	page = ev_link_dest_get_page (dest);
 
 	if (change_zoom && zoom > 1) {
-		ev_view_set_sizing_mode (view, EV_SIZING_FREE);
-		ev_view_set_zoom (view, zoom, FALSE);
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+		ev_document_model_set_scale (view->model, zoom);
 	}
 
 	left = ev_link_dest_get_left (dest, &change_left);
@@ -1559,7 +1556,7 @@ goto_dest (EvView *view, EvLinkDest *dest)
 
 	switch (type) {
 	        case EV_LINK_DEST_TYPE_PAGE:
-			ev_page_cache_set_current_page (view->page_cache, page);
+			ev_document_model_set_page (view->model, page);
 			break;
 	        case EV_LINK_DEST_TYPE_FIT:
 			goto_fit_dest (view, dest);
@@ -1577,15 +1574,14 @@ goto_dest (EvView *view, EvLinkDest *dest)
 			goto_xyz_dest (view, dest);
 			break;
 	        case EV_LINK_DEST_TYPE_PAGE_LABEL:
-			ev_page_cache_set_page_label (view->page_cache, ev_link_dest_get_page_label (dest));
+			ev_document_model_set_page_by_label (view->model, ev_link_dest_get_page_label (dest));
 			break;
 	        default:
 			g_assert_not_reached ();
 	}
 
 	if (current_page != view->current_page)
-		ev_page_cache_set_current_page (view->page_cache,
-						view->current_page);
+		ev_document_model_set_page (view->model, view->current_page);
 }
 
 static void
@@ -3085,7 +3081,7 @@ ev_view_expose_event (GtkWidget      *widget,
 
 	cr = gdk_cairo_create (view->layout.bin_window);
 	
-	for (i = view->start_page; i <= view->end_page; i++) {
+	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
 		gboolean page_ready = TRUE;
@@ -3881,8 +3877,9 @@ ev_view_goto_entry_activate (GtkEntry *entry,
 	
 	ev_view_goto_window_hide (view);
 
-	if (page >= 0 && page < ev_document_get_n_pages (view->document))
-		ev_page_cache_set_current_page (view->page_cache, page);
+	if (page >= 0 && page < ev_document_get_n_pages (view->document)) {
+		ev_document_model_set_page (view->model, page);
+	}
 }
 
 static void
@@ -4296,7 +4293,7 @@ draw_one_page (EvView       *view,
 	if (!view->presentation) {
 		gint current_page;
 		
-		current_page = ev_page_cache_get_current_page (view->page_cache);
+		current_page = ev_document_model_get_page (view->model);
 		ev_document_misc_paint_one_page (view->layout.bin_window,
 						 GTK_WIDGET (view),
 						 page_area, border, 
@@ -4406,6 +4403,11 @@ ev_view_destroy (GtkObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
+	if (view->model) {
+		g_object_unref (view->model);
+		view->model = NULL;
+	}
+
 	if (view->document) {
 		g_object_unref (view->document);
 		view->document = NULL;
@@ -4486,7 +4488,7 @@ ev_view_set_property (GObject      *object,
 			ev_view_set_sizing_mode (view, g_value_get_enum (value));
 			break;
 	        case PROP_ZOOM:
-			ev_view_set_zoom (view, g_value_get_double (value), FALSE);
+			ev_view_set_zoom (view, g_value_get_double (value));
 			break;
 	        case PROP_ROTATION:
 			ev_view_set_rotation (view, g_value_get_int (value));
@@ -4697,6 +4699,7 @@ ev_view_class_init (EvViewClass *class)
 							      360,
 							      0,
 							      G_PARAM_READWRITE));
+
 	g_object_class_install_property (object_class,
 					 PROP_HAS_SELECTION,
 					 g_param_spec_boolean ("has-selection",
@@ -4861,10 +4864,14 @@ job_finished_cb (EvPixbufCache *pixbuf_cache,
 }
 
 static void
-page_changed_cb (EvPageCache *page_cache,
-		 int          new_page,
-		 EvView      *view)
+ev_view_page_changed_cb (EvDocumentModel *model,
+			 gint             old_page,
+			 gint             new_page,
+			 EvView          *view)
 {
+	if (!view->document)
+		return;
+
 	if (view->current_page != new_page) {
 		if (view->presentation)
 			ev_view_presentation_animation_start (view, new_page);
@@ -4949,14 +4956,9 @@ ev_view_new (void)
 static void
 setup_caches (EvView *view)
 {
-	view->page_cache = ev_page_cache_get (view->document);
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
-	g_signal_connect (view->page_cache, "page-changed", G_CALLBACK (page_changed_cb), view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
-	page_changed_cb (view->page_cache,
-			 ev_page_cache_get_current_page (view->page_cache),
-			 view);
 }
 
 static void
@@ -4965,10 +4967,6 @@ clear_caches (EvView *view)
 	if (view->pixbuf_cache) {
 		g_object_unref (view->pixbuf_cache);
 		view->pixbuf_cache = NULL;
-	}
-
-	if (view->page_cache) {
-		view->page_cache = NULL;
 	}
 }
 
@@ -5053,20 +5051,20 @@ ev_view_autoscroll_stop (EvView *view)
 	ev_view_handle_cursor_over_xy (view, x, y);
 }
 
-void
-ev_view_set_document (EvView     *view,
-		      EvDocument *document)
+static void
+ev_view_document_changed_cb (EvDocumentModel *model,
+			     GParamSpec      *pspec,
+			     EvView          *view)
 {
-	g_return_if_fail (EV_IS_VIEW (view));
+	EvDocument *document = ev_document_model_get_document (model);
 
 	view->loading = FALSE;
-	
+
 	if (document != view->document) {
 		clear_caches (view);
 
 		if (view->document) {
 			g_object_unref (view->document);
-			view->page_cache = NULL;
                 }
 
 		view->document = document;
@@ -5077,10 +5075,100 @@ ev_view_set_document (EvView     *view,
 			setup_caches (view);
                 }
 
-		view_update_range_and_current_page (view);
+		ev_view_change_page (view,
+				     ev_document_model_get_page (model),
+				     TRUE);
+	}
+}
 
+static void
+ev_view_rotation_changed_cb (EvDocumentModel *model,
+			     GParamSpec      *pspec,
+			     EvView          *view)
+{
+	gint rotation = ev_document_model_get_rotation (model);
+
+	ev_view_set_rotation (view, rotation);
+
+	if (view->pixbuf_cache) {
+		ev_pixbuf_cache_clear (view->pixbuf_cache);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
+
+	if (rotation != 0)
+		clear_selection (view);
+}
+
+static void
+ev_view_sizing_mode_changed_cb (EvDocumentModel *model,
+				GParamSpec      *pspec,
+				EvView          *view)
+{
+	EvSizingMode mode = ev_document_model_get_sizing_mode (model);
+
+	ev_view_set_sizing_mode (view, mode);
+
+	if (mode != EV_SIZING_FREE)
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+#define EPSILON 0.0000001
+static void
+ev_view_scale_changed_cb (EvDocumentModel *model,
+			  GParamSpec      *pspec,
+			  EvView          *view)
+{
+	gdouble scale = ev_document_model_get_scale (model);
+
+	if (ABS (view->scale - scale) < EPSILON)
+		return;
+
+	if (view->loading_text) {
+		cairo_surface_destroy (view->loading_text);
+		view->loading_text = NULL;
+	}
+
+	ev_view_set_zoom (view, scale);
+
+	view->pending_resize = TRUE;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+void
+ev_view_set_model (EvView          *view,
+		   EvDocumentModel *model)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (model == view->model)
+		return;
+
+	if (view->model) {
+		g_signal_handlers_disconnect_by_func (view->model,
+						      ev_view_document_changed_cb,
+						      view);
+		g_signal_handlers_disconnect_by_func (view->model,
+						      ev_view_page_changed_cb,
+						      view);
+		g_object_unref (view->model);
+	}
+	view->model = g_object_ref (model);
+	g_signal_connect (view->model, "notify::document",
+			  G_CALLBACK (ev_view_document_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::rotation",
+			  G_CALLBACK (ev_view_rotation_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::sizing-mode",
+			  G_CALLBACK (ev_view_sizing_mode_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::scale",
+			  G_CALLBACK (ev_view_scale_changed_cb),
+			  view);
+	g_signal_connect (view->model, "page-changed",
+			  G_CALLBACK (ev_view_page_changed_cb),
+			  view);
 }
 
 static void
@@ -5104,38 +5192,11 @@ ev_view_reload (EvView *view)
 
 /*** Zoom and sizing mode ***/
 
-#define EPSILON 0.0000001
 void
 ev_view_set_zoom (EvView   *view,
-		  double    factor,
-		  gboolean  relative)
+		  double    scale)
 {
-	double scale;
-
-	if (relative)
-		scale = view->scale * factor;
-	else
-		scale = factor;
-
-	scale = CLAMP (scale,
-		       view->sizing_mode == EV_SIZING_FREE ? view->min_scale : 0,
-		       view->max_scale);
-
-	if (scale == view->scale)
-		return;
-
-	if (ABS (view->scale - scale) < EPSILON)
-		return;
-
-	if (view->loading_text) {
-		cairo_surface_destroy (view->loading_text);
-		view->loading_text = NULL;
-	}
-
 	view->scale = scale;
-	view->pending_resize = TRUE;
-
-	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	g_object_notify (G_OBJECT (view), "zoom");
 }
@@ -5154,8 +5215,6 @@ ev_view_set_screen_dpi (EvView  *view,
 	g_return_if_fail (dpi > 0);
 
 	view->dpi = dpi;
-	view->min_scale = MIN_SCALE * dpi / 72.0;
-	view->max_scale = MAX_SCALE * dpi / 72.0;
 }
 
 gboolean
@@ -5259,8 +5318,8 @@ ev_view_set_presentation (EvView   *view,
 		view->scale_saved = view->scale;
 		ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
 	} else {
-		ev_view_set_sizing_mode (view, view->sizing_mode_saved);
-		ev_view_set_zoom (view, view->scale_saved, FALSE);
+		ev_document_model_set_sizing_mode (view->model, view->sizing_mode_saved);
+		ev_document_model_set_scale (view->model, view->scale_saved);
 	}
 	
 	gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -5336,13 +5395,7 @@ void
 ev_view_set_sizing_mode (EvView       *view,
 			 EvSizingMode  sizing_mode)
 {
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	if (view->sizing_mode == sizing_mode)
-		return;
-
 	view->sizing_mode = sizing_mode;
-	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	g_object_notify (G_OBJECT (view), "sizing-mode");
 }
@@ -5358,75 +5411,49 @@ ev_view_get_sizing_mode (EvView *view)
 gboolean
 ev_view_can_zoom_in (EvView *view)
 {
-	return view->scale * ZOOM_IN_FACTOR <= view->max_scale;
+	return view->scale * ZOOM_IN_FACTOR <= ev_document_model_get_max_scale (view->model);
 }
 
 gboolean
 ev_view_can_zoom_out (EvView *view)
 {
-	return view->scale * ZOOM_OUT_FACTOR >= view->min_scale;
+	return view->scale * ZOOM_OUT_FACTOR >= ev_document_model_get_min_scale (view->model);
 }
 
 void
 ev_view_zoom_in (EvView *view)
 {
+	gdouble scale;
+
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
 	if (view->presentation)
 		return;
-	
+
 	view->pending_scroll = SCROLL_TO_CENTER;
-	ev_view_set_zoom (view, ZOOM_IN_FACTOR, TRUE);
+	scale = ev_document_model_get_scale (view->model) * ZOOM_IN_FACTOR;
+	ev_document_model_set_scale (view->model, scale);
 }
 
 void
 ev_view_zoom_out (EvView *view)
 {
+	gdouble scale;
+
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
 	if (view->presentation)
 		return;
-	
+
 	view->pending_scroll = SCROLL_TO_CENTER;
-	ev_view_set_zoom (view, ZOOM_OUT_FACTOR, TRUE);
-}
-
-void
-ev_view_rotate_right (EvView *view)
-{
-	int rotation = view->rotation + 90;
-
-	if (rotation >= 360) {
-		rotation -= 360;
-	}
-
-	ev_view_set_rotation (view, rotation);
-}
-
-void
-ev_view_rotate_left (EvView *view)
-{
-	int rotation = view->rotation - 90;
-
-	if (rotation < 0) {
-		rotation += 360;
-	}
-
-	ev_view_set_rotation (view, rotation);
+	scale = ev_document_model_get_scale (view->model) * ZOOM_OUT_FACTOR;
+	ev_document_model_set_scale (view->model, scale);
 }
 
 void
 ev_view_set_rotation (EvView *view, int rotation)
 {
 	view->rotation = rotation;
-
-	if (view->pixbuf_cache) {
-		ev_pixbuf_cache_clear (view->pixbuf_cache);
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	}
-
-	if (rotation != 0)
-		clear_selection (view);
 
 	g_object_notify (G_OBJECT (view), "rotation");
 }
@@ -5500,7 +5527,7 @@ ev_view_zoom_for_size_presentation (EvView *view,
 
 	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
 	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
-	ev_view_set_zoom (view, scale, FALSE);
+	ev_document_model_set_scale (view->model, scale);
 }
 
 static void
@@ -5534,7 +5561,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_set_zoom (view, scale, FALSE);
+	ev_document_model_set_scale (view->model, scale);
 }
 
 static void
@@ -5567,7 +5594,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_set_zoom (view, scale, FALSE);
+	ev_document_model_set_scale (view->model, scale);
 }
 
 static void
@@ -5606,7 +5633,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_set_zoom (view, scale, FALSE);
+	ev_document_model_set_scale (view->model, scale);
 }
 
 static void
@@ -5633,7 +5660,7 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	else
 		g_assert_not_reached ();
 
-	ev_view_set_zoom (view, scale, FALSE);
+	ev_document_model_set_scale (view->model, scale);
 }
 
 static void
@@ -5726,7 +5753,7 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 			page = page + n_pages;
 
 		if (ev_view_find_get_n_results (view, page) > 0) {
-			ev_page_cache_set_current_page (view->page_cache, page);
+			ev_document_model_set_page (view->model, page);
 			break;
 		}
 	}
@@ -6390,7 +6417,7 @@ ev_view_next_page (EvView *view)
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 	
-	if (!view->page_cache)
+	if (!view->document)
 		return FALSE;
 
 	if (view->presentation &&
@@ -6407,7 +6434,7 @@ ev_view_next_page (EvView *view)
 	ev_view_presentation_transition_stop (view);
 	ev_view_reset_presentation_state (view);
 	
-	page = ev_page_cache_get_current_page (view->page_cache);
+	page = ev_document_model_get_page (view->model);
 	n_pages = ev_document_get_n_pages (view->document);
 
 	if (view->dual_page && !view->presentation)
@@ -6416,14 +6443,14 @@ ev_view_next_page (EvView *view)
 		page = page + 1;
 
 	if (page < n_pages) {
-		ev_page_cache_set_current_page (view->page_cache, page);
+		ev_document_model_set_page (view->model, page);
 		return TRUE;
 	} else if (view->presentation && page == n_pages) {
 		view->presentation_state = EV_PRESENTATION_END;
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 		return TRUE;
 	} else if (view->dual_page && page == n_pages) {
-		ev_page_cache_set_current_page (view->page_cache, page - 1);
+		ev_document_model_set_page (view->model, page - 1);
 		return TRUE;
 	} else {
 		return FALSE;
@@ -6437,7 +6464,7 @@ ev_view_previous_page (EvView *view)
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-	if (!view->page_cache)
+	if (!view->document)
 		return FALSE;
 
 	if (view->presentation &&
@@ -6459,7 +6486,7 @@ ev_view_previous_page (EvView *view)
 
 	ev_view_reset_presentation_state (view);
 
-	page = ev_page_cache_get_current_page (view->page_cache);
+	page = ev_document_model_get_page (view->model);
 
 	if (view->dual_page && !view->presentation)
 	        page = page - 2; 
@@ -6467,10 +6494,10 @@ ev_view_previous_page (EvView *view)
 		page = page - 1;
 
 	if (page >= 0) {
-		ev_page_cache_set_current_page (view->page_cache, page);
+		ev_document_model_set_page (view->model, page);
 		return TRUE;
 	} else if (ev_view_get_dual_page (view) && page == -1) {
-		ev_page_cache_set_current_page (view->page_cache, 0);
+		ev_document_model_set_page (view->model, 0);
 		return TRUE;
 	} else {	
 		return FALSE;

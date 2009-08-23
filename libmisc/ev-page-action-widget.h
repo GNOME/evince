@@ -36,11 +36,11 @@ struct _EvPageActionWidgetClass
 			        EvLink             *link);
 };
 
-GType ev_page_action_widget_get_type      (void) G_GNUC_CONST;
+GType ev_page_action_widget_get_type          (void) G_GNUC_CONST;
 
-void ev_page_action_widget_update_model   (EvPageActionWidget *proxy,
-					   GtkTreeModel       *model);
+void ev_page_action_widget_update_links_model (EvPageActionWidget *proxy,
+					       GtkTreeModel       *model);
 
-void ev_page_action_widget_set_document   (EvPageActionWidget *action_widget,
-					   EvDocument         *document);
-void ev_page_action_widget_grab_focus     (EvPageActionWidget *proxy);
+void ev_page_action_widget_set_model          (EvPageActionWidget *action_widget,
+					       EvDocumentModel    *doc_model);
+void ev_page_action_widget_grab_focus         (EvPageActionWidget *proxy);

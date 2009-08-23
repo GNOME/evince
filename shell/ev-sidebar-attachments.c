@@ -651,12 +651,20 @@ job_finished_callback (EvJobAttachments     *job,
 	g_object_unref (job);
 }
 
+
 static void
-ev_sidebar_attachments_set_document (EvSidebarPage   *page,
-				     EvDocument      *document)
+ev_sidebar_attachments_document_changed_cb (EvDocumentModel      *model,
+					    GParamSpec           *pspec,
+					    EvSidebarAttachments *ev_attachbar)
 {
-	EvSidebarAttachments *ev_attachbar = EV_SIDEBAR_ATTACHMENTS (page);
+	EvDocument *document = ev_document_model_get_document (model);
 	EvJob *job;
+
+	if (!EV_IS_DOCUMENT_ATTACHMENTS (document))
+		return;
+
+	if (!ev_document_attachments_has_attachments (EV_DOCUMENT_ATTACHMENTS (document)))
+		return;
 
 	if (!ev_attachbar->priv->icon_theme) {
 		GdkScreen *screen;
@@ -682,6 +690,15 @@ ev_sidebar_attachments_set_document (EvSidebarPage   *page,
 	ev_job_scheduler_push_job (job, EV_JOB_PRIORITY_NONE);
 }
 
+static void
+ev_sidebar_attachments_set_model (EvSidebarPage   *page,
+				  EvDocumentModel *model)
+{
+	g_signal_connect (model, "notify::document",
+			  G_CALLBACK (ev_sidebar_attachments_document_changed_cb),
+			  page);
+}
+
 static gboolean
 ev_sidebar_attachments_support_document (EvSidebarPage   *sidebar_page,
 					 EvDocument      *document)
@@ -700,7 +717,7 @@ static void
 ev_sidebar_attachments_page_iface_init (EvSidebarPageIface *iface)
 {
 	iface->support_document = ev_sidebar_attachments_support_document;
-	iface->set_document = ev_sidebar_attachments_set_document;
+	iface->set_model = ev_sidebar_attachments_set_model;
 	iface->get_label = ev_sidebar_attachments_get_label;
 }
 

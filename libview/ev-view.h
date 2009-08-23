@@ -28,6 +28,8 @@
 
 #include <evince-document.h>
 
+#include "ev-document-model.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_VIEW            (ev_view_get_type ())
@@ -37,13 +39,6 @@ G_BEGIN_DECLS
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
-
-typedef enum {
-	EV_SIZING_BEST_FIT,
-	EV_SIZING_FIT_WIDTH,
-	EV_SIZING_FREE,
-} EvSizingMode;
-
 typedef enum {
 	EV_VIEW_SELECTION_TEXT,
 	EV_VIEW_SELECTION_RECTANGLE,
@@ -52,8 +47,8 @@ typedef enum {
 GType		ev_view_get_type	  (void) G_GNUC_CONST;
 
 GtkWidget*	ev_view_new		  (void);
-void		ev_view_set_document	  (EvView         *view,
-			   		   EvDocument     *document);
+void		ev_view_set_model	  (EvView         *view,
+			   		   EvDocumentModel *model);
 void 		ev_view_set_loading       (EvView 	  *view,
 				           gboolean        loading);
 void            ev_view_reload            (EvView         *view);
@@ -92,8 +87,7 @@ void		ev_view_zoom_in		  (EvView         *view);
 gboolean        ev_view_can_zoom_out      (EvView         *view);
 void		ev_view_zoom_out	  (EvView         *view);
 void		ev_view_set_zoom	  (EvView         *view,
-					   double          factor,
-					   gboolean        relative);
+					   double          factor);
 double		ev_view_get_zoom	  (EvView         *view);
 void            ev_view_set_screen_dpi    (EvView         *view,
 					   gdouble         dpi);

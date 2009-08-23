@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include <evince-document.h>
+#include <evince-view.h>
 
 G_BEGIN_DECLS
 
@@ -54,12 +55,13 @@ struct _EvPageActionClass
 			            EvLink       *link);
 };
 
-GType ev_page_action_get_type     (void);
-void  ev_page_action_set_document (EvPageAction *page_action,
-				   EvDocument   *document);
-void  ev_page_action_set_model    (EvPageAction *page_action,
-				   GtkTreeModel *model);
-void  ev_page_action_grab_focus   (EvPageAction *page_action);
+GType ev_page_action_get_type        (void) G_GNUC_CONST;
+
+void  ev_page_action_set_model       (EvPageAction    *page_action,
+				      EvDocumentModel *model);
+void  ev_page_action_set_links_model (EvPageAction    *page_action,
+				      GtkTreeModel    *links_model);
+void  ev_page_action_grab_focus      (EvPageAction    *page_action);
 
 G_END_DECLS
 

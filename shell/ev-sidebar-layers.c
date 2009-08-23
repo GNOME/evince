@@ -346,18 +346,15 @@ job_finished_callback (EvJobLayers     *job,
 }
 
 static void
-ev_sidebar_layers_set_document (EvSidebarPage  *sidebar_page,
-				EvDocument     *document)
+ev_sidebar_layers_document_changed_cb (EvDocumentModel *model,
+				       GParamSpec      *pspec,
+				       EvSidebarLayers *sidebar_layers)
 {
-	EvSidebarLayers *sidebar_layers;
-	EvSidebarLayersPrivate *priv;
+	EvDocument *document = ev_document_model_get_document (model);
+	EvSidebarLayersPrivate *priv = sidebar_layers->priv;
 
-	g_return_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page));
-	g_return_if_fail (EV_IS_DOCUMENT (document));
-	
-	sidebar_layers = EV_SIDEBAR_LAYERS (sidebar_page);
-
-	priv = sidebar_layers->priv;
+	if (!EV_IS_DOCUMENT_LAYERS (document))
+		return;
 
 	if (priv->document) {
 		gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), NULL);
@@ -381,6 +378,15 @@ ev_sidebar_layers_set_document (EvSidebarPage  *sidebar_page,
 	ev_job_scheduler_push_job (priv->job, EV_JOB_PRIORITY_NONE);
 }
 
+static void
+ev_sidebar_layers_set_model (EvSidebarPage   *sidebar_page,
+			     EvDocumentModel *model)
+{
+	g_signal_connect (model, "notify::document",
+			  G_CALLBACK (ev_sidebar_layers_document_changed_cb),
+			  sidebar_page);
+}
+
 static gboolean
 ev_sidebar_layers_support_document (EvSidebarPage *sidebar_page,
 				    EvDocument    *document)
@@ -399,7 +405,7 @@ static void
 ev_sidebar_layers_page_iface_init (EvSidebarPageIface *iface)
 {
 	iface->support_document = ev_sidebar_layers_support_document;
-	iface->set_document = ev_sidebar_layers_set_document;
+	iface->set_model = ev_sidebar_layers_set_model;
 	iface->get_label = ev_sidebar_layers_get_label;
 }
 

@@ -28,7 +28,6 @@
 #include <glib/gstdio.h>
 #include <unistd.h>
 
-#include "ev-page-cache.h"
 #include "ev-file-exporter.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"

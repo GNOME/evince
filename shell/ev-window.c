@@ -176,6 +176,7 @@ struct _EvWindowPrivate {
 	GList        *attach_list;
 
 	/* Document */
+	EvDocumentModel *model;
 	char *uri;
 	glong uri_mtime;
 	char *local_uri;
@@ -185,7 +186,6 @@ struct _EvWindowPrivate {
 	
 	EvDocument *document;
 	EvHistory *history;
-	EvPageCache *page_cache;
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
 
@@ -226,6 +226,9 @@ struct _EvWindowPrivate {
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 #define LAYERS_SIDEBAR_ID "layers"
 
+#define MIN_SCALE 0.05409
+#define MAX_SCALE 4.0
+
 static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_N_COPIES,
 	GTK_PRINT_SETTINGS_COLLATE,
@@ -254,10 +257,10 @@ static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
 							 EvWindow         *ev_window);
 static void     ev_window_save_job_cb                   (EvJob            *save,
 							 EvWindow         *window);
-static void     ev_window_sizing_mode_changed_cb        (EvView           *view,
+static void     ev_window_sizing_mode_changed_cb        (EvDocumentModel  *model,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
-static void     ev_window_zoom_changed_cb 	        (EvView           *view,
+static void     ev_window_zoom_changed_cb 	        (EvDocumentModel  *model,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
 static void     ev_window_add_recent                    (EvWindow         *window,
@@ -339,11 +342,8 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 
 	if (document) {
 		has_document = TRUE;
-		info = ev_document_get_info (document);
-	}
-
-	if (has_document && ev_window->priv->page_cache) {
 		has_pages = ev_document_get_n_pages (document) > 0;
+		info = ev_document_get_info (document);
 	}
 
 	if (!info || info->fields_mask == 0) {
@@ -422,9 +422,10 @@ ev_window_update_actions (EvWindow *ev_window)
 	gboolean has_pages = FALSE;
 	gboolean presentation_mode;
 	gboolean can_find_in_page = FALSE;
+	EvSizingMode sizing_mode;
 
-	if (ev_window->priv->document && ev_window->priv->page_cache) {
-		page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	if (ev_window->priv->document) {
+		page = ev_document_model_get_page (ev_window->priv->model);
 		n_pages = ev_document_get_n_pages (ev_window->priv->document);
 		has_pages = n_pages > 0;
 	}
@@ -466,17 +467,16 @@ ev_window_update_actions (EvWindow *ev_window)
 		ev_window_set_action_sensitive (ev_window, "GoLastPage", FALSE);
 	}
 
-	if (has_pages &&
-	    ev_view_get_sizing_mode (view) != EV_SIZING_FIT_WIDTH &&
-	    ev_view_get_sizing_mode (view) != EV_SIZING_BEST_FIT) {
+	sizing_mode = ev_document_model_get_sizing_mode (ev_window->priv->model);
+	if (has_pages && sizing_mode != EV_SIZING_FIT_WIDTH && sizing_mode != EV_SIZING_BEST_FIT) {
 		GtkAction *action;
 		float      zoom;
 		float      real_zoom;
 
-		action = gtk_action_group_get_action (ev_window->priv->action_group, 
+		action = gtk_action_group_get_action (ev_window->priv->action_group,
 						      ZOOM_CONTROL_ACTION);
 
-		real_zoom = ev_view_get_zoom (EV_VIEW (ev_window->priv->view));
+		real_zoom = ev_document_model_get_scale (ev_window->priv->model);
 		real_zoom *= 72.0 / get_screen_dpi (GTK_WINDOW (ev_window));
 		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
 
@@ -732,19 +732,6 @@ ev_window_warning_message (EvWindow    *window,
 	ev_window_set_message_area (window, area);
 }
 
-static void
-page_changed_cb (EvPageCache *page_cache,
-		 gint         page,
-		 EvWindow    *ev_window)
-{
-	ev_window_update_actions (ev_window);
-
-	ev_window_update_find_status_message (ev_window);
-
-	if (!ev_window_is_empty (ev_window))
-		ev_metadata_manager_set_int (ev_window->priv->uri, "page", page);
-}
-
 typedef struct _FindTask {
 	const gchar *page_label;
 	gchar *chapter;
@@ -843,23 +830,29 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 static void
 view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
 {
-	int current_page = ev_page_cache_get_current_page (window->priv->page_cache);
+	int current_page = ev_document_model_get_page (window->priv->model);
 	
 	ev_window_add_history (window, 0, link);
 	ev_window_add_history (window, current_page, NULL);
 }
 
 static void
-history_changed_cb (EvPageCache *page_cache,
-		    gint         page,
-		    EvWindow 	*window)
+ev_window_page_changed_cb (EvWindow        *ev_window,
+			   gint             old_page,
+			   gint             new_page,
+			   EvDocumentModel *model)
 {
-	int current_page = ev_page_cache_get_current_page (window->priv->page_cache);
+	ev_window_update_actions (ev_window);
 
-	ev_window_add_history (window, page, NULL);
-	ev_window_add_history (window, current_page, NULL);
+	ev_window_update_find_status_message (ev_window);
 
-	return;
+	if (abs (new_page - old_page) > 1) {
+		ev_window_add_history (ev_window, new_page, NULL);
+		ev_window_add_history (ev_window, old_page, NULL);
+	}
+
+	if (!ev_window_is_empty (ev_window))
+		ev_metadata_manager_set_int (ev_window->priv->uri, "page", new_page);
 }
 
 static void
@@ -940,6 +933,66 @@ setup_sidebar_from_metadata (EvWindow *window)
 }
 
 static void
+setup_model_from_metadata (EvWindow *window)
+{
+	gchar *uri = window->priv->uri;
+	GValue page = { 0, };
+	GValue sizing_mode = { 0, };
+	GValue zoom = { 0, };
+	GValue rotation = { 0, };
+
+	/* Current page */
+	if (ev_metadata_manager_get (uri, "page", &page, TRUE)) {
+		ev_document_model_set_page (window->priv->model,
+					    g_value_get_int (&page));
+		g_value_unset (&page);
+	}
+
+	/* Sizing mode */
+	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode, FALSE)) {
+		GEnumValue *enum_value;
+
+		enum_value = g_enum_get_value_by_nick
+			(g_type_class_peek (EV_TYPE_SIZING_MODE), g_value_get_string (&sizing_mode));
+		ev_document_model_set_sizing_mode (window->priv->model, enum_value->value);
+		g_value_unset (&sizing_mode);
+	}
+
+	/* Zoom */
+	if (ev_document_model_get_sizing_mode (window->priv->model) == EV_SIZING_FREE &&
+	    ev_metadata_manager_get (uri, "zoom", &zoom, FALSE)) {
+		gdouble zoom_value;
+
+		zoom_value = g_value_get_double (&zoom);
+		zoom_value *= get_screen_dpi (GTK_WINDOW (window)) / 72.0;
+		ev_document_model_set_scale (window->priv->model, zoom_value);
+		g_value_unset (&zoom);
+	}
+
+	/* Rotation */
+	if (ev_metadata_manager_get (uri, "rotation", &rotation, TRUE)) {
+		gint rotation_value;
+
+		switch (g_value_get_int (&rotation)) {
+		case 90:
+			rotation_value = 90;
+			break;
+		case 180:
+			rotation_value = 180;
+			break;
+		case 270:
+			rotation_value = 270;
+			break;
+		default:
+			rotation_value = 0;
+			break;
+		}
+		ev_document_model_set_rotation (window->priv->model, rotation_value);
+		g_value_unset (&rotation);
+	}
+}
+
+static void
 setup_document_from_metadata (EvWindow *window)
 {
 	gchar *uri = window->priv->uri;
@@ -949,20 +1002,21 @@ setup_document_from_metadata (EvWindow *window)
 	GValue width_ratio = { 0, };
 	GValue height_ratio = { 0, };
 
+#if 0 /* FIXME */
 	/* View the previously shown page, but make sure to not open a document on
 	 * the last page, since closing it on the last page most likely means the
 	 * user was finished reading the document. In that case, reopening should
 	 * show the first page. */
-	if (uri && ev_metadata_manager_get (uri, "page", &page, TRUE)) {
+	if (ev_metadata_manager_get (uri, "page", &page, TRUE)) {
 		gint n_pages;
 		gint new_page;
 		
 		n_pages = ev_document_get_n_pages (window->priv->document);
 		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
-		ev_page_cache_set_current_page (window->priv->page_cache,
-						new_page);
+		ev_document_model_set_page (window->priv->model, new_page);
 		g_value_unset (&page);
 	}
+#endif
 
 	setup_sidebar_from_metadata (window);
 
@@ -1045,33 +1099,10 @@ setup_view_from_metadata (EvWindow *window)
 {
 	EvView *view = EV_VIEW (window->priv->view);
 	gchar *uri = window->priv->uri;
-	GEnumValue *enum_value;
-	GValue sizing_mode = { 0, };
-	GValue zoom = { 0, };
 	GValue continuous = { 0, };
 	GValue dual_page = { 0, };
 	GValue presentation = { 0, };
 	GValue fullscreen = { 0, };
-	GValue rotation = { 0, };
-
-	/* Sizing mode */
-	if (ev_metadata_manager_get (uri, "sizing_mode", &sizing_mode, FALSE)) {
-		enum_value = g_enum_get_value_by_nick
-			(g_type_class_peek (EV_TYPE_SIZING_MODE), g_value_get_string (&sizing_mode));
-		g_value_unset (&sizing_mode);
-		ev_view_set_sizing_mode (view, enum_value->value);
-	}
-
-	/* Zoom */
-	if (ev_metadata_manager_get (uri, "zoom", &zoom, FALSE) &&
-	    ev_view_get_sizing_mode (view) == EV_SIZING_FREE) {
-		gdouble zoom_value;
-
-		zoom_value = g_value_get_double (&zoom);
-		zoom_value *= get_screen_dpi (GTK_WINDOW (window)) / 72.0;
-		ev_view_set_zoom (view, zoom_value, FALSE);
-		g_value_unset (&zoom);
-	}
 
 	/* Continuous */
 	if (ev_metadata_manager_get (uri, "continuous", &continuous, FALSE)) {
@@ -1099,26 +1130,6 @@ setup_view_from_metadata (EvWindow *window)
 			ev_window_run_fullscreen (window);
 		}
 		g_value_unset (&fullscreen);
-	}
-
-	/* Rotation */
-	if (ev_metadata_manager_get (uri, "rotation", &rotation, TRUE)) {
-		if (g_value_get_int (&rotation)) {
-			switch (g_value_get_int (&rotation)) {
-			        case 90:
-					ev_view_set_rotation (view, 90);
-					break;
-			        case 180:
-					ev_view_set_rotation (view, 180);
-					break;
-			        case 270:
-					ev_view_set_rotation (view, 270);
-					break;
-			        default:
-					break;
-			}
-		}
-		g_value_unset (&rotation);
 	}
 }
 
@@ -1179,7 +1190,6 @@ ev_window_setup_document (EvWindow *ev_window)
 {
 	const EvDocumentInfo *info;
 	EvDocument *document = ev_window->priv->document;
-	EvSidebar *sidebar = EV_SIDEBAR (ev_window->priv->sidebar);
 	GtkAction *action;
 
 	ev_window->priv->setup_document_idle = 0;
@@ -1190,10 +1200,6 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
 
-	ev_sidebar_set_document (sidebar, document);
-
-	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
-	ev_page_action_set_document (EV_PAGE_ACTION (action), document);
 	ev_window_setup_action_sensitivity (ev_window);
 
 	if (ev_window->priv->history)
@@ -1219,19 +1225,14 @@ ev_window_setup_document (EvWindow *ev_window)
 static void
 ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 {
-	EvView *view = EV_VIEW (ev_window->priv->view);
+	if (ev_window->priv->document == document)
+		return;
 
 	if (ev_window->priv->document)
 		g_object_unref (ev_window->priv->document);
 	ev_window->priv->document = g_object_ref (document);
 
 	ev_window_set_message_area (ev_window, NULL);
-	
-	ev_window->priv->page_cache = ev_page_cache_get (ev_window->priv->document);
-	g_signal_connect (ev_window->priv->page_cache, "page-changed",
-			  G_CALLBACK (page_changed_cb), ev_window);
-	g_signal_connect (ev_window->priv->page_cache, "history-changed",
-			  G_CALLBACK (history_changed_cb), ev_window);
 
 	if (ev_window->priv->in_reload && ev_window->priv->dest) {
 		gint page;
@@ -1240,7 +1241,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 		page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
 			      0,
 			      ev_document_get_n_pages (document) - 1);
-		ev_page_cache_set_current_page (ev_window->priv->page_cache, page);
+		ev_document_model_set_page (ev_window->priv->model, page);
 		g_object_unref (ev_window->priv->dest);
 		ev_window->priv->dest = NULL;
 	}
@@ -1251,8 +1252,6 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	} else if (!ev_document_check_dimensions (document)) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains only empty pages"));
-	} else {
-		ev_view_set_document (view, document);
 	}
 
 	if (ev_window->priv->setup_document_idle > 0)
@@ -1386,7 +1385,7 @@ ev_window_load_job_cb (EvJob *job,
 
 	/* Success! */
 	if (!ev_job_is_failed (job)) {
-		ev_window_set_document (ev_window, document);
+		ev_document_model_set_document (ev_window->priv->model, document);
 
 		setup_document_from_metadata (ev_window);
 		setup_view_from_metadata (ev_window);
@@ -1503,8 +1502,8 @@ ev_window_reload_job_cb (EvJob    *job,
 	if (ev_window->priv->dest) {
 		dest = g_object_ref (ev_window->priv->dest);
 	}
-	ev_window_set_document (ev_window, job->document);
-
+	ev_document_model_set_document (ev_window->priv->model,
+					job->document);
 	ev_window_handle_link (ev_window, dest);
 
 	/* Restart the search after reloading */
@@ -1839,6 +1838,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
 
 	setup_size_from_metadata (ev_window);
+	setup_model_from_metadata (ev_window);
 
 	ev_window->priv->load_job = ev_job_load_new (uri);
 	g_signal_connect (ev_window->priv->load_job,
@@ -2013,7 +2013,7 @@ ev_window_reload_document (EvWindow *ev_window,
 	ev_window_clear_reload_job (ev_window);
 	ev_window->priv->in_reload = TRUE;
 
-	page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	page = ev_document_model_get_page (ev_window->priv->model);
 	
 	if (ev_window->priv->dest)
 		g_object_unref (ev_window->priv->dest);
@@ -2194,13 +2194,11 @@ ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
 static void
 ev_window_cmd_file_open_copy (GtkAction *action, EvWindow *window)
 {
-	EvPageCache *page_cache;
 	EvLinkDest  *dest;
 	gint         current_page;
 
-	page_cache = ev_page_cache_get (window->priv->document);
-	current_page = ev_page_cache_get_current_page (page_cache);
-	
+	current_page = ev_document_model_get_page (window->priv->model);
+
 	dest = ev_link_dest_new_page (current_page);
 	ev_window_cmd_file_open_copy_at_dest (window, dest);
 	g_object_unref (dest);
@@ -2988,7 +2986,6 @@ ev_window_print_range (EvWindow *ev_window,
 		       gint      last_page)
 {
 	EvPrintOperation *op;
-	EvPageCache      *page_cache;
 	gint              current_page;
 	gint              document_last_page;
 
@@ -3014,8 +3011,7 @@ ev_window_print_range (EvWindow *ev_window,
 			  G_CALLBACK (ev_window_print_operation_done),
 			  (gpointer)ev_window);
 
-	page_cache = ev_page_cache_get (ev_window->priv->document);
-	current_page = ev_page_cache_get_current_page (page_cache);
+	current_page = ev_document_model_get_page (ev_window->priv->model);
 	document_last_page = ev_document_get_n_pages (ev_window->priv->document);
 
 	if (!ev_window->priv->print_settings) {
@@ -3238,9 +3234,9 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 	ev_window_stop_presentation (ev_window, TRUE);
 
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_BEST_FIT);
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_BEST_FIT);
 	} else {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
 	}
 	ev_window_update_actions (ev_window);
 }
@@ -3251,9 +3247,9 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 	ev_window_stop_presentation (ev_window, TRUE);
 
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FIT_WIDTH);
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FIT_WIDTH);
 	} else {
-		ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
 	}
 	ev_window_update_actions (ev_window);
 }
@@ -3665,15 +3661,17 @@ ev_window_screen_changed (GtkWidget *widget,
 	EvWindow *window = EV_WINDOW (widget);
 	EvWindowPrivate *priv = window->priv;
 	GdkScreen *screen;
+	gdouble dpi;
 
 	screen = gtk_widget_get_screen (widget);
 	if (screen == old_screen)
 		return;
 
 	ev_window_setup_gtk_settings (window);
-	ev_view_set_screen_dpi (EV_VIEW (priv->view),
-				get_screen_dpi (GTK_WINDOW (window)));
-	
+	dpi = get_screen_dpi (GTK_WINDOW (window));
+	ev_document_model_set_min_scale (priv->model, MIN_SCALE * dpi / 72.0);
+	ev_document_model_set_max_scale (priv->model, MAX_SCALE * dpi / 72.0);
+
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
 	}
@@ -3745,13 +3743,17 @@ ev_window_set_page_mode (EvWindow         *window,
 static void
 ev_window_cmd_edit_rotate_left (GtkAction *action, EvWindow *ev_window)
 {
-	ev_view_rotate_left (EV_VIEW (ev_window->priv->view));
+	gint rotation = ev_document_model_get_rotation (ev_window->priv->model);
+
+	ev_document_model_set_rotation (ev_window->priv->model, rotation - 90);
 }
 
 static void
 ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 {
-	ev_view_rotate_right (EV_VIEW (ev_window->priv->view));
+	gint rotation = ev_document_model_get_rotation (ev_window->priv->model);
+
+	ev_document_model_set_rotation (ev_window->priv->model, rotation + 90);
 }
 
 static void
@@ -3803,7 +3805,7 @@ ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
 	ev_view_zoom_in (EV_VIEW (ev_window->priv->view));
 }
 
@@ -3812,7 +3814,7 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), EV_SIZING_FREE);
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
 	ev_view_zoom_out (EV_VIEW (ev_window->priv->view));
 }
 
@@ -3837,7 +3839,7 @@ ev_window_cmd_go_first_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_page_cache_set_current_page (ev_window->priv->page_cache, 0);
+	ev_document_model_set_page (ev_window->priv->model, 0);
 }
 
 static void
@@ -3845,8 +3847,8 @@ ev_window_cmd_go_last_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	ev_page_cache_set_current_page (ev_window->priv->page_cache,
-					ev_document_get_n_pages (ev_window->priv->document) - 1);
+	ev_document_model_set_page (ev_window->priv->model,
+				    ev_document_get_n_pages (ev_window->priv->document) - 1);
 }
 
 static void
@@ -3857,10 +3859,11 @@ ev_window_cmd_go_forward (GtkAction *action, EvWindow *ev_window)
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	n_pages = ev_document_get_n_pages (ev_window->priv->document);
-	current_page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	current_page = ev_document_model_get_page (ev_window->priv->model);
 	
-	if (current_page + 10 < n_pages)
-		ev_page_cache_set_current_page (ev_window->priv->page_cache, current_page + 10);
+	if (current_page + 10 < n_pages) {
+		ev_document_model_set_page (ev_window->priv->model, current_page + 10);
+	}
 }
 
 static void
@@ -3870,10 +3873,11 @@ ev_window_cmd_go_backward (GtkAction *action, EvWindow *ev_window)
 	
         g_return_if_fail (EV_IS_WINDOW (ev_window));
 
-	current_page = ev_page_cache_get_current_page (ev_window->priv->page_cache);
+	current_page = ev_document_model_get_page (ev_window->priv->model);
 	
-	if (current_page - 10 >= 0)
-		ev_page_cache_set_current_page (ev_window->priv->page_cache, current_page - 10);
+	if (current_page - 10 >= 0) {
+		ev_document_model_set_page (ev_window->priv->model, current_page - 10);
+	}
 }
 
 static void
@@ -3957,23 +3961,30 @@ save_sizing_mode (EvWindow *window)
 	EvSizingMode mode;
 	GEnumValue *enum_value;
 
-	mode = ev_view_get_sizing_mode (EV_VIEW (window->priv->view));
-	enum_value = g_enum_get_value (g_type_class_peek (EV_TYPE_SIZING_MODE), mode);
+	if (ev_window_is_empty (window))
+		return;
 
-	if (!ev_window_is_empty (window))
-		ev_metadata_manager_set_string (window->priv->uri, "sizing_mode",
-						enum_value->value_nick);
+	mode = ev_document_model_get_sizing_mode (window->priv->model);
+	enum_value = g_enum_get_value (g_type_class_peek (EV_TYPE_SIZING_MODE), mode);
+	ev_metadata_manager_set_string (window->priv->uri, "sizing_mode",
+					enum_value->value_nick);
 }
 
-static void     
-ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
-		 		  EvWindow   *ev_window)
+static void
+ev_window_document_changed_cb (EvDocumentModel *model,
+			       GParamSpec      *pspec,
+			       EvWindow        *ev_window)
 {
-	EvSizingMode sizing_mode;
+	ev_window_set_document (ev_window,
+				ev_document_model_get_document (model));
+}
 
-	g_object_get (ev_window->priv->view,
-		      "sizing-mode", &sizing_mode,
-		      NULL);
+static void
+ev_window_sizing_mode_changed_cb (EvDocumentModel *model,
+				  GParamSpec      *pspec,
+		 		  EvWindow        *ev_window)
+{
+	EvSizingMode sizing_mode = ev_document_model_get_sizing_mode (model);
 
 	g_object_set (ev_window->priv->scrolled_window,
 		      "hscrollbar-policy",
@@ -3986,15 +3997,15 @@ ev_window_sizing_mode_changed_cb (EvView *view, GParamSpec *pspec,
 	save_sizing_mode (ev_window);
 }
 
-static void     
-ev_window_zoom_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
+static void
+ev_window_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *ev_window)
 {
         ev_window_update_actions (ev_window);
 
-	if (ev_view_get_sizing_mode (view) == EV_SIZING_FREE && !ev_window_is_empty (ev_window)) {
+	if (ev_document_model_get_sizing_mode (model) == EV_SIZING_FREE && !ev_window_is_empty (ev_window)) {
 		gdouble zoom;
 
-		zoom = ev_view_get_zoom (view);
+		zoom = ev_document_model_get_scale (model);
 		zoom *= 72.0 / get_screen_dpi (GTK_WINDOW(ev_window));
 		ev_metadata_manager_set_double (ev_window->priv->uri, "zoom", zoom);
 	}
@@ -4038,19 +4049,15 @@ ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_w
 					         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
 }
 
-static void     
-ev_window_rotation_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window)
+static void
+ev_window_rotation_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *window)
 {
-	int rotation;
-
-	rotation = ev_view_get_rotation (EV_VIEW (window->priv->view));
+	gint rotation = ev_document_model_get_rotation (model);
 
 	if (!ev_window_is_empty (window))
 		ev_metadata_manager_set_int (window->priv->uri, "rotation",
 					     rotation);
 
-	ev_sidebar_thumbnails_refresh (EV_SIDEBAR_THUMBNAILS (window->priv->sidebar_thumbs),
-				       rotation);
 	ev_window_refresh_window_thumbnail (window, rotation);
 }
 
@@ -4376,7 +4383,7 @@ ev_window_update_find_status_message (EvWindow *ev_window)
 		gint n_results;
 
 		n_results = ev_job_find_get_n_results (EV_JOB_FIND (ev_window->priv->find_job),
-						       ev_page_cache_get_current_page (ev_window->priv->page_cache));
+						       ev_document_model_get_page (ev_window->priv->model));
 		/* TRANS: Sometimes this could be better translated as
 		                      "%d hit(s) on this page".  Therefore this string
 				      contains plural cases. */
@@ -4479,7 +4486,7 @@ find_bar_search_changed_cb (EggFindBar *find_bar,
 
 	if (search_string && search_string[0]) {
 		ev_window->priv->find_job = ev_job_find_new (ev_window->priv->document,
-							     ev_page_cache_get_current_page (ev_window->priv->page_cache),
+							     ev_document_model_get_page (ev_window->priv->model),
 							     ev_document_get_n_pages (ev_window->priv->document),
 							     search_string,
 							     case_sensitive);
@@ -4534,8 +4541,6 @@ zoom_control_changed_cb (EphyZoomAction *action,
 			 EvWindow       *ev_window)
 {
 	EvSizingMode mode;
-	
-	g_return_if_fail (EV_IS_WINDOW (ev_window));
 
 	if (zoom == EPHY_ZOOM_BEST_FIT) {
 		mode = EV_SIZING_BEST_FIT;
@@ -4545,12 +4550,11 @@ zoom_control_changed_cb (EphyZoomAction *action,
 		mode = EV_SIZING_FREE;
 	}
 
-	ev_view_set_sizing_mode (EV_VIEW (ev_window->priv->view), mode);
-	
+	ev_document_model_set_sizing_mode (ev_window->priv->model, mode);
+
 	if (mode == EV_SIZING_FREE) {
-		ev_view_set_zoom (EV_VIEW (ev_window->priv->view),
-				  zoom * get_screen_dpi (GTK_WINDOW (ev_window)) / 72.0,
-				  FALSE);
+		ev_document_model_set_scale (ev_window->priv->model,
+					     zoom * get_screen_dpi (GTK_WINDOW (ev_window)) / 72.0);
 	}
 }
 
@@ -4671,9 +4675,12 @@ ev_window_dispose (GObject *object)
 
 	priv->recent_ui_id = 0;
 
-	if (priv->page_cache) {
-		g_signal_handlers_disconnect_by_func (priv->page_cache, page_changed_cb, window);
-		priv->page_cache = NULL;
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_func (priv->model,
+						      ev_window_page_changed_cb,
+						      window);
+		g_object_unref (priv->model);
+		priv->model = NULL;
 	}
 
 	if (priv->document) {
@@ -5103,6 +5110,8 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "icon_name", "text-x-generic",
 			       "visible_overflown", FALSE,
 			       NULL);
+	ev_page_action_set_model (EV_PAGE_ACTION (action),
+				  window->priv->model);
 	g_signal_connect (action, "activate_link",
 			  G_CALLBACK (activate_link_cb), window);
 	gtk_action_group_add_action (group, action);
@@ -5213,7 +5222,7 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 		      NULL);
 
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
-	ev_page_action_set_model (EV_PAGE_ACTION (action), model);
+	ev_page_action_set_links_model (EV_PAGE_ACTION (action), model);
 	g_object_unref (model);
 }
 
@@ -5858,6 +5867,7 @@ ev_window_init (EvWindow *ev_window)
 	GtkWidget *sidebar_widget;
 	GObject *mpkeys;
 	gchar *ui_path;
+	gdouble dpi;
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -5865,6 +5875,8 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (window_state_event_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
+
+	ev_window->priv->model = ev_document_model_new ();
 
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	ev_window->priv->title = ev_window_title_new (ev_window);
@@ -5964,6 +5976,8 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->hpaned);
 	
 	ev_window->priv->sidebar = ev_sidebar_new ();
+	ev_sidebar_set_model (EV_SIDEBAR (ev_window->priv->sidebar),
+			      ev_window->priv->model);
 	gtk_paned_pack1 (GTK_PANED (ev_window->priv->hpaned),
 			 ev_window->priv->sidebar, FALSE, FALSE);
 	gtk_widget_show (ev_window->priv->sidebar);
@@ -6031,6 +6045,10 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view_box);
 
 	ev_window->priv->view = ev_view_new ();
+	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
+	dpi = get_screen_dpi (GTK_WINDOW (ev_window));
+	ev_document_model_set_min_scale (ev_window->priv->model, MIN_SCALE * dpi / 72.0);
+	ev_document_model_set_max_scale (ev_window->priv->model, MAX_SCALE * dpi / 72.0);
 	ev_view_set_screen_dpi (EV_VIEW (ev_window->priv->view),
 				get_screen_dpi (GTK_WINDOW (ev_window)));
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
@@ -6070,14 +6088,29 @@ ev_window_init (EvWindow *ev_window)
 	gtk_container_add (GTK_CONTAINER (ev_window->priv->scrolled_window),
 			   ev_window->priv->view);
 
-	g_signal_connect (ev_window->priv->view,
+	/* Connect to model signals */
+	g_signal_connect_swapped (ev_window->priv->model,
+				  "page-changed",
+				  G_CALLBACK (ev_window_page_changed_cb),
+				  ev_window);
+	g_signal_connect (ev_window->priv->model,
+			  "notify::document",
+			  G_CALLBACK (ev_window_document_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->model,
+			  "notify::scale",
+			  G_CALLBACK (ev_window_zoom_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->model,
 			  "notify::sizing-mode",
 			  G_CALLBACK (ev_window_sizing_mode_changed_cb),
 			  ev_window);
-	g_signal_connect (ev_window->priv->view,
-			  "notify::zoom",
-			  G_CALLBACK (ev_window_zoom_changed_cb),
+	g_signal_connect (ev_window->priv->model,
+			  "notify::rotation",
+			  G_CALLBACK (ev_window_rotation_changed_cb),
 			  ev_window);
+
+	/* Connect to view signals */
 	g_signal_connect (ev_window->priv->view,
 			  "notify::dual-page",
 			  G_CALLBACK (ev_window_dual_mode_changed_cb),
@@ -6085,10 +6118,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->view,
 			  "notify::continuous",
 			  G_CALLBACK (ev_window_continuous_changed_cb),
-			  ev_window);
-	g_signal_connect (ev_window->priv->view,
-			  "notify::rotation",
-			  G_CALLBACK (ev_window_rotation_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->view,
 			  "notify::has-selection",
@@ -6169,7 +6198,7 @@ ev_window_init (EvWindow *ev_window)
 	setup_view_from_metadata (ev_window);
 	setup_sidebar_from_metadata (ev_window);
 
-        ev_window_sizing_mode_changed_cb (EV_VIEW (ev_window->priv->view), NULL, ev_window);
+        ev_window_sizing_mode_changed_cb (ev_window->priv->model, NULL, ev_window);
 	ev_window_setup_action_sensitivity (ev_window);
 
 	/* Drag and Drop */

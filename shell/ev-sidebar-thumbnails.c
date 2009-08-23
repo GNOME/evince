@@ -66,7 +66,7 @@ struct _EvSidebarThumbnailsPrivate {
 	GtkListStore *list_store;
 	GHashTable *loading_icons;
 	EvDocument *document;
-	EvPageCache *page_cache;
+	EvDocumentModel *model;
 	EvThumbsSizeCache *size_cache;
 
 	gint n_pages, pages_done;
@@ -94,8 +94,6 @@ static void         ev_sidebar_thumbnails_clear_model      (EvSidebarThumbnails 
 static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage       *sidebar_page,
 							    EvDocument          *document);
 static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageIface  *iface);
-static void         ev_sidebar_thumbnails_set_document     (EvSidebarPage       *sidebar_page,
-							    EvDocument          *document);
 static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage       *sidebar_page);
 static void         thumbnail_job_completed_callback       (EvJobThumbnail      *job,
 							    EvSidebarThumbnails *sidebar_thumbnails);
@@ -585,34 +583,6 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 	}
 }
 
-static gboolean
-refresh (EvSidebarThumbnails *sidebar_thumbnails)
-{
-	adjustment_changed_cb (sidebar_thumbnails);
-	return FALSE;
-}
-
-void
-ev_sidebar_thumbnails_refresh (EvSidebarThumbnails *sidebar_thumbnails,
-			       int                  rotation)
-{
-	sidebar_thumbnails->priv->rotation = rotation;
-	if (sidebar_thumbnails->priv->loading_icons)
-		g_hash_table_remove_all (sidebar_thumbnails->priv->loading_icons);
-
-	if (sidebar_thumbnails->priv->document == NULL ||
-	    sidebar_thumbnails->priv->n_pages <= 0)
-		return;
-
-	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
-	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
-
-	/* Trigger a redraw */
-	sidebar_thumbnails->priv->start_page = -1;
-	sidebar_thumbnails->priv->end_page = -1;
-	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
-}
-
 static void
 ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 				   EvSidebarThumbnails *ev_sidebar_thumbnails)
@@ -630,7 +600,7 @@ ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
 	page = gtk_tree_path_get_indices (path)[0];
 	gtk_tree_path_free (path);
 
-	ev_page_cache_set_current_page_history (priv->page_cache, page);
+	ev_document_model_set_page (priv->model, page);
 }
 
 static void
@@ -655,7 +625,7 @@ ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 	gtk_tree_path_free (path);
 	g_list_free (selected);
 
-	ev_page_cache_set_current_page_history (priv->page_cache, page);
+	ev_document_model_set_page (priv->model, page);
 }
 
 static void
@@ -749,9 +719,8 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 }
 
 static void
-page_changed_cb (EvPageCache         *page_cache,
-		 int                  page,
-		 EvSidebarThumbnails *sidebar)
+ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
+					gint                 page)
 {
 	GtkTreeView *tree_view;
 	GtkTreePath *path;
@@ -781,6 +750,45 @@ page_changed_cb (EvPageCache         *page_cache,
 }
 
 static void
+page_changed_cb (EvSidebarThumbnails *sidebar,
+		 gint                 old_page,
+		 gint                 new_page)
+{
+	ev_sidebar_thumbnails_set_current_page (sidebar, new_page);
+}
+
+static gboolean
+refresh (EvSidebarThumbnails *sidebar_thumbnails)
+{
+	adjustment_changed_cb (sidebar_thumbnails);
+	return FALSE;
+}
+
+static void
+ev_sidebar_thumbnails_rotation_changed_cb (EvDocumentModel     *model,
+					   GParamSpec          *pspec,
+					   EvSidebarThumbnails *sidebar_thumbnails)
+{
+	gint rotation = ev_document_model_get_rotation (model);
+
+	sidebar_thumbnails->priv->rotation = rotation;
+	if (sidebar_thumbnails->priv->loading_icons)
+		g_hash_table_remove_all (sidebar_thumbnails->priv->loading_icons);
+
+	if (sidebar_thumbnails->priv->document == NULL ||
+	    sidebar_thumbnails->priv->n_pages <= 0)
+		return;
+
+	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
+	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
+
+	/* Trigger a redraw */
+	sidebar_thumbnails->priv->start_page = -1;
+	sidebar_thumbnails->priv->end_page = -1;
+	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
+}
+
+static void
 thumbnail_job_completed_callback (EvJobThumbnail      *job,
 				  EvSidebarThumbnails *sidebar_thumbnails)
 {
@@ -797,14 +805,12 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 }
 
 static void
-ev_sidebar_thumbnails_set_document (EvSidebarPage *sidebar_page,
-				    EvDocument    *document)
+ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
+					   GParamSpec          *pspec,
+					   EvSidebarThumbnails *sidebar_thumbnails)
 {
-	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (sidebar_page);
-
+	EvDocument *document = ev_document_model_get_document (model);
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-
-	priv->page_cache = ev_page_cache_get (document);
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
 	    ev_document_get_n_pages (document) <= 0 ||
@@ -849,13 +855,33 @@ ev_sidebar_thumbnails_set_document (EvSidebarPage *sidebar_page,
 	}
 
 	/* Connect to the signal and trigger a fake callback */
-	g_signal_connect (priv->page_cache, "page-changed", G_CALLBACK (page_changed_cb), sidebar_thumbnails);
+	g_signal_connect_swapped (priv->model, "page-changed",
+				  G_CALLBACK (page_changed_cb),
+				  sidebar_thumbnails);
+	g_signal_connect (priv->model, "notify::rotation",
+			  G_CALLBACK (ev_sidebar_thumbnails_rotation_changed_cb),
+			  sidebar_thumbnails);
 	sidebar_thumbnails->priv->start_page = -1;
 	sidebar_thumbnails->priv->end_page = -1;
-	page_changed_cb (priv->page_cache,
-			 ev_page_cache_get_current_page (priv->page_cache),
-			 sidebar_thumbnails);
+	ev_sidebar_thumbnails_set_current_page (sidebar_thumbnails,
+						ev_document_model_get_page (model));
 	adjustment_changed_cb (sidebar_thumbnails);
+}
+
+static void
+ev_sidebar_thumbnails_set_model (EvSidebarPage   *sidebar_page,
+				 EvDocumentModel *model)
+{
+	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (sidebar_page);
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
+
+	if (priv->model == model)
+		return;
+
+	priv->model = model;
+	g_signal_connect (model, "notify::document",
+			  G_CALLBACK (ev_sidebar_thumbnails_document_changed_cb),
+			  sidebar_page);
 }
 
 static gboolean
@@ -903,7 +929,7 @@ static void
 ev_sidebar_thumbnails_page_iface_init (EvSidebarPageIface *iface)
 {
 	iface->support_document = ev_sidebar_thumbnails_support_document;
-	iface->set_document = ev_sidebar_thumbnails_set_document;
+	iface->set_model = ev_sidebar_thumbnails_set_model;
 	iface->get_label = ev_sidebar_thumbnails_get_label;
 }
 
