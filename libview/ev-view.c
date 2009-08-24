@@ -5136,6 +5136,44 @@ ev_view_scale_changed_cb (EvDocumentModel *model,
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
+static void
+ev_view_continuous_changed_cb (EvDocumentModel *model,
+			       GParamSpec      *pspec,
+			       EvView          *view)
+{
+	gboolean continuous = ev_document_model_get_continuous (model);
+
+	ev_view_set_continuous (view, continuous);
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+static void
+ev_view_dual_page_changed_cb (EvDocumentModel *model,
+			      GParamSpec      *pspec,
+			      EvView          *view)
+{
+	gboolean dual_page = ev_document_model_get_dual_page (model);
+
+	ev_view_set_dual_page (view, dual_page);
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
+	 * preload_cache_size to be 2 if dual_page is set.
+	 */
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+static void
+ev_view_fullscreen_changed_cb (EvDocumentModel *model,
+			       GParamSpec      *pspec,
+			       EvView          *view)
+{
+	gboolean fullscreen = ev_document_model_get_fullscreen (model);
+
+	ev_view_set_fullscreen (view, fullscreen);
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
 void
 ev_view_set_model (EvView          *view,
 		   EvDocumentModel *model)
@@ -5167,6 +5205,15 @@ ev_view_set_model (EvView          *view,
 			  view);
 	g_signal_connect (view->model, "notify::scale",
 			  G_CALLBACK (ev_view_scale_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::continuous",
+			  G_CALLBACK (ev_view_continuous_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::dual-page",
+			  G_CALLBACK (ev_view_dual_page_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::fullscreen",
+			  G_CALLBACK (ev_view_fullscreen_changed_cb),
 			  view);
 	g_signal_connect (view->model, "page-changed",
 			  G_CALLBACK (ev_view_page_changed_cb),
@@ -5223,13 +5270,7 @@ ev_view_set_continuous (EvView   *view,
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
-	continuous = continuous != FALSE;
-
-	if (view->continuous != continuous) {
-		view->continuous = continuous;
-		view->pending_scroll = SCROLL_TO_PAGE_POSITION;
-		gtk_widget_queue_resize (GTK_WIDGET (view));
-	}
+	view->continuous = continuous;
 
 	g_object_notify (G_OBJECT (view), "continuous");
 }
@@ -5248,17 +5289,7 @@ ev_view_set_dual_page (EvView   *view,
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
-	dual_page = dual_page != FALSE;
-
-	if (view->dual_page == dual_page)
-		return;
-
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	view->dual_page = dual_page;
-	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
-	 * preload_cache_size to be 2 if dual_page is set.
-	 */
-	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	g_object_notify (G_OBJECT (view), "dual-page");
 }
@@ -5269,14 +5300,8 @@ ev_view_set_fullscreen (EvView   *view,
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 
-	fullscreen = fullscreen != FALSE;
-
-	if (view->fullscreen == fullscreen) 
-		return;
-		
 	view->fullscreen = fullscreen;
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-	
+
 	g_object_notify (G_OBJECT (view), "fullscreen");
 }
 

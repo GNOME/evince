@@ -530,7 +530,7 @@ update_chrome_visibility (EvWindow *window)
 	gboolean fullscreen_mode, presentation, fullscreen;
 
 	presentation = ev_view_get_presentation (EV_VIEW (priv->view));
-	fullscreen = ev_view_get_fullscreen (EV_VIEW (priv->view));
+	fullscreen = ev_document_model_get_fullscreen (priv->model);
 	fullscreen_mode = fullscreen || presentation;
 
 	menubar = (priv->chrome & EV_CHROME_MENUBAR) != 0 && !fullscreen_mode;
@@ -571,16 +571,8 @@ update_sizing_buttons (EvWindow *window)
 	GtkActionGroup *action_group = window->priv->action_group;
 	GtkAction *action;
 	gboolean best_fit, page_width;
-	EvSizingMode sizing_mode;
 
-	if (window->priv->view == NULL)
-		return;
-
-	g_object_get (window->priv->view,
-		      "sizing_mode", &sizing_mode,
-		      NULL);
-
-	switch (sizing_mode) {
+	switch (ev_document_model_get_sizing_mode (window->priv->model)) {
 	        case EV_SIZING_BEST_FIT:
 			best_fit = TRUE;
 			page_width = FALSE;
@@ -940,6 +932,9 @@ setup_model_from_metadata (EvWindow *window)
 	GValue sizing_mode = { 0, };
 	GValue zoom = { 0, };
 	GValue rotation = { 0, };
+	GValue continuous = { 0, };
+	GValue dual_page = { 0, };
+	GValue fullscreen = { 0, };
 
 	/* Current page */
 	if (ev_metadata_manager_get (uri, "page", &page, TRUE)) {
@@ -989,6 +984,28 @@ setup_model_from_metadata (EvWindow *window)
 		}
 		ev_document_model_set_rotation (window->priv->model, rotation_value);
 		g_value_unset (&rotation);
+	}
+
+	/* Continuous */
+	if (ev_metadata_manager_get (uri, "continuous", &continuous, FALSE)) {
+		ev_document_model_set_continuous (window->priv->model,
+						  g_value_get_boolean (&continuous));
+		g_value_unset (&continuous);
+	}
+
+	/* Dual page */
+	if (ev_metadata_manager_get (uri, "dual-page", &dual_page, FALSE)) {
+		ev_document_model_set_dual_page (window->priv->model,
+						 g_value_get_boolean (&dual_page));
+		g_value_unset (&dual_page);
+	}
+
+	/* Fullscreen */
+	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen, FALSE)) {
+		if (g_value_get_boolean (&fullscreen) && uri) {
+			ev_window_run_fullscreen (window);
+		}
+		g_value_unset (&fullscreen);
 	}
 }
 
@@ -1090,24 +1107,8 @@ setup_size_from_metadata (EvWindow *window)
 static void
 setup_view_from_metadata (EvWindow *window)
 {
-	EvView *view = EV_VIEW (window->priv->view);
 	gchar *uri = window->priv->uri;
-	GValue continuous = { 0, };
-	GValue dual_page = { 0, };
 	GValue presentation = { 0, };
-	GValue fullscreen = { 0, };
-
-	/* Continuous */
-	if (ev_metadata_manager_get (uri, "continuous", &continuous, FALSE)) {
-		ev_view_set_continuous (view, g_value_get_boolean (&continuous));
-		g_value_unset (&continuous);
-	}
-
-	/* Dual page */
-	if (ev_metadata_manager_get (uri, "dual-page", &dual_page, FALSE)) {
-		ev_view_set_dual_page (view, g_value_get_boolean (&dual_page));
-		g_value_unset (&dual_page);
-	}
 
 	/* Presentation */
 	if (ev_metadata_manager_get (uri, "presentation", &presentation, FALSE)) {
@@ -1115,14 +1116,6 @@ setup_view_from_metadata (EvWindow *window)
 			ev_window_run_presentation (window);
 		}
 		g_value_unset (&presentation);
-	}
-
-	/* Fullscreen */
-	if (ev_metadata_manager_get (uri, "fullscreen", &fullscreen, FALSE)) {
-		if (g_value_get_boolean (&fullscreen) && uri) {
-			ev_window_run_fullscreen (window);
-		}
-		g_value_unset (&fullscreen);
 	}
 }
 
@@ -3158,10 +3151,7 @@ ev_window_cmd_continuous (GtkAction *action, EvWindow *ev_window)
 
 	ev_window_stop_presentation (ev_window, TRUE);
 	continuous = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-	g_object_set (G_OBJECT (ev_window->priv->view),
-		      "continuous", continuous,
-		      NULL);
-	ev_window_update_actions (ev_window);
+	ev_document_model_set_continuous (ev_window->priv->model, continuous);
 }
 
 static void
@@ -3171,10 +3161,7 @@ ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
 
 	ev_window_stop_presentation (ev_window, TRUE);
 	dual_page = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-	g_object_set (G_OBJECT (ev_window->priv->view),
-		      "dual-page", dual_page,
-		      NULL);
-	ev_window_update_actions (ev_window);
+	ev_document_model_set_dual_page (ev_window->priv->model, dual_page);
 }
 
 static void
@@ -3275,7 +3262,7 @@ ev_window_update_fullscreen_action (EvWindow *window)
 	g_signal_handlers_block_by_func
 		(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      ev_view_get_fullscreen (EV_VIEW (window->priv->view)));
+				      ev_document_model_get_fullscreen (window->priv->model));
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_view_fullscreen), window);
 }
@@ -3325,7 +3312,7 @@ ev_window_run_fullscreen (EvWindow *window)
 	EvView  *view = EV_VIEW (window->priv->view);
 	gboolean fullscreen_window = TRUE;
 
-	if (ev_view_get_fullscreen (view))
+	if (ev_document_model_get_fullscreen (window->priv->model))
 		return;
 	
 	if (!window->priv->fullscreen_toolbar) {
@@ -3354,7 +3341,7 @@ ev_window_run_fullscreen (EvWindow *window)
 		      "shadow-type", GTK_SHADOW_NONE,
 		      NULL);
 
-	ev_view_set_fullscreen (view, TRUE);
+	ev_document_model_set_fullscreen (window->priv->model, TRUE);
 	ev_window_update_fullscreen_action (window);
 
 	/* If the user doesn't have the main toolbar he/she won't probably want
@@ -3376,16 +3363,14 @@ static void
 ev_window_stop_fullscreen (EvWindow *window,
 			   gboolean  unfullscreen_window)
 {
-	EvView *view = EV_VIEW (window->priv->view);
-
-	if (!ev_view_get_fullscreen (view))
+	if (!ev_document_model_get_fullscreen (window->priv->model))
 		return;
 
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
 		      "shadow-type", GTK_SHADOW_IN,
 		      NULL);
 
-	ev_view_set_fullscreen (view, FALSE);
+	ev_document_model_set_fullscreen (window->priv->model, FALSE);
 	ev_window_update_fullscreen_action (window);
 	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
 	update_chrome_visibility (window);
@@ -3496,7 +3481,7 @@ ev_window_run_presentation (EvWindow *window)
 	if (ev_view_get_presentation (view))
 		return;
 
-	if (ev_view_get_fullscreen (view)) {
+	if (ev_document_model_get_fullscreen (window->priv->model)) {
 		ev_window_stop_fullscreen (window, FALSE);
 		fullscreen_window = FALSE;
 	}
@@ -3641,12 +3626,12 @@ ev_window_state_event (GtkWidget           *widget,
 		return FALSE;
 
 	if (event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN) {
-		if (ev_view_get_fullscreen (view) || ev_view_get_presentation (view))
+		if (ev_document_model_get_fullscreen (window->priv->model) || ev_view_get_presentation (view))
 			return FALSE;
 		
 		ev_window_run_fullscreen (window);
 	} else {
-		if (ev_view_get_fullscreen (view))
+		if (ev_document_model_get_fullscreen (window->priv->model))
 			ev_window_stop_fullscreen (window, FALSE);
 		else if (ev_view_get_presentation (view))
 			ev_window_stop_presentation (window, FALSE);
@@ -3885,8 +3870,8 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 		gboolean fullscreen;
 		gboolean presentation;
 
+		fullscreen = ev_document_model_get_fullscreen (window->priv->model);
 		g_object_get (window->priv->view,
-			      "fullscreen", &fullscreen,
 			      "presentation", &presentation,
 			      NULL);
 
@@ -3969,7 +3954,7 @@ ev_window_update_continuous_action (EvWindow *window)
 	g_signal_handlers_block_by_func
 		(action, G_CALLBACK (ev_window_cmd_continuous), window);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      ev_view_get_continuous (EV_VIEW (window->priv->view)));
+				      ev_document_model_get_continuous (window->priv->model));
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_continuous), window);
 }
@@ -3983,19 +3968,21 @@ ev_window_update_dual_page_action (EvWindow *window)
 	g_signal_handlers_block_by_func
 		(action, G_CALLBACK (ev_window_cmd_dual), window);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      ev_view_get_dual_page (EV_VIEW (window->priv->view)));
+				      ev_document_model_get_dual_page (window->priv->model));
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_dual), window);
 }
 
-static void     
-ev_window_continuous_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
+static void
+ev_window_continuous_changed_cb (EvDocumentModel *model,
+				 GParamSpec      *pspec,
+				 EvWindow        *ev_window)
 {
 	ev_window_update_continuous_action (ev_window);
 
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "continuous",
-					         ev_view_get_continuous (EV_VIEW (ev_window->priv->view)));
+					         ev_document_model_get_continuous (model));
 }
 
 static void
@@ -4016,14 +4003,16 @@ ev_window_has_selection_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *w
         ev_window_update_actions (window);
 }
 
-static void     
-ev_window_dual_mode_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *ev_window)
+static void
+ev_window_dual_mode_changed_cb (EvDocumentModel *model,
+				GParamSpec      *pspec,
+				EvWindow        *ev_window)
 {
 	ev_window_update_dual_page_action (ev_window);
 
 	if (!ev_window_is_empty (ev_window))
 		ev_metadata_manager_set_boolean (ev_window->priv->uri, "dual-page",
-					         ev_view_get_dual_page (EV_VIEW (ev_window->priv->view)));
+					         ev_document_model_get_dual_page (model));
 }
 
 static char *
@@ -6054,16 +6043,16 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::rotation",
 			  G_CALLBACK (ev_window_rotation_changed_cb),
 			  ev_window);
-
-	/* Connect to view signals */
-	g_signal_connect (ev_window->priv->view,
-			  "notify::dual-page",
-			  G_CALLBACK (ev_window_dual_mode_changed_cb),
-			  ev_window);
-	g_signal_connect (ev_window->priv->view,
+	g_signal_connect (ev_window->priv->model,
 			  "notify::continuous",
 			  G_CALLBACK (ev_window_continuous_changed_cb),
 			  ev_window);
+	g_signal_connect (ev_window->priv->model,
+			  "notify::dual-page",
+			  G_CALLBACK (ev_window_dual_mode_changed_cb),
+			  ev_window);
+
+	/* Connect to view signals */
 	g_signal_connect (ev_window->priv->view,
 			  "notify::has-selection",
 			  G_CALLBACK (ev_window_has_selection_changed_cb),
