@@ -1855,6 +1855,75 @@ ev_window_open_uri (EvWindow       *ev_window,
 	}
 }
 
+void
+ev_window_open_document (EvWindow       *ev_window,
+			 EvDocument     *document,
+			 EvLinkDest     *dest,
+			 EvWindowRunMode mode,
+			 const gchar    *search_string)
+{
+	if (document == ev_window->priv->document)
+		return;
+
+	ev_window_close_dialogs (ev_window);
+	ev_window_clear_load_job (ev_window);
+	ev_window_clear_local_uri (ev_window);
+
+	if (ev_window->priv->monitor) {
+		g_object_unref (ev_window->priv->monitor);
+		ev_window->priv->monitor = NULL;
+	}
+
+	if (ev_window->priv->uri)
+		g_free (ev_window->priv->uri);
+	ev_window->priv->uri = g_strdup (ev_document_get_uri (document));
+
+	setup_size_from_metadata (ev_window);
+	setup_model_from_metadata (ev_window);
+
+	ev_document_model_set_document (ev_window->priv->model, document);
+
+	setup_document_from_metadata (ev_window);
+	setup_view_from_metadata (ev_window);
+
+	if (dest) {
+		EvLink *link;
+		EvLinkAction *link_action;
+
+		link_action = ev_link_action_new_dest (dest);
+		link = ev_link_new (NULL, link_action);
+		ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
+		/* FIXME: link action should inc dest ref counting
+		 * or not unref it at all
+		 */
+		g_object_ref (dest);
+		g_object_unref (link);
+	}
+
+	switch (mode) {
+	case EV_WINDOW_MODE_FULLSCREEN:
+		ev_window_run_fullscreen (ev_window);
+		break;
+	case EV_WINDOW_MODE_PRESENTATION:
+		ev_window_run_presentation (ev_window);
+		break;
+	default:
+		break;
+	}
+
+	if (search_string && EV_IS_DOCUMENT_FIND (document)) {
+		ev_window_cmd_edit_find (NULL, ev_window);
+		egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
+						search_string);
+	}
+
+	/* Create a monitor for the document */
+	ev_window->priv->monitor = ev_file_monitor_new (ev_window->priv->uri);
+	g_signal_connect_swapped (ev_window->priv->monitor, "changed",
+				  G_CALLBACK (ev_window_document_changed),
+				  ev_window);
+}
+
 static void
 ev_window_reload_local (EvWindow *ev_window)
 {
