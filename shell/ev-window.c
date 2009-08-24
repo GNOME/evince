@@ -1316,39 +1316,6 @@ ev_window_clear_local_uri (EvWindow *ev_window)
 }
 
 static void
-ev_window_clear_temp_symlink (EvWindow *ev_window)
-{
-	GFile *file, *tempdir;
-
-	if (!ev_window->priv->uri)
-		return;
-
-	file = g_file_new_for_uri (ev_window->priv->uri);
-	tempdir = g_file_new_for_path (ev_tmp_dir ());
-
-	if (g_file_has_prefix (file, tempdir)) {
-		GFileInfo *file_info;
-		GError    *error = NULL;
-
-		file_info = g_file_query_info (file,
-					       G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK,
-					       G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
-					       NULL, &error);
-		if (file_info) {
-			if (g_file_info_get_is_symlink (file_info))
-				g_file_delete (file, NULL, NULL);
-			g_object_unref (file_info);
-		} else {
-			g_warning ("Error deleting temp symlink: %s\n", error->message);
-			g_error_free (error);
-		}
-	}
-
-	g_object_unref (file);
-	g_object_unref (tempdir);
-}
-
-static void
 ev_window_handle_link (EvWindow *ev_window,
 		       EvLinkDest *dest)
 {
@@ -2175,102 +2142,22 @@ ev_window_cmd_file_open (GtkAction *action, EvWindow *window)
 	gtk_widget_show (chooser);
 }
 
-static gchar *
-ev_window_create_tmp_symlink (const gchar *filename, GError **error)
-{
-	gchar  *tmp_filename = NULL;
-	gchar  *name;
-	guint   i = 0;
-	GError *link_error = NULL;
-	GFile  *tmp_file = NULL;
-
-	name = g_path_get_basename (filename);
-	
-	do {
-		gchar *basename;
-
-		if (tmp_filename)
-			g_free (tmp_filename);
-		if (tmp_file)
-			g_object_unref (tmp_file);
-		g_clear_error (&link_error);
-
-		basename = g_strdup_printf ("%s-%d", name, i++);
-		tmp_filename = g_build_filename (ev_tmp_dir (),
-						 basename, NULL);
-		
-		g_free (basename);
-		tmp_file = g_file_new_for_path (tmp_filename);
-	} while (!g_file_make_symbolic_link (tmp_file, filename, NULL, &link_error) &&
-		 g_error_matches (link_error, G_IO_ERROR, G_IO_ERROR_EXISTS));
-	
-	g_free (name);
-	g_object_unref (tmp_file);
-
-	if (link_error) {
-		g_propagate_prefixed_error (error, 
-					    link_error,
-					    _("Couldn't create symlink “%s”: "),
-					    tmp_filename);
-		g_free (tmp_filename);
-		
-		return NULL;
-	}
-
-	return tmp_filename;
-}
-
 static void
-ev_window_cmd_file_open_copy_at_dest (EvWindow *window, EvLinkDest *dest)
+ev_window_open_copy_at_dest (EvWindow   *window,
+			     EvLinkDest *dest)
 {
-	GError      *error = NULL;
-	gchar       *symlink_uri;
-	gchar       *old_filename;
-	gchar       *new_filename;
-	const gchar *uri_unc;
+	GtkWidget *new_window = ev_window_new ();
 
-	uri_unc = g_object_get_data (G_OBJECT (window->priv->document),
-				     "uri-uncompressed");
-	old_filename = g_filename_from_uri (uri_unc ? uri_unc : window->priv->uri,
-					    NULL, NULL);
-	new_filename = ev_window_create_tmp_symlink (old_filename, &error);
-
-	if (error) {
-		ev_window_error_message (window, error, 
-					 "%s", _("Cannot open a copy."));
-		g_error_free (error);
-		g_free (old_filename);
-		g_free (new_filename);
-
-		return;
-	}
-		
-	g_free (old_filename);
-
-	symlink_uri = g_filename_to_uri (new_filename, NULL, NULL);
-	g_free (new_filename);
-
-	ev_application_open_uri_at_dest (EV_APP,
-					 symlink_uri,
-					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 dest,
-					 0,
-					 NULL, 
-					 GDK_CURRENT_TIME);
-	g_free (symlink_uri);
+	ev_window_open_document (EV_WINDOW (new_window),
+				 window->priv->document,
+				 dest, 0, NULL);
+	gtk_widget_show (new_window);
 }
 
 static void
 ev_window_cmd_file_open_copy (GtkAction *action, EvWindow *window)
 {
-	EvLinkDest  *dest;
-	gint         current_page;
-
-	current_page = ev_document_model_get_page (window->priv->model);
-
-	dest = ev_link_dest_new_page (current_page);
-	ev_window_cmd_file_open_copy_at_dest (window, dest);
-	g_object_unref (dest);
+	ev_window_open_copy_at_dest (window, NULL);
 }
 
 static void
@@ -4837,8 +4724,6 @@ ev_window_dispose (GObject *object)
 	}
 
 	if (priv->uri) {
-		/* Delete the uri if it's a temp symlink (open a copy) */
-		ev_window_clear_temp_symlink (window);
 		g_free (priv->uri);
 		priv->uri = NULL;
 	}
@@ -5538,7 +5423,7 @@ view_external_link_cb (EvView *view, EvLinkAction *action, EvWindow *window)
 			if (!dest)
 				return;
 
-			ev_window_cmd_file_open_copy_at_dest (window, dest);
+			ev_window_open_copy_at_dest (window, dest);
 		}
 			break;
 	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
@@ -5578,7 +5463,7 @@ ev_view_popup_cmd_open_link_new_window (GtkAction *action, EvWindow *window)
 	if (!dest)
 		return;
 
-	ev_window_cmd_file_open_copy_at_dest (window, dest);
+	ev_window_open_copy_at_dest (window, dest);
 }
 
 static void
