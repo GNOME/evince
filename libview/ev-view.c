@@ -2901,6 +2901,8 @@ ev_view_realize (GtkWidget *widget)
 		gdk_window_set_background (view->layout.bin_window, &widget->style->black);
 	else
 		gdk_window_set_background (view->layout.bin_window, &widget->style->mid [GTK_STATE_NORMAL]);
+
+	on_adjustment_value_changed (NULL, view);
 }
 
 static gboolean
