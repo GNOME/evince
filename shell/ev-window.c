@@ -996,27 +996,20 @@ static void
 setup_document_from_metadata (EvWindow *window)
 {
 	gchar *uri = window->priv->uri;
-	GValue page = { 0, };
+	gint   page, n_pages;
 	GValue width = { 0, };
 	GValue height = { 0, };
 	GValue width_ratio = { 0, };
 	GValue height_ratio = { 0, };
 
-#if 0 /* FIXME */
-	/* View the previously shown page, but make sure to not open a document on
-	 * the last page, since closing it on the last page most likely means the
+	/* Make sure to not open a document on the last page,
+	 * since closing it on the last page most likely means the
 	 * user was finished reading the document. In that case, reopening should
 	 * show the first page. */
-	if (ev_metadata_manager_get (uri, "page", &page, TRUE)) {
-		gint n_pages;
-		gint new_page;
-		
-		n_pages = ev_document_get_n_pages (window->priv->document);
-		new_page = CLAMP (g_value_get_int (&page), 0, n_pages - 1);
-		ev_document_model_set_page (window->priv->model, new_page);
-		g_value_unset (&page);
-	}
-#endif
+	page = ev_document_model_get_page (window->priv->model);
+	n_pages = ev_document_get_n_pages (window->priv->document);
+	if (page == n_pages - 1)
+		ev_document_model_set_page (window->priv->model, 0);
 
 	setup_sidebar_from_metadata (window);
 
