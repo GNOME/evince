@@ -35,6 +35,9 @@ struct _EvDocumentModel
 	gint rotation;
 	gdouble scale;
 	EvSizingMode sizing_mode;
+	guint continuous : 1;
+	guint dual_page  : 1;
+	guint fullscreen : 1;
 
 	gdouble max_scale;
 	gdouble min_scale;
@@ -56,7 +59,10 @@ enum {
 	PROP_PAGE,
 	PROP_ROTATION,
 	PROP_SCALE,
-	PROP_SIZING_MODE
+	PROP_SIZING_MODE,
+	PROP_CONTINUOUS,
+	PROP_DUAL_PAGE,
+	PROP_FULLSCREEN
 };
 
 enum
@@ -106,6 +112,15 @@ ev_document_model_set_property (GObject      *object,
 	case PROP_SIZING_MODE:
 		ev_document_model_set_sizing_mode (model, g_value_get_enum (value));
 		break;
+	case PROP_CONTINUOUS:
+		ev_document_model_set_continuous (model, g_value_get_boolean (value));
+		break;
+	case PROP_DUAL_PAGE:
+		ev_document_model_set_dual_page (model, g_value_get_boolean (value));
+		break;
+	case PROP_FULLSCREEN:
+		ev_document_model_set_fullscreen (model, g_value_get_boolean (value));
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 	}
@@ -134,6 +149,15 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_SIZING_MODE:
 		g_value_set_enum (value, model->sizing_mode);
+		break;
+	case PROP_CONTINUOUS:
+		g_value_set_boolean (value, ev_document_model_get_continuous (model));
+		break;
+	case PROP_DUAL_PAGE:
+		g_value_set_boolean (value, ev_document_model_get_dual_page (model));
+		break;
+	case PROP_FULLSCREEN:
+		g_value_set_boolean (value, ev_document_model_get_fullscreen (model));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -186,6 +210,27 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							    EV_TYPE_SIZING_MODE,
 							    EV_SIZING_FIT_WIDTH,
 							    G_PARAM_READWRITE));
+	g_object_class_install_property (g_object_class,
+					 PROP_CONTINUOUS,
+					 g_param_spec_boolean ("continuous",
+							       "Continuous",
+							       "Whether document is displayed in continuous mode",
+							       TRUE,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (g_object_class,
+					 PROP_DUAL_PAGE,
+					 g_param_spec_boolean ("dual-page",
+							       "Dual Page",
+							       "Whether document is displayed in dual page mode",
+							       FALSE,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (g_object_class,
+					 PROP_FULLSCREEN,
+					 g_param_spec_boolean ("fullscreen",
+							       "Fullscreen",
+							       "Whether document is displayed in fullscreen mode",
+							       FALSE,
+							       G_PARAM_READWRITE));
 
 	/* Signals */
 	signals [PAGE_CHANGED] =
@@ -205,6 +250,7 @@ ev_document_model_init (EvDocumentModel *model)
 	model->page = -1;
 	model->scale = 1.;
 	model->sizing_mode = EV_SIZING_FIT_WIDTH;
+	model->continuous = TRUE;
 	model->min_scale = 0.;
 	model->max_scale = G_MAXDOUBLE;
 }
@@ -414,3 +460,74 @@ ev_document_model_get_rotation (EvDocumentModel *model)
 	return model->rotation;
 }
 
+void
+ev_document_model_set_continuous (EvDocumentModel *model,
+				  gboolean         continuous)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	continuous = continuous != FALSE;
+
+	if (continuous == model->continuous)
+		return;
+
+	model->continuous = continuous;
+
+	g_object_notify (G_OBJECT (model), "continuous");
+}
+
+gboolean
+ev_document_model_get_continuous (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), TRUE);
+
+	return model->continuous;
+}
+
+void
+ev_document_model_set_dual_page (EvDocumentModel *model,
+				 gboolean         dual_page)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	dual_page = dual_page != FALSE;
+
+	if (dual_page == model->dual_page)
+		return;
+
+	model->dual_page = dual_page;
+
+	g_object_notify (G_OBJECT (model), "dual-page");
+}
+
+gboolean
+ev_document_model_get_dual_page (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
+
+	return model->dual_page;
+}
+
+void
+ev_document_model_set_fullscreen (EvDocumentModel *model,
+				  gboolean         fullscreen)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	fullscreen = fullscreen != FALSE;
+
+	if (fullscreen == model->fullscreen)
+		return;
+
+	model->fullscreen = fullscreen;
+
+	g_object_notify (G_OBJECT (model), "fullscreen");
+}
+
+gboolean
+ev_document_model_get_fullscreen (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
+
+	return model->fullscreen;
+}

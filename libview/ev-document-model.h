@@ -69,6 +69,15 @@ EvSizingMode     ev_document_model_get_sizing_mode   (EvDocumentModel *model);
 void             ev_document_model_set_rotation      (EvDocumentModel *model,
 						      gint             rotation);
 gint             ev_document_model_get_rotation      (EvDocumentModel *model);
+void             ev_document_model_set_continuous    (EvDocumentModel *model,
+						      gboolean         continuous);
+gboolean         ev_document_model_get_continuous    (EvDocumentModel *model);
+void             ev_document_model_set_dual_page     (EvDocumentModel *model,
+						      gboolean         dual_page);
+gboolean         ev_document_model_get_dual_page     (EvDocumentModel *model);
+void             ev_document_model_set_fullscreen    (EvDocumentModel *model,
+						      gboolean         fullscreen);
+gboolean         ev_document_model_get_fullscreen    (EvDocumentModel *model);
 
 G_END_DECLS
 
