@@ -5996,8 +5996,6 @@ ev_window_init (EvWindow *ev_window)
 	dpi = get_screen_dpi (GTK_WINDOW (ev_window));
 	ev_document_model_set_min_scale (ev_window->priv->model, MIN_SCALE * dpi / 72.0);
 	ev_document_model_set_max_scale (ev_window->priv->model, MAX_SCALE * dpi / 72.0);
-	ev_view_set_screen_dpi (EV_VIEW (ev_window->priv->view),
-				get_screen_dpi (GTK_WINDOW (ev_window)));
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",
