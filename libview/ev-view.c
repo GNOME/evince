@@ -5209,16 +5209,6 @@ ev_view_get_zoom (EvView *view)
 	return view->scale;
 }
 
-void
-ev_view_set_screen_dpi (EvView  *view,
-			gdouble  dpi)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-	g_return_if_fail (dpi > 0);
-
-	view->dpi = dpi;
-}
-
 gboolean
 ev_view_get_continuous (EvView *view)
 {

@@ -89,8 +89,6 @@ void		ev_view_zoom_out	  (EvView         *view);
 void		ev_view_set_zoom	  (EvView         *view,
 					   double          factor);
 double		ev_view_get_zoom	  (EvView         *view);
-void            ev_view_set_screen_dpi    (EvView         *view,
-					   gdouble         dpi);
 void		ev_view_rotate_left       (EvView         *view);
 void            ev_view_rotate_right      (EvView         *view);
 void            ev_view_set_rotation      (EvView         *view,

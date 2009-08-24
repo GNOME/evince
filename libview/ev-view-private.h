@@ -161,7 +161,6 @@ struct _EvView {
 	gint rotation;
 	gdouble scale;
 	gint spacing;
-	gdouble dpi;
 
 	gboolean loading;
 	gboolean continuous;
