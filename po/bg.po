@@ -1,18 +1,20 @@
 # Bulgarian translation of evince po-file.
 # Copyright (C) 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+# Copyright (C) 2009 Krasimir "Bfaf" Chonov <mk2616@abv.bg>.
 # This file is distributed under the same license as the evince package.
 # Rostislav "zbrox" Raykov <zbrox@i-space.org>, 2005.
 # Vladimir "kaladan" Petkov <kaladan@gmail.com>, 2005, 2006, 2007.
 # Alexander Shopov <ash@contact.bg>, 2006, 2007, 2008, 2009.
+# Krasimir "Bfaf" Chonov <mk2616@abv.bg>, 2009.
 # Yavor Doganov <yavor@gnu.org>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-22 18:26+0300\n"
-"PO-Revision-Date: 2009-02-21 22:33+0200\n"
-"Last-Translator: Alexander Shopov <ash@contact.bg>\n"
+"POT-Creation-Date: 2009-08-24 10:06+0300\n"
+"PO-Revision-Date: 2009-08-24 10:06+0300\n"
+"Last-Translator: Krasimir Chonov <mk2616@abv.bg>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,22 +25,22 @@ msgstr ""
 #, c-format
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
+msgstr "Грешка при стартиране на командата „%s“, да разархивира комикса: %s"
 
 #: ../backend/comics/comics-document.c:169
 #, c-format
 msgid "The command “%s” failed at decompressing the comic book."
-msgstr ""
+msgstr "Командата „%s“ не успя да разархивира комикса."
 
 #: ../backend/comics/comics-document.c:178
 #, c-format
 msgid "The command “%s” did not end normally."
-msgstr ""
+msgstr "Командата „%s“ не завърши нормално."
 
 #: ../backend/comics/comics-document.c:225
 #, c-format
 msgid "Failed to create a temporary directory."
-msgstr ""
+msgstr "Неуспешно създаване на временна папка."
 
 #: ../backend/comics/comics-document.c:347
 #, c-format
@@ -48,6 +50,7 @@ msgstr "Видът на MIME не е на комикс: %s"
 #: ../backend/comics/comics-document.c:354
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr ""
+"Не може да се намери подходяща команда за разархивиране на този тип комикс"
 
 #: ../backend/comics/comics-document.c:385
 #: ../libdocument/ev-document-factory.c:143
@@ -56,14 +59,12 @@ msgid "Unknown MIME Type"
 msgstr "Неясен/непознат вид MIME"
 
 #: ../backend/comics/comics-document.c:412
-#, fuzzy
 msgid "File corrupted"
-msgstr "Файлът е развален."
+msgstr "Файлът е повреден"
 
 #: ../backend/comics/comics-document.c:424
-#, fuzzy
 msgid "No files in archive"
-msgstr "В архива няма файлове."
+msgstr "В архива няма файлове"
 
 #: ../backend/comics/comics-document.c:465
 #, c-format
@@ -71,14 +72,14 @@ msgid "No images found in archive %s"
 msgstr "В архива %s няма намерени изображения"
 
 #: ../backend/comics/comics-document.c:704
-#, fuzzy, c-format
+#, c-format
 msgid "There was an error deleting “%s”."
-msgstr "Грешка при показването на помощ"
+msgstr "Възникна грешка при изтриването на „%s“."
 
 #: ../backend/comics/comics-document.c:854
 #, c-format
 msgid "Error %s"
-msgstr ""
+msgstr "Грешка %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.h:1
 msgid "Comic Books"
@@ -438,14 +439,13 @@ msgstr ""
 
 #: ../previewer/ev-previewer.c:45
 msgid "Delete the temporary file"
-msgstr ""
+msgstr "Изтриване на временен файл"
 
 #: ../previewer/ev-previewer.c:46
 msgid "Print settings file"
-msgstr ""
+msgstr "Файл с настройки за печат"
 
 #: ../previewer/ev-previewer.c:141 ../previewer/ev-previewer.c:175
-#, fuzzy
 msgid "GNOME Document Previewer"
 msgstr "Преглед на документи"
 
@@ -456,7 +456,7 @@ msgstr "Документът не може да бъде отпечатан"
 #: ../previewer/ev-previewer-window.c:242
 #, c-format
 msgid "The selected printer '%s' could not be found"
-msgstr ""
+msgstr "Избраният принтер „%s“ не може да бъде открит"
 
 #. Go menu
 #: ../previewer/ev-previewer-window.c:286 ../shell/ev-window.c:4972
@@ -629,9 +629,9 @@ msgid "Failed to create file “%s”: %s"
 msgstr "Неуспех при създаването на файла „%s“: %s"
 
 #: ../libview/ev-jobs.c:1435
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to print page %d: %s"
-msgstr "Документът не може да бъде отпечатан"
+msgstr "Страница %d не може да бъде отпечатана: %s"
 
 #: ../libview/ev-view-accessible.c:41
 msgid "Scroll Up"
@@ -771,27 +771,28 @@ msgid "Toggle case sensitive search"
 msgstr "Превключване на разлика главни/малки букви"
 
 #: ../shell/ev-application.c:309
-#, fuzzy
 msgid "Recover previous documents?"
-msgstr "Презареждане на документа"
+msgstr "Възстановяване на предишни документи?"
 
 #: ../shell/ev-application.c:312
 msgid ""
 "Evince appears to have exited unexpectedly the last time it was run. You can "
 "recover the opened documents."
 msgstr ""
+"Изглежда Evince се е затворила неочаквано при последното си изпълнение. "
+"Можете да възстановите отворените документи."
 
 #: ../shell/ev-application.c:316
 msgid "_Don't Recover"
-msgstr ""
+msgstr "_Без възстановяване"
 
 #: ../shell/ev-application.c:319
 msgid "_Recover"
-msgstr ""
+msgstr "_Възстановяване"
 
 #: ../shell/ev-application.c:322
 msgid "Crash Recovery"
-msgstr ""
+msgstr "Възстановяване след срив"
 
 #: ../shell/ev-keyring.c:102
 #, c-format
@@ -863,17 +864,16 @@ msgid "Printing is not supported on this printer."
 msgstr "Разпечатването чрез този принтер не се поддържа."
 
 #: ../shell/ev-print-operation.c:1208
-#, fuzzy
 msgid "Invalid page selection"
-msgstr "Лош формат за ZIP"
+msgstr "Неправилен избор на страница"
 
 #: ../shell/ev-print-operation.c:1209
 msgid "Warning"
-msgstr ""
+msgstr "Предупреждение"
 
 #: ../shell/ev-print-operation.c:1211
 msgid "Your print range selection does not include any page"
-msgstr ""
+msgstr "Обхватът за печат не включва нито една страница"
 
 #: ../shell/ev-properties-dialog.c:57
 msgid "Properties"
@@ -931,18 +931,17 @@ msgid "The document contains no pages"
 msgstr "Документът не съдържа страници"
 
 #: ../shell/ev-window.c:1258
-#, fuzzy
 msgid "The document contains only empty pages"
-msgstr "Документът не съдържа страници"
+msgstr "Документът съдържа само празни страници"
 
 #: ../shell/ev-window.c:1481 ../shell/ev-window.c:1634
 msgid "Unable to open document"
 msgstr "Документът не може да бъде отворен"
 
 #: ../shell/ev-window.c:1605
-#, fuzzy, c-format
+#, c-format
 msgid "Loading document from “%s”"
-msgstr "Зареждане на документа от %s"
+msgstr "Зареждане на документ от „%s“"
 
 #: ../shell/ev-window.c:1743 ../shell/ev-window.c:1926
 #, c-format
@@ -963,9 +962,9 @@ msgid "Open Document"
 msgstr "Отваряне на документ"
 
 #: ../shell/ev-window.c:2136
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't create symlink “%s”: "
-msgstr "Неуспех при създаването на символната връзка „%s“: %s"
+msgstr "Не може да се създаде символна връзка „%s“: "
 
 #: ../shell/ev-window.c:2163
 msgid "Cannot open a copy."
@@ -1103,9 +1102,8 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:4195
-#, fuzzy
 msgid "© 1996–2009 The Evince authors"
-msgstr "© 1996-2007 Авторите на Evince"
+msgstr "© 1996-2009 Авторите на Evince"
 
 #: ../shell/ev-window.c:4201
 msgid "translator-credits"
@@ -1113,6 +1111,7 @@ msgstr ""
 "Владимир „Kaladan“ Петков <kaladan@gmail.com>\n"
 "Ростислав „zbrox“ Райков <zbrox@i-space.org>\n"
 "Александър Шопов <ash@contact.bg>\n"
+"Красимир „bfaf“ Чонов\n"
 "\n"
 "Проектът за превод на GNOME има нужда от подкрепа.\n"
 "Научете повече за нас на http://gnome.cult.bg\n"
@@ -1180,9 +1179,8 @@ msgid "Save a copy of the current document"
 msgstr "Запазване на копие на текущия документ"
 
 #: ../shell/ev-window.c:4927
-#, fuzzy
 msgid "Page Set_up..."
-msgstr "_Настройки на печата…"
+msgstr "Настройки на стр_аницата…"
 
 #: ../shell/ev-window.c:4928
 msgid "Setup the page settings for printing"
@@ -1496,27 +1494,3 @@ msgstr ""
 "Валидна команда заедно с аргументите си за създаването на мини изображения "
 "от документи от вид PDF. За повече информация прегледайте документацията на "
 "nautilus за мини изображенията."
-
-#~ msgid "Co_nnect"
-#~ msgstr "_Свързване"
-
-#~ msgid "Connect _anonymously"
-#~ msgstr "_Анонимно свързване"
-
-#~ msgid "Connect as u_ser:"
-#~ msgstr "Свързване като _потребител:"
-
-#~ msgid "_Username:"
-#~ msgstr "_Име на потребител:"
-
-#~ msgid "_Domain:"
-#~ msgstr "_Домейн:"
-
-#~ msgid "_Forget password immediately"
-#~ msgstr "_Незабавно забравяне на паролата"
-
-#~ msgid "_Remember password until you logout"
-#~ msgstr "Запомняне на паролата за тази _сесия"
-
-#~ msgid "_Remember forever"
-#~ msgstr "_Запомняне завинаги"
