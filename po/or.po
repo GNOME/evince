@@ -1,4 +1,4 @@
-# translation of evince.master.or.po to Oriya
+# translation of or.po to Oriya
 # This file is distributed under the same license as the PACKAGE package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 #
@@ -6,16 +6,17 @@
 # Manoj Kumar Giri <mgiri@redhat.com>, 2008, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: evince.master.or\n"
+"Project-Id-Version: or\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2009-08-09 09:40+0000\n"
-"PO-Revision-Date: 2009-08-12 14:10+0530\n"
+"POT-Creation-Date: 2009-08-13 21:54+0000\n"
+"PO-Revision-Date: 2009-08-26 15:55+0530\n"
 "Last-Translator: Manoj Kumar Giri <mgiri@redhat.com>\n"
 "Language-Team: Oriya <oriya-it@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n!=1);\n\n"
+"\n"
 "\n"
 "\n"
 "\n"
@@ -39,10 +40,10 @@ msgid "The command “%s” did not end normally."
 msgstr "ନିର୍ଦ୍ଦେଶ “%s” ସାଧାରଣ ଭାବରେ ସମାପ୍ତ ହୋଇନଥିଲା।"
 
 #: ../backend/comics/comics-document.c:225
-#, fuzzy, c-format
+#, c-format
 #| msgid "Failed to create a temporary directory on “%s”: %s"
 msgid "Failed to create a temporary directory."
-msgstr "“%s” ରେ ଅସ୍ଥାୟୀ ଡିରେକ୍ଟୋରୀକୁ ନିର୍ମାଣ କରିବାରେ ବିଫଳ: %s"
+msgstr "ଅସ୍ଥାୟୀ ଡିରେକ୍ଟୋରୀ ନିର୍ମାଣ କରିବାରେ ବିଫଳ।"
 
 #: ../backend/comics/comics-document.c:347
 #, c-format
@@ -50,8 +51,10 @@ msgid "Not a comic book MIME type: %s"
 msgstr "ଗୋଟିଏ ହାସ୍ୟସ୍ପଦ ବହି MIME ପ୍ରକାର ନୁହଁ: %s"
 
 #: ../backend/comics/comics-document.c:354
-msgid "Can't find an appropiate command to decompress this type of comic book"
-msgstr "ଏହି ପ୍ରକାର କମିକ ବହିକୁ ସଙ୍କୋଚନ କରିବା ପାଇଁ ସଠିକ ନିର୍ଦ୍ଦେଶ ପାଇବେ ନାହିଁ"
+#| msgid ""
+#| "Can't find an appropiate command to decompress this type of comic book"
+msgid "Can't find an appropriate command to decompress this type of comic book"
+msgstr "ଏହି ପ୍ରକାର କମିକ ବହିକୁ ପ୍ରସାରଣ କରିବା ପାଇଁ ସଠିକ ନିର୍ଦ୍ଦେଶ ପାଇବେ ନାହିଁ"
 
 #: ../backend/comics/comics-document.c:385
 #: ../libdocument/ev-document-factory.c:143
@@ -628,10 +631,10 @@ msgid "Failed to create file “%s”: %s"
 msgstr "“%s” ଦଲିଲକୁ ସୃଷ୍ଟିକରିବାରେ ବିଫଳ: %s"
 
 #: ../libview/ev-jobs.c:1435
-#, fuzzy, c-format
+#, c-format
 #| msgid "Failed to print document"
 msgid "Failed to print page %d: %s"
-msgstr "ଦଲିଲ ମୂଦ୍ରଣ କରିବାରେ ବିଫଳ"
+msgstr "ପୃଷ୍ଠା %d କୁ ମୂଦ୍ରଣ କରିବାରେ ବିଫଳ: %s"
 
 #: ../libview/ev-view-accessible.c:41
 msgid "Scroll Up"
@@ -771,16 +774,17 @@ msgid "Toggle case sensitive search"
 msgstr "ଅକ୍ଷର ନିର୍ଦ୍ଦିଷ୍ଟ ଅନୁସନ୍ଧାନକୁ ଅଦଳବଦଳ କରନ୍ତୁ"
 
 #: ../shell/ev-application.c:305
-#, fuzzy
 #| msgid "Reload the document"
 msgid "Recover previous documents?"
-msgstr "ଦଲିଲକୁ ପୁନର୍ଧାରଣ କରନ୍ତୁ"
+msgstr "ପୂର୍ବ ଦଲିଲଗୁଡ଼ିକୁ କାଢ଼ିବେ କି?"
 
 #: ../shell/ev-application.c:308
 msgid ""
 "Evince appears to have exited unexpectedly the last time it was run. You can "
 "recover the opened documents."
 msgstr ""
+"Evince ଗତଥର ଚାଲୁଥିବା ସମୟରେ ଅପ୍ରତ୍ୟାଶିତ ଭାବରେ ପ୍ରସ୍ଥାନ କରିବା ପରି ଲାଗୁଛି। ଆପଣ ଖୋଲାଥିବା "
+"ଦଲିଲଗୁଡ଼ିକୁ କାଢ଼ିପାରିବେ।"
 
 #: ../shell/ev-application.c:312
 msgid "_Don't Recover"
@@ -1098,10 +1102,9 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:4195
-#, fuzzy
 #| msgid "© 1996-2007 The Evince authors"
 msgid "© 1996–2009 The Evince authors"
-msgstr "© 1996-2007 The Evince authors"
+msgstr "© 1996–2009 The Evince authors"
 
 #: ../shell/ev-window.c:4201
 msgid "translator-credits"
