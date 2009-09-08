@@ -246,7 +246,8 @@ static void     ev_window_set_page_mode                 (EvWindow         *windo
 							 EvWindowPageMode  page_mode);
 static void	ev_window_load_job_cb  			(EvJob            *job,
 							 gpointer          data);
-static void     ev_window_reload_document               (EvWindow         *window);
+static void     ev_window_reload_document               (EvWindow         *window,
+							 EvLinkDest *dest);
 static void     ev_window_reload_job_cb                 (EvJob            *job,
 							 EvWindow         *window);
 static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
@@ -1270,7 +1271,7 @@ static void
 ev_window_document_changed (EvWindow *ev_window,
 			    gpointer  user_data)
 {
-	ev_window_reload_document (ev_window);
+	ev_window_reload_document (ev_window, NULL);
 }
 
 static void
@@ -1354,6 +1355,21 @@ ev_window_clear_temp_symlink (EvWindow *ev_window)
 	g_object_unref (tempdir);
 }
 
+static void
+ev_window_handle_link (EvWindow *ev_window,
+		       EvLinkDest *dest)
+{
+	if (dest) {
+		EvLink *link;
+		EvLinkAction *link_action;
+
+		link_action = ev_link_action_new_dest (dest);
+		link = ev_link_new (NULL, link_action);
+		ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
+		g_object_unref (link);
+	}
+}
+
 /* This callback will executed when load job will be finished.
  *
  * Since the flow of the error dialog is very confusing, we assume that both
@@ -1395,21 +1411,12 @@ ev_window_load_job_cb (EvJob *job,
 						  flags);
 		}
 
-		if (ev_window->priv->dest) {
-			EvLink *link;
-			EvLinkAction *link_action;
-	
-			link_action = ev_link_action_new_dest (ev_window->priv->dest);
-			link = ev_link_new (NULL, link_action);
-			ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
-		    	g_object_unref (link);
-
-			/* Already unrefed by ev_link_action
-			 * FIXME: link action should inc dest ref counting
-			 * or not unref it at all
-			 */
-			ev_window->priv->dest = NULL;
-		}
+		ev_window_handle_link (ev_window, ev_window->priv->dest);
+		/* Already unrefed by ev_link_action
+		 * FIXME: link action should inc dest ref counting
+		 * or not unref it at all
+		 */
+		ev_window->priv->dest = NULL;
 
 		switch (ev_window->priv->window_mode) {
 		        case EV_WINDOW_MODE_FULLSCREEN:
@@ -1488,6 +1495,7 @@ ev_window_reload_job_cb (EvJob    *job,
 			 EvWindow *ev_window)
 {
 	GtkWidget *widget;
+	EvLinkDest *dest = NULL;
 
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
@@ -1497,9 +1505,14 @@ ev_window_reload_job_cb (EvJob    *job,
 		
 		return;
 	}
-	
+
+	if (ev_window->priv->dest) {
+		dest = g_object_ref (ev_window->priv->dest);
+	}
 	ev_window_set_document (ev_window, job->document);
-	
+
+	ev_window_handle_link (ev_window, dest);
+
 	/* Restart the search after reloading */
 	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
@@ -1802,7 +1815,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	
 	if (ev_window->priv->uri &&
 	    g_ascii_strcasecmp (ev_window->priv->uri, uri) == 0) {
-		ev_window_reload_document (ev_window);
+		ev_window_reload_document (ev_window, dest);
 		return;
 	}
 
@@ -1997,7 +2010,8 @@ ev_window_reload_remote (EvWindow *ev_window)
 }
 
 static void
-ev_window_reload_document (EvWindow *ev_window)
+ev_window_reload_document (EvWindow *ev_window,
+			   EvLinkDest *dest)
 {
 	gint page;
 
@@ -2010,7 +2024,7 @@ ev_window_reload_document (EvWindow *ev_window)
 	if (ev_window->priv->dest)
 		g_object_unref (ev_window->priv->dest);
 	/* FIXME: save the scroll position too (xyz dest) */
-	ev_window->priv->dest = ev_link_dest_new_page (page);
+	ev_window->priv->dest = dest ? g_object_ref (dest) : ev_link_dest_new_page (page);
 
 	if (ev_window->priv->local_uri) {
 		ev_window_reload_remote (ev_window);
@@ -3878,7 +3892,7 @@ ev_window_cmd_go_backward (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
-	ev_window_reload_document (ev_window);
+	ev_window_reload_document (ev_window, NULL);
 }
 
 static void
