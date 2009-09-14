@@ -5603,6 +5603,15 @@ image_save_dialog_response_cb (GtkWidget *fc,
 		format = get_gdk_pixbuf_format_by_extension (uri);
 	}
 
+	if (format == NULL && g_strrstr (uri, ".") == NULL) {
+		/* no extension found and no extension provided within uri */
+		format = get_gdk_pixbuf_format_by_extension (".png");
+		if (format == NULL) {
+			/* no .png support, try .jpeg */
+			format = get_gdk_pixbuf_format_by_extension (".jpeg");
+		}
+	}
+
 	if (format == NULL) {
 		ev_window_error_message (ev_window, NULL, 
 					 "%s",
