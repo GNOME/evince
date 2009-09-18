@@ -31,6 +31,7 @@
 	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_MESSAGE_AREA, EvMessageAreaPrivate))
 
 struct _EvMessageAreaPrivate {
+	GtkWidget *main_box;
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *secondary_label;
@@ -40,7 +41,6 @@ struct _EvMessageAreaPrivate {
 
 enum {
 	PROP_0,
-	PROP_MESSAGE_TYPE,
 	PROP_TEXT,
 	PROP_SECONDARY_TEXT,
 	PROP_IMAGE
@@ -55,7 +55,7 @@ static void ev_message_area_get_property (GObject      *object,
 					  GValue       *value,
 					  GParamSpec   *pspec);
 
-G_DEFINE_TYPE (EvMessageArea, ev_message_area, GEDIT_TYPE_MESSAGE_AREA)
+G_DEFINE_TYPE (EvMessageArea, ev_message_area, EV_TYPE_INFO_BAR)
 
 static void
 ev_message_area_class_init (EvMessageAreaClass *class)
@@ -65,14 +65,6 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 	gobject_class->set_property = ev_message_area_set_property;
 	gobject_class->get_property = ev_message_area_get_property;
 
-	g_object_class_install_property (gobject_class,
-					 PROP_MESSAGE_TYPE,
-					 g_param_spec_enum ("message-type",
-							    "Message Type",
-							    "The type of message",
-							    GTK_TYPE_MESSAGE_TYPE,
-							    GTK_MESSAGE_INFO,
-							    G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
 	g_object_class_install_property (gobject_class,
 					 PROP_TEXT,
 					 g_param_spec_string ("text",
@@ -101,16 +93,16 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 static void
 ev_message_area_init (EvMessageArea *area)
 {
-	GtkWidget *main_box;
 	GtkWidget *hbox, *vbox;
-	
+	GtkWidget *content_area;
+
 	area->priv = EV_MESSAGE_AREA_GET_PRIVATE (area);
 
-	main_box = gtk_vbox_new (FALSE, 12);
-	
+	area->priv->main_box = gtk_vbox_new (FALSE, 12);
+
 	hbox = gtk_hbox_new (FALSE, 12);
 	vbox = gtk_vbox_new (FALSE, 12);
-	
+
 	area->priv->label = gtk_label_new (NULL);
 	gtk_label_set_use_markup (GTK_LABEL (area->priv->label), TRUE);
 	gtk_label_set_line_wrap (GTK_LABEL (area->priv->label), TRUE);
@@ -119,7 +111,7 @@ ev_message_area_init (EvMessageArea *area)
 	GTK_WIDGET_SET_FLAGS (area->priv->label, GTK_CAN_FOCUS);
 	gtk_box_pack_start (GTK_BOX (vbox), area->priv->label, TRUE, TRUE, 0);
 	gtk_widget_show (area->priv->label);
-	
+
 	area->priv->secondary_label = gtk_label_new (NULL);
 	gtk_label_set_use_markup (GTK_LABEL (area->priv->secondary_label), TRUE);
 	gtk_label_set_line_wrap (GTK_LABEL (area->priv->secondary_label), TRUE);
@@ -136,11 +128,12 @@ ev_message_area_init (EvMessageArea *area)
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 	gtk_widget_show (vbox);
 
-	gtk_box_pack_start (GTK_BOX (main_box), hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (area->priv->main_box), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (hbox);
-	
-	gedit_message_area_set_contents (GEDIT_MESSAGE_AREA (area), main_box);
-	gtk_widget_show (main_box);
+
+	content_area = ev_info_bar_get_content_area (EV_INFO_BAR (area));
+	gtk_container_add (GTK_CONTAINER (content_area), area->priv->main_box);
+	gtk_widget_show (area->priv->main_box);
 }
 
 static void
@@ -195,10 +188,6 @@ ev_message_area_set_property (GObject      *object,
 	EvMessageArea *area = EV_MESSAGE_AREA (object);
 
 	switch (prop_id) {
-	case PROP_MESSAGE_TYPE:
-		area->priv->message_type = g_value_get_enum (value);
-		ev_message_area_set_image_for_type (area, area->priv->message_type);
-		break;
 	case PROP_TEXT:
 		ev_message_area_set_text (area, g_value_get_string (value));
 		break;
@@ -223,9 +212,6 @@ ev_message_area_get_property (GObject     *object,
 	EvMessageArea *area = EV_MESSAGE_AREA (object);
 
 	switch (prop_id) {
-	case PROP_MESSAGE_TYPE:
-		g_value_set_enum (value, (GtkMessageType) area->priv->message_type);
-		break;
 	case PROP_TEXT:
 		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (area->priv->label)));
 		break;
@@ -241,6 +227,37 @@ ev_message_area_get_property (GObject     *object,
 	}
 }
 
+void
+_ev_message_area_add_buttons_valist (EvMessageArea *area,
+				     const gchar   *first_button_text,
+				     va_list        args)
+{
+	const gchar* text;
+	gint response_id;
+
+	if (first_button_text == NULL)
+		return;
+
+	text = first_button_text;
+	response_id = va_arg (args, gint);
+
+	while (text != NULL) {
+		ev_info_bar_add_button (EV_INFO_BAR (area), text, response_id);
+
+		text = va_arg (args, gchar*);
+		if (text == NULL)
+			break;
+
+		response_id = va_arg (args, int);
+	}
+}
+
+GtkWidget *
+_ev_message_area_get_main_box (EvMessageArea *area)
+{
+	return area->priv->main_box;
+}
+
 GtkWidget *
 ev_message_area_new (GtkMessageType type,
 		     const gchar   *text,
@@ -253,13 +270,13 @@ ev_message_area_new (GtkMessageType type,
 			       "message-type", type,
 			       "text", text,
 			       NULL);
+	ev_message_area_set_image_for_type (EV_MESSAGE_AREA (widget), type);
 	if (first_button_text) {
 		va_list args;
-		
+
 		va_start (args, first_button_text);
-		gedit_message_area_add_buttons_valist (GEDIT_MESSAGE_AREA (widget),
-						       first_button_text,
-						       args);
+		_ev_message_area_add_buttons_valist (EV_MESSAGE_AREA (widget),
+						     first_button_text, args);
 		va_end (args);
 	}
 

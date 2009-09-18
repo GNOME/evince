@@ -681,7 +681,6 @@ backend/pixbuf/Makefile
 backend/ps/Makefile
 backend/tiff/Makefile
 cut-n-paste/Makefile
-cut-n-paste/gedit-message-area/Makefile
 cut-n-paste/evinfobar/Makefile
 cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/smclient/Makefile

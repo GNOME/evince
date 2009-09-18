@@ -26,7 +26,7 @@
 
 #include <gtk/gtk.h>
 
-#include "gedit-message-area.h"
+#include "evinfobar.h"
 
 G_BEGIN_DECLS
 
@@ -42,14 +42,14 @@ typedef struct _EvMessageAreaClass   EvMessageAreaClass;
 typedef struct _EvMessageAreaPrivate EvMessageAreaPrivate;
 
 struct _EvMessageArea {
-	GeditMessageArea parent_instance;
+	EvInfoBar parent_instance;
 
 	/*< private >*/
 	EvMessageAreaPrivate *priv;
 };
 
 struct _EvMessageAreaClass {
-	GeditMessageAreaClass parent_class;
+	EvInfoBarClass parent_class;
 };
 
 GType      ev_message_area_get_type             (void) G_GNUC_CONST;
@@ -65,6 +65,11 @@ void       ev_message_area_set_text             (EvMessageArea *area,
 						 const gchar   *str);
 void       ev_message_area_set_secondary_text   (EvMessageArea *area,
 						 const gchar   *str);
+
+void      _ev_message_area_add_buttons_valist   (EvMessageArea *area,
+						 const gchar   *first_button_text,
+						 va_list        args);
+GtkWidget *_ev_message_area_get_main_box        (EvMessageArea *area);
 
 G_END_DECLS
 

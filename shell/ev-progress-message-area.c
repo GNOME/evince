@@ -83,7 +83,7 @@ ev_progress_message_area_init (EvProgressMessageArea *area)
 	
 	area->priv = EV_PROGRESS_MESSAGE_AREA_GET_PRIVATE (area);
 
-	contents = gedit_message_area_get_contents (GEDIT_MESSAGE_AREA (area));
+	contents = _ev_message_area_get_main_box (EV_MESSAGE_AREA (area));
 	
 	vbox = gtk_vbox_new (FALSE, 6);
 	
@@ -162,11 +162,11 @@ ev_progress_message_area_new (const gchar *stock_id,
 			       NULL);
 	if (first_button_text) {
 		va_list args;
-		
+
 		va_start (args, first_button_text);
-		gedit_message_area_add_buttons_valist (GEDIT_MESSAGE_AREA (widget),
-						       first_button_text,
-						       args);
+		_ev_message_area_add_buttons_valist (EV_MESSAGE_AREA (widget),
+						     first_button_text,
+						     args);
 		va_end (args);
 	}
 
