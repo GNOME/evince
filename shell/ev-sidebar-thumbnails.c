@@ -821,6 +821,7 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	priv->size_cache = ev_thumbnails_size_cache_get (document);
 	priv->document = document;
 	priv->n_pages = ev_document_get_n_pages (document);
+	priv->rotation = ev_document_model_get_rotation (model);
 	priv->loading_icons = g_hash_table_new_full (g_str_hash,
 						     g_str_equal,
 						     (GDestroyNotify)g_free,
