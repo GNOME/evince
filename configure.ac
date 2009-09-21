@@ -308,6 +308,12 @@ if test "x$enable_debug" = "xyes"; then
    DEBUG_FLAGS="-DEV_ENABLE_DEBUG"
 fi
 
+AC_ARG_ENABLE([tests],
+	AC_HELP_STRING([--enable-tests], [Disable tests]),
+	enable_tests="$enableval",
+	enable_tests=yes)
+
+AM_CONDITIONAL(ENABLE_TESTS, test x$enable_tests = xyes)
 
 LIBDOCUMENT_CFLAGS="$LIBDOCUMENT_CFLAGS $DEBUG_FLAGS"
 LIBDOCUMENT_LIBS="$LIBDOCUMENT_LIBS"
@@ -746,6 +752,7 @@ Configure summary:
 	Gtk-Doc Support....:  $enable_gtk_doc
 	Debug mode.........:  $enable_debug
 	GObj. Introspection:  $enable_introspection
+	Tests..............:  $enable_tests
 
 	PDF Backend........:  $enable_pdf
 	PostScript Backend.:  $enable_ps

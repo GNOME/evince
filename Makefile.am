@@ -8,8 +8,11 @@ SUBDIRS = \
 	properties \
 	shell \
 	po \
-	help \
-	test
+	help
+
+if ENABLE_TESTS
+SUBDIRS += test
+endif
 
 if ENABLE_THUMBNAILER
 SUBDIRS += thumbnailer
@@ -52,7 +55,7 @@ DISTCLEANFILES = 		\
 
 ACLOCAL_AMFLAGS = -I m4
 
-DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install --disable-scrollkeeper --enable-gtk-doc --disable-nautilus
+DISTCHECK_CONFIGURE_FLAGS = --disable-schemas-install --disable-scrollkeeper --enable-gtk-doc --disable-nautilus --disable-tests
 
 # Ignore scrollkeeper issues for now.  @#*$& scrollkeeper
 distuninstallcheck_listfiles = find . -type f -print | grep -v scrollkeeper | grep -v /share/gnome/help/ | grep -v \.omf
