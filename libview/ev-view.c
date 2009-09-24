@@ -87,8 +87,6 @@ typedef enum {
 #define SCROLL_TIME 150
 
 /*** Scrolling ***/
-static void       scroll_to_current_page 		     (EvView *view,
-							      GtkOrientation orientation);
 static void       ev_view_set_scroll_adjustments             (GtkLayout          *layout,
 							      GtkAdjustment      *hadjustment,
 							      GtkAdjustment      *vadjustment);
@@ -483,41 +481,63 @@ ev_view_get_height_to_page (EvView *view,
 }
 
 static void
-scroll_to_current_page (EvView *view, GtkOrientation orientation)
+scroll_to_point (EvView        *view,
+		 gdouble        x,
+		 gdouble        y,
+		 GtkOrientation orientation)
 {
-	GdkPoint view_point;
-
-	if (view->document == NULL) {
-		return;
-	}
-
-        doc_point_to_view_point (view, view->current_page, &view->pending_point, &view_point);
-
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
 		if (view->continuous) {
     			gtk_adjustment_clamp_page (view->vadjustment,
-						   view_point.y - view->spacing / 2,
-						   view_point.y + view->vadjustment->page_size);
+						   y - view->spacing / 2,
+						   y + view->vadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->vadjustment,
-						  CLAMP (view_point.y,
+						  CLAMP (y,
 						  view->vadjustment->lower,
 						  view->vadjustment->upper -
 						  view->vadjustment->page_size));
 		}
 	} else {
 		if (view->dual_page) {
-			gtk_adjustment_clamp_page (view->hadjustment,
-						   view_point.x,
-						   view_point.x + view->hadjustment->page_size);
+			gtk_adjustment_clamp_page (view->hadjustment, x,
+						   x + view->hadjustment->page_size);
 		} else {
 			gtk_adjustment_set_value (view->hadjustment,
-						  CLAMP (view_point.x,
+						  CLAMP (x,
 						  view->hadjustment->lower,
 						  view->hadjustment->upper -
 						  view->hadjustment->page_size));
 		}
 	}
+}
+
+static void
+ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
+{
+	gdouble x, y;
+
+	if (!view->document)
+		return;
+
+	if ((orientation == GTK_ORIENTATION_VERTICAL && view->pending_point.y == 0) ||
+	    (orientation == GTK_ORIENTATION_HORIZONTAL && view->pending_point.x == 0)) {
+		GdkRectangle page_area;
+		GtkBorder    border;
+
+		get_page_extents (view, view->current_page, &page_area, &border);
+		x = page_area.x;
+		y = page_area.y;
+	} else {
+		GdkPoint view_point;
+
+		doc_point_to_view_point (view, view->current_page,
+					 &view->pending_point, &view_point);
+		x = view_point.x;
+		y = view_point.y;
+	}
+
+	scroll_to_point (view, x, y, orientation);
 }
 
 static void
@@ -574,7 +594,7 @@ view_set_adjustment_values (EvView         *view,
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
     	        case SCROLL_TO_PAGE_POSITION:
-			scroll_to_current_page (view, orientation);
+			ev_view_scroll_to_page_position (view, orientation);
 			break;
     	        case SCROLL_TO_CENTER:
 			new_value = CLAMP (adjustment->upper * factor - adjustment->page_size * 0.5 + 0.5,
