@@ -5093,6 +5093,8 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 
 	if (view->pixbuf_cache) {
 		ev_pixbuf_cache_clear (view->pixbuf_cache);
+		if (!ev_document_is_page_size_uniform (view->document))
+			view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
