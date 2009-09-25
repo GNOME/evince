@@ -260,47 +260,10 @@ save_session_crashed_in_idle (EvApplication *application)
 }
 
 static gboolean
-ev_application_run_crash_recovery_dialog (EvApplication *application,
-					  const gchar  **files)
+ev_application_run_crash_recovery_dialog (EvApplication *application)
 {
 	GtkWidget *dialog;
 	gint       response;
-
-	/* Do not show the recover dialog if the requested file is the
-	 * only one to be recovered
-	 */
-	if (files && g_strv_length ((gchar **)files) == 1) {
-		GKeyFile *state_file;
-		gchar   **uri_list;
-
-		state_file = g_key_file_new ();
-		g_key_file_load_from_file (state_file,
-					   application->crashed_file,
-					   G_KEY_FILE_NONE,
-					   NULL);
-		uri_list = g_key_file_get_string_list (state_file,
-						       "Evince",
-						       "documents",
-						       NULL, NULL);
-		if (uri_list && g_strv_length (uri_list) == 1) {
-			GFile *file;
-			gchar *uri;
-
-			file = g_file_new_for_commandline_arg (files[0]);
-			uri = g_file_get_uri (file);
-			g_object_unref (file);
-			if (g_ascii_strcasecmp (uri, uri_list[0]) == 0) {
-				g_strfreev (uri_list);
-				g_key_file_free (state_file);
-				g_free (uri);
-
-				return FALSE;
-			}
-			g_free (uri);
-			g_strfreev (uri_list);
-		}
-		g_key_file_free (state_file);
-	}
 
 	dialog = gtk_message_dialog_new	(NULL,
 					 GTK_DIALOG_MODAL,
@@ -330,6 +293,84 @@ ev_application_run_crash_recovery_dialog (EvApplication *application,
 
 	return response == GTK_RESPONSE_ACCEPT;
 }
+
+static gboolean
+is_in_command_line (GFile         *file,
+		    const gchar  **files)
+{
+	gint i;
+
+	if (!files)
+		return FALSE;
+
+	for (i = 0; files[i]; i++) {
+		GFile *cfile;
+
+		cfile = g_file_new_for_commandline_arg (files[i]);
+		if (g_file_equal (cfile, file)) {
+			g_object_unref (cfile);
+			return TRUE;
+		}
+		g_object_unref (cfile);
+	}
+
+	return FALSE;
+}
+
+static GKeyFile *
+ev_application_get_files_to_recover (EvApplication *application,
+				     const gchar  **files)
+{
+	GKeyFile *state_file;
+	gchar   **uri_list;
+	gchar   **dest_list = NULL;
+	gint      i, j;
+
+	state_file = g_key_file_new ();
+	g_key_file_load_from_file (state_file,
+				   application->crashed_file,
+				   G_KEY_FILE_NONE,
+				   NULL);
+
+	uri_list = g_key_file_get_string_list (state_file,
+					       "Evince",
+					       "documents",
+					       NULL, NULL);
+	if (!uri_list) {
+		g_key_file_free (state_file);
+		return NULL;
+	}
+
+	for (i = 0, j = 0; uri_list[i]; i++) {
+		GFile *file = g_file_new_for_uri (uri_list[i]);
+
+		if (!g_file_query_exists (file, NULL) ||
+		    is_in_command_line (file, files)) {
+			g_object_unref (file);
+			continue;
+		}
+
+		if (!dest_list)
+			dest_list = g_new (gchar *, g_strv_length (uri_list) - i);
+		dest_list[j++] = uri_list[i];
+	}
+
+	if (j > 0) {
+		g_key_file_set_string_list (state_file,
+					    "Evince",
+					    "documents",
+					    (const gchar **)dest_list,
+					    j);
+	} else {
+		g_key_file_free (state_file);
+		state_file = NULL;
+	}
+
+	g_free (dest_list);
+	g_strfreev (uri_list);
+
+	return state_file;
+}
 #endif /* ENABLE_DBUS */
 
 gboolean
@@ -348,13 +389,12 @@ ev_application_load_session (EvApplication *application,
 #endif /* WITH_SMCLIENT */
 #ifdef ENABLE_DBUS
         if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
-		if (ev_application_run_crash_recovery_dialog (application, files)) {
-			state_file = g_key_file_new ();
-			g_key_file_load_from_file (state_file,
-						   application->crashed_file,
-						   G_KEY_FILE_NONE,
-						   NULL);
-		} else {
+		state_file = ev_application_get_files_to_recover (application, files);
+		if (!state_file)
+			return FALSE;
+
+		if (!ev_application_run_crash_recovery_dialog (application)) {
+			g_key_file_free (state_file);
 			return FALSE;
 		}
 	} else
