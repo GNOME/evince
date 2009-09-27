@@ -785,6 +785,8 @@ ev_sidebar_thumbnails_rotation_changed_cb (EvDocumentModel     *model,
 	/* Trigger a redraw */
 	sidebar_thumbnails->priv->start_page = -1;
 	sidebar_thumbnails->priv->end_page = -1;
+	ev_sidebar_thumbnails_set_current_page (sidebar_thumbnails,
+						ev_document_model_get_page (model));
 	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
 }
 
