@@ -5098,6 +5098,8 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
+	ev_view_remove_all (view);
+
 	if (rotation != 0)
 		clear_selection (view);
 }
