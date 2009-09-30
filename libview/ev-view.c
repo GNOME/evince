@@ -5222,6 +5222,8 @@ ev_view_set_rotation (EvView *view, int rotation)
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
+	ev_view_remove_all (view);
+
 	if (rotation != 0)
 		clear_selection (view);
 
