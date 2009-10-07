@@ -116,7 +116,7 @@ static EvThumbsSizeCache *
 ev_thumbnails_size_cache_new (EvDocument *document)
 {
 	EvThumbsSizeCache *cache;
-	EvRenderContext *rc;
+	EvRenderContext *rc = NULL;
 	gint i, n_pages;
 	EvThumbsSize *thumb_size;
 
