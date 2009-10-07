@@ -767,6 +767,79 @@ add_scroll_binding_keypad (GtkBindingSet  *binding_set,
 				G_TYPE_BOOLEAN, horizontal);
 }
 
+static gdouble
+compute_scroll_increment (EvView        *view,
+			  GtkScrollType  scroll)
+{
+	GtkWidget *widget = GTK_WIDGET (view);
+	GtkAdjustment *adjustment = view->vadjustment;
+	GdkRegion *text_region, *region;
+	gint page;
+	GdkRectangle rect;
+	EvRectangle doc_rect;
+	GdkRectangle page_area;
+	GtkBorder border;
+	GdkRectangle *recs;
+	gint n_recs;
+	gdouble fraction = 1.0;
+
+	if (scroll != GTK_SCROLL_PAGE_BACKWARD && scroll != GTK_SCROLL_PAGE_FORWARD)
+		return adjustment->page_size;
+
+	page = scroll == GTK_SCROLL_PAGE_BACKWARD ? view->start_page : view->end_page;
+
+	text_region = ev_pixbuf_cache_get_text_mapping (view->pixbuf_cache, page);
+	if (!text_region || gdk_region_empty (text_region))
+		return adjustment->page_size;
+
+	get_page_extents (view, page, &page_area, &border);
+	rect.x = page_area.x + view->scroll_x;
+	rect.y = view->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : widget->allocation.height - 5);
+	rect.width = page_area.width;
+	rect.height = 1;
+	view_rect_to_doc_rect (view, &rect, &page_area, &doc_rect);
+
+	/* Convert the doc rectangle into a GdkRectangle */
+	rect.x = doc_rect.x1;
+	rect.y = doc_rect.y1;
+	rect.width = doc_rect.x2 - doc_rect.x1;
+	rect.height = MAX (1, doc_rect.y2 - doc_rect.y1);
+	region = gdk_region_rectangle (&rect);
+
+	gdk_region_intersect (region, text_region);
+	gdk_region_get_rectangles (region, &recs, &n_recs);
+	gdk_region_destroy (region);
+	if (n_recs > 0) {
+		EvRenderContext *rc;
+		EvPage  *ev_page;
+
+		ev_page = ev_document_get_page (view->document, page);
+		rc = ev_render_context_new (ev_page, view->rotation, view->scale);
+		g_object_unref (ev_page);
+		/* Get the selection region to know the height of the line */
+		doc_rect.x1 = doc_rect.x2 = recs[0].x + 0.5;
+		doc_rect.y1 = doc_rect.y2 = recs[0].y + 0.5;
+
+		ev_document_doc_mutex_lock ();
+		region = ev_selection_get_selection_region (EV_SELECTION (view->document),
+							    rc, EV_SELECTION_STYLE_LINE,
+							    &doc_rect);
+		ev_document_doc_mutex_unlock ();
+
+		g_object_unref (rc);
+		g_free (recs);
+		gdk_region_get_rectangles (region, &recs, &n_recs);
+		gdk_region_destroy (region);
+		if (n_recs > 0) {
+			fraction = 1 - (recs[0].height / adjustment->page_size);
+		}
+		g_free (recs);
+	}
+
+	return adjustment->page_size * fraction;
+
+}
+
 void
 ev_view_scroll (EvView        *view,
 	        GtkScrollType  scroll,
@@ -797,7 +870,6 @@ ev_view_scroll (EvView        *view,
 
 	/* Assign values for increment and vertical adjustment */
 	adjustment = horizontal ? view->hadjustment : view->vadjustment;
-	increment = adjustment->page_size * 0.75;
 	value = adjustment->value;
 
 	/* Assign boolean for first and last page */
@@ -817,6 +889,7 @@ ev_view_scroll (EvView        *view,
 				ev_view_previous_page (view);
 				/* Jump to the top */
 			} else {
+				increment = compute_scroll_increment (view, GTK_SCROLL_PAGE_BACKWARD);
 				value = MAX (value - increment, adjustment->lower);
 			}
 			break;
@@ -830,6 +903,7 @@ ev_view_scroll (EvView        *view,
 				ev_view_next_page (view);
 			/* Jump to the bottom */
 			} else {
+				increment = compute_scroll_increment (view, GTK_SCROLL_PAGE_FORWARD);
 				value = MIN (value + increment, adjustment->upper - adjustment->page_size);
 			}
 			break;
