@@ -75,7 +75,7 @@ get_filename_from_uri (const char *uri)
 	char *filename;
 	char *basename;
 	
-	filename = escape_uri_for_display (uri);
+	filename = g_uri_unescape_string (uri, NULL);
 	basename = g_path_get_basename (filename);
 	g_free(filename);
 
