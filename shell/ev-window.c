@@ -1648,7 +1648,8 @@ window_open_file_copy_ready_cb (GFile        *source,
 	GError *error = NULL;
 
 	ev_window_clear_progress_idle (ev_window);
-	
+	ev_window_set_message_area (ev_window, NULL);
+
 	g_file_copy_finish (source, async_result, &error);
 	if (!error) {
 		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
