@@ -1701,6 +1701,9 @@ window_open_file_copy_progress_cb (goffset   n_bytes,
 	if (!ev_window->priv->message_area)
 		return;
 
+	if (total_bytes <= 0)
+		return;
+
 	fraction = n_bytes / (gdouble)total_bytes;
 	status = g_strdup_printf (_("Downloading document (%d%%)"),
 				  (gint)(fraction * 100));
@@ -1953,7 +1956,10 @@ reload_remote_copy_progress_cb (goffset   n_bytes,
 	
 	if (!ev_window->priv->message_area)
 		return;
-	
+
+	if (total_bytes <= 0)
+		return;
+
 	fraction = n_bytes / (gdouble)total_bytes;
 	status = g_strdup_printf (_("Downloading document (%d%%)"),
 				  (gint)(fraction * 100));
@@ -2419,7 +2425,10 @@ window_save_file_copy_progress_cb (goffset n_bytes,
 	
 	if (!ev_window->priv->message_area)
 		return;
-	
+
+	if (total_bytes <= 0)
+		return;
+
 	fraction = n_bytes / (gdouble)total_bytes;
 	save_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dst), "save-type"));
 
