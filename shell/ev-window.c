@@ -1614,7 +1614,9 @@ show_loading_progress (EvWindow *ev_window)
 	if (ev_window->priv->message_area)
 		return FALSE;
 
-	display_name = g_uri_unescape_string (ev_window->priv->uri, NULL);
+	text = g_uri_unescape_string (ev_window->priv->uri, NULL);
+	display_name = g_markup_escape_text (text, -1);
+	g_free (text);
 	text = g_strdup_printf (_("Loading document from “%s”"),
 				display_name);
 
