@@ -885,7 +885,7 @@ ev_info_bar_new_with_buttons (const gchar *first_button_text,
   EvInfoBar *info_bar;
   va_list args;
 
-  info_bar = EV_INFO_BAR (gtk_info_bar_new ());
+  info_bar = EV_INFO_BAR (ev_info_bar_new ());
 
   va_start (args, first_button_text);
   add_buttons_valist (info_bar, first_button_text, args);
