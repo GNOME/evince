@@ -52,8 +52,6 @@ evince_SOURCES=				\
 	ev-message-area.h		\
 	ev-metadata.c			\
 	ev-metadata.h			\
-	ev-metadata-manager.c		\
-	ev-metadata-manager.h		\
 	ev-navigation-action.c		\
 	ev-navigation-action.h		\
 	ev-navigation-action-widget.c	\
