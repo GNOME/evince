@@ -49,6 +49,8 @@ evince_SOURCES=				\
 	$(DBUS_SOURCES)			\
 	ev-message-area.c		\
 	ev-message-area.h		\
+	ev-metadata.c			\
+	ev-metadata.h			\
 	ev-metadata-manager.c		\
 	ev-metadata-manager.h		\
 	ev-navigation-action.c		\
