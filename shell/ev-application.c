@@ -41,7 +41,6 @@
 #include "ev-application.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
-#include "ev-metadata-manager.h"
 #include "ev-utils.h"
 #include "ev-stock-icons.h"
 
@@ -151,8 +150,6 @@ ev_application_register_service (EvApplication *application)
                                              G_OBJECT (application));
 	
 	application->scr_saver = totem_scrsaver_new (connection);
-
-        ev_metadata_manager_init ();
 
 	return TRUE;
 }
@@ -894,8 +891,6 @@ ev_application_shutdown (EvApplication *application)
 	}
 #endif /* ENABLE_DBUS */
 	
-        ev_metadata_manager_shutdown ();
-
         g_free (application->dot_dir);
         application->dot_dir = NULL;
         g_free (application->data_dir);
