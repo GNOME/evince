@@ -24,6 +24,8 @@ INCLUDES=							\
 
 bin_PROGRAMS=evince
 
+libexec_PROGRAMS=evince-convert-metadata
+
 EV_MEDIA_PLAYER_KEYS_SOURCES = ev-media-player-keys.c ev-media-player-keys.h
 if ENABLE_DBUS
 DBUS_SOURCES = $(EV_MEDIA_PLAYER_KEYS_SOURCES)
@@ -109,6 +111,14 @@ BUILT_SOURCES = ev-marshal.h ev-marshal.c
 if ENABLE_DBUS
 BUILT_SOURCES += ev-application-service.h
 endif
+
+evince_convert_metadata_SOURCES=	\
+	ev-convert-metadata.c
+
+evince_convert_metadata_LDADD=		\
+	$(SHELL_LIBS)
+
+
 
 EXTRA_DIST = ev-marshal.list		\
 	ev-application-service.xml	\
