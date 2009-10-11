@@ -2128,7 +2128,8 @@ ev_window_open_copy_at_dest (EvWindow   *window,
 {
 	EvWindow *new_window = EV_WINDOW (ev_window_new ());
 
-	new_window->priv->metadata = g_object_ref (window->priv->metadata);
+	if (window->priv->metadata)
+		new_window->priv->metadata = g_object_ref (window->priv->metadata);
 	ev_window_open_document (new_window,
 				 window->priv->document,
 				 dest, 0, NULL);
