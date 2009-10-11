@@ -17,6 +17,7 @@ INCLUDES=							\
 	-I$(top_srcdir)/properties				\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
+	-DLIBEXECDIR=\""$(libexecdir)"\"			\
 	-DEVINCE_COMPILATION					\
 	$(SHELL_CFLAGS)						\
 	$(WARN_CFLAGS)						\

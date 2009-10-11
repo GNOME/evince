@@ -26,6 +26,13 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#ifndef G_OS_WIN32
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
 #ifdef ENABLE_DBUS
 #include <gdk/gdkx.h>
 #include <dbus/dbus-glib-bindings.h>
@@ -37,6 +44,7 @@
 #include "ev-init.h"
 #include "ev-file-helpers.h"
 #include "ev-stock-icons.h"
+#include "ev-metadata.h"
 
 #ifdef WITH_SMCLIENT
 #include "eggsmclient.h"
@@ -145,6 +153,74 @@ launch_previewer (void)
 
 	return retval;
 }
+
+#ifndef G_OS_WIN32
+static gboolean
+convert_metadata (const gchar *metadata)
+{
+	GFile   *file;
+	gchar   *cmd;
+	gint     exit_status;
+	GError  *error = NULL;
+	gboolean retval;
+
+	/* If metadata is not supported for a local file
+	 * is likely because and old gvfs version is running.
+	 */
+	file = g_file_new_for_path (metadata);
+	if (!ev_is_metadata_supported_for_file (file)) {
+		g_warning ("%s\n",
+			   "GVFS metadata not supported, "
+			   "Evince will run without metadata support");
+		g_object_unref (file);
+		return FALSE;
+	}
+	g_object_unref (file);
+
+	cmd = g_strdup_printf ("%s %s", LIBEXECDIR"/evince-convert-metadata", metadata);
+
+	retval = g_spawn_command_line_sync (cmd, NULL, NULL, &exit_status, &error);
+	g_free (cmd);
+
+	if (!retval) {
+		g_printerr ("Error migrating metadata: %s\n", error->message);
+		g_error_free (error);
+	}
+
+	return retval && exit_status == 0;
+}
+
+static void
+ev_migrate_metadata (void)
+{
+	gchar *updated;
+	gchar *metadata;
+
+	updated = g_build_filename (ev_application_get_dot_dir (EV_APP),
+				    "migrated-to-gvfs", NULL);
+	if (g_file_test (updated, G_FILE_TEST_EXISTS)) {
+		/* Already migrated */
+		g_free (updated);
+		return;
+	}
+
+	metadata = g_build_filename (ev_application_get_dot_dir (EV_APP),
+				     "ev-metadata.xml", NULL);
+	if (g_file_test (metadata, G_FILE_TEST_EXISTS)) {
+		if (convert_metadata (metadata)) {
+			gint fd;
+
+			fd = g_creat (updated, 0600);
+			if (fd != -1) {
+				close (fd);
+			}
+		}
+	}
+
+	g_free (updated);
+	g_free (metadata);
+}
+#endif /* !G_OS_WIN32 */
 
 static void
 value_free (GValue *value)
@@ -474,6 +550,10 @@ main (int argc, char *argv[])
 	
         if (!ev_init ())
                 return 1;
+
+#ifndef G_OS_WIN32
+	ev_migrate_metadata ();
+#endif
 
 	ev_stock_icons_init ();
 
