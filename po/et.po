@@ -5,17 +5,17 @@
 # Copyright (C) 2007-2009 The GNOME Project
 # This file is distributed under the same license as the evince package.
 #
-# Sven Sapelson <sven.sapelson@gmail.com>, 2005.
-# Ivar Smolin <okul@linux.ee>, 2005-2009.
-# Priit Laes <amd@store20.com>, 2005-2007.
+# Sven Sapelson <sven.sapelson gmail com>, 2005.
+# Ivar Smolin <okul linux ee>, 2005-2009.
+# Priit Laes <amd store20 com>, 2005-2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Evince HEAD\n"
+"Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2009-08-13 21:54+0000\n"
-"PO-Revision-Date: 2009-08-17 16:47+0300\n"
+"POT-Creation-Date: 2009-10-11 15:26+0000\n"
+"PO-Revision-Date: 2009-10-16 06:51+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -623,6 +623,25 @@ msgstr "Krahhist taastamine"
 msgid "Password for document %s"
 msgstr "Dokumendi %s parool"
 
+#, c-format
+msgid "Converting %s"
+msgstr "Teisendamine: %s"
+
+#, c-format
+msgid "%d of %d documents converted"
+msgstr "%d/%d dokumenti teisendatud"
+
+msgid "Converting metadata"
+msgstr "Metaandmete teisendamine"
+
+msgid ""
+"The metadata format used by Evince has changed, and hence it needs to be "
+"migrated. If the migration is cancelled the metadata storage will not work."
+msgstr ""
+"Evince poolt kasutatavate metaandmete vorming on muutunud ja vanad andmed "
+"tuleb teisendada uude vormingusse. Teisendamise katkestamise korral lakkab "
+"metaandmete hoidla töötamast."
+
 msgid "Open a recently used document"
 msgstr "Hiljuti kasutatud dokumendi avamine"
 
@@ -747,13 +766,6 @@ msgid "Open Document"
 msgstr "Dokumendi avamine"
 
 #, c-format
-msgid "Couldn't create symlink “%s”: "
-msgstr "Nimeviita „%s” pole võimalik luua: "
-
-msgid "Cannot open a copy."
-msgstr "Koopiat pole võimalik avada."
-
-#, c-format
 msgid "Saving document to %s"
 msgstr "Dokumendi salvestamine asukohale %s"
 
@@ -867,9 +879,9 @@ msgstr "© 1996-2009 Evince'i autorid"
 
 msgid "translator-credits"
 msgstr ""
-"Sven Sapelson <sven.sapelson@gmail.com>, 2005.\n"
-"Ivar Smolin <okul@linux.ee>, 2005-2009.\n"
-"Priit Laes <amd@store20.com>, 2005-2007."
+"Sven Sapelson <sven.sapelson gmail com>, 2005.\n"
+"Ivar Smolin <okul linux ee>, 2005-2009.\n"
+"Priit Laes <amd store20 com>, 2005-2007."
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
