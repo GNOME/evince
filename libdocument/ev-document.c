@@ -262,6 +262,8 @@ ev_document_load (EvDocument  *document,
 			if (i == 0) {
 				priv->uniform_width = page_width;
 				priv->uniform_height = page_height;
+				priv->max_width = priv->uniform_width;
+				priv->max_height = priv->uniform_height;
 			} else if (priv->uniform &&
 				   (priv->uniform_width != page_width ||
 				    priv->uniform_height != page_height)) {
@@ -309,11 +311,6 @@ ev_document_load (EvDocument  *document,
 			}
 
 			g_object_unref (page);
-		}
-
-		if (priv->uniform) {
-			priv->max_width = priv->uniform_width;
-			priv->max_height = priv->uniform_height;
 		}
 	}
 
