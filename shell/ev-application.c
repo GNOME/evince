@@ -50,6 +50,11 @@
 
 #ifdef ENABLE_DBUS
 #include <dbus/dbus-glib-bindings.h>
+static gboolean ev_application_open_uri (EvApplication  *application,
+					 const char     *uri,
+					 GHashTable     *args,
+					 guint           timestamp,
+					 GError        **error);
 #include "ev-application-service.h"
 #endif
 
@@ -64,8 +69,9 @@ struct _EvApplication {
 	gchar *toolbars_file;
 
 #ifdef ENABLE_DBUS
-	gchar *crashed_file;
-	guint  crashed_idle;
+	DBusGConnection *connection;
+	GHashTable *windows;
+	guint doc_counter;
 #endif
 
 	EggToolbarsModel *toolbars_model;
@@ -96,64 +102,14 @@ static EvApplication *instance;
 
 G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 
-#define APPLICATION_SERVICE_NAME "org.gnome.evince.ApplicationService"
+#ifdef ENABLE_DBUS
+#define APPLICATION_DBUS_OBJECT_PATH "/org/gnome/evince/Evince"
+#define APPLICATION_DBUS_INTERFACE   "org.gnome.evince.Application"
+#endif
 
 #define EV_PRINT_SETTINGS_FILE "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
 #define EV_PAGE_SETUP_GROUP "Page Setup"
-
-#ifdef ENABLE_DBUS
-gboolean
-ev_application_register_service (EvApplication *application)
-{
-	static DBusGConnection *connection = NULL;
-	DBusGProxy *driver_proxy;
-	GError *err = NULL;
-	guint request_name_result;
-
-	if (connection) {
-		g_warning ("Service already registered.");
-		return FALSE;
-	}
-	
-	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &err);
-	if (connection == NULL) {
-		g_warning ("Service registration failed.");
-		g_error_free (err);
-
-		return FALSE;
-	}
-
-	driver_proxy = dbus_g_proxy_new_for_name (connection,
-						  DBUS_SERVICE_DBUS,
-						  DBUS_PATH_DBUS,
-						  DBUS_INTERFACE_DBUS);
-
-	if (!org_freedesktop_DBus_request_name (driver_proxy,
-                                        	APPLICATION_SERVICE_NAME,
-						DBUS_NAME_FLAG_DO_NOT_QUEUE,
-						&request_name_result, &err)) {
-		g_warning ("Service registration failed.");
-		g_clear_error (&err);
-	}
-
-	g_object_unref (driver_proxy);
-	
-	if (request_name_result == DBUS_REQUEST_NAME_REPLY_EXISTS) {
-		return FALSE;
-	}
-
-	dbus_g_object_type_install_info (EV_TYPE_APPLICATION,
-					 &dbus_glib_ev_application_object_info);
-	dbus_g_connection_register_g_object (connection,
-					     "/org/gnome/evince/Evince",
-                                             G_OBJECT (application));
-	
-	application->scr_saver = totem_scrsaver_new (connection);
-
-	return TRUE;
-}
-#endif /* ENABLE_DBUS */
 
 /**
  * ev_application_get_instance:
@@ -172,8 +128,7 @@ ev_application_get_instance (void)
 	return instance;
 }
 
-#if defined (WITH_SMCLIENT) || defined (ENABLE_DBUS)
-
+#if defined (WITH_SMCLIENT)
 /* Session */
 static void
 save_session (EvApplication *application,
@@ -202,173 +157,7 @@ save_session (EvApplication *application,
 	g_free (uri_list);
 }
 
-#endif /* WITH_SMCLIENT || ENABLE_DBUS */
-
-#ifdef ENABLE_DBUS
-static void
-ev_application_save_session_crashed (EvApplication *application)
-{
-	GList *windows;
-
-	windows = ev_application_get_windows (application);
-	if (windows) {
-		GKeyFile *crashed_file;
-		gchar    *data;
-		gssize    data_length;
-		GError   *error = NULL;
-
-		crashed_file = g_key_file_new ();
-		save_session (application, windows, crashed_file);
-
-		data = g_key_file_to_data (crashed_file, (gsize *)&data_length, NULL);
-		g_file_set_contents (application->crashed_file, data, data_length, &error);
-		if (error) {
-			g_warning ("%s", error->message);
-			g_error_free (error);
-		}
-		g_free (data);
-		g_key_file_free (crashed_file);
-	} else if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
-		GFile *file;
-
-		file = g_file_new_for_path (application->crashed_file);
-		g_file_delete (file, NULL, NULL);
-		g_object_unref (file);
-	}
-}
-
-static gboolean
-save_session_crashed_in_idle_cb (EvApplication *application)
-{
-	ev_application_save_session_crashed (application);
-	application->crashed_idle = 0;
-
-	return FALSE;
-}
-
-static void
-save_session_crashed_in_idle (EvApplication *application)
-{
-	if (application->crashed_idle > 0)
-		g_source_remove (application->crashed_idle);
-	application->crashed_idle =
-		g_idle_add ((GSourceFunc)save_session_crashed_in_idle_cb,
-			    application);
-}
-
-static gboolean
-ev_application_run_crash_recovery_dialog (EvApplication *application)
-{
-	GtkWidget *dialog;
-	gint       response;
-
-	dialog = gtk_message_dialog_new	(NULL,
-					 GTK_DIALOG_MODAL,
-					 GTK_MESSAGE_WARNING,
-					 GTK_BUTTONS_NONE,
-					 _("Recover previous documents?"));
-	gtk_message_dialog_format_secondary_text (
-		GTK_MESSAGE_DIALOG (dialog),
-		_("Evince appears to have exited unexpectedly the last time "
-		  "it was run. You can recover the opened documents."));
-
-	gtk_dialog_add_button (GTK_DIALOG (dialog),
-			       _("_Don't Recover"),
-			       GTK_RESPONSE_CANCEL);
-	gtk_dialog_add_button (GTK_DIALOG (dialog),
-			       _("_Recover"),
-			       GTK_RESPONSE_ACCEPT);
-
-	gtk_window_set_title (GTK_WINDOW (dialog), _("Crash Recovery"));
-	gtk_window_set_icon_name (GTK_WINDOW (dialog), "evince");
-	gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
-	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (dialog), FALSE);
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
-
-	response = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-
-	return response == GTK_RESPONSE_ACCEPT;
-}
-
-static gboolean
-is_in_command_line (GFile         *file,
-		    const gchar  **files)
-{
-	gint i;
-
-	if (!files)
-		return FALSE;
-
-	for (i = 0; files[i]; i++) {
-		GFile *cfile;
-
-		cfile = g_file_new_for_commandline_arg (files[i]);
-		if (g_file_equal (cfile, file)) {
-			g_object_unref (cfile);
-			return TRUE;
-		}
-		g_object_unref (cfile);
-	}
-
-	return FALSE;
-}
-
-static GKeyFile *
-ev_application_get_files_to_recover (EvApplication *application,
-				     const gchar  **files)
-{
-	GKeyFile *state_file;
-	gchar   **uri_list;
-	gchar   **dest_list = NULL;
-	gint      i, j;
-
-	state_file = g_key_file_new ();
-	g_key_file_load_from_file (state_file,
-				   application->crashed_file,
-				   G_KEY_FILE_NONE,
-				   NULL);
-
-	uri_list = g_key_file_get_string_list (state_file,
-					       "Evince",
-					       "documents",
-					       NULL, NULL);
-	if (!uri_list) {
-		g_key_file_free (state_file);
-		return NULL;
-	}
-
-	for (i = 0, j = 0; uri_list[i]; i++) {
-		GFile *file = g_file_new_for_uri (uri_list[i]);
-
-		if (!g_file_query_exists (file, NULL) ||
-		    is_in_command_line (file, files)) {
-			g_object_unref (file);
-			continue;
-		}
-
-		if (!dest_list)
-			dest_list = g_new (gchar *, g_strv_length (uri_list) - i);
-		dest_list[j++] = uri_list[i];
-	}
-
-	if (j > 0) {
-		g_key_file_set_string_list (state_file,
-					    "Evince",
-					    "documents",
-					    (const gchar **)dest_list,
-					    j);
-	} else {
-		g_key_file_free (state_file);
-		state_file = NULL;
-	}
-
-	g_free (dest_list);
-	g_strfreev (uri_list);
-
-	return state_file;
-}
-#endif /* ENABLE_DBUS */
+#endif /* WITH_SMCLIENT */
 
 gboolean
 ev_application_load_session (EvApplication *application,
@@ -384,18 +173,6 @@ ev_application_load_session (EvApplication *application,
 			return FALSE;
 	} else
 #endif /* WITH_SMCLIENT */
-#ifdef ENABLE_DBUS
-        if (g_file_test (application->crashed_file, G_FILE_TEST_IS_REGULAR)) {
-		state_file = ev_application_get_files_to_recover (application, files);
-		if (!state_file)
-			return FALSE;
-
-		if (!ev_application_run_crash_recovery_dialog (application)) {
-			g_key_file_free (state_file);
-			return FALSE;
-		}
-	} else
-#endif /* ENABLE_DBUS */
 		return FALSE;
 
 	uri_list = g_key_file_get_string_list (state_file,
@@ -404,12 +181,14 @@ ev_application_load_session (EvApplication *application,
 					       NULL, NULL);
 	if (uri_list) {
 		gint i;
+		GdkScreen *screen = gdk_screen_get_default ();
 
 		for (i = 0; uri_list[i]; i++) {
 			if (g_ascii_strcasecmp (uri_list[i], "empty-window") == 0)
-				ev_application_open_window (application, NULL, GDK_CURRENT_TIME, NULL);
+				ev_application_open_window (application, screen, GDK_CURRENT_TIME);
 			else
-				ev_application_open_uri (application, uri_list[i], NULL, GDK_CURRENT_TIME, NULL);
+				ev_application_open_uri_at_dest (application, uri_list[i], screen,
+								 NULL, 0, NULL, GDK_CURRENT_TIME);
 		}
 		g_strfreev (uri_list);
 	}
@@ -446,11 +225,6 @@ smclient_quit_cb (EggSMClient   *client,
 static void
 ev_application_init_session (EvApplication *application)
 {
-#ifdef ENABLE_DBUS
-	application->crashed_file = g_build_filename (application->dot_dir,
-						      "evince-crashed", NULL);
-#endif
-
 #ifdef WITH_SMCLIENT
 	application->smclient = egg_sm_client_get ();
 	g_signal_connect (application->smclient, "save_state",
@@ -600,58 +374,106 @@ get_find_string_from_args (GHashTable *args)
 	return value ? g_value_get_string (value) : NULL;
 }
 
+static void
+value_free (GValue *value)
+{
+	g_value_unset (value);
+	g_free (value);
+}
+
+static GHashTable *
+build_args (GdkScreen      *screen,
+	    EvLinkDest     *dest,
+	    EvWindowRunMode mode,
+	    const gchar    *search_string)
+{
+	GHashTable  *args;
+	GValue      *value;
+	GdkDisplay  *display;
+	const gchar *display_name;
+	gint         screen_number;
+
+	args = g_hash_table_new_full (g_str_hash,
+				      g_str_equal,
+				      (GDestroyNotify)g_free,
+				      (GDestroyNotify)value_free);
+
+	/* Display */
+	display = gdk_screen_get_display (screen);
+	display_name = gdk_display_get_name (display);
+	value = g_new0 (GValue, 1);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_string (value, display_name);
+	g_hash_table_insert (args, g_strdup ("display"), value);
+
+	/* Screen */
+	screen_number = gdk_screen_get_number (screen);
+	value = g_new0 (GValue, 1);
+	g_value_init (value, G_TYPE_INT);
+	g_value_set_int (value, screen_number);
+	g_hash_table_insert (args, g_strdup ("screen"), value);
+
+	/* Page label */
+	if (dest) {
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_STRING);
+		g_value_set_string (value, ev_link_dest_get_page_label (dest));
+
+		g_hash_table_insert (args, g_strdup ("page-label"), value);
+	}
+
+	/* Find string */
+	if (search_string) {
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_STRING);
+		g_value_set_string (value, search_string);
+
+		g_hash_table_insert (args, g_strdup ("find-string"), value);
+	}
+
+	/* Mode */
+	if (mode != EV_WINDOW_MODE_NORMAL) {
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_UINT);
+		g_value_set_uint (value, mode);
+
+		g_hash_table_insert (args, g_strdup ("mode"), value);
+	}
+
+	return args;
+}
+
 /**
  * ev_application_open_window:
  * @application: The instance of the application.
- * @args: A #GHashTable with the arguments data.
  * @timestamp: Current time value.
- * @error: The #GError facility.
- * 
- * Creates a new window and if the args are available, it's not NULL, it gets
- * the screen from them and assigns the just created window to it. At last it
- * does show it.
  *
- * Returns: %TRUE.
+ * Creates a new window
  */
-gboolean
-ev_application_open_window (EvApplication  *application,
-			    GHashTable     *args,
-			    guint32         timestamp,
-			    GError        **error)
+void
+ev_application_open_window (EvApplication *application,
+			    GdkScreen     *screen,
+			    guint32        timestamp)
 {
 	GtkWidget *new_window = ev_window_new ();
-	GdkScreen *screen = NULL;
 
-	if (args) {
-		screen = get_screen_from_args (args);
-	}
-	
 	if (screen) {
 		ev_stock_icons_set_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 
-#ifdef ENABLE_DBUS
-	ev_application_save_session_crashed (application);
-	g_signal_connect_swapped (new_window, "destroy",
-				  G_CALLBACK (save_session_crashed_in_idle),
-				  application);
-#endif
-
 	if (!GTK_WIDGET_REALIZED (new_window))
 		gtk_widget_realize (new_window);
-	
+
 #ifdef GDK_WINDOWING_X11
 	if (timestamp <= 0)
 		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
 	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
-	
+
 	gtk_window_present (GTK_WINDOW (new_window));
 #else
 	gtk_window_present_with_time (GTK_WINDOW (new_window), timestamp);
 #endif /* GDK_WINDOWING_X11 */
-
-	return TRUE;
 }
 
 /**
@@ -725,6 +547,152 @@ ev_application_get_uri_window (EvApplication *application, const char *uri)
 	return uri_window;
 }
 
+#ifdef ENABLE_DBUS
+static gboolean
+ev_application_register_uri (EvApplication *application,
+			     const gchar   *uri,
+			     GHashTable    *args,
+			     guint          timestamp)
+{
+	DBusGProxy *proxy;
+	gchar      *owner;
+	gboolean    retval = TRUE;
+	GError     *error = NULL;
+
+	if (!application->connection)
+		return TRUE;
+
+	proxy = dbus_g_proxy_new_for_name (application->connection,
+					   "org.gnome.evince.Daemon",
+					   "/org/gnome/evince/Daemon",
+					   "org.gnome.evince.Daemon");
+	if (!dbus_g_proxy_call (proxy, "RegisterDocument", &error,
+				G_TYPE_STRING, uri,
+				G_TYPE_INVALID,
+				G_TYPE_STRING, &owner,
+				G_TYPE_INVALID)) {
+		g_warning ("Error registering document: %s\n", error->message);
+		g_error_free (error);
+		g_object_unref (proxy);
+
+		return TRUE;
+	}
+	g_object_unref (proxy);
+
+	if (*owner == ':') {
+		/* Already registered */
+		proxy = dbus_g_proxy_new_for_name_owner (application->connection,
+							 owner,
+							 APPLICATION_DBUS_OBJECT_PATH,
+							 APPLICATION_DBUS_INTERFACE,
+							 &error);
+		if (proxy) {
+			if (!dbus_g_proxy_call (proxy, "OpenURI", &error,
+						G_TYPE_STRING, uri,
+						dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
+						G_TYPE_UINT, timestamp,
+						G_TYPE_INVALID,
+						G_TYPE_INVALID)) {
+				g_warning ("%s", error->message);
+				g_error_free (error);
+			}
+			g_object_unref (proxy);
+		} else {
+			g_warning ("Error creating proxy: %s\n", error->message);
+			g_error_free (error);
+		}
+
+		/* Do not continue opening this document */
+		retval = FALSE;
+	}
+
+	g_free (owner);
+
+	return retval;
+}
+
+static void
+ev_application_unregister_uri (EvApplication *application,
+			       const gchar   *uri)
+{
+	DBusGProxy *proxy;
+	GError     *error = NULL;
+
+	if (!application->connection)
+		return;
+
+	proxy = dbus_g_proxy_new_for_name (application->connection,
+					   "org.gnome.evince.Daemon",
+					   "/org/gnome/evince/Daemon",
+					   "org.gnome.evince.Daemon");
+	if (!dbus_g_proxy_call (proxy, "UnregisterDocument", &error,
+				G_TYPE_STRING, uri,
+				G_TYPE_INVALID,
+				G_TYPE_INVALID)) {
+		g_warning ("Error unregistering document: %s\n", error->message);
+		g_error_free (error);
+	}
+
+	g_object_unref (proxy);
+}
+
+static void
+ev_application_window_destroyed (EvApplication *application,
+				 EvWindow      *ev_window)
+{
+	gchar *uri = g_hash_table_lookup (application->windows, ev_window);
+
+	ev_application_unregister_uri (application, uri);
+	g_hash_table_remove (application->windows, ev_window);
+}
+#endif /* ENABLE_DBUS */
+
+static void
+ev_application_open_uri_in_window (EvApplication  *application,
+				   const char     *uri,
+				   EvWindow       *ev_window,
+				   GdkScreen      *screen,
+				   EvLinkDest     *dest,
+				   EvWindowRunMode mode,
+				   const gchar    *search_string,
+				   guint           timestamp)
+{
+	if (screen) {
+		ev_stock_icons_set_screen (screen);
+		gtk_window_set_screen (GTK_WINDOW (ev_window), screen);
+	}
+
+	/* We need to load uri before showing the window, so
+	   we can restore window size without flickering */
+	ev_window_open_uri (ev_window, uri, dest, mode, search_string);
+
+#ifdef ENABLE_DBUS
+	if (!g_hash_table_lookup (application->windows, ev_window)) {
+		g_hash_table_insert (application->windows, ev_window, g_strdup (uri));
+		g_signal_connect_swapped (ev_window, "destroy",
+					  G_CALLBACK (ev_application_window_destroyed),
+					  application);
+	}
+#endif
+
+	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (ev_window)))
+		gtk_widget_realize (GTK_WIDGET (ev_window));
+
+#ifdef GDK_WINDOWING_X11
+	if (timestamp <= 0)
+		timestamp = gdk_x11_get_server_time (GTK_WIDGET (ev_window)->window);
+	gdk_x11_window_set_user_time (GTK_WIDGET (ev_window)->window, timestamp);
+
+	ev_document_fc_mutex_lock ();
+	gtk_window_present (GTK_WINDOW (ev_window));
+	ev_document_fc_mutex_unlock ();
+#else
+	ev_document_fc_mutex_lock ();
+	gtk_window_present_with_time (GTK_WINDOW (ev_window), timestamp);
+	ev_document_fc_mutex_unlock ();
+#endif /* GDK_WINDOWING_X11 */
+}
+
 /**
  * ev_application_open_uri_at_dest:
  * @application: The instance of the application.
@@ -743,52 +711,37 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 const gchar    *search_string,
 				 guint           timestamp)
 {
-	EvWindow *new_window;
+	EvWindow *ev_window;
 
 	g_return_if_fail (uri != NULL);
-	
-	new_window = ev_application_get_uri_window (application, uri);
-	
-	if (new_window == NULL) {
-		new_window = ev_application_get_empty_window (application, screen);
-	}
 
-	if (new_window == NULL) {
-		new_window = EV_WINDOW (ev_window_new ());
-	}
-
-	if (screen) {
-		ev_stock_icons_set_screen (screen);
-		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
-	}
-
-	/* We need to load uri before showing the window, so
-	   we can restore window size without flickering */	
-	ev_window_open_uri (new_window, uri, dest, mode, search_string);
-
+	ev_window = ev_application_get_uri_window (application, uri);
 #ifdef ENABLE_DBUS
-	ev_application_save_session_crashed (application);
-	g_signal_connect_swapped (new_window, "destroy",
-				  G_CALLBACK (save_session_crashed_in_idle),
-				  application);
-#endif
+	if (!ev_window) {
+		GHashTable *args = build_args (screen, dest, mode, search_string);
+		gboolean    ret;
 
-	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (new_window)))
-		gtk_widget_realize (GTK_WIDGET (new_window));
+		/* Register the uri or send OpenURI to
+		 * remote instance if already registered
+		 */
+		ret = ev_application_register_uri (application, uri, args, timestamp);
+		g_hash_table_destroy (args);
+		if (!ret)
+			return;
+	}
+#endif /* ENABLE_DBUS */
 
-#ifdef GDK_WINDOWING_X11
-	if (timestamp <= 0)
-		timestamp = gdk_x11_get_server_time (GTK_WIDGET (new_window)->window);
-	gdk_x11_window_set_user_time (GTK_WIDGET (new_window)->window, timestamp);
+	if (ev_window == NULL) {
+		ev_window = ev_application_get_empty_window (application, screen);
+	}
 
-	ev_document_fc_mutex_lock ();
-	gtk_window_present (GTK_WINDOW (new_window));
-	ev_document_fc_mutex_unlock ();
-#else
-	ev_document_fc_mutex_lock ();
-	gtk_window_present_with_time (GTK_WINDOW (new_window), timestamp);
-	ev_document_fc_mutex_unlock ();
-#endif /* GDK_WINDOWING_X11 */
+	if (ev_window == NULL) {
+		ev_window = EV_WINDOW (ev_window_new ());
+	}
+
+	ev_application_open_uri_in_window (application, uri, ev_window,
+					   screen, dest, mode, search_string,
+					   timestamp);
 }
 
 /**
@@ -799,17 +752,21 @@ ev_application_open_uri_at_dest (EvApplication  *application,
  * @timestamp: Current time value.
  * @error: The #GError facility.
  */
-gboolean
+static gboolean
 ev_application_open_uri (EvApplication  *application,
 			 const char     *uri,
 			 GHashTable     *args,
 			 guint           timestamp,
 			 GError        **error)
 {
+	EvWindow        *ev_window;
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 	const gchar     *search_string = NULL;
 	GdkScreen       *screen = NULL;
+
+	ev_window = ev_application_get_uri_window (application, uri);
+	g_assert (ev_window != NULL);
 
 	if (args) {
 		screen = get_screen_from_args (args);
@@ -817,10 +774,10 @@ ev_application_open_uri (EvApplication  *application,
 		mode = get_window_run_mode_from_args (args);
 		search_string = get_find_string_from_args (args);
 	}
-	
-	ev_application_open_uri_at_dest (application, uri, screen,
-					 dest, mode, search_string,
-					 timestamp);
+
+	ev_application_open_uri_in_window (application, uri, ev_window,
+					   screen, dest, mode, search_string,
+					   timestamp);
 
 	if (dest)
 		g_object_unref (dest);
@@ -847,10 +804,9 @@ void
 ev_application_shutdown (EvApplication *application)
 {
 #ifdef ENABLE_DBUS
-	if (application->crashed_file) {
-		ev_application_save_session_crashed (application);
-		g_free (application->crashed_file);
-		application->crashed_file = NULL;
+	if (application->windows) {
+		g_hash_table_destroy (application->windows);
+		application->windows = NULL;
 	}
 #endif
 
@@ -909,6 +865,10 @@ ev_application_shutdown (EvApplication *application)
 static void
 ev_application_class_init (EvApplicationClass *ev_application_class)
 {
+#ifdef ENABLE_DBUS
+	dbus_g_object_type_install_info (EV_TYPE_APPLICATION,
+					 &dbus_glib_ev_application_object_info);
+#endif
 }
 
 static void
@@ -917,6 +877,7 @@ ev_application_init (EvApplication *ev_application)
 	gint i;
 	const gchar *home_dir;
 	gchar *toolbar_path;
+	GError *error = NULL;
 
         ev_application->dot_dir = g_build_filename (g_get_home_dir (),
                                                     ".gnome2",
@@ -988,6 +949,20 @@ ev_application_init (EvApplication *ev_application)
 				      EGG_TB_MODEL_NOT_REMOVABLE);
 
 #ifdef ENABLE_DBUS
+	ev_application->connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
+	if (ev_application->connection) {
+		dbus_g_connection_register_g_object (ev_application->connection,
+						     APPLICATION_DBUS_OBJECT_PATH,
+						     G_OBJECT (ev_application));
+		ev_application->windows = g_hash_table_new_full (g_direct_hash,
+								 g_direct_equal,
+								 NULL,
+								 (GDestroyNotify)g_free);
+		ev_application->scr_saver = totem_scrsaver_new (ev_application->connection);
+	} else {
+		g_warning ("Error connection to DBus: %s\n", error->message);
+		g_error_free (error);
+	}
 	ev_application->keys = ev_media_player_keys_new ();
 #endif /* ENABLE_DBUS */
 }

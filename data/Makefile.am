@@ -36,6 +36,17 @@ DESKTOP_FILES= $(DESKTOP_IN_FILES:.desktop.in.in=.desktop)
 desktopdir = $(datadir)/applications
 desktop_DATA = $(DESKTOP_FILES)
 
+#
+# DBus servide file
+#
+if ENABLE_DBUS
+servicedir = $(datadir)/dbus-1/services
+service_in_files = org.gnome.evince.Daemon.service.in
+service_DATA = $(service_in_files:.service.in=.service)
+
+$(service_DATA): $(service_in_files) Makefile
+	@sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+endif
 
 #
 # GConf schema
@@ -102,12 +113,13 @@ update-icon-cache:
 # Extra files to be included in the tarball
 #
 
-EXTRA_DIST =				\
-	$(ui_DATA)			\
-	$(DESKTOP_IN_FILES)		\
-	$(schema_in_files)		\
-	$(man_MANS)			\
-	$(NULL)				
+EXTRA_DIST =					\
+	$(ui_DATA)				\
+	$(DESKTOP_IN_FILES)			\
+	$(schema_in_files)			\
+	org.gnome.evince.Daemon.service.in	\
+	$(man_MANS)				\
+	$(NULL)
 
 #
 # Clean up properly
@@ -115,4 +127,5 @@ EXTRA_DIST =				\
 
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
-	$(schema_DATA)
+	$(schema_DATA)		\
+	$(service_DATA)

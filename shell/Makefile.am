@@ -26,6 +26,9 @@ INCLUDES=							\
 bin_PROGRAMS=evince
 
 libexec_PROGRAMS=evince-convert-metadata
+if ENABLE_DBUS
+libexec_PROGRAMS += evinced
+endif
 
 EV_MEDIA_PLAYER_KEYS_SOURCES = ev-media-player-keys.c ev-media-player-keys.h
 if ENABLE_DBUS
@@ -119,10 +122,30 @@ evince_convert_metadata_SOURCES=	\
 evince_convert_metadata_LDADD=		\
 	$(SHELL_LIBS)
 
+if ENABLE_DBUS
+BUILT_SOURCES += ev-daemon-service.h
 
+evinced_SOURCES=			\
+	ev-daemon.c
+
+evinced_CFLAGS=				\
+	-DDATADIR=\"$(pkgdatadir)\"				\
+	-DGNOMEDATADIR=\"$(datadir)\"				\
+	-I$(top_srcdir)						\
+	-I$(top_builddir)					\
+	-DLIBEXECDIR=\""$(libexecdir)"\"			\
+	-DEVINCE_COMPILATION					\
+	$(EV_DAEMON_CFLAGS)					\
+	$(WARN_CFLAGS)						\
+	$(DISABLE_DEPRECATED)
+
+evinced_LDADD=				\
+	$(EV_DAEMON_LIBS)
+endif
 
 EXTRA_DIST = ev-marshal.list		\
 	ev-application-service.xml	\
+	ev-daemon-service.xml		\
 	$(EV_MEDIA_PLAYER_KEYS_SOURCES)
 
 
@@ -133,8 +156,12 @@ ev-marshal.c: $(srcdir)/ev-marshal.list
 	echo '#include "ev-marshal.h"' > ev-marshal.c
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
 
-DISTCLEANFILES= \
-	ev-application-service.h
+DISTCLEANFILES= 			\
+	ev-application-service.h	\
+	ev-daemon-service.h
 
 ev-application-service.h: $(srcdir)/ev-application-service.xml
 	$(AM_V_GEN)dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
+
+ev-daemon-service.h: $(srcdir)/ev-daemon-service.xml
+	$(AM_V_GEN)dbus-binding-tool --prefix=ev_daemon --mode=glib-server --output=ev-daemon-service.h $(srcdir)/ev-daemon-service.xml

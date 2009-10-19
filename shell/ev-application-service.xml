@@ -5,12 +5,6 @@
   <interface name="org.gnome.evince.Application">
     <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application"/>
 
-    <method name="OpenWindow">
-       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_window"/>
-       <arg type="a{sv}" name="args" direction="in"/>
-      <arg type="u" name="timestamp" direction="in"/>
-    </method>
-
     <method name="OpenURI">
       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_application_open_uri"/>
       <arg type="s" name="uri" direction="in"/>

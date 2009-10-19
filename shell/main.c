@@ -26,20 +26,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#ifndef G_OS_WIN32
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#endif
-
-#ifdef ENABLE_DBUS
-#include <gdk/gdkx.h>
-#include <dbus/dbus-glib-bindings.h>
-#endif
-
 #include "ev-application.h"
-#include "ev-backends-manager.h"
 #include "ev-debug.h"
 #include "ev-init.h"
 #include "ev-file-helpers.h"
@@ -154,167 +141,6 @@ launch_previewer (void)
 	return retval;
 }
 
-#ifndef G_OS_WIN32
-static gboolean
-convert_metadata (const gchar *metadata)
-{
-	GFile   *file;
-	gchar   *cmd;
-	gint     exit_status;
-	GError  *error = NULL;
-	gboolean retval;
-
-	/* If metadata is not supported for a local file
-	 * is likely because and old gvfs version is running.
-	 */
-	file = g_file_new_for_path (metadata);
-	if (!ev_is_metadata_supported_for_file (file)) {
-		g_warning ("%s\n",
-			   "GVFS metadata not supported, "
-			   "Evince will run without metadata support");
-		g_object_unref (file);
-		return FALSE;
-	}
-	g_object_unref (file);
-
-	cmd = g_strdup_printf ("%s %s", LIBEXECDIR"/evince-convert-metadata", metadata);
-
-	retval = g_spawn_command_line_sync (cmd, NULL, NULL, &exit_status, &error);
-	g_free (cmd);
-
-	if (!retval) {
-		g_printerr ("Error migrating metadata: %s\n", error->message);
-		g_error_free (error);
-	}
-
-	return retval && exit_status == 0;
-}
-
-static void
-ev_migrate_metadata (void)
-{
-	gchar *updated;
-	gchar *metadata;
-
-	updated = g_build_filename (ev_application_get_dot_dir (EV_APP),
-				    "migrated-to-gvfs", NULL);
-	if (g_file_test (updated, G_FILE_TEST_EXISTS)) {
-		/* Already migrated */
-		g_free (updated);
-		return;
-	}
-
-	metadata = g_build_filename (ev_application_get_dot_dir (EV_APP),
-				     "ev-metadata.xml", NULL);
-	if (g_file_test (metadata, G_FILE_TEST_EXISTS)) {
-		if (convert_metadata (metadata)) {
-			gint fd;
-
-			fd = g_creat (updated, 0600);
-			if (fd != -1) {
-				close (fd);
-			}
-		}
-	}
-
-	g_free (updated);
-	g_free (metadata);
-}
-#endif /* !G_OS_WIN32 */
-
-static void
-value_free (GValue *value)
-{
-	g_value_unset (value);
-	g_free (value);
-}
-
-/**
- * arguments_parse:
- *
- * Parses the arguments and creates a #GHashTable with this data.
- *
- *  key                 ->  value
- *
- *  dislay              ->  display at the default screen.
- *  screen              ->  screen number.
- *  page-label          ->  only if the page label argument has been passed,
- *                          the page of the document to display.
- *  mode                ->  only if the view mode is one of the availables,
- *                          the view mode.
- *
- * Returns: a pointer into #GHashTable with data from the arguments.
- */
-static GHashTable *
-arguments_parse (void)
-{
-	GHashTable      *args;
-	GValue          *value;
-	EvWindowRunMode  mode;
-	GdkScreen       *screen;
-	GdkDisplay      *display;
-	const gchar     *display_name;
-	gint             screen_number;
-
-	args = g_hash_table_new_full (g_str_hash,
-				      g_str_equal,
-				      (GDestroyNotify)g_free,
-				      (GDestroyNotify)value_free);
-	
-	screen = gdk_screen_get_default ();
-	display = gdk_screen_get_display (screen);
-
-	display_name = gdk_display_get_name (display);
-	screen_number = gdk_screen_get_number (screen);
-
-	value = g_new0 (GValue, 1);
-	g_value_init (value, G_TYPE_STRING);
-	g_value_set_string (value, display_name);
-	g_hash_table_insert (args, g_strdup ("display"), value);
-
-	value = g_new0 (GValue, 1);
-	g_value_init (value, G_TYPE_INT);
-	g_value_set_int (value, screen_number);
-	g_hash_table_insert (args, g_strdup ("screen"), value);
-
-	if (ev_page_label) {
-		value = g_new0 (GValue, 1);
-		g_value_init (value, G_TYPE_STRING);
-		g_value_set_string (value, ev_page_label);
-
-		g_hash_table_insert (args, g_strdup ("page-label"), value);
-
-		g_free (ev_page_label);
-		ev_page_label = NULL;
-	}
-
-	if (ev_find_string) {
-		value = g_new0 (GValue, 1);
-		g_value_init (value, G_TYPE_STRING);
-		g_value_set_string (value, ev_find_string);
-
-		g_hash_table_insert (args, g_strdup ("find-string"), value);
-
-		g_free (ev_find_string);
-		ev_page_label = NULL;
-	}
-
-	if (fullscreen_mode)
-		mode = EV_WINDOW_MODE_FULLSCREEN;
-	else if (presentation_mode)
-		mode = EV_WINDOW_MODE_PRESENTATION;
-	else
-		return args;
-
-	value = g_new0 (GValue, 1);
-	g_value_init (value, G_TYPE_UINT);
-	g_value_set_uint (value, mode);
-
-	g_hash_table_insert (args, g_strdup ("mode"), value);
-
-	return args;
-}
-
 static gint
 find_window_list (EvWindow    *window,
 		  const gchar *uri)
@@ -323,27 +149,37 @@ find_window_list (EvWindow    *window,
 }
 
 static void
-load_files (const char **files,
-	    GHashTable  *args)
+load_files (const char **files)
 {
-	int    i;
-	GList *windows;
+	GdkScreen       *screen = gdk_screen_get_default ();
+	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
+	GList           *windows;
+	gint             i;
+	EvLinkDest      *global_dest = NULL;
 
 	windows = ev_application_get_windows (EV_APP);
 
 	if (!files) {
 		if (!windows)
-			ev_application_open_window (EV_APP, args, GDK_CURRENT_TIME, NULL);
+			ev_application_open_window (EV_APP, screen, GDK_CURRENT_TIME);
 		else
 			g_list_free (windows);
 		return;
 	}
 
+	if (ev_page_label)
+		global_dest = ev_link_dest_new_page_label (ev_page_label);
+
+	if (fullscreen_mode)
+		mode = EV_WINDOW_MODE_FULLSCREEN;
+	else if (presentation_mode)
+		mode = EV_WINDOW_MODE_PRESENTATION;
+
 	for (i = 0; files[i]; i++) {
-		char   *uri;
-		char   *label;
-		GValue *old = NULL;
-		GFile  *file;
+		gchar      *uri;
+		gchar      *label;
+		GFile      *file;
+		EvLinkDest *dest = NULL;
 
 		file = g_file_new_for_commandline_arg (files[i]);
 		uri = g_file_get_uri (file);
@@ -355,122 +191,31 @@ load_files (const char **files,
 		}
 
 		label = strchr (uri, '#');
-
 		if (label) {
-			GValue *new;
-
-			*label = 0; label++;
-			
-			old = g_hash_table_lookup (args, "page-label");
-			
-			new = g_new0 (GValue, 1);
-			g_value_init (new, G_TYPE_STRING);
-			g_value_set_string (new, label);
-
-			g_hash_table_insert (args, g_strdup ("page-label"), new);
-
+			*label = 0;
+			label++;
+			dest = ev_link_dest_new_page_label (label);
+		} else if (global_dest) {
+			dest = g_object_ref (global_dest);
 		}
 
-		ev_application_open_uri (EV_APP, uri, args,
-					 GDK_CURRENT_TIME, NULL);
+		ev_application_open_uri_at_dest (EV_APP, uri, screen, dest,
+						 mode, ev_find_string,
+						 GDK_CURRENT_TIME);
 
-		if (old)
-			g_hash_table_insert (args, g_strdup ("page-label"), old);
-		
+		if (dest)
+			g_object_unref (dest);
 		g_free (uri);
         }
 
 	g_list_free (windows);
 }
 
-#ifdef ENABLE_DBUS
-static gboolean
-load_files_remote (const char **files,
-		   GHashTable  *args)
-{
-	int i;
-	GError *error = NULL;
-	DBusGConnection *connection;
-	gboolean result = FALSE;
-	DBusGProxy *remote_object;
-	GdkDisplay *display;
-	guint32 timestamp;
-
-	display = gdk_display_get_default ();
-	timestamp = gdk_x11_display_get_user_time (display);
-	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
-
-	if (connection == NULL) {
-		g_warning ("%s", error->message);
-		g_error_free (error);	
-
-		return FALSE;
-	}
-
-	remote_object = dbus_g_proxy_new_for_name (connection,
-						   "org.gnome.evince.ApplicationService",
-                                                   "/org/gnome/evince/Evince",
-                                                   "org.gnome.evince.Application");
-	if (!files) {
-		if (!dbus_g_proxy_call (remote_object, "OpenWindow", &error,
-					dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
-					G_TYPE_UINT, timestamp,
-					G_TYPE_INVALID,
-					G_TYPE_INVALID)) {
-			g_warning ("%s", error->message);
-			g_clear_error (&error);
-			g_object_unref (remote_object);
-			dbus_g_connection_unref (connection);
-			return FALSE;
-		}
-
-		g_object_unref (remote_object);
-		dbus_g_connection_unref (connection);
-		
-		return TRUE;
-	}
-
-	for (i = 0; files[i]; i++) {
-		const char *page_label;
-		GFile *file;
-		char *uri;
-
-		file = g_file_new_for_commandline_arg (files[i]);
-		uri = g_file_get_uri (file);
-		g_object_unref (file);
-
-		page_label = ev_page_label ? ev_page_label : "";
-
-		if (!dbus_g_proxy_call (remote_object, "OpenURI", &error,
-					G_TYPE_STRING, uri,
-					dbus_g_type_get_map ("GHashTable", G_TYPE_STRING, G_TYPE_VALUE), args,
-					G_TYPE_UINT, timestamp,
-					G_TYPE_INVALID,
-					G_TYPE_INVALID)) {
-			g_warning ("%s", error->message);
-			g_clear_error (&error);
-			g_free (uri);
-			continue;
-		}
-
-		g_free (uri);
-		result = TRUE;
-        }
-
-	g_object_unref (remote_object);
-	dbus_g_connection_unref (connection);
-
-	gdk_notify_startup_complete ();
-
-	return result;
-}
-#endif /* ENABLE_DBUS */
-
 int
 main (int argc, char *argv[])
 {
 	GOptionContext *context;
-	GHashTable *args;
+	GList *toplevels;
 	GError *error = NULL;
 
 #ifdef G_OS_WIN32
@@ -536,24 +281,8 @@ main (int argc, char *argv[])
 		return retval ? 0 : 1;
 	}
 
-	args = arguments_parse ();
-
-#ifdef ENABLE_DBUS
-	if (!ev_application_register_service (EV_APP)) {
-		if (load_files_remote (file_arguments, args)) {
-			g_hash_table_destroy (args);
-
-			return 0;
-		}
-	}
-#endif /* ENABLE_DBUS */
-	
         if (!ev_init ())
                 return 1;
-
-#ifndef G_OS_WIN32
-	ev_migrate_metadata ();
-#endif
 
 	ev_stock_icons_init ();
 
@@ -566,15 +295,17 @@ main (int argc, char *argv[])
 #endif /* WITH_SMCLIENT && GDK_WINDOWING_X11 */
 
 	ev_application_load_session (EV_APP, file_arguments);
-	load_files (file_arguments, args);
-	g_hash_table_destroy (args);
+	load_files (file_arguments);
+	toplevels = gtk_window_list_toplevels ();
+	if (toplevels) {
+		g_list_free (toplevels);
+		/* Change directory so we don't prevent unmounting in case the initial cwd
+		 * is on an external device (see bug #575436)
+		 */
+		g_chdir (g_get_home_dir ());
 
-	/* Change directory so we don't prevent unmounting in case the initial cwd
-	 * is on an external device (see bug #575436)
-	 */
-	g_chdir (g_get_home_dir ());	
-
-	gtk_main ();
+		gtk_main ();
+	}
 
 	ev_shutdown ();
 	ev_stock_icons_shutdown ();

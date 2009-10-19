@@ -55,15 +55,9 @@ void	          ev_application_shutdown	     (EvApplication   *application);
 
 gboolean          ev_application_load_session        (EvApplication   *application,
 						      const gchar    **files);
-gboolean          ev_application_open_window         (EvApplication   *application,
-						      GHashTable      *args,
-						      guint32          timestamp,
-						      GError         **error);
-gboolean          ev_application_open_uri            (EvApplication   *application,
-						      const char      *uri,
-						      GHashTable      *args,
-						      guint            timestamp,
-						      GError         **error);
+void              ev_application_open_window         (EvApplication   *application,
+						      GdkScreen       *screen,
+						      guint32          timestamp);
 void              ev_application_open_uri_at_dest    (EvApplication   *application,
 						      const char      *uri,
 						      GdkScreen       *screen,
@@ -94,7 +88,7 @@ GtkPageSetup     *ev_application_get_page_setup      (EvApplication   *applicati
 void              ev_application_set_page_setup      (EvApplication   *application,
 						      GtkPageSetup    *page_setup);
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application);
-const gchar      *ev_application_get_data_dir         (EvApplication   *application);
+const gchar      *ev_application_get_data_dir        (EvApplication   *application);
 
 G_END_DECLS
 

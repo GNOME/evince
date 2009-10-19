@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<node name="/org/gnome/evince/Daemon">
+
+  <interface name="org.gnome.evince.Daemon">
+    <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="ev_daemon"/>
+
+    <method name="RegisterDocument">
+       <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+       <arg type="s" name="uri" direction="in"/>
+       <arg type="s" name="owner" direction="out"/>
+    </method>
+
+    <method name="UnregisterDocument">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg type="s" name="uri" direction="in"/>
+    </method>
+
+  </interface>
+
+</node>

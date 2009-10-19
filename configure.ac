@@ -269,6 +269,10 @@ AC_SUBST([DBUS_LIBS])
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])
 
+if test "$enable_dbus" = "yes"; then
+   PKG_CHECK_MODULES([EV_DAEMON], [gthread-2.0 gio-2.0 >= $GLIB_REQUIRED dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
+fi
+
 dnl ========= Check for GConf
 
 AC_MSG_CHECKING([whether GConf support is requested])
@@ -338,6 +342,10 @@ FRONTEND_CFLAGS="$FRONTEND_CORE_CFLAGS $DEBUG_FLAGS"
 FRONTEND_LIBS="$FRONTEND_CORE_LIBS -lz"
 AC_SUBST(FRONTEND_CFLAGS)
 AC_SUBST(FRONTEND_LIBS)
+
+EV_DAEMON_CFLAGS="$EV_DAEMON_CFLAGS $DEBUG_FLAGS"
+AC_SUBST([EV_DAEMON_CFLAGS])
+AC_SUBST([EV_DAEMON_LIBS])
 
 # Check for Nautilus property page build
 AC_ARG_ENABLE([nautilus],
