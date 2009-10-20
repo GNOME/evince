@@ -26,6 +26,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <dbus/dbus-glib-bindings.h>
@@ -149,7 +150,7 @@ ev_daemon_shutdown (EvDaemon *ev_daemon)
 static void
 ev_daemon_stop_killtimer (EvDaemon *ev_daemon)
 {
-	if (ev_daemon->timer_id > 0)
+	if (ev_daemon->timer_id != 0)
 		g_source_remove (ev_daemon->timer_id);
 	ev_daemon->timer_id = 0;
 }
@@ -333,7 +334,7 @@ static gboolean
 convert_metadata (const gchar *metadata)
 {
 	GFile   *file;
-	gchar   *cmd;
+	char    *argv[3];
 	gint     exit_status;
 	GFileAttributeInfoList *namespaces;
 	gboolean supported = FALSE;
@@ -357,25 +358,28 @@ convert_metadata (const gchar *metadata)
 		g_file_attribute_info_list_unref (namespaces);
 	}
 	if (!supported) {
-		g_warning ("%s\n",
-			   "GVFS metadata not supported, "
-			   "Evince will run without metadata support");
+		g_warning ("GVFS metadata not supported. "
+			   "Evince will run without metadata support.\n");
 		g_object_unref (file);
 		return FALSE;
 	}
 	g_object_unref (file);
 
-	cmd = g_strdup_printf ("%s %s", LIBEXECDIR"/evince-convert-metadata", metadata);
+	argv[0] = g_build_filename (LIBEXECDIR, "evince-convert-metadata", NULL);
+	argv[1] = (char *) metadata;
+	argv[2] = NULL;
 
-	retval = g_spawn_command_line_sync (cmd, NULL, NULL, &exit_status, &error);
-	g_free (cmd);
+	retval = g_spawn_sync (NULL /* wd */, argv, NULL /* env */,
+			       0, NULL, NULL, NULL, NULL,
+			       &exit_status, &error);
+	g_free (argv[0]);
 
 	if (!retval) {
 		g_printerr ("Error migrating metadata: %s\n", error->message);
 		g_error_free (error);
 	}
 
-	return retval && exit_status == 0;
+	return retval && WIFEXITED (exit_status) && WEXITSTATUS (exit_status) == 0;
 }
 
 static void
