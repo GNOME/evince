@@ -121,7 +121,6 @@ ev_page_action_set_property (GObject      *object,
 			     GParamSpec   *pspec)
 {
 	EvPageAction *page = EV_PAGE_ACTION (object);
-	GtkTreeModel *model;
 
 	switch (prop_id)
 	{
