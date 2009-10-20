@@ -667,7 +667,8 @@ ev_application_open_uri_in_window (EvApplication  *application,
 	ev_window_open_uri (ev_window, uri, dest, mode, search_string);
 
 #ifdef ENABLE_DBUS
-	if (!g_hash_table_lookup (application->windows, ev_window)) {
+	if (application->windows != NULL &&
+            !g_hash_table_lookup (application->windows, ev_window)) {
 		g_hash_table_insert (application->windows, ev_window, g_strdup (uri));
 		g_signal_connect_swapped (ev_window, "destroy",
 					  G_CALLBACK (ev_application_window_destroyed),
