@@ -399,11 +399,23 @@ build_args (GdkScreen      *screen,
 }
 
 static void
+child_setup (gpointer user_data)
+{
+	gchar *startup_id;
+
+	startup_id = g_strdup_printf ("_TIME%lu",
+				      (unsigned long)GPOINTER_TO_INT (user_data));
+	g_setenv ("DESKTOP_STARTUP_ID", startup_id, TRUE);
+	g_free (startup_id);
+}
+
+static void
 ev_spawn (const char     *uri,
 	  GdkScreen      *screen,
 	  EvLinkDest     *dest,
 	  EvWindowRunMode mode,
-	  const gchar    *search_string)
+	  const gchar    *search_string,
+	  guint           timestamp)
 {
 	gchar   *argv[6];
 	guint    arg = 0;
@@ -446,7 +458,10 @@ ev_spawn (const char     *uri,
 	argv[arg] = NULL;
 
 	res = gdk_spawn_on_screen (screen, NULL /* wd */, argv, NULL /* env */,
-				   0, NULL, NULL, NULL, &error);
+				   0,
+				   child_setup,
+				   GINT_TO_POINTER(timestamp),
+				   NULL, &error);
 	if (!res) {
 		g_warning ("Error launching evince %s: %s\n", uri, error->message);
 		g_error_free (error);
@@ -608,7 +623,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	if (application->window && !ev_window_is_empty (application->window)) {
 		if (application->uri && strcmp (application->uri, uri) != 0) {
 			/* spawn a new evince process */
-			ev_spawn (uri, screen, dest, mode, search_string);
+			ev_spawn (uri, screen, dest, mode, search_string, timestamp);
 			return;
 		}
 	} else {
