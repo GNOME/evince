@@ -936,7 +936,8 @@ setup_model_from_metadata (EvWindow *window)
 		return;
 
 	/* Current page */
-	if (ev_metadata_get_int (window->priv->metadata, "page", &page)) {
+	if (!window->priv->dest &&
+	    ev_metadata_get_int (window->priv->metadata, "page", &page)) {
 		ev_document_model_set_page (window->priv->model, page);
 	}
 
