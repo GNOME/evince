@@ -310,6 +310,8 @@ static void     ev_window_media_player_key_pressed      (EvWindow         *windo
 							 gpointer          user_data);
 static void     ev_window_save_print_page_setup         (EvWindow         *window);
 
+static guint ev_window_n_copies = 0;
+
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
 static void
@@ -2128,6 +2130,8 @@ ev_window_open_copy_at_dest (EvWindow   *window,
 			     EvLinkDest *dest)
 {
 	EvWindow *new_window = EV_WINDOW (ev_window_new ());
+
+	ev_window_n_copies++;
 
 	if (window->priv->metadata)
 		new_window->priv->metadata = g_object_ref (window->priv->metadata);
@@ -4549,14 +4553,12 @@ ev_window_drag_data_received (GtkWidget        *widget,
 static void
 ev_window_finalize (GObject *object)
 {
-	GList *windows = ev_application_get_windows (EV_APP);
-
-	if (windows == NULL) {
+	if (ev_window_n_copies == 0) {
 		ev_application_shutdown (EV_APP);
 	} else {
-		g_list_free (windows);
+		ev_window_n_copies--;
 	}
-	
+
 	G_OBJECT_CLASS (ev_window_parent_class)->finalize (object);
 }
 

@@ -141,29 +141,17 @@ launch_previewer (void)
 	return retval;
 }
 
-static gint
-find_window_list (EvWindow    *window,
-		  const gchar *uri)
-{
-	return g_ascii_strcasecmp (uri, ev_window_get_uri (window));
-}
-
 static void
 load_files (const char **files)
 {
 	GdkScreen       *screen = gdk_screen_get_default ();
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
-	GList           *windows;
 	gint             i;
 	EvLinkDest      *global_dest = NULL;
 
-	windows = ev_application_get_windows (EV_APP);
-
 	if (!files) {
-		if (!windows)
+		if (!ev_application_has_window (EV_APP))
 			ev_application_open_window (EV_APP, screen, GDK_CURRENT_TIME);
-		else
-			g_list_free (windows);
 		return;
 	}
 
@@ -176,16 +164,18 @@ load_files (const char **files)
 		mode = EV_WINDOW_MODE_PRESENTATION;
 
 	for (i = 0; files[i]; i++) {
-		gchar      *uri;
-		gchar      *label;
-		GFile      *file;
-		EvLinkDest *dest = NULL;
+		gchar       *uri;
+		gchar       *label;
+		GFile       *file;
+		EvLinkDest  *dest = NULL;
+		const gchar *app_uri;
 
 		file = g_file_new_for_commandline_arg (files[i]);
 		uri = g_file_get_uri (file);
 		g_object_unref (file);
 
-		if (g_list_find_custom (windows, uri, (GCompareFunc) find_window_list)) {
+		app_uri = ev_application_get_uri (EV_APP);
+		if (app_uri && strcmp (app_uri, uri) == 0) {
 			g_free (uri);
 			continue;
 		}
@@ -207,16 +197,13 @@ load_files (const char **files)
 			g_object_unref (dest);
 		g_free (uri);
         }
-
-	g_list_free (windows);
 }
 
 int
 main (int argc, char *argv[])
 {
 	GOptionContext *context;
-	GList *toplevels;
-	GError *error = NULL;
+	GError         *error = NULL;
 
 #ifdef G_OS_WIN32
 
@@ -265,10 +252,10 @@ main (int argc, char *argv[])
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
-		g_printerr ("Cannot parse arguments: %s", error->message);
+		g_printerr ("Cannot parse arguments: %s\n", error->message);
 		g_error_free (error);
 		g_option_context_free (context);
-		
+
 		return 1;
 	}
 	g_option_context_free (context);
@@ -294,11 +281,9 @@ main (int argc, char *argv[])
 	gtk_window_set_default_icon_name ("evince");
 #endif /* WITH_SMCLIENT && GDK_WINDOWING_X11 */
 
-	ev_application_load_session (EV_APP, file_arguments);
+	ev_application_load_session (EV_APP);
 	load_files (file_arguments);
-	toplevels = gtk_window_list_toplevels ();
-	if (toplevels) {
-		g_list_free (toplevels);
+	if (ev_application_has_window (EV_APP)) {
 		/* Change directory so we don't prevent unmounting in case the initial cwd
 		 * is on an external device (see bug #575436)
 		 */

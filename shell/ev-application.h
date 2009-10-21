@@ -50,11 +50,9 @@ typedef struct _EvApplicationClass EvApplicationClass;
 
 GType	          ev_application_get_type	     (void) G_GNUC_CONST;
 EvApplication    *ev_application_get_instance        (void);
-gboolean          ev_application_register_service    (EvApplication   *application);
-void	          ev_application_shutdown	     (EvApplication   *application);
 
-gboolean          ev_application_load_session        (EvApplication   *application,
-						      const gchar    **files);
+void              ev_application_shutdown            (EvApplication   *application);
+gboolean          ev_application_load_session        (EvApplication   *application);
 void              ev_application_open_window         (EvApplication   *application,
 						      GdkScreen       *screen,
 						      guint32          timestamp);
@@ -69,7 +67,8 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,
 						      GdkScreen       *screen,
     						      guint32          timestamp);
-GList		 *ev_application_get_windows	     (EvApplication   *application);
+gboolean	  ev_application_has_window	     (EvApplication   *application);
+const gchar *     ev_application_get_uri             (EvApplication   *application);
 GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 
 EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
