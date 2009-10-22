@@ -31,3 +31,5 @@ libevince_properties_page_la_LIBADD = 		\
 libevince_properties_page_la_LDFLAGS = -module -avoid-version -no-undefined
 
 endif # ENABLE_NAUTILUS
+
+-include $(top_srcdir)/git.mk

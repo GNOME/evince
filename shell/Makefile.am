@@ -166,3 +166,5 @@ ev-application-service.h: $(srcdir)/ev-application-service.xml
 
 ev-daemon-service.h: $(srcdir)/ev-daemon-service.xml
 	$(AM_V_GEN)dbus-binding-tool --prefix=ev_daemon --mode=glib-server --output=ev-daemon-service.h $(srcdir)/ev-daemon-service.xml
+
+-include $(top_srcdir)/git.mk

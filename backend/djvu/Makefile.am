@@ -34,3 +34,5 @@ EXTRA_DIST = $(backend_in_files)
 CLEANFILES = $(backend_DATA)
 
 @EV_INTLTOOL_EVINCE_BACKEND_RULE@
+
+-include $(top_srcdir)/git.mk

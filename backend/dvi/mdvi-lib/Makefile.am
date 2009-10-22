@@ -39,3 +39,5 @@ libmdvi_la_SOURCES = \
 	util.c	     \
 	vf.c         
 
+
+-include $(top_srcdir)/git.mk

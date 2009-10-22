@@ -79,3 +79,5 @@ EXTRA_DIST =         	\
 
 DISTCLEANFILES = \
 	$(schema_DATA)
+
+-include $(top_srcdir)/git.mk

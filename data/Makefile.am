@@ -129,3 +129,5 @@ DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
 	$(schema_DATA)		\
 	$(service_DATA)
+
+-include $(top_srcdir)/git.mk

@@ -38,3 +38,5 @@ libsmclient_la_SOURCES += eggsmclient-osx.c
 endif
 
 endif # WITH_SMCLIENT
+
+-include $(top_srcdir)/git.mk

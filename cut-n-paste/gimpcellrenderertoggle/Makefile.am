@@ -34,3 +34,5 @@ gen_sources = xgen-wmh xgen-wmc $(libgimpcellrenderertoggle_la_built_sources)
 CLEANFILES = $(gen_sources)
 
 EXTRA_DIST = $(libgimpcellrenderertoggle_la_extra_sources)
+
+-include $(top_srcdir)/git.mk

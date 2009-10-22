@@ -34,3 +34,5 @@ evince_previewer_LDADD = \
 	$(top_builddir)/libmisc/libevmisc.la		\
 	$(PREVIEWER_LIBS)
 
+
+-include $(top_srcdir)/git.mk

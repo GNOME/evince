@@ -174,3 +174,5 @@ CLEANFILES += $(gir_DATA) $(typelibs_DATA)
 	$< -o $@
 
 endif # ENABLE_INTROSPECTION
+
+-include $(top_srcdir)/git.mk

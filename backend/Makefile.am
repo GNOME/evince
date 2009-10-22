@@ -36,3 +36,5 @@ endif
 
 EXTRA_DIST = \
 	backend.symbols
+
+-include $(top_srcdir)/git.mk

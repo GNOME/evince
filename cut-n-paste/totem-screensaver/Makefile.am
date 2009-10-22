@@ -8,3 +8,5 @@ libtotemscrsaver_la_CFLAGS = 	\
 	$(DBUS_CFLAGS)		\
 	$(WARNING_CFLAGS)	\
 	$(DISABLE_DEPRECATED)
+
+-include $(top_srcdir)/git.mk

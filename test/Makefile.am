@@ -15,3 +15,5 @@ EXTRA_DIST = \
 	test-page-labels.pdf \
 	test6.py \
 	test7.py
+
+-include $(top_srcdir)/git.mk
