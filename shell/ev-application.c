@@ -63,8 +63,7 @@ static void ev_application_save_print_settings (EvApplication *application);
 struct _EvApplication {
 	GObject base_instance;
 
-	EvWindow *window;
-	gchar    *uri;
+	gchar *uri;
 
 	gchar *dot_dir;
 	gchar *data_dir;
@@ -472,6 +471,49 @@ ev_spawn (const char     *uri,
 	}
 }
 
+static GList *
+ev_application_get_windows (EvApplication *application)
+{
+	GList *l, *toplevels;
+	GList *windows = NULL;
+
+	toplevels = gtk_window_list_toplevels ();
+
+	for (l = toplevels; l != NULL; l = l->next) {
+		if (EV_IS_WINDOW (l->data)) {
+			windows = g_list_append (windows, l->data);
+		}
+	}
+
+	g_list_free (toplevels);
+
+	return windows;
+}
+
+static EvWindow *
+ev_application_get_empty_window (EvApplication *application,
+				 GdkScreen     *screen)
+{
+	EvWindow *empty_window = NULL;
+	GList    *windows = ev_application_get_windows (application);
+	GList    *l;
+
+	for (l = windows; l != NULL; l = l->next) {
+		EvWindow *window = EV_WINDOW (l->data);
+
+		if (ev_window_is_empty (window) &&
+		    gtk_window_get_screen (GTK_WINDOW (window)) == screen) {
+			empty_window = window;
+			break;
+		}
+	}
+
+	g_list_free (windows);
+
+	return empty_window;
+}
+
+
 #ifdef ENABLE_DBUS
 static gboolean
 ev_application_register_uri (EvApplication *application,
@@ -565,14 +607,13 @@ ev_application_unregister_uri (EvApplication *application,
 static void
 ev_application_open_uri_in_window (EvApplication  *application,
 				   const char     *uri,
+				   EvWindow       *ev_window,
 				   GdkScreen      *screen,
 				   EvLinkDest     *dest,
 				   EvWindowRunMode mode,
 				   const gchar    *search_string,
 				   guint           timestamp)
 {
-	EvWindow *ev_window = application->window;
-
 	if (screen) {
 		ev_stock_icons_set_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (ev_window), screen);
@@ -618,14 +659,14 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 const gchar    *search_string,
 				 guint           timestamp)
 {
+	EvWindow *ev_window;
+
 	g_return_if_fail (uri != NULL);
 
-	if (application->window && !ev_window_is_empty (application->window)) {
-		if (application->uri && strcmp (application->uri, uri) != 0) {
-			/* spawn a new evince process */
-			ev_spawn (uri, screen, dest, mode, search_string, timestamp);
-			return;
-		}
+	if (application->uri && strcmp (application->uri, uri) != 0) {
+		/* spawn a new evince process */
+		ev_spawn (uri, screen, dest, mode, search_string, timestamp);
+		return;
 	} else {
 #ifdef ENABLE_DBUS
 		GHashTable *args = build_args (screen, dest, mode, search_string);
@@ -640,13 +681,14 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 			return;
 #endif /* ENABLE_DBUS */
 
-		if (!application->window)
-			application->window = EV_WINDOW (ev_window_new ());
+		ev_window = ev_application_get_empty_window (application, screen);
+		if (!ev_window)
+			ev_window = EV_WINDOW (ev_window_new ());
 	}
 
 	application->uri = g_strdup (uri);
 
-	ev_application_open_uri_in_window (application, uri,
+	ev_application_open_uri_in_window (application, uri, ev_window,
 					   screen, dest, mode,
 					   search_string,
 					   timestamp);
@@ -665,8 +707,6 @@ ev_application_open_window (EvApplication *application,
 			    guint32        timestamp)
 {
 	GtkWidget *new_window = ev_window_new ();
-
-	application->window = EV_WINDOW (new_window);
 
 	if (screen) {
 		ev_stock_icons_set_screen (screen);
@@ -702,12 +742,13 @@ ev_application_open_uri (EvApplication  *application,
 			 guint           timestamp,
 			 GError        **error)
 {
+	GList           *windows, *l;
 	EvLinkDest      *dest = NULL;
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 	const gchar     *search_string = NULL;
 	GdkScreen       *screen = NULL;
 
-	g_assert (application->window != NULL);
+	g_assert (application->uri != NULL);
 
 	/* FIXME: we don't need uri anymore,
 	 * maybe this method should be renamed
@@ -726,10 +767,16 @@ ev_application_open_uri (EvApplication  *application,
 		search_string = get_find_string_from_args (args);
 	}
 
-	ev_application_open_uri_in_window (application, uri,
-					   screen, dest, mode,
-					   search_string,
-					   timestamp);
+	windows = ev_application_get_windows (application);
+	for (l = windows; l != NULL; l = g_list_next (l)) {
+		EvWindow *ev_window = EV_WINDOW (l->data);
+
+		ev_application_open_uri_in_window (application, uri, ev_window,
+						   screen, dest, mode,
+						   search_string,
+						   timestamp);
+	}
+	g_list_free (windows);
 
 	if (dest)
 		g_object_unref (dest);
@@ -920,7 +967,12 @@ ev_application_init (EvApplication *ev_application)
 gboolean
 ev_application_has_window (EvApplication *application)
 {
-	return application->window != NULL;
+	GList   *windows = ev_application_get_windows (application);
+	gboolean retval = windows != NULL;
+
+	g_list_free (windows);
+
+	return retval;
 }
 
 const gchar *
