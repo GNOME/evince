@@ -227,6 +227,10 @@ struct _EvWindowPrivate {
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 #define LAYERS_SIDEBAR_ID "layers"
 
+#define EV_PRINT_SETTINGS_FILE  "print-settings"
+#define EV_PRINT_SETTINGS_GROUP "Print Settings"
+#define EV_PAGE_SETUP_GROUP     "Page Setup"
+
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
@@ -308,7 +312,6 @@ static void     ev_window_load_file_remote              (EvWindow         *ev_wi
 static void     ev_window_media_player_key_pressed      (EvWindow         *window,
 							 const gchar      *key,
 							 gpointer          user_data);
-static void     ev_window_save_print_page_setup         (EvWindow         *window);
 
 static guint ev_window_n_copies = 0;
 
@@ -2596,28 +2599,65 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	gtk_widget_show (fc);
 }
 
-static void
-ev_window_load_print_settings_from_metadata (EvWindow *window)
+static GKeyFile *
+get_print_settings_file (void)
 {
-	gint i;
+	GKeyFile *print_settings_file;
+	gchar    *filename;
 
-	if (!window->priv->metadata)
-		return;
+	print_settings_file = g_key_file_new ();
 
-	/* Load print setting that are specific to the document */
-	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
-		gchar *value = NULL;
+	filename = g_build_filename (ev_application_get_dot_dir (EV_APP),
+				     EV_PRINT_SETTINGS_FILE, NULL);
+	if (g_file_test (filename, G_FILE_TEST_IS_REGULAR)) {
+		GError *error = NULL;
 
-		ev_metadata_get_string (window->priv->metadata, document_print_settings[i], &value);
-		gtk_print_settings_set (window->priv->print_settings,
-					document_print_settings[i], value);
+		g_key_file_load_from_file (print_settings_file,
+					   filename,
+					   G_KEY_FILE_KEEP_COMMENTS |
+					   G_KEY_FILE_KEEP_TRANSLATIONS,
+					   &error);
+		if (error) {
+			g_warning ("%s", error->message);
+			g_error_free (error);
+		}
 	}
+	g_free (filename);
+
+	return print_settings_file;
 }
 
 static void
-ev_window_save_print_settings (EvWindow *window)
+save_print_setting_file (GKeyFile *key_file)
 {
-	gint i;
+	gchar  *filename;
+	gchar  *data;
+	gssize  data_length;
+	GError *error = NULL;
+
+	filename = g_build_filename (ev_application_get_dot_dir (EV_APP),
+				     EV_PRINT_SETTINGS_FILE, NULL);
+	data = g_key_file_to_data (key_file, (gsize *)&data_length, NULL);
+	g_file_set_contents (filename, data, data_length, &error);
+	if (error) {
+		g_warning ("%s", error->message);
+		g_error_free (error);
+	}
+	g_free (data);
+	g_free (filename);
+}
+
+static void
+ev_window_save_print_settings (EvWindow         *window,
+			       GtkPrintSettings *print_settings)
+{
+	GKeyFile *key_file;
+	gint      i;
+
+	key_file = get_print_settings_file ();
+	gtk_print_settings_to_key_file (print_settings, key_file, EV_PRINT_SETTINGS_GROUP);
+	save_print_setting_file (key_file);
+	g_key_file_free (key_file);
 
 	if (!window->priv->metadata)
 		return;
@@ -2626,7 +2666,7 @@ ev_window_save_print_settings (EvWindow *window)
 	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
 		const gchar *value;
 
-		value = gtk_print_settings_get (window->priv->print_settings,
+		value = gtk_print_settings_get (print_settings,
 						document_print_settings[i]);
 		ev_metadata_set_string (window->priv->metadata,
 					document_print_settings[i], value);
@@ -2634,9 +2674,15 @@ ev_window_save_print_settings (EvWindow *window)
 }
 
 static void
-ev_window_save_print_page_setup (EvWindow *window)
+ev_window_save_print_page_setup (EvWindow     *window,
+				 GtkPageSetup *page_setup)
 {
-	GtkPageSetup *page_setup = window->priv->print_page_setup;
+	GKeyFile *key_file;
+
+	key_file = get_print_settings_file ();
+	gtk_page_setup_to_key_file (page_setup, key_file, EV_PAGE_SETUP_GROUP);
+	save_print_setting_file (key_file);
+	g_key_file_free (key_file);
 
 	if (!window->priv->metadata)
 		return;
@@ -2655,9 +2701,29 @@ ev_window_save_print_page_setup (EvWindow *window)
 }
 
 static void
-ev_window_load_print_page_setup_from_metadata (EvWindow *window)
+ev_window_load_print_settings_from_metadata (EvWindow         *window,
+					     GtkPrintSettings *print_settings)
 {
-	GtkPageSetup *page_setup = window->priv->print_page_setup;
+	gint i;
+
+	if (!window->priv->metadata)
+		return;
+
+	/* Load print setting that are specific to the document */
+	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
+		gchar *value = NULL;
+
+		ev_metadata_get_string (window->priv->metadata,
+					document_print_settings[i], &value);
+		gtk_print_settings_set (print_settings,
+					document_print_settings[i], value);
+	}
+}
+
+static void
+ev_window_load_print_page_setup_from_metadata (EvWindow     *window,
+					       GtkPageSetup *page_setup)
+{
 	gint          int_value;
 	gdouble       double_value;
 	GtkPaperSize *paper_size = gtk_page_setup_get_paper_size (page_setup);
@@ -2707,6 +2773,30 @@ ev_window_load_print_page_setup_from_metadata (EvWindow *window)
 	}
 }
 
+static GtkPrintSettings *
+get_print_settings (GKeyFile *key_file)
+{
+	GtkPrintSettings *print_settings;
+
+	print_settings = g_key_file_has_group (key_file, EV_PRINT_SETTINGS_GROUP) ?
+		gtk_print_settings_new_from_key_file (key_file, EV_PRINT_SETTINGS_GROUP, NULL) :
+		gtk_print_settings_new ();
+
+	return print_settings ? print_settings : gtk_print_settings_new ();
+}
+
+static GtkPageSetup *
+get_print_page_setup (GKeyFile *key_file)
+{
+	GtkPageSetup *page_setup;
+
+	page_setup = g_key_file_has_group (key_file, EV_PAGE_SETUP_GROUP) ?
+		gtk_page_setup_new_from_key_file (key_file, EV_PAGE_SETUP_GROUP, NULL) :
+		gtk_page_setup_new ();
+
+	return page_setup ? page_setup : gtk_page_setup_new ();
+}
+
 static void
 ev_window_print_page_setup_done_cb (GtkPageSetup *page_setup,
 				    EvWindow     *window)
@@ -2715,31 +2805,33 @@ ev_window_print_page_setup_done_cb (GtkPageSetup *page_setup,
 	if (!page_setup)
 		return;
 
-	if (window->priv->print_page_setup != page_setup) {
-		if (window->priv->print_page_setup)
-			g_object_unref (window->priv->print_page_setup);
-		window->priv->print_page_setup = g_object_ref (page_setup);
-	}
-	
-	ev_application_set_page_setup (EV_APP, page_setup);
-	ev_window_save_print_page_setup (window);
+	ev_window_save_print_page_setup (window, page_setup);
 }
 
 static void
-ev_window_cmd_file_print_setup (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_file_print_setup (GtkAction *action,
+				EvWindow  *ev_window)
 {
-	if (!ev_window->priv->print_page_setup) {
-		ev_window->priv->print_page_setup = gtk_page_setup_copy (
-			ev_application_get_page_setup (EV_APP));
-		ev_window_load_print_page_setup_from_metadata (ev_window);
-	}
-	
-	gtk_print_run_page_setup_dialog_async (
-		GTK_WINDOW (ev_window),
-		ev_window->priv->print_page_setup,
-		ev_window->priv->print_settings,
-		(GtkPageSetupDoneFunc) ev_window_print_page_setup_done_cb,
-		ev_window);
+	GKeyFile         *print_settings_file;
+	GtkPrintSettings *print_settings;
+	GtkPageSetup     *print_page_setup;
+
+	print_settings_file = get_print_settings_file ();
+
+	print_settings = get_print_settings (print_settings_file);
+	ev_window_load_print_settings_from_metadata (ev_window, print_settings);
+
+	print_page_setup = get_print_page_setup (print_settings_file);
+	ev_window_load_print_page_setup_from_metadata (ev_window, print_page_setup);
+
+	gtk_print_run_page_setup_dialog_async (GTK_WINDOW (ev_window),
+					       print_page_setup,
+					       print_settings,
+					       (GtkPageSetupDoneFunc)ev_window_print_page_setup_done_cb,
+					       ev_window);
+	g_object_unref (print_settings);
+	g_object_unref (print_page_setup);
+	g_key_file_free (print_settings_file);
 }
 
 static void
@@ -2795,20 +2887,13 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 				EvWindow               *ev_window)
 {
 	gint n_jobs;
-	
+
 	switch (result) {
 	case GTK_PRINT_OPERATION_RESULT_APPLY: {
 		GtkPrintSettings *print_settings;
-		
+
 		print_settings = ev_print_operation_get_print_settings (op);
-		if (ev_window->priv->print_settings != print_settings) {
-			if (ev_window->priv->print_settings)
-				g_object_unref (ev_window->priv->print_settings);
-			ev_window->priv->print_settings = g_object_ref (print_settings);
-		}
-		
-		ev_application_set_print_settings (EV_APP, print_settings);
-		ev_window_save_print_settings (ev_window);
+		ev_window_save_print_settings (ev_window, print_settings);
 	}
 
 		break;
@@ -2912,19 +2997,12 @@ static void
 ev_window_print_operation_begin_print (EvPrintOperation *op,
 				       EvWindow         *ev_window)
 {
-	GtkPrintSettings *print_settings;
-	
 	if (!ev_window->priv->print_queue)
 		ev_window->priv->print_queue = g_queue_new ();
 
 	g_queue_push_head (ev_window->priv->print_queue, op);
 	ev_window_print_update_pending_jobs_message (ev_window,
 						     g_queue_get_length (ev_window->priv->print_queue));
-	
-	if (ev_window->priv->print_settings)
-		g_object_unref (ev_window->priv->print_settings);
-	print_settings = ev_print_operation_get_print_settings (op);
-	ev_window->priv->print_settings = g_object_ref (print_settings);
 }
 
 void
@@ -2933,6 +3011,9 @@ ev_window_print_range (EvWindow *ev_window,
 		       gint      last_page)
 {
 	EvPrintOperation *op;
+	GKeyFile         *print_settings_file;
+	GtkPrintSettings *print_settings;
+	GtkPageSetup     *print_page_setup;
 	gint              current_page;
 	gint              document_last_page;
 
@@ -2961,17 +3042,13 @@ ev_window_print_range (EvWindow *ev_window,
 	current_page = ev_document_model_get_page (ev_window->priv->model);
 	document_last_page = ev_document_get_n_pages (ev_window->priv->document);
 
-	if (!ev_window->priv->print_settings) {
-		ev_window->priv->print_settings = gtk_print_settings_copy (
-			ev_application_get_print_settings (EV_APP));
-		ev_window_load_print_settings_from_metadata (ev_window);
-	}
+	print_settings_file = get_print_settings_file ();
 
-	if (!ev_window->priv->print_page_setup) {
-		ev_window->priv->print_page_setup = gtk_page_setup_copy (
-			ev_application_get_page_setup (EV_APP));
-		ev_window_load_print_page_setup_from_metadata (ev_window);
-	}
+	print_settings = get_print_settings (print_settings_file);
+	ev_window_load_print_settings_from_metadata (ev_window, print_settings);
+
+	print_page_setup = get_print_page_setup (print_settings_file);
+	ev_window_load_print_page_setup_from_metadata (ev_window, print_page_setup);
 
 	if (first_page != 1 || last_page != document_last_page) {
 		GtkPageRange range;
@@ -2979,17 +3056,21 @@ ev_window_print_range (EvWindow *ev_window,
 		/* Ranges in GtkPrint are 0 - N */
 		range.start = first_page - 1;
 		range.end = last_page - 1;
-		
-		gtk_print_settings_set_print_pages (ev_window->priv->print_settings,
+
+		gtk_print_settings_set_print_pages (print_settings,
 						    GTK_PRINT_PAGES_RANGES);
-		gtk_print_settings_set_page_ranges (ev_window->priv->print_settings,
+		gtk_print_settings_set_page_ranges (print_settings,
 						    &range, 1);
 	}
 
 	ev_print_operation_set_job_name (op, gtk_window_get_title (GTK_WINDOW (ev_window)));
 	ev_print_operation_set_current_page (op, current_page);
-	ev_print_operation_set_print_settings (op, ev_window->priv->print_settings);
-	ev_print_operation_set_default_page_setup (op, ev_window->priv->print_page_setup);
+	ev_print_operation_set_print_settings (op, print_settings);
+	ev_print_operation_set_default_page_setup (op, print_page_setup);
+
+	g_object_unref (print_settings);
+	g_object_unref (print_page_setup);
+	g_key_file_free (print_settings_file);
 
 	ev_print_operation_run (op, GTK_WINDOW (ev_window));
 }
@@ -4684,16 +4765,6 @@ ev_window_dispose (GObject *object)
 	}
 	
 	ev_window_close_dialogs (window);
-
-	if (window->priv->print_settings) {
-		g_object_unref (window->priv->print_settings);
-		window->priv->print_settings = NULL;
-	}
-
-	if (window->priv->print_page_setup) {
-		g_object_unref (window->priv->print_page_setup);
-		window->priv->print_page_setup = NULL;
-	}
 
 	if (priv->link) {
 		g_object_unref (priv->link);

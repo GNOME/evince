@@ -80,12 +80,6 @@ const gchar	 *ev_application_get_filechooser_uri (EvApplication   *application,
 						      GtkFileChooserAction action);
 void		  ev_application_screensaver_enable  (EvApplication   *application);
 void		  ev_application_screensaver_disable (EvApplication   *application);
-GtkPrintSettings *ev_application_get_print_settings  (EvApplication   *application);
-void              ev_application_set_print_settings  (EvApplication   *application,
-						      GtkPrintSettings *settings);
-GtkPageSetup     *ev_application_get_page_setup      (EvApplication   *application);
-void              ev_application_set_page_setup      (EvApplication   *application,
-						      GtkPageSetup    *page_setup);
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application);
 const gchar      *ev_application_get_data_dir        (EvApplication   *application);
 
