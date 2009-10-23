@@ -66,14 +66,11 @@ struct _EvApplication {
 	gchar *dot_dir;
 	gchar *data_dir;
 	gchar *accel_map_file;
-	gchar *toolbars_file;
 
 #ifdef ENABLE_DBUS
 	DBusGConnection *connection;
 	EvMediaPlayerKeys *keys;
 #endif
-
-	EggToolbarsModel *toolbars_model;
 
 	TotemScrsaver *scr_saver;
 
@@ -807,13 +804,6 @@ ev_application_shutdown (EvApplication *application)
 		application->accel_map_file = NULL;
 	}
 	
-	if (application->toolbars_model) {
-		g_object_unref (application->toolbars_model);
-		g_free (application->toolbars_file);
-		application->toolbars_model = NULL;
-		application->toolbars_file = NULL;
-	}
-
 #ifdef ENABLE_DBUS
 	if (application->keys) {
 		g_object_unref (application->keys);
@@ -848,9 +838,7 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
-	gint i;
 	const gchar *home_dir;
-	gchar *toolbar_path;
 	GError *error = NULL;
 
         ev_application->dot_dir = g_build_filename (g_get_home_dir (),
@@ -885,42 +873,6 @@ ev_application_init (EvApplication *ev_application)
 								   NULL);
 		gtk_accel_map_load (ev_application->accel_map_file);
 	}
-	
-	ev_application->toolbars_model = egg_toolbars_model_new ();
-
-	ev_application->toolbars_file = g_build_filename
-			(ev_application->dot_dir, "evince_toolbar.xml", NULL);
-
-	toolbar_path = g_build_filename (ev_application->data_dir,
-					 "evince-toolbar.xml", NULL);
-	egg_toolbars_model_load_names (ev_application->toolbars_model,
-				       toolbar_path);
-
-	if (!egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
-					       ev_application->toolbars_file)) {
-		egg_toolbars_model_load_toolbars (ev_application->toolbars_model,
-						  toolbar_path);
-	}
-	g_free (toolbar_path);
-
-	/* Open item doesn't exist anymore,
-	 * convert it to OpenRecent for compatibility
-	 */
-	for (i = 0; i < egg_toolbars_model_n_items (ev_application->toolbars_model, 0); i++) {
-		const gchar *item;
-		
-		item = egg_toolbars_model_item_nth (ev_application->toolbars_model, 0, i);
-		if (g_ascii_strcasecmp (item, "FileOpen") == 0) {
-			egg_toolbars_model_remove_item (ev_application->toolbars_model, 0, i);
-			egg_toolbars_model_add_item (ev_application->toolbars_model, 0, i,
-						     "FileOpenRecent");
-			ev_application_save_toolbars_model (ev_application);
-			break;
-		}
-	}
-
-	egg_toolbars_model_set_flags (ev_application->toolbars_model, 0,
-				      EGG_TB_MODEL_NOT_REMOVABLE);
 
 #ifdef ENABLE_DBUS
 	ev_application->connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
@@ -970,19 +922,6 @@ ev_application_get_media_keys (EvApplication *application)
 #else
 	return NULL;
 #endif /* ENABLE_DBUS */
-}
-
-EggToolbarsModel *
-ev_application_get_toolbars_model (EvApplication *application)
-{
-	return application->toolbars_model;
-}
-
-void
-ev_application_save_toolbars_model (EvApplication *application)
-{
-        egg_toolbars_model_save_toolbars (application->toolbars_model,
-			 	          application->toolbars_file, "1.0");
 }
 
 void

@@ -231,6 +231,8 @@ struct _EvWindowPrivate {
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
 #define EV_PAGE_SETUP_GROUP     "Page Setup"
 
+#define EV_TOOLBARS_FILENAME "evince-toolbar.xml"
+
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
@@ -3778,42 +3780,54 @@ ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog, gint response, gpointer data)
+ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
+			       gint       response,
+			       EvWindow  *ev_window)
 {
-	EvWindow *ev_window = EV_WINDOW (data);
-        egg_editable_toolbar_set_edit_mode
-			(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), FALSE);
-	ev_application_save_toolbars_model (EV_APP);
+	EggEditableToolbar *toolbar;
+	gchar              *toolbars_file;
+
+	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
+        egg_editable_toolbar_set_edit_mode (toolbar, FALSE);
+
+	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP),
+					  "evince_toolbar.xml", NULL);
+	egg_toolbars_model_save_toolbars (egg_editable_toolbar_get_model (toolbar),
+					  toolbars_file, "1.0");
+	g_free (toolbars_file);
+
         gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
 ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 {
-	GtkWidget *dialog;
-	GtkWidget *editor;
+	GtkWidget          *dialog;
+	GtkWidget          *editor;
+	EggEditableToolbar *toolbar;
 
 	dialog = gtk_dialog_new_with_buttons (_("Toolbar Editor"),
-					      GTK_WINDOW (ev_window), 
-				              GTK_DIALOG_DESTROY_WITH_PARENT, 
+					      GTK_WINDOW (ev_window),
+				              GTK_DIALOG_DESTROY_WITH_PARENT,
 					      GTK_STOCK_CLOSE,
-					      GTK_RESPONSE_CLOSE, 
+					      GTK_RESPONSE_CLOSE,
 					      NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)), 5);
 	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 2);
 	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
-	  
+
+	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
 	editor = egg_toolbar_editor_new (ev_window->priv->ui_manager,
-					 ev_application_get_toolbars_model (EV_APP));
+					 egg_editable_toolbar_get_model (toolbar));
+
 	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
 	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
-             
+
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), editor);
 
-	egg_editable_toolbar_set_edit_mode
-		(EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar), TRUE);
+	egg_editable_toolbar_set_edit_mode (toolbar, TRUE);
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_window_cmd_edit_toolbar_cb),
@@ -5882,6 +5896,49 @@ ev_window_media_player_key_pressed (EvWindow    *window,
 	}
 }
 
+static EggToolbarsModel *
+get_toolbars_model (void)
+{
+	EggToolbarsModel *toolbars_model;
+	gchar            *toolbars_file;
+	gchar            *toolbars_path;
+	gint              i;
+
+	toolbars_model = egg_toolbars_model_new ();
+
+	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP),
+					  "evince_toolbar.xml", NULL);
+	toolbars_path = g_build_filename (ev_application_get_data_dir (EV_APP),
+					 "evince-toolbar.xml", NULL);
+	egg_toolbars_model_load_names (toolbars_model, toolbars_path);
+
+	if (!egg_toolbars_model_load_toolbars (toolbars_model, toolbars_file)) {
+		egg_toolbars_model_load_toolbars (toolbars_model, toolbars_path);
+	}
+	g_free (toolbars_path);
+
+	/* Open item doesn't exist anymore,
+	 * convert it to OpenRecent for compatibility
+	 */
+	for (i = 0; i < egg_toolbars_model_n_items (toolbars_model, 0); i++) {
+		const gchar *item;
+
+		item = egg_toolbars_model_item_nth (toolbars_model, 0, i);
+		if (g_ascii_strcasecmp (item, "FileOpen") == 0) {
+			egg_toolbars_model_remove_item (toolbars_model, 0, i);
+			egg_toolbars_model_add_item (toolbars_model, 0, i,
+						     "FileOpenRecent");
+			egg_toolbars_model_save_toolbars (toolbars_model, toolbars_file, "1.0");
+			break;
+		}
+	}
+	g_free (toolbars_file);
+
+	egg_toolbars_model_set_flags (toolbars_model, 0, EGG_TB_MODEL_NOT_REMOVABLE);
+
+	return toolbars_model;
+}
+
 static void
 ev_window_init (EvWindow *ev_window)
 {
@@ -5889,6 +5946,7 @@ ev_window_init (EvWindow *ev_window)
 	GtkAccelGroup *accel_group;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
+	EggToolbarsModel *toolbars_model;
 	GObject *mpkeys;
 	gchar *ui_path;
 	gdouble dpi;
@@ -5973,12 +6031,14 @@ ev_window_init (EvWindow *ev_window)
 			    ev_window->priv->menubar,
 			    FALSE, FALSE, 0);
 
-	ev_window->priv->toolbar = GTK_WIDGET 
-	  (g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
-			 "ui-manager", ev_window->priv->ui_manager,
-			 "popup-path", "/ToolbarPopup",
-			 "model", ev_application_get_toolbars_model (EV_APP),
-			 NULL));
+	toolbars_model = get_toolbars_model ();
+	ev_window->priv->toolbar = GTK_WIDGET
+		(g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
+			       "ui-manager", ev_window->priv->ui_manager,
+			       "popup-path", "/ToolbarPopup",
+			       "model", toolbars_model,
+			       NULL));
+	g_object_unref (toolbars_model);
 
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");

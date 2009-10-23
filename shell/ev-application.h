@@ -30,8 +30,6 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include "egg-toolbars-model.h"
-
 #include "ev-window.h"
 
 G_BEGIN_DECLS
@@ -71,8 +69,6 @@ gboolean	  ev_application_has_window	     (EvApplication   *application);
 const gchar *     ev_application_get_uri             (EvApplication   *application);
 GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 
-EggToolbarsModel *ev_application_get_toolbars_model  (EvApplication   *application);
-void              ev_application_save_toolbars_model (EvApplication   *application);
 void 		  ev_application_set_filechooser_uri (EvApplication   *application,
 						      GtkFileChooserAction action,
 						      const gchar     *uri);
