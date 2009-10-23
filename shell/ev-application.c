@@ -27,10 +27,12 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 #include <gtk/gtk.h>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
+#include <unistd.h>
 
 #include "totem-scrsaver.h"
 
@@ -39,9 +41,7 @@
 #endif
 
 #include "ev-application.h"
-#include "ev-document-factory.h"
 #include "ev-file-helpers.h"
-#include "ev-utils.h"
 #include "ev-stock-icons.h"
 
 #ifdef ENABLE_DBUS
@@ -65,7 +65,6 @@ struct _EvApplication {
 
 	gchar *dot_dir;
 	gchar *data_dir;
-	gchar *accel_map_file;
 
 #ifdef ENABLE_DBUS
 	DBusGConnection *connection;
@@ -786,6 +785,50 @@ ev_application_open_uri_list (EvApplication *application,
 	}
 }
 
+static void
+ev_application_accel_map_save (EvApplication *application)
+{
+	gchar *accel_map_file;
+	gchar *tmp_filename;
+	gint   fd;
+
+	accel_map_file = g_build_filename (g_get_home_dir (),
+					   ".gnome2", "accels",
+					   "evince", NULL);
+
+	tmp_filename = g_strdup_printf ("%s.XXXXXX", accel_map_file);
+
+	fd = g_mkstemp (tmp_filename);
+	if (fd == -1) {
+		g_free (accel_map_file);
+		g_free (tmp_filename);
+
+		return;
+	}
+	gtk_accel_map_save_fd (fd);
+	close (fd);
+
+	if (g_rename (tmp_filename, accel_map_file) == -1) {
+		/* FIXME: win32? */
+		g_unlink (tmp_filename);
+	}
+
+	g_free (accel_map_file);
+	g_free (tmp_filename);
+}
+
+static void
+ev_application_accel_map_load (EvApplication *application)
+{
+	gchar *accel_map_file;
+
+	accel_map_file = g_build_filename (g_get_home_dir (),
+					   ".gnome2", "accels",
+					   "evince", NULL);
+	gtk_accel_map_load (accel_map_file);
+	g_free (accel_map_file);
+}
+
 void
 ev_application_shutdown (EvApplication *application)
 {
@@ -798,12 +841,8 @@ ev_application_shutdown (EvApplication *application)
 		application->uri = NULL;
 	}
 
-	if (application->accel_map_file) {
-		gtk_accel_map_save (application->accel_map_file);
-		g_free (application->accel_map_file);
-		application->accel_map_file = NULL;
-	}
-	
+	ev_application_accel_map_save (application);
+
 #ifdef ENABLE_DBUS
 	if (application->keys) {
 		g_object_unref (application->keys);
@@ -838,7 +877,6 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
-	const gchar *home_dir;
 	GError *error = NULL;
 
         ev_application->dot_dir = g_build_filename (g_get_home_dir (),
@@ -864,15 +902,7 @@ ev_application_init (EvApplication *ev_application)
 
 	ev_application_init_session (ev_application);
 
-	home_dir = g_get_home_dir ();
-	if (home_dir) {
-		ev_application->accel_map_file = g_build_filename (home_dir,
-								   ".gnome2",
-								   "accels",
-								   "evince",
-								   NULL);
-		gtk_accel_map_load (ev_application->accel_map_file);
-	}
+	ev_application_accel_map_load (ev_application);
 
 #ifdef ENABLE_DBUS
 	ev_application->connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
