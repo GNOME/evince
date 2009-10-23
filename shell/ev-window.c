@@ -2143,7 +2143,7 @@ ev_window_open_copy_at_dest (EvWindow   *window,
 	ev_window_open_document (new_window,
 				 window->priv->document,
 				 dest, 0, NULL);
-	gtk_widget_show (GTK_WIDGET (new_window));
+	gtk_window_present (GTK_WINDOW (new_window));
 }
 
 static void
