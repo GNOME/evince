@@ -1642,6 +1642,23 @@ print_job_cancelled (EvJobPrint            *job,
 }
 
 static void
+ev_print_operation_print_request_page_setup (EvPrintOperationPrint *print,
+					     GtkPrintContext       *context,
+					     gint                   page_nr,
+					     GtkPageSetup          *setup)
+{
+	EvPrintOperation *op = EV_PRINT_OPERATION (print);
+	gdouble           width, height;
+
+	ev_document_get_page_size (op->document, page_nr,
+				   &width, &height);
+	if (width > height)
+	        gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_LANDSCAPE);
+	else
+	        gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_PORTRAIT);
+}
+
+static void
 ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 				    GtkPrintContext       *context,
 				    gint                   page)
@@ -1726,6 +1743,9 @@ ev_print_operation_print_init (EvPrintOperationPrint *print)
 				  print);
 	g_signal_connect_swapped (print->op, "status_changed",
 				  G_CALLBACK (ev_print_operation_print_status_changed),
+				  print);
+	g_signal_connect_swapped (print->op, "request_page_setup",
+				  G_CALLBACK (ev_print_operation_print_request_page_setup),
 				  print);
 	gtk_print_operation_set_allow_async (print->op, TRUE);
 }
