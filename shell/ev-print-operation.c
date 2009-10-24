@@ -1651,6 +1651,7 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	cairo_t          *cr;
 	gdouble           cr_width, cr_height;
 	gint              width, height;
+	gdouble           scale;
 
 	gtk_print_operation_set_defer_drawing (print->op);
 
@@ -1672,7 +1673,11 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	ev_page_cache_get_size (ev_page_cache_get (op->document),
 				page, 0, 1.0,
 				&width, &height);
-	cairo_scale (cr, cr_width / (gdouble)width, cr_height / (gdouble)height);
+	if (cr_width / (gdouble)width < cr_height / (gdouble)height)
+	        scale = cr_width / (gdouble)width;
+	else
+	        scale = cr_height / (gdouble)height;
+	cairo_scale (cr, scale, scale);
 
 	ev_job_print_set_cairo (EV_JOB_PRINT (print->job_print), cr);
 	ev_job_scheduler_push_job (print->job_print, EV_JOB_PRIORITY_NONE);
