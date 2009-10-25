@@ -410,7 +410,7 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 		GtkTreePath  *path;
 		GtkTreeIter   iter;
 		GFile        *file;
-		gchar        *filename, *template, *name;
+		gchar        *template;
 		GError       *error = NULL;
 		
 		path = (GtkTreePath *) l->data;
