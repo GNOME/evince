@@ -70,6 +70,8 @@ evince_SOURCES=				\
 	ev-properties-dialog.h		\
 	ev-properties-fonts.c		\
 	ev-properties-fonts.h		\
+	ev-properties-license.c		\
+	ev-properties-license.h		\
 	ev-open-recent-action.c		\
 	ev-open-recent-action.h		\
 	ev-utils.c			\

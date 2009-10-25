@@ -29,6 +29,7 @@
 #include "ev-properties-dialog.h"
 #include "ev-properties-fonts.h"
 #include "ev-properties-view.h"
+#include "ev-properties-license.h"
 
 struct _EvPropertiesDialog {
 	GtkDialog base_instance;
@@ -37,6 +38,7 @@ struct _EvPropertiesDialog {
 	GtkWidget *notebook;
 	GtkWidget *general_page;
 	GtkWidget *fonts_page;
+	GtkWidget *license_page;
 };
 
 struct _EvPropertiesDialogClass {
@@ -106,6 +108,19 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 
 		ev_properties_fonts_set_document
 			(EV_PROPERTIES_FONTS (properties->fonts_page), document);
+	}
+
+	if (info->fields_mask & EV_DOCUMENT_INFO_LICENSE && info->license) {
+		if (properties->license_page == NULL) {
+			label = gtk_label_new (_("Document License"));
+			properties->license_page = ev_properties_license_new ();
+			gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
+						  properties->license_page, label);
+			gtk_widget_show (properties->license_page);
+		}
+
+		ev_properties_license_set_license
+			(EV_PROPERTIES_LICENSE (properties->license_page), info->license);
 	}
 }
 
