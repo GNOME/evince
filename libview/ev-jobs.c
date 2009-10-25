@@ -936,31 +936,17 @@ ev_job_save_run (EvJob *job)
 {
 	EvJobSave *job_save = EV_JOB_SAVE (job);
 	gint       fd;
-	gchar     *filename;
-	gchar     *tmp_filename;
+	gchar     *tmp_filename = NULL;
 	gchar     *local_uri;
 	GError    *error = NULL;
 	
 	ev_debug_message (DEBUG_JOBS, "uri: %s, document_uri: %s", job_save->uri, job_save->document_uri);
 	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
-	
-	filename = ev_tmp_filename ("saveacopy");
-	tmp_filename = g_strdup_printf ("%s.XXXXXX", filename);
-	g_free (filename);
 
-	fd = g_mkstemp (tmp_filename);
-	if (fd == -1) {
-		gchar *display_name;
-		gint   save_errno = errno;
-
-		display_name = g_filename_display_name (tmp_filename);
-		ev_job_failed (job,
-			       G_FILE_ERROR,
-			       g_file_error_from_errno (save_errno),
-			       _("Failed to create file “%s”: %s"),
-			       display_name, g_strerror (save_errno));
-		g_free (display_name);
-		g_free (tmp_filename);
+        fd = ev_mkstemp ("saveacopy.XXXXXX", &tmp_filename, &error);
+        if (fd == -1) {
+                ev_job_failed_from_error (job, error);
+                g_error_free (error);
 
 		return FALSE;
 	}
@@ -968,8 +954,11 @@ ev_job_save_run (EvJob *job)
 	ev_document_doc_mutex_lock ();
 
 	/* Save document to temp filename */
-	local_uri = g_filename_to_uri (tmp_filename, NULL, NULL);
-	ev_document_save (job->document, local_uri, &error);
+	local_uri = g_filename_to_uri (tmp_filename, NULL, &error);
+        if (local_uri != NULL) {
+                ev_document_save (job->document, local_uri, &error);
+        }
+
 	close (fd);
 
 	ev_document_doc_mutex_unlock ();
@@ -1000,7 +989,7 @@ ev_job_save_run (EvJob *job)
 
 		uri_comp = ev_file_compress (local_uri, ctype, &error);
 		g_free (local_uri);
-		ev_tmp_filename_unlink (tmp_filename);
+		g_unlink (tmp_filename);
 
 		if (!uri_comp || error) {
 			local_uri = NULL;
@@ -1010,7 +999,7 @@ ev_job_save_run (EvJob *job)
 	}
 
 	g_free (tmp_filename);
-	
+
 	if (error) {
 		g_free (local_uri);
 		ev_job_failed_from_error (job, error);

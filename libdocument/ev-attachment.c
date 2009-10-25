@@ -101,7 +101,7 @@ ev_attachment_finalize (GObject *object)
 		attachment->priv->tmp_file = NULL;
 	}
 
-	(* G_OBJECT_CLASS (ev_attachment_parent_class)->finalize) (object);
+	G_OBJECT_CLASS (ev_attachment_parent_class)->finalize (object);
 }
 
 static void
@@ -411,18 +411,19 @@ ev_attachment_open (EvAttachment *attachment,
 		return FALSE;
 	}
 
-	if (attachment->priv->tmp_file &&
-	    g_file_query_exists (attachment->priv->tmp_file, NULL)) {
+	if (attachment->priv->tmp_file) {
 		retval = ev_attachment_launch_app (attachment, screen,
 						   timestamp, error);
 	} else {
-		GFile *tmpdir;
+                char *template;
 		GFile *file;
-		
-		tmpdir = g_file_new_for_path (ev_tmp_dir ());
-		file = g_file_get_child (tmpdir, attachment->priv->name);
 
-		if (ev_attachment_save (attachment, file, error)) {
+                /* FIXMEchpe: convert to filename encoding first! */
+                template = g_strdup_printf ("%s.XXXXXX", ev_attachment_get_name (attachment));
+                file = ev_mkstemp_file (template, error);
+                g_free (template);
+
+		if (file != NULL && ev_attachment_save (attachment, file, error)) {
 			if (attachment->priv->tmp_file)
 				g_object_unref (attachment->priv->tmp_file);
 			attachment->priv->tmp_file = g_object_ref (file);
@@ -432,7 +433,6 @@ ev_attachment_open (EvAttachment *attachment,
 		}
 
 		g_object_unref (file);
-		g_object_unref (tmpdir);
 	}
 
 	return retval;

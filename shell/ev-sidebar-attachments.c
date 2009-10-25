@@ -410,7 +410,7 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 		GtkTreePath  *path;
 		GtkTreeIter   iter;
 		GFile        *file;
-		gchar        *filename;
+		gchar        *filename, *template, *name;
 		GError       *error = NULL;
 		
 		path = (GtkTreePath *) l->data;
@@ -421,13 +421,12 @@ ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
 				    COLUMN_ATTACHMENT, &attachment,
 				    -1);
 
-		filename = g_build_filename (ev_tmp_dir (),
-					     ev_attachment_get_name (attachment),
-					     NULL);
-		file = g_file_new_for_path (filename);
-		g_free (filename);
+                /* FIXMEchpe: convert to filename encoding first! */
+                template = g_strdup_printf ("%s.XXXXXX", ev_attachment_get_name (attachment));
+                file = ev_mkstemp_file (template, &error);
+                g_free (template);
 		
-		if (ev_attachment_save (attachment, file, &error)) {
+		if (file != NULL && ev_attachment_save (attachment, file, &error)) {
 			gchar *uri;
 
 			uri = g_file_get_uri (file);

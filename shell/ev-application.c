@@ -885,7 +885,7 @@ ev_application_init (EvApplication *ev_application)
                                                     NULL);
 
         /* FIXME: why make this fatal? */
-        if (!ev_dir_ensure_exists (ev_application->dot_dir, 0700))
+        if (!ev_dir_ensure_exists (ev_application->dot_dir, 0700, NULL))
                 exit (1);
 
 #ifdef G_OS_WIN32

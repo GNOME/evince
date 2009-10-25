@@ -205,32 +205,20 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 	comics_document->regex_arg = command_usage_def[type].regex_arg;
 	comics_document->offset = command_usage_def[type].offset;
 	if (command_usage_def[type].decompress_tmp) {
-		comics_document->dir = ev_tmp_directory (NULL); 
-		comics_document->decompress_tmp = 
+		comics_document->dir = ev_mkdtemp ("comics.XXXXXX", error);
+                if (comics_document->dir == NULL)
+                        return FALSE;
+
+		/* unrar-free can't create directories, but ev_mkdtemp already created the dir */
+
+		comics_document->decompress_tmp =
 			g_strdup_printf (command_usage_def[type].decompress_tmp, 
 					 comics_document->selected_command, 
 					 quoted_file, 
 					 comics_document->dir);
 		g_free (quoted_file);
-		/* unrar-free can't create directories so we do it on its 
-		 * behalf */
-		if (type == GNAUNRAR) {
-			if (g_mkdir_with_parents (comics_document->dir, 0700) != 
-			    0) {
-				int errsv = errno;
-				g_set_error (error,
-					     EV_DOCUMENT_ERROR,
-					     EV_DOCUMENT_ERROR_INVALID,
-					     _("Failed to create a temporary "
-					     "directory."));
-				g_warning ("Failed to create directory %s: %s", 
-					   comics_document->dir, 
-					   g_strerror (errsv));
-				
-				return FALSE;
-			}
-		}
-		if (!comics_decompress_temp_dir (comics_document->decompress_tmp, 
+
+		if (!comics_decompress_temp_dir (comics_document->decompress_tmp,
 		    comics_document->selected_command, error))
 			return FALSE;
 		else
@@ -713,7 +701,6 @@ comics_document_finalize (GObject *object)
 			g_warning (_("There was an error deleting “%s”."),
 				   comics_document->dir);
 		g_free (comics_document->dir);
-		g_remove (ev_tmp_dir ());
 	}
 	
 	if (comics_document->page_names) {

@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2002 Jorn Baayen
+ *  Copyright © 2009 Christian Persch
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,58 +15,85 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *  $Id$
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <config.h>
 
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
+
 #include <glib.h>
 #include <glib/gstdio.h>
-#include <errno.h>
+#include <glib/gi18n-lib.h>
 
 #include "ev-file-helpers.h"
 
 static gchar *tmp_dir = NULL;
-static gint   count = 0;
 
+/**
+ * ev_dir_ensure_exists:
+ * @dir: the directory name
+ * @mode: permissions to use when creating the directory
+ * @error: a location to store a #GError
+ *
+ * Create @dir recursively with permissions @mode.
+ *
+ * Returns: %TRUE on success, or %FALSE on error with @error filled in
+ */
 gboolean
 ev_dir_ensure_exists (const gchar *dir,
-                      int          mode)
+                      int          mode,
+                      GError     **error)
 {
+        int errsv;
+        char *display_name;
+
+        g_return_val_if_fail (dir != NULL, FALSE);
+
+        errno = 0;
 	if (g_mkdir_with_parents (dir, mode) == 0)
 		return TRUE;
 
-	if (errno == EEXIST)
-		return g_file_test (dir, G_FILE_TEST_IS_DIR);
-	
-	g_warning ("Failed to create directory %s: %s", dir, g_strerror (errno));
+        errsv = errno;
+	if (errsv == EEXIST && g_file_test (dir, G_FILE_TEST_IS_DIR))
+                return TRUE;
+
+        display_name = g_filename_display_name (dir);
+        g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
+                     "Failed to create directory '%s': %s",
+                     display_name, g_strerror (errsv));
+        g_free (display_name);
+
 	return FALSE;
 }
 
-const gchar *
-ev_tmp_dir (void)
+/*
+ * _ev_tmp_dir:
+ * @error: a location to store a #GError
+ *
+ * Returns the tmp directory.
+ *
+ * Returns: the tmp directory, or %NULL with @error filled in if the
+ *   directory could not be created
+ */
+const char *
+_ev_tmp_dir (GError **error)
 {
-	if (tmp_dir == NULL) {
-		gboolean exists;
-		gchar   *dirname, *prgname;
+
+        if (tmp_dir == NULL) {
+                gchar *dirname, *prgname;
 
                 prgname = g_get_prgname ();
-		dirname = g_strdup_printf ("%s-%u", prgname ? prgname : "unknown", getpid ());
-		tmp_dir = g_build_filename (g_get_tmp_dir (),
-					    dirname,
-					    NULL);
-		g_free (dirname);
+                dirname = g_strdup_printf ("%s-%u", prgname ? prgname : "unknown", getpid ());
+                tmp_dir = g_build_filename (g_get_tmp_dir (), dirname, NULL);
+                g_free (dirname);
+        }
 
-		exists = ev_dir_ensure_exists (tmp_dir, 0700);
-		g_assert (exists);
-	}
+        if (!ev_dir_ensure_exists (tmp_dir, 0700, error))
+                return NULL;
 
 	return tmp_dir;
 }
@@ -85,47 +113,121 @@ _ev_file_helpers_shutdown (void)
 	tmp_dir = NULL;
 }
 
+/**
+ * ev_mkstemp:
+ * @template: a template string; must contain 'XXXXXX', but not necessarily as a suffix
+ * @file_name: a location to store the filename of the temp file
+ * @error: a location to store a #GError
+ *
+ * Creates a temp file in the evince temp directory.
+ *
+ * Returns: a file descriptor to the newly created temp file name, or %-1
+ *   on error with @error filled in
+ */
+int
+ev_mkstemp (const char  *template,
+            char       **file_name,
+            GError     **error)
+{
+        const char *tmp;
+        char *name;
+        int fd;
+
+        if ((tmp = _ev_tmp_dir (error)) == NULL)
+              return -1;
+
+        name = g_build_filename (tmp, template, NULL);
+        fd = g_mkstemp (name);
+
+        if (fd == -1) {
+		int errsv = errno;
+
+                g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
+                             _("Failed to create a temporary file: %s"),
+                             g_strerror (errsv));
+
+                g_free (name);
+                return -1;
+        }
+
+        if (file_name)
+                *file_name = name;
+
+        return fd;
+}
+
+static void
+close_fd_cb (gpointer fdptr)
+{
+        int fd = GPOINTER_TO_INT (fdptr);
+
+        close (fd);
+}
+
+/**
+ * ev_mkstemp_file:
+ * @template: a template string; must contain 'XXXXXX', but not necessarily as a suffix
+ * @error: a location to store a #GError
+ *
+ * Creates a temp #GFile in the evince temp directory. See ev_mkstemp() for more information.
+ *
+ * Returns: a newly allocated #GFile for the newly created temp file name, or %NULL
+ *   on error with @error filled in
+ */
 GFile *
-ev_tmp_file_get (const gchar *prefix)
+ev_mkstemp_file (const char        *template,
+                 GError           **error)
 {
-	gchar *path;
-	GFile *file;
+        char *file_name;
+        int fd;
+        GFile *file;
 
-	path = ev_tmp_filename (prefix);
-	file = g_file_new_for_path (path);
-	
-	g_free (path);
-	
-	return file;
+        fd = ev_mkstemp (template, &file_name, error);
+        if (fd == -1)
+                return NULL;
+
+        file = g_file_new_for_path (file_name);
+        g_free (file_name);
+
+        g_object_set_data_full (G_OBJECT (file), "ev-mkstemp-fd",
+                                GINT_TO_POINTER (fd), (GDestroyNotify) close_fd_cb);
+
+        return file;
 }
 
-gchar * 
-ev_tmp_filename (const gchar *prefix)
+/**
+ * ev_mkdtemp:
+ * @template: a template string; must end in 'XXXXXX'
+ * @error: a location to store a #GError
+ *
+ * Creates a temp directory in the evince temp directory.
+ *
+ * Returns: a newly allocated string with the temp directory name, or %NULL
+ *   on error with @error filled in
+ */
+gchar *
+ev_mkdtemp (const char        *template,
+            GError           **error)
 {
-	gchar *basename;
-	gchar *filename = NULL;
+        const char *tmp;
+        char *name;
 
-	do {
-		if (filename != NULL)
-			g_free (filename);
-			
-		basename = g_strdup_printf ("%s-%d",
-					    prefix ? prefix : "document",
-					    count ++);
-		
-		filename = g_build_filename (ev_tmp_dir (),
-					     basename, NULL);
-		
-		g_free (basename);
-	} while (g_file_test (filename, G_FILE_TEST_EXISTS));
-			
-	return filename;
-}
+        if ((tmp = _ev_tmp_dir (error)) == NULL)
+              return NULL;
 
-gchar * 
-ev_tmp_directory (const gchar *prefix) 
-{
-	return ev_tmp_filename (prefix ? prefix : "directory");
+        name = g_build_filename (tmp, template, NULL);
+        if (mkdtemp (name) == NULL) {
+		int errsv = errno;
+
+                g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
+                             _("Failed to create a temporary directory: %s"),
+                             g_strerror (errsv));
+
+                g_free (name);
+                return NULL;
+        }
+
+        return name;
 }
 
 /* Remove a local temp file created by evince */
@@ -138,7 +240,7 @@ ev_tmp_filename_unlink (const gchar *filename)
 		return;
 
 	tempdir = g_get_tmp_dir ();
-	if (g_ascii_strncasecmp (filename, tempdir, strlen (tempdir)) == 0) {
+	if (g_str_has_prefix (filename, tempdir) == 0) {
 		g_unlink (filename);
 	}
 }
@@ -326,7 +428,7 @@ compression_run (const gchar       *uri,
 {
 	gchar *argv[N_ARGS];
 	gchar *uri_dst = NULL;
-	gchar *filename, *filename_dst;
+	gchar *filename, *filename_dst = NULL;
 	gchar *cmd;
 	gint   fd, pout;
 	GError *err = NULL;
@@ -349,20 +451,12 @@ compression_run (const gchar       *uri,
 		g_free (cmd);
 		return NULL;
 	}
-	
-	filename_dst = g_build_filename (ev_tmp_dir (), "evinceXXXXXX", NULL);
-	fd = g_mkstemp (filename_dst);
-	if (fd < 0) {
-		int errsv = errno;
 
+        fd = ev_mkstemp ("comp.XXXXXX", &filename_dst, error);
+	if (fd == -1) {
 		g_free (cmd);
 		g_free (filename);
-		g_free (filename_dst);
 
-		g_set_error (error, G_IO_ERROR,
-			     g_io_error_from_errno (errsv),
-			     "Error creating a temporary file: %s",
-			     g_strerror (errsv));
 		return NULL;
 	}
 

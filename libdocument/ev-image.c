@@ -18,7 +18,10 @@
  */
 
 #include <config.h>
+
 #include <glib/gstdio.h>
+#include <unistd.h>
+
 #include "ev-document-misc.h"
 #include "ev-file-helpers.h"
 #include "ev-image.h"
@@ -132,7 +135,8 @@ ev_image_save_tmp (EvImage   *image,
 		   GdkPixbuf *pixbuf)
 {
 	GError *error = NULL;
-	gchar  *filename;
+	gchar  *filename = NULL;
+        int fd;
 	
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
 	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
@@ -140,19 +144,28 @@ ev_image_save_tmp (EvImage   *image,
 	if (image->priv->tmp_uri)
 		return image->priv->tmp_uri;
 
-	filename = ev_tmp_filename ("image");
+        if ((fd = ev_mkstemp ("image.XXXXXX", &filename, &error)) == -1)
+                goto had_error;
+
 	gdk_pixbuf_save (pixbuf, filename,
 			 "png", &error,
 			 "compression", "3", NULL);
+        close (fd);
+
 	if (!error) {
-		image->priv->tmp_uri = g_filename_to_uri (filename, NULL, NULL);
+		image->priv->tmp_uri = g_filename_to_uri (filename, NULL, &error);
+                if (image->priv->tmp_uri == NULL)
+                        goto had_error;
+
 		g_free (filename);
 		
 		return image->priv->tmp_uri;
 	}
 
+    had_error:
+
 	/* Erro saving image */
-	g_warning ("%s", error->message);
+	g_warning ("Error saving image: %s", error->message);
 	g_error_free (error);
 	g_free (filename);
 
@@ -166,6 +179,3 @@ ev_image_get_tmp_uri (EvImage *image)
 
 	return image->priv->tmp_uri;
 }
-
-
-

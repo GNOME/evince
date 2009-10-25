@@ -1708,19 +1708,30 @@ ev_window_load_file_remote (EvWindow *ev_window,
 	GFile *target_file;
 	
 	if (!ev_window->priv->local_uri) {
-		gchar *tmp_name;
-		gchar *base_name;
+		char *base_name, *template;
+                GFile *tmp_file;
+                GError *err = NULL;
 
 		/* We'd like to keep extension of source uri since
-		 * it helps to resolve some mime types, say cbz */
-		tmp_name = ev_tmp_filename (NULL);
+		 * it helps to resolve some mime types, say cbz.
+                 */
 		base_name = g_file_get_basename (source_file);
-		ev_window->priv->local_uri = g_strconcat ("file:", tmp_name, "-",
-							  base_name, NULL);
+                template = g_build_filename ("document.XXXXXX-%s", base_name, NULL);
+                g_free (base_name);
+
+                tmp_file = ev_mkstemp_file (template, &err);
+                if (tmp_file == NULL) {
+                        ev_window_error_message (ev_window, err,
+                                                 "%s", _("Failed to load remote file."));
+                        g_error_free (err);
+                        return;
+                }
+
+		ev_window->priv->local_uri = g_file_get_uri (tmp_file);
+		g_object_unref (tmp_file);
+
 		ev_job_load_set_uri (EV_JOB_LOAD (ev_window->priv->load_job),
 				     ev_window->priv->local_uri);
-		g_free (base_name);
-		g_free (tmp_name);
 	}
 
 	ev_window_reset_progress_cancellable (ev_window);
@@ -4648,13 +4659,13 @@ ev_window_drag_data_received (GtkWidget        *widget,
 static void
 ev_window_finalize (GObject *object)
 {
+	G_OBJECT_CLASS (ev_window_parent_class)->finalize (object);
+
 	if (ev_window_n_copies == 0) {
 		ev_application_shutdown (EV_APP);
 	} else {
 		ev_window_n_copies--;
 	}
-
-	G_OBJECT_CLASS (ev_window_parent_class)->finalize (object);
 }
 
 static void
@@ -5629,7 +5640,9 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	if (is_native) {
 		filename = g_file_get_path (target_file);
 	} else {
-		filename = ev_tmp_filename ("saveimage");
+                /* Create a temporary local file to save to */
+                if (ev_mkstemp ("saveimage.XXXXXX", &filename, &error) == -1)
+                        goto has_error;
 	}
 
 	ev_document_doc_mutex_lock ();
@@ -5642,6 +5655,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	g_free (file_format);
 	g_object_unref (pixbuf);
 	
+    has_error:
 	if (error) {
 		ev_window_error_message (ev_window, error, 
 					 "%s", _("The image could not be saved."));
@@ -5774,7 +5788,7 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 	
 	for (l = ev_window->priv->attach_list; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
-		GFile        *save_to;
+		GFile        *save_to = NULL;
 		GError       *error = NULL;
 		
 		attachment = (EvAttachment *) l->data;
@@ -5782,15 +5796,17 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 		if (is_native) {
 			if (is_dir) {
 				save_to = g_file_get_child (target_file,
+                                    /* FIXMEchpe: file name encoding! */
 							    ev_attachment_get_name (attachment));
 			} else {
 				save_to = g_object_ref (target_file);
 			}
 		} else {
-			save_to = ev_tmp_file_get ("saveattachment");
+			save_to = ev_mkstemp_file ("saveattachment.XXXXXX", &error);
 		}
 
-		ev_attachment_save (attachment, save_to, &error);
+                if (save_to)
+                        ev_attachment_save (attachment, save_to, &error);
 		
 		if (error) {
 			ev_window_error_message (ev_window, error, 

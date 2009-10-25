@@ -36,18 +36,23 @@ typedef enum {
 	EV_COMPRESSION_GZIP
 } EvCompressionType;
 
-const gchar *ev_tmp_dir               (void);
+const char *_ev_tmp_dir               (GError **error);
 
 void        _ev_file_helpers_init     (void);
 
 void        _ev_file_helpers_shutdown (void);
 
 gboolean     ev_dir_ensure_exists     (const gchar       *dir,
-                                       int                mode);
+                                       int                mode,
+                                       GError           **error);
 
-GFile       *ev_tmp_file_get          (const gchar       *prefix);
-gchar       *ev_tmp_filename          (const char        *prefix);
-gchar       *ev_tmp_directory         (const char        *prefix);
+int          ev_mkstemp               (const char        *template,
+                                       char             **file_name,
+                                       GError           **error);
+GFile       *ev_mkstemp_file          (const char        *template,
+                                       GError           **error);
+gchar       *ev_mkdtemp               (const char        *template,
+                                       GError           **error);
 void         ev_tmp_filename_unlink   (const gchar       *filename);
 void         ev_tmp_file_unlink       (GFile             *file);
 void         ev_tmp_uri_unlink        (const gchar       *uri);
