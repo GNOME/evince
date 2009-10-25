@@ -31,6 +31,7 @@
 G_BEGIN_DECLS
 
 typedef struct _EvDocumentInfo    EvDocumentInfo;
+typedef struct _EvDocumentLicense EvDocumentLicense;
 
 #define EV_TYPE_DOCUMENT_INFO (ev_document_info_get_type())
 
@@ -98,7 +99,9 @@ typedef enum
 	EV_DOCUMENT_INFO_PERMISSIONS = 1 << 13,
 	EV_DOCUMENT_INFO_N_PAGES = 1 << 14,
 	EV_DOCUMENT_INFO_SECURITY = 1 << 15,
-	EV_DOCUMENT_INFO_PAPER_SIZE = 1 << 16
+	EV_DOCUMENT_INFO_PAPER_SIZE = 1 << 16,
+	EV_DOCUMENT_INFO_LICENSE = 1 << 17,
+
 } EvDocumentInfoFields;
 
 struct _EvDocumentInfo
@@ -121,6 +124,7 @@ struct _EvDocumentInfo
 	int   n_pages;
 	double paper_height;
 	double paper_width;
+	EvDocumentLicense *license;
 
 	/* Mask of all the valid fields */
 	guint fields_mask;
@@ -129,6 +133,21 @@ struct _EvDocumentInfo
 GType           ev_document_info_get_type (void) G_GNUC_CONST;
 EvDocumentInfo *ev_document_info_copy     (EvDocumentInfo *info);
 void            ev_document_info_free     (EvDocumentInfo *info);
+
+/* EvDocumentLicense */
+#define EV_TYPE_DOCUMENT_LICENSE (ev_document_license_get_type())
+struct _EvDocumentLicense {
+	gchar *text;
+	gchar *uri;
+	gchar *web_statement;
+};
+GType              ev_document_license_get_type          (void) G_GNUC_CONST;
+EvDocumentLicense *ev_document_license_new               (void);
+EvDocumentLicense *ev_document_license_copy              (EvDocumentLicense *license);
+void               ev_document_license_free              (EvDocumentLicense *license);
+const gchar       *ev_document_license_get_text          (EvDocumentLicense *license);
+const gchar       *ev_document_license_get_uri           (EvDocumentLicense *license);
+const gchar       *ev_document_license_get_web_statement (EvDocumentLicense *license);
 
 G_END_DECLS
 

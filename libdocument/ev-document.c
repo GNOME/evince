@@ -578,6 +578,8 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->ui_hints = info->ui_hints;
 	copy->permissions = info->permissions;
 	copy->n_pages = info->n_pages;
+	copy->license = ev_document_license_copy (info->license);
+
 	copy->fields_mask = info->fields_mask;
 
 	return copy;
@@ -598,8 +600,69 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->producer);
 	g_free (info->linearized);
 	g_free (info->security);
-	
+	ev_document_license_free (info->license);
+
 	g_free (info);
+}
+
+/* EvDocumentLicense */
+EV_DEFINE_BOXED_TYPE (EvDocumentLicense, ev_document_license, ev_document_license_copy, ev_document_license_free)
+
+EvDocumentLicense *
+ev_document_license_new (void)
+{
+	return g_new0 (EvDocumentLicense, 1);
+}
+
+EvDocumentLicense *
+ev_document_license_copy (EvDocumentLicense *license)
+{
+	EvDocumentLicense *new_license;
+
+	if (!license)
+		return NULL;
+
+	new_license = ev_document_license_new ();
+
+	if (license->text)
+		new_license->text = g_strdup (license->text);
+	if (license->uri)
+		new_license->uri = g_strdup (license->uri);
+	if (license->web_statement)
+		new_license->web_statement = g_strdup (license->web_statement);
+
+	return new_license;
+}
+
+void
+ev_document_license_free (EvDocumentLicense *license)
+{
+	if (!license)
+		return;
+
+	g_free (license->text);
+	g_free (license->uri);
+	g_free (license->web_statement);
+
+	g_free (license);
+}
+
+const gchar *
+ev_document_license_get_text (EvDocumentLicense *license)
+{
+	return license->text;
+}
+
+const gchar *
+ev_document_license_get_uri (EvDocumentLicense *license)
+{
+	return license->uri;
+}
+
+const gchar *
+ev_document_license_get_web_statement (EvDocumentLicense *license)
+{
+	return license->web_statement;
 }
 
 /* EvRectangle */
