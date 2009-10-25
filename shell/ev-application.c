@@ -884,10 +884,6 @@ ev_application_init (EvApplication *ev_application)
                                                     "evince",
                                                     NULL);
 
-        /* FIXME: why make this fatal? */
-        if (!ev_dir_ensure_exists (ev_application->dot_dir, 0700, NULL))
-                exit (1);
-
 #ifdef G_OS_WIN32
 {
 	gchar *dir;
@@ -998,8 +994,12 @@ ev_application_screensaver_disable (EvApplication *application)
 }
 
 const gchar *
-ev_application_get_dot_dir (EvApplication   *application)
+ev_application_get_dot_dir (EvApplication *application,
+                            gboolean create)
 {
+        if (create)
+                g_mkdir_with_parents (application->dot_dir, 0700);
+
 	return application->dot_dir;
 }
 

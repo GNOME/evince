@@ -2617,24 +2617,25 @@ get_print_settings_file (void)
 {
 	GKeyFile *print_settings_file;
 	gchar    *filename;
+        GError *error = NULL;
 
 	print_settings_file = g_key_file_new ();
 
-	filename = g_build_filename (ev_application_get_dot_dir (EV_APP),
-				     EV_PRINT_SETTINGS_FILE, NULL);
-	if (g_file_test (filename, G_FILE_TEST_IS_REGULAR)) {
-		GError *error = NULL;
+	filename = g_build_filename (ev_application_get_dot_dir (EV_APP, FALSE),
+                                     EV_PRINT_SETTINGS_FILE, NULL);
+        if (!g_key_file_load_from_file (print_settings_file,
+                                        filename,
+                                        G_KEY_FILE_KEEP_COMMENTS |
+                                        G_KEY_FILE_KEEP_TRANSLATIONS,
+                                        &error)) {
 
-		g_key_file_load_from_file (print_settings_file,
-					   filename,
-					   G_KEY_FILE_KEEP_COMMENTS |
-					   G_KEY_FILE_KEEP_TRANSLATIONS,
-					   &error);
-		if (error) {
+                /* Don't warn if the file simply doesn't exist */
+                if (!g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT))
 			g_warning ("%s", error->message);
-			g_error_free (error);
-		}
+
+                g_error_free (error);
 	}
+
 	g_free (filename);
 
 	return print_settings_file;
@@ -2645,15 +2646,15 @@ save_print_setting_file (GKeyFile *key_file)
 {
 	gchar  *filename;
 	gchar  *data;
-	gssize  data_length;
+	gsize  data_length;
 	GError *error = NULL;
 
-	filename = g_build_filename (ev_application_get_dot_dir (EV_APP),
+	filename = g_build_filename (ev_application_get_dot_dir (EV_APP, TRUE),
 				     EV_PRINT_SETTINGS_FILE, NULL);
-	data = g_key_file_to_data (key_file, (gsize *)&data_length, NULL);
+	data = g_key_file_to_data (key_file, &data_length, NULL);
 	g_file_set_contents (filename, data, data_length, &error);
 	if (error) {
-		g_warning ("%s", error->message);
+		g_warning ("Failed to save print settings: %s", error->message);
 		g_error_free (error);
 	}
 	g_free (data);
@@ -3801,7 +3802,7 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
 	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
         egg_editable_toolbar_set_edit_mode (toolbar, FALSE);
 
-	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP),
+	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP, TRUE),
 					  "evince_toolbar.xml", NULL);
 	egg_toolbars_model_save_toolbars (egg_editable_toolbar_get_model (toolbar),
 					  toolbars_file, "1.0");
@@ -5922,7 +5923,7 @@ get_toolbars_model (void)
 
 	toolbars_model = egg_toolbars_model_new ();
 
-	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP),
+	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP, FALSE),
 					  "evince_toolbar.xml", NULL);
 	toolbars_path = g_build_filename (ev_application_get_data_dir (EV_APP),
 					 "evince-toolbar.xml", NULL);
@@ -5930,8 +5931,8 @@ get_toolbars_model (void)
 
 	if (!egg_toolbars_model_load_toolbars (toolbars_model, toolbars_file)) {
 		egg_toolbars_model_load_toolbars (toolbars_model, toolbars_path);
+                goto skip_conversion;
 	}
-	g_free (toolbars_path);
 
 	/* Open item doesn't exist anymore,
 	 * convert it to OpenRecent for compatibility
@@ -5948,7 +5949,10 @@ get_toolbars_model (void)
 			break;
 		}
 	}
+
+    skip_conversion:
 	g_free (toolbars_file);
+	g_free (toolbars_path);
 
 	egg_toolbars_model_set_flags (toolbars_model, 0, EGG_TB_MODEL_NOT_REMOVABLE);
 
