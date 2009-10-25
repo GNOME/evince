@@ -1,5 +1,7 @@
 /* -*- Mode: C++; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
-/* pdfdocument.h: Implementation of EvDocument for PDF
+/* this file is part of evince, a gnome document viewer
+ *
+ * Copyright (C) 2009, Juanjo Marín <juanj.marin@juntadeandalucia.es>
  * Copyright (C) 2004, Red Hat, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +64,13 @@
 #if (defined (HAVE_POPPLER_PAGE_RENDER)) && (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
 #define HAVE_CAIRO_PRINT
 #endif
+
+/* fields from the XMP Rights Management Schema, XMP Specification Sept 2005, pag. 45 */
+#define LICENSE_MARKED "/x:xmpmeta/rdf:RDF/rdf:Description/xmpRights:Marked"
+#define LICENSE_TEXT "/x:xmpmeta/rdf:RDF/rdf:Description/dc:rights/rdf:Alt/rdf:li[lang('%s')]"
+#define LICENSE_WEB_STATEMENT "/x:xmpmeta/rdf:RDF/rdf:Description/xmpRights:WebStatement"
+/* license field from Creative Commons schema, http://creativecommons.org/ns */
+#define LICENSE_URI "/x:xmpmeta/rdf:RDF/rdf:Description/cc:license/@rdf:resource"
 
 typedef struct {
 	PdfDocument *document;
@@ -442,25 +451,14 @@ pdf_document_render (EvDocument      *document,
 /* reference:
 http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf */
 static char *
-pdf_document_get_format_from_metadata (const char *metadata)
+pdf_document_get_format_from_metadata (xmlDocPtr          doc,
+				       xmlXPathContextPtr xpathCtx)
 {
-	xmlDocPtr doc;
-	xmlXPathContextPtr xpathCtx;
 	xmlXPathObjectPtr xpathObj;
 	xmlChar *part = NULL;
 	xmlChar *conf = NULL;
 	char *result = NULL;
 	int i;
-
-	doc = xmlParseMemory (metadata, strlen (metadata));
-	if (doc == NULL)
-		return NULL;      /* invalid xml metadata */
-
-	xpathCtx = xmlXPathNewContext (doc);
-	if (xpathCtx == NULL) {
-		xmlFreeDoc (doc);
-		return NULL;      /* invalid xpath context */
-	}
 
 	/* add pdf/a namespaces */
 	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
@@ -519,10 +517,157 @@ pdf_document_get_format_from_metadata (const char *metadata)
 	/* Cleanup */
 	xmlFree (part);
 	xmlFree (conf);
-	xmlXPathFreeContext (xpathCtx);
-	xmlFreeDoc (doc);
 
 	return result;
+}
+
+static EvDocumentLicense *
+pdf_document_get_license_from_metadata (xmlDocPtr          doc,
+					xmlXPathContextPtr xpathCtx)
+{
+	xmlXPathObjectPtr xpathObj;
+	xmlChar *marked = NULL;
+	const char *language_string;
+	char  *aux;
+	gchar **tags;
+	gchar *tag, *tag_aux;
+	int i, j;
+	EvDocumentLicense *license;
+
+	/* register namespaces */
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "dc", BAD_CAST "http://purl.org/dc/elements/1.1/");
+	/* XMP Rights Management Schema */
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmpRights", BAD_CAST "http://ns.adobe.com/xap/1.0/rights/");
+	/* Creative Commons Schema */
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "cc", BAD_CAST "http://creativecommons.org/ns#");
+
+	/* checking if the document has been marked as defined on the XMP Rights
+	 * Management Schema */
+	xpathObj = xmlXPathEvalExpression (BAD_CAST LICENSE_MARKED, xpathCtx);
+	if (xpathObj != NULL) {
+		if (xpathObj->nodesetval != NULL &&
+		    xpathObj->nodesetval->nodeNr != 0)
+			marked = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+		xmlXPathFreeObject (xpathObj);
+	}
+
+	/* a) Not marked => No XMP Rights information */
+	if (!marked) {
+		xmlFree (marked);
+		return NULL;
+	}
+
+	license = ev_document_license_new ();
+
+	/* b) Marked False => Public Domain, no copyrighted material and no
+	 * license needed */
+	if (g_strrstr ((char *) marked, "False") != NULL) {
+		license->text = g_strdup (_("This work is in the Public Domain"));
+	/* c) Marked True => Copyrighted material */
+	} else {
+		/* Checking usage terms as defined by the XMP Rights Management
+		 * Schema. This field is recomended to be checked by Creative
+		 * Commons */
+		/* 1) checking for a suitable localized string */
+		language_string = pango_language_to_string (gtk_get_default_language ());
+		tags = g_strsplit (language_string, "-", -1);
+		i = g_strv_length (tags);
+		while (i-- && !license->text) {
+			tag = g_strdup (tags[0]);
+			for (j = 1; j <= i; j++) {
+				tag_aux = g_strdup_printf ("%s-%s", tag, tags[j]);
+				g_free (tag);
+				tag = tag_aux;
+			}
+			aux = g_strdup_printf (LICENSE_TEXT, tag);
+			xpathObj = xmlXPathEvalExpression (BAD_CAST aux, xpathCtx);
+			if (xpathObj != NULL) {
+				if (xpathObj->nodesetval != NULL &&
+				    xpathObj->nodesetval->nodeNr != 0)
+					license->text = (gchar *)xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+				xmlXPathFreeObject (xpathObj);
+			}
+			g_free (tag);
+			g_free (aux);
+		}
+		g_strfreev(tags);
+
+		/* 2) if not, use the default string */
+		if (!license->text) {
+			aux = g_strdup_printf (LICENSE_TEXT, "x-default");
+			xpathObj = xmlXPathEvalExpression (BAD_CAST aux, xpathCtx);
+			if (xpathObj != NULL) {
+				if (xpathObj->nodesetval != NULL &&
+				    xpathObj->nodesetval->nodeNr != 0)
+					license->text = (gchar *)xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+				xmlXPathFreeObject (xpathObj);
+			}
+			g_free (aux);
+		}
+
+		/* Checking the license URI as defined by the Creative Commons
+		 * Schema. This field is recomended to be checked by Creative
+		 * Commons */
+		xpathObj = xmlXPathEvalExpression (BAD_CAST LICENSE_URI, xpathCtx);
+		if (xpathObj != NULL) {
+			if (xpathObj->nodesetval != NULL &&
+			    xpathObj->nodesetval->nodeNr != 0)
+				license->uri = (gchar *)xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+			xmlXPathFreeObject (xpathObj);
+		}
+
+		/* Checking the web statement as defined by the XMP Rights
+		 * Management Schema. Checking it out is a sort of above-and-beyond
+		 * the basic recommendations by Creative Commons. It can be
+		 * considered as a "reinforcement" approach to add certainty. */
+		xpathObj = xmlXPathEvalExpression (BAD_CAST LICENSE_WEB_STATEMENT, xpathCtx);
+		if (xpathObj != NULL) {
+			if (xpathObj->nodesetval != NULL &&
+			    xpathObj->nodesetval->nodeNr != 0)
+				license->web_statement = (gchar *)xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+			xmlXPathFreeObject (xpathObj);
+		}
+	}
+	xmlFree (marked);
+
+	if (!license->text && !license->uri && !license->web_statement) {
+		ev_document_license_free (license);
+		return NULL;
+	}
+
+	return license;
+}
+
+static void
+pdf_document_parse_metadata (const gchar    *metadata,
+			     EvDocumentInfo *info)
+{
+	xmlDocPtr          doc;
+	xmlXPathContextPtr xpathCtx;
+	gchar             *fmt;
+
+	doc = xmlParseMemory (metadata, strlen (metadata));
+	if (doc == NULL)
+		return;		/* invalid xml metadata */
+
+	xpathCtx = xmlXPathNewContext (doc);
+	if (xpathCtx == NULL) {
+		xmlFreeDoc (doc);
+		return;		/* invalid xpath context */
+	}
+
+	fmt = pdf_document_get_format_from_metadata (doc, xpathCtx);
+	if (fmt != NULL) {
+		g_free (info->format);
+		info->format = fmt;
+	}
+
+	info->license = pdf_document_get_license_from_metadata (doc, xpathCtx);
+
+	xmlXPathFreeContext (xpathCtx);
+	xmlFreeDoc (doc);
 }
 
 
@@ -536,7 +681,6 @@ pdf_document_get_info (EvDocument *document)
 	PopplerPermissions permissions;
 	EvPage *page;
 	char *metadata;
-	char *fmt;
 
 	info = g_new0 (EvDocumentInfo, 1);
 
@@ -556,7 +700,8 @@ pdf_document_get_info (EvDocument *document)
 			    EV_DOCUMENT_INFO_LINEARIZED |
 			    EV_DOCUMENT_INFO_N_PAGES |
 			    EV_DOCUMENT_INFO_SECURITY | 
-		            EV_DOCUMENT_INFO_PAPER_SIZE;
+		            EV_DOCUMENT_INFO_PAPER_SIZE |
+			    EV_DOCUMENT_INFO_LICENSE;
 
 	g_object_get (PDF_DOCUMENT (document)->document,
 		      "title", &(info->title),
@@ -577,11 +722,7 @@ pdf_document_get_info (EvDocument *document)
 		      NULL);
 
 	if (metadata != NULL) {
-		fmt = pdf_document_get_format_from_metadata(metadata);
-		if (fmt != NULL) {
-			g_free (info->format);
-			info->format = fmt;
-		}
+		pdf_document_parse_metadata (metadata, info);
 		g_free (metadata);
 	}
 
