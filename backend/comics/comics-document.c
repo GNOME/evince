@@ -52,8 +52,7 @@ struct _ComicsDocument
 	EvDocument parent_instance;
 
 	gchar    *archive, *dir;
-	GSList   *page_names;
-	gint     n_pages;
+	GPtrArray *page_names;
 	gchar    *selected_command;
 	gchar    *extract_command, *list_command, *decompress_tmp;
 	gboolean regex_arg;
@@ -356,6 +355,13 @@ comics_check_decompress_command	(gchar          *mime_type,
 	return FALSE;
 }
 
+static int
+sort_page_names (gconstpointer a,
+                 gconstpointer b)
+{
+  return strcmp (* (const char **) a, * (const char **) b);
+}
+
 static gboolean
 comics_document_load (EvDocument *document,
 		      const char *uri,
@@ -425,6 +431,8 @@ comics_document_load (EvDocument *document,
 		return FALSE;
 	}
 
+        comics_document->page_names = g_ptr_array_sized_new (64);
+
 	supported_extensions = get_supported_image_extensions ();
 	for (i = 0; cb_files[i] != NULL; i++) {
 		if (comics_document->offset != NO_OFFSET) {
@@ -445,12 +453,8 @@ comics_document_load (EvDocument *document,
 		suffix = g_ascii_strdown (suffix + 1, -1);
 		if (g_slist_find_custom (supported_extensions, suffix,
 					 (GCompareFunc) strcmp) != NULL) {
-			comics_document->page_names =
-				g_slist_insert_sorted (
-					comics_document->page_names,
-					g_strdup (g_strstrip (cb_file)),
-					(GCompareFunc) strcmp);
-			comics_document->n_pages++;
+                        g_ptr_array_add (comics_document->page_names,
+                                         g_strstrip (g_strdup (cb_file)));
 		}
 		g_free (suffix);
 	}
@@ -458,7 +462,7 @@ comics_document_load (EvDocument *document,
 	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
 	g_slist_free (supported_extensions);
 
-	if (comics_document->n_pages == 0) {
+	if (comics_document->page_names->len == 0) {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,
 			     EV_DOCUMENT_ERROR_INVALID,
@@ -466,6 +470,10 @@ comics_document_load (EvDocument *document,
 			     uri);
 		return FALSE;
 	}
+
+        /* Now sort the pages */
+        g_ptr_array_sort (comics_document->page_names, sort_page_names);
+
 	return TRUE;
 }
 
@@ -483,7 +491,12 @@ comics_document_save (EvDocument *document,
 static int
 comics_document_get_n_pages (EvDocument *document)
 {
-	return COMICS_DOCUMENT (document)->n_pages;
+	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
+
+        if (comics_document->page_names == NULL)
+                return 0;
+
+	return comics_document->page_names->len;
 }
 
 static void
@@ -542,10 +555,8 @@ comics_document_get_page_size (EvDocument *document,
 		g_spawn_close_pid (child_pid);
 		g_object_unref (loader);
 	} else {
-		filename = g_build_filename (comics_document->dir, 	
-					     (char*) g_slist_nth_data (
-					     comics_document->page_names, 
-					     page->index),
+		filename = g_build_filename (comics_document->dir,
+                                             (char *) comics_document->page_names->pdata[page->index],
 					     NULL);
 		pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
 		g_free (filename);
@@ -617,9 +628,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 	} else {
 		filename = 
 			g_build_filename (comics_document->dir,
-					  (char*) g_slist_nth_data (
-						comics_document->page_names, 
-						rc->page->index),
+                                          (char *) comics_document->page_names->pdata[rc->page->index],
 					  NULL);
 	   
 		gdk_pixbuf_get_file_info (filename, &width, &height);
@@ -708,9 +717,8 @@ comics_document_finalize (GObject *object)
 	}
 	
 	if (comics_document->page_names) {
-		g_slist_foreach (comics_document->page_names,
-				 (GFunc) g_free, NULL);
-		g_slist_free (comics_document->page_names);
+                g_ptr_array_foreach (comics_document->page_names, (GFunc) g_free, NULL);
+                g_ptr_array_free (comics_document->page_names, TRUE);
 	}
 
 	g_free (comics_document->archive);
@@ -742,7 +750,6 @@ comics_document_init (ComicsDocument *comics_document)
 	comics_document->archive = NULL;
 	comics_document->page_names = NULL;
 	comics_document->extract_command = NULL;
-	comics_document->n_pages = 0;
 }
 
 /* Returns a list of file extensions supported by gdk-pixbuf */
@@ -823,13 +830,14 @@ extract_argv (EvDocument *document, gint page)
 	char *command_line, *quoted_archive, *quoted_filename;
 	GError *err = NULL;
 
+        if (page >= comics_document->page_names->len)
+                return NULL;
+
 	quoted_archive = g_shell_quote (comics_document->archive);
 	if (comics_document->regex_arg) {
-		quoted_filename = comics_regex_quote (
-			g_slist_nth_data (comics_document->page_names, page));
+		quoted_filename = comics_regex_quote (comics_document->page_names->pdata[page]);
 	} else {
-		quoted_filename = g_shell_quote (
-			g_slist_nth_data (comics_document->page_names, page));
+		quoted_filename = g_shell_quote (comics_document->page_names->pdata[page]);
 	}
 
 	command_line = g_strdup_printf ("%s -- %s %s",
@@ -838,13 +846,13 @@ extract_argv (EvDocument *document, gint page)
 					quoted_filename);
 
 	g_shell_parse_argv (command_line, NULL, &argv, &err);
-	
+
 	if (err) {
 		g_warning (_("Error %s"), err->message);
 		g_error_free (err);
 		return NULL;
 	}
-	
+
 	g_free (command_line);
 	g_free (quoted_archive);
 	g_free (quoted_filename);
