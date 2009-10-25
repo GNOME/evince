@@ -1253,13 +1253,8 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 
 	get_first_and_last_page (export, &first_page, &last_page);
 
-	if (file_format) {
-		export->fc.format = g_ascii_strcasecmp (file_format, "pdf") == 0 ?
-			EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
-	} else {
-		export->fc.format = gtk_printer_accepts_pdf (printer) ?
-			EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
-	}
+	export->fc.format = file_format && g_ascii_strcasecmp (file_format, "pdf") == 0 ?
+		EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
 	export->fc.filename = export->temp_file;
 	export->fc.first_page = MIN (first_page, last_page);
 	export->fc.last_page = MAX (first_page, last_page);
