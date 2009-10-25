@@ -33,7 +33,7 @@
 
 static gchar *tmp_dir = NULL;
 
-/**
+/*
  * ev_dir_ensure_exists:
  * @dir: the directory name
  * @mode: permissions to use when creating the directory
@@ -43,10 +43,10 @@ static gchar *tmp_dir = NULL;
  *
  * Returns: %TRUE on success, or %FALSE on error with @error filled in
  */
-gboolean
-ev_dir_ensure_exists (const gchar *dir,
-                      int          mode,
-                      GError     **error)
+static gboolean
+_ev_dir_ensure_exists (const gchar *dir,
+                       int          mode,
+                       GError     **error)
 {
         int errsv;
         char *display_name;
@@ -79,7 +79,7 @@ ev_dir_ensure_exists (const gchar *dir,
  * Returns: the tmp directory, or %NULL with @error filled in if the
  *   directory could not be created
  */
-const char *
+static const char *
 _ev_tmp_dir (GError **error)
 {
 
@@ -92,7 +92,7 @@ _ev_tmp_dir (GError **error)
                 g_free (dirname);
         }
 
-        if (!ev_dir_ensure_exists (tmp_dir, 0700, error))
+        if (!_ev_dir_ensure_exists (tmp_dir, 0700, error))
                 return NULL;
 
 	return tmp_dir;
