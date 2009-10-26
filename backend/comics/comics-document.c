@@ -35,11 +35,6 @@
 #include "ev-document-thumbnails.h"
 #include "ev-file-helpers.h"
 
-struct _ComicsDocumentClass
-{
-	EvDocumentClass parent_class;
-};
-
 typedef enum
 {
 	RARLABS,
@@ -47,6 +42,13 @@ typedef enum
 	UNZIP,
 	P7ZIP
 } ComicBookDecompressType;
+
+typedef struct _ComicsDocumentClass ComicsDocumentClass;
+
+struct _ComicsDocumentClass
+{
+	EvDocumentClass parent_class;
+};
 
 struct _ComicsDocument
 {
@@ -67,19 +69,39 @@ struct _ComicsDocument
 /* For perfomance reasons of 7z* we've choosen to decompress on the temporary 
  * directory instead of decompressing on the stdout */
 
-struct {
-	char *extract, *list, *decompress_tmp; 
-	gboolean regex_arg;
-	gint offset;
-} command_usage_def[] = {
+/**
+ * @extract: command line arguments to pass to extract a file from the archive
+ *   to stdout. The archive file and the file to extract will be appended after
+ *   a "--".
+ * @list: command line arguments to list the archive contents
+ * @decompress_tmp: command line arguments to pass to extract the archive
+ *   into a directory. The archive file and the directory to extract to will be
+ *   appended after a "--".
+ * @regex_arg: whether the command expects one filename or accepts a regex (glob?)
+ * @offset: the byte offset of the filename on each line in the output of
+ *   running the @list command
+ */
+typedef struct {
+        char *extract;
+        char *list;
+        char *decompress_tmp;
+        gboolean regex_arg;
+        gint offset;
+} ComicBookDecompressCommand;
+
+static const ComicBookDecompressCommand command_usage_def[] = {
+        /* RARLABS unrar */
 	{"%s p -c- -ierr", "%s vb -c- -- %s", NULL	       , FALSE, NO_OFFSET},
+
+        /* GNA! unrar */
 	{NULL		 , "%s t %s"	    , "%s -xf %s %s"   , TRUE , NO_OFFSET},
+
+        /* unzip */
 	{"%s -p -C"	 , "%s -Z -1 -- %s" , NULL	       , TRUE , NO_OFFSET},
+
+        /* 7zip */
 	{NULL		 , "%s l -- %s"	    , "%s x -y %s -o%s", FALSE, OFFSET_7Z}
 };
-
-
-typedef struct    _ComicsDocumentClass ComicsDocumentClass;
 
 static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
 
@@ -206,7 +228,7 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 	comics_document->regex_arg = command_usage_def[type].regex_arg;
 	comics_document->offset = command_usage_def[type].offset;
 	if (command_usage_def[type].decompress_tmp) {
-		comics_document->dir = ev_mkdtemp ("comics.XXXXXX", error);
+		comics_document->dir = ev_mkdtemp ("evince-comics-XXXXXX", error);
                 if (comics_document->dir == NULL)
                         return FALSE;
 
