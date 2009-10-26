@@ -95,11 +95,16 @@ INCLUDES= \
 	$(DISABLE_DEPRECATED)				\
 	$(GTK_PRINT_CFLAGS)
 
+FILTER_OUT = \
+	$(top_builddir)/shell/main.o			\
+	$(top_builddir)/shell/evinced-ev-daemon.o	\
+	$(top_builddir)/shell/ev-convert-metadata.o
+
 GTKDOC_LIBS= \
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
-	$(top_builddir)/cut-n-paste/gedit-message-area/libgeditmsgarea.la	\
+	$(top_builddir)/cut-n-paste/evinfobar/libevinfobar.la		\
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
@@ -108,7 +113,7 @@ GTKDOC_LIBS= \
 	$(top_builddir)/libmisc/libevmisc.la				\
 	$(SHELL_LIBS)							\
 	$(GTK_PRINT_LIBS)						\
-	$(filter-out ../../../shell/main.o,$(wildcard ../../../shell/*.o))
+	$(filter-out $(FILTER_OUT),$(wildcard $(top_builddir)/shell/*.o))
 
 if ENABLE_DJVU
 GTKDOC_LIBS +=	$(DJVU_LIBS)
