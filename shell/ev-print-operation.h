@@ -56,6 +56,9 @@ void              ev_print_operation_run                    (EvPrintOperation *o
 void              ev_print_operation_cancel                 (EvPrintOperation *op);
 void              ev_print_operation_get_error              (EvPrintOperation *op,
 							     GError          **error);
+void              ev_print_operation_set_embed_page_setup   (EvPrintOperation *op,
+							     gboolean          embed);
+gboolean          ev_print_operation_get_embed_page_setup   (EvPrintOperation *op);
 const gchar      *ev_print_operation_get_status             (EvPrintOperation *op);
 gdouble           ev_print_operation_get_progress           (EvPrintOperation *op);
 

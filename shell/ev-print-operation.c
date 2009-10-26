@@ -78,6 +78,9 @@ struct _EvPrintOperationClass {
 	void              (* cancel)                 (EvPrintOperation       *op);
 	void              (* get_error)              (EvPrintOperation       *op,
 						      GError                **error);
+	void              (* set_embed_page_setup)   (EvPrintOperation       *op,
+						      gboolean                embed);
+	gboolean          (* get_embed_page_setup)   (EvPrintOperation       *op);
 
 	/* signals */
 	void              (* done)                   (EvPrintOperation       *op,
@@ -282,6 +285,33 @@ ev_print_operation_get_error (EvPrintOperation *op,
 	class->get_error (op, error);
 }
 
+void
+ev_print_operation_set_embed_page_setup (EvPrintOperation *op,
+					 gboolean          embed)
+{
+#if GTK_CHECK_VERSION (2, 17, 4)
+	EvPrintOperationClass *class = EV_PRINT_OPERATION_GET_CLASS (op);
+
+	g_return_if_fail (EV_IS_PRINT_OPERATION (op));
+
+	class->set_embed_page_setup (op, embed);
+#endif
+}
+
+gboolean
+ev_print_operation_get_embed_page_setup (EvPrintOperation *op)
+{
+#if GTK_CHECK_VERSION (2, 17, 4)
+	EvPrintOperationClass *class = EV_PRINT_OPERATION_GET_CLASS (op);
+
+	g_return_val_if_fail (EV_IS_PRINT_OPERATION (op), FALSE);
+
+	return class->get_embed_page_setup (op);
+#else
+	return FALSE;
+#endif
+}
+
 const gchar *
 ev_print_operation_get_status (EvPrintOperation *op)
 {
@@ -364,7 +394,8 @@ struct _EvPrintOperationExport {
 	gint fd;
 	gchar *temp_file;
 	gchar *job_name;
-	
+	gboolean embed_page_setup;
+
 	guint idle_id;
 	
 	/* Context */
@@ -1292,6 +1323,10 @@ ev_print_operation_export_run (EvPrintOperation *op,
 		ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (op->document));
 	gtk_print_unix_dialog_set_manual_capabilities (GTK_PRINT_UNIX_DIALOG (dialog),
 						       capabilities);
+#if GTK_CHECK_VERSION (2, 17, 4)
+	gtk_print_unix_dialog_set_embed_page_setup (GTK_PRINT_UNIX_DIALOG (dialog),
+						    export->embed_page_setup);
+#endif
 
 	gtk_print_unix_dialog_set_current_page (GTK_PRINT_UNIX_DIALOG (dialog),
 						export->current_page);
@@ -1302,7 +1337,7 @@ ev_print_operation_export_run (EvPrintOperation *op,
 	if (export->page_setup)
 		gtk_print_unix_dialog_set_page_setup (GTK_PRINT_UNIX_DIALOG (dialog),
 						      export->page_setup);
-	
+
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_print_operation_export_print_dialog_response_cb),
 			  export);
@@ -1331,6 +1366,25 @@ ev_print_operation_export_get_error (EvPrintOperation *op,
 
 	g_propagate_error (error, export->error);
 	export->error = NULL;
+}
+
+static void
+ev_print_operation_export_set_embed_page_setup (EvPrintOperation *op,
+						gboolean          embed)
+{
+#if GTK_CHECK_VERSION (2, 17, 4)
+	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
+
+	export->embed_page_setup = embed;
+#endif
+}
+
+static gboolean
+ev_print_operation_export_get_embed_page_setup (EvPrintOperation *op)
+{
+	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
+
+	return export->embed_page_setup;
 }
 
 static void
@@ -1443,6 +1497,8 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 	ev_print_op_class->run = ev_print_operation_export_run;
 	ev_print_op_class->cancel = ev_print_operation_export_cancel;
 	ev_print_op_class->get_error = ev_print_operation_export_get_error;
+	ev_print_op_class->set_embed_page_setup = ev_print_operation_export_set_embed_page_setup;
+	ev_print_op_class->get_embed_page_setup = ev_print_operation_export_get_embed_page_setup;
 
 	g_object_class->constructor = ev_print_operation_export_constructor;
 	g_object_class->finalize = ev_print_operation_export_finalize;
@@ -1574,6 +1630,29 @@ ev_print_operation_print_get_error (EvPrintOperation *op,
 	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
 
 	gtk_print_operation_get_error (print->op, error);
+}
+
+static void
+ev_print_operation_print_set_embed_page_setup (EvPrintOperation *op,
+					       gboolean          embed)
+{
+#if GTK_CHECK_VERSION (2, 17, 4)
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	gtk_print_operation_set_embed_page_setup (print->op, embed);
+#endif
+}
+
+static gboolean
+ev_print_operation_print_get_embed_page_setup (EvPrintOperation *op)
+{
+#if GTK_CHECK_VERSION (2, 17, 4)
+	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
+
+	return gtk_print_operation_get_embed_page_setup (print->op);
+#else
+	return FALSE;
+#endif
 }
 
 static void
@@ -1761,6 +1840,8 @@ ev_print_operation_print_class_init (EvPrintOperationPrintClass *klass)
 	ev_print_op_class->run = ev_print_operation_print_run;
 	ev_print_op_class->cancel = ev_print_operation_print_cancel;
 	ev_print_op_class->get_error = ev_print_operation_print_get_error;
+	ev_print_op_class->set_embed_page_setup = ev_print_operation_print_set_embed_page_setup;
+	ev_print_op_class->get_embed_page_setup = ev_print_operation_print_get_embed_page_setup;
 
 	g_object_class->finalize = ev_print_operation_print_finalize;
 }

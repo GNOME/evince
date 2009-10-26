@@ -395,7 +395,9 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
 	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
+#if !GTK_CHECK_VERSION (2, 17, 4)
 	ev_window_set_action_sensitive (ev_window, "FilePageSetup", has_pages && ok_to_print);
+#endif
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 
@@ -2908,6 +2910,13 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 
 		print_settings = ev_print_operation_get_print_settings (op);
 		ev_window_save_print_settings (ev_window, print_settings);
+
+		if (ev_print_operation_get_embed_page_setup (op)) {
+			GtkPageSetup *page_setup;
+
+			page_setup = ev_print_operation_get_default_page_setup (op);
+			ev_window_save_print_page_setup (ev_window, page_setup);
+		}
 	}
 
 		break;
@@ -3081,6 +3090,7 @@ ev_window_print_range (EvWindow *ev_window,
 	ev_print_operation_set_current_page (op, current_page);
 	ev_print_operation_set_print_settings (op, print_settings);
 	ev_print_operation_set_default_page_setup (op, print_page_setup);
+	ev_print_operation_set_embed_page_setup (op, TRUE);
 
 	g_object_unref (print_settings);
 	g_object_unref (print_page_setup);
@@ -6039,7 +6049,17 @@ ev_window_init (EvWindow *ev_window)
 		g_error_free (error);
 	}
 	g_free (ui_path);
-	
+
+#if GTK_CHECK_VERSION (2, 17, 4)
+	{
+		GtkAction *action;
+
+		action = gtk_action_group_get_action (ev_window->priv->action_group,
+						      "FilePageSetup");
+		g_object_set (action, "visible", FALSE, "sensitive", FALSE, NULL);
+	}
+#endif
+
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
 	ev_window->priv->recent_action_group = NULL;
 	ev_window->priv->recent_ui_id = 0;
