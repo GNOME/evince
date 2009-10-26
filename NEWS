@@ -1,4 +1,111 @@
 ================
+Evince  2.29.1
+================
+
+New Features and UI Improvements:
+
+    * Embed page setup settings in the print dialog (#591551, Marek
+      Kašík, Carlos Garcia Campos)
+    * A new tab has been added to properties dialog to show
+    * information about the document license (#349173, Juanjo Marín,
+      Carlos Garcia Campos)
+    * Use different processes for every document opened. (#583680,
+      #434966, #497388, #524633, #586087, Carlos Garcia Campos)
+    * Use GVFS metadata instead of our own xml based
+      implementation. (#586841, Carlos Garcia Campos)
+    * When scrolling a page, move one screen leaving one line context
+      to help to visually track the document as it moves. (#170871,
+      Carlos Garcia Campos)
+    * Use GtkInfoBar instead of GeditMessageArea for the message area
+      (#592785, Carlos Garcia Campos)
+    * EvPageCache has been splitted up into document part (moved to
+      EvDocument which has been converted into an abstract class
+      instead of an interface) and view part: EvDocumentModel. This
+      allows to have more than one EvView for the same document, so
+      that "Open a Copy" can be implemented without using the symlink
+      hack. (#573641, Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Several fixes and cleanups in comics backend (Christian Persch)
+    * Don't exit with non-writable $HOME (Christian Persch)
+    * Clean up temp file handling to make sure we can cope with not
+      being able to create our temp directory (#595372, Christian Persch)
+    * Set page orientation of each page when printing so that
+      documents with mixed portrait/landscape pages print correctly
+      (#599470, Adrian Johnson)
+    * Preserve aspect ratio when scaling page for printing (#599468,
+      Adrian Johnson)
+    * Fix a crash when we don't have a DBUS connection (Christian Persch)
+    * Make sure total_num_bytes > 0 before using it in progress
+      callbacks (#597691, Carlos Garcia Campos)
+    * Escape document URI before showing it in progress area (#597691,
+      Carlos Garcia Campos)
+    * Fix a crash due to an uninitialized variable (#597154, Carlos
+      Garcia Campos)
+    * Fix a crash when there are form field widgets active during
+      rotation (#593316, Carlos Garcia Campos)
+    * Remarks the selected thumbnail after rotation (#595548, Juanjo Marín)
+    * Don't change current page when rotating documents with different
+      page sizes (#595704, Carlos Garcia Campos)
+    * Fix thumbnails rotation when loading a rotated document
+      (#595718, Carlos Garcia Campos)
+    * Save images as png or jpg when the filename has no extensions
+      (#595079, Patrick Ammann)
+    * Populate destination page when reloading the document (#570054,
+      Fernando Herrera)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Astur (ast)
+    * Krasimir \"Bfaf\" Chonov (bg)
+    * Runa Bhattacharjee (bn_IN)
+    * Gil Forcada (ca)
+    * Marek Černocký (cs)
+    * Kenneth Nielsen (da)
+    * Mario Blättermann (de)
+    * Kostas Papadimas (el)
+    * Philip Withnall (en_GB)
+    * Jorge González (es)
+    * Ivar Smolin (et)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Tommi Vainikainen (fi)
+    * Claude Paroz (fr)
+    * Antón Méixome (gl)
+    * Sweta Kothari (gu)
+    * Gabor Kelemen (hu)
+    * Andika Triwidada (id)
+    * Francesco Marletta (it)
+    * Shushi Kurose (ja)
+    * Shankar Prasad (kn)
+    * Changwoo Ryu (ko)
+    * Gintautas Miliauskas (lt)
+    * Sangeeta Kumari (mai)
+    * Ani Peter (ml)
+    * Sandeep Shedmake (mr)
+    * Kjartan Maraas (nb)
+    * Reinout van Schouwen (nl)
+    * Manoj Kumar Giri (or)
+    * A S Alam (pa)
+    * Piotr Drąg (pl)
+    * André Gondim (pt_BR)
+    * Duarte Loreto (pt)
+    * Lucian Adrian Grijincu (ro)
+    * Matej Urbančič (sl)
+    * Miloš Popović (sr@latin)
+    * Милош Поповић (sr)
+    * Daniel Nylander (sv)
+    * Dr.T.Vasudevan (ta)
+    * Krishna Babu K (te)
+    * Theppitak Karoonboonyanan (th)
+    * Baris Cicek (tr)
+    * Maxim Dziumanenko (uk)
+    * Aron Xu (zh_CN)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince  2.27.90
 ================
 
