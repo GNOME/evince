@@ -17,17 +17,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-
 #include <config.h>
+
 #include <unistd.h>
 #include <string.h>
-#include <glib/gi18n-lib.h>
-#include <glib/gstdio.h>
-#include <gio/gio.h>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <errno.h>
+
+#include <glib.h>
+#include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
+#include <gio/gio.h>
 
 #include "comics-document.h"
 #include "ev-document-misc.h"
