@@ -2075,7 +2075,7 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 
 		ev_application_open_uri_list (EV_APP, uris,
 					      gtk_window_get_screen (GTK_WINDOW (ev_window)),
-					      GDK_CURRENT_TIME);
+					      gtk_get_current_event_time ());
 
 		g_slist_foreach (uris, (GFunc)g_free, NULL);
 		g_slist_free (uris);
@@ -2177,7 +2177,7 @@ ev_window_cmd_recent_file_activate (GtkAction *action,
 	
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0, NULL, GDK_CURRENT_TIME);
+					 NULL, 0, NULL, gtk_get_current_event_time ());
 }
 
 static void
@@ -2187,7 +2187,7 @@ ev_window_open_recent_action_item_activated (EvOpenRecentAction *action,
 {
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0, NULL, GDK_CURRENT_TIME);
+					 NULL, 0, NULL, gtk_get_current_event_time ());
 }
 
 static void
@@ -3946,7 +3946,7 @@ ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 
 	gtk_show_uri (gtk_window_get_screen (GTK_WINDOW (ev_window)),
 		      "ghelp:evince",
-		      GDK_CURRENT_TIME,
+		      gtk_get_current_event_time (),
 		      &error);
 	if (error) {
 		ev_window_error_message (ev_window, error, 
@@ -5407,7 +5407,8 @@ launch_action (EvWindow *window, EvLinkAction *action)
 	context = G_APP_LAUNCH_CONTEXT (gdk_app_launch_context_new ());
 	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context),
 					   gtk_window_get_screen (GTK_WINDOW (window)));
-	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context), GDK_CURRENT_TIME);
+	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context),
+                                              gtk_get_current_event_time ());
 	
 	file_list.data = file;
 	if (!g_app_info_launch (app_info, &file_list, context, &error)) {
@@ -5436,7 +5437,7 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 	gdk_app_launch_context_set_screen (GDK_APP_LAUNCH_CONTEXT (context),
 					   gtk_window_get_screen (GTK_WINDOW (window)));
 	gdk_app_launch_context_set_timestamp (GDK_APP_LAUNCH_CONTEXT (context),
-					      GDK_CURRENT_TIME);
+					      gtk_get_current_event_time ());
 
 	if (!g_strstr_len (uri, strlen (uri), "://") &&
 	    !g_str_has_prefix (uri, "mailto:")) {
@@ -5474,7 +5475,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 					 ev_link_action_get_dest (action),
 					 0,
 					 NULL, 
-					 GDK_CURRENT_TIME);
+					 gtk_get_current_event_time ());
 
 	g_free (uri);
 }
@@ -5754,7 +5755,7 @@ ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 		
 		attachment = (EvAttachment *) l->data;
 		
-		ev_attachment_open (attachment, screen, GDK_CURRENT_TIME, &error);
+		ev_attachment_open (attachment, screen, gtk_get_current_event_time (), &error);
 
 		if (error) {
 			ev_window_error_message (window, error, 
