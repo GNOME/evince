@@ -1644,10 +1644,11 @@ ev_print_operation_print_request_page_setup (EvPrintOperationPrint *print,
 					     GtkPageSetup          *setup)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
-	gdouble           width, height;
+	gint              width, height;
 
-	ev_document_get_page_size (op->document, page_nr,
-				   &width, &height);
+	ev_page_cache_get_size (ev_page_cache_get (op->document),
+				page_nr, 0, 1.0,
+				&width, &height);
 	if (width > height)
 	        gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_LANDSCAPE);
 	else
