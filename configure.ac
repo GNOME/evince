@@ -161,14 +161,13 @@ PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_
 
 GDK_TARGET="$($PKG_CONFIG --variable target gdk-2.0)"
 
-SMCLIENT_PKGS=
 AC_MSG_CHECKING([which smclient backend to use])
 AC_ARG_WITH([smclient],
   [AS_HELP_STRING([--with-smclient-backend],[which smclient backend to use (no|xsmp|win32|quartz)])],
   [],
   [case "$GDK_TARGET" in
     x11) case "$with_platform" in
-           gnome) with_smclient=xsmp SMCLIENT_PKGS="sm >= 1.0.0" ;;
+           gnome) with_smclient=xsmp ;;
            *) with_smclient=no ;;
          esac ;;
     win32|quartz) with_smclient=$GDK_TARGET ;;
@@ -178,6 +177,11 @@ AC_MSG_RESULT([$with_smclient])
 
 if test "$with_smclient" != "no"; then
   AC_DEFINE([WITH_SMCLIENT],[1],[Define if smclient is enabled])
+
+  case "$with_smclient" in
+    xsmp) SMCLIENT_PKGS="sm >= 1.0.0" ;;
+    *) SMCLIENT_PKGS="" ;;
+  esac
 
   PKG_CHECK_MODULES([SMCLIENT],[gtk+-2.0 gthread-2.0 $SMCLIENT_PKGS])
   AC_SUBST([SMCLIENT_CFLAGS])
