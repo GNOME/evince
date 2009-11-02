@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2009-10-11 15:26+0000\n"
-"PO-Revision-Date: 2009-10-16 06:51+0300\n"
+"POT-Creation-Date: 2009-10-26 18:48+0000\n"
+"PO-Revision-Date: 2009-11-01 09:21+0200\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -35,10 +35,6 @@ msgstr "Koomiksiraamatu lahtipakkimise käsk „%s” lõpetas tõrkega."
 #, c-format
 msgid "The command “%s” did not end normally."
 msgstr "Käsk „%s” ei lõpetanud normaalselt."
-
-#, c-format
-msgid "Failed to create a temporary directory."
-msgstr "Tõrge ajutise kataloogi loomisel."
 
 #, c-format
 msgid "Not a comic book MIME type: %s"
@@ -91,6 +87,9 @@ msgstr "DVI-dokument ei ole korrektses vormingus"
 
 msgid "DVI Documents"
 msgstr "DVI-dokumendid"
+
+msgid "This work is in the Public Domain"
+msgstr "See töö on avalik omand (Public Domain)"
 
 #. translators: this is the document security state
 msgid "Yes"
@@ -207,6 +206,14 @@ msgstr "Kõik dokumendid"
 
 msgid "All Files"
 msgstr "Kõik failid"
+
+#, c-format
+msgid "Failed to create a temporary file: %s"
+msgstr "Tõrge ajutise faili loomisel: %s"
+
+#, c-format
+msgid "Failed to create a temporary directory: %s"
+msgstr "Tõrge ajutise kataloogi loomisel: %s"
 
 #, c-format
 msgid "File is not a valid .desktop file"
@@ -490,10 +497,6 @@ msgid "of %d"
 msgstr "%d-st"
 
 #, c-format
-msgid "Failed to create file “%s”: %s"
-msgstr "Faili „%s” pole võimalik luua: %s"
-
-#, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Tõrge lehekülje %d printimisel: %s"
 
@@ -600,25 +603,6 @@ msgstr "_Tõstutundlik"
 msgid "Toggle case sensitive search"
 msgstr "Tõstutundliku otsingu sisse- ja väljalülitamine"
 
-msgid "Recover previous documents?"
-msgstr "Kas taastada eelmised dokumendid?"
-
-msgid ""
-"Evince appears to have exited unexpectedly the last time it was run. You can "
-"recover the opened documents."
-msgstr ""
-"Paistab, et Evince on pärast viimast käivitamist lõpetanud ootamatult. Sul "
-"on võimalik viimati avatud dokumendid taastada."
-
-msgid "_Don't Recover"
-msgstr "Ä_ra taasta"
-
-msgid "_Recover"
-msgstr "_Taasta"
-
-msgid "Crash Recovery"
-msgstr "Krahhist taastamine"
-
 #, c-format
 msgid "Password for document %s"
 msgstr "Dokumendi %s parool"
@@ -708,12 +692,24 @@ msgstr "Üldine"
 msgid "Fonts"
 msgstr "Kirjatüübid"
 
+msgid "Document License"
+msgstr "Dokumendi litsents"
+
 msgid "Font"
 msgstr "Kirjatüüp"
 
 #, c-format
 msgid "Gathering font information... %3d%%"
 msgstr "Kogun infot kasutatud kirjatüüpide kohta... %3d%%"
+
+msgid "Usage terms"
+msgstr "Kasutustingimused"
+
+msgid "Text License"
+msgstr "Teksti litsents"
+
+msgid "Further Information"
+msgstr "Lisateave"
 
 msgid "Attachments"
 msgstr "Manused"
@@ -754,6 +750,9 @@ msgstr "Dokumendi laadimine asukohast „%s”"
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Dokumendi allalaadimine (%d%%)"
+
+msgid "Failed to load remote file."
+msgstr "Tõrge kaugfaili laadimisel."
 
 #, c-format
 msgid "Reloading document from %s"
@@ -1170,3 +1169,25 @@ msgid ""
 msgstr ""
 "PDF-dokumentide pisipilditegija käsk koos argumentidega. Lähema teabe "
 "saamiseks vaata nautiluse pisipilditegija dokumentatsiooni."
+
+#~ msgid "Failed to create file “%s”: %s"
+#~ msgstr "Faili „%s” pole võimalik luua: %s"
+
+#~ msgid "Recover previous documents?"
+#~ msgstr "Kas taastada eelmised dokumendid?"
+
+#~ msgid ""
+#~ "Evince appears to have exited unexpectedly the last time it was run. You "
+#~ "can recover the opened documents."
+#~ msgstr ""
+#~ "Paistab, et Evince on pärast viimast käivitamist lõpetanud ootamatult. "
+#~ "Sul on võimalik viimati avatud dokumendid taastada."
+
+#~ msgid "_Don't Recover"
+#~ msgstr "Ä_ra taasta"
+
+#~ msgid "_Recover"
+#~ msgstr "_Taasta"
+
+#~ msgid "Crash Recovery"
+#~ msgstr "Krahhist taastamine"
