@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2009-10-26 12:30+0000\n"
-"PO-Revision-Date: 2009-10-26 14:22+0100\n"
+"POT-Creation-Date: 2009-10-27 21:40+0000\n"
+"PO-Revision-Date: 2009-10-30 11:58+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -155,11 +155,11 @@ msgstr "Vgrajena podmnožica"
 
 #: ../backend/pdf/ev-poppler.cc:970
 msgid "Embedded"
-msgstr "Vgrajen"
+msgstr "Vgrajeno"
 
 #: ../backend/pdf/ev-poppler.cc:972
 msgid "Not embedded"
-msgstr "Ni vgrajen"
+msgstr "Ni vgrajeno"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -255,6 +255,16 @@ msgstr "Vsi dokumenti"
 #: ../libdocument/ev-document-factory.c:391
 msgid "All Files"
 msgstr "Vse datoteke"
+
+#: ../libdocument/ev-file-helpers.c:146
+#, c-format
+msgid "Failed to create a temporary file: %s"
+msgstr "Ni mogoče ustvariti začasne datoteke: %s"
+
+#: ../libdocument/ev-file-helpers.c:223
+#, c-format
+msgid "Failed to create a temporary directory: %s"
+msgstr "Ni mogoče ustvariti začasne mape: %s"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:165
 #, c-format
@@ -1482,8 +1492,6 @@ msgstr "Ukaz za sličice dokumentov PDF"
 msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
 msgstr "Veljaven ukaz z argumenti za izdelovalca sličic dokumentov PDF. Za več informacij si oglejte dokumentacijo izdelovalca sličic v Nautilusu."
 
-#~ msgid "Failed to create a temporary directory."
-#~ msgstr "Ni mogoče ustvariti začasne mape."
 #~ msgid "Failed to create file “%s”: %s"
 #~ msgstr "Ni mogoče ustvariti datoteke \"%s\": %s"
 #~ msgid "Recover previous documents?"
