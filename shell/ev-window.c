@@ -1722,6 +1722,7 @@ ev_window_load_file_remote (EvWindow *ev_window,
                 g_free (base_name);
 
                 tmp_file = ev_mkstemp_file (template, &err);
+		g_free (template);
                 if (tmp_file == NULL) {
                         ev_window_error_message (ev_window, err,
                                                  "%s", _("Failed to load remote file."));
