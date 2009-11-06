@@ -1718,7 +1718,7 @@ ev_window_load_file_remote (EvWindow *ev_window,
 		 * it helps to resolve some mime types, say cbz.
                  */
 		base_name = g_file_get_basename (source_file);
-                template = g_build_filename ("document.XXXXXX-%s", base_name, NULL);
+                template = g_strdup_printf ("document.XXXXXX-%s", base_name);
                 g_free (base_name);
 
                 tmp_file = ev_mkstemp_file (template, &err);
@@ -1740,7 +1740,8 @@ ev_window_load_file_remote (EvWindow *ev_window,
 	
 	target_file = g_file_new_for_uri (ev_window->priv->local_uri);
 	g_file_copy_async (source_file, target_file,
-			   0, G_PRIORITY_DEFAULT,
+			   G_FILE_COPY_OVERWRITE,
+			   G_PRIORITY_DEFAULT,
 			   ev_window->priv->progress_cancellable,
 			   (GFileProgressCallback)window_open_file_copy_progress_cb,
 			   ev_window, 
