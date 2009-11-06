@@ -114,7 +114,7 @@ EvinceView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES)
 	--include=Gtk-2.0 \
 	--include=EvinceDocument-$(EV_API_VERSION) \
 	--library=evview \
-	--libtool="$(SHAVE_SAVED_LIBTOOL)" \
+	--libtool="$(LIBTOOL)" \
 	--output $@ \
 	--pkg evince-document-$(EV_API_VERSION) \
 	--pkg evince-view-$(EV_API_VERSION) \

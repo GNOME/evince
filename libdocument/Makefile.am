@@ -147,7 +147,7 @@ EvinceDocument-$(EV_API_VERSION).gir: libevdocument.la Makefile $(INST_H_FILES)
 	--include=GdkPixbuf-2.0 \
 	--include=Gtk-2.0 \
 	--library=evdocument \
-	--libtool="$(SHAVE_SAVED_LIBTOOL)" \
+	--libtool="$(SAVED_LIBTOOL)" \
 	--output $@ \
 	--pkg evince-document-$(EV_API_VERSION) \
 	-I$(top_srcdir) \
