@@ -206,6 +206,9 @@ struct _EvWindowPrivate {
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
 	gboolean          close_after_print;
+#ifdef WITH_GCONF
+	GConfClient *gconf_client;
+#endif
 };
 
 #define EV_WINDOW_GET_PRIVATE(object) \
@@ -215,6 +218,7 @@ struct _EvWindowPrivate {
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
 #define NAVIGATION_ACTION	"Navigation"
 
+#define GCONF_LOCKDOWN_DIR          "/desktop/gnome/lockdown"
 #define GCONF_OVERRIDE_RESTRICTIONS "/apps/evince/override_restrictions"
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
@@ -335,7 +339,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 {
 	EvDocument *document = ev_window->priv->document;
 	const EvDocumentInfo *info = NULL;
-
 	gboolean has_document = FALSE;
 	gboolean ok_to_print = TRUE;
 	gboolean ok_to_copy = TRUE;
@@ -344,9 +347,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	gboolean can_get_text = FALSE;
 	gboolean has_pages = FALSE;
 	gboolean can_find = FALSE;
-#ifdef WITH_GCONF
-	GConfClient *client;
-#endif
 
 	if (document) {
 		has_document = TRUE;
@@ -367,10 +367,10 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	}
 
 #ifdef WITH_GCONF
-	client = gconf_client_get_default ();
-	override_restrictions = gconf_client_get_bool (client, 
-						       GCONF_OVERRIDE_RESTRICTIONS, 
-						       NULL);
+	if (has_document)
+		override_restrictions = gconf_client_get_bool (ev_window->priv->gconf_client,
+							       GCONF_OVERRIDE_RESTRICTIONS,
+							       NULL);
 #endif
 	if (!override_restrictions && info && info->fields_mask & EV_DOCUMENT_INFO_PERMISSIONS) {
 		ok_to_print = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT);
@@ -381,15 +381,15 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		ok_to_print = FALSE;
 
 #ifdef WITH_GCONF
-	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_SAVE, NULL)) {
+	if (has_document &&
+	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_SAVE, NULL)) {
 		ok_to_copy = FALSE;
 	}
 
-	if (gconf_client_get_bool (client, GCONF_LOCKDOWN_PRINT, NULL)) {
+	if (has_document &&
+	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_PRINT, NULL)) {
 		ok_to_print = FALSE;
 	}
-
-	g_object_unref (client);
 #endif
 
 	/* File menu */
@@ -1158,6 +1158,17 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 	ev_job_scheduler_push_job (ev_window->priv->thumbnail_job, EV_JOB_PRIORITY_NONE);
 }
 
+#ifdef WITH_GCONF
+static void
+lockdown_changed (GConfClient *client,
+		  guint        cnxn_id,
+		  GConfEntry  *entry,
+		  EvWindow    *ev_window)
+{
+	ev_window_setup_action_sensitivity (ev_window);
+}
+#endif /* WITH_GCONF */
+
 static gboolean
 ev_window_setup_document (EvWindow *ev_window)
 {
@@ -1172,6 +1183,27 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
+
+#ifdef WITH_GCONF
+	if (!ev_window->priv->gconf_client)
+		ev_window->priv->gconf_client = gconf_client_get_default ();
+	gconf_client_add_dir (ev_window->priv->gconf_client,
+			      GCONF_LOCKDOWN_DIR,
+			      GCONF_CLIENT_PRELOAD_ONELEVEL,
+			      NULL);
+	gconf_client_add_dir (ev_window->priv->gconf_client,
+			      GCONF_OVERRIDE_RESTRICTIONS,
+			      GCONF_CLIENT_PRELOAD_NONE,
+			      NULL);
+	gconf_client_notify_add (ev_window->priv->gconf_client,
+				 GCONF_LOCKDOWN_DIR,
+				 (GConfClientNotifyFunc)lockdown_changed,
+				 ev_window, NULL, NULL);
+	gconf_client_notify_add (ev_window->priv->gconf_client,
+				 GCONF_OVERRIDE_RESTRICTIONS,
+				 (GConfClientNotifyFunc)lockdown_changed,
+				 ev_window, NULL, NULL);
+#endif /* WITH_GCONF */
 
 	ev_window_setup_action_sensitivity (ev_window);
 
@@ -4703,7 +4735,14 @@ ev_window_dispose (GObject *object)
 		g_source_remove (priv->setup_document_idle);
 		priv->setup_document_idle = 0;
 	}
-	
+
+#ifdef WITH_GCONF
+	if (priv->gconf_client) {
+		g_object_unref (priv->gconf_client);
+		priv->gconf_client = NULL;
+	}
+#endif
+
 	if (priv->monitor) {
 		g_object_unref (priv->monitor);
 		priv->monitor = NULL;
