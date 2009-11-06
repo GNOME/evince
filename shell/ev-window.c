@@ -222,6 +222,7 @@ struct _EvWindowPrivate {
 #define GCONF_OVERRIDE_RESTRICTIONS "/apps/evince/override_restrictions"
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
+#define GCONF_LOCKDOWN_PRINT_SETUP  "/desktop/gnome/lockdown/disable_print_setup"
 
 #define PRESENTATION_TIMEOUT 5
 
@@ -341,6 +342,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	const EvDocumentInfo *info = NULL;
 	gboolean has_document = FALSE;
 	gboolean ok_to_print = TRUE;
+	gboolean ok_to_print_setup = TRUE;
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
 	gboolean override_restrictions = TRUE;
@@ -390,13 +392,18 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_PRINT, NULL)) {
 		ok_to_print = FALSE;
 	}
+
+	if (has_document &&
+	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_PRINT_SETUP, NULL)) {
+		ok_to_print_setup = FALSE;
+	}
 #endif
 
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
 	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
 #if !GTK_CHECK_VERSION (2, 17, 4)
-	ev_window_set_action_sensitive (ev_window, "FilePageSetup", has_pages && ok_to_print);
+	ev_window_set_action_sensitive (ev_window, "FilePageSetup", has_pages && ok_to_print && ok_to_print_setup);
 #endif
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
@@ -3124,7 +3131,13 @@ ev_window_print_range (EvWindow *ev_window,
 	ev_print_operation_set_current_page (op, current_page);
 	ev_print_operation_set_print_settings (op, print_settings);
 	ev_print_operation_set_default_page_setup (op, print_page_setup);
+#ifdef WITH_GCONF
+	ev_print_operation_set_embed_page_setup (op, !gconf_client_get_bool (ev_window->priv->gconf_client,
+									     GCONF_LOCKDOWN_PRINT_SETUP,
+									     NULL));
+#else
 	ev_print_operation_set_embed_page_setup (op, TRUE);
+#endif
 
 	g_object_unref (print_settings);
 	g_object_unref (print_page_setup);
