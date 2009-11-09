@@ -143,8 +143,8 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   g_object_class_install_property (object_class,
 				   PROP_SEARCH_STRING,
 				   g_param_spec_string ("search_string",
-							_("Search string"),
-							_("The name of the string to be found"),
+							"Search string",
+							"The name of the string to be found",
 							NULL,
 							G_PARAM_READWRITE));
 
@@ -157,23 +157,23 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   g_object_class_install_property (object_class,
 				   PROP_CASE_SENSITIVE,
 				   g_param_spec_boolean ("case_sensitive",
-                                                         _("Case sensitive"),
-                                                         _("TRUE for a case sensitive search"),
+                                                         "Case sensitive",
+                                                         "TRUE for a case sensitive search",
                                                          FALSE,
                                                          G_PARAM_READWRITE));
 
   /* Style properties */
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_boxed ("all_matches_color",
-                                                               _("Highlight color"),
-                                                               _("Color of highlight for all matches"),
+                                                               "Highlight color",
+                                                               "Color of highlight for all matches",
                                                                GDK_TYPE_COLOR,
                                                                G_PARAM_READABLE));
 
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_boxed ("current_match_color",
-                                                               _("Current color"),
-                                                               _("Color of highlight for the current match"),
+                                                               "Current color",
+                                                               "Color of highlight for the current match",
                                                                GDK_TYPE_COLOR,
                                                                G_PARAM_READABLE));
 
