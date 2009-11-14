@@ -609,8 +609,6 @@ view_set_adjustment_values (EvView         *view,
 static void
 view_update_range_and_current_page (EvView *view)
 {
-	gint current_page;
-	gint best_current_page = -1;
 	gint start = view->start_page;
 	gint end = view->end_page;
 	
@@ -623,6 +621,7 @@ view_update_range_and_current_page (EvView *view)
 		GtkBorder border;
 		gboolean found = FALSE;
 		gint area_max = -1, area;
+		gint best_current_page = -1;
 		int i;
 
 		if (!(view->vadjustment && view->hadjustment))
@@ -657,12 +656,20 @@ view_update_range_and_current_page (EvView *view)
 			}
 		}
 
+		if (view->pending_scroll == SCROLL_TO_KEEP_POSITION) {
+			best_current_page = MAX (best_current_page, view->start_page);
+
+			if (view->current_page != best_current_page) {
+				view->current_page = best_current_page;
+				ev_document_model_set_page (view->model, best_current_page);
+			}
+		}
 	} else if (view->dual_page) {
 		if (view->current_page % 2 == get_dual_even_left (view)) {
 			view->start_page = view->current_page;
 			if (view->current_page + 1 < ev_document_get_n_pages (view->document))
 				view->end_page = view->start_page + 1;
-			else 
+			else
 				view->end_page = view->start_page;
 		} else {
 			if (view->current_page < 1)
@@ -674,14 +681,6 @@ view_update_range_and_current_page (EvView *view)
 	} else {
 		view->start_page = view->current_page;
 		view->end_page = view->current_page;
-	}
-
-	best_current_page = MAX (best_current_page, view->start_page);
-	current_page = ev_document_model_get_page (view->model);
-
-	if ((current_page != best_current_page) && (view->pending_scroll == SCROLL_TO_KEEP_POSITION)) {
-		view->current_page = best_current_page;
-		ev_document_model_set_page (view->model, best_current_page);
 	}
 
 	if (start != view->start_page || end != view->end_page) {
