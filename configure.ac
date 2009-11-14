@@ -89,7 +89,8 @@ AC_SUBST([EV_INTLTOOL_EVINCE_BACKEND_RULE])
 
 AC_MSG_CHECKING([for which platform to build])
 AC_ARG_WITH([platform],
-  [AS_HELP_STRING([--with-platform=gnome|win32|hildon (default: gnome)])],
+  [AS_HELP_STRING([--with-platform=gnome|win32|hildon],
+                  [Setting platform (default: gnome)])],
   [case "$withval" in
     gnome|win32|hildon) ;;
     *) AC_MSG_ERROR([invalid argument "$withval" for --with-platform]) ;;
@@ -163,7 +164,8 @@ GDK_TARGET="$($PKG_CONFIG --variable target gdk-2.0)"
 
 AC_MSG_CHECKING([which smclient backend to use])
 AC_ARG_WITH([smclient],
-  [AS_HELP_STRING([--with-smclient-backend],[which smclient backend to use (no|xsmp|win32|quartz)])],
+  [AS_HELP_STRING([--with-smclient-backend=no|xsmp|win32|quartz],
+		  [Setting smclient backend (default:auto)])],
   [],
   [case "$GDK_TARGET" in
     x11) case "$with_platform" in
@@ -173,6 +175,7 @@ AC_ARG_WITH([smclient],
     win32|quartz) with_smclient=$GDK_TARGET ;;
     *) with_smclient=no ;;
    esac])
+   
 AC_MSG_RESULT([$with_smclient])
 
 if test "$with_smclient" != "no"; then
@@ -211,11 +214,13 @@ LIBS=$evince_save_LIBS
 
 AC_MSG_CHECKING([whether gtk+-unix-print support is requested])
 AC_ARG_WITH([gtk-unix-print],
-  [AS_HELP_STRING([--without-gtk-unix-print],[disable the use of gtk-unix-print])],
+  [AS_HELP_STRING([--without-gtk-unix-print],
+		  [Disable the use of gtk-unix-print])],
   [],[case "$os_win32" in
         yes) with_gtk_unix_print=no ;;
         *) with_gtk_unix_print=yes ;;
       esac])
+      
 AC_MSG_RESULT([$with_gtk_unix_print])
 
 if test "$with_gtk_unix_print" = "yes"; then
@@ -228,7 +233,8 @@ fi
 # *********************
 
 AC_ARG_WITH(keyring,
-        [AS_HELP_STRING([--without-keyring],[disable the use of gnome-keyring])],
+        [AS_HELP_STRING([--without-keyring],
+			[Disable the use of gnome-keyring])],
         [],
         [case "$with_platform" in
            gnome) with_keyring=yes ;;
@@ -250,7 +256,7 @@ AC_SUBST(GLIB_GENMARSHAL)
 # ****
 
 AC_ARG_ENABLE([dbus],
-  [AS_HELP_STRING([--enable-dbus], [Compile with support for dbus])],
+  [AS_HELP_STRING([--disable-dbus], [Disable support for dbus])],
   [],
   [case "$with_platform" in
       gnome) enable_dbus=yes ;;
@@ -282,7 +288,8 @@ dnl ========= Check for GConf
 
 AC_MSG_CHECKING([whether GConf support is requested])
 AC_ARG_WITH([gconf],
-  [AS_HELP_STRING([--without-gconf],[disable the use of gconf])],
+  [AS_HELP_STRING([--without-gconf],
+		  [Disable the use of gconf])],
   [],
   [case "$os_win32" in
      yes) with_gconf=no ;;
@@ -309,18 +316,19 @@ fi
 dnl Debug mode
 
 AC_ARG_ENABLE([debug],
-	AC_HELP_STRING([--enable-debug],
-			[Turn on evince debug mode]),,
-		[enable_debug=no])
-		
+	AS_HELP_STRING([--enable-debug],
+		       [Turn on evince debug mode]),
+	[enable_debug=$enableval],
+	[enable_debug=no])
+
 if test "x$enable_debug" = "xyes"; then
    DEBUG_FLAGS="-DEV_ENABLE_DEBUG"
 fi
 
 AC_ARG_ENABLE([tests],
-	AC_HELP_STRING([--enable-tests], [Disable tests]),
-	enable_tests="$enableval",
-	enable_tests=yes)
+	AS_HELP_STRING([--enable-tests], [Enable the tests]),
+	[enable_tests=$enableval],
+	[enable_tests=yes])
 
 AM_CONDITIONAL(ENABLE_TESTS, test x$enable_tests = xyes)
 
@@ -354,7 +362,8 @@ AC_SUBST([EV_DAEMON_LIBS])
 
 # Check for Nautilus property page build
 AC_ARG_ENABLE([nautilus],
-  [AS_HELP_STRING([--disable-nautilus],[Build the nautilus extensions])],
+  [AS_HELP_STRING([--disable-nautilus],
+		  [Disable build of nautilus extensions])],
   [],
   [case "$with_platform" in
      gnome) enable_nautilus=yes ;;
@@ -377,7 +386,8 @@ AM_CONDITIONAL([ENABLE_NAUTILUS],[test "$enable_nautilus" = "yes"])
 # Check for thumbnailer build
 
 AC_ARG_ENABLE([thumbnailer],
-  [AS_HELP_STRING([--disable-thumbnailer],[disable the GNOME thumbnailer])],
+  [AS_HELP_STRING([--disable-thumbnailer],
+		  [Disable GNOME thumbnailer])],
   [],
   [case "$with_platform" in
      gnome) enable_thumbnailer=yes ;;
@@ -391,7 +401,8 @@ AM_CONDITIONAL([ENABLE_THUMBNAILER],[test "$enable_thumbnailer" = "yes"])
 # ***************
 
 AC_ARG_ENABLE([previewer],
-  [AS_HELP_STRING([--disable-previewer],[disable the GNOME Document Previewer])],
+  [AS_HELP_STRING([--disable-previewer],
+		  [Disable the GNOME Document Previewer])],
   [],
   [case "$with_platform" in
       gnome) enable_previewer=yes ;;
@@ -414,8 +425,10 @@ AC_SUBST(PREVIEWER_LIBS)
 
 AC_MSG_CHECKING([whether GObject introspection is requested])
 AC_ARG_ENABLE([introspection],
-        AS_HELP_STRING([--enable-introspection],[Enable GObject introspection]),
-        [],[enable_introspection=no])
+        AS_HELP_STRING([--enable-introspection],
+		       [Enable GObject introspection]),
+       	[enable_introspection=$enableval],
+	[enable_introspection=no])
 AC_MSG_RESULT([$enable_introspection])
 
 G_IR_SCANNER=
@@ -453,8 +466,11 @@ AC_CHECK_DECL([_NL_MEASUREMENT_MEASUREMENT],[
   ],[],[#include <langinfo.h>])
 
 dnl ================== pdf checks ===================================================
-AC_ARG_ENABLE(pdf,
-              [AC_HELP_STRING([--enable-pdf], [Compile with pdf support])],enable_pdf="$enableval",enable_pdf=yes)
+AC_ARG_ENABLE([pdf],
+  [AS_HELP_STRING([--disable-pdf],
+		  [Disable the PDF support])],
+  [enable_pdf=$enableval],
+  [enable_pdf=yes])
 
 if test "x$enable_pdf" = "xyes"; then
     POPPLER_REQUIRED=0.12.0
@@ -498,7 +514,10 @@ fi
 
 dnl ================== ps checks ====================================================
 AC_ARG_ENABLE(ps,
-  	[AC_HELP_STRING([--disable-ps], [Compile without PostScript backend])],enable_ps=$enableval,enable_ps="yes")
+  	[AS_HELP_STRING([--disable-ps],
+			[Disable the PostScript backend])],
+	[enable_ps=$enableval],
+	[enable_ps=yes])
 
 if test "x$enable_ps" = "xyes"; then
    if test "x$have_spectre" = "xyes"; then
@@ -513,7 +532,10 @@ dnl ======================== End of ps checks ==================================
 
 dnl ================== tiff checks ===================================================
 AC_ARG_ENABLE(tiff,
-            [AC_HELP_STRING([--enable-tiff], [Compile with support of multipage tiff])],enable_tiff="$enableval",enable_tiff=yes)
+            [AS_HELP_STRING([--disable-tiff],
+			    [Disable the support of multipage tiff])],
+	    [enable_tiff=$enableval],
+	    [enable_tiff=yes])
 
 if test "x$enable_tiff" = "xyes"; then
     AC_CHECK_HEADERS([tiff.h],enable_tiff=yes,enable_tiff=no,)
@@ -534,7 +556,10 @@ dnl ================== end of tiff checks ======================================
 dnl ================== djvu checks ===================================================
 
 AC_ARG_ENABLE(djvu,
-            [AC_HELP_STRING([--enable-djvu], [Compile with support of djvu viewer])],enable_djvu="$enableval",enable_djvu=yes)
+            [AS_HELP_STRING([--disable-djvu],
+			    [Disable the support of djvu viewer])],
+	    [enable_djvu=$enableval],
+	    [enable_djvu=yes])
 
 if test "x$enable_djvu" = "xyes"; then
     DJVULIBRE_REQUIRED=3.5.17
@@ -558,10 +583,16 @@ dnl ================== End of djvu checks ======================================
 dnl ================== dvi checks ===================================================
 
 AC_ARG_ENABLE(dvi,
-            [AC_HELP_STRING([--enable-dvi], [Compile with support of dvi viewer])],enable_dvi="$enableval",enable_dvi=yes)
+            [AS_HELP_STRING([--disable-dvi],
+	    [Disable the support of dvi viewer])],
+	    [enable_dvi=$enableval],
+	    [enable_dvi=yes])
 
 AC_ARG_ENABLE(t1lib,
-            [AC_HELP_STRING([--enable-t1lib], [Compile with support of t1lib for type1 fonts in dvi])],enable_type1_fonts="$enableval",enable_type1_fonts=no)
+            [AS_HELP_STRING([--enable-t1lib],
+	                    [Compile with support of t1lib for type1 fonts in dvi])],
+	    [enable_type1_fonts=$enableval],
+	    [enable_type1_fonts=no])
 
 if test "x$enable_dvi" = "xyes"; then
     AC_C_CONST
@@ -599,10 +630,15 @@ dnl ================== End of dvi checks =======================================
 dnl ================== pixbuf checks ===================================================
 
 AC_ARG_ENABLE(pixbuf,
-            [AC_HELP_STRING([--enable-pixbuf], [Compile with support of pixbuf])],enable_pixbuf="$enableval",enable_pixbuf=no)
+            [AS_HELP_STRING([--enable-pixbuf],
+                            [Compile with support of pixbuf])],
+	    [enable_pixbuf=$enableval],
+	    [enable_pixbuf=no])
+	    
 if test "x$enable_pixbuf" = "xyes"; then
 	AC_DEFINE([ENABLE_PIXBUF], [1], [Enable pixbuf support.])
 fi
+
 AM_CONDITIONAL(ENABLE_PIXBUF, test x$enable_pixbuf = xyes)
 
 dnl ================== End of pixbuf checks ===================================================
@@ -610,7 +646,11 @@ dnl ================== End of pixbuf checks ====================================
 dnl ================== comic book checks ===================================================
  
 AC_ARG_ENABLE(comics,
- 	[AC_HELP_STRING([--enable-comics], [Compile with support for comic book archives])],enable_comics="$enableval",enable_comics=yes)
+ 	[AS_HELP_STRING([--enable-comics],
+	                [Compile with support for comic book archives])],
+	[enable_comics=$enableval],
+	[enable_comics=yes])
+	
 if test "x$enable_comics" = "xyes"; then
 	if test "x$os_win32" = "xyes"; then
 		# The comics backend is disabled on windows because:
@@ -629,7 +669,11 @@ dnl ================== End of comic book checks ================================
 dnl ================== impress book checks ===================================================
 
 AC_ARG_ENABLE(impress,
- 	[AC_HELP_STRING([--enable-impress], [Compile with support for impress presentations])],enable_impress="$enableval",enable_impress=no)
+ 	[AS_HELP_STRING([--enable-impress],
+	                [Compile with support for impress presentations])],
+	[enable_impress=$enableval],
+	[enable_impress=no])
+	
 if test "x$enable_impress" = "xyes"; then
 	AC_DEFINE([ENABLE_IMPRESS], [1], [Enable support for impress.])
 fi 
