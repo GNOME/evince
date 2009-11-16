@@ -24,8 +24,9 @@
 #include "ev-annotation.h"
 
 
-static void ev_annotation_markup_iface_base_init (EvAnnotationMarkupIface *iface);
-static void ev_annotation_text_markup_iface_init (EvAnnotationMarkupIface *iface);
+static void ev_annotation_markup_iface_base_init       (EvAnnotationMarkupIface *iface);
+static void ev_annotation_text_markup_iface_init       (EvAnnotationMarkupIface *iface);
+static void ev_annotation_attachment_markup_iface_init (EvAnnotationMarkupIface *iface);
 
 enum {
 	PROP_0,
@@ -65,6 +66,11 @@ G_DEFINE_TYPE_WITH_CODE (EvAnnotationText, ev_annotation_text, EV_TYPE_ANNOTATIO
 	 {
 		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
 					ev_annotation_text_markup_iface_init);
+	 });
+G_DEFINE_TYPE_WITH_CODE (EvAnnotationAttachment, ev_annotation_attachment, EV_TYPE_ANNOTATION,
+	 {
+		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
+					ev_annotation_attachment_markup_iface_init);
 	 });
 
 /* EvAnnotation */
@@ -107,17 +113,6 @@ ev_annotation_class_init (EvAnnotationClass *klass)
 	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
 
 	g_object_class->finalize = ev_annotation_finalize;
-}
-
-EvAnnotation *
-ev_annotation_text_new (EvPage *page)
-{
-	EvAnnotation *annot;
-
-	annot = EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TEXT, NULL));
-	annot->page = g_object_ref (page);
-
-	return annot;
 }
 
 /* EvAnnotationMarkup */
@@ -387,3 +382,62 @@ ev_annotation_text_markup_iface_init (EvAnnotationMarkupIface *iface)
 {
 }
 
+EvAnnotation *
+ev_annotation_text_new (EvPage *page)
+{
+	EvAnnotation *annot;
+
+	annot = EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TEXT, NULL));
+	annot->page = g_object_ref (page);
+
+	return annot;
+}
+
+/* EvAnnotationAttachment */
+static void
+ev_annotation_attachment_finalize (GObject *object)
+{
+	EvAnnotationAttachment *annot = EV_ANNOTATION_ATTACHMENT (object);
+
+	if (annot->attachment) {
+		g_object_unref (annot->attachment);
+		annot->attachment = NULL;
+	}
+
+	G_OBJECT_CLASS (ev_annotation_attachment_parent_class)->finalize (object);
+}
+
+static void
+ev_annotation_attachment_init (EvAnnotationAttachment *annot)
+{
+}
+
+static void
+ev_annotation_attachment_class_init (EvAnnotationAttachmentClass *klass)
+{
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	ev_annotation_markup_class_install_properties (g_object_class);
+
+	g_object_class->finalize = ev_annotation_attachment_finalize;
+}
+
+static void
+ev_annotation_attachment_markup_iface_init (EvAnnotationMarkupIface *iface)
+{
+}
+
+EvAnnotation *
+ev_annotation_attachment_new (EvPage       *page,
+			      EvAttachment *attachment)
+{
+	EvAnnotation *annot;
+
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
+
+	annot = EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_ATTACHMENT, NULL));
+	annot->page = g_object_ref (page);
+	EV_ANNOTATION_ATTACHMENT (annot)->attachment = g_object_ref (attachment);
+
+	return annot;
+}
