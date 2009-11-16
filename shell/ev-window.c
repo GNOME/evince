@@ -5181,9 +5181,9 @@ static const GtkActionEntry view_popup_entries [] = {
 };
 
 static const GtkActionEntry attachment_popup_entries [] = {
-	{ "OpenAttachment", GTK_STOCK_OPEN, N_("_Open..."), NULL,
+	{ "OpenAttachment", GTK_STOCK_OPEN, N_("_Open Attachment"), NULL,
 	  NULL, G_CALLBACK (ev_attachment_popup_cmd_open_attachment) },
-	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), NULL,
+	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save Attachment As..."), NULL,
 	  NULL, G_CALLBACK (ev_attachment_popup_cmd_save_attachment_as) },
 };
 
