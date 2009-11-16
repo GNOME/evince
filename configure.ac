@@ -498,7 +498,7 @@ if test "x$enable_pdf" = "xyes"; then
 	            AC_DEFINE([HAVE_CAIRO_PS], [1], [defined if cairo-ps is available])
             fi
     else
-	    AC_MSG_WARN("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
+	    AC_MSG_ERROR("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 
 fi
 
