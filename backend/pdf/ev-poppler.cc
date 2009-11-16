@@ -144,12 +144,16 @@ static void pdf_document_thumbnails_get_dimensions       (EvDocumentThumbnails  
 							  gint                       *height);
 static int  pdf_document_get_n_pages			 (EvDocument                 *document);
 
-static EvLinkDest *ev_link_dest_from_dest   (PdfDocument       *pdf_document,
-					     PopplerDest       *dest);
-static EvLink     *ev_link_from_action      (PdfDocument       *pdf_document,
-					     PopplerAction     *action);
-static void        pdf_document_search_free (PdfDocumentSearch *search);
-static void        pdf_print_context_free   (PdfPrintContext   *ctx);
+static EvLinkDest *ev_link_dest_from_dest    (PdfDocument       *pdf_document,
+					      PopplerDest       *dest);
+static EvLink     *ev_link_from_action       (PdfDocument       *pdf_document,
+					      PopplerAction     *action);
+static void        pdf_document_search_free  (PdfDocumentSearch *search);
+static void        pdf_print_context_free    (PdfPrintContext   *ctx);
+static gboolean    attachment_save_to_buffer (PopplerAttachment *attachment,
+					      gchar            **buffer,
+					      gsize             *buffer_size,
+					      GError           **error);
 
 EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 			 {
@@ -2507,7 +2511,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	const gchar  *unimplemented_annot = NULL;
 
 	switch (poppler_annot_get_annot_type (poppler_annot)) {
-	        case POPPLER_ANNOT_TEXT:
+	        case POPPLER_ANNOT_TEXT: {
 			PopplerAnnotText *poppler_text;
 			EvAnnotationText *ev_annot_text;
 
@@ -2517,8 +2521,44 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 
 			ev_annot_text = EV_ANNOTATION_TEXT (ev_annot);
 			ev_annot_text->is_open = poppler_annot_text_get_is_open (poppler_text);
-
+		}
 			break;
+#ifdef HAVE_POPPLER_ANNOT_FILE_ATTACHMENT_GET_ATTACHMENT
+	        case POPPLER_ANNOT_FILE_ATTACHMENT: {
+			PopplerAnnotFileAttachment *poppler_annot_attachment;
+			EvAnnotationAttachment     *ev_annot_attachment;
+			PopplerAttachment          *poppler_attachment;
+			gchar                      *data = NULL;
+			gsize                       size;
+			GError                     *error = NULL;
+
+			poppler_annot_attachment = POPPLER_ANNOT_FILE_ATTACHMENT (poppler_annot);
+			poppler_attachment = poppler_annot_file_attachment_get_attachment (poppler_annot_attachment);
+
+			if (poppler_attachment &&
+			    attachment_save_to_buffer (poppler_attachment, &data, &size, &error)) {
+				EvAttachment *ev_attachment;
+				gchar        *name;
+
+				name = poppler_annot_file_attachment_get_name (poppler_annot_attachment);
+				ev_attachment = ev_attachment_new (name,
+								   poppler_attachment->description,
+								   poppler_attachment->mtime,
+								   poppler_attachment->ctime,
+								   size, data);
+				g_free (name);
+				ev_annot = ev_annotation_attachment_new (page, ev_attachment);
+				g_object_unref (ev_attachment);
+			} else if (error) {
+				g_warning ("%s", error->message);
+				g_error_free (error);
+			}
+
+			if (poppler_attachment)
+				g_object_unref (poppler_attachment);
+		}
+			break;
+#endif /* HAVE_POPPLER_ANNOT_FILE_ATTACHMENT_GET_ATTACHMENT */
 	        case POPPLER_ANNOT_LINK:
 	        case POPPLER_ANNOT_WIDGET:
 			/* Ignore link and widgets annots since they are already handled */
