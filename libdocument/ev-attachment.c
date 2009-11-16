@@ -293,7 +293,7 @@ ev_attachment_save (EvAttachment *attachment,
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
 	g_return_val_if_fail (G_IS_FILE (file), FALSE);
 
-	output_stream = g_file_create (file, 0, NULL, &ioerror);
+	output_stream = g_file_replace (file, NULL, FALSE, 0, NULL, &ioerror);
 	if (output_stream == NULL) {
 		char *uri;
 		
