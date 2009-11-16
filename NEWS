@@ -1,4 +1,49 @@
 ================
+Evince  2.29.2
+================
+
+New Features and UI Improvements:
+
+    * Add support for PDF File Attachment Annotations (#601839, Carlos
+      Garcia Campos)
+    * Use "n" and "p" keys for page jump (#601217, Carlos Garcia
+      Campos)
+    * Update actions sensitivity when gconf keys change (#568433,
+      Carlos Garcia Campos)
+
+Documentation fixes:
+
+    * Make series ID unique (#599726, Christian Persch)
+
+Bug fixes:
+
+    * Fix saving attachments (Carlos Garcia Campos)
+    * Make sure view is redrawn as soon as current page is rendered
+      (#601433, Carlos Garcia Campos)
+    * Fix documentation of default flag values in configure (Emmanuel
+      Fleury)
+    * Do not mark properties name and desc as translatable (#509824,
+      Carlos Garcia Campos)
+    * Fix build with glib < 2.22.0 (#600338, Christian Spurk)
+    * Disable print page setup options according to lockdown (#568433,
+      Carlos Garcia Campos)
+    * Fix loading of remote files (Carlos Garcia Campos)
+    * Correctly process --with-smclient arguments (#590174, Christian
+      Persch)
+
+Translation updates:
+
+    * Thomas Thurman (en@shaw)
+    * Jorge González (es)
+    * Ivar Smolin (et)
+    * Antón Méixome (gl)
+    * Kjartan Maraas (nb)
+    * Matej Urbančič (sl)
+    * Daniel Nylander (sv)
+    * Dr.T.Vasudevan (ta)
+    * 樊栖江(Fan Qijiang) (zh_CN)
+
+================
 Evince  2.29.1
 ================
 
