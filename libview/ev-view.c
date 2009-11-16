@@ -2701,7 +2701,8 @@ static void
 ev_view_handle_annotation (EvView       *view,
 			   EvAnnotation *annot,
 			   gdouble       x,
-			   gdouble       y)
+			   gdouble       y,
+			   guint32       timestamp)
 {
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		GtkWidget *window;
@@ -2715,6 +2716,24 @@ ev_view_handle_annotation (EvView       *view,
 				child->visible = TRUE;
 				ev_view_window_child_move (view, child, child->x, child->y);
 				gtk_widget_show (window);
+			}
+		}
+	}
+
+	if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
+		EvAttachment *attachment = EV_ANNOTATION_ATTACHMENT (annot)->attachment;
+
+		if (attachment) {
+			GError *error = NULL;
+
+			ev_attachment_open (attachment,
+					    gtk_widget_get_screen (GTK_WIDGET (view)),
+					    timestamp,
+					    &error);
+
+			if (error) {
+				g_warning ("%s", error->message);
+				g_error_free (error);
 			}
 		}
 	}
@@ -3380,7 +3399,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 				gtk_widget_queue_draw (widget);
 			} else if ((annot = ev_view_get_annotation_at_location (view, event->x, event->y))) {
-				ev_view_handle_annotation (view, annot, event->x, event->y);
+				ev_view_handle_annotation (view, annot, event->x, event->y, event->time);
 			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
 				ev_view_remove_all (view);
 				ev_view_handle_form_field (view, field, event->x, event->y);
