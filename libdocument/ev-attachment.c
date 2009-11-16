@@ -397,7 +397,7 @@ ev_attachment_open (EvAttachment *attachment,
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
 	
 	if (!attachment->priv->app) {
-		app_info = g_app_info_get_default_for_type (attachment->priv->mime_type, TRUE);
+		app_info = g_app_info_get_default_for_type (attachment->priv->mime_type, FALSE);
 		attachment->priv->app = app_info;
 	}
 
