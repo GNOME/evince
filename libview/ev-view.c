@@ -3209,8 +3209,9 @@ ev_view_do_popup_menu (EvView *view,
 		       gdouble x,
 		       gdouble y)
 {
-	EvLink  *link;
-	EvImage *image;
+	EvLink       *link;
+	EvImage      *image;
+	EvAnnotation *annot;
 
 	image = ev_view_get_image_at_location (view, x, y);
 	if (image) {
@@ -3221,6 +3222,12 @@ ev_view_do_popup_menu (EvView *view,
 	link = ev_view_get_link_at_location (view, x, y);
 	if (link) {
 		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
+		return TRUE;
+	}
+
+	annot = ev_view_get_annotation_at_location (view, x, y);
+	if (annot) {
+		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, annot);
 		return TRUE;
 	}
 

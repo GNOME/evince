@@ -59,6 +59,7 @@
 #include "ev-document-images.h"
 #include "ev-document-links.h"
 #include "ev-document-thumbnails.h"
+#include "ev-document-annotations.h"
 #include "ev-document-type-builtins.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
@@ -4441,6 +4442,39 @@ view_menu_image_popup (EvWindow  *ev_window,
 	gtk_action_set_visible (action, show_image);
 }
 
+static void
+view_menu_annot_popup (EvWindow     *ev_window,
+		       EvAnnotation *annot)
+{
+	GtkAction *action;
+	gboolean   show_annot = FALSE;
+
+	if (annot && EV_IS_ANNOTATION_ATTACHMENT (annot)) {
+		EvAttachment *attachment = EV_ANNOTATION_ATTACHMENT (annot)->attachment;
+
+		if (attachment) {
+			show_annot = TRUE;
+			if (ev_window->priv->attach_list) {
+				g_list_foreach (ev_window->priv->attach_list,
+						(GFunc) g_object_unref, NULL);
+				g_list_free (ev_window->priv->attach_list);
+				ev_window->priv->attach_list = NULL;
+			}
+			ev_window->priv->attach_list =
+				g_list_prepend (ev_window->priv->attach_list,
+						g_object_ref (attachment));
+		}
+	}
+
+	action = gtk_action_group_get_action (ev_window->priv->attachment_popup_action_group,
+					      "OpenAttachment");
+	gtk_action_set_visible (action, show_annot);
+
+	action = gtk_action_group_get_action (ev_window->priv->attachment_popup_action_group,
+					      "SaveAttachmentAs");
+	gtk_action_set_visible (action, show_annot);
+}
+
 static gboolean
 view_menu_popup_cb (EvView   *view,
 		    GObject  *object,
@@ -4453,6 +4487,8 @@ view_menu_popup_cb (EvView   *view,
 			      EV_IS_LINK (object) ? EV_LINK (object) : NULL);
 	view_menu_image_popup (ev_window,
 			       EV_IS_IMAGE (object) ? EV_IMAGE (object) : NULL);
+	view_menu_annot_popup (ev_window,
+			       EV_IS_ANNOTATION (object) ? EV_ANNOTATION (object) : NULL);
 	
 	gtk_menu_popup (GTK_MENU (ev_window->priv->view_popup),
 			NULL, NULL, NULL, NULL,
