@@ -2538,15 +2538,12 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			if (poppler_attachment &&
 			    attachment_save_to_buffer (poppler_attachment, &data, &size, &error)) {
 				EvAttachment *ev_attachment;
-				gchar        *name;
 
-				name = poppler_annot_file_attachment_get_name (poppler_annot_attachment);
-				ev_attachment = ev_attachment_new (name,
+				ev_attachment = ev_attachment_new (poppler_attachment->name,
 								   poppler_attachment->description,
 								   poppler_attachment->mtime,
 								   poppler_attachment->ctime,
 								   size, data);
-				g_free (name);
 				ev_annot = ev_annotation_attachment_new (page, ev_attachment);
 				g_object_unref (ev_attachment);
 			} else if (error) {
