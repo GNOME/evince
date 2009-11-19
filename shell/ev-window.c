@@ -524,6 +524,8 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 		ev_window_set_action_sensitive (window, "KpPlus", sensitive);
 		ev_window_set_action_sensitive (window, "KpMinus", sensitive);
 		ev_window_set_action_sensitive (window, "Equal", sensitive);
+		ev_window_set_action_sensitive (window, "p", sensitive);
+		ev_window_set_action_sensitive (window, "n", sensitive);
 
 		ev_window_set_action_sensitive (window, "Slash", sensitive && can_find);
 	}
