@@ -5164,6 +5164,8 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 	view->loading = FALSE;
 
 	if (document != view->document) {
+		gint current_page;
+
 		clear_caches (view);
 
 		if (view->document) {
@@ -5178,9 +5180,13 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 			setup_caches (view);
                 }
 
-		ev_view_change_page (view,
-				     ev_document_model_get_page (model),
-				     TRUE);
+		current_page = ev_document_model_get_page (model);
+		if (view->current_page != current_page) {
+			ev_view_change_page (view, current_page, TRUE);
+		} else {
+			view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+			gtk_widget_queue_resize (GTK_WIDGET (view));
+		}
 	}
 }
 
