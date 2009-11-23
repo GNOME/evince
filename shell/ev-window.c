@@ -1249,18 +1249,6 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 
 	ev_window_set_message_area (ev_window, NULL);
 
-	if (ev_window->priv->in_reload && ev_window->priv->dest) {
-		gint page;
-
-		/* Restart the current page */
-		page = CLAMP (ev_link_dest_get_page (ev_window->priv->dest),
-			      0,
-			      ev_document_get_n_pages (document) - 1);
-		ev_document_model_set_page (ev_window->priv->model, page);
-		g_object_unref (ev_window->priv->dest);
-		ev_window->priv->dest = NULL;
-	}
-
 	if (ev_document_get_n_pages (document) <= 0) {
 		ev_window_warning_message (ev_window, "%s",
 					   _("The document contains no pages"));
@@ -1470,23 +1458,28 @@ ev_window_reload_job_cb (EvJob    *job,
 			 EvWindow *ev_window)
 {
 	GtkWidget *widget;
-	EvLinkDest *dest = NULL;
 
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
 		ev_window->priv->in_reload = FALSE;
-		g_object_unref (ev_window->priv->dest);
-		ev_window->priv->dest = NULL;
-		
+		if (ev_window->priv->dest) {
+			g_object_unref (ev_window->priv->dest);
+			ev_window->priv->dest = NULL;
+		}
+
 		return;
 	}
 
-	if (ev_window->priv->dest) {
-		dest = g_object_ref (ev_window->priv->dest);
-	}
 	ev_document_model_set_document (ev_window->priv->model,
 					job->document);
-	ev_window_handle_link (ev_window, dest);
+	if (ev_window->priv->dest) {
+		ev_window_handle_link (ev_window, ev_window->priv->dest);
+		/* Already unrefed by ev_link_action
+		 * FIXME: link action should inc dest ref counting
+		 * or not unref it at all
+		 */
+		ev_window->priv->dest = NULL;
+	}
 
 	/* Restart the search after reloading */
 	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
@@ -2098,8 +2091,7 @@ ev_window_reload_document (EvWindow *ev_window,
 	
 	if (ev_window->priv->dest)
 		g_object_unref (ev_window->priv->dest);
-	/* FIXME: save the scroll position too (xyz dest) */
-	ev_window->priv->dest = dest ? g_object_ref (dest) : ev_link_dest_new_page (page);
+	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
 
 	if (ev_window->priv->local_uri) {
 		ev_window_reload_remote (ev_window);
