@@ -3008,8 +3008,7 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
 	if (state == GDK_CONTROL_MASK && view->presentation == FALSE) {
-		ev_view_set_sizing_mode (view, EV_SIZING_FREE);
-
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
 		if (event->direction == GDK_SCROLL_UP ||
 		    event->direction == GDK_SCROLL_LEFT) {
 			if (ev_view_can_zoom_in (view)) {
@@ -5444,7 +5443,7 @@ ev_view_set_presentation (EvView   *view,
 	if (presentation) {
 		view->sizing_mode_saved = view->sizing_mode;
 		view->scale_saved = view->scale;
-		ev_view_set_sizing_mode (view, EV_SIZING_BEST_FIT);
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_BEST_FIT);
 	} else {
 		ev_document_model_set_sizing_mode (view->model, view->sizing_mode_saved);
 		ev_document_model_set_scale (view->model, view->scale_saved);
