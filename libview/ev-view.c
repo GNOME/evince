@@ -622,13 +622,13 @@ view_update_range_and_current_page (EvView *view)
 		gboolean found = FALSE;
 		gint area_max = -1, area;
 		gint best_current_page = -1;
-		int i;
+		int i, j = 0;
 
 		if (!(view->vadjustment && view->hadjustment))
 			return;
 
 		current_area.x = view->hadjustment->value;
-		current_area.width = view->hadjustment->upper;
+		current_area.width = view->hadjustment->page_size;
 		current_area.y = view->vadjustment->value;
 		current_area.height = view->vadjustment->page_size;
 
@@ -651,7 +651,15 @@ view_update_range_and_current_page (EvView *view)
 				}
 
 				view->end_page = i;
+				j = 0;
 			} else if (found && view->current_page <= view->end_page) {
+				if (view->dual_page && j < 1) {
+					/* In dual mode  we stop searching
+					 * after two consecutive non-visible pages.
+					 */
+					j++;
+					continue;
+				}
 				break;
 			}
 		}
