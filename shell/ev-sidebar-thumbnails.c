@@ -72,6 +72,7 @@ struct _EvSidebarThumbnailsPrivate {
 	gint n_pages, pages_done;
 
 	int rotation;
+	gboolean inverted_colors;
 
 	/* Visible pages */
 	gint start_page, end_page;
@@ -765,19 +766,18 @@ refresh (EvSidebarThumbnails *sidebar_thumbnails)
 }
 
 static void
-ev_sidebar_thumbnails_rotation_changed_cb (EvDocumentModel     *model,
-					   GParamSpec          *pspec,
-					   EvSidebarThumbnails *sidebar_thumbnails)
+ev_sidebar_thumbnails_reload (EvSidebarThumbnails *sidebar_thumbnails)
 {
-	gint rotation = ev_document_model_get_rotation (model);
+	EvDocumentModel *model;
 
-	sidebar_thumbnails->priv->rotation = rotation;
 	if (sidebar_thumbnails->priv->loading_icons)
 		g_hash_table_remove_all (sidebar_thumbnails->priv->loading_icons);
 
 	if (sidebar_thumbnails->priv->document == NULL ||
 	    sidebar_thumbnails->priv->n_pages <= 0)
 		return;
+
+	model = sidebar_thumbnails->priv->model;
 
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
@@ -791,6 +791,28 @@ ev_sidebar_thumbnails_rotation_changed_cb (EvDocumentModel     *model,
 }
 
 static void
+ev_sidebar_thumbnails_rotation_changed_cb (EvDocumentModel     *model,
+					   GParamSpec          *pspec,
+					   EvSidebarThumbnails *sidebar_thumbnails)
+{
+	gint rotation = ev_document_model_get_rotation (model);
+
+	sidebar_thumbnails->priv->rotation = rotation;
+	ev_sidebar_thumbnails_reload (sidebar_thumbnails);
+}
+
+static void
+ev_sidebar_thumbnails_inverted_colors_changed_cb (EvDocumentModel     *model,
+						  GParamSpec          *pspec,
+						  EvSidebarThumbnails *sidebar_thumbnails)
+{
+	gboolean inverted_colors = ev_document_model_get_inverted_colors (model);
+
+	sidebar_thumbnails->priv->inverted_colors = inverted_colors;
+	ev_sidebar_thumbnails_reload (sidebar_thumbnails);
+}
+
+static void
 thumbnail_job_completed_callback (EvJobThumbnail      *job,
 				  EvSidebarThumbnails *sidebar_thumbnails)
 {
@@ -798,6 +820,8 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 	GtkTreeIter *iter;
 
 	iter = (GtkTreeIter *) g_object_get_data (G_OBJECT (job), "tree_iter");
+	if (priv->inverted_colors)
+		ev_document_misc_invert_pixbuf (job->thumbnail);
 	gtk_list_store_set (priv->list_store,
 			    iter,
 			    COLUMN_PIXBUF, job->thumbnail,
@@ -824,6 +848,7 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	priv->document = document;
 	priv->n_pages = ev_document_get_n_pages (document);
 	priv->rotation = ev_document_model_get_rotation (model);
+	priv->inverted_colors = ev_document_model_get_inverted_colors (model);
 	priv->loading_icons = g_hash_table_new_full (g_str_hash,
 						     g_str_equal,
 						     (GDestroyNotify)g_free,
@@ -863,6 +888,9 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 				  sidebar_thumbnails);
 	g_signal_connect (priv->model, "notify::rotation",
 			  G_CALLBACK (ev_sidebar_thumbnails_rotation_changed_cb),
+			  sidebar_thumbnails);
+	g_signal_connect (priv->model, "notify::inverted-colors",
+			  G_CALLBACK (ev_sidebar_thumbnails_inverted_colors_changed_cb),
 			  sidebar_thumbnails);
 	sidebar_thumbnails->priv->start_page = -1;
 	sidebar_thumbnails->priv->end_page = -1;
@@ -935,4 +963,3 @@ ev_sidebar_thumbnails_page_iface_init (EvSidebarPageIface *iface)
 	iface->set_model = ev_sidebar_thumbnails_set_model;
 	iface->get_label = ev_sidebar_thumbnails_get_label;
 }
-
