@@ -33,6 +33,7 @@ struct _EvDocumentModel
 
 	gint page;
 	gint rotation;
+	gboolean inverted_colors;
 	gdouble scale;
 	EvSizingMode sizing_mode;
 	guint continuous : 1;
@@ -58,6 +59,7 @@ enum {
 	PROP_DOCUMENT,
 	PROP_PAGE,
 	PROP_ROTATION,
+	PROP_INVERTED_COLORS,
 	PROP_SCALE,
 	PROP_SIZING_MODE,
 	PROP_CONTINUOUS,
@@ -106,6 +108,9 @@ ev_document_model_set_property (GObject      *object,
 	case PROP_ROTATION:
 		ev_document_model_set_rotation (model, g_value_get_int (value));
 		break;
+	case PROP_INVERTED_COLORS:
+		ev_document_model_set_inverted_colors (model, g_value_get_boolean (value));
+		break;
 	case PROP_SCALE:
 		ev_document_model_set_scale (model, g_value_get_double (value));
 		break;
@@ -143,6 +148,9 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_ROTATION:
 		g_value_set_int (value, model->rotation);
+		break;
+	case PROP_INVERTED_COLORS:
+		g_value_set_boolean (value, model->inverted_colors);
 		break;
 	case PROP_SCALE:
 		g_value_set_double (value, model->scale);
@@ -195,6 +203,13 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							   "Current rotation angle",
 							   0, 360, 0,
 							   G_PARAM_READWRITE));
+	g_object_class_install_property (g_object_class,
+					 PROP_INVERTED_COLORS,
+					 g_param_spec_boolean ("inverted-colors",
+							       "Inverted Colors",
+							       "Whether document is displayed with inverted colors",
+							       FALSE,
+							       G_PARAM_READWRITE));
 	g_object_class_install_property (g_object_class,
 					 PROP_SCALE,
 					 g_param_spec_double ("scale",
@@ -251,6 +266,7 @@ ev_document_model_init (EvDocumentModel *model)
 	model->scale = 1.;
 	model->sizing_mode = EV_SIZING_FIT_WIDTH;
 	model->continuous = TRUE;
+	model->inverted_colors = FALSE;
 	model->min_scale = 0.;
 	model->max_scale = G_MAXDOUBLE;
 }
@@ -458,6 +474,28 @@ ev_document_model_get_rotation (EvDocumentModel *model)
 	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), 0);
 
 	return model->rotation;
+}
+
+void
+ev_document_model_set_inverted_colors (EvDocumentModel *model,
+				       gboolean         inverted_colors)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (inverted_colors == model->inverted_colors)
+		return;
+
+	model->inverted_colors = inverted_colors;
+
+	g_object_notify (G_OBJECT (model), "inverted-colors");
+}
+
+gboolean
+ev_document_model_get_inverted_colors (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
+
+	return model->inverted_colors;
 }
 
 void
