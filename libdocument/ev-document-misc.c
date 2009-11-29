@@ -297,6 +297,44 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 }
 
 void
+ev_document_misc_invert_surface (cairo_surface_t *surface) {
+#if CAIRO_VERSION > CAIRO_VERSION_ENCODE(1, 9, 2)
+	cairo_t *cr;
+
+	cr = cairo_create (surface);
+
+	/* white + DIFFERENCE -> invert */
+	cairo_set_operator (cr, CAIRO_OPERATOR_DIFFERENCE);
+	cairo_set_source_rgb (cr, 1., 1., 1.);
+	cairo_paint(cr);
+	cairo_destroy (cr);
+#else
+	guchar *data;
+	gint    rowstride;
+	gint    width, height;
+	gint    x, y;
+
+	data = cairo_image_surface_get_data (surface);
+	rowstride = cairo_image_surface_get_stride (surface);
+	width = cairo_image_surface_get_width (surface);
+	height = cairo_image_surface_get_height (surface);
+
+	for (y = 0; y < height; y++) {
+		guchar *p = data + y * rowstride;
+
+		for (x = 0; x < width; x++) {
+			p[0] = 255 - p[0];
+			p[1] = 255 - p[1];
+			p[2] = 255 - p[2];
+			p += 4;
+		}
+	}
+
+	cairo_surface_mark_dirty (surface);
+#endif
+}
+
+void
 ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
 {
 	guchar *data, *p;
