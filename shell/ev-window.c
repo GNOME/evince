@@ -1,6 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /* this file is part of evince, a gnome document viewer
  *
+ *  Copyright (C) 2009 Juanjo Marín <juanj.marin@juntadeandalucia.es>
  *  Copyright (C) 2008 Carlos Garcia Campos
  *  Copyright (C) 2004 Martin Kretzschmar
  *  Copyright (C) 2004 Red Hat, Inc.
@@ -423,6 +424,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewAutoscroll", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewInvertedColors", has_pages);
 
 	/* Toolbar-specific actions: */
 	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
@@ -947,9 +949,10 @@ setup_model_from_metadata (EvWindow *window)
 	gchar   *sizing_mode;
 	gdouble  zoom;
 	gint     rotation;
-	gboolean continuous = { 0, };
-	gboolean dual_page = { 0, };
-	gboolean fullscreen = { 0, };
+	gboolean inverted_colors = FALSE;
+	gboolean continuous = FALSE;
+	gboolean dual_page = FALSE;
+	gboolean fullscreen = FALSE;
 
 	if (!window->priv->metadata)
 		return;
@@ -994,6 +997,10 @@ setup_model_from_metadata (EvWindow *window)
 		}
 		ev_document_model_set_rotation (window->priv->model, rotation);
 	}
+
+	/* Inverted Colors */
+	if (ev_metadata_get_boolean (window->priv->metadata, "inverted-colors", &inverted_colors))
+		ev_document_model_set_inverted_colors (window->priv->model, inverted_colors);
 
 	/* Continuous */
 	if (ev_metadata_get_boolean (window->priv->metadata, "continuous", &continuous)) {
@@ -3846,6 +3853,14 @@ ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_view_inverted_colors (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean inverted_colors = ev_document_model_get_inverted_colors (ev_window->priv->model);
+
+	ev_document_model_set_inverted_colors (ev_window->priv->model, !inverted_colors);
+}
+
+static void
 ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
 			       gint       response,
 			       EvWindow  *ev_window)
@@ -4170,12 +4185,28 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_window_update_inverted_colors_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewInvertedColors");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_inverted_colors), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_document_model_get_inverted_colors (window->priv->model));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_inverted_colors), window);
+}
+
+static void
 ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 			              GParamSpec      *pspec,
 			              EvWindow        *window)
 {
 	gboolean inverted_colors = ev_document_model_get_inverted_colors (model);
 	gint rotation = ev_document_model_get_rotation (model);
+
+	ev_window_update_inverted_colors_action (window);
 
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (window->priv->metadata, "inverted-colors",
@@ -5085,6 +5116,7 @@ static const GtkActionEntry entries[] = {
 	{ "EditRotateRight", EV_STOCK_ROTATE_RIGHT, N_("Rotate _Right"), "<control>Right", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_right) },
 
+
         /* View menu */
         { "ViewZoomIn", GTK_STOCK_ZOOM_IN, NULL, "<control>plus",
           N_("Enlarge the document"),
@@ -5208,6 +5240,9 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
           N_("Make the current document fill the window width"),
           G_CALLBACK (ev_window_cmd_view_page_width) },
+	{ "ViewInvertedColors", EV_STOCK_INVERTED_COLORS, N_("_Inverted Colors"), "<control>I", NULL,
+	  G_CALLBACK (ev_window_cmd_view_inverted_colors) },
+
 };
 
 /* Popups specific items */
