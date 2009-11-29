@@ -45,6 +45,7 @@ struct _EvPixbufCache
 	EvDocument *document;
 	int start_page;
 	int end_page;
+	gboolean inverted_colors;
 
 	/* preload_cache_size is the number of pages prior to the current
 	 * visible area that we cache.  It's normally 1, but could be 2 in the
@@ -468,6 +469,9 @@ copy_job_page_and_selection_to_job_info (EvJobRender   *job_render,
 		cairo_surface_destroy (job_info->surface);
 	}
 	job_info->surface = cairo_surface_reference (job_render->surface);
+	if (pixbuf_cache->inverted_colors) {
+		ev_document_misc_invert_surface (job_info->surface);
+	}
 
 	job_info->points_set = FALSE;
 	if (job_render->flags & EV_RENDER_INCLUDE_SELECTION) {
@@ -757,6 +761,38 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 	/* Finally, we add the new jobs for all the sizes that don't have a
 	 * pixbuf */
 	ev_pixbuf_cache_add_jobs_if_needed (pixbuf_cache, rotation, scale);
+}
+
+void
+ev_pixbuf_cache_set_inverted_colors (EvPixbufCache *pixbuf_cache,
+				     gboolean       inverted_colors)
+{
+	gint i;
+
+	if (pixbuf_cache->inverted_colors == inverted_colors)
+		return;
+
+	pixbuf_cache->inverted_colors = inverted_colors;
+
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		CacheJobInfo *job_info;
+
+		job_info = pixbuf_cache->prev_job + i;
+		if (job_info->surface)
+			ev_document_misc_invert_surface (job_info->surface);
+
+		job_info = pixbuf_cache->next_job + i;
+		if (job_info->surface)
+			ev_document_misc_invert_surface (job_info->surface);
+	}
+
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+		CacheJobInfo *job_info;
+
+		job_info = pixbuf_cache->job_list + i;
+		if (job_info->surface)
+			ev_document_misc_invert_surface (job_info->surface);
+	}
 }
 
 cairo_surface_t *

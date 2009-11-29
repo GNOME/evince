@@ -80,7 +80,9 @@ void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache *pixbuf_cache,
 						     GdkRegion     *region,
                     				     gint           page,
 			                             gint           rotation,
-                         			     gdouble         scale);
+						     gdouble        scale);
+void           ev_pixbuf_cache_set_inverted_colors  (EvPixbufCache *pixbuf_cache,
+						     gboolean       inverted_colors);
 /* Selection */
 cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache *pixbuf_cache,
 							gint           page,

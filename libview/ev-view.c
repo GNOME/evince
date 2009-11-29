@@ -5066,8 +5066,12 @@ ev_view_new (void)
 static void
 setup_caches (EvView *view)
 {
+	gboolean inverted_colors;
+
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
+	inverted_colors = ev_document_model_get_inverted_colors (view->model);
+	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
 }
 
@@ -5220,6 +5224,20 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_view_inverted_colors_changed_cb (EvDocumentModel *model,
+				    GParamSpec      *pspec,
+				    EvView          *view)
+{
+	if (view->pixbuf_cache) {
+		gboolean inverted_colors;
+
+		inverted_colors = ev_document_model_get_inverted_colors (model);
+		ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+	}
+}
+
+static void
 ev_view_sizing_mode_changed_cb (EvDocumentModel *model,
 				GParamSpec      *pspec,
 				EvView          *view)
@@ -5317,6 +5335,9 @@ ev_view_set_model (EvView          *view,
 			  view);
 	g_signal_connect (view->model, "notify::rotation",
 			  G_CALLBACK (ev_view_rotation_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::inverted-colors",
+			  G_CALLBACK (ev_view_inverted_colors_changed_cb),
 			  view);
 	g_signal_connect (view->model, "notify::sizing-mode",
 			  G_CALLBACK (ev_view_sizing_mode_changed_cb),
