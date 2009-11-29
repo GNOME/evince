@@ -1153,10 +1153,11 @@ ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
 }
 
 static void
-ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
+ev_window_refresh_window_thumbnail (EvWindow *ev_window)
 {
 	gdouble page_width;
 	gdouble scale;
+	gint rotation;
 	EvDocument *document = ev_window->priv->document;
 
 	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
@@ -1169,6 +1170,7 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window, int rotation)
 
 	ev_document_get_page_size (document, 0, &page_width, NULL);
 	scale = 128. / page_width;
+	rotation = ev_document_model_get_rotation (ev_window->priv->model);
 
 	ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, 0, rotation, scale);
 	g_signal_connect (ev_window->priv->thumbnail_job, "finished",
@@ -1197,7 +1199,7 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_window->priv->setup_document_idle = 0;
 	
-	ev_window_refresh_window_thumbnail (ev_window, 0);
+	ev_window_refresh_window_thumbnail (ev_window);
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 	ev_window_title_set_document (ev_window->priv->title, document);
@@ -4181,7 +4183,7 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 		ev_metadata_set_int (window->priv->metadata, "rotation",
 				     rotation);
 
-	ev_window_refresh_window_thumbnail (window, rotation);
+	ev_window_refresh_window_thumbnail (window);
 }
 
 static void
@@ -4204,7 +4206,6 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 			              EvWindow        *window)
 {
 	gboolean inverted_colors = ev_document_model_get_inverted_colors (model);
-	gint rotation = ev_document_model_get_rotation (model);
 
 	ev_window_update_inverted_colors_action (window);
 
@@ -4212,7 +4213,7 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 		ev_metadata_set_boolean (window->priv->metadata, "inverted-colors",
 					 inverted_colors);
 
-	ev_window_refresh_window_thumbnail (window, rotation);
+	ev_window_refresh_window_thumbnail (window);
 }
 
 static void
