@@ -1136,6 +1136,8 @@ ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
 				   EvWindow       *ev_window)
 {
 	if (job->thumbnail) {
+		if (ev_document_model_get_inverted_colors (ev_window->priv->model))
+			ev_document_misc_invert_pixbuf (job->thumbnail);
 		gtk_window_set_icon (GTK_WINDOW (ev_window),
 				     job->thumbnail);
 	}
@@ -4168,6 +4170,21 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
+			              GParamSpec      *pspec,
+			              EvWindow        *window)
+{
+	gboolean inverted_colors = ev_document_model_get_inverted_colors (model);
+	gint rotation = ev_document_model_get_rotation (model);
+
+	if (window->priv->metadata && !ev_window_is_empty (window))
+		ev_metadata_set_boolean (window->priv->metadata, "inverted-colors",
+					 inverted_colors);
+
+	ev_window_refresh_window_thumbnail (window, rotation);
+}
+
+static void
 ev_window_has_selection_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window)
 {
         ev_window_update_actions (window);
@@ -6333,6 +6350,10 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 
 	/* Connect to view signals */
+	g_signal_connect (ev_window->priv->model,
+			  "notify::inverted-colors",
+			  G_CALLBACK (ev_window_inverted_colors_changed_cb),
+			  ev_window);
 	g_signal_connect (ev_window->priv->view,
 			  "notify::has-selection",
 			  G_CALLBACK (ev_window_has_selection_changed_cb),
