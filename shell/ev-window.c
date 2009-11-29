@@ -5240,7 +5240,8 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
           N_("Make the current document fill the window width"),
           G_CALLBACK (ev_window_cmd_view_page_width) },
-	{ "ViewInvertedColors", EV_STOCK_INVERTED_COLORS, N_("_Inverted Colors"), "<control>I", NULL,
+	{ "ViewInvertedColors", EV_STOCK_INVERTED_COLORS, N_("_Inverted Colors"), "<control>I",
+	  N_("Show page contents with the colors inverted"),
 	  G_CALLBACK (ev_window_cmd_view_inverted_colors) },
 
 };
