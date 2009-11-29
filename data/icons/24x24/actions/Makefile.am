@@ -5,6 +5,7 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
+	stock_filters-invert.png	\
 	view-page-continuous.png	\
 	view-page-facing.png		\
 	zoom.png                \
