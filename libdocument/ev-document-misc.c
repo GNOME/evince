@@ -1,4 +1,5 @@
 /*
+ *  Copyright (C) 2009 Juanjo Marín <juanj.marin@juntadeandalucia.es>
  *  Copyright (c) 2007 Carlos Garcia Campos <carlosgc@gnome.org>
  *  Copyright (C) 2000-2003 Marco Pesenti Gritti
  *
@@ -294,4 +295,33 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 
 	return new_surface;
 }
-	
+
+void
+ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
+{
+	guchar *data, *p;
+	guint   width, height, x, y, rowstride, n_channels;
+
+	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+	g_assert (gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB);
+	g_assert (gdk_pixbuf_get_bits_per_sample (pixbuf) == 8);
+
+	/* First grab a pointer to the raw pixel data. */
+	data = gdk_pixbuf_get_pixels (pixbuf);
+
+	/* Find the number of bytes per row (could be padded). */
+	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+	for (x = 0; x < width; x++) {
+		for (y = 0; y < height; y++) {
+			/* Calculate pixel's offset into the data array. */
+			p = data + x * n_channels + y * rowstride;
+			/* Change the RGB values*/
+			p[0] = 255 - p[0];
+			p[1] = 255 - p[1];
+			p[2] = 255 - p[2];
+		}
+	}
+}
