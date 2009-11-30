@@ -5264,7 +5264,7 @@ ev_view_inverted_colors_changed_cb (EvDocumentModel *model,
 
 		inverted_colors = ev_document_model_get_inverted_colors (model);
 		ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
-		gtk_widget_queue_resize (GTK_WIDGET (view));
+		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
 
