@@ -480,6 +480,37 @@ ev_view_get_height_to_page (EvView *view,
 		*dual_height = (gint)(dh * view->scale + 0.5);
 }
 
+static gint
+ev_view_get_scrollbar_size (EvView        *view,
+			    GtkOrientation orientation)
+{
+	GtkWidget *widget = GTK_WIDGET (view);
+	GtkWidget *sb;
+	GtkWidget *swindow = gtk_widget_get_parent (GTK_WIDGET (view));
+	GtkRequisition req;
+	gint spacing;
+
+	if (!GTK_IS_SCROLLED_WINDOW (swindow))
+		return 0;
+
+	if (orientation == GTK_ORIENTATION_VERTICAL) {
+		if (widget->allocation.height >= widget->requisition.height)
+			sb = gtk_scrolled_window_get_vscrollbar (GTK_SCROLLED_WINDOW (swindow));
+		else
+			return 0;
+	} else {
+		if (widget->allocation.width >= widget->requisition.width)
+			sb = gtk_scrolled_window_get_hscrollbar (GTK_SCROLLED_WINDOW (swindow));
+		else
+			return 0;
+	}
+
+	gtk_widget_style_get (swindow, "scrollbar_spacing", &spacing, NULL);
+	gtk_widget_size_request (sb, &req);
+
+	return (orientation == GTK_ORIENTATION_VERTICAL ? req.width : req.height) + spacing;
+}
+
 static void
 scroll_to_point (EvView        *view,
 		 gdouble        x,
@@ -5269,7 +5300,8 @@ ev_view_scale_changed_cb (EvDocumentModel *model,
 	ev_view_set_zoom (view, scale);
 
 	view->pending_resize = TRUE;
-	gtk_widget_queue_resize (GTK_WIDGET (view));
+	if (view->sizing_mode == EV_SIZING_FREE)
+		gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
@@ -5710,9 +5742,12 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	width -= (2 * (border.left + border.right) + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
-	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		gint sb_size;
+
+		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
@@ -5743,9 +5778,12 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	width -= (border.left + border.right + 2 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
-	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		gint sb_size;
+
+		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
@@ -5782,9 +5820,12 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
-	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		gint sb_size;
+
+		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
@@ -5809,9 +5850,12 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	width -= (border.left + border.right + 2 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH)
-		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
-	else if (view->sizing_mode == EV_SIZING_BEST_FIT)
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
+		gint sb_size;
+
+		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
+	} else if (view->sizing_mode == EV_SIZING_BEST_FIT)
 		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
 	else
 		g_assert_not_reached ();
