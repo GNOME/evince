@@ -2784,25 +2784,28 @@ static void
 ev_view_size_request_continuous_dual_page (EvView         *view,
 			     	           GtkRequisition *requisition)
 {
-	int max_width;
 	gint n_pages;
-	GtkBorder border;
-
-	ev_view_get_max_page_size (view, &max_width, NULL);
-	compute_border (view, max_width, max_width, &border);
 
 	n_pages = ev_document_get_n_pages (view->document) + 1;
-
-	requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
 	get_page_y_offset (view, n_pages, &requisition->height);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		requisition->width = 1;
-	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
-		requisition->width = 1;
-		/* FIXME: This could actually be set on one page docs or docs
-		 * with a strange aspect ratio. */
-		/* requisition->height = 1;*/
+	switch (view->sizing_mode) {
+	        case EV_SIZING_FIT_WIDTH:
+	        case EV_SIZING_BEST_FIT:
+			requisition->width = 1;
+
+			break;
+	        case EV_SIZING_FREE: {
+			gint max_width;
+			GtkBorder border;
+
+			ev_view_get_max_page_size (view, &max_width, NULL);
+			compute_border (view, max_width, max_width, &border);
+			requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
+		}
+			break;
+	        default:
+			g_assert_not_reached ();
 	}
 }
 
@@ -2810,24 +2813,28 @@ static void
 ev_view_size_request_continuous (EvView         *view,
 				 GtkRequisition *requisition)
 {
-	int max_width;
-	int n_pages;
-	GtkBorder border;
+	gint n_pages;
 
-	ev_view_get_max_page_size (view, &max_width, NULL);
 	n_pages = ev_document_get_n_pages (view->document);
-	compute_border (view, max_width, max_width, &border);
-
-	requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
 	get_page_y_offset (view, n_pages, &requisition->height);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		requisition->width = 1;
-	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
-		requisition->width = 1;
-		/* FIXME: This could actually be set on one page docs or docs
-		 * with a strange aspect ratio. */
-		/* requisition->height = 1;*/
+	switch (view->sizing_mode) {
+	        case EV_SIZING_FIT_WIDTH:
+	        case EV_SIZING_BEST_FIT:
+			requisition->width = 1;
+
+			break;
+	        case EV_SIZING_FREE: {
+			gint max_width;
+			GtkBorder border;
+
+			ev_view_get_max_page_size (view, &max_width, NULL);
+			compute_border (view, max_width, max_width, &border);
+			requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
+		}
+			break;
+	        default:
+			g_assert_not_reached ();
 	}
 }
 
@@ -2837,6 +2844,13 @@ ev_view_size_request_dual_page (EvView         *view,
 {
 	GtkBorder border;
 	gint width, height;
+
+	if (view->sizing_mode == EV_SIZING_BEST_FIT) {
+		requisition->width = 1;
+		requisition->height = 1;
+
+		return;
+	}
 
 	/* Find the largest of the two. */
 	ev_view_get_page_size (view,
@@ -2854,17 +2868,9 @@ ev_view_size_request_dual_page (EvView         *view,
 	}
 	compute_border (view, width, height, &border);
 
-	requisition->width = ((width + border.left + border.right) * 2) +
-		(view->spacing * 3);
-	requisition->height = (height + border.top + border.bottom) +
-		(view->spacing * 2);
-
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		requisition->width = 1;
-	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
-		requisition->width = 1;
-		requisition->height = 1;
-	}
+	requisition->width = view->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
+		((width + border.left + border.right) * 2) + (view->spacing * 3);
+	requisition->height = (height + border.top + border.bottom) + (view->spacing * 2);
 }
 
 static void
@@ -2874,19 +2880,19 @@ ev_view_size_request_single_page (EvView         *view,
 	GtkBorder border;
 	gint width, height;
 
+	if (view->sizing_mode == EV_SIZING_BEST_FIT) {
+		requisition->width = 1;
+		requisition->height = 1;
+
+		return;
+	}
+
 	ev_view_get_page_size (view, view->current_page, &width, &height);
 	compute_border (view, width, height, &border);
 
-	requisition->width = width + border.left + border.right + (2 * view->spacing);
+	requisition->width = view->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
+		width + border.left + border.right + (2 * view->spacing);
 	requisition->height = height + border.top + border.bottom + (2 * view->spacing);
-
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		requisition->width = 1;
-		requisition->height = height + border.top + border.bottom + (2 * view->spacing);
-	} else if (view->sizing_mode == EV_SIZING_BEST_FIT) {
-		requisition->width = 1;
-		requisition->height = 1;
-	}
 }
 
 static void
