@@ -5658,14 +5658,7 @@ zoom_for_size_fit_width (gdouble doc_width,
 			 int     target_width,
 			 int     target_height)
 {
-	double scale;
-
-	scale = (double)target_width / doc_width;
-
-	if (doc_height * scale > target_height)
-		scale = (double)target_width / doc_width;
-
-	return scale;
+	return (double)target_width / doc_width;
 }
 
 static double
@@ -5674,14 +5667,7 @@ zoom_for_size_fit_height (gdouble doc_width,
 			  int     target_width,
 			  int     target_height)
 {
-	double scale;
-
-	scale = (double)target_height / doc_height;
-
-	if (doc_width * scale > target_width)
-		scale = (double)target_height / doc_height;
-
-	return scale;
+	return (double)target_height / doc_height;
 }
 
 static double
@@ -5695,11 +5681,6 @@ zoom_for_size_best_fit (gdouble doc_width,
 
 	w_scale = (double)target_width / doc_width;
 	h_scale = (double)target_height / doc_height;
-
-	if (doc_height * w_scale > target_height)
-		w_scale = (double)target_width / doc_width;
-	if (doc_width * h_scale > target_width)
-		h_scale = (double)target_height / doc_height;
 
 	return MIN (w_scale, h_scale);
 }
