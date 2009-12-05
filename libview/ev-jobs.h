@@ -366,7 +366,6 @@ void            ev_job_failed             (EvJob          *job,
 void            ev_job_failed_from_error  (EvJob          *job,
 					   GError         *error);
 void            ev_job_succeeded          (EvJob          *job);
-gboolean        ev_job_is_cancelled       (EvJob          *job);
 gboolean        ev_job_is_finished        (EvJob          *job);
 gboolean        ev_job_is_failed          (EvJob          *job);
 EvJobRunMode    ev_job_get_run_mode       (EvJob          *job);
