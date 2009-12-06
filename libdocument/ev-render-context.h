@@ -34,7 +34,7 @@ typedef struct _EvRenderContext EvRenderContext;
 typedef struct _EvRenderContextClass EvRenderContextClass;
 
 #define EV_TYPE_RENDER_CONTEXT		(ev_render_context_get_type())
-#define EV_RENDER_CONTEXT(context)	(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_RENDER_CONTEXT, EvRenderContext)
+#define EV_RENDER_CONTEXT(object)	(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_RENDER_CONTEXT, EvRenderContext))
 #define EV_RENDER_CONTEXT_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_RENDER_CONTEXT, EvRenderContextClass))
 #define EV_IS_RENDER_CONTEXT(object)	(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_RENDER_CONTEXT))
 
