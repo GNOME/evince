@@ -725,11 +725,11 @@ view_update_range_and_current_page (EvView *view)
 	if (start != view->start_page || end != view->end_page) {
 		gint i;
 
-		for (i = start; i < view->start_page; i++) {
+		for (i = start; i < view->start_page && start != -1; i++) {
 			hide_annotation_windows (view, i);
 		}
 
-		for (i = end; i > view->end_page; i--) {
+		for (i = end; i > view->end_page && end != -1; i--) {
 			hide_annotation_windows (view, i);
 		}
 	}
