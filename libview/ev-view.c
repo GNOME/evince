@@ -35,6 +35,7 @@
 #include "ev-document-misc.h"
 #include "ev-document-transition.h"
 #include "ev-pixbuf-cache.h"
+#include "ev-page-cache.h"
 #include "ev-transition-animation.h"
 #include "ev-view-marshal.h"
 #include "ev-document-annotations.h"
@@ -734,6 +735,9 @@ view_update_range_and_current_page (EvView *view)
 		}
 	}
 
+	ev_page_cache_set_page_range (view->page_cache,
+				      view->start_page,
+				      view->end_page);
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->start_page,
 					view->end_page,
@@ -829,7 +833,7 @@ compute_scroll_increment (EvView        *view,
 
 	page = scroll == GTK_SCROLL_PAGE_BACKWARD ? view->start_page : view->end_page;
 
-	text_region = ev_pixbuf_cache_get_text_mapping (view->pixbuf_cache, page);
+	text_region = ev_page_cache_get_text_mapping (view->page_cache, page);
 	if (!text_region || gdk_region_empty (text_region))
 		return adjustment->page_size;
 
@@ -1379,7 +1383,7 @@ location_in_text (EvView  *view,
 	if (page == -1)
 		return FALSE;
 	
-	region = ev_pixbuf_cache_get_text_mapping (view->pixbuf_cache, page);
+	region = ev_page_cache_get_text_mapping (view->page_cache, page);
 
 	if (region)
 		return gdk_region_point_in (region, x_offset / view->scale, y_offset / view->scale);
@@ -1514,7 +1518,7 @@ ev_view_get_link_at_location (EvView  *view,
 	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
-	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, page);
 
 	if (link_mapping)
 		return ev_mapping_list_get_data (link_mapping, x_new, y_new);
@@ -1932,7 +1936,7 @@ ev_view_get_image_at_location (EvView  *view,
 	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
-	image_mapping = ev_pixbuf_cache_get_image_mapping (view->pixbuf_cache, page);
+	image_mapping = ev_page_cache_get_image_mapping (view->page_cache, page);
 
 	if (image_mapping)
 		return ev_mapping_list_get_data (image_mapping, x_new, y_new);
@@ -1956,7 +1960,7 @@ ev_view_get_form_field_at_location (EvView  *view,
 	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
-	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, page);
+	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache, page);
 
 	if (forms_mapping)
 		return ev_mapping_list_get_data (forms_mapping, x_new, y_new);
@@ -1971,8 +1975,8 @@ ev_view_form_field_get_region (EvView      *view,
 	GdkRectangle view_area;
 	GList       *forms_mapping;
 
-	forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
-								field->page->index);
+	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+							      field->page->index);
 	ev_view_get_area_from_mapping (view, field->page->index,
 				       forms_mapping,
 				       field, &view_area);
@@ -2023,8 +2027,8 @@ ev_view_form_field_button_create_widget (EvView      *view,
 			/* For radio buttons and checkbox buttons that are in a set
 			 * we need to update also the region for the current selected item
 			 */
-			forms_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
-										field->page->index);
+			forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+									      field->page->index);
 			for (l = forms_mapping; l; l = g_list_next (l)) {
 				EvFormField *button = ((EvMapping *)(l->data))->data;
 				GdkRegion   *button_region;
@@ -2407,7 +2411,8 @@ ev_view_handle_form_field (EvView      *view,
 				g_object_ref (field),
 				(GDestroyNotify)g_object_unref);
 
-	form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache, field->page->index);
+	form_field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+								   field->page->index);
 	ev_view_get_area_from_mapping (view, field->page->index,
 				       form_field_mapping,
 				       field, &view_area);
@@ -2631,7 +2636,7 @@ show_annotation_windows (EvView *view,
 
 	parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
 
-	annots = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+	annots = ev_page_cache_get_annot_mapping (view->page_cache, page);
 
 	for (l = annots; l && l->data; l = g_list_next (l)) {
 		EvAnnotation      *annot;
@@ -2696,7 +2701,7 @@ hide_annotation_windows (EvView *view,
 {
 	GList *annots, *l;
 
-	annots = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+	annots = ev_page_cache_get_annot_mapping (view->page_cache, page);
 
 	for (l = annots; l && l->data; l = g_list_next (l)) {
 		EvAnnotation *annot;
@@ -2728,7 +2733,7 @@ ev_view_get_annotation_at_location (EvView  *view,
 	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
-	annotations_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+	annotations_mapping = ev_page_cache_get_annot_mapping (view->page_cache, page);
 
 	if (annotations_mapping)
 		return ev_mapping_list_get_data (annotations_mapping, x_new, y_new);
@@ -2965,8 +2970,8 @@ ev_view_size_allocate (GtkWidget      *widget,
 		if (!field)
 			continue;
 
-		form_field_mapping = ev_pixbuf_cache_get_form_field_mapping (view->pixbuf_cache,
-									     field->page->index);
+		form_field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+									   field->page->index);
 		ev_view_get_area_from_mapping (view, field->page->index,
 					       form_field_mapping,
 					       field, &view_area);
@@ -3220,7 +3225,7 @@ ev_view_expose_event (GtkWidget      *widget,
 		return FALSE;
 
 	cr = gdk_cairo_create (view->layout.bin_window);
-	
+
 	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
 		GtkBorder border;
@@ -3305,7 +3310,7 @@ get_link_area (EvView       *view,
 	
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 	
-	link_mapping = ev_pixbuf_cache_get_link_mapping (view->pixbuf_cache, page);
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, page);
 	ev_view_get_area_from_mapping (view, page,
 				       link_mapping,
 				       link, area);
@@ -3318,7 +3323,7 @@ get_annot_area (EvView       *view,
 	       EvAnnotation *annot,
 	       GdkRectangle *area)
 {
-	GList *annots_mapping;
+	GList *annot_mapping;
 	gint   page;
 	gint   x_offset = 0, y_offset = 0;
 
@@ -3327,9 +3332,9 @@ get_annot_area (EvView       *view,
 
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
-	annots_mapping = ev_pixbuf_cache_get_annots_mapping (view->pixbuf_cache, page);
+	annot_mapping = ev_page_cache_get_annot_mapping (view->page_cache, page);
 	ev_view_get_area_from_mapping (view, page,
-				       annots_mapping,
+				       annot_mapping,
 				       annot, area);
 }
 
@@ -4565,6 +4570,11 @@ ev_view_destroy (GtkObject *object)
 		view->pixbuf_cache = NULL;
 	}
 
+	if (view->page_cache) {
+		g_object_unref (view->page_cache);
+		view->page_cache = NULL;
+	}
+
 	if (view->goto_window) {
 		gtk_widget_destroy (view->goto_window);
 		view->goto_window = NULL;
@@ -5107,6 +5117,7 @@ setup_caches (EvView *view)
 
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
+	view->page_cache = ev_page_cache_new (view->document);
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
@@ -5118,6 +5129,11 @@ clear_caches (EvView *view)
 	if (view->pixbuf_cache) {
 		g_object_unref (view->pixbuf_cache);
 		view->pixbuf_cache = NULL;
+	}
+
+	if (view->page_cache) {
+		g_object_unref (view->page_cache);
+		view->page_cache = NULL;
 	}
 }
 

@@ -28,6 +28,7 @@
 #include "ev-view.h"
 #include "ev-document-model.h"
 #include "ev-pixbuf-cache.h"
+#include "ev-page-cache.h"
 #include "ev-jobs.h"
 #include "ev-image.h"
 #include "ev-form-field.h"
@@ -136,6 +137,7 @@ struct _EvView {
 
 	EvDocumentModel *model;
 	EvPixbufCache *pixbuf_cache;
+	EvPageCache *page_cache;
 	EvHeightToPageCache *height_to_page_cache;
 	EvViewCursor cursor;
 	EvJobRender *current_job;

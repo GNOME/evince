@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libevview.la
 
 NOINST_H_FILES =			\
 	ev-annotation-window.h		\
+	ev-page-cache.h			\
 	ev-pixbuf-cache.h		\
 	ev-timeline.h			\
 	ev-transition-animation.h	\
@@ -25,6 +26,7 @@ libevview_la_SOURCES = 			\
 	ev-document-model.c		\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
+	ev-page-cache.c			\
 	ev-pixbuf-cache.c		\
 	ev-stock-icons.c		\
 	ev-timeline.c			\

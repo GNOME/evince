@@ -39,6 +39,9 @@ typedef struct _EvJobClass EvJobClass;
 typedef struct _EvJobRender EvJobRender;
 typedef struct _EvJobRenderClass EvJobRenderClass;
 
+typedef struct _EvJobPageData EvJobPageData;
+typedef struct _EvJobPageDataClass EvJobPageDataClass;
+
 typedef struct _EvJobThumbnail EvJobThumbnail;
 typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
 
@@ -89,6 +92,11 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_RENDER(object)		     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_RENDER, EvJobRender))
 #define EV_JOB_RENDER_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_RENDER, EvJobRenderClass))
 #define EV_IS_JOB_RENDER(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_RENDER))
+
+#define EV_TYPE_JOB_PAGE_DATA		     (ev_job_page_data_get_type())
+#define EV_JOB_PAGE_DATA(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_PAGE_DATA, EvJobPageData))
+#define EV_JOB_PAGE_DATA_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_PAGE_DATA, EvJobPageDataClass))
+#define EV_IS_JOB_PAGE_DATA(object)	     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_PAGE_DATA))
 
 #define EV_TYPE_JOB_THUMBNAIL		     (ev_job_thumbnail_get_type())
 #define EV_JOB_THUMBNAIL(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnail))
@@ -189,17 +197,6 @@ struct _EvJobAttachmentsClass
 	EvJobClass parent_class;
 };
 
-typedef enum {
-	EV_RENDER_INCLUDE_NONE      = 0,
-	EV_RENDER_INCLUDE_LINKS     = 1 << 0,
-	EV_RENDER_INCLUDE_TEXT      = 1 << 1,
-	EV_RENDER_INCLUDE_SELECTION = 1 << 2,
-	EV_RENDER_INCLUDE_IMAGES    = 1 << 3,
-	EV_RENDER_INCLUDE_FORMS     = 1 << 4,
-	EV_RENDER_INCLUDE_ANNOTS    = 1 << 5,
-	EV_RENDER_INCLUDE_ALL       = (1 << 6) - 1
-} EvRenderFlags;
-
 struct _EvJobRender
 {
 	EvJob parent;
@@ -214,27 +211,47 @@ struct _EvJobRender
 	gint target_height;
 	cairo_surface_t *surface;
 
-	GList *link_mapping;
-	GdkRegion *text_mapping;
-	GList *image_mapping;
-	GList *form_field_mapping;
-	GList *annots_mapping;
-
+	gboolean include_selection;
 	cairo_surface_t *selection;
 	GdkRegion *selection_region;
 	EvRectangle selection_points;
 	EvSelectionStyle selection_style;
 	GdkColor base;
-	GdkColor text; 
-
-	EvRenderFlags flags;
+	GdkColor text;
 };
 
 struct _EvJobRenderClass
 {
 	EvJobClass parent_class;
+};
 
-	void    (* page_ready) (EvJobRender *job);
+typedef enum {
+	EV_PAGE_DATA_INCLUDE_NONE   = 0,
+	EV_PAGE_DATA_INCLUDE_LINKS  = 1 << 0,
+	EV_PAGE_DATA_INCLUDE_TEXT   = 1 << 1,
+	EV_PAGE_DATA_INCLUDE_IMAGES = 1 << 2,
+	EV_PAGE_DATA_INCLUDE_FORMS  = 1 << 3,
+	EV_PAGE_DATA_INCLUDE_ANNOTS = 1 << 4,
+	EV_PAGE_DATA_INCLUDE_ALL    = (1 << 5) - 1
+} EvJobPageDataFlags;
+
+struct _EvJobPageData
+{
+	EvJob parent;
+
+	gint page;
+	EvJobPageDataFlags flags;
+
+	GList *link_mapping;
+	GList *image_mapping;
+	GList *form_field_mapping;
+	GList *annot_mapping;
+	GdkRegion *text_mapping;
+};
+
+struct _EvJobPageDataClass
+{
+	EvJobClass parent_class;
 };
 
 struct _EvJobThumbnail
@@ -387,13 +404,18 @@ EvJob          *ev_job_render_new         (EvDocument      *document,
 					   gint             rotation,
 					   gdouble          scale,
 					   gint             width,
-					   gint             height,
-					   EvRenderFlags    flags);
+					   gint             height);
 void     ev_job_render_set_selection_info (EvJobRender     *job,
 					   EvRectangle     *selection_points,
 					   EvSelectionStyle selection_style,
 					   GdkColor        *text,
 					   GdkColor        *base);
+/* EvJobPageData */
+GType           ev_job_page_data_get_type (void) G_GNUC_CONST;
+EvJob          *ev_job_page_data_new      (EvDocument      *document,
+					   gint             page,
+					   EvJobPageDataFlags flags);
+
 /* EvJobThumbnail */
 GType           ev_job_thumbnail_get_type (void) G_GNUC_CONST;
 EvJob          *ev_job_thumbnail_new      (EvDocument      *document,
