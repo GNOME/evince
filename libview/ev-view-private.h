@@ -135,7 +135,6 @@ struct _EvView {
 	gboolean highlight_find_results;
 
 	EvDocumentModel *model;
-	EvPageCache *page_cache;
 	EvPixbufCache *pixbuf_cache;
 	EvHeightToPageCache *height_to_page_cache;
 	EvViewCursor cursor;

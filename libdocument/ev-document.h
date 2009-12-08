@@ -49,9 +49,6 @@ typedef struct _EvDocument        EvDocument;
 typedef struct _EvDocumentClass   EvDocumentClass;
 typedef struct _EvDocumentPrivate EvDocumentPrivate;
 
-typedef struct _EvPageCache       EvPageCache;
-typedef struct _EvPageCacheClass  EvPageCacheClass;
-
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
 #define EV_DOC_MUTEX_LOCK (ev_document_doc_mutex_lock ())
 #define EV_DOC_MUTEX_UNLOCK (ev_document_doc_mutex_unlock ())
