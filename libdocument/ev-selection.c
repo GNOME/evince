@@ -77,13 +77,13 @@ ev_selection_get_selection_region (EvSelection     *selection,
 }
 
 GdkRegion *
-ev_selection_get_selection_map (EvSelection     *selection,
-				EvRenderContext *rc)
+ev_selection_get_selection_map (EvSelection *selection,
+				EvPage      *page)
 {
 	EvSelectionIface *iface = EV_SELECTION_GET_IFACE (selection);
 
 	if (!iface->get_selection_map)
 		return NULL;
-	
-	return iface->get_selection_map (selection, rc);
+
+	return iface->get_selection_map (selection, page);
 }

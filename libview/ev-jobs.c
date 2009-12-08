@@ -553,7 +553,7 @@ ev_job_render_run (EvJob *job)
 		
 	if ((job_render->flags & EV_RENDER_INCLUDE_TEXT) && EV_IS_SELECTION (job->document))
 		job_render->text_mapping =
-			ev_selection_get_selection_map (EV_SELECTION (job->document), rc);
+			ev_selection_get_selection_map (EV_SELECTION (job->document), job_render->ev_page);
 	if ((job_render->flags & EV_RENDER_INCLUDE_LINKS) && EV_IS_DOCUMENT_LINKS (job->document))
 		job_render->link_mapping =
 			ev_document_links_get_links (EV_DOCUMENT_LINKS (job->document), job_render->page);

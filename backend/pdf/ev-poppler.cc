@@ -2012,15 +2012,15 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 }
 
 static GdkRegion *
-pdf_selection_get_selection_map (EvSelection     *selection,
-				 EvRenderContext *rc)
+pdf_selection_get_selection_map (EvSelection *selection,
+				 EvPage      *page)
 {
 	PopplerPage *poppler_page;
 	PopplerRectangle points;
 	GList *region;
 	GdkRegion *retval;
 
-	poppler_page = POPPLER_PAGE (rc->page->backend_page);
+	poppler_page = POPPLER_PAGE (page->backend_page);
 
 	points.x1 = 0.0;
 	points.y1 = 0.0;
