@@ -697,9 +697,9 @@ djvu_document_find_iface_init (EvDocumentFindIface *iface)
 
 static GList *
 djvu_document_links_get_links (EvDocumentLinks *document_links,
-			       gint             page)
+			       EvPage          *page)
 {
-	return djvu_links_get_links (document_links, page, SCALE_FACTOR);
+	return djvu_links_get_links (document_links, page->index, SCALE_FACTOR);
 }
 
 static void

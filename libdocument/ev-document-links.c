@@ -56,7 +56,7 @@ ev_document_links_get_links_model (EvDocumentLinks *document_links)
 
 GList *
 ev_document_links_get_links (EvDocumentLinks *document_links,
-			     gint             page)
+			     EvPage          *page)
 {
 	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 	GList *retval;

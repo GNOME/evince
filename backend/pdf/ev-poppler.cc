@@ -1260,7 +1260,7 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 
 static GList *
 pdf_document_links_get_links (EvDocumentLinks *document_links,
-			      gint             page)
+			      EvPage          *page)
 {
 	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
@@ -1270,8 +1270,7 @@ pdf_document_links_get_links (EvDocumentLinks *document_links,
 	double height;
 
 	pdf_document = PDF_DOCUMENT (document_links);
-	poppler_page = poppler_document_get_page (pdf_document->document,
-						  page);
+	poppler_page = POPPLER_PAGE (page->backend_page);
 	mapping_list = poppler_page_get_link_mapping (poppler_page);
 	poppler_page_get_size (poppler_page, NULL, &height);
 
@@ -1293,7 +1292,6 @@ pdf_document_links_get_links (EvDocumentLinks *document_links,
 	}
 
 	poppler_page_free_link_mapping (mapping_list);
-	g_object_unref (poppler_page);
 
 	return g_list_reverse (retval);
 }

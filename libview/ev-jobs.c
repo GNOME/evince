@@ -598,7 +598,7 @@ ev_job_page_data_run (EvJob *job)
 			ev_selection_get_selection_map (EV_SELECTION (job->document), ev_page);
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_LINKS) && EV_IS_DOCUMENT_LINKS (job->document))
 		job_pd->link_mapping =
-			ev_document_links_get_links (EV_DOCUMENT_LINKS (job->document), job_pd->page);
+			ev_document_links_get_links (EV_DOCUMENT_LINKS (job->document), ev_page);
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_FORMS) && EV_IS_DOCUMENT_FORMS (job->document))
 		job_pd->form_field_mapping =
 			ev_document_forms_get_form_fields (EV_DOCUMENT_FORMS (job->document),
