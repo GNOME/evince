@@ -448,12 +448,8 @@ ev_job_render_dispose (GObject *object)
 
 	job = EV_JOB_RENDER (object);
 
-	if (job->ev_page) {
-		ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job->ev_page->index, job);
-		g_object_unref (job->ev_page);
-		job->ev_page = NULL;
-	}
-	
+	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job->page, job);
+
 	if (job->surface) {
 		cairo_surface_destroy (job->surface);
 		job->surface = NULL;
@@ -476,6 +472,7 @@ static gboolean
 ev_job_render_run (EvJob *job)
 {
 	EvJobRender     *job_render = EV_JOB_RENDER (job);
+	EvPage          *ev_page;
 	EvRenderContext *rc;
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_render->page, job);
@@ -487,9 +484,10 @@ ev_job_render_run (EvJob *job)
 		
 	ev_document_fc_mutex_lock ();
 
-	job_render->ev_page = ev_document_get_page (job->document, job_render->page);
-	rc = ev_render_context_new (job_render->ev_page, job_render->rotation, job_render->scale);
-		
+	ev_page = ev_document_get_page (job->document, job_render->page);
+	rc = ev_render_context_new (ev_page, job_render->rotation, job_render->scale);
+	g_object_unref (ev_page);
+
 	job_render->surface = ev_document_render (job->document, rc);
 	/* If job was cancelled during the page rendering,
 	 * we return now, so that the thread is finished ASAP

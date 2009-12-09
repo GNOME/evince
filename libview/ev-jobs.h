@@ -205,7 +205,6 @@ struct _EvJobRender
 	gint rotation;
 	gdouble scale;
 
-	EvPage *ev_page;
 	gboolean page_ready;
 	gint target_width;
 	gint target_height;
