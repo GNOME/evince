@@ -10,7 +10,6 @@
 typedef struct _CacheJobInfo
 {
 	EvJob *job;
-	EvRenderContext *rc;
 	gboolean page_ready;
 
 	/* Region of the page that needs to be drawn */
@@ -170,10 +169,6 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		gdk_region_destroy (job_info->selection_region);
 		job_info->selection_region = NULL;
 	}
-	if (job_info->rc) {
-		g_object_unref (G_OBJECT (job_info->rc));
-		job_info->rc = NULL;
-	}
 
 	job_info->points_set = FALSE;
 }
@@ -218,16 +213,6 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		      CacheJobInfo  *job_info,
 		      EvPixbufCache *pixbuf_cache)
 {
-	if (job_info->rc == NULL) {
-		job_info->rc = ev_render_context_new (job_render->ev_page,
-						      job_render->rotation,
-						      job_render->scale);
-	} else {
-		ev_render_context_set_page (job_info->rc, job_render->ev_page);
-		ev_render_context_set_rotation (job_info->rc, job_render->rotation);
-		ev_render_context_set_scale (job_info->rc, job_render->scale);
-	}
-
 	if (job_info->surface) {
 		cairo_surface_destroy (job_info->surface);
 	}
@@ -697,12 +682,12 @@ new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
 			      gint           page,
 			      gfloat         scale)
 {
-	if (job_info->selection && job_info->rc) {
+	if (job_info->selection) {
 		gint width, height;
 		gint selection_width, selection_height;
 
 		_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
-						       page, scale, job_info->rc->rotation,
+						       page, scale, 0,
 						       &width, &height);
 
 		selection_width = cairo_image_surface_get_width (job_info->selection);
@@ -803,17 +788,6 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 	if (!job_info->points_set)
 		return NULL;
 
-	/* Create new render context if needed (selection + fast scrolling) */
-	if (job_info->rc == NULL) {
-		EvPage  *ev_page;
-		ev_page = ev_document_get_page (pixbuf_cache->document, page);
-		job_info->rc = ev_render_context_new (ev_page, 0, scale);
-		g_object_unref (ev_page);
-	}
-
-	/* Update the rc */
-	ev_render_context_set_scale (job_info->rc, scale);
-
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
@@ -832,6 +806,8 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 	if (ev_rect_cmp (&(job_info->target_points), &(job_info->selection_points))) {
 		EvRectangle *old_points;
 		GdkColor *text, *base;
+		EvRenderContext *rc;
+		EvPage *ev_page;
 
 		/* we need to get a new selection pixbuf */
 		ev_document_doc_mutex_lock ();
@@ -843,12 +819,15 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 			old_points = &(job_info->selection_points);
 		}
 
+		ev_page = ev_document_get_page (pixbuf_cache->document, page);
+		rc = ev_render_context_new (ev_page, 0, scale);
+		g_object_unref (ev_page);
+
 		if (job_info->selection_region)
 			gdk_region_destroy (job_info->selection_region);
 		job_info->selection_region =
 			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
-							   job_info->rc,
-							   job_info->selection_style,
+							   rc, job_info->selection_style,
 							   &(job_info->target_points));
 
 		gtk_widget_ensure_style (pixbuf_cache->view);
@@ -856,12 +835,13 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 		get_selection_colors (pixbuf_cache->view, &text, &base);
 
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
-					       job_info->rc, &(job_info->selection),
+					       rc, &(job_info->selection),
 					       &(job_info->target_points),
 					       old_points,
 					       job_info->selection_style,
 					       text, base);
 		job_info->selection_points = job_info->target_points;
+		g_object_unref (rc);
 		ev_document_doc_mutex_unlock ();
 	}
 	if (region)
