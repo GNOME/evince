@@ -48,14 +48,14 @@ struct _EvDocumentImagesIface {
 
         /* Methods  */
         GList     *(* get_image_mapping) (EvDocumentImages *document_images,
-					  gint              page);
+					  EvPage           *page);
 	GdkPixbuf *(* get_image)         (EvDocumentImages *document_images,
 					  EvImage          *image);
 };
 
 GType      ev_document_images_get_type            (void) G_GNUC_CONST;
 GList     *ev_document_images_get_image_mapping   (EvDocumentImages *document_images,
-						   gint              page);
+						   EvPage           *page);
 GdkPixbuf *ev_document_images_get_image           (EvDocumentImages *document_images,
 						   EvImage          *image);
 

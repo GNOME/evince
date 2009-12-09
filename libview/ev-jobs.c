@@ -606,7 +606,7 @@ ev_job_page_data_run (EvJob *job)
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_IMAGES) && EV_IS_DOCUMENT_IMAGES (job->document))
 		job_pd->image_mapping =
 			ev_document_images_get_image_mapping (EV_DOCUMENT_IMAGES (job->document),
-							      job_pd->page);
+							      ev_page);
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_ANNOTS) && EV_IS_DOCUMENT_ANNOTATIONS (job->document))
 		job_pd->annot_mapping =
 			ev_document_annotations_get_annotations (EV_DOCUMENT_ANNOTATIONS (job->document),

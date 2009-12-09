@@ -30,7 +30,7 @@ ev_document_images_class_init (EvDocumentImagesIface *klass)
 
 GList *
 ev_document_images_get_image_mapping (EvDocumentImages *document_images,
-				      gint              page)
+				      EvPage           *page)
 {
 	EvDocumentImagesIface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
 

@@ -1326,7 +1326,7 @@ pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
 
 static GList *
 pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
-				       gint              page)
+				       EvPage           *page)
 {
 	GList *retval = NULL;
 	PdfDocument *pdf_document;
@@ -1335,7 +1335,7 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 	GList *list;
 
 	pdf_document = PDF_DOCUMENT (document_images);
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
+	poppler_page = POPPLER_PAGE (page->backend_page);
 	mapping_list = poppler_page_get_image_mapping (poppler_page);
 
 	for (list = mapping_list; list; list = list->next) {
@@ -1346,7 +1346,7 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 
 		ev_image_mapping = g_new (EvMapping, 1);
 		
-		ev_image_mapping->data = ev_image_new (page, image_mapping->image_id);
+		ev_image_mapping->data = ev_image_new (page->index, image_mapping->image_id);
 		ev_image_mapping->area.x1 = image_mapping->area.x1;
 		ev_image_mapping->area.y1 = image_mapping->area.y1;
 		ev_image_mapping->area.x2 = image_mapping->area.x2;
@@ -1356,7 +1356,6 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 	}
 
 	poppler_page_free_image_mapping (mapping_list);
-	g_object_unref (poppler_page);
 
 	return g_list_reverse (retval);
 }
