@@ -5,6 +5,8 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
+	object-rotate-left.png		\
+	object-rotate-right.png		\
 	view-page-continuous.png	\
 	view-page-facing.png
 

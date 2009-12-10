@@ -150,8 +150,21 @@ case "$with_platform" in
   hildon) AC_DEFINE([PLATFORM_HILDON],[1],[Define if building for the hildon platform])
           SHELL_PLATFORM_PKGS="hildon-1 hildon-fm-2 libosso"
           ;;
-  *) SHELL_PLATFORM_PKGS="gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED"
-     ;;
+  gnome)
+        # Evince has a rather soft run-time dependency on hicolor-icon-theme.
+        # If the hicolor theme is not available, Evince fails to display some
+        # icons. Because we cannot check for it at run-time, we instead
+        # would like to require the icon theme at compile-time. But, because
+        # the hicolor-icon-theme does not have a pkgconfig file, on gnome we
+        # require the gnome icon theme instead.
+        SHELL_PLATFORM_PKGS="gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED"
+        ;;
+  *)
+        # On all other platforms we issue a warning about the runtime
+        # dependency.
+        AC_MSG_WARN([Evince has a soft run-time dependency on hicolor-icon-theme. You are advised to have this theme installed when running Evince.]);
+        SHELL_PLATFORM_PKGS=""
+        ;;
 esac
 
 PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
@@ -757,19 +770,25 @@ data/icons/Makefile
 data/icons/16x16/Makefile
 data/icons/16x16/apps/Makefile
 data/icons/16x16/actions/Makefile
+data/icons/16x16/mimetypes/Makefile
 data/icons/22x22/Makefile
 data/icons/22x22/apps/Makefile
 data/icons/22x22/actions/Makefile
+data/icons/22x22/mimetypes/Makefile
 data/icons/24x24/Makefile
 data/icons/24x24/apps/Makefile
 data/icons/24x24/actions/Makefile
+data/icons/24x24/mimetypes/Makefile
 data/icons/32x32/Makefile
 data/icons/32x32/actions/Makefile
+data/icons/32x32/mimetypes/Makefile
 data/icons/48x48/Makefile
 data/icons/48x48/apps/Makefile
 data/icons/48x48/actions/Makefile
 data/icons/scalable/Makefile
 data/icons/scalable/apps/Makefile
+data/icons/scalable/actions/Makefile
+data/icons/scalable/mimetypes/Makefile
 help/Makefile
 help/reference/Makefile
 help/reference/libdocument/Makefile

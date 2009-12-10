@@ -9,7 +9,9 @@ icons_DATA = \
 	view-page-facing.png		\
 	zoom.png                \
 	zoom-fit-page.png		\
-	zoom-fit-width.png
+	zoom-fit-width.png		\
+	object-rotate-left.png		\
+	object-rotate-right.png
 
 noinst_DATA = \
 	view-page-continuous.xcf	\

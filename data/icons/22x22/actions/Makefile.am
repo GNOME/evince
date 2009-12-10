@@ -6,6 +6,8 @@ iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
 	eye.png				\
+	object-rotate-left.png		\
+	object-rotate-right.png		\
 	view-page-continuous.png	\
 	view-page-facing.png		\
 	zoom.png                \
