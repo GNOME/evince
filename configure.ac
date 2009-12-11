@@ -700,7 +700,7 @@ if test "x$enable_tiff" = "xyes"; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/tiff;"
 fi
 if test "x$enable_comics" = "xyes"; then
-	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-cbr;application/x-cbz;application/x-cb7;"
+	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-cbr;application/x-cbz;application/x-cb7;application/x-cbt;"
 fi
 if test "x$enable_pixbuf" = "xyes"; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/*;"

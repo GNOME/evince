@@ -40,7 +40,8 @@ typedef enum
 	RARLABS,
 	GNAUNRAR,
 	UNZIP,
-	P7ZIP
+	P7ZIP,
+	TAR
 } ComicBookDecompressType;
 
 typedef struct _ComicsDocumentClass ComicsDocumentClass;
@@ -91,16 +92,19 @@ typedef struct {
 
 static const ComicBookDecompressCommand command_usage_def[] = {
         /* RARLABS unrar */
-	{"%s p -c- -ierr", "%s vb -c- -- %s", NULL	       , FALSE, NO_OFFSET},
+	{"%s p -c- -ierr --", "%s vb -c- -- %s", NULL             , FALSE, NO_OFFSET},
 
         /* GNA! unrar */
-	{NULL		 , "%s t %s"	    , "%s -xf %s %s"   , TRUE , NO_OFFSET},
+	{NULL               , "%s t %s"        , "%s -xf %s %s"   , TRUE , NO_OFFSET},
 
         /* unzip */
-	{"%s -p -C"	 , "%s -Z -1 -- %s" , NULL	       , TRUE , NO_OFFSET},
+	{"%s -p -C --"      , "%s -Z -1 -- %s" , NULL             , TRUE , NO_OFFSET},
 
         /* 7zip */
-	{NULL		 , "%s l -- %s"	    , "%s x -y %s -o%s", FALSE, OFFSET_7Z}
+	{NULL               , "%s l -- %s"     , "%s x -y %s -o%s", FALSE, OFFSET_7Z},
+
+        /* tar */
+	{"%s -xOf"          , "%s -tf %s"      , NULL             , FALSE, NO_OFFSET}
 };
 
 static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
@@ -350,6 +354,15 @@ comics_check_decompress_command	(gchar          *mime_type,
 				comics_document->command_usage = P7ZIP;
 				return TRUE;
 			}
+	} else if (!strcmp (mime_type, "application/x-cbt") ||
+		   !strcmp (mime_type, "application/x-tar")) {
+		/* tar utility (Tape ARchive) */
+		comics_document->selected_command =
+				g_find_program_in_path ("tar");
+		if (comics_document->selected_command) {
+			comics_document->command_usage = TAR;
+			return TRUE;
+		}
 	} else {
 		g_set_error (error,
 			     EV_DOCUMENT_ERROR,
@@ -850,11 +863,10 @@ extract_argv (EvDocument *document, gint page)
 		quoted_filename = g_shell_quote (comics_document->page_names->pdata[page]);
 	}
 
-	command_line = g_strdup_printf ("%s -- %s %s",
+	command_line = g_strdup_printf ("%s %s %s",
 					comics_document->extract_command,
 					quoted_archive,
 					quoted_filename);
-
 	g_shell_parse_argv (command_line, NULL, &argv, &err);
 
 	if (err) {
