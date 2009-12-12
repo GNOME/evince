@@ -248,7 +248,6 @@ ev_document_load (EvDocument  *document,
 		 */
 		priv->uri = g_strdup (uri);
 		priv->n_pages = _ev_document_get_n_pages (document);
-		priv->info = _ev_document_get_info (document);
 
 		for (i = 0; i < priv->n_pages; i++) {
 			EvPage     *page = ev_document_get_page (document, i);
@@ -312,6 +311,8 @@ ev_document_load (EvDocument  *document,
 
 			g_object_unref (page);
 		}
+
+		priv->info = _ev_document_get_info (document);
 	}
 
 	return retval;
