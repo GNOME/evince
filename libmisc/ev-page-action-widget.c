@@ -132,6 +132,10 @@ activate_cb (EvPageActionWidget *action_widget)
 	EvLinkAction *link_action;
 	EvLink *link;
 	gchar *link_text;
+	gint current_page;
+
+	model = action_widget->doc_model;
+	current_page = ev_document_model_get_page (model);
 
 	text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
 
@@ -145,14 +149,8 @@ activate_cb (EvPageActionWidget *action_widget)
 	g_object_unref (link);
 	g_free (link_text);
 
-	/* rest the entry to the current page if we were unable to
-	 * change it */
-	model = action_widget->doc_model;
-	page_label = ev_document_get_page_label (action_widget->document,
-						 ev_document_model_get_page (model));
-	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
-	gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
-	g_free (page_label);
+	if (current_page == ev_document_model_get_page (model))
+		ev_page_action_widget_set_current_page (action_widget, current_page);
 }
 
 static void
