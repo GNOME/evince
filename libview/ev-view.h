@@ -64,22 +64,9 @@ gboolean        ev_view_get_has_selection (EvView         *view);
 /* These are all orthoganal to each other, except 'presentation' trumps all
  * other behaviors
  */
-gboolean	ev_view_get_continuous	  (EvView         *view);
-void     	ev_view_set_continuous    (EvView         *view,
-					   gboolean        continuous);
-gboolean	ev_view_get_dual_page	  (EvView         *view);
-void     	ev_view_set_dual_page	  (EvView         *view,
-					   gboolean        dual_page);
-void     	ev_view_set_fullscreen	  (EvView         *view,
-					   gboolean        fullscreen);
-gboolean 	ev_view_get_fullscreen	  (EvView         *view);
 void     	ev_view_set_presentation  (EvView         *view,
 					   gboolean        presentation);
 gboolean 	ev_view_get_presentation  (EvView         *view);
-void     	ev_view_set_sizing_mode	  (EvView         *view,
-					   EvSizingMode    mode);
-EvSizingMode	ev_view_get_sizing_mode	  (EvView         *view);
-
 
 /* Page size */
 gboolean	ev_view_can_zoom_in       (EvView         *view);
@@ -88,13 +75,6 @@ gboolean        ev_view_can_zoom_out      (EvView         *view);
 void		ev_view_zoom_out	  (EvView         *view);
 void		ev_view_set_zoom	  (EvView         *view,
 					   double          factor);
-double		ev_view_get_zoom	  (EvView         *view);
-void		ev_view_rotate_left       (EvView         *view);
-void            ev_view_rotate_right      (EvView         *view);
-void            ev_view_set_rotation      (EvView         *view,
-					   int             rotation);
-int             ev_view_get_rotation      (EvView         *view);
-
 /* Find */
 void            ev_view_find_next                 (EvView         *view);
 void            ev_view_find_previous             (EvView         *view);

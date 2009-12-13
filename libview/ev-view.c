@@ -51,14 +51,8 @@
 
 enum {
 	PROP_0,
-	PROP_CONTINUOUS,
-	PROP_DUAL_PAGE,
-	PROP_FULLSCREEN,
 	PROP_PRESENTATION,
-	PROP_SIZING_MODE,
-	PROP_ZOOM,
-	PROP_ROTATION,
-	PROP_HAS_SELECTION,
+	PROP_HAS_SELECTION
 };
 
 enum {
@@ -4629,26 +4623,8 @@ ev_view_set_property (GObject      *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
-	        case PROP_CONTINUOUS:
-			ev_view_set_continuous (view, g_value_get_boolean (value));
-			break;
-	        case PROP_DUAL_PAGE:
-			ev_view_set_dual_page (view, g_value_get_boolean (value));
-			break;
-	        case PROP_FULLSCREEN:
-			ev_view_set_fullscreen (view, g_value_get_boolean (value));
-			break;
 	        case PROP_PRESENTATION:
 			ev_view_set_presentation (view, g_value_get_boolean (value));
-			break;
-	        case PROP_SIZING_MODE:
-			ev_view_set_sizing_mode (view, g_value_get_enum (value));
-			break;
-	        case PROP_ZOOM:
-			ev_view_set_zoom (view, g_value_get_double (value));
-			break;
-	        case PROP_ROTATION:
-			ev_view_set_rotation (view, g_value_get_int (value));
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -4695,26 +4671,8 @@ ev_view_get_property (GObject *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
-	        case PROP_CONTINUOUS:
-			g_value_set_boolean (value, view->continuous);
-			break;
-	        case PROP_DUAL_PAGE:
-			g_value_set_boolean (value, view->dual_page);
-			break;
-	        case PROP_FULLSCREEN:
-			g_value_set_boolean (value, view->fullscreen);
-			break;
 	        case PROP_PRESENTATION:
 			g_value_set_boolean (value, view->presentation);
-			break;
-	        case PROP_SIZING_MODE:
-			g_value_set_enum (value, view->sizing_mode);
-			break;
-	        case PROP_ZOOM:
-			g_value_set_double (value, view->scale);
-			break;
-	        case PROP_ROTATION:
-			g_value_set_int (value, view->rotation);
 			break;
 	        case PROP_HAS_SELECTION:
 			g_value_set_boolean (value,
@@ -4800,63 +4758,12 @@ ev_view_class_init (EvViewClass *class)
 
 
 	g_object_class_install_property (object_class,
-					 PROP_CONTINUOUS,
-					 g_param_spec_boolean ("continuous",
-							       "Continuous",
-							       "Continuous scrolling mode",
-							       TRUE,
-							       G_PARAM_READWRITE));
-
-	g_object_class_install_property (object_class,
-					 PROP_DUAL_PAGE,
-					 g_param_spec_boolean ("dual-page",
-							       "Dual Page",
-							       "Two pages visible at once",
-							       FALSE,
-							       G_PARAM_READWRITE));
-	g_object_class_install_property (object_class,
-					 PROP_FULLSCREEN,
-					 g_param_spec_boolean ("fullscreen",
-							       "Full Screen",
-							       "Draw page in a fullscreen fashion",
-							       FALSE,
-							       G_PARAM_READWRITE));
-	g_object_class_install_property (object_class,
 					 PROP_PRESENTATION,
 					 g_param_spec_boolean ("presentation",
 							       "Presentation",
 							       "Draw page in presentation mode",
 							       TRUE,
 							       G_PARAM_READWRITE));
-
-	g_object_class_install_property (object_class,
-					 PROP_SIZING_MODE,
-					 g_param_spec_enum ("sizing-mode",
-							    "Sizing Mode",
-							    "Sizing Mode",
-							    EV_TYPE_SIZING_MODE,
-							    EV_SIZING_FIT_WIDTH,
-							    G_PARAM_READWRITE));
-
-	g_object_class_install_property (object_class,
-					 PROP_ZOOM,
-					 g_param_spec_double ("zoom",
-							      "Zoom factor",
-							      "Zoom factor",
-							      0,
-							      G_MAXDOUBLE,
-							      1.0,
-							      G_PARAM_READWRITE));
-	g_object_class_install_property (object_class,
-					 PROP_ROTATION,
-					 g_param_spec_double ("rotation",
-							      "Rotation",
-							      "Rotation",
-							      0,
-							      360,
-							      0,
-							      G_PARAM_READWRITE));
-
 	g_object_class_install_property (object_class,
 					 PROP_HAS_SELECTION,
 					 g_param_spec_boolean ("has-selection",
@@ -5261,7 +5168,7 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 {
 	gint rotation = ev_document_model_get_rotation (model);
 
-	ev_view_set_rotation (view, rotation);
+	view->rotation = rotation;
 
 	if (view->pixbuf_cache) {
 		ev_pixbuf_cache_clear (view->pixbuf_cache);
@@ -5297,8 +5204,7 @@ ev_view_sizing_mode_changed_cb (EvDocumentModel *model,
 {
 	EvSizingMode mode = ev_document_model_get_sizing_mode (model);
 
-	ev_view_set_sizing_mode (view, mode);
-
+	view->sizing_mode = mode;
 	if (mode != EV_SIZING_FREE)
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 }
@@ -5319,7 +5225,7 @@ ev_view_scale_changed_cb (EvDocumentModel *model,
 		view->loading_text = NULL;
 	}
 
-	ev_view_set_zoom (view, scale);
+	view->scale = scale;
 
 	view->pending_resize = TRUE;
 	if (view->sizing_mode == EV_SIZING_FREE)
@@ -5333,7 +5239,7 @@ ev_view_continuous_changed_cb (EvDocumentModel *model,
 {
 	gboolean continuous = ev_document_model_get_continuous (model);
 
-	ev_view_set_continuous (view, continuous);
+	view->continuous = continuous;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
@@ -5345,7 +5251,7 @@ ev_view_dual_page_changed_cb (EvDocumentModel *model,
 {
 	gboolean dual_page = ev_document_model_get_dual_page (model);
 
-	ev_view_set_dual_page (view, dual_page);
+	view->dual_page = dual_page;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
 	 * preload_cache_size to be 2 if dual_page is set.
@@ -5360,7 +5266,7 @@ ev_view_fullscreen_changed_cb (EvDocumentModel *model,
 {
 	gboolean fullscreen = ev_document_model_get_fullscreen (model);
 
-	ev_view_set_fullscreen (view, fullscreen);
+	view->fullscreen = fullscreen;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
@@ -5430,80 +5336,6 @@ ev_view_reload (EvView *view)
 {
 	ev_pixbuf_cache_clear (view->pixbuf_cache);
 	view_update_range_and_current_page (view);
-}
-
-/*** Zoom and sizing mode ***/
-
-void
-ev_view_set_zoom (EvView   *view,
-		  double    scale)
-{
-	view->scale = scale;
-
-	g_object_notify (G_OBJECT (view), "zoom");
-}
-
-double
-ev_view_get_zoom (EvView *view)
-{
-	return view->scale;
-}
-
-gboolean
-ev_view_get_continuous (EvView *view)
-{
-	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-
-	return view->continuous;
-}
-
-void
-ev_view_set_continuous (EvView   *view,
-			gboolean  continuous)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	view->continuous = continuous;
-
-	g_object_notify (G_OBJECT (view), "continuous");
-}
-
-gboolean
-ev_view_get_dual_page (EvView *view)
-{
-	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-
-	return view->dual_page;
-}
-
-void
-ev_view_set_dual_page (EvView   *view,
-		       gboolean  dual_page)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	view->dual_page = dual_page;
-
-	g_object_notify (G_OBJECT (view), "dual-page");
-}
-
-void
-ev_view_set_fullscreen (EvView   *view,
-			 gboolean  fullscreen)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	view->fullscreen = fullscreen;
-
-	g_object_notify (G_OBJECT (view), "fullscreen");
-}
-
-gboolean
-ev_view_get_fullscreen (EvView *view)
-{
-	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-
-	return view->fullscreen;
 }
 
 void
@@ -5601,22 +5433,7 @@ ev_view_presentation_transition_start (EvView *view)
 	}
 }
 
-void
-ev_view_set_sizing_mode (EvView       *view,
-			 EvSizingMode  sizing_mode)
-{
-	view->sizing_mode = sizing_mode;
-
-	g_object_notify (G_OBJECT (view), "sizing-mode");
-}
-
-EvSizingMode
-ev_view_get_sizing_mode (EvView *view)
-{
-	g_return_val_if_fail (EV_IS_VIEW (view), EV_SIZING_FREE);
-
-	return view->sizing_mode;
-}
+/*** Zoom and sizing mode ***/
 
 gboolean
 ev_view_can_zoom_in (EvView *view)
@@ -5658,20 +5475,6 @@ ev_view_zoom_out (EvView *view)
 	view->pending_scroll = SCROLL_TO_CENTER;
 	scale = ev_document_model_get_scale (view->model) * ZOOM_OUT_FACTOR;
 	ev_document_model_set_scale (view->model, scale);
-}
-
-void
-ev_view_set_rotation (EvView *view, int rotation)
-{
-	view->rotation = rotation;
-
-	g_object_notify (G_OBJECT (view), "rotation");
-}
-
-int
-ev_view_get_rotation (EvView *view)
-{
-	return view->rotation;
 }
 
 static double
@@ -6699,7 +6502,7 @@ ev_view_previous_page (EvView *view)
 	if (page >= 0) {
 		ev_document_model_set_page (view->model, page);
 		return TRUE;
-	} else if (ev_view_get_dual_page (view) && page == -1) {
+	} else if (view->dual_page && page == -1) {
 		ev_document_model_set_page (view->model, 0);
 		return TRUE;
 	} else {	
