@@ -432,8 +432,6 @@ ev_previewer_window_constructor (GType                  type,
 	gchar             *datadir, *ui_path;
 	gdouble            dpi;
 
-	g_print ("DBG: constructor\n");
-
 	object = G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructor (type,
 										 n_construct_properties,
 										 construct_params);
