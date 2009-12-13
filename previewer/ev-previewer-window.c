@@ -498,7 +498,7 @@ ev_previewer_window_constructor (GType                  type,
 
 	window->view = EV_VIEW (ev_view_new ());
 	ev_view_set_model (window->view, window->model);
-	ev_view_set_continuous (window->view, FALSE);
+	ev_document_model_set_continuous (window->model, FALSE);
 	ev_view_set_loading (window->view, TRUE);
 
 	gtk_container_add (GTK_CONTAINER (window->swindow), GTK_WIDGET (window->view));
