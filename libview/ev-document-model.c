@@ -33,12 +33,12 @@ struct _EvDocumentModel
 
 	gint page;
 	gint rotation;
-	gboolean inverted_colors;
 	gdouble scale;
 	EvSizingMode sizing_mode;
 	guint continuous : 1;
 	guint dual_page  : 1;
 	guint fullscreen : 1;
+	guint inverted_colors : 1;
 
 	gdouble max_scale;
 	gdouble min_scale;
