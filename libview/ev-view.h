@@ -73,8 +73,7 @@ gboolean	ev_view_can_zoom_in       (EvView         *view);
 void		ev_view_zoom_in		  (EvView         *view);
 gboolean        ev_view_can_zoom_out      (EvView         *view);
 void		ev_view_zoom_out	  (EvView         *view);
-void		ev_view_set_zoom	  (EvView         *view,
-					   double          factor);
+
 /* Find */
 void            ev_view_find_next                 (EvView         *view);
 void            ev_view_find_previous             (EvView         *view);
