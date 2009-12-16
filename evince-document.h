@@ -24,6 +24,7 @@
 #include <libdocument/ev-async-renderer.h>
 #include <libdocument/ev-attachment.h>
 #include <libdocument/ev-backends-manager.h>
+#include <libdocument/ev-document-attachments.h>
 #include <libdocument/ev-document-factory.h>
 #include <libdocument/ev-document-find.h>
 #include <libdocument/ev-document-fonts.h>
