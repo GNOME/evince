@@ -14,6 +14,7 @@ INST_H_FILES = 				\
 	ev-document-model.h		\
 	ev-jobs.h			\
 	ev-job-scheduler.h		\
+	ev-print-operation.h	\
 	ev-stock-icons.h		\
 	ev-view.h			\
 	ev-view-type-builtins.h
@@ -28,6 +29,7 @@ libevview_la_SOURCES = 			\
 	ev-job-scheduler.c		\
 	ev-page-cache.c			\
 	ev-pixbuf-cache.c		\
+	ev-print-operation.c	\
 	ev-stock-icons.c		\
 	ev-timeline.c			\
 	ev-transition-animation.c	\

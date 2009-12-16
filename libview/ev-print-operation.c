@@ -28,12 +28,8 @@
 #include <glib/gstdio.h>
 #include <unistd.h>
 
-#include "ev-file-exporter.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
-#include "ev-application.h"
-#include "ev-file-helpers.h"
-#include "ev-document-print.h"
 
 enum {
 	PROP_0,

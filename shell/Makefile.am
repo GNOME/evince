@@ -62,8 +62,6 @@ evince_SOURCES=				\
 	ev-navigation-action-widget.h	\
 	ev-password-view.h		\
 	ev-password-view.c		\
-	ev-print-operation.h		\
-	ev-print-operation.c		\
 	ev-progress-message-area.h	\
 	ev-progress-message-area.c	\
 	ev-properties-dialog.c		\

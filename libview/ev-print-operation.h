@@ -17,13 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-view.h> can be included directly."
+#endif
+
 #ifndef __EV_PRINT_OPERATION_H__
 #define __EV_PRINT_OPERATION_H__
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
-#include "ev-document.h"
+#include <evince-document.h>
 
 G_BEGIN_DECLS
 
