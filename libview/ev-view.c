@@ -4554,14 +4554,14 @@ ev_view_destroy (GtkObject *object)
 		view->model = NULL;
 	}
 
-	if (view->document) {
-		g_object_unref (view->document);
-		view->document = NULL;
-	}
-
 	if (view->pixbuf_cache) {
 		g_object_unref (view->pixbuf_cache);
 		view->pixbuf_cache = NULL;
+	}
+
+	if (view->document) {
+		g_object_unref (view->document);
+		view->document = NULL;
 	}
 
 	if (view->page_cache) {
