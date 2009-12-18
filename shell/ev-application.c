@@ -408,7 +408,17 @@ ev_spawn (const char     *uri,
 	gboolean res;
 	GError  *error = NULL;
 
+#ifdef G_OS_WIN32
+{
+	gchar *dir;
+
+	dir = g_win32_get_package_installation_directory_of_module (NULL);
+	argv[arg++] = g_build_filename (dir, "bin", "evince", NULL);
+	g_free (dir);
+}
+#else
 	argv[arg++] = g_build_filename (BINDIR, "evince", NULL);
+#endif
 
 	/* Page label */
 	if (dest) {
