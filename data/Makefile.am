@@ -119,6 +119,7 @@ EXTRA_DIST =					\
 	$(schema_in_files)			\
 	org.gnome.evince.Daemon.service.in	\
 	$(man_MANS)				\
+	evince.ico				\
 	$(NULL)
 
 #

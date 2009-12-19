@@ -111,6 +111,13 @@ evince_LDADD=										\
 	$(top_builddir)/libmisc/libevmisc.la						\
 	$(SHELL_LIBS)
 
+if PLATFORM_WIN32
+evince_LDADD += evince-icon.o
+
+evince-icon.o: $(srcdir)/evince-icon.rc $(top_srcdir)/data/evince.ico
+	$(WINDRES) $(srcdir)/evince-icon.rc -I $(top_srcdir)/data evince-icon.o
+endif
+
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 
 if ENABLE_DBUS
@@ -147,6 +154,7 @@ endif
 EXTRA_DIST = ev-marshal.list		\
 	ev-application-service.xml	\
 	ev-daemon-service.xml		\
+	evince-icon.rc			\
 	$(EV_MEDIA_PLAYER_KEYS_SOURCES)
 
 
