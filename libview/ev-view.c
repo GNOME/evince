@@ -637,7 +637,11 @@ view_update_range_and_current_page (EvView *view)
 {
 	gint start = view->start_page;
 	gint end = view->end_page;
-	
+
+	if (ev_document_get_n_pages (view->document) <= 0 ||
+	    !ev_document_check_dimensions (view->document))
+		return;
+
 	/* Presentation trumps all other modes */
 	if (view->presentation) {
 		view->start_page = view->current_page;
