@@ -5594,18 +5594,35 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 
 	if (!g_strstr_len (uri, strlen (uri), "://") &&
 	    !g_str_has_prefix (uri, "mailto:")) {
-		gchar *http;
-		
-		/* Not a valid uri, assuming it's http */
-		http = g_strdup_printf ("http://%s", uri);
-		ret = g_app_info_launch_default_for_uri (http, context, &error);
-		g_free (http);
+		gchar *new_uri;
+
+		/* Not a valid uri, assume http if it starts with www */
+		if (g_str_has_prefix (uri, "www.")) {
+			new_uri = g_strdup_printf ("http://%s", uri);
+		} else {
+			GFile *file, *parent;
+
+			file = g_file_new_for_uri (window->priv->uri);
+			parent = g_file_get_parent (file);
+			g_object_unref (file);
+			if (parent) {
+				gchar *parent_uri = g_file_get_uri (parent);
+
+				new_uri = g_build_filename (parent_uri, uri, NULL);
+				g_free (parent_uri);
+				g_object_unref (parent);
+			} else {
+				new_uri = g_strdup_printf ("file:///%s", uri);
+			}
+		}
+		ret = g_app_info_launch_default_for_uri (new_uri, context, &error);
+		g_free (new_uri);
 	} else {
 		ret = g_app_info_launch_default_for_uri (uri, context, &error);
 	}
-	
+
   	if (ret == FALSE) {
-		ev_window_error_message (window, error, 
+		ev_window_error_message (window, error,
 					 "%s", _("Unable to open external link"));
 		g_error_free (error);
 	}
