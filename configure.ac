@@ -779,6 +779,7 @@ cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/totem-screensaver/Makefile
 cut-n-paste/gail-util/Makefile
+cut-n-paste/synctex/Makefile
 data/evince.desktop.in
 data/Makefile
 data/icons/Makefile
