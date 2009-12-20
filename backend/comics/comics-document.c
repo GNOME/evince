@@ -22,7 +22,6 @@
 
 #include <unistd.h>
 #include <string.h>
-#include <sys/wait.h>
 #include <stdlib.h>
 #include <errno.h>
 
@@ -30,6 +29,13 @@
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
 #include <gio/gio.h>
+
+#ifdef G_OS_WIN32
+# define WIFEXITED(x) ((x) != 3)
+# define WEXITSTATUS(x) (x)
+#else
+# include <sys/wait.h>
+#endif
 
 #include "comics-document.h"
 #include "ev-document-misc.h"

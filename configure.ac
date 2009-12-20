@@ -666,16 +666,8 @@ AC_ARG_ENABLE(comics,
 	[enable_comics=yes])
 	
 if test "x$enable_comics" = "xyes"; then
-	if test "x$os_win32" = "xyes"; then
-		# The comics backend is disabled on windows because:
-		# 1) it uses unix functions from sys/wait.h.
-		# 2) it uses external decompression tools not generally available on windows.
-		enable_comics=no
-		AC_MSG_WARN(The comics backend is not supported on windows.)
-	else
-		AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
-	fi
-fi 
+	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
+fi
 AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
 
 dnl ================== End of comic book checks ============================================
