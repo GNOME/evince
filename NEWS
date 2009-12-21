@@ -1,4 +1,47 @@
 ================
+Evince  2.29.4
+================
+
+New Features and UI Improvements:
+
+    * Always show rotate icons (#599398, Carlos Garcia Campos)
+    * EvPrintOperation has been moved to libview so that it can
+      be used by EvView users (#604750, Tomeu Vizoso)
+    * Support for cbt comic files (#588266, Juanjo Marín)
+
+Bug fixes:
+
+    * Do not fail to open external uri links that are relative paths
+      (#604716, Carlos Garcia Campos)
+    * Do not hardcode BINDIR on Windows (#605001, Hib Eris)
+    * Fix a crash in djvu backend on windows (#604919, Hib Eris)
+    * Replace mkdtemp with our own _ev_g_mkdtemp to make it portable
+      (#604917, Hib Eris)
+    * Include a copy of some icons from gnome-icon-theme to be used as
+      fallback on platforms like window where gnome-icon-theme is not
+      available (#596400, Hib Eris)
+    * Fix 0x0 page size always shown in properties view (Carlos Garcia
+      Campos)
+    * Do not hide page selector widget on invalid input (#603714,
+      Carlos Garcia Campos)
+    * Split EvPixbufCache into dynamic and static data. Static page
+      data (links, annots, images, text and forms) that don't
+      depend on current scale/rotation, have been moved to EvPageCache
+      and are never removed. (#602405, Carlos Garcia Campos)
+    * Fix a typo in EV_RENDER_CONTEXT macro definition (#603857,
+      Gustavo Carneiro)
+    * Code cleanups and improvements in libview (#603858, Carlos
+      Garcia Campos)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Yaron Shahrabani (he)
+    * Kjartan Maraas (nb)
+    * Matej Urbančič (sl)
+    * Tao Wei (zh_CN)
+
+================
 Evince  2.29.3
 ================
 
