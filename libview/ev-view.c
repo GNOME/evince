@@ -5294,6 +5294,16 @@ ev_view_set_model (EvView          *view,
 		g_object_unref (view->model);
 	}
 	view->model = g_object_ref (model);
+
+	/* Initialize view from model */
+	view->rotation = ev_document_model_get_rotation (view->model);
+	view->sizing_mode = ev_document_model_get_sizing_mode (view->model);
+	view->scale = ev_document_model_get_scale (view->model);
+	view->continuous = ev_document_model_get_continuous (view->model);
+	view->dual_page = ev_document_model_get_dual_page (view->model);
+	view->fullscreen = ev_document_model_get_fullscreen (view->model);
+	ev_view_document_changed_cb (view->model, NULL, view);
+
 	g_signal_connect (view->model, "notify::document",
 			  G_CALLBACK (ev_view_document_changed_cb),
 			  view);
