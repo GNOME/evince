@@ -504,7 +504,7 @@ comics_document_get_page_size (EvDocument *document,
 	guchar buf[1024];
 	gboolean success, got_size = FALSE;
 	gint outpipe = -1;
-	GPid child_pid = -1;
+	GPid child_pid;
 	gssize bytes;
 	GdkPixbuf *pixbuf;
 	gchar *filename;
@@ -579,7 +579,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 	guchar buf[4096];
 	gboolean success;
 	gint outpipe = -1;
-	GPid child_pid = -1;
+	GPid child_pid;
 	gssize bytes;
 	gint width, height;
 	gchar *filename;
