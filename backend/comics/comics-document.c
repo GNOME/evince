@@ -186,18 +186,19 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 			       GError         **error)
 {
 	gchar *quoted_file;
+	gchar *quoted_command;
 	ComicBookDecompressType type;
 	
 	type = comics_document->command_usage;
 	quoted_file = g_shell_quote (comics_document->archive);
-	
-	comics_document->extract_command = 
-			    g_strdup_printf (command_usage_def[type].extract, 
-				             comics_document->selected_command);
+	quoted_command = g_shell_quote (comics_document->selected_command);
+
+	comics_document->extract_command =
+			    g_strdup_printf (command_usage_def[type].extract,
+				             quoted_command);
 	comics_document->list_command =
-			    g_strdup_printf (command_usage_def[type].list, 
-				             comics_document->selected_command, 
-					     quoted_file);
+			    g_strdup_printf (command_usage_def[type].list,
+				             quoted_command, quoted_file);
 	comics_document->offset = command_usage_def[type].offset;
 	if (command_usage_def[type].decompress_tmp) {
 		comics_document->dir = ev_mkdtemp ("evince-comics-XXXXXX", error);
@@ -208,10 +209,10 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 
 		comics_document->decompress_tmp =
 			g_strdup_printf (command_usage_def[type].decompress_tmp, 
-					 comics_document->selected_command, 
-					 quoted_file, 
+					 quoted_command, quoted_file,
 					 comics_document->dir);
 		g_free (quoted_file);
+		g_free (quoted_command);
 
 		if (!comics_decompress_temp_dir (comics_document->decompress_tmp,
 		    comics_document->selected_command, error))
@@ -220,6 +221,7 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 			return TRUE;
 	} else {
 		g_free (quoted_file);
+		g_free (quoted_command);
 		return TRUE;
 	}
 
