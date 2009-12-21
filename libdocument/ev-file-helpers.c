@@ -438,6 +438,7 @@ get_mime_type_from_uri (const gchar *uri, GError **error)
 static gchar *
 get_mime_type_from_data (const gchar *uri, GError **error)
 {
+#ifndef G_OS_WIN32
 	GFile            *file;
 	GFileInputStream *input_stream;
 	gssize            size_read;
@@ -477,6 +478,13 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	mime_type = g_content_type_get_mime_type (content_type);
 	g_free (content_type);
 	return mime_type;
+#else
+	/*
+	 * On Windows, the implementation of g_content_type_guess() is too limited at the moment, so we do not
+	 * use it and fall back to get_mime_type_from_uri()
+	 */
+	return get_mime_type_from_uri (uri, error);
+#endif /* G_OS_WIN32 */
 }
 
 /**
