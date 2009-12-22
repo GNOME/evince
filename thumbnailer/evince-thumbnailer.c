@@ -53,13 +53,63 @@ struct AsyncData {
 	gboolean     success;
 };
 
+static void
+delete_temp_file (GFile *file)
+{
+	ev_tmp_file_unlink (file);
+	g_object_unref (file);
+}
+
 static EvDocument *
-evince_thumbnailer_get_document (const gchar *uri)
+evince_thumbnailer_get_document (GFile *file)
 {
 	EvDocument *document = NULL;
+	gchar      *uri;
+	GFile      *tmp_file = NULL;
 	GError     *error = NULL;
 
-	document = ev_document_factory_get_document  (uri, &error);
+	if (!g_file_is_native (file)) {
+		gchar *base_name, *template;
+
+		base_name = g_file_get_basename (file);
+		template = g_strdup_printf ("document.XXXXXX-%s", base_name);
+		g_free (base_name);
+
+		tmp_file = ev_mkstemp_file (template, &error);
+		g_free (template);
+		if (!tmp_file) {
+			g_printerr ("Error loading remote document: %s\n", error->message);
+			g_error_free (error);
+
+			return NULL;
+		}
+
+		g_file_copy (file, tmp_file, G_FILE_COPY_OVERWRITE,
+			     NULL, NULL, NULL, &error);
+		if (error) {
+			g_printerr ("Error loading remote document: %s\n", error->message);
+			g_error_free (error);
+			g_object_unref (tmp_file);
+
+			return NULL;
+		}
+		uri = g_file_get_uri (tmp_file);
+	} else {
+		uri = g_file_get_uri (file);
+	}
+
+	document = ev_document_factory_get_document (uri, &error);
+	if (tmp_file) {
+		if (document) {
+			g_object_weak_ref (G_OBJECT (document),
+					   (GWeakNotify)delete_temp_file,
+					   tmp_file);
+		} else {
+			ev_tmp_file_unlink (tmp_file);
+			g_object_unref (tmp_file);
+		}
+	}
+	g_free (uri);
 	if (error) {
 		if (error->domain == EV_DOCUMENT_ERROR &&
 		    error->code == EV_DOCUMENT_ERROR_ENCRYPTED) {
@@ -67,10 +117,11 @@ evince_thumbnailer_get_document (const gchar *uri)
 			g_error_free (error);
 			return NULL;
 		}
+		g_printerr ("Error loading document: %s\n", error->message);
 		g_error_free (error);
 		return NULL;
 	}
-	
+
 	return document;
 }
 
@@ -169,7 +220,6 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	const char     *input;
 	const char     *output;
-	char           *uri;
 	GFile          *file;
 	GError         *error = NULL;
 
@@ -213,11 +263,8 @@ main (int argc, char *argv[])
                 return -1;
 
 	file = g_file_new_for_commandline_arg (input);
-	uri = g_file_get_uri (file);
-	document = evince_thumbnailer_get_document (uri);
-
+	document = evince_thumbnailer_get_document (file);
 	g_object_unref (file);
-	g_free (uri);
 
 	if (!document) {
 		ev_shutdown ();
