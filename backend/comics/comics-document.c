@@ -42,6 +42,16 @@
 #include "ev-document-thumbnails.h"
 #include "ev-file-helpers.h"
 
+#ifdef G_OS_WIN32
+/* On windows g_spawn_command_line_sync reads stdout in O_BINARY mode, not in O_TEXT mode.
+ * As a consequence, newlines are in a platform dependent representation (\r\n). This
+ * might be considered a bug in glib.
+ */
+#define EV_EOL "\r\n"
+#else
+#define EV_EOL "\n"
+#endif
+
 typedef enum
 {
 	RARLABS,
@@ -414,7 +424,8 @@ comics_document_load (EvDocument *document,
 	}
 
 	/* FIXME: is this safe against filenames containing \n in the archive ? */
-	cb_files = g_strsplit (std_out, "\n", 0);
+	cb_files = g_strsplit (std_out, EV_EOL, 0);
+
 	g_free (std_out);
 
 	if (!cb_files) {
