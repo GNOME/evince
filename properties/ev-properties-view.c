@@ -47,7 +47,8 @@ typedef enum {
 	LINEARIZED_PROPERTY,
 	FORMAT_PROPERTY,
 	SECURITY_PROPERTY,
-	PAPER_SIZE_PROPERTY
+	PAPER_SIZE_PROPERTY,
+	N_PROPERTIES
 } Property;
 
 typedef struct {
@@ -76,6 +77,7 @@ struct _EvPropertiesView {
 	GtkVBox base_instance;
 
 	GtkWidget *table;
+	GtkWidget *labels[N_PROPERTIES];
 	gchar     *uri;
 };
 
@@ -170,33 +172,40 @@ make_valid_utf8 (const gchar *name)
 }
 
 static void
-set_property (GtkTable    *table,
-	      Property     property,
-	      const gchar *text,
-	      gint        *row)
+set_property (EvPropertiesView *properties,
+	      GtkTable         *table,
+	      Property          property,
+	      const gchar      *text,
+	      gint             *row)
 {
 	GtkWidget *label;
 	gchar     *markup;
 	gchar     *valid_text;
 
-	label = gtk_label_new (NULL);
-	g_object_set (G_OBJECT (label), "xalign", 0.0, NULL);
-	markup = g_strdup_printf ("<b>%s</b>", _(properties_info[property].label));
-	gtk_label_set_markup (GTK_LABEL (label), markup);
-	g_free (markup);
-	
-	gtk_table_attach (table, label, 0, 1, *row, *row + 1,
-			  GTK_FILL, GTK_FILL, 0, 0);
-	gtk_widget_show (label);
+	if (!properties->labels[property]) {
+		label = gtk_label_new (NULL);
+		g_object_set (G_OBJECT (label), "xalign", 0.0, NULL);
+		markup = g_strdup_printf ("<b>%s</b>", _(properties_info[property].label));
+		gtk_label_set_markup (GTK_LABEL (label), markup);
+		g_free (markup);
 
-	label = gtk_label_new (NULL);
-	g_object_set (G_OBJECT (label),
-		      "xalign", 0.0,
-		      "width_chars", 25,
-		      "selectable", TRUE,
-		      "ellipsize", PANGO_ELLIPSIZE_END,
-		      NULL);
-	
+		gtk_table_attach (table, label, 0, 1, *row, *row + 1,
+				  GTK_FILL, GTK_FILL, 0, 0);
+		gtk_widget_show (label);
+	}
+
+	if (!properties->labels[property]) {
+		label = gtk_label_new (NULL);
+
+		g_object_set (G_OBJECT (label),
+			      "xalign", 0.0,
+			      "width_chars", 25,
+			      "selectable", TRUE,
+			      "ellipsize", PANGO_ELLIPSIZE_END,
+			      NULL);
+	} else {
+		label = properties->labels[property];
+	}
 
 	if (text == NULL || text[0] == '\000') {
 		markup = g_markup_printf_escaped ("<i>%s</i>", _("None"));
@@ -208,8 +217,12 @@ set_property (GtkTable    *table,
 		g_free (valid_text);
 	}
 
-	gtk_table_attach (table, label, 1, 2, *row, *row + 1,
-			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	if (!properties->labels[property]) {
+		gtk_table_attach (table, label, 1, 2, *row, *row + 1,
+				  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+		properties->labels[property] = label;
+	}
+
 	gtk_widget_show (label);
 
 	*row += 1;
@@ -330,51 +343,51 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 	table = properties->table;
 
 	if (info->fields_mask & EV_DOCUMENT_INFO_TITLE) {
-		set_property (GTK_TABLE (table), TITLE_PROPERTY, info->title, &row);
+		set_property (properties, GTK_TABLE (table), TITLE_PROPERTY, info->title, &row);
 	}
-	set_property (GTK_TABLE (table), URI_PROPERTY, properties->uri, &row);
+	set_property (properties, GTK_TABLE (table), URI_PROPERTY, properties->uri, &row);
 	if (info->fields_mask & EV_DOCUMENT_INFO_SUBJECT) {
-		set_property (GTK_TABLE (table), SUBJECT_PROPERTY, info->subject, &row);
+		set_property (properties, GTK_TABLE (table), SUBJECT_PROPERTY, info->subject, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_AUTHOR) {
-		set_property (GTK_TABLE (table), AUTHOR_PROPERTY, info->author, &row);
+		set_property (properties, GTK_TABLE (table), AUTHOR_PROPERTY, info->author, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_KEYWORDS) {
-		set_property (GTK_TABLE (table), KEYWORDS_PROPERTY, info->keywords, &row);
+		set_property (properties, GTK_TABLE (table), KEYWORDS_PROPERTY, info->keywords, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_PRODUCER) {
-		set_property (GTK_TABLE (table), PRODUCER_PROPERTY, info->producer, &row);
+		set_property (properties, GTK_TABLE (table), PRODUCER_PROPERTY, info->producer, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATOR) {
-		set_property (GTK_TABLE (table), CREATOR_PROPERTY, info->creator, &row);
+		set_property (properties, GTK_TABLE (table), CREATOR_PROPERTY, info->creator, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATE) {
 		text = ev_properties_view_format_date (info->creation_date);
-		set_property (GTK_TABLE (table), CREATION_DATE_PROPERTY, text, &row);
+		set_property (properties, GTK_TABLE (table), CREATION_DATE_PROPERTY, text, &row);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATE) {
 		text = ev_properties_view_format_date (info->modified_date);
-		set_property (GTK_TABLE (table), MOD_DATE_PROPERTY, text, &row);
+		set_property (properties, GTK_TABLE (table), MOD_DATE_PROPERTY, text, &row);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_FORMAT) {
-		set_property (GTK_TABLE (table), FORMAT_PROPERTY, info->format, &row);
+		set_property (properties, GTK_TABLE (table), FORMAT_PROPERTY, info->format, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_N_PAGES) {
 		text = g_strdup_printf ("%d", info->n_pages);
-		set_property (GTK_TABLE (table), N_PAGES_PROPERTY, text, &row);
+		set_property (properties, GTK_TABLE (table), N_PAGES_PROPERTY, text, &row);
 		g_free (text);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_LINEARIZED) {
-		set_property (GTK_TABLE (table), LINEARIZED_PROPERTY, info->linearized, &row);
+		set_property (properties, GTK_TABLE (table), LINEARIZED_PROPERTY, info->linearized, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_SECURITY) {
-		set_property (GTK_TABLE (table), SECURITY_PROPERTY, info->security, &row);
+		set_property (properties, GTK_TABLE (table), SECURITY_PROPERTY, info->security, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_PAPER_SIZE) {
 		text = ev_regular_paper_size (info);
-		set_property (GTK_TABLE (table), PAPER_SIZE_PROPERTY, text, &row);
+		set_property (properties, GTK_TABLE (table), PAPER_SIZE_PROPERTY, text, &row);
 		g_free (text);
 	}
 }
