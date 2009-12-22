@@ -1,5 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
+ * Copyright (C) 2009, Juanjo Marín <juanj.marin@juntadeandalucia.es>
  * Copyright (C) 2005, Teemu Tervo <teemu.tervo@gmx.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,7 +60,6 @@ struct _ComicsDocument
 	GPtrArray *page_names;
 	gchar    *selected_command;
 	gchar    *extract_command, *list_command, *decompress_tmp;
-	gboolean regex_arg;
 	gint     offset;
 	ComicBookDecompressType command_usage;
 };
@@ -72,39 +72,35 @@ struct _ComicsDocument
 
 /**
  * @extract: command line arguments to pass to extract a file from the archive
- *   to stdout. The archive file and the file to extract will be appended after
- *   a "--".
+ *   to stdout.
  * @list: command line arguments to list the archive contents
  * @decompress_tmp: command line arguments to pass to extract the archive
- *   into a directory. The archive file and the directory to extract to will be
- *   appended after a "--".
- * @regex_arg: whether the command expects one filename or accepts a regex (glob?)
- * @offset: the byte offset of the filename on each line in the output of
+ *   into a directory.
+ * @offset: the position offset of the filename on each line in the output of
  *   running the @list command
  */
 typedef struct {
         char *extract;
         char *list;
         char *decompress_tmp;
-        gboolean regex_arg;
         gint offset;
 } ComicBookDecompressCommand;
 
 static const ComicBookDecompressCommand command_usage_def[] = {
         /* RARLABS unrar */
-	{"%s p -c- -ierr --", "%s vb -c- -- %s", NULL             , FALSE, NO_OFFSET},
+	{"%s p -c- -ierr --", "%s vb -c- -- %s", NULL             , NO_OFFSET},
 
         /* GNA! unrar */
-	{NULL               , "%s t %s"        , "%s -xf %s %s"   , TRUE , NO_OFFSET},
+	{NULL               , "%s t %s"        , "%s -xf %s %s"   , NO_OFFSET},
 
         /* unzip */
-	{"%s -p -C --"      , "%s -Z -1 -- %s" , NULL             , TRUE , NO_OFFSET},
+	{"%s -p -C --"      , "%s -Z -1 -- %s" , NULL             , NO_OFFSET},
 
         /* 7zip */
-	{NULL               , "%s l -- %s"     , "%s x -y %s -o%s", FALSE, OFFSET_7Z},
+	{NULL               , "%s l -- %s"     , "%s x -y %s -o%s", OFFSET_7Z},
 
         /* tar */
-	{"%s -xOf"          , "%s -tf %s"      , NULL             , FALSE, NO_OFFSET}
+	{"%s -xOf"          , "%s -tf %s"      , NULL             , NO_OFFSET}
 };
 
 static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
@@ -126,39 +122,6 @@ EV_BACKEND_REGISTER_WITH_CODE (ComicsDocument, comics_document,
 						comics_document_document_thumbnails_iface_init);
 	} );
 
-static char *
-comics_regex_quote (const char *s)
-{
-    char *ret, *d;
-
-    d = ret = g_malloc (strlen (s) * 4 + 3);
-    
-    *d++ = '\'';
-
-    for (; *s; s++, d++) {
-	switch (*s) {
-	case '?':
-	case '|':
-	case '[':
-	case ']':
-	case '*':
-	case '\\':
-	    *d++ = '\\';
-	    break;
-	case '\'':
-	    *d++ = '\'';
-	    *d++ = '\\';
-	    *d++ = '\'';
-	    break;
-	}
-	*d = *s;
-    }
-    
-    *d++ = '\'';
-    *d = '\0';
-
-    return ret;
-}
 
 /* This function manages the command for decompressing a comic book */
 static gboolean 
@@ -229,7 +192,6 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 			    g_strdup_printf (command_usage_def[type].list, 
 				             comics_document->selected_command, 
 					     quoted_file);
-	comics_document->regex_arg = command_usage_def[type].regex_arg;
 	comics_document->offset = command_usage_def[type].offset;
 	if (command_usage_def[type].decompress_tmp) {
 		comics_document->dir = ev_mkdtemp ("evince-comics-XXXXXX", error);
@@ -857,11 +819,7 @@ extract_argv (EvDocument *document, gint page)
                 return NULL;
 
 	quoted_archive = g_shell_quote (comics_document->archive);
-	if (comics_document->regex_arg) {
-		quoted_filename = comics_regex_quote (comics_document->page_names->pdata[page]);
-	} else {
-		quoted_filename = g_shell_quote (comics_document->page_names->pdata[page]);
-	}
+	quoted_filename = g_shell_quote (comics_document->page_names->pdata[page]);
 
 	command_line = g_strdup_printf ("%s %s %s",
 					comics_document->extract_command,
