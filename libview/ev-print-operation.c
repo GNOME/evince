@@ -1521,6 +1521,7 @@ typedef enum {
 } EvPrintScale;
 
 #define EV_PRINT_SETTING_PAGE_SCALE "evince-print-setting-page-scale"
+#define EV_PRINT_SETTING_AUTOROTATE "evince-print-setting-page-autorotate"
 
 struct _EvPrintOperationPrint {
 	EvPrintOperation parent;
@@ -1534,6 +1535,8 @@ struct _EvPrintOperationPrint {
         /* Page handling tab */
         GtkWidget   *scale_combo;
         EvPrintScale page_scale;
+	GtkWidget   *autorotate_button;
+	gboolean     autorotate;
 };
 
 struct _EvPrintOperationPrintClass {
@@ -1732,6 +1735,9 @@ ev_print_operation_print_request_page_setup (EvPrintOperationPrint *print,
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
 	gdouble           width, height;
 
+	if (!print->autorotate)
+		return;
+
 	ev_document_get_page_size (op->document, page_nr,
 				   &width, &height);
 	if (width > height)
@@ -1794,12 +1800,15 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	cr = gtk_print_context_get_cairo_context (context);
 	cr_width = gtk_print_context_get_width (context);
 	cr_height = gtk_print_context_get_height (context);
-	ev_document_get_page_size (op->document, page,
-				   &width, &height);
+	ev_document_get_page_size (op->document, page, &width, &height);
 
-	_print_context_get_hard_margins (context, &top, &bottom, &left, &right);
+	if (print->page_scale == EV_SCALE_NONE) {
+		/* Center document page on the printed page */
+		if (print->autorotate)
+			cairo_translate (cr, (cr_width - width) / 2, (cr_height - height) / 2);
+	} else {
+		_print_context_get_hard_margins (context, &top, &bottom, &left, &right);
 
-	if (print->page_scale != EV_SCALE_NONE) {
 		x_scale = (cr_width - left - right) / width;
 		y_scale = (cr_height - top - bottom) / height;
 
@@ -1808,8 +1817,35 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 		else
 			scale = y_scale;
 
-		if (print->page_scale == EV_SCALE_FIT_TO_PRINTABLE_AREA || scale < 1.0) {
+		if (print->autorotate) {
+			double left_right_sides, top_bottom_sides;
+
+			cairo_translate (cr, (cr_width - scale * width) / 2,
+					 (cr_height - scale * height) / 2);
+
+			/* Ensure document page is within the margins. The
+			 * scale guarantees the document will fit in the
+			 * margins so we just need to check each side and
+			 * if it overhangs the margin, translate it to the
+			 * margin. */
+			left_right_sides = (cr_width - width*scale)/2;
+			top_bottom_sides = (cr_height - height*scale)/2;
+			if (left_right_sides < left)
+				cairo_translate (cr, left - left_right_sides, 0);
+
+			if (left_right_sides < right)
+				cairo_translate (cr, -(right - left_right_sides), 0);
+
+			if (top_bottom_sides < top)
+				cairo_translate (cr, 0, top - top_bottom_sides);
+
+			if (top_bottom_sides < bottom)
+				cairo_translate (cr, 0, -(bottom - top_bottom_sides));
+		} else {
 			cairo_translate (cr, left, top);
+		}
+
+		if (print->page_scale == EV_SCALE_FIT_TO_PRINTABLE_AREA || scale < 1.0) {
 			cairo_scale (cr, scale, scale);
 		}
 	}
@@ -1826,11 +1862,15 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	GtkWidget        *label;
 	GtkWidget        *table;
 	EvPrintScale      page_scale;
+	gboolean          autorotate = TRUE;
 
 	settings = gtk_print_operation_get_print_settings (print->op);
 	page_scale = gtk_print_settings_get_int_with_default (settings, EV_PRINT_SETTING_PAGE_SCALE, 0);
+	autorotate = gtk_print_settings_has_key (settings, EV_PRINT_SETTING_AUTOROTATE) ?
+		gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_AUTOROTATE) :
+		TRUE;
 
-	table = gtk_table_new (1, 2, FALSE);
+	table = gtk_table_new (2, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
 	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
@@ -1857,6 +1897,14 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_table_attach (GTK_TABLE (table), print->scale_combo, 1, 2, 0, 1, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (print->scale_combo);
 
+	print->autorotate_button = gtk_check_button_new_with_label (_("Auto Rotate and Center"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->autorotate_button), autorotate);
+	gtk_widget_set_tooltip_text (print->autorotate_button,
+		_("Rotate printer page orientation of each page to match orientation of each document page. "
+		  "Document pages will be centered within the printer page."));
+	gtk_table_attach (GTK_TABLE (table), print->autorotate_button, 0, 2, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_widget_show (print->autorotate_button);
+
 	return G_OBJECT (table);
 }
 
@@ -1867,8 +1915,10 @@ ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
 	GtkPrintSettings *settings;
 
 	print->page_scale = gtk_combo_box_get_active (GTK_COMBO_BOX (print->scale_combo));
+	print->autorotate = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->autorotate_button));
 	settings = gtk_print_operation_get_print_settings (print->op);
 	gtk_print_settings_set_int (settings, EV_PRINT_SETTING_PAGE_SCALE, print->page_scale);
+	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_AUTOROTATE, print->autorotate);
 }
 
 static void
