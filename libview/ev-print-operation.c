@@ -1514,6 +1514,14 @@ typedef struct _EvPrintOperationPrintClass EvPrintOperationPrintClass;
 
 static GType ev_print_operation_print_get_type (void) G_GNUC_CONST;
 
+typedef enum {
+	EV_SCALE_NONE,
+	EV_SCALE_SHRINK_TO_PRINTABLE_AREA,
+	EV_SCALE_FIT_TO_PRINTABLE_AREA
+} EvPrintScale;
+
+#define EV_PRINT_SETTING_PAGE_SCALE "evince-print-setting-page-scale"
+
 struct _EvPrintOperationPrint {
 	EvPrintOperation parent;
 
@@ -1522,6 +1530,10 @@ struct _EvPrintOperationPrint {
 	gint               total;
 	EvJob             *job_print;
 	gchar             *job_name;
+
+        /* Page handling tab */
+        GtkWidget   *scale_combo;
+        EvPrintScale page_scale;
 };
 
 struct _EvPrintOperationPrintClass {
@@ -1729,6 +1741,31 @@ ev_print_operation_print_request_page_setup (EvPrintOperationPrint *print,
 }
 
 static void
+_print_context_get_hard_margins (GtkPrintContext *context,
+				 gdouble         *top,
+				 gdouble         *bottom,
+				 gdouble         *left,
+				 gdouble         *right)
+{
+#if GTK_CHECK_VERSION (2, 19, 2)
+	if (!gtk_print_context_get_hard_margins (context, top, bottom, left, right)) {
+		*top = 0;
+		*bottom = 0;
+		*left = 0;
+		*right = 0;
+	}
+#else
+	GtkPageSetup *page_setup;
+
+	page_setup = gtk_print_context_get_page_setup (context);
+	*top = gtk_page_setup_get_top_margin (page_setup, GTK_UNIT_POINTS);
+	*bottom = gtk_page_setup_get_bottom_margin (page_setup, GTK_UNIT_POINTS);
+	*left = gtk_page_setup_get_left_margin (page_setup, GTK_UNIT_POINTS);
+	*right = gtk_page_setup_get_right_margin (page_setup, GTK_UNIT_POINTS);
+#endif
+}
+
+static void
 ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 				    GtkPrintContext       *context,
 				    gint                   page)
@@ -1737,6 +1774,8 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	cairo_t          *cr;
 	gdouble           cr_width, cr_height;
 	gdouble           width, height, scale;
+	gdouble           x_scale, y_scale;
+	gdouble           top, bottom, left, right;
 
 	gtk_print_operation_set_defer_drawing (print->op);
 
@@ -1757,14 +1796,79 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	cr_height = gtk_print_context_get_height (context);
 	ev_document_get_page_size (op->document, page,
 				   &width, &height);
-	if (cr_width / width < cr_height / height)
-	        scale = cr_width / width;
-	else
-	        scale = cr_height / height;
-	cairo_scale (cr, scale, scale);
+
+	_print_context_get_hard_margins (context, &top, &bottom, &left, &right);
+
+	if (print->page_scale != EV_SCALE_NONE) {
+		x_scale = (cr_width - left - right) / width;
+		y_scale = (cr_height - top - bottom) / height;
+
+		if (x_scale < y_scale)
+			scale = x_scale;
+		else
+			scale = y_scale;
+
+		if (print->page_scale == EV_SCALE_FIT_TO_PRINTABLE_AREA || scale < 1.0) {
+			cairo_translate (cr, left, top);
+			cairo_scale (cr, scale, scale);
+		}
+	}
 
 	ev_job_print_set_cairo (EV_JOB_PRINT (print->job_print), cr);
 	ev_job_scheduler_push_job (print->job_print, EV_JOB_PRIORITY_NONE);
+}
+
+static GObject *
+ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
+					       GtkPrintContext       *context)
+{
+	GtkPrintSettings *settings;
+	GtkWidget        *label;
+	GtkWidget        *table;
+	EvPrintScale      page_scale;
+
+	settings = gtk_print_operation_get_print_settings (print->op);
+	page_scale = gtk_print_settings_get_int_with_default (settings, EV_PRINT_SETTING_PAGE_SCALE, 0);
+
+	table = gtk_table_new (1, 2, FALSE);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
+
+	label =  gtk_label_new (_("Page Scaling:"));
+	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_widget_show (label);
+
+	print->scale_combo = gtk_combo_box_new_text ();
+	gtk_combo_box_append_text (GTK_COMBO_BOX (print->scale_combo), _("None"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (print->scale_combo), _("Shrink to Printable Area"));
+	gtk_combo_box_append_text (GTK_COMBO_BOX (print->scale_combo), _("Fit to Printable Area"));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (print->scale_combo), page_scale);
+	gtk_widget_set_tooltip_text (print->scale_combo,
+		_("Scale document pages to fit the selected printer page. Select from one of the following:\n"
+		  "\n"
+		  "• \"None\": No page scaling is performed.\n"
+		  "\n"
+		  "• \"Shrink to Printable Area\": Document pages larger than the printable area"
+		  " are reduced fit the printable area of the printer page.\n"
+		  "\n"
+		  "• \"Fit to Printable Area\": Document pages are enlarged or reduced as"
+		  " required to fit the printable area of the printer page.\n"));
+	gtk_table_attach (GTK_TABLE (table), print->scale_combo, 1, 2, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_widget_show (print->scale_combo);
+
+	return G_OBJECT (table);
+}
+
+static void
+ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
+					      GtkPrintContext       *context)
+{
+	GtkPrintSettings *settings;
+
+	print->page_scale = gtk_combo_box_get_active (GTK_COMBO_BOX (print->scale_combo));
+	settings = gtk_print_operation_get_print_settings (print->op);
+	gtk_print_settings_set_int (settings, EV_PRINT_SETTING_PAGE_SCALE, print->page_scale);
 }
 
 static void
@@ -1817,7 +1921,16 @@ ev_print_operation_print_init (EvPrintOperationPrint *print)
 	g_signal_connect_swapped (print->op, "request_page_setup",
 				  G_CALLBACK (ev_print_operation_print_request_page_setup),
 				  print);
+	g_signal_connect_swapped (print->op, "create_custom_widget",
+				  G_CALLBACK (ev_print_operation_print_create_custom_widget),
+				  print);
+	g_signal_connect_swapped (print->op, "custom_widget_apply",
+				  G_CALLBACK (ev_print_operation_print_custom_widget_apply),
+				  print);
 	gtk_print_operation_set_allow_async (print->op, TRUE);
+	gtk_print_operation_set_use_full_page (print->op, TRUE);
+	gtk_print_operation_set_unit (print->op, GTK_UNIT_POINTS);
+	gtk_print_operation_set_custom_tab_label (print->op, _("Page Handling"));
 }
 
 static void
