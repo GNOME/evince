@@ -1522,6 +1522,7 @@ typedef enum {
 
 #define EV_PRINT_SETTING_PAGE_SCALE "evince-print-setting-page-scale"
 #define EV_PRINT_SETTING_AUTOROTATE "evince-print-setting-page-autorotate"
+#define EV_PRINT_SETTING_PAGE_SIZE  "evince-print-setting-page-size"
 
 struct _EvPrintOperationPrint {
 	EvPrintOperation parent;
@@ -1537,6 +1538,8 @@ struct _EvPrintOperationPrint {
         EvPrintScale page_scale;
 	GtkWidget   *autorotate_button;
 	gboolean     autorotate;
+	GtkWidget   *source_button;
+	gboolean     use_source_size;
 };
 
 struct _EvPrintOperationPrintClass {
@@ -1734,16 +1737,24 @@ ev_print_operation_print_request_page_setup (EvPrintOperationPrint *print,
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
 	gdouble           width, height;
-
-	if (!print->autorotate)
-		return;
+	GtkPaperSize     *paper_size;
 
 	ev_document_get_page_size (op->document, page_nr,
 				   &width, &height);
-	if (width > height)
-	        gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_LANDSCAPE);
-	else
-	        gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_PORTRAIT);
+
+	if (print->use_source_size) {
+		paper_size = gtk_paper_size_new_custom ("custom", "custom",
+							width, height, GTK_UNIT_POINTS);
+		gtk_page_setup_set_paper_size_and_default_margins (setup, paper_size);
+		gtk_paper_size_free (paper_size);
+	}
+
+	if (print->autorotate) {
+		if (width > height)
+			gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_LANDSCAPE);
+		else
+			gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_PORTRAIT);
+	}
 }
 
 static void
@@ -1862,15 +1873,17 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	GtkWidget        *label;
 	GtkWidget        *table;
 	EvPrintScale      page_scale;
-	gboolean          autorotate = TRUE;
+	gboolean          autorotate;
+	gboolean          use_source_size;
 
 	settings = gtk_print_operation_get_print_settings (print->op);
 	page_scale = gtk_print_settings_get_int_with_default (settings, EV_PRINT_SETTING_PAGE_SCALE, 0);
 	autorotate = gtk_print_settings_has_key (settings, EV_PRINT_SETTING_AUTOROTATE) ?
 		gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_AUTOROTATE) :
 		TRUE;
+	use_source_size = gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_PAGE_SIZE);
 
-	table = gtk_table_new (2, 2, FALSE);
+	table = gtk_table_new (3, 2, FALSE);
 	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
 	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
 	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
@@ -1905,6 +1918,13 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_table_attach (GTK_TABLE (table), print->autorotate_button, 0, 2, 1, 2, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (print->autorotate_button);
 
+	print->source_button = gtk_check_button_new_with_label (_("Select page size using document page size"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->source_button), use_source_size);
+	gtk_widget_set_tooltip_text (print->source_button, _("When enabled, each page will be printed on "
+							     "the same size paper as the document page."));
+	gtk_table_attach (GTK_TABLE (table), print->source_button, 0, 2, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_widget_show (print->source_button);
+
 	return G_OBJECT (table);
 }
 
@@ -1916,9 +1936,11 @@ ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
 
 	print->page_scale = gtk_combo_box_get_active (GTK_COMBO_BOX (print->scale_combo));
 	print->autorotate = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->autorotate_button));
+	print->use_source_size = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->source_button));
 	settings = gtk_print_operation_get_print_settings (print->op);
 	gtk_print_settings_set_int (settings, EV_PRINT_SETTING_PAGE_SCALE, print->page_scale);
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_AUTOROTATE, print->autorotate);
+	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_PAGE_SIZE, print->use_source_size);
 }
 
 static void
