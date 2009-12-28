@@ -4528,9 +4528,6 @@ view_menu_popup_cb (EvView   *view,
 		    GObject  *object,
 		    EvWindow *ev_window)
 {
-	if (ev_view_get_presentation (EV_VIEW (ev_window->priv->view)))
-		return FALSE;
-
 	view_menu_link_popup (ev_window,
 			      EV_IS_LINK (object) ? EV_LINK (object) : NULL);
 	view_menu_image_popup (ev_window,
