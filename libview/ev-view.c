@@ -1891,7 +1891,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	link = ev_view_get_link_at_location (view, x, y);
         if (link) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-	} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
+	} else if ((field = ev_view_get_form_field_at_location (view, x, y)) && !view->presentation) {
 		if (field->is_read_only) {
 			if (view->cursor == EV_VIEW_CURSOR_LINK ||
 			    view->cursor == EV_VIEW_CURSOR_IBEAM ||
@@ -1902,9 +1902,9 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		} else {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 		}
-	} else if ((annot = ev_view_get_annotation_at_location (view, x, y))) {
+	} else if ((annot = ev_view_get_annotation_at_location (view, x, y)) && !view->presentation) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
+	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y) && !view->presentation) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 	} else {
 		if (view->cursor == EV_VIEW_CURSOR_LINK ||
@@ -3431,6 +3431,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
 
+	if (view->presentation)
+		return FALSE;
+
 	if (view->scroll_info.autoscrolling)
 		return TRUE;
 	
@@ -3697,13 +3700,17 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 	if (!view->document)
 		return FALSE;
-	
-		
+
         if (event->is_hint || event->window != view->layout.bin_window) {
 	    gtk_widget_get_pointer (widget, &x, &y);
         } else {
 	    x = event->x;
 	    y = event->y;
+	}
+
+	if (view->presentation) {
+		ev_view_handle_cursor_over_xy (view, x, y);
+		return FALSE;
 	}
 
 	if (view->scroll_info.autoscrolling) {
@@ -3866,8 +3873,25 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->document && !view->drag_info.in_drag && view->pressed_button != 3) {
 		link = ev_view_get_link_at_location (view, event->x, event->y);
 	}
-	
+
 	view->drag_info.in_drag = FALSE;
+
+	if (view->presentation) {
+		view->pressed_button = -1;
+
+		switch (event->button) {
+		case 1:
+			if (link)
+				ev_view_handle_link (view, link);
+			else
+				ev_view_next_page (view);
+			break;
+		case 3:
+			ev_view_previous_page (view);
+		}
+
+		return FALSE;
+	}
 
 	if (view->pressed_button == 2) {
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
@@ -5370,6 +5394,8 @@ ev_view_set_presentation (EvView   *view,
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	
 	if (presentation) {
+		clear_selection (view);
+		/* FIXME: save selections */
 		view->sizing_mode_saved = view->sizing_mode;
 		view->scale_saved = view->scale;
 		ev_document_model_set_sizing_mode (view->model, EV_SIZING_BEST_FIT);
