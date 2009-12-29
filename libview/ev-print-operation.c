@@ -2062,6 +2062,8 @@ ev_print_operation_new (EvDocument *document)
 #if GTKUNIXPRINT_ENABLED
 		op = EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_EXPORT,
 						       "document", document, NULL));
+#else
+		op = NULL;
 #endif
 	return op;
 }
