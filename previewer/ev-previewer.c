@@ -33,7 +33,9 @@
 #endif
 #include <io.h>
 #include <conio.h>
-#define _WIN32_WINNT 0x0500
+#if !(_WIN32_WINNT >= 0x0500)
+#error "_WIN32_WINNT must be defined >= 0x0500"
+#endif
 #include <windows.h>
 #endif
 
