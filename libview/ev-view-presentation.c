@@ -184,27 +184,25 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 				    GdkRectangle       *area)
 {
 	GtkWidget *widget = GTK_WIDGET (pview);
-	gdouble    width, height;
+	gdouble    doc_width, doc_height;
+	gint       view_width, view_height;
 
 	ev_document_get_page_size (pview->document,
 				   pview->current_page,
-				   &width, &height);
+				   &doc_width, &doc_height);
 
 	if (pview->rotation == 90 || pview->rotation == 270) {
-		gdouble tmp;
-
-		tmp = width;
-		width = height;
-		height = tmp;
+		view_width = (gint)((doc_height * pview->scale) + 0.5);
+		view_height = (gint)((doc_width * pview->scale) + 0.5);
+	} else {
+		view_width = (gint)((doc_width * pview->scale) + 0.5);
+		view_height = (gint)((doc_height * pview->scale) + 0.5);
 	}
 
-	width *= pview->scale;
-	height *= pview->scale;
-
-	area->x = (MAX (0, widget->allocation.width - width)) / 2;
-	area->y = (MAX (0, widget->allocation.height - height)) / 2;
-	area->width = width;
-	area->height = height;
+	area->x = (MAX (0, widget->allocation.width - view_width)) / 2;
+	area->y = (MAX (0, widget->allocation.height - view_height)) / 2;
+	area->width = view_width;
+	area->height = view_height;
 }
 
 /* Page Transition */
