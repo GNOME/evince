@@ -76,6 +76,10 @@ GList        *ev_document_links_get_links          (EvDocumentLinks *document_li
 						    EvPage          *page);
 EvLinkDest   *ev_document_links_find_link_dest     (EvDocumentLinks *document_links,
 						    const gchar     *link_name);
+gint          ev_document_links_get_dest_page      (EvDocumentLinks *document_links,
+						    EvLinkDest      *dest);
+gchar        *ev_document_links_get_dest_page_label(EvDocumentLinks *document_links,
+						    EvLinkDest      *dest);
 
 G_END_DECLS
 
