@@ -34,6 +34,7 @@
 #include "ev-form-field.h"
 #include "ev-selection.h"
 #include "ev-transition-animation.h"
+#include "ev-view-cursor.h"
 
 #define DRAG_HISTORY 10
 
@@ -100,16 +101,6 @@ typedef enum {
 	SCROLL_TO_CENTER,
 	SCROLL_TO_FIND_LOCATION,
 } PendingScroll;
-
-typedef enum {
-	EV_VIEW_CURSOR_NORMAL,
-	EV_VIEW_CURSOR_IBEAM,
-	EV_VIEW_CURSOR_LINK,
-	EV_VIEW_CURSOR_WAIT,
-	EV_VIEW_CURSOR_HIDDEN,
-	EV_VIEW_CURSOR_DRAG,
-	EV_VIEW_CURSOR_AUTOSCROLL,
-} EvViewCursor;
 
 typedef enum {
 	EV_PRESENTATION_NORMAL,

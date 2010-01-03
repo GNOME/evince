@@ -7,6 +7,7 @@ NOINST_H_FILES =			\
 	ev-timeline.h			\
 	ev-transition-animation.h	\
 	ev-view-accessible.h		\
+	ev-view-cursor.h		\
 	ev-view-marshal.h		\
 	ev-view-private.h
 
@@ -36,6 +37,7 @@ libevview_la_SOURCES = 			\
 	ev-view.c			\
 	ev-view-accessible.c		\
 	ev-view-marshal.c		\
+	ev-view-cursor.c		\
 	ev-view-type-builtins.c		\
 	$(NOINST_H_FILES)		\
 	$(INST_H_FILES)

@@ -264,7 +264,6 @@ static void	ev_view_zoom_for_size_single_page 	       (EvView *view,
 				    			        int     width,
 					    			int     height);
 /*** Cursors ***/
-static GdkCursor* ev_view_create_invisible_cursor            (void);
 static void       ev_view_set_cursor                         (EvView             *view,
 							      EvViewCursor        new_cursor);
 static void       ev_view_handle_cursor_over_xy              (EvView *view,
@@ -6372,63 +6371,24 @@ ev_view_copy_link_address (EvView       *view,
 }
 
 /*** Cursor operations ***/
-
-static GdkCursor *
-ev_view_create_invisible_cursor(void)
-{
-       GdkBitmap *empty;
-       GdkColor black = { 0, 0, 0, 0 };
-       static char bits[] = { 0x00 };
-
-       empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
-
-       return gdk_cursor_new_from_pixmap (empty, empty, &black, &black, 0, 0);
-}
-
 static void
 ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 {
 	GdkCursor *cursor = NULL;
-	GdkDisplay *display;
 	GtkWidget *widget;
 
 	if (view->cursor == new_cursor) {
 		return;
 	}
 
-	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
-	display = gtk_widget_get_display (widget);
 	view->cursor = new_cursor;
 
-	switch (new_cursor) {
-		case EV_VIEW_CURSOR_NORMAL:
-			gdk_window_set_cursor (view->layout.bin_window, NULL);
-			break;
-		case EV_VIEW_CURSOR_IBEAM:
-			cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
-			break;
-		case EV_VIEW_CURSOR_LINK:
-			cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
-			break;
-		case EV_VIEW_CURSOR_WAIT:
-			cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
-			break;
-                case EV_VIEW_CURSOR_HIDDEN:
-                        cursor = ev_view_create_invisible_cursor ();
-                        break;
-		case EV_VIEW_CURSOR_DRAG:
-			cursor = gdk_cursor_new_for_display (display, GDK_FLEUR);
-			break;
-		case EV_VIEW_CURSOR_AUTOSCROLL:
-			cursor = gdk_cursor_new_for_display (display, GDK_DOUBLE_ARROW);
-			break;
-	}
-
-	if (cursor) {
-		gdk_window_set_cursor (view->layout.bin_window, cursor);
+	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	cursor = ev_view_cursor_new (gtk_widget_get_display (widget), new_cursor);
+	gdk_window_set_cursor (view->layout.bin_window, cursor);
+	gdk_flush ();
+	if (cursor)
 		gdk_cursor_unref (cursor);
-		gdk_flush();
-	}
 }
 
 void
