@@ -803,8 +803,7 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	if (link) {
 		action = g_object_ref (ev_link_get_action (link));
 		dest = ev_link_action_get_dest (action);
-		page = ev_link_dest_get_page (dest);
-		page_label = ev_view_page_label_from_dest (EV_VIEW (window->priv->view), dest);
+		page_label = ev_document_links_get_dest_page_label (EV_DOCUMENT_LINKS (window->priv->document), dest);
 	} else {
 		dest = ev_link_dest_new_page (page);
 		action = ev_link_action_new_dest (dest);
