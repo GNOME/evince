@@ -1753,42 +1753,6 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	}
 }
 
-gchar *
-ev_view_page_label_from_dest (EvView *view, EvLinkDest *dest)
-{
-	EvLinkDestType type;
-	gchar *msg = NULL;
-
-	type = ev_link_dest_get_dest_type (dest);
-
-	switch (type) {
-	        case EV_LINK_DEST_TYPE_NAMED: {
-			EvLinkDest  *dest2;
-			const gchar *named_dest;
-			
-			named_dest = ev_link_dest_get_named_dest (dest);
-			dest2 = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
-								  named_dest);
-			if (dest2) {
-				msg = ev_document_get_page_label (view->document,
-								  ev_link_dest_get_page (dest2));
-				g_object_unref (dest2);
-			}
-		}
-			
-			break;
-	        case EV_LINK_DEST_TYPE_PAGE_LABEL: {
-	    		msg = g_strdup (ev_link_dest_get_page_label (dest));
-	        }
-	    		break;
-	        default: 
-			msg = ev_document_get_page_label (view->document,
-							  ev_link_dest_get_page (dest));
-	}
-	
-	return msg;
-}
-
 static char *
 tip_from_action_named (EvLinkAction *action)
 {
@@ -1830,8 +1794,8 @@ tip_from_link (EvView *view, EvLink *link)
 
 	switch (type) {
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST:
-			page_label = ev_view_page_label_from_dest (view,
-								   ev_link_action_get_dest (action));
+			page_label = ev_document_links_get_dest_page_label (EV_DOCUMENT_LINKS (view->document),
+									    ev_link_action_get_dest (action));
 			if (page_label) {
     				msg = g_strdup_printf (_("Go to page %s"), page_label);
 				g_free (page_label);
