@@ -41,6 +41,7 @@ enum {
 
 enum {
 	CHANGE_PAGE,
+	FINISHED,
 	N_SIGNALS
 };
 
@@ -91,6 +92,7 @@ struct _EvViewPresentationClass
 	/* signals */
 	void (* change_page) (EvViewPresentation *pview,
 			      GtkScrollType       scroll);
+	void (* finished)    (EvViewPresentation *pview);
 };
 
 static guint signals[N_SIGNALS] = { 0 };
@@ -953,7 +955,7 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview)
 	PangoFontDescription *font_desc;
 	gchar *markup;
 	GdkRectangle area = {0};
-	const gchar *text = _("End of presentation. Press Escape to exit.");
+	const gchar *text = _("End of presentation. Click to exit.");
 
 	if (pview->state != EV_PRESENTATION_END)
 		return;
@@ -1102,6 +1104,12 @@ ev_view_presentation_button_release_event (GtkWidget      *widget,
 	switch (event->button) {
 	case 1: {
 		EvLink *link;
+
+		if (pview->state == EV_PRESENTATION_END) {
+			g_signal_emit (pview, signals[FINISHED], 0, NULL);
+
+			return FALSE;
+		}
 
 		link = ev_view_presentation_get_link_at_location (pview,
 								  event->x,
@@ -1353,6 +1361,15 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 			      g_cclosure_marshal_VOID__ENUM,
 			      G_TYPE_NONE, 1,
 			      GTK_TYPE_SCROLL_TYPE);
+	signals[FINISHED] =
+		g_signal_new ("finished",
+			      G_OBJECT_CLASS_TYPE (gobject_class),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (EvViewPresentationClass, finished),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0,
+			      G_TYPE_NONE);
 
 	binding_set = gtk_binding_set_by_class (klass);
 	add_change_page_binding_keypad (binding_set, GDK_Left,  0, GTK_SCROLL_PAGE_BACKWARD);

@@ -3578,6 +3578,12 @@ ev_window_update_presentation_action (EvWindow *window)
 }
 
 static void
+ev_window_view_presentation_finished (EvWindow *window)
+{
+	ev_window_stop_presentation (window, TRUE);
+}
+
+static void
 ev_window_run_presentation (EvWindow *window)
 {
 	gboolean fullscreen_window = TRUE;
@@ -3596,6 +3602,9 @@ ev_window_run_presentation (EvWindow *window)
 	rotation = ev_document_model_get_rotation (window->priv->model);
 	window->priv->presentation_view =
 		ev_view_presentation_new (window->priv->document, current_page, rotation);
+	g_signal_connect_swapped (window->priv->presentation_view, "finished",
+				  G_CALLBACK (ev_window_view_presentation_finished),
+				  window);
 
 	gtk_box_pack_start (GTK_BOX (window->priv->main_box),
 			    window->priv->presentation_view,
