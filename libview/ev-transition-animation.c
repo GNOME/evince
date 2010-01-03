@@ -189,23 +189,9 @@ paint_surface (cairo_t         *cr,
 	       gdouble          alpha,
 	       GdkRectangle     page_area)
 {
-	gint width, height;
-
-	gdk_cairo_rectangle (cr, &page_area);
-	cairo_clip (cr);
-
-	width = cairo_image_surface_get_width (surface);
-	height = cairo_image_surface_get_height (surface);
-
 	cairo_save (cr);
 
-	if (width != page_area.width || height != page_area.height) {
-		cairo_pattern_set_filter (cairo_get_source (cr), CAIRO_FILTER_FAST);
-		cairo_scale (cr,
-			     (gdouble) page_area.width / width,
-			     (gdouble) page_area.height / height);
-	}
-
+	gdk_cairo_rectangle (cr, &page_area);
 	cairo_surface_set_device_offset (surface, x_offset, y_offset);
 	cairo_set_source_surface (cr, surface, 0, 0);
 
