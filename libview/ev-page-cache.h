@@ -27,6 +27,7 @@
 #include <glib-object.h>
 #include <gdk/gdk.h>
 #include <evince-document.h>
+#include <evince-view.h>
 
 G_BEGIN_DECLS
 
@@ -37,22 +38,25 @@ G_BEGIN_DECLS
 typedef struct _EvPageCache        EvPageCache;
 typedef struct _EvPageCacheClass   EvPageCacheClass;
 
-GType        ev_page_cache_get_type               (void) G_GNUC_CONST;
-EvPageCache *ev_page_cache_new                    (EvDocument *document);
+GType              ev_page_cache_get_type               (void) G_GNUC_CONST;
+EvPageCache       *ev_page_cache_new                    (EvDocument        *document);
 
-void         ev_page_cache_set_page_range         (EvPageCache *cache,
-						   gint         start,
-						   gint         end);
-GList       *ev_page_cache_get_link_mapping       (EvPageCache *cache,
-						   gint         page);
-GList       *ev_page_cache_get_image_mapping      (EvPageCache *cache,
-						   gint         page);
-GList       *ev_page_cache_get_form_field_mapping (EvPageCache *cache,
-						   gint         page);
-GList       *ev_page_cache_get_annot_mapping      (EvPageCache *cache,
-						   gint         page);
-GdkRegion   *ev_page_cache_get_text_mapping       (EvPageCache *cache,
-						   gint         page);
+void               ev_page_cache_set_page_range         (EvPageCache       *cache,
+							 gint               start,
+							 gint               end);
+EvJobPageDataFlags ev_page_cache_get_flags              (EvPageCache       *cache);
+void               ev_page_cache_set_flags              (EvPageCache       *cache,
+							 EvJobPageDataFlags flags);
+GList             *ev_page_cache_get_link_mapping       (EvPageCache       *cache,
+							 gint               page);
+GList             *ev_page_cache_get_image_mapping      (EvPageCache       *cache,
+							 gint               page);
+GList             *ev_page_cache_get_form_field_mapping (EvPageCache       *cache,
+							 gint               page);
+GList             *ev_page_cache_get_annot_mapping      (EvPageCache       *cache,
+							 gint               page);
+GdkRegion         *ev_page_cache_get_text_mapping       (EvPageCache       *cache,
+							 gint               page);
 
 G_END_DECLS
 

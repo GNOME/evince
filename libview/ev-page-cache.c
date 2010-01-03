@@ -218,6 +218,19 @@ ev_page_cache_set_page_range (EvPageCache *cache,
 	}
 }
 
+EvJobPageDataFlags
+ev_page_cache_get_flags (EvPageCache *cache)
+{
+	return cache->flags;
+}
+
+void
+ev_page_cache_set_flags (EvPageCache       *cache,
+			 EvJobPageDataFlags flags)
+{
+	cache->flags = flags;
+}
+
 GList *
 ev_page_cache_get_link_mapping (EvPageCache *cache,
 				gint         page)
