@@ -33,10 +33,8 @@
 #include "ev-document-images.h"
 #include "ev-document-links.h"
 #include "ev-document-misc.h"
-#include "ev-document-transition.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
-#include "ev-transition-animation.h"
 #include "ev-view-marshal.h"
 #include "ev-document-annotations.h"
 #include "ev-annotation-window.h"
@@ -51,7 +49,6 @@
 
 enum {
 	PROP_0,
-	PROP_PRESENTATION,
 	PROP_HAS_SELECTION
 };
 
@@ -206,8 +203,7 @@ static void       ev_view_reload_page                        (EvView            
 
 /*** Callbacks ***/
 static void       ev_view_change_page                        (EvView             *view,
-							      gint                new_page,
-							      gboolean            start_transition);
+							      gint                new_page);
 static void       job_finished_cb                            (EvPixbufCache      *pixbuf_cache,
 							      GdkRegion          *region,
 							      EvView             *view);
@@ -221,10 +217,6 @@ static void       on_adjustment_value_changed                (GtkAdjustment     
 /*** GObject ***/
 static void       ev_view_finalize                           (GObject            *object);
 static void       ev_view_destroy                            (GtkObject          *object);
-static void       ev_view_set_property                       (GObject            *object,
-							      guint               prop_id,
-							      const GValue       *value,
-							      GParamSpec         *pspec);
 static void       ev_view_get_property                       (GObject            *object,
 							      guint               prop_id,
 							      GValue             *value,
@@ -248,9 +240,6 @@ static double	zoom_for_size_best_fit 			     (gdouble doc_width,
 static void     ev_view_zoom_for_size                        (EvView *view,
 							      int     width,
 							      int     height);
-static void	ev_view_zoom_for_size_presentation	     (EvView *view,
-							      int     width,
-					    		      int     height);
 static void	ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 							        int     width,
 						     	        int     height);
@@ -297,11 +286,6 @@ static void       ev_view_primary_get_cb                     (GtkClipboard      
 static void       ev_view_primary_clear_cb                   (GtkClipboard       *clipboard,
 							      gpointer            data);
 static void       ev_view_update_primary_selection           (EvView             *ev_view);
-
-/*** Presentation ***/
-static void       ev_view_presentation_transition_start      (EvView             *ev_view);
-static void       ev_view_presentation_transition_stop       (EvView             *ev_view);
-
 
 G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_LAYOUT)
 
@@ -641,11 +625,7 @@ view_update_range_and_current_page (EvView *view)
 	    !ev_document_check_dimensions (view->document))
 		return;
 
-	/* Presentation trumps all other modes */
-	if (view->presentation) {
-		view->start_page = view->current_page;
-		view->end_page = view->current_page;
-	} else if (view->continuous) {
+	if (view->continuous) {
 		GdkRectangle current_area, unused, page_area;
 		GtkBorder border;
 		gboolean found = FALSE;
@@ -894,7 +874,7 @@ ev_view_scroll (EvView        *view,
 
 	view->jump_to_find_result = FALSE;
 
-	if (view->presentation || view->sizing_mode == EV_SIZING_BEST_FIT) {
+	if (view->sizing_mode == EV_SIZING_BEST_FIT) {
 		switch (scroll) {
 			case GTK_SCROLL_PAGE_BACKWARD:
 			case GTK_SCROLL_STEP_BACKWARD:
@@ -1014,14 +994,7 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 static void
 compute_border (EvView *view, int width, int height, GtkBorder *border)
 {
-	if (view->presentation) {
-		border->left = 0;
-		border->right = 0;
-		border->top = 0;
-		border->bottom = 0;
-	} else {
-		ev_document_misc_get_page_border_size (width, height, border);
-	}
+	ev_document_misc_get_page_border_size (width, height, border);
 }
 
 void
@@ -1120,10 +1093,7 @@ get_page_extents (EvView       *view,
 	page_area->width = width + border->left + border->right;
 	page_area->height = height + border->top + border->bottom;
 
-	if (view->presentation) {
-		page_area->x = (MAX (0, widget->allocation.width - width))/2;
-		page_area->y = (MAX (0, widget->allocation.height - height))/2;
-	} else if (view->continuous) {
+	if (view->continuous) {
 		gint max_width;
 		gint x, y;
 
@@ -1545,7 +1515,7 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 	doc_point.y = change_top ? top : 0;
 	view->pending_point = doc_point;
 
-	ev_view_change_page (view, ev_link_dest_get_page (dest), TRUE);
+	ev_view_change_page (view, ev_link_dest_get_page (dest));
 }
 
 static void
@@ -1573,7 +1543,7 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 
 	view->pending_point = doc_point;
 
-	ev_view_change_page (view, page, TRUE);
+	ev_view_change_page (view, page);
 }
 
 static void
@@ -1602,7 +1572,7 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 
 	view->pending_point = doc_point;
 
-	ev_view_change_page (view, page, TRUE);
+	ev_view_change_page (view, page);
 }
 
 static void
@@ -1622,7 +1592,7 @@ goto_fit_dest (EvView *view, EvLinkDest *dest)
 	ev_document_model_set_sizing_mode (view->model, EV_SIZING_BEST_FIT);
 	ev_document_model_set_scale (view->model, zoom);
 
-	ev_view_change_page (view, page, TRUE);
+	ev_view_change_page (view, page);
 }
 
 static void
@@ -1648,7 +1618,7 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 	doc_point.y = change_top ? top : 0;
 	view->pending_point = doc_point;
 
-	ev_view_change_page (view, page, TRUE);
+	ev_view_change_page (view, page);
 }
 
 static void
@@ -1854,7 +1824,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	link = ev_view_get_link_at_location (view, x, y);
         if (link) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-	} else if ((field = ev_view_get_form_field_at_location (view, x, y)) && !view->presentation) {
+	} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 		if (field->is_read_only) {
 			if (view->cursor == EV_VIEW_CURSOR_LINK ||
 			    view->cursor == EV_VIEW_CURSOR_IBEAM ||
@@ -1865,9 +1835,9 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		} else {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 		}
-	} else if ((annot = ev_view_get_annotation_at_location (view, x, y)) && !view->presentation) {
+	} else if ((annot = ev_view_get_annotation_at_location (view, x, y))) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y) && !view->presentation) {
+	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 	} else {
 		if (view->cursor == EV_VIEW_CURSOR_LINK ||
@@ -2873,12 +2843,6 @@ ev_view_size_request (GtkWidget      *widget,
 		return;
 	}
 
-	if (view->presentation) {
-		requisition->width = 1;
-		requisition->height = 1;
-		return;
-	}
-
 	if (view->continuous && view->dual_page)
 		ev_view_size_request_continuous_dual_page (view, requisition);
 	else if (view->continuous)
@@ -3002,10 +2966,7 @@ ev_view_realize (GtkWidget *widget)
 				GDK_ENTER_NOTIFY_MASK |
 				GDK_LEAVE_NOTIFY_MASK));
 
-	if (view->presentation)
-		gdk_window_set_background (view->layout.bin_window, &widget->style->black);
-	else
-		gdk_window_set_background (view->layout.bin_window, &widget->style->mid [GTK_STATE_NORMAL]);
+	gdk_window_set_background (view->layout.bin_window, &widget->style->mid [GTK_STATE_NORMAL]);
 
 	on_adjustment_value_changed (NULL, view);
 }
@@ -3018,7 +2979,7 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 
 	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
-	if (state == GDK_CONTROL_MASK && view->presentation == FALSE) {
+	if (state == GDK_CONTROL_MASK) {
 		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
 		if (event->direction == GDK_SCROLL_UP ||
 		    event->direction == GDK_SCROLL_LEFT) {
@@ -3051,9 +3012,7 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 		state &= ~GDK_SHIFT_MASK;
 	}
 
-	if (state == 0 &&
-	    (view->presentation ||
-	     (view->sizing_mode == EV_SIZING_BEST_FIT && !view->continuous))) {
+	if (state == 0 && view->sizing_mode == EV_SIZING_BEST_FIT && !view->continuous) {
 		switch (event->direction) {
 		        case GDK_SCROLL_DOWN:
 		        case GDK_SCROLL_RIGHT:
@@ -3089,42 +3048,6 @@ find_selection_for_page (EvView *view,
 	return NULL;
 }
 
-static void
-draw_end_presentation_page (EvView       *view,
-			    GdkRectangle *page_area)
-{
-	PangoLayout *layout;
-	PangoFontDescription *font_desc;
-	gchar *markup;
-	const gchar *text = _("End of presentation. Press Escape to exit.");
-
-	if (view->presentation_state != EV_PRESENTATION_END)
-		return;
-
-	layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), NULL);
-	markup = g_strdup_printf ("<span foreground=\"white\">%s</span>", text);
-	pango_layout_set_markup (layout, markup, -1);
-	g_free (markup);
-
-	font_desc = pango_font_description_new ();
-	pango_font_description_set_size (font_desc, 16 * PANGO_SCALE);
-	pango_layout_set_font_description (layout, font_desc);
-
-	gtk_paint_layout (GTK_WIDGET (view)->style,
-			  view->layout.bin_window,
-			  GTK_WIDGET_STATE (view),
-			  FALSE,
-			  page_area,
-			  GTK_WIDGET (view),
-			  NULL,
-			  page_area->x + 15,
-			  page_area->y + 15,
-			  layout);
-
-	pango_font_description_free (font_desc);
-	g_object_unref (layout);
-}
-
 static gboolean
 ev_view_expose_event (GtkWidget      *widget,
 		      GdkEventExpose *event)
@@ -3133,45 +3056,7 @@ ev_view_expose_event (GtkWidget      *widget,
 	cairo_t *cr;
 	gint     i;
 
-	if (view->animation) {
-		if (ev_transition_animation_ready (view->animation)) {
-			GdkRectangle page_area;
-			GtkBorder    border;
-
-			if (get_page_extents (view, view->current_page, &page_area, &border)) {
-				cr = gdk_cairo_create (view->layout.bin_window);
-
-				/* normalize to x=0, y=0 */
-				cairo_translate (cr, page_area.x, page_area.y);
-				page_area.x = page_area.y = 0;
-
-				ev_transition_animation_paint (view->animation, cr, page_area);
-				cairo_destroy (cr);
-		    	}
-		}
-
-		return TRUE;
-	}
-
-	if (view->presentation) {
-		switch (view->presentation_state) {
-		        case EV_PRESENTATION_END: {
-				GdkRectangle area = {0};
-
-				area.width = widget->allocation.width;
-				area.height = widget->allocation.height;
-				
-				draw_end_presentation_page (view, &area);
-			}
-				return FALSE;
-		        case EV_PRESENTATION_BLACK:
-		        case EV_PRESENTATION_WHITE:
-				return FALSE;
-		        case EV_PRESENTATION_NORMAL:
-		        default:
-				break;
-		}
-	} else if (view->loading) {
+	if (view->loading) {
 		GdkRectangle area = {0};
 		
 		area.width = widget->allocation.width;
@@ -3393,9 +3278,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 	
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
-
-	if (view->presentation)
-		return FALSE;
 
 	if (view->scroll_info.autoscrolling)
 		return TRUE;
@@ -3671,11 +3553,6 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	    y = event->y;
 	}
 
-	if (view->presentation) {
-		ev_view_handle_cursor_over_xy (view, x, y);
-		return FALSE;
-	}
-
 	if (view->scroll_info.autoscrolling) {
 		view->scroll_info.last_y = y;
 		return TRUE;
@@ -3839,23 +3716,6 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->drag_info.in_drag = FALSE;
 
-	if (view->presentation) {
-		view->pressed_button = -1;
-
-		switch (event->button) {
-		case 1:
-			if (link)
-				ev_view_handle_link (view, link);
-			else
-				ev_view_next_page (view);
-			break;
-		case 3:
-			ev_view_previous_page (view);
-		}
-
-		return FALSE;
-	}
-
 	if (view->pressed_button == 2) {
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
 	}
@@ -3899,220 +3759,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 		} else {
 			ev_view_handle_link (view, link);
 		}
-	} else if (view->presentation) {
-		switch (event->button) {
-		        case 1:
-				ev_view_next_page (view);	
-				return TRUE;
-		        case 3:
-				ev_view_previous_page (view);	
-				return TRUE;
-		}
-	}
- 
-	return FALSE;
-}
-
-/* Goto Window */
-/* Cut and paste from gtkwindow.c */
-static void
-send_focus_change (GtkWidget *widget,
-		   gboolean   in)
-{
-	GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
-
-	g_object_ref (widget);
-
-	if (in)
-		GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
-	else
-		GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
-
-	fevent->focus_change.type = GDK_FOCUS_CHANGE;
-	fevent->focus_change.window = g_object_ref (widget->window);
-	fevent->focus_change.in = in;
-
-	gtk_widget_event (widget, fevent);
-
-	g_object_notify (G_OBJECT (widget), "has-focus");
-
-	g_object_unref (widget);
-	gdk_event_free (fevent);
-}
-
-static void
-ev_view_goto_window_hide (EvView *view)
-{
-	/* send focus-in event */
-	send_focus_change (view->goto_entry, FALSE);
-	gtk_widget_hide (view->goto_window);
-	gtk_entry_set_text (GTK_ENTRY (view->goto_entry), "");
-}
-
-static gboolean
-ev_view_goto_window_delete_event (GtkWidget   *widget,
-				  GdkEventAny *event,
-				  EvView      *view)
-{
-	ev_view_goto_window_hide (view);
-
-	return TRUE;
-}
-
-static gboolean
-key_is_numeric (guint keyval)
-{
-	return ((keyval >= GDK_0 && keyval <= GDK_9) ||
-		(keyval >= GDK_KP_0 && keyval <= GDK_KP_9));
-}
-
-static gboolean
-ev_view_goto_window_key_press_event (GtkWidget   *widget,
-				     GdkEventKey *event,
-				     EvView      *view)
-{
-	switch (event->keyval) {
-	        case GDK_Escape:
-	        case GDK_Tab:
-	        case GDK_KP_Tab:
-	        case GDK_ISO_Left_Tab:
-			ev_view_goto_window_hide (view);
-			return TRUE;
-	        case GDK_Return:
-	        case GDK_KP_Enter:
-	        case GDK_ISO_Enter:
-	        case GDK_BackSpace:
-	        case GDK_Delete:
-			return FALSE;
-	        default:
-			if (!key_is_numeric (event->keyval))
-				return TRUE;
 	}
 
 	return FALSE;
-}
-
-static gboolean
-ev_view_goto_window_button_press_event (GtkWidget      *widget,
-					GdkEventButton *event,
-					EvView         *view)
-{
-	ev_view_goto_window_hide (view);
-
-	return TRUE;
-}
-
-static void
-ev_view_goto_entry_activate (GtkEntry *entry,
-			     EvView   *view)
-{
-	const gchar *text;
-	gint         page;
-
-	text = gtk_entry_get_text (entry);
-	page = atoi (text) - 1;
-	
-	ev_view_goto_window_hide (view);
-
-	if (page >= 0 && page < ev_document_get_n_pages (view->document)) {
-		ev_document_model_set_page (view->model, page);
-	}
-}
-
-static void
-ev_view_goto_window_create (EvView *view)
-{
-	GtkWidget *frame, *hbox, *toplevel, *label;
-
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
-	
-	if (view->goto_window) {
-		if (GTK_WINDOW (toplevel)->group)
-			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
-						     GTK_WINDOW (view->goto_window));
-		else if (GTK_WINDOW (view->goto_window)->group)
-			gtk_window_group_remove_window (GTK_WINDOW (view->goto_window)->group,
-							GTK_WINDOW (view->goto_window));
-		return;
-	}
-
-	view->goto_window = gtk_window_new (GTK_WINDOW_POPUP);
-	gtk_window_set_screen (GTK_WINDOW (view->goto_window),
-			       gtk_widget_get_screen (GTK_WIDGET (view)));
-
-	if (GTK_WINDOW (toplevel)->group)
-		gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
-					     GTK_WINDOW (view->goto_window));
-	
-	gtk_window_set_modal (GTK_WINDOW (view->goto_window), TRUE);
-
-	g_signal_connect (view->goto_window, "delete_event",
-			  G_CALLBACK (ev_view_goto_window_delete_event),
-			  view);
-	g_signal_connect (view->goto_window, "key_press_event",
-			  G_CALLBACK (ev_view_goto_window_key_press_event),
-			  view);
-	g_signal_connect (view->goto_window, "button_press_event",
-			  G_CALLBACK (ev_view_goto_window_button_press_event),
-			  view);
-
-	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add (GTK_CONTAINER (view->goto_window), frame);
-	gtk_widget_show (frame);
-
-	hbox = gtk_hbox_new (FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 3);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-	gtk_widget_show (hbox);
-
-	label = gtk_label_new(_("Jump to page:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 3);
-	gtk_widget_show (label);
-	gtk_widget_realize (label);
-
-	view->goto_entry = gtk_entry_new ();
-	g_signal_connect (view->goto_entry, "activate",
-			  G_CALLBACK (ev_view_goto_entry_activate),
-			  view);
-	gtk_box_pack_start (GTK_BOX (hbox), view->goto_entry, TRUE, TRUE, 0);
-	gtk_widget_show (view->goto_entry);
-	gtk_widget_realize (view->goto_entry);
-}
-
-static void
-ev_view_goto_entry_grab_focus (EvView *view)
-{
-	GtkWidgetClass *entry_parent_class;
-	
-	entry_parent_class = g_type_class_peek_parent (GTK_ENTRY_GET_CLASS (view->goto_entry));
-	(entry_parent_class->grab_focus) (view->goto_entry);
-
-	send_focus_change (view->goto_entry, TRUE);
-}
-
-static void
-ev_view_goto_window_send_key_event (EvView   *view,
-				    GdkEvent *event)
-{
-	GdkEventKey *new_event;
-	GdkScreen   *screen;
-
-	/* Move goto window off screen */
-	screen = gtk_widget_get_screen (GTK_WIDGET (view));
-	gtk_window_move (GTK_WINDOW (view->goto_window),
-			 gdk_screen_get_width (screen) + 1,
-			 gdk_screen_get_height (screen) + 1);
-	gtk_widget_show (view->goto_window);
-
-	new_event = (GdkEventKey *) gdk_event_copy (event);
-	g_object_unref (new_event->window);
-	new_event->window = g_object_ref (view->goto_window->window);
-	gtk_widget_realize (view->goto_window);
-
-	gtk_widget_event (view->goto_window, (GdkEvent *)new_event);
-	gdk_event_free ((GdkEvent *)new_event);
-	gtk_widget_hide (view->goto_window);
 }
 
 static gboolean
@@ -4120,7 +3769,6 @@ ev_view_key_press_event (GtkWidget   *widget,
 			 GdkEventKey *event)
 {
 	EvView *view = EV_VIEW (widget);
-	EvPresentationState current;
 
 	if (!view->document)
 		return FALSE;
@@ -4144,69 +3792,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 		return FALSE;
 	}
 
-	if (!view->presentation ||
-	    view->presentation_state == EV_PRESENTATION_END)
-		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
-
-
-	current = view->presentation_state;
-
-	switch (event->keyval) {
-	        case GDK_b:
-	        case GDK_B:
-	        case GDK_period:
-	        case GDK_KP_Decimal:
-			view->presentation_state =
-				(view->presentation_state == EV_PRESENTATION_BLACK) ?
-				EV_PRESENTATION_NORMAL : EV_PRESENTATION_BLACK;
-			break;
-	        case GDK_w:
-	        case GDK_W:
-			view->presentation_state =
-				(view->presentation_state == EV_PRESENTATION_WHITE) ?
-				EV_PRESENTATION_NORMAL : EV_PRESENTATION_WHITE;
-			break;
-	        default:
-			if (view->presentation_state == EV_PRESENTATION_BLACK ||
-			    view->presentation_state == EV_PRESENTATION_WHITE) {
-				view->presentation_state = EV_PRESENTATION_NORMAL;
-			}
-	}
-
-	if (current == view->presentation_state) {
-		if (ev_document_get_n_pages (view->document) > 1 &&
-		    key_is_numeric (event->keyval)) {
-			gint x, y;
-			
-			ev_view_goto_window_create (view);
-			ev_view_goto_window_send_key_event (view, (GdkEvent *)event);
-			gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
-			gtk_window_move (GTK_WINDOW (view->goto_window), x, y);
-			gtk_widget_show (view->goto_window);
-			ev_view_goto_entry_grab_focus (view);
-			
-			return TRUE;
-		}
-		
-		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
-	}
-
-	switch (view->presentation_state) {
-	        case EV_PRESENTATION_NORMAL:
-	        case EV_PRESENTATION_BLACK:
-			gdk_window_set_background (view->layout.bin_window,
-						   &widget->style->black);
-			break;
-	        case EV_PRESENTATION_WHITE:
-			gdk_window_set_background (view->layout.bin_window,
-						   &widget->style->white);
-			break;
-	        default:
-			return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
-	}
-
-	gtk_widget_queue_draw (widget);
-	return TRUE;
+	return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
 }
 
 static gint
@@ -4222,11 +3808,8 @@ ev_view_focus_in (GtkWidget     *widget,
 
 static gint
 ev_view_focus_out (GtkWidget     *widget,
-		     GdkEventFocus *event)
+		   GdkEventFocus *event)
 {
-	if (EV_VIEW (widget)->goto_window)
-		ev_view_goto_window_hide (EV_VIEW (widget));
-	
 	if (EV_VIEW (widget)->pixbuf_cache)
 		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
 	gtk_widget_queue_draw (widget);
@@ -4412,6 +3995,7 @@ draw_one_page (EvView       *view,
 {
 	GdkRectangle overlap;
 	GdkRectangle real_page_area;
+	gint         current_page;
 
 	g_assert (view->document);
 
@@ -4427,15 +4011,11 @@ draw_one_page (EvView       *view,
 	real_page_area.height -= (border->top + border->bottom);
 	*page_ready = TRUE;
 
-	if (!view->presentation) {
-		gint current_page;
-		
-		current_page = ev_document_model_get_page (view->model);
-		ev_document_misc_paint_one_page (view->layout.bin_window,
-						 GTK_WIDGET (view),
-						 page_area, border, 
-						 page == current_page);
-	}
+	current_page = ev_document_model_get_page (view->model);
+	ev_document_misc_paint_one_page (view->layout.bin_window,
+					 GTK_WIDGET (view),
+					 page_area, border,
+					 page == current_page);
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
 		gint             width, height;
@@ -4447,11 +4027,9 @@ draw_one_page (EvView       *view,
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
 		if (!page_surface) {
-			if (!view->presentation) {
-				draw_loading_text (view,
-						   &real_page_area,
-						   expose_area);
-			}
+			draw_loading_text (view,
+					   &real_page_area,
+					   expose_area);
 
 			*page_ready = FALSE;
 
@@ -4560,12 +4138,6 @@ ev_view_destroy (GtkObject *object)
 		view->page_cache = NULL;
 	}
 
-	if (view->goto_window) {
-		gtk_widget_destroy (view->goto_window);
-		view->goto_window = NULL;
-		view->goto_entry = NULL;
-	}
-
 	ev_view_window_children_free (view);
 
 	if (view->selection_scroll_id) {
@@ -4598,28 +4170,9 @@ ev_view_destroy (GtkObject *object)
 		view->drag_info.release_timeout_id = 0;
 	}
 
-	ev_view_presentation_transition_stop (view);
-
 	ev_view_set_scroll_adjustments (GTK_LAYOUT (view), NULL, NULL);
 
 	GTK_OBJECT_CLASS (ev_view_parent_class)->destroy (object);
-}
-
-static void
-ev_view_set_property (GObject      *object,
-		      guint         prop_id,
-		      const GValue *value,
-		      GParamSpec   *pspec)
-{
-	EvView *view = EV_VIEW (object);
-
-	switch (prop_id) {
-	        case PROP_PRESENTATION:
-			ev_view_set_presentation (view, g_value_get_boolean (value));
-			break;
-	        default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-	}
 }
 
 static AtkObject *
@@ -4662,9 +4215,6 @@ ev_view_get_property (GObject *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
-	        case PROP_PRESENTATION:
-			g_value_set_boolean (value, view->presentation);
-			break;
 	        case PROP_HAS_SELECTION:
 			g_value_set_boolean (value,
 					     view->selection_info.selections != NULL);
@@ -4684,7 +4234,6 @@ ev_view_class_init (EvViewClass *class)
 	GtkBindingSet *binding_set;
 
 	object_class->finalize = ev_view_finalize;
-	object_class->set_property = ev_view_set_property;
 	object_class->get_property = ev_view_get_property;
 
 	widget_class->expose_event = ev_view_expose_event;
@@ -4749,13 +4298,6 @@ ev_view_class_init (EvViewClass *class)
 
 
 	g_object_class_install_property (object_class,
-					 PROP_PRESENTATION,
-					 g_param_spec_boolean ("presentation",
-							       "Presentation",
-							       "Draw page in presentation mode",
-							       TRUE,
-							       G_PARAM_READWRITE));
-	g_object_class_install_property (object_class,
 					 PROP_HAS_SELECTION,
 					 g_param_spec_boolean ("has-selection",
 							       "Has selection",
@@ -4804,8 +4346,6 @@ ev_view_init (EvView *view)
 	view->selection_mode = EV_VIEW_SELECTION_TEXT;
 	view->continuous = TRUE;
 	view->dual_page = FALSE;
-	view->presentation = FALSE;
-	view->presentation_state = EV_PRESENTATION_NORMAL;
 	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
@@ -4820,16 +4360,12 @@ ev_view_init (EvView *view)
 
 static void
 ev_view_change_page (EvView *view,
-		     gint    new_page,
-		     gboolean start_transition)
+		     gint    new_page)
 {
 	gint x, y;
 
 	view->current_page = new_page;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
-
-	if (view->presentation && start_transition)
-		ev_view_presentation_transition_start (view);
 
 	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
@@ -4838,78 +4374,10 @@ ev_view_change_page (EvView *view,
 }
 
 static void
-ev_view_transition_animation_finish (EvTransitionAnimation *animation,
-				     EvView                *view)
-{
-	g_object_unref (view->animation);
-	view->animation = NULL;
-	ev_view_change_page (view, view->current_page, TRUE);
-}
-
-/**
- * ev_view_transition_animation_cancel:
- * @animation: Animation to finish
- * @view: An EvView
- *
- * Does almost the same as cancel, but without scheduling the transition.
- */
-
-static void
-ev_view_transition_animation_cancel (EvTransitionAnimation *animation,
-				     EvView                *view)
-{
-	g_object_unref (view->animation);
-	view->animation = NULL;
-	ev_view_change_page (view, view->current_page, FALSE);
-}
-
-static void
-ev_view_transition_animation_frame (EvTransitionAnimation *animation,
-				    gdouble                progress,
-				    EvView                *view)
-{
-	gtk_widget_queue_draw (GTK_WIDGET (view));
-}
-
-static void
-ev_view_presentation_animation_start (EvView *view,
-                                      int     new_page)
-{
-	EvTransitionEffect *effect = NULL;
-	cairo_surface_t *surface;
-
-        if (EV_IS_DOCUMENT_TRANSITION (view->document))
-		effect = ev_document_transition_get_effect (EV_DOCUMENT_TRANSITION (view->document),
-							    view->current_page);
-	if (!effect)
-		return;
-
-	view->animation = ev_transition_animation_new (effect);
-
-	surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, view->current_page);
-	ev_transition_animation_set_origin_surface (view->animation, surface);
-	surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, new_page);
-	if (surface)
-		ev_transition_animation_set_dest_surface (view->animation, surface);
-
-	g_signal_connect (view->animation, "frame",
-			  G_CALLBACK (ev_view_transition_animation_frame), view);
-	g_signal_connect (view->animation, "finished",
-			  G_CALLBACK (ev_view_transition_animation_finish), view);
-}
-
-static void
 job_finished_cb (EvPixbufCache *pixbuf_cache,
 		 GdkRegion     *region,
 		 EvView        *view)
 {
-	if (view->animation) {
-		cairo_surface_t *surface;
-
-		surface = ev_pixbuf_cache_get_surface (pixbuf_cache, view->current_page);
-		ev_transition_animation_set_dest_surface (view->animation, surface);
-	}
-
 	if (region) {
 		gdk_window_invalidate_region (view->layout.bin_window,
 					      region, TRUE);
@@ -4928,10 +4396,7 @@ ev_view_page_changed_cb (EvDocumentModel *model,
 		return;
 
 	if (view->current_page != new_page) {
-		if (view->presentation)
-			ev_view_presentation_animation_start (view, new_page);
-
-		ev_view_change_page (view, new_page, TRUE);
+		ev_view_change_page (view, new_page);
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -5144,7 +4609,7 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 
 		current_page = ev_document_model_get_page (model);
 		if (view->current_page != current_page) {
-			ev_view_change_page (view, current_page, TRUE);
+			ev_view_change_page (view, current_page);
 		} else {
 			view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 			gtk_widget_queue_resize (GTK_WIDGET (view));
@@ -5339,103 +4804,6 @@ ev_view_reload (EvView *view)
 	view_update_range_and_current_page (view);
 }
 
-void
-ev_view_set_presentation (EvView   *view,
-			  gboolean  presentation)
-{
-	g_return_if_fail (EV_IS_VIEW (view));
-
-	presentation = presentation != FALSE;
-
-	if (view->presentation == presentation)
-		return;
-
-	if (!presentation)
-		view->presentation_state = EV_PRESENTATION_NORMAL;
-	
-	view->presentation = presentation;
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
-	
-	if (presentation) {
-		clear_selection (view);
-		/* FIXME: save selections */
-		view->sizing_mode_saved = view->sizing_mode;
-		view->scale_saved = view->scale;
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_BEST_FIT);
-	} else {
-		ev_document_model_set_sizing_mode (view->model, view->sizing_mode_saved);
-		ev_document_model_set_scale (view->model, view->scale_saved);
-	}
-	
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-
-	if (presentation)
-		ev_view_presentation_transition_start (view);
-	else {
-		ev_view_presentation_transition_stop (view);
-
-		if (view->animation) {
-			/* stop any running animation */
-			ev_view_transition_animation_cancel (view->animation, view);
-		}
-	}
-
-	if (GTK_WIDGET_REALIZED (view)) {
-		if (view->presentation)
-			gdk_window_set_background (view->layout.bin_window,
-						   &GTK_WIDGET (view)->style->black);
-		else
-			gdk_window_set_background (view->layout.bin_window,
-						   &GTK_WIDGET (view)->style->mid [GTK_STATE_NORMAL]);
-	}
-
-	g_object_notify (G_OBJECT (view), "presentation");
-}
-
-gboolean
-ev_view_get_presentation (EvView *view)
-{
-	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-
-	return view->presentation;
-}
-
-static gboolean
-transition_next_page (EvView *view)
-{
-	ev_view_next_page (view);
-
-	return FALSE;
-}
-
-static void
-ev_view_presentation_transition_stop (EvView *view)
-{
-	if (view->trans_timeout_id > 0)
-		g_source_remove (view->trans_timeout_id);
-	view->trans_timeout_id = 0;
-}
-
-static void
-ev_view_presentation_transition_start (EvView *view)
-{
-	gdouble duration;
-	
-	if (!EV_IS_DOCUMENT_TRANSITION (view->document))
-		return;
-
-	ev_view_presentation_transition_stop (view);
-
-	duration = ev_document_transition_get_page_duration (EV_DOCUMENT_TRANSITION (view->document),
-							     view->current_page);
-	if (duration > 0) {
-		view->trans_timeout_id =
-			g_timeout_add_seconds (duration,
-					       (GSourceFunc) transition_next_page,
-					       view);
-	}
-}
-
 /*** Zoom and sizing mode ***/
 
 gboolean
@@ -5457,9 +4825,6 @@ ev_view_zoom_in (EvView *view)
 
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
 
-	if (view->presentation)
-		return;
-
 	view->pending_scroll = SCROLL_TO_CENTER;
 	scale = ev_document_model_get_scale (view->model) * ZOOM_IN_FACTOR;
 	ev_document_model_set_scale (view->model, scale);
@@ -5471,9 +4836,6 @@ ev_view_zoom_out (EvView *view)
 	gdouble scale;
 
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
-
-	if (view->presentation)
-		return;
 
 	view->pending_scroll = SCROLL_TO_CENTER;
 	scale = ev_document_model_get_scale (view->model) * ZOOM_OUT_FACTOR;
@@ -5511,20 +4873,6 @@ zoom_for_size_best_fit (gdouble doc_width,
 	h_scale = (double)target_height / doc_height;
 
 	return MIN (w_scale, h_scale);
-}
-
-
-static void
-ev_view_zoom_for_size_presentation (EvView *view,
-				    int     width,
-				    int     height)
-{
-	gdouble doc_width, doc_height;
-	gdouble scale;
-
-	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
-	scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
-	ev_document_model_set_scale (view->model, scale);
 }
 
 static void
@@ -5686,9 +5034,7 @@ ev_view_zoom_for_size (EvView *view,
 	if (view->document == NULL)
 		return;
 
-	if (view->presentation)
-		ev_view_zoom_for_size_presentation (view, width, height);
-	else if (view->continuous && view->dual_page)
+	if (view->continuous && view->dual_page)
 		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height);
 	else if (view->continuous)
 		ev_view_zoom_for_size_continuous (view, width, height);
@@ -6367,19 +5713,6 @@ ev_view_show_cursor (EvView *view)
        ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }
 
-static void
-ev_view_reset_presentation_state (EvView *view)
-{
-	if (!view->presentation ||
-	    view->presentation_state == EV_PRESENTATION_NORMAL)
-		return;
-
-	view->presentation_state = EV_PRESENTATION_NORMAL;
-	gdk_window_set_background (view->layout.bin_window,
-				   &GTK_WIDGET (view)->style->black);
-	gtk_widget_queue_draw (GTK_WIDGET (view));
-}
-
 gboolean
 ev_view_next_page (EvView *view)
 {
@@ -6390,34 +5723,16 @@ ev_view_next_page (EvView *view)
 	if (!view->document)
 		return FALSE;
 
-	if (view->presentation &&
-	    (view->presentation_state == EV_PRESENTATION_BLACK ||
-	     view->presentation_state == EV_PRESENTATION_WHITE)) {
-		ev_view_reset_presentation_state (view);
-		return FALSE; 
-	}
-
-	if (view->animation) {
-		ev_view_transition_animation_cancel (view->animation, view);
-	}
-
-	ev_view_presentation_transition_stop (view);
-	ev_view_reset_presentation_state (view);
-	
 	page = ev_document_model_get_page (view->model);
 	n_pages = ev_document_get_n_pages (view->document);
 
-	if (view->dual_page && !view->presentation)
+	if (view->dual_page)
 	        page = page + 2; 
 	else 
 		page = page + 1;
 
 	if (page < n_pages) {
 		ev_document_model_set_page (view->model, page);
-		return TRUE;
-	} else if (view->presentation && page == n_pages) {
-		view->presentation_state = EV_PRESENTATION_END;
-		gtk_widget_queue_draw (GTK_WIDGET (view));
 		return TRUE;
 	} else if (view->dual_page && page == n_pages) {
 		ev_document_model_set_page (view->model, page - 1);
@@ -6437,28 +5752,9 @@ ev_view_previous_page (EvView *view)
 	if (!view->document)
 		return FALSE;
 
-	if (view->presentation &&
-	    view->presentation_state == EV_PRESENTATION_END) {
-		ev_view_reset_presentation_state (view);
-		return TRUE;
-	}
-	
-	if (view->presentation && 
-	    (view->presentation_state == EV_PRESENTATION_BLACK ||
-	     view->presentation_state == EV_PRESENTATION_WHITE)) {
-		ev_view_reset_presentation_state (view);
-		return FALSE; 
-	}	
-
-        if (view->animation) {
-		ev_view_transition_animation_cancel (view->animation, view);
-        }
-
-	ev_view_reset_presentation_state (view);
-
 	page = ev_document_model_get_page (view->model);
 
-	if (view->dual_page && !view->presentation)
+	if (view->dual_page)
 	        page = page - 2; 
 	else 
 		page = page - 1;

@@ -33,7 +33,6 @@
 #include "ev-image.h"
 #include "ev-form-field.h"
 #include "ev-selection.h"
-#include "ev-transition-animation.h"
 #include "ev-view-cursor.h"
 
 #define DRAG_HISTORY 10
@@ -102,13 +101,6 @@ typedef enum {
 	SCROLL_TO_FIND_LOCATION,
 } PendingScroll;
 
-typedef enum {
-	EV_PRESENTATION_NORMAL,
-	EV_PRESENTATION_BLACK,
-	EV_PRESENTATION_WHITE,
-	EV_PRESENTATION_END
-} EvPresentationState;
-
 typedef struct _EvHeightToPageCache {
 	gint rotation;
 	gdouble *height_to_page;
@@ -158,15 +150,8 @@ struct _EvView {
 	gboolean continuous;
 	gboolean dual_page;
 	gboolean fullscreen;
-	gboolean presentation;
 	EvSizingMode sizing_mode;
 	cairo_surface_t *loading_text;
-
-	/* Presentation */
-	EvPresentationState presentation_state;
-	EvSizingMode sizing_mode_saved;
-	double scale_saved;
-	guint  trans_timeout_id;
 
 	/* Common for button press handling */
 	int pressed_button;
@@ -190,12 +175,6 @@ struct _EvView {
 
 	/* Image DND */
 	ImageDNDInfo image_dnd_info;
-
-	/* Goto Popup */
-	GtkWidget *goto_window;
-	GtkWidget *goto_entry;
-
-	EvTransitionAnimation *animation;
 
 	/* Annotations */
 	GList             *window_children;
