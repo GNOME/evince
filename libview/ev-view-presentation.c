@@ -237,7 +237,7 @@ ev_view_presentation_transition_start (EvViewPresentation *pview)
 
 	duration = ev_document_transition_get_page_duration (EV_DOCUMENT_TRANSITION (pview->document),
 							     pview->current_page);
-	if (duration > 0) {
+	if (duration >= 0) {
 		        pview->trans_timeout_id =
 				g_timeout_add_seconds (duration,
 						       (GSourceFunc) transition_next_page,
