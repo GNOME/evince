@@ -57,6 +57,7 @@ struct _EvViewPresentation
 	GtkWidget base;
 
 	guint                  current_page;
+	cairo_surface_t       *current_surface;
 	EvDocument            *document;
 	guint                  rotation;
 	EvPresentationState    state;
@@ -291,7 +292,9 @@ ev_view_presentation_animation_start (EvViewPresentation *pview,
 	pview->animation = ev_transition_animation_new (effect);
 
 	surface = EV_JOB_RENDER (pview->curr_job)->surface;
-	ev_transition_animation_set_origin_surface (pview->animation, surface);
+	ev_transition_animation_set_origin_surface (pview->animation,
+						    surface != NULL ?
+						    surface : pview->current_surface);
 
 	jump = new_page - pview->current_page;
 	if (jump == -1)
@@ -878,6 +881,19 @@ ev_view_presentation_hide_cursor_timeout_start (EvViewPresentation *pview)
 }
 
 static void
+ev_view_presentation_update_current_surface (EvViewPresentation *pview,
+					     cairo_surface_t    *surface)
+{
+	if (!surface || pview->current_surface == surface)
+		return;
+
+	cairo_surface_reference (surface);
+	if (pview->current_surface)
+		cairo_surface_destroy (pview->current_surface);
+	pview->current_surface = surface;
+}
+
+static void
 ev_view_presentation_destroy (GtkObject *object)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (object);
@@ -904,6 +920,11 @@ ev_view_presentation_destroy (GtkObject *object)
 	if (pview->next_job) {
 		ev_view_presentation_delete_job (pview, pview->next_job);
 		pview->next_job = NULL;
+	}
+
+	if (pview->current_surface) {
+		cairo_surface_destroy (pview->current_surface);
+		pview->current_surface = NULL;
 	}
 
 	if (pview->page_cache) {
@@ -1026,8 +1047,13 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 	}
 
 	surface = pview->curr_job ? EV_JOB_RENDER (pview->curr_job)->surface : NULL;
-	if (!surface)
+	if (surface) {
+		ev_view_presentation_update_current_surface (pview, surface);
+	} else if (pview->current_surface) {
+		surface = pview->current_surface;
+	} else {
 		return FALSE;
+	}
 
 	ev_view_presentation_get_page_area (pview, &page_area);
 	if (gdk_rectangle_intersect (&page_area, &(event->area), &overlap)) {
