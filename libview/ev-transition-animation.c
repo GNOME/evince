@@ -192,6 +192,7 @@ paint_surface (cairo_t         *cr,
 	cairo_save (cr);
 
 	gdk_cairo_rectangle (cr, &page_area);
+	cairo_clip (cr);
 	cairo_surface_set_device_offset (surface, x_offset, y_offset);
 	cairo_set_source_surface (cr, surface, 0, 0);
 
