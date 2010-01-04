@@ -1039,6 +1039,9 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 			cairo_translate (cr, page_area.x, page_area.y);
 			page_area.x = page_area.y = 0;
 
+			/* Try to fix rounding errors */
+			page_area.width--;
+
 			ev_transition_animation_paint (pview->animation, cr, page_area);
 			cairo_destroy (cr);
 		}
@@ -1059,12 +1062,13 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 	if (gdk_rectangle_intersect (&page_area, &(event->area), &overlap)) {
 		cr = gdk_cairo_create (widget->window);
 
-		cairo_translate (cr, overlap.x, overlap.y);
-		cairo_surface_set_device_offset (surface,
-						 overlap.x - page_area.x,
-						 overlap.y - page_area.y);
-		cairo_set_source_surface (cr, surface, 0, 0);
-		cairo_paint (cr);
+		/* Try to fix rounding errors. See bug #438760 */
+		if (overlap.width == page_area.width)
+			overlap.width--;
+
+		cairo_rectangle (cr, overlap.x, overlap.y, overlap.width, overlap.height);
+		cairo_set_source_surface (cr, surface, page_area.x, page_area.y);
+		cairo_fill (cr);
 		cairo_destroy (cr);
 	}
 
