@@ -1103,6 +1103,22 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 			ev_view_presentation_set_white (pview);
 
 		return TRUE;
+	case GDK_Home:
+		if (pview->state == EV_PRESENTATION_NORMAL) {
+			ev_view_presentation_update_current_page (pview, 0);
+			return TRUE;
+		}
+		break;
+	case GDK_End:
+		if (pview->state == EV_PRESENTATION_NORMAL) {
+			gint page;
+
+			page = ev_document_get_n_pages (pview->document) - 1;
+			ev_view_presentation_update_current_page (pview, page);
+
+			return TRUE;
+		}
+		break;
 	default:
 		break;
 	}
