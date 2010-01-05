@@ -359,7 +359,7 @@ static int sort_down(const void *p1, const void *p2)
 }
 static int sort_random(const void *p1, const void *p2)
 {
-	return (random() % 1) ? -1 : 1;
+	return (rand() % 1) ? -1 : 1;
 }
 static int sort_dvi_up(const void *p1, const void *p2)
 {
