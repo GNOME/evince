@@ -32,7 +32,12 @@
 
 #include <glib/gi18n-lib.h>
 #include <ctype.h>
-#include <sys/wait.h>
+#ifdef G_OS_WIN32
+# define WIFEXITED(x) ((x) != 3)
+# define WEXITSTATUS(x) (x)
+#else
+# include <sys/wait.h>
+#endif
 #include <stdlib.h>
 
 GMutex *dvi_context_mutex = NULL;
