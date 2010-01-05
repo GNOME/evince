@@ -39,7 +39,7 @@
 #  endif
 #endif
 
-#ifdef HAVE_MEMCPY
+#if defined(STDC_HEADERS) || defined(HAVE_MEMCPY)
 #define memzero(a,n) memset((a), 0, (n))
 #else
 #define memzero(a,n) bzero((a), (n))
