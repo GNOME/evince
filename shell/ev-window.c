@@ -854,6 +854,13 @@ view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
 }
 
 static void
+view_selection_changed_cb (EvView   *view,
+			   EvWindow *window)
+{
+	ev_window_update_actions (window);
+}
+
+static void
 ev_window_page_changed_cb (EvWindow        *ev_window,
 			   gint             old_page,
 			   gint             new_page,
@@ -4153,12 +4160,6 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 }
 
 static void
-ev_window_has_selection_changed_cb (EvView *view, GParamSpec *pspec, EvWindow *window)
-{
-        ev_window_update_actions (window);
-}
-
-static void
 ev_window_dual_mode_changed_cb (EvDocumentModel *model,
 				GParamSpec      *pspec,
 				EvWindow        *ev_window)
@@ -6287,9 +6288,11 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "handle-link",
 			         G_CALLBACK (view_handle_link_cb),
 			         ev_window, 0);
-	g_signal_connect_object (ev_window->priv->view,
-			         "popup",
+	g_signal_connect_object (ev_window->priv->view, "popup",
 				 G_CALLBACK (view_menu_popup_cb),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "selection-changed",
+				 G_CALLBACK (view_selection_changed_cb),
 				 ev_window, 0);
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
@@ -6336,15 +6339,9 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::dual-page",
 			  G_CALLBACK (ev_window_dual_mode_changed_cb),
 			  ev_window);
-
-	/* Connect to view signals */
 	g_signal_connect (ev_window->priv->model,
 			  "notify::inverted-colors",
 			  G_CALLBACK (ev_window_inverted_colors_changed_cb),
-			  ev_window);
-	g_signal_connect (ev_window->priv->view,
-			  "notify::has-selection",
-			  G_CALLBACK (ev_window_has_selection_changed_cb),
 			  ev_window);
 
      	/* Connect sidebar signals */

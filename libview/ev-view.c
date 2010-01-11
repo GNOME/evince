@@ -48,16 +48,12 @@
 #define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
 
 enum {
-	PROP_0,
-	PROP_HAS_SELECTION
-};
-
-enum {
 	SIGNAL_BINDING_ACTIVATED,
 	SIGNAL_HANDLE_LINK,
 	SIGNAL_EXTERNAL_LINK,
 	SIGNAL_POPUP_MENU,
-	N_SIGNALS,
+	SIGNAL_SELECTION_CHANGED,
+	N_SIGNALS
 };
 
 enum {
@@ -217,10 +213,6 @@ static void       on_adjustment_value_changed                (GtkAdjustment     
 /*** GObject ***/
 static void       ev_view_finalize                           (GObject            *object);
 static void       ev_view_destroy                            (GtkObject          *object);
-static void       ev_view_get_property                       (GObject            *object,
-							      guint               prop_id,
-							      GValue             *value,
-							      GParamSpec         *pspec);
 static void       ev_view_class_init                         (EvViewClass        *class);
 static void       ev_view_init                               (EvView             *view);
 
@@ -4207,24 +4199,6 @@ ev_view_get_accessible (GtkWidget *widget)
 }
 
 static void
-ev_view_get_property (GObject *object,
-		      guint prop_id,
-		      GValue *value,
-		      GParamSpec *pspec)
-{
-	EvView *view = EV_VIEW (object);
-
-	switch (prop_id) {
-	        case PROP_HAS_SELECTION:
-			g_value_set_boolean (value,
-					     view->selection_info.selections != NULL);
-			break;
-	        default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-	}
-}
-
-static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -4234,7 +4208,6 @@ ev_view_class_init (EvViewClass *class)
 	GtkBindingSet *binding_set;
 
 	object_class->finalize = ev_view_finalize;
-	object_class->get_property = ev_view_get_property;
 
 	widget_class->expose_event = ev_view_expose_event;
 	widget_class->button_press_event = ev_view_button_press_event;
@@ -4295,15 +4268,14 @@ ev_view_class_init (EvViewClass *class)
 		         g_cclosure_marshal_VOID__OBJECT,
 		         G_TYPE_NONE, 1,
 			 G_TYPE_OBJECT);
-
-
-	g_object_class_install_property (object_class,
-					 PROP_HAS_SELECTION,
-					 g_param_spec_boolean ("has-selection",
-							       "Has selection",
-							       "The view has selections",
-							       FALSE,
-							       G_PARAM_READABLE));
+	signals[SIGNAL_SELECTION_CHANGED] = g_signal_new ("selection-changed",
+                         G_TYPE_FROM_CLASS (object_class),
+                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                         G_STRUCT_OFFSET (EvViewClass, selection_changed),
+                         NULL, NULL,
+			 g_cclosure_marshal_VOID__VOID,
+                         G_TYPE_NONE, 0,
+                         G_TYPE_NONE);
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -5345,7 +5317,7 @@ merge_selection_region (EvView *view,
 	g_list_free (view->selection_info.selections);
 	view->selection_info.selections = new_list;
 	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, new_list);
-	g_object_notify (G_OBJECT (view), "has-selection");
+	g_signal_emit (view, signals[SIGNAL_SELECTION_CHANGED], 0, NULL);
 
 	new_list_ptr = new_list;
 	old_list_ptr = old_list;
@@ -5488,7 +5460,7 @@ clear_selection (EvView *view)
 	view->selection_info.in_selection = FALSE;
 	if (view->pixbuf_cache)
 		ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, NULL);
-	g_object_notify (G_OBJECT (view), "has-selection");
+	g_signal_emit (view, signals[SIGNAL_SELECTION_CHANGED], 0, NULL);
 }
 
 void

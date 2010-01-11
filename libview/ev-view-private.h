@@ -193,6 +193,7 @@ struct _EvViewClass {
 					   EvLinkAction   *action);
 	void    (*popup_menu)		  (EvView         *view,
 					   EvLink         *link);
+	void    (*selection_changed)      (EvView         *view);
 };
 
 void _get_page_size_for_scale_and_rotation (EvDocument *document,
