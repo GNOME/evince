@@ -857,7 +857,8 @@ static void
 view_selection_changed_cb (EvView   *view,
 			   EvWindow *window)
 {
-	ev_window_update_actions (window);
+	ev_window_set_action_sensitive (window, "EditCopy",
+					ev_view_get_has_selection (view));
 }
 
 static void
