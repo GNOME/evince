@@ -1,4 +1,47 @@
 ================
+Evince  2.29.5
+================
+
+New Features and UI Improvements:
+
+    * Make Home/End keys go to first/last page in presentation mode
+      too (#358462, Carlos Garcia Campos)
+    * Allow finish presentation by clicking on end page (#309364,
+      Carlos Garcia Campos)
+    * Add custom print tab to printing dialog with several page scale
+      options (#599468, #599470, #599547, Adrian Johnson)
+    * Add support for remote files in evince thumbnailers (#605218,
+      Carlos Garcia Campos)
+    * Add evince icon to the windows executable (#596401, Hib Eris)
+
+Bug fixes:
+
+    * Fix transition of pages with duration=0 in presentation mode
+      (Carlos Garcia Campos)
+    * Fix vertical white line shown in presentation mode with
+      documents with black background (#438760, Carlos Garcia Campos)
+    * Fix fickering and blank screen issues when changing pages fast
+      in presentation mode (#602738, Carlos Garcia Campos)
+    * Fix printing on Windows (#604705, Hib Eris)
+    * Disable text selection in presentation mode (#605554, Carlos
+      Garcia Campos)
+    * Make comics backend also compile on Windows (#605146, Hib Eris)
+    * Remove comics_regex_quote() in favor of always using
+      g_shell_quote() (#605092, Juanjo Marín)
+    * Properly redrawn properties view when document is reloaded
+      (#605169, Carlos Garcia Campos)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Jorge González (es)
+    * Kjartan Maraas (nb)
+    * Matej Urbančič (sl)
+    * Daniel Nylander (sv)
+    * Theppitak Karoonboonyanan (th)
+    * Maxim Dziumanenko (uk)
+
+================
 Evince  2.29.4
 ================
 
