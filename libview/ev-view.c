@@ -5367,7 +5367,7 @@ merge_selection_region (EvView *view,
 							       view->scale,
 							       &tmp_region);
 
-			if (tmp_region) {
+			if (tmp_region && !gdk_region_empty (tmp_region)) {
 				new_sel->covered_region = gdk_region_copy (tmp_region);
 			}
 		}
