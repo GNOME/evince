@@ -68,12 +68,25 @@
 #define HAVE_CAIRO_PRINT
 #endif
 
-/* fields from the XMP Rights Management Schema, XMP Specification Sept 2005, pag. 45 */
+/* Fields for checking the license info suggested by Creative Commons 
+ * Main reference: http://wiki.creativecommons.org/XMP */
+
+/* fields from the XMP Rights Management Schema, XMP Specification Sept 2005, pag. 42 */
 #define LICENSE_MARKED "/rdf:RDF/rdf:Description/xmpRights:Marked"
-#define LICENSE_TEXT "/rdf:RDF/rdf:Description/dc:rights/rdf:Alt/rdf:li[lang('%s')]"
+#define LICENSE_TEXT "/x:xmpmeta/rdf:RDF/rdf:Description/xmpRights:UsageTerms/rdf:Alt/rdf:li[lang('%s')]"
 #define LICENSE_WEB_STATEMENT "/rdf:RDF/rdf:Description/xmpRights:WebStatement"
 /* license field from Creative Commons schema, http://creativecommons.org/ns */
 #define LICENSE_URI "/rdf:RDF/rdf:Description/cc:license/@rdf:resource"
+
+/* alternative field from the Dublic Core Schema for checking the informal rights statement 
+ * as suggested by the Creative Commons template [1]. This field has been replaced or 
+ * complemented by its XMP counterpart [2].
+ * References: 
+ *    [1] http://wiki.creativecommons.org/XMP_help_for_Adobe_applications 
+ *    [2] http://code.creativecommons.org/issues/issue505 */
+#define LICENSE_TEXT_ALT "/x:xmpmeta/rdf:RDF/rdf:Description/dc:rights/rdf:Alt/rdf:li[lang('%s')]"
+#define GET_LICENSE_TEXT(a) ( (a < 1) ? LICENSE_TEXT : LICENSE_TEXT_ALT )
+
 /* fields for authors and keywords */
 #define AUTHORS "/rdf:RDF/rdf:Description/dc:creator/rdf:Seq/rdf:li"
 #define KEYWORDS "/rdf:RDF/rdf:Description/dc:subject/rdf:Bag/rdf:li"
@@ -921,7 +934,11 @@ pdf_document_get_license_from_metadata (xmlXPathContextPtr xpathCtx)
 		 * Schema. This field is recomended to be checked by Creative
 		 * Commons */
 		/* 1) checking for a suitable localized string */
-		license->text = pdf_document_get_localized_object_from_metadata (xpathCtx, LICENSE_TEXT);
+		int lt;
+
+		for (lt = 0; !license->text && lt < 2; lt++)
+			license->text = pdf_document_get_localized_object_from_metadata (xpathCtx,
+											 GET_LICENSE_TEXT (lt));
 
 		/* Checking the license URI as defined by the Creative Commons
 		 * Schema. This field is recomended to be checked by Creative
