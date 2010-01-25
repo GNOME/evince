@@ -81,7 +81,7 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 	CharMetricInfo *cm;
 	FILE	*in;
 	
-	in = fopen(filename, "r");
+	in = fopen(filename, "rb");
 	if(in == NULL)
 		return -1;
 	status = afm_parse_file(in, &fi, P_GM);
@@ -162,7 +162,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	Int32	*depths;
 	Uint32	checksum;
 
-	in = fopen(filename, "r");
+	in = fopen(filename, "rb");
 	if(in == NULL)
 		return -1;
 	tfm = NULL;
@@ -445,7 +445,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	int	olevel;
 	int	nwords;
 
-	in = fopen(filename, "r");
+	in = fopen(filename, "rb");
 	if(in == NULL)
 		return -1;
 

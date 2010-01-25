@@ -119,7 +119,7 @@ static int read_encoding(DviEncoding *enc)
 	
 	ASSERT(enc->private == NULL);
 
-	in = fopen(enc->filename, "r");
+	in = fopen(enc->filename, "rb");
 	if(in == NULL) {
 		DEBUG((DBG_FMAP, "%s: could not read `%s' (%s)\n",
 			enc->name, enc->filename, strerror(errno)));
@@ -267,7 +267,7 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 	if(filename == NULL)
 		filename = mdvi_strdup(basefile);
 
-	in = fopen(filename, "r");
+	in = fopen(filename, "rb");
 	if(in == NULL) {
 		mdvi_free(filename);
 		return NULL;
@@ -478,9 +478,9 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 	if(ptr == NULL)
 		ptr = kpse_find_file(file, kpse_dvips_config_format, 0);
 	if(ptr == NULL)
-		in = fopen(file, "r");			
+		in = fopen(file, "rb");
 	else {
-		in = fopen(ptr, "r");
+		in = fopen(ptr, "rb");
 		mdvi_free(ptr);
 	}
 	if(in == NULL)
@@ -728,9 +728,9 @@ static int	mdvi_init_fontmaps(void)
 	/* let's ask kpathsea for the file first */
 	file = kpse_find_file(config, kpse_program_text_format, 0);
 	if(file == NULL)
-		in = fopen(config, "r");
+		in = fopen(config, "rb");
 	else {
-		in = fopen(file, "r");
+		in = fopen(file, "rb");
 		mdvi_free(file);
 	}
 	if(in == NULL)
@@ -906,7 +906,7 @@ int	mdvi_ps_read_fontmap(const char *name)
 		fullname = kpse_path_search(pslibdir, name, 1);
 	else
 		fullname = (char *)name;
-	in = fopen(fullname, "r");
+	in = fopen(fullname, "rb");
 	if(in == NULL) {
 		if(fullname != name)
 			mdvi_free(fullname);

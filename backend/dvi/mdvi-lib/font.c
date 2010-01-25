@@ -36,7 +36,7 @@ int	font_reopen(DviFont *font)
 {
 	if(font->in)
 		fseek(font->in, (long)0, SEEK_SET);
-	else if((font->in = fopen(font->filename, "r")) == NULL) {
+	else if((font->in = fopen(font->filename, "rb")) == NULL) {
 		DEBUG((DBG_FILES, "reopen(%s) -> Error\n", font->filename));
 		return -1;
 	}

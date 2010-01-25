@@ -684,7 +684,7 @@ DviContext *mdvi_init_context(DviParams *par, DviPageSpec *spec, const char *fil
 		perror(file);
 		return NULL;
 	}
-	p = fopen(filename, "r");
+	p = fopen(filename, "rb");
 	if(p == NULL) {
 		perror(file);
 		mdvi_free(filename);
@@ -1008,7 +1008,7 @@ int	mdvi_dopage(DviContext *dvi, int pageno)
 again:	
 	if(dvi->in == NULL) {
 		/* try reopening the file */
-		dvi->in = fopen(dvi->filename, "r");
+		dvi->in = fopen(dvi->filename, "rb");
 		if(dvi->in == NULL) {
 			mdvi_warning(_("%s: could not reopen file (%s)\n"),
 				     dvi->filename,
