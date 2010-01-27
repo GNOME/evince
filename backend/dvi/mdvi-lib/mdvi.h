@@ -490,7 +490,7 @@ extern void	flush_font_metrics __PROTO((void));
 
 extern void	mdvi_sort_pages __PROTO((DviContext *, DviPageSort));
 
-extern void mdvi_init_kpathsea __PROTO((const char *, const char *, const char *, int));
+extern void mdvi_init_kpathsea __PROTO((const char *, const char *, const char *, int, const char *));
 
 extern DviContext* mdvi_init_context __PROTO((DviParams *, DviPageSpec *, const char *));
 extern void 	mdvi_destroy_context __PROTO((DviContext *));

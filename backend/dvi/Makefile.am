@@ -18,6 +18,8 @@ libdvidocument_la_SOURCES = 	\
 	dvi-document.h  	\
 	cairo-device.c		\
 	cairo-device.h		\
+	texmfcnf.c		\
+	texmfcnf.h		\
 	fonts.c			\
 	fonts.h
 

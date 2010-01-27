@@ -26,7 +26,8 @@
 #include "private.h"
 
 void	mdvi_init_kpathsea(const char *program, 
-	const char *mfmode, const char *font, int dpi)
+	const char *mfmode, const char *font, int dpi,
+	const char *texmfcnf)
 {
 	const char *p;
 
@@ -41,5 +42,7 @@ void	mdvi_init_kpathsea(const char *program,
 	kpse_set_program_enabled(kpse_pk_format, 1, kpse_src_compile);
 	kpse_set_program_enabled(kpse_tfm_format, 1, kpse_src_compile);
 	kpse_set_program_enabled(kpse_ofm_format, 1, kpse_src_compile);
+	if (texmfcnf != NULL)
+		xputenv("TEXMFCNF", texmfcnf);
 }
 

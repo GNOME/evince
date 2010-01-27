@@ -39,6 +39,7 @@
 #include <kpathsea/proginit.h>
 #include <kpathsea/progname.h>
 #include <kpathsea/tex-make.h>
+#include <kpathsea/lib.h>
 
 #define ISSP(p)		(*(p) == ' ' || *(p) == '\t')
 #define SKIPSP(p)	while(ISSP(p)) p++
