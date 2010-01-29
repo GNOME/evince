@@ -2,21 +2,22 @@
 # Estonian translation of Evince.
 #
 # Copyright (C) 2005, 2006 Free Software Foundation, Inc.
-# Copyright (C) 2007-2009 The GNOME Project
+# Copyright (C) 2007-2010 The GNOME Project
 # This file is distributed under the same license as the evince package.
 #
 # Sven Sapelson <sven.sapelson gmail com>, 2005.
 # Ivar Smolin <okul linux ee>, 2005-2009.
 # Priit Laes <amd store20 com>, 2005-2007.
+# Mattias Põldaru <mahfiaz gmail com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2009-11-29 16:01+0000\n"
-"PO-Revision-Date: 2009-11-29 19:51+0200\n"
-"Last-Translator: Ivar Smolin <okul@linux.ee>\n"
+"POT-Creation-Date: 2010-01-28 18:06+0000\n"
+"PO-Revision-Date: 2010-01-29 09:29+0300\n"
+"Last-Translator: Mattias Põldaru <mahfiaz gmail com>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgstr ""
 "käsku leida"
 
 msgid "Unknown MIME Type"
-msgstr "Tundmatu MIME tüüp"
+msgstr "Tundmatu MIME-tüüp"
 
 msgid "File corrupted"
 msgstr "Fail on rikutud"
@@ -163,7 +164,7 @@ msgid "Multi file zips are not supported"
 msgstr "Mitut faili sisaldavad zip'id pole toetatud"
 
 msgid "Cannot open the file"
-msgstr "Faili pole võimalik"
+msgstr "Faili pole võimalik avada"
 
 msgid "Cannot read data from file"
 msgstr "Andmeid ei suudeta failist lugeda"
@@ -305,7 +306,7 @@ msgid "Best Fit"
 msgstr "Parim sobitus"
 
 msgid "Fit Page Width"
-msgstr "Sobitus lehekülje laiuse järgi"
+msgstr "Sobitus laiuse järgi"
 
 msgid "50%"
 msgstr "50%"
@@ -400,7 +401,7 @@ msgid "Make the current document fill the window"
 msgstr "Dokumendi sobitamine akna suurusega"
 
 msgid "Fit Page _Width"
-msgstr "Sobita _lehekülje laius"
+msgstr "Sobitus _laiuse järgi"
 
 msgid "Make the current document fill the window width"
 msgstr "Dokumendi sobitamine akna laiusega"
@@ -496,6 +497,83 @@ msgstr "(%d %d-st)"
 msgid "of %d"
 msgstr "%d-st"
 
+#. Initial state
+msgid "Preparing to print ..."
+msgstr "Printimise ettevalmistamine..."
+
+msgid "Finishing..."
+msgstr "Lõpetamine..."
+
+#, c-format
+msgid "Printing page %d of %d..."
+msgstr "Lehekülje %d/%d printimine"
+
+msgid "Printing is not supported on this printer."
+msgstr "Selle printeriga printimine ei ole toetatud."
+
+msgid "Invalid page selection"
+msgstr "Vigane lehekülgede valik"
+
+msgid "Warning"
+msgstr "Hoiatus"
+
+msgid "Your print range selection does not include any page"
+msgstr "Sinu määratud printimisvahemik ei sisalda ühtegi lehekülge"
+
+msgid "Page Scaling:"
+msgstr "Lehekülje mastaapimine:"
+
+msgid "Shrink to Printable Area"
+msgstr "Vähenda trükialale"
+
+msgid "Fit to Printable Area"
+msgstr "Täida trükiala"
+
+msgid ""
+"Scale document pages to fit the selected printer page. Select from one of "
+"the following:\n"
+"\n"
+"• \"None\": No page scaling is performed.\n"
+"\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable "
+"area are reduced fit the printable area of the printer page.\n"
+"\n"
+"• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
+"required to fit the printable area of the printer page.\n"
+msgstr ""
+"Dokumendi lehtede mastaapimine, et need mahuksid paberile. Vali üks "
+"järgnevaist:\n"
+"\n"
+"• \"Puudub\": mitte mingit mastaapimist ei teostata.\n"
+"\n"
+"• \"Vähenda trükialale\": dokumendi lehti, mis on suuremad trükialast "
+"vähendatakse, et need mahuksid paberi trükialale.\n"
+"\n"
+"• \"Täida trükiala\": dokumendi lehti suurendatakse või vähendatakse "
+"vastavalt vajadusele, et need täidaksid kogu paberi trükiala.\n"
+
+msgid "Auto Rotate and Center"
+msgstr "Automaatne pööramine ja keskele paigutamine"
+
+msgid ""
+"Rotate printer page orientation of each page to match orientation of each "
+"document page. Document pages will be centered within the printer page."
+msgstr ""
+"Igal prinditaval lehel pööratakse paberi suund samaks dokumendi lehe "
+"suunaga. Dokumendi leht paigutatakse paberi keskele."
+
+msgid "Select page size using document page size"
+msgstr "Paberi formaat valitakse vastavalt dokumendi lehe suurusele"
+
+msgid ""
+"When enabled, each page will be printed on the same size paper as the "
+"document page."
+msgstr ""
+"Kui lubatud, prinditakse kõik lehed sama suurele paberile, kui on dokumendis."
+
+msgid "Page Handling"
+msgstr "Lehekülje käsitlemine"
+
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Tõrge lehekülje %d printimisel: %s"
@@ -514,6 +592,12 @@ msgstr "Vaate allakerimine"
 
 msgid "Document View"
 msgstr "Dokumendivaade"
+
+msgid "Jump to page:"
+msgstr "Hüppa leheküljele:"
+
+msgid "End of presentation. Click to exit."
+msgstr "Esitluse lõpp. Väljumiseks klõpsa."
 
 msgid "Go to first page"
 msgstr "Esimesele leheküljele liikumine"
@@ -548,12 +632,6 @@ msgstr "Liikumine failile „%s”"
 #, c-format
 msgid "Launch %s"
 msgstr "Käivita %s"
-
-msgid "End of presentation. Press Escape to exit."
-msgstr "Esitluse lõpp. Väljumiseks vajuta Escape klahvi."
-
-msgid "Jump to page:"
-msgstr "Hüppa leheküljele:"
 
 msgid "Loading..."
 msgstr "Laadimine..."
@@ -635,29 +713,6 @@ msgstr "Jäta parool kuni _väljalogimiseni meelde"
 
 msgid "Remember _forever"
 msgstr "Jäta alat_iseks meelde"
-
-#. Initial state
-msgid "Preparing to print ..."
-msgstr "Printimise ettevalmistamine..."
-
-msgid "Finishing..."
-msgstr "Lõpetamine..."
-
-#, c-format
-msgid "Printing page %d of %d..."
-msgstr "Lehekülje %d/%d printimine"
-
-msgid "Printing is not supported on this printer."
-msgstr "Selle printeriga ei ole printimine toetatud."
-
-msgid "Invalid page selection"
-msgstr "Vigane lehekülgede valik"
-
-msgid "Warning"
-msgstr "Hoiatus"
-
-msgid "Your print range selection does not include any page"
-msgstr "Sinu määratud printimisvahemik ei sisalda ühtegi lehekülge"
 
 msgid "Properties"
 msgstr "Omadused"
@@ -906,10 +961,10 @@ msgid "Save a copy of the current document"
 msgstr "Käesolevast dokumendist koopia salvestamine"
 
 msgid "Page Set_up..."
-msgstr "Lehekülje _sätted..."
+msgstr "Paberi _sätted..."
 
 msgid "Setup the page settings for printing"
-msgstr "Printimise jaoks lehesätete seadistamine"
+msgstr "Printimise jaoks paberi sätete seadistamine"
 
 msgid "_Print..."
 msgstr "_Prindi..."
@@ -1013,6 +1068,7 @@ msgstr "_Esitlus"
 msgid "Run document as a presentation"
 msgstr "Dokumenti näitamine esitlusena"
 
+# kas siia võib kirjutada "Pööratud värvid?"
 msgid "_Inverted Colors"
 msgstr "_Pööratud värvused"
 
