@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
 "POT-Creation-Date: 2010-01-28 18:06+0000\n"
-"PO-Revision-Date: 2010-01-29 09:29+0300\n"
+"PO-Revision-Date: 2010-01-29 19:38+0300\n"
 "Last-Translator: Mattias Põldaru <mahfiaz gmail com>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -43,8 +43,7 @@ msgstr "Pole koomiksiraamatu MIME-tüüp: %s"
 
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr ""
-"Seda liiki koomiksiraamatu lahtipakkimiseks pole võimalik ühtegi sobivat "
-"käsku leida"
+"Seda liiki koomiksiraamatu lahtipakkimiseks ei leitud ühtegi sobivat käsku"
 
 msgid "Unknown MIME Type"
 msgstr "Tundmatu MIME-tüüp"
@@ -77,8 +76,8 @@ msgid ""
 "The document is composed of several files. One or more of such files cannot "
 "be accessed."
 msgstr ""
-"See dokument on koostatud mitme faili põhjal, paraku pole võimalik mõnele "
-"nendest failidest ligi pääseda."
+"See dokument koosneb mitmest failist, paraku pole võimalik mõnele nendest "
+"failidest ligi pääseda."
 
 msgid "Djvu Documents"
 msgstr "Djvu-dokumendid"
@@ -125,7 +124,7 @@ msgid "Unknown font type"
 msgstr "Tundmatu kirjatüüp"
 
 msgid "No name"
-msgstr "Nimi Puudub"
+msgstr "Nimi puudub"
 
 msgid "Embedded subset"
 msgstr "Põimitud alamhulk"
@@ -149,17 +148,18 @@ msgid "Impress Slides"
 msgstr "Impress'i slaidid"
 
 msgid "No error"
-msgstr "Viga ei esinenud"
+msgstr "Vigu ei esinenud"
 
 msgid "Not enough memory"
 msgstr "Ebapiisavalt mälu"
 
 msgid "Cannot find zip signature"
-msgstr "Zip-signatuuri ei suudeta leida"
+msgstr "Zip-signatuuri ei suudetud leida"
 
 msgid "Invalid zip file"
 msgstr "Vigane zip-fail"
 
+# äkki peaks olema: Mitmest failist koosnevad zip'id pole toetatud
 msgid "Multi file zips are not supported"
 msgstr "Mitut faili sisaldavad zip'id pole toetatud"
 
@@ -299,7 +299,7 @@ msgid "Separator"
 msgstr "Eraldaja"
 
 msgid "Running in presentation mode"
-msgstr "Evince käivitamine esitlusžiimis"
+msgstr "Evince käivitamine esitlusrežiimis"
 
 #. translators: this is the label for toolbar button
 msgid "Best Fit"
@@ -398,13 +398,13 @@ msgid "_Best Fit"
 msgstr "Par_im sobitus"
 
 msgid "Make the current document fill the window"
-msgstr "Dokumendi sobitamine akna suurusega"
+msgstr "Dokumendi lehekülje mahutamine aknasse"
 
 msgid "Fit Page _Width"
 msgstr "Sobitus _laiuse järgi"
 
 msgid "Make the current document fill the window width"
-msgstr "Dokumendi sobitamine akna laiusega"
+msgstr "Dokumendi laiuse sobitamine akna laiusega"
 
 msgid "Page"
 msgstr "Lehekülg"
@@ -481,13 +481,13 @@ msgstr "%.2f x %.2f tolli"
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr "%s, vertikaalpaigutus (%s)"
+msgstr "%s, püstpaigutus (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #, c-format
 msgid "%s, Landscape (%s)"
-msgstr "%s, horisontaalpaigutus (%s)"
+msgstr "%s, rõhtpaigutus (%s)"
 
 #, c-format
 msgid "(%d of %d)"
@@ -512,7 +512,7 @@ msgid "Printing is not supported on this printer."
 msgstr "Selle printeriga printimine ei ole toetatud."
 
 msgid "Invalid page selection"
-msgstr "Vigane lehekülgede valik"
+msgstr "Sobimatu lehekülgede valik"
 
 msgid "Warning"
 msgstr "Hoiatus"
@@ -546,7 +546,7 @@ msgstr ""
 "\n"
 "• \"Puudub\": mitte mingit mastaapimist ei teostata.\n"
 "\n"
-"• \"Vähenda trükialale\": dokumendi lehti, mis on suuremad trükialast "
+"• \"Vähenda trükialale\": dokumendi lehti, mis on suuremad trükialast, "
 "vähendatakse, et need mahuksid paberi trükialale.\n"
 "\n"
 "• \"Täida trükiala\": dokumendi lehti suurendatakse või vähendatakse "
@@ -731,7 +731,7 @@ msgstr "Kirjatüüp"
 
 #, c-format
 msgid "Gathering font information... %3d%%"
-msgstr "Kogun infot kasutatud kirjatüüpide kohta... %3d%%"
+msgstr "Kasutatud kirjatüüpide kohta info kogumine... %3d%%"
 
 msgid "Usage terms"
 msgstr "Kasutustingimused"
@@ -805,7 +805,7 @@ msgstr "Manuse salvestamine asukohale %s"
 
 #, c-format
 msgid "Saving image to %s"
-msgstr "Pildi salvestamine asukohale %s"
+msgstr "Pildi salvestamine kataloogi %s"
 
 #, c-format
 msgid "The file could not be saved as “%s”."
@@ -911,7 +911,8 @@ msgid "translator-credits"
 msgstr ""
 "Sven Sapelson <sven.sapelson gmail com>, 2005.\n"
 "Ivar Smolin <okul linux ee>, 2005-2009.\n"
-"Priit Laes <amd store20 com>, 2005-2007."
+"Priit Laes <amd store20 com>, 2005-2007.\n"
+"Mattias Põldaru <mahfiaz gmail com>, 2010."
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -1070,10 +1071,10 @@ msgstr "Dokumenti näitamine esitlusena"
 
 # kas siia võib kirjutada "Pööratud värvid?"
 msgid "_Inverted Colors"
-msgstr "_Pööratud värvused"
+msgstr "_Pööratud värvid"
 
 msgid "Show page contents with the colors inverted"
-msgstr "Lehe sisu näitamine pööratud värvustega"
+msgstr "Lehe sisu näitamine inverteeritud värvides"
 
 #. Links
 msgid "_Open Link"
@@ -1183,7 +1184,7 @@ msgid "Run evince in presentation mode"
 msgstr "Evince käivitamine esitlusžiimis"
 
 msgid "Run evince as a previewer"
-msgstr "Evince kävitamine eelvaatlusrežiimis"
+msgstr "Evince käivitamine eelvaatlusrežiimis"
 
 msgid "The word or phrase to find in the document"
 msgstr "Dokumendist otsitav sõna või fraas"
