@@ -259,7 +259,7 @@ create_loading_model (void)
 						     G_TYPE_STRING);
 
 	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
-	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>", _("Loading..."));
+	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>", _("Loading…"));
 	gtk_list_store_set (GTK_LIST_STORE (retval), &iter,
 			    EV_DOCUMENT_LINKS_COLUMN_MARKUP, markup,
 			    EV_DOCUMENT_LINKS_COLUMN_EXPAND, FALSE,
@@ -332,7 +332,7 @@ build_popup_menu (EvSidebarLinks *sidebar)
 
 	menu = gtk_menu_new ();
 	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, NULL);
-	gtk_label_set_label (GTK_LABEL (GTK_BIN (item)->child), _("Print..."));
+	gtk_label_set_label (GTK_LABEL (GTK_BIN (item)->child), _("Print…"));
 	gtk_widget_show (item);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	g_signal_connect (item, "activate",

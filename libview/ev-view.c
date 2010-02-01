@@ -3923,7 +3923,7 @@ draw_loading_text (EvView       *view,
 	gint     width, height;
 
 	if (!view->loading_text) {
-		const gchar *loading_text = _("Loading...");
+		const gchar *loading_text = _("Loading…");
 		PangoLayout *layout;
 		PangoFontDescription *font_desc;
 		PangoRectangle logical_rect;

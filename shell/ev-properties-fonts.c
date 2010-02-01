@@ -159,7 +159,7 @@ update_progress_label (GtkWidget *label, double progress)
 {
 	if (progress > 0) {
 		char *progress_text;
-		progress_text = g_strdup_printf (_("Gathering font information... %3d%%"),
+		progress_text = g_strdup_printf (_("Gathering font information… %3d%%"),
 						 (int) (progress * 100));
 		gtk_label_set_text (GTK_LABEL (label), progress_text);
 		g_free (progress_text);

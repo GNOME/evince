@@ -170,7 +170,7 @@ djvu_document_load (EvDocument  *document,
     		g_set_error_literal (error,
 				     EV_DOCUMENT_ERROR,
 				     EV_DOCUMENT_ERROR_INVALID,
-				     _("DJVU document has incorrect format"));
+				     _("DjVu document has incorrect format"));
 		return FALSE;
 	}
 
@@ -248,7 +248,7 @@ djvu_document_load (EvDocument  *document,
                                      G_FILE_ERROR,
                                      G_FILE_ERROR_EXIST,
 				     _("The document is composed of several files. "
-                                       "One or more of such files cannot be accessed."));
+                                       "One or more of these files cannot be accessed."));
 
 		return FALSE;
 	}

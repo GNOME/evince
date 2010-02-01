@@ -830,7 +830,7 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	}
 
 	if (find_task.chapter)
-		link_title = g_strdup_printf (_("Page %s - %s"), page_label, find_task.chapter);
+		link_title = g_strdup_printf (_("Page %s — %s"), page_label, find_task.chapter);
 	else
 		link_title = g_strdup_printf (_("Page %s"), page_label);
 	
@@ -4195,7 +4195,7 @@ build_comments_string (void)
 	}
 
 	return g_strdup_printf (_("Document Viewer.\n"
-				  "Using poppler %s (%s)"),
+				  "Using Poppler %s (%s)"),
 				version, backend_name);
 #else
 	return g_strdup_printf (_("Document Viewer"));
@@ -5007,19 +5007,19 @@ static const GtkActionEntry entries[] = {
 	{ "Help", NULL, N_("_Help") },
 
 	/* File menu */
-	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open..."), "<control>O",
+	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open…"), "<control>O",
 	  N_("Open an existing document"),
 	  G_CALLBACK (ev_window_cmd_file_open) },
 	{ "FileOpenCopy", NULL, N_("Op_en a Copy"), "<control>N",
 	  N_("Open a copy of the current document in a new window"),
 	  G_CALLBACK (ev_window_cmd_file_open_copy) },
-       	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy..."), "<control>S",
+       	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy…"), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePageSetup", GTK_STOCK_PAGE_SETUP, N_("Page Set_up..."), NULL,
-	  N_("Setup the page settings for printing"),
+	{ "FilePageSetup", GTK_STOCK_PAGE_SETUP, N_("Page Set_up…"), NULL,
+	  N_("Set up the page settings for printing"),
 	  G_CALLBACK (ev_window_cmd_file_print_setup) },
-	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print..."), "<control>P",
+	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print…"), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
 	{ "FileProperties", GTK_STOCK_PROPERTIES, N_("P_roperties"), "<alt>Return", NULL,
@@ -5032,7 +5032,7 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_edit_copy) },
  	{ "EditSelectAll", GTK_STOCK_SELECT_ALL, N_("Select _All"), "<control>A", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_select_all) },
-        { "EditFind", GTK_STOCK_FIND, N_("_Find..."), "<control>F",
+        { "EditFind", GTK_STOCK_FIND, N_("_Find…"), "<control>F",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
 	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G", NULL,
@@ -5187,7 +5187,7 @@ static const GtkActionEntry view_popup_entries [] = {
 	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link_new_window) },
 	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
 	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_link_address) },
-	{ "SaveImageAs", NULL, N_("_Save Image As..."), NULL,
+	{ "SaveImageAs", NULL, N_("_Save Image As…"), NULL,
 	  NULL, G_CALLBACK (ev_view_popup_cmd_save_image_as) },
 	{ "CopyImage", NULL, N_("Copy _Image"), NULL,
 	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_image) },
@@ -5196,7 +5196,7 @@ static const GtkActionEntry view_popup_entries [] = {
 static const GtkActionEntry attachment_popup_entries [] = {
 	{ "OpenAttachment", GTK_STOCK_OPEN, N_("_Open Attachment"), NULL,
 	  NULL, G_CALLBACK (ev_attachment_popup_cmd_open_attachment) },
-	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save Attachment As..."), NULL,
+	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save Attachment As…"), NULL,
 	  NULL, G_CALLBACK (ev_attachment_popup_cmd_save_attachment_as) },
 };
 
@@ -5275,7 +5275,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 
 	action = g_object_new (EV_TYPE_OPEN_RECENT_ACTION,
 			       "name", "FileOpenRecent",
-			       "label", _("_Open..."),
+			       "label", _("_Open…"),
 			       "tooltip", _("Open an existing document"),
 			       "stock_id", GTK_STOCK_OPEN,
 			       NULL);

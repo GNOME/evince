@@ -374,7 +374,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 		gtk_widget_show (choice);
 
 		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
-		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember password until you _logout"));
+		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember password until you _log out"));
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
 					      password_view->priv->password_save == G_PASSWORD_SAVE_FOR_SESSION);
 		g_object_set_data (G_OBJECT (choice), "password-save",

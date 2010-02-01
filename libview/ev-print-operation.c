@@ -338,11 +338,11 @@ ev_print_operation_update_status (EvPrintOperation *op,
 
 	if (page == -1) {
 		/* Initial state */
-		op->status = g_strdup (_("Preparing to print ..."));
+		op->status = g_strdup (_("Preparing to print…"));
 	} else if (page > n_pages) {
-		op->status = g_strdup (_("Finishing..."));
+		op->status = g_strdup (_("Finishing…"));
 	} else {
-		op->status = g_strdup_printf (_("Printing page %d of %d..."),
+		op->status = g_strdup_printf (_("Printing page %d of %d…"),
 					      page, n_pages);
 	}
 
@@ -1234,7 +1234,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 						 "%s", _("Invalid page selection"));
 		gtk_window_set_title (GTK_WINDOW (message_dialog), _("Warning"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (message_dialog),
-							  "%s", _("Your print range selection does not include any page"));
+							  "%s", _("Your print range selection does not include any pages"));
 		g_signal_connect (message_dialog, "response",
 				  G_CALLBACK (gtk_widget_destroy),
 				  NULL);
@@ -1903,7 +1903,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 		  "• \"None\": No page scaling is performed.\n"
 		  "\n"
 		  "• \"Shrink to Printable Area\": Document pages larger than the printable area"
-		  " are reduced fit the printable area of the printer page.\n"
+		  " are reduced to fit the printable area of the printer page.\n"
 		  "\n"
 		  "• \"Fit to Printable Area\": Document pages are enlarged or reduced as"
 		  " required to fit the printable area of the printer page.\n"));

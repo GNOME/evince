@@ -56,13 +56,13 @@ zip_error (int err)
 			ret = _("Not enough memory");
 			break;
 		case ZIP_NOSIG:
-			ret = _("Cannot find zip signature");
+			ret = _("Cannot find ZIP signature");
 			break;
 		case ZIP_BADZIP:
-			ret = _("Invalid zip file");
+			ret = _("Invalid ZIP file");
 			break;
 		case ZIP_NOMULTI:
-			ret = _("Multi file zips are not supported");
+			ret = _("Multi file ZIPs are not supported");
 			break;
 		case ZIP_EOPEN:
 			ret = _("Cannot open the file");
@@ -71,7 +71,7 @@ zip_error (int err)
 			ret = _("Cannot read data from file");
 			break;
 		case ZIP_NOFILE:
-			ret = _("Cannot find file in the zip archive");
+			ret = _("Cannot find file in the ZIP archive");
 			break;
 		default:
 			ret = _("Unknown error");

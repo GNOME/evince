@@ -281,11 +281,11 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 	units = get_default_user_units ();
 
 	if (units == GTK_UNIT_MM) {
-		exact_size = g_strdup_printf(_("%.0f x %.0f mm"),
+		exact_size = g_strdup_printf(_("%.0f × %.0f mm"),
 					     info->paper_width,
 					     info->paper_height);
 	} else {
-		exact_size = g_strdup_printf (_("%.2f x %.2f inch"),
+		exact_size = g_strdup_printf (_("%.2f × %.2f inch"),
 					      info->paper_width  / 25.4f,
 					      info->paper_height / 25.4f);
 	}
