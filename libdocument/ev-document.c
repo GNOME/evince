@@ -141,6 +141,7 @@ ev_document_class_init (EvDocumentClass *klass)
 
 	klass->get_page = ev_document_impl_get_page;
 	klass->get_info = ev_document_impl_get_info;
+	klass->get_backend_info = NULL;
 
 	g_object_class->finalize = ev_document_finalize;
 }
@@ -421,6 +422,18 @@ ev_document_get_info (EvDocument *document)
 	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
 
 	return document->priv->info;
+}
+
+gboolean
+ev_document_get_backend_info (EvDocument *document, EvDocumentBackendInfo *info)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+	if (klass->get_backend_info == NULL)
+		return FALSE;
+
+	return klass->get_backend_info (document, info);
 }
 
 cairo_surface_t *

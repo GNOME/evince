@@ -97,10 +97,6 @@
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
-#ifdef ENABLE_PDF
-#include <poppler.h>
-#endif
-
 typedef enum {
 	PAGE_MODE_DOCUMENT,
 	PAGE_MODE_PASSWORD
@@ -4173,33 +4169,21 @@ ev_window_dual_mode_changed_cb (EvDocumentModel *model,
 }
 
 static char *
-build_comments_string (void)
+build_comments_string (EvDocument *document)
 {
-#ifdef ENABLE_PDF
-	PopplerBackend backend;
-	const char *backend_name;
-	const char *version;
+	gchar *comments = NULL;
+	EvDocumentBackendInfo info;
 
-	backend = poppler_get_backend ();
-	version = poppler_get_version ();
-	switch (backend) {
-		case POPPLER_BACKEND_CAIRO:
-			backend_name = "cairo";
-			break;
-		case POPPLER_BACKEND_SPLASH:
-			backend_name = "splash";
-			break;
-		default:
-			backend_name = "unknown";
-			break;
+	if (document && ev_document_get_backend_info (document, &info)) {
+		comments = g_strdup_printf (
+			_("Document Viewer\nUsing %s (%s)"),
+			info.name, info.version);
+	} else {
+		comments = g_strdup_printf (
+			_("Document Viewer"));
 	}
 
-	return g_strdup_printf (_("Document Viewer.\n"
-				  "Using Poppler %s (%s)"),
-				version, backend_name);
-#else
-	return g_strdup_printf (_("Document Viewer"));
-#endif
+	return comments;
 }
 
 static void
@@ -4251,7 +4235,8 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 
 	license_trans = g_strconcat (_(license[0]), "\n", _(license[1]), "\n",
 				     _(license[2]), "\n", NULL);
-	comments = build_comments_string ();
+
+	comments = build_comments_string (ev_window->priv->document);
 
 	gtk_show_about_dialog (
 		GTK_WINDOW (ev_window),

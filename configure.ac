@@ -490,10 +490,6 @@ if test "x$enable_pdf" = "xyes"; then
     PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED,enable_pdf=yes,enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
-	    AC_DEFINE([ENABLE_PDF], [1], [Enable pdf support.])
-	    SHELL_LIBS="$SHELL_LIBS $POPPLER_LIBS"
-	    SHELL_CFLAGS="$SHELL_CFLAGS $POPPLER_CFLAGS"
-
 	    evince_save_LIBS=$LIBS
 	    LIBS="$LIBS $POPPLER_LIBS"
 	    AC_CHECK_FUNCS(poppler_page_render)

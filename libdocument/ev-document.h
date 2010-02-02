@@ -66,6 +66,13 @@ typedef struct {
 
 typedef struct _EvRectangle EvRectangle;
 
+typedef struct _EvDocumentBackendInfo EvDocumentBackendInfo;
+struct _EvDocumentBackendInfo
+{
+	const gchar *name;
+	const gchar *version;
+};
+
 struct _EvDocument
 {
 	GObject base;
@@ -96,6 +103,8 @@ struct _EvDocumentClass
         cairo_surface_t * (* render)          (EvDocument      *document,
                                                EvRenderContext *rc);
         EvDocumentInfo  * (* get_info)        (EvDocument      *document);
+        gboolean          (* get_backend_info)(EvDocument      *document,
+                                               EvDocumentBackendInfo *info);
 };
 
 GType            ev_document_get_type             (void) G_GNUC_CONST;
@@ -114,6 +123,8 @@ void             ev_document_fc_mutex_unlock      (void);
 gboolean         ev_document_fc_mutex_trylock     (void);
 
 EvDocumentInfo  *ev_document_get_info             (EvDocument      *document);
+gboolean         ev_document_get_backend_info     (EvDocument      *document,
+						   EvDocumentBackendInfo *info);
 gboolean         ev_document_load                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);

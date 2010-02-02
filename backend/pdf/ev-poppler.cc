@@ -830,6 +830,29 @@ pdf_document_get_info (EvDocument *document)
 	return info;
 }
 
+static gboolean
+pdf_document_get_backend_info (EvDocument *document, EvDocumentBackendInfo *info)
+{
+	PopplerBackend backend;
+
+	backend = poppler_get_backend ();
+	switch (backend) {
+		case POPPLER_BACKEND_CAIRO:
+			info->name = "poppler/cairo";
+			break;
+		case POPPLER_BACKEND_SPLASH:
+			info->name = "poppler/splash";
+			break;
+		default:
+			info->name = "poppler/unknown";
+			break;
+	}
+
+	info->version = poppler_get_version ();
+
+	return TRUE;
+}
+
 static void
 pdf_document_class_init (PdfDocumentClass *klass)
 {
@@ -846,6 +869,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_page_label = pdf_document_get_page_label;
 	ev_document_class->render = pdf_document_render;
 	ev_document_class->get_info = pdf_document_get_info;
+	ev_document_class->get_backend_info = pdf_document_get_backend_info;
 }
 
 /* EvDocumentSecurity */
