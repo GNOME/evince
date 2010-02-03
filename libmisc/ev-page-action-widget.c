@@ -127,7 +127,6 @@ activate_cb (EvPageActionWidget *action_widget)
 {
 	EvDocumentModel *model;
 	const char *text;
-	gchar *page_label;
 	EvLinkDest *link_dest;
 	EvLinkAction *link_action;
 	EvLink *link;
