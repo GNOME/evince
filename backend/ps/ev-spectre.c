@@ -259,6 +259,16 @@ ps_document_get_info (EvDocument *document)
 	return info;
 }
 
+static gboolean
+ps_document_get_backend_info (EvDocument            *document,
+			      EvDocumentBackendInfo *info)
+{
+	info->name = "libspectre";
+	info->version = SPECTRE_VERSION_STRING;
+
+	return TRUE;
+}
+
 static cairo_surface_t *
 ps_document_render (EvDocument      *document,
 		    EvRenderContext *rc)
@@ -334,6 +344,7 @@ ps_document_class_init (PSDocumentClass *klass)
 	ev_document_class->get_page_size = ps_document_get_page_size;
 	ev_document_class->get_page_label = ps_document_get_page_label;
 	ev_document_class->get_info = ps_document_get_info;
+	ev_document_class->get_backend_info = ps_document_get_backend_info;
 	ev_document_class->render = ps_document_render;
 }
 
