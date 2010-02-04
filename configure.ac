@@ -41,7 +41,7 @@ m4_define([ev_binary_version],[ev_document_lt_current])
 
 AC_PREREQ([2.57])
 AC_INIT([Evince],[ev_version],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
-AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([1.10 foreign dist-bzip2 no-dist-gzip])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -66,13 +66,10 @@ AC_PROG_SED
 AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
 AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
-GNOME_COMMON_INIT
 GNOME_DOC_INIT
 GNOME_MAINTAINER_MODE_DEFINES
 GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
-
-GTK_DOC_CHECK(1.0)
 
 IT_PROG_INTLTOOL([0.35.0])
 
@@ -260,9 +257,6 @@ if test "$with_keyring" = "yes"; then
         PKG_CHECK_MODULES(KEYRING, gnome-keyring-1 >= $KEYRING_REQUIRED)
         AC_DEFINE([WITH_KEYRING],[1],[Define if KEYRING support is enabled])
 fi
-
-GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`  
-AC_SUBST(GLIB_GENMARSHAL)
 
 # ****
 # DBUS
@@ -713,12 +707,25 @@ AC_SUBST(EVINCE_MIME_TYPES)
 
 AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_r is available on your system]))
 
+# *****************
+# API documentation
+# *****************
+
+GTK_DOC_CHECK([1.13],[--flavour no-tmpl])
+
+AC_SUBST([GLIB_PREFIX],[$($PKG_CONFIG --variable=prefix glib-2.0)])
+AC_SUBST([GTK_PREFIX],[$($PKG_CONFIG --variable=prefix gtk+-2.0)])
+
+# ******************
 # Backends directory
+# ******************
 
 AC_SUBST([backenddir],"\$(libdir)/evince/ev_binary_version/backends")
 AC_SUBST([backend_binary_version],"ev_binary_version")
 
+# **********
 # Versioning
+# **********
 
 AC_SUBST([EV_MAJOR_VERSION],[ev_major_version])
 AC_SUBST([EV_MINOR_VERSION],[ev_minor_version])
@@ -732,6 +739,7 @@ AC_SUBST([EV_DOCUMENT_LT_CURRENT_MINUS_AGE],[ev_document_lt_current_minus_age])
 AC_SUBST([EV_VIEW_LT_VERSION_INFO],[ev_view_lt_version_info])
 AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
 
+# *****************************************************************************
 # *****************************************************************************
 
 AC_CONFIG_FILES([

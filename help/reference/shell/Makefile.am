@@ -1,7 +1,5 @@
-## Process this file with automake to produce Makefile.in
-
-# We require automake 1.6 at least.
-AUTOMAKE_OPTIONS = 1.6
+# We require automake 1.10 for $(abs_builddir)
+AUTOMAKE_OPTIONS = 1.10
 
 # This is a blank Makefile.am for using gtk-doc.
 # Copy this to your project's API docs directory and modify the variables to
@@ -9,75 +7,98 @@ AUTOMAKE_OPTIONS = 1.6
 # of using the various options.
 
 # The name of the module, e.g. 'glib'.
-DOC_MODULE=evince
+DOC_MODULE = evince
+
+# Uncomment for versioned docs and specify the version of the module, e.g. '2'.
+# DOC_MODULE_VERSION = $(EV_API_VERSION)
 
 # The top-level SGML file. You can change this if you want to.
-DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
+DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.xml
 
 # The directory containing the source code. Relative to $(srcdir).
 # gtk-doc will search all .c & .h files beneath here for inline comments
-# documenting the functions and macros.
+# evinceing the functions and macros.
 # e.g. DOC_SOURCE_DIR=../../../gtk
-DOC_SOURCE_DIR=../../../shell --source-dir=../../../libmisc
+DOC_SOURCE_DIR = ../../../shell --source-dir=../../../libmisc
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
-SCANGOBJ_OPTIONS=
+SCANGOBJ_OPTIONS =
 
 # Extra options to supply to gtkdoc-scan.
-# e.g. SCAN_OPTIONS=--deprecated-guards="GTK_DISABLE_DEPRECATED" 
-SCAN_OPTIONS=
+# e.g. SCAN_OPTIONS=--deprecated-guards="GTK_DISABLE_DEPRECATED"
+SCAN_OPTIONS =
 
 # Extra options to supply to gtkdoc-mkdb.
 # e.g. MKDB_OPTIONS=--sgml-mode --output-format=xml
-MKDB_OPTIONS=--sgml-mode --output-format=xml
+MKDB_OPTIONS = --sgml-mode --output-format=xml --name-space=ev
 
 # Extra options to supply to gtkdoc-mktmpl
 # e.g. MKTMPL_OPTIONS=--only-section-tmpl
-MKTMPL_OPTIONS=--source-dir=../../../libmisc
+MKTMPL_OPTIONS =--source-dir=../../../libmisc
 
+# Extra options to supply to gtkdoc-mkhtml
 # Add the builddir to the HTML path so that version.xml is found
-MKHTML_OPTIONS=--path="$(abs_builddir)"
+MKHTML_OPTIONS = --path="$(abs_builddir)"
 
 # Extra options to supply to gtkdoc-fixref. Not normally needed.
 # e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
-FIXXREF_OPTIONS=
+FIXXREF_OPTIONS = \
+	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/glib \
+	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/gio \
+	--extra-dir=$(GTK_PREFIX)/share/gtk-doc/html/gdk \
+	--extra-dir=$(GTK_PREFIX)/share/gtk-doc/html/gdk-pixbuf \
+	--extra-dir=$(GTK_PREFIX)/share/gtk-doc/html/gtk
 
 # Used for dependencies. The docs will be rebuilt if any of these change.
 # e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
 # e.g. CFILE_GLOB=$(top_srcdir)/gtk/*.c
-HFILE_GLOB=$(top_srcdir)/shell/*.h
-CFILE_GLOB=$(top_srcdir)/shell/*.c
+HFILE_GLOB = \
+	$(top_srcdir)/shell/*.h \
+	$(top_builddir)/shell/*.h \
+	$(top_srcdir)/libmisc/*.h \
+	$(top_builddir)/libmisc/*.h
 
-# Header files to ignore when scanning.
+CFILE_GLOB = \
+	$(top_srcdir)/shell/*.c \
+	$(top_srcdir)/libmisc/*.c
+
+# Extra header to include when scanning, which are not under DOC_SOURCE_DIR
+# e.g. EXTRA_HFILES=$(top_srcdir}/contrib/extra.h
+# EXTRA_HFILES = $(top_builddir)/evince/ev-version.h
+EXTRA_HFILES =
+
+# Header files to ignore when scanning. Use base file name, no paths
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES=		\
-	ev-marshal.h 	\
-	ev-marshal.c 
+IGNORE_HFILES = \
+	config.h \
+	ev-marshal.h \
+	ev-application-service.h \
+	ev-daemon-service.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
-HTML_IMAGES=
+HTML_IMAGES =
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.sgml building.sgml changes-2.0.sgml
-content_files=
+content_files = \
+ 	version.xml
 
 # SGML files where gtk-doc abbrevations (#GtkWidget) are expanded
 # These files must be listed here *and* in content_files
 # e.g. expand_content_files=running.sgml
-expand_content_files=
+expand_content_files =
 
 # CFLAGS and LDFLAGS for compiling gtkdoc-scangobj with your library.
 # Only needed if you are using gtkdoc-scangobj to dynamically query widget
 # signals and properties.
-# e.g. INCLUDES=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
+# e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-INCLUDES= \
+GTKDOC_CFLAGS = \
 	-I$(top_srcdir)					\
 	-I$(top_builddir)				\
-	-I$(top_srcdir)/shell \
-	-DDATADIR=\"$(pkgdatadir)\"			\
-	-DGNOMEDATADIR=\"$(datadir)\"			\
+	-I$(top_srcdir)/shell				\
+	-I$(top_builddir)/shell				\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
@@ -87,6 +108,8 @@ INCLUDES= \
 	-I$(top_srcdir)/libmisc				\
 	-I$(top_builddir)/libview			\
 	-I$(top_srcdir)/properties			\
+	-DDATADIR=\"$(pkgdatadir)\"			\
+	-DGNOMEDATADIR=\"$(datadir)\"			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	-DEVINCE_COMPILATION				\
@@ -100,7 +123,7 @@ FILTER_OUT = \
 	$(top_builddir)/shell/evinced-ev-daemon.o	\
 	$(top_builddir)/shell/ev-convert-metadata.o
 
-GTKDOC_LIBS= \
+GTKDOC_LIBS = \
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
@@ -115,23 +138,23 @@ GTKDOC_LIBS= \
 	$(GTK_PRINT_LIBS)						\
 	$(filter-out $(FILTER_OUT),$(wildcard $(top_builddir)/shell/*.o))
 
-if ENABLE_DJVU
-GTKDOC_LIBS +=	$(DJVU_LIBS)
-endif
-
-if ENABLE_DVI
-GTKDOC_LIBS +=	-lkpathsea
-endif
-
-if WITH_TYPE1_FONTS
-GTKDOC_LIBS += -lt1
-endif
-
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
 # e.g. EXTRA_DIST += version.xml.in
-EXTRA_DIST += version.xml.in
+EXTRA_DIST += \
+	version.xml.in
+
+# Files not to distribute
+# for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
+# for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
+#DISTCLEANFILES +=
+
+# Comment this out if you want your docs-status tested during 'make check'
+if ENABLE_GTK_DOC
+#TESTS_ENVIRONMENT = cd $(srcsrc) &&
+#TESTS = $(GTKDOC_CHECK)
+endif
 
 -include $(top_srcdir)/git.mk
