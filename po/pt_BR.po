@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-04 16:27-0300\n"
-"PO-Revision-Date: 2010-02-02 16:23-0200\n"
+"POT-Creation-Date: 2010-02-05 10:34-0300\n"
+"PO-Revision-Date: 2010-02-05 00:30-0200\n"
 "Last-Translator: Henrique P. Machado <hpmachado@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -91,12 +91,10 @@ msgid "Comic Books"
 msgstr "Revistas em quadrinho"
 
 #: ../backend/djvu/djvu-document.c:173
-#, fuzzy
 msgid "DjVu document has incorrect format"
-msgstr "O documento DVI tem um formato incorreto"
+msgstr "O documento DjVu tem um formato incorreto"
 
 #: ../backend/djvu/djvu-document.c:250
-#, fuzzy
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -105,9 +103,8 @@ msgstr ""
 "acessados."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
-#, fuzzy
 msgid "DjVu Documents"
-msgstr "Documentos Djvu"
+msgstr "Documentos DjVu"
 
 #: ../backend/dvi/dvi-document.c:113
 msgid "DVI document has incorrect format"
@@ -204,19 +201,16 @@ msgid "Not enough memory"
 msgstr "Memória insuficiente"
 
 #: ../backend/impress/zip.c:59
-#, fuzzy
 msgid "Cannot find ZIP signature"
-msgstr "Não é possível encontrar a assinatura do arquivo zip"
+msgstr "Não é possível encontrar a assinatura do arquivo ZIP"
 
 #: ../backend/impress/zip.c:62
-#, fuzzy
 msgid "Invalid ZIP file"
-msgstr "Arquivo zip inválido"
+msgstr "Arquivo ZIP inválido"
 
 #: ../backend/impress/zip.c:65
-#, fuzzy
 msgid "Multi file ZIPs are not supported"
-msgstr "Não há suporte a pacotes zip com múltiplos arquivos"
+msgstr "Não há suporte a pacotes ZIP com múltiplos arquivos"
 
 #: ../backend/impress/zip.c:68
 msgid "Cannot open the file"
@@ -227,9 +221,8 @@ msgid "Cannot read data from file"
 msgstr "Não foi possível ler os dados do arquivo"
 
 #: ../backend/impress/zip.c:74
-#, fuzzy
 msgid "Cannot find file in the ZIP archive"
-msgstr "Não foi possível encontrar arquivos no pacote zip"
+msgstr "Não é possível encontrar arquivo no pacote ZIP"
 
 #: ../backend/impress/zip.c:77
 msgid "Unknown error"
@@ -454,7 +447,6 @@ msgid "Document Viewer"
 msgstr "Visualizador de Documentos"
 
 #: ../data/evince.desktop.in.in.h:2
-#, fuzzy
 msgid "View multi-page documents"
 msgstr "Visualize documentos de múltiplas páginas"
 
@@ -620,12 +612,12 @@ msgid "default:mm"
 msgstr "default:mm"
 
 #: ../properties/ev-properties-view.c:284
-#, fuzzy, c-format
+#, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f x %.0f mm"
 
 #: ../properties/ev-properties-view.c:288
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f x %.2f pol."
 
@@ -655,17 +647,15 @@ msgstr "de %d"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:341
-#, fuzzy
 msgid "Preparing to print…"
 msgstr "Preparando para imprimir..."
 
 #: ../libview/ev-print-operation.c:343
-#, fuzzy
 msgid "Finishing…"
 msgstr "Concluindo..."
 
 #: ../libview/ev-print-operation.c:345
-#, fuzzy, c-format
+#, c-format
 msgid "Printing page %d of %d…"
 msgstr "Imprimindo página %d de %d..."
 
@@ -682,7 +672,6 @@ msgid "Warning"
 msgstr "Aviso"
 
 #: ../libview/ev-print-operation.c:1237
-#, fuzzy
 msgid "Your print range selection does not include any pages"
 msgstr "A sua seleção de intervalo de impressão não inclui página alguma"
 
@@ -699,7 +688,6 @@ msgid "Fit to Printable Area"
 msgstr "Caber na área imprimível"
 
 #: ../libview/ev-print-operation.c:1901
-#, fuzzy
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -712,7 +700,7 @@ msgid ""
 "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
-"Redimensionar páginas para caber na página da impressora. Selecione uma das "
+"Redimensiona páginas para caber na página da impressora. Selecione uma das "
 "seguintes opções:\n"
 "\n"
 "• \"Nenhum\": Nenhum redimensionamento de página é realizado.\n"
@@ -833,7 +821,6 @@ msgstr "Lançar %s"
 
 #: ../libview/ev-view.c:3926 ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:262
-#, fuzzy
 msgid "Loading…"
 msgstr "Carregando..."
 
@@ -931,7 +918,6 @@ msgid "Forget password _immediately"
 msgstr "Esquecer a senha _imediatamente"
 
 #: ../shell/ev-password-view.c:377
-#, fuzzy
 msgid "Remember password until you _log out"
 msgstr "_Lembrar a senha durante esta sessão"
 
@@ -960,7 +946,7 @@ msgid "Font"
 msgstr "Fonte"
 
 #: ../shell/ev-properties-fonts.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Reunindo informações de fontes... %3d%%"
 
@@ -985,9 +971,8 @@ msgid "Layers"
 msgstr "Camadas"
 
 #: ../shell/ev-sidebar-links.c:335
-#, fuzzy
 msgid "Print…"
-msgstr "Imprimir"
+msgstr "Imprimir..."
 
 #: ../shell/ev-sidebar-links.c:750
 msgid "Index"
@@ -998,9 +983,9 @@ msgid "Thumbnails"
 msgstr "Miniaturas"
 
 #: ../shell/ev-window.c:829
-#, fuzzy, c-format
+#, c-format
 msgid "Page %s — %s"
-msgstr "Página %s - %s"
+msgstr "Página %s — %s"
 
 #: ../shell/ev-window.c:831
 #, c-format
@@ -1133,13 +1118,13 @@ msgid "There was an error displaying help"
 msgstr "Houve um erro ao exibir a ajuda"
 
 #: ../shell/ev-window.c:4179
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Document Viewer\n"
 "Using %s (%s)"
 msgstr ""
 "Visualizador de Documentos.\n"
-"Usando poppler %s (%s)"
+"Usando %s (%s)"
 
 #: ../shell/ev-window.c:4210
 msgid ""
@@ -1236,7 +1221,6 @@ msgstr "Aj_uda"
 
 #. File menu
 #: ../shell/ev-window.c:4995 ../shell/ev-window.c:5263
-#, fuzzy
 msgid "_Open…"
 msgstr "_Abrir..."
 
@@ -1253,28 +1237,24 @@ msgid "Open a copy of the current document in a new window"
 msgstr "Abre uma cópia do documento atual numa nova janela"
 
 #: ../shell/ev-window.c:5001
-#, fuzzy
 msgid "_Save a Copy…"
-msgstr "Salvar uma cópia"
+msgstr "_Salvar uma cópia..."
 
 #: ../shell/ev-window.c:5002
 msgid "Save a copy of the current document"
 msgstr "Salvar uma cópia do documento atual"
 
 #: ../shell/ev-window.c:5004
-#, fuzzy
 msgid "Page Set_up…"
 msgstr "Configuração da _página..."
 
 #: ../shell/ev-window.c:5005
-#, fuzzy
 msgid "Set up the page settings for printing"
 msgstr "Configura a página para impressão"
 
 #: ../shell/ev-window.c:5007
-#, fuzzy
 msgid "_Print…"
-msgstr "Imprimir"
+msgstr "Im_primir..."
 
 #: ../shell/ev-window.c:5010
 msgid "P_roperties"
@@ -1285,9 +1265,8 @@ msgid "Select _All"
 msgstr "Selecionar _tudo"
 
 #: ../shell/ev-window.c:5020
-#, fuzzy
 msgid "_Find…"
-msgstr "Localizar"
+msgstr "_Localizar..."
 
 #: ../shell/ev-window.c:5021
 msgid "Find a word or phrase in the document"
@@ -1434,7 +1413,6 @@ msgid "_Copy Link Address"
 msgstr "_Copiar endereço do link"
 
 #: ../shell/ev-window.c:5175
-#, fuzzy
 msgid "_Save Image As…"
 msgstr "_Salvar imagem como..."
 
@@ -1447,7 +1425,6 @@ msgid "_Open Attachment"
 msgstr "_Abrir anexo"
 
 #: ../shell/ev-window.c:5184
-#, fuzzy
 msgid "_Save Attachment As…"
 msgstr "_Salvar anexo como..."
 
@@ -1530,9 +1507,9 @@ msgid "Save Attachment"
 msgstr "Salvar anexo"
 
 #: ../shell/ev-window-title.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "%s — Password Required"
-msgstr "%s - Senha requerida"
+msgstr "%s — Senha requerida"
 
 #: ../shell/ev-utils.c:330
 msgid "By extension"
@@ -1571,12 +1548,10 @@ msgid "STRING"
 msgstr "EXPRESSÃO"
 
 #: ../shell/main.c:86
-#, fuzzy
 msgid "[FILE…]"
 msgstr "[ARQUIVO...]"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-#, fuzzy
 msgid ""
 "Boolean options available: true enables thumbnailing and false disables the "
 "creation of new thumbnails"
@@ -1593,13 +1568,12 @@ msgid "Thumbnail command for PDF Documents"
 msgstr "Comando de miniatura para documentos PDF"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-#, fuzzy
 msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See Nautilus "
 "thumbnailer documentation for more information."
 msgstr ""
 "Um comando válido e argumentos para o miniaturizador de documentos PDF. Veja "
-"a documentação do miniaturizador do nautilus para mais informações."
+"a documentação do miniaturizador do Nautilus para mais informações."
 
 #~ msgid "DJVU document has incorrect format"
 #~ msgstr "O documento DJVU tem um formato incorreto"
