@@ -12,10 +12,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-31 02:01+0200\n"
-"PO-Revision-Date: 2010-01-29 19:14+0200\n"
-"Last-Translator: Μάριος Ζηντίλης <m.zindilis@dmajor.org>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
+"POT-Creation-Date: 2010-02-03 16:30+0000\n"
+"PO-Revision-Date: 2010-02-07 15:39+0200\n"
+"Last-Translator: nikosCharonitakis <nikosx@gmail.com>\n"
 "Language-Team: Greek <team@gnome.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +25,8 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:160
 #, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
-"Σφάλμα κατά την εκκίνηση της εντολής “%s” με σκοπό την αποσυμπίεση του comic "
-"book: %s"
+msgid "Error launching the command “%s” in order to decompress the comic book: %s"
+msgstr "Σφάλμα κατά την εκκίνηση της εντολής “%s” με σκοπό την αποσυμπίεση του comic book: %s"
 
 #: ../backend/comics/comics-document.c:174
 #, c-format
@@ -48,9 +45,7 @@ msgstr "Δεν είναι τύπος comic book MIME: %s"
 
 #: ../backend/comics/comics-document.c:357
 msgid "Can't find an appropriate command to decompress this type of comic book"
-msgstr ""
-"Αδυναμία εύρεσης κατάλληλης εντολής για την αποσυμπίεση αυτού του τύπου του "
-"comic book"
+msgstr "Αδυναμία εύρεσης κατάλληλης εντολής για την αποσυμπίεση αυτού του τύπου του comic book"
 
 #: ../backend/comics/comics-document.c:395
 #: ../libdocument/ev-document-factory.c:143
@@ -60,7 +55,7 @@ msgstr "Άγνωστος τύπος ΜΙΜΕ"
 
 #: ../backend/comics/comics-document.c:422
 msgid "File corrupted"
-msgstr "Το αρχείο είναι κατεστραμμένο."
+msgstr "Το αρχείο είναι κατεστραμμένο"
 
 #: ../backend/comics/comics-document.c:435
 msgid "No files in archive"
@@ -86,20 +81,21 @@ msgid "Comic Books"
 msgstr "Comic Books"
 
 #: ../backend/djvu/djvu-document.c:173
-msgid "DJVU document has incorrect format"
-msgstr "Το έγγραφο DJVU έχει εσφαλμένη μορφή"
+#| msgid "DVI document has incorrect format"
+msgid "DjVu document has incorrect format"
+msgstr "Το έγγραφο DjVu έχει εσφαλμένη μορφή"
 
 #: ../backend/djvu/djvu-document.c:250
-msgid ""
-"The document is composed of several files. One or more of such files cannot "
-"be accessed."
-msgstr ""
-"Το έγγραφο απαρτίζεται από διάφορα αρχεία. Δεν είναι δυνατή η πρόσβαση σε "
-"ένα ή περισσότερα από αυτά τα αρχεία."
+#| msgid ""
+#| "The document is composed of several files. One or more of such files "
+#| "cannot be accessed."
+msgid "The document is composed of several files. One or more of these files cannot be accessed."
+msgstr "Το έγγραφο απαρτίζεται από διάφορα αρχεία. Δεν είναι δυνατή η πρόσβαση σε ένα ή περισσότερα από αυτά τα αρχεία."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
-msgid "Djvu Documents"
-msgstr "Έγγραφα Djvu"
+#| msgid "Djvu Documents"
+msgid "DjVu Documents"
+msgstr "Έγγραφα DjVu"
 
 #: ../backend/dvi/dvi-document.c:113
 msgid "DVI document has incorrect format"
@@ -123,51 +119,51 @@ msgstr "Ναι"
 msgid "No"
 msgstr "Όχι"
 
-#: ../backend/pdf/ev-poppler.cc:924
+#: ../backend/pdf/ev-poppler.cc:948
 msgid "Type 1"
 msgstr "Τύπος 1"
 
-#: ../backend/pdf/ev-poppler.cc:926
+#: ../backend/pdf/ev-poppler.cc:950
 msgid "Type 1C"
 msgstr "Τύπος 1C"
 
-#: ../backend/pdf/ev-poppler.cc:928
+#: ../backend/pdf/ev-poppler.cc:952
 msgid "Type 3"
 msgstr "Τύπος 3"
 
-#: ../backend/pdf/ev-poppler.cc:930
+#: ../backend/pdf/ev-poppler.cc:954
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:932
+#: ../backend/pdf/ev-poppler.cc:956
 msgid "Type 1 (CID)"
 msgstr "Τύπος 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:934
+#: ../backend/pdf/ev-poppler.cc:958
 msgid "Type 1C (CID)"
 msgstr "Τύπος 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:936
+#: ../backend/pdf/ev-poppler.cc:960
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:938
+#: ../backend/pdf/ev-poppler.cc:962
 msgid "Unknown font type"
 msgstr "Άγνωστος τύπος γραμματοσειράς"
 
-#: ../backend/pdf/ev-poppler.cc:964
+#: ../backend/pdf/ev-poppler.cc:988
 msgid "No name"
 msgstr "Χωρίς όνομα"
 
-#: ../backend/pdf/ev-poppler.cc:972
+#: ../backend/pdf/ev-poppler.cc:996
 msgid "Embedded subset"
 msgstr "Ενσωματωμένο υποσύνολο"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:998
 msgid "Embedded"
 msgstr "Ενσωματωμένο"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:1000
 msgid "Not embedded"
 msgstr "Μη ενσωματωμένο"
 
@@ -196,16 +192,19 @@ msgid "Not enough memory"
 msgstr "Ανεπαρκής μνήμη"
 
 #: ../backend/impress/zip.c:59
-msgid "Cannot find zip signature"
-msgstr "Αδυναμία εύρεσης υπογραφής zip"
+#| msgid "Cannot find zip signature"
+msgid "Cannot find ZIP signature"
+msgstr "Αδυναμία εύρεσης υπογραφής ZIP"
 
 #: ../backend/impress/zip.c:62
-msgid "Invalid zip file"
-msgstr "Λανθασμένο αρχείο zip"
+#| msgid "Invalid zip file"
+msgid "Invalid ZIP file"
+msgstr "Μη έγκυρο αρχείο ZIP"
 
 #: ../backend/impress/zip.c:65
-msgid "Multi file zips are not supported"
-msgstr "Δεν υποστηρίζονται zip πολλαπλών αρχείων"
+#| msgid "Multi file zips are not supported"
+msgid "Multi file ZIPs are not supported"
+msgstr "Δεν υποστηρίζονται ZIP πολλαπλών αρχείων"
 
 #: ../backend/impress/zip.c:68
 msgid "Cannot open the file"
@@ -216,8 +215,9 @@ msgid "Cannot read data from file"
 msgstr "Αδυναμία ανάγνωσης δεδομένων από το αρχείο"
 
 #: ../backend/impress/zip.c:74
-msgid "Cannot find file in the zip archive"
-msgstr "Αδυναμία εύρεσης αρχείου στο συμπιεσμένο αρχείο zip"
+#| msgid "Cannot find file in the zip archive"
+msgid "Cannot find file in the ZIP archive"
+msgstr "Αδυναμία εύρεσης αρχείου στο συμπιεσμένο αρχείο ZIP"
 
 #: ../backend/impress/zip.c:77
 msgid "Unknown error"
@@ -237,7 +237,8 @@ msgstr "Αδυναμία αποθήκευσης εγγράφου “%s”"
 msgid "PostScript Documents"
 msgstr "Έγγραφα PostScript"
 
-#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
+#: ../libdocument/ev-attachment.c:304
+#: ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Αδυναμία αποθήκευσης συνημμένου “%s”: %s"
@@ -303,8 +304,7 @@ msgstr "Μη αναγνωρίσιμη επιλογή εκκίνησης: %d"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Αδυναμία ορισμού URI εγγράφου σε 'Type=Link' εγγραφή επιφάνειας εργασίας"
+msgstr "Αδυναμία ορισμού URI εγγράφου σε 'Type=Link' εγγραφή επιφάνειας εργασίας"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -319,7 +319,8 @@ msgstr "Απενεργοποίηση σύνδεσης στο διαχειρισ�
 msgid "Specify file containing saved configuration"
 msgstr "Ορισμός αρχείου που περιέχει αποθηκευμένες επιλογές"
 
-#: ../cut-n-paste/smclient/eggsmclient.c:228 ../previewer/ev-previewer.c:48
+#: ../cut-n-paste/smclient/eggsmclient.c:228
+#: ../previewer/ev-previewer.c:48
 #: ../previewer/ev-previewer.c:49
 msgid "FILE"
 msgstr "ΑΡΧΕΙΟ"
@@ -385,7 +386,8 @@ msgid "Running in presentation mode"
 msgstr "Εκτέλεση σε λειτουργία παρουσίασης"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5316
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
+#: ../shell/ev-window.c:5301
 msgid "Best Fit"
 msgstr "Καλύτερο ταίριασμα"
 
@@ -434,14 +436,17 @@ msgid "400%"
 msgstr "400%"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4201
-#: ../shell/ev-window-title.c:149 ../shell/main.c:282
+#: ../data/evince.desktop.in.in.h:1
+#: ../shell/ev-window.c:4183
+#: ../shell/ev-window-title.c:149
+#: ../shell/main.c:282
 #, c-format
 msgid "Document Viewer"
 msgstr "Εφαρμογή προβολής εγγράφων"
 
 #: ../data/evince.desktop.in.in.h:2
-msgid "View multipage documents"
+#| msgid "View multipage documents"
+msgid "View multi-page documents"
 msgstr "Προβολή εγγράφων πολλαπλών σελίδων"
 
 #: ../data/evince.schemas.in.h:1
@@ -450,9 +455,7 @@ msgstr "Παράκαμψη των περιορισμών του εγγράφου
 
 #: ../data/evince.schemas.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr ""
-"Παράκαμψη των περιορισμών του εγγράφου, όπως περιορισμών εκτύπωσης ή "
-"αντιγραφής."
+msgstr "Παράκαμψη των περιορισμών του εγγράφου, όπως περιορισμών εκτύπωσης ή αντιγραφής."
 
 #: ../previewer/ev-previewer.c:47
 msgid "Delete the temporary file"
@@ -462,11 +465,13 @@ msgstr "Διαγραφή του προσωρινού αρχείου"
 msgid "Print settings file"
 msgstr "Εκτύπωση αρχείου ρυθμίσεων"
 
-#: ../previewer/ev-previewer.c:143 ../previewer/ev-previewer.c:177
+#: ../previewer/ev-previewer.c:143
+#: ../previewer/ev-previewer.c:177
 msgid "GNOME Document Previewer"
 msgstr "Εφαρμογή προβολής εγγράφων του GNOME"
 
-#: ../previewer/ev-previewer-window.c:95 ../shell/ev-window.c:2999
+#: ../previewer/ev-previewer-window.c:95
+#: ../shell/ev-window.c:2995
 msgid "Failed to print document"
 msgstr "Αδυναμία εκτύπωσης εγγράφου"
 
@@ -476,60 +481,73 @@ msgid "The selected printer '%s' could not be found"
 msgstr "Ο επιλεγμένος εκτυπωτής '%s'  δεν μπορεί να βρεθεί"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:253 ../shell/ev-window.c:5065
+#: ../previewer/ev-previewer-window.c:253
+#: ../shell/ev-window.c:5050
 msgid "_Previous Page"
 msgstr "_Προηγούμενη σελίδα"
 
-#: ../previewer/ev-previewer-window.c:254 ../shell/ev-window.c:5066
+#: ../previewer/ev-previewer-window.c:254
+#: ../shell/ev-window.c:5051
 msgid "Go to the previous page"
 msgstr "Μετάβαση στην προηγούμενη σελίδα"
 
-#: ../previewer/ev-previewer-window.c:256 ../shell/ev-window.c:5068
+#: ../previewer/ev-previewer-window.c:256
+#: ../shell/ev-window.c:5053
 msgid "_Next Page"
 msgstr "Επόμε_νη σελίδα"
 
-#: ../previewer/ev-previewer-window.c:257 ../shell/ev-window.c:5069
+#: ../previewer/ev-previewer-window.c:257
+#: ../shell/ev-window.c:5054
 msgid "Go to the next page"
 msgstr "Μετάβαση στην επόμενη σελίδα"
 
-#: ../previewer/ev-previewer-window.c:260 ../shell/ev-window.c:5052
+#: ../previewer/ev-previewer-window.c:260
+#: ../shell/ev-window.c:5037
 msgid "Enlarge the document"
 msgstr "Μεγέθυνση εγγράφου"
 
-#: ../previewer/ev-previewer-window.c:263 ../shell/ev-window.c:5055
+#: ../previewer/ev-previewer-window.c:263
+#: ../shell/ev-window.c:5040
 msgid "Shrink the document"
 msgstr "Σμίκρυνση εγγράφου"
 
-#: ../previewer/ev-previewer-window.c:266 ../libview/ev-print-operation.c:1315
+#: ../previewer/ev-previewer-window.c:266
+#: ../libview/ev-print-operation.c:1315
 msgid "Print"
 msgstr "Εκτύπωση"
 
-#: ../previewer/ev-previewer-window.c:267 ../shell/ev-window.c:5023
+#: ../previewer/ev-previewer-window.c:267
+#: ../shell/ev-window.c:5008
 msgid "Print this document"
 msgstr "Εκτύπωση αυτού του εγγράφου"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/ev-window.c:5167
+#: ../previewer/ev-previewer-window.c:273
+#: ../shell/ev-window.c:5152
 msgid "_Best Fit"
 msgstr "_Καλύτερο ταίριασμα"
 
-#: ../previewer/ev-previewer-window.c:274 ../shell/ev-window.c:5168
+#: ../previewer/ev-previewer-window.c:274
+#: ../shell/ev-window.c:5153
 msgid "Make the current document fill the window"
 msgstr "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το παράθυρο"
 
-#: ../previewer/ev-previewer-window.c:276 ../shell/ev-window.c:5170
+#: ../previewer/ev-previewer-window.c:276
+#: ../shell/ev-window.c:5155
 msgid "Fit Page _Width"
 msgstr "Ταίριασμα στο π_λάτος σελίδας"
 
-#: ../previewer/ev-previewer-window.c:277 ../shell/ev-window.c:5171
+#: ../previewer/ev-previewer-window.c:277
+#: ../shell/ev-window.c:5156
 msgid "Make the current document fill the window width"
-msgstr ""
-"Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το πλάτος του παραθύρου"
+msgstr "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το πλάτος του παραθύρου"
 
-#: ../previewer/ev-previewer-window.c:460 ../shell/ev-window.c:5238
+#: ../previewer/ev-previewer-window.c:460
+#: ../shell/ev-window.c:5223
 msgid "Page"
 msgstr "Σελίδα"
 
-#: ../previewer/ev-previewer-window.c:461 ../shell/ev-window.c:5239
+#: ../previewer/ev-previewer-window.c:461
+#: ../shell/ev-window.c:5224
 msgid "Select Page"
 msgstr "Επιλογή σελίδας"
 
@@ -593,7 +611,8 @@ msgstr "Ασφάλεια:"
 msgid "Paper Size:"
 msgstr "Μέγεθος χαρτιού:"
 
-#: ../properties/ev-properties-view.c:211 ../libview/ev-print-operation.c:1896
+#: ../properties/ev-properties-view.c:211
+#: ../libview/ev-print-operation.c:1896
 msgid "None"
 msgstr "Κανένα"
 
@@ -609,12 +628,14 @@ msgstr "προεπιλογή:mm"
 
 #: ../properties/ev-properties-view.c:284
 #, c-format
-msgid "%.0f x %.0f mm"
+#| msgid "%.0f x %.0f mm"
+msgid "%.0f × %.0f mm"
 msgstr "%.0f x %.0f mm"
 
 #: ../properties/ev-properties-view.c:288
 #, c-format
-msgid "%.2f x %.2f inch"
+#| msgid "%.2f x %.2f inch"
+msgid "%.2f × %.2f inch"
 msgstr "%.2f x %.2f ίντσα"
 
 #. Note to translators: first placeholder is the paper name (eg.
@@ -643,16 +664,19 @@ msgstr "από %d"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:341
-msgid "Preparing to print ..."
-msgstr "Προετοιμασία για εκτύπωση ..."
+#| msgid "Preparing to print ..."
+msgid "Preparing to print…"
+msgstr "Προετοιμασία για εκτύπωση..."
 
 #: ../libview/ev-print-operation.c:343
-msgid "Finishing..."
-msgstr "Ολοκλήρωση...."
+#| msgid "Finishing..."
+msgid "Finishing…"
+msgstr "Ολοκλήρωση..."
 
 #: ../libview/ev-print-operation.c:345
 #, c-format
-msgid "Printing page %d of %d..."
+#| msgid "Printing page %d of %d..."
+msgid "Printing page %d of %d…"
 msgstr "Εκτύπωση σελίδας %d από %d..."
 
 #: ../libview/ev-print-operation.c:1169
@@ -668,7 +692,8 @@ msgid "Warning"
 msgstr "Προειδοποίηση"
 
 #: ../libview/ev-print-operation.c:1237
-msgid "Your print range selection does not include any page"
+#| msgid "Your print range selection does not include any page"
+msgid "Your print range selection does not include any pages"
 msgstr "Η επιλογή του εύρους εκτύπωσης δεν περιέχει καμία σελίδα"
 
 #: ../libview/ev-print-operation.c:1891
@@ -684,55 +709,49 @@ msgid "Fit to Printable Area"
 msgstr "Προσαρμογή στην εκτυπώσιμη περιοχή"
 
 #: ../libview/ev-print-operation.c:1901
+#| msgid ""
+#| "Scale document pages to fit the selected printer page. Select from one of "
+#| "the following:\n"
+#| "\n"
+#| "• \"None\": No page scaling is performed.\n"
+#| "\n"
+#| "• \"Shrink to Printable Area\": Document pages larger than the printable "
+#| "area are reduced fit the printable area of the printer page.\n"
+#| "\n"
+#| "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
+#| "required to fit the printable area of the printer page.\n"
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the following:\n"
 "\n"
 "• \"None\": No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable "
-"area are reduced fit the printable area of the printer page.\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable area are reduced to fit the printable area of the printer page.\n"
 "\n"
-"• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
-"required to fit the printable area of the printer page.\n"
+"• \"Fit to Printable Area\": Document pages are enlarged or reduced as required to fit the printable area of the printer page.\n"
 msgstr ""
-"Κλιμάκωση των σελίδων του εγγράφου για προσαρμογή στην επιλεγμένη σελίδα "
-"εκτυπωτή. Επιλέξτε ένα από τα ακόλουθα:\n"
+"Κλιμάκωση των σελίδων του εγγράφου για προσαρμογή στην επιλεγμένη σελίδα εκτυπωτή. Επιλέξτε ένα από τα ακόλουθα:\n"
 "\n"
-"• «Καμία»: Δεν εφαρμόζεται καμία κλιμάκωση.\n"
+"• \"Καμία\": Δεν εφαρμόζεται καμία κλιμάκωση.\n"
 "\n"
-"• «Σμίκρυνση στην εκτυπώσιμη περιοχή»: Οι σελίδες του εγγράφου που είναι "
-"μεγαλύτερες από την εκτυπώσιμη περιοχή της σελίδας του εκτυπωτή σμικρύνονται "
-"για να χωρέσουν.\n"
+"• \"Σμίκρυνση στην εκτυπώσιμη περιοχή\": Οι σελίδες του εγγράφου που είναι μεγαλύτερες από την εκτυπώσιμη περιοχή της σελίδας του εκτυπωτή σμικρύνονται για να χωρέσουν.\n"
 "\n"
-"• «Προσαρμογή στην εκτυπώσιμη περιοχή»: Οι σελίδες του εγγράφουν μεγεθύνονται "
-"ή σμικρύνονται ανάλογα, για να χωρέσουν στην εκτυπώσιμη περιοχή της σελίδας "
-"του εκτυπωτή.\n"
+"• \"Προσαρμογή στην εκτυπώσιμη περιοχή\": Οι σελίδες του εγγράφουν μεγεθύνονται ή σμικρύνονται ανάλογα, για να χωρέσουν στην εκτυπώσιμη περιοχή της σελίδας του εκτυπωτή.\n"
 
 #: ../libview/ev-print-operation.c:1913
 msgid "Auto Rotate and Center"
 msgstr "Αυτόματη περιστροφή και κεντράρισμα"
 
 #: ../libview/ev-print-operation.c:1916
-msgid ""
-"Rotate printer page orientation of each page to match orientation of each "
-"document page. Document pages will be centered within the printer page."
-msgstr ""
-"Περιστροφή της κάθε σελίδας εκτυπωτή ώστε να ταιριάζει με τον προσανατολισμό "
-"κάθε σελίδας του εγγράφου. "
+msgid "Rotate printer page orientation of each page to match orientation of each document page. Document pages will be centered within the printer page."
+msgstr "Περιστροφή της κάθε σελίδας εκτυπωτή ώστε να ταιριάζει με τον προσανατολισμό κάθε σελίδας του εγγράφου. "
 
 #: ../libview/ev-print-operation.c:1921
 msgid "Select page size using document page size"
-msgstr ""
-"Επιλογή του μεγέθους της σελίδας βάσει του μεγέθους σελίδας του εγγράφου"
+msgstr "Επιλογή του μεγέθους της σελίδας βάσει του μεγέθους σελίδας του εγγράφου"
 
 #: ../libview/ev-print-operation.c:1923
-msgid ""
-"When enabled, each page will be printed on the same size paper as the "
-"document page."
-msgstr ""
-"Αν ενεργοποιηθεί, κάθε σελίδα θα εκτυπωθεί στο ίδιο μέγεθος χαρτιού με τη "
-"σελίδα του εγγράφου."
+msgid "When enabled, each page will be printed on the same size paper as the document page."
+msgstr "Αν ενεργοποιηθεί, κάθε σελίδα θα εκτυπωθεί στο ίδιο μέγεθος χαρτιού με τη σελίδα του εγγράφου."
 
 #: ../libview/ev-print-operation.c:2005
 msgid "Page Handling"
@@ -815,16 +834,19 @@ msgstr "Μετάβαση στο αρχείο “%s”"
 msgid "Launch %s"
 msgstr "Εκκίνηση %s"
 
-#: ../libview/ev-view.c:3926 ../shell/ev-sidebar-layers.c:125
+#: ../libview/ev-view.c:3926
+#: ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:262
-msgid "Loading..."
+#| msgid "Loading..."
+msgid "Loading…"
 msgstr "Φορτώνεται..."
 
 #: ../shell/eggfindbar.c:320
 msgid "Find:"
 msgstr "Εύρεση:"
 
-#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:5040
+#: ../shell/eggfindbar.c:329
+#: ../shell/ev-window.c:5025
 msgid "Find Pre_vious"
 msgstr "Εύρεση προη_γουμένου"
 
@@ -832,7 +854,8 @@ msgstr "Εύρεση προη_γουμένου"
 msgid "Find previous occurrence of the search string"
 msgstr "Εύρεση της προηγούμενης εμφάνισης του αλφαριθμητικού αναζήτησης"
 
-#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5038
+#: ../shell/eggfindbar.c:337
+#: ../shell/ev-window.c:5023
 msgid "Find Ne_xt"
 msgstr "Εύρεση ε_πομένου"
 
@@ -863,32 +886,25 @@ msgstr "Μετατροπή %s"
 msgid "%d of %d documents converted"
 msgstr "%d από %d έγγραφα μετατράπηκαν"
 
-#: ../shell/ev-convert-metadata.c:164 ../shell/ev-convert-metadata.c:179
+#: ../shell/ev-convert-metadata.c:164
+#: ../shell/ev-convert-metadata.c:179
 msgid "Converting metadata"
 msgstr "Μετατροπή μεταδεδομένων"
 
 #: ../shell/ev-convert-metadata.c:185
-msgid ""
-"The metadata format used by Evince has changed, and hence it needs to be "
-"migrated. If the migration is cancelled the metadata storage will not work."
-msgstr ""
-"Η μορφή μεταδεδομένων που χρησιμοποιείται από το Evince έχει αλλάξει, και "
-"χρειάζεται να γίνει μετάβαση. Αν ακυρωθεί η μετάβαση δε θα λειτουργεί η "
-"αποθήκη μεταδεδομένων."
+msgid "The metadata format used by Evince has changed, and hence it needs to be migrated. If the migration is cancelled the metadata storage will not work."
+msgstr "Η μορφή μεταδεδομένων που χρησιμοποιείται από το Evince έχει αλλάξει, και χρειάζεται να γίνει μετάβαση. Αν ακυρωθεί η μετάβαση δε θα λειτουργεί η αποθήκη μεταδεδομένων."
 
 #: ../shell/ev-open-recent-action.c:72
 msgid "Open a recently used document"
 msgstr "Άνοιγμα ενός πρόσφατα χρησιμοποιημένου εγγράφου"
 
 #: ../shell/ev-password-view.c:144
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
-msgstr ""
-"Το έγγραφο είναι κλειδωμένο και μπορεί να αναγνωστεί μόνο μετά από την "
-"εισαγωγή του σωστού κωδικού."
+msgid "This document is locked and can only be read by entering the correct password."
+msgstr "Το έγγραφο είναι κλειδωμένο και μπορεί να αναγνωστεί μόνο μετά από την εισαγωγή του σωστού κωδικού."
 
-#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:153
+#: ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "_Ξεκλείδωμα εγγράφου"
 
@@ -902,10 +918,8 @@ msgstr "Απαιτείται κωδικός."
 
 #: ../shell/ev-password-view.c:302
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
-msgstr ""
-"Το έγγραφο “%s” είναι κλειδωμένο και απαιτείται κωδικός πριν το άνοιγμα."
+msgid "The document “%s” is locked and requires a password before it can be opened."
+msgstr "Το έγγραφο “%s” είναι κλειδωμένο και απαιτείται κωδικός πριν το άνοιγμα."
 
 #: ../shell/ev-password-view.c:332
 msgid "_Password:"
@@ -916,8 +930,9 @@ msgid "Forget password _immediately"
 msgstr "_Μη αποθήκευση του κωδικού"
 
 #: ../shell/ev-password-view.c:377
-msgid "Remember password until you _logout"
-msgstr "_Απομνημόνευση κωδικού για αυτήν τη συνεδρία"
+#| msgid "Remember password until you _logout"
+msgid "Remember password until you _log out"
+msgstr "Απομνημόνευση κωδικού μέχρι να α_ποσυνδεθήτε"
 
 #: ../shell/ev-password-view.c:389
 msgid "Remember _forever"
@@ -945,7 +960,8 @@ msgstr "Γραμματοσειρά"
 
 #: ../shell/ev-properties-fonts.c:162
 #, c-format
-msgid "Gathering font information... %3d%%"
+#| msgid "Gathering font information... %3d%%"
+msgid "Gathering font information… %3d%%"
 msgstr "Συλλογή πληροφοριών για τις γραμματοσειρές... %3d%%"
 
 #: ../shell/ev-properties-license.c:138
@@ -969,7 +985,8 @@ msgid "Layers"
 msgstr "Στρώματα"
 
 #: ../shell/ev-sidebar-links.c:335
-msgid "Print..."
+#| msgid "Print"
+msgid "Print…"
 msgstr "Εκτύπωση..."
 
 #: ../shell/ev-sidebar-links.c:750
@@ -980,195 +997,173 @@ msgstr "Κατάλογος"
 msgid "Thumbnails"
 msgstr "Μικρογραφίες"
 
-#: ../shell/ev-window.c:833
+#: ../shell/ev-window.c:829
 #, c-format
-msgid "Page %s - %s"
-msgstr "Σελίδα %s - %s"
+#| msgid "Page %s - %s"
+msgid "Page %s — %s"
+msgstr "Σελίδα %s — %s"
 
-#: ../shell/ev-window.c:835
+#: ../shell/ev-window.c:831
 #, c-format
 msgid "Page %s"
 msgstr "Σελίδα %s"
 
-#: ../shell/ev-window.c:1279
+#: ../shell/ev-window.c:1275
 msgid "The document contains no pages"
 msgstr "Το αρχείο δεν περιέχει σελίδες"
 
-#: ../shell/ev-window.c:1282
+#: ../shell/ev-window.c:1278
 msgid "The document contains only empty pages"
 msgstr "Το έγγραφο περιέχει μόνο κενές σελίδες"
 
-#: ../shell/ev-window.c:1476 ../shell/ev-window.c:1642
+#: ../shell/ev-window.c:1472
+#: ../shell/ev-window.c:1638
 msgid "Unable to open document"
 msgstr "Αδυναμία ανοίγματος εγγράφου"
 
-#: ../shell/ev-window.c:1613
+#: ../shell/ev-window.c:1609
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Φόρτωση εγγράφου από “%s”"
 
-#: ../shell/ev-window.c:1755 ../shell/ev-window.c:2032
+#: ../shell/ev-window.c:1751
+#: ../shell/ev-window.c:2028
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Κατέβασμα εγγράφου (%d%%)"
 
-#: ../shell/ev-window.c:1788
+#: ../shell/ev-window.c:1784
 msgid "Failed to load remote file."
 msgstr "Αδυναμία φόρτωσης του απομακρυσμένου εγγράφου."
 
-#: ../shell/ev-window.c:1976
+#: ../shell/ev-window.c:1972
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Επαναφόρτωση του εγγράφου από %s"
 
-#: ../shell/ev-window.c:2008
+#: ../shell/ev-window.c:2004
 msgid "Failed to reload document."
 msgstr "Αδυναμία επαναφόρτωσης του εγγράφου."
 
-#: ../shell/ev-window.c:2163
+#: ../shell/ev-window.c:2159
 msgid "Open Document"
 msgstr "Άνοιγμα εγγράφου"
 
-#: ../shell/ev-window.c:2427
+#: ../shell/ev-window.c:2423
 #, c-format
 msgid "Saving document to %s"
 msgstr "Αποθήκευση εγγράφου σε %s"
 
-#: ../shell/ev-window.c:2430
+#: ../shell/ev-window.c:2426
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Αποθήκευση συνημμένου σε %s"
 
-#: ../shell/ev-window.c:2433
+#: ../shell/ev-window.c:2429
 #, c-format
 msgid "Saving image to %s"
 msgstr "Αποθήκευση εικόνας σε %s"
 
-#: ../shell/ev-window.c:2477 ../shell/ev-window.c:2577
+#: ../shell/ev-window.c:2473
+#: ../shell/ev-window.c:2573
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Το αρχείο δεν μπορεί να αποθηκευτεί ως “%s”."
 
-#: ../shell/ev-window.c:2508
+#: ../shell/ev-window.c:2504
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Ανέβασμα εγγράφου (%d%%)"
 
-#: ../shell/ev-window.c:2512
+#: ../shell/ev-window.c:2508
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Ανέβασμα συνημμένου (%d%%)"
 
-#: ../shell/ev-window.c:2516
+#: ../shell/ev-window.c:2512
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Ανέβασμα εικόνας (%d%%)"
 
-#: ../shell/ev-window.c:2638
+#: ../shell/ev-window.c:2634
 msgid "Save a Copy"
 msgstr "Αποθήκευση αντιγράφου"
 
-#: ../shell/ev-window.c:2943
+#: ../shell/ev-window.c:2939
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "Εκκρεμεί %d εργασία στην σειρά αναμονής"
 msgstr[1] "Εκκρεμούν %d εργασίες στην σειρά αναμονής"
 
-#: ../shell/ev-window.c:3056
+#: ../shell/ev-window.c:3052
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Εργασία εκτύπωσης “%s”"
 
-#: ../shell/ev-window.c:3259
+#: ../shell/ev-window.c:3255
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
-"Αναμονή μέχρι η εργασία εκτύπωσης “%s” να ολοκληρωθεί πριν το κλείσιμο;"
+msgstr "Αναμονή μέχρι η εργασία εκτύπωσης “%s” να ολοκληρωθεί πριν το κλείσιμο;"
 
-#: ../shell/ev-window.c:3262
+#: ../shell/ev-window.c:3258
 #, c-format
-msgid ""
-"There are %d print jobs active. Wait until print finishes before closing?"
-msgstr ""
-"Υπάρχουν %d ενεργές εργασίες εκτύπωσης. Αναμονή μέχρι η εκτύπωση να "
-"τελειώσει πριν το κλείσιμο;"
+msgid "There are %d print jobs active. Wait until print finishes before closing?"
+msgstr "Υπάρχουν %d ενεργές εργασίες εκτύπωσης. Αναμονή μέχρι η εκτύπωση να τελειώσει πριν το κλείσιμο;"
+
+#: ../shell/ev-window.c:3270
+msgid "If you close the window, pending print jobs will not be printed."
+msgstr "Αν κλείσετε το παράθυρο, οι εκκρεμείς εργασίες εκτύπωσης δεν θα εκτυπωθούν."
 
 #: ../shell/ev-window.c:3274
-msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
-"Αν κλείσετε το παράθυρο, οι εκκρεμείς εργασίες εκτύπωσης δεν θα εκτυπωθούν."
-
-#: ../shell/ev-window.c:3278
 msgid "Cancel _print and Close"
 msgstr "Ακύρωση _εκτύπωσης και κλείσιμο"
 
-#: ../shell/ev-window.c:3282
+#: ../shell/ev-window.c:3278
 msgid "Close _after Printing"
 msgstr "Κλείσι_μο μετά την εκτύπωση"
 
-#: ../shell/ev-window.c:3840
+#: ../shell/ev-window.c:3836
 msgid "Toolbar Editor"
 msgstr "Επεξεργασία εργαλειοθήκης"
 
-#: ../shell/ev-window.c:3972
+#: ../shell/ev-window.c:3968
 msgid "There was an error displaying help"
 msgstr "Παρουσιάστηκε σφάλμα κατά την εμφάνιση της βοήθειας"
 
-#: ../shell/ev-window.c:4197
+#: ../shell/ev-window.c:4179
 #, c-format
+#| msgid ""
+#| "Document Viewer.\n"
+#| "Using poppler %s (%s)"
 msgid ""
-"Document Viewer.\n"
-"Using poppler %s (%s)"
+"Document Viewer\n"
+"Using %s (%s)"
 msgstr ""
-"Προβολέας Εγγράφων.\n"
-"Γίνεται χρήση του poppler %s (%s)"
+"Προβολή Εγγράφων.\n"
+"Γίνεται χρήση του %s (%s)"
 
-#: ../shell/ev-window.c:4226
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Το Evince είναι ελεύθερο λογισμικό. Επιτρέπεται η αναδιανομή ή/και "
-"τροποποίησή του υπό τους όρους της Γενικής Άδειας Δημόσιας Χρήσης GNU (GNU "
-"General Public License) όπως αυτή δημοσιεύεται από το Ίδρυμα Ελεύθερου "
-"Λογισμικού (Free Software Foundation) - είτε της έκδοσης 2 της άδειας, είτε "
-"(κατ' επιλογήν) οποιασδήποτε μεταγενέστερης έκδοσης.\n"
+#: ../shell/ev-window.c:4210
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgstr "Το Evince είναι ελεύθερο λογισμικό. Επιτρέπεται η αναδιανομή ή/και τροποποίησή του υπό τους όρους της Γενικής Άδειας Δημόσιας Χρήσης GNU (GNU General Public License) όπως αυτή δημοσιεύεται από το Ίδρυμα Ελεύθερου Λογισμικού (Free Software Foundation) - είτε της έκδοσης 2 της άδειας, είτε (κατ' επιλογήν) οποιασδήποτε μεταγενέστερης έκδοσης.\n"
 
-#: ../shell/ev-window.c:4230
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Το Evince διανέμεται με την ελπίδα οτι θα είναι χρήσιμο, αλλά ΧΩΡΙΣ ΚΑΜΜΙΑ "
-"ΑΠΟΛΥΤΩΣ ΕΓΓΥΗΣΗ - χωρίς ακόμη και την έμμεση εγγύηση ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ "
-"ήΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Δείτε για περισσότερες λεπτομέρειες "
-"την Γενική Άδεια Δημόσιας Χρήσης GNU (GNU General Public License).\n"
+#: ../shell/ev-window.c:4214
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgstr "Το Evince διανέμεται με την ελπίδα οτι θα είναι χρήσιμο, αλλά ΧΩΡΙΣ ΚΑΜΜΙΑ ΑΠΟΛΥΤΩΣ ΕΓΓΥΗΣΗ - χωρίς ακόμη και την έμμεση εγγύηση ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ήΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Δείτε για περισσότερες λεπτομέρειες την Γενική Άδεια Δημόσιας Χρήσης GNU (GNU General Public License).\n"
 
-#: ../shell/ev-window.c:4234
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
-msgstr ""
-"Θα πρέπει να έχετε λάβει ένα αντίγραφο της Γενικής Άδειας Δημόσιας Χρήσης "
-"GNU (GNU General Public License) μαζί με το Evince. Αν όχι, επικοινωνήστε "
-"γραπτώς με το Ίδρυμα Ελεύθερου Λογισμικού (Free Software Foundation, Inc.), "
-"51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA\n"
+#: ../shell/ev-window.c:4218
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgstr "Θα πρέπει να έχετε λάβει ένα αντίγραφο της Γενικής Άδειας Δημόσιας Χρήσης GNU (GNU General Public License) μαζί με το Evince. Αν όχι, επικοινωνήστε γραπτώς με το Ίδρυμα Ελεύθερου Λογισμικού (Free Software Foundation, Inc.), 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA\n"
 
-#: ../shell/ev-window.c:4258
+#: ../shell/ev-window.c:4243
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4261
+#: ../shell/ev-window.c:4246
 msgid "© 1996–2009 The Evince authors"
 msgstr "© 1996-2009 Οι συγγραφείς του Evince"
 
-#: ../shell/ev-window.c:4267
+#: ../shell/ev-window.c:4252
 msgid "translator-credits"
 msgstr ""
 "Ελληνική μεταφραστική ομάδα GNOME\n"
@@ -1182,335 +1177,348 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:4518
+#: ../shell/ev-window.c:4503
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d βρέθηκε σε αυτήν τη σελίδα"
 msgstr[1] "%d βρέθηκαν σε αυτήν τη σελίδα"
 
-#: ../shell/ev-window.c:4526
+#: ../shell/ev-window.c:4511
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% απομένουν για αναζήτηση"
 
-#: ../shell/ev-window.c:5003
+#: ../shell/ev-window.c:4988
 msgid "_File"
 msgstr "_Αρχείο"
 
-#: ../shell/ev-window.c:5004
+#: ../shell/ev-window.c:4989
 msgid "_Edit"
 msgstr "_Επεξεργασία"
 
-#: ../shell/ev-window.c:5005
+#: ../shell/ev-window.c:4990
 msgid "_View"
 msgstr "_Προβολή"
 
-#: ../shell/ev-window.c:5006
+#: ../shell/ev-window.c:4991
 msgid "_Go"
 msgstr "_Μετάβαση"
 
-#: ../shell/ev-window.c:5007
+#: ../shell/ev-window.c:4992
 msgid "_Help"
 msgstr "_Βοήθεια"
 
 #. File menu
-#: ../shell/ev-window.c:5010 ../shell/ev-window.c:5278
-msgid "_Open..."
+#: ../shell/ev-window.c:4995
+#: ../shell/ev-window.c:5263
+#| msgid "_Open..."
+msgid "_Open…"
 msgstr "Άν_οιγμα..."
 
-#: ../shell/ev-window.c:5011 ../shell/ev-window.c:5279
+#: ../shell/ev-window.c:4996
+#: ../shell/ev-window.c:5264
 msgid "Open an existing document"
 msgstr "Άν_οιγμα υπάρχοντος εγγράφου"
 
-#: ../shell/ev-window.c:5013
+#: ../shell/ev-window.c:4998
 msgid "Op_en a Copy"
 msgstr "Ά_νοιγμα ενός αντίγραφου"
 
-#: ../shell/ev-window.c:5014
+#: ../shell/ev-window.c:4999
 msgid "Open a copy of the current document in a new window"
 msgstr "Άνοιγμα ενός αντίγραφου του τρέχοντος εγγράφου σε ένα νέο παράθυρο"
 
-#: ../shell/ev-window.c:5016
-msgid "_Save a Copy..."
-msgstr "Απο_θήκευση ενός αντιγράφου"
+#: ../shell/ev-window.c:5001
+#| msgid "Save a Copy"
+msgid "_Save a Copy…"
+msgstr "_Αποθήκευση αντιγράφου..."
 
-#: ../shell/ev-window.c:5017
+#: ../shell/ev-window.c:5002
 msgid "Save a copy of the current document"
 msgstr "Αποθήκευση ενός αντιγράφου του τρέχοντος εγγράφου"
 
-#: ../shell/ev-window.c:5019
-msgid "Page Set_up..."
+#: ../shell/ev-window.c:5004
+#| msgid "Page Set_up..."
+msgid "Page Set_up…"
 msgstr "Δια_μόρφωση σελίδας..."
 
-#: ../shell/ev-window.c:5020
-msgid "Setup the page settings for printing"
+#: ../shell/ev-window.c:5005
+#| msgid "Setup the page settings for printing"
+msgid "Set up the page settings for printing"
 msgstr "Ρύθμιση επιλογών σελίδας για την εκτύπωση"
 
-#: ../shell/ev-window.c:5022
-msgid "_Print..."
+#: ../shell/ev-window.c:5007
+#| msgid "Print"
+msgid "_Print…"
 msgstr "_Εκτύπωση..."
 
-#: ../shell/ev-window.c:5025
+#: ../shell/ev-window.c:5010
 msgid "P_roperties"
 msgstr "_Ιδιότητες"
 
-#: ../shell/ev-window.c:5033
+#: ../shell/ev-window.c:5018
 msgid "Select _All"
 msgstr "Επιλογή ό_λων"
 
-#: ../shell/ev-window.c:5035
-msgid "_Find..."
-msgstr "Εύ_ρεση..."
+#: ../shell/ev-window.c:5020
+#| msgid "Find"
+msgid "_Find…"
+msgstr "_Εύρεση..."
 
-#: ../shell/ev-window.c:5036
+#: ../shell/ev-window.c:5021
 msgid "Find a word or phrase in the document"
 msgstr "Εύρεση μίας λέξης ή μίας φράσης μέσα στη σελίδα"
 
-#: ../shell/ev-window.c:5042
+#: ../shell/ev-window.c:5027
 msgid "T_oolbar"
 msgstr "_Εργαλειοθήκη"
 
-#: ../shell/ev-window.c:5044
+#: ../shell/ev-window.c:5029
 msgid "Rotate _Left"
 msgstr "Περιστροφή _αριστερά"
 
-#: ../shell/ev-window.c:5046
+#: ../shell/ev-window.c:5031
 msgid "Rotate _Right"
 msgstr "Περιστροφή _δεξιά"
 
-#: ../shell/ev-window.c:5057
+#: ../shell/ev-window.c:5042
 msgid "_Reload"
 msgstr "_Επαναφόρτωση"
 
-#: ../shell/ev-window.c:5058
+#: ../shell/ev-window.c:5043
 msgid "Reload the document"
 msgstr "Επαναφόρτωση του εγγράφου"
 
-#: ../shell/ev-window.c:5061
+#: ../shell/ev-window.c:5046
 msgid "Auto_scroll"
 msgstr "Αυτόματη κύλιση"
 
-#: ../shell/ev-window.c:5071
+#: ../shell/ev-window.c:5056
 msgid "_First Page"
 msgstr "_Πρώτη σελίδα"
 
-#: ../shell/ev-window.c:5072
+#: ../shell/ev-window.c:5057
 msgid "Go to the first page"
 msgstr "Μετάβαση στην πρώτη σελίδα"
 
-#: ../shell/ev-window.c:5074
+#: ../shell/ev-window.c:5059
 msgid "_Last Page"
 msgstr "_Τελευταία σελίδα"
 
-#: ../shell/ev-window.c:5075
+#: ../shell/ev-window.c:5060
 msgid "Go to the last page"
 msgstr "Μετάβαση στην τελευταία σελίδα"
 
 #. Help menu
-#: ../shell/ev-window.c:5079
+#: ../shell/ev-window.c:5064
 msgid "_Contents"
 msgstr "Περιε_χόμενα"
 
-#: ../shell/ev-window.c:5082
+#: ../shell/ev-window.c:5067
 msgid "_About"
 msgstr "_Περί"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5086
+#: ../shell/ev-window.c:5071
 msgid "Leave Fullscreen"
 msgstr "Έξοδος από πλήρη οθόνη"
 
-#: ../shell/ev-window.c:5087
+#: ../shell/ev-window.c:5072
 msgid "Leave fullscreen mode"
 msgstr "Έξοδος από λειτουργία πλήρους οθόνη"
 
-#: ../shell/ev-window.c:5089
+#: ../shell/ev-window.c:5074
 msgid "Start Presentation"
 msgstr "Έναρξη παρουσίασης"
 
-#: ../shell/ev-window.c:5090
+#: ../shell/ev-window.c:5075
 msgid "Start a presentation"
 msgstr "Έναρξη μιας παρουσίασης"
 
 #. View Menu
-#: ../shell/ev-window.c:5149
+#: ../shell/ev-window.c:5134
 msgid "_Toolbar"
 msgstr "_Εργαλειοθήκη"
 
-#: ../shell/ev-window.c:5150
+#: ../shell/ev-window.c:5135
 msgid "Show or hide the toolbar"
 msgstr "Προβολή ή απόκρυψη της εργαλειοθήκης"
 
-#: ../shell/ev-window.c:5152
+#: ../shell/ev-window.c:5137
 msgid "Side _Pane"
 msgstr "Πλευρικό _ταμπλώ"
 
-#: ../shell/ev-window.c:5153
+#: ../shell/ev-window.c:5138
 msgid "Show or hide the side pane"
 msgstr "Προβολή ή απόκρυψη πλευρικού ταμπλώ"
 
-#: ../shell/ev-window.c:5155
+#: ../shell/ev-window.c:5140
 msgid "_Continuous"
 msgstr "Συνε_χής"
 
-#: ../shell/ev-window.c:5156
+#: ../shell/ev-window.c:5141
 msgid "Show the entire document"
 msgstr "Εμφάνιση ολόκληρου του εγγράφου"
 
-#: ../shell/ev-window.c:5158
+#: ../shell/ev-window.c:5143
 msgid "_Dual"
 msgstr "_Διπλή"
 
-#: ../shell/ev-window.c:5159
+#: ../shell/ev-window.c:5144
 msgid "Show two pages at once"
 msgstr "Εμφάνιση δύο σελίδων ταυτόχρονα"
 
-#: ../shell/ev-window.c:5161
+#: ../shell/ev-window.c:5146
 msgid "_Fullscreen"
 msgstr "_Πλήρης οθόνη"
 
-#: ../shell/ev-window.c:5162
+#: ../shell/ev-window.c:5147
 msgid "Expand the window to fill the screen"
 msgstr "Ανάπτυξη παραθύρου ώστε να γεμίσει την οθόνη"
 
-#: ../shell/ev-window.c:5164
+#: ../shell/ev-window.c:5149
 msgid "Pre_sentation"
 msgstr "_Παρουσίαση"
 
-#: ../shell/ev-window.c:5165
+#: ../shell/ev-window.c:5150
 msgid "Run document as a presentation"
 msgstr "Χρήση του εγγράφου για παρουσίαση"
 
-#: ../shell/ev-window.c:5173
+#: ../shell/ev-window.c:5158
 msgid "_Inverted Colors"
 msgstr "_Αντιστραμμένα χρώματα"
 
-#: ../shell/ev-window.c:5174
+#: ../shell/ev-window.c:5159
 msgid "Show page contents with the colors inverted"
 msgstr "Εμφάνιση των περιεχομένων της σελίδας με τα χρώματα αντιστραμμένα"
 
 #. Links
-#: ../shell/ev-window.c:5182
+#: ../shell/ev-window.c:5167
 msgid "_Open Link"
 msgstr "Ά_νοιγμα δεσμού"
 
-#: ../shell/ev-window.c:5184
+#: ../shell/ev-window.c:5169
 msgid "_Go To"
 msgstr "_Μετάβαση σε"
 
-#: ../shell/ev-window.c:5186
+#: ../shell/ev-window.c:5171
 msgid "Open in New _Window"
 msgstr "Άνοιγμα σε νέο _παράθυρο"
 
-#: ../shell/ev-window.c:5188
+#: ../shell/ev-window.c:5173
 msgid "_Copy Link Address"
 msgstr "Αντι_γραφή διεύθυνσης δεσμού"
 
-#: ../shell/ev-window.c:5190
-msgid "_Save Image As..."
+#: ../shell/ev-window.c:5175
+#| msgid "_Save Image As..."
+msgid "_Save Image As…"
 msgstr "Απο_θήκευση εικόνας ως..."
 
-#: ../shell/ev-window.c:5192
+#: ../shell/ev-window.c:5177
 msgid "Copy _Image"
 msgstr "Αντι_γραφή εικόνας"
 
-#: ../shell/ev-window.c:5197
+#: ../shell/ev-window.c:5182
 msgid "_Open Attachment"
 msgstr "Ά_νοιγμα συνημμένου"
 
-#: ../shell/ev-window.c:5199
-msgid "_Save Attachment As..."
+#: ../shell/ev-window.c:5184
+#| msgid "_Save Attachment As..."
+msgid "_Save Attachment As…"
 msgstr "Αποθήκευ_ση συνημμένου ως..."
 
-#: ../shell/ev-window.c:5252
+#: ../shell/ev-window.c:5237
 msgid "Zoom"
 msgstr "Μεγέθυνση"
 
-#: ../shell/ev-window.c:5254
+#: ../shell/ev-window.c:5239
 msgid "Adjust the zoom level"
 msgstr "Προσαρμογή του επιπέδου μεγέθυνσης"
 
-#: ../shell/ev-window.c:5264
+#: ../shell/ev-window.c:5249
 msgid "Navigation"
 msgstr "Πλοήγηση"
 
-#: ../shell/ev-window.c:5266
+#: ../shell/ev-window.c:5251
 msgid "Back"
 msgstr "Πίσω"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:5269
+#: ../shell/ev-window.c:5254
 msgid "Move across visited pages"
 msgstr "Μετακίνηση σε σελίδες που έχετε ήδη επισκεφτεί"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5299
+#: ../shell/ev-window.c:5284
 msgid "Previous"
 msgstr "Προηγούμενο"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5304
+#: ../shell/ev-window.c:5289
 msgid "Next"
 msgstr "Επόμενο"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5308
+#: ../shell/ev-window.c:5293
 msgid "Zoom In"
 msgstr "Μεγέθυνση"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5312
+#: ../shell/ev-window.c:5297
 msgid "Zoom Out"
 msgstr "Σμίκρυνση"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5320
+#: ../shell/ev-window.c:5305
 msgid "Fit Width"
 msgstr "Ταίριασμα στο πλάτος"
 
-#: ../shell/ev-window.c:5481 ../shell/ev-window.c:5498
+#: ../shell/ev-window.c:5466
+#: ../shell/ev-window.c:5483
 msgid "Unable to launch external application."
 msgstr "Αδυναμία εκκίνησης εξωτερικής εφαρμογής."
 
-#: ../shell/ev-window.c:5555
+#: ../shell/ev-window.c:5540
 msgid "Unable to open external link"
 msgstr "Αδυναμία ανοίγματος εξωτερικού συνδέσμου"
 
-#: ../shell/ev-window.c:5722
+#: ../shell/ev-window.c:5707
 msgid "Couldn't find appropriate format to save image"
 msgstr "Αδυναμία εύρεσης κατάλληλης μορφής αποθήκευσης για την εικόνα"
 
-#: ../shell/ev-window.c:5764
+#: ../shell/ev-window.c:5749
 msgid "The image could not be saved."
 msgstr "Η εικόνα δεν μπορεί να αποθηκευτεί."
 
-#: ../shell/ev-window.c:5796
+#: ../shell/ev-window.c:5781
 msgid "Save Image"
 msgstr "Αποθήκευση εικόνας"
 
-#: ../shell/ev-window.c:5863
+#: ../shell/ev-window.c:5848
 msgid "Unable to open attachment"
 msgstr "Αδυναμία ανοίγματος συνημμένου"
 
-#: ../shell/ev-window.c:5916
+#: ../shell/ev-window.c:5901
 msgid "The attachment could not be saved."
 msgstr "Το συνημμένο δεν μπορεί να αποθηκευτεί."
 
-#: ../shell/ev-window.c:5961
+#: ../shell/ev-window.c:5946
 msgid "Save Attachment"
 msgstr "Αποθήκευση συνημμένων"
 
 #: ../shell/ev-window-title.c:162
 #, c-format
-msgid "%s - Password Required"
-msgstr "%s - Απαιτείται Κωδικός"
+#| msgid "%s - Password Required"
+msgid "%s — Password Required"
+msgstr "%s — Απαιτείται κωδικός"
 
 #: ../shell/ev-utils.c:330
 msgid "By extension"
 msgstr "Κατά επέκταση"
 
-#: ../shell/main.c:70 ../shell/main.c:246
+#: ../shell/main.c:70
+#: ../shell/main.c:246
 msgid "GNOME Document Viewer"
 msgstr "Εφαρμογή προβολής εγγράφων του GNOME"
 
@@ -1543,16 +1551,16 @@ msgid "STRING"
 msgstr "ΑΛΦΑΡΙΘΜΗΤΙΚΟ"
 
 #: ../shell/main.c:86
-msgid "[FILE...]"
+#| msgid "[FILE...]"
+msgid "[FILE…]"
 msgstr "[ΑΡΧΕΙΟ...]"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid ""
-"Boolean options available, true enables thumbnailing and false disables the "
-"creation of new thumbnails"
-msgstr ""
-"Διαθέσιμη επιλογή boolean: true ενεργοποιεί τη δημιουργία μικρογραφιών ενώ "
-"false απενεργοποιεί τη δημιουργία νέων μικρογραφιών"
+#| msgid ""
+#| "Boolean options available, true enables thumbnailing and false disables "
+#| "the creation of new thumbnails"
+msgid "Boolean options available: true enables thumbnailing and false disables the creation of new thumbnails"
+msgstr "Διαθέσιμες επιλογές boolean: true ενεργοποιεί τη δημιουργία μικρογραφιών ενώ false απενεργοποιεί τη δημιουργία νέων μικρογραφιών"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
@@ -1563,86 +1571,72 @@ msgid "Thumbnail command for PDF Documents"
 msgstr "Εντολή για δημιουργία μικρογραφιών εγγράφων PDF"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid ""
-"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
-"thumbnailer documentation for more information."
-msgstr ""
-"Έγκυρη εντολή και επιλογές για τη δημιουργία μικρογραφιών εγγράφων τύπου\n"
-"PDF. Δείτε την τεκμηριώση των μικρογραφιών του Ναυτίλου για περισσότερες\n"
-"πληροφορίες."
+#| msgid ""
+#| "Valid command plus arguments for the PDF Document thumbnailer. See "
+#| "nautilus thumbnailer documentation for more information."
+msgid "Valid command plus arguments for the PDF Document thumbnailer. See Nautilus thumbnailer documentation for more information."
+msgstr "Έγκυρη εντολή και επιλογές για τη δημιουργία μικρογραφιών εγγράφων τύπου PDF. Δείτε την τεκμηριώση των μικρογραφιών του Ναυτίλου για περισσότερες πληροφορίες."
 
+#~ msgid "DJVU document has incorrect format"
+#~ msgstr "Το έγγραφο DJVU έχει εσφαλμένη μορφή"
+#~ msgid "Print..."
+#~ msgstr "Εκτύπωση..."
+#~ msgid "_Save a Copy..."
+#~ msgstr "Απο_θήκευση ενός αντιγράφου"
+#~ msgid "_Print..."
+#~ msgstr "_Εκτύπωση..."
+#~ msgid "_Find..."
+#~ msgstr "Εύ_ρεση..."
 #~ msgid "Failed to create file “%s”: %s"
 #~ msgstr "Αδυναμία δημιουργίας αρχείου “%s”: %s"
-
 #~ msgid "Search string"
 #~ msgstr "Αναζήτηση αλφαριθμητικού"
-
 #~ msgid "The name of the string to be found"
 #~ msgstr "Το όνομα του αλφαριθμητικού προς αναζήτηση"
-
 #~ msgid "Case sensitive"
 #~ msgstr "Ταίριασμα πεζών-κεφαλαίων"
-
 #~ msgid "TRUE for a case sensitive search"
 #~ msgstr "TRUE για ταίριασμα πεζών-κεφαλαίων κατά την αναζήτηση"
-
 #~ msgid "Highlight color"
 #~ msgstr "Χρώμα επισήμανσης"
-
 #~ msgid "Color of highlight for all matches"
 #~ msgstr "Χρώμα επισήμανσης ταιριασμάτων"
-
 #~ msgid "Current color"
 #~ msgstr "Τρέχον χρώμα"
-
 #~ msgid "Color of highlight for the current match"
 #~ msgstr "Χρώμα επισήμανσης για τρέχον ταίριασμα"
-
 #~ msgid "Recover previous documents?"
 #~ msgstr "Ανάκτηση προηγούμενων εγγράφων;"
-
 #~ msgid ""
 #~ "Evince appears to have exited unexpectedly the last time it was run. You "
 #~ "can recover the opened documents."
 #~ msgstr ""
 #~ "Το Evince φαίνεται ότι τερματίστηκε αναπάντεχα την τελευταία φορά που "
 #~ "εκτελέστηκε. Μπορείτε να ανακτήσετε τα ανοιγμένα έγγραφα."
-
 #~ msgid "_Don't Recover"
 #~ msgstr "_Να μην γίνει αποκατάσταση"
-
 #~ msgid "_Recover"
 #~ msgstr "_Επαναφορά"
-
 #~ msgid "Crash Recovery"
 #~ msgstr "Επαναφορά από κατάρρευση"
-
 #~ msgid "Couldn't create symlink “%s”: "
 #~ msgstr "Αδυναμία δημιουργίας συμβολικού συνδέσμου  “%s”:"
-
 #~ msgid "Cannot open a copy."
 #~ msgstr "Αδυναμία ανοίγματος ενός αντίγραφου."
-
 #~ msgid "Co_nnect"
 #~ msgstr "Σύ_νδεση"
-
 #~ msgid "Connect _anonymously"
 #~ msgstr "_Ανώνυμη σύνδεση"
-
 #~ msgid "Connect as u_ser:"
 #~ msgstr "Σύνδεση ως χρή_στης:"
-
 #~ msgid "_Username:"
 #~ msgstr "Ό_νομα χρήστη:"
-
 #~ msgid "_Domain:"
 #~ msgstr "_Διεύθυνση:"
-
 #~ msgid "_Forget password immediately"
 #~ msgstr "_Μη αποθήκευση του κωδικού"
-
 #~ msgid "_Remember password until you logout"
 #~ msgstr "_Απομνημόνευση κωδικού για αυτήν τη συνεδρία"
-
 #~ msgid "_Remember forever"
 #~ msgstr "_Μόνιμη αποθήκευση στοιχείων"
+
