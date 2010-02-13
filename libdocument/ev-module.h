@@ -49,7 +49,7 @@
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_MODULE            (ev_module_get_type ())
+#define EV_TYPE_MODULE            (_ev_module_get_type ())
 #define EV_MODULE(obj)		  (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_MODULE, EvModule))
 #define EV_MODULE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_MODULE, EvModuleClass))
 #define EV_IS_MODULE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_MODULE))
@@ -58,16 +58,16 @@ G_BEGIN_DECLS
 
 typedef struct _EvModule EvModule;
 
-GType        ev_module_get_type        (void) G_GNUC_CONST;
+GType        _ev_module_get_type        (void) G_GNUC_CONST;
 
-EvModule    *ev_module_new             (const gchar *path,
-					gboolean     resident);
+EvModule    *_ev_module_new             (const gchar *path,
+                                        gboolean     resident);
 
-const gchar *ev_module_get_path        (EvModule    *module);
+const gchar *_ev_module_get_path        (EvModule    *module);
 
-GObject     *ev_module_new_object      (EvModule    *module);
+GObject     *_ev_module_new_object      (EvModule    *module);
 
-GType        ev_module_get_object_type (EvModule    *module);
+GType        _ev_module_get_object_type (EvModule    *module);
 
 G_END_DECLS
 

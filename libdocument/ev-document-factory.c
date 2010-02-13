@@ -73,7 +73,7 @@ get_backend_info_for_document (EvDocument *document)
                 if (!info->module)
                         continue;
 
-                type = ev_module_get_object_type (EV_MODULE (info->module));
+                type = _ev_module_get_object_type (EV_MODULE (info->module));
 
                 if (G_TYPE_CHECK_INSTANCE_TYPE (document, type))
                         return info;
@@ -96,7 +96,7 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type)
                 gchar *path;
 
                 path = g_module_build_path (ev_backends_dir, info->module_name);
-                info->module = G_TYPE_MODULE (ev_module_new (path, info->resident));
+                info->module = G_TYPE_MODULE (_ev_module_new (path, info->resident));
                 g_free (path);
         }
 
@@ -112,7 +112,7 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type)
                 return NULL;
         }
 
-        document = EV_DOCUMENT (ev_module_new_object (EV_MODULE (info->module)));
+        document = EV_DOCUMENT (_ev_module_new_object (EV_MODULE (info->module)));
         g_type_module_unuse (info->module);
 
         return document;

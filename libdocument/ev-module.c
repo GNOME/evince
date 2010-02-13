@@ -65,6 +65,7 @@ typedef GType (*EvModuleRegisterFunc) (GTypeModule *);
 static void ev_module_init       (EvModule *action);
 static void ev_module_class_init (EvModuleClass *class);
 
+#define ev_module_get_type _ev_module_get_type
 G_DEFINE_TYPE (EvModule, ev_module, G_TYPE_TYPE_MODULE)
 
 static gboolean
@@ -125,7 +126,7 @@ ev_module_unload (GTypeModule *gmodule)
 }
 
 const gchar *
-ev_module_get_path (EvModule *module)
+_ev_module_get_path (EvModule *module)
 {
         g_return_val_if_fail (EV_IS_MODULE (module), NULL);
 
@@ -133,7 +134,7 @@ ev_module_get_path (EvModule *module)
 }
 
 GObject *
-ev_module_new_object (EvModule *module)
+_ev_module_new_object (EvModule *module)
 {
 	g_return_val_if_fail (EV_IS_MODULE (module), NULL);
 	
@@ -144,7 +145,7 @@ ev_module_new_object (EvModule *module)
 }
 
 GType
-ev_module_get_object_type (EvModule *module)
+_ev_module_get_object_type (EvModule *module)
 {
 	g_return_val_if_fail (EV_IS_MODULE (module), 0);
 
@@ -179,8 +180,8 @@ ev_module_class_init (EvModuleClass *class)
 }
 
 EvModule *
-ev_module_new (const gchar *path,
-	       gboolean     resident)
+_ev_module_new (const gchar *path,
+                gboolean     resident)
 {
         EvModule *result;
 
