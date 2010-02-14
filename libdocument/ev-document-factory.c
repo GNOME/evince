@@ -40,7 +40,8 @@
 static GList *ev_backends_list = NULL;
 static gchar *ev_backends_dir = NULL;
 
-static EvDocument* ev_document_factory_new_document_for_mime_type (const char *mime_type);
+static EvDocument* ev_document_factory_new_document_for_mime_type (const char *mime_type,
+                                                                   GError **error);
 
 static EvBackendInfo *
 get_backend_info_for_mime_type (const gchar *mime_type)
@@ -83,14 +84,32 @@ get_backend_info_for_document (EvDocument *document)
 }
 
 static EvDocument *
-ev_document_factory_new_document_for_mime_type (const gchar *mime_type)
+ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
+                                                GError **error)
 {
         EvDocument    *document;
         EvBackendInfo *info;
 
+        g_return_val_if_fail (mime_type != NULL, NULL);
+
         info = get_backend_info_for_mime_type (mime_type);
-        if (!info)
+        if (info == NULL) {
+                char *content_type, *mime_desc = NULL;
+
+                content_type = g_content_type_from_mime_type (mime_type);
+                if (content_type)
+                        mime_desc = g_content_type_get_description (content_type);
+
+                g_set_error (error,
+                             EV_DOCUMENT_ERROR,
+                             EV_DOCUMENT_ERROR_INVALID,
+                             _("File type %s (%s) is not supported"),
+                             mime_desc ? mime_desc : "(unknown)", mime_type);
+                g_free (mime_desc);
+                g_free (content_type);
+
                 return NULL;
+        }
 
         if (!info->module) {
                 gchar *path;
@@ -104,8 +123,9 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type)
                 const char *err;
 
                 err = g_module_error ();
-                g_warning ("Cannot load backend '%s': %s",
-                          info->module_name, err ? err : "unknown error");
+                g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
+                             "Failed to load backend for '%s': %s",
+                             mime_type, err ? err : "unknown error");
                 g_object_unref (G_OBJECT (info->module));
                 info->module = NULL;
 
@@ -162,46 +182,16 @@ new_document_for_uri (const char        *uri,
 {
 	EvDocument *document = NULL;
 	gchar      *mime_type = NULL;
-	GError     *err = NULL;
 
 	*compression = EV_COMPRESSION_NONE;
 
-	mime_type = ev_file_get_mime_type (uri, fast, &err);
-
-	if (mime_type == NULL) {
-		g_free (mime_type);
-
-		if (err == NULL) {
-			g_set_error_literal (error,
-                                             EV_DOCUMENT_ERROR,
-                                             EV_DOCUMENT_ERROR_INVALID,
-                                             _("Unknown MIME Type"));
-		} else {
-			g_propagate_error (error, err);
-		}
-		
+	mime_type = ev_file_get_mime_type (uri, fast, error);
+	if (mime_type == NULL)
 		return NULL;
-	}
 
-	document = ev_document_factory_new_document_for_mime_type (mime_type);
-	if (document == NULL) {
-		gchar *content_type, *mime_desc = NULL;
-
-		content_type = g_content_type_from_mime_type (mime_type);
-		if (content_type)
-			mime_desc = g_content_type_get_description (content_type);
-
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,	
-			     EV_DOCUMENT_ERROR_INVALID,
-			     _("File type %s (%s) is not supported"),
-			     mime_desc ? mime_desc : "-", mime_type);
-		g_free (mime_desc);
-		g_free (content_type);
-		g_free (mime_type);
-
-		return NULL;
-	}
+	document = ev_document_factory_new_document_for_mime_type (mime_type, error);
+	if (document == NULL)
+                return NULL;
 
 	*compression = get_compression_from_mime_type (mime_type);
 
@@ -454,7 +444,7 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 
 EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
 {
-        return ev_document_factory_new_document_for_mime_type (mime_type);
+        return ev_document_factory_new_document_for_mime_type (mime_type, NULL);
 }
 
 const gchar *
