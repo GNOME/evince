@@ -86,7 +86,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 			 GList *files)
 {
 	GError *error = NULL;
-	EvDocument *document;
+	EvDocument *document = NULL;
 	GList *pages = NULL;
 	NautilusFileInfo *file;
 	gchar *uri = NULL;
@@ -120,14 +120,16 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	gtk_widget_show (page);
 	property_page = nautilus_property_page_new ("document-properties",
 			label, page);
-	g_object_unref (document);
 
 	pages = g_list_prepend (pages, property_page);
 
 end:
 	g_free (uri);
 	g_free (mime_type);
-	
+
+	if (document != NULL)
+		g_object_unref (document);
+
 	return pages;
 }
 
