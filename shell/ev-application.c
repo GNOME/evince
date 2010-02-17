@@ -853,6 +853,9 @@ ev_application_shutdown (EvApplication *application)
 
 	ev_application_accel_map_save (application);
 
+	g_object_unref (application->scr_saver);
+	application->scr_saver = NULL;
+
 #ifdef ENABLE_DBUS
 	if (application->keys) {
 		g_object_unref (application->keys);
@@ -910,13 +913,14 @@ ev_application_init (EvApplication *ev_application)
 
 	ev_application_accel_map_load (ev_application);
 
+	ev_application->scr_saver = totem_scrsaver_new ();
+
 #ifdef ENABLE_DBUS
 	ev_application->connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
 	if (ev_application->connection) {
 		dbus_g_connection_register_g_object (ev_application->connection,
 						     APPLICATION_DBUS_OBJECT_PATH,
 						     G_OBJECT (ev_application));
-		ev_application->scr_saver = totem_scrsaver_new (ev_application->connection);
 	} else {
 		g_warning ("Error connection to DBus: %s\n", error->message);
 		g_error_free (error);
@@ -992,15 +996,13 @@ ev_application_get_filechooser_uri (EvApplication       *application,
 void
 ev_application_screensaver_enable (EvApplication *application)
 {
-	if (application->scr_saver)
-		totem_scrsaver_enable (application->scr_saver);	
+	totem_scrsaver_enable (application->scr_saver);
 }
 
 void
 ev_application_screensaver_disable (EvApplication *application)
 {
-	if (application->scr_saver)
-		totem_scrsaver_disable (application->scr_saver);	
+	totem_scrsaver_disable (application->scr_saver);
 }
 
 const gchar *

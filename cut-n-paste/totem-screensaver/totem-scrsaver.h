@@ -13,18 +13,14 @@
 
    You should have received a copy of the GNU Library General Public
    License along with the Gnome Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.
+   write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301  USA.
 
    Author: Bastien Nocera <hadess@hadess.net>
  */
 
 #include <glib.h>
 #include <glib-object.h>
-
-#ifdef ENABLE_DBUS
-#include <dbus/dbus-glib.h>
-#endif
 
 #define TOTEM_TYPE_SCRSAVER		(totem_scrsaver_get_type ())
 #define TOTEM_SCRSAVER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), TOTEM_TYPE_SCRSAVER, TotemScrsaver))
@@ -46,12 +42,10 @@ struct TotemScrsaverClass {
 	GObjectClass parent_class; 
 };
 
-GType totem_scrsaver_get_type		(void);
-#ifdef ENABLE_DBUS
-TotemScrsaver *totem_scrsaver_new	(DBusGConnection *connection);
-#else
-TotemScrsaver *totem_scrsaver_new	();
-#endif
+GType totem_scrsaver_get_type		(void) G_GNUC_CONST;
+TotemScrsaver *totem_scrsaver_new	(void);
 void totem_scrsaver_enable		(TotemScrsaver *scr);
 void totem_scrsaver_disable		(TotemScrsaver *scr);
+void totem_scrsaver_set_state		(TotemScrsaver *scr,
+					 gboolean enable);
 

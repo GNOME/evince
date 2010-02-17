@@ -14,8 +14,8 @@
 
    You should have received a copy of the GNU Library General Public
    License along with the Gnome Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.
+   write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301  USA.
 
    Author: Bastien Nocera <hadess@hadess.net>
  */
@@ -50,8 +50,6 @@
 #define XSCREENSAVER_MIN_TIMEOUT 60
 
 static GObjectClass *parent_class = NULL;
-static void totem_scrsaver_class_init (TotemScrsaverClass *class);
-static void totem_scrsaver_init       (TotemScrsaver      *parser);
 static void totem_scrsaver_finalize   (GObject *object);
 
 
@@ -132,10 +130,12 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 			/* try the old API */
 			res = dbus_g_proxy_call (scr->priv->gs_proxy,
 						 "InhibitActivation",
-						 &error,
+						 NULL,
 						 G_TYPE_STRING, reason,
 						 G_TYPE_INVALID,
 						 G_TYPE_INVALID);
+			if (res)
+				g_error_free (error);
 		}
 
 		g_free (reason);
@@ -155,9 +155,11 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 			/* try the old API */
 			res = dbus_g_proxy_call (scr->priv->gs_proxy,
 						 "AllowActivation",
-						 &error,
+						 NULL,
 						 G_TYPE_INVALID,
 						 G_TYPE_INVALID);
+			if (res)
+				g_error_free (error);
 		}
 	}
 
@@ -194,16 +196,13 @@ gs_proxy_destroy_cb (GObject *proxy,
 }
 #endif
 
-#ifdef ENABLE_DBUS
 static void
-screensaver_init_dbus (TotemScrsaver *scr, DBusGConnection *connection)
+screensaver_init_dbus (TotemScrsaver *scr)
 {
+#ifdef ENABLE_DBUS
 	GError *error = NULL;
 
-	if (!connection)
-		scr->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
-	else
-		scr->priv->connection = connection;
+	scr->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 
 	if (! scr->priv->connection) {
 		if (error) {
@@ -226,9 +225,8 @@ screensaver_init_dbus (TotemScrsaver *scr, DBusGConnection *connection)
 					 0);
 
 	}
-
-}
 #endif /* ENABLE_DBUS */
+}
 
 static void
 screensaver_finalize_dbus (TotemScrsaver *scr)
@@ -299,13 +297,12 @@ screensaver_disable_x11 (TotemScrsaver *scr)
 				&scr->priv->allow_exposures);
 		XUnlockDisplay (GDK_DISPLAY());
 
-		if (scr->priv->timeout != 0)
-		{
+		if (scr->priv->timeout != 0) {
 			g_timeout_add_seconds (scr->priv->timeout / 2,
 					       (GSourceFunc) fake_event, scr);
 		} else {
 			g_timeout_add_seconds (XSCREENSAVER_MIN_TIMEOUT / 2,
-					(GSourceFunc) fake_event, scr);
+					       (GSourceFunc) fake_event, scr);
 		}
 
 		return;
@@ -366,45 +363,23 @@ totem_scrsaver_class_init (TotemScrsaverClass *klass)
 	object_class->finalize = totem_scrsaver_finalize;
 }
 
-#ifdef ENABLE_DBUS
 TotemScrsaver *
-totem_scrsaver_new	(DBusGConnection *connection)
+totem_scrsaver_new (void)
 {
-	TotemScrsaver * scr;
-	scr = TOTEM_SCRSAVER (g_object_new (TOTEM_TYPE_SCRSAVER, NULL));
-
-	screensaver_init_dbus (scr, connection);
-#ifdef GDK_WINDOWING_X11
-	screensaver_init_x11 (scr);
-#else
-#warning Unimplemented
-#endif
-	
-	return scr;
+	return TOTEM_SCRSAVER (g_object_new (TOTEM_TYPE_SCRSAVER, NULL));
 }
-#else
-TotemScrsaver *
-totem_scrsaver_new()
-{
-	TotemScrsaver * scr;
-	scr = TOTEM_SCRSAVER (g_object_new (TOTEM_TYPE_SCRSAVER, NULL));
-
-#ifdef GDK_WINDOWING_X11
-	screensaver_init_x11 (scr);
-#else
-#warning Unimplemented
-#endif
-	
-	return scr;
-}
-#endif
 
 static void
 totem_scrsaver_init (TotemScrsaver *scr)
 {
 	scr->priv = g_new0 (TotemScrsaverPrivate, 1);
 
-	
+	screensaver_init_dbus (scr);
+#ifdef GDK_WINDOWING_X11
+	screensaver_init_x11 (scr);
+#else
+#warning Unimplemented
+#endif
 }
 
 void
@@ -447,6 +422,20 @@ totem_scrsaver_enable (TotemScrsaver *scr)
 #warning Unimplemented
 	{}
 #endif
+}
+
+void
+totem_scrsaver_set_state (TotemScrsaver *scr, gboolean enable)
+{
+	g_return_if_fail (TOTEM_SCRSAVER (scr));
+
+	if (scr->priv->disabled == !enable)
+		return;
+
+	if (enable == FALSE)
+		totem_scrsaver_disable (scr);
+	else
+		totem_scrsaver_enable (scr);
 }
 
 static void
