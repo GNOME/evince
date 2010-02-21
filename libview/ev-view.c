@@ -3096,29 +3096,26 @@ ev_view_do_popup_menu (EvView *view,
 		       gdouble x,
 		       gdouble y)
 {
+	GList        *items = NULL;
 	EvLink       *link;
 	EvImage      *image;
 	EvAnnotation *annot;
 
 	image = ev_view_get_image_at_location (view, x, y);
-	if (image) {
-		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, image);
-		return TRUE;
-	}
+	if (image)
+		items = g_list_prepend (items, image);
 
 	link = ev_view_get_link_at_location (view, x, y);
-	if (link) {
-		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, link);
-		return TRUE;
-	}
+	if (link)
+		items = g_list_prepend (items, link);
 
 	annot = ev_view_get_annotation_at_location (view, x, y);
-	if (annot) {
-		g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, annot);
-		return TRUE;
-	}
+	if (annot)
+		items = g_list_prepend (items, annot);
 
-	g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, NULL);
+	g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, items);
+
+	g_list_free (items);
 
 	return TRUE;
 }
@@ -4265,9 +4262,9 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, popup_menu),
 		         NULL, NULL,
-		         g_cclosure_marshal_VOID__OBJECT,
+		         g_cclosure_marshal_VOID__POINTER,
 		         G_TYPE_NONE, 1,
-			 G_TYPE_OBJECT);
+			 G_TYPE_POINTER);
 	signals[SIGNAL_SELECTION_CHANGED] = g_signal_new ("selection-changed",
                          G_TYPE_FROM_CLASS (object_class),
                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,

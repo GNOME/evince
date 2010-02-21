@@ -192,7 +192,7 @@ struct _EvViewClass {
 	void    (*external_link)	  (EvView         *view,
 					   EvLinkAction   *action);
 	void    (*popup_menu)		  (EvView         *view,
-					   EvLink         *link);
+					   GList          *items);
 	void    (*selection_changed)      (EvView         *view);
 };
 

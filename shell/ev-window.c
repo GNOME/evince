@@ -4442,16 +4442,34 @@ view_menu_annot_popup (EvWindow     *ev_window,
 
 static gboolean
 view_menu_popup_cb (EvView   *view,
-		    GObject  *object,
+		    GList    *items,
 		    EvWindow *ev_window)
 {
-	view_menu_link_popup (ev_window,
-			      EV_IS_LINK (object) ? EV_LINK (object) : NULL);
-	view_menu_image_popup (ev_window,
-			       EV_IS_IMAGE (object) ? EV_IMAGE (object) : NULL);
-	view_menu_annot_popup (ev_window,
-			       EV_IS_ANNOTATION (object) ? EV_ANNOTATION (object) : NULL);
-	
+	GList   *l;
+	gboolean has_link = FALSE;
+	gboolean has_image = FALSE;
+	gboolean has_annot = FALSE;
+
+	for (l = items; l; l = g_list_next (l)) {
+		if (EV_IS_LINK (l->data)) {
+			view_menu_link_popup (ev_window, EV_LINK (l->data));
+			has_link = TRUE;
+		} else if (EV_IS_IMAGE (l->data)) {
+			view_menu_image_popup (ev_window, EV_IMAGE (l->data));
+			has_image = TRUE;
+		} else if (EV_IS_ANNOTATION (l->data)) {
+			view_menu_annot_popup (ev_window, EV_ANNOTATION (l->data));
+			has_annot = TRUE;
+		}
+	}
+
+	if (!has_link)
+		view_menu_link_popup (ev_window, NULL);
+	if (!has_image)
+		view_menu_image_popup (ev_window, NULL);
+	if (!has_annot)
+		view_menu_annot_popup (ev_window, NULL);
+
 	gtk_menu_popup (GTK_MENU (ev_window->priv->view_popup),
 			NULL, NULL, NULL, NULL,
 			3, gtk_get_current_event_time ());
