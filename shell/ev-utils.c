@@ -307,14 +307,17 @@ gdouble
 get_screen_dpi (GtkWindow *window)
 {
 	GdkScreen *screen;
-	gdouble    xdpi, ydpi;
+	gdouble    dp, di;
 
 	screen = gtk_window_get_screen (window);
 
-	xdpi = 25.4 * gdk_screen_get_width (screen) / gdk_screen_get_width_mm (screen);
-	ydpi = 25.4 * gdk_screen_get_height (screen) / gdk_screen_get_height_mm (screen);
-	
-	return (xdpi + ydpi) / 2.0;
+	/*diagonal in pixels*/
+	dp = hypot (gdk_screen_get_width (screen), gdk_screen_get_height (screen));
+
+	/*diagonal in inches*/
+	di = hypot (gdk_screen_get_width_mm(screen), gdk_screen_get_height_mm (screen)) / 25.4;
+
+	return (dp / di);
 }
 
 
