@@ -62,6 +62,7 @@
 #include "ev-document-thumbnails.h"
 #include "ev-document-annotations.h"
 #include "ev-document-type-builtins.h"
+#include "ev-document-misc.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
 #include "ev-file-monitor.h"
@@ -321,6 +322,15 @@ static guint ev_window_n_copies = 0;
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
+static gdouble
+get_screen_dpi (EvWindow *window)
+{
+	GdkScreen *screen;
+
+	screen = gtk_window_get_screen (GTK_WINDOW (window));
+	return ev_document_misc_get_screen_dpi (screen);
+}
+
 static void
 ev_window_set_action_sensitive (EvWindow   *ev_window,
 		    	        const char *name,
@@ -497,7 +507,7 @@ ev_window_update_actions (EvWindow *ev_window)
 						      ZOOM_CONTROL_ACTION);
 
 		real_zoom = ev_document_model_get_scale (ev_window->priv->model);
-		real_zoom *= 72.0 / get_screen_dpi (GTK_WINDOW (ev_window));
+		real_zoom *= 72.0 / get_screen_dpi (ev_window);
 		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
 
 		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), zoom);
@@ -982,7 +992,7 @@ setup_model_from_metadata (EvWindow *window)
 	/* Zoom */
 	if (ev_document_model_get_sizing_mode (window->priv->model) == EV_SIZING_FREE &&
 	    ev_metadata_get_double (window->priv->metadata, "zoom", &zoom)) {
-		zoom *= get_screen_dpi (GTK_WINDOW (window)) / 72.0;
+		zoom *= get_screen_dpi (window) / 72.0;
 		ev_document_model_set_scale (window->priv->model, zoom);
 	}
 
@@ -3711,7 +3721,7 @@ ev_window_screen_changed (GtkWidget *widget,
 		return;
 
 	ev_window_setup_gtk_settings (window);
-	dpi = get_screen_dpi (GTK_WINDOW (window));
+	dpi = get_screen_dpi (window);
 	ev_document_model_set_min_scale (priv->model, MIN_SCALE * dpi / 72.0);
 	ev_document_model_set_max_scale (priv->model, MAX_SCALE * dpi / 72.0);
 
@@ -4067,7 +4077,7 @@ ev_window_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *
 		gdouble zoom;
 
 		zoom = ev_document_model_get_scale (model);
-		zoom *= 72.0 / get_screen_dpi (GTK_WINDOW (ev_window));
+		zoom *= 72.0 / get_screen_dpi (ev_window);
 		ev_metadata_set_double (ev_window->priv->metadata, "zoom", zoom);
 	}
 }
@@ -4685,7 +4695,7 @@ zoom_control_changed_cb (EphyZoomAction *action,
 
 	if (mode == EV_SIZING_FREE) {
 		ev_document_model_set_scale (ev_window->priv->model,
-					     zoom * get_screen_dpi (GTK_WINDOW (ev_window)) / 72.0);
+					     zoom * get_screen_dpi (ev_window) / 72.0);
 	}
 }
 
@@ -6272,7 +6282,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->view = ev_view_new ();
 	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
-	dpi = get_screen_dpi (GTK_WINDOW (ev_window));
+	dpi = get_screen_dpi (ev_window);
 	ev_document_model_set_min_scale (ev_window->priv->model, MIN_SCALE * dpi / 72.0);
 	ev_document_model_set_max_scale (ev_window->priv->model, MAX_SCALE * dpi / 72.0);
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));

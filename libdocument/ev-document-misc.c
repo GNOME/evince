@@ -21,6 +21,7 @@
 #include <config.h>
 
 #include <string.h>
+#include <math.h>
 
 #include <gtk/gtk.h>
 
@@ -362,4 +363,18 @@ ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
 			p[2] = 255 - p[2];
 		}
 	}
+}
+
+gdouble
+ev_document_misc_get_screen_dpi (GdkScreen *screen)
+{
+	gdouble dp, di;
+
+	/*diagonal in pixels*/
+	dp = hypot (gdk_screen_get_width (screen), gdk_screen_get_height (screen));
+
+	/*diagonal in inches*/
+	di = hypot (gdk_screen_get_width_mm(screen), gdk_screen_get_height_mm (screen)) / 25.4;
+
+	return (dp / di);
 }
