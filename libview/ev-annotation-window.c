@@ -26,6 +26,7 @@
 #include "ev-annotation-window.h"
 #include "ev-stock-icons.h"
 #include "ev-view-marshal.h"
+#include "ev-document-misc.h"
 
 enum {
 	PROP_0,
@@ -103,17 +104,12 @@ send_focus_change (GtkWidget *widget,
 }
 
 static gdouble
-get_screen_dpi (GtkWindow *window)
+get_screen_dpi (EvAnnotationWindow *window)
 {
 	GdkScreen *screen;
-	gdouble    xdpi, ydpi;
 
-	screen = gtk_window_get_screen (window);
-
-	xdpi = 25.4 * gdk_screen_get_width (screen) / gdk_screen_get_width_mm (screen);
-	ydpi = 25.4 * gdk_screen_get_height (screen) / gdk_screen_get_height_mm (screen);
-
-	return (xdpi + ydpi) / 2.0;
+	screen = gtk_window_get_screen (GTK_WINDOW (window));
+	return ev_document_misc_get_screen_dpi (screen);
 }
 
 static GtkIconSize
@@ -423,7 +419,7 @@ ev_annotation_window_constructor (GType                  type,
 	rect = window->rect;
 
 	/* Rectangle is at doc resolution (72.0) */
-	scale = get_screen_dpi (GTK_WINDOW (window)) / 72.0;
+	scale = get_screen_dpi (window) / 72.0;
 	gtk_window_resize (GTK_WINDOW (window),
 			   (gint)((rect->x2 - rect->x1) * scale),
 			   (gint)((rect->y2 - rect->y1) * scale));
