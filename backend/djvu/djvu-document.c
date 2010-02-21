@@ -323,7 +323,6 @@ djvu_document_render (EvDocument      *document,
 	ddjvu_page_t *d_page;
 	ddjvu_page_rotation_t rotation;
 	double page_width, page_height, tmp;
-	static const cairo_user_data_key_t key;
 
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page->index);
 	
@@ -355,19 +354,12 @@ djvu_document_render (EvDocument      *document,
 	        default:
 			rotation = DDJVU_ROTATE_0;
 	}
-#ifdef HAVE_CAIRO_FORMAT_STRIDE_FOR_WIDTH
-	rowstride = cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, page_width);
-#else
-	rowstride = page_width * 4;
-#endif
-	pixels = (gchar *) g_malloc (page_height * rowstride);
-	surface = cairo_image_surface_create_for_data ((guchar *)pixels,
-						       CAIRO_FORMAT_RGB24,
-						       page_width,
-						       page_height,
-						       rowstride);
-	cairo_surface_set_user_data (surface, &key,
-				     pixels, (cairo_destroy_func_t)g_free);
+
+	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
+					      page_width, page_height);
+	rowstride = cairo_image_surface_get_stride (surface);
+	pixels = (gchar *)cairo_image_surface_get_data (surface);
+
 	prect.x = 0;
 	prect.y = 0;
 	prect.w = page_width;
@@ -382,6 +374,8 @@ djvu_document_render (EvDocument      *document,
 			   djvu_document->d_format,
 			   rowstride,
 			   pixels);
+
+	cairo_surface_mark_dirty (surface);
 
 	return surface;
 }
