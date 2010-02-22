@@ -54,13 +54,10 @@ FIXXREF_OPTIONS = \
 # e.g. CFILE_GLOB=$(top_srcdir)/gtk/*.c
 HFILE_GLOB = \
 	$(top_srcdir)/shell/*.h \
-	$(top_builddir)/shell/*.h \
-	$(top_srcdir)/libmisc/*.h \
-	$(top_builddir)/libmisc/*.h
+	$(top_builddir)/shell/*.h
 
 CFILE_GLOB = \
-	$(top_srcdir)/shell/*.c \
-	$(top_srcdir)/libmisc/*.c
+	$(top_srcdir)/shell/*.c
 
 # Extra header to include when scanning, which are not under DOC_SOURCE_DIR
 # e.g. EXTRA_HFILES=$(top_srcdir}/contrib/extra.h
