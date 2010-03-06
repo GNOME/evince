@@ -1,14 +1,14 @@
 # Catalan translation of evince.
 # Copyright © 2005, 2006 Free Software Foundation, Inc.
 # This file is distributed under the same license as the evince package.
-# Gil Forcada <gilforcada@guifi.net>, 2005, 2006, 2007, 2008, 2009.
+# Gil Forcada <gilforcada@guifi.net>, 2005, 2006, 2007, 2008, 2009, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-05 22:55+0100\n"
-"PO-Revision-Date: 2010-02-24 22:50+0100\n"
+"POT-Creation-Date: 2010-03-06 13:32+0100\n"
+"PO-Revision-Date: 2010-03-05 23:19+0100\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,23 +78,20 @@ msgid "Comic Books"
 msgstr "Còmics"
 
 #: ../backend/djvu/djvu-document.c:173
-#, fuzzy
 msgid "DjVu document has incorrect format"
-msgstr "El document DVI té un format incorrecte"
+msgstr "El document DjVu té un format incorrecte"
 
 #: ../backend/djvu/djvu-document.c:250
-#, fuzzy
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
 msgstr ""
-"El document està format per diversos fitxers, un o més dels quals són "
+"El document és format per diversos fitxers, un o més dels quals són "
 "inaccessibles."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
-#, fuzzy
 msgid "DjVu Documents"
-msgstr "Documents DJVU"
+msgstr "Documents DjVu"
 
 #: ../backend/dvi/dvi-document.c:113
 msgid "DVI document has incorrect format"
@@ -191,19 +188,16 @@ msgid "Not enough memory"
 msgstr "No hi ha prou memòria"
 
 #: ../backend/impress/zip.c:59
-#, fuzzy
 msgid "Cannot find ZIP signature"
-msgstr "No s'ha pogut trobar la signatura zip"
+msgstr "No s'ha pogut trobar la signatura ZIP"
 
 #: ../backend/impress/zip.c:62
-#, fuzzy
 msgid "Invalid ZIP file"
-msgstr "Fitxer zip invàlid"
+msgstr "Fitxer ZIP no vàlid"
 
 #: ../backend/impress/zip.c:65
-#, fuzzy
 msgid "Multi file ZIPs are not supported"
-msgstr "Encara no es poden fer servir arxius zip amb múltiples fitxers"
+msgstr "Encara no es poden fer servir arxius ZIP amb múltiples fitxers"
 
 #: ../backend/impress/zip.c:68
 msgid "Cannot open the file"
@@ -214,9 +208,8 @@ msgid "Cannot read data from file"
 msgstr "No s'han pogut llegir les dades del fitxer"
 
 #: ../backend/impress/zip.c:74
-#, fuzzy
 msgid "Cannot find file in the ZIP archive"
-msgstr "No s'ha pogut trobar el fitxer a l'arxiu zip"
+msgstr "No s'ha pogut trobar el fitxer a l'arxiu ZIP"
 
 #: ../backend/impress/zip.c:77
 msgid "Unknown error"
@@ -442,7 +435,6 @@ msgid "Document Viewer"
 msgstr "Visualitzador de documents"
 
 #: ../data/evince.desktop.in.in.h:2
-#, fuzzy
 msgid "View multi-page documents"
 msgstr "Visualitzeu documents multi-pàgina"
 
@@ -609,14 +601,14 @@ msgid "default:mm"
 msgstr "default:mm"
 
 #: ../properties/ev-properties-view.c:284
-#, fuzzy, c-format
+#, c-format
 msgid "%.0f × %.0f mm"
-msgstr "%.0f x %.0f mm"
+msgstr "%.0f × %.0f mm"
 
 #: ../properties/ev-properties-view.c:288
-#, fuzzy, c-format
+#, c-format
 msgid "%.2f × %.2f inch"
-msgstr "%.2f x %.2f in"
+msgstr "%.2f × %.2f polzades"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -644,19 +636,17 @@ msgstr "de %d"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:341
-#, fuzzy
 msgid "Preparing to print…"
-msgstr "S'està preparant per imprimir..."
+msgstr "S'està preparant per imprimir…"
 
 #: ../libview/ev-print-operation.c:343
-#, fuzzy
 msgid "Finishing…"
-msgstr "S'està acabant..."
+msgstr "S'està acabant…"
 
 #: ../libview/ev-print-operation.c:345
-#, fuzzy, c-format
+#, c-format
 msgid "Printing page %d of %d…"
-msgstr "S'està imprimint la pàgina %d de %d..."
+msgstr "S'està imprimint la pàgina %d de %d…"
 
 #: ../libview/ev-print-operation.c:1169
 msgid "Printing is not supported on this printer."
@@ -671,7 +661,6 @@ msgid "Warning"
 msgstr "Avís"
 
 #: ../libview/ev-print-operation.c:1237
-#, fuzzy
 msgid "Your print range selection does not include any pages"
 msgstr "No hi ha cap pàgina en el rang d'impressió"
 
@@ -688,7 +677,6 @@ msgid "Fit to Printable Area"
 msgstr "Ajusta a l'àrea d'impressió"
 
 #: ../libview/ev-print-operation.c:1901
-#, fuzzy
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -701,7 +689,7 @@ msgid ""
 "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
-"Escala les pàgines del document per ajustar a la pàgina d'impressió "
+"Escala les pàgines del document per ajustar-les a la pàgina d'impressió "
 "seleccionada. Seleccioneu una de les opcions següents:\n"
 "\n"
 "• «Cap»: No es fa cap escalat.\n"
@@ -820,9 +808,8 @@ msgstr "Engega %s"
 
 #: ../libview/ev-view.c:3923 ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:262
-#, fuzzy
 msgid "Loading…"
-msgstr "S'està carregant..."
+msgstr "S'està carregant…"
 
 #: ../shell/eggfindbar.c:320
 msgid "Find:"
@@ -919,7 +906,6 @@ msgid "Forget password _immediately"
 msgstr "Oblida la contrasenya _immediatament"
 
 #: ../shell/ev-password-view.c:377
-#, fuzzy
 msgid "Remember password until you _log out"
 msgstr "Recorda la contrasenya durant aquesta _sessió"
 
@@ -948,9 +934,9 @@ msgid "Font"
 msgstr "Tipus de lletra"
 
 #: ../shell/ev-properties-fonts.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Gathering font information… %3d%%"
-msgstr "S'està recollint informació del tipus de lletra ... %3d%%"
+msgstr "S'està recollint informació del tipus de lletra… %3d%%"
 
 #: ../shell/ev-properties-license.c:138
 msgid "Usage terms"
@@ -973,9 +959,8 @@ msgid "Layers"
 msgstr "Capes"
 
 #: ../shell/ev-sidebar-links.c:335
-#, fuzzy
 msgid "Print…"
-msgstr "Imprimeix"
+msgstr "Imprimeix…"
 
 #: ../shell/ev-sidebar-links.c:750
 msgid "Index"
@@ -986,9 +971,9 @@ msgid "Thumbnails"
 msgstr "Miniatures"
 
 #: ../shell/ev-window.c:839
-#, fuzzy, c-format
+#, c-format
 msgid "Page %s — %s"
-msgstr "Pàgina %s - %s"
+msgstr "Pàgina %s — %s"
 
 #: ../shell/ev-window.c:841
 #, c-format
@@ -1119,13 +1104,13 @@ msgid "There was an error displaying help"
 msgstr "S'ha produït un error en mostrar l'ajuda"
 
 #: ../shell/ev-window.c:4189
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Document Viewer\n"
 "Using %s (%s)"
 msgstr ""
 "Visualitzador de documents.\n"
-"S'utilitza el poppler %s (%s)"
+"S'utilitza el %s (%s)"
 
 #: ../shell/ev-window.c:4220
 msgid ""
@@ -1210,9 +1195,8 @@ msgstr "A_juda"
 
 #. File menu
 #: ../shell/ev-window.c:5023 ../shell/ev-window.c:5291
-#, fuzzy
 msgid "_Open…"
-msgstr "_Obre..."
+msgstr "_Obre…"
 
 #: ../shell/ev-window.c:5024 ../shell/ev-window.c:5292
 msgid "Open an existing document"
@@ -1227,28 +1211,24 @@ msgid "Open a copy of the current document in a new window"
 msgstr "Obre una còpia del document actual en una finestra nova"
 
 #: ../shell/ev-window.c:5029
-#, fuzzy
 msgid "_Save a Copy…"
-msgstr "Desa'n una còpia"
+msgstr "Desa'n una còpia…"
 
 #: ../shell/ev-window.c:5030
 msgid "Save a copy of the current document"
 msgstr "Desa una còpia del document actual"
 
 #: ../shell/ev-window.c:5032
-#, fuzzy
 msgid "Page Set_up…"
-msgstr "_Configuració de la pàgina..."
+msgstr "_Configuració de la pàgina…"
 
 #: ../shell/ev-window.c:5033
-#, fuzzy
 msgid "Set up the page settings for printing"
 msgstr "Configureu els paràmetres de pàgina per a la impressió"
 
 #: ../shell/ev-window.c:5035
-#, fuzzy
 msgid "_Print…"
-msgstr "_Imprimeix"
+msgstr "_Imprimeix…"
 
 #: ../shell/ev-window.c:5038
 msgid "P_roperties"
@@ -1259,9 +1239,8 @@ msgid "Select _All"
 msgstr "Selecciona-ho _tot"
 
 #: ../shell/ev-window.c:5048
-#, fuzzy
 msgid "_Find…"
-msgstr "Cerca"
+msgstr "_Cerca…"
 
 #: ../shell/ev-window.c:5049
 msgid "Find a word or phrase in the document"
@@ -1409,9 +1388,8 @@ msgid "_Copy Link Address"
 msgstr "_Copia l'adreça de l'enllaç"
 
 #: ../shell/ev-window.c:5203
-#, fuzzy
 msgid "_Save Image As…"
-msgstr "_Anomena i desa la imatge..."
+msgstr "_Anomena i desa la imatge…"
 
 #: ../shell/ev-window.c:5205
 msgid "Copy _Image"
@@ -1422,9 +1400,8 @@ msgid "_Open Attachment"
 msgstr "_Obre l'adjunció"
 
 #: ../shell/ev-window.c:5212
-#, fuzzy
 msgid "_Save Attachment As…"
-msgstr "_Desa l'adjunció com a..."
+msgstr "_Desa l'adjunció com a…"
 
 #: ../shell/ev-window.c:5265
 msgid "Zoom"
@@ -1506,9 +1483,9 @@ msgid "Save Attachment"
 msgstr "Desa l'adjunció"
 
 #: ../shell/ev-window-title.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "%s — Password Required"
-msgstr "%s - Necessita contrasenya"
+msgstr "%s — Necessita contrasenya"
 
 #: ../shell/ev-utils.c:315
 msgid "By extension"
@@ -1548,18 +1525,16 @@ msgid "STRING"
 msgstr "CADENA"
 
 #: ../shell/main.c:86
-#, fuzzy
 msgid "[FILE…]"
-msgstr "[FITXER...]"
+msgstr "[FITXER…]"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-#, fuzzy
 msgid ""
 "Boolean options available: true enables thumbnailing and false disables the "
 "creation of new thumbnails"
 msgstr ""
-"Opcions booleanes disponibles, cert habilita les miniatures i fals "
-"inhabilita la creació de noves miniatures"
+"Opcions booleanes disponibles: «true» (cert) habilita les miniatures i "
+"«false» (fals) inhabilita la creació de noves miniatures"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
@@ -1570,14 +1545,13 @@ msgid "Thumbnail command for PDF Documents"
 msgstr "Ordre de miniatura per als documents PDF"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-#, fuzzy
 msgid ""
 "Valid command plus arguments for the PDF Document thumbnailer. See Nautilus "
 "thumbnailer documentation for more information."
 msgstr ""
 "Ordre vàlida amb arguments addicionals per al miniaturitzador de documents "
 "PDF. Per a més informació vegeu la documentació del miniaturitzador del "
-"nautilus."
+"Nautilus."
 
 #~ msgid "DJVU document has incorrect format"
 #~ msgstr "El document DJVU té un format incorrecte"
