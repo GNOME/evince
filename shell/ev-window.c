@@ -3622,15 +3622,17 @@ ev_window_run_presentation (EvWindow *window)
 
 	gtk_box_pack_start (GTK_BOX (window->priv->main_box),
 			    window->priv->presentation_view,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (window->priv->presentation_view);
+			    TRUE, TRUE, 0);
 
+	gtk_widget_hide (window->priv->hpaned);
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
 	gtk_widget_grab_focus (window->priv->presentation_view);
 	if (fullscreen_window)
 		gtk_window_fullscreen (GTK_WINDOW (window));
+
+	gtk_widget_show (window->priv->presentation_view);
 
 	ev_application_screensaver_disable (EV_APP);
 
@@ -3654,6 +3656,7 @@ ev_window_stop_presentation (EvWindow *window,
 			      window->priv->presentation_view);
 	window->priv->presentation_view = NULL;
 
+	gtk_widget_show (window->priv->hpaned);
 	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 	if (unfullscreen_window)

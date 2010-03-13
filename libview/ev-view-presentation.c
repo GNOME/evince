@@ -62,6 +62,7 @@ struct _EvViewPresentation
 	guint                  rotation;
 	EvPresentationState    state;
 	gdouble                scale;
+	gint                   monitor_height;
 
 	/* Cursors */
 	EvViewCursor           cursor;
@@ -168,9 +169,9 @@ ev_view_presentation_get_scale_for_page (EvViewPresentation *pview,
 	ev_document_get_page_size (pview->document, page, &width, &height);
 
 	if (pview->rotation == 90 || pview->rotation == 270)
-		return GTK_WIDGET (pview)->allocation.height / width;
+		return pview->monitor_height / width;
 	else
-		return GTK_WIDGET (pview)->allocation.height / height;
+		return pview->monitor_height / height;
 }
 
 static void
@@ -953,19 +954,9 @@ static void
 ev_view_presentation_size_allocate (GtkWidget     *widget,
 				    GtkAllocation *allocation)
 {
-	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
-	GdkScreen          *screen = gtk_widget_get_screen (widget);
-
-	allocation->x = 0;
-	allocation->y = 0;
-	allocation->width = gdk_screen_get_width (screen);
-	allocation->height = gdk_screen_get_height (screen);
-
 	GTK_WIDGET_CLASS (ev_view_presentation_parent_class)->size_allocate (widget, allocation);
 
-	ev_view_presentation_update_scale (pview);
-
-	gtk_widget_queue_draw (widget);
+	widget->allocation = *allocation;
 }
 
 static void
@@ -1200,6 +1191,25 @@ ev_view_presentation_motion_notify_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+static gboolean
+init_presentation (GtkWidget *widget)
+{
+	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
+	GdkScreen          *screen = gtk_widget_get_screen (widget);
+	GdkRectangle        monitor;
+	gint                monitor_num;
+
+	monitor_num = gdk_screen_get_monitor_at_window (screen, widget->window);
+	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+	pview->monitor_height = monitor.height;
+
+	ev_view_presentation_update_scale (pview);
+	ev_view_presentation_update_current_page (pview, pview->current_page);
+	ev_view_presentation_hide_cursor_timeout_start (pview);
+
+	return FALSE;
+}
+
 static void
 ev_view_presentation_realize (GtkWidget *widget)
 {
@@ -1223,7 +1233,7 @@ ev_view_presentation_realize (GtkWidget *widget)
 		GDK_KEY_PRESS_MASK |
 		GDK_POINTER_MOTION_MASK |
 		GDK_POINTER_MOTION_HINT_MASK |
-		                GDK_ENTER_NOTIFY_MASK |
+		GDK_ENTER_NOTIFY_MASK |
 		GDK_LEAVE_NOTIFY_MASK;
 
 	widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
@@ -1236,7 +1246,7 @@ ev_view_presentation_realize (GtkWidget *widget)
 
 	gdk_window_set_background (widget->window, &widget->style->black);
 
-	gtk_widget_queue_resize (widget);
+	g_idle_add ((GSourceFunc)init_presentation, widget);
 }
 
 static void
@@ -1328,7 +1338,6 @@ ev_view_presentation_constructor (GType                  type,
 {
 	GObject            *object;
 	EvViewPresentation *pview;
-	GtkAllocation       a;
 
 	object = G_OBJECT_CLASS (ev_view_presentation_parent_class)->constructor (type,
 										  n_construct_properties,
@@ -1339,11 +1348,6 @@ ev_view_presentation_constructor (GType                  type,
 		pview->page_cache = ev_page_cache_new (pview->document);
 		ev_page_cache_set_flags (pview->page_cache, EV_PAGE_DATA_INCLUDE_LINKS);
 	}
-
-	/* Call allocate asap to update page scale */
-	ev_view_presentation_size_allocate (GTK_WIDGET (pview), &a);
-	ev_view_presentation_update_current_page (pview, pview->current_page);
-	ev_view_presentation_hide_cursor_timeout_start (pview);
 
 	return object;
 }
