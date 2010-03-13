@@ -3242,6 +3242,15 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 	gchar     *text, *markup;
 	gint       n_print_jobs;
 
+	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
+		gint current_page;
+
+		/* Save current page */
+		current_page = ev_view_presentation_get_current_page (
+			EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
+		ev_document_model_set_page (ev_window->priv->model, current_page);
+	}
+
 	n_print_jobs = ev_window->priv->print_queue ?
 		g_queue_get_length (ev_window->priv->print_queue) : 0;
 	
