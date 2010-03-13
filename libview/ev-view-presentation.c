@@ -62,6 +62,7 @@ struct _EvViewPresentation
 	guint                  rotation;
 	EvPresentationState    state;
 	gdouble                scale;
+	gint                   monitor_width;
 	gint                   monitor_height;
 
 	/* Cursors */
@@ -168,9 +169,14 @@ ev_view_presentation_get_scale_for_page (EvViewPresentation *pview,
 		gdouble width, height;
 
 		ev_document_get_page_size (pview->document, page, &width, &height);
-		pview->scale = (pview->rotation == 90 || pview->rotation == 270) ?
-			pview->monitor_height / width :
-			pview->monitor_height / height;
+		if (pview->rotation == 90 || pview->rotation == 270) {
+			gdouble tmp;
+
+			tmp = width;
+			width = height;
+			height = tmp;
+		}
+		pview->scale = MIN (pview->monitor_width / width, pview->monitor_height / height);
 	}
 
 	return pview->scale;
@@ -1195,6 +1201,7 @@ init_presentation (GtkWidget *widget)
 
 	monitor_num = gdk_screen_get_monitor_at_window (screen, widget->window);
 	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+	pview->monitor_width = monitor.width;
 	pview->monitor_height = monitor.height;
 
 	ev_view_presentation_update_current_page (pview, pview->current_page);
