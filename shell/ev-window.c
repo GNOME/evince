@@ -23,7 +23,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -4201,7 +4201,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 		   "GNU General Public License for more details.\n"),
 		N_("You should have received a copy of the GNU General Public License "
 		   "along with Evince; if not, write to the Free Software Foundation, Inc., "
-		   "59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n")
+		   "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n")
 	};
 
 	char *license_trans;
