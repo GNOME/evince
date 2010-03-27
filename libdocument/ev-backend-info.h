@@ -26,8 +26,6 @@
 
 #include <glib.h>
 
-#include "ev-module.h"
-
 G_BEGIN_DECLS
 
 typedef struct _EvBackendInfo EvBackendInfo;
@@ -40,7 +38,6 @@ struct _EvBackendInfo {
         volatile int ref_count;
 
 	gchar       *module_name;
-        GTypeModule *module;
 	gboolean     resident;
 };
 

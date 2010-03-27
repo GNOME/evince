@@ -41,6 +41,7 @@
 #define BACKEND_DATA_KEY "ev-backend-info"
 
 static GList *ev_backends_list = NULL;
+static GHashTable *ev_module_hash = NULL;
 static gchar *ev_backends_dir = NULL;
 
 static EvDocument* ev_document_factory_new_document_for_mime_type (const char *mime_type,
@@ -82,6 +83,7 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
 {
         EvDocument    *document;
         EvBackendInfo *info;
+        GTypeModule *module = NULL;
 
         g_return_val_if_fail (mime_type != NULL, NULL);
 
@@ -104,29 +106,36 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 return NULL;
         }
 
-        if (!info->module) {
+        if (ev_module_hash != NULL) {
+                module = g_hash_table_lookup (ev_module_hash, info->module_name);
+        }
+        if (module == NULL) {
                 gchar *path;
 
                 path = g_module_build_path (ev_backends_dir, info->module_name);
-                info->module = G_TYPE_MODULE (_ev_module_new (path, info->resident));
+                module = G_TYPE_MODULE (_ev_module_new (path, info->resident));
                 g_free (path);
+
+                if (ev_module_hash == NULL) {
+                        ev_module_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                                                g_free,
+                                                                NULL /* leaked on purpose */);
+                }
+                g_hash_table_insert (ev_module_hash, g_strdup (info->module_name), module);
         }
 
-        if (!g_type_module_use (info->module)) {
+        if (!g_type_module_use (module)) {
                 const char *err;
 
                 err = g_module_error ();
                 g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
                              "Failed to load backend for '%s': %s",
                              mime_type, err ? err : "unknown error");
-                g_object_unref (G_OBJECT (info->module));
-                info->module = NULL;
-
                 return NULL;
         }
 
-        document = EV_DOCUMENT (_ev_module_new_object (EV_MODULE (info->module)));
-        g_type_module_unuse (info->module);
+        document = EV_DOCUMENT (_ev_module_new_object (EV_MODULE (module)));
+        g_type_module_unuse (module);
 
         g_object_set_data_full (G_OBJECT (document), BACKEND_DATA_KEY,
                                 _ev_backend_info_ref (info),
@@ -250,6 +259,11 @@ _ev_document_factory_shutdown (void)
 	g_list_foreach (ev_backends_list, (GFunc) _ev_backend_info_unref, NULL);
 	g_list_free (ev_backends_list);
 	ev_backends_list = NULL;
+
+	if (ev_module_hash != NULL) {
+		g_hash_table_unref (ev_module_hash);
+		ev_module_hash = NULL;
+	}
 
 	g_free (ev_backends_dir);
         ev_backends_dir = NULL;
