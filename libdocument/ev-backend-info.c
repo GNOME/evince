@@ -28,18 +28,38 @@
  * _ev_backend_info_free:
  * @info:
  *
- * Frees @info
+ * Increases refcount of @info by 1.
+ */
+EvBackendInfo *
+_ev_backend_info_ref (EvBackendInfo *info)
+{
+        g_return_val_if_fail (info != NULL, NULL);
+        g_return_val_if_fail (info->ref_count >= 1, NULL);
+
+        g_atomic_int_inc (&info->ref_count);
+        return info;
+}
+
+/*
+ * _ev_backend_info_free:
+ * @info:
+ *
+ * Decreases refcount of @info by 1, and frees @info if the refcount reaches 0.
  */
 void
-_ev_backend_info_free (EvBackendInfo *info)
+_ev_backend_info_unref (EvBackendInfo *info)
 {
         if (info == NULL)
+                return;
+
+        g_return_if_fail (info->ref_count >= 1);
+
+        if (!g_atomic_int_dec_and_test (&info->ref_count))
                 return;
 
 	g_free (info->module_name);
 	g_free (info->type_desc);
 	g_strfreev (info->mime_types);
-        /* Leak info->module */
 	g_slice_free (EvBackendInfo, info);
 }
 
@@ -64,6 +84,7 @@ _ev_backend_info_new_from_file (const char *file,
                 goto err;
 
 	info = g_slice_new0 (EvBackendInfo);
+        info->ref_count = 1;
 
 	info->module_name = g_key_file_get_string (backend_file, EV_BACKENDS_GROUP,
 						   "Module", error);
@@ -89,7 +110,7 @@ _ev_backend_info_new_from_file (const char *file,
 
     err:
         g_key_file_free (backend_file);
-        _ev_backend_info_free (info);
+        _ev_backend_info_unref (info);
         return NULL;
 }
 

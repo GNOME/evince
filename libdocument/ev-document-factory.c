@@ -32,10 +32,13 @@
 #include "ev-backend-info.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
+#include "ev-module.h"
 
 #include "ev-backends-manager.h"
 
 /* Backends manager */
+
+#define BACKEND_DATA_KEY "ev-backend-info"
 
 static GList *ev_backends_list = NULL;
 static gchar *ev_backends_dir = NULL;
@@ -65,22 +68,12 @@ get_backend_info_for_mime_type (const gchar *mime_type)
 static EvBackendInfo *
 get_backend_info_for_document (EvDocument *document)
 {
-        GList *l;
+        EvBackendInfo *info;
 
-        for (l = ev_backends_list; l; l = l->next) {
-                EvBackendInfo *info = (EvBackendInfo *) l->data;
-                GType type;
+        info = g_object_get_data (G_OBJECT (document), BACKEND_DATA_KEY);
 
-                if (!info->module)
-                        continue;
-
-                type = _ev_module_get_object_type (EV_MODULE (info->module));
-
-                if (G_TYPE_CHECK_INSTANCE_TYPE (document, type))
-                        return info;
-        }
-
-        return NULL;
+        g_warn_if_fail (info != NULL);
+        return info;
 }
 
 static EvDocument *
@@ -134,6 +127,10 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
 
         document = EV_DOCUMENT (_ev_module_new_object (EV_MODULE (info->module)));
         g_type_module_unuse (info->module);
+
+        g_object_set_data_full (G_OBJECT (document), BACKEND_DATA_KEY,
+                                _ev_backend_info_ref (info),
+                                (GDestroyNotify) _ev_backend_info_unref);
 
         return document;
 }
@@ -250,7 +247,7 @@ _ev_document_factory_init (void)
 void
 _ev_document_factory_shutdown (void)
 {
-	g_list_foreach (ev_backends_list, (GFunc) _ev_backend_info_free, NULL);
+	g_list_foreach (ev_backends_list, (GFunc) _ev_backend_info_unref, NULL);
 	g_list_free (ev_backends_list);
 	ev_backends_list = NULL;
 

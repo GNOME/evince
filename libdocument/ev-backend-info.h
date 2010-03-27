@@ -37,17 +37,21 @@ struct _EvBackendInfo {
         gchar       *type_desc;
         gchar      **mime_types;
 
+        volatile int ref_count;
+
 	gchar       *module_name;
-	GTypeModule *module;
+        GTypeModule *module;
 	gboolean     resident;
 };
 
-void            _ev_backend_info_free           (EvBackendInfo *info);
+EvBackendInfo *_ev_backend_info_ref           (EvBackendInfo *info);
 
-EvBackendInfo  *_ev_backend_info_new_from_file  (const char *file,
-                                                 GError **error);
+void           _ev_backend_info_unref         (EvBackendInfo *info);
 
-GList          *_ev_backend_info_load_from_dir  (const char *path);
+EvBackendInfo *_ev_backend_info_new_from_file (const char *file,
+                                               GError **error);
+
+GList         *_ev_backend_info_load_from_dir (const char *path);
 
 G_END_DECLS
 
