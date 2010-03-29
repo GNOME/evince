@@ -4381,7 +4381,7 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 	gint x, y;
 	GList *children, *l;
 
-	if (! GTK_WIDGET_REALIZED (view))
+	if (!gtk_widget_get_realized (GTK_WIDGET (view)))
 		return;
 
 	if (view->hadjustment) {

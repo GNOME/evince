@@ -831,7 +831,7 @@ ev_view_presentation_set_cursor (EvViewPresentation *pview,
 		return;
 
 	widget = GTK_WIDGET (pview);
-	if (!GTK_WIDGET_REALIZED (widget))
+	if (!gtk_widget_get_realized (widget))
 		gtk_widget_realize (widget);
 
 	pview->cursor = view_cursor;

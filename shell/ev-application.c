@@ -619,7 +619,7 @@ ev_application_open_uri_in_window (EvApplication  *application,
 	   we can restore window size without flickering */
 	ev_window_open_uri (ev_window, uri, dest, mode, search_string);
 
-	if (!GTK_WIDGET_REALIZED (GTK_WIDGET (ev_window)))
+	if (!gtk_widget_get_realized (GTK_WIDGET (ev_window)))
 		gtk_widget_realize (GTK_WIDGET (ev_window));
 
 #ifdef GDK_WINDOWING_X11
@@ -709,7 +709,7 @@ ev_application_open_window (EvApplication *application,
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
 	}
 
-	if (!GTK_WIDGET_REALIZED (new_window))
+	if (!gtk_widget_get_realized (new_window))
 		gtk_widget_realize (new_window);
 
 #ifdef GDK_WINDOWING_X11

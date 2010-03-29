@@ -510,7 +510,7 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 		return;
 	
 	if (priv->tree_view) {
-		if (! GTK_WIDGET_REALIZED (priv->tree_view))
+		if (! gtk_widget_get_realized (priv->tree_view))
 			return;
 
 		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
@@ -526,7 +526,7 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 					       1, wy2 -1, &path2,
 					       NULL, NULL, NULL);
 	} else if (priv->icon_view) {
-		if (! GTK_WIDGET_REALIZED (priv->icon_view))
+		if (! gtk_widget_get_realized (priv->icon_view))
 			return;
 		if (! gtk_icon_view_get_visible_range (GTK_ICON_VIEW (priv->icon_view), &path, &path2))
 			return;
