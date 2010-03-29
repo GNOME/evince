@@ -249,7 +249,7 @@ ev_annotation_window_set_resize_cursor (GtkWidget          *widget,
 	if (!widget->window)
 		return;
 
-	if (GTK_WIDGET_IS_SENSITIVE (widget)) {
+	if (gtk_widget_is_sensitive (widget)) {
 		GdkDisplay *display = gtk_widget_get_display (widget);
 		GdkCursor  *cursor;
 

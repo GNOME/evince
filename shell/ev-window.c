@@ -4935,7 +4935,7 @@ ev_window_key_press_event (GtkWidget   *widget,
 	 */
 	if (priv->view) {
 		g_object_ref (priv->view);
-		if (GTK_WIDGET_IS_SENSITIVE (priv->view))
+		if (gtk_widget_is_sensitive (priv->view))
 			handled = gtk_widget_event (priv->view, (GdkEvent*) event);
 		g_object_unref (priv->view);
 	}
