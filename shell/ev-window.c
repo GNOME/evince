@@ -4301,12 +4301,13 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 	action = gtk_action_group_get_action (ev_window->priv->action_group, "ViewSidebar");
 
 	if (!EV_WINDOW_IS_PRESENTATION (ev_window)) {
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-					      GTK_WIDGET_VISIBLE (ev_sidebar));
+		gboolean visible = gtk_widget_get_visible (GTK_WIDGET (ev_sidebar));
+
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), visible);
 
 		if (ev_window->priv->metadata)
 			ev_metadata_set_boolean (ev_window->priv->metadata, "sidebar_visibility",
-						 GTK_WIDGET_VISIBLE (ev_sidebar));
+						 visible);
 	}
 }
 
@@ -4625,7 +4626,7 @@ find_bar_visibility_changed_cb (EggFindBar *find_bar,
 {
 	gboolean visible;
 
-	visible = GTK_WIDGET_VISIBLE (find_bar);
+	visible = gtk_widget_get_visible (GTK_WIDGET (find_bar));
 
 	if (ev_window->priv->document &&
 	    EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
@@ -4946,7 +4947,7 @@ ev_window_key_press_event (GtkWidget   *widget,
 		if (priv->menubar_accel_keyval != 0 &&
 		    event->keyval == priv->menubar_accel_keyval &&
 		    modifier == priv->menubar_accel_modifier) {
-			if (!GTK_WIDGET_VISIBLE (priv->menubar)) {
+			if (!gtk_widget_get_visible (priv->menubar)) {
 				g_signal_connect (priv->menubar, "deactivate",
 						  G_CALLBACK (menubar_deactivate_cb),
 						  ev_window);

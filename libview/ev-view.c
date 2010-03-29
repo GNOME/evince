@@ -2398,7 +2398,7 @@ ev_view_window_child_move_with_parent (EvView    *view,
 		ev_view_window_child_move (view, child, dest_x, dest_y);
 	}
 
-	if (child->visible && !GTK_WIDGET_VISIBLE (window))
+	if (child->visible && !gtk_widget_get_visible (window))
 		gtk_widget_show (window);
 }
 

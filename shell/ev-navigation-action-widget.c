@@ -98,7 +98,7 @@ ev_navigation_action_widget_set_menu(EvNavigationActionWidget *button, GtkWidget
       if (button->menu == GTK_MENU (menu))
 		return;
 	
-      if (button->menu && GTK_WIDGET_VISIBLE (button->menu))
+      if (button->menu && gtk_widget_get_visible (GTK_WIDGET (button->menu)))
 	        gtk_menu_shell_deactivate (GTK_MENU_SHELL (button->menu));
 
       if (button->menu) {
@@ -186,7 +186,7 @@ ev_navigation_action_widget_toggled (GtkToggleToolButton *toggle)
     		return;
 
 	if (gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (button)) &&
-	    !GTK_WIDGET_VISIBLE (button->menu)) {
+	    !gtk_widget_get_visible (GTK_WIDGET (button->menu))) {
 		      /* we get here only when the menu is activated by a key
 		       * press, so that we can select the first menu item */
 		      popup_menu_under_arrow (button, NULL);
