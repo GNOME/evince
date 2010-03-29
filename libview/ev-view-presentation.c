@@ -986,7 +986,7 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview)
 
 	gtk_paint_layout (widget->style,
 			  widget->window,
-			  GTK_WIDGET_STATE (widget),
+			  gtk_widget_get_state (widget),
 			  FALSE,
 			  &area,
 			  widget,
