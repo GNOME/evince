@@ -273,7 +273,7 @@ ev_sidebar_attachments_button_press (EvSidebarAttachments *ev_attachbar,
 				     GdkEventButton       *event,
 				     GtkWidget            *icon_view)
 {
-	if (!GTK_WIDGET_HAS_FOCUS (icon_view)) {
+	if (!gtk_widget_has_focus (icon_view)) {
 		gtk_widget_grab_focus (icon_view);
 	}
 	

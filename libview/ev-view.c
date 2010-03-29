@@ -3250,7 +3250,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 	if (!view->document)
 		return FALSE;
 	
-	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
+	if (!gtk_widget_has_focus (widget)) {
 		gtk_widget_grab_focus (widget);
 	}
 
@@ -3762,7 +3762,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 	if (!view->document)
 		return FALSE;
 
-	if (!GTK_WIDGET_HAS_FOCUS (widget)) {
+	if (!gtk_widget_has_focus (widget)) {
 		/* Forward key events to current focused window child */
 		if (view->window_child_focus) {
 			GdkEventKey *new_event;
