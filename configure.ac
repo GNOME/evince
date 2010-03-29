@@ -3,13 +3,13 @@
 # *****************************************************************************
 
 m4_define([ev_major_version],[2])
-m4_define([ev_minor_version],[29])
-m4_define([ev_micro_version],[92])
+m4_define([ev_minor_version],[30])
+m4_define([ev_micro_version],[0])
 m4_define([ev_extra_version],[])
 m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
 # The evince API version
-m4_define([ev_api_version], [2.29])
+m4_define([ev_api_version], [2.30])
 
 # Libtool versioning. The backend and view libraries have separate versions.
 # Before making a release, the libtool version should be modified.
