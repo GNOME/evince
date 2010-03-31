@@ -1,3 +1,3 @@
-SUBDIRS = zoom-control toolbar-editor totem-screensaver evinfobar smclient gimpcellrenderertoggle
+SUBDIRS = zoom-control toolbar-editor totem-screensaver smclient gimpcellrenderertoggle
 
 -include $(top_srcdir)/git.mk

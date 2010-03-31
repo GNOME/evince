@@ -23,8 +23,6 @@
 
 #include <config.h>
 
-#include <gtk/gtk.h>
-
 #include "ev-message-area.h"
 
 #define EV_MESSAGE_AREA_GET_PRIVATE(obj) \
@@ -55,7 +53,7 @@ static void ev_message_area_get_property (GObject      *object,
 					  GValue       *value,
 					  GParamSpec   *pspec);
 
-G_DEFINE_TYPE (EvMessageArea, ev_message_area, EV_TYPE_INFO_BAR)
+G_DEFINE_TYPE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR)
 
 static void
 ev_message_area_class_init (EvMessageAreaClass *class)
@@ -131,7 +129,7 @@ ev_message_area_init (EvMessageArea *area)
 	gtk_box_pack_start (GTK_BOX (area->priv->main_box), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (hbox);
 
-	content_area = ev_info_bar_get_content_area (EV_INFO_BAR (area));
+	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (area));
 	gtk_container_add (GTK_CONTAINER (content_area), area->priv->main_box);
 	gtk_widget_show (area->priv->main_box);
 }
@@ -242,7 +240,7 @@ _ev_message_area_add_buttons_valist (EvMessageArea *area,
 	response_id = va_arg (args, gint);
 
 	while (text != NULL) {
-		ev_info_bar_add_button (EV_INFO_BAR (area), text, response_id);
+		gtk_info_bar_add_button (GTK_INFO_BAR (area), text, response_id);
 
 		text = va_arg (args, gchar*);
 		if (text == NULL)

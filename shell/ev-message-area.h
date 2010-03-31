@@ -26,8 +26,6 @@
 
 #include <gtk/gtk.h>
 
-#include "evinfobar.h"
-
 G_BEGIN_DECLS
 
 #define EV_TYPE_MESSAGE_AREA                  (ev_message_area_get_type ())
@@ -42,14 +40,14 @@ typedef struct _EvMessageAreaClass   EvMessageAreaClass;
 typedef struct _EvMessageAreaPrivate EvMessageAreaPrivate;
 
 struct _EvMessageArea {
-	EvInfoBar parent_instance;
+	GtkInfoBar parent_instance;
 
 	/*< private >*/
 	EvMessageAreaPrivate *priv;
 };
 
 struct _EvMessageAreaClass {
-	EvInfoBarClass parent_class;
+	GtkInfoBarClass parent_class;
 };
 
 GType      ev_message_area_get_type             (void) G_GNUC_CONST;
