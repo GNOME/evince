@@ -97,6 +97,13 @@ ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 #endif
 
 static void
+ev_previewer_window_close (GtkAction         *action,
+			   EvPreviewerWindow *window)
+{
+	gtk_widget_destroy (GTK_WIDGET (window));
+}
+
+static void
 ev_previewer_window_previous_page (GtkAction         *action,
 				   EvPreviewerWindow *window)
 {
@@ -271,6 +278,9 @@ ev_previewer_window_print (GtkAction         *action,
 #endif
 
 static const GtkActionEntry action_entries[] = {
+	{ "FileCloseWindow", GTK_STOCK_CLOSE, NULL, "<control>W",
+	  NULL,
+	  G_CALLBACK (ev_previewer_window_close) },
 	{ "GoPreviousPage", GTK_STOCK_GO_UP, N_("_Previous Page"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_previewer_window_previous_page) },
