@@ -247,16 +247,18 @@ ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 	GtkTreeView *tree_view = GTK_TREE_VIEW (user_data);
 	GtkWidget *widget = GTK_WIDGET (user_data);
 	GtkRequisition req;
+	GtkAllocation allocation;
 	GdkRectangle visible;
 
 	gtk_widget_size_request (GTK_WIDGET (menu), &req);
-	gdk_window_get_origin (widget->window, x, y);
+	gdk_window_get_origin (gtk_widget_get_window (widget), x, y);
+	gtk_widget_get_allocation (widget, &allocation);
 
-	*x += (widget->allocation.width - req.width) / 2;
+	*x += (allocation.width - req.width) / 2;
 
 	/* Add on height for the treeview title */
 	gtk_tree_view_get_visible_rect (tree_view, &visible);
-	*y += widget->allocation.height - visible.height;
+	*y += allocation.height - visible.height;
 
 	selection = gtk_tree_view_get_selection (tree_view);
 	selected_rows = gtk_tree_selection_get_selected_rows (selection, &model);

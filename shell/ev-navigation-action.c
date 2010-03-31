@@ -102,11 +102,11 @@ new_history_menu_item (EvNavigationAction *action,
 
 	title = ev_link_get_title (link);
 	item = gtk_image_menu_item_new_with_label (title);
-	gtk_label_set_use_markup (GTK_LABEL (gtk_bin_get_child (GTK_BIN (item))), TRUE);
+	label = GTK_LABEL (gtk_bin_get_child (GTK_BIN (item)));
+	gtk_label_set_use_markup (label, TRUE);
 	g_object_set_data (G_OBJECT (item), "index",
 			   GINT_TO_POINTER (index));
 
-	label = GTK_LABEL (GTK_BIN (item)->child);
 	gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 	gtk_label_set_max_width_chars (label, MAX_LABEL_LENGTH);
 

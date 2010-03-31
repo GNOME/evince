@@ -280,7 +280,7 @@ set_focus_cb (GtkWidget *window,
 
   while (widget != NULL && widget != wbar)
     {
-      widget = widget->parent;
+      widget = gtk_widget_get_parent (widget);
     }
 
   /* if widget == bar, the new focus widget is in the bar, so we

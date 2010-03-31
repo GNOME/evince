@@ -499,6 +499,8 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreePath *path = NULL;
 	GtkTreePath *path2 = NULL;
+	gdouble page_size;
+	gdouble value;
 	gint wy1;
 	gint wy2;
 
@@ -506,18 +508,22 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	if (!gtk_widget_get_mapped (GTK_WIDGET (sidebar_thumbnails)))
 		return;
 
-	if (priv->vadjustment->page_size == 0)
+	page_size = gtk_adjustment_get_page_size (priv->vadjustment);
+
+	if (page_size == 0)
 		return;
+
+	value = gtk_adjustment_get_value (priv->vadjustment);
 	
 	if (priv->tree_view) {
 		if (! gtk_widget_get_realized (priv->tree_view))
 			return;
 
 		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
-								 0, (int) priv->vadjustment->value,
+								 0, (int) value,
 								 NULL, &wy1);
 		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
-								 0, (int) (priv->vadjustment->value + priv->vadjustment->page_size),
+								 0, (int) (value + page_size),
 								 NULL, &wy2);
 		gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (priv->tree_view),
 					       1, wy1 + 1, &path,

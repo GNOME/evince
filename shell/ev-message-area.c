@@ -106,7 +106,7 @@ ev_message_area_init (EvMessageArea *area)
 	gtk_label_set_line_wrap (GTK_LABEL (area->priv->label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (area->priv->label), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (area->priv->label), 0.0, 0.5);
-	GTK_WIDGET_SET_FLAGS (area->priv->label, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (area->priv->label, TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), area->priv->label, TRUE, TRUE, 0);
 	gtk_widget_show (area->priv->label);
 
@@ -115,7 +115,7 @@ ev_message_area_init (EvMessageArea *area)
 	gtk_label_set_line_wrap (GTK_LABEL (area->priv->secondary_label), TRUE);
 	gtk_label_set_selectable (GTK_LABEL (area->priv->secondary_label), TRUE);
 	gtk_misc_set_alignment (GTK_MISC (area->priv->secondary_label), 0.0, 0.5);
-	GTK_WIDGET_SET_FLAGS (area->priv->secondary_label, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (area->priv->secondary_label, TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), area->priv->secondary_label, TRUE, TRUE, 0);
 
 	area->priv->image = gtk_image_new_from_stock (NULL, GTK_ICON_SIZE_DIALOG);
@@ -291,7 +291,7 @@ ev_message_area_set_image (EvMessageArea *area,
 
 	area->priv->message_type = GTK_MESSAGE_OTHER;
 
-	parent = area->priv->image->parent;
+	parent = gtk_widget_get_parent (area->priv->image);
 	gtk_container_add (GTK_CONTAINER (parent), image);
 	gtk_container_remove (GTK_CONTAINER (parent), area->priv->image);
 	gtk_box_reorder_child (GTK_BOX (parent), image, 0);

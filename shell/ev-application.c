@@ -610,6 +610,10 @@ ev_application_open_uri_in_window (EvApplication  *application,
 				   const gchar    *search_string,
 				   guint           timestamp)
 {
+#ifdef GDK_WINDOWING_X11
+	GdkWindow *gdk_window;
+#endif
+
 	if (screen) {
 		ev_stock_icons_set_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (ev_window), screen);
@@ -623,9 +627,11 @@ ev_application_open_uri_in_window (EvApplication  *application,
 		gtk_widget_realize (GTK_WIDGET (ev_window));
 
 #ifdef GDK_WINDOWING_X11
+	gdk_window = gtk_widget_get_window (GTK_WIDGET (ev_window));
+
 	if (timestamp <= 0)
-		timestamp = gdk_x11_get_server_time (GTK_WIDGET (ev_window)->window);
-	gdk_x11_window_set_user_time (GTK_WIDGET (ev_window)->window, timestamp);
+		timestamp = gdk_x11_get_server_time (gdk_window);
+	gdk_x11_window_set_user_time (gdk_window, timestamp);
 
 	ev_document_fc_mutex_lock ();
 	gtk_window_present (GTK_WINDOW (ev_window));
@@ -703,6 +709,9 @@ ev_application_open_window (EvApplication *application,
 			    guint32        timestamp)
 {
 	GtkWidget *new_window = ev_window_new ();
+#ifdef GDK_WINDOWING_X11
+	GdkWindow *gdk_window;
+#endif
 
 	if (screen) {
 		ev_stock_icons_set_screen (screen);
@@ -713,9 +722,11 @@ ev_application_open_window (EvApplication *application,
 		gtk_widget_realize (new_window);
 
 #ifdef GDK_WINDOWING_X11
+	gdk_window = gtk_widget_get_window (GTK_WIDGET (new_window));
+
 	if (timestamp <= 0)
-		timestamp = gdk_x11_get_server_time (new_window->window);
-	gdk_x11_window_set_user_time (new_window->window, timestamp);
+		timestamp = gdk_x11_get_server_time (gdk_window);
+	gdk_x11_window_set_user_time (gdk_window, timestamp);
 
 	gtk_window_present (GTK_WINDOW (new_window));
 #else

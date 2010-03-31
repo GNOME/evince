@@ -241,6 +241,7 @@ void
 ev_password_view_ask_password (EvPasswordView *password_view)
 {
 	GtkDialog *dialog;
+	GtkWidget *content_area, *action_area;
 	GtkWidget *entry_container;
 	GtkWidget *hbox, *main_vbox, *vbox, *icon;
 	GtkWidget *table;
@@ -250,13 +251,15 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_widget_set_sensitive (GTK_WIDGET (password_view), FALSE);
 	
 	dialog = GTK_DIALOG (gtk_dialog_new ());
-	
+	content_area = gtk_dialog_get_content_area (dialog);
+	action_area = gtk_dialog_get_action_area (dialog);
+
 	/* Set the dialog up with HIG properties */
 	gtk_dialog_set_has_separator (dialog, FALSE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
-	gtk_box_set_spacing (GTK_BOX (dialog->vbox), 2); /* 2 * 5 + 2 = 12 */
-	gtk_container_set_border_width (GTK_CONTAINER (dialog->action_area), 5);
-	gtk_box_set_spacing (GTK_BOX (dialog->action_area), 6);
+	gtk_box_set_spacing (GTK_BOX (content_area), 2); /* 2 * 5 + 2 = 12 */
+	gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
+	gtk_box_set_spacing (GTK_BOX (action_area), 6);
 
 	gtk_window_set_title (GTK_WINDOW (dialog), _("Enter password"));
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
@@ -279,7 +282,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	/* Build contents */
 	hbox = gtk_hbox_new (FALSE, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-	gtk_box_pack_start (GTK_BOX (dialog->vbox), hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (content_area), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (hbox);
 
 	icon = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION,

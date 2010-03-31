@@ -156,6 +156,7 @@ static void
 show_progress_dialog (ConvertData *data)
 {
 	GtkWidget *dialog;
+	GtkWidget *action_area;
 	GtkWidget *vbox, *pbox;
 	GtkWidget *label;
 	GtkWidget *progress;
@@ -166,9 +167,10 @@ show_progress_dialog (ConvertData *data)
 					      GTK_DIALOG_NO_SEPARATOR,
 					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					      NULL);
+	action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog));
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), 5);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->action_area), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
+	gtk_box_set_spacing (GTK_BOX (action_area), 6);
 
 	vbox = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	gtk_box_set_spacing (GTK_BOX (vbox), 12);

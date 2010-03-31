@@ -205,17 +205,19 @@ ev_sidebar_menu_position_under (GtkMenu  *menu,
 				gboolean *push_in,
 				gpointer  user_data)
 {
-	GtkWidget *widget;
+	GtkWidget    *widget;
+	GtkAllocation allocation;
 
 	g_return_if_fail (GTK_IS_BUTTON (user_data));
 	g_return_if_fail (!gtk_widget_get_has_window (GTK_WIDGET (user_data)));
 
 	widget = GTK_WIDGET (user_data);
 	   
-	gdk_window_get_origin (widget->window, x, y);
+	gdk_window_get_origin (gtk_widget_get_window (widget), x, y);
+	gtk_widget_get_allocation (widget, &allocation);
 	   
-	*x += widget->allocation.x;
-	*y += widget->allocation.y + widget->allocation.height;
+	*x += allocation.x;
+	*y += allocation.y + allocation.height;
 	   
 	*push_in = FALSE;
 }
@@ -229,9 +231,11 @@ ev_sidebar_select_button_press_cb (GtkWidget      *widget,
 
 	if (event->button == 1) {
 		GtkRequisition requisition;
+		GtkAllocation allocation;
 		gint width;
-		
-		width = widget->allocation.width;
+
+		gtk_widget_get_allocation (widget, &allocation);
+		width = allocation.width;
 		gtk_widget_set_size_request (ev_sidebar->priv->menu, -1, -1);
 		gtk_widget_size_request (ev_sidebar->priv->menu, &requisition);
 		gtk_widget_set_size_request (ev_sidebar->priv->menu,
