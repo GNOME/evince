@@ -542,7 +542,7 @@ ev_sidebar_links_set_current_page (EvSidebarLinks *sidebar_links,
 	GtkTreeIter iter;
 
 	/* Widget is not currently visible */
-	if (!GTK_WIDGET_MAPPED (sidebar_links))
+	if (!gtk_widget_get_mapped (GTK_WIDGET (sidebar_links)))
 		return;
 	
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));

@@ -503,7 +503,7 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	gint wy2;
 
 	/* Widget is not currently visible */
-	if (!GTK_WIDGET_MAPPED (sidebar_thumbnails))
+	if (!gtk_widget_get_mapped (GTK_WIDGET (sidebar_thumbnails)))
 		return;
 
 	if (priv->vadjustment->page_size == 0)
