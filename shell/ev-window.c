@@ -409,9 +409,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
 	ev_window_set_action_sensitive (ev_window, "FileSaveAs", has_document && ok_to_copy);
-#if !GTK_CHECK_VERSION (2, 17, 4)
-	ev_window_set_action_sensitive (ev_window, "FilePageSetup", has_pages && ok_to_print && ok_to_print_setup);
-#endif
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 
@@ -2881,43 +2878,6 @@ get_print_page_setup (GKeyFile *key_file)
 }
 
 static void
-ev_window_print_page_setup_done_cb (GtkPageSetup *page_setup,
-				    EvWindow     *window)
-{
-	/* Dialog was canceled */
-	if (!page_setup)
-		return;
-
-	ev_window_save_print_page_setup (window, page_setup);
-}
-
-static void
-ev_window_cmd_file_print_setup (GtkAction *action,
-				EvWindow  *ev_window)
-{
-	GKeyFile         *print_settings_file;
-	GtkPrintSettings *print_settings;
-	GtkPageSetup     *print_page_setup;
-
-	print_settings_file = get_print_settings_file ();
-
-	print_settings = get_print_settings (print_settings_file);
-	ev_window_load_print_settings_from_metadata (ev_window, print_settings);
-
-	print_page_setup = get_print_page_setup (print_settings_file);
-	ev_window_load_print_page_setup_from_metadata (ev_window, print_page_setup);
-
-	gtk_print_run_page_setup_dialog_async (GTK_WINDOW (ev_window),
-					       print_page_setup,
-					       print_settings,
-					       (GtkPageSetupDoneFunc)ev_window_print_page_setup_done_cb,
-					       ev_window);
-	g_object_unref (print_settings);
-	g_object_unref (print_page_setup);
-	g_key_file_free (print_settings_file);
-}
-
-static void
 ev_window_print_cancel (EvWindow *ev_window)
 {
 	EvPrintOperation *op;
@@ -5041,9 +5001,6 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy…"), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FilePageSetup", GTK_STOCK_PAGE_SETUP, N_("Page Set_up…"), NULL,
-	  N_("Set up the page settings for printing"),
-	  G_CALLBACK (ev_window_cmd_file_print_setup) },
 	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print…"), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
@@ -6163,16 +6120,6 @@ ev_window_init (EvWindow *ev_window)
 		g_error_free (error);
 	}
 	g_free (ui_path);
-
-#if GTK_CHECK_VERSION (2, 17, 4)
-	{
-		GtkAction *action;
-
-		action = gtk_action_group_get_action (ev_window->priv->action_group,
-						      "FilePageSetup");
-		g_object_set (action, "visible", FALSE, "sensitive", FALSE, NULL);
-	}
-#endif
 
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
 	ev_window->priv->recent_action_group = NULL;

@@ -285,27 +285,21 @@ void
 ev_print_operation_set_embed_page_setup (EvPrintOperation *op,
 					 gboolean          embed)
 {
-#if GTK_CHECK_VERSION (2, 17, 4)
 	EvPrintOperationClass *class = EV_PRINT_OPERATION_GET_CLASS (op);
 
 	g_return_if_fail (EV_IS_PRINT_OPERATION (op));
 
 	class->set_embed_page_setup (op, embed);
-#endif
 }
 
 gboolean
 ev_print_operation_get_embed_page_setup (EvPrintOperation *op)
 {
-#if GTK_CHECK_VERSION (2, 17, 4)
 	EvPrintOperationClass *class = EV_PRINT_OPERATION_GET_CLASS (op);
 
 	g_return_val_if_fail (EV_IS_PRINT_OPERATION (op), FALSE);
 
 	return class->get_embed_page_setup (op);
-#else
-	return FALSE;
-#endif
 }
 
 const gchar *
@@ -324,7 +318,6 @@ ev_print_operation_get_progress (EvPrintOperation *op)
 	return op->progress;
 }
 
-#if GTK_CHECK_VERSION (2, 17, 1) | GTKUNIXPRINT_ENABLED
 static void
 ev_print_operation_update_status (EvPrintOperation *op,
 				  gint              page,
@@ -350,7 +343,6 @@ ev_print_operation_update_status (EvPrintOperation *op,
 
 	g_signal_emit (op, signals[STATUS_CHANGED], 0);
 }
-#endif
 
 #if GTKUNIXPRINT_ENABLED
 
@@ -1319,10 +1311,9 @@ ev_print_operation_export_run (EvPrintOperation *op,
 		ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (op->document));
 	gtk_print_unix_dialog_set_manual_capabilities (GTK_PRINT_UNIX_DIALOG (dialog),
 						       capabilities);
-#if GTK_CHECK_VERSION (2, 17, 4)
+
 	gtk_print_unix_dialog_set_embed_page_setup (GTK_PRINT_UNIX_DIALOG (dialog),
 						    export->embed_page_setup);
-#endif
 
 	gtk_print_unix_dialog_set_current_page (GTK_PRINT_UNIX_DIALOG (dialog),
 						export->current_page);
@@ -1368,11 +1359,9 @@ static void
 ev_print_operation_export_set_embed_page_setup (EvPrintOperation *op,
 						gboolean          embed)
 {
-#if GTK_CHECK_VERSION (2, 17, 4)
 	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (op);
 
 	export->embed_page_setup = embed;
-#endif
 }
 
 static gboolean
@@ -1502,7 +1491,6 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 
 #endif /* GTKUNIXPRINT_ENABLED */
 
-#if GTK_CHECK_VERSION (2, 17, 1)
 /* Print to cairo interface */
 #define EV_TYPE_PRINT_OPERATION_PRINT         (ev_print_operation_print_get_type())
 #define EV_PRINT_OPERATION_PRINT(object)      (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PRINT_OPERATION_PRINT, EvPrintOperationPrint))
@@ -1650,23 +1638,17 @@ static void
 ev_print_operation_print_set_embed_page_setup (EvPrintOperation *op,
 					       gboolean          embed)
 {
-#if GTK_CHECK_VERSION (2, 17, 4)
 	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
 
 	gtk_print_operation_set_embed_page_setup (print->op, embed);
-#endif
 }
 
 static gboolean
 ev_print_operation_print_get_embed_page_setup (EvPrintOperation *op)
 {
-#if GTK_CHECK_VERSION (2, 17, 4)
 	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
 
 	return gtk_print_operation_get_embed_page_setup (print->op);
-#else
-	return FALSE;
-#endif
 }
 
 static void
@@ -1764,22 +1746,12 @@ _print_context_get_hard_margins (GtkPrintContext *context,
 				 gdouble         *left,
 				 gdouble         *right)
 {
-#if GTK_CHECK_VERSION (2, 19, 2)
 	if (!gtk_print_context_get_hard_margins (context, top, bottom, left, right)) {
 		*top = 0;
 		*bottom = 0;
 		*left = 0;
 		*right = 0;
 	}
-#else
-	GtkPageSetup *page_setup;
-
-	page_setup = gtk_print_context_get_page_setup (context);
-	*top = gtk_page_setup_get_top_margin (page_setup, GTK_UNIT_POINTS);
-	*bottom = gtk_page_setup_get_bottom_margin (page_setup, GTK_UNIT_POINTS);
-	*left = gtk_page_setup_get_left_margin (page_setup, GTK_UNIT_POINTS);
-	*right = gtk_page_setup_get_right_margin (page_setup, GTK_UNIT_POINTS);
-#endif
 }
 
 static void
@@ -2026,22 +1998,14 @@ ev_print_operation_print_class_init (EvPrintOperationPrintClass *klass)
 
 	g_object_class->finalize = ev_print_operation_print_finalize;
 }
-#endif /* GTK_CHECK_VERSION (2, 17, 1) */
 
-gboolean ev_print_operation_exists_for_document (EvDocument *document)
+gboolean
+ev_print_operation_exists_for_document (EvDocument *document)
 {
 #if GTKUNIXPRINT_ENABLED
-#if GTK_CHECK_VERSION (2, 17, 1)
 	return (EV_IS_FILE_EXPORTER(document) || EV_IS_DOCUMENT_PRINT(document));
 #else
-	return EV_IS_FILE_EXPORTER(document);
-#endif
-#else /* ! GTKUNIXPRINT_ENABLED */
-#if GTK_CHECK_VERSION (2, 17, 1)
 	return EV_IS_DOCUMENT_PRINT(document);
-#else
-	return FALSE;
-#endif
 #endif /* GTKUNIXPRINT_ENABLED */
 }
 
@@ -2053,12 +2017,10 @@ ev_print_operation_new (EvDocument *document)
 
 	g_return_val_if_fail (ev_print_operation_exists_for_document (document), NULL);
 
-#if GTK_CHECK_VERSION (2, 17, 1)
 	if (EV_IS_DOCUMENT_PRINT (document))
 		op = EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_PRINT,
 						       "document", document, NULL));
 	else
-#endif
 #if GTKUNIXPRINT_ENABLED
 		op = EV_PRINT_OPERATION (g_object_new (EV_TYPE_PRINT_OPERATION_EXPORT,
 						       "document", document, NULL));

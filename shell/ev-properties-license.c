@@ -84,16 +84,15 @@ get_license_uri_widget (const gchar *uri)
 		      "ellipsize", PANGO_ELLIPSIZE_END,
 		      NULL);
 
-#if GTK_CHECK_VERSION (2, 17, 0)
 	checked_uri = g_uri_parse_scheme (uri);
 	if (checked_uri) {
 		markup = g_markup_printf_escaped ("<a href=\"%s\">%s</a>", uri, uri);
 		gtk_label_set_markup (GTK_LABEL (label), markup);
 		g_free (markup);
 		g_free (checked_uri);
-	} else
-#endif
+	} else {
 		gtk_label_set_text (GTK_LABEL (label), uri);
+	}
 
 	return label;
 }
