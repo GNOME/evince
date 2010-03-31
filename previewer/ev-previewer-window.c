@@ -319,6 +319,18 @@ ev_previewer_window_set_document (EvPreviewerWindow *window,
 }
 
 static void
+ev_previewer_window_connect_action_accelerators (EvPreviewerWindow *window)
+{
+	GList *actions;
+
+	gtk_ui_manager_ensure_update (window->ui_manager);
+
+	actions = gtk_action_group_list_actions (window->action_group);
+	g_list_foreach (actions, (GFunc)gtk_action_connect_accelerator, NULL);
+	g_list_free (actions);
+}
+
+static void
 ev_previewer_window_dispose (GObject *object)
 {
 	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
@@ -477,6 +489,11 @@ ev_previewer_window_constructor (GType                  type,
 	}
 	g_free (ui_path);
 	g_free (datadir);
+
+	/* GTKUIManager connects actions accels only for menu items,
+	 * but not for tool items. See bug #612972.
+	 */
+	ev_previewer_window_connect_action_accelerators (window);
 
 	view_sizing_mode_changed (window->model, NULL, window);
 
