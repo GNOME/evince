@@ -120,30 +120,32 @@ ev_document_misc_paint_one_page (GdkDrawable  *drawable,
 				 GtkBorder    *border,
 				 gboolean highlight)
 {
+	GtkStyle    *style = gtk_widget_get_style (widget);
+	GtkStateType state = gtk_widget_get_state (widget);
+
 	gdk_draw_rectangle (drawable,
-			    highlight ?
-			    	    widget->style->text_gc[widget->state] : widget->style->dark_gc[widget->state],
+			    highlight ? style->text_gc[state] : style->dark_gc[state],
 			    TRUE,
 			    area->x,
 			    area->y,
 			    area->width,
 			    area->height);
 	gdk_draw_rectangle (drawable,
-			    widget->style->white_gc,
+			    style->white_gc,
 			    TRUE,
 			    area->x + border->left,
 			    area->y + border->top,
 			    area->width - (border->left + border->right),
 			    area->height - (border->top + border->bottom));
 	gdk_draw_rectangle (drawable,
-			    widget->style->mid_gc[widget->state],
+			    style->mid_gc[state],
 			    TRUE,
 			    area->x,
 			    area->y + area->height - (border->bottom - border->top),
 			    border->bottom - border->top,
 			    border->bottom - border->top);
 	gdk_draw_rectangle (drawable,
-			    widget->style->mid_gc[widget->state],
+			    style->mid_gc[state],
 			    TRUE,
 			    area->x + area->width - (border->right - border->left),
 			    area->y,
