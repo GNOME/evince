@@ -54,12 +54,14 @@
 
 static gchar   *ev_page_label;
 static gchar   *ev_find_string;
+static gint     ev_page_index = 0;
 static gboolean preview_mode = FALSE;
 static gboolean fullscreen_mode = FALSE;
 static gboolean presentation_mode = FALSE;
 static gboolean unlink_temp_file = FALSE;
 static gchar   *print_settings;
 static const char **file_arguments = NULL;
+
 
 static gboolean
 option_version_cb (const gchar *option_name,
@@ -75,7 +77,8 @@ option_version_cb (const gchar *option_name,
 
 static const GOptionEntry goption_options[] =
 {
-	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page of the document to display."), N_("PAGE")},
+	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page label of the document to display."), N_("PAGE")},
+	{ "page-index", 'i', 0, G_OPTION_ARG_INT, &ev_page_index, N_("The page number of the document to display."), N_("NUMBER")},
 	{ "fullscreen", 'f', 0, G_OPTION_ARG_NONE, &fullscreen_mode, N_("Run evince in fullscreen mode"), NULL },
 	{ "presentation", 's', 0, G_OPTION_ARG_NONE, &presentation_mode, N_("Run evince in presentation mode"), NULL },
 	{ "preview", 'w', 0, G_OPTION_ARG_NONE, &preview_mode, N_("Run evince as a previewer"), NULL },
@@ -159,6 +162,8 @@ load_files (const char **files)
 
 	if (ev_page_label)
 		global_dest = ev_link_dest_new_page_label (ev_page_label);
+	else if (ev_page_index)
+		global_dest = ev_link_dest_new_page (MAX (0, ev_page_index - 1));
 
 	if (fullscreen_mode)
 		mode = EV_WINDOW_MODE_FULLSCREEN;
