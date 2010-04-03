@@ -840,6 +840,8 @@ ev_job_load_run (EvJob *job)
 	   because, e.g., a password is required - if so, just reload rather than
 	   creating a new instance */
 	if (job->document) {
+		const gchar *uncompressed_uri;
+
 		if (job_load->password) {
 			ev_document_security_set_password (EV_DOCUMENT_SECURITY (job->document),
 							   job_load->password);
@@ -848,9 +850,11 @@ ev_job_load_run (EvJob *job)
 		job->failed = FALSE;
 		job->finished = FALSE;
 		g_clear_error (&job->error);
-		
+
+		uncompressed_uri = g_object_get_data (G_OBJECT (job->document),
+						      "uri-uncompressed");
 		ev_document_load (job->document,
-				  job_load->uri,
+				  uncompressed_uri ? uncompressed_uri : job_load->uri,
 				  &error);
 	} else {
 		job->document = ev_document_factory_get_document (job_load->uri,
