@@ -692,6 +692,9 @@ view_update_range_and_current_page (EvView *view)
 		view->end_page = view->current_page;
 	}
 
+	if (view->start_page == -1 || view->end_page == -1)
+		return;
+
 	if (start != view->start_page || end != view->end_page) {
 		gint i;
 
