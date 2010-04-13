@@ -4557,8 +4557,6 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 {
 	EvDocument *document = ev_document_model_get_document (model);
 
-	view->loading = FALSE;
-
 	if (document != view->document) {
 		gint current_page;
 
@@ -4572,6 +4570,7 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 		view->find_result = 0;
 
 		if (view->document) {
+			view->loading = FALSE;
 			g_object_ref (view->document);
 			setup_caches (view);
                 }
