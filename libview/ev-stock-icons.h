@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 
 /* Evince stock icons */
 #define EV_STOCK_ZOOM	                "zoom"
-#define EV_STOCK_ZOOM_PAGE              "zoom-fit-page"
+#define EV_STOCK_ZOOM_PAGE              "zoom-fit-height"
 #define EV_STOCK_ZOOM_WIDTH             "zoom-fit-width"
 #define EV_STOCK_VIEW_DUAL       	"view-page-facing"
 #define EV_STOCK_VIEW_CONTINUOUS        "view-page-continuous"

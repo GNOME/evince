@@ -35,7 +35,7 @@ typedef struct {
 /* Evince stock icons */
 static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ZOOM,	     "zoom" },
-	{ EV_STOCK_ZOOM_PAGE,        "zoom-fit-page" },
+	{ EV_STOCK_ZOOM_PAGE,        "zoom-fit-height" },
 	{ EV_STOCK_ZOOM_WIDTH,       "zoom-fit-width" },
 	{ EV_STOCK_VIEW_DUAL,        "view-page-facing" },
 	{ EV_STOCK_VIEW_CONTINUOUS,  "view-page-continuous" },
