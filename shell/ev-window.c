@@ -433,11 +433,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, ZOOM_CONTROL_ACTION,  has_pages);
 	ev_window_set_action_sensitive (ev_window, NAVIGATION_ACTION,  FALSE);
 
-        /* Help menu */
-#ifdef G_OS_WIN32
-	ev_window_set_action_sensitive (ev_window, "HelpContents", FALSE);
-#endif
-
         ev_window_update_actions (ev_window);
 }
 
@@ -3938,13 +3933,19 @@ ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 	ev_view_autoscroll_start (EV_VIEW (ev_window->priv->view));
 }
 
+#if OFFLINE_HELP_ENABLED
+#define EV_HELP "ghelp:evince"
+#else
+#define EV_HELP "http://library.gnome.org/users/evince/stable/"
+#endif
+
 static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
 	GError  *error = NULL;
 
 	gtk_show_uri (gtk_window_get_screen (GTK_WINDOW (ev_window)),
-		      "ghelp:evince",
+		      EV_HELP,
 		      gtk_get_current_event_time (),
 		      &error);
 	if (error) {

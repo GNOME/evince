@@ -66,7 +66,6 @@ AC_PROG_SED
 AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
 AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
-GNOME_DOC_INIT
 GNOME_MAINTAINER_MODE_DEFINES
 GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
@@ -715,6 +714,34 @@ AC_SUBST(EVINCE_MIME_TYPES)
 AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_r is available on your system]))
 
 # *****************
+# Help files
+# *****************
+
+GNOME_DOC_INIT([], gnome_doc_utils=yes, gnome_doc_utils=no)
+
+AC_ARG_ENABLE(help,
+    [AS_HELP_STRING([--disable-help], [Disable offline help files])],
+    [enable_help=$enableval],
+    [enable_help=yes])
+
+if test "x$enable_help" = "xyes" && test "x$os_win32" = "xyes" ; then
+    AC_MSG_WARN([Offline help is disabled (not implemented on Windows).])
+    enable_help=no
+fi
+
+if test "x$enable_help" = "xyes" && test "x$gnome_doc_utils" == "xno"; then
+    AC_MSG_ERROR(
+       [gnome-doc-utils not found; use --disable-help to disable help files]
+    )
+fi
+
+if test "x$enable_help" = "xyes"; then
+    AC_DEFINE([OFFLINE_HELP_ENABLED], [1], [Enable offline help])
+fi
+
+AM_CONDITIONAL(ENABLE_HELP, test "x$enable_help" = "xyes")
+
+# *****************
 # API documentation
 # *****************
 
@@ -825,6 +852,7 @@ Configure summary:
 	Keyring Support....:  $with_keyring
 	DBUS Support.......:  $enable_dbus
 	SM client support..:  $with_smclient
+	Help files.........:  $enable_help
 	Nautilus Plugin....:  $enable_nautilus
 	Thumbnailer........:  $enable_thumbnailer
 	Previewer..........:  $enable_previewer

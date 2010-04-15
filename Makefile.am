@@ -14,8 +14,11 @@ SUBDIRS = \
 	libmisc \
 	properties \
 	shell \
-	po \
-	help
+	po
+
+if ENABLE_HELP
+SUBDIRS += help
+endif
 
 if ENABLE_TESTS
 SUBDIRS += test
