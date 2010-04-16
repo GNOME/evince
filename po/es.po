@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2010-02-03 21:30+0000\n"
-"PO-Revision-Date: 2010-02-03 22:31+0100\n"
+"POT-Creation-Date: 2010-04-13 09:30+0000\n"
+"PO-Revision-Date: 2010-04-16 08:42+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -244,12 +244,12 @@ msgstr "Documentos PostScript"
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "No se pudo guardar el adjunto «%s»: %s"
 
-#: ../libdocument/ev-attachment.c:373
+#: ../libdocument/ev-attachment.c:372
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "No se pudo abrir el adjunto «%s»: %s"
 
-#: ../libdocument/ev-attachment.c:408
+#: ../libdocument/ev-attachment.c:407
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "No se pudo abrir el adjunto «%s»"
@@ -381,7 +381,7 @@ msgstr "Quitar barra de herramientas seleccionada"
 msgid "Separator"
 msgstr "Separador"
 
-#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:117
+#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:115
 msgid "Running in presentation mode"
 msgstr "Ejecutar en modo presentación"
 
@@ -435,8 +435,8 @@ msgid "400%"
 msgstr "400%"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4183
-#: ../shell/ev-window-title.c:149 ../shell/main.c:282
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4167
+#: ../shell/ev-window-title.c:149 ../shell/main.c:287
 #, c-format
 msgid "Document Viewer"
 msgstr "Visor de documentos"
@@ -467,69 +467,69 @@ msgstr "Archivo de ajustes de impresión"
 msgid "GNOME Document Previewer"
 msgstr "Visor de documentos de Gnome"
 
-#: ../previewer/ev-previewer-window.c:95 ../shell/ev-window.c:2995
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:2965
 msgid "Failed to print document"
 msgstr "No se pudo imprimir el documento"
 
-#: ../previewer/ev-previewer-window.c:209
+#: ../previewer/ev-previewer-window.c:237
 #, c-format
 msgid "The selected printer '%s' could not be found"
 msgstr "No se pudo encontrar la impresora actual «%s»"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:253 ../shell/ev-window.c:5050
+#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5050
 msgid "_Previous Page"
 msgstr "Página _anterior"
 
-#: ../previewer/ev-previewer-window.c:254 ../shell/ev-window.c:5051
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5051
 msgid "Go to the previous page"
 msgstr "Ir a la página anterior"
 
-#: ../previewer/ev-previewer-window.c:256 ../shell/ev-window.c:5053
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5053
 msgid "_Next Page"
 msgstr "_Siguiente página"
 
-#: ../previewer/ev-previewer-window.c:257 ../shell/ev-window.c:5054
+#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5054
 msgid "Go to the next page"
 msgstr "Ir a la página siguiente"
 
-#: ../previewer/ev-previewer-window.c:260 ../shell/ev-window.c:5037
+#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5037
 msgid "Enlarge the document"
 msgstr "Amplía el documento"
 
-#: ../previewer/ev-previewer-window.c:263 ../shell/ev-window.c:5040
+#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5040
 msgid "Shrink the document"
 msgstr "Reduce el documento"
 
-#: ../previewer/ev-previewer-window.c:266 ../libview/ev-print-operation.c:1315
+#: ../previewer/ev-previewer-window.c:297 ../libview/ev-print-operation.c:1307
 msgid "Print"
 msgstr "Imprimir"
 
-#: ../previewer/ev-previewer-window.c:267 ../shell/ev-window.c:5008
+#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5008
 msgid "Print this document"
 msgstr "Imprime este documento"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/ev-window.c:5152
+#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5152
 msgid "_Best Fit"
 msgstr "Ajuste óp_timo"
 
-#: ../previewer/ev-previewer-window.c:274 ../shell/ev-window.c:5153
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5153
 msgid "Make the current document fill the window"
 msgstr "Hace que el documento actual llene la ventana"
 
-#: ../previewer/ev-previewer-window.c:276 ../shell/ev-window.c:5155
+#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5155
 msgid "Fit Page _Width"
 msgstr "Ajustar al a_ncho de página"
 
-#: ../previewer/ev-previewer-window.c:277 ../shell/ev-window.c:5156
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5156
 msgid "Make the current document fill the window width"
 msgstr "Hace que el documento actual llene la anchura de la ventana"
 
-#: ../previewer/ev-previewer-window.c:460 ../shell/ev-window.c:5223
+#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:5223
 msgid "Page"
 msgstr "Página"
 
-#: ../previewer/ev-previewer-window.c:461 ../shell/ev-window.c:5224
+#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:5224
 msgid "Select Page"
 msgstr "Seleccione la página"
 
@@ -593,7 +593,7 @@ msgstr "Seguridad:"
 msgid "Paper Size:"
 msgstr "Tamaño del papel:"
 
-#: ../properties/ev-properties-view.c:211 ../libview/ev-print-operation.c:1896
+#: ../properties/ev-properties-view.c:211 ../libview/ev-print-operation.c:1868
 msgid "None"
 msgstr "Ninguno"
 
@@ -642,59 +642,48 @@ msgid "of %d"
 msgstr "de %d"
 
 #. Initial state
-#: ../libview/ev-print-operation.c:341
+#: ../libview/ev-print-operation.c:334
 msgid "Preparing to print…"
 msgstr "Prepaŕandose para imprimir…"
 
-#: ../libview/ev-print-operation.c:343
+#: ../libview/ev-print-operation.c:336
 msgid "Finishing…"
 msgstr "Terminando…"
 
-#: ../libview/ev-print-operation.c:345
+#: ../libview/ev-print-operation.c:338
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "Imprimiendo página %d de %d…"
 
-#: ../libview/ev-print-operation.c:1169
+#: ../libview/ev-print-operation.c:1161
 msgid "Printing is not supported on this printer."
 msgstr "La impresión no está soportada con esta impresora."
 
-#: ../libview/ev-print-operation.c:1234
+#: ../libview/ev-print-operation.c:1226
 msgid "Invalid page selection"
 msgstr "Archivo zip inválido"
 
-#: ../libview/ev-print-operation.c:1235
+#: ../libview/ev-print-operation.c:1227
 msgid "Warning"
 msgstr "Advertencia"
 
-#: ../libview/ev-print-operation.c:1237
+#: ../libview/ev-print-operation.c:1229
 msgid "Your print range selection does not include any pages"
 msgstr "Su selección de intervalo de páginas no incluye ninguna página"
 
-#: ../libview/ev-print-operation.c:1891
+#: ../libview/ev-print-operation.c:1863
 msgid "Page Scaling:"
 msgstr "Escalado de página:"
 
-#: ../libview/ev-print-operation.c:1897
+#: ../libview/ev-print-operation.c:1869
 msgid "Shrink to Printable Area"
 msgstr "Encoger a un área imprimible"
 
-#: ../libview/ev-print-operation.c:1898
+#: ../libview/ev-print-operation.c:1870
 msgid "Fit to Printable Area"
 msgstr "Ajustar a un área imprimible"
 
-#: ../libview/ev-print-operation.c:1901
-#| msgid ""
-#| "Scale document pages to fit the selected printer page. Select from one of "
-#| "the following:\n"
-#| "\n"
-#| "• \"None\": No page scaling is performed.\n"
-#| "\n"
-#| "• \"Shrink to Printable Area\": Document pages larger than the printable "
-#| "area are reduced fit the printable area of the printer page.\n"
-#| "\n"
-#| "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
-#| "required to fit the printable area of the printer page.\n"
+#: ../libview/ev-print-operation.c:1873
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -720,11 +709,11 @@ msgstr ""
 "reducen según se requiera para ajustarse al área de impresión de página de "
 "la impresora.\n"
 
-#: ../libview/ev-print-operation.c:1913
+#: ../libview/ev-print-operation.c:1885
 msgid "Auto Rotate and Center"
 msgstr "Autorotar y centrar"
 
-#: ../libview/ev-print-operation.c:1916
+#: ../libview/ev-print-operation.c:1888
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -733,12 +722,12 @@ msgstr ""
 "con cada página del documento. Las páginas del documento se centrarán en la "
 "página de impresión."
 
-#: ../libview/ev-print-operation.c:1921
+#: ../libview/ev-print-operation.c:1893
 msgid "Select page size using document page size"
 msgstr ""
 "Seleccionar el tamaño de página usando tamaños de páginas de documentos"
 
-#: ../libview/ev-print-operation.c:1923
+#: ../libview/ev-print-operation.c:1895
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -746,11 +735,11 @@ msgstr ""
 "Cuando está activado, cada página se imprimirá en el mismo tamaño de papel "
 "que la página del documento."
 
-#: ../libview/ev-print-operation.c:2005
+#: ../libview/ev-print-operation.c:1977
 msgid "Page Handling"
 msgstr "Gestión de páginas"
 
-#: ../libview/ev-jobs.c:1434
+#: ../libview/ev-jobs.c:1438
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falló al imprimir la página %d: %s"
@@ -775,11 +764,11 @@ msgstr "Desplaza la vista abajo"
 msgid "Document View"
 msgstr "Vista de documento"
 
-#: ../libview/ev-view-presentation.c:669
+#: ../libview/ev-view-presentation.c:668
 msgid "Jump to page:"
 msgstr "Saltar a la página:"
 
-#: ../libview/ev-view-presentation.c:979
+#: ../libview/ev-view-presentation.c:970
 msgid "End of presentation. Click to exit."
 msgstr "Fin de la presentación. Pulse para salir."
 
@@ -827,7 +816,7 @@ msgstr "Ir al archivo «%s»"
 msgid "Launch %s"
 msgstr "Lanzar %s"
 
-#: ../libview/ev-view.c:3926 ../shell/ev-sidebar-layers.c:125
+#: ../libview/ev-view.c:3923 ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:262
 msgid "Loading…"
 msgstr "Cargando…"
@@ -875,11 +864,11 @@ msgstr "Convirtiendo %s"
 msgid "%d of %d documents converted"
 msgstr "%d de %d documentos convertidos"
 
-#: ../shell/ev-convert-metadata.c:164 ../shell/ev-convert-metadata.c:179
+#: ../shell/ev-convert-metadata.c:165 ../shell/ev-convert-metadata.c:181
 msgid "Converting metadata"
 msgstr "Convirtiendo metadatos"
 
-#: ../shell/ev-convert-metadata.c:185
+#: ../shell/ev-convert-metadata.c:187
 msgid ""
 "The metadata format used by Evince has changed, and hence it needs to be "
 "migrated. If the migration is cancelled the metadata storage will not work."
@@ -900,19 +889,19 @@ msgstr ""
 "Este documento está bloqueado y sólo puede leerse introduciendo la "
 "contraseña correcta."
 
-#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:272
 msgid "_Unlock Document"
 msgstr "_Desbloquear documento"
 
-#: ../shell/ev-password-view.c:261
+#: ../shell/ev-password-view.c:264
 msgid "Enter password"
 msgstr "Introduzca la contraseña"
 
-#: ../shell/ev-password-view.c:301
+#: ../shell/ev-password-view.c:304
 msgid "Password required"
 msgstr "Se requiere una contraseña"
 
-#: ../shell/ev-password-view.c:302
+#: ../shell/ev-password-view.c:305
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
@@ -920,35 +909,35 @@ msgstr ""
 "El documento «%s» está bloqueado y requiere una contraseña antes de que pueda "
 "abrirse."
 
-#: ../shell/ev-password-view.c:332
+#: ../shell/ev-password-view.c:335
 msgid "_Password:"
 msgstr "_Contraseña:"
 
-#: ../shell/ev-password-view.c:365
+#: ../shell/ev-password-view.c:368
 msgid "Forget password _immediately"
 msgstr "Olvidar la contraseña _inmediatamente"
 
-#: ../shell/ev-password-view.c:377
+#: ../shell/ev-password-view.c:380
 msgid "Remember password until you _log out"
 msgstr "_Recordar contraseña para esta sesión"
 
-#: ../shell/ev-password-view.c:389
+#: ../shell/ev-password-view.c:392
 msgid "Remember _forever"
 msgstr "Recordar para _siempre"
 
-#: ../shell/ev-properties-dialog.c:58
+#: ../shell/ev-properties-dialog.c:62
 msgid "Properties"
 msgstr "Propiedades"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:95
 msgid "General"
 msgstr "General"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:105
 msgid "Fonts"
 msgstr "Tipografías"
 
-#: ../shell/ev-properties-dialog.c:115
+#: ../shell/ev-properties-dialog.c:118
 msgid "Document License"
 msgstr "Licencia del documento"
 
@@ -961,19 +950,19 @@ msgstr "Tipografía"
 msgid "Gathering font information… %3d%%"
 msgstr "Obteniendo información tipográfica… %3d%%"
 
-#: ../shell/ev-properties-license.c:138
+#: ../shell/ev-properties-license.c:137
 msgid "Usage terms"
 msgstr "Términos de uso"
 
-#: ../shell/ev-properties-license.c:144
+#: ../shell/ev-properties-license.c:143
 msgid "Text License"
 msgstr "Texto de la licencia"
 
-#: ../shell/ev-properties-license.c:150
+#: ../shell/ev-properties-license.c:149
 msgid "Further Information"
 msgstr "Más información"
 
-#: ../shell/ev-sidebar-attachments.c:712
+#: ../shell/ev-sidebar-attachments.c:697
 msgid "Attachments"
 msgstr "Adjuntos"
 
@@ -989,117 +978,117 @@ msgstr "Imprimir…"
 msgid "Index"
 msgstr "Índice"
 
-#: ../shell/ev-sidebar-thumbnails.c:956
+#: ../shell/ev-sidebar-thumbnails.c:962
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
-#: ../shell/ev-window.c:829
+#: ../shell/ev-window.c:836
 #, c-format
 msgid "Page %s — %s"
 msgstr "Página %s — %s"
 
-#: ../shell/ev-window.c:831
+#: ../shell/ev-window.c:838
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
 
-#: ../shell/ev-window.c:1275
+#: ../shell/ev-window.c:1282
 msgid "The document contains no pages"
 msgstr "El documento no contiene ninguna página"
 
-#: ../shell/ev-window.c:1278
+#: ../shell/ev-window.c:1285
 msgid "The document contains only empty pages"
 msgstr "El documento sólo contiene páginas vacías"
 
-#: ../shell/ev-window.c:1472 ../shell/ev-window.c:1638
+#: ../shell/ev-window.c:1479 ../shell/ev-window.c:1645
 msgid "Unable to open document"
 msgstr "No se pudo abrir el documento"
 
-#: ../shell/ev-window.c:1609
+#: ../shell/ev-window.c:1616
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Cargando documento desde «%s»"
 
-#: ../shell/ev-window.c:1751 ../shell/ev-window.c:2028
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:2035
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Descargando documento (%d%%)"
 
-#: ../shell/ev-window.c:1784
+#: ../shell/ev-window.c:1791
 msgid "Failed to load remote file."
 msgstr "Falló al cargar el archivo remoto."
 
-#: ../shell/ev-window.c:1972
+#: ../shell/ev-window.c:1979
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Recargando el documento desde %s"
 
-#: ../shell/ev-window.c:2004
+#: ../shell/ev-window.c:2011
 msgid "Failed to reload document."
 msgstr "Falló al recargar el documento."
 
-#: ../shell/ev-window.c:2159
+#: ../shell/ev-window.c:2166
 msgid "Open Document"
 msgstr "Abrir un documento"
 
-#: ../shell/ev-window.c:2423
+#: ../shell/ev-window.c:2430
 #, c-format
 msgid "Saving document to %s"
 msgstr "Guardando el documento en %s"
 
-#: ../shell/ev-window.c:2426
+#: ../shell/ev-window.c:2433
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Guardando el adjunto en %s"
 
-#: ../shell/ev-window.c:2429
+#: ../shell/ev-window.c:2436
 #, c-format
 msgid "Saving image to %s"
 msgstr "Guardando la imagen en %s"
 
-#: ../shell/ev-window.c:2473 ../shell/ev-window.c:2573
+#: ../shell/ev-window.c:2480 ../shell/ev-window.c:2580
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "El archivo no se pudo guardar como «%s»."
 
-#: ../shell/ev-window.c:2504
+#: ../shell/ev-window.c:2511
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Subiendo el documento (%d%%)"
 
-#: ../shell/ev-window.c:2508
+#: ../shell/ev-window.c:2515
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Subiendo el adjunto (%d%%)"
 
-#: ../shell/ev-window.c:2512
+#: ../shell/ev-window.c:2519
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Subiendo la imagen (%d%%)"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2641
 msgid "Save a Copy"
 msgstr "Guardar una copia"
 
-#: ../shell/ev-window.c:2939
+#: ../shell/ev-window.c:2909
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d trabajo pendiente en cola"
 msgstr[1] "%d trabajos pendientes en cola"
 
-#: ../shell/ev-window.c:3052
+#: ../shell/ev-window.c:3022
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Imprimiendo trabajo «%s»"
 
-#: ../shell/ev-window.c:3255
+#: ../shell/ev-window.c:3234
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
 "¿Esperar hasta que termine el trabajo de impresión «%s» antes de cerrar?"
 
-#: ../shell/ev-window.c:3258
+#: ../shell/ev-window.c:3237
 #, c-format
 msgid ""
 "There are %d print jobs active. Wait until print finishes before closing?"
@@ -1107,28 +1096,28 @@ msgstr ""
 "Existen %d trabajos de impresión activos. ¿Desea esperar a que termine la "
 "impresora antes de cerrar?"
 
-#: ../shell/ev-window.c:3270
+#: ../shell/ev-window.c:3249
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Si cierra la ventana, los trabajos de impresión pendientes no se imprimirán."
 
-#: ../shell/ev-window.c:3274
+#: ../shell/ev-window.c:3253
 msgid "Cancel _print and Close"
 msgstr "Cancelar la _impresión y cerrar"
 
-#: ../shell/ev-window.c:3278
+#: ../shell/ev-window.c:3257
 msgid "Close _after Printing"
 msgstr "Cerrar _después de imprimir"
 
-#: ../shell/ev-window.c:3836
+#: ../shell/ev-window.c:3819
 msgid "Toolbar Editor"
 msgstr "Editor de la barra de herramientas"
 
-#: ../shell/ev-window.c:3968
+#: ../shell/ev-window.c:3952
 msgid "There was an error displaying help"
 msgstr "Hubo un error al mostrar la ayuda"
 
-#: ../shell/ev-window.c:4179
+#: ../shell/ev-window.c:4163
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1137,7 +1126,7 @@ msgstr ""
 "Visor de documentos\n"
 "Usando %s (%s)"
 
-#: ../shell/ev-window.c:4210
+#: ../shell/ev-window.c:4194
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1149,7 +1138,7 @@ msgstr ""
 "Software Foundation; ya sea en su versión 2 ó (a su criterio)en una versión "
 "posterior.\n"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4198
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1160,25 +1149,29 @@ msgstr ""
 "ninguna garantía implícita de COMERCIALIDAD o IDONEIDAD PARA UN FIN "
 "DETERMINADO.  Mire la Licencia General GNU para más detalles.\n"
 
-#: ../shell/ev-window.c:4218
+#: ../shell/ev-window.c:4202
+#| msgid ""
+#| "You should have received a copy of the GNU General Public License along "
+#| "with Evince; if not, write to the Free Software Foundation, Inc., 59 "
+#| "Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 msgstr ""
 "Debería haber recibido una copia de la Licencia Pública General de GNU junto "
-"con Evince; si no es el caso, escriba a Free Software Foundation, Inc., 59 "
-"Temple Place, Suite 330, Boston, MA  02111-1307 EE. UU.\n"
+"con Evince; si no es el caso, escriba a la Free Software Foundation, Inc., "
+"51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 EE. UU.\n"
 
-#: ../shell/ev-window.c:4243
+#: ../shell/ev-window.c:4227
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4246
+#: ../shell/ev-window.c:4230
 msgid "© 1996–2009 The Evince authors"
 msgstr "© 1996-2009 Los autores de Evince"
 
-#: ../shell/ev-window.c:4252
+#: ../shell/ev-window.c:4236
 msgid "translator-credits"
 msgstr ""
 "Jorge González <jorgegonz@svn.gnome.org>, 2007-2010\n"
@@ -1189,70 +1182,62 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:4503
+#: ../shell/ev-window.c:4506
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d encontrado en esta página"
 msgstr[1] "%d encontrados en esta página"
 
-#: ../shell/ev-window.c:4511
+#: ../shell/ev-window.c:4514
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante para buscar"
 
-#: ../shell/ev-window.c:4988
+#: ../shell/ev-window.c:4991
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../shell/ev-window.c:4989
+#: ../shell/ev-window.c:4992
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../shell/ev-window.c:4990
+#: ../shell/ev-window.c:4993
 msgid "_View"
 msgstr "_Ver"
 
-#: ../shell/ev-window.c:4991
+#: ../shell/ev-window.c:4994
 msgid "_Go"
 msgstr "_Ir"
 
-#: ../shell/ev-window.c:4992
+#: ../shell/ev-window.c:4995
 msgid "_Help"
 msgstr "Ay_uda"
 
 #. File menu
-#: ../shell/ev-window.c:4995 ../shell/ev-window.c:5263
+#: ../shell/ev-window.c:4998 ../shell/ev-window.c:5263
 msgid "_Open…"
 msgstr "_Abrir…"
 
-#: ../shell/ev-window.c:4996 ../shell/ev-window.c:5264
+#: ../shell/ev-window.c:4999 ../shell/ev-window.c:5264
 msgid "Open an existing document"
 msgstr "Abre un documento existente"
 
-#: ../shell/ev-window.c:4998
+#: ../shell/ev-window.c:5001
 msgid "Op_en a Copy"
 msgstr "A_brir una copia"
 
-#: ../shell/ev-window.c:4999
+#: ../shell/ev-window.c:5002
 msgid "Open a copy of the current document in a new window"
 msgstr "Abre una copia del documento actual en una ventana nueva"
 
-#: ../shell/ev-window.c:5001
+#: ../shell/ev-window.c:5004
 msgid "_Save a Copy…"
 msgstr "Guardar una _copia…"
 
-#: ../shell/ev-window.c:5002
+#: ../shell/ev-window.c:5005
 msgid "Save a copy of the current document"
 msgstr "Guarda una copia del documento actual"
-
-#: ../shell/ev-window.c:5004
-msgid "Page Set_up…"
-msgstr "Config_uración de página…"
-
-#: ../shell/ev-window.c:5005
-msgid "Set up the page settings for printing"
-msgstr "Configurar los ajustes de página para impresión"
 
 #: ../shell/ev-window.c:5007
 msgid "_Print…"
@@ -1513,43 +1498,53 @@ msgstr "Guardar adjuntos"
 msgid "%s — Password Required"
 msgstr "%s — Se requiere una contraseña"
 
-#: ../shell/ev-utils.c:330
+#: ../shell/ev-utils.c:317
 msgid "By extension"
 msgstr "Por extensión"
 
-#: ../shell/main.c:70 ../shell/main.c:246
+#: ../shell/main.c:72 ../shell/main.c:251
 msgid "GNOME Document Viewer"
 msgstr "Visor de documentos de Gnome"
 
-#: ../shell/main.c:78
-msgid "The page of the document to display."
-msgstr "La página del documento que mostrar."
+#: ../shell/main.c:80
+#| msgid "The page of the document to display."
+msgid "The page label of the document to display."
+msgstr "La etiqueta de página del documento que mostrar."
 
-#: ../shell/main.c:78
+#: ../shell/main.c:80
 msgid "PAGE"
 msgstr "PÁGINA"
 
-#: ../shell/main.c:79
+#: ../shell/main.c:81
+#| msgid "The page of the document to display."
+msgid "The page number of the document to display."
+msgstr "El número de página del documento que mostrar."
+
+#: ../shell/main.c:81
+msgid "NUMBER"
+msgstr "NÚMERO"
+
+#: ../shell/main.c:82
 msgid "Run evince in fullscreen mode"
 msgstr "Ejecutar Evince en modo pantalla completa"
 
-#: ../shell/main.c:80
+#: ../shell/main.c:83
 msgid "Run evince in presentation mode"
 msgstr "Ejecutar Evince en modo presentación"
 
-#: ../shell/main.c:81
+#: ../shell/main.c:84
 msgid "Run evince as a previewer"
 msgstr "Ejecutar Evince como un previsualizador"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:85
 msgid "The word or phrase to find in the document"
 msgstr "La palabra o frase que buscar en el documento"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:85
 msgid "STRING"
 msgstr "CADENA"
 
-#: ../shell/main.c:86
+#: ../shell/main.c:89
 msgid "[FILE…]"
 msgstr "[ARCHIVO…]"
 
@@ -1577,6 +1572,12 @@ msgstr ""
 "Comando válido y argumentos para el miniaturizador de documentos PDF. "
 "Consulte la documentación para el miniaturizador de Nautilus para más "
 "información."
+
+#~ msgid "Page Set_up…"
+#~ msgstr "Config_uración de página…"
+
+#~ msgid "Set up the page settings for printing"
+#~ msgstr "Configurar los ajustes de página para impresión"
 
 #~ msgid "DJVU document has incorrect format"
 #~ msgstr "El documento DJVU tiene un formato incorrecto"
