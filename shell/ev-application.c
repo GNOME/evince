@@ -94,6 +94,8 @@ G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 #define APPLICATION_DBUS_INTERFACE   "org.gnome.evince.Application"
 #endif
 
+static const gchar *userdir = NULL;
+
 /**
  * ev_application_get_instance:
  *
@@ -802,9 +804,14 @@ ev_application_accel_map_save (EvApplication *application)
 	gchar *tmp_filename;
 	gint   fd;
 
-	accel_map_file = g_build_filename (g_get_home_dir (),
-					   ".gnome2", "accels",
-					   "evince", NULL);
+	if (userdir) {
+		accel_map_file = g_build_filename (userdir, "accels",
+						   "evince", NULL);
+	} else {
+		accel_map_file = g_build_filename (g_get_home_dir (),
+						   ".gnome2", "accels",
+						   "evince", NULL);
+	}
 
 	tmp_filename = g_strdup_printf ("%s.XXXXXX", accel_map_file);
 
@@ -832,9 +839,15 @@ ev_application_accel_map_load (EvApplication *application)
 {
 	gchar *accel_map_file;
 
-	accel_map_file = g_build_filename (g_get_home_dir (),
-					   ".gnome2", "accels",
-					   "evince", NULL);
+	if (userdir) {
+		accel_map_file = g_build_filename (userdir, "accels",
+						   "evince", NULL);
+	} else {
+		accel_map_file = g_build_filename (g_get_home_dir (),
+						   ".gnome2", "accels",
+						   "evince", NULL);
+	}
+
 	gtk_accel_map_load (accel_map_file);
 	g_free (accel_map_file);
 }
@@ -892,10 +905,14 @@ ev_application_init (EvApplication *ev_application)
 {
 	GError *error = NULL;
 
-        ev_application->dot_dir = g_build_filename (g_get_home_dir (),
-                                                    ".gnome2",
-                                                    "evince",
-                                                    NULL);
+	userdir = g_getenv ("GNOME22_USER_DIR");
+	if (userdir)
+		ev_application->dot_dir = g_build_filename (userdir, "evince", NULL);
+	else
+		ev_application->dot_dir = g_build_filename (g_get_home_dir (),
+							    ".gnome2",
+							    "evince",
+							    NULL);
 
 #ifdef G_OS_WIN32
 {
