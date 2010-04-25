@@ -171,13 +171,24 @@ load_files (const char **files)
 		mode = EV_WINDOW_MODE_PRESENTATION;
 
 	for (i = 0; files[i]; i++) {
+		const gchar *filename;
 		gchar       *uri;
 		gchar       *label;
 		GFile       *file;
 		EvLinkDest  *dest = NULL;
 		const gchar *app_uri;
 
-		file = g_file_new_for_commandline_arg (files[i]);
+		filename = files[i];
+		label = strchr (filename, '#');
+		if (label) {
+			*label = 0;
+			label++;
+			dest = ev_link_dest_new_page_label (label);
+		} else if (global_dest) {
+			dest = g_object_ref (global_dest);
+		}
+
+		file = g_file_new_for_commandline_arg (filename);
 		uri = g_file_get_uri (file);
 		g_object_unref (file);
 
@@ -187,14 +198,7 @@ load_files (const char **files)
 			continue;
 		}
 
-		label = strchr (uri, '#');
-		if (label) {
-			*label = 0;
-			label++;
-			dest = ev_link_dest_new_page_label (label);
-		} else if (global_dest) {
-			dest = g_object_ref (global_dest);
-		}
+
 
 		ev_application_open_uri_at_dest (EV_APP, uri, screen, dest,
 						 mode, ev_find_string,
