@@ -1,4 +1,39 @@
 ================
+Evince  2.30.1
+================
+
+Bug fixes:
+
+    * Make inverted colors mode work in presentation mode too
+      (#614693, Carlos Garcia Campos)
+    * Respect GNOME22_USER_DIR env variable (#613637, Ray Strode)
+    * Fix loading of local documents when uri contains a page
+      destination (#616515, Carlos Garcia Campos)
+    * Take default settings from last document opened. Fixes
+      regression caused by migration to gio metadata (#606090, Carlos
+      Garcia Campos)
+    * Update icons to match gnome-icon-theme appearance (#614747,
+      Hylke Bons, Carlos Garcia Campos)
+    * Make sure there's a new valid page range before updating caches
+      (fdo#27599, Carlos Garcia Campos)
+    * Update FSF address everywhere (#514607, Arun Persaud)
+    * Fix loading of compressed password-protected documents (#613959,
+      Carlos Garcia Campos)
+    * Close previewer window with control + w (#612972, Carlos Garcia
+      Campos)
+    * Fix keybindings in previewer window (#612972, Carlos Garcia
+      Campos)
+
+Translation updates:
+
+    * Runa Bhattacharjee (bn_IN)
+    * Gil Forcada (ca)
+    * Gil Forcada (ca@valencia)
+    * Ivar Smolin (et)
+    * Shankar Prasad (kn)
+    * Sandeep Shedmake (mr)
+
+================
 Evince  2.30.0
 ================
 
