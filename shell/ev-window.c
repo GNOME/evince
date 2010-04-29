@@ -239,6 +239,8 @@ struct _EvWindowPrivate {
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
+#define MAX_RECENT_ITEM_LEN (40)
+
 static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_N_COPIES,
 	GTK_PRINT_SETTINGS_COLLATE,
@@ -2325,6 +2327,23 @@ ev_window_get_recent_file_label (gint index, const gchar *filename)
 }
 
 static void
+ev_window_recent_action_connect_proxy_cb (GtkActionGroup *action_group,
+                                          GtkAction *action,
+                                          GtkWidget *proxy,
+                                          gpointer data)
+{
+        GtkLabel *label;
+
+        if (!GTK_IS_MENU_ITEM (proxy))
+                return;
+
+        label = GTK_LABEL (gtk_bin_get_child (GTK_BIN (proxy)));
+
+        gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_MIDDLE);
+        gtk_label_set_max_width_chars (label, MAX_RECENT_ITEM_LEN);
+}
+
+static void
 ev_window_setup_recent (EvWindow *ev_window)
 {
 	GList        *items, *l;
@@ -2345,8 +2364,11 @@ ev_window_setup_recent (EvWindow *ev_window)
 		g_object_unref (ev_window->priv->recent_action_group);
 	}
 	ev_window->priv->recent_action_group = gtk_action_group_new ("RecentFilesActions");
+        g_signal_connect (ev_window->priv->recent_action_group, "connect-proxy",
+                          G_CALLBACK (ev_window_recent_action_connect_proxy_cb), NULL);
+
 	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
-					    ev_window->priv->recent_action_group, 0);
+					    ev_window->priv->recent_action_group, -1);
 
 	items = gtk_recent_manager_get_items (ev_window->priv->recent_manager);
 	items = g_list_sort (items, (GCompareFunc) compare_recent_items);
