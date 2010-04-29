@@ -2378,6 +2378,9 @@ ev_window_setup_recent (EvWindow *ev_window)
 		GtkAction     *action;
 		gchar         *action_name;
 		gchar         *label;
+                const gchar   *mime_type;
+                gchar         *content_type;
+                GIcon         *icon = NULL;
 
 		info = (GtkRecentInfo *) l->data;
 
@@ -2388,10 +2391,23 @@ ev_window_setup_recent (EvWindow *ev_window)
 		action_name = g_strdup_printf ("RecentFile%u", i++);
 		label = ev_window_get_recent_file_label (
 			n_items + 1, gtk_recent_info_get_display_name (info));
-		
+
+                mime_type = gtk_recent_info_get_mime_type (info);
+                content_type = g_content_type_from_mime_type (mime_type);
+                if (content_type != NULL) {
+                        icon = g_content_type_get_icon (content_type);
+                        g_free (content_type);
+                }
+
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", action_name,
 				       "label", label,
+#if GTK_CHECK_VERSION (2, 16, 0)
+                                       "gicon", icon,
+#endif
+#if GTK_CHECK_VERSION (2, 20, 0)
+                                       "always-show-image", TRUE,
+#endif
 				       NULL);
 
 		g_object_set_data_full (G_OBJECT (action),
@@ -2416,6 +2432,8 @@ ev_window_setup_recent (EvWindow *ev_window)
 				       FALSE);
 		g_free (action_name);
 		g_free (label);
+                if (icon != NULL)
+                        g_object_unref (icon);
 
 		if (++n_items == 5)
 			break;
