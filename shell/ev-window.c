@@ -6107,7 +6107,7 @@ ev_window_create_last_settings_metadata (EvWindow *window)
 	GFile *file;
 	gchar *path;
 
-	path = g_build_filename (ev_application_get_dot_dir (EV_APP, FALSE), "last_settings", NULL);
+	path = g_build_filename (ev_application_get_dot_dir (EV_APP, TRUE), "last_settings", NULL);
 	file = g_file_new_for_path (path);
 	g_free (path);
 
