@@ -565,7 +565,7 @@ update_chrome_visibility (EvWindow *window)
 	fullscreen_toolbar = ((priv->chrome & EV_CHROME_FULLSCREEN_TOOLBAR) != 0 || 
 			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && fullscreen;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
-	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && !presentation;
+	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
 
 	set_widget_visibility (priv->menubar, menubar);	
 	set_widget_visibility (priv->toolbar, toolbar);
