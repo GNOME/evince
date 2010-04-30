@@ -2402,12 +2402,8 @@ ev_window_setup_recent (EvWindow *ev_window)
 		action = g_object_new (GTK_TYPE_ACTION,
 				       "name", action_name,
 				       "label", label,
-#if GTK_CHECK_VERSION (2, 16, 0)
                                        "gicon", icon,
-#endif
-#if GTK_CHECK_VERSION (2, 20, 0)
                                        "always-show-image", TRUE,
-#endif
 				       NULL);
 
 		g_object_set_data_full (G_OBJECT (action),
