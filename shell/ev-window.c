@@ -142,6 +142,7 @@ struct _EvWindowPrivate {
 
 	/* Settings */
 	GSettings *settings;
+	GSettings *last_settings;
 
 	/* Menubar accels */
 	guint           menubar_accel_keyval;
@@ -903,11 +904,16 @@ setup_chrome_from_metadata (EvWindow *window)
 	EvChrome chrome = EV_CHROME_NORMAL;
 	gboolean show_toolbar;
 
-	if (window->priv->metadata &&
-	    ev_metadata_get_boolean (window->priv->metadata, "show_toolbar", &show_toolbar)) {
+	if (window->priv->document) {
+		if (!window->priv->metadata ||
+		    !ev_metadata_get_boolean (window->priv->metadata, "show_toolbar", &show_toolbar)) {
+			show_toolbar = g_settings_get_boolean (window->priv->last_settings, "show-toolbar");
+		}
+
 		if (!show_toolbar)
 			chrome &= ~EV_CHROME_TOOLBAR;
 	}
+
 	window->priv->chrome = chrome;
 }
 
@@ -953,10 +959,11 @@ setup_sidebar_from_metadata (EvWindow *window)
 		}
 	}
 
-	if (ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility)) {
-		update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
-		update_chrome_visibility (window);
-	}
+	if (!ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility))
+		sidebar_visibility = g_settings_get_boolean (window->priv->last_settings, "show-sidebar");
+
+	update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
+	update_chrome_visibility (window);
 }
 
 static void
@@ -1064,8 +1071,8 @@ setup_document_from_metadata (EvWindow *window)
 	    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
 		return; /* size was already set in setup_size_from_metadata */
 
-	if (ev_metadata_get_double (window->priv->metadata, "window_width_ratio", &width_ratio) &&
-	    ev_metadata_get_double (window->priv->metadata, "window_height_ratio", &height_ratio)) {
+	g_settings_get (window->priv->last_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
+	if (width_ratio > 0. && height_ratio > 0.) {
 		gdouble    document_width;
 		gdouble    document_height;
 		GdkScreen *screen;
@@ -4305,6 +4312,8 @@ ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
 	update_chrome_visibility (ev_window);
 	if (ev_window->priv->metadata)
 		ev_metadata_set_boolean (ev_window->priv->metadata, "show_toolbar", active);
+	if (ev_window->priv->document)
+		g_settings_set_boolean (ev_window->priv->last_settings, "show-toolbar", active);
 }
 
 static void
@@ -4363,6 +4372,8 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 		if (ev_window->priv->metadata)
 			ev_metadata_set_boolean (ev_window->priv->metadata, "sidebar_visibility",
 						 visible);
+		if (ev_window->priv->document)
+			g_settings_set_boolean (ev_window->priv->last_settings, "show-sidebar", visible);
 	}
 }
 
@@ -4855,6 +4866,11 @@ ev_window_dispose (GObject *object)
 	if (priv->settings) {
 		g_object_unref (priv->settings);
 		priv->settings = NULL;
+	}
+
+	if (priv->last_settings) {
+		g_object_unref (priv->last_settings);
+		priv->last_settings = NULL;
 	}
 
 	priv->recent_ui_id = 0;
@@ -5476,10 +5492,10 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 		if (!ev_window_is_empty (window) && window->priv->document) {
 			ev_document_get_max_page_size (window->priv->document,
 						       &document_width, &document_height);
-			ev_metadata_set_double (window->priv->metadata, "window_width_ratio",
-						(double)event->width / document_width);
-			ev_metadata_set_double (window->priv->metadata, "window_height_ratio",
-						(double)event->height / document_height);
+			g_settings_set (window->priv->last_settings, "window-ratio", "(dd)",
+					(double)event->width / document_width,
+					(double)event->height / document_height);
+
 			ev_metadata_set_int (window->priv->metadata, "window_x", event->x);
 			ev_metadata_set_int (window->priv->metadata, "window_y", event->y);
 			ev_metadata_set_int (window->priv->metadata, "window_width", event->width);
@@ -6437,6 +6453,8 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
+
+	ev_window->priv->last_settings = g_settings_new (GS_SCHEMA_NAME".Default");
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);

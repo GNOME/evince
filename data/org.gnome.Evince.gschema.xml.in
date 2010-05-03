@@ -5,5 +5,19 @@
       <summary>Override document restrictions</summary>
       <description>Override document restrictions, like restriction to copy or to print.</description>
     </key>
+    <child name="default" schema="org.gnome.Evince.Default"/>
   </schema>
+
+  <schema id="org.gnome.Evince.Default" path="/apps/evince/default/" gettext-domain="evince">
+    <key name="show-toolbar" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-sidebar" type="b">
+      <default>true</default>
+    </key>
+    <key name="window-ratio" type="(dd)">
+      <default>(0., 0.)</default>
+    </key>
+  </schema>
+
 </schemalist>
