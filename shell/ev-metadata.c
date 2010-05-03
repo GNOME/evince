@@ -89,13 +89,11 @@ ev_metadata_load (EvMetadata *metadata)
 		return;
 	}
 
-#if GLIB_CHECK_VERSION(2,22,0)
 	if (!g_file_info_has_namespace (info, "metadata")) {
 		g_object_unref (info);
 
 		return;
 	}
-#endif
 
 	attrs = g_file_info_list_attributes (info, "metadata");
 	for (i = 0; attrs[i]; i++) {
