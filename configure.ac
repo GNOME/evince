@@ -85,6 +85,8 @@ m4_pattern_allow([AM_V_GEN])dnl Make autoconf not complain about the rule below
 EV_INTLTOOL_EVINCE_BACKEND_RULE='%.evince-backend:   %.evince-backend.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; $(AM_V_GEN) LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< [$]@'
 AC_SUBST([EV_INTLTOOL_EVINCE_BACKEND_RULE])
 
+GLIB_GSETTINGS
+
 # Check which platform to use
 
 AC_MSG_CHECKING([for which platform to build])
@@ -122,8 +124,9 @@ AM_CONDITIONAL([PLATFORM_WIN32],[test "$with_platform" = "win32"])
 dnl Specify required versions of dependencies
 DBUS_GLIB_REQUIRED=0.70
 GTK_REQUIRED=2.20.0
-GLIB_REQUIRED=2.18.0
+GLIB_REQUIRED=2.25.3
 KEYRING_REQUIRED=2.22.0
+GCONF_REQUIRED=2.31.2
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
 
@@ -312,7 +315,7 @@ AC_MSG_RESULT([$with_gconf])
 AM_CONDITIONAL([WITH_GCONF],[test "$with_gconf" = "yes"])
 
 if test "$with_gconf" = "yes"; then
-   PKG_CHECK_MODULES([GCONF],[gconf-2.0])
+   PKG_CHECK_MODULES([GCONF],[gconf-2.0 >= $GCONF_REQUIRED])
    AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
 
    AM_GCONF_SOURCE_2

@@ -140,6 +140,9 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
 
+	/* Settings */
+	GSettings *settings;
+
 	/* Menubar accels */
 	guint           menubar_accel_keyval;
 	GdkModifierType menubar_accel_modifier;
@@ -223,6 +226,9 @@ struct _EvWindowPrivate {
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 #define GCONF_LOCKDOWN_PRINT_SETUP  "/desktop/gnome/lockdown/disable_print_setup"
+
+#define GS_SCHEMA_NAME           "org.gnome.Evince"
+#define GS_OVERRIDE_RESTRICTIONS "override_restrictions"
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
@@ -377,12 +383,12 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 		can_find = TRUE;
 	}
 
-#ifdef WITH_GCONF
-	if (has_document)
-		override_restrictions = gconf_client_get_bool (ev_window->priv->gconf_client,
-							       GCONF_OVERRIDE_RESTRICTIONS,
-							       NULL);
-#endif
+	if (has_document && ev_window->priv->settings) {
+		override_restrictions =
+			g_settings_get_boolean (ev_window->priv->settings,
+						GS_OVERRIDE_RESTRICTIONS);
+	}
+
 	if (!override_restrictions && info && info->fields_mask & EV_DOCUMENT_INFO_PERMISSIONS) {
 		ok_to_print = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_PRINT);
 		ok_to_copy = (info->permissions & EV_DOCUMENT_PERMISSIONS_OK_TO_COPY);
@@ -1190,6 +1196,14 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window)
 	ev_job_scheduler_push_job (ev_window->priv->thumbnail_job, EV_JOB_PRIORITY_NONE);
 }
 
+static void
+override_restrictions_changed (GSettings *settings,
+			       gchar     *key,
+			       EvWindow  *ev_window)
+{
+	ev_window_setup_action_sensitivity (ev_window);
+}
+
 #ifdef WITH_GCONF
 static void
 lockdown_changed (GConfClient *client,
@@ -1216,6 +1230,12 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
 
+	ev_window->priv->settings = g_settings_new (GS_SCHEMA_NAME);
+	g_signal_connect (ev_window->priv->settings,
+			  "changed::"GS_OVERRIDE_RESTRICTIONS,
+			  G_CALLBACK (override_restrictions_changed),
+			  ev_window);
+
 #ifdef WITH_GCONF
 	if (!ev_window->priv->gconf_client)
 		ev_window->priv->gconf_client = gconf_client_get_default ();
@@ -1223,16 +1243,8 @@ ev_window_setup_document (EvWindow *ev_window)
 			      GCONF_LOCKDOWN_DIR,
 			      GCONF_CLIENT_PRELOAD_ONELEVEL,
 			      NULL);
-	gconf_client_add_dir (ev_window->priv->gconf_client,
-			      GCONF_OVERRIDE_RESTRICTIONS,
-			      GCONF_CLIENT_PRELOAD_NONE,
-			      NULL);
 	gconf_client_notify_add (ev_window->priv->gconf_client,
 				 GCONF_LOCKDOWN_DIR,
-				 (GConfClientNotifyFunc)lockdown_changed,
-				 ev_window, NULL, NULL);
-	gconf_client_notify_add (ev_window->priv->gconf_client,
-				 GCONF_OVERRIDE_RESTRICTIONS,
 				 (GConfClientNotifyFunc)lockdown_changed,
 				 ev_window, NULL, NULL);
 #endif /* WITH_GCONF */
@@ -4838,6 +4850,11 @@ ev_window_dispose (GObject *object)
 						      ev_window_setup_recent,
 						      window);
 		priv->recent_manager = NULL;
+	}
+
+	if (priv->settings) {
+		g_object_unref (priv->settings);
+		priv->settings = NULL;
 	}
 
 	priv->recent_ui_id = 0;

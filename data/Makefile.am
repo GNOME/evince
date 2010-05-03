@@ -1,8 +1,7 @@
 SUBDIRS = icons
 NULL=
 
-install-data-local: install-schemas update-icon-cache
-uninstall-local: uninstall-schemas
+install-data-local: update-icon-cache
 
 #
 # man file
@@ -49,45 +48,20 @@ $(service_DATA): $(service_in_files) Makefile
 endif
 
 #
-# GConf schema
+# GSettings schema
 #
 
-if WITH_GCONF
-@INTLTOOL_SCHEMAS_RULE@
-
-schema_in_files = evince.schemas.in
-schemadir = $(GCONF_SCHEMA_FILE_DIR)
-schema_DATA = $(schema_in_files:.schemas.in=.schemas)
-
-install-schemas: $(schema_DATA)
-if GCONF_SCHEMAS_INSTALL
-	if test -z "$(DESTDIR)" ; then \
-	for p in $^ ; do \
-		GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
-			$(GCONFTOOL) \
-			--makefile-install-rule \
-			$(top_builddir)/data/$$p; \
-	done \
-	fi
-endif
-
-uninstall-schemas: $(schema_DATA)
-if GCONF_SCHEMAS_INSTALL
-	if test -z "$(DESTDIR)" ; then \
-	for p in $^ ; do \
-		GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
-			$(GCONFTOOL) \
-			--makefile-uninstall-rule \
-			$(top_builddir)/data/$$p; \
-	done \
-	fi
-endif
-
-else
-
-install-schemas:
-uninstall-schemas:
-
+# gsettingsschemadir and gschema_compile are defined by the GLIB_GSETTINGS
+# macro in configure.ac
+gsettingsschema_in_files = org.gnome.Evince.gschema.xml.in
+gsettingsschema_DATA = $(gsettingsschema_in_files:.xml.in=.xml)
+@INTLTOOL_XML_NOMERGE_RULE@
+# This rule will check your schemas for validity before installation
+# Uncomment when porting is done
+# GSETTINGS_CHECK_RULE
+if GSETTINGS_SCHEMAS_INSTALL
+install-data-hook:
+	$(AM_V_GEN) $(GLIB_COMPILE_SCHEMAS) --allow-any-name $(DESTDIR)$(gsettingsschemadir) --targetdir=$(DESTDIR)$(gsettingsschemadir)
 endif
 
 #
@@ -116,7 +90,7 @@ update-icon-cache:
 EXTRA_DIST =					\
 	$(ui_DATA)				\
 	$(DESKTOP_IN_FILES)			\
-	$(schema_in_files)			\
+	$(gsettingsschema_in_files)		\
 	org.gnome.evince.Daemon.service.in	\
 	$(man_MANS)				\
 	evince.ico				\
@@ -128,7 +102,7 @@ EXTRA_DIST =					\
 
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
-	$(schema_DATA)		\
+	$(gsettingsschema_DATA)		\
 	$(service_DATA)
 
 -include $(top_srcdir)/git.mk
