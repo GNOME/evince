@@ -385,14 +385,20 @@ convert_metadata (const gchar *metadata)
 static void
 ev_migrate_metadata (void)
 {
-	gchar *updated;
-	gchar *metadata;
-	gchar *dot_dir;
+	gchar       *updated;
+	gchar       *metadata;
+	gchar       *dot_dir;
+	const gchar *userdir;
 
-	dot_dir = g_build_filename (g_get_home_dir (),
-				    ".gnome2",
-				    "evince",
-				    NULL);
+	userdir = g_getenv ("GNOME22_USER_DIR");
+	if (userdir) {
+		dot_dir = g_build_filename (userdir, "evince", NULL);
+	} else {
+		dot_dir = g_build_filename (g_get_home_dir (),
+					    ".gnome2",
+					    "evince",
+					    NULL);
+	}
 
 	updated = g_build_filename (dot_dir, "migrated-to-gvfs", NULL);
 	if (g_file_test (updated, G_FILE_TEST_EXISTS)) {
