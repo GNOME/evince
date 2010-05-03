@@ -1679,13 +1679,11 @@ ev_print_operation_print_done (EvPrintOperationPrint  *print,
 static void
 ev_print_operation_print_status_changed (EvPrintOperationPrint *print)
 {
-#ifdef HAVE_GTK_PRINT_OPERATION_GET_N_PAGES_TO_PRINT
 	GtkPrintStatus status;
 
 	status = gtk_print_operation_get_status (print->op);
 	if (status == GTK_PRINT_STATUS_GENERATING_DATA)
 		print->n_pages_to_print = gtk_print_operation_get_n_pages_to_print (print->op);
-#endif
 }
 
 static void
@@ -1695,12 +1693,11 @@ print_job_finished (EvJobPrint            *job,
 	EvPrintOperation *op = EV_PRINT_OPERATION (print);
 
 	gtk_print_operation_draw_page_finish (print->op);
-#ifdef HAVE_GTK_PRINT_OPERATION_GET_N_PAGES_TO_PRINT
+
 	print->total++;
 	ev_print_operation_update_status (op, print->total,
 					  print->n_pages_to_print,
 					  print->total / (gdouble)print->n_pages_to_print);
-#endif
 	ev_job_print_set_cairo (job, NULL);
 }
 
