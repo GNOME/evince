@@ -1,4 +1,62 @@
 ================
+Evince  2.31.1
+================
+
+New Features and UI Improvements:
+
+    * Add saved documents with "save a copy" to recent file list
+      (#617580, Carlos Garcia Campos)
+    * Port override_restrictions gconf key to GSettings (Carlos Garcia
+      Campos)
+    * Add icons to the recent items, and always show them in menu
+      (#614400, Christian Persch)
+
+Bug fixes:
+
+    * Invert colors of pages and thumbanils when loading in inverted
+      color mode (#616110, #616111, Juanjo Marín)
+    * Take default settings from last document opened. Fixes
+      regression caused by migration to gio metadata (#606090,
+      Carlos Garcia Campos)
+    * Ellipsise the recent action's label (Christian Persch)
+    * Make inverted colors mode work in presentation mode too
+      (#614693, Carlos Garcia Campos)
+    * Respect GNOME22_USER_DIR env variable (#613637, Ray Strode)
+    * Fix loading of local documents when uri contains a page
+      destination (#616515, Carlos Garcia Campos)
+    * Make gnome-doc-utils optional (Hib Eris)
+    * Update icons to match gnome-icon-theme appearance (#614747,
+      Hylke Bons, Carlos Garcia Campos)
+    * Make sure there's a new valid page range before updating caches
+      (fdo#27599, Carlos Garcia Campos)
+    * Fix .desktop file according to CorrectDesktopFiles GNIOME Goal
+      (#592733, Javier Jardón)
+    * Update FSF address everywhere (#514607, Arun Persaud)
+    * Fix loading of compressed password-protected documents (#613959,
+      Carlos Garcia Campos)
+    * Add command line option to open document at a given page index
+      (#613449, Daniel M. German)
+    * Fix build with GSEAL_ENABLE for libview and libdocument
+      (#605776, Hib Eris, Carlos Garcia Campos)
+    * Close previewer window with control + w (#612972, Carlos Garcia
+      Campos)
+    * Fix keybindings in previewer window (#612972, Carlos Garcia
+      Campos)
+
+Translation updates:
+
+    * Runa Bhattacharjee (bn_IN)
+    * Gil Forcada (ca)
+    * Gil Forcada (ca@valencia)
+    * Jorge González (es)
+    * Fran Diéguez (gl)
+    * Shankar Prasad (kn)
+    * Ani Peter (ml)
+    * Sandeep Shedmake (mr)
+    * Wouter Bolsterlee (nl)
+    * Andrej Žnidaršič (sl)
+
+================
 Evince  2.30.0
 ================
 
