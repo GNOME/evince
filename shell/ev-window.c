@@ -1084,7 +1084,7 @@ setup_document_from_metadata (EvWindow *window)
 		screen = gtk_window_get_screen (GTK_WINDOW (window));
 		if (screen) {
 			request_width = MIN (request_width, gdk_screen_get_width (screen));
-			request_height = MIN (request_width, gdk_screen_get_height (screen));
+			request_height = MIN (request_height, gdk_screen_get_height (screen));
 		}
 
 		if (request_width > 0 && request_height > 0) {
