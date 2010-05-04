@@ -19,7 +19,7 @@ DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.xml
 # gtk-doc will search all .c & .h files beneath here for inline comments
 # evinceing the functions and macros.
 # e.g. DOC_SOURCE_DIR=../../../gtk
-DOC_SOURCE_DIR = ../../../shell --source-dir=../../../libmisc
+DOC_SOURCE_DIR = ../../../shell
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
 SCANGOBJ_OPTIONS =
@@ -34,7 +34,7 @@ MKDB_OPTIONS = --sgml-mode --output-format=xml --name-space=ev
 
 # Extra options to supply to gtkdoc-mktmpl
 # e.g. MKTMPL_OPTIONS=--only-section-tmpl
-MKTMPL_OPTIONS =--source-dir=../../../libmisc
+# MKTMPL_OPTIONS =
 
 # Extra options to supply to gtkdoc-mkhtml
 # Add the builddir to the HTML path so that version.xml is found
@@ -124,7 +124,6 @@ GTKDOC_LIBS = \
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
-	$(top_builddir)/cut-n-paste/evinfobar/libevinfobar.la		\
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
