@@ -2629,6 +2629,8 @@ ev_window_save_job_cb (EvJob     *job,
 		ev_window_error_message (window, job->error,
 					 _("The file could not be saved as “%s”."),
 					 EV_JOB_SAVE (job)->uri);
+	} else {
+		ev_window_add_recent (window, EV_JOB_SAVE (job)->uri);
 	}
 
 	ev_window_clear_save_job (window);
