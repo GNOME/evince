@@ -930,6 +930,15 @@ setup_sidebar_from_metadata (EvWindow *window)
 	gint        sidebar_size;
 	gboolean    sidebar_visibility;
 
+	if (document) {
+		if (!window->priv->metadata ||
+		    !ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility)) {
+			sidebar_visibility = g_settings_get_boolean (window->priv->last_settings, "show-sidebar");
+		}
+		update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
+		update_chrome_visibility (window);
+	}
+
 	if (!window->priv->metadata)
 		return;
 
@@ -958,12 +967,6 @@ setup_sidebar_from_metadata (EvWindow *window)
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
 		}
 	}
-
-	if (!ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility))
-		sidebar_visibility = g_settings_get_boolean (window->priv->last_settings, "show-sidebar");
-
-	update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
-	update_chrome_visibility (window);
 }
 
 static void
@@ -1053,23 +1056,22 @@ setup_document_from_metadata (EvWindow *window)
 	gdouble width_ratio;
 	gdouble height_ratio;
 
-	if (!window->priv->metadata)
-		return;
+	if (window->priv->metadata) {
+		/* Make sure to not open a document on the last page,
+		 * since closing it on the last page most likely means the
+		 * user was finished reading the document. In that case, reopening should
+		 * show the first page. */
+		page = ev_document_model_get_page (window->priv->model);
+		n_pages = ev_document_get_n_pages (window->priv->document);
+		if (page == n_pages - 1)
+			ev_document_model_set_page (window->priv->model, 0);
 
-	/* Make sure to not open a document on the last page,
-	 * since closing it on the last page most likely means the
-	 * user was finished reading the document. In that case, reopening should
-	 * show the first page. */
-	page = ev_document_model_get_page (window->priv->model);
-	n_pages = ev_document_get_n_pages (window->priv->document);
-	if (page == n_pages - 1)
-		ev_document_model_set_page (window->priv->model, 0);
+		setup_sidebar_from_metadata (window);
 
-	setup_sidebar_from_metadata (window);
-
-	if (ev_metadata_get_int (window->priv->metadata, "window_width", &width) &&
-	    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
-		return; /* size was already set in setup_size_from_metadata */
+		if (ev_metadata_get_int (window->priv->metadata, "window_width", &width) &&
+		    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
+			return; /* size was already set in setup_size_from_metadata */
+	}
 
 	g_settings_get (window->priv->last_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
 	if (width_ratio > 0. && height_ratio > 0.) {
@@ -1870,7 +1872,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_object_unref (ev_window->priv->metadata);
 
 	source_file = g_file_new_for_uri (uri);
-	if (ev_is_metadata_supported_for_file (source_file))
+	if (!ev_file_is_temp (source_file) &&
+	    ev_is_metadata_supported_for_file (source_file))
 		ev_window->priv->metadata = ev_metadata_new (source_file);
 	else
 		ev_window->priv->metadata = NULL;
