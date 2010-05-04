@@ -43,7 +43,8 @@ void       ev_document_misc_paint_one_page       (GdkDrawable  *drawable,
 						  GtkWidget    *widget,
 						  GdkRectangle *area,
 						  GtkBorder    *border,
-						  gboolean      highlight);
+						  gboolean      highlight,
+						  gboolean      inverted_colors);
 
 cairo_surface_t *ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf);
 GdkPixbuf       *ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface);

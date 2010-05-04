@@ -118,7 +118,8 @@ ev_document_misc_paint_one_page (GdkDrawable  *drawable,
 				 GtkWidget    *widget,
 				 GdkRectangle *area,
 				 GtkBorder    *border,
-				 gboolean highlight)
+				 gboolean      highlight,
+				 gboolean      inverted_colors)
 {
 	GtkStyle    *style = gtk_widget_get_style (widget);
 	GtkStateType state = gtk_widget_get_state (widget);
@@ -131,7 +132,7 @@ ev_document_misc_paint_one_page (GdkDrawable  *drawable,
 			    area->width,
 			    area->height);
 	gdk_draw_rectangle (drawable,
-			    style->white_gc,
+			    inverted_colors ? style->black_gc : style->white_gc,
 			    TRUE,
 			    area->x + border->left,
 			    area->y + border->top,

@@ -3988,6 +3988,7 @@ draw_one_page (EvView       *view,
 	GdkRectangle overlap;
 	GdkRectangle real_page_area;
 	gint         current_page;
+	gboolean     inverted_colors;
 
 	g_assert (view->document);
 
@@ -4004,10 +4005,12 @@ draw_one_page (EvView       *view,
 	*page_ready = TRUE;
 
 	current_page = ev_document_model_get_page (view->model);
+	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_document_misc_paint_one_page (view->layout.bin_window,
 					 GTK_WIDGET (view),
 					 page_area, border,
-					 page == current_page);
+					 page == current_page,
+					 inverted_colors);
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
 		gint             width, height;
