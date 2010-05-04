@@ -332,15 +332,18 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 					gint                 width,
 					gint                 height)
 {
+	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GdkPixbuf *icon;
 	gchar     *key;
 
 	key = g_strdup_printf ("%dx%d", width, height);
-	icon = g_hash_table_lookup (sidebar_thumbnails->priv->loading_icons, key);
+	icon = g_hash_table_lookup (priv->loading_icons, key);
 	if (!icon) {
-		icon = ev_document_misc_get_thumbnail_frame (width, height, NULL);
-		g_hash_table_insert (sidebar_thumbnails->priv->loading_icons,
-				     key, icon);
+		gboolean inverted_colors;
+
+		inverted_colors = ev_document_model_get_inverted_colors (priv->model);
+		icon = ev_document_misc_get_loading_thumbnail (width, height, inverted_colors);
+		g_hash_table_insert (priv->loading_icons, key, icon);
 	} else {
 		g_free (key);
 	}
