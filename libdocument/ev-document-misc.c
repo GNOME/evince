@@ -32,10 +32,11 @@
  * NULL, then it will fill the return pixbuf with the contents of
  * source_pixbuf.
  */
-GdkPixbuf *
-ev_document_misc_get_thumbnail_frame (int        width,
-				      int        height,
-				      GdkPixbuf *source_pixbuf)
+static GdkPixbuf *
+create_thumbnail_frame (int        width,
+			int        height,
+			GdkPixbuf *source_pixbuf,
+			gboolean   fill_bg)
 {
 	GdkPixbuf *retval;
 	guchar *data;
@@ -67,8 +68,10 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	rowstride = gdk_pixbuf_get_rowstride (retval);
 
 	gdk_pixbuf_fill (retval, 0x000000ff);
-	for (i = 1; i < height_r + 1; i++)
-		memset (data + (rowstride * i) + 4, 0xffffffff, width_r * 4);
+	if (fill_bg) {
+		for (i = 1; i < height_r + 1; i++)
+			memset (data + (rowstride * i) + 4, 0xffffffff, width_r * 4);
+	}
 
 	/* copy the source pixbuf */
 	if (source_pixbuf)
@@ -89,6 +92,22 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	data [(height_r + 3) * rowstride + 4 + 3] = 0;
 
 	return retval;
+}
+
+GdkPixbuf *
+ev_document_misc_get_thumbnail_frame (int        width,
+				      int        height,
+				      GdkPixbuf *source_pixbuf)
+{
+	return create_thumbnail_frame (width, height, source_pixbuf, TRUE);
+}
+
+GdkPixbuf *
+ev_document_misc_get_loading_thumbnail (int      width,
+					int      height,
+					gboolean inverted_colors)
+{
+	return create_thumbnail_frame (width, height, NULL, !inverted_colors);
 }
 
 void
