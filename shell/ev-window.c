@@ -5470,7 +5470,7 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 	state = gdk_window_get_state (GTK_WIDGET (window)->window);
 
 	if (!(state & GDK_WINDOW_STATE_FULLSCREEN)) {
-		if (!ev_window_is_empty (window) && window->priv->document) {
+		if (window->priv->document) {
 			ev_document_get_max_page_size (window->priv->document,
 						       &document_width, &document_height);
 			ev_metadata_set_double (window->priv->last_settings, "window_width_ratio",
