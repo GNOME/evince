@@ -369,6 +369,25 @@ ev_tmp_uri_unlink (const gchar *uri)
 	g_object_unref (file);
 }
 
+gboolean
+ev_file_is_temp (GFile *file)
+{
+	gchar   *path;
+	gboolean retval;
+
+	if (!g_file_is_native (file))
+		return FALSE;
+
+	path = g_file_get_path (file);
+	if (!path)
+		return FALSE;
+
+	retval = g_str_has_prefix (path, g_get_tmp_dir ());
+	g_free (path);
+
+	return retval;
+}
+
 /**
  * ev_xfer_uri_simple:
  * @from: the source URI

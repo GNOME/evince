@@ -49,7 +49,7 @@ gchar       *ev_mkdtemp               (const char        *template,
 void         ev_tmp_filename_unlink   (const gchar       *filename);
 void         ev_tmp_file_unlink       (GFile             *file);
 void         ev_tmp_uri_unlink        (const gchar       *uri);
-
+gboolean     ev_file_is_temp          (GFile             *file);
 gboolean     ev_xfer_uri_simple       (const char        *from,
 				       const char        *to,
 				       GError           **error);
