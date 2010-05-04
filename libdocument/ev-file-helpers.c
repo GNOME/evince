@@ -319,13 +319,13 @@ ev_mkdtemp (const char        *template,
 void
 ev_tmp_filename_unlink (const gchar *filename)
 {
-	const gchar *tempdir;
-	
 	if (!filename)
 		return;
 
-	tempdir = g_get_tmp_dir ();
-	if (g_str_has_prefix (filename, tempdir) == 0) {
+	if (!tmp_dir)
+		return;
+
+	if (g_str_has_prefix (filename, tmp_dir)) {
 		g_unlink (filename);
 	}
 }
