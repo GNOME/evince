@@ -768,6 +768,7 @@ AC_SUBST([EV_MINOR_VERSION],[ev_minor_version])
 AC_SUBST([EV_MICRO_VERSION],[ev_micro_version])
 
 AC_SUBST([EV_API_VERSION],[ev_api_version])
+AC_SUBST([EV_API_VERSION_U],[AS_TR_SH([ev_api_version])])
 AC_SUBST([EV_BINARY_VERSION],[ev_binary_version])
 
 AC_SUBST([EV_DOCUMENT_LT_VERSION_INFO],[ev_document_lt_version_info])
