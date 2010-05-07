@@ -151,7 +151,8 @@ struct _EvView {
 	gboolean dual_page;
 	gboolean fullscreen;
 	EvSizingMode sizing_mode;
-	cairo_surface_t *loading_text;
+	GtkWidget *loading_window;
+	guint loading_timeout;
 
 	/* Common for button press handling */
 	int pressed_button;

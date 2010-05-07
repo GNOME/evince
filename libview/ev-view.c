@@ -38,6 +38,7 @@
 #include "ev-view-marshal.h"
 #include "ev-document-annotations.h"
 #include "ev-annotation-window.h"
+#include "ev-loading-window.h"
 #include "ev-view.h"
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
@@ -190,12 +191,12 @@ static void       draw_one_page                              (EvView            
 							      GtkBorder          *border,
 							      GdkRectangle       *expose_area,
 							      gboolean		 *page_ready);
-static void	  draw_loading_text 			     (EvView             *view,
-							      GdkRectangle       *page_area,
-							      GdkRectangle       *expose_area);
+static void       show_loading_window                        (EvView             *view);
+static void       hide_loading_window                        (EvView             *view);
 static void       ev_view_reload_page                        (EvView             *view,
 							      gint                page,
 							      GdkRegion          *region);
+static void       ev_view_loading_window_move                (EvView             *view);
 
 /*** Callbacks ***/
 static void       ev_view_change_page                        (EvView             *view,
@@ -670,6 +671,7 @@ view_update_range_and_current_page (EvView *view)
 
 			if (view->current_page != best_current_page) {
 				view->current_page = best_current_page;
+				hide_loading_window (view);
 				ev_document_model_set_page (view->model, best_current_page);
 			}
 		}
@@ -3052,14 +3054,10 @@ ev_view_expose_event (GtkWidget      *widget,
 	gint     i;
 
 	if (view->loading) {
-		GdkRectangle area = {0};
-		
-		area.width = widget->allocation.width;
-		area.height = widget->allocation.height;
-
-		draw_loading_text (view,
-				   &area,
-				   &(event->area));
+		show_loading_window (view);
+	} else if (view->loading_window &&
+		   gtk_widget_get_visible (view->loading_window)) {
+		ev_view_loading_window_move (view);
 	}
 
 	if (view->document == NULL)
@@ -3915,65 +3913,78 @@ highlight_find_results (EvView *view, int page)
 }
 
 static void
-draw_loading_text (EvView       *view,
-		   GdkRectangle *page_area,
-		   GdkRectangle *expose_area)
+ev_view_loading_window_move (EvView *view)
 {
-	cairo_t *cr;
-	gint     width, height;
+	GtkWidget       *widget = GTK_WIDGET (view);
+	EvLoadingWindow *window = EV_LOADING_WINDOW (view->loading_window);
+	gint             root_x, root_y;
+	gint             window_width;
+	GtkAllocation    allocation;
 
-	if (!view->loading_text) {
-		const gchar *loading_text = _("Loading…");
-		PangoLayout *layout;
-		PangoFontDescription *font_desc;
-		PangoRectangle logical_rect;
-		gint target_width;
-		gdouble real_scale;
+	gtk_widget_get_allocation (widget, &allocation);
+	gdk_window_get_origin (gtk_widget_get_window (widget), &root_x, &root_y);
+	ev_loading_window_get_size (window, &window_width, NULL);
 
-		ev_document_fc_mutex_lock ();
+	root_x += allocation.width - window_width - 10;
+	root_y += 10;
 
-		layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), loading_text);
-		
-		font_desc = pango_font_description_new ();
-		
-		/* We set the font to be 10 points, get the size, and scale appropriately */
-		pango_font_description_set_size (font_desc, 10 * PANGO_SCALE);
-		pango_layout_set_font_description (layout, font_desc);
-		pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+	ev_loading_window_move (window, root_x, root_y);
+}
 
-		target_width = MAX (page_area->width / 2, 1);
-		real_scale = ((double)target_width / (double) logical_rect.width) * (PANGO_SCALE * 10);
-		pango_font_description_set_size (font_desc, (int)real_scale);
-		pango_layout_set_font_description (layout, font_desc);
-		pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+static gboolean
+show_loading_window_cb (EvView *view)
+{
+	if (!view->loading_window) {
+		GtkWindow *parent;
+		GdkScreen *screen;
 
-		view->loading_text = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
-								 logical_rect.width,
-								 logical_rect.height);
-		cr = cairo_create (view->loading_text);
-		cairo_set_source_rgb (cr,
-				      155 / (double)255,
-				      155 / (double)255,
-				      155 / (double)255);
-		pango_cairo_show_layout (cr, layout);
-		cairo_destroy (cr);
+		parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+		view->loading_window = ev_loading_window_new (parent);
 
-		pango_font_description_free (font_desc);
-		g_object_unref (layout);
-
-		ev_document_fc_mutex_unlock ();
+		/* Show the window off screen to get a valid size asap */
+		screen = gtk_widget_get_screen (GTK_WIDGET (view));
+		gtk_window_move (GTK_WINDOW (view->loading_window),
+				 gdk_screen_get_width (screen) + 1,
+				 gdk_screen_get_height (screen) + 1);
+		gtk_widget_show (view->loading_window);
 	}
 
-	width = (page_area->width - cairo_image_surface_get_width (view->loading_text)) / 2;
-	height = (page_area->height - cairo_image_surface_get_height (view->loading_text)) / 2;
-	
-	cr = gdk_cairo_create (view->layout.bin_window);
-	cairo_translate (cr,
-			 page_area->x + width,
-			 page_area->y + height);
-	cairo_set_source_surface (cr, view->loading_text, 0, 0);
-	cairo_paint (cr);
-	cairo_destroy (cr);
+	ev_view_loading_window_move (view);
+
+	gtk_widget_show (view->loading_window);
+
+	view->loading_timeout = 0;
+
+	return FALSE;
+}
+
+static void
+show_loading_window (EvView *view)
+{
+	if (view->loading_window && gtk_widget_get_visible (view->loading_window)) {
+		ev_view_loading_window_move (view);
+		return;
+	}
+
+	if (!view->loading_timeout) {
+		view->loading_timeout =
+			g_timeout_add_full (G_PRIORITY_LOW,
+					    0.5, (GSourceFunc)show_loading_window_cb,
+					    view, NULL);
+	}
+}
+
+static void
+hide_loading_window (EvView *view)
+{
+	if (view->loading_timeout) {
+		g_source_remove (view->loading_timeout);
+		view->loading_timeout = 0;
+	}
+
+	if (view->loading_window && gtk_widget_get_visible (view->loading_window)) {
+		gtk_widget_hide (view->loading_window);
+	}
 }
 
 static void
@@ -4022,14 +4033,16 @@ draw_one_page (EvView       *view,
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
 		if (!page_surface) {
-			draw_loading_text (view,
-					   &real_page_area,
-					   expose_area);
+			if (page == current_page)
+				show_loading_window (view);
 
 			*page_ready = FALSE;
 
 			return;
 		}
+
+		if (page == current_page)
+			hide_loading_window (view);
 
 		ev_view_get_page_size (view, page, &width, &height);
 
@@ -4145,11 +4158,6 @@ ev_view_destroy (GtkObject *object)
 	    view->selection_update_id = 0;
 	}
 
-	if (view->loading_text) {
-		cairo_surface_destroy (view->loading_text);
-		view->loading_text = NULL;
-	}
-
 	if (view->scroll_info.timeout_id) {
 	    g_source_remove (view->scroll_info.timeout_id);
 	    view->scroll_info.timeout_id = 0;
@@ -4163,6 +4171,11 @@ ev_view_destroy (GtkObject *object)
 	if (view->drag_info.release_timeout_id) {
 		g_source_remove (view->drag_info.release_timeout_id);
 		view->drag_info.release_timeout_id = 0;
+	}
+
+	if (view->loading_timeout) {
+		g_source_remove (view->loading_timeout);
+		view->loading_timeout = 0;
 	}
 
 	ev_view_set_scroll_adjustments (GTK_LAYOUT (view), NULL, NULL);
@@ -4341,6 +4354,8 @@ ev_view_change_page (EvView *view,
 
 	view->current_page = new_page;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+
+	hide_loading_window (view);
 
 	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
@@ -4649,11 +4664,6 @@ ev_view_scale_changed_cb (EvDocumentModel *model,
 
 	if (ABS (view->scale - scale) < EPSILON)
 		return;
-
-	if (view->loading_text) {
-		cairo_surface_destroy (view->loading_text);
-		view->loading_text = NULL;
-	}
 
 	view->scale = scale;
 
