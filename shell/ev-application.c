@@ -635,13 +635,9 @@ ev_application_open_uri_in_window (EvApplication  *application,
 		timestamp = gdk_x11_get_server_time (gdk_window);
 	gdk_x11_window_set_user_time (gdk_window, timestamp);
 
-	ev_document_fc_mutex_lock ();
 	gtk_window_present (GTK_WINDOW (ev_window));
-	ev_document_fc_mutex_unlock ();
 #else
-	ev_document_fc_mutex_lock ();
 	gtk_window_present_with_time (GTK_WINDOW (ev_window), timestamp);
-	ev_document_fc_mutex_unlock ();
 #endif /* GDK_WINDOWING_X11 */
 }
 
