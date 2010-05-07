@@ -34,10 +34,10 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_SELECTION            (ev_selection_get_type ())
 #define EV_SELECTION(o)		     (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_SELECTION, EvSelection))
-#define EV_SELECTION_IFACE(k)	     (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_SELECTION, EvSelectionIface))
+#define EV_SELECTION_IFACE(k)	     (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_SELECTION, EvSelectionInterface))
 #define EV_IS_SELECTION(o)	     (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_SELECTION))
 #define EV_IS_SELECTION_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_SELECTION))
-#define EV_SELECTION_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_SELECTION, EvSelectionIface))
+#define EV_SELECTION_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_SELECTION, EvSelectionInterface))
 
 typedef enum {
 	EV_SELECTION_STYLE_GLYPH,
@@ -45,10 +45,10 @@ typedef enum {
 	EV_SELECTION_STYLE_LINE
 } EvSelectionStyle;
 
-typedef struct _EvSelection	  EvSelection;
-typedef struct _EvSelectionIface   EvSelectionIface;
+typedef struct _EvSelection	       EvSelection;
+typedef struct _EvSelectionInterface   EvSelectionInterface;
 
-struct _EvSelectionIface
+struct _EvSelectionInterface
 {
 	GTypeInterface base_iface;
 

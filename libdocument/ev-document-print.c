@@ -23,10 +23,10 @@
 #include "ev-document.h"
 #include "ev-document-print.h"
 
-EV_DEFINE_INTERFACE (EvDocumentPrint, ev_document_print, 0)
+G_DEFINE_INTERFACE (EvDocumentPrint, ev_document_print, 0)
 
 static void
-ev_document_print_class_init (EvDocumentPrintIface *klass)
+ev_document_print_default_init (EvDocumentPrintInterface *klass)
 {
 }
 
@@ -35,7 +35,7 @@ ev_document_print_print_page (EvDocumentPrint *document_print,
 			      EvPage          *page,
 			      cairo_t         *cr)
 {
-	EvDocumentPrintIface *iface = EV_DOCUMENT_PRINT_GET_IFACE (document_print);
+	EvDocumentPrintInterface *iface = EV_DOCUMENT_PRINT_GET_IFACE (document_print);
 
 	iface->print_page (document_print, page, cr);
 }

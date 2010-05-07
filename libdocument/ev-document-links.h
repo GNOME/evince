@@ -39,13 +39,13 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_LINKS		  (ev_document_links_get_type ())
 #define EV_DOCUMENT_LINKS(o)		  (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinks))
-#define EV_DOCUMENT_LINKS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksIface))
+#define EV_DOCUMENT_LINKS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksInterface))
 #define EV_IS_DOCUMENT_LINKS(o)		  (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_LINKS))
 #define EV_IS_DOCUMENT_LINKS_IFACE(k)	  (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_LINKS))
-#define EV_DOCUMENT_LINKS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksIface))
+#define EV_DOCUMENT_LINKS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksInterface))
 
-typedef struct _EvDocumentLinks	     EvDocumentLinks;
-typedef struct _EvDocumentLinksIface EvDocumentLinksIface;
+typedef struct _EvDocumentLinks	         EvDocumentLinks;
+typedef struct _EvDocumentLinksInterface EvDocumentLinksInterface;
 
 enum {
 	EV_DOCUMENT_LINKS_COLUMN_MARKUP,
@@ -55,7 +55,7 @@ enum {
 	EV_DOCUMENT_LINKS_COLUMN_NUM_COLUMNS
 };
 
-struct _EvDocumentLinksIface
+struct _EvDocumentLinksInterface
 {
 	GTypeInterface base_iface;
 

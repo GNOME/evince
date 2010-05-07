@@ -41,8 +41,8 @@ struct _PSDocumentClass {
 	EvDocumentClass parent_class;
 };
 
-static void ps_document_file_exporter_iface_init       (EvFileExporterIface       *iface);
-static void ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void ps_document_file_exporter_iface_init       (EvFileExporterInterface       *iface);
+static void ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (PSDocument, ps_document,
                          {
@@ -401,7 +401,7 @@ ps_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails
 }
 
 static void
-ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = ps_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = ps_document_thumbnails_get_dimensions;
@@ -464,7 +464,7 @@ ps_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 }
 
 static void
-ps_document_file_exporter_iface_init (EvFileExporterIface *iface)
+ps_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 {
 	iface->begin = ps_document_file_exporter_begin;
 	iface->do_page = ps_document_file_exporter_do_page;

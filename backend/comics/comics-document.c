@@ -119,7 +119,7 @@ static const ComicBookDecompressCommand command_usage_def[] = {
 	{"%s -xOf"          , "%s -tf %s"      , NULL             , NO_OFFSET}
 };
 
-static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
 
 static GSList*    get_supported_image_extensions (void);
 static void       get_page_size_area_prepared_cb (GdkPixbufLoader *loader,
@@ -820,7 +820,7 @@ comics_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 }
 
 static void
-comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = comics_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = comics_document_thumbnails_get_dimensions;

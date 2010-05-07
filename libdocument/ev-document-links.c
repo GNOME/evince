@@ -25,17 +25,17 @@
 
 #include "ev-document-links.h"
 
-EV_DEFINE_INTERFACE (EvDocumentLinks, ev_document_links, 0)
+G_DEFINE_INTERFACE (EvDocumentLinks, ev_document_links, 0)
 
 static void
-ev_document_links_class_init (EvDocumentLinksIface *klass)
+ev_document_links_default_init (EvDocumentLinksInterface *klass)
 {
 }
 
 gboolean
 ev_document_links_has_document_links (EvDocumentLinks *document_links)
 {
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvDocumentLinksInterface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 	gboolean retval;
 
 	retval = iface->has_document_links (document_links);
@@ -46,7 +46,7 @@ ev_document_links_has_document_links (EvDocumentLinks *document_links)
 GtkTreeModel *
 ev_document_links_get_links_model (EvDocumentLinks *document_links)
 {
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvDocumentLinksInterface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 	GtkTreeModel *retval;
 
 	retval = iface->get_links_model (document_links);
@@ -58,7 +58,7 @@ GList *
 ev_document_links_get_links (EvDocumentLinks *document_links,
 			     EvPage          *page)
 {
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvDocumentLinksInterface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 	GList *retval;
 
 	retval = iface->get_links (document_links, page);
@@ -70,7 +70,7 @@ EvLinkDest *
 ev_document_links_find_link_dest (EvDocumentLinks *document_links,
 				  const gchar     *link_name)
 {
-	EvDocumentLinksIface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	EvDocumentLinksInterface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
 	EvLinkDest *retval;
 
 	ev_document_doc_mutex_lock ();

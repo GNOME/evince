@@ -35,15 +35,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_FIND	    (ev_document_find_get_type ())
 #define EV_DOCUMENT_FIND(o)		    (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_FIND, EvDocumentFind))
-#define EV_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FIND, EvDocumentFindIface))
+#define EV_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FIND, EvDocumentFindInterface))
 #define EV_IS_DOCUMENT_FIND(o)	    (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_FIND))
 #define EV_IS_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_FIND))
-#define EV_DOCUMENT_FIND_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FIND, EvDocumentFindIface))
+#define EV_DOCUMENT_FIND_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FIND, EvDocumentFindInterface))
 
-typedef struct _EvDocumentFind	    EvDocumentFind;
-typedef struct _EvDocumentFindIface EvDocumentFindIface;
+typedef struct _EvDocumentFind	        EvDocumentFind;
+typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
 
-struct _EvDocumentFindIface
+struct _EvDocumentFindInterface
 {
 	GTypeInterface base_iface;
 

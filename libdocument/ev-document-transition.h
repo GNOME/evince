@@ -34,15 +34,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_TRANSITION	       (ev_document_transition_get_type ())
 #define EV_DOCUMENT_TRANSITION(o)	       (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_TRANSITION, EvDocumentTransition))
-#define EV_DOCUMENT_TRANSITION_IFACE(k)	       (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_TRANSITION, EvDocumentTransitionIface))
+#define EV_DOCUMENT_TRANSITION_IFACE(k)	       (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_TRANSITION, EvDocumentTransitionInterface))
 #define EV_IS_DOCUMENT_TRANSITION(o)	       (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_TRANSITION))
 #define EV_IS_DOCUMENT_TRANSITION_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_TRANSITION))
-#define EV_DOCUMENT_TRANSITION_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_TRANSITION, EvDocumentTransitionIface))
+#define EV_DOCUMENT_TRANSITION_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_TRANSITION, EvDocumentTransitionInterface))
 
-typedef struct _EvDocumentTransition      EvDocumentTransition;
-typedef struct _EvDocumentTransitionIface EvDocumentTransitionIface;
+typedef struct _EvDocumentTransition          EvDocumentTransition;
+typedef struct _EvDocumentTransitionInterface EvDocumentTransitionInterface;
 
-struct _EvDocumentTransitionIface
+struct _EvDocumentTransitionInterface
 {
 	GTypeInterface base_iface;
 

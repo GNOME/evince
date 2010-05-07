@@ -21,10 +21,10 @@
 #include <config.h>
 #include "ev-document-images.h"
 
-EV_DEFINE_INTERFACE (EvDocumentImages, ev_document_images, 0)
+G_DEFINE_INTERFACE (EvDocumentImages, ev_document_images, 0)
 
 static void
-ev_document_images_class_init (EvDocumentImagesIface *klass)
+ev_document_images_default_init (EvDocumentImagesInterface *klass)
 {
 }
 
@@ -32,7 +32,7 @@ GList *
 ev_document_images_get_image_mapping (EvDocumentImages *document_images,
 				      EvPage           *page)
 {
-	EvDocumentImagesIface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
+	EvDocumentImagesInterface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
 
 	return iface->get_image_mapping (document_images, page);
 }
@@ -41,7 +41,7 @@ GdkPixbuf *
 ev_document_images_get_image (EvDocumentImages *document_images,
 			      EvImage          *image)
 {
-	EvDocumentImagesIface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
+	EvDocumentImagesInterface *iface = EV_DOCUMENT_IMAGES_GET_IFACE (document_images);
 
 	return iface->get_image (document_images, image);
 }

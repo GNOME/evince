@@ -32,15 +32,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_ATTACHMENTS		(ev_document_attachments_get_type ())
 #define EV_DOCUMENT_ATTACHMENTS(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachments))
-#define EV_DOCUMENT_ATTACHMENTS_IFACE(k)	(G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachmentsIface))
+#define EV_DOCUMENT_ATTACHMENTS_IFACE(k)	(G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachmentsInterface))
 #define EV_IS_DOCUMENT_ATTACHMENTS(o)	        (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_ATTACHMENTS))
 #define EV_IS_DOCUMENT_ATTACHMENTS_IFACE(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_ATTACHMENTS))
-#define EV_DOCUMENT_ATTACHMENTS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachmentsIface))
+#define EV_DOCUMENT_ATTACHMENTS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachmentsInterface))
 
-typedef struct _EvDocumentAttachments      EvDocumentAttachments;
-typedef struct _EvDocumentAttachmentsIface EvDocumentAttachmentsIface;
+typedef struct _EvDocumentAttachments          EvDocumentAttachments;
+typedef struct _EvDocumentAttachmentsInterface EvDocumentAttachmentsInterface;
 
-struct _EvDocumentAttachmentsIface
+struct _EvDocumentAttachmentsInterface
 {
 	GTypeInterface base_iface;
 

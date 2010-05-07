@@ -23,17 +23,17 @@
 #include "ev-document-attachments.h"
 #include "ev-document.h"
 
-EV_DEFINE_INTERFACE (EvDocumentAttachments, ev_document_attachments, 0)
+G_DEFINE_INTERFACE (EvDocumentAttachments, ev_document_attachments, 0)
 
 static void
-ev_document_attachments_class_init (EvDocumentAttachmentsIface *klass)
+ev_document_attachments_default_init (EvDocumentAttachmentsInterface *klass)
 {
 }
 
 gboolean
 ev_document_attachments_has_attachments (EvDocumentAttachments *document_attachments)
 {
-	EvDocumentAttachmentsIface *iface = EV_DOCUMENT_ATTACHMENTS_GET_IFACE (document_attachments);
+	EvDocumentAttachmentsInterface *iface = EV_DOCUMENT_ATTACHMENTS_GET_IFACE (document_attachments);
 
 	return iface->has_attachments (document_attachments);
 }
@@ -41,7 +41,7 @@ ev_document_attachments_has_attachments (EvDocumentAttachments *document_attachm
 GList *
 ev_document_attachments_get_attachments (EvDocumentAttachments *document_attachments)
 {
-	EvDocumentAttachmentsIface *iface = EV_DOCUMENT_ATTACHMENTS_GET_IFACE (document_attachments);
+	EvDocumentAttachmentsInterface *iface = EV_DOCUMENT_ATTACHMENTS_GET_IFACE (document_attachments);
 
 	return iface->get_attachments (document_attachments);
 }

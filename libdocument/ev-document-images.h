@@ -35,15 +35,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_IMAGES            (ev_document_images_get_type ())
 #define EV_DOCUMENT_IMAGES(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_IMAGES, EvDocumentImages))
-#define EV_DOCUMENT_IMAGES_IFACE(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_IMAGES, EvDocumentImagesIface))
+#define EV_DOCUMENT_IMAGES_IFACE(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_IMAGES, EvDocumentImagesInterface))
 #define EV_IS_DOCUMENT_IMAGES(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_IMAGES))
 #define EV_IS_DOCUMENT_IMAGES_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_IMAGES))
-#define EV_DOCUMENT_IMAGES_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_IMAGES, EvDocumentImagesIface))
+#define EV_DOCUMENT_IMAGES_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_IMAGES, EvDocumentImagesInterface))
 
-typedef struct _EvDocumentImages      EvDocumentImages;
-typedef struct _EvDocumentImagesIface EvDocumentImagesIface;
+typedef struct _EvDocumentImages          EvDocumentImages;
+typedef struct _EvDocumentImagesInterface EvDocumentImagesInterface;
 
-struct _EvDocumentImagesIface {
+struct _EvDocumentImagesInterface {
         GTypeInterface base_iface;
 
         /* Methods  */

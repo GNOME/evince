@@ -33,15 +33,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_ASYNC_RENDERER	          (ev_async_renderer_get_type ())
 #define EV_ASYNC_RENDERER(o)		  (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_ASYNC_RENDERER, EvAsyncRenderer))
-#define EV_ASYNC_RENDERER_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_ASYNC_RENDERER, EvAsyncRendererIface))
+#define EV_ASYNC_RENDERER_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_ASYNC_RENDERER, EvAsyncRendererInterface))
 #define EV_IS_ASYNC_RENDERER(o)		  (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_ASYNC_RENDERER))
 #define EV_IS_ASYNC_RENDERER_IFACE(k)	  (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_ASYNC_RENDERER))
-#define EV_ASYNC_RENDERER_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_ASYNC_RENDERER, EvAsyncRendererIface))
+#define EV_ASYNC_RENDERER_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_ASYNC_RENDERER, EvAsyncRendererInterface))
 
-typedef struct _EvAsyncRenderer	  EvAsyncRenderer;
-typedef struct _EvAsyncRendererIface   EvAsyncRendererIface;
+typedef struct _EvAsyncRenderer	           EvAsyncRenderer;
+typedef struct _EvAsyncRendererInterface   EvAsyncRendererInterface;
 
-struct _EvAsyncRendererIface
+struct _EvAsyncRendererInterface
 {
 	GTypeInterface base_iface;
 

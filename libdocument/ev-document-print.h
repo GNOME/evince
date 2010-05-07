@@ -30,15 +30,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_PRINT		   (ev_document_print_get_type ())
 #define EV_DOCUMENT_PRINT(o)		   (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrint))
-#define EV_DOCUMENT_PRINT_IFACE(k)	   (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrintIface))
+#define EV_DOCUMENT_PRINT_IFACE(k)	   (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrintInterface))
 #define EV_IS_DOCUMENT_PRINT(o)	           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_PRINT))
 #define EV_IS_DOCUMENT_PRINT_IFACE(k)	   (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_PRINT))
-#define EV_DOCUMENT_PRINT_GET_IFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrintIface))
+#define EV_DOCUMENT_PRINT_GET_IFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrintInterface))
 
-typedef struct _EvDocumentPrint      EvDocumentPrint;
-typedef struct _EvDocumentPrintIface EvDocumentPrintIface;
+typedef struct _EvDocumentPrint          EvDocumentPrint;
+typedef struct _EvDocumentPrintInterface EvDocumentPrintInterface;
 
-struct _EvDocumentPrintIface
+struct _EvDocumentPrintInterface
 {
 	GTypeInterface base_iface;
 

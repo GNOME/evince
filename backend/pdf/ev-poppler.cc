@@ -122,27 +122,27 @@ struct _PdfDocument
 	GList *layers;
 };
 
-static void pdf_document_security_iface_init             (EvDocumentSecurityIface    *iface);
-static void pdf_document_document_thumbnails_iface_init  (EvDocumentThumbnailsIface  *iface);
-static void pdf_document_document_links_iface_init       (EvDocumentLinksIface       *iface);
-static void pdf_document_document_images_iface_init      (EvDocumentImagesIface      *iface);
-static void pdf_document_document_forms_iface_init       (EvDocumentFormsIface       *iface);
-static void pdf_document_document_fonts_iface_init       (EvDocumentFontsIface       *iface);
-static void pdf_document_document_layers_iface_init      (EvDocumentLayersIface      *iface);
+static void pdf_document_security_iface_init             (EvDocumentSecurityInterface    *iface);
+static void pdf_document_document_thumbnails_iface_init  (EvDocumentThumbnailsInterface  *iface);
+static void pdf_document_document_links_iface_init       (EvDocumentLinksInterface       *iface);
+static void pdf_document_document_images_iface_init      (EvDocumentImagesInterface      *iface);
+static void pdf_document_document_forms_iface_init       (EvDocumentFormsInterface       *iface);
+static void pdf_document_document_fonts_iface_init       (EvDocumentFontsInterface       *iface);
+static void pdf_document_document_layers_iface_init      (EvDocumentLayersInterface      *iface);
 #ifdef HAVE_POPPLER_PAGE_RENDER
-static void pdf_document_document_print_iface_init       (EvDocumentPrintIface       *iface);
+static void pdf_document_document_print_iface_init       (EvDocumentPrintInterface       *iface);
 #endif
-static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface);
-static void pdf_document_document_attachments_iface_init (EvDocumentAttachmentsIface *iface);
-static void pdf_document_find_iface_init                 (EvDocumentFindIface        *iface);
-static void pdf_document_file_exporter_iface_init        (EvFileExporterIface        *iface);
-static void pdf_selection_iface_init                     (EvSelectionIface           *iface);
-static void pdf_document_page_transition_iface_init      (EvDocumentTransitionIface  *iface);
-static void pdf_document_thumbnails_get_dimensions       (EvDocumentThumbnails       *document_thumbnails,
-							  EvRenderContext            *rc,
-							  gint                       *width,
-							  gint                       *height);
-static int  pdf_document_get_n_pages			 (EvDocument                 *document);
+static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface);
+static void pdf_document_document_attachments_iface_init (EvDocumentAttachmentsInterface *iface);
+static void pdf_document_find_iface_init                 (EvDocumentFindInterface        *iface);
+static void pdf_document_file_exporter_iface_init        (EvFileExporterInterface        *iface);
+static void pdf_selection_iface_init                     (EvSelectionInterface           *iface);
+static void pdf_document_page_transition_iface_init      (EvDocumentTransitionInterface  *iface);
+static void pdf_document_thumbnails_get_dimensions       (EvDocumentThumbnails           *document_thumbnails,
+							  EvRenderContext                *rc,
+							  gint                           *width,
+							  gint                           *height);
+static int  pdf_document_get_n_pages			 (EvDocument                     *document);
 
 static EvLinkDest *ev_link_dest_from_dest    (PdfDocument       *pdf_document,
 					      PopplerDest       *dest);
@@ -893,7 +893,7 @@ pdf_document_set_password (EvDocumentSecurity *document_security,
 }
 
 static void
-pdf_document_security_iface_init (EvDocumentSecurityIface *iface)
+pdf_document_security_iface_init (EvDocumentSecurityInterface *iface)
 {
 	iface->has_document_security = pdf_document_has_document_security;
 	iface->set_password = pdf_document_set_password;
@@ -1013,7 +1013,7 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 }
 
 static void
-pdf_document_document_fonts_iface_init (EvDocumentFontsIface *iface)
+pdf_document_document_fonts_iface_init (EvDocumentFontsInterface *iface)
 {
 	iface->fill_model = pdf_document_fonts_fill_model;
 	iface->scan = pdf_document_fonts_scan;
@@ -1340,7 +1340,7 @@ pdf_document_links_find_link_dest (EvDocumentLinks  *document_links,
 }
 
 static void
-pdf_document_document_links_iface_init (EvDocumentLinksIface *iface)
+pdf_document_document_links_iface_init (EvDocumentLinksInterface *iface)
 {
 	iface->has_document_links = pdf_document_links_has_document_links;
 	iface->get_links_model = pdf_document_links_get_links_model;
@@ -1410,7 +1410,7 @@ pdf_document_images_get_image (EvDocumentImages *document_images,
 }
 
 static void
-pdf_document_document_images_iface_init (EvDocumentImagesIface *iface)
+pdf_document_document_images_iface_init (EvDocumentImagesInterface *iface)
 {
 	iface->get_image_mapping = pdf_document_images_get_image_mapping;
 	iface->get_image = pdf_document_images_get_image;
@@ -1531,7 +1531,7 @@ pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnail
 }
 
 static void
-pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = pdf_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = pdf_document_thumbnails_get_dimensions;
@@ -1571,7 +1571,7 @@ pdf_document_find_find_text (EvDocumentFind *document_find,
 }
 
 static void
-pdf_document_find_iface_init (EvDocumentFindIface *iface)
+pdf_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = pdf_document_find_find_text;
 }
@@ -1855,7 +1855,7 @@ pdf_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 }
 
 static void
-pdf_document_file_exporter_iface_init (EvFileExporterIface *iface)
+pdf_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 {
         iface->begin = pdf_document_file_exporter_begin;
 	iface->begin_page = pdf_document_file_exporter_begin_page;
@@ -1878,7 +1878,7 @@ pdf_document_print_print_page (EvDocumentPrint *document,
 }
 
 static void
-pdf_document_document_print_iface_init (EvDocumentPrintIface *iface)
+pdf_document_document_print_iface_init (EvDocumentPrintInterface *iface)
 {
 	iface->print_page = pdf_document_print_print_page;
 }
@@ -2057,7 +2057,7 @@ pdf_selection_get_selection_map (EvSelection *selection,
 }
 
 static void
-pdf_selection_iface_init (EvSelectionIface *iface)
+pdf_selection_iface_init (EvSelectionInterface *iface)
 {
         iface->render_selection = pdf_selection_render_selection;
 	iface->get_selected_text = pdf_selection_get_selected_text;
@@ -2124,7 +2124,7 @@ pdf_document_get_effect (EvDocumentTransition *trans,
 }
 
 static void
-pdf_document_page_transition_iface_init (EvDocumentTransitionIface *iface)
+pdf_document_page_transition_iface_init (EvDocumentTransitionInterface *iface)
 {
 	iface->get_page_duration = pdf_document_get_page_duration;
 	iface->get_effect = pdf_document_get_effect;
@@ -2490,7 +2490,7 @@ pdf_document_forms_form_field_choice_get_text (EvDocumentForms *document,
 }
 
 static void
-pdf_document_document_forms_iface_init (EvDocumentFormsIface *iface)
+pdf_document_document_forms_iface_init (EvDocumentFormsInterface *iface)
 {
 	iface->get_form_fields = pdf_document_forms_get_form_fields;
 	iface->form_field_text_get_text = pdf_document_forms_form_field_text_get_text;
@@ -2724,7 +2724,7 @@ pdf_document_annotations_annotation_set_contents (EvDocumentAnnotations *documen
 }
 
 static void
-pdf_document_document_annotations_iface_init (EvDocumentAnnotationsIface *iface)
+pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface)
 {
 	iface->get_annotations = pdf_document_annotations_get_annotations;
 	iface->annotation_set_contents = pdf_document_annotations_annotation_set_contents;
@@ -2841,7 +2841,7 @@ pdf_document_attachments_has_attachments (EvDocumentAttachments *document)
 }
 
 static void
-pdf_document_document_attachments_iface_init (EvDocumentAttachmentsIface *iface)
+pdf_document_document_attachments_iface_init (EvDocumentAttachmentsInterface *iface)
 {
 	iface->has_attachments = pdf_document_attachments_has_attachments;
 	iface->get_attachments = pdf_document_attachments_get_attachments;
@@ -2971,7 +2971,7 @@ pdf_document_layers_layer_is_visible (EvDocumentLayers *document,
 }
 
 static void
-pdf_document_document_layers_iface_init (EvDocumentLayersIface *iface)
+pdf_document_document_layers_iface_init (EvDocumentLayersInterface *iface)
 {
 	iface->has_layers = pdf_document_layers_has_layers;
 	iface->get_layers = pdf_document_layers_get_layers;

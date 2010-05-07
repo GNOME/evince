@@ -21,10 +21,10 @@
 #include <config.h>
 #include "ev-document-transition.h"
 
-EV_DEFINE_INTERFACE (EvDocumentTransition, ev_document_transition, 0)
+G_DEFINE_INTERFACE (EvDocumentTransition, ev_document_transition, 0)
 
 static void
-ev_document_transition_class_init (EvDocumentTransitionIface *klass)
+ev_document_transition_default_init (EvDocumentTransitionInterface *klass)
 {
 }
 
@@ -32,7 +32,7 @@ gdouble
 ev_document_transition_get_page_duration (EvDocumentTransition *document_trans,
 					  gint                  page)
 {
-	EvDocumentTransitionIface *iface = EV_DOCUMENT_TRANSITION_GET_IFACE (document_trans);
+	EvDocumentTransitionInterface *iface = EV_DOCUMENT_TRANSITION_GET_IFACE (document_trans);
 
 	if (iface->get_page_duration)
 		return iface->get_page_duration (document_trans, page);
@@ -44,7 +44,7 @@ EvTransitionEffect *
 ev_document_transition_get_effect (EvDocumentTransition *document_trans,
 				   gint                  page)
 {
-	EvDocumentTransitionIface *iface = EV_DOCUMENT_TRANSITION_GET_IFACE (document_trans);
+	EvDocumentTransitionInterface *iface = EV_DOCUMENT_TRANSITION_GET_IFACE (document_trans);
 	EvTransitionEffect *effect = NULL;
 
 	if (iface->get_effect)

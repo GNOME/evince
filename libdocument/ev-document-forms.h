@@ -34,15 +34,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_FORMS	          (ev_document_forms_get_type ())
 #define EV_DOCUMENT_FORMS(o)	          (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_FORMS, EvDocumentForms))
-#define EV_DOCUMENT_FORMS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FORMS, EvDocumentFormsIface))
+#define EV_DOCUMENT_FORMS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FORMS, EvDocumentFormsInterface))
 #define EV_IS_DOCUMENT_FORMS(o)	          (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_FORMS))
 #define EV_IS_DOCUMENT_FORMS_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_FORMS))
-#define EV_DOCUMENT_FORMS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FORMS, EvDocumentFormsIface))
+#define EV_DOCUMENT_FORMS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FORMS, EvDocumentFormsInterface))
 
-typedef struct _EvDocumentForms      EvDocumentForms;
-typedef struct _EvDocumentFormsIface EvDocumentFormsIface;
+typedef struct _EvDocumentForms          EvDocumentForms;
+typedef struct _EvDocumentFormsInterface EvDocumentFormsInterface;
 
-struct _EvDocumentFormsIface
+struct _EvDocumentFormsInterface
 {
 	GTypeInterface base_iface;
 

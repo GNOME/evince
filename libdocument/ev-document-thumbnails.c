@@ -22,10 +22,10 @@
 #include "ev-document-thumbnails.h"
 #include "ev-document.h"
 
-EV_DEFINE_INTERFACE (EvDocumentThumbnails, ev_document_thumbnails, 0)
+G_DEFINE_INTERFACE (EvDocumentThumbnails, ev_document_thumbnails, 0)
 
 static void
-ev_document_thumbnails_class_init (EvDocumentThumbnailsIface *klass)
+ev_document_thumbnails_default_init (EvDocumentThumbnailsInterface *klass)
 {
 }
 
@@ -34,7 +34,7 @@ ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 				      EvRenderContext      *rc,
 				      gboolean              border)
 {
-	EvDocumentThumbnailsIface *iface;
+	EvDocumentThumbnailsInterface *iface;
 
 	g_return_val_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document), NULL);
 	g_return_val_if_fail (EV_IS_RENDER_CONTEXT (rc), NULL);
@@ -50,7 +50,7 @@ ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 				       gint                 *width,
 				       gint                 *height)
 {
-	EvDocumentThumbnailsIface *iface;
+	EvDocumentThumbnailsInterface *iface;
 
 	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
 	g_return_if_fail (EV_IS_RENDER_CONTEXT (rc));

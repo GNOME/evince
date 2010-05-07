@@ -51,11 +51,11 @@ struct _DjvuDocumentClass
 
 typedef struct _DjvuDocumentClass DjvuDocumentClass;
 
-static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-static void djvu_document_file_exporter_iface_init (EvFileExporterIface *iface);
-static void djvu_document_find_iface_init (EvDocumentFindIface *iface);
-static void djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface);
-static void djvu_selection_iface_init (EvSelectionIface *iface);
+static void djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
+static void djvu_document_file_exporter_iface_init (EvFileExporterInterface *iface);
+static void djvu_document_find_iface_init (EvDocumentFindInterface *iface);
+static void djvu_document_document_links_iface_init  (EvDocumentLinksInterface *iface);
+static void djvu_selection_iface_init (EvSelectionInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (DjvuDocument, djvu_document,
     {
@@ -468,7 +468,7 @@ djvu_selection_get_selected_text (EvSelection     *selection,
 }
 
 static void
-djvu_selection_iface_init (EvSelectionIface *iface)
+djvu_selection_iface_init (EvSelectionInterface *iface)
 {
 	iface->get_selected_text = djvu_selection_get_selected_text;
 }
@@ -541,7 +541,7 @@ djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 }
 
 static void
-djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = djvu_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = djvu_document_thumbnails_get_dimensions;
@@ -605,7 +605,7 @@ djvu_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 }
 
 static void
-djvu_document_file_exporter_iface_init (EvFileExporterIface *iface)
+djvu_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 {
         iface->begin = djvu_document_file_exporter_begin;
         iface->do_page = djvu_document_file_exporter_do_page;
@@ -684,7 +684,7 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 }
 
 static void
-djvu_document_find_iface_init (EvDocumentFindIface *iface)
+djvu_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = djvu_document_find_find_text;
 }
@@ -697,7 +697,7 @@ djvu_document_links_get_links (EvDocumentLinks *document_links,
 }
 
 static void
-djvu_document_document_links_iface_init  (EvDocumentLinksIface *iface)
+djvu_document_document_links_iface_init  (EvDocumentLinksInterface *iface)
 {
 	iface->has_document_links = djvu_links_has_document_links;
 	iface->get_links_model = djvu_links_get_links_model;

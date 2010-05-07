@@ -41,7 +41,7 @@ struct _PixbufDocument
 
 typedef struct _PixbufDocumentClass PixbufDocumentClass;
 
-static void pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (PixbufDocument, pixbuf_document,
                    {
@@ -195,7 +195,7 @@ pixbuf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 }
 
 static void
-pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = pixbuf_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = pixbuf_document_thumbnails_get_dimensions;

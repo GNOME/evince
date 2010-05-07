@@ -21,10 +21,10 @@
 
 #include "ev-document-annotations.h"
 
-EV_DEFINE_INTERFACE (EvDocumentAnnotations, ev_document_annotations, 0)
+G_DEFINE_INTERFACE (EvDocumentAnnotations, ev_document_annotations, 0)
 
 static void
-ev_document_annotations_class_init (EvDocumentAnnotationsIface *klass)
+ev_document_annotations_default_init (EvDocumentAnnotationsInterface *klass)
 {
 }
 
@@ -32,7 +32,7 @@ GList *
 ev_document_annotations_get_annotations (EvDocumentAnnotations *document_annots,
 					 EvPage                *page)
 {
-	EvDocumentAnnotationsIface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
 
 	return iface->get_annotations (document_annots, page);
 }
@@ -42,7 +42,7 @@ ev_document_annotations_annotation_set_contents (EvDocumentAnnotations *document
 						 EvAnnotation          *annot,
 						 const gchar           *contents)
 {
-	EvDocumentAnnotationsIface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
 
 	iface->annotation_set_contents (document_annots, annot, contents);
 }

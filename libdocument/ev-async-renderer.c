@@ -31,10 +31,10 @@ enum
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-EV_DEFINE_INTERFACE (EvAsyncRenderer, ev_async_renderer, 0)
+G_DEFINE_INTERFACE (EvAsyncRenderer, ev_async_renderer, 0)
 
 static void
-ev_async_renderer_class_init (EvAsyncRendererIface *klass)
+ev_async_renderer_default_init (EvAsyncRendererInterface *klass)
 {
 	static gboolean initialized = FALSE;
 
@@ -43,7 +43,7 @@ ev_async_renderer_class_init (EvAsyncRendererIface *klass)
 			g_signal_new ("render_finished",
 				      EV_TYPE_ASYNC_RENDERER,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (EvAsyncRendererIface, render_finished),
+				      G_STRUCT_OFFSET (EvAsyncRendererInterface, render_finished),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__OBJECT,
 				      G_TYPE_NONE,
@@ -59,7 +59,7 @@ ev_async_renderer_render_pixbuf (EvAsyncRenderer *async_renderer,
 			         double           scale,
 				 int              rotation)
 {
-	EvAsyncRendererIface *iface = EV_ASYNC_RENDERER_GET_IFACE (async_renderer);
+	EvAsyncRendererInterface *iface = EV_ASYNC_RENDERER_GET_IFACE (async_renderer);
 
 	iface->render_pixbuf (async_renderer, page, scale, rotation);
 }

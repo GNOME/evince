@@ -24,10 +24,10 @@
 #include "ev-file-exporter.h"
 #include "ev-document.h"
 
-EV_DEFINE_INTERFACE (EvFileExporter, ev_file_exporter, 0)
+G_DEFINE_INTERFACE (EvFileExporter, ev_file_exporter, 0)
 
 static void
-ev_file_exporter_class_init (EvFileExporterIface *klass)
+ev_file_exporter_default_init (EvFileExporterInterface *klass)
 {
 }
 
@@ -35,7 +35,7 @@ void
 ev_file_exporter_begin (EvFileExporter        *exporter,
                         EvFileExporterContext *fc)
 {
-        EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+        EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
         iface->begin (exporter, fc);
 }
@@ -43,7 +43,7 @@ ev_file_exporter_begin (EvFileExporter        *exporter,
 void
 ev_file_exporter_begin_page (EvFileExporter *exporter)
 {
-	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+	EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
 	if (iface->begin_page)
 		iface->begin_page (exporter);
@@ -53,7 +53,7 @@ void
 ev_file_exporter_do_page (EvFileExporter  *exporter,
 			  EvRenderContext *rc)
 {
-        EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+        EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
         iface->do_page (exporter, rc);
 }
@@ -61,7 +61,7 @@ ev_file_exporter_do_page (EvFileExporter  *exporter,
 void
 ev_file_exporter_end_page (EvFileExporter *exporter)
 {
-	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+	EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 	
 	if (iface->end_page)
 		iface->end_page (exporter);
@@ -70,7 +70,7 @@ ev_file_exporter_end_page (EvFileExporter *exporter)
 void
 ev_file_exporter_end (EvFileExporter *exporter)
 {
-        EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+        EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
         iface->end (exporter);
 }
@@ -78,7 +78,7 @@ ev_file_exporter_end (EvFileExporter *exporter)
 EvFileExporterCapabilities
 ev_file_exporter_get_capabilities (EvFileExporter *exporter)
 {
-	EvFileExporterIface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
+	EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
 
 	return iface->get_capabilities (exporter);
 }

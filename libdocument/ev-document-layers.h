@@ -35,13 +35,13 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_LAYERS		   (ev_document_layers_get_type ())
 #define EV_DOCUMENT_LAYERS(o)		   (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_LAYERS, EvDocumentLayers))
-#define EV_DOCUMENT_LAYERS_IFACE(k)	   (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_LAYERS, EvDocumentLayersIface))
+#define EV_DOCUMENT_LAYERS_IFACE(k)	   (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_LAYERS, EvDocumentLayersInterface))
 #define EV_IS_DOCUMENT_LAYERS(o)	   (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_LAYERS))
 #define EV_IS_DOCUMENT_LAYERS_IFACE(k)	   (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_LAYERS))
-#define EV_DOCUMENT_LAYERS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_LAYERS, EvDocumentLayersIface))
+#define EV_DOCUMENT_LAYERS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_LAYERS, EvDocumentLayersInterface))
 
-typedef struct _EvDocumentLayers      EvDocumentLayers;
-typedef struct _EvDocumentLayersIface EvDocumentLayersIface;
+typedef struct _EvDocumentLayers          EvDocumentLayers;
+typedef struct _EvDocumentLayersInterface EvDocumentLayersInterface;
 
 enum {
 	EV_DOCUMENT_LAYERS_COLUMN_TITLE,
@@ -53,7 +53,7 @@ enum {
 	EV_DOCUMENT_LAYERS_N_COLUMNS
 };
 
-struct _EvDocumentLayersIface
+struct _EvDocumentLayersInterface
 {
 	GTypeInterface base_iface;
 

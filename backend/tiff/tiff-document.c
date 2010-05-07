@@ -53,8 +53,8 @@ struct _TiffDocument
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
 
-static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-static void tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface);
+static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
+static void tiff_document_document_file_exporter_iface_init (EvFileExporterInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (TiffDocument, tiff_document,
 			 {
@@ -468,7 +468,7 @@ tiff_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 }
 
 static void
-tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = tiff_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = tiff_document_thumbnails_get_dimensions;
@@ -518,7 +518,7 @@ tiff_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 }
 
 static void
-tiff_document_document_file_exporter_iface_init (EvFileExporterIface *iface)
+tiff_document_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 {
 	iface->begin = tiff_document_file_exporter_begin;
 	iface->do_page = tiff_document_file_exporter_do_page;

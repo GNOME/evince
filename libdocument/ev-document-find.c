@@ -22,10 +22,10 @@
 
 #include "ev-document-find.h"
 
-EV_DEFINE_INTERFACE (EvDocumentFind, ev_document_find, 0)
+G_DEFINE_INTERFACE (EvDocumentFind, ev_document_find, 0)
 
 static void
-ev_document_find_class_init (EvDocumentFindIface *klass)
+ev_document_find_default_init (EvDocumentFindInterface *klass)
 {
 }
 
@@ -35,7 +35,7 @@ ev_document_find_find_text (EvDocumentFind *document_find,
 			    const gchar    *text,
 			    gboolean        case_sensitive)
 {
-	EvDocumentFindIface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
 	
 	return iface->find_text (document_find, page, text, case_sensitive);
 }

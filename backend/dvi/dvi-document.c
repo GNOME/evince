@@ -74,11 +74,11 @@ struct _DviDocument
 
 typedef struct _DviDocumentClass DviDocumentClass;
 
-static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
-static void dvi_document_file_exporter_iface_init	(EvFileExporterIface 	   *iface);
-static void dvi_document_do_color_special               (DviContext                *dvi,
-							 const char                *prefix,
-							 const char                *arg);
+static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
+static void dvi_document_file_exporter_iface_init	(EvFileExporterInterface       *iface);
+static void dvi_document_do_color_special               (DviContext                    *dvi,
+							 const char                    *prefix,
+							 const char                    *arg);
 
 EV_BACKEND_REGISTER_WITH_CODE (DviDocument, dvi_document,
      {
@@ -337,7 +337,7 @@ dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 }
 
 static void
-dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = dvi_document_thumbnails_get_thumbnail;
 	iface->get_dimensions = dvi_document_thumbnails_get_dimensions;
@@ -413,7 +413,7 @@ dvi_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 }
 
 static void
-dvi_document_file_exporter_iface_init (EvFileExporterIface *iface)
+dvi_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 {
         iface->begin = dvi_document_file_exporter_begin;
         iface->do_page = dvi_document_file_exporter_do_page;

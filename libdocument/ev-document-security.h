@@ -39,15 +39,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_SECURITY		  (ev_document_security_get_type ())
 #define EV_DOCUMENT_SECURITY(o)			  (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurity))
-#define EV_DOCUMENT_SECURITY_IFACE(k)	  	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurityIface))
+#define EV_DOCUMENT_SECURITY_IFACE(k)	  	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurityInterface))
 #define EV_IS_DOCUMENT_SECURITY(o)		  (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_SECURITY))
 #define EV_IS_DOCUMENT_SECURITY_IFACE(k)	  (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_SECURITY))
-#define EV_DOCUMENT_SECURITY_GET_IFACE(inst) 	  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurityIface))
+#define EV_DOCUMENT_SECURITY_GET_IFACE(inst) 	  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurityInterface))
 
-typedef struct _EvDocumentSecurity      EvDocumentSecurity;
-typedef struct _EvDocumentSecurityIface EvDocumentSecurityIface;
+typedef struct _EvDocumentSecurity          EvDocumentSecurity;
+typedef struct _EvDocumentSecurityInterface EvDocumentSecurityInterface;
 
-struct _EvDocumentSecurityIface
+struct _EvDocumentSecurityInterface
 {
 	GTypeInterface base_iface;
 
