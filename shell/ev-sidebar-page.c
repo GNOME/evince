@@ -26,13 +26,13 @@
 
 #include "ev-sidebar-page.h"
 
-EV_DEFINE_INTERFACE (EvSidebarPage, ev_sidebar_page, 0)
+G_DEFINE_INTERFACE (EvSidebarPage, ev_sidebar_page, 0)
 
 gboolean 
 ev_sidebar_page_support_document (EvSidebarPage *sidebar_page,
 				  EvDocument    *document)
 {
-        EvSidebarPageIface *iface;
+        EvSidebarPageInterface *iface;
 
 	g_return_val_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page), FALSE);
         g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
@@ -48,7 +48,7 @@ void
 ev_sidebar_page_set_model (EvSidebarPage   *sidebar_page,
 			   EvDocumentModel *model)
 {
-	EvSidebarPageIface *iface;
+	EvSidebarPageInterface *iface;
 
         g_return_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page));
 	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
@@ -63,7 +63,7 @@ ev_sidebar_page_set_model (EvSidebarPage   *sidebar_page,
 const gchar *
 ev_sidebar_page_get_label (EvSidebarPage *sidebar_page)
 {
-	EvSidebarPageIface *iface;
+	EvSidebarPageInterface *iface;
 
         g_return_val_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page), NULL);
 
@@ -76,7 +76,7 @@ ev_sidebar_page_get_label (EvSidebarPage *sidebar_page)
 
 
 static void
-ev_sidebar_page_class_init (EvSidebarPageIface *iface)
+ev_sidebar_page_default_init (EvSidebarPageInterface *iface)
 {
 	static gboolean initialized = FALSE;
  

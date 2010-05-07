@@ -31,15 +31,15 @@ G_BEGIN_DECLS
 
 #define EV_TYPE_SIDEBAR_PAGE	    	(ev_sidebar_page_get_type ())
 #define EV_SIDEBAR_PAGE(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_SIDEBAR_PAGE, EvSidebarPage))
-#define EV_SIDEBAR_PAGE_IFACE(k)	(G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_SIDEBAR_PAGE, EvSidebarPageIface))
+#define EV_SIDEBAR_PAGE_IFACE(k)	(G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_SIDEBAR_PAGE, EvSidebarPageInterface))
 #define EV_IS_SIDEBAR_PAGE(o)	    	(G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_SIDEBAR_PAGE))
 #define EV_IS_SIDEBAR_PAGE_IFACE(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_SIDEBAR_PAGE))
-#define EV_SIDEBAR_PAGE_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_SIDEBAR_PAGE, EvSidebarPageIface))
+#define EV_SIDEBAR_PAGE_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_SIDEBAR_PAGE, EvSidebarPageInterface))
 
-typedef struct _EvSidebarPage	  EvSidebarPage;
-typedef struct _EvSidebarPageIface   EvSidebarPageIface;
+typedef struct _EvSidebarPage	         EvSidebarPage;
+typedef struct _EvSidebarPageInterface   EvSidebarPageInterface;
 
-struct _EvSidebarPageIface
+struct _EvSidebarPageInterface
 {
 	GTypeInterface base_iface;
 

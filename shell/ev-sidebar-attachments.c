@@ -67,7 +67,7 @@ struct _EvSidebarAttachmentsPrivate {
 	GHashTable     *icon_cache;
 };
 
-static void ev_sidebar_attachments_page_iface_init (EvSidebarPageIface *iface);
+static void ev_sidebar_attachments_page_iface_init (EvSidebarPageInterface *iface);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarAttachments,
                         ev_sidebar_attachments,
@@ -698,7 +698,7 @@ ev_sidebar_attachments_get_label (EvSidebarPage *sidebar_page)
 }
 
 static void
-ev_sidebar_attachments_page_iface_init (EvSidebarPageIface *iface)
+ev_sidebar_attachments_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_attachments_support_document;
 	iface->set_model = ev_sidebar_attachments_set_model;

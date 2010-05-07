@@ -47,9 +47,9 @@ enum {
 	N_SIGNALS
 };
 
-static void ev_sidebar_layers_page_iface_init (EvSidebarPageIface *iface);
-static void job_finished_callback             (EvJobLayers        *job,
-					       EvSidebarLayers    *sidebar_layers);
+static void ev_sidebar_layers_page_iface_init (EvSidebarPageInterface *iface);
+static void job_finished_callback             (EvJobLayers            *job,
+					       EvSidebarLayers        *sidebar_layers);
 
 static guint signals[N_SIGNALS];
 
@@ -402,7 +402,7 @@ ev_sidebar_layers_get_label (EvSidebarPage *sidebar_page)
 }
 
 static void
-ev_sidebar_layers_page_iface_init (EvSidebarPageIface *iface)
+ev_sidebar_layers_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_layers_support_document;
 	iface->set_model = ev_sidebar_layers_set_model;

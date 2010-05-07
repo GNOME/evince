@@ -91,14 +91,14 @@ enum {
 	PROP_WIDGET,
 };
 
-static void         ev_sidebar_thumbnails_clear_model      (EvSidebarThumbnails *sidebar);
-static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage       *sidebar_page,
-							    EvDocument          *document);
-static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageIface  *iface);
-static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage       *sidebar_page);
-static void         thumbnail_job_completed_callback       (EvJobThumbnail      *job,
-							    EvSidebarThumbnails *sidebar_thumbnails);
-static void         adjustment_changed_cb                  (EvSidebarThumbnails *sidebar_thumbnails);
+static void         ev_sidebar_thumbnails_clear_model      (EvSidebarThumbnails     *sidebar);
+static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage           *sidebar_page,
+							    EvDocument              *document);
+static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageInterface  *iface);
+static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage           *sidebar_page);
+static void         thumbnail_job_completed_callback       (EvJobThumbnail          *job,
+							    EvSidebarThumbnails     *sidebar_thumbnails);
+static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
                         ev_sidebar_thumbnails, 
@@ -966,7 +966,7 @@ ev_sidebar_thumbnails_get_label (EvSidebarPage *sidebar_page)
 }
 
 static void
-ev_sidebar_thumbnails_page_iface_init (EvSidebarPageIface *iface)
+ev_sidebar_thumbnails_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_thumbnails_support_document;
 	iface->set_model = ev_sidebar_thumbnails_set_model;

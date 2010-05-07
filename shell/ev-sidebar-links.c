@@ -73,7 +73,7 @@ static void job_finished_callback 			(EvJobLinks     *job,
 				    		         EvSidebarLinks *sidebar_links);
 static void ev_sidebar_links_set_current_page           (EvSidebarLinks *sidebar_links,
 							 gint            current_page);
-static void ev_sidebar_links_page_iface_init 		(EvSidebarPageIface *iface);
+static void ev_sidebar_links_page_iface_init 		(EvSidebarPageInterface *iface);
 static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
 						         EvDocument     *document);
 static const gchar* ev_sidebar_links_get_label 		(EvSidebarPage *sidebar_page);
@@ -751,7 +751,7 @@ ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
 }
 
 static void
-ev_sidebar_links_page_iface_init (EvSidebarPageIface *iface)
+ev_sidebar_links_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_links_support_document;
 	iface->set_model = ev_sidebar_links_set_model;
