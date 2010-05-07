@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libevview.la
 
 NOINST_H_FILES =			\
 	ev-annotation-window.h		\
+	ev-loading-window.h		\
 	ev-page-cache.h			\
 	ev-pixbuf-cache.h		\
 	ev-timeline.h			\
@@ -27,6 +28,7 @@ header_DATA = $(INST_H_FILES)
 libevview_la_SOURCES = 			\
 	ev-annotation-window.c		\
 	ev-document-model.c		\
+	ev-loading-window.c		\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
 	ev-page-cache.c			\
